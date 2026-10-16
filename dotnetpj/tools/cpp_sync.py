@@ -36,6 +36,8 @@ CONSUMERS = ("Core", "Assets")
 ORIGINS = ("cpppj", "dotnetpj")
 # 보고서에 펼쳐 보여 주는 커밋·파일 목록의 최대 길이.
 LIST_LIMIT = 40
+# cpppj 의 원본 목록(.inc 등)에서 C# 자료를 만드는 생성 도구들. 각 도구의 --check 가 현재 C# 자료와 cpppj 원본의 일치를 확인한다.
+GENERATORS = ("gen_original_constructors.py",)
 
 
 @dataclass
@@ -139,6 +141,15 @@ def report() -> int:
     cpp_total = len(list(CPP_FIXTURES.glob("*-x86.tsv")))
     cpp_linked = sum(1 for e in entries if e.origin == "cpppj" and e.file.endswith("-x86.tsv"))
     print(f"  cpppj *-x86.tsv {cpp_total}개 중 {cpp_linked}개 연결")
+
+    # 생성한 C# 자료가 cpppj 원본 목록과 아직 같은지 각 생성기의 --check 로 확인한다.
+    print(f"\n[생성 자료 {len(GENERATORS)}개]")
+    for generator in GENERATORS:
+        done = subprocess.run([sys.executable, "-X", "utf8", str(Path(__file__).with_name(generator)), "--check"],
+                              capture_output=True, text=True, encoding="utf-8", errors="replace")
+        state = "OK" if done.returncode == 0 else "다름"
+        bad += done.returncode != 0
+        print(f"  {state:<3} {generator}" + ("" if done.returncode == 0 else "  <- cpppj 목록이 바뀌었다. 도구를 다시 실행하고 관련 검사를 재대조한다"))
 
     if reflected and head:
         since = git("log", "--oneline", "--no-decorate", f"{reflected}..HEAD", "--", "cpppj", "docs/exe", "LEFT_JOBS.md")

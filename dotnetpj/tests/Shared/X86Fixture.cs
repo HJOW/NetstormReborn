@@ -50,6 +50,31 @@ internal static class X86Fixture
     public static IReadOnlyList<(string Label, int Count)> Sections(string[][] rows) => rows
         .GroupBy(row => row[0]).Select(group => (group.Key, group.Count())).ToArray();
 
+    /// <summary>Adler-32 의 나머지 연산 값과, 나머지를 미뤄도 32비트가 넘치지 않는 최대 묶음 길이.</summary>
+    private const uint AdlerPrime = 65521, AdlerBlock = 5552;
+
+    /// <summary>Python zlib 와 같은 Adler-32. 원본 풀 전체 바이트 같은 긴 버퍼를 기대값과 대조할 때 쓴다(묶음마다 한 번만 나머지를 구한다).</summary>
+    public static uint Adler32(ReadOnlySpan<byte> bytes)
+    {
+        uint a = 1;
+        uint b = 0;
+        // 묶음 단위로 누적한다
+        while (bytes.Length > 0)
+        {
+            int length = (int)Math.Min(AdlerBlock, (uint)bytes.Length);
+            // 한 묶음의 바이트
+            foreach (byte value in bytes[..length])
+            {
+                a += value;
+                b += a;
+            }
+            a %= AdlerPrime;
+            b %= AdlerPrime;
+            bytes = bytes[length..];
+        }
+        return (b << 16) | a;
+    }
+
     /// <summary>모든 입력을 끝까지 대조해 실패 개수와 대표 입력을 함께 보고한다.</summary>
     public static void CheckRows(string[][] rows, Func<string[], bool> matches)
     {

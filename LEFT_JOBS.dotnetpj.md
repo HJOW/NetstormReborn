@@ -1,3 +1,14 @@
+## 2026-10-16 완료: W02 첫 조각 — 원본 월드 코어의 슬롯 풀과 오브젝트 생성·Take (`DESKTOP-HJOW`)
+
+- [x] 위 W01에 이어 같은 요청의 범위로 현행 계획의 **W02(원본 월드 코어 ① 생성·등록)** 를 시작했다. `cpppj/`·공통 `LEFT_JOBS.md`는 수정하지 않았고 **디컴파일 산출물을 읽지 않았다**(현재 PC는 마지막 정밀 디컴파일 PC VM-W11-Codex와 다름). 새 디컴파일·원본 관찰·원본/클론 게임·창 실행은 없다. 상세·근거 표·경계는 [원본 월드 코어 W02 첫 조각](docs/dotnet-original-core-20261016.md).
+- [x] **저장 방식 결정(에이전트 판단, 10절 11번):** 원본 월드 코어의 저장소는 **슬롯 50바이트를 그대로 둔다.** 계획 3절 3번의 "raw 슬롯 미이식"을 코어 안쪽에 한해 바꿨다. fixture가 슬롯 전체 바이트를 대조하고, 파생 생성자의 쓰기가 필드 이름 없는 오프셋이어서 의미 모델로는 W02~W03 전체를 검증할 수 없기 때문이다. 가상 표 주소는 클래스 식별 값으로만 쓴다. 기존 세션·`SidPool`은 그대로이고 폴더만 지우면 되돌릴 수 있다.
+- [x] **구현(`dotnetpj/src/Netstorm.Core/Original/`):** `RawSidPool`(슬롯 풀, 원본 `004abb10`/`004af1d0`/`004abf60`/`004abe00`), `RawSquidFactory`(`Create`·`Construct`·`Take`·`PostCreate`·`PostTake`·`FirstPopFlags`, `IRawUnpop` 연결 지점), `OriginalConstructors`(타입 188개 주소와 파생 생성자 82개 표; `.Data.cs`는 [`gen_original_constructors.py`](dotnetpj/tools/gen_original_constructors.py)가 cpppj 목록에서 생성), `OriginalTypeRecord`. CD 10.72는 옮기지 않았다(기준 판본 10.78).
+- [x] **검증:** Release 경고 0·오류 0, 단위 **1,090개 통과**(Assets 347 + Core 743; 이번 +20). 원본 fixture 10.78 몫이 처음부터 전부 일치했다 — `sid` 전이 **1,584**(풀 전체 바이트 Adler-32 포함), `constructors` **188**, `creation` 호출 **482**, `derived` 호출 **3,300**(대상 슬롯 50바이트 전부 + 풀 카운터·머리/꼬리·전체 체크섬). 보호 경로 검사(미복원 생성자·162 금지·non-void/타입 불일치/다른 클래스/contained Take의 변경 전 거부, anim HP 4바이트, postCreate HP·소유자·mana 1/4) 포함. **변이 11곳**(HP 폭·OR 무시·dead 비트·소유자 0·mana 비율·최초 Pop·162 금지·반납/할당 시 슬롯 지움·삭제 기록·표 값 변조)이 모두 검사를 실패시켰고 원복했다. fixture 3개(`constructors`·`creation`·`derived`)를 SHA 목록에 등록했다(연결 18개). 기존 `X86SidTests`는 새 공용 `X86Fixture.Adler32`를 쓰도록 바꿨다.
+- [x] **동기화 장치 보강:** `cpp_sync.py` 보고에 생성 자료 점검을 넣었다(생성기 `--check`가 cpppj 목록과 어긋나면 종료 코드 1).
+- [ ] **하지 않은 것(경계):** non-void Take의 공간 해제(`IRawUnpop` 미구현), `FirstPopFlags`의 원본 대조(`unpop-x86.tsv`의 `FirstPop` 행은 Unpop 이식 때), 생산 칸 contained Form(타입 6)·GumpForm(타입 3) 생성(W03), `TypeCatalog` → `OriginalTypeRecord` 어댑터, **세션 연결**(`BattleMap`·`BridgeGrid`는 아직 기존 `SidPool`). 이 조각은 L1 모듈 단계이며 L2 이상으로 합산하지 않는다.
+- [ ] **다음 조각:** `Unpop`(공간 해제, `unpop-x86.tsv`) → `Pop`/공간 해시·spot(기존 `SpotMap`·`SpotRules` 재사용 검토) → `PostPop`·`assetpostpop` → 소유자·프레임 → 건물 공간·이웃·탐색 → Graph 계열. 시작할 때 `python dotnetpj/tools/cpp_sync.py`를 먼저 실행하고, 쓸 fixture를 `--update --add`로 등록한다.
+- [x] 인수인계 뒤 **`20261016-21 DN 원본 월드 코어의 슬롯 풀과 기본·파생 오브젝트 생성을 원본 10.78 행으로 검증`** 으로 로컬 커밋한다. 원격 push는 하지 않는다.
+
 ## 2026-10-16 완료: W01 기준선·동기화 장치 (`DESKTOP-HJOW`)
 
 - [x] 사용자 요청("AGENTS.md, LEFT_JOBS.md, LEFT_JOBS.dotnetpj.md를 읽고 dotnetpj 진행. 창 띄우는 작업은 이 PC에서 금지, cpppj 파일 수정 자제")으로 아래 현행 계획의 **다음 시작점 W01**을 수행했다. `cpppj/`·공통 `LEFT_JOBS.md`는 수정하지 않았다. 현재 PC **DESKTOP-HJOW**는 공통 기록의 마지막 정밀 디컴파일 PC(**VM-W11-Codex, 2026-10-16**)와 달라 **디컴파일 산출물을 읽지 않았고** 새 디컴파일·원본 관찰·원본/클론 게임·창 실행은 없다.
@@ -6,7 +17,7 @@
 - [x] **검증:** Release 경고 0·오류 0, 단위 **1,070개 통과**(Assets 347 + Core 723; 이번 **+13**). 변이 확인: 목록의 sid 해시 한 글자 변조, graph 항목 삭제, options 행 수 변조를 동시에 넣자 Core의 `LinkedFixturesMatchRecordedHashAndRows`·`EveryLinkedFixtureIsRegistered`와 Assets의 `LinkedFixturesMatchRecordedHashAndRows`가 정확히 그 항목을 지목하며 실패했고, 파이썬 보고도 종료 코드 1로 같은 두 항목을 잡았다. 목록을 원복해 모두 통과함을 다시 확인했다.
 - [x] **cpppj 반영 검토(`53113b66` → `ba8c3d83`):** cpppj 커밋 5개(`20261016-15`~`19`)를 검토했다. 연결 fixture는 하나도 바뀌지 않았고 이식한 모듈의 cpppj 소스도 바뀌지 않아 C# 단위를 다시 열지 않았다. 새 fixture 6개(residence-coordinates·buried-regular·fence-regular·fence-marker-clear·fence-create·flyer-postpop)는 아직 연결하지 않았고 담당 단위(W04·W11·W19)는 [계획 7절 6번](docs/dotnet-cpp-port-plan-20261016.md#7-cpppj-진행을-따라가는-절차-다른-ai가-cpppj를-계속-진행-중)에 정리했다. **반영 커밋을 `ba8c3d83`으로 올렸다.** 계획 문서 5절 W01 행·7절(절차·검토 기록)도 갱신했다.
 - [ ] **하지 않은 것:** 연결하지 않은 fixture 약 270개의 SHA는 목록에 넣지 않았다(연결할 때 `--add`로 등록). 클론 창·GUI 검사는 이 PC 규칙으로 실행하지 않았다(변경은 테스트 도구뿐이라 게임 동작 변화 없음). cpppj에 전달할 요청 5건(현행 계획 절)은 그대로 남아 있다.
-- [x] **다음 시작점은 W02**(원본 월드 코어 ① 생성·등록)이다. 규모가 크므로 먼저 코어의 객체 표·타입별 처리기 표 설계와 constructors(359)→creation(1,648) 순서의 얇은 첫 조각부터 잡는다. 단위를 시작할 때 `python dotnetpj/tools/cpp_sync.py`를 먼저 실행한다.
+- [x] W02(원본 월드 코어 ① 생성·등록)는 같은 날 첫 조각(슬롯 풀·생성자 표·Create/Take)을 마쳤다(위 절). 단위를 시작할 때 `python dotnetpj/tools/cpp_sync.py`를 먼저 실행한다.
 
 ## 2026-10-16 현행 계획: cpppj 복원 결과를 이식해 원본과 거의 동일한 플레이로 (`DESKTOP-HJOW`)
 
@@ -17,7 +28,7 @@
 - [x] **판정 단계:** L1 모듈(fixture 10.78 행 전부) → L2 세션 시작 상태 → L3 고정 입력 진행 → L4 화면·소리 → L5 자연 완주 순서다. L1 통과를 L2 이후 완료로 합산하지 않는다. 1차 범위는 cpppj 목표와 같은 11개 미션(Tutorial1~6·캠페인 1-1·1-2·데모 3개)이다.
 - [ ] **P0 기반**(순서대로, 각 단위의 fixture·교체 대상·완료 기준은 계획 5절)
   - [x] W01 기준선·동기화 장치: 연결 fixture SHA 목록 검사, `X86Fixture` 확장, 반영 커밋 기록 (**완료 2026-10-16**, 위 절)
-  - [ ] W02 원본 월드 코어 ① 생성·등록: 객체 표·생성자·Pop/Unpop/PostPop·해시/spot·소유자/프레임·Graph 연결(D14)
+  - [ ] W02 원본 월드 코어 ① 생성·등록: 객체 표·생성자·Pop/Unpop/PostPop·해시/spot·소유자/프레임·Graph 연결(D14) — **첫 조각 완료(2026-10-16): 슬롯 풀·생성자 표·Create/Take**, 다음은 Unpop → Pop (위 절)
   - [ ] W03 원본 월드 코어 ② 삭제·수명: 공통 삭제·Damageable·종속/내용물/Form·신전 삭제(D14)
   - [ ] W04 시간·Kernel·Process: Regular·ProcessForm·공통 프레임 진행, 24Hz/8틱 소비자를 하나씩 이행(D01)
   - [ ] W05 SP·보상·난수: float32 SP 저장소·쓰기마다 난수 160회·보상/환불/AI 지갑/샘 풀(D12)
@@ -788,7 +799,7 @@ cpppj 는 "원본을 그대로 되살린다"가 목표라 아래를 원본대로
 | 입력 사건 큐 40칸, 넘치면 새 사건 버림 | MonoGame 입력 | 플랫폼 차이. 조작 결과가 달라지는 사례가 나오면 그때 본다 |
 | 변경 사각형 100개 표(부분 다시 그리기) | 매 프레임 전체 그리기 | 화면 결과가 같다 |
 | 뮤텍스, 레지스트리, CD 찾기, 창 크기 고정 | 없음 | 원본 실행 환경 전용 |
-| raw 50바이트 슬롯·vtable 주소·생성자 주소 표 | 옮기지 않는다 | 의미만 옮긴다 |
+| raw 50바이트 슬롯·vtable 주소·생성자 주소 표 | 세션·`GameEntity` 쪽은 옮기지 않는다. **원본 월드 코어(`Netstorm.Core.Original`)의 저장소는 슬롯 바이트째 옮긴다(2026-10-16, 10절 11번)** | 세션 쪽은 의미만. 코어는 fixture가 슬롯 전체 바이트를 대조해서 |
 | CD 10.72 의 다른 값(가중치 306, 타입 171, 점유 충돌 시 계속 등록 등) | 쓰지 않는다 | 기준은 10.78 |
 | 10.82(V10·V12)의 Sun Generator·난이도·새 단축키·SID 77바이트·그래프 50,000 한도 | 쓰지 않는다 | 후대 판본 기능. AGENTS.md 도 Sun Generator 를 구현 대상이 아니라고 적었다 |
 
@@ -817,7 +828,7 @@ cpppj 는 "원본을 그대로 되살린다"가 목표라 아래를 원본대로
 | E | 매 프레임 전체를 다시 그린다 (원본은 변경 사각형 100개 표로 부분만 다시 그린다) | 화면 결과가 같아야 한다 | [cpp-renderer-reconstruction.md](docs/exe/cpp-renderer-reconstruction.md), 화면 캡처 비교 | 변경 영역 표를 옮긴다 |
 | F | 뮤텍스·레지스트리·CD 찾기·창 크기 고정이 없다 | 창 크기 조절·중복 실행처럼 사용자가 보는 동작 | [cpp-screen-reconstruction.md](docs/exe/cpp-screen-reconstruction.md) | 사용자가 보는 동작만 원본대로 맞춘다 |
 
-**이 결정으로 바꾸지 않는 것:** MonoGame 을 쓰는 것과 raw 슬롯·vtable 을 옮기지 않는 것은 플랫폼(Linux 목표)과 내부 표현의 문제다. 화면·소리·규칙의 결과가 원본과 같아야 한다는 기준만 적용한다. CD 10.72·10.82 값을 쓰지 않는 것은 기준 판본(10.78)을 따르는 것이라 원본과의 차이가 아니다.
+**이 결정으로 바꾸지 않는 것:** MonoGame 을 쓰는 것과 raw 슬롯·vtable 을 옮기지 않는 것은 플랫폼(Linux 목표)과 내부 표현의 문제다(2026-10-16: 원본 월드 코어 저장소에 한해 슬롯 바이트를 옮기도록 바꿨다, 10절 11번). 화면·소리·규칙의 결과가 원본과 같아야 한다는 기준만 적용한다. CD 10.72·10.82 값을 쓰지 않는 것은 기준 판본(10.78)을 따르는 것이라 원본과의 차이가 아니다.
 
 **순서(에이전트 제안 — 바꿔도 된다):** 6단계 다음, 8절 항목을 더 받기 전에 판정한다. 규칙이 고정 틱 위에 더 쌓이기 전에 A 를 정해야 고칠 양이 적다. A → C → B → D·E·F 순서로 본다. B 의 일부는 cpppj 의 입력 처리 복원을 기다린다.
 
@@ -835,6 +846,7 @@ cpppj 는 "원본을 그대로 되살린다"가 목표라 아래를 원본대로
 8. **기존 코드 주석 정비 — 해결(2026-10-10 사용자 결정): 그 주석이 설명하는 대상이 수정될 때 한다.** 상수·함수·클래스·멤버함수·반복문을 고치면 그 대상의 주석을 새 규칙(설명·사용법 먼저, 추가/수정 이력은 뒤)에 맞춘다. 고치지 않는 대상의 주석을 찾아다니며 일괄 정리하지 않는다.
 9. **cpppj 미복원 동작의 처리(2026-10-16 추가, 에이전트 기본값·사용자 확인 전).** cpppj는 미복원 타입의 후처리를 만나면 명시 오류로 멈춘다. dotnetpj는 플레이 가능 상태 유지를 우선한다. 기존 근사를 유지하고 [core-rules.md](docs/core-rules.md)의 근사 목록에 "원본 근거 없음"으로 등록한 뒤, cpppj가 복원하면 교체한다. 대신 해당 미션을 잠그기를 원하면 이 기본값을 바꾼다.
 10. **원본 월드 코어 도입(2026-10-16 추가, 에이전트 판단).** 5번 결정의 "그렇게 할 수 없으면 구조 자체를 원본처럼 바꾼다"에 해당한다고 판단했다. 근거와 범위는 [이식 계획 4절](docs/dotnet-cpp-port-plan-20261016.md#4-구조-결정-c-원본-월드-코어-도입)에 있다. 규모가 크므로(cpppj 원본 대응 소스 약 6.2만 줄·fixture 약 68만 행) 영역별 교체형으로 진행하고 1-1·1-2 플레이를 유지한다.
+11. **원본 월드 코어의 저장 방식(2026-10-16 추가, 에이전트 판단·사용자 확인 전).** 코어 저장소는 슬롯 50바이트를 그대로 둔다(이식 계획 3절 3번의 "raw 슬롯 미이식"을 코어 안쪽에 한해 변경). 근거: W02~W03 fixture가 슬롯 전체 바이트를 대조하고, 파생 생성자 쓰기가 필드 이름 없는 오프셋이라 의미 모델로는 검증할 수 없다. 가상 표 주소는 클래스 식별 값으로만 쓰고 세션·`GameEntity`는 코어 위의 보기로 만든다. 상세는 [원본 월드 코어 W02 첫 조각](docs/dotnet-original-core-20261016.md) 1절. 의미 모델을 원하면 이 기본값을 바꾼다(아직 세션에 연결하지 않아 되돌리는 비용이 작다).
 
 ---
 
@@ -883,6 +895,7 @@ python dotnetpj/tools/cpp_sync.py --update --add 이름:Core           # 새 fix
 | 주제 | 문서 | cpppj 기준 구현 |
 |---|---|---|
 | **cpppj → dotnetpj 이식 계획(현행, 2026-10-16)** | [dotnet-cpp-port-plan-20261016.md](docs/dotnet-cpp-port-plan-20261016.md) | `client/RawCampaignSession`, `client/RawSurfaceWorld`의 `RawWorldCore` |
+| **원본 월드 코어 W02 첫 조각(슬롯 풀·생성자·Create/Take, 2026-10-16)** | [dotnet-original-core-20261016.md](docs/dotnet-original-core-20261016.md) | `o/SidPool.cpp`, `o/SquidFactory.cpp`, `o/TypeConstructors.inc`, `o/DerivedConstructors.inc` |
 | 반영 점검 D01~D16 | [dotnet-cpp-audit-20261015.md](docs/dotnet-cpp-audit-20261015.md) | — |
 | 표시 이름·내부 타입명 대응 | [unit-source-name-map.md](docs/unit-source-name-map.md) | `o/RiftTypeTable.cpp` |
 | 데모·캠페인 1-6/2-4 대응 | [demo-campaign-map.md](docs/gameplay/demo-campaign-map.md) | `o/RawMissionStart` |

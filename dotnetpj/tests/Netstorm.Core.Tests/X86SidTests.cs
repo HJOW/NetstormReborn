@@ -28,30 +28,8 @@ public sealed class X86SidTests
     /// <summary>풀 +14 에 겹쳐 놓인 서버 목록 머리의 다음 번호 위치 (0번 슬롯 안)</summary>
     private const int ServerHeadOffset = 14 + NextOffset;
 
-    /// <summary>Adler-32 의 나머지 연산 값과, 나머지를 미뤄도 32비트가 넘치지 않는 최대 묶음 길이</summary>
-    private const uint AdlerPrime = 65521, AdlerBlock = 5552;
-
-    /// <summary>Python zlib 와 같은 Adler-32 (긴 버퍼용: 묶음마다 한 번만 나머지를 구한다).</summary>
-    private static uint Adler(ReadOnlySpan<byte> bytes)
-    {
-        uint a = 1;
-        uint b = 0;
-        // 묶음 단위로 누적한다
-        while (bytes.Length > 0)
-        {
-            int length = (int)Math.Min(AdlerBlock, (uint)bytes.Length);
-            // 한 묶음의 바이트
-            foreach (byte value in bytes[..length])
-            {
-                a += value;
-                b += a;
-            }
-            a %= AdlerPrime;
-            b %= AdlerPrime;
-            bytes = bytes[length..];
-        }
-        return (b << 16) | a;
-    }
+    /// <summary>Python zlib 와 같은 Adler-32 (공용 도우미에 위임한다).</summary>
+    private static uint Adler(ReadOnlySpan<byte> bytes) => X86Fixture.Adler32(bytes);
 
     /// <summary>두 삭제 기록(클라이언트, 서버 순서)을 리틀 엔디언 32비트 두 개씩 늘어놓아 체크섬을 낸다.</summary>
     private static uint LogAdler(SidPool pool)
