@@ -1,0 +1,89 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "uniqueInputs": 417,
+  "normalReturns": 834,
+  "precisionDifferentInputs": [],
+  "inputsByKind": {
+    "0": 1,
+    "1": 8,
+    "2": 160,
+    "3": 224,
+    "4": 8,
+    "5": 16
+  },
+  "nativeCalls": {
+    "004680f0": 1,
+    "00467fb0": 1,
+    "00466e50": 1,
+    "00467f20": 1,
+    "00467f30": 1,
+    "00467f70": 1,
+    "00466ab0": 111,
+    "boundary-20000100": 1,
+    "boundary-0041bd20": 1,
+    "00468130": 136,
+    "00466f50": 288,
+    "004ac1e0": 120,
+    "0049a840": 120,
+    "0041bfb0": 444,
+    "boundary-004571b0": 92,
+    "00472700": 100,
+    "boundary-004e4391": 98,
+    "boundary-004d4f00": 44,
+    "boundary-00471d10": 87,
+    "00455930": 40,
+    "boundary-004d5000": 48,
+    "00467330": 224,
+    "boundary-004adea0": 80,
+    "boundary-20000200": 128,
+    "boundary-20000300": 128,
+    "00466eb0": 110,
+    "boundary-004ae2d0": 110,
+    "0041bff0": 110,
+    "boundary-20000400": 110,
+    "boundary-0041bf10": 110,
+    "00472690": 16
+  },
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "tools/decomp_vander_fire.py": "c8f1c72bdf021fbf14fdf7f5b7362b543b35d616bca927347457d18de60e4a76",
+    "cpppj/tests/fixtures/vander-fire-x86.tsv": "be3c685abe10d7deaa88d0a7d1436855b377d3eed439743d6c9c3aa862f20d81"
+  },
+  "limitations": [
+    "실제 반더 ctor/Step/Frame/Launch·HP/타입 조회·난수·두 빔 wrapper를 실행했다.",
+    "공간/중심/코너·빔 생성자/메모리·피해/refresh·Host 부착/조회/완료/삭제는 명시 외부 경계다. 빔 생성/Frame/Draw 자체의 원문 대조는 앞선 별도 자료다.",
+    "미초기화 padding·네 raw 슬롯·난수·시각·요청 순서를 보존한다. 실제 캠페인/사용자 자연 완주 증거와 구별한다."
+  ],
+  "product_validation": {
+    "baseline_commit": "e6d9763",
+    "native_cpp_unique_inputs": 417,
+    "focused_tests": 3,
+    "focused_failed": 0,
+    "build_exit_code": 0,
+    "build_warnings": 0,
+    "build_errors": 0,
+    "ctest": {
+      "total": 1445,
+      "passed": 1444,
+      "failed": 1,
+      "total_seconds": 216.77,
+      "exit_code": 8,
+      "log": "extracted/goal-vander-fire-20261017-ctest.log"
+    },
+    "campaign_beam_runtime_connected": true,
+    "storm_first_boundary": {
+      "previous_frame": 145,
+      "previous_game_seconds": 3.625,
+      "current_frame": 232,
+      "current_game_seconds": 5.8,
+      "type": 144,
+      "sid": 15082,
+      "reason": "실제 맨 오 워 전투 가상 삭제 미연결"
+    },
+    "storm_400_frames_passed": false,
+    "user_natural_completion": false
+  }
+}

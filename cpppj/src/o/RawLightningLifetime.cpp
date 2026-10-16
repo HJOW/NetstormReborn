@@ -6,6 +6,14 @@
 #include <utility>
 
 namespace netstorm::o {
+// unavailable의 raw 주소 의미를0 실패와 합치지 않고 생존 검사 뒤에만 확보한다.
+LightningCreateResult CreateLightning(const SidPool& pool,Sid parent,Sid target,std::optional<std::string> sound,
+    const std::function<LightningVisualProcess*(Sid,Sid,std::optional<std::string>)>& create) {
+    if (pool.Edition()!=OriginalEdition::Patch1078 || target.value>=pool.Capacity()) throw std::invalid_argument("빔 wrapper 판본/표적 오류");
+    if (pool.Slot(target)[11]&3) return {LightningCreateStatus::TargetUnavailable,target,nullptr};
+    if (!create) throw std::invalid_argument("빔 wrapper 실제 생성 경계 누락");const auto process=create(parent,target,std::move(sound));
+    return {process ? LightningCreateStatus::Created : LightningCreateStatus::AllocationFailed,{},process};
+}
 namespace {
 // 보호10.78의 실제 process19·120입자·stride24·공유 색 객체/경로 확보량이다.
 constexpr std::uint32_t kProcessType=19,kParticleCount=120,kParticleBytes=24,kPaletteBytes=8,kPathBytes=64;

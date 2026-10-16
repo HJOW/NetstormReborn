@@ -28,7 +28,11 @@ set_source_files_properties(LightningFrameTests.cpp PROPERTIES COMPILE_DEFINITIO
 # 공유 빔 생성/삭제의 두 정밀도 원문을 새 수명 검사에서만 읽는다.
 set_source_files_properties(LightningLifetimeTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_LIGHTNING_LIFETIME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/lightning-lifetime-x86.tsv\"")
+# 반더 발사와 두 빔 wrapper의 독립 원문 전체 상태를 새 검사에서만 읽는다.
+set_source_files_properties(VanderFireTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_VANDER_FIRE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/vander-fire-x86.tsv\"")
 add_executable(netstorm_tests
+    VanderFireTests.cpp
     LightningLifetimeTests.cpp
     LightningVisualSystemTests.cpp
     LightningFrameTests.cpp

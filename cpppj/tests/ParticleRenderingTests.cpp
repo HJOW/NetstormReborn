@@ -120,3 +120,26 @@ TEST_CASE(CampaignParticles_ActualHostPaletteAndVfxPixels) {
     core.processes.Kill(*process,0x10);CHECK(particles.Rendering().Size()==0 && core.kernel.Size()==0);
     renderer.SetScene(std::move(shifted));const auto removed=renderer.SceneImage();CHECK(std::count(removed.indices.begin(),removed.indices.end(),196)==0);
 }
+// Fiery 생성 없이 빔만 존재해도 실제 공유 팔레트/음향/Renderer/VFX와 소진 갱신이 동작한다.
+TEST_CASE(CampaignParticles_BeamRendererSoundAndRemoval) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);
+    BridgeConnectState links;links.bridgeType=82;links.islandType=94;links.stalagType=95;links.connectorType=155;links.noIslandType=157;
+    RawSurfaceWorld world(OriginalEdition::Patch1078,assets.types,assets.frames,assets.shapes,links,83);auto core=world.Core();
+    const auto parent=core.pool.Allocate(0),victim=core.pool.Allocate(0); // 같은 실제 풀의 부모/표적이다.
+    // 독립 표시에 필요한 실제 TYPE/좌표만 원본 게임 자산 표와 함께 구성한다.
+    for (const auto [sid,type,x,y]:{std::tuple{parent,148U,20.5F,21.25F},std::tuple{victim,128U,40.125F,35.375F}}) {
+        auto raw=core.pool.AllocatedBytes(sid);Put(raw,0,0x501dd0);raw[10]=static_cast<std::uint8_t>(type);raw[11]=0;Put(raw,14,std::bit_cast<std::uint32_t>(x));Put(raw,18,std::bit_cast<std::uint32_t>(y));
+    }
+    Renderer renderer(1024,768);GameRandom random(0x12345678);std::vector<std::string> sounds;
+    RawCampaignParticles particles(core,random,assets.game.Palette(),[&](float x,float y,std::string_view name) { CHECK(x==20.5F && y==21.25F);sounds.emplace_back(name); });
+    const SurfaceDisplayHooks display{[&] { return renderer.FullRedrawPending(); },[&](SquidDisplayRect rect,std::uint32_t flags) { renderer.Invalidate({rect.left,rect.top,rect.right,rect.bottom},flags); }};
+    particles.SetView({0,0,0,0,1024,768},display);const auto created=particles.AddBeam(parent,victim,std::string{"shortZap.wav"});CHECK(created.status==LightningCreateStatus::Created && created.process!=nullptr);
+    CHECK(core.kernel.Size()==1 && particles.Rendering().Size()==1);particles.PrepareFrame(2);core.kernel.RunFrame();CHECK(sounds==std::vector<std::string>{"shortZap.wav"});
+    particles.PrepareFrame(2.025);core.kernel.RunFrame();renderer.SetScene(particles.Sprites({0,0,1024,768}));const auto image=renderer.SceneImage();
+    CHECK(std::count(image.indices.begin(),image.indices.end(),195)>0 && std::count(image.indices.begin(),image.indices.end(),85)>0);
+    CHECK(std::all_of(image.indices.begin(),image.indices.end(),[](auto color) { return color==0 || color==195 || color==85; }));
+    particles.PrepareFrame(2.6);core.kernel.RunFrame();CHECK(core.kernel.Size()==0 && particles.Rendering().Size()==0 && sounds.size()==1);
+    renderer.SetScene(particles.Sprites({0,0,1024,768}));const auto removed=renderer.SceneImage();CHECK(std::all_of(removed.indices.begin(),removed.indices.end(),[](auto color) { return color==0; }));
+    core.pool.AllocatedBytes(victim)[11]|=2;const auto skipped=particles.AddBeam(parent,victim,std::nullopt);
+    CHECK(skipped.status==LightningCreateStatus::TargetUnavailable && skipped.skippedTarget==victim && core.kernel.Size()==0);
+}

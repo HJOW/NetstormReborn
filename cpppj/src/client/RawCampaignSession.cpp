@@ -448,8 +448,14 @@ struct RawCampaignSession::Impl {
             },[this](Sid sid) { core.building.NotifySurface(sid); }}));
         projectileGeometry=std::make_unique<RawProjectileGeometry>(core.pool,core.types,projectileTypes,16.0F,11.0F,gunMode.get());
         fenceTarget=std::make_unique<RawFenceTarget>(core.pool,core.hash,core.types,projectileTypes,*gunTarget,gunTargetState,gunState);
-        particles=std::make_unique<RawCampaignParticles>(core,random,assets.game.Palette());
+        particles=std::make_unique<RawCampaignParticles>(core,random,assets.game.Palette(),[this](float x,float y,std::string_view name) {
+            if (!services.sound.playOnceAt) throw std::logic_error("캠페인 빔 실제 파일명 음향 미연결");services.sound.playOnceAt(x,y,soundNames.Lookup(name),0,0);
+        });
         auto combatEffects=services.archer;
+        // 반더는 빔 생성 뒤 초기 source/target snapshot으로 피해/회피를 처리한다.
+        combatEffects.beam.create=[this](Sid source,Sid target) { static_cast<void>(particles->AddBeam(source,target,std::string{"shortZap.wav"})); };
+        combatEffects.beam.refresh=[this](Sid source) { gunHit->SetTime(source,core.processState.now); };
+        combatEffects.beam.hit=[this](Sid source,Sid target) { gunHit->Hit(source,target,core.processState.now); };
         // 실제 SID의 현재 좌표와 같은 이름표/위치 재생 함수를 사용한다. 설치 전 world_ UI 포인터를 캡처하지 않는다.
         if (!combatEffects.animation.common.sound) combatEffects.animation.common.sound=[this](Sid sid,std::string_view name) {
             const auto raw=core.pool.Slot(sid); // 비정렬 원본 float 좌표를 읽는 현재 부모 슬롯이다.
@@ -749,7 +755,9 @@ struct RawCampaignSession::Impl {
         hooks.refreshSun=[this](SunAviaryProcessFields& fields) { auto* process=dynamic_cast<SunAviaryProcess*>(core.processes.FromForm(fields.Form()));if (!process || &process->Fields()!=&fields) throw std::logic_error("착륙 훨리베이스 Host/raw 이미지 불일치");core.processes.RefreshForm(*process); };
         hooks.homeNotice=SessionMissing<void,Sid,std::uint32_t,std::uint32_t>();
         hooks.runCount=[this](Sid sid) { const auto raw=core.pool.Slot(sid);const auto frame=std::bit_cast<std::int32_t>(Read(raw,36));const auto& table=core.frames[raw[10]];if (frame<0 || static_cast<std::size_t>(frame)>=table.Codes().size()) throw std::logic_error("플라이어 현재 글자 프레임 정상 범위 밖");return table.Run(table.Codes()[static_cast<std::size_t>(frame)].side).count; };
-        hooks.launch=[](Sid,Sid,std::uint32_t) { throw std::logic_error("맨 오 워 무기 생성00472690 미복원"); };
+        hooks.launch=[this](Sid source,Sid target,std::uint32_t filename) {
+            if (filename) throw std::logic_error("맨 오 워 빔의 비영 파일명 주소 미복원");static_cast<void>(particles->AddBeam(source,target,std::nullopt));
+        };
         hooks.sound=[this](float x,float y,std::uint32_t token) { if (!services.sound.playOnceAt) throw std::logic_error("맨 오 워 실제 발사 소리 미연결");services.sound.playOnceAt(x,y,token,0,0); };
         std::vector<FlyerFrameType> details(core.types.size()); // 같은 이미 파싱한 TYPE 사거리와 실제 사운드 이름표 토큰이다.
         for (std::size_t type=0;type<details.size();++type) details[type]={gunTypes[type].range,missileTypes[type].firingSound}; // 현재 단일 TYPE 번호를 유지한다.

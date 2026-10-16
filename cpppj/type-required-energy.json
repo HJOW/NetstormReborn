@@ -30,7 +30,7 @@
     "cpppj/tests/TypeRequiredEnergyTests.cpp": "0802ab400413ec5da3f2d03a4ac6b6f88e2d088915646609a2ca0bb39a02b05c",
     "cpppj/src/o/CMakeLists.txt": "5d8389bd36167906fda92ccd1791e013e11dc0a574426ccd2b6355bdfeaf4505",
     "cpppj/src/client/CMakeLists.txt": "ea2d57ebe830821400fad4ff3478ddc6f45d7566313a2719952bfef2b5b8a938",
-    "cpppj/tests/CMakeLists.txt": "beb5f057f589bf8b618087aaa28a0c15e0b68acdfd220262b3bd0d10cb1d79ed"
+    "cpppj/tests/CMakeLists.txt": "638f9a8bd5f3d8bc220f8e140162766daa7b343269993806bd6ae575b2479087"
   },
   "product_validation": {
     "configuration": "Release",
@@ -944,6 +944,27 @@
         "total_seconds": 211.14,
         "exit_code": 8,
         "log": "extracted/goal-lightning-lifetime-20261017-ctest.log"
+      }
+    },
+    {
+      "date": "2026-10-17",
+      "host": "HJOW-Athlon",
+      "reason": "단위107 반더 발사/wrapper417입력과 실제 캠페인 빔/Renderer/음향 검사 등록. 기존2352행·TYPE 제품·원문 기대값은 변경하지 않음",
+      "cmake_sha256": {
+        "cpppj/tests/CMakeLists.txt": {
+          "previous": "beb5f057f589bf8b618087aaa28a0c15e0b68acdfd220262b3bd0d10cb1d79ed",
+          "current": "638f9a8bd5f3d8bc220f8e140162766daa7b343269993806bd6ae575b2479087"
+        }
+      },
+      "focused_tests": 3,
+      "focused_failed": 0,
+      "ctest": {
+        "total": 1445,
+        "passed": 1444,
+        "failed": 1,
+        "total_seconds": 216.77,
+        "exit_code": 8,
+        "log": "extracted/goal-vander-fire-20261017-ctest.log"
       }
     }
   ]

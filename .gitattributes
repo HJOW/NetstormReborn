@@ -922,3 +922,9 @@ cpppj/src/o/LightningVisualSystem.* text eol=lf
 cpppj/tests/LightningLifetimeTests.cpp text eol=lf
 cpppj/tests/LightningVisualSystemTests.cpp text eol=lf
 docs/exe/cpp-lightning-lifetime-20261017.md text eol=lf
+# 반더 발사/빔 wrapper의 원문 근거와 새 대조 검사를 같은 바이트로 유지한다.
+tools/decomp_vander_fire.py text eol=lf
+cpppj/vander-fire.json text eol=lf
+cpppj/tests/fixtures/vander-fire-x86.tsv text eol=lf
+cpppj/tests/VanderFireTests.cpp text eol=lf
+docs/exe/cpp-vander-fire-20261017.md text eol=lf

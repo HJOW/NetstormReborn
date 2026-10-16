@@ -15,6 +15,19 @@ struct LightningLifetimeHooks {
 };
 // 소멸자가 구별해 반납하는 세 대상이다. 공유 팔레트는 포함하지 않는다.
 enum class LightningRelease { Path,Particles,Object };
+class LightningVisualProcess; // 실제 빔 객체의 소유권은 Host/Kernel이 유지한다.
+// 원본 wrapper의 raw 주소 반환/NULL/생성 성공을 호스트 포인터 혼용 없이 구별한다.
+enum class LightningCreateStatus { TargetUnavailable,AllocationFailed,Created };
+// raw 주소는 해당 SID 토큰으로 보존하며 생성 성공 때만 process가 유효하다.
+struct LightningCreateResult {
+    LightningCreateStatus status{LightningCreateStatus::AllocationFailed}; // 실제 wrapper 반환의 종류다.
+    Sid skippedTarget{}; // dead/void일 때 원본이 반환한 raw 주소에 해당하는 SID다.
+    LightningVisualProcess* process{}; // 성공한104BYTE 원본 객체의 호스트 표현이다.
+};
+// 00472700/00472690의 생존 검사 뒤에만 실제104BYTE 생성 경계를 호출한다.
+// create는 객체 확보 실패를 nullptr로 반환한다. named wrapper는 sound="shortZap.wav"를 전달한다.
+LightningCreateResult CreateLightning(const SidPool& pool,Sid parent,Sid target,std::optional<std::string> sound,
+    const std::function<LightningVisualProcess*(Sid,Sid,std::optional<std::string>)>& create);
 // 실제 생성/삭제 순서와 필드 저장을 실행한다. Host/Kernel 소유권은 호출자가 관리한다.
 class RawLightningLifetime {
 public:

@@ -1,5 +1,16 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-17 단위107 완료: 반더 발사와 캠페인 빔 출력 (`HJOW-Athlon`)
+
+- [x] AGENTS.md·양 LEFT·트리를 다시 읽었다. 직전 커밋은 `e6d9763`이며 현재/마지막 전체 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-16**으로 일치한다. 새 디컴파일·원본 게임/GUI 실행은 없다.
+- [x] `decomp_vander_fire.py`의 고유417입력·두 정밀도834정상 반환·차이0을 보존했다. 생성1/Step8/Launch160/Frame224/wrapper24이며 실제 HP/타입·난수/발사/완료/두 wrapper를 실행한다. 공간/중심/코너·빔 ctor/메모리·피해/refresh·Host는 명시 외부 경계다. 기본53비트 **393발사+24wrapper 전체64BYTE·네 슬롯200BYTE·난수·시각·요청 순서가 C++와 일치**했다.
+- [x] `RawCannonFire` 반더 동시 발사/완료와 초기 raw 주소 snapshot→현재 인수 빔→초기 source 피해/회피를 구현했다. notify 뒤 Form 변경 시 이전 번호를 쓰던 Finish를 실제 현재 번호 재조회로 고쳤다. `CreateLightning`은 dead/void raw 주소 의미·실패0·생성을 구별한다. [기록](docs/exe/cpp-vander-fire-20261017.md).
+- [x] `RawCampaignParticles`의 process19/실제44바이트 색/현재 중심·같은 VFX/Renderer·파일명 소리를 연결했다. 빔만 있을 때 Fiery 미생성 색 snapshot을 읽지 않는다. Session/ArcherBindings의148 발사·실제 GunHit 시각/피해와 맨 오 워 NULL 빔도 연결했다. 실제 Renderer195/85 픽셀·소리1회·소진 갱신을 확인해 새 집중3개가 통과했다. 검사 입력 재설치 도구만 dead/void 다음 행 재설치를 허용했고 기존 원문은 바꾸지 않았다.
+- [x] Release 전체 대상/검사 도구 수정 빌드 **경고0·오류0·종료0**. 자연 데모1은145프레임/3.625초 발사를 넘어 **232프레임/5.8초 TYPE144 SID15082의 전투 가상 삭제**로 전진했다. 전체 CTest 내부 **1445개 중1444통과·1실패,216.77초,종료8**이며 추가 실패는 없다. 실행기·빌드·검사는 모두 종료했고 대기 핸들은 없다.
+- [x] 새417·기존5534캐논/55빔 수명/250빔 프레임/30Fiery 픽셀/2352필요 에너지의 SHA/고유 입력을 감사했다. tests CMake1개의 실제 변경 전후 핀/이력만 갱신하고 TYPE 제품/기존 기대값을 보존했다. 새 파일 UTF-8/LF·한국어 주석/공백을 확인했다. 보호 원본·AGENTS.md·dotnetpj는 수정하지 않았다.
+- [x] 문서/인수인계 뒤 **`20261017-07 CP 반더 발사와 캠페인 빔 출력 및 피해 연결`**로 로컬 커밋한다. 로그 접두사는 `extracted/goal-vander-fire-20261017-`다. 원격 push는 하지 않으며 전체 목표는 active다.
+- [ ] **다음 전투 삭제 근거:** 실제144 VT=`0050a388`, +10=`004af780` 공통, +14=`0045e7e0` 전용 Pre, +18=`0044b9e0` Damageable Post다. Pre는 현재 +8 WORD가 비영이면 그 SID의 실제 가상+10(0)을 먼저 호출한 뒤 `0044b4b0(this,flags)`로 간다. 기존 `RawDamageablePreDestroy/PostDestroy`와 Session의 같은 해방/예약/다리/공통 후처리를 연결하고 callback 재진입을 원문과 대조한다. 공통 whitelist로232를 우회하거나 맨 오 워의 자연 수명 소멸과 이 전투 삭제를 합치지 않는다. 사용자 플레이·자연 완주·전체 그래픽/음향 동일성, 공통 GUI/입력·AI 전략·건설/경제·승패/저장/다음 미션은 미완료다. 전체화면 DirectDraw는 이번1차 범위에서 제외한다.
+
 ## 2026-10-17 단위106 완료: 공유 빔 생성·소유·반납과 실제 Host/Kernel (`HJOW-Athlon`)
 
 - [x] AGENTS.md·양 LEFT·트리를 다시 확인했다. 직전 단위105 커밋은 `4f8ff8d`이며 현재/마지막 전체 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-16**으로 일치한다.
@@ -9,7 +20,7 @@
 - [x] 첫 빌드의 새 검사 Scene 이름 충돌을 고쳐 수정 Release 전체 대상 빌드 **경고0·오류0·종료0**이다. 전체 CTest 내부 **1442개 중1441통과·기존1실패,211.14초,종료8**이며 새 실패는 없다. 데모1의145프레임/3.625초 TYPE148 stage5는 그대로다. 원본 실행기·빌드·검사는 모두 종료했고 대기 핸들은 없다.
 - [x] 새55/기존31Fiery 수명·216빔 경로·250빔 프레임·48색 띠·2352필요 에너지 원문의 SHA/고유 입력을 확인했다. 공유 o/tests CMake2개의 실제 변경 전후 핀/이력만 갱신하고 TYPE 제품/기존 원문을 보존했다. 새 파일 UTF-8/LF·한국어 주석/공백을 확인했다. 보호 원본·AGENTS.md·dotnetpj는 수정하지 않았다.
 - [x] 문서/인수인계 뒤 **`20261017-06 CP 공유 빔 생성과 팔레트 및 실제 프로세스 수명 복원`**으로 로컬 커밋한다. 로그 접두사는 `extracted/goal-lightning-lifetime-20261017-`다. 원격 push는 하지 않으며 전체 목표는 active다.
-- [ ] **다음 캠페인 연결:** `RawCampaignParticles`에서 같은 공통 목록의 빔/실제 팔레트·VFX/Renderer·파일명 음향을 연결한다. 중심은 같은 `core.neighbors.Center`를 사용한다. `00472700/00472690`의 대상 dead/void raw주소 반환·할당 실패0·파일명 NULL을 구별한다. TYPE148은 outer VT50b170/inner50b16c, Step=`frame|0xc000`, speed20·delayfloat0.3·effect19·display80이다. `00466f50`은 초기 source/target raw 포인터를 보관하고 targetPoint 뒤 현재 source/target으로 빔을 만든다. 이후 초기 target의 dead/void 또는146 Cloud Floater의 RandomFloat(0,1000)<**signed DWORD800**이면 초기 source를 refresh, 아니면 초기 source→현재 target Hit다. 마지막 반환은 초기 target의 현재 생존 상태다. 생성/피해 콜백의 재진입 snapshot/재조회 순서를 지킨다. 맨 오 워는 별도 fireSound가 있으므로 빔 파일명 NULL을 유지한다. 사용자 플레이/자연 완주·전체 동일성은 미완료다. 전체화면 DirectDraw는 이번1차 범위에서 제외한다.
+- [x] **후속 단위107에서 캠페인 빔/반더 발사·Renderer/파일명 음향 연결 완료. 다음 메모는 원문 연결 근거다:** `RawCampaignParticles`에서 같은 공통 목록의 빔/실제 팔레트·VFX/Renderer·파일명 음향을 연결한다. 중심은 같은 `core.neighbors.Center`를 사용한다. `00472700/00472690`의 대상 dead/void raw주소 반환·할당 실패0·파일명 NULL을 구별한다. TYPE148은 outer VT50b170/inner50b16c, Step=`frame|0xc000`, speed20·delayfloat0.3·effect19·display80이다. `00466f50`은 초기 source/target raw 포인터를 보관하고 targetPoint 뒤 현재 source/target으로 빔을 만든다. 이후 초기 target의 dead/void 또는146 Cloud Floater의 RandomFloat(0,1000)<**signed DWORD800**이면 초기 source를 refresh, 아니면 초기 source→현재 target Hit다. 마지막 반환은 초기 target의 현재 생존 상태다. 생성/피해 콜백의 재진입 snapshot/재조회 순서를 지킨다. 맨 오 워는 별도 fireSound가 있으므로 빔 파일명 NULL을 유지한다. 사용자 플레이/자연 완주·전체 동일성은 미완료다. 전체화면 DirectDraw는 이번1차 범위에서 제외한다.
 
 ## 2026-10-17 단위105 완료: 공유 빔 프레임·선 출력·소진 요청 (`HJOW-Athlon`)
 

@@ -1,5 +1,6 @@
 // 원본 공통 Fire와 각 파생 단계의 snapshot/재조회 순서를 유지한다.
 #include "o/RawCannonFire.h"
+#include "o/SpStore.h"
 #include <bit>
 #include <stdexcept>
 #include <utility>
@@ -25,14 +26,15 @@ std::array<float,2> Point(const GunAnimationFields& fields,std::size_t offset) {
 }
 // 먼저10.78의 실제 파생만 지원하며 CD 가상 표를 추정하지 않는다.
 RawCannonFire::RawCannonFire(SidPool& pool,std::span<const RiftTypeRecord> types,
-    std::span<const PriestPlainCanonType> frames,CannonFireState& state,GunAnimationHooks hooks)
-    :pool_(pool),types_(types),frames_(frames),state_(state),hooks_(std::move(hooks)) {
+    std::span<const PriestPlainCanonType> frames,CannonFireState& state,GunAnimationHooks hooks,CannonBeamHooks beam)
+    :pool_(pool),types_(types),frames_(frames),state_(state),hooks_(std::move(hooks)),beam_(std::move(beam)) {
     if (pool.Edition()!=OriginalEdition::Patch1078 || types.size()!=188 || frames.size()!=types.size() || state.type>=types.size()) throw std::invalid_argument("캐논 발사 실제 판본/타입 자료 오류");
 }
 // 썬00468460과 썬더004684d0의 공통 접두·파생 가상 표를 보존한다.
 void RawCannonFire::Initialize(GunAnimationFields& fields,Sid gunForm,Sid target) const {
     if (!gunForm.value || gunForm.value>=pool_.Capacity()) throw std::out_of_range("캐논 발사 GunForm 오류");const bool sun=state_.kind==CannonFireKind::Sun;
-    Put(fields.bytes,0,sun ? 0x50b318U : 0x50b370U);Put(fields.bytes,4,0);Put(fields.bytes,8,0);Put(fields.bytes,32,sun ? 0x50b310U : 0x50b368U);fields.bytes[40]=0xff;Put(fields.bytes,42,gunForm.value,2);Put(fields.bytes,44,target.value,2);Time(fields,state_.now);Put(fields.bytes,56,0);
+    const bool vander=state_.kind==CannonFireKind::Vander; // 실제 반더 outer/inner 가상 표를 두 캐논과 구별한다.
+    Put(fields.bytes,0,vander ? 0x50b170U : sun ? 0x50b318U : 0x50b370U);Put(fields.bytes,4,0);Put(fields.bytes,8,0);Put(fields.bytes,32,vander ? 0x50b16cU : sun ? 0x50b310U : 0x50b368U);fields.bytes[40]=0xff;Put(fields.bytes,42,gunForm.value,2);Put(fields.bytes,44,target.value,2);Time(fields,state_.now);Put(fields.bytes,56,0);
 }
 // 범위 밖/미복원 TYPE는 현재 원본 슬롯을 수정하기 전에 거부한다.
 Sid RawCannonFire::Parent(const GunAnimationFields& fields) const {
@@ -42,12 +44,13 @@ Sid RawCannonFire::Parent(const GunAnimationFields& fields) const {
 void RawCannonFire::SetFrame(GunAnimationFields& fields,std::uint32_t frame) const {
     if (!hooks_.unpop || !hooks_.repop) throw std::logic_error("캐논 발사 실제 공간 경계 누락");const auto parent=Parent(fields);hooks_.unpop(parent,0);Put(pool_.AllocatedBytes(parent),36,frame);hooks_.repop(parent,0x40);
 }
-// 완료 통지 뒤 현재 객체가 삭제될 수 있으므로 번호를 미리 읽는다.
+// GunForm은 통지 전에, 삭제할 현재 Form은 통지 뒤에 조회하는 원문 순서다.
 void RawCannonFire::Finish(GunAnimationFields& fields) const {
-    if (!hooks_.notify || !hooks_.kill) throw std::logic_error("캐논 발사 실제 완료 경계 누락");const auto gun=fields.GunForm(),form=fields.Form();hooks_.notify(gun,1,6,7);hooks_.kill(form,0x10);
+    if (!hooks_.notify || !hooks_.kill) throw std::logic_error("캐논 발사 실제 완료 경계 누락");const auto gun=fields.GunForm();hooks_.notify(gun,1,6,7);hooks_.kill(fields.Form(),0x10);
 }
 // 썬은24프레임 앞뒤 변환이며 썬더는 현재 물리 프레임의 문자 구간을 순서대로 진행한다.
 std::uint32_t RawCannonFire::Step(GunAnimationFields& fields,std::int32_t frame) const {
+    if (state_.kind==CannonFireKind::Vander) return static_cast<std::uint32_t>(frame)|0xc000U; // 실제00468130은 발사/완료 비트를 동시에 세운다.
     if (state_.kind==CannonFireKind::Sun) return frame<24 ? static_cast<std::uint32_t>(frame+24)|0x4000U : static_cast<std::uint32_t>(frame-24)|0x8000U;
     const auto parent=Parent(fields);const auto raw=pool_.Slot(parent);const auto current=Read(raw,36);const auto& table=frames_[raw[10]].frames;const auto codes=table.Codes();if (current>=codes.size()) throw std::out_of_range("썬더 캐논 현재 프레임 코드 범위 오류");const auto run=table.Run(codes[current].side);const auto last=run.first+run.count-1,next=frame+1;
     if (next>last) return static_cast<std::uint32_t>(run.first)|0x8000U;
@@ -56,10 +59,22 @@ std::uint32_t RawCannonFire::Step(GunAnimationFields& fields,std::int32_t frame)
     if (next==last-state_.roarOffset) { if (!hooks_.sound) throw std::logic_error("썬더 캐논 Roar 음향 경계 누락");hooks_.sound(Parent(fields),"thunderCannonRoar.wav"); }
     return static_cast<std::uint32_t>(next);
 }
-// 공통 일반 Missile 분기이며 코너 효과 뒤의 현재 인수를 다시 조회한다.
+// 공통 Launch의 초기 raw 주소 snapshot과 일반 Missile/즉시 빔의 각 분기를 보존한다.
 bool RawCannonFire::Launch(GunAnimationFields& fields) const {
-    Parent(fields);const auto target=fields.Target();if (!target.value || target.value>=pool_.Capacity()) throw std::out_of_range("캐논 발사 표적 번호 오류");const auto raw=pool_.Slot(target);if (raw[11]&3) return false;if (raw[10]>=types_.size()) throw std::out_of_range("캐논 발사 표적 TYPE 오류");if (!(types_[raw[10]].flags1&0x10)) return false;
-    if (!hooks_.targetPoint || !hooks_.createProjectile) throw std::logic_error("캐논 발사 실제 Missile 경계 누락");const auto corner=hooks_.targetPoint(fields.Parent(),fields.Target());GunProjectileRequest request;request.firing=fields.Parent();request.target=fields.Target();request.speed=state_.speed;request.displayType=state_.displayType;request.effectType=state_.effectType;request.targetPosition=Point(fields,12);request.targetCenter=corner;request.firingPosition={-10000,-10000};hooks_.createProjectile(request);return true;
+    const auto source=Parent(fields),target=fields.Target();const auto initialSource=pool_.Slot(source);
+    if (!target.value || target.value>=pool_.Capacity()) throw std::out_of_range("캐논 발사 표적 번호 오류");const auto raw=pool_.Slot(target);if (raw[11]&3) return false;if (raw[10]>=types_.size()) throw std::out_of_range("캐논 발사 표적 TYPE 오류");if (!(types_[raw[10]].flags1&0x10)) return false;
+    if (!hooks_.targetPoint) throw std::logic_error("캐논 발사 실제 표적 코너 경계 누락");
+    if (initialSource[10]==state_.vanderType) {
+        if (!beam_.create || !beam_.refresh || !beam_.hit || !beam_.random) throw std::logic_error("반더 실제 빔/피해/난수 경계 누락");
+    } else if (!hooks_.createProjectile) throw std::logic_error("캐논 발사 실제 Missile 경계 누락");
+    const auto corner=hooks_.targetPoint(fields.Parent(),fields.Target());
+    if (initialSource[10]==state_.vanderType) {
+        if (!beam_.create || !beam_.refresh || !beam_.hit || !beam_.random) throw std::logic_error("현재 반더 실제 빔 경계 누락");
+        beam_.create(fields.Parent(),fields.Target());bool avoided=(raw[11]&3)!=0;
+        if (!avoided && raw[10]==state_.floaterType) avoided=static_cast<double>(beam_.random->Next(65536))*(1.0/65536.0)*1000<state_.avoidanceCutoff;
+        if (avoided) beam_.refresh(source);else beam_.hit(source,fields.Target());return (raw[11]&3)==0;
+    }
+    if (!hooks_.createProjectile) throw std::logic_error("현재 캐논 실제 Missile 경계 누락");GunProjectileRequest request;request.firing=fields.Parent();request.target=fields.Target();request.speed=state_.speed;request.displayType=state_.displayType;request.effectType=state_.effectType;request.targetPosition=Point(fields,12);request.targetCenter=corner;request.firingPosition={-10000,-10000};hooks_.createProjectile(request);return true;
 }
 // 00467330은 처음 추적한 표적의 생존 상태를 효과 이후 현재 표적과 구별한다.
 void RawCannonFire::Frame(GunAnimationFields& fields) const {
