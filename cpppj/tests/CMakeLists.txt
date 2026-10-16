@@ -8,9 +8,13 @@ set_source_files_properties(ParticleGradientTests.cpp PROPERTIES COMPILE_DEFINIT
 set_source_files_properties(FieryTailFrameTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_FIERYTAIL_FRAME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fierytail-frame-x86.tsv\"")
 # 실제 생성·등록·120입자 초기화·공유 색/반납 순서의 원본 관찰이다.
+# 공통 RenderProcess의 실제 Form 삭제 dirty 영역을 새 통합 검사에 공급한다.
+set_source_files_properties(FieryTailVisualSystemTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_RENDER_REMOVAL_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/render-removal-x86.tsv\"")
 set_source_files_properties(FieryTailLifetimeTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_FIERYTAIL_LIFETIME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fierytail-lifetime-x86.tsv\"")
 add_executable(netstorm_tests
+    FieryTailVisualSystemTests.cpp
     FieryTailLifetimeTests.cpp
     FieryTailFrameTests.cpp
     ParticleGradientTests.cpp

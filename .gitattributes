@@ -871,3 +871,12 @@ cpppj/fierytail-lifetime.json text eol=lf
 cpppj/tests/fixtures/fierytail-lifetime-x86.tsv text eol=lf
 cpppj/src/o/RawFieryTailLifetime.* text eol=lf
 cpppj/tests/FieryTailLifetimeTests.cpp text eol=lf
+# 공통 표시 목록과 실제 Fiery Tail Host 연결/삭제 통지의 원문 바이트를 유지한다.
+cpppj/src/o/RenderProcessSystem.* text eol=lf
+cpppj/src/o/FieryTailVisualSystem.* text eol=lf
+cpppj/src/o/ConstructionVisualSystem.* text eol=lf
+cpppj/src/client/ConstructionVisualRenderer.* text eol=lf
+cpppj/tests/FieryTailVisualSystemTests.cpp text eol=lf
+cpppj/tests/fixtures/render-removal-x86.tsv text eol=lf
+cpppj/render-removal.json text eol=lf
+tools/decomp_render_removal.py text eol=lf

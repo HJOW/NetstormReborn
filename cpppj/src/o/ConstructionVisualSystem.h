@@ -4,6 +4,7 @@
 #include "o/RawConstructionLifetime.h"
 #include "o/RawRenderCollection.h"
 #include "o/SquidProcess.h"
+#include "o/RenderProcessSystem.h"
 #include <unordered_map>
 
 namespace netstorm::o {
@@ -38,6 +39,10 @@ public:
         ConstructionFrameState& frameState,const ConstructionFramePalette& palette,GameRandom& random,
         RenderRegistryHooks registryHooks,ConstructionVisualHooks visualHooks,ConstructionFrameHooks frameHooks,
         std::function<void(ConstructionRelease)> release);
+    // 다른 효과와 같은 표시 목록/토큰/Host를 공유한다. render는 이 시스템보다 오래 살아야 한다.
+    ConstructionVisualSystem(RenderProcessSystem& render,ConstructionFrameState& frameState,
+        const ConstructionFramePalette& palette,GameRandom& random,ConstructionVisualHooks visualHooks,
+        ConstructionFrameHooks frameHooks,std::function<void(ConstructionRelease)> release);
     // 남은 표시 form을 host를 통해 지워 Kernel에 system 참조가 남지 않게 한다.
     ~ConstructionVisualSystem();
     // 저장한 콜백과 프로세스의 참조가 주소를 사용하므로 system을 복사/이동하지 않는다.
@@ -59,10 +64,12 @@ public:
     std::size_t Size() const;
     // 같은 월드의 건설 시작에 연결할 때 풀을 확인한다.
     const SidPool& Pool() const;
+    // 공통 renderer가 종류별 목록 분리 없이 수집/정렬/출력할 저장소다.
+    RenderProcessSystem& Rendering() const;
 private:
     friend class ConstructionVisualProcess;
-    // registry 생성자의 attach를 실제 host 부착으로 대체한다. 목록 등록은 이미 끝난 상태다.
-    RenderRegistryHooks RegistryHooks(RenderRegistryHooks hooks);
+    // 두 생성 경로의 실제 몸체/출력 경계를 동일하게 검사한다.
+    void Validate() const;
     // 한 프레임만 살아 있는 kill 콜백을 만든다. 프로세스 자체에 자기 삭제 콜백을 저장하지 않는다.
     ConstructionFrameHooks FrameHooks(ConstructionVisualProcess& process) const;
     // Run 뒤 살아 있는 프로세스에만 현재 사각형/깊이를 등록 필드로 돌려 쓴다.
@@ -80,10 +87,10 @@ private:
     ConstructionVisualHooks visualHooks_; // 캡처/팔레트/확보 경계다.
     ConstructionFrameHooks frameHooks_; // 최대 HP/dirty/장치 경계다.
     std::function<void(ConstructionRelease)> release_; // 원본 반납 순서의 관찰자다.
-    RawRenderRegistry registry_; // 표시 토큰의 원본 슬롯 목록이다.
+    std::unique_ptr<RenderProcessSystem> ownedRendering_; // 단독 사용 생성자만 공통 저장소를 직접 소유한다.
+    RenderProcessSystem* rendering_{}; // 외부 공유 또는 직접 소유한 단일 표시 저장소다.
     std::unordered_map<std::uint32_t,ConstructionVisualProcess*> processes_; // 소유권은 pending 또는 Kernel에 있다.
     std::unique_ptr<ConstructionVisualProcess> pending_; // 상위 부착 전 생성 중인 객체의 소유권이다.
-    std::uint32_t nextToken_{1}; // 호스트 포인터 대신 부여하는 비영 식별자다. 감김은 거부한다.
     bool creating_{}; // 콜백 중 중첩 생성을 방지한다.
 };
 // 건설 Start의 표시 효과를 실제 표시 프로세스 생성에 연결한다. system은 hooks보다 오래 살아야 한다.

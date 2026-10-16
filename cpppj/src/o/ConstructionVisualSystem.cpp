@@ -33,7 +33,19 @@ ConstructionVisualSystem::ConstructionVisualSystem(SidPool& pool,SquidProcessHos
     std::function<void(ConstructionRelease)> release)
     :pool_(pool),host_(host),visualState_(visualState),frameState_(frameState),palette_(palette),random_(random),
      visualHooks_(std::move(visualHooks)),frameHooks_(std::move(frameHooks)),release_(std::move(release)),
-     registry_(pool,RegistryHooks(std::move(registryHooks))) {
+     ownedRendering_(std::make_unique<RenderProcessSystem>(pool,host,visualState,std::move(registryHooks))),rendering_(ownedRendering_.get()) {
+    Validate();
+}
+// Fiery Tail 등 다른 효과와 실제 등록 배열/토큰/Host를 함께 사용한다.
+ConstructionVisualSystem::ConstructionVisualSystem(RenderProcessSystem& render,ConstructionFrameState& frameState,
+    const ConstructionFramePalette& palette,GameRandom& random,ConstructionVisualHooks visualHooks,
+    ConstructionFrameHooks frameHooks,std::function<void(ConstructionRelease)> release)
+    :pool_(render.Pool()),host_(render.Host()),visualState_(render.State()),frameState_(frameState),palette_(palette),random_(random),
+     visualHooks_(std::move(visualHooks)),frameHooks_(std::move(frameHooks)),release_(std::move(release)),rendering_(&render) {
+    Validate();
+}
+// 생성 경로에 관계없이 같은 원본 몸체의 필수 경계를 검사한다.
+void ConstructionVisualSystem::Validate() const {
     if (&pool_!=&host_.Pool() || !release_) throw std::invalid_argument("건설 표시 시스템 연결 오류");
     auto visualCheck=visualHooks_;visualCheck.attach=[](ConstructionVisualFields&,std::uint32_t) {};
     const RawConstructionVisual visual(pool_,visualState_,random_,std::move(visualCheck));
@@ -45,15 +57,6 @@ ConstructionVisualSystem::~ConstructionVisualSystem() {
     // 각 Kill이 소멸자에서 조회 항목을 지우므로 매번 현재 첫 항목을 다시 읽는다.
     while (!processes_.empty()) host_.Kill(*processes_.begin()->second,kClientKill);
 }
-// 표시 목록이 먼저 채워진 뒤 해당 객체의 소유권을 Kernel로 옮긴다.
-RenderRegistryHooks ConstructionVisualSystem::RegistryHooks(RenderRegistryHooks hooks) {
-    hooks.attach=[this](RenderProcessFields& fields,std::uint32_t type,Sid parent,std::uint32_t flags) {
-        if (!pending_ || &pending_->registration_!=&fields) throw std::logic_error("건설 표시 부착 객체 불일치");
-        auto* attached=host_.Attach(std::move(pending_),type,parent,flags);
-        if (!attached) throw std::logic_error("건설 표시 부모 부착 실패");
-        fields.form=attached->Form().value;fields.parent=attached->Parent().value;
-    };return hooks;
-}
 // 원본 마지막 Kill이 process를 없애더라도 로컬 RawConstructionFrame의 콜백 수명은 유지된다.
 ConstructionFrameHooks ConstructionVisualSystem::FrameHooks(ConstructionVisualProcess& process) const {
     auto hooks=frameHooks_;hooks.kill=[host=&host_,self=&process](std::uint32_t flags) { host->Kill(*self,flags); };return hooks;
@@ -61,16 +64,20 @@ ConstructionFrameHooks ConstructionVisualSystem::FrameHooks(ConstructionVisualPr
 // Raw Create가 끝나기 전의 Kernel 재진입은 초기화되지 않은 버퍼를 실행하지 않는다.
 ConstructionVisualProcess* ConstructionVisualSystem::Add(Sid parent,bool instant) {
     if (creating_) throw std::logic_error("건설 표시 중첩 생성은 지원하지 않습니다");
-    if (!nextToken_) throw std::overflow_error("건설 표시 토큰 소진");
-    const auto token=nextToken_++;creating_=true;
+    std::uint32_t token=0;creating_=true;
     try {
         pending_=std::make_unique<ConstructionVisualProcess>(*this);auto* process=pending_.get();
-        process->registration_.token=token;processes_.emplace(token,process);
-        RawConstructionVisual visual(pool_,visualState_,random_,MakeConstructionRegistryHooks(registry_,process->registration_,token,visualHooks_));
+        token=rendering_->Track(process->registration_,[this](RenderProcessFields& fields,std::uint32_t type,Sid target,std::uint32_t flags) {
+            if (!pending_ || &pending_->registration_!=&fields) throw std::logic_error("건설 표시 부착 객체 불일치");
+            auto* attached=host_.Attach(std::move(pending_),type,target,flags);
+            if (!attached) throw std::logic_error("건설 표시 부모 부착 실패");
+            fields.form=attached->Form().value;fields.parent=attached->Parent().value;
+        },[process] { process->Draw(); });processes_.emplace(token,process);
+        RawConstructionVisual visual(pool_,visualState_,random_,MakeConstructionRegistryHooks(rendering_->Registry(),process->registration_,token,visualHooks_));
         auto fields=visual.Create(parent,instant);
         if (!processes_.contains(token)) throw std::logic_error("건설 표시 생성 중 객체 삭제");
         process->fields_.visual=std::move(fields);SynchronizeRegistration(process->registration_,process->fields_.visual);
-        process->ready_=true;creating_=false;return process;
+        process->ready_=true;rendering_->Ready(token);creating_=false;return process;
     } catch (...) {
         if (pending_) pending_.reset();
         else if (const auto found=processes_.find(token);found!=processes_.end()) host_.Kill(*found->second,kClientKill);
@@ -91,19 +98,11 @@ void ConstructionVisualSystem::DrawProcess(const ConstructionVisualProcess& proc
 }
 // 슬롯 span은 콜백 중 Add가 확장할 수 있으므로 각 차례에 다시 얻는다.
 void ConstructionVisualSystem::Draw() const {
-    // 현재 살아 있는 초기화 완료 객체만 원래 등록 슬롯 순서로 제출한다.
-    for (std::size_t slot=0;slot<registry_.Slots().size();++slot) {
-        const auto token=registry_.Slots()[slot];const auto found=processes_.find(token);
-        if (found!=processes_.end()) found->second->Draw();
-    }
+    rendering_->Draw();
 }
 // 원본 collector는 등록 필드/부모 raw를 읽는다. 호스트 생성 중 객체만 lookup에서 제외한다.
 std::int32_t ConstructionVisualSystem::Collect(RenderWorldRect view,std::span<RenderCollectionEntry> output,std::int32_t limit) const {
-    RawRenderCollection collection(pool_,visualState_,registry_,[this](std::uint32_t token)->const RenderProcessFields* {
-        const auto found=processes_.find(token);
-        return found!=processes_.end() && found->second->ready_ ? &found->second->registration_ : nullptr;
-    });
-    return collection.Collect(view,output,limit);
+    return rendering_->Collect(view,output,limit);
 }
 // 원본 kind 3 분배를 현재 토큰 조회로 연결한다. 삭제된 포인터를 호출하는 원본 오류 경로는 재현하지 않는다.
 void ConstructionVisualSystem::DrawCollected(std::span<const RenderCollectionEntry> entries) const {
@@ -115,20 +114,22 @@ void ConstructionVisualSystem::DrawCollected(std::span<const RenderCollectionEnt
 }
 // 상위 공통 목록의 kind 3은 키/종류 대신 표시 토큰만 전달한다.
 void ConstructionVisualSystem::DrawToken(std::uint32_t token) const {
-    const auto found=processes_.find(token);if (found!=processes_.end()) found->second->Draw();
+    rendering_->DrawToken(token);
 }
 // 소멸 경계는 예외를 던지지 않는 계약이다. 부착 전 확보 실패라면 아직 등록할 칸이 없다.
 void ConstructionVisualSystem::Destroy(ConstructionVisualProcess& process) {
     const auto token=process.registration_.token;
-    if (process.registration_.slot>=0) DestroyConstructionVisual(process.fields_.visual,process.registration_,registry_,1,release_);
-    processes_.erase(token);
+    if (process.registration_.slot>=0) DestroyConstructionVisual(process.fields_.visual,process.registration_,rendering_->Registry(),1,release_);
+    processes_.erase(token);rendering_->Forget(token);
 }
 // 원본 슬롯의 구멍을 그대로 제공한다.
-std::span<const std::uint32_t> ConstructionVisualSystem::Slots() const { return registry_.Slots(); }
+std::span<const std::uint32_t> ConstructionVisualSystem::Slots() const { return rendering_->Slots(); }
 // 생성 중 객체를 포함한 현재 토큰 조회 수다.
 std::size_t ConstructionVisualSystem::Size() const { return processes_.size(); }
 // 시작 어댑터가 같은 월드인지 확인하는 읽기 전용 참조다.
 const SidPool& ConstructionVisualSystem::Pool() const { return pool_; }
+// 클라이언트는 같은 저장소에서 모든 입자 효과를 한 번에 수집한다.
+RenderProcessSystem& ConstructionVisualSystem::Rendering() const { return *rendering_; }
 // Start가 표시를 만든 후 시각을 읽는 순서도 기존 Start 몸체 그대로 유지한다.
 ConstructionProcessHooks MakeConstructionVisualSystemHooks(const SidPool& pool,ConstructionVisualSystem& system,ConstructionProcessHooks hooks) {
     if (&pool!=&system.Pool()) throw std::invalid_argument("건설 표시 시작의 풀 연결 오류");

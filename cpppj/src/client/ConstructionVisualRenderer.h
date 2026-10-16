@@ -16,4 +16,8 @@ std::int32_t DrawVisibleConstruction(o::ConstructionVisualSystem& system,o::Rend
 DrawCollectionResult DrawVisibleScene(o::ConstructionVisualSystem& system,const DrawCollectionRequest& request,
     std::span<o::RenderCollectionEntry> work,DrawCollectionHooks collection,
     const DrawDispatchState& state,DrawDispatchHooks dispatch,bool sort=true);
+// 건설/Fiery Tail을 포함한 원본 단일 표시 목록을 같은 kind3 수집·정렬·Draw로 처리한다.
+DrawCollectionResult DrawVisibleScene(o::RenderProcessSystem& system,const DrawCollectionRequest& request,
+    std::span<o::RenderCollectionEntry> work,DrawCollectionHooks collection,
+    const DrawDispatchState& state,DrawDispatchHooks dispatch,bool sort=true);
 }

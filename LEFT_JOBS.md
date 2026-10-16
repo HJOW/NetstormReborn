@@ -1,5 +1,15 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-16 단위100 완료: 공통 표시 목록·Fiery Tail Host 연결 (`HJOW-Athlon`)
+
+- [x] 직전 목표 턴은 단위99 실제 생성자 대조·첫8색 방향 수정과 **`8240d94`** 커밋으로 authoritative 상태를 바꾼 **진행**이다. AGENTS.md와 양 LEFT, 깨끗한 트리를 다시 확인했다. 현재/마지막 전체 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-16**으로 일치한다. 새 디컴파일·실제 게임·GUI 실행은 없다.
+- [x] `RenderProcessSystem`으로 원본 표시 registry·비영 토큰·초기화 완료 조회·공통 수집/Draw 분배를 공유했다. 기존 `ConstructionVisualSystem`은 같은 저장소를 받거나 단독일 때 하나를 소유한다. 새 `FieryTailVisualSystem`은 실제 Host/Kernel의 process11·client Form·부모 종속 삭제를 기존 생성/프레임/Draw/소멸 몸체에 연결한다. 두 효과는 같은 슬롯/토큰/깊이 정렬과 난수를 사용한다. [작업 기록](docs/exe/cpp-render-process-system-20261016.md).
+- [x] 실제 Fiery Tail Form 삭제 가상 `00487960`은 각 변의 선행 정수화와 중간 float 저장 경계가 일반 프레임 dirty와 다르다. 이를 실제 PE의 **고유48입력·두 정밀도96정상 반환·차이0**과 대조했고 C++ 전체4DWORD·flags0이 일치한다. 생성 중 재진입, 혼합 종류 등록/정렬/출력, 확보 실패·dead 부모 정리, 부모 삭제 dirty·토큰 재사용·배율 불일치 검사5개와 기존 건설 시스템9개가 통과했다.
+- [x] 최종 Release 전체 빌드 경고0·오류0·종료0, 집중 **25개 통과**(FieryTail8·ConstructionVisualSystem9·RenderCollection7·삭제 영역1). 전체 CTest 내부 **1424개 중1422통과·기존2실패,199.49초,종료8**이다. 데모1의145프레임/3.625초 TYPE148 stage5와 데모3의113프레임/2.825초 TYPE128 effect11은 그대로이며 새 실패는 없다. 모든 프로세스/검사는 종료했으며 대기 작업이 없다.
+- [x] 삭제 통지48입력·기존 Fiery Tail 수명31입력/프레임65입력·색 띠48행·필요 에너지2352행의 SHA/고유 입력 감사를 확인했다. 공유 CMake2개의 실제 변경 전후 핀/이력만 갱신하고 기존 TYPE 제품/원본2352행은 보존했다. UTF-8/한국어 주석·공백을 확인했다. 최초/후속 프레임과 선 요청을 실제 Host에 연결한 것이며 실제 장치 픽셀이나 Session의 effect11 경계를 통과한 증거는 아니다.
+- [x] 문서·인수인계 뒤 **`20261016-37 CP 공통 표시 목록과 Fiery Tail 실제 프로세스 연결`**로 로컬 커밋한다. 로그 접두사는 `extracted/goal-render-process-system-20261016-`다. AGENTS.md·보호 원본·dotnetpj는 수정하지 않았으며 원격 push는 하지 않는다. 목표는 active를 유지하고 사용자 자연 완주/전체 동일성 완료로 바꾸지 않는다.
+- [ ] **다음 실제 진행:** 공통 표시를 Client/GameWorld의 단일 수집·정렬/dirty/VFX 선 래스터에 연결하고 정상 첫 Draw가 읽는 색 표 뒤 DWORD의 실제 할당 근거를 확보한다. 이 통합 검사의 `0xabcdef01`은 명시 입력이며 실제 게임 heap 관찰값이 아니다. 그 뒤 Session의 표시 Pop→effect11→Missile 부착 순서와 데모3의113프레임 이후를 검사한다. 건설 표시의 삭제 가상 통지와 CD 대응은 판본별 실제 몸체 연결/검증이 남아 있다. 반더148 stage5·전체 GUI/입력·AI/건설/경제·승패/저장/다음 미션·자연 완주는 남아 있다. 전체화면 DirectDraw는 이번1차 범위에서 제외한다.
+
 ## 2026-10-16 단위99 완료: Fiery Tail 생성·등록·삭제 및 첫 색 띠 방향 정정 (`HJOW-Athlon`)
 
 - [x] 사용자 `/goal`로 cpppj 목표를 재개했다. AGENTS.md와 양 LEFT 인수인계, 깨끗한 작업 트리, active 목표를 확인했다. 현재/마지막 전체 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-16**으로 일치한다. 새 디컴파일·실제 게임·GUI 실행은 없다.

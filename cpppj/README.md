@@ -1,6 +1,8 @@
 # cpppj — NetStorm C++ 빌드
 
-2026-10-16 (`HJOW-Athlon`) 현재: **[Fiery Tail 생성·등록·삭제와 공유 색 표](../docs/exe/cpp-fierytail-lifetime-20261016.md)**를 복원했다. 실제10.78 **고유31입력·두 정밀도 생성62회/삭제62회 정상 반환·차이0**이며 C++의 필드·120입자·11색·등록/반납 순서와 일치한다. 실제 생성자 대조에서 첫8색 방향이 반대였음을 찾아 **어두운 빨강→주황**으로 수정했다. 기존 일반 색 띠 fixture는 보존했다. Release 전체 빌드 경고0·오류0, 집중4검사 통과, 전체 **1419개 중1417통과·기존2실패**다. 데모1의145프레임 TYPE148 stage5와 데모3의113프레임 TYPE128 effect11 경계는 그대로다. 실제 Host/Kernel·공통 표시 출력·인접 색 메모리·Session 연결과 사용자 자연 완주는 미완료다. [남은 비행 효과 연결](../docs/exe/cpp-fierytail-notes-20261016.md). `/goal`로 재개된 목표는 active다. 현재/마지막 전체 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-16**이다.
+2026-10-16 (`HJOW-Athlon`) 현재: **[공통 표시 목록과 Fiery Tail 실제 프로세스](../docs/exe/cpp-render-process-system-20261016.md)**를 연결했다. 건설과 process11이 같은 raw 풀·Host/Kernel·registry·토큰·수집/깊이 정렬/Draw 분배를 사용한다. 실제 Form 삭제 통지는 **고유48입력·두 정밀도96정상 반환·차이0**과 C++ DWORD 전체가 일치한다. Release 전체 빌드 경고0·오류0, 집중25검사 통과, 전체 **1424개 중1422통과·기존2실패**다. 데모1의145프레임 TYPE148 stage5와 데모3의113프레임 TYPE128 effect11 경계는 그대로다. 실제 장치 픽셀·인접 색 메모리·Session 연결과 사용자 자연 완주는 미완료다. [남은 연결](../docs/exe/cpp-fierytail-notes-20261016.md). 목표는 active이며 현재/마지막 전체 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-16**이다.
+
+직전 단위99: **[Fiery Tail 생성·등록·삭제와 공유 색 표](../docs/exe/cpp-fierytail-lifetime-20261016.md)**는 실제10.78 고유31입력·두 정밀도 생성62회/삭제62회 정상 반환과 C++ 필드·120입자·11색·반납 순서가 일치한다. 실제 생성자 대조로 첫8색의 방향을 어두운 빨강→주황으로 수정했다. 기존 일반 색 띠 fixture는 보존했다.
 
 직전 단위98: **[Fiery Tail 프레임·색 조회·선 요청](../docs/exe/cpp-fierytail-frame-20261016.md)**은 고유65입력·두 정밀도 Frame/Draw 각각130회 정상 반환·차이0이며 C++ 전체 필드·입자·난수·dirty/선 요청과 일치한다. 단위97의 **[RGB 색 띠·CRT 정렬·병합](../docs/exe/cpp-particle-gradient-20261016.md)**은 고유24입력/두 정밀도 색 띠96회·병합144회 정상 반환과 일치한다. 당시 전용 Fiery Tail 검사의 직접 지정 RGB 입력을 실제 생성자 순서로 해석했던 부분은 단위99에서 정정했다.
 

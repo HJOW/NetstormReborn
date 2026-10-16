@@ -29,4 +29,6 @@
 
 ## 다음 실제 연결
 
+단위100에서 생성/프레임/Draw/삭제 몸체를 **같은 공통 표시 registry와 실제 Host/Kernel**에 연결했고, 기존 건설 표시도 같은 목록/토큰을 공유하도록 옮겼다. [공통 표시 연결 기록](cpp-render-process-system-20261016.md)의 통합 검사와 실제 Form 삭제 통지48입력이 통과했다. 실제 Client/GameWorld 장치 연결·인접 색 DWORD와 Session의 effect11 연결은 아직 남아 있다. 아래 순서는 이 남은 실제 장면 연결에 해당한다.
+
 같은 Session의 Host/World/Kernel과 실제 공통 표시 목록·공유11색·dirty/VFX 선 래스터에 연결한다. 정상 초기 Draw의 인접 색 DWORD와 실제 생성/등록/소멸 근거도 확보해야 한다. Missile 생성 중에는 표시 자산 Pop→effect11 생성/부착→Missile 부착 순서를 유지해야 한다. 효과가 먼저 Kernel에 들어가는 순서를 바꾸면 같은 프레임의 부모 위치 관찰도 달라진다. 실제 `flightEffect`를 연결한 뒤 데모3의113프레임 이후를 다시 검증하고, 새 경계를 인수인계에 기록한다.

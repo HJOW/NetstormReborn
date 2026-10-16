@@ -1,0 +1,43 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "entry": "00487960",
+  "uniqueInputs": 48,
+  "normalReturns": 96,
+  "precisionDifferentInputs": [],
+  "helperCalls": {
+    "004e49c0": 768,
+    "dirty-boundary": 96
+  },
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "tools/decomp_fierytail_frame.py": "7921fa905c5ad10cc89250e6e7a790a85dbf8883bdf8e9a22290586afd48529e",
+    "tools/decomp_render_removal.py": "446d20f0e273fdba98031cd262b6e3e98da681ae324b883bc0315dc7ab99c408",
+    "cpppj/tests/fixtures/render-removal-x86.tsv": "70592ed5bf0dde8a825da5f6cc377d49a78a0bac08542f9734dc4c1cb4dd893f"
+  },
+  "limitations": [
+    "실제00487960과__ftol을 실행하고499310 dirty 큐 소비만 요청 경계로 관찰했다.",
+    "Host/Kernel·실제 게임·장치/픽셀 실행 관찰은 아니다. 두 정밀도의 동일 입력을 고유 입력으로 중복 가산하지 않는다."
+  ],
+  "productValidation": {
+    "configuration": "Release",
+    "buildExitCode": 0,
+    "buildWarnings": 0,
+    "buildErrors": 0,
+    "focusedTests": 25,
+    "focusedFailures": 0,
+    "nativeDefaultRowsCompared": 48,
+    "hostIntegrationTests": 4,
+    "scope": "같은 실제 Host/Kernel·공통 표시 등록/수집/정렬/Draw 요청 통합 검사다. 장치 픽셀·Session이나 실제 게임 heap 관찰은 아니다.",
+    "ctest": {
+      "total": 1424,
+      "passed": 1422,
+      "failed": 2,
+      "total_seconds": 199.49,
+      "exit_code": 8,
+      "log": "extracted/goal-render-process-system-20261016-ctest.log"
+    }
+  }
+}

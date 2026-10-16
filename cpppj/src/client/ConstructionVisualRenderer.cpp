@@ -3,6 +3,7 @@
 #include "client/DrawSort.h"
 #include <limits>
 #include <stdexcept>
+#include <utility>
 
 namespace netstorm::client {
 // 클라이언트의 원본 비교 키를 그대로 사용한다. 수집 순서 보존 옵션은 정렬 전역이 꺼진 상태에 해당한다.
@@ -13,6 +14,12 @@ std::int32_t DrawVisibleConstruction(o::ConstructionVisualSystem& system,o::Rend
 }
 // 수집기는 호출 동안만 system을 참조하며 정렬은 같은 풀의 판본을 따른다.
 DrawCollectionResult DrawVisibleScene(o::ConstructionVisualSystem& system,const DrawCollectionRequest& request,
+    std::span<o::RenderCollectionEntry> work,DrawCollectionHooks collection,
+    const DrawDispatchState& state,DrawDispatchHooks dispatch,bool sort) {
+    return DrawVisibleScene(system.Rendering(),request,work,std::move(collection),state,std::move(dispatch),sort);
+}
+// 원본 collector의 단일 슬롯 목록을 처리해 효과 종류별 정렬/번호 체계를 만들지 않는다.
+DrawCollectionResult DrawVisibleScene(o::RenderProcessSystem& system,const DrawCollectionRequest& request,
     std::span<o::RenderCollectionEntry> work,DrawCollectionHooks collection,
     const DrawDispatchState& state,DrawDispatchHooks dispatch,bool sort) {
     collection.construction=[&system](o::RenderWorldRect view,std::span<o::RenderCollectionEntry> output,std::int32_t limit) {

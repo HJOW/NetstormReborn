@@ -275,3 +275,9 @@ target_sources(netstorm PRIVATE RawFieryTailFrame.cpp RawFieryTailFrame.h)
 
 # 실제 Fiery Tail 생성·공통 표시 등록·120입자 확보와 반납 순서다.
 target_sources(netstorm PRIVATE RawFieryTailLifetime.cpp RawFieryTailLifetime.h)
+
+# 모든 입자 효과의 원본 단일 표시 목록과 실제 Host 부착/공통 수집·분배다.
+target_sources(netstorm PRIVATE RenderProcessSystem.cpp RenderProcessSystem.h)
+
+# 원본 Fiery Tail 몸체를 실제 같은 Kernel/공통 표시 목록에 부착한다.
+target_sources(netstorm PRIVATE FieryTailVisualSystem.cpp FieryTailVisualSystem.h)
