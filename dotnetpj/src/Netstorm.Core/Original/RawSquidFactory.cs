@@ -4,10 +4,13 @@ namespace Netstorm.Core.Original;
 
 /// <summary>
 /// 이미 월드에 놓여 있던(void 가 아닌) 오브젝트를 Take 가 다시 받을 때 먼저 공간 등록을 푸는 원본 Unpop 의 연결 지점.
-/// 원본 월드 코어의 Unpop 모듈(W02 후속)이 구현해 <see cref="RawSquidFactory"/> 에 넘긴다.
+/// 원본 월드 코어의 Unpop 모듈(<see cref="RawUnpop"/>, W02 Unpop 조각)이 구현해 <see cref="RawSquidFactory"/> 에 넘긴다.
 /// </summary>
 public interface IRawUnpop
 {
+    /// <summary>이 모듈이 쓰는 슬롯 풀. 팩토리는 자기 풀과 같은 풀의 모듈만 받아 서로 다른 수명 상태의 혼용을 막는다.</summary>
+    RawSidPool Pool { get; }
+
     /// <summary>오브젝트를 공간(해시·spot·표면 그래프)에서 푼다. 끝나면 슬롯은 void 상태여야 한다.</summary>
     /// <param name="sid">풀 슬롯 번호.</param>
     /// <param name="type">그 오브젝트의 타입 레코드.</param>
@@ -74,6 +77,10 @@ public sealed class RawSquidFactory
         if (types.Count != OriginalConstructors.TypeCount)
         {
             throw new ArgumentException($"타입 레코드가 {types.Count}개입니다 (10.78 은 {OriginalConstructors.TypeCount}개)", nameof(types));
+        }
+        if (unpop is not null && !ReferenceEquals(unpop.Pool, pool))
+        {
+            throw new ArgumentException("Unpop과 Factory의 SID 풀이 다릅니다", nameof(unpop));
         }
         _pool = pool;
         _types = types;

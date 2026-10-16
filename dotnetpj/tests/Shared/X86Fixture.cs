@@ -10,7 +10,13 @@ internal static class X86Fixture
     private const string Empty = "-";
 
     /// <summary>주석을 제외한 행을 읽는다. 자료가 없으면 검사를 생략하지 않고 실패한다.</summary>
-    public static string[][] Read(string name) => File.ReadLines(Path.Combine(AppContext.BaseDirectory, "X86", name + "-x86.tsv"))
+    public static string[][] Read(string name) => ReadFile(name + "-x86.tsv");
+
+    /// <summary>
+    /// 출력 폴더(X86)의 fixture 파일을 이름 그대로 읽어 주석을 제외한 행으로 나눈다. 이름이 -x86.tsv 로 끝나지 않는 자료
+    /// (예: unpop-vtables.tsv)에 쓴다. 자료가 없으면 검사를 생략하지 않고 실패한다 (W02 Unpop 조각 확장, 2026-10-16).
+    /// </summary>
+    public static string[][] ReadFile(string fileName) => File.ReadLines(Path.Combine(AppContext.BaseDirectory, "X86", fileName))
         .Where(line => line.Length > 0 && !line.StartsWith('#')).Select(line => line.Split('\t')).ToArray();
 
     /// <summary>16진수 칸을 손실 없는 바이트 배열로 바꾼다.</summary>

@@ -21,7 +21,7 @@ public sealed class CppFixtureManifestTests
         // 항목마다 열 값의 형식을 확인한다.
         foreach (CppFixtureEntry entry in CppFixtureManifest.Entries)
         {
-            Assert.EndsWith("-x86.tsv", entry.File);
+            Assert.EndsWith(".tsv", entry.File);
             Assert.Matches("^[0-9a-f]{64}$", entry.Sha256);
             Assert.True(entry.Rows > 0, $"{entry.File}: 행 수가 0 이하");
             Assert.Contains(entry.Origin, new[] { "cpppj", "dotnetpj" });

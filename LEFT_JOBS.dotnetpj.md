@@ -1,3 +1,15 @@
+## 2026-10-16 완료: W02 둘째 조각 — 원본 월드 코어의 공간 해제(Unpop)와 4단계 공간 해시 (`DESKTOP-HJOW`)
+
+- [x] 사용자 요청("AGENTS.md 및 LEFT_JOBS.dotnetpj.md를 읽고 dotnetpj 다음 작업 진행, cpppj 쪽 파일 수정은 자제")으로 직전 절이 정한 다음 시작점, 곧 W02의 다음 조각 `Unpop`을 수행했다. `cpppj/`·공통 `LEFT_JOBS.md`는 수정하지 않았다. 현재 PC **DESKTOP-HJOW**는 마지막 정밀 디컴파일 PC(**VM-W11-Codex, 2026-10-16**)와 달라 **디컴파일 산출물을 읽지 않았고**, 새 디컴파일·원본 관찰·원본/클론 게임·창 실행은 없다. 마지막 디컴파일 PC 기록은 그대로다. 상세·근거 표·경계는 [원본 월드 코어 W02 둘째 조각](docs/dotnet-original-core-unpop-20261016.md).
+- [x] **동기화 먼저:** `cpp_sync.py`가 연결 fixture 18개 일치를 보고했다. 반영 이후 cpppj 커밋 3개(`20261016-22`~`24`)는 명칭 교정·새 모듈 `RawFlyerFrame`(W19)·캠페인 세션 연결 일부로, 연결 fixture와 이식한 모듈 소스에 실질 변경이 없어 반영 커밋을 `ba8c3d83`→**`b62774f2`**로 올렸다([계획 7절 7번](docs/dotnet-cpp-port-plan-20261016.md#7-cpppj-진행을-따라가는-절차-다른-ai가-cpppj를-계속-진행-중)). 미연결 새 fixture `flyer-frame`(745행)은 W19, 주석만 바뀐 `dudenotice`는 그대로 둔다.
+- [x] **구현(`dotnetpj/src/Netstorm.Core/Original/`):** `RawSquidHash`(4단계 공간 해시, 단계별 배율 1·2·4·16, 머리 참조 반환), `RawUnpop`(공통 Unpop `004afe50`의 일반 자산·매몰 경로, `IRawUnpop` 구현), `OriginalUnpopDisplay`(+`.Data.cs`는 [`gen_original_unpop_vtables.py`](dotnetpj/tools/gen_original_unpop_vtables.py)가 cpppj 목록에서 생성, 가상 표 83개), 연결 지점 인터페이스 3개(`IRawUnpopDisplay`·`IRawBuildingSide`·`IRawMinimapQueue`). `OriginalTypeRecord`에 `FootX`·`FootY`와 상수를 더했고 `IRawUnpop`에 `Pool`을 더해 `RawSquidFactory`가 같은 풀의 모듈만 받게 했다. 잘못된 체인·미복원 효과는 풀·점유 지도·해시 머리를 바꾸기 전에 예외로 거부한다.
+- [x] **검증:** 전체 Release 경고 0·오류 0, 단위 **1,115개 통과**(Assets 363 + Core 752; 이번 +9). 원본 fixture `unpop-x86.tsv` 10.78 몫이 처음부터 전부 일치했다 — 세션 **9**개·호출 **1,809**(Unpop 768·Take 384·FirstPop 448·Release 192·Create 17)의 반환값·풀 카운터·**풀 전체/삭제 기록/네 단계 해시 86,272머리/65,536칸 점유 지도의 Adler-32**·대상 슬롯 50바이트. `unpop-vtables.tsv` 10.78 **83**행도 일치한다. 첫 조각이 미뤘던 **non-void Take의 공간 해제(384회)** 와 **`FirstPopFlags` 원본 대조(448회)** 가 이 조각으로 끝났다. 보호 경로·연결 지점 순서·해시 주소 계산은 새 `RawUnpopTests` 9개가 확인한다.
+- [x] **변이 확인:** 구현 15곳(void 비트·점유 해제 방식 2종·체인 단계 범위·머리 교체·앞 슬롯 relink·매몰 비트 위치·dead 처리·미니맵 통지·표시 지원 검사·소용돌이 비트·해시 배율·해시 x/y 순서·발자국 왼쪽 계산·옆면 맨 위 행)을 하나씩 망가뜨려 모두 실패로 잡혔다. 처음에 "미니맵 항상 통지" 하나를 놓쳐 통지가 **없어야 하는** 경우(섬·다리가 아닌 건물, 매몰)를 확인하는 검사를 더한 뒤 잡았다. 소스는 모두 원복했다.
+- [x] **도구:** `cpp_sync.py`의 생성 자료 점검에 새 생성기를 넣었다(연결 fixture 18→**20**개: `unpop-x86.tsv`·`unpop-vtables.tsv`). 이름이 `-x86.tsv`로 끝나지 않는 fixture를 읽는 `X86Fixture.ReadFile`을 더했고, 목록 형식 검사를 `.tsv`로 완화했다.
+- [ ] **하지 않은 것(경계):** 연결 지점의 **구현체**(표시·건물 옆면·미니맵 큐) — 해당 효과를 가진 섬·다리·건물의 Unpop은 구현체가 연결돼야 하며 지금은 건물 몸체가 없으면 거부한다. 연결 지점의 호출 순서는 cpppj 구현의 계약이고 원본 행으로 증명된 것이 아니다. 파생 Unpop·삭제·의존 객체·수명(W03), 체인 **삽입**(Pop), 세션 연결(`BattleMap`·`BridgeGrid`는 아직 기존 `SidPool`·`SpotMap`)은 하지 않았다. CD 10.72는 옮기지 않았다. 이 조각은 L1 모듈 단계이며 L2 이상으로 합산하지 않는다.
+- [ ] **다음 조각:** `Pop`/공간 해시 삽입·spot 등록(`pop` 6,240행·`spatial` 1,382행, 기존 `SpotMap`·`SpotRules` 재사용 검토) → `PostPop`·`assetpostpop` → 소유자(`owner`)·프레임(`setframe`) → 건물 공간(`buildingspace`, `IRawBuildingSide`를 구현)·이웃·탐색 → Graph 계열. 시작할 때 `python dotnetpj/tools/cpp_sync.py`를 먼저 실행하고 쓸 fixture를 `--update --add`로 등록한다.
+- [x] 인수인계 뒤 **`20261016-25 DN 원본 월드 코어의 공간 해제와 4단계 공간 해시를 원본 10.78 행 1,809회로 검증`** 으로 로컬 커밋한다. 원격 push는 하지 않는다.
+
 ## 2026-10-16 완료: 명칭 규칙 전수 점검과 반영 — dotnetpj·공통 문서 (`DESKTOP-HJOW`)
 
 - [x] 사용자가 AGENTS.md 명칭 항목을 추가로 고치고(간헐천·제단·거주 구역·**고갈된(Empty)** 번역 허용, 훨리베이스·훨리기그 확정) 공유 표와 문서의 양쪽 수정을 수동 병합했다(`859249b6`·`a06550b1`·`d00cdb39`). 병합 결과를 점검하고 dotnetpj와 cpppj 양쪽에 적용했다. cpppj 작업은 사용자 지시로 중단 상태였다. 새 번호가 겹치지 않도록 이번 커밋은 `20261016-23`이다(앞서 `20261016-22`는 DN과 CP가 한 번씩 썼다).
@@ -24,8 +36,8 @@
 - [x] **구현(`dotnetpj/src/Netstorm.Core/Original/`):** `RawSidPool`(슬롯 풀, 원본 `004abb10`/`004af1d0`/`004abf60`/`004abe00`), `RawSquidFactory`(`Create`·`Construct`·`Take`·`PostCreate`·`PostTake`·`FirstPopFlags`, `IRawUnpop` 연결 지점), `OriginalConstructors`(타입 188개 주소와 파생 생성자 82개 표; `.Data.cs`는 [`gen_original_constructors.py`](dotnetpj/tools/gen_original_constructors.py)가 cpppj 목록에서 생성), `OriginalTypeRecord`. CD 10.72는 옮기지 않았다(기준 판본 10.78).
 - [x] **검증:** Release 경고 0·오류 0, 단위 **1,090개 통과**(Assets 347 + Core 743; 이번 +20). 원본 fixture 10.78 몫이 처음부터 전부 일치했다 — `sid` 전이 **1,584**(풀 전체 바이트 Adler-32 포함), `constructors` **188**, `creation` 호출 **482**, `derived` 호출 **3,300**(대상 슬롯 50바이트 전부 + 풀 카운터·머리/꼬리·전체 체크섬). 보호 경로 검사(미복원 생성자·162 금지·non-void/타입 불일치/다른 클래스/contained Take의 변경 전 거부, anim HP 4바이트, postCreate HP·소유자·mana 1/4) 포함. **변이 11곳**(HP 폭·OR 무시·dead 비트·소유자 0·mana 비율·최초 Pop·162 금지·반납/할당 시 슬롯 지움·삭제 기록·표 값 변조)이 모두 검사를 실패시켰고 원복했다. fixture 3개(`constructors`·`creation`·`derived`)를 SHA 목록에 등록했다(연결 18개). 기존 `X86SidTests`는 새 공용 `X86Fixture.Adler32`를 쓰도록 바꿨다.
 - [x] **동기화 장치 보강:** `cpp_sync.py` 보고에 생성 자료 점검을 넣었다(생성기 `--check`가 cpppj 목록과 어긋나면 종료 코드 1).
-- [ ] **하지 않은 것(경계):** non-void Take의 공간 해제(`IRawUnpop` 미구현), `FirstPopFlags`의 원본 대조(`unpop-x86.tsv`의 `FirstPop` 행은 Unpop 이식 때), 생산 칸 contained Form(타입 6)·GumpForm(타입 3) 생성(W03), `TypeCatalog` → `OriginalTypeRecord` 어댑터, **세션 연결**(`BattleMap`·`BridgeGrid`는 아직 기존 `SidPool`). 이 조각은 L1 모듈 단계이며 L2 이상으로 합산하지 않는다.
-- [ ] **다음 조각:** `Unpop`(공간 해제, `unpop-x86.tsv`) → `Pop`/공간 해시·spot(기존 `SpotMap`·`SpotRules` 재사용 검토) → `PostPop`·`assetpostpop` → 소유자·프레임 → 건물 공간·이웃·탐색 → Graph 계열. 시작할 때 `python dotnetpj/tools/cpp_sync.py`를 먼저 실행하고, 쓸 fixture를 `--update --add`로 등록한다.
+- [ ] **하지 않은 것(경계):** ~~non-void Take의 공간 해제, `FirstPopFlags`의 원본 대조~~(둘째 조각에서 완료, 위 절), 생산 칸 contained Form(타입 6)·GumpForm(타입 3) 생성(W03), `TypeCatalog` → `OriginalTypeRecord` 어댑터, **세션 연결**(`BattleMap`·`BridgeGrid`는 아직 기존 `SidPool`). 이 조각은 L1 모듈 단계이며 L2 이상으로 합산하지 않는다.
+- [ ] **다음 조각:** ~~`Unpop`(공간 해제, `unpop-x86.tsv`)~~(완료, 위 절) → `Pop`/공간 해시·spot(기존 `SpotMap`·`SpotRules` 재사용 검토) → `PostPop`·`assetpostpop` → 소유자·프레임 → 건물 공간·이웃·탐색 → Graph 계열. 시작할 때 `python dotnetpj/tools/cpp_sync.py`를 먼저 실행하고, 쓸 fixture를 `--update --add`로 등록한다.
 - [x] 인수인계 뒤 **`20261016-21 DN 원본 월드 코어의 슬롯 풀과 기본·파생 오브젝트 생성을 원본 10.78 행으로 검증`** 으로 로컬 커밋한다. 원격 push는 하지 않는다.
 
 ## 2026-10-16 완료: W01 기준선·동기화 장치 (`DESKTOP-HJOW`)
@@ -47,7 +59,7 @@
 - [x] **판정 단계:** L1 모듈(fixture 10.78 행 전부) → L2 세션 시작 상태 → L3 고정 입력 진행 → L4 화면·소리 → L5 자연 완주 순서다. L1 통과를 L2 이후 완료로 합산하지 않는다. 1차 범위는 cpppj 목표와 같은 11개 미션(Tutorial1~6·캠페인 1-1·1-2·데모 3개)이다.
 - [ ] **P0 기반**(순서대로, 각 단위의 fixture·교체 대상·완료 기준은 계획 5절)
   - [x] W01 기준선·동기화 장치: 연결 fixture SHA 목록 검사, `X86Fixture` 확장, 반영 커밋 기록 (**완료 2026-10-16**, 위 절)
-  - [ ] W02 원본 월드 코어 ① 생성·등록: 객체 표·생성자·Pop/Unpop/PostPop·해시/spot·소유자/프레임·Graph 연결(D14) — **첫 조각 완료(2026-10-16): 슬롯 풀·생성자 표·Create/Take**, 다음은 Unpop → Pop (위 절)
+  - [ ] W02 원본 월드 코어 ① 생성·등록: 객체 표·생성자·Pop/Unpop/PostPop·해시/spot·소유자/프레임·Graph 연결(D14) — **첫 조각 완료(2026-10-16): 슬롯 풀·생성자 표·Create/Take**, **둘째 조각 완료(2026-10-16): 공간 해시·Unpop**, 다음은 Pop (위 절)
   - [ ] W03 원본 월드 코어 ② 삭제·수명: 공통 삭제·Damageable·종속/내용물/Form·신전 삭제(D14)
   - [ ] W04 시간·Kernel·Process: Regular·ProcessForm·공통 프레임 진행, 24Hz/8틱 소비자를 하나씩 이행(D01)
   - [ ] W05 SP·보상·난수: float32 SP 저장소·쓰기마다 난수 160회·보상/환불/AI 지갑/샘 풀(D12)
@@ -56,7 +68,7 @@
 - [ ] **P1 플레이 규칙:** W08 사제(D09) → W09 경로·운반·수확(D11·D05 간헐천) → W10 배치·건설·생산(D13, **M2: 1-1에서 원본 건설 파이프라인**) → W11 전투·파생 건물(D10·D20) → W12 희생·신전·제단 → W13 진행·안내·승패(D04·D06·D07·D08·D18, **M3: 1-1·1-2 원본 규칙 자연 완주, AI 전략 제외**)
 - [ ] **P2 표시·UI·소리(P1과 병행 가능):** W14 표시(D15·D21), W15 Gump UI(D23), W16 소리·음악(D24)
 - [ ] **P3:** W17 데모 3개·캠페인 1-6/2-4(D22) → W18 Early Missions 공개와 11개 미션 자연 완주(**M4**) → W19 cpppj 대기 항목(AI 전략·데빌 메이커 TYPE59·플라이어 BaseFlyer·썬 바리케이드 공격·생산 재시작 상위 호출자) → W20 요구사항(화면비·60/120프레임·Linux)
-- [ ] **cpppj 동기화(매 단위 시작 시):** 저장소 루트에서 `python dotnetpj/tools/cpp_sync.py`를 실행한다(반영 이후 cpppj 커밋·fixture 변경, 연결 fixture 어긋남 보고). 반영 커밋은 [`cpp-fixture-manifest.tsv`](dotnetpj/tests/Shared/cpp-fixture-manifest.tsv)의 `reflected-commit` 행이 소유하며 **현재 `ba8c3d83`**이다(W01에서 `53113b66`에서 올렸다). 영향이 없거나 이식을 마친 변경을 검토한 뒤 `--update --reflect HEAD`로 올린다. HEAD만 근거로 쓰며 다른 AI의 미커밋 변경은 쓰지 않는다.
+- [ ] **cpppj 동기화(매 단위 시작 시):** 저장소 루트에서 `python dotnetpj/tools/cpp_sync.py`를 실행한다(반영 이후 cpppj 커밋·fixture 변경, 연결 fixture 어긋남 보고). 반영 커밋은 [`cpp-fixture-manifest.tsv`](dotnetpj/tests/Shared/cpp-fixture-manifest.tsv)의 `reflected-commit` 행이 소유하며 **현재 `b62774f2`**이다(W01에서 `53113b66`→`ba8c3d83`, W02 Unpop 조각에서 `ba8c3d83`→`b62774f2`로 올렸다). 영향이 없거나 이식을 마친 변경을 검토한 뒤 `--update --reflect HEAD`로 올린다. HEAD만 근거로 쓰며 다른 AI의 미커밋 변경은 쓰지 않는다.
 - [ ] **cpppj에 전달할 요청(사용자 전달용, cpppj 미수정):** ① 실제 Session의 Load/Start·N프레임 상태 덤프 ② 고정 입력 재생 도구 ③ fixture 열 이름 ④ 모듈별 연결 상태표 ⑤ `cpppj/tests/GraphTests.cpp:105`의 `v[11]` 범위 밖 읽기(2026-10-09 전달, 아직 남음). 상세는 계획 8절.
 - [x] **문서 정리:** 아래 0·1·8절의 순서·대기 표는 당시 기록으로 두고, 머리말과 각 절에서 현행 계획을 가리키게 했다. 10절에 이번 기본값 2건, 12절에 동기화 명령, 13절에 참고 문서를 추가했다. [반영 점검 D01~D16](docs/dotnet-cpp-audit-20261015.md) 머리에 후속 계획 링크를 달았다. 루트 README 두 개의 dotnetpj 상태·다음 작업을 이번 기준선과 계획으로 갱신했다.
 - [x] ~~다음 시작점은 W01이다.~~ W01은 완료했다(위 절). **다음 시작점은 W02다.** `DESKTOP-HJOW`에서는 헤드리스 빌드·검사만 하고, 창 검사는 AGENTS.md 면제 PC나 사용자 승인 뒤에 한다.

@@ -41,12 +41,12 @@
 
 ## 4. 이번 조각에서 하지 않은 것 (경계)
 
-- **non-void Take의 공간 해제.** `IRawUnpop`을 넘기지 않으면 거부한다. Unpop 모듈이 구현해 연결한다.
-- **`FirstPopFlags`의 원본 기대값 대조.** 표 기반 단위 검사만 있다. `unpop-x86.tsv`의 `FirstPop` 행(10.78 몫 포함)은 앞선 Unpop 상태에 의존하므로 Unpop 이식 때 대조한다.
+- ~~**non-void Take의 공간 해제.**~~ 둘째 조각에서 `RawUnpop`을 구현해 연결했고 Take 384회를 원본 행으로 대조했다. [기록](dotnet-original-core-unpop-20261016.md)
+- ~~**`FirstPopFlags`의 원본 기대값 대조.**~~ 같은 조각에서 `unpop-x86.tsv`의 `FirstPop` 448회로 대조했다.
 - **생산 칸 contained Form(타입 6)과 GumpForm(타입 3)의 생성.** Form 모듈(W03)에서 옮긴다.
 - **타입 로더 연결.** `OriginalTypeRecord`는 코어 검사용 얇은 모양이다. Assets의 `TypeCatalog`에서 이 레코드를 채우는 어댑터(최대 HP 속성, 플래그, 생성자 주소 표 조회)는 세션 연결 때 만든다.
 - **세션 연결.** `BattleMap`·`BridgeGrid`는 여전히 기존 `SidPool`(압축 표현)을 쓴다. 코어가 세션에 연결될 때 기존 풀을 이 풀로 대체한다(두 풀의 할당 규칙은 같은 fixture로 각각 검증됨).
 
 ## 5. 다음 조각 (W02 안의 의존 순서)
 
-`Unpop`(공간 해제, `unpop-x86.tsv`) → `Pop`/공간 해시·spot(`pop`·`spatial`, 기존 `SpotMap`·`SpotRules` 재사용 검토) → `PostPop`·`assetpostpop` → 소유자(`owner`)·프레임(`setframe`) → 건물 공간·이웃·탐색 → Graph 계열. 각 조각은 그 fixture의 10.78 행을 SHA 목록(`cpp_sync.py --update --add`)에 등록하며 시작한다.
+~~`Unpop`(공간 해제, `unpop-x86.tsv`)~~ (둘째 조각에서 완료, [기록](dotnet-original-core-unpop-20261016.md)) → `Pop`/공간 해시·spot(`pop`·`spatial`, 기존 `SpotMap`·`SpotRules` 재사용 검토) → `PostPop`·`assetpostpop` → 소유자(`owner`)·프레임(`setframe`) → 건물 공간·이웃·탐색 → Graph 계열. 각 조각은 그 fixture의 10.78 행을 SHA 목록(`cpp_sync.py --update --add`)에 등록하며 시작한다.

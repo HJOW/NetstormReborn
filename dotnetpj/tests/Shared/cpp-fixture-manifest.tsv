@@ -2,7 +2,7 @@
 # dotnetpj 테스트(CppFixtureManifestTests)가 이 목록과 실제 파일을 비교한다. 다르면 cpppj 가 fixture 를 다시 만든 것이므로
 # 해당 C# 검사를 재대조한 뒤 `python dotnetpj/tools/cpp_sync.py --update` 로 갱신한다. 기대값을 C# 결과로 덮어쓰지 않는다.
 # SHA-256 은 CRLF 를 LF 로 바꾼 바이트로 계산하고, rows 는 주석·빈 줄을 뺀 행 수다.
-# reflected-commit: ba8c3d837df3d9baf6f252d19422cbfb3fc031cc
+# reflected-commit: b62774f2ed61b91d72483cc53a0d041d1fee249b
 # 열: file	sha256	rows	origin	consumer
 bridge-x86.tsv	35ce571886e24ea79839fdda354b2db8d93711733087b512e769f9286fac1988	18055	cpppj	Core
 bridgedecay-x86.tsv	1009c82b63b6b655bde417aeecf287fd43099b3a75295cd28ac6b474cdd4b638	14539	cpppj	Core
@@ -22,3 +22,5 @@ renderer-x86.tsv	3ba3dbb353f8d978533d9a843b73a8e9b6f78dd06dd6cfdbbf20ba589a3f6ef
 sid-x86.tsv	b45b5726f2860a762fd0fa53fa85949f941baf28e836570b43dfd7a2c9e40eb4	4720	cpppj	Core
 surface-x86.tsv	73977006dfa97215ae4836dc1d01c2b33b4b358f945eb40b18603947dd8dd05b	3450	cpppj	Core
 tutorial-one-x86.tsv	d94e94513402c9421861b686bff8aa2b1f3033f1f2e61b7a6c13e9330d96c27c	370	cpppj	Core
+unpop-vtables.tsv	d149c425723b9be5f8f1808f37f08e951b93a8f0dca069db4eaffa9fb07f5197	151	cpppj	Core
+unpop-x86.tsv	76c693fe249b31249fbd011cc5cafadd32d6aa7f016952cc63b2acdda275585b	8422	cpppj	Core

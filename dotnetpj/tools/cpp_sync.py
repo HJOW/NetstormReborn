@@ -37,7 +37,7 @@ ORIGINS = ("cpppj", "dotnetpj")
 # 보고서에 펼쳐 보여 주는 커밋·파일 목록의 최대 길이.
 LIST_LIMIT = 40
 # cpppj 의 원본 목록(.inc 등)에서 C# 자료를 만드는 생성 도구들. 각 도구의 --check 가 현재 C# 자료와 cpppj 원본의 일치를 확인한다.
-GENERATORS = ("gen_original_constructors.py",)
+GENERATORS = ("gen_original_constructors.py", "gen_original_unpop_vtables.py")
 
 
 @dataclass
