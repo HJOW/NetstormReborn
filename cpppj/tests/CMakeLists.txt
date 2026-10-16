@@ -1228,3 +1228,7 @@ set_source_files_properties(ObjectMenuTests.cpp PROPERTIES COMPILE_DEFINITIONS
 target_sources(netstorm_tests PRIVATE CarrierMenuTests.cpp)
 set_source_files_properties(CarrierMenuTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_CARRIER_MENU_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/carrier-menu-x86.tsv\"")
+# 실제 Player 식별자/네 getter/객체 메뉴DWORD의 독립 원문이다.
+target_sources(netstorm_tests PRIVATE PlayerIdentityTests.cpp)
+set_source_files_properties(PlayerIdentityTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_PLAYER_IDENTITY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/player-identity-x86.tsv\"")

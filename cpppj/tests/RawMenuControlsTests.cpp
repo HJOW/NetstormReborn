@@ -135,11 +135,15 @@ TEST_CASE(RawMenuControls_CarrierAndObjectMenuChain) {
         // 고정 원본 서식에 대한 검사 번역 경계이며 제품 서식 계산을 대체하지 않는다.
         for (std::size_t index=0;index<key.size();++index) { if (key[index]!='%') { result+=key[index];continue; }++index;if (key[index]=='s') result+=std::get<std::string>(arguments[argument++]);else result+=std::to_string(std::get<std::int32_t>(arguments[argument++])); }CHECK(argument==arguments.size());return result;
     };
-    objects.format=hooks.format;objects.count=[](Sid) { return 1U; };objects.salvageRefund=[](Sid,std::uint32_t,std::uint32_t) { return 0; };objects.playerName=[](std::uint32_t) { return "Player1"; };
+    objects.format=hooks.format;objects.count=[](Sid) { return 1U; };objects.salvageRefund=[](Sid,std::uint32_t,std::uint32_t) { return 0; };
+    std::array<std::uint8_t,9*180> players{};std::array<std::uint8_t,100*48> chat{};PlayerIdentityReads reads;
+    reads.localOwner=[&] { return common.localOwner; };reads.subscriber=[] { return 0xfedcba98U; };reads.address=[] { return 0x12345678U; };reads.name=[] { return std::string_view("Player1"); };
+    reads.battle=[] { return true; };reads.editor=[&] { return common.editor; };reads.metamap=[] { return false; };reads.unknownName=[] { return std::string_view("SOMEONE"); };
+    RawPlayerIdentity identity(OriginalEdition::Patch1078,players,{},chat,reads);BindObjectMenuIdentity(objects,identity);
     const auto open=[&] { client.poll={InputCode::kRelease,0,0};client.buttons.Poll(client.poll);client.menus->Open({160,120},[&](const auto& widgets,const auto& controls,const auto& menus) {
         widgets.BeginVertical();BindObjectMenuControls(objects,controls,menus,config,[](std::string_view)->std::uint32_t { throw std::logic_error("검사 미등록 정적 문자열"); });
         // Player 전체 몸체는 이 검사의 명시 경계다. 하위 노드/등록은 실제 builder를 쓴다.
-        objects.playerMenu=[&](std::string_view text,bool first,bool second) { CHECK(first && !second);widgets.BeginVertical();controls.AddHeader(text);return menus.TakeCurrent(); };
+        objects.playerMenu=[&](std::uint32_t subscriber,bool first,bool second) { CHECK(subscriber==0xfedcba98U && first && !second);widgets.BeginVertical();controls.AddHeader(identity.NameForSubscriber(subscriber));return menus.TakeCurrent(); };
         RawObjectMenu base(pool,client.assets.TypeTable().Types(),common,objects);BindCarrierMenuControls(hooks,controls);BindCarrierMenuBase(hooks,base);
         RawCarrierMenu carrier(pool,client.assets.TypeTable().Types(),finder,state,hooks);PriestMenuHooks priest;BindPriestMenuCarrier(priest,carrier);priest.baseMenu(Sid{50});
     }); };open();

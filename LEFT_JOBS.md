@@ -1,5 +1,17 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-17 단위115 완료: 실제 Player 식별자 조회와 객체 메뉴 DWORD 교정 (`HJOW-Athlon`)
+
+- [x] AGENTS.md·양 LEFT·깨끗한 `e49f11d` 트리를 재확인했다. 현재/마지막 전체 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-16**으로 일치한다. 직전 턴은 Carrier 원문628/전체1,466통과를 커밋한 진행이다. 새 Ghidra 내보내기·원본/클론 게임·GUI 실행은 없다. 목표는 active다.
+- [x] Player004c9700 입력 추적에서 기존 RawObjectMenu의 playerName/string 해석 오류를 확인했다. 실제004844f0/CD004019e0은 **subscriber DWORD**다. 이전 객체 oracle은 이 두 의존을 문자열 반환/관찰로 대체했으므로 실제 하위 의미를 입증하지 못했다. API를 ownerSubscriber(uint32)→playerMenu(uint32,1,0)으로 고치고 실제 getter 바인딩을 추가했다. 과거 객체 문서에도 교정 안내를 붙였다. [작업 기록](docs/exe/cpp-player-identity-20261017.md).
+- [x] `RawPlayerIdentity`에 PATCH004841c0/CD00401610 전체 검색, 초기화, 네 getter를 복원했다. 같은 현재 전역 getter·9 Player·40 metadata·100채팅을 참조하며 로컬→Player→활성metadata→채팅 순서/첫 OR 일치/부분완료를 보존한다. bool true를 유효 owner 증거로 바꾸지 않는다. 미작성 이름 뒤/마지막 표식은 유지한다.60바이트는 대조 영역이며 원본 클래스sizeof의 별도 증거로 사용하지 않는다.
+- [x] `decomp_player_identity.py`는 **1,702고유 입력/두 정밀도3,404정상 반환·차이0/실제 명령2,210,198회**다. 초기화8·Resolve358·네 getter1,288·객체 메뉴→실제 getter→DWORD48이다. 실제 조회/초기화/getter를 대체하지 않았고 C ASCII stricmp 및 GUI/Player 메뉴 전체는 명시 외부 경계다. 게임/OS 호출은0이다.
+- [x] C++ 집중4개가1,702행의 반환/전체60바이트/메뉴DWORD·호출 순서와 일치한다. 동일 조회기의 현재 저장소 변경 반영·부분완료·누락metadata도 확인했다. 기존 객체4검사와 실제 공통 Gump Carrier/객체 사슬1검사도 통과했다. 그 입력 검사는 실제 조회기로 fedcba98을 전달하고 이름은 별도 getter로 읽는다. 이전1,434 fixture는 고정 opaque 반환에 붙인 관찰 label로 구분해 보존했다.
+- [x] 첫 Release 빌드1이 **종료0·경고0·오류0**이다. 전체 CTest 내부 **1,470개 모두 통과·실패0·208.55초·종료0**이다. 전체 내부 로그는 `extracted/goal-player-identity-20261017-ctest-output.log`이며 집중/빌드/원문 접두사도 같다. 시스템 기본 커서도 통과했으나 앞선 간헐 실패 원인은 여전히 미확정이다.
+- [x] 새1,702/기존 객체1,434/Carrier628/TYPE2,352 SHA를 감사했다. 실제 바뀐 TYPE2핀·객체5핀·Carrier1핀만 이전/현재 이력과 갱신했다. 기존 fixture는 바꾸지 않았다. 새 파일 UTF-8/LF·한국어 주석·문자 혼입/공백을 확인했고 보호 원본·AGENTS·dotnetpj는 수정하지 않았다.
+- [x] 모든 빌드/검사/관찰 핸들이 종료했다. 문서·인수인계 뒤 **`20261017-15 CP 실제 Player 식별자 조회와 객체 메뉴 subscriber 형식 교정`**으로 로컬 커밋한다. 원격 push하지 않으며 전체 목표를 active로 유지한다.
+- [ ] **다음:** 목표 캠페인에서 도달하는 실제 Player004c9700 메뉴를 먼저 완성하고, 내려놓기 위치00426a70·같은 실제 Session의 현재 전역/기록·메뉴/명령 소비자·GumpForm에 연결한다. 사제 커서445b30/445440/4458e0·일반 건설 확정/배치가 남아 Construct는 비활성이다. 생산/다리·경제·AI 전략·GUI 미션 시작/단계·승패/저장/다음 미션·사용자 자연 완주/전체 동일성은 미완료다. 400프레임으로 사용자 플레이 완료를 선언하지 않으며 DirectDraw는 이번1차 범위에서 제외한다.
+
 ## 2026-10-17 단위114 완료: Carrier 운반물·주문 메뉴 사슬 (`HJOW-Athlon`)
 
 - [x] AGENTS.md·양 LEFT와 깨끗한 `989d134` 트리를 재확인했다. 이전 턴은 객체/회수 세 몸체·원문1,434·전체1,463통과를 커밋한 진행이다. 현재/마지막 전체 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-16**으로 일치한다. 새 Ghidra 내보내기·원본/클론 게임·GUI 창 실행은 없다. 목표는 active다.

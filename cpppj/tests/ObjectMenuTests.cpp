@@ -19,6 +19,7 @@ struct ObjectScene {
     ObjectMenuHooks hooks; // 원문과 같은 외부 조회/효과를 공급한다.
     std::vector<std::uint32_t> input; // fixture의 독립14DWORD 입력이다.
     std::string trace; // 실제로 호출된 전체 효과 순서다.
+    std::uint32_t resolvedOwner{}; // 이전 oracle의 명시 opaque 반환값에 붙인 관찰용 label의 입력이다.
     // 원문 입력50번 슬롯만 실제 클라이언트 영역에서 확보한다.
     ObjectScene(OriginalEdition edition,const std::vector<std::string>& row):pool(edition,24000,true),types(edition==OriginalEdition::Patch1078 ? 188 : 171) {
         // 입력 정수의 부호와DWORD비트를 보존한다.
@@ -46,8 +47,9 @@ struct ObjectScene {
             const auto value=std::holds_alternative<std::uint32_t>(parameter) ? "N:"+std::to_string(std::get<std::uint32_t>(parameter)) : "S:"+TextHex(std::get<std::string>(parameter));
             Add("I,"+TextHex(label)+','+std::to_string(command)+','+value);
         };
-        hooks.playerName=[this](std::uint32_t owner) { Add("N,"+std::to_string(owner));return "Player"+std::to_string(owner); };
-        hooks.playerMenu=[this](std::string_view name,bool first,bool second) { Add("P,"+TextHex(name)+','+std::to_string(first)+','+std::to_string(second));return 123U; };
+        hooks.ownerSubscriber=[this](std::uint32_t owner) { Add("N,"+std::to_string(owner));resolvedOwner=owner;return 0x12200100U; };
+        // 이전 fixture의 하위 경계는 고정 opaque값을 PlayerN label로 관찰했다. 문자열 API의 근거로 사용하지 않는다.
+        hooks.playerMenu=[this](std::uint32_t subscriber,bool first,bool second) { CHECK(subscriber==0x12200100U);Add("P,"+TextHex("Player"+std::to_string(resolvedOwner))+','+std::to_string(first)+','+std::to_string(second));return 123U; };
         hooks.submenu=[this](std::string_view label,std::uint32_t menu) { Add("S,"+TextHex(label)+','+std::to_string(menu)); };
     }
     // 외부 효과의 순서와 빈 결과를 원문 형식에 맞춘다.

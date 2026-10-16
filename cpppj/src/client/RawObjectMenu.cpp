@@ -45,11 +45,11 @@ void RawObjectMenu::Open(o::Sid sid) const {
         const auto label=Format("CHEAT Set Owner");Required(hooks_.item)(label,state_.tellCommand,std::string("SetOwner"));
     }
     if (Owner(sid)) {
-        const auto name=Required(hooks_.playerName)(Owner(sid));
+        const auto subscriber=Required(hooks_.ownerSubscriber)(Owner(sid));
         if (pool_.Edition()==o::OriginalEdition::Patch1078) {
-            const auto label=Format("Player");const auto menu=Required(hooks_.playerMenu)(name,true,false);Required(hooks_.submenu)(label,menu);
+            const auto label=Format("Player");const auto menu=Required(hooks_.playerMenu)(subscriber,true,false);Required(hooks_.submenu)(label,menu);
         } else {
-            const auto menu=Required(hooks_.playerMenu)(name,true,false);const auto label=Format("Player");Required(hooks_.submenu)(label,menu);
+            const auto menu=Required(hooks_.playerMenu)(subscriber,true,false);const auto label=Format("Player");Required(hooks_.submenu)(label,menu);
         }
     }
 }
@@ -92,4 +92,6 @@ void BindObjectMenuControls(ObjectMenuHooks& hooks,const MenuGumpControls& contr
     hooks.submenu=[&controls](std::string_view label,std::uint32_t child) { controls.AddSubmenu(label,child,true,false); };
     hooks.setConfig=[&config](std::string_view key,std::string_view value) { config.Set(key,value); };
 }
+// 네이티브 정수 식별자를 문자열/호스트 주소로 재해석하지 않는다.
+void BindObjectMenuIdentity(ObjectMenuHooks& hooks,const o::RawPlayerIdentity& identity) { hooks.ownerSubscriber=[&identity](std::uint32_t owner) { return identity.SubscriberForOwner(owner); }; }
 }

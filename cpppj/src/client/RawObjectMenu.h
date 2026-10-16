@@ -1,6 +1,7 @@
 // 공통 객체·Damageable·회수 메뉴의 원본 조건과 명령 인자를 보존한다.
 #pragma once
 #include "client/RawPriestMenu.h"
+#include "o/RawPlayerIdentity.h"
 #include <optional>
 
 namespace netstorm::client {
@@ -27,8 +28,8 @@ struct ObjectMenuHooks {
     std::function<void(std::string_view,std::uint32_t,const ObjectMenuParameter&)> item; // 실제 include1/enabled1/forceColor0 항목 작성이다.
     std::function<void(std::string_view,std::uint32_t)> submenu; // 실제 enabled1/checked0의 Player 하위 메뉴다.
     std::function<void(std::string_view,std::string_view)> setConfig; // 원본 global.salvageSid를 같은 현재 설정에 쓴다.
-    std::function<std::string(std::uint32_t)> playerName; // 실제004844f0/CD004019e0이다.
-    std::function<std::uint32_t(std::string_view,bool,bool)> playerMenu; // 실제004c9700/CD004c4cd0의(name,1,0)이다.
+    std::function<std::uint32_t(std::uint32_t)> ownerSubscriber; // 실제004844f0/CD004019e0이며 문자열이 아닌 subscriber DWORD다.
+    std::function<std::uint32_t(std::uint32_t,bool,bool)> playerMenu; // 실제004c9700/CD004c4cd0의(subscriber,1,0)이다.
 };
 // 같은 Pool/TYPE를 조회하는 세 원본 몸체다. Carrier/Priest는 마지막 기본 메뉴 호출에 이 객체를 연결한다.
 class RawObjectMenu {
@@ -57,4 +58,6 @@ private:
 // 원본 문자열은 정적 수명이므로 80칸 스크립트 고리의 임시 토큰으로 대체하지 않는다.
 void BindObjectMenuControls(ObjectMenuHooks& hooks,const MenuGumpControls& controls,const MenuGump& menus,
     o::ConfigInterface& config,std::function<std::uint32_t(std::string_view)> encodeString);
+// 같은 현재 PlayerFinder를 통해 실제 owner→subscriber DWORD를 연결한다.
+void BindObjectMenuIdentity(ObjectMenuHooks& hooks,const o::RawPlayerIdentity& identity);
 }

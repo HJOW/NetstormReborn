@@ -28,9 +28,9 @@
     "cpppj/src/client/AiTypeRequiredEnergy.cpp": "a77ecbbece0a23b295c26e35ba5f788ea1c61a660b95880a83abc6988ef559c0",
     "cpppj/tests/fixtures/type-required-energy-x86.tsv": "8bcb3e215c958f5df0a395365059f5481801b1660569f2f04c0720f394f14f4c",
     "cpppj/tests/TypeRequiredEnergyTests.cpp": "0802ab400413ec5da3f2d03a4ac6b6f88e2d088915646609a2ca0bb39a02b05c",
-    "cpppj/src/o/CMakeLists.txt": "5914ae795283dac964ea550a0d6593e4b96b84f5284f8785696fd334649983b8",
+    "cpppj/src/o/CMakeLists.txt": "46579dbd727e16177530beba64a9c8ab6d4eec7f1c8c3f002ac3c9ce52321da0",
     "cpppj/src/client/CMakeLists.txt": "d5bf5ae4aa05e5fa22b856c0e2f84dc9036f79d00624eed7507f9e5971222caf",
-    "cpppj/tests/CMakeLists.txt": "75fa404983d2115305854d7acd1a192d64b067938b42c6194440441725205c05"
+    "cpppj/tests/CMakeLists.txt": "2548de0b0b7602c29d8a7e30727234f3ecada65df5635d5a3c3b46502ab90e56"
   },
   "product_validation": {
     "configuration": "Release",
@@ -1134,6 +1134,26 @@
         "failed_checks": 0,
         "exit_code": 0,
         "seconds": 213.96
+      }
+    },
+    {
+      "date": "2026-10-17",
+      "reason": "unit115 actual Player identity and ObjectMenu subscriber DWORD correction; prior native fixtures preserved",
+      "shared_sha256": {
+        "cpppj/src/o/CMakeLists.txt": {
+          "previous": "5914ae795283dac964ea550a0d6593e4b96b84f5284f8785696fd334649983b8",
+          "current": "46579dbd727e16177530beba64a9c8ab6d4eec7f1c8c3f002ac3c9ce52321da0"
+        },
+        "cpppj/tests/CMakeLists.txt": {
+          "previous": "75fa404983d2115305854d7acd1a192d64b067938b42c6194440441725205c05",
+          "current": "2548de0b0b7602c29d8a7e30727234f3ecada65df5635d5a3c3b46502ab90e56"
+        }
+      },
+      "full_ctest": {
+        "tests": 1470,
+        "failed_checks": 0,
+        "exit_code": 0,
+        "seconds": 208.55
       }
     }
   ]

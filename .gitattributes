@@ -994,3 +994,10 @@ cpppj/tests/fixtures/carrier-menu-x86.tsv text eol=lf
 cpppj/src/client/RawCarrierMenu.* text eol=lf
 cpppj/tests/CarrierMenuTests.cpp text eol=lf
 docs/exe/cpp-carrier-menu-20261017.md text eol=lf
+# 실제 Player 식별자와 메뉴DWORD의 원문/제품을 같은 UTF-8/LF로 보존한다.
+tools/decomp_player_identity.py text eol=lf
+cpppj/player-identity.json text eol=lf
+cpppj/tests/fixtures/player-identity-x86.tsv text eol=lf
+cpppj/src/o/RawPlayerIdentity.* text eol=lf
+cpppj/tests/PlayerIdentityTests.cpp text eol=lf
+docs/exe/cpp-player-identity-20261017.md text eol=lf

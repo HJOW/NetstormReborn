@@ -60,12 +60,12 @@
     "fixture_identical_after_output_encoding_update": true,
     "cursor_intermittent_failure_root_cause_unresolved": true,
     "sha256": {
-      "cpppj/src/client/RawObjectMenu.h": "779fa9cc64126ccb35f7c6a24f32972c3249817026b4ea77eea4e3abfee1fe08",
-      "cpppj/src/client/RawObjectMenu.cpp": "7c751ff5cb8cc1f7df57f4d18483819c774e23837215f4d925cbe65874699dae",
-      "cpppj/tests/ObjectMenuTests.cpp": "849f3bfabd854e40b451c3f727ed21db9d6d524c516191012da9f8a568875590",
-      "cpppj/tests/RawMenuControlsTests.cpp": "3ea0a940b2693a8889eb742505a81a8284b8f023c561c9adfdf612ad8b2860ea",
+      "cpppj/src/client/RawObjectMenu.h": "41436f4f64e69da224fe045ff4bc4a68352e603d61ed342d7f29a3075645c082",
+      "cpppj/src/client/RawObjectMenu.cpp": "ef92b668ec60c211d8a54722f864664d4262a25358ce0f2b1aaa95d572a558d5",
+      "cpppj/tests/ObjectMenuTests.cpp": "7485055d8b76db99eb8e2fc117f9d89eb4892c2620112c1afbb1ed267710aa37",
+      "cpppj/tests/RawMenuControlsTests.cpp": "8f162b339419c44b4a64f54f6cd05bb7bfe6c40744cd881f8c42bb5445ed86b8",
       "cpppj/src/client/CMakeLists.txt": "d5bf5ae4aa05e5fa22b856c0e2f84dc9036f79d00624eed7507f9e5971222caf",
-      "cpppj/tests/CMakeLists.txt": "75fa404983d2115305854d7acd1a192d64b067938b42c6194440441725205c05"
+      "cpppj/tests/CMakeLists.txt": "2548de0b0b7602c29d8a7e30727234f3ecada65df5635d5a3c3b46502ab90e56"
     }
   },
   "integration_updates": [
@@ -91,6 +91,38 @@
         "failed_checks": 0,
         "exit_code": 0,
         "seconds": 213.96
+      }
+    },
+    {
+      "date": "2026-10-17",
+      "reason": "unit115 actual Player identity and ObjectMenu subscriber DWORD correction; prior native fixtures preserved",
+      "shared_sha256": {
+        "cpppj/src/client/RawObjectMenu.h": {
+          "previous": "779fa9cc64126ccb35f7c6a24f32972c3249817026b4ea77eea4e3abfee1fe08",
+          "current": "41436f4f64e69da224fe045ff4bc4a68352e603d61ed342d7f29a3075645c082"
+        },
+        "cpppj/src/client/RawObjectMenu.cpp": {
+          "previous": "7c751ff5cb8cc1f7df57f4d18483819c774e23837215f4d925cbe65874699dae",
+          "current": "ef92b668ec60c211d8a54722f864664d4262a25358ce0f2b1aaa95d572a558d5"
+        },
+        "cpppj/tests/ObjectMenuTests.cpp": {
+          "previous": "849f3bfabd854e40b451c3f727ed21db9d6d524c516191012da9f8a568875590",
+          "current": "7485055d8b76db99eb8e2fc117f9d89eb4892c2620112c1afbb1ed267710aa37"
+        },
+        "cpppj/tests/RawMenuControlsTests.cpp": {
+          "previous": "3ea0a940b2693a8889eb742505a81a8284b8f023c561c9adfdf612ad8b2860ea",
+          "current": "8f162b339419c44b4a64f54f6cd05bb7bfe6c40744cd881f8c42bb5445ed86b8"
+        },
+        "cpppj/tests/CMakeLists.txt": {
+          "previous": "75fa404983d2115305854d7acd1a192d64b067938b42c6194440441725205c05",
+          "current": "2548de0b0b7602c29d8a7e30727234f3ecada65df5635d5a3c3b46502ab90e56"
+        }
+      },
+      "full_ctest": {
+        "tests": 1470,
+        "failed_checks": 0,
+        "exit_code": 0,
+        "seconds": 208.55
       }
     }
   ]

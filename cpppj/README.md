@@ -1,5 +1,7 @@
 # cpppj — NetStorm C++ 빌드
 
+2026-10-17 단위115 (`HJOW-Athlon`) 현재: **[실제 Player 식별자와 객체 메뉴DWORD](../docs/exe/cpp-player-identity-20261017.md)**를 두 판본1,702고유 입력/두 정밀도3,404정상 반환과 대조했다. 기존 객체 메뉴가004844f0 반환을 이름으로 다루던 오류를 실제 subscriber DWORD로 교정했다. 초기화/검색/네 getter·60바이트 관찰 영역·부분완료·객체 메뉴48입력을 검증하고 기존 fixture는 보존했다. Release 경고0·오류0, 전체 **1,470개 모두 통과**다. Player 메뉴 전체·실제 Session/건설 연결이 남아 Construct는 비활성이고 사용자 완주/전체 동일성은 미완료다. 목표는 active이며 마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-10-16**, 전체화면 DirectDraw는 이번1차 범위에서 제외한다.
+
 2026-10-17 단위114 (`HJOW-Athlon`) 현재: **[Carrier 운반물·주문 메뉴](../docs/exe/cpp-carrier-menu-20261017.md)**를 두 판본628고유 입력/두 정밀도1,256정상 반환과 대조했다. 사제 기본 호출→Carrier→회수/객체 메뉴 사슬과 실제 공통 Gump의 Cast/About 입력을 검사했다. 비활성~r~E·NaN 좌표 및 판본별 명령/비용/사건 조건을 보존했다. Release 경고0·오류0, 전체 **1,466개 모두 통과**다. Player 메뉴·내려놓기 위치·실제 Session·커서/건설 연결은 남아 Construct는 비활성이다. 사용자 완주/전체 동일성은 미완료이며 목표는 active다. 마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-10-16**이고 전체화면 DirectDraw는 이번1차 범위에서 제외한다.
 
 2026-10-17 단위113 (`HJOW-Athlon`) 현재: **[공통 객체·Damageable·회수 메뉴](../docs/exe/cpp-object-menu-20261017.md)**의 세 원본 몸체를 두 판본1,434고유 입력/두 정밀도2,868정상 반환과 대조했다. 타입 snapshot·회수 생략·Player 메뉴 순서의 판본 차이와 재진입을 보존했다. 실제 공통 Gump 입력에서 문자열/숫자 명령·현재 설정 쓰기를 확인했다. Release 경고0·오류0, 전체 **1,463개 모두 통과**다. 직전 시스템 기본 커서의 간헐 실패 원인은 미확정이다. Carrier/Player 하위 메뉴·같은 실제 Session·커서 배치·건설 연결이 남아 Construct는 아직 비활성이다. 사용자 플레이/완주·전체 동일성은 미완료이며 목표는 active다. 마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-10-16**이고 전체화면 DirectDraw는 이번1차 범위에서 제외한다.
