@@ -33,4 +33,7 @@ std::vector<std::uint32_t> MergeParticleGradients(std::span<const ParticleGradie
 // PATCH00457ea0: 실제 PE의 RGB double 상수로 어두운 빨강→주황8색과 주황→밝은색3색을 만든다.
 // 초기 입자가 읽을 수 있는 배열 뒤의 인접 할당 DWORD는 이 반환값에 임의로 추가하지 않는다.
 std::vector<std::uint32_t> BuildFieryTailPalette(std::span<const std::uint32_t,kParticlePaletteColors> palette);
+// PATCH00458480: 파랑→흰색8개와 흰색→128/255 회색3개를 실제 폭2.4로 합친다.
+// 개별 빔의 수명과 독립인 월드 공유 표이며 Draw의 리터럴 선 색과 구별한다.
+std::vector<std::uint32_t> BuildLightningPalette(std::span<const std::uint32_t,kParticlePaletteColors> palette);
 }

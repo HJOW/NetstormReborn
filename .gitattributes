@@ -913,3 +913,12 @@ cpppj/src/o/RawLightningFrame.cpp text eol=lf
 cpppj/src/o/RawLightningFrame.h text eol=lf
 cpppj/tests/LightningFrameTests.cpp text eol=lf
 docs/exe/cpp-lightning-frame-20261017.md text eol=lf
+# 공유 빔 생성/소멸 원문과 실제 Host/Kernel 어댑터를 같은 바이트로 유지한다.
+tools/decomp_lightning_lifetime.py text eol=lf
+cpppj/lightning-lifetime.json text eol=lf
+cpppj/tests/fixtures/lightning-lifetime-x86.tsv text eol=lf
+cpppj/src/o/RawLightningLifetime.* text eol=lf
+cpppj/src/o/LightningVisualSystem.* text eol=lf
+cpppj/tests/LightningLifetimeTests.cpp text eol=lf
+cpppj/tests/LightningVisualSystemTests.cpp text eol=lf
+docs/exe/cpp-lightning-lifetime-20261017.md text eol=lf

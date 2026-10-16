@@ -187,4 +187,10 @@ std::vector<std::uint32_t> BuildFieryTailPalette(std::span<const std::uint32_t,k
         BuildParticleGradient(palette,kFieryStart,kFieryLight,3)};
     return MergeParticleGradients(gradients);
 }
+// 실제 빔의 두 색 띠는0.5가 아닌 PE binary64의128/255 회색을 사용한다.
+std::vector<std::uint32_t> BuildLightningPalette(std::span<const std::uint32_t,kParticlePaletteColors> palette) {
+    const std::array<double,3> blue{0,0,1},white{1,1,1},gray{128.0/255.0,128.0/255.0,128.0/255.0}; // 실제 RGB 끝점이다.
+    const std::array<ParticleGradient,2> gradients{BuildParticleGradient(palette,blue,white,8),BuildParticleGradient(palette,white,gray,3)}; // 원문 순서의8+3색이다.
+    return MergeParticleGradients(gradients);
+}
 }

@@ -19,8 +19,10 @@ struct LightningFrameFields {
     double lastTime{},elapsed{}; // +30/+38: 마지막 시각과10배 시간 누적이다.
     float delta{},scaledDelta{}; // +40/+44: 현재 조각과 표시 속도 배율을 곱한 조각이다.
     bool first{}; // +48: 최초 Seed/파일명 소리 처리를 완료했는지 나타낸다.
+    std::uint32_t palette{}; // +50: 월드가 소유하는 공유 색 객체 토큰이며 Draw는 이를 조회하지 않는다.
     std::int32_t firstLive{}; // +54: 용량 전체에서 처음 살아 있는 입자 위치다.
     LightningPathFields path; // +58이 가리키는 실제64BYTE 경로 이미지다.
+    bool pathAllocated{}; // 원본 경로 포인터의 비영 여부다. 삭제 뒤 원문처럼 필드 값을 보존한다.
     float jitter{}; // +5c: 생성 시 거리의0.025배로 설정하는 흔들림 범위다.
     std::optional<std::string> sound; // +60: 최초 한 번 재생할 파일명이며 NULL은 무음이다.
 };

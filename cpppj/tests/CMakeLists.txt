@@ -25,7 +25,12 @@ set_source_files_properties(LightningPathTests.cpp PROPERTIES COMPILE_DEFINITION
 # 공유 빔 Frame/Draw의 독립 전체 상태/출력 요청을 새 검사에서만 읽는다.
 set_source_files_properties(LightningFrameTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_LIGHTNING_FRAME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/lightning-frame-x86.tsv\"")
+# 공유 빔 생성/삭제의 두 정밀도 원문을 새 수명 검사에서만 읽는다.
+set_source_files_properties(LightningLifetimeTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_LIGHTNING_LIFETIME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/lightning-lifetime-x86.tsv\"")
 add_executable(netstorm_tests
+    LightningLifetimeTests.cpp
+    LightningVisualSystemTests.cpp
     LightningFrameTests.cpp
     LightningPathTests.cpp
     ThunderMissileTests.cpp

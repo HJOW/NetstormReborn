@@ -28,9 +28,9 @@
     "cpppj/src/client/AiTypeRequiredEnergy.cpp": "a77ecbbece0a23b295c26e35ba5f788ea1c61a660b95880a83abc6988ef559c0",
     "cpppj/tests/fixtures/type-required-energy-x86.tsv": "8bcb3e215c958f5df0a395365059f5481801b1660569f2f04c0720f394f14f4c",
     "cpppj/tests/TypeRequiredEnergyTests.cpp": "0802ab400413ec5da3f2d03a4ac6b6f88e2d088915646609a2ca0bb39a02b05c",
-    "cpppj/src/o/CMakeLists.txt": "a7d8e297d713e46135393741cdd3d102d4a778aff2abfe4963e6a3c9e6770857",
+    "cpppj/src/o/CMakeLists.txt": "5d8389bd36167906fda92ccd1791e013e11dc0a574426ccd2b6355bdfeaf4505",
     "cpppj/src/client/CMakeLists.txt": "ea2d57ebe830821400fad4ff3478ddc6f45d7566313a2719952bfef2b5b8a938",
-    "cpppj/tests/CMakeLists.txt": "7446d21b834bd2e98d6f8428e6049d147702d8bdd2dd432723ea99b6b7d5fe2d"
+    "cpppj/tests/CMakeLists.txt": "beb5f057f589bf8b618087aaa28a0c15e0b68acdfd220262b3bd0d10cb1d79ed"
   },
   "product_validation": {
     "configuration": "Release",
@@ -919,6 +919,31 @@
         "total_seconds": 214.86,
         "exit_code": 8,
         "log": "extracted/goal-lightning-frame-20261017-ctest.log"
+      }
+    },
+    {
+      "date": "2026-10-17",
+      "host": "HJOW-Athlon",
+      "reason": "단위106 공유 빔 생성/소멸·팔레트와 실제 Host/Kernel 수명 검사 등록. 기존2352행·TYPE 제품·원문 기대값은 변경하지 않음",
+      "cmake_sha256": {
+        "cpppj/src/o/CMakeLists.txt": {
+          "previous": "a7d8e297d713e46135393741cdd3d102d4a778aff2abfe4963e6a3c9e6770857",
+          "current": "5d8389bd36167906fda92ccd1791e013e11dc0a574426ccd2b6355bdfeaf4505"
+        },
+        "cpppj/tests/CMakeLists.txt": {
+          "previous": "7446d21b834bd2e98d6f8428e6049d147702d8bdd2dd432723ea99b6b7d5fe2d",
+          "current": "beb5f057f589bf8b618087aaa28a0c15e0b68acdfd220262b3bd0d10cb1d79ed"
+        }
+      },
+      "focused_tests": 4,
+      "focused_failed": 0,
+      "ctest": {
+        "total": 1442,
+        "passed": 1441,
+        "failed": 1,
+        "total_seconds": 211.14,
+        "exit_code": 8,
+        "log": "extracted/goal-lightning-lifetime-20261017-ctest.log"
       }
     }
   ]

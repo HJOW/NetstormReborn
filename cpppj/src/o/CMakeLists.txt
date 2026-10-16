@@ -286,3 +286,5 @@ target_sources(netstorm PRIVATE FieryTailVisualSystem.cpp FieryTailVisualSystem.
 target_sources(netstorm PRIVATE RawLightningPath.cpp RawLightningPath.h)
 # 같은 공유 빔의 실제 시간 조각/전체 용량 수명과 굵기 선을 복원한다.
 target_sources(netstorm PRIVATE RawLightningFrame.cpp RawLightningFrame.h)
+# 공유 빔의 생성/색/경로 반납과 실제 process19 Host/Kernel 소유권이다.
+target_sources(netstorm PRIVATE RawLightningLifetime.cpp RawLightningLifetime.h LightningVisualSystem.cpp LightningVisualSystem.h)
