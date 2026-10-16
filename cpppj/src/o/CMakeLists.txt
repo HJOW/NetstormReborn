@@ -266,3 +266,6 @@ target_sources(netstorm PRIVATE RawSunAviaryProcess.cpp RawSunAviaryProcess.h)
 target_sources(netstorm PRIVATE RawFencePostPop.cpp RawFencePostPop.h RawFenceNeighbors.cpp RawFenceNeighbors.h RawFenceLine.cpp RawFenceLine.h)
 # 실제 AI 피격의 네 목록과 조건부 공격자·홈 반응을 같은 본체 메모리에 적용한다.
 target_sources(netstorm PRIVATE RawAiDamage.cpp RawAiDamage.h)
+
+# 실제 Fiery Tail/건설/불타는 표시가 공유하는 RGB 색 띠와 팔레트 병합이다.
+target_sources(netstorm PRIVATE ParticleGradient.cpp ParticleGradient.h)

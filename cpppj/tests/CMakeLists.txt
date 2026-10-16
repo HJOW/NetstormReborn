@@ -1,7 +1,11 @@
 # 단위 테스트. 외부 테스트 프레임워크 없이 TestSupport.h 의 작은 도구만 쓴다
 # (첫 구성 때 인터넷에서 내려받을 것이 없다).
 # 테스트 파일을 만들면 아래 목록에 더한다. 파일 안의 TEST_CASE 는 자동으로 등록된다.
+# 실제 색 띠·CRT 정렬·팔레트 병합의 독립 원본 입력을 새 검사에서만 읽는다.
+set_source_files_properties(ParticleGradientTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_PARTICLE_GRADIENT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/particle-gradient-x86.tsv\"")
 add_executable(netstorm_tests
+    ParticleGradientTests.cpp
     FenceRegularTests.cpp
     FenceMarkerClearTests.cpp
     FenceCreateTests.cpp
