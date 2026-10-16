@@ -949,3 +949,15 @@ cpppj/src/client/OwnerColorMaps.* text eol=lf
 cpppj/src/client/VFXMappedDraw.* text eol=lf
 cpppj/tests/OwnerCaptureTests.cpp text eol=lf
 docs/exe/cpp-owner-capture-20261017.md text eol=lf
+# 실제 파편 wrapper/생성/반납과 같은 Host/Kernel 제품을 같은 바이트로 유지한다.
+tools/decomp_shrapnel_lifetime.py text eol=lf
+cpppj/shrapnel-lifetime.json text eol=lf
+cpppj/tests/fixtures/shrapnel-lifetime-x86.tsv text eol=lf
+cpppj/src/o/RawShrapnelLifetime.* text eol=lf
+cpppj/src/o/ShrapnelVisualSystem.* text eol=lf
+cpppj/tests/ShrapnelLifetimeTests.cpp text eol=lf
+docs/exe/cpp-shrapnel-lifetime-20261017.md text eol=lf
+tools/decomp_rain_home_notice.py text eol=lf
+cpppj/rain-home-notice.json text eol=lf
+cpppj/tests/fixtures/rain-home-notice-x86.tsv text eol=lf
+cpppj/tests/RainHomeNoticeTests.cpp text eol=lf

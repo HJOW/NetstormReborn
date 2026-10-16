@@ -4,12 +4,14 @@
 namespace netstorm::o {
 // 원본 __getptd가 만드는 첫 holdrand 또는 명시 srand 상태를 받는다.
 CrtRandom::CrtRandom(std::uint32_t state):state_(state) {}
+// 별도 저장소를 초기화하지 않고 기존 상태의 주소를 유지한다.
+CrtRandom CrtRandom::Borrow(std::uint32_t& state) { CrtRandom result;result.shared_=&state;return result; }
 // 부호 있는 곱셈 overflow 없이 실제 low32를 만든다.
-std::uint32_t CrtRandom::Next() { state_=state_*214013U+2531011U;return (state_>>16)&32767U; }
+std::uint32_t CrtRandom::Next() { auto& current=shared_ ? *shared_ : state_;current=current*214013U+2531011U;return (current>>16)&32767U; }
 // 진단은 스트림을 전진시키지 않는다.
-std::uint32_t CrtRandom::State() const { return state_; }
+std::uint32_t CrtRandom::State() const { return shared_ ? *shared_ : state_; }
 // 0도 유효한 원본 srand 입력이다.
-void CrtRandom::SetState(std::uint32_t state) { state_=state; }
+void CrtRandom::SetState(std::uint32_t state) { if (shared_) *shared_=state;else state_=state; }
 // 각 스레드에 하나만 두고 Session/미션 재생성으로 리셋하지 않는다.
 CrtRandom& ThreadCrtRandom() { static thread_local CrtRandom random;return random; }
 }

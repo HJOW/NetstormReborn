@@ -290,3 +290,5 @@ target_sources(netstorm PRIVATE RawLightningFrame.cpp RawLightningFrame.h)
 target_sources(netstorm PRIVATE RawLightningLifetime.cpp RawLightningLifetime.h LightningVisualSystem.cpp LightningVisualSystem.h)
 # 실제 전투 플라이어 Pre와 별도 CRT 스트림/픽셀 파편 수치·표시 본체다.
 target_sources(netstorm PRIVATE RawFlyerPreDestroy.cpp RawFlyerPreDestroy.h CrtRandom.cpp CrtRandom.h RawShrapnelFrame.cpp RawShrapnelFrame.h)
+# 실제 bitmap/입자 반납과 dummy/process16의 공통 Host/Kernel 수명이다.
+target_sources(netstorm PRIVATE RawShrapnelLifetime.cpp RawShrapnelLifetime.h ShrapnelVisualSystem.cpp ShrapnelVisualSystem.h)

@@ -4,6 +4,8 @@
 #include "client/AiTypeRequiredEnergy.h"
 #include "o/RawMissionAiSettings.h"
 #include "o/RawGeyserAiRegistration.h"
+#include "client/RawShapeToBuffer.h"
+#include "client/OwnerColorMaps.h"
 #include <unordered_set>
 using namespace netstorm::client;
 namespace {
@@ -499,4 +501,45 @@ TEST_CASE(CampaignSession_ActualWarBeginsCombatToOne) {
     }
     CHECK(dependencyPacket && deletionPacket);
     std::printf("생산 세션 실제 교전: 최초피해 frame%u, HP1 frame%u, 종료 frame%u\n",firstDamage,low,frame);
+}
+
+// 실제 미션의 비행 자산을 파괴해 원본 캡처/픽셀/프레임과 감시 쌍의 dummy 삭제를 확인한다.
+TEST_CASE(CampaignSession_ManowarExplosionPixelsAndDummyLifetime) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
+    auto fort=FortTemplate::Parse(assets.files.Read("d/DemoStormRages.fort"),assets.game.TypeTable());auto services=external.Services();
+    services.deletion={};services.deletion.selected=[] { return Sid{}; }; // 실제 UI 선택이 없는 명시 입력이다. 삭제 계산/전송은 Session이 공급한다.
+    services.dependencyTransmit={};services.formPacket=[&external](std::span<const std::uint8_t> bytes) { external.packets.emplace_back(bytes.begin(),bytes.end()); };
+    RawCampaignSession session(assets.game,assets.files,std::move(fort),"DemoStormRages",std::move(services));session.Load();auto core=session.Core();Sid source;std::uint64_t frame=0;double time=0;
+    // 미복원 경계232 이전의 실제 전체 Kernel에서 자연 생성된 현재 맨 오 워를 찾는다.
+    for (;frame<230 && !source.value;++frame) {
+        time=static_cast<double>(frame)*.025;session.RunFrame({time,time,frame ? .025 : 0,frame+1},false);
+        // 별도 합성 객체 대신 현재 살아 있는 실제 미션 자산만 선택한다.
+        for (const auto& object:session.World().Objects()) if (object.object.type==144 && !(core.pool.Slot(object.sid)[40]&8)) { source=object.sid;break; }
+    }
+    CHECK(source.value!=0);if (!source.value) return;const auto before=core.pool.Slot(source);const auto x=std::bit_cast<float>(Get(before,14)),y=std::bit_cast<float>(Get(before,18));const auto depth=std::bit_cast<std::int8_t>(before[35]);
+    std::array<std::uint32_t,188> tokens{};tokens[144]=1;const auto maps=BuildStandardOwnerColorMaps(144,82);ShapeToBufferState state;state.addTypeHotspot=true;state.ownerTypeMaps=tokens;
+    state.ownerColors=[&](std::uint32_t type,std::uint32_t owner)->std::span<const std::uint8_t> { CHECK(type==144);return maps.at(static_cast<std::size_t>(core.bridgeState.ownerColors.at(owner))); };
+    RawShapeToBuffer capture(core.pool,core.types,core.shapes,assets.game.Shapes(),state);const auto expected=capture.Capture(source);
+    Renderer renderer(1024,768);const auto cameraX=static_cast<int>(x*16)-128,cameraY=static_cast<int>(y*11)-128;
+    session.SetParticleView({cameraX,cameraY,0,0,1024,768},{[&] { return renderer.FullRedrawPending(); },[&](SquidDisplayRect rect,std::uint32_t flags) { renderer.Invalidate({rect.left,rect.top,rect.right,rect.bottom},flags); }});
+    session.World().Destroy(source,0x100000);CHECK(core.pool.Slot(source)[11]&1);ShrapnelVisualProcess* effect=nullptr;
+    // 같은 registry/Host의 실제 process16을 조회하며 별도 효과 목록을 만들지 않는다.
+    for (const auto token:session.Particles().Rendering().Slots()) {
+        const auto* fields=session.Particles().Rendering().Lookup(token);if (!fields) continue;auto* current=dynamic_cast<ShrapnelVisualProcess*>(core.processes.FromForm(Sid{static_cast<std::uint16_t>(fields->form)}));if (current) { CHECK(effect==nullptr);effect=current; }
+    }
+    CHECK(effect!=nullptr);if (!effect) return;const auto form=effect->Form(),dummy=effect->Parent();const auto token=effect->Fields().registration.token;
+    CHECK(core.pool.Slot(dummy)[10]==110 && core.dependencies.Has(form,dummy));CHECK(effect->Fields().registration.zOrder==depth);
+    CHECK(effect->Fields().image.pixels==expected.pixels && effect->Fields().image.width==expected.width && effect->Fields().image.hotspotX==expected.hotspotX && !effect->Fields().particles.empty());
+    time+=.025;session.RunFrame({time,time,.025,frame+1},false);CHECK(effect->Fields().lastTime==time);
+    auto sprites=session.ParticleSprites({0,0,1024,768});std::erase_if(sprites,[&](const auto& sprite) { return sprite.order.depth!=depth; });CHECK(!sprites.empty());renderer.SetScene(sprites);const auto image=renderer.SceneImage();CHECK(std::any_of(image.indices.begin(),image.indices.end(),[](auto color) { return color!=0; }));
+    std::vector<std::uint8_t> padded(1028*768,0x7e);renderer.Draw(padded,1028);renderer.Present([](ScreenRect) {});
+    // 실제 padded 표면의 본문 픽셀과 각 행의 화면 밖4바이트를 함께 확인한다.
+    for (std::size_t row=0;row<768;++row) {
+        CHECK(std::equal(image.indices.begin()+row*1024,image.indices.begin()+(row+1)*1024,padded.begin()+row*1028));
+        // Renderer와 직접 픽셀 효과 모두 행 padding을 덮지 않아야 한다.
+        for (std::size_t column=1024;column<1028;++column) CHECK(padded[row*1028+column]==0x7e);
+    }
+    const auto count=core.kernel.Size();core.processes.Kill(*effect,0);CHECK(core.kernel.Size()+1==count && !session.Particles().Rendering().Lookup(token));CHECK((core.pool.Slot(form)[11]&1) && (core.pool.Slot(dummy)[11]&1));
+    renderer.SetScene(std::move(sprites));const auto removed=renderer.SceneImage();CHECK(std::all_of(removed.indices.begin(),removed.indices.end(),[](auto color) { return color==0; }));
+    CHECK(core.bookkeeping.depth==0 && core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0);
 }

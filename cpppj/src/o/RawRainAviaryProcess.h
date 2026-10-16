@@ -6,6 +6,7 @@
 #include <string_view>
 
 namespace netstorm::o {
+class GameRandom; // 같은 게임의 원본 난수 스트림을 홈 통지에서 직접 소비한다.
 // 생성자가 쓰지 않는 padding과 비서버 상태도 caller 입력으로 보존한다.
 struct RainAviaryProcessFields {
     std::array<std::uint8_t,0x30> bytes{}; // 실제 outer0/inner+20의48BYTE 이미지다.
@@ -48,6 +49,8 @@ public:
     void Initialize(RainAviaryProcessFields& fields) const; // 0045d810의 실제 생성자 쓰기만 수행한다.
     void PostPop(Sid parent,std::uint32_t flags) const; // 0045ed10의 중복/할당/생성/부착/Damageable 순서다.
     void Frame(RainAviaryProcessFields& fields) const; // inner0045dde0의 실제 상태1~10을 실행한다.
+    //0045b5b0: 실제 홈 lookup 뒤 stage10/현재 시각→정수10..14초 대기→Form 갱신을 수행한다.
+    void FlyerDied(RainAviaryProcessFields& fields,GameRandom& random,const std::function<void(RainAviaryProcessFields&)>& refresh) const;
     static std::uint16_t WriteProcess(RainAviaryProcessFields& fields,std::span<std::uint8_t> packet,bool includeParent,bool force=false,std::uint8_t protocol=1,std::uint8_t message=0x73); // 0045d870→0045b2a0의 변경 비트와 길이를 기록한다.
     const SidPool& Pool() const; // Host와 동일 풀인지 확인한다.
 private:

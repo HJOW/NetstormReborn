@@ -149,6 +149,7 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
         formDispatch->Bind(*host);
         dependencies=std::make_unique<o::DependFormHost>(pool,*baseDestroy,
             [this](o::Sid watcher,o::Sid watched,o::Sid form) {
+                if (runtime.dependencyNotice) { runtime.dependencyNotice(watcher,watched,form);return; }
                 // 실제 ProcessForm34는 server일 때 PID의 notify(2,form,watched)를 호출한다.
                 host->NotifyDependency(watcher,watched,form);
             },formDispatch->Hooks(),[this](o::Sid form,std::uint32_t flags) {

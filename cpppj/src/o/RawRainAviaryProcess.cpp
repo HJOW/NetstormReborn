@@ -1,5 +1,6 @@
 // 실제 맨 오 워 풀의 현재 읽기 위치와 효과 이후 상태/시각 재조회를 보존한다.
 #include "o/RawRainAviaryProcess.h"
+#include "o/SpStore.h"
 #include <algorithm>
 #include <bit>
 #include <stdexcept>
@@ -38,6 +39,11 @@ void RawRainAviaryProcess::Initialize(RainAviaryProcessFields& fields) const {
     StoreTime(fields,0);fields.bytes[kDirty]=0xff;Put(fields.bytes,32,0x5019ec);Put(fields.bytes,kParent,0);Put(fields.bytes,kForm,0);
     Put(fields.bytes,0,0x509e20);Put(fields.bytes,32,0x509e00);
     if (globals_.server) { StoreTime(fields,globals_.now);fields.bytes[kDirty]|=4;Put(fields.bytes,kStage,1); }
+}
+// 가상 홈 통지의 현재 시각 저장/난수 소비/정수 나눗셈과 실제 갱신 순서를 유지한다.
+void RawRainAviaryProcess::FlyerDied(RainAviaryProcessFields& fields,GameRandom& random,const std::function<void(RainAviaryProcessFields&)>& refresh) const {
+    if (!globals_.server) return;Stage(fields,10);fields.bytes[kDirty]|=2;StoreTime(fields,globals_.now);
+    const auto milliseconds=random.Next(5000)+10000U;StoreTime(fields,globals_.now+static_cast<double>(milliseconds/1000U));Need(refresh)(fields);
 }
 // 실제 할당 실패도 NULL inner 부착 요청으로 전달한다. Host는 해당 비정상 경로를 명시 거부할 수 있다.
 void RawRainAviaryProcess::PostPop(Sid parent,std::uint32_t flags) const {

@@ -1203,5 +1203,13 @@ set_source_files_properties(AiDamageTests.cpp PROPERTIES COMPILE_DEFINITIONS
 
 # 실제9개 소유자 색표와 보호 SHP의 mapped 캡처 전체 원문이다.
 target_sources(netstorm_tests PRIVATE OwnerCaptureTests.cpp)
+# 실제 파편 생성/준비/반납의 전체 원문이다.
+target_sources(netstorm_tests PRIVATE ShrapnelLifetimeTests.cpp)
+# 비행 사망 뒤 홈 풀의 실제 상태/난수/지연 원문이다.
+target_sources(netstorm_tests PRIVATE RainHomeNoticeTests.cpp)
+set_source_files_properties(RainHomeNoticeTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_RAIN_HOME_NOTICE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/rain-home-notice-x86.tsv\"")
+set_source_files_properties(ShrapnelLifetimeTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_SHRAPNEL_LIFETIME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/shrapnel-lifetime-x86.tsv\"")
 set_source_files_properties(OwnerCaptureTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_OWNER_CAPTURE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/owner-capture-x86.tsv\"")

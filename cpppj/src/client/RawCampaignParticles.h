@@ -6,20 +6,29 @@
 #include "client/Sound.h"
 #include "o/FieryTailVisualSystem.h"
 #include "o/LightningVisualSystem.h"
+#include "o/ShrapnelVisualSystem.h"
 
 namespace netstorm::client {
+// 같은 Session의 실제 dummy/공간/캡처/의존과 부착 전 실패 삭제 경계다.
+struct CampaignShrapnelHooks {
+    o::ShrapnelLifetimeHooks lifetime; // create/pop/depend/capture는 실제 월드에 연결한다.
+    std::function<void(o::Sid)> destroyUnpaired; // 아직 감시 쌍이 없는 dummy의 실제 가상 삭제다.
+    o::CrtRandom* crt{}; // 같은 Session의 원본 시드 초기화/지형과 공유하는 실제 CRT 상태다.
+};
 // Session의 실제 입자 표시 수명이다. 게임 계산/출력을 빈 효과로 대신하지 않는다.
 class RawCampaignParticles {
 public:
     // core/난수/팔레트는 이 객체보다 오래 살아야 한다. 해제 전 상위가 같은 Kernel을 비운다.
     RawCampaignParticles(RawWorldCore core,o::GameRandom& random,const GamePalette& palette,
-        std::function<void(float,float,std::string_view)> sound={});
+        std::function<void(float,float,std::string_view)> sound={},std::optional<CampaignShrapnelHooks> shrapnel={});
     RawCampaignParticles(const RawCampaignParticles&)=delete; // 실제 콜백 대상 주소를 유지한다.
     RawCampaignParticles& operator=(const RawCampaignParticles&)=delete; // 다른 캠페인에 상태를 복사하지 않는다.
     // 실제 생성한 투사체의 process11을 표시 Pop과 Missile 부착 사이에 붙인다.
     void Add(std::uint32_t type,o::Sid parent);
     // 실제 wrapper의 생존 검사 뒤 공유 빔을 같은 Host/표시 목록에 생성한다. NULL 파일명은 무음이다.
     o::LightningCreateResult AddBeam(o::Sid parent,o::Sid target,std::optional<std::string> sound);
+    // 실제 wrapper의 세 종류 파편을 같은 Host/Renderer에 생성한다. 확보 실패는nullptr다.
+    o::ShrapnelVisualProcess* AddShrapnel(o::Sid source,o::ShrapnelKind kind);
     // 같은 전체 Kernel 실행 직전 현재 게임 시각을 공급한다.
     void PrepareFrame(double now);
     // 현재 실제 카메라/표시 영역과 장치 재생성에도 유효한 dirty 경계를 갱신한다.
@@ -35,6 +44,8 @@ private:
     o::FieryTailSystemHooks FieryHooks();
     // 같은 현재 중심/실제 공유 색/파일명 음향과 VFX 선 표면을 process19에 공급한다.
     o::LightningSystemHooks LightningHooks();
+    // 실제 bitmap 픽셀을 현재 clip/pitch 표면에 연결하고 메모리는 소유 vector가 반납한다.
+    o::ShrapnelSystemHooks ShrapnelHooks(CampaignShrapnelHooks hooks);
     // 현재 dirty 큐와 실제 renderer에 같은 요청을 전달한다.
     void Invalidate(o::FieryTailDirtyRect rect);
     // 장치 연결 전 쌓인 원본 변경 표는 버리지 않고 실제 장치에 전달한다.
@@ -65,5 +76,6 @@ private:
     o::RenderProcessSystem rendering_; // 모든 표시가 사용하는 공통 원본 목록이다.
     o::FieryTailVisualSystem fiery_; // 같은 Host/Kernel의 실제 process11 관리자다.
     o::LightningVisualSystem lightning_; // 같은 공통 목록/Host/Kernel의 실제 process19 관리자다.
+    std::unique_ptr<o::ShrapnelVisualSystem> shrapnel_; // 실제 세계/캡처 경계가 제공된 Session의 process16이다.
 };
 }

@@ -1,0 +1,18 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "uniqueInputs": 36,
+  "normalReturns": 72,
+  "precisionDifferentInputs": [],
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "tools/decomp_rain_home_notice.py": "05123389c983a5198ef856f42ec4101694ccef8cbe44218c7413b908c69e6a64",
+    "cpppj/tests/fixtures/rain-home-notice-x86.tsv": "e313b1cbd5c5105e6e28594f319f7a31d050f0784240dac44b270f01a47f5d94"
+  },
+  "limitations": [
+    "실제0045b5b0의 stage/time/dirty와 정수 난수/1000 지연을 실행한다.",
+    "finder/Host lookup/refresh는 명시 외부 경계다. 원본 NULL process 역참조는 정상 입력에 합산하지 않는다."
+  ]
+}

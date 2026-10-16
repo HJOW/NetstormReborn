@@ -1,0 +1,98 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "uniqueInputs": 216,
+  "dummyNoticeInputs": [
+    [
+      0,
+      0,
+      "583c00000000000000"
+    ],
+    [
+      0,
+      80,
+      "583c00000000000000"
+    ],
+    [
+      0,
+      65535,
+      "583c00000000000000"
+    ],
+    [
+      50,
+      0,
+      "583c00000000000000"
+    ],
+    [
+      50,
+      80,
+      "583c00000000000000"
+    ],
+    [
+      50,
+      65535,
+      "583c00000000000000"
+    ],
+    [
+      65535,
+      0,
+      "583c00000000000000"
+    ],
+    [
+      65535,
+      80,
+      "583c00000000000000"
+    ],
+    [
+      65535,
+      65535,
+      "583c00000000000000"
+    ]
+  ],
+  "normalReturns": 882,
+  "precisionDifferentInputs": [],
+  "nativeCalls": {
+    "004604a0": 216,
+    "0045ffb0": 72,
+    "004881d0": 216,
+    "00487fd0": 216,
+    "004437f0": 144,
+    "00460000": 216,
+    "004e49c0": 432,
+    "0045fc70": 216,
+    "00488100": 216,
+    "00487ab0": 216,
+    "00460200": 432,
+    "00455930": 432,
+    "004e64ab": 30240,
+    "boundary-004ea61d": 30240,
+    "004600a0": 1296,
+    "00487b20": 1296,
+    "00418400": 216,
+    "0045ffe0": 72,
+    "0045fc10": 216,
+    "00423aa0": 216,
+    "0040f1b0": 216,
+    "00487880": 216,
+    "0041bd00": 216,
+    "004602c0": 72,
+    "004602f0": 432,
+    "00460380": 144,
+    "00460490": 144,
+    "004603a0": 72,
+    "004603e0": 432
+  },
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "tools/decomp_shrapnel_frame.py": "292bc3ede10241c2244f79b5efd860b4c0525ead91d9afbea56a5bf8d4186265",
+    "tools/decomp_shrapnel_lifetime.py": "b3f043bda11965d43f025da4f7c30ff368af3b6c842036b22e223e9e85c00c6a",
+    "cpppj/tests/fixtures/shrapnel-lifetime-x86.tsv": "68b71fd279ca04806b60d5e06261fe919ed25f15a17c0ca16d540fd80b926180"
+  },
+  "limitations": [
+    "실제 wrapper/세 생성자/등록/픽셀 묶음/두 난수/타이머/소멸을 실행한다. 별도9입력은 실제dummy 가상+34의 ret8/가상 삭제0이다.",
+    "new/free·dummy Create/Pop·Host 부착·상호 의존·캡처는 명시 외부 경계다. 실제 캡처480 및 계산980 자료와 별도다.",
+    "원본 미초기화 delta2개는a5 입력을 보존한다. bitmap/입자 색 주소/목록 객체 주소만 의미 토큰으로 정규화한다."
+  ]
+}

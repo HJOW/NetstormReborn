@@ -28,9 +28,9 @@
     "cpppj/src/client/AiTypeRequiredEnergy.cpp": "a77ecbbece0a23b295c26e35ba5f788ea1c61a660b95880a83abc6988ef559c0",
     "cpppj/tests/fixtures/type-required-energy-x86.tsv": "8bcb3e215c958f5df0a395365059f5481801b1660569f2f04c0720f394f14f4c",
     "cpppj/tests/TypeRequiredEnergyTests.cpp": "0802ab400413ec5da3f2d03a4ac6b6f88e2d088915646609a2ca0bb39a02b05c",
-    "cpppj/src/o/CMakeLists.txt": "3a642f0bf665c9f45a48ba36fb6724ef5d8d16f407881f8a8a53ed4ad32deea8",
+    "cpppj/src/o/CMakeLists.txt": "5914ae795283dac964ea550a0d6593e4b96b84f5284f8785696fd334649983b8",
     "cpppj/src/client/CMakeLists.txt": "15b2ba49328c2858963dd6ab9acc66cebdd1ad9855bd5c0ffb782e032ec81170",
-    "cpppj/tests/CMakeLists.txt": "6adaef7cf519f244c9f4c3a8d6d36090e53f18a2675a052a50747746d42b72f6"
+    "cpppj/tests/CMakeLists.txt": "c3c9c5850b14f280e8652ecb70f7414e1c228d23327371e7ba3c7e9689a2cc31"
   },
   "product_validation": {
     "configuration": "Release",
@@ -1016,6 +1016,32 @@
         "exit_code": 8,
         "log": "extracted/goal-owner-capture-20261017-ctest.log"
       }
+    },
+    {
+      "date": "2026-10-17",
+      "host": "HJOW-Athlon",
+      "reason": "단위110 파편 수명216/dummy 통지9/맨 오 워 홈 통지36 원문과 실제 Session 파괴 출력/반납 검사 등록. 기존2352행·TYPE 제품·기대값은 보존",
+      "cmake_sha256": {
+        "cpppj/src/o/CMakeLists.txt": {
+          "previous": "3a642f0bf665c9f45a48ba36fb6724ef5d8d16f407881f8a8a53ed4ad32deea8",
+          "current": "5914ae795283dac964ea550a0d6593e4b96b84f5284f8785696fd334649983b8"
+        },
+        "cpppj/tests/CMakeLists.txt": {
+          "previous": "6adaef7cf519f244c9f4c3a8d6d36090e53f18a2675a052a50747746d42b72f6",
+          "current": "c3c9c5850b14f280e8652ecb70f7414e1c228d23327371e7ba3c7e9689a2cc31"
+        }
+      },
+      "ctest": {
+        "total": 1453,
+        "passed": 1453,
+        "failed": 0,
+        "total_seconds": 210.49,
+        "exit_code": 0,
+        "log": "extracted/goal-shrapnel-lifetime-20261017-ctest.log",
+        "output_log": "extracted/goal-shrapnel-lifetime-20261017-ctest-output.log"
+      },
+      "focused_tests": 11,
+      "focused_failed": 0
     }
   ]
 }

@@ -107,6 +107,7 @@ struct RawWorldRuntimeHooks {
     std::function<void(std::uint32_t)> loadingDepth;
     // formTransmit: 실제 DependForm 서버 Pop의 현재 raw Form/flags 전송 요청 경계다.
     o::FormPopTransmit formTransmit;
+    o::DependFormNotice dependencyNotice; // watcher의 실제 가상+34다. 누락 시 기존 ProcessForm 통지를 사용한다.
 };
 // 같은 SID 풀·공간 지도에서 표면 객체의 생성·등록·수명·표시를 관리하는 월드이다.
 class RawSurfaceWorld {

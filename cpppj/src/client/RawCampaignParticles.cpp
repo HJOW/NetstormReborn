@@ -12,9 +12,14 @@
 namespace netstorm::client {
 // raw 풀/시계는 복사하지 않으며 같은 공통 Host를 실제 표시 시스템에 공급한다.
 RawCampaignParticles::RawCampaignParticles(RawWorldCore core,o::GameRandom& random,const GamePalette& palette,
-    std::function<void(float,float,std::string_view)> sound)
+    std::function<void(float,float,std::string_view)> sound,std::optional<CampaignShrapnelHooks> shrapnel)
     :core_(core),random_(random),source_(palette),sound_(std::move(sound)),rendering_(core.pool,core.processes,renderState_,RegistryHooks()),
-     fiery_(rendering_,random,lifetime_,frame_,colors_,FieryHooks()),lightning_(rendering_,random,lightningLifetime_,frame_,LightningHooks()) {}
+     fiery_(rendering_,random,lifetime_,frame_,colors_,FieryHooks()),lightning_(rendering_,random,lightningLifetime_,frame_,LightningHooks()) {
+    if (shrapnel) {
+        if (!shrapnel->crt) throw std::invalid_argument("파편 실제 공유 CRT 상태 미연결");auto& crt=*shrapnel->crt;
+        shrapnel_=std::make_unique<o::ShrapnelVisualSystem>(rendering_,random_,crt,frame_,ShrapnelHooks(std::move(*shrapnel)));
+    }
+}
 // 실제 포인터 배열의 메모리는 RawRenderRegistry의 vector가 소유한다. 중복 외부 확보/반납을 하지 않는다.
 o::RenderRegistryHooks RawCampaignParticles::RegistryHooks() {
     o::RenderRegistryHooks hooks;hooks.reserve=[](std::uint32_t) { return true; };hooks.releaseArray=[] {};return hooks;
@@ -87,6 +92,27 @@ o::LightningCreateResult RawCampaignParticles::AddBeam(o::Sid parent,o::Sid targ
         try { return lightning_.Add(source,victim,std::move(name)); }
         catch (const std::bad_alloc&) { return static_cast<o::LightningVisualProcess*>(nullptr); }
     });
+}
+// 실제 캡처 그림은 원본 준비 몸체가 읽고 현재8비트 장치에 같은 색 번호를 쓴다.
+o::ShrapnelSystemHooks RawCampaignParticles::ShrapnelHooks(CampaignShrapnelHooks input) {
+    o::ShrapnelSystemHooks hooks;hooks.lifetime=std::move(input.lifetime);hooks.destroyUnpaired=std::move(input.destroyUnpaired);
+    hooks.lifetime.reserve=[](std::uint32_t bytes) { if (bytes!=104) throw std::logic_error("파편 실제 객체 확보량 오류");return true; };
+    hooks.frame.reserve=[](std::uint32_t bytes) { if (!bytes) throw std::logic_error("파편 실제 저장소 확보량0 오류");return true; }; // 실제 vector가 요청 저장소를 확보한다.
+    hooks.frame.release=[](bool) {}; // 실제 이전 입자/작업 복사본은 RawShrapnelFrame의 소유 저장소가 반납한다.
+    hooks.frame.invalidate=[this](o::FieryTailDirtyRect rect) { Invalidate(rect); };
+    hooks.frame.pixel=[this](o::ShrapnelPixel pixel) {
+        if (!target_) throw std::logic_error("파편 실제 픽셀 표면 미연결");const auto& cut=target_->clip;
+        if (pixel.x<cut.left || pixel.x>=cut.right || pixel.y<cut.top || pixel.y>=cut.bottom) return;
+        if (pixel.x<0 || pixel.x>=target_->pitch || pixel.y<0 || pixel.y>=target_->height) throw std::out_of_range("파편 실제 clip/표면 경계 불일치");
+        target_->pixels[static_cast<std::size_t>(pixel.y)*static_cast<std::size_t>(target_->pitch)+static_cast<std::size_t>(pixel.x)]=static_cast<std::uint8_t>(pixel.color);
+    };
+    hooks.release=[](o::ShrapnelRelease) {}; // 실제 bitmap/입자/객체는 원본 수명 몸체와 Kernel이 반납한다.
+    return hooks;
+}
+// 실패0과 실제 생성 성공만 반환하며 미연결 캡처를 빈 그림으로 대체하지 않는다.
+o::ShrapnelVisualProcess* RawCampaignParticles::AddShrapnel(o::Sid source,o::ShrapnelKind kind) {
+    if (!shrapnel_) throw std::logic_error("캠페인 실제 파편 세계/캡처 미연결");
+    try { return shrapnel_->Add(source,kind); }catch (const std::bad_alloc&) { return nullptr; }
 }
 // 원본 게임 시각을 별도 고정 틱이나 벽시각으로 대체하지 않는다.
 void RawCampaignParticles::PrepareFrame(double now) {
