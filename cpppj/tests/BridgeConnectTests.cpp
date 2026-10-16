@@ -69,7 +69,7 @@ void Replay(const char* edition) {
                     std::vector<Sid> preview;std::string expected;
                     if (kind=="Connect") {
                         const bool listed=row[3]=="1";
-                        connect.Connect(kSource,listed ? &preview : nullptr);
+                        if (listed) connect.ConnectPreview(kSource,[&preview](Sid born) { preview.push_back(born); });else connect.Connect(kSource);
                         actual=scene.Events()+'|'+scene.Born()+'|'+std::to_string(scene.PoolAdler())+'|'+Listed(preview,listed);
                         expected=row[4]+'|'+row[5]+'|'+row[6]+'|'+row[7];
                     } else if (kind=="Link") {
@@ -131,6 +131,22 @@ TEST_CASE(bridge_connect_patch_x86_walk_link_owner) { Replay("originals"); }
 TEST_CASE(bridge_connect_cd_x86_walk_link_owner) { Replay("originalCD"); }
 // 추가 10.37은 별도 PE 입력 SHA를 가진 관찰이다.
 TEST_CASE(bridge_connect_1037_x86_walk_link_owner) { Replay("original1037"); }
+
+// 원본4210f0의 목록 쓰기가 다음 Factory 재진입 전에 보이는지 실제 다중 이웃 장면으로 확인한다.
+TEST_CASE(bridge_connect_preview_append_is_visible_before_next_creation) {
+    Scene scene(OriginalEdition::Patch1078);bool found{};
+    // 독립 원문의 다중 연결 장면을 고른다. 기대 SID 순서도 원문에서 읽는다.
+    for (const auto& row:Fixture().rows) {
+        if (row[0]!="Connect" || row[1]!="originals" || row[3]!="1" || row[7].find(',')==std::string::npos) continue;
+        scene.Prepare(Fixture().scenes.at(row[2]));auto hooks=scene.Hooks();const auto create=hooks.create;std::vector<Sid> written;std::size_t calls{};
+        hooks.create=[&](std::uint32_t type,std::uint32_t flags) { CHECK(written.size()==calls++);return create(type,flags); };
+        RawBridgeConnect connect(scene.pool,*scene.neighbors,scene.state,std::move(hooks));
+        CHECK(Throws([&] { connect.ConnectPreview(kSource,{}); }));
+        connect.ConnectPreview(kSource,[&written](Sid sid) { written.push_back(sid); });
+        CHECK(calls>1);CHECK(Listed(written,true)==row[7]);CHECK(&connect.Pool()==&scene.pool);found=true;break;
+    }
+    CHECK(found);
+}
 
 // 훅 누락·다른 풀·표면 지도 순회 flag·색 표 밖 번호·소유자 없는 다리의 전파는 상태를 바꾸기 전에 거부한다.
 TEST_CASE(bridge_connect_rejects_missing_hooks_and_invalid_inputs) {

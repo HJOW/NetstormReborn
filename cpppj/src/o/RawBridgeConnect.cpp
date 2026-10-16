@@ -113,6 +113,10 @@ Sid RawBridgeConnect::FindTypeAt(float x, float y, std::uint32_t type) const {
     return {};
 }
 Sid RawBridgeConnect::Link(Sid first, Sid second, std::uint32_t owner, std::vector<Sid>* preview) const {
+    return LinkImpl(first,second,owner,preview,nullptr);
+}
+// 기존 벡터와 실제 커서 배열이 같은 생성/좌표 쓰기 및 추가 시점을 공유한다.
+Sid RawBridgeConnect::LinkImpl(Sid first,Sid second,std::uint32_t owner,std::vector<Sid>* preview,const std::function<void(Sid)>* append) const {
     const Sid born = hooks_.create(state_.connectorType, kConnectCreateFlags);
     // first의 위치를 읽고 second의 중심을 거의 올림한 정수 좌표로 만든다.
     const auto origin = pool_.Slot(first);
@@ -125,7 +129,7 @@ Sid RawBridgeConnect::Link(Sid first, Sid second, std::uint32_t owner, std::vect
     y = static_cast<float>(static_cast<double>(kStepY[static_cast<std::size_t>(direction)]) + static_cast<double>(y));
     SetFrameField(born, direction / 2);
     hooks_.setOwner(born, owner);
-    if (preview == nullptr) {
+    if (preview == nullptr && append == nullptr) {
         hooks_.pop(born, x, y, 0);
         // 004ac220 ↔ CD 004abb00: 첫 참조 단어를 쓰고 연결 객체의 타입이 다리 타입 전역과 같으면 표면 알림을 부른다.
         auto raw = pool_.AllocatedBytes(born);
@@ -140,7 +144,7 @@ Sid RawBridgeConnect::Link(Sid first, Sid second, std::uint32_t owner, std::vect
     Write(raw, kY, std::bit_cast<std::uint32_t>(y), 4);
     Write(raw, kScreenX, static_cast<std::uint32_t>(Ftol(static_cast<double>(x) * kScreenScaleX + kScreenBias)), 2);
     Write(raw, kScreenY, static_cast<std::uint32_t>(Ftol(static_cast<double>(y) * kScreenScaleY + kScreenBias)), 2);
-    preview->push_back(born);
+    if (append) (*append)(born);else preview->push_back(born);
     // 원본은 이 뒤에 004b2070(중심, 0x10000000)으로 그 칸의 객체를 조회하지만 결과를 쓰지 않는다. 상태를 바꾸지 않으므로 옮기지 않았다.
     return born;
 }
@@ -170,6 +174,14 @@ void RawBridgeConnect::PropagateOwner(Sid first, Sid second) const {
     }
 }
 void RawBridgeConnect::Connect(Sid sid, std::vector<Sid>* preview) const {
+    ConnectImpl(sid,preview,nullptr);
+}
+// 원본의 출력 배열 쓰기를 소유권 전파/다음 이웃 생성보다 뒤로 미루지 않는다.
+void RawBridgeConnect::ConnectPreview(Sid sid,const std::function<void(Sid)>& append) const {
+    if (!append) throw std::invalid_argument("다리 미리보기 SID 소비자 누락");ConnectImpl(sid,nullptr,&append);
+}
+// 두 호출 방식 모두 실제 이웃 순회와 같은 시점의 소유권 전파를 수행한다.
+void RawBridgeConnect::ConnectImpl(Sid sid,std::vector<Sid>* preview,const std::function<void(Sid)>* append) const {
     const std::size_t ownerOffset = OwnerOffset(pool_);
     // 자기 genus로 상대를 정한다. 탐색기를 만들기 전에 한 번만 읽는다.
     const bool bridge = (Genus(sid) & TypeFlag2::kBridge) != 0;
@@ -180,7 +192,7 @@ void RawBridgeConnect::Connect(Sid sid, std::vector<Sid>* preview) const {
         if ((Genus(other) & mask) == 0) continue;
         // 다리 쪽이 첫 인자이고 연결 객체의 소유자는 다리 쪽의 현재 소유자다.
         const Sid first = bridge ? sid : other, second = bridge ? other : sid;
-        Link(first, second, pool_.Slot(first)[ownerOffset], preview);
+        LinkImpl(first, second, pool_.Slot(first)[ownerOffset], preview,append);
         PropagateOwner(first, second);
     }
 }
@@ -198,4 +210,6 @@ void RawBridgeConnect::IslandPostPop(Sid island, std::uint32_t flags, const std:
     IslandPostPopPrefix(island, flags);
     base(island, flags);
 }
+// 실제 연결 객체 생성 대상의 동일성을 상위 조립에서 확인한다.
+const SidPool& RawBridgeConnect::Pool() const { return pool_; }
 }

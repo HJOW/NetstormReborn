@@ -60,10 +60,14 @@ class RawBridgeConnect {
 public:
     // 풀·이웃 탐색기·상태는 이 객체보다 오래 살아야 한다. neighbors는 같은 풀을 읽어야 하고 훅은 모두 연결돼 있어야 한다.
     RawBridgeConnect(SidPool& pool, const RawSquidNeighbors& neighbors, const BridgeConnectState& state, BridgeConnectHooks hooks);
+    // 커서/건설 연결기가 같은 실제 풀의 연결 객체를 생성하는지 확인한다.
+    const SidPool& Pool() const;
     // 004213b0 ↔ CD 00448b00: flag 4(abstract 제외) 연결 이웃을 순회하며 다리↔섬 표면 쌍마다 연결 객체를 만들고 소유자를 전파한다.
     // 자기가 다리이면 genus가 kIslandSurfaceMask에 걸리는 이웃이, 아니면 다리인 이웃이 대상이다. 다리 쪽이 항상 첫 인자다.
     // preview가 있으면 연결 객체를 등록하지 않고 위치만 써서 목록에 넣는다(소유자 전파는 그대로 한다).
     void Connect(Sid sid, std::vector<Sid>* preview = nullptr) const;
+    // 미리보기 SID를 생성 직후 목록 꼬리에 쓴다. 소유권 전파/다음 생성의 재진입도 이미 쓴 목록을 본다.
+    void ConnectPreview(Sid sid,const std::function<void(Sid)>& append) const;
     // 004210f0 ↔ CD 004487c0: first의 위치에서 second의 (올림한) 중심 쪽으로 한 칸 옮긴 곳에 연결 객체를 만든다.
     // 프레임은 방향/2, +0xc 단어는 first, +8 단어는 second다. 원본은 두 객체의 타입을 검사하지 않는다.
     Sid Link(Sid first, Sid second, std::uint32_t owner, std::vector<Sid>* preview = nullptr) const;
@@ -79,6 +83,9 @@ public:
     // 004421c0 ↔ CD 004d01d0 전체: 접두 뒤에 같은 flags로 공통 postPop(base, 004b0d30 ↔ CD 004ae180)을 부른다.
     void IslandPostPop(Sid island, std::uint32_t flags, const std::function<void(Sid, std::uint32_t)>& base) const;
 private:
+    // 두 미리보기 API가 동일한 순회/링크 몸체를 사용한다. append는 실제 raw 목록에 즉시 쓰는 소비자다.
+    void ConnectImpl(Sid sid,std::vector<Sid>* preview,const std::function<void(Sid)>* append) const;
+    Sid LinkImpl(Sid first,Sid second,std::uint32_t owner,std::vector<Sid>* preview,const std::function<void(Sid)>* append) const;
     // 판본별 프레임 번호 필드를 읽고 쓴다. 패치는 +0x24 DWORD, CD는 +0x22 바이트다.
     std::int32_t Frame(Sid sid) const;
     void SetFrameField(Sid sid, std::int32_t frame) const;

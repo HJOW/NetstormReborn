@@ -1,0 +1,77 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "entry": "00445b30",
+  "uniqueInputs": 522,
+  "normalReturns": 1076,
+  "chainInputs": 32,
+  "instructionObservations": 870296,
+  "instructionObservationsIncludeBoundaryEntries": true,
+  "precisionDifferentInputs": [],
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+    "tools/decomp_cursor_previews.py": "33ed19d9b6409ad49e6db93081e951b8d105f170ce7a530363689aa9fda6c7c0",
+    "cpppj/tests/fixtures/cursor-previews-x86.tsv": "d149954cf5475f127797d1ccd208f0d6ca6bfe2efca13cf9df1bd2aa29fd3a32",
+    "cpppj/src/client/RawCursorPreviews.h": "63b07afad11e3008f2c55e848c9d7f48f41e62741d759db92ff4c8e3eaf4981a",
+    "cpppj/src/client/RawCursorPreviews.cpp": "13f90773195aebca5469cc2de11a1293bcb9a3d097500a7feb9fb7faedb79ed4",
+    "cpppj/src/o/RawBridgeConnect.h": "3ce1ed2f4cf63ae28f75d1a9d84f2c4d00d92cca9f6e30732a6e06bb45a546ad",
+    "cpppj/src/o/RawBridgeConnect.cpp": "d61934e4375b6e1630f735ee685ddd2aa788316ee1b8cb9cf5c668fba1a1b0f5",
+    "cpppj/tests/BridgeConnectTests.cpp": "16e2d952e252c2a264a859182f261487ca50101e34eb7036ea6d66242b9aae11",
+    "cpppj/tests/CursorPreviewTests.cpp": "24444c758de3d6174b57e36c9924d5d31f3494325e5a0c14433ab6c57b5ad687",
+    "cpppj/src/client/CMakeLists.txt": "dc4c728e9039aa54be3e16a51b933f7b9e69225e9b6b9581e28d03ea1064ab0d",
+    "cpppj/tests/CMakeLists.txt": "15daa41bf152553fbc7dfa56432e6a6853db253c58f0661c78f290223e46756b"
+  },
+  "limitations": [
+    "실제445b30/FindFlags/CRT를 실행하며 chain입력은445440/445340/4458e0도 실행한다.",
+    "decoder/Factory/WORD/Owner/HP/연결 객체·설명/공간/GUI/투영/표시 효과는 명시 경계다.",
+    "실제 Client 활성·일반 건설 확정/사용자 완주/전체 그래픽 동일성은 별도다. 원본 또는 클론 게임/OS 호출은 없다."
+  ],
+  "source_annotation_updates": [
+    {
+      "date": "2026-10-17",
+      "path": "tools/decomp_cursor_previews.py",
+      "previous": "52f06b6668b3e4f209ec5b5a0477cbcac75f6148ad8a2c6bc09f3174decb9571",
+      "current": "33ed19d9b6409ad49e6db93081e951b8d105f170ce7a530363689aa9fda6c7c0",
+      "reason": "관찰 전역19개와52DWORD 순서의 한국어 상수 주석만 보완; 실행 코드/522행 원문 불변"
+    }
+  ],
+  "product_validation": {
+    "configuration": "Release",
+    "first_serial_build_cancelled": true,
+    "first_build_exit_code": 1,
+    "first_build_completed": false,
+    "build_exit_code": 0,
+    "build_warnings": 0,
+    "build_errors": 0,
+    "build_command": "cmake --build cpppj/build --config Release --parallel 3 -- /p:UseMultiToolTask=true /p:EnforceProcessCountAcrossBuilds=true /p:CL_MPCount=3",
+    "build_log": "extracted/goal-cursor-previews-20261017-build2.log",
+    "focused_tests": 2,
+    "native_rows_compared": 522,
+    "actual_placement_chain_rows": 32,
+    "bridge_focused_tests": 7,
+    "legacy_bridge_preview_rows_compared": 696,
+    "focused_log": "extracted/goal-cursor-previews-20261017-focused.log",
+    "bridge_log": "extracted/goal-cursor-previews-20261017-bridge-focused.log",
+    "fixture_bytes_identical_after_test_helper_name_fix": true,
+    "actual_client_session_enabled": false,
+    "full_validation_pending": false,
+    "full_tests": 1477,
+    "failed_checks": 0,
+    "ctest_exit_code": 0,
+    "ctest_seconds": 235.5,
+    "full_output": "extracted/goal-cursor-previews-20261017-ctest-output.log",
+    "cursor_intermittent_failure_root_cause_unresolved": true
+  },
+  "source_format_updates": [
+    {
+      "date": "2026-10-17",
+      "path": "cpppj/tests/BridgeConnectTests.cpp",
+      "previous": "c036c5f5322eaa40042b7d523bd7c8e9a7f7ed0d794a6a75f22d1c66cc6d5a1f",
+      "current": "16e2d952e252c2a264a859182f261487ca50101e34eb7036ea6d66242b9aae11",
+      "reason": "기존 수정 검사 CRLF를 스테이지와 같은 UTF-8/LF로 정규화; 줄바꿈 외 바이트·실행 의미·원문fixture 불변"
+    }
+  ]
+}

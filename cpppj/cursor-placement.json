@@ -20,8 +20,8 @@
     "cpppj/src/client/RawCursorPlacement.h": "166517cced3912fc85a15fd673c47af5dd4b7933b8e1b788c18ba154cf88cb21",
     "cpppj/src/client/RawCursorPlacement.cpp": "8ea2e225c067bae0a73ea379da8ad9d8f11f4e67f935de2f8772ee0753bfedb3",
     "cpppj/tests/CursorPlacementTests.cpp": "1aa900f0e8bcffd1115f300ce391a130f116ba345fcb19f0cc35144477730e26",
-    "cpppj/src/client/CMakeLists.txt": "5e4bba87824dd21833f5f4d5e18bf30076a6cac4b9cf2b3e783e5795a78096ec",
-    "cpppj/tests/CMakeLists.txt": "40c04ec1576325161ea35d36fc11e020ae7eb794453fd2b2c227091d85437210"
+    "cpppj/src/client/CMakeLists.txt": "dc4c728e9039aa54be3e16a51b933f7b9e69225e9b6b9581e28d03ea1064ab0d",
+    "cpppj/tests/CMakeLists.txt": "15daa41bf152553fbc7dfa56432e6a6853db253c58f0661c78f290223e46756b"
   },
   "limitations": [
     "세 커서 몸체와 실제 CRT 절삭/floor만 실행한다. decoder/SHP/설명/GUI/지역/투영/화면 갱신은 명시 경계다.",
@@ -45,5 +45,22 @@
     "instruction_observations_include_boundary_entries": true,
     "actual_client_session_enabled": false,
     "cursor_intermittent_failure_root_cause_unresolved": true
-  }
+  },
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "reason": "단위118 실제 커서 미리보기 생성/재사용 통합; 과거 원문 fixture 보존",
+      "shared_sha256": {
+        "cpppj/src/client/CMakeLists.txt": {
+          "previous": "5e4bba87824dd21833f5f4d5e18bf30076a6cac4b9cf2b3e783e5795a78096ec",
+          "current": "dc4c728e9039aa54be3e16a51b933f7b9e69225e9b6b9581e28d03ea1064ab0d"
+        },
+        "cpppj/tests/CMakeLists.txt": {
+          "previous": "40c04ec1576325161ea35d36fc11e020ae7eb794453fd2b2c227091d85437210",
+          "current": "15daa41bf152553fbc7dfa56432e6a6853db253c58f0661c78f290223e46756b"
+        }
+      },
+      "previous_fixture_preserved": true
+    }
+  ]
 }

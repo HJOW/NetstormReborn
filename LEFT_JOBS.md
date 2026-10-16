@@ -1,5 +1,18 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-17 단위118 완료: 실제 커서 미리보기 생성·재사용 (`HJOW-Athlon`)
+
+- [x] AGENTS.md·양 LEFT·깨끗한 `a61a8a4`와 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16**을 재확인했다. 직전 단위117은 위치573행/전체1,474통과와 커밋으로 진행됐다. 새 Ghidra 내보내기·원본/클론 게임 별도 실행·GUI 플레이 검증은 없다. 목표는 active다.
+- [x] `RawCursorPreviews`에 PATCH445b30 전체의 생성/재사용·품질 프레임·HP0·위치/화면 캐시·다리 연결 delta 복원·추가 island/stalag를 같은 Drop/Lifecycle 및 BridgeConnect 타입 전역으로 복원했다. C 출력에서 빠진 **x*16+0.5/y*11+0.5→CRT 절삭 화면WORD**를 실제 명령으로 보완했다. 생성 조건은 Query 뒤 첫SID다. [작업 기록](docs/exe/cpp-cursor-previews-20261017.md).
+- [x] 같은 실제 Query/Prepare/Canon, Factory/공통 HP/bridge 프레임/연결 객체의 연결기를 추가했다. 파생 가상 Owner와 표면 진단은 실제 상위 공급자가 필요하다. RawBridgeConnect의 새 ConnectPreview는 각 SID를 **소유권 전파/다음 Factory 재진입 전에 즉시** 실제 커서 배열에 쓴다. 기존 벡터/새 소비자는 같은 LinkImpl/ConnectImpl을 사용한다.
+- [x] `decomp_cursor_previews.py`는 **522고유 입력/두 정밀도1,076정상 반환·차이0/실제 위치 사슬32/명령 및 명시 경계 진입 관찰870,296회**다. 실제445b30/FindFlags/CRT와 사슬의445440/445340/4458e0을 실행했다. decoder/Factory/WORD/Owner/HP/연결 객체 및 GUI/공간/표시는 명시 경계다. 게임/OS 호출은0이며 실제 Client 활성 증거로 쓰지 않는다.
+- [x] 처음 Query의 재사용 전환 시험 입력이 후속 SID를 공급하지 않아 native vtable0에서 차단됐다. 외부 입력을 완전한 유효 목록으로 교정한 최종 원문2/3만 사용한다. C++ 집중2개는522행의52DWORD·모든 접근 슬롯50바이트·모든 효과와 일치했다. 반복 호출은 첫 결과를 이어 쓴다. 다리 집중7개도 통과했으며 기존 세 판본 미리보기696행/즉시 SID 가시성/실제 중립 섬 소유권 전파를 포함한다.
+- [x] 최초 직렬 빌드는 설치된 VS18의 UseMultiToolTask 기본false와 공통 헤더의 넓은 영향을 확인한 뒤, 소유 PID/명령/부모를 검증해 중단했다(종료1/자식 종료 확인). 종료 뒤 새 검사의 Read를 공통 Get으로 교정했다. 이 첫 실행을 완료/컴파일 실패 증거로 합산하지 않는다. 최종 **Release 빌드2 종료0·경고0·오류0**이며 **UseMultiToolTask=true/EnforceProcessCountAcrossBuilds=true/CL_MPCount=3**으로 실제 cl3개 동시 동작을 확인했다. 후속 MSVC 빌드도 이 옵션을 사용하면 파일별 fixture 정의가 있어도 병렬 처리한다.
+- [x] 전체 CTest 내부 **1,477개 모두 통과·실패0·235.50초·종료0**이다. 영구 전체 출력은 `extracted/goal-cursor-previews-20261017-ctest-output.log`, 최종 원문/빌드/집중 접두사도 같다. 기본 시스템 커서는 통과했지만 앞선 간헐 실패의 원인은 미확정이다.
+- [x] 새522/기존 위치573·수명565·TYPE2,352·객체1,434·Carrier628·Identity1,702·Player292 SHA 감사를 통과했다. 공유 CMake가 바뀐 TYPE2핀·객체2핀·위치2핀만 이전/현재 이력과 갱신했다. 도우미 이름 교정 후 원문 fixture는 바이트 동일하고, 이후 한국어 상수 주석만 보완한 도구 SHA도 별도 이력으로 기록했다. 기존 fixture는 보존했다. 최종 감사에서 기존 BridgeConnectTests의 작업본CRLF/스테이지LF 차이를 줄바꿈만 정규화하고 이전/현재 SHA 이력을 추가했다. 새7파일 UTF-8/LF·한국어 주석·문자/공백 및 보호 실행 파일2/자산 SHA를 확인했다. AGENTS·dotnetpj는 수정하지 않았다.
+- [x] 모든 빌드/검사/관찰 핸들이 종료했다. 인수인계 뒤 **`20261017-18 CP 커서 미리보기 생성과 다리 연결 SID 기록 시점 복원`**으로 로컬 커밋한다. 원격 push하지 않으며 전체 목표는 active다.
+- [ ] **다음 실제 플레이:** 446b50 마우스 좌표 갱신/표시와 실제 Client Session/현재 전역/메뉴 명령/Tell/GumpForm, 내려놓기 위치426a70 및 일반 건설 확정/배치가 남아 Construct는 비활성이다. 기계어로446b50의 **int 화면 인자**,41d770의 signed DWORD 절삭,4971e0의 실제 역투영을 확인했다. 스냅55a2d8(초기0)과 teleporter 진단5e4794는 별도 전역이다. 생산/다리·경제·AI 전략·GUI 미션 시작/단계·승패/저장/다음 미션·사용자 자연 완주/전체 동일성은 미완료다. 400프레임을 완주 증거로 쓰지 않으며 DirectDraw는 이번1차 범위에서 제외한다.
+
 ## 2026-10-17 단위117 완료: 실제 커서 위치·연관 지역·갱신 영역 (`HJOW-Athlon`)
 
 - [x] AGENTS.md·양 LEFT·깨끗한 `8b2d264`와 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16**을 확인했다. 새 Ghidra 내보내기·원본/클론 게임·GUI 실행 없이 진행했다. 목표는 active다.

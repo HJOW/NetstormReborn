@@ -1016,3 +1016,13 @@ cpppj/tests/fixtures/cursor-placement-x86.tsv text eol=lf whitespace=-blank-at-e
 cpppj/src/client/RawCursorPlacement.* text eol=lf
 cpppj/tests/CursorPlacementTests.cpp text eol=lf
 docs/exe/cpp-cursor-placement-20261017.md text eol=lf
+# 실제 커서 미리보기 생성/재사용 원문과 제품을 UTF-8/LF로 보존한다.
+tools/decomp_cursor_previews.py text eol=lf
+cpppj/cursor-previews.json text eol=lf
+cpppj/tests/fixtures/cursor-previews-x86.tsv text eol=lf
+cpppj/src/client/RawCursorPreviews.* text eol=lf
+# 연결 객체의 즉시 SID 기록 API도 새 제품 SHA와 동일한 줄바꿈을 유지한다.
+cpppj/src/o/RawBridgeConnect.* text eol=lf
+cpppj/tests/CursorPreviewTests.cpp text eol=lf
+cpppj/tests/BridgeConnectTests.cpp text eol=lf
+docs/exe/cpp-cursor-previews-20261017.md text eol=lf
