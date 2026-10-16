@@ -1,5 +1,6 @@
 // 가상 함수의 호스트 분배만 구성하며 개별 원본 몸체는 기존 Gump/Button 모듈을 호출한다.
 #include "client/RawButtonControls.h"
+#include "client/RawMenuControls.h"
 #include "client/StoneButtonGump.h"
 #include <algorithm>
 #include <bit>
@@ -46,6 +47,7 @@ struct RawButtonControls::Impl {
     std::unique_ptr<GumpFrame> frame;/* buttons: 돌 버튼 생성/텍스트/부착은 StoneButtonGump에 맡기는 상태 처리기다. GumpEvents/입력/프레임 훅에 연결한다 (std::unique_ptr<ButtonGump>). */ std::unique_ptr<ButtonGump> buttons;/* backgroundCreate: 기본 생성/등록은 GumpCreate, 부착/파괴는 같은 저장소의 GumpTree/GumpLifetime이 맡는다 (std::unique_ptr<GumpBackgroundCreate>). */ std::unique_ptr<GumpBackgroundCreate> backgroundCreate;
     // stone: 같은 ButtonGump/GumpCreate/GumpTree/GumpLifetime을 사용한다. 자동 Client 연결은 별도 계층이 맡는다 (std::unique_ptr<StoneButtonGump>).
     std::unique_ptr<StoneButtonGump> stone;
+    std::unique_ptr<RawMenuControls> menus; // 실제 메뉴도 같은 루트/serial/등록표/입력/수명을 공유한다.
     // 모든 분배 훅은 실제 호출 때 현재 노드와 처리기를 조회하여 순환 의존을 연결한다.
     Impl(o::OriginalEdition edition,RawButtonHooks supplied):hooks(std::move(supplied)) {
         create.collection.edition=edition;stoneState.color=kStoneType;stoneState.defaultContext={0,0,0,0,0,0,1,1};
@@ -53,16 +55,16 @@ struct RawButtonControls::Impl {
             [this](auto token) { return Node(token); },[this](auto bytes) { return Allocate(bytes); }});
         collection=std::make_unique<GumpCollection>(create.collection,factory->CollectionHooks());
         GumpTreeHooks treeHooks;treeHooks.node=[this](auto token) { return Node(token); };
-        treeHooks.redraw=[this](auto,bool) { changed=true; };treeHooks.push=[this](auto token) { tree->Push(token); };
+        treeHooks.redraw=[this](auto token,auto erase) { if (menus && menus->Node(token)) menus->Redraw(token,erase);else changed=true; };treeHooks.push=[this](auto token) { tree->Push(token); };
         treeHooks.attach=[this](auto token,float x,float y,auto parent,auto mode) { Attach(token,x,y,parent,mode); };
         treeHooks.kill=[this](auto token) { lifetime->Kill(token); };
         tree=std::make_unique<GumpTree>(create,treeState,std::move(treeHooks));
         GumpLifetimeHooks lifeHooks;lifeHooks.node=[this](auto token) { return Node(token); };
         lifeHooks.push=[this](auto token) { tree->Push(token); };
         lifeHooks.deletingDestructor=[this](auto token,auto flags) {
-            if (stones.contains(token)) stone->DeleteScalar(token,flags);else lifetime->DeleteScalar(token,flags);
+            if (menus && menus->Node(token)) menus->DeleteScalar(token,flags);else if (stones.contains(token)) stone->DeleteScalar(token,flags);else lifetime->DeleteScalar(token,flags);
         };
-        lifeHooks.release=[this](auto token) { bases.erase(token);stones.erase(token);backgrounds.erase(token); };
+        lifeHooks.release=[this](auto token) { if (menus) menus->Release(token);bases.erase(token);stones.erase(token);backgrounds.erase(token); };
         lifetime=std::make_unique<GumpLifetime>(create,life,std::move(lifeHooks));
         GumpEventHooks eventHooks;eventHooks.node=[this](auto token) { return Node(token); };
         eventHooks.handle=[this](auto token,auto event,auto first,auto second) { return Handle(token,event,first,second); };
@@ -72,15 +74,16 @@ struct RawButtonControls::Impl {
         input=std::make_unique<GumpInput>(create,life,inputState,*collection,*events,std::move(inputHooks));
         GumpFrameHooks frameHooks;frameHooks.node=[this](auto token) { return Node(token); };
         frameHooks.redraw=[this](auto,bool) { changed=true; };
-        frameHooks.idle=[this](auto token) { if (stones.contains(token)) buttons->Idle(token); };
+        frameHooks.idle=[this](auto token) { if (stones.contains(token) || (menus && menus->Button(token))) buttons->Idle(token);else if (menus && menus->Node(token)) menus->Idle(token); };
         frameHooks.broadcast=[this](auto token,auto event,auto first,auto second) {
-            if (stones.contains(token)) buttons->Broadcast(token,event,first,second);
+            if (stones.contains(token) || (menus && menus->Button(token))) buttons->Broadcast(token,event,first,second);
+            else if (menus && menus->Node(token)) menus->Broadcast(token,event,first,second);
         };
         frame=std::make_unique<GumpFrame>(create,life,std::move(frameHooks));
         ButtonGumpHooks buttonHooks;
-        buttonHooks.node=[this](auto token)->ButtonGumpNode* { const auto found=stones.find(token);return found==stones.end() ? nullptr : found->second.get(); };
+        buttonHooks.node=[this](auto token)->ButtonGumpNode* { const auto found=stones.find(token);return found==stones.end() ? (menus ? menus->Button(token) : nullptr) : found->second.get(); };
         buttonHooks.baseNode=[this](auto token) { return Node(token); };
-        buttonHooks.backgroundFlags=[this](auto token)->std::uint32_t* { const auto found=backgrounds.find(token);return found==backgrounds.end() ? nullptr : &found->second->backgroundFlags; };
+        buttonHooks.backgroundFlags=[this](auto token)->std::uint32_t* { const auto found=backgrounds.find(token);auto* background=found==backgrounds.end() ? (menus ? menus->Background(token) : nullptr) : found->second.get();return background ? &background->backgroundFlags : nullptr; };
         buttonHooks.now=[this] { return hooks.now ? hooks.now() : 0.0; };
         buttonHooks.poll=[this](auto code) { return hooks.poll ? hooks.poll(code) : currentPoll; };
         buttonHooks.redraw=[this](auto,bool) { changed=true; };
@@ -93,7 +96,7 @@ struct RawButtonControls::Impl {
         backgroundHooks.frame=[this](auto,auto,auto number)->const GumpBackgroundFrame* { return number==assets.frame ? &backgroundFrame : nullptr; };
         backgroundCreate=std::make_unique<GumpBackgroundCreate>(create,*factory,backgroundColor,std::move(backgroundHooks));
         StoneButtonGumpHooks stoneHooks;
-        stoneHooks.node=[this](auto token) { const auto found=stones.find(token);return found==stones.end() ? nullptr : found->second.get(); };
+        stoneHooks.node=[this](auto token) { const auto found=stones.find(token);return found==stones.end() ? (menus ? menus->Button(token) : nullptr) : found->second.get(); };
         stoneHooks.allocate=[this](auto bytes) { return Allocate(bytes); };stoneHooks.push=[this](auto token) { tree->Push(token); };
         stoneHooks.attach=[this](auto token,float x,float y,auto parent,auto mode) { Attach(token,x,y,parent,mode); };
         stone=std::make_unique<StoneButtonGump>(create,stoneState,*factory,*buttons,*backgroundCreate,*tree,*lifetime,std::move(stoneHooks));
@@ -103,6 +106,7 @@ struct RawButtonControls::Impl {
     GumpCreateNode* Node(std::uint32_t token) const {
         if (const auto it=stones.find(token);it!=stones.end()) return it->second.get();
         if (const auto it=backgrounds.find(token);it!=backgrounds.end()) return it->second.get();
+        if (menus) if (auto* node=menus->Node(token)) return node;
         const auto it=bases.find(token);return it==bases.end() ? nullptr : it->second.get();
     }
     // 원본 new 요청 크기에 맞는 파생 저장소를 준비한다. 호스트 토큰은 재사용하지 않는다.
@@ -114,11 +118,12 @@ struct RawButtonControls::Impl {
     }
     // 돌 버튼 가상 부착의 실제 배경 Push/Attach를 먼저 실행한다.
     void Attach(std::uint32_t token,float x,float y,std::uint32_t parent,std::uint32_t mode) {
-        if (stones.contains(token)) stone->Attach(token,x,y,parent,mode);else tree->Attach(token,x,y,parent,mode);
+        if (menus && menus->Node(token)) menus->Attach(token,x,y,parent,mode);else if (stones.contains(token)) stone->Attach(token,x,y,parent,mode);else tree->Attach(token,x,y,parent,mode);
     }
     // 루트 부모 click의 serial을 화면 명령 번호로 변환한다. right/repeat는 미지원 상위 명령으로 보존한다.
     std::uint32_t Handle(std::uint32_t token,std::uint32_t event,std::uint32_t first,std::uint32_t second) {
-        if (stones.contains(token)) return buttons->Handle(token,event,first,second);
+        if (stones.contains(token) || (menus && menus->Button(token))) return buttons->Handle(token,event,first,second);
+        if (menus && menus->Node(token)) return menus->Handle(token,event,first,second);
         if (token==root && (event&0x03ffffffU)==buttonState.clickEvent) {
             // ID와 serial의 크기/순서를 같다고 가정하지 않는다.
             for (const auto& [id,button]:controls) if (Node(button)->serial==first) { activated=id;return 1; }
@@ -179,6 +184,17 @@ void RawButtonControls::Cancel() {
 }
 // 캡처 우선 및 includeHidden=1의 실제 원본 분배이며 UI 상태를 임의 갱신하지 않는다.
 void RawButtonControls::RefreshProduction() { impl_->input->Route(kRefreshProductionEvent,0,0,true); }
+// 공통 등록표와 현재 파생 가상 분배를 그대로 빌려 메뉴 처리기를 생성한다.
+RawMenuControls& RawButtonControls::EnableMenus(const GameAssets& assets,FontStore& fonts,RawMenuHooks hooks) {
+    auto& s=*impl_;if (s.menus) throw std::logic_error("실제 메뉴 계층은 한 번만 연결 가능");
+    RawMenuTree tree{s.create,s.life,*s.factory,*s.collection,*s.tree,*s.lifetime,*s.events,*s.input,*s.stone,
+        [&s](auto token) { const auto it=s.backgrounds.find(token);return it==s.backgrounds.end() ? nullptr : it->second.get(); },
+        [&s] { return ++s.nextToken; },[&s](auto token) { return s.Node(token); },
+        [&s](auto token,float x,float y,auto parent,auto mode) { s.Attach(token,x,y,parent,mode); },[&s] { s.changed=true; }};
+    s.menus=std::make_unique<RawMenuControls>(std::move(tree),assets,fonts,std::move(hooks));return *s.menus;
+}
+// 별도 메뉴 트리 사본을 만들지 않고 같은 현재 확장 계층을 반환한다.
+RawMenuControls* RawButtonControls::Menus() const { return impl_->menus.get(); }
 // 원본00463ff0과 같은 실제 등록 배열을 요청 시 읽는다. 등록 없는0은 그대로 반환한다.
 std::uint32_t RawButtonControls::RegisteredGump(std::uint32_t id) const {
     if (id>=impl_->create.entries.size()) throw std::out_of_range("현재 Gump 등록ID 물리 범위 오류");

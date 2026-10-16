@@ -1,5 +1,17 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-17 단위112 완료: 실제 Client 공통 트리의 메뉴 입력/출력 조립 (`HJOW-Athlon`)
+
+- [x] AGENTS.md·양 LEFT·깨끗한 현재 트리를 확인했다. 직전 단위111 `9501a2f`는 원본565/전체1456 통과와 실제 커서 취득/취소 몸체를 만든 진행이다. 현재/마지막 전체 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-16**으로 일치한다. 목표는 active다. 새 Ghidra 내보내기·원본 게임 실행은 없다.
+- [x] `RawMenuControls`를 RawButtonControls의 같은 등록표/루트/serial/트리/입력/수명에 조립하고 실제 UberGump 팝업의 입력/8비트 출력을 교체했다. 기존 MenuGump/장식/제목/버퍼/Slider/화살표/손잡이/StyleText/Markup 몸체를 사용한다. 팝업의 기존 DialogAction은 명시 호스트 전용 토큰01ffffff로 연결하며 원본 게임 명령 복원으로 합산하지 않는다. 메인 돌 버튼은 팝업 아래에서도 같은 실제 노드를 유지한다. [작업 기록](docs/exe/cpp-client-menu-runtime-20261017.md).
+- [x] 집중 통합 검사에서 제목이 클릭을 가로채는 기존 생성자 오류를 확인했다. TextGump/다중 줄/Slider/화살표/손잡이의 signed 종류BYTE는 원본 +20(command)인데 +28(alignFlags)에 쓰고 있었다. 실제 기계어를 확인해 다섯 대입을 교정했다. 10.78·CD의 실제 두 대입 명령은 **143고유 입력/286명령**에서 +20 쓰기와 +28 표식 보존을 보였다. CD 화살표4인라인 분기를 별도 포함했다. 생성자 전체 실행이 아님을 문서/보고서에 명시했다. 원본 메뉴 shadow/disabled는 회색이 아닌 RGB47/24/17의 실제 named 색을 공급한다.
+- [x] 최종 집중 **2개 통과**: 원본 명령/등록ID/전체DWORD·비활성/삭제 뒤 실제 버튼 복귀, 실제 fancy 제목·숨긴 Slider/하위 확장·클릭·여섯 종류+20/+28·SHP/글리프 픽셀·padding·공통 삭제. 빌드1의 누락 GumpControl 선언, 중간 fancy 제목 오류와 팝업 바탕 글자 누락을 수정했다. 최신 Release 빌드13은 종료0/경고0·오류0이다. 실제 CD UI 자산 검사는10.78 SHP 판본 불일치로 거부되어 성공 합계에서 제외했다.
+- [x] 현재 호스트는 실행 확인 예외다. CLI로 실제 클론 창을 실행해 computer-use로 `NetStorm Main Menu`를 확인했으나 창 캡처는 재선택 후 재시도까지2회 timeout이었다. 미관찰 좌표 OS 입력은 하지 않았고 경로/PID를 확인한 해당 검사 프로세스13036만 종료했다(61303 종료−1은 의도한 정리). 내장 입력 큐/실제ControlPoint/프레임 보고/BMP로 **메인→옵션→해상도→800×600→도움말→About**,6개 상태와 팝업 아래 메인 버튼8개 전후 픽셀 동일을 검증했다. 두 번째/최종65프레임 실행은 종료0이다. 캡처는 실제 Renderer 출력이며 OS 합성 화면 증거는 아니다. 검사 옵션 사본을 복구했다.
+- [x] 전체 CTest는 **내부1458개 중1457통과·1실패·240.09초·종료8**이다. 실패는 기존 `Cursor_DefaultResourceMappingAndSoftwareFrames_AreUsable`의 불투명 픽셀 수>0이며 단독 재실행도 종료1로 재현했다. 이 검사는 resources=nullptr의 시스템 IDC_ARROW 경로다. `Cursor.cpp`는 이번에 바꾸지 않았고 원인은 미확정이다. 새 메뉴2개와 나머지 기존 원문/Session 검사는 통과했다. 전체 로그와 내부 결과는 `extracted/goal-raw-menu-20261017-ctest.log`/`ctest-output.log`, 단독은 `cursor-isolated.log`다. 이 실패를 숨기거나 전체 통과로 바꾸지 않는다.
+- [x] 종류143/기존 필요 에너지2352의 SHA 감사·새 파일UTF-8/한자·일본어 혼입/공백을 확인했다. 공유 CMake2개 실제 핀/이력만 갱신했고 과거 fixture는 보존했다. 옵션 사본 SHA가 일치하며 런타임이 지운 추적 fullscreenStateFile.dat도 원래 상태로 돌렸다. 원본 PE a305414c…/tarc f2cafc1a… SHA는 유지된다. 재현 UI 입력을 `cpppj/tests/fixtures/client-menu-ui.tsv`에 보존했다. 모든 빌드/검사/클론 프로세스는 종료했고 대기 핸들은 없다. 문서·인수인계 뒤 로컬 `20261017-12 CP 실제 Client 트리에 메뉴 입력 출력과 종류 필드 교정 연결`로 커밋한다. 원격 push하지 않고 전체 목표를 active로 유지한다.
+- [ ] **커서 후속:** 시스템 기본 커서의 all-transparent 단독 실패와 실제 원본 리소스 경로를 구별해 원인을 확인한다. Windows 캡처 timeout과의 인과는 확인하지 않았으며 OS 설정이나 원본 파일을 임의로 바꿔 우회하지 않는다.
+- [ ] **다음:** 사제 `RawPriestMenu`를 같은 Session의 현재 Player/SP/기술/제외목록과 이 실제 builder/명령에 연결한다. 원본 기본 객체/Carrier 메뉴·GumpForm 부착, 커서445b30/445440/4458e0 및 일반 건설 확정/배치가 남아 **Construct는 아직 비활성**이다. 대화 페이지 내부 목록은 기존 어댑터다. mapped 그림 전용 표와 선택 소멸 callback도 미연결 경계로 거부한다. 생산/다리·경제·AI 전략·GUI Start/StartDemo·미션 단계·승패/저장/다음 미션·사용자 자연 완주/전체 동일성은 남아 있다. DirectDraw는 이번1차 범위에서 제외한다. 보호 원본·AGENTS·dotnetpj는 수정하지 않는다.
+
 ## 2026-10-17 단위111 완료: 사제 선택 뒤 커서 취득·취소·임시 삭제 (`HJOW-Athlon`)
 
 - [x] AGENTS.md·양 LEFT·현재 트리를 다시 확인했다. 직전 단위110 `954d194` 뒤 트리는 깨끗했다. 현재/마지막 전체 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-16**으로 일치한다. 새 디컴파일·원본/클론 게임·GUI 창 실행은 없다. 전체 사용자 플레이 목표는 active다.

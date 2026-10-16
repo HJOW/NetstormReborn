@@ -33,10 +33,10 @@ private:
     // records_: 기록.
     std::map<std::uint32_t,std::unique_ptr<Record>> records_;
 };
-// 현재 signed 정렬과 Slider 배경 인자·실제 문자열 사건 ID 전역이다. 사건 ID는 원본 초기화 결과를 공급한다.
-// 초기 정렬은 46, 나머지 ID/type은 실행 초기화 후 값이며 PE의 미초기화 0으로 대체하면 안 된다.
+// 현재 +20 종류 BYTE와 Slider 배경 인자·실제 문자열 사건 ID 전역이다. +28 위치 정렬과 구별한다. 사건 ID는 원본 초기화 결과를 공급한다.
+// 초기 종류는46, 나머지 ID/type은 실행 초기화 후 값이며 PE의 미초기화 0으로 대체하면 안 된다.
 struct ScrollingTextGumpWidgetState {
-    // alignment: 항목의 좌우·상하 정렬을 선택하는 값.
+    // alignment: +20의 종류 BYTE이며 +28 위치 정렬과 구별한다.
     std::int8_t alignment{46};
     // sliderType: 스크롤바 타입.
     // sliderFrame: 스크롤바 프레임.
@@ -116,7 +116,7 @@ private:
     std::uint32_t Hit(std::uint32_t token,std::uint32_t x,std::uint32_t y) const;
     // create_: 등록 표 +0이 실제 루트다. 외부에서 표를 바꿀 때 collection.root도 같은 토큰으로 맞춰야 한다 (GumpCreateState).
     GumpCreateState& create_;
-    // state_: 현재 signed 정렬과 Slider 배경 인자·실제 문자열 사건 ID 전역이다. 사건 ID는 원본 초기화 결과를 공급한다 (ScrollingTextGumpWidgetState).
+    // state_: 현재 +20 종류 BYTE와 Slider 배경 인자·실제 문자열 사건 ID 전역이다. +28 위치 정렬과 구별한다. 사건 ID는 원본 초기화 결과를 공급한다 (ScrollingTextGumpWidgetState).
     ScrollingTextGumpWidgetState& state_;
     // factory_: 타입에 맞는 객체를 생성하는 처리기.
     const GumpCreate& factory_;

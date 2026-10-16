@@ -113,7 +113,7 @@ void ScrollingTextGumpWidgets::ReplaceBuffer(std::uint32_t token,std::uint32_t b
 std::uint32_t ScrollingTextGumpWidgets::Construct(std::uint32_t token,std::int32_t width,std::int32_t height,std::uint32_t font,std::uint32_t color) const {
     Node(token);factory_.Construct(token,0,0,0,1);auto& node=Node(token);
     node.vtable=create_.collection.edition==o::OriginalEdition::Patch1078 ? kVtable : kCdVtable;
-    node.reserved={0,0};node.alignFlags=static_cast<std::uint32_t>(static_cast<std::int32_t>(state_.alignment));
+    node.reserved={0,0};node.command=static_cast<std::uint32_t>(static_cast<std::int32_t>(state_.alignment));
     if (!hooks_.allocate) throw std::invalid_argument("다중 줄 Widget 할당 경계 필요");
     const auto buffer=hooks_.allocate(kBufferBytes);
     Node(token).buffer=buffer ? buffers_.Construct(buffer,kLines) : 0;Node(token).ownsBuffer=1;

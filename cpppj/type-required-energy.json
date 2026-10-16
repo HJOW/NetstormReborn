@@ -29,8 +29,8 @@
     "cpppj/tests/fixtures/type-required-energy-x86.tsv": "8bcb3e215c958f5df0a395365059f5481801b1660569f2f04c0720f394f14f4c",
     "cpppj/tests/TypeRequiredEnergyTests.cpp": "0802ab400413ec5da3f2d03a4ac6b6f88e2d088915646609a2ca0bb39a02b05c",
     "cpppj/src/o/CMakeLists.txt": "5914ae795283dac964ea550a0d6593e4b96b84f5284f8785696fd334649983b8",
-    "cpppj/src/client/CMakeLists.txt": "8ccd708c3f414ab63e3655812be62a33734957ee9d737572911a4c272356d449",
-    "cpppj/tests/CMakeLists.txt": "5d0d2eb81f86adb869db7732cb70ab550f3a9121392a5ce36792848c847bde6f"
+    "cpppj/src/client/CMakeLists.txt": "3e1be7033a150c975abfcd3b6f15d092cbaf30cb458e9e35eda7a761cb112a05",
+    "cpppj/tests/CMakeLists.txt": "3ac25e61d4fad08405fd70aff32d3ea7673e6905c51865930372c32623126b41"
   },
   "product_validation": {
     "configuration": "Release",
@@ -1068,6 +1068,33 @@
         "log": "extracted/goal-cursor-lifecycle-20261017-ctest.log",
         "output_log": "extracted/goal-cursor-lifecycle-20261017-ctest-output.log"
       }
+    },
+    {
+      "date": "2026-10-17",
+      "host": "HJOW-Athlon",
+      "reason": "단위112 공통 Client 트리의 메뉴/장식/제목/Slider 입력·픽셀과 +20 종류 필드 교정 등록. 원본2352행·기존 TYPE 제품·기대값은 보존",
+      "cmake_sha256": {
+        "cpppj/src/client/CMakeLists.txt": {
+          "previous": "8ccd708c3f414ab63e3655812be62a33734957ee9d737572911a4c272356d449",
+          "current": "3e1be7033a150c975abfcd3b6f15d092cbaf30cb458e9e35eda7a761cb112a05"
+        },
+        "cpppj/tests/CMakeLists.txt": {
+          "previous": "5d0d2eb81f86adb869db7732cb70ab550f3a9121392a5ce36792848c847bde6f",
+          "current": "3ac25e61d4fad08405fd70aff32d3ea7673e6905c51865930372c32623126b41"
+        }
+      },
+      "focused_tests": 2,
+      "focused_failed": 0,
+      "ctest": {
+        "total": 1458,
+        "passed": 1457,
+        "failed": 1,
+        "total_seconds": 240.09,
+        "exit_code": 8,
+        "log": "extracted/goal-raw-menu-20261017-ctest.log",
+        "output_log": "extracted/goal-raw-menu-20261017-ctest-output.log"
+      },
+      "remaining_failure": "기존 시스템 기본 소프트웨어 커서 불투명 픽셀 검사: 단독 재현, Cursor.cpp 변경 없음, 원인 미확정"
     }
   ]
 }

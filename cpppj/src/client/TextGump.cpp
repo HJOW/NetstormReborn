@@ -51,7 +51,7 @@ std::uint32_t TextGump::Construct(std::uint32_t token,std::int32_t width,std::in
     if (patch) node.vtable=kTextVtable;
     node.head=0;
     if (!patch) node.vtable=kCdTextVtable;
-    node.alignFlags=static_cast<std::uint32_t>(static_cast<std::int32_t>(state_.alignment));
+    node.command=static_cast<std::uint32_t>(static_cast<std::int32_t>(state_.alignment));
     node.baseWidth=static_cast<float>(width);node.width=static_cast<float>(static_cast<double>(width)*node.scale);
     node.baseHeight=static_cast<float>(height);node.height=static_cast<float>(static_cast<double>(height)*node.scale);
     node.textContext={0,font,color,0,0,0,1,1};node.flags|=kGumpDrawClip;return token;

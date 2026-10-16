@@ -1,0 +1,18 @@
+2	report	main
+2	snapshot	extracted/goal-raw-menu-20261017-main.bmp
+4	click	Options
+7	report	options
+7	snapshot	extracted/goal-raw-menu-20261017-options.bmp
+12	click	Resolution >
+15	report	resolution
+15	snapshot	extracted/goal-raw-menu-20261017-resolution.bmp
+20	click	800 by 600
+24	report	resized
+24	snapshot	extracted/goal-raw-menu-20261017-resized.bmp
+30	esc
+34	click	Help
+38	report	help
+38	snapshot	extracted/goal-raw-menu-20261017-help.bmp
+44	click	About NetStorm
+48	report	about
+48	snapshot	extracted/goal-raw-menu-20261017-about.bmp

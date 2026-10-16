@@ -7,12 +7,12 @@
 namespace netstorm::client {
 // 원본 StoneButton 파생 +170 방향이다. 버튼/배경/글자 문맥과 동일 객체를 공유한다.
 struct ScrollGumpArrowNode: StoneButtonGumpNode { /* direction: 방향이나 회전을 선택하는 값. */ std::uint32_t direction{}; };
-// 현재 signed 정렬 BYTE와 손잡이 기본 배경 전역이다. 초기 정렬은 두 원본에서 39/51/1이다.
+// 현재 +20 종류 BYTE와 손잡이 기본 배경 전역이다. 초기 종류는 두 원본에서39/51/1이다. 위치 정렬 +28과 구별한다.
 // defaultType은 원본 자산 로딩 후의 타입 토큰을 공급해야 한다. 원본 배포 PE 초기값은 0, frame은 1이다.
 struct ScrollGumpWidgetState {
-    // sliderAlignment: 스크롤바 정렬.
-    // thumbAlignment: 스크롤손잡이 정렬.
-    // arrowAlignment: 화살표 정렬.
+    // sliderAlignment: 스크롤바 종류 BYTE(기존 이름).
+    // thumbAlignment: 손잡이 종류 BYTE(기존 이름).
+    // arrowAlignment: 화살표 종류 BYTE(기존 이름).
     std::int8_t sliderAlignment{39},thumbAlignment{51},arrowAlignment{1};
     // defaultType: 기본 타입.
     // defaultFrame: 기본 프레임.

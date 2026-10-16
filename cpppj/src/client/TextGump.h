@@ -7,8 +7,8 @@
 namespace netstorm::client {
 // 원본 TextGump +a0의 소유 체인이다. 기본 생성/표시/수명 저장소와 같은 객체여야 한다.
 struct TextGumpNode: GumpCreateNode { /* head: 연결 목록에서 순회를 시작할 머리 번호. */ std::uint32_t head{}; };
-// 실제 생성자가 signed로 확장하는 정렬 BYTE 전역이다. 기본값은 두 배포 PE의 초기값이며 호출자가 변경할 수 있다.
-struct TextGumpState { /* alignment: 항목의 좌우·상하 정렬을 선택하는 값. */ std::int8_t alignment{45}; };
+// 실제 생성자가 +20(command)에 signed로 확장하는 종류 BYTE 전역이다. 기본값은 두 배포 PE의 초기값이며 호출자가 변경할 수 있다.
+struct TextGumpState { /* alignment: 기존 이름을 유지한 종류 BYTE이며 위치 정렬 필드와 구별한다. */ std::int8_t alignment{45}; };
 // 파생 노드와 기본 노드는 같은 주소를 반환해야 한다. 실제 저장소의 반납은 GumpLifetime이 맡는다.
 struct TextGumpHooks {
     // node: 토큰에 대응하는 저장 노드를 조회하는 콜백.
@@ -42,7 +42,7 @@ private:
     TextGumpNode& Node(std::uint32_t token) const;
     // create_: 등록 표 +0이 실제 루트다. 외부에서 표를 바꿀 때 collection.root도 같은 토큰으로 맞춰야 한다 (GumpCreateState).
     GumpCreateState& create_;
-    // state_: 실제 생성자가 signed로 확장하는 정렬 BYTE 전역이다. 기본값은 두 배포 PE의 초기값이며 호출자가 변경할 수 있다 (TextGumpState).
+    // state_: 실제 생성자가 +20(command)에 signed로 확장하는 종류 BYTE 전역이다. 기본값은 두 배포 PE의 초기값이며 호출자가 변경할 수 있다 (TextGumpState).
     TextGumpState& state_;
     // factory_: 타입에 맞는 객체를 생성하는 처리기.
     const GumpCreate& factory_;

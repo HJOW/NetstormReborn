@@ -1218,3 +1218,5 @@ set_source_files_properties(OwnerCaptureTests.cpp PROPERTIES COMPILE_DEFINITIONS
 target_sources(netstorm_tests PRIVATE CursorLifecycleTests.cpp)
 set_source_files_properties(CursorLifecycleTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_CURSOR_LIFECYCLE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/cursor-lifecycle-x86.tsv\"")
+# 실제 Client 공통 트리의 원본 메뉴 입력/제목/하위 메뉴/픽셀과 삭제를 검사한다.
+target_sources(netstorm_tests PRIVATE RawMenuControlsTests.cpp)

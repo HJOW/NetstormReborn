@@ -1,6 +1,7 @@
 // 원본 004d0120·004cebf0·004cf270·004ce580의 메뉴/명령 흐름을 표시 기반과 연결한다.
 // 전체 Gump/StyleText와 게임 규칙은 후속이다. 저장 미션 월드는 GameWorld에 연결한다.
 #include "client/UberGump.h"
+#include "client/RawMenuControls.h"
 #include "client/ClientAudio.h"
 #include "client/ClientMain.h"
 #include "client/CampaignClientServices.h"
@@ -22,6 +23,19 @@
 #include <iostream>
 
 namespace netstorm::client {
+namespace {
+// 팝업 아래에 남는 기존 UI 글자를 같은 원본 글리프 몸체로 먼저 합성한다. 월드 전용 SceneImage는 UI 글자를 생략한다.
+void RasterMenuBackdropText(IndexedImage& image,std::span<const RenderText> texts) {
+    const auto width=static_cast<int>(image.width),height=static_cast<int>(image.height);const ScreenRect all{0,0,width,height};
+    GumpDrawState clip;GumpPixelTarget target(image.indices,width,height,clip);GumpGlyphColorState colors;const auto hooks=MakeGumpGlyphPixelHooks(target,colors);
+    // 현재 각 글자의 내부 클립과 원본 출력 문맥을 그대로 적용한다.
+    for (const auto& text:texts) {
+        SetGumpDrawClip(clip,text.clip ? ClipScreenRect(all,*text.clip) : all);
+        const GumpTextContext context{(text.shadow ? 2U : 0U)|(text.outline ? 4U : 0U),0,text.color,0,0,text.shadowColor,text.shadowOffset.x,text.shadowOffset.y};
+        DrawBitmapGlyphText(text.bytes,text.font,{text.x,text.y},context,hooks,static_cast<std::int32_t>(text.bytes.size()));
+    }
+}
+}
 // 화면 검사도 GUI가 표시하는 같은 raw 월드의 삭제/프로세스 경로를 사용한다.
 bool UberGump::InspectDestroySurface(std::string_view type,float x,float y) {
     if (!world_ || (type!="bridge" && type!="island" && type!="noIsland")) throw std::invalid_argument("검사할 raw 월드/표면 종류 오류");
@@ -114,6 +128,15 @@ UberGump::UberGump(Client& client) : client_(client) {
     rawButtons_=std::make_unique<RawButtonControls>(client_.Assets().Edition(),RawButtonHooks{
         [this] { return client_.WallSeconds(); },[this](auto code) { return client_.Poll(code); },
         [this] { if (client_.Audio()) client_.Audio()->Sounds().PlayByName("button.wav",0,0,0,0,0); }});
+    RawMenuHooks menuHooks;
+    menuHooks.command=[this](auto command,auto,auto parameter) {
+        if (command!=0x01ffffffU || !parameter || parameter>actions_.size()) throw std::logic_error("Client 팝업 DialogAction 연결 번호 오류");
+        state_.Post(actions_[parameter-1]); // 기존 DialogAction의 임시 호스트 번호이며 원본 게임 명령 토큰과 구별한다.
+    };
+    menuHooks.readInt=[this](std::string_view key,std::int32_t& value) { value=client_.Configuration().GetInt(key); };
+    menuHooks.sound=[this](std::string_view name) { client_.WorldAudio().Sounds().PlayByName(name,0,0,0,0,0); };
+    menuHooks.poll=[this](auto code) { return client_.Poll(code); };menuHooks.cursor=[this](auto number) { client_.GetCursor().Set(static_cast<int>(number)); };
+    rawButtons_->EnableMenus(client_.Assets(),client_.Fonts(),std::move(menuHooks)).SetPalette(client_.GetScreen().Colors());
     warnings_=std::make_unique<WarningMessages>(client_.Fonts(),client_.GetScreen().Colors(),[this] { return client_.WallSeconds(); },[this] {
         client_.WorldAudio().Sounds().PlayByName("newWarnMessage.wav",0,0,0,0,0);
     });
@@ -342,7 +365,7 @@ void UberGump::Event(InputEvent event) {
         return;
     }
     if (!popup_.empty() && (event.code & 0x03ffffffu) == InputCode::kLeftButton &&
-        (event.code & InputCode::kRelease) == 0 && !GumpControlInput::Contains(popupRect_, {event.x, event.y})) {
+        (event.code & InputCode::kRelease) == 0 && !rawButtons_->Menus()->Contains({event.x,event.y})) {
         state_.Post({"Menu", "close"}); return;
     }
     if (world_ && userInput_ && state_.phase==ClientPhase::Mission && popup_.empty()) {
@@ -351,7 +374,7 @@ void UberGump::Event(InputEvent event) {
     }
     const auto old=rawButtons_->Pressed();auto activated=rawButtons_->Event(event);
     // 메뉴 행은 현재 어댑터에서 누름 즉시 실행한다. 돌 버튼 명령은 실제 부모 click 통지만 사용한다.
-    if (!activated && std::any_of(input_.Controls().begin(),input_.Controls().end(),[&](const GumpControl& control) {
+    if (popup_.empty() && !activated && std::any_of(input_.Controls().begin(),input_.Controls().end(),[&](const GumpControl& control) {
         return control.menu && GumpControlInput::Contains(control.rect,{event.x,event.y}); })) activated=input_.Event(event);
     if (old!=rawButtons_->Pressed()) rebuild_=true;
     if (activated && *activated >= 0 && static_cast<std::size_t>(*activated) < actions_.size()) {
@@ -475,7 +498,7 @@ void UberGump::Compose() {
     // 돌 버튼은 누르는 동안만 명암과 글자 위치를 바꾼다.
     const auto button = [&](const DialogItem& item, int x, int y, int w) {
         const int id = control(item, {x, y, x + w, y + kButtonHeight + 1});
-        const bool drawRaw=!controls && popup_.empty(); // 펼침 메뉴 아래의 장식 버튼은 입력 트리에 등록하지 않는다.
+        const bool drawRaw=!controls && (popup_.empty() || state_.phase==ClientPhase::MainMenu); // 팝업 아래 메인 버튼도 같은 실제 노드를 유지한다.
         const auto label=drawRaw ? rawButtons_->Label(id) : FontBytes(item.label);
         const ScreenRect r{x, y, x + w, y + kButtonHeight};
         // 실제 raw 자식의 상대 (1,1) 부착/크기/눌림을 사용한다. 첫 준비 합성은 다음 raw 합성으로 대체된다.
@@ -507,21 +530,15 @@ void UberGump::Compose() {
         if (world_) client_.GetRenderer().SetOverlay(world_->SelectionImage());
     } else {
         if (!popup_.empty()) {
-            if (controls) { regions.clear(); labels_.clear(); actions_.clear(); }
-            else regions.clear();
-            int menuWidth = 140;
-            // 원본 글꼴 폭과 체크 표시 여백으로 목록의 폭을 정한다.
-            for (const auto& item : page_.items) menuWidth = std::max(menuWidth, font.Measure(FontBytes(item.label)) + 28);
-            const int menuHeight = static_cast<int>(page_.items.size()) * kRowHeight + 8;
-            const int x = std::clamp(width / 2 + 2, 0, width - menuWidth), y = std::clamp(height / 2 - 27, 0, height - menuHeight);
-            popupRect_ = {x, y, x + menuWidth, y + menuHeight}; Tile(*canvas, decorations_.at("A01"), popupRect_); Bevel(*canvas, popupRect_, light, dark);
-            int row = y + 4;
-            // 목록은 버튼 뗌을 기다리지 않고 누름에 실행한다.
-            for (const auto& item : page_.items) {
-                const int id = control(item, {x + 4, row, x + menuWidth - 4, row + kRowHeight});
-                if (input_.HoveredMenu() == id) Fill(*canvas, {x + 4, row, x + menuWidth - 4, row + kRowHeight}, dark);
-                if (item.checked) Paste(*canvas, decorations_.at("J02"), x + 5, row + 3, all);
-                text.push_back({&font, FontBytes(item.label), x + 20, row + 1, item.enabled ? static_cast<std::uint8_t>(255) : dark, 0, {1, 1}, true, false}); row += kRowHeight;
+            if (controls) {
+                regions.clear();labels_.clear();actions_.clear();
+                // 첫 합성에서는 호스트 DialogAction 번호만 준비한다. 실제 경계는 아래 원본 메뉴 생성 뒤 읽는다.
+                for (const auto& item:page_.items) control(item,{0,0,1,1});
+            } else {
+                regions=rawButtons_->Menus()->Controls();
+                // 먼저 기존 바탕 글자를 실제 픽셀로 합성하고 그 위에 같은 원본 메뉴 Draw를 실행한다.
+                RasterMenuBackdropText(*canvas,text);text.clear();
+                rawButtons_->Menus()->Draw(canvas->indices,width,height,client_.GetScreen().Colors(),client_.GetScreen().ShadeMaps());
             }
         } else if (state_.phase == ClientPhase::Dialog || state_.phase == ClientPhase::Briefing) {
             if (!page_.background.empty()) {
@@ -573,8 +590,19 @@ void UberGump::Compose() {
         std::vector<std::string> originalLabels;originalLabels.reserve(labels_.size());
         // 원본 돌 버튼의 63바이트 라벨은 UTF-8가 아닌 기존 게임 글꼴 바이트를 사용한다.
         for (const auto& label:labels_) originalLabels.push_back(FontBytes(label));
-        rawButtons_->SetControls(regions,originalLabels,width,height,{buttonTextureType_,buttonTextureFrame_,
+        if (popup_.empty()) rawButtons_->SetControls(regions,originalLabels,width,height,{buttonTextureType_,buttonTextureFrame_,
             static_cast<std::int16_t>(buttonTextureMetrics_.width),static_cast<std::int16_t>(buttonTextureMetrics_.height),buttonColors});
+        if (!popup_.empty()) {
+            auto& menus=*rawButtons_->Menus();menus.SetPalette(client_.GetScreen().Colors());
+            menus.Open({width/2+2,height/2-27},[&](const MenuGumpWidgets& widgets,const MenuGumpControls& controls,const MenuGump&) {
+                widgets.BeginVertical();
+                // 기존 팝업 동작의 호스트 인덱스만 연결하며 실제 게임 명령의 원본 토큰은 이 어댑터와 구분한다.
+                for (std::size_t index=0;index<page_.items.size();++index) {
+                    const auto& item=page_.items[index];controls.AddChecked(item.checked,FontBytes(item.label),0x01ffffffU,static_cast<std::uint32_t>(index+1),true,item.enabled);
+                }
+            });
+            regions=menus.Controls();
+        }
         input_.SetControls(std::move(regions));
         // 새 페이지는 같은 raw 노드로 한 번 다시 합성하며 중간 어댑터 그림은 화면에 제출하지 않는다.
         controlsChanged_=false;Compose();return;
@@ -598,6 +626,7 @@ std::string UberGump::Report() const {
     out << "paused\t" << client_.Paused() << "\nsound\t" << client_.Configuration().GetInt("sound") << "\n";
     out << "thunder_processes\t" << client_.ThunderFlashCount() << '\n';
     out<<rawButtons_->Report()<<'\n';
+    out<<rawButtons_->Menus()->Report();
     out<<warnings_->Report();
     out.precision(12); out<<"time\t"<<client_.Time().game<<'\t'<<client_.Time().wall<<"\n";
     out << "fullscreenMarker\t" << client_.Files().TryRead("fullscreenStateFile.dat").has_value() << "\n";

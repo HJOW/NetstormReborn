@@ -127,3 +127,5 @@ target_sources(netstorm PRIVATE ParticlePaletteMemory.cpp ParticlePaletteMemory.
 target_sources(netstorm PRIVATE OwnerColorMaps.h OwnerColorMaps.cpp VFXMappedDraw.h VFXMappedDraw.cpp)
 # 사제 건설 선택과 내려놓기의 취득/취소·임시 객체 수명을 공유한다.
 target_sources(netstorm PRIVATE RawCursorLifecycle.h RawCursorLifecycle.cpp)
+# 같은 실제 Client Gump 트리에 메뉴·장식·제목·Slider를 조립한다.
+target_sources(netstorm PRIVATE RawMenuControls.h RawMenuControls.cpp)

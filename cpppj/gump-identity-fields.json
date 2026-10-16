@@ -1,0 +1,235 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "uniqueInputs": 143,
+  "executedInstructions": 286,
+  "instructions": [
+    {
+      "edition": "originals",
+      "kind": "single",
+      "entry": "004bb170",
+      "source": "00540448",
+      "initialByte": 45,
+      "load": "004bb1ba",
+      "loadBytes": "0fbe0548045400",
+      "store": "004bb1cf",
+      "storeBytes": "894320",
+      "field": 32
+    },
+    {
+      "edition": "originals",
+      "kind": "scrolling",
+      "entry": "004bc060",
+      "source": "00540449",
+      "initialByte": 46,
+      "load": "004bc0a4",
+      "loadBytes": "0fbe0549045400",
+      "store": "004bc0b1",
+      "storeBytes": "894520",
+      "field": 32
+    },
+    {
+      "edition": "originals",
+      "kind": "slider",
+      "entry": "004a64b0",
+      "source": "00540442",
+      "initialByte": 39,
+      "load": "004a6532",
+      "loadBytes": "0fbe0542045400",
+      "store": "004a653d",
+      "storeBytes": "894620",
+      "field": 32
+    },
+    {
+      "edition": "originals",
+      "kind": "arrow",
+      "entry": "004a63b0",
+      "source": "0054041c",
+      "initialByte": 1,
+      "load": "004a640d",
+      "loadBytes": "0fbe0d1c045400",
+      "store": "004a641d",
+      "storeBytes": "894e20",
+      "field": 32
+    },
+    {
+      "edition": "originals",
+      "kind": "thumb",
+      "entry": "004a60e0",
+      "source": "0054044e",
+      "initialByte": 51,
+      "load": "004a6130",
+      "loadBytes": "0fbe154e045400",
+      "store": "004a6156",
+      "storeBytes": "895620",
+      "field": 32
+    },
+    {
+      "edition": "originalCD",
+      "kind": "single",
+      "entry": "004b7280",
+      "source": "00535f5c",
+      "initialByte": 45,
+      "load": "004b72ca",
+      "loadBytes": "0fbe055c5f5300",
+      "store": "004b72d1",
+      "storeBytes": "894320",
+      "field": 32
+    },
+    {
+      "edition": "originalCD",
+      "kind": "scrolling",
+      "entry": "004b5c30",
+      "source": "00535f60",
+      "initialByte": 46,
+      "load": "004b5c7d",
+      "loadBytes": "0fbe0d605f5300",
+      "store": "004b5c87",
+      "storeBytes": "894b20",
+      "field": 32
+    },
+    {
+      "edition": "originalCD",
+      "kind": "slider",
+      "entry": "00417bd0",
+      "source": "00535f44",
+      "initialByte": 39,
+      "load": "00417c5d",
+      "loadBytes": "0fbe0d445f5300",
+      "store": "00417c64",
+      "storeBytes": "894f20",
+      "field": 32
+    },
+    {
+      "edition": "originalCD",
+      "kind": "arrow-0",
+      "entry": "00417bd0",
+      "source": "00535eac",
+      "initialByte": 1,
+      "load": "00417d48",
+      "loadBytes": "0fbe0dac5e5300",
+      "store": "00417d57",
+      "storeBytes": "894e20",
+      "field": 32
+    },
+    {
+      "edition": "originalCD",
+      "kind": "arrow-1",
+      "entry": "00417bd0",
+      "source": "00535eac",
+      "initialByte": 1,
+      "load": "00417def",
+      "loadBytes": "0fbe0dac5e5300",
+      "store": "00417dfe",
+      "storeBytes": "894b20",
+      "field": 32
+    },
+    {
+      "edition": "originalCD",
+      "kind": "arrow-2",
+      "entry": "00417bd0",
+      "source": "00535eac",
+      "initialByte": 1,
+      "load": "00417f53",
+      "loadBytes": "0fbe0dac5e5300",
+      "store": "00417f62",
+      "storeBytes": "894b20",
+      "field": 32
+    },
+    {
+      "edition": "originalCD",
+      "kind": "arrow-3",
+      "entry": "00417bd0",
+      "source": "00535eac",
+      "initialByte": 1,
+      "load": "00417ffb",
+      "loadBytes": "0fbe0dac5e5300",
+      "store": "00418018",
+      "storeBytes": "894e20",
+      "field": 32
+    },
+    {
+      "edition": "originalCD",
+      "kind": "thumb",
+      "entry": "004178f0",
+      "source": "00535f74",
+      "initialByte": 51,
+      "load": "00417958",
+      "loadBytes": "0fbe05745f5300",
+      "store": "0041796b",
+      "storeBytes": "894620",
+      "field": 32
+    }
+  ],
+  "sha256": {
+    "tools/analyze_gump_identity_fields.py": "ac30ea084e6a6af4e75be9f474757806c0a955878c892ae60a18623f22db94ad",
+    "cpppj/tests/fixtures/gump-identity-fields-x86.tsv": "767342e6d45d40a023897c4a606ab2f26ac49009a3a9daa595577c8ba4c0e023",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/refined/originalCD/functions.tsv": "453aa383c27baf8eefa00d97bf44051d18460150556511c2eb7a46f111e92def"
+  },
+  "limitations": [
+    "실제 MOVSX와 +20 MOV 두 명령만 실행한다. 생성자 전체·기본 생성/할당/가상 효과 관찰이 아니다.",
+    "+28 표식 보존은 두 대입 명령의 효과다. 기본 생성자는 별도 기존 몸체로 +28을 초기화한다."
+  ],
+  "productValidation": {
+    "configuration": "Release",
+    "buildExitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "focusedTests": 2,
+    "focusedFailed": 0,
+    "ctest": {
+      "total": 1458,
+      "passed": 1457,
+      "failed": 1,
+      "seconds": 240.09,
+      "exitCode": 8,
+      "log": "extracted/goal-raw-menu-20261017-ctest.log",
+      "outputLog": "extracted/goal-raw-menu-20261017-ctest-output.log"
+    },
+    "remainingFailure": {
+      "test": "Cursor_DefaultResourceMappingAndSoftwareFrames_AreUsable",
+      "assertion": "소프트웨어 커서의 불투명 픽셀 수 > 0",
+      "isolatedExitCode": 1,
+      "isolatedLog": "extracted/goal-raw-menu-20261017-cursor-isolated.log",
+      "cursorSourceChanged": false,
+      "cause": "미확정"
+    },
+    "ui": {
+      "exitCode": 0,
+      "frames": 65,
+      "states": 6,
+      "resized": [
+        800,
+        600
+      ],
+      "aboutReached": true,
+      "backdropButtonsCompared": 8,
+      "backdropButtonPixelDifferences": 0,
+      "report": "extracted/goal-raw-menu-20261017-ui-script-final.tsv",
+      "validation": "extracted/goal-raw-menu-20261017-ui-validation.txt",
+      "osWindowTitle": "NetStorm Main Menu",
+      "osCaptureError": "window capture timed out: timed out waiting on channel",
+      "osCaptureAttempts": 2,
+      "osCoordinateInput": false,
+      "captureKind": "게임 Renderer BMP",
+      "optionsRestored": true,
+      "trackedFullscreenMarkerRestored": true
+    },
+    "sourceSha256": {
+      "cpppj/src/client/RawMenuControls.h": "7c91668a0f3a6219494893fe31f4378a47359faf5d22d1242ebc07af98742366",
+      "cpppj/src/client/RawMenuControls.cpp": "285e0e7c6c8fd3b4f00bbe42bbaa018afc6e4629dbf2855d90dd6d13716380a9",
+      "cpppj/src/client/RawButtonControls.h": "596feb0580f735049aae1d3619ced12fcd8702bb4c4adcab684674626226f1f9",
+      "cpppj/src/client/RawButtonControls.cpp": "7c382a110a7187a7af3d227e09922cf8d43a4e9827ce6d82a862fbcd74021906",
+      "cpppj/src/client/UberGump.cpp": "ec34a458ece2440b8376b7d524f7a00f3d34a0487fdbb3e2d61c9891f54914c6",
+      "cpppj/src/client/TextGump.cpp": "8f501caa7ba39352386060e81c79835eb75e070e6231d22e879b3c17142c5804",
+      "cpppj/src/client/ScrollingTextGumpWidgets.cpp": "6ef03644d61c31ca94c11f163b6774f2f5f608727209ff57adf6c9cc4c73c849",
+      "cpppj/src/client/ScrollGumpWidgets.cpp": "378d5b65e02f8e5e1693fca50b2a3582e07e53b0f3e2df4ffe36c3fb618f435b",
+      "cpppj/tests/RawMenuControlsTests.cpp": "dc9c68a673d95e0ce26b93635f094f58420e3fc23734002859b34d30c034e1e4",
+      "cpppj/tests/fixtures/client-menu-ui.tsv": "c25776b568d9a691ef381fa3690c7f71ce870d4d3790e8ef3d6c375de598af23",
+      "cpppj/src/client/Cursor.cpp": "5dfefaf0162895b6ae65c7092a67e50d8811d7047e70dda3928ff5508acdc458"
+    }
+  }
+}

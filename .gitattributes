@@ -968,3 +968,15 @@ cpppj/tests/fixtures/cursor-lifecycle-x86.tsv text eol=lf
 cpppj/src/client/RawCursorLifecycle.* text eol=lf
 cpppj/tests/CursorLifecycleTests.cpp text eol=lf
 docs/exe/cpp-cursor-lifecycle-20261017.md text eol=lf
+# 공통 트리의 실제 메뉴 조립과 종류 필드 교정 근거를 같은 바이트로 보존한다.
+cpppj/src/client/RawMenuControls.* text eol=lf
+cpppj/tests/RawMenuControlsTests.cpp text eol=lf
+tools/analyze_gump_identity_fields.py text eol=lf
+cpppj/gump-identity-fields.json text eol=lf
+cpppj/tests/fixtures/gump-identity-fields-x86.tsv text eol=lf
+cpppj/src/client/ScrollGumpWidgets.* text eol=lf
+cpppj/src/client/ScrollingTextGumpWidgets.* text eol=lf
+cpppj/src/client/TextGump.* text eol=lf
+cpppj/src/client/UberGump.cpp text eol=lf
+docs/exe/cpp-client-menu-runtime-20261017.md text eol=lf
+cpppj/tests/fixtures/client-menu-ui.tsv text eol=lf

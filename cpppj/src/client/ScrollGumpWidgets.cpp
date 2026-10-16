@@ -56,7 +56,7 @@ std::uint32_t ScrollGumpWidgets::ConstructArrow(std::uint32_t token,std::int32_t
     Arrow(token);const std::array<std::uint32_t,8> context{0,0,color,0,0,0,1,1};
     stones_.Construct(token,width,height,nullptr,unused,&context);auto& node=Arrow(token);
     node.vtable=create_.collection.edition==o::OriginalEdition::Patch1078 ? kArrow : kCdArrow;
-    node.buttonFlags|=kKeepPopups;node.alignFlags=Alignment(state_.arrowAlignment);node.direction=direction;return token;
+    node.buttonFlags|=kKeepPopups;node.command=Alignment(state_.arrowAlignment);node.direction=direction;return token;
 }
 // 기본 배경 생성에 넘기는 현재 type/frame은 손잡이의 추가 인자 사본과 별개다.
 std::uint32_t ScrollGumpWidgets::ConstructThumb(std::uint32_t token,std::int32_t width,std::int32_t height,
@@ -64,7 +64,7 @@ std::uint32_t ScrollGumpWidgets::ConstructThumb(std::uint32_t token,std::int32_t
     Thumb(token);const auto defaultType=state_.defaultType,defaultFrame=state_.defaultFrame;
     backgrounds_.Construct(token,0,0,kTrackFlags,kThumbFlags,defaultType,defaultFrame);auto& node=Thumb(token);
     node.vtable=create_.collection.edition==o::OriginalEdition::Patch1078 ? kThumb : kCdThumb;
-    node.handle={0,0,0,0};node.alignFlags=Alignment(state_.thumbAlignment);node.detailType=type;node.detailFrame=frame;
+    node.handle={0,0,0,0};node.command=Alignment(state_.thumbAlignment);node.detailType=type;node.detailFrame=frame;
     node.baseWidth=static_cast<float>(width);node.width=static_cast<float>(static_cast<double>(width)*node.scale);
     node.baseHeight=static_cast<float>(height);node.height=static_cast<float>(static_cast<double>(height)*node.scale);
     node.flags|=kKeyboard;return token;
@@ -91,7 +91,7 @@ std::uint32_t ScrollGumpWidgets::Construct(std::uint32_t token,std::int32_t widt
     const bool patch=create_.collection.edition==o::OriginalEdition::Patch1078;
     node.vtable=patch ? kSlider : kCdSlider;node.minimum=node.maximum=node.position=node.page=node.step=0;
     node.reservedB0=0;node.scrollFlags=0;node.reserved={0,0};node.decrement=node.increment=node.thumb=0;
-    node.alignFlags=Alignment(state_.sliderAlignment);
+    node.command=Alignment(state_.sliderAlignment);
     if (!width) width=kDefaultSize;if (!height) height=kDefaultSize;
     const bool horizontal=height<width;node.scrollFlags=horizontal ? 1U : 0U;node.flags|=kKeyboard;node.step=1;
     node.baseWidth=static_cast<float>(width);node.width=static_cast<float>(static_cast<double>(width)*node.scale);

@@ -9,6 +9,10 @@
 #include <string>
 
 namespace netstorm::client {
+class RawMenuControls; // 같은 트리에 연결하는 실제 메뉴 처리기다.
+struct RawMenuHooks; // 현재 Client의 메뉴 외부 효과다.
+class GameAssets; // Client가 소유하는 실제 TYPE/SHP 저장소다.
+class FontStore; // Client가 소유하는 실제 글꼴 저장소다.
 // 실제 fortGump A00 헤더와 현재 팔레트다. 픽셀 출력과 raw 배경 생성은 같은 자산을 사용한다.
 struct RawButtonAssets {
     // type: 타입 표에서 객체 종류를 찾는 번호.
@@ -50,6 +54,10 @@ public:
     // 0047d890/CD004773a0: 현재 캡처/dialog/루트에 생산 갱신 사건을 원본 Route 순서로 분배한다.
     // 생산 패널 노드가 아직 없으면 실제 트리의 미처리 반환을 유지한다.
     void RefreshProduction();
+    // 같은 트리/입력/수명에 실제 원본 메뉴 계층을 한 번 연결한다. 자산/글꼴은 Client가 소유한다.
+    RawMenuControls& EnableMenus(const GameAssets& assets,FontStore& fonts,RawMenuHooks hooks);
+    // 연결된 실제 메뉴를 빌린다. 연결 전에는 nullptr다.
+    RawMenuControls* Menus() const;
     // Player 내용물 통지는 현재 등록ID를 직접 조회하며 생산 갱신 사건으로 바꾸지 않는다.
     std::uint32_t RegisteredGump(std::uint32_t id) const;
     // 등록된 대상 자신의 가상+28만 실행한다. 전체 트리 Route/재귀 분배를 수행하지 않는다.
