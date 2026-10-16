@@ -1,0 +1,128 @@
+{
+  "host": "VM-W11-Codex",
+  "date": "2026-10-16",
+  "last_full_refined_host": "VM-W11-Codex",
+  "last_full_refined_date": "2026-10-16",
+  "observations": 744,
+  "scopes": {
+    "I": 18,
+    "A": 122,
+    "C": 26,
+    "N": 74,
+    "D": 30,
+    "F": 474
+  },
+  "precision_replays": [
+    639,
+    895
+  ],
+  "normal_returns": 1488,
+  "extended_differences": 0,
+  "status": "native-and-cpp-flight-control-validated-targeting-and-effects-pending",
+  "game_gui_runs": 0,
+  "limits": "실제 공통 제어/이동 산술/타이머/맨 오 워 수명·프레임/홈·표적 제어를 실행한다. 큰 검색/표적 검증/포위/의존/Host·썬 아비어리 조회·전송/공간/피해·무기/소리/명령/개발자진단은 선언한 경계다. 중심/offset/거리/클램프/ftol은 실제 명령이다. 전체112BYTE/7객체350BYTE/20BYTE전역/5TYPE stamp/48BYTE Sun/호출/반환/스택/비휘발/SEH/FPU/쓰기guard를 확인한다. 두 x87 재생을 고유 입력에 중복 합산하지 않는다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_flyer_frame.py": "01a53cebbedde37d8feb2fb253812312af6e41c33f1d642b52e5bdd0d905d712",
+    "tools/decomp_local_mission_transport.py": "db71da65079aa9a985a3a833edd224f089ba9a20137d92042551cb346937eb78",
+    "cpppj/src/o/RawFlyerFrame.h": "66e591165423f060a530439dab1f95d42f56f3c9e220b13d301df8d00df46a7a",
+    "cpppj/src/o/RawFlyerFrame.cpp": "f2c2ca29d03de925c2a5102e475eb9d57b2f5d0a3f7db8fc942e8abc64feabc0",
+    "cpppj/tests/FlyerFrameTests.cpp": "26252f6809f8262960fcaaee695251ba1eab7d7db0738c91f176bd46afe1ccba",
+    "cpppj/tests/fixtures/flyer-frame-x86.tsv": "627270d186495d6929cac8a1d4e74c29e92c69294558e020b7d774854b0dfc85"
+  },
+  "integration_snapshot_sha256": {
+    "cpppj/src/client/RawCampaignSession.cpp": "02330084e9a179eb76c6f78c6ffe4117cf3e69caa7257e4728c98d55e27eea4f",
+    "cpppj/src/o/CMakeLists.txt": "2ec03e08df88e43593359077ba7d4bd26b74d173fc8d1b929256da382d56ea3e",
+    "cpppj/tests/CMakeLists.txt": "8af7e46c2cc9364c2d16c950aba2b1c5a06a55124260db626189ea52ba174968",
+    "assets/unit-names.korean.json": "0a6c6d58f252d3134df720327b455b0322f604a081910e860a06e2c26504a371"
+  },
+  "historical_source_drift": {
+    "cpppj/flyer-postpop.json": {
+      "report_sha256": "86f4a7fa4551065832f619eb65fcbfac0a372e541cbebe732fb367cc3dc52539",
+      "primary_sources_match": true,
+      "current_integration_differences": {
+        "cpppj/src/client/RawCampaignSession.cpp": {
+          "historical": "c30e8b480a00f9135461c527d5af8427a9eea81d0f7085d74ecdf436d3f4b9fd",
+          "current": "02330084e9a179eb76c6f78c6ffe4117cf3e69caa7257e4728c98d55e27eea4f"
+        },
+        "cpppj/src/o/CMakeLists.txt": {
+          "historical": "153363cd3dcc57d7f4e673b9986db5f404c3c1bee144ec8e25e81a83fb831673",
+          "current": "2ec03e08df88e43593359077ba7d4bd26b74d173fc8d1b929256da382d56ea3e"
+        },
+        "cpppj/tests/CMakeLists.txt": {
+          "historical": "a0e572985fee458038234b24b91b77d6cf6bac043d4e9c4eaddb1cb44c9419b8",
+          "current": "8af7e46c2cc9364c2d16c950aba2b1c5a06a55124260db626189ea52ba174968"
+        }
+      }
+    }
+  },
+  "input_and_boundary_corrections": [
+    {
+      "preserved_prefix": "extracted/goal-flyer-frame-20261016-first-parent-input",
+      "reason": "Normal Parent getter requires attached head. Corrected both parent heads to Form70/type31/state8 and replayed PE; void/dead/free child mutations remain separate.",
+      "cpp_failure_log": "extracted/goal-flyer-frame-20261016-focused.log"
+    },
+    {
+      "preserved_prefix": "extracted/goal-flyer-frame-20261016-before-search-input",
+      "reason": "Separated actual search timer outer64 from initial outer72 timer; moved independent due inputs to64 and replayed PE. Product also corrected scatter second argument from Form to parent.",
+      "cpp_failure_log": "extracted/goal-flyer-frame-20261016-focused-corrected.log"
+    },
+    {
+      "preserved_prefix": "extracted/goal-flyer-frame-20261016-before-depend-pointer",
+      "reason": "Native004b15f0 takes target and process pointer. Asserted exact current inner pointer, normalized its +4 Form for shared dependency boundary and replayed PE. Exactly8 traces changed; all state/return columns unchanged.",
+      "cpp_failure_log": "extracted/goal-flyer-frame-20261016-focused-search.log"
+    }
+  ],
+  "product_validation": {
+    "build_exit": 0,
+    "warnings": 0,
+    "errors": 0,
+    "build_log": "extracted/goal-flyer-frame-20261016-final-build.log",
+    "native_scope_cases": 7,
+    "native_scope_failed_checks": 0,
+    "native_log": "extracted/goal-flyer-frame-20261016-native-final.log",
+    "focused_log": "extracted/goal-flyer-frame-20261016-focused-final.log",
+    "flyer_postpop_regression_cases": 5,
+    "aviary_regression_cases": 10,
+    "actual_resource_creation_cases": 1,
+    "regression_failed_checks": 0,
+    "kernel400_passed_missions": 9,
+    "kernel400_total_missions": 11,
+    "load_start_passed_missions": 11,
+    "full_ctest": {
+      "full_tests": 1379,
+      "passed": 1377,
+      "failed_checks": 2,
+      "ctest_passed": false,
+      "shell_exit_code": 8,
+      "test_seconds": 133.14,
+      "total_seconds": 133.25,
+      "failing_cases": [
+        "CampaignKernelFrames_TheStormRages",
+        "CampaignKernelFrames_DissolvedAlliance"
+      ],
+      "log": "extracted/goal-flyer-frame-20261016-ctest.log"
+    },
+    "validated_binary_sha256": {
+      "cpppj/build/bin/Release/netstorm_tests.exe": "a2f394240f745651058b999174a0425b02e55ec1f6735fc29eef595b6a22638b",
+      "cpppj/build/bin/Release/NetstormCpp.exe": "217c7a3e3a4653eef4c5a024b4d083a065f8fb554d1ed6db918200c52f3d5f67"
+    },
+    "unexecuted_link_lock_attempt_logs": [
+      "extracted/goal-flyer-frame-20261016-postpop-link-lock-attempt.log",
+      "extracted/goal-flyer-frame-20261016-aviary-link-lock-attempt.log"
+    ],
+    "current_limits": [
+      "DemoStormRages: frame103/game2.575, target search0045c4b0 pending; no frame-count improvement claimed",
+      "DissolvedAlliance: frame3/game0.075, other-parent Archer animation pending",
+      "Flight scatter0045bb80, competition0045b840, weapon00472690, finish0045bc30/004605f0, commands and home notification bodies pending",
+      "Whirligig return/recharge/relaunch and derived Flyer PreDestroy/effects/audio parity pending",
+      "No natural playthrough, GUI/AI strategy/outcome/save/next or complete visual/audio parity claimed"
+    ]
+  },
+  "user_requested_pause": {
+    "after_unit": 86,
+    "after_documentation_and_local_commit": true,
+    "next_unit_started": false
+  }
+}

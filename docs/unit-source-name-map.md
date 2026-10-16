@@ -19,7 +19,7 @@
 | 78 | `sunBlocker` | Stone Tower | 스톤 타워 |
 | 79 | `thunderBlocker` | Bulwark | 불워크 |
 | 82 | `bridge` | Bridge | 다리 |
-| 84 | `emptyGeyser` | Empty Storm Geyser | 엠프티 스톰 가이저 |
+| 84 | `emptyGeyser` | Empty Storm Geyser | 고갈된 스톰 간헐천 |
 | 85 | `sunFactory` | Sun Workshop | 썬 워크샾 |
 | 86 | `windFactory` | Wind Workshop | 윈드 워크샾 |
 | 87 | `rainFactory` | Rain Workshop | 레인 워크샾 |
@@ -27,7 +27,7 @@
 | 89 | `residence` | Residence | 거주 구역 |
 | 111 | `sunBalloon` | Balloon | 벌룬 |
 | 112 | `buried` | Obelisk | 오벨리스크 |
-| 122 | `geyser` | Storm Geyser | 스톰 가이저 |
+| 122 | `geyser` | Storm Geyser | 스톰 간헐천 |
 | 123 | `windVortex` | Wind Temple | 윈드 신전 |
 | 124 | `rainVortex` | Rain Temple | 레인 신전 |
 | 125 | `thunderVortex` | Thunder Temple | 썬더 신전 |
@@ -77,6 +77,7 @@
 | ---: | --- | --- | --- |
 | 31 | `baseFlyerProcessType` | `baseFlyerProcessType` | 플라이어 공통 동작 프로세스. |
 | 32 | `sunAviaryProcessType` | `sunAviaryProcessType` | 훨리베이스(TYPE72·sunAviary)의 생산 동작 프로세스. |
+| 47 | `soundProcessType` | `soundProcessType` | 플라이어가 이동 중 제거하는 소리 프로세스. 무기 프로세스와 구별한다. |
 | 59 | `windAviaryProcessTyp` | `windAviaryProcessType` | 데빌 메이커(TYPE139·windAviary)의 생산 동작 프로세스. |
 | 60 | `rainAviaryProcessTyp` | `rainAviaryProcessType` | 맨 오 워 풀(TYPE143·rainAviary)의 생산 동작 프로세스. |
 | 94 | `island` | `island` | 섬 받침. 지형 본체인 TYPE97·isle과 구별한다. |
@@ -85,6 +86,12 @@
 프로세스의 TYPE 이름 필드는20바이트여서 TYPE59/60의 끝 `e`가 잘린다. 전체 소스 이름과 등록 덤프의 문자열 차이를 별도 유닛으로 오인하지 않는다. TYPE94/95의 `island` 명칭도 사용자 유닛 이름을 번역할 근거는 아니다.
 
 2026-10-16에 TYPE144 `rainFlyer`의 실제0050a388+20→0045fac0도 확인했다. 이 맨 오 워는 공통 **타입31** 프로세스를 만든 뒤 outer00509f60/inner00509f40의 전용 동작 표로 바꾼다. 별도 `rainFlyerProcessType` 번호를 추정해 추가하지 않는다. 그림자도 같은 TYPE144를 사용하고 전체 프레임 수만큼 프레임을 옮긴다. [최초 후처리/프로세스 생성 복원](exe/cpp-flyer-postpop-20261016.md)을 참고한다.
+
+### 비행체별 수명과 종료를 구별한다
+
+2026-10-16 사용자가 **훨리기그는 수명 만료 시 소속 훨리베이스로 귀환·충전 후 다시 출격하고, 맨 오 워는 수명 만료 시 소멸하며 전투 파괴와 그래픽·효과음이 다르다**고 알려 주었다. 이를 같은 플라이어 공통 동작으로 합치지 않는다. 훨리기그의 귀환·충전·재출격 전체와 두 종료 효과의 실제 재생 결과는 원본 대조가 필요하다.
+
+현재 정적 분석으로 확인한 맨 오 워의 `0045d630`은 첫 수명 기한을 현재 시각+60초로 설정하고, 기한 만료 시 `Destroy(0x200000)`을 호출한다. 일반적인 `Destroy(0)`와 플래그를 구별한다. 그림자 삭제·파생 PreDestroy·공통 피해 종료 효과까지 이어지는 복원과 확인은 별도이며, 이 플래그 확인만으로 그래픽·음향 재현 완료를 선언하지 않는다. 공통 `0045c9d0`의 홈 복귀·착륙 처리와 맨 오 워의 수명 wrapper도 서로 구별한다.
 
 ## 썬 바리케이드에서 구별할 두 연결 객체
 
@@ -100,4 +107,4 @@
 - 이번 확인은 현재/마지막 전체 정밀 디컴파일 PC **VM-W11-Codex / 2026-10-16**에서 읽기 전용으로 수행했다. 추출 JSON/TYPE 덤프는 `extracted/unit-name-{types,ids}-20261016.*`에 보존했다. 게임 창 실행과 보호 원본 변경은 없다.
 - 이후 새 명칭은 **판본·내부 타입/번호·원문 표시 이름·근거 경로·확인 범위**를 함께 기록한다. 미션/번역 설정이 이름을 바꾸면 기본 `description`과 실제 설정 후 이름을 구별한다. CD10.72의 번호/이름은 별도 확인 전10.78과 같다고 가정하지 않는다.
 
-기존 [한국어 명칭 규칙](korean-unit-names.md)과 공유 JSON은 그대로 사용한다. 이 문서는 내부 이름과 표시 이름의 관계를 기록하며 게임 UI나 공유 번역 자료를 변경하지 않는다.
+2026-10-16 [한국어 명칭 규칙](korean-unit-names.md)과 공유 JSON에 훨리기그·훨리베이스·제단·거주 구역·간헐천을 반영했다. 영어 원문·내부 식별자·과거 검증 기록은 유지한다.
