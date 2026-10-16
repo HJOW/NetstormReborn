@@ -72,6 +72,10 @@ RawRenderRegistry& RenderProcessSystem::Registry() { return registry_; }
 std::span<const std::uint32_t> RenderProcessSystem::Slots() const { return registry_.Slots(); }
 // 생성 중 항목도 등록 수명 검사에 포함한다.
 std::size_t RenderProcessSystem::Size() const { return bindings_.size(); }
+// renderer가 같은 현재 필드에서 영역을 읽게 하며 생성 중인 버퍼는 노출하지 않는다.
+const RenderProcessFields* RenderProcessSystem::Lookup(std::uint32_t token) const {
+    const auto found=bindings_.find(token);return found!=bindings_.end() && found->second.ready ? found->second.fields : nullptr;
+}
 // 효과 모듈의 동일 월드 검사용 참조다.
 SidPool& RenderProcessSystem::Pool() const { return pool_; }
 // 같은 client Form/Kernel을 사용하는 호스트다.

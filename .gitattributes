@@ -884,3 +884,12 @@ tools/decomp_render_removal.py text eol=lf
 tools/capture_fierytail_heap.py text eol=lf
 cpppj/fierytail-live-heap.json text eol=lf
 docs/exe/cpp-fierytail-live-heap-20261017.md text eol=lf
+# 실제 Session/Renderer 입자와 독립 VFX 픽셀 근거의 원문 바이트를 유지한다.
+cpppj/src/client/ParticlePaletteMemory.* text eol=lf
+cpppj/src/client/RawCampaignParticles.* text eol=lf
+cpppj/tests/ParticleRenderingTests.cpp text eol=lf
+tools/decomp_fierytail_pixels.py text eol=lf
+cpppj/fierytail-pixels.json text eol=lf
+cpppj/tests/fixtures/fierytail-pixels-x86.tsv text eol=lf
+docs/exe/cpp-campaign-particles-20261017.md text eol=lf
+docs/exe/cpp-fierytail-notes-20261016.md text eol=lf

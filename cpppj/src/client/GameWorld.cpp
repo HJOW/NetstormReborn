@@ -293,6 +293,7 @@ void GameWorld::AdvanceObjects(double seconds) {
 void GameWorld::SurfaceView() {
     const o::SquidDisplayRect clip{0,std::min(kMenuHeight,height_),width_,height_};
     Surfaces().SetDisplay({scrollX_,scrollY_,65536,clip},surfaceDisplay);
+    if (campaign_) campaign_->SetParticleView({scrollX_,scrollY_,clip.left,clip.top,clip.right,clip.bottom},surfaceDisplay);
     if (soundViewChanged) soundViewChanged({scrollX_,scrollY_,clip.left,clip.top,clip.right,clip.bottom});
 }
 // 카메라 크기만 바뀌어도 다시 표시하고 위치 효과음의 화면 기준을 갱신한다. 같은 크기로 불러도 새 수신자를 갱신한다.
@@ -433,6 +434,8 @@ std::vector<RenderSprite> GameWorld::Sprites() const {
         const auto& type=assets_.Types()[static_cast<std::size_t>(object.type-o::kFirstAssetTypeNumber)];
         add(type,object.frame,object.x,object.y,object.owner,kObjectDepth,false);
     }
+    // 실제 입자도 같은 Renderer 정렬에 넣으며 화면의 뒤에 별도 overlay로 덮지 않는다.
+    if (campaign_) for (auto& sprite:campaign_->ParticleSprites(clip)) result.push_back(std::move(sprite));
     return result;
 }
 // 현재 표시 팔레트에서 가까운 색 번호를 찾는다.

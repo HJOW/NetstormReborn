@@ -92,6 +92,10 @@ void DrawIndexedImage(std::span<std::uint8_t> pixels, int pitch, int height, con
 Renderer::Renderer(int width, int height,o::OriginalEdition edition) : width_(width), height_(height),edition_(edition), dirty_(width, height) { dirty_.InvalidateAll(); }
 // 같은 객체가 제출한 모든 그림의 합집합을 무효화한다. 특수 프레임은 그림 범위가 없다.
 ScreenRect Renderer::Bounds(const RenderSprite& sprite) const {
+    if (sprite.procedure) {
+        if (sprite.database || !sprite.procedure->draw) throw std::invalid_argument("직접 표시 항목의 실제 출력 경계 오류");
+        return ClipScreenRect(sprite.procedure->bounds,sprite.clip);
+    }
     if (!sprite.database) throw std::invalid_argument("Null sprite database");
     if (sprite.block >= sprite.database->Blocks().size()) throw std::out_of_range("Invalid sprite block");
     ScreenRect bounds{};bool present=false;
@@ -111,6 +115,7 @@ ScreenRect Renderer::Bounds(const RenderSprite& sprite) const {
 // 부분 갱신과 SceneImage 모두 같은 객체 내부 합성 순서를 사용한다.
 void Renderer::DrawSprite(std::span<std::uint8_t> pixels,int pitch,ScreenRect clip,const RenderSprite& sprite) {
     const auto cut=ClipScreenRect(clip,sprite.clip);
+    if (sprite.procedure) { sprite.procedure->draw(pixels,pitch,height_,cut);return; }
     // 압축 영역의 투명도와 색 치환 규칙은 기존 한 장 그리기를 그대로 사용한다.
     const auto draw=[&](std::size_t number) {
         const auto& frame=sprite.database->Blocks()[sprite.block].frames.at(number);if (frame.IsSpecial()) return;

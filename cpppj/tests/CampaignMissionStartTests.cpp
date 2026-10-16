@@ -235,6 +235,31 @@ TEST_CASE(CampaignKernelFrames_GuardMyBack) { RunProtectedKernelFrames("GuardMyB
 // 데모3의 실제 현재 동맹/프로세스다.
 TEST_CASE(CampaignKernelFrames_DissolvedAlliance) { RunProtectedKernelFrames("DissolvedAlliance",true); }
 
+// 실제 데모에서 자연 발사된 썬 캐논의 같은 Form/Kernel/표시를 실제 픽셀까지 연결한다.
+TEST_CASE(CampaignParticles_DissolvedAllianceNaturalShot) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);ConfigInterface config([&](std::string_view path) { return assets.files.TryRead(path); });ConfigureStart(config);MissionScript script(config,"DissolvedAlliance");
+    StartExternal external;Renderer renderer(128,128);auto fort=FortTemplate::Parse(assets.files.Read(script.FortPath()),assets.game.TypeTable());
+    RawCampaignSession session(assets.game,assets.files,std::move(fort),script.FortName(),external.Services());session.Load();
+    GameClock clock;MissionFrameGateState gate;MissionStartState state;MissionStartGlobals globals;MissionAiSettingsState ai;gate.demo=1;ai.stuffRefreshRate=4;
+    auto effects=external.Effects();effects.gameSeconds=[&] { return clock.GameSeconds(0); };RawCampaignMissionStartBindings start(session,script,gate,state,globals,ai,std::move(effects));start.Start();
+    // 총/표적/위치/HP/난수를 고치지 않고 최초 자연 발사와 다음 실제 시간 조각까지 진행한다.
+    for (std::uint32_t frame=1;frame<=115;++frame) session.RunFrame(clock.Capture(frame*25),false);
+    const auto core=session.Core();const auto& rendering=session.Particles().Rendering();CHECK(rendering.Size()>0);
+    const RenderProcessFields* fields=nullptr;
+    // 실제 단일 표시 목록의 현재 첫 유효 효과만 선택하며 별도 효과를 생성하지 않는다.
+    for (const auto token:rendering.Slots()) if (const auto* current=rendering.Lookup(token)) { fields=current;break; }
+    CHECK(fields!=nullptr);if (!fields) return;
+    const Sid parent{static_cast<std::uint16_t>(fields->parent)};const auto raw=core.pool.Slot(parent);CHECK(raw[10]==80);
+    auto* fiery=dynamic_cast<FieryTailVisualProcess*>(core.processes.FromForm(Sid{static_cast<std::uint16_t>(fields->form)}));
+    auto* missile=core.processes.FromForm(FindAttachedProcess(core.pool,parent,28));CHECK(fiery && missile);
+    if (!fiery || !missile) return;
+    CHECK(fiery->Fields().first && fiery->Fields().total>=10 && core.kernel.Find(*fiery)<core.kernel.Find(*missile));
+    const auto x=std::bit_cast<float>(Get(raw,14)),y=std::bit_cast<float>(Get(raw,18));const auto cameraX=static_cast<std::int32_t>(x*16)-64,cameraY=static_cast<std::int32_t>(y*11)-64;
+    session.SetParticleView({cameraX,cameraY,0,0,128,128},{[&] { return renderer.FullRedrawPending(); },[&](SquidDisplayRect rect,std::uint32_t flags) { renderer.Invalidate({rect.left,rect.top,rect.right,rect.bottom},flags); }});
+    auto sprites=session.ParticleSprites({0,0,128,128});CHECK(!sprites.empty());renderer.SetScene(std::move(sprites));const auto image=renderer.SceneImage();
+    CHECK(std::count(image.indices.begin(),image.indices.end(),196)>3 && core.bookkeeping.depth==0);
+}
+
 // 실제 데모 배치의 생산 건물/동일 factory/공간/Host로 최초 비행 Pop만 분리해 검사한다. Frame 완주 검사와 구별한다.
 TEST_CASE(CampaignManOWar_ActualPostPopAndBaseProcess) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);

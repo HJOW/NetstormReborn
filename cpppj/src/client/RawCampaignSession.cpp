@@ -172,6 +172,7 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawProjectileGeometry> projectileGeometry; // 실제 포구/표적 치수/충돌 상자다.
     std::unique_ptr<RawFenceTarget> fenceTarget; // 같은 해시/배리어 끝점/현재 동맹의 실제 표적 코너 계산이다.
     std::unique_ptr<RawCampaignArcherBindings> combat; // 같은 Archer/Missile 생성/공간/Host를 소유한다.
+    std::unique_ptr<RawCampaignParticles> particles; // 같은 Host/Kernel·난수와 실제 색 할당/Renderer/VFX의 process11이다.
     std::uint32_t archerCommand{0x030000b0}; // 보호 PE의 실제 입력 토큰이다.
     std::unique_ptr<RawCampaignAssetBindings> assetBindings; // 실제 저장 건물 후처리와 Gun/Regular다.
     CanonPlacementPipelineState placement; // 실제 공간/기하/지형 허용 상태다.
@@ -446,6 +447,7 @@ struct RawCampaignSession::Impl {
             },[this](Sid sid) { core.building.NotifySurface(sid); }}));
         projectileGeometry=std::make_unique<RawProjectileGeometry>(core.pool,core.types,projectileTypes);
         fenceTarget=std::make_unique<RawFenceTarget>(core.pool,core.hash,core.types,projectileTypes,*gunTarget,gunTargetState,gunState);
+        particles=std::make_unique<RawCampaignParticles>(core,random,assets.game.Palette());
         auto combatEffects=services.archer;
         // 실제 SID의 현재 좌표와 같은 이름표/위치 재생 함수를 사용한다. 설치 전 world_ UI 포인터를 캡처하지 않는다.
         if (!combatEffects.animation.common.sound) combatEffects.animation.common.sound=[this](Sid sid,std::string_view name) {
@@ -464,6 +466,10 @@ struct RawCampaignSession::Impl {
         combatEffects.missile.directionFrame=[this](std::array<float,2> from,std::array<float,2> to,std::uint32_t type) { return projectileGeometry->DirectionFrame(from,to,type); };
         combatEffects.missile.targetDimensions=[this](Sid sid) { return projectileGeometry->Dimensions(sid); };
         combatEffects.missile.targetBounds=[this](Sid sid,std::array<float,2> point) { return projectileGeometry->TargetBounds(sid,point); };
+        combatEffects.missile.flightEffect=[this,other=std::move(combatEffects.missile.flightEffect)](std::uint32_t type,Sid parent) {
+            if (type==11) { particles->Add(type,parent);return; }
+            if (!other) throw std::logic_error("실제 비행 표시 효과 미복원 TYPE"+std::to_string(type));other(type,parent);
+        };
         FillMissing(combatEffects.missile.firingSound);FillMissing(combatEffects.missile.impactSound);
         combatEffects.missile=hits->MissileHooks(*gunHit,missileState,std::move(combatEffects.missile));
         combat=std::make_unique<RawCampaignArcherBindings>(world,*gunTarget,random,archerTypes,metadata.frames,missileTypes,archerState,missileState,std::move(combatEffects));
@@ -974,7 +980,13 @@ void RawCampaignSession::ResetCamera(CameraHomeState& state,std::function<void(s
     CameraHome(impl_->core.pool,impl_->core.types,state,std::move(apply)).Reset();
 }
 // 현재 같은 시각을 공격/소리/실제 Kernel에 공급한다.
-void RawCampaignSession::RunFrame(FrameTime time,bool paused) { impl_->assetBindings->PrepareFrame(time.game);impl_->combat->PrepareFrame(time);impl_->soundState.frame=static_cast<std::uint32_t>(time.number);impl_->world.RunFrame(time,paused); }
+void RawCampaignSession::RunFrame(FrameTime time,bool paused) { impl_->assetBindings->PrepareFrame(time.game);impl_->combat->PrepareFrame(time);impl_->particles->PrepareFrame(time.game);impl_->soundState.frame=static_cast<std::uint32_t>(time.number);impl_->world.RunFrame(time,paused); }
+// 해상도/카메라 변경과 동일 위치 효과음의 view를 process11에도 전달한다.
+void RawCampaignSession::SetParticleView(SoundView view,SurfaceDisplayHooks display) { impl_->particles->SetView(view,std::move(display)); }
+// 현재 단일 raw 표시 목록에서 SHP와 같은 정렬 항목을 만든다.
+std::vector<RenderSprite> RawCampaignSession::ParticleSprites(ScreenRect clip) const { return impl_->particles->Sprites(clip); }
+// 실제 표시 소유자이며 별도 검사용 모형이 아니다.
+const RawCampaignParticles& RawCampaignSession::Particles() const { return *impl_->particles; }
 // 원본 미션 게이트가 지정한 순서에 호출하며 Session Kernel 프레임에서는 자동 실행하지 않는다.
 void RawCampaignSession::CheckMissionOutcome() { impl_->outcome->Check(); }
 // 실제 worldLoad의 loginSubscriber 복사 대상과 같은 장기 전역을 매번 읽는다.

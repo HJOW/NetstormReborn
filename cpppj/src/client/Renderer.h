@@ -39,6 +39,11 @@ private:
     // entries_: 현재 등록하거나 읽은 항목 목록.
     std::vector<DirtyRegion> entries_;
 };
+// 원본 kind3 입자처럼 SHP 없이 현재 표면에 직접 그리는 한 정렬 항목이다.
+struct RenderProcedure {
+    ScreenRect bounds; // 같은 시점의 현재 표시 영역이다. 실제 그리기 클립은 renderer의 dirty 사각형이다.
+    std::function<void(std::span<std::uint8_t>,int,int,ScreenRect)> draw; // pixels/pitch/height/clip의 실제 표면 소비자다.
+};
 // 출력할 스프라이트 프레임·좌표·클립·정렬·색 변환 정보이다.
 struct RenderSprite {
     // 자산과 글꼴·커서 이미지는 Renderer보다 오래 살아야 한다.
@@ -59,6 +64,7 @@ struct RenderSprite {
     bool shadow{};
     // 같은 객체 Draw 안에서 본 프레임 뒤에 순서대로 그릴 그림이다. 정렬은 객체당 한 번만 한다.
     std::vector<std::size_t> followingFrames;
+    std::optional<RenderProcedure> procedure; // SHP 대신 같은 정렬 위치에서 실행할 실제 직접 그리기다. 소유자는 Draw 동안 살아 있어야 한다.
 };
 // 004a3f70의 글자 색·그림자·네 방향 외곽선 문맥. 문자열은 원본 코드 페이지 바이트다.
 struct RenderText {

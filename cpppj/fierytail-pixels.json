@@ -1,0 +1,27 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "uniqueInputs": 30,
+  "drawReturns": 60,
+  "precisionDifferentInputs": [],
+  "nativeCalls": {
+    "004011f1": 600,
+    "004583a0": 60,
+    "00487e50": 600,
+    "004dade0": 600,
+    "004e49c0": 2400
+  },
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "tools/decomp_fierytail_frame.py": "7921fa905c5ad10cc89250e6e7a790a85dbf8883bdf8e9a22290586afd48529e",
+    "tools/decomp_fierytail_pixels.py": "d019382879db9af554b40796f9b709530cddd84491f40cb4c68c5005cc3964e1",
+    "cpppj/tests/fixtures/fierytail-pixels-x86.tsv": "4970cddc8a828c75cf88711997573efcfc67ea57289bab81247430e8cf8aea0e"
+  },
+  "limitations": [
+    "실제004583a0→004dade0→004011f1 전체와 색 조회/__ftol을 대체 없이 실행했다. 정상 반환/비휘발/x87 균형과 쓰기 범위를 검사했다.",
+    "입자/색/수명/인접DWORD는 명시 입력이다. 0xabcdef01은 실제 게임 heap 관찰값이 아니다.",
+    "장치 대신 격리64×48 메모리 표면이다. 전체 Session/생성/프레임/장치·사용자 플레이 완주를 이 관찰로 입증하지 않는다."
+  ]
+}

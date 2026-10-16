@@ -34,6 +34,8 @@ public:
     std::span<const std::uint32_t> Slots() const;
     // 생성 중인 항목도 포함하는 현재 조회 수다.
     std::size_t Size() const;
+    // 초기화 완료 토큰의 현재 등록 필드다. 삭제 뒤 이 포인터를 보관/사용하지 않는다.
+    const RenderProcessFields* Lookup(std::uint32_t token) const;
     // 효과가 같은 월드·Host·좌표 배율을 사용하는지 검증할 참조다.
     SidPool& Pool() const;
     SquidProcessHost& Host() const;

@@ -18,6 +18,7 @@
 #include "o/RawPriestParticipation.h"
 #include "o/RawDamageablePostDestroy.h"
 #include "client/CameraHome.h"
+#include "client/RawCampaignParticles.h"
 namespace netstorm::client {
 // 미션 입력/정지/UI 수명은 실제 UberGump의 현재 저장소와 동작을 빌린다.
 struct CampaignMissionOutcomeUi {
@@ -86,6 +87,12 @@ public:
     void ResetCamera(CameraHomeState& state,std::function<void(std::int32_t,std::int32_t)> apply) const;
     // 현재 같은 시각을 모든 모듈에 공급한 뒤 동일 Kernel을 실행한다.
     void RunFrame(o::FrameTime time,bool paused);
+    // 같은 실제 카메라와 현재 장치의 dirty 경계를 process11에 공급한다.
+    void SetParticleView(SoundView view,SurfaceDisplayHooks display);
+    // 실제 원본 표시 목록의 현재 직접 그리기를 다른 월드 SHP와 함께 정렬한다.
+    std::vector<RenderSprite> ParticleSprites(ScreenRect clip) const;
+    // 후속 검증이 같은 Host/Kernel의 등록을 읽는 현재 표시 관리자다.
+    const RawCampaignParticles& Particles() const;
     // 원본 미션 게이트의 첫 checkOutcome 위치에서만 호출한다. 설치/활성화 전에 자동 실행하지 않는다.
     void CheckMissionOutcome();
     // 원본 로그인/월드 로더가 공유하는 현재 globals.mySubscriber를 읽기만 한다. 별도 캐시를 만들지 않는다.

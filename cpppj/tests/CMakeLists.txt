@@ -13,7 +13,11 @@ set_source_files_properties(FieryTailVisualSystemTests.cpp PROPERTIES COMPILE_DE
     "NETSTORM_RENDER_REMOVAL_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/render-removal-x86.tsv\"")
 set_source_files_properties(FieryTailLifetimeTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_FIERYTAIL_LIFETIME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fierytail-lifetime-x86.tsv\"")
+# 실제 Draw→화면 wrapper→VFX의 전체 픽셀 원문을 새 표시 통합 검사에 공급한다.
+set_source_files_properties(ParticleRenderingTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_FIERYTAIL_PIXELS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fierytail-pixels-x86.tsv\"")
 add_executable(netstorm_tests
+    ParticleRenderingTests.cpp
     FieryTailVisualSystemTests.cpp
     FieryTailLifetimeTests.cpp
     FieryTailFrameTests.cpp

@@ -120,3 +120,6 @@ target_sources(netstorm PRIVATE
 )
 # 원본처럼 Win32 GDI·멀티미디어 타이머를 직접 쓴다(Screen·ClientMain).
 target_link_libraries(netstorm PUBLIC user32 gdi32 winmm)
+
+# 실제 입자 색 할당/인접 메모리와 같은 캠페인의 Renderer/VFX 출력을 연결한다.
+target_sources(netstorm PRIVATE ParticlePaletteMemory.cpp ParticlePaletteMemory.h RawCampaignParticles.cpp RawCampaignParticles.h)
