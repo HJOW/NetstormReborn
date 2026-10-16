@@ -10,20 +10,20 @@ a game developed by Activision in 1997 and abandoned long ago.
 
 # Current development status
 
-**Based on the handover dated October 15, 2026.** Playability and fidelity to the original are assessed separately below.
+**C++ status: October 16, 2026; C# status: October 15, 2026.** Playability and fidelity to the original are assessed separately below.
 
 | Project | Execution and playability | Fidelity and remaining work |
 | --- | --- | --- |
-| `cpppj/` — C++ reconstruction | On Windows in windowed mode, menu → campaign → briefing → fort, terrain, object and dialog display, selection, priest movement, some live combat and return to the menu work. | Reconstruction uses decompilation and comparisons against version 10.78 machine code. **Construct is disabled.** Construction, production, bridges, harvesting, transport, sacrifice, AI activation and strategy, and live mission progression through outcome saving still need integration. Natural completion of Early Missions and Campaign 1-1/1-2, and full visual/audio parity, remain unfinished. |
+| `cpppj/` — C++ reconstruction | On Windows in windowed mode, menu → campaign → briefing → fort, terrain, object and dialog display, selection, priest movement, some live combat and return to the menu work. | Reconstruction uses decompilation and comparisons against version 10.78 machine code. **Construct is disabled.** Construction, production, bridges, harvesting, transport, sacrifice, GUI Start/StartDemo and AI strategy frames, and live mission progression through outcome saving still need integration. Natural completion of Early Missions and Campaign 1-1/1-2, and full visual/audio parity, remain unfinished. |
 | `dotnetpj/` — C# + MonoGame clone | Campaign **1-1 The War Begins!** and **1-2 Master of Whirligigs** have playable implementations with construction, production, movement and combat controls. English/Korean UI, help, context menus and options are available. | Original data is reused while rules are reconstructed. Provisional AI/construction rules and timing, frame and rendering differences remain. Recent session-clock and tutorial-frame changes have only been build-checked. A full playthrough → progress save → restart → next-mission unlock and complete original parity still need verification. |
 
 ## Latest C++ reconstruction
 
-Common deletion, technology-content lifetime, and current SP/UI notices now share the campaign session. Dialog bodies use the restored ordering for HTML conditions, configuration substitution, images and inline styles. The AI constructor and initial update have been reconstructed and verified as separate modules, but live-session AI activation is pending. The four mana-metadata files are a **draft excluded from CMake, with no build or new original-code comparison performed**.
+The same session now connects SP, technology, priest participation, AI creation/initial update, and the common mission Start. Headless Load/Start checks pass for Early Missions 1–6, Campaign 1-1/1-2, and demos 2/3. GUI Start/StartDemo, Guide and mission-frame integration, AI strategy, natural playthroughs and full visual/audio parity remain unfinished.
 
-The final October 15 record reports **zero warnings/errors** in the Release game/test builds and **1/1 CTest passed (1,233 internal cases, zero failures)**. Clone GUI checks covered 97 dialog states, 23 Early1/2 dialog states, and 9 completion-value/next-tutorial states. Forced completion-dialog checks do not establish a natural gameplay playthrough. Fixing the legacy DirectDraw fullscreen error is outside the current work scope.
+The October 16 Release build has **zero warnings/errors**. The full suite reports **1,334 of 1,335 cases passed, one failure (CTest exit 8)**: unsupported Man o'War Pool (TYPE143) post-processing during demo 1, `DemoStormRages`. These checks do not establish GUI playthrough parity. Fixing the legacy DirectDraw fullscreen error remains excluded from the current specified-mission reconstruction task, and is **mandatory in C++ phase 2** under the October 16 AGENTS.md update.
 
-Development toward playthrough parity is paused at the user's request. Resume steps and remaining boundaries are in the [C++/shared handover](LEFT_JOBS.md). See [session lifetime integration](docs/exe/cpp-session-lifetime-20261015.md), [SP storage and notices](docs/exe/cpp-sp-store-notice-20261015.md), [AI initial update](docs/exe/cpp-ai-initial-update-20261015.md), and [dialog conditions and processing order](docs/exe/cpp-dialog-condition-flow-20261015.md) for evidence.
+Development is **active**. See the [C++/shared handover](LEFT_JOBS.md), [demo initialization](docs/exe/cpp-demo-initialization-20261016.md), [AI colors](docs/exe/cpp-player-color-20261016.md), and [demo/campaign correspondence](docs/gameplay/demo-campaign-map.md).
 
 ## Latest C# + MonoGame clone
 
@@ -37,7 +37,7 @@ The linked analysis and handover documents are written in Korean.
 
 # Project layout and development goals
 
-`cpppj` proceeds in this order: **① version 10.78 single-player reconstruction → ② stable Windows 10/11 execution → ③ Korean support → ④ TCP/IP LAN multiplayer and outposts → ⑤ added requirements and MCP**. It is Windows only. Multiplayer-only outposts belong to phase 4; official-server access is not restored. Comparison records for CD version 10.72 are also retained.
+`cpppj` proceeds in this order: **① version 10.78 single-player reconstruction → ② stable Windows 10/11 execution (including mandatory DirectDraw error fixes) → ③ Korean support → ④ TCP/IP LAN multiplayer and outposts → ⑤ added requirements and MCP**. It is Windows only. Multiplayer-only outposts belong to phase 4; official-server access is not restored. Comparison records for CD version 10.72 are also retained.
 
 `dotnetpj` uses C# and MonoGame. Its existing clone will later be refined by analyzing the completed `cpppj`, first matching the original behavior and then adding new requirements. GUI Linux support and multiplayer have lower priority. Final requirements include fullscreen, 16:9/16:10/4:3 aspect ratios, fullscreen edge scrolling, and English/Korean support. Animation first targets the original cadence, with 60/120-frame support afterwards.
 

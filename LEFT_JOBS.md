@@ -1,5 +1,12 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-16 단위79 완료: AGENTS.md의2차 목표·DirectDraw 오류 수정 필수 반영 (`VM-W11-Codex`)
+
+- [x] 사용자 요청으로 AGENTS.md를 다시 읽고 사용자 커밋 `71f8171`의 변경을 확인했다. **cpppj 2차 목표에서 Windows10/11의 DirectDraw 오류도 반드시 수정**한다. AGENTS.md 자체는 수정하지 않았다. 현재 Early Missions1~6·캠페인1-1/1-2·데모3개 1차 복원 요청의 일시 제외는 유지하며 후속2차 목표에서 누락하지 않는다.
+- [x] 루트 README 한국어/영어, cpppj README, `docs/cpp-roadmap.md`·`cpp-playable-plan.md`·`cpp-build.md`·`exe/cpp-screen-reconstruction.md`의 현재 목표/단계/검사표를 갱신했다. Windows10/11 각각에서 전체화면 설정 저장→종료→재실행 반복 시 오류 없이 정상 전체화면에 진입하고 원인/수정/환경/결과를 기록하는 완료 기준을 명시했다. 과거 복원 기록의 당시 제외/번호 설명은 역사로 보존한다.
+- [x] 루트 README의 지난 ‘개발 일시 중지/AI 미연결/mana 초안’ 현재 상태도 단위78의 실제 결과로 바로잡았다. 빌드 경고0·오류0, 전체1335개 중1334통과·데모1 TYPE143 실패1, 실제8미션·데모2/3 헤드리스 Load/Start 통과와 GUI/자연 완주 미검증을 구분했다. 이 문서 작업에서 새 빌드/검사/원본 게임/GUI 실행은 없다.
+- [x] UTF-8·문서 목표 일치/새 링크·공백을 확인한 뒤 `20261016-11 CM cpppj 2차 DirectDraw 오류 수정 목표와 관련 문서 반영`으로 로컬 커밋한다. 현재/마지막 전체 정밀 PC는 **VM-W11-Codex / 2026-10-16**이다. 목표는 active·미달성이며 다음은 아래 단위78의 TYPE143 실제 후처리/타입60 프로세스 복원이다.
+
 ## 2026-10-16 단위78 완료: 실제 AI 색 변경0043ca70과 공유 받침/종유석 프레임 (`VM-W11-Codex`)
 
 - [x] 단위77의 GuardMyBack Start 실패에서 이어 실제0043ca70·iterator0040eb40·색 프레임004421a0을 분석했다. 현재/마지막 전체 정밀 PC는 **VM-W11-Codex / 2026-10-16**이다. `RawPlayerColor.h`로 같은 `core.bridgeState.ownerColors`를 먼저 쓰고 같은 풀의 모든 받침94/종유석95를 실제 `core.frame.Set`에 연결했다. 이전 필수 외부 changeColor는 게임 계산 뒤 선택형 화면 완료 통지로 바꿨다. 원본은 변경 소유자와 다른 섬도 갱신하며 free만 제외하고 dead/void/abstract는 포함한다.
