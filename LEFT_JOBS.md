@@ -1,5 +1,15 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-16 단위96 완료: 썬 캐논 사정거리 방향 보정 (`HJOW-Athlon`)
+
+- [x] 직전 목표 턴은 단위94·95의 검토·검사 보완 및 `2477fad` 커밋으로 authoritative 상태를 바꾼 **진행**이다. 작업 전 AGENTS.md와 양 LEFT, 깨끗한 트리와 active 목표를 다시 확인했다. 현재/마지막 전체 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-16**으로 일치한다.
+- [x] 기존 인수인계의 **“rayEnd 난수 보정”은 잘못된 해석**이다. `0049ace0`은 TYPE+44 사정거리 getter이고 `004e49c0`은 `__ftol` 정수 변환이다. `00481750`은 불일치 때 현재 프레임의 허용 방향을 고른 뒤 사정거리를 절삭해 더하고1..255로 제한한다. 난수 소비가 없다. `RawProjectileGeometry`에 이를 복원하고 실제 Session의 같은 TYPE 사정거리 입력에 연결했다.
+- [x] 보호10.78 실제 사정선과 모든 하위 함수8개를 대체 없이 격리 x86으로 실행했다. **고유4040입력, 두 x87 정밀도8080정상 반환·차이0**이다. 원본 방향표 조회·타입 조회·__ftol·clamp를 실행했고 반환/스택/비휘발/x87 제어·스택 균형과 출력8바이트/스택 외 쓰기 금지를 확인했다. [원본 보고서](cpppj/cannon-rayend.json), [기록](docs/exe/cpp-suncannon-rayend-20261016.md). 실제 게임·GUI 실행과 새 디컴파일은 없다.
+- [x] C++는4040행 전체 좌표 DWORD와 일치했다. 기하5검사 통과, Release 전체 빌드 경고0·오류0. 전체 CTest 내부 **1414개 중1412통과·2실패, 182.31초, 종료8**이다. 데모1의145프레임/3.625초 TYPE148 stage5와 데모3의113프레임/2.825초 TYPE128 effect11이 그대로이며 새 실패는 없다. 비행 효과11 사전 검사 때문에 실제 Session의 새 기하 조회와 사용자 자연 완주를 입증한 것은 아니다.
+- [x] CMake의 필요 에너지 유효 핀은 검사 fixture 등록으로 바뀐1개만 전후 이력과 함께 갱신했다. 이 PC의3개 제품 파일 체크아웃이 지정 LF 대신 CRLF여서 기존 HEAD/핀과 일치하는 LF로 복구했고 코드 내용·기존 제품 해시는 바꾸지 않았다. 필요 에너지 원본2352행과 새 사정선4040행의 SHA/고유 입력 감사가 모두 통과했다. 단위96 로그는 `extracted/goal-cannon-rayend-20261016-{native,build,focused,ctest}.log`다. 보호 PE·AGENTS.md·dotnetpj는 수정하지 않았다.
+- [x] Fiery Tail TYPE11의 실제 생성자·용량120·최초10입자·프레임/그리기·공통 등록과 공유 색 표 의존을 [정적 인수인계](docs/exe/cpp-fierytail-notes-20261016.md)에 기록했다. 정적 분석을 효과의 새 실행 관찰이나 구현 완료로 세지 않는다. 문서·인수인계 뒤 **`20261016-33 CP 썬 캐논 사정거리 방향 보정 원본 대조`**로 로컬 커밋한다. 원격 push는 하지 않는다.
+- [ ] **다음 실제 진행:** 같은 Host/World/Kernel과 공통 표시 목록·공유 색 표·dirty/픽셀 출력에 Fiery Tail process11을 연결해 데모3의113프레임 이후를 검증한다. 원본 생성 순서(표시 Pop→effect11→Missile 부착)를 유지한다. 반더148 stage5·전체 GUI/입력·AI 전략·건설/경제·승패/저장/다음 미션과 실제 사용자 자연 완주도 남아 있다. 목표는 active를 유지하며 전체화면 DirectDraw는 이번1차 범위에서만 제외한다.
+
 ## 2026-10-16 단위94·95 검토·보완 완료: 썬 캐논 포구·사정선 검증 (`HJOW-Athlon`)
 
 - [x] 사용자 요청으로 두 LEFT 인수인계와 미커밋 변경8개를 검토하고 필요한 수정을 수행했다. 현재/마지막 전체 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-16**으로 일치한다. 새 디컴파일은 수행하지 않았다.
@@ -8,7 +18,7 @@
 - [x] 최종 Release 전체 빌드 경고0·오류0. `ProjectileGeometry`4개 전부 통과. 전체 CTest 내부 **1413개 중1411통과·2실패, 214.68초, 종료8**이다. 기존과 같은 `TheStormRages`의145프레임/3.625초 TYPE148 stage5, `DissolvedAlliance`의113프레임/2.825초 TYPE128 effect11 실패이며 새 실패는 없다. 기하 단위 검사 통과를 실제 썬 캐논 생성/Pop/비행이나 사용자 자연 완주로 합산하지 않는다.
 - [x] 두 작업 기록·README·인수인계와 UTF-8/한국어 주석/공백을 확인했다. 보호 PE 두 SHA는 기존 기록과 동일하며 AGENTS.md·dotnetpj·보호 원본을 수정하지 않았다. 원본/클론 게임·GUI 실행은 없다. 최종 로그는 `extracted/review-luna-20261016-build-verified.log`, `extracted/review-luna-20261016-build-tests.log`, `extracted/review-luna-20261016-ctest.log`다.
 - [x] 기존 미커밋 구현과 이번 보완을 함께 **`20261016-32 CP 썬 캐논 포구와 방향 일치 사정선 검증`**으로 로컬 커밋한다. 원격 push는 하지 않는다.
-- [ ] **다음 cpppj 작업:** 실제 비행 효과11의 같은 Host/World/Kernel·renderer 연결과 `rayEnd` 방향 불일치 난수 보정이 필요하다. 사전 발사 허용만으로 방향 일치를 가정하지 않는다. 반더 타워148 stage5도 미복원이며 실제 사용자 플레이·자연 완주·전체 동일성은 미완료다.
+- [ ] **다음 cpppj 작업:** 실제 비행 효과11의 같은 Host/World/Kernel·renderer 연결이 필요하다. `rayEnd` 방향 불일치 처리는 단위96에서 사정거리 절삭 보정으로 복원했고 기존 “난수” 표현은 정정했다. 반더 타워148 stage5도 미복원이며 실제 사용자 플레이·자연 완주·전체 동일성은 미완료다.
 
 ## 2026-10-16 단위95 완료: 썬 캐논 Missile 사정선 방향 일치 경로
 
@@ -16,7 +26,7 @@
 - [x] `RawProjectileGeometry::CannonRayEnd`를 추가해 0..3 및24..27의 발사 방향을 계산하고 실제 Sun Cannon `rayEnd`로 연결했다. raw TYPE/frame·좌표 검사를 거쳐 미복원 frame이나 미일치 입력은 명시 오류를 낸다. [작업 기록](docs/exe/cpp-suncannon-rayend-20261016.md).
 - [x] 최초 검사는0..3·24프레임만 포함했고 빌드·테스트·게임/GUI를 실행하지 않았다. 상단 검토·보완에서25·26·27 검사를 추가하고 실제 실행 결과를 기록했다.
 - [x] 문서·인수인계 갱신 후 상단 검토·보완 및 단위94와 함께 **`20261016-32 CP 썬 캐논 포구와 방향 일치 사정선 검증`**으로 로컬 커밋한다. 원격 push는 하지 않는다.
-- [ ] **다음 cpppj 작업:** TYPE80 Sun Cannon Missile이 Pop 후 `+0x1d0` virtual로 생성하는 실제 Fiery Tail process type11을 같은 Host/World/Kernel과 renderer에 연결한다. 현재 `rayEnd`의 원본 난수 보정 분기도 조사한다. DirectDraw 전체화면 오류는 이번 1차 목표에서 제외한다.
+- [ ] **다음 cpppj 작업:** TYPE80 Sun Cannon Missile이 Pop 후 `+0x1d0` virtual로 생성하는 실제 Fiery Tail process type11을 같은 Host/World/Kernel과 renderer에 연결한다. `rayEnd`의 방향 불일치 분기는 단위96에서 사정거리 보정으로 복원했다. DirectDraw 전체화면 오류는 이번 1차 목표에서 제외한다.
 
 ## 2026-10-16 단위93 완료: HJOW-Athlon 10.78·10.72 정밀 디컴파일 재생성
 

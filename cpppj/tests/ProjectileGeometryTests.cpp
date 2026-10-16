@@ -92,3 +92,26 @@ TEST_CASE(ProjectileGeometry_SunCannonAxisRayEnd) {
     point=logic.CannonRayEnd({10,20},{30,21},object);
     CHECK(point[0]==30 && point[1]==20);
 }
+// 원본 사정선 및 모든 하위 함수의4040입력을 전체 float 비트로 대조한다.
+TEST_CASE(ProjectileGeometry_SunCannonNativeRayEnd) {
+    SidPool pool(OriginalEdition::Patch1078,24000,false);
+    const auto object=pool.Allocate(2);
+    std::vector<RiftTypeRecord> types(188);
+    std::vector<ProjectileGeometryType> geometry(types.size());
+    RawProjectileGeometry logic(pool,types,geometry);
+    auto raw=pool.AllocatedBytes(object);
+    raw[10]=128;
+    std::size_t count=0;
+    // 기대 좌표는 C++로 재계산하지 않고 실제 PE의 반환 DWORD를 그대로 읽는다.
+    for (const auto& row:LoadFixture(NETSTORM_CANNON_RAYEND_FIXTURE).rows) {
+        CHECK(row.size()==8);
+        Put(raw,36,Number(row[0]));
+        geometry[128].range=std::bit_cast<float>(Number(row[5]));
+        const auto point=logic.CannonRayEnd({std::bit_cast<float>(Number(row[1])),std::bit_cast<float>(Number(row[2]))},
+            {std::bit_cast<float>(Number(row[3])),std::bit_cast<float>(Number(row[4]))},object);
+        CHECK(std::bit_cast<std::uint32_t>(point[0])==Number(row[6]));
+        CHECK(std::bit_cast<std::uint32_t>(point[1])==Number(row[7]));
+        ++count;
+    }
+    CHECK(count==4040);
+}

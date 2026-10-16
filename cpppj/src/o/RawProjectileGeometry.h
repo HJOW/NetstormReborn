@@ -9,6 +9,7 @@ struct ProjectileGeometryType {
     std::int32_t directions{}; // 실제 TYPE+110의 균등 투사체 방향 수다.
     std::vector<std::array<std::int16_t,2>> shotOffsets; // 물리 SHP header+20/+22의 포구 픽셀 기준점이다.
     std::int32_t heightExtension{}; // Missile 충돌 상자의 실제 TYPE 확장 높이다.
+    float range{}; // PATCH TYPE+44: 방향 불일치 시 __ftol로 절삭하는 실제 사정거리다.
 };
 // 표시 hotspot과 포구 픽셀을 구분하며 현재 raw 프레임을 매번 읽는다.
 class RawProjectileGeometry {
@@ -20,7 +21,7 @@ public:
     std::array<float,2> ArcherMuzzle(Sid firing) const;
     // 실제 가상+b4를 분배한다.71은 두 SHP 포구의 합,10.78의128·140은 현재 자산 좌표다.
     std::array<float,2> Muzzle(Sid firing) const;
-    // PATCH00481750의 일치 방향 발사에서 현재 썬 캐논 프레임에 맞는 축 정렬 종점이다.
+    // PATCH00481750: 현재 썬 캐논 프레임의 허용 방향을 택하고 불일치하면 절삭한 사정거리로 종점을 보정한다.
     std::array<float,2> CannonRayEnd(std::array<float,2> from,std::array<float,2> to,Sid firing) const;
     // 현재 물리 SHP header+20/+22를 읽는다. 기본 프레임과 합산하지 않는다.
     std::array<std::int32_t,2> Hotspot(Sid firing) const;

@@ -138,6 +138,7 @@ cpppj/src/o/RawCannonFire.h text eol=lf
 cpppj/tests/CannonFireTests.cpp text eol=lf
 cpppj/tests/fixtures/cannon-fire-x86.tsv text eol=lf
 cpppj/cannon-fire.json text eol=lf
+cpppj/cannon-rayend.json text eol=lf
 tools/decomp_cannon_fire.py text eol=lf
 docs/exe/cpp-cannon-fire-20261016.md text eol=lf
 cpppj/tests/FlyerFrameTests.cpp text eol=lf

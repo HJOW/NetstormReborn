@@ -383,6 +383,7 @@ struct RawCampaignSession::Impl {
             missileTypes[type].firingSound=firingSound && !firingSound->empty() ? soundNames.Lookup(*firingSound) : 0;
             missileTypes[type].impactSound=impactSound && !impactSound->empty() ? soundNames.Lookup(*impactSound) : 0;
             auto& geometry=projectileTypes[type];geometry.defaultFrame=asset.definition.specialFrames.defaultFrame;
+            geometry.range=target.range; // 방향 불일치 사정선 보정도 동일 TYPE의 현재 사정거리를 사용한다.
             geometry.frameCount=archerTypes[type].frameCount;geometry.directions=archerTypes[type].directions;geometry.heightExtension=target.heightExtension;
             // 각 물리 SHP header 마지막 두 WORD를 그대로 읽으며 표시 hotspot과 혼용하지 않는다.
             for (std::size_t frame=0;frame<core.shapes[type].frames.size();++frame) {
@@ -457,7 +458,7 @@ struct RawCampaignSession::Impl {
         if (!combatEffects.animation.common.targetPoint) combatEffects.animation.common.targetPoint=
             [this](Sid firing,Sid target) { return fenceTarget->Point(firing,target); };
         combatEffects.missile.muzzle=[this](Sid sid) { return projectileGeometry->Muzzle(sid); };
-        // 현재 썬 캐논 프레임과 보정된 포구에서 방향이 일치하는 사정선 종점을 조회한다.
+        // 현재 썬 캐논 프레임의 허용 방향과 실제 사정거리로 보정한 사정선 종점을 조회한다.
         combatEffects.missile.rayEnd=[this](std::array<float,2> from,std::array<float,2> to,Sid sid) { return projectileGeometry->CannonRayEnd(from,to,sid); };
         combatEffects.missile.hotspot=[this](Sid sid) { return projectileGeometry->Hotspot(sid); };
         combatEffects.missile.directionFrame=[this](std::array<float,2> from,std::array<float,2> to,std::uint32_t type) { return projectileGeometry->DirectionFrame(from,to,type); };

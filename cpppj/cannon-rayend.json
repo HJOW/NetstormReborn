@@ -1,0 +1,27 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "uniqueInputs": 4040,
+  "normalReturns": 8080,
+  "precisionDifferences": 0,
+  "nativeCalls": {
+    "0041ce90": 8080,
+    "0041d0d0": 6060,
+    "00466df0": 23852,
+    "00481750": 8080,
+    "0049a840": 6060,
+    "0049ace0": 6060,
+    "004ac550": 6060,
+    "004e49c0": 6060
+  },
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_cannon_rayend.py": "815ad128a34a1a2afc0fc908e15ed3975e76bcaf8c5bd36bee2f044764c2b03b",
+    "cpppj/tests/fixtures/cannon-rayend-x86.tsv": "442c1aa29620c7f4a782c8fb590a2786a3588f1bfbc73c32f896c6df93de5d63"
+  },
+  "limitations": [
+    "합성 TYPE128/raw 프레임·사정거리 입력이다. 실제 Missile 생성·비행·사용자 플레이 증거로 세지 않는다.",
+    "다른 TYPE/판본과 허용 방향이 없는 프레임은 포함하지 않는다."
+  ]
+}

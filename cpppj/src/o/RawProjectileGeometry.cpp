@@ -61,7 +61,7 @@ std::array<float,2> RawProjectileGeometry::Muzzle(Sid firing) const {
         return {std::bit_cast<float>(Read(raw,14)),std::bit_cast<float>(Read(raw,18))};
     throw std::logic_error("Projectile 실제 가상 포구 미복원 TYPE"+std::to_string(raw[10]));
 }
-// 실제00481750의 썬 캐논 방향 일치 분기만 실행하며 미복원 방향 보정을 통과시키지 않는다.
+// 실제00481750의 썬 캐논 분기다. 방향 불일치는 난수 없이 TYPE 사정거리의 정수 변환으로 보정한다.
 std::array<float,2> RawProjectileGeometry::CannonRayEnd(std::array<float,2> from,std::array<float,2> to,Sid firing) const {
     const auto raw=Slot(firing);
     if (pool_.Edition()!=OriginalEdition::Patch1078 || raw[10]!=128) throw std::logic_error("Cannon rayEnd 미복원 판본/TYPE");
@@ -73,8 +73,18 @@ std::array<float,2> RawProjectileGeometry::CannonRayEnd(std::array<float,2> from
     if (frame>=0 && frame<4) frameDirection=kSunCannonFrameDirections[static_cast<std::size_t>(frame)];
     else if (frame>=24 && frame<28) frameDirection=kSunCannonFrameDirections[static_cast<std::size_t>(frame-24)];
     else throw std::logic_error("Cannon rayEnd 미복원 물리 프레임"+std::to_string(frame));
-    if (frameDirection!=direction) throw std::logic_error("Cannon rayEnd 방향 불일치 및 원본 보정 경계 미복원");
-    if (direction==0 || direction==4) return {from[0],to[1]};
+    if (frameDirection!=direction) {
+        const auto range=geometry_[raw[10]].range;
+        if (!std::isfinite(range) || range<-2147483648.0 || range>=2147483648.0)
+            throw std::out_of_range("Cannon rayEnd 사정거리 정수 변환 범위 오류");
+        const auto distance=static_cast<std::int32_t>(range);
+        // 원본 imul의 하위 DWORD를 보존해 INT_MIN의 서/북 방향 부호 반전도 정의된 연산으로 처리한다.
+        const auto backwards=std::bit_cast<std::int32_t>(0U-static_cast<std::uint32_t>(distance));
+        const auto offsetX=frameDirection==2 ? distance : frameDirection==6 ? backwards : 0;
+        const auto offsetY=frameDirection==4 ? distance : frameDirection==0 ? backwards : 0;
+        to=Clamp({static_cast<float>(static_cast<double>(offsetX)+from[0]),static_cast<float>(static_cast<double>(offsetY)+from[1])});
+    }
+    if (frameDirection==0 || frameDirection==4) return {from[0],to[1]};
     return {to[0],from[1]};
 }
 // 가상 포구 계산 뒤 Missile ctor가 별도로 요구하는 현재 SHP 기준점이다.
