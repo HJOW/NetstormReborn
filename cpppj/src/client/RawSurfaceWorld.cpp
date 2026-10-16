@@ -97,6 +97,7 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
             throw std::out_of_range("raw 표면 월드 타입 번호 오류");
         bookkeeping.localOwner=1;ownerMode.battle=true;eventState.bridgeType=links.bridgeType;
         graph=std::make_unique<o::RawGraph>(pool,hash,spots,types,codes);
+        graph->ResetTable(); // 원본 월드 초기화004b2df0의00462b20처럼 첫 객체 이전에 Graph0을 예약한다.
         display=std::make_unique<o::SquidDisplay>(edition,types,shapes,*this,o::SquidDisplayView{0,0,65536,{0,0,640,480}});
         postPop=std::make_unique<o::SquidPostPop>(pool,types,bookkeeping,graph.get(),[this](o::Sid sid) { connect->Connect(sid); });
         postPop->SetIslandPrefix([this](o::Sid sid,std::uint32_t flags) { connect->IslandPostPopPrefix(sid,flags); });

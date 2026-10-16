@@ -2,6 +2,8 @@
 # (첫 구성 때 인터넷에서 내려받을 것이 없다).
 # 테스트 파일을 만들면 아래 목록에 더한다. 파일 안의 TEST_CASE 는 자동으로 등록된다.
 add_executable(netstorm_tests
+    GraphResetTests.cpp
+    GunAngleTests.cpp
     FencePostPopTests.cpp
     FenceNeighborsTests.cpp
     FenceLineTests.cpp
@@ -1077,3 +1079,11 @@ set_source_files_properties(FenceNeighborsTests.cpp PROPERTIES COMPILE_DEFINITIO
     "NETSTORM_FENCE_NEIGHBORS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fence-neighbors-x86.tsv\"")
 set_source_files_properties(FenceLineTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_FENCE_LINE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fence-line-x86.tsv\"")
+
+# Gunanim 프레임→방향은 실제 원본 함수 반환값과 대조한다.
+set_source_files_properties(GunAngleTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_GUN_ANGLE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/gun-angle-x86.tsv\"")
+
+# 원본 Graph 초기화는 전체255행의 바이트 보존과 대조한다.
+set_source_files_properties(GraphResetTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_GRAPH_RESET_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/graph-reset-x86.tsv\"")

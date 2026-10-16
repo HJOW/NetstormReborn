@@ -1,5 +1,15 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-16 단위77 완료: 총 각도·Graph 초기화 복원 및 데모3개 실제 Load/Start 검사 (`VM-W11-Codex`)
+
+- [x] 직전 턴은 `6b4ffe6`까지 복원/검증/문서/커밋을 완료한 진행 턴이다. AGENTS.md와 양 LEFT_JOBS·깨끗한 작업 트리를 다시 확인했다. 현재/마지막 전체 정밀 PC는 **VM-W11-Codex / 2026-10-16**이다. 명칭은 별도 대응표의 사용자 표시 이름을 따른다. 목표는 active·미달성이다.
+- [x] `CampaignDemoStart_`3개를 독립 추가해 실제 **DemoStormRages·GuardMyBack·DissolvedAlliance**의 같은 Script/Session/Start를 검사한다. 원본 StartDemo의 미션 생성 뒤+68=1을 같은 gate.demo에 공급하며 스크립트 demo 키로 대체하지 않는다. 아직 GUI 명령 분배 연결 검사는 아니다. 최초 세 실패는 맨 오 워 풀(TYPE143·VT005099e8) 후처리 누락, 두 번째 Graph 소진, 세 번째 총 각도→Graph 미연결이다. 로그 `extracted/goal-demo-20261016-{build,first-focused}.log`를 따른다.
+- [x] 실제00467610의20개float 각도/5프레임 나눗셈/상한19/방향0~3을 `RawGunAngle.h`로 복원하고 같은 Session의 실제 Graph BYTE 쓰기에 연결했다. 원본 **518개 고유 입력**을 두 x87 정밀도에서 관찰했으며 `GunAngle_`2개·실패0이다. DissolvedAlliance는 이 경계를 통과해 Graph 재구성의 다음 실패에 도달했다. 실제004ad3e0의 정상 허용 타입/번호에서 BYTE+30만 쓰는 몸체를 확인했다. 로그 `extracted/goal-demo-20261016-angle-{build,focused,start}.log`를 따른다.
+- [x] Graph 추적에서 두 큰 데모 모두 **Rebuild(false)·inUse0·members2791/2737**에서 실패함을 확인했다. 원본 월드 초기화004b2df0의 **00462b20·Graph0 예약** 누락을 `RawGraph::ResetTable`과 첫 객체 전 호출로 복원했다. 원본255행1530BYTE의 쓰기/보존을 **16입력**으로 대조했고 집중1개가 통과했다. 기존 FullPool 정책만 켠 실패 시도와 임시 추적 출력은 제거했다.
+- [x] 최종 Release 경고0·오류0, 전체 CTest **1333개·1331통과·2실패, exit8, 검사115.50초·전체115.57초**다. 기존8미션 시작과 새 DissolvedAlliance 데모의 Load/Start는 통과한다. GuardMyBack은 Load 뒤 **AI 색 변경0043ca70**, DemoStormRages는 **맨 오 워 풀 TYPE143·VT005099e8 PostPop**에서 실패한다. 실패 검사는 유지한다. 로그 `extracted/goal-demo-20261016-{final-build,reset-focused,graph-reset-focused,ctest,tests}.log`와 [상세 기록](docs/exe/cpp-demo-initialization-20261016.md)을 따른다.
+- [x] 새534입력과 인접 Graph288·휘리베이스1734·썬 바리케이드330/1904/99·매립580·요구에너지2352의 보존 SHA, Python 구문/UTF-8/공백을 감사한다. CMake 등록의 이전/현재 SHA는 요구에너지 이력에 보존했다. 원본 게임/GUI 실행0이며 현재/마지막 전체 정밀 PC는 **VM-W11-Codex / 2026-10-16**이다. 이 단위를 `20261016-08 CP 데모 로드의 Graph 초기화와 총 방향 복원 및 시작 경계 검증`으로 로컬 커밋한다. 목표는 active·미달성이다.
+- [ ] 다음은 위 두 실패 경계를 실제 원본 순서대로 복원한다. 맨 오 워 풀 및 데빌 메이커의 실제 프로세스/후처리, GUI StartDemo 및 일반 미션 Start/Guide/프레임 연결과 자연 완주는 여전히 남아 있다. 작업 도중 나타난 `originals/d/options.cfg` 변경·`originals/fullscreenStateFile.dat` 삭제는 이 단위에서 수행하지 않았으며 커밋/복원하지 않는다.
+
 ## 2026-10-16 사용자 표시 이름·내부 타입명 대응 문서 (`VM-W11-Codex`)
 
 - [x] 사용자 요청에 따라 [별도 대응표](docs/unit-source-name-map.md)를 만들었다. 원본10.78 `.type`의 description, 실제 등록188TYPE 덤프, 기존 공유 한국어 이름을 대조했다. 건물·유닛·자원45개와 같은 description의 보조 객체4개를 구별한다. `sunFence`=**Sun Barricade/썬 바리케이드**, `sunBlocker`=**Stone Tower/스톤 타워**, `sunAviary`=**Whirlibase/휘리베이스**다. 한국어 명칭 규칙 문서에 링크했다.

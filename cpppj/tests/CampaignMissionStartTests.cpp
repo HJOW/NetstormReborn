@@ -124,3 +124,28 @@ TEST_CASE(CampaignMissionStart_RequiredEffectFailurePreservesOriginalPartialWrit
     CHECK(gate.started==0 && state.sequence==4 && session.Sp(session.LocalOwner())==3000 && external.settings==0 && session.AiMemory().Allocations().empty());
     effects.settingsBytes={};CHECK(Throws([&] { RawCampaignMissionStartBindings missing(session,script,gate,state,globals,ai,effects); }));
 }
+
+namespace {
+// 실제 데모 미션의 같은 Session/Script/게이트를 시작한다. GUI 명령 분배 자체의 검사는 별도다.
+void StartProtectedDemo(std::string_view name) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);ConfigInterface config([&](std::string_view path) { return assets.files.TryRead(path); });ConfigureStart(config);
+    MissionScript script(config,name);CHECK(script.Loaded());StartExternal external;auto fort=FortTemplate::Parse(assets.files.Read(script.FortPath()),assets.game.TypeTable());
+    std::fprintf(stderr,"실제 데모 Load 검사: %s\n",std::string(name).c_str()); // 미복원 파생 몸체의 실제 진입 미션을 보존한다.
+    RawCampaignSession session(assets.game,assets.files,std::move(fort),script.FortName(),external.Services());session.Load();
+    MissionFrameGateState gate;MissionStartState state;MissionStartGlobals globals;MissionAiSettingsState ai;ai.stuffRefreshRate=4;
+    // 원본 StartDemo는00463b70의 현재 미션 생성 뒤00463a00으로 실제+68에1을 쓴다. 스크립트 demo 키로 대체하지 않는다.
+    gate.demo=1;RawCampaignMissionStartBindings start(session,script,gate,state,globals,ai,external.Effects());
+    CHECK(start.FindLivePriest(session.LocalOwner())!=0);std::array<bool,9> live{};std::size_t requested{}; // Start 이전 실제 사제의 참여 입력이다.
+    for (std::uint32_t owner=1;owner<9;++owner) { live[owner]=start.FindLivePriest(owner)!=0;if (live[owner]) ++requested; } // 데모는 로컬 소유자도 AI 생성에 포함한다.
+    std::fprintf(stderr,"실제 데모 Start 검사: %s\n",std::string(name).c_str());start.Start();
+    CHECK(gate.demo==1 && gate.started==1 && gate.startSeconds==123.5 && gate.demoEndSeconds==483.5);
+    CHECK(external.settings==requested && session.Participation().Brain(session.LocalOwner())!=0 && session.Core().bookkeeping.depth==0);
+    for (std::uint32_t owner=1;owner<9;++owner) if (live[owner]) CHECK(session.Participation().Brain(owner)!=0); // 같은 실제 사제 소유자는 모두 현재 AI에 연결되어야 한다.
+}
+}
+// 원본 DEMOVILLE의 세 StartDemo 입력은 독립 검사로 실행해 첫 실패가 뒤 미션을 감추지 않게 한다.
+TEST_CASE(CampaignDemoStart_TheStormRages) { StartProtectedDemo("DemoStormRages"); }
+// 실제 ai1과 동맹/색 설정이 있는 두 번째 원본 데모다.
+TEST_CASE(CampaignDemoStart_GuardMyBack) { StartProtectedDemo("GuardMyBack"); }
+// 세 소유자와 배신 동맹 설정이 있는 세 번째 원본 데모다.
+TEST_CASE(CampaignDemoStart_DissolvedAlliance) { StartProtectedDemo("DissolvedAlliance"); }

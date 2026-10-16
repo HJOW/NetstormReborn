@@ -1,0 +1,52 @@
+{
+  "host": "VM-W11-Codex",
+  "date": "2026-10-16",
+  "last_full_refined_host": "VM-W11-Codex",
+  "last_full_refined_date": "2026-10-16",
+  "observations": 518,
+  "precision_replays": [
+    639,
+    895
+  ],
+  "game_gui_runs": 0,
+  "status": "native-compared-cpp-focused-passed-demo-integration-incomplete",
+  "boundary": "원본00467610과 실제float 표/진단꺼짐을 사용한다. 외부 함수 대체는 없으며 음수 인덱스의 무효 메모리는 범위 밖이다. 반환/스택/비휘발/스택 밖 쓰기를 확인한다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_gun_angle.py": "44a6c588a9affe2a83e4d0b11ace5e13a0e83d73c4182e545d33ddd4371153ea",
+    "tools/decomp_local_mission_transport.py": "db71da65079aa9a985a3a833edd224f089ba9a20137d92042551cb346937eb78",
+    "cpppj/src/o/RawGunAngle.h": "1e3da31bec605a78bc3036836e030c7e454fa697b49e30d08c154c2acfd21485",
+    "cpppj/tests/GunAngleTests.cpp": "f3c8c81be5ef1e8ffc0c84b905ea84e76b5718f2c3e53917c94fd44374905f3f",
+    "cpppj/tests/fixtures/gun-angle-x86.tsv": "86c0c4b0346bcf6fd230b940548b9dfbee369ca26c92ddae5a0def7c5fb43be2"
+  },
+  "product_validation": {
+    "configuration": "Release",
+    "build_exit_code": 0,
+    "build_warnings": 0,
+    "build_errors": 0,
+    "build_log": "extracted/goal-demo-20261016-final-build.log",
+    "full_ctest": {
+      "tests": 1333,
+      "passed": 1331,
+      "failed_checks": 2,
+      "exit_code": 8,
+      "test_seconds": 115.5,
+      "total_seconds": 115.57,
+      "failed_tests": [
+        "CampaignDemoStart_TheStormRages",
+        "CampaignDemoStart_GuardMyBack"
+      ],
+      "log": "extracted/goal-demo-20261016-ctest.log"
+    },
+    "focused_tests": 2,
+    "focused_failed_checks": 0,
+    "focused_log": "extracted/goal-demo-20261016-angle-focused.log",
+    "integration_source_sha256": {
+      "cpppj/src/client/RawSurfaceWorld.cpp": "706048a22e8526e531de8c1466e9892d366f5972673a389c4cfbb8e8a9c721dd",
+      "cpppj/src/client/RawCampaignSession.cpp": "2264c08498c1424a4a7d80d893a35d3b31bb59ec049551b49b9f5492d4b464a6",
+      "cpppj/tests/CampaignMissionStartTests.cpp": "0d86c9fcffc034909325e6b2baf6d549c07f1f0fcabc6fbdcfe46ebf72be3a31",
+      "cpppj/tests/CMakeLists.txt": "ccdf6efa7ad81526ec863fac9454d871411f9a07ae3f3f739f45e271047d5f03"
+    }
+  }
+}

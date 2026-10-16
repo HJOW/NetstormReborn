@@ -16,6 +16,7 @@
 #include "o/RawFencePostPop.h"
 #include "o/RawFenceNeighbors.h"
 #include "o/RawFenceLine.h"
+#include "o/RawGunAngle.h"
 #include "o/RawRainVortexDraw.h"
 #include "o/RawRegionOwner.h"
 #include "o/RawSpStoreNoticeBindings.h"
@@ -401,6 +402,8 @@ struct RawCampaignSession::Impl {
         assetEffects.levelAssertion=SessionMissing<void,SquidLevelAssertion>();
         assetEffects.factory.regionOwnership=[this](float x,float y) { ownership->UpdateRegion(x,y); };
         assetEffects.postPop.setOwner=[this](Sid sid,std::uint32_t owner) { ownership->SetOwner(sid,owner); };
+        assetEffects.postPop.gunFrame=[](std::int32_t frame) { return static_cast<std::int32_t>(PatchGunGraphFromFrame(frame)); }; // 실제00467610의 프레임 표 조회다.
+        assetEffects.postPop.setGraph=[this](Sid sid,std::int32_t number) { core.pool.AllocatedBytes(sid)[30]=static_cast<std::uint8_t>(number); }; // 실제004ad3e0은 Graph BYTE만 쓴다.
         // PATCH0040d980은 현재float를절삭한 뒤16으로 나눈 청크의 실제 BYTE를 읽는다.
         assetEffects.postPop.regionNumber=[this](float x,float y) { return static_cast<std::int32_t>(chunks.At(static_cast<int>(x)/16,static_cast<int>(y)/16).island); };
         // 실제 TYPE 사운드 이름을 클라이언트의 단일 이름표에서 조회한다. TYPE번호를 토큰으로 대신하지 않는다.

@@ -43,6 +43,8 @@ public:
     std::uint32_t Flood(Sid sid,std::uint8_t graph);
     // 전체 raw 풀에서 무효 번호 수집 또는 전체 초기화 재구성을 원자적으로 반영한다.
     void Rebuild(bool resetAll);
+    // 원본00462b20의 월드 초기 표를 만든다. Graph0 예약·reserved LOW BYTE·sentinel만 초기화하고 풀/스택은 보존한다.
+    void ResetTable();
     // 빈 번호가 있으면 표만 갱신하고, 소진되면 전체 raw 풀 재구성 뒤 번호를 확보한다.
     std::uint8_t Allocate();
     // 기존 레코드의 reserved WORD와 전체 스택의 미사용 흔적도 노출한다.

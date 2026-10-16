@@ -391,6 +391,12 @@ std::uint32_t RawGraph::Flood(Sid sid,std::uint8_t graph) {
 }
 // 지역 root를 지정하지 않고 전체 할당 풀에서 계산한다.
 void RawGraph::Rebuild(bool resetAll) { Commit(Calculate(Sid{},Operation::Rebuild,resetAll ? 1 : 0,nullptr)); }
+// 같은 전체 월드가 첫 저장 객체를 설치하기 전에 호출하는 원본 표 초기화다.
+void RawGraph::ResetTable() {
+    for (std::size_t index=0;index<Graph::kCount;++index) records_[index].surfaces=records_[index].inUse=0; // 앞251개의 두 WORD만 지우고 reserved/나머지 행은 보존한다.
+    records_[0].inUse=1;records_[0].reserved=std::bit_cast<std::int16_t>(static_cast<std::uint16_t>((static_cast<std::uint16_t>(records_[0].reserved)&0xff00U)|1U));
+    records_[Graph::kInvalid].surfaces=records_[Graph::kInvalid].inUse=0x7dfd;
+}
 // 재구성 결과의 번호/표/스택을 함께 적용한 뒤 확보한 번호를 돌려준다.
 std::uint8_t RawGraph::Allocate() {
     const auto plan=Calculate(Sid{},Operation::Allocate,0,nullptr); Commit(plan); return static_cast<std::uint8_t>(plan.changed);

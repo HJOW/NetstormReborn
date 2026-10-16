@@ -56,6 +56,20 @@ cpppj/tests/fixtures/fence-*-x86.tsv text eol=lf
 cpppj/fence-postpop.json text eol=lf
 cpppj/fence-neighbors.json text eol=lf
 cpppj/fence-line.json text eol=lf
+
+# Gunanim 각도 계산의 원문 관찰과 제품 바이트를 유지한다.
+cpppj/src/o/RawGunAngle.h text eol=lf
+cpppj/tests/GunAngleTests.cpp text eol=lf
+cpppj/tests/fixtures/gun-angle-x86.tsv text eol=lf
+tools/decomp_gun_angle.py text eol=lf
+cpppj/gun-angle.json text eol=lf
+
+# Graph 초기 표의 정확한 쓰기와 독립 기대값을 유지한다.
+cpppj/src/o/RawGraph.h text eol=lf
+tools/decomp_graph_reset.py text eol=lf
+cpppj/tests/GraphResetTests.cpp text eol=lf
+cpppj/tests/fixtures/graph-reset-x86.tsv text eol=lf
+cpppj/graph-reset.json text eol=lf
 # 썬 아비어리의 원문/관찰/검사 바이트를 Windows 체크아웃에서도 보존한다.
 cpppj/src/o/RawSunAviaryProcess.* text eol=lf
 cpppj/tests/SunAviaryProcessTests.cpp text eol=lf

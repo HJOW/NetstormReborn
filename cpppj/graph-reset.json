@@ -1,0 +1,55 @@
+{
+  "host": "VM-W11-Codex",
+  "date": "2026-10-16",
+  "last_full_refined_host": "VM-W11-Codex",
+  "last_full_refined_date": "2026-10-16",
+  "observations": 16,
+  "game_gui_runs": 0,
+  "status": "native-compared-cpp-focused-passed-demo-integration-incomplete",
+  "boundary": "원본00462b20은 외부 대체 없이 표255행 전체를 관찰한다. 원문 반환/스택/비휘발과 표 밖 쓰기를 확인한다. 전체 Graph 연결/재구성이나 자연 플레이 관찰은 아니다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_graph_reset.py": "6ca42fdd647153bc168c57c22edafcc11a4a01ea7d187bf0126c2a851e0399ea",
+    "tools/decomp_local_mission_transport.py": "db71da65079aa9a985a3a833edd224f089ba9a20137d92042551cb346937eb78",
+    "cpppj/src/o/RawGraph.h": "3300336f25d5669a05859e50c3f4903cd7ea05bded2ce43d2be68707f5428cd5",
+    "cpppj/src/o/RawGraph.cpp": "5c19ce26e1e8949f05e4bc81db18cc648c1826ffbca7be3c478bf36ee2dc2043",
+    "cpppj/tests/GraphResetTests.cpp": "fe3888fbae14ad14ab9b83d92cb1705c880d7a17b54154731b44b3de959e5912",
+    "cpppj/tests/fixtures/graph-reset-x86.tsv": "48fc211e1d99eab562ceabb1112f5e9031343c0e7e46ce5a0bdfa020a946fa79"
+  },
+  "product_validation": {
+    "configuration": "Release",
+    "build_exit_code": 0,
+    "build_warnings": 0,
+    "build_errors": 0,
+    "build_log": "extracted/goal-demo-20261016-final-build.log",
+    "full_ctest": {
+      "tests": 1333,
+      "passed": 1331,
+      "failed_checks": 2,
+      "exit_code": 8,
+      "test_seconds": 115.5,
+      "total_seconds": 115.57,
+      "failed_tests": [
+        "CampaignDemoStart_TheStormRages",
+        "CampaignDemoStart_GuardMyBack"
+      ],
+      "log": "extracted/goal-demo-20261016-ctest.log"
+    },
+    "focused_tests": 1,
+    "focused_failed_checks": 0,
+    "focused_log": "extracted/goal-demo-20261016-reset-focused.log",
+    "integration_source_sha256": {
+      "cpppj/src/client/RawSurfaceWorld.cpp": "706048a22e8526e531de8c1466e9892d366f5972673a389c4cfbb8e8a9c721dd",
+      "cpppj/src/client/RawCampaignSession.cpp": "2264c08498c1424a4a7d80d893a35d3b31bb59ec049551b49b9f5492d4b464a6",
+      "cpppj/tests/CampaignMissionStartTests.cpp": "0d86c9fcffc034909325e6b2baf6d549c07f1f0fcabc6fbdcfe46ebf72be3a31",
+      "cpppj/tests/CMakeLists.txt": "ccdf6efa7ad81526ec863fac9454d871411f9a07ae3f3f739f45e271047d5f03"
+    }
+  },
+  "line_ending_normalization": {
+    "path": "cpppj/src/o/RawGraph.h",
+    "previous": "d3bf293fa8030e3a6f7160015496fbb0790543fdf35224ad56b37ead6c95087c",
+    "current": "3300336f25d5669a05859e50c3f4903cd7ea05bded2ce43d2be68707f5428cd5",
+    "meaning": "검사한 CRLF 헤더를 LF로만 정규화했다. C++ 토큰 변경은 없다."
+  }
+}
