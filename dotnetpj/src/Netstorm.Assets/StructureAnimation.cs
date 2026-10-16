@@ -1,6 +1,6 @@
 namespace Netstorm.Assets;
 
-/// <summary>건물·가이저처럼 제자리에서 도는 그림의 지금 프레임: 본체 클러스터와, 본체 위에 겹쳐 그리는 클러스터(없으면 null).</summary>
+/// <summary>건물·간헐천처럼 제자리에서 도는 그림의 지금 프레임: 본체 클러스터와, 본체 위에 겹쳐 그리는 클러스터(없으면 null).</summary>
 /// <param name="Body">본체 클러스터 번호 (그림자는 이 클러스터의 것을 쓴다)</param>
 /// <param name="Overlay">본체 위에 같은 기준점으로 겹쳐 그릴 클러스터 번호</param>
 public readonly record struct StructureFrames(int Body, int? Overlay = null);
@@ -12,7 +12,7 @@ public readonly record struct StructureFrames(int Body, int? Overlay = null);
 /// </summary>
 public static class StructureAnimation
 {
-    /// <summary>가이저 증기 한 프레임의 길이(초). 원본 0.04초 타이머가 75fps 루프에서 3루프 = 약 41.7ms 가 된다.</summary>
+    /// <summary>간헐천 증기 한 프레임의 길이(초). 원본 0.04초 타이머가 75fps 루프에서 3루프 = 약 41.7ms 가 된다.</summary>
     public const double SteamFrameSeconds = 1.0 / 24;
 
     /// <summary>신전 회오리·번개, 풍선 흔들림 한 프레임의 길이(초). 원본 0.08초 타이머 → 약 83.3ms.</summary>
@@ -22,7 +22,7 @@ public static class StructureAnimation
     public const double WorkshopFrameSeconds = 0.5;
 
     /// <summary>
-    /// 가이저가 평소에 되풀이하는 증기 프레임 수 (A00~A16). 녹화에서는 이 17장만 차례로 나왔다.
+    /// 간헐천이 평소에 되풀이하는 증기 프레임 수 (A00~A16). 녹화에서는 이 17장만 차례로 나왔다.
     /// A17~A48 은 바위 없이 증기만 있는 작은 그림이며 어느 상태에서 쓰는지는 확인하지 못했다.
     /// </summary>
     public const int GeyserSteamFrames = 17;
@@ -51,7 +51,7 @@ public static class StructureAnimation
         return (int)(step % count);
     }
 
-    /// <summary>가이저의 지금 증기 프레임 (A00~A16 을 약 24Hz 로 되풀이). 그 그림이 없는 타입이면 기본 프레임이다.</summary>
+    /// <summary>간헐천의 지금 증기 프레임 (A00~A16 을 약 24Hz 로 되풀이). 그 그림이 없는 타입이면 기본 프레임이다.</summary>
     /// <param name="type">geyser 타입</param>
     /// <param name="seconds">게임 경과 시간(초)</param>
     public static int GeyserFrame(TypeDefinition type, double seconds)
@@ -84,7 +84,7 @@ public static class StructureAnimation
     /// <summary>
     /// 타입의 <c>hotFootRatioX·Y</c> 로 그림 기준점을 칸 기준점에서 옮기는 논리 픽셀 (왼쪽·위쪽이 음수).
     /// 원본은 비율 × 한 칸 크기(16×11)만큼 왼쪽·위에 그린다. TEST01 녹화에서 건물(비율 없음) 대비
-    /// 가이저 (0.22, 0.22) → (−3, −2), Rain 수정탑 (0.5, 0.4) → (−8, −5), 사제 (0.5, 0.2) → (−8, −2),
+    /// 간헐천 (0.22, 0.22) → (−3, −2), Rain 수정탑 (0.5, 0.4) → (−8, −5), 사제 (0.5, 0.2) → (−8, −2),
     /// Cloud Floater (1.0, 0.7) → (−16, −7) 캡처 환산값이 모두 1픽셀 안에서 맞았다. 소수점은 버린다.
     /// </summary>
     /// <param name="type">오브젝트 타입</param>

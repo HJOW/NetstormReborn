@@ -132,7 +132,7 @@ public sealed class EnergyRuleTests
 
     /// <summary>
     /// 원본 .type 전체에 규칙을 적용한 요구값이 문서 표(elements-energy.md 4절)와 같다.
-    /// 신전·워크샵·알타·사제는 요구값이 없다.
+    /// 신전·워크샾·제단·사제는 요구값이 없다.
     /// </summary>
     [Fact]
     public void OriginalTypes_MatchDocumentedTable()

@@ -7,7 +7,7 @@ namespace Netstorm.Core.Tests;
 
 /// <summary>
 /// 사제의 건물 건설 규칙: 설치 클릭에서 비용을 차감하고 공사장을 놓은 뒤 사제가 현장까지 걸어가 도착해야 건설 시간이 시작된다.
-/// 템플·알타는 플레이어당 1기이며(건설 중 포함), 도착 전에 사제가 다른 명령을 받으면 공사장은 비용 전액 환불과 함께 사라진다.
+/// 신전·제단은 플레이어당 1기이며(건설 중 포함), 도착 전에 사제가 다른 명령을 받으면 공사장은 비용 전액 환불과 함께 사라진다.
 /// 근거는 2026-10-03 원본 자동 분석(docs/videos/auto-war-begins-20261003.md 4.5절)과 웹 팬게임의 같은 흐름이다.
 /// 사제가 (2,2)에 있는 합성 섬에서 거리와 도달 여부를 정확히 통제해 검사한다.
 /// </summary>
@@ -19,16 +19,16 @@ public sealed class ConstructionTests
     /// <summary>사제가 서 있는 칸 (x, y 모두)</summary>
     private const int PriestStart = 2;
 
-    /// <summary>사제에게서 멀리 떨어진 템플 기준점 x (발자국 8×8 이라 x 43~50, y 33~40을 차지한다)</summary>
+    /// <summary>사제에게서 멀리 떨어진 신전 기준점 x (발자국 8×8 이라 x 43~50, y 33~40을 차지한다)</summary>
     private const int FarX = 50;
 
-    /// <summary>사제에게서 멀리 떨어진 템플 기준점 y</summary>
+    /// <summary>사제에게서 멀리 떨어진 신전 기준점 y</summary>
     private const int FarY = 40;
 
-    /// <summary>사제가 서 있는 칸 바로 옆에 놓이는 템플 기준점 x (발자국 x 3~10, y 0~7 — 사제 (2,2)가 왼쪽 변 바로 바깥이다)</summary>
+    /// <summary>사제가 서 있는 칸 바로 옆에 놓이는 신전 기준점 x (발자국 x 3~10, y 0~7 — 사제 (2,2)가 왼쪽 변 바로 바깥이다)</summary>
     private const int NearX = 10;
 
-    /// <summary>사제 바로 옆 템플 기준점 y</summary>
+    /// <summary>사제 바로 옆 신전 기준점 y</summary>
     private const int NearY = 7;
 
     /// <summary>건설 시간(10초)의 틱 수 (초당 24틱)</summary>
@@ -91,7 +91,7 @@ public sealed class ConstructionTests
         Assert.True(session.CheckBuilding(1, "sunFactory", 20, 15).Allowed);
     }
 
-    /// <summary>워크샵은 템플과 달리 건물 수로 제한하지 않는다. 원본 TEST02의 14채 설치를 합성 섬에서도 확인한다.</summary>
+    /// <summary>워크샾은 신전과 달리 건물 수로 제한하지 않는다. 원본 TEST02의 14채 설치를 합성 섬에서도 확인한다.</summary>
     [Fact]
     public void Workshop_FourteenSitesHaveNoCountRestriction()
     {
@@ -111,7 +111,7 @@ public sealed class ConstructionTests
     }
 
     /// <summary>
-    /// 멀리 있는 템플: 비용은 설치 때 한 번에 나가고 공사장이 생기지만, 사제가 현장 옆에 도착하기 전에는 건설 시간이 시작되지 않는다.
+    /// 멀리 있는 신전: 비용은 설치 때 한 번에 나가고 공사장이 생기지만, 사제가 현장 옆에 도착하기 전에는 건설 시간이 시작되지 않는다.
     /// 도착한 틱에 건설이 시작되어 정확히 10초 뒤 완공된다.
     /// </summary>
     [Fact]
@@ -199,7 +199,7 @@ public sealed class ConstructionTests
         IReadOnlyList<SessionEvent> events = session.DrainEvents();
         Assert.Contains(events, e => e.Kind == SessionEventKind.ConstructionCancelled && e.EntityId == temple.Id);
         Assert.DoesNotContain(events, e => e.Kind is SessionEventKind.BridgeCracked or SessionEventKind.BridgeCollapsed);
-        // 취소했으므로 템플을 다시 지을 수 있다
+        // 취소했으므로 신전을 다시 지을 수 있다
         Assert.Equal(BuildingRestriction.None, session.GetBuildingRestriction(1, "windVortex"));
         Assert.True(session.CheckBuilding(1, "windVortex", FarX, FarY, priest.Id).Allowed);
     }
@@ -235,8 +235,8 @@ public sealed class ConstructionTests
     }
 
     /// <summary>
-    /// 같은 사제의 새 건설 지시는 앞서 맡은 도착 전 공사장을 취소(환불)하고 새 공사장으로 간다. (템플·알타는 1기 제한 때문에 워크샵으로 확인한다.
-    /// 워크샵은 에너지 공급원이 필요하므로 먼저 템플을 지어 둔다.)
+    /// 같은 사제의 새 건설 지시는 앞서 맡은 도착 전 공사장을 취소(환불)하고 새 공사장으로 간다. (신전·제단은 1기 제한 때문에 워크샾으로 확인한다.
+    /// 워크샾은 에너지 공급원이 필요하므로 먼저 신전을 지어 둔다.)
     /// </summary>
     [Fact]
     public void NewOrderForSamePriest_ReplacesPendingSite()
@@ -263,7 +263,7 @@ public sealed class ConstructionTests
     }
 
     /// <summary>
-    /// 건설 중이거나 사제를 기다리는 템플도 "이미 템플이 있음"이다: Construct 메뉴가 Temple 줄을 어둡게 하는 조건과 판정이 같다.
+    /// 건설 중이거나 사제를 기다리는 신전도 "이미 신전이 있음"이다: Construct 메뉴가 Temple 줄을 어둡게 하는 조건과 판정이 같다.
     /// </summary>
     [Fact]
     public void PendingTemple_BlocksSecondTempleAndMenuRestriction()
@@ -288,11 +288,11 @@ public sealed class ConstructionTests
         Assert.Contains(session.DrainEvents(), e => e.Kind == SessionEventKind.CommandRejected && e.Failure == CommandFailure.Placement);
         Assert.Equal(15000, session.Player(1).StormPower);
         Assert.Single(session.Entities, e => e.Kind == ObjectKind.Temple);
-        // 템플이 아닌 건물은 템플이 있어도 제한이 없다
+        // 신전이 아닌 건물은 신전이 있어도 제한이 없다
         Assert.Equal(BuildingRestriction.None, session.GetBuildingRestriction(1, "outpost"));
     }
 
-    /// <summary>알타도 플레이어당 1기다 (웹 팬게임 규칙). 도착 전 공사장도 센다.</summary>
+    /// <summary>제단도 플레이어당 1기다 (웹 팬게임 규칙). 도착 전 공사장도 센다.</summary>
     [Fact]
     public void Altar_OnlyOnePerPlayer()
     {
@@ -320,8 +320,8 @@ public sealed class ConstructionTests
     }
 
     /// <summary>
-    /// 워크샵 줄은 그 원소의 지식(발전기 제외)이 있어야 쓸 수 있다: 원본 1-1 관찰에서 Sun Workshop 만 활성이고 Rain·Wind·Thunder 는 어두웠다
-    /// (1-1 은 Rain 발전기 지식을 가졌지만 Rain Workshop 이 어두웠다). 웹 팬게임 fo 와 같다.
+    /// 워크샾 줄은 그 원소의 지식(제네레이터 제외)이 있어야 쓸 수 있다: 원본 1-1 관찰에서 Sun Workshop 만 활성이고 Rain·Wind·Thunder 는 어두웠다
+    /// (1-1 은 Rain 제네레이터 지식을 가졌지만 Rain Workshop 이 어두웠다). 웹 팬게임 fo 와 같다.
     /// </summary>
     [Fact]
     public void Workshop_NeedsNonGeneratorKnowledgeOfItsElement()
@@ -329,11 +329,11 @@ public sealed class ConstructionTests
         BattleSession session = Create();
         PlayerState player = session.Player(1);
         Assert.Equal(BuildingRestriction.NoKnowledge, session.GetBuildingRestriction(1, "sunFactory"));
-        // 발전기 지식은 세지 않는다
+        // 제네레이터 지식은 세지 않는다
         player.Deck.LearnKnowledge("rainBattery");
         Assert.Equal(BuildingRestriction.NoKnowledge, session.GetBuildingRestriction(1, "rainFactory"));
         Assert.Equal(BuildingRestriction.NoKnowledge, session.GetBuildingRestriction(1, "sunFactory"));
-        // 같은 원소의 일반 유닛 지식이 생기면 그 원소의 워크샵만 쓸 수 있다
+        // 같은 원소의 일반 유닛 지식이 생기면 그 원소의 워크샾만 쓸 수 있다
         player.Deck.LearnKnowledge("sunCannon");
         Assert.Equal(BuildingRestriction.None, session.GetBuildingRestriction(1, "sunFactory"));
         Assert.Equal(BuildingRestriction.NoKnowledge, session.GetBuildingRestriction(1, "rainFactory"));

@@ -68,7 +68,7 @@ internal sealed partial class FortMapViewer : IDisposable
     /// <summary>_supportTopType: 섬 받침 윗부분을 그릴 타입.</summary>
     private readonly TypeInfo _supportTopType;
 
-    /// <summary>다 쓴 가이저를 그릴 원본 emptyGeyser 타입 (없으면 원래 가이저 그림을 유지).</summary>
+    /// <summary>다 쓴 간헐천을 그릴 원본 emptyGeyser 타입 (없으면 원래 간헐천 그림을 유지).</summary>
     private readonly TypeInfo? _emptyGeyserType;
     /// <summary>_supportBottomType: 섬 받침 아랫부분을 그릴 타입.</summary>
     private readonly TypeInfo _supportBottomType;

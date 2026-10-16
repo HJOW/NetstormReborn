@@ -4,7 +4,7 @@
 
 **실제 캠페인 설치 부모는 `PATCH004b5300/CD004322e0`다.** 미션의 Packet0x27 새 로그인 처리기가 이를 호출한다. 단위13의 저장 부모 `PATCH004b5f70/CD004330c0`는 별도 Fort 메뉴 State 경로의 부모다. War Begins stage1은 State7→Battle/packet 전송 경로를 요청한다. 기존 부모534행 및 같은 풀의 선택 Fort 소비자1개/Builder 골든2개의 성공을 실제 캠페인173개(저장172+별도Player152) 설치 완료로 확대하지 않는다.
 
-이 문서는 현재/마지막 정밀 PC **HJOW-Athlon, 2026-10-14**의 `extracted/refined/originals/raw.c`, `extracted/refined/originalCD/raw.c` 및 각 좁은 정밀 내보내기를 읽은 정적 감사다. 기준 커밋은 단위12 `db9b626`이며 이후 단위13 새 연결 파일과 root/gun이 전담한 shared successor는 별도다. 이번 감사 자체의 새 PE 실행/GUI/게임 실행은0이다. 아래 최초 가이저의 신규 정상168/미복원 거부436은 별도 보고서다.
+이 문서는 현재/마지막 정밀 PC **HJOW-Athlon, 2026-10-14**의 `extracted/refined/originals/raw.c`, `extracted/refined/originalCD/raw.c` 및 각 좁은 정밀 내보내기를 읽은 정적 감사다. 기준 커밋은 단위12 `db9b626`이며 이후 단위13 새 연결 파일과 root/gun이 전담한 shared successor는 별도다. 이번 감사 자체의 새 PE 실행/GUI/게임 실행은0이다. 아래 최초 간헐천의 신규 정상168/미복원 거부436은 별도 보고서다.
 
 ## 실제 미션 State/Guide/AI 순서
 
@@ -25,7 +25,7 @@
 
 PATCH 메인 루프 `00438dc0`/분리 함수 `004395df`와 CD `00485b20`은 **State update 후 Guide 실행** 순서를 가진다. State 함수가 pending0으로 바꾼 순간을 독립 ready 완료로 해석하면 안 된다. 맵 전송/설치 동안의 후속 State와 진행 GUI도 Guide의 조건이다. 정적 근거는 정상 새 미션 reset 직후 AI 포인터가0이며, 아래 저장173개 설치와 진행 GUI 종료 뒤 stage3가 사제의 존재를 확인하여 부착한다는 것이다. load 중 Guide를 중첩 실행하거나 이미 부착된 AI를 보존하는 별도 경로의 성공을 주장하지 않는다. 실제 소켓/GUI 실행과 시점 관찰은 아직 하지 않았다.
 
-첫 가이저 PostPop은 `00416720/CD004d8670(sid,1)`으로 현재 Player1..8의 AI 포인터를 조회한다. 새 `RawGeyserAiRegistration`은 같은9기록의 null AI를 실제 순회하며 nonnull 하위는 명시 거부한다. Packet0x5b 채집의 `RawGeyserMined`로 대신할 수 없다. [정상168/미복원거부436의 독립 자료](cpp-geyser-ai-registration-20261014.md).
+첫 간헐천 PostPop은 `00416720/CD004d8670(sid,1)`으로 현재 Player1..8의 AI 포인터를 조회한다. 새 `RawGeyserAiRegistration`은 같은9기록의 null AI를 실제 순회하며 nonnull 하위는 명시 거부한다. Packet0x5b 채집의 `RawGeyserMined`로 대신할 수 없다. [정상168/미복원거부436의 독립 자료](cpp-geyser-ai-registration-20261014.md).
 
 ## 저장 부모의 완료 범위와 캠페인 차이
 
@@ -57,7 +57,7 @@ State7은 Zone 이미지 설치→local 전송(server/client)의 로그인으로
 
 Packet0x2a의 `004b3d30` owner별 FortDataPacket→Builder 배치와 Packet0x72의 `004b3bc0` 중앙섬/archipelago는 일반 Battle의 별도 경로다. 실제 중앙 이름이`$`일 때만 archipelago이며 `SURROUNDED.FORT`도 그 내부 조건이다. 이름 War Begins만으로 이 분기들을 선택하지 않는다. 초기 자신의 미션 설치는 Packet0x27의 mode 분기에서 확인했다.
 
-Ready는 Player+50의0x40, 원본 login timer/Begin 수신, pending State 및 GUIempty의 별개 조건이다. `004b67c0/CD004336e0`은 mission fa4/52e170 또는 Begin(c7a74/CD53da04) 조건에서 owner1..8의 사제상태 `00495060/CD0040f0e0`를 지정한 뒤 진행 GUI를 닫는다. 추가 초기 가이저 생성 `00486440/CD00415a30`은 fa0/CD52e16c==0 조건이어서 실제 미션에서 선택하지 않는다. 이런 자연 반환을 missing callback fallback과 구분한다.
+Ready는 Player+50의0x40, 원본 login timer/Begin 수신, pending State 및 GUIempty의 별개 조건이다. `004b67c0/CD004336e0`은 mission fa4/52e170 또는 Begin(c7a74/CD53da04) 조건에서 owner1..8의 사제상태 `00495060/CD0040f0e0`를 지정한 뒤 진행 GUI를 닫는다. 추가 초기 간헐천 생성 `00486440/CD00415a30`은 fa0/CD52e16c==0 조건이어서 실제 미션에서 선택하지 않는다. 이런 자연 반환을 missing callback fallback과 구분한다.
 
 새 좁은 spec `tools/ghidra/campaign-world-load-functions.json`은 실제부모2개와 로그인 선택 감사2개를 별도로 준비한다. 기존 generic534행과 같은 실행 관찰로 합산하지 않는다. **후속 완료 목표는 실제 이 부모/Player 및 같은 저장173개 전체 raw/장부/두 난수/예약의 독립 대조**다.
 
@@ -87,9 +87,9 @@ Ready는 Player+50의0x40, 원본 login timer/Begin 수신, pending State 및 GU
 | 대상 | 기존 복원/재사용 | 아직 필요한 설치/미복원 경계 |
 | --- | --- | --- |
 | 사제158×2 | 실제 ctor/Owner/HP/Priest PostPop/같은 Host 경로 | 동일 raw 사제 장부·firstRegion·보호막/경로·전송·실제 SHP를 상위 전역에 연결 |
-| 레지던스89×2 | `RawAssetPostPop::Residence`, `RawAssetRegular`, FinishOwner | 같은 residences 목록/Player fields/현재 지역·예약. 목록의 신전을 레지던스로 취급하지 않음 |
+| 거주 구역89×2 | `RawAssetPostPop::Residence`, `RawAssetRegular`, FinishOwner | 같은 residences 목록/Player fields/현재 지역·예약. 목록의 신전을 거주 구역으로 취급하지 않음 |
 | 신전123/124×1씩 | Vortex 실제 ctor/Asset PostPop/Regular/지역·섬setter | 실제 impactSound/typeDword, 동일 Runtime·목록·Player; 내부 contained 슬롯은 별도 실제 Form |
-| 가이저122×14 | 실제 ctor/Asset PostPop/Regular, 새 nullAI 등록 | nonnull AI 거리/목록/후속 등록은 아직 거부, 실제 주변 받침 Unpop/Repop·장부를 연결 |
+| 간헐천122×14 | 실제 ctor/Asset PostPop/Regular, 새 nullAI 등록 | nonnull AI 거리/목록/후속 등록은 아직 거부, 실제 주변 받침 Unpop/Repop·장부를 연결 |
 | 썬 디스크 발사기71×9 | 실제 ctor/Gun PostPop/RawGunProcess/Archer animation | 실제 GunProcess 생성/부착/초기 Frame/SHP/두 난수/전송·목록. 일반 공격 이후 모든 handler 완료와 구분 |
 | 윈드 배터리75×3·썬 블로커78×8 | 실제 ctor/Asset PostPop 및 공통 장부 | 실제 타입 metadata와 로딩 depth로 선택된 경계를 확인. 비로딩 blocker start와 현재 초기 선택을 구분 |
 | 다리82×15·noIsland157×117 | 같은 Core의 실제 표면/Owner/Frame/Pop/Hash/Graph | Chaff 저장순 그대로 설치, 수동 배열 정렬·ground support 대입 제거 |

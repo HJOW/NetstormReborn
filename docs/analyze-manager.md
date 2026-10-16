@@ -284,7 +284,7 @@ analyzeManager/bin/Release/net10.0-windows/Netstorm.AnalyzeManager.exe call capt
 ```text
 튜토리얼 1을 열고 첫 안내 화면을 확인하세요.
 다리 조각 하나를 섬 가장자리에 놓으세요.
-가이저까지 다리를 연결하고 사제의 이동을 관찰하세요.
+간헐천까지 다리를 연결하고 사제의 이동을 관찰하세요.
 ```
 
 기존 `start_session`의 응답에서 받은 ID로 안내 창을 연다. `--steps-file`의 내용은 세션 안의 `guide-steps.txt`에 복사되어 창을 닫고 다시 열 때도 남는다. 이후에는 `--steps-file`을 생략해 같은 안내를 다시 사용할 수 있다. AI가 MCP/CLI의 `set_guide_steps`에 줄 단위 `steps`를 전달해 미리 저장할 수도 있다. 안내 창을 연 뒤 파일을 바꿨으면 `안내 다시 읽기`를 누른다.

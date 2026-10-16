@@ -105,7 +105,7 @@ public sealed class BridgeGrid
     /// <summary>칸 → 다리 칸 상태</summary>
     private readonly Dictionary<(int X, int Y), BridgeCellState> _cells = [];
 
-    /// <summary>섬 칸인지 (본섬·받침·가이저 바위)</summary>
+    /// <summary>섬 칸인지 (본섬·받침·간헐천 바위)</summary>
     private readonly Func<int, int, bool> _isIsland;
 
     /// <summary>다리 외의 오브젝트가 칸을 차지하는지</summary>
@@ -180,7 +180,7 @@ public sealed class BridgeGrid
     /// <param name="y">월드 칸 y</param>
     public BridgeCellState? At(int x, int y) => _cells.GetValueOrDefault((x, y));
 
-    /// <summary>맵에서 만든 본섬·받침·가이저 바위 칸인지. 사제 이동 경로의 지면 판정에 쓴다.</summary>
+    /// <summary>맵에서 만든 본섬·받침·간헐천 바위 칸인지. 사제 이동 경로의 지면 판정에 쓴다.</summary>
     public bool IsIsland(int x, int y) => _isIsland(x, y);
 
     /// <summary>섬 판정 콜백의 동적 받침이 생기거나 사라졌음을 알려 이동 경로를 재탐색하게 한다.</summary>

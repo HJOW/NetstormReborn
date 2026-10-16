@@ -12,11 +12,11 @@
 | 주변 통지 | `00451470` | `004e8e70` | 좌표−1 거의올림, ±4 사각형의 실제 finder와 genus400 필터 |
 | 피해 통지 | `00450db0` | 주변 몸체에 인라인 | dead/task5107/task5105 자연반환, 현재 Regular/task, Burning, 대피 순서 |
 | task 변경 | `00450670` | 주변 몸체에 인라인 | event5107·delay0 소비 경로, 기존 count0/event 재쓰기 또는 payload5 생성 |
-| 같은 owner 거주지 선택 | `0048fd30` | `00406ef0` | active DWORD 목록 순서, 엄격한 거리 비교, best float 저장 |
-| 거주지 진입점 | `004505a0` | `004e8a30` | x−footX×0.5 절삭+0.5, y−footY, 실제 mask `50444200` 및 genus 보정 |
+| 같은 owner 거주 구역 선택 | `0048fd30` | `00406ef0` | active DWORD 목록 순서, 엄격한 거리 비교, best float 저장 |
+| 거주 구역 진입점 | `004505a0` | `004e8a30` | x−footX×0.5 절삭+0.5, y−footY, 실제 mask `50444200` 및 genus 보정 |
 | 대피 요청 | `00450760` | 주변 몸체에 인라인 | 기존 type24 endpoint 비교, speed2배, 경로 요청, speed 정수절삭 복원, I→A frame |
 
-현재 `RawDudeNotice`는 같은 SID 풀·해시·타입·프레임·mutable speed·거주지 목록·Host 시계를 참조한다. `MakeDudeNoticeHostHooks`는 현재 실제 Host의 masked Regular 검색과 AddRegular를 연결한다. 기존 Regular가 있으면 같은 객체의 payload/Form/부착을 유지하고 `ResetTask(5107, now)`로 event/count/time만 바꾼다.
+현재 `RawDudeNotice`는 같은 SID 풀·해시·타입·프레임·mutable speed·거주 구역 목록·Host 시계를 참조한다. `MakeDudeNoticeHostHooks`는 현재 실제 Host의 masked Regular 검색과 AddRegular를 연결한다. 기존 Regular가 있으면 같은 객체의 payload/Form/부착을 유지하고 `ResetTask(5107, now)`로 event/count/time만 바꾼다.
 
 패치 task 시각 대입은 decompiler가 표시한 `float(now)`가 아니다. 실제 `00450726 fld float(delay) → 0045072b fadd double[0055b4d0] → 00450731 fstp double`을 따르므로 delay0인 현재 경로는 정밀 double now를 보존한다. CD는 `005484a8`의 두 DWORD를 그대로 복사한다. 일반 task5103/5104와 nonzero delay는 현재 이 모듈의 완료 범위가 아니다.
 
@@ -30,13 +30,13 @@
 
 ## 독립 원본 격자와 관찰 경계
 
-각 판본207행은 Around199, nearest4, 진입점4다. task5101/5104/5105/5107, dead0/2, 기존 Regular/Burning 유무, 거주지 없음/같은 owner/다른 owner/둘, 기존 경로 없음/endpoint25·22/endpoint100·100을 교차한다. 추가 입력은 speed2/2.75/−2.75, 현재 A/I frame, 경로 성공/실패 및 double now10/16777217.125다. 중복 기본 입력은 제거했다.
+각 판본207행은 Around199, nearest4, 진입점4다. task5101/5104/5105/5107, dead0/2, 기존 Regular/Burning 유무, 거주 구역 없음/같은 owner/다른 owner/둘, 기존 경로 없음/endpoint25·22/endpoint100·100을 교차한다. 추가 입력은 speed2/2.75/−2.75, 현재 A/I frame, 경로 성공/실패 및 double now10/16777217.125다. 중복 기본 입력은 제거했다.
 
 최초 초안은 path1을 같은 endpoint라고 이름 붙였으나 실제 x발자국 보정 뒤 진입점은23.5/21.5, Snap은24/22다. **기존 두 endpoint 입력 모두 실제 목적지와 다르며 같은 endpoint 자연반환의 원본 관찰은 이414행에 없다.** 해당 비교 몸체는 구현했지만 그 분기를 별도 신규 원본 격자로 대조하는 작업은 남았다. 도구와 fixture의 기존 입력/출력은 바꾸지 않았다.
 
 원본 finder·typed 체인·genus·Regular 생성자·task WORD setter·거리·스냅·진입점·속도 대입·현재 단계 조회는 보호 PE 몸체를 실행한다. heap, masked Regular 검색, Form 부착, Burning 모드0 ctor, type24 PathStart, 기존 경로 객체와 SetFrame은 명시 관찰 경계다. 반환된 번호/contained 링크는 해당 경계의 입력 효과이며 실제 Burning/경로 생성 완료로 세지 않는다. 현재 두 생성 몸체 완료 수는 각각 **0**이다.
 
-C++ fixture 장면은 같은 실제 Kernel/Host의 Regular를 사용한다. 기존 count7/time27은 기대값 직접 대입 없이 실제 Regular7회 실행으로 준비한다. 생성 번호83/84, 기존 type14/24 Form, A/I 코드와 거주지 순서는 native와 같은 명시 입력이다. 실제 protected Dude 자산 전체·Burning 시각 효과·경제 작업·전체 경로 이동·GunImpact Ground의 월드 설치는 아직 미완료다.
+C++ fixture 장면은 같은 실제 Kernel/Host의 Regular를 사용한다. 기존 count7/time27은 기대값 직접 대입 없이 실제 Regular7회 실행으로 준비한다. 생성 번호83/84, 기존 type14/24 Form, A/I 코드와 거주 구역 순서는 native와 같은 명시 입력이다. 실제 protected Dude 자산 전체·Burning 시각 효과·경제 작업·전체 경로 이동·GunImpact Ground의 월드 설치는 아직 미완료다.
 
 ## 자료와 현재 검사 상태
 

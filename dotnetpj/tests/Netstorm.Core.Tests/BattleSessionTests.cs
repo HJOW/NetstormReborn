@@ -8,7 +8,7 @@ namespace Netstorm.Core.Tests;
 /// <summary>
 /// 게임 세션(고정 틱 루프 + 명령 + 규칙 코어) 테스트.
 /// 원본 튜토리얼 1·2 의 시작 상태와 사용자 직접 조작 관찰(2026-09-30)을 기준으로 삼는다:
-/// 튜토리얼 2 는 10,000 SP → 템플 완공 5,000 → 워크샵 완공 4,200 → Sun Disc Thrower 300 SP 씩, 회수하면 원가의 25%.
+/// 튜토리얼 2 는 10,000 SP → 신전 완공 5,000 → 워크샾 완공 4,200 → Sun Disc Thrower 300 SP 씩, 회수하면 원가의 25%.
 /// 미션 머리의 techAllowed·denySalvage 는 시작 값이고 튜토리얼 단계 처리가 실행 중에 바꾼다(docs/exe/mission-header-flags.md).
 /// 아래 테스트는 규칙만 따로 확인하려고 단계 B(sunFactory 허용)·단계 H(denySalvage 해제)의 효과를 손으로 재현한다.
 /// 단계 처리 자체(A→I 흐름)는 <see cref="TutorialStagesTests"/> 가 확인한다.
@@ -18,7 +18,7 @@ public sealed class BattleSessionTests
     /// <summary>이벤트 목록에서 종류별 개수를 센다</summary>
     private static int Count(IEnumerable<SessionEvent> events, SessionEventKind kind) => events.Count(e => e.Kind == kind);
 
-    /// <summary>템플을 짓고 완공될 때까지 진행한다 (사제가 걸어가 도착한 뒤 건설). 지은 템플을 돌려준다.</summary>
+    /// <summary>신전을 짓고 완공될 때까지 진행한다 (사제가 걸어가 도착한 뒤 건설). 지은 신전을 돌려준다.</summary>
     private static GameEntity BuildTemple(BattleSession session)
     {
         (int x, int y) = SessionData.FindCell((cx, cy) => session.CheckBuilding(1, "windVortex", cx, cy).Allowed);
@@ -29,7 +29,7 @@ public sealed class BattleSessionTests
         return temple;
     }
 
-    /// <summary>튜토리얼 2 시작: 10,000 SP·Sun Disc Thrower 지식·전투 옵션 덮어쓰기, 사제·거주지만 있고 템플은 없다</summary>
+    /// <summary>튜토리얼 2 시작: 10,000 SP·Sun Disc Thrower 지식·전투 옵션 덮어쓰기, 사제·거주 구역만 있고 신전은 없다</summary>
     [Fact]
     public void Tutorial2_StartsFromMissionHeader()
     {
@@ -41,13 +41,13 @@ public sealed class BattleSessionTests
         // 튜토리얼 2 는 공급 반지름이 Short(14칸)로 시작한다
         Assert.Equal(14, session.Map.Options.GeneratorRadius);
         Assert.Contains(session.Entities, e => e.Kind == ObjectKind.Priest && e.Owner == 1);
-        // 템플이 없으면 다리 조각이 생기지 않는다
+        // 신전이 없으면 다리 조각이 생기지 않는다
         session.RunTicks(session.TicksPerSecond * 3);
         Assert.Empty(player.Tray.Pieces);
     }
 
     /// <summary>
-    /// 템플 건설: 비용은 설치할 때 나가고, 사제가 도착한 뒤 건설 시간(10초) 동안은 효과가 없다가 완공되면 섬 소유·다리 공급이 시작된다
+    /// 신전 건설: 비용은 설치할 때 나가고, 사제가 도착한 뒤 건설 시간(10초) 동안은 효과가 없다가 완공되면 섬 소유·다리 공급이 시작된다
     /// </summary>
     [Fact]
     public void Temple_TakesConstructionTimeThenOwnsIslandAndSuppliesBridges()
@@ -62,7 +62,7 @@ public sealed class BattleSessionTests
         // 건설 시간은 사제가 현장에 도착한 뒤부터 흐른다
         SessionData.RunUntilStarted(session, temple);
         Assert.Equal(10 * session.TicksPerSecond, temple.CompleteTick - temple.StartTick);
-        // 건설 중에는 섬이 빈 섬이고, 건설 중인 템플도 "이미 템플이 있음"으로 세어 두 번째 템플은 지을 수 없다
+        // 건설 중에는 섬이 빈 섬이고, 건설 중인 신전도 "이미 신전이 있음"으로 세어 두 번째 신전은 지을 수 없다
         Assert.Null(session.Map.Ownership.OwnerOf(temple.Territory!.Value));
         (int x2, int y2) = SessionData.FindCell((cx, cy) => session.CheckBuilding(1, "windVortex", cx, cy).Site is
             { Problem: PlacementProblem.TempleAlreadyExists });
@@ -76,13 +76,13 @@ public sealed class BattleSessionTests
         Assert.Equal(1, session.Map.Ownership.OwnerOf(temple.Territory!.Value));
         Assert.Equal(temple.Id, session.Player(1).Deck.TempleId);
         Assert.Contains(session.Map.Sources, s => s.Id == temple.Id && s.Element == Element.Wind && s.Owner == 1);
-        // 템플이 있으면 다리 조각이 1초마다 칸 수(기본 6)까지 채워진다
+        // 신전이 있으면 다리 조각이 1초마다 칸 수(기본 6)까지 채워진다
         session.RunTicks(session.TicksPerSecond * 8);
         Assert.Equal(session.Map.Options.BridgeSlotCount, session.Player(1).Tray.Pieces.Count);
         Assert.Equal(1, Count(session.DrainEvents(), SessionEventKind.BuildingCompleted));
     }
 
-    /// <summary>튜토리얼 2 전체 흐름: 템플 → 워크샵 → 지식 등록 → Sun Disc Thrower 배치(재충전) → 회수. SP 가 관찰 값과 같다</summary>
+    /// <summary>튜토리얼 2 전체 흐름: 신전 → 워크샾 → 지식 등록 → Sun Disc Thrower 배치(재충전) → 회수. SP 가 관찰 값과 같다</summary>
     [Fact]
     public void Tutorial2_FullProductionFlowMatchesObservedStormPower()
     {
@@ -96,7 +96,7 @@ public sealed class BattleSessionTests
         Assert.Equal(CommandFailure.TechDenied, session.CheckBuilding(1, "sunFactory", sx, sy).Failure);
         player.Tech.Set("sunFactory", true);
 
-        // 워크샵 건설: 사제가 도착한 뒤 약 10초
+        // 워크샾 건설: 사제가 도착한 뒤 약 10초
         (int wx, int wy) = SessionData.FindCell((cx, cy) => session.CheckBuilding(1, "sunFactory", cx, cy).Allowed);
         session.Submit(new ConstructBuildingCommand(1, "sunFactory", wx, wy));
         session.RunTicks(1);
@@ -154,7 +154,7 @@ public sealed class BattleSessionTests
         Assert.False(session.Map.IsOccupied(archer.Footprint));
     }
 
-    /// <summary>템플을 회수하면 섬이 빈 섬이 되고 다리 조각·골렘이 사라진다 (템플 5,000 → 1,250). 사제는 회수할 수 없다</summary>
+    /// <summary>신전을 회수하면 섬이 빈 섬이 되고 다리 조각·골렘이 사라진다 (신전 5,000 → 1,250). 사제는 회수할 수 없다</summary>
     [Fact]
     public void Salvage_RemovesRuleEffectsOfBuildings()
     {
@@ -185,7 +185,7 @@ public sealed class BattleSessionTests
         Assert.Contains(session.DrainEvents(), e => e.Failure == CommandFailure.CannotSalvage);
     }
 
-    /// <summary>튜토리얼 1: 처음부터 템플이 있어 다리 조각이 채워지고, 집어서 놓으면 다리가 생긴다. 놓을 수 없는 곳은 거부되고 조각은 그대로 든다</summary>
+    /// <summary>튜토리얼 1: 처음부터 신전이 있어 다리 조각이 채워지고, 집어서 놓으면 다리가 생긴다. 놓을 수 없는 곳은 거부되고 조각은 그대로 든다</summary>
     [Fact]
     public void Tutorial1_PickAndPlaceBridgePiece()
     {
@@ -279,7 +279,7 @@ public sealed class BattleSessionTests
     }
 
     /// <summary>
-    /// 건물형 유닛(여기서는 템플)이 없어지면 중심 칸 ±2 의 다리가 한 단계 약해진다: 보통 → 금 감, 금 감 → 무너짐, 범위 밖은 그대로.
+    /// 건물형 유닛(여기서는 신전)이 없어지면 중심 칸 ±2 의 다리가 한 단계 약해진다: 보통 → 금 감, 금 감 → 무너짐, 범위 밖은 그대로.
     /// 원본 FUN_0044b9e0 은 제거 이유를 보지 않으므로 회수도 해당한다고 본다(원본 화면 확인 전).
     /// </summary>
     [Fact]
@@ -432,7 +432,7 @@ public sealed class BattleSessionTests
         uint start = a.Checksum();
         Assert.Equal(start, b.Checksum());
         (int x, int y) = SessionData.FindCell((cx, cy) => a.CheckBuilding(1, "windVortex", cx, cy).Allowed);
-        // 두 세션에 같은 명령을 넣고 같은 틱만큼 진행한다 (사제가 걸어가 템플을 짓고, 다리 조각이 채워질 때까지)
+        // 두 세션에 같은 명령을 넣고 같은 틱만큼 진행한다 (사제가 걸어가 신전을 짓고, 다리 조각이 채워질 때까지)
         foreach (BattleSession session in new[] { a, b })
         {
             session.Submit(new ConstructBuildingCommand(1, "windVortex", x, y));

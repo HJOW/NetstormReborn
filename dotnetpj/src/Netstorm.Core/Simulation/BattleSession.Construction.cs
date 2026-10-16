@@ -6,7 +6,7 @@ namespace Netstorm.Core.Simulation;
 /// <summary>
 /// 사제 Construct 메뉴가 건물 줄을 어둡게 하는, 자리와 무관한 이유.
 /// 원본 1-1 관찰: 이미 신전이 있으면 Temple 줄이, 지식이 없으면 다른 원소 워크샾 줄이 어둡게 표시된다
-/// (docs/videos/auto-war-begins-20261003.md 4.5절). 웹 팬게임은 알타도 플레이어당 1기로 막는다.
+/// (docs/videos/auto-war-begins-20261003.md 4.5절). 웹 팬게임은 제단도 플레이어당 1기로 막는다.
 /// </summary>
 public enum BuildingRestriction
 {
@@ -19,7 +19,7 @@ public enum BuildingRestriction
     /// <summary>이미 신전이 있다 (건설 중인 신전 포함)</summary>
     TempleExists,
 
-    /// <summary>이미 알타가 있다 (건설 중인 알타 포함)</summary>
+    /// <summary>이미 제단이 있다 (건설 중인 제단 포함)</summary>
     AltarExists,
 
     /// <summary>
@@ -57,7 +57,7 @@ public sealed partial class BattleSession
     public bool HasBuilding(int player, ObjectKind kind) => _entities.Values.Any(e => e.Owner == player && e.Kind == kind);
 
     /// <summary>
-    /// 건물 타입을 지금 지을 수 있는 종류인지 (자리와 무관한 조건): 신전·알타는 플레이어당 1기, 기술 허용 표, 워크샾은 그 원소의 지식.
+    /// 건물 타입을 지금 지을 수 있는 종류인지 (자리와 무관한 조건): 신전·제단은 플레이어당 1기, 기술 허용 표, 워크샾은 그 원소의 지식.
     /// 우클릭 Construct 메뉴가 줄을 어둡게 할지 정하는 데 쓴다. 앞의 세 조건은 실제 판정(<see cref="CheckBuilding"/>)과 같고,
     /// 지식 조건은 원본처럼 메뉴에만 있다.
     /// </summary>

@@ -4,12 +4,12 @@
 
 사전 조건: AGENTS.md 의 실행 허용 시스템이거나 사용자가 실행을 확인한 상태여야 한다. 실행 중에는 마우스·키보드를 건드리지 않는다.
 흐름: 메인 메뉴 → Edit → Create New Map 에 TEST02 입력 → 편집기 → Esc → Game → Test Battle → Go!
-      → 사제로 Rain 템플 건설(완공까지) → 템플 두 번째 시도(메뉴 줄 확인)
-      → 워크샵 설치 가능 위치 전수 훑기(아직 워크샵이 없는 섬) → 빈틈없이 쌓아 가며 건설(더 못 지을 때까지)
+      → 사제로 Rain 신전 건설(완공까지) → 신전 두 번째 시도(메뉴 줄 확인)
+      → 워크샾 설치 가능 위치 전수 훑기(아직 워크샾이 없는 섬) → 빈틈없이 쌓아 가며 건설(더 못 지을 때까지)
       → Leave Mission → 종료.
 1차·2차 정찰에서 확정한 좌표·메뉴 오프셋·판정 방식을 쓴다. 상세와 결과는 docs/videos/auto-test02-construct-20261004.md.
 
-화면 좌표는 모두 "기준 화면"(시험 전투 시작 때 카메라) 좌표로 적고, 카메라가 움직이면 템플·집 그림을 찾아 이동량을 재서
+화면 좌표는 모두 "기준 화면"(시험 전투 시작 때 카메라) 좌표로 적고, 카메라가 움직이면 신전·집 그림을 찾아 이동량을 재서
 실제 화면 좌표로 바꾼다. (P 키를 이미 선택된 사제에게 한 번 더 누르면 카메라가 사제 위치로 이동하는 등 카메라가 밀릴 수 있다.)
 
 사용법: python tools/analyze_test02_construct.py --work extracted/test02-construct-run3
@@ -50,19 +50,19 @@ MENU_CONSTRUCT_X_MAX = 990
 MENU_ROW_X_MAX = 960
 # 한 칸의 화면 크기 (가로 16, 세로 11)
 CELL_W, CELL_H = 16, 11
-# 워크샵(7x8칸) 설치 미리보기 테두리는 커서가 가장 가까운 칸에 붙어 움직인다 (1차 정찰 실측):
+# 워크샾(7x8칸) 설치 미리보기 테두리는 커서가 가장 가까운 칸에 붙어 움직인다 (1차 정찰 실측):
 # 왼쪽 = 16 x (round(rx/16) - 4), 위 = 11 x round(ry/11) - 34, 가로 112·세로 88픽셀
 WS_COLS_LEFT, WS_TOP_OFFSET, WS_WIDTH, WS_HEIGHT = 4, 34, 112, 88
 # 사제 이동 속도 (칸/초, 직선 실측 1.74~1.82)
 PRIEST_SPEED = 1.8
 # 설치 뒤 사제가 서는 위치: 설치 커서 기준 (-3, +48) (1차 정찰 실측)
 SITE_FRONT = (-3, 48)
-# 시험 전투 시작 때 사제 위치와 템플 설치 위치
+# 시험 전투 시작 때 사제 위치와 신전 설치 위치
 PRIEST_START = (520, 388)
 TEMPLE_SITE = (780, 220)
 # 사제를 매 사이클마다 불러 세우는 자리 (섬 가운데). 우클릭 메뉴를 열기 좋은 빈 곳이다
 HOME = (560, 470)
-# HOME 둘레 예약 영역(왼쪽, 위, 오른쪽, 아래): 이 영역과 겹치는 워크샵 자리는 짓지 않는다
+# HOME 둘레 예약 영역(왼쪽, 위, 오른쪽, 아래): 이 영역과 겹치는 워크샾 자리는 짓지 않는다
 RESERVED = (524, 430, 596, 500)
 # 훑기 범위(커서 칸 번호: 가로 16·세로 11픽셀 단위): S3 영상에서 복원한 가능 구간(열 22~57, 행 13~48)에 여유를 둔 범위
 SCAN_COLS = range(18, 61)
@@ -75,9 +75,9 @@ RETRY_SETTLE = 0.4
 HOME_TIMEOUT = 75.0
 # 건설 시간(사제 도착 뒤 약 10초) 위에 더하는 여유(초)
 BUILD_MARGIN = 6.0
-# 워크샵 건설을 멈추는 최대 개수 (안전 상한: 디스크·시간)
+# 워크샾 건설을 멈추는 최대 개수 (안전 상한: 디스크·시간)
 MAX_WORKSHOPS = 40
-# 카메라 이동량 측정용 템플릿 영역(기준 화면): 템플 그림, 집 그림
+# 카메라 이동량 측정용 템플릿 영역(기준 화면): 신전 그림, 집 그림
 TEMPLE_BOX = (715, 170, 845, 275)
 HOUSE_BOX = (555, 250, 630, 310)
 # 템플릿 일치로 인정하는 정규화 상관 하한
@@ -141,7 +141,7 @@ def locate(template: np.ndarray, image: np.ndarray):
 
 class Cam:
     """카메라 이동량 (sx, sy): 실제 화면 좌표 = 기준 화면 좌표 + (sx, sy).
-    기준 화면(템플 완공 직후, 건물 없음)에서 템플·집 그림을 잘라 두고, 현재 화면에서 그 그림을 찾아 이동량을 잰다."""
+    기준 화면(신전 완공 직후, 건물 없음)에서 신전·집 그림을 잘라 두고, 현재 화면에서 그 그림을 찾아 이동량을 잰다."""
 
     def __init__(self):
         self.sx = 0
@@ -149,7 +149,7 @@ class Cam:
         self.templates = []
 
     def set_reference(self, img: Image.Image):
-        """기준 화면에서 템플·집 템플릿을 잘라 둔다 (이 화면의 이동량을 (0,0)으로 정의)"""
+        """기준 화면에서 신전·집 템플릿을 잘라 둔다 (이 화면의 이동량을 (0,0)으로 정의)"""
         gray = np.asarray(img.convert("L")).astype(float)
         self.templates = [(box, gray[box[1]:box[3], box[0]:box[2]]) for box in (TEMPLE_BOX, HOUSE_BOX)]
         self.sx = self.sy = 0
@@ -158,7 +158,7 @@ class Cam:
         """현재 화면에서 이동량을 다시 잰다. 어느 템플릿도 충분히 맞지 않으면 이전 값을 유지하고 False"""
         gray = np.asarray(img.convert("L")).astype(float)
         best = None
-        # 템플·집 템플릿 중 가장 잘 맞는 것을 쓴다
+        # 신전·집 템플릿 중 가장 잘 맞는 것을 쓴다
         for box, tpl in self.templates:
             x, y, score = locate(tpl, gray)
             if best is None or score > best[2]:
@@ -178,7 +178,7 @@ class Cam:
 
 
 def frame_ref(rx: int, ry: int):
-    """기준 화면 커서 (rx, ry) 에서 워크샵 설치 테두리의 (왼쪽, 위, 오른쪽, 아래)를 계산한다 (칸에 붙어 움직임)"""
+    """기준 화면 커서 (rx, ry) 에서 워크샾 설치 테두리의 (왼쪽, 위, 오른쪽, 아래)를 계산한다 (칸에 붙어 움직임)"""
     left = CELL_W * (round(rx / CELL_W) - WS_COLS_LEFT)
     top = CELL_H * round(ry / CELL_H) - WS_TOP_OFFSET
     return left, top, left + WS_WIDTH - 1, top + WS_HEIGHT - 1
@@ -207,7 +207,7 @@ def read_preview(img: Image.Image, cam: Cam):
 
 
 def preview_valid(img: Image.Image, cam: Cam, rx: int, ry: int) -> bool:
-    """기준 화면 커서 (rx, ry) 에 들고 있는 워크샵의 미리보기가 '설치 가능'(흰 테두리)인지 판정한다.
+    """기준 화면 커서 (rx, ry) 에 들고 있는 워크샾의 미리보기가 '설치 가능'(흰 테두리)인지 판정한다.
     불가능이면 붉은 테두리·분홍 채움이다. 건물 그림(나무)이 위쪽 테두리를 가리므로 왼쪽·오른쪽·아래 세 변이 순백이면 가능으로 본다."""
     arr = np.asarray(img).astype(int)
     white = (arr[..., 0] == WHITE) & (arr[..., 1] == WHITE) & (arr[..., 2] == WHITE)
@@ -289,7 +289,7 @@ class Run:
 
     def boot_to_battle(self):
         """원본 시작 → 팁 창 닫기 → Edit 로 TEST02 불러오기 → 시험 전투 시작"""
-        res = self.step("start", label="TEST02 건설 한도 분석: 템플·워크샵 전수 (30FPS 자동 분석)", fps=30)
+        res = self.step("start", label="TEST02 건설 한도 분석: 신전·워크샾 전수 (30FPS 자동 분석)", fps=30)
         window = res["evidence"]["window"]
         self.screen = nd.ClientScreen(window["x"], window["y"])
         # 시작 직후 약 10초 동안은 팁 창이 입력을 받지 못하므로 넉넉히 기다린다
@@ -322,7 +322,7 @@ class Run:
                   name=f"menu-{kind}-c-picked")
 
     def wait_theme_snow(self, timeout: float = 80.0) -> float:
-        """템플 완공 때 지면이 초록 풀밭에서 눈으로 바뀌는 시각까지 기다린다 (경과 초 반환)"""
+        """신전 완공 때 지면이 초록 풀밭에서 눈으로 바뀌는 시각까지 기다린다 (경과 초 반환)"""
         t0 = time.time()
         # 지면 한 점의 빨강 성분이 올라가면 눈으로 본다 (풀밭은 약 63, 눈은 약 149)
         while time.time() - t0 < timeout:
@@ -330,10 +330,10 @@ class Run:
             if img.getpixel((700, 500))[0] > 110:
                 return time.time() - t0
             time.sleep(0.25)
-        raise RuntimeError("템플 완공(지면 테마 변화)을 시간 안에 확인하지 못했다")
+        raise RuntimeError("신전 완공(지면 테마 변화)을 시간 안에 확인하지 못했다")
 
     def build_temple(self):
-        """Rain 템플을 (780,220) 에 설치하고 완공까지 기다린다. 사제·커서 확인용 이동 포함"""
+        """Rain 신전을 (780,220) 에 설치하고 완공까지 기다린다. 사제·커서 확인용 이동 포함"""
         self.step("move", x=PRIEST_START[0], y=PRIEST_START[1], settle=250, name="t01-hover-priest-unselected")
         self.step("click", x=PRIEST_START[0], y=PRIEST_START[1], dur=100, settle=250, name="t02-priest-selected")
         for name, x, y in (("t03-hover-ground", 700, 450), ("t04-hover-void", 150, 400), ("t05-hover-house", 595, 290),
@@ -348,9 +348,9 @@ class Run:
             self.step("move", x=x, y=y, settle=350, name=name)
         t_place = nd.now_iso()
         self.step("click", x=TEMPLE_SITE[0], y=TEMPLE_SITE[1], dur=100, settle=0, name="t11-temple-placed")
-        self.note("템플 설치 클릭", site=TEMPLE_SITE)
+        self.note("신전 설치 클릭", site=TEMPLE_SITE)
         elapsed = self.wait_theme_snow()
-        self.note("템플 완공(지면이 눈으로 바뀜)", seconds_after_place=round(elapsed, 2))
+        self.note("신전 완공(지면이 눈으로 바뀜)", seconds_after_place=round(elapsed, 2))
         self.summary["temple"] = {"placedAt": t_place, "completeAfterSec": round(elapsed, 2), "site": TEMPLE_SITE}
         time.sleep(1.5)
         self.step("shot", name="t12-temple-done")
@@ -398,7 +398,7 @@ class Run:
         raise RuntimeError("사제를 HOME 으로 불러오지 못했다")
 
     def temple_second_try(self):
-        """템플이 이미 있을 때 Construct 메뉴의 Temple 줄을 확인하고 눌러 본다"""
+        """신전이 이미 있을 때 Construct 메뉴의 Temple 줄을 확인하고 눌러 본다"""
         priest = self.bring_priest_home()
         px, py = priest
         self.step("click", x=px, y=py, button="right", dur=100, settle=350, name="u01-menu")
@@ -410,7 +410,7 @@ class Run:
         self.step("click", x=150, y=650, dur=100, settle=400, name="u05-closed")
 
     def hover_checks_after_build(self):
-        """완공된 템플·집·땅 위에서 선택된 사제의 커서를 남긴다"""
+        """완공된 신전·집·땅 위에서 선택된 사제의 커서를 남긴다"""
         self.press_p_select()
         # 기준 화면 좌표를 실제 화면 좌표로 바꿔 커서를 올린다
         for name, x, y in (("h01-over-temple", 780, 215), ("h02-over-house", 595, 288), ("h03-over-ground", 520, 520)):
@@ -425,7 +425,7 @@ class Run:
         time.sleep(HOVER_SETTLE)
 
     def scan_valid_anchors(self):
-        """워크샵을 커서에 붙인 채 칸마다 커서를 옮겨 설치 가능(흰 테두리)·불가(붉은 테두리) 칸을 전수 조사한다.
+        """워크샾을 커서에 붙인 채 칸마다 커서를 옮겨 설치 가능(흰 테두리)·불가(붉은 테두리) 칸을 전수 조사한다.
         테두리 자체의 위치를 읽어 기록하므로 미리보기가 한 박자 늦어도 칸이 어긋나지 않는다. 읽지 못한 칸은 더 오래 기다려 다시 읽는다.
         결과는 즉시 scan.json 에 저장하고 가능한 칸의 기준 화면 커서 좌표 목록을 돌려준다"""
         seen = {}
@@ -501,7 +501,7 @@ class Run:
         return plan
 
     def build_workshops(self, plan, carrying: bool = False):
-        """계획한 자리에 Sun 워크샵을 하나씩 짓는다: 사제 불러오기 → 메뉴 → (미리보기가 가능한 첫 자리) → 설치 → 완공 대기.
+        """계획한 자리에 Sun 워크샾을 하나씩 짓는다: 사제 불러오기 → 메뉴 → (미리보기가 가능한 첫 자리) → 설치 → 완공 대기.
         메뉴로 집은 건물은 허공을 눌러도 내려놓아지지 않으므로(정찰에서 확인) 불가 자리는 건너뛰고 같은 건물로 다음 후보를 시험한다"""
         remaining = list(plan)
         built = 0
@@ -548,7 +548,7 @@ class Run:
             self.cam_refresh()
             self.summary["workshops"].append({"n": n, "site": site, "placedAt": placed_at,
                                               "completeAfterSec": None if done is None else round(done + 0.5, 2)})
-            self.note(f"워크샵 {n} 설치", site=site, done=done)
+            self.note(f"워크샾 {n} 설치", site=site, done=done)
             self.save_grab(f"w{n:02d}-done")
             time.sleep(0.6)
         self.step("shot", name="z01-fill-final")
@@ -594,7 +594,7 @@ def main():
             valid = [(c * CELL_W, r * CELL_H) for c, r in data["valid"]]
             run.note("훑기 결과를 파일에서 읽음", valid=len(valid))
         else:
-            # 워크샵을 커서에 붙여 훑기: 사제를 불러 메뉴로 워크샵을 집은 뒤 훑는다 (끝나면 첫 후보에 바로 놓아야 한다)
+            # 워크샾을 커서에 붙여 훑기: 사제를 불러 메뉴로 워크샾을 집은 뒤 훑는다 (끝나면 첫 후보에 바로 놓아야 한다)
             priest = run.bring_priest_home()
             run.open_construct_menu(priest, "workshop", "sun")
             valid = run.scan_valid_anchors()

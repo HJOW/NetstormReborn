@@ -8,7 +8,7 @@ namespace Netstorm.Core.Tests;
 /// </summary>
 public sealed class Test01MapTests
 {
-    /// <summary>TEST01의 myTech=all은 실제 지식으로 확장돼 저장된 워크샵에 아이스·썬더 캐논을 등록할 수 있다.</summary>
+    /// <summary>TEST01의 myTech=all은 실제 지식으로 확장돼 저장된 워크샾에 아이스·썬더 캐논을 등록할 수 있다.</summary>
     [Fact]
     public void AllKnowledge_AllowsCannonRegistrationInStoredWorkshops()
     {
@@ -18,7 +18,7 @@ public sealed class Test01MapTests
         Assert.DoesNotContain("all", player.Deck.Knowledge);
         Assert.Contains("rainCannon", player.Deck.Knowledge);
         Assert.Contains("thunderCannon", player.Deck.Knowledge);
-        // 각 캐논 원소의 첫 저장 워크샵에 실제 명령으로 등록한다.
+        // 각 캐논 원소의 첫 저장 워크샾에 실제 명령으로 등록한다.
         foreach (string name in new[] { "rainCannon", "thunderCannon" })
         {
             Element element = name == "rainCannon" ? Element.Rain : Element.Thunder;
@@ -31,7 +31,7 @@ public sealed class Test01MapTests
     }
 
     /// <summary>
-    /// 맵에 저장된 워크샵은 저장 상태(0·1·2)가 레벨 I·II·III 이 된다. 녹화에서 저장 상태 2 인 Sun 워크샵의
+    /// 맵에 저장된 워크샾은 저장 상태(0·1·2)가 레벨 I·II·III 이 된다. 녹화에서 저장 상태 2 인 Sun 워크샾의
     /// 풍선 도움말이 "Sun Workshop Level III" 였다.
     /// </summary>
     [Fact]
@@ -40,7 +40,7 @@ public sealed class Test01MapTests
         BattleSession session = SessionData.FromMap("TEST01");
         GameEntity[] workshops = [.. session.Entities.Where(e => e.Kind == ObjectKind.Workshop)];
         Assert.NotEmpty(workshops);
-        // 워크샵마다 생산 창의 레벨이 저장 상태 + 1 인지 본다
+        // 워크샾마다 생산 창의 레벨이 저장 상태 + 1 인지 본다
         foreach (GameEntity workshop in workshops)
         {
             int expected = (workshop.Source!.Object.FactoryState ?? 0) + 1;

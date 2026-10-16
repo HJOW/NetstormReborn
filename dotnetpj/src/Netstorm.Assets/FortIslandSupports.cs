@@ -20,7 +20,7 @@ public static class FortIslandSupports
         var remaining = objects.Where(item => item.Object.Type.Name.Equals("noIsland", StringComparison.OrdinalIgnoreCase))
             .GroupBy(item => (item.X, item.Y)).ToDictionary(group => group.Key, group => group.First().Object.Owner ?? 0);
         var result = new List<FortIslandSupport>();
-        // 저장된 건물·가이저 기준점을 먼저 확인하여 서로 붙어 있는 받침의 경계를 유지한다.
+        // 저장된 건물·간헐천 기준점을 먼저 확인하여 서로 붙어 있는 받침의 경계를 유지한다.
         foreach (FortMapObject item in objects.Where(item => item.Object.Type.Definition.HasFlag("createsisland")))
         {
             Take(item.X, item.Y);

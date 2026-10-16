@@ -327,7 +327,7 @@ public sealed class MissionFrameScreenPathTests
         Assert.Equal(["A.", "B."], screen.Tells);
         screen.Acknowledge();
 
-        // 워크샵 완공 → 단계 C(sunFactory는 단계 B의 판정이 허용한다).
+        // 워크샾 완공 → 단계 C(sunFactory는 단계 B의 판정이 허용한다).
         Assert.True(player.Tech.IsAllowed("sunFactory"));
         (x, y) = SessionData.FindCell((cx, cy) => session.CheckBuilding(1, "sunFactory", cx, cy).Allowed);
         session.Submit(new ConstructBuildingCommand(1, "sunFactory", x, y));
@@ -358,7 +358,7 @@ public sealed class MissionFrameScreenPathTests
         Assert.True(screen.Clock.IsPaused);
         screen.Acknowledge();
 
-        // 지식을 워크샵에 등록하면 단계 D.
+        // 지식을 워크샾에 등록하면 단계 D.
         session.Submit(new RegisterKnowledgeCommand(1, workshop.Id, "sunArcher"));
         screen.Frame();
         Assert.Equal('D', session.Tutorial.Stage);

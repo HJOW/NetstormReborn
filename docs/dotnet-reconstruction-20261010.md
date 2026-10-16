@@ -225,7 +225,7 @@
 - [`OriginalUiSkin`](../dotnetpj/src/Netstorm.Game/OriginalUiSkin.cs): 행 17·구분 16·글자 들여쓰기 15·폭 여유 31·테두리 2 등의 상수, 2픽셀 `Frame`(눌린 모양 선택), `Separator`, `MenuLabelWidth`·`MenuWidth`·`MenuTextPosition`·`MenuRow`, 색 `ValueColor`·`EmphasisColor`.
 - [`MainMenuView`](../dotnetpj/src/Netstorm.Game/MainMenuView.cs): 도움말·옵션 목록을 위 치수로 다시 만들었다. 옵션에 "Pause - Shift-F9" 행을 넣었고(`PauseRequested` → `FortMapViewer.TogglePause`), 하위 목록은 부모 오른쪽에 붙는다. 영어 해상도 문구는 "W by H".
 - [`FortMapViewer.MissionMenu`](../dotnetpj/src/Netstorm.Game/FortMapViewer.MissionMenu.cs): 메뉴 줄 높이 17, 탭 간격 53, 목록 폭은 문구에 맞춤.
-- [`FortMapViewer.ContextMenu`](../dotnetpj/src/Netstorm.Game/FortMapViewer.ContextMenu.cs): 위 표의 여백·행 높이·눌린 테두리·하위 메뉴 위치. 알타 문구는 아라비아 숫자("Build Level 1 Altar for 500"). 마지막 건설 목록(좁은 창)은 예전 수치 그대로다.
+- [`FortMapViewer.ContextMenu`](../dotnetpj/src/Netstorm.Game/FortMapViewer.ContextMenu.cs): 위 표의 여백·행 높이·눌린 테두리·하위 메뉴 위치. 제단 문구는 아라비아 숫자("Build Level 1 Altar for 500"). 마지막 건설 목록(좁은 창)은 예전 수치 그대로다.
 - [`FortMapViewer.TutorialDialog`](../dotnetpj/src/Netstorm.Game/FortMapViewer.TutorialDialog.cs): 본문 시작 55, 창 높이 계산, 여백(브리핑 50·그 밖 30), 폭(승리·패배 375, 제목 있는 창 351, 제목 없는 창 300), 버튼 묶음 가로 위치 +1 반올림, 연속 공백 유지.
 - [`TutorialDialogScript`](../dotnetpj/src/Netstorm.Assets/TutorialDialogScript.cs): `NormalizeSpaces`. [`HelpWindow`](../dotnetpj/src/Netstorm.Game/HelpWindow.cs): 값·강조 색을 위 팔레트 색으로.
 - 스모크 스크립트의 클릭 좌표: `tools/clone_ui_smoke.ps1`(옵션 줄, 1-2 브리핑 버튼), `tools/clone_buttons_smoke.ps1`, `tools/clone_help_options_smoke.ps1`.

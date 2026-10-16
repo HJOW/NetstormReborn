@@ -50,7 +50,7 @@ internal sealed partial class FortMapViewer
         [Element.Thunder] = new Color(220, 140, 255),
     };
 
-    /// <summary>배치해 볼 수 있는 타입: 워크샾 생산 유닛(원소·레벨 순) 다음에 사제가 짓는 건물(신전·워크샾·알타·아웃포스트)</summary>
+    /// <summary>배치해 볼 수 있는 타입: 워크샾 생산 유닛(원소·레벨 순) 다음에 사제가 짓는 건물(신전·워크샾·제단·아웃포스트)</summary>
     private TypeInfo[] _candidates = [];
 
     /// <summary>배치 시험 모드가 켜졌는지</summary>
@@ -106,7 +106,7 @@ internal sealed partial class FortMapViewer
         TypeInfo[] units = [.. catalog.Types.Where(t => ProducibleUnit.FromType(t) != null)
             .OrderBy(t => Elements.FromTheme(t.Definition.GetString("theme")))
             .ThenBy(t => t.Definition.GetInt("level") ?? 0).ThenBy(t => t.Name, StringComparer.Ordinal)];
-        // 건물은 종류(신전·워크샾·아웃포스트·알타) 순, 원소가 없는 미사용 타입(예: fireVortex)은 뺀다
+        // 건물은 종류(신전·워크샾·아웃포스트·제단) 순, 원소가 없는 미사용 타입(예: fireVortex)은 뺀다
         TypeInfo[] buildings = [.. catalog.Types.Where(IsBuildable)
             .OrderBy(t => ObjectKinds.Of(t)).ThenBy(t => Elements.FromTheme(t.Definition.GetString("theme"))).ThenBy(t => t.Name, StringComparer.Ordinal)];
         _candidates = [.. units, .. buildings];

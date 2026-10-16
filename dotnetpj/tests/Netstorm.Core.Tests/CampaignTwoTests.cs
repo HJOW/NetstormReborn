@@ -40,8 +40,8 @@ public sealed class CampaignTwoTests
     }
 
     /// <summary>
-    /// 가이저는 2,000 SP(geyser.type cost)를 품고 채집한 만큼 줄어든다. 비면 GeyserDepleted 가 나고 더는 수확 명령을 받지 않는다.
-    /// 신전 바로 옆 가이저도 결정마다 채집 시간을 거쳐 틱마다 SP 가 생기지 않는다.
+    /// 간헐천은 2,000 SP(geyser.type cost)를 품고 채집한 만큼 줄어든다. 비면 GeyserDepleted 가 나고 더는 수확 명령을 받지 않는다.
+    /// 신전 바로 옆 간헐천도 결정마다 채집 시간을 거쳐 틱마다 SP 가 생기지 않는다.
     /// </summary>
     [Fact]
     public void Geysers_DepleteAndBoundIncome()

@@ -4,10 +4,10 @@ using Netstorm.Core.Simulation;
 
 namespace Netstorm.Core.Tests;
 
-/// <summary>튜토리얼 1의 가이저 연결·사제 운반·결정당 Storm Power와 유닛별 이동 속도를 검사한다.</summary>
+/// <summary>튜토리얼 1의 간헐천 연결·사제 운반·결정당 Storm Power와 유닛별 이동 속도를 검사한다.</summary>
 public sealed class HarvestEconomyTests
 {
-    /// <summary>원본 파일에 가이저가 없는 튜토리얼 1도 연결 가능한 연습 가이저를 만든다.</summary>
+    /// <summary>원본 파일에 간헐천이 없는 튜토리얼 1도 연결 가능한 연습 간헐천을 만든다.</summary>
     [Fact]
     public void TutorialOne_GeyserRequiresBridgeThenPaysPerDelivery()
     {
@@ -25,7 +25,7 @@ public sealed class HarvestEconomyTests
         session.RunTicks(1);
         Assert.DoesNotContain(session.DrainEvents(), e => e.Kind == SessionEventKind.CommandRejected);
 
-        // 사제가 가이저와 신전을 왕복해 결정 세 개를 전달할 때까지 정확히 틱을 진행한다.
+        // 사제가 간헐천과 신전을 왕복해 결정 세 개를 전달할 때까지 정확히 틱을 진행한다.
         int delivered = 0;
         for (int tick = 0; tick < session.TicksPerSecond * 180 && delivered < 3; tick++)
         {
@@ -37,7 +37,7 @@ public sealed class HarvestEconomyTests
         Assert.Equal(0, priest.CarriedCrystals);
     }
 
-    /// <summary>F4부터 다리 8·19칸, 가이저 연결, 첫 전달, 600 SP까지 튜토리얼 1의 단계가 넘어간다.</summary>
+    /// <summary>F4부터 다리 8·19칸, 간헐천 연결, 첫 전달, 600 SP까지 튜토리얼 1의 단계가 넘어간다.</summary>
     [Fact]
     public void TutorialOne_StagesReachMissionAccomplished()
     {
@@ -92,7 +92,7 @@ public sealed class HarvestEconomyTests
         Assert.Equal(2.4, MovementRate.CellsPerSecond(types.Find("rainWalker")!));
     }
 
-    /// <summary>연습 가이저의 받침과 본섬 사이 네 칸에 가로 다리를 차례로 잇는다.</summary>
+    /// <summary>연습 간헐천의 받침과 본섬 사이 네 칸에 가로 다리를 차례로 잇는다.</summary>
     private static void ConnectPracticeGeyser(BattleSession session, GameEntity geyser)
     {
         int padLeft = geyser.Footprint.Left - 1;
@@ -102,7 +102,7 @@ public sealed class HarvestEconomyTests
         {
             var piece = new BridgePiece(BridgePatternCatalog.SinglePiece, 1);
             BridgePlacementCheck check = session.Bridges.Check(piece, x, y, 1);
-            Assert.True(check.Allowed, $"연습 가이저 다리 ({x}, {y}): {check.Problem}");
+            Assert.True(check.Allowed, $"연습 간헐천 다리 ({x}, {y}): {check.Problem}");
             session.Bridges.Place(piece, x, y, 1);
         }
     }

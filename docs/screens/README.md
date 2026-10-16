@@ -35,7 +35,7 @@
 | `mainMenu - Campaign - A Nation Rises.png` | 캠페인 2 | 1~3 파란 점, **4 Guard My Back·5 Surrounded! 는 점 없음** (미완료) |
 | `mainMenu - Campaign - Complete Victory.png` | 캠페인 3 | 1 Breaking Through ~ 5 Final Confrontation, 모두 흐린 글자·점 없음 (잠김) |
 | `mainMenu - Campaign - User Made Campaigns.png` | 팬 캠페인 | 세로 스크롤 목록 (Legendary Missions Of Ass, Against evil thunder, The Great Battle, Priest Training, Smart Bulfs, Cedz's Campaign, The Fuji Files, The Year of Creation …) |
-| `mainMenu - Multiplayer.png` | 멀티플레이 준비 | 창 제목이 `NetStorm Multiplayer Game "<저장 이름>" owner: <플레이어 이름>` 으로 바뀜. 배경은 구름 + **자기 요새 섬**(초록 풀밭, 주황 테두리, 사제·알타). 왼쪽 아래 "Multiplayer Options" 창: Save Game, Player Name(각각 `>` 버튼), Server: Find Local Server, Protocol: TCP/IP, Connect! / Cancel. 사이드바 없음 |
+| `mainMenu - Multiplayer.png` | 멀티플레이 준비 | 창 제목이 `NetStorm Multiplayer Game "<저장 이름>" owner: <플레이어 이름>` 으로 바뀜. 배경은 구름 + **자기 요새 섬**(초록 풀밭, 주황 테두리, 사제·제단). 왼쪽 아래 "Multiplayer Options" 창: Save Game, Player Name(각각 `>` 버튼), Server: Find Local Server, Protocol: TCP/IP, Connect! / Cancel. 사이드바 없음 |
 | `mainMenu - Demo.png` | 데모 선택 | The Storm Rages, Demo of "Guard My Back", Demo of "Dissolved Alliance", Cancel |
 | `mainMenu - Help.png` | Help 드롭다운 | 버튼 아래 펼침 메뉴: General Help - F1, Technical Help, Version |
 | `help - NetStorm Instructions.png` | 도움말 창 | `help.english` 의 `F1Help` 절. 돌 테두리 창(약 450×350)·세로 스크롤바·Back/OK. 메뉴에서는 `<?{global.inMission}>` 의 F8 안내 줄이 숨겨짐. `~lblue~.` 파란 글자, `<c>` 노란 글자 |
@@ -166,7 +166,7 @@ Windows 10 Pro(지정 예외 시스템 2)에서 원본 복사본을 1024×768 �
 
 ### 1.5 시간 계획 분석: 메뉴 타이머·편집기·튜토리얼 1 (2026-09-29 밤, Windows `HJOW-Athlon`)
 
-세션 `20260929T133717181Z-7f413cde9896`(git 제외 `extracted/analyzeManager/` 아래). 시각은 도구 이벤트의 UTC다. 원본은 진행 저장 기능이 없어(Edit 모드 맵 저장만 가능, 사용자 확인) 미션 상태가 필요한 측정은 한 번의 진행 안에서 이어서 했다. 도중에 도구의 **세션 이미지 한도(500장)**에 걸려 튜토리얼 1의 D 단계(가이저 연결 전)에서 멈췄고, 이어서 사용자 요청으로 분석을 중단했다.
+세션 `20260929T133717181Z-7f413cde9896`(git 제외 `extracted/analyzeManager/` 아래). 시각은 도구 이벤트의 UTC다. 원본은 진행 저장 기능이 없어(Edit 모드 맵 저장만 가능, 사용자 확인) 미션 상태가 필요한 측정은 한 번의 진행 안에서 이어서 했다. 도중에 도구의 **세션 이미지 한도(500장)**에 걸려 튜토리얼 1의 D 단계(간헐천 연결 전)에서 멈췄고, 이어서 사용자 요청으로 분석을 중단했다.
 
 **메뉴·데모 타이머**
 - **로딩 창("Starting Mission...")의 Cancel은 반응하지 않았다.**
@@ -220,15 +220,15 @@ Windows 10 Pro(지정 예외 시스템 2)에서 원본 복사본을 1024×768 �
   - B "Bridges" → 다리를 몇 개 놓으면 C "Rotating Bridges"가 뜬다. C에는 **q·w·a·s 키로 칸 선택**, ESC 또는 칸 클릭으로 되돌리기가 안내된다.
   - MORE → C1 "Bridge Quality" → 몇 개 더 놓으면 D "Storm Power"가 뜬다.
   - 무너져 사라진 다리는 개수에 들어가지 않는 것으로 보인다(B 단계에서 몇 개가 무너진 뒤 추가로 놓아야 진행됨).
-- **가이저는 D 단계에서 생긴다:** 그전까지는 맵 어디에도 가이저가 없었다(`bridgethegap.fort`에도 가이저 오브젝트 없음). D 단계 안내와 함께 섬 아래 가장자리 바로 밑에 가이저 바위 3개가 나타났다.
+- **간헐천은 D 단계에서 생긴다:** 그전까지는 맵 어디에도 간헐천이 없었다(`bridgethegap.fort`에도 간헐천 오브젝트 없음). D 단계 안내와 함께 섬 아래 가장자리 바로 밑에 간헐천 바위 3개가 나타났다.
 - **F2:** 신전 같은 큰 물체를 투명(윤곽)하게 그린다.
 - **ALT 스크롤:** ALT를 누르고 있으면 커서 쪽으로 스크롤되는데 매우 빠르다(0.25~1.5초 누름으로 섬이 화면 밖으로 벗어남).
 
-**당시 미측정, 이후 1.6절에서 확인:** 가이저 연결, 사제 결정 반납·결정당 Storm Power, 600 SP 달성 뒤 결과 화면. 튜토리얼 2의 건설 시간과 배치 뒤 아이콘 복귀는 1.7절, Original Credits의 마지막 전환은 1.8절에서 확인했다. **아직 미측정:** 사제의 순수 왕복 시간, Leave → Replay Mission.
+**당시 미측정, 이후 1.6절에서 확인:** 간헐천 연결, 사제 결정 반납·결정당 Storm Power, 600 SP 달성 뒤 결과 화면. 튜토리얼 2의 건설 시간과 배치 뒤 아이콘 복귀는 1.7절, Original Credits의 마지막 전환은 1.8절에서 확인했다. **아직 미측정:** 사제의 순수 왕복 시간, Leave → Replay Mission.
 
 ### 1.6 사용자 직접 조작 녹화: 튜토리얼 1 완료 (2026-09-30, Windows `HJOW-Athlon`)
 
-세션 `20260929T154230683Z-bdf8f92d93a1`의 `recording/`(Git 제외)에 게임 창 영상·출력 소리·입력 로그가 있다. 사용자 조작으로 `Campaign → Early Missions → 1 Bridge the Gap!`에 들어가 600 SP를 모았고, 마지막 화면(`screens/28dbf655f84105cfb82ee6f3b6b3a1ed7e4b937c5e5153e902ebbd934eb911c4.png`)에 **“Mission Accomplished! … completed the first Tutorial.”**과 `Leave Tutorials`·`Next Tutorial` 버튼이 표시됐다. 다음 튜토리얼은 열지 않고 세션을 종료했다. 위 1.5절의 미완료 항목 중 **가이저 연결·결정 수집·600 SP 결과 화면**을 이번에 확인했다.
+세션 `20260929T154230683Z-bdf8f92d93a1`의 `recording/`(Git 제외)에 게임 창 영상·출력 소리·입력 로그가 있다. 사용자 조작으로 `Campaign → Early Missions → 1 Bridge the Gap!`에 들어가 600 SP를 모았고, 마지막 화면(`screens/28dbf655f84105cfb82ee6f3b6b3a1ed7e4b937c5e5153e902ebbd934eb911c4.png`)에 **“Mission Accomplished! … completed the first Tutorial.”**과 `Leave Tutorials`·`Next Tutorial` 버튼이 표시됐다. 다음 튜토리얼은 열지 않고 세션을 종료했다. 위 1.5절의 미완료 항목 중 **간헐천 연결·결정 수집·600 SP 결과 화면**을 이번에 확인했다.
 
 - 녹화는 15:43:10.7~15:47:14.7 UTC, 약 4분 4초다. 10 FPS 영상 **2,438프레임**, AVI 4개(각 48 MB 미만), WAV 2개(각 48 MB 미만), 입력 JSONL 1개다. 네 AVI는 전부 FFmpeg 오류 없이 디코딩됐고, WAV 두 조각은 약 243.9초로 영상 약 243.8초와 맞는다. 두 WAV 모두 무음 파일이 아니다.
 - 화면 왼쪽 SP는 **0 → 200 → 400 → 600**으로 올라갔다. 1 FPS 표본 기준 각 값이 처음 보인 시각은 약 15:46:12·15:46:44·15:47:05 UTC다. 결정 반납당 200 SP라는 튜토리얼 설명과 부합한다. 중간 안내 창을 사용자가 읽은 시간이 포함되므로 이 간격을 사제의 순수 왕복 시간으로 사용하지 않는다.
@@ -313,20 +313,20 @@ Windows 10 Pro(지정 예외 시스템 2)에서 원본 복사본을 1024×768 �
 | 파일 | 관찰 |
 |---|---|
 | `The War Begins! - Briefing.png` | 시작 브리핑: 미션 스크립트 `[A.]` 절 (제목 `<h2>`, 인용문 갈색 글자, 본문). 버튼 **Review Knowledge / Play Mission**. Storm Power 3000. 배경은 이미 맵 화면 |
-| `The War Begins! - Playing 1.png` | Storm Power 450(빨강). 적 섬은 **갈색 풀밭 + 빨간 테두리** + 회오리 신전(windVortex), 휘리기그(windFlyer)·포대 다수 |
+| `The War Begins! - Playing 1.png` | Storm Power 450(빨강). 적 섬은 **갈색 풀밭 + 빨간 테두리** + 회오리 신전(windVortex), 훨리기그(windFlyer)·포대 다수 |
 | `The War Begins! - Playing 2.png` | 1650(노랑). 건물 배치 중 표시(흰 사각형 + 400). 하늘의 노란 별 여러 개 = 배치 중인 유닛의 **공격 범위** 표시 (사용자 확인) |
 | `The War Begins! - Playing 3.png` | 사제 정보 창: High Priest Level I / Owner: You / Alignment: None / Class: High Priest / Construct >, View Netstorm Knowledge / About, Player > → 하위 "Construct Building": Temple >, Workshop >, Build Level 1 Altar for 500 |
 | `The War Begins! - High Priest Context Menu.png` | 같은 사제 메뉴를 다른 시점에서 (Storm Power 2800) |
 | `The War Begins! - Playing 4.png` | 2950. 자기 섬에 건설 중인 건물의 **어두운 그림자 모양 표시** |
-| `The War Begins! - Playing 5.png` | 5650. 적 신전이 없어진 뒤 적 섬이 **초록 풀밭 + 주황 테두리**로 바뀜. 자기 섬에 알타 완성, 선택된 유닛(체력 막대) |
+| `The War Begins! - Playing 5.png` | 5650. 적 신전이 없어진 뒤 적 섬이 **초록 풀밭 + 주황 테두리**로 바뀜. 자기 섬에 제단 완성, 선택된 유닛(체력 막대) |
 | `The War Begins! - Playing 6.png` | 5650. 5 와 비슷한 시점, 시점 이동 |
 | `The War Begins! - Playing 7.png` | 골렘 정보 창: Golem Level I / Owner: You / Alignment: Sun / Class: Ground Transport / Salvage gains 100 / About / Player > |
-| `The War Begins! - Playing 8.png` | 알타 위에서 희생 진행 중으로 보이는 장면 |
+| `The War Begins! - Playing 8.png` | 제단 위에서 희생 진행 중으로 보이는 장면 |
 | `The War Begins! - Victory.png` | 10650. "Success!" 창: `[Succeeded]` 절 문구 + **Leave Missions / Next Mission** |
 | `The War Begins! - Sun Workshop Context Menu.png` | **Sun Workshop 우클릭 메뉴**. 사이드바에 아직 유닛 아이콘이 없음(등록 전). Sun Workshop Level I / Alignment: Sun / Class: Production / View Current Production >, Put Knowledge into Production >, Upgrade costs 800 / Salvage gains 200 / About / Player > → 하위 "Knowledge Available — Production Slots Available:": Rain Generator, Sun Cannon, Whirlibase |
 | `The War Begins! - Rain Temple Context Menu.png` | **Rain Temple 우클릭 메뉴**: Rain Temple / Alignment: Rain / Class: Energy / View Netstorm Knowledge / Salvage gains 1250 / About / Player > |
 | `The War Begins! - In game menu.png` | 메뉴 막대 Game 펼침: Review Mission Objectives - F8 / Restart Mission, Leave Mission / Quit Game |
-| `The War Begins! - Playing 9.png` | 다른 판: Storm Power 200(빨강), 사이드바 아이콘 붉은색. 적 섬은 초록 풀밭 + 주황 테두리, 적 알타에 자기 사제가 올라가 있음 |
+| `The War Begins! - Playing 9.png` | 다른 판: Storm Power 200(빨강), 사이드바 아이콘 붉은색. 적 섬은 초록 풀밭 + 주황 테두리, 적 제단에 자기 사제가 올라가 있음 |
 | `The War Begins! - Lose 1.png` | "Failure!" 창: `[Failed]` 절 문구 + **Continue** |
 | `The War Begins! - Lose 2.png` | 이어서 "Would you like to attempt the mission **The War Begins!** again?" (미션 이름 노란 글자) + **Replay Mission / Leave Missions** |
 

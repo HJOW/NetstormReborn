@@ -89,7 +89,7 @@ public sealed partial class BattleSession
         _moveTasks.TryGetValue(entityId, out UnitMoveTask? move) ? move
         : _harvestTasks.TryGetValue(entityId, out PriestHarvestTask? harvest) ? harvest : null;
 
-    /// <summary>걸어서 이동 중인지 (길 막힘 대기나 도착한 뒤·가이저에서 머무는 동안은 false). 걷는 그림을 고르는 데 쓴다.</summary>
+    /// <summary>걸어서 이동 중인지 (길 막힘 대기나 도착한 뒤·간헐천에서 머무는 동안은 false). 걷는 그림을 고르는 데 쓴다.</summary>
     /// <param name="entityId">오브젝트 번호</param>
     public bool IsMoving(int entityId) => RouteOf(entityId) is { IsBlocked: false } route && route.NextIndex < route.Path.Count;
 

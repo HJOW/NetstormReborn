@@ -208,7 +208,7 @@ public sealed class BridgePieceTests
         Assert.Equal(14, BridgeCursor.TopLeftCell(0, 154).Y);
     }
 
-    /// <summary>생산 칸: 1초 간격, 칸 수 제한, 첫 추첨은 한 칸 조각, 템플을 잃으면 비운다</summary>
+    /// <summary>생산 칸: 1초 간격, 칸 수 제한, 첫 추첨은 한 칸 조각, 신전을 잃으면 비운다</summary>
     [Fact]
     public void Tray_RefillsLikeOriginal()
     {
@@ -236,7 +236,7 @@ public sealed class BridgePieceTests
         Assert.Null(tray.Update(3.5, hasTemple: true));
         Assert.NotNull(tray.Update(4.0, hasTemple: true));
         Assert.NotNull(tray.Slots[0]);
-        // 템플을 잃는 순간 칸이 비고, 템플이 없으면 채우지 않는다.
+        // 신전을 잃는 순간 칸이 비고, 신전이 없으면 채우지 않는다.
         Assert.Null(tray.Update(10.0, hasTemple: false));
         Assert.Empty(tray.Pieces);
     }

@@ -10,7 +10,7 @@
 
 - `RawLocalMissionState`는 직전 커밋에서 이미 CMake 등록과 원본33개 입력 대조를 마쳤다. 더 이상 미등록 초안이 아니다. [검증 기록](cpp-local-mission-state-20261015.md)을 따른다.
 - `RawCampaignMissionStartBindings`와 신규 `CampaignMissionStartTests`를 CMake에 등록했다. 같은 실제 Session의 SP·기술·현재 사제·AI 생성/초기 갱신을 같은 MissionScript/프레임 게이트에 연결한다. AI 이름은 현재 Script의 UTF-8을 원본 Windows-1252로 변환한다. 미등록 능력은 실제 assertion/log 소비자를 요구하며, 소비자가 반환하면 원본처럼 계속 진행한다.
-- `RawVortexPreDestroy`는 원본 신전 Pre `004dca50`과 목록 중복 전체 제거 `0040ea00`을 복원한다. 같은 Player 1,620바이트, 현재 신전/거주지/outpost 목록, loading 전역을 참조한다. 목록의 stale 꼬리, 효과 이후 현재 owner/좌표/extra 재조회, 섬 진단과 지역 갱신 및 Player의 신전 참조 정리 순서를 보존한다.
+- `RawVortexPreDestroy`는 원본 신전 Pre `004dca50`과 목록 중복 전체 제거 `0040ea00`을 복원한다. 같은 Player 1,620바이트, 현재 신전/거주 구역/outpost 목록, loading 전역을 참조한다. 목록의 stale 꼬리, 효과 이후 현재 owner/좌표/extra 재조회, 섬 진단과 지역 갱신 및 Player의 신전 참조 정리 순서를 보존한다.
 - Session에 같은 공통 삭제를 반환하는 `RawSurfaceWorld::CommonDeletion()`과 실제 Damageable 해방/Pre/Post를 조립했다. 네 신전 VT의 공통 Destroy/신전 Pre/Damageable Post를 현재 가상 분배기에 연결하고 사제에도 같은 Damageable Pre를 공급한다. 미복원 붕괴·폭발·Dude/받침 드롭은 선택 시 명시 오류를 유지한다.
 
 ## 원본 대조와 현재 실패

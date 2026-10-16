@@ -329,7 +329,7 @@ internal sealed partial class FortMapViewer
             LayoutContextPanel("", [], finalGroups, finalAnchor, width, height, child.Bounds, ConstructionRowHeight, compact: true);
         }
         // 선택한 건물을 배치 커서로 전환하는 명령 줄 (이름 뒤에 비용과 Storm Power 아이콘).
-        // 기술이 막혔거나 신전·알타가 이미 있거나 Storm Power 가 모자라면 줄을 어둡게 하고 고를 수 없게 한다 (원본: 지식 없는 워크샾 줄이 어둡다).
+        // 기술이 막혔거나 신전·제단이 이미 있거나 Storm Power 가 모자라면 줄을 어둡게 하고 고를 수 없게 한다 (원본: 지식 없는 워크샾 줄이 어둡다).
         // 고른 건물은 이 메뉴를 연 사제가 짓는다.
         ContextCommand Construct(TypeInfo type, string prefix, bool elementIcon = false)
         {

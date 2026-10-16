@@ -133,7 +133,7 @@ internal sealed partial class FortMapViewer
         }
         if (!_playUi && Pressed(keyboard, Keys.H) && mouse.Y >= HeaderHeight)
         {
-            // 개발용 수확 입력: 커서가 가리키는 가이저로 플레이어 사제를 보낸다.
+            // 개발용 수확 입력: 커서가 가리키는 간헐천으로 플레이어 사제를 보낸다.
             (int harvestX, int harvestY) = CellAt(new Vector2(mouse.X, mouse.Y));
             SubmitCommand(new HarvestGeyserCommand(TestPlayer, _session.EntityAt(harvestX, harvestY)?.Id ?? 0));
         }
@@ -183,8 +183,8 @@ internal sealed partial class FortMapViewer
     /// <item><description><c>construct 타입 x,y</c> — 사제가 건물을 짓기 시작 · <c>place 타입 x,y</c> — 유닛 배치 · <c>register 타입</c> — 워크샾에 지식 등록 · <c>salvage x,y</c> — 그 칸의 내 오브젝트 회수</description></item>
     /// <item><description><c>wait 초</c> — 게임 시간을 진행 · <c>rules 0|1</c> — 생산 규칙 끄기/켜기</description></item>
     /// <item><description><c>select x,y</c> — 그 칸의 오브젝트 선택 (없으면 선택 해제) · <c>select none</c> — 선택 해제 (튜토리얼 단계 C·F 는 선택한 신전을 본다)</description></item>
-    /// <item><description><c>harvest x,y</c> — 그 칸의 가이저로 사제를 보내 결정을 반복 수확한다 · <c>home</c> — F4 화면 복귀</description></item>
-    /// <item><description><c>capture tx,ty px,py [ax,ay]</c> — 수송 유닛을 사제에게 보내고 선택적으로 알타까지 운반 · <c>deliver tx,ty ax,ay</c> — 운반 사제를 알타에 묶기 · <c>altar ax,ay</c> — 내 사제를 알타으로 이동 · <c>drop tx,ty x,y</c> — 지정 칸에 사제 내려놓기</description></item>
+    /// <item><description><c>harvest x,y</c> — 그 칸의 간헐천으로 사제를 보내 결정을 반복 수확한다 · <c>home</c> — F4 화면 복귀</description></item>
+    /// <item><description><c>capture tx,ty px,py [ax,ay]</c> — 수송 유닛을 사제에게 보내고 선택적으로 제단까지 운반 · <c>deliver tx,ty ax,ay</c> — 운반 사제를 제단에 묶기 · <c>altar ax,ay</c> — 내 사제를 제단으로 이동 · <c>drop tx,ty x,y</c> — 지정 칸에 사제 내려놓기</description></item>
     /// <item><description>단계 처리가 없는 미션에서 손으로 재현: <c>allow 타입</c>·<c>deny 타입</c> — 기술 허용 표 변경, <c>denysalvage 0|1</c> — 회수 금지 변경. 튜토리얼 2 는 세션의 단계 처리(<c>TutorialStages</c>)가 자동으로 바꾼다 (docs/exe/mission-header-flags.md)</description></item>
     /// </list>
     /// </summary>

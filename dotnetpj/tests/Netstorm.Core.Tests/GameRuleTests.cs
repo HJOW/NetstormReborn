@@ -24,7 +24,7 @@ public sealed class GameRuleTests
         Assert.Equal(30, options.GeneratorRadius);
     }
 
-    /// <summary>원본 옵션 표의 기본값: 다리 6칸, 시작 6500, 보상 50%, 가이저 3000</summary>
+    /// <summary>원본 옵션 표의 기본값: 다리 6칸, 시작 6500, 보상 50%, 간헐천 3000</summary>
     [Fact]
     public void BattleOptions_Defaults()
     {
@@ -115,7 +115,7 @@ public sealed class GameRuleTests
         Assert.Equal(32 + 26 + 27, steps);
     }
 
-    /// <summary>회수 금액 25%: 템플 5000 → 1250, Sun Workshop 800 → 200 (컨텍스트 메뉴 캡처), 파괴 보상 비율 적용</summary>
+    /// <summary>회수 금액 25%: 신전 5000 → 1250, Sun Workshop 800 → 200 (컨텍스트 메뉴 캡처), 파괴 보상 비율 적용</summary>
     [Fact]
     public void Salvage_AndKillReward()
     {
@@ -136,7 +136,7 @@ public sealed class GameRuleTests
         Assert.Equal(15, ProductionTimers.RefreshInterval(1, true, useProductTimers: true));
     }
 
-    /// <summary>템플이 있으면 다리·골렘이 덱에 있고, 템플이 없어지면 사라진다</summary>
+    /// <summary>신전이 있으면 다리·골렘이 덱에 있고, 신전이 없어지면 사라진다</summary>
     [Fact]
     public void Deck_TempleSuppliesBridgeAndGolem()
     {
@@ -149,8 +149,8 @@ public sealed class GameRuleTests
     }
 
     /// <summary>
-    /// 워크샵 등록: 자기 원소만(Sun Workshop 은 Generator 예외), 한 유닛은 한 워크샵에만, Level I 은 2칸,
-    /// 파괴되면 등록이 풀리고 다른 워크샵에 다시 등록할 수 있다.
+    /// 워크샾 등록: 자기 원소만(Sun Workshop 은 Generator 예외), 한 유닛은 한 워크샾에만, Level I 은 2칸,
+    /// 파괴되면 등록이 풀리고 다른 워크샾에 다시 등록할 수 있다.
     /// </summary>
     [Fact]
     public void Deck_WorkshopRegistrationRules()
@@ -189,7 +189,7 @@ public sealed class GameRuleTests
         Assert.Equal(RegisterResult.Registered, deck.Register(2, rainGenerator));
         Assert.Equal(RegisterResult.NoWorkshop, deck.Register(1, sunCannon));
         Assert.Equal(RegisterResult.UnknownKnowledge, deck.Register(2, new ProducibleUnit("rainBlocker", Element.Rain, false)));
-        // 재건한 워크샵은 빈 상태로 시작한다.
+        // 재건한 워크샾은 빈 상태로 시작한다.
         deck.AddWorkshop(1, Element.Sun);
         Assert.Empty(deck.RegisteredAt(1));
     }
@@ -212,17 +212,17 @@ public sealed class GameRuleTests
         Assert.Equal(PlacementProblem.None, PlacementRules.CheckUnitSite(IslandState.Empty, true, false));
         Assert.Equal(PlacementProblem.NotOnIslandOrBridgeEnd, PlacementRules.CheckUnitSite(IslandState.NoIsland, false, false));
         Assert.Equal(PlacementProblem.None, PlacementRules.CheckUnitSite(IslandState.NoIsland, false, true));
-        // 건물: 템플은 빈 섬에만·1기, 워크샵은 빈 섬도 가능, 다리 끝 불가
+        // 건물: 신전은 빈 섬에만·1기, 워크샾은 빈 섬도 가능, 다리 끝 불가
         Assert.Equal(PlacementProblem.TempleNeedsEmptyIsland, PlacementRules.CheckBuildingSite(ObjectKind.Temple, IslandState.Mine, false));
         Assert.Equal(PlacementProblem.TempleAlreadyExists, PlacementRules.CheckBuildingSite(ObjectKind.Temple, IslandState.Empty, true));
         Assert.Equal(PlacementProblem.None, PlacementRules.CheckBuildingSite(ObjectKind.Workshop, IslandState.Empty, true));
         Assert.Equal(PlacementProblem.BuildingNeedsIsland, PlacementRules.CheckBuildingSite(ObjectKind.Altar, IslandState.NoIsland, true));
-        // 템플이 사라지면 빈 섬
+        // 신전이 사라지면 빈 섬
         ownership.RemoveTemple(5);
         Assert.Equal(IslandState.Empty, ownership.StateFor(5, 1));
     }
 
-    /// <summary>원본 타입 분류: 신전·워크샵·아웃포스트·알타·사제·Generator·건물형·수송·비행체·다리·주문</summary>
+    /// <summary>원본 타입 분류: 신전·워크샾·아웃포스트·제단·사제·Generator·건물형·수송·비행체·다리·주문</summary>
     [Fact]
     public void ObjectKinds_ClassifyOriginalTypes()
     {
@@ -269,7 +269,7 @@ public sealed class GameRuleTests
     }
 
     /// <summary>
-    /// 튜토리얼 3 의 "전력선": Wind 템플 범위 밖이라 Sail Skater(Wind 1 + 아무 1)를 못 짓다가,
+    /// 튜토리얼 3 의 "전력선": Wind 신전 범위 밖이라 Sail Skater(Wind 1 + 아무 1)를 못 짓다가,
     /// 범위 안에 Wind Generator 를 줄지어 놓으면 멀리까지 공급이 이어진다 (매뉴얼 튜토리얼 3 설명).
     /// </summary>
     [Fact]
@@ -280,7 +280,7 @@ public sealed class GameRuleTests
         var battle = new BattleMap([], (x, y) => 0);
         battle.Ownership.SetTemple(0, 1);
         battle.AddSource(new EnergySource(100, Element.Wind, 0, 0, 1));
-        // 템플에서 50칸 떨어진 곳은 범위 밖
+        // 신전에서 50칸 떨어진 곳은 범위 밖
         Assert.Equal(PlacementProblem.NotEnoughEnergy, battle.CheckUnit(skater, 50, 0, 1, 10000, true, false).Problem);
         // 25칸·50칸에 Generator 를 차례로 놓는다 (각 Generator 는 이전 공급원 범위 안이어야 한다 — 아무 1).
         foreach (int x in new[] { 26, 51 })

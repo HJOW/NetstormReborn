@@ -12,7 +12,7 @@ public static class MapSpriteFrames
     }
 
     /// <summary>
-    /// 저장 프레임이 없는 randframe 타입(거주지)은 원본 캡처처럼 섬 원소에 맞는 그림을 고른다.
+    /// 저장 프레임이 없는 randframe 타입(거주 구역)은 원본 캡처처럼 섬 원소에 맞는 그림을 고른다.
     /// 원본은 원소별 그림 묶음 중 무작위로 고르므로, 개발용 미리보기는 lit 프레임 중 하나를 좌표로 고정 선택한다.
     /// 원소별 그림이 없는 타입이나 저장 프레임이 있는 오브젝트는 BodyFrame(FortObject) 와 같다.
     /// </summary>

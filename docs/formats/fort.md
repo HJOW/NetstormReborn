@@ -179,14 +179,14 @@ CD판(10.72)은 N = 171: 프로세스 타입 52개(10~61), `.type` 타입 101개
 * 주요 단어 → 비트: `saveFrame` F1 0x20, `saveQA` F1 0x1000, `saveQB` F1 0x2000, `container` F1 0x20000, `bridge` F2 0x4,
   `factory` F2 0x4000, `walker` F2 0x10000, `balloon` F2 0x20000, `emplacement` F2 0x40000, `priest` F2 0x200000 등 — 전체 표는 `tools/fort.py` 의 `FLAG1_BITS`, `FLAG2_BITS`
 * 파생 규칙 (해석에 영향 있는 것):
-  * F2 & 0x34200 (vortex·factory·walker·balloon) → F1 `container` — 그래서 프리스트·신전 등은 내용물 개수 바이트를 가진다
+  * F2 & 0x34200 (vortex·factory·walker·balloon) → F1 `container` — 그래서 사제·신전 등은 내용물 개수 바이트를 가진다
   * F2 `buried`(0x2000) → F1 `saveQA`
   * (2026-10-05 확정) `.type` 의 `group` 속성(이름 표: archer 0, cannon 1, blocker 2, aviary 3, flyer 4, battery 5, fence 6, walker 7, balloon 8, misc 9, 없으면 10)에 따라
     battery → F2 0x800, archer·cannon → F2 0x8000000, blocker → F2 0x4000000. 이 비트들도 소유자를 저장하는 마스크에 들어 있다.
 
 ## 5. 원본 통계
 
-* 오브젝트 상위: `noIsland` 175,616 (**가이저를 받치는 떠 있는 작은 바위 3×3칸** — 가이저가 있는 청크마다 9개, 원본 화면에서 확인), `bridge` 90,290, `geyser` 17,090, `priest` 2,038, 각종 포대·제네레이터·워크샾·신전 …
+* 오브젝트 상위: `noIsland` 175,616 (**간헐천을 받치는 떠 있는 작은 바위 3×3칸** — 간헐천이 있는 청크마다 9개, 원본 화면에서 확인), `bridge` 90,290, `geyser` 17,090, `priest` 2,038, 각종 포대·제네레이터·워크샾·신전 …
 * 36개 이상 섹션: 97개 파일 / 섹션 뒤 남는 바이트: 3개 파일 / 플래그 0xFE: 6개 파일
 
 ## 5-1. 2026-10-05 원본 코드 대조로 추가 확인한 것

@@ -7,7 +7,7 @@ namespace Netstorm.Core.Simulation;
 /// <summary>게임 세션의 판정(조회)과 명령 실행.</summary>
 public sealed partial class BattleSession
 {
-    /// <summary>회수할 수 있는 오브젝트 분류 (건물과 생산 유닛. 사제·가이저·결정·지형·다리는 제외)</summary>
+    /// <summary>회수할 수 있는 오브젝트 분류 (건물과 생산 유닛. 사제·간헐천·결정·지형·다리는 제외)</summary>
     private static readonly IReadOnlySet<ObjectKind> SalvageableKinds = new HashSet<ObjectKind>
     {
         ObjectKind.Temple, ObjectKind.Workshop, ObjectKind.Outpost, ObjectKind.Altar,
@@ -102,7 +102,7 @@ public sealed partial class BattleSession
     }
 
     /// <summary>
-    /// 건물(신전·워크샾·알타·아웃포스트)을 지을 수 있는지 판정한다: 기술 허용 표 → 위치(신전·알타 플레이어당 1기 포함) → 자리 →
+    /// 건물(신전·워크샾·제단·아웃포스트)을 지을 수 있는지 판정한다: 기술 허용 표 → 위치(신전·제단 플레이어당 1기 포함) → 자리 →
     /// Storm Power → 에너지 → (사제를 지정했으면) 사제가 그 자리까지 걸어갈 수 있는지 순서다.
     /// 원본은 허용되지 않은 타입을 사제의 Construct 메뉴에서 아예 빼 버린다 (FUN_00461cf0).
     /// 사제는 설치 뒤 현장까지 걸어가야 건설을 시작하므로 길이 없는 섬의 자리는 지을 수 없다 (웹 팬게임의 builderCannotReach).
@@ -127,7 +127,7 @@ public sealed partial class BattleSession
         {
             return new SessionPlacementCheck(CommandFailure.WrongKind, null);
         }
-        // 건설 중이거나 사제를 기다리는 신전·알타도 "이미 있음"으로 센다 (플레이어당 동시에 1기)
+        // 건설 중이거나 사제를 기다리는 신전·제단도 "이미 있음"으로 센다 (플레이어당 동시에 1기)
         // TEST02 원본은 사제가 서 있는 칸에는 건물을 놓을 수 있다. 다른 건물·집의 점유는 그대로 검사한다.
         Footprint[] priests = [.. _entities.Values.Where(e => e.Kind == ObjectKind.Priest && e.OccupiesGround).Select(e => e.Footprint)];
         PlacementCheck site = Map.CheckBuilding(type, x, y, player, state.StormPower,

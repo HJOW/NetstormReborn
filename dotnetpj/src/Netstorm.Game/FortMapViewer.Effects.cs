@@ -171,7 +171,7 @@ internal sealed partial class FortMapViewer
             _jimBuildClock = 0; _forceFieldClock = 0;
             return;
         }
-        // 화면 안에서 건설이 진행 중인 오브젝트(사제가 도착한 공사장)가 있거나, 화면 안 알타의 룬 마크가 타는 동안 jimbuild.wav 를 이어서 튼다
+        // 화면 안에서 건설이 진행 중인 오브젝트(사제가 도착한 공사장)가 있거나, 화면 안 제단의 룬 마크가 타는 동안 jimbuild.wav 를 이어서 튼다
         bool building = _session.Entities.Any(e => !e.IsComplete && e.Production == null && !e.AwaitingBuilder && OnScreen(e.Footprint.AnchorX, e.Footprint.AnchorY))
             || _session.Rituals.Any(r => r.RuneMarked && _session.Entity(r.AltarId) is { } altar && OnScreen(altar.Footprint.AnchorX, altar.Footprint.AnchorY));
         _jimBuildClock = RepeatSound(building, _jimBuildClock, seconds, JimBuildSeconds, JimBuildSound);

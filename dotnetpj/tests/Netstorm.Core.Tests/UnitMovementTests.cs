@@ -218,7 +218,7 @@ public sealed class UnitMovementTests
         return ticks;
     }
 
-    /// <summary>열린 정사각 섬 한가운데에 내 사제를 둔 세션을 만든다 (가이저·신전 없음).</summary>
+    /// <summary>열린 정사각 섬 한가운데에 내 사제를 둔 세션을 만든다 (간헐천·신전 없음).</summary>
     private static BattleSession Create(int priestX, int priestY, Func<int, int, bool>? island = null)
     {
         island ??= (x, y) => x is >= 0 and < IslandSize && y is >= 0 and < IslandSize;

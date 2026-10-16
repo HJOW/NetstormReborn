@@ -59,7 +59,7 @@ public sealed class MovementPathingTests
         Assert.DoesNotContain(session.DrainEvents(), e => e.Kind is SessionEventKind.MoveResumed or SessionEventKind.CrystalCollected);
     }
 
-    /// <summary>우회 지면이 있으면 끊긴 길을 밟지 않고 같은 가이저까지 계속 이동한다.</summary>
+    /// <summary>우회 지면이 있으면 끊긴 길을 밟지 않고 같은 간헐천까지 계속 이동한다.</summary>
     [Fact]
     public void Harvest_RepathsOverDetourWithoutBlockingOrFalling()
     {
@@ -68,7 +68,7 @@ public sealed class MovementPathingTests
         GameEntity priest = session.Entity(OriginalData.Sid(1))!;
         bool usedDetour = false;
         var events = new List<SessionEvent>();
-        // 가이저로 가는 첫 여정에서 우회 행을 통과했는지 확인한다.
+        // 간헐천으로 가는 첫 여정에서 우회 행을 통과했는지 확인한다.
         for (int tick = 0; tick < session.TicksPerSecond * 15 && priest.CarriedCrystals == 0; tick++)
         {
             session.RunTicks(1);
@@ -108,7 +108,7 @@ public sealed class MovementPathingTests
         session = new BattleSession(new BattleMap([Object("priest", 9, 50), Object("windVortex", 6, 51), Object("geyser", 23, 51)],
             (x, _) => x <= 9 ? 0 : x >= 20 ? 1 : null), grid, OriginalData.RequireTypes());
         session.CombatEnabled = false;
-        // 가이저 섬까지 열 칸의 가로 다리를 잇는다.
+        // 간헐천 섬까지 열 칸의 가로 다리를 잇는다.
         for (int x = 10; x <= 19; x++) AddBridge(session, x, 50);
         return session;
     }

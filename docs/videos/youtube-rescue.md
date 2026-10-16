@@ -1,4 +1,4 @@
-# 캠페인 3-4 Enemy Territory: 프리스트 구조 관찰
+# 캠페인 3-4 Enemy Territory: 사제 구조 관찰
 
 > 영상: [Netstorm Enemy Territory speedrun 2m10s](https://www.youtube.com/watch?v=t2g9fASt4do), 2026-10-01 분석. 업로드 길이 3분 5초, 1920×1080·30fps. 원본 게임을 실행하지 않았다.
 
@@ -8,9 +8,9 @@ Linux `youtube_frames`로 2:42~2:46 구간을 1920×1080으로 추출했다. 아
 
 | 영상 시각 | 관찰 | 의미와 한계 |
 |---:|---|---|
-| 2:42.0 | 선택된 Sail Skater 메뉴에 `Class: Ground Transport`, `Carrying: High Priest`, `Drop High Priest`가 보임 | 프리스트를 지상 수송 유닛으로 운반 중 |
+| 2:42.0 | 선택된 Sail Skater 메뉴에 `Class: Ground Transport`, `Carrying: High Priest`, `Drop High Priest`가 보임 | 사제를 지상 수송 유닛으로 운반 중 |
 | 2:45.5 | 같은 유닛 메뉴에 `Carrying: High Priest`가 계속 보임 | 이 프레임 시점까지는 운반 상태 |
-| 2:46.0 | `Success! You have brought the traitor to your island!` 안내와 `Leave Missions`, `Next Mission` 버튼이 보임 | 프리스트가 플레이어 섬에 내려진 뒤 성공 판정이 표시됨. 드롭 입력 자체는 2:45.5 이후, 2:46.0 이전 |
+| 2:46.0 | `Success! You have brought the traitor to your island!` 안내와 `Leave Missions`, `Next Mission` 버튼이 보임 | 사제가 플레이어 섬에 내려진 뒤 성공 판정이 표시됨. 드롭 입력 자체는 2:45.5 이후, 2:46.0 이전 |
 
 설치본 `extracted/tarc/d/enemyterritory.english`의 미션 스크립트는 다음 조건을 명시한다.
 

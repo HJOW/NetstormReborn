@@ -9,7 +9,7 @@ namespace Netstorm.Core.Tests;
 /// </summary>
 public sealed class PlacementCursorTests
 {
-    /// <summary>워크샵은 원본 그림 중앙을 잡아 가까운 칸에 붙는다. 기존 유닛처럼 커서의 오른쪽 열에 붙으면 안 된다.</summary>
+    /// <summary>워크샾은 원본 그림 중앙을 잡아 가까운 칸에 붙는다. 기존 유닛처럼 커서의 오른쪽 열에 붙으면 안 된다.</summary>
     [Theory]
     [InlineData(432, 143, 30, 17)]
     [InlineData(438, 146.9, 30, 17)]
@@ -19,7 +19,7 @@ public sealed class PlacementCursorTests
         Assert.Equal((anchorX, anchorY), PlacementCursor.BuildingAnchorCell(x, y, -111, -114, 111, 114));
     }
 
-    /// <summary>워크샵의 세로 6→8칸 보정은 저장된 템플·다른 원소 워크샵에도 원본 타입 로더처럼 적용된다.</summary>
+    /// <summary>워크샾의 세로 6→8칸 보정은 저장된 신전·다른 원소 워크샾에도 원본 타입 로더처럼 적용된다.</summary>
     [Theory]
     [InlineData("sunFactory", 7, 8)]
     [InlineData("rainFactory", 8, 8)]

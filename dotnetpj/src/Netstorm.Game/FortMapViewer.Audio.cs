@@ -107,7 +107,7 @@ internal sealed partial class FortMapViewer
                 break;
             case SessionEventKind.SacrificeStarted:
             case SessionEventKind.SacrificeResumed:
-                // 내 알타 의식이 시작되거나 사제가 돌아와 재개되면 희생 음악을 요청한다 (같은 곡이 재생 중이면 무시된다).
+                // 내 제단 의식이 시작되거나 사제가 돌아와 재개되면 희생 음악을 요청한다 (같은 곡이 재생 중이면 무시된다).
                 // 2026-10-01 캠페인 1-2 녹화: 사제 복귀(18:28.2 priestMove3) 직후 18:28.8 에 thu22 를 끊고 sacrifice.mus 가 시작됐다.
                 if (sessionEvent.Player == TestPlayer)
                 {
@@ -136,15 +136,15 @@ internal sealed partial class FortMapViewer
                 QueueSound("priestFall.wav");
                 break;
             case SessionEventKind.PriestReleased:
-                // 운반체 내려놓기·판매, 알타 판매로 포로가 풀릴 때 (1-2 11:06.7·11:34.2·14:41.2·16:49.3)
+                // 운반체 내려놓기·판매, 제단 판매로 포로가 풀릴 때 (1-2 11:06.7·11:34.2·14:41.2·16:49.3)
                 QueueSound("priestFree.wav");
                 break;
             case SessionEventKind.PriestBound:
-                // 포로를 알타에 묶을 때 (1-2 15:16.3·17:36.5, 1-1 12:11.7)
+                // 포로를 제단에 묶을 때 (1-2 15:16.3·17:36.5, 1-1 12:11.7)
                 QueueSound("priestStruggleFade02-800.wav");
                 break;
             case SessionEventKind.Salvaged:
-                // 오브젝트를 판매(회수)할 때 해체 소리 (1-2 11:34.2 골렘·14:41.2·16:49.3 알타, exe FUN_0044b4b0)
+                // 오브젝트를 판매(회수)할 때 해체 소리 (1-2 11:34.2 골렘·14:41.2·16:49.3 제단, exe FUN_0044b4b0)
                 QueueSound("collapse.wav");
                 break;
             case SessionEventKind.WorkshopUpgraded:

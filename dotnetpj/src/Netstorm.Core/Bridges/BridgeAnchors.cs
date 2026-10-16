@@ -8,7 +8,7 @@ namespace Netstorm.Core.Bridges;
 /// 규칙(사용자 확인 2026-09-30): 섬 가장자리 중 **초목이 있는 부분에서는 다리 건설을 시작할 수 없다**.
 /// 원본 구현: 가장자리 초목은 edgeFarm 오브젝트이고 typeflags 에 dropBlocking(플래그2 0x10)이 있다.
 /// 원본은 오브젝트 발자국 칸의 스폿 지도에 이 비트를 남기고(Squid.cpp FUN_004b02d0), 다리 배치 판정(Rifttype.cpp FUN_0049b510)은
-/// 이 비트가 있는 칸을 이어 붙일 곳으로 쓰지 않는다. 같은 비트를 가진 건물·나무·신전·가이저 칸도 마찬가지다.
+/// 이 비트가 있는 칸을 이어 붙일 곳으로 쓰지 않는다. 같은 비트를 가진 건물·나무·신전·간헐천 칸도 마찬가지다.
 /// </summary>
 public static class BridgeAnchors
 {

@@ -16,9 +16,9 @@
 | 내 시작 SP | `myStartMoney=3000`. fort Money의 100000보다 스크립트가 우선 |
 | 내 시작 지식 | `sunWalker;rainBattery;sunAviary;sunCannon` |
 | 적 AI | `The Jailer`, `sunWalker;windBattery;sunArcher`, 시작 SP 0, `aiGeyserAttachments=1`, `aiCollectors=1`, 행동 간격 6초, 능력 `!ENCIRCLE_ENEMY_ISLAND;!USE_PRIEST_TO_COLLECT` |
-| 내 Terr00 | 가이저 1, 사제 1, 레지던스 1, Rain Temple(`rainVortex`) 1 |
-| 적 Terr01 | 사제 1, 레지던스 1, 썬 디스크 발사기(`sunArcher`) 9, 썬 배리케이드(`sunBlocker`) 8, 윈드 제네레이터(`windBattery`) 3, Wind Temple(`windVortex`) 1 |
-| Chaff | 다리 15, 가이저 13, `noIsland` 117 |
+| 내 Terr00 | 간헐천 1, 사제 1, 거주 구역 1, Rain Temple(`rainVortex`) 1 |
+| 적 Terr01 | 사제 1, 거주 구역 1, 썬 디스크 발사기(`sunArcher`) 9, 썬 배리케이드(`sunBlocker`) 8, 윈드 제네레이터(`windBattery`) 3, Wind Temple(`windVortex`) 1 |
+| Chaff | 다리 15, 간헐천 13, `noIsland` 117 |
 | 저장 목록 | Technology 26개, Deck 38개. 시작 지식 4개와 별도 목록 |
 | 브리핑 | `[A.]`, `Review Knowledge,ShowTechnology,55`, `Play Mission,DoNothing,0` |
 | 성공 | `[Succeeded][BadTeamDead]`, `<$Config,Done{mission.fileName}=1>`, `Leave Missions,MissionAbort,1`, `Next Mission,MissionBegin,MasterOfWhirligigs` |
@@ -58,11 +58,11 @@
 - `FUN_004c36c0`(155833~155918): 활성 플레이어의 신전 halfDead/dead, 사제 dead/captured/saved 상태를 조사한다. `004922e0`의 사제 생존 결과와 동맹 표로 내 팀/적 팀을 집계해 `GoodTeamDead`, `BadTeamDead`, `Failed`를 만든다.
 - `FUN_004c3940`(155923 부근): 참으로 변한 조건에 대한 edge latch와 해당 스크립트 이벤트 호출을 처리한다.
 
-원본 실제 플레이 기록 `docs/videos/the-war-begins-record-play-20260930.md:33`은 신전 파괴 → 적 사제 보호막 기절 → 골렘 포획/운반 → 알타 다섯 룬 의식 → 사제 사망/알타 소멸 → 성공 창을 확인했다. 신전 파괴에서 성공까지 약 2분 15초이며 **신전 파괴 즉시 승리 처리로 대체하면 원본과 달라진다.** F6 지식창은 전투를 정지하지 않으며 성공 스크립트 창은 게임 시계를 정지한다.
+원본 실제 플레이 기록 `docs/videos/the-war-begins-record-play-20260930.md:33`은 신전 파괴 → 적 사제 보호막 기절 → 골렘 포획/운반 → 제단 다섯 룬 의식 → 사제 사망/제단 소멸 → 성공 창을 확인했다. 신전 파괴에서 성공까지 약 2분 15초이며 **신전 파괴 즉시 승리 처리로 대체하면 원본과 달라진다.** F6 지식창은 전투를 정지하지 않으며 성공 스크립트 창은 게임 시계를 정지한다.
 
 ## 직접적인 다음 구현 순서
 
-1. 현재 `RawSurfaceWorld::Impl`의 소유 풀/해시/spot/Graph/Frame/Owner/Pop/Destroy/Kernel을 비표면 생성까지 확장한 단일 월드에 보존한다. `GameWorld::objects_`와 raw SID에 같은 객체를 이중 생성하지 않는다. fort의 사제·신전·가이저·전투 건물·레지던스의 실제 초기화/Pop/contained/Regular를 같은 풀에 연결하고 렌더링/선택/체력도 해당 raw 슬롯을 읽는다.
+1. 현재 `RawSurfaceWorld::Impl`의 소유 풀/해시/spot/Graph/Frame/Owner/Pop/Destroy/Kernel을 비표면 생성까지 확장한 단일 월드에 보존한다. `GameWorld::objects_`와 raw SID에 같은 객체를 이중 생성하지 않는다. fort의 사제·신전·간헐천·전투 건물·거주 구역의 실제 초기화/Pop/contained/Regular를 같은 풀에 연결하고 렌더링/선택/체력도 해당 raw 슬롯을 읽는다.
 2. 동일 저장소의 SP/기술/Technology/Deck를 실제 생산 목록으로 구성한다. 내 사제 Construct, 워크샾 지식 등록, 다리/생산 칸, 회전/배치 미리보기/판정/반환/비용을 실제 UI 입력에 연결한다. `ShowTechnology(55)`는 저장 Technology 목록 및 골렘 제외 규칙으로 원본 브리핑 버튼에 연결한다.
 3. 이미 복원한 건설 Request → Confirm → Notice → Place → Builder/Process를 같은 월드에 조립한다. 로컬 예측 영역과 서버 SID 영역의 원본 구분은 유지한다. 단일 플레이 direct dispatch라 하더라도 요청/통지 필드·순서·실패 환불은 원본 몸체를 사용한다.
 4. 원본 이동/명령, 수확/운반/결정 생성, GunProcess/투사체/피해, AI 행동을 복원하고 같은 월드의 실제 프레임에 등록한다. 기존 임시 이동을 최종 원본 동일성 근거로 삼지 않는다.

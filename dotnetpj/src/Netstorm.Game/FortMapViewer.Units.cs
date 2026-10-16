@@ -243,7 +243,7 @@ internal sealed partial class FortMapViewer
             if (item.Object.Type.Name == "noIsland") continue;
             GetTexture(item.Object.Type.LoadIndex, MapSpriteFrames.BodyFrame(item, _terrain.TerritoryTheme(item.Territory)));
         }
-        // 제자리 애니메이션이 있는 타입(가이저 증기·워크샾 레벨·신전 회오리·풍선)은 모든 클러스터와 그 그림자를 만들어 둔다.
+        // 제자리 애니메이션이 있는 타입(간헐천 증기·워크샾 레벨·신전 회오리·풍선)은 모든 클러스터와 그 그림자를 만들어 둔다.
         foreach (TypeInfo type in _map.Objects.Select(o => o.Object.Type).DistinctBy(t => t.LoadIndex)
                      .Where(t => ObjectKinds.Of(t) is ObjectKind.Geyser or ObjectKind.Workshop or ObjectKind.Temple || t.Definition.HasFlag("balloon")))
         {

@@ -8,15 +8,15 @@
 
 기존 미등록 `RawPathStart` 소스에서 세 차이를 교정했다. 패치의 기존 경로 시작 좌표 보정은 `start <= destination`에서 0.5를 빼며, `replaceStart`가 쓰는 좌표는 이 보정된 start다. 실패 finder의 오른쪽·아래 경계는 거의 올림이다. `RawPathRuntime`에는 명령 DWORD 세 개/패치 전용 목적지 쓰기와 시각·방향을 보존한 꼭짓점 좌표 쓰기를 추가했다. `tailByte`라는 이름의 인자도 실제 원본은 DWORD 전체를 쓴다.
 
-사제 `+44`는 실제 같은 풀/hash의 finder로 목적지 칸에 있는 **가이저(type122)**를 모두 찾아 마지막 일치 번호를 targetA에 기록한다. 기존 미등록 소스와 작업 지시의 `nuggetType`은 명칭 오류였다. 실제 조회 전역은 패치 `00541240`/CD `0051cb2c`이며 nugget(type154)의 `005412c0`를 조회하지 않는다. `005412cc`의 type157은 noIsland다. 주소·분기는 유지하고 상태 이름을 `geyserType`으로 교정했다. buried 후보는 실제 finder가 제외한다. `+40`은 사건 `0x25c`/`0x25d`(**604/605**)를 각각 처음부터 다시 검색하여 전부 삭제하고, 현재 타입의 defaultFrame을 같은 `SquidFrame`에 지정한다. teleport의 두 부모 통지는 두 판본의 실제 빈 ret 몸체다.
+사제 `+44`는 실제 같은 풀/hash의 finder로 목적지 칸에 있는 **간헐천(type122)**를 모두 찾아 마지막 일치 번호를 targetA에 기록한다. 기존 미등록 소스와 작업 지시의 `nuggetType`은 명칭 오류였다. 실제 조회 전역은 패치 `00541240`/CD `0051cb2c`이며 nugget(type154)의 `005412c0`를 조회하지 않는다. `005412cc`의 type157은 noIsland다. 주소·분기는 유지하고 상태 이름을 `geyserType`으로 교정했다. buried 후보는 실제 finder가 제외한다. `+40`은 사건 `0x25c`/`0x25d`(**604/605**)를 각각 처음부터 다시 검색하여 전부 삭제하고, 현재 타입의 defaultFrame을 같은 `SquidFrame`에 지정한다. teleport의 두 부모 통지는 두 판본의 실제 빈 ret 몸체다.
 
 ## 독립 대조와 범위
 
 `tools/decomp_pathstart_oracle.py`는 두 보호 PE의 실제 기계어에서 **새 시작512개**와 **종류 선택 회귀718개**를 관찰한다. 시작 입력은 부모134/158, 정상·스냅·시작 표면0·목적지 clamp·void 부모·같은 좌표 목적지·겹침 정리 재귀·기존 guard의8개 장면, boss/기존 경로/꼭짓점 보정/사건 반복 유무를 교차한다. 종류 선택은 패치188/CD171개 모든 타입과 balloon genus 유무를 교차하며 CD의 의도된 assert도 기록한다. 이718개는 이전에 검증한2872개 이동 선택 입력의 정확한 부분집합이므로 신규 관찰 수는 **512개**다.
 
-실제로 실행한 몸체는 상위 Start·종류 선택·파생 ctor·flags0 Init wrapper·실제 표면/Graph 조회·BFS/접합/경로 축약·Prepare/CRT·사제 목적지 가이저 finder·사건 취소 반복이다. SHA 감사는 두 PE, 현재 정밀 몸체, 도구, 소스, fixture를 고정한다. 원본 게임 설정인 x87 53비트 결과를 fixture에 쓰고64비트 결과 차이는 별도로 남긴다. 같은 입력 재실행과 정밀도 반복은 고유 관찰 수에 더하지 않는다.
+실제로 실행한 몸체는 상위 Start·종류 선택·파생 ctor·flags0 Init wrapper·실제 표면/Graph 조회·BFS/접합/경로 축약·Prepare/CRT·사제 목적지 간헐천 finder·사건 취소 반복이다. SHA 감사는 두 PE, 현재 정밀 몸체, 도구, 소스, fixture를 고정한다. 원본 게임 설정인 x87 53비트 결과를 fixture에 쓰고64비트 결과 차이는 별도로 남긴다. 같은 입력 재실행과 정밀도 반복은 고유 관찰 수에 더하지 않는다.
 
-C++ 재생은 실제 `RawPathSearch`·`RawPathRuntime`을 사용하고, 같은 `SidPool`의 기존 contained 경로 조회/Host 삭제·실제 서버 flags0 부착/`RawPathData` 공유 버퍼 전송·실제 종속 체인·사제 가이저 finder·예약 삭제/프레임 지정을 연결한다. 성공한 경로의 모든 꼭짓점/방향/double 시각과 대상/명령 DWORD, 공유 생성/정리/Init Pop/겹침 효과 인자 및 순서, 현재 부모 프레임, 남은 두 사건 개수/재귀 guard를 원본 관찰과 대조한다. 실패해 해제된 C++ 객체의 바이트는 역참조하지 않으며 실패 분기의 생성/정리 효과와 반환/현재 상태를 대조한다.
+C++ 재생은 실제 `RawPathSearch`·`RawPathRuntime`을 사용하고, 같은 `SidPool`의 기존 contained 경로 조회/Host 삭제·실제 서버 flags0 부착/`RawPathData` 공유 버퍼 전송·실제 종속 체인·사제 간헐천 finder·예약 삭제/프레임 지정을 연결한다. 성공한 경로의 모든 꼭짓점/방향/double 시각과 대상/명령 DWORD, 공유 생성/정리/Init Pop/겹침 효과 인자 및 순서, 현재 부모 프레임, 남은 두 사건 개수/재귀 guard를 원본 관찰과 대조한다. 실패해 해제된 C++ 객체의 바이트는 역참조하지 않으며 실패 분기의 생성/정리 효과와 반환/현재 상태를 대조한다.
 
 ## 남은 외부 경계
 

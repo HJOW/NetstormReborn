@@ -4,7 +4,7 @@ namespace Netstorm.Core.Rules;
 
 /// <summary>
 /// 게임 규칙에서 쓰는 오브젝트 분류 (docs/gameplay/island-ownership.md "용어", docs/sources/game-manual.md 1절).
-/// 신전·워크샾·알타·아웃포스트는 "건물"이며 사제가 짓는다. 그 밖의 작은 건물과 이동체가 "유닛"이다.
+/// 신전·워크샾·제단·아웃포스트는 "건물"이며 사제가 짓는다. 그 밖의 작은 건물과 이동체가 "유닛"이다.
 /// </summary>
 public enum ObjectKind
 {
@@ -20,7 +20,7 @@ public enum ObjectKind
     /// <summary>아웃포스트 (멀티플레이 중립 섬 소유용 건물)</summary>
     Outpost,
 
-    /// <summary>알타(알타, altar·dais)</summary>
+    /// <summary>제단(제단, altar·dais)</summary>
     Altar,
 
     /// <summary>High Priest</summary>
@@ -44,7 +44,7 @@ public enum ObjectKind
     /// <summary>주문 (bomb)</summary>
     Spell,
 
-    /// <summary>가이저 (Storm Power 원천)</summary>
+    /// <summary>간헐천 (Storm Power 원천)</summary>
     Geyser,
 
     /// <summary>Storm Crystal (결정 1개 = 200 SP)</summary>
@@ -84,7 +84,7 @@ public static class ObjectKinds
         return ObjectKind.Other;
     }
 
-    /// <summary>사제의 Construct 메뉴로 짓는 "건물"인지 (신전·워크샾·알타·아웃포스트)</summary>
+    /// <summary>사제의 Construct 메뉴로 짓는 "건물"인지 (신전·워크샾·제단·아웃포스트)</summary>
     /// <param name="kind">분류</param>
     public static bool IsBuilding(ObjectKind kind) =>
         kind is ObjectKind.Temple or ObjectKind.Workshop or ObjectKind.Altar or ObjectKind.Outpost;

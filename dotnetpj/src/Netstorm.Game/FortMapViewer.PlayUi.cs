@@ -144,7 +144,7 @@ internal sealed partial class FortMapViewer
     /// <summary>생산 창(사이드바)을 지도 배치·명령에서 제외한다. 원본은 상단 메뉴 막대·하단 상태줄이 없어 나머지는 모두 지도다.</summary>
     private bool IsPlayUiPoint(int x, int y) => x < PlaySidebarWidth;
 
-    /// <summary>내 오브젝트 클릭은 선택, 가이저·적 사제·알타·빈 칸 클릭은 선택한 이동체의 명령으로 해석한다.</summary>
+    /// <summary>내 오브젝트 클릭은 선택, 간헐천·적 사제·제단·빈 칸 클릭은 선택한 이동체의 명령으로 해석한다.</summary>
     private void UpdatePlayOrders(MouseState mouse)
     {
         if (_placementMode || _bridgeMode || IsPlayUiPoint(mouse.X, mouse.Y)) return;
@@ -157,11 +157,11 @@ internal sealed partial class FortMapViewer
         GameEntity? selected = _session.Entity(_session.Player(TestPlayer).SelectedEntityId);
         if (left && target?.Owner == TestPlayer && !(target.Kind == ObjectKind.Altar && selected?.Kind is ObjectKind.Priest or ObjectKind.Transport))
         { SubmitCommand(new SelectEntityCommand(TestPlayer, target.Id)); return; }
-        // 원본 도움말: 가이저를 우클릭하면 남은 Storm Power 를 보여 준다 (왼쪽 클릭은 수확 명령)
+        // 원본 도움말: 간헐천을 우클릭하면 남은 Storm Power 를 보여 준다 (왼쪽 클릭은 수확 명령)
         if (right && target?.Kind == ObjectKind.Geyser)
         {
-            _notice = target.IsDepletedGeyser ? Ui("빈 Storm 가이저", "Empty Storm Geyser")
-                : Ui($"Storm 가이저 · 남은 Storm Power {target.StoredStormPower}", $"Storm Geyser · Storm Power {target.StoredStormPower}");
+            _notice = target.IsDepletedGeyser ? Ui("고갈된 스톰 간헐천", "Empty Storm Geyser")
+                : Ui($"스톰 간헐천 · 남은 Storm Power {target.StoredStormPower}", $"Storm Geyser · Storm Power {target.StoredStormPower}");
         }
         else if (target?.Kind == ObjectKind.Geyser)
         {
@@ -178,7 +178,7 @@ internal sealed partial class FortMapViewer
             {
                 SubmitCommand(new MovePriestToAltarCommand(TestPlayer, target.Id, selected.Id));
                 AcknowledgeOrder(selected);
-                // 원본은 포로가 묶인 알타으로 사제를 보내는 명령 때 희생 음악을 요청한다 (2026-10-01 캠페인 1-2 녹화: 명령 18:28.2 → 음악 18:28.8, 도착은 18:32 무렵)
+                // 원본은 포로가 묶인 제단으로 사제를 보내는 명령 때 희생 음악을 요청한다 (2026-10-01 캠페인 1-2 녹화: 명령 18:28.2 → 음악 18:28.8, 도착은 18:32 무렵)
                 if (_session.Entities.Any(e => e.Kind == ObjectKind.Priest && e.CaptorId == target.Id)) _mySacrificeMusicRequested = true;
             }
         }

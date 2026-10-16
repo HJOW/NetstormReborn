@@ -219,8 +219,8 @@ public sealed class BattleMap
     }
 
     /// <summary>
-    /// 사제가 짓는 건물(신전·워크샾·알타·아웃포스트)을 기준점에 지을 수 있는지 판정한다.
-    /// 위치는 섬 소유 규칙(신전은 빈 섬에 플레이어당 1기, 알타도 1기, 남의 섬 불가, 섬 밖 불가), 이어서 빈 자리·Storm Power·에너지 순서다.
+    /// 사제가 짓는 건물(신전·워크샾·제단·아웃포스트)을 기준점에 지을 수 있는지 판정한다.
+    /// 위치는 섬 소유 규칙(신전은 빈 섬에 플레이어당 1기, 제단도 1기, 남의 섬 불가, 섬 밖 불가), 이어서 빈 자리·Storm Power·에너지 순서다.
     /// 사제가 그 자리까지 걸어갈 수 있는지는 맵이 아니라 세션(<c>BattleSession.CheckBuilding</c>)이 판정한다.
     /// </summary>
     /// <param name="type">건물 타입</param>
@@ -229,7 +229,7 @@ public sealed class BattleMap
     /// <param name="player">플레이어</param>
     /// <param name="stormPower">플레이어의 현재 Storm Power</param>
     /// <param name="playerHasTemple">플레이어에게 이미 신전이 있는지 (건설 중인 신전 포함)</param>
-    /// <param name="playerHasAltar">플레이어에게 이미 알타가 있는지 (건설 중인 알타 포함)</param>
+    /// <param name="playerHasAltar">플레이어에게 이미 제단이 있는지 (건설 중인 제단 포함)</param>
     /// <param name="ignored">건물 설치를 막지 않는 사제 발자국.</param>
     public PlacementCheck CheckBuilding(TypeInfo type, int anchorX, int anchorY, int player, int stormPower, bool playerHasTemple,
         bool playerHasAltar = false, IReadOnlyList<Footprint>? ignored = null)

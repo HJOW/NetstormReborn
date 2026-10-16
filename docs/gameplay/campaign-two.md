@@ -16,8 +16,8 @@
 | 항목 | 값 |
 |---|---|
 | 플레이어 | 2,000 SP, 지식 `sunWalker;windBattery;sunArcher;sunCannon` |
-| AI(플레이어 2, "Master of Whirligigs") | 2,000 SP, 지식 `sunWalker;rainBattery;sunAviary`, 수집자 1, 가이저 연결 1, 판단 6초, `!CONCENTRATE_FIRE;!REPEAT_SUCCESSFUL_DROPS` |
-| 맵 오브젝트 | 내 Wind Temple·사제, 적 Rain Temple·사제·골렘 1·Sun Workshop 2·Stone Tower 5·거주지 2, 가이저 11 |
+| AI(플레이어 2, "Master of Whirligigs") | 2,000 SP, 지식 `sunWalker;rainBattery;sunAviary`, 수집자 1, 간헐천 연결 1, 판단 6초, `!CONCENTRATE_FIRE;!REPEAT_SUCCESSFUL_DROPS` |
+| 맵 오브젝트 | 내 Wind Temple·사제, 적 Rain Temple·사제·골렘 1·Sun Workshop 2·Stone Tower 5·거주 구역 2, 간헐천 11 |
 | 성공 | `[Succeeded][BadTeamDead]` — 적 사제를 희생 |
 | 실패 | `[Failed]` — 내 사제가 희생됨 |
 
@@ -30,7 +30,7 @@
 - 워크샾 지식 목록은 원본 지식 창의 행 안 group 순서(battery → cannon → archer → blocker → fence → aviary → balloon)다.
 - 생산 창 항목을 우클릭하면 원본 정보 창(이름·원소·분류·Cost)이 열린다. 한국어 이름은 공유 명칭 표의 레인 제네레이터·썬 캐논·썬 디스크 발사기 등을 생산/워크샾 메뉴와 지식창에 사용한다([2026-10-13 명칭 규칙](../korean-unit-names.md)). 2026-10-02부터 하단 상태줄은 없다.
 
-가이저를 **우클릭**하면 남은 Storm Power가 지도 아래쪽 알림으로 잠깐 나온다(원본 도움말 "Right-clicking on a Storm Geyser will show the available Storm Power"). 다 쓴 가이저는 원본 `emptyGeyser` 그림으로 바뀐다.
+간헐천을 **우클릭**하면 남은 Storm Power가 지도 아래쪽 알림으로 잠깐 나온다(원본 도움말 "Right-clicking on a Storm Geyser will show the available Storm Power"). 다 쓴 간헐천은 원본 `emptyGeyser` 그림으로 바뀐다.
 
 ## 이번 작업에서 함께 바꾼 공통 규칙
 
@@ -42,17 +42,17 @@
    - 그 결과 골렘 400(1-2 녹화의 골렘 판매 환급 100과 일치), Whirlibase 400(매뉴얼 값)이다.
    - group이 없는 Whirligig와 level이 없는 사제는 0이다.
    - 이전에는 이런 타입을 0 SP로 생산·회수할 수 있었다(1-1 문서의 "타입 누락 비용 0 처리" 후속 항목 해소).
-2. **가이저 고갈.**
-   - 가이저는 `geyser.type`의 `cost` 2,000 SP를 품는다. 싱글 플레이 전투 초기화 `FUN_004b2df0`이 가이저 타입 `+0xc4`에 넣는 `_DAT_00540bdc`의 초기값이 2000이다.
+2. **간헐천 고갈.**
+   - 간헐천은 `geyser.type`의 `cost` 2,000 SP를 품는다. 싱글 플레이 전투 초기화 `FUN_004b2df0`이 간헐천 타입 `+0xc4`에 넣는 `_DAT_00540bdc`의 초기값이 2000이다.
    - 결정 하나(200 SP)를 캘 때마다 줄고, 0이 되면 `GeyserDepleted` 이벤트가 나며 수집자는 반복을 멈춘다(도움말 "until the Geyser is depleted").
-   - 빈 가이저에 수확 명령을 내리면 `GeyserEmpty`로 거부한다.
+   - 고갈된 간헐천에 수확 명령을 내리면 `GeyserEmpty`로 거부한다.
 3. **채집 시간.**
-   - 수집자는 가이저 옆에서 `HarvestMineSeconds`(1.0초, 임시) 머문 뒤 결정을 얻는다.
-   - 1-2 맵은 적 신전 둘레와 가이저 둘레가 맞닿아 이동 거리가 0이다. 이 시간이 없으면 틱마다 결정이 생겨 적이 4분에 50만 SP를 모았다.
+   - 수집자는 간헐천 옆에서 `HarvestMineSeconds`(1.0초, 임시) 머문 뒤 결정을 얻는다.
+   - 1-2 맵은 적 신전 둘레와 간헐천 둘레가 맞닿아 이동 거리가 0이다. 이 시간이 없으면 틱마다 결정이 생겨 적이 4분에 50만 SP를 모았다.
 4. **임시 AI 일반화.** 1-1 전용 방어 AI를 공개 캠페인 공통으로 바꿨다(`MissionStart.Campaign`·`UsesCampaignAi`).
    - 방어 유닛은 미션 `aiTech`에서 cannon → archer → aviary 순으로 고른다(1-1 Sun Disc Thrower, 1-2 **Whirlibase**).
    - 에너지 부족으로 놓을 자리가 없을 때만 `aiTech`의 제네레이터(1-2 Rain Generator)를 신전 주변에 놓는다.
-   - 골렘 채집·침입 사제 포획·알타·의식 규칙은 1-1과 같다.
+   - 골렘 채집·침입 사제 포획·제단·의식 규칙은 1-1과 같다.
 
 ## 근거
 
@@ -60,9 +60,9 @@
 - [1-2 원본 녹화 판독](../videos/master-of-whirligigs-record-play-20261001.md):
   - 07:30 무렵 적 섬 신전 둘레에 Whirlibase가 빽빽하게 놓인 모습. 방어 상한 14의 근거이며, 화면으로 센 추정값이다.
   - 골렘 판매 환급 100(+100 SP)
-  - 의식 일시정지·알타 판매·완료 보상 5,000
+  - 의식 일시정지·제단 판매·완료 보상 5,000
   - 신전 파괴 폭발과 25% 처치 보상
-- exe: 기본 비용 상수와 타입 로더, 가이저 보유량 초기값 2000, 싱글 처치 보상 25%([전투 옵션 2-1](../exe/battle-options.md)), 파괴 폭발 `FUN_0044b9e0`([전투](combat.md))
+- exe: 기본 비용 상수와 타입 로더, 간헐천 보유량 초기값 2000, 싱글 처치 보상 25%([전투 옵션 2-1](../exe/battle-options.md)), 파괴 폭발 `FUN_0044b9e0`([전투](combat.md))
 - 원본 도움말 `help.english`의 `geyserType`·`sunAviaryType`
 
 ## 추정·차이와 후속 수정
@@ -73,7 +73,7 @@
 | 에너지 부족일 때만 Rain Generator 1개씩 추가 | 원본 AI 의 제네레이터 배치 규칙 |
 | 적 초기 골렘은 1-1과 같은 방식으로 신전 주변에 1기 지급(맵에 이미 골렘 1기가 있어 총 2기) | `aiCollectors`가 맵의 기존 골렘을 포함하는지 |
 | 채집 시간 1.0초 | 원본 결정 채집 시간(`geyserMined*.wav` 호출 `FUN_004266c0` 주변) |
-| 가이저 2,000 SP, 미션 중 새 가이저 생성 없음 | 도움말의 "파괴될 때마다 가이저 섬이 새로 생김"(멀티 `moreGeysers`·Fury 전투) 규칙 |
+| 간헐천 2,000 SP, 미션 중 새 간헐천 생성 없음 | 도움말의 "파괴될 때마다 간헐천 섬이 새로 생김"(멀티 `moreGeysers`·Fury 전투) 규칙 |
 | 진행도 저장 없음 — 1-2를 처음부터 선택 가능 | 원본 캠페인 체크 표시·해금(`Done{mission.fileName}` 설정) |
 | 1-2 성공 뒤 Next Mission(1-3) 잠금 | 다음 범위에서 1-3 구현 |
 
@@ -82,7 +82,7 @@
 - `CampaignTwoTests` 5개:
   - 원본 머리 값 시작 상태(양측 2,000 SP·지식·미션 번호)
   - 적 AI의 Whirlibase 건설과 상한
-  - 가이저 고갈·채집 시간·빈 가이저 거부
+  - 간헐천 고갈·채집 시간·고갈된 간헐천 거부
   - 결정론
   - 1-3 잠금 유지
 - `GameRuleTests.TypeCost_UsesOriginalDefaultForMissingCost` 6건. `CampaignOneTests`의 다음 미션 판정은 1-2 공개로 갱신했다.

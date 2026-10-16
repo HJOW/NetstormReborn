@@ -20,7 +20,7 @@ BaseHit는 live/free/dead·extra9·NoDamage를 판정하고 실제 virtual+0x9c 
 
 삭제 flags는 공격 owner를16비트 왼쪽으로 민 값에 `0x100000`을 더한다. 공격자 genus에 `0x100`이 있으면 `0x4100000`으로 바뀐다. CD의 별도 death-context 두 helper도 실제 PE로 실행한다. 10.78 BaseHit의 HP쓰기는 몸체 내부 직접 저장이며 CD는 공통 setter를 호출한다. C++는 동일 raw 폭의 공유 setter를 사용한다.
 
-DamageableHit는 먼저 HP 보유를 검사한다. genus `0x400000`은 **dais 부류**이며 현재 extra bit0을 사용한다. 일반 자산은 TYPE_HAS_HP `0x10`이다. 이 genus를 레지던스로 해석하지 않는다. 현재 local owner의 실제 주 섬 피격이면 wall clock으로 경고를 제한하고, extra bit4이면 virtual+0x88 재평가 후 BaseHit를 실행한다. 생존 반환일 때만 기존 실제 burning 판정을 호출한다.
+DamageableHit는 먼저 HP 보유를 검사한다. genus `0x400000`은 **dais 부류**이며 현재 extra bit0을 사용한다. 일반 자산은 TYPE_HAS_HP `0x10`이다. 이 genus를 거주 구역으로 해석하지 않는다. 현재 local owner의 실제 주 섬 피격이면 wall clock으로 경고를 제한하고, extra bit4이면 virtual+0x88 재평가 후 BaseHit를 실행한다. 생존 반환일 때만 기존 실제 burning 판정을 호출한다.
 
 ## 섬 피격 경고의 판본 차이
 

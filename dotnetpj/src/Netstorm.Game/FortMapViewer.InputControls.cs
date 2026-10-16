@@ -92,7 +92,7 @@ internal sealed partial class FortMapViewer
         }
     }
 
-    /// <summary>F2는 고정 건물·생산 유닛의 그림만 숨기며 사제·수송체·가이저는 유지한다.</summary>
+    /// <summary>F2는 고정 건물·생산 유닛의 그림만 숨기며 사제·수송체·간헐천은 유지한다.</summary>
     private bool HiddenByBuildingToggle(TypeInfo type)
     {
         ObjectKind kind = ObjectKinds.Of(type);

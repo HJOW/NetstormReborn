@@ -1,4 +1,4 @@
-# 가이저 채굴 통지 복원 — 2026-10-13
+# 간헐천 채굴 통지 복원 — 2026-10-13
 
 마지막 디컴파일 PC는 **HJOW-Athlon, 2026-10-13**이다. 같은 PC의 정밀 프로젝트를 읽기 전용으로 내보낸 `extracted/geysermined`의 함수 범위를 사용한다. 보호 원본과 AGENTS.md는 바꾸지 않았으며 실제 게임/GUI 실행은 없다.
 
@@ -26,7 +26,7 @@
 5. 삭제 callback 뒤 현재 hash0 머리의 isle(type97) 여부를 검사한다. 좌표에는 거의 올림 편향을 추가하지 않는다. `__ftol`의 하위 DWORD를 사용하므로 특수값/큰 좌표의 감김도 보존한다.
 6. isle이 없으면 현재 emptyGeyser(type84)를 flags0으로 생성하고 보존 좌표에서 가상+0x90(flags0)으로 Pop한다.
 
-가이저는 타입122이고 실제 nugget은 타입154다. PathStart의 가이저 찾기를 nugget 찾기로 이름 붙이지 않는다. 순서대로 읽는 mutable 전역과 raw 필드를 별도 경제 캐시에 복사하지 않는다.
+간헐천은 타입122이고 실제 nugget은 타입154다. PathStart의 간헐천 찾기를 nugget 찾기로 이름 붙이지 않는다. 순서대로 읽는 mutable 전역과 raw 필드를 별도 경제 캐시에 복사하지 않는다.
 
 10.78의 Bridge setter는 WORD를 **먼저 쓴 뒤** 현재 타입82/미매장/checking일 때 `num<=7`을 assert한다. 10.72의 같은 위치 하위 함수는 슬롯 주소를 반환할 뿐 assert가 없다. 패치의 실패 입력에서 C++는 기록 후 예외로 진단하고 PE는 assert 보고 경계의 호출을 기록한 뒤 반환한다. 이를 정상 실제 Bridge 작업으로 세지 않는다.
 
@@ -36,7 +36,7 @@
 
 고유 입력은 **양판본 합계2312개(각1156개)**이며 **정상2304개와 패치 assert8개**를 구분한다. 수량0/199/200/201/400/2000/65535, 분수/음수/큰 cost, free/권한/표면, 음향 뒤 수량·비용·권한·좌표 변경, 삭제 뒤 표면 변경, 좌표 절삭 특수값, Bridge checking/매장 차이를 포함한다. 각 입력의 x87 53/64비트 반복은 같은 출력인지 검사하며 고유 입력 합계에 다시 더하지 않는다. 근거/SHA는 `cpppj/geysermined.json`, fixture는 `cpppj/tests/fixtures/geysermined-x86.tsv`다.
 
-`GeyserMinedTests.cpp`의 첫 검사는 PE의 난수·효과 순서와 가상 표 주입 주소를 제외한 두 raw 슬롯 전체를 C++와 비교한다. 두 번째 검사는 **원본 등록 → 실제 단일 PacketDispatch → 같은 SidPool의 채굴 handler → 기존 SquidFactory/공통 RawSquidDestroy/SquidPop/Unpop**를 연결한다. 수신 시각/기록/중첩 깊이, client 가이저 반납, server emptyGeyser 생성과 현재 hash 등록을 확인한다. 해당 검사의 기반 자산 생성/공통 삭제 범위를 파생 가이저/emptyGeyser 전체 수명 완료로 세지 않는다.
+`GeyserMinedTests.cpp`의 첫 검사는 PE의 난수·효과 순서와 가상 표 주입 주소를 제외한 두 raw 슬롯 전체를 C++와 비교한다. 두 번째 검사는 **원본 등록 → 실제 단일 PacketDispatch → 같은 SidPool의 채굴 handler → 기존 SquidFactory/공통 RawSquidDestroy/SquidPop/Unpop**를 연결한다. 수신 시각/기록/중첩 깊이, client 간헐천 반납, server emptyGeyser 생성과 현재 hash 등록을 확인한다. 해당 검사의 기반 자산 생성/공통 삭제 범위를 파생 간헐천/emptyGeyser 전체 수명 완료로 세지 않는다.
 
 검사 명령:
 
@@ -49,7 +49,7 @@ C++ 집중 **2개 검사 통과**: 전수2312개 대조(정상2304/assert8)와 �
 ## 남은 실제 경계
 
 - 실제 raw 월드의 packet 등록/송수신, 사제·골렘의 CarrierArrival이 contained nugget을 생성하고 채굴 통지를 작성/송신/직접 처리하는 상위 사슬은 계속 미연결이다.
-- 파생 가이저 삭제/emptyGeyser 생성·postPop 및 실제 음향 자산 재생은 같은 월드의 실제 소비자를 연결해야 한다.
+- 파생 간헐천 삭제/emptyGeyser 생성·postPop 및 실제 음향 자산 재생은 같은 월드의 실제 소비자를 연결해야 한다.
 - PathProcess cleanup의 helper 인접 finder → SharedRegular(지연1) → helper0, 사제 주변 신전 ritual, abstract helper 환불/삭제는 남아 있다. 기존 +cc CarrierCheck와 건설 운반 type23의 ConstructionArrival을 재사용한다.
 - **10.78 cleanup0048aa00에는 TempleAt·contained nugget·동일 owner/graph 조건의 nugget 삭제가 추가되어 있고 CD10.72 cleanup0047f0a0에는 이 분기가 없다.** 다음 복원에서 두 몸체를 하나의 동일 분기로 합치지 않는다.
 - 캠페인1-1 실제 클릭 명령/애니메이션·채굴 운반·의식·UI·승패와 완주 대조는 이 단위의 독립 대조 범위를 넘는다.

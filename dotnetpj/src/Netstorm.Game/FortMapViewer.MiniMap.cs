@@ -24,7 +24,7 @@ internal sealed partial class FortMapViewer
     /// <summary>소유자가 없는 섬(신전 없는 섬·중립 받침)의 미니맵 색. 녹화 표본 (64,86,40) → 팔레트 140번 (63,88,40).</summary>
     private static readonly Color MiniMapNeutral = new(63, 88, 40);
 
-    /// <summary>가이저를 나타내는 노란 점의 색 (1-1 시작 캡처의 2×2 노란 점). 정확한 팔레트 번호는 확인하지 못해 순색을 쓴다.</summary>
+    /// <summary>간헐천을 나타내는 노란 점의 색 (1-1 시작 캡처의 2×2 노란 점). 정확한 팔레트 번호는 확인하지 못해 순색을 쓴다.</summary>
     private static readonly Color MiniMapGeyser = new(255, 255, 0);
 
     /// <summary>현재 화면 범위를 나타내는 사각형 테두리 색 (녹화의 흰 1픽셀 선).</summary>
@@ -108,8 +108,8 @@ internal sealed partial class FortMapViewer
 
     /// <summary>
     /// 월드 전체 미니맵 그림을 필요할 때만 다시 만든다. 한 픽셀(2×2칸)에 소유자가 있는 땅이 하나라도 있으면 그 색,
-    /// 중립 땅만 있으면 중립색이다. 다리는 놓은 플레이어의 색으로 덮고, 가이저는 소유자 색이 없는 자리에만 노란 점으로 찍는다
-    /// (1-1 캡처에서 적 섬 위 가이저는 빨간색에 가려 보이지 않았다).
+    /// 중립 땅만 있으면 중립색이다. 다리는 놓은 플레이어의 색으로 덮고, 간헐천은 소유자 색이 없는 자리에만 노란 점으로 찍는다
+    /// (1-1 캡처에서 적 섬 위 간헐천은 빨간색에 가려 보이지 않았다).
     /// </summary>
     private void RefreshMiniMapTexture()
     {
@@ -149,7 +149,7 @@ internal sealed partial class FortMapViewer
             pixels[index] = MiniMapColor(cell.Owner);
             owned[index] = _playerColors.GetValueOrDefault(cell.Owner) > 0;
         }
-        // 남은 가이저를 2×2 노란 점으로 찍는다 (소유자 색 위에는 찍지 않는다)
+        // 남은 간헐천을 2×2 노란 점으로 찍는다 (소유자 색 위에는 찍지 않는다)
         foreach (GameEntity geyser in _session.Entities.Where(e => e.Kind == ObjectKind.Geyser && !e.IsDepletedGeyser))
         {
             int px = geyser.Footprint.AnchorX / MiniMapLayout.CellsPerPixel;

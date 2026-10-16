@@ -12,7 +12,7 @@ public sealed partial class BattleSession
     /// <summary>이번 틱의 지형 변화가 끝난 뒤 지상 이동체를 번호순으로 검사한다.</summary>
     private void UpdateGroundSupport()
     {
-        // 포획 사제는 운반체/알타이 지지하므로 자유 상태인 지상 이동체만 검사한다.
+        // 포획 사제는 운반체/제단이 지지하므로 자유 상태인 지상 이동체만 검사한다.
         foreach (GameEntity entity in _entities.Values.Where(e => e.IsComplete && e.Captivity == PriestCaptivity.Free &&
             (e.Kind == ObjectKind.Priest || e.Type.Definition.HasFlag("walker")) &&
             e.Kind != ObjectKind.Flyer && !IsAirborneTransport(e)).ToArray())

@@ -54,7 +54,7 @@ public sealed class BattleOptions
     /// <summary>Kill Reward 인덱스별 보상 비율(%)</summary>
     private static readonly int[] KillRewardTable = [0, 25, 50, 75, 100, 150];
 
-    /// <summary>Money per Geyser 인덱스별 가이저 초기 보유량</summary>
+    /// <summary>Money per Geyser 인덱스별 간헐천 초기 보유량</summary>
     private static readonly int[] MoneyPerGeyserTable = [1000, 2000, 3000, 5000];
 
     /// <summary>원본 옵션 표에서 규칙에 쓰는 항목 (번호 순). 나머지 옵션은 맵 생성·멀티플레이 구현 때 추가한다.</summary>
@@ -114,7 +114,7 @@ public sealed class BattleOptions
     /// <summary>적 파괴 보상 비율(%)</summary>
     public int KillRewardPercent => KillRewardTable[Math.Clamp(Get(KillReward), 0, KillRewardTable.Length - 1)];
 
-    /// <summary>가이저 초기 보유량</summary>
+    /// <summary>간헐천 초기 보유량</summary>
     public int GeyserStormPower => MoneyPerGeyserTable[Math.Clamp(Get(MoneyPerGeyser), 0, MoneyPerGeyserTable.Length - 1)];
 
     /// <summary>

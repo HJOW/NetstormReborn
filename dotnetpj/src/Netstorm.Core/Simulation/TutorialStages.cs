@@ -210,7 +210,7 @@ public sealed class TutorialStages
     }
 
     /// <summary>
-    /// 튜토리얼 1의 F4·다리 칸·가이저 연결·결정 전달·600 SP 단계. 원본 004c3a20 의 판정 전체를 이식한 <see cref="TutorialOne"/>에 맡기고
+    /// 튜토리얼 1의 F4·다리 칸·간헐천 연결·결정 전달·600 SP 단계. 원본 004c3a20 의 판정 전체를 이식한 <see cref="TutorialOne"/>에 맡기고
     /// 이 클래스는 세션의 현재 상태(장부·간헐천·SP)를 경계로 연결한다.
     /// </summary>
     /// <remarks>

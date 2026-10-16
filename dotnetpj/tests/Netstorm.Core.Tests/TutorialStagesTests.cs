@@ -39,7 +39,7 @@ public sealed class TutorialStagesTests
             && e.Footprint.AnchorX == x && e.Footprint.AnchorY == y));
     }
 
-    /// <summary>템플을 짓고 완공 틱까지 진행한다 (사제가 걸어가 도착한 뒤 건설하며, 완공 틱에 단계가 넘어가므로 그 틱에서 멈춘다)</summary>
+    /// <summary>신전을 짓고 완공 틱까지 진행한다 (사제가 걸어가 도착한 뒤 건설하며, 완공 틱에 단계가 넘어가므로 그 틱에서 멈춘다)</summary>
     private static GameEntity BuildTemple(BattleSession session)
     {
         (int x, int y) = SessionData.FindCell((cx, cy) => session.CheckBuilding(1, "windVortex", cx, cy).Allowed);
@@ -50,7 +50,7 @@ public sealed class TutorialStagesTests
         return temple;
     }
 
-    /// <summary>워크샵을 짓고 완공 틱까지 진행한다</summary>
+    /// <summary>워크샾을 짓고 완공 틱까지 진행한다</summary>
     private static GameEntity BuildWorkshop(BattleSession session)
     {
         (int x, int y) = SessionData.FindCell((cx, cy) => session.CheckBuilding(1, "sunFactory", cx, cy).Allowed);
@@ -75,18 +75,18 @@ public sealed class TutorialStagesTests
         Assert.False(player.Tech.IsAllowed("sunFactory"));
         Assert.True(session.DenySalvage);
 
-        // 템플 완공 틱에 단계 B 로 넘어간다. 다음 틱부터 단계 B 처리가 sunFactory 를 허용한다
+        // 신전 완공 틱에 단계 B 로 넘어간다. 다음 틱부터 단계 B 처리가 sunFactory 를 허용한다
         GameEntity temple = BuildTemple(session);
         Assert.Equal('B', session.Tutorial.Stage);
         Assert.False(player.Tech.IsAllowed("sunFactory"));
         session.RunTicks(1);
         Assert.True(player.Tech.IsAllowed("sunFactory"));
 
-        // 워크샵 완공 → 단계 C
+        // 워크샾 완공 → 단계 C
         GameEntity workshop = BuildWorkshop(session);
         Assert.Equal('C', session.Tutorial.Stage);
 
-        // 단계 C: 워크샵 대신 템플을 선택하고 있으면 2초 뒤에 "NotVortex" 안내가 나오고 선택이 풀린다. 단계는 그대로다
+        // 단계 C: 워크샾 대신 신전을 선택하고 있으면 2초 뒤에 "NotVortex" 안내가 나오고 선택이 풀린다. 단계는 그대로다
         session.Submit(new SelectEntityCommand(1, temple.Id));
         session.RunTicks(1);
         Assert.Equal(temple.Id, player.SelectedEntityId);
@@ -97,7 +97,7 @@ public sealed class TutorialStagesTests
         Assert.Equal(0, player.SelectedEntityId);
         Assert.Equal('C', session.Tutorial.Stage);
 
-        // 지식을 워크샵에 등록하면 단계 D
+        // 지식을 워크샾에 등록하면 단계 D
         session.Submit(new RegisterKnowledgeCommand(1, workshop.Id, "sunArcher"));
         session.RunTicks(1);
         Assert.Equal('D', session.Tutorial.Stage);
@@ -108,7 +108,7 @@ public sealed class TutorialStagesTests
         PlaceArcher(session);
         Assert.Equal('F', session.Tutorial.Stage);
 
-        // 단계 F: 템플을 고르지 않으면 넘어가지 않는다. 고르면 4초 뒤 단계 G 로 넘어가고 선택이 풀린다
+        // 단계 F: 신전을 고르지 않으면 넘어가지 않는다. 고르면 4초 뒤 단계 G 로 넘어가고 선택이 풀린다
         session.RunTicks(6 * second);
         Assert.Equal('F', session.Tutorial.Stage);
         session.Submit(new SelectEntityCommand(1, temple.Id));
@@ -258,7 +258,7 @@ public sealed class TutorialStagesTests
         session.RunTicks(1);
         Assert.Equal(0, session.Player(1).SelectedEntityId);
 
-        // 회수 금지를 풀고 워크샵을 회수하면 선택이 사라진다 (단계 처리는 끄고 규칙만 확인)
+        // 회수 금지를 풀고 워크샾을 회수하면 선택이 사라진다 (단계 처리는 끄고 규칙만 확인)
         session.RunsTutorial = false;
         session.Player(1).Tech.Set("sunFactory", true);
         BuildTemple(session);
@@ -281,7 +281,7 @@ public sealed class TutorialStagesTests
         Assert.Equal('A', session.Tutorial!.Stage);
         Assert.False(session.Player(1).Tech.IsAllowed("sunFactory"));
 
-        // 튜토리얼 1 은 가이저 수집 경로와 함께 단계 처리가 생겼다.
+        // 튜토리얼 1 은 간헐천 수집 경로와 함께 단계 처리가 생겼다.
         Assert.Equal('A', SessionData.FromMission("tutorial1").Tutorial!.Stage);
         Assert.True(TutorialStages.IsSupported(1));
         Assert.True(TutorialStages.IsSupported(2));

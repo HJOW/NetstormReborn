@@ -24,7 +24,7 @@
 
 최종 Release 빌드는 경고0·오류0이며 색 변경 집중2개가 통과했다. 실제 데모 시작3개 중 **GuardMyBack·DissolvedAlliance 두 개가 통과**했고 DemoStormRages는 기존 TYPE143 후처리에서 실패한다. 전체 CTest는 **1335개 중1334개 통과·1개 실패, exit8**, 검사118.07초·전체118.12초다. 이 실패 검사는 유지한다. 기존8미션 시작과 색 변경 전 기존 모든 회귀 검사는 통과했다.
 
-새216입력과 인접 Graph 초기화16·총 각도518·Graph 재구성288회·휘리베이스1734개의 보존 SHA, Python 구문/UTF-8/문서 링크/공백을 확인했다. CMake의 이전/현재 SHA는 요구에너지 보고서 이력에 남겨 기존2352입력 감사도 통과한다. 새 헤더 두 개를 원본 모듈의 IDE 목록에도 등록했다.
+새216입력과 인접 Graph 초기화16·총 각도518·Graph 재구성288회·훨리베이스1734개의 보존 SHA, Python 구문/UTF-8/문서 링크/공백을 확인했다. CMake의 이전/현재 SHA는 요구에너지 보고서 이력에 남겨 기존2352입력 감사도 통과한다. 새 헤더 두 개를 원본 모듈의 IDE 목록에도 등록했다.
 
 로그는 `extracted/goal-color-20261016-{native,build,focused,diagnostic-build,diagnostic,final-build,final-demo,ctest,tests}.log`, 제품 검증은 `cpppj/player-color.json`을 따른다. 캠페인/데모의 자원 대응은 [후속 캠페인 기록](../gameplay/demo-campaign-map.md)을 따른다.
 

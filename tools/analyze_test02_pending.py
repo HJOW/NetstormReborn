@@ -4,9 +4,9 @@
 
 사전 조건: AGENTS.md 의 실행 허용 시스템이거나 사용자가 실행을 확인한 상태여야 한다. 실행 중에는 마우스·키보드를 건드리지 않는다.
 시험 (TEST02 시험 전투에서 사제 하나로):
-  A. Rain 템플을 설치하고 사제가 걷기 시작하기 전에 사제를 우클릭 → Construct → Temple 줄·Workshop 줄·Altar 줄 상태를 본다
-     (건설 중인 템플도 "이미 있음"으로 쳐서 Temple 줄이 어두워지는가?)
-  B. 메뉴에서 Sun 워크샵을 골라 다른 자리에 설치 → 앞선 템플 공사장이 취소·환불되는가, 둘 다 남아 순서대로 지어지는가?
+  A. Rain 신전을 설치하고 사제가 걷기 시작하기 전에 사제를 우클릭 → Construct → Temple 줄·Workshop 줄·Altar 줄 상태를 본다
+     (건설 중인 신전도 "이미 있음"으로 쳐서 Temple 줄이 어두워지는가?)
+  B. 메뉴에서 Sun 워크샾을 골라 다른 자리에 설치 → 앞선 신전 공사장이 취소·환불되는가, 둘 다 남아 순서대로 지어지는가?
   C. 완공 뒤 들고 있는 건물을 허공 우클릭으로 취소할 수 있는가?
 결과는 <work>/shots/*.png, actions.jsonl, cursor_timeline.jsonl 로 판독한다. 해석은 docs/videos/auto-test02-construct-20261004.md.
 
@@ -22,7 +22,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import ns_driver as nd  # noqa: E402
 import analyze_test02_construct as base  # noqa: E402
 
-# 템플을 놓는 자리와 두 번째로 놓는 워크샵 자리 (기준 화면 좌표, analyze_test02_construct.py 와 같은 좌표계)
+# 신전을 놓는 자리와 두 번째로 놓는 워크샾 자리 (기준 화면 좌표, analyze_test02_construct.py 와 같은 좌표계)
 TEMPLE_SITE = (780, 220)
 WORKSHOP_SITE = (540, 400)
 
@@ -36,12 +36,12 @@ def main():
     try:
         run.boot_to_battle()
         priest = base.PRIEST_START
-        # ---- A. 템플 설치 직후 메뉴 상태 ----
+        # ---- A. 신전 설치 직후 메뉴 상태 ----
         run.step("click", x=150, y=650, dur=100, settle=300)                    # 선택 없음 보장
         run.open_construct_menu(priest, "temple", "rain")
         run.step("move", x=TEMPLE_SITE[0], y=TEMPLE_SITE[1], settle=300, name="a01-preview")
         run.step("click", x=TEMPLE_SITE[0], y=TEMPLE_SITE[1], dur=100, settle=0, name="a02-temple-placed")
-        run.note("A: 템플 설치 클릭")
+        run.note("A: 신전 설치 클릭")
         # 사제는 설치 클릭 뒤 0.4~0.8초 동안 방향을 바꾸고 걷기 시작하므로, 그림을 찾아 지금 서 있는 자리를 우클릭한다
         time.sleep(0.15)
         found = base.find_priest_by_sprite(run.screen.grab(), (priest[0] - 70, priest[1] - 70, priest[0] + 70, priest[1] + 50))
@@ -55,14 +55,14 @@ def main():
                  settle=300, name="a05-hover-temple-row")
         run.step("click", x=min(mx + base.MENU_TEMPLE_ROW[0], base.MENU_ROW_X_MAX), y=my + base.MENU_TEMPLE_ROW[1],
                  dur=100, settle=500, name="a06-click-temple-row")
-        # ---- B. 대기 중에 워크샵 설치 ----
+        # ---- B. 대기 중에 워크샾 설치 ----
         run.step("click", x=min(mx + base.MENU_WORKSHOP_ROW[0], base.MENU_ROW_X_MAX),
                  y=my + base.MENU_WORKSHOP_ROW[1], dur=100, settle=400, name="b01-workshop-rows")
         run.step("click", x=min(mx + base.MENU_ITEM_DX, base.MENU_ITEM_X_MAX), y=my + base.MENU_WORKSHOP_ITEM_Y["sun"],
                  dur=100, settle=300, name="b02-picked-workshop")
         run.step("move", x=WORKSHOP_SITE[0], y=WORKSHOP_SITE[1], settle=300, name="b03-preview")
         run.step("click", x=WORKSHOP_SITE[0], y=WORKSHOP_SITE[1], dur=100, settle=0, name="b04-workshop-placed")
-        run.note("B: 템플 대기 중 워크샵 설치 클릭")
+        run.note("B: 신전 대기 중 워크샾 설치 클릭")
         # 이후 60초 동안 3초마다 화면과 SP 를 남긴다 (어느 공사장이 남는지·순서)
         for k in range(1, 21):
             time.sleep(3.0)

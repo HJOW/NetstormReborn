@@ -24,7 +24,7 @@
 
 **워크샾 비용 정리:** 워크샾 업그레이드 비용은 해당 워크샾의 건설 비용과 같다: **Sun Workshop만 800 SP**, Wind·Rain·Thunder Workshop은 각각 **1,000 SP**다(사용자 확인 2026-10-02, `.type`의 `cost`와 일치). 건설 비용과 업그레이드 비용이 다른 워크샾은 없다. 회수액은 건설 비용의 25%(Sun 200, 그 외 250 — 마지막 값은 구버전 PDF 그림의 Thunder 값과 일치하나 현재 패치판 메뉴 캡처는 Sun만 확인)다.
 
-신전·워크샾·알타는 "유닛"이 아니며 사제의 `Construct` 메뉴로 짓는다. 덱 등록 대상은 그 밖의 유닛이다 ([island-ownership.md](island-ownership.md) 용어).
+신전·워크샾·제단은 "유닛"이 아니며 사제의 `Construct` 메뉴로 짓는다. 덱 등록 대상은 그 밖의 유닛이다 ([island-ownership.md](island-ownership.md) 용어).
 
 ## 2. 워크샾에서 덱에 등록해야 생산·건설 가능 (사용자 확인, 2026-09-28)
 

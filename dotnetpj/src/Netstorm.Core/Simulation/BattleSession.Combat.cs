@@ -349,7 +349,7 @@ public sealed partial class BattleSession
     /// <summary>회수·파괴 공통 정리: 점유·공급·소유권·생산·수집·선택을 함께 제거한다.</summary>
     private void RemoveEntity(GameEntity entity)
     {
-        // 운반 중이거나 알타에 묶인 사제를 먼저 풀어 준다 (도움말: 운반 유닛·알타이 파괴되면 사제가 풀려난다)
+        // 운반 중이거나 제단에 묶인 사제를 먼저 풀어 준다 (도움말: 운반 유닛·제단이 파괴되면 사제가 풀려난다)
         ReleaseCaptivesOf(entity);
         // 공중 공격체는 지상 점유를 등록하지 않으므로 아래 건물의 점유를 해제해서는 안 된다.
         if (entity.OccupiesGround) Map.RemoveOccupant(entity.Footprint);
@@ -373,7 +373,7 @@ public sealed partial class BattleSession
             home.NextAttackTick = Tick + TicksFor(WhirligigBuildSeconds);
         // 사라진 오브젝트를 가리키는 선택과 수집 예약을 해제한다.
         foreach (PlayerState viewer in _players.Values.Where(p => p.SelectedEntityId == entity.Id)) ClearSelection(viewer);
-        // 신전·가이저가 제거되면 그 대상을 사용하던 작업도 즉시 해제한다.
+        // 신전·간헐천이 제거되면 그 대상을 사용하던 작업도 즉시 해제한다.
         foreach (PriestHarvestTask task in _harvestTasks.Values.Where(t => t.TempleId == entity.Id || t.GeyserId == entity.Id).ToArray())
             _harvestTasks.Remove(task.PriestId);
     }

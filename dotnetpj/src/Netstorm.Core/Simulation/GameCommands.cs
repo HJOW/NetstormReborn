@@ -16,7 +16,7 @@ public abstract record GameCommand(int Player);
 public sealed record PlaceUnitCommand(int Player, string TypeName, int X, int Y, int Rotation = 0) : GameCommand(Player);
 
 /// <summary>
-/// 사제의 Construct 로 건물(신전·워크샾·알타·아웃포스트)을 짓는다. 비용은 이 명령을 받을 때 차감되고 그 자리에 공사장이 생기며,
+/// 사제의 Construct 로 건물(신전·워크샾·제단·아웃포스트)을 짓는다. 비용은 이 명령을 받을 때 차감되고 그 자리에 공사장이 생기며,
 /// 맡은 사제가 현장까지 걸어가 도착해야 건설 시간이 시작된다. 건설이 끝나야 규칙 효과가 생긴다.
 /// </summary>
 /// <param name="Player">플레이어 번호</param>
@@ -61,9 +61,9 @@ public sealed record PlaceBridgeCommand(int Player, int Rotation, int X, int Y) 
 /// <param name="EntityId">선택할 오브젝트 번호 (0 이면 선택 해제)</param>
 public sealed record SelectEntityCommand(int Player, int EntityId) : GameCommand(Player);
 
-/// <summary>내 사제 또는 수송 유닛에게 지정 가이저에서 결정을 반복 수확해 신전으로 가져오게 한다.</summary>
+/// <summary>내 사제 또는 수송 유닛에게 지정 간헐천에서 결정을 반복 수확해 신전으로 가져오게 한다.</summary>
 /// <param name="Player">플레이어 번호</param>
-/// <param name="GeyserId">수확할 가이저 오브젝트 번호</param>
+/// <param name="GeyserId">수확할 간헐천 오브젝트 번호</param>
 /// <param name="CollectorId">수집자 번호. 0이면 기존 사제 자동 선택을 유지한다.</param>
 public sealed record HarvestGeyserCommand(int Player, int GeyserId, int CollectorId = 0) : GameCommand(Player);
 
@@ -90,18 +90,18 @@ public sealed record ReturnHomeCommand(int Player) : GameCommand(Player);
 
 /// <summary>
 /// 수송 유닛을 기절한 적 사제에게 보내 집게 한다 (도움말 "Bring the Enemy Priest to your Altar").
-/// 알타 번호를 주면 집은 뒤 곧바로 그 알타으로 운반해 희생의 원에 묶는다.
+/// 제단 번호를 주면 집은 뒤 곧바로 그 제단으로 운반해 희생의 원에 묶는다.
 /// </summary>
 /// <param name="Player">플레이어 번호</param>
 /// <param name="TransportId">내 수송 유닛(골렘·게·풍선 등) 번호</param>
 /// <param name="PriestId">집을 사제 번호</param>
-/// <param name="AltarId">이어서 운반할 내 알타 번호 (0 이면 집은 채로 대기)</param>
+/// <param name="AltarId">이어서 운반할 내 제단 번호 (0 이면 집은 채로 대기)</param>
 public sealed record CapturePriestCommand(int Player, int TransportId, int PriestId, int AltarId = 0) : GameCommand(Player);
 
-/// <summary>사제를 운반 중인 수송 유닛을 내 알타으로 보내 사제를 희생의 원에 묶는다.</summary>
+/// <summary>사제를 운반 중인 수송 유닛을 내 제단으로 보내 사제를 희생의 원에 묶는다.</summary>
 /// <param name="Player">플레이어 번호</param>
 /// <param name="TransportId">사제를 운반 중인 수송 유닛 번호</param>
-/// <param name="AltarId">내 알타 번호</param>
+/// <param name="AltarId">내 제단 번호</param>
 public sealed record DeliverPriestCommand(int Player, int TransportId, int AltarId) : GameCommand(Player);
 
 /// <summary>
@@ -114,8 +114,8 @@ public sealed record DeliverPriestCommand(int Player, int TransportId, int Altar
 /// <param name="Y">내려놓을 칸 y</param>
 public sealed record DropPriestCommand(int Player, int TransportId, int X, int Y) : GameCommand(Player);
 
-/// <summary>내 사제를 내 알타으로 보낸다. PriestId 가 0 이면 첫 자유 사제를 고른다.</summary>
+/// <summary>내 사제를 내 제단으로 보낸다. PriestId 가 0 이면 첫 자유 사제를 고른다.</summary>
 /// <param name="Player">플레이어 번호</param>
-/// <param name="AltarId">내 알타 번호</param>
+/// <param name="AltarId">내 제단 번호</param>
 /// <param name="PriestId">이동할 사제 번호 (0 이면 자동 선택)</param>
 public sealed record MovePriestToAltarCommand(int Player, int AltarId, int PriestId = 0) : GameCommand(Player);

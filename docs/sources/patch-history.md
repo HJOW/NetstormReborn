@@ -8,23 +8,23 @@
 
 | 버전 | 주요 내용 |
 |---|---|
-| 10.77/10.78 | `$Input` 숫자 버그, 알타 5000SP 반복 치트 수정, manabolt 아이콘을 보석으로, **셰이프에서 숨은 갈매기 그림 제거**, Zone 정보 시스템 |
-| 10.75/10.76 | 주문 제외 옵션, 가이저 수·배치·재생성 옵션, **Resource Injections**, **Island Dynamics**(나무·폐허·기념비 무작위 생성), Game Type 옵션, 사용자 캠페인 메뉴, 주인 없는 다리는 미니맵에 회색. Ice Tower·Devil Maker·Acid Barricade 조정 |
+| 10.77/10.78 | `$Input` 숫자 버그, 제단 5000SP 반복 치트 수정, manabolt 아이콘을 보석으로, **셰이프에서 숨은 갈매기 그림 제거**, Zone 정보 시스템 |
+| 10.75/10.76 | 주문 제외 옵션, 간헐천 수·배치·재생성 옵션, **Resource Injections**, **Island Dynamics**(나무·폐허·기념비 무작위 생성), Game Type 옵션, 사용자 캠페인 메뉴, 주인 없는 다리는 미니맵에 회색. Ice Tower·Devil Maker·Acid Barricade 조정 |
 | 10.73/10.74 | 승리 조건 코드 수정, 공중/지상 피해 구분, 비행체 목표 규칙, Arc Spire 가 비행체 공격 안 함. Arc Spire·Disc Thrower·Air Ship·Man o'War·Graviton 조정 |
 | 10.72 | R.exe·setup.cfg 지원, Man o'War hp 175→165, Zone 메뉴 제거 |
 | 10.71 V1.0~1.5 | Thunderstorm·Thunder Strike 주문, 새 소리, 편집기 다리 상태 메뉴(Cracked/Normal/Hard), **반시계 회전**, 튜토리얼 2·3·6 마나 표시 수정, Enemy Territory 난이도 |
-| 10.70 V4.4~9.4 | 사제 Pray·주문서, Gravitation·Meteor·Hydra 계열, **섬 테마 그래픽(신전 원소별)**, 거주지·Edge Farm 테마, 치트 방지(**tarc 우선**), 채팅 도우미·길드, 스크립트 조건 연산자, 해상도 제거, 키 변경 |
-| 10.70 이전 | 새 전투 옵션 다수, 새 다리 모양, 게임 타이머, 가이저 잔량 프레임, Send Storm Power, 주문 Whirlwind/Twister/Vortex, `$Input` 명령 |
+| 10.70 V4.4~9.4 | 사제 Pray·주문서, Gravitation·Meteor·Hydra 계열, **섬 테마 그래픽(신전 원소별)**, 거주 구역·Edge Farm 테마, 치트 방지(**tarc 우선**), 채팅 도우미·길드, 스크립트 조건 연산자, 해상도 제거, 키 변경 |
+| 10.70 이전 | 새 전투 옵션 다수, 새 다리 모양, 게임 타이머, 간헐천 잔량 프레임, Send Storm Power, 주문 Whirlwind/Twister/Vortex, `$Input` 명령 |
 
 ## 2. 그래픽·화면
 
 * **섬 테마 = 신전 원소** (10.70 V5.3 "different island textures for different themed vortexes", V5.4~5.5 wind·rain·thunder 섬 그래픽과 Edge Farm).
-  V6.0: 원소 전환 시 그래픽 알고리즘 수정, **유닛당 프레임 수 상한 증가**(새 섬 테마용), **거주지가 섬 소유자·테마를 따라 바뀜**, Edge Farm 테마 수정, 신전을 회수했을 때 섬이 기본 테마로 돌아가는 버그 수정.
-  → 우리 분석(신전 원소 → 지면 테마, 거주지 원소별 그림)과 일치 ([dissolved-alliance-start.md](../screens/dissolved-alliance-start.md)).
+  V6.0: 원소 전환 시 그래픽 알고리즘 수정, **유닛당 프레임 수 상한 증가**(새 섬 테마용), **거주 구역이 섬 소유자·테마를 따라 바뀜**, Edge Farm 테마 수정, 신전을 회수했을 때 섬이 기본 테마로 돌아가는 버그 수정.
+  → 우리 분석(신전 원소 → 지면 테마, 거주 구역 원소별 그림)과 일치 ([dissolved-alliance-start.md](../screens/dissolved-alliance-start.md)).
 * 섬 테마 켜기/끄기: **Shift+F3** (V9.0), View 메뉴 Hide/Show Island Theme (V7.0).
 * **1152×864, 1280×960 해상도 제거** (V9.0) → 한때 4:3 고해상도를 지원했다가 없앴다.
 * 섬·다리가 소유자 색으로 표시 (10.70 이전), 주인 없는 다리는 미니맵 회색 (10.75).
-* **가이저 잔량에 따라 프레임이 바뀜** (1 ~ 1/2, 1/2 ~ 1/4, 1/4 ~ 0) (10.70 이전).
+* **간헐천 잔량에 따라 프레임이 바뀜** (1 ~ 1/2, 1/2 ~ 1/4, 1/4 ~ 0) (10.70 이전).
 * 상태 막대: 높이 줄임, 폭 = 유닛 폭, 마비·투명 타이머 막대 추가 (V9.0). 기도·시전 타이머 막대 (V4.4).
 * 결정(nugget)이 공중에 떠 있지 않고 떨어짐 (V7.0).
 * 스크린샷은 `ScreenShot` 폴더에 저장, 폴더가 없으면 충돌 (V6.4).

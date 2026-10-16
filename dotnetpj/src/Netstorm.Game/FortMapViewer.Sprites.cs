@@ -7,13 +7,13 @@ using Netstorm.Core.Simulation;
 namespace Netstorm.Game;
 
 /// <summary>
-/// 오브젝트의 지금 그림 고르기(가이저 증기·워크샾 레벨·신전 회오리·풍선 흔들림)와 그림자 그리기.
+/// 오브젝트의 지금 그림 고르기(간헐천 증기·워크샾 레벨·신전 회오리·풍선 흔들림)와 그림자 그리기.
 /// 프레임 규칙은 <see cref="StructureAnimation"/>, 근거는 2026-10-03 TEST01 녹화 대조(docs/videos/test01-visuals-20261003.md)다.
 /// </summary>
 internal sealed partial class FortMapViewer
 {
     /// <summary>
-    /// 그림자의 불투명도(0~255). 녹화에서 가이저 그림자가 덮은 지면의 밝기가 주변의 0.59~0.70배(평균 약 0.64)였으므로
+    /// 그림자의 불투명도(0~255). 녹화에서 간헐천 그림자가 덮은 지면의 밝기가 주변의 0.59~0.70배(평균 약 0.64)였으므로
     /// 검은색을 36% 덮는다. 원본은 팔레트 음영표로 어둡게 하므로 색조까지 같지는 않다.
     /// </summary>
     private const int ShadowAlpha = 92;
@@ -23,7 +23,7 @@ internal sealed partial class FortMapViewer
     {
         /// <summary>그림자 없음 (typeflags 에 shadow·flyershadow 가 없다)</summary>
         None,
-        /// <summary>고르게 어두운 그림자 (typeflags shadow: 건물·가이저·걷는 유닛)</summary>
+        /// <summary>고르게 어두운 그림자 (typeflags shadow: 건물·간헐천·걷는 유닛)</summary>
         Solid,
         /// <summary>한 픽셀 건너 한 픽셀만 어두운 체크무늬 그림자 (typeflags flyershadow: 풍선·비행체)</summary>
         Dithered,
@@ -109,7 +109,7 @@ internal sealed partial class FortMapViewer
     }
 
     /// <summary>
-    /// 오브젝트가 지금 그릴 타입·프레임과 기준점 이동량을 고른다. 전투 상태(캐논·재성장) → 가이저 증기 → 워크샾 레벨 →
+    /// 오브젝트가 지금 그릴 타입·프레임과 기준점 이동량을 고른다. 전투 상태(캐논·재성장) → 간헐천 증기 → 워크샾 레벨 →
     /// 신전 회오리 → 풍선 → 걷는 유닛 → 저장 프레임·기본 프레임 순서로 본다. 이동량은 오브젝트 타입의 hotFootRatio 다.
     /// </summary>
     /// <param name="type">오브젝트 타입</param>
@@ -123,7 +123,7 @@ internal sealed partial class FortMapViewer
         ObjectKind kind = live?.Kind ?? ObjectKinds.Of(type);
         if (kind == ObjectKind.Geyser)
         {
-            // 다 쓴 가이저는 원본 emptyGeyser 그림으로 바꿔 그린다 (도움말 "Empty Storm Geyser")
+            // 다 쓴 간헐천은 원본 emptyGeyser 그림으로 바꿔 그린다 (도움말 "Empty Storm Geyser")
             if (live is { IsDepletedGeyser: true } && _emptyGeyserType != null)
                 return (_emptyGeyserType, new StructureFrames(_emptyGeyserType.Definition.Frames.DefaultFrame), HotFootShift(_emptyGeyserType));
             return (type, new StructureFrames(StructureAnimation.GeyserFrame(definition, _walkClock)), shift);

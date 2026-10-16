@@ -9,7 +9,7 @@ namespace Netstorm.Core.Rules;
 /// </summary>
 public static class MiniMapLayout
 {
-    /// <summary>미니맵 1픽셀이 나타내는 칸 수 (가로·세로 같음). 가이저 13개의 미니맵 점과 월드 칸을 맞춰 확정했다.</summary>
+    /// <summary>미니맵 1픽셀이 나타내는 칸 수 (가로·세로 같음). 간헐천 13개의 미니맵 점과 월드 칸을 맞춰 확정했다.</summary>
     public const int CellsPerPixel = 2;
 
     /// <summary>

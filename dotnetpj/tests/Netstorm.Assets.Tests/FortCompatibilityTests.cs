@@ -55,7 +55,7 @@ public sealed class FortCompatibilityTests
         Assert.Equal(deck, fort.Section("Deck").ToArray());
     }
 
-    /// <summary>저장 값은 유지하면서 일반 소유자는 1~8, 가이저·매장물·섬은 중립으로 정규화한다.</summary>
+    /// <summary>저장 값은 유지하면서 일반 소유자는 1~8, 간헐천·매장물·섬은 중립으로 정규화한다.</summary>
     [Theory]
     [InlineData(0, 1)]
     [InlineData(1, 1)]

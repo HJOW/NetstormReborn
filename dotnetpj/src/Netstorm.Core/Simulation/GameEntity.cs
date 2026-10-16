@@ -80,10 +80,10 @@ public sealed class GameEntity
     public bool OccupiesGround => Kind != ObjectKind.Flyer && !Type.Definition.HasFlag("balloon")
         && Captivity == PriestCaptivity.Free && !IsSuspended;
 
-    /// <summary>사제의 포획 상태 (자유 / 수송 유닛이 운반 중 / 알타에 묶임).</summary>
+    /// <summary>사제의 포획 상태 (자유 / 수송 유닛이 운반 중 / 제단에 묶임).</summary>
     public PriestCaptivity Captivity { get; internal set; }
 
-    /// <summary>포획된 사제를 잡고 있는 오브젝트 번호 (운반 중이면 수송 유닛, 묶였으면 알타). 자유면 0.</summary>
+    /// <summary>포획된 사제를 잡고 있는 오브젝트 번호 (운반 중이면 수송 유닛, 묶였으면 제단). 자유면 0.</summary>
     public int CaptorId { get; internal set; }
 
     /// <summary>수송 유닛이 운반 중인 사제 번호. 없으면 0.</summary>
@@ -172,14 +172,14 @@ public sealed class GameEntity
             CannonDirection = EmplacementDirection.SavedDirection(type, frame);
             CrossbowFrame = frame is >= 0 and < 100 ? frame : 0;
         }
-        // 가이저는 타입 cost 만큼의 Storm Power 를 품는다. 싱글 플레이 원본 값(exe 타입 로더 → FUN_004b2df0, geyser.type cost = 2000).
+        // 간헐천은 타입 cost 만큼의 Storm Power 를 품는다. 싱글 플레이 원본 값(exe 타입 로더 → FUN_004b2df0, geyser.type cost = 2000).
         if (kind == ObjectKind.Geyser) StoredStormPower = type.Definition.GetInt("cost") is int stored and > 0 ? stored : int.MaxValue;
     }
 
-    /// <summary>가이저에 남은 Storm Power. 가이저가 아니면 0. 0 이 되면 빈 가이저(emptyGeyser)가 된다.</summary>
+    /// <summary>간헐천에 남은 Storm Power. 간헐천이 아니면 0. 0 이 되면 고갈된 간헐천(emptyGeyser)가 된다.</summary>
     public int StoredStormPower { get; internal set; }
 
-    /// <summary>다 써서 비어 버린 가이저인지 (원본 "Empty Storm Geyser").</summary>
+    /// <summary>다 써서 비어 버린 간헐천인지 (원본 "Empty Storm Geyser").</summary>
     public bool IsDepletedGeyser => Kind == ObjectKind.Geyser && StoredStormPower <= 0;
 
     /// <summary>화면에 보이는 설명 이름 (.type 의 description, 없으면 타입 이름)</summary>
@@ -201,6 +201,6 @@ public enum PriestCaptivity
     /// <summary>수송 유닛이 운반 중. 운반 유닛에게서 생명력을 얻어 풀려나면 완전히 회복한다.</summary>
     Carried,
 
-    /// <summary>알타의 희생의 원(Sacrificial Circle)에 묶임.</summary>
+    /// <summary>제단의 희생의 원(Sacrificial Circle)에 묶임.</summary>
     Bound,
 }

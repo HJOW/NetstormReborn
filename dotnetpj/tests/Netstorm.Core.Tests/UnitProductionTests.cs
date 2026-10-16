@@ -13,7 +13,7 @@ public sealed class UnitProductionTests
     /// <summary>각 생산 시험의 시작 스톰 파워.</summary>
     private const int StartingPower = 20000;
 
-    /// <summary>작은 실제 타입 지도를 만든다. 기본은 템플 한 기와 두 Sun 워크샵이다.</summary>
+    /// <summary>작은 실제 타입 지도를 만든다. 기본은 신전 한 기와 두 Sun 워크샾이다.</summary>
     private static BattleSession Create(Func<int, int, bool>? ground = null, params FortMapObject[] objects)
     {
         ground ??= (x, y) => x is >= 0 and < IslandSize && y is >= 0 and < IslandSize;
@@ -29,7 +29,7 @@ public sealed class UnitProductionTests
     private static FortMapObject Object(string type, int x, int y) =>
         new(x, y, 0, new FortObject(0, 0, OriginalData.RequireTypes().Find(type)!, null, null, null, null, null, 1, []));
 
-    /// <summary>지식을 지정 워크샵에 등록한다.</summary>
+    /// <summary>지식을 지정 워크샾에 등록한다.</summary>
     private static void Register(BattleSession session, string type, int workshopId = 2)
     {
         session.Player(1).Deck.LearnKnowledge(type);
@@ -48,7 +48,7 @@ public sealed class UnitProductionTests
         return Assert.Single(session.Entities, e => !before.Contains(e.Id));
     }
 
-    /// <summary>골렘은 템플에서 출발하고 배치 때 한 번만 비용을 낸다. 자원 도착·실체화 뒤 이동할 수 있다.</summary>
+    /// <summary>골렘은 신전에서 출발하고 배치 때 한 번만 비용을 낸다. 자원 도착·실체화 뒤 이동할 수 있다.</summary>
     [Fact]
     public void Golem_UsesTempleAndWaitsForDeliveriesThenMaterializes()
     {
@@ -64,7 +64,7 @@ public sealed class UnitProductionTests
         session.Submit(new MoveEntityCommand(1, golem.Id, 25, 8));
         session.RunTicks(1);
         Assert.Contains(session.DrainEvents(), e => e.Failure == CommandFailure.NotComplete);
-        // 템플 경계에서 12칸 떨어진 골렘은 원소보다 느린 스톰 파워의 도착을 기다린다.
+        // 신전 경계에서 12칸 떨어진 골렘은 원소보다 느린 스톰 파워의 도착을 기다린다.
         session.RunTicks(session.TicksPerSecond / 2);
         Assert.True(production.AwaitingDeliveries);
         Assert.Equal(0, golem.StartTick);
@@ -78,7 +78,7 @@ public sealed class UnitProductionTests
         Assert.True(session.IsMoving(golem.Id));
     }
 
-    /// <summary>가까운 다른 워크샵이 있어도 덱 등록에 사용한 워크샵에서 스톰 파워를 보낸다.</summary>
+    /// <summary>가까운 다른 워크샾이 있어도 덱 등록에 사용한 워크샾에서 스톰 파워를 보낸다.</summary>
     [Fact]
     public void RegisteredUnit_UsesItsWorkshopInsteadOfNearestWorkshop()
     {
@@ -314,7 +314,7 @@ public sealed class UnitProductionTests
         Assert.Equal(3, entity.CannonDirection);
     }
 
-    /// <summary>아직 생성 중인 골렘은 가이저 수집 명령도 받지 않는다.</summary>
+    /// <summary>아직 생성 중인 골렘은 간헐천 수집 명령도 받지 않는다.</summary>
     [Fact]
     public void PendingGolem_CannotHarvest()
     {

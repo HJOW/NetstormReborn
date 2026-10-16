@@ -1,9 +1,20 @@
+## 2026-10-16 완료: 명칭 규칙 전수 점검과 반영 — dotnetpj·공통 문서 (`DESKTOP-HJOW`)
+
+- [x] 사용자가 AGENTS.md 명칭 항목을 추가로 고치고(간헐천·제단·거주 구역·**고갈된(Empty)** 번역 허용, 훨리베이스·훨리기그 확정) 공유 표와 문서의 양쪽 수정을 수동 병합했다(`859249b6`·`a06550b1`·`d00cdb39`). 병합 결과를 점검하고 dotnetpj와 cpppj 양쪽에 적용했다. cpppj 작업은 사용자 지시로 중단 상태였다. 새 번호가 겹치지 않도록 이번 커밋은 `20261016-23`이다(앞서 `20261016-22`는 DN과 CP가 한 번씩 썼다).
+- [x] **병합 점검:** 공유 표 [assets/unit-names.korean.json](assets/unit-names.korean.json)은 56항목이고 [대응표](docs/unit-source-name-map.md)의 한국어 값 56행과 모두 일치한다(Altar·High Priest 설명 행만 값이 다른 칸). 어긋난 곳은 [명칭 문서](docs/korean-unit-names.md)의 낡은 서술("55개", 공유 표가 가이저를 유지)과 내 `GameUnitNamesTests`의 `55` 단언뿐이었다. 모두 고쳤다.
+- [x] **전수 검색:** 이전 표기(알타·레지던스·휘리베이스·휘리기그·가이저·엠프티)와 변이 표기(워크샵·제너레이터·프리스트·템플·발전기·거주지·거처)를 추적 파일 전체에서 찾았다(`cpppj/hist` 스냅샷·원본 디렉터리·`extracted` 제외). 조사는 받침 변화에 맞춰 교정했다(알타가→제단이, 가이저를→간헐천을, 레지던스로→거주 구역으로 등). 규칙을 설명하는 줄은 보호했고 합성어는 공백을 넣었다.
+- [x] **바꾼 범위:** 사용자에게 보이는 dotnetpj 문구 — 시작 팁 5문장(간헐천·고갈된 간헐천·스톰 간헐천), 간헐천 고갈·희생 이벤트·명령 실패 사유("간헐천이 고갈됨"), 간헐천 안내("고갈된 스톰 간헐천" / "스톰 간헐천 · 남은 Storm Power"), `Residence`류 문구. 코드 주석·테스트(템플→신전, 발전기→제네레이터 포함), 스모크·분석 스크립트 주석 5개, 공통 문서와 이 문서의 이력문까지 **파일 150개(변경 약 800줄)**. `GameUnitNamesTests`는 Geyser 3항목 표기와 가이저·엠프티 부재를 추가로 고정한다.
+- [x] **cpppj는 고치지 않은 것과 그 이유:** cpppj 소스·테스트·JSON·도구와 해시 고정 문서(`docs/exe` 5개, `LEFT_JOBS.md`)에 이전 표기가 약 200줄 남았다. 검증 도구의 `--verify`가 이 파일들의 SHA-256을 고정하고 있다. 이 PC에서 `--verify`는 348개 중 26개만 통과하고 190개는 `extracted/`가 없어 실행되지 않는다. 그래서 "바꿔도 통과하던 검증이 안 깨진다"를 이 PC에서 입증할 수 없다. 이 PC에서 통과하는 26개는 변경 전후 동일함을 확인했다. 상세 표는 [명칭 문서](docs/korean-unit-names.md)의 "cpppj에 남은 이전 표기와 이유"다.
+- [x] **검증:** Release 경고 0·오류 0, 단위 **1,106개 통과**(Assets 363 + Core 743). 이 PC 규칙에 따라 클론 창은 실행하지 않았다(문자열·주석 변경).
+- [ ] **사용자 결정 대기:** cpppj의 해시 고정 파일까지 바꿀지. 바꾸려면 검증 환경(`extracted/`)이 있는 PC에서 해당 `--verify` 기록을 다시 만들어야 한다. 기본값은 "cpppj는 새 코드·문서만 새 표기를 쓰고 기존 고정 파일은 기능 때문에 고칠 때 함께 바꾼다"이다.
+- [x] 인수인계 뒤 **`20261016-23 CM 명칭 규칙 전수 점검과 dotnetpj·공통 문서 반영, cpppj 해시 고정 파일 보류`** 로 로컬 커밋한다. 원격 push는 하지 않는다.
+
 ## 2026-10-16 완료: 한국어 명칭 규칙 변경 반영 — 제단·거주 구역·훨리베이스·훨리기그 (`DESKTOP-HJOW`)
 
 - [x] 작업 중 사용자가 AGENTS.md를 바꿨다(`92a2ec04`): **Altar → 제단, Residence → 거주 구역**을 번역해도 되고, 모호한 발음은 **Whirlibase → 훨리베이스, Whirligig → 훨리기그**로 정했다. 사용자에게 보이는 dotnetpj 한국어를 새 규칙에 맞췄다. AGENTS.md는 수정하지 않았다.
 - [x] **고친 곳:** 공유 명칭 표 [`assets/unit-names.korean.json`](assets/unit-names.korean.json) 4항목(Altar 알타→제단, Residence 레지던스→거주 구역, Whirlibase 휘리베이스→훨리베이스, Whirligig 휘리기그→훨리기그), 게임 문구 — 1-2 브리핑 본문·제목(`FortMapViewer.PlayUi.cs`), 캠페인 목록(`MainMenuView.cs`), 건설 불가 사유(`IslandOwnership.cs`), 우클릭 건설 줄(`FortMapViewer.ContextMenu.cs`), 포로 표식(`FortMapViewer.Sacrifice.cs`), 개발 명령 오류 문구(`FortMapViewer.Session.cs`, "알타이" 문법 오류도 함께 바로잡음). 문서는 [korean-unit-names.md](docs/korean-unit-names.md)·[unit-source-name-map.md](docs/unit-source-name-map.md)·`README.md`의 미션 이름.
 - [x] **검증:** 새 [`GameUnitNamesTests`](dotnetpj/tests/Netstorm.Assets.Tests/GameUnitNamesTests.cs) 13개(대표 이름 11개 표기, 다른 언어·미등록 이름 불변, 공유 표에 이전 표기 없음·55항목)를 추가했다. Release 경고 0·오류 0, 단위 **1,103개 통과**(Assets 360 + Core 743). 이 PC 규칙에 따라 클론 창은 실행하지 않았다(문자열 상수 교체라 빌드·단위 검사로 확인).
-- [ ] **남은 것:** 코드 주석 약 26개 파일과 과거 분석 기록 문서(`docs/gameplay/*`, `docs/videos/*` 등)에 이전 표기(알타 등)가 남아 있다. 사용자에게 보이지 않고 인수인계 10절 8번(주석은 그 대상을 고칠 때 정비)에 따라 일괄 변경하지 않았다. 공유 표의 Geyser는 아직 발음 표기 "가이저"다(번역은 허용일 뿐 필수가 아니므로 사용자 지시가 있으면 "간헐천"으로 바꾼다). 원본 영어 스크립트에서 오는 미션 본문·도움말의 한국어 번역 전체는 별도 작업이다. cpppj 쪽 한국어 표기는 건드리지 않았다.
+- [x] ~~남은 것: 코드 주석·과거 문서의 이전 표기, 공유 표의 Geyser~~ 아래 "2026-10-16 명칭 규칙 전수 점검" 절에서 처리했다. 원본 영어 스크립트에서 오는 미션 본문·도움말의 한국어 번역 전체는 별도 작업이다.
 - [x] 인수인계 뒤 **`20261016-22 DN 한국어 명칭 규칙 변경(제단·거주 구역·훨리베이스·훨리기그)을 공유 표와 게임 문구에 반영`** 으로 로컬 커밋한다. 원격 push는 하지 않는다.
 
 ## 2026-10-16 완료: W02 첫 조각 — 원본 월드 코어의 슬롯 풀과 오브젝트 생성·Take (`DESKTOP-HJOW`)
@@ -1004,12 +1015,12 @@ python dotnetpj/tools/cpp_sync.py --update --add 이름:Core           # 새 fix
 
 - [x] **요청:** AGENTS.md·LEFT_JOBS.md를 먼저 읽고 다른 AI가 남긴 원본 분석을 클론에 반영. 원본 관찰·사용자 확인을 팬게임보다 우선했다. [구현 근거·검증·남은 차이](docs/gameplay/test02-clone-parity-20261004.md).
 - [x] **실제 발자국 복원:** `Rifttype.cpp FUN_0049b0d0`의 `foot_y=6 → 8` 로딩 보정을 `Footprint.TypeHeight`에 반영. Sun Workshop 7×8칸 전체가 같은 본섬 안이어야 하고 건물·집과 겹치면 거부, 경계 맞닿음 허용, 사제는 설치를 막지 않음. `Cursor.cpp FUN_00446b50`의 셰이프 헤더 원점·크기·가장 가까운 칸 계산으로 사제 건물의 잡는 위치를 수정했다.
-- [x] **원본 커서·입력:** RT_CURSOR 5종(화살표·금지·이동·신전·건물 배치)을 동봉하고 SDL 네이티브 커서로 연결. 원본 핫스폿·단색 AND/XOR 배경 반전을 유지한다. 선택한 사제 자신 우클릭·허공 좌클릭은 이동 명령 없이 선택만 해제한다. 알타·수송·주문 커서는 아직 미확인이다.
+- [x] **원본 커서·입력:** RT_CURSOR 5종(화살표·금지·이동·신전·건물 배치)을 동봉하고 SDL 네이티브 커서로 연결. 원본 핫스폿·단색 AND/XOR 배경 반전을 유지한다. 선택한 사제 자신 우클릭·허공 좌클릭은 이동 명령 없이 선택만 해제한다. 제단·수송·주문 커서는 아직 미확인이다.
 - [x] **건설 메뉴·소리:** Construct/Temple/Workshop 행의 상대 위치, Sun·Wind·Rain·Thunder 순서와 21px 간격, 앞선 두 창을 남기는 제목 없는 원소 아이콘 목록을 구현. 가려진 부모 행은 클릭하지 않는다. 최종 선택 `openSubGump`, 설치 `dropPiece`, 건설 `jimbuild` 1.14초 반복, 건물 완공은 타입별 완공음만 재생(잘못 추가되던 공통 `buildDone` 제거). 유닛 생산 완공음은 유지했다.
 - [x] **취소·건설 그림:** 도착 전 새 이동은 논리상 즉시 취소·전액 환불하고 화면 그림자를 0.35초 남기며 환불 숫자는 0.85초 뒤 움직인다. 같은 사제의 새 건설 지시는 사용자 확인대로 즉시 교체한다. 기존 전역 SP 롤링은 설치·환불에도 이미 적용돼 있었으므로 ‘설치·환불 롤링 미구현’ 기록을 정정했다. 건설 그림은 원본 그림자/어두운 바닥 → 바닥부터 드러남 → 완공 직전 워크샾 점등으로 보강했고 플레이용 진행 막대를 제거했다.
 - [x] **검증:** Release 빌드 성공. 전체 단위 테스트 **Core 521 + Assets 262 = 783개**, 실패·건너뜀 0. 사제 위 설치·소수 픽셀 정수 변환 단언을 보강한 뒤 ConstructionTests/PlacementCursorTests 38개도 통과. TEST02 한국어·영어 각각 **54개**, 합계 **108개**(언어별 커서 27·취소 12·건설 15) 단언과 실제 SDL 현재 커서 핸들 확인, 기존 건설 27·이동 22·전투 56·생산 19개, TEST01 영어/한국어·4:3/16:9/16:10 네 구성 96개, 일반 UI·전체화면 왕복/설정 저장·도움말/옵션 검사 통과. 전체 재빌드 시 기존 Assets 테스트의 CA2014 경고는 남아 있다.
 - [x] **자산·도구·문서:** TEST02 맵 2개와 커서 5개를 클론 자산에 복사하고 SHA-256 원본 일치를 확인. 새 `tools/clone_test02_smoke.ps1`은 언어 선택을 지원하며 검사 좌표도 실제 7×8 지면 규칙으로 보정했다. 입력·건설·타입·영상 색인·자산 출처 문서를 갱신했다. PNG/로그는 Git 제외 `extracted/screens/test02-implementation/`에 있다. 사용자 설정은 분리했고 AGENTS.md·originals·originalCD는 변경하지 않았으며 커밋은 만들지 않았다.
-- **정밀 복원에 남음:** 그림자 유지 0.35초는 측정 범위 0.2~0.9초의 근사, 환불 표시 0.85초는 관찰값이다. 공사장 초목 마스크·그림자 음영·높이 증가 곡선·창문 점등 시각(현재 선형/90%)·메뉴 글꼴/가장자리 위치는 추가 대조가 필요하다. 들고 있는 건물 취소·정지/다른 유닛 선택 취소·알타 제한·일반 이동 충돌, Linux GUI·안정적 30/60/120FPS·실제 청취·캠페인 완주는 기존 후속이다.
+- **정밀 복원에 남음:** 그림자 유지 0.35초는 측정 범위 0.2~0.9초의 근사, 환불 표시 0.85초는 관찰값이다. 공사장 초목 마스크·그림자 음영·높이 증가 곡선·창문 점등 시각(현재 선형/90%)·메뉴 글꼴/가장자리 위치는 추가 대조가 필요하다. 들고 있는 건물 취소·정지/다른 유닛 선택 취소·제단 제한·일반 이동 충돌, Linux GUI·안정적 30/60/120FPS·실제 청취·캠페인 완주는 기존 후속이다.
 - **재현:** `powershell -NoProfile -File tools/clone_test02_smoke.ps1`, `dotnet test dotnetpj/tests/Netstorm.Core.Tests -c Release --filter ConstructionTests`. 아래 이전 기록의 커서 미구현·7×8 대조 미비·건설 반투명/진행 막대·취소 표시 지연 미구현은 이번 기록으로 대체한다.
 
 <a id="legacy-dotnet-039"></a>
@@ -1044,11 +1055,11 @@ python dotnetpj/tools/cpp_sync.py --update --add 이름:Core           # 새 fix
 ### 2026-10-04 (Windows 10, 원본 실행 없음 — 기존 분석 문서·웹 팬게임 대조) ✅ 완료: 사제 건물 건설 흐름(Construct 메뉴·걸어가서 건설)
 
 - [x] **문제:** ① 이미 신전이 있어도 사제 우클릭 → Construct 메뉴의 Temple 줄이 활성이었다. ② 먼 자리에 워크샾을 설치해도 사제가 걷지 않았는데 명령 즉시 건설이 시작됐다.
-- [x] **근거:** 원본 자동 분석 [auto-war-begins-20261003.md 4.5절](docs/videos/auto-war-begins-20261003.md)(Temple 어둡게 · Sun 외 워크샾 어둡게 · 설치 클릭에서 800 차감과 공사장 그림자 · 사제가 걸어가 도착 후 약 10~11초 건설)와 웹 팬게임 `battle-*.js`(`kS` placeBuilding → `Fo` 경로 → `Ro` 공사장 → 도착 시 `Lo` 시작, 사제의 모든 새 명령 `Io` = 도착 전 공사장 환불 취소, 신전 `ql`·알타 `wr`·워크샾 지식 `fo`). 상세 표: [건설 흐름](docs/gameplay/priest-construction-flow.md).
-- [x] **구현(코어):** 새 `BattleSession.Construction.cs`. 설치 때 비용 차감·공사장(`GameEntity.AwaitingBuilder`/`BuilderId`) → 사제가 `UnitMovePurpose.ConstructBuilding`으로 걸어가 도착하면 `BuildingStarted`·10초 건설. 도착 전 사제가 다른 명령을 받거나 기절·포획·사망하면 `ConstructionCancelled`와 함께 전액 환불. 길 없는 섬은 `NoRoute`. 신전·알타 플레이어당 1기(건설 중 포함), `GetBuildingRestriction`(신전·알타·기술·워크샾 지식). `ConstructionTimes`는 도착 뒤 10초 단일 값으로 바꿨고(신전 16초·알타 14.5초는 걷기가 섞인 값이었다), AI도 같은 경로를 쓴다. 검사합에 `AwaitingBuilder`·`BuilderId` 추가. 걷는 도중 지시하면 걸음을 이어 받도록 `PlanPath`를 이동 명령과 공용화했다.
+- [x] **근거:** 원본 자동 분석 [auto-war-begins-20261003.md 4.5절](docs/videos/auto-war-begins-20261003.md)(Temple 어둡게 · Sun 외 워크샾 어둡게 · 설치 클릭에서 800 차감과 공사장 그림자 · 사제가 걸어가 도착 후 약 10~11초 건설)와 웹 팬게임 `battle-*.js`(`kS` placeBuilding → `Fo` 경로 → `Ro` 공사장 → 도착 시 `Lo` 시작, 사제의 모든 새 명령 `Io` = 도착 전 공사장 환불 취소, 신전 `ql`·제단 `wr`·워크샾 지식 `fo`). 상세 표: [건설 흐름](docs/gameplay/priest-construction-flow.md).
+- [x] **구현(코어):** 새 `BattleSession.Construction.cs`. 설치 때 비용 차감·공사장(`GameEntity.AwaitingBuilder`/`BuilderId`) → 사제가 `UnitMovePurpose.ConstructBuilding`으로 걸어가 도착하면 `BuildingStarted`·10초 건설. 도착 전 사제가 다른 명령을 받거나 기절·포획·사망하면 `ConstructionCancelled`와 함께 전액 환불. 길 없는 섬은 `NoRoute`. 신전·제단 플레이어당 1기(건설 중 포함), `GetBuildingRestriction`(신전·제단·기술·워크샾 지식). `ConstructionTimes`는 도착 뒤 10초 단일 값으로 바꿨고(신전 16초·제단 14.5초는 걷기가 섞인 값이었다), AI도 같은 경로를 쓴다. 검사합에 `AwaitingBuilder`·`BuilderId` 추가. 걷는 도중 지시하면 걸음을 이어 받도록 `PlanPath`를 이동 명령과 공용화했다.
 - [x] **구현(화면):** Construct 하위 창의 Temple 줄·기술/지식/SP가 안 되는 건물 줄을 어둡게 하고 누르지 못하게 함, 메뉴를 연 사제가 짓도록 전달, 사제가 못 가는 자리는 붉은 미리보기, 사제를 기다리는 공사장은 어두운 반투명 실루엣(도착 뒤 반투명+진행 막대), 건설 소리는 도착 뒤에만. UI 검사 상세에 `sites=`·`sp=` 추가.
 - [x] **검증:** Release 빌드 오류 0·경고 1(기존 CA2014). 단위 테스트 Assets **255** + Core **493**(기존 479 + 새 `ConstructionTests` 14, 기존 즉시 건설 가정 테스트 보정) 통과. 기존 스모크 `clone_ui`·`clone_move`·`clone_test01`(4개 화면 구성)·`clone_combat`·`clone_recordplay_details`도 통과. 새 `tools/clone_construct_smoke.ps1`(menu 10 + build 17 단언) 통과: 1-1에서 Temple 줄·Rain/Wind/Thunder 워크샾 줄이 눌리지 않고, 사제에서 약 23칸 떨어진 자리의 워크샾이 SP −800 → `waiting` → 사제 이동 → 건설 → 완공. 기존 `clone_help_options_smoke`(Mission·Workshop)는 사제가 완공된 워크샾 옆에 서 있게 되어 우클릭 좌표(530,250)와 대기(60초)를 고쳐 통과했다. 화면 PNG는 Git 제외 `extracted/screens/construct-smoke-20261004/`.
-- **확인하지 못한 것/가정(후속):** ① 공사장 그림자의 실제 그림(어두운 실루엣+나무 윤곽)과 건물이 바닥부터 차오르는 건설 연출, 도착 때 소리·사제 동작 ② 건설이 시작된 뒤 사제를 보내면 건설이 계속되는지, 도착 전 새 명령이 환불 취소하는지(둘 다 팬게임 기준, 원본 미확인) ③ 알타 플레이어당 1기와 SP 부족 시 줄 어둡게(팬게임 규칙) ④ `constructionRate`의 실제 시간 계산식(exe 미분석, 모든 건물 10초로 단순화) ⑤ 신전·알타를 가까운 자리에서 직접 잰 건설 시간 ⑥ 사제의 선택·건설 중 명령 가능 여부 ⑦ 사제가 건물·다른 유닛을 가로지르는 문제(기존 이동 구현 한계).
+- **확인하지 못한 것/가정(후속):** ① 공사장 그림자의 실제 그림(어두운 실루엣+나무 윤곽)과 건물이 바닥부터 차오르는 건설 연출, 도착 때 소리·사제 동작 ② 건설이 시작된 뒤 사제를 보내면 건설이 계속되는지, 도착 전 새 명령이 환불 취소하는지(둘 다 팬게임 기준, 원본 미확인) ③ 제단 플레이어당 1기와 SP 부족 시 줄 어둡게(팬게임 규칙) ④ `constructionRate`의 실제 시간 계산식(exe 미분석, 모든 건물 10초로 단순화) ⑤ 신전·제단을 가까운 자리에서 직접 잰 건설 시간 ⑥ 사제의 선택·건설 중 명령 가능 여부 ⑦ 사제가 건물·다른 유닛을 가로지르는 문제(기존 이동 구현 한계).
 - **재현:** `powershell -File tools/clone_construct_smoke.ps1`, `dotnet test dotnetpj/tests/Netstorm.Core.Tests --filter ConstructionTests` (원본·AGENTS.md는 수정하지 않았고 커밋은 하지 않았다).
 
 <a id="legacy-dotnet-042"></a>
@@ -1135,7 +1146,7 @@ python dotnetpj/tools/cpp_sync.py --update --add 이름:Core           # 새 fix
 | 플레이어 색 규칙 | 색 번호 = 소유자 번호(1 파랑·2 빨강·3 흰색…), `aiNColor` 덮어쓰기(시험 전투 제외) | `Core/Rules/PlayerColors.cs`, `MissionStart.AiColors` |
 | 미니맵 | 1px = 2칸, 화면 중심을 따라 스크롤, 섬·다리 소유자 색, 흰 시야 사각형, 누르기·끌기 | `Core/Rules/MiniMapLayout.cs`, `FortMapViewer.MiniMap.cs` |
 | 그림자 | typeflags `shadow`(고른 그림자)·`flyershadow`(체크무늬), 검정 36% 근사 | `FortMapViewer.Sprites.cs` |
-| 제자리 애니메이션 | 가이저 증기, 워크샾 레벨 그림·Rain 물 반짝임, 신전 번개·회오리, 풍선, Sail Skater | `Assets/StructureAnimation.cs` |
+| 제자리 애니메이션 | 간헐천 증기, 워크샾 레벨 그림·Rain 물 반짝임, 신전 번개·회오리, 풍선, Sail Skater | `Assets/StructureAnimation.cs` |
 | 저장 워크샾 레벨 | 맵의 저장 상태 0·1·2 → 세션 레벨 I·II·III (이전에는 전부 I) | `BattleSession.RegisterCompletedBuilding` |
 | 그림 기준점 | `hotFootRatio × (16, 11)` 만큼 왼쪽·위로 이동 | `StructureAnimation.HotFootShift`, `ObjectSprite` |
 | 시작 카메라 | 사제 칸 기준점 (525, 393) → (528, 396) | `OriginalStartOffset` |
@@ -1153,7 +1164,7 @@ python dotnetpj/tools/cpp_sync.py --update --add 이름:Core           # 새 fix
 - **다음 작업자의 점검 목록:**
   1. 스모크: `tools/clone_ui_smoke.ps1`, `tools/clone_help_options_smoke.ps1`, `tools/clone_move_smoke.ps1` (셋 다 Release 실행 파일 사용. `clone_move_smoke.ps1` 의 골렘 선택 좌표를 `499,392` 로 고쳤다).
   2. TEST01 시험 전투를 원본 프레임과 겹쳐 보기 — 설정 폴더에 `{"WindowWidth":1280,"WindowHeight":960,"ViewHeight":768}` 을 두고(`NETSTORM_SETTINGS_DIR`), `NetstormClone.exe --language english --test-battle TEST01 --ui-script-file <파일>`, 스크립트 예 `wait 60; click 594,463; wait 40; assert battle; capture <png>; quit;`(브리핑 Go! 가 논리 (594, 463)). 원본 프레임은 `python tools/recordplay_frames.py frames playingVideos/20261003T074745758Z-adc787856962 -o <폴더> 37.5`.
-  3. 눈으로 확인할 것: 테두리·받침 색(파랑/빨강/흰색, F7 토글), 미니맵(사각형이 상자 중심, 월드 끝에서 멈춤, 누르기·끌기), 그림자, 가이저·신전·풍선·Rain 워크샾 애니메이션, 워크샾 레벨 그림, 선택 괄호·체력 막대(사제·골렘·건물·풍선), 배치 미리보기(덱의 골렘, 워크샾에 등록한 Ice/Thunder Cannon 의 회전·사거리 반짝임, 섬 밖 붉은 사각형과 안내 글), 브리핑의 풍선 그림.
+  3. 눈으로 확인할 것: 테두리·받침 색(파랑/빨강/흰색, F7 토글), 미니맵(사각형이 상자 중심, 월드 끝에서 멈춤, 누르기·끌기), 그림자, 간헐천·신전·풍선·Rain 워크샾 애니메이션, 워크샾 레벨 그림, 선택 괄호·체력 막대(사제·골렘·건물·풍선), 배치 미리보기(덱의 골렘, 워크샾에 등록한 Ice/Thunder Cannon 의 회전·사거리 반짝임, 섬 밖 붉은 사각형과 안내 글), 브리핑의 풍선 그림.
   4. **회귀 위험이 큰 곳:** ① 캠페인 1-1·1-2 의 배치·건설 흐름(기준 칸이 커서보다 1 + `height` 행 아래로 바뀜 — 골렘은 2행 아래) ② 건물 클릭 선택·우클릭 메뉴(칸 판정이 한 칸 이동) ③ 사제 Construct 의 건물 미리보기(같은 커서 규칙을 쓰는 것은 추정) ④ 맵 시험 화면(`--map`)의 T/H 키·희생 입력·P 배치 시험(같은 `CellAt` 사용) ⑤ `hotFootRatio` 이동으로 캐논·바리케이트 그림이 옮겨졌는데 탄·번개·방어선은 `CellCenterScreen` 기준 그대로라 서로 어긋나 보일 수 있음(앞 작업자가 녹화에 맞춘 `FenceHeadOffset` 등) ⑥ 저장 워크샾 레벨이 실제 레벨로 바뀌어 등록 칸 수가 달라짐(캠페인 맵의 AI·플레이어 워크샾) ⑦ 16:9·16:10 에서 미니맵·배치 미리보기 ⑧ 성능(`--perf`): 그림자만큼 그리기 호출이 늘었고 미니맵 그림은 다리·오브젝트 수가 바뀔 때 65,536칸을 다시 훑는다.
   5. 문제가 나오면 고치고, 통과하면 이 절의 제목을 ✅ 완료로 바꾼다.
 
@@ -1163,7 +1174,7 @@ python dotnetpj/tools/cpp_sync.py --update --add 이름:Core           # 새 fix
 2. 시험 전투 시작의 "Connecting to Game Server - Countdown 29." → "Starting Mission..." 창.
 3. **후속 완료:** 선택·배치 사거리, Crossbow 60도 V 반짝임/배치 회전, 직선 개수·간격, bomb의 B 묶음. **남음:** 그림의 실제 주기·초기 위상, C 묶음의 쓰임([후속 기록](docs/videos/record-play-details-20261003.md)).
 4. Wind·Rain 신전 겹침 그림의 간격·위치를 녹화 275·345초 구간에서 확인(카메라 위치부터 맞춰야 한다. `sprite_match.py --locate` 는 생산 창 아이콘에 걸리므로 지도 영역만 보도록 고치면 좋다).
-5. Sun 워크샾의 불 켜진 창 조각(`02`~`04`)이 켜지는 조건, 가이저 `A17`~`A48` 의 쓰임.
+5. Sun 워크샾의 불 켜진 창 조각(`02`~`04`)이 켜지는 조건, 간헐천 `A17`~`A48` 의 쓰임.
 6. **2026-10-04 배치 연출 완료:** 자원 운송 → 반투명 → 불투명([생산 흐름](docs/gameplay/unit-production-flow.md)). 그림자의 정확한 음영표·그리기 순서와 건설 연출(실루엣 → 아래에서 위로)은 남음.
 7. 브리핑 창 크기·버튼 배치, 나머지 배치 안내 문구, 초록·보라·노랑·연파랑·주황 플레이어의 미니맵 색(지금은 추정 순색).
 8. `CellCenterScreen` 의 칸 중심 가정 정리(칸은 기준점의 왼쪽 위에 보인다 — 탄·번개·방어선·임시 체력 막대가 반 칸~한 칸 오른쪽·아래 기준이다).
@@ -1207,7 +1218,7 @@ python dotnetpj/tools/cpp_sync.py --update --add 이름:Core           # 새 fix
 
 - **현재 클론과의 차이(새로 생긴 과제):**
   1. (2026-10-05: 목표가 "기존 게임 수준의 프레임 먼저"로 바뀌어 적용 완료 — 맨 위 절. 아래는 당시 기록) **프레임 속도 선택이 없다.** 지금은 수직 동기(모니터 주사율)에 맞춰 그리고 진단용 `NETSTORM_NOVSYNC=1`만 있다. 규칙은 24Hz 고정 틱 + 화면 보간이라 그리기 속도를 30/60/120으로 바꿔도 게임 속도는 같아야 한다. **할 일: 30프레임 상한을 먼저 구현**(옵션·설정 저장·명령줄), 그다음 60·120. "프레임"을 화면 갱신 속도로 해석했다 — 다른 뜻(예: 애니메이션·규칙 틱)이면 사용자 확인 필요.
-  2. **애니메이션을 원본과 같게.** 원본은 요소마다 간격이 다르다(영상 측정: 가이저 증기 약 24Hz, 신전 회오리·피해 연기 12Hz, 걷기 12Hz). 타입별 간격 상수를 exe에서 더 찾아 전부 맞추는 일이 남아 있다([animation-timing.md](docs/videos/animation-timing.md) 3·5절).
+  2. **애니메이션을 원본과 같게.** 원본은 요소마다 간격이 다르다(영상 측정: 간헐천 증기 약 24Hz, 신전 회오리·피해 연기 12Hz, 걷기 12Hz). 타입별 간격 상수를 exe에서 더 찾아 전부 맞추는 일이 남아 있다([animation-timing.md](docs/videos/animation-timing.md) 3·5절).
   3. **사운드·그래픽 전 요소 대조.** 효과음 파일 대응(명령 응답음·건설음·등록음), 생산 창 깜빡임, 다리 금 간 그림 등 기존 "남은 것" 항목이 이제 목표 범위에 명시적으로 들어간다.
   4. 전체화면 재실행 오류 방지는 이미 구현돼 있다(테두리 없는 전체 화면 창 + 시작 안전장치, [map-viewer.md](docs/map-viewer.md) 화면 설정). 요구사항으로 명시됐으므로 회귀 검사 대상으로 유지한다.
   5. TEST01을 클론에서 불러 시험 전투하는 경로(커스텀 맵 로드·`.english` 헤더의 AI 구성 적용)가 있는지는 이번에 확인하지 않았다.
@@ -1251,8 +1262,8 @@ python dotnetpj/tools/cpp_sync.py --update --add 이름:Core           # 새 fix
 - **프레임 측정 결론:** 클론 연산은 병목이 아니다(갱신 0.1ms, 그리기 5.9 → 4.2ms, 무제한 약 205~228fps). 수직 동기를 켜면 32fps로 고정되는 것은 **이 PC가 RDP 세션이고 Microsoft Remote Display Adapter의 주사율이 32Hz**이기 때문이다(`NETSTORM_NOVSYNC=1`이면 60fps 이상). 직접 모니터에서는 주사율까지 나온다. 측정: `--perf`(콘솔 구간별 시간 + 화면 FPS).
 - **코드:** Core `UnitHeading`(신규)·`GameEntity.Heading`·`BattleSession.Harvest.cs`(`FindHarvestPath` 8방향 다익스트라, `CanWalkStep`)·`BattleSession.Movement.cs`(`AdvanceMovement` 걸음 길이·`VisualCell`·`IsMoving`)·`BattleSession.PlayerActions.cs`(걷는 중 재명령). Game `FortMapViewer.Units.cs`(신규: 방향·걷기 프레임·보간 위치·그림 모양 선택·텍스처 예열), `FortMapViewer.cs`(컬링·이동형 그리기), `…PlayUi.cs`·`…Placement.cs`·`…ContextMenu.cs`·`…Combat.cs`·`…Sacrifice.cs`, `PerfMeter.cs`(신규), `NetstormGame.cs`(`--perf`·`NETSTORM_NOVSYNC`), `UiAutomation.cs`(`assert-detail`). 커밋은 하지 않았다.
 - **검증:** Release 빌드 경고·오류 0, Core **271개**(신규 `UnitMovementTests` 20개)·Assets 202개 통과. 클론 자동 입력: 신규 `tools/clone_move_smoke.ps1`(사제 13·골렘 9개 확인) + 기존 `clone_ui_smoke`·`clone_help_options_smoke` Menu/Mission/Workshop 모두 통과.
-- **가정·주의:** 수확·수송·제물 이동도 8방향 대각선으로 바꿨다(원본 공통 이동 코드로 추정) — 가이저 왕복이 짧아져 Storm Power 수집이 이전 클론보다 빠를 수 있으니 원본 왕복 시간 측정으로 대조가 필요하다. 명령 직후 0.4~0.8초 출발 지연은 원인 미확인이라 넣지 않았다. 텍스처 아틀라스는 연산이 병목이 아니어서 하지 않았다(그리기 4.2ms 중 3.5ms가 `SpriteBatch.End()` 제출이라 약한 GPU·Linux에서는 도움이 될 수 있다).
-- **남은 것:** 가이저 왕복 시간의 원본 대조, 충돌 회피, 이동 중 막힘·우회 원본 관찰, 출발 지연, 다리 위 걷는 그림의 발 위치, 다른 걷는 유닛(Sail Skater·Crystal Crab) 방향 규칙 확인, 수송 유닛 위 사제 표시.
+- **가정·주의:** 수확·수송·제물 이동도 8방향 대각선으로 바꿨다(원본 공통 이동 코드로 추정) — 간헐천 왕복이 짧아져 Storm Power 수집이 이전 클론보다 빠를 수 있으니 원본 왕복 시간 측정으로 대조가 필요하다. 명령 직후 0.4~0.8초 출발 지연은 원인 미확인이라 넣지 않았다. 텍스처 아틀라스는 연산이 병목이 아니어서 하지 않았다(그리기 4.2ms 중 3.5ms가 `SpriteBatch.End()` 제출이라 약한 GPU·Linux에서는 도움이 될 수 있다).
+- **남은 것:** 간헐천 왕복 시간의 원본 대조, 충돌 회피, 이동 중 막힘·우회 원본 관찰, 출발 지연, 다리 위 걷는 그림의 발 위치, 다른 걷는 유닛(Sail Skater·Crystal Crab) 방향 규칙 확인, 수송 유닛 위 사제 표시.
 
 ---
 
@@ -1287,8 +1298,8 @@ python dotnetpj/tools/cpp_sync.py --update --add 이름:Core           # 새 fix
 
 - **요청:** AGENTS.md·이 문서를 읽은 뒤 `playingVideos/`의 분석기 녹화를 모두 클론에 반영하고 녹화 자료를 지운다. 참고용 mp4 5개는 지우지 않는다. 원본 게임은 실행하지 않았고 클론만 실행했다. AGENTS.md는 수정하지 않았다.
 - **삭제 전 최종 판독:** [녹화 최종 판독](docs/videos/record-play-final-20261002.md).
-  - 룬 마크 = `jimbuild.wav` 반복 시작: 룬별 1.87~2.42초(음성 길이 + 약 0.1초). 마크 → 소멸 10.04초(14건 ±0.02), 소멸 → 다음 음성 2.77초. 알타 폭발은 완료 9.45초 뒤.
-  - 희생 음악은 포로가 묶인 알타으로 사제를 보내는 명령에서 요청한다(1-2 18:28.2 → 18:28.8, 곡 끝 아님). 곡 끝 재선택은 룬이 하나 이상 탔을 때만이다.
+  - 룬 마크 = `jimbuild.wav` 반복 시작: 룬별 1.87~2.42초(음성 길이 + 약 0.1초). 마크 → 소멸 10.04초(14건 ±0.02), 소멸 → 다음 음성 2.77초. 제단 폭발은 완료 9.45초 뒤.
+  - 희생 음악은 포로가 묶인 제단으로 사제를 보내는 명령에서 요청한다(1-2 18:28.2 → 18:28.8, 곡 끝 아님). 곡 끝 재선택은 룬이 하나 이상 탔을 때만이다.
   - SP 숫자는 exe `FUN_0043e530` 규칙(300 초과 100·30 초과 10·그 밖 1)으로 초당 약 60번 따라간다. 정지 중에는 즉시 맞추고, SP 부족 유닛 클릭 때는 0.15초 간격으로 10번 깜빡인다.
   - 낙하 궤적: 30px/초 + 109px/초², 유닛 약 1.8초·다리 조각 약 1초.
   - 효과음: `jimbuild` 1.14초 반복, `priestForceField` 반복, `priestFall`·`priestFree`·`collapse`·`upgradeComplete`·`priestStruggleFade02`. `unitLost`는 exe에서 내 오브젝트 제거 시 위치를 저장한다(U 키). 명령 응답음은 클릭 0.06~0.10초 뒤에 났다.
@@ -1395,11 +1406,11 @@ python dotnetpj/tools/cpp_sync.py --update --add 이름:Core           # 새 fix
 - **1-2 플레이:**
   - 원본 `masterofwhirligigs.english/.fort`를 그대로 쓴다(양측 2,000 SP, 지식·AI 설정).
   - 생산 버튼 3~5는 시작 지식에서 group 순서로 자동 선택한다(1-2: Wind Generator·Sun Cannon·Sun Disc Thrower).
-  - 한국어 브리핑·성공·실패 본문, 상단 미션 번호, 가이저 우클릭 남은 SP, 빈 가이저 그림을 추가했다.
+  - 한국어 브리핑·성공·실패 본문, 상단 미션 번호, 간헐천 우클릭 남은 SP, 고갈된 간헐천 그림을 추가했다.
 - **공통 보완(1-1에도 적용):**
   - **타입 기본 비용:** exe 타입 로더식 level × 200, 수송체 × 400. 골렘 400·Whirlibase 400이 되고 0 SP 생산 문제가 없어졌다.
-  - **가이저 고갈:** 2,000 SP. exe 싱글 초기값과 `geyser.type cost`를 근거로 했다.
-  - **채집 시간:** 1.0초(임시). 신전에 붙은 가이저에서 틱마다 수입이 생기던 결함을 수정했다.
+  - **간헐천 고갈:** 2,000 SP. exe 싱글 초기값과 `geyser.type cost`를 근거로 했다.
+  - **채집 시간:** 1.0초(임시). 신전에 붙은 간헐천에서 틱마다 수입이 생기던 결함을 수정했다.
   - **임시 방어 AI 일반화:** `aiTech`에서 방어 유닛을 고른다(1-2 Whirlibase, 상한 14 — 녹화 추정). 에너지 부족 시에만 제네레이터를 놓는다.
 - **검증:**
   - Release 빌드 경고·오류 0. 전체 테스트 **437개 통과**(Assets 193·Core 244), 실패·건너뜀 0. 신규는 `CampaignTwoTests` 5개와 `TypeCost` 6건이다.
@@ -1408,7 +1419,7 @@ python dotnetpj/tools/cpp_sync.py --update --add 이름:Core           # 새 fix
 - **문서:** [캠페인 1-2 구현·근거·추정표](docs/gameplay/campaign-two.md), [캠페인 1-1](docs/gameplay/campaign-one.md)의 갱신된 항목, README·맵 뷰어·Core 규칙의 링크.
 - **남은 것:**
   - 원본 AI 전략·채집 시간 정밀값
-  - 전투 중 새 가이저 생성
+  - 전투 중 새 간헐천 생성
   - 진행도 저장·체크 표시
   - 1-3 이후 미션
   - GUI 완주
@@ -1425,13 +1436,13 @@ python dotnetpj/tools/cpp_sync.py --update --add 이름:Core           # 새 fix
   - 녹화 결과: 11,842프레임, AVI 29, WAV 9, 입력 1, `error=null`.
   - 분석 뒤 녹화 창을 닫고 관찰 메모를 남긴 다음 `end_session force=true`(`closed=true`)로 끝냈다. `Netstorm.exe`는 남아 있지 않다. `originals/`는 수정하지 않았다.
 - **판독:** [녹화 노트](docs/videos/master-of-whirligigs-record-play-20261001.md).
-  - 사용자 재현 항목: 실제 전투, 운반 골렘·내 사제가 서 있는 다리 붕괴, 의식 중 사제 이탈, 운반 골렘 판매·`Drop`, 의식 중 알타 판매.
+  - 사용자 재현 항목: 실제 전투, 운반 골렘·내 사제가 서 있는 다리 붕괴, 의식 중 사제 이탈, 운반 골렘 판매·`Drop`, 의식 중 제단 판매.
   - 사용자 보충 설명 두 가지를 반영했다.
     - Thunder 재음성은 **룬 마크가 나타나기 전에** 사제를 옮긴 경우다.
     - 의식 완료 보상은 **+5,000 SP**다(멀티플레이 보상 선택은 후속).
   - 판독 확정 사항:
     - 이탈 시 의식은 깨지지 않고 멈춘다(포로 유지). 마크 후 이탈이면 룬 완료, 마크 전 이탈이면 룬 취소·복귀 시 재음성. 마크는 음성 뒤 1.6~2.6초에 나타났다.
-    - 알타 판매 시 포로가 알타 자리에서 체력이 가득 찬 채 풀려나고, 다음 의식은 첫 룬부터 다시 한다.
+    - 제단 판매 시 포로가 제단 자리에서 체력이 가득 찬 채 풀려나고, 다음 의식은 첫 룬부터 다시 한다.
     - 골렘 판매(+100)·`Drop` 시 사제가 그 자리에서 기절 없이 풀려난다.
     - 운반 골렘이 낙하하면(약 1.8초 연출) 사제는 허공에서 기절한다(체력 가득). 다리를 재건하면 0.4~0.6초 안에 복귀한다.
     - 허공 사제는 계속 떠 있다.
@@ -1440,7 +1451,7 @@ python dotnetpj/tools/cpp_sync.py --update --add 이름:Core           # 새 fix
   - `SacrificeRuneMarkSeconds = 2.0`(임시 경계값)을 추가했다.
   - 시간표 보정값(`ScheduleOffsetSeconds`)으로 바꿔 중단이 없으면 이전과 같은 틱이 되게 했다.
   - 포로 제거 시점에 `SacrificeRewardStormPower = 5000` 지급(`SacrificeRewarded`)을 추가했다.
-  - **후속 사용자 확인 반영:** 의식 사제가 기절·포획돼도 포로는 풀리지 않는다(의식만 멈춤). 포로는 알타이 파괴·판매될 때만 풀린다. 그래서 도움말 기준의 "기절·포획 시 깨짐"과 "알타 체력 50% 미만이면 깨짐"(`AltarBreakHealthRatio`)을 없앴다. 알타 소멸 시 `ReleaseCaptivesOf`가 `SacrificeBroken`을 낸다.
+  - **후속 사용자 확인 반영:** 의식 사제가 기절·포획돼도 포로는 풀리지 않는다(의식만 멈춤). 포로는 제단이 파괴·판매될 때만 풀린다. 그래서 도움말 기준의 "기절·포획 시 깨짐"과 "제단 체력 50% 미만이면 깨짐"(`AltarBreakHealthRatio`)을 없앴다. 제단 소멸 시 `ReleaseCaptivesOf`가 `SacrificeBroken`을 낸다.
   - 검사합에 이탈 상태·보정값을 추가했다.
   - 뷰어는 멈춘 의식을 주황색 `멈춤(사제 복귀 필요)`로 표시한다.
   - 운반체 해방 위치·HP, 허공 기절·복귀, 판매 환급 25%는 기존 구현이 녹화와 맞아 바꾸지 않았다.
@@ -1454,13 +1465,13 @@ python dotnetpj/tools/cpp_sync.py --update --add 이름:Core           # 새 fix
   - 남은 것: 폭발 대상 제외 비트의 의미, 자기 오브젝트 처치 시 보상 여부, 폭발 그림·효과음.
 - **도구:** [`tools/recordplay_frames.py`](tools/recordplay_frames.py)를 추가했다. record-play AVI 조각을 FFmpeg 없이 읽어 `frames`·`sheet`(잘라내기)를 만들고, 시각은 `.frames.csv` 기준이다. 임시 스크립트와 같은 프레임 해시를 만드는 것을 확인했다.
 - **검증(최종):** `dotnet build dotnetpj/Netstorm.sln -c Release` 경고·오류 0(증분 빌드, 클린 빌드에서는 기존 CA2014 경고 1개). 전체 테스트 **426개 통과**(Assets 193·Core 233), 실패·건너뜀 0.
-  - `SacrificeTests`는 10 → 13개다(CombatTests +2, GameRuleTests +1 별도). 신규: 마크 후 이탈 완료·복귀 대기, 마크 전 이탈 취소·재음성, 의식 사제 기절 시 멈춤·포로 유지. 기존 "알타 피해로 의식 중단"은 "크게 다쳐도 포로 유지·파괴될 때만 해방"으로 바꿨다. 기존 타임라인 테스트에 +5,000 보상 검사를 추가했다.
+  - `SacrificeTests`는 10 → 13개다(CombatTests +2, GameRuleTests +1 별도). 신규: 마크 후 이탈 완료·복귀 대기, 마크 전 이탈 취소·재음성, 의식 사제 기절 시 멈춤·포로 유지. 기존 "제단 피해로 의식 중단"은 "크게 다쳐도 포로 유지·파괴될 때만 해방"으로 바꿨다. 기존 타임라인 테스트에 +5,000 보상 검사를 추가했다.
   - 클론 GUI 실행은 하지 않았다.
 - **문서:** [희생 의식 계약](docs/gameplay/sacrifice.md), [이동 경로 3.4 임시 정책 표](docs/gameplay/movement-pathing.md#34-낙하-규칙-구현과-임시-정책), [음악 5절](docs/exe/music.md), [분석기 record-play 실측](docs/analyze-manager.md#기존-게임-플레이-녹화-분석-모드), [맵 뷰어](docs/map-viewer.md), [영상 목록](docs/videos/README.md). **AGENTS.md는 수정하지 않았다.**
 - **남은 것:**
   - ~~룬 마크 출현 경계의 정밀 측정(현재 2.0초 임시값)~~ → ✅ 2026-10-02 룬별 측정값(맨 위 절)
   - ~~지상 이동체 낙하 연출(약 1.8초)·`priestFall` 효과음 반영~~ → ✅ 2026-10-02
-  - ~~`sacrifice.mus` 재시작 조건~~ → ✅ 2026-10-02 확정(알타으로 보내는 명령)
+  - ~~`sacrifice.mus` 재시작 조건~~ → ✅ 2026-10-02 확정(제단으로 보내는 명령)
   - 멀티플레이 의식 보상 선택(멀티플레이 구현 때)
   - 클론 GUI에서 의식 멈춤 표시 확인
 
@@ -1508,8 +1519,8 @@ python dotnetpj/tools/cpp_sync.py --update --add 이름:Core           # 새 fix
 
 - **완료 범위:** 기본 실행을 원본 `titleMenu.gif`·구름·돌 질감 메뉴로 변경했다. Campaign → Struggle For Freedom → The War Begins! → 브리핑 → 전투 → 결과/재시작/메인 메뉴 복귀를 연결했다. Multiplayer·Demo·Help·Edit·Credits, 다른 그룹과 1-2 이후, 성공 창 Next Mission은 표시하면서 잠금 처리했다. AGENTS.md는 수정하지 않았다.
 - **옵션 완료:** 원본 3개·와이드 5개 해상도, 창/테두리 없는 전체화면, 와이드 시야/레터박스, 효과음·음악 켜기와 1~5 볼륨, 가장자리 이동. 현재 재생 중 음량과 사용자 설정 저장에 반영한다. 전체화면은 바탕화면 크기에 선택 높이로 내부 렌더링한다.
-- **1-1 조작 완료:** 마우스 건설/생산, 시작 지식 자동 등록, 비용을 검사하는 워크샾 업그레이드, 골렘 채집, 일반 이동/정지, 다리 칸 클릭·회전, 미니맵·원본 구름·선택 상태. 한국어 첫 브리핑/승패 본문을 추가했다. 기존 포대·Whirligig·포획→알타→다섯 룬→성공 이벤트를 사용한다. 플레이 UI에서 타입 탐색·연결 강제·규칙 해제는 막는다.
-- **1-1 임시 방어 AI 완료:** 원본 시작 머리 값의 0 SP·지식·수집자 1·6초 간격을 사용한다. 초기 골렘 채집, 방어 탑 보충, 침입 사제 포획·알타·희생으로 패배 가능. 사제 채집/적 섬 포위는 하지 않는다. 원본 전략을 디컴파일한 구현이 아니며 다른 미션에는 적용하지 않는다. 검사합에 지식·등록·워크샾 단계를 추가했다.
+- **1-1 조작 완료:** 마우스 건설/생산, 시작 지식 자동 등록, 비용을 검사하는 워크샾 업그레이드, 골렘 채집, 일반 이동/정지, 다리 칸 클릭·회전, 미니맵·원본 구름·선택 상태. 한국어 첫 브리핑/승패 본문을 추가했다. 기존 포대·Whirligig·포획→제단→다섯 룬→성공 이벤트를 사용한다. 플레이 UI에서 타입 탐색·연결 강제·규칙 해제는 막는다.
+- **1-1 임시 방어 AI 완료:** 원본 시작 머리 값의 0 SP·지식·수집자 1·6초 간격을 사용한다. 초기 골렘 채집, 방어 탑 보충, 침입 사제 포획·제단·희생으로 패배 가능. 사제 채집/적 섬 포위는 하지 않는다. 원본 전략을 디컴파일한 구현이 아니며 다른 미션에는 적용하지 않는다. 검사합에 지식·등록·워크샾 단계를 추가했다.
 - **검증:** 전체 테스트 **414개 통과**(Assets 187·Core 227, 신규 캠페인 검사 11), 실패/건너뜀 0. 원본 맵 시작 경제·생산·채집·이동·슬롯 확장과 AI 결정론을 검사했다. AI 포획→희생→패배는 원본 타입을 쓰는 작은 별도 지형 검사다. Release 빌드·클론 공통 마우스 입력 UI 검사를 수행했으며 메뉴/잠금/1-1/다리/복귀와 1280×720·전체화면 복귀·음량 4/3 저장을 확인했다. PNG·로그는 Git 제외 `extracted/screens/ui-smoke-20261001/`. OS 입력 초기 실험의 캡처는 검증 근거에서 제외했다.
 - **추정과 후속:** AI 초기 지급 위치·전략·보충 상한, 모든 수집자 결정 1개, 건설 예약/사제 이동 생략과 고정 시간, 즉시 워크샾 업그레이드, 타입 누락 비용의 기존 0 처리, 메뉴/플레이 레이아웃 근사를 문서화했다. 원본 1-1의 긴 GUI 완주·가격/AI/타이밍 일치·진행도 파일 저장·Linux GUI·소리 청취는 미검증/후속이다. 생산 Stream of Power·충돌 회피 등 기존 후속도 유지한다.
 - **문서/재현:** [캠페인 1-1 사용법·근거·추정표·검증 한계](docs/gameplay/campaign-one.md), `tools/clone_ui_smoke.ps1`, README·맵 뷰어·메뉴·Core·워크샾 문서를 갱신했다. 이전 전체 게임 UI·전략 AI 계획 중 **이번 한정 범위만 완료**한 것이다.
@@ -1561,14 +1572,14 @@ python dotnetpj/tools/cpp_sync.py --update --add 이름:Core           # 새 fix
 
 <a id="legacy-dotnet-073"></a>
 
-### 2026-10-01 (`vm-debian-codex`, 원본 실행 없음) ✅ 코드 점검·수정: 다른 AI 작업분(Linux 분석기·포획/알타/승패) 검토
+### 2026-10-01 (`vm-debian-codex`, 원본 실행 없음) ✅ 코드 점검·수정: 다른 AI 작업분(Linux 분석기·포획/제단/승패) 검토
 
 - **점검 범위:** AGENTS.md·이 문서·커밋 `c3a1a31` 이후 미커밋 변경(희생 의식 Core·뷰어 연결·문서·테스트)과 분석기 Linux 빌드. 빌드·테스트는 통과 상태였으나 코드를 읽고 원본 미션 전체로 검사해 아래 결함을 찾아 고쳤다.
 - **발견·수정(전부 회귀 테스트 추가):**
   1. **승패·사망 이벤트 오발동** — 원본 미션 전수(5초 진행) 검사에서 동맹이 없는 거의 모든 미션이 `GoodTeamDead`를 첫 틱에 내고, 적 사제·신전이 지도에 없는 미션은 `BadTeamDead`/`Failed`/`…Dead`가 시작 즉시 나왔다(해당 섹션이 있는 `tnron8ex`는 시작하자마자 성공 창). → 대상이 살아 있던 적이 있어야 사망·전멸 이벤트를 내도록 변경(`BattleSession.Sacrifice.cs` `_seenAlive`, 검사합 포함). 테스트 `MissionOutcomeTests.OriginalMissions_DoNotEndImmediately`.
   2. **사람 플레이어 동맹 미반영** — `myAllyList`(예: `tnron8ex` "4;6;7;8")를 읽지 않았다. → `MissionStart.MyAllyList`, `AreAllied(first, second, human)`; 팩토리가 사람 플레이어 번호를 넘긴다. 테스트 `AllyLists_ReadMyAndAiLists`·`EnemyTerritory_StartsWithoutRescueOutcome`(3-4 구출 미션).
   3. **실패 창 Continue 막힘** — `[Failed]`의 `Tell,TryAgain`은 공용 `tell.english`에만 있어 "안내 섹션이 없습니다"로 창이 닫히지 않았다(승패 판정이 생긴 뒤 새로 노출된 결함). → `TutorialDialogScript`가 공용 스크립트 대체 조회와 `{mission.title}` 등 미션 치환 값을 받음, 뷰어·`NetstormGame`이 `tell` 스크립트를 넘김. 테스트 `FailureContinue_OpensTryAgainFromCommonScript`.
-  4. 희생 음악 유지 조건이 의식 완료 시점에 끊기던 것을 알타 소멸까지로 보정(`IsSacrificeInProgress`).
+  4. 희생 음악 유지 조건이 의식 완료 시점에 끊기던 것을 제단 소멸까지로 보정(`IsSacrificeInProgress`).
 - **검증:** `dotnet build dotnetpj/Netstorm.sln -c Release` 경고·오류 0, Assets **187**·Core **195** 통과, Linux portable 빌드·Windows 대상 교차 빌드 경고·오류 0, `mcp_smoke.py --youtube-only` 통과. 원본 게임·클론 GUI는 실행하지 않았다.
 - **남은 의심 사항(다음에 확인):** (a) `ai{N}PriestSaved`는 사제가 "내 소유 섬 영역"에 서면 참이며 `bc1menu`·`portal3` 같은 일부 미션은 시작 직후 참이 된다(원본도 같은 위치 판정이라 보이며 해당 섹션이 있는 미션에서만 영향 — 구출 미션 3-4는 정상). ~~(b) `DropPriest` 경로는 다리가 바뀌어도 다시 찾지 않는다.~~ → ✅ 2026-10-01 수정(맨 위 절, `UnitMoveTask.FixedGoal`). ~~(c) 희생된 사제는 `RemoveEntity`를 거치지 않고 지워져 선택 상태 등이 남을 수 있다.~~ → ✅ 2026-10-01 수정(맨 위 절). (d) 뷰어 `D`/`T` 입력·실제 화면은 GUI 확인 전.
 
@@ -1587,22 +1598,22 @@ python dotnetpj/tools/cpp_sync.py --update --add 이름:Core           # 새 fix
 - 검증: Linux portable 빌드 성공(경고·오류 0), 프레임 추출과 `youtube_note` 기록 확인. 이전 단계의 `mcp_smoke.py --youtube-only`와 Windows/Wine 기본 검사도 통과했다. 전체 솔루션 Release 빌드와 Core 테스트 결과는 이 절 끝의 최신 검증 요약을 따른다.
 - 남은 환경 회귀 확인: Windows 실기기에서 기존 GDI+ 관찰표 경로를 다시 확인한다. Linux 빌드만으로는 Windows 실제 화면 출력 회귀를 검증하지 않았다.
 
-#### B. 완료 — 캠페인 1-5 YouTube 포획·알타 의식 분석
+#### B. 완료 — 캠페인 1-5 YouTube 포획·제단 의식 분석
 
 - AGENTS.md에 적힌 13개 영상의 메타데이터·표본 관찰표를 만들었다. 방송 인트로·오버레이가 있는 영상은 색 비교에 주의한다. `8tcj3rI_YqE`·`b3VzVERd9CE`·`0p7VvzSxTAY`·`WDQSrGqZAH0`의 편집 요소 전수 확인은 후속 분석이다.
-- 캠페인 1-5 `adR1Kap60hw`에서 골렘의 기절 사제 포획, 알타 500 SP 건설, 약 14.5초 클릭-완공, 다섯 룬, 희생, 알타 소멸·성공 창까지 관찰했다. 효과음 상관값과 두 번째 미션에서 재확인한 시각은 [관찰 노트](docs/videos/youtube-sacrifice.md)에 기록했다.
+- 캠페인 1-5 `adR1Kap60hw`에서 골렘의 기절 사제 포획, 제단 500 SP 건설, 약 14.5초 클릭-완공, 다섯 룬, 희생, 제단 소멸·성공 창까지 관찰했다. 효과음 상관값과 두 번째 미션에서 재확인한 시각은 [관찰 노트](docs/videos/youtube-sacrifice.md)에 기록했다.
 - Linux `youtube_note`로 관찰 시점 10개의 메모 11개(13:35.5/13:37.5 시각 정정 포함)를 `extracted/youtube/adR1Kap60hw/notes.jsonl`·`report.md`에 저장하고 `youtube_frames` SHA-256과 연결했다. 추출물은 Git 제외 경로다.
-- 시간 보정에 쓴 측정은 룬 사이 14.8초, 음성에서 룬 소멸까지 약 12.1초, 의식 완료에서 알타 제거까지 평균 9.3초, 제거 후 성공 창까지 3초다. 희생 효과음은 완료 약 4초 뒤로 exe 상수와 일치한다.
-- 3-4 `Enemy Territory` 구조 미션 확인 완료: 원본 미션 스크립트의 `allowAnyCapture = 1`, 프리스트 운반 화면, 내 섬에 내려놓은 뒤 뜨는 성공 화면을 대조했다. 관찰 범위와 SHA-256 근거는 [구조 미션 영상 노트](docs/videos/youtube-rescue.md)에 있다. 1-6·2-x에서 의식 시간 재확인, 2-x·3-x Man o'War/Dust Devil 동작은 후속이다.
+- 시간 보정에 쓴 측정은 룬 사이 14.8초, 음성에서 룬 소멸까지 약 12.1초, 의식 완료에서 제단 제거까지 평균 9.3초, 제거 후 성공 창까지 3초다. 희생 효과음은 완료 약 4초 뒤로 exe 상수와 일치한다.
+- 3-4 `Enemy Territory` 구조 미션 확인 완료: 원본 미션 스크립트의 `allowAnyCapture = 1`, 사제 운반 화면, 내 섬에 내려놓은 뒤 뜨는 성공 화면을 대조했다. 관찰 범위와 SHA-256 근거는 [구조 미션 영상 노트](docs/videos/youtube-rescue.md)에 있다. 1-6·2-x에서 의식 시간 재확인, 2-x·3-x Man o'War/Dust Devil 동작은 후속이다.
 
-#### C. 완료 — 사제 포획·운반·알타 의식·승패 이벤트
+#### C. 완료 — 사제 포획·운반·제단 의식·승패 이벤트
 
-- `BattleSession.Sacrifice.cs`: 기절 적 사제 포획(미션 `allowAnyCapture` 예외 포함), 타입 `.type speed`에 따른 이동, 알타 운반·내려놓기·내 사제의 알타 이동, 다섯 룬 의식과 중단·구출을 구현했다. 운반체나 알타가 파괴되면 포획 사제를 풀고 회복한다. `balloon` 직선 이동은 임시 경로이며 비행 수송의 이륙·착륙은 아직 없다.
-- 시간 모델: 의식 시작→첫 룬 1.2초, 룬 간격 14.8초, 룬 음성→소멸 12.1초, 완료→희생 효과음 4초, 완료→알타 제거 9.3초, 알타 제거→희생 사제 제거·팀 재판정 3초. 알타 건설 14.5초는 사제 이동이 포함된 관찰 총시간이라 순수 건설 시간과 거리를 분리하지 못했다. 알타 피해 중단 50%는 임시 임계값이다.
-- `MissionTell`을 뷰어 안내 창에 연결했다. 해당 스크립트 섹션이 있으면 표시하고 열린 동안 시간을 멈춘다. 사제 상태·룬 표시, `golemPickUp`, 다섯 룬 음성, 룬 소멸·완료·희생·알타 폭발 효과음과 희생 음악도 연결했다.
-- 검증: `dotnetpj/tests/Netstorm.Core.Tests/SacrificeTests.cs` 8개로 기절 전 포획 거부, 포획·운반·의식 타임라인, rescue 이벤트, 수송 파괴·알타 피해 시 해제, 결정론을 검사했다. 전체 솔루션 빌드에서 새 코드 오류는 없었다.
+- `BattleSession.Sacrifice.cs`: 기절 적 사제 포획(미션 `allowAnyCapture` 예외 포함), 타입 `.type speed`에 따른 이동, 제단 운반·내려놓기·내 사제의 제단 이동, 다섯 룬 의식과 중단·구출을 구현했다. 운반체나 제단이 파괴되면 포획 사제를 풀고 회복한다. `balloon` 직선 이동은 임시 경로이며 비행 수송의 이륙·착륙은 아직 없다.
+- 시간 모델: 의식 시작→첫 룬 1.2초, 룬 간격 14.8초, 룬 음성→소멸 12.1초, 완료→희생 효과음 4초, 완료→제단 제거 9.3초, 제단 제거→희생 사제 제거·팀 재판정 3초. 제단 건설 14.5초는 사제 이동이 포함된 관찰 총시간이라 순수 건설 시간과 거리를 분리하지 못했다. 제단 피해 중단 50%는 임시 임계값이다.
+- `MissionTell`을 뷰어 안내 창에 연결했다. 해당 스크립트 섹션이 있으면 표시하고 열린 동안 시간을 멈춘다. 사제 상태·룬 표시, `golemPickUp`, 다섯 룬 음성, 룬 소멸·완료·희생·제단 폭발 효과음과 희생 음악도 연결했다.
+- 검증: `dotnetpj/tests/Netstorm.Core.Tests/SacrificeTests.cs` 8개로 기절 전 포획 거부, 포획·운반·의식 타임라인, rescue 이벤트, 수송 파괴·제단 피해 시 해제, 결정론을 검사했다. 전체 솔루션 빌드에서 새 코드 오류는 없었다.
 - 문서: [희생 의식 구현·근거](docs/gameplay/sacrifice.md), [Core 규칙](docs/core-rules.md), [맵 뷰어 입력](docs/map-viewer.md), [전투 범위](docs/gameplay/combat.md), [음악·효과음](docs/exe/music.md), [영상 측정](docs/videos/youtube-sacrifice.md).
-- 후속: 여러 적 사제가 남았을 때 원소 배경음악 복귀, 비행 수송 이륙·착륙, 알타 프레임 애니메이션과 피해 한계의 원본 대조, Windows GDI 경로 회귀 확인. 3-4 구조 미션의 스크립트·운반·구출 판정은 [영상 노트](docs/videos/youtube-rescue.md)와 함께 확인했다.
+- 후속: 여러 적 사제가 남았을 때 원소 배경음악 복귀, 비행 수송 이륙·착륙, 제단 프레임 애니메이션과 피해 한계의 원본 대조, Windows GDI 경로 회귀 확인. 3-4 구조 미션의 스크립트·운반·구출 판정은 [영상 노트](docs/videos/youtube-rescue.md)와 함께 확인했다.
 - 원본 게임은 실행하지 않았다. 이 단계는 Linux YouTube 영상 분석과 헤드리스 테스트로 진행했다.
 
 #### 최신 검증
@@ -1636,7 +1647,7 @@ python dotnetpj/tools/cpp_sync.py --update --add 이름:Core           # 새 fix
   클론에서 제네레이터·기지 배치 → 비행체 생성 이벤트와 대기 본체 표시를 캡처했다
   (`extracted/whirligig-clone-base.png`). 공격·귀환은 헤드리스 검증이며 실시간 원본 대조는 남았다.
 - **남은 작업:** Rain/Wind 공격체의 별도 수명·무적·연장·다리 손상 규칙, 기지 개폐/그림자/이륙 높이,
-  원본 생성·보급/피해 타이머 정밀 측정. 수송·포획 → 알타·승리는 이 문서의 최신 절에서 구현했고 원본 정밀 대조가 남았다.
+  원본 생성·보급/피해 타이머 정밀 측정. 수송·포획 → 제단·승리는 이 문서의 최신 절에서 구현했고 원본 정밀 대조가 남았다.
   Sun 공격체의 첫 모델은 완료했으나 원본과 일대일 수치·동작 일치를 검증한 상태는 아니다.
 
 ---
@@ -1673,9 +1684,9 @@ python dotnetpj/tools/cpp_sync.py --update --add 이름:Core           # 새 fix
 - **새 도구 `tools/audiomatch.py`** (`level`·`music`·`sfx`): 녹음을 원본 `music/*.mus`·`sound/*.wav`와 FFT 정규화 상호상관으로 대조. 사용법 [videos/README.md](docs/videos/README.md#소리-판독-도구-toolsaudiomatchpy-2026-10-01).
 - **소리 판독 결과** ([music.md](docs/exe/music.md) 4절, [녹화 노트](docs/videos/the-war-begins-record-play-20260930.md) 5절):
   - 배경음악: 메뉴 `ser22` → 미션 `rain22`(00:09.1) → `thu22`(03:42.7, `thunderCrack.wav` 동반) → `sun22`(07:27.9) → `wind22`(11:20.8) — 앞 곡이 끝나자마자 0.5초 안에 다음 곡. **12:06.4 `sacrifice.mus`가 wind22 를 끊고 시작**, 성공 창(13:34)이 뜬 뒤에도 이어진다. `fanfare.mus` 없음.
-  - 희생 의식: 신전 파괴(10:58.5) → 적 사제 보호막(`priestForceField` 10:59.8~11:34.4) → 골렘이 사제를 집음(`golemPickUp` 11:35.9, 영상 확인) → 알타 도착(12:05.6) → **다섯 룬** 음성 `forWind2`·`forSun2`·`forRain2`·`forThunder2`·`forStorm2`(약 14.8초 간격, 룬마다 `altarBurnCollapse`) → `itIsDone2`(13:19.0) → 4.0초 뒤 `priestSacrifice2`(exe 상수와 일치) → 알타 소멸 → 성공 창.
+  - 희생 의식: 신전 파괴(10:58.5) → 적 사제 보호막(`priestForceField` 10:59.8~11:34.4) → 골렘이 사제를 집음(`golemPickUp` 11:35.9, 영상 확인) → 제단 도착(12:05.6) → **다섯 룬** 음성 `forWind2`·`forSun2`·`forRain2`·`forThunder2`·`forStorm2`(약 14.8초 간격, 룬마다 `altarBurnCollapse`) → `itIsDone2`(13:19.0) → 4.0초 뒤 `priestSacrifice2`(exe 상수와 일치) → 제단 소멸 → 성공 창.
 - **사용자 설명(2026-10-01) 기록·대조:** "의식 중 배경음악이 바뀌고(모든 스테이지 공통), 다른 적 사제가 남아 있으면 의식 뒤 본래 루프로 돌아오며, 적 사제가 없으면 승리 창이 떠서 게임이 일시정지된다" → 녹음·exe 와 모두 일치. exe 기준으로 원소 루프 복귀 시점은 **희생 음악 곡이 끝날 때**(실시간, 139.9초)이고 중단된 곡이 아니라 다음 곡부터다 — 이번 녹화도 의식이 끝난 뒤 성공 창까지 희생 음악이 이어졌다. 승리 창이 열린 동안 SP 는 그대로였다(정지). [music.md](docs/exe/music.md) 0·5절.
-- **exe 정적 분석(음악):** `FUN_00469fc0`(시작, 첫 곡 난수)·`FUN_00469f00`(다음 곡 wind→rain→thunder→sun, 희생 중이면 sacrifice)·`FUN_00469f60`(곡 끝 확인, 실시간 `timeGetTime`)·`FUN_00469db0`(요청, 30초 이하 곡은 180초 뒤 재확인, fanfare·defeat 잠금)·`FUN_00469c80`(천둥 곡 thunderCrack, `ascendancyPalette` 날씨 팔레트)·`FUN_00494eb0`(내 알타 의식 시작 → sacrifice). 알타 단계 `FUN_00449f40`·`FUN_00448080`. 효과음 호출 위치(다리 붕괴·금·건설 완료·조각 회전 등)는 [music.md](docs/exe/music.md) 7절.
+- **exe 정적 분석(음악):** `FUN_00469fc0`(시작, 첫 곡 난수)·`FUN_00469f00`(다음 곡 wind→rain→thunder→sun, 희생 중이면 sacrifice)·`FUN_00469f60`(곡 끝 확인, 실시간 `timeGetTime`)·`FUN_00469db0`(요청, 30초 이하 곡은 180초 뒤 재확인, fanfare·defeat 잠금)·`FUN_00469c80`(천둥 곡 thunderCrack, `ascendancyPalette` 날씨 팔레트)·`FUN_00494eb0`(내 제단 의식 시작 → sacrifice). 제단 단계 `FUN_00449f40`·`FUN_00448080`. 효과음 호출 위치(다리 붕괴·금·건설 완료·조각 회전 등)는 [music.md](docs/exe/music.md) 7절.
 - **영상 추가 판독:** (1) **F6 지식 창은 게임 시간을 멈추지 않는다**(열린 채 SP 3,450 → 3,650, 전투 소리 지속) — 이전 노트의 미확정 4번 해소. (2) **지식 격자의 어두운 카드 = 마우스 호버**(입력 로그와 대조). (3) 격자 25장 = `thewarbegins.fort` Technology 목록 플래그 4 타입 26개 − `sunWalker`, 행 안 순서 = `.type` group 순서. (4) 입력 로그: F6 4회 열고 닫음, 다리 칸 단축키 Q·W·A·S·Z·X 다수 사용. (5) `MissionAbort`: 인자 0 → `[ABORT]` 확인 창, 인자 ≠ 0 → 곧바로 LeaveBattle (exe `FUN_00463e40`).
 - **구현 (원본 실행 없이 가능한 부분):**
   1. **오디오(7단계):** `Netstorm.Assets.WaveFile`(RIFF PCM 해석·16bit 변환·재표본화 — 원본에 6,000Hz 파일 3개), `Netstorm.Core.Audio.MusicDirector`(exe 음악 규칙), `Netstorm.Game.AudioPlayer`(효과음 최대 8개 동시, 음악 스트리밍, 장치 없으면 무음 계속). 미션 = 전투 음악, 그 밖 = 메뉴 음악. 효과음: 다리 금·붕괴·놓기·회전, 건설 완료(+신전·워크샾 완료음), 지식 창 열기. 설정 `SoundOn`·`PlayMusic`·`SoundVolume`(3)·`MusicVolume`(2) + `--no-sound`·`--no-music`.
@@ -1684,7 +1695,7 @@ python dotnetpj/tools/cpp_sync.py --update --add 이름:Core           # 새 fix
   4. **미션 스크립트 버튼** `MissionAbort`(0 → Leave Mission 확인 창, 1 → 떠나기)·`MissionRestart`(재시작).
 - **검증:** Release 빌드 오류 0. 테스트 **Assets 185**(기존 179 + 6)·**Core 156**(기존 147 + 9) 통과. 클론을 실행해 `--mission thewarbegins --knowledge`·`--knowledge rainBattery` 화면(`extracted/screens/knowledge-{grid,detail}.png`)을 원본 녹화와 눈으로 대조했고, 개발용 기본 화면 상태 줄에서 소리 장치 사용 가능·`ser22.mus` 재생 중을 확인했다. 실제로 귀로 듣는 확인과 미션 중 곡 전환(3~4분 단위)은 화면으로 확인하지 않았다.
 - **남은 것 / 다음 후보**
-  1. **사제 포획·알타 의식·미션 이벤트 구현 완료**: 구현 상태·테스트·시간 임시값은 위 최신 절과 [희생 의식 계약](docs/gameplay/sacrifice.md)에 정리했다. 후속은 다른 미션에서의 구조·생존 판정, 알타 프레임 값의 증가 속도와 원본 외관 대조다.
+  1. **사제 포획·제단 의식·미션 이벤트 구현 완료**: 구현 상태·테스트·시간 임시값은 위 최신 절과 [희생 의식 계약](docs/gameplay/sacrifice.md)에 정리했다. 후속은 다른 미션에서의 구조·생존 판정, 제단 프레임 값의 증가 속도와 원본 외관 대조다.
   2. 원본 지식 창·상세창의 돌 질감 창 그림 자산 찾기(exe 리소스 또는 gump 타입), Damage 계산, 상세창 OK 가 격자까지 닫는지.
   3. 효과음 위치 반영(좌우·크기), `jimBuild.wav` 건설 진행음 반복 주기, 날씨 팔레트(`ascendancyPalette`), 원본 볼륨 단계 → 음량 변환식, Options 화면에서 소리 설정 바꾸기.
   4. `forWind2`는 상관 0.52로 약하게 잡혔다. 다섯 번째 `altarBurnCollapse`는 `itIsDone2`와 겹쳐 판정이 약하다.
@@ -1698,7 +1709,7 @@ python dotnetpj/tools/cpp_sync.py --update --add 이름:Core           # 새 fix
 
 - 관리 세션 `20260930T154921831Z-8bdcc06b6539`의 `record-play` 녹화 8,335프레임(13분 53.5초, AVI 27개, WAV 7개, 입력 로그 1개)을 분석했다. 녹화 오류는 없었다. 게임은 `The War Begins!` 브리핑에서 시작해 승리 후 `Master of Whirligigs` 브리핑을 거쳐 메인 메뉴로 돌아왔다. 분석 뒤 안내창과 원본 게임을 종료했고 `end_session` 응답은 `closed=true`다.
 - 원본 지식 창의 **SUN·WIND·RAIN·THUN. 4행 그림 카드 격자**, 개별 항목 상세창을 확인했다. 현재 클론의 이름 목록과 배치가 다르다. 적 회오리 신전 파괴 직후 약 2초 안에 섬이 갈색 지면·빨간 테두리에서 초록 지면·주황 테두리로 바뀌었지만 성공 창은 약 2분 15초 뒤에 떴다. `Success!`의 `Leave Missions`·`Next Mission`과 다음 미션 브리핑도 확인했다.
-- [타임스탬프·증거·미확정 사항](docs/videos/the-war-begins-record-play-20260930.md)을 기록하고 [영상 목록](docs/videos/README.md), [지식 창 정적 분석](docs/exe/show-technology.md)을 갱신했다. 승리 직전 알타 모양 구조물이 사라지는 모습은 보이나 사제 포획·희생·승리 조건의 정확한 연결은 추가 분석이 필요하다. → ✅ 2026-10-01 소리 판독·exe·사용자 설명으로 확정(맨 위 절).
+- [타임스탬프·증거·미확정 사항](docs/videos/the-war-begins-record-play-20260930.md)을 기록하고 [영상 목록](docs/videos/README.md), [지식 창 정적 분석](docs/exe/show-technology.md)을 갱신했다. 승리 직전 제단 모양 구조물이 사라지는 모습은 보이나 사제 포획·희생·승리 조건의 정확한 연결은 추가 분석이 필요하다. → ✅ 2026-10-01 소리 판독·exe·사용자 설명으로 확정(맨 위 절).
 
 ---
 
@@ -1834,7 +1845,7 @@ python dotnetpj/tools/cpp_sync.py --update --add 이름:Core           # 새 fix
 
 ### 2026-09-30 사용자 추가 규칙 — 비행형 이동·공중 공격 (문서·주석 반영 완료, 기능 구현은 후속)
 
-- 비행형 이동유닛은 **출발 시 이륙 → 이동 → 목적지 착륙** 과정을 거친다. 튜토리얼 1·2에는 아직 등장하지 않는다. 이후 사제 수집과 수송·알타 명령에 실제 이동을 연결했고 각 이동 유닛은 `.type speed`를 사용한다. 비행 수송의 이륙·높이·착륙 위치/점유·이동 중 명령 변경은 후속이며, 건물형 공중 공격 기지와 그 공격체의 생명주기는 별도 규칙으로 다룬다.
+- 비행형 이동유닛은 **출발 시 이륙 → 이동 → 목적지 착륙** 과정을 거친다. 튜토리얼 1·2에는 아직 등장하지 않는다. 이후 사제 수집과 수송·제단 명령에 실제 이동을 연결했고 각 이동 유닛은 `.type speed`를 사용한다. 비행 수송의 이륙·높이·착륙 위치/점유·이동 중 명령 변경은 후속이며, 건물형 공중 공격 기지와 그 공격체의 생명주기는 별도 규칙으로 다룬다.
 - 일부 **건물형 유닛**은 적이 사정거리 안에 들어오면 비행형 공격 유닛을 생성해 보내 공격한다. `Air Attack Base` 타입(Whirlibase·Devil Maker·Man o'War Pool)과 `flyer` 공격체(Whirligig·Dust Devil·Man o'War)를 구분해, 사정거리 감지·생성·목표 선택·공격체 생명주기를 후속 분석한다. 이 공격체에 공중 수송 유닛의 이륙·착륙 규칙이 동일하게 적용되는지는 미확인이다.
 - 반영 위치: `Simulation/MovementRate.cs`, `Rules/ObjectKind.cs` 주석, [규칙 코어](docs/core-rules.md), [이동·건설 분석](docs/exe/priest-construction.md), [섬 소유권 용어](docs/gameplay/island-ownership.md). 이번 변경은 설명만 추가했고 게임 동작은 바꾸지 않았다.
 
@@ -1842,11 +1853,11 @@ python dotnetpj/tools/cpp_sync.py --update --add 이름:Core           # 새 fix
 
 ### 2026-09-30 (`vm-debian-codex`, Linux, 원본 게임 실행 없음): 수집 경제·튜토리얼 1 및 사제 이동·건설 정적 분석
 
-- **후보 1 수집 경제 완료**: `HarvestGeyserCommand`로 소유 사제가 섬·내 다리 연결망을 따라 가이저와 완공 신전을 반복 왕복한다. 결정 하나를 전달할 때 200 SP를 더한다. 다리가 바뀌면 경로를 재탐색하고 길이나 대상이 사라지면 멈춘다. 운반량·경로·진행량을 검사합에 넣었다. 뷰어에서는 가이저 위 **H**, 스크립트에서는 `harvest x,y`로 시작한다.
-- **튜토리얼 1 A~G 단계 추가**: F4 또는 첫 다리 → 다리 8·19칸 → 가이저 연결 → 200·600 SP. 원본 `FUN_004c3a20`의 경계값과 exe 상수 `0x510298 = 200.0f`, `0x514c34 = 600.0f`를 확인했다. `bridgethegap.fort`에는 가이저가 없고 원본은 `FUN_00486440`/`00486360`으로 동적 생성하므로, 현재는 동쪽에 연결 가능한 5×5 연습 받침·3×3 가이저를 결정적 위치에 만든다. 뷰어 F4와 `home` 스크립트도 연결했다.
+- **후보 1 수집 경제 완료**: `HarvestGeyserCommand`로 소유 사제가 섬·내 다리 연결망을 따라 간헐천과 완공 신전을 반복 왕복한다. 결정 하나를 전달할 때 200 SP를 더한다. 다리가 바뀌면 경로를 재탐색하고 길이나 대상이 사라지면 멈춘다. 운반량·경로·진행량을 검사합에 넣었다. 뷰어에서는 간헐천 위 **H**, 스크립트에서는 `harvest x,y`로 시작한다.
+- **튜토리얼 1 A~G 단계 추가**: F4 또는 첫 다리 → 다리 8·19칸 → 간헐천 연결 → 200·600 SP. 원본 `FUN_004c3a20`의 경계값과 exe 상수 `0x510298 = 200.0f`, `0x514c34 = 600.0f`를 확인했다. `bridgethegap.fort`에는 간헐천이 없고 원본은 `FUN_00486440`/`00486360`으로 동적 생성하므로, 현재는 동쪽에 연결 가능한 5×5 연습 받침·3×3 간헐천을 결정적 위치에 만든다. 뷰어 F4와 `home` 스크립트도 연결했다.
 - **후보 3 사제 이동·건설 분석 완료 범위**: `priest.type`의 `speed = 1.8`은 타입 구조체 `+0xe0`에 파싱된다. 사용자 지적대로 Golem 2.0, Balloon 1.9, Sail Skater 3.4, Crystal Crab 2.4 등 **유닛마다 속도가 다르다**. 공통 `MovementRate`가 각 타입의 값을 읽고 사제 수집 이동에 사용한다. `Construction.cpp` `00442c80` → `00442b50`에서 타입 비용을 배치 처리 중 차감함을 확인했다. `constructionRate`는 구조체 `+0x50`에 파싱되고 생략 시 기본값 **10.0**이 채워진다. 실제 소비·시간 계산식은 미확인이라 기존 관찰 기반 건설 시간(신전 16초, 워크샾 10초)을 유지했다. [상세 분석](docs/exe/priest-construction.md).
-- **검증**: `dotnet test dotnetpj/Netstorm.sln -c Release --no-restore` 성공 — Assets **175**, Core **138**, 실패 0. 연습 가이저 연결 전 수확 거부, 다리 연결 후 3회 운반 = 600 SP, 튜토리얼 1 완료, 유닛별 속도 테스트를 포함한다. 원본 게임과 뷰어 화면은 실행하지 않아 시각 배치·입력을 화면에서 확인하지 않았다.
-- **남은 일**: (1) 원본 `speed` 값의 실제 칸/초 변환, 곡선 경로·충돌·다른 이동형 유닛 명령 구현; (2) `constructionRate` 소비 경로·사제의 건설 현장 이동·중단/환불 규칙을 찾아 현재 고정 시간을 교체 **(→ 2026-10-04: 건설 현장 이동·도착 후 건설·환불은 원본 관찰·팬게임 기준으로 구현, `constructionRate` 식·exe 정적 확인은 남음)**; (3) 튜토리얼 1 가이저의 실제 생성 위치와 다리 **누적 제작 수** 판정 복원(클론은 현재 살아 있는 다리 칸 수); (4) 생성 가이저 받침과 안내 창 흐름의 실제 GUI 확인. 실행 확인 규칙은 AGENTS.md의 해당 시스템 예외를 따른다.
+- **검증**: `dotnet test dotnetpj/Netstorm.sln -c Release --no-restore` 성공 — Assets **175**, Core **138**, 실패 0. 연습 간헐천 연결 전 수확 거부, 다리 연결 후 3회 운반 = 600 SP, 튜토리얼 1 완료, 유닛별 속도 테스트를 포함한다. 원본 게임과 뷰어 화면은 실행하지 않아 시각 배치·입력을 화면에서 확인하지 않았다.
+- **남은 일**: (1) 원본 `speed` 값의 실제 칸/초 변환, 곡선 경로·충돌·다른 이동형 유닛 명령 구현; (2) `constructionRate` 소비 경로·사제의 건설 현장 이동·중단/환불 규칙을 찾아 현재 고정 시간을 교체 **(→ 2026-10-04: 건설 현장 이동·도착 후 건설·환불은 원본 관찰·팬게임 기준으로 구현, `constructionRate` 식·exe 정적 확인은 남음)**; (3) 튜토리얼 1 간헐천의 실제 생성 위치와 다리 **누적 제작 수** 판정 복원(클론은 현재 살아 있는 다리 칸 수); (4) 생성 간헐천 받침과 안내 창 흐름의 실제 GUI 확인. 실행 확인 규칙은 AGENTS.md의 해당 시스템 예외를 따른다.
 - 변경 파일: `dotnetpj/src/Netstorm.Core/Simulation/{BattleSession.Harvest,MovementRate,TutorialGeysers}` 및 세션·명령·이벤트·단계·팩토리, `Bridges/BridgeGrid.cs`, `dotnetpj/src/Netstorm.Game/FortMapViewer*`, `dotnetpj/tests/Netstorm.Core.Tests/{HarvestEconomyTests,TutorialStagesTests}.cs`, `docs/{core-rules,map-viewer}.md`, [분석 문서](docs/exe/priest-construction.md), 이 문서.
 
 <a id="legacy-dotnet-098"></a>
@@ -1875,7 +1886,7 @@ python dotnetpj/tools/cpp_sync.py --update --add 이름:Core           # 새 fix
 - **검증(확실)**: Release 솔루션 빌드 오류 0(기존 CA2014 경고 1), Assets 172·Core **135**(기존 128 + 신규 7: 세션 표 독립, 검사합 범위, 단계 A~I 걷기, 결정론, 누적 수, 선택 명령, 단계 끄기/미구현 튜토리얼) 통과, Core 4회 반복 안정. 원본 게임은 실행하지 않았다.
 - **근사·미확정**: 단계 넘김 뒤 잠금(10 카운트, 안내 창 표시·닫힘 조건으로 추정)은 "다음 틱부터 검사"로 대신함. 출생 콜백 시점(건설 시작/완공). `[NotVortex]` 안내는 항상 이벤트로 내보냄(원본은 그 섹션이 있을 때만). 안내 창 UI 없음.
 - **다음 후보 (우선순위 순)**
-  1. ~~**수집 경제**(튜토리얼 1의 D~F가 의존): 가이저 → 사제 결정 운반(결정당 200 SP), 튜토리얼 1 단계 추가.~~ → **2026-09-30 완료 범위**(위 절).
+  1. ~~**수집 경제**(튜토리얼 1의 D~F가 의존): 간헐천 → 사제 결정 운반(결정당 200 SP), 튜토리얼 1 단계 추가.~~ → **2026-09-30 완료 범위**(위 절).
   2. ~~튜토리얼 안내 창(9단계 UI): `TutorialTell` 이벤트의 섹션 본문(HTML 부분집합·`$Button=`)을 띄우고 F8로 다시 보기.~~ → **2026-09-30 완료**(위 절).
   3. **사제 이동·건설 절차 분석** → 타입별 이동 속도·배치 시 비용 차감은 **2026-09-30 확인**. `constructionRate` 계산과 건설 현장 이동은 남음(위 절).
   4. Ghidra 누락 함수 목록(후보 528개) — `FUN_004c34c0`의 `FUN_004c8e90`·`FUN_00460de0` 의미도 여기서 확인.
@@ -1896,7 +1907,7 @@ python dotnetpj/tools/cpp_sync.py --update --add 이름:Core           # 새 fix
   - 기준 상태 확인: Release 빌드 오류 0(기존 CA2014 경고 1), 테스트 Core 128·Assets 172 통과.
 - **아직 하지 않은 것 → 후보 1번(튜토리얼 단계 처리)은 오후에 완료함**(위 절). 2~4번은 미착수. `extracted/decomp/Netstorm.c`는 준비됐으므로 바로 분석에 들어갈 수 있다. 디컴파일에 없는 함수(`0x484ab0`·`0x4c2b20`·`0x4c3290` 등)는 `tools/ghidra/decompile_at.ps1`이 필요한데 이것도 PowerShell 전용이라 이 PC에서는 `DecompileAt.java`를 `analyzeHeadless -process`로 직접 돌려야 한다(미시도).
 - **다음 후보 1번(튜토리얼 단계 처리 객체)을 위해 읽어 둔 것**
-  - 튜토리얼 1은 단계 D~F(가이저 연결·사제의 결정 운반·600 SP)가 수집 경제에 의존한다. 그래서 **튜토리얼 2만 지금 구현할 수 있다**(단계 A·B·D·E·G·H는 "지은 개수" 조건). 튜토리얼 1은 후보 3번(수집 경제)이 먼저다. 튜토리얼 3~6은 전투가 필요하다.
+  - 튜토리얼 1은 단계 D~F(간헐천 연결·사제의 결정 운반·600 SP)가 수집 경제에 의존한다. 그래서 **튜토리얼 2만 지금 구현할 수 있다**(단계 A·B·D·E·G·H는 "지은 개수" 조건). 튜토리얼 1은 후보 3번(수집 경제)이 먼저다. 튜토리얼 3~6은 전투가 필요하다.
   - 단계 C(워크샾에서 지식 등록 — 세션의 `RegisterKnowledgeCommand`로 판정 가능)·F(신전을 선택해 범위를 보면 타이머 시작)는 UI 선택 상태가 필요하다. 세션에 "선택" 개념이 없으므로 결정론을 지키려면 선택을 명령(예: `SelectEntityCommand`)으로 만들지 화면 신호로 둘지 정해야 한다.
   - "지은 개수"(`FUN_004c24c0`, `DAT_005c98d0[타입]`)가 누적인지 현재 개수인지가 미확정이다. 파일 이름이 `Totalmade.cpp`라서 **누적(지은 총수)** 일 가능성이 높다. 이 배열을 올리는 곳을 디컴파일에서 찾아 확인할 것(회수해도 줄지 않는지가 단계 G 조건에 영향).
 - **발견한 문제 → ✅ 2026-09-30 오후 수정함**(위 절): `BattleSession.CreatePlayer`가 `MissionStart.Tech`를 복사하지 않고 그대로 `PlayerState.Tech`로 쓴다. `TechPermissions`가 변경 가능해졌으므로(`Set`) 같은 `MissionStart`로 세션을 두 개 만들면 한쪽의 단계 처리가 다른 쪽 표까지 바꾼다. 현재 테스트는 세션마다 미션을 새로 읽어서 드러나지 않는다. 튜토리얼 단계 처리를 넣기 전에 `TechPermissions` 복사본(예: `Clone()`)을 쓰도록 고치고 회귀 테스트를 추가할 것.
@@ -1922,7 +1933,7 @@ python dotnetpj/tools/cpp_sync.py --update --add 이름:Core           # 새 fix
 - **다음 후보**:
   1. 튜토리얼 단계 처리 객체 — 세션 명령·이벤트를 보고 표·`DenySalvage`를 바꾸는 별도 클래스로(단계 A·B·D·E·G·H는 개수 조건, C·F는 UI 선택과 함께)
   2. 사제 이동·건설 절차 분석(`Priest.cpp` 등) → `ConstructionTimes`·비용 차감 시점 교체
-  3. 수집 경제: 가이저 → 사제 결정 운반(결정당 200 SP) (`Carrier.cpp`·`Nugget.cpp`·`Vortex.cpp`)
+  3. 수집 경제: 간헐천 → 사제 결정 운반(결정당 200 SP) (`Carrier.cpp`·`Nugget.cpp`·`Vortex.cpp`)
   4. Ghidra 누락 함수 목록 만들기(후보 528개)와 게임 로직 쪽 우선 디컴파일
   5. 세션을 게임 화면으로: 생산 창(덱) 사이드바·HUD(9단계 UI)
   6. 다리: 붕괴 대기 조건·영역 소유 이어짐(기존 후보 1)
@@ -1967,7 +1978,7 @@ python dotnetpj/tools/cpp_sync.py --update --add 이름:Core           # 새 fix
 
 - [x] `HJOW-Athlon`에서 세션 `20260929T154230683Z-bdf8f92d93a1`로 `Bridge the Gap!`을 사용자 직접 조작 방식으로 끝냈다. 600 SP와 `Mission Accomplished!` 결과 화면을 PNG로 저장하고 세션 메모에 연결했다. 다음 튜토리얼은 열지 않았고 녹화·안내 창·게임을 모두 종료했다. [관찰 결과](docs/screens/README.md#16-사용자-직접-조작-녹화-튜토리얼-1-완료-2026-09-30-windows-hjow-athlon).
 - [x] 실제 게임에서 10 FPS 영상 2,438프레임을 AVI 4개, 소리를 WAV 2개, 마우스·키 입력을 JSONL 1개에 저장했다. 모든 AVI/WAV는 48 MB 미만이고 FFmpeg로 읽혔다. 영상·오디오 길이는 각각 약 243.8초·243.9초다. 이전 RDP 화면 가림으로 0프레임에 그친 사례와 달리, RDP 화면이 보이는 상태에서 녹화가 정상 동작했다.
-- [x] 가이저 연결 뒤 사제의 결정 반납으로 SP가 0→200→400→600이 되고 튜토리얼 1 완료 창이 뜨는 것을 확인했다. 사용자가 `Bridge Quality` 설명은 빠르게 넘겼다고 알렸지만, 이후 영상에서 연결되지 않은 오른쪽 다리 끝이 입력 없이 조각나 사라지는 장면은 확인했다. 개별 금 감 시작 시각과 일반적인 붕괴 시간은 이 영상만으로 확정하지 않는다.
+- [x] 간헐천 연결 뒤 사제의 결정 반납으로 SP가 0→200→400→600이 되고 튜토리얼 1 완료 창이 뜨는 것을 확인했다. 사용자가 `Bridge Quality` 설명은 빠르게 넘겼다고 알렸지만, 이후 영상에서 연결되지 않은 오른쪽 다리 끝이 입력 없이 조각나 사라지는 장면은 확인했다. 개별 금 감 시작 시각과 일반적인 붕괴 시간은 이 영상만으로 확정하지 않는다.
 
 #### 사용자 직접 조작 녹화 기능과 PNG 한도 수정 (2026-09-29~30)
 
@@ -1999,10 +2010,10 @@ python dotnetpj/tools/cpp_sync.py --update --add 이름:Core           # 새 fix
 - **한쪽만 붙은 다리의 붕괴:**
   - ~~단일 칸~~ **두 칸 막대**(2026-09-30 정정): 놓은 뒤 +40초 바깥 칸 금 → +80초 낙하 → +120초 안쪽 칸 금 → +160초 낙하. 기록 당시엔 "단일 칸 약 120초 보통 → 금 간 그림(K11) 약 40초 → 사라짐(총 약 160초)"로 잘못 읽었다.
   - 두 칸짜리는 끝 칸이 먼저 사라짐
-- **튜토리얼 진행:** B → 다리 몇 개 → C(q·w·a·s 칸 선택 안내) → C1 → 몇 개 더 → D. **가이저는 D 단계에서야 생김**(.fort 에 없음).
+- **튜토리얼 진행:** B → 다리 몇 개 → C(q·w·a·s 칸 선택 안내) → C1 → 몇 개 더 → D. **간헐천은 D 단계에서야 생김**(.fort 에 없음).
 - **기타:** F2 = 큰 물체 투명. ALT 스크롤은 매우 빠름.
 - **다음에 이어서 할 일:**
-  - [x] 새 세션에서 튜토리얼 1을 처음부터 진행(저장 불가): 가이저 연결 → 사제 결정 왕복·결정당 SP → 600 SP 결과 화면 (2026-09-30 사용자 직접 조작 녹화로 완료, 위 절)
+  - [x] 새 세션에서 튜토리얼 1을 처음부터 진행(저장 불가): 간헐천 연결 → 사제 결정 왕복·결정당 SP → 600 SP 결과 화면 (2026-09-30 사용자 직접 조작 녹화로 완료, 위 절)
   - [x] 튜토리얼 2 건설 시간·배치 뒤 아이콘 복귀·완료 결과 (2026-09-30 사용자 직접 조작 녹화로 완료, 위 절)
   - [x] Leave → Replay Mission 흐름 — 2026-09-30 Windows 자동 분석에서 같은 미션 첫 브리핑 재진입 확인
   - [x] Credits 마지막 쪽 뒤 흐름 — 2026-09-30 Windows 자동 분석에서 메인 메뉴 복귀 확인
@@ -2326,7 +2337,7 @@ python dotnetpj/tools/cpp_sync.py --update --add 이름:Core           # 새 fix
     | [learnmineral.htm](https://hjow.duckdns.org/netstorm/learnmineral.htm) | 광물 자원 | 4·8단계(경제) |
     | [learnresource.htm](https://hjow.duckdns.org/netstorm/learnresource.htm) | 자원 수집·관리 (Storm Power 등) | 4·8단계(경제) |
     | [learntemple.htm](https://hjow.duckdns.org/netstorm/learntemple.htm) | 신전 시스템 | 4·8단계(신전·기술) |
-    | [learnpriest.htm](https://hjow.duckdns.org/netstorm/learnpriest.htm) | 사제(프리스트)·고위 사제 | 4·8단계(승패 조건·프리스트) |
+    | [learnpriest.htm](https://hjow.duckdns.org/netstorm/learnpriest.htm) | 사제(사제)·고위 사제 | 4·8단계(승패 조건·사제) |
     | [learnmovie.htm](https://hjow.duckdns.org/netstorm/learnmovie.htm) | 플레이 영상 | 5단계 |
     | [unitmain.htm](https://hjow.duckdns.org/netstorm/unitmain.htm) | 전체 유닛 목록·설명 | 4·8단계(유닛·건물 규칙), [types.md](docs/gameplay/types.md) 수치와 대조 |
 
@@ -2346,7 +2357,7 @@ python dotnetpj/tools/cpp_sync.py --update --add 이름:Core           # 새 fix
 
 * **풀스크린 모드**를 지원해야 한다 (원본처럼 재실행 오류가 나서는 안 된다 — 1.4절, 2026-10-03 AGENTS.md에 명시).
 * **프레임 속도(2026-10-05 AGENTS.md 변경): 기존 게임 수준의 프레임으로 먼저 만들고(✅ 적용 — 화면 루프 14ms, 초당 약 71.4바퀴), 이후 60·120프레임을 지원한다.** (2026-10-03 문구는 "30·60·120 지원, 30 먼저"였다.) 기존 게임은 요소마다 애니메이션 프레임이 달랐던 것으로 추정된다(AGENTS.md).
-  * 근거 자료: 원본 영상 측정에서 가이저 증기 약 24Hz, 신전 회오리·피해 연기 12Hz로 요소마다 달랐고, 화면 갱신 상한은 설정 `maxFPS = 75`였다([animation-timing.md](docs/videos/animation-timing.md)).
+  * 근거 자료: 원본 영상 측정에서 간헐천 증기 약 24Hz, 신전 회오리·피해 연기 12Hz로 요소마다 달랐고, 화면 갱신 상한은 설정 `maxFPS = 75`였다([animation-timing.md](docs/videos/animation-timing.md)).
   * 현재 클론: 규칙은 24Hz 고정 틱, 화면은 수직 동기에 맞춰 그리며 이동은 보간한다. **프레임 속도를 고르는 옵션은 아직 없다** → [map-viewer.md](docs/map-viewer.md#프레임-속도-요구사항-agentsmd-2026-10-03)에 구현 기준을 적었다.
 * **화면비 16:9, 16:10, 4:3** 을 지원해야 한다. 원본 기본 해상도 1024×768 과 메인 메뉴 타이틀 그림(640×480)은 4:3 이다.
   * **원본은 4:3 해상도만 지원했다** (AGENTS.md·사용자 확인): Options → Resolution 하위 메뉴가 `640 by 480`, `800 by 600`, `1024 by 768` 세 가지뿐 (`mainMenu - Options - Resolution.png`). 따라서 16:9·16:10 은 원본 참고 자료가 없는 **새 기능**이며 동작은 클론에서 설계한다.
@@ -2530,7 +2541,7 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
 - [x] **리소스** — 2026-09-27 완료: `tools/peres.py` (비트맵 3·커서 18·다이얼로그·문자열). DLL 문자열은 설치 프로그램용
 - [x] **도움말** — 2026-09-29: 형제 저장소의 helpdeco 소스를 VS 2022 Build Tools Win32 Release로 빌드하고 `help/*.HLP` 5개에서 실제 본문 150개·BMP 77개를 추출. `tools/hlp.py`로 UTF-8 토픽별 텍스트 생성·목록 대조, [HLP 형식·재현](docs/formats/hlp.md), [게임 규칙 요약](docs/gameplay/help-manual.md). 게임 내 도움말 텍스트는 아카이브의 `help.english` 에도 있음
   - [x] **동봉 문서 전체 정독·정리** — 2026-09-29: `GAME.HLP`(규칙·화면·조작·튜토리얼·멀티·유닛/주문 핸드북), `readme.hlp`·`HELP.HLP`·`VENDOR`·`VOCAB`, `README.DOC`(Word, 1997-10 변경점), `*.CNT`·`HELP.EXE`, `PatchFixs.txt`(10.70~10.78), `Readme.txt`·`TMaker.txt`·`disclaimer.txt`·`steam_appid.txt` → **[docs/sources/](docs/sources/README.md)** (목록·불일치 12건, [게임 매뉴얼](docs/sources/game-manual.md), [패치 이력](docs/sources/patch-history.md), [설치·지원 문서](docs/sources/support-docs.md))
-    - 주요 사실: 보유 exe 는 **10.78**(2026-09-29 게임 내 Version 창으로 확정. 이전 추정: 옵션 표 근거 10.75 이상). 섬 테마·거주지 테마는 패치 10.70 V5.3~6.0 기능. 1152×864·1280×960 해상도는 패치에서 제거. 멀티는 BattleMaster 가 서버·서버 인계·포트 6800. `bridgeDrawRate`·`stuffRefreshRate` 설정 키는 패치판 exe 에 없음(확인)
+    - 주요 사실: 보유 exe 는 **10.78**(2026-09-29 게임 내 Version 창으로 확정. 이전 추정: 옵션 표 근거 10.75 이상). 섬 테마·거주 구역 테마는 패치 10.70 V5.3~6.0 기능. 1152×864·1280×960 해상도는 패치에서 제거. 멀티는 BattleMaster 가 서버·서버 인계·포트 6800. `bridgeDrawRate`·`stuffRefreshRate` 설정 키는 패치판 exe 에 없음(확인)
     - **확인 필요**: ~~level 1 원소 유닛의 에너지~~(→ 2026-09-29 확정: 유닛마다 다르며 Bulf = Thunder 1 — 사용자 확인·PDF 대조), 파일 조회 순서(패치 문서: tarc 우선 ↔ 정적 분석: 디스크 우선), Storm Power 노랑 기준(매뉴얼은 1000 미만 빨강만), 튜토리얼 3 의 범위
   - [ ] 남은 일: 원본 도움말의 링크·토픽 간 탐색 정보 복원과 패치 실행 파일에서 수치·규칙 검증. helpdeco는 모든 파일에서 browse 재구성 경고 출력
 - [x] 오디오 전수 확인 — 2026-09-27 완료: 229개 모두 표준 PCM WAV
@@ -2556,18 +2567,18 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
 - [ ] 핵심 구조체 복원: 게임 오브젝트, 플레이어, 섬, 다리, 타일/좌표계
 - [ ] **게임 틱**: 고정 프레임 여부, 틱 레이트, 난수 생성기(결정론 확보에 필수)
   - [x] 2026-09-28 부분 확인 ([animation-timing.md](docs/videos/animation-timing.md)): 화면 루프 상한 `maxFPS = 75`(`sleepPerLoop = 0`), 게임 시각 = `timeGetTime` 기반 초(`00460cd0`), 애니메이션은 고정 틱이 아니라 오브젝트별 "다음 시각 = 현재 시각 + 간격(0.04초·0.08초 등)" 타이머 → 루프 주기로 올림되어 실제 **24Hz·12Hz** (영상 측정과 일치)
-  - [ ] 남은 일: 게임 로직(이동·전투·경제)의 갱신 방식(가변 시간 간격인지), 가이저·신전 등 타입별 간격 상수 위치, 난수 생성기
+  - [ ] 남은 일: 게임 로직(이동·전투·경제)의 갱신 방식(가변 시간 간격인지), 간헐천·신전 등 타입별 간격 상수 위치, 난수 생성기
 - [ ] **좌표계·맵**: 아이소메트릭 투영, 타일 크기, 섬 형태, 높이/레이어, 그리기 순서(정렬 규칙)
-- [ ] **경제**: 가이저(geyser) → Storm Power(게임 내 재화) 수집 흐름, 수집 유닛(collector) 이동, 자원 운반, 알타(altar)·희생, 비용
-  - [x] 2026-09-29 도움말 근거 확보: 수송 유닛의 가이저→신전·전초기지 운반, 가이저 초기 2000, 적 파괴·건강한 유닛 회수 보상 25%, 알타 업그레이드·희생 절차. 실행 파일 판정은 남음 — [도움말의 게임 규칙](docs/gameplay/help-manual.md)
+- [ ] **경제**: 간헐천(geyser) → Storm Power(게임 내 재화) 수집 흐름, 수집 유닛(collector) 이동, 자원 운반, 제단(altar)·희생, 비용
+  - [x] 2026-09-29 도움말 근거 확보: 수송 유닛의 간헐천→신전·전초기지 운반, 간헐천 초기 2000, 적 파괴·건강한 유닛 회수 보상 25%, 제단 업그레이드·희생 절차. 실행 파일 판정은 남음 — [도움말의 게임 규칙](docs/gameplay/help-manual.md)
 - [ ] **섬 소유권** — 규칙은 사용자 확인으로 정리됨 (2026-09-28): [docs/gameplay/island-ownership.md](docs/gameplay/island-ownership.md)
   - 섬 테두리 색 = 소유 플레이어 색. **신전이 건설된 섬이 그 플레이어 소유**. 신전은 **플레이어당 동시에 1기(파괴되면 사제가 재건 가능), 빈 섬에만**, 원소 무관 **5000** Storm Power
   - **신전이 있어야 다리 건설** 가능. 섬 상태는 내 섬 / 빈 섬(무소유) / 남의 섬
   - **남의 섬**: 건물·유닛 일체 건설 불가, 이동형 유닛은 이동 가능
-  - **빈 섬**: 워크샾·알타는 사제가 도달하면 건설 가능(다리 불필요, 내 섬도 가능), 건물형 유닛은 내 섬과 다리로 연결돼야 건설 가능. 연결은 건설 시점에만 필요하고, 다리가 끊겨도 지은 유닛은 계속 동작
-  - 용어: 신전·워크샾·알타는 "유닛"이 아니다 (사제 `Construct` 로 건설). 그 밖의 작은 건물·이동체가 유닛
+  - **빈 섬**: 워크샾·제단은 사제가 도달하면 건설 가능(다리 불필요, 내 섬도 가능), 건물형 유닛은 내 섬과 다리로 연결돼야 건설 가능. 연결은 건설 시점에만 필요하고, 다리가 끊겨도 지은 유닛은 계속 동작
+  - 용어: 신전·워크샾·제단은 "유닛"이 아니다 (사제 `Construct` 로 건설). 그 밖의 작은 건물·이동체가 유닛
   - 캡처 근거: The War Begins! 에서 적 신전이 없어지자 적 섬 테두리가 빨강 → 주황(소유자 없음), 지면도 초록으로 바뀜
-  - 남은 일: exe 판정 함수, 소유자 변경 시점, 신전이 파괴된 섬에 남은 건물·유닛·다리의 처리, Outpost(중립 섬 소유), 받침 섬·가이저 바위의 소유권
+  - 남은 일: exe 판정 함수, 소유자 변경 시점, 신전이 파괴된 섬에 남은 건물·유닛·다리의 처리, Outpost(중립 섬 소유), 받침 섬·간헐천 바위의 소유권
 - [ ] **다리 건설**: 다리 조각 생성 규칙(모양 풀, 순서, `BridgeDrawRate`), 배치 판정, 연결·붕괴 조건 (다리는 소유한 섬에서만 시작 — 위 소유권 규칙)
   - [x] 2026-09-29 조각 생성: 모양 표 26개(VA 0x52f998, 가중치 합 287)·누적 가중치 추첨·회전 표(0x531590)·프레임 선택, 생산 칸 채우기(신전이 있을 때 1초마다, Bridge Slots 칸까지, 5번째 추첨마다 한 칸 조각, 신전을 잃으면 비움), AI 는 4번째마다 한 칸 조각 → [bridge-pieces.md](docs/exe/bridge-pieces.md). `Deck.cpp` 는 다리와 무관(지식·생산 덱, Gem.cpp 가중 추첨)
   - [x] 2026-09-29 원본 실행(Windows `HJOW-Athlon`, Bridge the Gap!)으로 확인. 세부는 [bridge-pieces.md](docs/exe/bridge-pieces.md) 4절·[화면 목록 1.4절](docs/screens/README.md). 클론 `RotateByPlayer`·`BridgeCursor` 에 반영, 테스트 2개 추가.
@@ -2591,12 +2602,12 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
     - **소모 개념 아님**(같은 공급원 범위에 여러 유닛 가능), 조건은 **건설·생산 순간에만** 확인(공급원이 파괴돼도 유닛 유지), **이동 유닛도 생산 지점에 에너지 필요** — 질문 A~F 모두 확정 (문서 5절)
   - 남은 일: exe 의 등록·추첨(`Deck.cpp`)·도움말의 워크샾 생산 칸(Level I 2개·II 3개·III 4개) 검증·업그레이드 비용/효과, 에너지 공급 범위·판정 함수, 등록 목록과 `myTech`·`techBit` 의 관계
 - [ ] **전투**: 사거리·명중·피해 공식, 발사체 궤적, 특수 효과(`bomb*` 계열: 마비, 중력, 치유, 반역 등), 방어(차단벽·실드)
-- [ ] **승패 조건**: 프리스트(priest) 사망/포획, 신전(temple) 파괴, 미션 스크립트 이벤트 발생 지점
+- [ ] **승패 조건**: 사제(priest) 사망/포획, 신전(temple) 파괴, 미션 스크립트 이벤트 발생 지점
 - [ ] 미션 스크립트 인터프리터 동작(3단계 문법 명세와 교차 검증)
 - [ ] AI 의사결정 루틴 (10단계 입력)
 - [ ] 네트워크: 프로토콜 방식(TCP/IP, IPX), 동기화 모델(락스텝 여부), 패킷 형식 (13단계 입력)
 - [ ] `PatchFixs.txt` 와 대조하여 **기준 버전** 결정 (원본 1.x 동작 vs 패치 10.7x 동작)
-  - 2026-09-29 정리: [patch-history.md](docs/sources/patch-history.md) (주제별 변경), 원판 매뉴얼 수치 ↔ 현재 `.type` 대조표 [game-manual.md](docs/sources/game-manual.md) 7절. 보유 exe = **10.78**(게임 내 Version 창). 사용자 캡처·설명(섬 테마, 거주지 원소 그림, Edit 메뉴 등)이 모두 패치판 기능이므로 **패치판 동작 기준**이 자연스러움 (결정은 5절 2번)
+  - 2026-09-29 정리: [patch-history.md](docs/sources/patch-history.md) (주제별 변경), 원판 매뉴얼 수치 ↔ 현재 `.type` 대조표 [game-manual.md](docs/sources/game-manual.md) 7절. 보유 exe = **10.78**(게임 내 Version 창). 사용자 캡처·설명(섬 테마, 거주 구역 원소 그림, Edit 메뉴 등)이 모두 패치판 기능이므로 **패치판 동작 기준**이 자연스러움 (결정은 5절 2번)
 
 **완료 기준**: `docs/gameplay/` 만 보고도 게임 규칙을 재구현할 수 있다.
 
@@ -2632,7 +2643,7 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
   - [x] 원본 캡처 1: 튜토리얼 "Bridge the Gap!" 시작 직후 — 2026-09-28 완료: [docs/screens/bridge-the-gap-start.md](docs/screens/bridge-the-gap-start.md)
     (클라이언트 1024×768 위치, 사이드바·미니맵 배치, 맵 데이터 대조. 처음의 칸 크기 가설 32×22px 은 캡처 2 로 정정됨)
   - [x] 원본 캡처 2: 캠페인 1-1 "The War Begins!" 시작 직후 — 2026-09-28 완료: [docs/screens/the-war-begins-start.md](docs/screens/the-war-begins-start.md)
-    (**좌표계 확정**: 위치 바이트 상위=x·하위=y, 청크 i → (i%16, i/16), 미니맵 1px = 2칸, 칸 = 16 × 약 11.25px(→ 캡처 3 에서 16 × 11 로 정정). noIsland = 가이저 받침 바위, 섬 지형 테마 = 신전 원소 추정)
+    (**좌표계 확정**: 위치 바이트 상위=x·하위=y, 청크 i → (i%16, i/16), 미니맵 1px = 2칸, 칸 = 16 × 약 11.25px(→ 캡처 3 에서 16 × 11 로 정정). noIsland = 간헐천 받침 바위, 섬 지형 테마 = 신전 원소 추정)
   - [x] 원본 캡처 3: 캠페인 1-3 "Save the Island!" 시작 직후 (유닛·다리·바리케이드 배치) — 2026-09-28 완료: [docs/screens/save-the-island-start.md](docs/screens/save-the-island-start.md)
     (**신전릿 매칭으로 정밀 확정**: 칸 = 정확히 16 × 11px, 모든 타입이 칸 좌표→화면 점에 스프라이트 기준점(0,0)을 그림, TerrNN 청크 = 영역 소속 청크를 y·x 순으로 훑은 것. Sun Barricade = 두 기둥 사이 광선, 미니맵은 다리도 소유자 색으로 표시)
   - [x] 원본 캡처 4~42 목록·캡처별 관찰 정리 — 2026-09-28: [docs/screens/README.md](docs/screens/README.md)
@@ -2640,15 +2651,15 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
   - [ ] 정밀 노트 작성(좌표·글꼴 측정): 메인 메뉴·대화상자(`docs/screens/main-menu.md`), 도움말 창, 미션 화면 정보 창·게임 메뉴 막대, 결과 창
     - 할 일: 타이틀·버튼·돌 테두리·스크롤바 그림의 원본 자산 찾기(exe 리소스 비트맵, `TITLE*.COL` 짝 그림), 줄 간격·글꼴(`!Arial.*.chfnt` 중 어느 것인지), 메뉴 정의가 exe 하드코딩인지 스크립트(`offical*.english`·`tell.english` 의 `$Button=`)인지 확인, 도움말 링크(`#앵커`, `cmd:Tell,…`, `http…`) 동작
   - [x] Dissolved Alliance! 시작 캡처와 `--map dissolvedalliance` 대조 — 2026-09-28: [dissolved-alliance-start.md](docs/screens/dissolved-alliance-start.md)
-    - 섬 모양·다리·가이저·건물 위치 일치. **플레이어 1 = 가운데 바람 섬**, 왼쪽 눈 섬 = Duke of Rain(소유자 3), 오른쪽 돌 섬 = Prince of Thunder(소유자 2) (목록 문서의 "눈 섬 = 플레이어" 정정)
+    - 섬 모양·다리·간헐천·건물 위치 일치. **플레이어 1 = 가운데 바람 섬**, 왼쪽 눈 섬 = Duke of Rain(소유자 3), 오른쪽 돌 섬 = Prince of Thunder(소유자 2) (목록 문서의 "눈 섬 = 플레이어" 정정)
     - **원본 시작 카메라 규칙**: 플레이어 1 사제 칸 기준점이 클라이언트 약 (525, 393) (캡처 3장 공통 ±4px) → 맵 뷰어 시작 카메라에 반영, 원본 캡처와 ±6px 이내로 겹침
-    - **거주지(Residence) 외관 = 섬 원소별 그림** 확인 → 뷰어가 영역 원소의 lit 그림을 고르도록 수정 (`MapSpriteFrames.BodyFrame(FortMapObject, theme)`, `FortTerrainPreview.TerritoryTheme`), 검사 9개 추가·전체 147개 통과
-    - 남은 일: `Playing 1`·`Playing 2`(시점 이동 캡처)의 카메라 위치를 신전릿 매칭으로 구해 섬별 대조, 소유자 3 이상의 플레이어 색, 원본의 거주지 원소 재선택 경로(exe), 섬 가장자리 풀 장식
+    - **거주 구역(Residence) 외관 = 섬 원소별 그림** 확인 → 뷰어가 영역 원소의 lit 그림을 고르도록 수정 (`MapSpriteFrames.BodyFrame(FortMapObject, theme)`, `FortTerrainPreview.TerritoryTheme`), 검사 9개 추가·전체 147개 통과
+    - 남은 일: `Playing 1`·`Playing 2`(시점 이동 캡처)의 카메라 위치를 신전릿 매칭으로 구해 섬별 대조, 소유자 3 이상의 플레이어 색, 원본의 거주 구역 원소 재선택 경로(exe), 섬 가장자리 풀 장식
   - [ ] The War Begins! 진행 캡처로 **신전 원소 → 지면 테마**(비 → 눈·얼음, 바람 → 갈색 풀밭, 번개 → 어두운 돌, 신전 없음 → 초록 풀밭)와 소유권 변화 확인 (4단계 exe 분석으로 확정)
 - [ ] 메뉴 흐름도(타이틀 → 캠페인/멀티 → 브리핑 → 게임 → 결과)
   - [x] 2026-09-29 원본 실행으로 메인 메뉴 전 항목(멀티 제외)·데모·미션 진입/이탈·편집기 진입/이탈 흐름 확인 → [main-menu.md](docs/screens/main-menu.md) "메뉴 흐름도". 남은 일: 결과 화면 이후, Replay/Restart, 멀티플레이 화면
 - [ ] 애니메이션 속도·연출(건설, 다리 설치, 폭발, 승리/패배), 사운드·음악 재생 타이밍
-  - [x] 반복 애니메이션 속도 — 2026-09-28: 가이저 증기 약 24Hz(41.7ms), 신전 회오리·피해 연기 12Hz(83.3ms). `tools/videoframes.py cadence` 로 영상 4개 중 3개에서 재현 측정 ([animation-timing.md](docs/videos/animation-timing.md))
+  - [x] 반복 애니메이션 속도 — 2026-09-28: 간헐천 증기 약 24Hz(41.7ms), 신전 회오리·피해 연기 12Hz(83.3ms). `tools/videoframes.py cadence` 로 영상 4개 중 3개에서 재현 측정 ([animation-timing.md](docs/videos/animation-timing.md))
   - [ ] 남은 일: 건설·다리 설치·폭발·유닛 동작별 속도, 승리/패배 연출
 - [ ] 수치 검증용 관찰(건설 시간, 공격 간격, 자원 증가 속도) → 4단계 결과와 대조
 - [ ] 각 미션의 시작 상태·목표·스크립트 이벤트 발생 순서
@@ -2677,7 +2688,7 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
 - [x] 지면 미리보기 — 2026-09-28 완료. `FortTerrainPreview`: 청크 연결 통로·시드 성장·빈 틈 보정·원소별 원본 타일·작은 받침 표시. G로 청크 윤곽 전환. 두 공식 맵의 반복 생성·타일 유효성 검증
   - [x] 본섬 밀도 시드 수정·마스크 대조 — 2026-09-28 완료: 원본 어셈블리에서 청크별 밀도 시드 초기화 확인, 월드 y·x 처리 순서 반영. `IslandCells`·`tools/terrain_mask.py` 추가. 두 공식 맵의 전체 마스크가 독립 Python 재현 결과와 일치하며, 두 원본 캡처에 경계를 겹쳐 형태를 확인. 회귀 검사 2개 추가, 전체 39개 통과 ([수치·재현 명령](docs/exe/terrain-and-bridges.md))
   - [x] 별도 절벽 `fringe` 표시 — 2026-09-28 완료: 원본 `004bfe50`의 생성 플래그·방향 폴백·y+4칸 기준점·전투 조명 조건을 적용한 `FortTerrainFringe`와 뷰어 표시 추가. 두 공식 맵 PNG 대조, 회귀 검사 6개 추가. 변형·깊이 정렬의 완전 재현은 미완료 ([분석](docs/exe/terrain-and-bridges.md))
-  - [x] 다중 레이어 본체 프레임 오류 수정 — 2026-09-28 완료: 잘못된 `클러스터 × 레이어 수` 계산을 `본체 프레임 = 클러스터 번호`로 정정. 원본 가이저 기본 B00(49번)이 그림자 영역을 선택하지 않는 검사 추가, 전체 46개 통과
+  - [x] 다중 레이어 본체 프레임 오류 수정 — 2026-09-28 완료: 잘못된 `클러스터 × 레이어 수` 계산을 `본체 프레임 = 클러스터 번호`로 정정. 원본 간헐천 기본 B00(49번)이 그림자 영역을 선택하지 않는 검사 추가, 전체 46개 통과
   - [x] 저장된 작은 받침 전용 스프라이트 복원 — 2026-09-28 완료: 같은 소유자의 noIsland 3×3 묶음에서 island·islandStalag를 같은 오른쪽 아래 기준점에 표시. 두 공식 맵의 26개·13개 받침이 저장된 모든 논리 칸을 중복 없이 포함하는지 검증. 개발용 청록·빨강 색상표 적용, 중립은 P09. 전체 54개 검사 통과, 두 맵 PNG 생성 ([분석과 제한](docs/exe/terrain-and-bridges.md))
   - [x] 본섬 `isle` 소유자색 변환 — 2026-09-28 완료: 원본 `0043b750`·`0043bc40`의 256색 변환표와 `00498220`의 소유자색 적용 경로를 미리보기에 반영. 원본 캡처와 수정 전후 PNG 육안 대조, Game 빌드 성공 ([분석과 제한](docs/exe/terrain-and-bridges.md))
   - [x] 흰 가장자리 장식 `edgeFarm` — 2026-09-28 완료: 원본 `0046da70`·`0040e560`의 청크당 20개 배치 목표와 `0040db90`의 `matchframe` 대체 규칙을 확인. 뷰어에 재현 가능한 위치 미리보기와 같은 번호 프레임·소유자색 표시 추가. 두 공식 맵 PNG를 원본 캡처와 육안 대조, 전체 검사 150개 통과. 전역 난수에 따른 개별 위치는 미확정 ([분석](docs/exe/terrain-and-bridges.md))
@@ -2734,9 +2745,9 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
 - [ ] 건물 배치·건설
   - [x] 2026-09-30 사제 건물 건설(건설 시간 뒤 완성: 신전 → 섬 소유·공급원·다리/골렘 공급, 워크샾 → 등록 가능)·회수·배치 뒤 재충전 — 건설 시간은 관찰값 근사, 사제 이동·도달은 미구현
   - [x] 유닛 배치 판정(위치·빈 자리·Storm Power·에너지)과 배치 실행 — 2026-09-29 `BattleMap` (건설 시간·Power Stream 연출·사제 건설 절차는 남음)
-- [ ] 경제(가이저, 수집, 운반, Storm Power)
+- [ ] 경제(간헐천, 수집, 운반, Storm Power)
   - [x] Storm Power 표시 색·회수 25%·파괴 보상·결정 200 규칙 — 2026-09-29 `StormPower` (수집·운반 흐름은 남음)
-- [ ] 이동 유닛(수집 유닛, 프리스트 등) 경로 탐색
+- [ ] 이동 유닛(수집 유닛, 사제 등) 경로 탐색
 - [ ] 전투·발사체·특수 효과
   - [x] 2026-10-01 포대 전투 1차: 목표·재장전·탄·Vander 번개·피해·파괴·사제 기절·지면 외관 갱신. [확정/근사 계약](docs/gameplay/combat.md)
   - [ ] 공중 기지·비행체, 방어 타입별 반사·흡수, 폭발 연쇄, 정확한 발사/피해 공식과 방향각, 원본 효과 셰이프
@@ -2871,7 +2882,7 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
 **위 중단 시점의 미확인 항목 → 2026-09-28 재개 후 처리 결과**
 1. ~~커밋 여부 확인~~ → 사용자가 모두 커밋함 (재개 시점에 미반영 파일 없음)
 2. ~~나머지 영상 형식·여백 측정~~ → 4개 모두 AV1 1920×1080 60fps, 게임 영역 x 240~1679 측정 ([docs/videos/README.md](docs/videos/README.md))
-3. ~~Dissolved Alliance! 맵 뷰어 대조~~ → 완료 ([dissolved-alliance-start.md](docs/screens/dissolved-alliance-start.md)). 원본 시작 카메라 규칙 발견·뷰어 반영, 거주지 원소별 그림 반영 (검사 147개 통과, 빌드 오류 0, 경고는 기존 CA2014 뿐)
+3. ~~Dissolved Alliance! 맵 뷰어 대조~~ → 완료 ([dissolved-alliance-start.md](docs/screens/dissolved-alliance-start.md)). 원본 시작 카메라 규칙 발견·뷰어 반영, 거주 구역 원소별 그림 반영 (검사 147개 통과, 빌드 오류 0, 경고는 기존 CA2014 뿐)
 4. 영상 프레임 추출 도구 `tools/videoframes.py` 작성 완료. `docs/videos/` 미션별 관찰 노트는 **미착수** → 6절 5번
 
 **재개 후 변경 파일 (커밋 전)**: `tools/videoframes.py`(신규), `dotnetpj/src/Netstorm.Assets/MapSpriteFrames.cs`, `dotnetpj/src/Netstorm.Assets/FortTerrainPreview.cs`, `dotnetpj/src/Netstorm.Game/FortMapViewer.cs`, `dotnetpj/tests/Netstorm.Assets.Tests/MapRenderingTests.cs`, `docs/videos/README.md`(신규), `docs/screens/dissolved-alliance-start.md`(신규), `docs/screens/README.md`, `docs/gameplay/island-ownership.md`, `docs/map-viewer.md`, `LEFT_JOBS.md`
@@ -2890,7 +2901,7 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
    - (이전) 이번 변경 파일(커밋 전): `dotnetpj/src/Netstorm.Core/Bridges/*`·`Simulation/NetstormRandom.cs`(신규), `dotnetpj/tests/Netstorm.Core.Tests/BridgePieceTests.cs`(신규), `dotnetpj/src/Netstorm.Game/FortMapViewer.Bridges.cs`(신규)·`FortMapViewer.cs`·`FortMapViewer.Placement.cs`·`NetstormGame.cs`, `docs/exe/bridge-pieces.md`(신규)·`docs/core-rules.md`·`docs/map-viewer.md`, 이 문서. 빌드 오류 0(기존 CA2014 경고 1), 테스트 Core 98·Assets 172 통과.
 2. **엔티티·틱** — `.type` 구동 오브젝트 목록을 `FixedTimestep`으로 갱신하고, 건설 시간(`constructionRate`)·재충전 간격(`ProductionTimers`)을 틱으로 돌린다 → **2026-09-30 완료**(`BattleSession`, 건설 시간은 관찰값 근사)
 3. **초기 상태** — 미션 머리 값 `myTech`·`myStartMoney`, `.fort` `Technology`·`Deck`에서 지식·덱·Storm Power를 채운다. 튜토리얼 2 는 `BattleOptions.ApplyTutorialTwoOverrides` → **2026-09-30 부분 완료**: 머리 값·전투 옵션 적용. `.fort` `Technology`·`Deck` 연결은 남음
-4. **수집·경제** — `Carrier.cpp`·`Nugget.cpp`·`Vortex.cpp` 분석 → 가이저 → 결정 → 신전 운반 흐름
+4. **수집·경제** — `Carrier.cpp`·`Nugget.cpp`·`Vortex.cpp` 분석 → 간헐천 → 결정 → 신전 운반 흐름
 5. 이후 전투(`Gunprocess`·`Damageable`·`Bomb`), 사제·희생(`Priest`·`Dais`), UI(생산 창·컨텍스트 메뉴)
 
 이번 변경 파일(커밋 전): `dotnetpj/src/Netstorm.Core/Rules/*`·`Simulation/*`(신규), `dotnetpj/tests/Netstorm.Core.Tests/{EnergyRuleTests,GameRuleTests,OriginalData}.cs`(신규), `dotnetpj/src/Netstorm.Game/FortMapViewer.Placement.cs`(신규)·`FortMapViewer.cs`·`NetstormGame.cs`, `docs/core-rules.md`(신규)·`docs/map-viewer.md`·`docs/exe/energy-requirements.md`, 이 문서.
@@ -2905,7 +2916,7 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
    - **완료(2026-09-28)**: 영역 청크 결정 규칙·맵 뷰어 기본 구현, `FortMap` 및 [영역 배치 분석](docs/exe/territory-layout.md), [맵 뷰어 실행](docs/map-viewer.md)
    - **추가 완료(2026-09-28)**: 저장된 다리 표시와 지면 미리보기 구현. [다리·지면 분석](docs/exe/terrain-and-bridges.md). 이전 추정 정정: 저장된 bridge 값은 각 칸의 프레임이며 VA 0x52f998은 새 조각 배치용 복합 패턴
    - **후속 완료(2026-09-28)**: 본섬 밀도 시드 오류 수정, 독립 재현 도구와 두 공식 맵의 전체 마스크 일치 검증, 원본 캡처의 섬 형태 대조. `extracted/terrain/*-overlay.png`와 수정 뷰어 PNG 생성, 테스트 39개 통과·솔루션 빌드 성공 (NuGet 취약성 조회 연결 실패 경고 NU1900 1개)
-   - **절벽 후속 완료(2026-09-28)**: fringe 생성·방향 폴백·y+4칸·전투 조명 조건 적용, 뷰어 표시 및 두 공식 맵 PNG 대조. 다중 레이어 본체 프레임 오류도 수정하여 가이저 본체 표시 복구. 테스트 46개 통과·빌드 성공 (NU1900 조회 경고 1개)
+   - **절벽 후속 완료(2026-09-28)**: fringe 생성·방향 폴백·y+4칸·전투 조명 조건 적용, 뷰어 표시 및 두 공식 맵 PNG 대조. 다중 레이어 본체 프레임 오류도 수정하여 간헐천 본체 표시 복구. 테스트 46개 통과·빌드 성공 (NU1900 조회 경고 1개)
    - **받침 후속 완료(2026-09-28)**: 저장된 noIsland 3×3 묶음을 전용 island·islandStalag로 복원, 공통 기준점·소유자색 클러스터 선택 적용. Save the Island! 26개·The War Begins! 13개 받침의 모든 저장 칸 대조, 테스트 54개 통과·빌드 성공 (NU1900 조회 경고 1개). `extracted/screens/fort-map-supports-*.png` 생성
    - **지면 색상 후속 완료(2026-09-28)**: 원본 isle 변환표와 소유자별 색상 적용 경로 구현. Save the Island! 수정 전후·원본 캡처 육안 대조에서 갈색 윗면 테두리가 청록색으로 바뀜을 확인. Game 빌드 성공, `extracted/terrain/player-color-*.png` 두 맵 생성
    - **가장자리 장식 후속 완료(2026-09-28)**: 흰 돌출 장식이 원본 `edgeFarm` 프레임임을 확인. `Islandbuilder`의 청크당 20개 배치 목표와 `matchframe`의 `isle` 대체 규칙을 뷰어에 반영. Save the Island!·The War Begins! 원본 캡처와 새 PNG 육안 대조, 전체 검사 150개 통과. 위치는 원본 전역 난수 대신 재현 가능한 근사
@@ -2927,7 +2938,7 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
 4. 4단계: 메인 루프/틱, 다리 생성(`Deck.cpp`, `Bridge.cpp`), 경제 분석
 5. 5단계(영상 분석)와 병행: 공식 캠페인 구성([mission-script.md](docs/formats/mission-script.md))과 영상 대응 확인
    - 2026-09-28 로컬 영상 4개 형식·화면 영역 확인과 추출 도구 `tools/videoframes.py` 완료 ([docs/videos/README.md](docs/videos/README.md)). **The War Begins! 사용자 직접 조작 녹화 관찰 노트는 2026-10-01 완료** ([분석](docs/videos/the-war-begins-record-play-20260930.md)). 다른 미션별 관찰 노트와 애니메이션·건설·다리 조각 생성 간격·이동 속도처럼 스크린샷으로 잴 수 없는 시간 수치는 계속 측정한다 (기존 방송 영상은 60fps, 새 `record-play` 녹화는 10fps).
-   - **애니메이션 속도 완료(2026-09-28)**: 가이저 24Hz·신전/연기 12Hz, exe 의 "현재 시각 + 간격" 타이머(`Flyer.cpp` 0.04초, `Lightning.cpp` 0.08초)와 `maxFPS = 75` 루프 양자화로 설명 — [animation-timing.md](docs/videos/animation-timing.md), 측정 명령 `videoframes.py cadence`. 다음은 타입별 간격 상수 위치(exe)와 건설·다리 조각 생성 간격 측정
+   - **애니메이션 속도 완료(2026-09-28)**: 간헐천 24Hz·신전/연기 12Hz, exe 의 "현재 시각 + 간격" 타이머(`Flyer.cpp` 0.04초, `Lightning.cpp` 0.08초)와 `maxFPS = 75` 루프 양자화로 설명 — [animation-timing.md](docs/videos/animation-timing.md), 측정 명령 `videoframes.py cadence`. 다음은 타입별 간격 상수 위치(exe)와 건설·다리 조각 생성 간격 측정
    - **에너지 공급 범위 완료(2026-09-29)**: 스크린샷 측정(일반 30칸·튜토리얼 2 약 14칸)과 exe 전투 옵션 Generator Range(표 14/22/30/38, 14~30 제한, 튜토리얼 2만 Short) 일치 — [elements-energy.md](docs/gameplay/elements-energy.md) 6절, [battle-options.md](docs/exe/battle-options.md). 도움말 `GAME.HLP`(다른 세션 추출)의 "BattleMasters"·튜토리얼 2 안내가 단서
    - Dissolved Alliance! `Playing 1`·`Playing 2`(시점 이동 캡처)도 신전릿 매칭으로 카메라 위치를 구해 섬별로 뷰어와 대조
    - **유닛 재충전 간격(Unit Rate) 정적 분석 완료(2026-09-29)**: 화면 왼쪽 "덱" = 매뉴얼의 Production window. 보유 `setup.cfg`의 `useProductTimers = 0`에서는 Unit Rate 순서대로 10/5/1초이지만, **요새 모드에서는 0.0001초**로 대체된다. 이전에 네트워크 역할 플래그로 추정한 `DAT_00594fb8`은 exe 검사 문자열로 `inFortMode`임을 확인했다. `useProductTimers`가 켜진 별도 경로는 30/15/8초·수량 상한 1이며 요새 모드 예외가 없다. [근거와 구현 기준](docs/exe/production-refresh.md). **남은 일**: 원본에서 배치 직후 아이콘 복귀와 일반 전투의 Unit Rate별 간격을 프레임으로 측정한다.

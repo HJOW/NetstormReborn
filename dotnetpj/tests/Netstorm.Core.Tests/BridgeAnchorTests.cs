@@ -6,7 +6,7 @@ namespace Netstorm.Core.Tests;
 /// <summary>초목이 있는 섬 가장자리에서는 다리를 시작할 수 없다는 규칙 테스트 (사용자 확인 2026-09-30)</summary>
 public sealed class BridgeAnchorTests
 {
-    /// <summary>원본 타입 플래그: edgeFarm·신전·워크샵·가이저는 dropBlocking, 섬 지면·다리는 아니다</summary>
+    /// <summary>원본 타입 플래그: edgeFarm·신전·워크샾·간헐천은 dropBlocking, 섬 지면·다리는 아니다</summary>
     [Fact]
     public void DropBlocking_MatchesOriginalTypeFlags()
     {

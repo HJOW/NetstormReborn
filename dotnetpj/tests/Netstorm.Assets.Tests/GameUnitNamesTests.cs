@@ -18,6 +18,9 @@ public sealed class GameUnitNamesTests
     [InlineData("Residence", "거주 구역")]
     [InlineData("Whirlibase", "훨리베이스")]
     [InlineData("Whirligig", "훨리기그")]
+    [InlineData("Geyser", "간헐천")]
+    [InlineData("Storm Geyser", "스톰 간헐천")]
+    [InlineData("Empty Storm Geyser", "고갈된 스톰 간헐천")]
     [InlineData("Workshop", "워크샾")]
     [InlineData("Generator", "제네레이터")]
     [InlineData("Sun Barricade", "썬 바리케이드")]
@@ -32,19 +35,21 @@ public sealed class GameUnitNamesTests
         Assert.Equal("Unknown Thing", GameUnitNames.Format("Unknown Thing", GameLanguage.Korean));
     }
 
-    /// <summary>공유 표 어디에도 이전 표기(휘리·알타·레지던스)가 남아 있지 않다.</summary>
+    /// <summary>공유 표 어디에도 이전 표기(휘리·알타·레지던스·가이저·엠프티)가 남아 있지 않다.</summary>
     [Fact]
     public void SharedTableHasNoRetiredSpellings()
     {
         using Stream stream = typeof(GameUnitNames).Assembly.GetManifestResourceStream("Netstorm.Assets.UnitNames.Korean.json")!;
         Dictionary<string, string> names = JsonSerializer.Deserialize<Dictionary<string, string>>(stream)!;
-        Assert.Equal(55, names.Count);
+        Assert.Equal(56, names.Count);
         // 표의 한국어 값마다 이전 표기가 들어 있지 않은지 확인한다
         foreach ((string english, string korean) in names)
         {
             Assert.DoesNotContain("휘리", korean);
             Assert.DoesNotContain("알타", korean);
             Assert.DoesNotContain("레지던스", korean);
+            Assert.DoesNotContain("가이저", korean);
+            Assert.DoesNotContain("엠프티", korean);
             Assert.False(string.IsNullOrWhiteSpace(korean), $"{english} 의 한국어 표시가 비어 있다");
         }
     }

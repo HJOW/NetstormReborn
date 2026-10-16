@@ -1,6 +1,6 @@
 ﻿# 원본 실행·OS 입력 없이 클론의 사제 건설 규칙을 실제 화면에서 검사한다.
-#  menu : 이미 템플이 있으면 Temple 줄이 어둡고(눌러도 하위 창이 열리지 않음), 지식이 없는 원소의 워크샵 줄도 어둡다. Sun Workshop 줄만 활성이다.
-#  build: 먼 자리에 워크샵을 설치하면 비용이 바로 나가고 공사장이 생기지만, 사제가 걸어가 도착해야 건설이 시작되어 완공된다.
+#  menu : 이미 신전이 있으면 Temple 줄이 어둡고(눌러도 하위 창이 열리지 않음), 지식이 없는 원소의 워크샾 줄도 어둡다. Sun Workshop 줄만 활성이다.
+#  build: 먼 자리에 워크샾을 설치하면 비용이 바로 나가고 공사장이 생기지만, 사제가 걸어가 도착해야 건설이 시작되어 완공된다.
 # 캠페인 1-1 시작 화면의 고정 좌표(1024x768 창)를 쓰므로 창 크기를 바꿔 실행하지 않는다.
 param([string]$OutputDirectory = 'extracted/screens/construct-smoke-20261004')
 $ErrorActionPreference = 'Stop'
@@ -13,7 +13,7 @@ $taskSettings = Join-Path $taskOutput 'settings'
 New-Item -ItemType Directory -Force -Path $taskSettings | Out-Null
 Set-Content -LiteralPath (Join-Path $taskSettings 'settings.json') -Encoding UTF8 -Value '{"WindowWidth":1024,"WindowHeight":768,"ViewHeight":768,"SoundVolume":3,"MusicVolume":2}'
 # 시나리오 이름 → 명령. 사제 우클릭(526,393) → Construct(577,414) → Workshop(745,431) → Sun Workshop(745,434).
-# 건설 하위 창의 줄: Temple(745,414)·Workshop(745,431), 워크샵 하위 창의 줄: Sun(434)·Wind(455)·Rain(476)·Thunder(497).
+# 건설 하위 창의 줄: Temple(745,414)·Workshop(745,431), 워크샾 하위 창의 줄: Sun(434)·Wind(455)·Rain(476)·Thunder(497).
 # build 는 사제(525,380)에서 약 23칸 떨어진 섬 오른쪽 (920,470)에 짓는다. 사제는 약 13초를 걸은 뒤 약 10초 건설한다.
 $taskScenarios = [ordered]@{
     'menu' = @"

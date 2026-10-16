@@ -8,20 +8,20 @@ namespace Netstorm.Assets.Tests;
 /// </summary>
 public class StructureAnimationTests
 {
-    /// <summary>가이저처럼 증기 프레임(A00~A19)과 baseframe 기본 프레임(B00)을 가진 시험용 타입.</summary>
+    /// <summary>간헐천처럼 증기 프레임(A00~A19)과 baseframe 기본 프레임(B00)을 가진 시험용 타입.</summary>
     private static readonly TypeDefinition Geyser = TypeDefinition.Parse(
         "typename geyser\ntypeflags geyser shadow;\n{\n\thotFootRatioX = 0.22;\n\thotFootRatioY = 0.22;\n}\n"
         + string.Concat(Enumerable.Range(0, 20).Select(i => $"A{i:00} : : \"g.gif\" #{i} ;\n"))
         + "B00 : default baseframe : \"g.gif\" #20 ;\nP00 : help : \"b.gif\" #0 ;\n");
 
-    /// <summary>Rain 워크샵: 레벨마다 본체 01 과 겹침 조각 02·03.</summary>
+    /// <summary>Rain 워크샾: 레벨마다 본체 01 과 겹침 조각 02·03.</summary>
     private static readonly TypeDefinition RainFactory = TypeDefinition.Parse(
         "typename rainFactory\ntypeflags factory shadow;\n{\n\ttheme = \"rain\";\n}\n"
         + "A01 : default baseframe : \"f.gif\" #0 ;\nA02 : : \"f.gif\" #1 ;\nA03 : : \"f.gif\" #2 ;\n"
         + "B01 : : \"f.gif\" #3 ;\nB02 : : \"f.gif\" #4 ;\nB03 : : \"f.gif\" #5 ;\n"
         + "C01 : : \"f.gif\" #6 ;\nC02 : : \"f.gif\" #7 ;\nC03 : : \"f.gif\" #8 ;\nP00 : help : \"b.gif\" #0 ;\n");
 
-    /// <summary>Sun 워크샵: 겹침 조각이 있어도 돌리지 않는다.</summary>
+    /// <summary>Sun 워크샾: 겹침 조각이 있어도 돌리지 않는다.</summary>
     private static readonly TypeDefinition SunFactory = TypeDefinition.Parse(
         "typename sunFactory\ntypeflags factory shadow;\n{\n\ttheme = \"sun\";\n}\n"
         + "A01 : default baseframe : \"f.gif\" #0 ;\nA02 : : \"f.gif\" #1 ;\nB01 : : \"f.gif\" #2 ;\nC01 : : \"f.gif\" #3 ;\nC02 : : \"f.gif\" #4 ;\n");
@@ -47,7 +47,7 @@ public class StructureAnimationTests
         Assert.Equal(0, StructureAnimation.LoopIndex(10, 0, 5));
     }
 
-    /// <summary>가이저는 A00~A16 의 17장만 약 24Hz 로 되풀이한다 (A17 이후와 기본 B00 은 쓰지 않는다).</summary>
+    /// <summary>간헐천은 A00~A16 의 17장만 약 24Hz 로 되풀이한다 (A17 이후와 기본 B00 은 쓰지 않는다).</summary>
     [Fact]
     public void Geyser_LoopsFirstSeventeenSteamFrames()
     {
@@ -66,7 +66,7 @@ public class StructureAnimationTests
         Assert.Equal(1, StructureAnimation.GeyserFrame(plain, 3));
     }
 
-    /// <summary>워크샵 본체는 레벨 1·2·3 → A01·B01·C01 이고 범위 밖 레벨은 가까운 값으로 맞춘다.</summary>
+    /// <summary>워크샾 본체는 레벨 1·2·3 → A01·B01·C01 이고 범위 밖 레벨은 가까운 값으로 맞춘다.</summary>
     [Theory]
     [InlineData(1, 0)]
     [InlineData(2, 3)]
@@ -78,7 +78,7 @@ public class StructureAnimationTests
         Assert.Equal(expectedBody, StructureAnimation.FactoryFrames(RainFactory, level, 0).Body);
     }
 
-    /// <summary>Rain 워크샵은 "조각 없음 → 02 → 03" 을 0.5초마다 되풀이한다 (1.5초 주기).</summary>
+    /// <summary>Rain 워크샾은 "조각 없음 → 02 → 03" 을 0.5초마다 되풀이한다 (1.5초 주기).</summary>
     [Fact]
     public void RainFactory_CyclesOverlayEveryHalfSecond()
     {
@@ -89,7 +89,7 @@ public class StructureAnimationTests
         Assert.Equal(3, StructureAnimation.FactoryFrames(RainFactory, 2, 1.1).Body);
     }
 
-    /// <summary>Sun 워크샵은 겹침 조각을 그리지 않는다 (녹화 내내 창 조각이 보이지 않았다).</summary>
+    /// <summary>Sun 워크샾은 겹침 조각을 그리지 않는다 (녹화 내내 창 조각이 보이지 않았다).</summary>
     [Fact]
     public void SunFactory_NeverShowsOverlay()
     {

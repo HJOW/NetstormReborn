@@ -139,7 +139,7 @@ internal sealed partial class FortMapViewer
         foreach (FortIslandSupport support in _terrain.Supports)
             if (_session.Bridges.IsIsland(support.X, support.Y))
                 AddWorldSupport(items, WorldPixels(support.X, support.Y), center, support.Owner);
-        // 새 건물 받침과 미션에서 생성한 연습 가이저 받침도 같은 깊이로 등록한다.
+        // 새 건물 받침과 미션에서 생성한 연습 간헐천 받침도 같은 깊이로 등록한다.
         foreach (GameEntity entity in _session.Entities)
         {
             bool practice = entity.Kind == ObjectKind.Geyser && entity.Source != null && !_map.Objects.Contains(entity.Source);

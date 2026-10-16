@@ -17,7 +17,7 @@ public static class BattleSessionFactory
     /// <summary>튜토리얼 2(Secret Workshop) 번호 — 원본이 시작할 때 전투 옵션을 덮어쓴다 (BattleOptions.ApplyTutorialTwoOverrides)</summary>
     private const int TutorialTwo = 2;
 
-    /// <summary>원본 실행 시 동적으로 가이저를 만드는 튜토리얼 1 번호.</summary>
+    /// <summary>원본 실행 시 동적으로 간헐천을 만드는 튜토리얼 1 번호.</summary>
     private const int TutorialOne = 1;
 
     /// <summary>

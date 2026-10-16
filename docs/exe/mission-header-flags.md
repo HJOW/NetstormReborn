@@ -147,7 +147,7 @@ techAllowed = "deny;all;allow;windVortex;sunArcher"
 * **튜토리얼 2 단계 처리 구현(2026-09-30)**: [`TutorialStages`](../../dotnetpj/src/Netstorm.Core/Simulation/TutorialStages.cs)가 단계 A~I를 재현한다. 세션 명령·이벤트만 보고 표·회수 금지·전투 옵션을 바꾸고
   단계마다 스크립트 섹션 이름을 `TutorialTell` 이벤트로 알린다(안내 창은 아직 없다). 단계 C·F가 읽는 "선택한 오브젝트"는 `SelectEntityCommand`로 세션 상태가 되었다.
   [TutorialStagesTests](../../dotnetpj/tests/Netstorm.Core.Tests/TutorialStagesTests.cs)가 명령만으로 A→I를 끝까지 걷는다. 이전 테스트([BattleSessionTests](../../dotnetpj/tests/Netstorm.Core.Tests/BattleSessionTests.cs))의 손 재현은 규칙만 따로 확인하려고 남겼다.
-  튜토리얼 1은 수집 경제(가이저·사제 결정 운반)가 필요해 아직 구현하지 않았고, 3~6은 전투가 필요하다.
+  튜토리얼 1은 수집 경제(간헐천·사제 결정 운반)가 필요해 아직 구현하지 않았고, 3~6은 전투가 필요하다.
 * 맵 뷰어의 배치 시험 모드는 `EnforceProductionRules = false`라 표·회수 금지·덱을 모두 무시한다.
 
 ## 6. 한계·미확인

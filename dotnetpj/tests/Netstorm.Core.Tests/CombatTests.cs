@@ -127,8 +127,8 @@ public sealed class CombatTests
     }
 
     /// <summary>
-    /// 템플이 파괴되면 주위 1칸에 400 피해가 들어가 옆의 골렘은 한 번에 파괴되고 사제는 기절한다. 휘말린 포대(Sun Disc Thrower)도
-    /// 파괴되며, 연쇄 파괴의 보상은 템플을 부순 플레이어가 받는다 (사용자 설명 2026-10-01, exe FUN_0044b9e0).
+    /// 신전이 파괴되면 주위 1칸에 400 피해가 들어가 옆의 골렘은 한 번에 파괴되고 사제는 기절한다. 휘말린 포대(Sun Disc Thrower)도
+    /// 파괴되며, 연쇄 파괴의 보상은 신전을 부순 플레이어가 받는다 (사용자 설명 2026-10-01, exe FUN_0044b9e0).
     /// </summary>
     [Fact]
     public void TempleDestruction_ExplodesOntoAdjacentUnitsAndChainsRewards()
@@ -143,7 +143,7 @@ public sealed class CombatTests
         GameEntity farPriest = session.Entity(OriginalData.Sid(6))!;
         int money = session.Player(1).StormPower;
         int percent = session.Map.Options.KillRewardPercent;
-        // 템플이 파괴될 때까지 진행한다
+        // 신전이 파괴될 때까지 진행한다
         for (int tick = 0; tick < 600 && session.Entity(temple.Id) != null; tick++)
         {
             session.RunTicks(1);
@@ -159,7 +159,7 @@ public sealed class CombatTests
             + StormPower.KillReward(archer.Cost, percent);
         Assert.Equal(money + expected, session.Player(1).StormPower);
         SessionEvent[] events = [.. session.DrainEvents()];
-        // 템플과 휘말린 포대(archer 그룹) 두 번 폭발한다. 골렘은 폭발하지 않는다.
+        // 신전과 휘말린 포대(archer 그룹) 두 번 폭발한다. 골렘은 폭발하지 않는다.
         Assert.Equal(2, events.Count(e => e.Kind == SessionEventKind.EntityExploded));
         Assert.Equal(3, events.Count(e => e.Kind == SessionEventKind.EntityDestroyed && e.Player == 1));
     }

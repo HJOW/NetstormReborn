@@ -52,11 +52,11 @@
 | --- | --- | --- | --- |
 | Terr00 | 사제158 | (14,12) | QA129, owner1, 빈 contents |
 | Terr00 | 레인 보텍스124 | (9,4) | owner1, 내용물 sunWalker |
-| Terr00 | 레지던스89 | (5,14) | owner1 |
+| Terr00 | 거주 구역89 | (5,14) | owner1 |
 | Terr01 | 사제158 | (0,11) | QA2, owner2, 빈 contents |
 | Terr01 | 윈드 보텍스123 | (12,12) | owner2, 내용물 sunWalker |
-| Terr01 | 레지던스89 | (5,9) | owner2 |
+| Terr01 | 거주 구역89 | (5,9) | owner2 |
 
-실제 priest.type에는 saveFrame이 없고 생성/이 body의 기본 프레임은0이다. `GameWorld::Place`는 `.type defaultFrame` C02를 선택하는 값형 어댑터이므로 이 값으로 raw 원본 프레임을 덮으면 초기 표시가 달라질 수 있다. 사제 QA129/2는 이후 실제 소유자 지정에서 원래 소유자 low7/로컬 표식과 상호작용한다. 레지던스의 randframe 효과도 기존 단일 defaultFrame과 다르다.
+실제 priest.type에는 saveFrame이 없고 생성/이 body의 기본 프레임은0이다. `GameWorld::Place`는 `.type defaultFrame` C02를 선택하는 값형 어댑터이므로 이 값으로 raw 원본 프레임을 덮으면 초기 표시가 달라질 수 있다. 사제 QA129/2는 이후 실제 소유자 지정에서 원래 소유자 low7/로컬 표식과 상호작용한다. 거주 구역의 randframe 효과도 기존 단일 defaultFrame과 다르다.
 
 실제1-1 월드 연결은 위 기본 소유자/모드/flags9·현재 최대 HP·사제 프레임0·randframe/지형 프레임·Pop 이후 contained 재귀·로딩 깊이/타입변환표 수명을 복원해야 한다. 이번 분석은 정적 근거와 보호 자료 입력을 확보한 단계이며, 해당 body의 독립 x86 실행 및 실제 캠페인 로딩 비교는 후속 작업이다.

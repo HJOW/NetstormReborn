@@ -63,7 +63,7 @@ key LeftShift+F9; wait 120; capture $OutputDirectory/21-resumed.png; quit;
 "@
     $taskArguments = "--mission thewarbegins --language korean --no-sound --no-music --ui-script-file $OutputDirectory/commands.txt"
 } elseif ($Mode -eq 'Workshop') {
-    # 7×8 발자국 전체가 섬 안에 들어가는 (109,106)에 완공하고 사제를 피해 워크샵 내부 (706,314)를 우클릭한다.
+    # 7×8 발자국 전체가 섬 안에 들어가는 (109,106)에 완공하고 사제를 피해 워크샾 내부 (706,314)를 우클릭한다.
     # 화면 오른쪽의 부모 메뉴에서는 지식·생산 하위 창이 왼쪽에 열리며, 등록 후 남은 첫 지식을 다시 고른다.
     $taskScript = @"
 click-center 82,114; assert battle; assert-detail workshops=sunfactory:1; right-click 706,314; assert context:main; capture $OutputDirectory/22-workshop.png;

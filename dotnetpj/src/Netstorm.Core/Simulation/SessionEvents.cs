@@ -48,7 +48,7 @@ public enum CommandFailure
     /// <summary>회수 금지 상태 (미션 denySalvage 가 켜져 있음)</summary>
     SalvageDenied,
 
-    /// <summary>회수할 수 없는 종류 (사제·가이저·지형 등)</summary>
+    /// <summary>회수할 수 없는 종류 (사제·간헐천·지형 등)</summary>
     CannotSalvage,
 
     /// <summary>다리 칸의 조각 순번이 잘못됨</summary>
@@ -72,16 +72,16 @@ public enum CommandFailure
     /// <summary>결정을 전달할 완성된 신전이 없음.</summary>
     NoTemple,
 
-    /// <summary>가이저가 비어 더 채집할 수 없음</summary>
+    /// <summary>간헐천이 비어 더 채집할 수 없음</summary>
     GeyserEmpty,
 
-    /// <summary>현재 섬·다리 칸에서 가이저까지 걸어갈 경로가 없음.</summary>
+    /// <summary>현재 섬·다리 칸에서 간헐천까지 걸어갈 경로가 없음.</summary>
     NoRoute,
 
     /// <summary>집을 수 없는 사제 (기절하지 않음·동맹·이미 포획됨, allowAnyCapture 미션 제외).</summary>
     NotCapturable,
 
-    /// <summary>알타에 이미 다른 사제가 묶여 있음.</summary>
+    /// <summary>제단에 이미 다른 사제가 묶여 있음.</summary>
     AltarOccupied,
 
     /// <summary>수송 유닛이 사제를 운반하고 있지 않음.</summary>
@@ -168,13 +168,13 @@ public enum SessionEventKind
     /// <summary>건물 건설 완료 (신전이면 섬 소유·다리 공급 시작, 워크샾이면 덱에 등록 가능)</summary>
     BuildingCompleted,
 
-    /// <summary>사제가 가이저에서 Storm Crystal 하나를 가져옴.</summary>
+    /// <summary>사제가 간헐천에서 Storm Crystal 하나를 가져옴.</summary>
     CrystalCollected,
 
     /// <summary>사제가 신전에 Storm Crystal 하나를 전달해 Storm Power를 얻음.</summary>
     CrystalDelivered,
 
-    /// <summary>가이저의 Storm Power 가 바닥나 빈 가이저가 됨 (EntityId = 가이저). 원본 도움말: 수송 유닛은 가이저가 고갈될 때까지 채집을 반복한다.</summary>
+    /// <summary>간헐천의 Storm Power 가 바닥나 고갈된 간헐천이 됨 (EntityId = 간헐천). 원본 도움말: 수송 유닛은 간헐천이 고갈될 때까지 채집을 반복한다.</summary>
     GeyserDepleted,
 
     /// <summary>튜토리얼의 F4 화면 복귀 입력.</summary>
@@ -228,13 +228,13 @@ public enum SessionEventKind
     /// <summary>수송 유닛이 도착했지만 사제가 회복해 포획에 저항함 (EntityId = 사제).</summary>
     PriestResisted,
 
-    /// <summary>운반한 사제를 알타의 희생의 원에 묶음 (EntityId = 사제).</summary>
+    /// <summary>운반한 사제를 제단의 희생의 원에 묶음 (EntityId = 사제).</summary>
     PriestBound,
 
-    /// <summary>포획된 사제가 풀려나 완전히 회복함 (내려놓음·운반 유닛 파괴·판매, 알타 파괴·판매, EntityId = 사제).</summary>
+    /// <summary>포획된 사제가 풀려나 완전히 회복함 (내려놓음·운반 유닛 파괴·판매, 제단 파괴·판매, EntityId = 사제).</summary>
     PriestReleased,
 
-    /// <summary>알타에서 희생 의식이 시작됨 (Player = 알타 소유자, EntityId = 알타). 원본은 이때 희생 음악을 튼다.</summary>
+    /// <summary>제단에서 희생 의식이 시작됨 (Player = 제단 소유자, EntityId = 제단). 원본은 이때 희생 음악을 튼다.</summary>
     SacrificeStarted,
 
     /// <summary>의식의 룬 하나를 지키기 시작함 (Text = 룬 이름 Wind/Sun/Rain/Thunder/Storm, 원본 forWind2.wav 등).</summary>
@@ -249,22 +249,22 @@ public enum SessionEventKind
     /// <summary>묶인 사제가 희생됨 (원본 priestSacrifice2.wav, EntityId = 희생된 사제).</summary>
     PriestSacrificed,
 
-    /// <summary>알타이 파괴·판매돼 의식이 깨지고 포로가 풀림 (EntityId = 알타). 의식 사제의 이탈·기절·포획은 깨지지 않고 멈춘다.</summary>
+    /// <summary>제단이 파괴·판매돼 의식이 깨지고 포로가 풀림 (EntityId = 제단). 의식 사제의 이탈·기절·포획은 깨지지 않고 멈춘다.</summary>
     SacrificeBroken,
 
-    /// <summary>의식 사제가 알타 옆을 떠나거나 기절·포획돼 의식이 멈춤 (EntityId = 알타). 포로는 묶인 채 남는다(2026-10-01 녹화·사용자 확인).</summary>
+    /// <summary>의식 사제가 제단 옆을 떠나거나 기절·포획돼 의식이 멈춤 (EntityId = 제단). 포로는 묶인 채 남는다(2026-10-01 녹화·사용자 확인).</summary>
     SacrificePaused,
 
-    /// <summary>마크가 나타나기 전에 사제가 떠나 그 룬이 취소됨 (Text = 룬 이름, EntityId = 알타). 복귀하면 음성부터 다시 한다.</summary>
+    /// <summary>마크가 나타나기 전에 사제가 떠나 그 룬이 취소됨 (Text = 룬 이름, EntityId = 제단). 복귀하면 음성부터 다시 한다.</summary>
     SacrificeRuneCancelled,
 
-    /// <summary>의식 사제가 움직일 수 있는 상태로 알타 옆에 돌아와 의식이 이어짐 (EntityId = 알타).</summary>
+    /// <summary>의식 사제가 움직일 수 있는 상태로 제단 옆에 돌아와 의식이 이어짐 (EntityId = 제단).</summary>
     SacrificeResumed,
 
-    /// <summary>적 사제를 의식으로 완전히 처리해 알타 주인이 스톰 파워 5,000을 받음 (EntityId = 희생된 사제).</summary>
+    /// <summary>적 사제를 의식으로 완전히 처리해 제단 주인이 스톰 파워 5,000을 받음 (EntityId = 희생된 사제).</summary>
     SacrificeRewarded,
 
-    /// <summary>의식이 끝난 알타이 소멸함 (EntityId = 알타).</summary>
+    /// <summary>의식이 끝난 제단이 소멸함 (EntityId = 제단).</summary>
     AltarConsumed,
 
     /// <summary>
@@ -286,7 +286,7 @@ public enum SessionEventKind
     MoveResumed,
 
     /// <summary>
-    /// 룬 음성이 끝나 알타에 그 룬의 마크가 나타났다 (Text = 룬 이름). 이 뒤에는 사제가 떠나도 룬이 탄다.
+    /// 룬 음성이 끝나 제단에 그 룬의 마크가 나타났다 (Text = 룬 이름). 이 뒤에는 사제가 떠나도 룬이 탄다.
     /// 원본은 이때부터 룬이 탈 때까지 jimbuild.wav 를 1.14초마다 반복한다(2026-10-02 녹음 판독).
     /// </summary>
     SacrificeRuneMarked,
@@ -353,10 +353,10 @@ public static class SessionText
         CommandFailure.BridgeBlocked => "다리를 놓을 수 없는 위치",
         CommandFailure.NoPriest => "움직일 사제가 없음",
         CommandFailure.NoTemple => "결정을 전달할 신전이 없음",
-        CommandFailure.GeyserEmpty => "가이저가 비어 있음",
+        CommandFailure.GeyserEmpty => "간헐천이 고갈됨",
         CommandFailure.NoRoute => "목적지까지 이어진 길이 없음",
         CommandFailure.NotCapturable => "집을 수 없는 사제 (기절하지 않았거나 동맹)",
-        CommandFailure.AltarOccupied => "알타에 이미 사제가 묶여 있음",
+        CommandFailure.AltarOccupied => "제단에 이미 사제가 묶여 있음",
         CommandFailure.NotCarrying => "운반 중인 사제가 없음",
         CommandFailure.AlreadyCarrying => "이미 사제를 운반 중",
         _ => failure.ToString(),

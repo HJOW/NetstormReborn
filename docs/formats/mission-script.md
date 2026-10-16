@@ -117,7 +117,7 @@ PreparedMissionSection? section = mission?.Script.PrepareSection("CraftWarning",
 | `myStartMoney` | `7000` | 플레이어 시작 Storm Power (게임 내 재화) |
 | `myTech` | `"suncannon;sunblocker;..."` 또는 `"all"` | 플레이어가 가진 기술 (`;` 구분, `.type` 이름). `all`은 대소문자와 관계없이 생산 그룹이 있는 타입 전체로 확장한다 |
 | `myAllyList` | | ~~플레이어 동맹~~ — **원본 실행 파일이 읽지 않는 키**(2026-10-15). AI 쪽 `aiNAllyList`·공통 `aiAllyList` 만 동맹을 정한다 |
-| `moreGeysers`, `randGeysers` / `randomGeysers` | `1` | 가이저 추가/무작위 배치 |
+| `moreGeysers`, `randGeysers` / `randomGeysers` | `1` | 간헐천 추가/무작위 배치 |
 | `denySalvage`, `denyAscend`, `techAllowed`, `allowAnyCapture` | | 규칙 제한의 **시작 값**. 튜토리얼 단계 처리가 실행 중에 바꾼다 — 튜토리얼 2 는 `denySalvage = 1` 로 시작해 단계 H 에서 0 으로, `techAllowed` 에 없는 sunFactory 를 단계 B 에서 허용으로 바꾼다 ([mission-header-flags.md](../exe/mission-header-flags.md)) |
 | `loadFort` | | 불러올 요새 |
 | `aiNName` | `"Juggler of Thunder"` | AI 이름 |
@@ -126,7 +126,7 @@ PreparedMissionSection? section = mission?.Script.PrepareSection("CraftWarning",
 | `aiNAllyList` | | AI 동맹 |
 | `aiNTimeBetweenMoves` | | AI 행동 간격 |
 | `aiNCollectors` | `4` | AI 수집 유닛 수 |
-| `aiNGeyserAttachments` | `5` | AI 가이저 연결 수 |
+| `aiNGeyserAttachments` | `5` | AI 간헐천 연결 수 |
 | `aiNcolor` | `red` | AI 색상. exe 의 이름 목록 `/none/blue/red/white/green/purple/yellow/lightblue/orange/` 에서 찾은 순번(1~8)이 색 번호가 된다(대소문자 무시, 목록에 없는 `cyan`·`magenta` 는 무시). 기본 색 번호는 플레이어 번호와 같다. AI 플레이어를 만들 때 적용된다 — [근거](../videos/test01-visuals-20261003.md) 3절 |
 | `aiNBridgeDrawRate` | `1` | AI 다리 조각 뽑기 속도 |
 | `aiNAbility` | `"!USE_PRIEST_TO_COLLECT"` | AI 능력 플래그 (`!` = 끔) |
@@ -142,7 +142,7 @@ PreparedMissionSection? section = mission?.Script.PrepareSection("CraftWarning",
 | `[Succeeded]` / `[Succeed]` | 승리 |
 | `[Failed]` | 패배 |
 | `[BadTeamDead]` | 적 전멸 |
-| `[aiNPriestDead]`, `[aiNPriestCaptured]`, `[aiNPriestSaved]` | AI N 의 프리스트 사망/포획/구출 |
+| `[aiNPriestDead]`, `[aiNPriestCaptured]`, `[aiNPriestSaved]` | AI N 의 사제 사망/포획/구출 |
 | `[aiNTempleHalfDead]`, `[aiNTempleDead]` | AI N 의 신전 반파/파괴 |
 | `[init]` | 미션 초기화 |
 | `[END]` | 종료 |
@@ -220,7 +220,7 @@ AGENTS.md가 정리한 커스텀 맵의 구성이다. 예는 사용자가 만든
 | 팬 제작 | User Made Campaigns | |
 
 * **"Early Missions"(Tutorial1~6) 는 캠페인이 아니라 튜토리얼이다** (2026-09-28 사용자 확인. 미션 헤더도 `missionType = "Tutorial"`, `tutorialNumber` 를 가짐).
-  Bridge the Gap! 에는 가이저가 없다 (`moreGeysers = 0`) — 원본 화면 관찰: [bridge-the-gap-start.md](../screens/bridge-the-gap-start.md)
+  Bridge the Gap! 에는 간헐천이 없다 (`moreGeysers = 0`) — 원본 화면 관찰: [bridge-the-gap-start.md](../screens/bridge-the-gap-start.md)
 * 각 미션은 이전 미션 완료 변수(`{Done<이전 미션>}`)가 참이어야 열린다.
 * 주의: 캠페인 미션(예: The War Begins!)도 헤더가 `missionType = "Tutorial"` 이다 → 헤더 값으로 튜토리얼/캠페인을 구분할 수 없다. 구분은 메뉴 스크립트(`offical*.english`) 소속으로 한다.
 * 섹션 머리에 이름이 두 개 붙은 경우가 있다: `[Succeeded][BadTeamDead]` (두 이벤트가 같은 내용) → 파서가 지원해야 한다.

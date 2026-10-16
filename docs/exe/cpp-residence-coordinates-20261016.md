@@ -1,4 +1,4 @@
-# 레지던스 좌표 복원 정정과 실제 연속 Kernel 검사
+# 거주 구역 좌표 복원 정정과 실제 연속 Kernel 검사
 
 아래 수치는 단위81 당시 결과다. 후속 [오벨리스크 Handle 복원](cpp-buried-regular-20261016.md)으로 Tutorial5도400프레임을 통과했고 현재 실패는4개다.
 
@@ -6,7 +6,7 @@
 
 ## 원본 오류로 잘못 설명했던 좌표
 
-10.78 레지던스(TYPE89·residence)의 `0049a4e0` event1에서 첫 범위는 `ftol(X-48)..ftol(X+32)`, 둘째 범위는 `ftol(Y-32)..ftol(Y+32)`다. 기존 문서/C++의 ‘패치만 X-32인 원본 결함’은 스택 변화를 놓친 복원 오류다. 원본의 나눗셈0 회피나 난수 소비를 바꾸지 않고 잘못된 축만 고쳤다.
+10.78 거주 구역(TYPE89·residence)의 `0049a4e0` event1에서 첫 범위는 `ftol(X-48)..ftol(X+32)`, 둘째 범위는 `ftol(Y-32)..ftol(Y+32)`다. 기존 문서/C++의 ‘패치만 X-32인 원본 결함’은 스택 변화를 놓친 복원 오류다. 원본의 나눗셈0 회피나 난수 소비를 바꾸지 않고 잘못된 축만 고쳤다.
 
 `0049a674`에서 X/Y를 현재 ESP+14/+18에 저장한다. `0049a69b/0049a6a1`에서 두 인수를 push한 뒤 `004558f0`을 cdecl로 호출하므로 호출 후에도8바이트가 남는다. 따라서 `0049a6a7/0049a6bc`의 ESP+20은 처음의 ESP+18인 **Y**다. `0049a6c0`의 추가 push 전 Y를 읽고32를 뺀다. 원본 CRT ftol와 unsigned 나머지/helper는 그대로 실행한다. CD10.72의 별도 `0044a710`도 같은 좌표 관계다.
 
@@ -24,7 +24,7 @@
 
 | 실제 입력 | 수정 후400프레임 결과 |
 | --- | --- |
-| Tutorial1/2/3/4 | 통과. Tutorial4는 첫 프레임의 레지던스 event1 범위0 복원 오류를 해결했다. |
+| Tutorial1/2/3/4 | 통과. Tutorial4는 첫 프레임의 거주 구역 event1 범위0 복원 오류를 해결했다. |
 | TheWarBegins / MasterOfWhirligigs | 통과 |
 | Tutorial5 / DissolvedAlliance | 첫 프레임의 TYPE112 buried event0 미복원 |
 | Tutorial6 / GuardMyBack | 첫 프레임의 TYPE136 Sun Barricade event0 미복원 |

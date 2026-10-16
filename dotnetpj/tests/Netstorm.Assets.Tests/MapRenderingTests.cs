@@ -143,7 +143,7 @@ public sealed class MapRenderingTests
     }
 
     /// <summary>
-    /// 원본 거주지(randframe)는 섬 원소별 그림을 쓴다 (Dissolved Alliance! 캡처: 바람 섬 = 흙집, 비 섬 = 돔).
+    /// 원본 거주 구역(randframe)는 섬 원소별 그림을 쓴다 (Dissolved Alliance! 캡처: 바람 섬 = 흙집, 비 섬 = 돔).
     /// 원소마다 해당 그림의 lit 클러스터를 고르고, 저장 프레임이 있으면 그 값을 우선한다.
     /// </summary>
     [Theory]
@@ -176,7 +176,7 @@ public sealed class MapRenderingTests
     public void ImageTheme_FromPrefix(string image, string theme) =>
         Assert.Equal(theme, MapSpriteFrames.ImageTheme(image));
 
-    /// <summary>원본 가이저 기본 B00은 본체 49번이며 그림자 영역으로 건너뛰지 않아야 한다.</summary>
+    /// <summary>원본 간헐천 기본 B00은 본체 49번이며 그림자 영역으로 건너뛰지 않아야 한다.</summary>
     [Fact]
     public void Original_GeyserDefaultUsesBodyInsteadOfShadow()
     {
@@ -339,7 +339,7 @@ public sealed class MapRenderingTests
         var map = new FortMap(new FortFile(archive.Read(entry), catalog));
         var terrain = new FortTerrainPreview(map, catalog.Find("isle")!.Definition);
         var mask = Enumerable.Repeat(byte.MaxValue, MaskSize * MaskSize).ToArray();
-        // 본섬만 비교하여 미확정인 건물·가이저 받침 생성이 기준값에 섞이지 않게 한다.
+        // 본섬만 비교하여 미확정인 건물·간헐천 받침 생성이 기준값에 섞이지 않게 한다.
         foreach (FortTerrainCell cell in terrain.IslandCells)
         {
             Assert.Equal(byte.MaxValue, mask[cell.Y * MaskSize + cell.X]);

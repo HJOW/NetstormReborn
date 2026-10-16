@@ -6,7 +6,7 @@ using Netstorm.Core.Simulation;
 
 namespace Netstorm.Core.Tests;
 
-/// <summary>원본 1-1 맵의 시작 조건·수입·워크샵·일반 이동을 검사한다.</summary>
+/// <summary>원본 1-1 맵의 시작 조건·수입·워크샾·일반 이동을 검사한다.</summary>
 public sealed class CampaignOneTests
 {
     /// <summary>시작 조건이 같으면 임시 AI도 결정적이며, 지식의 차이는 검사합에 반영된다.</summary>
@@ -63,7 +63,7 @@ public sealed class CampaignOneTests
         Assert.DoesNotContain("Failed", session.ToldSections);
     }
 
-    /// <summary>실제 생산 골렘도 가이저를 왕복하고 내 SP를 늘린다.</summary>
+    /// <summary>실제 생산 골렘도 간헐천을 왕복하고 내 SP를 늘린다.</summary>
     [Fact]
     public void ProducedGolem_HarvestsAndCanStopWithoutLosingCrystals()
     {
@@ -75,7 +75,7 @@ public sealed class CampaignOneTests
         int money = session.Player(1).StormPower;
         session.Submit(new HarvestGeyserCommand(1, geyser.Id, golem.Id));
         session.RunTicks(session.TicksPerSecond * 90);
-        Assert.True(session.Player(1).StormPower > money, $"골렘 {golem.Footprint}, 신전 {temple.Footprint}, 가이저 {geyser.Footprint}: " + string.Join("; ", session.DrainEvents().Where(e => e.Kind == SessionEventKind.CommandRejected).Select(e => e.Text)));
+        Assert.True(session.Player(1).StormPower > money, $"골렘 {golem.Footprint}, 신전 {temple.Footprint}, 간헐천 {geyser.Footprint}: " + string.Join("; ", session.DrainEvents().Where(e => e.Kind == SessionEventKind.CommandRejected).Select(e => e.Text)));
         int carried = golem.CarriedCrystals;
         session.Submit(new StopEntityCommand(1, golem.Id)); session.RunTicks(1);
         Footprint stopped = golem.Footprint;
@@ -104,7 +104,7 @@ public sealed class CampaignOneTests
         Assert.Contains(session.DrainEvents(), e => e.Failure == CommandFailure.NotOwner);
     }
 
-    /// <summary>워크샵 두 생산 칸을 실제 지식으로 채우고 업그레이드 후 세 번째 타입을 등록한다.</summary>
+    /// <summary>워크샾 두 생산 칸을 실제 지식으로 채우고 업그레이드 후 세 번째 타입을 등록한다.</summary>
     [Fact]
     public void Workshop_UpgradeUnlocksThirdStartingUnitAndChargesOnce()
     {

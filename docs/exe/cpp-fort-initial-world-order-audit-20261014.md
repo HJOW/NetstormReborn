@@ -34,7 +34,7 @@ PlaceAll은 **0046dd70/CD00490980**의 `[start,end)` 순회이며 recordBYTE+1�
 
 ## 저장 객체의 같은 풀 연결
 
-기존 `RawFortObjectLoad`의 실제 body는 Factory(type,0)→저장 QA/frame 등→가상 state/owner→HasHP/MaxHP/공통 직접HP→지형/게임random frame→**Pop9→contained 재귀** 순서다. Terr를 같은 current Runtime.Matches/ChunkMap으로 선택한 뒤 Chaff를 읽는다. Template칸1의 미션 저장owner1/2와 가이저/noIsland의 강제0을 구분한다.
+기존 `RawFortObjectLoad`의 실제 body는 Factory(type,0)→저장 QA/frame 등→가상 state/owner→HasHP/MaxHP/공통 직접HP→지형/게임random frame→**Pop9→contained 재귀** 순서다. Terr를 같은 current Runtime.Matches/ChunkMap으로 선택한 뒤 Chaff를 읽는다. Template칸1의 미션 저장owner1/2와 간헐천/noIsland의 강제0을 구분한다.
 
 필수 연결은 같은 `RawSurfaceWorld.Core`의 Factory/HP/표면 알림, 사제 포함 실제 state/owner 분배, 실제 Pop/Destroy, `RawContainedCreate`의 타입6 Form 생성/실제 Attach, 현재3204BYTE Matches, 단일 게임GameRandom, `RawAssetPostPopState.residences` 자체를 쓰는 실제 FinishOwner다. 신전의 저장sunWalker133을 공간 자산으로 Pop하지 않고 contained 타입6 Form의 storedTypeWORD로 등록해야 한다.
 

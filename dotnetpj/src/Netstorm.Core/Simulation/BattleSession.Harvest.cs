@@ -3,15 +3,15 @@ using Netstorm.Core.Rules;
 
 namespace Netstorm.Core.Simulation;
 
-/// <summary>사제·수송 유닛이 가이저에서 결정을 가져와 신전에 전달하는 수집 경제.</summary>
+/// <summary>사제·수송 유닛이 간헐천에서 결정을 가져와 신전에 전달하는 수집 경제.</summary>
 public sealed partial class BattleSession
 {
     /// <summary>수집자 번호순으로 처리하는 수확 작업. 내부 작업 타입의 기존 이름은 유지한다.</summary>
     private readonly SortedDictionary<int, PriestHarvestTask> _harvestTasks = [];
 
     /// <summary>
-    /// 가이저에 도착한 수집자가 결정 하나를 얻을 때까지 머무는 시간(초). 원본 값은 미측정인 임시값이다.
-    /// 가이저 둘레와 신전 둘레가 맞닿아 이동 거리가 0인 경우에도 틱마다 결정을 얻지 않게 한다.
+    /// 간헐천에 도착한 수집자가 결정 하나를 얻을 때까지 머무는 시간(초). 원본 값은 미측정인 임시값이다.
+    /// 간헐천 둘레와 신전 둘레가 맞닿아 이동 거리가 0인 경우에도 틱마다 결정을 얻지 않게 한다.
     /// </summary>
     public const double HarvestMineSeconds = 1.0;
 
@@ -38,7 +38,7 @@ public sealed partial class BattleSession
     internal static double StepLength((int X, int Y) from, (int X, int Y) to) =>
         from.X != to.X && from.Y != to.Y ? DiagonalStepLength : 1.0;
 
-    /// <summary>명령 대상 가이저와 수집자·신전을 검사한 뒤 갈 수 있는 길을 예약한다.</summary>
+    /// <summary>명령 대상 간헐천과 수집자·신전을 검사한 뒤 갈 수 있는 길을 예약한다.</summary>
     private CommandResult ExecuteHarvestGeyser(HarvestGeyserCommand command)
     {
         if (!_players.ContainsKey(command.Player))
@@ -99,10 +99,10 @@ public sealed partial class BattleSession
     }
 
     /// <summary>
-    /// 현재 다리·섬에서 지정한 가이저까지 소유자의 사제가 갈 수 있는지. 튜토리얼 1의 연결 단계가 표면 Graph 번호 비교 대신 쓰는 근사다.
+    /// 현재 다리·섬에서 지정한 간헐천까지 소유자의 사제가 갈 수 있는지. 튜토리얼 1의 연결 단계가 표면 Graph 번호 비교 대신 쓰는 근사다.
     /// </summary>
     /// <param name="owner">사제의 소유자</param>
-    /// <param name="geyser">가이저 객체</param>
+    /// <param name="geyser">간헐천 객체</param>
     internal bool CanReachGeyser(int owner, GameEntity geyser)
     {
         GameEntity? priest = _entities.Values.FirstOrDefault(e => e.Kind == ObjectKind.Priest && e.Owner == owner);
@@ -138,14 +138,14 @@ public sealed partial class BattleSession
                     _harvestTasks.Remove(task.PriestId);
                     continue;
                 }
-                // 가이저 옆에서 정해진 시간 동안 머문 뒤 결정을 얻는다
+                // 간헐천 옆에서 정해진 시간 동안 머문 뒤 결정을 얻는다
                 if (task.MiningUntilTick == 0) task.MiningUntilTick = Tick + TicksFor(HarvestMineSeconds);
                 if (Tick < task.MiningUntilTick) continue;
                 task.MiningUntilTick = 0;
                 geyser.StoredStormPower = Math.Max(0, geyser.StoredStormPower - StormPower.CrystalValue);
                 priest.CarriedCrystals = 1;
                 Emit(SessionEventKind.CrystalCollected, priest.Owner, priest.Id, $"{priest.DisplayName} 결정 수확");
-                if (geyser.IsDepletedGeyser) Emit(SessionEventKind.GeyserDepleted, 0, geyser.Id, "가이저 고갈");
+                if (geyser.IsDepletedGeyser) Emit(SessionEventKind.GeyserDepleted, 0, geyser.Id, "간헐천 고갈");
                 List<(int X, int Y)>? home = FindMovePath(priest, temple.Footprint);
                 task.Phase = HarvestPhase.ToTemple;
                 ReplaceMovementRoute(priest, task, home);
@@ -157,7 +157,7 @@ public sealed partial class BattleSession
                 _players[priest.Owner].StormPower += crystals * StormPower.CrystalValue;
                 Emit(SessionEventKind.CrystalDelivered, priest.Owner, priest.Id,
                     $"{priest.DisplayName} 결정 전달 (+{crystals * StormPower.CrystalValue})");
-                // 가이저가 비었으면 원본처럼 반복을 멈춘다
+                // 간헐천이 비었으면 원본처럼 반복을 멈춘다
                 if (geyser.IsDepletedGeyser)
                 {
                     _harvestTasks.Remove(task.PriestId);
@@ -301,7 +301,7 @@ public sealed partial class BattleSession
     /// <summary>다리가 놓이지 않은 섬 칸인지 (대각선 걸음이 지날 수 있는 칸).</summary>
     private bool IsPlainIsland(int x, int y) => Bridges.IsIsland(x, y) && Bridges.At(x, y) == null;
 
-    /// <summary>사제가 가이저로 가는지 신전으로 결정을 되돌리는지.</summary>
+    /// <summary>사제가 간헐천으로 가는지 신전으로 결정을 되돌리는지.</summary>
     private enum HarvestPhase { ToGeyser, ToTemple }
 
     /// <summary>사제 한 명의 반복 수확 경로와 다음 칸까지의 이동량.</summary>
@@ -310,13 +310,13 @@ public sealed partial class BattleSession
     {
         /// <summary>움직이는 사제 번호.</summary>
         public int PriestId { get; } = priestId;
-        /// <summary>수확 대상 가이저 번호.</summary>
+        /// <summary>수확 대상 간헐천 번호.</summary>
         public int GeyserId { get; } = geyserId;
         /// <summary>결정을 받을 신전 번호.</summary>
         public int TempleId { get; } = templeId;
         /// <summary>현재 왕복 방향.</summary>
         public HarvestPhase Phase { get; set; } = phase;
-        /// <summary>가이저 옆에서 결정을 얻는 틱 (머무는 중이 아니면 0).</summary>
+        /// <summary>간헐천 옆에서 결정을 얻는 틱 (머무는 중이 아니면 0).</summary>
         public long MiningUntilTick { get; set; }
     }
 }

@@ -43,4 +43,4 @@
 
 ## 남은 실제 연결
 
-이 모듈을 Client/GameWorld의 실제 미션 process에 아직 등록하지 않았다. 전체 게임의 Player 상태·신전 SID·사제 ownerState·동맹 표를 공유하고, 미션 section 실행/임시 UI 정리/가상 +0x28/영역 조회의 실제 효과를 연결해야 한다. 실제 골렘 운반/알타 의식이 ownerState를 원본처럼 변경한 뒤 `BadTeamDead`가 발생해야 한다. `<$Config,DoneTheWarBegins=1>`·성공 창·저장·다음 미션 해제와 원본10.78 실제 1-1 진행/완주는 별도 목표로 남아 있다. 신전 파괴 즉시 승리라는 대체 조건은 추가하지 않았다.
+이 모듈을 Client/GameWorld의 실제 미션 process에 아직 등록하지 않았다. 전체 게임의 Player 상태·신전 SID·사제 ownerState·동맹 표를 공유하고, 미션 section 실행/임시 UI 정리/가상 +0x28/영역 조회의 실제 효과를 연결해야 한다. 실제 골렘 운반/제단 의식이 ownerState를 원본처럼 변경한 뒤 `BadTeamDead`가 발생해야 한다. `<$Config,DoneTheWarBegins=1>`·성공 창·저장·다음 미션 해제와 원본10.78 실제 1-1 진행/완주는 별도 목표로 남아 있다. 신전 파괴 즉시 승리라는 대체 조건은 추가하지 않았다.

@@ -46,7 +46,7 @@ PDF의 규칙은 한결같다.
 - 원소 유닛: **L1 = 자기 원소 1**, **L2 = 자기 원소 1 + Sun 1**, **L3 = 자기 원소 2 + Sun 1**.
 - Sun 유닛: **Sun × 레벨**.
 - 예외: **Generator 3종·Outpost = Sun 1**(아무 원소).
-- 건물(신전·워크샾·알타)·사제·기지가 만드는 비행체(Whirligig·Dust Devil·Man o' War): None.
+- 건물(신전·워크샾·제단)·사제·기지가 만드는 비행체(Whirligig·Dust Devil·Man o' War): None.
 
 같은 레벨이라도 유닛에 따라 필요 에너지가 다르다. 예를 들어 L1 Bulf는 Thunder 1이고 L1 Thunder Generator는 Sun 1이다. 사용자도 Bulf는 Thunder 공급원(Thunder Generator 또는 Thunder Temple)이 반드시 있어야 한다고 확인했다.
 

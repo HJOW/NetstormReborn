@@ -9,7 +9,7 @@ $taskOutput = Join-Path $taskRoot $OutputDirectory
 $taskSettings = Join-Path $taskOutput 'settings'
 New-Item -ItemType Directory -Force -Path $taskSettings | Out-Null
 Set-Content -LiteralPath (Join-Path $taskSettings 'settings.json') -Encoding UTF8 -Value '{"WindowWidth":1024,"WindowHeight":768,"ViewHeight":768,"PlayMusic":false,"WindNoise":false}'
-# 골렘은 템플, 포대는 덱 등록에 사용한 워크샵에서 자원을 받아야 한다.
+# 골렘은 신전, 포대는 덱 등록에 사용한 워크샾에서 자원을 받아야 한다.
 $taskScenarios = [ordered]@{
     'golem' = @{
         Setup = ''
