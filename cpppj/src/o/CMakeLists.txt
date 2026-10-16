@@ -269,3 +269,6 @@ target_sources(netstorm PRIVATE RawAiDamage.cpp RawAiDamage.h)
 
 # 실제 Fiery Tail/건설/불타는 표시가 공유하는 RGB 색 띠와 팔레트 병합이다.
 target_sources(netstorm PRIVATE ParticleGradient.cpp ParticleGradient.h)
+
+# 실제 Fiery Tail의 시간 조각·난수·입자와 선 출력 요청 몸체다.
+target_sources(netstorm PRIVATE RawFieryTailFrame.cpp RawFieryTailFrame.h)

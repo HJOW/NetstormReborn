@@ -1,0 +1,37 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "uniqueInputs": 65,
+  "frameReturns": 130,
+  "drawReturns": 130,
+  "precisionDifferentInputs": [],
+  "nativeCalls": {
+    "00418400": 14,
+    "00418470": 306,
+    "0041bfb0": 130,
+    "004239f0": 7648,
+    "00455930": 1504,
+    "004580f0": 130,
+    "004583a0": 130,
+    "00487b40": 752,
+    "00487ba0": 306,
+    "00487e50": 572,
+    "004e49c0": 4736,
+    "dirty-boundary": 612,
+    "line-boundary": 572
+  },
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "tools/decomp_fierytail_frame.py": "7921fa905c5ad10cc89250e6e7a790a85dbf8883bdf8e9a22290586afd48529e",
+    "cpppj/tests/fixtures/fierytail-frame-x86.tsv": "38e03276460eb8655eb567d0419f87f0db0b8c934f45abde5250207d4230040c"
+  },
+  "limitations": [
+    "실제 Frame/Draw·부모 조회·timer·난수·Append·영역·색·__ftol은 원본 몸체다.",
+    "dirty 큐 소비499310과 선 래스터4dade0은 명시 요청 관찰 경계다. 실제 픽셀·장치 검증이 아니다.",
+    "기존 객체/입자/부모와 팔레트 인접 메모리는 명시 입력이다. 생성자·공통 등록/소멸·Session 연결·실제 게임 할당을 관찰한 것이 아니다.",
+    "기본53비트027f를 C++ 대조 대상으로 삼고 비교037f도 보존한다. CRT 실제 기본023f와 연산 설정은 같다.",
+    "TYPE11 생성자의120개/수명4와 TYPE12 생성 자체를 이 프레임 입력 관찰로 완료 처리하지 않는다."
+  ]
+}

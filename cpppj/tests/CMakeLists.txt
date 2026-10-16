@@ -4,7 +4,11 @@
 # 실제 색 띠·CRT 정렬·팔레트 병합의 독립 원본 입력을 새 검사에서만 읽는다.
 set_source_files_properties(ParticleGradientTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_PARTICLE_GRADIENT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/particle-gradient-x86.tsv\"")
+# 실제 Fiery Tail Frame/Draw의 독립 원본 비트는 이 검사에서만 읽는다.
+set_source_files_properties(FieryTailFrameTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_FIERYTAIL_FRAME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fierytail-frame-x86.tsv\"")
 add_executable(netstorm_tests
+    FieryTailFrameTests.cpp
     ParticleGradientTests.cpp
     FenceRegularTests.cpp
     FenceMarkerClearTests.cpp
