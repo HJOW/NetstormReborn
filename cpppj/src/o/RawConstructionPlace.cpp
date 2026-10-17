@@ -1,5 +1,6 @@
 // 건설 배치의 비용 판정·조각별 쓰기 순서와 패치판 비용 부족 처리/환불/취소 통지를 원본 순서대로 유지한다.
 #include "o/RawConstructionPlace.h"
+#include <algorithm>
 #include <bit>
 #include <cmath>
 #include <stdexcept>
@@ -134,19 +135,34 @@ void RawConstructionPlace::ChargeShortfall(std::uint32_t type,std::uint32_t play
     RequirePatch();
     const float cost=Type(type).cost;
     if (player>static_cast<std::uint32_t>(kPlayerCount)) throw std::out_of_range("건설 비용 처리 플레이어 번호 오류");
-    auto& flags=state_.playerFlags[player];
-    const bool reported=(flags&kShortfallFlag)!=0;
-    flags|=kShortfallFlag;
+    const auto offset=static_cast<std::size_t>(player)*0xb4; // 현재 Player의 원본 stride다.
+    auto flags=state_.playerFlags[player]; // 값형 원문 fixture의 입력이며 실제 연결에서는 현재 raw로 교체한다.
+    if (!players_.empty()) { flags=0;
+        // 현재 비정렬 DWORD를 little endian으로 읽는다.
+        for (std::size_t i=0;i<4;++i) flags|=static_cast<std::uint32_t>(players_[offset+0x54+i])<<(8*i);
+    }
+    const bool reported=(flags&kShortfallFlag)!=0;flags|=kShortfallFlag;
+    if (players_.empty()) state_.playerFlags[player]=flags;
+    else {
+        // 표시 비트 외의 현재 Player 비트를 모두 보존한다.
+        for (std::size_t i=0;i<4;++i) players_[offset+0x54+i]=static_cast<std::uint8_t>(flags>>(8*i));
+    }
+    const auto name=[this,offset,player] { // 안내를 선택하는 현재 위치에서만 실제 원본 이름을 읽는다.
+        if (players_.empty()) return state_.playerNames[player];
+        const auto begin=players_.begin()+offset+0xc,end=players_.begin()+offset+0x2c; // 원본 Player 이름은+c부터subscriber+2c 직전의32바이트다.
+        const auto terminator=std::find(begin,end,0); // 정상 Player 이름의 종료를 인접 필드까지 넘겨 찾지 않는다.
+        if (terminator==end) throw std::out_of_range("건설 비용 안내 Player 이름의 NUL 누락");return std::string(begin,terminator);
+    };
     if (state_.authority) {
         // 권한 쪽: 처음이면 다른 플레이어에게 알리고, 당사자에게 알린 뒤 좌표가 유효하면 환불과 취소 통지를 보낸다.
-        if (!reported) hooks_.tellOthers(player,hooks_.format(kClientCheated,state_.playerNames[player]));
+        if (!reported) hooks_.tellOthers(player,hooks_.format(kClientCheated,name()));
         hooks_.tellPlayer(player,kServerThinks);
         if (ValidPosition(x,y)) Reject(type,player,x,y,argument,direction);
         return;
     }
     // 비권한 쪽: 잔액과 무관하게 차감하고 처음이면 로컬 안내를 띄운다.
     AddMoney(player,-cost);
-    if (!reported) hooks_.tell(hooks_.format(kServerCheated,state_.playerNames[player]));
+    if (!reported) hooks_.tell(hooks_.format(kServerCheated,name()));
 }
 // 00442a40 / CD 004d1bc0: 비용을 정수로 절삭해 돌려주고 양수이면 SP 통지를 보낸다. CD판은 통지만 한다.
 void RawConstructionPlace::Refund(std::uint32_t type,std::uint32_t player) {
@@ -182,6 +198,10 @@ void RawConstructionPlace::SetWord(Sid sid,std::uint16_t word) {
     auto raw=pool_.AllocatedBytes(sid);
     Put(raw,kWord,word,2);
     if (static_cast<std::uint32_t>(raw[kType])==state_.bridgeType) hooks_.notifySurface(sid);
+}
+// 실제 Player 기록은 Session보다 오래 살아야 하며 PATCH의9개 구조체 크기를 요구한다.
+void RawConstructionPlace::BindPlayerRecords(std::span<std::uint8_t> players) {
+    RequirePatch();if (players.size()!=9*0xb4) throw std::invalid_argument("건설 배치의 실제 Player 기록 크기 오류");players_=players;
 }
 // 어댑터와 호출자가 같은 풀을 쓰는지 확인할 수 있게 실제 풀을 돌려준다.
 const SidPool& RawConstructionPlace::Pool() const { return pool_; }

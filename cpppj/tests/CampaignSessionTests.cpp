@@ -888,3 +888,86 @@ TEST_CASE(CampaignSession_ConstructionDefaultTimeOwnsActualSoundProcess) {
     session.RunFrame({process->Fields().start,0,0,1},true);core.processes.FromForm(sound)->RunFrame();CHECK(!external.playing.empty());const auto end=process->Fields().end;session.RunFrame({end+0.001,0,10,2},true);process->RunFrame();CHECK(!FindAttachedProcess(core.pool,target,47).value);CHECK(external.playing.empty());CHECK(!FindAttachedProcess(core.pool,target,30).value);CHECK((core.pool.Slot(target)[40]&1)==0);
     visual->RunFrame();CHECK(!FindAttachedProcess(core.pool,target,17).value);
 }
+
+namespace {
+// 생산 완료를 대신하지 않고 복제한 Fort의 원본 저장 내용물 입력에 준비된75를 추가한다.
+void ReadyConstructionInput(FortTemplate& fort,std::int32_t factoryType) {
+    const auto add=[factoryType](FortChunkSection& section) { // 원본 저장 섹션의 공장 내용물만 바꾼다.
+        // 같은 청크/객체 순서로 실제 저장 내용물 로더에 넘길 입력을 준비한다.
+        for (auto& chunk:section.chunks) {
+            // 목표 공장은 원본 thewarbegins의124(소유자1)/123(소유자2)다.
+            for (auto& object:chunk.objects) if (object.type==factoryType) { if (!object.contents) object.contents=FortContentList{};FortContent ready;ready.type=75;ready.listFlags=0x10;ready.listFlagsStored=true;object.contents->items.push_back(ready); }
+        }
+    };
+    // 지역 섹션과 별도 Chaff를 원래 설치 경로로 읽게 한다.
+    for (auto& section:fort.territories) add(section);add(fort.chaff);
+}
+// 실제 소유자 공장과 같은 Graph의 빈3×3 지면을 찾으며 배치/경로 결과는 합성하지 않는다.
+CellPoint GeneralConstructionPoint(const RawWorldCore& core,std::uint32_t owner) {
+    const auto factories=core.bookkeeping.ownerFactories.at(owner).Items();if (factories.empty()) throw std::logic_error("일반 건설 검사의 실제 공장 부재");
+    const auto raw=core.pool.Slot(Sid{static_cast<std::uint16_t>(factories.front())});const auto fx=static_cast<int>(std::bit_cast<float>(Get(raw,14))+0.9999f),fy=static_cast<int>(std::bit_cast<float>(Get(raw,18))+0.9999f);
+    const auto surface=core.hash.Cell(0,fx,fy);if (!surface) throw std::logic_error("일반 건설 공장의 실제 표면 부재");const auto graph=core.pool.Slot(Sid{surface})[30];
+    // 실제 공장과5~15칸 떨어진 같은 Graph의 지면을 원본 지도 순서로 찾는다.
+    for (int y=4;y<248;++y) {
+        // 각 후보의3×3 전체 지면과 점유 비트를 확인한다.
+        for (int x=4;x<248;++x) { const auto distance=std::abs(x-fx)+std::abs(y-fy);if (distance<5 || distance>15) continue;bool free=true;
+            // 원본 surface/spot을 같은 행 순서로 읽는다.
+            for (int dy=0;dy<3 && free;++dy) {
+                // 한 칸이라도 다른 Graph/점유면 다음 후보를 찾는다.
+                for (int dx=0;dx<3;++dx) { const auto sid=core.hash.Cell(0,x+dx,y+dy);const auto spot=core.spots[(y+dy)*256+x+dx];if (!sid || core.pool.Slot(Sid{sid})[30]!=graph || !(spot&6) || (spot&0x38)) { free=false;break; } }
+            }
+            if (free) return {x+2,y+2};
+        }
+    }
+    throw std::logic_error("일반 건설 검사의 같은 실제 Graph 빈 지면 부재");
+}
+// 현재 같은 풀에서 공간 등록된 실제 타입만 관찰한다.
+std::vector<Sid> ConstructionLive(const RawWorldCore& core,std::uint32_t type) {
+    std::vector<Sid> result; // 결과 SID는 관찰용이며 객체 소유권을 갖지 않는다.
+    // client/server 번호를 모두 읽되 free/dead/void는 제외한다.
+    for (std::uint32_t id=5;id<core.pool.Capacity();++id) { const Sid sid{static_cast<std::uint16_t>(id)};const auto raw=core.pool.Slot(sid);if (raw[10]==type && !(raw[11]&7)) result.push_back(sid); }return result;
+}
+// 같은 실제23의 도착과 새30/17을 끝까지 실행한다. 다른 미션 프로세스는 정지한다.
+void FinishGeneralConstruction(RawCampaignSession& session,Sid builder,Sid target) {
+    auto core=session.Core();const auto form=FindAttachedProcess(core.pool,builder,23);CHECK(form.value!=0);if (!form.value) return;
+    auto* path=dynamic_cast<RawPathProcess*>(core.processes.FromForm(form));CHECK(path!=nullptr);if (!path) return;const auto pid=core.kernel.Find(*path);const auto began=core.processState.now;
+    // 도착이 경로를 지우거나 PID를 재사용하면 이전 주소를 더 읽지 않는다.
+    for (int step=0;step<4000 && core.kernel.Get(pid)==path;++step) { core.processState.now=began+step*0.02;path->RunFrame(); }
+    CHECK((core.pool.Slot(builder)[11]&3)!=0);const auto construction=FindAttachedProcess(core.pool,target,30),visualForm=FindAttachedProcess(core.pool,target,17);CHECK(construction.value && visualForm.value);if (!construction.value || !visualForm.value) return;
+    auto* process=dynamic_cast<ConstructionProcess*>(core.processes.FromForm(construction));auto* visual=dynamic_cast<ConstructionVisualProcess*>(core.processes.FromForm(visualForm));CHECK(process && visual);if (!process || !visual) return;const auto end=process->Fields().end;
+    session.RunFrame({end+0.001,0,0.601,1},true);process->RunFrame();CHECK((core.pool.Slot(target)[40]&1)==0);CHECK((core.pool.Slot(target)[11]&7)==0);CHECK(Get(core.pool.Slot(target),26)==static_cast<std::uint32_t>(session.HitPoints().MaxHitPoints(target)));CHECK(!FindAttachedProcess(core.pool,target,30).value);
+    visual->RunFrame();CHECK(!FindAttachedProcess(core.pool,target,17).value);
+}
+}
+// 실제 공장에 준비된 부품이 없으면 기준점 검사에서 실패하고 서버 SID/패킷/Builder를 만들지 않는다.
+TEST_CASE(CampaignSession_GeneralConfirmRequiresActualReadyFactory) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",external.Services(),{1024,768});auto& session=world.Session();auto core=session.Core();const auto point=GeneralConstructionPoint(core,1);session.AddTechnology(1,core.types[75].assetName);const auto kernel=core.kernel.Size();const auto sp=session.Sp(1);const auto oldBatteries=ConstructionLive(core,75),oldBuilders=ConstructionLive(core,134);
+    CHECK(!session.ConfirmConstruction({75,static_cast<float>(point.x),static_cast<float>(point.y),1,0,0,0,0,0,0}));CHECK(session.Construction().LastPacket().empty());CHECK(core.kernel.Size()==kernel && session.Sp(1)==sp);CHECK(ConstructionLive(core,75)==oldBatteries && ConstructionLive(core,134)==oldBuilders);
+}
+// 다른 Player의 확정은 실제 비용 차감/서버 조각/134 이동/30 완료까지 같은 월드에서 이어진다.
+TEST_CASE(CampaignSession_GeneralConfirmBuildsForRemoteOwner) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();services.unitLost=[&](Sid) { ++external.notices; };auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());ReadyConstructionInput(fort,123);GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services),{1024,768});auto& session=world.Session();auto core=session.Core();const auto point=GeneralConstructionPoint(core,2);const auto parent=session.CreatePlayer(2);CHECK(core.pool.Slot(parent)[10]==152 && core.pool.Slot(parent)[34]==2);session.AddTechnology(2,core.types[75].assetName);session.SetSp(2,10000);
+    CHECK(session.ConfirmConstruction({75,static_cast<float>(point.x),static_cast<float>(point.y),2,0,0,0,0,0,0}));const auto packet=session.Construction().LastPacket();CHECK(packet.size()==29 && packet[0]==1 && packet[1]==0x3f && packet[26]==1);if (packet.size()!=29) return;const Sid target{static_cast<std::uint16_t>(packet[27]|(std::uint16_t(packet[28])<<8))};const auto raw=core.pool.Slot(target);
+    CHECK(target.value>=core.pool.Layout().serverFirst && raw[10]==75 && raw[34]==2 && (raw[40]&1));CHECK(Get(raw,26)==0);CHECK(session.Sp(2)==10000-core.types[75].cost);const auto builders=ConstructionLive(core,134);CHECK(builders.size()==1);if (builders.size()!=1) return;CHECK(core.pool.Slot(builders.front())[34]==2);FinishGeneralConstruction(session,builders.front(),target);
+}
+// 로컬 예측 조각 교체는 같은 기존134를 유지하며 서버 Notice가 두 번째 Builder를 만들지 않는다.
+TEST_CASE(CampaignSession_GeneralConfirmReplacesLocalPredictionAndKeepsBuilder) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();services.unitLost=[&](Sid) { ++external.notices; };auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());ReadyConstructionInput(fort,124);GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services),{1024,768});auto& session=world.Session();auto core=session.Core();const auto point=GeneralConstructionPoint(core,1);session.AddTechnology(1,core.types[75].assetName);session.SetSp(1,5000);
+    const auto predicted=session.World().Create(75,2);core.owner.Set(predicted,1);core.pool.AllocatedBytes(predicted)[40]|=1;SetRawSquidHitPoints(core.pool,predicted,0);session.World().Pop(predicted,static_cast<float>(point.x),static_cast<float>(point.y),2);ConstructionBuilderState state;auto mover=session.MakeConstructionBuilder(state,{});const auto arrival=mover->Move(1,predicted,0,0);const auto before=ConstructionLive(core,134);CHECK(before.size()==1);if (before.size()!=1) return;const auto time=std::bit_cast<std::uint64_t>(arrival);
+    CHECK(session.ConfirmConstruction({75,static_cast<float>(point.x),static_cast<float>(point.y),1,0,0,0,static_cast<std::uint32_t>(time),static_cast<std::uint32_t>(time>>32),0}));CHECK((core.pool.Slot(predicted)[11]&3)!=0);CHECK(ConstructionLive(core,134)==before);CHECK(session.Sp(1)==5000);const auto packet=session.Construction().LastPacket();CHECK(packet.size()==29);if (packet.size()!=29) return;CHECK(Get(packet,18)==static_cast<std::uint32_t>(time) && Get(packet,22)==static_cast<std::uint32_t>(time>>32));const Sid target{static_cast<std::uint16_t>(packet[27]|(std::uint16_t(packet[28])<<8))};CHECK(target!=predicted && target.value>=core.pool.Layout().serverFirst);FinishGeneralConstruction(session,before.front(),target);
+}
+// 비용 부족 보고가 실제 Player+54를 보존 갱신하고 이름/표시 비트의 외부 변경을 다음 요청에서 읽는다.
+TEST_CASE(CampaignSession_GeneralConfirmShortfallUsesCurrentPlayerRecords) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();std::vector<std::string> names;std::size_t others{},direct{},money{},rejects{}; // 외부 안내/송신만 관찰하며 비용 계산은 실제 Place가 수행한다.
+    services.construction.presentation.format=[&](std::string_view key,std::string_view name) { CHECK(key=="ClientCheated(%s)");names.emplace_back(name);return std::string(name); };
+    services.construction.presentation.tellOthers=[&](std::uint32_t owner,std::string_view) { CHECK(owner==2);++others; };services.construction.presentation.tellPlayer=[&](std::uint32_t owner,std::string_view text) { CHECK(owner==2 && text=="ServerThinksYouCheated");++direct; };
+    services.construction.presentation.sendMoney=[&](std::uint32_t owner,const ConstructionMoneyNotice& value) { CHECK(owner==2 && value.player==2 && value.source==2 && value.kind==1 && value.amount>0);++money; };services.construction.presentation.sendReject=[&](std::uint32_t owner,const ConstructionRejectNotice& value) { CHECK(owner==2 && value.type==75);++rejects; };
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services),{1024,768});auto& session=world.Session();auto core=session.Core();auto records=session.PlayerRecords();Put(records,2*0xb4+0x54,0x123);const std::string first="Alice",last="ABCDEFGHIJKLMNOPQRSTUVWXYZ12345"; // 같은 실제 원문 이름 입력이다.
+    std::copy(first.begin(),first.end(),records.begin()+2*0xb4+0xc);records[2*0xb4+0xc+first.size()]=0;
+    // 같은 실제 필드의 외부 변경/유지를 세 요청에서 구별한다. flags1은 원본 즉시 배치 입력이다.
+    for (int pass=0;pass<3;++pass) {
+        if (pass==2) { Put(records,2*0xb4+0x54,0x81);std::copy(last.begin(),last.end(),records.begin()+2*0xb4+0xc);records[2*0xb4+0xc+last.size()]=0; }
+        session.SetSp(2,0);const auto origin=EmptySessionSupport(core);CHECK(session.ConfirmConstruction({75,static_cast<float>(origin.x+2),static_cast<float>(origin.y+2),2,0,0,1,0,0,0}));CHECK(Get(records,2*0xb4+0x54)==static_cast<std::uint32_t>(pass==2 ? 0x481 : 0x523));
+    }
+    CHECK(last.size()==31);CHECK(names==std::vector<std::string>({first,last}));CHECK(others==2 && direct==3 && money==3 && rejects==3);
+}

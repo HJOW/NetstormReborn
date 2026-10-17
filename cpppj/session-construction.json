@@ -116,8 +116,8 @@
     "initialFailureLogPreserved": true
   },
   "sha256": {
-    "cpppj/src/client/RawCampaignConstructionBindings.h": "44fc9c2f1da6b663a45822854b292a91acf0145db67ad7dfbb08efa5339397bd",
-    "cpppj/src/client/RawCampaignConstructionBindings.cpp": "69d2313ec0b88aafb4af2743cb1bbb3a66915f7d91b0981b4eb0b68f7796c2ff",
+    "cpppj/src/client/RawCampaignConstructionBindings.h": "5d39dd8063663fb53b5efc4270bccf1b9a443f449f0d7b9e257304006075e821",
+    "cpppj/src/client/RawCampaignConstructionBindings.cpp": "66ca96a011f73fb54cfee4cb0a896556de37320ec21ff7eb8d9aec92bd486500",
     "cpppj/src/client/RawCampaignSession.h": "22f17f2a2dfbd71c5995e498b870e9d0ab27cfb3d2b532f6ce2fcdc032479244",
     "cpppj/src/client/RawCampaignSession.cpp": "36b23f4e6c6b557ceaf908de235f6451938f10bdde86cac3fa715eafe8d71ea1",
     "cpppj/src/client/CampaignClientServices.cpp": "86407af96a1a5ccaaa16ba158f205bbe66fa97c88f091629b1516eb6f2395ed3",
@@ -138,8 +138,8 @@
     "cpppj/src/o/RawConstructionNotice.cpp": "aa4bae3beeac9dc5aef0899d7e0ceec3beea0655702e862125c1f8a7bbd1d8ee",
     "cpppj/src/o/RawConstructionClear.h": "96af0b799ef88ba5c55ec96b00d1d6408a170314d60493e4b00ef22ecf61d440",
     "cpppj/src/o/RawConstructionClear.cpp": "9bc0b5165242ea92637a22a38ee2ac1b2681fa2bf93b176096d93266336da238",
-    "cpppj/src/o/RawConstructionPlace.h": "04b204d48496ad8db14886e12c2ec70ed8fb7165619daf5ee69ce2287830d691",
-    "cpppj/src/o/RawConstructionPlace.cpp": "623c69f19aac8dbc2d918885c8324afb881cca3b47339303bf65e62c789eaaf8",
+    "cpppj/src/o/RawConstructionPlace.h": "d12819f99d45323e56428c0a28919bdf06026b23e26f1e0d1c681b025a5bbf0e",
+    "cpppj/src/o/RawConstructionPlace.cpp": "c90e759306d3452eb9c400f6bb252a68f8f89cff6f1ff9fe7b051a8e390618ff",
     "cpppj/src/o/RawLocalGeyser.h": "6de11b55587db730335842d6d59ccf857e615dd3e468cf9ba90cc60bba073c59",
     "cpppj/src/o/RawLocalGeyser.cpp": "782e33a62604a0767809f2d999b1b84badfc1d12cea21382394a8f1257843658",
     "cpppj/src/o/RawPlayerGeyserBounds.h": "43e5c680a8ef31dafae366e262f19723474b129fab43ac8de344e6068e2f8e66",
@@ -216,6 +216,33 @@
           "path": "cpppj/src/client/RawCampaignLifetimeBindings.cpp",
           "previous": "93d3e0040fe883d6da64622098be929103c1f07aea00e6c4a9a5c652d15958af",
           "current": "2eb0d3fc16e6967b54271c0365991e0ebd8f3d57ef6412aa92d4c4d21fbb01c3"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 132,
+      "reason": "일반 서버 Confirm/Place/Notice의 같은 기준점/Builder/사제/30과 실제 Player 비용 필드 연결",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignConstructionBindings.h",
+          "previous": "44fc9c2f1da6b663a45822854b292a91acf0145db67ad7dfbb08efa5339397bd",
+          "current": "5d39dd8063663fb53b5efc4270bccf1b9a443f449f0d7b9e257304006075e821"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignConstructionBindings.cpp",
+          "previous": "69d2313ec0b88aafb4af2743cb1bbb3a66915f7d91b0981b4eb0b68f7796c2ff",
+          "current": "66ca96a011f73fb54cfee4cb0a896556de37320ec21ff7eb8d9aec92bd486500"
+        },
+        {
+          "path": "cpppj/src/o/RawConstructionPlace.h",
+          "previous": "04b204d48496ad8db14886e12c2ec70ed8fb7165619daf5ee69ce2287830d691",
+          "current": "d12819f99d45323e56428c0a28919bdf06026b23e26f1e0d1c681b025a5bbf0e"
+        },
+        {
+          "path": "cpppj/src/o/RawConstructionPlace.cpp",
+          "previous": "623c69f19aac8dbc2d918885c8324afb881cca3b47339303bf65e62c789eaaf8",
+          "current": "c90e759306d3452eb9c400f6bb252a68f8f89cff6f1ff9fe7b051a8e390618ff"
         }
       ]
     }

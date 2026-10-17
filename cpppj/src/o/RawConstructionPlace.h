@@ -106,6 +106,8 @@ public:
     float Money(std::uint32_t player) const;
     // 0041dff0(패치): 로컬 플레이어이면 로컬 가산, 아니면 플레이어 가산을 부른다.
     void AddMoney(std::uint32_t player,float delta);
+    // PATCH의 실제9 Player 원문을 연결한다. 비용 표시+54/이름+c를 매 호출 직접 읽고 쓰며 값형 fixture는 기존 State를 쓴다.
+    void BindPlayerRecords(std::span<std::uint8_t> players);
     // 어댑터가 같은 실제 풀을 연결하는지 확인하는 데 쓴다.
     const SidPool& Pool() const;
 private:
@@ -128,6 +130,7 @@ private:
     // reward_: HP·SP·지갑 보상을 실제 장부에 적용하는 처리기.
     const SquidReward& reward_;
     // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (ConstructionPlaceHooks).
+    std::span<std::uint8_t> players_; // 연결됐으면 같은 현재9×b4 Player 바이트이며 사본으로 동기화하지 않는다.
     ConstructionPlaceHooks hooks_;
 };
 // 수신·소유자 지정·SP 읽기/가산을 같은 풀의 실제 모듈로 바꾼다. Pop·표면 알림·문구·메시지 경계는 받은 그대로 둔다.

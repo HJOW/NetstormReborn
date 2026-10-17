@@ -9,11 +9,11 @@
   "edition": "PATCH10.78",
   "baseCommit": "3330211",
   "currentSources": {
-    "cpppj/src/client/RawCampaignSession.cpp": "7eba22266da9a3923bcf7a2114cb1ca41ccb6247b260acaac07f902cf9290500",
-    "cpppj/src/client/RawCampaignSession.h": "b7826ea4088211a21a3870380ef55688351b51b1e2417e6e6e9919ba9d436110",
+    "cpppj/src/client/RawCampaignSession.cpp": "8a0a734f0a9e63ad6ef6d8de21d841f8744e9aab1b62d03fd8a3ff1403519794",
+    "cpppj/src/client/RawCampaignSession.h": "5271ca6e2c051218eaf14de4554b45e107d164e8b223bfa63b5a6562db3ebaf2",
     "cpppj/src/client/RawCampaignParticles.cpp": "8916546c2570f5bf03238062671ce8c3edab9b796865c70e3716328712b5db3e",
     "cpppj/src/client/RawCampaignParticles.h": "f1ea87839f7538b0714be13f586a4c30cbff1e9975edf2eec138dfafaf424f69",
-    "cpppj/tests/CampaignSessionTests.cpp": "c23e7c2daf4ab1b9da427add7eb2f477dddc35c74cd5203046840334b590fd92"
+    "cpppj/tests/CampaignSessionTests.cpp": "93237943b2d85ef3fa84f0d514c00c88e3444b1255586912df4d8f3943a3f65a"
   },
   "protectedFileSha256": {
     "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
@@ -74,5 +74,29 @@
     "전용 소유자 색표와 추가 가상 그림, DropIsland의 다른 효과는 명시 미복원이다.",
     "일반 Confirm/Place/Notice·생산·전체 DWORD 메뉴/커서·경제/AI·GUI 완주는 남았다.",
     "원본 전체화면 DirectDraw 수정은 제외한다."
+  ],
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "unit": 132,
+      "reason": "일반 서버 Confirm/Place/Notice의 같은 기준점/Builder/사제/30과 실제 Player 비용 필드 연결",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "7eba22266da9a3923bcf7a2114cb1ca41ccb6247b260acaac07f902cf9290500",
+          "current": "8a0a734f0a9e63ad6ef6d8de21d841f8744e9aab1b62d03fd8a3ff1403519794"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "b7826ea4088211a21a3870380ef55688351b51b1e2417e6e6e9919ba9d436110",
+          "current": "5271ca6e2c051218eaf14de4554b45e107d164e8b223bfa63b5a6562db3ebaf2"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "c23e7c2daf4ab1b9da427add7eb2f477dddc35c74cd5203046840334b590fd92",
+          "current": "93237943b2d85ef3fa84f0d514c00c88e3444b1255586912df4d8f3943a3f65a"
+        }
+      ]
+    }
   ]
 }

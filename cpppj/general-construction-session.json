@@ -1,0 +1,89 @@
+{
+  "unit": 132,
+  "date": "2026-10-17",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16"
+  },
+  "baseCommit": "cbe9585",
+  "edition": "PATCH10.78",
+  "currentSources": {
+    "cpppj/src/client/RawCampaignSession.cpp": "8a0a734f0a9e63ad6ef6d8de21d841f8744e9aab1b62d03fd8a3ff1403519794",
+    "cpppj/src/client/RawCampaignSession.h": "5271ca6e2c051218eaf14de4554b45e107d164e8b223bfa63b5a6562db3ebaf2",
+    "cpppj/src/client/RawCampaignConstructionBindings.cpp": "66ca96a011f73fb54cfee4cb0a896556de37320ec21ff7eb8d9aec92bd486500",
+    "cpppj/src/client/RawCampaignConstructionBindings.h": "5d39dd8063663fb53b5efc4270bccf1b9a443f449f0d7b9e257304006075e821",
+    "cpppj/src/o/RawConstructionPlace.cpp": "c90e759306d3452eb9c400f6bb252a68f8f89cff6f1ff9fe7b051a8e390618ff",
+    "cpppj/src/o/RawConstructionPlace.h": "d12819f99d45323e56428c0a28919bdf06026b23e26f1e0d1c681b025a5bbf0e",
+    "cpppj/tests/CampaignSessionTests.cpp": "93237943b2d85ef3fa84f0d514c00c88e3444b1255586912df4d8f3943a3f65a"
+  },
+  "protectedFileSha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6"
+  },
+  "integration": {
+    "generalConfirm": "같은 Session의 실제 Anchor/서버 SID/0x3f 송신/직접 Notice/Clear/Place",
+    "builder": "다른 Player와 moveLocalBuilder 조건에 기존 전체 Builder Move를 연결; 로컬 기존134를 중복 생성하지 않음",
+    "priest": "실제 조회/첫 경로 삭제/Immobile/발자국 접근점/54 Start; replaceStart0/helper 대상SID/나머지0",
+    "automaticStart": "같은30/17 시작",
+    "playerFields": "같은9×b4 Player+54의0x400과+c..+2b의32바이트 이름; 현재PlayerKnown/로컬 owner",
+    "playerCreate": "명시490250/CD407400 요청은 같은 PlayerWorld 생성자로 연결하며 Confirm에서 자동 생성하지 않음",
+    "nativeBodies": [
+      "00444590",
+      "004441b0",
+      "00442c80",
+      "00441fd0",
+      "00443000",
+      "0048fdb0",
+      "0048f7e0",
+      "0048f7b0",
+      "00489080",
+      "00490250"
+    ],
+    "newNativeExecutions": 0
+  },
+  "validation": {
+    "releaseBuild": 5,
+    "buildExit": 0,
+    "warnings": 0,
+    "errors": 0,
+    "generalTests": 4,
+    "existingSessionConstructionTests": 6,
+    "placementTests": 6,
+    "focusedFailures": 0,
+    "verifyCommands": 33,
+    "verifyFailuresAfterCheckoutFix": 0,
+    "initialVerifyFailures": {
+      "constructionbuilder_oracle": "함수 목록의 작업 사본 CRLF; LF 내용과 HEAD/기존 SHA가 동일함을 확인"
+    },
+    "checkoutFix": "tools/ghidra/constructionbuilder-functions.json을 동일 HEAD LF 바이트로 복구; 기존 보고서/fixture 값과 기대 SHA는 그대로이며 eol=lf 고정",
+    "nativeRows": {
+      "constructionplace": 3682,
+      "constructionclear": 1020,
+      "constructionconfirm": 1300,
+      "constructionnotice": 1611,
+      "constructionbuilder": 1110
+    },
+    "pinUpdate": {
+      "reports": 23,
+      "currentPins": 64,
+      "historicPinsPreserved": 44
+    },
+    "fullSuite": {
+      "tests": 1531,
+      "failedChecks": 0,
+      "ctestExit": 0,
+      "testSeconds": 231.71,
+      "totalSeconds": 231.74
+    }
+  },
+  "remaining": [
+    "일반 API는 MayPlace 이후의 서버 요청이며 전체 UI/로컬 예측/상위 비용 차감/요청 수신 연결은 남았다.",
+    "준비 부품 입력은 원본 Fort의 복제본이며 실제 생산 완료를 대신 검증하지 않았다.",
+    "명시 Player 생성과 선택된 경로/30/17 실행 검사이며 전체 미션 Kernel/AI 자연 실행은 아니다.",
+    "비용 문구/타 Player 안내/SP·취소 송신·선택적 기록기 등 미공급 경계는 선택 시 오류다.",
+    "실제 생산/전체 DWORD 메뉴/경제·AI/GUI 진행·승패·저장·다음 미션/사용자 완주는 미완료다.",
+    "전체화면 DirectDraw 수정은 제외한다."
+  ]
+}

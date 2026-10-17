@@ -1177,3 +1177,11 @@ cpppj/tests/BoardApproachTests.cpp text eol=lf
 
 # 단위131 실제 건설 세션 연결 보고서의 SHA와 UTF-8 줄 끝을 보존한다.
 cpppj/construction-session.json text eol=lf
+
+# 단위132 일반 확정/실제 Player 비용 필드의 SHA와 UTF-8 줄 끝을 보존한다.
+cpppj/general-construction-session.json text eol=lf
+cpppj/src/client/RawCampaignConstructionBindings.cpp text eol=lf
+cpppj/src/client/RawCampaignConstructionBindings.h text eol=lf
+cpppj/src/o/RawConstructionPlace.cpp text eol=lf
+cpppj/src/o/RawConstructionPlace.h text eol=lf
+tools/ghidra/constructionbuilder-functions.json text eol=lf

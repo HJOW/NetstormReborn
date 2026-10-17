@@ -301,6 +301,8 @@ struct RawCampaignSession::Impl {
     OwnerColorMaps buildingOwnerColors; // 일반 소유자 색 띠이며 다리는 별도 기존 분기로 취급한다.
     ShapeToBufferState buildingCaptureState; // 건설 현재 SHP의 원본 fixed16/추가 TYPE 기준점이다.
     std::unique_ptr<RawShapeToBuffer> buildingCapture; // 같은 실제 자산에서 건설 버퍼를 캡처한다.
+    ConstructionBuilderState buildingMoverState; // 통지의 실제 운반 몸체가 유지하는 원본 상태이며 공급원은 같은 energySupply를 읽는다.
+    std::unique_ptr<RawConstructionBuilder> buildingMover; // 같은 실제 기준점/23/39/현재 경로 시각의 통지용 Builder다.
     ConstructionArrivalState buildArrivalState; // 실제134의 예측 대기/서버 건설 시작 전역이다.
     std::unique_ptr<RawConstructionArrival> buildArrival; // 같은 풀/해시에서 건설 대상을 찾는다.
     ManaBoltArrivalState manaArrivalState; // 실제105의 도착 뒤 두 프로세스 종류/예약 간격이다.
@@ -967,8 +969,8 @@ struct RawCampaignSession::Impl {
     }
     // 각 명시 요청에서 현재 실제 소유자/서버/권한/요새/타입만 공급한다. Player/자원/지도는 복사하지 않는다.
     void PrepareConstruction() {
-        constructionState.place.localPlayer=constructionState.notice.localPlayer=assetState.localOwner;
-        constructionState.place.server=core.processState.server;
+        constructionState.place.localPlayer=constructionState.notice.localPlayer=playerState.battleOwner;
+        constructionState.place.server=core.processState.server;constructionState.place.battleShown=playerState.playerKnown!=0;
         constructionState.place.authority=constructionState.clear.authority=constructionState.notice.authority=constructionState.geyser.boss=assetState.boss;
         constructionState.geyser.fort=core.ownerMode.fort;
         constructionState.place.noIslandType=constructionState.geyser.noIslandType=core.bridgeState.noIslandType;
@@ -984,9 +986,25 @@ struct RawCampaignSession::Impl {
         auto effects=services.construction; // 미선택 외부 경계는 실제 호출 때 오류로 드러내며 성공 관찰로 채우지 않는다.
         FillMissing(effects.configInt);FillMissing(effects.wallSeconds);FillMissing(effects.refresh);
         FillMissing(effects.negativeQuantity);FillMissing(effects.boundsAssertion);
+        RawCampaignConstructionGameplay gameplay; // 첫 객체 설치 뒤 선택될 현재 원본 하위만 지연 연결한다.
+        gameplay.confirm.findBuilder=[this](std::uint32_t owner,std::uint32_t type,float x,float y) {
+            if (!anchor) throw std::logic_error("일반 확정의 실제 기준점 미설치");const auto value=anchor->Locate(owner,type,x,y);
+            if (value>=core.pool.Capacity()) throw std::out_of_range("일반 확정 기준점 SID 범위 오류");return Sid{static_cast<std::uint16_t>(value)};
+        };
+        gameplay.notice.moveBuilder=[this](std::uint32_t owner,Sid target,std::uint32_t low,std::uint32_t high) { if (!buildingMover) throw std::logic_error("일반 통지의 실제 Builder 미설치");static_cast<void>(buildingMover->Move(owner,target,low,high)); };
+        gameplay.notice.findPriest=[this](std::uint32_t owner) { return Sid{static_cast<std::uint16_t>(RawPriestLookup(core.pool,priestState.priests).Find(owner))}; };
+        gameplay.notice.containedType=[this](std::uint32_t type) { return priests->MovementProcessType(type); };
+        gameplay.notice.removeContained=[this](Sid parent,std::uint32_t type) { RawContainedLookup lookup(core.pool,[this](Sid target,std::uint32_t flags) { world.Destroy(target,flags); });static_cast<void>(lookup.Find(parent,type,0,true)); };
+        gameplay.notice.immobile=[this](Sid sid) { return priests->PriestState().Immobile(sid); };
+        gameplay.notice.approach=[this](Sid sid,float x,float y,std::uint32_t flags) {
+            if (!anchor) throw std::logic_error("일반 통지 접근점의 실제 Graph 미설치");const auto footprint=gunTarget->Footprint(sid,false);auto rect=std::array<float,4>{footprint.left,footprint.top,footprint.right,footprint.bottom};
+            RawBoardApproach approach([this](float px,float py) { return anchor->GraphAt(px,py); });return approach.Find(rect,x,y,flags);
+        };
+        gameplay.notice.tryMove=[this](Sid priest,float x,float y,Sid target) { if (!motion) throw std::logic_error("일반 통지의 실제54 미설치");return motion->Paths().StartPriest({priest,{x,y},0,target.value,0,0,0})!=nullptr; };
+        gameplay.notice.start=[this](Sid parent,std::uint32_t bits) { if (!building) throw std::logic_error("일반 통지의 실제30 미설치");PrepareBuilding(core.processState.now);building->Start(parent,std::bit_cast<float>(bits)); };
         construction=std::make_unique<RawCampaignConstructionBindings>(world,hp,sp,rewardState,metadata.frames,chunks,players,*broadcast,constructionState,
             PlayerGeyserBoundsState{core.ownerMode.battle,objectState.mission,core.ownerMode.challenge,geyserMapSize,piece,playerDirections},
-            recentGeysers,assetState.geysers,std::move(effects));
+            recentGeysers,assetState.geysers,std::move(effects),std::move(gameplay));
     }
     // 실제 AI 계산/색 표/섬 프레임은 Session이 연결하고 언어/채팅/표시 통지는 외부 소비자에 남긴다.
     void ConnectAi() {
@@ -1090,6 +1108,30 @@ struct RawCampaignSession::Impl {
         hooks.setState=[this](Sid sid,std::uint32_t value) { assetBindings->SetState(sid,value); };
         hooks.virtualCount=[this](Sid sid) { return static_cast<std::int32_t>(level->Get(sid)); };
         return std::make_unique<RawCampaignWorldRuntime>(world,chunks,*islands,*player,*normal,random,hp,*ownership,*finish,*contained,objectState,globals,piece,noRegion,RawCampaignInstallData{std::span<const FortTemplate>(templates).first(templateCount),streams,headers,handle},std::move(hooks));
+    }
+    // 공개 운반 어댑터와 일반 배치 통지가 같은 현재 원본 Builder를 조립한다.
+    std::unique_ptr<RawConstructionBuilder> MakeBuilder(ConstructionBuilderState& state,ConstructionBuilderHooks hooks) {
+    auto* current=this;if (!current->motion) throw std::logic_error("미설치 Session의 건설 운반 연결");
+    hooks=MakeConstructionBuilderHooks(current->core.pool,*current->anchor,current->core.factory,current->core.owner,std::move(hooks));
+    hooks.pop=[current](Sid sid,float x,float y,std::uint32_t flags) { current->world.Pop(sid,x,y,flags); };
+    hooks.notifySurface=[current](Sid sid) { current->core.building.NotifySurface(sid); };
+    hooks.approach=[current](const std::array<float,4>& rectangle,float x,float y,std::uint32_t flags) { auto mutableRectangle=rectangle;RawBoardApproach approach([current](float px,float py) { return current->anchor->GraphAt(px,py); });return approach.Find(mutableRectangle,x,y,flags); };
+    hooks.move=[current](Sid sid,float x,float y)->ConstructionBuilderPath* {
+        auto* path=current->motion->Paths().StartConstruction({sid,{x,y},0,0,0,0,0});if (!path) return nullptr;const auto pid=current->core.kernel.Find(*path);
+        auto& view=current->builderPaths[sid.value];
+        view.readArrival=[current,path,pid] { if (current->core.kernel.Get(pid)!=path) throw std::logic_error("건설 운반의 실제 경로 수명 종료");const auto& runtime=path->Runtime();if (runtime.Count()<1) throw std::logic_error("건설 운반의 실제 경로 꼭짓점0");return runtime.Time(runtime.Count()-1); };
+        view.prepare=[current,path,pid,sid](float speed,std::uint32_t flags) { if (flags || current->core.kernel.Get(pid)!=path) throw std::logic_error("건설 운반 Prepare의 실제 경로/flags 오류");const auto& definition=current->assets.game.Types()[current->core.pool.Slot(sid)[10]-70].definition;path->Prepare(speed,static_cast<float>(definition.Number("speed").value()),static_cast<float>(definition.Number("turningSpeed").value())); };
+        return &view;
+    };
+    hooks.speed=[](ConstructionBuilderPath& path,float speed,std::uint32_t flags) { if (!path.prepare) throw std::logic_error("건설 운반의 실제 Prepare view 미연결");path.prepare(speed,flags); };
+    hooks.reserveTimer=[current] { try { current->builderPendingRegular=std::make_unique<RegularProcess>(0,0.05f);return true; }catch (const std::bad_alloc&) { return false; } };
+    hooks.addTimer=[current](Sid sid,std::uint32_t event,float payload) {
+        if (!current->builderPendingRegular || payload!=0.05f) throw std::logic_error("건설 운반의 실제 예약 객체/payload 오류");
+        auto* process=dynamic_cast<RegularProcess*>(current->core.processes.Attach(std::move(current->builderPendingRegular),46,sid,0x50));if (!process) throw std::logic_error("건설 운반의 실제 Regular 부착 실패");process->ResetTask(event,current->core.processState.now);
+    };
+    ConstructionBuilderReads reads;reads.builderType=[current] { return current->start.teleportType; };reads.carrierType=[current] { return current->start.manaBoltType; };reads.bridgeType=[current] { return current->core.bridgeState.bridgeType; };reads.approachMask=[current] { return current->builderApproachMask; };reads.timerPayload=[] { return 0.05f; };reads.now=[current] { return current->core.processState.now; };
+    return std::make_unique<RawConstructionBuilder>(current->core.pool,current->core.types,current->builderTypes,state,std::move(hooks),current->energySupply.get(),std::move(reads));
+
     }
     // 같은 Session 전역을 건설 시작/프레임 직전에 갱신한다. 별도 건설 시계를 만들지 않는다.
     void PrepareBuilding(double now) {
@@ -1214,7 +1256,7 @@ RawCampaignSession::RawCampaignSession(const GameAssets& assets,const BaseFileSy
 // Impl이 Kernel을 비운 뒤 실제 모듈을 해제한다.
 RawCampaignSession::~RawCampaignSession()=default;
 // 동일 원본 부모를 실행한다.
-void RawCampaignSession::Load() { impl_->runtime->Load();impl_->ConnectBuilding();impl_->ConnectMotion();impl_->loaded=true; }
+void RawCampaignSession::Load() { impl_->runtime->Load();impl_->ConnectBuilding();impl_->ConnectMotion();impl_->buildingMover=impl_->MakeBuilder(impl_->buildingMoverState,{});impl_->loaded=true; }
 // UI의 현재 크기/변경 전역을 빌리며 게임 소유자·모드는 실제 세션에서 다시 읽는다.
 void RawCampaignSession::ResetCamera(CameraHomeState& state,std::function<void(std::int32_t,std::int32_t)> apply) const {
     state.localPlayer=impl_->assetState.localOwner;state.fort=impl_->core.ownerMode.fort;
@@ -1277,6 +1319,10 @@ std::uint32_t RawCampaignSession::FindPriestParticipation(std::uint32_t owner) c
 void RawCampaignSession::RefreshPriestParticipation(std::uint32_t owner) { impl_->priestParticipation->Refresh(owner); }
 // 실제MissionOutcome/PostPop과동일한저장소인지후속소비자가확인한다.
 const RawPriestParticipation& RawCampaignSession::PriestParticipation() const { return *impl_->priestParticipation; }
+// 배치 가능 판정을 통과한 서버 요청을 현재 원본 모드와 같은 일반 확정/통지에 전달한다.
+bool RawCampaignSession::ConfirmConstruction(const ConstructionConfirmRequest& request) {
+    if (!impl_->loaded) throw std::logic_error("미설치 Session의 일반 건설 확정");impl_->PrepareConstruction();return impl_->construction->Confirm(request);
+}
 // 원본 부모 설치 전의 임의 공간 쓰기를 거부하며 같은 현재 noIsland 전역으로 요청을 구성한다.
 bool RawCampaignSession::ConfirmSupport(float x,float y) {
     if (!impl_->loaded) throw std::logic_error("실제 Session 설치 전 받침 확정 요청");
@@ -1293,6 +1339,8 @@ const RawCampaignConstructionBindings& RawCampaignSession::Construction() const 
 const RawCampaignProductionBindings& RawCampaignSession::Production() const { return *impl_->production; }
 // 현재 세 카운터와 생산이 사용하는 같은 금지DWORD 표를 빌린다.
 RawTotalMade& RawCampaignSession::TotalMade() { return *impl_->totalMade; }
+// 같은 PlayerWorld 생성자/Owner/직접frame0/Pop으로 실제 기술 부모 기록을 설치한다.
+Sid RawCampaignSession::CreatePlayer(std::int32_t owner) { if (!impl_->loaded) throw std::logic_error("미설치 Session의 Player 생성");return impl_->player->Create(owner); }
 // 원본 시작/AI 기술 처리가 사용하는 같은 현재 부모/실제 contained 생성 경로다.
 void RawCampaignSession::AddTechnology(std::int32_t owner,std::string_view list) { impl_->technology->AddList(owner,list); }
 // 제거 통지는 현재 Player SP 접두와 직접 Gump 가상 처리까지 같은 경로를 사용한다.
@@ -1361,26 +1409,7 @@ void RawCampaignSession::BindCursorEnergy(CursorPlacementHooks& hooks) {
 }
 // 실제 원문 하위들을 조립하며 경로/접근점을 독립 직선 계산으로 대체하지 않는다.
 std::unique_ptr<RawConstructionBuilder> RawCampaignSession::MakeConstructionBuilder(ConstructionBuilderState& state,ConstructionBuilderHooks hooks) {
-    auto* current=impl_.get();if (!current->loaded) throw std::logic_error("미설치 Session의 건설 운반 연결");
-    hooks=MakeConstructionBuilderHooks(current->core.pool,*current->anchor,current->core.factory,current->core.owner,std::move(hooks));
-    hooks.pop=[current](Sid sid,float x,float y,std::uint32_t flags) { current->world.Pop(sid,x,y,flags); };
-    hooks.notifySurface=[current](Sid sid) { current->core.building.NotifySurface(sid); };
-    hooks.approach=[current](const std::array<float,4>& rectangle,float x,float y,std::uint32_t flags) { auto mutableRectangle=rectangle;RawBoardApproach approach([current](float px,float py) { return current->anchor->GraphAt(px,py); });return approach.Find(mutableRectangle,x,y,flags); };
-    hooks.move=[current](Sid sid,float x,float y)->ConstructionBuilderPath* {
-        auto* path=current->motion->Paths().StartConstruction({sid,{x,y},0,0,0,0,0});if (!path) return nullptr;const auto pid=current->core.kernel.Find(*path);
-        auto& view=current->builderPaths[sid.value];
-        view.readArrival=[current,path,pid] { if (current->core.kernel.Get(pid)!=path) throw std::logic_error("건설 운반의 실제 경로 수명 종료");const auto& runtime=path->Runtime();if (runtime.Count()<1) throw std::logic_error("건설 운반의 실제 경로 꼭짓점0");return runtime.Time(runtime.Count()-1); };
-        view.prepare=[current,path,pid,sid](float speed,std::uint32_t flags) { if (flags || current->core.kernel.Get(pid)!=path) throw std::logic_error("건설 운반 Prepare의 실제 경로/flags 오류");const auto& definition=current->assets.game.Types()[current->core.pool.Slot(sid)[10]-70].definition;path->Prepare(speed,static_cast<float>(definition.Number("speed").value()),static_cast<float>(definition.Number("turningSpeed").value())); };
-        return &view;
-    };
-    hooks.speed=[](ConstructionBuilderPath& path,float speed,std::uint32_t flags) { if (!path.prepare) throw std::logic_error("건설 운반의 실제 Prepare view 미연결");path.prepare(speed,flags); };
-    hooks.reserveTimer=[current] { try { current->builderPendingRegular=std::make_unique<RegularProcess>(0,0.05f);return true; }catch (const std::bad_alloc&) { return false; } };
-    hooks.addTimer=[current](Sid sid,std::uint32_t event,float payload) {
-        if (!current->builderPendingRegular || payload!=0.05f) throw std::logic_error("건설 운반의 실제 예약 객체/payload 오류");
-        auto* process=dynamic_cast<RegularProcess*>(current->core.processes.Attach(std::move(current->builderPendingRegular),46,sid,0x50));if (!process) throw std::logic_error("건설 운반의 실제 Regular 부착 실패");process->ResetTask(event,current->core.processState.now);
-    };
-    ConstructionBuilderReads reads;reads.builderType=[current] { return current->start.teleportType; };reads.carrierType=[current] { return current->start.manaBoltType; };reads.bridgeType=[current] { return current->core.bridgeState.bridgeType; };reads.approachMask=[current] { return current->builderApproachMask; };reads.timerPayload=[] { return 0.05f; };reads.now=[current] { return current->core.processState.now; };
-    return std::make_unique<RawConstructionBuilder>(current->core.pool,current->core.types,current->builderTypes,state,std::move(hooks),current->energySupply.get(),std::move(reads));
+    if (!impl_->loaded) throw std::logic_error("미설치 Session의 건설 운반 연결");return impl_->MakeBuilder(state,std::move(hooks));
 }
 // 화면과 입력은 같은 살아 있는 상태를 읽는다.
 RawPathProcess* RawCampaignSession::StartConstructionMovement(RawPathStartRequest request) {

@@ -34,11 +34,11 @@ struct RawCampaignConstructionBindings::Impl {
     std::unique_ptr<o::RawPlayerGeyserBounds> bounds; // 같은 Player9/ChunkMap/TYPE/프레임을 읽는다.
     std::unique_ptr<o::RawLocalGeyser> geysers; // 같은 보상 자원 pool과 전용 최근5목록을 사용한다.
 
-    // 첫 생성 전에 같은 저장소/필수 서비스/비도달 일반 건설 분기 계약을 확인한다.
+    // 첫 생성 전에 같은 저장소/필수 서비스와 실제 일반 건설 경계를 구성한다.
     Impl(RawSurfaceWorld& source,o::SquidReward& hp,o::ScrambledSpStore& sp,o::SquidRewardState& reward,
-        std::span<const o::PriestPlainCanonType> frames,const o::ChunkMap& chunks,std::span<const std::uint8_t> players,
+        std::span<const o::PriestPlainCanonType> frames,const o::ChunkMap& chunks,std::span<std::uint8_t> players,
         o::RawBattleBroadcast& transmission,RawCampaignConstructionState& globals,o::PlayerGeyserBoundsState currentBounds,
-        o::SquidPostPopList& recent,const o::SquidPostPopList& allGeysers,RawCampaignConstructionEffects input)
+        o::SquidPostPopList& recent,const o::SquidPostPopList& allGeysers,RawCampaignConstructionEffects input,RawCampaignConstructionGameplay gameplay)
         :world(source),core(source.Core()),state(globals),broadcast(transmission),effects(std::move(input)) {
         if (core.pool.Edition()!=o::OriginalEdition::Patch1078 || &hp.Pool()!=&core.pool || &hp.Bookkeeping()!=&core.bookkeeping ||
             frames.size()!=core.types.size() || players.size()!=kPlayerBytes || &recent==&allGeysers || recent.entries.size()<kRecentMinimum ||
@@ -46,42 +46,43 @@ struct RawCampaignConstructionBindings::Impl {
             !effects.configInt || !effects.wallSeconds || !effects.refresh || !effects.negativeQuantity || !effects.boundsAssertion)
             throw std::invalid_argument("캠페인 받침/간헐천의 같은 월드/현재 모드/전용 목록/실제 서비스 계약 오류");
         ValidateState();
-        o::ConstructionPlaceHooks placeHooks; // 미사용 일반 비용 안내/전송 경계도 명시 오류로 둔다.
+        auto placeHooks=effects.presentation; // 현재 비용/UI 소비자를 사용하며 비어 있는 선택 경계는 명시 오류다.
         placeHooks.notifySurface=[this](o::Sid sid) { core.building.NotifySurface(sid); };
         placeHooks.pop=[this](o::Sid sid,float x,float y,std::uint32_t flags) { world.Pop(sid,x,y,flags); };
-        placeHooks.sendMoney=ConstructionMissing<void,std::uint32_t,const o::ConstructionMoneyNotice&>("SP 통지");
-        placeHooks.format=ConstructionMissing<std::string,std::string_view,std::string_view>("비용 안내 서식");
-        placeHooks.tellOthers=ConstructionMissing<void,std::uint32_t,std::string_view>("다른 Player 비용 안내");
-        placeHooks.tellPlayer=ConstructionMissing<void,std::uint32_t,std::string_view>("Player 비용 안내");
-        placeHooks.tell=ConstructionMissing<void,std::string_view>("로컬 비용 안내");
-        placeHooks.sendReject=ConstructionMissing<void,std::uint32_t,const o::ConstructionRejectNotice&>("배치 취소 통지");
+        if (!placeHooks.sendMoney) placeHooks.sendMoney=ConstructionMissing<void,std::uint32_t,const o::ConstructionMoneyNotice&>("SP 통지");
+        if (!placeHooks.format) placeHooks.format=ConstructionMissing<std::string,std::string_view,std::string_view>("비용 안내 서식");
+        if (!placeHooks.tellOthers) placeHooks.tellOthers=ConstructionMissing<void,std::uint32_t,std::string_view>("다른 Player 비용 안내");
+        if (!placeHooks.tellPlayer) placeHooks.tellPlayer=ConstructionMissing<void,std::uint32_t,std::string_view>("Player 비용 안내");
+        if (!placeHooks.tell) placeHooks.tell=ConstructionMissing<void,std::string_view>("로컬 비용 안내");
+        if (!placeHooks.sendReject) placeHooks.sendReject=ConstructionMissing<void,std::uint32_t,const o::ConstructionRejectNotice&>("배치 취소 통지");
         place=std::make_unique<o::RawConstructionPlace>(core.pool,core.types,frames,state.place,hp,
             o::MakeConstructionPlaceHooks(core.pool,core.factory,core.owner,hp,&sp,state.place,std::move(placeHooks)));
+        place->BindPlayerRecords(players);
         o::ConstructionClearHooks clearHooks; // 삭제는 관찰/목록 제거가 아닌 같은 가상 수명 전체를 실행한다.
         clearHooks.destroy=[this](o::Sid sid,std::uint32_t flags) { Destroy(sid,flags); };
         clear=std::make_unique<o::RawConstructionClear>(core.pool,core.hash,core.types,frames,state.clear,std::move(clearHooks));
-        o::ConstructionNoticeHooks noticeHooks; // noIsland는abstract가아니므로일반사제/운반/Start효과를선택하지않는다.
-        noticeHooks.moveBuilder=ConstructionMissing<void,std::uint32_t,o::Sid,std::uint32_t,std::uint32_t>("건설 운반 생성/이동");
-        noticeHooks.findPriest=ConstructionMissing<o::Sid,std::uint32_t>("소유 사제 조회");
-        noticeHooks.containedType=ConstructionMissing<std::uint32_t,std::uint32_t>("사제 contained 타입");
-        noticeHooks.removeContained=ConstructionMissing<void,o::Sid,std::uint32_t>("사제 contained 삭제");
-        noticeHooks.immobile=ConstructionMissing<bool,o::Sid>("사제 이동 불가");
-        noticeHooks.approach=ConstructionMissing<o::ConstructionNoticePoint,o::Sid,float,float,std::uint32_t>("사제 접근점");
-        noticeHooks.tryMove=ConstructionMissing<bool,o::Sid,float,float,o::Sid>("사제 건설 접근 이동");
+        auto noticeHooks=std::move(gameplay.notice); // 같은 실제 Session의 운반/사제/시작을 선택 시 호출한다.
+        if (!noticeHooks.moveBuilder) noticeHooks.moveBuilder=ConstructionMissing<void,std::uint32_t,o::Sid,std::uint32_t,std::uint32_t>("건설 운반 생성/이동");
+        if (!noticeHooks.findPriest) noticeHooks.findPriest=ConstructionMissing<o::Sid,std::uint32_t>("소유 사제 조회");
+        if (!noticeHooks.containedType) noticeHooks.containedType=ConstructionMissing<std::uint32_t,std::uint32_t>("사제 contained 타입");
+        if (!noticeHooks.removeContained) noticeHooks.removeContained=ConstructionMissing<void,o::Sid,std::uint32_t>("사제 contained 삭제");
+        if (!noticeHooks.immobile) noticeHooks.immobile=ConstructionMissing<bool,o::Sid>("사제 이동 불가");
+        if (!noticeHooks.approach) noticeHooks.approach=ConstructionMissing<o::ConstructionNoticePoint,o::Sid,float,float,std::uint32_t>("사제 접근점");
+        if (!noticeHooks.tryMove) noticeHooks.tryMove=ConstructionMissing<bool,o::Sid,float,float,o::Sid>("사제 건설 접근 이동");
         noticeHooks.destroy=[this](o::Sid sid,std::uint32_t flags) { Destroy(sid,flags); };
-        noticeHooks.start=ConstructionMissing<void,o::Sid,std::uint32_t>("건설 Process 시작");
+        if (!noticeHooks.start) noticeHooks.start=ConstructionMissing<void,o::Sid,std::uint32_t>("건설 Process 시작");
         noticeHooks.refresh=effects.refresh;
         notice=std::make_unique<o::RawConstructionNotice>(core.pool,core.types,state.notice,
             o::MakeConstructionNoticeHooks(core.pool,*clear,*place,std::move(noticeHooks)));
-        o::ConstructionConfirmHooks confirmHooks; // 서버 SID와 실제 wire 전송 뒤 원본처럼 같은 통지를 직접 처리한다.
-        confirmHooks.findBuilder=ConstructionMissing<o::Sid,std::uint32_t,std::uint32_t,float,float>("작업장/Graph 기준점");
+        auto confirmHooks=std::move(gameplay.confirm); // 서버 SID와 실제 wire 전송 뒤 원본처럼 같은 통지를 직접 처리한다.
+        if (!confirmHooks.findBuilder) confirmHooks.findBuilder=ConstructionMissing<o::Sid,std::uint32_t,std::uint32_t,float,float>("작업장/Graph 기준점");
         confirmHooks.broadcast=[this](const o::ConstructionNotice& value) {
             o::WriteConstructionPacket(value,state.packet,packet);o::FinalizeConstructionPacket(packet,true);
             packetLength=static_cast<std::size_t>(packet[2])|(static_cast<std::size_t>(packet[3])<<8);
             broadcast.Send(std::span<const std::uint8_t>(packet).first(packetLength));
         };
-        confirmHooks.recorderActive=ConstructionMissing<bool>("기록기 활성 조회");
-        confirmHooks.record=ConstructionMissing<void,o::Sid>("기록기 첫 SID 기록");
+        if (!confirmHooks.recorderActive) confirmHooks.recorderActive=ConstructionMissing<bool>("기록기 활성 조회");
+        if (!confirmHooks.record) confirmHooks.record=ConstructionMissing<void,o::Sid>("기록기 첫 SID 기록");
         confirmHooks=o::MakeConstructionNoticeConfirmHooks(core.pool,*notice,std::move(confirmHooks));
         confirm=std::make_unique<o::RawConstructionConfirm>(core.pool,core.types,frames,state.confirm,
             o::MakeConstructionConfirmHooks(core.pool,core.factory,std::move(confirmHooks)));
@@ -106,8 +107,8 @@ struct RawCampaignConstructionBindings::Impl {
             state.place.authority!=state.clear.authority || state.place.authority!=state.notice.authority ||
             state.place.authority!=state.geyser.boss || state.geyser.fort!=core.ownerMode.fort ||
             (core.types[type].flags1&kNoIslandUnsupportedFlags) || (core.types[type].flags2&kDaisGenus) ||
-            type==state.notice.daisType || state.confirm.recorderEnabled)
-            throw std::logic_error("캠페인 받침/간헐천의 현재 전역 불일치 또는 일반 건설/기록 미연결");
+            type==state.notice.daisType)
+            throw std::logic_error("캠페인 건설/간헐천의 현재 전역 불일치");
     }
     // 원본 LocalGeyser의 명시0인자만허용하여커서/SP/운반미연결을통과하지못하게한다.
     bool ConfirmSupport(const o::ConstructionConfirmRequest& request) const {
@@ -129,12 +130,14 @@ struct RawCampaignConstructionBindings::Impl {
 // 실제세션의장기자료를복사하지않고같은주소의하위모듈을구성한다.
 RawCampaignConstructionBindings::RawCampaignConstructionBindings(RawSurfaceWorld& world,o::SquidReward& hp,o::ScrambledSpStore& sp,
     o::SquidRewardState& reward,std::span<const o::PriestPlainCanonType> frames,const o::ChunkMap& chunks,
-    std::span<const std::uint8_t> players,o::RawBattleBroadcast& broadcast,RawCampaignConstructionState& state,
-    o::PlayerGeyserBoundsState bounds,o::SquidPostPopList& recent,const o::SquidPostPopList& allGeysers,RawCampaignConstructionEffects effects)
-    :impl_(std::make_unique<Impl>(world,hp,sp,reward,frames,chunks,players,broadcast,state,bounds,recent,allGeysers,std::move(effects))) {}
+    std::span<std::uint8_t> players,o::RawBattleBroadcast& broadcast,RawCampaignConstructionState& state,
+    o::PlayerGeyserBoundsState bounds,o::SquidPostPopList& recent,const o::SquidPostPopList& allGeysers,RawCampaignConstructionEffects effects,RawCampaignConstructionGameplay gameplay)
+    :impl_(std::make_unique<Impl>(world,hp,sp,reward,frames,chunks,players,broadcast,state,bounds,recent,allGeysers,std::move(effects),std::move(gameplay))) {}
 // 내부모듈은새Kernel프로세스를소유하지않으며현재배열보다먼저해제한다.
 RawCampaignConstructionBindings::~RawCampaignConstructionBindings()=default;
-// 일반건설은첫factory이전에거부하고로컬간헐천받침만원본사슬로확정한다.
+// 일반 서버 요청도 원본 확정/통지/배치 몸체를 그대로 사용한다. 배치 가능 판정은 호출자의 선행 책임이다.
+bool RawCampaignConstructionBindings::Confirm(const o::ConstructionConfirmRequest& request) const { impl_->ValidateState();return impl_->confirm->Confirm(request); }
+// 로컬 간헐천 전용 입구는 기존 인자 제한을 보존한다.
 bool RawCampaignConstructionBindings::ConfirmSupport(const o::ConstructionConfirmRequest& request) const { return impl_->ConfirmSupport(request); }
 // 실제로그인/Player초기화뒤미션부모가지정한위치에서만호출한다.
 void RawCampaignConstructionBindings::GenerateLocalGeysers() const { impl_->ValidateState();impl_->geysers->Generate(); }

@@ -21,8 +21,8 @@
     "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
     "cpppj/src/client/GameWorld.h": "57adef4cb282f91c27ebdac68846b09883494f8406abdd7517d5267bd44a93fc",
     "cpppj/src/client/GameWorld.cpp": "0c7c8431cfdc1bcb911b3c50f8c9e409e95b14fa788a9d53960c950ade95c01d",
-    "cpppj/src/client/RawCampaignSession.h": "b7826ea4088211a21a3870380ef55688351b51b1e2417e6e6e9919ba9d436110",
-    "cpppj/src/client/RawCampaignSession.cpp": "7eba22266da9a3923bcf7a2114cb1ca41ccb6247b260acaac07f902cf9290500",
+    "cpppj/src/client/RawCampaignSession.h": "5271ca6e2c051218eaf14de4554b45e107d164e8b223bfa63b5a6562db3ebaf2",
+    "cpppj/src/client/RawCampaignSession.cpp": "8a0a734f0a9e63ad6ef6d8de21d841f8744e9aab1b62d03fd8a3ff1403519794",
     "cpppj/src/client/RawPriestMenu.h": "5364d92d3af5b9b81a0477df5c005fcfc4a1ef7f6817894bd337250ce4d0e43d",
     "cpppj/src/client/RawPriestMenu.cpp": "f30be4e91f2141d1000f4a75d9f41619024d20f6cb024f68b8ffb483b1eddcf7",
     "cpppj/src/client/RawCampaignLifetimeBindings.h": "6f4be73b52279abf308c8a3e6d8962271560e47c25996f7a03fca09f8cd063e8",
@@ -38,7 +38,7 @@
     "cpppj/src/o/SpStore.cpp": "2319a90807d423b72b0e47e51101bc9ea1618f234c65e26b704c017313f4268a",
     "cpppj/src/o/SquidReward.cpp": "a29c11afe56a477c470956b1ed0a0678d059340806537ce08b43bf6b6aa1375d",
     "cpppj/tests/PriestMenuTests.cpp": "a7b76f4b807941334f1dc6c089b156a59c72347e93b7898ff0bda018c73ca1c4",
-    "cpppj/tests/CampaignSessionTests.cpp": "c23e7c2daf4ab1b9da427add7eb2f477dddc35c74cd5203046840334b590fd92",
+    "cpppj/tests/CampaignSessionTests.cpp": "93237943b2d85ef3fa84f0d514c00c88e3444b1255586912df4d8f3943a3f65a",
     "cpppj/tests/CarrierContentNoticeTests.cpp": "82ed556e50d599e2d08f594e309129a7d92a7d5e994a6a81f794342f518ed76c",
     "cpppj/tests/fixtures/priestmenu-x86.tsv": "2dda11277f2b67f1a69447ea7cb1694e989a08ed513dbf9819e14bfbf3ce6208",
     "cpppj/tests/fixtures/carrier-content-notice-x86.tsv": "c8a21b68d3b0b6e271d04950022366eab9abd3069ff5a9ce3b53746f1fb4d4bf",
@@ -374,6 +374,28 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "22f12b1dca18b5c72b3e1be8bbad75c2d679b104484e5f71f3a2da4085b7fb3d",
           "current": "c23e7c2daf4ab1b9da427add7eb2f477dddc35c74cd5203046840334b590fd92"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 132,
+      "reason": "일반 서버 Confirm/Place/Notice의 같은 기준점/Builder/사제/30과 실제 Player 비용 필드 연결",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "b7826ea4088211a21a3870380ef55688351b51b1e2417e6e6e9919ba9d436110",
+          "current": "5271ca6e2c051218eaf14de4554b45e107d164e8b223bfa63b5a6562db3ebaf2"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "7eba22266da9a3923bcf7a2114cb1ca41ccb6247b260acaac07f902cf9290500",
+          "current": "8a0a734f0a9e63ad6ef6d8de21d841f8744e9aab1b62d03fd8a3ff1403519794"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "c23e7c2daf4ab1b9da427add7eb2f477dddc35c74cd5203046840334b590fd92",
+          "current": "93237943b2d85ef3fa84f0d514c00c88e3444b1255586912df4d8f3943a3f65a"
         }
       ]
     }

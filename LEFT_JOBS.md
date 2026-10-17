@@ -1,5 +1,18 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-17 단위132 완료: 일반 서버 Confirm→Clear/Place/Notice·실제 Player 비용 필드 (`HJOW-Athlon`)
+
+- [x] AGENTS.md·양 LEFT·깨끗한cbe9585과 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16**을 다시 확인했다. 새 디컴파일·원본/클론 게임·GUI 실행은 없다. 전체 목표는 active다. [작업 기록](docs/exe/cpp-general-construction-20261017.md), `cpppj/general-construction-session.json`, 로그 접두사`extracted/goal-construction-confirm-20261017-`를 남겼다.
+- [x] `Session.ConfirmConstruction`/`RawCampaignConstructionBindings::Confirm`이 원본444590의 기준점→서버 SID→실제0x3f 직렬화/송신→441b0 직접 통지와 기존 Clear/Place를 사용한다. LocalGeyser용 ConfirmSupport의 noIsland/Player0 제한은 별도 전용 입구에 유지한다. 일반 API는 원본 MayPlace 이후의 서버 확정 계층이며 UI/전체 배치 가능 판정을 대신 검증한 것은 아니다.
+- [x] 같은 원본 Anchor/공장·준비 내용물·Graph, 통지의 다른 Player/현재 moveLocalBuilder 조건, 기존 전체 Builder와 실제 사제 조회/첫 경로 삭제/Immobile/발자국 접근점/54 Start/30 시작을 연결했다. 공개 Builder와 통지 Builder는 같은 조립 함수를 공유한다. 실제441b0의489080은 replaceStart0/helper=대상 SID/나머지0이며 바깥 실패를 현재 경로 조회로 성공 처리하지 않는다. 로컬 Notice는 기존134를 중복 생성하지 않는다.
+- [x] Place가 같은9×b4 Player 기록의 **+54/0x400**과 이름 **+c..+2b/32바이트**를 매 호출 직접 읽고 쓴다. 다른 비트를 보존하며31자 이름도 대조했다. 별도 사본의 flags/이름 동기화로 바꾸지 않았다. 비용/SP/소유자/Pop은 기존 실제 모듈이고 현재 PlayerKnown/로컬 owner를 공급한다. 미공급 비용 안내/SP·취소 송신/선택적 기록기는 선택 시 명시 오류다.
+- [x] 초기 Fort 설치만으로는 다른 Player의 기술 부모가 없어 AddTechnology2가 실패함을 확인했다. 명시 `Session.CreatePlayer`는 같은 실제490250/CD407400 Create→Owner→직접frame0→Pop과 실제 Player 기술 부모 기록을 사용한다. 일반 Confirm에서 임의 자동 생성하지 않는다. 로그인/참여 부모가 호출할 실제 진입이다.
+- [x] 새 집중4개가 실제 준비 부품 부재의 확정 실패, 다른 Player의 비용 차감→실제 서버 조각→134/23→30/17 완료, 로컬 예측75 삭제→서버75 교체→기존134 유지/도착/완료와 wire 시각 보존, 실제 Player 표시/이름의 외부 변경 재조회를 검증했다. 준비 부품은 복제 Fort의 원본 저장 내용물 입력이며 생산 완료를 모형으로 대신하지 않았다. 다른 미션 프로세스는 정지하고 선택된 실제 경로/30/17을 실행한 검사다.
+- [x] 최종 **Release 빌드5 종료0·경고0·오류0**, 새4개/기존 건설 Session6개/Place6개 통과, 전체 **1,531개/실패0/CTest 종료0/231.71초(전체231.74초)**다. 근거 **33종 통과**이며 Place3682/Clear1020/Confirm1300/Notice1611/Builder1110행을 기존 값으로 감사했다. Builder 최초 SHA 실패는 함수 목록 작업 사본의 CRLF였고 LF 내용=HEAD=기존 기대 SHA임을 증명했다. 해당 한 파일을 동일 HEAD LF로 복구하고 eol=lf를 고정한 뒤 감사했다. 함수 목록 내용/기존 기대 SHA/fixture는 그대로다. 새 원본 CPU 실행은 없다.
+- [x] 현재 HEAD와 일치하던23개 보고서의64핀만 이력을 추가해 갱신하고 과거44핀은 보존했다. 현재제품7개/보호3개 SHA·UTF-8/LF·CMake/기존 fixture·AGENTS/DN 불변을 감사한다. 이 인수인계와 함께 **20261017-32 CP 일반 서버 건설 확정과 배치 통지 및 실제 Player 비용 필드 연결**로 로컬 커밋하며 push하지 않는다.
+- [ ] **다음 실제 플레이:** 실제 커서 내려놓기→상위 비용 차감→`RawConstructionLocal` 예측 배치/기존 Builder→요청 wire/서버 수신·MayPlace→이번 일반 Confirm을 연결한다. 현재 일반 API의 명시 요청 검사를 전체 사용자 UI 배치 완료로 취급하지 않는다. `construction.presentation`의 비용 문구/안내/SP·취소 송신과 기록기, 자산 Regular/룬의 다른 시작 Missing, Load 뒤 연결인30/17의 초기 저장·수신 및 전체 미션 프레임도 확인해야 한다.
+- [ ] 실제 생산이 공장에 준비된 ContentForm6/flags10 부품을 만드는 흐름, Client 전체DWORD 메뉴→ContentForm6 Take/위치/수집/그리기/내려놓기, 경제/AI 전략과 명시 Player 생성의 로그인 연결, GUI 시작/진행/승패·저장·다음 미션·사용자 자연 완주와 전체 원본 동일성은 미완료다. 현재 실제 Builder/공유 공급원/105 Regular/30/17/일반 서버 확정을 재사용한다. 새 조립은10.78이며 CD 대응은 문서에 보존한다. 전체화면 DirectDraw 수정도 제외다.
+
 ## 2026-10-17 단위131 완료: 실제 Builder 도착→건설30·표시17·완료 공간 (`HJOW-Athlon`)
 
 - [x] AGENTS.md·양 LEFT·깨끗한3330211과 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16**을 확인했다. 새 디컴파일·원본/클론 게임·GUI 실행은 없다. 전체 목표는 active다. [작업 기록](docs/exe/cpp-construction-session-20261017.md), `cpppj/construction-session.json`, 로그 접두사`extracted/goal-construction-process-20261017-`를 남겼다.
@@ -8,7 +21,7 @@
 - [x] 실제 Session 검사는 보호 thewarbegins 설치 후 실제 World Create/Owner/Pop과 명시 abstract 입력으로 시작한다. 원본 지형의134/23 도착→30/17 생성→0.6초 HP 증가/전체 완료/공간 재등록/표시 종료, 실제 출력 버퍼의 독립 픽셀 배열 비교, duration0의 즉시 표시 변형/기본10초/소리47 소유·반납을 검증했다. 초회 검사에서는0.3초 뒤 활성 입자 만료와 frame0 소리 중복 억제를 확인해 검사 시점/관찰을 고쳤고 제품 몸체는 바꾸지 않았다. 일반 UI 배치나 전체 미션 Kernel 완주를 대신 검증한 것은 아니다.
 - [x] 최종 **Release 빌드3 종료0·경고0·오류0**, 건설 Session 집중 **6개/실패0**, 전체 **1,527개/실패0/CTest 종료0/222.09초(전체222.12초)**다. 근거 `--verify` **28개 모두 통과**, 이 중 기존 건설2868/생성1776/프레임1317행을 변경 없이 재감사했다. 현재 HEAD와 일치하던12개 보고서의39개 핀만 이력과 갱신하고 과거44개 핀은 보존했다. 보호3개 SHA·UTF-8/LF·기존 fixture/AGENTS/DN 불변을 감사한다.
 - [x] 이 인수인계를 포함해 **20261017-31 CP 실제 Builder 도착의 건설 진행과 완료 및 표시 연결**로 로컬 커밋한다. push하지 않는다.
-- [ ] **다음 실제 플레이:** `RawCampaignConstructionBindings`의 noIsland/Player0만 허용하는 제한을 원본 일반 Confirm/Place/Notice로 확장해 같은 실제30 시작을 연결한다. 자산 Regular/룬 등 다른 건설 시작도 아직 별도 Missing 경계이며 초기 저장 프로세스/수신과 전체 미션 프레임은 함께 확인해야 한다. 이번 연결은 Load 뒤 구성한다. 임의 건물/전용 색표나 미복원 DropIsland 효과를 성공으로 처리하지 않는다.
+- [x] **일반 서버 확정 단위132 완료:** noIsland/Player0 전용 입구를 유지하면서 일반 Confirm/Place/Notice와 같은 기준점/Builder/사제 접근/30 시작을 연결했다. 다른 건설 시작/초기 저장·수신/전체 미션 프레임과 로컬 UI 진입은 단위132의 다음 항목에 남긴다.
 - [ ] 실제 생산이 공장에 준비된 ContentForm6/flags10 부품을 만드는 흐름, Client 전체DWORD 메뉴→ContentForm6 Take/위치/수집/그리기/내려놓기, 경제/AI 전략, GUI 시작/진행/승패·저장·다음 미션·사용자 자연 완주와 전체 원본 동일성은 남았다. 실제 Builder/공유 공급원/105 Regular 및 이번30/17을 재사용한다. CD 대응 기록은 문서에 보존했으며 새 조립은10.78 대상이다. 전체화면 DirectDraw 수정도 계속 제외다.
 
 ## 2026-10-17 단위130 완료: 실제 Builder 접근점·같은 경로 시각·소유자 공장 목록 (`HJOW-Athlon`)

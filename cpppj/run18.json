@@ -365,8 +365,8 @@
     "cpppj/src/o/RawConstructionLocal.h": "19b971196e14f05287660a8146223d2896f6457b391af63095523425a16f60a3",
     "cpppj/src/o/RawConstructionNotice.cpp": "aa4bae3beeac9dc5aef0899d7e0ceec3beea0655702e862125c1f8a7bbd1d8ee",
     "cpppj/src/o/RawConstructionNotice.h": "d43e7d5fec25b4ad3f4c4ddcb5e7894e1ea7ac6729c9fa20104bc542f8319c13",
-    "cpppj/src/o/RawConstructionPlace.cpp": "623c69f19aac8dbc2d918885c8324afb881cca3b47339303bf65e62c789eaaf8",
-    "cpppj/src/o/RawConstructionPlace.h": "04b204d48496ad8db14886e12c2ec70ed8fb7165619daf5ee69ce2287830d691",
+    "cpppj/src/o/RawConstructionPlace.cpp": "c90e759306d3452eb9c400f6bb252a68f8f89cff6f1ff9fe7b051a8e390618ff",
+    "cpppj/src/o/RawConstructionPlace.h": "d12819f99d45323e56428c0a28919bdf06026b23e26f1e0d1c681b025a5bbf0e",
     "cpppj/src/o/RawConstructionProcess.cpp": "d06198334dead553c67f1886649d3d09583a3325174e348f9e881a84456c02e7",
     "cpppj/src/o/RawConstructionProcess.h": "4e02ff1102ed07aba86cc2de7c00d313805dc496afcd44009871d84e838ae030",
     "cpppj/src/o/RawConstructionRequest.cpp": "4118552481c5e97c5c266e3cc19b682121b77d34f07360b640bff7adc2e22ac5",
@@ -1253,6 +1253,23 @@
           "path": "cpppj/src/o/RawConstructionBuilder.h",
           "previous": "f3e8165d42cf4070a94055ec018add56fd35b16e633d96c9d45045ed5b026ca5",
           "current": "134e353fb2fae37b9e8726197f3d80ab1b3b9819e6a19bf6a876481b55ef33d4"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 132,
+      "reason": "일반 서버 Confirm/Place/Notice의 같은 기준점/Builder/사제/30과 실제 Player 비용 필드 연결",
+      "pins": [
+        {
+          "path": "cpppj/src/o/RawConstructionPlace.cpp",
+          "previous": "623c69f19aac8dbc2d918885c8324afb881cca3b47339303bf65e62c789eaaf8",
+          "current": "c90e759306d3452eb9c400f6bb252a68f8f89cff6f1ff9fe7b051a8e390618ff"
+        },
+        {
+          "path": "cpppj/src/o/RawConstructionPlace.h",
+          "previous": "04b204d48496ad8db14886e12c2ec70ed8fb7165619daf5ee69ce2287830d691",
+          "current": "d12819f99d45323e56428c0a28919bdf06026b23e26f1e0d1c681b025a5bbf0e"
         }
       ]
     }

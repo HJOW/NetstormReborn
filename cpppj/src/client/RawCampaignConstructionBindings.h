@@ -23,23 +23,31 @@ struct RawCampaignConstructionEffects {
     std::function<std::int32_t(std::string_view,std::int32_t)> configInt; // 현재 predictableGeysers 설정을 읽는다.
     std::function<double()> wallSeconds; // 비결정적 생성에서 TimeSeed에 전달할 현재 벽시각이다.
     std::function<void()> refresh; // 확정 통지 마지막의 실제 전역 표시 갱신 요청이다.
+    o::ConstructionPlaceHooks presentation; // 비용 문구/안내/SP·취소 송신만 사용하며 생성/소유자/SP/공간은 내부 실제 몸체가 공급한다.
     std::function<void()> negativeQuantity; // reps>=0 원본 진단을 전달한다.
     std::function<void(o::PlayerGeyserBoundsAssertion)> boundsAssertion; // 현재 Player/모드/Canon 진단을 전달한다.
 };
-// Early1의 받침 확정/로컬 간헐천만 공개한다. 일반 건설의 미복원 운반/커서/생산 경계는 오류로 남긴다.
+// 같은 Session의 기준점/실제 Builder/사제 경로/건설 시작을 연결하는 현재 게임 몸체다.
+struct RawCampaignConstructionGameplay {
+    o::ConstructionConfirmHooks confirm; // 기준점과 선택적 실제 기록기다. 생성/송신/직접 통지는 내부가 연결한다.
+    o::ConstructionNoticeHooks notice; // 운반/사제 조회·접근·이동/시작이다. 정리/배치/환불/삭제/갱신은 내부가 연결한다.
+};
+// 원본 일반 서버 확정/배치 통지와 로컬 간헐천이 같은 실제 월드를 사용한다.
 class RawCampaignConstructionBindings {
 public:
     // 모든 참조는 이 연결보다 오래 살아야 한다. recent는 전체 geysers 목록과 서로 다른 전용5칸 이상 저장소다.
     RawCampaignConstructionBindings(RawSurfaceWorld& world,o::SquidReward& hp,o::ScrambledSpStore& sp,
         o::SquidRewardState& reward,std::span<const o::PriestPlainCanonType> frames,const o::ChunkMap& chunks,
-        std::span<const std::uint8_t> players,o::RawBattleBroadcast& broadcast,RawCampaignConstructionState& state,
+        std::span<std::uint8_t> players,o::RawBattleBroadcast& broadcast,RawCampaignConstructionState& state,
         o::PlayerGeyserBoundsState bounds,o::SquidPostPopList& recent,const o::SquidPostPopList& allGeysers,
-        RawCampaignConstructionEffects effects);
+        RawCampaignConstructionEffects effects,RawCampaignConstructionGameplay gameplay={});
     // 고정 주소를 참조하는 내부 callback을 복사하지 않는다.
     ~RawCampaignConstructionBindings();
     RawCampaignConstructionBindings(const RawCampaignConstructionBindings&)=delete; // 다른 월드 저장소로 복사하지 않는다.
     RawCampaignConstructionBindings& operator=(const RawCampaignConstructionBindings&)=delete; // 현재 callback의 고정 주소를 보존한다.
-    // LocalGeyser가 전달하는 noIsland/player0/나머지0 요청만 허용한다. 일반 TYPE는 생성 전에 거부한다.
+    // MayPlace를 통과한 일반 서버 요청을 원본 기준점 검사→SID 확보→송신→직접 통지 순서로 확정한다.
+    bool Confirm(const o::ConstructionConfirmRequest& request) const;
+    // LocalGeyser 전용 입구는 기존 noIsland/player0/나머지0 계약을 유지한다.
     bool ConfirmSupport(const o::ConstructionConfirmRequest& request) const;
     // 현재 Player9와 실제 PlayerBounds를 읽어 원본 로컬 생성 부모를 실행한다.
     void GenerateLocalGeysers() const;

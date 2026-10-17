@@ -140,6 +140,8 @@ public:
     void RefreshPriestParticipation(std::uint32_t owner);
     // 같은 현재 사제 목록/ownerState/풀에 연결된 참여 몸체를 읽기 전용으로 빌린다.
     const o::RawPriestParticipation& PriestParticipation() const;
+    // 원본 MayPlace를 통과한 일반 서버 요청의 기준점/송신/직접 통지/실제 배치를 실행한다.
+    bool ConfirmConstruction(const o::ConstructionConfirmRequest& request);
     // 설치 뒤 로컬 간헐천의 noIsland/Player0 받침만 실제 서버 확정 사슬로 만든다.
     bool ConfirmSupport(float x,float y);
     // 원본 미션 부모가 정한 위치에서 명시 호출한다. Load/프레임의 자동 생성은 하지 않는다.
@@ -150,6 +152,8 @@ public:
     const RawCampaignProductionBindings& Production() const;
     // 생산/튜토리얼/건설 표시가 함께 읽는 금지DWORD 표와 실제 세 카운터를 직접 조작한다.
     o::RawTotalMade& TotalMade();
+    // 실제490250으로 명시 Player 부모를 생성한다. 로그인/참여 부모가 요청할 때만 호출하며 일반 확정에서 자동 생성하지 않는다.
+    o::Sid CreatePlayer(std::int32_t owner);
     // 실제 시작 설정/AI와 같은 Player 기술 부모에 원본 목록 파서를 적용한다.
     void AddTechnology(std::int32_t owner,std::string_view list);
     // 실제 flags4 기술을 가상 삭제하여 부모 체인/등록/삭제 깊이를 함께 정리한다.
