@@ -1373,3 +1373,8 @@ set_source_files_properties(CarrierRegularTests.cpp PROPERTIES COMPILE_DEFINITIO
 target_sources(netstorm_tests PRIVATE NuggetPostPopTests.cpp)
 set_source_files_properties(NuggetPostPopTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_NUGGET_POSTPOP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/nugget-postpop-x86.tsv\"")
+
+# 너겟Regular의실제9019개독립입력이다.
+target_sources(netstorm_tests PRIVATE NuggetRegularTests.cpp)
+set_source_files_properties(NuggetRegularTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_NUGGET_REGULAR_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/nugget-regular-x86.tsv\"")

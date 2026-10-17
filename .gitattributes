@@ -1311,3 +1311,12 @@ cpppj/nugget-postpop.json text eol=lf
 cpppj/campaign-carrier-preview-session.json text eol=lf
 tools/decomp_nugget_postpop.py text eol=lf
 docs/exe/cpp-carrier-preview-session-20261017.md text eol=lf
+
+# 너겟Regular의새코드/원문/보고서는UTF-8/LF로보존한다.
+cpppj/src/o/RawNuggetRegular.* text eol=lf
+cpppj/tests/NuggetRegularTests.cpp text eol=lf
+cpppj/tests/fixtures/nugget-regular-x86.tsv text eol=lf
+cpppj/nugget-regular.json text eol=lf
+cpppj/campaign-nugget-regular.json text eol=lf
+tools/decomp_nugget_regular.py text eol=lf
+docs/exe/cpp-nugget-regular-20261017.md text eol=lf

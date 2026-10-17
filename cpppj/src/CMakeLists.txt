@@ -68,3 +68,6 @@ target_sources(netstorm PRIVATE o/RawCarrierRegular.cpp o/RawCarrierRegular.h)
 
 # 너겟의실제전체484f90예약/난수/기본처리다.
 target_sources(netstorm PRIVATE o/RawNuggetPostPop.cpp o/RawNuggetPostPop.h)
+
+# 너겟의왕복프레임/지면조회/가속낙하와실제게임난수다.
+target_sources(netstorm PRIVATE o/RawNuggetRegular.cpp o/RawNuggetRegular.h)

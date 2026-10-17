@@ -20,6 +20,7 @@
 #include "o/RawCarrierRegular.h"
 #include "o/RawContentPreviewProcess.h"
 #include "o/RawNuggetPostPop.h"
+#include "o/RawNuggetRegular.h"
 #include "o/RawPlayerTemplateState.h"
 #include "o/RawArcherTypeData.h"
 #include "o/RawProjectileGeometry.h"
@@ -277,6 +278,8 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawCarrierRegular> carrierRegular; // 실제 내용물/자산/표시/기본Handle에 연결한 Carrier 부모다.
     std::unique_ptr<RawNuggetPostPop> nuggetPostPop; // 너겟의 실제 두 예약/난수/기본 처리다.
     std::unique_ptr<RegularProcess> pendingNuggetRegular; // 원본 new28과 생성자를 같은 실제 할당으로 연결한다.
+    std::vector<std::int32_t> nuggetAFrames; // 같은188TYPE의A구간실제프레임수다.
+    std::unique_ptr<RawNuggetRegular> nuggetRegular; // 기존너겟예약의왕복프레임/지면/낙하/삭제를소비한다.
     std::unique_ptr<GumpFormHost> gumpForms; // 같은Pool의실제Form3와현재UI등록ID/부모삭제알림수명이다.
     std::unique_ptr<RawContentParentNotice> contentNotice; // 부모의 실제 현재 VT로 기본/파생 +24를 분배한다.
     bool contentSavedGame{}; // 이 생성자는 새 미션 경로이며005c85d4 저장 게임은 선택하지 않는다.
@@ -735,6 +738,7 @@ struct RawCampaignSession::Impl {
         auto actualRegular=hits->Handler(combat->Handler(assetBindings->Handler(buriedRegular->Handler(priests->RegularHandler([this](Sid sid,std::uint32_t event,std::uint32_t count,float payload) {
             if (playerRegular->Handles(sid)) return playerRegular->Handle(sid,event,count,payload);
             if (manaRegular && manaRegular->Handles(sid)) return manaRegular->Run(sid,event,count);
+            if (nuggetRegular && nuggetRegular->Handles(sid)) return nuggetRegular->Handle(sid,event,count,payload);
             const auto raw=core.pool.Slot(sid);const bool priest=raw[10]==kPriestType && Read(raw,0)==kPatchPriestVtable;
             // 사제의 다섯 고유 사건은 파생 처리기가 담당한다. 나머지만 원본 기본 Carrier로 넘긴다.
             if (carrierRegular->Handles(sid) || (priest && (event<0x259U || event>0x25dU))) return carrierRegular->Handle(sid,event,count,payload);
@@ -1022,6 +1026,18 @@ struct RawCampaignSession::Impl {
             auto* attached=static_cast<RegularProcess*>(core.processes.Attach(std::move(pendingNuggetRegular),46,sid,0x50));if (attached) attached->ResetTask(event,core.processState.now);
         };
         nugget.damageable=[this](Sid sid,std::uint32_t flags) { carrier->DamageablePostPop(sid,flags); };
+        NuggetRegularHooks nuggetEvents;nuggetEvents.allocate=nugget.allocate;nuggetEvents.construct=nugget.construct; // 같은확보메모리/Host를PostPop과왕복끝점에서공유한다.
+        nuggetEvents.randomInteger=[this](std::int32_t low,std::int32_t high) { if (high<=low) throw std::invalid_argument("너겟정수난수구간오류");return low+static_cast<std::int32_t>(random.Next(static_cast<std::uint32_t>(high-low))); };
+        nuggetEvents.setFrame=[this](Sid sid,std::int32_t frame,std::uint32_t flags) { core.frame.Set(sid,frame,flags); };
+        nuggetEvents.refresh=[this](Sid sid) { core.display.Update(core.pool.Slot(sid)); };
+        nuggetEvents.destroy=[this](Sid sid,std::uint32_t flags) { static_cast<void>(world.Destroy(sid,flags)); };
+        nuggetEvents.unpop=[this](Sid sid,std::uint32_t flags) { world.Unpop(sid,flags); };
+        nuggetEvents.pop=[this](Sid sid,float x,float y,std::uint32_t flags) { world.Pop(sid,x,y,flags); };
+        nuggetEvents.damageable=[this](Sid sid,std::uint32_t event,std::uint32_t count,float payload) { return assetBindings->Regular().DamageableHandle(sid,event,count,payload); };
+        nuggetAFrames.resize(core.types.size());
+        // 원본TYPE+170과같은A구간개수를현재보호프레임표에서보충한다.
+        for (std::size_t type=0;type<nuggetAFrames.size();++type) nuggetAFrames[type]=core.frames[type].Run('A').count;
+        nuggetRegular=std::make_unique<RawNuggetRegular>(core.pool,nuggetAFrames,core.spots,assetState.boss,std::move(nuggetEvents));
         nuggetPostPop=std::make_unique<RawNuggetPostPop>(core.pool,std::move(nugget));
         carrierRegularTypes.resize(core.types.size());
         // 원본 타입 로더의 기본0과 실제 자산 정의의118/1b8을 같은 번호로 보충한다.

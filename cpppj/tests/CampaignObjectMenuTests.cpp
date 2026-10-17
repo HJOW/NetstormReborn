@@ -296,3 +296,36 @@ TEST_CASE(CampaignContentPreview_RealNuggetInitialRegulars) {
     CHECK(core.processes.FromForm(first->Form())==first && core.processes.FromForm(third->Form())==third);
     // 실제 너겟Regular485230의프레임소비는이번생성/부착검증과구분한다.
 }
+// 같은Session의실제예약으로프레임왕복과가속낙하/부모·예약삭제까지검사한다.
+TEST_CASE(CampaignNuggetRegular_ActualAnimationAndFallLifecycle) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);MenuServices external;
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",external.Make());session.Load();auto core=session.Core();
+    const auto nugget=session.World().Create(154,2);session.World().Pop(nugget,10.5F,10.5F,0); // client번호의실체이며extra8미리보기로바꾸지않는다.
+    const auto maximum=core.frames[154].Run('A').count-1;CHECK(maximum>0);auto* grow=core.processes.FindEvent(nugget,1);CHECK(grow);if (!grow) return;
+    CHECK(grow->Payload()>0.0F);if (grow->Payload()<=0.0F) return;const auto growPid=core.kernel.Find(*grow);const auto initialFrame=Get(core.pool.Slot(nugget),36);grow->RunFrame();CHECK(Get(core.pool.Slot(nugget),36)==initialFrame && grow->Count()==1);
+    // 다른부모의AI/예약을실행하지않고현재너겟의실제증가예약만끝점까지진행한다.
+    for (std::int32_t step=0;step<maximum+3 && core.kernel.Get(growPid)==grow;++step) { core.processState.now=grow->Time();grow->RunFrame(); }
+    CHECK(!core.kernel.Get(growPid));CHECK(Get(core.pool.Slot(nugget),36)==static_cast<std::uint32_t>(maximum));
+    auto* shrink=core.processes.FindEvent(nugget,0);CHECK(shrink);if (!shrink) return;CHECK(shrink->Count()==0 && shrink->Payload()>=2.0F && shrink->Payload()<8.0F);
+    const auto shrinkPid=core.kernel.Find(*shrink);shrink->RunFrame();CHECK(Get(core.pool.Slot(nugget),36)==static_cast<std::uint32_t>(maximum) && shrink->Count()==1);
+    // 실제감소예약이0프레임에닿으면새증가예약을만들고자신의Form을정리한다.
+    for (std::int32_t step=0;step<maximum+3 && core.kernel.Get(shrinkPid)==shrink;++step) { core.processState.now=shrink->Time();shrink->RunFrame(); }
+    CHECK(!core.kernel.Get(shrinkPid));CHECK(Get(core.pool.Slot(nugget),36)==0);CHECK(core.processes.FindEvent(nugget,1));
+    std::int32_t skyColumn{}; // 실제점유지도에서전체낙하경로가빈열을선택하며지도값은수정하지않는다.
+    // 보호미션의실제하늘열을조회한다. 각열의지면/다리비트만읽는다.
+    for (std::int32_t x=2;x<254 && !skyColumn;++x) {
+        bool empty=true;
+        // 100회가속낙하가통과할수있는실제지도전체열이다.
+        for (std::int32_t y=2;y<255;++y) if (core.spots[static_cast<std::size_t>(y*256+x)]&6U) { empty=false;break; }
+        if (empty) skyColumn=x;
+    }
+    CHECK(skyColumn);if (!skyColumn) return;session.World().Unpop(nugget,0);session.World().Pop(nugget,static_cast<float>(skyColumn),2.0F,0x40);
+    auto* falling=core.processes.FindEvent(nugget,3);CHECK(falling && falling->Payload()>0.0F);if (!falling || falling->Payload()<=0.0F) return;const auto fallingPid=core.kernel.Find(*falling);const auto frameBeforeFall=Get(core.pool.Slot(nugget),36);
+    bool moved{},sawZ{};
+    // 같은 실제 낙하 예약만 기한마다 실행한다. 다른 부모를 포함한 전체Kernel 완주와는 구별한다.
+    for (std::uint32_t step=0;step<105 && !(core.pool.Slot(nugget)[11]&1U);++step) {
+        CHECK(core.kernel.Get(fallingPid)==falling);if (core.kernel.Get(fallingPid)!=falling) break;core.processState.now=std::max(core.processState.now,falling->Time());falling->RunFrame(); // 늦게처리하는기존예약때문에게임시각을과거로되돌리지않는다.
+        if (!(core.pool.Slot(nugget)[11]&1U)) { moved=moved || std::bit_cast<float>(Get(core.pool.Slot(nugget),18))>2.0F;sawZ=sawZ || core.pool.Slot(nugget)[35]==20;CHECK(Get(core.pool.Slot(nugget),36)==frameBeforeFall); }
+    }
+    CHECK(moved && sawZ && (core.pool.Slot(nugget)[11]&1U));CHECK(!core.kernel.Get(fallingPid));CHECK(core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0);
+}

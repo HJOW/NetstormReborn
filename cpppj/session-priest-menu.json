@@ -22,7 +22,7 @@
     "cpppj/src/client/GameWorld.h": "a8606419c9753965231813d4cc5391614a4b892ac1d716b534ef5b84c88b79f3",
     "cpppj/src/client/GameWorld.cpp": "6f1c2bb5a44a98039f2c0709164ec27911fa0893282377120c35e5e05fd3b7fa",
     "cpppj/src/client/RawCampaignSession.h": "b63d3540024b9eef248329d84fd9cde386c6e799dee06ea2ddaf8ee68f7d21a4",
-    "cpppj/src/client/RawCampaignSession.cpp": "120d965e0371fe56fd4a6d3da847a5861bfc2c23668d8fbb467bf1fc6413d0f5",
+    "cpppj/src/client/RawCampaignSession.cpp": "0e5b27ea8bda1e8c821c919ce4589fe40df70a1a481923f94c1da0070dca06ec",
     "cpppj/src/client/RawPriestMenu.h": "5364d92d3af5b9b81a0477df5c005fcfc4a1ef7f6817894bd337250ce4d0e43d",
     "cpppj/src/client/RawPriestMenu.cpp": "f30be4e91f2141d1000f4a75d9f41619024d20f6cb024f68b8ffb483b1eddcf7",
     "cpppj/src/client/RawCampaignLifetimeBindings.h": "6f4be73b52279abf308c8a3e6d8962271560e47c25996f7a03fca09f8cd063e8",
@@ -45,7 +45,7 @@
     "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
     "tools/decomp_carrier_content_notice.py": "dbb32841a7019edbcb411f75094046c8bf0e20b4ed503e109a14b79a79d8a94c",
     "cpppj/src/o/CMakeLists.txt": "3d0010c676da1156f5223bfcaa207887a88910a4cf50733a7b2e9e515f939c48",
-    "cpppj/tests/CMakeLists.txt": "2caa125a7e1987b1ecfc912b8ce2199560a21683efdeb8405933f58b0928ad29"
+    "cpppj/tests/CMakeLists.txt": "fcd81971a02f119f8a90d8ab28d7ec45c5b3c587d515e34cfdfad1b1e56ea5ca"
   },
   "validation": {
     "configuration": "Release",
@@ -694,6 +694,25 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "ba633eb094bb697a98b67b6fab8045976dd6e718810a635440285a3dced6b2d7",
           "current": "2caa125a7e1987b1ecfc912b8ce2199560a21683efdeb8405933f58b0928ad29"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 147,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "120d965e0371fe56fd4a6d3da847a5861bfc2c23668d8fbb467bf1fc6413d0f5",
+          "current": "0e5b27ea8bda1e8c821c919ce4589fe40df70a1a481923f94c1da0070dca06ec"
+        },
+        {
+          "group": "/sha256",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "2caa125a7e1987b1ecfc912b8ce2199560a21683efdeb8405933f58b0928ad29",
+          "current": "fcd81971a02f119f8a90d8ab28d7ec45c5b3c587d515e34cfdfad1b1e56ea5ca"
         }
       ]
     }

@@ -8,7 +8,7 @@
     "date": "2026-10-16"
   },
   "currentSources": {
-    "cpppj/src/CMakeLists.txt": "c9dedcec3f71a8b0e9bf8be61f1caaa2b1775b164f922efe04659459d57b0728",
+    "cpppj/src/CMakeLists.txt": "380c5b11b56392ae385a0eaaefae67dfa0e192a59d44e6d4a815ffa348c50c6f",
     "cpppj/src/client/CampaignCursorClientEffects.cpp": "f062844066e8db3e6419aa2cf9ac4c9043188f2d95ed0a274de8b0f8c23c2ffa",
     "cpppj/src/client/CampaignCursorClientEffects.h": "4ae92870ccfc7e2431bad380e4b4858a020d59af221c001c7c47b5c4ff266328",
     "cpppj/src/client/GameWorld.cpp": "6f1c2bb5a44a98039f2c0709164ec27911fa0893282377120c35e5e05fd3b7fa",
@@ -17,7 +17,7 @@
     "cpppj/src/client/RawButtonControls.h": "372d15ad4ab423ef9869fab470ad1f4b5c75cb0ebc12503edd2bb7a6f3f240d6",
     "cpppj/src/client/RawCampaignCursor.cpp": "d1c12ed9e16c11771470abfae09d0a2bfccda51dc49be5b90c4a4c78604f961c",
     "cpppj/src/client/RawCampaignCursor.h": "0c4aa17d5acf5cd03fd9d651c33de2fedd115c622e9f75f1c469edb462c775ce",
-    "cpppj/src/client/RawCampaignSession.cpp": "120d965e0371fe56fd4a6d3da847a5861bfc2c23668d8fbb467bf1fc6413d0f5",
+    "cpppj/src/client/RawCampaignSession.cpp": "0e5b27ea8bda1e8c821c919ce4589fe40df70a1a481923f94c1da0070dca06ec",
     "cpppj/src/client/RawCampaignSession.h": "b63d3540024b9eef248329d84fd9cde386c6e799dee06ea2ddaf8ee68f7d21a4",
     "cpppj/src/client/RawCarrierMenu.cpp": "4a0fada9b8ac9d00eab37955189a8ac669d26f1d22559deae229a6ce3637dc1e",
     "cpppj/src/client/RawCarrierMenu.h": "e4ef0cccd8c956ccf6c167a7b08e0a9350f46206e08a9670dbaed6272d7749d8",
@@ -32,9 +32,9 @@
     "cpppj/src/client/UserInput.cpp": "9575d895408cb355415abb025d1eda5dab8267be63a450864ecd3e6a00d6c5bb",
     "cpppj/src/o/SquidFactory.h": "439126b14875597ae876ab82d1699d414fa15fdf76ec9ac83f6794d32595c549",
     "cpppj/src/o/SquidReward.h": "59cf154a0aa681fbce7bdf445728afc582409bd9af9b24e5b135e435e92aa362",
-    "cpppj/tests/CMakeLists.txt": "2caa125a7e1987b1ecfc912b8ce2199560a21683efdeb8405933f58b0928ad29",
+    "cpppj/tests/CMakeLists.txt": "fcd81971a02f119f8a90d8ab28d7ec45c5b3c587d515e34cfdfad1b1e56ea5ca",
     "cpppj/tests/CampaignCursorClientEffectsTests.cpp": "a87b47e02dfd422019acca2efccc9899b937a33057552b177e182d9ea0f1794b",
-    "cpppj/tests/CampaignObjectMenuTests.cpp": "120224ae61396c16375332ac28afd520049839dfee0cb920e500f388e487fd97",
+    "cpppj/tests/CampaignObjectMenuTests.cpp": "95857ea3ffe7590359bf7f4afcc6ea12789f8cb32b8ea75fecdc92a496fd5d53",
     "cpppj/tests/CampaignSessionTests.cpp": "964400205960599492a269d374aaaa7e46ff7f7b6e3968a992d0a447dc16bf2a",
     "cpppj/tests/RawButtonCursorBoundaryTests.cpp": "1f24a7464493536890611554b51d41bdeb477fa23190a909933ebd0ef1873684",
     "cpppj/tests/UserHighlightTests.cpp": "a23f97791f61415d333d3d99b33ec56e6ec67423a021da43473934fadd3a57ab",
@@ -401,6 +401,37 @@
           "path": "cpppj/tests/CampaignObjectMenuTests.cpp",
           "previous": "56e76a33cd0c6d4f174ee5330375344f623f9a3aff28f8a8c5e15a5f8d129bf1",
           "current": "120224ae61396c16375332ac28afd520049839dfee0cb920e500f388e487fd97"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 147,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "c9dedcec3f71a8b0e9bf8be61f1caaa2b1775b164f922efe04659459d57b0728",
+          "current": "380c5b11b56392ae385a0eaaefae67dfa0e192a59d44e6d4a815ffa348c50c6f"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "120d965e0371fe56fd4a6d3da847a5861bfc2c23668d8fbb467bf1fc6413d0f5",
+          "current": "0e5b27ea8bda1e8c821c919ce4589fe40df70a1a481923f94c1da0070dca06ec"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "2caa125a7e1987b1ecfc912b8ce2199560a21683efdeb8405933f58b0928ad29",
+          "current": "fcd81971a02f119f8a90d8ab28d7ec45c5b3c587d515e34cfdfad1b1e56ea5ca"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignObjectMenuTests.cpp",
+          "previous": "120224ae61396c16375332ac28afd520049839dfee0cb920e500f388e487fd97",
+          "current": "95857ea3ffe7590359bf7f4afcc6ea12789f8cb32b8ea75fecdc92a496fd5d53"
         }
       ]
     }

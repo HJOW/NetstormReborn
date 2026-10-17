@@ -1,0 +1,123 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-17",
+  "unit": 147,
+  "baseCommit": "f724baa",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16"
+  },
+  "currentSources": {
+    ".gitattributes": "5a09780fc24a357d7e8a09424ea259e16e2ac988c06d24c4e40fa6433e833e82",
+    "cpppj/src/CMakeLists.txt": "380c5b11b56392ae385a0eaaefae67dfa0e192a59d44e6d4a815ffa348c50c6f",
+    "cpppj/tests/CMakeLists.txt": "fcd81971a02f119f8a90d8ab28d7ec45c5b3c587d515e34cfdfad1b1e56ea5ca",
+    "cpppj/src/client/RawCampaignSession.cpp": "0e5b27ea8bda1e8c821c919ce4589fe40df70a1a481923f94c1da0070dca06ec",
+    "cpppj/tests/CampaignObjectMenuTests.cpp": "95857ea3ffe7590359bf7f4afcc6ea12789f8cb32b8ea75fecdc92a496fd5d53",
+    "cpppj/src/o/RawNuggetRegular.cpp": "5b62ca9f75cdda9b83252a1601c88cc78c235df4190bd8d48b2dbfa93b497cab",
+    "cpppj/src/o/RawNuggetRegular.h": "b1c882b0fdc15254543f5f7bea70a7ad81a83765e0e4ddae57ecb12e9b702fd1",
+    "cpppj/tests/NuggetRegularTests.cpp": "a26fc7be84f02b3a4005078bcddc4f38b49f0a5658ce9e4e00b75a505c80d3b7",
+    "tools/decomp_nugget_regular.py": "5a55630da35c054c5230336b3c8750504c73fdfe03b6c7a5033cacb1d98d729e",
+    "cpppj/tests/fixtures/nugget-regular-x86.tsv": "185f7df7e9600e2e1f1d7d622b0a7de3c4382bb5f1347309822326d5bf50f1e6"
+  },
+  "nativeReports": {
+    "cpppj/nugget-regular.json": "48056ec4b32fe221992e9ea274c7361fbc909c623bc4db6472394e969a9f90e7",
+    "cpppj/nugget-postpop.json": "225f29f827362f4d910c51edbbd5b20bd122e7db06ebf4b2ea651075af7f60db"
+  },
+  "nativeContext": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-17",
+    "lastPreciseDecompile": {
+      "host": "HJOW-Athlon",
+      "date": "2026-10-16"
+    },
+    "controls": [
+      639,
+      895
+    ],
+    "uniqueInputs": 9019,
+    "normalReturns": 18038,
+    "instructions": 1616300,
+    "nativeCalls": {
+      "00485230": 12918,
+      "00485170": 856,
+      "004850a0": 856,
+      "004ac550": 856,
+      "0049a840": 856,
+      "00485fe0": 15996,
+      "004e49c0": 31992,
+      "00484ec0": 2236,
+      "004558f0": 96
+    },
+    "precisionDifferentInputs": [],
+    "boundaries": "485230/4850a0/485170/484ec0/485fe0/TYPEgetter/4558f0/_ftol전체실행. 할당/Regular생성/프레임/표시/Unpop/Pop/삭제/Damageable는명시경계. mapPattern은고정입력이며좌표색인을대신계산하지않는다. 실제callerfloat32/GP/스택/canary/SEH/x87/코드·읽기·쓰기범위검사. free부모/지도물리밖조회는입력범위아님. 원본/OS창실행없음.",
+    "sha256": {
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "tools/decomp_nugget_regular.py": "5a55630da35c054c5230336b3c8750504c73fdfe03b6c7a5033cacb1d98d729e",
+      "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+      "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+      "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+      "cpppj/tests/fixtures/nugget-regular-x86.tsv": "185f7df7e9600e2e1f1d7d622b0a7de3c4382bb5f1347309822326d5bf50f1e6"
+    }
+  },
+  "protectedFileSha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6"
+  },
+  "workRecordSha256": "f0786d034bcb1850931c9feef27adc32a1e3ab81ecc3fc73260a8b713a2bce3a",
+  "validation": {
+    "releaseBuilds": [
+      0,
+      0,
+      0
+    ],
+    "warnings": [
+      0,
+      0,
+      0
+    ],
+    "errors": [
+      0,
+      0,
+      0
+    ],
+    "finalFocusedTests": 3,
+    "fullRegression": {
+      "cases": 1592,
+      "failed": 0,
+      "exitCode": 0,
+      "runnerSeconds": 202.46,
+      "ctestSeconds": 202.5
+    },
+    "nativeAudit": {
+      "tools": 65,
+      "passed": 54,
+      "existingFailed": 11,
+      "newFailed": 0
+    },
+    "currentPinReports": 42,
+    "currentPins": 97,
+    "cloneEntry": {
+      "runs": 5,
+      "passed": 5,
+      "originalsUnchanged": true,
+      "world": [
+        "thewarbegins",
+        "masterofwhirligigs"
+      ],
+      "briefingOnly": [
+        "tutorial1",
+        "tutorial2",
+        "tutorial3"
+      ],
+      "reportSha256": "ffbd3c09149b18f1e0120d5df9007551ea82f525b13749c2e5be9b03a5a1e5dc"
+    }
+  },
+  "scope": "원문9019행/실제RNG/_ftol과같은Session의너겟예약/프레임왕복/실제빈하늘열/가속낙하/부모·Form·예약삭제. 다른부모AI/전체Kernel자연완주/서버전송/픽셀동일성아님.",
+  "remaining": [
+    "Carrier492의4225b0/429010 및5105의426ef0",
+    "실제Client선택/강조/dump/비정지우클릭/번역/원본DWORD소비자",
+    "11스테이지자연완주/승패/저장/다음미션/생산경제AI/로컬전송/전체동일성"
+  ]
+}
