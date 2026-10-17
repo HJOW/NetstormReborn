@@ -1398,3 +1398,8 @@ set_source_files_properties(CarrierTransferTests.cpp PROPERTIES COMPILE_DEFINITI
 target_sources(netstorm_tests PRIVATE CarrierTargetTests.cpp)
 set_source_files_properties(CarrierTargetTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_CARRIER_TARGET_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/carrier-target-x86.tsv\";NETSTORM_CARRIER_TARGET_HARDWARE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/carrier-target-hardware.tsv\"")
+
+# 골렘 후보의 실제 주소 비교/정렬 호출 전체를 재생한다.
+target_sources(netstorm_tests PRIVATE CarrierCandidateSortTests.cpp)
+set_source_files_properties(CarrierCandidateSortTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CARRIER_CANDIDATE_SORT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/carrier-candidate-sort-x86.tsv\"")

@@ -1,0 +1,91 @@
+{
+  "unit": 152,
+  "date": "2026-10-18",
+  "host": "HJOW-Athlon",
+  "baseCommit": "b7932e8",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16"
+  },
+  "status": "정렬단위완료/Session선택기미연결/전체사용자플레이목표진행중",
+  "currentSources": {
+    "cpppj/src/o/RawCarrierCandidateSort.h": "d6772fee26dab5961e379781030a469a52fb940462f44c67b16d9cc33b97a61f",
+    "cpppj/src/o/RawCarrierCandidateSort.cpp": "a7749297ad70712a059aea52088cfd41c0880801a4f72c68d2b1548495a5bc69",
+    "cpppj/tests/CarrierCandidateSortTests.cpp": "0899bcd133f09fd587e42105e6e790b68eb622021242d63c87748d36b1820a4e",
+    "cpppj/src/CMakeLists.txt": "106a8ab82aa2ca9498435ced1437de66ce51744392b3f823b16592bafbf5b693",
+    "cpppj/tests/CMakeLists.txt": "794e324f586ed472cdcd777ed3159952faca723ac6e67d101bc10f4755d2611d",
+    "tools/decomp_carrier_candidate_sort.py": "b33e27d24a1d4f2bf4cabbb6958164f8d1e6cbf672c1f0aa1c2635b0b96d20d1",
+    "docs/exe/cpp-carrier-candidate-sort-20261018.md": "9e79257a499cde7bab8038aa3aee3928376e2233d88c88c62199c0f48d48d950"
+  },
+  "nativeReports": {
+    "cpppj/carrier-candidate-sort.json": "0758a493b624974545da3afa7e4063b1a4637de4d6e500f9f36955fb89167f2b"
+  },
+  "nativeContext": {
+    "uniqueInputs": 513,
+    "normalReturns": 1026,
+    "instructions": 6101830,
+    "nativeCalls": {
+      "004e6010": 400,
+      "004e5fa0": 796,
+      "00428020": 135070
+    },
+    "precisionDifferentInputs": [],
+    "boundaries": "428020/4e6010/4e5fa0 전체 실제 코드. 하위 계산/키/비교 결과/교환을 대체하지 않았다. GP/cdecl 스택/canary/SEH/x87 CW·TOP·tag/코드·읽기·쓰기 범위와 전체 raw 풀 불변을 검사한다. 정렬 입력의 명시 주소와 물리 바이트만 경계다. 상위4280a0/귀환선택/게임창/자연운반 검증은 아니다."
+  },
+  "validation": {
+    "build": {
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0
+    },
+    "focused": {
+      "tests": 2,
+      "failedChecks": 0,
+      "exitCode": 0
+    },
+    "full": {
+      "tests": 1608,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "seconds": 217.92,
+      "ctestSeconds": 217.96
+    },
+    "audit": {
+      "tools": 72,
+      "passed": 61,
+      "knownFailures": 11,
+      "newFailures": 0
+    },
+    "pinMaintenance": {
+      "reports": 44,
+      "pins": 66,
+      "historyExact": true
+    },
+    "cloneEntry": "순수 정렬 단위이므로 재실행하지 않았다"
+  },
+  "protected": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "AGENTS.md": "7addbf9b31c42f29aab7c93faa865eb6de8590a600d17202a297cf7122bdf979",
+    "LEFT_JOBS.dotnetpj.md": "0c067e1d12879dbf2212cbd64c8f9f60e65b590df910418f025027ed84f80ec2"
+  },
+  "logSha256": {
+    "extracted/goal-carrier-sort-20261018-native1.log": "127b78ca8aa82473a289a3dceb1a3cd8606ea50c0897cceb76d856a5caa920ea",
+    "extracted/goal-carrier-sort-20261018-native2.log": "0687e90dbd9e468d534a22604dc1ec13778c610dfda7bf41c31faa6b3b801f07",
+    "extracted/goal-carrier-sort-20261018-build1.log": "bb7acd956b5bfcd67e71d1cb25b78b9ea5069b2aa832af996ad079443492b785",
+    "extracted/goal-carrier-sort-20261018-focused1.log": "3d133fd9eafae72024025ceae52e7798c6147eb1a0c91c4d1184fe786c1f6697",
+    "extracted/goal-carrier-sort-20261018-ctest1.log": "17760107201628985234ca4eec2b295c0b49293ed3a9a16a8822cf8cd1e22e30",
+    "extracted/goal-carrier-sort-20261018-LastTest.log": "96767c0abcd0b3628888039c416a778119693c6f71478b925d28f12b8f7112d4",
+    "extracted/goal-carrier-sort-20261018-audit.log": "3fef88680890d680ecaaec323815ab4e6f5a9abdec6c956d8b5fbbe2164bbcd7",
+    "extracted/goal-carrier-sort-20261018-verify-final.json": "7cfbdf9965928aeaf45881f851f15b7c36ae200db331fb0f9a6d90b9b16be925",
+    "extracted/goal-carrier-sort-20261018-pin-updates.json": "2a906a45c32abe014d190218c6e089b63b377b5c5fd5f84e0fe04f2b5af5cea8"
+  },
+  "remaining": [
+    "428ea0/429420 후보 수집과4280a0 평가기 연결",
+    "상위CarrierArrival의현재Player+b0 AI조회",
+    "자연운반·경제·AI·11스테이지완주·승패·저장·다음미션의전체동일성"
+  ],
+  "intendedCommit": "20261018-02 CP 골렘 후보의 원본 주소 비교와 동률 정렬 복원",
+  "push": false
+}

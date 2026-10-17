@@ -1,0 +1,29 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-18",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16"
+  },
+  "uniqueInputs": 513,
+  "normalReturns": 1026,
+  "instructions": 6101830,
+  "nativeCalls": {
+    "004e6010": 400,
+    "004e5fa0": 796,
+    "00428020": 135070
+  },
+  "precisionDifferentInputs": [],
+  "boundaries": "428020/4e6010/4e5fa0 전체 실제 코드. 하위 계산/키/비교 결과/교환을 대체하지 않았다. GP/cdecl 스택/canary/SEH/x87 CW·TOP·tag/코드·읽기·쓰기 범위와 전체 raw 풀 불변을 검사한다. 정렬 입력의 명시 주소와 물리 바이트만 경계다. 상위4280a0/귀환선택/게임창/자연운반 검증은 아니다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "tools/decomp_carrier_candidate_sort.py": "b33e27d24a1d4f2bf4cabbb6958164f8d1e6cbf672c1f0aa1c2635b0b96d20d1",
+    "tools/decomp_carrier_falling.py": "f8702db0708a543b73213c8df9154503afe977767a11bd7c150b639ee1b587a6",
+    "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+    "tools/decomp_cursor_position.py": "e15bcdbc4c6be9c131c30f15416c945d650dba9f7dc6def404b47f63c635c212",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "cpppj/tests/fixtures/carrier-candidate-sort-x86.tsv": "de225ecc8a84240242f00c54fe7617bf0feb5b7475420d21660d3ad7c2dc6267"
+  }
+}

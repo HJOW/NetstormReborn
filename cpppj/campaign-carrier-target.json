@@ -25,8 +25,8 @@
     "cpppj/src/o/RawCarrierArrival.cpp": "1ce744b92bb3faa0c30b4ae8b76f4787e1cd42b9971d4a41c1cbfc9def11e6a3",
     "cpppj/tests/CarrierTargetTests.cpp": "7ca2aa993bae751e63e973190da5eefb9259d1cfb544899bb108e89d26912400",
     "cpppj/tests/CampaignObjectMenuTests.cpp": "fea9198ea2150c42bb523f7ac9298c2f819acd1fc9b9887b53020c206ad62563",
-    "cpppj/src/CMakeLists.txt": "b3a552aa0a7f2f5b61666cc009112ce5c1de62425fe4f4955d93fe574f269b4f",
-    "cpppj/tests/CMakeLists.txt": "339fab10b33d455e42a58f14e70b9ad41a35ebd913f59d3842e5a6e7bc9cff89",
+    "cpppj/src/CMakeLists.txt": "106a8ab82aa2ca9498435ced1437de66ce51744392b3f823b16592bafbf5b693",
+    "cpppj/tests/CMakeLists.txt": "794e324f586ed472cdcd777ed3159952faca723ac6e67d101bc10f4755d2611d",
     "tools/native_carrier_geometry.cpp": "c471a0ce9889c730bb1a3b6a4659fe0eb0fea2d854b7007524fb93cd56fa34e8",
     "tools/carrier-geometry-hardware/CMakeLists.txt": "918768180d59716d3c0d46ac8955edd89ce2963237dae7eff3435fbd0e0287a3",
     "tools/decomp_carrier_target.py": "5869d80a3bde70e576f055d8fa6336364fb217343ec5cf7984eb763d99fc718f",
@@ -443,5 +443,26 @@
     "extracted/goal-carrier-target-20261017-entry/results.json": "a05d3abe90ce467e78f5465e8fdcaeaf6ee8119509fe9d022952d7760963ebc4",
     "extracted/goal-carrier-target-20261017-hardware-cmake-configure.log": "0058c44a8603770282f6815216c79e9da066319d5ac28637fe63c3679fcd1ad9",
     "extracted/goal-carrier-target-20261017-hardware-cmake-build.log": "276afb58e239811366f680013d429ec49a41c42723ae60f5714c963a8e66b0ed"
-  }
+  },
+  "integration_updates": [
+    {
+      "date": "2026-10-18",
+      "unit": 152,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "b3a552aa0a7f2f5b61666cc009112ce5c1de62425fe4f4955d93fe574f269b4f",
+          "current": "106a8ab82aa2ca9498435ced1437de66ce51744392b3f823b16592bafbf5b693"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "339fab10b33d455e42a58f14e70b9ad41a35ebd913f59d3842e5a6e7bc9cff89",
+          "current": "794e324f586ed472cdcd777ed3159952faca723ac6e67d101bc10f4755d2611d"
+        }
+      ]
+    }
+  ]
 }

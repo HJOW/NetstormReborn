@@ -83,3 +83,6 @@ target_sources(netstorm PRIVATE o/RawCarrierTransfer.cpp o/RawCarrierTransfer.h)
 
 # 운반체의 실제 대상 접근점과 경로 시작/귀환 명령이다.
 target_sources(netstorm PRIVATE o/RawBoardTarget.cpp o/RawBoardTarget.h o/RawCarrierTarget.cpp o/RawCarrierTarget.h)
+
+# 골렘 후보 비교기의 주소 감김과 구형 CRT 동률 순서다.
+target_sources(netstorm PRIVATE o/RawCarrierCandidateSort.cpp o/RawCarrierCandidateSort.h)
