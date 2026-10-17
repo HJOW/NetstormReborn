@@ -21,7 +21,7 @@
     "cpppj/src/client/RawCursorPlacement.cpp": "cf1a0d4cfbd0cf2118db90c00b45fa7ea59300b1bf5d4011ec12d268115a2c48",
     "cpppj/tests/CursorPlacementTests.cpp": "a03f225bbf82cce49a770d111b2d4d24f5c496cde97560f3f55c6bce50dad997",
     "cpppj/src/client/CMakeLists.txt": "8bb17d335554c16e6ff3300134492a264bfa425dfafd52062ecf0062f523d87c",
-    "cpppj/tests/CMakeLists.txt": "9dc34335f2f606b142e8f5ba295e11c54c92498de07d38917da041d36a325b22"
+    "cpppj/tests/CMakeLists.txt": "15ccb8c846d54cbdd447ab3060531c68bf80d464ea9503f49a58901793a0b52d"
   },
   "limitations": [
     "세 커서 몸체와 실제 CRT 절삭/floor만 실행한다. decoder/SHP/설명/GUI/지역/투영/화면 갱신은 명시 경계다.",
@@ -148,6 +148,18 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "687f283a950b897c92cfca118f23b86de2192ed710a1fcc651c48685a7a221ba",
           "current": "9dc34335f2f606b142e8f5ba295e11c54c92498de07d38917da041d36a325b22"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 127,
+      "reason": "실제 공급원 정렬/공유 건설 선택 및 현재 전역의 Session 연결",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "9dc34335f2f606b142e8f5ba295e11c54c92498de07d38917da041d36a325b22",
+          "current": "15ccb8c846d54cbdd447ab3060531c68bf80d464ea9503f49a58901793a0b52d"
         }
       ]
     }

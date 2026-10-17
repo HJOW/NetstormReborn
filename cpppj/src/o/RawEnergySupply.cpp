@@ -2,6 +2,8 @@
 #include "o/RawEnergySupply.h"
 #include <algorithm>
 #include <bit>
+#include <cmath>
+#include <memory>
 #include <stdexcept>
 
 namespace netstorm::o {
@@ -106,7 +108,35 @@ std::uint32_t RawEnergySupply::Evaluate(std::string& output,float x,float y,std:
     if (required.empty() || required[0]=='\0') { output.clear();return 1; }return Match(output,required) ? length : 0;
 }
 // Builder가 같은 목록을 순서대로 소비하게 한다.
-std::uint32_t RawEnergySupply::TakeSource() const { for (std::uint32_t index=0;index<selected_.count;++index) { auto& value=selected_.entries.at(index);if (value) { const auto result=value;value=0;return result; } }return 0; }
+std::uint32_t RawEnergySupply::TakeSource() const { if (std::bit_cast<std::int32_t>(selected_.count)<=0) return 0;for (std::uint32_t index=0;index<selected_.count;++index) { auto& value=selected_.entries.at(index);if (value) { const auto result=value;value=0;return result; } }return 0; }
+// 41cfc0의 제곱근 거리와float 임계값 저장을 사용한다. 원소/중심으로 후보를 다시 거르지 않는다.
+void RawEnergySupply::SortSources(std::string_view demand,float x,float y) const {
+    constexpr std::size_t kKept=10; // 원본 new28의 실제10DWORD이며 요구가 길어도 이 수만 다시 보관한다.
+    auto kept=std::make_unique<std::array<std::uint32_t,kKept>>();std::size_t count{};
+    const auto report=[this](EnergySortDiagnostic diagnostic) { if (!hooks_.sortDiagnostic) throw std::logic_error("에너지 정렬 원본 진단");hooks_.sortDiagnostic(diagnostic); }; // 원본 보고 뒤 현재 조건을 다시 검사한다.
+    // 문자 내용은 사용하지 않으며 첫NUL 또는 첫 미선택에서 끝난다.
+    for (const char letter:demand) {
+        if (!letter) break;std::int32_t best=-1;float distanceLimit=999.0f;
+        // 선택/진단 뒤에도 현재signed count와 현재 슬롯을 읽는다.
+        for (std::int32_t index=0;index<std::bit_cast<std::int32_t>(selected_.count);++index) {
+            const auto value=selected_.entries.at(static_cast<std::size_t>(index));if (!value) continue;
+            const auto valid=[this,value] { return value>=1 && value<pool_.Capacity() && value<=65535 && !(pool_.Slot(Sid{static_cast<std::uint16_t>(value)})[11]&1); }; // 예약슬롯1..4도 원본 범위라면 허용한다.
+            if (!valid()) report(EnergySortDiagnostic::InvalidSource);
+            if (!valid()) continue;const auto raw=pool_.Slot(Sid{static_cast<std::uint16_t>(value)});
+            const double dx=static_cast<double>(x)-Coordinate(raw,14),dy=static_cast<double>(y)-Coordinate(raw,18);
+            const double distance=std::sqrt(dx*dx+dy*dy);
+            if (distance<distanceLimit) { distanceLimit=static_cast<float>(distance);best=index; }
+        }
+        if (best==-1) break;
+        if (best<0 || best>std::bit_cast<std::int32_t>(selected_.count)) report(EnergySortDiagnostic::InvalidBestIndex);
+        if (best>=0 && best<=std::bit_cast<std::int32_t>(selected_.count)) {
+            auto& value=selected_.entries.at(static_cast<std::size_t>(best));if (count<kKept) (*kept)[count++]=value;value=0;
+        }
+    }
+    selected_.count=0;
+    // 임시 목록을 현재 용량까지만 앞에 쓰고 선택하지 않은 꼬리는 지우지 않는다.
+    for (std::size_t index=0;index<count;++index) if (selected_.count<selected_.entries.size()) selected_.entries[selected_.count++]=(*kept)[index];
+}
 // 연결 시 단일 풀의 정체성을 확인한다.
 const SidPool& RawEnergySupply::Pool() const { return pool_; }
 }

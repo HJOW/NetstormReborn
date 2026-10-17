@@ -1,5 +1,18 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-17 단위127 완료: 실제 공급원 정렬·건설 운반 공유 선택 (`HJOW-Athlon`)
+
+- [x] AGENTS.md·양 LEFT·깨끗한5bd2e80과 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16**을 다시 확인했다. 새 내보내기·원본/클론 게임·GUI 실행은 없다. 전체 목표는 active다. [작업 기록](docs/exe/cpp-energy-sort-20261017.md).
+- [x] `RawEnergySupply::SortSources`가 실제474970의 new40·요구 길이 반복·초기float999·실제제곱근 거리41cfc0·float 임계값 저장·0/free/무효 진단·현재 재검사·최대10보관/이후도소모·현재 용량까지 재작성/꼬리 보존을 복원한다. 원소나 공급 중심으로 다시 거르지 않는다.473570도 signed count<=0의 빈 조회를 보완했다.
+- [x] Native1 **567고유 입력/두 정밀도2,898정상 반환/1,196,050명령/차이0**이다. 실제 정렬1,106/거리16,142/소비1,792/보고360회이며 전체30칸/count/정렬 직후 단계/32회 연속 소비의 반환·출력/진단을 C++가 모두 대조했다. new40 성공/반납/보고만 명시 경계다. 기존 공급1,058행/Builder3판본1,110행 fixture는 불변이다. 실행은 기존`extracted/oracle-python`을 PYTHONPATH로 지정한다.
+- [x] Builder는 같은 실제 에너지 모듈을 빌려 Evaluate→SortSources→TakeSource를 실행한다. 별도 state.sources/선택 훅은 사용하지 않고 서로 다른 풀은 생성 때 거부한다. 현재 타입/시각 getter도 연결했다. 결합 검사는 w/r 공급 순서를 실제 계산/정렬로 바꾸어 운반 프레임/현재 시각 속도 조정/독성 fallback 목록 불변을 확인했다. 접근점/경로/가상 효과는 명시 입력 경계이며 실제 사용자 이동 증거는 아니다.
+- [x] Session`MakeConstructionBuilder`는 실제 기준점/Factory/Owner/Pop/TYPE 속도·theme·A..P 첫 프레임/현재 타입·시계/Regular/에너지 저장소를 조립한다. 예약 객체를 실제 확보한 뒤 같은 Host에 event0/payload0.05로 부착한다. caller의 실제 접근점/경로/속도 효과는 필수이며 성공 기본값을 넣지 않는다. 반환 Builder/State는 Session보다 먼저 해제한다.
+- [x] 실제thewarbegins GameWorld의 레인 제네레이터76 등록/윈드 제네레이터75의 실제 요구 판정·정렬 뒤 Session이 만든 Builder가 같은 마지막 목록을 소비함을 확인했다. 별도 State.sources 독성값은 불변이다. 이 검사는 실제 경로/접근점이나 일반 건설 완주를 실행하지 않는다.
+- [x] 최종 **Release 빌드4 종료0·경고0·오류0**, 집중 정렬2/Builder10/실제 Session1 통과다. 전체 **1,513개 모두 통과·실패0·CTest 종료0·216.81초(전체216.85초)**는 build3에서 실행했다. 이후 기존 검사 파일의 CRLF311개만 LF로 정규화하고 컴파일 토큰/행 번호 동일을 확인한 뒤 build4/Builder10개를 다시 통과했다. Player enum/형식의 초기 컴파일 충돌은 Input::Player로 수정했다.
+- [x] 현대 `--verify`19개·정규화 후 정렬 재검증·제품10개/관측/보호3개 SHA·UTF-8/LF/추가 문자를 감사했다. HEAD와 일치하던22보고서62핀만 이력과 갱신하고 과거93핀은 보존했다. 정규화 전 미커밋 핀은 기존 HEAD 이력을 보존하면서 최종 바이트의 한 갱신으로 다시 작성했다. 기존 fixture/metadata·AGENTS/DN/보호 원본은 불변이고 CMake 기존 접두 바이트도 보존했다. 로그 접두사는`extracted/goal-energy-sort-20261017-`다.
+- [x] 이 인수인계를 포함해 **20261017-27 CP 실제 공급원 정렬과 건설 운반의 공유 선택 연결**로 로컬 커밋한다. push하지 않는다.
+- [ ] **다음 실제 플레이:** 일반 Confirm/Place/Notice/Process/Frame/Visual과 실제 접근점41db70, 사제 외 type23 경로(건설용134·마나 볼트105)를 같은 World/Host에 연결한다. 현재 RawCampaignPathBindings는158/type54만 허용하며 실제 경로의 시각/속도 view도 필요하다. 다음 정적 근거는`extracted/goal-energy-sort-20261017-next-types.txt`/`next-주소.txt`다.134는ctor443fc0/VT5070c0,105는ctor45acd0/VT509810이고 둘의 Halt4ac990·도착444080/45ab30·표시4ad500/45ac90·공통 삭제4af780/4b0950/4b0840을 확인했다. 실제 표시/삭제 분배도 연결해야 한다. Client 전체DWORD 메뉴→ContentForm6 Take/위치/수집/그리기/내려놓기·생산/경제/AI전략·GUI 시작/진행/승패·저장/다음 미션·사용자 자연 완주/전체 동일성은 남았고 전체화면 DirectDraw는 제외다.
+
 ## 2026-10-17 단위126 완료: 실제 에너지 공급·공유 장부·커서 판정 (`HJOW-Athlon`)
 
 - [x] AGENTS.md·양 LEFT·깨끗한b62491b과 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16**을 확인했다. 새 내보내기·원본/클론 게임·GUI 실행은 없다. 전체 목표는 active다. [작업 기록](docs/exe/cpp-energy-supply-20261017.md).
@@ -10,7 +23,7 @@
 - [x] 실제thewarbegins GameWorld에서 Factory→Owner→Pop으로 레인 제네레이터76을 등록하고, 윈드 제네레이터75의 실제mana="s" 문구/경계/크기 항/동맹 정방향·역방향/동맹 비활성/같은 목록 소비/삭제 후 공급 제거·삭제 깊이를 통과했다. 삭제 검사의 unitLost.wav 외부 장치 요청도 명시 관찰했다. 초기 용량0 실패·미공급 소리 경계는 해결했고 계산을 성공 기본값으로 바꾸지 않았다. 실제 Client는 기존 CampaignClientServices 재생기를 사용한다.
 - [x] 최종 **Release 빌드7 종료0·경고0·오류0**, 집중4개와 전체 **1,509개 모두 통과·실패0·CTest 종료0·237.02초(전체237.05초)**다. 현대 `--verify`18개·제품9개/관측/보호3개 SHA·UTF-8/LF/추가 문자를 감사했다. HEAD와 일치하던20보고서39핀만 이력과 갱신하고 과거93핀은 보존했다. 기존 fixture/metadata·AGENTS/DN/보호 원본은 불변이고 CMake 기존 접두 바이트도 보존했다. 로그 접두사는`extracted/goal-energy-20261017-`다.
 - [x] 이 인수인계를 포함해 **20261017-26 CP 실제 에너지 공급 판정과 공유 장부 및 커서 연결 복원**으로 로컬 커밋한다. push하지 않는다.
-- [ ] **다음 실제 플레이:** Client 전체DWORD 메뉴→실제 ContentForm6의 Take/위치/수집/그리기/내려놓기를 조립한다. GumpForm3은 별도 UI 수명 객체이며 이전 인수인계의 메뉴/GumpForm 표현과 구분한다. 일반 건설은`RawCampaignConstructionBindings`의 noIsland/Player0 제한과 명시 Missing들을 기존 실제 Confirm/Place/Notice/Builder/Process/Frame/Visual·사제·이동에 연결해야 한다. 에너지 공급원 정렬474970도 남았다(`extracted/goal-energy-20261017-00474970.txt`). BuilderState.sources에 EnergySources를 복사하지 않고 같은 목록을 참조하도록 연결한다. 생산·경제·AI전략·GUI 시작/진행/승패·저장/다음 미션·사용자 자연 완주/전체 원본 동일성은 남았고, 전체화면 DirectDraw는 제외다.
+- [ ] **다음 실제 플레이:** Client 전체DWORD 메뉴→실제 ContentForm6의 Take/위치/수집/그리기/내려놓기를 조립한다. GumpForm3은 별도 UI 수명 객체이며 이전 인수인계의 메뉴/GumpForm 표현과 구분한다. 일반 건설은`RawCampaignConstructionBindings`의 noIsland/Player0 제한과 명시 Missing들을 기존 실제 Confirm/Place/Notice/Builder/Process/Frame/Visual·사제·이동에 연결해야 한다. 에너지 공급원 정렬474970과 Builder의 같은 목록 소비는 단위127에서 완료했다. 후속 일반 건설/이동은 단위127의 다음 작업을 따른다. 생산·경제·AI전략·GUI 시작/진행/승패·저장/다음 미션·사용자 자연 완주/전체 원본 동일성은 남았고, 전체화면 DirectDraw는 제외다.
 
 ## 2026-10-17 단위125 완료: 실제 사정거리·펜스 및 부모 삭제 수명 (`HJOW-Athlon`)
 

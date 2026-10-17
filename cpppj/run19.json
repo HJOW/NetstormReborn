@@ -451,8 +451,8 @@
     "cpppj/src/o/RawCarrierPreDestroy.h": "d1f5903fc44c51dc7c6985ff073851b31f46f3f6fdd1a972cb568440cf7d173a",
     "cpppj/src/o/RawConstructionArrival.cpp": "871ed32e306e85ef45ce53bd357289384d04fc6e4a75a3aa98fdbf8cad8a4eb0",
     "cpppj/src/o/RawConstructionArrival.h": "3a6f3d512f873a8c683d0d2429cae6cd36f51c9f1103560d8c9773dc0b8a14ab",
-    "cpppj/src/o/RawConstructionBuilder.cpp": "262613e5a87d10aaf5980cdcada9499c43937bbbdb1d217b79b730f097bdf0e2",
-    "cpppj/src/o/RawConstructionBuilder.h": "bceb3e5f4ae1a4a7cfbd8ec3f895337709d86786a284b16755a60216b003b261",
+    "cpppj/src/o/RawConstructionBuilder.cpp": "9af3eb30ab5b57062bf0a3006e1973683165de48fd79b4227316322a99317189",
+    "cpppj/src/o/RawConstructionBuilder.h": "f3e8165d42cf4070a94055ec018add56fd35b16e633d96c9d45045ed5b026ca5",
     "cpppj/src/o/RawConstructionClear.cpp": "9bc0b5165242ea92637a22a38ee2ac1b2681fa2bf93b176096d93266336da238",
     "cpppj/src/o/RawConstructionClear.h": "96af0b799ef88ba5c55ec96b00d1d6408a170314d60493e4b00ef22ecf61d440",
     "cpppj/src/o/RawConstructionConfirm.cpp": "0b50515a6d1cd9f79c10af3f8d8ed899cbcfc9db5c94ae829bf6fb0b9e21c330",
@@ -771,7 +771,7 @@
     "cpppj/tests/ConfigInterfaceTests.cpp": "1e58c50ea1b39c5ea7ab6d615018f7e2d324260a25ab4873a2d2b2f7df38934d",
     "cpppj/tests/ConfigOracleTests.cpp": "1e7429ec68ce155e881bb873a2cc0843ba2569460f54cc4d95cd55b4f7a07f01",
     "cpppj/tests/ConstructionArrivalTests.cpp": "936592ac5b245af7102ad16c48d967030035b8a6d2531152ad829d613294b358",
-    "cpppj/tests/ConstructionBuilderTests.cpp": "8447974c516e0be01421a26d9f71a87037dcf31d3af428264bc7a2c2f4c79778",
+    "cpppj/tests/ConstructionBuilderTests.cpp": "90f3a5d35eb2562542c69b5969d95db90b9796fb6ed74fa72e43eff684488ac9",
     "cpppj/tests/ConstructionClearTests.cpp": "a77317e6981032114e8009ed1b634c24193d785bef0bc8e9fd81c6f80e2e2667",
     "cpppj/tests/ConstructionConfirmTests.cpp": "6127ba8a50c82e673056c46deb2409917cbb3a3d5bc5366c88649925b53b03da",
     "cpppj/tests/ConstructionDataTests.cpp": "1229681851474732e9e0c16fbc4d04d93400e96a213842da965ad18e848a13d0",
@@ -1263,6 +1263,28 @@
           "path": "cpppj/src/CMakeLists.txt",
           "previous": "d57ce7c787ea9a7ba42218a7e8b25a39fb60a551130387b6838e59788b628e7b",
           "current": "c6788ec0b508c34f26406203a824455adc59d87a1a5aa80ab2bfda476e91021b"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 127,
+      "reason": "실제 공급원 정렬/공유 건설 선택 및 현재 전역의 Session 연결",
+      "pins": [
+        {
+          "path": "cpppj/src/o/RawConstructionBuilder.cpp",
+          "previous": "262613e5a87d10aaf5980cdcada9499c43937bbbdb1d217b79b730f097bdf0e2",
+          "current": "9af3eb30ab5b57062bf0a3006e1973683165de48fd79b4227316322a99317189"
+        },
+        {
+          "path": "cpppj/src/o/RawConstructionBuilder.h",
+          "previous": "bceb3e5f4ae1a4a7cfbd8ec3f895337709d86786a284b16755a60216b003b261",
+          "current": "f3e8165d42cf4070a94055ec018add56fd35b16e633d96c9d45045ed5b026ca5"
+        },
+        {
+          "path": "cpppj/tests/ConstructionBuilderTests.cpp",
+          "previous": "8447974c516e0be01421a26d9f71a87037dcf31d3af428264bc7a2c2f4c79778",
+          "current": "90f3a5d35eb2562542c69b5969d95db90b9796fb6ed74fa72e43eff684488ac9"
         }
       ]
     }

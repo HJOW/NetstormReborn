@@ -1108,3 +1108,13 @@ cpppj/tests/fixtures/energy-provider-vtables.tsv text eol=lf
 tools/decomp_energy_supply.py text eol=lf
 cpppj/energy-supply.json text eol=lf
 docs/exe/cpp-energy-supply-20261017.md text eol=lf
+
+# 실제 공급원 정렬/공유 건설 선택의 의존 바이트를 LF로 보존한다.
+cpppj/src/o/RawConstructionBuilder.cpp text eol=lf
+cpppj/src/o/RawConstructionBuilder.h text eol=lf
+cpppj/tests/ConstructionBuilderTests.cpp text eol=lf
+cpppj/tests/EnergySortTests.cpp text eol=lf
+cpppj/tests/fixtures/energy-sort-x86.tsv text eol=lf
+tools/decomp_energy_sort.py text eol=lf
+cpppj/energy-sort.json text eol=lf
+docs/exe/cpp-energy-sort-20261017.md text eol=lf

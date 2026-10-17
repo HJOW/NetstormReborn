@@ -35,9 +35,9 @@
     "cpppj/src/o/SpStore.cpp": "61723355bccecc352ff415d79434767fec6bfb776ba411cb096bb8b2046fd37a",
     "cpppj/src/o/RawConstructionArrival.h": "c0b213bbe5781394281ec2735595020b7b19c201d4495b9cf32799687a52f845",
     "cpppj/src/o/RawConstructionArrival.cpp": "7c2b73ff96b2a90da808423269e3ebc061a660fbd9ca80bff1b5d2a821301b02",
-    "cpppj/src/o/RawConstructionBuilder.h": "b54194d6f8e087a53d579c6bc77983460dd126e566d73394a797fc251b8d3e03",
-    "cpppj/src/o/RawConstructionBuilder.cpp": "9fab839e758fb7a9e5319122453897fb7e4d9dcce51edc79c886b450c4d76438",
-    "cpppj/tests/ConstructionBuilderTests.cpp": "8447974c516e0be01421a26d9f71a87037dcf31d3af428264bc7a2c2f4c79778",
+    "cpppj/src/o/RawConstructionBuilder.h": "f3e8165d42cf4070a94055ec018add56fd35b16e633d96c9d45045ed5b026ca5",
+    "cpppj/src/o/RawConstructionBuilder.cpp": "9af3eb30ab5b57062bf0a3006e1973683165de48fd79b4227316322a99317189",
+    "cpppj/tests/ConstructionBuilderTests.cpp": "90f3a5d35eb2562542c69b5969d95db90b9796fb6ed74fa72e43eff684488ac9",
     "cpppj/src/client/RawSurfaceWorld.cpp": "2cd4fdedfdb0f61a92dde713ed706a23e2fb3b7b53ef0ce82c4b70f5e7853a0e",
     "cpppj/src/client/RawPriestWorldBindings.h": "2486df64b44cef2f14f92e0c7e7818487fdb3f9fed0a4515b51be300872adbe0",
     "cpppj/src/client/RawPriestWorldBindings.cpp": "5fff294f243fb939efb4fb3e81719c498024b904c35c1901484cdff0beebffa6",
@@ -79,5 +79,29 @@
     "건설 도착 몸체 복원은 type23 경로 탐색·이동/입력/UI 연결 완성을 의미하지 않음",
     "GunProcess/타입별 Regular/비zero damageEffect 및 중립 사제 행동 일부 실제 연결은 후속",
     "각 독립 native fixture의 명시 하위 경계 관찰은 게임 종단 완주와 구별"
+  ],
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "unit": 127,
+      "reason": "실제 공급원 정렬/공유 건설 선택 및 현재 전역의 Session 연결",
+      "pins": [
+        {
+          "path": "cpppj/src/o/RawConstructionBuilder.h",
+          "previous": "b54194d6f8e087a53d579c6bc77983460dd126e566d73394a797fc251b8d3e03",
+          "current": "f3e8165d42cf4070a94055ec018add56fd35b16e633d96c9d45045ed5b026ca5"
+        },
+        {
+          "path": "cpppj/src/o/RawConstructionBuilder.cpp",
+          "previous": "9fab839e758fb7a9e5319122453897fb7e4d9dcce51edc79c886b450c4d76438",
+          "current": "9af3eb30ab5b57062bf0a3006e1973683165de48fd79b4227316322a99317189"
+        },
+        {
+          "path": "cpppj/tests/ConstructionBuilderTests.cpp",
+          "previous": "8447974c516e0be01421a26d9f71a87037dcf31d3af428264bc7a2c2f4c79778",
+          "current": "90f3a5d35eb2562542c69b5969d95db90b9796fb6ed74fa72e43eff684488ac9"
+        }
+      ]
+    }
   ]
 }

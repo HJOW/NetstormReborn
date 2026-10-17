@@ -17,10 +17,13 @@ struct EnergySupplyState {
 struct EnergySupplyReads {
     std::function<std::uint32_t()> editor,special,mission; // 실제 편집/특수/미션 저장소의 현재 DWORD다.
 };
+// 474970의 원본 진단 두 위치다. 반환하는 진단 소비자는 원문처럼 이후 검사를 계속한다.
+enum class EnergySortDiagnostic { InvalidSource,InvalidBestIndex };
 // +a0의 정확한 가상 표 분배와 TYPE+a0 요구 문자열만 외부에서 공급한다.
 struct EnergySupplyHooks {
     std::function<std::uint32_t(std::uint32_t)> providerEntry; // 현재 가상 표의 실제+a0 주소다. 알 수 없는 표는 거부한다.
     std::function<std::string(std::uint32_t)> requirement; // 현재 TYPE와 보호 AST로 만든 실제 mana 바이트다.
+    std::function<void(EnergySortDiagnostic)> sortDiagnostic; // 원본 source/bestIndex 진단이다. 미연결이면 예외로 거부한다.
 };
 // 4730c0/473330/4734d0/473570 및 실제 두 공급 가상 몸체를 구현한다.
 class RawEnergySupply {
@@ -39,6 +42,8 @@ public:
     bool Covers(Sid provider,const std::array<float,4>& bounds,float centerX,float centerY,float sizeSquared,std::uint32_t flags) const;
     // 473570: 첫 비영 DWORD만0으로 바꿔 반환하며 목록의 count를 줄이지 않는다.
     std::uint32_t TakeSource() const;
+    // 474970: 요구 문자열 길이만큼 현재 raw 좌표에서 가까운 공급자를 고른다. 최대10개를 같은 목록에 다시 쓴다.
+    void SortSources(std::string_view demand,float x,float y) const;
     const SidPool& Pool() const; // 다른 월드의 커서/AI/Builder가 잘못 연결되는 것을 막는다.
 private:
     const RiftTypeRecord& Type(std::uint32_t type) const; // 현재 TYPE 번호를 검증한다.

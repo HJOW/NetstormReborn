@@ -1,6 +1,7 @@
 // 세 원본 PE의 생성·이동/공급원 소비 관찰과 실제 factory/소유자/Regular 연결을 검사한다.
 #include "ConstructionNoticeSupport.h"
 #include "o/RawConstructionBuilder.h"
+#include "o/RawEnergySupply.h"
 
 namespace {
 using namespace netstorm::test::construction;
@@ -287,4 +288,24 @@ TEST_CASE(ConstructionBuilder_ActualRegularConstructorFields) {
         ++count;
     }
     CHECK(count==192);
+}
+
+// 실제 에너지 계산→정렬→같은 목록 소비를 Builder 생성/프레임/현재 시각 흐름과 합친다.
+TEST_CASE(ConstructionBuilder_SharedEnergySelectSortAndCurrentClock) {
+    BuilderScene scene(OriginalEdition::Patch1078);scene.Prepare(DefaultInput());const auto x=Float(scene.input[X]),y=Float(scene.input[Y]);
+    scene.Node(Sid{70},84,x+4,y+4);scene.Node(Sid{71},85,x+2,y+2);scene.types[84].theme=0;scene.types[85].theme=1;scene.metadata[84].sourceFrameIndex=0;scene.metadata[85].sourceFrameIndex=1;scene.metadata[kBuilder].speed=2;
+    SquidPostPopList providers{{70,71},2},selected{std::vector<std::uint32_t>(30),0};std::array<std::uint32_t,81> alliances{};std::int32_t limit=256;EnergySupplyState supplyState;
+    EnergySupplyHooks energyHooks;energyHooks.providerEntry=[](std::uint32_t) { return 0x41c170U; };energyHooks.requirement=[](std::uint32_t type) { CHECK(type==100);return std::string("wr"); };
+    RawEnergySupply supply(scene.pool,scene.types,providers,selected,alliances,limit,supplyState,std::move(energyHooks));
+    scene.state.sources={{0xdeadbeefU},1};scene.state.now=-500;auto hooks=scene.Hooks();
+    hooks.chooseSources=[](float,float,std::uint32_t,std::uint32_t) { throw std::logic_error("분리된 공급 선택 사용"); };hooks.sortSources=[](float,float) { throw std::logic_error("분리된 공급 정렬 사용"); };
+    std::size_t clockReads{};ConstructionBuilderReads reads;reads.now=[&] { ++clockReads;return 5.0; };
+    RawConstructionBuilder builder(scene.pool,scene.types,scene.metadata,scene.state,std::move(hooks),&supply,std::move(reads));const auto requested=std::bit_cast<std::uint64_t>(15.0);
+    CHECK(builder.Move(scene.input[Input::Player],Sid{50},static_cast<std::uint32_t>(requested),static_cast<std::uint32_t>(requested>>32))==10.0);
+    CHECK(scene.born==3 && clockReads==1 && selected.count==2 && selected.entries[0]==0 && selected.entries[1]==0 && builder.TakeSource()==0);
+    CHECK(scene.state.sources.entries==std::vector<std::uint32_t>{0xdeadbeefU} && scene.state.sources.count==1);
+    // 가까운71이 첫 운반 frame에,70이 다음 frame에 사용된다. 기존 명시 경로 효과는 실제 호출만 기록한다.
+    CHECK(Get(scene.pool.Slot(Sid{101}),36)==std::bit_cast<std::uint32_t>(scene.metadata[kCarrier].firstFrames[1]));CHECK(Get(scene.pool.Slot(Sid{102}),36)==std::bit_cast<std::uint32_t>(scene.metadata[kCarrier].firstFrames[0]));
+    CHECK(std::find(scene.events.begin(),scene.events.end(),std::string("V:")+std::to_string(Bits(4.0f))+":0")!=scene.events.end());
+    SidPool other(OriginalEdition::Patch1078,kCapacity,false);CHECK(Throws([&] { RawConstructionBuilder invalid(other,scene.types,scene.metadata,scene.state,scene.Hooks(),&supply); }));
 }

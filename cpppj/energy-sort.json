@@ -1,0 +1,101 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "entries": [
+    "00474970",
+    "0041cfc0",
+    "00473570"
+  ],
+  "uniqueInputs": 567,
+  "normalReturns": 2898,
+  "instructions": 1196050,
+  "actualEntries": {
+    "00474970": 1106,
+    "new40-boundary": 1106,
+    "free40-boundary": 1106,
+    "0041cfc0": 16142,
+    "assertion-boundary": 360,
+    "00473570": 1792
+  },
+  "precisionDifferentInputs": [],
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "tools/decomp_energy_supply.py": "a18c1913de8e3462dc30e21d1cbb62541600655630d8605c594ecc860d200434",
+    "tools/decomp_energy_sort.py": "a203949bf138366de9812342953ecfe050dfa588a0c1df4536b5973284caf5ef",
+    "cpppj/tests/fixtures/energy-sort-x86.tsv": "58f67ad1e9207c2b7793101100855d504c6167de92ee0176adf3be816489ab4e",
+    "cpppj/tests/CMakeLists.txt": "15ccb8c846d54cbdd447ab3060531c68bf80d464ea9503f49a58901793a0b52d",
+    "cpppj/src/client/RawCampaignSession.h": "53bdc20896cc14554d00e66e6de30af4f4982aef22038354d3a5c3dcbc0af389",
+    "cpppj/src/client/RawCampaignSession.cpp": "d9d013f772a86b7ff24896bc6cadbff1f88ba773c4e6e21ea8c10a8c183e1c84",
+    "cpppj/tests/CampaignSessionTests.cpp": "55df964695c0572d7c524ea9068d7d9f24b8d3e3383e7394b1e4f475503b5784",
+    "cpppj/src/o/RawEnergySupply.h": "16298ecafac440612cf5722175fe7adade050e9bdd67015f8308fd37077998be",
+    "cpppj/src/o/RawEnergySupply.cpp": "c5597f73998872c29ecb266356405d084ad36b24c6248a3cfc1a1bc43d55f495",
+    "cpppj/src/o/RawConstructionBuilder.h": "f3e8165d42cf4070a94055ec018add56fd35b16e633d96c9d45045ed5b026ca5",
+    "cpppj/src/o/RawConstructionBuilder.cpp": "9af3eb30ab5b57062bf0a3006e1973683165de48fd79b4227316322a99317189",
+    "cpppj/tests/EnergySortTests.cpp": "a6805569761f438a66b07af01fbec879264db7e57af71691b6b53f9b9549d694",
+    "cpppj/tests/ConstructionBuilderTests.cpp": "90f3a5d35eb2562542c69b5969d95db90b9796fb6ed74fa72e43eff684488ac9"
+  },
+  "limitations": [
+    "정렬/제곱근 거리/선택 소비는 실제 명령이며 메모리 확보40/반납/보고만 명시 경계다.",
+    "할당은 성공 입력이다. 할당 실패 뒤 원본의NULL 역참조는 정상 반환 근거가 아니다.",
+    "독립 입력 관찰이며 실제 GUI/사용자 플레이 증거가 아니다."
+  ],
+  "protectedFileSha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6"
+  },
+  "productValidation": {
+    "releaseBuild": {
+      "log": "extracted/goal-energy-sort-20261017-build4.log",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0
+    },
+    "focused": {
+      "energySort": 2,
+      "builderLegacyAndShared": 10,
+      "actualSessionSources": 1,
+      "failed": 0,
+      "builderAfterLfLog": "extracted/goal-energy-sort-20261017-builder-focused2.log"
+    },
+    "fullRegression": {
+      "build": 3,
+      "tests": 1513,
+      "failed": 0,
+      "ctestExitCode": 0,
+      "testSeconds": 216.81,
+      "totalSeconds": 216.85,
+      "log": "extracted/goal-energy-sort-20261017-ctest.log",
+      "output": "extracted/goal-energy-sort-20261017-ctest-output.log"
+    },
+    "afterFullSuite": {
+      "onlyCrLfToLf": true,
+      "source": "cpppj/tests/ConstructionBuilderTests.cpp",
+      "removedCrBytes": 311,
+      "compilerTokensAndLineNumbersUnchanged": true,
+      "finalRebuild": 4,
+      "builderFocusedPassed": 10
+    },
+    "dependencyVerifiers": {
+      "count": 19,
+      "failed": 0,
+      "log": "extracted/goal-energy-sort-20261017-verify19.log",
+      "energySortVerifiedAgainAfterLf": true
+    },
+    "integrationPins": {
+      "reportsUpdated": 22,
+      "pinsUpdated": 62,
+      "historicalPinsPreserved": 93,
+      "currentProductSources": 10
+    },
+    "actualSessionSharedSourceConsumer": true,
+    "builderCombinedSelectSortConsumeWithExplicitMotionBoundary": true,
+    "actualApproachAndType23MotionIntegrated": false,
+    "generalConstructionIntegrated": false,
+    "originalOrCloneGameLaunched": false,
+    "guiOrHumanPlayVerified": false,
+    "overallGoalComplete": false
+  }
+}

@@ -32,7 +32,7 @@
     "cpppj/tests/CursorPositionTests.cpp": "111ab2b59d662bacc5b51bb44d54fccec4260df86f15502e370a35d7d13a73f1",
     "cpppj/tests/CursorPreviewSupport.h": "fa4e6b6d54bbc564af308ffd154f2ced7482a131c542222c0342e6019d6c9084",
     "cpppj/src/client/CMakeLists.txt": "8bb17d335554c16e6ff3300134492a264bfa425dfafd52062ecf0062f523d87c",
-    "cpppj/tests/CMakeLists.txt": "9dc34335f2f606b142e8f5ba295e11c54c92498de07d38917da041d36a325b22"
+    "cpppj/tests/CMakeLists.txt": "15ccb8c846d54cbdd447ab3060531c68bf80d464ea9503f49a58901793a0b52d"
   },
   "limitations": [
     "실제 정수 위치 갱신/역투영/CRT 절삭을 실행한다. 단독 입력의 Activate/Create/선택은 명시 효과다.",
@@ -138,6 +138,18 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "687f283a950b897c92cfca118f23b86de2192ed710a1fcc651c48685a7a221ba",
           "current": "9dc34335f2f606b142e8f5ba295e11c54c92498de07d38917da041d36a325b22"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 127,
+      "reason": "실제 공급원 정렬/공유 건설 선택 및 현재 전역의 Session 연결",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "9dc34335f2f606b142e8f5ba295e11c54c92498de07d38917da041d36a325b22",
+          "current": "15ccb8c846d54cbdd447ab3060531c68bf80d464ea9503f49a58901793a0b52d"
         }
       ]
     }

@@ -734,3 +734,19 @@ TEST_CASE(CampaignSession_CursorEnergyActualProvidersAndSharedSources) {
     CHECK(lostSounds.size()==1 && lostSounds.front()==created);
     CHECK(core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0 && core.bookkeeping.depth==0);
 }
+
+// 같은 실제 Session의 공급 선택 목록을 Builder가 복사 없이 소비하는 연결 계약이다.
+TEST_CASE(CampaignSession_ConstructionBuilderSharesActualEnergySources) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());
+    GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",external.Services(),{1024,768});auto& session=world.Session();auto core=session.Core();
+    const auto origin=EmptySessionSupport(core);const auto provider=session.World().Create(76);core.owner.Set(provider,1);session.World().Pop(provider,static_cast<float>(origin.x+2),static_cast<float>(origin.y+2),0);
+    const auto raw=core.pool.Slot(provider);const auto& type=core.types[76];const float x=static_cast<float>(static_cast<double>(std::bit_cast<float>(Get(raw,14)))-type.footX*0.5),y=static_cast<float>(static_cast<double>(std::bit_cast<float>(Get(raw,18)))-type.footY*0.5);
+    std::string demand;CHECK(session.EnergySupply().Evaluate(demand,x,y,75,1)>0);session.EnergySupply().SortSources(demand,x,y);CHECK(session.EnergySources().count>0);
+    ConstructionBuilderState state;state.sources={{0xdeadbeefU},1};ConstructionBuilderHooks hooks;
+    hooks.approach=[](const std::array<float,4>&,float,float,std::uint32_t)->ConstructionNoticePoint { throw std::logic_error("선택 소비 검사에서 접근점 실행"); };
+    hooks.move=[](Sid,float,float)->ConstructionBuilderPath* { throw std::logic_error("선택 소비 검사에서 이동 실행"); };hooks.speed=[](ConstructionBuilderPath&,float,std::uint32_t) { throw std::logic_error("선택 소비 검사에서 속도 실행"); };
+    auto builder=session.MakeConstructionBuilder(state,std::move(hooks));CHECK(&builder->Pool()==&core.pool);const auto first=session.EnergySources().entries.front();CHECK(first==provider.value);
+    CHECK(builder->TakeSource()==first && session.EnergySources().entries.front()==0 && state.sources.entries.front()==0xdeadbeefU && state.sources.count==1);
+    CHECK(builder->TakeSource()==0); // 이 요새의 현재 공급 범위에 있는 실제 선택을 모두 소비했다.
+}

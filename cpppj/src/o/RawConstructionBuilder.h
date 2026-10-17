@@ -5,6 +5,7 @@
 #include "o/SquidProcess.h"
 
 namespace netstorm::o {
+class RawEnergySupply; // 실제 Session의 단일 에너지 판정/정렬/선택 소비를 참조한다.
 // 원본 타입 +0xe0/+0x98/+0x130의 이 흐름 전용 메타 자료다. 기본 타입 표를 확장하지 않는다.
 struct ConstructionBuilderType {
     float speed{}; // 첫 건설 사제의 도착 시각을 조정할 때 읽는 현재 타입 속도다.
@@ -41,12 +42,18 @@ struct ConstructionBuilderHooks {
     std::function<bool()> reserveTimer; // 원본 new(0x28)의 성공 여부다. 실패해도 이동은 계속한다.
     std::function<void(Sid,std::uint32_t,float)> addTimer; // 확보 성공 뒤 현재 이벤트로 Regular를 만든다.
 };
+// 실제 Session은 같은 타입/시계 전역을 읽고, 독립 원문 검사는 기존 값형 State를 사용한다.
+struct ConstructionBuilderReads {
+    std::function<std::uint32_t()> builderType,carrierType,bridgeType,approachMask; // 현재541270/5411fc/5411a0/5424b8이다.
+    std::function<float()> timerPayload; // 원본532750의 예약 payload다.
+    std::function<double()> now; // 같은55b4d0 게임 시각이며 사본을 매 프레임 복사하지 않는다.
+};
 // 00443000 / CD 004d1120 전체의 생성·배치·경로·공급원 소비 순서를 복원한다.
 class RawConstructionBuilder {
 public:
     // 풀·타입·메타·상태와 훅의 참조 대상은 객체보다 오래 살아야 한다.
     RawConstructionBuilder(SidPool& pool,std::span<const RiftTypeRecord> types,std::span<const ConstructionBuilderType> metadata,
-        ConstructionBuilderState& state,ConstructionBuilderHooks hooks);
+        ConstructionBuilderState& state,ConstructionBuilderHooks hooks,const RawEnergySupply* supply=nullptr,ConstructionBuilderReads reads={});
     // 숨은 double 결과 포인터를 반환값으로 표현한다. timeLow/High는 속도 조정 목표 시각의 원래 비트다.
     // 기준점/첫 경로가 없으면 5.0이며, 실패 이전에 생성한 객체를 되돌리지 않는다.
     double Move(std::uint32_t player,Sid target,std::uint32_t timeLow,std::uint32_t timeHigh) const;
@@ -76,6 +83,8 @@ private:
     std::span<const ConstructionBuilderType> metadata_; // 현재 타입의 속도/프레임 표를 재조회한다.
     ConstructionBuilderState& state_; // 경계가 바꾼 현재 전역과 공급원 목록을 공유한다.
     ConstructionBuilderHooks hooks_; // 아직 복원하지 않은 하위 효과다.
+    const RawEnergySupply* supply_{}; // 연결됐으면 별도 state.sources/선택 훅 대신 같은 실제 마지막 목록을 사용한다.
+    ConstructionBuilderReads reads_; // 실제 전역 조회 위치에서만 호출하는 현재 getter다.
 };
 // 같은 풀의 실제 기준점/factory/일반 소유자 지정과 선택적으로 Regular/Kernel를 연결한다.
 ConstructionBuilderHooks MakeConstructionBuilderHooks(const SidPool& pool,const RawPlayerPlacementAnchor& anchor,

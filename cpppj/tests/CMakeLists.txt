@@ -1282,3 +1282,8 @@ set_source_files_properties(EnergySupplyTests.cpp PROPERTIES COMPILE_DEFINITIONS
 
 set_property(SOURCE EnergySupplyTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS
     "NETSTORM_ENERGY_PROVIDER_VTABLES_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/energy-provider-vtables.tsv\"")
+
+# 실제 공급원 정렬/연속 소비의 전체 원문을 대조한다.
+target_sources(netstorm_tests PRIVATE EnergySortTests.cpp)
+set_source_files_properties(EnergySortTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_ENERGY_SORT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/energy-sort-x86.tsv\"")

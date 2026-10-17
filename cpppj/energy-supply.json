@@ -54,12 +54,12 @@
     "cpppj/tests/fixtures/energy-provider-vtables.tsv": "21022817bb7106b346b7be01a30078a61ce9ac4ed11ed0341b5db888886a9d63",
     "cpppj/tests/fixtures/energy-supply-x86.tsv": "d020d2165be81e8db054c63804976ddd9a50876e3765243e7f7fcc38f2299802",
     "cpppj/src/CMakeLists.txt": "c6788ec0b508c34f26406203a824455adc59d87a1a5aa80ab2bfda476e91021b",
-    "cpppj/tests/CMakeLists.txt": "9dc34335f2f606b142e8f5ba295e11c54c92498de07d38917da041d36a325b22",
-    "cpppj/src/client/RawCampaignSession.h": "0ad38e5ba9cd1fd01d6bc1620c01f1ddfce7d31118303e59ef7f21885723be2e",
-    "cpppj/src/client/RawCampaignSession.cpp": "9c2ae6632a257cdced76dc4d3af778bae9b5b90cbcb1a47ad198d66edcb97813",
-    "cpppj/tests/CampaignSessionTests.cpp": "a3c3dfeafef99605eee7d9bbee5ee582fb7111296b648032a4d6b356d7e1e1de",
-    "cpppj/src/o/RawEnergySupply.h": "0bcb3621d80154bf3a4ea9b3559a8f264f03a8222a596b7eb4fec98374ccab1d",
-    "cpppj/src/o/RawEnergySupply.cpp": "0b6690712e863ba9d93d8777243d58de7eecb318198b8e1fa3ccb4615d6621b9",
+    "cpppj/tests/CMakeLists.txt": "15ccb8c846d54cbdd447ab3060531c68bf80d464ea9503f49a58901793a0b52d",
+    "cpppj/src/client/RawCampaignSession.h": "53bdc20896cc14554d00e66e6de30af4f4982aef22038354d3a5c3dcbc0af389",
+    "cpppj/src/client/RawCampaignSession.cpp": "d9d013f772a86b7ff24896bc6cadbff1f88ba773c4e6e21ea8c10a8c183e1c84",
+    "cpppj/tests/CampaignSessionTests.cpp": "55df964695c0572d7c524ea9068d7d9f24b8d3e3383e7394b1e4f475503b5784",
+    "cpppj/src/o/RawEnergySupply.h": "16298ecafac440612cf5722175fe7adade050e9bdd67015f8308fd37077998be",
+    "cpppj/src/o/RawEnergySupply.cpp": "c5597f73998872c29ecb266356405d084ad36b24c6248a3cfc1a1bc43d55f495",
     "cpppj/tests/EnergySupplyTests.cpp": "a5ce81b2b36556dbef880b4fcda93113d2ec2041b8442578d2d35f501033bd6d"
   },
   "limitations": [
@@ -454,5 +454,44 @@
     "clientMenuCursorIntegrated": false,
     "generalConstructionIntegrated": false,
     "overallGoalComplete": false
-  }
+  },
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "unit": 127,
+      "reason": "실제 공급원 정렬/공유 건설 선택 및 현재 전역의 Session 연결",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "9dc34335f2f606b142e8f5ba295e11c54c92498de07d38917da041d36a325b22",
+          "current": "15ccb8c846d54cbdd447ab3060531c68bf80d464ea9503f49a58901793a0b52d"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "0ad38e5ba9cd1fd01d6bc1620c01f1ddfce7d31118303e59ef7f21885723be2e",
+          "current": "53bdc20896cc14554d00e66e6de30af4f4982aef22038354d3a5c3dcbc0af389"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "9c2ae6632a257cdced76dc4d3af778bae9b5b90cbcb1a47ad198d66edcb97813",
+          "current": "d9d013f772a86b7ff24896bc6cadbff1f88ba773c4e6e21ea8c10a8c183e1c84"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "a3c3dfeafef99605eee7d9bbee5ee582fb7111296b648032a4d6b356d7e1e1de",
+          "current": "55df964695c0572d7c524ea9068d7d9f24b8d3e3383e7394b1e4f475503b5784"
+        },
+        {
+          "path": "cpppj/src/o/RawEnergySupply.h",
+          "previous": "0bcb3621d80154bf3a4ea9b3559a8f264f03a8222a596b7eb4fec98374ccab1d",
+          "current": "16298ecafac440612cf5722175fe7adade050e9bdd67015f8308fd37077998be"
+        },
+        {
+          "path": "cpppj/src/o/RawEnergySupply.cpp",
+          "previous": "0b6690712e863ba9d93d8777243d58de7eecb318198b8e1fa3ccb4615d6621b9",
+          "current": "c5597f73998872c29ecb266356405d084ad36b24c6248a3cfc1a1bc43d55f495"
+        }
+      ]
+    }
+  ]
 }

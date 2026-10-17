@@ -108,6 +108,9 @@ struct RawCampaignSession::Impl {
     EnergySupplyState energyState; // 마나 반경과 별개인 실제 제곱 반경 및 공급 전역이다.
     SquidPostPopList energySources{std::vector<std::uint32_t>(kEnergySourceCapacity),0}; // 4fcb80의 실제30칸 lastSource다.
     std::unique_ptr<RawEnergySupply> energySupply; // 현재 장부 공급원/동맹/타입을 직접 읽는 실제 배치 에너지다.
+    std::vector<ConstructionBuilderType> builderTypes=std::vector<ConstructionBuilderType>(188); // 같은 실제 TYPE의 속도/theme/A..P 첫 프레임이다.
+    std::uint32_t builderApproachMask{0x50444200}; // 실제005424b8의 접근점 genus 전역이다.
+    std::unique_ptr<RegularProcess> builderPendingRegular; // 원본 new28 성공부터 같은 Host 부착까지의 실제 예약 객체다.
     GameRandom random; // 게임 난수의 명시 초기 입력이다.
     ScrambledSpStore sp; // 같은 게임 난수를 사용하는 실제 패치 SP 저장소다.
     SquidRewardState rewardState; // 실제 HP getter의 장기 전역이다.
@@ -400,12 +403,16 @@ struct RawCampaignSession::Impl {
         // 빈/내장 타입을 포함해 실제 TYPE+98의 판본 초기값과 파싱값을 같은 번호의 모든 소비자에게 전달한다.
         for (std::size_t type=0;type<core.types.size();++type) {
             gunTypes[type].theme=core.types[type].theme;themes[type]=std::bit_cast<std::uint32_t>(core.types[type].theme);elements[type]=core.types[type].theme;
+            builderTypes[type].sourceFrameIndex=std::bit_cast<std::uint32_t>(core.types[type].theme);
+            // TYPE+130의 실제16개 첫 번호이며 없는Run의-1도 보존한다.
+            for (std::uint8_t index=0;index<16;++index) builderTypes[type].firstFrames[index]=core.frames[type].Run(static_cast<std::uint8_t>('A'+index)).first;
         }
         // 보호 .type의 실제 숫자/문자 Run을 같은 TYPE 번호의 보충 표에 연결한다.
         for (const auto& asset:assets.game.Types()) {
             const auto type=static_cast<std::uint32_t>(70+asset.block);auto& target=gunTypes[type];target.range=static_cast<float>(asset.definition.Number("range").value_or(0));
             target.heightExtension=static_cast<int>(asset.definition.Number("height").value_or(0));
             dudeSpeeds[type].speed=static_cast<float>(asset.definition.Number("speed").value_or(0));
+            builderTypes[type].speed=dudeSpeeds[type].speed;
             // 원본 방향별 L/M/N/O 첫 프레임 표다. 없는Run의-1은 실제 검색 몸체가 처리한다.
             for (std::uint8_t direction=0;direction<4;++direction) target.directionFrames[direction]=core.frames[type].Run(static_cast<std::uint8_t>('L'+direction)).first;
             hitTypes[type].damagePerSecond=static_cast<float>(asset.definition.Number("hpPerSec").value_or(0));
@@ -1251,6 +1258,20 @@ SquidPostPopList& RawCampaignSession::EnergySources() { return impl_->energySour
 void RawCampaignSession::BindCursorEnergy(CursorPlacementHooks& hooks) {
     if (!impl_->loaded) throw std::logic_error("미설치 Session의 커서 에너지 연결");
     hooks.describe=[this](std::string& text,float x,float y,std::uint32_t type,std::uint32_t owner) { return impl_->energySupply->Evaluate(text,x,y,type,owner); };
+}
+// 실제 원문 하위들을 조립하며 경로/접근점을 독립 직선 계산으로 대체하지 않는다.
+std::unique_ptr<RawConstructionBuilder> RawCampaignSession::MakeConstructionBuilder(ConstructionBuilderState& state,ConstructionBuilderHooks hooks) {
+    auto* current=impl_.get();if (!current->loaded) throw std::logic_error("미설치 Session의 건설 운반 연결");
+    hooks=MakeConstructionBuilderHooks(current->core.pool,*current->anchor,current->core.factory,current->core.owner,std::move(hooks));
+    hooks.pop=[current](Sid sid,float x,float y,std::uint32_t flags) { current->world.Pop(sid,x,y,flags); };
+    hooks.notifySurface=[current](Sid sid) { current->core.building.NotifySurface(sid); };
+    hooks.reserveTimer=[current] { try { current->builderPendingRegular=std::make_unique<RegularProcess>(0,0.05f);return true; }catch (const std::bad_alloc&) { return false; } };
+    hooks.addTimer=[current](Sid sid,std::uint32_t event,float payload) {
+        if (!current->builderPendingRegular || payload!=0.05f) throw std::logic_error("건설 운반의 실제 예약 객체/payload 오류");
+        auto* process=dynamic_cast<RegularProcess*>(current->core.processes.Attach(std::move(current->builderPendingRegular),46,sid,0x50));if (!process) throw std::logic_error("건설 운반의 실제 Regular 부착 실패");process->ResetTask(event,current->core.processState.now);
+    };
+    ConstructionBuilderReads reads;reads.builderType=[current] { return current->start.teleportType; };reads.carrierType=[current] { return current->start.manaBoltType; };reads.bridgeType=[current] { return current->core.bridgeState.bridgeType; };reads.approachMask=[current] { return current->builderApproachMask; };reads.timerPayload=[] { return 0.05f; };reads.now=[current] { return current->core.processState.now; };
+    return std::make_unique<RawConstructionBuilder>(current->core.pool,current->core.types,current->builderTypes,state,std::move(hooks),current->energySupply.get(),std::move(reads));
 }
 // 화면과 입력은 같은 살아 있는 상태를 읽는다.
 RawSurfaceWorld& RawCampaignSession::World() { return impl_->world; }

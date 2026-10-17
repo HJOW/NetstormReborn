@@ -23,6 +23,7 @@
 #include "client/RawCursorMana.h"
 #include "client/RawCursorRange.h"
 #include "o/RawEnergySupply.h"
+#include "o/RawConstructionBuilder.h"
 #include "client/RawCampaignParticles.h"
 namespace netstorm::client {
 struct CursorPlacementHooks; // 실제 커서 배치의 설명/에너지 경계만 연결할 때 사용한다.
@@ -180,6 +181,9 @@ public:
     o::SquidPostPopList& EnergySources(); // 이후 Builder도 같은 lastSource30 저장소를 빌린다.
     // 실제4734d0의 전체 DWORD와 문구를 커서 Query에 연결한다. GUI/공간 판정은 유지한다.
     void BindCursorEnergy(CursorPlacementHooks& hooks);
+    // 실제 기준점/Factory/Owner/Pop/TYPE/현재 전역/Regular 및 같은 에너지 목록을 연결한다.
+    // 접근점·경로 시작·속도 적용은 caller가 실제 몸체로 공급하며 반환 객체/State는 Session보다 먼저 해제한다.
+    std::unique_ptr<o::RawConstructionBuilder> MakeConstructionBuilder(o::ConstructionBuilderState& state,o::ConstructionBuilderHooks hooks);
     // 화면/명령은 같은 현재 raw 월드와 HP를 읽는다.
     RawSurfaceWorld& World();
     // 같은 월드의 현재 Pool/장부/Host 참조를 빌린다.
