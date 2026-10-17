@@ -17,11 +17,11 @@
     "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
     "tools/decomp_cursor_placement.py": "6c4e191a60923df578f16cc36cf47474267ebdb4159d541d1033362146e2f810",
     "cpppj/tests/fixtures/cursor-placement-x86.tsv": "92948f3001f745d088ec58fb8212f3a42e6c02514e1c69fef7e77bc3a12e742f",
-    "cpppj/src/client/RawCursorPlacement.h": "166517cced3912fc85a15fd673c47af5dd4b7933b8e1b788c18ba154cf88cb21",
-    "cpppj/src/client/RawCursorPlacement.cpp": "8ea2e225c067bae0a73ea379da8ad9d8f11f4e67f935de2f8772ee0753bfedb3",
-    "cpppj/tests/CursorPlacementTests.cpp": "1aa900f0e8bcffd1115f300ce391a130f116ba345fcb19f0cc35144477730e26",
-    "cpppj/src/client/CMakeLists.txt": "dc4c728e9039aa54be3e16a51b933f7b9e69225e9b6b9581e28d03ea1064ab0d",
-    "cpppj/tests/CMakeLists.txt": "15daa41bf152553fbc7dfa56432e6a6853db253c58f0661c78f290223e46756b"
+    "cpppj/src/client/RawCursorPlacement.h": "9da2051c1797b9114e6883e5c170e238d77d6b0fcdddcf9dac88906f8f32a61d",
+    "cpppj/src/client/RawCursorPlacement.cpp": "cf1a0d4cfbd0cf2118db90c00b45fa7ea59300b1bf5d4011ec12d268115a2c48",
+    "cpppj/tests/CursorPlacementTests.cpp": "a03f225bbf82cce49a770d111b2d4d24f5c496cde97560f3f55c6bce50dad997",
+    "cpppj/src/client/CMakeLists.txt": "dba280d27bef2f179278fbda5517de976ea89737d0ef804f90ac6754314e51a4",
+    "cpppj/tests/CMakeLists.txt": "c1d5b09df20f6b431b5839f6bd16591a770e960519745bad1757cd246c313ca8"
   },
   "limitations": [
     "세 커서 몸체와 실제 CRT 절삭/floor만 실행한다. decoder/SHP/설명/GUI/지역/투영/화면 갱신은 명시 경계다.",
@@ -58,6 +58,33 @@
         "cpppj/tests/CMakeLists.txt": {
           "previous": "40c04ec1576325161ea35d36fc11e020ae7eb794453fd2b2c227091d85437210",
           "current": "15daa41bf152553fbc7dfa56432e6a6853db253c58f0661c78f290223e46756b"
+        }
+      },
+      "previous_fixture_preserved": true
+    },
+    {
+      "date": "2026-10-17",
+      "reason": "단위119 실제 연속 이동 사슬 통합/55a2ac·55a2e0·55a2dc 공유 전역 교정/기존 fixture 보존",
+      "shared_sha256": {
+        "cpppj/src/client/RawCursorPlacement.h": {
+          "previous": "166517cced3912fc85a15fd673c47af5dd4b7933b8e1b788c18ba154cf88cb21",
+          "current": "9da2051c1797b9114e6883e5c170e238d77d6b0fcdddcf9dac88906f8f32a61d"
+        },
+        "cpppj/src/client/RawCursorPlacement.cpp": {
+          "previous": "8ea2e225c067bae0a73ea379da8ad9d8f11f4e67f935de2f8772ee0753bfedb3",
+          "current": "cf1a0d4cfbd0cf2118db90c00b45fa7ea59300b1bf5d4011ec12d268115a2c48"
+        },
+        "cpppj/tests/CursorPlacementTests.cpp": {
+          "previous": "1aa900f0e8bcffd1115f300ce391a130f116ba345fcb19f0cc35144477730e26",
+          "current": "a03f225bbf82cce49a770d111b2d4d24f5c496cde97560f3f55c6bce50dad997"
+        },
+        "cpppj/src/client/CMakeLists.txt": {
+          "previous": "dc4c728e9039aa54be3e16a51b933f7b9e69225e9b6b9581e28d03ea1064ab0d",
+          "current": "dba280d27bef2f179278fbda5517de976ea89737d0ef804f90ac6754314e51a4"
+        },
+        "cpppj/tests/CMakeLists.txt": {
+          "previous": "15daa41bf152553fbc7dfa56432e6a6853db253c58f0661c78f290223e46756b",
+          "current": "c1d5b09df20f6b431b5839f6bd16591a770e960519745bad1757cd246c313ca8"
         }
       },
       "previous_fixture_preserved": true

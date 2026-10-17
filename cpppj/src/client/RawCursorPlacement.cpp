@@ -38,7 +38,7 @@ const o::RiftTypeRecord& RawCursorPlacement::Type() const {
 }
 // SP 부족 판정이 아니다. Form의 연관 지역과 현재 패턴이 겹치는지 검사한다.
 std::uint32_t RawCursorPlacement::SourceAllowed() const {
-    if (!(drop_.inputFlags&0x20)) return 1;
+    if (!(drop_.costFlags&0x20)) return 1;
     const auto source=Need(hooks_.source)(drop_.preview);const auto region=Need(hooks_.region)(source);std::uint32_t allowed{};
     Need(hooks_.walk)({drop_.type,std::bit_cast<std::int32_t>(drop_.argument),std::bit_cast<std::int32_t>(drop_.direction),drop_.x,drop_.y,false},
         [this,region,&allowed](CursorCanonCell cell) {
@@ -106,11 +106,11 @@ void RawCursorPlacement::Prepare() const {
     const auto point=Need(hooks_.project)(drop_.x,drop_.y);const auto& b=state_.bounds;
     const ScreenRect rect{Sub(Sub(point.x,b[0]),2),Sub(Sub(point.y,b[1]),2),Add(Add(Sub(b[2],b[0]),6),point.x),Add(Add(Sub(b[3],b[1]),14),point.y)};
     Need(hooks_.invalidate)(rect,2);
-    if (((drop_.inputFlags&0x20) && !state_.sourceAllowed) || !state_.descriptionAllowed || (!state_.placementAllowed && drop_.costFlags) || !state_.spaceAllowed) {
+    if (((drop_.costFlags&0x20) && !state_.sourceAllowed) || !state_.descriptionAllowed || (!state_.placementAllowed && state_.placementFlags) || !state_.spaceAllowed) {
         const auto x=Add(Sub(b[2]/2,lifecycle_.warningWidth/2),rect.left),y=Add(Sub(b[3]/2,lifecycle_.warningHeight/2),rect.top);
         Need(hooks_.invalidate)({x,y,Add(Add(lifecycle_.warningWidth,2),x),Add(Add(lifecycle_.warningHeight,2),y)},0);
     }
-    if (drop_.inputFlags&0x40) {
+    if (drop_.costFlags&0x40) {
         const auto raw=pool_.Slot(lifecycle_.previews[0]);
         const auto cellX=std::bit_cast<std::int16_t>(static_cast<std::uint16_t>(raw[22]|static_cast<std::uint16_t>(raw[23])<<8));
         const auto cellY=std::bit_cast<std::int16_t>(static_cast<std::uint16_t>(raw[24]|static_cast<std::uint16_t>(raw[25])<<8));

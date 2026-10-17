@@ -1026,3 +1026,11 @@ cpppj/src/o/RawBridgeConnect.* text eol=lf
 cpppj/tests/CursorPreviewTests.cpp text eol=lf
 cpppj/tests/BridgeConnectTests.cpp text eol=lf
 docs/exe/cpp-cursor-previews-20261017.md text eol=lf
+# 원본 정수 마우스 갱신/역투영/절삭과 연속 이동 사슬을 UTF-8/LF로 보존한다.
+tools/decomp_cursor_position.py text eol=lf
+cpppj/cursor-position.json text eol=lf
+cpppj/tests/fixtures/cursor-position-x86.tsv text eol=lf
+cpppj/src/client/RawCursorPosition.* text eol=lf
+cpppj/tests/CursorPositionTests.cpp text eol=lf
+cpppj/tests/CursorPreviewSupport.h text eol=lf
+docs/exe/cpp-cursor-position-20261017.md text eol=lf

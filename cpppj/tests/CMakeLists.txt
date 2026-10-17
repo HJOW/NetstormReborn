@@ -1218,6 +1218,9 @@ set_source_files_properties(OwnerCaptureTests.cpp PROPERTIES COMPILE_DEFINITIONS
 target_sources(netstorm_tests PRIVATE CursorLifecycleTests.cpp)
 target_sources(netstorm_tests PRIVATE CursorPlacementTests.cpp)
 target_sources(netstorm_tests PRIVATE CursorPreviewTests.cpp)
+target_sources(netstorm_tests PRIVATE CursorPositionTests.cpp CursorPreviewSupport.h)
+set_source_files_properties(CursorPositionTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CURSOR_POSITION_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/cursor-position-x86.tsv\"")
 set_source_files_properties(CursorPreviewTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_CURSOR_PREVIEWS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/cursor-previews-x86.tsv\"")
 set_source_files_properties(CursorPlacementTests.cpp PROPERTIES COMPILE_DEFINITIONS

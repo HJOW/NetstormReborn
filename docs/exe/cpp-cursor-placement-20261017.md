@@ -1,5 +1,7 @@
 # 원본10.78 커서 위치·연관 지역·갱신 영역 복원
 
+단위119 교정:55a2e0의20/40은 Drop.costFlags(Take 호출 플래그)이며55a2ac의 저장 WORD와 다르다.55a2dc는 별도 Placement.placementFlags로 분리했고5427f4의 PE 기본 수신 이벤트0200003f도 반영했다. 기존573행은 보존하고 어댑터만 같은 원본 주소에 맞췄다. 실제 연속 이동 사슬과 근거는 [후속 작업 기록](cpp-cursor-position-20261017.md)에 정리했다.
+
 작업 PC는 **HJOW-Athlon**, 마지막 전체 정밀 디컴파일 PC/날짜는 **HJOW-Athlon / 2026-10-16**이다. 단위117은 `8b2d264`에서 시작했다. 원본·추출 소스·AGENTS.md·dotnetpj는 변경하지 않았고 원본/클론 게임이나 OS 창을 실행하지 않았다.
 
 `RawCursorPlacement`는 다음 세 원본 몸체를 같은 SID 풀·TYPE·표면 지도·커서 상태에 연결한다.

@@ -8,8 +8,9 @@ namespace netstorm::client {
 class Renderer; // 갱신 사각형을 실제8비트 표면에 전달하는 기존 출력기다.
 // 내려놓기/수명 상태와 겹치지 않는 원본 커서 전역만 보관한다.
 struct CursorPlacementState {
+    std::uint32_t placementFlags{}; // 55a2dc: 배치 경고 조건이다. Drop.costFlags의 Take 호출 플래그55a2e0과 별도다.
     std::uint32_t placementAllowed{},descriptionAllowed{},spaceAllowed{},sourceAllowed{}; // 55a290/294/298/29c의 원래 DWORD다.
-    std::uint32_t obstruction{},acceptEvent{}; // 59ab2c·5427f4의 현재 공간 판정과 Gump 수신 이벤트다.
+    std::uint32_t obstruction{},acceptEvent{0x0200003f}; // 59ab2c의 공간 판정과5427f4의 PE 기본 Gump 수신 이벤트다.
     std::int32_t labelSpacing{16}; // 5325e0: 설명의 한 글자당 세로 여백과 가로 여백이다.
     std::array<std::int32_t,4> bounds{}; // 55a2b0..bc: 기준점 x/y와 전체 폭/높이다. 좌상/우하 좌표가 아니다.
     std::int32_t hotspotX{},hotspotY{},imageWidth{},imageHeight{}; // 55a2c0..cc의 첫 그림 signed WORD다.

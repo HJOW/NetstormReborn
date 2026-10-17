@@ -29,8 +29,8 @@
     "cpppj/tests/fixtures/type-required-energy-x86.tsv": "8bcb3e215c958f5df0a395365059f5481801b1660569f2f04c0720f394f14f4c",
     "cpppj/tests/TypeRequiredEnergyTests.cpp": "0802ab400413ec5da3f2d03a4ac6b6f88e2d088915646609a2ca0bb39a02b05c",
     "cpppj/src/o/CMakeLists.txt": "46579dbd727e16177530beba64a9c8ab6d4eec7f1c8c3f002ac3c9ce52321da0",
-    "cpppj/src/client/CMakeLists.txt": "dc4c728e9039aa54be3e16a51b933f7b9e69225e9b6b9581e28d03ea1064ab0d",
-    "cpppj/tests/CMakeLists.txt": "15daa41bf152553fbc7dfa56432e6a6853db253c58f0661c78f290223e46756b"
+    "cpppj/src/client/CMakeLists.txt": "dba280d27bef2f179278fbda5517de976ea89737d0ef804f90ac6754314e51a4",
+    "cpppj/tests/CMakeLists.txt": "c1d5b09df20f6b431b5839f6bd16591a770e960519745bad1757cd246c313ca8"
   },
   "product_validation": {
     "configuration": "Release",
@@ -1202,6 +1202,21 @@
         "cpppj/tests/CMakeLists.txt": {
           "previous": "40c04ec1576325161ea35d36fc11e020ae7eb794453fd2b2c227091d85437210",
           "current": "15daa41bf152553fbc7dfa56432e6a6853db253c58f0661c78f290223e46756b"
+        }
+      },
+      "previous_fixture_preserved": true
+    },
+    {
+      "date": "2026-10-17",
+      "reason": "단위119 실제 연속 이동 사슬 통합/55a2ac·55a2e0·55a2dc 공유 전역 교정/기존 fixture 보존",
+      "shared_sha256": {
+        "cpppj/src/client/CMakeLists.txt": {
+          "previous": "dc4c728e9039aa54be3e16a51b933f7b9e69225e9b6b9581e28d03ea1064ab0d",
+          "current": "dba280d27bef2f179278fbda5517de976ea89737d0ef804f90ac6754314e51a4"
+        },
+        "cpppj/tests/CMakeLists.txt": {
+          "previous": "15daa41bf152553fbc7dfa56432e6a6853db253c58f0661c78f290223e46756b",
+          "current": "c1d5b09df20f6b431b5839f6bd16591a770e960519745bad1757cd246c313ca8"
         }
       },
       "previous_fixture_preserved": true

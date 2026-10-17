@@ -7,7 +7,7 @@ using namespace netstorm::test::rawscene;
 using namespace netstorm::client;
 namespace {
 // 독립 입력23개의 순서다. 파생 결과를 입력으로 재사용하지 않는다.
-enum Column : std::size_t { Operation,Profile,Flags1,Flags2,FootX,FootY,Spacing,Describe,Text,OldGump,NewGump,Accept,Place,Obstruction,SourceRegion,InputFlags,CostFlags,Mana,X,Y,Match,Mutation,RectVariant };
+enum Column : std::size_t { Operation,Profile,Flags1,Flags2,FootX,FootY,Spacing,Describe,Text,OldGump,NewGump,Accept,Place,Obstruction,SourceRegion,CursorFlags,PlacementFlags,Mana,X,Y,Match,Mutation,RectVariant };
 // 원문 DWORD 열을 비트 손실 없이 읽는다.
 std::vector<std::uint32_t> Numbers(std::string_view text) {
     std::vector<std::uint32_t> result;
@@ -54,7 +54,7 @@ struct PlacementScene {
         surface[0]=80;surface[22*256+21]=81;surface[21*256+20]=82;surface[255*256+255]=83;
         drop.legal=5;state.placementAllowed=values[Place];state.descriptionAllowed=values[Describe];state.spaceAllowed=1-values[Obstruction];state.sourceAllowed=values[Match];
         lifecycle.currentGump=values[OldGump] ? 1U : 0U;drop.legalGump=2;state.bounds={3,7,43,51};state.hotspotX=44;state.hotspotY=45;state.imageWidth=91;state.imageHeight=93;
-        drop.type=lifecycle.abstractType=100;drop.argument=7;drop.direction=3;drop.preview=Sid{50};drop.inputFlags=values[InputFlags];drop.costFlags=values[CostFlags];drop.cursorGump=values[Mana] ? 1U : 0U;
+        drop.type=lifecycle.abstractType=100;drop.argument=7;drop.direction=3;drop.preview=Sid{50};drop.costFlags=values[CursorFlags];state.placementFlags=values[PlacementFlags];drop.cursorGump=values[Mana] ? 1U : 0U;
         drop.x=std::bit_cast<float>(values[X]);drop.y=std::bit_cast<float>(values[Y]);drop.localPlayer=0x123401;drop.screenX=-3;drop.screenY=47;
         state.labelSpacing=std::bit_cast<std::int32_t>(values[Spacing]);state.obstruction=values[Obstruction];state.acceptEvent=0x123456;state.screenOrigin={-17,31};state.description="old";lifecycle.previews[0]=Sid{100};
         types[100].footX=std::bit_cast<std::int32_t>(values[FootX]);types[100].footY=std::bit_cast<std::int32_t>(values[FootY]);types[100].flags1=values[Flags1];types[100].flags2=values[Flags2];
@@ -122,6 +122,6 @@ TEST_CASE(CursorPlacement_BindsSharedLifecycleAndRequiresRealDependencies) {
     BindCursorPlacement(lifecycle,drop,placement);lifecycle.prepareCursor();const auto first=scene.trace;scene.trace.clear();drop.prepareCursor();CHECK(scene.trace==first);CHECK(&placement.Pool()==&scene.pool);
     RawCursorPlacement missing(scene.pool,scene.types,{},scene.drop,scene.lifecycle,scene.state,{});bool failed{};
     try { missing.Query(); } catch (const std::logic_error&) { failed=true; }CHECK(failed);
-    scene.drop.inputFlags=0;CHECK(missing.SourceAllowed()==1);scene.drop.inputFlags=0x20;failed=false;
+    scene.drop.inputFlags=0x20;scene.drop.costFlags=0;CHECK(missing.SourceAllowed()==1);scene.drop.costFlags=0x20;failed=false;
     try { missing.SourceAllowed(); } catch (const std::logic_error&) { failed=true; }CHECK(failed);
 }
