@@ -206,6 +206,8 @@ public:
     void ClearTechnology(std::int32_t owner);
     // 현재 같은 Player 부모에서 지정한 실제 기술 ContentForm을 조회한다.
     o::Sid FindTechnology(std::int32_t owner,std::int32_t type) const;
+    // 같은 실제 Form6 생성·정렬 부착·부모 통지를 실행한다. 원본 인자는 RawContainedCreate::Create와 같고 설치 뒤에만 허용한다.
+    o::Sid CreateContained(o::Sid parent,std::uint32_t type,std::uint32_t argument,std::uint32_t flags,std::uint32_t attachFlags,std::uint32_t quality);
     // 실제 사제의 같은 Start/BFS/Host54 경로를 시작한다.
     bool MovePriest(o::Sid sid,o::RawPathPoint destination);
     // 같은 raw 신전의 가상 Draw를 실행하고 실제 SoundList/재생 경계로 상승음을 보낸다.

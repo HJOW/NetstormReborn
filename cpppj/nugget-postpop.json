@@ -1,0 +1,33 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-17",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16"
+  },
+  "controls": [
+    639,
+    895
+  ],
+  "uniqueInputs": 288,
+  "normalReturns": 576,
+  "instructions": 23744,
+  "vtable": {
+    "16": 4913024,
+    "20": 4738944,
+    "24": 4504032,
+    "32": 4738960
+  },
+  "preThunk": "e92b65fcff",
+  "precisionDifferentInputs": [],
+  "boundaries": "조회4afb40/할당/게임난수455930/Regular496e80/Damageable44bf80은명시입력. 부모484f90전체/SEH/스택/GP/x87검사. 원본/OS창실행없음.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "tools/decomp_nugget_postpop.py": "d6c8dbac3dd11d6ca4324b655539cfd6ca5f86f7ec71dad8019d32fde170d70a",
+    "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "cpppj/tests/fixtures/nugget-postpop-x86.tsv": "46998ea686990586fb51f7a50f6cade479ec339bfa8187e99b9e6cff4367fa7a"
+  }
+}

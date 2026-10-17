@@ -1302,3 +1302,12 @@ cpppj/carrier-regular.json text eol=lf
 cpppj/campaign-carrier-regular.json text eol=lf
 tools/decomp_carrier_regular.py text eol=lf
 docs/exe/cpp-carrier-regular-20261017.md text eol=lf
+
+# 실제내용물표시Session연결과너겟의새원문은UTF-8/LF다.
+cpppj/src/o/RawNuggetPostPop.* text eol=lf
+cpppj/tests/NuggetPostPopTests.cpp text eol=lf
+cpppj/tests/fixtures/nugget-postpop-x86.tsv text eol=lf
+cpppj/nugget-postpop.json text eol=lf
+cpppj/campaign-carrier-preview-session.json text eol=lf
+tools/decomp_nugget_postpop.py text eol=lf
+docs/exe/cpp-carrier-preview-session-20261017.md text eol=lf

@@ -6,6 +6,8 @@
 #include "client/RawMenuControls.h"
 #include "client/RawUserHighlight.h"
 #include "o/OriginalText.h"
+#include "o/RawContentPreviewProcess.h"
+#include <cmath>
 
 using namespace netstorm::client;
 namespace {
@@ -256,4 +258,41 @@ TEST_CASE(CampaignUserSelection_SamePoolMarksRegularAndManaNotice) {
     CursorLifecycleHooks mana;session.BindCursorMana(mana);const auto token=mana.createMana(priest,0);auto* process=dynamic_cast<CursorManaProcess*>(core.kernel.Get(token));CHECK(process && process->Parent()==priest);
     if (process) CHECK(Get(process->Fields().bytes,0x94)==0);CHECK(selection->Select(0,0,1)==0);CHECK(selected==0 && !(core.pool.Slot(priest)[40]&4));if (process) CHECK(Get(process->Fields().bytes,0x94)==1);
     CHECK(dumps==1 && cursors==0); // 같은 mode0은 불필요한 장치 커서 변경을 하지 않는다.
+}
+
+// 실제 Form6 추가 통지가491을 예약하고 같은Session의그림/타이머/가상삭제까지 실행해야 한다.
+TEST_CASE(CampaignContentPreview_RealNoticeCreatePopAndExpiry) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);MenuServices external;auto services=external.Make();
+    services.carrierContent.checkCarrier=[](Sid) { throw std::logic_error("외부 지면 검사로 잘못 연결된 내용물 표시"); };
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));
+    CHECK(Throws([&] { static_cast<void>(session.CreateContained(Sid{5},100,0,1,0x10,0)); }));session.Load();auto core=session.Core();
+    const Sid priest{static_cast<std::uint16_t>(session.FindPriestParticipation(1))};CHECK(priest.value);std::uint32_t kind{}; // 실제 생산 자산 중 표시 가능하고 폭탄/사제 전용 통지가 없는 첫 타입이다.
+    // 현재 보호TYPE에서 원본 표시 genus8000의 실제 자산을 고르며 결과/프레임은 주입하지 않는다.
+    for (std::size_t type=70;type<core.types.size();++type) if ((core.types[type].flags2&0x8000U) && !(core.types[type].flags2&0x100U)) { kind=static_cast<std::uint32_t>(type);break; }
+    CHECK(kind>=70);CHECK(!core.processes.FindEvent(priest,0x491));
+    const auto content=session.CreateContained(priest,kind,0x1234,1,0x10,0);CHECK(content.value);
+    auto* regular=core.processes.FindEvent(priest,0x491);CHECK(regular && regular->Payload()==std::bit_cast<float>(0x3e4ccccdU));if (!regular) return;
+    regular->RunFrame();ContentPreviewProcess* timer{};std::uint32_t timerPid{}; // 다른 사건/AI 프레임을 실행하지 않고 실제491 체인만 관찰한다.
+    // 실제Kernel에 생긴 파생 타이머를 찾는다. SID나 만료 값을 검사용으로 대신 쓰지 않는다.
+    for (std::uint32_t pid=1;pid<=core.kernel.Capacity();++pid) if (auto* candidate=dynamic_cast<ContentPreviewProcess*>(core.kernel.Get(pid))) { CHECK(!timer);timer=candidate;timerPid=pid; }
+    CHECK(timer);if (!timer) return;const auto ghost=timer->Parent(),form=timer->Form();const auto deadline=timer->Fields().Deadline();const auto raw=core.pool.Slot(ghost);
+    CHECK(raw[10]==kind && (raw[40]&8U) && raw[34]==core.pool.Slot(priest)[34]);CHECK(Get(raw,12,2)==0x1234U);
+    CHECK(Get(raw,36)==static_cast<std::uint32_t>(assets.game.Types()[kind-70].definition.specialFrames.defaultFrame));CHECK(core.pool.Slot(form)[10]==47);
+    CHECK(deadline==core.processState.now+static_cast<double>(std::bit_cast<float>(0x3e4ccccdU)));
+    core.processState.now=std::nextafter(deadline,-INFINITY);timer->RunFrame();CHECK(core.kernel.Get(timerPid)==timer && !(core.pool.Slot(ghost)[11]&1U));
+    core.processState.now=deadline;timer->RunFrame();CHECK(!core.kernel.Get(timerPid));CHECK((core.pool.Slot(ghost)[11]&1U) && (core.pool.Slot(form)[11]&1U));
+    CHECK(!(core.pool.Slot(priest)[11]&3U) && !(core.pool.Slot(content)[11]&1U));CHECK(core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0);
+}
+// 미리보기가 아닌 최초 너겟도 실제 두 예약/확보 메모리/공유게임난수를 사용한다.
+TEST_CASE(CampaignContentPreview_RealNuggetInitialRegulars) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);MenuServices external;
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",external.Make());session.Load();auto core=session.Core();
+    const auto nugget=session.World().Create(154);CHECK(!(core.pool.Slot(nugget)[40]&8U));session.World().Pop(nugget,10.5F,10.5F,0);
+    const auto* first=core.processes.FindEvent(nugget,1);const auto* third=core.processes.FindEvent(nugget,3);CHECK(first && third && first!=third);if (!first || !third) return;
+    CHECK(first->Parent()==nugget && third->Parent()==nugget && first->Count()==0 && third->Count()==0);
+    CHECK(first->Time()==core.processState.now && third->Time()==core.processState.now);
+    CHECK(first->Payload()>=0.0F && first->Payload()<=0.3F && third->Payload()>=0.0F && third->Payload()<=0.5F);
+    CHECK(core.pool.Slot(first->Form())[10]==46 && core.pool.Slot(third->Form())[10]==46);
+    CHECK(core.processes.FromForm(first->Form())==first && core.processes.FromForm(third->Form())==third);
+    // 실제 너겟Regular485230의프레임소비는이번생성/부착검증과구분한다.
 }

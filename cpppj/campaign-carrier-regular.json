@@ -8,9 +8,9 @@
     "date": "2026-10-16"
   },
   "currentSources": {
-    ".gitattributes": "6618a0dd3d1edb3e5646872eb3b70e6097f4f05867d854b3f5ba44eed2c33147",
-    "cpppj/src/CMakeLists.txt": "a40ff146c9ac132642b260df7712aad89b6a936e1ee385345bbd031d57f0ef04",
-    "cpppj/tests/CMakeLists.txt": "ba633eb094bb697a98b67b6fab8045976dd6e718810a635440285a3dced6b2d7",
+    ".gitattributes": "356e19c891438f6b7b1306de8723e3743891458fec6fb7cb13cc4b56d0bc9831",
+    "cpppj/src/CMakeLists.txt": "c9dedcec3f71a8b0e9bf8be61f1caaa2b1775b164f922efe04659459d57b0728",
+    "cpppj/tests/CMakeLists.txt": "2caa125a7e1987b1ecfc912b8ce2199560a21683efdeb8405933f58b0928ad29",
     "cpppj/src/o/RawCarrierRegular.cpp": "a164805423a92cef4e3d6dcf26571cbc0931c08db0a506cad72f80c4206501be",
     "cpppj/src/o/RawCarrierRegular.h": "ada769f00c757f3fa15664da0acf790f4656416b333959acb9dbef60d819e13c",
     "cpppj/tests/CarrierRegularTests.cpp": "451de3245b3617a49fa1acad7b711b81c8867cb5dcda7cdfa971aecc7135cbc9",
@@ -431,5 +431,32 @@
     "사제고유사건을보존한Carrier 기본위임",
     "492/5105 큰하위몸체",
     "Client선택/우클릭/원본DWORD소비자 및11스테이지 자연완주/전체동일성"
+  ],
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "unit": 146,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": ".gitattributes",
+          "previous": "6618a0dd3d1edb3e5646872eb3b70e6097f4f05867d854b3f5ba44eed2c33147",
+          "current": "356e19c891438f6b7b1306de8723e3743891458fec6fb7cb13cc4b56d0bc9831"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "a40ff146c9ac132642b260df7712aad89b6a936e1ee385345bbd031d57f0ef04",
+          "current": "c9dedcec3f71a8b0e9bf8be61f1caaa2b1775b164f922efe04659459d57b0728"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "ba633eb094bb697a98b67b6fab8045976dd6e718810a635440285a3dced6b2d7",
+          "current": "2caa125a7e1987b1ecfc912b8ce2199560a21683efdeb8405933f58b0928ad29"
+        }
+      ]
+    }
   ]
 }

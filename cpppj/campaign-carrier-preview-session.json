@@ -1,0 +1,126 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-17",
+  "unit": 146,
+  "baseCommit": "9b15487",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16"
+  },
+  "currentSources": {
+    ".gitattributes": "356e19c891438f6b7b1306de8723e3743891458fec6fb7cb13cc4b56d0bc9831",
+    "cpppj/src/CMakeLists.txt": "c9dedcec3f71a8b0e9bf8be61f1caaa2b1775b164f922efe04659459d57b0728",
+    "cpppj/tests/CMakeLists.txt": "2caa125a7e1987b1ecfc912b8ce2199560a21683efdeb8405933f58b0928ad29",
+    "cpppj/src/client/RawCampaignSession.cpp": "120d965e0371fe56fd4a6d3da847a5861bfc2c23668d8fbb467bf1fc6413d0f5",
+    "cpppj/src/client/RawCampaignSession.h": "b63d3540024b9eef248329d84fd9cde386c6e799dee06ea2ddaf8ee68f7d21a4",
+    "cpppj/tests/CampaignObjectMenuTests.cpp": "120224ae61396c16375332ac28afd520049839dfee0cb920e500f388e487fd97",
+    "cpppj/src/o/RawAssetPostPop.cpp": "cc3f8f7f0356152b8f60cd499992771f31dc554a7427e2d20fd432a4ce05b245",
+    "cpppj/src/o/RawAssetPostPop.h": "6092804ea72da7e9166eca3c5b8de522486565d49045a7b8101ae131d04e4dff",
+    "cpppj/src/o/RawNuggetPostPop.cpp": "0eab1fdd8c77b0772ce5a3d36f37b09e309fbb175aa57095f1465268d3d6a5b9",
+    "cpppj/src/o/RawNuggetPostPop.h": "0f63d89a16c16cf1bfef28e079ca60b2c28cde5a65228de596e06ef48b1bc5af",
+    "cpppj/tests/NuggetPostPopTests.cpp": "fba542d5b076fc0fec208762a02e1240ad1ec27564496314a79060d28c8db924",
+    "tools/decomp_nugget_postpop.py": "d6c8dbac3dd11d6ca4324b655539cfd6ca5f86f7ec71dad8019d32fde170d70a",
+    "cpppj/tests/fixtures/nugget-postpop-x86.tsv": "46998ea686990586fb51f7a50f6cade479ec339bfa8187e99b9e6cff4367fa7a"
+  },
+  "nativeReports": {
+    "cpppj/nugget-postpop.json": "225f29f827362f4d910c51edbbd5b20bd122e7db06ebf4b2ea651075af7f60db",
+    "cpppj/carrier-regular.json": "9f487d5290c6e4385698a2624434ffb8120dfea57b3b02cb8b7bd17c753ebfff",
+    "cpppj/content-preview-process.json": "290c3398c95061684ec375d9df132cda1198ea9815268a3f3e8ade41f1336606",
+    "cpppj/squid-selection.json": "8b74e9baeb368ae71d021e0baf469d7d7118e117c4c399d4b5382aa60b2110d8"
+  },
+  "nativeContext": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-17",
+    "lastPreciseDecompile": {
+      "host": "HJOW-Athlon",
+      "date": "2026-10-16"
+    },
+    "controls": [
+      639,
+      895
+    ],
+    "uniqueInputs": 288,
+    "normalReturns": 576,
+    "instructions": 23744,
+    "vtable": {
+      "16": 4913024,
+      "20": 4738944,
+      "24": 4504032,
+      "32": 4738960
+    },
+    "preThunk": "e92b65fcff",
+    "precisionDifferentInputs": [],
+    "boundaries": "조회4afb40/할당/게임난수455930/Regular496e80/Damageable44bf80은명시입력. 부모484f90전체/SEH/스택/GP/x87검사. 원본/OS창실행없음.",
+    "sha256": {
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "tools/decomp_nugget_postpop.py": "d6c8dbac3dd11d6ca4324b655539cfd6ca5f86f7ec71dad8019d32fde170d70a",
+      "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+      "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+      "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+      "cpppj/tests/fixtures/nugget-postpop-x86.tsv": "46998ea686990586fb51f7a50f6cade479ec339bfa8187e99b9e6cff4367fa7a"
+    }
+  },
+  "protectedFileSha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6"
+  },
+  "workRecordSha256": "fa223525a4b4a8e9f528023c2c737e73e8e269e691c79f4a631c30417a35b48d",
+  "validation": {
+    "releaseBuilds": [
+      0,
+      0,
+      0
+    ],
+    "warnings": [
+      0,
+      0,
+      0
+    ],
+    "errors": [
+      0,
+      0,
+      0
+    ],
+    "firstIntegration": "실제너겟154의Pop미복원으로1실패. 입력/기대값유지후전체너겟PostPop복원.",
+    "finalFocusedTests": 4,
+    "fullRegression": {
+      "cases": 1589,
+      "failed": 0,
+      "exitCode": 0,
+      "runnerSeconds": 204.96,
+      "ctestSeconds": 205.0
+    },
+    "nativeAudit": {
+      "tools": 64,
+      "passed": 53,
+      "existingFailed": 11,
+      "newFailed": 0
+    },
+    "currentPinReports": 41,
+    "currentPins": 110,
+    "cloneEntry": {
+      "runs": 5,
+      "passed": 5,
+      "originalsUnchanged": true,
+      "world": [
+        "thewarbegins",
+        "masterofwhirligigs"
+      ],
+      "briefingOnly": [
+        "tutorial1",
+        "tutorial2",
+        "tutorial3"
+      ],
+      "reportSha256": "ae24bae274dd5fc02b30e7cb382fd25b0c7a0c362761f59ea9dd5023cd01af73"
+    }
+  },
+  "scope": "같은Session실제Form통지/491/Nugget그림/Pop/Owner/WORD/타이머/만료삭제와일반너겟두예약생성.491/타이머RunFrame직접호출이며다른AI/전체Kernel자연완주아님.",
+  "remaining": [
+    "너겟Regular485230과4850a0/485170/484ec0·현재가상b4",
+    "Carrier492의4225b0/429010 및5105의426ef0",
+    "실제Client선택/강조/dump/비정지우클릭/번역/원본DWORD소비자",
+    "11스테이지자연완주/승패/저장/다음미션/생산경제AI/전체동일성"
+  ]
+}

@@ -17,6 +17,9 @@
 #include "o/RawProcessRemoval.h"
 #include "o/RawSquidLevel.h"
 #include "o/RawSquidSelection.h"
+#include "o/RawCarrierRegular.h"
+#include "o/RawContentPreviewProcess.h"
+#include "o/RawNuggetPostPop.h"
 #include "o/RawPlayerTemplateState.h"
 #include "o/RawArcherTypeData.h"
 #include "o/RawProjectileGeometry.h"
@@ -61,6 +64,9 @@
 #include <stdexcept>
 #include <cstdlib>
 #include <cstring>
+#include <cmath>
+#include <limits>
+#include <new>
 using namespace netstorm::o;
 namespace netstorm::client {
 namespace {
@@ -265,6 +271,12 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawFortFinishOwner> finish; // 같은9 Player의 최초 지역을 읽는다.
     ContainedCreateState contentState; // 저장 내용물은 실제 Form6으로 생성한다.
     std::unique_ptr<ContentFormHost> contentForms; // ProcessForm과 다른 실제 Form6의 정렬 부착 몸체다.
+    std::vector<CarrierRegularType> carrierRegularTypes; // 같은 실제 TYPE 정의의 기본 프레임/casttime이다.
+    std::unique_ptr<RawContentPreviewProcess> contentPreviewProcess; // 같은 현재 시계/공유47타입의 일시 표시 수명이다.
+    std::unique_ptr<ContentPreviewProcess> pendingContentPreview; // 원본 new18 성공 뒤 생성/부착까지의 단일 소유권이다.
+    std::unique_ptr<RawCarrierRegular> carrierRegular; // 실제 내용물/자산/표시/기본Handle에 연결한 Carrier 부모다.
+    std::unique_ptr<RawNuggetPostPop> nuggetPostPop; // 너겟의 실제 두 예약/난수/기본 처리다.
+    std::unique_ptr<RegularProcess> pendingNuggetRegular; // 원본 new28과 생성자를 같은 실제 할당으로 연결한다.
     std::unique_ptr<GumpFormHost> gumpForms; // 같은Pool의실제Form3와현재UI등록ID/부모삭제알림수명이다.
     std::unique_ptr<RawContentParentNotice> contentNotice; // 부모의 실제 현재 VT로 기본/파생 +24를 분배한다.
     bool contentSavedGame{}; // 이 생성자는 새 미션 경로이며005c85d4 저장 게임은 선택하지 않는다.
@@ -630,6 +642,7 @@ struct RawCampaignSession::Impl {
         combatEffects.missile=hits->MissileHooks(*gunHit,missileState,std::move(combatEffects.missile));
         combat=std::make_unique<RawCampaignArcherBindings>(world,*gunTarget,random,archerTypes,metadata.frames,missileTypes,archerState,missileState,std::move(combatEffects));
         auto assetEffects=services.assets;assetEffects.postPop.reserveRegular=[] { return true; };
+        assetEffects.postPop.nuggetPostPop=[this](Sid sid,std::uint32_t flags) { if (!nuggetPostPop) throw std::logic_error("현재 너겟 PostPop 미설치");nuggetPostPop->PostPop(sid,flags); };
         // 거주 구역은 현재 일치 신전을 찾은 호출 위치에서 실제 theammode를 다시 읽는다.
         if (!assetEffects.regular.themeMode) assetEffects.regular.themeMode=services.ownership.themeMode;
         FillMissing(assetEffects.regular.themeMode);
@@ -676,6 +689,7 @@ struct RawCampaignSession::Impl {
         InstallContents(worldHooks.assets);
         ConnectConstruction(); // 실제공통삭제후설치뒤같은noIsland VT의표면가상분배를첫객체전등록한다.
         ConnectDamageable(); // 같은 공통 삭제와 신전/사제 해방의 파생 하위를 첫 객체 전에 연결한다.
+        ConnectCarrierRegular(); // 첫491예약/프레임 전에 같은 내용물 그림과 만료 삭제를 연결한다.
         ConnectSunAviary(); // 실제 타입32/flags8 부착과 현재48BYTE 필드를 같은 Kernel에 등록한다.
         ConnectRainAviary(); // 실제 타입60/flags8 부착과 별도 Frame/0x73 패킷을 구성한다.
         ConnectFlyer(); // TYPE144의 전체 후처리와 기본 표 부착→전용 표 쓰기의 실제 순서를 연결한다.
@@ -695,7 +709,7 @@ struct RawCampaignSession::Impl {
                 if (event.effect==SquidDestroyEffect::PreDestroy) { damageablePre->PreDestroy(event.sid,event.flags);return; }
                 if (event.effect==SquidDestroyEffect::PostDestroy) { DestroyPreviewDaisSlots(event.sid);damageablePostState.battle=core.ownerMode.battle;damageablePostState.boss=assetState.boss;damageablePost->PostDestroy(event.sid,event.flags);return; }
             }
-            if (PlainDamageable(event.sid) || SunFence(event.sid)) {
+            if (PlainDamageable(event.sid) || SunFence(event.sid) || Nugget(event.sid)) {
                 if (event.effect==SquidDestroyEffect::PreDestroy) { if (SunFence(event.sid)) fenceLifetime->PreDestroy(event.sid,event.flags);else damageablePre->PreDestroy(event.sid,event.flags);return; }
                 if (event.effect==SquidDestroyEffect::PostDestroy) { damageablePostState.battle=core.ownerMode.battle;damageablePostState.boss=assetState.boss;damageablePost->PostDestroy(event.sid,event.flags);return; }
             }
@@ -715,12 +729,15 @@ struct RawCampaignSession::Impl {
         };
         auto previousDestroy=std::move(worldHooks.destroy); // 실제 신전 VT의 공통+10만 추가 분배한다.
         worldHooks.destroy=[this,previous=std::move(previousDestroy)](Sid sid,std::uint32_t flags,const SquidDestroyHooks& hooks) {
-            if (Vortex(sid) || FenceCommon(sid) || Flyer(sid) || VisualDummy(sid) || PlainDamageable(sid) || SunFence(sid) || PreviewDais(sid)) return core.virtualDestroy.Destroy(sid,flags,hooks);return previous(sid,flags,hooks);
+            if (Vortex(sid) || FenceCommon(sid) || Flyer(sid) || VisualDummy(sid) || PlainDamageable(sid) || SunFence(sid) || Nugget(sid) || PreviewDais(sid)) return core.virtualDestroy.Destroy(sid,flags,hooks);return previous(sid,flags,hooks);
         };
         buriedRegular=std::make_unique<RawBuriedRegular>(core.pool,core.frames,core.frame,random);
         auto actualRegular=hits->Handler(combat->Handler(assetBindings->Handler(buriedRegular->Handler(priests->RegularHandler([this](Sid sid,std::uint32_t event,std::uint32_t count,float payload) {
             if (playerRegular->Handles(sid)) return playerRegular->Handle(sid,event,count,payload);
             if (manaRegular && manaRegular->Handles(sid)) return manaRegular->Run(sid,event,count);
+            const auto raw=core.pool.Slot(sid);const bool priest=raw[10]==kPriestType && Read(raw,0)==kPatchPriestVtable;
+            // 사제의 다섯 고유 사건은 파생 처리기가 담당한다. 나머지만 원본 기본 Carrier로 넘긴다.
+            if (carrierRegular->Handles(sid) || (priest && (event<0x259U || event>0x25dU))) return carrierRegular->Handle(sid,event,count,payload);
             throw std::logic_error("캠페인 현재 Kernel의 다른 실제 Regular 부모 미연결: TYPE"+
                 std::to_string(core.pool.Slot(sid)[10])+" event"+std::to_string(event));
         })))));
@@ -825,6 +842,8 @@ struct RawCampaignSession::Impl {
     }
     // 썬 바리케이드의 특수457990 전처리는 다른 일반 Damageable에 적용하지 않는다.
     bool SunFence(Sid sid) const { const auto raw=core.pool.Slot(sid);return raw[10]==136 && Read(raw,0)==0x509470; }
+    // 보호50dc30의+14는484f80→44b4b0 thunk이며+18/+10도기존Damageable/공통삭제다. 메뉴 범위와는 별개다.
+    bool Nugget(Sid sid) const { const auto raw=core.pool.Slot(sid);return raw[10]==154 && Read(raw,0)==0x50dc30U; }
     // 실제 PE의 신전 네 가상 표를 판정하며 다른 자산을 타입 이름만으로 허용하지 않는다.
     bool Vortex(Sid sid) const {
         const auto table=Read(core.pool.Slot(sid),0);return table==0x005196f0 || table==0x005197a8 || table==0x00519860 || table==0x00519918;
@@ -986,6 +1005,65 @@ struct RawCampaignSession::Impl {
         hooks.writeData=[this,fallback](SquidProcess& process,bool parentChanged) { auto* flying=dynamic_cast<FlyerProcess*>(&process);writingFlyer=flying!=nullptr;auto* rain=dynamic_cast<RainAviaryProcess*>(&process);writingRainAviary=rain!=nullptr;auto* current=dynamic_cast<SunAviaryProcess*>(&process);writingSunAviary=current!=nullptr;if (flying) return static_cast<std::int32_t>(flying->WritePacket(flyerPacket,parentChanged));if (rain) return static_cast<std::int32_t>(rain->WritePacket(rainAviaryPacket,parentChanged));if (current) return static_cast<std::int32_t>(current->WritePacket(sunAviaryPacket,parentChanged));if (!fallback.writeData) throw std::logic_error("다른 실제 프로세스 writer 미연결");return fallback.writeData(process,parentChanged); };
         hooks.transmit=[this,fallback](std::int32_t length) { if (writingFlyer) { if (length<0 || static_cast<std::size_t>(length)>flyerPacket.size()) throw std::out_of_range("비행 실제 패킷 길이 오류");services.formPacket(std::span<const std::uint8_t>(flyerPacket).first(static_cast<std::size_t>(length)));return; }if (writingRainAviary) { if (length<0 || static_cast<std::size_t>(length)>rainAviaryPacket.size()) throw std::out_of_range("맨 오 워 풀 실제 패킷 길이 오류");services.formPacket(std::span<const std::uint8_t>(rainAviaryPacket).first(static_cast<std::size_t>(length)));return; }if (writingSunAviary) { if (length<0 || static_cast<std::size_t>(length)>sunAviaryPacket.size()) throw std::out_of_range("훨리베이스 실제 패킷 길이 오류");services.formPacket(std::span<const std::uint8_t>(sunAviaryPacket).first(static_cast<std::size_t>(length)));return; }if (!fallback.transmit) throw std::logic_error("다른 실제 프로세스 송신 미연결");fallback.transmit(length); };return hooks;
     }
+    // 실제 Carrier 내용물 그림/표시/타이머를 현재 Session의 한 풀·시계·공유 타입에 연결한다.
+    void ConnectCarrierRegular() {
+        NuggetPostPopHooks nugget;
+        nugget.hasRegular=[this](Sid sid,std::uint32_t event) { return core.processes.FindEvent(sid,event)!=nullptr; };
+        nugget.allocate=[this] {
+            if (pendingNuggetRegular) throw std::logic_error("너겟 Regular 확보 메모리 중복");
+            try { pendingNuggetRegular=std::make_unique<RegularProcess>(0,0.0F); }catch (const std::bad_alloc&) { return false; }
+            return true;
+        };
+        // 기존455930 복원과 같은LCG상위16비트/65536 및넓은간격을 사용하고 여기서만float저장한다.
+        nugget.random=[this](float low,float high) { return static_cast<float>(static_cast<double>(random.Next(65536))*(1.0/65536.0)*std::abs(static_cast<double>(high)-low)+low); };
+        nugget.construct=[this](Sid sid,std::uint32_t event,float payload) {
+            if (!pendingNuggetRegular) throw std::logic_error("너겟 Regular 생성 전 확보 메모리 없음");
+            auto* reserved=pendingNuggetRegular.get();std::destroy_at(reserved);std::construct_at(reserved,event,payload); // 확보한 객체를 같은 주소에서 실제 인자로 생성하며 두 번째 할당을 하지 않는다.
+            auto* attached=static_cast<RegularProcess*>(core.processes.Attach(std::move(pendingNuggetRegular),46,sid,0x50));if (attached) attached->ResetTask(event,core.processState.now);
+        };
+        nugget.damageable=[this](Sid sid,std::uint32_t flags) { carrier->DamageablePostPop(sid,flags); };
+        nuggetPostPop=std::make_unique<RawNuggetPostPop>(core.pool,std::move(nugget));
+        carrierRegularTypes.resize(core.types.size());
+        // 원본 타입 로더의 기본0과 실제 자산 정의의118/1b8을 같은 번호로 보충한다.
+        for (std::size_t index=0;index<assets.game.Types().size();++index) {
+            const auto& definition=assets.game.Types()[index].definition;const auto cast=definition.Number("casttime").value_or(0.0);
+            if (!std::isfinite(cast) || cast<std::numeric_limits<std::int32_t>::min() || cast>std::numeric_limits<std::int32_t>::max()) throw std::out_of_range("실제 자산 casttime의 정수 범위 오류");
+            carrierRegularTypes.at(index+70)={definition.specialFrames.defaultFrame,static_cast<std::int32_t>(cast)};
+        }
+        ContentPreviewHooks preview;
+        preview.attach=[this](ContentPreviewFields& fields,Sid parent,std::uint32_t type,std::uint32_t flags) {
+            if (!pendingContentPreview || &pendingContentPreview->Fields()!=&fields) throw std::logic_error("내용물 타이머의 실제 확보 메모리 불일치");
+            static_cast<void>(core.processes.Attach(std::move(pendingContentPreview),type,parent,flags));
+        };
+        preview.destroy=[this](Sid sid,std::uint32_t flags) { static_cast<void>(world.Destroy(sid,flags)); };
+        preview.assertion=SessionMissing<void>();
+        contentPreviewProcess=std::make_unique<RawContentPreviewProcess>(core.pool,core.processState.now,soundState.processType,std::move(preview));
+        CarrierRegularHooks hooks;
+        hooks.find=[this](Sid parent,std::uint32_t mask,std::uint32_t kind,std::uint32_t index) { return priests->Carrier().FindContained(parent,mask,kind,index); };
+        hooks.create=[this](std::uint32_t type,std::uint32_t flags) { return world.Create(type,flags); };
+        // 실제4ac220은 하위WORD 저장 뒤 현재 타입이 다리일 때만 기존 표면 통지를 호출한다.
+        hooks.setWord=[this](Sid sid,std::uint32_t value) { auto raw=core.pool.AllocatedBytes(sid);raw[12]=static_cast<std::uint8_t>(value);raw[13]=static_cast<std::uint8_t>(value>>8);if (raw[10]==core.bridgeState.bridgeType) core.building.NotifySurface(sid); };
+        hooks.setOwner=[this](Sid sid,std::uint32_t owner) { ownership->SetOwner(sid,owner); };
+        hooks.pop=[this](Sid sid,float x,float y,std::uint32_t flags) { world.Pop(sid,x,y,flags); };
+        hooks.allocateTimer=[this] {
+            if (pendingContentPreview) throw std::logic_error("내용물 타이머 확보 메모리의 중복 소유권");
+            try { pendingContentPreview=std::make_unique<ContentPreviewProcess>(*contentPreviewProcess,ContentPreviewFields{}); }
+            catch (const std::bad_alloc&) { return false; }
+            return true;
+        };
+        hooks.constructTimer=[this](Sid parent,float duration) {
+            if (!pendingContentPreview) throw std::logic_error("내용물 타이머 생성 전 실제 메모리 미확보");
+            contentPreviewProcess->Construct(pendingContentPreview->Fields(),parent,duration);
+        };
+        hooks.refresh=[this](Sid sid) { core.display.Update(core.pool.Slot(sid)); };
+        hooks.needsEscape=SessionMissing<bool,float,float>(); // 4225b0은 별도 원본 관측 뒤 실제 지면/프레임 표에 연결한다.
+        hooks.movementType=[this](std::uint32_t type) { return priests->MovementProcessType(type); };
+        hooks.hasPath=[this](Sid sid,std::uint32_t type) { RawContainedLookup lookup(core.pool,[this](Sid target,std::uint32_t flags) { static_cast<void>(world.Destroy(target,flags)); });return lookup.Find(sid,type).value!=0; };
+        hooks.escape=[this](Sid sid,float delay,std::uint32_t event) { if (!services.motion.carrier.escape) throw std::logic_error("현재 Carrier 회피429010 미연결");static_cast<void>(services.motion.carrier.escape(sid,delay,event)); };
+        hooks.falling=SessionMissing<float,Sid,std::uint32_t>(); // 5105의426ef0은 빈 성공 대신 미복원 큰 하위를 요구한다.
+        hooks.damageable=[this](Sid sid,std::uint32_t event,std::uint32_t count,float payload) { return assetBindings->Regular().DamageableHandle(sid,event,count,payload); };
+        carrierRegular=std::make_unique<RawCarrierRegular>(core.pool,core.types,carrierRegularTypes,assetState.boss,std::move(hooks));
+    }
     // 실제 Damageable 해방/공통 삭제와 신전 Pre를 같은 현재 월드에 조립한다.
     void ConnectDamageable() {
         DamageableReleaseHooks release;release.create=[this](std::uint32_t type,std::uint32_t flags) { return world.Create(type,flags); };
@@ -1143,7 +1221,9 @@ struct RawCampaignSession::Impl {
         contentLifetimeState.notice=0x020000b4; // PATCH005429c4의 실제 수입 명령 초기값이다.
         auto carrierEffects=services.carrierContent;
         carrierEffects.center=[this](Sid parent) { return gunTarget->Center(parent); };
-        carrierEffects.checkCarrier=[this](Sid parent) { static_cast<void>(priests->CheckCarrier(parent)); };
+        carrierEffects.checkCarrier=[this](Sid parent) {
+            StartSelectionContentPreview(core.pool,parent,objectState.loadingDepth,[this](Sid sid,std::uint32_t event,float payload) { static_cast<void>(core.processes.AddRegular(sid,event,payload)); },SessionMissing<void>());
+        };
         carrierEffects.typeAt=[this](float x,float y,std::uint32_t type) { return world.Find(x,y,type); };
         carrierContentNotice=std::make_unique<RawCarrierContentNotice>(core.pool,core.types,
             CarrierContentNoticeState{contentSavedGame,objectState.loadingDepth,contentBombBlocked,playerState.battleOwner,priestState.movement.priest,contentScreenOrigin[0],contentScreenOrigin[1],priestState.movement.rainWalker},std::move(carrierEffects));
@@ -1480,6 +1560,11 @@ void RawCampaignSession::AddTechnology(std::int32_t owner,std::string_view list)
 void RawCampaignSession::ClearTechnology(std::int32_t owner) { impl_->technology->Clear(owner); }
 // 상태 사본 없이 현재 raw 부모 체인에서 읽는다.
 Sid RawCampaignSession::FindTechnology(std::int32_t owner,std::int32_t type) const { return impl_->technology->Find(owner,type); }
+// 실제 내용물 생성/부착/현재 부모 통지의 같은 장기 몸체를 명령 소비자에게 제공한다.
+Sid RawCampaignSession::CreateContained(Sid parent,std::uint32_t type,std::uint32_t argument,std::uint32_t flags,std::uint32_t attachFlags,std::uint32_t quality) {
+    if (!impl_->loaded || !impl_->contained) throw std::logic_error("설치 전 실제 내용물 생성 요청");
+    return impl_->contained->Create(parent,type,argument,flags,attachFlags,quality);
+}
 // 실제 동일 Host54/BFS 경로를 시작하며 원본 재귀의 외부nullptr 뒤 현재 경로도 확인한다.
 bool RawCampaignSession::MovePriest(Sid sid,RawPathPoint destination) {
     if (!impl_->motion) throw std::logic_error("실제 세션 설치 전 사제 명령");
