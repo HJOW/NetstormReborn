@@ -845,3 +845,46 @@ TEST_CASE(CampaignSession_PlayerFactoryCapacityMatchesNativeInitialization) {
     while (std::getline(file,line)) { if (line.empty() || line[0]=='#') continue;const auto row=netstorm::test::rawscene::Split(line,'\t');const auto owner=netstorm::test::rawscene::Number(row[0]);CHECK(core.bookkeeping.ownerFactories[owner].entries.size()==netstorm::test::rawscene::Number(row[2]));CHECK(core.bookkeeping.ownerFactories[owner].count==netstorm::test::rawscene::Number(row[3]));++count; }
     CHECK(count==9);
 }
+
+// 실제 서버 abstract/134 도착이30과17을 만들고 같은 시각으로 HP/완료/공간/표시 종료를 실행한다.
+TEST_CASE(CampaignSession_ConstructionArrivalRunsActualProgressAndVisual) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();services.unitLost=[&](Sid) { ++external.notices; };
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services),{1024,768});auto& session=world.Session();auto core=session.Core();Sid priest{};
+    // 현재 원본 지형에 설치된 살아 있는 사제 좌표를 동일 경로의 시작/도착 입력으로 쓴다.
+    for (std::uint32_t id=5;id<core.pool.Capacity();++id) { const auto raw=core.pool.Slot(Sid{static_cast<std::uint16_t>(id)});if (raw[10]==158 && !(raw[11]&7) && raw[34]==1) { priest=Sid{static_cast<std::uint16_t>(id)};break; } }
+    CHECK(priest.value!=0);if (!priest.value) return;const auto raw=core.pool.Slot(priest);const float x=std::bit_cast<float>(Get(raw,14)),y=std::bit_cast<float>(Get(raw,18));
+    const auto target=session.World().Create(76);CHECK(target.value>=core.pool.Layout().serverFirst);CHECK((core.types[76].flags1&0x8000)!=0);core.owner.Set(target,1);core.pool.AllocatedBytes(target)[40]|=1;SetRawSquidHitPoints(core.pool,target,1);session.World().Pop(target,x,y,0);
+    const auto builder=session.World().Create(134,2);core.owner.Set(builder,1);session.World().Pop(builder,x,y,0);auto* path=session.StartConstructionMovement({builder,{x,y},1,0,0,0,0});CHECK(path!=nullptr);if (!path) return;const auto pathId=core.kernel.Find(*path);
+    // 실경로가 자기 삭제될 때까지 다른 미션 프로세스는 실행하지 않는다.
+    for (int step=0;step<2000 && core.kernel.Get(pathId);++step) { core.processState.now=step*0.02;path->RunFrame(); }
+    CHECK((core.pool.Slot(builder)[11]&3)!=0);const auto form=FindAttachedProcess(core.pool,target,30),visualForm=FindAttachedProcess(core.pool,target,17);CHECK(form.value!=0 && visualForm.value!=0);if (!form.value || !visualForm.value) return;
+    auto* process=dynamic_cast<ConstructionProcess*>(core.processes.FromForm(form));auto* visual=dynamic_cast<ConstructionVisualProcess*>(core.processes.FromForm(visualForm));CHECK(process!=nullptr && visual!=nullptr);if (!process || !visual) return;
+    const auto start=process->Fields().start,end=process->Fields().end;CHECK(end==start+static_cast<double>(0.6f));CHECK(!visual->Fields().visual.instant);CHECK(visual->Fields().visual.opaque>0);CHECK(!FindAttachedProcess(core.pool,target,47).value);
+    const auto maximum=core.types[76].maxHitPoints;CHECK(maximum>1);const auto cameraX=static_cast<int>(x*16)-512,cameraY=static_cast<int>(y*11)-384;session.SetParticleView({cameraX,cameraY,0,0,1024,768},{});
+    session.RunFrame({start,0,0,1},true);process->RunFrame();visual->RunFrame();CHECK(Get(core.pool.Slot(target),26)==0);CHECK((core.pool.Slot(target)[40]&1)!=0);
+    const auto middle=start+(end-start)/2;session.RunFrame({middle,0,middle-start,2},true);process->RunFrame();visual->RunFrame();CHECK(Get(core.pool.Slot(target),26)==static_cast<std::uint32_t>(maximum/2));CHECK((core.pool.Slot(target)[40]&1)!=0);
+    const auto& v=visual->Fields().visual;CHECK(v.selected>0);const ScreenRect cut{480,355,540,415};std::vector<std::uint8_t> pixels(1024*768,199),expected=pixels;
+    const auto px=static_cast<int>(x*16-cameraX)-v.image.hotspotX,py=static_cast<int>(y*11-cameraY)-v.image.hotspotY;std::size_t painted{}; // 실제 캡처 버퍼의 위치/투명/clip을 독립적으로 대조한다.
+    // 현재 출력 버퍼를 기대 표면에 옮기며 clip 밖과255 픽셀은 원래199를 유지한다.
+    for (int row=0;row<v.image.height;++row) {
+        // 출력 버퍼의 각 픽셀을 현재 정수 카메라/실제 hotspot 위치에 대조한다.
+        for (int column=0;column<v.image.width;++column) { const auto color=v.output[static_cast<std::size_t>(row)*v.image.width+column];const auto sx=px+column,sy=py+row;if (color!=255 && sx>=cut.left && sx<cut.right && sy>=cut.top && sy<cut.bottom) { expected[static_cast<std::size_t>(sy)*1024+sx]=color;++painted; } }
+    }
+    const auto sprites=session.ParticleSprites({0,0,1024,768});CHECK(sprites.size()==1 && painted>0);
+    // 수집한 실제 공통 kind3 표시를 현재8비트 표면에 직접 그린다.
+    for (const auto& sprite:sprites) if (sprite.procedure) sprite.procedure->draw(pixels,1024,768,cut);
+    CHECK(pixels==expected);const auto notices=external.notices;session.RunFrame({end+0.001,0,end-middle,3},true);process->RunFrame();
+    CHECK(!FindAttachedProcess(core.pool,target,30).value);CHECK(Get(core.pool.Slot(target),26)==static_cast<std::uint32_t>(maximum));CHECK((core.pool.Slot(target)[40]&1)==0);CHECK((core.pool.Slot(target)[11]&7)==0);CHECK(external.notices>notices);
+    visual->RunFrame();CHECK(!FindAttachedProcess(core.pool,target,17).value);CHECK(session.Particles().Rendering().Size()==0);
+}
+// duration0은 실제 즉시 표시 변형/기본10초와 반복 건설음47을 선택하고 완료 때 소리를 반납한다.
+TEST_CASE(CampaignSession_ConstructionDefaultTimeOwnsActualSoundProcess) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",external.Services(),{1024,768});auto& session=world.Session();auto core=session.Core();const auto origin=EmptySessionSupport(core);
+    const auto target=session.World().Create(76);core.owner.Set(target,1);core.pool.AllocatedBytes(target)[40]|=1;session.World().Pop(target,static_cast<float>(origin.x+2),static_cast<float>(origin.y+2),0);session.StartConstruction(target,0);
+    const auto form=FindAttachedProcess(core.pool,target,30),sound=FindAttachedProcess(core.pool,target,47),visualForm=FindAttachedProcess(core.pool,target,17);CHECK(form.value && sound.value && visualForm.value);if (!form.value || !sound.value || !visualForm.value) return;
+    auto* process=dynamic_cast<ConstructionProcess*>(core.processes.FromForm(form));auto* visual=dynamic_cast<ConstructionVisualProcess*>(core.processes.FromForm(visualForm));CHECK(process && visual);if (!process || !visual) return;
+    CHECK(process->Fields().end==process->Fields().start+10);CHECK(process->Fields().sound==external.names.Lookup("jimBuild.wav"));CHECK(visual->Fields().visual.instant);CHECK(visual->Fields().visual.minimum==2 && visual->Fields().visual.maximum==9);
+    session.RunFrame({process->Fields().start,0,0,1},true);core.processes.FromForm(sound)->RunFrame();CHECK(!external.playing.empty());const auto end=process->Fields().end;session.RunFrame({end+0.001,0,10,2},true);process->RunFrame();CHECK(!FindAttachedProcess(core.pool,target,47).value);CHECK(external.playing.empty());CHECK(!FindAttachedProcess(core.pool,target,30).value);CHECK((core.pool.Slot(target)[40]&1)==0);
+    visual->RunFrame();CHECK(!FindAttachedProcess(core.pool,target,17).value);
+}

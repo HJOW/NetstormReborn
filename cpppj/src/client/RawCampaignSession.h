@@ -67,7 +67,6 @@ struct RawCampaignSessionServices {
     RawCampaignConstructionEffects construction; // 로컬 간헐천의 실제 설정/벽시각/표시/진단이며 일반 건설을 대신하지 않는다.
     o::SquidDestroyHooks deletion; // 다른 파생 삭제/선택/전송의 실제 외부 경계다.
     std::function<void(o::Sid)> unitLost; // 공통 삭제가 요청한 실제 unitLost 전역 소리를 재생한다.
-    std::function<void(o::Sid,float)> startConstruction; // 134 도착 때 선택한 실제 서버 대상의 건설을 시작한다. 미연결은 선택 시 거부한다.
     o::CarrierContentNoticeHooks carrierContent; // 실제 Carrier 폭탄/포획 표시·음향·공간 효과이며 선택한 분기만 필수다.
     std::function<void(std::uint32_t,std::string_view)> cursorRangeDiagnostic; // 실제 사정거리 color29 진단 출력이며 해당 분기에서만 필요하다.
     o::ContentLifetimeHooks contentLifetime; // 같은 ContentForm의 실제 커서/수입/AI 지갑/소리 경계다.
@@ -93,6 +92,8 @@ public:
     RawCampaignSession& operator=(const RawCampaignSession&)=delete; // 다른 월드 상태와 복사하지 않는다.
     // 실제 부모 설치를 한 번 실행한다. 실제 큰 하위가 누락되면 오류를 그대로 반환한다.
     void Load();
+    // 실제443fe0을 같은 시각/Host/표시/음향으로 실행한다. duration0은 원본 기본10초다.
+    void StartConstruction(o::Sid parent,float duration);
     // 현재 같은 풀/TYPE/실제 로컬 소유자·모드로 원본 초기 시야를 계산하여 화면에 적용한다.
     void ResetCamera(CameraHomeState& state,std::function<void(std::int32_t,std::int32_t)> apply) const;
     // 현재 같은 시각을 모든 모듈에 공급한 뒤 동일 Kernel을 실행한다.

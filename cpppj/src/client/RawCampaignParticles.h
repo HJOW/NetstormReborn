@@ -4,6 +4,8 @@
 #include "client/RawSurfaceWorld.h"
 #include "client/Renderer.h"
 #include "client/Sound.h"
+#include "o/ConstructionVisualSystem.h"
+#include "o/ParticleGradient.h"
 #include "o/FieryTailVisualSystem.h"
 #include "o/LightningVisualSystem.h"
 #include "o/ShrapnelVisualSystem.h"
@@ -29,6 +31,10 @@ public:
     o::LightningCreateResult AddBeam(o::Sid parent,o::Sid target,std::optional<std::string> sound);
     // 실제 wrapper의 세 종류 파편을 같은 Host/Renderer에 생성한다. 확보 실패는nullptr다.
     o::ShrapnelVisualProcess* AddShrapnel(o::Sid source,o::ShrapnelKind kind);
+    // 같은 표시 목록에 실제 건설 캡처/최대 HP를 연결한다. 첫 건설 전에 한 번만 호출한다.
+    void ConnectConstruction(std::function<o::ConstructionVisualImage(o::Sid)> capture,std::function<std::int32_t(o::Sid)> maximum);
+    // 실제17 표시와 캡처/입자를 만들며 부모 완료 뒤 같은 Kernel에서 종료한다.
+    o::ConstructionVisualProcess* AddConstruction(o::Sid parent,bool instant);
     // 같은 전체 Kernel 실행 직전 현재 게임 시각을 공급한다.
     void PrepareFrame(double now);
     // 현재 실제 카메라/표시 영역과 장치 재생성에도 유효한 dirty 경계를 갱신한다.
@@ -76,6 +82,11 @@ private:
     o::RenderProcessSystem rendering_; // 모든 표시가 사용하는 공통 원본 목록이다.
     o::FieryTailVisualSystem fiery_; // 같은 Host/Kernel의 실제 process11 관리자다.
     o::LightningVisualSystem lightning_; // 같은 공통 목록/Host/Kernel의 실제 process19 관리자다.
+    o::ConstructionFrameState constructionFrame_; // 같은 현재 게임 시각/정수 카메라를 쓰는 건설 표시 전역이다.
+    o::ConstructionFramePalette constructionColors_; // 원본11색과 실제 읽을 수 있는 인접 DWORD의 현재 view다.
+    ParticlePaletteMemory constructionMemory_; // 빔/비행과 별개인 건설 전용 공유 색 할당이다.
+    std::vector<o::ParticleGradient> constructionGradients_; // 생성자가 요청하는 두 실제 색 띠다.
+    std::unique_ptr<o::ConstructionVisualSystem> construction_; // 같은 표시 목록/Host/난수를 쓰는 실제17 수명이다.
     std::unique_ptr<o::ShrapnelVisualSystem> shrapnel_; // 실제 세계/캡처 경계가 제공된 Session의 process16이다.
 };
 }

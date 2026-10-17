@@ -116,12 +116,13 @@ o::ShrapnelVisualProcess* RawCampaignParticles::AddShrapnel(o::Sid source,o::Shr
 }
 // 원본 게임 시각을 별도 고정 틱이나 벽시각으로 대체하지 않는다.
 void RawCampaignParticles::PrepareFrame(double now) {
-    if (!std::isfinite(now)) throw std::invalid_argument("캠페인 입자 게임 시각 오류");frame_.now=now;
+    if (!std::isfinite(now)) throw std::invalid_argument("캠페인 입자 게임 시각 오류");frame_.now=now;constructionFrame_.now=now;
+    if (constructionMemory_.Count()) constructionColors_.entries=constructionMemory_.Snapshot();
 }
 // 카메라가 바뀌면 표시 영역을 함께 다시 그린다. 같은 view 호출도 대기 dirty를 장치에 전달한다.
 void RawCampaignParticles::SetView(SoundView view,SurfaceDisplayHooks display) {
     const bool changed=view.cameraX!=view_.cameraX || view.cameraY!=view_.cameraY || view.left!=view_.left || view.top!=view_.top || view.right!=view_.right || view.bottom!=view_.bottom;
-    view_=view;frame_.cameraX=static_cast<float>(view.cameraX);frame_.cameraY=static_cast<float>(view.cameraY);display_=std::move(display);
+    view_=view;frame_.cameraX=static_cast<float>(view.cameraX);frame_.cameraY=static_cast<float>(view.cameraY);constructionFrame_.cameraX=frame_.cameraX;constructionFrame_.cameraY=frame_.cameraY;display_=std::move(display);
     if (changed) { pending_=DirtyRegions(view.right,view.bottom);pending_.InvalidateAll(); }FlushDirty();
 }
 // 원본 현재/이전 영역 요청을 실제 renderer 또는 제한된 대기 표로 보낸다.
@@ -166,4 +167,44 @@ void RawCampaignParticles::Draw(std::uint32_t token,std::span<std::uint8_t> pixe
 }
 // 실제 등록/프로세스 수명 검사용 단일 저장소다.
 const o::RenderProcessSystem& RawCampaignParticles::Rendering() const { return rendering_; }
+// 건설 계산은 기존 복원 몸체에 맡기고 실제 캡처/색 할당/화면 장치만 공급한다.
+void RawCampaignParticles::ConnectConstruction(std::function<o::ConstructionVisualImage(o::Sid)> capture,std::function<std::int32_t(o::Sid)> maximum) {
+    if (construction_ || !capture || !maximum) throw std::invalid_argument("실제 건설 표시 연결 오류");
+    o::ConstructionVisualHooks visual; // 원본 Create가 요청하는 저장소/두 색 띠/현재 SHP 경계다.
+    visual.reserve=[](std::uint32_t) { return true; }; // 실제 vector와 색 할당이 실패하면 예외로 보고한다.
+    visual.createPalette=[] { return 3U; }; // 건설 전용 호스트 토큰이며 팔레트 색 번호와 구별한다.
+    visual.gradient=[this](std::uint32_t count,std::array<double,3> from,std::array<double,3> to,double width) {
+        std::array<std::uint32_t,256> palette{}; // 현재 원본 RGBX 팔레트다.
+        // 실제256색을 원래 순서로 색 띠 계산에 공급한다.
+        for (std::size_t index=0;index<palette.size();++index) { const auto rgb=source_.Color(static_cast<std::uint8_t>(index));palette[index]=std::uint32_t(rgb.red)|(std::uint32_t(rgb.green)<<8)|(std::uint32_t(rgb.blue)<<16); }
+        constructionGradients_.push_back(o::BuildParticleGradient(palette,from,to,static_cast<std::int32_t>(count),width));
+    };
+    visual.buildPalette=[this](std::uint32_t token) {
+        if (token!=3 || constructionGradients_.size()!=2) throw std::logic_error("건설 실제 공유 색 띠 연결 오류");
+        constructionMemory_.Assign(o::MergeParticleGradients(constructionGradients_));constructionColors_={token,static_cast<std::int32_t>(constructionMemory_.Count()),constructionMemory_.Snapshot()};
+        constructionGradients_.clear();
+    };
+    visual.capture=std::move(capture);visual.releaseParticles=[] {}; // 이전 입자 vector는 원본 몸체가 직접 반납한다.
+    o::ConstructionFrameHooks frame;frame.maxHitPoints=std::move(maximum); // 같은 실제 보상 최대 HP 조회다.
+    frame.invalidate=[this](o::ConstructionFrameRect rect) { Invalidate({rect.left,rect.top,rect.right,rect.bottom}); };
+    frame.draw=[this](const o::ConstructionFrameDraw& draw) {
+        if (!target_) throw std::logic_error("건설 실제 그리기 표면 미연결");
+        const auto& target=*target_; // 이번 Draw 동안만 살아 있는 실제8비트 출력 표면이다.
+        // 원본 입력 사각형의 각 행을 현재 dirty clip 안에서만 복사한다.
+        for (int row=draw.clip.top;row<draw.clip.bottom;++row) {
+            const auto y=static_cast<std::int64_t>(draw.y)+row;if (y<target.clip.top || y>=target.clip.bottom || y<0 || y>=target.height) continue;
+            // 255 투명 픽셀은 기존 화면을 보존한다.
+            for (int column=draw.clip.left;column<draw.clip.right;++column) {
+                const auto x=static_cast<std::int64_t>(draw.x)+column;if (x<target.clip.left || x>=target.clip.right || x<0 || x>=target.pitch) continue;
+                const auto color=draw.pixels[static_cast<std::size_t>(row)*draw.pitch+column];if (color!=255) target.pixels[static_cast<std::size_t>(y)*target.pitch+static_cast<std::size_t>(x)]=color;
+            }
+        }
+    };
+    construction_=std::make_unique<o::ConstructionVisualSystem>(rendering_,constructionFrame_,constructionColors_,random_,std::move(visual),std::move(frame),[](o::ConstructionRelease) {});
+}
+// 공통 등록 배열에 실제17 프로세스를 추가한다. 미연결을 빈 효과로 바꾸지 않는다.
+o::ConstructionVisualProcess* RawCampaignParticles::AddConstruction(o::Sid parent,bool instant) {
+    if (!construction_) throw std::logic_error("실제 건설 표시 미연결");return construction_->Add(parent,instant);
+}
+
 }

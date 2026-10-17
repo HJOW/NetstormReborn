@@ -1,0 +1,78 @@
+{
+  "unit": 131,
+  "date": "2026-10-17",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16"
+  },
+  "edition": "PATCH10.78",
+  "baseCommit": "3330211",
+  "currentSources": {
+    "cpppj/src/client/RawCampaignSession.cpp": "7eba22266da9a3923bcf7a2114cb1ca41ccb6247b260acaac07f902cf9290500",
+    "cpppj/src/client/RawCampaignSession.h": "b7826ea4088211a21a3870380ef55688351b51b1e2417e6e6e9919ba9d436110",
+    "cpppj/src/client/RawCampaignParticles.cpp": "8916546c2570f5bf03238062671ce8c3edab9b796865c70e3716328712b5db3e",
+    "cpppj/src/client/RawCampaignParticles.h": "f1ea87839f7538b0714be13f586a4c30cbff1e9975edf2eec138dfafaf424f69",
+    "cpppj/tests/CampaignSessionTests.cpp": "c23e7c2daf4ab1b9da427add7eb2f477dddc35c74cd5203046840334b590fd92"
+  },
+  "protectedFileSha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6"
+  },
+  "integration": {
+    "arrival": "443fe0을 같은 Session의30/17/47/HP/공간/시각에 연결",
+    "clock": "같은 게임 시각/현재 권한/로컬 Player/정수 카메라",
+    "visual": "같은 RenderProcessSystem과 실제 SHP/RGB 색 띠/11색 할당/8비트 표면",
+    "completion": "기존 최대 HP/표시 갱신/소리 반납/완료 소리/buildDoneSound/Unpop/abstract 해제/Repop9/Displace",
+    "nativeSources": [
+      "443fe0",
+      "443c40",
+      "4428c0",
+      "443e20",
+      "444030",
+      "423840",
+      "423900",
+      "422f00",
+      "423200",
+      "49c3b0",
+      "43be30",
+      "43bc40"
+    ],
+    "newNativeExecutions": 0
+  },
+  "validation": {
+    "releaseBuild": 3,
+    "buildExit": 0,
+    "warnings": 0,
+    "errors": 0,
+    "focusedTests": 6,
+    "focusedFailures": 0,
+    "verifyCommands": 28,
+    "verifyFailures": 0,
+    "existingNativeRows": {
+      "constructionprocess": 2868,
+      "constructionvisual": 1776,
+      "constructionframe": 1317
+    },
+    "fullSuite": {
+      "tests": 1527,
+      "failedChecks": 0,
+      "ctestExit": 0,
+      "testSeconds": 222.09,
+      "totalSeconds": 222.12
+    },
+    "pinUpdate": {
+      "reports": 12,
+      "currentPins": 39,
+      "historicPinsPreserved": 44
+    }
+  },
+  "boundaries": [
+    "검사는 원본 Fort 설치 후 실제 World Create/Owner/Pop과 명시 abstract 입력으로 시작하며 UI 확정을 대신 검증하지 않는다.",
+    "집중 검사는 선택된 실제 경로/30/17/47을 실행하며 나머지 미션 프로세스는 정지한다.",
+    "전용 소유자 색표와 추가 가상 그림, DropIsland의 다른 효과는 명시 미복원이다.",
+    "일반 Confirm/Place/Notice·생산·전체 DWORD 메뉴/커서·경제/AI·GUI 완주는 남았다.",
+    "원본 전체화면 DirectDraw 수정은 제외한다."
+  ]
+}

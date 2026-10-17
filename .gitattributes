@@ -1174,3 +1174,6 @@ cpppj/player-factory-init.json text eol=lf
 cpppj/src/o/RawBoardApproach.cpp text eol=lf
 cpppj/src/o/RawBoardApproach.h text eol=lf
 cpppj/tests/BoardApproachTests.cpp text eol=lf
+
+# 단위131 실제 건설 세션 연결 보고서의 SHA와 UTF-8 줄 끝을 보존한다.
+cpppj/construction-session.json text eol=lf

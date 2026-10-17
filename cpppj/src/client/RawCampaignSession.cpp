@@ -6,6 +6,7 @@
 #include "o/RawGameRandomSeed.h"
 #include "o/RawSquidFinder.h"
 #include "o/RawConstructionArrival.h"
+#include "o/RawConstructionProcess.h"
 #include "o/RawManaBoltArrival.h"
 #include "o/RawManaBoltRegular.h"
 #include "o/RawBoardApproach.h"
@@ -292,6 +293,14 @@ struct RawCampaignSession::Impl {
     RawPathStartState start; // 같은 현재 시계/이동 타입을 참조한다.
     RawPathProcessState process; // 같은 Host의 경로 프로세스 전역이다.
     std::unique_ptr<RawCampaignMotionBindings> motion; // 실제 Start/BFS/도착/cleanup의 모듈 소유자다.
+    ConstructionProcessState buildingState; // 같은 현재 게임 시각/권한/로컬 소유자의 실제30 전역이다.
+    ConstructionEffectsState buildingEffectsState; // 완료 밀어내기가 현재 방향별 동맹을 읽는 저장소다.
+    std::unique_ptr<RawConstructionEffects> buildingEffects; // 같은 해시/spot/가상 공간을 쓰는 원본 밀어내기 몸체다.
+    std::unique_ptr<RawConstructionProcess> building; // 같은 Host의 실제30 시작/진행/완료를 소유한다.
+    std::array<std::uint32_t,188> buildingMapTokens{}; // 원본 색표 초기화의 일반1/전용2/없는0 분류다.
+    OwnerColorMaps buildingOwnerColors; // 일반 소유자 색 띠이며 다리는 별도 기존 분기로 취급한다.
+    ShapeToBufferState buildingCaptureState; // 건설 현재 SHP의 원본 fixed16/추가 TYPE 기준점이다.
+    std::unique_ptr<RawShapeToBuffer> buildingCapture; // 같은 실제 자산에서 건설 버퍼를 캡처한다.
     ConstructionArrivalState buildArrivalState; // 실제134의 예측 대기/서버 건설 시작 전역이다.
     std::unique_ptr<RawConstructionArrival> buildArrival; // 같은 풀/해시에서 건설 대상을 찾는다.
     ManaBoltArrivalState manaArrivalState; // 실제105의 도착 뒤 두 프로세스 종류/예약 간격이다.
@@ -1082,11 +1091,52 @@ struct RawCampaignSession::Impl {
         hooks.virtualCount=[this](Sid sid) { return static_cast<std::int32_t>(level->Get(sid)); };
         return std::make_unique<RawCampaignWorldRuntime>(world,chunks,*islands,*player,*normal,random,hp,*ownership,*finish,*contained,objectState,globals,piece,noRegion,RawCampaignInstallData{std::span<const FortTemplate>(templates).first(templateCount),streams,headers,handle},std::move(hooks));
     }
+    // 같은 Session 전역을 건설 시작/프레임 직전에 갱신한다. 별도 건설 시계를 만들지 않는다.
+    void PrepareBuilding(double now) {
+        buildingState.now=now;buildingState.boss=assetState.boss;buildingState.localPlayer=playerState.battleOwner;
+        buildingEffectsState.alliances=alliances;buildingEffectsState.server=core.processState.server;
+    }
+    // 원본30/17을 같은 Host/표시/최대 HP/음향/가상 공간에 연결한다.
+    void ConnectBuilding() {
+        if (building) throw std::logic_error("실제 건설 프로세스 중복 연결");
+        buildingOwnerColors=BuildStandardOwnerColorMaps(0,core.bridgeState.bridgeType);buildingCaptureState.addTypeHotspot=true;
+        // 실제43be30의 일반 색표 등록 대상이다. 다리/connector는 전용 처리 전까지 명시 거부한다.
+        for (const auto type:std::array<std::uint32_t,12>{82,155,158,164,135,133,156,73,170,146,144,126}) buildingMapTokens[type]=1;
+        // 실제43be30/43bc40의 전용 색표 대상은 일반 색표로 대신하지 않는다.
+        for (const auto type:std::array<std::uint32_t,7>{82,155,111,141,137,94,97}) buildingMapTokens[type]=2;
+        buildingCaptureState.ownerTypeMaps=buildingMapTokens;
+        buildingCaptureState.ownerColors=[this](std::uint32_t type,std::uint32_t owner)->std::span<const std::uint8_t> {
+            if (buildingMapTokens.at(type)!=1 || owner>=core.bridgeState.ownerColors.size()) throw std::logic_error("건설 전용 소유자 색표 미복원");
+            const auto color=core.bridgeState.ownerColors[owner];if (color<0 || color>8) throw std::out_of_range("건설 현재 소유자 색 번호 오류");return buildingOwnerColors[static_cast<std::size_t>(color)];
+        };
+        buildingCapture=std::make_unique<RawShapeToBuffer>(core.pool,core.types,core.shapes,assets.game.Shapes(),buildingCaptureState);
+        particles->ConnectConstruction([this](Sid sid) { return buildingCapture->Capture(sid); },[this](Sid sid) { return hp.MaxHitPoints(sid); });
+        ConstructionEffectsHooks effects; // 밀어내기에 필요한 현재 이동 종류/내용물 삭제/가상 공간이다.
+        effects.pathType=[this](std::uint32_t type) { return SelectMovementProcessType(core.pool.Edition(),core.types,priestState.movement,type); };
+        effects.clearPath=[this](Sid sid,std::uint32_t type) { RawContainedLookup lookup(core.pool,[this](Sid target,std::uint32_t flags) { world.Destroy(target,flags); });static_cast<void>(lookup.Find(sid,type,0,true)); };
+        effects.unpop=[this](Sid sid,std::uint32_t flags) { world.Unpop(sid,flags); };effects.pop=[this](Sid sid,float x,float y,std::uint32_t flags) { world.Pop(sid,x,y,flags); };
+        effects.fall=SessionMissing<void,Sid>();effects.sound=SessionMissing<void,float,float>();effects.destroy=SessionMissing<void,Sid,std::uint32_t>();effects.notify=SessionMissing<void,Sid>();effects.broadcast=SessionMissing<void,std::uint32_t,std::uint32_t,std::uint32_t,std::uint32_t>();
+        buildingEffects=std::make_unique<RawConstructionEffects>(core.pool,core.hash,core.types,core.spots,buildingEffectsState,std::move(effects));
+        ConstructionProcessHooks hooks; // 실제 Host/vector가 확보를 수행하며 실패를 예외로 보고한다.
+        hooks.reserve=[] { return true; };hooks.reserveSound=[] { return true; };
+        hooks.effect=[this](Sid sid,bool instant) { static_cast<void>(particles->AddConstruction(sid,instant)); };
+        hooks.loadSound=[this](std::string_view name) { return soundNames.Lookup(name); };
+        hooks.attachSound=[this](Sid sid,std::uint32_t sound,std::uint32_t alternate,std::uint32_t flags) { SessionCheck(sounds->Add(sid,sound,alternate,flags)!=nullptr); };
+        hooks.refresh=[this] { if (!services.construction.refresh) throw std::logic_error("건설 실제 화면 갱신 요청 미연결");services.construction.refresh(); };
+        hooks.maxHitPoints=[this](Sid sid) { return hp.MaxHitPoints(sid); };hooks.updateDisplay=[this](Sid sid) { core.display.Update(core.pool.Slot(sid)); };
+        hooks.removeContained=[this](Sid sid,std::uint32_t type) { RawContainedLookup lookup(core.pool,[this](Sid target,std::uint32_t flags) { world.Destroy(target,flags); });static_cast<void>(lookup.Find(sid,type,0,true)); };
+        hooks.playAt=[this](float x,float y,std::string_view name,std::uint32_t loop) { services.sound.playOnceAt(x,y,soundNames.Lookup(name),loop,0); };
+        hooks.readySound=[this](std::uint32_t type) { if (type<70 || type-70>=assets.game.Types().size()) throw std::out_of_range("건설 준비 소리 TYPE 오류");const auto name=assets.game.Types()[type-70].definition.String("buildDoneSound");return name && !name->empty() ? soundNames.Lookup(*name) : 0U; };
+        hooks.play=[this](std::uint32_t sound) { services.sound.play(sound,0,0,0,0,0); };
+        hooks.unpop=[this](Sid sid,std::uint32_t flags) { world.Unpop(sid,flags); };hooks.repop=[this](Sid sid,std::uint32_t flags) { world.Repop(sid,flags); };
+        hooks.push=[this](float x,float y,std::uint32_t type,std::uint32_t owner) { static_cast<void>(buildingEffects->Displace(x,y,type,owner)); };
+        building=std::make_unique<RawConstructionProcess>(core.pool,core.types,buildingState,std::move(hooks),&core.processes);
+    }
     // 설치를 마친 동일 Graph/Host에 실제 사제 경로 모듈을 한 번 연결한다.
     void ConnectMotion() {
         if (motion) throw std::logic_error("실제 세션 경로 중복 연결");
         ConstructionArrivalHooks buildHooks;
-        buildHooks.start=[this](Sid sid,float duration) { if (!services.startConstruction) throw std::logic_error("실제 서버 건설 시작 미연결");services.startConstruction(sid,duration); };
+        buildHooks.start=[this](Sid sid,float duration) { PrepareBuilding(core.processState.now);building->Start(sid,duration); };
         buildHooks.removeContained=[this](Sid sid,std::uint32_t type) { RawContainedLookup lookup(core.pool,[this](Sid target,std::uint32_t flags) { world.Destroy(target,flags); });static_cast<void>(lookup.Find(sid,type,0,true)); };
         buildHooks.destroy=[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); };
         buildArrival=std::make_unique<RawConstructionArrival>(core.pool,core.hash,core.types,buildArrivalState,std::move(buildHooks));
@@ -1164,15 +1214,20 @@ RawCampaignSession::RawCampaignSession(const GameAssets& assets,const BaseFileSy
 // Impl이 Kernel을 비운 뒤 실제 모듈을 해제한다.
 RawCampaignSession::~RawCampaignSession()=default;
 // 동일 원본 부모를 실행한다.
-void RawCampaignSession::Load() { impl_->runtime->Load();impl_->ConnectMotion();impl_->loaded=true; }
+void RawCampaignSession::Load() { impl_->runtime->Load();impl_->ConnectBuilding();impl_->ConnectMotion();impl_->loaded=true; }
 // UI의 현재 크기/변경 전역을 빌리며 게임 소유자·모드는 실제 세션에서 다시 읽는다.
 void RawCampaignSession::ResetCamera(CameraHomeState& state,std::function<void(std::int32_t,std::int32_t)> apply) const {
     state.localPlayer=impl_->assetState.localOwner;state.fort=impl_->core.ownerMode.fort;
     state.battle=impl_->core.ownerMode.battle;state.challenge=impl_->core.ownerMode.challenge;
     CameraHome(impl_->core.pool,impl_->core.types,state,std::move(apply)).Reset();
 }
+// 같은 원본 건설 시작을 후속 배치/룬 부모와 공유한다.
+void RawCampaignSession::StartConstruction(Sid parent,float duration) {
+    if (!impl_->loaded || !impl_->building) throw std::logic_error("미설치 Session의 실제 건설 시작");
+    impl_->PrepareBuilding(impl_->core.processState.now);impl_->building->Start(parent,duration);
+}
 // 현재 같은 시각을 공격/소리/실제 Kernel에 공급한다.
-void RawCampaignSession::RunFrame(FrameTime time,bool paused) { impl_->assetBindings->PrepareFrame(time.game);impl_->combat->PrepareFrame(time);impl_->particles->PrepareFrame(time.game);impl_->soundState.frame=static_cast<std::uint32_t>(time.number);impl_->world.RunFrame(time,paused); }
+void RawCampaignSession::RunFrame(FrameTime time,bool paused) { impl_->PrepareBuilding(time.game);impl_->assetBindings->PrepareFrame(time.game);impl_->combat->PrepareFrame(time);impl_->particles->PrepareFrame(time.game);impl_->soundState.frame=static_cast<std::uint32_t>(time.number);impl_->world.RunFrame(time,paused); }
 // 해상도/카메라 변경과 동일 위치 효과음의 view를 process11에도 전달한다.
 void RawCampaignSession::SetParticleView(SoundView view,SurfaceDisplayHooks display) {
     impl_->contentScreenOrigin={view.cameraX,view.cameraY};

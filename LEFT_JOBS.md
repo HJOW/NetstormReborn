@@ -1,5 +1,16 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-17 단위131 완료: 실제 Builder 도착→건설30·표시17·완료 공간 (`HJOW-Athlon`)
+
+- [x] AGENTS.md·양 LEFT·깨끗한3330211과 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16**을 확인했다. 새 디컴파일·원본/클론 게임·GUI 실행은 없다. 전체 목표는 active다. [작업 기록](docs/exe/cpp-construction-session-20261017.md), `cpppj/construction-session.json`, 로그 접두사`extracted/goal-construction-process-20261017-`를 남겼다.
+- [x] 실제134 서버 대상 도착의 외부`services.startConstruction` 대행 경계를 제거하고 같은 풀/Host의 `RawConstructionProcess`를 호출한다. `Session.StartConstruction`도 같은 실제 몸체다. 실제30 진행의 시각/권한/로컬 Player·최대 HP/표시 갱신·소리47·완료음과 실제 TYPE **buildDoneSound(+90)**·Unpop→abstract 해제→Repop9·발자국 유닛 밀어내기를 기존 월드에 연결했다. 기존 원본 진행 몸체를 별도 건설 타이머로 대체하지 않았다.
+- [x] 실제17 건설 표시가11/19/16과 같은 `RenderProcessSystem`에 등록된다. 실제 현재 SHP/TYPE hotspot·일반 소유자 색표를 캡처하고, 기존 원본 RGB 색 띠→건설 전용11색 할당/실제 인접 DWORD→실제8비트 출력 버퍼와 현재 카메라/dirty/255 투명/clip에 연결했다. 전용 색표(다리/connector/기타)와 추가 가상 그림은 명시 미복원을 유지한다. 원본43be30/43bc40의 타입 전역도 보호 PE에서 대조했으며 새 범용 색표로 대신하지 않았다.
+- [x] 실제 Session 검사는 보호 thewarbegins 설치 후 실제 World Create/Owner/Pop과 명시 abstract 입력으로 시작한다. 원본 지형의134/23 도착→30/17 생성→0.6초 HP 증가/전체 완료/공간 재등록/표시 종료, 실제 출력 버퍼의 독립 픽셀 배열 비교, duration0의 즉시 표시 변형/기본10초/소리47 소유·반납을 검증했다. 초회 검사에서는0.3초 뒤 활성 입자 만료와 frame0 소리 중복 억제를 확인해 검사 시점/관찰을 고쳤고 제품 몸체는 바꾸지 않았다. 일반 UI 배치나 전체 미션 Kernel 완주를 대신 검증한 것은 아니다.
+- [x] 최종 **Release 빌드3 종료0·경고0·오류0**, 건설 Session 집중 **6개/실패0**, 전체 **1,527개/실패0/CTest 종료0/222.09초(전체222.12초)**다. 근거 `--verify` **28개 모두 통과**, 이 중 기존 건설2868/생성1776/프레임1317행을 변경 없이 재감사했다. 현재 HEAD와 일치하던12개 보고서의39개 핀만 이력과 갱신하고 과거44개 핀은 보존했다. 보호3개 SHA·UTF-8/LF·기존 fixture/AGENTS/DN 불변을 감사한다.
+- [x] 이 인수인계를 포함해 **20261017-31 CP 실제 Builder 도착의 건설 진행과 완료 및 표시 연결**로 로컬 커밋한다. push하지 않는다.
+- [ ] **다음 실제 플레이:** `RawCampaignConstructionBindings`의 noIsland/Player0만 허용하는 제한을 원본 일반 Confirm/Place/Notice로 확장해 같은 실제30 시작을 연결한다. 자산 Regular/룬 등 다른 건설 시작도 아직 별도 Missing 경계이며 초기 저장 프로세스/수신과 전체 미션 프레임은 함께 확인해야 한다. 이번 연결은 Load 뒤 구성한다. 임의 건물/전용 색표나 미복원 DropIsland 효과를 성공으로 처리하지 않는다.
+- [ ] 실제 생산이 공장에 준비된 ContentForm6/flags10 부품을 만드는 흐름, Client 전체DWORD 메뉴→ContentForm6 Take/위치/수집/그리기/내려놓기, 경제/AI 전략, GUI 시작/진행/승패·저장·다음 미션·사용자 자연 완주와 전체 원본 동일성은 남았다. 실제 Builder/공유 공급원/105 Regular 및 이번30/17을 재사용한다. CD 대응 기록은 문서에 보존했으며 새 조립은10.78 대상이다. 전체화면 DirectDraw 수정도 계속 제외다.
+
 ## 2026-10-17 단위130 완료: 실제 Builder 접근점·같은 경로 시각·소유자 공장 목록 (`HJOW-Athlon`)
 
 - [x] AGENTS.md·양 LEFT·깨끗한0e6574f과 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16**을 확인했다. 새 내보내기·원본/클론 게임·GUI 실행은 없다. 전체 목표는 active다. [작업 기록](docs/exe/cpp-builder-path-bindings-20261017.md). 로그/원문 접두사는`extracted/goal-builder-path-20261017-`다.
@@ -10,7 +21,7 @@
 - [x] 읽기 전용 초기 상태 조사에서 TheGreatBattleDemo/tnrondemo/vndemo의 공장 설치와 일반 건물 준비 부품 부재도 확인했다. 별도DEMOFw는 TYPE156의 파생 Pop 미복원에서 중단됐다. 임시 조사 코드는 제거했으며 로그만 보존했다. 이 관찰을 데모 플레이/AI/승패 완료로 취급하지 않는다.
 - [x] 최종 **Release 빌드10 종료0·경고0·오류0**, 새 집중3개·기존Builder10개 통과, 전체 **1,525개 모두 통과·실패0·CTest 종료0·226.59초(전체226.63초)**다. 현대 `--verify` **25개**, 스테이징44파일/현재제품9개/보호3개 SHA·UTF-8/LF·새 문자·CMake 기존 접두/기존 fixture 불변을 감사했다. 기존26보고서의 현재 HEAD 핀66개만 이력과 갱신하고 과거128핀은 보존했다. AGENTS/DN/보호 원본은 불변이다.
 - [x] 이 인수인계를 포함해 **20261017-30 CP 실제 Builder 접근점과 경로 시각 및 소유자 공장 목록 복원**으로 로컬 커밋한다. push하지 않는다.
-- [ ] **다음 실제 플레이:** 실제134 도착의 서버 대상 분기는 아직`services.startConstruction` 명시 미연결이다. 같은 Session의 원본 `RawConstructionProcess`/Construction Frame/Visual·완료 처리와 일반 Confirm/Place/Notice를 조립한다. 현재`RawCampaignConstructionBindings`는 noIsland/Player0만 허용하는 제한과 Missing 경계가 남았다. 현재 실제 Builder/공유 공급원/105 Regular는 재사용한다.
+- [x] **도착→건설 단위131 완료:** 실제134 도착을 같은 Session의30/17/47·시각·HP·완료 공간에 연결했다. 일반 Confirm/Place/Notice와 noIsland/Player0 제한 해제는 단위131의 다음 항목으로 분리했다. 현재 실제 Builder/공유 공급원/105 Regular는 유지한다.
 - [ ] 실제 생산이 공장에 준비된 ContentForm6/flags10 부품을 만드는 흐름, Client 전체DWORD 메뉴→ContentForm6 Take/위치/수집/그리기/내려놓기, 경제/AI 전략, GUI 시작/진행/승패·저장·다음 미션·사용자 자연 완주와 전체 원본 동일성은 남았다. CD440400/구조체 오프셋은 기록만 했고 새 접근점은10.78 대상이다. 전체화면 DirectDraw도 계속 제외다.
 
 ## 2026-10-17 단위129 완료: 마나 볼트 주기 동작·도착 뒤 실제 타이머 연결 (`HJOW-Athlon`)

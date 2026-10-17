@@ -32,16 +32,16 @@
     "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
     "tools/decomp_cursor_mana.py": "00cfea4f089b06b1b8f1b0cc61f0cf4f93bd33aa16aaa0715a95c66187a9f888",
     "tools/decomp_fence_lifetime.py": "d470de69c26be1c0c50ededee28a45e9f452f40b48837efd809044b394a535a7",
-    "cpppj/src/client/RawCampaignSession.cpp": "ba3c4ac3d43e7a3ea503b2e14a83e12cf8e8c89109a8ebd41d2a34ef6d1a3357",
+    "cpppj/src/client/RawCampaignSession.cpp": "7eba22266da9a3923bcf7a2114cb1ca41ccb6247b260acaac07f902cf9290500",
     "cpppj/tests/fixtures/fence-lifetime-x86.tsv": "f3e5be8c131684bc679dba1fb7d27f431ace773495800e92ced8fd7ac856155b",
     "cpppj/src/CMakeLists.txt": "c6788ec0b508c34f26406203a824455adc59d87a1a5aa80ab2bfda476e91021b",
     "cpppj/src/client/RawCampaignLifetimeBindings.cpp": "2eb0d3fc16e6967b54271c0365991e0ebd8f3d57ef6412aa92d4c4d21fbb01c3",
     "cpppj/src/client/RawCampaignLifetimeBindings.h": "6f4be73b52279abf308c8a3e6d8962271560e47c25996f7a03fca09f8cd063e8",
-    "cpppj/src/client/RawCampaignSession.h": "a104faaa39103e4b48f6ecd6a2618ffa80130d1aae9c3959848f5345cf64dea7",
+    "cpppj/src/client/RawCampaignSession.h": "b7826ea4088211a21a3870380ef55688351b51b1e2417e6e6e9919ba9d436110",
     "cpppj/src/o/RawGunTarget.cpp": "7fbcc542cc48449f414494ccca7abeb351d75ecc861d45d1d0a517833e485229",
     "cpppj/src/o/RawGunTarget.h": "486e6d411905a3b1a996c6900f390bb3ee229bb8f10ff31fbfd77977cc4b2513",
     "cpppj/tests/CMakeLists.txt": "bfc500dc462287984f94118cfad9b630149023924fde65414e5950dfb2f2df3e",
-    "cpppj/tests/CampaignSessionTests.cpp": "22f12b1dca18b5c72b3e1be8bbad75c2d679b104484e5f71f3a2da4085b7fb3d",
+    "cpppj/tests/CampaignSessionTests.cpp": "c23e7c2daf4ab1b9da427add7eb2f477dddc35c74cd5203046840334b590fd92",
     "cpppj/src/client/RawCursorRange.cpp": "965b5bce38bdceb3d31cc63cbae3fc8db5da57ccb3bf8c71be81f23ec548ec2e",
     "cpppj/src/client/RawCursorRange.h": "5aa384b5432bd6fbee04ae0fc9bf65acf685d45b66553f8b91866261fcd79758",
     "cpppj/src/o/RawFenceLifetime.cpp": "f24971d75e0ad7ee97739ee00964b2ec71be8a127c0ecd1bbc6b29797bb45ddf",
@@ -270,6 +270,28 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "91835c753dee36fdef80ff4e99562fff20a4c577ea8711a81981156f058702dd",
           "current": "22f12b1dca18b5c72b3e1be8bbad75c2d679b104484e5f71f3a2da4085b7fb3d"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 131,
+      "reason": "같은 Session의 건설30/표시17과 실제 시각/HP/완료/음향/출력 연결",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "ba3c4ac3d43e7a3ea503b2e14a83e12cf8e8c89109a8ebd41d2a34ef6d1a3357",
+          "current": "7eba22266da9a3923bcf7a2114cb1ca41ccb6247b260acaac07f902cf9290500"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "a104faaa39103e4b48f6ecd6a2618ffa80130d1aae9c3959848f5345cf64dea7",
+          "current": "b7826ea4088211a21a3870380ef55688351b51b1e2417e6e6e9919ba9d436110"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "22f12b1dca18b5c72b3e1be8bbad75c2d679b104484e5f71f3a2da4085b7fb3d",
+          "current": "c23e7c2daf4ab1b9da427add7eb2f477dddc35c74cd5203046840334b590fd92"
         }
       ]
     }
