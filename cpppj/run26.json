@@ -128,7 +128,7 @@
     "cpppj/hist/run26-draft/RawBattleBroadcast.cpp": "0c88515bdfc87fc05310087ad360ea94ee9a95666329aaec09ea896a04744f13",
     "cpppj/hist/run26-draft/battle-bcast-x86.tsv": "d7da6351dca0e671136a4a81926662815762b2c3466e0d6413d1587b1415d732",
     "cpppj/hist/run26-draft/decomp_battle_bcast.py": "95a96ec4e3ffe37e5e906f8cd30546c5594e74fe0ddda045683339ecd7e2e3f7",
-    "cpppj/src/CMakeLists.txt": "d13c369eaf82eb49e84eab35a3e526590cdbd6b8837b468398b57230d15110bf",
+    "cpppj/src/CMakeLists.txt": "246345f8480f6b04b702b6247ca3c3753e1007dec3a7cfb4df7fabe582cfc9b4",
     "cpppj/src/app/CanonMayPlaceInspect.cpp": "27eda46bca500c898abeb9a3a7c4e8588b38e061b579c84cbf6c032c6d46dda9",
     "cpppj/src/app/FrameBindingInspect.cpp": "042602919b0531fb1cbaf3941dc6597bee73944bbf0d571dacfd638bb45dd07c",
     "cpppj/src/app/FrameBindingInspect.h": "4e187ca41f8c34ed52c022b58a57327a554a723e3e26ee88a1ae152c99de3fce",
@@ -240,8 +240,8 @@
     "cpppj/src/client/RawCampaignGunQueries.h": "2c0ad0d6aab9a7b5972130fdd547d8efc96aab6410fda41e0d7a173356feb922",
     "cpppj/src/client/RawCampaignHitBindings.cpp": "5759ab0d9110d08fa94f2b236b62366412e98ec3766b46660aba0fe588666872",
     "cpppj/src/client/RawCampaignHitBindings.h": "634bea1bd8b68f27c1b6e0c7e6bcb6b8a08fab3361f5b942bb84bbc3c6fd4d5a",
-    "cpppj/src/client/RawCampaignMotionBindings.cpp": "49ec5488843e3ac1bdf0697745ef1a18604984ac7dd2b6d104ea57b96f0aedd0",
-    "cpppj/src/client/RawCampaignMotionBindings.h": "61b83606bb8e3ac43dcc785b98737beab2e4bf7ff57db4dc4e00c7dde07dbf0e",
+    "cpppj/src/client/RawCampaignMotionBindings.cpp": "532ab06cd71c6eb3eba5aa042a6204e59c282014b13b68400241c2079a2556bb",
+    "cpppj/src/client/RawCampaignMotionBindings.h": "6b196fba2833df49bb4882300dbeded4ff68bb2e340b8881338c19c17ef7060d",
     "cpppj/src/client/RawCampaignOwnership.cpp": "960af85c2b29897a853f2f08e8a78283e87b5c04a7595ca9e62924e2c455c6c5",
     "cpppj/src/client/RawCampaignOwnership.h": "f53be166d29d72a8fbcda53fe2e476932e50a392be04c4d5a1a91d56d90c41a1",
     "cpppj/src/client/RawCampaignPathBindings.cpp": "b89ed98f6b8edeeb0a4cc471cf91cc83b87f0d695dd7b0acbbfebfa0dbbed216",
@@ -1698,6 +1698,31 @@
           "path": "cpppj/src/o/SquidProcess.h",
           "previous": "402e405b5eb8e34d73ebcc3a470feca9136980d9c691c06bca4f321a23ae96b8",
           "current": "481ad652080175ccb135c5f4981edc44e7d853584eaaebaab1a65d3873bc5399"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 150,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "d13c369eaf82eb49e84eab35a3e526590cdbd6b8837b468398b57230d15110bf",
+          "current": "246345f8480f6b04b702b6247ca3c3753e1007dec3a7cfb4df7fabe582cfc9b4"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/client/RawCampaignMotionBindings.cpp",
+          "previous": "49ec5488843e3ac1bdf0697745ef1a18604984ac7dd2b6d104ea57b96f0aedd0",
+          "current": "532ab06cd71c6eb3eba5aa042a6204e59c282014b13b68400241c2079a2556bb"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/client/RawCampaignMotionBindings.h",
+          "previous": "61b83606bb8e3ac43dcc785b98737beab2e4bf7ff57db4dc4e00c7dde07dbf0e",
+          "current": "6b196fba2833df49bb4882300dbeded4ff68bb2e340b8881338c19c17ef7060d"
         }
       ]
     }

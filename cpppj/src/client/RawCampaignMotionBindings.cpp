@@ -75,6 +75,8 @@ RawCampaignMotionBindings::~RawCampaignMotionBindings()=default;
 RawCampaignPathBindings& RawCampaignMotionBindings::Paths() const { return *impl_->paths; }
 // 같은 실제 공통 도착 몸체를 빌린다.
 const o::RawCarrierArrival& RawCampaignMotionBindings::CarrierArrival() const { return *impl_->carrier; }
+// 187의 네 번 중 세 번은 같은 기존 공통 몸체를 실행한다.
+std::uint32_t RawCampaignMotionBindings::CommonHalt(o::Sid parent) const { return impl_->halt->CommonHalt(parent); }
 // 같은 실제 공간 이후 정리 몸체를 빌린다.
 const o::RawPathCleanup& RawCampaignMotionBindings::Cleanup() const { return *impl_->cleanup; }
 // 다른 runtime 하위가 같은 Pool인지 확인한다.

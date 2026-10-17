@@ -1388,3 +1388,8 @@ set_source_files_properties(CarrierFallingTests.cpp PROPERTIES COMPILE_DEFINITIO
 target_sources(netstorm_tests PRIVATE CarrierFallStartTests.cpp)
 set_source_files_properties(CarrierFallStartTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_CARRIER_FALL_START_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/carrier-fall-start-x86.tsv\";NETSTORM_WORM_PATH_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/worm-path-x86.tsv\";NETSTORM_WORM_PATH_VTABLES=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/worm-path-vtables.tsv\"")
+
+# 너겟 전달의 독립 PE 원문1110개를 재생한다.
+target_sources(netstorm_tests PRIVATE CarrierTransferTests.cpp)
+set_source_files_properties(CarrierTransferTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CARRIER_TRANSFER_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/carrier-transfer-x86.tsv\"")

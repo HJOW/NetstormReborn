@@ -1,0 +1,140 @@
+{
+  "unit": 150,
+  "date": "2026-10-17",
+  "host": "HJOW-Athlon",
+  "baseCommit": "c3b0a4d",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16"
+  },
+  "status": "이번 단위 완료/전체 사용자 플레이 목표 진행 중",
+  "correction": "187은 미등록 타입이다. 고갈된 자산 이름/그래픽/발자국으로 보정하지 않는다. Session 그래픽 경로는 거부한다.",
+  "currentSources": {
+    "cpppj/src/o/RawCarrierTransfer.h": "9468ec39390adc5cb1abfcf8e098eba410d0933b00f06f1c29d331fad3510f27",
+    "cpppj/src/o/RawCarrierTransfer.cpp": "4e434098a1b784416e2a39a54baaa83cb4363c888e5036418b1db52df0d8d4e4",
+    "cpppj/src/client/RawCampaignSession.h": "40c421a1839bc41d001d4d443dc9e227be027f4fda4d03c4086b1f19bcbe3948",
+    "cpppj/src/client/RawCampaignSession.cpp": "1e296de7ff596c61745ce3745daac9b8fd4cf25bcc3d82e2ec4aac9606b6b59d",
+    "cpppj/src/client/RawCampaignMotionBindings.h": "6b196fba2833df49bb4882300dbeded4ff68bb2e340b8881338c19c17ef7060d",
+    "cpppj/src/client/RawCampaignMotionBindings.cpp": "532ab06cd71c6eb3eba5aa042a6204e59c282014b13b68400241c2079a2556bb",
+    "cpppj/src/client/RawCampaignPathBindings.h": "2b7f0cf76e10e66a9bd9d7678c92393a657997e9248742a8f7895b8bd026674c",
+    "cpppj/src/client/RawCampaignPathBindings.cpp": "b89ed98f6b8edeeb0a4cc471cf91cc83b87f0d695dd7b0acbbfebfa0dbbed216",
+    "cpppj/src/o/RawSquidFinder.h": "e84bf53e772117ecfbc913eabbf460e86f1e687d79cb3f48f2f9c7db8893ed63",
+    "cpppj/src/o/RawSquidFinder.cpp": "f7947c488c45aa7632d0a705a863c0fe5262c3ea1c29c17ea23c56ed4249e4e2",
+    "cpppj/src/o/ContentFormHost.h": "8653814bdfbe2c0b82957014ca65f7c17381bf428dc3671a7254ec14324c441f",
+    "cpppj/src/o/ContentFormHost.cpp": "cb21effe599b73f6ca85d826c6f85f0e3f6f41e956fbc80cf344a06674d20cb4",
+    "cpppj/src/o/RawSquidSelection.cpp": "1c652caa97931cdb416db831ac1ad7974e6468a474176b82919af14c8a967b13",
+    "cpppj/src/o/RawCarrierPreDestroy.cpp": "18a4daeff34834590cfbc4d1b73f64475a009b4815a88ac98aa76f5b1e618c95",
+    "cpppj/src/o/RawBattleBroadcast.cpp": "5a6c9f8eb6644578a40448fb81ba1522028e9060cf310e217ba7e50baeb9e2f7",
+    "cpppj/src/client/GameAssets.cpp": "fd39cf7dd7072af2022d7c142f6376303cf4a150af510d47f4abca54b9d59963",
+    "cpppj/src/o/RiftTypeTable.cpp": "e482f1e9183264f4800e7c6fe95e12c811c5b0868f7e8843f77f37b4694795d0",
+    "cpppj/src/o/TypeConstructors.inc": "bfac943af8c22cf91a0c267200f3e94133b021f2fe0e02507544978a7e08bd27",
+    "cpppj/tests/CarrierTransferTests.cpp": "ea98b1fdd347b04d35a2a8fed0c14c5db02d73e83de64cb0505427b259c9b449",
+    "cpppj/tests/CampaignObjectMenuTests.cpp": "78ca23440d06e1cb42596d63b4a53b75af24ab37af9238e6fef6900909bc9fd1",
+    "cpppj/src/CMakeLists.txt": "246345f8480f6b04b702b6247ca3c3753e1007dec3a7cfb4df7fabe582cfc9b4",
+    "cpppj/tests/CMakeLists.txt": "00453e0f0c8653a76f7c712b67df79c7414284032f469d36ae415e5079374f98"
+  },
+  "nativeReports": {
+    "cpppj/carrier-transfer.json": "dec792141b89f10a971cde77430358711301b4ae84bfc399a32bbc2bb9a4baf4"
+  },
+  "nativeContext": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-17",
+    "lastPreciseDecompile": {
+      "host": "HJOW-Athlon",
+      "date": "2026-10-16"
+    },
+    "uniqueInputs": 1110,
+    "normalReturns": 2220,
+    "instructions": 206446,
+    "nativeCalls": {
+      "0042a0d0": 1944,
+      "0040acf0": 266,
+      "004df230": 266,
+      "00426830": 362,
+      "0042ac60": 240
+    },
+    "precisionDifferentInputs": [],
+    "boundaries": "42a0d0/42ac60/426830/40acf0/4df230 전체. 일반 finder/내용물 조회/가상 detach·attach/426080 예약/송신/타입 getter/경로 선택·삭제·재개/귀환은 명시 효과 경계다. C++에서는 실제 일반 finder를 재사용한다. GP/retN/SEH/canary/x87/코드·읽기·쓰기 범위를 검사했다. 전체 경제/자연 채취·완주/게임 창 실행 검증이 아니다.",
+    "sha256": {
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "tools/decomp_carrier_transfer.py": "9a514cb8511a90379fa5583a733ba611e1fcf43647feccf7070f6dfae76d1a9f",
+      "tools/decomp_carrier_falling.py": "f8702db0708a543b73213c8df9154503afe977767a11bd7c150b639ee1b587a6",
+      "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+      "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+      "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+      "cpppj/tests/fixtures/carrier-transfer-x86.tsv": "11ea45cdc7567e5fa85fe229428c9232c11863ff092637315cadaad23a919fd9"
+    }
+  },
+  "protectedFileSha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6"
+  },
+  "workRecord": "docs/exe/cpp-carrier-transfer-20261017.md",
+  "workRecordSha256": "2a4bd6bf6a32adcf99d2c9aa7678affd568b179261146cbdc68444dc32019758",
+  "validation": {
+    "build": {
+      "runs": 3,
+      "exit": 0,
+      "warnings": 0,
+      "errors": 0
+    },
+    "initialFocused": {
+      "cases": 3,
+      "failed": 1,
+      "reason": "독립2성공/미등록187을Pop한통합1실패. 실제133 수신으로수정했다."
+    },
+    "focused": {
+      "cases": 3,
+      "failed": 0,
+      "exit": 0
+    },
+    "fallRegression": {
+      "cases": 5,
+      "failed": 0,
+      "exit": 0
+    },
+    "ctest": {
+      "cases": 1603,
+      "failed": 0,
+      "exit": 0,
+      "testSeconds": 214.75,
+      "ctestSeconds": 214.79
+    },
+    "nativeAudit": {
+      "tools": 69,
+      "passed": 58,
+      "existingFailures": 11,
+      "newFailures": 0
+    },
+    "currentPins": {
+      "reports": 45,
+      "pins": 138
+    },
+    "entrySmoke": {
+      "runs": 5,
+      "passed": 5,
+      "originalsUnchanged": true,
+      "boundaries": "1-1/1-2 briefing→world/tutorial1~3 briefing"
+    },
+    "logsPrefix": "extracted/goal-carrier-transfer-20261017-"
+  },
+  "boundaries": [
+    "일반 finder/내용물조회/가상 효과/491입구/송신/TYPE getter/경로 선택·이동·귀환은 독립원문에서 명시경계다. C++는 실제일반finder를 사용한다.",
+    "Session통합은133 두 개의초기너겟Form/실제40경로/로컬426830 수신이다.426830은기증자경로를삭제하지않는다.",
+    "187 본문은독립원문으로만검증하고 실제자산으로인위생성하지않는다.",
+    "간헐천선택429420/427600이동/428fd0귀환은외부필수경계이며38/41/42도미완료다.",
+    "실제Client명령/생산·경제·AI/11스테이지자연완주·승패·저장·다음미션/전체동일성은미완료다."
+  ],
+  "logSha256": {
+    "extracted/goal-carrier-transfer-20261017-build1.log": "eeba0ccde39d30bc0aa39a87f92f40b18f63f21d72e2c8ec83683e421a8d2898",
+    "extracted/goal-carrier-transfer-20261017-build2.log": "4c435db0cb8214f32d4fd19202bc52165fcbd960d8cb83fab16efa746072733a",
+    "extracted/goal-carrier-transfer-20261017-build3.log": "b34bc501d69c7017cbd0ca2b8bce09070c5f5ee31814cb33bfb270dcafe80eef",
+    "extracted/goal-carrier-transfer-20261017-focused-final.log": "6a466f6cfa3e7ff3abe937758f2d02eb0f2829385b2de97c75581b6dfcd5deaa",
+    "extracted/goal-carrier-transfer-20261017-fall-regression.log": "8f9cfbca1e52f12f266952744ee10e56fa8f23aeb3046808faf303dad2cdc94e",
+    "extracted/goal-carrier-transfer-20261017-ctest.log": "0b5897c335f07d2bb0f850c131fd995c0d1d57621cf81c377ea29c8e0dd90824",
+    "extracted/goal-carrier-transfer-20261017-verify-final.json": "7fd1fd13517eb7544f4897b9db2a036b9ee6049d78d2b5c093587bdd30901826",
+    "extracted/goal-carrier-transfer-20261017-entry/results.json": "f3fb11b5ff47b82e487c06983d1ca04794bd78d616514a7fb02e747747fdf586"
+  }
+}

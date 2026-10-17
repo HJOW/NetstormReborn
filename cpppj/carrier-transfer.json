@@ -1,0 +1,30 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-17",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16"
+  },
+  "uniqueInputs": 1110,
+  "normalReturns": 2220,
+  "instructions": 206446,
+  "nativeCalls": {
+    "0042a0d0": 1944,
+    "0040acf0": 266,
+    "004df230": 266,
+    "00426830": 362,
+    "0042ac60": 240
+  },
+  "precisionDifferentInputs": [],
+  "boundaries": "42a0d0/42ac60/426830/40acf0/4df230 전체. 일반 finder/내용물 조회/가상 detach·attach/426080 예약/송신/타입 getter/경로 선택·삭제·재개/귀환은 명시 효과 경계다. C++에서는 실제 일반 finder를 재사용한다. GP/retN/SEH/canary/x87/코드·읽기·쓰기 범위를 검사했다. 전체 경제/자연 채취·완주/게임 창 실행 검증이 아니다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "tools/decomp_carrier_transfer.py": "9a514cb8511a90379fa5583a733ba611e1fcf43647feccf7070f6dfae76d1a9f",
+    "tools/decomp_carrier_falling.py": "f8702db0708a543b73213c8df9154503afe977767a11bd7c150b639ee1b587a6",
+    "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "cpppj/tests/fixtures/carrier-transfer-x86.tsv": "11ea45cdc7567e5fa85fe229428c9232c11863ff092637315cadaad23a919fd9"
+  }
+}

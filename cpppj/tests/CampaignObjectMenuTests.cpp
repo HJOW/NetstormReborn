@@ -391,7 +391,7 @@ TEST_CASE(CampaignCarrierFallStart_ActualSelectedMovementReleaseAndFall) {
     // 현재 캐리어의 원본 예약만 진행하며 다른 AI/전체 Kernel을 함께 실행하지 않는다.
     for (std::uint32_t step=0;step<105 && !(core.pool.Slot(carrier)[11]&1U);++step) { CHECK(core.kernel.Get(fallPid)==falling);if (core.kernel.Get(fallPid)!=falling) break;core.processState.now=std::max(core.processState.now,falling->Time());falling->RunFrame(); }
     CHECK(core.pool.Slot(carrier)[11]&1U);CHECK(!core.kernel.Get(fallPid) && (core.pool.Slot(fallForm)[11]&1U));CHECK(core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0);
-    const auto empty=session.World().Create(187,2);CHECK(Throws([&] { static_cast<void>(session.StartCarrierMovement({empty,{x,y},1,0,0,0,0})); })); // 다른42ac60 Halt를 썬 워커의 공통 몸체로 대체하지 않는다.
+    const auto empty=session.World().Create(187,2);CHECK(core.types[187].name.empty() && core.types[187].footX==0 && core.types[187].footY==0 && !core.shapes[187].loaded);CHECK(Throws([&] { static_cast<void>(session.StartCarrierMovement({empty,{x,y},1,0,0,0,0})); })); // 187은 생성자만 있는 미등록 슬롯이므로 실제 자산의 SHP/경로로 보정하지 않는다.
 }
 // UI 소유자가 먼저 사라지면 해제된 선택 객체를 호출하지 않고 필요한 경계에서 거부한다.
 TEST_CASE(CampaignCarrierFallStart_ExpiredSelectionDoesNotDangle) {
@@ -402,4 +402,18 @@ TEST_CASE(CampaignCarrierFallStart_ExpiredSelectionDoesNotDangle) {
     auto selection=session.MakeUserSelection({selected,mouseType,remembered,multiple,count},std::move(hooks));CHECK(selection->Select(carrier.value,0,0)==carrier.value);CHECK(dumps==1 && selected==carrier.value && (core.pool.Slot(carrier)[40]&4U));selection.reset();
     bool rejected{};try { static_cast<void>(session.Priests().FallWalker(carrier)); }catch (const std::logic_error& error) { rejected=std::string_view(error.what()).find("낙하 선택 해제의 현재 UI 수명 미연결")!=std::string_view::npos; }
     CHECK(rejected);CHECK(!core.processes.FindEvent(carrier,0x5105));CHECK(selected==carrier.value && (core.pool.Slot(carrier)[40]&4U));
+}
+
+// 초기 너겟 Form의 실제 로컬 수신/재부착/표시 예약과 수신기의 좁은 책임을 확인한다.
+TEST_CASE(CampaignCarrierTransfer_ActualFormReceiveAndPreview) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);MenuServices external;std::uint32_t homeRequests{},geyserRequests{};Sid requestedHome{}; // 미복원 귀환/간헐천 선택 요청만 외부 경계로 관찰한다.
+    auto services=external.Make();services.dependencyTransmit=[](Sid,std::uint32_t) {};services.pathPacket=[](std::span<const std::uint8_t>) {};services.motion.path.stepSound=[](Sid,float,float,std::uint32_t) {};
+    services.motion.carrier.chooseGeyser=[&](Sid) { ++geyserRequests;return Sid{}; };services.motion.carrierGoHome=[&](Sid sid) { ++homeRequests;requestedHome=sid; };
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));session.Load();auto core=session.Core();const Sid priest{static_cast<std::uint16_t>(session.FindPriestParticipation(1))};CHECK(priest.value);const auto raw=core.pool.Slot(priest);const auto x=std::bit_cast<float>(Get(raw,14)),y=std::bit_cast<float>(Get(raw,18));
+    const auto receiver=session.World().Create(133,2),donor=session.World().Create(133,2);session.World().Pop(receiver,x,y,0);session.World().Pop(donor,x,y,0);core.owner.Set(receiver,1);core.owner.Set(donor,1);
+    const auto nugget=session.CreateContained(donor,154,7,0x20,0x10,0);CHECK(nugget.value);CHECK(core.types[154].flags2&0x8000U); // 초기 너겟만 명시하며 전달 결과/새 부모/예약은 공급하지 않는다.
+    auto* movement=session.StartCarrierMovement({donor,{x,y},1,0,0,0,0});CHECK(movement);if (!movement) return;const auto oldPid=core.kernel.Find(*movement);RawContainedLookup lookup(core.pool,[](Sid,std::uint32_t) { throw std::logic_error("검사 조회에서 삭제 금지"); });CHECK(lookup.Find(donor,40).value);
+    std::array<std::uint8_t,8> command{};Put(command,4,receiver.value,2);Put(command,6,nugget.value,2);session.CarrierTransfer().Receive(999,0xffffffffU,command);CHECK(&session.CarrierTransfer().Pool()==&core.pool);CHECK(Get(core.pool.Slot(nugget),16,2)==receiver.value);CHECK(session.Priests().Carrier().FindContained(receiver,0x20,154,0)==nugget);CHECK(!session.Priests().Carrier().FindContained(donor,0x20,0,0).value);
+    CHECK(lookup.Find(donor,40).value);CHECK(core.kernel.Get(oldPid)==movement);CHECK(core.processes.FindEvent(receiver,0x491));CHECK(geyserRequests==0 && homeRequests==0 && !requestedHome.value); // 426830 자체는 기증자의 이동 삭제/경제·귀환을 실행하지 않는다.
+    CHECK(session.CarrierTransfer().Transfer(receiver)==10);CHECK(geyserRequests==0 && homeRequests==0); // 이미 받은 너겟은 추가 전달/재시작을 만들지 않는다.
 }

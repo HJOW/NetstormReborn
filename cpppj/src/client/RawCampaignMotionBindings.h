@@ -19,6 +19,7 @@ struct RawCampaignMotionEffects {
     o::CarrierArrivalHooks carrier; // 운반/포획/회피/조회/전송의 실제 외부 하위다.
     o::PriestArrivalHooks priest; // 실제 중립 귀환이며 자기삭제는 같은 월드에 연결한다.
     RawCampaignPathEffects path; // 같은 TYPE 메타/소리/겹침/재탐색의 실제 경계다.
+    std::function<void(o::Sid)> carrierGoHome; // 428fd0의 실제 귀환 요청이며4276a0과 같은 함수로 대체하지 않는다.
 };
 // 첫 명령 전 구성하고 Kernel을 먼저 비운 뒤 해제한다. 별도 좌표/경로/지면 사본을 만들지 않는다.
 class RawCampaignMotionBindings {
@@ -36,6 +37,7 @@ public:
     RawCampaignPathBindings& Paths() const;
     // 후속 운반/전투 모듈도 같은 현재 도착/cleanup 몸체를 재사용한다.
     const o::RawCarrierArrival& CarrierArrival() const;
+    std::uint32_t CommonHalt(o::Sid parent) const; // 같은42a5f0을187의 주기 wrapper에서도 재사용한다.
     const o::RawPathCleanup& Cleanup() const;
     const o::SidPool& Pool() const;
 private:

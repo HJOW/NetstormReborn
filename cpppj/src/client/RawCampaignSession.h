@@ -25,6 +25,7 @@
 #include "client/RawUserSelection.h"
 #include "client/RawPlayerMenu.h"
 #include "o/RawCarrierContentNotice.h"
+#include "o/RawCarrierTransfer.h"
 #include "client/RawCursorMana.h"
 #include "client/RawCursorRange.h"
 #include "o/RawEnergySupply.h"
@@ -253,6 +254,7 @@ public:
     std::unique_ptr<o::RawConstructionBuilder> MakeConstructionBuilder(o::ConstructionBuilderState& state,o::ConstructionBuilderHooks hooks);
     o::RawPathProcess* StartConstructionMovement(o::RawPathStartRequest request); // 같은 월드의 실제134/105를 각각23/39 경로로 움직인다.
     o::RawPathProcess* StartCarrierMovement(o::RawPathStartRequest request); // 같은 실제 썬 워커133의40 경로를 시작한다.다른Halt는 별도 경계다.
+    const o::RawCarrierTransfer& CarrierTransfer() const; // 현재 같은 풀의 로컬 전달 수신/주기/공유 상태를 빌린다.
     // 화면/명령은 같은 현재 raw 월드와 HP를 읽는다.
     RawSurfaceWorld& World();
     // 같은 월드의 현재 Pool/장부/Host 참조를 빌린다.

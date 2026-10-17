@@ -9,8 +9,8 @@
   "baseCommit": "cbe9585",
   "edition": "PATCH10.78",
   "currentSources": {
-    "cpppj/src/client/RawCampaignSession.cpp": "f24a17fe60433cdc7e61e7fafc65af03c83e79c03d7b5d4388008d24a581b8f1",
-    "cpppj/src/client/RawCampaignSession.h": "cd0946fdfc5b5229a6574ae10b81606f10b610aa1236e80ff91376f50a8c7568",
+    "cpppj/src/client/RawCampaignSession.cpp": "1e296de7ff596c61745ce3745daac9b8fd4cf25bcc3d82e2ec4aac9606b6b59d",
+    "cpppj/src/client/RawCampaignSession.h": "40c421a1839bc41d001d4d443dc9e227be027f4fda4d03c4086b1f19bcbe3948",
     "cpppj/src/client/RawCampaignConstructionBindings.cpp": "ee1d38d554fb25e502d0dc54cb19a55f501a45860e5612ca9666ca0f7ec2d2cf",
     "cpppj/src/client/RawCampaignConstructionBindings.h": "9d16b7a6b2ff2c5033dcf1b8a8ff1c73429715c8444f5553c84afe1a93c6ef65",
     "cpppj/src/o/RawConstructionPlace.cpp": "c90e759306d3452eb9c400f6bb252a68f8f89cff6f1ff9fe7b051a8e390618ff",
@@ -344,6 +344,25 @@
           "path": "cpppj/src/client/RawCampaignSession.h",
           "previous": "b63d3540024b9eef248329d84fd9cde386c6e799dee06ea2ddaf8ee68f7d21a4",
           "current": "cd0946fdfc5b5229a6574ae10b81606f10b610aa1236e80ff91376f50a8c7568"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 150,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "f24a17fe60433cdc7e61e7fafc65af03c83e79c03d7b5d4388008d24a581b8f1",
+          "current": "1e296de7ff596c61745ce3745daac9b8fd4cf25bcc3d82e2ec4aac9606b6b59d"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "cd0946fdfc5b5229a6574ae10b81606f10b610aa1236e80ff91376f50a8c7568",
+          "current": "40c421a1839bc41d001d4d443dc9e227be027f4fda4d03c4086b1f19bcbe3948"
         }
       ]
     }

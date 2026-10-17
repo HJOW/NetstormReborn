@@ -288,6 +288,8 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawCarrierFalling> carrierFalling; // 같은 표면/Player/권한에서 캐리어 낙하와 포획 사제 해방을 처리한다.
     std::unique_ptr<RawCarrierTask> carrierTask; // 실제 현재 Regular/SharedRegular task와 double 기한을 갱신한다.
     std::unique_ptr<RawCarrierFallStart> carrierFallStart; // 현재 이동 삭제/선택 해제/복귀 좌표/즉시 해방을 수행한다.
+    CarrierTransferState carrierTransferState; // 미등록187 분기의 공유 주기/재시도/마지막 기증자와 현재 헤더다.
+    std::unique_ptr<RawCarrierTransfer> carrierTransfer; // 실제 내용물 재부착/491/송신/이동 삭제와 연결한다.
     std::unique_ptr<RegularProcess> pendingCarrierTask; // 원본 new28과 생성자가 공유하는 하나의 확보 메모리다.
     std::unique_ptr<GumpFormHost> gumpForms; // 같은Pool의실제Form3와현재UI등록ID/부모삭제알림수명이다.
     std::unique_ptr<RawContentParentNotice> contentNotice; // 부모의 실제 현재 VT로 기본/파생 +24를 분배한다.
@@ -1486,7 +1488,7 @@ struct RawCampaignSession::Impl {
         effects.path.constructionArrival=[this](Sid sid,std::uint32_t,std::uint32_t) { const auto type=core.pool.Slot(sid)[10];if (type==134) return buildArrival->Arrive(sid);if (type==105) return manaArrival->Arrive(sid);throw std::logic_error("실제 건설 도착 타입 오류"); };
         if (!effects.cleanup.reserveShared) effects.cleanup.reserveShared=[] { return true; };
         FillMissing(effects.cleanup.ritual);FillMissing(effects.cleanup.refund);
-        FillMissing(effects.halt.carrierPickup);FillMissing(effects.halt.nuggetTransfer);
+        FillMissing(effects.halt.carrierPickup);
         effects.carrier.genusAt=[this](float x,float y,std::uint32_t genus) {
             RawSquidFinder finder(core.pool,core.hash,core.types);
             // 실제 일반 getter의 첫 현재 후보/표면 생략 순서를 사용한다.
@@ -1497,6 +1499,19 @@ struct RawCampaignSession::Impl {
         FillMissing(effects.carrier.cdPriestPickupPriest);FillMissing(effects.carrier.pickup);FillMissing(effects.carrier.escape);
         FillMissing(effects.carrier.chooseReturn);FillMissing(effects.carrier.chooseGeyser);FillMissing(effects.carrier.goReturn);FillMissing(effects.carrier.goGeyser);
         FillMissing(effects.carrier.minedPacket);FillMissing(effects.carrier.cdAddSp);FillMissing(effects.carrier.cdOwnerPacket);FillMissing(effects.carrier.playAt);FillMissing(effects.carrier.robust);
+        CarrierTransferHooks transfer;
+        transfer.find=[this](Sid parent,std::uint32_t mask,std::uint32_t kind,std::uint32_t index) { return priests->Carrier().FindContained(parent,mask,kind,index); };
+        transfer.detach=[this](Sid form,std::uint32_t flags) { if (flags) throw std::logic_error("너겟 전달의 실제 Unpop flags 오류");contentForms->Unpop(form); };
+        transfer.attach=[this](Sid form,Sid parent,std::uint32_t flags) { contentForms->Attach(form,parent,flags); };
+        transfer.preview=[this](Sid parent) { StartSelectionContentPreview(core.pool,parent,objectState.loadingDepth,[this](Sid sid,std::uint32_t event,float payload) { static_cast<void>(core.processes.AddRegular(sid,event,payload)); },SessionMissing<void>()); };
+        transfer.broadcast=[this](std::span<const std::uint8_t> packet) { broadcast->Send(packet); };
+        transfer.movementType=[this](std::uint32_t type) { return priests->MovementProcessType(type); };
+        transfer.removeMovement=[this](Sid sid,std::uint32_t type) { RawContainedLookup lookup(core.pool,[this](Sid target,std::uint32_t flags) { static_cast<void>(world.Destroy(target,flags)); });static_cast<void>(lookup.Find(sid,type,0,true)); };
+        transfer.chooseGeyser=effects.carrier.chooseGeyser;transfer.goGeyser=effects.carrier.goGeyser;
+        transfer.goHome=effects.carrierGoHome;FillMissing(transfer.goHome);
+        transfer.commonHalt=[this](Sid sid) { if (!motion) throw std::logic_error("현재 이동 연결 전 고갈된 캐리어 정지");return motion->CommonHalt(sid); };
+        carrierTransfer=std::make_unique<RawCarrierTransfer>(core.pool,core.hash,core.types,assetState.boss,globals.editor,assetState.localOwner,carrierTransferState,std::move(transfer));
+        effects.halt.nuggetTransfer=[this](Sid sid) { return carrierTransfer->Transfer(sid); };
         FillMissing(effects.priest.neutralReturn);
         effects.path.metadata=[this](Sid sid) {
             const auto& definition=assets.game.Types()[core.pool.Slot(sid)[10]-70].definition;
@@ -1806,6 +1821,8 @@ RawPathProcess* RawCampaignSession::StartConstructionMovement(RawPathStartReques
 }
 // 같은 원본489080과 현재40 클래스의 생성/부모 통지를 사용한다.
 RawPathProcess* RawCampaignSession::StartCarrierMovement(RawPathStartRequest request) { if (!impl_->loaded || !impl_->motion) throw std::logic_error("미설치 Session의 Carrier 이동");return impl_->motion->Paths().StartCarrier(request); }
+// 원본 네트워크/내부 명령 소비자는 같은 실제 처리기를 사용한다.
+const RawCarrierTransfer& RawCampaignSession::CarrierTransfer() const { if (!impl_->loaded || !impl_->carrierTransfer) throw std::logic_error("미설치 Session의 캐리어 전달");return *impl_->carrierTransfer; }
 // 화면과 입력은 같은 살아 있는 상태를 읽는다.
 RawSurfaceWorld& RawCampaignSession::World() { return impl_->world; }
 RawWorldCore RawCampaignSession::Core() { return impl_->core; }

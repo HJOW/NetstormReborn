@@ -1,5 +1,17 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-17 단위150 완료: 너겟 전달 수신과 미등록 타입 정지 (`HJOW-Athlon`)
+
+- [x] 기준 `c3b0a4d`, 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16** 일치. AGENTS/양 LEFT 재독. 원본 수정/새 디컴파일/원본 실행/DirectDraw 수정 없음. [작업 기록](docs/exe/cpp-carrier-transfer-20261017.md).
+- [x] `RawCarrierTransfer`42ac60/42a0d0/426830/40acf0/4df230을 복원했다. 공유 signed 나머지·양수 cooldown 감소·현재 내용물/타입 재조회·로컬 수신→송신·이동 삭제/선택·귀환 요청 순서다. 원본 독립 **1,110입력·2,220정상 반환·206,446명령·53/64차이0**이며 큰 하위는 명시 경계다.
+- [x] **인계 정정:**541344의 초기187은 이름·발자국·SHP가 없고 생성자42aff0/VT503ff0만 있는 미등록 슬롯이다. 고갈된 자산을 뜻하는 번역 이름으로 부른 직전 해석을 정정한다. 첫 통합의187 Pop은 frameCheck로 실패했다. 그래픽/발자국을 가짜로 보정하지 않고 Session187 경로 거부를 유지했다. 독립 주기/전달 분기의 원문은 보존한다.
+- [x] 실제 Session426830 수신을 같은 ContentFormHost.Unpop/Attach/부모 통지/491 예약에 연결했다. 실제133 두 개와 초기 너겟Form/실제40 경로로 같은Form의 부모·목록 변경을 확인했다.8바이트 수신으로packet+8/두 선행 인자 미사용도 검사한다. 수신 자체는 기증자의 이동을 지우지 않으며 기존40이 살아 있음을 확인했다. 상위 전달의 삭제/경제/귀환을 이 수신에 합치지 않는다.
+- [x] Release build1/2/3 모두 경고0·오류0. 첫 집중은 독립2성공/잘못된187 통합1실패였고 수정 후 최종 집중 **3성공**, 낙하 시작 회귀 **5성공**, 전체 CTest **1,603개·실패0·종료0·214.75초**(CTest214.79초)다. 모든 핸들 종료/대기 없음이다.
+- [x] 감사69종 **58성공·기존11실패·새실패0**, 기존45보고서138현재핀/과거 전체 이력/CMake 접두/기존 fixture·AGENTS·원본·DN/보호SHA3/새 UTF-8·LF를 확인했다. 클론 진입5회PASS/originals_unchanged=true이며1-1/1-2briefing→world/tutorial1~3briefing범위다.
+- [x] 로그 접두 `extracted/goal-carrier-transfer-20261017-`, 제품 `cpppj/campaign-carrier-transfer.json`. 인수인계 뒤 **`20261017-50 CP 너겟 전달 수신과 미등록 타입 정지 분기 복원`** 로 로컬 커밋한다. push하지 않고 전체 goal active다.
+- [ ] **다음 우선:**실제 운반체의4894e0 대상 접근 이동,427600/4276a0/428fd0,429420/428ea0 선택과4280a0 후보평가를 복원한다. `extracted/goal-carrier-return-20261017-read.c`를 준비했다. 기존 RawSquidNeighbors.Footprint/RawBoardApproach는 재사용하되41d530과41db70을 혼동하지 않는다.4280a0의 후보WORD+8 거리/qsort 동률/원래 ring목록 순서/BFS·Prepare·현재 시각도 보존해야 한다. 미등록187의 그래픽을 임의 생성하지 않는다.
+- [ ] 429010 회피 준비는 직전 인계를 따른다.38/41/42 실제 경로와5040c0의42ae80도 미완료다. 현재429420/427600/428fd0은 Session 외부 필수 경계이며 실제 Client 명령 소비자/생산·경제·AI/11스테이지 자연 완주·승패·저장·다음미션/전체 동일성은 미완료다.
+
 ## 2026-10-17 단위149 완료: 자연 낙하 시작과 썬 워커 실제 경로 (`HJOW-Athlon`)
 
 - [x] 기준 `030386a`, 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16** 일치. AGENTS/양LEFT/깨끗한트리를재독했다. 새디컴파일/원본실행/DirectDraw수정없음. [작업 기록](docs/exe/cpp-carrier-fall-start-20261017.md).
@@ -11,7 +23,7 @@
 - [x] 최종build6 **경고0·오류0/집중5성공**, 전체CTest **1,600개·실패0·종료0·211.52초**(CTest211.56초)다. build1은확인한작업3892/1736만종료해직렬CL을MultiToolTask로전환했고,2/3/5/6성공,4의새검사헤더누락은수정했다. 모든핸들은종료/대기없음이다.
 - [x] 원본감사68종 **57성공·기존11실패·새실패0**, 기존60보고서270현재핀/과거이력/CMake접두/보호SHA3/기존fixture·AGENTS·원본·DN불변/새UTF-8·LF를확인했다. 클론진입5회PASS/originals_unchanged=true이며1-1/1-2briefing→world/tutorial1~3briefing범위다.
 - [x] 로그접두부 `extracted/goal-carrier-fall-start-20261017-`; 제품보고서 `cpppj/campaign-carrier-fall-start.json`. 인수인계뒤 **`20261017-49 CP 자연 낙하 시작과 썬 워커 경로 및 공통 예약 복원`** 으로로컬커밋한다. push하지않고전체목표active다.
-- [ ] **다음우선:**187의42ac60을복원한다.54542c DWORD를inc뒤and80000003/음수보정한signed%4로갱신하고0이면42a0d0 nuggetTransfer,나머지42a5f0이다. 현재이는Session의명시경계다. 다른38/41/42실제경로/5040c0의42ae80도미완료다.133→50e568,187→503ff0,134→5070c0을혼동하지않는다.
+- [x] **단위150 정정:**42ac60/42a0d0은 독립 복원했다.187은 실제 이름·발자국·SHP 없는 미등록 슬롯이므로 Session의 그래픽 경로 거부를 유지한다. 고갈된 캐리어로 부른 해석은 위 정정을 따른다.38/41/42 실제 경로/5040c0의42ae80은 계속 미완료다.
 - [ ] **429010회피준비:** `extracted/goal-carrier-escape-20261017-read.c/.asm`과`...-notes.txt`를읽는다.1da1a도RNG소비,일반RNG0..4의index4도W라4시도W/E/S/W다.카운터는DWORD이고0.9999spot색인은감긴다.특수finder422230은0.99999거의올림/±5,probe는times5000QWORD만0으로지운다.488fb0은지도포인터가아니라cardinalOnly비트다. RawPathRuntime.MoveAwayDepth/SetMoveAwayDepth와RawPathSearch/Prepare를재사용할수있다.다른WalkerPath를더미로대체하지않는다.
 - [ ] 향후공통헤더빌드는CL을보존하고MP4와 `-- /p:UseMultiToolTask=true /p:MultiProcMaxCount=4 /p:EnforceProcessCountAcrossBuilds=true /nr:false`를사용한다.실제4CL을확인했다.실행중인검사와링크를겹치지않는다.로그는UTF-16일수있고LastTest는한국어시스템인코딩일수있어ASCII지표를안전하게읽는다.
 - [ ] 실제Client선택/비정지메뉴/원본DWORD소비자/생산·경제·AI·로그인된로컬전송/11스테이지자연완주·승패·저장·다음미션/전체동일성은미완료다.

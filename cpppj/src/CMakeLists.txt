@@ -77,3 +77,6 @@ target_sources(netstorm PRIVATE o/RawCarrierFalling.cpp o/RawCarrierFalling.h)
 
 # 캐리어의 자연 낙하 시작과 원본 공통 task 예약이다.
 target_sources(netstorm PRIVATE o/RawCarrierTask.cpp o/RawCarrierTask.h o/RawCarrierFallStart.cpp o/RawCarrierFallStart.h)
+
+# 미등록187 정지 분기와 실제 너겟 전달 수신 명령이다.
+target_sources(netstorm PRIVATE o/RawCarrierTransfer.cpp o/RawCarrierTransfer.h)
