@@ -12,7 +12,7 @@
     "cpppj/src/client/CampaignClientServices.cpp": "deb067662fe4fcd5324bab710c7b06fb7ce5f661f4078227946adc4fa92db72a",
     "cpppj/src/client/RawButtonControls.cpp": "5d9568d2a6c461e9dd474cc584db62389ca3eb576e780fdeb6e9a39f1ee55baf",
     "cpppj/src/client/RawButtonControls.h": "372d15ad4ab423ef9869fab470ad1f4b5c75cb0ebc12503edd2bb7a6f3f240d6",
-    "cpppj/src/client/RawCampaignSession.cpp": "55aa0251fb16d34ca8fa95cab25abe61b5a13d736611e8cafe1388e9b4666c2c",
+    "cpppj/src/client/RawCampaignSession.cpp": "9c1ead4136a7d61433a681f085afe66f950c62d289bf3e7208a67b8c08790e6c",
     "cpppj/src/client/RawCampaignSession.h": "44468ab67ff1827853b0bd59516259d7439e52b67703f9276db78784ec303a68",
     "cpppj/src/client/RawMenuControls.cpp": "e1d3a27c5330b52727e18447c97b02f6a7f82cb0ceeb9bf55aad874b744720f1",
     "cpppj/src/client/RawMenuControls.h": "92b7db6b2d4fa00641d814a9e0e6b76bf649b7789302cb1dc306abd87c99023d",
@@ -514,6 +514,19 @@
           "path": "cpppj/src/client/RawCampaignSession.cpp",
           "previous": "323972d251bba7ff132b8cbd0bf74fcf52548178c9a3d50f5644210cb55b8083",
           "current": "55aa0251fb16d34ca8fa95cab25abe61b5a13d736611e8cafe1388e9b4666c2c"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 161,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "55aa0251fb16d34ca8fa95cab25abe61b5a13d736611e8cafe1388e9b4666c2c",
+          "current": "9c1ead4136a7d61433a681f085afe66f950c62d289bf3e7208a67b8c08790e6c"
         }
       ]
     }

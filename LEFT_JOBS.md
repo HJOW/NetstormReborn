@@ -1,5 +1,15 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-18 단위161 완료: 반복 보상 획득의 전역 보충 관문 (HJOW-Athlon)
+
+- [x] 기준65b2185/깨끗한 트리. 직전 목표턴은 제품·원문·회귀·커밋의 진행턴이다. AGENTS/양LEFT 재독, 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16** 일치. 보호원본/AGENTS/DN/DirectDraw 수정·새디컴파일/원본게임실행없음. [작업 기록](docs/exe/cpp-nugget-replenish-20261018.md).
+- [x] 실제485e40의 boss진단 후 재독/현재 single·fort·editor 관문·지역0 첫record·431ff0 원점6 배치·40d900/현재542654 정수감김·각float저장·40e050(area,1)을 복원했다. 기존 PlayerBounds의 실제 Canon/TYPE를 공유한다. Session의 기존내용물 제거/Carrier 삭제를 같은 부모로 연결했다. 단독 미션은 원문 관문에서 자연 반환하며 비미션 실제40e050은 명시 미연결이다.
+- [x] 독립 **372입력/부모744정상반환/준비R744별도/3565716명령/53·64차이0**. 실제 Canon/지역 검색/원점/변환을 실행했으며 assertion/큰40e050만 경계다. GP/ret/canary/CW/TOP/빈tag/명령·쓰기범위를 검사했다. 첫 시도의 없는 옛 export는 새 관측기만 현재 정밀export로 고쳤다. 기존 도구/원문을 바꾸지 않았고 첫C++ 재생 전 동결한fixture로 처음부터 통과했다.
+- [x] 같은1-1 Session의 골렘40 실제도착→LocalMissionTransport buffer→Flush/Poll→등록4f를 두 번 성공했다. 첫QA113을 실제획득한 뒤 QA119가 기존내용물 가상삭제→현재미션 보충관문→새내용물 부착까지 수행했다. 내용물1개/이전113부재/19·47부착/SP불변/서버·삭제·장부depth0을 확인했다. 이미연결된owner1/저장QA/한지점은 명시입력이며 로그인/UI 자연명령/전체왕복·완주로 합산하지 않는다.
+- [x] **Release build2 경고0·오류0, 집중2개/실제통합1개, 전체1640개 실패0 / 213.87초**(CTest 213.91초). 감사83도구72통과/기존11실패집합동일/새0, 클론진입5PASS/originals_unchanged=true. 보호5종SHA/현재핀57보고서156개/과거전체JSON 역치환/기존fixture·CMake접두·인계/UTF8·LF·공백·커밋인덱스 바이트를 검사한다. 제품cpppj/campaign-nugget-replenish.json, 독립cpppj/nugget-replenish.json, 로그접두extracted/goal-nugget-replenish-20261018-.
+- [ ] 다음 우선은 **실제42/38/41 경로와5040c0의42ae80**, Client전송/명령소비 연결이다. 비미션40e050 배치, AI간헐천 등록/제거·전략·생산/경제, 전체11스테이지 자연왕복·승패·저장·다음 미션·완주/동일성은 미완료이며 goal active다.
+- [x] 인계 뒤 **20261018-11 CP 반복 보상 획득의 전역 보충 관문 복원**으로 로컬 커밋한다. 원격push하지 않는다.
+
 ## 2026-10-18 단위160 완료: 보상 획득 번개·지연 소리와 실제4f 변환 (HJOW-Athlon)
 
 - [x] 기준a192ea5/깨끗한트리. 직전목표턴은제품/독립원본/회귀/커밋의진행턴이다. AGENTS/양LEFT 재독, 현재/마지막정밀디컴파일PC **HJOW-Athlon / 2026-10-16** 일치. 보호원본/AGENTS/DN/DirectDraw/새디컴파일/원본게임실행없음. [작업기록](docs/exe/cpp-lightning-screen-20261018.md).

@@ -21,7 +21,7 @@
     "cpppj/src/client/RawCursorPlacement.cpp": "64c57e1581716ad63ebf952aa9c4b7ce4c432ec20f3ca23dcfeede6fcf8a1a46",
     "cpppj/tests/CursorPlacementTests.cpp": "a03f225bbf82cce49a770d111b2d4d24f5c496cde97560f3f55c6bce50dad997",
     "cpppj/src/client/CMakeLists.txt": "78725b028b113f3e2c815aebcc41847d2f79fc8acdcd237f4a75a05aa9854a3b",
-    "cpppj/tests/CMakeLists.txt": "275600087e95b10d1d7f0f498968926b3638709f6ad5d0b5f2237cc4078685dc"
+    "cpppj/tests/CMakeLists.txt": "07621f6f2974e46d0f8477970918f8f2ae951de670682d133c2e5df4a3c0fa38"
   },
   "limitations": [
     "세 커서 몸체와 실제 CRT 절삭/floor만 실행한다. decoder/SHP/설명/GUI/지역/투영/화면 갱신은 명시 경계다.",
@@ -558,6 +558,19 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "8f6e1c66577d4a5cc2804616a67576d5d6f3fce3f6f8a79401cfddf26507d5a4",
           "current": "275600087e95b10d1d7f0f498968926b3638709f6ad5d0b5f2237cc4078685dc"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 161,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/sha256",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "275600087e95b10d1d7f0f498968926b3638709f6ad5d0b5f2237cc4078685dc",
+          "current": "07621f6f2974e46d0f8477970918f8f2ae951de670682d133c2e5df4a3c0fa38"
         }
       ]
     }

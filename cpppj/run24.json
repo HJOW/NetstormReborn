@@ -125,7 +125,7 @@
     "cpppj/hist/run24-base/cpppj/tests/CMakeLists.txt": "38b1bdb0a61e211f82e4d08c775abf2a7669debd6167c24e7cb3cddc74b75b81",
     "cpppj/hist/run24-base/cpppj/tests/CampaignInstallSupport.h": "2d42c64bfd2e49e9f1bdb5218c8e0e3f47d5029e24a9c1e2c65180aaf08cf02a",
     "cpppj/run23.json": "e29f9286a2c79f91ba40b843f7e8618404154b261c876ef89281e26607f9fbf1",
-    "cpppj/src/CMakeLists.txt": "dd60e00a38103f278f83671bf51a3d2b235cdf36831b48033f7df02803986818",
+    "cpppj/src/CMakeLists.txt": "fa951043f560d3a4a68312ab64ffc3fa08625510011cd0052bb5281abf4baccd",
     "cpppj/src/app/CanonMayPlaceInspect.cpp": "27eda46bca500c898abeb9a3a7c4e8588b38e061b579c84cbf6c032c6d46dda9",
     "cpppj/src/app/FrameBindingInspect.cpp": "042602919b0531fb1cbaf3941dc6597bee73944bbf0d571dacfd638bb45dd07c",
     "cpppj/src/app/FrameBindingInspect.h": "4e187ca41f8c34ed52c022b58a57327a554a723e3e26ee88a1ae152c99de3fce",
@@ -1908,6 +1908,19 @@
           "path": "cpppj/src/client/SoundProcess.h",
           "previous": "e0d1725448c7aa84367b231199d3a0d9950864b5de9969f27b98b07f3b025bed",
           "current": "e5d672e71b6c9484a7258eec0d04482cee7bec1da7f234b6d53fb2c54f6ac575"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 161,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "dd60e00a38103f278f83671bf51a3d2b235cdf36831b48033f7df02803986818",
+          "current": "fa951043f560d3a4a68312ab64ffc3fa08625510011cd0052bb5281abf4baccd"
         }
       ]
     }

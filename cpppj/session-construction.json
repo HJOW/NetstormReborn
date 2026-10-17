@@ -142,8 +142,8 @@
     "cpppj/src/o/RawConstructionPlace.cpp": "c90e759306d3452eb9c400f6bb252a68f8f89cff6f1ff9fe7b051a8e390618ff",
     "cpppj/src/o/RawLocalGeyser.h": "6de11b55587db730335842d6d59ccf857e615dd3e468cf9ba90cc60bba073c59",
     "cpppj/src/o/RawLocalGeyser.cpp": "782e33a62604a0767809f2d999b1b84badfc1d12cea21382394a8f1257843658",
-    "cpppj/src/o/RawPlayerGeyserBounds.h": "43e5c680a8ef31dafae366e262f19723474b129fab43ac8de344e6068e2f8e66",
-    "cpppj/src/o/RawPlayerGeyserBounds.cpp": "144858939bb867934111baa38a96a179a5651731481f3b942effe5f0dffb5370",
+    "cpppj/src/o/RawPlayerGeyserBounds.h": "dbd25cda206a7e53e21b9c35d1d9f1ff53505196c5a32e00e187391545547a14",
+    "cpppj/src/o/RawPlayerGeyserBounds.cpp": "4983ae36fcebb76a06068c68500f2184dc2c14f816c6513b9cf1492353c69a96",
     "cpppj/tests/CampaignConstructionTests.cpp": "d174046ac88bedb2fbec01a5ead2138806edeaad103066d3c9abe2a53517bad2",
     "cpppj/tests/CampaignSessionTests.cpp": "41cf3b0114ab0c0e909fbf7d25638d21ad81b8c7e690914290f992faa8f36cf0",
     "cpppj/src/client/CMakeLists.txt": "aa92fd831eb24c7ea783615d6e7376d3729192cbf255132bddad5d213a00a483",
@@ -277,6 +277,25 @@
           "path": "cpppj/src/client/RawCampaignConstructionBindings.cpp",
           "previous": "9172dba73289abb3db36e47cfccc31956356930a086b3dc2165df72eb87c76ac",
           "current": "ee1d38d554fb25e502d0dc54cb19a55f501a45860e5612ca9666ca0f7ec2d2cf"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 161,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/o/RawPlayerGeyserBounds.h",
+          "previous": "43e5c680a8ef31dafae366e262f19723474b129fab43ac8de344e6068e2f8e66",
+          "current": "dbd25cda206a7e53e21b9c35d1d9f1ff53505196c5a32e00e187391545547a14"
+        },
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/o/RawPlayerGeyserBounds.cpp",
+          "previous": "144858939bb867934111baa38a96a179a5651731481f3b942effe5f0dffb5370",
+          "current": "4983ae36fcebb76a06068c68500f2184dc2c14f816c6513b9cf1492353c69a96"
         }
       ]
     }

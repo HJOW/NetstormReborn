@@ -49,6 +49,10 @@ std::array<std::int32_t,2> RawPlayerGeyserBounds::Dimensions(std::span<const std
     return {Signed(static_cast<std::uint32_t>(bounds[2])-static_cast<std::uint32_t>(bounds[0])),
         Signed(static_cast<std::uint32_t>(bounds[3])-static_cast<std::uint32_t>(bounds[1]))};
 }
+// 실제 보충 부모의 원점 배치도 기존 CanonDecoder/현재 TYPE 발자국 계산을 공유한다.
+ChunkRect RawPlayerGeyserBounds::OriginPlacement(std::span<const std::uint8_t,6> record) const {
+    const auto size=Dimensions(record);return {6,6,Signed(6U+static_cast<std::uint32_t>(size[0])),Signed(6U+static_cast<std::uint32_t>(size[1]))};
+}
 // 원본 helper0041ca10은 매 호출 현재 BYTE로 로컬[3,4,5,6]을 고른다.
 std::uint32_t RawPlayerGeyserBounds::Spacing() const {
     constexpr std::array<std::uint32_t,4> spacing{3,4,5,6}; // 원본 스택 배열에 쓰는 네 정수다.

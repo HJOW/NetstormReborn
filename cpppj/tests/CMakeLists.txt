@@ -1448,3 +1448,8 @@ set_source_files_properties(GemRewardTests.cpp PROPERTIES COMPILE_DEFINITIONS
 target_sources(netstorm_tests PRIVATE LightningScreenTests.cpp)
 set_source_files_properties(LightningScreenTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_LIGHTNING_SCREEN_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/lightning-screen-x86.tsv\";NETSTORM_BOMB_PREDESTROY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/bomb-predestroy-x86.tsv\"")
+
+# 반복 보상 보충 부모와 실제 Canon의 독립 원문을 검증한다.
+target_sources(netstorm_tests PRIVATE NuggetReplenishTests.cpp)
+set_source_files_properties(NuggetReplenishTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_NUGGET_REPLENISH_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/nugget-replenish-x86.tsv\"")

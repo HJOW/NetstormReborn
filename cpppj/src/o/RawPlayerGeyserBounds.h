@@ -33,6 +33,8 @@ public:
     FortRandomRectangle Bounds(std::uint32_t player) const;
     // 00432430: y행/x열의 첫 signed섬BYTE 일치에서6BYTE를 복사하고 없으면0레코드다.
     std::array<std::uint8_t,6> RegionRecord(std::int32_t region) const;
+    // 00431ff0: 현재 패턴의 실제 폭/높이를 원점(6,6)에 더한다. record의 위치 nibble은 사용하지 않는다.
+    ChunkRect OriginPlacement(std::span<const std::uint8_t,6> record) const;
     // 00432050: 미션의 실제 패턴/위치 또는 전투의 현재옵션/방향 배치를 계산한다.
     ChunkRect Placement(std::int32_t player,std::span<const std::uint8_t,6> record) const;
     // 상위 바인딩이 실제 월드와 같은 풀/청크 지도를 연결했는지 확인한다.

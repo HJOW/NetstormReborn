@@ -1500,3 +1500,25 @@ TEST_CASE(CampaignSession_LightningScreenPickupThroughActualLocalTransport) {
     std::cout<<"실제4f 획득 QA"<<savedQA<<" TYPE"<<kind<<" 픽셀/지연재생/자연효과삭제 통과\n";
     }
 }
+
+// 같은 골렘의 두 실제 보상 획득에서 기존 내용물 삭제→보충 관문→새 내용물 부착을 검증한다.
+TEST_CASE(CampaignSession_RepeatedRewardPickupThroughActualLocalTransport) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();InputQueue input;netstorm::zacket::LocalMissionTransport* wire{}; //이미 연결된 단독 미션을 명시 입력한다.
+    services.production.allocationBytes=[](std::span<std::uint8_t> raw) { std::fill(raw.begin(),raw.end(),std::uint8_t{0xa7}); };
+    services.carrierRequest=[&](std::int32_t target,std::span<const std::uint8_t> packet) { CHECK(wire && target==9);if (!wire) throw std::logic_error("반복 획득의 실제 로컬 연결 미설치");CHECK(wire->Send(target,packet)); };
+    services.assets.queueCommand=[&](std::uint32_t code,std::int32_t first,std::int32_t second) { input.PushCommand(code,first,second); };
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));session.Load();auto core=session.Core();SessionPickupWire link(session);wire=&link.transport;
+    const RawPathPoint point{98,122};const auto golem=session.World().Create(133,2);session.World().Pop(golem,point.x,point.y,0);core.owner.Set(golem,1);const auto sp=session.Sp(1);Sid previous{};std::size_t index{}; //같은 위치의 실제 경로 도착을 두 번 수행한다.
+    // 결과 내용물은 주입하지 않고 저장 QA만 실제 오벨리스크에 입력한다.
+    for (const std::uint32_t qa:{113U,119U}) {
+        const auto buried=session.World().Create(112,2);session.World().Pop(buried,point.x,point.y,0);Put(core.pool.AllocatedBytes(buried),12,qa,2);
+        // 이전 획득의 통지를 모두 소비한 뒤 새 실제 입력 명령만 검사한다.
+        while (!input.Empty()) static_cast<void>(input.Pop(false));const auto before=link.recorded.size();ArriveForPickup(session,golem,point);CHECK(link.recorded.size()==before && input.Empty());link.transport.Flush();CHECK(link.transport.Poll()==1);
+        const auto event=input.Pop(false);CHECK(event.code==0x030000b1 && event.y==golem.value);CHECK(link.recorded.size()==before+1 && link.recorded.back()[8]==112);
+        const auto content=session.Priests().Carrier().FindContained(golem,1,qa,0);CHECK(content.value && SquidForms(core.pool).Parent(content)==golem && session.Sp(1)==sp);
+        CHECK(!session.Priests().Carrier().FindContained(golem,1,0,1).value); //생존하는 보상 내용물은 항상 하나다.
+        if (index) { CHECK(!session.Priests().Carrier().FindContained(golem,1,113,0).value);CHECK(previous==content || (core.pool.Slot(previous)[11]&1)); }
+        CHECK(FindAttachedProcess(core.pool,golem,19).value && FindAttachedProcess(core.pool,golem,47).value);CHECK(core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0 && core.bookkeeping.depth==0 && link.transport.Server().depth==0);previous=content;++index;
+    }
+    CHECK(index==2);wire=nullptr;
+}

@@ -1,0 +1,39 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-18",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16"
+  },
+  "uniqueInputs": 372,
+  "normalParentReturns": 744,
+  "preparationRegionReturns": 744,
+  "instructions": 3565716,
+  "native": {
+    "00485e40": 744,
+    "00432430": 708,
+    "00432180": 41164,
+    "00431ff0": 708,
+    "004bfd70": 708,
+    "00425c20": 708,
+    "0049a840": 1416,
+    "00425860": 708,
+    "00425700": 1222,
+    "0049a940": 828,
+    "00425b90": 708,
+    "0049a900": 708,
+    "004e49c0": 1416,
+    "0040d900": 708
+  },
+  "precisionDifferentInputs": [],
+  "boundaries": "485e40/431ff0/432430/40d900와 기존 실제 Canon/TYPE 하위를 PE로 실행했다. assertion 보고와 큰40e050 배치만 명시 경계다. 준비용R은 부모 관측과 별도 집계했다. 보존GP/ret/canary/x87/CW/TOP/빈tag/실행·쓰기범위를 검사했다. 원본게임/창/OS 실행과 실제 비미션 배치 검증은 아니다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_nugget_replenish.py": "343fcd950078734e0c2651f65c80b56c3ca2e69db9023e36350741c942b2d720",
+    "tools/decomp_player_geyser_bounds.py": "5efdaa8417a1cc57f3962969eadeca953969ab690be1dffe45a125f05aab45e9",
+    "tools/decomp_missionframe_oracle.py": "98987447be7aa3632aeb6337a21880d57c43ad184e3657fae4171c8e9ffb1739",
+    "tools/ghidra/player-geyser-bounds-functions.json": "b5887078a524099bc57a7c661a8f779315fb9e8563a73ca630efa60bdaf971bb",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "cpppj/tests/fixtures/nugget-replenish-x86.tsv": "a8f283c172744a3529023b31d7d69b98ed96610e96fb6fd48e117b2622a23858"
+  }
+}

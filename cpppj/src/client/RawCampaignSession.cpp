@@ -11,6 +11,7 @@
 #include "o/RawCarrierSteal.h"
 #include "o/RawCarrierPickup.h"
 #include "o/RawGemReward.h"
+#include "o/RawNuggetReplenish.h"
 #include "o/RawBombPreDestroy.h"
 #include "o/RawPacketDispatch.h"
 #include "client/AiTypeRequiredEnergy.h"
@@ -484,7 +485,7 @@ struct RawCampaignSession::Impl {
         // 사제 Owner의 004214a0도 동일한 실제 무상태 다리 진단 몸체다. 별도 AI 통지로 대체하지 않는다.
         if (!priestEffects.ownerNotice) priestEffects.ownerNotice=[this](Sid sid) { core.building.NotifySurface(sid); };
         priestEffects.notifySurface=[this](Sid sid) { core.building.NotifySurface(sid); };
-        priestEffects.dependentFound=SessionMissing<void>();priestEffects.reserveRegular=[] { return true; };
+        priestEffects.dependentFound=[this] { ReplenishNuggets(); };priestEffects.reserveRegular=[] { return true; };
         priestEffects.shield.reserveSound=[] { return true; };
         sounds=std::make_unique<SoundProcessSystem>(core.processes,soundState,services.sound);
         priestEffects.shield.loadSound=[this](std::string_view name) { return soundNames.Lookup(name); };
@@ -1287,6 +1288,13 @@ struct RawCampaignSession::Impl {
         constructionState.confirm.patternTypes[2]=core.bridgeState.islandType;constructionState.confirm.patternTypes[3]=core.bridgeState.noIslandType;
         constructionState.clear.patternTypes=constructionState.place.patternTypes=constructionState.request.patternTypes=constructionState.confirm.patternTypes;
     }
+    // 같은 현재 모드와 지도/Canon의 원본 보충 부모다. 비미션의 큰 배치는 아직 명시 미연결이다.
+    void ReplenishNuggets() const {
+        if (!construction) throw std::logic_error("보충 부모의 실제 지도 범위 미설치");
+        RawNuggetReplenish body(construction->PlayerBounds(),{assetState.boss,globals.missionPost,core.ownerMode.fort,globals.editor,farm.archipelagoSpan},
+            {[](std::uint32_t line) { throw std::logic_error("원본 Nugget.cpp 보충 권한 진단 "+std::to_string(line)); },SessionMissing<void,FortRandomRectangle,std::uint32_t>()});
+        body.Run();
+    }
     // 수명/자산의 실제 파생 동작을 설치한 뒤 첫 객체 생성 전에 받침/로컬 간헐천 연결을 한 번 구성한다.
     void ConnectConstruction() {
         if (construction) throw std::logic_error("실제 Session 받침/간헐천 중복 연결");
@@ -1630,7 +1638,7 @@ struct RawCampaignSession::Impl {
         pickup.reveal=[this](Sid sid) { return gemReward->Reveal(sid); }; //같은실제보상선택/생성/Pop/원오벨리스크삭제다.
         pickup.queue=[this](std::uint32_t command,std::int32_t target,std::int32_t parent) { if (!services.assets.queueCommand) throw std::logic_error("포획실제입력큐미연결");services.assets.queueCommand(command,target,parent); };
         pickup.find=[this](Sid sid,std::uint32_t mask,std::uint32_t kind,std::uint32_t index) { return priests->Carrier().FindContained(sid,mask,kind,index); };
-        pickup.afterDiscard=SessionMissing<void>(); //485e40의보충부모를빈성공으로대체하지않는다.
+        pickup.afterDiscard=[this] { ReplenishNuggets(); }; //기존 내용물 제거와 Carrier 삭제가 같은 실제 보충 부모를 사용한다.
         pickup.create=[this](Sid parent,std::uint32_t kind,std::uint32_t argument,std::uint32_t flags,std::uint32_t attachFlags,std::uint32_t quality) { return contained->Create(parent,kind,argument,flags,attachFlags,quality); };
         pickup.destroy=[this](Sid sid,std::uint32_t flags) { static_cast<void>(world.Destroy(sid,flags)); };
         pickup.detach=[this](Sid form,std::uint32_t flags) { if (flags) throw std::logic_error("포획종속Unpop flags오류");contentForms->Unpop(form); };
