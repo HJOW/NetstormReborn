@@ -1,5 +1,16 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-18 단위164 완료: 실제 클라이언트 로그인과 짧은 State 확장 (HJOW-Athlon)
+
+- [x] 기준f3e4525/깨끗한트리에서 AGENTS/양LEFT 재독. 직전163은 원문·제품·회귀·커밋을 완료한 진행턴이다. 현재/마지막정밀디컴파일PC **HJOW-Athlon / 2026-10-16** 일치. 새디컴파일/원본게임실행/보호원본·AGENTS·DN·DirectDraw변경없음. [상세기록](docs/exe/cpp-local-login-20261018.md).
+- [x] 실제Client가월드포인터를먼저등록한뒤같은Session에서로컬Zone/서버열기/클라이언트Connect/원본Login/상태8·9·10·13·14/타이머/현재Template·Player9·SP·설정·Ready·Load를실행한다. 초기subscriber1은원본54265c 초기값복사이며성공플래그를미리쓰지않는다. 명령송수신/후속Flush·Poll도같은전송이다. 옵션+3e숨김표/실제초기7설정DWORD/포트키gameServerPort를공유한다. 전체상태7부모와UI는미완료다.
+- [x] 실제Early1 로그인에서발견한44d290/44cce0 기존shortState 복사·0확장·pos/end28을복원했다. 독립99입력/198정상반환/20700명령/53·64차이0, 첫C++대조부터PASS, 최초freeze3종/기존fixture불변이다. 없는State의미정stack바이트초기화/파일저장/Template.sections와저장통합은미완료다.
+- [x] 실제Login의자기Begin/Ready추가수신12→13을추적하여기존BYTE localOwner→const DWORD 임시참조4곳을실제Player.battleOwner DWORD로수정했다. 세생성자rvalue삭제/내용물현재getter/컴파일BYTE거부검사를추가했다. 최종로그인수신12→12/성공플래그원본처리와같은로그인후40h·Kernel사제이동/정리를통과했다. UI의직접이동을전체교체한증거는아니다.
+- [x] 첫지역이름경고/Chat채널가정실패/정상로그stderr검사/Early1미복원/두UI동시options충돌/기존할당경계문구2개실패를로그에보존했다. 문구검사만새미연결오류로맞추고기존원문출력을보존했다. 최종build7 경고0·오류0, 전송4/확장1/기존Regular3/통합1, **전체1649개 실패0 / 216.82초**(CTest 216.85초). 감사88종77통과/기존11실패동일/새0, 순차화면5진입+1이동/목표11진입PASS/originals_unchanged=true다.
+- [x] 보호5SHA/68보고서258현재핀·과거전체JSON역치환/최초동결3종/기존fixture(git내용동일·10개체크아웃CRLF차이별도기록)/CMake접두/인계/새UTF8·LF·공백/인덱스바이트를검사한다. 원문cpppj/player-state-expand.json, 제품cpppj/campaign-local-login.json, 로그접두extracted/goal-local-login-20261018-다. 인계뒤 **20261018-14 CP 실제 클라이언트 로컬 로그인과 State 확장 연결**로로컬커밋한다. push없음/모든현재핸들종료뒤대기없음/goal active다.
+- [ ] **다음우선:**현재UserInput의단순선택/직접MovePriest를원본RawUserSelection/강조/4277f0/42a360→RequestCarrierMove의실제UI경로로교체한다. 이번에실제로그인전송·수신40h가준비됐다. 건설메뉴의현재Construct 비활성화도원본메뉴·cursor·생산/SP와연결해야한다.
+- [ ] **남은범위:**전체상태7/4d3090 UI/최초핸들/패널전역/원격·오류해제/빈State·파일저장/실제4498e0·494eb0 희생/38·41·187/전략AI·생산·경제/11스테이지자연완주·승패·저장·다음미션·동일성이다. CLI진입과단일로그인이동을완주로합산하지않는다.
+
 ## 2026-10-18 단위163 완료: 운반체 이동 요청과 실제 서버 소비 (HJOW-Athlon)
 
 - [x] 기준6cbb7fd/깨끗한트리. AGENTS/양LEFT 재독, 현재/마지막정밀디컴파일PC **HJOW-Athlon / 2026-10-16** 일치. 직전 명칭 재확인은 기존92b7526을 읽기 전용 확인하여 제품 진척은 없었다. 이번은 원문/코드/회귀/실제전송 증거를 추가한 진행턴이다. 보호원본/AGENTS/DN/DirectDraw변경·새디컴파일/원본게임실행없음. [상세기록](docs/exe/cpp-carrier-move-20261018.md).

@@ -11,6 +11,14 @@
 #include "o/RawCarrierSteal.h"
 #include "o/RawCarrierPickup.h"
 #include "o/RawCarrierMove.h"
+#include "o/RawMissionLogin.h"
+#include "o/RawMissionClientPackets.h"
+#include "o/RawMissionServerPackets.h"
+#include "o/RawMissionLoginPackets.h"
+#include "o/RawMissionBattleOptions.h"
+#include "o/RawLocalMissionState.h"
+#include "zacket/LocalMissionTransport.h"
+
 #include "o/RawGemReward.h"
 #include "o/RawNuggetReplenish.h"
 #include "o/RawBalloonBody.h"
@@ -167,6 +175,9 @@ std::string_view RawCampaignObjectMenus::TextParameter(std::uint32_t token) cons
 struct RawCampaignSession::Impl {
     struct SelectionLink { RawUserSelection* selection{}; }; // 살아 있는 실제 선택 객체의 주소이며 약한 토큰으로만 빌린다.
     std::weak_ptr<SelectionLink> activeSelection; // UI 몸체가 먼저 파괴돼도 낙하가 해제된 주소를 호출하지 않는다.
+    struct Login; //같은실제원본로그인과현재전송의고정주소 소유자다.
+    std::shared_ptr<Login> login; //불완전타입의수명은실제모듈구성뒤에반납한다.
+    std::function<void(std::int32_t,std::int32_t)> connectionAssign; //현재로컬pending 재배치를 실제참여모듈에연결한다.
     RawCampaignSessionServices services; // 실제 클라이언트의 선택 서비스이며 검사 관찰 기본값을 사용하지 않는다.
 
     SessionAssets assets; // 보호 archive의 현재 실제 자료다.
@@ -195,7 +206,8 @@ struct RawCampaignSession::Impl {
     std::array<std::uint8_t,RawIslandRuntime::kBytes> islandBytes{}; // 실제3204BYTE 섬 목록이다.
     std::vector<std::uint8_t> players=std::vector<std::uint8_t>(9*0xb4); // 부모/Owner/신전이 공유하는 실제9 기록이다.
     std::array<std::uint32_t,81> alliances{}; // 원본 방향별9×9 DWORD 표다. 실제 초기화 모듈이 현재 칸을 직접 쓴다.
-    std::array<std::uint8_t,9> hiddenPlayers{}; // 같은 현재 Chat 숨김 BYTE9이며 동맹이나 active의 사본이 아니다.
+    std::array<std::uint8_t,87> battleOptions{}; //원본87BYTE와Chat숨김9의단일물리저장소다.
+    std::span<std::uint8_t> hiddenPlayers{battleOptions.data()+0x3e,9}; // 같은 현재 Chat 숨김 BYTE9이며 동맹이나 active의 사본이 아니다.
     PlayerParticipationState participationState; // 독립 모듈의 값형 호환 상태이며 실제 세션은 현재 getter로만 읽는다.
     std::unique_ptr<RawPlayerParticipation> participation; // 같은 Player9/동맹/실제 brain 해제 몸체다.
     RawAiBrainMemory aiMemory; // AI 본체와17개 목록의 유일한 실제 소유 메모리다.
@@ -225,6 +237,7 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawPlayerWorld> player; // 최초152 생성자/실제 PostPop/9기록을 연결한다.
     std::unique_ptr<RawPlayerRegular> playerRegular; // 현재 Player의 실제 사건1/2를 처리한다.
     std::unique_ptr<RawPlayerTemplateState> templateState; // 같은Template header/원본State28BYTE를 직접 읽는다.
+    std::array<std::vector<std::uint8_t>,9> stateGrowth; //짧은State의실제새버퍼이며기존입력은복사가끝날때까지보존한다.
     std::array<std::vector<std::uint8_t>,9> stateBytes; // 실제 선택한 State 섹션의 writable 원문이다.
     std::array<PlayerTemplateStateStream,9> stateStreams; // 같은 State cursor/end를 공유한다.
     std::array<std::string,9> stateNames; // 같은 현재 Template manager의 실제 이름이다.
@@ -447,7 +460,8 @@ struct RawCampaignSession::Impl {
         level=std::make_unique<RawSquidLevel>(core.pool,core.types,SessionMissing<void,SquidLevelAssertion>());
         finishState.chaffMode=true;objectState.mission=true;objectState.chaffMode=true;
         playerState.playerKnown=1;assetState.boss=true;assetState.inBattle=true;assetState.localOwner=1;gunState.boss=true;
-        broadcast=std::make_unique<RawBattleBroadcast>(core.pool.Edition(),players,services.battlePeers,assetState.localOwner,assetState.boss);
+        //BYTE호환값을DWORD const참조로넘기면임시값수명오류가나므로실제Player DWORD를빌린다.
+        broadcast=std::make_unique<RawBattleBroadcast>(core.pool.Edition(),players,services.battlePeers,playerState.battleOwner,assetState.boss);
         // 별도 관찰/장치 송신이 없으면 실제 분배기를 사용한다. NULL 연결은 원본 조건에서 자연스럽게 생략한다.
         if (!services.assets.sendGunPacket) services.assets.sendGunPacket=[this](std::span<const std::uint8_t> bytes) { broadcast->Send(bytes); };
         if (!services.pathPacket) services.pathPacket=[this](std::span<const std::uint8_t> bytes) { broadcast->Send(bytes); };
@@ -530,7 +544,8 @@ struct RawCampaignSession::Impl {
         playerHooks.addRegular=[this](Sid sid,std::uint32_t event,float payload) { SessionCheck(core.processes.AddRegular(sid,event,payload)!=nullptr); };
         player=std::make_unique<RawPlayerWorld>(core.pool,core.postPop,players,playerState,std::move(playerHooks));core.postPop.SetPlayerPostPop(player.get());
         templateState=std::make_unique<RawPlayerTemplateState>(core.pool.Edition(),headers,stateStreams,stateNames,
-            objectState.loadingDepth,objectState.mission,SessionMissing<void,PlayerTemplateStateAssertion>(),[this](std::uint32_t depth) { world.SetLoadingDepth(depth); });
+            objectState.loadingDepth,objectState.mission,SessionMissing<void,PlayerTemplateStateAssertion>(),[this](std::uint32_t depth) { world.SetLoadingDepth(depth); },
+            [this](std::uint32_t owner,std::uint32_t size) { auto& buffer=stateGrowth.at(owner);buffer.resize(size);return std::span<std::uint8_t>(buffer); });
         auto playerRegularHooks=services.player;playerRegularHooks.assertion=SessionMissing<void,PlayerRegularAssertion>();
         FillMissing(playerRegularHooks.log);
         playerRegularHooks.reserveRegular=[] { return true; };
@@ -607,7 +622,7 @@ struct RawCampaignSession::Impl {
         priestDamageState.levelCorrectionDisabled=globals.missionPost;priestDamageState.boss=assetState.boss;
         priestDamageState.levelCorrectionDisabledRead=[this] { return globals.missionPost; };
         generalDamageState.serverRead=[this] { return core.processState.server; };
-        generalDamageState.localOwnerRead=[this] { return static_cast<std::uint8_t>(assetState.localOwner); };
+        generalDamageState.localOwnerRead=[this] { return static_cast<std::uint8_t>(playerState.battleOwner); };
         generalDamageState.primaryIslandRead=[this](std::uint8_t owner) { return std::bit_cast<std::int32_t>(Read(players,owner*0xb4U+0x78)); };
         auto hitEffects=services.hit;
         hitEffects.priest.defaultFrame=[this](Sid sid) { return projectileTypes[core.pool.Slot(sid)[10]].defaultFrame; };
@@ -1131,7 +1146,7 @@ struct RawCampaignSession::Impl {
         steal.regular=[this](Sid sid,std::uint32_t event,float delay) { if (!pendingCarrierTask || delay!=1.0F) throw std::logic_error("크랩 Regular 예약 누락");auto* reserved=pendingCarrierTask.get();std::destroy_at(reserved);std::construct_at(reserved,event,delay);auto* task=static_cast<RegularProcess*>(core.processes.Attach(std::move(pendingCarrierTask),46,sid,0x50));task->ResetTask(event,core.processState.now); };
         steal.check=[this](Sid sid) { static_cast<void>(priests->CarrierCheck().Check(sid)); };
         steal.damageablePostPop=[this](Sid sid,std::uint32_t flags) { carrier->DamageablePostPop(sid,flags); };
-        carrierSteal=std::make_unique<RawCarrierSteal>(core.pool,core.hash,core.types,assetState.boss,globals.editor,assetState.localOwner,alliances,motionState.halt.carrierType,motionState.carrier.priestType,stealHeader,stealHaltCounter,std::move(steal));
+        carrierSteal=std::make_unique<RawCarrierSteal>(core.pool,core.hash,core.types,assetState.boss,globals.editor,playerState.battleOwner,alliances,motionState.halt.carrierType,motionState.carrier.priestType,stealHeader,stealHaltCounter,std::move(steal));
         core.postPop.SetCarrierStealPostPop(carrierSteal.get());
     }
     // 실제 Carrier 내용물 그림/표시/타이머를 현재 Session의 한 풀·시계·공유 타입에 연결한다.
@@ -1338,6 +1353,8 @@ struct RawCampaignSession::Impl {
     // 실제 AI 계산/색 표/섬 프레임은 Session이 연결하고 언어/채팅/표시 통지는 외부 소비자에 남긴다.
     void ConnectAi() {
         auto hooks=services.ai.participation; // brain 수명은 외부 관찰 callback에 맡기지 않는다.
+        const auto otherAssign=hooks.assignConnection; //독립검사의실제전송경계는로컬연결을선택하지않을때유지한다.
+        hooks.assignConnection=[this,otherAssign](std::int32_t pending,std::int32_t owner) { if (connectionAssign) connectionAssign(pending,owner);else { if (!otherAssign) throw std::logic_error("실제로그인 연결재배치 미연결");otherAssign(pending,owner); } };
         hooks.destructBrain=[this](std::uint32_t token) { aiConstructor->Destruct(token); };
         hooks.freeBrain=[this](std::uint32_t token) { aiConstructor->FreeBody(token); };
         participation=std::make_unique<RawPlayerParticipation>(core.pool.Edition(),players,alliances,hiddenPlayers,participationState,std::move(hooks));
@@ -1391,7 +1408,7 @@ struct RawCampaignSession::Impl {
         playerContent=std::make_unique<RawPlayerContentNotice>(core.pool,PlayerContentNoticeState{
             reads.cursorA,reads.cursorB,patch.changedSample,patch.sample,patch.remaining,
             PlayerContentNoticeRead<std::uint32_t>::Bind([this] { return assetState.inBattle ? 1U : 0U; }),
-            assetState.localOwner,reads.firstSpPool,reads.firstPermutation,contentGumpType,contentEvent},std::move(playerHooks));
+            playerState.battleOwner,reads.firstSpPool,reads.firstPermutation,contentGumpType,contentEvent},std::move(playerHooks));
         contentNotice=std::make_unique<RawContentParentNotice>(core.pool,[this](Sid parent,Sid form,std::uint32_t reason) {
             lifetime->ParentNotice(parent,form,reason);
         });
@@ -1404,7 +1421,7 @@ struct RawCampaignSession::Impl {
         contentLifetimeState.currentCursor=[this] { return cursorDrop.preview; };
         FillMissing(contentEffects.localNotice);FillMissing(contentEffects.remoteNotice);
         FillMissing(contentEffects.wallet);FillMissing(contentEffects.addSp);FillMissing(contentEffects.sound);
-        contentLifetimeState.localOwner=assetState.localOwner;contentLifetimeState.boss=assetState.boss;
+        contentLifetimeState.localOwner=static_cast<std::uint8_t>(playerState.battleOwner);contentLifetimeState.boss=assetState.boss;
         contentLifetimeState.notice=0x020000b4; // PATCH005429c4의 실제 수입 명령 초기값이다.
         auto carrierEffects=services.carrierContent;
         carrierEffects.center=[this](Sid parent) { return gunTarget->Center(parent); };
@@ -1730,7 +1747,7 @@ struct RawCampaignSession::Impl {
         transfer.goHome=effects.carrierGoHome;FillMissing(transfer.goHome);
         transfer.commonHalt=[this](Sid sid) { if (!motion) throw std::logic_error("현재 이동 연결 전 고갈된 캐리어 정지");return motion->CommonHalt(sid); };
         effects.halt.carrierPickup=[this](Sid sid) { return carrierSteal->Try(sid); };
-        carrierTransfer=std::make_unique<RawCarrierTransfer>(core.pool,core.hash,core.types,assetState.boss,globals.editor,assetState.localOwner,carrierTransferState,std::move(transfer));
+        carrierTransfer=std::make_unique<RawCarrierTransfer>(core.pool,core.hash,core.types,assetState.boss,globals.editor,playerState.battleOwner,carrierTransferState,std::move(transfer));
         effects.halt.nuggetTransfer=[this](Sid sid) { return carrierTransfer->Transfer(sid); };
         FillMissing(effects.priest.neutralReturn);
         effects.path.metadata=[this](Sid sid) {
@@ -1790,6 +1807,19 @@ struct RawCampaignSession::Impl {
     }
 
 };
+#include "client/RawCampaignSessionLogin.inc"
+
+//같은원본처리기가참여성공/Ready/월드설치를수행한다.강제owner/flags쓰기를추가하지않는다.
+void RawCampaignSession::LoadLocalConnection() {
+    if (impl_->loaded || impl_->login || !impl_->services.localLogin) throw std::logic_error("실제로컬로그인 새수명/장치 계약 오류");
+    impl_->login=std::make_shared<Impl::Login>(*impl_,*impl_->services.localLogin,[this] { Load();RegisterCarrierCommands(impl_->login->transport->Dispatch());RegisterConstructionCommands(impl_->login->transport->Dispatch()); });impl_->login->Begin();
+}
+//현재프레임에서만같은실제두끝의큐를소비한다.
+void RawCampaignSession::PumpLocalConnection() { if (impl_->login) impl_->login->Pump(); }
+//진단은현재원본확정phase를읽고성공을합성하지않는다.
+std::uint32_t RawCampaignSession::LocalConnectionPhase() const { return impl_->login ? impl_->login->blocks[1][0] : 0U; }
+//현재실제수신기록의종류만빌린다.
+std::span<const std::uint8_t> RawCampaignSession::LocalConnectionPackets() const { return impl_->login ? std::span<const std::uint8_t>(impl_->login->wireTypes) : std::span<const std::uint8_t>{}; }
 // 현재 실제 자산/Template/서비스를 보관하고 모든 하위 모듈을 구성한다.
 RawCampaignSession::RawCampaignSession(const GameAssets& assets,const BaseFileSystem& files,FortTemplate fort,std::string mission,RawCampaignSessionServices services)
     :impl_(std::make_unique<Impl>(assets,files,std::move(fort),std::move(mission),std::move(services))) {}
@@ -1799,7 +1829,7 @@ RawCampaignSession::~RawCampaignSession()=default;
 void RawCampaignSession::Load() { impl_->runtime->Load();impl_->ConnectBuilding();impl_->ConnectMotion();impl_->buildingMover=impl_->MakeBuilder(impl_->buildingMoverState,{});impl_->ConnectGameplayPlacement();impl_->ConnectCursor();impl_->loaded=true; }
 // UI의 현재 크기/변경 전역을 빌리며 게임 소유자·모드는 실제 세션에서 다시 읽는다.
 void RawCampaignSession::ResetCamera(CameraHomeState& state,std::function<void(std::int32_t,std::int32_t)> apply) const {
-    state.localPlayer=impl_->assetState.localOwner;state.fort=impl_->core.ownerMode.fort;
+    state.localPlayer=impl_->playerState.battleOwner;state.fort=impl_->core.ownerMode.fort;
     state.battle=impl_->core.ownerMode.battle;state.challenge=impl_->core.ownerMode.challenge;
     CameraHome(impl_->core.pool,impl_->core.types,state,std::move(apply)).Reset();
 }

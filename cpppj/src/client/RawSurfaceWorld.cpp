@@ -193,6 +193,8 @@ RawWorldCore RawSurfaceWorld::Core() {
         *s.factory,*s.owner,*s.frame,*s.pop,*s.unpop,*s.postPop,*s.display,*s.building,*s.graph,*s.neighbors,
         *s.baseDestroy,*s.virtualDestroy,*s.lifecycle,*s.events,*s.formDispatch,*s.dependencies,*s.host,s.processState,s.kernel,s.links};
 }
+//현재같은전역TYPE의수정가능범위를원본옵션소비자에게만빌린다.
+std::span<o::RiftTypeRecord> RawSurfaceWorld::MutableTypes() { return impl_->types; }
 // 완성된 실제 파생 훅을 설치할 때 Form/Regular의 기존 callback도 현재 경계를 읽게 한다.
 void RawSurfaceWorld::BindRuntime(RawWorldRuntimeHooks hooks) {
     auto& s=*impl_;

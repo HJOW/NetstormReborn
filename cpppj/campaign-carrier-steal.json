@@ -9,15 +9,15 @@
   },
   "status": "크랩포획및전용배치후처리단위완료/11스테이지전체목표진행중",
   "currentSources": {
-    "cpppj/src/o/RawCarrierSteal.h": "1612395f673dbda326b350eeb1cbf76a32a5a727569132355c4f0a486c7bcc9b",
+    "cpppj/src/o/RawCarrierSteal.h": "0b1d9a043731c29e1d585d206ef45f26294929baac86bc7268b51ff412ad492d",
     "cpppj/src/o/RawCarrierSteal.cpp": "fd25cb306d2a4acd19f619d59e141254cc69346c3f0d27e7acbb25cbd776af07",
     "cpppj/src/o/SquidPostPop.cpp": "0e6f552bafeab1be94ba07919b928535e774ce54e121d775df514c9b6645d4e6",
     "cpppj/src/o/SquidPostPop.h": "b4bfb4886068b9dd98bed52b9f56f17e1c25e50b123b4fdd6b165f2054bcdf1d",
-    "cpppj/src/client/RawCampaignSession.cpp": "3c4e3d0f7af8db3b1b1e0e37fbb77331a3d2f2917fb4e5b7ff5d0412c34df337",
-    "cpppj/src/client/RawCampaignSession.h": "84fcfbdf8f4abcc82bfbc87e5a383ea208eba7ea5d6553f2ac8d9938ef357e8a",
-    "cpppj/src/CMakeLists.txt": "c71e26b7f761fd9c22f70e87414fa2c278dfaeb270443457d0405d60d6c3899c",
-    "cpppj/tests/CMakeLists.txt": "1049e7a50b5dc17dd33e6218951686d5a0b171f44062fe892561869f928a3867",
-    "cpppj/tests/CampaignSessionTests.cpp": "58592b3cdc555e8b7203a82997b89134f73db5e67ca3aaa4b3a4033055d459e0",
+    "cpppj/src/client/RawCampaignSession.cpp": "4d831f540fa3fac33097c2e6a3fd52009105620287c5745e2c4daeb63bd7bcda",
+    "cpppj/src/client/RawCampaignSession.h": "c1d372021f024b7c45d625a7f16843738f9a77221eeaf85876d909dd639d1508",
+    "cpppj/src/CMakeLists.txt": "4a161874d436220480319b695c006badf5032924a6c03139cbb6a7cf7bc7f116",
+    "cpppj/tests/CMakeLists.txt": "ee8abf06ee9fc0f6eb349424597d29d64e578a3b4ff2ad785d79fd88f9dd4da6",
+    "cpppj/tests/CampaignSessionTests.cpp": "23484e24e91f574fb3d92ce3f2199fab52a8c04a67a7aef2f5143d3dc20bfaad",
     "cpppj/tests/CarrierStealTests.cpp": "233fe7aba55a5c620a6f7440f4c0a6838dfec54d868b33243305e66e1fbd8ebf",
     "tools/decomp_carrier_steal.py": "a6e7171636127f108fec09bb01c1fefaf2d3d9c201c8d1fcbda3bf11df4e39f5",
     "docs/exe/cpp-carrier-steal-20261018.md": "dbc0c8d971ec93269fa1017ecb54da31046a69d16bdd637d86e0dfbb4cd05d76",
@@ -377,6 +377,49 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "e31ee73e26df5e5c3a8aa32814529a0433759f371c3ca9fb5196b89841f5bd12",
           "current": "58592b3cdc555e8b7203a82997b89134f73db5e67ca3aaa4b3a4033055d459e0"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 164,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/o/RawCarrierSteal.h",
+          "previous": "1612395f673dbda326b350eeb1cbf76a32a5a727569132355c4f0a486c7bcc9b",
+          "current": "0b1d9a043731c29e1d585d206ef45f26294929baac86bc7268b51ff412ad492d"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "3c4e3d0f7af8db3b1b1e0e37fbb77331a3d2f2917fb4e5b7ff5d0412c34df337",
+          "current": "4d831f540fa3fac33097c2e6a3fd52009105620287c5745e2c4daeb63bd7bcda"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "84fcfbdf8f4abcc82bfbc87e5a383ea208eba7ea5d6553f2ac8d9938ef357e8a",
+          "current": "c1d372021f024b7c45d625a7f16843738f9a77221eeaf85876d909dd639d1508"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "c71e26b7f761fd9c22f70e87414fa2c278dfaeb270443457d0405d60d6c3899c",
+          "current": "4a161874d436220480319b695c006badf5032924a6c03139cbb6a7cf7bc7f116"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "1049e7a50b5dc17dd33e6218951686d5a0b171f44062fe892561869f928a3867",
+          "current": "ee8abf06ee9fc0f6eb349424597d29d64e578a3b4ff2ad785d79fd88f9dd4da6"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "58592b3cdc555e8b7203a82997b89134f73db5e67ca3aaa4b3a4033055d459e0",
+          "current": "23484e24e91f574fb3d92ce3f2199fab52a8c04a67a7aef2f5143d3dc20bfaad"
         }
       ]
     }

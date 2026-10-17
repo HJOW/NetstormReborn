@@ -9,8 +9,8 @@
   },
   "status": "벌룬42와 그림자 수명 연결. 전체11스테이지 자연 플레이 목표는 미완료.",
   "currentSources": {
-    "cpppj/src/CMakeLists.txt": "c71e26b7f761fd9c22f70e87414fa2c278dfaeb270443457d0405d60d6c3899c",
-    "cpppj/src/client/RawCampaignSession.cpp": "3c4e3d0f7af8db3b1b1e0e37fbb77331a3d2f2917fb4e5b7ff5d0412c34df337",
+    "cpppj/src/CMakeLists.txt": "4a161874d436220480319b695c006badf5032924a6c03139cbb6a7cf7bc7f116",
+    "cpppj/src/client/RawCampaignSession.cpp": "4d831f540fa3fac33097c2e6a3fd52009105620287c5745e2c4daeb63bd7bcda",
     "cpppj/src/client/RawCampaignPathBindings.cpp": "0d36db062813bc9ea5b204fd06f1cf4bc0c43b6f71ede35aae851285fdbdcdb1",
     "cpppj/src/client/RawCampaignPathBindings.h": "6ac357c4b2724907eb183be465f5f031f7164c2fdbc474de308d12acf4edc329",
     "cpppj/src/o/RawPathRuntime.cpp": "4f051a4e5c50de3a99cb856c80dcccf7988ee1000fec9f66942f6e4e8999e639",
@@ -20,8 +20,8 @@
     "cpppj/src/o/RawPathStart.cpp": "9dbe404e4d377a362213cffd1da8a42b65816aaf54830fc5708379b9d528edab",
     "cpppj/src/o/SquidPostPop.cpp": "0e6f552bafeab1be94ba07919b928535e774ce54e121d775df514c9b6645d4e6",
     "cpppj/src/o/SquidPostPop.h": "b4bfb4886068b9dd98bed52b9f56f17e1c25e50b123b4fdd6b165f2054bcdf1d",
-    "cpppj/tests/CMakeLists.txt": "1049e7a50b5dc17dd33e6218951686d5a0b171f44062fe892561869f928a3867",
-    "cpppj/tests/CampaignSessionTests.cpp": "58592b3cdc555e8b7203a82997b89134f73db5e67ca3aaa4b3a4033055d459e0",
+    "cpppj/tests/CMakeLists.txt": "ee8abf06ee9fc0f6eb349424597d29d64e578a3b4ff2ad785d79fd88f9dd4da6",
+    "cpppj/tests/CampaignSessionTests.cpp": "23484e24e91f574fb3d92ce3f2199fab52a8c04a67a7aef2f5143d3dc20bfaad",
     "cpppj/src/o/RawBalloonFrame.cpp": "71390bf0c48ed94bd6381b15c812b5a6702cd94e02528692f7ac5d1b6f18ab05",
     "cpppj/src/o/RawBalloonFrame.h": "3c50521f9a4a132e33b627fcf609e6028ff2cfbbc6b757434f06b4b3d7b90c8d",
     "cpppj/src/o/RawBalloonBody.cpp": "ae406292ac8d2be18bbdd2aaf46dc0a845e3b06c989d51af4219d722a5881f61",
@@ -2219,6 +2219,37 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "e31ee73e26df5e5c3a8aa32814529a0433759f371c3ca9fb5196b89841f5bd12",
           "current": "58592b3cdc555e8b7203a82997b89134f73db5e67ca3aaa4b3a4033055d459e0"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 164,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "c71e26b7f761fd9c22f70e87414fa2c278dfaeb270443457d0405d60d6c3899c",
+          "current": "4a161874d436220480319b695c006badf5032924a6c03139cbb6a7cf7bc7f116"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "3c4e3d0f7af8db3b1b1e0e37fbb77331a3d2f2917fb4e5b7ff5d0412c34df337",
+          "current": "4d831f540fa3fac33097c2e6a3fd52009105620287c5745e2c4daeb63bd7bcda"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "1049e7a50b5dc17dd33e6218951686d5a0b171f44062fe892561869f928a3867",
+          "current": "ee8abf06ee9fc0f6eb349424597d29d64e578a3b4ff2ad785d79fd88f9dd4da6"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "58592b3cdc555e8b7203a82997b89134f73db5e67ca3aaa4b3a4033055d459e0",
+          "current": "23484e24e91f574fb3d92ce3f2199fab52a8c04a67a7aef2f5143d3dc20bfaad"
         }
       ]
     }

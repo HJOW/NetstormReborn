@@ -3,6 +3,7 @@
 #include "client/ClientAudio.h"
 #include "client/ClientMain.h"
 #include "client/RawButtonControls.h"
+#include "client/RawMenuControls.h"
 #include "client/RawChatChannels.h"
 #include "o/OriginalText.h"
 #include <algorithm>
@@ -125,6 +126,13 @@ RawCampaignSessionServices MakeCampaignClientServices(Client& client,RawButtonCo
         std::clog<<"Player 간헐천 범위 원본 진단: "<<descriptions.at(static_cast<std::size_t>(assertion))<<'\n';
     };
     BindCampaignAiClientServices(client,services.ai); // 장치 없는 검사와 실제 GUI 월드가 동일한 장기 Client 경계를 사용한다.
+    CampaignLoginServices login; //실제Client의현재설정/시계/표시를원본로컬로그인에연결한다.
+    login.configInt=[&client](std::string_view key,std::int32_t fallback) { client.Configuration().ReadInt(key,fallback);return fallback; };
+    login.wallSeconds=[&client] { return client.WallSeconds(); };login.clock=[] { return static_cast<std::uint32_t>(std::clock()); };
+    login.refresh=[&client] { client.GetRenderer().InvalidateAll(); };
+    login.playerUiBusy=[&controls] { return controls.Menus() && controls.Menus()->HasMenus(); };
+    login.playerNotice=[&client](std::uint32_t kind,std::uint32_t owner,std::uint32_t value) { std::clog<<"Player UI "<<kind<<' '<<owner<<' '<<value<<'\n';client.GetRenderer().InvalidateAll(); };
+    login.log=[](std::string_view text) { std::clog<<text; };services.localLogin=std::move(login);
     return services;
 }
 }

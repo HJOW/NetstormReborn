@@ -1463,3 +1463,8 @@ set_source_files_properties(BalloonPathTests.cpp PROPERTIES COMPILE_DEFINITIONS
 target_sources(netstorm_tests PRIVATE CarrierMoveTests.cpp)
 set_source_files_properties(CarrierMoveTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_CARRIER_MOVE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/carrier-move-x86.tsv\"")
+
+# Early Mission 로그인에서실제짧은State 확장의독립원문을검증한다.
+target_sources(netstorm_tests PRIVATE PlayerStateExpandTests.cpp)
+set_source_files_properties(PlayerStateExpandTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_PLAYER_STATE_EXPAND_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/player-state-expand-x86.tsv\"")

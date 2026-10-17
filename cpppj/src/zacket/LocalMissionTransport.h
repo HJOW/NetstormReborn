@@ -61,7 +61,8 @@ public:
     //0x27/version1/정책0 등록이다. 실제004a7800 상위 몸체가 없으면 열기 전에 거부한다.
     void RegisterLogin(decltype(o::PacketRegistration::receive) receive);
     // 원본 zlocal 서버/접속 두 끝을 열고 서버 측을 pending-1로 등록한다. 포트는 실제 게임 설정값이다.
-    void Open(std::uint32_t port);
+    void Open(std::uint32_t port,bool connectImmediately=true); // 기존 호출은 양끝을 열며 실제 미션 부모는 서버만 먼저 연다.
+    void Connect(); // 이미 열린 로컬 서버에 실제 클라이언트9 끝을 접속한다. Player 성공 flag는 쓰지 않는다.
     //004e27b0의 실제 pending-1을 같은 연결 객체 owner1..8로 이동하고 buffered 전송을 켠다.
     void AssignConnection(std::int32_t pending,std::int32_t owner);
     //004e2dc0의 현재 flags1/NULL 연결 선택 후 선언 길이 바이트를 실제 다른 끝의 송신 큐에 쓴다.

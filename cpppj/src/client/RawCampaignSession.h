@@ -1,6 +1,8 @@
 // 실제 캠페인 초기화/전투/이동의 상태와 모듈 수명을 클라이언트 세션 하나에 보관한다.
 #pragma once
 #include "client/GameAssets.h"
+#include "client/CampaignLoginServices.h"
+#include <optional>
 #include "client/RawCampaignWorldRuntime.h"
 #include "client/RawCampaignMotionBindings.h"
 #include "client/RawCampaignAssetBindings.h"
@@ -93,6 +95,7 @@ struct CampaignProductionServices {
 };
 // 게임 계산을 대신하지 않고 실제 클라이언트 UI/음향/전송의 선택 경계를 공급한다.
 struct RawCampaignSessionServices {
+    std::optional<CampaignLoginServices> localLogin; //실제Client는 원본 로컬로그인을 사용하며 독립 모듈 검사는 명시Load를 유지한다.
     std::function<std::int32_t()> unixSeconds; // 실제 time32의 현재 Unix 초다.
     RawPriestWorldEffects priest; // 원본 소유자 통지/보호막 안내/음향 등의 실제 외부 소비자다.
     CampaignOwnershipEffects ownership; // 실제 생산 UI/현재 themeMode 및 진단 경계다.
@@ -137,6 +140,13 @@ public:
     RawCampaignSession& operator=(const RawCampaignSession&)=delete; // 다른 월드 상태와 복사하지 않는다.
     // 실제 부모 설치를 한 번 실행한다. 실제 큰 하위가 누락되면 오류를 그대로 반환한다.
     void Load();
+    //현재실제설정/시계/Player/Template로 원본로컬로그인 후 같은Load를 정확한 위치에서 실행한다.
+    void LoadLocalConnection();
+    //프레임마다현재실제송신/수신큐와로그인타이머를진행한다.
+    void PumpLocalConnection();
+    //현재연결상태/실제수신패킷은진단전용읽기다. 별도성공flag를만들지않는다.
+    std::uint32_t LocalConnectionPhase() const;
+    std::span<const std::uint8_t> LocalConnectionPackets() const;
     // 실제443fe0을 같은 시각/Host/표시/음향으로 실행한다. duration0은 원본 기본10초다.
     void StartConstruction(o::Sid parent,float duration);
     // 현재 같은 풀/TYPE/실제 로컬 소유자·모드로 원본 초기 시야를 계산하여 화면에 적용한다.

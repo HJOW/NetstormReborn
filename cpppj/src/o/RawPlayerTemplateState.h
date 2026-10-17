@@ -27,11 +27,12 @@ public:
     RawPlayerTemplateState(OriginalEdition edition,std::span<std::uint8_t> headers,
         std::array<PlayerTemplateStateStream,9>& states,std::array<std::string,9>& fileNames,
         std::uint32_t& loadingDepth,const bool& inMission,std::function<void(PlayerTemplateStateAssertion)> assertion,
-        std::function<void(std::uint32_t)> depthChanged);
-    // PATCH4bd550/CD427920의기존nonemptyState/end>=28 선택범위다. 현재pos를0으로바꾸고동일데이터를반환한다.
+        std::function<void(std::uint32_t)> depthChanged,
+        std::function<std::span<std::uint8_t>(std::uint32_t,std::uint32_t)> allocate={});
+    // PATCH4bd550/CD427920의기존nonemptyState다. 처음pos0, 짧은원문은44d290처럼확장뒤pos/end28, 그외동일데이터를반환한다.
     std::span<std::uint8_t> Get(std::uint32_t slot) const;
     // PATCH4bd540/4bd360·CD427910/4275d0의Notify다. 실제isMine1 또는preventSave에서자연반환한다.
-    // 선택된실제파일저장/State없는초기화/shortState힙확장은완료로대체하지않고명시거부한다.
+    // 없는State초기화/실제파일저장은명시거부하며짧은기존State는실제할당이연결됐을때만28BYTE로확장한다.
     void Changed(std::uint32_t slot) const;
 private:
     // 현재Template한기록의DWORD를원본little endian폭으로조회한다.
@@ -43,6 +44,7 @@ private:
     std::uint32_t& depth_; // 같은Template/Object/Priest/Meta로딩깊이다.
     const bool& mission_; // 실제미션ctor가설정한594fa0/CD52e16c를공유한다.
     std::function<void(PlayerTemplateStateAssertion)> assertion_; // 원본보고후현재조건을재조회한다.
+    std::function<std::span<std::uint8_t>(std::uint32_t,std::uint32_t)> allocate_; //shortState의실제새MemStream할당이다. 기존원문은본문이복사/0채움한다.
     std::function<void(std::uint32_t)> depthChanged_; // CD즉시증감값을실제소비자에전달한다.
 };
 }

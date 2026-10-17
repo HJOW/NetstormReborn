@@ -122,3 +122,6 @@ target_sources(netstorm PRIVATE o/RawBalloonFrame.cpp o/RawBalloonFrame.h o/RawB
 
 # 원본40h 이동 요청/서버 수신을 같은 실제 Session에서 사용한다.
 target_sources(netstorm PRIVATE o/RawCarrierMove.cpp o/RawCarrierMove.h)
+
+# 같은Session의원본로그인/로컬전송수명과실제Client장치경계다.
+target_sources(netstorm PRIVATE client/CampaignLoginServices.h client/RawCampaignSessionLogin.inc)

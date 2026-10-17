@@ -61,8 +61,8 @@
   "files": {
     "cpppj/src/o/RawPlayerRegular.cpp": "73fda5e8031e6566e380e725523ead1e7705b3d0edec7132056cf49795ea9570",
     "cpppj/src/o/RawPlayerRegular.h": "a34c451c07dec3690e6c8f045b05b49398ef1e09a649527932fcbf4d18e6b03c",
-    "cpppj/src/o/RawPlayerTemplateState.cpp": "b45911b191f1cd3112ec89d4fca7acab880fcace40b4102b336abfca7420d833",
-    "cpppj/src/o/RawPlayerTemplateState.h": "80d949ec5135e5c3869fe4a2939871c6138bb1b759bc5da9ffbdada93487bd7f",
+    "cpppj/src/o/RawPlayerTemplateState.cpp": "0ad672bee01c7fbf1930a8ef28b8be9ff3b3e9dbac17c8b6c68e3eb6f72286fb",
+    "cpppj/src/o/RawPlayerTemplateState.h": "94d77a52e0d7d3f218732b27acf4039d293dae1b4041a723db88669a51c4b77e",
     "cpppj/tests/fixtures/player-regular-x86.tsv": "e3ef582f5da9c62f3235eb16f30bd76b97f9db1a5bff0728070f7ac83ccea932",
     "extracted/creation/originalCD/creation.c": "6968a5c10a81f60f270671e24c163202da11b99bdf64578d038c3eb54cff49ac",
     "extracted/creation/originalCD/functions.tsv": "4853e93e88fd741083d3cc6d5ef2429e652e8fa13b3a2315dba6e36585ff3f3d",
@@ -147,5 +147,26 @@
     "실제Handle/getExistingState/Notify/lookup/최소길이helper와기존Factory/Regular/Form/Kernel를실행한다.",
     "State이름ASCII일치비교/로그/진단/heap40은명시경계다.없는State/shortState힙확장/파일저장은미복원진입에서거부하며assert정상반환으로합치지않는다.",
     "CPP전수/같은Host시간0→5→65소비자는후속이다.14Player1680/반복정밀도는새고유수에더하지않는다."
+  ],
+  "integration_updates": [
+    {
+      "date": "2026-10-18",
+      "unit": 164,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawPlayerTemplateState.cpp",
+          "previous": "b45911b191f1cd3112ec89d4fca7acab880fcace40b4102b336abfca7420d833",
+          "current": "0ad672bee01c7fbf1930a8ef28b8be9ff3b3e9dbac17c8b6c68e3eb6f72286fb"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawPlayerTemplateState.h",
+          "previous": "80d949ec5135e5c3869fe4a2939871c6138bb1b759bc5da9ffbdada93487bd7f",
+          "current": "94d77a52e0d7d3f218732b27acf4039d293dae1b4041a723db88669a51c4b77e"
+        }
+      ]
+    }
   ]
 }

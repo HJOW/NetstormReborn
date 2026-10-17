@@ -44,7 +44,12 @@ def check(mission, play, movement=False, combat=False, output=OUT):
               'stderr': result.stderr.decode('utf-8', errors='replace')}
     (directory / 'result.json').write_text(json.dumps(record, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
     # 긴 이동 실행의 stderr에는 실제 PlayerRegular 로그가 기록된다. 오류는 프로세스 종료 코드로 판정한다.
-    assert result.returncode == 0 and (movement or combat or not result.stderr), record
+    # 실제로그인/타이머의확인한상태로그만초기진입에서허용한다. 알수없는stderr는계속실패다.
+    login_lines = {'No Central Island.', '로컬 Fort 전송', 'login status timer start',
+                   'Seting Priest State', 'Done', 'Moveing Camera', 'Player UI 5 1 0', 'Player UI 3 1 1'}
+    login_lines.update(f'로컬 미션 상태 {phase}' for phase in (8, 9, 10, 13, 14))
+    stderr_lines = [line for line in record['stderr'].splitlines() if line]
+    assert result.returncode == 0 and (movement or combat or all(line in login_lines for line in stderr_lines)), record
     observed = states(directory / 'states.tsv')
     briefing = observed['briefing']
     assert briefing['phase'] == ['3'] and briefing['paused'] == ['1']

@@ -26,7 +26,7 @@ void RawPlayerContentNotice::Notify(Sid parent,std::uint32_t form,std::uint32_t 
     if (state_.cursorA.Read()!=state_.cursorB.Read()) state_.problemCode=fallback;
     if (state_.moneyChecks) {
         if (state_.battleShown.Read()) {
-            const auto money=hooks_.money(state_.localPlayer); // 출력float는조건부조회에서한번저장한현재SP다.
+            const auto money=hooks_.money(state_.localPlayer.Read()); // 출력float는조건부조회에서한번저장한현재SP다.
             fallback=state_.fallbackCode;
             if (money>kMoneyThreshold) state_.problemCode=fallback;
         }

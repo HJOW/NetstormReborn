@@ -19,8 +19,8 @@
     "cpppj/src/o/RawContainedCreate.cpp": "54ac5f440300896af9fc25bfc98315ae5efe3e99b393fce348f006e09c3cbf97",
     "cpppj/src/o/ContentFormHost.h": "8653814bdfbe2c0b82957014ca65f7c17381bf428dc3671a7254ec14324c441f",
     "cpppj/src/o/ContentFormHost.cpp": "cb21effe599b73f6ca85d826c6f85f0e3f6f41e956fbc80cf344a06674d20cb4",
-    "cpppj/src/o/RawPlayerContentNotice.h": "ff67c426b6c98f6892c02a4c55bc639998c33d0e170c29f87d5d48769f2f62ba",
-    "cpppj/src/o/RawPlayerContentNotice.cpp": "81e9630abc19b52efad5680d82acab806a22f5849f849d3823a335822a0f6e24",
+    "cpppj/src/o/RawPlayerContentNotice.h": "57297eb8147285fec63e3b290c941babdf3838d57b1f7831f54d24c1895f0b36",
+    "cpppj/src/o/RawPlayerContentNotice.cpp": "17aedeb4b2648e39b2107f11d2fb093706e5dced4591a51e67f24f9db489a2ec",
     "cpppj/src/o/RawSpStoreNoticeBindings.h": "ebebfd0f507b96550a0b4d5850dbc73c1ecd5685e50fa744f807f4d9e3c3e5f7",
     "cpppj/src/o/RawSpStoreNoticeBindings.cpp": "0db2f7def058c20df55768105632612edc73bea61523a7309cf445c1af6f50cb",
     "cpppj/src/o/RawTotalMade.h": "2be2cd700c067829ade6cef17aedd4cbfbc6bad32f5918497e8d332c78510d2c",
@@ -111,6 +111,25 @@
           "path": "cpppj/src/o/RawProductionDeck.cpp",
           "previous": "d5fa55e6bc52724af0e4b3cce90a7f0232f2eb703d711566d04e9f3a7f20089b",
           "current": "dbd0522578b668d61df3ae2ebe395810ffb58cba7f811f2c3b30d8532cb13bbc"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 164,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/current_sources",
+          "path": "cpppj/src/o/RawPlayerContentNotice.h",
+          "previous": "ff67c426b6c98f6892c02a4c55bc639998c33d0e170c29f87d5d48769f2f62ba",
+          "current": "57297eb8147285fec63e3b290c941babdf3838d57b1f7831f54d24c1895f0b36"
+        },
+        {
+          "group": "/current_sources",
+          "path": "cpppj/src/o/RawPlayerContentNotice.cpp",
+          "previous": "81e9630abc19b52efad5680d82acab806a22f5849f849d3823a335822a0f6e24",
+          "current": "17aedeb4b2648e39b2107f11d2fb093706e5dced4591a51e67f24f9db489a2ec"
         }
       ]
     }

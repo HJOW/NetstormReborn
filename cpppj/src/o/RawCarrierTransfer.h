@@ -30,6 +30,9 @@ public:
     RawCarrierTransfer(const SidPool& pool,const SquidHash& hash,std::span<const RiftTypeRecord> types,
         const bool& boss,const std::uint32_t& editor,const std::uint32_t& localOwner,
         CarrierTransferState& state,CarrierTransferHooks hooks); // 모든 참조는 처리기보다 오래 살아야 한다.
+    //실제현재전역보다먼저사라지는로컬번호임시참조를금지한다.
+    RawCarrierTransfer(const SidPool&,const SquidHash&,std::span<const RiftTypeRecord>,const bool&,const std::uint32_t&,std::uint32_t&&,CarrierTransferState&,CarrierTransferHooks)=delete;
+    RawCarrierTransfer(const SidPool&,const SquidHash&,std::span<const RiftTypeRecord>,const bool&,const std::uint32_t&,const std::uint32_t&&,CarrierTransferState&,CarrierTransferHooks)=delete;
     std::uint32_t Transfer(Sid parent) const; // 실제42a0d0: 전달 성공12, 나머지10이다.
     std::uint32_t Halt(Sid parent) const; // 실제42ac60: 감긴 signed 나머지0일 때만 전달한다.
     void Receive(std::uint32_t owner,std::uint32_t flags,std::span<const std::uint8_t> packet) const; // 실제426830은 두 선행 인자와 packet+8을 읽지 않는다.

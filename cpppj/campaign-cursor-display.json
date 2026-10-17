@@ -8,8 +8,8 @@
     "date": "2026-10-16"
   },
   "currentSources": {
-    "cpppj/src/CMakeLists.txt": "c71e26b7f761fd9c22f70e87414fa2c278dfaeb270443457d0405d60d6c3899c",
-    "cpppj/src/client/GameWorld.cpp": "6f1c2bb5a44a98039f2c0709164ec27911fa0893282377120c35e5e05fd3b7fa",
+    "cpppj/src/CMakeLists.txt": "4a161874d436220480319b695c006badf5032924a6c03139cbb6a7cf7bc7f116",
+    "cpppj/src/client/GameWorld.cpp": "6b28d6de50e78e991100d163cfe0f005f0e7e7504df1b03f24134dac1c3edd7c",
     "cpppj/src/client/OwnerColorMaps.cpp": "1dc23bab259f2bdbb6e88d7e12c4427a50f76304c8aa11cc6309800d0da7e620",
     "cpppj/src/client/OwnerColorMaps.h": "aed5d31073e2015b4d0773eef376a302d122c024a04f90533d0882fd28121abf",
     "cpppj/src/client/PreviewCollection.cpp": "6a067ab897f31fd8bc9c046f91ac40f15c815563b74c26757bf023a9eaf3255c",
@@ -20,12 +20,12 @@
     "cpppj/src/client/RawCampaignCursor.h": "0c4aa17d5acf5cd03fd9d651c33de2fedd115c622e9f75f1c469edb462c775ce",
     "cpppj/src/client/RawCampaignCursorDisplay.cpp": "8e3f58a74524806c727a1ea81ed725495a22fc41270a77fd6457342925a80117",
     "cpppj/src/client/RawCampaignCursorDisplay.h": "e30e775cf87189bfa1dfeb8a26075decd485dea5e2d366056df8579dcc2f5b73",
-    "cpppj/src/client/RawCampaignSession.cpp": "3c4e3d0f7af8db3b1b1e0e37fbb77331a3d2f2917fb4e5b7ff5d0412c34df337",
+    "cpppj/src/client/RawCampaignSession.cpp": "4d831f540fa3fac33097c2e6a3fd52009105620287c5745e2c4daeb63bd7bcda",
     "cpppj/src/client/Renderer.cpp": "5a36413dc3cf1bfa2c12a57823dc0c44a37ad3f01952ff14f17fdb0ab5b1ff11",
     "cpppj/src/client/Renderer.h": "b6bcd1c739f94173876bb8f9ecbbf2ae34bc48bbe092c6a1bad3454f3a950f55",
-    "cpppj/src/client/UberGump.cpp": "471b592cf1e784c63db34bc109eb3d38785481018b403cef0afa98d98622d10b",
-    "cpppj/tests/CMakeLists.txt": "1049e7a50b5dc17dd33e6218951686d5a0b171f44062fe892561869f928a3867",
-    "cpppj/tests/CampaignSessionTests.cpp": "58592b3cdc555e8b7203a82997b89134f73db5e67ca3aaa4b3a4033055d459e0",
+    "cpppj/src/client/UberGump.cpp": "e374f00c4d17ec9ed4ef0246eb332a00cfd9567fc6956619c74489b818319757",
+    "cpppj/tests/CMakeLists.txt": "ee8abf06ee9fc0f6eb349424597d29d64e578a3b4ff2ad785d79fd88f9dd4da6",
+    "cpppj/tests/CampaignSessionTests.cpp": "23484e24e91f574fb3d92ce3f2199fab52a8c04a67a7aef2f5143d3dc20bfaad",
     "cpppj/tests/PreviewColorMapsTests.cpp": "5019672dc1589cace9bb92690be4bf9786ab8257770794cb51fdff87cf937311",
     "cpppj/tests/RendererTests.cpp": "fb868b30dcd882c0c2add47d3a66434e4cb34bf514f4ce8a7102a0a3ed2995c8"
   },
@@ -829,6 +829,49 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "e31ee73e26df5e5c3a8aa32814529a0433759f371c3ca9fb5196b89841f5bd12",
           "current": "58592b3cdc555e8b7203a82997b89134f73db5e67ca3aaa4b3a4033055d459e0"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 164,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "c71e26b7f761fd9c22f70e87414fa2c278dfaeb270443457d0405d60d6c3899c",
+          "current": "4a161874d436220480319b695c006badf5032924a6c03139cbb6a7cf7bc7f116"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/GameWorld.cpp",
+          "previous": "6f1c2bb5a44a98039f2c0709164ec27911fa0893282377120c35e5e05fd3b7fa",
+          "current": "6b28d6de50e78e991100d163cfe0f005f0e7e7504df1b03f24134dac1c3edd7c"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "3c4e3d0f7af8db3b1b1e0e37fbb77331a3d2f2917fb4e5b7ff5d0412c34df337",
+          "current": "4d831f540fa3fac33097c2e6a3fd52009105620287c5745e2c4daeb63bd7bcda"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/UberGump.cpp",
+          "previous": "471b592cf1e784c63db34bc109eb3d38785481018b403cef0afa98d98622d10b",
+          "current": "e374f00c4d17ec9ed4ef0246eb332a00cfd9567fc6956619c74489b818319757"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "1049e7a50b5dc17dd33e6218951686d5a0b171f44062fe892561869f928a3867",
+          "current": "ee8abf06ee9fc0f6eb349424597d29d64e578a3b4ff2ad785d79fd88f9dd4da6"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "58592b3cdc555e8b7203a82997b89134f73db5e67ca3aaa4b3a4033055d459e0",
+          "current": "23484e24e91f574fb3d92ce3f2199fab52a8c04a67a7aef2f5143d3dc20bfaad"
         }
       ]
     }

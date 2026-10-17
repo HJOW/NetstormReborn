@@ -15,6 +15,9 @@ public:
     // players/peers/localOwner/server는 이 객체보다 오래 살아야 한다.
     RawBattleBroadcast(OriginalEdition edition,std::span<const std::uint8_t> players,
         BattlePacketPeers& peers,const std::uint32_t& localOwner,const bool& server);
+    //변환된BYTE/임시DWORD를현재전역참조로보관하는수명오류를컴파일단계에서거부한다.
+    RawBattleBroadcast(OriginalEdition,std::span<const std::uint8_t>,BattlePacketPeers&,std::uint32_t&&,const bool&)=delete;
+    RawBattleBroadcast(OriginalEdition,std::span<const std::uint8_t>,BattlePacketPeers&,const std::uint32_t&&,const bool&)=delete;
     // PATCH004e2e30/CD004c0420: 현재 접속한1..8의 NULL 아닌 연결 중 로컬을 제외한다.
     void Send(std::span<const std::uint8_t> packet) const;
     // PATCH004e2e80/CD004c0480: 서버를 확인하고 시작 시 로컬 owner와 지정 제외 번호를 사용한다.

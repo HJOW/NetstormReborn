@@ -279,7 +279,7 @@ void UberGump::BeginMission(std::string name) {
         [this] { RefreshWindowTitle(); },[this](std::string_view key) { Tell(std::string(key)); },
         [this](std::int32_t kind,std::int32_t player,std::int32_t parameter) { warnings_->Remove(kind,player,parameter);rebuild_=true; }}); // 현재 클라이언트의 설정·음향·입력·UI다.
     auto world=std::make_unique<GameWorld>(client_.Assets(),client_.Files(),std::move(fort),std::move(players),
-        mission_->FortName(),std::move(services),ScreenPoint{client_.GetScreen().Width(),client_.GetScreen().Height()});
+        mission_->FortName(),std::move(services),ScreenPoint{client_.GetScreen().Width(),client_.GetScreen().Height()},true);
     world->elapsed=[this]() { return client_.Time().delta; }; world->paused=[this]() { return client_.Paused(); };
     world->frameTime=[this]() { return client_.Time(); };
     // 카메라/해상도 변경 직후 위치 효과음의 기준을 갱신한다. 월드와 소리 묶음의 수신은 모두 주 스레드에서 실행한다.
@@ -288,7 +288,9 @@ void UberGump::BeginMission(std::string name) {
     world->surfaceDisplay={
         [this]() { return client_.GetRenderer().FullRedrawPending(); },
         [this](o::SquidDisplayRect rect,std::uint32_t flags) { client_.GetRenderer().Invalidate({rect.left,rect.top,rect.right,rect.bottom},flags); }};
-    world_=world.get(); worldProcess_=client_.GetKernel().Add(std::move(world)); userInput_=std::make_unique<UserInput>(client_,*world_);
+    world_=world.get(); worldProcess_=client_.GetKernel().Add(std::move(world));
+    world_->BeginLocalConnection(); //전역subscriber 조회가같은월드를보는상태에서Zone/로그인/월드로드를실행한다.
+    userInput_=std::make_unique<UserInput>(client_,*world_);
     // 브리핑으로 게임 시계가 멈추기 전에도 첫 카메라/표시 영역이 음악·효과음에 전달되게 한다.
     world_->Resize(client_.GetScreen().Width(),client_.GetScreen().Height());
     // 직전 미션의 날씨 팔레트가 유지된 재진입도 현재 화면 색을 사용한다.

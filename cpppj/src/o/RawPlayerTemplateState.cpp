@@ -1,6 +1,7 @@
 // existing Stategetter의pos0/최소28과 Notify의isMine재조회/선택저장거부를보존한다.
 #include "o/RawPlayerTemplateState.h"
 #include <bit>
+#include <algorithm>
 #include <stdexcept>
 #include <utility>
 
@@ -9,8 +10,8 @@ namespace netstorm::o {
 RawPlayerTemplateState::RawPlayerTemplateState(OriginalEdition edition,std::span<std::uint8_t> headers,
     std::array<PlayerTemplateStateStream,9>& states,std::array<std::string,9>& fileNames,
     std::uint32_t& loadingDepth,const bool& inMission,std::function<void(PlayerTemplateStateAssertion)> assertion,
-    std::function<void(std::uint32_t)> depthChanged)
-    :edition_(edition),headers_(headers),states_(states),names_(fileNames),depth_(loadingDepth),mission_(inMission),assertion_(std::move(assertion)),depthChanged_(std::move(depthChanged)) {
+    std::function<void(std::uint32_t)> depthChanged,std::function<std::span<std::uint8_t>(std::uint32_t,std::uint32_t)> allocate)
+    :edition_(edition),headers_(headers),states_(states),names_(fileNames),depth_(loadingDepth),mission_(inMission),assertion_(std::move(assertion)),allocate_(std::move(allocate)),depthChanged_(std::move(depthChanged)) {
     if (headers.size()!=180 || !assertion_ || !depthChanged_) throw std::invalid_argument("Player Template실제9기록/State/진단/깊이효과누락");
 }
 // 호스트포인터로reinterpret하지않고매조회현재DWORD를읽는다.
@@ -27,7 +28,13 @@ std::span<std::uint8_t> RawPlayerTemplateState::Get(std::uint32_t slot) const {
     if (!Header(slot,0)) throw std::logic_error("Player Stategetter실제manager0메모리경계");
     auto& stream=states_.at(slot);stream.position=0; // 실제lookupState(writable1)의현재MemStream pos0쓰기다.
     if (!stream.present || !stream.end) throw std::logic_error("Player 없는State초기화/stack미정BYTE/힙생성미복원");
-    if (std::bit_cast<std::int32_t>(stream.end)<28) throw std::logic_error("Player shortState실제DataManager힙확장미복원");
+    if (std::bit_cast<std::int32_t>(stream.end)<28) {
+        if (!allocate_) throw std::logic_error("Player shortState 실제MemStream할당 미연결");
+        auto replacement=allocate_(slot,28); //원본44d290은새record를할당한뒤현재원문의길이/포인터를다시읽는다.
+        if (replacement.size()<28 || stream.end>28 || stream.end>stream.bytes.size()) throw std::out_of_range("Player shortState 현재원문/새할당 범위");
+        std::copy_n(stream.bytes.begin(),stream.end,replacement.begin());std::fill(replacement.begin()+stream.end,replacement.begin()+28,std::uint8_t{});
+        stream.bytes=replacement.first(28);stream.position=28;stream.end=28; //임시MemStream을현재State로바꾸며pos/end는둘다28이다.
+    }
     if (stream.bytes.size()<28 || stream.end>stream.bytes.size()) throw std::out_of_range("Player 현재State물리BYTE범위");return stream.bytes;
 }
 // 실제isMine후재검사에의한earlyreturn은빈callback대체가아니다.

@@ -168,14 +168,35 @@
   ],
   "files": {
     "cpppj/src/o/RawBurningFrame.cpp": "c517b282e39f2ccc5636c9424c6578f81a8f0ffc2c88a6d344b164b1c6021e9d",
-    "cpppj/tests/PlayerRegularTests.cpp": "691f83150cd786369635ecf748289c97e9166d285f422b469dda82790030ce31",
+    "cpppj/tests/PlayerRegularTests.cpp": "c5dc6f89b8ee7e6ed21c7720d1e11a8c019022f079eb7f62024833ed47e56afe",
     "cpppj/tests/fixtures/burningframe-x86.tsv": "8b09c3d54803039df92c36374537ff316fbd8062ffbaa02913e89dc0d4fdbcc6",
     "cpppj/tests/fixtures/player-regular-x86.tsv": "e3ef582f5da9c62f3235eb16f30bd76b97f9db1a5bff0728070f7ac83ccea932",
     "cpppj/burningframe.json": "28c6315a3fa1c03acfb36989606ea9fd2c2fce52d81e04151008a24851475308",
-    "cpppj/player-regular.json": "32a2e5712b7f833dd4242f800aadfecd8ddaba387e572b9a5d8a6719222a88a8",
+    "cpppj/player-regular.json": "27a574e8d4feac68c6599680fd6e9817f34a1f08c7ebc576f46901b353882d93",
     "extracted/run15-new-first-tests.log": "05f436f63bb1ff63f313c443bf7f66910fa296e0570f417d0d07ff508415f160",
     "extracted/run15-all-first-tests.log": "7e10e35fb576e7fcbc14fce22a66e533ed677b3ca67333ff1a2107a55d6d9c3d"
   },
   "tool_sha256": "c90a6208a01456cbe743b2b97d7d083a13bd8ed51171e37edc77b2427c980695",
-  "scope": "Player 소비자에 기존 실제 TYPE 연결값을 공급한다. Burning SetRect의1픽셀 확장과 camera 감산을 실제 양판본 명령대로 복원한다. 기존 fixture/보고서/관찰1214 입력과 최초 실패로그는 보존하며 기대값을 변경하지 않는다."
+  "scope": "Player 소비자에 기존 실제 TYPE 연결값을 공급한다. Burning SetRect의1픽셀 확장과 camera 감산을 실제 양판본 명령대로 복원한다. 기존 fixture/보고서/관찰1214 입력과 최초 실패로그는 보존하며 기대값을 변경하지 않는다.",
+  "integration_updates": [
+    {
+      "date": "2026-10-18",
+      "unit": 164,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/tests/PlayerRegularTests.cpp",
+          "previous": "691f83150cd786369635ecf748289c97e9166d285f422b469dda82790030ce31",
+          "current": "c5dc6f89b8ee7e6ed21c7720d1e11a8c019022f079eb7f62024833ed47e56afe"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/player-regular.json",
+          "previous": "32a2e5712b7f833dd4242f800aadfecd8ddaba387e572b9a5d8a6719222a88a8",
+          "current": "27a574e8d4feac68c6599680fd6e9817f34a1f08c7ebc576f46901b353882d93"
+        }
+      ]
+    }
+  ]
 }

@@ -22,7 +22,10 @@
 #include "client/OwnerColorMaps.h"
 #include <unordered_set>
 #include <iostream>
+#include <type_traits>
 using namespace netstorm::client;
+//BYTE변환의임시DWORD를원본공유owner로빌리는오류를거부한다.
+static_assert(!std::is_constructible_v<netstorm::o::RawBattleBroadcast,netstorm::o::OriginalEdition,std::span<const std::uint8_t>,netstorm::o::BattlePacketPeers&,std::uint8_t&,const bool&>);
 namespace {
 // 장치/UI/송신은 명시 검사 경계이며 생산 세션의 게임 계산을 대체하지 않는다.
 struct SessionServicesFixture {
@@ -1573,4 +1576,22 @@ TEST_CASE(CampaignSession_CarrierMoveRequestThroughActualLocalTransportAndKernel
         CHECK(!core.processes.FromForm(form) && frames>1);CHECK(std::bit_cast<float>(Get(core.pool.Slot(parent),14))==destination.x && std::bit_cast<float>(Get(core.pool.Slot(parent),18))==destination.y);CHECK(session.Sp(1)==sp && !link.transport.Server().depth && !core.destroy.PreDepth() && !core.destroy.PostDepth() && !core.bookkeeping.depth);CHECK(&session.CarrierMove().Pool()==&core.pool);wire=nullptr;
         std::cout<<"실제40h 요청/수신 TYPE"<<kind<<" 경로"<<movement<<"/자연이동 "<<frames<<"프레임 통과\n";
     }
+}
+
+
+//성공flag를입력하지않고실제Zone→접속→Login→월드설치/응답→상태14/타이머를검사한다.
+TEST_CASE(CampaignSession_LocalLoginActualHandshakeAndWorldLoad) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();std::vector<std::string> trace;std::vector<std::array<std::uint32_t,3>> notices;std::map<std::string,std::int32_t> config;std::size_t refresh{},chat{}; //실제장치/설정의명시입력과관측이다.
+    CampaignLoginServices login;login.configInt=[&](std::string_view key,std::int32_t fallback) { const auto at=config.find(std::string(key));return at==config.end() ? fallback : at->second; };login.wallSeconds=[] { return 100.25; };login.clock=[] { return 100250U; };login.refresh=[&] { ++refresh; };login.playerUiBusy=[] { return false; };login.playerNotice=[&](std::uint32_t kind,std::uint32_t owner,std::uint32_t value) { notices.push_back({kind,owner,value}); };login.observePacket=[](std::uint32_t sender,bool boss,std::uint32_t local,std::span<const std::uint8_t> packet) { if (packet[1]==0x6e) std::cout<<"Ready 실제수신 sender"<<sender<<" boss"<<boss<<" local"<<local<<" mask"<<Get(packet,4)<<'\n'; };
+    login.log=[&](std::string_view text) { trace.emplace_back(text); };services.localLogin=std::move(login);
+    services.ai.participation.clearChat=[&](std::uint32_t channel) { CHECK(channel==0x40 || channel==0x80);++chat; };services.ai.participation.addChat=[&](std::uint32_t subscriber,std::string_view,std::uint32_t channel) { CHECK(channel==0x20 || channel==0x40 || channel==0x80);static_cast<void>(subscriber);++chat; };
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));CHECK(!session.CurrentSubscriber() && !session.LocalConnectionPhase() && session.LocalConnectionPackets().empty());CHECK(!(session.PlayerRecords()[0xb4+0x50]&0x43));session.LoadLocalConnection();auto core=session.Core();CHECK(session.CurrentSubscriber()==1 && session.LocalOwner()==1 && session.PlayerKnown()==1 && session.LocalConnectionPhase()==14);CHECK((session.PlayerRecords()[0xb4+0x50]&0x43)==0x43 && session.FindPriestParticipation(1));
+    const auto packets=session.LocalConnectionPackets();CHECK(packets.size()>8 && packets.front()==0x27 && std::find(packets.begin(),packets.end(),0x29)!=packets.end() && std::find(packets.begin(),packets.end(),0x28)!=packets.end() && packets.back()==0x6e);CHECK(refresh && chat && !notices.empty());
+    std::vector<std::string> states; //원본상태로그만원래순서로읽는다.
+    for (const auto& line:trace) { if (line.starts_with("로컬 미션 상태 ")) states.push_back(line);if (line.starts_with("Ready 송신") || line.starts_with("Timer broadcast")) std::cout<<line; }CHECK(states==std::vector<std::string>({"로컬 미션 상태 8\n","로컬 미션 상태 9\n","로컬 미션 상태 10\n","로컬 미션 상태 13\n","로컬 미션 상태 14\n"}));
+    const auto before=packets.size();session.PumpLocalConnection();std::cout<<"로그인 실제수신 "<<before<<"→"<<session.LocalConnectionPackets().size()<<" 종류";for (const auto kind:session.LocalConnectionPackets()) std::cout<<' '<<std::uint32_t(kind);std::cout<<'\n';CHECK(session.LocalConnectionPackets().size()==before && session.LocalConnectionPhase()==14);CHECK(core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0 && core.bookkeeping.depth==0);
+    const Sid priest{static_cast<std::uint16_t>(session.FindPriestParticipation(1))};const RawPathPoint destination{90,108};const auto sp=session.Sp(1);CHECK(!FindAttachedProcess(core.pool,priest,54).value);session.RequestCarrierMove(priest,destination);CHECK(!FindAttachedProcess(core.pool,priest,54).value);session.PumpLocalConnection();CHECK(session.LocalConnectionPackets().back()==0x40);const auto form=FindAttachedProcess(core.pool,priest,54);auto* path=dynamic_cast<RawPathProcess*>(core.processes.FromForm(form));CHECK(path);if (!path) return;const auto start=core.processState.now,end=path->Runtime().Time(path->Runtime().Count()-1); //실제로그인된같은전송으로40h를소비한경로다.
+    //기존Kernel이실제사제이동/도착/자연삭제를수행하도록연속시각만공급한다.
+    for (std::uint64_t frame=0;frame<1000 && core.processState.now<end+.25;++frame) { const auto now=start+static_cast<double>(frame)*.025;session.PumpLocalConnection();session.RunFrame({now,100.25+(now-start),frame ? .025 : 0.0,frame},false);if (!core.processes.FromForm(form)) break; }
+    CHECK(!core.processes.FromForm(form) && std::bit_cast<float>(Get(core.pool.Slot(priest),14))==90 && std::bit_cast<float>(Get(core.pool.Slot(priest),18))==108 && session.Sp(1)==sp);CHECK(Throws([&] { session.LoadLocalConnection(); }));
 }

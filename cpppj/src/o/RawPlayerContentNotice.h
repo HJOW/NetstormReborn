@@ -34,7 +34,7 @@ struct PlayerContentNoticeState {
     const std::uint32_t& fallbackCode; // 00540cb8: 호출 앞과 조건부 SP조회 뒤에 읽는 코드다.
     std::uint32_t& moneyChecks; // 005c89c4: 비영이면 SP검사 뒤 DWORD감김으로 하나 줄인다.
     PlayerContentNoticeRead<std::uint32_t> battleShown; // 00595344: 실제BOOL/DWORD의현재비제로조건을수명안정조회한다.
-    const std::uint32_t& localPlayer; // 00540c70: 현재 SP조회 인자다.
+    PlayerContentNoticeRead<std::uint32_t> localPlayer; // 00540c70: 현재 SP조회 인자다.
     PlayerContentNoticeRead<std::uint32_t> firstSpPool; // 00594fd0: 비영 여부만 읽는 현재 첫 SP 분산배열 주소다.
     PlayerContentNoticeRead<std::int16_t> firstPermutation; // 00531890: 정확WORD -1비교의 현재 SP 첫 순열값이다.
     const std::uint32_t& gumpFormType; // 0054107c: 종속 raw타입BYTE와 비교하는 현재 Form타입DWORD다.

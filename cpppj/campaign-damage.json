@@ -125,7 +125,7 @@
     "unit": 92,
     "base_commit": "db13f25",
     "current_cpp_sha256": {
-      "cpppj/src/client/CampaignClientServices.cpp": "deb067662fe4fcd5324bab710c7b06fb7ce5f661f4078227946adc4fa92db72a",
+      "cpppj/src/client/CampaignClientServices.cpp": "552a80348ea1606fec4f6bb9459962db68589d8cdfc9fbd9d8c084dcc897716f",
       "cpppj/src/client/CampaignClientServices.h": "d0b19f5feecbf90d8536e63227fc2892ffb6bab99077d78b1ff23a4a3bd50897",
       "cpppj/src/client/RawCampaignHitBindings.cpp": "4e279ff1709724554faef72883cad8d7580c9a965c87f55fcb3b280d5ceb1c5c",
       "cpppj/src/client/RawCampaignHitBindings.h": "8c1ab2e210d52dc66978cd142f83815589d9c3954e448ea846d8b01c88dfcccf",
@@ -212,6 +212,19 @@
           "path": "cpppj/src/client/CampaignClientServices.cpp",
           "previous": "f37794eeef8b843183157712dbc2864c457d353afabb895075546354f2e6bcbe",
           "current": "deb067662fe4fcd5324bab710c7b06fb7ce5f661f4078227946adc4fa92db72a"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 164,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/integration_snapshot/current_cpp_sha256",
+          "path": "cpppj/src/client/CampaignClientServices.cpp",
+          "previous": "deb067662fe4fcd5324bab710c7b06fb7ce5f661f4078227946adc4fa92db72a",
+          "current": "552a80348ea1606fec4f6bb9459962db68589d8cdfc9fbd9d8c084dcc897716f"
         }
       ]
     }

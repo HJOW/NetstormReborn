@@ -117,3 +117,12 @@ TEST_CASE(LocalMissionTransport_SelectedBoundariesAndDepth) {
     transport.AssignConnection(-1,1);CHECK(!transport.Send(1,login.Bytes()));players[180+0x50]=1;CHECK(transport.Send(1,login.Bytes()));
     auto shortPacket=login.storage;shortPacket.resize(17);rejected=false;try { ReadLocalMissionLogin(shortPacket); } catch (const std::out_of_range&) { rejected=true; }CHECK(rejected);
 }
+
+
+//서버만열었을때현재클라이언트/Player는미접속이며Connect뒤실제pending큐로만요청이간다.
+TEST_CASE(LocalMissionTransport_ServerOpenAndClientConnectAreSeparate) {
+    std::array<std::uint8_t,9*0xb4> players{};bool server=true;TransportEffects effects;LocalMissionTransport wire(players,server,effects.Hooks());std::size_t received{}; //동일물리Player의0flag는끝까지입력하지않는다.
+    wire.RegisterLogin([&](std::uint32_t sender,PacketConnection& connection,std::span<const std::uint8_t> packet) { CHECK(sender==0xffffffff && &connection==&wire.Server() && packet[1]==0x27);++received; });wire.Open(6799,false);CHECK(wire.Client().flags==0 && wire.Server().flags==0x24 && wire.Owner()==0 && effects.now==102);CHECK(wire.Server().received==101 && wire.Server().heartbeat==102);
+    const std::array<std::uint8_t,2> image{1,2};const auto packet=MakeLocalMissionLogin(1,"You",image);CHECK(!wire.Send(9,packet.Bytes()) && wire.QueuedFrames()==0);wire.Connect();CHECK(wire.Client().flags==0x26 && wire.Client().received==103 && wire.Client().heartbeat==104);CHECK(wire.Owner()==0 && players[0xb4+0x50]==0);CHECK(wire.Send(9,packet.Bytes()));CHECK(!received && !wire.QueuedFrames());wire.Flush();CHECK(wire.QueuedFrames()==1 && wire.Poll()==1 && received==1);CHECK(wire.Server().depth==0 && wire.Owner()==0 && players[0xb4+0x50]==0);
+    bool rejected{};try { wire.Connect(); }catch (const std::logic_error&) { rejected=true; }CHECK(rejected);
+}

@@ -14,9 +14,9 @@
     "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
     "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
     "tools/decomp_local_mission_transport.py": "db71da65079aa9a985a3a833edd224f089ba9a20137d92042551cb346937eb78",
-    "cpppj/src/zacket/LocalMissionTransport.h": "b09982ec52f9c0491ae1b46c92d8f27a323d6647fc81c0386136563bfa500cca",
-    "cpppj/src/zacket/LocalMissionTransport.cpp": "9eca9a66112df27a580d8f159bcea58d9d2aa35ffbe35d3bbc8f3182049e09ff",
-    "cpppj/tests/LocalMissionTransportTests.cpp": "ed6bba7db6a2dccf541ed674b4f9064a2d57b15b7ebe3fa6206b3b210b8890c6",
+    "cpppj/src/zacket/LocalMissionTransport.h": "cb2a6db9ba11d2be26699fa0675ecc4a2714969b58c96a94275071fbd3464ee2",
+    "cpppj/src/zacket/LocalMissionTransport.cpp": "f659b7bbcfcd3923147472a099fcf74c04014e0005eff3e46d273898c4a2d92a",
+    "cpppj/tests/LocalMissionTransportTests.cpp": "4091601c094ddeb30f2795aaa7c991770196fcfdf2c1d1ed9da9f124ac8d1938",
     "cpppj/tests/fixtures/local-mission-transport-x86.tsv": "34288e9109dd6d15df5231191b61f1f193c97d4a01d72a8aa59d812e3852368c"
   },
   "product_validation": {
@@ -40,5 +40,32 @@
       "log": "extracted/goal-chat-transport-ctest.log",
       "internal_log": "extracted/goal-chat-transport-tests.log"
     }
-  }
+  },
+  "integration_updates": [
+    {
+      "date": "2026-10-18",
+      "unit": 164,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/zacket/LocalMissionTransport.h",
+          "previous": "b09982ec52f9c0491ae1b46c92d8f27a323d6647fc81c0386136563bfa500cca",
+          "current": "cb2a6db9ba11d2be26699fa0675ecc4a2714969b58c96a94275071fbd3464ee2"
+        },
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/zacket/LocalMissionTransport.cpp",
+          "previous": "9eca9a66112df27a580d8f159bcea58d9d2aa35ffbe35d3bbc8f3182049e09ff",
+          "current": "f659b7bbcfcd3923147472a099fcf74c04014e0005eff3e46d273898c4a2d92a"
+        },
+        {
+          "group": "/sha256",
+          "path": "cpppj/tests/LocalMissionTransportTests.cpp",
+          "previous": "ed6bba7db6a2dccf541ed674b4f9064a2d57b15b7ebe3fa6206b3b210b8890c6",
+          "current": "4091601c094ddeb30f2795aaa7c991770196fcfdf2c1d1ed9da9f124ac8d1938"
+        }
+      ]
+    }
+  ]
 }

@@ -59,7 +59,7 @@ GameWorld::GameWorld(const GameAssets& assets,const o::FortTemplate& fort,o::Mis
 }
 // 실제 캠페인에서는 이전 관찰기반 객체/지형 어댑터를 생성하지 않고 같은 raw 세션을 설치한다.
 GameWorld::GameWorld(const GameAssets& assets,const o::BaseFileSystem& files,o::FortTemplate fort,o::MissionPlayers players,
-    std::string mission,RawCampaignSessionServices services,ScreenPoint viewport):assets_(assets),players_(std::move(players)) {
+    std::string mission,RawCampaignSessionServices services,ScreenPoint viewport,bool deferConnection):assets_(assets),players_(std::move(players)) {
     if (viewport.x<=0 || viewport.y<=0) throw std::invalid_argument("실제 캠페인 설치 전 화면 크기 누락");
     width_=viewport.x;height_=viewport.y;
     // 현재 보호 팔레트 번호만 UI 색 조회용으로 보관한다.
@@ -73,9 +73,13 @@ GameWorld::GameWorld(const GameAssets& assets,const o::BaseFileSystem& files,o::
         if (!other) throw std::logic_error("GameWorld의 다른 파생 삭제 효과 미연결");
         other(event);
     };
+    const bool connect=services.localLogin.has_value(); //실제Client는로그인서버가Load를호출한다.
     campaign_=std::make_unique<RawCampaignSession>(assets,files,std::move(fort),std::move(mission),std::move(services));
-    campaign_->Load();RefreshCampaignObjects();
+    if (deferConnection) { if (!connect) throw std::logic_error("실제Client 지연로그인 장치 누락");return; }
+    if (connect) campaign_->LoadLocalConnection();else campaign_->Load();RefreshCampaignObjects();
 }
+//Client.CurrentSubscriber가현재Session을반환하는등록이끝난뒤에만실제로그인을시작한다.
+void GameWorld::BeginLocalConnection() { if (!campaign_) throw std::logic_error("실제Session 없는 로그인 요청");campaign_->LoadLocalConnection();RefreshCampaignObjects(); }
 // 세션의 실제 Kernel/음향/Form 콜백은 나머지 월드 멤버가 살아 있는 동안 정리한다.
 GameWorld::~GameWorld() { campaign_.reset(); }
 // 초기 카메라의 원본 좌표를 clamp나 신전 우선 선택 없이 현재 raw 표시와 음향 원점에 전달한다.
@@ -273,7 +277,7 @@ void GameWorld::RefreshSurfaceGround() {
 void GameWorld::RunFrame() {
     const bool stopped=paused && paused();
     if (frameTime) {
-        if (campaign_) { surfaceTime_=frameTime();SurfaceView();campaign_->RunFrame(surfaceTime_,stopped);RefreshCampaignObjects();return; }
+        if (campaign_) { surfaceTime_=frameTime();SurfaceView();campaign_->PumpLocalConnection();campaign_->RunFrame(surfaceTime_,stopped);RefreshCampaignObjects();return; }
         surfaceTime_=frameTime();SurfaceView();surfaces_->RunFrame(surfaceTime_,stopped);RefreshSurfaceGround();
         if (!stopped) AdvanceObjects(surfaceTime_.delta);
     } else if (elapsed && !stopped) Step(elapsed());

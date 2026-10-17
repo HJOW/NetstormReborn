@@ -103,11 +103,17 @@ void LocalMissionTransport::RegisterLogin(decltype(o::PacketRegistration::receiv
     if (!receive) throw std::invalid_argument("실제0x27 로그인 처리기 누락");dispatch_.Version(kLoginType,kVersion,0);dispatch_.Register(kLoginType,std::move(receive));
 }
 // 실제 두 PacketConnection을 만들고 각각 다른 endpoint/수신 큐를 사용한다.
-void LocalMissionTransport::Open(std::uint32_t port) {
+void LocalMissionTransport::Open(std::uint32_t port,bool connectImmediately) {
     if (open_ || !port || port>65535 || !dispatch_.Registration(kLoginType).receive) throw std::logic_error("로컬 서버 포트/새 수명/실제 로그인 처리기 계약 오류");
     port_=port;client_={};server_={};client_.sender=9;server_.sender=std::bit_cast<std::uint32_t>(std::int32_t{-1});
-    client_.received=hooks_.now();client_.heartbeat=hooks_.now();server_.received=hooks_.now();server_.heartbeat=hooks_.now();
-    client_.flags=0x26;server_.flags=0x24;open_=true;pending_=true;serverBuffered_=false;owner_=0;
+    if (connectImmediately) { client_.received=hooks_.now();client_.heartbeat=hooks_.now(); }
+    server_.received=hooks_.now();server_.heartbeat=hooks_.now();
+    client_.flags=connectImmediately ? 0x26U : 0U;server_.flags=0x24;open_=true;pending_=true;serverBuffered_=false;owner_=0;
+}
+// 서버열기는성공한접속과별개다.같은클라이언트기록의실제접속시각/flags만지정한다.
+void LocalMissionTransport::Connect() {
+    if (!open_ || client_.flags || !pending_ || owner_) throw std::logic_error("로컬 클라이언트 새접속/현재서버 계약 오류");
+    client_.received=hooks_.now();client_.heartbeat=hooks_.now();client_.flags=0x26;
 }
 // 같은 실제 pending 객체의 sender/등록 위치만 바꾼다. 새 연결이나 연결 성공 flag를 합성하지 않는다.
 void LocalMissionTransport::AssignConnection(std::int32_t pending,std::int32_t owner) {
@@ -118,6 +124,7 @@ void LocalMissionTransport::AssignConnection(std::int32_t pending,std::int32_t o
 // packet observer가 확정한 WORD 바이트를 전송하며 없는 연결의 자연 생략과 실제 송신을 구분한다.
 bool LocalMissionTransport::Send(std::int32_t destination,std::span<const std::uint8_t> packet) {
     if (!open_) throw std::logic_error("로컬 전송 연결을 열기 전 송신");
+    if (destination==9 && !(client_.flags&2U)) return false; // 서버만열린상태의클라이언트송신은아직연결이없다.
     if (destination>=1 && destination<static_cast<std::int32_t>(kPlayers) && !(players_[std::size_t(destination)*kPlayerBytes+0x50]&1U)) return false;
     const bool client=destination==9,server=(destination==-1 && pending_) || (destination>=1 && static_cast<std::uint32_t>(destination)==owner_);
     if (!client && !server) return false;const auto length=Read(packet,2,2);if (length<4 || length>packet.size()) throw std::out_of_range("로컬 전송 패킷 실제 선언 바이트 부족");

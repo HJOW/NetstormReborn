@@ -128,7 +128,7 @@
     "cpppj/hist/run26-draft/RawBattleBroadcast.cpp": "0c88515bdfc87fc05310087ad360ea94ee9a95666329aaec09ea896a04744f13",
     "cpppj/hist/run26-draft/battle-bcast-x86.tsv": "d7da6351dca0e671136a4a81926662815762b2c3466e0d6413d1587b1415d732",
     "cpppj/hist/run26-draft/decomp_battle_bcast.py": "95a96ec4e3ffe37e5e906f8cd30546c5594e74fe0ddda045683339ecd7e2e3f7",
-    "cpppj/src/CMakeLists.txt": "c71e26b7f761fd9c22f70e87414fa2c278dfaeb270443457d0405d60d6c3899c",
+    "cpppj/src/CMakeLists.txt": "4a161874d436220480319b695c006badf5032924a6c03139cbb6a7cf7bc7f116",
     "cpppj/src/app/CanonMayPlaceInspect.cpp": "27eda46bca500c898abeb9a3a7c4e8588b38e061b579c84cbf6c032c6d46dda9",
     "cpppj/src/app/FrameBindingInspect.cpp": "042602919b0531fb1cbaf3941dc6597bee73944bbf0d571dacfd638bb45dd07c",
     "cpppj/src/app/FrameBindingInspect.h": "4e187ca41f8c34ed52c022b58a57327a554a723e3e26ee88a1ae152c99de3fce",
@@ -376,7 +376,7 @@
     "cpppj/src/o/RawAssetRegular.cpp": "e28f9992286e640fd75d87ae958bdc426979f322699fddd032c3ab6e7521136d",
     "cpppj/src/o/RawAssetRegular.h": "86ab6d8d9615facf136080e21e71d7f95a125b4b031169912dbf9599e55448cd",
     "cpppj/src/o/RawBattleBroadcast.cpp": "5a6c9f8eb6644578a40448fb81ba1522028e9060cf310e217ba7e50baeb9e2f7",
-    "cpppj/src/o/RawBattleBroadcast.h": "3a2c51d58dae5566efc2a6e148486e6ff5e91dd4349139a53f8a399d41bf4eaa",
+    "cpppj/src/o/RawBattleBroadcast.h": "ca7c51f493ccb8662ed6e075d731052519181d116db005d1e126afc5191dc654",
     "cpppj/src/o/RawBridgeConnect.cpp": "6a62e826f3cf57d5a22607ca78909c0626d269f25f0783a800a020ab51518e85",
     "cpppj/src/o/RawBridgeConnect.h": "a008bd46b8049745c28f336ef78b44b7854ada385f83aa85be74356789f8e034",
     "cpppj/src/o/RawBridgeEvents.cpp": "b96043a54eb2df42a4c7dba3e295d40d3c2fa91985ab4e48a914bc0ecbc0fce8",
@@ -564,8 +564,8 @@
     "cpppj/src/o/RawPlayerPlacementAnchor.h": "4de78ec2de321ab53223d369ea68babab0c099d929dc10fb033a89e6f8566bbb",
     "cpppj/src/o/RawPlayerRegular.cpp": "73fda5e8031e6566e380e725523ead1e7705b3d0edec7132056cf49795ea9570",
     "cpppj/src/o/RawPlayerRegular.h": "a34c451c07dec3690e6c8f045b05b49398ef1e09a649527932fcbf4d18e6b03c",
-    "cpppj/src/o/RawPlayerTemplateState.cpp": "b45911b191f1cd3112ec89d4fca7acab880fcace40b4102b336abfca7420d833",
-    "cpppj/src/o/RawPlayerTemplateState.h": "80d949ec5135e5c3869fe4a2939871c6138bb1b759bc5da9ffbdada93487bd7f",
+    "cpppj/src/o/RawPlayerTemplateState.cpp": "0ad672bee01c7fbf1930a8ef28b8be9ff3b3e9dbac17c8b6c68e3eb6f72286fb",
+    "cpppj/src/o/RawPlayerTemplateState.h": "94d77a52e0d7d3f218732b27acf4039d293dae1b4041a723db88669a51c4b77e",
     "cpppj/src/o/RawPlayerWorld.cpp": "c3a40006ab856ad1d8784231c29926be7cbeacdd5658e8d35c6d146d9eb9d644",
     "cpppj/src/o/RawPlayerWorld.h": "c8dcef4b3f28fdfc6e5cdf7a8b0a4003bc14aa8ca9cded22c17ab1e5c49c9de9",
     "cpppj/src/o/RawPriestArrival.cpp": "6552e43202269a1c2dfabbc8dcd11878f320a34e95dba9691c870d3e7859b806",
@@ -868,7 +868,7 @@
     "cpppj/tests/PathAnimationTests.cpp": "e4e96564f1f0458f151e54b313c86a06d396c9d559cbd76596f6db96135f2c12",
     "cpppj/tests/PathCleanupTests.cpp": "7c1f6ecf956290e70e66040e966a512735c74926a4e2dc5118e477583f6f1ca6",
     "cpppj/tests/PlayerPlacementAnchorTests.cpp": "4014e8534f9fbb91e58f536e30e64c7652c134592f1ef711e804eddacb529f9e",
-    "cpppj/tests/PlayerRegularTests.cpp": "691f83150cd786369635ecf748289c97e9166d285f422b469dda82790030ce31",
+    "cpppj/tests/PlayerRegularTests.cpp": "c5dc6f89b8ee7e6ed21c7720d1e11a8c019022f079eb7f62024833ed47e56afe",
     "cpppj/tests/PlayerWorldTests.cpp": "fe10cc0a9464d85499d9fa27b2d30af7a87583348a886072865cd5899de55098",
     "cpppj/tests/PopTests.cpp": "250b9a9fd863142026c29ef68c75ea7c8bea6871ed0a42df9bafee4e2b072d48",
     "cpppj/tests/PostPopTests.cpp": "6cd0c37a8b2c9f84cd0b0c511f58f71000c4ba5936e06f73b3226788ec25dd2a",
@@ -1988,6 +1988,43 @@
           "path": "cpppj/src/CMakeLists.txt",
           "previous": "83c2c9e1e8697014f89ed77fd74253abb2e73e3f75465750aef0fd8d362d0d3d",
           "current": "c71e26b7f761fd9c22f70e87414fa2c278dfaeb270443457d0405d60d6c3899c"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 164,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "c71e26b7f761fd9c22f70e87414fa2c278dfaeb270443457d0405d60d6c3899c",
+          "current": "4a161874d436220480319b695c006badf5032924a6c03139cbb6a7cf7bc7f116"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawBattleBroadcast.h",
+          "previous": "3a2c51d58dae5566efc2a6e148486e6ff5e91dd4349139a53f8a399d41bf4eaa",
+          "current": "ca7c51f493ccb8662ed6e075d731052519181d116db005d1e126afc5191dc654"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawPlayerTemplateState.cpp",
+          "previous": "b45911b191f1cd3112ec89d4fca7acab880fcace40b4102b336abfca7420d833",
+          "current": "0ad672bee01c7fbf1930a8ef28b8be9ff3b3e9dbac17c8b6c68e3eb6f72286fb"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawPlayerTemplateState.h",
+          "previous": "80d949ec5135e5c3869fe4a2939871c6138bb1b759bc5da9ffbdada93487bd7f",
+          "current": "94d77a52e0d7d3f218732b27acf4039d293dae1b4041a723db88669a51c4b77e"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/tests/PlayerRegularTests.cpp",
+          "previous": "691f83150cd786369635ecf748289c97e9166d285f422b469dda82790030ce31",
+          "current": "c5dc6f89b8ee7e6ed21c7720d1e11a8c019022f079eb7f62024833ed47e56afe"
         }
       ]
     }
