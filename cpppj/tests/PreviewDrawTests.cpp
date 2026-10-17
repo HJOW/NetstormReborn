@@ -1,8 +1,10 @@
 // 미리보기 Draw의 원본 명령열과 실제 SHP 색·투명·체크 무늬 출력을 검사한다.
 #include "ConstructionSupport.h"
+#include "CursorPreviewBindingSupport.h"
 #include "client/PreviewDraw.h"
 #include "client/DrawSort.h"
 #include <sstream>
+#include <filesystem>
 
 namespace {
 using namespace netstorm::test::construction;
@@ -21,7 +23,7 @@ template<class... V> std::string PreviewEvent(const char* prefix,V... values) {
     std::ostringstream out;out<<prefix;((out<<','<<static_cast<std::uint32_t>(values)),...);return out.str();
 }
 // 세 판본의 전체 완성 입력과 저장된 native 명령열을 대조한다.
-void ReplayPreviewDraw(const std::string& edition) {
+void ReplayPreviewDraw(const std::string& edition,bool bound=false) {
     static const auto rows=LoadFixture(NETSTORM_PREVIEWDRAW_FIXTURE).rows;
     SidPool pool(edition=="originals" ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072,24000,false);int replayed=0;
     // 기대 분기나 좌표를 계산하지 않고 원본 관찰 행을 그대로 재생한다.
@@ -43,11 +45,21 @@ void ReplayPreviewDraw(const std::string& edition) {
         Put(raw,edition=="originals" ? 36 : 34,v[35],edition=="originals" ? 4 : 1);const std::vector<std::uint8_t> before(raw.begin(),raw.end());
         std::vector<std::string> events;int current=0;
         // 색 문맥 호출까지 포함해 native 출력 순서를 기록한다.
-        PreviewDrawHooks hooks{[&](auto r) { CHECK(r.type==70);CHECK(r.owner==c.localPlayer);current=static_cast<int>(r.colors);events.push_back(PreviewEvent("M",current)); },
+        PreviewDrawHooks hooks{[&](auto r) { CHECK(r.type==70);CHECK(r.owner==v[8]);current=static_cast<int>(r.colors);events.push_back(PreviewEvent("M",current)); },
             [&](auto r) { const int mode=r.mode==PreviewShapeMode::Plain ? 0 : r.mode==PreviewShapeMode::Illegal ? 3 : current;events.push_back(PreviewEvent("S",r.type,r.frame,r.position.x,r.position.y,mode)); },
             [&](auto r,auto color,auto checker) { events.push_back(PreviewEvent("R",checker,r.left,r.top,r.right,r.bottom,color)); },
             [&](auto r) { events.push_back(PreviewEvent("T",r.index,r.position.x,r.position.y)); }};
         const auto base=0x16000200U-5*pool.Layout().stride;PreviewDraw draw(pool,types,c,s,hooks,base);
+        netstorm::test::previewbinding::Scene actual;actual.Drawing(c,s);
+        if (bound) {
+            draw.BindCursor(actual.Source(pool));c.parentGump=0xffffffff;c.legal=!actual.placement.placementAllowed;c.localPlayer=0xffffffff;
+            s.selectedType=0xffffffff;s.destroyType=0xffffffff;s.noOutlineType=0xffffffff;s.cameraX=-900;s.cameraY=-900;
+            s.spacing=-900;s.labelOffsetX=-900;s.labelOffsetY=-900;s.labelWidth=-900;s.labelHeight=-900;
+            s.priceWidth=-900;s.priceIconOffset=-900;s.priceIconX=-900;s.priceIconY=-900;s.flags=~actual.drop.costFlags;
+            s.messageOverride=!actual.placement.sourceAllowed;s.blocked=!actual.placement.placementFlags;
+            s.powered=!actual.placement.descriptionAllowed;s.reachable=!actual.placement.spaceAllowed;
+            s.grid.fill(0x7f);s.labels="Wrong";s.messageWidths.fill(-900);s.messageHeights.fill(-900);
+        }
         draw.Draw({999,-999,0x16000200,0,4,static_cast<std::uint8_t>(v[34])});
         std::string observed;
         // native의 명령 구분과 동일하게 합친다.
@@ -78,6 +90,8 @@ std::vector<std::uint8_t> PreviewPixelShape() {
 }
 // 패치판 전체 Draw의 분기/현재 색 표/명령 순서를 독립 관찰과 대조한다.
 TEST_CASE(PreviewDraw_PatchNative) { ReplayPreviewDraw("originals"); }
+// 같은477개 원문 명령열을 실제 전역 참조로 재생하고 이전 중복 입력을 사용하지 않는지 확인한다.
+TEST_CASE(PreviewDraw_PatchNativeSharedCursor) { ReplayPreviewDraw("originals",true); }
 // CD의 BYTE 프레임·실제 스택 좌표도 독립 기계어 관찰과 대조한다.
 TEST_CASE(PreviewDraw_CdNative) { ReplayPreviewDraw("originalCD"); }
 // 추가판의 별도 PE 관찰을 재생한다.
@@ -85,14 +99,22 @@ TEST_CASE(PreviewDraw_AdditionalNative) { ReplayPreviewDraw("original1037"); }
 
 // 실제 수집→CRT→kind 4 Draw→VFX 픽셀 출력까지 한 흐름으로 연결한다.
 TEST_CASE(PreviewDraw_CommonCollectionDispatch) {
-    PreviewDrawScene scene;scene.c.parentGump=1;std::vector<std::uint8_t> spots(65536),pixels(64,9);
-    ShapeDatabase shape(PreviewPixelShape());PreviewPixelTarget target(pixels,8,8,{0,0,8,8},[&](auto) { return PreviewShapeBinding{&shape,0}; },{},{});
-    PreviewCollection collector(scene.pool,scene.types,spots,scene.c,{[](auto) { return 16U; },{}},kPreviewDrawTokenBase);
-    PreviewDraw draw(scene.pool,scene.types,scene.c,scene.s,target.Hooks(),kPreviewDrawTokenBase);
-    DrawCollectionHooks collection;BindPreviewCollection(collection,collector);DrawDispatchHooks dispatch;BindPreviewDraw(dispatch,draw);
-    std::array<RenderCollectionEntry,8> work;const auto result=CollectDrawEntries({{0,0,8,8},{0,0,8,8},{0,0,8,8},0,8},work,collection);
-    CHECK(result.count==2);CHECK(work[0].tail==0);CHECK(work[1].tail==2);SortDrawEntries(std::span(work).first(2),scene.pool.Edition());
-    DispatchDrawEntries(std::span(work).first(2),{},dispatch);CHECK(pixels[4*8+4]==9);CHECK(pixels[4*8+5]==0);CHECK(pixels[4*8+6]==255);
+    // 기존 입력과 실제 공유 참조가 같은 공통 수집·정렬·분배·픽셀 경로를 통과한다.
+    for (const bool bound:{false,true}) {
+        PreviewDrawScene scene;scene.c.parentGump=1;std::vector<std::uint8_t> spots(65536),pixels(64,9);
+        ShapeDatabase shape(PreviewPixelShape());PreviewPixelTarget target(pixels,8,8,{0,0,8,8},[&](auto) { return PreviewShapeBinding{&shape,0}; },{},{});
+        PreviewCollection collector(scene.pool,scene.types,spots,scene.c,{[](auto) { return 16U; },{}},kPreviewDrawTokenBase);
+        PreviewDraw draw(scene.pool,scene.types,scene.c,scene.s,target.Hooks(),kPreviewDrawTokenBase);
+        netstorm::test::previewbinding::Scene actual;actual.Drawing(scene.c,scene.s);
+        if (bound) {
+            collector.BindCursor(actual.Source(scene.pool));draw.BindCursor(actual.Source(scene.pool));
+            scene.c.pieceCount=0;scene.c.parentGump=0;scene.c.legal=0;
+        }
+        DrawCollectionHooks collection;BindPreviewCollection(collection,collector);DrawDispatchHooks dispatch;BindPreviewDraw(dispatch,draw);
+        std::array<RenderCollectionEntry,8> work;const auto result=CollectDrawEntries({{0,0,8,8},{0,0,8,8},{0,0,8,8},0,8},work,collection);
+        CHECK(result.count==2);CHECK(work[0].tail==0);CHECK(work[1].tail==2);SortDrawEntries(std::span(work).first(2),scene.pool.Edition());
+        DispatchDrawEntries(std::span(work).first(2),{},dispatch);CHECK(pixels[4*8+4]==9);CHECK(pixels[4*8+5]==0);CHECK(pixels[4*8+6]==255);
+    }
 }
 // 실제 압축 해제의 투명/원색/현재 색/명시 불법 표와 클립·캐시 재사용을 검사한다.
 TEST_CASE(PreviewDraw_PixelsColorsTransparencyClip) {
@@ -144,4 +166,40 @@ TEST_CASE(PreviewDraw_CurrentStateAfterGrid) {
     PreviewDrawHooks hooks;hooks.rectangle=[&](auto,auto,auto checker) { CHECK(checker);++rectangles;scene.c.parentGump=1; };
     hooks.text=[&](auto) { ++texts; };hooks.shape=[&](auto) { ++shapes; };PreviewDraw draw(scene.pool,scene.types,scene.c,scene.s,hooks,kPreviewDrawTokenBase);
     draw.Draw({0,0,0x16000200,0,4,2});CHECK(rectangles==9);CHECK(texts==0);CHECK(shapes==0);
+}
+
+// 실제 격자·부모 변경과 본체 출력 중 허용·플레이어 변경을 현재 참조에서 다시 읽는다.
+TEST_CASE(PreviewDraw_SharedCursorCurrentReadsAndContracts) {
+    PreviewDrawScene scene;scene.c.legal=0;scene.s.noOutlineType=90;scene.s.gridOption=1;scene.s.flags=0x40;
+    scene.s.grid.fill(1);netstorm::test::previewbinding::Scene actual;actual.Drawing(scene.c,scene.s);
+    int rectangles=0,texts=0,shapes=0;PreviewDrawHooks hooks;
+    hooks.rectangle=[&](auto,auto,auto checker) {
+        CHECK(checker);++rectangles;actual.lifecycle.currentGump=1;actual.pipeline.preview.blocked.fill(0);
+    };
+    hooks.text=[&](auto) { ++texts; };hooks.shape=[&](auto) { ++shapes; };
+    PreviewDraw draw(scene.pool,scene.types,scene.c,scene.s,hooks,kPreviewDrawTokenBase);draw.BindCursor(actual.Source(scene.pool));
+    draw.Draw({0,0,0x16000200,0,4,2});CHECK(rectangles==1 && texts==0 && shapes==0);
+    actual.lifecycle.currentGump=0;actual.placement.placementAllowed=1;actual.drop.legal=0;scene.s.ownerMaps[70]=true;
+    hooks.rectangle=[&](auto,auto,auto checker) { CHECK(!checker);actual.placement.placementAllowed=0;actual.drop.type=actual.surfaces.bridgeType;actual.drop.localPlayer=3; };
+    hooks.setColors=[&](auto request) { CHECK(request.colors==PreviewColors::Destroy && request.owner==3);actual.drop.localPlayer=4; };
+    hooks.shape=[&](auto request) { ++shapes;CHECK(request.mode==PreviewShapeMode::CurrentColors && actual.drop.localPlayer==4); };
+    PreviewDraw changing(scene.pool,scene.types,scene.c,scene.s,hooks,kPreviewDrawTokenBase);changing.BindCursor(actual.Source(scene.pool));
+    changing.Draw({0,0,0x16000200,0,4,0});CHECK(shapes==1);
+    PreviewDrawScene other;CHECK(Throws([&] { changing.BindCursor(actual.Source(other.pool)); }));
+    SidPool cd(OriginalEdition::Cd1072,24000,false);PreviewDraw cdDraw(cd,scene.types,scene.c,scene.s,hooks);
+    CHECK(Throws([&] { cdDraw.BindCursor(actual.Source(cd)); }));
+}
+
+// 실제 Take 자산 어댑터가 준 현재 비용 SHP를 사용하며 저장소 변경 뒤 낡은 바인딩을 재사용하지 않는다.
+TEST_CASE(PreviewDraw_CurrentCursorProtectedAssetBinding) {
+    const auto root=std::filesystem::path(__FILE__).parent_path().parent_path().parent_path()/"originals";
+    BaseFileSystem files(root);files.RegisterArchive(root/"netstorm.tarc");GameAssets assets(files,OriginalEdition::Patch1078);
+    FontStore fonts(files,"Arial");GumpText text(fonts);CursorLifecycleHooks hooks;BindCursorLifecycleAssets(hooks,assets,text);
+    CursorLifecycleState lifecycle;lifecycle.costImage=hooks.costImage(92,3).token;
+    const auto binding=MakeCursorPreviewAssetShapes(assets,0xfffffffe,lifecycle);
+    CHECK(binding(0xfffffffe).database==&assets.Shapes() && binding(0xfffffffe).block==assets.Types()[92-70].block);
+    CHECK(binding(123).block==assets.Types()[123-70].block);
+    lifecycle.costImage=hooks.defaultShape(123);CHECK(binding(0xfffffffe).block==assets.Types()[123-70].block);
+    lifecycle.costImage=0;CHECK(Throws([&] { binding(0xfffffffe); }));
+    lifecycle.costImage=static_cast<std::uint32_t>(assets.Shapes().Blocks().size()+1);CHECK(Throws([&] { binding(0xfffffffe); }));
 }

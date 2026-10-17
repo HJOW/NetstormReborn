@@ -1034,3 +1034,12 @@ cpppj/src/client/RawCursorPosition.* text eol=lf
 cpppj/tests/CursorPositionTests.cpp text eol=lf
 cpppj/tests/CursorPreviewSupport.h text eol=lf
 docs/exe/cpp-cursor-position-20261017.md text eol=lf
+# 실제 커서 전역을 공유하는 수집·표시 연결과 검사 기록은 UTF-8/LF다.
+cpppj/src/client/CursorPreviewSource.h text eol=lf
+cpppj/src/client/PreviewCollection.* text eol=lf
+cpppj/src/client/PreviewDraw.* text eol=lf
+cpppj/tests/CursorPreviewBindingSupport.h text eol=lf
+cpppj/tests/PreviewCollectionTests.cpp text eol=lf
+cpppj/tests/PreviewDrawTests.cpp text eol=lf
+cpppj/cursor-display.json text eol=lf
+docs/exe/cpp-cursor-display-20261017.md text eol=lf

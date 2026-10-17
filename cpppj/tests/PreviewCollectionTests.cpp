@@ -1,5 +1,6 @@
 // 실제 미리보기 기계어의 부분 출력/쌍/피드백과 기존 UI·자산 공통 제출을 검사한다.
 #include "ConstructionSupport.h"
+#include "CursorPreviewBindingSupport.h"
 #include "client/PreviewCollection.h"
 #include "client/GumpCollection.h"
 #include "client/TileGroupCollection.h"
@@ -26,7 +27,7 @@ int NativeSpReads(const std::string& entries) {
     return start==std::string::npos ? 0 : std::stoi(entries.substr(start+key.size()));
 }
 // 세 PE의 완성 입력과 전체 작업 칸/표시 상태/실제 getter 진입을 대조한다.
-void ReplayPreviews(const std::string& edition) {
+void ReplayPreviews(const std::string& edition,bool bound=false) {
     static const auto rows=LoadFixture(NETSTORM_PREVIEWCOLLECTION_FIXTURE).rows;
     SidPool pool(edition=="originals" ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072,24000,false);std::size_t replayed=0;
     // 행별 기대값은 저장한 원본 관찰만 사용한다.
@@ -57,9 +58,15 @@ void ReplayPreviews(const std::string& edition) {
         std::vector<RiftTypeRecord> types(2);types[1].flags2=v[2];types[1].zOrder=std::bit_cast<std::int32_t>(v[3]);
         const std::vector<std::uint8_t> before(pool.Bytes().begin(),pool.Bytes().end()),beforeSpots=spots;std::vector<std::uint32_t> owners;
         // 부모의 실제 깊이/준비된 SP 읽기의 반환 비트만 공급한다. 원본 쪽은 getter 전체를 실행했다.
-        PreviewCollectionHooks hooks{[&](auto token) { CHECK(token==state.parentGump);return v[5]; },
+        PreviewCollectionHooks hooks{[&](auto token) { CHECK(token==v[4]);return v[5]; },
             [&](auto owner) { owners.push_back(owner);return v[20]; }};
-        PreviewCollection collector(pool,types,spots,state,hooks,kPreviewPool);std::array<RenderCollectionEntry,kPreviewCapacity+2> guarded;
+        netstorm::test::previewbinding::Scene actual;actual.Collection(state);
+        PreviewCollection collector(pool,types,spots,state,hooks,kPreviewPool);
+        if (bound) {
+            collector.BindCursor(actual.Source(pool));state.lockDepth=1;state.type=0xffffffff;state.pieceCount=0;state.pieces.clear();
+            state.parentGump=0xffffffff;state.localPlayer=0xffffffff;state.legal=!actual.placement.placementAllowed;state.x=-900;state.y=-900;
+        }
+        std::array<RenderCollectionEntry,kPreviewCapacity+2> guarded;
         std::memset(guarded.data(),0xa5,sizeof(guarded));auto work=std::span(guarded).subspan(1,kPreviewCapacity);
         const auto count=collector.Collect({Float(Number(c[22])),Float(Number(c[23])),Float(Number(c[24])),Float(Number(c[25]))},work,std::stoi(c[21]));
         const auto bytes=std::span(reinterpret_cast<const std::uint8_t*>(work.data()),work.size_bytes());std::array<std::uint8_t,32> guards;
@@ -67,7 +74,7 @@ void ReplayPreviews(const std::string& edition) {
         const auto feedback=Inputs(row[8]);const bool same=count==std::stoi(row[6]) && Hex(bytes)==row[7] && state.highlight==feedback[0] && state.countdown==feedback[1];
         CHECK(same);CHECK(Hex(guards)==row[10]);CHECK(owners.size()==static_cast<std::size_t>(NativeSpReads(row[9])));
         // 모든 관찰 SP 읽기는 현재 플레이어로 호출되어야 한다.
-        for (const auto owner:owners) CHECK(owner==state.localPlayer);
+        for (const auto owner:owners) CHECK(owner==v[17]);
         CHECK(std::equal(before.begin(),before.end(),pool.Bytes().begin()));CHECK(spots==beforeSpots);
         // 두 레이어의 실제 raw 객체 토큰은 같은 풀 번호로 돌아간다.
         for (int i=0;i<count;++i) CHECK(collector.Object(work[i].token).value==(work[i].token-kPreviewPool)/pool.Layout().stride);
@@ -94,6 +101,8 @@ struct PreviewScene {
 }
 // 패치의 실제 부분 출력/원래 두 깊이/강조 상태/SP 진입을 재생한다.
 TEST_CASE(PreviewCollection_PatchNative) { ReplayPreviews("originals"); }
+// 같은520개 원문 입력을 실제 커서 참조에 공급하며 중복 입력은 서로 다르게 둔다.
+TEST_CASE(PreviewCollection_PatchNativeSharedCursor) { ReplayPreviews("originals",true); }
 // CD의 별도 활성 판정과 SP 피드백을 바꾸지 않는 수집을 재생한다.
 TEST_CASE(PreviewCollection_CdNative) { ReplayPreviews("originalCD"); }
 // 추가판의 독립 기계어 관찰도 같은 복원 경로에서 대조한다.
@@ -170,4 +179,22 @@ TEST_CASE(PreviewCollection_CommonSubmissionIntegration) {
     dispatch.preview=[&](const auto& entry) { drawn.push_back("p:"+std::to_string(preview.Object(entry.token).value)+":"+std::to_string(entry.tail));CHECK(entry.x==500 && entry.y==-100); };
     DispatchDrawEntries(entries,{},dispatch);CHECK(drawn==std::vector<std::string>({"ui:2","p:7:0","p:7:2","s:6:4","s:6:0","s:5:0"}));
     scene.state.countdown=3;request.dirtyFlags=4;CHECK(CollectDrawEntries(request,work,collection).count==1);CHECK(scene.state.countdown==3);
+}
+
+// 실제 SP 경계가 임시 목록을 바꾼 직후 보조 토큰과 다음 반복이 현재 배열을 읽는다.
+TEST_CASE(PreviewCollection_SharedCursorCurrentReadsAndContracts) {
+    PreviewScene scene;scene.Place({6},1,-10,-30);scene.state.pieces.push_back({6});scene.state.pieceCount=2;
+    scene.state.querySp=1;scene.state.countdown=1;netstorm::test::previewbinding::Scene actual;actual.Collection(scene.state);
+    PreviewCollectionHooks hooks;hooks.readSp=[&](auto owner) {
+        CHECK(owner==actual.drop.localPlayer);actual.lifecycle.previews[0]={6};actual.lifecycle.previewCount=1;
+        scene.Place({5},1,70,80);scene.types[1].zOrder=100;return Bits(0);
+    };
+    PreviewCollection collector(scene.pool,scene.types,scene.spots,scene.state,hooks);collector.BindCursor(actual.Source(scene.pool));
+    scene.state.lockDepth=1;std::array<RenderCollectionEntry,8> work;
+    CHECK(collector.Collect({},work,8)==2);CHECK(work[0].token==250 && work[1].token==300);
+    CHECK(work[1].x==20 && work[1].y==25 && work[0].depth==7 && work[1].depth==6);
+    CHECK(actual.drop.legal==0 && actual.placement.placementAllowed==1);
+    PreviewScene other;CHECK(Throws([&] { collector.BindCursor(actual.Source(other.pool)); }));
+    PreviewScene cd(OriginalEdition::Cd1072);PreviewCollection cdCollector(cd.pool,cd.types,cd.spots,cd.state);
+    CHECK(Throws([&] { cdCollector.BindCursor(actual.Source(cd.pool)); }));
 }

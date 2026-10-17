@@ -75,9 +75,12 @@ public:
     // 풀/타입/현재 상태와 콜백은 이 객체보다 오래 살아야 한다.
     PreviewDraw(const o::SidPool& pool,std::span<const o::RiftTypeRecord> types,
         const PreviewCollectionState& collection,const PreviewDrawState& state,PreviewDrawHooks hooks,std::uint32_t tokenBase=0);
+    // PATCH의 실제 전역을 참조한다. 팔레트·기호 타입·표시 옵션은 기존 state에서 읽는다.
+    void BindCursor(CursorPreviewSource source);
     // entry의 x/y/depth 대신 raw signed 화면 WORD/프레임과 tail bit 2를 읽는다.
     void Draw(const o::RenderCollectionEntry& entry) const;
 private:
+    std::optional<CursorPreviewSource> cursor_; // 수집기와 같은 커서 전역 및 실제 격자를 참조한다.
     // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     const o::SidPool& pool_;/* types_: 타입 번호로 속성·플래그를 조회하는 타입 표. */ std::span<const o::RiftTypeRecord> types_;
     // collection_: 원본 전역의 현재 목록/선택 타입/부모와 배치 칸, 패치 전용 표시 상태다 (PreviewCollectionState).
@@ -90,6 +93,9 @@ struct PreviewShapeBinding { /* database: 셰이프 블록과 프레임을 읽�
 // 원본 타입 번호를 실제 GameAssets SHP 블록으로 연결한다. 비용 이미지는 별도 바인딩으로 제공한다.
 std::function<PreviewShapeBinding(std::uint32_t)> MakePreviewAssetShapes(const GameAssets& assets,
     std::uint32_t priceType,PreviewShapeBinding price);
+// 실제 Take가 저장한 block+1 토큰을 매 그림 호출 때 읽는다. 금액 문자열 경계 뒤의 변경도 반영한다.
+std::function<PreviewShapeBinding(std::uint32_t)> MakeCursorPreviewAssetShapes(const GameAssets& assets,
+    std::uint32_t priceType,const CursorLifecycleState& lifecycle);
 // 현재 8비트 출력 표면에서 실제 SHP 투명/색 표/격자·윤곽을 즉시 합성한다.
 // text는 기존 번역/비트맵 글꼴에 연결한다. 전체 Client 프레임·커서 입력은 별도다.
 class PreviewPixelTarget {

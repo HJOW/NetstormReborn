@@ -1,6 +1,8 @@
 // 원본 커서 미리보기의 부분 기록·쌍 제출과 패치판 SP 표시 상태를 복원한다.
 #pragma once
 #include "client/DrawSubmission.h"
+#include "client/CursorPreviewSource.h"
+#include <optional>
 #include "o/SidPool.h"
 #include "o/SpStore.h"
 
@@ -43,13 +45,15 @@ public:
     // limit<1일 때만 멈추므로 limit 1에서도 두 항목을 쓴다. 실제 span 부족은 예외로 거부한다.
     // 건너뛴 조각도 현재 칸의 x/y/token/depth 14바이트를 쓰며 kind/tail과 반환 수는 바꾸지 않는다.
     std::int32_t Collect(o::RenderWorldRect view,std::span<o::RenderCollectionEntry> output,std::int32_t limit) const;
+    // PATCH의 실제 전역을 참조한다. 피드백 전역과 외부 경계는 기존 state/hooks를 유지한다.
+    void BindCursor(CursorPreviewSource source);
     // 실제 sprite 경계가 대리 토큰을 같은 raw 풀의 SID로 되돌릴 때 사용한다.
     o::Sid Object(std::uint32_t token) const;
 private:
     // 원본 float 0.9999를 x87에서 더한 뒤 CRT 64비트 절삭의 하위 DWORD를 반환한다.
     static std::int32_t SpotCoordinate(float coordinate);
     // 패치판의 offset/카운터/SP float/첫 포인터·순열 검사 순서로 표시 시각을 갱신한다.
-    void PatchFeedback() const;
+    void PatchFeedback(std::uint32_t owner) const;
     // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     const o::SidPool& pool_;
     // types_: 타입 번호로 속성·플래그를 조회하는 타입 표.
@@ -60,6 +64,7 @@ private:
     PreviewCollectionState& state_;
     // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (PreviewCollectionHooks).
     PreviewCollectionHooks hooks_;
+    std::optional<CursorPreviewSource> cursor_; // 연결했으면 중복 입력 대신 같은 실제 전역을 읽는다.
     // tokenBase_: 토큰 기본.
     std::uint32_t tokenBase_{};
 };

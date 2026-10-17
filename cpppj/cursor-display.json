@@ -1,0 +1,81 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "lastDecompileDate": "2026-10-16",
+  "date": "2026-10-17",
+  "restoredEntries": [
+    "00446060",
+    "00446270"
+  ],
+  "existingPatchNativeRows": {
+    "collection": 520,
+    "draw": 477
+  },
+  "existingAllEditionNativeRows": {
+    "collection": 1560,
+    "draw": 1431
+  },
+  "existingFixturesPreserved": true,
+  "freshNativeSmokeInputs": {
+    "collection": 63,
+    "draw": 42
+  },
+  "freshNativeSmokeNormalReturns": 210,
+  "newNativeFixtureGenerated": false,
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "cpppj/tests/fixtures/previewcollection-x86.tsv": "9901a90d6354dc93b302c83ad6aa84cb8fb6a8d4ec032dc285133b95fe4d2a82",
+    "cpppj/tests/fixtures/previewdraw-x86.tsv": "af2d5785a97c63ad38ecd8dd95c8040dfab46c813424fe906a17209f9e7ccb12",
+    "cpppj/previewcollection.json": "1ad589557da6d6b6cad67aee3af66c15d9c983e59430d673a49f5a52640ec847",
+    "cpppj/previewdraw.json": "a7520efe43d9dda64f952079a4b55dd7f08c1f9dade265627f6501fdc33ff2ce",
+    "tools/decomp_previewcollection_oracle.py": "acbb23951ebc973417ce5021180c524a6602006ae5acf3f4ae8a6f910ceaf29d",
+    "tools/decomp_previewdraw_oracle.py": "eaf6136528f4c4236336b459d0f7ecdb5f4448c0930a2755444e01be2085832b",
+    "cpppj/src/client/CursorPreviewSource.h": "6377854617e5fa84b411c232f09035956f66a722c4a7cb05db63103d882f0659",
+    "cpppj/src/client/PreviewCollection.h": "e4c45d8c26795430cf61b0631d10e31a8425dfdbcb0354df5f494e352f977902",
+    "cpppj/src/client/PreviewCollection.cpp": "e8c7867fe1928b3243f8bdd72dbaab053a010e879ae955d6ac9f9b7bfd30bf37",
+    "cpppj/src/client/PreviewDraw.h": "39ef0204066978f6351a094b1a908012e2ddce32eb688c529bfa7cfa2137f9d1",
+    "cpppj/src/client/PreviewDraw.cpp": "45f40e2cced1e6911e4c8fadfea79a303c4573a6134697aaf3a1dd0631e7be45",
+    "cpppj/src/client/RawCursorDrop.h": "c486d2604d46407ff8ace3961cabb880e327dc29e13407e3cfb2004ee33e1450",
+    "cpppj/src/client/RawCursorLifecycle.h": "2f945a627677997d31f6e05f42021049e9af486017109faf1978187ef517903f",
+    "cpppj/src/client/RawCursorLifecycle.cpp": "b6ceb2db9080d9d1411f519564bd727e421b5a7f529ce6df009f2876b4acb9d3",
+    "cpppj/src/client/RawCursorPlacement.h": "9da2051c1797b9114e6883e5c170e238d77d6b0fcdddcf9dac88906f8f32a61d",
+    "cpppj/src/o/RawBridgeConnect.h": "3ce1ed2f4cf63ae28f75d1a9d84f2c4d00d92cca9f6e30732a6e06bb45a546ad",
+    "cpppj/src/o/RawCanonPlacementPipeline.h": "4c52d14dea023e6c5251c528b1afd6955e10d8d25a31e9766b4d79faa286e8fc",
+    "cpppj/tests/CursorPreviewBindingSupport.h": "324ab94b2d23c33f96bf257089d77a54f88ede7bbe4f4288d070fdf08cc02b4e",
+    "cpppj/tests/PreviewCollectionTests.cpp": "c6faebfc2502d50278b1d0ee772206d3e4f4f63d0cb9af7aa45fbe62fe246892",
+    "cpppj/tests/PreviewDrawTests.cpp": "aeafbb82a3d086229cec59f5b8b4808730d51b47f406346ac45f3a5701cbda5f"
+  },
+  "validation": {
+    "configuration": "Release",
+    "buildExitCode": 0,
+    "buildWarnings": 0,
+    "buildErrors": 0,
+    "buildLog": "extracted/goal-cursor-display-20261017-build2.log",
+    "focusedTests": 21,
+    "focusedFailedChecks": 0,
+    "newTests": 5,
+    "patchNativeReplayRows": 997,
+    "boundCommonCollectionSortDispatchPixelsVerified": true,
+    "currentCostAssetTokenVerified": true,
+    "fullValidationPending": false,
+    "actualClientEnabled": false,
+    "actualGuiPlayVerified": false,
+    "fullTests": 1485,
+    "fullFailedChecks": 0,
+    "ctestExitCode": 0,
+    "testSeconds": 231.63,
+    "ctestTotalSeconds": 231.66,
+    "fullOutput": "extracted/goal-cursor-display-20261017-ctest-output.log",
+    "cursorIntermittentFailureRootCauseUnresolved": true
+  },
+  "limitations": [
+    "실제 Drop/Lifecycle/Placement/Bridge/Canon 격자를 참조하는 연결이며 기존 원문 입력의 출력과 대조한다.",
+    "신규997개 독립 관찰을 생성한 것이 아니다. 기존 PATCH997개를 새 연결에서 재생하며 세 판본 기존 관측 SHA를 감사한다.",
+    "원문 표본105개를 두 정밀도로 새 실행했다. 게임/OS 호출은 없다. 기계어 관찰은 픽셀/번역/글꼴 경계를 유지한다.",
+    "공통 수집/정렬/분배/픽셀은 검사 장면에서 연결한다. 실제 Client/Session/입력·건설/사용자 완주는 미완료다.",
+    "화면 표시용 옵션/기호/소유자 표와 경고·비용 텍스트는 기존 출력 상태/콜백을 실제 상위 계층에서 공급해야 한다."
+  ]
+}
