@@ -8,7 +8,7 @@
     "date": "2026-10-16"
   },
   "currentSources": {
-    ".gitattributes": "f3048061e28aecb90be1446e823452fdfea5e8418825826f0003fcb4dab9ba68",
+    ".gitattributes": "6618a0dd3d1edb3e5646872eb3b70e6097f4f05867d854b3f5ba44eed2c33147",
     "cpppj/src/client/CampaignClientServices.cpp": "deb067662fe4fcd5324bab710c7b06fb7ce5f661f4078227946adc4fa92db72a",
     "cpppj/src/client/RawButtonControls.cpp": "5d9568d2a6c461e9dd474cc584db62389ca3eb576e780fdeb6e9a39f1ee55baf",
     "cpppj/src/client/RawButtonControls.h": "372d15ad4ab423ef9869fab470ad1f4b5c75cb0ebc12503edd2bb7a6f3f240d6",
@@ -199,6 +199,19 @@
           "path": ".gitattributes",
           "previous": "09039021cbb282ab442a202d4233a9fa48f766f3f06407acda3eb900e4372601",
           "current": "f3048061e28aecb90be1446e823452fdfea5e8418825826f0003fcb4dab9ba68"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 145,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": ".gitattributes",
+          "previous": "f3048061e28aecb90be1446e823452fdfea5e8418825826f0003fcb4dab9ba68",
+          "current": "6618a0dd3d1edb3e5646872eb3b70e6097f4f05867d854b3f5ba44eed2c33147"
         }
       ]
     }

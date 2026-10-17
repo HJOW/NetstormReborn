@@ -1,5 +1,16 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-17 단위145 완료: Carrier 내용물 교대 표시와 원본 사건 처리 (`HJOW-Athlon`)
+
+- [x] 기준 `2c79a9b`, 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16** 일치다. 새 디컴파일·원본 게임 실행·DirectDraw 수정은 없다. [작업 기록](docs/exe/cpp-carrier-regular-20261017.md).
+- [x] `RawCarrierRegular`가42a750의491/492/493/5105와44b900위임을복원했다. 조회뒤기한검사/내용물교대표시/현재TYPE·WORD·owner·좌표재조회/할당실패/현재VT6개분배다. TYPE+1b8은casttime임을원본로더piVar9[6e]에서확인했다. 큰하위생성/가상효과/이동/낙하/Damageable는명시경계이고실제Session연결은아직없다.
+- [x] 독립PE **837입력·1,674정상반환·241,652명령·53/64차이0**과83VT슬롯을보존했다. 처음디컴파일C의NaN하한표현을따라224check가실패했다. 실제41d0d0의unordered분기를확인해NaN보존으로제품만교정했다. 원본/도구/fixture/기대값은변경하지않았다. 최종집중3개성공이다.
+- [x] 빌드1~3모두종료0, 최종빌드3 **경고0·오류0**, 같은최종바이너리의전체CTest **1,586개·실패0·종료0·215.85초**(CTest215.88초)다. 38163/73516/67331/30180/63613은모두종료했고대기명령없다.
+- [x] 원본감사63종 **52성공·기존11실패·새실패0**, 기존38보고서58현재핀갱신/과거보존이다. 보호SHA3/기존CMake접두/UTF-8·LF/과거이력/기존fixture·AGENTS·원본·DN불변을확인했다. 실제Client입구미변경으로클론창진입은반복하지않았다.
+- [x] 로그접두부 `extracted/goal-carrier-regular-20261017-`, 연결보고서 `cpppj/campaign-carrier-regular.json`이다. 인계후 **`20261017-45 CP 캐리어의 내용물 교대 표시와 원본 사건 처리 복원`** 으로로컬커밋하며push하지않는다. 전체목표active다.
+- [ ] **다음 우선:** 같은Session의실제내용물검색/자산생성/WORD/owner/Pop/표시/기본DamageableHandle과현재시계·SoundProcessState.processType의타이머를연결한다. 그뒤InstallContents.checkCarrier의잘못된426fc0지면검사를426080헬퍼로교체한다. 사제259/25a/25b/25c/25d를Carrier로오분배하지않는다. 492의4225b0/429010·5105의426ef0은아직큰하위경계다. 생성만연결하고프레임을빈성공으로대체하지않는다.
+- [ ] 실제Client선택/강조/dump·비정지객체메뉴/49af80설명·번역/문자열수명·VT별+a8/+ac·DWORD소비자, 로그인된로컬전송/생산/경제/AI와대상11스테이지자연완주·승패·저장·다음미션/전체동일성은미완료다.
+
 ## 2026-10-17 단위144 완료: 내용물 표시 타이머와 부모 삭제 수명 (`HJOW-Athlon`)
 
 - [x] 기준 `02c75a7`, 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16** 일치다. AGENTS·양LEFT를 재독했고 새 디컴파일·원본 게임 실행·DirectDraw 수정은 없다. [작업 기록](docs/exe/cpp-content-preview-process-20261017.md).

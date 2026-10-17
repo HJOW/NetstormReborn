@@ -62,3 +62,6 @@ target_sources(netstorm PRIVATE o/RawSquidSelection.cpp o/RawSquidSelection.h o/
 
 # 내용물 미리보기의 생성/만료/빈 통지/부모 삭제 수명이다.
 target_sources(netstorm PRIVATE o/RawContentPreviewProcess.cpp o/RawContentPreviewProcess.h)
+
+# 실제 Carrier42a750 전체 사건과 내용물 교대 표시다.
+target_sources(netstorm PRIVATE o/RawCarrierRegular.cpp o/RawCarrierRegular.h)

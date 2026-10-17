@@ -1363,3 +1363,8 @@ set_source_files_properties(SquidSelectionTests.cpp PROPERTIES COMPILE_DEFINITIO
 target_sources(netstorm_tests PRIVATE ContentPreviewProcessTests.cpp)
 set_source_files_properties(ContentPreviewProcessTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_CONTENT_PREVIEW_PROCESS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/content-preview-process-x86.tsv\"")
+
+# Carrier의 실제837입력과83VT의 보호PE 슬롯이다.
+target_sources(netstorm_tests PRIVATE CarrierRegularTests.cpp)
+set_source_files_properties(CarrierRegularTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CARRIER_REGULAR_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/carrier-regular-x86.tsv\";NETSTORM_CARRIER_REGULAR_VTABLES=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/carrier-regular-vtables.tsv\"")

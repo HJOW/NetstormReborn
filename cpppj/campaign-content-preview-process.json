@@ -8,9 +8,9 @@
     "date": "2026-10-16"
   },
   "currentSources": {
-    ".gitattributes": "f3048061e28aecb90be1446e823452fdfea5e8418825826f0003fcb4dab9ba68",
-    "cpppj/src/CMakeLists.txt": "e3ef1864284b926b0c1e564ecd477ce0761f8b9ac10abc4b65ea943e74af264a",
-    "cpppj/tests/CMakeLists.txt": "854bbdd793d41411851d4edebd52b671a921bb58dfa789a7ddd46bb893d50e4b",
+    ".gitattributes": "6618a0dd3d1edb3e5646872eb3b70e6097f4f05867d854b3f5ba44eed2c33147",
+    "cpppj/src/CMakeLists.txt": "a40ff146c9ac132642b260df7712aad89b6a936e1ee385345bbd031d57f0ef04",
+    "cpppj/tests/CMakeLists.txt": "ba633eb094bb697a98b67b6fab8045976dd6e718810a635440285a3dced6b2d7",
     "cpppj/src/o/RawContentPreviewProcess.cpp": "6be7f8997e59d046856a9c7d44d6882360d4b4cd510caba12b515b92554bc6c1",
     "cpppj/src/o/RawContentPreviewProcess.h": "e7690b3b77969d7057b2373baf42ce33367ace295f75a0aa8ee48f56aa150699",
     "cpppj/tests/ContentPreviewProcessTests.cpp": "99eb74565511fd1740a57a87414edc6e601cf8a61603a2f36dfde90bf294172c",
@@ -93,5 +93,32 @@
     "현재Session 시계/SoundProcessState의공유타입/실제표시자산 연결",
     "실제Client 선택/우클릭/원본DWORD소비자",
     "11스테이지 자연완주/승패/저장/다음미션/생산경제AI/전체동일성"
+  ],
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "unit": 145,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": ".gitattributes",
+          "previous": "f3048061e28aecb90be1446e823452fdfea5e8418825826f0003fcb4dab9ba68",
+          "current": "6618a0dd3d1edb3e5646872eb3b70e6097f4f05867d854b3f5ba44eed2c33147"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "e3ef1864284b926b0c1e564ecd477ce0761f8b9ac10abc4b65ea943e74af264a",
+          "current": "a40ff146c9ac132642b260df7712aad89b6a936e1ee385345bbd031d57f0ef04"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "854bbdd793d41411851d4edebd52b671a921bb58dfa789a7ddd46bb893d50e4b",
+          "current": "ba633eb094bb697a98b67b6fab8045976dd6e718810a635440285a3dced6b2d7"
+        }
+      ]
+    }
   ]
 }

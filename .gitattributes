@@ -1293,3 +1293,12 @@ cpppj/content-preview-process.json text eol=lf
 cpppj/campaign-content-preview-process.json text eol=lf
 tools/decomp_content_preview_process.py text eol=lf
 docs/exe/cpp-content-preview-process-20261017.md text eol=lf
+
+# Carrier Regular의 새 코드/독립 원문/보고서는 UTF-8/LF다.
+cpppj/src/o/RawCarrierRegular.* text eol=lf
+cpppj/tests/CarrierRegularTests.cpp text eol=lf
+cpppj/tests/fixtures/carrier-regular*.tsv text eol=lf
+cpppj/carrier-regular.json text eol=lf
+cpppj/campaign-carrier-regular.json text eol=lf
+tools/decomp_carrier_regular.py text eol=lf
+docs/exe/cpp-carrier-regular-20261017.md text eol=lf
