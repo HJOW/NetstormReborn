@@ -1,5 +1,15 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-17 단위139 완료: 공통 객체 메뉴Open/위치와 현재Session 연결 (`HJOW-Athlon`)
+
+- [x] 단위138의 `aff315d`를 기준으로 작업한다. 현재/마지막 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-16**이며 새 디컴파일·원본 게임 실행·전체화면 DirectDraw 수정은 없다. [작업 기록](docs/exe/cpp-object-menu-open-20261017.md).
+- [x] `RawObjectMenuOpen`이 실제4adb30의 extra거부·제단 가상+ac 위임/전체DWORD 반환·BeginFancy/요약/실제+a8·현재TYPE/사건 재조회와425f90의 전체 위치 정수식을 복원한다. getter/효과 누락은 명시 오류다. CD 대응4aebf0/4e35f0은 기록만 보존하며 새 몸체는10.78전용이다.
+- [x] `MakeObjectMenuOpen`은 같은 현재 Pool/TYPE·world.Find·현재 카메라 투영·실제 첫contained·현재 사정거리를 연결한다. GUI/제목/파생 가상 분배/부착은 여전히 실제 caller 경계이며 UberGump의 임시 우클릭은 아직 교체하지 않았다.
+- [x] 보호PE의 새 **788입력·1,576정상반환·132,544명령·정밀도 차이0**을 기록했다. 두 전체 부모/실제_ftol만 실행하며 나머지 경계는 작업 기록을 따른다. 기존fixture/원본은 보존했다. C++ 원본 재생3개 및 Session집중4개가 통과했다. 첫 빌드 형식 오류와 빌드2의 새BYTE경고를 수정해 최종 **Release빌드3 종료0·경고0·오류0**이다.
+- [x] 최종 전체CTest **1,569개·실패0·종료0·207.45초**다. 원본근거58종은 **47종성공·기존11종실패·새실패0**이고 이전 실패는 단위138을 따른다. object-menu 중첩현재핀2개 누락은 원본감사로 확인해 과거값 보존 후 갱신했다. 최종 현재제품핀은 **기존25보고서·68개** 갱신/과거보존이다. 보호SHA3·기존CMake바이트접두·UTF-8·LF를 확인했으며 기존fixture/AGENTS/원본/DN은 바꾸지 않았다. 로그접두부 `extracted/goal-object-menu-open-20261017-`, 연결보고서 `cpppj/campaign-object-menu-open.json`이다.
+- [x] 실제Client 입구를 교체하지 않아 이 단위의 클론창 회귀는 반복하지 않았다. 이전 단위138의 진입5회를 이번 새 메뉴의 자연UI 검증으로 확대하지 않는다. 인수인계 뒤 **`20261017-39 CP 공통 객체 메뉴 열기와 원본 위치 계산을 현재 세션에 연결`** 로 로컬커밋하며 push하지 않는다. 전체목표는active다.
+- [ ] 다음은 실제 제목4ada70·4ad780의4인자와 파생별+a8/+ac·같은Pool GumpFormHost/부모삭제알림·RawMenuControls 객체부착 완료입구·Client DWORD 명령 소비자다. 원본객체메뉴는 게임시간을 정지하지 않는다. 생산/경제/AI/로컬전송 및 대상11스테이지 자연완주·승패·저장·다음미션/전체동일성은 미완료다.
+
 ## 2026-10-17 단위138 완료: 직전 객체 메뉴 수정 재검증 (`HJOW-Athlon`)
 
 - [x] 사용자 목표 재개 지시로 AGENTS·두 LEFT·깨끗한 기준 `8c10b36`과 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16**을 확인했다. 새 디컴파일·원본 게임 실행·전체화면 DirectDraw 수정은 없다. [재검증 기록](docs/exe/cpp-cursor-client-resume-20261017.md).

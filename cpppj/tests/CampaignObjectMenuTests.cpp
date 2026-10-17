@@ -152,3 +152,21 @@ TEST_CASE(CampaignObjectMenus_CurrentPeerPlayerMenuUsesActualInput) {
     }
     ui.menus->Close();chain.reset();session.Core().bridgeState.mission=true;
 }
+
+// 공통Open의게임조회가같은Session의현재풀/카메라를사용하는지확인한다. GUI는명시경계다.
+TEST_CASE(CampaignObjectMenus_ActualCommonOpenUsesCurrentWorld) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);MenuServices external; // 보호자산과실제장치입력수명이다.
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",external.Make());
+    CHECK(Throws([&] { static_cast<void>(session.MakeObjectMenuOpen({})); }));session.Load();const Sid priest{static_cast<std::uint16_t>(session.FindPriestParticipation(1))};CHECK(priest.value);
+    std::vector<std::uint32_t> sequence;std::vector<std::array<std::int32_t,2>> positions; // 실제부모가선택한GUI효과와부착좌표다.
+    ObjectMenuOpenHooks hooks;hooks.beginFancy=[&] { sequence.push_back(1); };hooks.summary=[&](Sid sid) { CHECK(sid==priest);sequence.push_back(2); };hooks.populate=[&](Sid sid) { CHECK(sid==priest);sequence.push_back(3); };
+    hooks.attach=[&](Sid sid,std::int32_t x,std::int32_t y) { CHECK(sid==priest);sequence.push_back(4);positions.push_back({x,y}); };
+    hooks.menuWidth=[] { return 0.0F; };hooks.screenWidth=[] { return 100000; }; // 경계선택이바뀌지않는명시화면입력이다.
+    hooks.altar=[](Sid)->Sid { throw std::logic_error("외부제단조회사용오류"); };hooks.project=[](float,float)->std::array<std::int32_t,2> { throw std::logic_error("외부투영사용오류"); };
+    hooks.content=[](Sid)->Sid { throw std::logic_error("외부내용물조회사용오류"); };hooks.range=[](std::uint32_t)->float { throw std::logic_error("외부사정거리사용오류"); };
+    auto open=session.MakeObjectMenuOpen(std::move(hooks));session.SetParticleView({0,0,0,0,1024,768},{});
+    CHECK(open->Open(priest,{InputCode::kRightButton,320,240})==1);CHECK(sequence==std::vector<std::uint32_t>({1,2,3,4}));
+    positions.clear();open->Position(priest);session.SetParticleView({17,-23,0,0,1024,768},{});open->Position(priest);
+    CHECK(positions.size()==2);if (positions.size()==2) CHECK(positions[1][0]==positions[0][0]-17 && positions[1][1]==positions[0][1]+23);
+    const auto original=session.Core().pool.Slot(priest);CHECK(!(original[40]&1)); // 자연설치객체의허용비트를검사하기위해직접고치지않았다.
+}

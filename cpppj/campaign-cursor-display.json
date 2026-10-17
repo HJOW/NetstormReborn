@@ -20,11 +20,11 @@
     "cpppj/src/client/RawCampaignCursor.h": "0c4aa17d5acf5cd03fd9d651c33de2fedd115c622e9f75f1c469edb462c775ce",
     "cpppj/src/client/RawCampaignCursorDisplay.cpp": "8e3f58a74524806c727a1ea81ed725495a22fc41270a77fd6457342925a80117",
     "cpppj/src/client/RawCampaignCursorDisplay.h": "e30e775cf87189bfa1dfeb8a26075decd485dea5e2d366056df8579dcc2f5b73",
-    "cpppj/src/client/RawCampaignSession.cpp": "a5f5f1f43b329dee360ef78172a1a83eb42a078e5356a54a2c0c8f5e0fa5b88f",
+    "cpppj/src/client/RawCampaignSession.cpp": "743893d3824fe9b7915ab9dd32f568484e6ebd902c7a5390c4f4d81581902a84",
     "cpppj/src/client/Renderer.cpp": "5a36413dc3cf1bfa2c12a57823dc0c44a37ad3f01952ff14f17fdb0ab5b1ff11",
     "cpppj/src/client/Renderer.h": "b6bcd1c739f94173876bb8f9ecbbf2ae34bc48bbe092c6a1bad3454f3a950f55",
     "cpppj/src/client/UberGump.cpp": "d9304a5e1c2f15d39f78baf85af69bbfa7cfd1b68819e8a83f5298eec7c07432",
-    "cpppj/tests/CMakeLists.txt": "fe85134c12002da7e8271c43680ab1a254d34413ea3b5d187fb763ef493991ae",
+    "cpppj/tests/CMakeLists.txt": "e16d86562d18e8a6d7d23c511b6871a2a5459843c73286dc201203abaa5aaec3",
     "cpppj/tests/CampaignSessionTests.cpp": "964400205960599492a269d374aaaa7e46ff7f7b6e3968a992d0a447dc16bf2a",
     "cpppj/tests/PreviewColorMapsTests.cpp": "5019672dc1589cace9bb92690be4bf9786ab8257770794cb51fdff87cf937311",
     "cpppj/tests/RendererTests.cpp": "fb868b30dcd882c0c2add47d3a66434e4cb34bf514f4ce8a7102a0a3ed2995c8"
@@ -180,6 +180,25 @@
           "path": "cpppj/src/client/RawCampaignSession.cpp",
           "previous": "35fb5589cdde65bdd4d339c5ac7c5fe2028e3b0def3fa2105b27226be283389b",
           "current": "a5f5f1f43b329dee360ef78172a1a83eb42a078e5356a54a2c0c8f5e0fa5b88f"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 139,
+      "reason": "같은 Session의 공통 객체 메뉴 Open/위치 연결에 따른 현재 제품 SHA 갱신. 과거 SHA와 fixture는 보존하며 원본 전체 재실행을 뜻하지 않는다.",
+      "pins": [
+        {
+          "group": "currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "a5f5f1f43b329dee360ef78172a1a83eb42a078e5356a54a2c0c8f5e0fa5b88f",
+          "current": "743893d3824fe9b7915ab9dd32f568484e6ebd902c7a5390c4f4d81581902a84"
+        },
+        {
+          "group": "currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "fe85134c12002da7e8271c43680ab1a254d34413ea3b5d187fb763ef493991ae",
+          "current": "e16d86562d18e8a6d7d23c511b6871a2a5459843c73286dc201203abaa5aaec3"
         }
       ]
     }

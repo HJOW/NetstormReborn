@@ -64,8 +64,8 @@
       "cpppj/src/client/RawObjectMenu.cpp": "f64429574e0fd57e325cd99b47e3c46197979b5047d879b1a9693fda7d58a1ef",
       "cpppj/tests/ObjectMenuTests.cpp": "7485055d8b76db99eb8e2fc117f9d89eb4892c2620112c1afbb1ed267710aa37",
       "cpppj/tests/RawMenuControlsTests.cpp": "df26ef116d9971df27bf12f1f857a398dec99ecfe0d72d82c13600244b17d1dd",
-      "cpppj/src/client/CMakeLists.txt": "8bb17d335554c16e6ff3300134492a264bfa425dfafd52062ecf0062f523d87c",
-      "cpppj/tests/CMakeLists.txt": "fe85134c12002da7e8271c43680ab1a254d34413ea3b5d187fb763ef493991ae"
+      "cpppj/src/client/CMakeLists.txt": "ef27e7af2e58dc2782bfebdec87f26921cf7b11fa7c135f085b4a6df342cc08c",
+      "cpppj/tests/CMakeLists.txt": "e16d86562d18e8a6d7d23c511b6871a2a5459843c73286dc201203abaa5aaec3"
     }
   },
   "integration_updates": [
@@ -371,6 +371,25 @@
           "path": "cpppj/src/client/RawObjectMenu.cpp",
           "previous": "ef92b668ec60c211d8a54722f864664d4262a25358ce0f2b1aaa95d572a558d5",
           "current": "f64429574e0fd57e325cd99b47e3c46197979b5047d879b1a9693fda7d58a1ef"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 139,
+      "reason": "같은 Session의 공통 객체 메뉴 Open/위치 연결에 따른 현재 제품 SHA 갱신. 과거 SHA와 fixture는 보존하며 원본 전체 재실행을 뜻하지 않는다.",
+      "pins": [
+        {
+          "group": "/product_validation/sha256",
+          "path": "cpppj/src/client/CMakeLists.txt",
+          "previous": "8bb17d335554c16e6ff3300134492a264bfa425dfafd52062ecf0062f523d87c",
+          "current": "ef27e7af2e58dc2782bfebdec87f26921cf7b11fa7c135f085b4a6df342cc08c"
+        },
+        {
+          "group": "/product_validation/sha256",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "fe85134c12002da7e8271c43680ab1a254d34413ea3b5d187fb763ef493991ae",
+          "current": "e16d86562d18e8a6d7d23c511b6871a2a5459843c73286dc201203abaa5aaec3"
         }
       ]
     }

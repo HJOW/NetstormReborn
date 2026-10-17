@@ -1241,3 +1241,13 @@ cpppj/cursor-actions.json text eol=lf
 cpppj/campaign-cursor-actions.json text eol=lf
 cpppj/tests/fixtures/cursor-actions-x86.tsv text eol=lf
 tools/decomp_cursor_actions.py text eol=lf
+
+# 객체메뉴Open의원본관측과현재제품/검사의바이트SHA를체크아웃뒤에도보존한다.
+cpppj/src/client/RawObjectMenuOpen.* text eol=lf
+cpppj/tests/ObjectMenuOpenTests.cpp text eol=lf
+cpppj/tests/CampaignObjectMenuTests.cpp text eol=lf
+cpppj/tests/fixtures/object-menu-open-x86.tsv text eol=lf
+cpppj/object-menu-open.json text eol=lf
+cpppj/campaign-object-menu-open.json text eol=lf
+cpppj/campaign-cursor-client.json text eol=lf
+tools/decomp_object_menu_open.py text eol=lf

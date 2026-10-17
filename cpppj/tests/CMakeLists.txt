@@ -1342,3 +1342,6 @@ target_sources(netstorm_tests PRIVATE CampaignObjectMenuTests.cpp)
 target_sources(netstorm_tests PRIVATE UserHighlightTests.cpp)
 set_source_files_properties(UserHighlightTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_USER_HIGHLIGHT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/user-highlight-x86.tsv\"")
+
+# 공통 객체 메뉴Open/위치의실제PE788입력과미연결경계를검사한다.
+target_sources(netstorm_tests PRIVATE ObjectMenuOpenTests.cpp)

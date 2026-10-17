@@ -1,0 +1,106 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-17",
+  "unit": 139,
+  "baseCommit": "aff315d",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16"
+  },
+  "currentSources": {
+    ".gitattributes": "b26472e932912d4524379f3c581e108f57ecc2841aca637ddf39422cfcb0e3f6",
+    "cpppj/src/client/CMakeLists.txt": "ef27e7af2e58dc2782bfebdec87f26921cf7b11fa7c135f085b4a6df342cc08c",
+    "cpppj/src/client/RawCampaignSession.cpp": "743893d3824fe9b7915ab9dd32f568484e6ebd902c7a5390c4f4d81581902a84",
+    "cpppj/src/client/RawCampaignSession.h": "d25593c9bfed100c5900a8c56e447e097ff7c42a968db69de7ee221af78b9a64",
+    "cpppj/src/client/RawObjectMenuOpen.cpp": "7192212d68a6de9280b351b83dc53484b5d124520ecfddd0ae00eef29061b751",
+    "cpppj/src/client/RawObjectMenuOpen.h": "86a48b4cfc3c71725fb82e6e84c0cdc7f78c9a3f5d582daa3e960c56f532cdaf",
+    "cpppj/tests/CMakeLists.txt": "e16d86562d18e8a6d7d23c511b6871a2a5459843c73286dc201203abaa5aaec3",
+    "cpppj/tests/CampaignObjectMenuTests.cpp": "58b4b40630a8dbccf42b4cf30553ccf85fa2e8c2a4215948948b1887e1565292",
+    "cpppj/tests/ObjectMenuOpenTests.cpp": "17f364d169dc40b9d4276ed192fb4042c07ca212b3740bbb3abc2cb54fc54b77",
+    "tools/decomp_object_menu_open.py": "88e0ed764e3ab5e54e1feb5177bd9313bf7edfcb3b9f79d8d4cd60581f03df17",
+    "cpppj/tests/fixtures/object-menu-open-x86.tsv": "5ab274b7e92b4676b84bdd061954a1dfd92efbf6ff428671c884573cdf920e6f"
+  },
+  "nativeReports": {
+    "cpppj/object-menu-open.json": "875169605535bb8a6210bf00cab4cec11c06d84ba6c00eae8fb933d2c6c5cd49"
+  },
+  "protectedFileSha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6"
+  },
+  "nativeContext": {
+    "entries": [
+      "004adb30",
+      "00425f90"
+    ],
+    "controls": [
+      639,
+      895
+    ],
+    "uniqueInputs": 788,
+    "normalReturns": 1576,
+    "instructions": 132544,
+    "nativeCalls": {
+      "004adb30": 552,
+      "00425f90": 1216
+    },
+    "precisionDifferentInputs": [],
+    "boundaries": "제목4ada70/실제파생+a8/+ac, 장식생성/객체부착, 투영/종속조회/타입조회/현재메뉴조회는 명시입력. 두부모와_ftol만전체실행. 게임/OS실행없음."
+  },
+  "integration": {
+    "open": "extra1 거부/현재 제단 가상+ac 반환전체/BeginFancy·요약·파생+a8/현재TYPE·사건 재조회",
+    "position": "실제425f90·signed64_ftol하위DWORD·signed상한2·현재기본폭/화면폭·감김/INT_MIN/동률오른쪽",
+    "session": "같은현재Pool/TYPE·world.Find·현재카메라SoundToScreen·같은Carrier.FindContained(1,0,0)·현재gunTypes.range",
+    "limits": "GUI/요약4ada70·4ad780/실제파생가상분배/객체Form·부착은caller경계. UberGump 임시우클릭 미교체. 실제사용자메뉴/자연완주 검증 아님."
+  },
+  "validation": {
+    "releaseBuild": {
+      "latest": 3,
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0,
+      "log": "extracted/goal-object-menu-open-20261017-build3.log"
+    },
+    "focused": {
+      "nativeCases": 3,
+      "sessionCases": 4,
+      "failures": 0,
+      "logs": [
+        "extracted/goal-object-menu-open-20261017-focus.log",
+        "extracted/goal-object-menu-open-20261017-session-focus.log"
+      ]
+    },
+    "ctest": {
+      "status": "passed",
+      "cases": 1569,
+      "failures": 0,
+      "exitCode": 0,
+      "seconds": 207.45,
+      "totalSeconds": 207.56,
+      "log": "extracted/goal-object-menu-open-20261017-ctest.log"
+    },
+    "nativeVerifiers": {
+      "total": 58,
+      "passed": 47,
+      "failed": 11,
+      "newFailures": 0,
+      "existingFailuresDocument": "docs/exe/cpp-cursor-client-resume-20261017.md",
+      "log": "extracted/goal-object-menu-open-20261017-verify-final.json"
+    },
+    "currentPinUpdates": {
+      "reports": 25,
+      "pins": 68,
+      "scope": "직전기준과같던현재제품핀만갱신/과거SHA·fixture보존. 전체원본재실행을대신하지않음."
+    },
+    "protectedFilesUnchanged": 3,
+    "existingCMakePrefixesPreserved": true
+  },
+  "remaining": [
+    "실제제목4ada70·4ad780의4인자/파생+a8·+ac분배",
+    "같은Pool GumpFormHost·부모삭제알림·RawMenuControls객체부착완료입구",
+    "Client 실제DWORD명령소비자와시간을정지하지않는실제우클릭메뉴",
+    "생산/경제/AI/로그인된로컬전송양끝·큐잉·등록수명/전체Kernel/대상11스테이지자연완주·승패·저장·다음미션·전체동일성"
+  ],
+  "excluded": "전체화면 DirectDraw 수정",
+  "localCommitMessage": "20261017-39 CP 공통 객체 메뉴 열기와 원본 위치 계산을 현재 세션에 연결"
+}

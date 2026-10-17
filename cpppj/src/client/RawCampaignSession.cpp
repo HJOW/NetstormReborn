@@ -1547,6 +1547,18 @@ std::unique_ptr<RawCampaignObjectMenus> RawCampaignSession::MakeObjectMenus(Camp
     BindPriestMenuCarrier(priest,*chain->carrier);chain->priest=MakePriestMenu(std::move(priest));
     return std::unique_ptr<RawCampaignObjectMenus>(new RawCampaignObjectMenus(std::move(menus)));
 }
+// 공통Open의게임조회만현재Session으로교체한다. GUI몸체/가상+a8/+ac의대체성공은추가하지않는다.
+std::unique_ptr<RawObjectMenuOpen> RawCampaignSession::MakeObjectMenuOpen(ObjectMenuOpenHooks hooks) {
+    if (!impl_->loaded) throw std::logic_error("설치 전 실제 Session 공통 객체 메뉴 요청");
+    auto* current=impl_.get(); // 반환몸체가빌리는현재게임의고정주소다.
+    hooks.altar=[current](Sid sid) {
+        const auto raw=current->core.pool.Slot(sid);return current->world.Find(std::bit_cast<float>(Read(raw,14)),std::bit_cast<float>(Read(raw,18)),current->runeState.altarType);
+    };
+    hooks.project=[current](float x,float y) { const auto point=SoundToScreen(current->cursorView,x,y);return std::array<std::int32_t,2>{point.x,point.y}; };
+    hooks.content=[current](Sid sid) { return current->priests->Carrier().FindContained(sid,1,0,0); };
+    hooks.range=[current](std::uint32_t type) { if (type>=current->gunTypes.size()) throw std::out_of_range("객체 메뉴 현재 사정거리TYPE 범위 오류");return current->gunTypes[type].range; };
+    return std::make_unique<RawObjectMenuOpen>(current->core.pool,current->core.types,std::move(hooks));
+}
 // 기본 번호/특수 모드는 같은 장기 상태를 빌리며 getter를 새 캐시로 바꾸지 않는다.
 PriestMenuState& RawCampaignSession::PriestMenuSettings() { return impl_->priestMenu; }
 // 원본 TYPE 제외 목록을 현재 값으로 빌린다. 다른 SID/생산 금지 표와 합치지 않는다.

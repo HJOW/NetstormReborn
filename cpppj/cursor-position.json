@@ -31,8 +31,8 @@
     "cpppj/src/client/RawCursorPlacement.cpp": "64c57e1581716ad63ebf952aa9c4b7ce4c432ec20f3ca23dcfeede6fcf8a1a46",
     "cpppj/tests/CursorPositionTests.cpp": "111ab2b59d662bacc5b51bb44d54fccec4260df86f15502e370a35d7d13a73f1",
     "cpppj/tests/CursorPreviewSupport.h": "fa4e6b6d54bbc564af308ffd154f2ced7482a131c542222c0342e6019d6c9084",
-    "cpppj/src/client/CMakeLists.txt": "8bb17d335554c16e6ff3300134492a264bfa425dfafd52062ecf0062f523d87c",
-    "cpppj/tests/CMakeLists.txt": "fe85134c12002da7e8271c43680ab1a254d34413ea3b5d187fb763ef493991ae"
+    "cpppj/src/client/CMakeLists.txt": "ef27e7af2e58dc2782bfebdec87f26921cf7b11fa7c135f085b4a6df342cc08c",
+    "cpppj/tests/CMakeLists.txt": "e16d86562d18e8a6d7d23c511b6871a2a5459843c73286dc201203abaa5aaec3"
   },
   "limitations": [
     "실제 정수 위치 갱신/역투영/CRT 절삭을 실행한다. 단독 입력의 Activate/Create/선택은 명시 효과다.",
@@ -283,6 +283,25 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "f983e4d12e69969ad3b6739ed71b19c0c831d1e3bc83ec3b2b6d074bb6caa4e4",
           "current": "fe85134c12002da7e8271c43680ab1a254d34413ea3b5d187fb763ef493991ae"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 139,
+      "reason": "같은 Session의 공통 객체 메뉴 Open/위치 연결에 따른 현재 제품 SHA 갱신. 과거 SHA와 fixture는 보존하며 원본 전체 재실행을 뜻하지 않는다.",
+      "pins": [
+        {
+          "group": "sha256",
+          "path": "cpppj/src/client/CMakeLists.txt",
+          "previous": "8bb17d335554c16e6ff3300134492a264bfa425dfafd52062ecf0062f523d87c",
+          "current": "ef27e7af2e58dc2782bfebdec87f26921cf7b11fa7c135f085b4a6df342cc08c"
+        },
+        {
+          "group": "sha256",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "fe85134c12002da7e8271c43680ab1a254d34413ea3b5d187fb763ef493991ae",
+          "current": "e16d86562d18e8a6d7d23c511b6871a2a5459843c73286dc201203abaa5aaec3"
         }
       ]
     }

@@ -20,6 +20,7 @@
 #include "client/CameraHome.h"
 #include "client/RawPriestMenu.h"
 #include "client/RawCarrierMenu.h"
+#include "client/RawObjectMenuOpen.h"
 #include "client/RawPlayerMenu.h"
 #include "o/RawCarrierContentNotice.h"
 #include "client/RawCursorMana.h"
@@ -209,6 +210,9 @@ public:
     // caller는 기존 Bind*MenuControls로 같은 Gump 작성기를 공급한다. 미공급 Chat/번역/통신 분기는 선택 시 오류다.
     // 반환 체인은 메뉴가 열린 동안 유지하고 월드 교체/Session 해제 전에 반납한다.
     std::unique_ptr<RawCampaignObjectMenus> MakeObjectMenus(CampaignObjectMenuUi ui);
+    // 공통Open의제단/투영/내용물/사정거리를같은현재월드에연결한다. GUI·실제가상분배는caller가공급한다.
+    // 반환몸체와모든GUI참조는Session보다먼저해제한다. 제목/파생메뉴의미연결은원래오류를유지한다.
+    std::unique_ptr<RawObjectMenuOpen> MakeObjectMenuOpen(ObjectMenuOpenHooks hooks);
     // 현재 타입/명령·특수 모드의 장기 저장소다. 알려진 공통 전역은 실제 getter로 연결한다.
     PriestMenuState& PriestMenuSettings();
     // 0052f7e0의 TYPE 번호 제외 목록이다. 공간 앵커의 SID 추가 목록과 별개로 소유한다.
