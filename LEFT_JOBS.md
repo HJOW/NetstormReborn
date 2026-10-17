@@ -1,5 +1,15 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-18 단위159 완료: 오벨리스크 보상 추첨·포획 변환 (HJOW-Athlon)
+
+- [x] 기준318bfd1/깨끗한트리. 직전목표턴은제품변경/독립원본/회귀/커밋의진행턴이다. AGENTS/양LEFT 재독, 현재/마지막정밀디컴파일PC HJOW-Athlon / 2026-10-16 일치. 보호원본/AGENTS/DN/DirectDraw/새디컴파일/원본게임실행없음.
+- [x] RawGemReward/RawDeckDraw를만들고기존생산Deck의초기화·추가도동일본문으로위임했다. 실제전역난수10000/Open의0이면추가소비와별도벽시각*1013/ftol/signed>>4+*33 임시난수를분리했다. 현재TYPE/제외목록/레벨가중치/현재합계재독/선택/갱신,QA검증→선택→현재좌표Pop→원객체현재VT삭제를보존한다. 같은Session의BuriedPostPop/4f reveal을연결했다. 실제buried50a748+14의41f910→4b0950 jmp와공통삭제/후처리도연결했다.
+- [x] 독립전체16몸체 **1250입력/2436정상반환/QA65535의실제표밖읽기64건/3398268명령/53·64차이0**. 최종fixture는첫C++재생전동결했고원문1250개를그대로통과했다. 직접Deck352바이트/반환/전역난수/효과/두슬롯전체/현재개수를대조한다. QA32개입력은C++범위거부와구분했다. 생성/Pop/삭제·wall·진단/로그는명시경계다. 사라진C++임시스택은역참조하지않으며Choose/Reveal의Deck전체는원문관측에만보관한다.
+- [x] 실제1-1의세새Session에서저장QA113/빈QA0/최초Pop의실제추첨을준비해 TYPE113 bombExplodeSmall 및118 bombParalyze의실제생성·Pop/원오벨리스크·Regular삭제/현재공간/시각소비/depth0을통과했다. 최초Pop의FirstPopFlags1 추첨을놓친검사입력은변환시점QA준비로고쳤고실패로그도보존했다. build3/집중2개성공. 전체CTest/클론진입까지종료했으며진행중핸들은없다. 현재핀55보고서174개/감사80도구69통과기존11실패새0이다.
+- [x] 최종 **Release build3 경고0·오류0, 집중2개, 전체1634개 실패0 / 210.67초**(CTest 210.71초). 감사80도구69통과/단위158과같은기존11실패/새0, 클론진입5PASS/originals_unchanged=true. 보호5종SHA/원문fixture동결/UTF8·LF/기존CMake접두·인계·과거전체JSON역치환/현재핀·변경공백·커밋인덱스바이트를검사한다. [상세기록](docs/exe/cpp-gem-reward-20261018.md), 제품cpppj/campaign-gem-reward.json, 원본cpppj/gem-reward.json, 로그접두extracted/goal-gem-reward-20261018-.
+- [ ] 다음우선은보상획득통지429560의 **번개472770 및TYPE+6c/실제Sound47 생성·1.5초설정**이다. 같은4f가이분기를선택하므로이번실제Reveal을전체4f획득/UI완료로계산하지않는다. **485e40 전역보충**, 실제42/38/41/5040c0의42ae80, AI간헐천등록/제거·전략, Client전송/명령소비/생산/경제, 전체11스테이지자연왕복·승패·저장·다음미션·완주·동일성도미완료다. 전체goal active를유지한다.
+- [x] 인계뒤 **20261018-09 CP 오벨리스크의 보상 추첨과 실제 월드 변환 복원**으로로컬커밋한다. 원격push하지않는다.
+
 ## 2026-10-18 단위158 완료: 일반 운반체 포획 요청·서버 내용물 변환 (HJOW-Athlon)
 
 - [x] 기준 524cafd, 직전 단위157은 제품/원본관측/회귀/커밋을 마친 진행 턴이다. AGENTS/양 LEFT 재독, 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16** 일치. 보호 원본·AGENTS·DN 인계·DirectDraw 수정 및 새 디컴파일·원본 게임 실행은 없다. [작업 기록](docs/exe/cpp-carrier-pickup-20261018.md).

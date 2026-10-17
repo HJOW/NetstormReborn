@@ -5,7 +5,7 @@
   "base_commit": "400aaef",
   "current_sources": {
     "cpppj/src/o/RawProductionDeck.h": "5a0f97233673a3ccd2e3f96b79d1ecfcf091071fe9920c0bbf0377fb05fb34cd",
-    "cpppj/src/o/RawProductionDeck.cpp": "d5fa55e6bc52724af0e4b3cce90a7f0232f2eb703d711566d04e9f3a7f20089b",
+    "cpppj/src/o/RawProductionDeck.cpp": "dbd0522578b668d61df3ae2ebe395810ffb58cba7f811f2c3b30d8532cb13bbc",
     "cpppj/src/client/RawCampaignProductionBindings.h": "b18b90574b9961f8ba62c3cb338e0fe4be8cc2cb2cac0e9c3d2decdbd7eff9e4",
     "cpppj/src/client/RawCampaignProductionBindings.cpp": "38289a3895fe54a3f76f55c57bf8784453af34f1755e966f2f97812e132665d0",
     "cpppj/tests/ProductionDeckTests.cpp": "329a175661fc4efa1f73c2826985d71d5925e31437b32e4405fb3f0445407621",
@@ -99,5 +99,20 @@
       "extracted/goal-pause-final-ctest.log": "302c70b495ea8e9ac3ee18817606773f7dfb5aec9e5679aad42c939f4e45a52d",
       "extracted/goal-pause-final-tests.log": "91364ac6c5274ab548e3c4f14b64140a5935e4419760df5fa6c138f4a60a173b"
     }
-  }
+  },
+  "integration_updates": [
+    {
+      "date": "2026-10-18",
+      "unit": 159,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/current_sources",
+          "path": "cpppj/src/o/RawProductionDeck.cpp",
+          "previous": "d5fa55e6bc52724af0e4b3cce90a7f0232f2eb703d711566d04e9f3a7f20089b",
+          "current": "dbd0522578b668d61df3ae2ebe395810ffb58cba7f811f2c3b30d8532cb13bbc"
+        }
+      ]
+    }
+  ]
 }

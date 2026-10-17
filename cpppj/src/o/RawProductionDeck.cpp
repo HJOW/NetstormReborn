@@ -1,5 +1,6 @@
 // Deck의현재Player포인터와5BYTE항목·signed power를원본필드폭/순서대로보존한다.
 #include "o/RawProductionDeck.h"
+#include "o/RawDeckDraw.h"
 #include <algorithm>
 #include <bit>
 #include <limits>
@@ -57,7 +58,7 @@ std::int32_t RawProductionDeck::Count(std::span<const std::uint8_t> raw) const {
     const auto count=std::bit_cast<std::int32_t>(Read(raw,kCount));if (count>static_cast<std::int32_t>(kProductionEntryCapacity)) throw std::out_of_range("실제Deck의66항목물리범위오류");return count;
 }
 // 생성자는count/seed/chance/remaining/open의원본다섯DWORD만0으로쓴다.
-void RawProductionDeck::Initialize(std::uint32_t token) const { auto raw=Bytes(token);Put(raw,kCount,0);Put(raw,kSeed,0);Put(raw,kChance,0);Put(raw,kRemaining,0);Put(raw,kOpen,0); }
+void RawProductionDeck::Initialize(std::uint32_t token) const { RawDeckDraw::Initialize(Bytes(token)); }
 // 새생산재계산은목록개수/가중합/남은수만초기화하고seed/open을유지한다.
 void RawProductionDeck::ClearEntries(std::uint32_t token) const { auto raw=Bytes(token);Put(raw,kCount,0);Put(raw,kChance,0);Put(raw,kRemaining,0); }
 // 현재templateOwner와현재Deck개수를읽으며typeDWORD를BYTE로미리자르지않는다.
@@ -69,13 +70,7 @@ bool RawProductionDeck::Contains(std::uint32_t type) const {
 }
 // 중복진단을먼저수행한뒤원본5BYTE초기화와DWORD합계를기록한다.
 void RawProductionDeck::Append(std::uint32_t token,std::uint32_t type,std::int32_t chance) const {
-    auto raw=Bytes(token);const auto count=Count(raw);
-    // 중복이어도진단이반환하면원본처럼추가를계속한다.
-    for (std::int32_t index=0;index<count;++index) if (static_cast<std::uint32_t>(raw[static_cast<std::size_t>(index)*kProductionEntryBytes])==type) Assert(ProductionDeckAssertion::DuplicateType);
-    if (count<0 || count>=static_cast<std::int32_t>(kProductionEntryCapacity)) { Assert(ProductionDeckAssertion::Capacity);throw std::out_of_range("실제Deck추가물리범위오류"); }
-    const auto offset=static_cast<std::size_t>(count)*kProductionEntryBytes;raw[offset+2]=1;raw[offset]=static_cast<std::uint8_t>(type);raw[offset+1]=static_cast<std::uint8_t>(chance);raw[offset+3]=255;raw[offset+4]=0;
-    if (type>255) Assert(ProductionDeckAssertion::TypeTruncated);if (static_cast<std::uint32_t>(raw[offset+1])!=std::bit_cast<std::uint32_t>(chance)) Assert(ProductionDeckAssertion::ChanceTruncated);
-    Put(raw,kChance,Read(raw,kChance)+std::bit_cast<std::uint32_t>(chance));Put(raw,kCount,static_cast<std::uint32_t>(count)+1U);
+    RawDeckDraw::Append(Bytes(token),type,chance,[this](ProductionDeckAssertion where) { Assert(where); });
 }
 // 기존항목의signed power가음수이면0으로바꾸고increment가비영일때만1을더한다.
 void RawProductionDeck::Activate(std::uint32_t token,std::uint32_t type,std::int32_t increment) const {

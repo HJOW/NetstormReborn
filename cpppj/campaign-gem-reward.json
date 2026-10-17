@@ -1,0 +1,162 @@
+{
+  "unit": 159,
+  "date": "2026-10-18",
+  "host": "HJOW-Athlon",
+  "baseCommit": "318bfd1",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16"
+  },
+  "status": "오벨리스크보상추첨·실제변환단위완료/전체11스테이지goal진행중",
+  "currentSources": {
+    "cpppj/src/o/RawDeckDraw.h": "ed917e133e6150c7c448e293d7cc7dd12130ef905b5801f23c150871d7c71ecd",
+    "cpppj/src/o/RawDeckDraw.cpp": "89631617878d7c4b77f7a64f6729eddb877005863b710225131311d9e2c87bde",
+    "cpppj/src/o/RawGemReward.h": "2d5572cec4f334d740bdbbd813b554df7b737c1b6edd007ca73e3af57073dadc",
+    "cpppj/src/o/RawGemReward.cpp": "a071c8c765e1b6bb11bb6c9caafc543f7a5dc34157f02d814710f77817e47423",
+    "cpppj/src/o/RawProductionDeck.cpp": "dbd0522578b668d61df3ae2ebe395810ffb58cba7f811f2c3b30d8532cb13bbc",
+    "cpppj/src/client/RawCampaignSession.cpp": "323972d251bba7ff132b8cbd0bf74fcf52548178c9a3d50f5644210cb55b8083",
+    "cpppj/src/client/RawCampaignSession.h": "44468ab67ff1827853b0bd59516259d7439e52b67703f9276db78784ec303a68",
+    "cpppj/src/CMakeLists.txt": "a929e7b8c34a60695b5e6fb2cfacd0e23096323cc4870807627ae96cac2c4b62",
+    "cpppj/tests/CMakeLists.txt": "8f6e1c66577d4a5cc2804616a67576d5d6f3fce3f6f8a79401cfddf26507d5a4",
+    "cpppj/tests/CampaignSessionTests.cpp": "671956ef7188fa7c19555eae8e8014f48150db6eed0a8037c28fc41deb29733b",
+    "cpppj/tests/GemRewardTests.cpp": "f0cb013a5ef4da53823684fd5ea1fc5ae934c771fabb827dc77bac9391e84cce",
+    "tools/decomp_gem_reward.py": "9af183bfb0771406746c3eacce223412ac5450a0f334ff6480a0fc7358b15232",
+    "cpppj/tests/fixtures/gem-reward-x86.tsv": "4aa9033630b83976e528f354bb0df89e4f4226911b0a3d5e9c2c810c0a94bd09",
+    "docs/exe/cpp-gem-reward-20261018.md": "2683bcbe67f46b3738af5b2d3787844877b23ea2e0b9465220c3738e9ce919c8",
+    "cpppj/src/o/SpStore.cpp": "2319a90807d423b72b0e47e51101bc9ea1618f234c65e26b704c017313f4268a",
+    "cpppj/src/o/RawCarrierPickup.cpp": "627a2e9b2b49ce2516e038676090ad2606646289d4634db0a72476ec6a611e7c",
+    "cpppj/src/o/RawBuriedPostPop.cpp": "f7e3bc23db5ef4b9f120b73577bda46e60bc359ab6346277410127b481f09109"
+  },
+  "nativeReports": {
+    "cpppj/gem-reward.json": "36bc103141491c0e41cb1fd515c02aef092311d2fb690be744d0b1573c9f2889"
+  },
+  "nativeContext": {
+    "uniqueInputs": 1250,
+    "normalReturns": 2436,
+    "invalidQaReads": 64,
+    "invalidQaBoundary": "QA65535의462110 TYPE+ec 읽기는원본의물리표밖접근이다. 호스트는같은범위입력을읽기전거부한다.",
+    "instructions": 3398268,
+    "nativeCalls": {
+      "00461f00": 1078,
+      "0044f200": 1078,
+      "0049a840": 188646,
+      "0041c7a0": 4756,
+      "0044f290": 1564,
+      "0044f160": 1564,
+      "004558c0": 628,
+      "0044f250": 526,
+      "0044f510": 1690,
+      "004bcab0": 1690,
+      "004e49c0": 1690,
+      "004bca20": 1690,
+      "0044f280": 526,
+      "004620c0": 460,
+      "004acd10": 460,
+      "00425830": 360
+    },
+    "precisionDifferentInputs": [],
+    "wallSeedMultiplier": 1013.0,
+    "boundaries": "16개 전체몸체. wall460d70은호출시점double 공급경계이며진단/로그/큰생성·가상Pop·Destroy만분리한다.현재TYPEgetter/제외목록/전역및임시난수/ftol/Deck전체를실행했다. GP/retN/SEH/canary/x87/실행·읽기·쓰기범위를검사했다. 실제게임/OS/창·전체플레이검증이아니다."
+  },
+  "protected": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "AGENTS.md": "7addbf9b31c42f29aab7c93faa865eb6de8590a600d17202a297cf7122bdf979",
+    "LEFT_JOBS.dotnetpj.md": "0c067e1d12879dbf2212cbd64c8f9f60e65b590df910418f025027ed84f80ec2"
+  },
+  "originalFixtureBeforeCppReplaySha256": "4aa9033630b83976e528f354bb0df89e4f4226911b0a3d5e9c2c810c0a94bd09",
+  "bindingEvidence": {
+    "vtable": 5285704,
+    "slots": {
+      "0x10": "0x4af780",
+      "0x14": "0x41f910",
+      "0x18": "0x4b0840",
+      "0x90": "0x4b02d0"
+    },
+    "preThunkAddress": 4323600,
+    "preThunkBytes": "e93b100900",
+    "preTarget": 4917584,
+    "wallMultiplierAddress": 5326424,
+    "wallMultiplier": 1013.0
+  },
+  "validation": {
+    "release": {
+      "builds": [
+        "build1",
+        "build2",
+        "build3"
+      ],
+      "warnings": 0,
+      "errors": 0,
+      "exitCode": 0
+    },
+    "focused": {
+      "log": "focused3",
+      "tests": 2,
+      "failedChecks": 0,
+      "exitCode": 0
+    },
+    "full": {
+      "tests": 1634,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "seconds": 210.67,
+      "ctestSeconds": 210.71
+    },
+    "audit": {
+      "tools": 80,
+      "passed": 69,
+      "knownFailures": 11,
+      "newFailures": 0
+    },
+    "entry": {
+      "passed": 5,
+      "originalsUnchanged": true,
+      "scope": "campaign1-1/1-2 briefing→world와tutorial1~3 briefing"
+    },
+    "pinMaintenance": {
+      "reports": 55,
+      "pins": 174,
+      "history": "현재핀과unit159 이력만되돌리면HEAD의과거전체JSON과동일"
+    }
+  },
+  "integration": [
+    "RawProductionDeck/보상스택Deck의실제초기화·추가본문공유",
+    "같은현재TYPE/제외목록/전역난수와호출시점double벽시각/별도임시난수",
+    "실제1-1의최초Pop 추첨과QA113·QA0·최초QA의변환시점초기입력",
+    "실제bombExplodeSmall113/bombParalyze118 생성·Pop/원오벨리스크·Regular삭제/현재공간/시각소비/depth0",
+    "현재BuriedPostPop의chooseType 및현재4f reveal에같은모듈연결"
+  ],
+  "limitations": [
+    "wall/진단/로그/큰생성·가상Pop·Destroy는독립원본의명시효과경계다. 실제OS/게임창관측이아니다.",
+    "QA65535의32입력은각정밀도에서462110 표밖읽기로중단됐다. 64건을정상반환에포함하지않았으며C++도읽기전범위거부한다.",
+    "직접Draw의352바이트전체는대조하지만Choose/Reveal 반환뒤사라진C++스택은읽지않는다. 부모임시Deck이미지는원본관측으로만보관한다.",
+    "ConstructionExcludedTypes의현재BYTE항목을공유한다. 실제87바이트옵션수신·로그인·전체Client동기화완료가아니다.",
+    "보상획득통지429560의번개472770/TYPE+6c·실제Sound47 생성/1.5초가미연결이다. 실제Reveal검사를전체4f/UI획득완료로확대하지않는다.",
+    "485e40 전역보충·실제42/38/41/5040c0의42ae80·AI·Client전송/명령소비/생산/경제·11스테이지자연왕복/승패/저장/다음미션/완주·전체동일성미완료.",
+    "CD10.72보상/멀티플레이/한국어UI/DirectDraw수정은이번변경범위가아니다."
+  ],
+  "logSha256": {
+    "extracted/goal-gem-reward-20261018-LastTest.log": "353739cc3db41496332bc77ebb53bec2050ef8c23dc3369f9625f2a2e0d97294",
+    "extracted/goal-gem-reward-20261018-audit1.log": "01e2e34c3682b0579b6367267431e7939cd7a1df9fb611de1e2a10ddefb1ef50",
+    "extracted/goal-gem-reward-20261018-binding-evidence.json": "d7912f954f342c5f2bf77ca4503abe01865aede66e1aa61484424ac67d8b0486",
+    "extracted/goal-gem-reward-20261018-build1.log": "86017fb29448cd7442d418e904006c9e35140be29264452012c648aed3dd2a5c",
+    "extracted/goal-gem-reward-20261018-build2.log": "a83447579e0c09a1e5be74b3aa2edad2fd6d055105703c1d4f9ba801dfd9c08a",
+    "extracted/goal-gem-reward-20261018-build3.log": "68daf5268753a6f0253917d033a76282e07803e3b45f8c1951a34f7cbc6a3d34",
+    "extracted/goal-gem-reward-20261018-ctest1.log": "96131f9cbbc9407a4d758d50413cefcc9f3ab7c5459c5a9fceafe9c9314d9efe",
+    "extracted/goal-gem-reward-20261018-entry/results.json": "49e1019be4f07f7ea87e63d846685a2379e58dae0d4f8de05057bbed74fa5109",
+    "extracted/goal-gem-reward-20261018-entry1.log": "530bf9254a3b0be59b099d237909bd3be07412d0f47949f546997ffdb8b1e681",
+    "extracted/goal-gem-reward-20261018-focused1.log": "bc51c9a6e4895f863609c4baccbe06d22a28a408ecc84823dd99f365e37cf680",
+    "extracted/goal-gem-reward-20261018-focused2.log": "c08851ef873d20b200947d578dd470e02c19ea93ec8dcc95139e1fc4d21cbb15",
+    "extracted/goal-gem-reward-20261018-focused3.log": "7ebdf863f670f7f70987db3a85d1bd6cb32e3449d6d6aefd7babc5a2abc6897b",
+    "extracted/goal-gem-reward-20261018-native-initial-fixture.sha256": "f6c16f5e41364e7ec5738c000bb5be62afe459413f1a73324726330b0308a4fd",
+    "extracted/goal-gem-reward-20261018-native-initial-observation.json": "6484c6c2caf1a12b71779c395eb53c7386899c270f55a6d8c40ea8ef338934d0",
+    "extracted/goal-gem-reward-20261018-native1.log": "abc0ab19c03df3b25ba239150069263a8a2059886fa3904fa388096bec53ea76",
+    "extracted/goal-gem-reward-20261018-native2.log": "89362a1075845f3bae8d9cdd21a862e293176b6077c784e1d814c91657931cd5",
+    "extracted/goal-gem-reward-20261018-native3.log": "b6539bda82126865b550545582b637f395ca7ec4369880deb7cae94df15be029",
+    "extracted/goal-gem-reward-20261018-native4.log": "9b1cc9f2a9b0ade7045895b59f6e17ba3701df87fd888cb754ef85120d15a8a8",
+    "extracted/goal-gem-reward-20261018-native5.log": "c8ea9d3c3d788cd178a966384418bf4a41d205a357b5801b3cf7533032b12825",
+    "extracted/goal-gem-reward-20261018-verify-final.json": "fde068b60a58a5136e007dd5edbf8948a1d98befb4988bc6dfa685e280030ee8"
+  }
+}

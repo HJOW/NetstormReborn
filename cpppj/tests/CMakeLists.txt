@@ -1438,3 +1438,8 @@ set_source_files_properties(CarrierStealTests.cpp PROPERTIES COMPILE_DEFINITIONS
 target_sources(netstorm_tests PRIVATE CarrierPickupTests.cpp)
 set_source_files_properties(CarrierPickupTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_CARRIER_PICKUP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/carrier-pickup-x86.tsv\"")
+
+# 독립원문의 오벨리스크 보상·변환·Deck 추첨을 검증한다.
+target_sources(netstorm_tests PRIVATE GemRewardTests.cpp)
+set_source_files_properties(GemRewardTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_GEM_REWARD_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/gem-reward-x86.tsv\"")

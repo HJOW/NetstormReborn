@@ -1,0 +1,44 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-18",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16"
+  },
+  "uniqueInputs": 1250,
+  "normalReturns": 2436,
+  "invalidQaReads": 64,
+  "invalidQaBoundary": "QA65535의462110 TYPE+ec 읽기는원본의물리표밖접근이다. 호스트는같은범위입력을읽기전거부한다.",
+  "instructions": 3398268,
+  "nativeCalls": {
+    "00461f00": 1078,
+    "0044f200": 1078,
+    "0049a840": 188646,
+    "0041c7a0": 4756,
+    "0044f290": 1564,
+    "0044f160": 1564,
+    "004558c0": 628,
+    "0044f250": 526,
+    "0044f510": 1690,
+    "004bcab0": 1690,
+    "004e49c0": 1690,
+    "004bca20": 1690,
+    "0044f280": 526,
+    "004620c0": 460,
+    "004acd10": 460,
+    "00425830": 360
+  },
+  "precisionDifferentInputs": [],
+  "wallSeedMultiplier": 1013.0,
+  "boundaries": "16개 전체몸체. wall460d70은호출시점double 공급경계이며진단/로그/큰생성·가상Pop·Destroy만분리한다.현재TYPEgetter/제외목록/전역및임시난수/ftol/Deck전체를실행했다. GP/retN/SEH/canary/x87/실행·읽기·쓰기범위를검사했다. 실제게임/OS/창·전체플레이검증이아니다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_gem_reward.py": "9af183bfb0771406746c3eacce223412ac5450a0f334ff6480a0fc7358b15232",
+    "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+    "tools/decomp_cursor_position.py": "e15bcdbc4c6be9c131c30f15416c945d650dba9f7dc6def404b47f63c635c212",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "cpppj/tests/fixtures/gem-reward-x86.tsv": "4aa9033630b83976e528f354bb0df89e4f4226911b0a3d5e9c2c810c0a94bd09"
+  }
+}

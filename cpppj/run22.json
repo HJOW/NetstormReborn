@@ -199,7 +199,7 @@
     "cpppj/hist/run22-warn1/install.h": "20bf7e3c62cc9db8b84776948609a6088d406dfb7427fa34dbcddad45f65934f",
     "cpppj/projectile-geom.json": "bdc13b02a7303524f08e67e892fdfbc9f833a934273a4337d20520d7b23f0bc5",
     "cpppj/run21.json": "a794e0d3095ed2a00c1329cd95a1272f8f927a26b521b8fd2c56f7a8b08f402a",
-    "cpppj/src/CMakeLists.txt": "c8d9b21785c6344eaef9a9371c160f57176ddb913a6aa0d0c9beb64329598e79",
+    "cpppj/src/CMakeLists.txt": "a929e7b8c34a60695b5e6fb2cfacd0e23096323cc4870807627ae96cac2c4b62",
     "cpppj/src/app/CanonMayPlaceInspect.cpp": "27eda46bca500c898abeb9a3a7c4e8588b38e061b579c84cbf6c032c6d46dda9",
     "cpppj/src/app/FrameBindingInspect.cpp": "042602919b0531fb1cbaf3941dc6597bee73944bbf0d571dacfd638bb45dd07c",
     "cpppj/src/app/FrameBindingInspect.h": "4e187ca41f8c34ed52c022b58a57327a554a723e3e26ee88a1ae152c99de3fce",
@@ -1965,6 +1965,19 @@
           "path": "cpppj/src/o/SidPool.h",
           "previous": "5aae3c23e7376b0c1c3da5a96e736738335d1e1bf060db41e1b748535ff75ee1",
           "current": "21d77e1995b8697dba3f4e6cc9ae16501c573f417fd7019cf4a459b0e6fe521a"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 159,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "c8d9b21785c6344eaef9a9371c160f57176ddb913a6aa0d0c9beb64329598e79",
+          "current": "a929e7b8c34a60695b5e6fb2cfacd0e23096323cc4870807627ae96cac2c4b62"
         }
       ]
     }

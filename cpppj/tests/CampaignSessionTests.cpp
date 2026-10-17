@@ -15,6 +15,7 @@
 #include "o/RawSunAviaryProcess.h"
 #include "o/RawCarrierSteal.h"
 #include "o/RawCarrierPickup.h"
+#include "o/RawGemReward.h"
 #include "zacket/LocalMissionTransport.h"
 #include "client/RawShapeToBuffer.h"
 #include "client/OwnerColorMaps.h"
@@ -1443,4 +1444,29 @@ TEST_CASE(CampaignSession_CarrierPickupPriestMovesNestedContents) {
     const auto livePriests=session.Priests().Priests().priests.Items();CHECK(std::find(livePriests.begin(),livePriests.end(),priest.value)==livePriests.end()); // 실제4919b0이같은사제등록목록에서도원객체를제거했다.CHECK(link.recorded.size()==1 && link.recorded[0][8]==158);
     const std::array<std::uint32_t,6> expectedSound{external.names.Lookup("golemPickup.wav"),0,0,0,1,0};CHECK(std::find(pickupSounds.begin(),pickupSounds.end(),expectedSound)!=pickupSounds.end());
     const auto event=input.Pop(false);CHECK(event.code==0x030000b1 && event.x==priest.value && event.y==golem.value);CHECK(link.transport.Server().depth==0 && core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0 && core.bookkeeping.depth==0);wire=nullptr;
+}
+
+// 실제원본TYPE 보상을새오벨리스크QA/비어있는QA/최초Pop추첨에서선택하고같은월드에서변환한다.
+TEST_CASE(CampaignSession_GemRewardActualSelectionPopAndDestroy) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);
+    // 서로새로운세션에서저장QA/변환시추첨/최초Pop추첨의실제세경로를분리한다.
+    for (const std::uint32_t mode:{0U,1U,2U}) {
+        SessionServicesFixture external;auto services=external.Services();std::size_t fills{},wallReads{}; // 실제스택입력과벽시각장치요청수다.
+        services.production.allocationBytes=[&](std::span<std::uint8_t> raw) { CHECK(raw.size()==kProductionDeckBytes);++fills;std::fill(raw.begin(),raw.end(),std::uint8_t{0xa7}); };
+        services.sound.wallSeconds=[&] { ++wallReads;return 12.5; };
+        auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));CHECK(Throws([&] { static_cast<void>(session.GemReward()); }));session.Load();auto core=session.Core();std::uint32_t savedType{}; // 실제TYPE 표에서읽는명시저장QA입력이다.
+        // 원본레벨0~3/genus100 후보를표순서대로선택하되결과객체/추첨결과는주입하지않는다.
+        for (std::uint32_t type=70;type<core.types.size();++type) if ((core.types[type].flags2&0x100U) && core.types[type].level>=0 && core.types[type].level<=3) { savedType=type;break; }
+        CHECK(savedType!=0);if (!savedType) continue;
+        const auto buried=session.World().Create(112,2);if (mode==0) Put(core.pool.AllocatedBytes(buried),12,savedType,2);else Put(core.pool.AllocatedBytes(buried),12,0,2);const auto beforeFill=fills,beforeWall=wallReads;
+        session.World().Pop(buried,98,122,mode==2 ? 1U : 0U);
+        // 실제최초Pop은FirstPopFlags의1을추가해먼저추첨한다. 그뒤저장QA/빈QA라는변환시점초기입력만준비한다.
+        if (mode!=2) Put(core.pool.AllocatedBytes(buried),12,mode==0 ? savedType : 0U,2);const auto qa=Get(core.pool.Slot(buried),12,2);
+        if (mode==2) { CHECK(qa && (core.types[qa].flags2&0x100U));CHECK(fills==beforeFill+1 && wallReads==beforeWall+1);CHECK(core.processes.FindEvent(buried,0) && core.processes.FindEvent(buried,1)); }
+        const auto conversionFill=fills,conversionWall=wallReads;const auto reward=session.GemReward().Reveal(buried);const auto type=core.pool.Slot(reward)[10];
+        CHECK(type<core.types.size() && (core.types[type].flags2&0x100U));CHECK((core.pool.Slot(reward)[11]&7U)==0 && (core.pool.Slot(buried)[11]&1U));CHECK(session.World().Find(98,122,type)==reward);CHECK(&session.GemReward().Pool()==&core.pool);
+        if (mode!=1) { CHECK(type==qa && fills==conversionFill && wallReads==conversionWall); }else { CHECK(fills==conversionFill+1 && wallReads==conversionWall+1); }
+        CHECK(!core.processes.FindEvent(buried,0) && !core.processes.FindEvent(buried,1));CHECK(core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0 && core.bookkeeping.depth==0);
+        std::cout<<"실제오벨리스크변환 mode"<<mode<<" TYPE"<<std::uint32_t(type)<<' '<<core.types[type].name<<'\n';
+    }
 }

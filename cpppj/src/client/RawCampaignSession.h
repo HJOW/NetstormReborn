@@ -33,7 +33,7 @@
 #include "o/RawEnergySupply.h"
 #include "o/RawConstructionBuilder.h"
 #include "client/RawCampaignParticles.h"
-namespace netstorm::o { class RawCarrierSteal; class RawCarrierPickup; } // 포획 몸체의 고정 참조만 공개한다.
+namespace netstorm::o { class RawCarrierSteal; class RawCarrierPickup; class RawGemReward; } // 포획 몸체의 고정 참조만 공개한다.
 namespace netstorm::client {
 class RawCampaignCursor; // 세션과 같은 실제 커서/로컬 예측의 고정 주소 소유자다.
 struct CursorPlacementHooks; // 실제 커서 배치의 설명/에너지 경계만 연결할 때 사용한다.
@@ -261,6 +261,7 @@ public:
     o::RawPathProcess* StartConstructionMovement(o::RawPathStartRequest request); // 같은 월드의 실제134/105를 각각23/39 경로로 움직인다.
     o::RawPathProcess* StartCarrierMovement(o::RawPathStartRequest request); // 같은 실제 썬 워커133의40 경로를 시작한다.다른Halt는 별도 경계다.
     void RequestCarrierPickup(o::Sid parent); //같은실제후보/헤더/서버9 전송을요청하며설치후에만허용한다.
+    const o::RawGemReward& GemReward() const; //같은실제오벨리스크보상추첨과변환몸체를빌린다.
     const o::RawCarrierPickup& CarrierPickup() const; //실제4f 요청/수신/기존내용물삭제몸체를빌린다.
     const o::RawCarrierSteal& CarrierSteal() const; // 같은 실제 포획/로컬 수신/방향 동맹을 빌린다.
     const o::RawCarrierTransfer& CarrierTransfer() const; // 현재 같은 풀의 로컬 전달 수신/주기/공유 상태를 빌린다.

@@ -10,6 +10,7 @@
 #include "o/RawCarrierEscape.h"
 #include "o/RawCarrierSteal.h"
 #include "o/RawCarrierPickup.h"
+#include "o/RawGemReward.h"
 #include "o/RawPacketDispatch.h"
 #include "client/AiTypeRequiredEnergy.h"
 #include "o/RawGameRandomSeed.h"
@@ -296,6 +297,8 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawCarrierFalling> carrierFalling; // 같은 표면/Player/권한에서 캐리어 낙하와 포획 사제 해방을 처리한다.
     std::unique_ptr<RawCarrierTask> carrierTask; // 실제 현재 Regular/SharedRegular task와 double 기한을 갱신한다.
     std::unique_ptr<RawCarrierFallStart> carrierFallStart; // 현재 이동 삭제/선택 해제/복귀 좌표/즉시 해방을 수행한다.
+    GemRewardState gemRewardState; //현재TYPE개수/오벨리스크타입이다.
+    std::unique_ptr<RawGemReward> gemReward; //같은게임난수/TYPE제외목록/시각/월드의보상선택·변환이다.
     CarrierPickupState carrierPickupState; //같은현재4f 헤더/입력명령/특정내용물타입이다.
     std::unique_ptr<RawCarrierPickup> carrierPickup; //같은풀/현재후보/내용물/종속/입력/서버전송을연결한다.
     std::uint32_t stealHaltCounter{}; // 모든 크랩이 공유하는00545428이다.
@@ -743,7 +746,8 @@ struct RawCampaignSession::Impl {
         ConnectRainAviary(); // 실제 타입60/flags8 부착과 별도 Frame/0x73 패킷을 구성한다.
         ConnectFlyer(); // TYPE144의 전체 후처리와 기본 표 부착→전용 표 쓰기의 실제 순서를 연결한다.
         ConnectFence(); // 실제 최근접/연결선 삭제/Regular를 첫 저장 펜스 Pop 전에 연결한다.
-        BuriedPostPopHooks buried;buried.chooseType=SessionMissing<std::uint32_t,std::uint32_t>(); // 비로딩 최초 생성의 실제 보상 추첨은 별도 복원 전 명시 거부한다.
+        ConnectGemReward(); //첫오벨리스크Pop 전에실제보상추첨을연결한다.
+        BuriedPostPopHooks buried;buried.chooseType=[this](std::uint32_t value) { return gemReward->Choose(value); };
         buried.reserveRegular=[] { return true; }; // 실제 Host 할당 실패는 addRegular에서 예외로 전달한다.
         buried.addRegular=[this](Sid sid,std::uint32_t event,float delay) { SessionCheck(core.processes.AddRegular(sid,event,delay)!=nullptr); };
         buried.validateBase=[this](Sid sid,std::uint32_t flags,const RawGraphPop* projected) { core.postPop.ValidateBase(sid,flags,projected); };
@@ -772,7 +776,7 @@ struct RawCampaignSession::Impl {
             }
             // 실제 사제 +18은44b9e0이다. 고유 +14는 뒤의 사제 전처리 래퍼가 먼저 실행한다.
             if (PriestLifetime(event.sid) && event.effect==SquidDestroyEffect::PostDestroy) { damageablePostState.battle=core.ownerMode.battle;damageablePostState.boss=assetState.boss;damageablePost->PostDestroy(event.sid,event.flags);return; }
-            if (FenceCommon(event.sid) || VisualDummy(event.sid) || PriestForcefield(event.sid)) { // 실제 보호막도 +14/+18이 공통004b0950/004b0840이다.
+            if (FenceCommon(event.sid) || VisualDummy(event.sid) || PriestForcefield(event.sid) || BuriedLifetime(event.sid)) { // 실제 보호막도 +14/+18이 공통004b0950/004b0840이다.
                 if (event.effect==SquidDestroyEffect::PreDestroy) { world.CommonDeletion().PreDestroy(event.sid,event.flags);return; }
                 if (event.effect==SquidDestroyEffect::PostDestroy) { world.CommonDeletion().PostDestroy(event.sid,event.flags);return; }
             }
@@ -789,7 +793,7 @@ struct RawCampaignSession::Impl {
         worldHooks.assets=priests->DestroyHooks(std::move(worldHooks.assets)); // 실제4919b0의 목록·보호막·Carrier 전처리를 같은 삭제 호출에 연결한다.
         auto previousDestroy=std::move(worldHooks.destroy); // 실제 신전 VT의 공통+10만 추가 분배한다.
         worldHooks.destroy=[this,previous=std::move(previousDestroy)](Sid sid,std::uint32_t flags,const SquidDestroyHooks& hooks) {
-            if (geyserLifetime->Handles(sid) || Vortex(sid) || FenceCommon(sid) || Flyer(sid) || VisualDummy(sid) || PlainDamageable(sid) || SunFence(sid) || Nugget(sid) || PreviewDais(sid) || PriestForcefield(sid) || PlainCarrierLifetime(sid) || PriestLifetime(sid)) return core.virtualDestroy.Destroy(sid,flags,hooks);return previous(sid,flags,hooks);
+            if (geyserLifetime->Handles(sid) || Vortex(sid) || FenceCommon(sid) || Flyer(sid) || VisualDummy(sid) || PlainDamageable(sid) || SunFence(sid) || Nugget(sid) || PreviewDais(sid) || PriestForcefield(sid) || PlainCarrierLifetime(sid) || PriestLifetime(sid) || BuriedLifetime(sid)) return core.virtualDestroy.Destroy(sid,flags,hooks);return previous(sid,flags,hooks);
         };
         buriedRegular=std::make_unique<RawBuriedRegular>(core.pool,core.frames,core.frame,random);
         auto actualRegular=hits->Handler(combat->Handler(assetBindings->Handler(buriedRegular->Handler(priests->RegularHandler([this](Sid sid,std::uint32_t event,std::uint32_t count,float payload) {
@@ -910,6 +914,8 @@ struct RawCampaignSession::Impl {
     // 다섯 직접 Carrier의 +14=426890/+18=44b9e0이다. 5040c0은 별도42ae80이므로 포함하지 않는다.
     // TYPE158과 실제 PATCH 사제 VT가 함께 맞을 때만 공통4af780·고유4919b0·44b9e0 삭제를 분배한다.
     bool PriestLifetime(Sid sid) const { const auto raw=core.pool.Slot(sid);return raw[10]==kPriestType && Read(raw,0)==kPatchPriestVtable; }
+    // 실제50a748의+14=41f910은공통4b0950으로가는jmp이며+10/+18도공통4af780/4b0840이다.
+    bool BuriedLifetime(Sid sid) const { const auto raw=core.pool.Slot(sid);return std::uint32_t(raw[10])==gemRewardState.buriedType && Read(raw,0)==0x50a748U; }
     bool PlainCarrierLifetime(Sid sid) const { return carrierRegular && carrierRegular->Handles(sid) && Read(core.pool.Slot(sid),0)!=0x5040c0U; }
     // 실제 PE의 신전 네 가상 표를 판정하며 다른 자산을 타입 이름만으로 허용하지 않는다.
     bool Vortex(Sid sid) const {
@@ -924,6 +930,19 @@ struct RawCampaignSession::Impl {
     //110의 실제 공통 Pre/Post/Pop 가상 표이며 다른 자산에 일반화하지 않는다.
     bool VisualDummy(Sid sid) const { const auto raw=core.pool.Slot(sid);return raw[10]==110 && Read(raw,0)==0x0050eb98; }
     // 같은 현재 원문/Host의 생성·프레임·QA·패킷을 연결한다. 미복원 BaseFlyer 하위는 선택 시 거부한다.
+    // 현재전역게임난수와별도시각난수의실제Deck,같은풀의월드효과를연결한다.
+    void ConnectGemReward() {
+        GemRewardHooks hooks;hooks.fill=services.production.allocationBytes;hooks.deck.wallSeconds=services.sound.wallSeconds;
+        hooks.assertion=hooks.deck.assertion=[](std::uint32_t line) { throw std::logic_error("원본Gem/Deck.cpp 보상진단 "+std::to_string(line)); };
+        hooks.deckAssertion=SessionMissing<void,ProductionDeckAssertion>();
+        hooks.deck.mismatch=[this](std::uint32_t stored,std::uint32_t current) {
+            if (!services.player.log) throw std::logic_error("Deck 실제1d 로그미연결");services.player.log(0x1d,"Deck chance mismatch. "+std::to_string(std::bit_cast<std::int32_t>(stored))+"!="+std::to_string(std::bit_cast<std::int32_t>(current))+"\n");
+        };
+        hooks.create=[this](std::uint32_t type,std::uint32_t flags) { return world.Create(type,flags); };
+        hooks.pop=[this](Sid sid,float x,float y,std::uint32_t flags) { world.Pop(sid,x,y,flags); };
+        hooks.destroy=[this](Sid sid,std::uint32_t flags) { static_cast<void>(world.Destroy(sid,flags)); };
+        gemReward=std::make_unique<RawGemReward>(core.pool,core.types,random,constructionExcludedTypes,gemRewardState,std::move(hooks));
+    }
     void ConnectSunAviary() {
         SunAviaryProcessHooks hooks;hooks.findProcess=[this](Sid parent,std::uint32_t type) { return FindAttachedProcess(core.pool,parent,type); };
         hooks.allocate=[](std::size_t size)->std::optional<SunAviaryProcessFields> {
@@ -1584,7 +1603,7 @@ struct RawCampaignSession::Impl {
         pickup.candidate=[this](Sid sid,float x,float y) { if (!motion) throw std::logic_error("이동설치전포획후보조회");return motion->CarrierArrival().PickupCandidate(sid,x,y); };
         pickup.send=services.carrierRequest;
         pickup.assertion=[](std::uint32_t line) { throw std::logic_error("원본Carrier.cpp 포획권한진단 "+std::to_string(line)); };
-        pickup.reveal=SessionMissing<Sid,Sid>(); //오벨리스크4620c0/461f00 보상변환은별도원본문체복원경계다.
+        pickup.reveal=[this](Sid sid) { return gemReward->Reveal(sid); }; //같은실제보상선택/생성/Pop/원오벨리스크삭제다.
         pickup.queue=[this](std::uint32_t command,std::int32_t target,std::int32_t parent) { if (!services.assets.queueCommand) throw std::logic_error("포획실제입력큐미연결");services.assets.queueCommand(command,target,parent); };
         pickup.find=[this](Sid sid,std::uint32_t mask,std::uint32_t kind,std::uint32_t index) { return priests->Carrier().FindContained(sid,mask,kind,index); };
         pickup.afterDiscard=SessionMissing<void>(); //485e40의보충부모를빈성공으로대체하지않는다.
@@ -2003,6 +2022,8 @@ const SquidReward& RawCampaignSession::HitPoints() const { return impl_->hp; }
 const RawPriestWorldBindings& RawCampaignSession::Priests() const { return *impl_->priests; }
 // 같은 현재 포획 몸체를 실제 요청과 수신 검사에서 빌린다.
 const RawCarrierSteal& RawCampaignSession::CarrierSteal() const { if (!impl_->loaded || !impl_->carrierSteal) throw std::logic_error("미설치 Session의 크랩 포획");return *impl_->carrierSteal; }
+// 설치된현재동일보상모듈을빌리며별도월드사본은만들지않는다.
+const RawGemReward& RawCampaignSession::GemReward() const { if (!impl_->loaded || !impl_->gemReward) throw std::logic_error("미설치Session의오벨리스크보상");return *impl_->gemReward; }
 // 설치된현재동일포획모듈을빌린다.
 const RawCarrierPickup& RawCampaignSession::CarrierPickup() const { if (!impl_->loaded || !impl_->carrierPickup) throw std::logic_error("미설치Session의일반포획");return *impl_->carrierPickup; }
 // 현재같은후보와4f 서버요청을실행한다.원본요청에는직접수신이없다.
