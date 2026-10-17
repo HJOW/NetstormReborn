@@ -42,16 +42,19 @@ std::int32_t PreviewCollection::SpotCoordinate(float coordinate) {
 }
 // SP DWORD를 float 비트로 해석하고 ordered >7000만 강조한다. 카운터는 실제 제출 쌍마다 한 번 감소한다.
 void PreviewCollection::PatchFeedback(std::uint32_t owner) const {
-    if (state_.scrambledOffset!=state_.copiedOffset) state_.highlight=state_.now;
+    const auto now=[this] { return hooks_.now ? hooks_.now() : state_.now; }; // 현재 float 시각의 DWORD 비트를 그대로 복사한다.
+    const auto offset=hooks_.scrambledOffset ? hooks_.scrambledOffset() : state_.scrambledOffset;
+    const auto copy=hooks_.copiedOffset ? hooks_.copiedOffset() : state_.copiedOffset;
+    if (offset!=copy) state_.highlight=now();
     if (state_.countdown) {
-        if (state_.querySp) {
+        if (hooks_.querySp ? hooks_.querySp() : state_.querySp) {
             if (!hooks_.readSp) throw std::invalid_argument("Preview collection SP hook");
-            if (std::bit_cast<float>(hooks_.readSp(owner))>kSpThreshold) state_.highlight=state_.now;
+            if (std::bit_cast<float>(hooks_.readSp(owner))>kSpThreshold) state_.highlight=now();
         }
         --state_.countdown;
     }
-    if (!state_.firstSpPoolPresent) state_.highlight=state_.now;
-    if (state_.firstSpIndex==-1) state_.highlight=state_.now;
+    if (!(hooks_.firstPool ? hooks_.firstPool() : state_.firstSpPoolPresent)) state_.highlight=now();
+    if ((hooks_.firstIndex ? hooks_.firstIndex() : state_.firstSpIndex)==-1) state_.highlight=now();
 }
 // 원본은 view 인수를 읽지 않는다. 배치 판정 실패의 부분 쓰기와 성공 쌍의 원래 깊이를 구분한다.
 std::int32_t PreviewCollection::Collect(o::RenderWorldRect view,std::span<o::RenderCollectionEntry> output,std::int32_t limit) const {

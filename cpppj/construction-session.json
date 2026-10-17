@@ -9,11 +9,11 @@
   "edition": "PATCH10.78",
   "baseCommit": "3330211",
   "currentSources": {
-    "cpppj/src/client/RawCampaignSession.cpp": "91efb317e48d472e496b96f0f98b784b086acbaa875152582078f3b372ded7ec",
+    "cpppj/src/client/RawCampaignSession.cpp": "f6496464a28e6834afbe10a79a70e47c69eb0ef8cd490e1a3ad3c838059e0bf4",
     "cpppj/src/client/RawCampaignSession.h": "8b0cc82f468e9c014d87ae963d5991418403f7e5c12aca6622e53f9aa89b8c5c",
     "cpppj/src/client/RawCampaignParticles.cpp": "8916546c2570f5bf03238062671ce8c3edab9b796865c70e3716328712b5db3e",
     "cpppj/src/client/RawCampaignParticles.h": "f1ea87839f7538b0714be13f586a4c30cbff1e9975edf2eec138dfafaf424f69",
-    "cpppj/tests/CampaignSessionTests.cpp": "f394dce6db3dfe4de3ae5df16e57e63c5b5d7011c347369ccdfac0a48760e89f"
+    "cpppj/tests/CampaignSessionTests.cpp": "64e68631cd5039223726287c65b050b48480f1284e5042c2e921ea378d1ca14b"
   },
   "protectedFileSha256": {
     "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
@@ -139,6 +139,23 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "058c87ef19570411baee5459321070ceb57d6a965e6b6c91b76a428573d5049f",
           "current": "f394dce6db3dfe4de3ae5df16e57e63c5b5d7011c347369ccdfac0a48760e89f"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 135,
+      "reason": "실제 커서 수집/Draw/팔레트와 Client Renderer 연결",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "91efb317e48d472e496b96f0f98b784b086acbaa875152582078f3b372ded7ec",
+          "current": "f6496464a28e6834afbe10a79a70e47c69eb0ef8cd490e1a3ad3c838059e0bf4"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "f394dce6db3dfe4de3ae5df16e57e63c5b5d7011c347369ccdfac0a48760e89f",
+          "current": "64e68631cd5039223726287c65b050b48480f1284e5042c2e921ea378d1ca14b"
         }
       ]
     }

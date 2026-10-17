@@ -1195,7 +1195,11 @@ struct RawCampaignSession::Impl {
         game.placement.processEvent=game.lifecycle.processEvent;
         game.placement.project=[this](float x,float y) { const auto point=SoundToScreen(cursorView,x,y);return ScreenPoint{point.x,point.y}; };
         game.moveBuilder=[this](std::uint32_t owner,Sid target,std::uint32_t low,std::uint32_t high) { static_cast<void>(buildingMover->Move(owner,target,low,high)); };
-        cursor=std::make_unique<RawCampaignCursor>(CampaignCursorData{world,assets.game,gameplayPlacement.geometry,metadata.frames,*contentForms,*contained,hp,random,*construction,cursorDrop,contentCamera},std::move(game));
+        cursor=std::make_unique<RawCampaignCursor>(CampaignCursorData{world,assets.game,gameplayPlacement.geometry,metadata.frames,*contentForms,*contained,hp,random,*construction,cursorDrop,gameplayPlacement.preview.blocked,sp,playerState.playerKnown,contentCamera},std::move(game));
+        std::array<ScreenColor,256> palette; // 현재 파일 팔레트를 원본 논리 검정/흰색 끝점으로 준비한다.
+        // RGB와 예약 BYTE의 현재 파일 값을 그대로 공급한다.
+        for (std::size_t index=0;index<palette.size();++index) { const auto color=assets.game.Palette().Color(static_cast<std::uint8_t>(index));palette[index]={color.blue,color.green,color.red,assets.game.Palette().Reserved(static_cast<std::uint8_t>(index)).value_or(0)}; }
+        palette[0]={0,0,0,0};palette[255]={255,255,255,0};cursor->SetPalette(palette);cursor->SetView(cursorView);
     }
     // 같은 Session 전역을 건설 시작/프레임 직전에 갱신한다. 별도 건설 시계를 만들지 않는다.
     void PrepareBuilding(double now) {
@@ -1337,7 +1341,7 @@ void RawCampaignSession::RunFrame(FrameTime time,bool paused) { impl_->PrepareBu
 // 해상도/카메라 변경과 동일 위치 효과음의 view를 process11에도 전달한다.
 void RawCampaignSession::SetParticleView(SoundView view,SurfaceDisplayHooks display) {
     impl_->contentScreenOrigin={view.cameraX,view.cameraY};
-    impl_->cursorView=view;impl_->contentCamera=RawCursorPosition::CameraFromPixels(view.cameraX,view.cameraY);
+    impl_->cursorView=view;if (impl_->cursor) impl_->cursor->SetView(view);impl_->contentCamera=RawCursorPosition::CameraFromPixels(view.cameraX,view.cameraY);
     impl_->particles->SetView(view,std::move(display));
 }
 // 현재 단일 raw 표시 목록에서 SHP와 같은 정렬 항목을 만든다.

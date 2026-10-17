@@ -111,7 +111,7 @@
     "cpppj/hist/run25-base/cpppj/tests/CMakeLists.txt": "aace64ebdc1678bfdf480a70fec47e0daa06290dd956cbe40f49593c07c4ecbe",
     "cpppj/hist/run25-base/cpppj/tests/CampaignInstallSupport.h": "2d42c64bfd2e49e9f1bdb5218c8e0e3f47d5029e24a9c1e2c65180aaf08cf02a",
     "cpppj/hist/run25-base/cpppj/tests/CampaignWorldLoadTests.cpp": "3f104339ae0ff4ef53e366b50c801427e7a268d8991731a67677e73fbac68326",
-    "cpppj/src/CMakeLists.txt": "923a616e7647a31bc8054750bc04f59e0ecd391f82189ca99e629f6a8aa9cc41",
+    "cpppj/src/CMakeLists.txt": "abf7e84a08d79f53456456767ca6cb7bc144b7f6672e71a1154772313f9b48d0",
     "cpppj/src/app/CanonMayPlaceInspect.cpp": "27eda46bca500c898abeb9a3a7c4e8588b38e061b579c84cbf6c032c6d46dda9",
     "cpppj/src/app/FrameBindingInspect.cpp": "042602919b0531fb1cbaf3941dc6597bee73944bbf0d571dacfd638bb45dd07c",
     "cpppj/src/app/FrameBindingInspect.h": "4e187ca41f8c34ed52c022b58a57327a554a723e3e26ee88a1ae152c99de3fce",
@@ -896,7 +896,7 @@
     "cpppj/tests/RegionOwnershipTests.cpp": "c1f5a9e52cb835a6ebe685293b1b333bb1d2a785d930575ff85324a12f82fdc7",
     "cpppj/tests/RegionPaintTests.cpp": "3b45525f557739561adb2e3f0ad9ffa43dd5855bd08b5b153f317ac44771e206",
     "cpppj/tests/RenderCollectionTests.cpp": "d40ed2a9a3dc83846b21ee68002cbd8c8e3429c7fbfc774110c20bff50f8f069",
-    "cpppj/tests/RendererTests.cpp": "63005d693471cdd282ad6bfacff49a8d58ab8c835ba24f752a9e450436e8fbba",
+    "cpppj/tests/RendererTests.cpp": "fb868b30dcd882c0c2add47d3a66434e4cb34bf514f4ce8a7102a0a3ed2995c8",
     "cpppj/tests/ReturnPieceTests.cpp": "dcd99fb3c61c3aaf9ed602908c38271bfb425d16359a5b7913b2100d9e94c239",
     "cpppj/tests/RewardTests.cpp": "de36bfc66db0246495e81da5fb0a47f4b3c52179bb8c5e20d464d917844b112c",
     "cpppj/tests/RunePostPopTests.cpp": "9918c7375cb132f74579c6a3bfe94d0996e4e9f0f17c76abdf06887e933c2470",
@@ -1440,6 +1440,23 @@
           "path": "cpppj/src/o/ContentFormLifetime.h",
           "previous": "e7ac3f4a17817d550306e7308554d398d716791085ff5fbdc627881abc85af26",
           "current": "9c483590c4655b6ea974b980f144a05633f85dcc3a279b01c30c967daa0190e1"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 135,
+      "reason": "실제 커서 수집/Draw/팔레트와 Client Renderer 연결",
+      "pins": [
+        {
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "923a616e7647a31bc8054750bc04f59e0ecd391f82189ca99e629f6a8aa9cc41",
+          "current": "abf7e84a08d79f53456456767ca6cb7bc144b7f6672e71a1154772313f9b48d0"
+        },
+        {
+          "path": "cpppj/tests/RendererTests.cpp",
+          "previous": "63005d693471cdd282ad6bfacff49a8d58ab8c835ba24f752a9e450436e8fbba",
+          "current": "fb868b30dcd882c0c2add47d3a66434e4cb34bf514f4ce8a7102a0a3ed2995c8"
         }
       ]
     }

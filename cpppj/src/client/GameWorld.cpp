@@ -1,4 +1,5 @@
 #include "client/GameWorld.h"
+#include "client/RawCampaignCursor.h"
 #include "client/SquidRenderer.h"
 #include "client/PriestPlacementAssets.h"
 #include "o/RawPathAnimation.h"
@@ -139,6 +140,7 @@ void GameWorld::SetPalette(std::span<const ScreenColor> palette) {
     if (palette.size()!=palette_.size()) throw std::invalid_argument("World palette needs 256 colors");
     // 색 번호는 유지하고 RGB만 교체한다.
     for (std::size_t i=0;i<palette_.size();++i) palette_[i]={palette[i].red,palette[i].green,palette[i].blue};
+    if (campaign_) campaign_->Cursor().SetPalette(palette); // 실제 커서도 같은 파일 팔레트의 원본 색표를 사용한다.
     remaps_.clear();changed_=true;
 }
 // 연결 방향 후보와 원소별 묶음에서 지면/절벽의 실제 클러스터를 고른다.

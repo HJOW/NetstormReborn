@@ -134,6 +134,7 @@ void Renderer::SetScene(std::vector<RenderSprite> sprites, std::vector<RenderTex
         if (!std::isfinite(sprite.order.x) || !std::isfinite(sprite.order.y)) throw std::invalid_argument("Nonfinite draw order");
         dirty_.Add(Bounds(sprite));
     }
+    sourceSprites_=sprites; // dirty별 재정렬도 같은 원본 입력 순서에서 시작한다.
     if (sort) SortRenderSprites(sprites,edition_);
     // 글자 이동·삭제는 현재 전체를 무효화한다. 후속 Gump가 전용 변경 범위를 등록한다.
     if (!text_.empty() || !text.empty()) dirty_.InvalidateAll();
@@ -141,6 +142,9 @@ void Renderer::SetScene(std::vector<RenderSprite> sprites, std::vector<RenderTex
 }
 // 화면 모드 변경·전체 다시 그리기.
 void Renderer::InvalidateAll() { dirty_.InvalidateAll(); }
+// 수집기 교체/해제는 이전 캐시도 비워 반납된 월드 callback을 남기지 않는다.
+void Renderer::SetExtraCollection(std::function<std::vector<RenderSprite>(ScreenRect,std::uint32_t)> collect) { extraCollection_=std::move(collect);extraCache_.clear();dirty_.InvalidateAll(); }
+bool Renderer::HasExtraCollection() const { return static_cast<bool>(extraCollection_); } // 새 장치에 실제 수집기가 있는지 조회한다.
 // 배경 팔레트 번호를 변환하지 않고 변경 영역의 합성에서 재사용한다.
 void Renderer::SetBackground(std::shared_ptr<const IndexedImage> image) {
     if (image && (image->width != static_cast<std::size_t>(width_) || image->height != static_cast<std::size_t>(height_) ||
@@ -161,8 +165,10 @@ IndexedImage Renderer::SceneImage() {
         std::vector<std::uint8_t>(static_cast<std::size_t>(width_) * height_), std::vector<std::uint8_t>(static_cast<std::size_t>(width_) * height_,255)};
     const ScreenRect all{0,0,width_,height_};
     if (background_) DrawIndexedImage(result.indices,width_,height_,*background_,0,0,all);
-    // Renderer 장면 순서를 보존하며 메뉴 글자와 커서는 합성하지 않는다.
-    for (const auto& sprite : sprites_) {
+    // 추가 수집의 SP/피드백을 다시 실행하지 않고 마지막 표시 목록만 같은 정렬로 합성한다.
+    auto combined=extraCache_.empty() ? sprites_ : sourceSprites_;combined.insert(combined.end(),extraCache_.begin(),extraCache_.end());if (!extraCache_.empty()) SortRenderSprites(combined,edition_);
+    // Renderer 장면 순서를 보존하며 메뉴 글자와 하드웨어 커서는 합성하지 않는다.
+    for (const auto& sprite : combined) {
         const auto cut = ClipScreenRect(all, sprite.clip);
         if (!Nonempty(ClipScreenRect(Bounds(sprite), cut))) continue;
         DrawSprite(result.indices,width_,cut,sprite);
@@ -236,8 +242,13 @@ std::span<const ScreenRect> Renderer::Draw(std::span<std::uint8_t> pixels, int p
                 std::fill(pixels.begin() + row + clip.left, pixels.begin() + row + clip.right, background);
             }
         if (background_) DrawIndexedImage(pixels, pitch, height_, *background_, 0, 0, clip);
-        // 원본 깊이 키로 정렬한 스프라이트.
-        for (const auto& sprite : sprites_) {
+        auto combined=extraCollection_ ? sourceSprites_ : sprites_; // 정적 월드와 dirty별 미리보기를 같은 원본 작업 순서로 병합한다.
+        if (extraCollection_) {
+            auto extra=extraCollection_(clip,paintFlags_[i]);if (!(paintFlags_[i]&4U)) extraCache_=extra;
+            combined.insert(combined.end(),std::make_move_iterator(extra.begin()),std::make_move_iterator(extra.end()));SortRenderSprites(combined,edition_);
+        }
+        // 원본 깊이 키로 정렬한 모든 월드/미리보기 항목을 현재 dirty 안에서 출력한다.
+        for (const auto& sprite : combined) {
             const auto bounds = Bounds(sprite); const auto cut = ClipScreenRect(clip, sprite.clip);
             if (!Nonempty(ClipScreenRect(bounds, cut))) continue;
             DrawSprite(pixels,pitch,cut,sprite);

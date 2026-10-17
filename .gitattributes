@@ -1208,3 +1208,25 @@ cpppj/src/client/RawCursorPlacement.h text eol=lf
 cpppj/src/o/ContentFormLifetime.cpp text eol=lf
 cpppj/src/o/ContentFormLifetime.h text eol=lf
 cpppj/campaign-cursor-session.json text eol=lf
+
+# 현재 커서 표시와 원본 팔레트 관측의 바이트 SHA를 보존한다.
+cpppj/src/client/GameWorld.cpp text eol=lf
+cpppj/src/client/OwnerColorMaps.cpp text eol=lf
+cpppj/src/client/OwnerColorMaps.h text eol=lf
+cpppj/src/client/PreviewCollection.cpp text eol=lf
+cpppj/src/client/PreviewCollection.h text eol=lf
+cpppj/src/client/PreviewColorMaps.cpp text eol=lf
+cpppj/src/client/PreviewColorMaps.h text eol=lf
+cpppj/src/client/RawCampaignCursorDisplay.cpp text eol=lf
+cpppj/src/client/RawCampaignCursorDisplay.h text eol=lf
+cpppj/src/client/Renderer.cpp text eol=lf
+cpppj/src/client/Renderer.h text eol=lf
+cpppj/tests/PreviewColorMapsTests.cpp text eol=lf
+cpppj/tests/RendererTests.cpp text eol=lf
+cpppj/preview-colors.json text eol=lf
+cpppj/owner-hsl-colors.json text eol=lf
+cpppj/campaign-cursor-display.json text eol=lf
+cpppj/tests/fixtures/preview-colors-x86.tsv text eol=lf
+cpppj/tests/fixtures/owner-hsl-colors-x86.tsv text eol=lf
+tools/decomp_preview_colors.py text eol=lf
+tools/decomp_owner_hsl_colors.py text eol=lf

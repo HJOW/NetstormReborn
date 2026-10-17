@@ -13,4 +13,8 @@ std::span<const std::uint32_t,72> OriginalOwnerColorCandidates();
 // candidates는 실제 DWORD 후보이며 원문처럼 lowBYTE만 변환표에 저장한다.
 OwnerColorMaps BuildStandardOwnerColorMaps(std::uint32_t type,std::uint32_t bridgeType,
     std::span<const std::uint32_t,72> candidates=OriginalOwnerColorCandidates());
+// 실제43be30/43bc40의 전용5종(111/141/137/94/97)을 ColorSort 명도/8후보로 복원한다.
+// original CRT 기본53비트에 맞추며64비트 관측과의 차이는 별도 fixture에 보존한다.
+OwnerColorMaps BuildSpecialOwnerColorMaps(std::span<const std::uint32_t,256> logical,std::uint32_t type,
+    std::span<const std::uint32_t,72> candidates=OriginalOwnerColorCandidates());
 }

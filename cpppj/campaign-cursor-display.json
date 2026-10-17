@@ -1,0 +1,96 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-17",
+  "unit": 135,
+  "baseCommit": "4e00fc1",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16"
+  },
+  "currentSources": {
+    "cpppj/src/CMakeLists.txt": "abf7e84a08d79f53456456767ca6cb7bc144b7f6672e71a1154772313f9b48d0",
+    "cpppj/src/client/GameWorld.cpp": "1122dd3668d1c301768a8a5a1ff91c7240bee4507deafa0503729df68d2b4787",
+    "cpppj/src/client/OwnerColorMaps.cpp": "1dc23bab259f2bdbb6e88d7e12c4427a50f76304c8aa11cc6309800d0da7e620",
+    "cpppj/src/client/OwnerColorMaps.h": "aed5d31073e2015b4d0773eef376a302d122c024a04f90533d0882fd28121abf",
+    "cpppj/src/client/PreviewCollection.cpp": "6a067ab897f31fd8bc9c046f91ac40f15c815563b74c26757bf023a9eaf3255c",
+    "cpppj/src/client/PreviewCollection.h": "7e199768ba725cf4847428aaa8574d0fbbdc871fbc02c8882109b6803083f302",
+    "cpppj/src/client/PreviewColorMaps.cpp": "263d4f110d32cf16f928ea239b9454189681594fd1eaeb403a7a23428aec2970",
+    "cpppj/src/client/PreviewColorMaps.h": "1a091519d93750861a901111c9cc0c01b9abbdcea85b81a6f1ba916d0b770911",
+    "cpppj/src/client/RawCampaignCursor.cpp": "8e23f42d98e0058ba79d143ecbc697c74590377048639e7cb63d0d54c08b1ffc",
+    "cpppj/src/client/RawCampaignCursor.h": "7c9062685b2f8b8551aab8001b280c1d793c3a1edff14dc114970d20d90fb642",
+    "cpppj/src/client/RawCampaignCursorDisplay.cpp": "8e3f58a74524806c727a1ea81ed725495a22fc41270a77fd6457342925a80117",
+    "cpppj/src/client/RawCampaignCursorDisplay.h": "e30e775cf87189bfa1dfeb8a26075decd485dea5e2d366056df8579dcc2f5b73",
+    "cpppj/src/client/RawCampaignSession.cpp": "f6496464a28e6834afbe10a79a70e47c69eb0ef8cd490e1a3ad3c838059e0bf4",
+    "cpppj/src/client/Renderer.cpp": "5a36413dc3cf1bfa2c12a57823dc0c44a37ad3f01952ff14f17fdb0ab5b1ff11",
+    "cpppj/src/client/Renderer.h": "b6bcd1c739f94173876bb8f9ecbbf2ae34bc48bbe092c6a1bad3454f3a950f55",
+    "cpppj/src/client/UberGump.cpp": "c9e2ac8666ebcc162616674d3d6a127ffc6ef33e1102318299ce0b507e84e23e",
+    "cpppj/tests/CMakeLists.txt": "539635dedf774da6163e0702fa0f076db8fb6398b5b7b7de02af2509a255a7d5",
+    "cpppj/tests/CampaignSessionTests.cpp": "64e68631cd5039223726287c65b050b48480f1284e5042c2e921ea378d1ca14b",
+    "cpppj/tests/PreviewColorMapsTests.cpp": "5019672dc1589cace9bb92690be4bf9786ab8257770794cb51fdff87cf937311",
+    "cpppj/tests/RendererTests.cpp": "fb868b30dcd882c0c2add47d3a66434e4cb34bf514f4ce8a7102a0a3ed2995c8"
+  },
+  "protectedFileSha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6"
+  },
+  "source_sha256": {
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/refined/originals/vtables.tsv": "2151f08f1d1ea08841964b3a3fa77bf5b744ccd928eda86cc466de1c3d633766"
+  },
+  "nativeReports": {
+    "cpppj/preview-colors.json": "128892ea02d208515168e53edfb572fd1a75da1f691c97a5109375fc13bd5c81",
+    "cpppj/owner-hsl-colors.json": "fcd546ff68487ef7bea6022ac7c711bcadd45a365c6f9f7031afe396a5192d24"
+  },
+  "nativeContext": {
+    "colors": "전체 ColorSort439de0/43c010, 3행/12정상반환/53·64비트 결과차이0",
+    "hsl": "실제43b5a0/43b750, 15행/763정상반환, 원본 기본53비트 비교; 실제 팔레트97의64비트 차이는 별도 보존",
+    "crt": "4e81da/4f2a7b/4f2a49/4f2929/4f29bb의 실제53비트·최근접 반올림/정상 반환/보존GP/스택 확인; raw23f와canonical27f의 예약bit6 구분",
+    "instructions": "두 원본 보고서의 instructions는 호출마다 초기화되는 마지막 호출 명령 수이며 전체 합계가 아님",
+    "staticDefaults": "정밀 C/보호 PE의 원본 label 11문자, 99/123/103/92, 일반12종/전용5종, theammode 기본1; 부모 등록/해제 새 실행은 아님",
+    "cd": "10.72 ColorSort458a90/색표496530/전용495ed0·495e10/CRT4f4d10/수집43da30·Draw43dbd0 대조 기록; 새 관측10.78전용"
+  },
+  "integration": {
+    "display": "같은 현재 Pool/TYPE/spot/격자/커서/SP/PlayerKnown/시간/카메라/실제 SHP와 원본 Draw/GumpTextDraw",
+    "collection": "원본 dirtyFlags bit2(값4)는 UI만 수집; 현재 상태를 dirty마다 읽고 원본 제출 순서를 합쳐 같은 정렬기 사용",
+    "cache": "SceneImage는 피드백 재실행 없이 마지막 목록 사용; 전체 viewport bounds 유지; 잠금/취소/삭제 guard",
+    "client": "현재 파일 팔레트/현재 언어의 원본 바이트/장기 실제 FontStore/현재 theammode 연결, 월드 반환 전 callback 해제, HUD는 현재 로컬 SP",
+    "ownerColors": "기존 일반12종과 원본 HLS 명도 기반 전용5종 모두 제공"
+  },
+  "testInputs": {
+    "ready": "기존 단위134의 명시 준비75/실제 contained 생성기 GUI 반환8·quality3 Form 및 실제 Create/Owner/Pop 완성76 입력",
+    "warning": "실제 공장 GUI 취득flags41에서 공급 없는8,8은 원본 에너지 경고; SelectBuild flags160은 연관 지역 불일치에서 경고 억제하므로 같은 입력으로 간주하지 않음",
+    "pixels": "현재 카메라 중심의 원본 SHP/명시 원본 윤곽을 전체 픽셀 비교, 실제 FontStore 경고 출력과 clip 밖 불변",
+    "cache": "원본 SP8001/시각12.5의 실제 피드백, 작은 마지막 dirty 뒤 전체 SceneImage 불변, Cancel; 별도 Renderer 정렬/dirty별 호출/캐시/해제 검사",
+    "limits": "생산 완료/메뉴 Open 제공 행/실제 GUI 입력/전체 자연 플레이를 대신 검증하지 않음"
+  },
+  "validation": {
+    "releaseBuild": 3,
+    "buildExit": 0,
+    "warnings": 0,
+    "errors": 0,
+    "focusedCases": 13,
+    "focusedFailedChecks": 0,
+    "newCases": 5,
+    "fullSuite": 1547,
+    "nativeEvidenceVerifiers": 41,
+    "fullFailedChecks": 0,
+    "ctestExit": 0,
+    "ctestSeconds": 240.51,
+    "ctestTotalSeconds": 240.54,
+    "stagedFiles": 63,
+    "currentSourcePins": 20,
+    "updatedReports": 33,
+    "updatedPins": 91,
+    "preservedHistoricalPins": 144,
+    "protectedFiles": 3
+  },
+  "remaining": [
+    "실제 Client의 원본 커서 명령 입력/생산 Gump/금액/dirty/부모 깊이 및 전체 설정 소비자",
+    "실제 로컬 전송 로그인/등록 수명과 큐잉",
+    "실제 생산 완료/경제/AI/전체 Kernel",
+    "Early Missions1~6/캠페인1-1~1-2/데모3 사용자 자연 완주/승패/저장/다음 미션과 전체 원본 동일성",
+    "전체화면 DirectDraw 수정은 현재 범위 제외"
+  ]
+}

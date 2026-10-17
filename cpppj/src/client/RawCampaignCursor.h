@@ -5,6 +5,7 @@
 #include "client/RawCursorReturnPiece.h"
 
 namespace netstorm::client {
+class RawCampaignCursorDisplay; // 같은 커서의 실제 수집/Draw/픽셀 출력 수명이다.
 // UI/장치/송신만 외부에서 받는다. 실제 계산/생성/삭제 콜백은 내부에서 덮어쓴다.
 struct CampaignCursorEffects {
     CursorLifecycleHooks lifecycle; // 강조/커서 선택/팝업/번역/측정/마우스만 소비한다.
@@ -32,6 +33,9 @@ struct CampaignCursorData {
     o::GameRandom& random; // 반환 다리와 게임이 공유하는 실제 난수다.
     RawCampaignConstructionBindings& construction; // 같은 실제 Place를 로컬 예측에도 공급한다.
     CursorDropState& drop; // 기존 마나/사정거리/내용물 수명이 공유하는 현재 커서다.
+    const std::array<std::uint8_t,144>& grid; // 실제 현재 MayPlace가 쓴 열 우선 격자다.
+    o::ScrambledSpStore& sp; // 현재 단일 SP와 추적 offset/순열이다.
+    const std::uint32_t& playerKnown; // 실제595344 DWORD다.
     const std::array<std::uint32_t,2>& camera; // 현재497490 카메라 float비트를 매 이동마다 읽는다.
 };
 // 원본 각각의 몸체를 같은 상태에 조립하며 미연결 UI를 빈 성공으로 처리하지 않는다.
@@ -44,6 +48,9 @@ public:
     RawCampaignCursor& operator=(const RawCampaignCursor&)=delete; // 다른 세션으로 복사하지 않는다.
     // 같은 장기 몸체를 유지하면서 현재 장치/GUI/전송기를 교체한다.
     void SetEffects(CampaignCursorEffects effects);
+    RawCampaignCursorDisplay& Display(); // 같은 현재 커서/격자를 수집하고 그리는 단일 표시기다.
+    void SetPalette(std::span<const ScreenColor> palette); // 실제 파일 팔레트와 Native Take의 두 현재 색을 연결한다.
+    void SetView(SoundView view); // 현재 화면 픽셀 원점을 Query/Prepare/Draw가 공유하게 한다.
     void Take(o::Sid form,std::uint32_t flags); // 실제00447000의 전체 DWORD flags를 전달한다.
     void Cancel(); // 잠긴 상태에서도 실제 꼬리 정리/프로세스 반납을 실행한다.
     void Update(std::int32_t x,std::int32_t y); // 실제00446b50으로 현재 마우스/카메라를 반영한다.

@@ -1316,3 +1316,12 @@ set_property(SOURCE CampaignSessionTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS
 target_sources(netstorm_tests PRIVATE ConstructionCommandTests.cpp)
 set_source_files_properties(ConstructionCommandTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_CONSTRUCTION_COMMAND_WRITE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/construction-command-write-x86.tsv\";NETSTORM_CONSTRUCTION_COMMAND_RECEIVE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/construction-command-receive-x86.tsv\"")
+
+# 실제 커서 파괴/불법/글자 그림자 색표의 전체 원본 출력이다.
+target_sources(netstorm_tests PRIVATE PreviewColorMapsTests.cpp)
+set_source_files_properties(PreviewColorMapsTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_PREVIEW_COLORS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/preview-colors-x86.tsv\"")
+
+# 실제 CRT 기본 정밀도의 소유자 HSL 전용5종과64비트 별도 관측이다.
+set_property(SOURCE PreviewColorMapsTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS
+    "NETSTORM_OWNER_HSL_COLORS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/owner-hsl-colors-x86.tsv\"")

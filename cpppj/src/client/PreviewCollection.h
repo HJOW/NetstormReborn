@@ -35,6 +35,9 @@ struct PreviewCollectionHooks {
     // gumpDepth: 미리보기를 붙일 Gump의 현재 깊이를 조회하는 콜백.
     // readSp: 현재 플레이어의 SP 값을 조회하는 콜백.
     std::function<std::uint32_t(std::uint32_t)> gumpDepth,readSp;
+    std::function<std::uint32_t()> scrambledOffset,copiedOffset,now,querySp; // 실제 SP/게임 시각/PlayerKnown은 각 원본 접근에서 다시 읽는다.
+    std::function<bool()> firstPool; // 실제 첫 분산 배열의 NULL 여부다.
+    std::function<std::int16_t()> firstIndex; // 실제 첫 순열 WORD다.
 };
 // viewport와 무관하게 커서 조각을 kind 4의 본체/보조 레이어로 제출한다.
 class PreviewCollection {

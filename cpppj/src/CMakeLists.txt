@@ -41,3 +41,6 @@ target_sources(netstorm PRIVATE o/RawEnergySupply.cpp o/RawEnergySupply.h o/Ener
 
 # 같은 월드의 실제 커서와 로컬 예측 건설을 조립한다.
 target_sources(netstorm PRIVATE client/RawCampaignCursor.cpp client/RawCampaignCursor.h)
+
+# 실제 커서 수집/dirty 표시와 세 원본 색 변환표다.
+target_sources(netstorm PRIVATE client/PreviewColorMaps.cpp client/PreviewColorMaps.h client/RawCampaignCursorDisplay.cpp client/RawCampaignCursorDisplay.h)

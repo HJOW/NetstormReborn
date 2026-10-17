@@ -93,6 +93,9 @@ public:
     Renderer(int width, int height,o::OriginalEdition edition=o::OriginalEdition::Patch1078);
     // 현재 장면을 바꾼다. 기존/새 사각형을 모두 무효화하여 삭제된 그림도 지운다.
     void SetScene(std::vector<RenderSprite> sprites, std::vector<RenderText> text = {}, bool sort = true);
+    // 원본 미리보기처럼 dirty마다 수집하는 표시를 정적 월드 뒤에 병합해 같은 원본 키로 정렬한다.
+    void SetExtraCollection(std::function<std::vector<RenderSprite>(ScreenRect,std::uint32_t)> collect);
+    bool HasExtraCollection() const; // 장치 교체 뒤 실제 수집기 연결 여부를 확인한다.
     // 메뉴가 합성한 화면 크기의 8비트 배경을 소유하여 프레임 사이의 자산 수명을 보장한다.
     void SetBackground(std::shared_ptr<const IndexedImage> image);
     // 선택 표시처럼 스프라이트 위에 오는 투명 UI 픽셀을 소유한다.
@@ -131,6 +134,9 @@ private:
     DirtyRegions dirty_;
     // sprites_: 스프라이트.
     std::vector<RenderSprite> sprites_;
+    std::vector<RenderSprite> sourceSprites_; // 추가 수집을 병합할 때 정렬 전의 원본 제출 순서를 유지한다.
+    std::function<std::vector<RenderSprite>(ScreenRect,std::uint32_t)> extraCollection_; // 현재 dirty마다 원본 추가 수집을 호출한다.
+    std::vector<RenderSprite> extraCache_; // 정지 장면 합성은 새 SP 수집 없이 마지막 표시 목록을 사용한다.
     // text_: 표시하거나 해석할 본문 문자열.
     std::vector<RenderText> text_;
     // background_: 배경 출력 자료 또는 배경 Gump 토큰.

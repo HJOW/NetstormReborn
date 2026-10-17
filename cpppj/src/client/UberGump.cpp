@@ -9,6 +9,8 @@
 #include "client/GumpVisual.h"
 #include "client/GumpBackground.h"
 #include "client/GameWorld.h"
+#include "client/RawCampaignCursor.h"
+#include "client/RawCampaignCursorDisplay.h"
 #include "client/UserInput.h"
 #include "client/WindowTitle.h"
 #include "client/WarningMessages.h"
@@ -148,6 +150,7 @@ UberGump::~UberGump() { ClearWorld(); }
 // 입력 참조를 먼저 없애고 커널의 실제 소유권을 해제한다. 위치 효과음은 카메라 0의 전체 메뉴 영역으로 되돌린다.
 void UberGump::ClearWorld() {
     client_.ClearThunderFlashes();
+    if (world_) client_.GetRenderer().SetExtraCollection({}); // 월드 반납 전에 빌린 실제 커서 수집/Draw callback을 해제한다.
     userInput_.reset();
     const auto process=worldProcess_; // 해제 중의 현재 subscriber 조회가 파괴 중인 월드를 따라가지 않도록 번호만 보관한다.
     world_=nullptr; worldProcess_=0;
@@ -481,7 +484,15 @@ void UberGump::Compose() {
     std::vector<RenderSprite> worldSprites,dialogSprites; // 월드와본문그림은같은실제자산을읽으며UI본문목록은해당패널에만제출한다.
     client_.GetRenderer().SetOverlay(nullptr);
     if (world_ && state_.phase!=ClientPhase::LoadingMission) {
-        world_->Resize(width,height); worldSprites=world_->Sprites();
+        world_->Resize(width,height);worldSprites=world_->Sprites();
+        auto& cursorDisplay=world_->Session().Cursor().Display();cursorDisplay.Settings().gridOption=client_.GetScreen().Flags();
+        std::int32_t themeMode=1; // 원본 설정 철자와 누락 기본값을 같은 소유자 변경 경계와 맞춘다.
+        client_.Configuration().ReadInt("theammode",themeMode);cursorDisplay.SetThemeMode(static_cast<std::uint32_t>(themeMode));
+        cursorDisplay.SetText(client_.Fonts(),[this](std::string_view key) { const auto bytes=o::EncodeOriginalText(client_.Translate(key));return std::string(bytes.begin(),bytes.end()); });
+        if (!client_.GetRenderer().HasExtraCollection()) client_.GetRenderer().SetExtraCollection([this](ScreenRect clip,std::uint32_t flags) {
+            if (!world_ || state_.phase!=ClientPhase::Mission || !popup_.empty()) return std::vector<RenderSprite>{};
+            return world_->Session().Cursor().Display().Sprites(clip,flags);
+        });
         // 정지한 대화상자만 월드를 배경에 합성하고 실제 조작 화면은 살아 있는 스프라이트를 제출한다.
         if (state_.phase!=ClientPhase::Mission || !popup_.empty()) {
             client_.GetRenderer().SetBackground(canvas); client_.GetRenderer().SetScene(worldSprites);
@@ -523,9 +534,9 @@ void UberGump::Compose() {
         for (std::size_t i = 0; i < buttons.size(); ++i) button(buttons[i], x + static_cast<int>(i % 4) * kButtonPitch, y + static_cast<int>(i / 4) * 23, kButtonWidth);
     }
     if (state_.phase == ClientPhase::Mission && popup_.empty()) {
-        // 현재 연결한 Game 메뉴와 시작 Storm Power를 월드 위에 표시한다.
+        // 현재 연결한 Game 메뉴와 실제 로컬 Storm Power를 월드 위에 표시한다.
         button({"Game", {"Menu", "game"}}, 4, 4, kButtonWidth);
-        if (world_) text.push_back({&font,"Storm Power: "+std::to_string(static_cast<long long>(world_->Players().players[1].stormPower)),width-200,6,255,0,{1,1},true,false});
+        if (world_) text.push_back({&font,"Storm Power: "+std::to_string(static_cast<long long>(world_->Session().Sp(world_->Session().LocalOwner()))),width-200,6,255,0,{1,1},true,false});
         appendWarnings();client_.GetRenderer().SetBackground(canvas); client_.GetRenderer().SetScene(std::move(worldSprites), std::move(text));
         if (world_) client_.GetRenderer().SetOverlay(world_->SelectionImage());
     } else {

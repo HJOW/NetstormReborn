@@ -1,5 +1,15 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-17 단위135 완료: 실제 커서 수집·Draw·전용 팔레트 (`HJOW-Athlon`)
+
+- [x] AGENTS·두 LEFT·기준 `4e00fc1`과 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16**을 확인했다. 새 디컴파일/게임/GUI 실행은 없고 보호 PE의 격리 CPU 관측만 추가했다. [작업 기록](docs/exe/cpp-campaign-cursor-display-20261017.md), `cpppj/campaign-cursor-display.json`, 접두부 `extracted/goal-cursor-display-20261017-`를 남겼다. 전체 목표는 active다.
+- [x] 단일 RawCampaignCursorDisplay가 같은 현재 커서/격자/Pool/TYPE/spot/SP/PlayerKnown/시각/카메라를 읽고 원본 PreviewCollection/Draw/GumpTextDraw를 실행한다. Renderer는 dirty마다 수집하고 원본 제출 순서를 합쳐 정렬한다. UI 전용 bit2(값4)를 보존하며 SceneImage는 피드백 없이 마지막 목록을 그린다. 작은 마지막 dirty 뒤에도 전체 bounds를 유지하고 잠금/취소/삭제 guard와 월드 반환 전 callback 해제를 둔다.
+- [x] 실제 Client의 현재 파일 팔레트/FontStore/번역 바이트/원본 `theammode` 기본1을 연결했다. 원본 label11문자·99/123/103/92·흰 경고/노랑 비용과 일반12종/전용5종을 복원했다. HUD는 초기값이 아닌 현재 로컬 SP를 읽는다. 실제 원본 부모 Gump 깊이/전체 설정 소비자와 입력/생산 GUI는 아직 후속이다.
+- [x] 전체 ColorSort439de0/43c010의3행/12정상반환/두 정밀도 차이0을 관측했다. 전용43b5a0/43b750의15행/763정상반환을 추가했다. 실제 CRT 호출 사슬은53비트·최근접 반올림이며 raw23f와canonical27f의 예약bit6은 구분한다. 실제 팔레트97의64비트 차이 한 행을 지우지 않고 두 출력을 보존했고 C++는 기본53비트와 비교한다. 두 보고서 instructions는 마지막 호출 수이며 전체 합계가 아니다. 새 두 도구/fixture/보고서를 남겼고 기존10.72 자료는 수정하지 않았다.
+- [x] 최종 **Release 빌드3 종료0/경고0/오류0**, 집중 **13개/실패0**, 전체 **1,547개/실패0/CTest종료0/240.51초(전체240.54초)**다. 새5개는 원본 색표/전용HSL, 실제 SHP·윤곽·경고문·clip·카메라·SP피드백·캐시·Cancel, Renderer 정렬/dirty수집/해제를 검사한다. 명시 준비75/GUI 반환8 Form/완성76 공급원은 생산 완료 검증이 아니다. SelectBuild flags160에서 연관 지역 불일치는 경고를 억제하므로 실제 GUI 취득41 입력으로 에너지 경고를 확인했다.
+- [x] 원본 근거 **41종 통과**. 보호3SHA·제품20·기존33보고서의현재91핀 갱신/과거144핀 보존·스테이징63파일·UTF-8/LF·기존 CMake 접두/fixture/AGENTS/DN 불변을 감사했다. 이전 단위134의 ContentLifetime 기록CRLF/추출물 부재 제한은 변경하지 않았다. 커밋 메시지는 **20261017-35 CP 실제 커서 렌더링과 원본 전용 소유자 색표 연결**이며 push하지 않는다.
+- [ ] 다음: 실제 `UserInput.cpp`의 임시 선택/이동을 원본 커서 명령/메뉴/Gump·생산금액·dirty/장치 경계와 연결한다. `SetEffects`와 부모 깊이, 설정 `cursorSnapToGrid`/`cursorShowCannotPlace` 등 현재 소비자를 공급한다. 실제 로그인된 로컬 전송 양 끝/큐잉도 필요하다. 생산 완료·경제/AI·전체 Kernel, Early Missions1~6/캠페인1-1~1-2/데모3의 자연 완주·승패·저장·다음 미션 및 전체 동일성은 미완료다. 전체화면 DirectDraw 수정은 제외한다.
+
 ## 2026-10-17 단위134 완료: 단일 커서/ContentForm/실제 로컬 예측·반환·비용 (`HJOW-Athlon`)
 
 - [x] AGENTS·양 LEFT·깨끗한ad64c18과 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16**을 확인했다. 새 디컴파일·PE CPU·게임·GUI 실행은 없다. 보호 PE의43ec00 정렬 명령/기존 정밀 C·가상 표만 읽었다. 전체 목표는 active다. [작업 기록](docs/exe/cpp-campaign-cursor-20261017.md), `cpppj/campaign-cursor-session.json`, 접두사`extracted/goal-campaign-cursor-20261017-`를 남겼다.

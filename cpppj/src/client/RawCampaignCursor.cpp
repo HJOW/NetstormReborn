@@ -1,5 +1,6 @@
 // 기존 원본 몸체들의 계산을 재구현하지 않고 실제 월드의 단일 상태로 연결한다.
 #include "client/RawCampaignCursor.h"
+#include "client/RawCampaignCursorDisplay.h"
 #include "client/RawCursorPreviews.h"
 #include <stdexcept>
 #include <utility>
@@ -26,6 +27,7 @@ struct RawCampaignCursor::Impl {
     CursorReturnPieceState returnState; // 현재 선택 타입/유지/소멸 옵션이다.
     o::ConstructionLocalState localState; // 실제 로컬 소유자/Canon 패턴이다.
     std::uint32_t snapToGrid{}; // 실제 위치 갱신이 읽는 snapToGrid DWORD다.
+    std::unique_ptr<RawCampaignCursorDisplay> display; // 같은 현재 목록/격자/SP의 실제 수집/표시기다.
     std::unique_ptr<RawCursorPlacement> placement; // 실제 Query/Prepare 몸체다.
     std::unique_ptr<RawCursorPreviews> previews; // 실제 생성/재사용/연결 미리보기다.
     std::unique_ptr<RawCursorLifecycle> lifecycle; // 실제 Take/Cancel/Activate 몸체다.
@@ -110,6 +112,7 @@ struct RawCampaignCursor::Impl {
         dropHooks.refresh=Current(effects.drop.refresh,"커서 변경 갱신");
         dropHooks.closeGump=Current(effects.drop.closeGump,"커서 Gump 닫기");
         drop=std::make_unique<RawCursorDrop>(core.pool,core.types,data.drop,std::move(dropHooks));
+        display=std::make_unique<RawCampaignCursorDisplay>(core,CursorPreviewSource{core.pool,data.drop,lifecycleState,placementState,core.bridgeState,data.grid},data.assets,data.sp,data.playerKnown);
     }
     // 실제 가상 삭제의 거부를 성공한 임시 정리로 처리하지 않는다.
     void Destroy(o::Sid sid,std::uint32_t flags) { if (!data.world.Destroy(sid,flags)) throw std::logic_error("실제 커서 가상 삭제 거부"); }
@@ -121,6 +124,12 @@ RawCampaignCursor::RawCampaignCursor(CampaignCursorData data,CampaignCursorGame 
 RawCampaignCursor::~RawCampaignCursor()=default; // 상위 세션이 이미 Kernel을 비운 뒤 실제 몸체를 해제한다.
 // 현재 callback 저장소만 바꾸므로 이미 구성한 몸체가 다음 호출에 새 장치를 읽는다.
 void RawCampaignCursor::SetEffects(CampaignCursorEffects effects) { impl_->effects=std::move(effects); }
+// 현재 표시기의 주소는 장치/메뉴 교체 동안 바뀌지 않는다.
+RawCampaignCursorDisplay& RawCampaignCursor::Display() { return *impl_->display; }
+// Native Take의 words[2]는 글꼴 번호가 아닌 팔레트 색이다. 실제 흰색/노랑 전역을 공급한다.
+void RawCampaignCursor::SetPalette(std::span<const ScreenColor> palette) { impl_->display->SetPalette(palette);const auto colors=impl_->display->TextColors();impl_->lifecycleState.warningFont=colors[0];impl_->lifecycleState.costFont=colors[1]; }
+// 같은 화면 원점을 마우스의 카메라 비트와 별도로 원본 Draw의 signed 픽셀 빼기에 공급한다.
+void RawCampaignCursor::SetView(SoundView view) { impl_->placementState.screenOrigin={view.cameraX,view.cameraY};impl_->display->SetView(view); }
 // 실제 취득의 Cancel/Query/생성/측정/위치 꼬리를 그대로 실행한다.
 void RawCampaignCursor::Take(o::Sid form,std::uint32_t flags) { impl_->Prepare();impl_->lifecycle->Take(form,flags); }
 // 잠긴 상태의 꼬리 정리도 원본 몸체가 결정한다.

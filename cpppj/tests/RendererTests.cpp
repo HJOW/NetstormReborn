@@ -135,3 +135,16 @@ TEST_CASE(Cursor_DefaultResourceMappingAndSoftwareFrames_AreUsable) {
     CHECK(std::count(cursor.SoftwareImage()->opacity.begin(), cursor.SoftwareImage()->opacity.end(), 255) > 0);
     CHECK(Throws([&] { cursor.Set(0); })); CHECK(Throws([&] { cursor.Set(19); }));
 }
+
+// 동적 커서 수집은 dirty마다 한 번 호출하고 정적 월드와 같은 원본 깊이 순서로 합성한다.
+TEST_CASE(Renderer_ExtraCollectionUsesDirtyOrderAndCachedSceneImage) {
+    using namespace netstorm::client;Renderer renderer(20,10);std::size_t collections{};std::vector<int> draws;std::vector<std::uint8_t> pixels(200);
+    const auto sprite=[&](int label,std::int16_t depth) { // 실제 정렬 항목의 출력 순서와 한 픽셀 덮음을 관찰한다.
+        RenderSprite value;value.clip={0,0,20,10};value.order={1,1,depth};value.procedure=RenderProcedure{{0,0,20,10},[&,label](std::span<std::uint8_t> target,int,int,ScreenRect cut) { draws.push_back(label);if (cut.left<=1 && cut.right>1 && cut.top<=1 && cut.bottom>1) target[21]=static_cast<std::uint8_t>(label); }};return value;
+    };
+    renderer.SetScene({sprite(3,3),sprite(1,9)});renderer.SetExtraCollection([&](ScreenRect,std::uint32_t flags) { ++collections;CHECK(flags==0);return std::vector<RenderSprite>{sprite(2,5)}; });
+    CHECK(renderer.HasExtraCollection());renderer.Draw(pixels,20);renderer.Present([](ScreenRect) {});CHECK(collections==1 && draws==std::vector<int>({1,2,3}) && pixels[21]==3);draws.clear();
+    renderer.Invalidate({0,0,3,3},0);renderer.Invalidate({12,5,15,8},0);renderer.Draw(pixels,20);renderer.Present([](ScreenRect) {});CHECK(collections==3 && draws==std::vector<int>({1,2,3,1,2,3}));draws.clear();
+    const auto image=renderer.SceneImage();CHECK(collections==3 && draws==std::vector<int>({1,2,3}) && image.indices[21]==3);
+    renderer.SetExtraCollection({});CHECK(!renderer.HasExtraCollection());draws.clear();renderer.Draw(pixels,20);renderer.Present([](ScreenRect) {});CHECK(collections==3 && draws==std::vector<int>({1,3}));
+}

@@ -30,7 +30,7 @@
     "cpppj/tests/TypeRequiredEnergyTests.cpp": "0802ab400413ec5da3f2d03a4ac6b6f88e2d088915646609a2ca0bb39a02b05c",
     "cpppj/src/o/CMakeLists.txt": "3d0010c676da1156f5223bfcaa207887a88910a4cf50733a7b2e9e515f939c48",
     "cpppj/src/client/CMakeLists.txt": "8bb17d335554c16e6ff3300134492a264bfa425dfafd52062ecf0062f523d87c",
-    "cpppj/tests/CMakeLists.txt": "d7173af70d76e71528687996332c829890f0ba120aeb7c019a07086102161bcd"
+    "cpppj/tests/CMakeLists.txt": "539635dedf774da6163e0702fa0f076db8fb6398b5b7b7de02af2509a255a7d5"
   },
   "product_validation": {
     "configuration": "Release",
@@ -1404,6 +1404,18 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "bfc500dc462287984f94118cfad9b630149023924fde65414e5950dfb2f2df3e",
           "current": "d7173af70d76e71528687996332c829890f0ba120aeb7c019a07086102161bcd"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 135,
+      "reason": "실제 커서 수집/Draw/팔레트와 Client Renderer 연결",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "d7173af70d76e71528687996332c829890f0ba120aeb7c019a07086102161bcd",
+          "current": "539635dedf774da6163e0702fa0f076db8fb6398b5b7b7de02af2509a255a7d5"
         }
       ]
     }

@@ -1,5 +1,8 @@
 // DWORD 후보의 높은 바이트를 색 번호에 섞지 않고 원본 아홉 표를 생성한다.
 #include "client/OwnerColorMaps.h"
+#include <algorithm>
+#include <cmath>
+#include <stdexcept>
 
 namespace netstorm::client {
 namespace {
@@ -30,4 +33,36 @@ OwnerColorMaps BuildStandardOwnerColorMaps(std::uint32_t type,std::uint32_t brid
     }
     return result;
 }
+// 실제 지정 소스만 바꾸며 등록되지 않은 소스/중립0표는 항등을 유지한다.
+OwnerColorMaps BuildSpecialOwnerColorMaps(std::span<const std::uint32_t,256> logical,std::uint32_t type,std::span<const std::uint32_t,72> candidates) {
+    constexpr std::array<std::uint8_t,33> surface{44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,3,177,200,203,224,220,221,222,223,114,201,226}; // 43bc40의 동일 받침/지면 소스다.
+    constexpr std::array<std::uint8_t,20> first{86,188,85,247,84,31,34,75,82,74,83,156,153,70,72,71,73,152,13,144}; // 111의 전용 소스다.
+    constexpr std::array<std::uint8_t,21> second{87,88,85,86,84,156,75,82,153,74,73,83,155,72,71,44,152,154,70,13,144}; // 141의 전용 소스다.
+    constexpr std::array<std::uint8_t,19> third{218,219,220,52,53,54,55,56,57,58,59,66,161,210,19,21,214,141,18}; // 137의 전용 소스다.
+    constexpr std::array<double,8> offsets{-0.1,-0.17,0.15,0,0,0.05,-0.2,0}; // 실제43b750의 소유자별 double 명도 보정이다.
+    constexpr double normalize=1.0/255.0,otherOffset=-0.15000000596046448; // 원본 ColorSort 정규화 및141의 저장 double 값이다.
+    std::span<const std::uint8_t> sources; // 같은 Native 호출자가 선택한 소스 목록만 빌린다.
+    if (type==111) sources=first;else if (type==141) sources=second;else if (type==137) sources=third;else if (type==94 || type==97) sources=surface;else throw std::invalid_argument("전용 소유자 색표 TYPE 범위");
+    OwnerColorMaps result;std::array<double,256> light; // 실제 항등9표와 ColorSort +8 명도다.
+    // 정규 RGB를 먼저 double로 저장한 뒤 원본 명도를 계산한다.
+    for (std::size_t index=0;index<light.size();++index) {
+        const double red=(logical[index]&255)*normalize,green=((logical[index]>>8)&255)*normalize,blue=((logical[index]>>16)&255)*normalize;
+        light[index]=(std::max({red,green,blue})+std::min({red,green,blue}))*0.5;
+        // 중립을 포함한9표의 모든 소스는 원본43b950처럼 항등으로 시작한다.
+        for (auto& map:result) map[index]=static_cast<std::uint8_t>(index);
+    }
+    // 실제 변환은 소유자1..8에만 쓰고 동일 거리 후보는 앞의 번호를 유지한다.
+    for (std::size_t owner=1;owner<result.size();++owner) {
+        const double offset=type==97 ? offsets[owner-1] : (type==141 ? otherOffset : 0.0);
+        // 실제 호출자의 지정 소스 순서대로 같은 표를 수정한다.
+        for (const auto source:sources) {
+            const double target=light[source]+offset;std::size_t selected{};double minimum=std::min(99.0,std::abs(target-light[candidates[owner*8]]));
+            // 후보1..7은 엄격히 더 가까울 때만 교체하며 float로 최소값을 좁히지 않는다.
+            for (std::size_t shade=1;shade<8;++shade) { const double distance=std::abs(target-light[candidates[owner*8+shade]]);if (distance<minimum) { minimum=distance;selected=shade; } }
+            result[owner][source]=static_cast<std::uint8_t>(candidates[owner*8+selected]);
+        }
+    }
+    return result;
+}
+
 }
