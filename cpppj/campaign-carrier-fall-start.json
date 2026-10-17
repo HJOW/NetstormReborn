@@ -1,0 +1,217 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-17",
+  "unit": 149,
+  "baseCommit": "030386a",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16"
+  },
+  "currentSources": {
+    ".gitattributes": "3e8d869648cde0415d1a91e9b22d5a7ed7e5c0585923a189bfd37aa33229f3a8",
+    "cpppj/src/CMakeLists.txt": "d13c369eaf82eb49e84eab35a3e526590cdbd6b8837b468398b57230d15110bf",
+    "cpppj/tests/CMakeLists.txt": "6d7e1121be151ed25a806638a54925b6f4ec36273bd14efc4fe36a51415d9cbb",
+    "cpppj/src/client/RawCampaignSession.cpp": "f24a17fe60433cdc7e61e7fafc65af03c83e79c03d7b5d4388008d24a581b8f1",
+    "cpppj/src/client/RawCampaignSession.h": "cd0946fdfc5b5229a6574ae10b81606f10b610aa1236e80ff91376f50a8c7568",
+    "cpppj/src/client/RawUserSelection.h": "dbc19a2e21c7dd1a22464fb1c585be38a4c32c48f91360a8b3dbbed76fddb69d",
+    "cpppj/src/o/SquidProcess.h": "481ad652080175ccb135c5f4981edc44e7d853584eaaebaab1a65d3873bc5399",
+    "cpppj/src/o/SquidProcess.cpp": "993e34a3c7b3b87f290a33f548a126415c3a77794a7a191801d68f405baf1780",
+    "cpppj/tests/CampaignObjectMenuTests.cpp": "54a8f70a07e50693b0db721c102cd3498e3cbb68e058af0e24b6461909aa0175",
+    "cpppj/src/o/RawPathRuntime.h": "b74e6c9947182ef327a50be4921921d43ac1a62063e8cf02a193e3045359a667",
+    "cpppj/src/o/RawPathRuntime.cpp": "e771d3c17baf7c9e96b7da65a7b20c2171a8b82d75ccee94d091689036c5d42d",
+    "cpppj/src/o/RawPathProcess.h": "4143e265d2a5d103435f288bcc75f1257281c8d3bdc38f688a6e548a433a035e",
+    "cpppj/src/o/RawPathProcess.cpp": "c95903a9fc3c1507ca4b45f7fa93b5d9b2f2626fe050e236850eca21f5581624",
+    "cpppj/src/o/RawPathStart.cpp": "ae0c53e1bfb97c293ad92dcd7f3165f5bb803a3867a53ec84da9280e97772323",
+    "cpppj/src/client/RawCampaignPathBindings.h": "2b7f0cf76e10e66a9bd9d7678c92393a657997e9248742a8f7895b8bd026674c",
+    "cpppj/src/client/RawCampaignPathBindings.cpp": "b89ed98f6b8edeeb0a4cc471cf91cc83b87f0d695dd7b0acbbfebfa0dbbed216",
+    "cpppj/src/client/RawCampaignMotionBindings.cpp": "49ec5488843e3ac1bdf0697745ef1a18604984ac7dd2b6d104ea57b96f0aedd0",
+    "cpppj/src/o/RawCarrierTask.h": "575fd0830b5d058da0229c1df1259e3859783d56669cf1d768d0ed1f887d0ce3",
+    "cpppj/src/o/RawCarrierTask.cpp": "e09253f5b79e9b55f3c20854002c39d42afd236765f9f95cd43530279215aa82",
+    "cpppj/src/o/RawCarrierFallStart.h": "2e685b7dc9466591a795a56a46f800bc79e0fd92c13523c800a1a73876391336",
+    "cpppj/src/o/RawCarrierFallStart.cpp": "cd23f03a86c5ef7c4305281edbb1ee87b017ad4408c3771fb875a93ea39682a3",
+    "cpppj/tests/CarrierFallStartTests.cpp": "23b27dc1a52d4eb94c41732dd1cd10f45a733e2f960e209c8441c895c8897f27",
+    "tools/decomp_carrier_fall_start.py": "be7fd3e54d1e267ce77a0c96fb3016ee969281d31a140ba9f0a993d29e082a0d",
+    "cpppj/tests/fixtures/carrier-fall-start-x86.tsv": "ed68324eaa72914ed304434e148bfb563dcebf24f11d04c17f93599d5501b686",
+    "tools/decomp_worm_path.py": "94cabb9cb24d438ddbd283de623aa84b96192ffc07313dc23c7ddb6f3a5eb4d4",
+    "cpppj/tests/fixtures/worm-path-x86.tsv": "12b9e5f46d47d0a8193d079e0dbe6228937ebf53a84cb2a113be2c32e38fd392",
+    "cpppj/tests/fixtures/worm-path-vtables.tsv": "9ac15fc1fbe8516ceb72eb8ba719dc9d459b9001bac1bc8079d162f524f51da7",
+    "cpppj/src/o/RawPriestHalt.cpp": "374346e3ef06b04c59c544b5f6298cbf82c935f8c6f2f292d8e4bf2144f65742",
+    "cpppj/src/o/RawPathAnimation.cpp": "33591f751f20c897a895b0ad505fa8326428c3734524b36ae0ac503ba97ff6fd"
+  },
+  "nativeReports": {
+    "cpppj/carrier-fall-start.json": "58b7e77035b9baa98e18861e3a364923e3517867e6374df7555c608c000bbc6c",
+    "cpppj/worm-path.json": "4a81f722175c296f146dfe475b29e824261ddc7ad0ba5c931c4d830057ce2ec3",
+    "cpppj/carrier-falling.json": "b43a7a0fa52d006969fb3fdfd2cbac17bf4cdf36d5546ae87b38c92b38c8c934",
+    "cpppj/carrier-regular.json": "9f487d5290c6e4385698a2624434ffb8120dfea57b3b02cb8b7bd17c753ebfff"
+  },
+  "nativeContext": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-17",
+    "lastPreciseDecompile": {
+      "host": "HJOW-Athlon",
+      "date": "2026-10-16"
+    },
+    "controls": [
+      639,
+      895
+    ],
+    "uniqueInputs": 2850,
+    "normalReturns": 4740,
+    "nullWrites": 960,
+    "instructions": 301680,
+    "nativeCalls": {
+      "00426db0": 4900,
+      "004287d0": 1624,
+      "0041d7a0": 424,
+      "004e49c0": 848
+    },
+    "precisionDifferentInputs": [],
+    "boundaries": "4287d0/426db0/41d7a0/_ftol 전체. 현재 조회/이동 삭제/선택/사제 해방/할당/두 생성자는 명시 경계다. 생성 뒤 event/count 보존, 현재 double 시각/콜백 뒤 재조회, 실제 Player 쓰기 확인. 정상 반환은 GP/retN/SEH/canary/x87/코드·읽기·쓰기 범위를 검사한다. NULL+10 쓰기는 실제 별도 실패이며 정상 반환으로 세지 않는다. OS/게임 창 실행 없음.",
+    "sha256": {
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "tools/decomp_carrier_fall_start.py": "be7fd3e54d1e267ce77a0c96fb3016ee969281d31a140ba9f0a993d29e082a0d",
+      "tools/decomp_carrier_falling.py": "f8702db0708a543b73213c8df9154503afe977767a11bd7c150b639ee1b587a6",
+      "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+      "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+      "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+      "cpppj/tests/fixtures/carrier-fall-start-x86.tsv": "ed68324eaa72914ed304434e148bfb563dcebf24f11d04c17f93599d5501b686"
+    }
+  },
+  "wormContext": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-17",
+    "lastPreciseDecompile": {
+      "host": "HJOW-Athlon",
+      "date": "2026-10-16"
+    },
+    "uniqueInputs": 6,
+    "normalReturns": 12,
+    "instructions": 60318,
+    "nativeCalls": {
+      "0048bf90": 12,
+      "0048b2c0": 6
+    },
+    "controls": [
+      639,
+      895
+    ],
+    "boundaries": "48bf90/48b2c0 전체. new만 명시 경계이며 raw100080바이트 전체를 비교한다. GP/retN/canary/x87/코드·읽기·쓰기 범위 검사.13개 가상 슬롯 중40/54는부착+2c만 다르다. 부모187의42ac60은133의42a5f0과 다르며 공통 Halt로 바꾸면 안 된다.",
+    "sha256": {
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "tools/decomp_worm_path.py": "94cabb9cb24d438ddbd283de623aa84b96192ffc07313dc23c7ddb6f3a5eb4d4",
+      "tools/decomp_carrier_falling.py": "f8702db0708a543b73213c8df9154503afe977767a11bd7c150b639ee1b587a6",
+      "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+      "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+      "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+      "cpppj/tests/fixtures/worm-path-x86.tsv": "12b9e5f46d47d0a8193d079e0dbe6228937ebf53a84cb2a113be2c32e38fd392",
+      "cpppj/tests/fixtures/worm-path-vtables.tsv": "9ac15fc1fbe8516ceb72eb8ba719dc9d459b9001bac1bc8079d162f524f51da7"
+    }
+  },
+  "protectedFileSha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6"
+  },
+  "workRecordSha256": "8f4f6c7e945a78f13370f3b345a593180f3d9e791f9e239004c84fc33c2e68d7",
+  "validation": {
+    "releaseBuilds": [
+      {
+        "log": "extracted/goal-carrier-fall-start-20261017-build1.log",
+        "exit": 1,
+        "warnings": 0,
+        "errors": 0
+      },
+      {
+        "log": "extracted/goal-carrier-fall-start-20261017-build2.log",
+        "exit": 0,
+        "warnings": 0,
+        "errors": 0
+      },
+      {
+        "log": "extracted/goal-carrier-fall-start-20261017-build3.log",
+        "exit": 0,
+        "warnings": 0,
+        "errors": 0
+      },
+      {
+        "log": "extracted/goal-carrier-fall-start-20261017-build4.log",
+        "exit": 1,
+        "warnings": 0,
+        "errors": 5
+      },
+      {
+        "log": "extracted/goal-carrier-fall-start-20261017-build5.log",
+        "exit": 0,
+        "warnings": 0,
+        "errors": 0
+      },
+      {
+        "log": "extracted/goal-carrier-fall-start-20261017-build6.log",
+        "exit": 0,
+        "warnings": 0,
+        "errors": 0
+      }
+    ],
+    "focused": {
+      "cases": 5,
+      "failedChecks": 0,
+      "exit": 0,
+      "log": "extracted/goal-carrier-fall-start-20261017-focused4.log"
+    },
+    "ctest": {
+      "cases": 1600,
+      "failedChecks": 0,
+      "exit": 0,
+      "seconds": 211.52,
+      "ctestSeconds": 211.56,
+      "log": "extracted/goal-carrier-fall-start-20261017-ctest.log"
+    },
+    "entrySmoke": {
+      "runs": 5,
+      "passed": 5,
+      "originalsUnchanged": true,
+      "scope": "thewarbegins/masterofwhirligigs: briefing→world; tutorial1/2/3: briefing only"
+    },
+    "nativeAudit": {
+      "tools": 68,
+      "passed": 57,
+      "existingFailures": [
+        "tools/analyze_campaign_target_path.py",
+        "tools/decomp_chat_channels.py",
+        "tools/decomp_constructionarrival_oracle.py",
+        "tools/decomp_factorypostpop_oracle.py",
+        "tools/decomp_guntarget_oracle.py",
+        "tools/decomp_menulayout_oracle.py",
+        "tools/decomp_metadisplaydirty_oracle.py",
+        "tools/decomp_pathdata_oracle.py",
+        "tools/decomp_pathprepare_oracle.py",
+        "tools/decomp_pathruntime_oracle.py",
+        "tools/decomp_unpop_oracle.py"
+      ],
+      "newFailures": 0
+    },
+    "sourcePinUpdates": {
+      "reports": 60,
+      "pins": 270
+    },
+    "initialFixtureRowsPreserved": 2732
+  },
+  "limits": [
+    "정상 반환과 NULL+10 쓰기는 별도 결과다.",
+    "독립 시작 관측의 검색/두 생성자/선택/사제 해방은 명시 경계다.",
+    "실제 세션 통합은 포획물 Form만 초기 입력이며 복귀 좌표/새 사제/낙하 예약을 주입하지 않는다.",
+    "현재 썬 워커133의40 경로를 실제 지원한다.187은 다른42ac60 Halt 때문에 Session 이동을 명시 거부한다.",
+    "한 캐리어의 실제 예약만 진행하며 전체 Kernel/다른 AI/자연 포획 획득/11스테이지 완주로 확대하지 않는다."
+  ],
+  "remaining": [
+    "187의42ac60/전역54542c 및42a0d0 전달",
+    "다른38/41/42 이동 클래스",
+    "429010 실제 회피",
+    "5040c0의 별도42ae80 전처리",
+    "실제 비정지 메뉴/원본 DWORD 소비자",
+    "생산/경제/AI/로그인된 로컬 전송",
+    "11스테이지 자연 완주/승패/저장/다음 미션/전체 동일성"
+  ]
+}

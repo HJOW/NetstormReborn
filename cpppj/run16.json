@@ -31,8 +31,8 @@
     "cpppj/src/client/CMakeLists.txt": "de9f15ac506d0cdf9ebbe0e820fa70525d634ac03562447d212f985d0e6fd247",
     "cpppj/src/client/RawCampaignAssetBindings.cpp": "7747a030b9916bd58e4c7fb9d04e7a39a0814ca4b11111436999b831fe14f8bf",
     "cpppj/src/client/RawCampaignAssetBindings.h": "e4dfd66a55e6c45a8c4af8d3eb009bf9f4f6992ea4efbe7dfe44bc6f5922b3cd",
-    "cpppj/src/client/RawCampaignPathBindings.cpp": "33acf790e03a052f2808b067048fae51ea92c8bbc76f66d660323b0b7fe8da63",
-    "cpppj/src/client/RawCampaignPathBindings.h": "0f507504ab6b216eb92849f916d25637081c27bf934842b660ac68ea3f1c8217",
+    "cpppj/src/client/RawCampaignPathBindings.cpp": "b89ed98f6b8edeeb0a4cc471cf91cc83b87f0d695dd7b0acbbfebfa0dbbed216",
+    "cpppj/src/client/RawCampaignPathBindings.h": "2b7f0cf76e10e66a9bd9d7678c92393a657997e9248742a8f7895b8bd026674c",
     "cpppj/src/client/RawSurfaceWorld.cpp": "3bdb37094d1edaeb3fd57fde48c59685ad0edebe19f282a52c2392fa6d075bee",
     "cpppj/src/client/RawSurfaceWorld.h": "6b6ce538f7d865dc435be239f0bb176ed78b4ef7ac1181044617973a069926d1",
     "cpppj/src/o/RawAssetPostPop.cpp": "e5168825e56f9d2c7c0bc817f3b9e681c7d2720f9c3def60fc49578544612bc0",
@@ -67,6 +67,25 @@
           "path": "cpppj/src/client/RawCampaignPathBindings.h",
           "previous": "60ba6fdb85793117685d888b73e4dfb1f9dad7cb74d50dde63ac47c504bc2463",
           "current": "0f507504ab6b216eb92849f916d25637081c27bf934842b660ac68ea3f1c8217"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 149,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/src/client/RawCampaignPathBindings.cpp",
+          "previous": "33acf790e03a052f2808b067048fae51ea92c8bbc76f66d660323b0b7fe8da63",
+          "current": "b89ed98f6b8edeeb0a4cc471cf91cc83b87f0d695dd7b0acbbfebfa0dbbed216"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/client/RawCampaignPathBindings.h",
+          "previous": "0f507504ab6b216eb92849f916d25637081c27bf934842b660ac68ea3f1c8217",
+          "current": "2b7f0cf76e10e66a9bd9d7678c92393a657997e9248742a8f7895b8bd026674c"
         }
       ]
     }

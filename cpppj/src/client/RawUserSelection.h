@@ -5,8 +5,10 @@
 #include "o/SidPool.h"
 #include <array>
 #include <functional>
+#include <memory>
 
 namespace netstorm::client {
+class RawCampaignSession; // 같은 실제 선택 객체의 수명만 Session에 연결한다.
 // 선택·마우스 TYPE·기억 좌표와 다중 선택은 서로 다른 전역이다. 참조 대상은 처리기보다 오래 살아야 한다.
 struct UserSelectionState {
     std::uint32_t& selected; // 005caea0의 현재 SID이며 가상 통지 뒤 원본 위치에서만 변경한다.
@@ -39,12 +41,15 @@ class RawUserSelection {
 public:
     // 같은 물리 풀/188 TYPE/현재 UI 저장소를 빌린다. 생성 시 외부 효과를 실행하지 않는다.
     RawUserSelection(const o::SidPool& pool,std::span<const o::RiftTypeRecord> types,UserSelectionState state,UserSelectionHooks hooks);
+    RawUserSelection(const RawUserSelection&)=delete; // 현재 UI 참조와 Session 수명 연결을 다른 객체 주소로 복제하지 않는다.
+    RawUserSelection& operator=(const RawUserSelection&)=delete; // 현재 선택 몸체의 주소를 수명 동안 고정한다.
     std::uint32_t Select(std::uint32_t sid,std::uint32_t forceSelect,std::uint32_t activateMove) const; // 4d5c90: 거부0 또는 최종 대상 SID다.
     void ClearMultiple() const; // 4d5490: 범위와 state&3만 검사하고+7c(0)→+88 뒤 최종 개수를0으로 쓴다.
     void Remember(std::uint32_t x,std::uint32_t y,std::uint32_t type) const; // 4d5440: flags2&30000일 때만 좌표와 TYPE를 기억한다.
     std::uint32_t CarrierMenu(o::Sid sid,const InputEvent& event,const std::function<std::uint32_t(o::Sid,const InputEvent&)>& common) const; // 4268c0/492080: Select(sid,0,0) 뒤 실제 공통+ac다.
     std::uint32_t ArcherMenu(o::Sid sid,const InputEvent& event,const std::function<std::uint32_t(o::Sid,const InputEvent&)>& common) const; // 41e660: 셋째 인자만1이며 둘째는0이다.
 private:
+    friend class RawCampaignSession; // 자연 낙하가 같은 살아 있는 Select를 호출하도록 수명 토큰을 설치한다.
     std::span<const std::uint8_t> Raw(std::uint32_t sid) const; // 원본의 물리 범위만 확인하며 free/dead를 추가 제외하지 않는다.
     const o::RiftTypeRecord& Type(std::uint32_t type) const; // 현재 TYPE 번호를 검증한다.
     static std::uint32_t Read(std::span<const std::uint8_t> raw,std::size_t offset,std::size_t width=4); // 정렬되지 않은 원문 DWORD/WORD다.
@@ -53,5 +58,6 @@ private:
     std::span<const o::RiftTypeRecord> types_; // 콜백 뒤 다시 읽는 실제 TYPE 속성이다.
     UserSelectionState state_; // 단일 선택/다중 선택/기억 좌표의 현재 참조다.
     UserSelectionHooks hooks_; // 큰 실제 하위와 장치의 명시 소비자다.
+    std::shared_ptr<void> sessionLifetime_; // 선택 객체가 파괴되면 Session의 약한 연결도 만료된다.
 };
 }

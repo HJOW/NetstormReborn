@@ -32,8 +32,8 @@ int Cell(float value,bool biased) {
 // 필수 하위 가상 효과를 확인한다. 아직 없는 실제 BFS는 Init에서만 명시적으로 진단한다.
 RawPathProcess::RawPathProcess(SidPool& pool,const SquidHash& hash,std::span<const RiftTypeRecord> types,
     std::span<const RiftTypeFrames> frames,std::span<const SquidDisplayShape> shapes,std::span<const std::uint8_t> spots,
-    RawPathProcessState& state,RawPathProcessHooks hooks,bool priest,bool flying)
-    :pool_(pool),hash_(hash),types_(types),frames_(frames),shapes_(shapes),spots_(spots),state_(state),hooks_(std::move(hooks)),priest_(priest),flying_(flying),runtime_(pool.Edition(),priest,0,flying) {
+    RawPathProcessState& state,RawPathProcessHooks hooks,bool priest,bool flying,bool worm)
+    :pool_(pool),hash_(hash),types_(types),frames_(frames),shapes_(shapes),spots_(spots),state_(state),hooks_(std::move(hooks)),priest_(priest),flying_(flying),worm_(worm),runtime_(pool.Edition(),priest,0,flying,worm) {
     if (types.size()!=frames.size() || types.size()!=shapes.size() || spots.size()!=65536 || !hooks_.unpop || !hooks_.repop || !hooks_.pop || !hooks_.halt || !hooks_.arrival || !hooks_.soundId || !hooks_.stepSound || !hooks_.clearBlocked || !hooks_.cleanup)
         throw std::invalid_argument("경로 월드 연결 누락");
 }
@@ -43,13 +43,14 @@ RawPathProcess::~RawPathProcess() { *alive_=false; }
 RawPathProcess* RawPathProcess::Attach(SquidProcessHost& host,std::unique_ptr<RawPathProcess> process,Sid parent,std::uint32_t flags,Sid form) {
     if (!process || &host.Pool()!=&process->pool_) throw std::invalid_argument("경로 부착 풀 불일치");
     if (process->priest_ && process->pool_.Slot(parent)[10]!=process->state_.priestType) throw std::invalid_argument("사제 경로 부모 타입");
+    if (process->worm_) { const auto kind=process->pool_.Slot(parent)[10];if (kind!=process->state_.sunWalkerType && kind!=process->state_.emptyType) throw std::invalid_argument("웜40의 실제 sunWalker/empty 부착 검사"); }
     const auto type=process->MovementType();
     // 실제48af50은 새 비행 프로세스를 부착하기 전에 기존39를 모두 제거한다.
     if (process->flying_) RemoveAttachedProcesses(host,parent,type);
     return static_cast<RawPathProcess*>(host.Attach(std::move(process),type,parent,flags,form));
 }
 // 서로 다른 실제 가상 표의 종류를 번호만으로 대체하지 않는다.
-std::uint32_t RawPathProcess::MovementType() const { return flying_ ? state_.flyProcess : priest_ ? state_.priestProcess : state_.teleportProcess; }
+std::uint32_t RawPathProcess::MovementType() const { return worm_ ? state_.wormProcess : flying_ ? state_.flyProcess : priest_ ? state_.priestProcess : state_.teleportProcess; }
 // +0x14 원본 base 통지는 빈 몸체이며 현재 이미지의 번호만 같은 base 필드에 기록한다.
 void RawPathProcess::OnAttached() { runtime_.SetAttachment(Form(),Parent()); }
 // 같은 풀의 raw 좌표다.
@@ -124,7 +125,7 @@ bool RawPathProcess::Blocked(RawPathPoint point) const {
 void RawPathProcess::RunFrame() {
     if (!Host()) throw std::logic_error("미부착 경로 RunFrame");
     const auto parent=Parent();const auto type=pool_.Slot(parent)[10];
-    if (priest_ && (types_[type].flags2&0x10000)!=0 && Host()->FindEvent(parent,0x5105)) return;
+    if ((priest_ || worm_) && (types_[type].flags2&0x10000)!=0 && Host()->FindEvent(parent,0x5105)) return;
     if (runtime_.Finished() || Halt()) return;
     if (flying_) { if (runtime_.NextFrame()>state_.clock.now) return;runtime_.SetNextFrame(state_.clock.now+0.019999999552965164); } // 48af90의 예약 경계이며 Halt는 예약 전에도 실행한다.
     const auto watch=alive_;
@@ -133,7 +134,7 @@ void RawPathProcess::RunFrame() {
     },hooks_.observationStamp ? hooks_.observationStamp() : 0);
     if (!*watch) return;
     if (sample.finished) { Arrive();return; }
-    if (!priest_) {
+    if (!(priest_ || worm_)) {
         const auto current=Position(parent);
         if (sample.position.x!=current.x || sample.position.y!=current.y) { hooks_.unpop(parent,0);hooks_.pop(parent,sample.position,0x40); }
         return;
@@ -160,7 +161,7 @@ void RawPathProcess::RunFrame() {
 // 도착이 부모·Form·프로세스 자신을 지워도 after-call은 watch와 보존한 외부 효과만 사용한다.
 void RawPathProcess::Arrive() {
     const auto watch=alive_;const auto parent=Parent();
-    if (priest_) { RawPathAnimation animation(pool_,frames_,{hooks_.unpop,hooks_.repop});animation.Stop(parent); }
+    if (priest_ || worm_) { RawPathAnimation animation(pool_,frames_,{hooks_.unpop,hooks_.repop});animation.Stop(parent); }
     const auto sample=runtime_.Step(state_.clock.now,Position(parent),state_.observation,[this,parent] {
         const auto position=Position(parent);hooks_.stepSound(parent,position.x,position.y,hooks_.soundId(parent));
     },hooks_.observationStamp ? hooks_.observationStamp() : 0);

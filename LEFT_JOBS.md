@@ -1,5 +1,21 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-17 단위149 완료: 자연 낙하 시작과 썬 워커 실제 경로 (`HJOW-Athlon`)
+
+- [x] 기준 `030386a`, 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16** 일치. AGENTS/양LEFT/깨끗한트리를재독했다. 새디컴파일/원본실행/DirectDraw수정없음. [작업 기록](docs/exe/cpp-carrier-fall-start-20261017.md).
+- [x] `RawCarrierFallStart`4287d0/41d7a0과 `RawCarrierTask`426db0을같은Session에연결했다. 기존이동4b1a90(parent,type,0,1)의실제삭제/살아있는같은UI선택해제/복귀좌표기록/즉시사제해방/별도확보메모리와46·61생성/낙하task유지/기한갱신이다. 이전인계후보식과달리 **floatdelay+현재double시각**이다.
+- [x] 독립 시작4몸체전체 **2,850입력·4,740정상반환·960NULL쓰기·301,680명령·53/64차이0**다. 초기2732행을바꾸지않고추가입력만붙였다. NULL+10은정상반환이아니다. x87의signaling/NaN payload/부호선택을보존하며새SetNextTime은생성/부착콜백뒤event/count를보존한다.
+- [x] 실제이동취소까지지원하려고133썬워커/50e568의웜40을연결했다.40/54의13가상슬롯은부착2c만달라같은Init/frame/도착/삭제/직렬화/Prepare를재사용한다. 별도48bde0부착검사와40번호/VT50e4c4를보존한다. 독립48bf90/48b2c0 **6입력·12정상반환/전체100080바이트**와가상표4행, C++생성자전체비교가성공했다.
+- [x] Session.StartCarrierMovement는현재133/50e568/40과실제CommonHalt42a5f0/CarrierArrival429800/427750통지를지원한다. Raw웜의부착은원본처럼133/187이지만Session의187은별도42ac60이므로공통Halt로바꾸지않고명시거부한다.38/41/42클래스/CD웜도후속경계다.
+- [x] 최종집중 **5개성공**: 시작원문/경계/웜생성자·가상표/실제선택·40이동경로삭제·복귀좌표작성·사제즉시해방·46예약·중복시작·가속낙하와종료/만료UI토큰이다. 포획Form만초기입력이고복귀좌표/새사제/예약은주입하지않는다. PID/Form즉시재사용은실제40객체/현재부모종속체인조회로구별한다. 다른부모AI/전체Kernel/자연포획획득/완주검증으로확대하지않는다.
+- [x] 최종build6 **경고0·오류0/집중5성공**, 전체CTest **1,600개·실패0·종료0·211.52초**(CTest211.56초)다. build1은확인한작업3892/1736만종료해직렬CL을MultiToolTask로전환했고,2/3/5/6성공,4의새검사헤더누락은수정했다. 모든핸들은종료/대기없음이다.
+- [x] 원본감사68종 **57성공·기존11실패·새실패0**, 기존60보고서270현재핀/과거이력/CMake접두/보호SHA3/기존fixture·AGENTS·원본·DN불변/새UTF-8·LF를확인했다. 클론진입5회PASS/originals_unchanged=true이며1-1/1-2briefing→world/tutorial1~3briefing범위다.
+- [x] 로그접두부 `extracted/goal-carrier-fall-start-20261017-`; 제품보고서 `cpppj/campaign-carrier-fall-start.json`. 인수인계뒤 **`20261017-49 CP 자연 낙하 시작과 썬 워커 경로 및 공통 예약 복원`** 으로로컬커밋한다. push하지않고전체목표active다.
+- [ ] **다음우선:**187의42ac60을복원한다.54542c DWORD를inc뒤and80000003/음수보정한signed%4로갱신하고0이면42a0d0 nuggetTransfer,나머지42a5f0이다. 현재이는Session의명시경계다. 다른38/41/42실제경로/5040c0의42ae80도미완료다.133→50e568,187→503ff0,134→5070c0을혼동하지않는다.
+- [ ] **429010회피준비:** `extracted/goal-carrier-escape-20261017-read.c/.asm`과`...-notes.txt`를읽는다.1da1a도RNG소비,일반RNG0..4의index4도W라4시도W/E/S/W다.카운터는DWORD이고0.9999spot색인은감긴다.특수finder422230은0.99999거의올림/±5,probe는times5000QWORD만0으로지운다.488fb0은지도포인터가아니라cardinalOnly비트다. RawPathRuntime.MoveAwayDepth/SetMoveAwayDepth와RawPathSearch/Prepare를재사용할수있다.다른WalkerPath를더미로대체하지않는다.
+- [ ] 향후공통헤더빌드는CL을보존하고MP4와 `-- /p:UseMultiToolTask=true /p:MultiProcMaxCount=4 /p:EnforceProcessCountAcrossBuilds=true /nr:false`를사용한다.실제4CL을확인했다.실행중인검사와링크를겹치지않는다.로그는UTF-16일수있고LastTest는한국어시스템인코딩일수있어ASCII지표를안전하게읽는다.
+- [ ] 실제Client선택/비정지메뉴/원본DWORD소비자/생산·경제·AI·로그인된로컬전송/11스테이지자연완주·승패·저장·다음미션/전체동일성은미완료다.
+
 ## 2026-10-17 단위148 완료: 캐리어 낙하와 포획 사제 해방 (`HJOW-Athlon`)
 
 - [x] 기준 `f915b76`, 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16** 일치다. AGENTS·양 LEFT를 UTF-8로 재독했다. 새 디컴파일/원본 게임 실행/DirectDraw 수정은 없다. [작업 기록](docs/exe/cpp-carrier-falling-20261017.md).

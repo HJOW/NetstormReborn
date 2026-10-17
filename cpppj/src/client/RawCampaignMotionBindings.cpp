@@ -53,6 +53,7 @@ struct RawCampaignMotionBindings::Impl {
         auto priestHooks=effects.priest; // 실제 중립 귀환만 외부 큰 하위로 유지한다.
         priestHooks.destroy=[this](o::Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); };
         arrival=std::make_unique<o::RawPriestArrival>(core.pool,priests.PriestState(),hp,*terrain,islands,core.neighbors,contained,*carrier,state.priest,std::move(priestHooks));
+        effects.path.carrierArrival=[this](o::Sid sid,std::uint32_t first,std::uint32_t second) { return carrier->Arrival(sid,first,second); }; // 현재 동일429800 도착 몸체다.
         paths=std::make_unique<RawCampaignPathBindings>(world,core,priests,*halt,*arrival,*cleanup,
             Lookup(),start,process,state.search,std::move(effects.path));
     }

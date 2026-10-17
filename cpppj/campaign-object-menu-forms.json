@@ -8,16 +8,16 @@
     "date": "2026-10-16"
   },
   "currentSources": {
-    ".gitattributes": "312017592c21a6b517ec359daaaec61aa273f16f5af8bc5612e7dfd1bf528f5e",
+    ".gitattributes": "3e8d869648cde0415d1a91e9b22d5a7ed7e5c0585923a189bfd37aa33229f3a8",
     "cpppj/src/client/CampaignClientServices.cpp": "deb067662fe4fcd5324bab710c7b06fb7ce5f661f4078227946adc4fa92db72a",
     "cpppj/src/client/RawButtonControls.cpp": "5d9568d2a6c461e9dd474cc584db62389ca3eb576e780fdeb6e9a39f1ee55baf",
     "cpppj/src/client/RawButtonControls.h": "372d15ad4ab423ef9869fab470ad1f4b5c75cb0ebc12503edd2bb7a6f3f240d6",
-    "cpppj/src/client/RawCampaignSession.cpp": "ad2667626274a0da0ac2730f487abb665378690e5e3738345bc80001dcd89f38",
-    "cpppj/src/client/RawCampaignSession.h": "b63d3540024b9eef248329d84fd9cde386c6e799dee06ea2ddaf8ee68f7d21a4",
+    "cpppj/src/client/RawCampaignSession.cpp": "f24a17fe60433cdc7e61e7fafc65af03c83e79c03d7b5d4388008d24a581b8f1",
+    "cpppj/src/client/RawCampaignSession.h": "cd0946fdfc5b5229a6574ae10b81606f10b610aa1236e80ff91376f50a8c7568",
     "cpppj/src/client/RawMenuControls.cpp": "e1d3a27c5330b52727e18447c97b02f6a7f82cb0ceeb9bf55aad874b744720f1",
     "cpppj/src/client/RawMenuControls.h": "92b7db6b2d4fa00641d814a9e0e6b76bf649b7789302cb1dc306abd87c99023d",
     "cpppj/src/client/UberGump.cpp": "471b592cf1e784c63db34bc109eb3d38785481018b403cef0afa98d98622d10b",
-    "cpppj/tests/CampaignObjectMenuTests.cpp": "fe0b7cf2898773410f446d546ee25a4efbb93e44f103fa9642f779d8afcf2e63"
+    "cpppj/tests/CampaignObjectMenuTests.cpp": "54a8f70a07e50693b0db721c102cd3498e3cbb68e058af0e24b6461909aa0175"
   },
   "unchangedExistingModules": {
     "cpppj/src/o/GumpFormHost.cpp": "f4045100a4642fdb432cee4f0c223079810176c68235140950fa0a1490f112a4",
@@ -293,6 +293,37 @@
           "path": "cpppj/tests/CampaignObjectMenuTests.cpp",
           "previous": "95857ea3ffe7590359bf7f4afcc6ea12789f8cb32b8ea75fecdc92a496fd5d53",
           "current": "fe0b7cf2898773410f446d546ee25a4efbb93e44f103fa9642f779d8afcf2e63"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 149,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": ".gitattributes",
+          "previous": "312017592c21a6b517ec359daaaec61aa273f16f5af8bc5612e7dfd1bf528f5e",
+          "current": "3e8d869648cde0415d1a91e9b22d5a7ed7e5c0585923a189bfd37aa33229f3a8"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "ad2667626274a0da0ac2730f487abb665378690e5e3738345bc80001dcd89f38",
+          "current": "f24a17fe60433cdc7e61e7fafc65af03c83e79c03d7b5d4388008d24a581b8f1"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "b63d3540024b9eef248329d84fd9cde386c6e799dee06ea2ddaf8ee68f7d21a4",
+          "current": "cd0946fdfc5b5229a6574ae10b81606f10b610aa1236e80ff91376f50a8c7568"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignObjectMenuTests.cpp",
+          "previous": "fe0b7cf2898773410f446d546ee25a4efbb93e44f103fa9642f779d8afcf2e63",
+          "current": "54a8f70a07e50693b0db721c102cd3498e3cbb68e058af0e24b6461909aa0175"
         }
       ]
     }

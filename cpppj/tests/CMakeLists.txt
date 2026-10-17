@@ -1383,3 +1383,8 @@ set_source_files_properties(NuggetRegularTests.cpp PROPERTIES COMPILE_DEFINITION
 target_sources(netstorm_tests PRIVATE CarrierFallingTests.cpp)
 set_source_files_properties(CarrierFallingTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_CARRIER_FALLING_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/carrier-falling-x86.tsv\";NETSTORM_CARRIER_FALLING_VTABLES=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/carrier-falling-vtables.tsv\"")
+
+# 실제 자연 낙하 시작/Carrier task의 독립 원문이다.
+target_sources(netstorm_tests PRIVATE CarrierFallStartTests.cpp)
+set_source_files_properties(CarrierFallStartTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CARRIER_FALL_START_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/carrier-fall-start-x86.tsv\";NETSTORM_WORM_PATH_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/worm-path-x86.tsv\";NETSTORM_WORM_PATH_VTABLES=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/worm-path-vtables.tsv\"")

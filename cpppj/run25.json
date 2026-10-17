@@ -111,7 +111,7 @@
     "cpppj/hist/run25-base/cpppj/tests/CMakeLists.txt": "aace64ebdc1678bfdf480a70fec47e0daa06290dd956cbe40f49593c07c4ecbe",
     "cpppj/hist/run25-base/cpppj/tests/CampaignInstallSupport.h": "2d42c64bfd2e49e9f1bdb5218c8e0e3f47d5029e24a9c1e2c65180aaf08cf02a",
     "cpppj/hist/run25-base/cpppj/tests/CampaignWorldLoadTests.cpp": "3f104339ae0ff4ef53e366b50c801427e7a268d8991731a67677e73fbac68326",
-    "cpppj/src/CMakeLists.txt": "e26748dfc34098b8deb4e787630f22107868a8231f238daedd3621aa9036519d",
+    "cpppj/src/CMakeLists.txt": "d13c369eaf82eb49e84eab35a3e526590cdbd6b8837b468398b57230d15110bf",
     "cpppj/src/app/CanonMayPlaceInspect.cpp": "27eda46bca500c898abeb9a3a7c4e8588b38e061b579c84cbf6c032c6d46dda9",
     "cpppj/src/app/FrameBindingInspect.cpp": "042602919b0531fb1cbaf3941dc6597bee73944bbf0d571dacfd638bb45dd07c",
     "cpppj/src/app/FrameBindingInspect.h": "4e187ca41f8c34ed52c022b58a57327a554a723e3e26ee88a1ae152c99de3fce",
@@ -223,12 +223,12 @@
     "cpppj/src/client/RawCampaignGunQueries.h": "2c0ad0d6aab9a7b5972130fdd547d8efc96aab6410fda41e0d7a173356feb922",
     "cpppj/src/client/RawCampaignHitBindings.cpp": "5759ab0d9110d08fa94f2b236b62366412e98ec3766b46660aba0fe588666872",
     "cpppj/src/client/RawCampaignHitBindings.h": "634bea1bd8b68f27c1b6e0c7e6bcb6b8a08fab3361f5b942bb84bbc3c6fd4d5a",
-    "cpppj/src/client/RawCampaignMotionBindings.cpp": "33c9353bfb909d80dd275a488c009d03637b7634b94cf45e56f2bcda95561c82",
+    "cpppj/src/client/RawCampaignMotionBindings.cpp": "49ec5488843e3ac1bdf0697745ef1a18604984ac7dd2b6d104ea57b96f0aedd0",
     "cpppj/src/client/RawCampaignMotionBindings.h": "61b83606bb8e3ac43dcc785b98737beab2e4bf7ff57db4dc4e00c7dde07dbf0e",
     "cpppj/src/client/RawCampaignOwnership.cpp": "960af85c2b29897a853f2f08e8a78283e87b5c04a7595ca9e62924e2c455c6c5",
     "cpppj/src/client/RawCampaignOwnership.h": "f53be166d29d72a8fbcda53fe2e476932e50a392be04c4d5a1a91d56d90c41a1",
-    "cpppj/src/client/RawCampaignPathBindings.cpp": "33acf790e03a052f2808b067048fae51ea92c8bbc76f66d660323b0b7fe8da63",
-    "cpppj/src/client/RawCampaignPathBindings.h": "0f507504ab6b216eb92849f916d25637081c27bf934842b660ac68ea3f1c8217",
+    "cpppj/src/client/RawCampaignPathBindings.cpp": "b89ed98f6b8edeeb0a4cc471cf91cc83b87f0d695dd7b0acbbfebfa0dbbed216",
+    "cpppj/src/client/RawCampaignPathBindings.h": "2b7f0cf76e10e66a9bd9d7678c92393a657997e9248742a8f7895b8bd026674c",
     "cpppj/src/client/RawCampaignSession.cpp": "477ee98f0f1ca047e5a1bbff7c45e6cb7ae677a3a5e561629f0e063fb9c29a11",
     "cpppj/src/client/RawCampaignSession.h": "1de378d69c134ee031727617e942ed847ba6bc55f432c8095995f763dfda5862",
     "cpppj/src/client/RawCampaignWorldRuntime.cpp": "3c1d97361d9a7b01e2d032c739c9c475429cff2ee7c1883676a3fa4155821fb9",
@@ -533,10 +533,10 @@
     "cpppj/src/o/RawPathCleanup.h": "ae5012944517d2ca56cd1c19629d50c64ff65d9ee3d43f0d87b1bbe5ba0fa8d0",
     "cpppj/src/o/RawPathData.cpp": "ad7b25e89d79c84faa576aa50fb1efb1e9c71e6d96abc439527b798870a2d345",
     "cpppj/src/o/RawPathData.h": "13e0bf03c18aa2936c623c0b57d03e3fdb641375dc669daa77bfaae9b5f6e370",
-    "cpppj/src/o/RawPathProcess.cpp": "15e0b7f5097323d5431da841e47b892501c1911e74648c76686c7c66561667c0",
-    "cpppj/src/o/RawPathProcess.h": "34cf15f8d7eb761e7b13d1500d18aaa25536f5aa572dcb26b5cc942fd484caaa",
-    "cpppj/src/o/RawPathRuntime.cpp": "f9dba0640028d10e558b9467bff2e9e1c15acef225b9195896104f6b2c3365be",
-    "cpppj/src/o/RawPathRuntime.h": "1ea416e522e69d4ccadef34f1000a704a38e507f8ad021afe5fcedfa093149b4",
+    "cpppj/src/o/RawPathProcess.cpp": "c95903a9fc3c1507ca4b45f7fa93b5d9b2f2626fe050e236850eca21f5581624",
+    "cpppj/src/o/RawPathProcess.h": "4143e265d2a5d103435f288bcc75f1257281c8d3bdc38f688a6e548a433a035e",
+    "cpppj/src/o/RawPathRuntime.cpp": "e771d3c17baf7c9e96b7da65a7b20c2171a8b82d75ccee94d091689036c5d42d",
+    "cpppj/src/o/RawPathRuntime.h": "b74e6c9947182ef327a50be4921921d43ac1a62063e8cf02a193e3045359a667",
     "cpppj/src/o/RawPathSearch.cpp": "a7597d758972707a48ab25260af4ba877798c9c91ed01e0471d84819005d2858",
     "cpppj/src/o/RawPathSearch.h": "471c37aaeff1f5b7e157f52bfb20984c55e993fa59f7c33696fb42772107a7ac",
     "cpppj/src/o/RawPathStart.cpp": "289908568a07c6da645f13b4d5a4bd2c97d8eafa184a1609dc121deef15f4501",
@@ -664,8 +664,8 @@
     "cpppj/src/o/SquidPop.h": "8816c246917f01c63e612b9f4387982484636b0360f8d1a225c7c5296d801255",
     "cpppj/src/o/SquidPostPop.cpp": "63c6063fb4bb1ad2f21cfe951de8b864dc2c964a4ddafd2f6700d4e4ff0240e7",
     "cpppj/src/o/SquidPostPop.h": "e52e9788922873033195da04cc670ad31c6f21e9c44c5506c723d788a06dca06",
-    "cpppj/src/o/SquidProcess.cpp": "f7b85424a67fb3a5b2a2dbb6d8115fa5ceb503cf26dc8e8df3bd8f83bfdd8684",
-    "cpppj/src/o/SquidProcess.h": "402e405b5eb8e34d73ebcc3a470feca9136980d9c691c06bca4f321a23ae96b8",
+    "cpppj/src/o/SquidProcess.cpp": "993e34a3c7b3b87f290a33f548a126415c3a77794a7a191801d68f405baf1780",
+    "cpppj/src/o/SquidProcess.h": "481ad652080175ccb135c5f4981edc44e7d853584eaaebaab1a65d3873bc5399",
     "cpppj/src/o/SquidReward.cpp": "a29c11afe56a477c470956b1ed0a0678d059340806537ce08b43bf6b6aa1375d",
     "cpppj/src/o/SquidReward.h": "59cf154a0aa681fbce7bdf445728afc582409bd9af9b24e5b135e435e92aa362",
     "cpppj/src/o/SquidSpatial.cpp": "d6d38d116ba6a41ad59b1200159578fed2e3236841633a34af661abe61603f36",
@@ -1608,6 +1608,73 @@
           "path": "cpppj/src/CMakeLists.txt",
           "previous": "380c5b11b56392ae385a0eaaefae67dfa0e192a59d44e6d4a815ffa348c50c6f",
           "current": "e26748dfc34098b8deb4e787630f22107868a8231f238daedd3621aa9036519d"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 149,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "e26748dfc34098b8deb4e787630f22107868a8231f238daedd3621aa9036519d",
+          "current": "d13c369eaf82eb49e84eab35a3e526590cdbd6b8837b468398b57230d15110bf"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/client/RawCampaignMotionBindings.cpp",
+          "previous": "33c9353bfb909d80dd275a488c009d03637b7634b94cf45e56f2bcda95561c82",
+          "current": "49ec5488843e3ac1bdf0697745ef1a18604984ac7dd2b6d104ea57b96f0aedd0"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/client/RawCampaignPathBindings.cpp",
+          "previous": "33acf790e03a052f2808b067048fae51ea92c8bbc76f66d660323b0b7fe8da63",
+          "current": "b89ed98f6b8edeeb0a4cc471cf91cc83b87f0d695dd7b0acbbfebfa0dbbed216"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/client/RawCampaignPathBindings.h",
+          "previous": "0f507504ab6b216eb92849f916d25637081c27bf934842b660ac68ea3f1c8217",
+          "current": "2b7f0cf76e10e66a9bd9d7678c92393a657997e9248742a8f7895b8bd026674c"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawPathProcess.cpp",
+          "previous": "15e0b7f5097323d5431da841e47b892501c1911e74648c76686c7c66561667c0",
+          "current": "c95903a9fc3c1507ca4b45f7fa93b5d9b2f2626fe050e236850eca21f5581624"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawPathProcess.h",
+          "previous": "34cf15f8d7eb761e7b13d1500d18aaa25536f5aa572dcb26b5cc942fd484caaa",
+          "current": "4143e265d2a5d103435f288bcc75f1257281c8d3bdc38f688a6e548a433a035e"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawPathRuntime.cpp",
+          "previous": "f9dba0640028d10e558b9467bff2e9e1c15acef225b9195896104f6b2c3365be",
+          "current": "e771d3c17baf7c9e96b7da65a7b20c2171a8b82d75ccee94d091689036c5d42d"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawPathRuntime.h",
+          "previous": "1ea416e522e69d4ccadef34f1000a704a38e507f8ad021afe5fcedfa093149b4",
+          "current": "b74e6c9947182ef327a50be4921921d43ac1a62063e8cf02a193e3045359a667"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/SquidProcess.cpp",
+          "previous": "f7b85424a67fb3a5b2a2dbb6d8115fa5ceb503cf26dc8e8df3bd8f83bfdd8684",
+          "current": "993e34a3c7b3b87f290a33f548a126415c3a77794a7a191801d68f405baf1780"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/SquidProcess.h",
+          "previous": "402e405b5eb8e34d73ebcc3a470feca9136980d9c691c06bca4f321a23ae96b8",
+          "current": "481ad652080175ccb135c5f4981edc44e7d853584eaaebaab1a65d3873bc5399"
         }
       ]
     }

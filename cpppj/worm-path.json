@@ -1,0 +1,31 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-17",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16"
+  },
+  "uniqueInputs": 6,
+  "normalReturns": 12,
+  "instructions": 60318,
+  "nativeCalls": {
+    "0048bf90": 12,
+    "0048b2c0": 6
+  },
+  "controls": [
+    639,
+    895
+  ],
+  "boundaries": "48bf90/48b2c0 전체. new만 명시 경계이며 raw100080바이트 전체를 비교한다. GP/retN/canary/x87/코드·읽기·쓰기 범위 검사.13개 가상 슬롯 중40/54는부착+2c만 다르다. 부모187의42ac60은133의42a5f0과 다르며 공통 Halt로 바꾸면 안 된다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "tools/decomp_worm_path.py": "94cabb9cb24d438ddbd283de623aa84b96192ffc07313dc23c7ddb6f3a5eb4d4",
+    "tools/decomp_carrier_falling.py": "f8702db0708a543b73213c8df9154503afe977767a11bd7c150b639ee1b587a6",
+    "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "cpppj/tests/fixtures/worm-path-x86.tsv": "12b9e5f46d47d0a8193d079e0dbe6228937ebf53a84cb2a113be2c32e38fd392",
+    "cpppj/tests/fixtures/worm-path-vtables.tsv": "9ac15fc1fbe8516ceb72eb8ba719dc9d459b9001bac1bc8079d162f524f51da7"
+  }
+}

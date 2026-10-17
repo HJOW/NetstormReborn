@@ -8,11 +8,11 @@
     "date": "2026-10-16"
   },
   "currentSources": {
-    ".gitattributes": "312017592c21a6b517ec359daaaec61aa273f16f5af8bc5612e7dfd1bf528f5e",
-    "cpppj/src/CMakeLists.txt": "e26748dfc34098b8deb4e787630f22107868a8231f238daedd3621aa9036519d",
-    "cpppj/tests/CMakeLists.txt": "36fe0f40317f02e6c9981225658a95cdc13223193327413138a67cf902eee51a",
-    "cpppj/src/client/RawCampaignSession.cpp": "ad2667626274a0da0ac2730f487abb665378690e5e3738345bc80001dcd89f38",
-    "cpppj/tests/CampaignObjectMenuTests.cpp": "fe0b7cf2898773410f446d546ee25a4efbb93e44f103fa9642f779d8afcf2e63",
+    ".gitattributes": "3e8d869648cde0415d1a91e9b22d5a7ed7e5c0585923a189bfd37aa33229f3a8",
+    "cpppj/src/CMakeLists.txt": "d13c369eaf82eb49e84eab35a3e526590cdbd6b8837b468398b57230d15110bf",
+    "cpppj/tests/CMakeLists.txt": "6d7e1121be151ed25a806638a54925b6f4ec36273bd14efc4fe36a51415d9cbb",
+    "cpppj/src/client/RawCampaignSession.cpp": "f24a17fe60433cdc7e61e7fafc65af03c83e79c03d7b5d4388008d24a581b8f1",
+    "cpppj/tests/CampaignObjectMenuTests.cpp": "54a8f70a07e50693b0db721c102cd3498e3cbb68e058af0e24b6461909aa0175",
     "cpppj/src/o/RawCarrierFalling.h": "053f770faf58d4afd2c11f20c2f1608ba72ffd8202b8d983ecb15bb6da3240e8",
     "cpppj/src/o/RawCarrierFalling.cpp": "792cf6ac33b52ba476fdedc8ea22e0649aa5201b75b214fba1cb3519cd80682f",
     "cpppj/tests/CarrierFallingTests.cpp": "79507c7fda8c1458f07de11479a376e5c7c33e9a334d355c9d9455de551d981f",
@@ -172,5 +172,44 @@
     "한 캐리어의5105 실제 예약을 진행하며 다른 부모/전체 Kernel을 실행하지 않는다.",
     "음향 장치 요청은 기록하며 실제 하드웨어 재생/픽셀 동일성을 주장하지 않는다.",
     "원본/OS 게임 창 실행은 없고 클론 진입5회만 예외 호스트에서 실행했다."
+  ],
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "unit": 149,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": ".gitattributes",
+          "previous": "312017592c21a6b517ec359daaaec61aa273f16f5af8bc5612e7dfd1bf528f5e",
+          "current": "3e8d869648cde0415d1a91e9b22d5a7ed7e5c0585923a189bfd37aa33229f3a8"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "e26748dfc34098b8deb4e787630f22107868a8231f238daedd3621aa9036519d",
+          "current": "d13c369eaf82eb49e84eab35a3e526590cdbd6b8837b468398b57230d15110bf"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "36fe0f40317f02e6c9981225658a95cdc13223193327413138a67cf902eee51a",
+          "current": "6d7e1121be151ed25a806638a54925b6f4ec36273bd14efc4fe36a51415d9cbb"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "ad2667626274a0da0ac2730f487abb665378690e5e3738345bc80001dcd89f38",
+          "current": "f24a17fe60433cdc7e61e7fafc65af03c83e79c03d7b5d4388008d24a581b8f1"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignObjectMenuTests.cpp",
+          "previous": "fe0b7cf2898773410f446d546ee25a4efbb93e44f103fa9642f779d8afcf2e63",
+          "current": "54a8f70a07e50693b0db721c102cd3498e3cbb68e058af0e24b6461909aa0175"
+        }
+      ]
+    }
   ]
 }

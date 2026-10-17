@@ -123,8 +123,8 @@
     "cpppj/src/o/RawFortRandomPlacement.h": "79bba31820344fbe9e29da1c1aeb2e4100cf5d83365b1466d61eb3be6966104e",
     "cpppj/src/o/RawRunePostPop.cpp": "ca10766ced498c5aab0c92fbcca0d0d4ad39c5d9e5c91ce7865dd0523b2f6ab0",
     "cpppj/src/o/RawRunePostPop.h": "057c813ed8dcb33eab75554f9368645e77d4b85b61df76a22e64f52dcc82d5ee",
-    "cpppj/src/o/RawPathRuntime.cpp": "f9dba0640028d10e558b9467bff2e9e1c15acef225b9195896104f6b2c3365be",
-    "cpppj/src/o/RawPathRuntime.h": "1ea416e522e69d4ccadef34f1000a704a38e507f8ad021afe5fcedfa093149b4",
+    "cpppj/src/o/RawPathRuntime.cpp": "e771d3c17baf7c9e96b7da65a7b20c2171a8b82d75ccee94d091689036c5d42d",
+    "cpppj/src/o/RawPathRuntime.h": "b74e6c9947182ef327a50be4921921d43ac1a62063e8cf02a193e3045359a667",
     "cpppj/tests/IslandQueriesTests.cpp": "a0895f0fa8cb269e779a86b0753cab3332ff8beda2fd1ab68b593418d003c930",
     "cpppj/tests/DamageableHitTests.cpp": "811f951fa0370ebe26c2cf6c4faae36567379659dd2035eb8f4c35097e33480b",
     "cpppj/tests/FarmClusterTests.cpp": "c21896900126b47ce2cbccd40559f4d49b997fe9f077890e774601daafcd4e2b",
@@ -179,6 +179,25 @@
           "path": "cpppj/dais-shared-lineage.json",
           "previous": "3d4a63e81398f345cf4cfd241b664bca0d892cfea9860686c2de141782ae77e1",
           "current": "1961d1e39cb9e912ea65589a8a0a8a0a1e7bb598477b5840eaee7f4305a2a211"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 149,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawPathRuntime.cpp",
+          "previous": "f9dba0640028d10e558b9467bff2e9e1c15acef225b9195896104f6b2c3365be",
+          "current": "e771d3c17baf7c9e96b7da65a7b20c2171a8b82d75ccee94d091689036c5d42d"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawPathRuntime.h",
+          "previous": "1ea416e522e69d4ccadef34f1000a704a38e507f8ad021afe5fcedfa093149b4",
+          "current": "b74e6c9947182ef327a50be4921921d43ac1a62063e8cf02a193e3045359a667"
         }
       ]
     }

@@ -53,6 +53,7 @@ public:
     double Time() const;
     // Dude task 변경의 event/count0/다음double시각 직접쓰기를 같은 기존 Regular 객체에 적용한다.
     void ResetTask(std::uint32_t event,double time);
+    void SetNextTime(double time); // 생성자/부착 콜백 뒤 event/payload/count를 보존하며 실제 기한만 덮어쓴다.
     // Damageable 삭제 후 새 Regular에 원본 +0x20 초기 count를 쓴다. event/payload/time/Form은 보존한다.
     void SetInitialCount(std::uint32_t count);
 private:

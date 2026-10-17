@@ -1,0 +1,34 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-17",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16"
+  },
+  "controls": [
+    639,
+    895
+  ],
+  "uniqueInputs": 2850,
+  "normalReturns": 4740,
+  "nullWrites": 960,
+  "instructions": 301680,
+  "nativeCalls": {
+    "00426db0": 4900,
+    "004287d0": 1624,
+    "0041d7a0": 424,
+    "004e49c0": 848
+  },
+  "precisionDifferentInputs": [],
+  "boundaries": "4287d0/426db0/41d7a0/_ftol 전체. 현재 조회/이동 삭제/선택/사제 해방/할당/두 생성자는 명시 경계다. 생성 뒤 event/count 보존, 현재 double 시각/콜백 뒤 재조회, 실제 Player 쓰기 확인. 정상 반환은 GP/retN/SEH/canary/x87/코드·읽기·쓰기 범위를 검사한다. NULL+10 쓰기는 실제 별도 실패이며 정상 반환으로 세지 않는다. OS/게임 창 실행 없음.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "tools/decomp_carrier_fall_start.py": "be7fd3e54d1e267ce77a0c96fb3016ee969281d31a140ba9f0a993d29e082a0d",
+    "tools/decomp_carrier_falling.py": "f8702db0708a543b73213c8df9154503afe977767a11bd7c150b639ee1b587a6",
+    "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "cpppj/tests/fixtures/carrier-fall-start-x86.tsv": "ed68324eaa72914ed304434e148bfb563dcebf24f11d04c17f93599d5501b686"
+  }
+}

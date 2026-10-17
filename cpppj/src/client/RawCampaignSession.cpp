@@ -22,6 +22,8 @@
 #include "o/RawNuggetPostPop.h"
 #include "o/RawNuggetRegular.h"
 #include "o/RawCarrierFalling.h"
+#include "o/RawCarrierFallStart.h"
+#include "o/RawCarrierTask.h"
 #include "o/RawPlayerTemplateState.h"
 #include "o/RawArcherTypeData.h"
 #include "o/RawProjectileGeometry.h"
@@ -149,6 +151,8 @@ bool RawCampaignObjectMenus::SelectBuild(std::uint32_t type,Sid priest) const { 
 std::string_view RawCampaignObjectMenus::TextParameter(std::uint32_t token) const { return impl_->player->TextParameter(token); }
 // 실제 월드/상태와 모든 callback 대상을 같은 고정 주소에 소유한다.
 struct RawCampaignSession::Impl {
+    struct SelectionLink { RawUserSelection* selection{}; }; // 살아 있는 실제 선택 객체의 주소이며 약한 토큰으로만 빌린다.
+    std::weak_ptr<SelectionLink> activeSelection; // UI 몸체가 먼저 파괴돼도 낙하가 해제된 주소를 호출하지 않는다.
     RawCampaignSessionServices services; // 실제 클라이언트의 선택 서비스이며 검사 관찰 기본값을 사용하지 않는다.
 
     SessionAssets assets; // 보호 archive의 현재 실제 자료다.
@@ -282,6 +286,9 @@ struct RawCampaignSession::Impl {
     std::vector<std::int32_t> nuggetAFrames; // 같은188TYPE의A구간실제프레임수다.
     std::unique_ptr<RawNuggetRegular> nuggetRegular; // 기존너겟예약의왕복프레임/지면/낙하/삭제를소비한다.
     std::unique_ptr<RawCarrierFalling> carrierFalling; // 같은 표면/Player/권한에서 캐리어 낙하와 포획 사제 해방을 처리한다.
+    std::unique_ptr<RawCarrierTask> carrierTask; // 실제 현재 Regular/SharedRegular task와 double 기한을 갱신한다.
+    std::unique_ptr<RawCarrierFallStart> carrierFallStart; // 현재 이동 삭제/선택 해제/복귀 좌표/즉시 해방을 수행한다.
+    std::unique_ptr<RegularProcess> pendingCarrierTask; // 원본 new28과 생성자가 공유하는 하나의 확보 메모리다.
     std::unique_ptr<GumpFormHost> gumpForms; // 같은Pool의실제Form3와현재UI등록ID/부모삭제알림수명이다.
     std::unique_ptr<RawContentParentNotice> contentNotice; // 부모의 실제 현재 VT로 기본/파생 +24를 분배한다.
     bool contentSavedGame{}; // 이 생성자는 새 미션 경로이며005c85d4 저장 게임은 선택하지 않는다.
@@ -455,7 +462,11 @@ struct RawCampaignSession::Impl {
         if (!priestEffects.fallSound) priestEffects.fallSound=[this](Sid,float x,float y) {
             if (!services.sound.playOnceAt) throw std::logic_error("사제 낙하 실제 위치 음향 미연결");services.sound.playOnceAt(x,y,soundNames.Lookup("priestFall.wav"),0,0);
         };
-        FillMissing(priestEffects.otherWalkerFall);
+        const auto otherWalkerFall=priestEffects.otherWalkerFall; // 별도 파생의 실제 외부 낙하 경계를 보존한다.
+        priestEffects.otherWalkerFall=[this,otherWalkerFall](Sid sid) {
+            if (carrierRegular && carrierRegular->Handles(sid)) { if (!carrierFallStart) throw std::logic_error("캐리어 낙하 시작 설치 전 호출");return carrierFallStart->Begin(sid); }
+            if (!otherWalkerFall) throw std::logic_error("다른 실제 Walker 낙하 미연결");return otherWalkerFall(sid);
+        };
         priestEffects.regen.refresh=[this](Sid sid) { core.display.Update(core.pool.Slot(sid)); };
         FillMissing(priestEffects.regen.neutralAction);
         // 회전과 뒤의 읽기를 분리하여 중립 동작/측정이 바꾼 현재 SP 전역도 원본 시점에 조회한다.
@@ -1098,6 +1109,24 @@ struct RawCampaignSession::Impl {
         falling.fallWalker=[this](Sid sid) { return priests->FallWalker(sid); };
         falling.assertion=[](std::uint32_t line) { throw std::logic_error("원본 Carrier.cpp 낙하 진단 "+std::to_string(line)); };
         carrierFalling=std::make_unique<RawCarrierFalling>(core.pool,core.types,core.frames,core.hash.Entries(0),players,assetState.boss,gunState.checking,priestState.movement.priest,cursorManaGlobals.mapLimit,std::move(falling));
+        CarrierTaskHooks task;task.find=[this](Sid sid) { return core.processes.FindEventMasked(sid,0xfff0,0x5100); };
+        task.allocate=[this] { if (pendingCarrierTask) throw std::logic_error("캐리어 task 확보 메모리 중복");try { pendingCarrierTask=std::make_unique<RegularProcess>(0,0.0F); }catch (const std::bad_alloc&) { return false; }return true; };
+        task.construct=[this](Sid sid,std::uint32_t event,bool shared) {
+            if (!pendingCarrierTask) throw std::logic_error("캐리어 task 생성 전 확보 메모리 없음");auto* reserved=pendingCarrierTask.get();std::destroy_at(reserved);std::construct_at(reserved,event,5.0F);
+            return static_cast<RegularProcess*>(core.processes.Attach(std::move(pendingCarrierTask),shared ? 61U : 46U,sid,0x50));
+        };
+        task.assertion=[] { throw std::logic_error("원본 Carrier.cpp407 낙하 task 교체 진단"); };
+        carrierTask=std::make_unique<RawCarrierTask>(core.pool,core.processState.now,std::move(task));
+        CarrierFallStartHooks begin;begin.hasRegular=[this](Sid sid,std::uint32_t event) { return core.processes.FindEvent(sid,event)!=nullptr; };
+        begin.movementType=[this](std::uint32_t type) { return priests->MovementProcessType(type); };
+        begin.removeMovement=[this](Sid sid,std::uint32_t type) { RawContainedLookup lookup(core.pool,[this](Sid target,std::uint32_t flags) { static_cast<void>(world.Destroy(target,flags)); });static_cast<void>(lookup.Find(sid,type,0,true)); };
+        begin.clearSelection=[this] { auto link=activeSelection.lock();if (!link || !link->selection) throw std::logic_error("낙하 선택 해제의 현재 UI 수명 미연결");static_cast<void>(link->selection->Select(0,0,1)); };
+        begin.findKind=[this](Sid parent,std::uint32_t kind) { RawContainedFinder finder(core.pool,contentFinder);
+            // 실제4b26f0의 mask 없는 첫 kind 조회다.
+            for (auto sid=finder.Begin(parent);sid.value;sid=finder.Next()) { const auto raw=core.pool.Slot(sid);if ((std::uint32_t(raw[18])|(std::uint32_t(raw[19])<<8))==kind) return sid; }return Sid{};
+        };
+        begin.releasePriest=[this](Sid sid) { carrierFalling->ReleasePriest(sid); };begin.task=[this](Sid sid,std::uint32_t event,float delay) { carrierTask->Set(sid,event,delay); };
+        carrierFallStart=std::make_unique<RawCarrierFallStart>(core.pool,players,assetState.boss,priestState.movement.priest,std::move(begin));
         hooks.needsEscape=[this](float x,float y) { return carrierFalling->NeedsEscape(x,y)!=0; };
         hooks.movementType=[this](std::uint32_t type) { return priests->MovementProcessType(type); };
         hooks.hasPath=[this](Sid sid,std::uint32_t type) { RawContainedLookup lookup(core.pool,[this](Sid target,std::uint32_t flags) { static_cast<void>(world.Destroy(target,flags)); });return lookup.Find(sid,type).value!=0; };
@@ -1733,7 +1762,7 @@ std::unique_ptr<RawUserSelection> RawCampaignSession::MakeUserSelection(UserSele
     const auto previewAssertion=hooks.previewAssertion; // 서로 다른 원본 진단을 selectedSid 진단으로 합치지 않는다.
     hooks.movementPreview=[current,previewAssertion](Sid parent) { StartSelectionContentPreview(current->core.pool,parent,current->objectState.loadingDepth,[current](Sid sid,std::uint32_t event,float payload) { static_cast<void>(current->core.processes.AddRegular(sid,event,payload)); },previewAssertion); };
     hooks.sound=[current](std::uint32_t x,std::uint32_t y,std::string_view name,std::uint32_t flags) { if (!current->services.sound.playOnceAt) throw std::logic_error("선택 실제 위치 소리 미연결");current->services.sound.playOnceAt(std::bit_cast<float>(x),std::bit_cast<float>(y),current->soundNames.Lookup(name),flags,0); };
-    return std::make_unique<RawUserSelection>(current->core.pool,current->core.types,state,std::move(hooks));
+    auto selection=std::make_unique<RawUserSelection>(current->core.pool,current->core.types,state,std::move(hooks));auto link=std::make_shared<Impl::SelectionLink>();link->selection=selection.get();selection->sessionLifetime_=link;current->activeSelection=link;return selection;
 }
 // 기본 번호/특수 모드는 같은 장기 상태를 빌리며 getter를 새 캐시로 바꾸지 않는다.
 PriestMenuState& RawCampaignSession::PriestMenuSettings() { return impl_->priestMenu; }
@@ -1775,6 +1804,8 @@ std::unique_ptr<RawConstructionBuilder> RawCampaignSession::MakeConstructionBuil
 RawPathProcess* RawCampaignSession::StartConstructionMovement(RawPathStartRequest request) {
     if (!impl_->loaded || !impl_->motion) throw std::logic_error("미설치 Session의 건설 이동");return impl_->motion->Paths().StartConstruction(request);
 }
+// 같은 원본489080과 현재40 클래스의 생성/부모 통지를 사용한다.
+RawPathProcess* RawCampaignSession::StartCarrierMovement(RawPathStartRequest request) { if (!impl_->loaded || !impl_->motion) throw std::logic_error("미설치 Session의 Carrier 이동");return impl_->motion->Paths().StartCarrier(request); }
 // 화면과 입력은 같은 살아 있는 상태를 읽는다.
 RawSurfaceWorld& RawCampaignSession::World() { return impl_->world; }
 RawWorldCore RawCampaignSession::Core() { return impl_->core; }

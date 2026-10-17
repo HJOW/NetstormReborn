@@ -361,3 +361,45 @@ TEST_CASE(CampaignCarrierFalling_ActualCapturedPriestRelease) {
     CHECK(std::find(globalSounds.begin(),globalSounds.end(),std::array<std::uint32_t,6>{external.names.Lookup("priestFree.wav"),0,0,0,1,0})!=globalSounds.end());
     CHECK(core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0);
 }
+// 4287d0 자체가 복귀 좌표를 쓰고 즉시 사제를 해방하며 실제 경로/선택을 정리해야 한다.
+TEST_CASE(CampaignCarrierFallStart_ActualSelectedMovementReleaseAndFall) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);MenuServices external;
+    std::uint32_t selected{},mouseType{},mode{};std::array<std::uint32_t,2> remembered{};std::array<std::uint32_t,0> multiple{};std::int32_t multipleCount{},mouseX{},mouseY{}; // 같은 실제 UI 저장소다.
+    std::vector<std::vector<std::uint8_t>> pathPackets;std::uint32_t lost{},dumps{}; // 외부 패킷/유닛 손실/진단 요청만 기록한다.
+    auto services=external.Make();services.deletion.selected=[&] { return Sid{static_cast<std::uint16_t>(selected)}; };services.unitLost=[&](Sid) { ++lost; };
+    services.pathPacket=[&](std::span<const std::uint8_t> bytes) { pathPackets.emplace_back(bytes.begin(),bytes.end()); };services.motion.path.stepSound=[](Sid,float,float,std::uint32_t) {};services.dependencyTransmit=[](Sid,std::uint32_t) {};
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));session.Load();auto core=session.Core();
+    const Sid existing{static_cast<std::uint16_t>(session.FindPriestParticipation(1))};CHECK(existing.value);const auto old=core.pool.Slot(existing);const auto x=std::bit_cast<float>(Get(old,14)),y=std::bit_cast<float>(Get(old,18));
+    const auto carrier=session.World().Create(133,2);session.World().Pop(carrier,x,y,0);CHECK(Get(core.pool.Slot(carrier),0)==0x50e568U);
+    const auto content=session.CreateContained(carrier,158,0x1281,0x20,0x10,0);core.owner.Set(carrier,1); // 포획된 내용물이 있는 캐리어를 초기 상태로 두며 포획 획득 부모는 실행하지 않는다.
+    auto* path=session.StartCarrierMovement({carrier,{x,y},1,0,0,0,0});CHECK(path);if (!path) return;CHECK(path->MovementType()==40);const auto pathPid=core.kernel.Find(*path);const auto pathForm=path->Form();CHECK(!pathPackets.empty());
+    RawUserHighlight highlight({mode,selected,mouseType,mouseX,mouseY},{});UserSelectionHooks hooks;hooks.paused=[] { return 0U; };hooks.enabled=[] { return 1U; };hooks.blocked=[] { return 0U; };hooks.dump=[&](Sid sid) { CHECK(sid==carrier);++dumps; };hooks.highlight=[&](std::uint32_t value) { highlight.Highlight(value); };hooks.assertion=hooks.previewAssertion=[] { throw std::logic_error("자연 낙하 선택 검사 예상 밖 진단"); };
+    auto selection=session.MakeUserSelection({selected,mouseType,remembered,multiple,multipleCount},std::move(hooks));CHECK(selection->Select(carrier.value,0,0)==carrier.value);CHECK(selected==carrier.value && (core.pool.Slot(carrier)[40]&4U) && dumps==1);
+    std::vector<std::uint16_t> priorPriests; // 실제 새 사제와 기존 사제를 구별한다.
+    // 원래 살아 있는 사제 번호만 읽고 결과를 주입하지 않는다.
+    for (std::uint32_t sid=1;sid<core.pool.Capacity();++sid) { const auto raw=core.pool.Slot(Sid{static_cast<std::uint16_t>(sid)});if (raw[10]==158 && !(raw[11]&3U)) priorPriests.push_back(static_cast<std::uint16_t>(sid)); }
+    const auto records=session.PlayerRecords();const auto beforeX=Get(records,0xb4+0xa8),beforeY=Get(records,0xb4+0xac);CHECK(!core.processes.FindEvent(carrier,0x5105));
+    CHECK(session.Priests().FallWalker(carrier));CHECK(selected==0 && !(core.pool.Slot(carrier)[40]&4U));
+    RawContainedLookup remaining(core.pool,[&](Sid sid,std::uint32_t flags) { static_cast<void>(session.World().Destroy(sid,flags)); }); // 해방 중 PID/Form이 즉시 재사용될 수 있어 실제40 객체와 종속 체인을 조회한다.
+    CHECK(dynamic_cast<RawPathProcess*>(core.kernel.Get(pathPid))==nullptr);CHECK(!remaining.Find(carrier,40).value);CHECK(core.pool.Slot(content)[11]&1U);static_cast<void>(pathForm);
+    const auto homeX=Get(records,0xb4+0xa8),homeY=Get(records,0xb4+0xac);CHECK(homeX!=beforeX || homeY!=beforeY);CHECK(std::bit_cast<float>(homeX)>0 && std::bit_cast<float>(homeY)>0);Sid released{};
+    // 실제 해방된 사제의 위치/소유권/새 낙하 예약은 시작 함수가 만든 현재 기록과 일치해야 한다.
+    for (std::uint32_t sid=1;sid<core.pool.Capacity();++sid) { const Sid current{static_cast<std::uint16_t>(sid)};const auto raw=core.pool.Slot(current);if (raw[10]==158 && !(raw[11]&3U) && std::find(priorPriests.begin(),priorPriests.end(),current.value)==priorPriests.end()) { CHECK(!released.value);released=current; } }
+    CHECK(released.value);if (released.value) { const auto raw=core.pool.Slot(released);CHECK(Get(raw,12,2)==0x1281U && raw[34]==1);CHECK(Get(raw,14)==homeX && Get(raw,18)==homeY);CHECK(core.processes.FindEvent(released,0x25b)); }
+    auto* falling=core.processes.FindEvent(carrier,0x5105);CHECK(falling);if (!falling) return;const auto fallPid=core.kernel.Find(*falling);const auto fallForm=falling->Form();CHECK(core.pool.Slot(fallForm)[10]==46 && falling->Count()==0 && falling->Payload()==5.0F && falling->Time()==core.processState.now);
+    CHECK(session.Priests().FallWalker(carrier));CHECK(core.processes.FindEvent(carrier,0x5105)==falling && falling->Count()==0); // 중복 시작은 새 예약/해방을 만들지 않는다.
+    // 현재 캐리어의 원본 예약만 진행하며 다른 AI/전체 Kernel을 함께 실행하지 않는다.
+    for (std::uint32_t step=0;step<105 && !(core.pool.Slot(carrier)[11]&1U);++step) { CHECK(core.kernel.Get(fallPid)==falling);if (core.kernel.Get(fallPid)!=falling) break;core.processState.now=std::max(core.processState.now,falling->Time());falling->RunFrame(); }
+    CHECK(core.pool.Slot(carrier)[11]&1U);CHECK(!core.kernel.Get(fallPid) && (core.pool.Slot(fallForm)[11]&1U));CHECK(core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0);
+    const auto empty=session.World().Create(187,2);CHECK(Throws([&] { static_cast<void>(session.StartCarrierMovement({empty,{x,y},1,0,0,0,0})); })); // 다른42ac60 Halt를 썬 워커의 공통 몸체로 대체하지 않는다.
+}
+// UI 소유자가 먼저 사라지면 해제된 선택 객체를 호출하지 않고 필요한 경계에서 거부한다.
+TEST_CASE(CampaignCarrierFallStart_ExpiredSelectionDoesNotDangle) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);MenuServices external;std::uint32_t selected{},mouseType{},mode{},dumps{};std::array<std::uint32_t,2> remembered{};std::array<std::uint32_t,0> multiple{};std::int32_t count{},mouseX{},mouseY{}; // UI 저장소는 검사 내내 살아 있다.
+    auto services=external.Make();services.deletion.selected=[&] { return Sid{static_cast<std::uint16_t>(selected)}; };auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));session.Load();auto core=session.Core();
+    const auto carrier=session.World().Create(133,2);session.World().Pop(carrier,10.5F,10.5F,0);RawUserHighlight highlight({mode,selected,mouseType,mouseX,mouseY},{});UserSelectionHooks hooks;
+    hooks.paused=[] { return 0U; };hooks.enabled=[] { return 1U; };hooks.blocked=[] { return 0U; };hooks.dump=[&](Sid sid) { CHECK(sid==carrier);++dumps; };hooks.highlight=[&](std::uint32_t value) { highlight.Highlight(value); };hooks.assertion=hooks.previewAssertion=[] { throw std::logic_error("선택 수명 검사 예상 밖 진단"); };
+    auto selection=session.MakeUserSelection({selected,mouseType,remembered,multiple,count},std::move(hooks));CHECK(selection->Select(carrier.value,0,0)==carrier.value);CHECK(dumps==1 && selected==carrier.value && (core.pool.Slot(carrier)[40]&4U));selection.reset();
+    bool rejected{};try { static_cast<void>(session.Priests().FallWalker(carrier)); }catch (const std::logic_error& error) { rejected=std::string_view(error.what()).find("낙하 선택 해제의 현재 UI 수명 미연결")!=std::string_view::npos; }
+    CHECK(rejected);CHECK(!core.processes.FindEvent(carrier,0x5105));CHECK(selected==carrier.value && (core.pool.Slot(carrier)[40]&4U));
+}

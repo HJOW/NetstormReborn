@@ -20,6 +20,7 @@ struct RawCampaignPathEffects {
     std::function<void(o::RawPathRuntime&,o::Sid)> retarget; // 실제 운반 대상 사망/변경 후 재탐색 몸체다. 미복원 선택은 caller가 예외로 드러낸다.
     std::function<std::uint64_t()> observationStamp; // CD 관찰 시계이며 원본 게임 시각과 별개다. 미연결이면 기존 Process의0 입력을 유지한다.
     std::function<std::uint32_t(o::Sid,std::uint32_t,std::uint32_t)> constructionArrival; // 검증한134/105의 실제 부모 도착 분배다. 필요한 시작에서만 요구한다.
+    std::function<std::uint32_t(o::Sid,std::uint32_t,std::uint32_t)> carrierArrival; // 썬 워커/empty의 실제429800을 같은 Carrier 모듈로 호출한다.
 };
 // 경로 계산과 프레임 실행을 새 이동 모형으로 대체하지 않는 같은 월드 연결부다.
 // 참조하는 월드/사제/도착/cleanup/상태/effects는 이 객체 및 부착한 Path보다 오래 살아야 한다.
@@ -39,6 +40,7 @@ public:
     o::RawPathProcess* StartPriest(o::RawPathStartRequest request);
     // 원본134/VT5070c0의23과105/VT509810의39만 실제 분배로 시작한다.
     o::RawPathProcess* StartConstruction(o::RawPathStartRequest request);
+    o::RawPathProcess* StartCarrier(o::RawPathStartRequest request); // 검증한133의 실제40 생성/시작/가상 통지를 실행한다.187의42ac60은 별도 경계다.
     // 현재 종속 체인의 실제54 Form을 조회하고 같은 Host의 기존 Path 객체를 반환한다.
     o::RawPathProcess* CurrentPath(o::Sid parent) const;
     // CarrierArrival 등 순환 연결에서 같은 실제 현재 Path 저장소를 빌린다.
@@ -59,6 +61,7 @@ private:
     std::unique_ptr<o::RawPathProcess> Create(bool priest);
     std::unique_ptr<o::RawPathProcess> CreateType(std::uint32_t type); // 실제23/39/54 생성자를 구분한다.
     void ValidateConstruction(o::Sid parent) const; // 타입뿐 아니라 현재 정확한 생성자 VT를 함께 확인한다.
+    void ValidateCarrier(o::Sid parent) const; // 같은133/50e568 및 실제40을 함께 검사한다.다른Halt를 공통 몸체로 바꾸지 않는다.
     RawSurfaceWorld& world_; // 실제 가상 Pop/Unpop/Repop과 유일한 Kernel을 소유한 월드다.
     RawWorldCore core_; // 실제 pool/hash/spot/type/frame/SHP/Host를 빌리는 참조 묶음이다.
     const RawPriestWorldBindings& priests_; // 기존 mutable 이동 프로세스 선택 몸체를 공유한다.

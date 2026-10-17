@@ -17,6 +17,7 @@ struct RawPathProcessState {
     std::uint32_t flyProcess{39}; // PATCH0054110c의 마나 볼트 비행 경로다. teleport23과 구분한다.
     std::array<std::uint32_t,5> groundTypes{158,137,156,135,187}; // 00427da0의 허용 타입이며 CD는 마지막 empty를 제외한다.
     std::uint32_t blockingGenus{0x10444200}; // 005325b4/CD0053fc28: 도착 칸의 원본 겹침 제거 부류다.
+    std::uint32_t wormProcess{40},sunWalkerType{133},emptyType{187}; // PATCH40의 실제 부착 검사와 현재 두 부모 타입이다.
 };
 // 실제 가상 효과 및 아직 복원되지 않은 큰 하위 몸체의 경계다. 누락을 실행 가능한 빈 효과로 바꾸지 않는다.
 struct RawPathProcessHooks {
@@ -38,7 +39,7 @@ public:
     // 타입 표·프레임·실제 SHP·지도·상태는 프로세스보다 오래 살아야 한다. 생성만으로 부착하지 않는다.
     RawPathProcess(SidPool& pool,const SquidHash& hash,std::span<const RiftTypeRecord> types,
         std::span<const RiftTypeFrames> frames,std::span<const SquidDisplayShape> shapes,std::span<const std::uint8_t> spots,
-        RawPathProcessState& state,RawPathProcessHooks hooks,bool priest,bool flying=false);
+        RawPathProcessState& state,RawPathProcessHooks hooks,bool priest,bool flying=false,bool worm=false); // worm40은54와 같은 frame/도착/Init을 사용한다.
     std::uint32_t MovementType() const; // 실제 종류가 사용하는 현재23/39/54 프로세스 번호다.
     // 원본 destructor는 deadFlag를 켠다. shared watch는 부모 callback이 this를 지운 뒤의 역참조를 막는다.
     ~RawPathProcess() override;
@@ -95,6 +96,7 @@ private:
     // priest_: 사제 상태를 조회·변경하는 처리기 또는 사제 경로 여부.
     bool priest_{};
     bool flying_{}; // 실제48af00/48af90/48af50 분배이며 false generic23과 다르다.
+    bool worm_{}; // 실제50e4c4의 공유48bb40/48bd90과 별도48bde0 부착을 선택한다.
     // runtime_: 원본 필드 배치를 사용하는 실행 중 상태.
     RawPathRuntime runtime_;
     std::shared_ptr<bool> alive_=std::make_shared<bool>(true); // 원본 destructor의 stack deadFlag 대체이며 게임 상태를 대체하지 않는다.

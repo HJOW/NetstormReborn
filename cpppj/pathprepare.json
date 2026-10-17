@@ -41,7 +41,7 @@
     "cpppj/src/o/RawPathData.cpp": "38a2665489e998835caa07cbedb81516fae6f5e33270529a6d40f5d76d3a6a45",
     "cpppj/tests/RawPathDataTests.cpp": "531f1d4b1066cbdd6eea1ea8165a8fa1ca6db9cb11a0547411e51061d7a7d4f3",
     "tools/decomp_pathprepare_oracle.py": "3251981fd3cffa9ee7d92bf41b2a29b12cb93b5402df8fac70b855f66aca341d",
-    "cpppj/src/o/RawPathProcess.cpp": "15e0b7f5097323d5431da841e47b892501c1911e74648c76686c7c66561667c0"
+    "cpppj/src/o/RawPathProcess.cpp": "c95903a9fc3c1507ca4b45f7fa93b5d9b2f2626fe050e236850eca21f5581624"
   },
   "exports": {
     "extracted/pathdata/originals/creation.c": "8b4da9e4aaf23275733ccd62f3fca3cba304df32355a54709a6dc2be90404978",
@@ -402,6 +402,19 @@
           "path": "cpppj/src/o/RawPathProcess.cpp",
           "previous": "ae48353ef2132eaf0d5d382703891420941387e2c03dcbf8d1a1489e0abbae89",
           "current": "15e0b7f5097323d5431da841e47b892501c1911e74648c76686c7c66561667c0"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 149,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/sources",
+          "path": "cpppj/src/o/RawPathProcess.cpp",
+          "previous": "15e0b7f5097323d5431da841e47b892501c1911e74648c76686c7c66561667c0",
+          "current": "c95903a9fc3c1507ca4b45f7fa93b5d9b2f2626fe050e236850eca21f5581624"
         }
       ]
     }

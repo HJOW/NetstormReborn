@@ -9,8 +9,8 @@
   "edition": "PATCH10.78",
   "baseCommit": "3330211",
   "currentSources": {
-    "cpppj/src/client/RawCampaignSession.cpp": "ad2667626274a0da0ac2730f487abb665378690e5e3738345bc80001dcd89f38",
-    "cpppj/src/client/RawCampaignSession.h": "b63d3540024b9eef248329d84fd9cde386c6e799dee06ea2ddaf8ee68f7d21a4",
+    "cpppj/src/client/RawCampaignSession.cpp": "f24a17fe60433cdc7e61e7fafc65af03c83e79c03d7b5d4388008d24a581b8f1",
+    "cpppj/src/client/RawCampaignSession.h": "cd0946fdfc5b5229a6574ae10b81606f10b610aa1236e80ff91376f50a8c7568",
     "cpppj/src/client/RawCampaignParticles.cpp": "8916546c2570f5bf03238062671ce8c3edab9b796865c70e3716328712b5db3e",
     "cpppj/src/client/RawCampaignParticles.h": "f1ea87839f7538b0714be13f586a4c30cbff1e9975edf2eec138dfafaf424f69",
     "cpppj/tests/CampaignSessionTests.cpp": "964400205960599492a269d374aaaa7e46ff7f7b6e3968a992d0a447dc16bf2a"
@@ -316,6 +316,25 @@
           "path": "cpppj/src/client/RawCampaignSession.cpp",
           "previous": "0e5b27ea8bda1e8c821c919ce4589fe40df70a1a481923f94c1da0070dca06ec",
           "current": "ad2667626274a0da0ac2730f487abb665378690e5e3738345bc80001dcd89f38"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 149,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "ad2667626274a0da0ac2730f487abb665378690e5e3738345bc80001dcd89f38",
+          "current": "f24a17fe60433cdc7e61e7fafc65af03c83e79c03d7b5d4388008d24a581b8f1"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "b63d3540024b9eef248329d84fd9cde386c6e799dee06ea2ddaf8ee68f7d21a4",
+          "current": "cd0946fdfc5b5229a6574ae10b81606f10b610aa1236e80ff91376f50a8c7568"
         }
       ]
     }

@@ -308,7 +308,7 @@
     "cpppj/hist/run20-regression/unpop.cpp": "89ee0eb425b59778c216314eccb6dd09909a57118fb032cab1013c3f3345233c",
     "cpppj/run19.json": "6d9888fa7bcf7b1e13dd408db59a26410e9e3cef6d1fad987e20c464d6e0dc76",
     "cpppj/squid-level.json": "5d61185c834c2e195394000248d768f37a95a2056027c4d020c66b83b74f4c68",
-    "cpppj/src/CMakeLists.txt": "e26748dfc34098b8deb4e787630f22107868a8231f238daedd3621aa9036519d",
+    "cpppj/src/CMakeLists.txt": "d13c369eaf82eb49e84eab35a3e526590cdbd6b8837b468398b57230d15110bf",
     "cpppj/src/app/CanonMayPlaceInspect.cpp": "27eda46bca500c898abeb9a3a7c4e8588b38e061b579c84cbf6c032c6d46dda9",
     "cpppj/src/app/FrameBindingInspect.cpp": "042602919b0531fb1cbaf3941dc6597bee73944bbf0d571dacfd638bb45dd07c",
     "cpppj/src/app/FrameBindingInspect.h": "4e187ca41f8c34ed52c022b58a57327a554a723e3e26ee88a1ae152c99de3fce",
@@ -416,12 +416,12 @@
     "cpppj/src/client/RawCampaignAssetBindings.h": "ab49414fca330edc3b2f5fdae0d59b28bb0675e31ac236d810e63d20457612ed",
     "cpppj/src/client/RawCampaignGunQueries.cpp": "c2898584f1f9f55c9d112c555ddb7d94dfbe8df59011672c1d15db57ee210176",
     "cpppj/src/client/RawCampaignGunQueries.h": "2c0ad0d6aab9a7b5972130fdd547d8efc96aab6410fda41e0d7a173356feb922",
-    "cpppj/src/client/RawCampaignMotionBindings.cpp": "33c9353bfb909d80dd275a488c009d03637b7634b94cf45e56f2bcda95561c82",
+    "cpppj/src/client/RawCampaignMotionBindings.cpp": "49ec5488843e3ac1bdf0697745ef1a18604984ac7dd2b6d104ea57b96f0aedd0",
     "cpppj/src/client/RawCampaignMotionBindings.h": "61b83606bb8e3ac43dcc785b98737beab2e4bf7ff57db4dc4e00c7dde07dbf0e",
     "cpppj/src/client/RawCampaignOwnership.cpp": "960af85c2b29897a853f2f08e8a78283e87b5c04a7595ca9e62924e2c455c6c5",
     "cpppj/src/client/RawCampaignOwnership.h": "f53be166d29d72a8fbcda53fe2e476932e50a392be04c4d5a1a91d56d90c41a1",
-    "cpppj/src/client/RawCampaignPathBindings.cpp": "33acf790e03a052f2808b067048fae51ea92c8bbc76f66d660323b0b7fe8da63",
-    "cpppj/src/client/RawCampaignPathBindings.h": "0f507504ab6b216eb92849f916d25637081c27bf934842b660ac68ea3f1c8217",
+    "cpppj/src/client/RawCampaignPathBindings.cpp": "b89ed98f6b8edeeb0a4cc471cf91cc83b87f0d695dd7b0acbbfebfa0dbbed216",
+    "cpppj/src/client/RawCampaignPathBindings.h": "2b7f0cf76e10e66a9bd9d7678c92393a657997e9248742a8f7895b8bd026674c",
     "cpppj/src/client/RawCampaignWorldRuntime.cpp": "c8013d0c7e3b1b3b9f3196a202397d4f24c17c592186cf2fec201820ba7e473c",
     "cpppj/src/client/RawCampaignWorldRuntime.h": "4832ee863ef658efb14479c720c0ffa47104c1bcbdd1d042adb4d3f2330f0f97",
     "cpppj/src/client/RawCursorDrop.cpp": "f0942036950dfbb0085c48f2bb76bdd2d4edc9fb7c870cdbf7d9fc83e65dddd4",
@@ -720,10 +720,10 @@
     "cpppj/src/o/RawPathCleanup.h": "ae5012944517d2ca56cd1c19629d50c64ff65d9ee3d43f0d87b1bbe5ba0fa8d0",
     "cpppj/src/o/RawPathData.cpp": "ad7b25e89d79c84faa576aa50fb1efb1e9c71e6d96abc439527b798870a2d345",
     "cpppj/src/o/RawPathData.h": "13e0bf03c18aa2936c623c0b57d03e3fdb641375dc669daa77bfaae9b5f6e370",
-    "cpppj/src/o/RawPathProcess.cpp": "15e0b7f5097323d5431da841e47b892501c1911e74648c76686c7c66561667c0",
-    "cpppj/src/o/RawPathProcess.h": "34cf15f8d7eb761e7b13d1500d18aaa25536f5aa572dcb26b5cc942fd484caaa",
-    "cpppj/src/o/RawPathRuntime.cpp": "f9dba0640028d10e558b9467bff2e9e1c15acef225b9195896104f6b2c3365be",
-    "cpppj/src/o/RawPathRuntime.h": "1ea416e522e69d4ccadef34f1000a704a38e507f8ad021afe5fcedfa093149b4",
+    "cpppj/src/o/RawPathProcess.cpp": "c95903a9fc3c1507ca4b45f7fa93b5d9b2f2626fe050e236850eca21f5581624",
+    "cpppj/src/o/RawPathProcess.h": "4143e265d2a5d103435f288bcc75f1257281c8d3bdc38f688a6e548a433a035e",
+    "cpppj/src/o/RawPathRuntime.cpp": "e771d3c17baf7c9e96b7da65a7b20c2171a8b82d75ccee94d091689036c5d42d",
+    "cpppj/src/o/RawPathRuntime.h": "b74e6c9947182ef327a50be4921921d43ac1a62063e8cf02a193e3045359a667",
     "cpppj/src/o/RawPathSearch.cpp": "a7597d758972707a48ab25260af4ba877798c9c91ed01e0471d84819005d2858",
     "cpppj/src/o/RawPathSearch.h": "471c37aaeff1f5b7e157f52bfb20984c55e993fa59f7c33696fb42772107a7ac",
     "cpppj/src/o/RawPathStart.cpp": "289908568a07c6da645f13b4d5a4bd2c97d8eafa184a1609dc121deef15f4501",
@@ -2079,6 +2079,61 @@
           "path": "cpppj/src/CMakeLists.txt",
           "previous": "380c5b11b56392ae385a0eaaefae67dfa0e192a59d44e6d4a815ffa348c50c6f",
           "current": "e26748dfc34098b8deb4e787630f22107868a8231f238daedd3621aa9036519d"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 149,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "e26748dfc34098b8deb4e787630f22107868a8231f238daedd3621aa9036519d",
+          "current": "d13c369eaf82eb49e84eab35a3e526590cdbd6b8837b468398b57230d15110bf"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/client/RawCampaignMotionBindings.cpp",
+          "previous": "33c9353bfb909d80dd275a488c009d03637b7634b94cf45e56f2bcda95561c82",
+          "current": "49ec5488843e3ac1bdf0697745ef1a18604984ac7dd2b6d104ea57b96f0aedd0"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/client/RawCampaignPathBindings.cpp",
+          "previous": "33acf790e03a052f2808b067048fae51ea92c8bbc76f66d660323b0b7fe8da63",
+          "current": "b89ed98f6b8edeeb0a4cc471cf91cc83b87f0d695dd7b0acbbfebfa0dbbed216"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/client/RawCampaignPathBindings.h",
+          "previous": "0f507504ab6b216eb92849f916d25637081c27bf934842b660ac68ea3f1c8217",
+          "current": "2b7f0cf76e10e66a9bd9d7678c92393a657997e9248742a8f7895b8bd026674c"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawPathProcess.cpp",
+          "previous": "15e0b7f5097323d5431da841e47b892501c1911e74648c76686c7c66561667c0",
+          "current": "c95903a9fc3c1507ca4b45f7fa93b5d9b2f2626fe050e236850eca21f5581624"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawPathProcess.h",
+          "previous": "34cf15f8d7eb761e7b13d1500d18aaa25536f5aa572dcb26b5cc942fd484caaa",
+          "current": "4143e265d2a5d103435f288bcc75f1257281c8d3bdc38f688a6e548a433a035e"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawPathRuntime.cpp",
+          "previous": "f9dba0640028d10e558b9467bff2e9e1c15acef225b9195896104f6b2c3365be",
+          "current": "e771d3c17baf7c9e96b7da65a7b20c2171a8b82d75ccee94d091689036c5d42d"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawPathRuntime.h",
+          "previous": "1ea416e522e69d4ccadef34f1000a704a38e507f8ad021afe5fcedfa093149b4",
+          "current": "b74e6c9947182ef327a50be4921921d43ac1a62063e8cf02a193e3045359a667"
         }
       ]
     }

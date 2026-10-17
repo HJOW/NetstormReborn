@@ -74,3 +74,6 @@ target_sources(netstorm PRIVATE o/RawNuggetRegular.cpp o/RawNuggetRegular.h)
 
 # 캐리어의 실제 다리 판정/낙하/포획 사제 해방이다.
 target_sources(netstorm PRIVATE o/RawCarrierFalling.cpp o/RawCarrierFalling.h)
+
+# 캐리어의 자연 낙하 시작과 원본 공통 task 예약이다.
+target_sources(netstorm PRIVATE o/RawCarrierTask.cpp o/RawCarrierTask.h o/RawCarrierFallStart.cpp o/RawCarrierFallStart.h)
