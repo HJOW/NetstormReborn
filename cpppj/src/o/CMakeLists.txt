@@ -293,3 +293,6 @@ target_sources(netstorm PRIVATE RawLightningLifetime.cpp RawLightningLifetime.h 
 target_sources(netstorm PRIVATE RawFlyerPreDestroy.cpp RawFlyerPreDestroy.h CrtRandom.cpp CrtRandom.h RawShrapnelFrame.cpp RawShrapnelFrame.h)
 # 실제 bitmap/입자 반납과 dummy/process16의 공통 Host/Kernel 수명이다.
 target_sources(netstorm PRIVATE RawShrapnelLifetime.cpp RawShrapnelLifetime.h ShrapnelVisualSystem.cpp ShrapnelVisualSystem.h)
+
+# 사제와 Carrier의 실제 내용물 부모 가상 통지를 공유한다.
+target_sources(netstorm PRIVATE RawCarrierContentNotice.h RawCarrierContentNotice.cpp)

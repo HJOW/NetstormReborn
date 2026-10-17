@@ -18,6 +18,8 @@
 #include "o/RawPriestParticipation.h"
 #include "o/RawDamageablePostDestroy.h"
 #include "client/CameraHome.h"
+#include "client/RawPriestMenu.h"
+#include "o/RawCarrierContentNotice.h"
 #include "client/RawCampaignParticles.h"
 namespace netstorm::client {
 // 미션 입력/정지/UI 수명은 실제 UberGump의 현재 저장소와 동작을 빌린다.
@@ -60,6 +62,7 @@ struct RawCampaignSessionServices {
     RawCampaignConstructionEffects construction; // 로컬 간헐천의 실제 설정/벽시각/표시/진단이며 일반 건설을 대신하지 않는다.
     o::SquidDestroyHooks deletion; // 다른 파생 삭제/선택/전송의 실제 외부 경계다.
     std::function<void(o::Sid)> unitLost; // 공통 삭제가 요청한 실제 unitLost 전역 소리를 재생한다.
+    o::CarrierContentNoticeHooks carrierContent; // 실제 Carrier 폭탄/포획 표시·음향·공간 효과이며 선택한 분기만 필수다.
     o::ContentLifetimeHooks contentLifetime; // 같은 ContentForm의 실제 커서/수입/AI 지갑/소리 경계다.
     o::PlayerContentNoticeHooks playerContent; // 같은 현재 Gump 등록표와 대상 자신의 가상 처리를 공급한다.
     o::SquidAssetDestroy destroy; // 다른 파생 자산의 실제 가상 삭제 분배기다.
@@ -149,6 +152,13 @@ public:
     bool MovePriest(o::Sid sid,o::RawPathPoint destination);
     // 같은 raw 신전의 가상 Draw를 실행하고 실제 SoundList/재생 경계로 상승음을 보낸다.
     void DrawRainTemple(o::Sid sid,const std::function<void(std::int32_t)>& frame) const;
+    // 같은 Pool/Host/기술/허용/SP/실제 ContentForm 생성에 연결한 메뉴다. UI·번역·Tell·커서 취득만 caller가 공급한다.
+    // 반환 객체는 Session보다 먼저 해제한다. 설치 전에는 메뉴/내용물 생성을 허용하지 않는다.
+    std::unique_ptr<RawPriestMenu> MakePriestMenu(PriestMenuHooks hooks);
+    // 현재 타입/명령·특수 모드의 장기 저장소다. 알려진 공통 전역은 실제 getter로 연결한다.
+    PriestMenuState& PriestMenuSettings();
+    // 0052f7e0의 TYPE 번호 제외 목록이다. 공간 앵커의 SID 추가 목록과 별개로 소유한다.
+    o::SquidPostPopList& ConstructionExcludedTypes();
     // 화면/명령은 같은 현재 raw 월드와 HP를 읽는다.
     RawSurfaceWorld& World();
     // 같은 월드의 현재 Pool/장부/Host 참조를 빌린다.

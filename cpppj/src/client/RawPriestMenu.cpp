@@ -46,6 +46,14 @@ std::string RawPriestMenu::Format(std::string_view key,std::initializer_list<Pri
     auto result=Required(hooks_.format)(key,{arguments.begin(),arguments.size()});result.resize(result.find('\0')==std::string::npos ? result.size() : result.find('\0'));
     if (result.size()>=kFormatBytes) throw std::length_error("사제 메뉴 원본 포맷 버퍼 한도 초과");return result;
 }
+// 실제 세션이 연결한 원본 전역 조회기를 각 사용 시점에 호출한다. 기존 독립 입력은 그대로 지원한다.
+std::uint32_t RawPriestMenu::LocalOwner() const { return state_.localOwnerRead ? state_.localOwnerRead() : state_.localOwner; }
+// 전투 모드와 다른 특수 모드를 합치지 않는다.
+bool RawPriestMenu::WorkshopMode() const { return state_.workshopModeRead ? state_.workshopModeRead() : state_.workshopMode; }
+// 원본 편집 조건을 현재 로더에서 읽는다.
+bool RawPriestMenu::Editor() const { return state_.editorRead ? state_.editorRead() : state_.editor; }
+// 원본 미션 조건을 현재 저장소에서 읽는다.
+bool RawPriestMenu::ChargeBlocked() const { return state_.chargeBlockedRead ? state_.chargeBlockedRead() : state_.chargeBlocked; }
 // 실제FrameCode의 첫바이트는 MSVC signed char다. 큰 frame이나 음수frame의 원본 무효메모리는 호스트 예외다.
 std::int32_t RawPriestMenu::FrameState(o::Sid priest) const {
     const auto raw=Raw(priest);const auto type=raw[10];Type(type);const auto codes=frames_[type].Codes();const auto frame=Read(raw,36);
@@ -66,13 +74,13 @@ bool RawPriestMenu::HasTheme(std::int32_t theme) const {
 // 금액부족은 접두 ~r와 mana 아이콘군만 바꾸며 enabled에는 포함하지 않는다.
 void RawPriestMenu::AddBuild(std::uint32_t type,bool disabled,o::Sid priest,bool manaIcon) const {
     if (!Required(hooks_.allowed)(type)) return;
-    const auto amount=Required(hooks_.cost)(type);const auto money=Required(hooks_.money)(state_.localOwner);
+    const auto amount=Required(hooks_.cost)(type);const auto money=Required(hooks_.money)(LocalOwner());
     // x87은 fild의 정수를 단정도로 저장하지 않고 SP float와 비교한다. NaN은 지불불가다.
-    const bool affordable=state_.editor || static_cast<double>(amount)<=static_cast<double>(money);
+    const bool affordable=Editor() || static_cast<double>(amount)<=static_cast<double>(money);
     const auto price=amount ? Format(" for %s%d~[IfortGump.3]",{std::string(affordable ? "" : "~r"),amount}) : std::string{};
     const auto excluded=excluded_.Items();disabled=disabled || std::find(excluded.begin(),excluded.end(),type)!=excluded.end();std::string label;
     if (type==state_.dais || type==state_.altar) {
-        const auto level=(Player(state_.localOwner,0x70)>>8)&255U;
+        const auto level=(Player(LocalOwner(),0x70)>>8)&255U;
         label=Format("Build Level %d %s%s",{static_cast<std::int32_t>(level)+1,Required(hooks_.description)(type),price});
     } else if (manaIcon) {
         const auto theme=std::bit_cast<std::int32_t>(std::bit_cast<std::uint32_t>(Type(type).theme)+(affordable ? 4U : 0U));
@@ -83,18 +91,18 @@ void RawPriestMenu::AddBuild(std::uint32_t type,bool disabled,o::Sid priest,bool
 // 두 번째 SP 조회 전에 비용도 다시 조회하는 원본 순서를 유지한다.
 bool RawPriestMenu::SelectBuild(std::uint32_t type,o::Sid priest) const {
     const auto& record=Type(type);
-    if (!state_.editor && (record.flags2&0x4000) && !HasTheme(record.theme)) { Required(hooks_.tell)("NoTechTheme");return false; }
-    const float first=static_cast<float>(Required(hooks_.cost)(type));const auto firstMoney=Required(hooks_.money)(state_.localOwner);
-    if (!state_.editor && !(first<=firstMoney)) { Required(hooks_.tell)("BuildNoBucks");return false; }
-    const auto second=Required(hooks_.cost)(type);const auto secondMoney=Required(hooks_.money)(state_.localOwner);
+    if (!Editor() && (record.flags2&0x4000) && !HasTheme(record.theme)) { Required(hooks_.tell)("NoTechTheme");return false; }
+    const float first=static_cast<float>(Required(hooks_.cost)(type));const auto firstMoney=Required(hooks_.money)(LocalOwner());
+    if (!Editor() && !(first<=firstMoney)) { Required(hooks_.tell)("BuildNoBucks");return false; }
+    const auto second=Required(hooks_.cost)(type);const auto secondMoney=Required(hooks_.money)(LocalOwner());
     // 둘째 fild 비교는 int를 float로 축소하지 않는다. 시점 사이 잔액이 줄면 안내 없이 반환한다.
-    if (!state_.editor && !(static_cast<double>(second)<=static_cast<double>(secondMoney))) return false;
+    if (!Editor() && !(static_cast<double>(second)<=static_cast<double>(secondMoney))) return false;
     const auto preview=Required(hooks_.createPreview)(priest,type);Required(hooks_.takePreview)(preview,0x160);return true;
 }
 // 사제의 비가상 기본 객체메뉴 호출을 포함한 전체 원본 분기 순서다.
 void RawPriestMenu::Open(o::Sid priest) const {
     const auto raw=Raw(priest);
-    if (raw[34]!=state_.localOwner || Required(hooks_.hasEvent)(priest,kBlocked)) { Required(hooks_.baseMenu)(priest);return; }
+    if (raw[34]!=LocalOwner() || Required(hooks_.hasEvent)(priest,kBlocked)) { Required(hooks_.baseMenu)(priest);return; }
     Required(hooks_.beginFancy)();Required(hooks_.title)(Format("Construct Building\n"));
     const auto owner=raw[34];const bool templePresent=Player(owner,0x7c)!=0 || Player(owner,0x84)!=0;
     Required(hooks_.beginVertical)();
@@ -104,21 +112,21 @@ void RawPriestMenu::Open(o::Sid priest) const {
     // 원본의 || 단락평가 순서와 workshop 모드의 뒤늦은 조회를 유지한다.
     bool workshopAllowed=false;
     for (std::size_t index=0;index<state_.workshops.size();++index) if (Required(hooks_.allowed)(state_.workshops[index])) { workshopAllowed=true;break; }
-    if (workshopAllowed && (state_.workshopMode || state_.special || state_.editor)) {
+    if (workshopAllowed && (WorkshopMode() || state_.special || Editor())) {
         Required(hooks_.beginVertical)();
         // 원본 workshop 타입 순서에 대응하는 theme 인자는3,0,1,2다.
-        for (std::size_t index=0;index<state_.workshops.size();++index) AddBuild(state_.workshops[index],!state_.editor && !HasTheme(static_cast<std::int32_t>((index+3)%4)),priest,true);
+        for (std::size_t index=0;index<state_.workshops.size();++index) AddBuild(state_.workshops[index],!Editor() && !HasTheme(static_cast<std::int32_t>((index+3)%4)),priest,true);
         const auto label=Format("Workshop");const auto menu=Required(hooks_.takeMenu)();Required(hooks_.submenu)(label,menu,true);
     }
     const auto outpost=state_.outpost;const auto technology=Required(hooks_.currentTechnology)();
     if (technology>=pool_.Capacity()) throw std::out_of_range("사제 메뉴 Technology 범위 오류");
-    if (Required(hooks_.containedType)(o::Sid{static_cast<std::uint16_t>(technology)},kTechnology,outpost) || !state_.chargeBlocked || state_.editor) AddBuild(outpost,false,priest,false);
+    if (Required(hooks_.containedType)(o::Sid{static_cast<std::uint16_t>(technology)},kTechnology,outpost) || !ChargeBlocked() || Editor()) AddBuild(outpost,false,priest,false);
     const bool daisPresent=Player(owner,0x8c)!=0 || Player(owner,0x94)!=0;AddBuild(state_.dais,daisPresent,priest,false);
     const bool immobile=Required(hooks_.immobile)(priest);bool constructDisabled=immobile;
     if (!constructDisabled) constructDisabled=Required(hooks_.hasEvent)(priest,kBuilding);
     if (!constructDisabled) { const auto frame=FrameState(priest);constructDisabled=frame>=10 && frame<=14; }
     const auto label=Format("%sConstruct~.",{std::string(immobile ? "~r" : "")});const auto menu=Required(hooks_.takeMenu)();Required(hooks_.submenu)(label,menu,!constructDisabled);
-    if (!state_.chargeBlocked && !Required(hooks_.containedType)(priest,kPrayer,state_.devastation) && !immobile && !Required(hooks_.hasEvent)(priest,kBuilding)) {
+    if (!ChargeBlocked() && !Required(hooks_.containedType)(priest,kPrayer,state_.devastation) && !immobile && !Required(hooks_.hasEvent)(priest,kBuilding)) {
         const auto frame=FrameState(priest);
         if (!(frame>=10 && frame<=14) && !Required(hooks_.hasEvent)(priest,kBlocked)) {
             Required(hooks_.beginFancy)();Required(hooks_.title)(Format("Prayer\n"));Required(hooks_.item)(Format("Devastation"),state_.prayCommand,(state_.devastation<<16)|priest.value,true);

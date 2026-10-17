@@ -32,7 +32,7 @@
     "cpppj/tests/CursorPositionTests.cpp": "111ab2b59d662bacc5b51bb44d54fccec4260df86f15502e370a35d7d13a73f1",
     "cpppj/tests/CursorPreviewSupport.h": "fa4e6b6d54bbc564af308ffd154f2ced7482a131c542222c0342e6019d6c9084",
     "cpppj/src/client/CMakeLists.txt": "8bb17d335554c16e6ff3300134492a264bfa425dfafd52062ecf0062f523d87c",
-    "cpppj/tests/CMakeLists.txt": "fcb5d8ca761b6c48715c00302a7d4e6d00ca31a16ba6ff3ac0a2dd731d583c8d"
+    "cpppj/tests/CMakeLists.txt": "f932d354f00051f6807c2ccf95a7a3bdd53173fd79c8f104ae3e986e612c5723"
   },
   "limitations": [
     "실제 정수 위치 갱신/역투영/CRT 절삭을 실행한다. 단독 입력의 Activate/Create/선택은 명시 효과다.",
@@ -73,6 +73,17 @@
         "cpppj/tests/CMakeLists.txt": {
           "previous": "c1d5b09df20f6b431b5839f6bd16591a770e960519745bad1757cd246c313ca8",
           "current": "fcb5d8ca761b6c48715c00302a7d4e6d00ca31a16ba6ff3ac0a2dd731d583c8d"
+        }
+      },
+      "previous_fixture_preserved": true
+    },
+    {
+      "date": "2026-10-17",
+      "reason": "단위122 같은 실제 Session의 사제 메뉴/부모 내용물 통지 연결·기존 관측 보존",
+      "shared_sha256": {
+        "cpppj/tests/CMakeLists.txt": {
+          "previous": "fcb5d8ca761b6c48715c00302a7d4e6d00ca31a16ba6ff3ac0a2dd731d583c8d",
+          "current": "f932d354f00051f6807c2ccf95a7a3bdd53173fd79c8f104ae3e986e612c5723"
         }
       },
       "previous_fixture_preserved": true

@@ -23,13 +23,64 @@
   "sha256": {
     "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
     "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
-    "extracted/priestmenu/originals/creation.c": "5dd262b868fbd108a43f02166cdf0f1a624b97f4309f4c22d907545d0fcf2f59",
-    "extracted/priestmenu/originals/functions.tsv": "d06a50acf33ca02d99d1ea2c8ef299f728b7e0ffd4f101c1adc935a39c51a42e",
     "tools/ghidra/priestmenu-functions.json": "c1ff270ce889835ed326a355fe523162403c11ed91fb437a2120eba63ea86339",
-    "tools/decomp_priestmenu.py": "02fcb4d010e0558e969eaf3e9c55bc21d14779d8eb147d3fc2ecbcaeca7a9c2c",
-    "cpppj/src/client/RawPriestMenu.cpp": "ced6ef18b8ecba70bac5c9566dff15f44794d9d502d416ac7c19d98e69ddc50b",
-    "cpppj/src/client/RawPriestMenu.h": "697ce519d27ff4d4ea695dfcd549e0f4ddabe8df4597b249ee91517c2fc99284",
-    "cpppj/tests/PriestMenuTests.cpp": "51b46963c14c553e98939f0e3772440b839846294c6ec82a0228255a6af553ac",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+    "cpppj/src/client/RawPriestMenu.cpp": "f30be4e91f2141d1000f4a75d9f41619024d20f6cb024f68b8ffb483b1eddcf7",
+    "cpppj/src/client/RawPriestMenu.h": "5364d92d3af5b9b81a0477df5c005fcfc4a1ef7f6817894bd337250ce4d0e43d",
+    "cpppj/tests/PriestMenuTests.cpp": "a7b76f4b807941334f1dc6c089b156a59c72347e93b7898ff0bda018c73ca1c4",
     "cpppj/tests/fixtures/priestmenu-x86.tsv": "2dda11277f2b67f1a69447ea7cb1694e989a08ed513dbf9819e14bfbf3ce6208"
+  },
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "reason": "단위122 같은 실제 Session의 사제 메뉴/부모 내용물 통지 연결·기존 관측 보존",
+      "shared_sha256": {
+        "cpppj/src/client/RawPriestMenu.cpp": {
+          "previous": "ced6ef18b8ecba70bac5c9566dff15f44794d9d502d416ac7c19d98e69ddc50b",
+          "current": "f30be4e91f2141d1000f4a75d9f41619024d20f6cb024f68b8ffb483b1eddcf7"
+        },
+        "cpppj/src/client/RawPriestMenu.h": {
+          "previous": "697ce519d27ff4d4ea695dfcd549e0f4ddabe8df4597b249ee91517c2fc99284",
+          "current": "5364d92d3af5b9b81a0477df5c005fcfc4a1ef7f6817894bd337250ce4d0e43d"
+        }
+      },
+      "previous_fixture_preserved": true
+    },
+    {
+      "date": "2026-10-17",
+      "reason": "현재 PC에 없는 과거 부분 export2개는 이력으로 보존·실행기는 기존부터 현재 정밀 함수표만 사용·기대값 무변경 비교 모드 추가",
+      "shared_sha256": {
+        "tools/decomp_priestmenu.py": {
+          "previous": "02fcb4d010e0558e969eaf3e9c55bc21d14779d8eb147d3fc2ecbcaeca7a9c2c",
+          "current": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9"
+        }
+      },
+      "previous_fixture_preserved": true
+    },
+    {
+      "date": "2026-10-17",
+      "reason": "기존905행의 현재PC 원문 재비교·현재 C++ 집중4/전체1494 통과 뒤 과거부터 남은 검사 소스 핀1개 갱신",
+      "shared_sha256": {
+        "cpppj/tests/PriestMenuTests.cpp": {
+          "previous": "51b46963c14c553e98939f0e3772440b839846294c6ec82a0228255a6af553ac",
+          "current": "a7b76f4b807941334f1dc6c089b156a59c72347e93b7898ff0bda018c73ca1c4"
+        }
+      },
+      "previous_fixture_preserved": true
+    }
+  ],
+  "historical_export_sha256": {
+    "extracted/priestmenu/originals/creation.c": "5dd262b868fbd108a43f02166cdf0f1a624b97f4309f4c22d907545d0fcf2f59",
+    "extracted/priestmenu/originals/functions.tsv": "d06a50acf33ca02d99d1ea2c8ef299f728b7e0ffd4f101c1adc935a39c51a42e"
+  },
+  "current_fixture_revalidation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-17",
+    "mode": "--compare",
+    "matched": 905,
+    "instructions": 260365,
+    "fixture_unchanged": true,
+    "source": "extracted/refined/originals/functions.tsv",
+    "missing_historical_exports_preserved": true
   }
 }

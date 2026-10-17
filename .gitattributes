@@ -1050,3 +1050,13 @@ cpppj/tests/fixtures/carrier-drop-point-x86.tsv text eol=lf
 cpppj/src/client/RawCarrierDropPoint.* text eol=lf
 cpppj/tests/CarrierDropPointTests.cpp text eol=lf
 docs/exe/cpp-carrier-drop-point-20261017.md text eol=lf
+# 실제 Session의 사제 메뉴와 Carrier 내용물 통지의 관측/제품은 UTF-8/LF다.
+cpppj/src/client/RawPriestMenu.* text eol=lf
+tools/decomp_priestmenu.py text eol=lf
+cpppj/src/o/RawCarrierContentNotice.* text eol=lf
+cpppj/tests/CarrierContentNoticeTests.cpp text eol=lf
+cpppj/tests/fixtures/carrier-content-notice-x86.tsv text eol=lf
+tools/decomp_carrier_content_notice.py text eol=lf
+cpppj/carrier-content-notice.json text eol=lf
+cpppj/session-priest-menu.json text eol=lf
+docs/exe/cpp-session-priest-menu-20261017.md text eol=lf

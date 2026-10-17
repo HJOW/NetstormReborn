@@ -21,16 +21,16 @@
     "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
     "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
     "tools/decomp_type_required_energy.py": "5169eee31483d050aaa40b4f007bbea9d24b69ad6dff280194da4f97b163d268",
-    "tools/decomp_priestmenu.py": "02fcb4d010e0558e969eaf3e9c55bc21d14779d8eb147d3fc2ecbcaeca7a9c2c",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
     "cpppj/src/o/RawTypeRequiredEnergy.h": "8603497d0b3b61726e66792b1134d074ddd194925c7f3e8580e9833e272f44eb",
     "cpppj/src/o/RawTypeRequiredEnergy.cpp": "64dd0667cb8f822650af1318ac91bdc65618ae1da3f05a97cc3296c4dbccefbc",
     "cpppj/src/client/AiTypeRequiredEnergy.h": "4f6f1176c0f92b7be78e969c23b85164340311871436ed97df56646443ab194a",
     "cpppj/src/client/AiTypeRequiredEnergy.cpp": "a77ecbbece0a23b295c26e35ba5f788ea1c61a660b95880a83abc6988ef559c0",
     "cpppj/tests/fixtures/type-required-energy-x86.tsv": "8bcb3e215c958f5df0a395365059f5481801b1660569f2f04c0720f394f14f4c",
     "cpppj/tests/TypeRequiredEnergyTests.cpp": "0802ab400413ec5da3f2d03a4ac6b6f88e2d088915646609a2ca0bb39a02b05c",
-    "cpppj/src/o/CMakeLists.txt": "46579dbd727e16177530beba64a9c8ab6d4eec7f1c8c3f002ac3c9ce52321da0",
+    "cpppj/src/o/CMakeLists.txt": "c84659874163c54863d0de3c252858446f7e58e4e4df956d72ea4430cd79b538",
     "cpppj/src/client/CMakeLists.txt": "8bb17d335554c16e6ff3300134492a264bfa425dfafd52062ecf0062f523d87c",
-    "cpppj/tests/CMakeLists.txt": "fcb5d8ca761b6c48715c00302a7d4e6d00ca31a16ba6ff3ac0a2dd731d583c8d"
+    "cpppj/tests/CMakeLists.txt": "f932d354f00051f6807c2ccf95a7a3bdd53173fd79c8f104ae3e986e612c5723"
   },
   "product_validation": {
     "configuration": "Release",
@@ -1232,6 +1232,32 @@
         "cpppj/tests/CMakeLists.txt": {
           "previous": "c1d5b09df20f6b431b5839f6bd16591a770e960519745bad1757cd246c313ca8",
           "current": "fcb5d8ca761b6c48715c00302a7d4e6d00ca31a16ba6ff3ac0a2dd731d583c8d"
+        }
+      },
+      "previous_fixture_preserved": true
+    },
+    {
+      "date": "2026-10-17",
+      "reason": "단위122 같은 실제 Session의 사제 메뉴/부모 내용물 통지 연결·기존 관측 보존",
+      "shared_sha256": {
+        "cpppj/src/o/CMakeLists.txt": {
+          "previous": "46579dbd727e16177530beba64a9c8ab6d4eec7f1c8c3f002ac3c9ce52321da0",
+          "current": "c84659874163c54863d0de3c252858446f7e58e4e4df956d72ea4430cd79b538"
+        },
+        "cpppj/tests/CMakeLists.txt": {
+          "previous": "fcb5d8ca761b6c48715c00302a7d4e6d00ca31a16ba6ff3ac0a2dd731d583c8d",
+          "current": "f932d354f00051f6807c2ccf95a7a3bdd53173fd79c8f104ae3e986e612c5723"
+        }
+      },
+      "previous_fixture_preserved": true
+    },
+    {
+      "date": "2026-10-17",
+      "reason": "단위122 사제 관측 도구의 기존 기대값 무변경 비교 모드·사용하지 않는 과거 export 의존 정리, Oracle 계산 body는 보존",
+      "shared_sha256": {
+        "tools/decomp_priestmenu.py": {
+          "previous": "02fcb4d010e0558e969eaf3e9c55bc21d14779d8eb147d3fc2ecbcaeca7a9c2c",
+          "current": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9"
         }
       },
       "previous_fixture_preserved": true

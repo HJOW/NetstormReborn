@@ -21,6 +21,9 @@ struct PriestMenuState {
     std::uint32_t outpost{126},dais{165},altar{164},devastation{168}; // 원본00541250/ec/e8/f8의 현재 타입이다.
     std::uint32_t buildCommand{0x02000060},prayCommand{0x030000de},knowledgeCommand{0x020000a0}; // 원본00542878/2a6c/2974의 입력 토큰이다.
     bool workshopMode{},special{},editor{},chargeBlocked{}; // 00594fbc/0055a480/005c85a4/00594fa4를 각각 보관한다.
+    std::function<std::uint32_t()> localOwnerRead; // 연결됐으면 실제 PlayerWorld의00540c70을 해당 읽기 시점에 조회한다.
+    std::function<bool()> workshopModeRead,editorRead,chargeBlockedRead; // 실제00594fbc/005c85a4/00594fa4의 현재 저장소를 읽는다.
+
 };
 // 복원한 계산을 대신하지 않는 실제 현재 조회·번역·GUI/커서 효과 경계다. 도달한 경계만 필수로 검사한다.
 struct PriestMenuHooks {
@@ -61,6 +64,10 @@ public:
     // 004ad710: 현재물리frame의첫signed문자-'A'이며 WORD+12나 프레임 번호 자체가 아니다.
     std::int32_t FrameState(o::Sid priest) const;
 private:
+    std::uint32_t LocalOwner() const; // 실제 조회기가 있으면 로컬 번호 사본 대신 현재 전역을 읽는다.
+    bool WorkshopMode() const; // 사제 메뉴의 전투 모드00594fbc를 현재 값으로 읽는다.
+    bool Editor() const; // 같은 로더의 편집 DWORD를 해당 원본 분기에서 읽는다.
+    bool ChargeBlocked() const; // 같은 미션 DWORD00594fa4를 현재 값으로 읽는다.
     // 도달한 SID/타입·Player필드를 little endian으로 안전하게 조회한다.
     std::span<const std::uint8_t> Raw(o::Sid sid) const;
     const o::RiftTypeRecord& Type(std::uint32_t type) const;

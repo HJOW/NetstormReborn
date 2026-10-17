@@ -186,6 +186,9 @@ struct RawCampaignSession::Impl {
     CanonPlacementPipelineState placement; // 실제 공간/기하/지형 허용 상태다.
     SquidPostPopList additional; // 기존 pipeline이 읽는 실제 추가 목록이다.
     ContainedFinderState contentFinder; // 기존 내용물 검색의 장기 전역이다.
+    PriestMenuState priestMenu; // 원본 사제 메뉴의 타입/명령·특수 모드 전역을 같은 Session에서 소유한다.
+    SquidPostPopList constructionExcludedTypes; // 0052f7e0의 초기 빈 TYPE 목록이며 additional의 SID 목록과 다르다.
+
     std::unique_ptr<RawCanonPlacementPipeline> pipeline; // 실제 Same Core MayPlace다.
     TerrainContextGlobals terrainGlobals; // 정상 문자 mapping의 실제 전역이다.
     TerrainStampState stamp; // 첫 생성 이후에도 유지되는 실제99cache다.
@@ -196,6 +199,11 @@ struct RawCampaignSession::Impl {
     ContainedCreateState contentState; // 저장 내용물은 실제 Form6으로 생성한다.
     std::unique_ptr<ContentFormHost> contentForms; // ProcessForm과 다른 실제 Form6의 정렬 부착 몸체다.
     std::unique_ptr<RawContentParentNotice> contentNotice; // 부모의 실제 현재 VT로 기본/파생 +24를 분배한다.
+    bool contentSavedGame{}; // 이 생성자는 새 미션 경로이며005c85d4 저장 게임은 선택하지 않는다.
+    std::array<std::int32_t,2> contentScreenOrigin{}; // 같은 GameWorld의 현재59a91c/920이며 SetParticleView에서 함께 공급한다.
+    std::uint32_t contentBombBlocked{}; // 005453e8의 초기0이며 폭탄 시각 효과 억제 전역이다.
+    std::unique_ptr<RawCarrierContentNotice> carrierContentNotice; // 실제 Walker/Carrier/사제의 가상+24 전체 몸체다.
+
     std::unique_ptr<RawContainedCreate> contained; // 실제 Factory/ContentFormHost의 저장 내용물 생성이다.
     ContentLifetimeState contentLifetimeState; // 같은 ContentForm의 커서·로컬 소유자·수입 명령 전역이다.
     std::uint32_t contentGumpType{3},contentEvent{0x02000031}; // PATCH0054107c/005427bc의 실제 초기값이다.
@@ -953,8 +961,19 @@ struct RawCampaignSession::Impl {
         FillMissing(contentEffects.wallet);FillMissing(contentEffects.addSp);FillMissing(contentEffects.sound);
         contentLifetimeState.localOwner=assetState.localOwner;contentLifetimeState.boss=assetState.boss;
         contentLifetimeState.notice=0x020000b4; // PATCH005429c4의 실제 수입 명령 초기값이다.
+        auto carrierEffects=services.carrierContent;
+        carrierEffects.center=[this](Sid parent) { return gunTarget->Center(parent); };
+        carrierEffects.checkCarrier=[this](Sid parent) { static_cast<void>(priests->CheckCarrier(parent)); };
+        carrierEffects.typeAt=[this](float x,float y,std::uint32_t type) { return world.Find(x,y,type); };
+        carrierContentNotice=std::make_unique<RawCarrierContentNotice>(core.pool,core.types,
+            CarrierContentNoticeState{contentSavedGame,objectState.loadingDepth,contentBombBlocked,playerState.battleOwner,priestState.movement.priest,contentScreenOrigin[0],contentScreenOrigin[1],priestState.movement.rainWalker},std::move(carrierEffects));
+        auto otherParentNotice=services.contentNotice;
+        ContentFormNotice parentNotice=[this,other=std::move(otherParentNotice)](Sid parent,Sid form,std::uint32_t reason) {
+            if (carrierContentNotice->Handles(parent)) { carrierContentNotice->Notice(parent,form,reason);return; }
+            if (!other) throw std::logic_error("다른 캠페인 내용물 실제 부모 통지 미연결");other(parent,form,reason);
+        };
         lifetime=std::make_unique<RawCampaignLifetimeBindings>(world,*contentForms,contentLifetimeState,
-            std::move(contentEffects),hp,*playerContent,services.contentNotice);
+            std::move(contentEffects),hp,*playerContent,std::move(parentNotice));
         ContainedCreateHooks createHooks;createHooks.notifySurface=[this](Sid sid) { core.building.NotifySurface(sid); };
         contained=std::make_unique<RawContainedCreate>(core.pool,contentState,contentForms->BindCreate(core.factory,std::move(createHooks)));
         PlayerTechnologyHooks techHooks;techHooks.assertion=SessionMissing<void,PlayerTechnologyAssertion>();
@@ -1051,7 +1070,7 @@ void RawCampaignSession::ResetCamera(CameraHomeState& state,std::function<void(s
 // 현재 같은 시각을 공격/소리/실제 Kernel에 공급한다.
 void RawCampaignSession::RunFrame(FrameTime time,bool paused) { impl_->assetBindings->PrepareFrame(time.game);impl_->combat->PrepareFrame(time);impl_->particles->PrepareFrame(time.game);impl_->soundState.frame=static_cast<std::uint32_t>(time.number);impl_->world.RunFrame(time,paused); }
 // 해상도/카메라 변경과 동일 위치 효과음의 view를 process11에도 전달한다.
-void RawCampaignSession::SetParticleView(SoundView view,SurfaceDisplayHooks display) { impl_->particles->SetView(view,std::move(display)); }
+void RawCampaignSession::SetParticleView(SoundView view,SurfaceDisplayHooks display) { impl_->contentScreenOrigin={view.cameraX,view.cameraY};impl_->particles->SetView(view,std::move(display)); }
 // 현재 단일 raw 표시 목록에서 SHP와 같은 정렬 항목을 만든다.
 std::vector<RenderSprite> RawCampaignSession::ParticleSprites(ScreenRect clip) const { return impl_->particles->Sprites(clip); }
 // 실제 표시 소유자이며 별도 검사용 모형이 아니다.
@@ -1131,6 +1150,26 @@ void RawCampaignSession::DrawRainTemple(Sid sid,const std::function<void(std::in
         impl_->services.sound.play(impl_->soundNames.Lookup("templeAscend.wav"),0,0,0,0,0);
     }});
 }
+// 실제 설치된 Session의 게임 계산을 연결하고 UI의 실제 번역/작성/커서 소비자는 보존한다.
+std::unique_ptr<RawPriestMenu> RawCampaignSession::MakePriestMenu(PriestMenuHooks hooks) {
+    if (!impl_->loaded) throw std::logic_error("설치 전 실제 Session 사제 메뉴 요청");
+    auto* current=impl_.get(); // 반환 메뉴가 빌리는 고정 주소이며 Session의 수명 안에서만 유효하다.
+    auto& state=current->priestMenu;
+    state.localOwnerRead=[current] { return current->player->State().battleOwner; };
+    state.workshopModeRead=[current] { return current->core.ownerMode.battle; };
+    state.editorRead=[current] { return current->globals.editor!=0; };
+    state.chargeBlockedRead=[current] { return current->globals.missionPost; };
+    BindPriestMenuWorld(hooks,current->core.pool,current->priests->PriestState(),current->core.processes,
+        *current->player,current->priests->Carrier(),current->hp,*current->contained);
+    hooks.allowed=[current](std::uint32_t type) { return current->totalMade->Allowed(static_cast<std::int32_t>(type)); };
+    hooks.money=[current](std::uint32_t owner) { return std::bit_cast<float>(current->sp.Get(owner)); };
+    return std::make_unique<RawPriestMenu>(current->core.pool,current->core.types,current->core.frames,current->players,
+        current->constructionExcludedTypes,current->contentFinder,state,std::move(hooks));
+}
+// 기본 번호/특수 모드는 같은 장기 상태를 빌리며 getter를 새 캐시로 바꾸지 않는다.
+PriestMenuState& RawCampaignSession::PriestMenuSettings() { return impl_->priestMenu; }
+// 원본 TYPE 제외 목록을 현재 값으로 빌린다. 다른 SID/생산 금지 표와 합치지 않는다.
+SquidPostPopList& RawCampaignSession::ConstructionExcludedTypes() { return impl_->constructionExcludedTypes; }
 // 화면과 입력은 같은 살아 있는 상태를 읽는다.
 RawSurfaceWorld& RawCampaignSession::World() { return impl_->world; }
 RawWorldCore RawCampaignSession::Core() { return impl_->core; }

@@ -75,6 +75,8 @@ public:
     std::uint32_t CurrentSubscriber() const;
     // 검사/후속 게임 명령이 사용하는 실제 raw 표면 월드다. 표시도 같은 슬롯을 읽는다.
     RawSurfaceWorld& Surfaces();
+    // Client 명령/메뉴는 표시와 같은 실제 Session을 빌린다. 이전 값형 어댑터에서의 혼용은 거부한다.
+    RawCampaignSession& Session();
 private:
     // 현재 실제 슬롯에서 읽기 전용 UI 뷰만 갱신하며 별도 게임 상태를 진행하지 않는다.
     void RefreshCampaignObjects();

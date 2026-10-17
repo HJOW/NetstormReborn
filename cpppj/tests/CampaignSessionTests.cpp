@@ -543,3 +543,68 @@ TEST_CASE(CampaignSession_ManowarExplosionPixelsAndDummyLifetime) {
     renderer.SetScene(std::move(sprites));const auto removed=renderer.SceneImage();CHECK(std::all_of(removed.indices.begin(),removed.indices.end(),[](auto color) { return color==0; }));
     CHECK(core.bookkeeping.depth==0 && core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0);
 }
+
+namespace {
+// 실제 Session 메뉴의 GUI/번역/Tell/커서 소비자만 관찰한다. 게임 조회/생성은 교체하지 않는다.
+struct SessionPriestMenuUi {
+    struct Item { std::string label;std::uint32_t command{},parameter{};bool enabled{}; }; // 실제 작성 문자열과 전체DWORD·허용값이다.
+    std::vector<Item> items; // 실제 사제 메뉴가 작성한 행이다.
+    std::vector<std::string> messages; // 선택 관문이 요청한 원본 Tell 키다.
+    Sid preview{};std::uint32_t flags{},takes{},menus{}; // 실제 생성Form과 커서 취득 경계에 전달한 값·횟수다.
+    // 원본 고정 메뉴 서식의%s/%d/%%를 명시 UI 경계로 처리하며 게임 결과는 계산하지 않는다.
+    static std::string Format(std::string_view key,std::span<const PriestMenuArgument> values) {
+        std::string text;std::size_t argument=0;
+        // 원문 서식의 지정자 순서를 유지한다.
+        for (std::size_t i=0;i<key.size();++i) {
+            if (key[i]!='%') { text+=key[i];continue; }if (++i>=key.size()) throw std::logic_error("메뉴 검사 서식 끝");
+            if (key[i]=='%') { text+='%';continue; }if (argument>=values.size()) throw std::logic_error("메뉴 검사 인자 부족");
+            if (key[i]=='s') text+=std::get<std::string>(values[argument++]);
+            else if (key[i]=='d') text+=std::to_string(std::get<std::int32_t>(values[argument++]));
+            else throw std::logic_error("메뉴 검사 미지원 서식");
+        }
+        CHECK(argument==values.size());return text;
+    }
+    // 그림/메뉴 작성과 실제 커서 취득의 외부 경계만 제공한다.
+    PriestMenuHooks Hooks(std::span<const RiftTypeRecord> types) {
+        PriestMenuHooks hooks;hooks.format=Format;hooks.description=[types](std::uint32_t type) { return types[type].description; };
+        hooks.beginFancy=[] {};hooks.beginVertical=[] {};hooks.title=[](std::string_view) {};hooks.separator=[] {};
+        hooks.takeMenu=[this] { return ++menus; };hooks.submenu=[](std::string_view,std::uint32_t,bool) {};
+        hooks.item=[this](std::string_view label,std::uint32_t command,std::uint32_t parameter,bool enabled) { items.push_back({std::string(label),command,parameter,enabled}); };
+        hooks.baseMenu=[](Sid) {}; // Carrier/객체 GUI 부모는 이 검사의 명시 외부 경계다.
+        hooks.tell=[this](std::string_view key) { messages.emplace_back(key); };
+        hooks.takePreview=[this](Sid form,std::uint32_t input) { preview=form;flags=input;++takes; };return hooks;
+    }
+};
+}
+// 실제 GameWorld가 표시하는 같은 세션의 사제/허용/SP/내용물 생성기를 메뉴와 건설 선택에서 사용한다.
+TEST_CASE(CampaignSession_PriestMenuUsesActualWorldAndBuildSelection) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());
+    GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",external.Services(),{1024,768});
+    auto& session=world.Session();auto core=session.Core();CHECK(&core.pool==&world.Surfaces().Core().pool);const Sid priest{static_cast<std::uint16_t>(session.FindPriestParticipation(1))};CHECK(priest.value!=0);
+    SessionPriestMenuUi ui;auto hooks=ui.Hooks(core.types);hooks.allowed=[](std::uint32_t) { return false; };hooks.money=[](std::uint32_t) { return -999.0f; };
+    auto menu=session.MakePriestMenu(std::move(hooks));auto& settings=session.PriestMenuSettings();settings.localOwner=8;settings.editor=true;settings.workshopMode=false;settings.chargeBlocked=false;
+    menu->Open(priest);CHECK(!ui.items.empty());CHECK(settings.localOwnerRead()==session.LocalOwner() && !settings.editorRead() && settings.workshopModeRead()==core.ownerMode.battle && settings.chargeBlockedRead());
+    const auto type=settings.temples[0];const auto cost=session.HitPoints().TypeCostUnits(type);CHECK(cost>0);
+    if (core.types[type].flags2&0x4000) session.AddTechnology(1,core.types[type].assetName);
+    session.SetSp(1,static_cast<float>(cost-1));CHECK(!menu->SelectBuild(type,priest));CHECK(ui.takes==0 && ui.messages==std::vector<std::string>({"BuildNoBucks"}));
+    const float money=static_cast<float>(cost+1000);session.SetSp(1,money);CHECK(menu->SelectBuild(type,priest));CHECK(ui.takes==1 && ui.preview.value!=0 && ui.flags==0x160);
+    const auto form=core.pool.Slot(ui.preview);CHECK(form[10]==6 && Get(form,18,2)==type);
+    CHECK(session.Priests().Carrier().FindContained(priest,0x20,type,0)==ui.preview);CHECK(session.Sp(1)==money);
+}
+// 같은 메뉴 객체가 나중에 바뀐 실제 기술 체인과TYPE 제외 목록을 다시 읽는다.
+TEST_CASE(CampaignSession_PriestMenuTracksTechnologyAndTypeExclusions) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",external.Services());session.Load();
+    auto core=session.Core();SessionPriestMenuUi ui;auto menu=session.MakePriestMenu(ui.Hooks(core.types));const auto type=session.PriestMenuSettings().temples[0];
+    session.ClearTechnology(1);CHECK(!menu->HasTheme(core.types[type].theme));session.AddTechnology(1,core.types[type].assetName);CHECK(menu->HasTheme(core.types[type].theme));
+    const Sid priest{static_cast<std::uint16_t>(session.FindPriestParticipation(1))};session.SetSp(1,100000);menu->AddBuild(type,false,priest,true);CHECK(ui.items.size()==1 && ui.items.back().enabled);
+    auto& excluded=session.ConstructionExcludedTypes();excluded.entries={type};excluded.count=1;menu->AddBuild(type,false,priest,true);CHECK(ui.items.size()==2 && !ui.items.back().enabled);
+    excluded.count=0;menu->AddBuild(type,false,priest,true);CHECK(ui.items.size()==3 && ui.items.back().enabled);CHECK(&excluded==&session.ConstructionExcludedTypes());
+}
+// 실제 Session 설치 전에 새 메뉴가 생성/게임 조회를 진행하지 않는 관문을 확인한다.
+TEST_CASE(CampaignSession_PriestMenuRejectsUninstalledSession) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());
+    RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",external.Services());CHECK(Throws([&] { static_cast<void>(session.MakePriestMenu({})); }));
+}

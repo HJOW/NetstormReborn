@@ -1250,3 +1250,8 @@ set_source_files_properties(PlayerMenuTests.cpp PROPERTIES COMPILE_DEFINITIONS
 target_sources(netstorm_tests PRIVATE CarrierDropPointTests.cpp)
 set_source_files_properties(CarrierDropPointTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_CARRIER_DROP_POINT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/carrier-drop-point-x86.tsv\"")
+
+# 실제 Carrier 부모 통지 전체의 독립 관측이다.
+target_sources(netstorm_tests PRIVATE CarrierContentNoticeTests.cpp)
+set_source_files_properties(CarrierContentNoticeTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CARRIER_CONTENT_NOTICE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/carrier-content-notice-x86.tsv\"")

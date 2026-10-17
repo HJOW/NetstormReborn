@@ -1,0 +1,69 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "entries": [
+    "00429560",
+    "0049a840",
+    "004ac550",
+    "0041cc50",
+    "00497220",
+    "004e49c0"
+  ],
+  "uniqueInputs": 1731,
+  "normalReturns": 3462,
+  "instructionObservations": 404266,
+  "instructionObservationsIncludeBoundaryEntries": true,
+  "entryObservations": {
+    "00429560": 3462,
+    "0049a840": 6516,
+    "0041cc50": 1148,
+    "00497220": 1148,
+    "004e49c0": 2296,
+    "004ac550": 478
+  },
+  "precisionDifferentInputs": [],
+  "boundaryObservations": {
+    "C": 1148,
+    "B": 574,
+    "S": 574,
+    "A": 398,
+    "N": 270,
+    "T": 206,
+    "H": 716,
+    "P": 478,
+    "G": 830,
+    "I": 654,
+    "F": 566
+  },
+  "osCalls": 0,
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_object_menu.py": "883d1b6b694f773acebdb682161665954b020fe6d7068ff6677a7cdbbf3dd6be",
+    "tools/decomp_carrier_content_notice.py": "dbb32841a7019edbcb411f75094046c8bf0e20b4ed503e109a14b79a79d8a94c",
+    "cpppj/tests/fixtures/carrier-content-notice-x86.tsv": "c8a21b68d3b0b6e271d04950022366eab9abd3069ff5a9ce3b53746f1fb4d4bf",
+    "cpppj/src/o/RawCarrierContentNotice.h": "88c1a1a14c7e22dab3e185cf797472783422cde2783c58d3600e65f85a004c7d",
+    "cpppj/src/o/RawCarrierContentNotice.cpp": "b4c012ea2966e432fd60c4beb65de3e0a3a73df6ff9d64a798bd6bcb5e468599"
+  },
+  "limitations": [
+    "실제 가상 통지/TYPE lookup/벡터 wrapper는 원본 몸체다. 중심/번개/음향/new·생성자/타이머/공간 조회/Carrier check는 명시 경계다.",
+    "실제 Session의 일반 건설 Form 생성은 별도 통합 검증이며 Client 커서/확정/전체 플레이는 미완료다."
+  ],
+  "product_validation": {
+    "configuration": "Release",
+    "build_exit_code": 0,
+    "build_warnings": 0,
+    "build_errors": 0,
+    "build_log": "extracted/goal-session-priest-menu-20261017-build3.log",
+    "focused_tests": 2,
+    "native_rows_compared": 1731,
+    "full_tests": 1494,
+    "failed_checks": 0,
+    "ctest_exit_code": 0,
+    "ctest_seconds": 227.26,
+    "full_output": "extracted/goal-session-priest-menu-20261017-ctest-output.log",
+    "invalid_native1_excluded": true,
+    "normal_observation_run": "native3",
+    "actual_client_enabled": false
+  }
+}

@@ -254,9 +254,14 @@ def main():
         result, trace = oracle.call(0x4ad710, ecx=POOL + 50 * 50)
         rows.append(['Frame', side, struct.unpack('<i', struct.pack('<I', result))[0]])
     fixture = ROOT / 'cpppj/tests/fixtures/priestmenu-x86.tsv'
+    if '--compare' in sys.argv:
+        # 현재 PC의 실제 허용 함수로 관측한 전체 행을 기존 기대값과 비교하며 쓰지 않는다.
+        with fixture.open(encoding='utf-8') as fp:stored=list(csv.reader(fp,delimiter='\t'))[1:]
+        assert stored==[[str(value) for value in row] for row in rows], '기존 사제 메뉴 원문 관측 불일치'
+        print(json.dumps(dict(matched=len(rows),instructions=oracle.instructions,fixture_unchanged=True),ensure_ascii=False));return
     with fixture.open('w', encoding='utf-8', newline='') as fp:
         writer = csv.writer(fp, delimiter='\t', lineterminator='\n');writer.writerow(['kind', 'input_and_native_trace']);writer.writerows(rows)
-    paths = ['originals/Netstorm.exe', 'extracted/refined/originals/functions.tsv', 'extracted/priestmenu/originals/creation.c', 'extracted/priestmenu/originals/functions.tsv', 'tools/ghidra/priestmenu-functions.json', 'tools/decomp_priestmenu.py', 'cpppj/src/client/RawPriestMenu.cpp', 'cpppj/src/client/RawPriestMenu.h', 'cpppj/tests/PriestMenuTests.cpp', 'cpppj/tests/fixtures/priestmenu-x86.tsv']
+    paths = ['originals/Netstorm.exe', 'extracted/refined/originals/functions.tsv', 'tools/ghidra/priestmenu-functions.json', 'tools/decomp_priestmenu.py', 'cpppj/src/client/RawPriestMenu.cpp', 'cpppj/src/client/RawPriestMenu.h', 'cpppj/tests/PriestMenuTests.cpp', 'cpppj/tests/fixtures/priestmenu-x86.tsv']
     counts = {kind: sum(row[0] == kind for row in rows) for kind in ['Open', 'Select', 'Theme', 'Frame']}
     report = {'host': 'VM-W11-Codex', 'edition': 'PATCH10.78', 'observations': len(rows), 'counts': counts, 'instructions': oracle.instructions, 'boundaries': ['현재허용/비용/SP/TYPE설명/번역서식', 'Open/Select의테마query·내용물query와Theme실행의내용물커서', '실제HP불가/사건조회', '메뉴생성/작성/기본객체메뉴', 'ContainedCreate/실제커서취득'], 'limits': ['실제메뉴저장소/픽셀/게임커서/건설실행은이oracle관찰범위밖', 'CD10.72대응분석은미수행'], 'sha256': {path: digest(ROOT / path) for path in paths}}
     (ROOT / 'cpppj/priestmenu.json').write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')

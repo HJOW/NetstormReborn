@@ -186,7 +186,7 @@
     "cpppj/src/client/RawCarrierDropPoint.cpp": "a0c2130de14992eb2f3debda71840b9e0c9889398d17cfd92c2c8cb050b2acd5",
     "cpppj/tests/CarrierDropPointTests.cpp": "65a1f6834bad63ad10548fb4b0b96c26fc7e869a1f2447e07254190237f51b7c",
     "cpppj/src/client/CMakeLists.txt": "8bb17d335554c16e6ff3300134492a264bfa425dfafd52062ecf0062f523d87c",
-    "cpppj/tests/CMakeLists.txt": "fcb5d8ca761b6c48715c00302a7d4e6d00ca31a16ba6ff3ac0a2dd731d583c8d",
+    "cpppj/tests/CMakeLists.txt": "f932d354f00051f6807c2ccf95a7a3bdd53173fd79c8f104ae3e986e612c5723",
     "cpppj/src/client/RawCarrierMenu.h": "549eb57a893ffbb4aee1bdd5945fffb2e8a5fc45ec9cb9a294420f0737a292bd",
     "cpppj/src/client/RawCarrierMenu.cpp": "0cea02b171cccc0909d96d55ccc09551dfabfec0d65473b14ff687a28eae7e88",
     "cpppj/src/o/RawCanonPlacementPipeline.h": "4c52d14dea023e6c5251c528b1afd6955e10d8d25a31e9766b4d79faa286e8fc",
@@ -208,6 +208,17 @@
       "previous_tool_sha256": "93b8fea1bd17f2ac6bbd459415cf63f60d9ddf10ecf1d3245c32a8433212a9be",
       "current_tool_sha256": "57bcb00d5f98d290bda38ded1467fef332866bce8761598cd92346b191155a59",
       "fixture_preserved": true
+    },
+    {
+      "date": "2026-10-17",
+      "reason": "단위122 같은 실제 Session의 사제 메뉴/부모 내용물 통지 연결·기존 관측 보존",
+      "shared_sha256": {
+        "cpppj/tests/CMakeLists.txt": {
+          "previous": "fcb5d8ca761b6c48715c00302a7d4e6d00ca31a16ba6ff3ac0a2dd731d583c8d",
+          "current": "f932d354f00051f6807c2ccf95a7a3bdd53173fd79c8f104ae3e986e612c5723"
+        }
+      },
+      "previous_fixture_preserved": true
     }
   ],
   "product_validation": {

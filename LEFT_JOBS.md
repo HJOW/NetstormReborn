@@ -1,5 +1,18 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-17 단위122 완료: 실제 Session의 사제 메뉴·건설 선택과 부모 통지 (`HJOW-Athlon`)
+
+- [x] AGENTS.md·양 LEFT·깨끗한1261443과 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16**을 확인했다. 직전 단위121은 전체1,489 통과/로컬 커밋으로 진행됐다. 새 내보내기·원본/클론 게임 실행은 없다. 전체 목표는 active다.
+- [x] `GameWorld::Session`과 `RawCampaignSession::MakePriestMenu`가 실제 같은 Pool/TYPE/Player/기술/Host/허용/비용/SP/내용물 생성기를 연결한다. 알려진4전역은 각 사용 시점의 실제 reader다.00594fbc Workshop 조건은 battle이며0055a480 special을 challenge00594fc8로 추정하지 않았다. TYPE 제외 목록0052f7e0은 추가 SID 목록과 별개로 소유한다. [작업 기록](docs/exe/cpp-session-priest-menu-20261017.md).
+- [x] 실제thewarbegins GameWorld와 같은 Session에서 오래된 UI 필드/임의 allowed·SP 훅을 공급해도 실제 backend를 읽는다. 부족 SP는 원본 Tell로 거부하고, 충분하면 실제 Form6을 사제 부모에 붙여 SID/160을 커서 소비자 경계로 전달한다. 선택만으로 차감하지 않는다. 같은 메뉴에서 기술 체인·TYPE 제외 변경도 반영한다. **실제 RawCursorLifecycle.Take/GUI를 실행했다는 증거는 아니다.**
+- [x] 첫 실제 생성은 미연결 사제 부모 통지에서 실패해 PATCH429560 전체 `RawCarrierContentNotice`를 복원하고 실제 VT+24로 분배했다. reason4를 무시하는 우회는 없다. 저장/로딩·폭탄·포획·Carrier 검사·해방 소리의 현재 상태/순서, new0/생성0을 구별한다. Session은 중심/Carrier/타입 조회를 실제 몸체에 연결하며 나머지 선택 FX는 실제 서비스가 필요하다.
+- [x] 원문1은 제가 관찰 도구에서 풀 주소005c8464를 설정하지 않아 잘못된 주소를 읽은 **무효 관측**이었다. 무효 fixture/report는`extracted/goal-session-priest-menu-20261017-native1-invalid-*`로 보존하고 합계에서 제외했다. 풀 주소 assertion/SEH DWORD 외NULL 읽기 거부·효과별 실제 진입을 추가했다. 원문2는497220 미허용에서 중단했고 근거에 넣지 않는다.
+- [x] 원문3은 **1,731고유 입력/두 정밀도3,462정상 반환/명령·경계404,266회/차이0**다. 두 raw50바이트/현재9DWORD/전체 효과 인수·순서/ABI/x87/SEH·허용 실행/쓰기를 대조한다. 실제41cc50→497220 투영 결과는 **화면 정수**이며16/11배+0.5/ftol/현재 원점 차감이다. 시작y는0,005412c8은**rainWalker156**으로 확인했다. 같은 현재 이동 타입과 화면 원점을 연결했다.
+- [x] 기존 사제905 관측의 과거 부분 export2개가 현재 PC에 없어 old --verify가 실패했다. 실행에서 쓰지 않던 과거 export SHA는 이력으로 보존하고 현재 정밀표/PE로 --compare를 추가해 **905행 전체 일치·260,365명령·기존 fixture 불변**을 확인했다. 현재 C++ 집중4/전체1494 확인 뒤 과거부터 남아 있던 검사 소스1핀도 이력과 갱신했다. 최종 --verify905가 통과했다.
+- [x] 최종 **Release 빌드3 종료0·경고0·오류0**, 새 집중5/기존 사제4 및 Session 전체 집중24가 통과했다. 전체 CTest 내부 **1,494개 모두 통과·실패0·227.26초·종료0**다. 영구 내부 출력은 `extracted/goal-session-priest-menu-20261017-ctest-output.log`다. 기본 커서는 통과했으나 이전 간헐 실패 원인은 미확정이다. 이후 검사 설명의 숫자/범위만 교정해 실행 토큰은 바꾸지 않았다.
+- [x] 새 현재 의존31개·관측/제품3보고서 SHA·UTF-8/LF16파일·보호 원본3개/기존905 fixture/AGENTS/DN 경계를 감사했다. 실제 이전HEAD와 일치하던8보고서11핀·도구1핀·재검증한 과거 검사1핀만 전후 이력과 갱신했고 다른 기존 역사 핀은 보존했다. 모든 실행 핸들은 종료했다. 기록을 포함해 **20261017-22 CP 실제 세션 사제 메뉴와 건설 선택 및 내용물 부모 통지 연결**로 로컬 커밋한다. push하지 않는다.
+- [ ] **다음 실제 플레이:** UberGump336은 여전히 임시 우클릭/비활성 Construct다. 새 Session 메뉴 API를 실제 controlled 메뉴/전체DWORD 명령·GumpForm·커서 Take/위치/수집/표시/내려놓기와 일반 건설에 조립한다. UI는 Session보다 먼저 메뉴/커서를 해제해야 한다. 실제 FX 소비자·TYPE 제외의 미션/명령 생산자도 남았다. 생산/경제·AI 전략·GUI 목표미션 시작/진행/승패·저장/다음 미션·사용자 자연 완주와 전체 동일성은 미완료다. 전체1494/Native1731을 실제 플레이 완료 증거로 쓰지 않는다. DirectDraw는 이번 범위에서 제외한다.
+
 ## 2026-10-17 단위121 완료: 운반물 내려놓기 위치 복원 (`HJOW-Athlon`)
 
 - [x] AGENTS.md·양 LEFT·깨끗한c135438과 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16**을 확인했다. 직전 단위120은 전체1,485 통과/로컬 커밋으로 진행됐다. 새 내보내기·원본/클론 게임 실행은 없다. 전체 목표는 active다.
