@@ -308,3 +308,6 @@ target_sources(netstorm PRIVATE RawManaBoltRegular.cpp RawManaBoltRegular.h)
 
 # 실제 Boardcoord 가장자리/Graph 접근점이다.
 target_sources(netstorm PRIVATE RawBoardApproach.cpp RawBoardApproach.h)
+
+# 실제25바이트 로컬 건설 요청과 서버 수신 처리기다.
+target_sources(netstorm PRIVATE RawConstructionCommand.cpp RawConstructionCommand.h)

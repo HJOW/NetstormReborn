@@ -65,7 +65,7 @@
       "cpppj/tests/ObjectMenuTests.cpp": "7485055d8b76db99eb8e2fc117f9d89eb4892c2620112c1afbb1ed267710aa37",
       "cpppj/tests/RawMenuControlsTests.cpp": "df26ef116d9971df27bf12f1f857a398dec99ecfe0d72d82c13600244b17d1dd",
       "cpppj/src/client/CMakeLists.txt": "8bb17d335554c16e6ff3300134492a264bfa425dfafd52062ecf0062f523d87c",
-      "cpppj/tests/CMakeLists.txt": "bfc500dc462287984f94118cfad9b630149023924fde65414e5950dfb2f2df3e"
+      "cpppj/tests/CMakeLists.txt": "d7173af70d76e71528687996332c829890f0ba120aeb7c019a07086102161bcd"
     }
   },
   "integration_updates": [
@@ -313,6 +313,18 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "f9f01cf1461e8a290fd9d996bfcdca73e354de80b4a6890dddbd5a3a83ebd87d",
           "current": "bfc500dc462287984f94118cfad9b630149023924fde65414e5950dfb2f2df3e"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 133,
+      "reason": "실제25바이트 건설 요청/서버 수신과 현재 게임 MayPlace·전체 요청 연결",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "bfc500dc462287984f94118cfad9b630149023924fde65414e5950dfb2f2df3e",
+          "current": "d7173af70d76e71528687996332c829890f0ba120aeb7c019a07086102161bcd"
         }
       ]
     }

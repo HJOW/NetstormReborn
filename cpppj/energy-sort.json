@@ -25,10 +25,10 @@
     "tools/decomp_energy_supply.py": "a18c1913de8e3462dc30e21d1cbb62541600655630d8605c594ecc860d200434",
     "tools/decomp_energy_sort.py": "a203949bf138366de9812342953ecfe050dfa588a0c1df4536b5973284caf5ef",
     "cpppj/tests/fixtures/energy-sort-x86.tsv": "58f67ad1e9207c2b7793101100855d504c6167de92ee0176adf3be816489ab4e",
-    "cpppj/tests/CMakeLists.txt": "bfc500dc462287984f94118cfad9b630149023924fde65414e5950dfb2f2df3e",
-    "cpppj/src/client/RawCampaignSession.h": "5271ca6e2c051218eaf14de4554b45e107d164e8b223bfa63b5a6562db3ebaf2",
-    "cpppj/src/client/RawCampaignSession.cpp": "8a0a734f0a9e63ad6ef6d8de21d841f8744e9aab1b62d03fd8a3ff1403519794",
-    "cpppj/tests/CampaignSessionTests.cpp": "93237943b2d85ef3fa84f0d514c00c88e3444b1255586912df4d8f3943a3f65a",
+    "cpppj/tests/CMakeLists.txt": "d7173af70d76e71528687996332c829890f0ba120aeb7c019a07086102161bcd",
+    "cpppj/src/client/RawCampaignSession.h": "a339b719f4e208790732c1323a5ba7a4a72f5911db4fba78968afdd4d2b9e8eb",
+    "cpppj/src/client/RawCampaignSession.cpp": "2a85b1235f1ea99fb66961d637f191c73549ad189e08b8126e34673e29dc491f",
+    "cpppj/tests/CampaignSessionTests.cpp": "058c87ef19570411baee5459321070ceb57d6a965e6b6c91b76a428573d5049f",
     "cpppj/src/o/RawEnergySupply.h": "16298ecafac440612cf5722175fe7adade050e9bdd67015f8308fd37077998be",
     "cpppj/src/o/RawEnergySupply.cpp": "c5597f73998872c29ecb266356405d084ad36b24c6248a3cfc1a1bc43d55f495",
     "cpppj/src/o/RawConstructionBuilder.h": "134e353fb2fae37b9e8726197f3d80ab1b3b9819e6a19bf6a876481b55ef33d4",
@@ -262,6 +262,33 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "c23e7c2daf4ab1b9da427add7eb2f477dddc35c74cd5203046840334b590fd92",
           "current": "93237943b2d85ef3fa84f0d514c00c88e3444b1255586912df4d8f3943a3f65a"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 133,
+      "reason": "실제25바이트 건설 요청/서버 수신과 현재 게임 MayPlace·전체 요청 연결",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "bfc500dc462287984f94118cfad9b630149023924fde65414e5950dfb2f2df3e",
+          "current": "d7173af70d76e71528687996332c829890f0ba120aeb7c019a07086102161bcd"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "5271ca6e2c051218eaf14de4554b45e107d164e8b223bfa63b5a6562db3ebaf2",
+          "current": "a339b719f4e208790732c1323a5ba7a4a72f5911db4fba78968afdd4d2b9e8eb"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "8a0a734f0a9e63ad6ef6d8de21d841f8744e9aab1b62d03fd8a3ff1403519794",
+          "current": "2a85b1235f1ea99fb66961d637f191c73549ad189e08b8126e34673e29dc491f"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "93237943b2d85ef3fa84f0d514c00c88e3444b1255586912df4d8f3943a3f65a",
+          "current": "058c87ef19570411baee5459321070ceb57d6a965e6b6c91b76a428573d5049f"
         }
       ]
     }

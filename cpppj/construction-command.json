@@ -1,0 +1,99 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-17",
+  "unit": 133,
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16"
+  },
+  "controls": [
+    639,
+    895
+  ],
+  "writeRows": 64,
+  "receiveRows": 144,
+  "precisionDifferences": 0,
+  "normalReturns": 416,
+  "receiveInstructions": 13136,
+  "receiveBoundaries": {
+    "0x49a840": 216,
+    "0x444760": 176,
+    "0x442af0": 88,
+    "0x40ef30": 168,
+    "0x442b50": 40
+  },
+  "source_sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_construction_command.py": "68ab9c22dd4d1fb47a96750743fbecd95790a991167a229010a0b893ad6e4e39",
+    "tools/decomp_constructionlocal_oracle.py": "4809ab17e2df6dda0a3bf462c819c45bcad9c567ae070f90847ca5f8b39280a3",
+    "tools/decomp_constructionplace_oracle.py": "9e21f15fd8f29abd605aedb6325d8627a82ba792745a041e12fd0e4e1fb9e5b4",
+    "tools/decomp_damageablepredestroy_oracle.py": "6f260fca831f979df7361fb783b38de9ccadf93bced292e55a04e090c46a748b",
+    "tools/decomp_priestgeometry_oracle.py": "a2e100450c4e22d4f7de0bc4f725c766b7836ab3f7270a6ebb72df7b92e33dc1",
+    "tools/decomp_owner_oracle.py": "5a837ad7fd233d9d75c7241d52fbf2e5a508e24dc158d091f243a13ab698e7fb",
+    "tools/decomp_mana_bolt_arrival.py": "45894421c4a023424c7fd1b0a6d0e59da5cccf1e2cbbbe4bb1cf54b2f6d00eca",
+    "tools/decomp_constructionarrival_oracle.py": "a3db1f04c4c193f223a6b06790ac209dde0b7398a55d52bdb89588ffe4397ec3",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/constructionlocal/originals/functions.tsv": "692aa418daaa968c7535ce7ea00415787da7629b2023a6ebdfd146939a27c50b",
+    "extracted/constructionlocal/originals/creation.c": "fcc22c140349cca3b596c5cb2727915c3e8c39d2abf0312429c1986cd9b88034",
+    "extracted/constructionplace/originals/functions.tsv": "581cd3c146d6133b11e9bdce0ce7458d79208acf578806571c90610cb9c59152",
+    "extracted/constructionplace/originals/creation.c": "3e182a370e7344350ff234dde03ae96440157f404aa8542af64e6e1b4c3e5426",
+    "cpppj/tests/fixtures/construction-command-write-x86.tsv": "2bc1bc86bf6f7d1e61c0eb06ccccbd8e3581094aef6aaf4b032df302afd307c1",
+    "cpppj/tests/fixtures/construction-command-receive-x86.tsv": "9706070a4aa90831e4b50e775bdc576a1bc38561e25af0e3f222aeb33175568d"
+  },
+  "boundaries": [
+    "실제4433b0/40a7c0/4df230의 전체25바이트",
+    "실제444af0; 타입/Money/Request/부족/환불은 명시 경계",
+    "두 정밀도 ABI/보존 레지스터/x87 균형; OS/GUI/게임 호출0"
+  ],
+  "baseCommit": "aa054a6",
+  "currentSources": {
+    "cpppj/src/client/RawCampaignSession.cpp": "2a85b1235f1ea99fb66961d637f191c73549ad189e08b8126e34673e29dc491f",
+    "cpppj/src/client/RawCampaignSession.h": "a339b719f4e208790732c1323a5ba7a4a72f5911db4fba78968afdd4d2b9e8eb",
+    "cpppj/src/client/RawCampaignConstructionBindings.cpp": "9172dba73289abb3db36e47cfccc31956356930a086b3dc2165df72eb87c76ac",
+    "cpppj/src/client/RawCampaignConstructionBindings.h": "54c600c4696e0ae753d2c8bfa720e8e3265c9877b5d379e391907511d9f2ff24",
+    "cpppj/src/o/CMakeLists.txt": "3d0010c676da1156f5223bfcaa207887a88910a4cf50733a7b2e9e515f939c48",
+    "cpppj/src/o/RawConstructionCommand.cpp": "6bbc699ba2fdda0bf9de46d9386da677acb9d70bcd297a490f6fe210ceeab15a",
+    "cpppj/src/o/RawConstructionCommand.h": "7db4c56243619ccd34bf4fa40bacf50ff42a57b1804f0a740183c39d824eea7a",
+    "cpppj/tests/CMakeLists.txt": "d7173af70d76e71528687996332c829890f0ba120aeb7c019a07086102161bcd",
+    "cpppj/tests/CampaignSessionTests.cpp": "058c87ef19570411baee5459321070ceb57d6a965e6b6c91b76a428573d5049f",
+    "cpppj/tests/ConstructionCommandTests.cpp": "8ca02e9dbb4574f9f758ba2bb7408d1dd542eb9618e92ac1c0a9048a704eb154"
+  },
+  "protectedFileSha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6"
+  },
+  "integration": {
+    "server": "실제 등록/수신→같은 Place Money/Shortfall→전체 Request/MayPlace/충돌/Displace/받침/일반 Confirm→실패 Reject",
+    "placement": "지형 생성용과 별개이며 현재 Player/방향 동맹/Editor/Graph/원본 섬 +id*32+4/+8을 사용",
+    "tests": "명시 로컬 예측/기존134→wire→분배→서버 교체/완료; 다른 Player의 한 번 차감/완료; 다른 소유자 예측의 환불/취소",
+    "remaining": "실제 Client 커서/Local 예측 생성·조각 반환/로컬 전송 로그인 연결·전체 UI 자연 플레이는 미완료"
+  },
+  "validation": {
+    "releaseBuild": 2,
+    "buildExit": 0,
+    "warnings": 0,
+    "errors": 0,
+    "commandTests": 3,
+    "sessionTests": 3,
+    "focusedFailures": 0,
+    "nativeInputs": 208,
+    "verifyCommands": 36,
+    "verifyFailuresAfterCheckoutFix": 0,
+    "checkoutFix": "constructionrequest-functions.json의 CRLF 작업 사본을 동일 HEAD LF로 복구하고 eol=lf 고정; 기존 내용/기대 SHA/fixture 불변",
+    "existingRequestRows": 2192,
+    "existingLocalRows": 1450,
+    "pinUpdate": {
+      "reports": 21,
+      "currentPins": 79,
+      "historicPreserved": 138
+    },
+    "fullSuite": {
+      "tests": 1537,
+      "failedChecks": 0,
+      "ctestExit": 0,
+      "testSeconds": 236.45,
+      "totalSeconds": 236.48
+    }
+  }
+}

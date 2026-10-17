@@ -116,8 +116,8 @@
     "initialFailureLogPreserved": true
   },
   "sha256": {
-    "cpppj/src/client/RawCampaignConstructionBindings.h": "5d39dd8063663fb53b5efc4270bccf1b9a443f449f0d7b9e257304006075e821",
-    "cpppj/src/client/RawCampaignConstructionBindings.cpp": "66ca96a011f73fb54cfee4cb0a896556de37320ec21ff7eb8d9aec92bd486500",
+    "cpppj/src/client/RawCampaignConstructionBindings.h": "54c600c4696e0ae753d2c8bfa720e8e3265c9877b5d379e391907511d9f2ff24",
+    "cpppj/src/client/RawCampaignConstructionBindings.cpp": "9172dba73289abb3db36e47cfccc31956356930a086b3dc2165df72eb87c76ac",
     "cpppj/src/client/RawCampaignSession.h": "22f17f2a2dfbd71c5995e498b870e9d0ab27cfb3d2b532f6ce2fcdc032479244",
     "cpppj/src/client/RawCampaignSession.cpp": "36b23f4e6c6b557ceaf908de235f6451938f10bdde86cac3fa715eafe8d71ea1",
     "cpppj/src/client/CampaignClientServices.cpp": "86407af96a1a5ccaaa16ba158f205bbe66fa97c88f091629b1516eb6f2395ed3",
@@ -243,6 +243,23 @@
           "path": "cpppj/src/o/RawConstructionPlace.cpp",
           "previous": "623c69f19aac8dbc2d918885c8324afb881cca3b47339303bf65e62c789eaaf8",
           "current": "c90e759306d3452eb9c400f6bb252a68f8f89cff6f1ff9fe7b051a8e390618ff"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 133,
+      "reason": "실제25바이트 건설 요청/서버 수신과 현재 게임 MayPlace·전체 요청 연결",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignConstructionBindings.h",
+          "previous": "5d39dd8063663fb53b5efc4270bccf1b9a443f449f0d7b9e257304006075e821",
+          "current": "54c600c4696e0ae753d2c8bfa720e8e3265c9877b5d379e391907511d9f2ff24"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignConstructionBindings.cpp",
+          "previous": "66ca96a011f73fb54cfee4cb0a896556de37320ec21ff7eb8d9aec92bd486500",
+          "current": "9172dba73289abb3db36e47cfccc31956356930a086b3dc2165df72eb87c76ac"
         }
       ]
     }

@@ -140,6 +140,12 @@ public:
     void RefreshPriestParticipation(std::uint32_t owner);
     // 같은 현재 사제 목록/ownerState/풀에 연결된 참여 몸체를 읽기 전용으로 빌린다.
     const o::RawPriestParticipation& PriestParticipation() const;
+    // 같은 실제 현재 모드/방향 동맹/Graph/섬을 읽어 전체 MayPlace를 실행한다.
+    bool MayPlaceConstruction(const o::CanonPlacementQuery& query);
+    // 원본 전체 서버 요청의 공간 검사/밀어내기/받침/확정을 실행한다.
+    bool RequestConstruction(const o::ConstructionConfirmRequest& request);
+    // 같은 실제0x3e 수신을 기존 RawPacketDispatch 또는 LocalMissionTransport.Dispatch에 등록한다.
+    void RegisterConstructionCommands(o::RawPacketDispatch& dispatch);
     // 원본 MayPlace를 통과한 일반 서버 요청의 기준점/송신/직접 통지/실제 배치를 실행한다.
     bool ConfirmConstruction(const o::ConstructionConfirmRequest& request);
     // 설치 뒤 로컬 간헐천의 noIsland/Player0 받침만 실제 서버 확정 사슬로 만든다.

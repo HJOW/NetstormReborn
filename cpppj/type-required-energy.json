@@ -28,9 +28,9 @@
     "cpppj/src/client/AiTypeRequiredEnergy.cpp": "a77ecbbece0a23b295c26e35ba5f788ea1c61a660b95880a83abc6988ef559c0",
     "cpppj/tests/fixtures/type-required-energy-x86.tsv": "8bcb3e215c958f5df0a395365059f5481801b1660569f2f04c0720f394f14f4c",
     "cpppj/tests/TypeRequiredEnergyTests.cpp": "0802ab400413ec5da3f2d03a4ac6b6f88e2d088915646609a2ca0bb39a02b05c",
-    "cpppj/src/o/CMakeLists.txt": "ef282a0eea6f3ab2c93477676b64e5da05d01ae6abded1ec9e2bd727244c3aea",
+    "cpppj/src/o/CMakeLists.txt": "3d0010c676da1156f5223bfcaa207887a88910a4cf50733a7b2e9e515f939c48",
     "cpppj/src/client/CMakeLists.txt": "8bb17d335554c16e6ff3300134492a264bfa425dfafd52062ecf0062f523d87c",
-    "cpppj/tests/CMakeLists.txt": "bfc500dc462287984f94118cfad9b630149023924fde65414e5950dfb2f2df3e"
+    "cpppj/tests/CMakeLists.txt": "d7173af70d76e71528687996332c829890f0ba120aeb7c019a07086102161bcd"
   },
   "product_validation": {
     "configuration": "Release",
@@ -1387,6 +1387,23 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "f9f01cf1461e8a290fd9d996bfcdca73e354de80b4a6890dddbd5a3a83ebd87d",
           "current": "bfc500dc462287984f94118cfad9b630149023924fde65414e5950dfb2f2df3e"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 133,
+      "reason": "실제25바이트 건설 요청/서버 수신과 현재 게임 MayPlace·전체 요청 연결",
+      "pins": [
+        {
+          "path": "cpppj/src/o/CMakeLists.txt",
+          "previous": "ef282a0eea6f3ab2c93477676b64e5da05d01ae6abded1ec9e2bd727244c3aea",
+          "current": "3d0010c676da1156f5223bfcaa207887a88910a4cf50733a7b2e9e515f939c48"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "bfc500dc462287984f94118cfad9b630149023924fde65414e5950dfb2f2df3e",
+          "current": "d7173af70d76e71528687996332c829890f0ba120aeb7c019a07086102161bcd"
         }
       ]
     }

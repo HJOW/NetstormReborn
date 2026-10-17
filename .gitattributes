@@ -1185,3 +1185,13 @@ cpppj/src/client/RawCampaignConstructionBindings.h text eol=lf
 cpppj/src/o/RawConstructionPlace.cpp text eol=lf
 cpppj/src/o/RawConstructionPlace.h text eol=lf
 tools/ghidra/constructionbuilder-functions.json text eol=lf
+
+# 단위133 실제 건설 요청 바이트/수신과 원본 관측 SHA를 보존한다.
+cpppj/construction-command.json text eol=lf
+cpppj/src/o/RawConstructionCommand.cpp text eol=lf
+cpppj/src/o/RawConstructionCommand.h text eol=lf
+cpppj/tests/ConstructionCommandTests.cpp text eol=lf
+cpppj/tests/fixtures/construction-command-write-x86.tsv text eol=lf
+cpppj/tests/fixtures/construction-command-receive-x86.tsv text eol=lf
+tools/decomp_construction_command.py text eol=lf
+tools/ghidra/constructionrequest-functions.json text eol=lf

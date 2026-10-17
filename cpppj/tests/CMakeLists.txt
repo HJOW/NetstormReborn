@@ -1311,3 +1311,8 @@ set_source_files_properties(BoardApproachTests.cpp PROPERTIES COMPILE_DEFINITION
 # 실제 Player 초기화가 확보한9개 공장 목록 크기다.
 set_property(SOURCE CampaignSessionTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS
     "NETSTORM_PLAYER_FACTORY_INIT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/player-factory-init-x86.tsv\"")
+
+# 실제25바이트 요청과 서버 수신의 두 정밀도 원본 자료다.
+target_sources(netstorm_tests PRIVATE ConstructionCommandTests.cpp)
+set_source_files_properties(ConstructionCommandTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CONSTRUCTION_COMMAND_WRITE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/construction-command-write-x86.tsv\";NETSTORM_CONSTRUCTION_COMMAND_RECEIVE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/construction-command-receive-x86.tsv\"")

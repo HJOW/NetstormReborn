@@ -30,6 +30,8 @@ struct RawCampaignConstructionBindings::Impl {
     std::unique_ptr<o::RawConstructionPlace> place; // 같은 HP/SP/소유자와 실제 Pop을 사용한다.
     std::unique_ptr<o::RawConstructionClear> clear; // 같은 현재 hash/예측 조각을 실제 가상 삭제한다.
     std::unique_ptr<o::RawConstructionNotice> notice; // 원본 직접 수신 순서와 이력을 실행한다.
+    std::unique_ptr<o::RawConstructionRequest> requestBody; // 같은 공간/MayPlace와 실제 서버 확정을 사용한다.
+    std::unique_ptr<o::RawConstructionCommand> command; // 같은 실제 Place의 Money/부족/Reject를 사용하는0x3e 수신이다.
     std::unique_ptr<o::RawConstructionConfirm> confirm; // 실제 서버 SID를 확보하고 전송 뒤 직접 처리한다.
     std::unique_ptr<o::RawPlayerGeyserBounds> bounds; // 같은 Player9/ChunkMap/TYPE/프레임을 읽는다.
     std::unique_ptr<o::RawLocalGeyser> geysers; // 같은 보상 자원 pool과 전용 최근5목록을 사용한다.
@@ -86,6 +88,18 @@ struct RawCampaignConstructionBindings::Impl {
         confirmHooks=o::MakeConstructionNoticeConfirmHooks(core.pool,*notice,std::move(confirmHooks));
         confirm=std::make_unique<o::RawConstructionConfirm>(core.pool,core.types,frames,state.confirm,
             o::MakeConstructionConfirmHooks(core.pool,core.factory,std::move(confirmHooks)));
+        auto requestHooks=std::move(gameplay.request); // 명시된 실제 Session 하위만 사용한다.
+        if (!requestHooks.mayPlace) requestHooks.mayPlace=ConstructionMissing<bool,const o::CanonPlacementQuery&>("전체 MayPlace");
+        if (!requestHooks.displace) requestHooks.displace=ConstructionMissing<bool,float,float,std::uint32_t,std::uint32_t>("발자국 유닛 밀어내기");
+        if (!requestHooks.cancel) requestHooks.cancel=ConstructionMissing<void,float,float,std::uint32_t,std::uint32_t>("실패 섬 정리");
+        requestHooks.confirm=[this](const o::ConstructionConfirmRequest& value) { return confirm->Confirm(value); };
+        requestBody=std::make_unique<o::RawConstructionRequest>(core.pool,core.hash,core.types,frames,core.spots,state.request,std::move(requestHooks));
+        o::ConstructionCommandHooks commandHooks; // 비용 선검사와 실패 환불도 같은 실제 Place다.
+        commandHooks.money=[this](std::uint32_t owner) { return place->Money(owner); };
+        commandHooks.shortfall=[this](const o::ConstructionConfirmRequest& value) { place->ChargeShortfall(value.type,value.player,value.x,value.y,value.argument,value.direction); };
+        commandHooks.request=[this](const o::ConstructionConfirmRequest& value) { return requestBody->Request(value); };
+        commandHooks.reject=[this](const o::ConstructionConfirmRequest& value) { place->Reject(value.type,value.player,value.x,value.y,value.argument,value.direction); };
+        command=std::make_unique<o::RawConstructionCommand>(core.types,state.command,std::move(commandHooks));
         bounds=std::make_unique<o::RawPlayerGeyserBounds>(core.pool,chunks,core.types,core.frames,players,currentBounds,effects.boundsAssertion);
         o::LocalGeyserHooks geyserHooks; // factory/Pop/삭제/받침 모두 현재 같은 월드의 실제 몸체다.
         geyserHooks.configInt=effects.configInt;geyserHooks.wallSeconds=effects.wallSeconds;geyserHooks.negativeQuantity=effects.negativeQuantity;
@@ -137,6 +151,12 @@ RawCampaignConstructionBindings::RawCampaignConstructionBindings(RawSurfaceWorld
 RawCampaignConstructionBindings::~RawCampaignConstructionBindings()=default;
 // 일반 서버 요청도 원본 확정/통지/배치 몸체를 그대로 사용한다. 배치 가능 판정은 호출자의 선행 책임이다.
 bool RawCampaignConstructionBindings::Confirm(const o::ConstructionConfirmRequest& request) const { impl_->ValidateState();return impl_->confirm->Confirm(request); }
+// 전체 요청의 실제 공간/받침 검사와 현재 원본 확정만 실행한다.
+bool RawCampaignConstructionBindings::Request(const o::ConstructionConfirmRequest& value) const { impl_->ValidateState();return impl_->requestBody->Request(value); }
+// 원본 수신은 요청 실패 때 같은 실제 Place에서 환불/취소를 요청한다.
+void RawCampaignConstructionBindings::Receive(std::uint32_t sender,std::span<const std::uint8_t> packet) const { impl_->ValidateState();impl_->command->Receive(sender,packet); }
+// 분배기/전송 계층의 실제 수신 지점에 현재 고정 주소 몸체를 연결한다.
+void RawCampaignConstructionBindings::Register(o::RawPacketDispatch& dispatch,std::function<void()> prepare) { o::RegisterConstructionCommand(dispatch,*impl_->command,std::move(prepare)); }
 // 로컬 간헐천 전용 입구는 기존 인자 제한을 보존한다.
 bool RawCampaignConstructionBindings::ConfirmSupport(const o::ConstructionConfirmRequest& request) const { return impl_->ConfirmSupport(request); }
 // 실제로그인/Player초기화뒤미션부모가지정한위치에서만호출한다.

@@ -1,5 +1,19 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-17 단위133 완료: 실제0x3e 요청25바이트·서버 수신·전체 MayPlace (`HJOW-Athlon`)
+
+- [x] AGENTS.md·양 LEFT·깨끗한aa054a6과 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16**을 확인했다. 새 디컴파일·원본/클론 게임·GUI 실행은 없다. 보호 PE의 CPU 메모리 격리 관측만 추가했다. 전체 목표는 active다. [작업 기록](docs/exe/cpp-construction-command-20261017.md), `cpppj/construction-command.json`, 접두사`extracted/goal-local-construction-20261017-`를 남겼다.
+- [x] 새 `RawConstructionCommand`가 실제4433b0/40a7c0/4df230의 프로토콜1·메시지3e·길이25와 TYPE BYTE/x·y float/인자 WORD/방향·품질 BYTE/기본0시각8바이트를 직렬화한다. 실제 observer40b380은 빈 stdcall이며 등록은 버전1/정책0/수신444af0이다. 전체 sender DWORD와 현재 선언 길이/프로토콜을 실제 RawPacketDispatch로 처리한다.
+- [x] 실제444af0의558e74 차단→비용 선검사(Money의 ordered less, NaN은 부족 아님)→전체 Request444760→실패 Reject442af0을 복원했다. Money 뒤 현재 비용/Shortfall·Request·Reject 직전 현재 패킷을 다시 읽는다. wire 시각은 무시하고 Request에는0/0을 넘긴다. 같은 실제 Place의 Money/ChargeShortfall/Reject와 연결했으며 잔액 고정값이나 확정 직접 호출로 대체하지 않았다.
+- [x] Session의 `RegisterConstructionCommands`/`RequestConstruction`/`MayPlaceConstruction`이 실제 전체 공간 판정→abstract 충돌→Displace→받침/본 확정→실패 섬 정리를 연결한다. 생성용 지형의 임의 동맹 표와 구별한 게임 상태가 현재 Player/방향별 동맹/Editor/Graph와 원본 IslandList의 +id×32+4(제한·신전)/+8(존재)를 읽는다. useAlliances540cb0의 실제 PE 초기값1도 확인했다. force/권한 우회로 검사 위치를 만들지 않았다.
+- [x] 새 원본 관측은 전체25바이트64개·수신144개 입력을 두 정밀도로 실행한 **208고유 입력/416정상 반환/정밀도 차이0**이다. 타입/Money/Request/부족/환불 및 기존 Local의 가상 효과는 명시 경계다. Money는 float10 ABI 입력이며 이 관측이 그 몸체를 새로 실행했다는 의미는 아니다. 실제 실행기 의존·로컬 범위 표·두 제어값을 수록했다. 최종 재생성 후 두 fixture 전체 바이트가 직전 검사 입력과 같았다.
+- [x] 새 C++ 집중6개가 원본208개와 바이트/경계 순서·변경 뒤 재조회, 실제 등록의 길이/버전/sender, 명시 로컬 예측/기존134→wire→분배→전체 요청→서버 교체/완료, 다른 Player 비용의 한 번 차감/완료, 다른 소유자 예측의 환불/취소를 검증했다. Client 내려놓기/Local 예측 생성이나 실제 로그인된 로컬 전송 두 끝의 완주로 확대하지 않는다. 준비 부품도 복제 Fort 저장 입력이며 생산 완료를 대체하지 않았다.
+- [x] 최종 **Release 빌드2 종료0·경고0·오류0**, 집중6개/실패0, 전체 **1,537개/실패0/CTest 종료0/236.45초(전체236.48초)**다. 근거 **36종 통과**, 기존 Request2192/Local1450행도 그대로 감사했다. Request 함수 목록의 첫 SHA 실패는 CRLF 작업 사본이었고 LF=HEAD=기존 기대 SHA를 증명해 동일 HEAD LF로 복구/고정했다. 내용/기존 기대 SHA/fixture는 불변이다.
+- [x] 현재 HEAD와 맞던21개 보고서79핀만 이력을 추가해 갱신하고 과거138핀은 보존했다. 현재제품10개/보호3개 SHA·UTF-8/LF·CMake 기존 접두/기존 fixture·AGENTS/DN 불변을 감사한다. 인수인계와 함께 **20261017-33 CP 실제 건설 요청 바이트와 서버 수신 및 전체 MayPlace 연결**로 로컬 커밋하며 push하지 않는다.
+- [ ] **다음 실제 플레이:** 실제 Client의 전체 DWORD 메뉴→ContentForm6 취득/위치/수집/그리기/내려놓기→상위 비용 차감→`RawConstructionLocal` 예측 배치/조각 반환/기존 Builder→이번25바이트 송신을 실제 로컬 전송·로그인 수명에 연결한다. 현재 등록 API는 기존 RawPacketDispatch/LocalMissionTransport.Dispatch에 연결 가능하지만 실제 Client 소유자는 아직 조립해야 한다. 분배기 등록보다 Session이 오래 살아야 하며 월드 교체 때 해제한다.
+- [ ] **커서 수명 주의:** 현재 ContentLifetime의 cursor 값형 사본을 실제 CursorDrop의 현재 preview와 연결하고 원본 Cancel/Prepare/Query/Activate를 같은 상태로 묶어야 한다. `RawCursorLifecycle::Cancel`은 잠겼어도 꼬리의 Activate1/정리/상태 초기화를 수행하므로 잠금만 보고 취소 전체를 생략해서는 안 된다. 빈 UI/게임 성공 콜백으로 연결하지 않는다.
+- [ ] 실제 생산의 준비된 ContentForm6/flags10 부품, 비용 문구/안내/SP·취소 wire·선택 기록기와 다른 건설 시작 Missing, 경제/AI·Player 로그인 연결, 전체 Kernel/GUI 진행·승패·저장·다음 미션·사용자 자연 완주와 전체 원본 동일성은 미완료다. 현재 Builder/105 Regular/30/17/일반 Confirm/전체 요청·수신은 재사용한다. 새 조립/CPU 관측은10.78이며 CD 기록은 문서에 보존한다. 전체화면 DirectDraw 수정은 제외다.
+
 ## 2026-10-17 단위132 완료: 일반 서버 Confirm→Clear/Place/Notice·실제 Player 비용 필드 (`HJOW-Athlon`)
 
 - [x] AGENTS.md·양 LEFT·깨끗한cbe9585과 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16**을 다시 확인했다. 새 디컴파일·원본/클론 게임·GUI 실행은 없다. 전체 목표는 active다. [작업 기록](docs/exe/cpp-general-construction-20261017.md), `cpppj/general-construction-session.json`, 로그 접두사`extracted/goal-construction-confirm-20261017-`를 남겼다.
@@ -10,7 +24,7 @@
 - [x] 새 집중4개가 실제 준비 부품 부재의 확정 실패, 다른 Player의 비용 차감→실제 서버 조각→134/23→30/17 완료, 로컬 예측75 삭제→서버75 교체→기존134 유지/도착/완료와 wire 시각 보존, 실제 Player 표시/이름의 외부 변경 재조회를 검증했다. 준비 부품은 복제 Fort의 원본 저장 내용물 입력이며 생산 완료를 모형으로 대신하지 않았다. 다른 미션 프로세스는 정지하고 선택된 실제 경로/30/17을 실행한 검사다.
 - [x] 최종 **Release 빌드5 종료0·경고0·오류0**, 새4개/기존 건설 Session6개/Place6개 통과, 전체 **1,531개/실패0/CTest 종료0/231.71초(전체231.74초)**다. 근거 **33종 통과**이며 Place3682/Clear1020/Confirm1300/Notice1611/Builder1110행을 기존 값으로 감사했다. Builder 최초 SHA 실패는 함수 목록 작업 사본의 CRLF였고 LF 내용=HEAD=기존 기대 SHA임을 증명했다. 해당 한 파일을 동일 HEAD LF로 복구하고 eol=lf를 고정한 뒤 감사했다. 함수 목록 내용/기존 기대 SHA/fixture는 그대로다. 새 원본 CPU 실행은 없다.
 - [x] 현재 HEAD와 일치하던23개 보고서의64핀만 이력을 추가해 갱신하고 과거44핀은 보존했다. 현재제품7개/보호3개 SHA·UTF-8/LF·CMake/기존 fixture·AGENTS/DN 불변을 감사한다. 이 인수인계와 함께 **20261017-32 CP 일반 서버 건설 확정과 배치 통지 및 실제 Player 비용 필드 연결**로 로컬 커밋하며 push하지 않는다.
-- [ ] **다음 실제 플레이:** 실제 커서 내려놓기→상위 비용 차감→`RawConstructionLocal` 예측 배치/기존 Builder→요청 wire/서버 수신·MayPlace→이번 일반 Confirm을 연결한다. 현재 일반 API의 명시 요청 검사를 전체 사용자 UI 배치 완료로 취급하지 않는다. `construction.presentation`의 비용 문구/안내/SP·취소 송신과 기록기, 자산 Regular/룬의 다른 시작 Missing, Load 뒤 연결인30/17의 초기 저장·수신 및 전체 미션 프레임도 확인해야 한다.
+- [x] **서버 요청 단위133 완료:** 실제25바이트/등록/수신→비용 선검사→전체 MayPlace/충돌/밀어내기/받침/일반 Confirm→실패 Reject를 같은 Session에 연결했다. 실제 Client 내려놓기/상위 비용/Local 예측·반환/로컬 전송과 나머지 Missing은 단위133의 다음 항목에 유지한다.
 - [ ] 실제 생산이 공장에 준비된 ContentForm6/flags10 부품을 만드는 흐름, Client 전체DWORD 메뉴→ContentForm6 Take/위치/수집/그리기/내려놓기, 경제/AI 전략과 명시 Player 생성의 로그인 연결, GUI 시작/진행/승패·저장·다음 미션·사용자 자연 완주와 전체 원본 동일성은 미완료다. 현재 실제 Builder/공유 공급원/105 Regular/30/17/일반 서버 확정을 재사용한다. 새 조립은10.78이며 CD 대응은 문서에 보존한다. 전체화면 DirectDraw 수정도 제외다.
 
 ## 2026-10-17 단위131 완료: 실제 Builder 도착→건설30·표시17·완료 공간 (`HJOW-Athlon`)

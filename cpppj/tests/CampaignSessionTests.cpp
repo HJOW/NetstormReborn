@@ -971,3 +971,40 @@ TEST_CASE(CampaignSession_GeneralConfirmShortfallUsesCurrentPlayerRecords) {
     }
     CHECK(last.size()==31);CHECK(names==std::vector<std::string>({first,last}));CHECK(others==2 && direct==3 && money==3 && rejects==3);
 }
+
+namespace {
+// 원본 전체 MayPlace가 실제 허용하는 같은 지면을 검사 입력으로 찾는다. force/권한 우회를 켜지 않는다.
+CellPoint CommandPlacementPoint(RawCampaignSession& session,std::uint32_t owner) {
+    const auto base=GeneralConstructionPoint(session.Core(),owner); // 같은 실제 공장 Graph의 시작 후보다.
+    // 실제 파이프라인이 첫 허용을 반환한 좌표만 사용한다.
+    for (int dy=-8;dy<=8;++dy) {
+        // 주변의 각 후보를 실제 현재 MayPlace에 전달한다.
+        for (int dx=-8;dx<=8;++dx) { const auto x=static_cast<float>(base.x+dx),y=static_cast<float>(base.y+dy);if (session.MayPlaceConstruction({75,0,x,y,0,owner,0})) return {base.x+dx,base.y+dy}; }
+    }
+    throw std::logic_error("실제 현재 MayPlace가 허용하는 건설 검사 지면 부재");
+}
+// 패킷 분배의 실제 시각/기록 소비자다. 게임 판단은 Session의 실제 수신기가 수행한다.
+PacketDispatchHooks CommandDevice(std::vector<std::vector<std::uint8_t>>& packets) {
+    PacketDispatchHooks hooks;hooks.now=[] { return 77U; };hooks.record=[&packets](PacketConnection&,std::span<const std::uint8_t> packet,std::uint16_t size) { packets.emplace_back(packet.begin(),packet.begin()+size); };
+    hooks.terminate=[](PacketConnection&) { throw std::logic_error("정책0 요청의 예상 밖 연결 종료"); };hooks.close=[](PacketConnection&) { throw std::logic_error("정상 요청의 예상 밖 연결 닫기"); };hooks.release=[](PacketConnection&) { throw std::logic_error("정상 요청의 예상 밖 연결 반납"); };return hooks;
+}
+}
+// 명시 로컬 예측/기존 Builder 입력에서 실제25바이트→분배→수신→MayPlace→서버 교체→완료를 잇는다.
+TEST_CASE(CampaignSession_ConstructionCommandUsesActualRequestAndLocalPrediction) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();services.unitLost=[&](Sid) { ++external.notices; };auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());ReadyConstructionInput(fort,124);GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services),{1024,768});auto& session=world.Session();auto core=session.Core();session.AddTechnology(1,core.types[75].assetName);session.SetSp(1,5000);const auto point=CommandPlacementPoint(session,1);
+    const auto predicted=session.World().Create(75,2);core.owner.Set(predicted,1);core.pool.AllocatedBytes(predicted)[40]|=1;SetRawSquidHitPoints(core.pool,predicted,0);session.World().Pop(predicted,static_cast<float>(point.x),static_cast<float>(point.y),2);ConstructionBuilderState state;auto mover=session.MakeConstructionBuilder(state,{});static_cast<void>(mover->Move(1,predicted,0,0));const auto builders=ConstructionLive(core,134);CHECK(builders.size()==1);if (builders.size()!=1) return;
+    ConstructionLocalMessage message;message.type=75;message.x=static_cast<float>(point.x);message.y=static_cast<float>(point.y);message.timeLow=0x89abcdef;message.timeHigh=0x7ff80000;std::array<std::uint8_t,25> packet{};WriteConstructionCommand(message,packet);std::vector<std::vector<std::uint8_t>> received;RawPacketDispatch dispatch(OriginalEdition::Patch1078,CommandDevice(received));session.RegisterConstructionCommands(dispatch);PacketConnection connection;connection.sender=1;
+    CHECK(dispatch.Dispatch(connection,packet));CHECK(received.size()==1 && received.front()==std::vector<std::uint8_t>(packet.begin(),packet.end()));CHECK((core.pool.Slot(predicted)[11]&3)!=0);CHECK(ConstructionLive(core,134)==builders);CHECK(session.Sp(1)==5000);const auto notice=session.Construction().LastPacket();CHECK(notice.size()==29);if (notice.size()!=29) return;CHECK(Get(notice,18)==0 && Get(notice,22)==0);const Sid target{static_cast<std::uint16_t>(notice[27]|(std::uint16_t(notice[28])<<8))};FinishGeneralConstruction(session,builders.front(),target);
+}
+// 다른 Player의 수신은 잔액 선검사 뒤 실제 Place에서 한 번만 차감하고 실제 Builder가 완성한다.
+TEST_CASE(CampaignSession_ConstructionCommandChargesRemoteOnce) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();services.unitLost=[&](Sid) { ++external.notices; };auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());ReadyConstructionInput(fort,123);GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services),{1024,768});auto& session=world.Session();auto core=session.Core();session.CreatePlayer(2);session.AddTechnology(2,core.types[75].assetName);session.SetSp(2,10000);const auto point=CommandPlacementPoint(session,2);
+    ConstructionLocalMessage message;message.type=75;message.x=static_cast<float>(point.x);message.y=static_cast<float>(point.y);std::array<std::uint8_t,25> packet{};WriteConstructionCommand(message,packet);std::vector<std::vector<std::uint8_t>> received;RawPacketDispatch dispatch(OriginalEdition::Patch1078,CommandDevice(received));session.RegisterConstructionCommands(dispatch);PacketConnection connection;connection.sender=2;CHECK(dispatch.Dispatch(connection,packet));CHECK(session.Sp(2)==10000-core.types[75].cost);const auto notice=session.Construction().LastPacket();CHECK(notice.size()==29);if (notice.size()!=29) return;const Sid target{static_cast<std::uint16_t>(notice[27]|(std::uint16_t(notice[28])<<8))};const auto builders=ConstructionLive(core,134);CHECK(builders.size()==1);if (builders.size()==1) FinishGeneralConstruction(session,builders.front(),target);
+}
+// 클라이언트 예측이 다른 소유자면 전체 요청에서 거부하고 원본 수신은 환불/취소만 요청한다.
+TEST_CASE(CampaignSession_ConstructionCommandRejectsForeignPrediction) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();std::size_t money{},rejects{}; // 실제 송신 장치 경계의 논리 요청만 관찰한다.
+    services.construction.presentation.sendMoney=[&](std::uint32_t owner,const ConstructionMoneyNotice& value) { CHECK(owner==1 && value.player==1 && value.kind==1);++money; };services.construction.presentation.sendReject=[&](std::uint32_t owner,const ConstructionRejectNotice& value) { CHECK(owner==1 && value.type==75);++rejects; };
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());ReadyConstructionInput(fort,124);GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services),{1024,768});auto& session=world.Session();auto core=session.Core();session.AddTechnology(1,core.types[75].assetName);session.SetSp(1,5000);const auto point=CommandPlacementPoint(session,1);const auto predicted=session.World().Create(75,2);core.owner.Set(predicted,2);core.pool.AllocatedBytes(predicted)[40]|=1;session.World().Pop(predicted,static_cast<float>(point.x),static_cast<float>(point.y),2);
+    ConstructionLocalMessage message;message.type=75;message.x=static_cast<float>(point.x);message.y=static_cast<float>(point.y);std::array<std::uint8_t,25> packet{};WriteConstructionCommand(message,packet);std::vector<std::vector<std::uint8_t>> received;RawPacketDispatch dispatch(OriginalEdition::Patch1078,CommandDevice(received));session.RegisterConstructionCommands(dispatch);PacketConnection connection;connection.sender=1;CHECK(dispatch.Dispatch(connection,packet));CHECK(session.Construction().LastPacket().empty());CHECK(ConstructionLive(core,134).empty());CHECK(money==1 && rejects==1 && session.Sp(1)==5000);CHECK((core.pool.Slot(predicted)[11]&3)==0);
+}

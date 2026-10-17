@@ -3,6 +3,7 @@
 #include "client/RawSurfaceWorld.h"
 #include "o/RawBattleBroadcast.h"
 #include "o/RawConstructionNotice.h"
+#include "o/RawConstructionCommand.h"
 #include "o/RawConstructionPacket.h"
 #include "o/RawLocalGeyser.h"
 #include "o/RawPlayerGeyserBounds.h"
@@ -11,6 +12,8 @@
 namespace netstorm::client {
 // 세션이 끝날 때까지 유지할 실제 건설 전역이다. 호출자가 현재 모드/소유자 값을 직접 갱신한다.
 struct RawCampaignConstructionState {
+    o::ConstructionRequestState request; // 전체 서버 MayPlace/충돌/받침 확정의 현재 전역이다.
+    o::ConstructionCommandState command; // 실제0x3e 수신의 차단/비용/로컬 owner 전역이다.
     o::ConstructionConfirmState confirm; // 현재 확정/기록/Canon 타입 전역이다.
     o::ConstructionClearState clear; // 현재 권한과 예측 조각 정리의 Canon 타입 전역이다.
     o::ConstructionNoticeState notice; // 같은 로컬 소유자/권한과 실제 최근 건설 좌표 이력이다.
@@ -29,6 +32,7 @@ struct RawCampaignConstructionEffects {
 };
 // 같은 Session의 기준점/실제 Builder/사제 경로/건설 시작을 연결하는 현재 게임 몸체다.
 struct RawCampaignConstructionGameplay {
+    o::ConstructionRequestHooks request; // 실제 MayPlace/Displace/DropIsland이며 Confirm은 내부가 연결한다.
     o::ConstructionConfirmHooks confirm; // 기준점과 선택적 실제 기록기다. 생성/송신/직접 통지는 내부가 연결한다.
     o::ConstructionNoticeHooks notice; // 운반/사제 조회·접근·이동/시작이다. 정리/배치/환불/삭제/갱신은 내부가 연결한다.
 };
@@ -47,6 +51,12 @@ public:
     RawCampaignConstructionBindings& operator=(const RawCampaignConstructionBindings&)=delete; // 현재 callback의 고정 주소를 보존한다.
     // MayPlace를 통과한 일반 서버 요청을 원본 기준점 검사→SID 확보→송신→직접 통지 순서로 확정한다.
     bool Confirm(const o::ConstructionConfirmRequest& request) const;
+    // 일반 요청은 실제 MayPlace/abstract 충돌/밀어내기/받침/본 확정을 차례로 실행한다.
+    bool Request(const o::ConstructionConfirmRequest& request) const;
+    // 같은 실제0x3e 수신의 비용 선검사와 실패 환불을 실행한다.
+    void Receive(std::uint32_t sender,std::span<const std::uint8_t> packet) const;
+    // 실제 전송 분배기에 같은 수신 몸체를 등록하며 prepare는 현재 Session 전역을 갱신한다.
+    void Register(o::RawPacketDispatch& dispatch,std::function<void()> prepare);
     // LocalGeyser 전용 입구는 기존 noIsland/player0/나머지0 계약을 유지한다.
     bool ConfirmSupport(const o::ConstructionConfirmRequest& request) const;
     // 현재 Player9와 실제 PlayerBounds를 읽어 원본 로컬 생성 부모를 실행한다.

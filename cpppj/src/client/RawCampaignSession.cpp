@@ -208,6 +208,9 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawCampaignParticles> particles; // 같은 Host/Kernel/Renderer의 실제11/19/16 표시다.
     std::uint32_t archerCommand{0x030000b0}; // 보호 PE의 실제 입력 토큰이다.
     std::unique_ptr<RawCampaignAssetBindings> assetBindings; // 실제 저장 건물 후처리와 Gun/Regular다.
+    CanonPlacementPipelineState gameplayPlacement; // 생성용 지형 판정과 구별한 실제 요청/커서의 현재 모드·방향 동맹이다.
+    std::array<CanonPlacementIslandRegion,100> gameplayRegions{}; // 같은 원본32바이트 섬 기록의 현재 제한/존재 view다.
+    std::unique_ptr<RawCanonPlacementPipeline> gameplayPipeline; // 같은 풀/표면/원본 자산으로 전체 실제 MayPlace를 실행한다.
     CanonPlacementPipelineState placement; // 실제 공간/기하/지형 허용 상태다.
     SquidPostPopList additional; // 기존 pipeline이 읽는 실제 추가 목록이다.
     ContainedFinderState contentFinder; // 기존 내용물 검색의 장기 전역이다.
@@ -970,6 +973,9 @@ struct RawCampaignSession::Impl {
     // 각 명시 요청에서 현재 실제 소유자/서버/권한/요새/타입만 공급한다. Player/자원/지도는 복사하지 않는다.
     void PrepareConstruction() {
         constructionState.place.localPlayer=constructionState.notice.localPlayer=playerState.battleOwner;
+        constructionState.request.editor=core.ownerMode.fort;constructionState.request.localPlayer=playerState.battleOwner;
+        constructionState.request.displaceGenus=buildingState.pushGenus;constructionState.request.patternTypes=constructionState.confirm.patternTypes;
+        constructionState.command.localPlayer=playerState.battleOwner;constructionState.command.chargeBlocked=constructionState.place.chargeBlocked;
         constructionState.place.server=core.processState.server;constructionState.place.battleShown=playerState.playerKnown!=0;
         constructionState.place.authority=constructionState.clear.authority=constructionState.notice.authority=constructionState.geyser.boss=assetState.boss;
         constructionState.geyser.fort=core.ownerMode.fort;
@@ -977,7 +983,7 @@ struct RawCampaignSession::Impl {
         constructionState.place.bridgeType=constructionState.clear.bridgeType=core.bridgeState.bridgeType;
         constructionState.confirm.patternTypes[0]=piece;constructionState.confirm.patternTypes[1]=core.bridgeState.bridgeType;
         constructionState.confirm.patternTypes[2]=core.bridgeState.islandType;constructionState.confirm.patternTypes[3]=core.bridgeState.noIslandType;
-        constructionState.clear.patternTypes=constructionState.place.patternTypes=constructionState.confirm.patternTypes;
+        constructionState.clear.patternTypes=constructionState.place.patternTypes=constructionState.request.patternTypes=constructionState.confirm.patternTypes;
     }
     // 수명/자산의 실제 파생 동작을 설치한 뒤 첫 객체 생성 전에 받침/로컬 간헐천 연결을 한 번 구성한다.
     void ConnectConstruction() {
@@ -987,6 +993,9 @@ struct RawCampaignSession::Impl {
         FillMissing(effects.configInt);FillMissing(effects.wallSeconds);FillMissing(effects.refresh);
         FillMissing(effects.negativeQuantity);FillMissing(effects.boundsAssertion);
         RawCampaignConstructionGameplay gameplay; // 첫 객체 설치 뒤 선택될 현재 원본 하위만 지연 연결한다.
+        gameplay.request.mayPlace=[this](const CanonPlacementQuery& query) { return MayPlaceGameplay(query); };
+        gameplay.request.displace=[this](float x,float y,std::uint32_t type,std::uint32_t owner) { if (!buildingEffects) throw std::logic_error("요청의 실제 건설 효과 미설치");PrepareBuilding(core.processState.now);return buildingEffects->Displace(x,y,type,owner); };
+        gameplay.request.cancel=[this](float x,float y,std::uint32_t flags,std::uint32_t owner) { if (!buildingEffects) throw std::logic_error("요청 실패의 실제 섬 정리 미설치");PrepareBuilding(core.processState.now);buildingEffects->DropIsland(x,y,flags,owner); };
         gameplay.confirm.findBuilder=[this](std::uint32_t owner,std::uint32_t type,float x,float y) {
             if (!anchor) throw std::logic_error("일반 확정의 실제 기준점 미설치");const auto value=anchor->Locate(owner,type,x,y);
             if (value>=core.pool.Capacity()) throw std::out_of_range("일반 확정 기준점 SID 범위 오류");return Sid{static_cast<std::uint16_t>(value)};
@@ -1133,6 +1142,23 @@ struct RawCampaignSession::Impl {
     return std::make_unique<RawConstructionBuilder>(current->core.pool,current->core.types,current->builderTypes,state,std::move(hooks),current->energySupply.get(),std::move(reads));
 
     }
+    // 생성용 임의 동맹 표와 구별한 현재 게임 배치 파이프라인을 한 번 구성한다.
+    void ConnectGameplayPlacement() {
+        if (gameplayPipeline) throw std::logic_error("실제 게임 배치 중복 연결");gameplayPlacement.geometry=metadata.geometry;
+        gameplayPlacement.permission.useAlliances=1; // 실제540cb0의 PE 초기 DWORD는1이다. 이후에도 같은 장기 상태를 읽는다.
+        gameplayPipeline=std::make_unique<RawCanonPlacementPipeline>(core.pool,core.hash,CanonPlacementPipelineData{core.types,metadata.frames,core.shapes,metadata.hotspots,core.spots,core.hash.Entries(0),gameplayRegions},core.bookkeeping,additional,contentFinder,gameplayPlacement);
+    }
+    // 현재 Player/실제 방향 동맹/Graph와 IslandList를 요청 직전에 원본 소비 위치로 공급한다.
+    bool MayPlaceGameplay(const CanonPlacementQuery& query) {
+        if (!gameplayPipeline) throw std::logic_error("게임 요청의 전체 MayPlace 미설치");
+        gameplayPlacement.placement.localPlayer=std::bit_cast<std::int32_t>(playerState.battleOwner);gameplayPlacement.permission.editor=globals.editor;
+        gameplayPlacement.permission.graphReady=anchorState.graphReady;gameplayPlacement.permission.alliances=alliances;gameplayPlacement.anchor=anchorState;
+        gameplayPlacement.collision.clientMode=core.processState.server ? 1U : 0U;gameplayPlacement.collision.ignoredGenus=buildingState.pushGenus;
+        gameplayPlacement.geometry.patternTypes=constructionState.confirm.patternTypes;gameplayPlacement.relations.islandCount=islands->Count();
+        // 현재 원본 섬의 제한/존재 DWORD만 읽고 Player/owner를 새로 만들지 않는다.
+        for (std::size_t index=0;index<gameplayRegions.size();++index) gameplayRegions[index]={Read(islandBytes,4+index*32),Read(islandBytes,8+index*32)};
+        return gameplayPipeline->MayPlace(query);
+    }
     // 같은 Session 전역을 건설 시작/프레임 직전에 갱신한다. 별도 건설 시계를 만들지 않는다.
     void PrepareBuilding(double now) {
         buildingState.now=now;buildingState.boss=assetState.boss;buildingState.localPlayer=playerState.battleOwner;
@@ -1256,7 +1282,7 @@ RawCampaignSession::RawCampaignSession(const GameAssets& assets,const BaseFileSy
 // Impl이 Kernel을 비운 뒤 실제 모듈을 해제한다.
 RawCampaignSession::~RawCampaignSession()=default;
 // 동일 원본 부모를 실행한다.
-void RawCampaignSession::Load() { impl_->runtime->Load();impl_->ConnectBuilding();impl_->ConnectMotion();impl_->buildingMover=impl_->MakeBuilder(impl_->buildingMoverState,{});impl_->loaded=true; }
+void RawCampaignSession::Load() { impl_->runtime->Load();impl_->ConnectBuilding();impl_->ConnectMotion();impl_->buildingMover=impl_->MakeBuilder(impl_->buildingMoverState,{});impl_->ConnectGameplayPlacement();impl_->loaded=true; }
 // UI의 현재 크기/변경 전역을 빌리며 게임 소유자·모드는 실제 세션에서 다시 읽는다.
 void RawCampaignSession::ResetCamera(CameraHomeState& state,std::function<void(std::int32_t,std::int32_t)> apply) const {
     state.localPlayer=impl_->assetState.localOwner;state.fort=impl_->core.ownerMode.fort;
@@ -1323,6 +1349,12 @@ const RawPriestParticipation& RawCampaignSession::PriestParticipation() const { 
 bool RawCampaignSession::ConfirmConstruction(const ConstructionConfirmRequest& request) {
     if (!impl_->loaded) throw std::logic_error("미설치 Session의 일반 건설 확정");impl_->PrepareConstruction();return impl_->construction->Confirm(request);
 }
+// 현재 실제 공간/권한/지형 파이프라인을 커서와 서버 요청에서 공유한다.
+bool RawCampaignSession::MayPlaceConstruction(const CanonPlacementQuery& query) { impl_->PrepareConstruction();return impl_->MayPlaceGameplay(query); }
+// 실제 서버 요청 전체를 현재 모드로 실행한다. 일반 Confirm으로 바로 건너뛰지 않는다.
+bool RawCampaignSession::RequestConstruction(const ConstructionConfirmRequest& request) { if (!impl_->loaded) throw std::logic_error("미설치 Session의 건설 요청");impl_->PrepareConstruction();return impl_->construction->Request(request); }
+// 기존 실제 패킷 분배기/로컬 전송이 같은 서버 수신 몸체를 호출한다.
+void RawCampaignSession::RegisterConstructionCommands(RawPacketDispatch& dispatch) { if (!impl_->loaded) throw std::logic_error("미설치 Session의 건설 수신 등록");impl_->construction->Register(dispatch,[this] { impl_->PrepareConstruction(); }); }
 // 원본 부모 설치 전의 임의 공간 쓰기를 거부하며 같은 현재 noIsland 전역으로 요청을 구성한다.
 bool RawCampaignSession::ConfirmSupport(float x,float y) {
     if (!impl_->loaded) throw std::logic_error("실제 Session 설치 전 받침 확정 요청");
