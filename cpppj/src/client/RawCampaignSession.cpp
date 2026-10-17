@@ -10,6 +10,7 @@
 #include "o/RawCarrierEscape.h"
 #include "o/RawCarrierSteal.h"
 #include "o/RawCarrierPickup.h"
+#include "o/RawCarrierMove.h"
 #include "o/RawGemReward.h"
 #include "o/RawNuggetReplenish.h"
 #include "o/RawBalloonBody.h"
@@ -305,6 +306,8 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawCarrierFallStart> carrierFallStart; // 현재 이동 삭제/선택 해제/복귀 좌표/즉시 해방을 수행한다.
     GemRewardState gemRewardState; //현재TYPE개수/오벨리스크타입이다.
     std::unique_ptr<RawGemReward> gemReward; //같은게임난수/TYPE제외목록/시각/월드의보상선택·변환이다.
+    CarrierMoveState carrierMoveState; //같은40h 요청의 현재 BYTE/BYTE/WORD다.
+    std::unique_ptr<RawCarrierMove> carrierMove; //실제 요청/서버관문과 같은 경로/후보/현재 전송을 공유한다.
     CarrierPickupState carrierPickupState; //같은현재4f 헤더/입력명령/특정내용물타입이다.
     std::unique_ptr<RawCarrierPickup> carrierPickup; //같은풀/현재후보/내용물/종속/입력/서버전송을연결한다.
     std::uint32_t stealHaltCounter{}; // 모든 크랩이 공유하는00545428이다.
@@ -1679,6 +1682,7 @@ struct RawCampaignSession::Impl {
             else if (kind==priestState.movement.teleport || kind==priestState.movement.manaBolt) path=motion->Paths().StartConstruction(request);
             else throw std::logic_error("다른 실제 운반 경로38/41/42 미복원 경계");return reinterpret_cast<CarrierPathResult>(path);
         };
+        const auto startMove=target.start; //같은489080의 실제 종류별 시작을 서버 이동 수신도 사용한다.
         const auto startEscape=target.start; // 같은489080 분배/실제BFS/Host/직렬화 시작이다.
         target.chooseReturn=effects.carrier.chooseReturn;
         carrierTarget=std::make_unique<RawCarrierTarget>(core.pool,core.types,players,assetState.boss,*boardTarget,std::move(target));
@@ -1739,6 +1743,27 @@ struct RawCampaignSession::Impl {
         };
         FillMissing(effects.path.stepSound);
         motion=std::make_unique<RawCampaignMotionBindings>(world,*priests,*islands,*contained,*anchor,hp,metadata.frames,motionState,start,process,std::move(effects));
+        CarrierMoveHooks move; //실제40h는 현재 선택/동일 Graph/Host/경로 시작을 공유한다.
+        move.selected=[this] { if (!services.deletion.selected) throw std::logic_error("이동 요청의 현재 선택 조회 미연결");return services.deletion.selected(); };
+        move.select=[this](std::uint32_t sid,std::uint32_t force,std::uint32_t activate) { auto link=activeSelection.lock();if (!link || !link->selection) throw std::logic_error("이동 요청의 현재 선택 수명 미연결");static_cast<void>(link->selection->Select(sid,force,activate)); };
+        move.assertion=[](std::uint32_t line) { throw std::logic_error("원본 Carrier.cpp 이동 진단 "+std::to_string(line)); };
+        move.connected=[this](RawPathPoint source,RawPathPoint destination) { const auto first=anchor->GraphAt(source.x,source.y);return first==anchor->GraphAt(destination.x,destination.y); };
+        move.movement=[this](std::uint32_t kind) { return priests->MovementProcessType(kind); };
+        move.path=[this](Sid parent,std::uint32_t kind)->RawPathRuntime* { const auto form=FindAttachedProcess(core.pool,parent,kind);if (!form.value) return nullptr;auto* path=dynamic_cast<RawPathProcess*>(core.processes.FromForm(form));if (!path) throw std::logic_error("이동 요청의 현재 종속/Host 경로 불일치");return &path->Runtime(); };
+        move.send=services.carrierRequest;
+        move.regular=[this](Sid parent,std::uint32_t event) { return core.processes.FindEvent(parent,event)!=nullptr; };
+        move.candidate=[this](Sid parent,RawPathPoint point) { return motion->CarrierArrival().PickupCandidate(parent,point.x,point.y); };
+        move.returnPlace=[this](RawPathPoint point) { return motion->Cleanup().ReturnPlaceAt(point.x,point.y,0); };
+        move.target=[this](Sid parent,Sid place) { static_cast<void>(carrierTarget->StartTarget(parent,place,0,0)); };
+        move.genusAt=[this](RawPathPoint point,std::uint32_t genus) { RawSquidFinder finder(core.pool,core.hash,core.types);
+            //원본4b2070과 같은 첫 현재 후보를 읽는다.
+            for (auto sid=finder.Begin({static_cast<int>(point.x),static_cast<int>(point.y),static_cast<int>(point.x),static_cast<int>(point.y)},(genus&6)==0 ? 1U : 0U);sid.value;sid=finder.Next()) if (core.types[core.pool.Slot(sid)[10]].flags2&genus) return sid;
+            return Sid{};
+        };
+        move.geyser=[this](Sid parent,Sid geyser)->RawPathRuntime* { const auto result=carrierTarget->GoGeyser(parent,geyser);return result ? &reinterpret_cast<RawPathProcess*>(result)->Runtime() : nullptr; };
+        move.altarAllowed=SessionMissing<bool,Sid,Sid>();move.sacrifice=SessionMissing<void,Sid,Sid>(); //실제 의식 조건/시작 미복원을 성공으로 대체하지 않는다.
+        move.start=[startMove](RawPathStartRequest request)->RawPathRuntime* { const auto result=startMove(request);return result ? &reinterpret_cast<RawPathProcess*>(result)->Runtime() : nullptr; };
+        carrierMove=std::make_unique<RawCarrierMove>(core.pool,core.types,core.ownerMode.fort,carrierMoveState,std::move(move));
         FillMissing(services.pathPacket);
         auto pathTx=motion->Paths().Transmission(pathHeader,pathBuffer,[this](std::int32_t length) {
             if (length<=0 || static_cast<std::size_t>(length)>pathBuffer.size()) throw std::logic_error("세션 Path 송신 길이 오류");
@@ -1848,11 +1873,17 @@ void RawCampaignSession::RegisterConstructionCommands(RawPacketDispatch& dispatc
 void RawCampaignSession::RegisterCarrierCommands(RawPacketDispatch& dispatch) {
     if (!impl_->loaded) throw std::logic_error("미설치 Session의 채취 수신 등록");RegisterGeyserMined(dispatch,*impl_->geyserMined);
     dispatch.Register(0x5b,[this](std::uint32_t,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->ReceiveGeyserMined(packet); });
+    dispatch.Observe(0x40,{});dispatch.Version(0x40,1,0);dispatch.RequireLength(0x40,18);
+    dispatch.Register(0x40,[this](std::uint32_t owner,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->carrierMove->Receive(owner,packet); });
     dispatch.Observe(0x4f,{});dispatch.Version(0x4f,1,0);dispatch.RequireLength(0x4f,9);
     dispatch.Register(0x4f,[this](std::uint32_t owner,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->carrierPickup->Receive(owner,0,packet); });
     dispatch.Observe(0x60,{});dispatch.Version(0x60,1,0);dispatch.RequireLength(0x60,10);
     dispatch.Register(0x60,[this](std::uint32_t owner,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->carrierSteal->Receive(owner,0,packet); });
 }
+// 요청은 실제 선택/중복 검사와 전송만 수행하고 직접 Start를 부르지 않는다.
+void RawCampaignSession::RequestCarrierMove(Sid parent,RawPathPoint destination,std::uint32_t sacrifice) { CarrierMove().Request(parent,destination,sacrifice); }
+// 설치 뒤 같은 실제 요청/수신 모듈만 빌린다.
+const RawCarrierMove& RawCampaignSession::CarrierMove() const { if (!impl_->loaded || !impl_->carrierMove) throw std::logic_error("미설치Session의 이동 명령");return *impl_->carrierMove; }
 // 원본 부모 설치 전의 임의 공간 쓰기를 거부하며 같은 현재 noIsland 전역으로 요청을 구성한다.
 bool RawCampaignSession::ConfirmSupport(float x,float y) {
     if (!impl_->loaded) throw std::logic_error("실제 Session 설치 전 받침 확정 요청");

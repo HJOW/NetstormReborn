@@ -15,6 +15,7 @@
 #include "o/RawSunAviaryProcess.h"
 #include "o/RawCarrierSteal.h"
 #include "o/RawCarrierPickup.h"
+#include "o/RawCarrierMove.h"
 #include "o/RawGemReward.h"
 #include "zacket/LocalMissionTransport.h"
 #include "client/RawShapeToBuffer.h"
@@ -1544,5 +1545,32 @@ TEST_CASE(CampaignSession_BalloonFlightShadowAndLandingThroughActualKernel) {
         const auto flame=external.names.Lookup("balloonFlame.wav");CHECK((std::find(sounds.begin(),sounds.end(),flame)!=sounds.end())==(kind==111));CHECK(Get(core.pool.Slot(shadow),36)==core.frames[kind].Codes().size()+Get(core.pool.Slot(parent),36));
         CHECK(session.World().Destroy(parent,0));CHECK((core.pool.Slot(parent)[11]&1) && (core.pool.Slot(shadow)[11]&1));CHECK(lost==std::vector<Sid>{parent});CHECK(core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0 && core.bookkeeping.depth==0);
         std::cout<<"실제 벌룬 TYPE"<<kind<<" 42/고도/그림자/착륙/삭제 "<<frames<<"프레임 통과\n";
+    }
+}
+
+// 선택→18BYTE 송신→실제 buffer/Flush/Poll→서버40h→같은 Kernel 이동을 검사한다.
+TEST_CASE(CampaignSession_CarrierMoveRequestThroughActualLocalTransportAndKernel) {
+    // 같은 사제54/골렘40/벌룬42를 별개 실제1-1 Session에서 실행한다.
+    for (const std::uint32_t kind:{158U,133U,111U}) {
+        const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();netstorm::zacket::LocalMissionTransport* wire{};
+        std::uint32_t selected{},mouseType{},mode{};std::array<std::uint32_t,2> remembered{};std::array<std::uint32_t,0> multiple{};std::int32_t count{},mouseX{},mouseY{};std::vector<Sid> dumps; //실제 UI 외부 관측과 단일 현재 선택 저장소다.
+        services.deletion.selected=[&] { return Sid{static_cast<std::uint16_t>(selected)}; };
+        services.carrierRequest=[&](std::int32_t owner,std::span<const std::uint8_t> packet) { CHECK(wire && owner==9);if (!wire) throw std::logic_error("이동 요청의 실제 전송 미설치");CHECK(wire->Send(owner,packet)); };
+        auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));CHECK(Throws([&] { session.RequestCarrierMove(Sid{50},{90,108}); }));session.Load();auto core=session.Core();SessionPickupWire link(session);wire=&link.transport;
+        const auto parent=kind==158 ? Sid{static_cast<std::uint16_t>(session.FindPriestParticipation(1))} : session.World().Create(kind,2);CHECK(parent.value);if (!parent.value) continue;
+        if (kind!=158) { session.World().Pop(parent,kind==133 ? 94.0F : 98.0F,kind==133 ? 108.0F : 122.0F,0);core.owner.Set(parent,1); }
+        const RawPathPoint destination=kind!=111 ? RawPathPoint{90,108} : RawPathPoint{102,122};const auto movement=session.Priests().MovementProcessType(kind);const auto initial=core.pool.Slot(parent);const RawPathPoint source{std::bit_cast<float>(Get(initial,14)),std::bit_cast<float>(Get(initial,18))};const auto sp=session.Sp(1); //현재 위치·SP·실제 경로 종류를 관측한다.
+        RawUserHighlight highlight({mode,selected,mouseType,mouseX,mouseY},{});UserSelectionHooks hooks;hooks.paused=[] { return 0U; };hooks.enabled=[] { return 1U; };hooks.blocked=[] { return 0U; };hooks.dump=[&](Sid sid) { dumps.push_back(sid); };hooks.highlight=[&](std::uint32_t value) { highlight.Highlight(value); };hooks.assertion=hooks.previewAssertion=[] { throw std::logic_error("이동 선택 검사 예상 밖 진단"); };
+        auto selection=session.MakeUserSelection({selected,mouseType,remembered,multiple,count},std::move(hooks));CHECK(selection->Select(parent.value,0,0)==parent.value && selected==parent.value && (core.pool.Slot(parent)[40]&4));CHECK(dumps==std::vector<Sid>{parent});CHECK(!FindAttachedProcess(core.pool,parent,movement).value);
+        const auto& registration=link.transport.Dispatch().Registration(0x40);CHECK(registration.version==1 && !registration.mismatch && registration.length==18 && !registration.observer);session.RequestCarrierMove(parent,destination);CHECK(!selected && !(core.pool.Slot(parent)[40]&4));CHECK(link.recorded.empty() && !link.transport.QueuedFrames() && !FindAttachedProcess(core.pool,parent,movement).value);CHECK(Get(core.pool.Slot(parent),14)==std::bit_cast<std::uint32_t>(source.x) && Get(core.pool.Slot(parent),18)==std::bit_cast<std::uint32_t>(source.y));
+        link.transport.Flush();CHECK(link.transport.QueuedFrames()==1);CHECK(link.transport.Poll()==1 && link.recorded.size()==1 && !link.transport.QueuedFrames());if (link.recorded.empty()) continue;const auto& packet=link.recorded.front();CHECK(packet.size()==18 && packet[0]==1 && packet[1]==0x40 && Get(packet,4,2)==parent.value && Get(packet,6)==std::bit_cast<std::uint32_t>(destination.x) && Get(packet,10)==std::bit_cast<std::uint32_t>(destination.y) && Get(packet,14)==0);
+        const auto form=FindAttachedProcess(core.pool,parent,movement);auto* path=dynamic_cast<RawPathProcess*>(core.processes.FromForm(form));CHECK(path && !path->Runtime().TargetA() && !path->Runtime().TargetB() && !path->Runtime().MoveAwayDepth());if (!path) continue;const auto begin=core.processState.now,end=path->Runtime().Time(path->Runtime().Count()-1); //원본 Prepare가 선택한 실제 끝 시각이다.
+        const RawPathPoint storedDestination{std::bit_cast<float>(Get(path->Runtime().Bytes(),0x186dc)),std::bit_cast<float>(Get(path->Runtime().Bytes(),0x186e0))}; //원본에 저장된 두float를 그대로 중복 비교 입력으로 사용한다.
+        session.RequestCarrierMove(parent,storedDestination);link.transport.Flush();CHECK(!link.transport.QueuedFrames() && link.recorded.size()==1 && FindAttachedProcess(core.pool,parent,movement)==form); //현재 같은 목적지는 새 명령을 보내지 않는다.
+        std::size_t frames{};
+        //경로/도착 결과를 쓰지 않고 같은 전체 Kernel을 연속 시각으로 진행한다.
+        for (std::uint64_t frame=0;frame<3000 && core.processState.now<end+.25;++frame) { const auto now=begin+static_cast<double>(frame)*.025;session.RunFrame({now,100+(now-begin),frame ? .025 : 0.0,frame},false);++frames;if (!core.processes.FromForm(form)) break; }
+        CHECK(!core.processes.FromForm(form) && frames>1);CHECK(std::bit_cast<float>(Get(core.pool.Slot(parent),14))==destination.x && std::bit_cast<float>(Get(core.pool.Slot(parent),18))==destination.y);CHECK(session.Sp(1)==sp && !link.transport.Server().depth && !core.destroy.PreDepth() && !core.destroy.PostDepth() && !core.bookkeeping.depth);CHECK(&session.CarrierMove().Pool()==&core.pool);wire=nullptr;
+        std::cout<<"실제40h 요청/수신 TYPE"<<kind<<" 경로"<<movement<<"/자연이동 "<<frames<<"프레임 통과\n";
     }
 }

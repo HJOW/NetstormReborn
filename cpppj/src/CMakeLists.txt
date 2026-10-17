@@ -119,3 +119,6 @@ target_sources(netstorm PRIVATE o/RawBombPreDestroy.cpp o/RawBombPreDestroy.h)
 
 # 벌룬의 실제 고도 프레임·그림자 후처리와 삭제를 연결한다.
 target_sources(netstorm PRIVATE o/RawBalloonFrame.cpp o/RawBalloonFrame.h o/RawBalloonBody.cpp o/RawBalloonBody.h)
+
+# 원본40h 이동 요청/서버 수신을 같은 실제 Session에서 사용한다.
+target_sources(netstorm PRIVATE o/RawCarrierMove.cpp o/RawCarrierMove.h)

@@ -1,0 +1,38 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-18",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16"
+  },
+  "uniqueInputs": 982,
+  "normalReturns": 1964,
+  "instructions": 129614,
+  "nativeCalls": {
+    "00427340": 538,
+    "004ac200": 2376,
+    "0049a840": 2376,
+    "0040a850": 266,
+    "004df230": 266,
+    "00428570": 1426
+  },
+  "precisionDifferentInputs": [],
+  "boundaries": "427340/428570/40a850/4df230/4ac200/49a840/40eb80 전체 실행. 선택/연결/경로종류·종속조회/송신/사건/후보/지점/접근점·간헐천·희생·경로시작은명시큰하위경계. GP/retN/canary/SEH/x87 및실행·읽기·쓰기범위/전체부모50BYTE둘/100076BYTE경로접두Adler/현재전역/패킷/효과뒤재독을검사한다. 실제게임/사용자UI/자연완주증거가아니다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "tools/decomp_carrier_move.py": "a4acb58242f1b27fd9cde86fe5a185dea17668a4776f675715527889dfee4148",
+    "tools/decomp_carrier_falling.py": "f8702db0708a543b73213c8df9154503afe977767a11bd7c150b639ee1b587a6",
+    "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+    "tools/decomp_cursor_position.py": "e15bcdbc4c6be9c131c30f15416c945d650dba9f7dc6def404b47f63c635c212",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "cpppj/tests/fixtures/carrier-move-x86.tsv": "e59f542e07dd2248bfba155c7957bd51297706a7074687d939956d00dc5c346a"
+  },
+  "observationExtent": {
+    "runtimeBytes": 100080,
+    "observedPrefixBytes": 100076,
+    "unobservedTailBytes": 4,
+    "correction": "첫 C++ 대조는 원문 접두100076BYTE를 전체100080BYTE와 비교하여982개가 hash 열에서만 실패했다. 재생 비교 폭을 원본 관측 폭으로 수정했고 fixture/분기/효과 기대값은 변경하지 않았다."
+  }
+}

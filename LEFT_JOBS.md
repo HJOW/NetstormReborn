@@ -1,5 +1,15 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-18 단위163 완료: 운반체 이동 요청과 실제 서버 소비 (HJOW-Athlon)
+
+- [x] 기준6cbb7fd/깨끗한트리. AGENTS/양LEFT 재독, 현재/마지막정밀디컴파일PC **HJOW-Athlon / 2026-10-16** 일치. 직전 명칭 재확인은 기존92b7526을 읽기 전용 확인하여 제품 진척은 없었다. 이번은 원문/코드/회귀/실제전송 증거를 추가한 진행턴이다. 보호원본/AGENTS/DN/DirectDraw변경·새디컴파일/원본게임실행없음. [상세기록](docs/exe/cpp-carrier-move-20261018.md).
+- [x] 실제UI는 아직 단순선택/MovePriest 직접Start이며 Client에 LocalMissionTransport/Carrier 수신등록 호출이 없음을 확인했다. 원본427340/40a850의40h/version1/18BYTE 요청과428570의생존/현재genus/사건5105·493/소유권·594fb8 fort모드/후보·귀환·간헐천·제단/일반489080(끝인자1)을 복원했다. 선택해제 선행·정확한목적지중복·원문float/NaN/현재헤더와효과뒤packet재독을 보존한다.
+- [x] 독립982입력/1964정상반환/129614명령/53·64차이0이다. GP/retN/canary/SEH/x87/선택범위·전체50BYTE두슬롯/100076BYTE경로접두Adler·요청18BYTE/현재전역·효과를 대조했다. 첫C++의982개 hash열실패는 원문접두100076과전체100080을 비교한 검사폭 오류로 교정했고 fixture/분기·효과 기대값은 불변이다. 도구/보고서의범위설명만접두로정정했다. 마지막4BYTE는원문관측범위에합산하지않는다.
+- [x] 같은실제Session의선택/Graph/사건/후보/귀환점·대상·간헐천/54·40·42/BFS·Host·Kernel과현재carrierRequest를 연결하고40h수신을 등록했다. 새1-1세Session에서 실제선택해제→buffer→Flush/Poll→40h→경로/전체Kernel 자연이동·경로삭제를 통과했다. 사제90/골렘81/벌룬294프레임, 전송전경로부재·위치불변/중복무송신/현재SP·깊이0을 검사했다. 이미접속한owner1/선택activateMove0/현재사제94,108·추가골렘94,108→90,108/벌룬98,122→102,122는 명시입력이다. 로그인/사용자UI/생산/완주증거가아니다. 초기필터0개와잘못된골렘Graph입력/저장목적지동일가정실패도로그에보존한다.
+- [x] Release build3 경고0·오류0, 집중2개/실제통합1개, **전체1646개 실패0 / 216.25초**(CTest 216.29초). 감사87도구76통과/기존11실패집합동일/새0, 실제MORE/OK/Play Mission의11단계CLI진입PASS/originals_unchanged=true. 보호5종SHA/58보고서190현재핀과과거전체JSON역치환/동결fixture/CMake접두·인계/UTF8·LF·공백·인덱스바이트를 검사한다.
+- [ ] 다음우선은 실제Client 로그인·Zone·전송두끝수명/Flush·Poll과현재Player9 연결, 원본선택·강조·4277f0·42a360에서RequestCarrierMove를 호출하여 직접MovePriest를 교체하는 작업이다. owner/접속성공을강제로쓰는대체물을추가하지않는다. 실제4498e0·494eb0 희생과38/41/187 경로는명시미연결이다. AI전략·생산·경제/비미션보충·전체11단계 자연완주·승패·저장·다음미션/동일성은미완료이며goal active다.
+- [x] 원문cpppj/carrier-move.json, 제품cpppj/campaign-carrier-move.json, 로그접두extracted/goal-user-commands-20261018-. 인계뒤 **20261018-13 CP 운반체 이동 요청과 서버 명령 소비 복원**으로로컬커밋한다. 원격push하지않는다.
+
 ## 2026-10-18 단위162 완료: 벌룬42의 이륙·착륙과 그림자 수명 (HJOW-Athlon)
 
 - [x] 기준e7d9ff9/깨끗한트리. 직전목표턴은 제품·원문·회귀·커밋의 진행턴이다. AGENTS/양LEFT재독, 현재/마지막정밀디컴파일PC **HJOW-Athlon / 2026-10-16** 일치. 보호원본/AGENTS/DN/DirectDraw변경·새디컴파일·원본게임실행없음. [상세기록](docs/exe/cpp-balloon-path-20261018.md).

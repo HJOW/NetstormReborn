@@ -33,7 +33,7 @@
 #include "o/RawEnergySupply.h"
 #include "o/RawConstructionBuilder.h"
 #include "client/RawCampaignParticles.h"
-namespace netstorm::o { class RawCarrierSteal; class RawCarrierPickup; class RawGemReward; } // 포획 몸체의 고정 참조만 공개한다.
+namespace netstorm::o { class RawCarrierSteal; class RawCarrierPickup; class RawCarrierMove; class RawGemReward; } // 포획 몸체의 고정 참조만 공개한다.
 namespace netstorm::client {
 class RawCampaignCursor; // 세션과 같은 실제 커서/로컬 예측의 고정 주소 소유자다.
 struct CursorPlacementHooks; // 실제 커서 배치의 설명/에너지 경계만 연결할 때 사용한다.
@@ -193,6 +193,10 @@ public:
     void RegisterConstructionCommands(o::RawPacketDispatch& dispatch);
     // 같은 실제0x4f 일반포획/0x5b 채취/0x60 크랩포획 수신을현재캠페인에등록한다.
     void RegisterCarrierCommands(o::RawPacketDispatch& dispatch);
+    // 실제427340은 선택 해제/연결·중복 검사 뒤40h만 송신한다. 경로 생성은 등록 수신에서 수행한다.
+    void RequestCarrierMove(o::Sid parent,o::RawPathPoint destination,std::uint32_t sacrifice=0);
+    // 같은 실제40h 요청/수신 처리기를 읽기 전용으로 빌린다.
+    const o::RawCarrierMove& CarrierMove() const;
     // 원본 MayPlace를 통과한 일반 서버 요청의 기준점/송신/직접 통지/실제 배치를 실행한다.
     bool ConfirmConstruction(const o::ConstructionConfirmRequest& request);
     // 설치 뒤 로컬 간헐천의 noIsland/Player0 받침만 실제 서버 확정 사슬로 만든다.

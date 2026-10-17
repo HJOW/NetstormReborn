@@ -1458,3 +1458,8 @@ set_source_files_properties(NuggetReplenishTests.cpp PROPERTIES COMPILE_DEFINITI
 target_sources(netstorm_tests PRIVATE BalloonPathTests.cpp)
 set_source_files_properties(BalloonPathTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_BALLOON_PATH_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/balloon-path-x86.tsv\";NETSTORM_BALLOON_BODY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/balloon-body-x86.tsv\";NETSTORM_BALLOON_BODY_HEIGHT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/balloon-body-height-x86.tsv\"")
+
+# 독립 원본40h 이동 요청과 수신 결과를 대조한다.
+target_sources(netstorm_tests PRIVATE CarrierMoveTests.cpp)
+set_source_files_properties(CarrierMoveTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CARRIER_MOVE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/carrier-move-x86.tsv\"")
