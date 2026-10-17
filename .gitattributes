@@ -1264,3 +1264,12 @@ cpppj/tests/fixtures/object-menu-info-x86.tsv text eol=lf
 cpppj/object-menu-info.json text eol=lf
 cpppj/campaign-object-menu-info.json text eol=lf
 tools/decomp_object_menu_info.py text eol=lf
+
+# 원본 세 인자 선택의 새 코드와 독립 관찰은 UTF-8/LF로 보존한다.
+cpppj/src/client/RawUserSelection.* text eol=lf
+cpppj/tests/UserSelectionTests.cpp text eol=lf
+cpppj/tests/fixtures/user-selection-x86.tsv text eol=lf
+cpppj/user-selection.json text eol=lf
+tools/decomp_user_selection.py text eol=lf
+cpppj/campaign-user-selection.json text eol=lf
+docs/exe/cpp-user-selection-20261017.md text eol=lf

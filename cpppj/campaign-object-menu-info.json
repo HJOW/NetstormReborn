@@ -8,13 +8,13 @@
     "date": "2026-10-16"
   },
   "currentSources": {
-    ".gitattributes": "68ac33ee3c1433a1dacc5154baca6dfd0c531ed2e0481671dc91777875fadd07",
+    ".gitattributes": "1fe38a7e99bb9de9f0cf36571b4217fb0427bdaa65d3124de859ebbc4d887c89",
     "cpppj/src/client/CMakeLists.txt": "78725b028b113f3e2c815aebcc41847d2f79fc8acdcd237f4a75a05aa9854a3b",
     "cpppj/src/client/RawCampaignSession.cpp": "f5fd8fcbe2f6b2d20daba173a0fcf6987b56f105be2eca2374bcf284ed0eb877",
     "cpppj/src/client/RawCampaignSession.h": "7e8206da0091e1ed9e73a683f58cdd8229cb5a8251e7f09882ab7486bc28abeb",
     "cpppj/src/o/RawPlayerIdentity.cpp": "96c5c91ae865f10f9deba31b59ed9bac40df16c1d38d38d37329100732cfd49c",
     "cpppj/src/o/RawPlayerIdentity.h": "fe72fe29c2286a6ee6850affe138d9447516bdab1be3e5ab581f58438cc9b0ff",
-    "cpppj/tests/CMakeLists.txt": "b4d541e91686cd7407ecdd5fcf9e0373f26588a16e67b173b49f3ead85a2de78",
+    "cpppj/tests/CMakeLists.txt": "575ab2a11dcb8ac965cdde3a47e86ea32b6fe352665b4c2782902ba0c4e67017",
     "cpppj/tests/CampaignObjectMenuTests.cpp": "2cda2c4f5ae708ea51de898c878edaa6cdccd3de039f8f927afbfa9c39e86fce",
     "cpppj/src/client/RawObjectMenuInfo.cpp": "a9baa8625fb0f1c6c789f235e4d5b6020186a6fe49fc53a6f603c2c09d67c8dd",
     "cpppj/src/client/RawObjectMenuInfo.h": "6e494e34fa1092f5cba931bd0c7507ca9650483eabb4a268e8b72e96005eabea",
@@ -160,5 +160,26 @@
     "로그인된로컬전송양끝·큐잉·등록수명/생산·경제·AI·전체Kernel/대상11스테이지자연완주·승패·저장·다음미션·전체동일성"
   ],
   "excluded": "전체화면DirectDraw수정",
-  "localCommitMessage": "20261017-41 CP 원본 객체 메뉴의 네 인자 제목과 현재 세션 정보 연결"
+  "localCommitMessage": "20261017-41 CP 원본 객체 메뉴의 네 인자 제목과 현재 세션 정보 연결",
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "unit": 142,
+      "reason": "세 인자 선택의 새 소스/검사를 CMake에 추가하고 UTF-8/LF 속성을 등록했다. 직전 HEAD와 같던 현재 핀만 갱신하며 이전 값을 보존한다.",
+      "pins": [
+        {
+          "group": "currentSources",
+          "path": ".gitattributes",
+          "previous": "68ac33ee3c1433a1dacc5154baca6dfd0c531ed2e0481671dc91777875fadd07",
+          "current": "1fe38a7e99bb9de9f0cf36571b4217fb0427bdaa65d3124de859ebbc4d887c89"
+        },
+        {
+          "group": "currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "b4d541e91686cd7407ecdd5fcf9e0373f26588a16e67b173b49f3ead85a2de78",
+          "current": "575ab2a11dcb8ac965cdde3a47e86ea32b6fe352665b4c2782902ba0c4e67017"
+        }
+      ]
+    }
+  ]
 }

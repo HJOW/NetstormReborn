@@ -128,7 +128,7 @@
     "cpppj/hist/run26-draft/RawBattleBroadcast.cpp": "0c88515bdfc87fc05310087ad360ea94ee9a95666329aaec09ea896a04744f13",
     "cpppj/hist/run26-draft/battle-bcast-x86.tsv": "d7da6351dca0e671136a4a81926662815762b2c3466e0d6413d1587b1415d732",
     "cpppj/hist/run26-draft/decomp_battle_bcast.py": "95a96ec4e3ffe37e5e906f8cd30546c5594e74fe0ddda045683339ecd7e2e3f7",
-    "cpppj/src/CMakeLists.txt": "f307d187ef0cc892334c74198407070df34d9b5df08502b579cad1135c19685b",
+    "cpppj/src/CMakeLists.txt": "45615598a4600cf2f6e5dcd42359ab2640f143daac708a0447e6d2caa18f4f06",
     "cpppj/src/app/CanonMayPlaceInspect.cpp": "27eda46bca500c898abeb9a3a7c4e8588b38e061b579c84cbf6c032c6d46dda9",
     "cpppj/src/app/FrameBindingInspect.cpp": "042602919b0531fb1cbaf3941dc6597bee73944bbf0d571dacfd638bb45dd07c",
     "cpppj/src/app/FrameBindingInspect.h": "4e187ca41f8c34ed52c022b58a57327a554a723e3e26ee88a1ae152c99de3fce",
@@ -1534,6 +1534,19 @@
           "path": "cpppj/src/o/SquidReward.h",
           "previous": "221e142133a1e3a73f65ff6979d73859b7701912ab84cde9dc6a9fe565ccd2e7",
           "current": "59cf154a0aa681fbce7bdf445728afc582409bd9af9b24e5b135e435e92aa362"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 142,
+      "reason": "세 인자 선택의 새 소스/검사를 CMake에 추가하고 UTF-8/LF 속성을 등록했다. 직전 HEAD와 같던 현재 핀만 갱신하며 이전 값을 보존한다.",
+      "pins": [
+        {
+          "group": "files",
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "f307d187ef0cc892334c74198407070df34d9b5df08502b579cad1135c19685b",
+          "current": "45615598a4600cf2f6e5dcd42359ab2640f143daac708a0447e6d2caa18f4f06"
         }
       ]
     }

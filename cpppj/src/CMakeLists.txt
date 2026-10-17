@@ -53,3 +53,6 @@ target_sources(netstorm PRIVATE client/CampaignCursorClientEffects.cpp client/Ca
 
 # 원본 선택과 별개인 강조 모드/마우스 타입의 현재 상태를 처리한다.
 target_sources(netstorm PRIVATE client/RawUserHighlight.cpp client/RawUserHighlight.h)
+
+# 세 인자 선택과 다중 선택 정리 및 사제/Carrier/Archer 메뉴 입구다.
+target_sources(netstorm PRIVATE client/RawUserSelection.cpp client/RawUserSelection.h)
