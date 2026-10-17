@@ -3,6 +3,7 @@
 #include "client/RawCampaignCursor.h"
 #include "client/PriestPlacementAssets.h"
 #include "client/RawCampaignGunQueries.h"
+#include "o/RawPathRetarget.h"
 #include "client/AiTypeRequiredEnergy.h"
 #include "o/RawGameRandomSeed.h"
 #include "o/RawSquidFinder.h"
@@ -295,6 +296,7 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawCarrierTarget> carrierTarget; // 같은 실제 Player AI/발자국/Path 시작과 귀환 선택을 공유한다.
     CarrierChoiceState carrierChoiceState; // 실제 후보의 경로 비교/현재 타입/임시 거리 전역이다.
     std::unique_ptr<RawCarrierChoice> carrierChoice; // 현재 Player+7c/AI/자산 목록과 같은 BFS를 사용한다.
+    std::unique_ptr<RawPathRetarget> pathRetarget; //489ff0의 실제 대상 재확인을 현재 내용물/선택/이동에 연결한다.
     std::unique_ptr<RegularProcess> pendingCarrierTask; // 원본 new28과 생성자가 공유하는 하나의 확보 메모리다.
     std::unique_ptr<GumpFormHost> gumpForms; // 같은Pool의실제Form3와현재UI등록ID/부모삭제알림수명이다.
     std::unique_ptr<RawContentParentNotice> contentNotice; // 부모의 실제 현재 VT로 기본/파생 +24를 분배한다.
@@ -1532,6 +1534,12 @@ struct RawCampaignSession::Impl {
         effects.carrier.goReturn=[this](Sid sid,Sid place) { static_cast<void>(carrierTarget->GoReturn(sid,place)); };
         effects.carrier.goGeyser=[this](Sid sid,Sid geyser) { static_cast<void>(carrierTarget->GoGeyser(sid,geyser)); };
         effects.carrierGoHome=[this](Sid sid) { static_cast<void>(carrierTarget->GoHome(sid)); };
+        PathRetargetHooks retarget;
+        retarget.find=[this](Sid sid,std::uint32_t mask,std::uint32_t type,std::uint32_t index) { return priests->Carrier().FindContained(sid,mask,type,index); };
+        retarget.chooseReturn=effects.carrier.chooseReturn;retarget.chooseGeyser=effects.carrier.chooseGeyser;
+        retarget.goReturn=effects.carrier.goReturn;retarget.goGeyser=effects.carrier.goGeyser;
+        pathRetarget=std::make_unique<RawPathRetarget>(core.pool,motionState.carrier.nuggetType,std::move(retarget));
+        effects.path.retarget=[this](RawPathRuntime& runtime,Sid initialParent) { pathRetarget->Update(runtime,initialParent); };
         FillMissing(effects.carrier.minedPacket);FillMissing(effects.carrier.cdAddSp);FillMissing(effects.carrier.cdOwnerPacket);FillMissing(effects.carrier.playAt);FillMissing(effects.carrier.robust);
         CarrierTransferHooks transfer;
         transfer.find=[this](Sid parent,std::uint32_t mask,std::uint32_t kind,std::uint32_t index) { return priests->Carrier().FindContained(parent,mask,kind,index); };
@@ -1555,7 +1563,7 @@ struct RawCampaignSession::Impl {
             const auto sound=assets.game.Types()[core.pool.Slot(sid)[10]-70].definition.String("stepSound");
             return sound && !sound->empty() ? soundNames.Lookup(*sound) : 0U;
         };
-        FillMissing(effects.path.stepSound);FillMissing(effects.path.startBlocked);FillMissing(effects.path.arrivalBlocked);FillMissing(effects.path.retarget);
+        FillMissing(effects.path.stepSound);FillMissing(effects.path.startBlocked);FillMissing(effects.path.arrivalBlocked);
         motion=std::make_unique<RawCampaignMotionBindings>(world,*priests,*islands,*contained,*anchor,hp,metadata.frames,motionState,start,process,std::move(effects));
         FillMissing(services.pathPacket);
         auto pathTx=motion->Paths().Transmission(pathHeader,pathBuffer,[this](std::int32_t length) {

@@ -1,5 +1,16 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-18 단위154 완료: 운반 경로의 대상 재확인과 프레임 연결 (`HJOW-Athlon`)
+
+- [x] 기준 `87c37af`, 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16** 일치. AGENTS/양 LEFT 재독. 원본 수정·새 디컴파일·원본 게임 창 실행·DirectDraw 수정은 없다. [작업 기록](docs/exe/cpp-path-retarget-20261018.md).
+- [x] `RawPathRetarget`을 실제 Session의 내용물/귀환·간헐천 선택/두 이동에 연결했다. 전체489ff0 Halt 안의 분기이며 바깥 권한/부모 가상/생존watch는 기존RawPathProcess가 맡는다. 최초A/B 포인터와 현재번호 재조회, 현재부모와 최초부모의 서로 다른Find, 각Find의 현재nuggetType, 귀환선택0의 분기 종료, 새이동 뒤Runtime 무접근을 보존했다. **아래 단위153의 retarget 미연결 항목은 해결했다.**
+- [x] 보호 PE 전체489ff0/4ac200/49a840의 명시계약 관측은 **4,801입력·9,602정상반환·868,870명령·53/64차이0**이다. Runtime삭제/poison696회 뒤 원본 무접근이다. 부모Halt10/extra20없음/boss1/carrier 계약이며 큰 내용물/선택/이동은 명시 경계다. GP/retN/SEH/앞뒤canary/x87/명령·접근범위/효과순서·인자/A·B·현재부모·현재nuggetType·조회수/물리raw64KB Adler를 검사했다. C++원문4801행은 모두일치하고 이동중Runtime을 실제해제했다. 늦은경계/CD거부도통과했다.
+- [x] 실제1-1의간헐천15095 섬모서리에서실제BFS가두꼭짓점/한칸/0.5초의40경로를생성했다. 0.45초Frame의살아있는대상통과/current0→1/기존Path·대상·패킷보존이다. 실제SHP hotspot(1.1875,2.38182)의임계값때문에한칸도착전raw좌표유지가맞다. 첫좌표변경assert와두칸바깥의끊긴초기위치가정은검사입력오류로교정했고로그를보존했다. 대상dead2입력뒤실제선택15001→GoGeyser/PathStart는옛40을삭제하지만끊긴섬이라새40=0/추가패킷0이며watch로반환한다. 자연도착/채취나대상삭제트랜잭션검증으로확대하지않는다.
+- [x] 첫입력채움C4244를BYTE명시로수정했다. 최종Release build5 **경고0·오류0**, 집중 **3성공**, 전체CTest **1,615개·실패0·종료0·200.02초**(CTest200.05초)다. 감사74종 **63성공·기존11실패·새실패0**, 기존49보고서126현재핀/과거전체JSON역치환/CMake접두/기존fixture/보호SHA·AGENTS·DN/새UTF-8·LF를확인했다. 클론진입5PASS/originals_unchanged=true이며1-1/1-2briefing→world/tutorial1~3briefing 범위다. 모든핸들종료/대기없음이다.
+- [x] 로그접두 `extracted/goal-path-retarget-20261018-`, 독립 `cpppj/path-retarget.json`, 제품 `cpppj/campaign-path-retarget.json`이다. 인수인계뒤 **`20261018-04 CP 골렘 운반 경로의 대상 재확인과 프레임 연결 복원`** 으로로컬커밋한다. push하지않고전체goal active다.
+- [ ] **다음우선:**carrier/halt의pickup(428e00)와간헐천mined packet/경제를실제하위에연결하고원본과대조한다. 현재Session1498의halt.carrierPickup,1506의carrier.pickup/escape,1543의minedPacket은아직FillMissing이다. 이번Frame은도착전/재선택실패까지만검사했으므로자연채취완료로보지않는다. 이전단위148의포획/Task연결계획도유지한다.
+- [ ] **후속:**429010회피/443800시작·도착겹침정리/38·41·42경로/5040c0의42ae80/실제Client명령소비자/생산·경제·AI/11스테이지자연운반·완주·승패·저장·다음미션/전체동일성은미완료다. 미등록187 그래픽경로거부를유지한다.
+
 ## 2026-10-18 단위153 완료: 골렘의 귀환·간헐천 후보 선택과 현재 AI 연결 (`HJOW-Athlon`)
 
 - [x] 기준 `52e714f`, 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16** 일치. AGENTS/양 LEFT 재독. 보호 원본 수정·새 디컴파일·원본 게임 창 실행·DirectDraw 수정은 없다. [작업 기록](docs/exe/cpp-carrier-choice-20261018.md).

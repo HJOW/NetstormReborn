@@ -108,6 +108,30 @@ TEST_CASE(CampaignCarrierChoice_ActualListsBfsHomeAndCurrentAi) {
     CHECK(mining);if (!mining) return;auto* current=reinterpret_cast<RawPathProcess*>(mining);CHECK(current->Parent()==collector && current->MovementType()==40 && current->Runtime().Count()>1);const auto currentForm=current->Form();
     const auto ai=session.CreateAi(2,SessionAiSettings("Explicit","sunCannon"));CHECK(ai && session.Participation().Brain(2)==ai);const auto beforeAi=external.packets.size();core.owner.Set(collector,2);CHECK(session.CarrierTarget().GoReturn(collector,home)==0 && core.processes.FromForm(currentForm)==current && external.packets.size()==beforeAi);session.RemoveAi(2);CHECK(!session.Participation().Brain(2));core.owner.Set(collector,1);CHECK(core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0);
 }
+// 실제 보호 지도의 골렘 경로는 살아 있는 대상 확인 뒤 프레임을 진행하고 죽은 대상은 재선택한다.
+TEST_CASE(CampaignSession_PathRetargetRunsRealCarrierFrames) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",external.Services());session.Load();const auto core=session.Core();
+    const Sid priest{static_cast<std::uint16_t>(session.FindPriestParticipation(1))};CHECK(priest.value);if (!priest.value) return;const auto source=core.pool.Slot(priest);
+    const auto golem=session.World().Create(133,2);session.World().Pop(golem,std::bit_cast<float>(Get(source,14)),std::bit_cast<float>(Get(source,18)),0);core.owner.Set(golem,1);
+    const auto geyser=session.CarrierChoice().ChooseGeyser(golem);CHECK(geyser.value);if (!geyser.value) return;const auto rectangle=core.neighbors.Footprint(geyser);session.World().Unpop(golem,0);session.World().Pop(golem,rectangle.right,rectangle.bottom,0);
+    const auto started=session.CarrierTarget().GoGeyser(golem,geyser);CHECK(started);if (!started) return;auto* path=reinterpret_cast<RawPathProcess*>(started);
+    CHECK(path->Runtime().Count()>1 && path->Runtime().TargetA()==geyser.value);const auto form=path->Form();const auto before=Get(core.pool.Slot(golem),14);const auto beforeY=Get(core.pool.Slot(golem),18);const auto packets=external.packets.size();
+    core.processState.now=path->Runtime().Time(0)+(path->Runtime().Time(path->Runtime().Count()-1)-path->Runtime().Time(0))*0.9;
+    const auto previous=path->Runtime().Current();path->RunFrame();CHECK(core.processes.FromForm(form)==path);if (core.processes.FromForm(form)!=path) return;
+    CHECK(path->Runtime().Current()==previous+1);path->RunFrame();CHECK(core.processes.FromForm(form)==path);if (core.processes.FromForm(form)!=path) return;
+    const auto& shape=core.shapes[133].frames.at(Get(core.pool.Slot(golem),36)); // 실제 보호 SHP의 한 걸음 임계값이다.
+    CHECK(path->Runtime().Count()==2 && shape.cellHotspotX*shape.cellHotspotX+shape.cellHotspotY*shape.cellHotspotY>=1);
+    CHECK(Get(core.pool.Slot(golem),14)==before && Get(core.pool.Slot(golem),18)==beforeY);CHECK(!path->Runtime().Finished() && path->Runtime().TargetA()==geyser.value && external.packets.size()==packets);
+    std::cout<<"실제 골렘 경로 count="<<path->Runtime().Count()<<" current="<<path->Runtime().Current()<<" now="<<core.processState.now<<" end="<<path->Runtime().Time(1)<<" hotspot="<<shape.cellHotspotX<<','<<shape.cellHotspotY<<'\n';
+    const auto oldState=core.pool.AllocatedBytes(geyser)[11];core.pool.AllocatedBytes(geyser)[11]|=2; // 사망 상태만 명시 입력한다. 삭제 트랜잭션을 대신한 것으로 계산하지 않는다.
+    const auto replacement=session.CarrierChoice().ChooseGeyser(golem);CHECK(replacement!=geyser);path->RunFrame();core.pool.AllocatedBytes(geyser)[11]=oldState;
+    RawContainedLookup lookup(core.pool,[](Sid,std::uint32_t) { throw std::logic_error("경로 재선택 검사 조회에서 삭제 금지"); });const auto currentForm=lookup.Find(golem,40);
+    std::cout<<"사망 간헐천 "<<geyser.value<<" 재선택 "<<replacement.value<<" 현재40 "<<currentForm.value<<" 추가패킷 "<<external.packets.size()-packets<<'\n';
+    if (currentForm.value) { auto* current=dynamic_cast<RawPathProcess*>(core.processes.FromForm(currentForm));CHECK(current && current->Runtime().TargetA()==replacement.value && current->Runtime().TargetA()!=geyser.value); }
+    else CHECK(replacement.value!=0 && external.packets.size()==packets); // 실제 끊긴 섬의 접근 실패는 기존40만 삭제한다.
+    CHECK(core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0);
+}
 // 실제Stage3가읽을전역과직접SP지정이동일Session의원문32×9분산배열에만영향을주어야한다.
 TEST_CASE(CampaignSession_MissionInputsUseSameScrambledSpSlots) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;

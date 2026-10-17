@@ -1,0 +1,30 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-18",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16"
+  },
+  "uniqueInputs": 4801,
+  "normalReturns": 9602,
+  "instructions": 868870,
+  "nativeCalls": {
+    "00489ff0": 9602,
+    "004ac200": 9602,
+    "0049a840": 9602
+  },
+  "deletedRuntimeNoRead": 696,
+  "precisionDifferentInputs": [],
+  "boundaries": "전체489ff0/4ac200/49a840 실행. 입력 계약은 부모Halt10/extra20없음/boss1/carrier다. 새C++비교범위는그안의대상사망fragment이며바깥Halt기존검증과구별한다. 부모Halt효과/내용물조회/두선택/두이동은명시경계다. 이동경계의Runtime삭제/poison뒤원본무접근,GP/retN/SEH/canary/x87/명령·읽기·쓰기범위를검사했다. 비교필드는A/B/현재부모/현재nuggetType/호출순서/물리raw64KB Adler다.전체Runtime생성자/실제게임창/자연운반완주검증은아니다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "tools/decomp_path_retarget.py": "abd243287cf0b8c440e4bf9ba83dd40a2ab980374613201fd3c00f1273aa670a",
+    "tools/decomp_carrier_falling.py": "f8702db0708a543b73213c8df9154503afe977767a11bd7c150b639ee1b587a6",
+    "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+    "tools/decomp_cursor_position.py": "e15bcdbc4c6be9c131c30f15416c945d650dba9f7dc6def404b47f63c635c212",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "cpppj/tests/fixtures/path-retarget-x86.tsv": "89b1fc34c732d83eb35ec98095b89883003737faffaa002686eee10e6d6fb122"
+  }
+}

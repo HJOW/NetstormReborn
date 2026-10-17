@@ -9,9 +9,9 @@
   },
   "currentSources": {
     ".gitattributes": "3e8d869648cde0415d1a91e9b22d5a7ed7e5c0585923a189bfd37aa33229f3a8",
-    "cpppj/src/CMakeLists.txt": "a39881701201bec12a66b5594b88ed694f997825b61df7730a49bc4cc938dcef",
-    "cpppj/tests/CMakeLists.txt": "f6f7d6c46ff9dacf49c46037330ef0fcc0052edbcb7c78a908540903159241aa",
-    "cpppj/src/client/RawCampaignSession.cpp": "26d4fa65f5dd103b8955f5eb0272a71759b5d5fec0bd89ee85fe0a26e3bb6d47",
+    "cpppj/src/CMakeLists.txt": "fd7f38fbb07f952eef2d2625072077e0b05da2f18e3ce15bf8879a3b4a582ca8",
+    "cpppj/tests/CMakeLists.txt": "dbffc6fb45c1ca5496869827b3be220de3899ce35267f9fb3247a2205254d018",
+    "cpppj/src/client/RawCampaignSession.cpp": "f6420fd87642682dbd95e8c4f2e718aea20fcfb791ad3be9804fbe6b6946d719",
     "cpppj/src/client/RawCampaignSession.h": "95a84650fd81b3b3c6cb3601f47d444f7b6ba3056ac8aab31de40c17c1cff38b",
     "cpppj/src/client/RawUserSelection.h": "dbc19a2e21c7dd1a22464fb1c585be38a4c32c48f91360a8b3dbbed76fddb69d",
     "cpppj/src/o/SquidProcess.h": "481ad652080175ccb135c5f4981edc44e7d853584eaaebaab1a65d3873bc5399",
@@ -354,6 +354,31 @@
           "path": "cpppj/src/client/RawCampaignPathBindings.cpp",
           "previous": "b89ed98f6b8edeeb0a4cc471cf91cc83b87f0d695dd7b0acbbfebfa0dbbed216",
           "current": "876b5c4b972f3a89fa8836ae0112437f9bbecf7db5a09f0a8b433ab0636b7bf7"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 154,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "a39881701201bec12a66b5594b88ed694f997825b61df7730a49bc4cc938dcef",
+          "current": "fd7f38fbb07f952eef2d2625072077e0b05da2f18e3ce15bf8879a3b4a582ca8"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "f6f7d6c46ff9dacf49c46037330ef0fcc0052edbcb7c78a908540903159241aa",
+          "current": "dbffc6fb45c1ca5496869827b3be220de3899ce35267f9fb3247a2205254d018"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "26d4fa65f5dd103b8955f5eb0272a71759b5d5fec0bd89ee85fe0a26e3bb6d47",
+          "current": "f6420fd87642682dbd95e8c4f2e718aea20fcfb791ad3be9804fbe6b6946d719"
         }
       ]
     }

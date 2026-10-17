@@ -1,0 +1,151 @@
+{
+  "unit": 154,
+  "date": "2026-10-18",
+  "host": "HJOW-Athlon",
+  "baseCommit": "87c37af",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16"
+  },
+  "status": "대상재확인단위완료/11스테이지전체플레이목표진행중",
+  "currentSources": {
+    "cpppj/src/o/RawPathRetarget.h": "bc69deb9620ee94bf7a35eb1f8262a635bfd54d78aac668d76084bf3cba67722",
+    "cpppj/src/o/RawPathRetarget.cpp": "76f960440f8908f16acd525be61dbb76d2905b84c50e03cbd13a2e319753eb24",
+    "cpppj/src/client/RawCampaignSession.cpp": "f6420fd87642682dbd95e8c4f2e718aea20fcfb791ad3be9804fbe6b6946d719",
+    "cpppj/src/CMakeLists.txt": "fd7f38fbb07f952eef2d2625072077e0b05da2f18e3ce15bf8879a3b4a582ca8",
+    "cpppj/tests/CMakeLists.txt": "dbffc6fb45c1ca5496869827b3be220de3899ce35267f9fb3247a2205254d018",
+    "cpppj/tests/CampaignSessionTests.cpp": "debc207ebde2e0db7adbbb48f298e60c401c82ad2c595ecadf2ab855e88b0d68",
+    "cpppj/tests/PathRetargetTests.cpp": "07b2e79eda167bea7a9934db91863c2730d908a48cdfe8f4c905ac6588de9be0",
+    "tools/decomp_path_retarget.py": "abd243287cf0b8c440e4bf9ba83dd40a2ab980374613201fd3c00f1273aa670a",
+    "docs/exe/cpp-path-retarget-20261018.md": "57daa01e0ea691b9821188baa94bb629e17460e1deee6cba9ec8163f6690157a",
+    "cpppj/src/o/RawPathRuntime.h": "b74e6c9947182ef327a50be4921921d43ac1a62063e8cf02a193e3045359a667",
+    "cpppj/src/o/RawPathRuntime.cpp": "e771d3c17baf7c9e96b7da65a7b20c2171a8b82d75ccee94d091689036c5d42d",
+    "cpppj/src/o/RawPathProcess.h": "4143e265d2a5d103435f288bcc75f1257281c8d3bdc38f688a6e548a433a035e",
+    "cpppj/src/o/RawPathProcess.cpp": "c95903a9fc3c1507ca4b45f7fa93b5d9b2f2626fe050e236850eca21f5581624",
+    "cpppj/src/o/RawCarrierChoice.h": "2fedbc83180495e739ab33a68949ce1a0a38ce0eafdaee726e3cccc94b985658",
+    "cpppj/src/o/RawCarrierChoice.cpp": "60104693cef32dbf1607961dab1628ef52113829ef58eaeece9094932027fad1",
+    "cpppj/src/o/RawCarrierTarget.h": "49e6340d4b120f87894cd07126c94fbf212a5e4d477bd44bdff22190e86f793d",
+    "cpppj/src/o/RawCarrierTarget.cpp": "82c9b3862969d5e664ed6acff2f63f97340898463c22347a667f278d9d519f08",
+    "cpppj/src/client/RawCampaignMotionBindings.cpp": "532ab06cd71c6eb3eba5aa042a6204e59c282014b13b68400241c2079a2556bb",
+    "cpppj/src/client/RawCampaignPathBindings.cpp": "876b5c4b972f3a89fa8836ae0112437f9bbecf7db5a09f0a8b433ab0636b7bf7"
+  },
+  "nativeReports": {
+    "cpppj/path-retarget.json": "5b7730ec331ed05dcfa1c6a640bdac7c5f42738a8404fa74a90053824d2e628a"
+  },
+  "nativeContext": {
+    "uniqueInputs": 4801,
+    "normalReturns": 9602,
+    "instructions": 868870,
+    "nativeCalls": {
+      "00489ff0": 9602,
+      "004ac200": 9602,
+      "0049a840": 9602
+    },
+    "deletedRuntimeNoRead": 696,
+    "precisionDifferentInputs": [],
+    "boundaries": "전체489ff0/4ac200/49a840 실행. 입력 계약은 부모Halt10/extra20없음/boss1/carrier다. 새C++비교범위는그안의대상사망fragment이며바깥Halt기존검증과구별한다. 부모Halt효과/내용물조회/두선택/두이동은명시경계다. 이동경계의Runtime삭제/poison뒤원본무접근,GP/retN/SEH/canary/x87/명령·읽기·쓰기범위를검사했다. 비교필드는A/B/현재부모/현재nuggetType/호출순서/물리raw64KB Adler다.전체Runtime생성자/실제게임창/자연운반완주검증은아니다."
+  },
+  "validation": {
+    "build": {
+      "final": "build5",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0
+    },
+    "focused": {
+      "final": "focused4",
+      "tests": 3,
+      "failedChecks": 0,
+      "exitCode": 0
+    },
+    "full": {
+      "tests": 1615,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "seconds": 200.02,
+      "ctestSeconds": 200.05
+    },
+    "audit": {
+      "tools": 74,
+      "passed": 63,
+      "knownFailures": 11,
+      "newFailures": 0
+    },
+    "pins": {
+      "reports": 49,
+      "count": 126,
+      "historyPreserved": true
+    },
+    "entry": {
+      "runs": 5,
+      "passed": 5,
+      "originalsUnchanged": true,
+      "scope": "1-1/1-2briefing→world/tutorial1~3briefing"
+    }
+  },
+  "actualFrame": {
+    "stage": "thewarbegins",
+    "initialInput": "간헐천15095 섬모서리에초기골렘위치만준비",
+    "points": [
+      [
+        99,
+        122
+      ],
+      [
+        98,
+        122
+      ]
+    ],
+    "endTime": 0.5,
+    "frameTime": 0.45,
+    "currentBefore": 0,
+    "currentAfter": 1,
+    "rawPositionChanged": false,
+    "shapeCellHotspot": [
+      1.1875,
+      2.38182
+    ],
+    "targetDeadInput": 15095,
+    "replacement": 15001,
+    "replacementPathForm": 0,
+    "extraPackets": 0,
+    "scope": "원래한칸경로의도착전단계진행/대상사망후실제선택/기존40삭제/새BFS실패/watch안전반환. 자연도착·채취·삭제트랜잭션·전체Kernel완주아님"
+  },
+  "limits": [
+    "10.78전용/전체Halt가아닌그안의대상분기",
+    "내용물·선택·이동은독립관측의명시경계/제품은실제몸체연결",
+    "원문전체Runtime생성자·물리단일쓰기횟수·자연운반검증아님",
+    "pickup/mined packet·경제/회피/겹침정리/다른경로/실제Client명령·AI/11스테이지완주미완료",
+    "원본DirectDraw수정없음/미등록187그래픽거부유지"
+  ],
+  "protected": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "AGENTS.md": "7addbf9b31c42f29aab7c93faa865eb6de8590a600d17202a297cf7122bdf979",
+    "LEFT_JOBS.dotnetpj.md": "0c067e1d12879dbf2212cbd64c8f9f60e65b590df910418f025027ed84f80ec2"
+  },
+  "logSha256": {
+    "extracted/goal-path-retarget-20261018-native.log": "e68e20c790984c1dd82c385aaf66ea2d424e4972d9e08e8bdbea62107ba1ad24",
+    "extracted/goal-path-retarget-20261018-build1.log": "9f7eb121dbc9c5369b3b0ee28fd6aa8ce38669ab1114cc504f5d0b3fc3859e5d",
+    "extracted/goal-path-retarget-20261018-build2.log": "ba74d52f8d58f889a07fb51a8e50e09b2dce9f8fcc4b7607eedad3c7f9d6821f",
+    "extracted/goal-path-retarget-20261018-build3.log": "68daf5268753a6f0253917d033a76282e07803e3b45f8c1951a34f7cbc6a3d34",
+    "extracted/goal-path-retarget-20261018-build4.log": "68daf5268753a6f0253917d033a76282e07803e3b45f8c1951a34f7cbc6a3d34",
+    "extracted/goal-path-retarget-20261018-build5.log": "68daf5268753a6f0253917d033a76282e07803e3b45f8c1951a34f7cbc6a3d34",
+    "extracted/goal-path-retarget-20261018-focused1.log": "f568cecd0f777711713685db18bb59261e47c34b3b10f90c7a97554bb3e3c86d",
+    "extracted/goal-path-retarget-20261018-focused2.log": "87d6be8f065838c2f242531e637c8fd8c06c9c7c82402a076a806d589cfeb469",
+    "extracted/goal-path-retarget-20261018-focused3.log": "79ad701fc2c93e6cd80025603207ca0f738f5781888f660598724515242a89bb",
+    "extracted/goal-path-retarget-20261018-focused4.log": "a130dcae5df8bbfb1b69cd8b6e4473becff8641a8e570d26847024eb45c98261",
+    "extracted/goal-path-retarget-20261018-ctest1.log": "7b0fed8abf7d1b9063178373f5cc91402a9887d6610acee595b45f247cacb9e8",
+    "extracted/goal-path-retarget-20261018-LastTest.log": "5f0bce28d0028e1be0aaf68ed4cacde596614873316eed1d0c1a6a04c2b9f25c",
+    "extracted/goal-path-retarget-20261018-pin-updates.json": "8612134ccac6c7160b7fd274b51480aa463950c26711138018c8980e11699c14",
+    "extracted/goal-path-retarget-20261018-pin-maintenance.log": "cc0621d1e11c876bfe9da250c36fad049cc5b64c0fef9bbfe4927f1e9176c239",
+    "extracted/goal-path-retarget-20261018-verify-final.json": "fbe496c130f6c640be661b6be1e6154ceb6bbe3612149fd772e2ff448fd598ec",
+    "extracted/goal-path-retarget-20261018-audit.log": "cc6672047814454222a49ab4af12afe6e83dc7491156a84e671326c0a34952a2",
+    "extracted/goal-path-retarget-20261018-entry.log": "530bf9254a3b0be59b099d237909bd3be07412d0f47949f546997ffdb8b1e681",
+    "extracted/goal-path-retarget-20261018-entry/results.json": "0a78ab4f24362e349713a644dd79035ab7e69f8e0bb1975bd16ee15351787007"
+  },
+  "commitMessage": "20261018-04 CP 골렘 운반 경로의 대상 재확인과 프레임 연결 복원",
+  "goalStatus": "active",
+  "pushed": false
+}

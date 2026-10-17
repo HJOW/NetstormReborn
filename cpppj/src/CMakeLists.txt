@@ -89,3 +89,6 @@ target_sources(netstorm PRIVATE o/RawCarrierCandidateSort.cpp o/RawCarrierCandid
 
 # 골렘의 실제 귀환·간헐천 목록과 임시 BFS/시각 평가다.
 target_sources(netstorm PRIVATE o/RawCarrierChoice.cpp o/RawCarrierChoice.h)
+
+# 운반 경로의 실제 대상 재확인과 새 이동의 Runtime 수명을 보존한다.
+target_sources(netstorm PRIVATE o/RawPathRetarget.cpp o/RawPathRetarget.h)

@@ -1408,3 +1408,8 @@ set_source_files_properties(CarrierCandidateSortTests.cpp PROPERTIES COMPILE_DEF
 target_sources(netstorm_tests PRIVATE CarrierChoiceTests.cpp)
 set_source_files_properties(CarrierChoiceTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_CARRIER_CHOICE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/carrier-choice-x86.tsv\"")
+
+# 전체 원본 Halt 안의 운반 대상 재확인4801행을 대조한다.
+target_sources(netstorm_tests PRIVATE PathRetargetTests.cpp)
+set_source_files_properties(PathRetargetTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_PATH_RETARGET_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/path-retarget-x86.tsv\"")
