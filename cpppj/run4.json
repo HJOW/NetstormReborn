@@ -42,9 +42,9 @@
     "cpppj/pathstart.json": "e12e74189f2b193457ce4b06985060d5a5983a56989eb74c0119187ce8402bbd",
     "cpppj/gunanimation.json": "2f468cf4c58059b79d2f1213f51d9f2fd86f2eaa11652dc083c6059b4923257b",
     "cpppj/assetregular.json": "e637f452b384879f7b594c3fa2fcaac6e73995e92993750c9a13aa421c9f5720",
-    "cpppj/regionpaint.json": "a1391a41fc478a639942d982096b7ea680f4c59a7e9f7854b0e13be84c39f16c",
-    "cpppj/pathruntime-lineage.json": "e35f68d46d5d6b8be419c2e5e3b110b14996e8f774ae672f4a4dcf5e3cc742f9",
-    "cpppj/movement-mapper-lineage.json": "58c07bcb5bf73f759fd51213eb810c30991ef7597080062ceb3ff1ee2fbf536c",
+    "cpppj/regionpaint.json": "797df6d58b66a2375501727ca2115aebaaf7d926d9c320fce759c48fcee785ec",
+    "cpppj/pathruntime-lineage.json": "738708f5b3eaccb78b95e61aa4a923c874e2a6d61f7ba0ecc12c27267c2bc307",
+    "cpppj/movement-mapper-lineage.json": "78c315fbf05f0bd4fa15b2ac8abe9a70f586ee13f1f7e6e0a40cef33a820b612",
     "cpppj/tests/RawPathStartTests.cpp": "b5dcda9c5e3a3634fe70bc3a5a35be3ef96eb520779ec6dcca3dad84cab34a0b",
     "cpppj/tests/GunAnimationTests.cpp": "51090267250f4e9881ddd3db3ea87c3ebb75bc56fbbe59a11baff6355b9393c4",
     "cpppj/tests/AssetRegularTests.cpp": "d3964b2b0b5c9d0a3b00f90dffff0610c16a24d644a9ec2b163ce428c3832bd6",
@@ -57,5 +57,32 @@
     "이는 네 하위 모듈의 실행 근거다. GameWorld 연결·GUI·캠페인 완주 완료 근거가 아니다.",
     "완료한 원본 입력은5482개다. Missile 접두50개와 기존 종류 선택 회귀718개는 신규 완료 입력으로 더하지 않는다.",
     "원본/클론 게임 실행과 DirectDraw 전체화면 오류 수정은 이 단위에 포함하지 않는다."
+  ],
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "unit": 144,
+      "reason": "내용물 표시 타이머 소스/검사 등록의 현재 핀 갱신. 과거 값은 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/regionpaint.json",
+          "previous": "a1391a41fc478a639942d982096b7ea680f4c59a7e9f7854b0e13be84c39f16c",
+          "current": "797df6d58b66a2375501727ca2115aebaaf7d926d9c320fce759c48fcee785ec"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/pathruntime-lineage.json",
+          "previous": "e35f68d46d5d6b8be419c2e5e3b110b14996e8f774ae672f4a4dcf5e3cc742f9",
+          "current": "738708f5b3eaccb78b95e61aa4a923c874e2a6d61f7ba0ecc12c27267c2bc307"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/movement-mapper-lineage.json",
+          "previous": "58c07bcb5bf73f759fd51213eb810c30991ef7597080062ceb3ff1ee2fbf536c",
+          "current": "78c315fbf05f0bd4fa15b2ac8abe9a70f586ee13f1f7e6e0a40cef33a820b612"
+        }
+      ]
+    }
   ]
 }

@@ -1358,3 +1358,8 @@ set_source_files_properties(UserSelectionTests.cpp PROPERTIES COMPILE_DEFINITION
 target_sources(netstorm_tests PRIVATE SquidSelectionTests.cpp)
 set_source_files_properties(SquidSelectionTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_SQUID_SELECTION_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/squid-selection-x86.tsv\"")
+
+# 실제 내용물 표시 타이머의 원문957행과 같은 Host 삭제 수명이다.
+target_sources(netstorm_tests PRIVATE ContentPreviewProcessTests.cpp)
+set_source_files_properties(ContentPreviewProcessTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CONTENT_PREVIEW_PROCESS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/content-preview-process-x86.tsv\"")

@@ -1,0 +1,97 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-17",
+  "unit": 144,
+  "baseCommit": "02c75a7",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16"
+  },
+  "currentSources": {
+    ".gitattributes": "f3048061e28aecb90be1446e823452fdfea5e8418825826f0003fcb4dab9ba68",
+    "cpppj/src/CMakeLists.txt": "e3ef1864284b926b0c1e564ecd477ce0761f8b9ac10abc4b65ea943e74af264a",
+    "cpppj/tests/CMakeLists.txt": "854bbdd793d41411851d4edebd52b671a921bb58dfa789a7ddd46bb893d50e4b",
+    "cpppj/src/o/RawContentPreviewProcess.cpp": "6be7f8997e59d046856a9c7d44d6882360d4b4cd510caba12b515b92554bc6c1",
+    "cpppj/src/o/RawContentPreviewProcess.h": "e7690b3b77969d7057b2373baf42ce33367ace295f75a0aa8ee48f56aa150699",
+    "cpppj/tests/ContentPreviewProcessTests.cpp": "99eb74565511fd1740a57a87414edc6e601cf8a61603a2f36dfde90bf294172c",
+    "tools/decomp_content_preview_process.py": "591fe5fa81d3dd23d25fe9a990b51b91b8f7a4f931d523f058927dd42192b09c",
+    "cpppj/tests/fixtures/content-preview-process-x86.tsv": "c05105f5e39cb0ce50682719b5494e65d67cb64f1db08c29882a89ef9837f948"
+  },
+  "nativeReports": {
+    "cpppj/content-preview-process.json": "290c3398c95061684ec375d9df132cda1198ea9815268a3f3e8ade41f1336606"
+  },
+  "nativeContext": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-17",
+    "lastPreciseDecompile": {
+      "host": "HJOW-Athlon",
+      "date": "2026-10-16"
+    },
+    "controls": [
+      639,
+      895
+    ],
+    "uniqueInputs": 957,
+    "normalReturns": 1914,
+    "instructions": 44256,
+    "nativeCalls": {
+      "00428700": 810,
+      "00428770": 1080,
+      "0041bfb0": 528,
+      "00480260": 12,
+      "00468230": 12,
+      "004ab2c0": 12,
+      "0041bd00": 12
+    },
+    "precisionDifferentInputs": [],
+    "boundaries": "부착41bd20/부모가상삭제/할당해제/진단은명시경계. 428700/428770/480260/468230/4ab2c0/41bd00/41bfb0전체실행. 부모삭제가Host수명을정리하는범위는별도C++검사. 두NaN피연산자동시덧셈payload선택은범위밖. 원본/OS창실행없음.",
+    "sha256": {
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "tools/decomp_content_preview_process.py": "591fe5fa81d3dd23d25fe9a990b51b91b8f7a4f931d523f058927dd42192b09c",
+      "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+      "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+      "cpppj/tests/fixtures/content-preview-process-x86.tsv": "c05105f5e39cb0ce50682719b5494e65d67cb64f1db08c29882a89ef9837f948"
+    }
+  },
+  "protectedFileSha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6"
+  },
+  "workRecordSha256": "77f48f728d7f4d8a8801fa71a1a8705209ef201f64515a01d9ffb054253f3f33",
+  "validation": {
+    "releaseBuild1": 0,
+    "releaseBuild2": {
+      "exitCode": 1,
+      "reason": "실행 중인 검사 EXE 파일 잠금 LNK1104. 전체 검사 정상 종료 후 재빌드."
+    },
+    "releaseBuild3": 0,
+    "finalFocusedTests": 3,
+    "fullRegression": {
+      "build": 1,
+      "cases": 1583,
+      "failed": 0,
+      "exitCode": 0,
+      "runnerSeconds": 216.64,
+      "ctestSeconds": 216.68
+    },
+    "finalChange": "빌드1 전체 검사 후 원본 double0 초기화 쓰기2개 보충. 최종 빌드3/집중3개 재검증.",
+    "nativeAudit": {
+      "tools": 62,
+      "passed": 51,
+      "existingFailed": 11,
+      "newFailed": 0
+    },
+    "currentPinReports": 63,
+    "currentPins": 100
+  },
+  "scope": "타이머 원문과 명시void부모의 실제Host/Kernel 수명. 부착/가상삭제/할당해제/진단은관찰경계. Session/Carrier491/실제표시자산은다음단위.",
+  "remaining": [
+    "Carrier42a750 전체사건과 Damageable fallback",
+    "InstallContents의426fc0 오연결을426080으로 교체",
+    "현재Session 시계/SoundProcessState의공유타입/실제표시자산 연결",
+    "실제Client 선택/우클릭/원본DWORD소비자",
+    "11스테이지 자연완주/승패/저장/다음미션/생산경제AI/전체동일성"
+  ]
+}

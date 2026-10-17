@@ -101,7 +101,7 @@
     "tools/analyze_vortex_live_islands_lineage.py": "8b5961e7979281b9f3bfb7ff80bc6d00c557c4f484cb6b1c1d491598d9824044",
     "cpppj/gunimpact-correction.json": "5a60cabf2e075aeca1e566a0f111144a08f9b70d936b0cb99738d789d097d88c",
     "cpppj/normalterrain-world-binding.json": "ef218ac93420c1c20632b9d68914b46e84fa2fbdb547908bddaafa873d01e26a",
-    "cpppj/normalterrain-binding-cpp-correction.json": "102854fe6730f865ec9916775845aae963c1f6f1e0b701af34873277a0fd6e23",
+    "cpppj/normalterrain-binding-cpp-correction.json": "1487759e5927c387ea2f014b01baf1009dbd5b3dde50cdbbd3b0715650c05947",
     "cpppj/normalterrain-binding-profile-correction.json": "d1ee7682459e6a3b22b3d2b8e945380282507ccb81694124ba009ab30523a0a4",
     "cpppj/normalterrain-binding-frame-correction.json": "f1a809c08d7e04d6685ba03430449fa26f94fb4f014f377eead0e98d6f420f78",
     "cpppj/dais-contained-lineage.json": "32d45a489a2ddd0983dbdb148324340bbe9bc1e49cb8ce5565e8ca2bfa5ca5e0",
@@ -146,5 +146,20 @@
     "DudeNoticeAround의 실제 하위몸체와 파생방어는 명시적 외부경계다.",
     "일반지형 소비자는 같은pool/record를 공유하며 전체 저장부모/군도는 미복원이다.",
     "Dais/Rune/Altar진행 및 ArcherType은 다음단위 자료이며 이번 관찰에 합산하지 않는다."
+  ],
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "unit": 144,
+      "reason": "내용물 표시 타이머 소스/검사 등록의 현재 핀 갱신. 과거 값은 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/normalterrain-binding-cpp-correction.json",
+          "previous": "102854fe6730f865ec9916775845aae963c1f6f1e0b701af34873277a0fd6e23",
+          "current": "1487759e5927c387ea2f014b01baf1009dbd5b3dde50cdbbd3b0715650c05947"
+        }
+      ]
+    }
   ]
 }

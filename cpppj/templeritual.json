@@ -107,7 +107,7 @@
     }
   },
   "files": {
-    "cpppj/squidhitpoints-lineage.json": "053e49a89779946a8f0b3a31ec743824f2b927b6e81f2bee87622ea71e3b02be",
+    "cpppj/squidhitpoints-lineage.json": "b45bab9e3f4177fd8d0d7f8b1883024594e79550250b657ffc37e8997a6e74ba",
     "cpppj/src/o/RawSquidHitPoints.cpp": "da3ebda20f092efd23939e17b75c09c21c5608921888e8b99844d8635d3375f5",
     "cpppj/src/o/RawSquidHitPoints.h": "b2ede7095eb575c39e7e92ba6ca3cca9d7b3ed409baf61bf18a1caa066837b8c",
     "cpppj/src/o/RawTempleRitual.cpp": "fee9b37873c162ea621595d819b05db4bdea5c28fb62a3b44908aca064530595",
@@ -137,5 +137,20 @@
     "실제Ritual/단계/count/SHP/좌표/사제·룬finder/공통HPsetter는원본몸체다.",
     "frame setter/new/Shared/create/sound/가상owner/Pop은명시관찰경계다.",
     "Rune 실제postPop304/건설시작,신전305/306/307전체consumer·GameWorld/UI는후속이다."
+  ],
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "unit": 144,
+      "reason": "내용물 표시 타이머 소스/검사 등록의 현재 핀 갱신. 과거 값은 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/squidhitpoints-lineage.json",
+          "previous": "053e49a89779946a8f0b3a31ec743824f2b927b6e81f2bee87622ea71e3b02be",
+          "current": "b45bab9e3f4177fd8d0d7f8b1883024594e79550250b657ffc37e8997a6e74ba"
+        }
+      ]
+    }
   ]
 }

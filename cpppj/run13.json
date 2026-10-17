@@ -183,7 +183,7 @@
     "extracted/run13-rawAltarSacrifice_final.log": "3182e1a70ced824bc48f7ffd6894e7deca3860b76fbb025a481a42ac6221e1b5",
     "extracted/run13-all-final.log": "d7f23f4918e85d842be06ea32fa2466a6933cd9af674a3d442de53b378065f4b",
     "extracted/run13-build-final.log": "dd53dc1e329e8819380b455b3dbe824ec777c2777fadcd349a1bf2966320e8ae",
-    "cpppj/run12.json": "e703f76dfec675953a0620ca0bed4ce6bec61b7579f64aa1c0c6f9784827d443",
+    "cpppj/run12.json": "8487c9e2edf348b876e621e12445a8477aff068f13f10b7eb74af1be3011374b",
     "cpppj/src/o/CMakeLists.txt": "7df86efa098dfbaac10a7ea5b1d24d371ec8c988412a332351dd599c695fed40",
     "cpppj/src/client/CMakeLists.txt": "17391e20258a3718babb815621c7ae955baae1b1917e400a1f1a0a6654e408cf",
     "cpppj/tests/CMakeLists.txt": "eb371908d4da367244ceb91f0f016a671dafadbfff7f31d9be90c95cb890a3b2",
@@ -219,5 +219,20 @@
     "Graph 입력은 비표면 내부Form6과 표면1이며 실제 복수자산 전체월드의 초기설치는 후속이다.",
     "Bridge는 실제 Path 생성/BFS/두번째Prepare/깊이이며 전체 걷기/도착/의식307·룬304까지 완료한 것이 아니다.",
     "실제 GameWorld/경제/AI/생산/운반·시각/음향·승패/UI·캠페인1-1 완주 동일성은 미완료다."
+  ],
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "unit": 144,
+      "reason": "내용물 표시 타이머 소스/검사 등록의 현재 핀 갱신. 과거 값은 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/run12.json",
+          "previous": "e703f76dfec675953a0620ca0bed4ce6bec61b7579f64aa1c0c6f9784827d443",
+          "current": "8487c9e2edf348b876e621e12445a8477aff068f13f10b7eb74af1be3011374b"
+        }
+      ]
+    }
   ]
 }

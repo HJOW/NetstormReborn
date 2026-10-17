@@ -1284,3 +1284,12 @@ cpppj/campaign-selection-effects.json text eol=lf
 tools/decomp_squid_selection.py text eol=lf
 docs/exe/cpp-selection-effects-20261017.md text eol=lf
 cpppj/src/o/SidPool.h text eol=lf
+
+# 내용물 표시 타이머의 새 원문/제품/검증 자료는 UTF-8/LF로 보존한다.
+cpppj/src/o/RawContentPreviewProcess.* text eol=lf
+cpppj/tests/ContentPreviewProcessTests.cpp text eol=lf
+cpppj/tests/fixtures/content-preview-process-x86.tsv text eol=lf
+cpppj/content-preview-process.json text eol=lf
+cpppj/campaign-content-preview-process.json text eol=lf
+tools/decomp_content_preview_process.py text eol=lf
+docs/exe/cpp-content-preview-process-20261017.md text eol=lf

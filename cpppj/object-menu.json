@@ -65,7 +65,7 @@
       "cpppj/tests/ObjectMenuTests.cpp": "7485055d8b76db99eb8e2fc117f9d89eb4892c2620112c1afbb1ed267710aa37",
       "cpppj/tests/RawMenuControlsTests.cpp": "df26ef116d9971df27bf12f1f857a398dec99ecfe0d72d82c13600244b17d1dd",
       "cpppj/src/client/CMakeLists.txt": "78725b028b113f3e2c815aebcc41847d2f79fc8acdcd237f4a75a05aa9854a3b",
-      "cpppj/tests/CMakeLists.txt": "e521a7468afa1af12c3b0b4831199e755eeed94a2fcc60e2e85f4517677a3f7c"
+      "cpppj/tests/CMakeLists.txt": "854bbdd793d41411851d4edebd52b671a921bb58dfa789a7ddd46bb893d50e4b"
     }
   },
   "integration_updates": [
@@ -435,6 +435,19 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "575ab2a11dcb8ac965cdde3a47e86ea32b6fe352665b4c2782902ba0c4e67017",
           "current": "e521a7468afa1af12c3b0b4831199e755eeed94a2fcc60e2e85f4517677a3f7c"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 144,
+      "reason": "내용물 표시 타이머 소스/검사 등록의 현재 핀 갱신. 과거 값은 보존한다.",
+      "pins": [
+        {
+          "group": "/product_validation/sha256",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "e521a7468afa1af12c3b0b4831199e755eeed94a2fcc60e2e85f4517677a3f7c",
+          "current": "854bbdd793d41411851d4edebd52b671a921bb58dfa789a7ddd46bb893d50e4b"
         }
       ]
     }

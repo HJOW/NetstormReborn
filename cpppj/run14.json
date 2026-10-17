@@ -181,7 +181,7 @@
     "tools/analyze_campaign_runtime4.py": "f988e5162560d05ab9b7c7bc6c7c6b06db52775067f77d84b9cc9997021d1941",
     "tools/analyze_campaign_runtime6.py": "6446b0f2f20b4c26a74301cbb62f933cb7110f64692aea4e0cb4bf0ba19dcfce",
     ".gitattributes": "c2b3aa652dfa422b8bbd0dd82a7760cd2dd28ae5cf66bfc5b7d65887d32d8cce",
-    "cpppj/burningsources.json": "133502425eece71d1737a3c4e0316e64355dd4e22dbaeea1775474340316a624",
+    "cpppj/burningsources.json": "deb8d3c741b1b0e876ff5a7809c482ad2616c2ef8a760e5dfaf7f2295b142bd2",
     "cpppj/tests/fixtures/burningsources-x86.tsv": "84abec71ace3f1cc634fbca2f3e4eec843f5d2ceb4595f7601f1db93f0b4eedd",
     "cpppj/shape-to-buffer.json": "435993711b168aae6fb5e3a706663291335fbc08ea9acd8b01c7600b50f38b33",
     "cpppj/tests/fixtures/shape-to-buffer-x86.tsv": "d92bc1a292b8f44cb87ec59ffec881f7e97db4c4b6680af92ad554af2d7c89c1",
@@ -289,5 +289,20 @@
     "ShapeToBuffer는 실제 보호Dude의 plain RLE 픽셀이며 모든가상출력/소유자색/전체BurningFrame 완료는 미포함이다.",
     "Geyser AI nonnull 요청436은 미복원거부이며 정상168과 합치지 않는다. DudeSpace48행은 고유36/반복12다.",
     "게임 실행/완주·시각/음향·경제/AI/생산/운반·승패/UI 동일성 전체는 미완료다."
+  ],
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "unit": 144,
+      "reason": "내용물 표시 타이머 소스/검사 등록의 현재 핀 갱신. 과거 값은 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/burningsources.json",
+          "previous": "133502425eece71d1737a3c4e0316e64355dd4e22dbaeea1775474340316a624",
+          "current": "deb8d3c741b1b0e876ff5a7809c482ad2616c2ef8a760e5dfaf7f2295b142bd2"
+        }
+      ]
+    }
   ]
 }

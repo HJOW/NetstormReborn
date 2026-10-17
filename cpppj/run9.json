@@ -78,7 +78,7 @@
     "tools/analyze_campaign_runtime9.py": "b6a89f002cf91aea57be6c9274b41829289055b9e54060112a29bda72959d63b",
     "tools/analyze_campaign_runtime4.py": "f988e5162560d05ab9b7c7bc6c7c6b06db52775067f77d84b9cc9997021d1941",
     "tools/analyze_campaign_runtime6.py": "6446b0f2f20b4c26a74301cbb62f933cb7110f64692aea4e0cb4bf0ba19dcfce",
-    "cpppj/islandqueries.json": "15a2abd48d61bd73588bfc2766e991b608e542808e01e7b2ba4e6d1856e39550",
+    "cpppj/islandqueries.json": "1fc88420c3be55c5b0967427395a9030f2bc1cce54518ccb55af554aeab29ab9",
     "cpppj/tests/fixtures/islandqueries-x86.tsv": "9a95feaf0093fe87a35d095f4d9233a8a560aff5e225e649e6bd4e8e8e359ebb",
     "cpppj/damageablehit.json": "12d36a4f721adbfd4f2442f8e2355c694bdb7196006cc7f310aa2c3538af17a5",
     "cpppj/tests/fixtures/damageablehit-x86.tsv": "77a50ddaf8af98fd6ead3679aa0546f0f48eb1c325147f3321e30615b908a2e6",
@@ -92,11 +92,11 @@
     "tools/analyze_farmcluster_cpp_correction.py": "3ccc65b3f67ca754e921f9f9b15d6131fe9af9abe8ca9ebd8cccbecdddf74cbf",
     "tools/analyze_terraingrowth_cpp_binding.py": "f5396a23110928a8184e06ed537b2caa3dc3901e9482e9df915c1d8112c7d715",
     "tools/analyze_dais_shared_lineage.py": "464120e6f472fb30605f35f2b0137fd2b0a5f2c5c25a4c462e5a198e81d615f7",
-    "cpppj/islandqueries-pool-correction.json": "954e4f087bd82fb7269fb62a956d548af0098cc66ea3d1b115bc15d21fb30f3c",
+    "cpppj/islandqueries-pool-correction.json": "eb4cdf33d3341be0962203869867b443084e1e4cb1249aba125f44110b5fe506",
     "cpppj/islandqueries-macro-correction.json": "5c6f906fb85be0ae5eca5a0b4fd7ea2641315d2cf7d41135168ff73503fdf276",
     "cpppj/damageablehit-correction.json": "129290de20a3fb0da9f1baec0faa02b20251ff0583fed3b0259e2f0bb1162f6c",
     "cpppj/farmcluster-cpp-correction.json": "dac56898906db1563b1c5fb038ff7d3308691646084e788c7b5fa73f83f468ce",
-    "cpppj/dais-shared-lineage.json": "3d4a63e81398f345cf4cfd241b664bca0d892cfea9860686c2de141782ae77e1",
+    "cpppj/dais-shared-lineage.json": "1961d1e39cb9e912ea65589a8a0a8a0a1e7bb598477b5840eaee7f4305a2a211",
     "extracted/run9-IslandQueries_final.log": "9563a11fd2dbc14dd8f65d97ce3d0795058986d83d5e94295616d212c8b33933",
     "extracted/run9-DamageableHit_final.log": "f3d6ada921c0eea7a768f284db4e4eb70783c50616aa33bac0f24c40572316a7",
     "extracted/run9-FarmCluster_final.log": "5cf58639ae7669b2b6bbbb7fd10dd9364db98b06ee2ba29d7c223d10d86ff1bb",
@@ -154,6 +154,31 @@
           "path": "cpppj/src/o/RawPathRuntime.h",
           "previous": "40b7ecedada3010cb7533f2007fcdb21b6470ad8ea98fc61379029c11c0601ef",
           "current": "1ea416e522e69d4ccadef34f1000a704a38e507f8ad021afe5fcedfa093149b4"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 144,
+      "reason": "내용물 표시 타이머 소스/검사 등록의 현재 핀 갱신. 과거 값은 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/islandqueries.json",
+          "previous": "15a2abd48d61bd73588bfc2766e991b608e542808e01e7b2ba4e6d1856e39550",
+          "current": "1fc88420c3be55c5b0967427395a9030f2bc1cce54518ccb55af554aeab29ab9"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/islandqueries-pool-correction.json",
+          "previous": "954e4f087bd82fb7269fb62a956d548af0098cc66ea3d1b115bc15d21fb30f3c",
+          "current": "eb4cdf33d3341be0962203869867b443084e1e4cb1249aba125f44110b5fe506"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/dais-shared-lineage.json",
+          "previous": "3d4a63e81398f345cf4cfd241b664bca0d892cfea9860686c2de141782ae77e1",
+          "current": "1961d1e39cb9e912ea65589a8a0a8a0a1e7bb598477b5840eaee7f4305a2a211"
         }
       ]
     }

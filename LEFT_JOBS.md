@@ -1,5 +1,16 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-17 단위144 완료: 내용물 표시 타이머와 부모 삭제 수명 (`HJOW-Athlon`)
+
+- [x] 기준 `02c75a7`, 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16** 일치다. AGENTS·양LEFT를 재독했고 새 디컴파일·원본 게임 실행·DirectDraw 수정은 없다. [작업 기록](docs/exe/cpp-content-preview-process-20261017.md).
+- [x] `RawContentPreviewProcess`가428700/428770/480260/468230→4ab2c0→41bd00와41bfb0을 복원했다. float지속시간+현재double시각·정확한만료·NaN건너뜀·진단전부모snapshot·flags400000부모삭제·실제빈통지·소멸진단DWORD/패딩보존이다. 현재공유47타입은참조입력이며Session연결은아직없다.
+- [x] 새 독립 PE관측 **957입력·1,914정상반환·44,256명령·53/64차이0**다. C++원문재생/실제Host두타이머의만료·외부부모삭제/미연결경계 **3개 성공**이다. 실제Form/Kernel/깊이0을검사했으나명시void자산입력이며실제그림Pop/픽셀완료를주장하지않는다.
+- [x] 빌드1과최종빌드3 **종료0·경고0·오류0**이다. 빌드2는전체검사중EXE링크의LNK1104파일잠금으로실패했다. 전체검사는중단없이정상종료했고그뒤빌드3을성공했다. 빌드1 전체CTest **1,583개·실패0·종료0·216.64초**(CTest216.68초), 이후원본double0초기화쓰기2개보충뒤최종빌드3 집중3개를재검증했다. 63797/25328/48978/56072/68624는모두종료했고대기명령없다.
+- [x] 원본감사62종 **51성공·기존11실패·새실패0**, 기존63보고서100현재핀갱신/과거값보존이다. 보호SHA3/과거이력/기존CMake접두/UTF-8·LF를확인했고기존fixture/AGENTS/원본/DN은수정하지않았다. Client입구미변경으로클론창진입은반복하지않았다.
+- [x] 로그접두부 `extracted/goal-content-preview-process-20261017-`, 연결보고서 `cpppj/campaign-content-preview-process.json`이다. 인계후 **`20261017-44 CP 내용물 미리보기 타이머와 부모 삭제 수명 복원`** 으로로컬커밋하며push하지않는다. 전체목표active다.
+- [ ] **다음 우선:** 타이머선행몸체는완료했다. Carrier42a750의491/492/493/5105·Damageable44b900 fallback과실제미리보기생성/프레임/좌표/소유자/표시를복원하고현재Session의시계·SoundProcessState.processType을연결한다. 그뒤InstallContents.checkCarrier의잘못된priests->CheckCarrier(426fc0)를실제426080헬퍼로교체한다. 원본42977f call426080근거는직전단위를따른다. 예약만연결하고프레임을빈성공으로바꾸지않는다.
+- [ ] 실제Client선택·시계/강조/dump·비정지객체메뉴/49af80설명·번역/문자열수명·VT별+a8/+ac·DWORD소비자, 로그인된로컬전송/생산/경제/AI와대상11스테이지자연완주·승패·저장·다음미션/전체동일성은미완료다.
+
 ## 2026-10-17 단위143 완료: 선택 가상 통지·같은Session 마나/사정거리/491 연결 (`HJOW-Athlon`)
 
 - [x] 기준 `e95ed13`, 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16** 일치다. AGENTS·양LEFT를 재독했다. 새 디컴파일·원본 게임/창 실행·DirectDraw 수정은 없다. [작업 기록](docs/exe/cpp-selection-effects-20261017.md).

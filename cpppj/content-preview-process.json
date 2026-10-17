@@ -1,0 +1,34 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-17",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16"
+  },
+  "controls": [
+    639,
+    895
+  ],
+  "uniqueInputs": 957,
+  "normalReturns": 1914,
+  "instructions": 44256,
+  "nativeCalls": {
+    "00428700": 810,
+    "00428770": 1080,
+    "0041bfb0": 528,
+    "00480260": 12,
+    "00468230": 12,
+    "004ab2c0": 12,
+    "0041bd00": 12
+  },
+  "precisionDifferentInputs": [],
+  "boundaries": "부착41bd20/부모가상삭제/할당해제/진단은명시경계. 428700/428770/480260/468230/4ab2c0/41bd00/41bfb0전체실행. 부모삭제가Host수명을정리하는범위는별도C++검사. 두NaN피연산자동시덧셈payload선택은범위밖. 원본/OS창실행없음.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "tools/decomp_content_preview_process.py": "591fe5fa81d3dd23d25fe9a990b51b91b8f7a4f931d523f058927dd42192b09c",
+    "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "cpppj/tests/fixtures/content-preview-process-x86.tsv": "c05105f5e39cb0ce50682719b5494e65d67cb64f1db08c29882a89ef9837f948"
+  }
+}

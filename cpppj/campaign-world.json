@@ -69,7 +69,7 @@
     "cpppj/constructionarrival.json": "975dabfb6909fa24c361f216f7c1696995f3c686f609bbdae04e5c32a36f7e89",
     "cpppj/tests/fixtures/constructionarrival-x86.tsv": "de99e6d0f8d2816101d30b6245603a7caffffe64b9b5c7fda505af252a9da691",
     "tools/decomp_constructionarrival_oracle.py": "a3db1f04c4c193f223a6b06790ac209dde0b7398a55d52bdb89588ffe4397ec3",
-    "cpppj/constructiontimer.json": "106d6b76f7b0ad48ca57e819c42ec8b462734e863219a08caddb3bb387eae3fb",
+    "cpppj/constructiontimer.json": "af152038eed52c3bb4c5757b840e62e450bda320b155a3a0330652fdb1b50ffb",
     "cpppj/tests/fixtures/constructiontimer-x86.tsv": "dd86e75ded7220354551aac29fb2481a938c286c1026917434864432d48d7cc6",
     "tools/decomp_constructiontimer_oracle.py": "e0d46e052222698a843c8c5d0d8a9122be9d15961c302c2243bbcb8706ecb158"
   },
@@ -117,6 +117,19 @@
           "path": "cpppj/src/o/RawConstructionBuilder.cpp",
           "previous": "9af3eb30ab5b57062bf0a3006e1973683165de48fd79b4227316322a99317189",
           "current": "6a17b819e976b76891f443cfca012d42e31d2f94e818261ce236f05cd19895f5"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 144,
+      "reason": "내용물 표시 타이머 소스/검사 등록의 현재 핀 갱신. 과거 값은 보존한다.",
+      "pins": [
+        {
+          "group": "/sha256",
+          "path": "cpppj/constructiontimer.json",
+          "previous": "106d6b76f7b0ad48ca57e819c42ec8b462734e863219a08caddb3bb387eae3fb",
+          "current": "af152038eed52c3bb4c5757b840e62e450bda320b155a3a0330652fdb1b50ffb"
         }
       ]
     }

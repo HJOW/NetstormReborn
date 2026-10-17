@@ -104,7 +104,7 @@
     "extracted/metadisplaydirty/originalCD/creation.c": "d2f582333587db537f25b283e9ac5b831684860d7fb31bc17ce4f09cfa07d855",
     "extracted/metadisplaydirty/originalCD/functions.tsv": "5dc5ee9db4cb87eb69cb8b14c4abc4aa0462d3748462959e45e2b3f3007b8b10",
     "tools/ghidra/metadisplaydirty-functions.json": "7795090ccd789b7d5e584f2ccee124d69bf011f95522da4454dc367974c8c589",
-    "cpppj/pathdata.json": "4b0e5f7d89eebd8462ca81f85212060c77b17135dee69182f41f468a8c9b2fc5",
+    "cpppj/pathdata.json": "19afec415e23c96c6d266134ea5eef18f25b4798520df71b488c62ad402c2768",
     "cpppj/tests/fixtures/pathdata-x86.tsv": "dbd3e1413d6ae263da77fd1da763dc1e133939e34b88bdbd660d2da6c307b23f",
     "tools/decomp_pathdata_oracle.py": "c8f56d48ecdfb39feaf11e0c61886e6b22de0044918f90060052e4ac7bf3214d",
     "tools/decomp_pathruntime_oracle.py": "d9764f3b0dc5005d8c0b229e367df88c42dcf74d171d5f29927c2855673d9fcc",
@@ -130,7 +130,7 @@
     "cpppj/pathprepare.json": "55bc9badb36cf280b1f4683f0943e95ef35088017127db6e5c36b93496908465",
     "cpppj/tests/fixtures/pathprepare-x86.tsv": "c854b31ce7ed0bc9ddf059ffa0b09a96d3ac37860aa5f05155df57e0fd772dc8",
     "tools/decomp_pathprepare_oracle.py": "3251981fd3cffa9ee7d92bf41b2a29b12cb93b5402df8fac70b855f66aca341d",
-    "cpppj/factorypostpop.json": "09849c6f091a53eae2cbedf4d64f2c5564efaf8bc983bf89a8fbb28175990b6d",
+    "cpppj/factorypostpop.json": "42429c2703d34b170c9fa4710e3867d9709252c7ac4b0c32c8801af896d7c0e0",
     "tools/decomp_factorypostpop_oracle.py": "32a85893335846152635602a2064573726a72e822fff41ae795c3cf98a9909ef",
     "cpppj/tests/fixtures/factorypostpop-x86.tsv": "3c03af2bf6a224449a789e86d6dbe88cb93d84bf56b85ee1e900af540f271b06",
     "tools/ghidra/factorypostpop-functions.json": "72d9871cc0f299df06b617ac558375aa0c8472e91b010b92562a243e3b88d35f",
@@ -220,6 +220,25 @@
           "path": "cpppj/src/o/SidPool.h",
           "previous": "dede45b0aed7bcbc896b8da80d72540c266d9e5a56b99878efbf4f2abad6448d",
           "current": "fbac21d016818c4f3436d2848658b628ff1ebcfe1ce2bee7c78596726ec077c4"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 144,
+      "reason": "내용물 표시 타이머 소스/검사 등록의 현재 핀 갱신. 과거 값은 보존한다.",
+      "pins": [
+        {
+          "group": "/sha256",
+          "path": "cpppj/pathdata.json",
+          "previous": "4b0e5f7d89eebd8462ca81f85212060c77b17135dee69182f41f468a8c9b2fc5",
+          "current": "19afec415e23c96c6d266134ea5eef18f25b4798520df71b488c62ad402c2768"
+        },
+        {
+          "group": "/sha256",
+          "path": "cpppj/factorypostpop.json",
+          "previous": "09849c6f091a53eae2cbedf4d64f2c5564efaf8bc983bf89a8fbb28175990b6d",
+          "current": "42429c2703d34b170c9fa4710e3867d9709252c7ac4b0c32c8801af896d7c0e0"
         }
       ]
     }

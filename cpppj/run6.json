@@ -33,7 +33,7 @@
     "cpppj/tests/fixtures/geysermined-x86.tsv": "29abf72063278eecebd954401b6af4a2e67fe8ad236e51bb60ce3db141bfd5aa",
     "cpppj/priestdamage.json": "48dc6441097cfc1ae2a2f88a0cf4b1e8881dc9d1f88323908049c7733dd4a18c",
     "cpppj/tests/fixtures/priestdamage-x86.tsv": "68004b70e556920ec30490ccb1145d5e0cc7ff2708ac3031b648886e9d602a0b",
-    "cpppj/framechoose-lineage.json": "fdc5b62966cf85f26db3d914030957f0db2799a8ae31b499dd418649b650d5e8",
+    "cpppj/framechoose-lineage.json": "8b903a5ff307810a3c7c44a24a768952993a65ddbf11dfd23a1567e828df4e42",
     "tools/analyze_framechoose_lineage.py": "ad7d7b0a29370f799db06bc1446a3e8e57e1856e7056be836cf1919fefe051ac",
     "tools/analyze_geysermined_shadow_lineage.py": "0bfead98b2de6f2689dea88a780d71c3e894d8e369483e6e94e2cafcae0502e7",
     "extracted/run6-GeyserMined_-final.log": "d14eadbf5db64368f9dc50aec9172462ce1aed5ec81b911b87e0ad4ac65951bc",
@@ -41,7 +41,7 @@
     "extracted/run6-RegionPaint_-final.log": "aea33691253b92919889b9f651b42a6ba092f72a6396508c55d6eb9bd90eb6f6",
     "extracted/run6-all-final.log": "c8767c728020b054bf837e355a36e72c75dff31bc08bad066395b831eab056d2",
     "extracted/run6-build-final.log": "657f2faabd0a0c73c75d79e1da33ee394a6bc9084d8d2700780f90976f4c7588",
-    "cpppj/run5.json": "a77e9c957154da3ca6a4cc1d0d8d885a73bbf4f09645244ab344ab286682060a",
+    "cpppj/run5.json": "4fb6c846e1d8fd951ac902bb13bd089e4365fc14225a6643bed0e70bee7dc7af",
     "cpppj/src/o/RawFrameChoose.cpp": "153ebec3c49993006dcd24ee6cd19c33d19f21b49e96de5b486a8297103478ad",
     "cpppj/src/o/RawFrameChoose.h": "76b17d1fa1c65f9f9c7f8bc59e0a544708a01cd172009af3ed130784d58252b8",
     "cpppj/src/o/RawRegionPaint.cpp": "8242ef06c28ce36784e2d79a9b34cc751654f32567953152431df83e9d736178",
@@ -65,5 +65,26 @@
     "nonzero burning 생성/애니메이션과 일반 표적 피해는 별도 미완료다.",
     "간헐천 상위 CarrierArrival·채굴 통지 작성/송신·실제 음향 재생은 미연결이다.",
     "이전 지형 후보484개는 기존 몸체 공유의 회귀이며 신규 입력으로 더하지 않는다."
+  ],
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "unit": 144,
+      "reason": "내용물 표시 타이머 소스/검사 등록의 현재 핀 갱신. 과거 값은 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/framechoose-lineage.json",
+          "previous": "fdc5b62966cf85f26db3d914030957f0db2799a8ae31b499dd418649b650d5e8",
+          "current": "8b903a5ff307810a3c7c44a24a768952993a65ddbf11dfd23a1567e828df4e42"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/run5.json",
+          "previous": "a77e9c957154da3ca6a4cc1d0d8d885a73bbf4f09645244ab344ab286682060a",
+          "current": "4fb6c846e1d8fd951ac902bb13bd089e4365fc14225a6643bed0e70bee7dc7af"
+        }
+      ]
+    }
   ]
 }

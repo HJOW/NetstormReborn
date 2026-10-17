@@ -104,7 +104,7 @@
   },
   "files": {
     "cpppj/dais-contained-lineage.json": "32d45a489a2ddd0983dbdb148324340bbe9bc1e49cb8ce5565e8ca2bfa5ca5e0",
-    "cpppj/dais-shared-lineage.json": "3d4a63e81398f345cf4cfd241b664bca0d892cfea9860686c2de141782ae77e1",
+    "cpppj/dais-shared-lineage.json": "1961d1e39cb9e912ea65589a8a0a8a0a1e7bb598477b5840eaee7f4305a2a211",
     "cpppj/src/o/RawDaisRegular.cpp": "c1a167728b02f382cbae23454e4aba1046c91a7284dbe4c6e206e856ccc4c433",
     "cpppj/src/o/RawDaisRegular.h": "fdc080a0ae1ff54909a1cf59a6b9be626e7a7d96c5103072c9325d13efb88ed3",
     "cpppj/tests/fixtures/daisregular-core-x86.tsv": "1af508f4d7c13401e6e9c3a5daacde2f941a83ad94332624d2b61b11173394f8",
@@ -139,5 +139,20 @@
   },
   "smoke": false,
   "game_runs": 0,
-  "scope": "초기 Stop604/Collapse/StartSacrifice/169의비wrapAdvance/305/CanBridge만. 전체Progress/Finish/Bridge/Rune304/Altar24/실제소비자/C++대조는미수행."
+  "scope": "초기 Stop604/Collapse/StartSacrifice/169의비wrapAdvance/305/CanBridge만. 전체Progress/Finish/Bridge/Rune304/Altar24/실제소비자/C++대조는미수행.",
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "unit": 144,
+      "reason": "내용물 표시 타이머 소스/검사 등록의 현재 핀 갱신. 과거 값은 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/dais-shared-lineage.json",
+          "previous": "3d4a63e81398f345cf4cfd241b664bca0d892cfea9860686c2de141782ae77e1",
+          "current": "1961d1e39cb9e912ea65589a8a0a8a0a1e7bb598477b5840eaee7f4305a2a211"
+        }
+      ]
+    }
+  ]
 }

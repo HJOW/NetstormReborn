@@ -59,3 +59,6 @@ target_sources(netstorm PRIVATE client/RawUserSelection.cpp client/RawUserSelect
 
 # 원본 선택 가상+7c와 사정거리/491 생성 입구다.
 target_sources(netstorm PRIVATE o/RawSquidSelection.cpp o/RawSquidSelection.h o/SelectionVtables.inc)
+
+# 내용물 미리보기의 생성/만료/빈 통지/부모 삭제 수명이다.
+target_sources(netstorm PRIVATE o/RawContentPreviewProcess.cpp o/RawContentPreviewProcess.h)

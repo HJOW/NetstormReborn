@@ -134,9 +134,9 @@
     "cpppj/tests/fixtures/daisprogress-x86.tsv": "20f5ddd2486a3b592db3a4f77a8f18200a9ec4f46cec5f43355d86cf1f215cea",
     "cpppj/damageablepostdestroy.json": "83ee40686f3029ba90e93a1b027bd1b5113eb8625847d3e361c630005818c616",
     "cpppj/tests/fixtures/damageablepostdestroy-x86.tsv": "7cbf0b93162674cd8d1cf353068ad96b4e717f1167782c0b8fe98908b98a4c6b",
-    "cpppj/burningprocess-constructor.json": "10f01daf4a2efcf4f61c37132a21d8dd8defbb783d1eb802291bded82b1dbfd1",
+    "cpppj/burningprocess-constructor.json": "7861dbee116af646b68e54877a766e7506fc859b231d5aeb561d783c3e385f01",
     "cpppj/tests/fixtures/burningprocess-constructor-x86.tsv": "cab4c23c2e79293da37d9d36983cc3bbf7593cd23e9c84bab5aa4f5424962622",
-    "cpppj/burningparticle.json": "18f1a982816ad6736b4a6c49053c15ffea3fd7272f0e01d0feca78953d1bfcf0",
+    "cpppj/burningparticle.json": "0379319f21a2622e9cae9b2b0280dc520501ddc54cef8874fb3f08065a59aac9",
     "cpppj/tests/fixtures/burningparticle-x86.tsv": "2d157284340561db003a70b51697d7f2922a89e4b8d9df3871394179f5a795a3",
     "cpppj/fortmeta.json": "6d829e2f37c37005c93c0f2de1ae79d06d26ecd9aa36029e0354a566dcf7e4e5",
     "cpppj/tests/fixtures/fortmeta-x86.tsv": "47c1ad6441ef2a9b62e010f32862171cb7ead5f174c4f7edbad81f037c2fe4a9",
@@ -188,7 +188,7 @@
     "extracted/run12-rawDaisRegular_final.log": "2152a5f678ad3ddc711fe5f923c2ffcf1fdf1880346ffe7a62842d426c2bb065",
     "extracted/run12-all-final.log": "da22f6f1650e6122bcbd63571760995a5d021c7a7a13bee4d92fc9e737ebc733",
     "extracted/run12-build-final.log": "76b10d8bbc38ea6623ccb66a8277f0b079d5fb06bdfe962f6a7407f9df6e9caa",
-    "cpppj/run11.json": "6fb5350770882030491b30447483a97b0f014e4517553c789f2afb78210f24b5",
+    "cpppj/run11.json": "a0258def86a9c07a8a6840a77db44acad89e542ecd72ba1747ab9b4ff4602976",
     "cpppj/src/o/CMakeLists.txt": "2fcbbc0ba5d9f92b359278132a0b87218687251589da7a70629119a7fb3defd5",
     "cpppj/tests/CMakeLists.txt": "e088563097b83e81dc7d284391a12bb0b5bcab9d06b7ec441b58f93764e41b72",
     "cpppj/src/o/SquidProcess.h": "827a9789c2a6b66ac7b98181e49e8c0fa19713755bb62fccababb7ae2a0d0589",
@@ -227,5 +227,32 @@
     "FortMeta의 TypeNames 전신·현재 부모 getter·UI·전체 Fort 부모 설치는 미완료다.",
     "DudeTask는 실제 Dude 생성/Pop/Path 및 전체 드롭 완료의 근거가 아니다.",
     "실제 GameWorld/경제/AI/생산/운반·시각/음향·승패/UI·캠페인1-1 완주 동일성은 미완료다."
+  ],
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "unit": 144,
+      "reason": "내용물 표시 타이머 소스/검사 등록의 현재 핀 갱신. 과거 값은 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/burningprocess-constructor.json",
+          "previous": "10f01daf4a2efcf4f61c37132a21d8dd8defbb783d1eb802291bded82b1dbfd1",
+          "current": "7861dbee116af646b68e54877a766e7506fc859b231d5aeb561d783c3e385f01"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/burningparticle.json",
+          "previous": "18f1a982816ad6736b4a6c49053c15ffea3fd7272f0e01d0feca78953d1bfcf0",
+          "current": "0379319f21a2622e9cae9b2b0280dc520501ddc54cef8874fb3f08065a59aac9"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/run11.json",
+          "previous": "6fb5350770882030491b30447483a97b0f014e4517553c789f2afb78210f24b5",
+          "current": "a0258def86a9c07a8a6840a77db44acad89e542ecd72ba1747ab9b4ff4602976"
+        }
+      ]
+    }
   ]
 }

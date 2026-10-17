@@ -101,13 +101,13 @@
     "cpppj/tests/fixtures/islandruntime-x86.tsv": "bc220732f4d41892cd82c847196ae01507598a3e0edb0ae0d3e1ceed2eaaa180",
     "cpppj/terraincontext.json": "3dd5dee3d5062ec8b37b34b9f6a07550bd85b080062e5e67cd0eb26902772954",
     "cpppj/tests/fixtures/terraincontext-x86.tsv": "4f2a00ade0e29273a76824b96ea3184a78d51022a0758b79deceaf322fa7696d",
-    "cpppj/templeritual.json": "5321e284dae09eb688c190fc4a10ac51ecd964631c65af9984ff98bdabd2a6c7",
+    "cpppj/templeritual.json": "ff930a04aaf2cbccc0444e1be6577fed5762082e43edd82b4d5f068d6b833233",
     "cpppj/tests/fixtures/templeritual-x86.tsv": "6ad3c0abef4a2af956e949ae54e7005d89811c0287bd9d5328e94efa3a98be65",
-    "cpppj/runepostpop.json": "403b27fa0d713ec0793830118af4d2edd9993dc7a3be1a6bc5ca4e402fbbf42f",
+    "cpppj/runepostpop.json": "6f7bf95efbd58974bcb78be66a59a627dfebae324bf543148b30711a7f171385",
     "cpppj/tests/fixtures/runepostpop-x86.tsv": "784669b8c4c20b725b3e23492bc76e4b1a4ab21042dfb9850378907bafd35e99",
     "cpppj/world-bridge-state-lineage.json": "053d2520d94f52bb3edf3f7c39fe061537f49f36be48b1d16a556ac73503845e",
-    "cpppj/squidhitpoints-lineage.json": "053e49a89779946a8f0b3a31ec743824f2b927b6e81f2bee87622ea71e3b02be",
-    "cpppj/runepostpop-lineage.json": "681860242d5774c8764ecc2cd3eaea88b01224c49d5d4cafbf4274012ed1b0d4",
+    "cpppj/squidhitpoints-lineage.json": "b45bab9e3f4177fd8d0d7f8b1883024594e79550250b657ffc37e8997a6e74ba",
+    "cpppj/runepostpop-lineage.json": "ce162384f655d093f9302c8d7925d95b2343fca3905cbc44f2a9bf133ef52974",
     "cpppj/gunarcher-correction.json": "ebd35cd08ceb70b2c6200418d14dd13d9f19dc250beb7ff57302bb99fa869137",
     "cpppj/temple-rune-runtime8-lineage.json": "bcea17c9b8d8bd9a93df9aba44dfd8e066bde1e0f5c12e0d74bc8ff097fce310",
     "tools/analyze_world_bridge_state_lineage.py": "5677002a634d2fda1e11750a13b1eb7004328f4c85acb15a39c551e68d33f90a",
@@ -165,5 +165,38 @@
     "초기 성장/일반·archipelago wrapper/edgeFarm 군집 배치는 후속이다.",
     "신전305/306/307·Rune304의 전체 희생 진행/사제 사망·미션 승패는 후속이다.",
     "합성 타입/프레임/SHP 소비자는 실제 전체 게임 자산/화면 대조와 구분한다."
+  ],
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "unit": 144,
+      "reason": "내용물 표시 타이머 소스/검사 등록의 현재 핀 갱신. 과거 값은 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/templeritual.json",
+          "previous": "5321e284dae09eb688c190fc4a10ac51ecd964631c65af9984ff98bdabd2a6c7",
+          "current": "ff930a04aaf2cbccc0444e1be6577fed5762082e43edd82b4d5f068d6b833233"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/runepostpop.json",
+          "previous": "403b27fa0d713ec0793830118af4d2edd9993dc7a3be1a6bc5ca4e402fbbf42f",
+          "current": "6f7bf95efbd58974bcb78be66a59a627dfebae324bf543148b30711a7f171385"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/squidhitpoints-lineage.json",
+          "previous": "053e49a89779946a8f0b3a31ec743824f2b927b6e81f2bee87622ea71e3b02be",
+          "current": "b45bab9e3f4177fd8d0d7f8b1883024594e79550250b657ffc37e8997a6e74ba"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/runepostpop-lineage.json",
+          "previous": "681860242d5774c8764ecc2cd3eaea88b01224c49d5d4cafbf4274012ed1b0d4",
+          "current": "ce162384f655d093f9302c8d7925d95b2343fca3905cbc44f2a9bf133ef52974"
+        }
+      ]
+    }
   ]
 }

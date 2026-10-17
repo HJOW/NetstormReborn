@@ -113,7 +113,7 @@
     ".gitattributes": "d8cc896fceacbb0e76b8e314b8a1adf508aaada810929b088a4d66cc9af98e8b",
     "cpppj/archertype.json": "641d8e0499c02b08036351a1f2c58bae3c46081da754b932aeabca01bf109c76",
     "cpppj/tests/fixtures/archertype-x86.tsv": "c892b554dc1f9baa161d3ca72fc1c3f891daef4e04eea44172b050c6c0e0580f",
-    "cpppj/daisregular-core.json": "7767b88f635be1f8810f4547572ebde32589a372a4b40d118c7a6796fc747c4c",
+    "cpppj/daisregular-core.json": "948bb7bfbcaa0a5716c45bf802724d48aa54e70e2324c6ce5fe5a33f56482f50",
     "cpppj/tests/fixtures/daisregular-core-x86.tsv": "1af508f4d7c13401e6e9c3a5daacde2f941a83ad94332624d2b61b11173394f8",
     "cpppj/altarsacrifice.json": "59bdbb1758846dffba4bbe351ce1b3bff9b4dff7e8ca5f007921849088c4c772",
     "cpppj/tests/fixtures/altarsacrifice-x86.tsv": "10ff5e1a36607b575a7de140023ee353263ea79da90991b2d58f03cd2ddccac1",
@@ -200,5 +200,20 @@
     "Dude의Burning모드0/Path24 하위factory는미완료다.",
     "Dude fixture의 두 기존 endpoint 입력은 모두 불일치이며 같은 endpoint의 자연반환은 아직 관찰하지 않았다.",
     "Money 전체SP배열비교는Badges/Technology/전체저장부모·GameWorld설치/캠페인완주완료의근거가아니다."
+  ],
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "unit": 144,
+      "reason": "내용물 표시 타이머 소스/검사 등록의 현재 핀 갱신. 과거 값은 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/daisregular-core.json",
+          "previous": "7767b88f635be1f8810f4547572ebde32589a372a4b40d118c7a6796fc747c4c",
+          "current": "948bb7bfbcaa0a5716c45bf802724d48aa54e70e2324c6ce5fe5a33f56482f50"
+        }
+      ]
+    }
   ]
 }

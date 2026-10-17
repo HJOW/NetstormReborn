@@ -81,7 +81,7 @@
     "cpppj/src/o/RawIslandRuntime.h": "6205b879664770b0a3047ed1066f2ae7dd243c3ec2bbd13689fef1da77298fa4",
     "cpppj/src/o/RawIslandRuntime.cpp": "3be93556f2b32efc641442ed1e21654fbd0504be1643085b82ab1e80f71acd12",
     "cpppj/islandruntime.json": "6024e529871f1d772a0cfda8b8eb577bd6af2c8f9e198649e12f8f8d72b8281c",
-    "cpppj/islandqueries-pool-correction.json": "954e4f087bd82fb7269fb62a956d548af0098cc66ea3d1b115bc15d21fb30f3c",
+    "cpppj/islandqueries-pool-correction.json": "eb4cdf33d3341be0962203869867b443084e1e4cb1249aba125f44110b5fe506",
     "tools/analyze_islandqueries_pool_correction.py": "35281125c6c1929186d6f8b729cb5a32a8e2bcfa9b3cb13b527e850ff3b7f966",
     "cpppj/islandqueries-macro-correction.json": "5c6f906fb85be0ae5eca5a0b4fd7ea2641315d2cf7d41135168ff73503fdf276",
     "tools/analyze_islandqueries_macro_correction.py": "7901c91a417b32d342a845892e9e53e5fcffef878ceb6c97cb062e49aef26e98"
@@ -101,5 +101,20 @@
     "evidence": "cpppj/islandqueries-macro-correction.json",
     "new_native_observations": 0,
     "macro_changes": 3
-  }
+  },
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "unit": 144,
+      "reason": "내용물 표시 타이머 소스/검사 등록의 현재 핀 갱신. 과거 값은 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/islandqueries-pool-correction.json",
+          "previous": "954e4f087bd82fb7269fb62a956d548af0098cc66ea3d1b115bc15d21fb30f3c",
+          "current": "eb4cdf33d3341be0962203869867b443084e1e4cb1249aba125f44110b5fe506"
+        }
+      ]
+    }
+  ]
 }

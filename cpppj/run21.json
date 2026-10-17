@@ -151,7 +151,7 @@
     "cpppj/hist/run21-fail3/focused.log": "123039fdee5e1755fb8eb0e4150bee208886b5d83ed6366705164d9c05dcb601",
     "cpppj/hist/run21-fail3/install.h": "d0ebfb3c587c6f19941a4bdff8f38981e5d0bb2e354699fd7a54c8393d2ea50c",
     "cpppj/run20.json": "32392f746feb46f4dc1ef51c23d38a2e04a36e3abaa9fde4b676c2c17ed699a2",
-    "cpppj/src/CMakeLists.txt": "8ca9af42a6c0ece47063322780f4d70dc1cc03354bf6eea5131f140233ce23f3",
+    "cpppj/src/CMakeLists.txt": "e3ef1864284b926b0c1e564ecd477ce0761f8b9ac10abc4b65ea943e74af264a",
     "cpppj/src/app/CanonMayPlaceInspect.cpp": "27eda46bca500c898abeb9a3a7c4e8588b38e061b579c84cbf6c032c6d46dda9",
     "cpppj/src/app/FrameBindingInspect.cpp": "042602919b0531fb1cbaf3941dc6597bee73944bbf0d571dacfd638bb45dd07c",
     "cpppj/src/app/FrameBindingInspect.h": "4e187ca41f8c34ed52c022b58a57327a554a723e3e26ee88a1ae152c99de3fce",
@@ -1572,6 +1572,19 @@
           "path": "cpppj/src/o/SidPool.h",
           "previous": "f56b3fd3b8c4cc0697afadb0d97ef4b7c62808103283c856c46bf68b59f0f35a",
           "current": "fbac21d016818c4f3436d2848658b628ff1ebcfe1ce2bee7c78596726ec077c4"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 144,
+      "reason": "내용물 표시 타이머 소스/검사 등록의 현재 핀 갱신. 과거 값은 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "8ca9af42a6c0ece47063322780f4d70dc1cc03354bf6eea5131f140233ce23f3",
+          "current": "e3ef1864284b926b0c1e564ecd477ce0761f8b9ac10abc4b65ea943e74af264a"
         }
       ]
     }

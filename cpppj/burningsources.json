@@ -46,8 +46,8 @@
     }
   },
   "files": {
-    "cpppj/burningparticle.json": "18f1a982816ad6736b4a6c49053c15ffea3fd7272f0e01d0feca78953d1bfcf0",
-    "cpppj/burningprocess-constructor.json": "10f01daf4a2efcf4f61c37132a21d8dd8defbb783d1eb802291bded82b1dbfd1",
+    "cpppj/burningparticle.json": "0379319f21a2622e9cae9b2b0280dc520501ddc54cef8874fb3f08065a59aac9",
+    "cpppj/burningprocess-constructor.json": "7861dbee116af646b68e54877a766e7506fc859b231d5aeb561d783c3e385f01",
     "cpppj/src/o/RawBurningSources.cpp": "66a175d6f74156a8c7e92cf705add0601767595b845890568843f85d1450afc6",
     "cpppj/src/o/RawBurningSources.h": "ce80a8babc7b28a2176ebd425e34aba1269cbffb1c1c8b66f39cbc487e2ac800",
     "cpppj/src/o/RawBurningVisual.cpp": "9521fe84204f87283fb4c9f2b5b3ebbccf8bca749b76a9bebf4691f563ade522",
@@ -91,5 +91,26 @@
     "source반환EAX는원본caller가무시하므로뜻없는포인터/이전레지스터값을C++반환값으로복원하지않는다.",
     "진단전역0/유한좌표/양수최대HP/정상마스크와구분한SID0/65535반환을포함한다.",
     "전체Step/Draw/첫cache0색표/효과factory/실제Host삭제와캠페인월드는별도후속이다."
+  ],
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "unit": 144,
+      "reason": "내용물 표시 타이머 소스/검사 등록의 현재 핀 갱신. 과거 값은 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/burningparticle.json",
+          "previous": "18f1a982816ad6736b4a6c49053c15ffea3fd7272f0e01d0feca78953d1bfcf0",
+          "current": "0379319f21a2622e9cae9b2b0280dc520501ddc54cef8874fb3f08065a59aac9"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/burningprocess-constructor.json",
+          "previous": "10f01daf4a2efcf4f61c37132a21d8dd8defbb783d1eb802291bded82b1dbfd1",
+          "current": "7861dbee116af646b68e54877a766e7506fc859b231d5aeb561d783c3e385f01"
+        }
+      ]
+    }
   ]
 }

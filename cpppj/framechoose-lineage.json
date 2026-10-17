@@ -11,6 +11,21 @@
     "cpppj/src/o/RawFrameChoose.h": "76b17d1fa1c65f9f9c7f8bc59e0a544708a01cd172009af3ed130784d58252b8",
     "cpppj/src/o/RawRegionPaint.cpp": "8242ef06c28ce36784e2d79a9b34cc751654f32567953152431df83e9d736178",
     "cpppj/src/o/RawRegionPaint.h": "7d6d77f708b38cd333ee28b1f86cf2e8aec72daca9a0b6e44f679a5b5d24cb23",
-    "cpppj/regionpaint.json": "a1391a41fc478a639942d982096b7ea680f4c59a7e9f7854b0e13be84c39f16c"
-  }
+    "cpppj/regionpaint.json": "797df6d58b66a2375501727ca2115aebaaf7d926d9c320fce759c48fcee785ec"
+  },
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "unit": 144,
+      "reason": "내용물 표시 타이머 소스/검사 등록의 현재 핀 갱신. 과거 값은 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/regionpaint.json",
+          "previous": "a1391a41fc478a639942d982096b7ea680f4c59a7e9f7854b0e13be84c39f16c",
+          "current": "797df6d58b66a2375501727ca2115aebaaf7d926d9c320fce759c48fcee785ec"
+        }
+      ]
+    }
+  ]
 }

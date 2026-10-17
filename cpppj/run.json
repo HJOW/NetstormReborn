@@ -154,11 +154,26 @@
     "cpppj/tests/fixtures/processretake-x86.tsv": "705276d822488e0177fc743d09d394d5f7dcbb3e796a7a77238044b7b88a09c8",
     "cpppj/uireset.json": "253fa2cefd81d2d723cc88ca3f6e492ea9d8d13e7efa41907cc5ec9baff26691",
     "cpppj/tests/fixtures/uireset-x86.tsv": "b1a48cbcd05a8bcc2a5fd38ce3dc2b63d79826a7fb8fd7f9a0d4b74e4dcc5348",
-    "cpppj/missionoutcome.json": "b05f31692b957bc262fdba64dabc1f113a74d3bb9cf4ebdb600a93944de53647",
+    "cpppj/missionoutcome.json": "fdf0fef21e93d348b4a98a3e8086a74955c7d033923892bfc5f7c85e2e1f3869",
     "cpppj/tests/fixtures/missionoutcome-x86.tsv": "3059eb7c9ee92f98eec042032d608707e5d1db506d0a6e3e08b175909b1aab16",
     "extracted/cpp-menu-smoke/report.json": "dbe280a4e69f9f798387c9fddfa6409e25c228d7773f48bd5f495edb04dfcbb4",
     "extracted/cpp-rawbuttons-smoke/report.json": "b011cb97b95a2e1adb0a53ea35feeb4d86093820eb05cc1cfd4409db7a675a4c",
     "extracted/cpp-gumpvisual-smoke/report.json": "0e56dbee1bc27e46ba546513a486d0b84d8356bc78a6656044e65af02897d3dc",
     "extracted/cpp-gumpbackground-smoke/report.json": "9f135a25f9ac1177b03d2040d786ccc7d5af9760ddd1ff3d4512e75c96a75e7a"
-  }
+  },
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "unit": 144,
+      "reason": "내용물 표시 타이머 소스/검사 등록의 현재 핀 갱신. 과거 값은 보존한다.",
+      "pins": [
+        {
+          "group": "/sha256",
+          "path": "cpppj/missionoutcome.json",
+          "previous": "b05f31692b957bc262fdba64dabc1f113a74d3bb9cf4ebdb600a93944de53647",
+          "current": "fdf0fef21e93d348b4a98a3e8086a74955c7d033923892bfc5f7c85e2e1f3869"
+        }
+      ]
+    }
+  ]
 }

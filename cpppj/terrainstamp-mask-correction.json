@@ -69,7 +69,7 @@
     "cpppj/src/o/RiftType.cpp": "795554df3a4538ba475a2095a1b87a6bf9ddf4ba5ff904b469cef1f7128dc895",
     "cpppj/src/o/TerrainBuilder.h": "504ed96f652444ed971a4ec5f69d29d1a872e5c7f6e4950d86427c698d00be4b",
     "cpppj/src/o/TerrainBuilder.cpp": "20c2732303039c44ce69b47b7e4d01ef4d0480e350f11b7f28da50004cd455a5",
-    "cpppj/framechoose-lineage.json": "fdc5b62966cf85f26db3d914030957f0db2799a8ae31b499dd418649b650d5e8",
+    "cpppj/framechoose-lineage.json": "8b903a5ff307810a3c7c44a24a768952993a65ddbf11dfd23a1567e828df4e42",
     "tools/analyze_framechoose_lineage.py": "ad7d7b0a29370f799db06bc1446a3e8e57e1856e7056be836cf1919fefe051ac",
     "tools/analyze_terrainstamp_cpp_binding.py": "e9a7699003cdff42a36f27237e78cb5a2936f3c95adbe9d0440974bf43c8fe63"
   },
@@ -103,7 +103,7 @@
     "cpppj/src/o/RiftType.cpp": "795554df3a4538ba475a2095a1b87a6bf9ddf4ba5ff904b469cef1f7128dc895",
     "cpppj/src/o/TerrainBuilder.h": "504ed96f652444ed971a4ec5f69d29d1a872e5c7f6e4950d86427c698d00be4b",
     "cpppj/src/o/TerrainBuilder.cpp": "20c2732303039c44ce69b47b7e4d01ef4d0480e350f11b7f28da50004cd455a5",
-    "cpppj/framechoose-lineage.json": "fdc5b62966cf85f26db3d914030957f0db2799a8ae31b499dd418649b650d5e8",
+    "cpppj/framechoose-lineage.json": "8b903a5ff307810a3c7c44a24a768952993a65ddbf11dfd23a1567e828df4e42",
     "tools/analyze_framechoose_lineage.py": "ad7d7b0a29370f799db06bc1446a3e8e57e1856e7056be836cf1919fefe051ac",
     "tools/analyze_terrainstamp_cpp_binding.py": "e9a7699003cdff42a36f27237e78cb5a2936f3c95adbe9d0440974bf43c8fe63"
   },
@@ -111,5 +111,26 @@
   "files": {
     "cpppj/src/o/RawTerrainStamp.cpp": "cffd1cb3b40c0053c527957c0bd589daa4227aa04bf9744cf70b6f660ee15be0",
     "tools/analyze_terrainstamp_mask_correction.py": "80435f45ed10d4a0c223b380f4e89be674b5bd2c5ef2b4811dc90e3b81bebbd8"
-  }
+  },
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "unit": 144,
+      "reason": "내용물 표시 타이머 소스/검사 등록의 현재 핀 갱신. 과거 값은 보존한다.",
+      "pins": [
+        {
+          "group": "/previous_cpp_source_files",
+          "path": "cpppj/framechoose-lineage.json",
+          "previous": "fdc5b62966cf85f26db3d914030957f0db2799a8ae31b499dd418649b650d5e8",
+          "current": "8b903a5ff307810a3c7c44a24a768952993a65ddbf11dfd23a1567e828df4e42"
+        },
+        {
+          "group": "/preserved_files",
+          "path": "cpppj/framechoose-lineage.json",
+          "previous": "fdc5b62966cf85f26db3d914030957f0db2799a8ae31b499dd418649b650d5e8",
+          "current": "8b903a5ff307810a3c7c44a24a768952993a65ddbf11dfd23a1567e828df4e42"
+        }
+      ]
+    }
+  ]
 }

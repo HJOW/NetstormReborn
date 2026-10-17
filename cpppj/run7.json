@@ -64,14 +64,14 @@
     "tools/analyze_campaign_runtime6.py": "6446b0f2f20b4c26a74301cbb62f933cb7110f64692aea4e0cb4bf0ba19dcfce",
     "cpppj/pathcleanup.json": "e34efa04c57bf2ec444f292d269f4c635ce43a4d04708a9685ab11e8384e24b9",
     "cpppj/tests/fixtures/pathcleanup-x86.tsv": "55b2d406caf9ac1759f00f4b205edaebcae2b5a5dd50585ab45c314c22a99e5f",
-    "cpppj/terrainstamp.json": "c0d789c8765aed2a6de0b17ece9b7b985ad8ec6e635ca96416c4327f7de936f8",
+    "cpppj/terrainstamp.json": "0d5161ed252076209b7e119b5355ccb222d317314d5a4f782ce2e49ded944310",
     "cpppj/tests/fixtures/terrainstamp-x86.tsv": "cf6848c4c51c0af2aecf5ed020637c3798011425ca2cb929a3870ebadb7495c6",
-    "cpppj/priestritualactions.json": "02ca5d4219050b5e0fa0555fb8ea31f31444d450028c203929056747a523b20d",
+    "cpppj/priestritualactions.json": "25db2cf58baceaec6feb3958bffaba1f4f49bfeac68d95f189c2b2f048ad555d",
     "cpppj/tests/fixtures/priestritualactions-x86.tsv": "95fddc7b02742d80d62159da55b893881bf597346c6f6c52feef4748b11ea72c",
     "cpppj/archermissile.json": "aebc02ef0999f3b5c6f17d57b3b6c95ab923abdd454d5f25f0cf60d5a39a0895",
     "cpppj/tests/fixtures/archermissile-x86.tsv": "3ac77dbd052c7a7fd7df1be9ed18fa4ce3f8f1b22ceaf1fbfc311a8b85d2be3f",
-    "cpppj/terrainstamp-enum-comments.json": "d94be019652f628c9cf833c02e49b215a2c5c53cf4cd6f52765b9548917636b6",
-    "cpppj/terrainstamp-mask-correction.json": "4e9a27a09567b1980734310b6b3f92f0933447bbf35fa90dc0fe73c23defddd2",
+    "cpppj/terrainstamp-enum-comments.json": "c7b95b701c949899b486e8f2082324514665cb5c5c43f8eda0f338a8d9953f4d",
+    "cpppj/terrainstamp-mask-correction.json": "e669e00c8d6cc17c5d882a830791b262bf053b04b43c67f581ebdea3240ede11",
     "cpppj/archermissile-correction.json": "f35db8d52f8c78578570a52074f3e514718c71cbdcbe7b8e49b98957a8c54615",
     "tools/analyze_pathcleanup_test_lineage.py": "e3e0607598ffa5fd8f3a71d39a30e4222d87f22b13ecc7423b7167e90182f2d0",
     "tools/analyze_priestritualactions_test_lineage.py": "f6b1849777fd3d891a8a34750466052e41a74780e54f468b5a1755a39a465af2",
@@ -89,7 +89,7 @@
     "extracted/run7-Missile_MissingRealFlightEffectRejected-final.log": "54f0387e9788382c44e39091ef3b1a0a9938f421be7b96483a1b71084161dae9",
     "extracted/run7-all-final.log": "581bc5a95a7441ec5a597d2a15feac49b39b9cb85e006dcc3f1538e43dd5a09c",
     "extracted/run7-build-final.log": "9a2d201ff6b95eb21f46099689663307a6da9660e2fd0512c41c5a9ce4c0c0c1",
-    "cpppj/run6.json": "66125184e731f3857abe5abb9bdc88a031ed1e433ea77b884533e983f77f29b7",
+    "cpppj/run6.json": "ab5c41077db3c1fe66f953b02acd8991579736601b3f5564047345516ea28048",
     "cpppj/src/o/CMakeLists.txt": "13b01092b914817fddc2e6d72c6f338d6aa13d297f10da6fe19c010dd6b87203",
     "cpppj/tests/CMakeLists.txt": "33155a42e7bcf557744d68cef2e5a623649dcd4b9f5bb61ed450d223b9f55417",
     "cpppj/src/o/RawPathCleanup.cpp": "3c8de01449f2773d859b31dd3485480d5cc6fbfdb9a82dae5effc4b0d9491da8",
@@ -115,5 +115,44 @@
     "전체 신전 의식/Archer 각도 애니메이션·실제 일반 표적 피해·미션 승패 상위 사슬은 별도 미완료다.",
     "Archer 최초 전체 보고서 snapshot 부재는 교정 보고서에 명시했고 root 사전 관찰 SHA/제한 역변환으로 연결했다.",
     "지형 factory/가상 owner/Pop 경계와 후속 context/군집 배치의 실제 월드 연결은 별도다."
+  ],
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "unit": 144,
+      "reason": "내용물 표시 타이머 소스/검사 등록의 현재 핀 갱신. 과거 값은 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/terrainstamp.json",
+          "previous": "c0d789c8765aed2a6de0b17ece9b7b985ad8ec6e635ca96416c4327f7de936f8",
+          "current": "0d5161ed252076209b7e119b5355ccb222d317314d5a4f782ce2e49ded944310"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/priestritualactions.json",
+          "previous": "02ca5d4219050b5e0fa0555fb8ea31f31444d450028c203929056747a523b20d",
+          "current": "25db2cf58baceaec6feb3958bffaba1f4f49bfeac68d95f189c2b2f048ad555d"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/terrainstamp-enum-comments.json",
+          "previous": "d94be019652f628c9cf833c02e49b215a2c5c53cf4cd6f52765b9548917636b6",
+          "current": "c7b95b701c949899b486e8f2082324514665cb5c5c43f8eda0f338a8d9953f4d"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/terrainstamp-mask-correction.json",
+          "previous": "4e9a27a09567b1980734310b6b3f92f0933447bbf35fa90dc0fe73c23defddd2",
+          "current": "e669e00c8d6cc17c5d882a830791b262bf053b04b43c67f581ebdea3240ede11"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/run6.json",
+          "previous": "66125184e731f3857abe5abb9bdc88a031ed1e433ea77b884533e983f77f29b7",
+          "current": "ab5c41077db3c1fe66f953b02acd8991579736601b3f5564047345516ea28048"
+        }
+      ]
+    }
   ]
 }

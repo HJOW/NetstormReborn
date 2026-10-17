@@ -57,7 +57,7 @@
     }
   },
   "files": {
-    "cpppj/runepostpop-lineage.json": "681860242d5774c8764ecc2cd3eaea88b01224c49d5d4cafbf4274012ed1b0d4",
+    "cpppj/runepostpop-lineage.json": "ce162384f655d093f9302c8d7925d95b2343fca3905cbc44f2a9bf133ef52974",
     "cpppj/src/o/RawRunePostPop.cpp": "854043c685372a5805140e6a30af061d5798919250c2457c125ad0e26760aa9a",
     "cpppj/src/o/RawRunePostPop.h": "736b4db5d7b02a0c7eda3c23a91b992e755fd515d0715fd57127f14984659276",
     "cpppj/tests/fixtures/runepostpop-x86.tsv": "784669b8c4c20b725b3e23492bc76e4b1a4ab21042dfb9850378907bafd35e99",
@@ -91,5 +91,20 @@
     "실제Rune postPop/근처같은owner신전/altar원래ownerWORD/player시간조회몸체는실제PE다.",
     "new/localRegular/ConstructionStart/공통PostPop은명시요청경계이며실제C++소비자는기존Host/Construction/Base를재사용한다.",
     "기존공통/건설2868관찰은새Rune고유입력에합산하지않는다. 실제게임/GUI/완주검사아님."
+  ],
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "unit": 144,
+      "reason": "내용물 표시 타이머 소스/검사 등록의 현재 핀 갱신. 과거 값은 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/runepostpop-lineage.json",
+          "previous": "681860242d5774c8764ecc2cd3eaea88b01224c49d5d4cafbf4274012ed1b0d4",
+          "current": "ce162384f655d093f9302c8d7925d95b2343fca3905cbc44f2a9bf133ef52974"
+        }
+      ]
+    }
   ]
 }

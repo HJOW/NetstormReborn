@@ -45,7 +45,7 @@
     }
   },
   "files": {
-    "cpppj/constructionlifetime.json": "25c8c965883efe72438d6c62698754884be332a2bf017f0e07f4b9dbb17788df",
+    "cpppj/constructionlifetime.json": "1a90de4df40b1f032cd1d28bc0ccab564da087826c9948c2869aca79093b4557",
     "cpppj/src/o/RawBurningVisual.cpp": "9521fe84204f87283fb4c9f2b5b3ebbccf8bca749b76a9bebf4691f563ade522",
     "cpppj/src/o/RawBurningVisual.h": "54aa4dfa1f816c18685f3023c9e27d5193ff55b3f91e6c0426361db4fb240f69",
     "cpppj/src/o/RawConstructionLifetime.cpp": "8e4da7a0213868697ea7df931ea132e880ccde80931a948d737cf7d5cdfb0835",
@@ -77,5 +77,20 @@
     "기존표시목록초기입력은공통RawRenderRegistry와같은명시토큰배열이다.",
     "첫팔레트cache0의색표생성과후속프레임/표시/삭제는완료로세지않는다.",
     "C++초안의전체source/test출처를현재SHA로기록하지만공유C++대조성공을이보고서만으로주장하지않는다."
+  ],
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "unit": 144,
+      "reason": "내용물 표시 타이머 소스/검사 등록의 현재 핀 갱신. 과거 값은 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/constructionlifetime.json",
+          "previous": "25c8c965883efe72438d6c62698754884be332a2bf017f0e07f4b9dbb17788df",
+          "current": "1a90de4df40b1f032cd1d28bc0ccab564da087826c9948c2869aca79093b4557"
+        }
+      ]
+    }
   ]
 }
