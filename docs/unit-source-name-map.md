@@ -2,7 +2,7 @@
 
 2026-10-16부터 분석 중 확인한 이름을 이 문서에 계속 추가한다. **영어 표시 이름은 원본10.78의 `.type` 속성 `description`, 내부 타입명과 번호는 실제 등록 TYPE 표**를 기준으로 한다. 클래스명·함수명·미션의 기술 키에는 내부 이름이 남아 있으므로 두 이름을 구별한다.
 
-예를 들어 `sunFence`는 **Sun Barricade(썬 바리케이드)**다. `sunBlocker`는 **Stone Tower(스톤 타워)**이며 서로 다른 건물이다. `sunAviary`도 사용자 표시 이름은 **Whirlibase(훨리베이스)**다. 앞으로 설명에는 표시 이름을 사용하고 처음 등장할 때 내부 이름을 함께 적는다. 기존 코드 심벌과 과거 작업 기록의 식별자는 유지한다.
+예를 들어 `sunFence`는 **Sun Barricade(썬 바리케이드)**다. `sunBlocker`는 **Stone Tower(스톤 타워)**이며 서로 다른 건물이다. `sunAviary`도 사용자 표시 이름은 **Whirlibase(훨리베이스)**다. 앞으로 설명에는 표시 이름을 사용하고 처음 등장할 때 내부 이름을 함께 적는다. 기존 코드 심벌과 과거 작업 기록의 식별자는 유지한다. **`sunWalker`도 사용자 표시 이름은 Golem(골렘)**이다. “썬 워커”는 내부 식별자를 읽은 표현이며, 앞으로 사용자에게 유닛을 설명할 때는 “골렘”으로 적는다.
 
 ## 확인한 건물·유닛·자원
 
@@ -57,6 +57,19 @@
 | 170 | `fenceShield` | Force Field | 포스 필드 |
 
 `Battery`·`Factory`·`Aviary`·`Walker`·`Archer`·`Fence`·`Blocker`·`Vortex`는 내부 구현상의 이름이다. 이를 그대로 사용자 명칭으로 번역하지 않는다. 특히 모든 `Blocker`가 바리케이드이거나 모든 `Archer`가 아처라는 뜻이 아니다.
+
+## `sunWalker`는 골렘이다
+
+2026-10-17 사용자 요청에 따라 원본10.78을 다시 확인했다. **TYPE133 `sunWalker` = Golem = 골렘**이며 위 대응표의 기존 행이 맞다. 별도 유닛인 “Sun Walker”를 뜻하지 않는다.
+
+| 확인 근거 | 원문에서 확인한 값 |
+| --- | --- |
+| 보호 원본 `originals/netstorm.tarc` 안의 `d/sunwalker.type` | `typename sunwalker`, `description="Golem"`, `class="Ground Transport"` |
+| 같은 `.type`의 그래픽·음향 참조 | `golem.gif`·`s_golem.gif`, `golemMove1.wav`·`golemPickup.wav`·`golemDrop.wav` |
+| `NetstormCpp.exe --dump-types originals` | TYPE133의 등록 이름 `sunWalker`, 그룹 `walker` |
+| [공유 한국어 명칭 표](../assets/unit-names.korean.json) | `"Golem": "골렘"` |
+
+보호 아카이브의 항목은 `NetstormCpp.exe --read-archive originals/netstorm.tarc d/sunwalker.type`으로 직접 읽었다. 내부 이름의 대소문자 차이(`sunwalker`/`sunWalker`)는 같은 대응으로 읽는다. 설명·작업 인계에는 **골렘(내부 `sunWalker`, TYPE133)**을 사용하고 코드 심벌·미션 기술 키·과거 근거 식별자는 보존한다. 이번 재확인은 현재 PC **HJOW-Athlon**, 마지막 정밀 디컴파일 **HJOW-Athlon / 2026-10-16**을 확인한 뒤 자산/등록표를 읽기 전용으로 대조했다. 새 디컴파일이나 게임 창 실행은 없으며, 확인 범위는10.78이다.
 
 ## 이름이 같아도 구별할 내부 객체
 

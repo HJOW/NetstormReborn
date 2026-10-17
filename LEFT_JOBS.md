@@ -1,5 +1,13 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-17 명칭 재확인 완료: `sunWalker`는 골렘 (`HJOW-Athlon`)
+
+- [x] 사용자 요청으로 AGENTS/양 LEFT/깨끗한 작업 트리를 재독했다. 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16** 일치이며 새 디컴파일·게임 창 실행·코드 수정은 없다.
+- [x] 보호 `originals/netstorm.tarc`의 `d/sunwalker.type`을 `--read-archive`로 직접 읽어 `typename sunwalker`/`description="Golem"`/`class="Ground Transport"`와 골렘 그림·음향 참조를 확인했다. `--dump-types originals`의 TYPE133 `sunWalker` 및 공유 JSON의 `Golem`→`골렘`과 일치한다.
+- [x] [명칭 대응표](docs/unit-source-name-map.md)에 별도 근거 절과 표기 규칙을 추가했다. 기존 TYPE133 대응 행은 이미 맞았다. 앞으로 설명·인계에는 **골렘(내부 `sunWalker`, TYPE133)**을 사용하고 코드/미션 키/과거 식별자는 보존한다. 확인 범위는10.78이며 CD 번호는 추정하지 않는다.
+- [x] 문서 두 개의 UTF-8/변경 범위/공유 명칭 일치/원본 보호 SHA·AGENTS·DN 인계 불변을 확인한 뒤 `20261017-51 CM sunWalker와 골렘 원본 명칭 대응 재확인`으로 로컬 커밋한다. 빌드/단위 검사 실행은 문서 변경이므로 생략한다. 기존 전체 goal은 active이며 단위150의 실제 운반체 이동·귀환 후속을 유지한다.
+
+
 ## 2026-10-17 단위150 완료: 너겟 전달 수신과 미등록 타입 정지 (`HJOW-Athlon`)
 
 - [x] 기준 `c3b0a4d`, 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16** 일치. AGENTS/양 LEFT 재독. 원본 수정/새 디컴파일/원본 실행/DirectDraw 수정 없음. [작업 기록](docs/exe/cpp-carrier-transfer-20261017.md).
