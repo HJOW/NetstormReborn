@@ -21,12 +21,12 @@
     "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
     "cpppj/src/client/GameWorld.h": "57adef4cb282f91c27ebdac68846b09883494f8406abdd7517d5267bd44a93fc",
     "cpppj/src/client/GameWorld.cpp": "0c7c8431cfdc1bcb911b3c50f8c9e409e95b14fa788a9d53960c950ade95c01d",
-    "cpppj/src/client/RawCampaignSession.h": "53bdc20896cc14554d00e66e6de30af4f4982aef22038354d3a5c3dcbc0af389",
-    "cpppj/src/client/RawCampaignSession.cpp": "d9d013f772a86b7ff24896bc6cadbff1f88ba773c4e6e21ea8c10a8c183e1c84",
+    "cpppj/src/client/RawCampaignSession.h": "a104faaa39103e4b48f6ecd6a2618ffa80130d1aae9c3959848f5345cf64dea7",
+    "cpppj/src/client/RawCampaignSession.cpp": "52e33329192ea878ac67afaff8a2f56587b9025ef97de2ac09f1d5d9e4a16ee0",
     "cpppj/src/client/RawPriestMenu.h": "5364d92d3af5b9b81a0477df5c005fcfc4a1ef7f6817894bd337250ce4d0e43d",
     "cpppj/src/client/RawPriestMenu.cpp": "f30be4e91f2141d1000f4a75d9f41619024d20f6cb024f68b8ffb483b1eddcf7",
     "cpppj/src/client/RawCampaignLifetimeBindings.h": "6f4be73b52279abf308c8a3e6d8962271560e47c25996f7a03fca09f8cd063e8",
-    "cpppj/src/client/RawCampaignLifetimeBindings.cpp": "93d3e0040fe883d6da64622098be929103c1f07aea00e6c4a9a5c652d15958af",
+    "cpppj/src/client/RawCampaignLifetimeBindings.cpp": "2eb0d3fc16e6967b54271c0365991e0ebd8f3d57ef6412aa92d4c4d21fbb01c3",
     "cpppj/src/o/RawCarrierContentNotice.h": "88c1a1a14c7e22dab3e185cf797472783422cde2783c58d3600e65f85a004c7d",
     "cpppj/src/o/RawCarrierContentNotice.cpp": "b4c012ea2966e432fd60c4beb65de3e0a3a73df6ff9d64a798bd6bcb5e468599",
     "cpppj/src/o/RawContentParentNotice.cpp": "9c7132c54bdd4f739bde24ad80f7b2f90bf39869300e9b5b01786487dfcfe986",
@@ -38,14 +38,14 @@
     "cpppj/src/o/SpStore.cpp": "2319a90807d423b72b0e47e51101bc9ea1618f234c65e26b704c017313f4268a",
     "cpppj/src/o/SquidReward.cpp": "a29c11afe56a477c470956b1ed0a0678d059340806537ce08b43bf6b6aa1375d",
     "cpppj/tests/PriestMenuTests.cpp": "a7b76f4b807941334f1dc6c089b156a59c72347e93b7898ff0bda018c73ca1c4",
-    "cpppj/tests/CampaignSessionTests.cpp": "55df964695c0572d7c524ea9068d7d9f24b8d3e3383e7394b1e4f475503b5784",
+    "cpppj/tests/CampaignSessionTests.cpp": "7dafb3fce59b756f4f9fe6ed9c20f0e895d4b15723fed3636d6b842591231a1d",
     "cpppj/tests/CarrierContentNoticeTests.cpp": "82ed556e50d599e2d08f594e309129a7d92a7d5e994a6a81f794342f518ed76c",
     "cpppj/tests/fixtures/priestmenu-x86.tsv": "2dda11277f2b67f1a69447ea7cb1694e989a08ed513dbf9819e14bfbf3ce6208",
     "cpppj/tests/fixtures/carrier-content-notice-x86.tsv": "c8a21b68d3b0b6e271d04950022366eab9abd3069ff5a9ce3b53746f1fb4d4bf",
     "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
     "tools/decomp_carrier_content_notice.py": "dbb32841a7019edbcb411f75094046c8bf0e20b4ed503e109a14b79a79d8a94c",
-    "cpppj/src/o/CMakeLists.txt": "c84659874163c54863d0de3c252858446f7e58e4e4df956d72ea4430cd79b538",
-    "cpppj/tests/CMakeLists.txt": "15ccb8c846d54cbdd447ab3060531c68bf80d464ea9503f49a58901793a0b52d"
+    "cpppj/src/o/CMakeLists.txt": "f906381aeb39546a2677a036cf7a0f5efc5043ec97d2a9bef48e64dd92df7990",
+    "cpppj/tests/CMakeLists.txt": "3dabffbe720e847dddb7cf6b86f98525757255eaac708588a6588ea2b61fc97c"
   },
   "validation": {
     "configuration": "Release",
@@ -210,6 +210,94 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "9dc34335f2f606b142e8f5ba295e11c54c92498de07d38917da041d36a325b22",
           "current": "15ccb8c846d54cbdd447ab3060531c68bf80d464ea9503f49a58901793a0b52d"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 128,
+      "reason": "실제23/39 이동 구분과 건설 도착/부분 표시/현재 Session 연결 및 재생 검사 보완; 기존 fixture 결과는 보존",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "53bdc20896cc14554d00e66e6de30af4f4982aef22038354d3a5c3dcbc0af389",
+          "current": "a104faaa39103e4b48f6ecd6a2618ffa80130d1aae9c3959848f5345cf64dea7"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "d9d013f772a86b7ff24896bc6cadbff1f88ba773c4e6e21ea8c10a8c183e1c84",
+          "current": "ae41c9356999aa305697e43db6a479cd9536efd312ede641356e1ba62f422107"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignLifetimeBindings.cpp",
+          "previous": "93d3e0040fe883d6da64622098be929103c1f07aea00e6c4a9a5c652d15958af",
+          "current": "2eb0d3fc16e6967b54271c0365991e0ebd8f3d57ef6412aa92d4c4d21fbb01c3"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "55df964695c0572d7c524ea9068d7d9f24b8d3e3383e7394b1e4f475503b5784",
+          "current": "6e5d31bcd15d16f51e7cb02be4ae15227e8aea9e169851204f64310de4b80102"
+        },
+        {
+          "path": "cpppj/src/o/CMakeLists.txt",
+          "previous": "c84659874163c54863d0de3c252858446f7e58e4e4df956d72ea4430cd79b538",
+          "current": "979cb463c42c684dcc20322a233bd8e730b5e89f19e994b4cbb8dfe4612e7108"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "15ccb8c846d54cbdd447ab3060531c68bf80d464ea9503f49a58901793a0b52d",
+          "current": "d0f37b499c2404075453292a3ef5be88defc86d8307d0ed631da53e376e83915"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 128,
+      "reason": "실제23/39 이동 구분과 건설 도착/부분 표시/현재 Session 연결 및 재생 검사 보완; 기존 fixture 결과는 보존",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "ae41c9356999aa305697e43db6a479cd9536efd312ede641356e1ba62f422107",
+          "current": "52e33329192ea878ac67afaff8a2f56587b9025ef97de2ac09f1d5d9e4a16ee0"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "6e5d31bcd15d16f51e7cb02be4ae15227e8aea9e169851204f64310de4b80102",
+          "current": "43a916111e8c0377575432319dd75d4030e6fedda31dbddbedd8a0206c814475"
+        },
+        {
+          "path": "cpppj/src/o/CMakeLists.txt",
+          "previous": "979cb463c42c684dcc20322a233bd8e730b5e89f19e994b4cbb8dfe4612e7108",
+          "current": "d460c0bb6a76af9a70a6dd108f9757ab8bb6260c11359b276bccbdbb11a8b1bc"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 128,
+      "reason": "실제23/39 이동 구분과 건설 도착/부분 표시/현재 Session 연결 및 재생 검사 보완; 기존 fixture 결과는 보존",
+      "pins": [
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "43a916111e8c0377575432319dd75d4030e6fedda31dbddbedd8a0206c814475",
+          "current": "7dafb3fce59b756f4f9fe6ed9c20f0e895d4b15723fed3636d6b842591231a1d"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 128,
+      "reason": "실제23/39 이동 구분과 건설 도착/부분 표시/현재 Session 연결 및 재생 검사 보완; 기존 fixture 결과는 보존",
+      "pins": [
+        {
+          "path": "cpppj/src/o/CMakeLists.txt",
+          "previous": "d460c0bb6a76af9a70a6dd108f9757ab8bb6260c11359b276bccbdbb11a8b1bc",
+          "current": "f906381aeb39546a2677a036cf7a0f5efc5043ec97d2a9bef48e64dd92df7990"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "d0f37b499c2404075453292a3ef5be88defc86d8307d0ed631da53e376e83915",
+          "current": "3dabffbe720e847dddb7cf6b86f98525757255eaac708588a6588ea2b61fc97c"
         }
       ]
     }

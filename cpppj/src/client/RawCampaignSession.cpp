@@ -5,6 +5,9 @@
 #include "client/AiTypeRequiredEnergy.h"
 #include "o/RawGameRandomSeed.h"
 #include "o/RawSquidFinder.h"
+#include "o/RawConstructionArrival.h"
+#include "o/RawManaBoltArrival.h"
+#include "o/RawProcessRemoval.h"
 #include "o/RawSquidLevel.h"
 #include "o/RawPlayerTemplateState.h"
 #include "o/RawArcherTypeData.h"
@@ -282,6 +285,11 @@ struct RawCampaignSession::Impl {
     RawPathStartState start; // 같은 현재 시계/이동 타입을 참조한다.
     RawPathProcessState process; // 같은 Host의 경로 프로세스 전역이다.
     std::unique_ptr<RawCampaignMotionBindings> motion; // 실제 Start/BFS/도착/cleanup의 모듈 소유자다.
+    ConstructionArrivalState buildArrivalState; // 실제134의 예측 대기/서버 건설 시작 전역이다.
+    std::unique_ptr<RawConstructionArrival> buildArrival; // 같은 풀/해시에서 건설 대상을 찾는다.
+    ManaBoltArrivalState manaArrivalState; // 실제105의 도착 뒤 두 프로세스 종류/예약 간격이다.
+    std::unique_ptr<RawManaBoltArrival> manaArrival; // 같은 풀에서 비행 도착의 실제 분기를 실행한다.
+    std::unique_ptr<RegularProcess> manaPendingRegular; // new28 성공 뒤 실제 부착까지 소유하는 예약이다.
     RawPathDataHeader pathHeader; // 실제 경로 writer가 사용하는 현재 프로토콜 header다.
     std::array<std::uint8_t,16384> pathBuffer{}; // 원본 경로 직렬화의 현재 송신 버퍼다.
     std::unique_ptr<RawBattleBroadcast> broadcast; // 동일 Player9와 실제 현재 연결 표를 사용하는 송신 분배기다.
@@ -1066,9 +1074,22 @@ struct RawCampaignSession::Impl {
     // 설치를 마친 동일 Graph/Host에 실제 사제 경로 모듈을 한 번 연결한다.
     void ConnectMotion() {
         if (motion) throw std::logic_error("실제 세션 경로 중복 연결");
+        ConstructionArrivalHooks buildHooks;
+        buildHooks.start=[this](Sid sid,float duration) { if (!services.startConstruction) throw std::logic_error("실제 서버 건설 시작 미연결");services.startConstruction(sid,duration); };
+        buildHooks.removeContained=[this](Sid sid,std::uint32_t type) { RawContainedLookup lookup(core.pool,[this](Sid target,std::uint32_t flags) { world.Destroy(target,flags); });static_cast<void>(lookup.Find(sid,type,0,true)); };
+        buildHooks.destroy=[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); };
+        buildArrival=std::make_unique<RawConstructionArrival>(core.pool,core.hash,core.types,buildArrivalState,std::move(buildHooks));
+        ManaBoltArrivalHooks manaHooks;
+        manaHooks.sound=[this](float x,float y,std::string_view name) { services.sound.playOnceAt(x,y,soundNames.Lookup(name),0,0); };
+        manaHooks.removeProcesses=[this](Sid sid,std::uint32_t type) { RemoveAttachedProcesses(core.processes,sid,type); };
+        manaHooks.reserveRegular=[this] { try { manaPendingRegular=std::make_unique<RegularProcess>(1,manaArrivalState.delay);return true; }catch (const std::bad_alloc&) { return false; } };
+        manaHooks.addRegular=[this](Sid sid,std::uint32_t event,float delay) { if (!manaPendingRegular || delay!=manaArrivalState.delay) throw std::logic_error("마나 볼트 Regular 예약 누락");auto* regular=static_cast<RegularProcess*>(core.processes.Attach(std::move(manaPendingRegular),manaArrivalState.regularType,sid,0x50));regular->ResetTask(event,core.processState.now); };
+        manaHooks.destroy=[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); };
+        manaArrival=std::make_unique<RawManaBoltArrival>(core.pool,core.hash,core.types,manaArrivalState,std::move(manaHooks));
         motionState.halt.battle=true;anchorState.graphReady=1;anchorState.fenceType=90;anchorState.windArcherType=140;
         anchor=std::make_unique<RawPlayerPlacementAnchor>(core.pool,core.types,core.hash.Entries(0),core.bookkeeping,additional,contentFinder,anchorState);
         auto effects=services.motion;
+        effects.path.constructionArrival=[this](Sid sid,std::uint32_t,std::uint32_t) { const auto type=core.pool.Slot(sid)[10];if (type==134) return buildArrival->Arrive(sid);if (type==105) return manaArrival->Arrive(sid);throw std::logic_error("실제 건설 도착 타입 오류"); };
         if (!effects.cleanup.reserveShared) effects.cleanup.reserveShared=[] { return true; };
         FillMissing(effects.cleanup.ritual);FillMissing(effects.cleanup.refund);
         FillMissing(effects.halt.carrierPickup);FillMissing(effects.halt.nuggetTransfer);
@@ -1272,6 +1293,10 @@ std::unique_ptr<RawConstructionBuilder> RawCampaignSession::MakeConstructionBuil
     };
     ConstructionBuilderReads reads;reads.builderType=[current] { return current->start.teleportType; };reads.carrierType=[current] { return current->start.manaBoltType; };reads.bridgeType=[current] { return current->core.bridgeState.bridgeType; };reads.approachMask=[current] { return current->builderApproachMask; };reads.timerPayload=[] { return 0.05f; };reads.now=[current] { return current->core.processState.now; };
     return std::make_unique<RawConstructionBuilder>(current->core.pool,current->core.types,current->builderTypes,state,std::move(hooks),current->energySupply.get(),std::move(reads));
+}
+// 화면과 입력은 같은 살아 있는 상태를 읽는다.
+RawPathProcess* RawCampaignSession::StartConstructionMovement(RawPathStartRequest request) {
+    if (!impl_->loaded || !impl_->motion) throw std::logic_error("미설치 Session의 건설 이동");return impl_->motion->Paths().StartConstruction(request);
 }
 // 화면과 입력은 같은 살아 있는 상태를 읽는다.
 RawSurfaceWorld& RawCampaignSession::World() { return impl_->world; }

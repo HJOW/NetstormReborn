@@ -1,0 +1,56 @@
+{
+  "host": "HJOW-Athlon",
+  "decompiled_host": "HJOW-Athlon / 2026-10-16",
+  "cases": 101,
+  "returns": 404,
+  "precision_differences": 0,
+  "instructions": 454882,
+  "external_calls": {
+    "0x4a9d70": 202,
+    "0x20000300": 142,
+    "0x4b27a0": 120,
+    "0x4e4391": 60,
+    "0x496e80": 30
+  },
+  "source_sha256": {
+    "tools/decomp_mana_bolt_arrival.py": "45894421c4a023424c7fd1b0a6d0e59da5cccf1e2cbbbe4bb1cf54b2f6d00eca",
+    "tools/decomp_constructionarrival_oracle.py": "a3db1f04c4c193f223a6b06790ac209dde0b7398a55d52bdb89588ffe4397ec3",
+    "cpppj/src/o/RawManaBoltArrival.cpp": "0a747951767966b2fdfb80928397e2d73ae33cb28ff76b4b3b73e3499e4c96b6",
+    "cpppj/src/o/RawManaBoltArrival.h": "9866ffe90c4a298a24afd11e685b50c1bc16c8df52f32aefcc5d4f9d108f0639",
+    "cpppj/tests/ConstructionArrivalTests.cpp": "3282c1768168e0301078a78de6d7e692d84d917bef5866bf1da22bd0c1b4b6f4",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "cpppj/tests/fixtures/mana-bolt-arrival-x86.tsv": "4ed1bc04ea15ff9cab1f9c088216337bdacbd61c48bbf6e060c9cbb3c7988239"
+  },
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "unit": 128,
+      "reason": "실제23/39 이동 구분과 건설 도착/부분 표시/현재 Session 연결 및 재생 검사 보완; 기존 fixture 결과는 보존",
+      "pins": [
+        {
+          "path": "cpppj/src/o/RawManaBoltArrival.cpp",
+          "previous": "55003d72a88fd54578f93a194dc1700b5e8d873844ab17fd95dea3d6ea3e077f",
+          "current": "b6f296408bd77b89bd44b95d336adabb42ad4b886f9448f316853eac8f7515ed"
+        },
+        {
+          "path": "cpppj/tests/ConstructionArrivalTests.cpp",
+          "previous": "936592ac5b245af7102ad16c48d967030035b8a6d2531152ad829d613294b358",
+          "current": "3282c1768168e0301078a78de6d7e692d84d917bef5866bf1da22bd0c1b4b6f4"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 128,
+      "reason": "실제23/39 이동 구분과 건설 도착/부분 표시/현재 Session 연결 및 재생 검사 보완; 기존 fixture 결과는 보존",
+      "pins": [
+        {
+          "path": "cpppj/src/o/RawManaBoltArrival.cpp",
+          "previous": "b6f296408bd77b89bd44b95d336adabb42ad4b886f9448f316853eac8f7515ed",
+          "current": "0a747951767966b2fdfb80928397e2d73ae33cb28ff76b4b3b73e3499e4c96b6"
+        }
+      ]
+    }
+  ]
+}

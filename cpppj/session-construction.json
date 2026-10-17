@@ -122,7 +122,7 @@
     "cpppj/src/client/RawCampaignSession.cpp": "36b23f4e6c6b557ceaf908de235f6451938f10bdde86cac3fa715eafe8d71ea1",
     "cpppj/src/client/CampaignClientServices.cpp": "86407af96a1a5ccaaa16ba158f205bbe66fa97c88f091629b1516eb6f2395ed3",
     "cpppj/src/client/RawCampaignLifetimeBindings.h": "6f4be73b52279abf308c8a3e6d8962271560e47c25996f7a03fca09f8cd063e8",
-    "cpppj/src/client/RawCampaignLifetimeBindings.cpp": "93d3e0040fe883d6da64622098be929103c1f07aea00e6c4a9a5c652d15958af",
+    "cpppj/src/client/RawCampaignLifetimeBindings.cpp": "2eb0d3fc16e6967b54271c0365991e0ebd8f3d57ef6412aa92d4c4d21fbb01c3",
     "cpppj/src/client/RawSurfaceWorld.h": "c5d3eb83397d1d3e09f021c419cd305585cd9b8496a4c0b56b02bae9104d4bb1",
     "cpppj/src/client/RawSurfaceWorld.cpp": "18705f46068add5b61eff6c6d176e7391ea637d4686a6d9fab95fd7db4f6721d",
     "cpppj/src/o/RawSquidDestroyDispatch.h": "1d040f3140f5a422d360bed59fe53fdf665dfdd8218a4d4e21132f2418364b43",
@@ -204,6 +204,18 @@
           "path": "cpppj/src/client/RawCampaignLifetimeBindings.cpp",
           "previous": "d9c3c3a134b5b451267336c20c81dd1db3dea2d597fba636d65abca4f6c1d6e8",
           "current": "93d3e0040fe883d6da64622098be929103c1f07aea00e6c4a9a5c652d15958af"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 128,
+      "reason": "실제23/39 이동 구분과 건설 도착/부분 표시/현재 Session 연결 및 재생 검사 보완; 기존 fixture 결과는 보존",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignLifetimeBindings.cpp",
+          "previous": "93d3e0040fe883d6da64622098be929103c1f07aea00e6c4a9a5c652d15958af",
+          "current": "2eb0d3fc16e6967b54271c0365991e0ebd8f3d57ef6412aa92d4c4d21fbb01c3"
         }
       ]
     }

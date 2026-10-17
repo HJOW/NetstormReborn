@@ -45,7 +45,7 @@
     "date": "2026-10-16",
     "scope": "Historical snapshot of unit74 integration; later Session/registration edits do not change the580 native observations",
     "sha256": {
-      "cpppj/src/o/SquidPop.cpp": "c57e6263de140459d3c109f9163b59ea1193e7038e2a46ce74b577cbdebae7a7",
+      "cpppj/src/o/SquidPop.cpp": "61f8db73c663d5d7c8880d73bc310cf7884e361bb76402e0946241e02b7dcd17",
       "cpppj/src/o/SquidPostPop.h": "9d6edf5f147ac5defc2f779a53c705302d8c86fe6c358b3e3e218e5b16242038",
       "cpppj/src/o/SquidPostPop.cpp": "f0a751d92e335edac8b7e707ed21b990acb6a596eacf044f3e6d5a2a10718fc8",
       "cpppj/src/client/RawCampaignSession.cpp": "059437aecba44cb962cb1d3ff617a5c18670b63803c104c19dcc9add0b7e18e2",
@@ -72,6 +72,30 @@
           "path": "cpppj/src/o/SquidPop.cpp",
           "previous": "c0d3a97d44a4166c8cb8a7ab28c695195f7ad902b239cf437dbc7e6001071e2a",
           "current": "c57e6263de140459d3c109f9163b59ea1193e7038e2a46ce74b577cbdebae7a7"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 128,
+      "reason": "실제23/39 이동 구분과 건설 도착/부분 표시/현재 Session 연결 및 재생 검사 보완; 기존 fixture 결과는 보존",
+      "pins": [
+        {
+          "path": "cpppj/src/o/SquidPop.cpp",
+          "previous": "c57e6263de140459d3c109f9163b59ea1193e7038e2a46ce74b577cbdebae7a7",
+          "current": "4a189846f9d3c721bda88b3324a64fce03556ea11098de3f89355d17cea1a134"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 128,
+      "reason": "실제23/39 이동 구분과 건설 도착/부분 표시/현재 Session 연결 및 재생 검사 보완; 기존 fixture 결과는 보존",
+      "pins": [
+        {
+          "path": "cpppj/src/o/SquidPop.cpp",
+          "previous": "4a189846f9d3c721bda88b3324a64fce03556ea11098de3f89355d17cea1a134",
+          "current": "61f8db73c663d5d7c8880d73bc310cf7884e361bb76402e0946241e02b7dcd17"
         }
       ]
     }

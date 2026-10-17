@@ -1,5 +1,19 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-17 단위128 완료: 실제 건설 운반 경로·마나 볼트 도착/표시 (`HJOW-Athlon`)
+
+- [x] AGENTS.md·양 LEFT·깨끗한504a92a과 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16**을 다시 확인했다. 새 내보내기·원본/클론 게임·GUI 실행은 없다. 전체 목표는 active다. [작업 기록](docs/exe/cpp-construction-flight-20261017.md). 로그/원문 접두사는`extracted/goal-build-path-20261017-`다.
+- [x] **직전 인수인계 정정:** 실제488fe0 분배에서134(teleportEffect)는23,105(manaBolt)는39(flyProcess)다. 두 객체 모두23이라는 단위127의 가정은 잘못됐으며 직전 문서도 정정했다. 실제39 생성자48bea0/VT50e2ec·현재 부모 좌표의 직선 Init48af00·20ms 예약48af90·기존39 전체 제거48af50를 복원했다. 사제54의 지면/스냅/프레임과 혼용하지 않는다.
+- [x] `RawManaBoltArrival`은 실제45aab0/45ab30의 현재 finder·abstract/!preview/동일 owner·음향·모든46→모든61 제거·new28 성공 시 event1/0.05·1000 또는 자기 삭제/1001을 복원한다. 별도 `RemoveAttachedProcesses`는 실제4b27a0의 **삭제 전 next 저장/flags40/타입0 전체**를 보존한다.134의 첫 contained 제거는 별도 실제 Lookup의 권한/순번/삭제 후 next 몸체로 연결했다.
+- [x] 보호 PE40DWORD 표로 실제 부모/경로 VT를 보존했다.134의7c/80/84는 공통41c0b0/4ad0f0/4ad110이며 초기 Session의 Pop 지원 누락을 해결했다.105의45ac90은 WORD와 무관한 부분 갱신이고 **499240이 음수 인수-10을 빼므로 오른쪽/아래10픽셀 확대**다. 초기 축소 해석으로 발생한 C++144체크 실패는 이 부호를 수정해 해결했다. 마나103과의 차이는 WORD 조건이다. 정확한134/105의 공통 삭제 쌍도 연결했다.
+- [x] Native 비행 **90행/1,824,434명령(x87 53비트)**, 마나 볼트 검색/도착 **101입력/404정상 반환/454,882명령/두 정밀도 차이0**, 표시 **432입력/864정상 반환/두 정밀도 차이0**이다. 생성자/Init의 전체 메모리, frame 필드/예약/호출 순서, 현재 후보/반환/모든 효과, raw/전체 dirty를 C++가 대조했다. 과거 export 부재/느린 범위 탐색/초기 SEH 쓰기 미허용은 최종 근거에서 제외하고 해결했다.
+- [x] 실제thewarbegins Session의 같은 clock/pool/hash/Host/Kernel에서 **105 생성/표시/Start39/비행/빈 대상 도착/삭제**, **134 생성/지면 BFS23/빈 대상 도착/삭제**를 통과했다. 새 집중7개와 기존 지원 분류5개도 통과했다. 일반 Regular 실행이나 자연 플레이 검증으로 확대하지 않는다.
+- [x] 최종 **Release 빌드12 종료0·경고0·오류0**, 전체 **1,520개 모두 통과·실패0·CTest 종료0·248.57초(전체248.60초)**다. 전체1차의 기존 미복원 분류2검사/6체크 실패는 기존 fixture를 보존한 채 이번에 검증한105/134만 별도 허용하여 해결했다. 현대 `--verify` **22개**와 스테이징86파일/현재제품26개/보호3개 SHA·UTF-8/LF·새 문자·CMake 기존 접두를 감사했다. 기존46보고서의 현재 HEAD 핀230개만 이력과 갱신했고 과거211핀은 보존했다. AGENTS/DN/보호 원본과 기존 fixture는 불변이다.
+- [x] 이 인수인계를 포함해 **20261017-28 CP 건설 운반 경로와 마나 볼트 도착 및 표시 복원**으로 로컬 커밋한다. push하지 않는다.
+- [ ] **다음 실제 플레이:** `MakeConstructionBuilder`의 접근점41db70과 move/speed를 같은 Session의 `StartConstructionMovement`/실제 `RawPathRuntime.Count/Time/Prepare`에 연결한다. Builder 반환 view의 실제+10은 **nVert**이며+186c0 진행 인덱스와 혼동하지 않는다. 현재 단위127에서 연결한 공유 선택/TYPE/현재 시계는 유지한다. 실제 서버 건설 시작 소비자와 일반 Construction Process/Frame/Visual도 조립해야 한다.
+- [ ] **다음105 Regular:** 실제45a8e0의 event0/count0 `influenceIcon.wav`·현재 글자 구간/카운트 frame, event1의 현재 Target 재검색/abstract 검사/없으면 가상 삭제와-1, 자기 TYPE의 **frame0** SHP 폭+hotspot·WORD12+1 간격16·현재 카메라 투영/역투영·Unpop/Pop·0.05를 복원해 Session Regular 분배에 연결한다. 역투영 호출의 디컴파일 unaff_EBX 표기는 원본 명령/격리 호출로 확인한다. 현재 Builder가 만든105의 Regular는 아직 실행할 수 없다.
+- [ ] **전체 목표:** Client 전체DWORD 메뉴→실제 ContentForm6 Take/위치/수집/그리기/내려놓기, 일반 건설·생산/경제/AI 전략, GUI 시작/진행/승패·저장·다음 미션, 사용자 자연 완주와 전체 원본 동일성은 남았다. GumpForm3은 별도 UI 수명이다. 10.72 비행39는 이번 범위에서 허용하지 않았으며 전체화면 DirectDraw도 계속 제외다.
+
 ## 2026-10-17 단위127 완료: 실제 공급원 정렬·건설 운반 공유 선택 (`HJOW-Athlon`)
 
 - [x] AGENTS.md·양 LEFT·깨끗한5bd2e80과 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16**을 다시 확인했다. 새 내보내기·원본/클론 게임·GUI 실행은 없다. 전체 목표는 active다. [작업 기록](docs/exe/cpp-energy-sort-20261017.md).
@@ -11,7 +25,7 @@
 - [x] 최종 **Release 빌드4 종료0·경고0·오류0**, 집중 정렬2/Builder10/실제 Session1 통과다. 전체 **1,513개 모두 통과·실패0·CTest 종료0·216.81초(전체216.85초)**는 build3에서 실행했다. 이후 기존 검사 파일의 CRLF311개만 LF로 정규화하고 컴파일 토큰/행 번호 동일을 확인한 뒤 build4/Builder10개를 다시 통과했다. Player enum/형식의 초기 컴파일 충돌은 Input::Player로 수정했다.
 - [x] 현대 `--verify`19개·정규화 후 정렬 재검증·제품10개/관측/보호3개 SHA·UTF-8/LF/추가 문자를 감사했다. HEAD와 일치하던22보고서62핀만 이력과 갱신하고 과거93핀은 보존했다. 정규화 전 미커밋 핀은 기존 HEAD 이력을 보존하면서 최종 바이트의 한 갱신으로 다시 작성했다. 기존 fixture/metadata·AGENTS/DN/보호 원본은 불변이고 CMake 기존 접두 바이트도 보존했다. 로그 접두사는`extracted/goal-energy-sort-20261017-`다.
 - [x] 이 인수인계를 포함해 **20261017-27 CP 실제 공급원 정렬과 건설 운반의 공유 선택 연결**로 로컬 커밋한다. push하지 않는다.
-- [ ] **다음 실제 플레이:** 일반 Confirm/Place/Notice/Process/Frame/Visual과 실제 접근점41db70, 사제 외 type23 경로(건설용134·마나 볼트105)를 같은 World/Host에 연결한다. 현재 RawCampaignPathBindings는158/type54만 허용하며 실제 경로의 시각/속도 view도 필요하다. 다음 정적 근거는`extracted/goal-energy-sort-20261017-next-types.txt`/`next-주소.txt`다.134는ctor443fc0/VT5070c0,105는ctor45acd0/VT509810이고 둘의 Halt4ac990·도착444080/45ab30·표시4ad500/45ac90·공통 삭제4af780/4b0950/4b0840을 확인했다. 실제 표시/삭제 분배도 연결해야 한다. Client 전체DWORD 메뉴→ContentForm6 Take/위치/수집/그리기/내려놓기·생산/경제/AI전략·GUI 시작/진행/승패·저장/다음 미션·사용자 자연 완주/전체 동일성은 남았고 전체화면 DirectDraw는 제외다.
+- [ ] **다음 실제 플레이:** 일반 Confirm/Place/Notice/Process/Frame/Visual과 실제 접근점41db70, 사제 외 경로(건설용134는type23, 마나 볼트105는type39로 단위128에서 정정)를 같은 World/Host에 연결한다. 현재 RawCampaignPathBindings는158/type54만 허용하며 실제 경로의 시각/속도 view도 필요하다. 다음 정적 근거는`extracted/goal-energy-sort-20261017-next-types.txt`/`next-주소.txt`다.134는ctor443fc0/VT5070c0,105는ctor45acd0/VT509810이고 둘의 Halt4ac990·도착444080/45ab30·표시4ad500/45ac90·공통 삭제4af780/4b0950/4b0840을 확인했다. 실제 표시/삭제 분배도 연결해야 한다. Client 전체DWORD 메뉴→ContentForm6 Take/위치/수집/그리기/내려놓기·생산/경제/AI전략·GUI 시작/진행/승패·저장/다음 미션·사용자 자연 완주/전체 동일성은 남았고 전체화면 DirectDraw는 제외다.
 
 ## 2026-10-17 단위126 완료: 실제 에너지 공급·공유 장부·커서 판정 (`HJOW-Athlon`)
 

@@ -101,8 +101,8 @@ void SquidDisplay::Validate(OriginalEdition edition,std::span<const std::uint8_t
     if (edition!=edition_) throw std::invalid_argument("표시 판본 불일치");
     if (!SquidUnpop::SupportsDisplay(edition_,Read(bytes,0),flags)) throw std::logic_error("파생 표시 갱신 미복원");
     // 마나의 WORD0 경로는 TYPE/SHP/프레임을 읽지 않는다. WORD 비영점도 억제 중이면 bounds에 진입하지 않는다.
-    if (edition_==OriginalEdition::Patch1078 && Read(bytes,0)==kPatchManaVtable) {
-        if (Read(bytes,12,2)!=0 && !sink_.Suppressed()) static_cast<void>(Bounds(Read(bytes,10,1),std::bit_cast<std::int32_t>(Read(bytes,36)),std::bit_cast<float>(Read(bytes,14)),std::bit_cast<float>(Read(bytes,18))));return;
+    if (edition_==OriginalEdition::Patch1078 && (Read(bytes,0)==kPatchManaVtable || Read(bytes,0)==0x509810)) {
+        if ((Read(bytes,0)==0x509810 || Read(bytes,12,2)!=0) && !sink_.Suppressed()) static_cast<void>(Bounds(Read(bytes,10,1),std::bit_cast<std::int32_t>(Read(bytes,36)),std::bit_cast<float>(Read(bytes,14)),std::bit_cast<float>(Read(bytes,18))));return;
     }
     const auto type=Read(bytes,10,1);
     if (type>=types_.size()) throw std::out_of_range("표시 타입 번호 범위 오류");
@@ -137,10 +137,11 @@ SquidDisplayRect SquidDisplay::Bounds(std::size_t type,int frame,float x,float y
 void SquidDisplay::Update(std::span<const std::uint8_t> bytes,std::uint32_t flags) {
     Validate(edition_,bytes,flags);
     // 473770→499240의 실제 부분 갱신이다. 추가10픽셀은 Q16 확대율을 곱하지 않으며 선택/그림자를 더하지 않는다.
-    if (edition_==OriginalEdition::Patch1078 && Read(bytes,0)==kPatchManaVtable) {
-        if (!Read(bytes,12,2) || sink_.Suppressed()) return;
+    if (edition_==OriginalEdition::Patch1078 && (Read(bytes,0)==kPatchManaVtable || Read(bytes,0)==0x509810)) {
+        const bool bolt=Read(bytes,0)==0x509810; // 45ac90은 WORD와 무관하다. 499240이 음수 여백을 빼므로 오른쪽/아래가10픽셀 늘어난다.
+        if ((!bolt && !Read(bytes,12,2)) || sink_.Suppressed()) return;
         auto rect=Bounds(Read(bytes,10,1),std::bit_cast<std::int32_t>(Read(bytes,36)),std::bit_cast<float>(Read(bytes,14)),std::bit_cast<float>(Read(bytes,18)));
-        rect.right=Coordinate(static_cast<std::int64_t>(rect.right)+10);rect.bottom=Coordinate(static_cast<std::int64_t>(rect.bottom)+10);rect=Clip(rect,view_.viewport);if (Nonempty(rect)) sink_.Invalidate(rect,0);return;
+        const auto extra=10;rect.right=Coordinate(static_cast<std::int64_t>(rect.right)+extra);rect.bottom=Coordinate(static_cast<std::int64_t>(rect.bottom)+extra);rect=Clip(rect,view_.viewport);if (Nonempty(rect)) sink_.Invalidate(rect,0);return;
     }
     const bool patch=edition_==OriginalEdition::Patch1078; const auto type=Read(bytes,10,1);
     const auto frame=patch ? std::bit_cast<std::int32_t>(Read(bytes,36)) : static_cast<int>(Read(bytes,34,1));

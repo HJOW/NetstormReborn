@@ -25,10 +25,10 @@
     "tools/decomp_energy_supply.py": "a18c1913de8e3462dc30e21d1cbb62541600655630d8605c594ecc860d200434",
     "tools/decomp_energy_sort.py": "a203949bf138366de9812342953ecfe050dfa588a0c1df4536b5973284caf5ef",
     "cpppj/tests/fixtures/energy-sort-x86.tsv": "58f67ad1e9207c2b7793101100855d504c6167de92ee0176adf3be816489ab4e",
-    "cpppj/tests/CMakeLists.txt": "15ccb8c846d54cbdd447ab3060531c68bf80d464ea9503f49a58901793a0b52d",
-    "cpppj/src/client/RawCampaignSession.h": "53bdc20896cc14554d00e66e6de30af4f4982aef22038354d3a5c3dcbc0af389",
-    "cpppj/src/client/RawCampaignSession.cpp": "d9d013f772a86b7ff24896bc6cadbff1f88ba773c4e6e21ea8c10a8c183e1c84",
-    "cpppj/tests/CampaignSessionTests.cpp": "55df964695c0572d7c524ea9068d7d9f24b8d3e3383e7394b1e4f475503b5784",
+    "cpppj/tests/CMakeLists.txt": "3dabffbe720e847dddb7cf6b86f98525757255eaac708588a6588ea2b61fc97c",
+    "cpppj/src/client/RawCampaignSession.h": "a104faaa39103e4b48f6ecd6a2618ffa80130d1aae9c3959848f5345cf64dea7",
+    "cpppj/src/client/RawCampaignSession.cpp": "52e33329192ea878ac67afaff8a2f56587b9025ef97de2ac09f1d5d9e4a16ee0",
+    "cpppj/tests/CampaignSessionTests.cpp": "7dafb3fce59b756f4f9fe6ed9c20f0e895d4b15723fed3636d6b842591231a1d",
     "cpppj/src/o/RawEnergySupply.h": "16298ecafac440612cf5722175fe7adade050e9bdd67015f8308fd37077998be",
     "cpppj/src/o/RawEnergySupply.cpp": "c5597f73998872c29ecb266356405d084ad36b24c6248a3cfc1a1bc43d55f495",
     "cpppj/src/o/RawConstructionBuilder.h": "f3e8165d42cf4070a94055ec018add56fd35b16e633d96c9d45045ed5b026ca5",
@@ -97,5 +97,75 @@
     "originalOrCloneGameLaunched": false,
     "guiOrHumanPlayVerified": false,
     "overallGoalComplete": false
-  }
+  },
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "unit": 128,
+      "reason": "실제23/39 이동 구분과 건설 도착/부분 표시/현재 Session 연결 및 재생 검사 보완; 기존 fixture 결과는 보존",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "15ccb8c846d54cbdd447ab3060531c68bf80d464ea9503f49a58901793a0b52d",
+          "current": "d0f37b499c2404075453292a3ef5be88defc86d8307d0ed631da53e376e83915"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "53bdc20896cc14554d00e66e6de30af4f4982aef22038354d3a5c3dcbc0af389",
+          "current": "a104faaa39103e4b48f6ecd6a2618ffa80130d1aae9c3959848f5345cf64dea7"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "d9d013f772a86b7ff24896bc6cadbff1f88ba773c4e6e21ea8c10a8c183e1c84",
+          "current": "ae41c9356999aa305697e43db6a479cd9536efd312ede641356e1ba62f422107"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "55df964695c0572d7c524ea9068d7d9f24b8d3e3383e7394b1e4f475503b5784",
+          "current": "6e5d31bcd15d16f51e7cb02be4ae15227e8aea9e169851204f64310de4b80102"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 128,
+      "reason": "실제23/39 이동 구분과 건설 도착/부분 표시/현재 Session 연결 및 재생 검사 보완; 기존 fixture 결과는 보존",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "ae41c9356999aa305697e43db6a479cd9536efd312ede641356e1ba62f422107",
+          "current": "52e33329192ea878ac67afaff8a2f56587b9025ef97de2ac09f1d5d9e4a16ee0"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "6e5d31bcd15d16f51e7cb02be4ae15227e8aea9e169851204f64310de4b80102",
+          "current": "43a916111e8c0377575432319dd75d4030e6fedda31dbddbedd8a0206c814475"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 128,
+      "reason": "실제23/39 이동 구분과 건설 도착/부분 표시/현재 Session 연결 및 재생 검사 보완; 기존 fixture 결과는 보존",
+      "pins": [
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "43a916111e8c0377575432319dd75d4030e6fedda31dbddbedd8a0206c814475",
+          "current": "7dafb3fce59b756f4f9fe6ed9c20f0e895d4b15723fed3636d6b842591231a1d"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 128,
+      "reason": "실제23/39 이동 구분과 건설 도착/부분 표시/현재 Session 연결 및 재생 검사 보완; 기존 fixture 결과는 보존",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "d0f37b499c2404075453292a3ef5be88defc86d8307d0ed631da53e376e83915",
+          "current": "3dabffbe720e847dddb7cf6b86f98525757255eaac708588a6588ea2b61fc97c"
+        }
+      ]
+    }
+  ]
 }

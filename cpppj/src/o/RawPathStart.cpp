@@ -65,10 +65,13 @@ RawPathProcess* RawPathStart::Start(RawPathStartRequest request) {
             first=old->Runtime().TargetA();second=old->Runtime().TargetB();host_.Kill(*old,0);
         }
     }
-    if (processType!=kTeleportProcess && processType!=kPriestProcess) throw std::logic_error("다른 파생 이동 생성/Init 미복원 경계");
-    auto owned=hooks_.create(processType==kPriestProcess);
+    constexpr std::uint32_t kFlyProcess=39; // 원본0054110c의 실제 비행 경로 생성자다.
+    if (processType!=kTeleportProcess && processType!=kPriestProcess && processType!=kFlyProcess) throw std::logic_error("다른 파생 이동 생성/Init 미복원 경계");
+    if (processType==kFlyProcess && !hooks_.createType) throw std::logic_error("fly39의 실제 생성자 미연결");
+    auto owned=hooks_.createType ? hooks_.createType(processType) : hooks_.create(processType==kPriestProcess);
     if (!owned) throw std::bad_alloc();
     if (&owned->Pool()!=&pool_) throw std::invalid_argument("Path 시작 생성 풀 불일치");
+    if (owned->MovementType()!=processType) throw std::invalid_argument("Path 시작의 실제 생성 종류 불일치");
     owned->InitializePath(request.parent,request.destination,start,0);
     auto& runtime=owned->Runtime();runtime.SetTargets(first,second);runtime.SetFinished(false);
     runtime.SetCommandFields(request.helper,request.tailWord,request.tailByte,request.destination);
@@ -105,7 +108,7 @@ RawPathProcess* RawPathStart::Start(RawPathStartRequest request) {
 // 지원된 원본 부모의 두 가상 몸체를 실제 같은 공간/Host/Frame로 실행한다.
 void RawPathStart::NotifyStarted(Sid parent,RawPathPoint destination,RawPathProcess& process) {
     const auto type=pool_.Slot(parent)[10];
-    if (type==state_.teleportType) return; // 양쪽 부모 가상+44/+40은 실제 빈 ret 몸체다.
+    if (type==state_.teleportType || type==state_.manaBoltType) return; // 두 실제 부모의+44/+40은480260/4437f0 빈 몸체다.
     if (type!=state_.priestType) throw std::logic_error("다른 부모 이동 통지 미복원 경계");
     const int x=static_cast<int>(destination.x),y=static_cast<int>(destination.y);RawSquidFinder finder(pool_,hash_,types_);auto candidate=finder.Begin({x,y,x,y},1);
     // 원본은 첫 일치에서 멈추지 않고 마지막 간헐천을targetA에 기록한다.

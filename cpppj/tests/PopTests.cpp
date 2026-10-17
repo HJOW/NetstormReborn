@@ -132,7 +132,7 @@ TEST_CASE(SquidPop_Vtables_RejectsUnrestoredPostPopOverrides) {
         const auto fields=Fields(line); CHECK(fields.size()==5);
         const auto edition=fields[0]=="originals" ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072;
         const auto vtable=static_cast<std::uint32_t>(std::stoul(fields[1])); const bool supported=fields[4]=="1";
-        const bool mana=edition==OriginalEdition::Patch1078 && vtable==0x50c3b0; // 별도 원문으로 복원한 마나 표시이며 기존 공통 metadata는 불변이다.
+        const bool mana=edition==OriginalEdition::Patch1078 && (vtable==0x50c3b0 || vtable==0x509810 || vtable==0x5070c0); // 마나103/볼트105는 별도 표시 관측,134는 실제7c/80/84 표와 Session 검사로 검증했다. 기존 metadata는 불변이다.
         CHECK(SquidPop::Supports(edition,vtable,0)==(supported || mana)); CHECK(SquidPop::Supports(edition,vtable,0x2000)==(supported || mana)); ++rows;
     }
     CHECK(rows==151);

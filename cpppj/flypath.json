@@ -1,0 +1,123 @@
+{
+  "host": "HJOW-Athlon",
+  "decompiled_host": "HJOW-Athlon / 2026-10-16",
+  "rows": 90,
+  "source_sha256": {
+    "tools/decomp_flypath_oracle.py": "6a1fae7ec822a4e28f860ff706b5176a43348691769087cb954ea1fcc8fa08d6",
+    "tools/decomp_pathruntime_oracle.py": "d9764f3b0dc5005d8c0b229e367df88c42dcf74d171d5f29927c2855673d9fcc",
+    "cpppj/src/o/RawPathRuntime.cpp": "f9dba0640028d10e558b9467bff2e9e1c15acef225b9195896104f6b2c3365be",
+    "cpppj/src/o/RawPathRuntime.h": "1ea416e522e69d4ccadef34f1000a704a38e507f8ad021afe5fcedfa093149b4",
+    "cpppj/src/o/RawPathProcess.cpp": "15e0b7f5097323d5431da841e47b892501c1911e74648c76686c7c66561667c0",
+    "cpppj/src/o/RawPathProcess.h": "34cf15f8d7eb761e7b13d1500d18aaa25536f5aa572dcb26b5cc942fd484caaa",
+    "cpppj/tests/RawPathRuntimeTests.cpp": "8643229e7929baf27c889e6acfdbd7221d0b37db8f2daca7ce02bb3fb9a20d75",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "cpppj/tests/fixtures/flypath-x86.tsv": "94f29b69b4b2be2868ce3099de063d404d54aabe1ef2646633457b8b89abcc65",
+    "tools/decomp_reward_oracle.py": "ca25b2b1befd0f4626759c17dde1af5eb080e86e4137f7a2b384d97f25a7a143",
+    "tools/decomp_oracle.py": "227b9a8b703cfd81d05ac4a7c72a42eaecf9c804fc028680466a19a591f2335d",
+    "cpppj/tests/fixtures/construction-path-vtables.tsv": "f7dfe26a822fe3630622105af09c1a36cea1b14952900df0f33c5dacdf05cb93"
+  },
+  "instructions": 1824434,
+  "external_calls": {
+    "0x4e4391": 180,
+    "0x13000200": 66,
+    "0x13000220": 23,
+    "0x13000230": 23,
+    "0x4a9c30": 9,
+    "0x13000210": 3
+  },
+  "scope": "실제39 생성자/Init/frame; x87 53비트; 부모 가상 효과/Host 삭제/공간 장치는 기존 관측기의 명시 경계; 게임/GUI 실행 없음",
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "unit": 128,
+      "reason": "실제23/39 이동 구분과 건설 도착/부분 표시/현재 Session 연결 및 재생 검사 보완; 기존 fixture 결과는 보존",
+      "pins": [
+        {
+          "path": "cpppj/tests/RawPathRuntimeTests.cpp",
+          "previous": "3e0753ef45b6bc4b33c9af32478110f9191f42e8bee3df4ea7eb5062ed534dda",
+          "current": "26e887d39c0919749b9b057172ca7e17f27dceba246ced35aa8a4a443eaa4931"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 128,
+      "reason": "실제23/39 이동 구분과 건설 도착/부분 표시/현재 Session 연결 및 재생 검사 보완; 기존 fixture 결과는 보존",
+      "pins": [
+        {
+          "path": "tools/decomp_flypath_oracle.py",
+          "previous": "3cfcfda9d56d7ce326975a85a3b2491ecd686480595d0dbac99b0031cd7029b7",
+          "current": "89bb78b4b3d107eecf4f02f0967dee479a0a0d27fb553cc39198e692941ce4fe"
+        },
+        {
+          "path": "cpppj/src/o/RawPathProcess.cpp",
+          "previous": "ae48353ef2132eaf0d5d382703891420941387e2c03dcbf8d1a1489e0abbae89",
+          "current": "15e0b7f5097323d5431da841e47b892501c1911e74648c76686c7c66561667c0"
+        },
+        {
+          "path": "cpppj/tests/RawPathRuntimeTests.cpp",
+          "previous": "26e887d39c0919749b9b057172ca7e17f27dceba246ced35aa8a4a443eaa4931",
+          "current": "8643229e7929baf27c889e6acfdbd7221d0b37db8f2daca7ce02bb3fb9a20d75"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 128,
+      "reason": "실제23/39 이동 구분과 건설 도착/부분 표시/현재 Session 연결 및 재생 검사 보완; 기존 fixture 결과는 보존",
+      "pins": [
+        {
+          "path": "tools/decomp_flypath_oracle.py",
+          "previous": "89bb78b4b3d107eecf4f02f0967dee479a0a0d27fb553cc39198e692941ce4fe",
+          "current": "6a1fae7ec822a4e28f860ff706b5176a43348691769087cb954ea1fcc8fa08d6"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 128,
+      "reason": "실제23/39 이동 구분과 건설 도착/부분 표시/현재 Session 연결 및 재생 검사 보완; 기존 fixture 결과는 보존",
+      "pins": [
+        {
+          "path": "cpppj/tests/fixtures/construction-path-vtables.tsv",
+          "previous": "e8b6b343291f85fd54eddf5fac5e1fc6043ac028408ceeb27e67877e82a9ff03",
+          "current": "f7dfe26a822fe3630622105af09c1a36cea1b14952900df0f33c5dacdf05cb93"
+        }
+      ]
+    }
+  ],
+  "currentSources": {
+    "cpppj/src/client/RawCampaignLifetimeBindings.cpp": "2eb0d3fc16e6967b54271c0365991e0ebd8f3d57ef6412aa92d4c4d21fbb01c3",
+    "cpppj/src/client/RawCampaignPathBindings.cpp": "33acf790e03a052f2808b067048fae51ea92c8bbc76f66d660323b0b7fe8da63",
+    "cpppj/src/client/RawCampaignPathBindings.h": "0f507504ab6b216eb92849f916d25637081c27bf934842b660ac68ea3f1c8217",
+    "cpppj/src/client/RawCampaignSession.cpp": "52e33329192ea878ac67afaff8a2f56587b9025ef97de2ac09f1d5d9e4a16ee0",
+    "cpppj/src/client/RawCampaignSession.h": "a104faaa39103e4b48f6ecd6a2618ffa80130d1aae9c3959848f5345cf64dea7",
+    "cpppj/src/o/CMakeLists.txt": "f906381aeb39546a2677a036cf7a0f5efc5043ec97d2a9bef48e64dd92df7990",
+    "cpppj/src/o/RawManaBoltArrival.cpp": "0a747951767966b2fdfb80928397e2d73ae33cb28ff76b4b3b73e3499e4c96b6",
+    "cpppj/src/o/RawManaBoltArrival.h": "9866ffe90c4a298a24afd11e685b50c1bc16c8df52f32aefcc5d4f9d108f0639",
+    "cpppj/src/o/RawPathProcess.cpp": "15e0b7f5097323d5431da841e47b892501c1911e74648c76686c7c66561667c0",
+    "cpppj/src/o/RawPathProcess.h": "34cf15f8d7eb761e7b13d1500d18aaa25536f5aa572dcb26b5cc942fd484caaa",
+    "cpppj/src/o/RawPathRuntime.cpp": "f9dba0640028d10e558b9467bff2e9e1c15acef225b9195896104f6b2c3365be",
+    "cpppj/src/o/RawPathRuntime.h": "1ea416e522e69d4ccadef34f1000a704a38e507f8ad021afe5fcedfa093149b4",
+    "cpppj/src/o/RawPathStart.cpp": "ff44ccf39ca83bb4fd53e72292b8903b9f53979f211d32f32d8cbd2aaaaa24a5",
+    "cpppj/src/o/RawPathStart.h": "576188b61294a25b8abb6caa7bc129c56e21804a2fb79cf5de74cd25421a568f",
+    "cpppj/src/o/RawProcessRemoval.cpp": "b4f459f867e696953e2b2d1716cf593ae988b48133c3de6a89d12a5ec1fe6676",
+    "cpppj/src/o/RawProcessRemoval.h": "d325745d16436d3a7213a88d9731fdcde29caea27b8f05843776da41c5f482ad",
+    "cpppj/src/o/SquidDisplay.cpp": "adff73d1c710cf295aed17e2a06cb90294e1399e5e455d423659f37c336f3dc6",
+    "cpppj/src/o/SquidPop.cpp": "61f8db73c663d5d7c8880d73bc310cf7884e361bb76402e0946241e02b7dcd17",
+    "cpppj/src/o/SquidUnpop.cpp": "f9a932b6ee543cc2ee051d6f67afb0c56fca1f325cc51d29ca3d0dc3adf26fef",
+    "cpppj/tests/CMakeLists.txt": "3dabffbe720e847dddb7cf6b86f98525757255eaac708588a6588ea2b61fc97c",
+    "cpppj/tests/CampaignSessionTests.cpp": "7dafb3fce59b756f4f9fe6ed9c20f0e895d4b15723fed3636d6b842591231a1d",
+    "cpppj/tests/ConstructionArrivalTests.cpp": "3282c1768168e0301078a78de6d7e692d84d917bef5866bf1da22bd0c1b4b6f4",
+    "cpppj/tests/CursorManaTests.cpp": "3f9aa47024782b0afe4f165a2145fa4f27706d8b5b7c1434f8e94c65a5318daa",
+    "cpppj/tests/PopTests.cpp": "250b9a9fd863142026c29ef68c75ea7c8bea6871ed0a42df9bafee4e2b072d48",
+    "cpppj/tests/RawPathRuntimeTests.cpp": "8643229e7929baf27c889e6acfdbd7221d0b37db8f2daca7ce02bb3fb9a20d75",
+    "cpppj/tests/UnpopTests.cpp": "af6cd4c73db3f50d707d1b7cc896f991a7c5222177b7bd4252054bbe826af9cc"
+  },
+  "protectedFileSha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6"
+  }
+}

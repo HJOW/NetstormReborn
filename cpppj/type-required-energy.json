@@ -28,9 +28,9 @@
     "cpppj/src/client/AiTypeRequiredEnergy.cpp": "a77ecbbece0a23b295c26e35ba5f788ea1c61a660b95880a83abc6988ef559c0",
     "cpppj/tests/fixtures/type-required-energy-x86.tsv": "8bcb3e215c958f5df0a395365059f5481801b1660569f2f04c0720f394f14f4c",
     "cpppj/tests/TypeRequiredEnergyTests.cpp": "0802ab400413ec5da3f2d03a4ac6b6f88e2d088915646609a2ca0bb39a02b05c",
-    "cpppj/src/o/CMakeLists.txt": "c84659874163c54863d0de3c252858446f7e58e4e4df956d72ea4430cd79b538",
+    "cpppj/src/o/CMakeLists.txt": "f906381aeb39546a2677a036cf7a0f5efc5043ec97d2a9bef48e64dd92df7990",
     "cpppj/src/client/CMakeLists.txt": "8bb17d335554c16e6ff3300134492a264bfa425dfafd52062ecf0062f523d87c",
-    "cpppj/tests/CMakeLists.txt": "15ccb8c846d54cbdd447ab3060531c68bf80d464ea9503f49a58901793a0b52d"
+    "cpppj/tests/CMakeLists.txt": "3dabffbe720e847dddb7cf6b86f98525757255eaac708588a6588ea2b61fc97c"
   },
   "product_validation": {
     "configuration": "Release",
@@ -1307,6 +1307,52 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "9dc34335f2f606b142e8f5ba295e11c54c92498de07d38917da041d36a325b22",
           "current": "15ccb8c846d54cbdd447ab3060531c68bf80d464ea9503f49a58901793a0b52d"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 128,
+      "reason": "실제23/39 이동 구분과 건설 도착/부분 표시/현재 Session 연결 및 재생 검사 보완; 기존 fixture 결과는 보존",
+      "pins": [
+        {
+          "path": "cpppj/src/o/CMakeLists.txt",
+          "previous": "c84659874163c54863d0de3c252858446f7e58e4e4df956d72ea4430cd79b538",
+          "current": "979cb463c42c684dcc20322a233bd8e730b5e89f19e994b4cbb8dfe4612e7108"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "15ccb8c846d54cbdd447ab3060531c68bf80d464ea9503f49a58901793a0b52d",
+          "current": "d0f37b499c2404075453292a3ef5be88defc86d8307d0ed631da53e376e83915"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 128,
+      "reason": "실제23/39 이동 구분과 건설 도착/부분 표시/현재 Session 연결 및 재생 검사 보완; 기존 fixture 결과는 보존",
+      "pins": [
+        {
+          "path": "cpppj/src/o/CMakeLists.txt",
+          "previous": "979cb463c42c684dcc20322a233bd8e730b5e89f19e994b4cbb8dfe4612e7108",
+          "current": "d460c0bb6a76af9a70a6dd108f9757ab8bb6260c11359b276bccbdbb11a8b1bc"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 128,
+      "reason": "실제23/39 이동 구분과 건설 도착/부분 표시/현재 Session 연결 및 재생 검사 보완; 기존 fixture 결과는 보존",
+      "pins": [
+        {
+          "path": "cpppj/src/o/CMakeLists.txt",
+          "previous": "d460c0bb6a76af9a70a6dd108f9757ab8bb6260c11359b276bccbdbb11a8b1bc",
+          "current": "f906381aeb39546a2677a036cf7a0f5efc5043ec97d2a9bef48e64dd92df7990"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "d0f37b499c2404075453292a3ef5be88defc86d8307d0ed631da53e376e83915",
+          "current": "3dabffbe720e847dddb7cf6b86f98525757255eaac708588a6588ea2b61fc97c"
         }
       ]
     }

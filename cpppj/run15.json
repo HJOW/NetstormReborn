@@ -33,8 +33,8 @@
     "cpppj/src/client/CMakeLists.txt": "24fe88f70687bf85c95418a8054e93b99a0878c90bc6b5c7d58ec597a6d4db94",
     "cpppj/src/client/RawCampaignAssetBindings.cpp": "7747a030b9916bd58e4c7fb9d04e7a39a0814ca4b11111436999b831fe14f8bf",
     "cpppj/src/client/RawCampaignAssetBindings.h": "eb33fc606d131e561811a82540acb10d5cd33817894ad34ea90b23bb9763edb4",
-    "cpppj/src/client/RawCampaignPathBindings.cpp": "3cb584c6ff3797d7de01f1c18e83074323a2883ba5e852a5f598b91ebf3ac993",
-    "cpppj/src/client/RawCampaignPathBindings.h": "60ba6fdb85793117685d888b73e4dfb1f9dad7cb74d50dde63ac47c504bc2463",
+    "cpppj/src/client/RawCampaignPathBindings.cpp": "33acf790e03a052f2808b067048fae51ea92c8bbc76f66d660323b0b7fe8da63",
+    "cpppj/src/client/RawCampaignPathBindings.h": "0f507504ab6b216eb92849f916d25637081c27bf934842b660ac68ea3f1c8217",
     "cpppj/src/o/CMakeLists.txt": "934423d7577f2b20eec66d10af67dd8bf18b04d75c3c0efa0695090312564be6",
     "cpppj/src/o/RawBurningFrame.cpp": "c517b282e39f2ccc5636c9424c6578f81a8f0ffc2c88a6d344b164b1c6021e9d",
     "cpppj/src/o/RawBurningFrame.h": "a8eb3aefeb0a1fb6afbe4aadc31cdbf0fdab5345355a661ed1e01699d23c56c7",
@@ -73,5 +73,24 @@
     "tools/decomp_campaign_worldload_oracle.py": "19b3196b177604a68d8311c4550e6ded094cb6abc5f1c8e11af236faa7bee3bc",
     "tools/decomp_player_regular_oracle.py": "4b0c63eb034c174ad28ce7cdf89f00fe1930baa550dca116e29865c03d12124c"
   },
-  "scope": "준비된1214입력의 C++ 소비를 처음 등록한다. 기존 원본 입력을 새 관찰로 합산하지 않는다. 실제172개 설치·GameWorld 연결·플레이 완주·화면/음향 동일성은 후속이다."
+  "scope": "준비된1214입력의 C++ 소비를 처음 등록한다. 기존 원본 입력을 새 관찰로 합산하지 않는다. 실제172개 설치·GameWorld 연결·플레이 완주·화면/음향 동일성은 후속이다.",
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "unit": 128,
+      "reason": "실제23/39 이동 구분과 건설 도착/부분 표시/현재 Session 연결 및 재생 검사 보완; 기존 fixture 결과는 보존",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignPathBindings.cpp",
+          "previous": "3cb584c6ff3797d7de01f1c18e83074323a2883ba5e852a5f598b91ebf3ac993",
+          "current": "33acf790e03a052f2808b067048fae51ea92c8bbc76f66d660323b0b7fe8da63"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignPathBindings.h",
+          "previous": "60ba6fdb85793117685d888b73e4dfb1f9dad7cb74d50dde63ac47c504bc2463",
+          "current": "0f507504ab6b216eb92849f916d25637081c27bf934842b660ac68ea3f1c8217"
+        }
+      ]
+    }
+  ]
 }

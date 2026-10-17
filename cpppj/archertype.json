@@ -87,7 +87,7 @@
     "cpppj/src/o/SquidFactory.cpp": "9773bb2d4f5b7dd0114fbb9406a95080e6f919a1106efe5b6a15ef8ed68e39e0",
     "cpppj/src/o/SquidPop.cpp": "e69942ca111f72c79ba4da05a42b5446e84013ef2ee0b9044381cf64a9e80ec9",
     "cpppj/src/o/SquidProcess.cpp": "188376ba728d8544d0bfafb92cc6f66403aea92434a81fa98efe894ed9f042e5",
-    "cpppj/src/o/SquidUnpop.cpp": "000e315fc0aead83fc423afc3293b3fd6176a211c1dc5b297d642e8dbea06ce2",
+    "cpppj/src/o/SquidUnpop.cpp": "f9a932b6ee543cc2ee051d6f67afb0c56fca1f325cc51d29ca3d0dc3adf26fef",
     "cpppj/src/o/TypeConstructors.inc": "bfac943af8c22cf91a0c267200f3e94133b021f2fe0e02507544978a7e08bd27",
     "cpppj/src/o/TypeParser.cpp": "5efbb48aa40e00ce8b516c864c9020c8b85d3a249ffb8c236b268469d57abbc6",
     "cpppj/tests/ArcherTypeDataTests.cpp": "5059f913a1442dd3d5e9d9fd900b1a2ce4efab5bff6628812dea49de3ff8fd05",
@@ -173,6 +173,18 @@
           "path": "cpppj/src/o/SquidUnpop.cpp",
           "previous": "c090a5c43f22ec5c59f6885bde124889b1fc3004260c271ea4556879e6263a41",
           "current": "000e315fc0aead83fc423afc3293b3fd6176a211c1dc5b297d642e8dbea06ce2"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 128,
+      "reason": "실제23/39 이동 구분과 건설 도착/부분 표시/현재 Session 연결 및 재생 검사 보완; 기존 fixture 결과는 보존",
+      "pins": [
+        {
+          "path": "cpppj/src/o/SquidUnpop.cpp",
+          "previous": "000e315fc0aead83fc423afc3293b3fd6176a211c1dc5b297d642e8dbea06ce2",
+          "current": "f9a932b6ee543cc2ee051d6f67afb0c56fca1f325cc51d29ca3d0dc3adf26fef"
         }
       ]
     }

@@ -24,15 +24,15 @@
     "cpppj/src/o/RawMetadisplayDirty.cpp": "078f2fd93f92fbaf8ca11d08ff7b4677db29b812cbeefa4d60e5473ec968f897",
     "cpppj/src/o/RawPathData.h": "21faf1f4095819996b79996b5036c731a06aac44edb3e5b358d1f3ebb1047430",
     "cpppj/src/o/RawPathData.cpp": "38a2665489e998835caa07cbedb81516fae6f5e33270529a6d40f5d76d3a6a45",
-    "cpppj/src/o/RawPathProcess.h": "b43bbffdc88656726192511c983f111d09227bd6416623f8563b6b8cd32f59d9",
-    "cpppj/src/o/RawPathProcess.cpp": "0910c0ca00a9c5ba38f6645b294c83098bba610abf682146fe8eb36530fe93a1",
+    "cpppj/src/o/RawPathProcess.h": "34cf15f8d7eb761e7b13d1500d18aaa25536f5aa572dcb26b5cc942fd484caaa",
+    "cpppj/src/o/RawPathProcess.cpp": "15e0b7f5097323d5431da841e47b892501c1911e74648c76686c7c66561667c0",
     "cpppj/src/o/RawFactoryPostPop.h": "1a58f8d6ba6140a812a419ab86e14793911c5a542d6ae94ed430f6f3fbbbdeb7",
     "cpppj/src/o/RawFactoryPostPop.cpp": "a1eda413fc18691e1acbccebfeec0b80b0caa7d816b0d0f23da50006f3cff262",
     "cpppj/src/o/RawAssetPostPop.h": "5fa157f1f186e6816d8e5515bad7a70e4a661c16b21b3f363ac71174127798d1",
     "cpppj/src/o/SquidPop.h": "8816c246917f01c63e612b9f4387982484636b0360f8d1a225c7c5296d801255",
     "cpppj/src/o/SquidPop.cpp": "e69942ca111f72c79ba4da05a42b5446e84013ef2ee0b9044381cf64a9e80ec9",
     "cpppj/src/o/SquidUnpop.h": "36635a51668570c7ae1df71e507f1f7d6d4fd1b141ccf0529165428034e5aad9",
-    "cpppj/src/o/SquidUnpop.cpp": "000e315fc0aead83fc423afc3293b3fd6176a211c1dc5b297d642e8dbea06ce2",
+    "cpppj/src/o/SquidUnpop.cpp": "f9a932b6ee543cc2ee051d6f67afb0c56fca1f325cc51d29ca3d0dc3adf26fef",
     "cpppj/src/o/CMakeLists.txt": "488f044ec5a8dc2ba134d7a5bf6463e14a29f49bf693e863af98bd8077595b1f",
     "cpppj/tests/CMakeLists.txt": "c8a62e12fd245778ce017633a87beaa2a3072995c64e97599c6285435e06b00e",
     "cpppj/tests/GunTargetTests.cpp": "e34ea71131234478036f25a9e023eadc5e182a313571444e914106f1a8c90f2f",
@@ -161,6 +161,40 @@
           "path": "cpppj/src/o/SquidUnpop.cpp",
           "previous": "c090a5c43f22ec5c59f6885bde124889b1fc3004260c271ea4556879e6263a41",
           "current": "000e315fc0aead83fc423afc3293b3fd6176a211c1dc5b297d642e8dbea06ce2"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 128,
+      "reason": "실제23/39 이동 구분과 건설 도착/부분 표시/현재 Session 연결 및 재생 검사 보완; 기존 fixture 결과는 보존",
+      "pins": [
+        {
+          "path": "cpppj/src/o/RawPathProcess.h",
+          "previous": "b43bbffdc88656726192511c983f111d09227bd6416623f8563b6b8cd32f59d9",
+          "current": "34cf15f8d7eb761e7b13d1500d18aaa25536f5aa572dcb26b5cc942fd484caaa"
+        },
+        {
+          "path": "cpppj/src/o/RawPathProcess.cpp",
+          "previous": "0910c0ca00a9c5ba38f6645b294c83098bba610abf682146fe8eb36530fe93a1",
+          "current": "ae48353ef2132eaf0d5d382703891420941387e2c03dcbf8d1a1489e0abbae89"
+        },
+        {
+          "path": "cpppj/src/o/SquidUnpop.cpp",
+          "previous": "000e315fc0aead83fc423afc3293b3fd6176a211c1dc5b297d642e8dbea06ce2",
+          "current": "f9a932b6ee543cc2ee051d6f67afb0c56fca1f325cc51d29ca3d0dc3adf26fef"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 128,
+      "reason": "실제23/39 이동 구분과 건설 도착/부분 표시/현재 Session 연결 및 재생 검사 보완; 기존 fixture 결과는 보존",
+      "pins": [
+        {
+          "path": "cpppj/src/o/RawPathProcess.cpp",
+          "previous": "ae48353ef2132eaf0d5d382703891420941387e2c03dcbf8d1a1489e0abbae89",
+          "current": "15e0b7f5097323d5431da841e47b892501c1911e74648c76686c7c66561667c0"
         }
       ]
     }

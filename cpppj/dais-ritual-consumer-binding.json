@@ -100,7 +100,7 @@
     "cpppj/src/o/SquidProcess.h": "827a9789c2a6b66ac7b98181e49e8c0fa19713755bb62fccababb7ae2a0d0589",
     "cpppj/src/o/SquidReward.cpp": "a29c11afe56a477c470956b1ed0a0678d059340806537ce08b43bf6b6aa1375d",
     "cpppj/src/o/SquidReward.h": "221e142133a1e3a73f65ff6979d73859b7701912ab84cde9dc6a9fe565ccd2e7",
-    "cpppj/src/o/SquidUnpop.cpp": "000e315fc0aead83fc423afc3293b3fd6176a211c1dc5b297d642e8dbea06ce2",
+    "cpppj/src/o/SquidUnpop.cpp": "f9a932b6ee543cc2ee051d6f67afb0c56fca1f325cc51d29ca3d0dc3adf26fef",
     "cpppj/src/o/SquidUnpop.h": "36635a51668570c7ae1df71e507f1f7d6d4fd1b141ccf0529165428034e5aad9",
     "cpppj/tests/DaisRitualConsumerTests.cpp": "bb48d9fd71bb551b9f6ee91009eafe963c350d81a4b9e7d905250a3d5f0f72d0",
     "tools/analyze_dais_ritual_consumer_binding.py": "dde6ffb97f463e87b0a5f7ac88fd58483fe1396777846b606d7a20fde8e343f3"
@@ -115,6 +115,18 @@
           "path": "cpppj/src/o/SquidUnpop.cpp",
           "previous": "c090a5c43f22ec5c59f6885bde124889b1fc3004260c271ea4556879e6263a41",
           "current": "000e315fc0aead83fc423afc3293b3fd6176a211c1dc5b297d642e8dbea06ce2"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 128,
+      "reason": "실제23/39 이동 구분과 건설 도착/부분 표시/현재 Session 연결 및 재생 검사 보완; 기존 fixture 결과는 보존",
+      "pins": [
+        {
+          "path": "cpppj/src/o/SquidUnpop.cpp",
+          "previous": "000e315fc0aead83fc423afc3293b3fd6176a211c1dc5b297d642e8dbea06ce2",
+          "current": "f9a932b6ee543cc2ee051d6f67afb0c56fca1f325cc51d29ca3d0dc3adf26fef"
         }
       ]
     }

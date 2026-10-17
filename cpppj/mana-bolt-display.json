@@ -1,0 +1,160 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-16",
+  "uniqueInputs": 432,
+  "normalReturns": 864,
+  "precisionDifferentInputs": [],
+  "sha256": {
+    "cpppj/src/CMakeLists.txt": "c6788ec0b508c34f26406203a824455adc59d87a1a5aa80ab2bfda476e91021b",
+    "cpppj/src/client/RawCampaignLifetimeBindings.cpp": "2eb0d3fc16e6967b54271c0365991e0ebd8f3d57ef6412aa92d4c4d21fbb01c3",
+    "cpppj/src/client/RawCampaignLifetimeBindings.h": "6f4be73b52279abf308c8a3e6d8962271560e47c25996f7a03fca09f8cd063e8",
+    "cpppj/src/client/RawCampaignSession.cpp": "52e33329192ea878ac67afaff8a2f56587b9025ef97de2ac09f1d5d9e4a16ee0",
+    "cpppj/src/client/RawCampaignSession.h": "a104faaa39103e4b48f6ecd6a2618ffa80130d1aae9c3959848f5345cf64dea7",
+    "cpppj/src/client/RawCursorMana.cpp": "b8ab58679249a18387757eb2eb93c7405e566a4a9fc02ed018b2046a7d751f7b",
+    "cpppj/src/client/RawCursorMana.h": "f363a35504b216243604734bcb9c7567943797c4b879b9f101b16763d9d3821a",
+    "cpppj/src/o/SquidDisplay.cpp": "adff73d1c710cf295aed17e2a06cb90294e1399e5e455d423659f37c336f3dc6",
+    "cpppj/src/o/SquidPop.cpp": "61f8db73c663d5d7c8880d73bc310cf7884e361bb76402e0946241e02b7dcd17",
+    "cpppj/src/o/SquidUnpop.cpp": "f9a932b6ee543cc2ee051d6f67afb0c56fca1f325cc51d29ca3d0dc3adf26fef",
+    "cpppj/tests/CMakeLists.txt": "3dabffbe720e847dddb7cf6b86f98525757255eaac708588a6588ea2b61fc97c",
+    "cpppj/tests/CampaignSessionTests.cpp": "7dafb3fce59b756f4f9fe6ed9c20f0e895d4b15723fed3636d6b842591231a1d",
+    "cpppj/tests/CursorManaTests.cpp": "3f9aa47024782b0afe4f165a2145fa4f27706d8b5b7c1434f8e94c65a5318daa",
+    "cpppj/tests/PopTests.cpp": "250b9a9fd863142026c29ef68c75ea7c8bea6871ed0a42df9bafee4e2b072d48",
+    "cpppj/tests/UnpopTests.cpp": "af6cd4c73db3f50d707d1b7cc896f991a7c5222177b7bd4252054bbe826af9cc",
+    "cpppj/tests/fixtures/cursor-mana-display-x86.tsv": "a4538ccefab60ad875c2c0d6e0b1a2283ab541a0c234b2b92853826b7314f844",
+    "cpppj/tests/fixtures/mana-bolt-display-x86.tsv": "4da6175c1a181d5c430e4fc485cb4afbc019e9ed48b671214d6400f96f2c6f3d",
+    "extracted/creation/originals/functions.tsv": "42b14fee0b262fd92c833ec51db3cf772e92fd56b6ccbdc1c589955eb347ccb7",
+    "extracted/display/originals/functions.tsv": "408c4530becac3e2ce5112b436e23b32437a729b36ec6b0ebae5b2da81eb51b4",
+    "extracted/pop/helpers-originals/functions.tsv": "fc21935402ba4781899da2002c5f844061e53150d0bddeeaa597f29b81d58cb8",
+    "extracted/pop/originals/functions.tsv": "5b3241e336bcc1dea4c188121e3c458d3aef3414c5b6e9c4590db8c126414568",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/sid/originals/functions.tsv": "3034dd0d393ebdfd77f2e9fafe8a5b252d5437f1e71ab94541cc229e8ef8694b",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_creation_oracle.py": "646adc1ca6c9eaeac08a9c700324ae05ba1727416bc62070e0a066afc07dc053",
+    "tools/decomp_cursor_mana_display.py": "022021b22c8e2c900feb725399185181148e6ec7c84ebcaa513a1f542fe1b61b",
+    "tools/decomp_display_oracle.py": "bd9a42431cdef96d3fb13accf78d5a0d6a3155243b1bbc0362d58e79f662f7a4",
+    "tools/decomp_mana_bolt_display.py": "5be13379f8504e2ce3feb91c8365a386b63b0f4dd9a623c5ff4c0c7ff80fe015",
+    "tools/decomp_oracle.py": "227b9a8b703cfd81d05ac4a7c72a42eaecf9c804fc028680466a19a591f2335d",
+    "tools/decomp_pop_oracle.py": "2a50f34e6b229d5ea4611f7073877ca1e165e0bf841f32c83f17d300b6113bb6",
+    "tools/decomp_sid_oracle.py": "7bfd7b95b26724b1793d407a4ad6654972b2aaa3bf04e4c206cc357670b68dff",
+    "tools/decomp_unpop_oracle.py": "8eea637aeb340f49932c83823e116114e342772f88c975c398012eff2ef1d07d"
+  },
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "unit": 128,
+      "reason": "실제23/39 이동 구분과 건설 도착/부분 표시/현재 Session 연결 및 재생 검사 보완; 기존 fixture 결과는 보존",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "4217ce5dbed71798a019fc22cf2d99c0aeb5de7276cbcf734dc6d014ec353d02",
+          "current": "d0f37b499c2404075453292a3ef5be88defc86d8307d0ed631da53e376e83915"
+        },
+        {
+          "path": "cpppj/tests/CursorManaTests.cpp",
+          "previous": "84b4c5aab77872135916da08e74cc5339957d3c32209b5274b713f413a76bbd2",
+          "current": "5b0e4a37504372fb8670cdd27d8a5fded0357324412071463ddc4b8146d644be"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 128,
+      "reason": "실제23/39 이동 구분과 건설 도착/부분 표시/현재 Session 연결 및 재생 검사 보완; 기존 fixture 결과는 보존",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "ae41c9356999aa305697e43db6a479cd9536efd312ede641356e1ba62f422107",
+          "current": "52e33329192ea878ac67afaff8a2f56587b9025ef97de2ac09f1d5d9e4a16ee0"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "6e5d31bcd15d16f51e7cb02be4ae15227e8aea9e169851204f64310de4b80102",
+          "current": "43a916111e8c0377575432319dd75d4030e6fedda31dbddbedd8a0206c814475"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 128,
+      "reason": "실제23/39 이동 구분과 건설 도착/부분 표시/현재 Session 연결 및 재생 검사 보완; 기존 fixture 결과는 보존",
+      "pins": [
+        {
+          "path": "cpppj/src/o/SquidDisplay.cpp",
+          "previous": "b81c637ae2d81448772a502f8ffc87212ca77fdf8e23c9d28cba796a8fd0a2e7",
+          "current": "c3702277c45d6ddeb7392a10ac9807c2d77e55a70559e8c13dd24980ef9b7996"
+        },
+        {
+          "path": "cpppj/src/o/SquidPop.cpp",
+          "previous": "4a189846f9d3c721bda88b3324a64fce03556ea11098de3f89355d17cea1a134",
+          "current": "61f8db73c663d5d7c8880d73bc310cf7884e361bb76402e0946241e02b7dcd17"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "43a916111e8c0377575432319dd75d4030e6fedda31dbddbedd8a0206c814475",
+          "current": "7dafb3fce59b756f4f9fe6ed9c20f0e895d4b15723fed3636d6b842591231a1d"
+        },
+        {
+          "path": "cpppj/tests/CursorManaTests.cpp",
+          "previous": "5b0e4a37504372fb8670cdd27d8a5fded0357324412071463ddc4b8146d644be",
+          "current": "57147730633274fe710dc73ad6c375785026b6fa38d67c927f2c5f0d5258ca71"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 128,
+      "reason": "실제23/39 이동 구분과 건설 도착/부분 표시/현재 Session 연결 및 재생 검사 보완; 기존 fixture 결과는 보존",
+      "pins": [
+        {
+          "path": "cpppj/src/o/SquidDisplay.cpp",
+          "previous": "c3702277c45d6ddeb7392a10ac9807c2d77e55a70559e8c13dd24980ef9b7996",
+          "current": "adff73d1c710cf295aed17e2a06cb90294e1399e5e455d423659f37c336f3dc6"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "d0f37b499c2404075453292a3ef5be88defc86d8307d0ed631da53e376e83915",
+          "current": "3dabffbe720e847dddb7cf6b86f98525757255eaac708588a6588ea2b61fc97c"
+        },
+        {
+          "path": "cpppj/tests/CursorManaTests.cpp",
+          "previous": "57147730633274fe710dc73ad6c375785026b6fa38d67c927f2c5f0d5258ca71",
+          "current": "51df3dae8cfb7f1fad49e5ce969d46b4eedb47c330641924d1126531535f7037"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 128,
+      "reason": "실제23/39 이동 구분과 건설 도착/부분 표시/현재 Session 연결 및 재생 검사 보완; 기존 fixture 결과는 보존",
+      "pins": [
+        {
+          "path": "cpppj/tests/CursorManaTests.cpp",
+          "previous": "51df3dae8cfb7f1fad49e5ce969d46b4eedb47c330641924d1126531535f7037",
+          "current": "3f9aa47024782b0afe4f165a2145fa4f27706d8b5b7c1434f8e94c65a5318daa"
+        },
+        {
+          "path": "cpppj/tests/PopTests.cpp",
+          "previous": "2815679f07e4c9873dc70b925e9e6c16e44864d3be191c636650954a12d4cea4",
+          "current": "250b9a9fd863142026c29ef68c75ea7c8bea6871ed0a42df9bafee4e2b072d48"
+        },
+        {
+          "path": "cpppj/tests/UnpopTests.cpp",
+          "previous": "e0ac9391654c79aabfafb7f57516371e540317bd95d335abb61d85f0fea17f94",
+          "current": "af6cd4c73db3f50d707d1b7cc896f991a7c5222177b7bd4252054bbe826af9cc"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 128,
+      "reason": "표시 관측 도구의 한국어 설명 문자 정정; fixture 결과는 불변",
+      "pins": [
+        {
+          "path": "tools/decomp_mana_bolt_display.py",
+          "previous": "1357ee23677b3f62b4e8e15e5c5e476192524107ce63729032aa562fd9d85c7a",
+          "current": "5be13379f8504e2ce3feb91c8365a386b63b0f4dd9a623c5ff4c0c7ff80fe015"
+        }
+      ]
+    }
+  ]
+}

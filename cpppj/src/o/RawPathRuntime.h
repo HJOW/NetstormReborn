@@ -34,7 +34,11 @@ struct RawPathObservation { /* flags: 동작을 선택하는 플래그 비트. *
 class RawPathRuntime {
 public:
     // 실제 생성자처럼 시간 배열과 지정 필드만 초기화한다. heapFill은 독립 생성자 대조의 미초기화 입력이다.
-    explicit RawPathRuntime(OriginalEdition edition,bool priest=false,std::uint8_t heapFill=0);
+    explicit RawPathRuntime(OriginalEdition edition,bool priest=false,std::uint8_t heapFill=0,bool flying=false);
+    // PATCH48af00/488d00: 표면/BFS를 조회하지 않고 현재 부모와 목적지를 실제 방향/시각0으로 append한다.
+    void InitializeFlight(RawPathPoint parent,RawPathPoint destination);
+    double NextFrame() const; // fly39의186b8 현재 예약 시각이다.
+    void SetNextFrame(double time); // 실제 프레임이 now+0.02를 저장하는 같은 QWORD다.
     // 패치 0048b2c0/CD0047d4d0의 배열 길이와 끝 필드를 반환한다.
     static RawPathLayout Layout(OriginalEdition edition);
     // 독립 원본 대조에 raw 전체 이미지를 공개한다. 포인터를 호스트에서 실행하지 않는다.

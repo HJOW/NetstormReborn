@@ -126,14 +126,14 @@ struct ManaDisplaySink final:SquidDisplaySink {
     void Invalidate(SquidDisplayRect rect,std::uint32_t flags) override { dirty.Add({rect.left,rect.top,rect.right,rect.bottom},flags); } // 실제 변경표에 전달한다.
 };
 }
-// 실제473770/8c thunk/부분 bounds/clip/dirty의432입력을 원문 전체 변경표와 대조한다.
-TEST_CASE(CursorMana_NativeDirtyDisplay432) {
+// 전달한 마나103 또는 볼트105 fixture의432입력을 실제 bounds/clip/dirty 전체 변경표와 대조한다.
+void ReplayNativeManaDisplay(const char* fixture) {
     std::vector<RiftTypeRecord> types(188);std::vector<SquidDisplayShape> shapes(188); // 원문의 합성 TYPE/SHP 입력이다.
     shapes[74].frameCount=2;shapes[74].loaded=true;shapes[74].frames={{100,120,-3,5,1,1},{130,140,7,-9,1,1},{50,70,2,3,1,1},{80,90,4,6,1,1}};
     types[74].flags2=0x10000;types[74].footX=types[74].footY=1;ManaDisplaySink sink;SquidDisplay display(OriginalEdition::Patch1078,types,shapes,sink,{7,9,65536,{12,9,620,450}});
     std::size_t count{}; // 실제 고유 원문 입력 수다.
     // 입력 raw 전체를 그대로 사용하고 출력 사각형을 테스트에서 계산하지 않는다.
-    for (const auto& row:LoadFixture(NETSTORM_CURSOR_MANA_DISPLAY_FIXTURE).rows) {
+    for (const auto& row:LoadFixture(fixture).rows) {
         CHECK(row.size()==4);const auto input=Numbers(row[0]);CHECK(input.size()==7);sink.dirty.Clear();sink.suppressed=input[5]!=0;types[74].flags1=input[2];display.SetView({7,9,static_cast<int>(input[3]),{12,9,620,450}});
         std::vector<std::uint8_t> bytes(50); // 원본 호출 직전 입력 슬롯이다.
         // WORD 옆 바이트/플래그/좌표도 원문에 기록된 바이트를 그대로 읽는다.
@@ -145,3 +145,8 @@ TEST_CASE(CursorMana_NativeDirtyDisplay432) {
     }
     CHECK(count==432);
 }
+
+// 실제473770/8c의 WORD 조건과10픽셀 확대를 독립432입력으로 검증한다.
+TEST_CASE(CursorMana_NativeDirtyDisplay432) { ReplayNativeManaDisplay(NETSTORM_CURSOR_MANA_DISPLAY_FIXTURE); }
+// 실제45ac90/8c의 WORD 무관/10픽셀 확대를 별도432입력으로 검증한다.
+TEST_CASE(ManaBolt_NativeDirtyDisplay432) { ReplayNativeManaDisplay(NETSTORM_MANA_BOLT_DISPLAY_FIXTURE); }

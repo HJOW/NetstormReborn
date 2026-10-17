@@ -1,5 +1,6 @@
 // x87 53비트 계산의 저장 지점을 보존한다. 패치/CD의 다른 중간 float 저장도 구별한다.
 #include "o/RawPathRuntime.h"
+#include "o/RawSquidNeighbors.h"
 #include <bit>
 #include <cmath>
 #include <stdexcept>
@@ -27,9 +28,10 @@ RawPathLayout RawPathRuntime::Layout(OriginalEdition edition) {
     return {600,0x2f28,0x12d8,0x2598,0x2ef8,0x2f00,0x2f04,0x2f08,0x2f0c,0x2f10,0x2f14,0x2f24,0x503d28,0x503d60,0x503eb0};
 }
 // 미초기화 heap 입력을 보존하면서 실제 원본 생성자에서 쓰는 부분만 지운다.
-RawPathRuntime::RawPathRuntime(OriginalEdition edition,bool priest,std::uint8_t heapFill)
+RawPathRuntime::RawPathRuntime(OriginalEdition edition,bool priest,std::uint8_t heapFill,bool flying)
     :edition_(edition),layout_(Layout(edition)),bytes_(layout_.size,heapFill) {
     Write(0,priest ? layout_.priestVtable : layout_.teleportVtable);Write(4,0);Write(8,0);Write(0x10,0);
+    if (flying) { if (edition!=OriginalEdition::Patch1078 || priest) throw std::invalid_argument("실제 fly39 생성자 판본/종류 오류");Write(0,0x50e2ec); }
     // 원본 두 생성자 모두 시각 배열 전체만 0으로 만들고 꼭짓점/방향 배열은 보존한다.
     for (std::size_t i=0;i<layout_.capacity;++i) Write(layout_.times+i*8,0,8);
     Write(layout_.nextFrame,0,8);
@@ -38,6 +40,19 @@ RawPathRuntime::RawPathRuntime(OriginalEdition edition,bool priest,std::uint8_t 
     const auto tail=edition==OriginalEdition::Patch1078 ? 0x186e4U : 0x2f1cU;
     Write(tail,0);Write(tail+4,0);
 }
+// 실제 비행 Init은 생성자의 기존 count를 초기화하지 않고 두 꼭짓점을 추가한다.
+void RawPathRuntime::InitializeFlight(RawPathPoint parent,RawPathPoint destination) {
+    if (edition_!=OriginalEdition::Patch1078) throw std::invalid_argument("CD 비행 Init 미복원");
+    const auto append=[this](RawPathPoint point,std::int32_t direction) {
+        const auto index=Count();if (index<0 || static_cast<std::size_t>(index)+1>=layout_.capacity) throw std::out_of_range("비행 경로 append 범위 오류");
+        Write(0x14+static_cast<std::size_t>(index)*8,Bits(point.x));Write(0x18+static_cast<std::size_t>(index)*8,Bits(point.y));Write(layout_.times+static_cast<std::size_t>(index)*8,0,8);Write(layout_.directions+static_cast<std::size_t>(index)*4,std::bit_cast<std::uint32_t>(direction));Write(0x10,static_cast<std::uint32_t>(index)+1);
+    }; // 4882e0의 좌표/방향/시각 쓰기와 마지막 count 증가 순서다.
+    append(parent,0);append(destination,RawSquidNeighbors::Direction(parent.x,parent.y,destination.x,destination.y));ResetCurrent();
+}
+// 같은 실제 QWORD 예약 시각을 bit 그대로 읽는다.
+double RawPathRuntime::NextFrame() const { return std::bit_cast<double>(Read(layout_.nextFrame,8)); }
+// 현재 비행 frame의 다음 실행 시각만 쓴다.
+void RawPathRuntime::SetNextFrame(double time) { Write(layout_.nextFrame,std::bit_cast<std::uint64_t>(time),8); }
 // byte 배열 자체는 호출자에게 읽기 전용으로 제공한다.
 std::span<const std::uint8_t> RawPathRuntime::Bytes() const { return bytes_; }
 // 배열 밖의 메모리를 읽기 전에 진단한다.

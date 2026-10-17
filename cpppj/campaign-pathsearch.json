@@ -21,7 +21,7 @@
     "cpppj/src/o/RawPathProcess.h": "a933cd9224641371e731019f8eb69e87e99229c1ad784697335caccfc6af6a63",
     "cpppj/src/o/RawPathProcess.cpp": "c5bd7c6b5cd14810d73e030f769d1c614a3ba8a599bf78f30c06e077009b3724",
     "cpppj/tests/RawPathSearchTests.cpp": "4b04a25e1c6f1478db5480f279ccf1ff22381aa63955734d37b76c1c707bc997",
-    "cpppj/tests/RawPathRuntimeTests.cpp": "3e0753ef45b6bc4b33c9af32478110f9191f42e8bee3df4ea7eb5062ed534dda",
+    "cpppj/tests/RawPathRuntimeTests.cpp": "8643229e7929baf27c889e6acfdbd7221d0b37db8f2daca7ce02bb3fb9a20d75",
     "cpppj/src/o/CMakeLists.txt": "cc09ef991fe8026ff1687d10e327e05f763cb875b5d6695fd52b156efc49da3e",
     "cpppj/tests/CMakeLists.txt": "b724fc467ab5be76893369ed0169bfb0dd840505552d00cb1e18a589642bc574",
     "tools/decomp_pathinit_oracle.py": "cee473cce2fc40d31a656f1000b11e7ee998af818e9d814f9c04e7448ed3bad6",
@@ -71,5 +71,31 @@
     "Kernel 통합 검사는 client Form과 합성 부모의 Halt/Arrival/소리/cleanup 경계를 사용한다.",
     "서버 Path 직렬화·실제 사제 운반/의식/도착 효과와 GameWorld 비표면 이관은 미완료다.",
     "건설/전투/승패 및 캠페인 1-1 완주를 입증하는 자료가 아니다."
+  ],
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "unit": 128,
+      "reason": "실제23/39 이동 구분과 건설 도착/부분 표시/현재 Session 연결 및 재생 검사 보완; 기존 fixture 결과는 보존",
+      "pins": [
+        {
+          "path": "cpppj/tests/RawPathRuntimeTests.cpp",
+          "previous": "3e0753ef45b6bc4b33c9af32478110f9191f42e8bee3df4ea7eb5062ed534dda",
+          "current": "26e887d39c0919749b9b057172ca7e17f27dceba246ced35aa8a4a443eaa4931"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 128,
+      "reason": "실제23/39 이동 구분과 건설 도착/부분 표시/현재 Session 연결 및 재생 검사 보완; 기존 fixture 결과는 보존",
+      "pins": [
+        {
+          "path": "cpppj/tests/RawPathRuntimeTests.cpp",
+          "previous": "26e887d39c0919749b9b057172ca7e17f27dceba246ced35aa8a4a443eaa4931",
+          "current": "8643229e7929baf27c889e6acfdbd7221d0b37db8f2daca7ce02bb3fb9a20d75"
+        }
+      ]
+    }
   ]
 }

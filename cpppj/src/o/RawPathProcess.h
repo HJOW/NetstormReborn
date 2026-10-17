@@ -14,6 +14,7 @@ struct RawPathProcessState {
     // observation: 경로 진행 중 활성화 비트와 관찰 시각을 보관하는 상태.
     RawPathObservation observation;
     std::uint32_t teleportProcess{23},priestProcess{54},priestType{158}; // 원본 mutable 프로세스/자산 번호다.
+    std::uint32_t flyProcess{39}; // PATCH0054110c의 마나 볼트 비행 경로다. teleport23과 구분한다.
     std::array<std::uint32_t,5> groundTypes{158,137,156,135,187}; // 00427da0의 허용 타입이며 CD는 마지막 empty를 제외한다.
     std::uint32_t blockingGenus{0x10444200}; // 005325b4/CD0053fc28: 도착 칸의 원본 겹침 제거 부류다.
 };
@@ -37,7 +38,8 @@ public:
     // 타입 표·프레임·실제 SHP·지도·상태는 프로세스보다 오래 살아야 한다. 생성만으로 부착하지 않는다.
     RawPathProcess(SidPool& pool,const SquidHash& hash,std::span<const RiftTypeRecord> types,
         std::span<const RiftTypeFrames> frames,std::span<const SquidDisplayShape> shapes,std::span<const std::uint8_t> spots,
-        RawPathProcessState& state,RawPathProcessHooks hooks,bool priest);
+        RawPathProcessState& state,RawPathProcessHooks hooks,bool priest,bool flying=false);
+    std::uint32_t MovementType() const; // 실제 종류가 사용하는 현재23/39/54 프로세스 번호다.
     // 원본 destructor는 deadFlag를 켠다. shared watch는 부모 callback이 this를 지운 뒤의 역참조를 막는다.
     ~RawPathProcess() override;
     // 실제 Init +0x20은 시작 표면이 있을 때만 void Pop→검색→current=0을 실행한다. flags1은 직선 방향만 축약한다.
@@ -92,6 +94,7 @@ private:
     RawPathProcessHooks hooks_;
     // priest_: 사제 상태를 조회·변경하는 처리기 또는 사제 경로 여부.
     bool priest_{};
+    bool flying_{}; // 실제48af00/48af90/48af50 분배이며 false generic23과 다르다.
     // runtime_: 원본 필드 배치를 사용하는 실행 중 상태.
     RawPathRuntime runtime_;
     std::shared_ptr<bool> alive_=std::make_shared<bool>(true); // 원본 destructor의 stack deadFlag 대체이며 게임 상태를 대체하지 않는다.

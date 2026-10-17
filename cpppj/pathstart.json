@@ -127,8 +127,8 @@
     "cpppj/src/client/RawPriestWorldBindings.h": "581e4e155cdff0d13bb9ae455801b156ba3afb72d73395069ecf2995b49acd24",
     "cpppj/src/o/RawPathRuntime.cpp": "e9cd97a76dbe1f2b9fc88d2c14a70f901f83e9b41210e7019050522be5ea1046",
     "cpppj/src/o/RawPathRuntime.h": "3aa49155494dabd4b173fca09abf09b5c8131a91881d244c084e6e6ae83a02ab",
-    "cpppj/src/o/RawPathStart.cpp": "4c3ca34ae35666b09ce7c1714139987cbdcff45d9653c4a9e5fff3983d361a1f",
-    "cpppj/src/o/RawPathStart.h": "feaf7f0e7d2c9e1905ab3ecdcdd91baf638a5e6d433b87866e2088ce0f0d56fd",
+    "cpppj/src/o/RawPathStart.cpp": "ff44ccf39ca83bb4fd53e72292b8903b9f53979f211d32f32d8cbd2aaaaa24a5",
+    "cpppj/src/o/RawPathStart.h": "576188b61294a25b8abb6caa7bc129c56e21804a2fb79cf5de74cd25421a568f",
     "cpppj/tests/fixtures/pathprocesstype-x86.tsv": "4a5da6130b1c840c4a6387efc64671f535c46251ccc529510f5386d0e9bcbb6f",
     "cpppj/tests/fixtures/pathstart-x86.tsv": "465f2d5e682d4e15756fd6d7f1fcb8427e55df5afc251d1dbbff1a6bb3126c3c",
     "cpppj/tests/RawPathStartTests.cpp": "b5dcda9c5e3a3634fe70bc3a5a35be3ef96eb520779ec6dcca3dad84cab34a0b",
@@ -171,5 +171,24 @@
     "실제 상위 Start/종류선택/ctor/flags0 Init/BFS/Prepare/사제 간헐천 finder/취소 루프를 실행한다. 종류선택718개는 이전2872개에 포함되는 회귀이며 신규 합산하지 않는다.",
     "힙·구 경로 조회/삭제·이벤트 조회/삭제·Host 부착·프레임 갱신·profiling 시계는 명시 관찰 경계다.",
     "실제 운반/의식·삭제 cleanup·캠페인 완주/GUI 검증으로 세지 않는다."
+  ],
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "unit": 128,
+      "reason": "실제23/39 이동 구분과 건설 도착/부분 표시/현재 Session 연결 및 재생 검사 보완; 기존 fixture 결과는 보존",
+      "pins": [
+        {
+          "path": "cpppj/src/o/RawPathStart.cpp",
+          "previous": "4c3ca34ae35666b09ce7c1714139987cbdcff45d9653c4a9e5fff3983d361a1f",
+          "current": "ff44ccf39ca83bb4fd53e72292b8903b9f53979f211d32f32d8cbd2aaaaa24a5"
+        },
+        {
+          "path": "cpppj/src/o/RawPathStart.h",
+          "previous": "feaf7f0e7d2c9e1905ab3ecdcdd91baf638a5e6d433b87866e2088ce0f0d56fd",
+          "current": "576188b61294a25b8abb6caa7bc129c56e21804a2fb79cf5de74cd25421a568f"
+        }
+      ]
+    }
   ]
 }

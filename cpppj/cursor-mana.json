@@ -58,20 +58,20 @@
     "tools/decomp_cursor_mana.py": "00cfea4f089b06b1b8f1b0cc61f0cf4f93bd33aa16aaa0715a95c66187a9f888",
     "cpppj/tests/fixtures/cursor-mana-x86.tsv": "13bc12de4bee7790d44ce4138249221a49f26740538e0e9ebca9fb22348adc38",
     "cpppj/src/CMakeLists.txt": "c6788ec0b508c34f26406203a824455adc59d87a1a5aa80ab2bfda476e91021b",
-    "cpppj/src/client/RawCampaignLifetimeBindings.cpp": "93d3e0040fe883d6da64622098be929103c1f07aea00e6c4a9a5c652d15958af",
+    "cpppj/src/client/RawCampaignLifetimeBindings.cpp": "2eb0d3fc16e6967b54271c0365991e0ebd8f3d57ef6412aa92d4c4d21fbb01c3",
     "cpppj/src/client/RawCampaignLifetimeBindings.h": "6f4be73b52279abf308c8a3e6d8962271560e47c25996f7a03fca09f8cd063e8",
-    "cpppj/src/client/RawCampaignSession.cpp": "d9d013f772a86b7ff24896bc6cadbff1f88ba773c4e6e21ea8c10a8c183e1c84",
-    "cpppj/src/client/RawCampaignSession.h": "53bdc20896cc14554d00e66e6de30af4f4982aef22038354d3a5c3dcbc0af389",
-    "cpppj/src/o/SquidDisplay.cpp": "47dd928d6df4a53c8debb0dd67c56fe62f4c530a1dd07cd31bae81cc7468faac",
-    "cpppj/src/o/SquidPop.cpp": "c57e6263de140459d3c109f9163b59ea1193e7038e2a46ce74b577cbdebae7a7",
-    "cpppj/src/o/SquidUnpop.cpp": "000e315fc0aead83fc423afc3293b3fd6176a211c1dc5b297d642e8dbea06ce2",
-    "cpppj/tests/CMakeLists.txt": "15ccb8c846d54cbdd447ab3060531c68bf80d464ea9503f49a58901793a0b52d",
-    "cpppj/tests/CampaignSessionTests.cpp": "55df964695c0572d7c524ea9068d7d9f24b8d3e3383e7394b1e4f475503b5784",
-    "cpppj/tests/PopTests.cpp": "2815679f07e4c9873dc70b925e9e6c16e44864d3be191c636650954a12d4cea4",
-    "cpppj/tests/UnpopTests.cpp": "e0ac9391654c79aabfafb7f57516371e540317bd95d335abb61d85f0fea17f94",
+    "cpppj/src/client/RawCampaignSession.cpp": "52e33329192ea878ac67afaff8a2f56587b9025ef97de2ac09f1d5d9e4a16ee0",
+    "cpppj/src/client/RawCampaignSession.h": "a104faaa39103e4b48f6ecd6a2618ffa80130d1aae9c3959848f5345cf64dea7",
+    "cpppj/src/o/SquidDisplay.cpp": "adff73d1c710cf295aed17e2a06cb90294e1399e5e455d423659f37c336f3dc6",
+    "cpppj/src/o/SquidPop.cpp": "61f8db73c663d5d7c8880d73bc310cf7884e361bb76402e0946241e02b7dcd17",
+    "cpppj/src/o/SquidUnpop.cpp": "f9a932b6ee543cc2ee051d6f67afb0c56fca1f325cc51d29ca3d0dc3adf26fef",
+    "cpppj/tests/CMakeLists.txt": "3dabffbe720e847dddb7cf6b86f98525757255eaac708588a6588ea2b61fc97c",
+    "cpppj/tests/CampaignSessionTests.cpp": "7dafb3fce59b756f4f9fe6ed9c20f0e895d4b15723fed3636d6b842591231a1d",
+    "cpppj/tests/PopTests.cpp": "250b9a9fd863142026c29ef68c75ea7c8bea6871ed0a42df9bafee4e2b072d48",
+    "cpppj/tests/UnpopTests.cpp": "af6cd4c73db3f50d707d1b7cc896f991a7c5222177b7bd4252054bbe826af9cc",
     "cpppj/src/client/RawCursorMana.cpp": "b8ab58679249a18387757eb2eb93c7405e566a4a9fc02ed018b2046a7d751f7b",
     "cpppj/src/client/RawCursorMana.h": "f363a35504b216243604734bcb9c7567943797c4b879b9f101b16763d9d3821a",
-    "cpppj/tests/CursorManaTests.cpp": "84b4c5aab77872135916da08e74cc5339957d3c32209b5274b713f413a76bbd2"
+    "cpppj/tests/CursorManaTests.cpp": "3f9aa47024782b0afe4f165a2145fa4f27706d8b5b7c1434f8e94c65a5318daa"
   },
   "limitations": [
     "실제 생성·원형/사각형 프레임·통지·소멸·클램프·절삭을 실행한다.",
@@ -194,6 +194,146 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "a3c3dfeafef99605eee7d9bbee5ee582fb7111296b648032a4d6b356d7e1e1de",
           "current": "55df964695c0572d7c524ea9068d7d9f24b8d3e3383e7394b1e4f475503b5784"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 128,
+      "reason": "실제23/39 이동 구분과 건설 도착/부분 표시/현재 Session 연결 및 재생 검사 보완; 기존 fixture 결과는 보존",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignLifetimeBindings.cpp",
+          "previous": "93d3e0040fe883d6da64622098be929103c1f07aea00e6c4a9a5c652d15958af",
+          "current": "2eb0d3fc16e6967b54271c0365991e0ebd8f3d57ef6412aa92d4c4d21fbb01c3"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "d9d013f772a86b7ff24896bc6cadbff1f88ba773c4e6e21ea8c10a8c183e1c84",
+          "current": "ae41c9356999aa305697e43db6a479cd9536efd312ede641356e1ba62f422107"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "53bdc20896cc14554d00e66e6de30af4f4982aef22038354d3a5c3dcbc0af389",
+          "current": "a104faaa39103e4b48f6ecd6a2618ffa80130d1aae9c3959848f5345cf64dea7"
+        },
+        {
+          "path": "cpppj/src/o/SquidDisplay.cpp",
+          "previous": "47dd928d6df4a53c8debb0dd67c56fe62f4c530a1dd07cd31bae81cc7468faac",
+          "current": "b81c637ae2d81448772a502f8ffc87212ca77fdf8e23c9d28cba796a8fd0a2e7"
+        },
+        {
+          "path": "cpppj/src/o/SquidPop.cpp",
+          "previous": "c57e6263de140459d3c109f9163b59ea1193e7038e2a46ce74b577cbdebae7a7",
+          "current": "4a189846f9d3c721bda88b3324a64fce03556ea11098de3f89355d17cea1a134"
+        },
+        {
+          "path": "cpppj/src/o/SquidUnpop.cpp",
+          "previous": "000e315fc0aead83fc423afc3293b3fd6176a211c1dc5b297d642e8dbea06ce2",
+          "current": "f9a932b6ee543cc2ee051d6f67afb0c56fca1f325cc51d29ca3d0dc3adf26fef"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "15ccb8c846d54cbdd447ab3060531c68bf80d464ea9503f49a58901793a0b52d",
+          "current": "d0f37b499c2404075453292a3ef5be88defc86d8307d0ed631da53e376e83915"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "55df964695c0572d7c524ea9068d7d9f24b8d3e3383e7394b1e4f475503b5784",
+          "current": "6e5d31bcd15d16f51e7cb02be4ae15227e8aea9e169851204f64310de4b80102"
+        },
+        {
+          "path": "cpppj/tests/CursorManaTests.cpp",
+          "previous": "84b4c5aab77872135916da08e74cc5339957d3c32209b5274b713f413a76bbd2",
+          "current": "5b0e4a37504372fb8670cdd27d8a5fded0357324412071463ddc4b8146d644be"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 128,
+      "reason": "실제23/39 이동 구분과 건설 도착/부분 표시/현재 Session 연결 및 재생 검사 보완; 기존 fixture 결과는 보존",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "ae41c9356999aa305697e43db6a479cd9536efd312ede641356e1ba62f422107",
+          "current": "52e33329192ea878ac67afaff8a2f56587b9025ef97de2ac09f1d5d9e4a16ee0"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "6e5d31bcd15d16f51e7cb02be4ae15227e8aea9e169851204f64310de4b80102",
+          "current": "43a916111e8c0377575432319dd75d4030e6fedda31dbddbedd8a0206c814475"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 128,
+      "reason": "실제23/39 이동 구분과 건설 도착/부분 표시/현재 Session 연결 및 재생 검사 보완; 기존 fixture 결과는 보존",
+      "pins": [
+        {
+          "path": "cpppj/src/o/SquidDisplay.cpp",
+          "previous": "b81c637ae2d81448772a502f8ffc87212ca77fdf8e23c9d28cba796a8fd0a2e7",
+          "current": "c3702277c45d6ddeb7392a10ac9807c2d77e55a70559e8c13dd24980ef9b7996"
+        },
+        {
+          "path": "cpppj/src/o/SquidPop.cpp",
+          "previous": "4a189846f9d3c721bda88b3324a64fce03556ea11098de3f89355d17cea1a134",
+          "current": "61f8db73c663d5d7c8880d73bc310cf7884e361bb76402e0946241e02b7dcd17"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "43a916111e8c0377575432319dd75d4030e6fedda31dbddbedd8a0206c814475",
+          "current": "7dafb3fce59b756f4f9fe6ed9c20f0e895d4b15723fed3636d6b842591231a1d"
+        },
+        {
+          "path": "cpppj/tests/CursorManaTests.cpp",
+          "previous": "5b0e4a37504372fb8670cdd27d8a5fded0357324412071463ddc4b8146d644be",
+          "current": "57147730633274fe710dc73ad6c375785026b6fa38d67c927f2c5f0d5258ca71"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 128,
+      "reason": "실제23/39 이동 구분과 건설 도착/부분 표시/현재 Session 연결 및 재생 검사 보완; 기존 fixture 결과는 보존",
+      "pins": [
+        {
+          "path": "cpppj/src/o/SquidDisplay.cpp",
+          "previous": "c3702277c45d6ddeb7392a10ac9807c2d77e55a70559e8c13dd24980ef9b7996",
+          "current": "adff73d1c710cf295aed17e2a06cb90294e1399e5e455d423659f37c336f3dc6"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "d0f37b499c2404075453292a3ef5be88defc86d8307d0ed631da53e376e83915",
+          "current": "3dabffbe720e847dddb7cf6b86f98525757255eaac708588a6588ea2b61fc97c"
+        },
+        {
+          "path": "cpppj/tests/CursorManaTests.cpp",
+          "previous": "57147730633274fe710dc73ad6c375785026b6fa38d67c927f2c5f0d5258ca71",
+          "current": "51df3dae8cfb7f1fad49e5ce969d46b4eedb47c330641924d1126531535f7037"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 128,
+      "reason": "실제23/39 이동 구분과 건설 도착/부분 표시/현재 Session 연결 및 재생 검사 보완; 기존 fixture 결과는 보존",
+      "pins": [
+        {
+          "path": "cpppj/tests/PopTests.cpp",
+          "previous": "2815679f07e4c9873dc70b925e9e6c16e44864d3be191c636650954a12d4cea4",
+          "current": "250b9a9fd863142026c29ef68c75ea7c8bea6871ed0a42df9bafee4e2b072d48"
+        },
+        {
+          "path": "cpppj/tests/UnpopTests.cpp",
+          "previous": "e0ac9391654c79aabfafb7f57516371e540317bd95d335abb61d85f0fea17f94",
+          "current": "af6cd4c73db3f50d707d1b7cc896f991a7c5222177b7bd4252054bbe826af9cc"
+        },
+        {
+          "path": "cpppj/tests/CursorManaTests.cpp",
+          "previous": "51df3dae8cfb7f1fad49e5ce969d46b4eedb47c330641924d1126531535f7037",
+          "current": "3f9aa47024782b0afe4f165a2145fa4f27706d8b5b7c1434f8e94c65a5318daa"
         }
       ]
     }

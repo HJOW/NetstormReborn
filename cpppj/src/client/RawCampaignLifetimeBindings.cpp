@@ -41,7 +41,7 @@ RawCampaignLifetimeBindings::RawCampaignLifetimeBindings(RawSurfaceWorld& world,
 // baseVT가실제값일때만84의세공통가상몸체를사용한다.
 bool RawCampaignLifetimeBindings::EmptyGeyser(o::Sid sid) const { const auto raw=core_.pool.Slot(sid);return raw[10]==kEmptyGeyser && LifetimeVtable(raw)==kBaseVtable; }
 // 마나의 +10/+14/+18/+24/+48은 base와 같다. range104는 실제 생성자 표의0으로 baseVT를 사용한다.
-bool RawCampaignLifetimeBindings::CommonAsset(o::Sid sid) const { const auto raw=core_.pool.Slot(sid);return EmptyGeyser(sid) || (raw[10]==103 && LifetimeVtable(raw)==0x50c3b0) || (raw[10]==104 && LifetimeVtable(raw)==kBaseVtable); }
+bool RawCampaignLifetimeBindings::CommonAsset(o::Sid sid) const { const auto raw=core_.pool.Slot(sid);return EmptyGeyser(sid) || (raw[10]==103 && LifetimeVtable(raw)==0x50c3b0) || (raw[10]==104 && LifetimeVtable(raw)==kBaseVtable) || (raw[10]==105 && LifetimeVtable(raw)==0x509810) || (raw[10]==134 && LifetimeVtable(raw)==0x5070c0); }
 // Pre/Post에만입증된공통모듈을선택하고종속/전송/선택은현재기존분배를유지한다.
 o::SquidDestroyHooks RawCampaignLifetimeBindings::DestroyHooks(o::SquidDestroyHooks fallback) const {
     auto hooks=fallback;

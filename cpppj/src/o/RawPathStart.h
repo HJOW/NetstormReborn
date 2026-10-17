@@ -34,6 +34,7 @@ struct RawPathStartHooks {
     std::function<std::unique_ptr<RawPathProcess>(bool priest)> create; // 실제 같은 풀/hash/search/state를 쓰는 type54 또는23 생성이다.
     std::function<RawPathStartType(Sid)> metadata; // 현재 부모의 실제 타입+e0/+e4/+118 조회다.
     std::function<void(RawPathPoint,std::uint32_t,std::uint32_t)> clearBlocked; // 00443800/CD004d2450의 실제 겹침 정리; 현재 부모 위치/타입/소유자다.
+    std::function<std::unique_ptr<RawPathProcess>(std::uint32_t)> createType; // 실제 타입39를23과 구분하는 생성자다. 미연결 기존 검사는 create(bool)를 사용한다.
 };
 // 패치00489080/CD0047d150의 실제 상위 순서와 지원 부모158/134의 두 통지를 실행한다.
 class RawPathStart {

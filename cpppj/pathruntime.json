@@ -102,7 +102,7 @@
     "cpppj/src/o/RawPathRuntime.cpp": "e5d68375402de55ed55a0460316a06159638e5d40213a51a45d178627695d4a6",
     "cpppj/src/o/RawPathProcess.h": "a933cd9224641371e731019f8eb69e87e99229c1ad784697335caccfc6af6a63",
     "cpppj/src/o/RawPathProcess.cpp": "c5bd7c6b5cd14810d73e030f769d1c614a3ba8a599bf78f30c06e077009b3724",
-    "cpppj/tests/RawPathRuntimeTests.cpp": "3e0753ef45b6bc4b33c9af32478110f9191f42e8bee3df4ea7eb5062ed534dda",
+    "cpppj/tests/RawPathRuntimeTests.cpp": "8643229e7929baf27c889e6acfdbd7221d0b37db8f2daca7ce02bb3fb9a20d75",
     "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
     "extracted/pathruntime/originals/creation.c": "96db0d462b7b23fc8217f07973354b963e1ba80370e02a5c2b7b78d524786161",
     "extracted/pathruntime/originals/functions.tsv": "0a90142ded4a8cc18b414810ab64dff5aeb6203ac586332e0fa9fc76d299c1ec",
@@ -121,5 +121,31 @@
   "limits": [
     "heap 할당/음향/진단 시계·부모 Halt/Arrival·공간 요청·삭제·Regular freeze 조회만 명시 대체한다. 계산/분배/CRT fmod는 실제 기계어다.",
     "BFS/transport 재탐색 및 수명 정리 하위 몸체는 이 근거의 검증 범위에 포함하지 않는다."
+  ],
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "unit": 128,
+      "reason": "실제23/39 이동 구분과 건설 도착/부분 표시/현재 Session 연결 및 재생 검사 보완; 기존 fixture 결과는 보존",
+      "pins": [
+        {
+          "path": "cpppj/tests/RawPathRuntimeTests.cpp",
+          "previous": "3e0753ef45b6bc4b33c9af32478110f9191f42e8bee3df4ea7eb5062ed534dda",
+          "current": "26e887d39c0919749b9b057172ca7e17f27dceba246ced35aa8a4a443eaa4931"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 128,
+      "reason": "실제23/39 이동 구분과 건설 도착/부분 표시/현재 Session 연결 및 재생 검사 보완; 기존 fixture 결과는 보존",
+      "pins": [
+        {
+          "path": "cpppj/tests/RawPathRuntimeTests.cpp",
+          "previous": "26e887d39c0919749b9b057172ca7e17f27dceba246ced35aa8a4a443eaa4931",
+          "current": "8643229e7929baf27c889e6acfdbd7221d0b37db8f2daca7ce02bb3fb9a20d75"
+        }
+      ]
+    }
   ]
 }

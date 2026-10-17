@@ -1,6 +1,7 @@
 // teleportEffect 도착의 두 실제 PE fixture와 현재 후보/서버 경계/다중 건설 시작을 대조한다.
 #include "TestSupport.h"
 #include "o/RawConstructionArrival.h"
+#include "o/RawManaBoltArrival.h"
 #include <algorithm>
 #include <array>
 #include <bit>
@@ -122,4 +123,22 @@ TEST_CASE(ConstructionArrival_RequiresCurrentWorldAndEffects) {
     CHECK(Throws([&] { RawConstructionArrival bad(scene.pool,scene.hash,scene.types,scene.state,hooks); }));
     auto shortTypes=std::span<const RiftTypeRecord>(scene.types).first(171);
     CHECK(Throws([&] { RawConstructionArrival bad(scene.pool,scene.hash,shortTypes,scene.state,scene.Hooks()); }));
+}
+// 실제105 검색/도착의 독립101행과 선택한 외부 효과 전체를 같은 raw/해시에서 대조한다.
+TEST_CASE(ManaBoltArrival_ReplaysActualFinderAndArrival) {
+    ArrivalScene scene(OriginalEdition::Patch1078);ManaBoltArrivalState state;std::ifstream file(NETSTORM_MANA_BOLT_ARRIVAL_FIXTURE);CHECK(file.good());std::string line;std::size_t count=0;
+    // 각 행은 서로 독립된 후보/소유권/할당 입력이다.
+    while (std::getline(file,line)) {
+        if (line.empty() || line[0]=='#') continue;const auto row=Split(line,'\t');CHECK(row.size()==8);
+        const auto nodes=Number(row[4]) ? "60,100,"+row[1]+','+row[0]+",1101266944,1101791232,1,1,0,1" : "-";
+        scene.Setup("1101398016,1102000947,0,12,1058642330,0",nodes);Write(scene.slots.at(50),34,1,1);if (Number(row[4])) Write(scene.slots.at(60),34,Number(row[2]),1);
+        ManaBoltArrivalHooks hooks;
+        hooks.sound=[&](float x,float y,std::string_view name) { CHECK(name=="sunCannonRaiseLower5.wav");scene.Event("S:"+std::to_string(std::bit_cast<std::uint32_t>(x))+':'+std::to_string(std::bit_cast<std::uint32_t>(y))); };
+        hooks.removeProcesses=[&](Sid sid,std::uint32_t type) { scene.Event("R:"+std::to_string(sid.value)+':'+std::to_string(type)); };
+        hooks.reserveRegular=[&] { scene.Event("N:"+row[3]);return Number(row[3])!=0; };
+        hooks.addRegular=[&](Sid sid,std::uint32_t event,float delay) { scene.Event("A:"+std::to_string(event)+':'+std::to_string(sid.value)+':'+std::to_string(std::bit_cast<std::uint32_t>(delay))); };
+        hooks.destroy=[&](Sid sid,std::uint32_t flags) { scene.Event("K:"+std::to_string(sid.value)+':'+std::to_string(flags)); };
+        RawManaBoltArrival arrival(scene.pool,scene.hash,scene.types,state,std::move(hooks));CHECK(arrival.Target(kBuilder).value==Number(row[5]));CHECK(arrival.Arrive(kBuilder)==Number(row[6]));CHECK(scene.events==row[7]);++count;
+    }
+    CHECK(count==101);
 }

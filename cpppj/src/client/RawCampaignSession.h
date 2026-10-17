@@ -67,6 +67,7 @@ struct RawCampaignSessionServices {
     RawCampaignConstructionEffects construction; // 로컬 간헐천의 실제 설정/벽시각/표시/진단이며 일반 건설을 대신하지 않는다.
     o::SquidDestroyHooks deletion; // 다른 파생 삭제/선택/전송의 실제 외부 경계다.
     std::function<void(o::Sid)> unitLost; // 공통 삭제가 요청한 실제 unitLost 전역 소리를 재생한다.
+    std::function<void(o::Sid,float)> startConstruction; // 134 도착 때 선택한 실제 서버 대상의 건설을 시작한다. 미연결은 선택 시 거부한다.
     o::CarrierContentNoticeHooks carrierContent; // 실제 Carrier 폭탄/포획 표시·음향·공간 효과이며 선택한 분기만 필수다.
     std::function<void(std::uint32_t,std::string_view)> cursorRangeDiagnostic; // 실제 사정거리 color29 진단 출력이며 해당 분기에서만 필요하다.
     o::ContentLifetimeHooks contentLifetime; // 같은 ContentForm의 실제 커서/수입/AI 지갑/소리 경계다.
@@ -184,6 +185,7 @@ public:
     // 실제 기준점/Factory/Owner/Pop/TYPE/현재 전역/Regular 및 같은 에너지 목록을 연결한다.
     // 접근점·경로 시작·속도 적용은 caller가 실제 몸체로 공급하며 반환 객체/State는 Session보다 먼저 해제한다.
     std::unique_ptr<o::RawConstructionBuilder> MakeConstructionBuilder(o::ConstructionBuilderState& state,o::ConstructionBuilderHooks hooks);
+    o::RawPathProcess* StartConstructionMovement(o::RawPathStartRequest request); // 같은 월드의 실제134/105를 각각23/39 경로로 움직인다.
     // 화면/명령은 같은 현재 raw 월드와 HP를 읽는다.
     RawSurfaceWorld& World();
     // 같은 월드의 현재 Pool/장부/Host 참조를 빌린다.

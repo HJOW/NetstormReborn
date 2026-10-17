@@ -61,7 +61,7 @@ void SquidPop::SetBuildingSpace(const RawBuildingSpace* space) {
 // 실제 PE에서 공통 firstPop/postPop을 확인한 vtable만 허용한다.
 bool SquidPop::Supports(OriginalEdition edition,std::uint32_t vtable,std::uint32_t flags) {
     // 마나는 공통 firstPop/postPop을 가지며 별도 복원한473770 표시만 달랐다. 생성 표의 과거 mask를 바꾸지 않는다.
-    if (edition==OriginalEdition::Patch1078 && vtable==0x50c3b0) return SquidUnpop::SupportsDisplay(edition,vtable,flags);
+    if (edition==OriginalEdition::Patch1078 && (vtable==0x50c3b0 || vtable==0x509810 || vtable==0x5070c0)) return SquidUnpop::SupportsDisplay(edition,vtable,flags); // 134도 실제7c/80/84가41c0b0/4ad0f0/4ad110인 정확한 공통 쌍이다.
     const auto values=edition==OriginalEdition::Patch1078 ? std::span<const std::uint32_t>(kPatchPopVtables) :
         std::span<const std::uint32_t>(kCdPopVtables);
     // 선택적으로 켠 표시도 공통 가상 경로만 지원한다.

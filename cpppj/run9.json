@@ -123,8 +123,8 @@
     "cpppj/src/o/RawFortRandomPlacement.h": "79bba31820344fbe9e29da1c1aeb2e4100cf5d83365b1466d61eb3be6966104e",
     "cpppj/src/o/RawRunePostPop.cpp": "ca10766ced498c5aab0c92fbcca0d0d4ad39c5d9e5c91ce7865dd0523b2f6ab0",
     "cpppj/src/o/RawRunePostPop.h": "057c813ed8dcb33eab75554f9368645e77d4b85b61df76a22e64f52dcc82d5ee",
-    "cpppj/src/o/RawPathRuntime.cpp": "2d399de08631e4227db49a9eb9b5646a5b38719ba6be5520ea935db256bc1b6e",
-    "cpppj/src/o/RawPathRuntime.h": "40b7ecedada3010cb7533f2007fcdb21b6470ad8ea98fc61379029c11c0601ef",
+    "cpppj/src/o/RawPathRuntime.cpp": "f9dba0640028d10e558b9467bff2e9e1c15acef225b9195896104f6b2c3365be",
+    "cpppj/src/o/RawPathRuntime.h": "1ea416e522e69d4ccadef34f1000a704a38e507f8ad021afe5fcedfa093149b4",
     "cpppj/tests/IslandQueriesTests.cpp": "a0895f0fa8cb269e779a86b0753cab3332ff8beda2fd1ab68b593418d003c930",
     "cpppj/tests/DamageableHitTests.cpp": "811f951fa0370ebe26c2cf6c4faae36567379659dd2035eb8f4c35097e33480b",
     "cpppj/tests/FarmClusterTests.cpp": "c21896900126b47ce2cbccd40559f4d49b997fe9f077890e774601daafcd4e2b",
@@ -138,5 +138,24 @@
     "Farm의 실제단일배치와 외부 legalDrop/공간·owner/할당·진단 효과 경계를 구분한다.",
     "Dais 공유API 준비만 포함하며 희생 진행/Rune304/305/306/307 전체는 후속이다.",
     "과거 경로 ignored 내보내기12파일 부재를 별도lineage에 명시하며 현재SHA감사성공으로 세지 않는다."
+  ],
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "unit": 128,
+      "reason": "실제23/39 이동 구분과 건설 도착/부분 표시/현재 Session 연결 및 재생 검사 보완; 기존 fixture 결과는 보존",
+      "pins": [
+        {
+          "path": "cpppj/src/o/RawPathRuntime.cpp",
+          "previous": "2d399de08631e4227db49a9eb9b5646a5b38719ba6be5520ea935db256bc1b6e",
+          "current": "f9dba0640028d10e558b9467bff2e9e1c15acef225b9195896104f6b2c3365be"
+        },
+        {
+          "path": "cpppj/src/o/RawPathRuntime.h",
+          "previous": "40b7ecedada3010cb7533f2007fcdb21b6470ad8ea98fc61379029c11c0601ef",
+          "current": "1ea416e522e69d4ccadef34f1000a704a38e507f8ad021afe5fcedfa093149b4"
+        }
+      ]
+    }
   ]
 }

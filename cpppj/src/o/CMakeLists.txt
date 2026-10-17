@@ -296,3 +296,9 @@ target_sources(netstorm PRIVATE RawShrapnelLifetime.cpp RawShrapnelLifetime.h Sh
 
 # 사제와 Carrier의 실제 내용물 부모 가상 통지를 공유한다.
 target_sources(netstorm PRIVATE RawCarrierContentNotice.h RawCarrierContentNotice.cpp)
+
+# 실제 마나 볼트 도착 분기를 연결한다.
+target_sources(netstorm PRIVATE RawManaBoltArrival.cpp RawManaBoltArrival.h)
+
+# 실제 비행/마나 도착이 공유하는 ProcessFinder 전체 제거다.
+target_sources(netstorm PRIVATE RawProcessRemoval.cpp RawProcessRemoval.h)

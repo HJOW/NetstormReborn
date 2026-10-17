@@ -11,8 +11,8 @@
   "tool_sha256": "e50f6af3f1a4505e86fcad843ad9fbaf54c10f634cc0f848a37ac5ee5df88308",
   "files": {
     "cpppj/priest-arrival-test-syntax-lineage.json": "137bb4b9997e21a3989339a16a3fab9a5ce1c124474ae7bc9b841c817abcb993",
-    "cpppj/src/client/RawCampaignPathBindings.cpp": "3cb584c6ff3797d7de01f1c18e83074323a2883ba5e852a5f598b91ebf3ac993",
-    "cpppj/src/client/RawCampaignPathBindings.h": "60ba6fdb85793117685d888b73e4dfb1f9dad7cb74d50dde63ac47c504bc2463",
+    "cpppj/src/client/RawCampaignPathBindings.cpp": "33acf790e03a052f2808b067048fae51ea92c8bbc76f66d660323b0b7fe8da63",
+    "cpppj/src/client/RawCampaignPathBindings.h": "0f507504ab6b216eb92849f916d25637081c27bf934842b660ac68ea3f1c8217",
     "cpppj/src/client/RawPriestWorldBindings.cpp": "f8c54dfcce6b31cbf96de451c5853e3fb97127f1eee9bcab80844a756a693b69",
     "cpppj/src/client/RawPriestWorldBindings.h": "581e4e155cdff0d13bb9ae455801b156ba3afb72d73395069ecf2995b49acd24",
     "cpppj/src/client/RawSurfaceWorld.cpp": "e58d0b3daa6d12fffd075d3326de5ced82bd8ca8e4b921649405f4750574f0cb",
@@ -23,14 +23,14 @@
     "cpppj/src/o/RawPathCleanup.h": "b67f788769de29eb333def2085c10e3eee17890eafe1d77bf5f5479367c2f56d",
     "cpppj/src/o/RawPathData.cpp": "ad7b25e89d79c84faa576aa50fb1efb1e9c71e6d96abc439527b798870a2d345",
     "cpppj/src/o/RawPathData.h": "13e0bf03c18aa2936c623c0b57d03e3fdb641375dc669daa77bfaae9b5f6e370",
-    "cpppj/src/o/RawPathProcess.cpp": "0910c0ca00a9c5ba38f6645b294c83098bba610abf682146fe8eb36530fe93a1",
-    "cpppj/src/o/RawPathProcess.h": "b158c671cac9f88eaf9897ad9c11ba024142874297a31f6068f4f2eadb260656",
-    "cpppj/src/o/RawPathRuntime.cpp": "2d399de08631e4227db49a9eb9b5646a5b38719ba6be5520ea935db256bc1b6e",
-    "cpppj/src/o/RawPathRuntime.h": "40b7ecedada3010cb7533f2007fcdb21b6470ad8ea98fc61379029c11c0601ef",
+    "cpppj/src/o/RawPathProcess.cpp": "15e0b7f5097323d5431da841e47b892501c1911e74648c76686c7c66561667c0",
+    "cpppj/src/o/RawPathProcess.h": "34cf15f8d7eb761e7b13d1500d18aaa25536f5aa572dcb26b5cc942fd484caaa",
+    "cpppj/src/o/RawPathRuntime.cpp": "f9dba0640028d10e558b9467bff2e9e1c15acef225b9195896104f6b2c3365be",
+    "cpppj/src/o/RawPathRuntime.h": "1ea416e522e69d4ccadef34f1000a704a38e507f8ad021afe5fcedfa093149b4",
     "cpppj/src/o/RawPathSearch.cpp": "a7597d758972707a48ab25260af4ba877798c9c91ed01e0471d84819005d2858",
     "cpppj/src/o/RawPathSearch.h": "471c37aaeff1f5b7e157f52bfb20984c55e993fa59f7c33696fb42772107a7ac",
-    "cpppj/src/o/RawPathStart.cpp": "4c3ca34ae35666b09ce7c1714139987cbdcff45d9653c4a9e5fff3983d361a1f",
-    "cpppj/src/o/RawPathStart.h": "feaf7f0e7d2c9e1905ab3ecdcdd91baf638a5e6d433b87866e2088ce0f0d56fd",
+    "cpppj/src/o/RawPathStart.cpp": "ff44ccf39ca83bb4fd53e72292b8903b9f53979f211d32f32d8cbd2aaaaa24a5",
+    "cpppj/src/o/RawPathStart.h": "576188b61294a25b8abb6caa7bc129c56e21804a2fb79cf5de74cd25421a568f",
     "cpppj/src/o/RawPriestArrival.cpp": "6552e43202269a1c2dfabbc8dcd11878f320a34e95dba9691c870d3e7859b806",
     "cpppj/src/o/RawPriestArrival.h": "33ca15f327ab858b673395e63c932051827e8b2ee71f80bedce7899c7476aac9",
     "cpppj/src/o/RawPriestHalt.cpp": "374346e3ef06b04c59c544b5f6298cbf82c935f8c6f2f292d8e4bf2144f65742",
@@ -47,5 +47,66 @@
     "cpppj/src/o/SquidProcess.h": "827a9789c2a6b66ac7b98181e49e8c0fa19713755bb62fccababb7ae2a0d0589",
     "tools/analyze_campaign_path_bindings.py": "e50f6af3f1a4505e86fcad843ad9fbaf54c10f634cc0f848a37ac5ee5df88308"
   },
-  "scope": "새 client 경로 연결부만 준비한다. 같은 실제 Core/Host/Kernel/BFS/PathStart/Process/Halt/Arrival/cleanup/전송을 조립하며 RawPathStartState는 root의 동일 상태를 직접 참조한다. 기존 원본/CPP 관찰을 재합산하지 않으며 단위15 공유 빌드/실제172 설치 및 사제 명령 소비자 검사는 아직 필요하다. 중립귀환/포획/큰운반/겹침/음향/다른 이동 부모는 명시 caller 경계다."
+  "scope": "새 client 경로 연결부만 준비한다. 같은 실제 Core/Host/Kernel/BFS/PathStart/Process/Halt/Arrival/cleanup/전송을 조립하며 RawPathStartState는 root의 동일 상태를 직접 참조한다. 기존 원본/CPP 관찰을 재합산하지 않으며 단위15 공유 빌드/실제172 설치 및 사제 명령 소비자 검사는 아직 필요하다. 중립귀환/포획/큰운반/겹침/음향/다른 이동 부모는 명시 caller 경계다.",
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "unit": 128,
+      "reason": "실제23/39 이동 구분과 건설 도착/부분 표시/현재 Session 연결 및 재생 검사 보완; 기존 fixture 결과는 보존",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignPathBindings.cpp",
+          "previous": "3cb584c6ff3797d7de01f1c18e83074323a2883ba5e852a5f598b91ebf3ac993",
+          "current": "33acf790e03a052f2808b067048fae51ea92c8bbc76f66d660323b0b7fe8da63"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignPathBindings.h",
+          "previous": "60ba6fdb85793117685d888b73e4dfb1f9dad7cb74d50dde63ac47c504bc2463",
+          "current": "0f507504ab6b216eb92849f916d25637081c27bf934842b660ac68ea3f1c8217"
+        },
+        {
+          "path": "cpppj/src/o/RawPathProcess.cpp",
+          "previous": "0910c0ca00a9c5ba38f6645b294c83098bba610abf682146fe8eb36530fe93a1",
+          "current": "ae48353ef2132eaf0d5d382703891420941387e2c03dcbf8d1a1489e0abbae89"
+        },
+        {
+          "path": "cpppj/src/o/RawPathProcess.h",
+          "previous": "b158c671cac9f88eaf9897ad9c11ba024142874297a31f6068f4f2eadb260656",
+          "current": "34cf15f8d7eb761e7b13d1500d18aaa25536f5aa572dcb26b5cc942fd484caaa"
+        },
+        {
+          "path": "cpppj/src/o/RawPathRuntime.cpp",
+          "previous": "2d399de08631e4227db49a9eb9b5646a5b38719ba6be5520ea935db256bc1b6e",
+          "current": "f9dba0640028d10e558b9467bff2e9e1c15acef225b9195896104f6b2c3365be"
+        },
+        {
+          "path": "cpppj/src/o/RawPathRuntime.h",
+          "previous": "40b7ecedada3010cb7533f2007fcdb21b6470ad8ea98fc61379029c11c0601ef",
+          "current": "1ea416e522e69d4ccadef34f1000a704a38e507f8ad021afe5fcedfa093149b4"
+        },
+        {
+          "path": "cpppj/src/o/RawPathStart.cpp",
+          "previous": "4c3ca34ae35666b09ce7c1714139987cbdcff45d9653c4a9e5fff3983d361a1f",
+          "current": "ff44ccf39ca83bb4fd53e72292b8903b9f53979f211d32f32d8cbd2aaaaa24a5"
+        },
+        {
+          "path": "cpppj/src/o/RawPathStart.h",
+          "previous": "feaf7f0e7d2c9e1905ab3ecdcdd91baf638a5e6d433b87866e2088ce0f0d56fd",
+          "current": "576188b61294a25b8abb6caa7bc129c56e21804a2fb79cf5de74cd25421a568f"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 128,
+      "reason": "실제23/39 이동 구분과 건설 도착/부분 표시/현재 Session 연결 및 재생 검사 보완; 기존 fixture 결과는 보존",
+      "pins": [
+        {
+          "path": "cpppj/src/o/RawPathProcess.cpp",
+          "previous": "ae48353ef2132eaf0d5d382703891420941387e2c03dcbf8d1a1489e0abbae89",
+          "current": "15e0b7f5097323d5431da841e47b892501c1911e74648c76686c7c66561667c0"
+        }
+      ]
+    }
+  ]
 }

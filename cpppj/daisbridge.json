@@ -642,14 +642,14 @@
     "cpppj/src/o/RawContainedLookup.h": "6b61feb38ffcb4a4ef021dcc39cbc759274e91b8d476f2caa14f0cf771b74410",
     "cpppj/src/o/RawDaisRegular.cpp": "c1a167728b02f382cbae23454e4aba1046c91a7284dbe4c6e206e856ccc4c433",
     "cpppj/src/o/RawDaisRegular.h": "fdc080a0ae1ff54909a1cf59a6b9be626e7a7d96c5103072c9325d13efb88ed3",
-    "cpppj/src/o/RawPathProcess.cpp": "0910c0ca00a9c5ba38f6645b294c83098bba610abf682146fe8eb36530fe93a1",
-    "cpppj/src/o/RawPathProcess.h": "b43bbffdc88656726192511c983f111d09227bd6416623f8563b6b8cd32f59d9",
-    "cpppj/src/o/RawPathRuntime.cpp": "2d399de08631e4227db49a9eb9b5646a5b38719ba6be5520ea935db256bc1b6e",
-    "cpppj/src/o/RawPathRuntime.h": "40b7ecedada3010cb7533f2007fcdb21b6470ad8ea98fc61379029c11c0601ef",
+    "cpppj/src/o/RawPathProcess.cpp": "15e0b7f5097323d5431da841e47b892501c1911e74648c76686c7c66561667c0",
+    "cpppj/src/o/RawPathProcess.h": "34cf15f8d7eb761e7b13d1500d18aaa25536f5aa572dcb26b5cc942fd484caaa",
+    "cpppj/src/o/RawPathRuntime.cpp": "f9dba0640028d10e558b9467bff2e9e1c15acef225b9195896104f6b2c3365be",
+    "cpppj/src/o/RawPathRuntime.h": "1ea416e522e69d4ccadef34f1000a704a38e507f8ad021afe5fcedfa093149b4",
     "cpppj/src/o/RawPathSearch.cpp": "09d5e57d46312785431500a0debab20e799db3844a03491edeb265c54417123c",
     "cpppj/src/o/RawPathSearch.h": "69e69c720f8af7e5961e58ae7db0d29197d79fed1d5030b468790dd9822b8464",
-    "cpppj/src/o/RawPathStart.cpp": "4c3ca34ae35666b09ce7c1714139987cbdcff45d9653c4a9e5fff3983d361a1f",
-    "cpppj/src/o/RawPathStart.h": "feaf7f0e7d2c9e1905ab3ecdcdd91baf638a5e6d433b87866e2088ce0f0d56fd",
+    "cpppj/src/o/RawPathStart.cpp": "ff44ccf39ca83bb4fd53e72292b8903b9f53979f211d32f32d8cbd2aaaaa24a5",
+    "cpppj/src/o/RawPathStart.h": "576188b61294a25b8abb6caa7bc129c56e21804a2fb79cf5de74cd25421a568f",
     "cpppj/src/o/RawRunePostPop.cpp": "ca10766ced498c5aab0c92fbcca0d0d4ad39c5d9e5c91ce7865dd0523b2f6ab0",
     "cpppj/src/o/RawRunePostPop.h": "057c813ed8dcb33eab75554f9368645e77d4b85b61df76a22e64f52dcc82d5ee",
     "cpppj/src/o/RawTempleRitual.cpp": "fee9b37873c162ea621595d819b05db4bdea5c28fb62a3b44908aca064530595",
@@ -712,5 +712,56 @@
     "tools/ghidra/runepostpop-functions.json": "7c81be957505c039f275dfd2a94c6109454a2d3d42cbb90fc58708a62158662e",
     "tools/ghidra/templeritual-functions.json": "2d8fabc0bcb8774371707aad07bc36dbe6011b0dcf5208a15f1c7cf745748cec"
   },
-  "scope": "stage0..3 자격충족 Bridge→실제PathStart/Init/BFS/명령/끝점교체/Prepare/깊이. oldLookup/Host부착/가상공간/Frame/cue장치는 명시 요청 경계. 두 x87 결과의 double시각 차이는 별도 보존하며 같은 입력을 합산하지 않는다. 단계5 손상목표/전체도착·같은Host실제소비자는 후속이다."
+  "scope": "stage0..3 자격충족 Bridge→실제PathStart/Init/BFS/명령/끝점교체/Prepare/깊이. oldLookup/Host부착/가상공간/Frame/cue장치는 명시 요청 경계. 두 x87 결과의 double시각 차이는 별도 보존하며 같은 입력을 합산하지 않는다. 단계5 손상목표/전체도착·같은Host실제소비자는 후속이다.",
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "unit": 128,
+      "reason": "실제23/39 이동 구분과 건설 도착/부분 표시/현재 Session 연결 및 재생 검사 보완; 기존 fixture 결과는 보존",
+      "pins": [
+        {
+          "path": "cpppj/src/o/RawPathProcess.cpp",
+          "previous": "0910c0ca00a9c5ba38f6645b294c83098bba610abf682146fe8eb36530fe93a1",
+          "current": "ae48353ef2132eaf0d5d382703891420941387e2c03dcbf8d1a1489e0abbae89"
+        },
+        {
+          "path": "cpppj/src/o/RawPathProcess.h",
+          "previous": "b43bbffdc88656726192511c983f111d09227bd6416623f8563b6b8cd32f59d9",
+          "current": "34cf15f8d7eb761e7b13d1500d18aaa25536f5aa572dcb26b5cc942fd484caaa"
+        },
+        {
+          "path": "cpppj/src/o/RawPathRuntime.cpp",
+          "previous": "2d399de08631e4227db49a9eb9b5646a5b38719ba6be5520ea935db256bc1b6e",
+          "current": "f9dba0640028d10e558b9467bff2e9e1c15acef225b9195896104f6b2c3365be"
+        },
+        {
+          "path": "cpppj/src/o/RawPathRuntime.h",
+          "previous": "40b7ecedada3010cb7533f2007fcdb21b6470ad8ea98fc61379029c11c0601ef",
+          "current": "1ea416e522e69d4ccadef34f1000a704a38e507f8ad021afe5fcedfa093149b4"
+        },
+        {
+          "path": "cpppj/src/o/RawPathStart.cpp",
+          "previous": "4c3ca34ae35666b09ce7c1714139987cbdcff45d9653c4a9e5fff3983d361a1f",
+          "current": "ff44ccf39ca83bb4fd53e72292b8903b9f53979f211d32f32d8cbd2aaaaa24a5"
+        },
+        {
+          "path": "cpppj/src/o/RawPathStart.h",
+          "previous": "feaf7f0e7d2c9e1905ab3ecdcdd91baf638a5e6d433b87866e2088ce0f0d56fd",
+          "current": "576188b61294a25b8abb6caa7bc129c56e21804a2fb79cf5de74cd25421a568f"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 128,
+      "reason": "실제23/39 이동 구분과 건설 도착/부분 표시/현재 Session 연결 및 재생 검사 보완; 기존 fixture 결과는 보존",
+      "pins": [
+        {
+          "path": "cpppj/src/o/RawPathProcess.cpp",
+          "previous": "ae48353ef2132eaf0d5d382703891420941387e2c03dcbf8d1a1489e0abbae89",
+          "current": "15e0b7f5097323d5431da841e47b892501c1911e74648c76686c7c66561667c0"
+        }
+      ]
+    }
+  ]
 }

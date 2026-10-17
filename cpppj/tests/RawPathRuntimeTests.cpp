@@ -4,6 +4,7 @@
 #include "o/SquidFactory.h"
 #include "o/SquidPop.h"
 #include "o/SquidPostPop.h"
+#include "o/RawProcessRemoval.h"
 
 using namespace netstorm::o;
 using namespace netstorm::test::rawscene;
@@ -86,7 +87,7 @@ struct PathScene {
     // externalDeletion: 외부 삭제. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<SquidDestroyEvent> externalDeletion;
     // native 입력의 parent5/Form7은 client 번호다. 합성 local flags0x10 부착이며 actual 서버 Path flags0와 구별한다.
-    PathScene(OriginalEdition chosen,bool priest):edition(chosen),pool(chosen,32768,false),types(ProcessTypes(chosen)),
+    PathScene(OriginalEdition chosen,bool priest,bool flying=false):edition(chosen),pool(chosen,32768,false),types(ProcessTypes(chosen)),
         frames(types.size(),RiftTypeFrames({})),shapes(types.size()),postPop(pool,types,book),unpop(pool,hash,spots),pop(pool,hash,spots,nullptr,&postPop),destroy(pool,unpop,types),kernel(32),
         host(pool,types,kernel,destroy,clock,{},SquidDestroyHooks{[this](const SquidDestroyEvent& event) { externalDeletion.push_back(event); },[] { return Sid{}; },{}}),state{clock},factory(pool,types) {
         book.suppressed=true;
@@ -101,7 +102,7 @@ struct PathScene {
         parent=factory.Create(type,2);CHECK(pop.Pop(parent,types[type],1,1,10,20,0)==RawPopResult::Registered);
         // 원본 입력의 Form7을 맞춘다. 중간 번호6은 할당된 void 입력이며 경로/부모에 부착하지 않는다.
         CHECK(parent==Sid{5});CHECK(pool.Allocate(2)==Sid{6});
-        auto next=std::make_unique<RawPathProcess>(pool,hash,types,frames,shapes,spots,state,Hooks(),priest);
+        auto next=std::make_unique<RawPathProcess>(pool,hash,types,frames,shapes,spots,state,Hooks(),priest,flying);
         const std::array<RawPathPoint,3> points{{{10,20},{15,20},{17,22}}};const std::array<std::int32_t,3> directions{0,0,2};const std::array<double,3> times{0,1,3};next->Runtime().SetPath(points,directions,times);
         process=RawPathProcess::Attach(host,std::move(next),parent,0x10);CHECK(process!=nullptr);CHECK(process->Form()==Sid{7});pid=kernel.Find(*process);events.clear();
     }
@@ -236,4 +237,43 @@ TEST_CASE(rawPathProcess_missing_search_and_pool) {
     CHECK(scene.kernel.Size()==1);CHECK(scene.process->Runtime().Current()==0);
     scene.types[158].flags2|=0x10000;auto* freeze=scene.host.AddRegular(scene.parent,0x5105,100);
     CHECK(freeze!=nullptr);scene.clock.now=0.5;scene.kernel.RunFrame();CHECK(scene.process->Runtime().Current()==0);CHECK(scene.Events()=="-");
+}
+// 실제39 생성자의 전체 이미지와 현재 count를 보존하는 직선 Init을 독립 PE 결과로 비교한다.
+TEST_CASE(rawFlyPath_native_constructor_and_init) {
+    const auto fixture=LoadFixture(NETSTORM_FLYPATH_FIXTURE);std::size_t count=0;
+    // 생성자3종과 기존 count3종·축/동률 방향8종을 전부 대조한다.
+    for (const auto& row:fixture.rows) {
+        if (row[0]=="ctor") { RawPathRuntime path(OriginalEdition::Patch1078,false,static_cast<std::uint8_t>(Number(row[1])),true);CHECK(Fnv(path.Bytes())==Number(row[2]));++count; }
+        if (row[0]=="init") {
+            RawPathRuntime path(OriginalEdition::Patch1078,false,0,true);const auto existing=Number(row[1]);
+            const std::vector<RawPathPoint> points(existing);const std::vector<std::int32_t> directions(existing);path.SetPath(points,directions);path.RestoreStep(static_cast<std::int32_t>(existing),0);
+            path.InitializeFlight({10,20},{Float(row[2]),Float(row[3])});CHECK(Fnv(path.Bytes())==Number(row[4]));++count;
+        }
+    }
+    CHECK(count==27);
+}
+// 20ms 예약은 Halt 뒤에 검사하며 같은 실제 Step/도착 몸체를 호출해야 한다.
+TEST_CASE(rawFlyPath_native_frame_and_gate) {
+    const auto fixture=LoadFixture(NETSTORM_FLYPATH_FIXTURE);std::size_t count=0;
+    // 현재 단계/시각/예약 시각의63가지 입력을 같은 Kernel/Form 위에서 대조한다.
+    for (const auto& row:fixture.rows) if (row[0]=="frame") {
+        PathScene scene(OriginalEdition::Patch1078,false,true);scene.AdvanceInput(Number(row[1]),0);scene.clock.now=Double(row[2]);scene.process->Runtime().SetNextFrame(Double(row[3]));
+        scene.process->RunFrame();CHECK(scene.Fields()==row[4]);CHECK(scene.Events()==row[5]);const auto time=std::bit_cast<std::uint64_t>(scene.process->Runtime().NextFrame());
+        CHECK(static_cast<std::uint32_t>(time)==Number(row[6]));CHECK(static_cast<std::uint32_t>(time>>32)==Number(row[7]));++count;
+    }
+    CHECK(count==63);
+}
+// 삭제 중 새 머리를 만들어도 원래 저장한 next로 진행하고 flags40을 전달한다.
+TEST_CASE(rawProcessRemoval_saved_next_and_original_flags) {
+    PathScene scene(OriginalEdition::Patch1078,false);const auto oldPath=scene.pid;auto* oldRegular=scene.host.AddRegular(scene.parent,0,1);const auto oldRegularId=scene.kernel.Find(*oldRegular);
+    std::vector<std::uint32_t> flags;ProcessId added{};
+    // 실제 Host가 호출한 제거 flags를 관찰하고 삭제 도중 신규 Regular를 추가하는 명시 외부 효과다.
+    struct Probe final:SquidProcess {
+        std::function<void(std::uint32_t)> effect; // 현재 검사에서만 사용하는 소멸 효과다.
+        explicit Probe(std::function<void(std::uint32_t)> f):effect(std::move(f)) {} // 실제 부착/삭제는 같은 Host가 담당한다.
+        void OnFormDestroy(std::uint32_t value) override { effect(value); } // 전달 flags와 신규 부착 효과를 관찰한다.
+    };
+    auto* probe=scene.host.Attach(std::make_unique<Probe>([&](std::uint32_t value) { flags.push_back(value);added=scene.kernel.Find(*scene.host.AddRegular(scene.parent,1,0.05f)); }),39,scene.parent,0x10);const auto probeId=scene.kernel.Find(*probe);
+    RemoveAttachedProcesses(scene.host,scene.parent,61);CHECK(scene.kernel.Get(probeId)!=nullptr);
+    RemoveAttachedProcesses(scene.host,scene.parent,0);CHECK(flags==std::vector<std::uint32_t>{0x40});CHECK(scene.kernel.Get(probeId)==nullptr);CHECK(scene.kernel.Get(oldRegularId)==nullptr);CHECK(scene.kernel.Get(oldPath)==nullptr);CHECK(scene.kernel.Get(added)!=nullptr);
 }

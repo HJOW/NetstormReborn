@@ -143,7 +143,7 @@ TEST_CASE(SquidUnpop_VtableMetadata_MatchesActualCommonDisplayPaths) {
         const auto row=Fields(line); CHECK(row.size()==6);
         const auto edition=row[0]=="originals" ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072;
         const auto vtable=static_cast<std::uint32_t>(std::stoul(row[1])); const auto mask=std::stoul(row[5]);
-        const bool mana=edition==OriginalEdition::Patch1078 && vtable==0x50c3b0; // 새 독립 원문으로 복원한 WORD 조건부 마나88/8c다.
+        const bool mana=edition==OriginalEdition::Patch1078 && (vtable==0x50c3b0 || vtable==0x509810); // 별도 원문으로 복원한 마나103/볼트105 표시다. 기존 fixture의 공통 mask는 바꾸지 않는다.
         CHECK(SquidUnpop::SupportsDisplay(edition,vtable,0)==(((mask&1)!=0) || mana));
         const auto alternate=static_cast<std::uint32_t>(std::stoul(row[3]));
         const bool vortex=edition==OriginalEdition::Patch1078 ?

@@ -1287,3 +1287,13 @@ set_property(SOURCE EnergySupplyTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS
 target_sources(netstorm_tests PRIVATE EnergySortTests.cpp)
 set_source_files_properties(EnergySortTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_ENERGY_SORT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/energy-sort-x86.tsv\"")
+
+# 실제 비행39와 마나 볼트 도착의 독립 원본 관측 자료다.
+set_property(SOURCE RawPathRuntimeTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS
+    "NETSTORM_FLYPATH_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/flypath-x86.tsv\"")
+set_property(SOURCE ConstructionArrivalTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS
+    "NETSTORM_MANA_BOLT_ARRIVAL_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/mana-bolt-arrival-x86.tsv\"")
+
+# 실제 마나 볼트105의 별도 부분 표시 관측이다.
+set_property(SOURCE CursorManaTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS
+    "NETSTORM_MANA_BOLT_DISPLAY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/mana-bolt-display-x86.tsv\"")

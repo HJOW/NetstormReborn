@@ -750,3 +750,26 @@ TEST_CASE(CampaignSession_ConstructionBuilderSharesActualEnergySources) {
     CHECK(builder->TakeSource()==first && session.EnergySources().entries.front()==0 && state.sources.entries.front()==0xdeadbeefU && state.sources.count==1);
     CHECK(builder->TakeSource()==0); // 이 요새의 현재 공급 범위에 있는 실제 선택을 모두 소비했다.
 }
+// 실제105 생성자/표시/Start39/20ms 이동/빈 대상 도착/공통 삭제를 같은 설치 월드에서 실행한다.
+TEST_CASE(CampaignSession_ManaBoltUsesActualFlightAndLifetime) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();services.unitLost=[&](Sid) { ++external.notices; };
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services),{1024,768});auto& session=world.Session();auto core=session.Core();const auto origin=EmptySessionSupport(core);
+    const auto bolt=session.World().Create(105,2);core.owner.Set(bolt,1);session.World().Pop(bolt,static_cast<float>(origin.x),static_cast<float>(origin.y),0);const auto before=external.notices;
+    auto* path=session.StartConstructionMovement({bolt,{static_cast<float>(origin.x+2),static_cast<float>(origin.y)},1,0,0,0,0});CHECK(path!=nullptr);CHECK(path->MovementType()==39);CHECK(path->Runtime().Count()==2);const auto pid=core.kernel.Find(*path);
+    // 같은 실제 시계를 전진시키며 등록이 살아 있는 경로만 호출한다. 다른 미완성 Regular 분배는 실행하지 않는다.
+    for (int step=0;step<2000 && core.kernel.Get(pid);++step) { core.processState.now=step*0.02;path->RunFrame(); }
+    CHECK(core.kernel.Get(pid)==nullptr);CHECK((core.pool.Slot(bolt)[11]&3)!=0);CHECK(external.notices>before);
+}
+// 실제134를 현재 사제와 같은 표면에서 생성하고 기존23 BFS/빈 대상 도착/삭제로 연결한다.
+TEST_CASE(CampaignSession_ConstructionTeleportUsesActualSurfacePath) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();services.unitLost=[&](Sid) { ++external.notices; };
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services),{1024,768});auto& session=world.Session();auto core=session.Core();Sid priest{};
+    // 설치된 실제 객체 중 살아 있고 공간 등록된 첫 사제 위치만 입력으로 고른다.
+    for (std::uint32_t id=5;id<core.pool.Capacity();++id) { const auto raw=core.pool.Slot(Sid{static_cast<std::uint16_t>(id)});if (raw[10]==158 && !(raw[11]&7)) { priest=Sid{static_cast<std::uint16_t>(id)};break; } }
+    CHECK(priest.value!=0);if (!priest.value) return;const auto raw=core.pool.Slot(priest);const float x=std::bit_cast<float>(Get(raw,14)),y=std::bit_cast<float>(Get(raw,18));
+    const auto builder=session.World().Create(134,2);core.owner.Set(builder,raw[34]);session.World().Pop(builder,x,y,0);auto* path=session.StartConstructionMovement({builder,{x,y},1,0,0,0,0});CHECK(path!=nullptr);if (!path) return;
+    CHECK(path->MovementType()==23);CHECK(path->Runtime().Count()>0);const auto pid=core.kernel.Find(*path);
+    // 같은 실제 시계만 전진시키고 경로 자신이 삭제되면 즉시 호출을 끝낸다.
+    for (int step=0;step<2000 && core.kernel.Get(pid);++step) { core.processState.now=step*0.02;path->RunFrame(); }
+    CHECK(core.kernel.Get(pid)==nullptr);CHECK((core.pool.Slot(builder)[11]&3)!=0);
+}

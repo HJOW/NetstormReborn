@@ -34,7 +34,7 @@ Session의`MakeConstructionBuilder`는 같은 실제 기준점/factory/owner/Pop
 
 인수인계를 포함해 `20261017-27 CP 실제 공급원 정렬과 건설 운반의 공유 선택 연결`로 로컬 커밋한다. 원격 push는 없다. 집중 정렬2개, 기존·신규 Builder10개, 실제 Session1개는 통과했다. 초기 추가 검사에서 Player enum 이름과 Player 형식이 모호했던 컴파일 오류는 Input::Player로 수정했다.
 
-일반 건설의 Confirm/Place/Notice/Process/Frame/Visual은 계속 조립해야 한다. 현재 RawCampaignPathBindings는 실제158/type54만 허용한다. 원본의 건설용134와 마나 볼트105는type23 경로이며 이를 사제 경로로 대신하지 않는다. 접근점41db70과 실제 경로 시각/속도 view도 연결해야 한다. 마지막 목록은 이번 실제 에너지 저장소를 계속 참조한다.
+일반 건설의 Confirm/Place/Notice/Process/Frame/Visual은 계속 조립해야 한다. 이 단위 종료 때 RawCampaignPathBindings는 실제158/type54만 허용했다. **단위128 정정:** 실제488fe0 분배에서 건설용134는type23, 마나 볼트105는type39(flyProcess)이며 서로 또는 사제 경로로 대신하지 않는다. 접근점41db70과 실제 경로 시각/속도 view도 연결해야 한다. 마지막 목록은 이번 실제 에너지 저장소를 계속 참조한다.
 
 다음 정적 근거는`extracted/goal-energy-sort-20261017-next-types.txt` 및`next-주소.txt`에 저장했다. TYPE134는ctor443fc0/VT5070c0이며 Halt4ac990·도착444080·표시4ad500이다. TYPE105는ctor45acd0/VT509810이며 Halt4ac990·도착45ab30·표시45ac90이다. 둘의 공통+10/+14/+18은4af780/4b0950/4b0840이며 실제 삭제/표시 분배도 같은 월드에 연결해야 한다.
 

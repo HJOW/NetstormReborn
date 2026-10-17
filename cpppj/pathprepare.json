@@ -41,7 +41,7 @@
     "cpppj/src/o/RawPathData.cpp": "38a2665489e998835caa07cbedb81516fae6f5e33270529a6d40f5d76d3a6a45",
     "cpppj/tests/RawPathDataTests.cpp": "531f1d4b1066cbdd6eea1ea8165a8fa1ca6db9cb11a0547411e51061d7a7d4f3",
     "tools/decomp_pathprepare_oracle.py": "3251981fd3cffa9ee7d92bf41b2a29b12cb93b5402df8fac70b855f66aca341d",
-    "cpppj/src/o/RawPathProcess.cpp": "0910c0ca00a9c5ba38f6645b294c83098bba610abf682146fe8eb36530fe93a1"
+    "cpppj/src/o/RawPathProcess.cpp": "15e0b7f5097323d5431da841e47b892501c1911e74648c76686c7c66561667c0"
   },
   "exports": {
     "extracted/pathdata/originals/creation.c": "8b4da9e4aaf23275733ccd62f3fca3cba304df32355a54709a6dc2be90404978",
@@ -377,6 +377,32 @@
         4613099993961909371,
         4620231172625131326,
         4624679505389971523
+      ]
+    }
+  ],
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "unit": 128,
+      "reason": "실제23/39 이동 구분과 건설 도착/부분 표시/현재 Session 연결 및 재생 검사 보완; 기존 fixture 결과는 보존",
+      "pins": [
+        {
+          "path": "cpppj/src/o/RawPathProcess.cpp",
+          "previous": "0910c0ca00a9c5ba38f6645b294c83098bba610abf682146fe8eb36530fe93a1",
+          "current": "ae48353ef2132eaf0d5d382703891420941387e2c03dcbf8d1a1489e0abbae89"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 128,
+      "reason": "실제23/39 이동 구분과 건설 도착/부분 표시/현재 Session 연결 및 재생 검사 보완; 기존 fixture 결과는 보존",
+      "pins": [
+        {
+          "path": "cpppj/src/o/RawPathProcess.cpp",
+          "previous": "ae48353ef2132eaf0d5d382703891420941387e2c03dcbf8d1a1489e0abbae89",
+          "current": "15e0b7f5097323d5431da841e47b892501c1911e74648c76686c7c66561667c0"
+        }
       ]
     }
   ]
