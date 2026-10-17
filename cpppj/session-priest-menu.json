@@ -21,12 +21,12 @@
     "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
     "cpppj/src/client/GameWorld.h": "57adef4cb282f91c27ebdac68846b09883494f8406abdd7517d5267bd44a93fc",
     "cpppj/src/client/GameWorld.cpp": "0c7c8431cfdc1bcb911b3c50f8c9e409e95b14fa788a9d53960c950ade95c01d",
-    "cpppj/src/client/RawCampaignSession.h": "25fb015f71b52348bf38624add1dad4290681939ff9258aea98a2ea40a453463",
-    "cpppj/src/client/RawCampaignSession.cpp": "1652cafd2488e0ab42b4829849666a790926bf396bce0e46a78b0cd16305a47a",
+    "cpppj/src/client/RawCampaignSession.h": "1b801ce2f93cc1c9b0cdcffcb486513338ae175e64f6616fb0fd79330f259ffc",
+    "cpppj/src/client/RawCampaignSession.cpp": "2f75dbbed2cd1ada2b0ff5e5611d3f623dd705bf32cfebfc6162300fcd4e0413",
     "cpppj/src/client/RawPriestMenu.h": "5364d92d3af5b9b81a0477df5c005fcfc4a1ef7f6817894bd337250ce4d0e43d",
     "cpppj/src/client/RawPriestMenu.cpp": "f30be4e91f2141d1000f4a75d9f41619024d20f6cb024f68b8ffb483b1eddcf7",
-    "cpppj/src/client/RawCampaignLifetimeBindings.h": "3114556500601a63ab28b40a27003a8a9e4737e11fa63b2ada8edf4a9a7aefd1",
-    "cpppj/src/client/RawCampaignLifetimeBindings.cpp": "d9c3c3a134b5b451267336c20c81dd1db3dea2d597fba636d65abca4f6c1d6e8",
+    "cpppj/src/client/RawCampaignLifetimeBindings.h": "6f4be73b52279abf308c8a3e6d8962271560e47c25996f7a03fca09f8cd063e8",
+    "cpppj/src/client/RawCampaignLifetimeBindings.cpp": "93d3e0040fe883d6da64622098be929103c1f07aea00e6c4a9a5c652d15958af",
     "cpppj/src/o/RawCarrierContentNotice.h": "88c1a1a14c7e22dab3e185cf797472783422cde2783c58d3600e65f85a004c7d",
     "cpppj/src/o/RawCarrierContentNotice.cpp": "b4c012ea2966e432fd60c4beb65de3e0a3a73df6ff9d64a798bd6bcb5e468599",
     "cpppj/src/o/RawContentParentNotice.cpp": "9c7132c54bdd4f739bde24ad80f7b2f90bf39869300e9b5b01786487dfcfe986",
@@ -38,14 +38,14 @@
     "cpppj/src/o/SpStore.cpp": "2319a90807d423b72b0e47e51101bc9ea1618f234c65e26b704c017313f4268a",
     "cpppj/src/o/SquidReward.cpp": "a29c11afe56a477c470956b1ed0a0678d059340806537ce08b43bf6b6aa1375d",
     "cpppj/tests/PriestMenuTests.cpp": "a7b76f4b807941334f1dc6c089b156a59c72347e93b7898ff0bda018c73ca1c4",
-    "cpppj/tests/CampaignSessionTests.cpp": "d89ecff205bf63e19de47cfd36d895eacda45c7e48620aeb13ad0fe9340f5d79",
+    "cpppj/tests/CampaignSessionTests.cpp": "3e74241700d3a4992d087296a3b019a27dbb3ddea24388a97dcae28c480bf11d",
     "cpppj/tests/CarrierContentNoticeTests.cpp": "82ed556e50d599e2d08f594e309129a7d92a7d5e994a6a81f794342f518ed76c",
     "cpppj/tests/fixtures/priestmenu-x86.tsv": "2dda11277f2b67f1a69447ea7cb1694e989a08ed513dbf9819e14bfbf3ce6208",
     "cpppj/tests/fixtures/carrier-content-notice-x86.tsv": "c8a21b68d3b0b6e271d04950022366eab9abd3069ff5a9ce3b53746f1fb4d4bf",
     "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
     "tools/decomp_carrier_content_notice.py": "dbb32841a7019edbcb411f75094046c8bf0e20b4ed503e109a14b79a79d8a94c",
     "cpppj/src/o/CMakeLists.txt": "c84659874163c54863d0de3c252858446f7e58e4e4df956d72ea4430cd79b538",
-    "cpppj/tests/CMakeLists.txt": "b850f423d0be8c30b22478834953b1f83dbe250243c869104153c5761ff5a3dd"
+    "cpppj/tests/CMakeLists.txt": "687f283a950b897c92cfca118f23b86de2192ed710a1fcc651c48685a7a221ba"
   },
   "validation": {
     "configuration": "Release",
@@ -119,6 +119,43 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "9e11ad9b798c2940bf5f63499b333368ed7df0914dee09c3ce210155736a33c0",
           "current": "d89ecff205bf63e19de47cfd36d895eacda45c7e48620aeb13ad0fe9340f5d79"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 125,
+      "reason": "실제 사정거리/펜스 수명과 같은 총 자료 및 Session 부모 삭제 연결",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "25fb015f71b52348bf38624add1dad4290681939ff9258aea98a2ea40a453463",
+          "current": "1b801ce2f93cc1c9b0cdcffcb486513338ae175e64f6616fb0fd79330f259ffc"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "1652cafd2488e0ab42b4829849666a790926bf396bce0e46a78b0cd16305a47a",
+          "current": "2f75dbbed2cd1ada2b0ff5e5611d3f623dd705bf32cfebfc6162300fcd4e0413"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignLifetimeBindings.h",
+          "previous": "3114556500601a63ab28b40a27003a8a9e4737e11fa63b2ada8edf4a9a7aefd1",
+          "current": "6f4be73b52279abf308c8a3e6d8962271560e47c25996f7a03fca09f8cd063e8"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignLifetimeBindings.cpp",
+          "previous": "d9c3c3a134b5b451267336c20c81dd1db3dea2d597fba636d65abca4f6c1d6e8",
+          "current": "93d3e0040fe883d6da64622098be929103c1f07aea00e6c4a9a5c652d15958af"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "d89ecff205bf63e19de47cfd36d895eacda45c7e48620aeb13ad0fe9340f5d79",
+          "current": "3e74241700d3a4992d087296a3b019a27dbb3ddea24388a97dcae28c480bf11d"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "b850f423d0be8c30b22478834953b1f83dbe250243c869104153c5761ff5a3dd",
+          "current": "687f283a950b897c92cfca118f23b86de2192ed710a1fcc651c48685a7a221ba"
         }
       ]
     }

@@ -19,9 +19,9 @@ public:
         o::ContentLifetimeHooks effects,o::SquidReward& reward,const o::RawPlayerContentNotice& player,o::ContentFormNotice fallbackParent={});
     RawCampaignLifetimeBindings(const RawCampaignLifetimeBindings&)=delete; // 분배기가빌리는동일callback주소를보존한다.
     RawCampaignLifetimeBindings& operator=(const RawCampaignLifetimeBindings&)=delete; // 다른세계와내용물수명을복사하지않는다.
-    // 84/baseVT와103/마나VT의 입증된 공통Pre/Post를 분배하고 다른 실제 자산 효과는 유지한다.
+    // 84·104/baseVT와103/마나VT의 입증된 공통Pre/Post를 분배하고 다른 실제 자산 효과는 유지한다.
     o::SquidDestroyHooks DestroyHooks(o::SquidDestroyHooks fallback) const;
-    // 현재84/baseVT 및103/마나VT의 실제+10을 공통 삭제기로 실행하고 다른 파생은 기존 분배를 유지한다.
+    // 현재84·104/baseVT 및103/마나VT의 실제+10을 공통 삭제기로 실행하고 다른 파생은 기존 분배를 유지한다.
     o::SquidAssetDestroy Destroy(o::SquidAssetDestroy fallback={}) const;
     // RawContentParentNotice의실제파생callback으로사용한다.Player만새몸체에보내고다른부모는명시경계다.
     void ParentNotice(o::Sid parent,o::Sid form,std::uint32_t reason) const;

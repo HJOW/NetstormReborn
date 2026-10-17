@@ -308,7 +308,7 @@
     "cpppj/hist/run20-regression/unpop.cpp": "89ee0eb425b59778c216314eccb6dd09909a57118fb032cab1013c3f3345233c",
     "cpppj/run19.json": "6d9888fa7bcf7b1e13dd408db59a26410e9e3cef6d1fad987e20c464d6e0dc76",
     "cpppj/squid-level.json": "5d61185c834c2e195394000248d768f37a95a2056027c4d020c66b83b74f4c68",
-    "cpppj/src/CMakeLists.txt": "a0ce72c79685631ce627defcc392fb06df32131c835594b570569404e1929a4a",
+    "cpppj/src/CMakeLists.txt": "d57ce7c787ea9a7ba42218a7e8b25a39fb60a551130387b6838e59788b628e7b",
     "cpppj/src/app/CanonMayPlaceInspect.cpp": "27eda46bca500c898abeb9a3a7c4e8588b38e061b579c84cbf6c032c6d46dda9",
     "cpppj/src/app/FrameBindingInspect.cpp": "042602919b0531fb1cbaf3941dc6597bee73944bbf0d571dacfd638bb45dd07c",
     "cpppj/src/app/FrameBindingInspect.h": "4e187ca41f8c34ed52c022b58a57327a554a723e3e26ee88a1ae152c99de3fce",
@@ -1694,6 +1694,18 @@
           "path": "cpppj/tests/UnpopTests.cpp",
           "previous": "4f9efda3896844d3fa93efb0b36cb2ef01423bcb0f7da16a4c82866299e35ad8",
           "current": "e0ac9391654c79aabfafb7f57516371e540317bd95d335abb61d85f0fea17f94"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 125,
+      "reason": "실제 사정거리/펜스 수명과 같은 총 자료 및 Session 부모 삭제 연결",
+      "pins": [
+        {
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "a0ce72c79685631ce627defcc392fb06df32131c835594b570569404e1929a4a",
+          "current": "d57ce7c787ea9a7ba42218a7e8b25a39fb60a551130387b6838e59788b628e7b"
         }
       ]
     }

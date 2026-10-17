@@ -57,16 +57,16 @@
     "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
     "tools/decomp_cursor_mana.py": "00cfea4f089b06b1b8f1b0cc61f0cf4f93bd33aa16aaa0715a95c66187a9f888",
     "cpppj/tests/fixtures/cursor-mana-x86.tsv": "13bc12de4bee7790d44ce4138249221a49f26740538e0e9ebca9fb22348adc38",
-    "cpppj/src/CMakeLists.txt": "a0ce72c79685631ce627defcc392fb06df32131c835594b570569404e1929a4a",
-    "cpppj/src/client/RawCampaignLifetimeBindings.cpp": "d9c3c3a134b5b451267336c20c81dd1db3dea2d597fba636d65abca4f6c1d6e8",
-    "cpppj/src/client/RawCampaignLifetimeBindings.h": "3114556500601a63ab28b40a27003a8a9e4737e11fa63b2ada8edf4a9a7aefd1",
-    "cpppj/src/client/RawCampaignSession.cpp": "1652cafd2488e0ab42b4829849666a790926bf396bce0e46a78b0cd16305a47a",
-    "cpppj/src/client/RawCampaignSession.h": "25fb015f71b52348bf38624add1dad4290681939ff9258aea98a2ea40a453463",
+    "cpppj/src/CMakeLists.txt": "d57ce7c787ea9a7ba42218a7e8b25a39fb60a551130387b6838e59788b628e7b",
+    "cpppj/src/client/RawCampaignLifetimeBindings.cpp": "93d3e0040fe883d6da64622098be929103c1f07aea00e6c4a9a5c652d15958af",
+    "cpppj/src/client/RawCampaignLifetimeBindings.h": "6f4be73b52279abf308c8a3e6d8962271560e47c25996f7a03fca09f8cd063e8",
+    "cpppj/src/client/RawCampaignSession.cpp": "2f75dbbed2cd1ada2b0ff5e5611d3f623dd705bf32cfebfc6162300fcd4e0413",
+    "cpppj/src/client/RawCampaignSession.h": "1b801ce2f93cc1c9b0cdcffcb486513338ae175e64f6616fb0fd79330f259ffc",
     "cpppj/src/o/SquidDisplay.cpp": "47dd928d6df4a53c8debb0dd67c56fe62f4c530a1dd07cd31bae81cc7468faac",
     "cpppj/src/o/SquidPop.cpp": "c57e6263de140459d3c109f9163b59ea1193e7038e2a46ce74b577cbdebae7a7",
     "cpppj/src/o/SquidUnpop.cpp": "000e315fc0aead83fc423afc3293b3fd6176a211c1dc5b297d642e8dbea06ce2",
-    "cpppj/tests/CMakeLists.txt": "b850f423d0be8c30b22478834953b1f83dbe250243c869104153c5761ff5a3dd",
-    "cpppj/tests/CampaignSessionTests.cpp": "d89ecff205bf63e19de47cfd36d895eacda45c7e48620aeb13ad0fe9340f5d79",
+    "cpppj/tests/CMakeLists.txt": "687f283a950b897c92cfca118f23b86de2192ed710a1fcc651c48685a7a221ba",
+    "cpppj/tests/CampaignSessionTests.cpp": "3e74241700d3a4992d087296a3b019a27dbb3ddea24388a97dcae28c480bf11d",
     "cpppj/tests/PopTests.cpp": "2815679f07e4c9873dc70b925e9e6c16e44864d3be191c636650954a12d4cea4",
     "cpppj/tests/UnpopTests.cpp": "e0ac9391654c79aabfafb7f57516371e540317bd95d335abb61d85f0fea17f94",
     "cpppj/src/client/RawCursorMana.cpp": "b8ab58679249a18387757eb2eb93c7405e566a4a9fc02ed018b2046a7d751f7b",
@@ -93,6 +93,48 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "9e11ad9b798c2940bf5f63499b333368ed7df0914dee09c3ce210155736a33c0",
           "current": "d89ecff205bf63e19de47cfd36d895eacda45c7e48620aeb13ad0fe9340f5d79"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 125,
+      "reason": "실제 사정거리/펜스 수명과 같은 총 자료 및 Session 부모 삭제 연결",
+      "pins": [
+        {
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "a0ce72c79685631ce627defcc392fb06df32131c835594b570569404e1929a4a",
+          "current": "d57ce7c787ea9a7ba42218a7e8b25a39fb60a551130387b6838e59788b628e7b"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignLifetimeBindings.cpp",
+          "previous": "d9c3c3a134b5b451267336c20c81dd1db3dea2d597fba636d65abca4f6c1d6e8",
+          "current": "93d3e0040fe883d6da64622098be929103c1f07aea00e6c4a9a5c652d15958af"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignLifetimeBindings.h",
+          "previous": "3114556500601a63ab28b40a27003a8a9e4737e11fa63b2ada8edf4a9a7aefd1",
+          "current": "6f4be73b52279abf308c8a3e6d8962271560e47c25996f7a03fca09f8cd063e8"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "1652cafd2488e0ab42b4829849666a790926bf396bce0e46a78b0cd16305a47a",
+          "current": "2f75dbbed2cd1ada2b0ff5e5611d3f623dd705bf32cfebfc6162300fcd4e0413"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "25fb015f71b52348bf38624add1dad4290681939ff9258aea98a2ea40a453463",
+          "current": "1b801ce2f93cc1c9b0cdcffcb486513338ae175e64f6616fb0fd79330f259ffc"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "b850f423d0be8c30b22478834953b1f83dbe250243c869104153c5761ff5a3dd",
+          "current": "687f283a950b897c92cfca118f23b86de2192ed710a1fcc651c48685a7a221ba"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "d89ecff205bf63e19de47cfd36d895eacda45c7e48620aeb13ad0fe9340f5d79",
+          "current": "3e74241700d3a4992d087296a3b019a27dbb3ddea24388a97dcae28c480bf11d"
         }
       ]
     }

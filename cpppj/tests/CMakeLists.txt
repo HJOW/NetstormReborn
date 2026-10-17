@@ -1264,3 +1264,13 @@ set_source_files_properties(CursorManaTests.cpp PROPERTIES COMPILE_DEFINITIONS
 # 실제 마나88/8c의 부분 변경 영역 표를 같은 검사에 공급한다.
 set_property(SOURCE CursorManaTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS
     "NETSTORM_CURSOR_MANA_DISPLAY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/cursor-mana-display-x86.tsv\"")
+
+# 실제 사정거리 생성·직선/원형 프레임·통지·소멸의 독립 원문이다.
+target_sources(netstorm_tests PRIVATE CursorRangeTests.cpp)
+set_source_files_properties(CursorRangeTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CURSOR_RANGE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/cursor-range-x86.tsv\"")
+
+# 실제 펜스 정리/이웃 갱신/전처리의 전체 원문이다.
+target_sources(netstorm_tests PRIVATE FenceLifetimeTests.cpp)
+set_source_files_properties(FenceLifetimeTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_FENCE_LIFETIME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fence-lifetime-x86.tsv\"")

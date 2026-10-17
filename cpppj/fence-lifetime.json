@@ -1,0 +1,99 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "entries": [
+    "004577f0",
+    "004578f0",
+    "00457990"
+  ],
+  "uniqueInputs": 207,
+  "normalReturns": 414,
+  "instructions": 100262,
+  "plainDamageableVtables": [
+    "00501ea0",
+    "00509148",
+    "00509930",
+    "005099e8",
+    "00509aa0",
+    "0050a820",
+    "0050a8e8",
+    "0050b6e8",
+    "0050b7c0",
+    "0050b888",
+    "0050b9b8",
+    "0050bad0",
+    "0050e668",
+    "0050e738"
+  ],
+  "precisionDifferentInputs": [],
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "tools/decomp_cursor_mana.py": "00cfea4f089b06b1b8f1b0cc61f0cf4f93bd33aa16aaa0715a95c66187a9f888",
+    "tools/decomp_fence_lifetime.py": "d470de69c26be1c0c50ededee28a45e9f452f40b48837efd809044b394a535a7",
+    "cpppj/src/client/RawCampaignSession.cpp": "2f75dbbed2cd1ada2b0ff5e5611d3f623dd705bf32cfebfc6162300fcd4e0413",
+    "cpppj/tests/fixtures/fence-lifetime-x86.tsv": "f3e5be8c131684bc679dba1fb7d27f431ace773495800e92ced8fd7ac856155b",
+    "cpppj/src/CMakeLists.txt": "d57ce7c787ea9a7ba42218a7e8b25a39fb60a551130387b6838e59788b628e7b",
+    "cpppj/src/client/RawCampaignLifetimeBindings.cpp": "93d3e0040fe883d6da64622098be929103c1f07aea00e6c4a9a5c652d15958af",
+    "cpppj/src/client/RawCampaignLifetimeBindings.h": "6f4be73b52279abf308c8a3e6d8962271560e47c25996f7a03fca09f8cd063e8",
+    "cpppj/src/client/RawCampaignSession.h": "1b801ce2f93cc1c9b0cdcffcb486513338ae175e64f6616fb0fd79330f259ffc",
+    "cpppj/src/o/RawGunTarget.cpp": "7fbcc542cc48449f414494ccca7abeb351d75ecc861d45d1d0a517833e485229",
+    "cpppj/src/o/RawGunTarget.h": "486e6d411905a3b1a996c6900f390bb3ee229bb8f10ff31fbfd77977cc4b2513",
+    "cpppj/tests/CMakeLists.txt": "687f283a950b897c92cfca118f23b86de2192ed710a1fcc651c48685a7a221ba",
+    "cpppj/tests/CampaignSessionTests.cpp": "3e74241700d3a4992d087296a3b019a27dbb3ddea24388a97dcae28c480bf11d",
+    "cpppj/src/client/RawCursorRange.cpp": "965b5bce38bdceb3d31cc63cbae3fc8db5da57ccb3bf8c71be81f23ec548ec2e",
+    "cpppj/src/client/RawCursorRange.h": "5aa384b5432bd6fbee04ae0fc9bf65acf685d45b66553f8b91866261fcd79758",
+    "cpppj/src/o/RawFenceLifetime.cpp": "f24971d75e0ad7ee97739ee00964b2ec71be8a127c0ecd1bbc6b29797bb45ddf",
+    "cpppj/src/o/RawFenceLifetime.h": "fce099b3bcdfb494a5cb2d3ef158a2a6eed11b22cfc708c916a769c41db41730",
+    "cpppj/tests/CursorRangeTests.cpp": "fdd3e6053d9f2828f6ffb5c04cf35ca6667794c1bb046ceccfcb3d1ccbae3d68",
+    "cpppj/tests/FenceLifetimeTests.cpp": "eca6fe713ade847f63d2b4b1da421de9c63942434edaf047422a12999608585b"
+  },
+  "limitations": [
+    "세 펜스 몸체는 실제 명령이며 이웃/표식/연결선/재생성/기존 Damageable/Regular 생성은 명시 경계다.",
+    "원본 전처리는 네 일반 이웃을 저장하지만 첫 두 칸에만 예약한다. 실제 GUI/플레이 증거는 아니다."
+  ],
+  "protectedFileSha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6"
+  },
+  "productValidation": {
+    "releaseBuild": {
+      "log": "extracted/goal-cursor-range-20261017-build8.log",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0
+    },
+    "focused": {
+      "cursorRange": 2,
+      "fenceLifetime": 2,
+      "actualSession": 1,
+      "failed": 0
+    },
+    "fullRegression": {
+      "tests": 1505,
+      "failed": 0,
+      "ctestExitCode": 0,
+      "testSeconds": 246.18,
+      "totalSeconds": 246.68,
+      "log": "extracted/goal-cursor-range-20261017-ctest.log",
+      "output": "extracted/goal-cursor-range-20261017-ctest-output.log"
+    },
+    "dependencyVerifiers": {
+      "count": 17,
+      "failed": 0,
+      "log": "extracted/goal-cursor-range-20261017-verify17.log"
+    },
+    "integrationPins": {
+      "reportsUpdated": 19,
+      "pinsUpdated": 39,
+      "historicalPinsPreserved": 118,
+      "currentProductSources": 15
+    },
+    "originalOrCloneGameLaunched": false,
+    "guiOrHumanPlayVerified": false,
+    "clientMenuCursorIntegrated": false,
+    "overallGoalComplete": false
+  }
+}

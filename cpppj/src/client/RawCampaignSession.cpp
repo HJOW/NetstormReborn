@@ -10,6 +10,7 @@
 #include "o/RawArcherTypeData.h"
 #include "o/RawProjectileGeometry.h"
 #include "o/RawFormPacket.h"
+#include "o/RawFenceLifetime.h"
 #include "o/RawContentParentNotice.h"
 #include "o/RawPlayerDamageNotice.h"
 #include "o/RawFenceTarget.h"
@@ -64,6 +65,8 @@ SoundList& RequireSounds(const RawCampaignSessionServices& services) { if (!serv
 // 현재 원본 초기 다리/받침/미션 전역이다.
 BridgeConnectState CampaignLinks() { BridgeConnectState result;result.bridgeType=82;result.islandType=94;result.stalagType=95;result.connectorType=155;result.noIslandType=157;result.battle=true;result.mission=true;return result; }
 constexpr std::size_t kCampaignFactoryCapacity=500; // PATCH004fc990의push1f4→0044fb20이확보하는실제0055a4d0목록의DWORD수다.
+// 실제83개 VT에서+10/+14/+18이4af780/44b4b0/44b9e0인14개만 일반 Damageable 수명으로 연결한다.
+constexpr std::array<std::uint32_t,14> kPlainDamageableTables{0x501ea0,0x509148,0x509930,0x5099e8,0x509aa0,0x50a820,0x50a8e8,0x50b6e8,0x50b7c0,0x50b888,0x50b9b8,0x50bad0,0x50e668,0x50e738};
 // 보호 GameAssets의 실제 TYPE/프레임을 보관하며 검사 전용74 변경을 적용하지 않는다.
 struct SessionAssets {
     const GameAssets& game; // 클라이언트가 소유하는 단일 자산이다.
@@ -153,6 +156,8 @@ struct RawCampaignSession::Impl {
     AssetRegularState regularState; // 실제 예약 사건의 현재 전역이다.
     GunProcessState gunState; // 실제 Gun 초기 Form/시각/서버 전역이다.
     GunTargetState gunTargetState; // 실제 자기 동맹/검색의 현재 상태다.
+    CursorRangeGlobals cursorRangeGlobals{cursorManaGlobals,gunTargetState}; // 마나와 총의 같은 좌표/픽셀/Wind 전역을 빌린다.
+    std::unique_ptr<RawCursorRange> cursorRange; // 같은 World/현재 타입/Host에 연결한 원형·직선 사정거리 몸체다.
     std::vector<GunTargetType> gunTypes; // 보호 TYPE의 사거리/방향/높이 보충 자료다.
     std::vector<GunHitType> hitTypes; // 보호 TYPE의 HP/초와 별도 피해 보충 자료다.
     std::vector<float> firingIntervals; // 실제 타입별 발사 간격이다.
@@ -235,6 +240,8 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawFenceLine> fenceLine; // 실제 기존 연결선 검색과 같은 월드의 가상 삭제다.
     std::unique_ptr<RawFencePostPop> fencePostPop; // 같은 공통 장부/이웃/연결선/Regular의 전체 펜스 접두다.
     std::unique_ptr<RawFenceRegular> fenceRegular; // 같은 현재 프레임/소유자/연결수의 실제 Regular 제어다.
+    std::unique_ptr<RawFenceLifetime> fenceLifetime; // 실제 연결 정리/동맹 이웃 갱신/펜스 PreDestroy다.
+    std::unique_ptr<RegularProcess> fencePendingRegular; // 원본 new28 성공 뒤 부착 전의 단일 실제 예약 객체다.
     std::unique_ptr<RawFenceMarkerClear> fenceMarkerClear; //같은 hash/가상 삭제의 기존 fencemark 제거다.
     std::unique_ptr<RawFenceMarkerCreate> fenceMarkerCreate; //같은 실제 중심/생성/통지의 내부 표식 생성이다.
     std::unique_ptr<RawFenceShieldCreate> fenceShieldCreate; //같은 현재TYPE/프레임의 화면 포스 필드 생성이다.
@@ -418,6 +425,21 @@ struct RawCampaignSession::Impl {
         gunTarget=std::make_unique<RawGunTarget>(core.pool,core.hash,core.types,gunTypes,core.shapes,gunTargetState);
         CursorManaHooks cursorManaHooks;BindCursorManaWorld(cursorManaHooks,world,[this](Sid sid) { return gunTarget->Center(sid); });
         cursorMana=std::make_unique<RawCursorMana>(core.pool,core.types,core.processState,cursorManaGlobals,cursorDrop,std::move(cursorManaHooks));
+        CursorRangeHooks rangeHooks;BindCursorManaWorld(rangeHooks.world,world,[this](Sid sid) { return gunTarget->Center(sid); });
+        rangeHooks.range=[this](std::uint32_t type) { if (type>=gunTypes.size()) throw std::out_of_range("현재 사정거리 TYPE 범위 오류");return gunTypes[type].range; };
+        rangeHooks.firstContent=[this](Sid parent) { return priests->Carrier().FindContained(parent,1,0,0); };
+        rangeHooks.mode=[this](Sid parent) { return gunMode->Get(parent); };
+        rangeHooks.cannonDirection=[this](const GunTargetQuery& query,std::int32_t direction) { return gunTarget->CannonDirection(query,direction); };
+        rangeHooks.footprint=[this](Sid parent) { return gunTarget->Footprint(parent,false); };
+        rangeHooks.directionFrame=[this](Sid parent,std::int32_t direction) { return gunTarget->DirectionFrame(core.pool.Slot(parent)[10],direction); };
+        rangeHooks.firingOffset=[this](std::uint32_t type,std::int32_t frame) {
+            if (type<70 || type-70>=assets.game.Types().size() || frame<0) throw std::out_of_range("실제 사정거리 발사구 자산 범위 오류");
+            const auto header=assets.game.Shapes().SquidHeader(assets.game.Types()[type-70].block,static_cast<std::uint32_t>(frame));
+            return std::array{std::bit_cast<std::int16_t>(static_cast<std::uint16_t>(header[32]|(std::uint16_t(header[33])<<8))),std::bit_cast<std::int16_t>(static_cast<std::uint16_t>(header[34]|(std::uint16_t(header[35])<<8)))};
+        };
+        rangeHooks.frameRun=[this](std::uint32_t type,std::uint32_t variant) { if (type>=core.frames.size() || variant>=16) throw std::out_of_range("실제 사정거리 Run 범위 오류");return core.frames[type].Run(static_cast<std::uint8_t>('A'+variant)); };
+        rangeHooks.diagnostic=services.cursorRangeDiagnostic;
+        cursorRange=std::make_unique<RawCursorRange>(core.pool,core.types,core.processState,cursorRangeGlobals,cursorDrop,std::move(rangeHooks));
         priestDamageState.levelCorrectionDisabled=globals.missionPost;priestDamageState.boss=assetState.boss;
         priestDamageState.levelCorrectionDisabledRead=[this] { return globals.missionPost; };
         generalDamageState.serverRead=[this] { return core.processState.server; };
@@ -581,6 +603,10 @@ struct RawCampaignSession::Impl {
         worldHooks.destroy=construction->Destroy(lifetime->Destroy(hits->Destroy(services.destroy)));
         auto previousEffects=std::move(worldHooks.assets.emit); // 다른 기존 파생/전송/선택 처리기를 유지한다.
         worldHooks.assets.emit=[this,previous=std::move(previousEffects)](const SquidDestroyEvent& event) {
+            if (PlainDamageable(event.sid) || SunFence(event.sid)) {
+                if (event.effect==SquidDestroyEffect::PreDestroy) { if (SunFence(event.sid)) fenceLifetime->PreDestroy(event.sid,event.flags);else damageablePre->PreDestroy(event.sid,event.flags);return; }
+                if (event.effect==SquidDestroyEffect::PostDestroy) { damageablePostState.battle=core.ownerMode.battle;damageablePostState.boss=assetState.boss;damageablePost->PostDestroy(event.sid,event.flags);return; }
+            }
             if (FenceCommon(event.sid) || VisualDummy(event.sid)) { //실제 세 가상 표의+14/+18은 공통004b0950/004b0840이다.
                 if (event.effect==SquidDestroyEffect::PreDestroy) { world.CommonDeletion().PreDestroy(event.sid,event.flags);return; }
                 if (event.effect==SquidDestroyEffect::PostDestroy) { world.CommonDeletion().PostDestroy(event.sid,event.flags);return; }
@@ -597,7 +623,7 @@ struct RawCampaignSession::Impl {
         };
         auto previousDestroy=std::move(worldHooks.destroy); // 실제 신전 VT의 공통+10만 추가 분배한다.
         worldHooks.destroy=[this,previous=std::move(previousDestroy)](Sid sid,std::uint32_t flags,const SquidDestroyHooks& hooks) {
-            if (Vortex(sid) || FenceCommon(sid) || Flyer(sid) || VisualDummy(sid)) return core.virtualDestroy.Destroy(sid,flags,hooks);return previous(sid,flags,hooks);
+            if (Vortex(sid) || FenceCommon(sid) || Flyer(sid) || VisualDummy(sid) || PlainDamageable(sid) || SunFence(sid)) return core.virtualDestroy.Destroy(sid,flags,hooks);return previous(sid,flags,hooks);
         };
         buriedRegular=std::make_unique<RawBuriedRegular>(core.pool,core.frames,core.frame,random);
         auto actualRegular=hits->Handler(combat->Handler(assetBindings->Handler(buriedRegular->Handler(priests->RegularHandler([this](Sid sid,std::uint32_t event,std::uint32_t count,float payload) {
@@ -674,11 +700,28 @@ struct RawCampaignSession::Impl {
         regular.connections=[this](Sid sid) { return fenceNeighbors->Connections(sid); };
         regular.reserveRegular=[] { return true; }; //실제 Host 할당 실패는 다음 AddRegular에서 예외로 보존한다.
         regular.addRegular=[this](Sid sid,std::uint32_t event,float payload) { SessionCheck(core.processes.AddRegular(sid,event,payload)!=nullptr); };
-        regular.refreshNeighbors=[](Sid) { throw std::logic_error("썬 바리케이드004578f0 이웃 갱신 미복원"); };
+        regular.refreshNeighbors=[this](Sid sid) { fenceLifetime->Refresh(sid); };
         regular.rebuild=[this](Sid sid) { fenceRebuild->Rebuild(sid); };
         regular.damageable=[this](Sid sid,std::uint32_t event,std::uint32_t count,float payload) { return assetBindings->Regular().DamageableHandle(sid,event,count,payload); };
         fenceRegular=std::make_unique<RawFenceRegular>(core.pool,core.frames,core.frame,std::move(regular));
+        FenceLifetimeHooks lifetimeHooks;
+        lifetimeHooks.neighbor=[this](Sid sid,std::uint32_t direction,bool allied) { return fenceNeighbors->Neighbor(sid,direction,allied); };
+        lifetimeHooks.clearMarkers=[this](Sid sid,Sid other) { fenceMarkerClear->Clear(sid,other); };
+        lifetimeHooks.clearLine=[this](std::array<float,4> points,std::uint32_t,std::uint32_t,Sid,Sid) { fenceLine->Clear(points); }; // 실제455b20(mode0)은 두 owner/SID를 사용하지 않는다.
+        lifetimeHooks.unpop=[this](Sid sid,std::uint32_t flags) { world.Unpop(sid,flags); };lifetimeHooks.repop=[this](Sid sid,std::uint32_t flags) { world.Repop(sid,flags); };
+        lifetimeHooks.rebuild=[this](Sid sid) { fenceRebuild->Rebuild(sid); };
+        lifetimeHooks.reserveRegular=[this] { try { fencePendingRegular=std::make_unique<RegularProcess>(2,0.10000000149011612f);return true; }catch (const std::bad_alloc&) { return false; } };
+        lifetimeHooks.addRegular=[this](Sid sid,std::uint32_t event,float) { if (!fencePendingRegular) throw std::logic_error("펜스 실제 예약 객체 누락");auto* process=dynamic_cast<RegularProcess*>(core.processes.Attach(std::move(fencePendingRegular),46,sid,0x50));if (!process) throw std::logic_error("펜스 Regular 부모 부착 실패");process->ResetTask(event,core.processState.now); };
+        lifetimeHooks.damageable=[this](Sid sid,std::uint32_t flags) { damageablePre->PreDestroy(sid,flags); };fenceLifetime=std::make_unique<RawFenceLifetime>(core.pool,std::move(lifetimeHooks));
     }
+    // 가상 주소를 호출하지 않고 검증한 일반 Damageable의 실제 표만 선택한다.
+    bool PlainDamageable(Sid sid) const {
+        const auto table=Read(core.pool.Slot(sid),0);
+        // 현재 VT를 매 호출 다시 읽고 주소가 같은 순수 수명 몸체만 공유한다.
+        for (const auto known:kPlainDamageableTables) if (known==table) return true;return false;
+    }
+    // 썬 바리케이드의 특수457990 전처리는 다른 일반 Damageable에 적용하지 않는다.
+    bool SunFence(Sid sid) const { const auto raw=core.pool.Slot(sid);return raw[10]==136 && Read(raw,0)==0x509470; }
     // 실제 PE의 신전 네 가상 표를 판정하며 다른 자산을 타입 이름만으로 허용하지 않는다.
     bool Vortex(Sid sid) const {
         const auto table=Read(core.pool.Slot(sid),0);return table==0x005196f0 || table==0x005197a8 || table==0x00519860 || table==0x00519918;
@@ -1183,6 +1226,12 @@ CursorManaGlobals& RawCampaignSession::CursorManaSettings() { return impl_->curs
 void RawCampaignSession::BindCursorMana(CursorLifecycleHooks& hooks) {
     if (!impl_->loaded) throw std::logic_error("미설치 Session의 커서 마나 연결");
     BindCursorManaLifecycle(hooks,impl_->core.processes,impl_->core.kernel,*impl_->cursorMana);
+}
+// 마나와 같은 실제 맵/현재 총 전역을 읽는 장기 상태다.
+CursorRangeGlobals& RawCampaignSession::CursorRangeSettings() { return impl_->cursorRangeGlobals; }
+// 설치/소유권 확인 뒤 실제 두 프로세스와 공통 현재 Kernel 분배기를 연결한다.
+void RawCampaignSession::BindCursorRange(CursorLifecycleHooks& hooks) {
+    BindCursorMana(hooks);BindCursorRangeLifecycle(hooks,impl_->core.processes,*impl_->cursorRange);
 }
 // 화면과 입력은 같은 살아 있는 상태를 읽는다.
 RawSurfaceWorld& RawCampaignSession::World() { return impl_->world; }

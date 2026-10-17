@@ -104,11 +104,11 @@ bool RawGunTarget::CannonDirection(const GunTargetQuery& query,std::int32_t dire
     return (theme!=1 && theme!=2) || direction==query.direction;
 }
 // base Footprint가 사용하는 확장 높이와 by-value raw 좌표를 읽는다.
-GunTargetRect RawGunTarget::Footprint(Sid target) const {
+GunTargetRect RawGunTarget::Footprint(Sid target,bool extended) const {
     if (!target.value || target.value>=pool_.Capacity()) throw std::out_of_range("Gun 표적 SID 오류");
     const auto raw=pool_.Slot(target);const auto number=raw[10];if (number>=types_.size()) throw std::out_of_range("Gun 표적 타입 오류");
     const auto& type=types_[number];const float x=Coordinate(raw,14),y=Coordinate(raw,18);
-    float lowX=static_cast<float>(static_cast<double>(x)-(type.footX-1)),lowY=static_cast<float>(static_cast<double>(y)-(type.footY+targetTypes_[number].heightExtension-1));
+    float lowX=static_cast<float>(static_cast<double>(x)-(type.footX-1)),lowY=static_cast<float>(static_cast<double>(y)-(type.footY+(extended ? targetTypes_[number].heightExtension : 0)-1));
     // 실제 min/max helper는 현재 원점이 아니라 들어오는 corner를 보드에 clamp한다.
     Clamp(lowX,lowY);float highX=x,highY=y,left=x,top=y;
     if (ValidPoint(left,top)) { left=std::min(left,lowX);top=std::min(top,lowY); } else { left=lowX;top=lowY; }

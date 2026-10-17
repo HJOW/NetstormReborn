@@ -65,7 +65,7 @@
       "cpppj/tests/ObjectMenuTests.cpp": "7485055d8b76db99eb8e2fc117f9d89eb4892c2620112c1afbb1ed267710aa37",
       "cpppj/tests/RawMenuControlsTests.cpp": "df26ef116d9971df27bf12f1f857a398dec99ecfe0d72d82c13600244b17d1dd",
       "cpppj/src/client/CMakeLists.txt": "8bb17d335554c16e6ff3300134492a264bfa425dfafd52062ecf0062f523d87c",
-      "cpppj/tests/CMakeLists.txt": "b850f423d0be8c30b22478834953b1f83dbe250243c869104153c5761ff5a3dd"
+      "cpppj/tests/CMakeLists.txt": "687f283a950b897c92cfca118f23b86de2192ed710a1fcc651c48685a7a221ba"
     }
   },
   "integration_updates": [
@@ -229,6 +229,18 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "f932d354f00051f6807c2ccf95a7a3bdd53173fd79c8f104ae3e986e612c5723",
           "current": "b850f423d0be8c30b22478834953b1f83dbe250243c869104153c5761ff5a3dd"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 125,
+      "reason": "실제 사정거리/펜스 수명과 같은 총 자료 및 Session 부모 삭제 연결",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "b850f423d0be8c30b22478834953b1f83dbe250243c869104153c5761ff5a3dd",
+          "current": "687f283a950b897c92cfca118f23b86de2192ed710a1fcc651c48685a7a221ba"
         }
       ]
     }

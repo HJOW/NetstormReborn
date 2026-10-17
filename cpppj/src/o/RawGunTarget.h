@@ -63,8 +63,11 @@ public:
     bool MayFire(const GunTargetQuery& query,Sid target) const;
     // 00469190/CD00434d60: 지정 방향의 SHP 핫스폿·사거리 사각형이다. 실제4DWORD 반환을 보존한다.
     GunTargetRect CannonRay(const GunTargetQuery& query,std::int32_t direction) const;
-    // 현재 객체의 확장 발자국 사각형과 실제 중심을 공개해 shotContext 연결에 사용한다.
-    GunTargetRect Footprint(Sid target) const;
+    // 현재 객체의 발자국이다. 기본 extended=true는 공격 검색이며 false는 사정거리 표시의 원본 flags0이다.
+    GunTargetRect Footprint(Sid target,bool extended=true) const;
+    // 원본4d4c60/469120을 사정거리 표시와 공유한다. 방향은 원본의0/2/4/6을 받는다.
+    std::int32_t DirectionFrame(std::uint32_t type,std::int32_t direction) const;
+    bool CannonDirection(const GunTargetQuery& query,std::int32_t direction) const;
     // 확장 높이를 포함하지 않는 현재 타입 발자국의 실제 중심이다.
     std::array<float,2> Center(Sid target) const;
     // 같은 raw 월드에 대한 GunProcess 어댑터인지 확인한다.
@@ -72,10 +75,6 @@ public:
 private:
     // 입력 타입/소유자/유한 좌표와 물리 자료를 원본 정상 호출 계약으로 제한한다.
     void Validate(const GunTargetQuery& query) const;
-    // 원본 special mapping 또는 L..O 프레임 표를 조회한다.
-    std::int32_t DirectionFrame(std::uint32_t type,std::int32_t direction) const;
-    // Cannon이 허용하는 짝수 방향/Rain1·Thunder2의 지정 방향 조건이다.
-    bool CannonDirection(const GunTargetQuery& query,std::int32_t direction) const;
     // 실제 Archer range 및 Wind 관측각의 포함 경계를 검사한다.
     bool ArcherShot(const GunTargetQuery& query,Sid target) const;
     // 실제 Cannon ray와 현재 확장 발자국의 접촉을 검사한다.

@@ -21,6 +21,7 @@
 #include "client/RawPriestMenu.h"
 #include "o/RawCarrierContentNotice.h"
 #include "client/RawCursorMana.h"
+#include "client/RawCursorRange.h"
 #include "client/RawCampaignParticles.h"
 namespace netstorm::client {
 // 미션 입력/정지/UI 수명은 실제 UberGump의 현재 저장소와 동작을 빌린다.
@@ -64,6 +65,7 @@ struct RawCampaignSessionServices {
     o::SquidDestroyHooks deletion; // 다른 파생 삭제/선택/전송의 실제 외부 경계다.
     std::function<void(o::Sid)> unitLost; // 공통 삭제가 요청한 실제 unitLost 전역 소리를 재생한다.
     o::CarrierContentNoticeHooks carrierContent; // 실제 Carrier 폭탄/포획 표시·음향·공간 효과이며 선택한 분기만 필수다.
+    std::function<void(std::uint32_t,std::string_view)> cursorRangeDiagnostic; // 실제 사정거리 color29 진단 출력이며 해당 분기에서만 필요하다.
     o::ContentLifetimeHooks contentLifetime; // 같은 ContentForm의 실제 커서/수입/AI 지갑/소리 경계다.
     o::PlayerContentNoticeHooks playerContent; // 같은 현재 Gump 등록표와 대상 자신의 가상 처리를 공급한다.
     o::SquidAssetDestroy destroy; // 다른 파생 자산의 실제 가상 삭제 분배기다.
@@ -166,6 +168,10 @@ public:
     CursorManaGlobals& CursorManaSettings();
     // 실제 Session의 마나 월드 객체와 Host/Kernel 생성·제거·이벤트를 연결한다. 설치 후에만 허용한다.
     void BindCursorMana(CursorLifecycleHooks& hooks);
+    // 같은 좌표/총 전역을 빌리는 현재 사정거리 종류/프로세스 전역이다.
+    CursorRangeGlobals& CursorRangeSettings();
+    // 실제 마나·사정거리 생성과 공통 제거/이벤트를 같은 Host/Kernel에 연결한다.
+    void BindCursorRange(CursorLifecycleHooks& hooks);
     // 화면/명령은 같은 현재 raw 월드와 HP를 읽는다.
     RawSurfaceWorld& World();
     // 같은 월드의 현재 Pool/장부/Host 참조를 빌린다.

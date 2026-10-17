@@ -1,5 +1,17 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-17 단위125 완료: 실제 사정거리·펜스 및 부모 삭제 수명 (`HJOW-Athlon`)
+
+- [x] AGENTS.md·양 LEFT·깨끗한1a04f78과 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16**을 확인했다. 새 내보내기·원본/클론 게임·GUI 실행은 없다. 전체 목표는 active다. [작업 기록](docs/exe/cpp-cursor-range-20261017.md).
+- [x] `RawCursorRange`가 실제474520/474280/474450/474b80/474c30/474ed0/474790/474870을512바이트·100SID로 복원한다. 실제 TYPE+44·0.2f 변별 개수·현재 가상 방향 프레임/그림 핫스폿/A·B Run·Wind 각도·CRT 나머지와 정밀도를 보존했다. Notify 고정100칸·소멸 free만 제외·preview 종료 때 다른 현재 토큰도 지우는 조건을 원본대로 실행한다.
+- [x] Native3 **593고유 입력/두 정밀도1,318정상 반환/1,254,380명령/차이0**이다. C++가 전체 필드512바이트/raw102슬롯/전역/모든 효과/연속 호출을 대조했다. 초기 CRT 진입 범위 중단은 완성 근거에서 제외했고 C++ 행270의 시작각0 누락은 >=0으로 수정했다. 마나/총과 같은 실제 전역을 참조하고 Session의 World/Host/Kernel/현재 자료와 연결했다.
+- [x] 실제 Session 부모 삭제에서 TYPE71 미연결을 발견했다. 실제83VT 중+10/+14/+18이4af780/44b4b0/44b9e0인 **14개 표**만 같은 기존 Damageable 수명에 연결했다. range104의 실제 생성자0/baseVT도 정확한 쌍만 공통 수명에 연결했다. 다른 파생을 성공 기본값으로 허용하지 않는다.
+- [x] 특수 펜스의`RawFenceLifetime`4577f0/4578f0/457990을 복원했다. 네 동맹 스냅샷/정리/Unpop/이웃 재생성/Repop40, 네 일반 이웃 중 **첫 두 칸만** new28 성공 시 실제 Regular event2/payload0.1 예약→Damageable 순서를 보존한다. Native **207고유 입력/414정상 반환/100,262명령/두 정밀도 차이0**이며 같은 월드의 기존 연결선/표식/Host/가상 삭제에 연결했다. 기존 Fence Regular refreshNeighbors 경계도 연결했다.
+- [x] 실제thewarbegins GameWorld에서 **썬 발사기71·캐논128·펜스136·Wind 크로스보우140**의 사정거리 생성/이동/숨김/복원/명시 제거, 실제 마나와 공존한 종료, 부모 삭제의 ProcessForm→Kernel→모든 마커 반납/삭제 깊이를 통과했다. 초기 TYPE71 부모 삭제 실패는 최종 위 연결로 해결했다. 사용자 자연 플레이/GUI 증거로 확대하지 않는다.
+- [x] 최종 **Release 빌드8 종료0·경고0·오류0**, 집중5개와 전체 **1,505개 모두 통과·실패0·CTest 종료0·246.18초(전체246.68초)**다. 현대 `--verify`17개·현재 제품15개/관측/보호3개 SHA·UTF-8/LF/추가 문자를 감사했다. HEAD와 일치하던19보고서39핀만 이력과 갱신하고 과거118핀은 보존했다. 기존 fixture/metadata·AGENTS/DN/보호 원본은 불변이며 CMake 기존 접두 바이트도 보존했다. 로그 접두사는`extracted/goal-cursor-range-20261017-`다.
+- [x] 이 인수인계를 포함해 **20261017-25 CP 실제 사정거리 프로세스와 펜스 및 부모 삭제 수명 복원**으로 로컬 커밋한다. push하지 않는다.
+- [ ] **다음 실제 플레이:** Client `UberGump::OpenObjectMenu`의 비활성 Construct와 `RawMenuHooks.command`의01ffffff DialogAction 전용 분배를 실제 전체DWORD 메뉴/GumpForm→같은 Session의 Take/위치/수집/그리기/내려놓기로 연결한다. 일반 건설·생산·경제·AI전략·GUI 시작/진행/승패·저장/다음 미션·사용자 자연 완주와 전체 원본 동일성은 남았다. 전체화면 DirectDraw는 제외다.
+
 ## 2026-10-17 단위124 완료: 실제 커서 마나·전용 표시·Session 수명 (`HJOW-Athlon`)
 
 - [x] AGENTS.md·양 LEFT·깨끗한a9d3510과 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16**을 확인했다. 새 내보내기·원본/클론 게임·GUI 실행은 없다. 전체 목표는 active다. [작업 기록](docs/exe/cpp-cursor-mana-20261017.md).
@@ -10,7 +22,7 @@
 - [x] 실제thewarbegins GameWorld에서8개 마커의 생성·공간/표시·이동·숨김·복원·명시 삭제, 두 번째 부모 삭제에 따른 ProcessForm→Kernel→8개 반납, 원형/사각형의 실제 frame 자기 삭제까지 통과했다. 임시 진단은 제거했다. 초기 컴파일 이름/치환 오류와 비정상 종료는 해결 전 로그로 보존했다.
 - [x] 최종 **Release 빌드11 종료0·경고0·오류0**, 새 집중4/기존Pop3·Unpop4 통과, 전체 **1,500개 모두 통과·실패0·CTest 종료0·233.58초**다. 자기 삭제 추가 전 첫 전체1500/233.98초는ctest1에 보존했다. 최종 로그 접두사는`extracted/goal-cursor-mana-20261017-`다.
 - [x] 현대 --verify15개·새 제품 의존15개/관측/보호 SHA·UTF-8/LF/문자를 감사했다. 실제 HEAD와 일치하던30보고서68공유 핀만 이력과 갱신하고 최종 검사 소스도 다시 이력 갱신했다. 과거124핀은 보존했다. 기존565/854·Pop/Unpop fixture/metadata·AGENTS/DN/보호 원본은 불변이고 CMake 기존 접두 바이트도 보존했다. 이 기록을 포함해 **20261017-24 CP 실제 커서 마나 프로세스와 전용 표시 및 세션 수명 복원**으로 로컬 커밋한다. push하지 않는다.
-- [ ] **다음 실제 플레이:** 사정거리 wrapper474900/ctor474520/VT50c498(frame474b80,event474790)/helpers474280·474450·474c30·474ed0을 복원해 같은 부모/Kernel/World에 연결한다. 참고 원문은 같은 접두사`next-주소.txt`다.474450은 range104 객체8개·extra8·TYPE+130+1ec*4 프레임을 만든다.474280은 gun mode/469120을 쓰며 현재`RawGunMode`/`RawGunTarget`을 재사용할 수 있다. Client 전체DWORD 메뉴/GumpForm→Take/위치/수집/그리기/내려놓기, 일반 건설·생산·경제·AI전략·GUI 시작/승패/저장/다음 미션·사용자 자연 완주와 원본 동일성은 남았다. 반환0 우회는 없다. 전체화면 DirectDraw는 제외다.
+- [x] **사정거리 후속:** 단위125에서 wrapper474900/ctor474520/VT50c498(frame474b80,event474790)/helpers474280·474450·474c30·474ed0을 같은 부모/Kernel/World에 복원·연결했다. 이후 실제 플레이 미완료 항목은 단위125의 다음 작업을 따른다. 참고 원문은 같은 접두사`next-주소.txt`다.474450은 range104 객체8개·extra8·TYPE+130+1ec*4 프레임을 만든다.474280은 gun mode/469120을 쓰며 현재`RawGunMode`/`RawGunTarget`을 재사용할 수 있다. Client 전체DWORD 메뉴/GumpForm→Take/위치/수집/그리기/내려놓기, 일반 건설·생산·경제·AI전략·GUI 시작/승패/저장/다음 미션·사용자 자연 완주와 원본 동일성은 남았다. 반환0 우회는 없다. 전체화면 DirectDraw는 제외다.
 
 ## 2026-10-17 단위123 완료: 커서 TYPE 번호와 사정거리 판정 (`HJOW-Athlon`)
 

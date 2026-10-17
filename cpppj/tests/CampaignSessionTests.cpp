@@ -666,3 +666,40 @@ TEST_CASE(CampaignSession_CursorManaUsesActualWorldHostAndDisplay) {
         CHECK(Get(core.pool.Slot(parent),6,2)==0 && core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0 && core.bookkeeping.depth==0);
     }
 }
+
+// 실제 Session의 원형·직선·Wind 관측각을 같은 월드/총 자료/Host에 연결하고 표시 수명 전체를 검사한다.
+TEST_CASE(CampaignSession_CursorRangeActualWorldAndSharedLifetime) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());
+    auto services=external.Services();std::vector<std::uint32_t> diagnostics; // 실제 color29 진단 출력의 외부 경계다.
+    services.cursorRangeDiagnostic=[&](std::uint32_t color,std::string_view text) { CHECK(text=="Dead circle range!");diagnostics.push_back(color); };
+    GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services),{1024,768});
+    auto& session=world.Session();auto core=session.Core();auto& surfaces=session.World();const auto baseline=core.kernel.Size();CursorLifecycleHooks hooks;session.BindCursorRange(hooks);
+    CHECK(&session.CursorRangeSettings().coordinates==&session.CursorManaSettings());
+    // 썬 발사기/캐논/펜스와 Wind 크로스보우의 실제 타입 자료를 각각 사용한다.
+    for (const std::uint32_t type:{71U,128U,136U,140U}) {
+        const auto parent=surfaces.Create(type,2);auto parentRaw=core.pool.AllocatedBytes(parent);Put(parentRaw,14,std::bit_cast<std::uint32_t>(100.0f));Put(parentRaw,18,std::bit_cast<std::uint32_t>(110.0f));parentRaw[40]|=8;
+        const auto token=hooks.createRange(parent,0);session.CursorDropSettings().cursorGump=token;auto* process=dynamic_cast<CursorRangeProcess*>(core.kernel.Get(token));CHECK(process && process->Parent()==parent && core.processes.IsRegistered(token,process));
+        const bool rays=core.types[type].group==1 || core.types[type].group==6;CHECK(Get(process->Fields().bytes,12)==(rays ? 0U : 1U));
+        std::vector<Sid> markers; // 실제 필드의 마커 SID이며 별도 표시 객체를 만들지 않는다.
+        // 실제100칸에서 살아 있는 표시 객체와 프레임을 읽는다.
+        for (std::size_t index=0;index<100;++index) {
+            const auto value=Get(process->Fields().bytes,20+4*index);if (!value) continue;markers.push_back(Sid{static_cast<std::uint16_t>(value)});const auto raw=core.pool.Slot(markers.back());CHECK(raw[10]==104 && (raw[40]&8) && !(raw[11]&4));
+        }
+        CHECK(!markers.empty() && markers.size()==Get(process->Fields().bytes,0x1ac));core.processState.now+=.5;process->RunFrame();CHECK(Get(core.pool.Slot(markers.front()),14)!=std::bit_cast<std::uint32_t>(1.0f) || Get(core.pool.Slot(markers.front()),18)!=std::bit_cast<std::uint32_t>(1.0f));
+        hooks.processEvent(token,1,1,0);
+        // 같은 객체를 실제 Unpop한 결과를 확인한다.
+        for (const auto marker:markers) CHECK(core.pool.Slot(marker)[11]&4);
+        hooks.processEvent(token,1,0,0);
+        // 같은 좌표와 프레임으로 실제 공간/표시를 복원한다.
+        for (const auto marker:markers) CHECK(!(core.pool.Slot(marker)[11]&4));
+        hooks.removeProcess(token,0);CHECK(!core.kernel.Get(token) && session.CursorDropSettings().cursorGump==0 && core.kernel.Size()==baseline);
+        // 명시 제거가 원본의 고정100칸 가상 삭제로 이어진다.
+        for (const auto marker:markers) CHECK(core.pool.Slot(marker)[11]&1);
+        const auto mana=hooks.createMana(parent,0);const auto closingToken=hooks.createRange(parent,0);session.CursorDropSettings().cursorGump=mana;auto* closing=dynamic_cast<CursorRangeProcess*>(core.kernel.Get(closingToken));CHECK(closing);
+        hooks.processEvent(closingToken,3,0,0);closing->RunFrame();CHECK(!core.kernel.Get(closingToken) && core.kernel.Get(mana) && session.CursorDropSettings().cursorGump==0);hooks.removeProcess(mana,0);CHECK(core.kernel.Size()==baseline);
+        const auto dependentToken=hooks.createRange(parent,0);session.CursorDropSettings().cursorGump=dependentToken;CHECK(surfaces.Destroy(parent,0));CHECK(!core.kernel.Get(dependentToken) && core.kernel.Size()==baseline && session.CursorDropSettings().cursorGump==0);
+        CHECK(core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0 && core.bookkeeping.depth==0);
+    }
+    CHECK(diagnostics.empty());
+}

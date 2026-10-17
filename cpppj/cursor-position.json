@@ -32,7 +32,7 @@
     "cpppj/tests/CursorPositionTests.cpp": "111ab2b59d662bacc5b51bb44d54fccec4260df86f15502e370a35d7d13a73f1",
     "cpppj/tests/CursorPreviewSupport.h": "fa4e6b6d54bbc564af308ffd154f2ced7482a131c542222c0342e6019d6c9084",
     "cpppj/src/client/CMakeLists.txt": "8bb17d335554c16e6ff3300134492a264bfa425dfafd52062ecf0062f523d87c",
-    "cpppj/tests/CMakeLists.txt": "b850f423d0be8c30b22478834953b1f83dbe250243c869104153c5761ff5a3dd"
+    "cpppj/tests/CMakeLists.txt": "687f283a950b897c92cfca118f23b86de2192ed710a1fcc651c48685a7a221ba"
   },
   "limitations": [
     "실제 정수 위치 갱신/역투영/CRT 절삭을 실행한다. 단독 입력의 Activate/Create/선택은 명시 효과다.",
@@ -114,6 +114,18 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "f932d354f00051f6807c2ccf95a7a3bdd53173fd79c8f104ae3e986e612c5723",
           "current": "b850f423d0be8c30b22478834953b1f83dbe250243c869104153c5761ff5a3dd"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 125,
+      "reason": "실제 사정거리/펜스 수명과 같은 총 자료 및 Session 부모 삭제 연결",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "b850f423d0be8c30b22478834953b1f83dbe250243c869104153c5761ff5a3dd",
+          "current": "687f283a950b897c92cfca118f23b86de2192ed710a1fcc651c48685a7a221ba"
         }
       ]
     }

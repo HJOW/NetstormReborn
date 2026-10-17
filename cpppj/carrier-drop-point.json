@@ -186,13 +186,13 @@
     "cpppj/src/client/RawCarrierDropPoint.cpp": "a0c2130de14992eb2f3debda71840b9e0c9889398d17cfd92c2c8cb050b2acd5",
     "cpppj/tests/CarrierDropPointTests.cpp": "65a1f6834bad63ad10548fb4b0b96c26fc7e869a1f2447e07254190237f51b7c",
     "cpppj/src/client/CMakeLists.txt": "8bb17d335554c16e6ff3300134492a264bfa425dfafd52062ecf0062f523d87c",
-    "cpppj/tests/CMakeLists.txt": "b850f423d0be8c30b22478834953b1f83dbe250243c869104153c5761ff5a3dd",
+    "cpppj/tests/CMakeLists.txt": "687f283a950b897c92cfca118f23b86de2192ed710a1fcc651c48685a7a221ba",
     "cpppj/src/client/RawCarrierMenu.h": "549eb57a893ffbb4aee1bdd5945fffb2e8a5fc45ec9cb9a294420f0737a292bd",
     "cpppj/src/client/RawCarrierMenu.cpp": "0cea02b171cccc0909d96d55ccc09551dfabfec0d65473b14ff687a28eae7e88",
     "cpppj/src/o/RawCanonPlacementPipeline.h": "4c52d14dea023e6c5251c528b1afd6955e10d8d25a31e9766b4d79faa286e8fc",
     "cpppj/src/o/RawCanonPlacementPipeline.cpp": "c65178b9ed2baeaabaae08e607c9a8c2ff8683141a39dc9b23b3852e6d7db6d4",
-    "cpppj/src/o/RawGunTarget.h": "e080687a331b91ba83abca43bf304688aaf1f3e20152fdb7e7e641a4fe55d1e4",
-    "cpppj/src/o/RawGunTarget.cpp": "c14e541e11ed5ad770f4851b08a6a11c088dccd4da2ad3d3aaa6d0ae140bcc3d",
+    "cpppj/src/o/RawGunTarget.h": "486e6d411905a3b1a996c6900f390bb3ee229bb8f10ff31fbfd77977cc4b2513",
+    "cpppj/src/o/RawGunTarget.cpp": "7fbcc542cc48449f414494ccca7abeb351d75ecc861d45d1d0a517833e485229",
     "cpppj/src/o/TerrainBuilder.h": "504ed96f652444ed971a4ec5f69d29d1a872e5c7f6e4950d86427c698d00be4b"
   },
   "limitations": [
@@ -229,6 +229,28 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "f932d354f00051f6807c2ccf95a7a3bdd53173fd79c8f104ae3e986e612c5723",
           "current": "b850f423d0be8c30b22478834953b1f83dbe250243c869104153c5761ff5a3dd"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 125,
+      "reason": "실제 사정거리/펜스 수명과 같은 총 자료 및 Session 부모 삭제 연결",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "b850f423d0be8c30b22478834953b1f83dbe250243c869104153c5761ff5a3dd",
+          "current": "687f283a950b897c92cfca118f23b86de2192ed710a1fcc651c48685a7a221ba"
+        },
+        {
+          "path": "cpppj/src/o/RawGunTarget.h",
+          "previous": "e080687a331b91ba83abca43bf304688aaf1f3e20152fdb7e7e641a4fe55d1e4",
+          "current": "486e6d411905a3b1a996c6900f390bb3ee229bb8f10ff31fbfd77977cc4b2513"
+        },
+        {
+          "path": "cpppj/src/o/RawGunTarget.cpp",
+          "previous": "c14e541e11ed5ad770f4851b08a6a11c088dccd4da2ad3d3aaa6d0ae140bcc3d",
+          "current": "7fbcc542cc48449f414494ccca7abeb351d75ecc861d45d1d0a517833e485229"
         }
       ]
     }

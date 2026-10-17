@@ -68,7 +68,7 @@
     "cpppj/hist/run18-run3/test.cpp": "8aec8423d2e67a772336e3984fdff90e65f645dffcfbf24e817cc0aa5af94df2",
     "cpppj/hist/run18-run4/focused.log": "2cf49d4b7f1371e78fe40a7794b66b86b75df79f6ea4e641460fca8634ccdb9c",
     "cpppj/hist/run18-run4/test.cpp": "bc3b9bd2204d65a2be2fe0c862f32b207ade6aaec1ed4c1fcca0443a0c6b5d29",
-    "cpppj/src/CMakeLists.txt": "a0ce72c79685631ce627defcc392fb06df32131c835594b570569404e1929a4a",
+    "cpppj/src/CMakeLists.txt": "d57ce7c787ea9a7ba42218a7e8b25a39fb60a551130387b6838e59788b628e7b",
     "cpppj/src/app/CanonMayPlaceInspect.cpp": "27eda46bca500c898abeb9a3a7c4e8588b38e061b579c84cbf6c032c6d46dda9",
     "cpppj/src/app/FrameBindingInspect.cpp": "042602919b0531fb1cbaf3941dc6597bee73944bbf0d571dacfd638bb45dd07c",
     "cpppj/src/app/FrameBindingInspect.h": "4e187ca41f8c34ed52c022b58a57327a554a723e3e26ee88a1ae152c99de3fce",
@@ -1109,6 +1109,18 @@
           "path": "cpppj/tests/PopTests.cpp",
           "previous": "efbcc139659e8ba5737b409e427787cdc1e896fe72d051f1119d356e171b0577",
           "current": "2815679f07e4c9873dc70b925e9e6c16e44864d3be191c636650954a12d4cea4"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 125,
+      "reason": "실제 사정거리/펜스 수명과 같은 총 자료 및 Session 부모 삭제 연결",
+      "pins": [
+        {
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "a0ce72c79685631ce627defcc392fb06df32131c835594b570569404e1929a4a",
+          "current": "d57ce7c787ea9a7ba42218a7e8b25a39fb60a551130387b6838e59788b628e7b"
         }
       ]
     }

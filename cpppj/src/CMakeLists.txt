@@ -29,3 +29,9 @@ target_link_libraries(NetstormCpp PRIVATE netstorm)
 
 # 실제 커서 마나의 월드 객체와 프로세스 수명을 연결한다.
 target_sources(netstorm PRIVATE client/RawCursorMana.cpp client/RawCursorMana.h)
+
+# 실제 원형/직선 사정거리의 월드 객체와 프로세스 수명을 연결한다.
+target_sources(netstorm PRIVATE client/RawCursorRange.cpp client/RawCursorRange.h)
+
+# 실제 펜스 연결 해제/이웃 갱신/가상 전처리 수명이다.
+target_sources(netstorm PRIVATE o/RawFenceLifetime.cpp o/RawFenceLifetime.h)
