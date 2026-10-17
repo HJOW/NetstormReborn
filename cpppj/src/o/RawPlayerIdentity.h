@@ -34,6 +34,8 @@ public:
     std::uint32_t AddressForSubscriber(std::uint32_t subscriber) const;
     // PATCH00484410/CD00401890: subscriber 이름이며 조회 실패 시 현재 unknownName이다.
     std::string NameForSubscriber(std::uint32_t subscriber) const;
+    // PATCH00484480/CD00401920: mode0의owner입력으로같은Resolve를실행하고실패시현재SOMEONE을반환한다.
+    std::string NameForOwner(std::uint32_t owner) const;
     // 실제 메뉴가 같은 판본/기록/전역을 사용하도록 원본 참조를 빌린다. 재복사하지 않는다.
     OriginalEdition Edition() const;
     std::span<const std::uint8_t> PlayerRecords() const;

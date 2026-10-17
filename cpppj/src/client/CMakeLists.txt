@@ -141,3 +141,6 @@ target_sources(netstorm PRIVATE RawCarrierDropPoint.h RawCarrierDropPoint.cpp)
 
 # 공통 객체 메뉴 Open과 원본의 객체 중심 위치 계산을 연결한다.
 target_sources(netstorm PRIVATE RawObjectMenuOpen.h RawObjectMenuOpen.cpp)
+
+# 원본객체메뉴의4인자제목/현재상태정보를복원한다.
+target_sources(netstorm PRIVATE RawObjectMenuInfo.h RawObjectMenuInfo.cpp)

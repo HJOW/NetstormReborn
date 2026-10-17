@@ -63,11 +63,11 @@
     "cpppj/src/o/RawManaBoltRegular.cpp": "4ea2499c6cf66978607e42ad0c84486d11ca5cf32e6deb58281e35fbd9aefdde",
     "cpppj/src/o/RawManaBoltRegular.h": "c0f4822f6a25c63644f507d31b3946e1f8a7ba6b1185e5c09a97e625d56e8011",
     "cpppj/tests/fixtures/mana-bolt-regular-x86.tsv": "f61c2e4c72c6729749e43a1517a77894d866cf5e5061a9c967ba43df9b41913e",
-    "cpppj/src/client/RawCampaignSession.cpp": "65c90c8a5135f732e628e54a4940dc922ead69044378aa6b839803a6fcb8e16f",
+    "cpppj/src/client/RawCampaignSession.cpp": "f5fd8fcbe2f6b2d20daba173a0fcf6987b56f105be2eca2374bcf284ed0eb877",
     "cpppj/src/client/RawCursorPosition.cpp": "db3b59d8211cee4f22583db354962f2da543512bd78ad86ed91c8725f0dda7a4",
     "cpppj/src/client/RawCursorPosition.h": "acef07ed2737b798d36034457c63e75e1bfde25c9068b4bd3a2c224bd8dab723",
     "cpppj/src/o/CMakeLists.txt": "3d0010c676da1156f5223bfcaa207887a88910a4cf50733a7b2e9e515f939c48",
-    "cpppj/tests/CMakeLists.txt": "e16d86562d18e8a6d7d23c511b6871a2a5459843c73286dc201203abaa5aaec3",
+    "cpppj/tests/CMakeLists.txt": "b4d541e91686cd7407ecdd5fcf9e0373f26588a16e67b173b49f3ead85a2de78",
     "cpppj/tests/CampaignSessionTests.cpp": "964400205960599492a269d374aaaa7e46ff7f7b6e3968a992d0a447dc16bf2a",
     "cpppj/tests/ManaBoltRegularTests.cpp": "3531f9ec3de58ad435557223606e16994d0f235b193780fab7700a06e96e8d5d",
     "cpppj/src/client/Sound.cpp": "30f85f35c1e5c75d1214ec5df2f3d86c7552fa060a1068905f77cb164cfd8ee3",
@@ -81,13 +81,13 @@
     "cpppj/src/o/SquidDisplay.h": "83ed777ce826ec37cc2a72808ffd3658b8f6bcb9644efcf31f203fc6da363be7"
   },
   "currentSources": {
-    "cpppj/src/client/RawCampaignSession.cpp": "65c90c8a5135f732e628e54a4940dc922ead69044378aa6b839803a6fcb8e16f",
+    "cpppj/src/client/RawCampaignSession.cpp": "f5fd8fcbe2f6b2d20daba173a0fcf6987b56f105be2eca2374bcf284ed0eb877",
     "cpppj/src/client/RawCursorPosition.cpp": "db3b59d8211cee4f22583db354962f2da543512bd78ad86ed91c8725f0dda7a4",
     "cpppj/src/client/RawCursorPosition.h": "acef07ed2737b798d36034457c63e75e1bfde25c9068b4bd3a2c224bd8dab723",
     "cpppj/src/o/CMakeLists.txt": "3d0010c676da1156f5223bfcaa207887a88910a4cf50733a7b2e9e515f939c48",
     "cpppj/src/o/RawManaBoltRegular.cpp": "4ea2499c6cf66978607e42ad0c84486d11ca5cf32e6deb58281e35fbd9aefdde",
     "cpppj/src/o/RawManaBoltRegular.h": "c0f4822f6a25c63644f507d31b3946e1f8a7ba6b1185e5c09a97e625d56e8011",
-    "cpppj/tests/CMakeLists.txt": "e16d86562d18e8a6d7d23c511b6871a2a5459843c73286dc201203abaa5aaec3",
+    "cpppj/tests/CMakeLists.txt": "b4d541e91686cd7407ecdd5fcf9e0373f26588a16e67b173b49f3ead85a2de78",
     "cpppj/tests/CampaignSessionTests.cpp": "964400205960599492a269d374aaaa7e46ff7f7b6e3968a992d0a447dc16bf2a",
     "cpppj/tests/ManaBoltRegularTests.cpp": "3531f9ec3de58ad435557223606e16994d0f235b193780fab7700a06e96e8d5d"
   },
@@ -431,6 +431,37 @@
           "path": "cpppj/src/client/RawCampaignSession.cpp",
           "previous": "743893d3824fe9b7915ab9dd32f568484e6ebd902c7a5390c4f4d81581902a84",
           "current": "65c90c8a5135f732e628e54a4940dc922ead69044378aa6b839803a6fcb8e16f"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 141,
+      "reason": "원본4인자 객체메뉴 정보와 현재 Session/owner 이름/동맹/Player 연결 및 독립 원본 재생검사에 따른 현재제품 SHA 갱신. 과거 SHA/원본 fixture 보존. 원본 전체 재실행이나 자연완주 검증을 뜻하지 않는다.",
+      "pins": [
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "65c90c8a5135f732e628e54a4940dc922ead69044378aa6b839803a6fcb8e16f",
+          "current": "f5fd8fcbe2f6b2d20daba173a0fcf6987b56f105be2eca2374bcf284ed0eb877"
+        },
+        {
+          "group": "/sha256",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "e16d86562d18e8a6d7d23c511b6871a2a5459843c73286dc201203abaa5aaec3",
+          "current": "b4d541e91686cd7407ecdd5fcf9e0373f26588a16e67b173b49f3ead85a2de78"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "65c90c8a5135f732e628e54a4940dc922ead69044378aa6b839803a6fcb8e16f",
+          "current": "f5fd8fcbe2f6b2d20daba173a0fcf6987b56f105be2eca2374bcf284ed0eb877"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "e16d86562d18e8a6d7d23c511b6871a2a5459843c73286dc201203abaa5aaec3",
+          "current": "b4d541e91686cd7407ecdd5fcf9e0373f26588a16e67b173b49f3ead85a2de78"
         }
       ]
     }

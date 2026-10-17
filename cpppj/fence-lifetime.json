@@ -32,15 +32,15 @@
     "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
     "tools/decomp_cursor_mana.py": "00cfea4f089b06b1b8f1b0cc61f0cf4f93bd33aa16aaa0715a95c66187a9f888",
     "tools/decomp_fence_lifetime.py": "d470de69c26be1c0c50ededee28a45e9f452f40b48837efd809044b394a535a7",
-    "cpppj/src/client/RawCampaignSession.cpp": "65c90c8a5135f732e628e54a4940dc922ead69044378aa6b839803a6fcb8e16f",
+    "cpppj/src/client/RawCampaignSession.cpp": "f5fd8fcbe2f6b2d20daba173a0fcf6987b56f105be2eca2374bcf284ed0eb877",
     "cpppj/tests/fixtures/fence-lifetime-x86.tsv": "f3e5be8c131684bc679dba1fb7d27f431ace773495800e92ced8fd7ac856155b",
     "cpppj/src/CMakeLists.txt": "f307d187ef0cc892334c74198407070df34d9b5df08502b579cad1135c19685b",
     "cpppj/src/client/RawCampaignLifetimeBindings.cpp": "2eb0d3fc16e6967b54271c0365991e0ebd8f3d57ef6412aa92d4c4d21fbb01c3",
     "cpppj/src/client/RawCampaignLifetimeBindings.h": "6f4be73b52279abf308c8a3e6d8962271560e47c25996f7a03fca09f8cd063e8",
-    "cpppj/src/client/RawCampaignSession.h": "1499e7139b7904a5d3a9484f2e7d38aa5ce76b4267e7f7e1fe6f2636cc0dae50",
+    "cpppj/src/client/RawCampaignSession.h": "7e8206da0091e1ed9e73a683f58cdd8229cb5a8251e7f09882ab7486bc28abeb",
     "cpppj/src/o/RawGunTarget.cpp": "7fbcc542cc48449f414494ccca7abeb351d75ecc861d45d1d0a517833e485229",
     "cpppj/src/o/RawGunTarget.h": "486e6d411905a3b1a996c6900f390bb3ee229bb8f10ff31fbfd77977cc4b2513",
-    "cpppj/tests/CMakeLists.txt": "e16d86562d18e8a6d7d23c511b6871a2a5459843c73286dc201203abaa5aaec3",
+    "cpppj/tests/CMakeLists.txt": "b4d541e91686cd7407ecdd5fcf9e0373f26588a16e67b173b49f3ead85a2de78",
     "cpppj/tests/CampaignSessionTests.cpp": "964400205960599492a269d374aaaa7e46ff7f7b6e3968a992d0a447dc16bf2a",
     "cpppj/src/client/RawCursorRange.cpp": "965b5bce38bdceb3d31cc63cbae3fc8db5da57ccb3bf8c71be81f23ec548ec2e",
     "cpppj/src/client/RawCursorRange.h": "5aa384b5432bd6fbee04ae0fc9bf65acf685d45b66553f8b91866261fcd79758",
@@ -498,6 +498,31 @@
           "path": "cpppj/src/client/RawCampaignSession.h",
           "previous": "d25593c9bfed100c5900a8c56e447e097ff7c42a968db69de7ee221af78b9a64",
           "current": "1499e7139b7904a5d3a9484f2e7d38aa5ce76b4267e7f7e1fe6f2636cc0dae50"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 141,
+      "reason": "원본4인자 객체메뉴 정보와 현재 Session/owner 이름/동맹/Player 연결 및 독립 원본 재생검사에 따른 현재제품 SHA 갱신. 과거 SHA/원본 fixture 보존. 원본 전체 재실행이나 자연완주 검증을 뜻하지 않는다.",
+      "pins": [
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "65c90c8a5135f732e628e54a4940dc922ead69044378aa6b839803a6fcb8e16f",
+          "current": "f5fd8fcbe2f6b2d20daba173a0fcf6987b56f105be2eca2374bcf284ed0eb877"
+        },
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "1499e7139b7904a5d3a9484f2e7d38aa5ce76b4267e7f7e1fe6f2636cc0dae50",
+          "current": "7e8206da0091e1ed9e73a683f58cdd8229cb5a8251e7f09882ab7486bc28abeb"
+        },
+        {
+          "group": "/sha256",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "e16d86562d18e8a6d7d23c511b6871a2a5459843c73286dc201203abaa5aaec3",
+          "current": "b4d541e91686cd7407ecdd5fcf9e0373f26588a16e67b173b49f3ead85a2de78"
         }
       ]
     }

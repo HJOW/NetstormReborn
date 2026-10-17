@@ -9,8 +9,8 @@
   "baseCommit": "cbe9585",
   "edition": "PATCH10.78",
   "currentSources": {
-    "cpppj/src/client/RawCampaignSession.cpp": "65c90c8a5135f732e628e54a4940dc922ead69044378aa6b839803a6fcb8e16f",
-    "cpppj/src/client/RawCampaignSession.h": "1499e7139b7904a5d3a9484f2e7d38aa5ce76b4267e7f7e1fe6f2636cc0dae50",
+    "cpppj/src/client/RawCampaignSession.cpp": "f5fd8fcbe2f6b2d20daba173a0fcf6987b56f105be2eca2374bcf284ed0eb877",
+    "cpppj/src/client/RawCampaignSession.h": "7e8206da0091e1ed9e73a683f58cdd8229cb5a8251e7f09882ab7486bc28abeb",
     "cpppj/src/client/RawCampaignConstructionBindings.cpp": "ee1d38d554fb25e502d0dc54cb19a55f501a45860e5612ca9666ca0f7ec2d2cf",
     "cpppj/src/client/RawCampaignConstructionBindings.h": "9d16b7a6b2ff2c5033dcf1b8a8ff1c73429715c8444f5553c84afe1a93c6ef65",
     "cpppj/src/o/RawConstructionPlace.cpp": "c90e759306d3452eb9c400f6bb252a68f8f89cff6f1ff9fe7b051a8e390618ff",
@@ -242,6 +242,25 @@
           "path": "cpppj/src/client/RawCampaignSession.h",
           "previous": "d25593c9bfed100c5900a8c56e447e097ff7c42a968db69de7ee221af78b9a64",
           "current": "1499e7139b7904a5d3a9484f2e7d38aa5ce76b4267e7f7e1fe6f2636cc0dae50"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 141,
+      "reason": "원본4인자 객체메뉴 정보와 현재 Session/owner 이름/동맹/Player 연결 및 독립 원본 재생검사에 따른 현재제품 SHA 갱신. 과거 SHA/원본 fixture 보존. 원본 전체 재실행이나 자연완주 검증을 뜻하지 않는다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "65c90c8a5135f732e628e54a4940dc922ead69044378aa6b839803a6fcb8e16f",
+          "current": "f5fd8fcbe2f6b2d20daba173a0fcf6987b56f105be2eca2374bcf284ed0eb877"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "1499e7139b7904a5d3a9484f2e7d38aa5ce76b4267e7f7e1fe6f2636cc0dae50",
+          "current": "7e8206da0091e1ed9e73a683f58cdd8229cb5a8251e7f09882ab7486bc28abeb"
         }
       ]
     }

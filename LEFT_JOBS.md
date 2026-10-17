@@ -1,5 +1,15 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-17 단위141 완료: 원본 객체메뉴4인자제목·정보/현재Session (`HJOW-Athlon`)
+
+- [x] AGENTS·양LEFT·깨끗한 `0514654`와현재/마지막정밀디컴파일PC **HJOW-Athlon / 2026-10-16**을다시확인했다. 직전목표턴은3개작업단위를완료/커밋한진행턴이다. 새디컴파일·원본실행·전체화면DirectDraw수정은없다. [작업 기록](docs/exe/cpp-object-menu-info-20261017.md).
+- [x] `RawObjectMenuInfo`가4ad780(type/count/owner/sid)·4ada70의선행owner/TYPE snapshot과현재extra·42a2f0의현재미션/Player포획문구를복원한다. 로마숫자/원소이름과서식의원본바이트/호출순서도보존한다. `decomp_object_menu_info.py`의새 **1,434입력·2,868정상반환·1,067,162명령·정밀도차이0**과C++재생2개가통과했다. 기존fixture/원본은변경하지않았다.
+- [x] 첫관측입력은59534c를배열자체로오해해Player상태대조49건이달랐다. 실제42a318의포인터로드를확인한후독립Player9×180배열과포인터를연결하고NULL페이지읽기거부를추가해원본을재관측했다. C++분기/기대문구를바꾸지않았다. 이전신규fixture/보고서/도구는 `extracted/goal-object-menu-info-20261017-before-player-pointer/`에보존한다. 초반번역ret4/로마표끝1바이트격리범위오류도수정후모든GP/스택/canary/x87검사를통과했다.
+- [x] Session메뉴체인에실제NameForOwner/같은가상80/현재동맹·Player상태/492090과정의의class23바이트보충표를연결했다. 단위140의명시제목fixture는같은체인의실제Summary→기존controlled제목/머리로교체했다. 실제Config치환/명시peer의현재이름·동맹·부분Resolve실패(SOMEONE), 명시저HP의실제492090→Capturable!도통과했다. 명시peer/저HP는로그인/자연전투검증이아니다. 설명49af80·실제Client번역/명령입구는여전히caller경계이며자연우클릭완료를주장하지않는다.
+- [x] Release빌드1~4 **종료0·경고0·오류0**, 최종집중 **9개·실패0**, 전체CTest **1,574개·실패0·종료0·208.36초**다. 원본근거59종 **48종성공·기존11종실패·새실패0**, 기존29보고서의현재82핀갱신/이전값보존이다. 보호SHA3/UTF-8·LF/기존CMake접두를확인하고기존fixture/AGENTS/원본/DN은변경하지않았다.
+- [x] 최신클론진입5회모두성공·originals_unchanged=true이며1-1/1-2월드와tutorial1/2/3브리핑범위다. 새메뉴자연진입이나사용자완주로확대하지않는다. 로그접두부 `extracted/goal-object-menu-info-20261017-`, 연결보고서 `cpppj/campaign-object-menu-info.json`이다. 인계후 **`20261017-41 CP 원본 객체 메뉴의 네 인자 제목과 현재 세션 정보 연결`** 로로컬커밋하며push하지않는다. 전체목표active다.
+- [ ] 다음은실제49af80설명·Client번역/설정/정적문자열수명·현재VT별+a8/+ac·원본DWORD명령소비자와시간을정지하지않는우클릭입구다. 로그인된로컬전송양끝/큐잉·등록수명, 생산/경제/AI/전체Kernel과대상11스테이지자연완주·승패·저장·다음미션/전체동일성은미완료다.
+
 ## 2026-10-17 단위140 완료: 같은Session 객체Form/메뉴 부착·삭제 수명 (`HJOW-Athlon`)
 
 - [x] 기준 `ed49269`, 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16**이다. 새 디컴파일·원본 실행·전체화면DirectDraw수정은 없다. 기존GumpFormHost/GumpFormBinding/가상분배/메뉴부착몸체를 재사용한다. [작업 기록](docs/exe/cpp-object-menu-forms-20261017.md).

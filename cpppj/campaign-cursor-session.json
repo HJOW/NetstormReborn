@@ -13,8 +13,8 @@
     "cpppj/src/client/RawCampaignConstructionBindings.h": "9d16b7a6b2ff2c5033dcf1b8a8ff1c73429715c8444f5553c84afe1a93c6ef65",
     "cpppj/src/client/RawCampaignCursor.cpp": "d1c12ed9e16c11771470abfae09d0a2bfccda51dc49be5b90c4a4c78604f961c",
     "cpppj/src/client/RawCampaignCursor.h": "0c4aa17d5acf5cd03fd9d651c33de2fedd115c622e9f75f1c469edb462c775ce",
-    "cpppj/src/client/RawCampaignSession.cpp": "65c90c8a5135f732e628e54a4940dc922ead69044378aa6b839803a6fcb8e16f",
-    "cpppj/src/client/RawCampaignSession.h": "1499e7139b7904a5d3a9484f2e7d38aa5ce76b4267e7f7e1fe6f2636cc0dae50",
+    "cpppj/src/client/RawCampaignSession.cpp": "f5fd8fcbe2f6b2d20daba173a0fcf6987b56f105be2eca2374bcf284ed0eb877",
+    "cpppj/src/client/RawCampaignSession.h": "7e8206da0091e1ed9e73a683f58cdd8229cb5a8251e7f09882ab7486bc28abeb",
     "cpppj/src/client/RawCursorLifecycle.cpp": "fce0a2a2eed2fc50169d36b85ac2766dd4b2b8b4b060f17966950601a103e1ce",
     "cpppj/src/client/RawCursorLifecycle.h": "537111c145676234c0f8ad032ca3b68e660f8e1d4245cc0e02f228c53066fd1b",
     "cpppj/src/client/RawCursorPlacement.cpp": "64c57e1581716ad63ebf952aa9c4b7ce4c432ec20f3ca23dcfeede6fcf8a1a46",
@@ -224,6 +224,25 @@
           "path": "cpppj/src/client/RawCampaignSession.h",
           "previous": "d25593c9bfed100c5900a8c56e447e097ff7c42a968db69de7ee221af78b9a64",
           "current": "1499e7139b7904a5d3a9484f2e7d38aa5ce76b4267e7f7e1fe6f2636cc0dae50"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 141,
+      "reason": "원본4인자 객체메뉴 정보와 현재 Session/owner 이름/동맹/Player 연결 및 독립 원본 재생검사에 따른 현재제품 SHA 갱신. 과거 SHA/원본 fixture 보존. 원본 전체 재실행이나 자연완주 검증을 뜻하지 않는다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "65c90c8a5135f732e628e54a4940dc922ead69044378aa6b839803a6fcb8e16f",
+          "current": "f5fd8fcbe2f6b2d20daba173a0fcf6987b56f105be2eca2374bcf284ed0eb877"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "1499e7139b7904a5d3a9484f2e7d38aa5ce76b4267e7f7e1fe6f2636cc0dae50",
+          "current": "7e8206da0091e1ed9e73a683f58cdd8229cb5a8251e7f09882ab7486bc28abeb"
         }
       ]
     }

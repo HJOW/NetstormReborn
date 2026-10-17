@@ -1,0 +1,164 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-17",
+  "unit": 141,
+  "baseCommit": "0514654",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16"
+  },
+  "currentSources": {
+    ".gitattributes": "68ac33ee3c1433a1dacc5154baca6dfd0c531ed2e0481671dc91777875fadd07",
+    "cpppj/src/client/CMakeLists.txt": "78725b028b113f3e2c815aebcc41847d2f79fc8acdcd237f4a75a05aa9854a3b",
+    "cpppj/src/client/RawCampaignSession.cpp": "f5fd8fcbe2f6b2d20daba173a0fcf6987b56f105be2eca2374bcf284ed0eb877",
+    "cpppj/src/client/RawCampaignSession.h": "7e8206da0091e1ed9e73a683f58cdd8229cb5a8251e7f09882ab7486bc28abeb",
+    "cpppj/src/o/RawPlayerIdentity.cpp": "96c5c91ae865f10f9deba31b59ed9bac40df16c1d38d38d37329100732cfd49c",
+    "cpppj/src/o/RawPlayerIdentity.h": "fe72fe29c2286a6ee6850affe138d9447516bdab1be3e5ab581f58438cc9b0ff",
+    "cpppj/tests/CMakeLists.txt": "b4d541e91686cd7407ecdd5fcf9e0373f26588a16e67b173b49f3ead85a2de78",
+    "cpppj/tests/CampaignObjectMenuTests.cpp": "2cda2c4f5ae708ea51de898c878edaa6cdccd3de039f8f927afbfa9c39e86fce",
+    "cpppj/src/client/RawObjectMenuInfo.cpp": "a9baa8625fb0f1c6c789f235e4d5b6020186a6fe49fc53a6f603c2c09d67c8dd",
+    "cpppj/src/client/RawObjectMenuInfo.h": "6e494e34fa1092f5cba931bd0c7507ca9650483eabb4a268e8b72e96005eabea",
+    "cpppj/tests/ObjectMenuInfoTests.cpp": "ca12af5ecd1fca95370f06359131fb3dee7285c5e7cff1e9d49658dd3f511115",
+    "tools/decomp_object_menu_info.py": "a510ea9059e5ff2d897f5316c7f103aa5c2ffa9e2b8fb69bb6a1d629cae7289a",
+    "cpppj/tests/fixtures/object-menu-info-x86.tsv": "9fd102d6cd45d7851c06ac62e8eb81e4676f277723a09d4915f3de9ac5d9e99f"
+  },
+  "nativeReports": {
+    "cpppj/object-menu-info.json": "9df91c8950ed525a7eeadf40956bb0fcdb07990ac7dcfabf6b5aedc07fc70fa7"
+  },
+  "protectedFileSha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6"
+  },
+  "nativeContext": {
+    "entries": [
+      "004ad780",
+      "004ada70",
+      "0042a2f0",
+      "004a8980",
+      "004a8940",
+      "004a8800",
+      "00484480",
+      "004e49c0"
+    ],
+    "controls": [
+      639,
+      895
+    ],
+    "uniqueInputs": 1434,
+    "normalReturns": 2868,
+    "instructions": 1067162,
+    "nativeCalls": {
+      "004ad780": 2804,
+      "004a8940": 1264,
+      "004a8980": 1256,
+      "004a8800": 1256,
+      "00484480": 1416,
+      "004e49c0": 80,
+      "004ada70": 436,
+      "0042a2f0": 452
+    },
+    "precisionDifferentInputs": [],
+    "nullPageReadGuard": true,
+    "playerArrayInput": {
+      "pointerGlobal": "0059534c",
+      "base": "12900000",
+      "count": 9,
+      "stride": 180,
+      "statusOffset": 80
+    },
+    "boundaries": "번역/순수printf·copy/설명/Config치환/GUI/가상count/PlayerFinder/492090은명시입력. 세부모와숫자·원소·이름복사/_ftol은실제전체실행. C++기대분기계산/게임·OS실행없음."
+  },
+  "supersededObservation": {
+    "reason": "첫 관측은59534c를Player배열자체로설정했다. 실제42a318의포인터로드에맞춰독립배열/포인터와NULL페이지읽기거부를설치하고원본을재실행했다. C++분기나기대문구를바꾸지않았다.",
+    "initialReplayFailures": 49,
+    "files": {
+      "extracted/goal-object-menu-info-20261017-before-player-pointer/object-menu-info-x86.tsv": "dfecbbacd579370adcea904d09af0ce0a415de93c7120758ac09b7244211881e",
+      "extracted/goal-object-menu-info-20261017-before-player-pointer/object-menu-info.json": "dff729f820e438643de080957f3ccbc077e46f11547d06ca82bf3b32fb176e5b",
+      "extracted/goal-object-menu-info-20261017-before-player-pointer/decomp_object_menu_info.py": "080e16036b4c27933d3c9c14b7a4be81518e2027bbb5aaecbbf5be62dea29cf5"
+    },
+    "scope": "로컬extracted에보존한초기의새fixture/보고서/도구이며기존프로젝트fixture변경은없다."
+  },
+  "integration": {
+    "body": "4ad780의4인자/4ada70의owner·TYPE선행snapshot과현재extra/42a2f0의현재미션·Player상태",
+    "session": "같은가상80·Identity.NameForOwner·81동맹·Player9×180 +50·실제492090·class23바이트보충표",
+    "controlled": "같은Summary→기존controlled제목/머리→사제+a8→실제Form부착/원본About입력",
+    "limits": "설명49af80·실제Client번역/정적문자열·DWORD명령본문/자연우클릭은미연결. 명시peer22/저HP는로그인·자연전투의증거가아님."
+  },
+  "validation": {
+    "releaseBuilds": [
+      {
+        "number": 1,
+        "exitCode": 0,
+        "warnings": 0,
+        "errors": 0
+      },
+      {
+        "number": 2,
+        "exitCode": 0,
+        "warnings": 0,
+        "errors": 0
+      },
+      {
+        "number": 3,
+        "exitCode": 0,
+        "warnings": 0,
+        "errors": 0
+      },
+      {
+        "number": 4,
+        "exitCode": 0,
+        "warnings": 0,
+        "errors": 0
+      }
+    ],
+    "finalBuildLog": "extracted/goal-object-menu-info-20261017-build4.log",
+    "focused": {
+      "nativeCases": 2,
+      "sessionCases": 7,
+      "newCases": 3,
+      "failures": 0,
+      "logs": [
+        "extracted/goal-object-menu-info-20261017-focus-final.log",
+        "extracted/goal-object-menu-info-20261017-session-focus4.log"
+      ]
+    },
+    "ctest": {
+      "cases": 1574,
+      "failures": 0,
+      "exitCode": 0,
+      "seconds": 208.36,
+      "totalSeconds": 208.4,
+      "log": "extracted/goal-object-menu-info-20261017-ctest.log"
+    },
+    "nativeVerifiers": {
+      "total": 59,
+      "passed": 48,
+      "existingFailures": 11,
+      "newFailures": 0,
+      "log": "extracted/goal-object-menu-info-20261017-verify-final.json"
+    },
+    "cloneEntry": {
+      "runs": 5,
+      "failures": 0,
+      "originalsUnchanged": true,
+      "results": "extracted/goal-object-menu-info-20261017-entry/results.json",
+      "scope": "1-1/1-2브리핑→Play Mission→월드와tutorial1/2/3브리핑. 새메뉴자연진입/사용자완주아님."
+    },
+    "pinUpdates": {
+      "reports": 29,
+      "pins": 82,
+      "previousHashesPreserved": true
+    },
+    "protectedFilesUnchanged": 3,
+    "existingCMakePrefixesPreserved": true,
+    "existingFixturesUnchanged": true
+  },
+  "remaining": [
+    "실제49af80설명/Client번역·설정·정적문자열수명",
+    "현재VT별+a8/+ac·실제DWORD명령본문과시간을정지하지않는원본우클릭입구",
+    "로그인된로컬전송양끝·큐잉·등록수명/생산·경제·AI·전체Kernel/대상11스테이지자연완주·승패·저장·다음미션·전체동일성"
+  ],
+  "excluded": "전체화면DirectDraw수정",
+  "localCommitMessage": "20261017-41 CP 원본 객체 메뉴의 네 인자 제목과 현재 세션 정보 연결"
+}

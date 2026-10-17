@@ -55,8 +55,8 @@
     "full_output": "extracted/goal-player-identity-20261017-ctest-output.log",
     "actual_client_session_enabled": false,
     "sha256": {
-      "cpppj/src/o/RawPlayerIdentity.h": "331f03a8693685a6bf1f4fadc24e7cdee4c5a1c8813d3a7cc02c46697a09c6c4",
-      "cpppj/src/o/RawPlayerIdentity.cpp": "3dc55d9fd0fac8fd4fb7d2caf3f4fc46618c6df9416709aaf1548629daf99e41",
+      "cpppj/src/o/RawPlayerIdentity.h": "fe72fe29c2286a6ee6850affe138d9447516bdab1be3e5ab581f58438cc9b0ff",
+      "cpppj/src/o/RawPlayerIdentity.cpp": "96c5c91ae865f10f9deba31b59ed9bac40df16c1d38d38d37329100732cfd49c",
       "cpppj/src/client/RawObjectMenu.h": "47fa941dc9fe3becb679f297ea29c8f7cc662aa44d1e6f91c5643739aa905e9a",
       "cpppj/src/client/RawObjectMenu.cpp": "f64429574e0fd57e325cd99b47e3c46197979b5047d879b1a9693fda7d58a1ef",
       "cpppj/tests/PlayerIdentityTests.cpp": "36f77b04d42a18eb21ea177c53ed4b3996d39ac3a3e1fc8e7b7ddf91be1dbbc4",
@@ -103,6 +103,25 @@
           "path": "cpppj/src/client/RawObjectMenu.cpp",
           "previous": "ef92b668ec60c211d8a54722f864664d4262a25358ce0f2b1aaa95d572a558d5",
           "current": "f64429574e0fd57e325cd99b47e3c46197979b5047d879b1a9693fda7d58a1ef"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 141,
+      "reason": "원본4인자 객체메뉴 정보와 현재 Session/owner 이름/동맹/Player 연결 및 독립 원본 재생검사에 따른 현재제품 SHA 갱신. 과거 SHA/원본 fixture 보존. 원본 전체 재실행이나 자연완주 검증을 뜻하지 않는다.",
+      "pins": [
+        {
+          "group": "/product_validation/sha256",
+          "path": "cpppj/src/o/RawPlayerIdentity.h",
+          "previous": "331f03a8693685a6bf1f4fadc24e7cdee4c5a1c8813d3a7cc02c46697a09c6c4",
+          "current": "fe72fe29c2286a6ee6850affe138d9447516bdab1be3e5ab581f58438cc9b0ff"
+        },
+        {
+          "group": "/product_validation/sha256",
+          "path": "cpppj/src/o/RawPlayerIdentity.cpp",
+          "previous": "3dc55d9fd0fac8fd4fb7d2caf3f4fc46618c6df9416709aaf1548629daf99e41",
+          "current": "96c5c91ae865f10f9deba31b59ed9bac40df16c1d38d38d37329100732cfd49c"
         }
       ]
     }

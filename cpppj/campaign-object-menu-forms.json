@@ -8,16 +8,16 @@
     "date": "2026-10-16"
   },
   "currentSources": {
-    ".gitattributes": "18cccb2879050d0f4f98e77c0991dd438415c0d929a1d42165f907dfad88fc0b",
+    ".gitattributes": "68ac33ee3c1433a1dacc5154baca6dfd0c531ed2e0481671dc91777875fadd07",
     "cpppj/src/client/CampaignClientServices.cpp": "deb067662fe4fcd5324bab710c7b06fb7ce5f661f4078227946adc4fa92db72a",
     "cpppj/src/client/RawButtonControls.cpp": "5d9568d2a6c461e9dd474cc584db62389ca3eb576e780fdeb6e9a39f1ee55baf",
     "cpppj/src/client/RawButtonControls.h": "372d15ad4ab423ef9869fab470ad1f4b5c75cb0ebc12503edd2bb7a6f3f240d6",
-    "cpppj/src/client/RawCampaignSession.cpp": "65c90c8a5135f732e628e54a4940dc922ead69044378aa6b839803a6fcb8e16f",
-    "cpppj/src/client/RawCampaignSession.h": "1499e7139b7904a5d3a9484f2e7d38aa5ce76b4267e7f7e1fe6f2636cc0dae50",
+    "cpppj/src/client/RawCampaignSession.cpp": "f5fd8fcbe2f6b2d20daba173a0fcf6987b56f105be2eca2374bcf284ed0eb877",
+    "cpppj/src/client/RawCampaignSession.h": "7e8206da0091e1ed9e73a683f58cdd8229cb5a8251e7f09882ab7486bc28abeb",
     "cpppj/src/client/RawMenuControls.cpp": "e1d3a27c5330b52727e18447c97b02f6a7f82cb0ceeb9bf55aad874b744720f1",
     "cpppj/src/client/RawMenuControls.h": "92b7db6b2d4fa00641d814a9e0e6b76bf649b7789302cb1dc306abd87c99023d",
     "cpppj/src/client/UberGump.cpp": "471b592cf1e784c63db34bc109eb3d38785481018b403cef0afa98d98622d10b",
-    "cpppj/tests/CampaignObjectMenuTests.cpp": "295f85011778d75761aa0edc9eec11725a7d08ba04c28cd3def94a60ad48f436"
+    "cpppj/tests/CampaignObjectMenuTests.cpp": "2cda2c4f5ae708ea51de898c878edaa6cdccd3de039f8f927afbfa9c39e86fce"
   },
   "unchangedExistingModules": {
     "cpppj/src/o/GumpFormHost.cpp": "f4045100a4642fdb432cee4f0c223079810176c68235140950fa0a1490f112a4",
@@ -112,5 +112,38 @@
     "생산/경제/AI/로그인된로컬전송양끝·큐잉·등록수명/전체Kernel/대상11스테이지자연완주·승패·저장·다음미션·전체동일성"
   ],
   "excluded": "전체화면DirectDraw수정",
-  "localCommitMessage": "20261017-40 CP 같은 세션의 객체 Form과 메뉴 부착 및 삭제 수명 연결"
+  "localCommitMessage": "20261017-40 CP 같은 세션의 객체 Form과 메뉴 부착 및 삭제 수명 연결",
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "unit": 141,
+      "reason": "원본4인자 객체메뉴 정보와 현재 Session/owner 이름/동맹/Player 연결 및 독립 원본 재생검사에 따른 현재제품 SHA 갱신. 과거 SHA/원본 fixture 보존. 원본 전체 재실행이나 자연완주 검증을 뜻하지 않는다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": ".gitattributes",
+          "previous": "18cccb2879050d0f4f98e77c0991dd438415c0d929a1d42165f907dfad88fc0b",
+          "current": "68ac33ee3c1433a1dacc5154baca6dfd0c531ed2e0481671dc91777875fadd07"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "65c90c8a5135f732e628e54a4940dc922ead69044378aa6b839803a6fcb8e16f",
+          "current": "f5fd8fcbe2f6b2d20daba173a0fcf6987b56f105be2eca2374bcf284ed0eb877"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "1499e7139b7904a5d3a9484f2e7d38aa5ce76b4267e7f7e1fe6f2636cc0dae50",
+          "current": "7e8206da0091e1ed9e73a683f58cdd8229cb5a8251e7f09882ab7486bc28abeb"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignObjectMenuTests.cpp",
+          "previous": "295f85011778d75761aa0edc9eec11725a7d08ba04c28cd3def94a60ad48f436",
+          "current": "2cda2c4f5ae708ea51de898c878edaa6cdccd3de039f8f927afbfa9c39e86fce"
+        }
+      ]
+    }
+  ]
 }

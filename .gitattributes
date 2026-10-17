@@ -1256,3 +1256,11 @@ tools/decomp_object_menu_open.py text eol=lf
 cpppj/src/client/RawButtonControls.* text eol=lf
 cpppj/src/client/CampaignClientServices.cpp text eol=lf
 cpppj/campaign-object-menu-forms.json text eol=lf
+
+# 원본객체메뉴정보의독립기대값/도구/현재제품바이트를보존한다.
+cpppj/src/client/RawObjectMenuInfo.* text eol=lf
+cpppj/tests/ObjectMenuInfoTests.cpp text eol=lf
+cpppj/tests/fixtures/object-menu-info-x86.tsv text eol=lf
+cpppj/object-menu-info.json text eol=lf
+cpppj/campaign-object-menu-info.json text eol=lf
+tools/decomp_object_menu_info.py text eol=lf

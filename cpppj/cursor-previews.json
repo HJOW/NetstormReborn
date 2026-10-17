@@ -21,8 +21,8 @@
     "cpppj/src/o/RawBridgeConnect.cpp": "d61934e4375b6e1630f735ee685ddd2aa788316ee1b8cb9cf5c668fba1a1b0f5",
     "cpppj/tests/BridgeConnectTests.cpp": "16e2d952e252c2a264a859182f261487ca50101e34eb7036ea6d66242b9aae11",
     "cpppj/tests/CursorPreviewTests.cpp": "ed217ca7021e4ed5af0fb7aa91fda7af1c2f67b0cb75307157a0a7ace0c86799",
-    "cpppj/src/client/CMakeLists.txt": "ef27e7af2e58dc2782bfebdec87f26921cf7b11fa7c135f085b4a6df342cc08c",
-    "cpppj/tests/CMakeLists.txt": "e16d86562d18e8a6d7d23c511b6871a2a5459843c73286dc201203abaa5aaec3",
+    "cpppj/src/client/CMakeLists.txt": "78725b028b113f3e2c815aebcc41847d2f79fc8acdcd237f4a75a05aa9854a3b",
+    "cpppj/tests/CMakeLists.txt": "b4d541e91686cd7407ecdd5fcf9e0373f26588a16e67b173b49f3ead85a2de78",
     "cpppj/tests/CursorPreviewSupport.h": "fa4e6b6d54bbc564af308ffd154f2ced7482a131c542222c0342e6019d6c9084"
   },
   "limitations": [
@@ -285,6 +285,25 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "fe85134c12002da7e8271c43680ab1a254d34413ea3b5d187fb763ef493991ae",
           "current": "e16d86562d18e8a6d7d23c511b6871a2a5459843c73286dc201203abaa5aaec3"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 141,
+      "reason": "원본4인자 객체메뉴 정보와 현재 Session/owner 이름/동맹/Player 연결 및 독립 원본 재생검사에 따른 현재제품 SHA 갱신. 과거 SHA/원본 fixture 보존. 원본 전체 재실행이나 자연완주 검증을 뜻하지 않는다.",
+      "pins": [
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/client/CMakeLists.txt",
+          "previous": "ef27e7af2e58dc2782bfebdec87f26921cf7b11fa7c135f085b4a6df342cc08c",
+          "current": "78725b028b113f3e2c815aebcc41847d2f79fc8acdcd237f4a75a05aa9854a3b"
+        },
+        {
+          "group": "/sha256",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "e16d86562d18e8a6d7d23c511b6871a2a5459843c73286dc201203abaa5aaec3",
+          "current": "b4d541e91686cd7407ecdd5fcf9e0373f26588a16e67b173b49f3ead85a2de78"
         }
       ]
     }

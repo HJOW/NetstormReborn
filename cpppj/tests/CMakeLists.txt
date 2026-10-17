@@ -1345,3 +1345,6 @@ set_source_files_properties(UserHighlightTests.cpp PROPERTIES COMPILE_DEFINITION
 
 # 공통 객체 메뉴Open/위치의실제PE788입력과미연결경계를검사한다.
 target_sources(netstorm_tests PRIVATE ObjectMenuOpenTests.cpp)
+
+# 객체메뉴의4인자제목/현재경고와실제원본문자열helper를재생한다.
+target_sources(netstorm_tests PRIVATE ObjectMenuInfoTests.cpp)

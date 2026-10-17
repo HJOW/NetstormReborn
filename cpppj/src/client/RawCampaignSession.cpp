@@ -107,6 +107,8 @@ std::uint32_t Read(std::span<const std::uint8_t> raw,std::size_t offset) {
 // 메뉴의 현재 원문/참조와 자식 우선 소멸 순서를 한 고정 주소에 보관한다.
 struct RawCampaignObjectMenus::Impl {
     CampaignObjectMenuUi ui; // GUI·Chat·정적 문자열과 현재 외부 getter의 수명 소유자다.
+    std::array<std::string,188> classes; // 실제GameAssets정의의TYPE+aa 보충문자열이며같은체인동안고정주소다.
+    ObjectMenuInfoState infoState; // 같은현재로컬번호/편집/미션getter와117/118그림TYPE다.
     CarrierDropPointState dropState; // PE의 지도 한계256/실패점0,0이며 같은 위치 계산기가 직접 읽는다.
     CarrierMenuState carrierState; // 공통 객체 상태/실제 CD SP와 같은 참조를 읽고 PATCH는 현재 getter를 사용한다.
     std::unique_ptr<RawPlayerIdentity> identity; // 실제 Player9와 Client Chat 원문을 빌린다.
@@ -114,6 +116,7 @@ struct RawCampaignObjectMenus::Impl {
     std::unique_ptr<RawCarrierDropPoint> dropPoint; // 전체 MayPlace/현재 중심을 사용하는 실제 위치 몸체다.
     std::unique_ptr<RawPlayerMenu> player; // 현재 사제 상태/동맹/정적 asksend 문자열을 읽는 끝 부모다.
     std::unique_ptr<RawObjectMenu> object; // 같은 Player 메뉴와 실제 HP/회수 계산을 사용한다.
+    std::unique_ptr<RawObjectMenuInfo> info; // 같은가상count/Identity/동맹/Player/포획몸체와controlled제목이다.
     std::unique_ptr<RawCarrierMenu> carrier; // 사제의 비가상 기본 호출이 참조하는 실제 Carrier 메뉴다.
     std::unique_ptr<RawPriestMenu> priest; // 같은 기술/SP/커서 취득과 위 전체 부모 체인을 사용한다.
     // 같은 현재 전역의 참조를 먼저 구성한다. 생성 중 메뉴/게임 효과를 실행하지 않는다.
@@ -127,6 +130,10 @@ void RawCampaignObjectMenus::OpenPriest(Sid sid) const { impl_->priest->Open(sid
 void RawCampaignObjectMenus::OpenCarrier(Sid sid) const { impl_->carrier->Open(sid); } // 실제 가상 메뉴가 Carrier인 caller가 선택한다.
 void RawCampaignObjectMenus::OpenDamageable(Sid sid) const { impl_->object->OpenDamageable(sid); } // 실제 Damageable 회수 관문을 보존한다.
 void RawCampaignObjectMenus::OpenObject(Sid sid) const { impl_->object->Open(sid); } // 기본 메뉴를 파생 기능의 대체 성공으로 쓰지 않는다.
+// 임의제목입력대신같은현재객체와원본정보작성몸체를사용한다.
+void RawCampaignObjectMenus::Summary(Sid sid) const { impl_->info->Summary(sid); }
+// 객체없는타입메뉴도원본4인자와SID=-1계약을그대로전달한다.
+void RawCampaignObjectMenus::Describe(std::uint32_t type,std::uint32_t count,std::uint32_t owner,std::uint32_t sid) const { impl_->info->Describe(type,count,owner,sid); }
 // Open과 동일한 실제 세션 커서/현재 금액으로 건설 선택을 수행한다.
 bool RawCampaignObjectMenus::SelectBuild(std::uint32_t type,Sid priest) const { return impl_->priest->SelectBuild(type,priest); }
 // 정적 Player 버퍼는 메뉴 체인이 살아 있는 동안 같은 원본 토큰으로 조회한다.
@@ -1535,7 +1542,18 @@ std::unique_ptr<RawCampaignObjectMenus> RawCampaignSession::MakeObjectMenus(Camp
     };
     object.salvageRefund=[current](Sid sid,std::uint32_t type,std::uint32_t count) { return current->hp.SalvageRefund(sid,type,std::bit_cast<std::int32_t>(count)); };
     BindObjectMenuIdentity(object,*chain->identity);BindObjectPlayerMenu(object,*chain->player);
+    const auto actualCount=object.count; // 정보와회수는같은현재VT검증/실제가상80을공유한다.
     chain->object=std::make_unique<RawObjectMenu>(current->core.pool,current->core.types,inputs.objectState,std::move(object));
+    // 기존RiftTypeRecord에서빠진+aa문자열만실제정의에서보충하며TYPE/flags/theme를복제하지않는다.
+    for (const auto& asset:current->assets.game.Types()) if (const auto value=asset.definition.String("class")) {
+        const auto text=value->substr(0,value->find('\0'));if (text.size()>23) throw std::length_error("현재객체메뉴 class23바이트초과");chain->classes[70+asset.block]=text;
+    }
+    chain->infoState.localOwner=inputs.objectState.localOwnerRead;chain->infoState.editor=[current] { return current->globals.editor; };chain->infoState.missionPost=[current] { return current->globals.missionPost; };
+    auto info=inputs.info;info.count=actualCount;info.ownerName=[chain](std::uint32_t owner) { return chain->identity->NameForOwner(owner); };
+    info.alliance=[current](std::uint32_t owner,std::uint32_t local) { if (owner>=9 || local>=9) throw std::out_of_range("현재객체메뉴 동맹범위오류");return current->alliances[owner*9+local]; };
+    info.groundImmobile=[current](Sid sid) { return current->priests->PriestState().GroundImmobile(sid); };
+    info.ownerStatus=[current](std::uint32_t owner) { if (owner>=9) throw std::out_of_range("현재객체메뉴 Player범위오류");return current->players[owner*180+0x50]; };
+    chain->info=std::make_unique<RawObjectMenuInfo>(current->core.pool,current->core.types,chain->classes,chain->infoState,std::move(info));
     CarrierDropPointHooks point;point.mayPlace=[current](const CanonPlacementQuery& query) { current->PrepareConstruction();return current->MayPlaceGameplay(query); };
     point.center=[current](Sid sid) { return current->gunTarget->Center(sid); };
     chain->dropPoint=std::make_unique<RawCarrierDropPoint>(current->core.pool,current->core.types,chain->dropState,std::move(point));

@@ -352,14 +352,39 @@
           "current": "1499e7139b7904a5d3a9484f2e7d38aa5ce76b4267e7f7e1fe6f2636cc0dae50"
         }
       ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 141,
+      "reason": "원본4인자 객체메뉴 정보와 현재 Session/owner 이름/동맹/Player 연결 및 독립 원본 재생검사에 따른 현재제품 SHA 갱신. 과거 SHA/원본 fixture 보존. 원본 전체 재실행이나 자연완주 검증을 뜻하지 않는다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "65c90c8a5135f732e628e54a4940dc922ead69044378aa6b839803a6fcb8e16f",
+          "current": "f5fd8fcbe2f6b2d20daba173a0fcf6987b56f105be2eca2374bcf284ed0eb877"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "1499e7139b7904a5d3a9484f2e7d38aa5ce76b4267e7f7e1fe6f2636cc0dae50",
+          "current": "7e8206da0091e1ed9e73a683f58cdd8229cb5a8251e7f09882ab7486bc28abeb"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "e16d86562d18e8a6d7d23c511b6871a2a5459843c73286dc201203abaa5aaec3",
+          "current": "b4d541e91686cd7407ecdd5fcf9e0373f26588a16e67b173b49f3ead85a2de78"
+        }
+      ]
     }
   ],
   "currentSources": {
     "cpppj/src/client/RawCampaignLifetimeBindings.cpp": "2eb0d3fc16e6967b54271c0365991e0ebd8f3d57ef6412aa92d4c4d21fbb01c3",
     "cpppj/src/client/RawCampaignPathBindings.cpp": "33acf790e03a052f2808b067048fae51ea92c8bbc76f66d660323b0b7fe8da63",
     "cpppj/src/client/RawCampaignPathBindings.h": "0f507504ab6b216eb92849f916d25637081c27bf934842b660ac68ea3f1c8217",
-    "cpppj/src/client/RawCampaignSession.cpp": "65c90c8a5135f732e628e54a4940dc922ead69044378aa6b839803a6fcb8e16f",
-    "cpppj/src/client/RawCampaignSession.h": "1499e7139b7904a5d3a9484f2e7d38aa5ce76b4267e7f7e1fe6f2636cc0dae50",
+    "cpppj/src/client/RawCampaignSession.cpp": "f5fd8fcbe2f6b2d20daba173a0fcf6987b56f105be2eca2374bcf284ed0eb877",
+    "cpppj/src/client/RawCampaignSession.h": "7e8206da0091e1ed9e73a683f58cdd8229cb5a8251e7f09882ab7486bc28abeb",
     "cpppj/src/o/CMakeLists.txt": "3d0010c676da1156f5223bfcaa207887a88910a4cf50733a7b2e9e515f939c48",
     "cpppj/src/o/RawManaBoltArrival.cpp": "0a747951767966b2fdfb80928397e2d73ae33cb28ff76b4b3b73e3499e4c96b6",
     "cpppj/src/o/RawManaBoltArrival.h": "9866ffe90c4a298a24afd11e685b50c1bc16c8df52f32aefcc5d4f9d108f0639",
@@ -374,7 +399,7 @@
     "cpppj/src/o/SquidDisplay.cpp": "adff73d1c710cf295aed17e2a06cb90294e1399e5e455d423659f37c336f3dc6",
     "cpppj/src/o/SquidPop.cpp": "61f8db73c663d5d7c8880d73bc310cf7884e361bb76402e0946241e02b7dcd17",
     "cpppj/src/o/SquidUnpop.cpp": "f9a932b6ee543cc2ee051d6f67afb0c56fca1f325cc51d29ca3d0dc3adf26fef",
-    "cpppj/tests/CMakeLists.txt": "e16d86562d18e8a6d7d23c511b6871a2a5459843c73286dc201203abaa5aaec3",
+    "cpppj/tests/CMakeLists.txt": "b4d541e91686cd7407ecdd5fcf9e0373f26588a16e67b173b49f3ead85a2de78",
     "cpppj/tests/CampaignSessionTests.cpp": "964400205960599492a269d374aaaa7e46ff7f7b6e3968a992d0a447dc16bf2a",
     "cpppj/tests/ConstructionArrivalTests.cpp": "3282c1768168e0301078a78de6d7e692d84d917bef5866bf1da22bd0c1b4b6f4",
     "cpppj/tests/CursorManaTests.cpp": "3f9aa47024782b0afe4f165a2145fa4f27706d8b5b7c1434f8e94c65a5318daa",

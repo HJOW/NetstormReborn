@@ -21,8 +21,8 @@
     "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
     "cpppj/src/client/GameWorld.h": "a8606419c9753965231813d4cc5391614a4b892ac1d716b534ef5b84c88b79f3",
     "cpppj/src/client/GameWorld.cpp": "6f1c2bb5a44a98039f2c0709164ec27911fa0893282377120c35e5e05fd3b7fa",
-    "cpppj/src/client/RawCampaignSession.h": "1499e7139b7904a5d3a9484f2e7d38aa5ce76b4267e7f7e1fe6f2636cc0dae50",
-    "cpppj/src/client/RawCampaignSession.cpp": "65c90c8a5135f732e628e54a4940dc922ead69044378aa6b839803a6fcb8e16f",
+    "cpppj/src/client/RawCampaignSession.h": "7e8206da0091e1ed9e73a683f58cdd8229cb5a8251e7f09882ab7486bc28abeb",
+    "cpppj/src/client/RawCampaignSession.cpp": "f5fd8fcbe2f6b2d20daba173a0fcf6987b56f105be2eca2374bcf284ed0eb877",
     "cpppj/src/client/RawPriestMenu.h": "5364d92d3af5b9b81a0477df5c005fcfc4a1ef7f6817894bd337250ce4d0e43d",
     "cpppj/src/client/RawPriestMenu.cpp": "f30be4e91f2141d1000f4a75d9f41619024d20f6cb024f68b8ffb483b1eddcf7",
     "cpppj/src/client/RawCampaignLifetimeBindings.h": "6f4be73b52279abf308c8a3e6d8962271560e47c25996f7a03fca09f8cd063e8",
@@ -45,7 +45,7 @@
     "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
     "tools/decomp_carrier_content_notice.py": "dbb32841a7019edbcb411f75094046c8bf0e20b4ed503e109a14b79a79d8a94c",
     "cpppj/src/o/CMakeLists.txt": "3d0010c676da1156f5223bfcaa207887a88910a4cf50733a7b2e9e515f939c48",
-    "cpppj/tests/CMakeLists.txt": "e16d86562d18e8a6d7d23c511b6871a2a5459843c73286dc201203abaa5aaec3"
+    "cpppj/tests/CMakeLists.txt": "b4d541e91686cd7407ecdd5fcf9e0373f26588a16e67b173b49f3ead85a2de78"
   },
   "validation": {
     "configuration": "Release",
@@ -580,6 +580,31 @@
           "path": "cpppj/src/client/RawCampaignSession.cpp",
           "previous": "743893d3824fe9b7915ab9dd32f568484e6ebd902c7a5390c4f4d81581902a84",
           "current": "65c90c8a5135f732e628e54a4940dc922ead69044378aa6b839803a6fcb8e16f"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 141,
+      "reason": "원본4인자 객체메뉴 정보와 현재 Session/owner 이름/동맹/Player 연결 및 독립 원본 재생검사에 따른 현재제품 SHA 갱신. 과거 SHA/원본 fixture 보존. 원본 전체 재실행이나 자연완주 검증을 뜻하지 않는다.",
+      "pins": [
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "1499e7139b7904a5d3a9484f2e7d38aa5ce76b4267e7f7e1fe6f2636cc0dae50",
+          "current": "7e8206da0091e1ed9e73a683f58cdd8229cb5a8251e7f09882ab7486bc28abeb"
+        },
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "65c90c8a5135f732e628e54a4940dc922ead69044378aa6b839803a6fcb8e16f",
+          "current": "f5fd8fcbe2f6b2d20daba173a0fcf6987b56f105be2eca2374bcf284ed0eb877"
+        },
+        {
+          "group": "/sha256",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "e16d86562d18e8a6d7d23c511b6871a2a5459843c73286dc201203abaa5aaec3",
+          "current": "b4d541e91686cd7407ecdd5fcf9e0373f26588a16e67b173b49f3ead85a2de78"
         }
       ]
     }

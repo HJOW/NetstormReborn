@@ -25,9 +25,9 @@
     "tools/decomp_energy_supply.py": "a18c1913de8e3462dc30e21d1cbb62541600655630d8605c594ecc860d200434",
     "tools/decomp_energy_sort.py": "a203949bf138366de9812342953ecfe050dfa588a0c1df4536b5973284caf5ef",
     "cpppj/tests/fixtures/energy-sort-x86.tsv": "58f67ad1e9207c2b7793101100855d504c6167de92ee0176adf3be816489ab4e",
-    "cpppj/tests/CMakeLists.txt": "e16d86562d18e8a6d7d23c511b6871a2a5459843c73286dc201203abaa5aaec3",
-    "cpppj/src/client/RawCampaignSession.h": "1499e7139b7904a5d3a9484f2e7d38aa5ce76b4267e7f7e1fe6f2636cc0dae50",
-    "cpppj/src/client/RawCampaignSession.cpp": "65c90c8a5135f732e628e54a4940dc922ead69044378aa6b839803a6fcb8e16f",
+    "cpppj/tests/CMakeLists.txt": "b4d541e91686cd7407ecdd5fcf9e0373f26588a16e67b173b49f3ead85a2de78",
+    "cpppj/src/client/RawCampaignSession.h": "7e8206da0091e1ed9e73a683f58cdd8229cb5a8251e7f09882ab7486bc28abeb",
+    "cpppj/src/client/RawCampaignSession.cpp": "f5fd8fcbe2f6b2d20daba173a0fcf6987b56f105be2eca2374bcf284ed0eb877",
     "cpppj/tests/CampaignSessionTests.cpp": "964400205960599492a269d374aaaa7e46ff7f7b6e3968a992d0a447dc16bf2a",
     "cpppj/src/o/RawEnergySupply.h": "16298ecafac440612cf5722175fe7adade050e9bdd67015f8308fd37077998be",
     "cpppj/src/o/RawEnergySupply.cpp": "c5597f73998872c29ecb266356405d084ad36b24c6248a3cfc1a1bc43d55f495",
@@ -426,6 +426,31 @@
           "path": "cpppj/src/client/RawCampaignSession.cpp",
           "previous": "743893d3824fe9b7915ab9dd32f568484e6ebd902c7a5390c4f4d81581902a84",
           "current": "65c90c8a5135f732e628e54a4940dc922ead69044378aa6b839803a6fcb8e16f"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 141,
+      "reason": "원본4인자 객체메뉴 정보와 현재 Session/owner 이름/동맹/Player 연결 및 독립 원본 재생검사에 따른 현재제품 SHA 갱신. 과거 SHA/원본 fixture 보존. 원본 전체 재실행이나 자연완주 검증을 뜻하지 않는다.",
+      "pins": [
+        {
+          "group": "/sha256",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "e16d86562d18e8a6d7d23c511b6871a2a5459843c73286dc201203abaa5aaec3",
+          "current": "b4d541e91686cd7407ecdd5fcf9e0373f26588a16e67b173b49f3ead85a2de78"
+        },
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "1499e7139b7904a5d3a9484f2e7d38aa5ce76b4267e7f7e1fe6f2636cc0dae50",
+          "current": "7e8206da0091e1ed9e73a683f58cdd8229cb5a8251e7f09882ab7486bc28abeb"
+        },
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "65c90c8a5135f732e628e54a4940dc922ead69044378aa6b839803a6fcb8e16f",
+          "current": "f5fd8fcbe2f6b2d20daba173a0fcf6987b56f105be2eca2374bcf284ed0eb877"
         }
       ]
     }
