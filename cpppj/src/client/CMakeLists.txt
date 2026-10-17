@@ -135,3 +135,6 @@ target_sources(netstorm PRIVATE RawCursorPreviews.h RawCursorPreviews.cpp)
 target_sources(netstorm PRIVATE RawCursorPosition.h RawCursorPosition.cpp)
 # 같은 실제 Client Gump 트리에 메뉴·장식·제목·Slider를 조립한다.
 target_sources(netstorm PRIVATE RawMenuControls.h RawMenuControls.cpp)
+
+# 실제 운반물 위치와 발자국 탐색을 같은 메뉴/배치 파이프라인에 연결한다.
+target_sources(netstorm PRIVATE RawCarrierDropPoint.h RawCarrierDropPoint.cpp)

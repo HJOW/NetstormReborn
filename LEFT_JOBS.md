@@ -1,5 +1,18 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-17 단위121 완료: 운반물 내려놓기 위치 복원 (`HJOW-Athlon`)
+
+- [x] AGENTS.md·양 LEFT·깨끗한c135438과 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16**을 확인했다. 직전 단위120은 전체1,485 통과/로컬 커밋으로 진행됐다. 새 내보내기·원본/클론 게임 실행은 없다. 전체 목표는 active다.
+- [x] `RawCarrierDropPoint`가 PATCH426a70 전체,49bfe0 전체,41d7a0의 기본53비트 의미를 같은 Pool/현재 TYPE/실패점·지도 한계로 복원한다. 즉시 허용/100 중심 분기·짝수방향4개→홀수4개·발자국x 바깥/y 안쪽·현재 치수 재조회·각 helper의 고정 owner DWORD를 보존한다. [작업 기록](docs/exe/cpp-carrier-drop-point-20261017.md).
+- [x] 실제 전체 MayPlace 파이프라인/현재 TYPE을 읽는 기존 RawGunTarget.Center와 Carrier 메뉴 위치 경계를 연결했다. 실제 Carrier.Open→contained finder→위치→MayPlace→Drop 항목까지 검사한다. 이 연결 검사의 공간 판정은 원본 forcePlacement 즉시 허용 경로다. 실제 지형/충돌 후반을 새로 검증했다거나 Client Session이 활성됐다는 증거로 쓰지 않는다.
+- [x] 최종 원문2는 **998고유 입력(위치609/발자국133/Snap256), 두 정밀도1,996정상 반환/명령·경계1,029,500회**다. 두 출력float/효과 인수 전체/현재 전역6DWORD/raw50바이트·가드/ABI/x87/허용 실행 및 쓰기를 감사했다. 전체 MayPlace와 현재 중심은 명시 경계이며 게임/OS 호출은0이다.
+- [x] 초기 원문1은 정밀도 일치 가정에서 중단했다. 거대한 지도 밖 Snap0x5effffff를 포함한 **31개53/64비트 차이**를 삭제하지 않고 양쪽 출력으로 보존했다. C++는 기본53비트 기대값과998개 모두 일치한다. 정상 지도 주 호출/발자국 입력은 두 정밀도가 일치한다. 실패 실행을 최종 정상 반환/명령 합계에 넣지 않았다. 원문2 이후 fixture는 보존하고 검증 강화·제품 의존만 이력과 추가했다.
+- [x] 최종 **Release 빌드2 종료0·경고0·오류0**, 새 집중4/기존 Carrier2 **총6개 모두 통과**다. 기존 Carrier628개와 새998개를 포함한다. 영구 로그 접두사는 `extracted/goal-carrier-drop-point-20261017-`다. 새17개SHA/7파일 UTF-8 LF·보호 원본3개·기존 fixture·AGENTS/DN 경계를 감사했다.
+- [x] 기존 커서687/522/573/565·TYPE2,352·객체1,434·Carrier628·Identity1,702·Player292 SHA를 감사했다. 공통 CMake의 실제 바뀐 기존5보고서10핀만 이전/현재 이력과 갱신했다. 객체 보고서의 nested 제품2핀도 포함하며 기존 관측/몸체는 바꾸지 않았다.
+- [x] 전체 CTest 내부 **1,489개 모두 통과·실패0·223.15초·종료0**다. 영구 전체 출력은 `extracted/goal-carrier-drop-point-20261017-ctest-output.log`다. 기본 시스템 커서는 통과했으나 이전 간헐 실패 원인은 미확정이다.
+- [x] 모든 빌드/검사/관찰 핸들이 종료했다. 새 제품/기존 공유 CMake의 실제 변경17핀을 스테이지 바이트와 대조했다. 기록을 포함한 단위를 **20261017-21 CP 운반물 내려놓기 위치와 실제 발자국 탐색 복원**으로 로컬 커밋한다. push하지 않고 전체 목표는 active다.
+- [ ] **다음 실제 플레이:** GameWorld의 private RawCampaignSession에서 같은 Core()/World()/PlayerRecords()/Alliances()/CurrentSubscriber()/Priests()를 Client 수명에 빌려, 실제 원본 사제/Carrier 메뉴·명령/Tell/GumpForm·커서 Take/위치/수집/표시/내려놓기와 일반 건설을 조립한다. UberGump336의 Construct는 아직 비활성이며 프로토타입 메뉴다. 생산/경제·AI 전략·GUI 목표미션 시작/진행/승패·저장/다음 미션·사용자 자연 완주와 전체 동일성은 미완료다. CD4e46f0은 signed DWORD 양수/x87 판정·owner 레지스터 폭 차이를 문서에 남겼으며 PATCH 경로로 복원됐다고 하지 않는다. DirectDraw는 이번 범위에서 제외한다.
+
 ## 2026-10-17 단위120 완료: 커서 공유 상태와 수집·표시 연결 (`HJOW-Athlon`)
 
 - [x] AGENTS.md·양 LEFT와 깨끗한94492b1·현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16**을 확인했다. 새 디컴파일/원본·클론 게임 실행은 없다. 전체 목표는 active다.

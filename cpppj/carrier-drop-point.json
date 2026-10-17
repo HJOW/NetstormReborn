@@ -1,0 +1,244 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "entries": [
+    "00426a70",
+    "0049bfe0",
+    "0041d7a0",
+    "0049a840",
+    "004e49c0"
+  ],
+  "uniqueInputs": 998,
+  "normalReturns": 1996,
+  "instructionObservations": 1029500,
+  "instructionObservationsIncludeBoundaryEntries": true,
+  "entryObservations": {
+    "00426a70": 1218,
+    "0041d7a0": 1826,
+    "004e49c0": 3652,
+    "0049a840": 1218,
+    "0049bfe0": 5004
+  },
+  "precisionDifferentInputs": [
+    {
+      "input": "2,0,1593835519,1,0,2,3,1095499776,1100021760,256,0,0,0,1,0,7,3,4275878552",
+      "precision53": "0,0",
+      "precision64": "0,1065353216"
+    },
+    {
+      "input": "2,2147483648,1593835519,1,0,2,3,1095499776,1100021760,256,0,0,0,1,0,7,3,4275878552",
+      "precision53": "0,0",
+      "precision64": "0,1065353216"
+    },
+    {
+      "input": "2,3219128320,1593835519,1,0,2,3,1095499776,1100021760,256,0,0,0,1,0,7,3,4275878552",
+      "precision53": "0,0",
+      "precision64": "0,1065353216"
+    },
+    {
+      "input": "2,3212836696,1593835519,1,0,2,3,1095499776,1100021760,256,0,0,0,1,0,7,3,4275878552",
+      "precision53": "0,0",
+      "precision64": "0,1065353216"
+    },
+    {
+      "input": "2,933741996,1593835519,1,0,2,3,1095499776,1100021760,256,0,0,0,1,0,7,3,4275878552",
+      "precision53": "1065353216,0",
+      "precision64": "1065353216,1065353216"
+    },
+    {
+      "input": "2,1065353300,1593835519,1,0,2,3,1095499776,1100021760,256,0,0,0,1,0,7,3,4275878552",
+      "precision53": "1073741824,0",
+      "precision64": "1073741824,1065353216"
+    },
+    {
+      "input": "2,1325400063,1593835519,1,0,2,3,1095499776,1100021760,256,0,0,0,1,0,7,3,4275878552",
+      "precision53": "1325400063,0",
+      "precision64": "1325400063,1065353216"
+    },
+    {
+      "input": "2,1325400064,1593835519,1,0,2,3,1095499776,1100021760,256,0,0,0,1,0,7,3,4275878552",
+      "precision53": "3472883712,0",
+      "precision64": "3472883712,1065353216"
+    },
+    {
+      "input": "2,1333788672,1593835519,1,0,2,3,1095499776,1100021760,256,0,0,0,1,0,7,3,4275878552",
+      "precision53": "0,0",
+      "precision64": "0,1065353216"
+    },
+    {
+      "input": "2,3481272320,1593835519,1,0,2,3,1095499776,1100021760,256,0,0,0,1,0,7,3,4275878552",
+      "precision53": "1065353216,0",
+      "precision64": "1065353216,1065353216"
+    },
+    {
+      "input": "2,1593835519,0,1,0,2,3,1095499776,1100021760,256,0,0,0,1,0,7,3,4275878552",
+      "precision53": "0,0",
+      "precision64": "1065353216,0"
+    },
+    {
+      "input": "2,1593835519,2147483648,1,0,2,3,1095499776,1100021760,256,0,0,0,1,0,7,3,4275878552",
+      "precision53": "0,0",
+      "precision64": "1065353216,0"
+    },
+    {
+      "input": "2,1593835519,3219128320,1,0,2,3,1095499776,1100021760,256,0,0,0,1,0,7,3,4275878552",
+      "precision53": "0,0",
+      "precision64": "1065353216,0"
+    },
+    {
+      "input": "2,1593835519,3212836696,1,0,2,3,1095499776,1100021760,256,0,0,0,1,0,7,3,4275878552",
+      "precision53": "0,0",
+      "precision64": "1065353216,0"
+    },
+    {
+      "input": "2,1593835519,933741996,1,0,2,3,1095499776,1100021760,256,0,0,0,1,0,7,3,4275878552",
+      "precision53": "0,1065353216",
+      "precision64": "1065353216,1065353216"
+    },
+    {
+      "input": "2,1593835519,1065353300,1,0,2,3,1095499776,1100021760,256,0,0,0,1,0,7,3,4275878552",
+      "precision53": "0,1073741824",
+      "precision64": "1065353216,1073741824"
+    },
+    {
+      "input": "2,1593835519,1325400063,1,0,2,3,1095499776,1100021760,256,0,0,0,1,0,7,3,4275878552",
+      "precision53": "0,1325400063",
+      "precision64": "1065353216,1325400063"
+    },
+    {
+      "input": "2,1593835519,1325400064,1,0,2,3,1095499776,1100021760,256,0,0,0,1,0,7,3,4275878552",
+      "precision53": "0,3472883712",
+      "precision64": "1065353216,3472883712"
+    },
+    {
+      "input": "2,1593835519,1333788672,1,0,2,3,1095499776,1100021760,256,0,0,0,1,0,7,3,4275878552",
+      "precision53": "0,0",
+      "precision64": "1065353216,0"
+    },
+    {
+      "input": "2,1593835519,3481272320,1,0,2,3,1095499776,1100021760,256,0,0,0,1,0,7,3,4275878552",
+      "precision53": "0,1065353216",
+      "precision64": "1065353216,1065353216"
+    },
+    {
+      "input": "2,1593835519,1593835519,1,0,2,3,1095499776,1100021760,256,0,0,0,1,0,7,3,4275878552",
+      "precision53": "0,0",
+      "precision64": "1065353216,1065353216"
+    },
+    {
+      "input": "2,1593835519,1593835520,1,0,2,3,1095499776,1100021760,256,0,0,0,1,0,7,3,4275878552",
+      "precision53": "0,0",
+      "precision64": "1065353216,0"
+    },
+    {
+      "input": "2,1593835519,2139095040,1,0,2,3,1095499776,1100021760,256,0,0,0,1,0,7,3,4275878552",
+      "precision53": "0,0",
+      "precision64": "1065353216,0"
+    },
+    {
+      "input": "2,1593835519,4286578688,1,0,2,3,1095499776,1100021760,256,0,0,0,1,0,7,3,4275878552",
+      "precision53": "0,0",
+      "precision64": "1065353216,0"
+    },
+    {
+      "input": "2,1593835519,2143294004,1,0,2,3,1095499776,1100021760,256,0,0,0,1,0,7,3,4275878552",
+      "precision53": "0,0",
+      "precision64": "1065353216,0"
+    },
+    {
+      "input": "2,1593835519,2141196852,1,0,2,3,1095499776,1100021760,256,0,0,0,1,0,7,3,4275878552",
+      "precision53": "0,0",
+      "precision64": "1065353216,0"
+    },
+    {
+      "input": "2,1593835520,1593835519,1,0,2,3,1095499776,1100021760,256,0,0,0,1,0,7,3,4275878552",
+      "precision53": "0,0",
+      "precision64": "0,1065353216"
+    },
+    {
+      "input": "2,2139095040,1593835519,1,0,2,3,1095499776,1100021760,256,0,0,0,1,0,7,3,4275878552",
+      "precision53": "0,0",
+      "precision64": "0,1065353216"
+    },
+    {
+      "input": "2,4286578688,1593835519,1,0,2,3,1095499776,1100021760,256,0,0,0,1,0,7,3,4275878552",
+      "precision53": "0,0",
+      "precision64": "0,1065353216"
+    },
+    {
+      "input": "2,2143294004,1593835519,1,0,2,3,1095499776,1100021760,256,0,0,0,1,0,7,3,4275878552",
+      "precision53": "0,0",
+      "precision64": "0,1065353216"
+    },
+    {
+      "input": "2,2141196852,1593835519,1,0,2,3,1095499776,1100021760,256,0,0,0,1,0,7,3,4275878552",
+      "precision53": "0,0",
+      "precision64": "0,1065353216"
+    }
+  ],
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_object_menu.py": "883d1b6b694f773acebdb682161665954b020fe6d7068ff6677a7cdbbf3dd6be",
+    "tools/decomp_carrier_drop_point.py": "57bcb00d5f98d290bda38ded1467fef332866bce8761598cd92346b191155a59",
+    "cpppj/tests/fixtures/carrier-drop-point-x86.tsv": "4092cfdba7201e449d64862e71488fd95257d6400513d81a2360cae1b6e3aebb",
+    "cpppj/src/client/RawCarrierDropPoint.h": "e57a82a5afd40fbfd482bb494a1d1c60d754dc70174bd1b801ee45fac7d645ac",
+    "cpppj/src/client/RawCarrierDropPoint.cpp": "a0c2130de14992eb2f3debda71840b9e0c9889398d17cfd92c2c8cb050b2acd5",
+    "cpppj/tests/CarrierDropPointTests.cpp": "65a1f6834bad63ad10548fb4b0b96c26fc7e869a1f2447e07254190237f51b7c",
+    "cpppj/src/client/CMakeLists.txt": "8bb17d335554c16e6ff3300134492a264bfa425dfafd52062ecf0062f523d87c",
+    "cpppj/tests/CMakeLists.txt": "fcb5d8ca761b6c48715c00302a7d4e6d00ca31a16ba6ff3ac0a2dd731d583c8d",
+    "cpppj/src/client/RawCarrierMenu.h": "549eb57a893ffbb4aee1bdd5945fffb2e8a5fc45ec9cb9a294420f0737a292bd",
+    "cpppj/src/client/RawCarrierMenu.cpp": "0cea02b171cccc0909d96d55ccc09551dfabfec0d65473b14ff687a28eae7e88",
+    "cpppj/src/o/RawCanonPlacementPipeline.h": "4c52d14dea023e6c5251c528b1afd6955e10d8d25a31e9766b4d79faa286e8fc",
+    "cpppj/src/o/RawCanonPlacementPipeline.cpp": "c65178b9ed2baeaabaae08e607c9a8c2ff8683141a39dc9b23b3852e6d7db6d4",
+    "cpppj/src/o/RawGunTarget.h": "e080687a331b91ba83abca43bf304688aaf1f3e20152fdb7e7e641a4fe55d1e4",
+    "cpppj/src/o/RawGunTarget.cpp": "c14e541e11ed5ad770f4851b08a6a11c088dccd4da2ad3d3aaa6d0ae140bcc3d",
+    "cpppj/src/o/TerrainBuilder.h": "504ed96f652444ed971a4ec5f69d29d1a872e5c7f6e4950d86427c698d00be4b"
+  },
+  "limitations": [
+    "실제 위치/전체 발자국 탐색/거의 올림/TYPE lookup/CRT를 실행한다. 기본53비트 결과와64비트 차이를 별도 보존한다.",
+    "전체 MayPlace와 현재 중심은 명시 경계다. ABI/출력 가드/허용 실행 및 쓰기를 감사한다.",
+    "게임/OS 호출은 없으며 실제 Client 건설/사용자 완주를 입증하지 않는다."
+  ],
+  "osCalls": 0,
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "reason": "관측998개와 두 정밀도 출력은 보존하고 검증 폭/진입 집계·제품 의존 SHA를 추가",
+      "previous_tool_sha256": "93b8fea1bd17f2ac6bbd459415cf63f60d9ddf10ecf1d3245c32a8433212a9be",
+      "current_tool_sha256": "57bcb00d5f98d290bda38ded1467fef332866bce8761598cd92346b191155a59",
+      "fixture_preserved": true
+    }
+  ],
+  "product_validation": {
+    "configuration": "Release",
+    "build_exit_code": 0,
+    "build_warnings": 0,
+    "build_errors": 0,
+    "build_log": "extracted/goal-carrier-drop-point-20261017-build2.log",
+    "focused_tests": 4,
+    "native_rows_compared": 998,
+    "normal_game_coordinates_precision_agree": true,
+    "precision_differences_preserved": 31,
+    "full_validation_pending": false,
+    "actual_client_enabled": false,
+    "actual_gui_play_verified": false,
+    "real_pipeline_check": "원본 forcePlacement 즉시 허용 경로·현재 TYPE 중심·실제 Carrier.Open/contained finder/Drop 항목",
+    "legacy_focused_tests": 2,
+    "full_tests": 1489,
+    "failed_checks": 0,
+    "ctest_exit_code": 0,
+    "ctest_seconds": 223.15,
+    "ctest_total_seconds": 223.18,
+    "full_output": "extracted/goal-carrier-drop-point-20261017-ctest-output.log",
+    "cursor_intermittent_failure_root_cause_unresolved": true
+  },
+  "precision_selection_evidence": {
+    "method": "보호 PE 정적 명령",
+    "initializer": "004e81da",
+    "control_function": "004f2a7b",
+    "requested_control": "00010000",
+    "mask": "00030000",
+    "product_reference": "53비트 관측 출력"
+  }
+}

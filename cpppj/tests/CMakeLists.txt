@@ -1245,3 +1245,8 @@ set_source_files_properties(PlayerIdentityTests.cpp PROPERTIES COMPILE_DEFINITIO
 target_sources(netstorm_tests PRIVATE PlayerMenuTests.cpp)
 set_source_files_properties(PlayerMenuTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_PLAYER_MENU_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/player-menu-x86.tsv\"")
+
+# 실제 운반물 위치/전체 발자국 탐색과 기본53비트 절삭의 독립 원문이다.
+target_sources(netstorm_tests PRIVATE CarrierDropPointTests.cpp)
+set_source_files_properties(CarrierDropPointTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CARRIER_DROP_POINT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/carrier-drop-point-x86.tsv\"")

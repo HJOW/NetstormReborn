@@ -64,8 +64,8 @@
       "cpppj/src/client/RawObjectMenu.cpp": "ef92b668ec60c211d8a54722f864664d4262a25358ce0f2b1aaa95d572a558d5",
       "cpppj/tests/ObjectMenuTests.cpp": "7485055d8b76db99eb8e2fc117f9d89eb4892c2620112c1afbb1ed267710aa37",
       "cpppj/tests/RawMenuControlsTests.cpp": "df26ef116d9971df27bf12f1f857a398dec99ecfe0d72d82c13600244b17d1dd",
-      "cpppj/src/client/CMakeLists.txt": "dba280d27bef2f179278fbda5517de976ea89737d0ef804f90ac6754314e51a4",
-      "cpppj/tests/CMakeLists.txt": "c1d5b09df20f6b431b5839f6bd16591a770e960519745bad1757cd246c313ca8"
+      "cpppj/src/client/CMakeLists.txt": "8bb17d335554c16e6ff3300134492a264bfa425dfafd52062ecf0062f523d87c",
+      "cpppj/tests/CMakeLists.txt": "fcb5d8ca761b6c48715c00302a7d4e6d00ca31a16ba6ff3ac0a2dd731d583c8d"
     }
   },
   "integration_updates": [
@@ -190,6 +190,21 @@
         "cpppj/tests/CMakeLists.txt": {
           "previous": "15daa41bf152553fbc7dfa56432e6a6853db253c58f0661c78f290223e46756b",
           "current": "c1d5b09df20f6b431b5839f6bd16591a770e960519745bad1757cd246c313ca8"
+        }
+      },
+      "previous_fixture_preserved": true
+    },
+    {
+      "date": "2026-10-17",
+      "reason": "단위121 실제 운반물 위치/발자국 탐색의 공통 빌드 추가·기존 객체 관측/제품 몸체 보존",
+      "shared_sha256": {
+        "cpppj/src/client/CMakeLists.txt": {
+          "previous": "dba280d27bef2f179278fbda5517de976ea89737d0ef804f90ac6754314e51a4",
+          "current": "8bb17d335554c16e6ff3300134492a264bfa425dfafd52062ecf0062f523d87c"
+        },
+        "cpppj/tests/CMakeLists.txt": {
+          "previous": "c1d5b09df20f6b431b5839f6bd16591a770e960519745bad1757cd246c313ca8",
+          "current": "fcb5d8ca761b6c48715c00302a7d4e6d00ca31a16ba6ff3ac0a2dd731d583c8d"
         }
       },
       "previous_fixture_preserved": true

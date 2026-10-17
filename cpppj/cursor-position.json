@@ -31,8 +31,8 @@
     "cpppj/src/client/RawCursorPlacement.cpp": "cf1a0d4cfbd0cf2118db90c00b45fa7ea59300b1bf5d4011ec12d268115a2c48",
     "cpppj/tests/CursorPositionTests.cpp": "111ab2b59d662bacc5b51bb44d54fccec4260df86f15502e370a35d7d13a73f1",
     "cpppj/tests/CursorPreviewSupport.h": "fa4e6b6d54bbc564af308ffd154f2ced7482a131c542222c0342e6019d6c9084",
-    "cpppj/src/client/CMakeLists.txt": "dba280d27bef2f179278fbda5517de976ea89737d0ef804f90ac6754314e51a4",
-    "cpppj/tests/CMakeLists.txt": "c1d5b09df20f6b431b5839f6bd16591a770e960519745bad1757cd246c313ca8"
+    "cpppj/src/client/CMakeLists.txt": "8bb17d335554c16e6ff3300134492a264bfa425dfafd52062ecf0062f523d87c",
+    "cpppj/tests/CMakeLists.txt": "fcb5d8ca761b6c48715c00302a7d4e6d00ca31a16ba6ff3ac0a2dd731d583c8d"
   },
   "limitations": [
     "실제 정수 위치 갱신/역투영/CRT 절삭을 실행한다. 단독 입력의 Activate/Create/선택은 명시 효과다.",
@@ -60,5 +60,22 @@
     "ctest_seconds": 218.77,
     "full_output": "extracted/goal-cursor-position-20261017-ctest-output.log",
     "cursor_intermittent_failure_root_cause_unresolved": true
-  }
+  },
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "reason": "단위121 실제 운반물 위치/발자국 탐색을 공통 빌드에 추가·기존 fixture 보존",
+      "shared_sha256": {
+        "cpppj/src/client/CMakeLists.txt": {
+          "previous": "dba280d27bef2f179278fbda5517de976ea89737d0ef804f90ac6754314e51a4",
+          "current": "8bb17d335554c16e6ff3300134492a264bfa425dfafd52062ecf0062f523d87c"
+        },
+        "cpppj/tests/CMakeLists.txt": {
+          "previous": "c1d5b09df20f6b431b5839f6bd16591a770e960519745bad1757cd246c313ca8",
+          "current": "fcb5d8ca761b6c48715c00302a7d4e6d00ca31a16ba6ff3ac0a2dd731d583c8d"
+        }
+      },
+      "previous_fixture_preserved": true
+    }
+  ]
 }

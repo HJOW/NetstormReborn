@@ -1043,3 +1043,10 @@ cpppj/tests/PreviewCollectionTests.cpp text eol=lf
 cpppj/tests/PreviewDrawTests.cpp text eol=lf
 cpppj/cursor-display.json text eol=lf
 docs/exe/cpp-cursor-display-20261017.md text eol=lf
+# 원본 운반물 위치/발자국 탐색과 두 x87 정밀도 관측을 UTF-8/LF로 보존한다.
+tools/decomp_carrier_drop_point.py text eol=lf
+cpppj/carrier-drop-point.json text eol=lf
+cpppj/tests/fixtures/carrier-drop-point-x86.tsv text eol=lf
+cpppj/src/client/RawCarrierDropPoint.* text eol=lf
+cpppj/tests/CarrierDropPointTests.cpp text eol=lf
+docs/exe/cpp-carrier-drop-point-20261017.md text eol=lf
