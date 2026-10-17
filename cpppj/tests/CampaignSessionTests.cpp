@@ -791,3 +791,57 @@ TEST_CASE(CampaignSession_ManaBoltRegularFollowsArrivalAndCurrentTarget) {
     CHECK(arrived->Count()==1 && arrived->Payload()==0.05f);CHECK(Get(core.pool.Slot(bolt),14)!=std::bit_cast<std::uint32_t>(x) || Get(core.pool.Slot(bolt),18)!=std::bit_cast<std::uint32_t>(y));
     core.pool.AllocatedBytes(target)[40]&=static_cast<std::uint8_t>(~1U);core.processState.now=arrived->Time();arrived->RunFrame();CHECK(core.kernel.Get(arrivedId)==nullptr);CHECK((core.pool.Slot(bolt)[11]&3)!=0);
 }
+// 공급원 선택과 접근점/실제23/39/현재 도착 시각/Prepare를 호출자 모형 없이 연결한다.
+TEST_CASE(CampaignSession_ConstructionBuilderUsesActualMovementAndTime) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();services.unitLost=[&](Sid) { ++external.notices; };
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());
+    // 원본 Fort 내용물 형식의 준비된 windBattery 한 항목을 입력에 추가한다. 생산 완료 자체를 모형으로 대신하지 않는다.
+    const auto prepareContents=[](FortChunkSection& section) {
+        // 같은 저장 섹션의 청크를 원래 순서로 읽는다.
+        for (auto& chunk:section.chunks) {
+            // 기존 소유자1 Vortex의 실제 저장 내용물 로더를 사용한다.
+            for (auto& object:chunk.objects) if (object.type==124) { if (!object.contents) object.contents=FortContentList{};FortContent ready;ready.type=75;ready.listFlags=0x10;ready.listFlagsStored=true;object.contents->items.push_back(ready); }
+        }
+    };
+    // 저장 지역 섹션과 별도 Chaff를 같은 원본 로더가 읽게 한다.
+    for (auto& section:fort.territories) prepareContents(section);prepareContents(fort.chaff);
+    GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services),{1024,768});auto& session=world.Session();auto core=session.Core();
+    const auto factories=core.bookkeeping.ownerFactories[1].Items();
+    CHECK(!factories.empty());if (factories.empty()) return;const Sid factory{static_cast<std::uint16_t>(factories.front())};const auto rawFactory=core.pool.Slot(factory);
+    const auto fx=static_cast<int>(std::bit_cast<float>(Get(rawFactory,14))+0.9999f),fy=static_cast<int>(std::bit_cast<float>(Get(rawFactory,18))+0.9999f);const auto surface=core.hash.Cell(0,fx,fy);CHECK(surface!=0);if (!surface) return;const auto graph=core.pool.Slot(Sid{surface})[30];CellPoint point{-1,-1};
+    // 같은 실제 Graph의 비어 있는3×3 지면만 입력 위치로 고른다. 확정 결과나 경로는 합성하지 않는다.
+    for (int y=4;y<248 && point.x<0;++y) {
+        // 공장과 적당히 떨어진 곳을 골라 실제 BFS가 이동 시각을 만들게 한다.
+        for (int x=4;x<248;++x) {
+            const auto distance=std::abs(x-fx)+std::abs(y-fy);if (distance<5 || distance>15) continue;bool free=true;
+            // 현재3×3 지면의 점유/Graph를 모두 확인한다.
+            for (int dy=0;dy<3 && free;++dy) {
+                // 각 칸은 같은 원본 surface 지도와 spot을 읽는다.
+                for (int dx=0;dx<3;++dx) { const auto sid=core.hash.Cell(0,x+dx,y+dy);const auto spot=core.spots[(y+dy)*256+x+dx];if (!sid || core.pool.Slot(Sid{sid})[30]!=graph || !(spot&6) || (spot&0x38)) { free=false;break; } }
+            }
+            if (free) { point={x+2,y+2};break; }
+        }
+    }
+    CHECK(point.x>=0);if (point.x<0) return;session.AddTechnology(1,core.types[75].assetName);
+    const auto target=session.World().Create(75,2);core.owner.Set(target,1);core.pool.AllocatedBytes(target)[40]|=1;session.World().Pop(target,static_cast<float>(point.x),static_cast<float>(point.y),0);
+    const auto source=session.World().Create(76);core.owner.Set(source,1);session.World().Pop(source,static_cast<float>(point.x+4),static_cast<float>(point.y+4),0);
+    ConstructionBuilderState state;auto builder=session.MakeConstructionBuilder(state,{});std::vector<Sid> oldBuilders;
+    // 새134의 실제 마지막 시각을 찾을 때만 현재 client 풀을 읽는다.
+    const auto latest=[&]() -> RawPathProcess* {
+        // 기존에 관찰한134는 다음 Move의 반환 경로와 구분한다.
+        for (std::uint32_t id=5;id<core.pool.Layout().serverFirst;++id) { const Sid sid{static_cast<std::uint16_t>(id)};const auto raw=core.pool.Slot(sid);if (raw[10]==134 && !(raw[11]&7) && std::find(oldBuilders.begin(),oldBuilders.end(),sid)==oldBuilders.end()) { oldBuilders.push_back(sid);const auto form=FindAttachedProcess(core.pool,sid,23);return form.value ? dynamic_cast<RawPathProcess*>(core.processes.FromForm(form)) : nullptr; } }return nullptr;
+    };
+    const auto first=builder->Move(1,target,0,0);CHECK(first>=0);auto* initial=latest();CHECK(initial!=nullptr);if (!initial) return;CHECK(first==initial->Runtime().Time(initial->Runtime().Count()-1));
+    const auto requested=std::bit_cast<std::uint64_t>(first+7.375);const auto adjusted=builder->Move(1,target,static_cast<std::uint32_t>(requested),static_cast<std::uint32_t>(requested>>32));auto* prepared=latest();CHECK(prepared!=nullptr);if (!prepared) return;CHECK(adjusted==prepared->Runtime().Time(prepared->Runtime().Count()-1));CHECK(adjusted!=first);
+    std::size_t bolts=0;
+    // 이번 두 Move가 실제 공급원에서 만든105/39/초기 Regular0를 같은 Host에서 확인한다.
+    for (std::uint32_t id=5;id<core.pool.Layout().serverFirst;++id) { const Sid sid{static_cast<std::uint16_t>(id)};const auto raw=core.pool.Slot(sid);if (raw[10]==105 && !(raw[11]&7)) { CHECK(FindAttachedProcess(core.pool,sid,39).value!=0);CHECK(core.processes.FindEvent(sid,0)!=nullptr);++bolts; } }
+    CHECK(bolts>0);
+}
+// 실제4910a0의9개 공장 용량을 첫 저장 객체 Pop 전의 같은 Session 상태와 비교한다.
+TEST_CASE(CampaignSession_PlayerFactoryCapacityMatchesNativeInitialization) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",external.Services());auto core=session.Core();std::ifstream file(NETSTORM_PLAYER_FACTORY_INIT_FIXTURE);CHECK(file.good());std::string line;std::size_t count=0;
+    // 실제 원문이 할당한 capacity와 count0을9개 모두 확인한다.
+    while (std::getline(file,line)) { if (line.empty() || line[0]=='#') continue;const auto row=netstorm::test::rawscene::Split(line,'\t');const auto owner=netstorm::test::rawscene::Number(row[0]);CHECK(core.bookkeeping.ownerFactories[owner].entries.size()==netstorm::test::rawscene::Number(row[2]));CHECK(core.bookkeeping.ownerFactories[owner].count==netstorm::test::rawscene::Number(row[3]));++count; }
+    CHECK(count==9);
+}

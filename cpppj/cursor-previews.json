@@ -22,7 +22,7 @@
     "cpppj/tests/BridgeConnectTests.cpp": "16e2d952e252c2a264a859182f261487ca50101e34eb7036ea6d66242b9aae11",
     "cpppj/tests/CursorPreviewTests.cpp": "ed217ca7021e4ed5af0fb7aa91fda7af1c2f67b0cb75307157a0a7ace0c86799",
     "cpppj/src/client/CMakeLists.txt": "8bb17d335554c16e6ff3300134492a264bfa425dfafd52062ecf0062f523d87c",
-    "cpppj/tests/CMakeLists.txt": "f9f01cf1461e8a290fd9d996bfcdca73e354de80b4a6890dddbd5a3a83ebd87d",
+    "cpppj/tests/CMakeLists.txt": "bfc500dc462287984f94118cfad9b630149023924fde65414e5950dfb2f2df3e",
     "cpppj/tests/CursorPreviewSupport.h": "fa4e6b6d54bbc564af308ffd154f2ced7482a131c542222c0342e6019d6c9084"
   },
   "limitations": [
@@ -206,6 +206,18 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "3dabffbe720e847dddb7cf6b86f98525757255eaac708588a6588ea2b61fc97c",
           "current": "f9f01cf1461e8a290fd9d996bfcdca73e354de80b4a6890dddbd5a3a83ebd87d"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 130,
+      "reason": "실제 Board 접근점/Player 공장30칸과 Builder의 같은 경로/현재 도착 시각 연결",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "f9f01cf1461e8a290fd9d996bfcdca73e354de80b4a6890dddbd5a3a83ebd87d",
+          "current": "bfc500dc462287984f94118cfad9b630149023924fde65414e5950dfb2f2df3e"
         }
       ]
     }

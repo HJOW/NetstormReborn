@@ -8,6 +8,8 @@
 #include "o/RawConstructionArrival.h"
 #include "o/RawManaBoltArrival.h"
 #include "o/RawManaBoltRegular.h"
+#include "o/RawBoardApproach.h"
+#include <map>
 #include "client/RawCursorPosition.h"
 #include "o/RawProcessRemoval.h"
 #include "o/RawSquidLevel.h"
@@ -71,6 +73,7 @@ SoundList& RequireSounds(const RawCampaignSessionServices& services) { if (!serv
 // 현재 원본 초기 다리/받침/미션 전역이다.
 BridgeConnectState CampaignLinks() { BridgeConnectState result;result.bridgeType=82;result.islandType=94;result.stalagType=95;result.connectorType=155;result.noIslandType=157;result.battle=true;result.mission=true;return result; }
 constexpr std::size_t kCampaignFactoryCapacity=500; // PATCH004fc990의push1f4→0044fb20이확보하는실제0055a4d0목록의DWORD수다.
+constexpr std::size_t kPlayerFactoryCapacity=30; // 실제4910a0이9개 Player 각각 new78/용량1e로 초기화하는 공장 목록이다.
 // 실제83개 VT에서+10/+14/+18이4af780/44b4b0/44b9e0인14개만 일반 Damageable 수명으로 연결한다.
 constexpr std::array<std::uint32_t,14> kPlainDamageableTables{0x501ea0,0x509148,0x509930,0x5099e8,0x509aa0,0x50a820,0x50a8e8,0x50b6e8,0x50b7c0,0x50b888,0x50b9b8,0x50bad0,0x50e668,0x50e738};
 // 보호 GameAssets의 실제 TYPE/프레임을 보관하며 검사 전용74 변경을 적용하지 않는다.
@@ -114,6 +117,7 @@ struct RawCampaignSession::Impl {
     SquidPostPopList energySources{std::vector<std::uint32_t>(kEnergySourceCapacity),0}; // 4fcb80의 실제30칸 lastSource다.
     std::unique_ptr<RawEnergySupply> energySupply; // 현재 장부 공급원/동맹/타입을 직접 읽는 실제 배치 에너지다.
     std::vector<ConstructionBuilderType> builderTypes=std::vector<ConstructionBuilderType>(188); // 같은 실제 TYPE의 속도/theme/A..P 첫 프레임이다.
+    std::map<std::uint16_t,ConstructionBuilderPath> builderPaths; // SID별 안정된 반환 view이며 계산 값 대신 같은 현재 경로를 읽는다.
     std::uint32_t builderApproachMask{0x50444200}; // 실제005424b8의 접근점 genus 전역이다.
     std::unique_ptr<RegularProcess> builderPendingRegular; // 원본 new28 성공부터 같은 Host 부착까지의 실제 예약 객체다.
     GameRandom random; // 게임 난수의 명시 초기 입력이다.
@@ -341,6 +345,7 @@ struct RawCampaignSession::Impl {
         core.bookkeeping.providers.entries.resize(kEnergyProviderCapacity); // 원본4fcb60의256칸을 첫 실제 공급자 Pop 전에 확보한다.
         // 원본 Player의 첫 지역 sentinel은9기록에 직접 쓴다. 별도 playerRegions 배열을 사용하지 않는다.
         for (std::uint32_t owner=0;owner<9;++owner) {
+            core.bookkeeping.ownerFactories[owner].entries.resize(kPlayerFactoryCapacity); // 첫 공장 Pop 이전에 확보하여 owner별 Append가 용량0 때문에 생략되지 않게 한다.
             Put(players,owner*0xb4+0x78,127);Put(players,owner*0xb4+0x54,1U<<owner);
             alliances[owner*9+owner]=1;
             gunTargetState.allyMasks[owner]=1U<<owner;gunState.allies[owner][owner]=true;
@@ -1305,6 +1310,15 @@ std::unique_ptr<RawConstructionBuilder> RawCampaignSession::MakeConstructionBuil
     hooks=MakeConstructionBuilderHooks(current->core.pool,*current->anchor,current->core.factory,current->core.owner,std::move(hooks));
     hooks.pop=[current](Sid sid,float x,float y,std::uint32_t flags) { current->world.Pop(sid,x,y,flags); };
     hooks.notifySurface=[current](Sid sid) { current->core.building.NotifySurface(sid); };
+    hooks.approach=[current](const std::array<float,4>& rectangle,float x,float y,std::uint32_t flags) { auto mutableRectangle=rectangle;RawBoardApproach approach([current](float px,float py) { return current->anchor->GraphAt(px,py); });return approach.Find(mutableRectangle,x,y,flags); };
+    hooks.move=[current](Sid sid,float x,float y)->ConstructionBuilderPath* {
+        auto* path=current->motion->Paths().StartConstruction({sid,{x,y},0,0,0,0,0});if (!path) return nullptr;const auto pid=current->core.kernel.Find(*path);
+        auto& view=current->builderPaths[sid.value];
+        view.readArrival=[current,path,pid] { if (current->core.kernel.Get(pid)!=path) throw std::logic_error("건설 운반의 실제 경로 수명 종료");const auto& runtime=path->Runtime();if (runtime.Count()<1) throw std::logic_error("건설 운반의 실제 경로 꼭짓점0");return runtime.Time(runtime.Count()-1); };
+        view.prepare=[current,path,pid,sid](float speed,std::uint32_t flags) { if (flags || current->core.kernel.Get(pid)!=path) throw std::logic_error("건설 운반 Prepare의 실제 경로/flags 오류");const auto& definition=current->assets.game.Types()[current->core.pool.Slot(sid)[10]-70].definition;path->Prepare(speed,static_cast<float>(definition.Number("speed").value()),static_cast<float>(definition.Number("turningSpeed").value())); };
+        return &view;
+    };
+    hooks.speed=[](ConstructionBuilderPath& path,float speed,std::uint32_t flags) { if (!path.prepare) throw std::logic_error("건설 운반의 실제 Prepare view 미연결");path.prepare(speed,flags); };
     hooks.reserveTimer=[current] { try { current->builderPendingRegular=std::make_unique<RegularProcess>(0,0.05f);return true; }catch (const std::bad_alloc&) { return false; } };
     hooks.addTimer=[current](Sid sid,std::uint32_t event,float payload) {
         if (!current->builderPendingRegular || payload!=0.05f) throw std::logic_error("건설 운반의 실제 예약 객체/payload 오류");

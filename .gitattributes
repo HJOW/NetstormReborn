@@ -1167,3 +1167,10 @@ cpppj/mana-bolt-regular.json text eol=lf
 cpppj/src/o/RawManaBoltRegular.cpp text eol=lf
 cpppj/src/o/RawManaBoltRegular.h text eol=lf
 cpppj/tests/ManaBoltRegularTests.cpp text eol=lf
+
+# 단위130 실제 접근점/Player 목록/Builder 경로 관측의 SHA를 유지한다.
+cpppj/board-approach.json text eol=lf
+cpppj/player-factory-init.json text eol=lf
+cpppj/src/o/RawBoardApproach.cpp text eol=lf
+cpppj/src/o/RawBoardApproach.h text eol=lf
+cpppj/tests/BoardApproachTests.cpp text eol=lf

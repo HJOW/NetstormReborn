@@ -404,8 +404,8 @@
     "cpppj/src/o/RawCarrierPreDestroy.h": "d1f5903fc44c51dc7c6985ff073851b31f46f3f6fdd1a972cb568440cf7d173a",
     "cpppj/src/o/RawConstructionArrival.cpp": "871ed32e306e85ef45ce53bd357289384d04fc6e4a75a3aa98fdbf8cad8a4eb0",
     "cpppj/src/o/RawConstructionArrival.h": "3a6f3d512f873a8c683d0d2429cae6cd36f51c9f1103560d8c9773dc0b8a14ab",
-    "cpppj/src/o/RawConstructionBuilder.cpp": "9af3eb30ab5b57062bf0a3006e1973683165de48fd79b4227316322a99317189",
-    "cpppj/src/o/RawConstructionBuilder.h": "f3e8165d42cf4070a94055ec018add56fd35b16e633d96c9d45045ed5b026ca5",
+    "cpppj/src/o/RawConstructionBuilder.cpp": "6a17b819e976b76891f443cfca012d42e31d2f94e818261ce236f05cd19895f5",
+    "cpppj/src/o/RawConstructionBuilder.h": "134e353fb2fae37b9e8726197f3d80ab1b3b9819e6a19bf6a876481b55ef33d4",
     "cpppj/src/o/RawConstructionClear.cpp": "9bc0b5165242ea92637a22a38ee2ac1b2681fa2bf93b176096d93266336da238",
     "cpppj/src/o/RawConstructionClear.h": "96af0b799ef88ba5c55ec96b00d1d6408a170314d60493e4b00ef22ecf61d440",
     "cpppj/src/o/RawConstructionConfirm.cpp": "0b50515a6d1cd9f79c10af3f8d8ed899cbcfc9db5c94ae829bf6fb0b9e21c330",
@@ -1384,6 +1384,23 @@
           "path": "cpppj/tests/UnpopTests.cpp",
           "previous": "e0ac9391654c79aabfafb7f57516371e540317bd95d335abb61d85f0fea17f94",
           "current": "af6cd4c73db3f50d707d1b7cc896f991a7c5222177b7bd4252054bbe826af9cc"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 130,
+      "reason": "실제 Board 접근점/Player 공장30칸과 Builder의 같은 경로/현재 도착 시각 연결",
+      "pins": [
+        {
+          "path": "cpppj/src/o/RawConstructionBuilder.cpp",
+          "previous": "9af3eb30ab5b57062bf0a3006e1973683165de48fd79b4227316322a99317189",
+          "current": "6a17b819e976b76891f443cfca012d42e31d2f94e818261ce236f05cd19895f5"
+        },
+        {
+          "path": "cpppj/src/o/RawConstructionBuilder.h",
+          "previous": "f3e8165d42cf4070a94055ec018add56fd35b16e633d96c9d45045ed5b026ca5",
+          "current": "134e353fb2fae37b9e8726197f3d80ab1b3b9819e6a19bf6a876481b55ef33d4"
         }
       ]
     }

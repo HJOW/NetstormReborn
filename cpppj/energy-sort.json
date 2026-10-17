@@ -25,14 +25,14 @@
     "tools/decomp_energy_supply.py": "a18c1913de8e3462dc30e21d1cbb62541600655630d8605c594ecc860d200434",
     "tools/decomp_energy_sort.py": "a203949bf138366de9812342953ecfe050dfa588a0c1df4536b5973284caf5ef",
     "cpppj/tests/fixtures/energy-sort-x86.tsv": "58f67ad1e9207c2b7793101100855d504c6167de92ee0176adf3be816489ab4e",
-    "cpppj/tests/CMakeLists.txt": "f9f01cf1461e8a290fd9d996bfcdca73e354de80b4a6890dddbd5a3a83ebd87d",
+    "cpppj/tests/CMakeLists.txt": "bfc500dc462287984f94118cfad9b630149023924fde65414e5950dfb2f2df3e",
     "cpppj/src/client/RawCampaignSession.h": "a104faaa39103e4b48f6ecd6a2618ffa80130d1aae9c3959848f5345cf64dea7",
-    "cpppj/src/client/RawCampaignSession.cpp": "cce1e2bbb5c26959ddefb2d3ed9fa3cc785ee7a668f06e02c8fea88456e98b01",
-    "cpppj/tests/CampaignSessionTests.cpp": "91835c753dee36fdef80ff4e99562fff20a4c577ea8711a81981156f058702dd",
+    "cpppj/src/client/RawCampaignSession.cpp": "ba3c4ac3d43e7a3ea503b2e14a83e12cf8e8c89109a8ebd41d2a34ef6d1a3357",
+    "cpppj/tests/CampaignSessionTests.cpp": "22f12b1dca18b5c72b3e1be8bbad75c2d679b104484e5f71f3a2da4085b7fb3d",
     "cpppj/src/o/RawEnergySupply.h": "16298ecafac440612cf5722175fe7adade050e9bdd67015f8308fd37077998be",
     "cpppj/src/o/RawEnergySupply.cpp": "c5597f73998872c29ecb266356405d084ad36b24c6248a3cfc1a1bc43d55f495",
-    "cpppj/src/o/RawConstructionBuilder.h": "f3e8165d42cf4070a94055ec018add56fd35b16e633d96c9d45045ed5b026ca5",
-    "cpppj/src/o/RawConstructionBuilder.cpp": "9af3eb30ab5b57062bf0a3006e1973683165de48fd79b4227316322a99317189",
+    "cpppj/src/o/RawConstructionBuilder.h": "134e353fb2fae37b9e8726197f3d80ab1b3b9819e6a19bf6a876481b55ef33d4",
+    "cpppj/src/o/RawConstructionBuilder.cpp": "6a17b819e976b76891f443cfca012d42e31d2f94e818261ce236f05cd19895f5",
     "cpppj/tests/EnergySortTests.cpp": "a6805569761f438a66b07af01fbec879264db7e57af71691b6b53f9b9549d694",
     "cpppj/tests/ConstructionBuilderTests.cpp": "90f3a5d35eb2562542c69b5969d95db90b9796fb6ed74fa72e43eff684488ac9"
   },
@@ -186,6 +186,38 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "7dafb3fce59b756f4f9fe6ed9c20f0e895d4b15723fed3636d6b842591231a1d",
           "current": "91835c753dee36fdef80ff4e99562fff20a4c577ea8711a81981156f058702dd"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 130,
+      "reason": "실제 Board 접근점/Player 공장30칸과 Builder의 같은 경로/현재 도착 시각 연결",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "f9f01cf1461e8a290fd9d996bfcdca73e354de80b4a6890dddbd5a3a83ebd87d",
+          "current": "bfc500dc462287984f94118cfad9b630149023924fde65414e5950dfb2f2df3e"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "cce1e2bbb5c26959ddefb2d3ed9fa3cc785ee7a668f06e02c8fea88456e98b01",
+          "current": "ba3c4ac3d43e7a3ea503b2e14a83e12cf8e8c89109a8ebd41d2a34ef6d1a3357"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "91835c753dee36fdef80ff4e99562fff20a4c577ea8711a81981156f058702dd",
+          "current": "22f12b1dca18b5c72b3e1be8bbad75c2d679b104484e5f71f3a2da4085b7fb3d"
+        },
+        {
+          "path": "cpppj/src/o/RawConstructionBuilder.h",
+          "previous": "f3e8165d42cf4070a94055ec018add56fd35b16e633d96c9d45045ed5b026ca5",
+          "current": "134e353fb2fae37b9e8726197f3d80ab1b3b9819e6a19bf6a876481b55ef33d4"
+        },
+        {
+          "path": "cpppj/src/o/RawConstructionBuilder.cpp",
+          "previous": "9af3eb30ab5b57062bf0a3006e1973683165de48fd79b4227316322a99317189",
+          "current": "6a17b819e976b76891f443cfca012d42e31d2f94e818261ce236f05cd19895f5"
         }
       ]
     }

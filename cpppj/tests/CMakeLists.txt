@@ -1302,3 +1302,12 @@ set_property(SOURCE CursorManaTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS
 target_sources(netstorm_tests PRIVATE ManaBoltRegularTests.cpp)
 set_source_files_properties(ManaBoltRegularTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_MANA_BOLT_REGULAR_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/mana-bolt-regular-x86.tsv\"")
+
+# 실제 사각형 가장자리/Graph/재귀의 독립 원본 관측이다.
+target_sources(netstorm_tests PRIVATE BoardApproachTests.cpp)
+set_source_files_properties(BoardApproachTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_BOARD_APPROACH_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/board-approach-x86.tsv\"")
+
+# 실제 Player 초기화가 확보한9개 공장 목록 크기다.
+set_property(SOURCE CampaignSessionTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS
+    "NETSTORM_PLAYER_FACTORY_INIT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/player-factory-init-x86.tsv\"")

@@ -35,8 +35,8 @@
     "cpppj/src/o/SpStore.cpp": "61723355bccecc352ff415d79434767fec6bfb776ba411cb096bb8b2046fd37a",
     "cpppj/src/o/RawConstructionArrival.h": "c0b213bbe5781394281ec2735595020b7b19c201d4495b9cf32799687a52f845",
     "cpppj/src/o/RawConstructionArrival.cpp": "7c2b73ff96b2a90da808423269e3ebc061a660fbd9ca80bff1b5d2a821301b02",
-    "cpppj/src/o/RawConstructionBuilder.h": "f3e8165d42cf4070a94055ec018add56fd35b16e633d96c9d45045ed5b026ca5",
-    "cpppj/src/o/RawConstructionBuilder.cpp": "9af3eb30ab5b57062bf0a3006e1973683165de48fd79b4227316322a99317189",
+    "cpppj/src/o/RawConstructionBuilder.h": "134e353fb2fae37b9e8726197f3d80ab1b3b9819e6a19bf6a876481b55ef33d4",
+    "cpppj/src/o/RawConstructionBuilder.cpp": "6a17b819e976b76891f443cfca012d42e31d2f94e818261ce236f05cd19895f5",
     "cpppj/tests/ConstructionBuilderTests.cpp": "90f3a5d35eb2562542c69b5969d95db90b9796fb6ed74fa72e43eff684488ac9",
     "cpppj/src/client/RawSurfaceWorld.cpp": "2cd4fdedfdb0f61a92dde713ed706a23e2fb3b7b53ef0ce82c4b70f5e7853a0e",
     "cpppj/src/client/RawPriestWorldBindings.h": "2486df64b44cef2f14f92e0c7e7818487fdb3f9fed0a4515b51be300872adbe0",
@@ -100,6 +100,23 @@
           "path": "cpppj/tests/ConstructionBuilderTests.cpp",
           "previous": "8447974c516e0be01421a26d9f71a87037dcf31d3af428264bc7a2c2f4c79778",
           "current": "90f3a5d35eb2562542c69b5969d95db90b9796fb6ed74fa72e43eff684488ac9"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 130,
+      "reason": "실제 Board 접근점/Player 공장30칸과 Builder의 같은 경로/현재 도착 시각 연결",
+      "pins": [
+        {
+          "path": "cpppj/src/o/RawConstructionBuilder.h",
+          "previous": "f3e8165d42cf4070a94055ec018add56fd35b16e633d96c9d45045ed5b026ca5",
+          "current": "134e353fb2fae37b9e8726197f3d80ab1b3b9819e6a19bf6a876481b55ef33d4"
+        },
+        {
+          "path": "cpppj/src/o/RawConstructionBuilder.cpp",
+          "previous": "9af3eb30ab5b57062bf0a3006e1973683165de48fd79b4227316322a99317189",
+          "current": "6a17b819e976b76891f443cfca012d42e31d2f94e818261ce236f05cd19895f5"
         }
       ]
     }

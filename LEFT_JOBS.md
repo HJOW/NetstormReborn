@@ -1,5 +1,18 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-17 단위130 완료: 실제 Builder 접근점·같은 경로 시각·소유자 공장 목록 (`HJOW-Athlon`)
+
+- [x] AGENTS.md·양 LEFT·깨끗한0e6574f과 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16**을 확인했다. 새 내보내기·원본/클론 게임·GUI 실행은 없다. 전체 목표는 active다. [작업 기록](docs/exe/cpp-builder-path-bindings-20261017.md). 로그/원문 접두사는`extracted/goal-builder-path-20261017-`다.
+- [x] `RawBoardApproach`가 실제41db70/41d400/41ce90/41d0d0의 가장자리 중간점·세계/사각형 보정 순서·flags2/4·면적 절삭 DWORD 횟수·top/right/bottom/left 순회·같은 Graph/254·사각형 복구/확장 유지·원래 사각형 안쪽 재귀를 복원했다. Native **696고유 입력/1,392정상 반환/3,408,122명령/두 정밀도 차이0**이며 C++가 모든 Graph 조회/사각형4DWORD/반환/assertion을 대조했다. GraphAt 응답과 선택된 assertion만 원본 계산 밖의 입력 경계다.
+- [x] `MakeConstructionBuilder(state,{})`가 같은 Session의 실제 GraphAt/23·39 Start/TYPE 속도·turningSpeed Prepare와 현재 시각에 연결된다. 실제443000의`piVar5[piVar5[4]*2+0x2714]`는 **nVert×8+9c50**, Runtime times는9c58이므로 **Time(nVert-1)**이다. +186c0 진행 인덱스로 해석하지 않는다. 값형 fixture 경계는 유지하고 SID별 안정된 실제경로 view의 readArrival/prepare를 추가했다. Prepare 뒤와 공급원 처리 뒤에도 같은 현재 경로를 읽는다.
+- [x] 실제 Session에서 전역 공장2개가 있어도 owner1 목록은 capacity0/count0이어서 등록이 생략되는 결함을 찾았다. 원본 **4910a0**은9개 Player 각각 **new78/capacity1e/count0**이다. Native **9기록/두 정밀도2정상 반환/1,404명령/차이0**으로 확인한 뒤 첫 공장 Pop 전에9개30칸을 준비했다. 기존 전역500칸·에너지256칸과 구별한다. 초기9기록도 C++가 원본 fixture와 대조했다.
+- [x] thewarbegins의 실제rainVortex는sunWalker만 준비되어 있어windBattery 요청을 거부하는 것이 정상이다. 공장별 내용물 조건을 우회하지 않았다. 실제 Builder 검사는 **복제한 Fort 저장 내용물 입력**에 준비된windBattery75를 넣고 같은 원본 설치 로더로 적용했다. 실제 공장 기준점/23 BFS/마지막 도착 시각 반환, 비영점 요청→같은 Prepare→새 시각 반환, 공유 공급원 소비→105/39/Regular0 생성까지 통과했다. 생산 완료나 일반 서버 건설 완료를 대신 검증한 것으로 확대하지 않는다. 원본 파일은 불변이다.
+- [x] 읽기 전용 초기 상태 조사에서 TheGreatBattleDemo/tnrondemo/vndemo의 공장 설치와 일반 건물 준비 부품 부재도 확인했다. 별도DEMOFw는 TYPE156의 파생 Pop 미복원에서 중단됐다. 임시 조사 코드는 제거했으며 로그만 보존했다. 이 관찰을 데모 플레이/AI/승패 완료로 취급하지 않는다.
+- [x] 최종 **Release 빌드10 종료0·경고0·오류0**, 새 집중3개·기존Builder10개 통과, 전체 **1,525개 모두 통과·실패0·CTest 종료0·226.59초(전체226.63초)**다. 현대 `--verify` **25개**, 스테이징44파일/현재제품9개/보호3개 SHA·UTF-8/LF·새 문자·CMake 기존 접두/기존 fixture 불변을 감사했다. 기존26보고서의 현재 HEAD 핀66개만 이력과 갱신하고 과거128핀은 보존했다. AGENTS/DN/보호 원본은 불변이다.
+- [x] 이 인수인계를 포함해 **20261017-30 CP 실제 Builder 접근점과 경로 시각 및 소유자 공장 목록 복원**으로 로컬 커밋한다. push하지 않는다.
+- [ ] **다음 실제 플레이:** 실제134 도착의 서버 대상 분기는 아직`services.startConstruction` 명시 미연결이다. 같은 Session의 원본 `RawConstructionProcess`/Construction Frame/Visual·완료 처리와 일반 Confirm/Place/Notice를 조립한다. 현재`RawCampaignConstructionBindings`는 noIsland/Player0만 허용하는 제한과 Missing 경계가 남았다. 현재 실제 Builder/공유 공급원/105 Regular는 재사용한다.
+- [ ] 실제 생산이 공장에 준비된 ContentForm6/flags10 부품을 만드는 흐름, Client 전체DWORD 메뉴→ContentForm6 Take/위치/수집/그리기/내려놓기, 경제/AI 전략, GUI 시작/진행/승패·저장·다음 미션·사용자 자연 완주와 전체 원본 동일성은 남았다. CD440400/구조체 오프셋은 기록만 했고 새 접근점은10.78 대상이다. 전체화면 DirectDraw도 계속 제외다.
+
 ## 2026-10-17 단위129 완료: 마나 볼트 주기 동작·도착 뒤 실제 타이머 연결 (`HJOW-Athlon`)
 
 - [x] AGENTS.md·양 LEFT·깨끗한8bf7620과 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16**을 확인했다. 새 내보내기·원본/클론 게임·GUI 실행은 없다. 전체 목표는 active다. [작업 기록](docs/exe/cpp-mana-bolt-regular-20261017.md). 로그/관측 접두사는`extracted/goal-mana-regular-20261017-`다.
@@ -9,7 +22,7 @@
 - [x] 실제thewarbegins의 Factory/Owner/Pop으로 abstract 레인 제네레이터76과105를 만들고 같은 Frame/World/Host/Kernel/clock에서 **Regular0 초기 소리/프레임→비행39→도착의 기존46/61 제거와 새event1→현재 카메라319/127 위치 조정→대상 abstract 해제 뒤105/Regular 실제 삭제**를 통과했다. 초기 검사의 Kernel 번호 공백 기대는 새 타이머의 즉시 번호 재사용 때문에 잘못됐으며, 원래event0/61의 부재와 새event1 존재를 확인하도록 고쳤다. 구현의 할당 순서는 바꾸지 않았다.
 - [x] 최종 **Release 빌드4 종료0·경고0·오류0**, 새 집중2개와 기존 커서 위치3개 통과, 전체 **1,522개 모두 통과·실패0·CTest 종료0·241.12초(전체241.15초)**다. 현대 `--verify` **23개**와 현재제품9개/보호3개 SHA·UTF-8/LF·새 문자·CMake 기존 접두/기존 fixture 불변을 감사했다. 기존15보고서의 현재 HEAD 핀38개만 이력과 갱신하고 과거128핀은 보존했다. AGENTS/DN/보호 원본은 불변이다.
 - [x] 이 인수인계를 포함해 **20261017-29 CP 마나 볼트 주기 동작과 실제 도착 타이머 연결 복원**으로 로컬 커밋한다. push하지 않는다.
-- [ ] **다음 실제 플레이:** `MakeConstructionBuilder`의 실제 접근점41db70과 move/speed를 같은 Session의`StartConstructionMovement`/실제`RawPathRuntime.Count/Time/Prepare`에 연결한다. Builder의 현재 반환 view는`currentStep`/`arrivalTimes` 값형이며 실제+10 nVert와+186c0 진행 인덱스를 혼동하지 않는다. 실제 Builder 읽기 오프셋과 Runtime 시각 배열 시작 차이를 원본에서 다시 확인한 뒤 view를 연결한다. 공유 공급원/TYPE/현재 시계와 이번105 Regular는 유지한다.
+- [x] **Builder 다음 단계 — 단위130 완료:** 실제 접근점41db70과 move/speed/현재 nVert·Time·Prepare view를 같은 Session에 연결했고, 소유자별 공장 목록 초기화 누락도 해결했다. 실제 서버 건설 시작/생산/Client 입력은 위 단위130의 다음 작업을 따른다.
 - [ ] 실제 서버 건설 시작 소비자와 일반 Construction Process/Frame/Visual, Client 전체DWORD 메뉴→실제 ContentForm6 Take/위치/수집/그리기/내려놓기, 생산/경제/AI 전략, GUI 시작/진행/승패·저장·다음 미션·사용자 자연 완주와 전체 원본 동일성은 남았다. CD47cb90은 이번 범위에서 복원하지 않았고 전체화면 DirectDraw도 계속 제외다.
 
 ## 2026-10-17 단위128 완료: 실제 건설 운반 경로·마나 볼트 도착/표시 (`HJOW-Athlon`)
@@ -22,7 +35,7 @@
 - [x] 실제thewarbegins Session의 같은 clock/pool/hash/Host/Kernel에서 **105 생성/표시/Start39/비행/빈 대상 도착/삭제**, **134 생성/지면 BFS23/빈 대상 도착/삭제**를 통과했다. 새 집중7개와 기존 지원 분류5개도 통과했다. 일반 Regular 실행이나 자연 플레이 검증으로 확대하지 않는다.
 - [x] 최종 **Release 빌드12 종료0·경고0·오류0**, 전체 **1,520개 모두 통과·실패0·CTest 종료0·248.57초(전체248.60초)**다. 전체1차의 기존 미복원 분류2검사/6체크 실패는 기존 fixture를 보존한 채 이번에 검증한105/134만 별도 허용하여 해결했다. 현대 `--verify` **22개**와 스테이징86파일/현재제품26개/보호3개 SHA·UTF-8/LF·새 문자·CMake 기존 접두를 감사했다. 기존46보고서의 현재 HEAD 핀230개만 이력과 갱신했고 과거211핀은 보존했다. AGENTS/DN/보호 원본과 기존 fixture는 불변이다.
 - [x] 이 인수인계를 포함해 **20261017-28 CP 건설 운반 경로와 마나 볼트 도착 및 표시 복원**으로 로컬 커밋한다. push하지 않는다.
-- [ ] **다음 실제 플레이:** `MakeConstructionBuilder`의 접근점41db70과 move/speed를 같은 Session의 `StartConstructionMovement`/실제 `RawPathRuntime.Count/Time/Prepare`에 연결한다. Builder 반환 view의 실제+10은 **nVert**이며+186c0 진행 인덱스와 혼동하지 않는다. 현재 단위127에서 연결한 공유 선택/TYPE/현재 시계는 유지한다. 실제 서버 건설 시작 소비자와 일반 Construction Process/Frame/Visual도 조립해야 한다.
+- [x] **Builder 다음 단계 — 단위130 완료:** 실제 접근점41db70과 move/speed/현재 nVert·Time·Prepare view를 같은 Session에 연결했고, 소유자별 공장 목록 초기화 누락도 해결했다. 실제 서버 건설 시작/생산/Client 입력은 위 단위130의 다음 작업을 따른다.
 - [x] **다음105 Regular — 단위129 완료:** 실제45a8e0의 프레임/현재 Target/화면 위치/반환 및 같은 Session Regular 연결을 위 단위129에서 완료했다.196개 원본 입력과 실제 초기 타이머→비행→도착 타이머→위치/삭제 흐름을 검증했다. Builder 전체 조립과 일반 건설/사용자 자연 플레이는 계속 남았다.
 - [ ] **전체 목표:** Client 전체DWORD 메뉴→실제 ContentForm6 Take/위치/수집/그리기/내려놓기, 일반 건설·생산/경제/AI 전략, GUI 시작/진행/승패·저장·다음 미션, 사용자 자연 완주와 전체 원본 동일성은 남았다. GumpForm3은 별도 UI 수명이다. 10.72 비행39는 이번 범위에서 허용하지 않았으며 전체화면 DirectDraw도 계속 제외다.
 

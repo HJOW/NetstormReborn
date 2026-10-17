@@ -63,12 +63,12 @@
     "cpppj/src/o/RawManaBoltRegular.cpp": "4ea2499c6cf66978607e42ad0c84486d11ca5cf32e6deb58281e35fbd9aefdde",
     "cpppj/src/o/RawManaBoltRegular.h": "c0f4822f6a25c63644f507d31b3946e1f8a7ba6b1185e5c09a97e625d56e8011",
     "cpppj/tests/fixtures/mana-bolt-regular-x86.tsv": "f61c2e4c72c6729749e43a1517a77894d866cf5e5061a9c967ba43df9b41913e",
-    "cpppj/src/client/RawCampaignSession.cpp": "cce1e2bbb5c26959ddefb2d3ed9fa3cc785ee7a668f06e02c8fea88456e98b01",
+    "cpppj/src/client/RawCampaignSession.cpp": "ba3c4ac3d43e7a3ea503b2e14a83e12cf8e8c89109a8ebd41d2a34ef6d1a3357",
     "cpppj/src/client/RawCursorPosition.cpp": "db3b59d8211cee4f22583db354962f2da543512bd78ad86ed91c8725f0dda7a4",
     "cpppj/src/client/RawCursorPosition.h": "acef07ed2737b798d36034457c63e75e1bfde25c9068b4bd3a2c224bd8dab723",
-    "cpppj/src/o/CMakeLists.txt": "831fd106a0f7c048a97d23bb7341b9b8b5a7a0c3c74629e25e40326a994bc717",
-    "cpppj/tests/CMakeLists.txt": "f9f01cf1461e8a290fd9d996bfcdca73e354de80b4a6890dddbd5a3a83ebd87d",
-    "cpppj/tests/CampaignSessionTests.cpp": "91835c753dee36fdef80ff4e99562fff20a4c577ea8711a81981156f058702dd",
+    "cpppj/src/o/CMakeLists.txt": "ef282a0eea6f3ab2c93477676b64e5da05d01ae6abded1ec9e2bd727244c3aea",
+    "cpppj/tests/CMakeLists.txt": "bfc500dc462287984f94118cfad9b630149023924fde65414e5950dfb2f2df3e",
+    "cpppj/tests/CampaignSessionTests.cpp": "22f12b1dca18b5c72b3e1be8bbad75c2d679b104484e5f71f3a2da4085b7fb3d",
     "cpppj/tests/ManaBoltRegularTests.cpp": "3531f9ec3de58ad435557223606e16994d0f235b193780fab7700a06e96e8d5d",
     "cpppj/src/client/Sound.cpp": "30f85f35c1e5c75d1214ec5df2f3d86c7552fa060a1068905f77cb164cfd8ee3",
     "cpppj/src/client/Sound.h": "d8820c78a72db8c30241bed470c85b5b07a36cc1b0737b96e81563836285623f",
@@ -81,14 +81,14 @@
     "cpppj/src/o/SquidDisplay.h": "83ed777ce826ec37cc2a72808ffd3658b8f6bcb9644efcf31f203fc6da363be7"
   },
   "currentSources": {
-    "cpppj/src/client/RawCampaignSession.cpp": "cce1e2bbb5c26959ddefb2d3ed9fa3cc785ee7a668f06e02c8fea88456e98b01",
+    "cpppj/src/client/RawCampaignSession.cpp": "ba3c4ac3d43e7a3ea503b2e14a83e12cf8e8c89109a8ebd41d2a34ef6d1a3357",
     "cpppj/src/client/RawCursorPosition.cpp": "db3b59d8211cee4f22583db354962f2da543512bd78ad86ed91c8725f0dda7a4",
     "cpppj/src/client/RawCursorPosition.h": "acef07ed2737b798d36034457c63e75e1bfde25c9068b4bd3a2c224bd8dab723",
-    "cpppj/src/o/CMakeLists.txt": "831fd106a0f7c048a97d23bb7341b9b8b5a7a0c3c74629e25e40326a994bc717",
+    "cpppj/src/o/CMakeLists.txt": "ef282a0eea6f3ab2c93477676b64e5da05d01ae6abded1ec9e2bd727244c3aea",
     "cpppj/src/o/RawManaBoltRegular.cpp": "4ea2499c6cf66978607e42ad0c84486d11ca5cf32e6deb58281e35fbd9aefdde",
     "cpppj/src/o/RawManaBoltRegular.h": "c0f4822f6a25c63644f507d31b3946e1f8a7ba6b1185e5c09a97e625d56e8011",
-    "cpppj/tests/CMakeLists.txt": "f9f01cf1461e8a290fd9d996bfcdca73e354de80b4a6890dddbd5a3a83ebd87d",
-    "cpppj/tests/CampaignSessionTests.cpp": "91835c753dee36fdef80ff4e99562fff20a4c577ea8711a81981156f058702dd",
+    "cpppj/tests/CMakeLists.txt": "bfc500dc462287984f94118cfad9b630149023924fde65414e5950dfb2f2df3e",
+    "cpppj/tests/CampaignSessionTests.cpp": "22f12b1dca18b5c72b3e1be8bbad75c2d679b104484e5f71f3a2da4085b7fb3d",
     "cpppj/tests/ManaBoltRegularTests.cpp": "3531f9ec3de58ad435557223606e16994d0f235b193780fab7700a06e96e8d5d"
   },
   "protectedFileSha256": {
@@ -101,5 +101,54 @@
     "Frame.Set/음향/가상 공간/가상 자기 삭제는 명시 외부 효과다. 실제 Session 검사는 같은 기존 Frame/World/Host/Kernel에 따로 연결했다.",
     "현재TYPE frame0 SHP와 WORD/카메라를 입력하며 과거 도착/표시 fixture는 변경하지 않았다.",
     "게임/GUI 실행이나 사용자 자연 플레이 검증은 아니다. CD47cb90은 이 단위에서 복원하지 않았다."
+  ],
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "unit": 130,
+      "reason": "실제 Board 접근점/Player 공장30칸과 Builder의 같은 경로/현재 도착 시각 연결",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "cce1e2bbb5c26959ddefb2d3ed9fa3cc785ee7a668f06e02c8fea88456e98b01",
+          "current": "ba3c4ac3d43e7a3ea503b2e14a83e12cf8e8c89109a8ebd41d2a34ef6d1a3357"
+        },
+        {
+          "path": "cpppj/src/o/CMakeLists.txt",
+          "previous": "831fd106a0f7c048a97d23bb7341b9b8b5a7a0c3c74629e25e40326a994bc717",
+          "current": "ef282a0eea6f3ab2c93477676b64e5da05d01ae6abded1ec9e2bd727244c3aea"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "f9f01cf1461e8a290fd9d996bfcdca73e354de80b4a6890dddbd5a3a83ebd87d",
+          "current": "bfc500dc462287984f94118cfad9b630149023924fde65414e5950dfb2f2df3e"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "91835c753dee36fdef80ff4e99562fff20a4c577ea8711a81981156f058702dd",
+          "current": "22f12b1dca18b5c72b3e1be8bbad75c2d679b104484e5f71f3a2da4085b7fb3d"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "cce1e2bbb5c26959ddefb2d3ed9fa3cc785ee7a668f06e02c8fea88456e98b01",
+          "current": "ba3c4ac3d43e7a3ea503b2e14a83e12cf8e8c89109a8ebd41d2a34ef6d1a3357"
+        },
+        {
+          "path": "cpppj/src/o/CMakeLists.txt",
+          "previous": "831fd106a0f7c048a97d23bb7341b9b8b5a7a0c3c74629e25e40326a994bc717",
+          "current": "ef282a0eea6f3ab2c93477676b64e5da05d01ae6abded1ec9e2bd727244c3aea"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "f9f01cf1461e8a290fd9d996bfcdca73e354de80b4a6890dddbd5a3a83ebd87d",
+          "current": "bfc500dc462287984f94118cfad9b630149023924fde65414e5950dfb2f2df3e"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "91835c753dee36fdef80ff4e99562fff20a4c577ea8711a81981156f058702dd",
+          "current": "22f12b1dca18b5c72b3e1be8bbad75c2d679b104484e5f71f3a2da4085b7fb3d"
+        }
+      ]
+    }
   ]
 }

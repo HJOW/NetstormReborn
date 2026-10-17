@@ -305,3 +305,6 @@ target_sources(netstorm PRIVATE RawProcessRemoval.cpp RawProcessRemoval.h)
 
 # 실제 마나 볼트의 주기 프레임/현재 대상 옆 위치 조정이다.
 target_sources(netstorm PRIVATE RawManaBoltRegular.cpp RawManaBoltRegular.h)
+
+# 실제 Boardcoord 가장자리/Graph 접근점이다.
+target_sources(netstorm PRIVATE RawBoardApproach.cpp RawBoardApproach.h)

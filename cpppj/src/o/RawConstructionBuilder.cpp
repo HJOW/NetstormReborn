@@ -82,6 +82,7 @@ ConstructionNoticePoint RawConstructionBuilder::Center(Sid sid) const {
 }
 // 속도 조정/운반 이동 뒤에도 현재 경로 단계로 시각을 다시 읽는다.
 double RawConstructionBuilder::Arrival(const ConstructionBuilderPath& path) const {
+    if (path.readArrival) return path.readArrival();
     if (path.currentStep>=path.arrivalTimes.size()) throw std::out_of_range("건설 사제 경로 시각 인덱스 오류");
     return path.arrivalTimes[path.currentStep];
 }

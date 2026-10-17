@@ -12,10 +12,12 @@ struct ConstructionBuilderType {
     std::uint32_t sourceFrameIndex{}; // 공급원 타입 +0x98: 운반 객체의 첫 프레임 표 인덱스다.
     std::array<std::int32_t,16> firstFrames{}; // 타입 +0x130의 프레임 DWORD 16개다. CD는 최종 BYTE만 쓴다.
 };
-// 경로 프로세스의 현재 단계와 단계별 도착 시각을 호스트 자료로 표현한다.
+// 값형 원본 fixture 또는 같은 실제 경로를 읽는 호출 수명 view다.
 struct ConstructionBuilderPath {
-    std::uint32_t currentStep{}; // 원본 프로세스 +0x10의 현재 시각 인덱스다.
-    std::vector<double> arrivalTimes; // 패치 +0x9c50 / CD +0x12d0의 시각 배열이다.
+    std::uint32_t currentStep{}; // 값형 fixture에서 원본 +0x10의 nVert를 인덱스로 보존한다. 진행 인덱스와 다르다.
+    std::vector<double> arrivalTimes; // 값형 fixture의 패치+9c50/CD+12d0 기준 배열이다. 실제 Runtime 시작은 각각8바이트 뒤다.
+    std::function<double()> readArrival; // 실제 Session은 nVert×8+9c50, 곧 현재 Runtime.Time(nVert-1)을 직접 읽는다. 값형 fixture는 기존 배열을 쓴다.
+    std::function<void(float,std::uint32_t)> prepare; // 같은 실제 경로의 가상+30이며 재준비 뒤 readArrival도 현재 시각을 읽는다.
 };
 // 생성/자원 선택 경계 뒤에도 다시 읽는 전역과 공유 공급원 목록이다.
 struct ConstructionBuilderState {
