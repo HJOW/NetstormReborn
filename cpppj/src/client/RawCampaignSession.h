@@ -20,6 +20,7 @@
 #include "client/CameraHome.h"
 #include "client/RawPriestMenu.h"
 #include "o/RawCarrierContentNotice.h"
+#include "client/RawCursorMana.h"
 #include "client/RawCampaignParticles.h"
 namespace netstorm::client {
 // 미션 입력/정지/UI 수명은 실제 UberGump의 현재 저장소와 동작을 빌린다.
@@ -159,6 +160,12 @@ public:
     PriestMenuState& PriestMenuSettings();
     // 0052f7e0의 TYPE 번호 제외 목록이다. 공간 앵커의 SID 추가 목록과 별개로 소유한다.
     o::SquidPostPopList& ConstructionExcludedTypes();
+    // 실제 Client 커서가 같은 취득/내려놓기/프로세스 토큰을 공유하는 단일 상태다.
+    CursorDropState& CursorDropSettings();
+    // 현재 맵 경계·마나 반경/대체점과 타입 전역을 같은 프로세스 몸체에 공급한다.
+    CursorManaGlobals& CursorManaSettings();
+    // 실제 Session의 마나 월드 객체와 Host/Kernel 생성·제거·이벤트를 연결한다. 설치 후에만 허용한다.
+    void BindCursorMana(CursorLifecycleHooks& hooks);
     // 화면/명령은 같은 현재 raw 월드와 HP를 읽는다.
     RawSurfaceWorld& World();
     // 같은 월드의 현재 Pool/장부/Host 참조를 빌린다.

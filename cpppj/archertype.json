@@ -87,7 +87,7 @@
     "cpppj/src/o/SquidFactory.cpp": "9773bb2d4f5b7dd0114fbb9406a95080e6f919a1106efe5b6a15ef8ed68e39e0",
     "cpppj/src/o/SquidPop.cpp": "e69942ca111f72c79ba4da05a42b5446e84013ef2ee0b9044381cf64a9e80ec9",
     "cpppj/src/o/SquidProcess.cpp": "188376ba728d8544d0bfafb92cc6f66403aea92434a81fa98efe894ed9f042e5",
-    "cpppj/src/o/SquidUnpop.cpp": "c090a5c43f22ec5c59f6885bde124889b1fc3004260c271ea4556879e6263a41",
+    "cpppj/src/o/SquidUnpop.cpp": "000e315fc0aead83fc423afc3293b3fd6176a211c1dc5b297d642e8dbea06ce2",
     "cpppj/src/o/TypeConstructors.inc": "bfac943af8c22cf91a0c267200f3e94133b021f2fe0e02507544978a7e08bd27",
     "cpppj/src/o/TypeParser.cpp": "5efbb48aa40e00ce8b516c864c9020c8b85d3a249ffb8c236b268469d57abbc6",
     "cpppj/tests/ArcherTypeDataTests.cpp": "5059f913a1442dd3d5e9d9fd900b1a2ce4efab5bff6628812dea49de3ff8fd05",
@@ -162,5 +162,19 @@
     "new_native": 0,
     "new_unique": 0,
     "reason": "실제71 Pop의누락된Asset→Damageable→공통postPop을비전투등록에연결. 같은Host의Gun명시생성/첫Fire,생산/42fixture/원본tool불변."
-  }
+  },
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "unit": 124,
+      "reason": "실제 커서 마나와 전용 표시 및 입증된 공통 수명을 Session에 연결",
+      "pins": [
+        {
+          "path": "cpppj/src/o/SquidUnpop.cpp",
+          "previous": "c090a5c43f22ec5c59f6885bde124889b1fc3004260c271ea4556879e6263a41",
+          "current": "000e315fc0aead83fc423afc3293b3fd6176a211c1dc5b297d642e8dbea06ce2"
+        }
+      ]
+    }
+  ]
 }

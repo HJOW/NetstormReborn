@@ -1,4 +1,4 @@
-// base84의입증된VT경로만확장하고다른실제파생/종속삭제분배는보존한다.
+// base84와 마나103의 입증된 VT 경로를 연결하고 다른 실제 파생/종속 삭제 분배는 보존한다.
 #include "client/RawCampaignLifetimeBindings.h"
 #include <stdexcept>
 #include <utility>
@@ -40,11 +40,13 @@ RawCampaignLifetimeBindings::RawCampaignLifetimeBindings(RawSurfaceWorld& world,
 }
 // baseVT가실제값일때만84의세공통가상몸체를사용한다.
 bool RawCampaignLifetimeBindings::EmptyGeyser(o::Sid sid) const { const auto raw=core_.pool.Slot(sid);return raw[10]==kEmptyGeyser && LifetimeVtable(raw)==kBaseVtable; }
+// 마나의 +10/+14/+18/+24/+48이 base와 같은 것을 실제 PE에서 확인했다.
+bool RawCampaignLifetimeBindings::CommonAsset(o::Sid sid) const { const auto raw=core_.pool.Slot(sid);return EmptyGeyser(sid) || (raw[10]==103 && LifetimeVtable(raw)==0x50c3b0); }
 // Pre/Post에만입증된공통모듈을선택하고종속/전송/선택은현재기존분배를유지한다.
 o::SquidDestroyHooks RawCampaignLifetimeBindings::DestroyHooks(o::SquidDestroyHooks fallback) const {
     auto hooks=fallback;
     hooks.emit=[this,fallback=std::move(fallback)](const o::SquidDestroyEvent& event) {
-        if (EmptyGeyser(event.sid) && (event.effect==o::SquidDestroyEffect::PreDestroy || event.effect==o::SquidDestroyEffect::PostDestroy)) {
+        if (CommonAsset(event.sid) && (event.effect==o::SquidDestroyEffect::PreDestroy || event.effect==o::SquidDestroyEffect::PostDestroy)) {
             core_.surfaces.Hooks().emit(event);return;
         }
         if (!fallback.emit) throw std::logic_error("다른 캠페인 실제 삭제 효과 미연결");fallback.emit(event);
@@ -53,7 +55,7 @@ o::SquidDestroyHooks RawCampaignLifetimeBindings::DestroyHooks(o::SquidDestroyHo
 // 같은RawSquidDestroy가dead/종속/전파/Unpop/PrePost깊이/반납을실제로처리한다.
 o::SquidAssetDestroy RawCampaignLifetimeBindings::Destroy(o::SquidAssetDestroy fallback) const {
     return [this,fallback=std::move(fallback)](o::Sid sid,std::uint32_t flags,const o::SquidDestroyHooks& hooks) {
-        if (EmptyGeyser(sid)) return core_.virtualDestroy.Destroy(sid,flags,hooks);
+        if (CommonAsset(sid)) return core_.virtualDestroy.Destroy(sid,flags,hooks);
         if (!fallback) throw std::logic_error("다른 캠페인 실제 파생 삭제 미연결");return fallback(sid,flags,hooks);
     };
 }

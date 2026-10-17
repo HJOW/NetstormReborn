@@ -128,7 +128,7 @@
     "cpppj/hist/run26-draft/RawBattleBroadcast.cpp": "0c88515bdfc87fc05310087ad360ea94ee9a95666329aaec09ea896a04744f13",
     "cpppj/hist/run26-draft/battle-bcast-x86.tsv": "d7da6351dca0e671136a4a81926662815762b2c3466e0d6413d1587b1415d732",
     "cpppj/hist/run26-draft/decomp_battle_bcast.py": "95a96ec4e3ffe37e5e906f8cd30546c5594e74fe0ddda045683339ecd7e2e3f7",
-    "cpppj/src/CMakeLists.txt": "2e6abfe6e4ecb09fc2814e051cb14293dce798f0af257e7e432e6dafb53238d5",
+    "cpppj/src/CMakeLists.txt": "a0ce72c79685631ce627defcc392fb06df32131c835594b570569404e1929a4a",
     "cpppj/src/app/CanonMayPlaceInspect.cpp": "27eda46bca500c898abeb9a3a7c4e8588b38e061b579c84cbf6c032c6d46dda9",
     "cpppj/src/app/FrameBindingInspect.cpp": "042602919b0531fb1cbaf3941dc6597bee73944bbf0d571dacfd638bb45dd07c",
     "cpppj/src/app/FrameBindingInspect.h": "4e187ca41f8c34ed52c022b58a57327a554a723e3e26ee88a1ae152c99de3fce",
@@ -661,7 +661,7 @@
     "cpppj/src/o/Squid.h": "4c69717ff5cb81f35bc6e849f62cf447af0009231312bd70c9fed2f8af7dd69a",
     "cpppj/src/o/SquidDestroyLifecycle.cpp": "75a6d698b2e800acc38ef008f3f32da2efc665286a7995a2e20d499bd40215fd",
     "cpppj/src/o/SquidDestroyLifecycle.h": "f1352b9e3a55bf413538fa53995db646ce29f288f23477baf81b5cefa0b7cea4",
-    "cpppj/src/o/SquidDisplay.cpp": "23b2719e6913e0f07a589919c2ac30a4d235ebb96ba5e76255deb53b006431c9",
+    "cpppj/src/o/SquidDisplay.cpp": "47dd928d6df4a53c8debb0dd67c56fe62f4c530a1dd07cd31bae81cc7468faac",
     "cpppj/src/o/SquidDisplay.h": "83ed777ce826ec37cc2a72808ffd3658b8f6bcb9644efcf31f203fc6da363be7",
     "cpppj/src/o/SquidFactory.cpp": "6221de3262944b7105ae57dacc67ee8cee3e237b62240d5d3a2fd777a5706aed",
     "cpppj/src/o/SquidFactory.h": "9a2b50ead267868364024a9fb0306e6fbf224486b87479a79c531ad2f3607708",
@@ -689,7 +689,7 @@
     "cpppj/src/o/SquidReward.h": "221e142133a1e3a73f65ff6979d73859b7701912ab84cde9dc6a9fe565ccd2e7",
     "cpppj/src/o/SquidSpatial.cpp": "d6d38d116ba6a41ad59b1200159578fed2e3236841633a34af661abe61603f36",
     "cpppj/src/o/SquidSpatial.h": "a5fe1fec719015fca4f30c4caba6fcd71c28de84cad03108ce7559fcb2ec41d6",
-    "cpppj/src/o/SquidUnpop.cpp": "c090a5c43f22ec5c59f6885bde124889b1fc3004260c271ea4556879e6263a41",
+    "cpppj/src/o/SquidUnpop.cpp": "000e315fc0aead83fc423afc3293b3fd6176a211c1dc5b297d642e8dbea06ce2",
     "cpppj/src/o/SquidUnpop.h": "36635a51668570c7ae1df71e507f1f7d6d4fd1b141ccf0529165428034e5aad9",
     "cpppj/src/o/Template.cpp": "01b1c9aca985827a3fae9d823c30005530d611f4538b909d0217316cab286e43",
     "cpppj/src/o/Template.h": "3426d9944a042cfa62f600168e59afcbf8c6b44308293f43f35c4a6283075500",
@@ -870,7 +870,7 @@
     "cpppj/tests/PlayerPlacementAnchorTests.cpp": "4014e8534f9fbb91e58f536e30e64c7652c134592f1ef711e804eddacb529f9e",
     "cpppj/tests/PlayerRegularTests.cpp": "691f83150cd786369635ecf748289c97e9166d285f422b469dda82790030ce31",
     "cpppj/tests/PlayerWorldTests.cpp": "fe10cc0a9464d85499d9fa27b2d30af7a87583348a886072865cd5899de55098",
-    "cpppj/tests/PopTests.cpp": "efbcc139659e8ba5737b409e427787cdc1e896fe72d051f1119d356e171b0577",
+    "cpppj/tests/PopTests.cpp": "2815679f07e4c9873dc70b925e9e6c16e44864d3be191c636650954a12d4cea4",
     "cpppj/tests/PostPopTests.cpp": "6cd0c37a8b2c9f84cd0b0c511f58f71000c4ba5936e06f73b3226788ec25dd2a",
     "cpppj/tests/PreviewCollectionTests.cpp": "d07e48af028b0735a54a40dcf5e3256c6222bfcc01cfd4ee1b3c0cad9ef086fb",
     "cpppj/tests/PreviewDrawTests.cpp": "9eecb5dde21349478df6aa7d6e0bcfd3091fc6e9a6c20dcc4ac736fc29130667",
@@ -951,7 +951,7 @@
     "cpppj/tests/TestSupport.h": "18827372a8b50e27d20954793d196c44a53b0dbe304457dd7c7127021373166c",
     "cpppj/tests/TileGroupCollectionTests.cpp": "d6359530aab4ebf7f7e4238a639fceb2ffeda48d06b3927dfa80d4857b55386c",
     "cpppj/tests/TypeHotspotTests.cpp": "639236d6952f3308c928370617e1303cd7c7fa68dd3070fb8c64ee0aba8a0dc9",
-    "cpppj/tests/UnpopTests.cpp": "4f9efda3896844d3fa93efb0b36cb2ef01423bcb0f7da16a4c82866299e35ad8",
+    "cpppj/tests/UnpopTests.cpp": "e0ac9391654c79aabfafb7f57516371e540317bd95d335abb61d85f0fea17f94",
     "cpppj/tests/VortexAscendTests.cpp": "3f3b5afe23bba6b316295847389732888469246f2e853b2381f9f6442ea0acbb",
     "cpppj/tests/VortexDisplayTests.cpp": "a86a52e4641643822d0b2a85b3b8456b09f947f02a52f60721485dffe742998b",
     "cpppj/tests/VortexIslandBindingTests.cpp": "92dde6c59535d6bdac2fd57f7659cabad9bb6d390b15e381794034e2025ec2f3",
@@ -1215,5 +1215,39 @@
     "Gun/Path 현재 writer 연결이며 dependency Form/자산 직렬화는 별도다.",
     "표 포인터 교체와 server0 assertion의 PE 실행 대조는 입력 범위 밖이다.",
     "실제 메뉴/UI/음향/Guide/Ready/경제/AI/승패와 Early Missions/1-1~1-2 완주 동일성은 미완료다."
+  ],
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "unit": 124,
+      "reason": "실제 커서 마나와 전용 표시 및 입증된 공통 수명을 Session에 연결",
+      "pins": [
+        {
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "2e6abfe6e4ecb09fc2814e051cb14293dce798f0af257e7e432e6dafb53238d5",
+          "current": "a0ce72c79685631ce627defcc392fb06df32131c835594b570569404e1929a4a"
+        },
+        {
+          "path": "cpppj/src/o/SquidDisplay.cpp",
+          "previous": "23b2719e6913e0f07a589919c2ac30a4d235ebb96ba5e76255deb53b006431c9",
+          "current": "47dd928d6df4a53c8debb0dd67c56fe62f4c530a1dd07cd31bae81cc7468faac"
+        },
+        {
+          "path": "cpppj/src/o/SquidUnpop.cpp",
+          "previous": "c090a5c43f22ec5c59f6885bde124889b1fc3004260c271ea4556879e6263a41",
+          "current": "000e315fc0aead83fc423afc3293b3fd6176a211c1dc5b297d642e8dbea06ce2"
+        },
+        {
+          "path": "cpppj/tests/PopTests.cpp",
+          "previous": "efbcc139659e8ba5737b409e427787cdc1e896fe72d051f1119d356e171b0577",
+          "current": "2815679f07e4c9873dc70b925e9e6c16e44864d3be191c636650954a12d4cea4"
+        },
+        {
+          "path": "cpppj/tests/UnpopTests.cpp",
+          "previous": "4f9efda3896844d3fa93efb0b36cb2ef01423bcb0f7da16a4c82866299e35ad8",
+          "current": "e0ac9391654c79aabfafb7f57516371e540317bd95d335abb61d85f0fea17f94"
+        }
+      ]
+    }
   ]
 }

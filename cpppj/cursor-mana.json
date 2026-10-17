@@ -1,0 +1,143 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "entries": [
+    "004741d0",
+    "004737f0",
+    "00473d00",
+    "00473c30",
+    "00473b90",
+    "00474b60",
+    "00472e60",
+    "0049a840",
+    "004ac220",
+    "0041bfb0",
+    "0041d150",
+    "0040e800",
+    "00446040",
+    "0041bd00",
+    "004e49c0"
+  ],
+  "uniqueInputs": 642,
+  "normalReturns": 1344,
+  "instructions": 568996,
+  "actualEntries": {
+    "00472e60": 2,
+    "004737f0": 216,
+    "0049a840": 216,
+    "004ac220": 1224,
+    "00473d00": 522,
+    "0041bfb0": 2076,
+    "00473b90": 444,
+    "00446040": 444,
+    "0041bd00": 444,
+    "004e49c0": 1554,
+    "0041d150": 2322,
+    "0040e800": 2322,
+    "00473c30": 300,
+    "004741d0": 12
+  },
+  "precisionDifferentInputs": [],
+  "themeFrames": [
+    4,
+    5,
+    6,
+    7,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "tools/decomp_cursor_mana.py": "00cfea4f089b06b1b8f1b0cc61f0cf4f93bd33aa16aaa0715a95c66187a9f888",
+    "cpppj/tests/fixtures/cursor-mana-x86.tsv": "13bc12de4bee7790d44ce4138249221a49f26740538e0e9ebca9fb22348adc38",
+    "cpppj/src/CMakeLists.txt": "a0ce72c79685631ce627defcc392fb06df32131c835594b570569404e1929a4a",
+    "cpppj/src/client/RawCampaignLifetimeBindings.cpp": "d9c3c3a134b5b451267336c20c81dd1db3dea2d597fba636d65abca4f6c1d6e8",
+    "cpppj/src/client/RawCampaignLifetimeBindings.h": "3114556500601a63ab28b40a27003a8a9e4737e11fa63b2ada8edf4a9a7aefd1",
+    "cpppj/src/client/RawCampaignSession.cpp": "1652cafd2488e0ab42b4829849666a790926bf396bce0e46a78b0cd16305a47a",
+    "cpppj/src/client/RawCampaignSession.h": "25fb015f71b52348bf38624add1dad4290681939ff9258aea98a2ea40a453463",
+    "cpppj/src/o/SquidDisplay.cpp": "47dd928d6df4a53c8debb0dd67c56fe62f4c530a1dd07cd31bae81cc7468faac",
+    "cpppj/src/o/SquidPop.cpp": "c57e6263de140459d3c109f9163b59ea1193e7038e2a46ce74b577cbdebae7a7",
+    "cpppj/src/o/SquidUnpop.cpp": "000e315fc0aead83fc423afc3293b3fd6176a211c1dc5b297d642e8dbea06ce2",
+    "cpppj/tests/CMakeLists.txt": "b850f423d0be8c30b22478834953b1f83dbe250243c869104153c5761ff5a3dd",
+    "cpppj/tests/CampaignSessionTests.cpp": "d89ecff205bf63e19de47cfd36d895eacda45c7e48620aeb13ad0fe9340f5d79",
+    "cpppj/tests/PopTests.cpp": "2815679f07e4c9873dc70b925e9e6c16e44864d3be191c636650954a12d4cea4",
+    "cpppj/tests/UnpopTests.cpp": "e0ac9391654c79aabfafb7f57516371e540317bd95d335abb61d85f0fea17f94",
+    "cpppj/src/client/RawCursorMana.cpp": "b8ab58679249a18387757eb2eb93c7405e566a4a9fc02ed018b2046a7d751f7b",
+    "cpppj/src/client/RawCursorMana.h": "f363a35504b216243604734bcb9c7567943797c4b879b9f101b16763d9d3821a",
+    "cpppj/tests/CursorManaTests.cpp": "84b4c5aab77872135916da08e74cc5339957d3c32209b5274b713f413a76bbd2"
+  },
+  "limitations": [
+    "실제 생성·원형/사각형 프레임·통지·소멸·클램프·절삭을 실행한다.",
+    "할당/Attach/부모 중심과 객체 가상 효과는 명시 경계다. 실제 World/Kernel 연결은 제품 검사로 구별한다.",
+    "프레임 자기 삭제는 실제 소멸 본문을 실행하고 사각형 꼬리 쓰기도 관측한다. 실제 GUI/플레이 증거는 아니다."
+  ],
+  "protectedFileSha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6"
+  },
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "unit": 124,
+      "reason": "실제 원형/사각형 frame의 Kernel 자기 삭제 검사 추가",
+      "pins": [
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "9e11ad9b798c2940bf5f63499b333368ed7df0914dee09c3ce210155736a33c0",
+          "current": "d89ecff205bf63e19de47cfd36d895eacda45c7e48620aeb13ad0fe9340f5d79"
+        }
+      ]
+    }
+  ],
+  "productValidation": {
+    "configuration": "Release",
+    "build": {
+      "attempt": 11,
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0,
+      "log": "extracted/goal-cursor-mana-20261017-build11.log"
+    },
+    "focused": {
+      "cursorMana": 3,
+      "actualSession": 1,
+      "oldPop": 3,
+      "oldUnpop": 4,
+      "failed": 0
+    },
+    "ctest": {
+      "total": 1500,
+      "passed": 1500,
+      "failed": 0,
+      "exitCode": 0,
+      "seconds": 233.58,
+      "log": "extracted/goal-cursor-mana-20261017-ctest.log",
+      "outputLog": "extracted/goal-cursor-mana-20261017-ctest-output.log"
+    },
+    "earlierCtestBeforeSelfDeleteCases": {
+      "passed": 1500,
+      "seconds": 233.98,
+      "log": "extracted/goal-cursor-mana-20261017-ctest1.log"
+    },
+    "actualSession": {
+      "samePoolWorldHostKernel": true,
+      "createdMovedHiddenRestoredRemoved": true,
+      "parentDeletionReleasesProcessAndMarkers": true,
+      "sphereAndRectangularFrameSelfDeletion": true
+    },
+    "constructorRectangularElseEntered": false,
+    "modernVerifyTools": 15,
+    "originalOrCloneGameRun": false,
+    "guiRun": false,
+    "actualClientTakeConnected": false,
+    "goalComplete": false
+  }
+}

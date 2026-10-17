@@ -80,7 +80,7 @@
     "cpppj/src/o/SquidProcess.h": "827a9789c2a6b66ac7b98181e49e8c0fa19713755bb62fccababb7ae2a0d0589",
     "cpppj/src/o/SquidReward.cpp": "a29c11afe56a477c470956b1ed0a0678d059340806537ce08b43bf6b6aa1375d",
     "cpppj/src/o/SquidReward.h": "221e142133a1e3a73f65ff6979d73859b7701912ab84cde9dc6a9fe565ccd2e7",
-    "cpppj/src/o/SquidUnpop.cpp": "c090a5c43f22ec5c59f6885bde124889b1fc3004260c271ea4556879e6263a41",
+    "cpppj/src/o/SquidUnpop.cpp": "000e315fc0aead83fc423afc3293b3fd6176a211c1dc5b297d642e8dbea06ce2",
     "cpppj/src/o/SquidUnpop.h": "36635a51668570c7ae1df71e507f1f7d6d4fd1b141ccf0529165428034e5aad9",
     "cpppj/tests/CarrierArrivalSupport.h": "711263ae85caf9cb748b2db1dace990c8066b74b453403af86e5c43d1618fedd",
     "cpppj/tests/CarrierArrivalTests.cpp": "7b7f94c8e142fd4fe81f620038c005bb07f06fccbc151d2baa0fe7faed2a9b5a",
@@ -257,5 +257,19 @@
     "cpppj/hist/priest-arriv-add6f/tools/decomp_priesthalt_oracle.py": "947f5326f185408786adfb5464d3818d0806cb151c5d202b1a98abee0ce65381",
     "cpppj/hist/priest-arriv-add6f/tools/ghidra/carrierarrival-functions.json": "7eac4c5bb71e91e4ef467297ecb95ec72a1298e89efb3dc2215efd41e2a9ecea"
   },
-  "scope": "서버가client Form을Kill0하면실제Destroy가flags0x10을추가하므로cleanup 기대만0→0x10으로바꾼다. 패치cleanup은부모가live면ReturnPlace0이어도contained를조회하므로consumer local cleanup에같은기존Carrier.FindContained만직접연결한다. ContentForm6이없는scene0에서실제Form54는자연제외되며빈getter/noop을공급하지않는다. helper0/다이스없음등미선택큰효과strict예외는유지한다. 입력/생산/Native864·406/Support/전수검사/이전보고서변경0,새원본입력0이다."
+  "scope": "서버가client Form을Kill0하면실제Destroy가flags0x10을추가하므로cleanup 기대만0→0x10으로바꾼다. 패치cleanup은부모가live면ReturnPlace0이어도contained를조회하므로consumer local cleanup에같은기존Carrier.FindContained만직접연결한다. ContentForm6이없는scene0에서실제Form54는자연제외되며빈getter/noop을공급하지않는다. helper0/다이스없음등미선택큰효과strict예외는유지한다. 입력/생산/Native864·406/Support/전수검사/이전보고서변경0,새원본입력0이다.",
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "unit": 124,
+      "reason": "실제 커서 마나와 전용 표시 및 입증된 공통 수명을 Session에 연결",
+      "pins": [
+        {
+          "path": "cpppj/src/o/SquidUnpop.cpp",
+          "previous": "c090a5c43f22ec5c59f6885bde124889b1fc3004260c271ea4556879e6263a41",
+          "current": "000e315fc0aead83fc423afc3293b3fd6176a211c1dc5b297d642e8dbea06ce2"
+        }
+      ]
+    }
+  ]
 }

@@ -121,8 +121,8 @@
     "cpppj/src/client/RawCampaignSession.h": "22f17f2a2dfbd71c5995e498b870e9d0ab27cfb3d2b532f6ce2fcdc032479244",
     "cpppj/src/client/RawCampaignSession.cpp": "36b23f4e6c6b557ceaf908de235f6451938f10bdde86cac3fa715eafe8d71ea1",
     "cpppj/src/client/CampaignClientServices.cpp": "86407af96a1a5ccaaa16ba158f205bbe66fa97c88f091629b1516eb6f2395ed3",
-    "cpppj/src/client/RawCampaignLifetimeBindings.h": "f7c7bb580be2152ec83e474dd1a84b6079b14bc9760e6c70b1a7dba034d92f1d",
-    "cpppj/src/client/RawCampaignLifetimeBindings.cpp": "e36af28a35b3d3ab025029c0682a05f65a35a8f575b49226edfbd1df0ad75fb2",
+    "cpppj/src/client/RawCampaignLifetimeBindings.h": "3114556500601a63ab28b40a27003a8a9e4737e11fa63b2ada8edf4a9a7aefd1",
+    "cpppj/src/client/RawCampaignLifetimeBindings.cpp": "d9c3c3a134b5b451267336c20c81dd1db3dea2d597fba636d65abca4f6c1d6e8",
     "cpppj/src/client/RawSurfaceWorld.h": "c5d3eb83397d1d3e09f021c419cd305585cd9b8496a4c0b56b02bae9104d4bb1",
     "cpppj/src/client/RawSurfaceWorld.cpp": "18705f46068add5b61eff6c6d176e7391ea637d4686a6d9fab95fd7db4f6721d",
     "cpppj/src/o/RawSquidDestroyDispatch.h": "1d040f3140f5a422d360bed59fe53fdf665dfdd8218a4d4e21132f2418364b43",
@@ -171,5 +171,24 @@
     "Nonnull AI geyser/damage/economy/strategy consumers remain explicit unsupported boundaries",
     "Original CheckLogin/worldLoad/Ready40/Stage3 and mission frame/tutorial/pause ownership parent integration",
     "Natural Early Missions/campaign1-1..1-2 completion and original visual/audio/behavior equality; DirectDraw fullscreen excluded"
+  ],
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "unit": 124,
+      "reason": "실제 커서 마나와 전용 표시 및 입증된 공통 수명을 Session에 연결",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignLifetimeBindings.h",
+          "previous": "f7c7bb580be2152ec83e474dd1a84b6079b14bc9760e6c70b1a7dba034d92f1d",
+          "current": "3114556500601a63ab28b40a27003a8a9e4737e11fa63b2ada8edf4a9a7aefd1"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignLifetimeBindings.cpp",
+          "previous": "e36af28a35b3d3ab025029c0682a05f65a35a8f575b49226edfbd1df0ad75fb2",
+          "current": "d9c3c3a134b5b451267336c20c81dd1db3dea2d597fba636d65abca4f6c1d6e8"
+        }
+      ]
+    }
   ]
 }

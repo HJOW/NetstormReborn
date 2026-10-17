@@ -1,5 +1,17 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-17 단위124 완료: 실제 커서 마나·전용 표시·Session 수명 (`HJOW-Athlon`)
+
+- [x] AGENTS.md·양 LEFT·깨끗한a9d3510과 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16**을 확인했다. 새 내보내기·원본/클론 게임·GUI 실행은 없다. 전체 목표는 active다. [작업 기록](docs/exe/cpp-cursor-mana-20261017.md).
+- [x] `RawCursorMana`가 실제4741d0/4737f0/473d00/473c30/473b90의 생성·원형/사각형 frame·숨김/종료·소멸을 복원한다. 같은 TYPE/SID 풀/현재 시각을 읽고 실제 표시8개·WORD1·extra8·theme 프레임과 콜백 뒤 현재 값 재조회를 보존했다. 생성자mode0은 실제 관측했고 else 진입은 관측하지 않았다.
+- [x] Native2 **642고유 입력/두 정밀도1,344정상 반환/568,996명령/차이0**이며 C++가 필드224바이트/raw31슬롯/전역/전체 효과/연속 호출을 모두 대조했다. 실제472e60의 theme11프레임도 확인했다. Native1 음수 DWORD 인코딩 실패는 제외했다. 사각형 Kill 뒤 시각 쓰기는 실제 소멸을 실행해 관측했다. C++ Kernel 어댑터는 프레임 동안 필드를 공유 소유해 같은 꼬리 쓰기를 안전하게 보존한다.
+- [x] 실제 Session 생성은 미복원 마나 표시473770에서 실패해 PE의 정확한67바이트/ret와8c thunk를 확인하고 복원했다. WORD0은 무동작, 비영점은 오른쪽/아래10픽셀의 실제 부분 갱신이다. Native 표시2 **432고유 입력/864정상 반환/차이0**으로 bounds/clip/dirty 전체를 대조했다. full 열은 표시 억제 전역이며 초기 C++ 비교의 잘못된 DirtyRegions full 해석을 수정했다.
+- [x] 생성/frame/숨김/복원 뒤 미연결 TYPE103 삭제도 발견해 **103+VT50c3b0**만 입증된 base+10/+14/+18/+24/+48로 연결했다. 실제 Session이 단일 CursorDrop/마나 전역/몸체를 소유하며`BindCursorMana`가 같은 World/Host/Kernel/현재 중심을 사용한다. 기존 공통 metadata/fixture는 보존했고 모르는 파생을 허용하지 않았다.
+- [x] 실제thewarbegins GameWorld에서8개 마커의 생성·공간/표시·이동·숨김·복원·명시 삭제, 두 번째 부모 삭제에 따른 ProcessForm→Kernel→8개 반납, 원형/사각형의 실제 frame 자기 삭제까지 통과했다. 임시 진단은 제거했다. 초기 컴파일 이름/치환 오류와 비정상 종료는 해결 전 로그로 보존했다.
+- [x] 최종 **Release 빌드11 종료0·경고0·오류0**, 새 집중4/기존Pop3·Unpop4 통과, 전체 **1,500개 모두 통과·실패0·CTest 종료0·233.58초**다. 자기 삭제 추가 전 첫 전체1500/233.98초는ctest1에 보존했다. 최종 로그 접두사는`extracted/goal-cursor-mana-20261017-`다.
+- [x] 현대 --verify15개·새 제품 의존15개/관측/보호 SHA·UTF-8/LF/문자를 감사했다. 실제 HEAD와 일치하던30보고서68공유 핀만 이력과 갱신하고 최종 검사 소스도 다시 이력 갱신했다. 과거124핀은 보존했다. 기존565/854·Pop/Unpop fixture/metadata·AGENTS/DN/보호 원본은 불변이고 CMake 기존 접두 바이트도 보존했다. 이 기록을 포함해 **20261017-24 CP 실제 커서 마나 프로세스와 전용 표시 및 세션 수명 복원**으로 로컬 커밋한다. push하지 않는다.
+- [ ] **다음 실제 플레이:** 사정거리 wrapper474900/ctor474520/VT50c498(frame474b80,event474790)/helpers474280·474450·474c30·474ed0을 복원해 같은 부모/Kernel/World에 연결한다. 참고 원문은 같은 접두사`next-주소.txt`다.474450은 range104 객체8개·extra8·TYPE+130+1ec*4 프레임을 만든다.474280은 gun mode/469120을 쓰며 현재`RawGunMode`/`RawGunTarget`을 재사용할 수 있다. Client 전체DWORD 메뉴/GumpForm→Take/위치/수집/그리기/내려놓기, 일반 건설·생산·경제·AI전략·GUI 시작/승패/저장/다음 미션·사용자 자연 완주와 원본 동일성은 남았다. 반환0 우회는 없다. 전체화면 DirectDraw는 제외다.
+
 ## 2026-10-17 단위123 완료: 커서 TYPE 번호와 사정거리 판정 (`HJOW-Athlon`)
 
 - [x] AGENTS.md·양 LEFT·깨끗한a550c7f와 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16**을 확인했다. 새 내보내기·원본/클론 게임·GUI 실행은 없다. 전체 목표는 active다. [작업 기록](docs/exe/cpp-cursor-type-range-20261017.md).

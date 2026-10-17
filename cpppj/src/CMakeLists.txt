@@ -26,3 +26,6 @@ target_sources(netstorm PRIVATE app/CanonMayPlaceInspect.cpp)
 add_executable(NetstormCpp app/main.cpp)
 netstorm_apply_compiler_options(NetstormCpp)
 target_link_libraries(NetstormCpp PRIVATE netstorm)
+
+# 실제 커서 마나의 월드 객체와 프로세스 수명을 연결한다.
+target_sources(netstorm PRIVATE client/RawCursorMana.cpp client/RawCursorMana.h)

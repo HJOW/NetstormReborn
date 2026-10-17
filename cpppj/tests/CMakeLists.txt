@@ -1255,3 +1255,12 @@ set_source_files_properties(CarrierDropPointTests.cpp PROPERTIES COMPILE_DEFINIT
 target_sources(netstorm_tests PRIVATE CarrierContentNoticeTests.cpp)
 set_source_files_properties(CarrierContentNoticeTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_CARRIER_CONTENT_NOTICE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/carrier-content-notice-x86.tsv\"")
+
+# 실제 커서 마나 생성·프레임·이벤트·소멸의 독립 원문이다.
+target_sources(netstorm_tests PRIVATE CursorManaTests.cpp)
+set_source_files_properties(CursorManaTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CURSOR_MANA_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/cursor-mana-x86.tsv\"")
+
+# 실제 마나88/8c의 부분 변경 영역 표를 같은 검사에 공급한다.
+set_property(SOURCE CursorManaTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS
+    "NETSTORM_CURSOR_MANA_DISPLAY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/cursor-mana-display-x86.tsv\"")

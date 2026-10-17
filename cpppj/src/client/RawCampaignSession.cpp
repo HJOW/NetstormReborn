@@ -98,6 +98,9 @@ struct RawCampaignSession::Impl {
     std::uint32_t terrainType{97}; // 실제 월드 생성과 영역 소유자 getter가 함께 읽는 isle 타입 전역이다.
     RawSurfaceWorld world; // 모든 생성/Pop/Graph가 사용하는 단일 raw 월드다.
     RawWorldCore core; // 같은 Pool/장부/해시의 참조만 유지한다.
+    CursorDropState cursorDrop; // 실제 취득/배치/취소가 공유할 커서 상태이며 마나 토큰도 같은 저장소다.
+    CursorManaGlobals cursorManaGlobals; // 현재 마나 종류/반경과 월드 좌표 제한 전역이다.
+    std::unique_ptr<RawCursorMana> cursorMana; // Kernel을 먼저 비운 뒤 해제하는 실제 마나 프레임/수명 몸체다.
     GameRandom random; // 게임 난수의 명시 초기 입력이다.
     ScrambledSpStore sp; // 같은 게임 난수를 사용하는 실제 패치 SP 저장소다.
     SquidRewardState rewardState; // 실제 HP getter의 장기 전역이다.
@@ -413,6 +416,8 @@ struct RawCampaignSession::Impl {
         }
         gunMode=std::make_unique<RawGunMode>(core.pool,core.frames,gunState.windArcherType);
         gunTarget=std::make_unique<RawGunTarget>(core.pool,core.hash,core.types,gunTypes,core.shapes,gunTargetState);
+        CursorManaHooks cursorManaHooks;BindCursorManaWorld(cursorManaHooks,world,[this](Sid sid) { return gunTarget->Center(sid); });
+        cursorMana=std::make_unique<RawCursorMana>(core.pool,core.types,core.processState,cursorManaGlobals,cursorDrop,std::move(cursorManaHooks));
         priestDamageState.levelCorrectionDisabled=globals.missionPost;priestDamageState.boss=assetState.boss;
         priestDamageState.levelCorrectionDisabledRead=[this] { return globals.missionPost; };
         generalDamageState.serverRead=[this] { return core.processState.server; };
@@ -1170,6 +1175,15 @@ std::unique_ptr<RawPriestMenu> RawCampaignSession::MakePriestMenu(PriestMenuHook
 PriestMenuState& RawCampaignSession::PriestMenuSettings() { return impl_->priestMenu; }
 // 원본 TYPE 제외 목록을 현재 값으로 빌린다. 다른 SID/생산 금지 표와 합치지 않는다.
 SquidPostPopList& RawCampaignSession::ConstructionExcludedTypes() { return impl_->constructionExcludedTypes; }
+// UI와 실제 마나 프로세스가 동일한 현재 커서 토큰을 공유한다.
+CursorDropState& RawCampaignSession::CursorDropSettings() { return impl_->cursorDrop; }
+// 이후 커서/맵 명령도 프레임이 읽는 같은 전역을 갱신한다.
+CursorManaGlobals& RawCampaignSession::CursorManaSettings() { return impl_->cursorManaGlobals; }
+// 실제 Session 소유의 생성·표시·공간·가상 삭제·중심과 현재 Host/Kernel을 조립한다.
+void RawCampaignSession::BindCursorMana(CursorLifecycleHooks& hooks) {
+    if (!impl_->loaded) throw std::logic_error("미설치 Session의 커서 마나 연결");
+    BindCursorManaLifecycle(hooks,impl_->core.processes,impl_->core.kernel,*impl_->cursorMana);
+}
 // 화면과 입력은 같은 살아 있는 상태를 읽는다.
 RawSurfaceWorld& RawCampaignSession::World() { return impl_->world; }
 RawWorldCore RawCampaignSession::Core() { return impl_->core; }

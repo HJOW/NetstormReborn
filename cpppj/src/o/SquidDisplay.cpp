@@ -12,6 +12,7 @@ namespace netstorm::o {
 namespace {
 // 표시 레이어와 extra의 선택/표식 비트다.
 constexpr std::uint32_t kDoubleFrames=0x440000,kShadow=0x40000,kMarker=0x10;
+constexpr std::uint32_t kPatchManaVtable=0x50c3b0; // 실제 마나 update88=473770이며8c는 같은88로 가상 꼬리 호출한다.
 // WORD0인 신전 가상8c는 실제 rune 사각형의 네 inset으로 본그림만 갱신한다. 썬 신전은 기본88의 thunk다.
 std::optional<std::array<int,4>> VortexInsets(OriginalEdition edition,std::uint32_t table) {
     const bool patch=edition==OriginalEdition::Patch1078;
@@ -99,6 +100,10 @@ bool SquidDisplay::PatchFrameValid(std::size_t type,int frame) const {
 void SquidDisplay::Validate(OriginalEdition edition,std::span<const std::uint8_t> bytes,std::uint32_t flags) const {
     if (edition!=edition_) throw std::invalid_argument("표시 판본 불일치");
     if (!SquidUnpop::SupportsDisplay(edition_,Read(bytes,0),flags)) throw std::logic_error("파생 표시 갱신 미복원");
+    // 마나의 WORD0 경로는 TYPE/SHP/프레임을 읽지 않는다. WORD 비영점도 억제 중이면 bounds에 진입하지 않는다.
+    if (edition_==OriginalEdition::Patch1078 && Read(bytes,0)==kPatchManaVtable) {
+        if (Read(bytes,12,2)!=0 && !sink_.Suppressed()) static_cast<void>(Bounds(Read(bytes,10,1),std::bit_cast<std::int32_t>(Read(bytes,36)),std::bit_cast<float>(Read(bytes,14)),std::bit_cast<float>(Read(bytes,18))));return;
+    }
     const auto type=Read(bytes,10,1);
     if (type>=types_.size()) throw std::out_of_range("표시 타입 번호 범위 오류");
     const bool patch=edition_==OriginalEdition::Patch1078;
@@ -131,6 +136,12 @@ SquidDisplayRect SquidDisplay::Bounds(std::size_t type,int frame,float x,float y
 // update8c는 update88로 가상 꼬리 호출하므로 지원 표에서 확인한 공통 경로를 공유한다.
 void SquidDisplay::Update(std::span<const std::uint8_t> bytes,std::uint32_t flags) {
     Validate(edition_,bytes,flags);
+    // 473770→499240의 실제 부분 갱신이다. 추가10픽셀은 Q16 확대율을 곱하지 않으며 선택/그림자를 더하지 않는다.
+    if (edition_==OriginalEdition::Patch1078 && Read(bytes,0)==kPatchManaVtable) {
+        if (!Read(bytes,12,2) || sink_.Suppressed()) return;
+        auto rect=Bounds(Read(bytes,10,1),std::bit_cast<std::int32_t>(Read(bytes,36)),std::bit_cast<float>(Read(bytes,14)),std::bit_cast<float>(Read(bytes,18)));
+        rect.right=Coordinate(static_cast<std::int64_t>(rect.right)+10);rect.bottom=Coordinate(static_cast<std::int64_t>(rect.bottom)+10);rect=Clip(rect,view_.viewport);if (Nonempty(rect)) sink_.Invalidate(rect,0);return;
+    }
     const bool patch=edition_==OriginalEdition::Patch1078; const auto type=Read(bytes,10,1);
     const auto frame=patch ? std::bit_cast<std::int32_t>(Read(bytes,36)) : static_cast<int>(Read(bytes,34,1));
     // 실제 부분 갱신 helper는 표시 억제부터 검사하고 선택 표식/그림자 갱신을 추가하지 않는다.

@@ -69,12 +69,26 @@
     "cpppj/src/o/SquidProcess.h": "827a9789c2a6b66ac7b98181e49e8c0fa19713755bb62fccababb7ae2a0d0589",
     "cpppj/src/o/SquidReward.cpp": "a29c11afe56a477c470956b1ed0a0678d059340806537ce08b43bf6b6aa1375d",
     "cpppj/src/o/SquidReward.h": "221e142133a1e3a73f65ff6979d73859b7701912ab84cde9dc6a9fe565ccd2e7",
-    "cpppj/src/o/SquidUnpop.cpp": "c090a5c43f22ec5c59f6885bde124889b1fc3004260c271ea4556879e6263a41",
+    "cpppj/src/o/SquidUnpop.cpp": "000e315fc0aead83fc423afc3293b3fd6176a211c1dc5b297d642e8dbea06ce2",
     "cpppj/src/o/SquidUnpop.h": "36635a51668570c7ae1df71e507f1f7d6d4fd1b141ccf0529165428034e5aad9",
     "cpppj/tests/DaisBridgeTests.cpp": "9e6e7e5b121b935336687e38923b74d72667139515a3bef98b707afe2389693f",
     "cpppj/tests/fixtures/daisbridge-x86.tsv": "f2ccd4f6499e54356a1f6dd6e68d9ceab02f30aa388b7f86ed79e584216f0b17",
     "tools/analyze_daisbridge_cpp_binding.py": "fbfc7af3c11ab0bd262bc1e3fb61948aabf689bc407cb8c0c4c2140b737b2ce1",
     "tools/decomp_daisbridge_oracle.py": "fd47a9ff7f61b056744ea7d5c42a5c274dce36335dac139efe5520c81c5d3b4f"
   },
-  "scope": "새 상위640은 원본보고서에서 한 번만 합산한다. C++ 현재 검사 SHA를 같은 실제 PathStart/BFS/Frame/Host/서버 PathData/구 경로 Kill/공간 접두/RawPathCleanup/Temple.Ritual에 연결한다. generic사제 VT·1×1 표시 합성 입력이며 전체걷기·가상도착·의식307/룬304·실제캠페인 metadata·UI/음향은 후속이다. 최초14smoke/기존512/668/2964는 새원본에 합산하지 않는다."
+  "scope": "새 상위640은 원본보고서에서 한 번만 합산한다. C++ 현재 검사 SHA를 같은 실제 PathStart/BFS/Frame/Host/서버 PathData/구 경로 Kill/공간 접두/RawPathCleanup/Temple.Ritual에 연결한다. generic사제 VT·1×1 표시 합성 입력이며 전체걷기·가상도착·의식307/룬304·실제캠페인 metadata·UI/음향은 후속이다. 최초14smoke/기존512/668/2964는 새원본에 합산하지 않는다.",
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "unit": 124,
+      "reason": "실제 커서 마나와 전용 표시 및 입증된 공통 수명을 Session에 연결",
+      "pins": [
+        {
+          "path": "cpppj/src/o/SquidUnpop.cpp",
+          "previous": "c090a5c43f22ec5c59f6885bde124889b1fc3004260c271ea4556879e6263a41",
+          "current": "000e315fc0aead83fc423afc3293b3fd6176a211c1dc5b297d642e8dbea06ce2"
+        }
+      ]
+    }
+  ]
 }

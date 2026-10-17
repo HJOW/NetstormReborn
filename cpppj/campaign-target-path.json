@@ -32,7 +32,7 @@
     "cpppj/src/o/SquidPop.h": "8816c246917f01c63e612b9f4387982484636b0360f8d1a225c7c5296d801255",
     "cpppj/src/o/SquidPop.cpp": "e69942ca111f72c79ba4da05a42b5446e84013ef2ee0b9044381cf64a9e80ec9",
     "cpppj/src/o/SquidUnpop.h": "36635a51668570c7ae1df71e507f1f7d6d4fd1b141ccf0529165428034e5aad9",
-    "cpppj/src/o/SquidUnpop.cpp": "c090a5c43f22ec5c59f6885bde124889b1fc3004260c271ea4556879e6263a41",
+    "cpppj/src/o/SquidUnpop.cpp": "000e315fc0aead83fc423afc3293b3fd6176a211c1dc5b297d642e8dbea06ce2",
     "cpppj/src/o/CMakeLists.txt": "488f044ec5a8dc2ba134d7a5bf6463e14a29f49bf693e863af98bd8077595b1f",
     "cpppj/tests/CMakeLists.txt": "c8a62e12fd245778ce017633a87beaa2a3072995c64e97599c6285435e06b00e",
     "cpppj/tests/GunTargetTests.cpp": "e34ea71131234478036f25a9e023eadc5e182a313571444e914106f1a8c90f2f",
@@ -150,5 +150,19 @@
     "Prepare48개는 원본게임 x87 53비트 결과이며 64비트의16개 1ULP 차이는 별도 보존한다.",
     "Factory 파생 wrapper는 아웃포스트126이며 실제 훨리베이스72는 별도 미복원 몸체다.",
     "GameWorld 비표면 이관·실제 지형 도장·Gun 애니메이션/투사체·사제 운반/의식/승패 및 캠페인1-1 완주가 남아 있다."
+  ],
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "unit": 124,
+      "reason": "실제 커서 마나와 전용 표시 및 입증된 공통 수명을 Session에 연결",
+      "pins": [
+        {
+          "path": "cpppj/src/o/SquidUnpop.cpp",
+          "previous": "c090a5c43f22ec5c59f6885bde124889b1fc3004260c271ea4556879e6263a41",
+          "current": "000e315fc0aead83fc423afc3293b3fd6176a211c1dc5b297d642e8dbea06ce2"
+        }
+      ]
+    }
   ]
 }

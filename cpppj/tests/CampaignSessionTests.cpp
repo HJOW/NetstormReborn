@@ -608,3 +608,61 @@ TEST_CASE(CampaignSession_PriestMenuRejectsUninstalledSession) {
     auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());
     RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",external.Services());CHECK(Throws([&] { static_cast<void>(session.MakePriestMenu({})); }));
 }
+
+// 실제 Session의 마나8개가 같은 Factory/표시/공간/ProcessForm/Kernel에서 생성·이동·숨김·삭제된다.
+TEST_CASE(CampaignSession_CursorManaUsesActualWorldHostAndDisplay) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());
+    GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",external.Services(),{1024,768});
+    auto& session=world.Session();auto core=session.Core();auto& surfaces=world.Surfaces();const auto baseline=core.kernel.Size();
+
+    const auto parent=surfaces.Create(123,2);Put(core.pool.AllocatedBytes(parent),14,std::bit_cast<std::uint32_t>(100.0f));Put(core.pool.AllocatedBytes(parent),18,std::bit_cast<std::uint32_t>(110.0f));
+    CursorLifecycleHooks hooks;session.BindCursorMana(hooks);const auto token=hooks.createMana(parent,0);CHECK(token!=0);session.CursorDropSettings().cursorGump=token;
+    auto* process=dynamic_cast<CursorManaProcess*>(core.kernel.Get(token));CHECK(process && core.kernel.Size()==baseline+1 && core.processes.IsRegistered(token,process));
+    CHECK(process->Parent()==parent && Get(process->Fields().bytes,0x84)==8 && Get(process->Fields().bytes,0x98)==0);
+    std::array<Sid,8> markers{}; // 실제 프로세스가 보관한 월드 SID이며 별도 표시 사본이 아니다.
+    // 생성된 같은 raw 슬롯에서 실제 TYPE/WORD/extra/프레임/공간 등록을 확인한다.
+    for (std::size_t index=0;index<markers.size();++index) {
+        markers[index]=Sid{static_cast<std::uint16_t>(Get(process->Fields().bytes,12+4*index))};const auto raw=core.pool.Slot(markers[index]);
+        CHECK(raw[10]==103 && Get(raw,12,2)==1 && (raw[40]&8) && !(raw[11]&4));CHECK(Get(raw,36)==CursorManaThemeFrame(core.types[123].theme));
+    }
+    core.processState.now+=.125;process->RunFrame();CHECK(Get(core.pool.Slot(markers[0]),14)!=std::bit_cast<std::uint32_t>(1.0f));
+    hooks.processEvent(token,1,1,0);
+    // 실제 Unpop은 같은8개 객체를 void로 만들고 살아 있는 SID/프로세스를 유지한다.
+    for (const auto marker:markers) CHECK(core.pool.Slot(marker)[11]&4);
+    hooks.processEvent(token,1,0,0);
+    // 실제 Repop은 같은 좌표/프레임으로 공간과 표시 등록을 복원한다.
+    for (const auto marker:markers) CHECK(!(core.pool.Slot(marker)[11]&4));
+    hooks.removeProcess(token,0);CHECK(!core.kernel.Get(token) && core.kernel.Size()==baseline && session.CursorDropSettings().cursorGump==0);
+    // 실제 가상 삭제가 표시 객체와 ProcessForm의 종속 수명을 끝낸다.
+    for (const auto marker:markers) CHECK(core.pool.Slot(marker)[11]&1);
+    CHECK(Get(core.pool.Slot(parent),6,2)==0 && core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0 && core.bookkeeping.depth==0);
+    CHECK(Throws([&] { hooks.processEvent(token,1,1,0); }));CHECK(Throws([&] { hooks.removeProcess(token,0); }));
+    const auto secondParent=surfaces.Create(103,2);Put(core.pool.AllocatedBytes(secondParent),14,std::bit_cast<std::uint32_t>(100.0f));Put(core.pool.AllocatedBytes(secondParent),18,std::bit_cast<std::uint32_t>(110.0f));
+    const auto secondToken=hooks.createMana(secondParent,0);session.CursorDropSettings().cursorGump=secondToken;auto* second=dynamic_cast<CursorManaProcess*>(core.kernel.Get(secondToken));CHECK(second);
+    std::array<Sid,8> dependentMarkers{}; // 부모 삭제가 정리해야 하는 실제 두 번째 표시 객체들이다.
+    // 삭제 전에 번호를 저장하고 해제된 C++ 프로세스 포인터는 이후에 읽지 않는다.
+    for (std::size_t index=0;index<dependentMarkers.size();++index) dependentMarkers[index]=Sid{static_cast<std::uint16_t>(Get(second->Fields().bytes,12+4*index))};
+    CHECK(surfaces.Destroy(secondParent,0));CHECK(!core.kernel.Get(secondToken) && core.kernel.Size()==baseline && session.CursorDropSettings().cursorGump==0);
+    // 실제 부모의 종속 ProcessForm 삭제가 Kernel 소멸자와8개 표시 삭제까지 이어진다.
+    for (const auto marker:dependentMarkers) CHECK(core.pool.Slot(marker)[11]&1);
+    CHECK(core.pool.Slot(secondParent)[11]&1);CHECK(core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0 && core.bookkeeping.depth==0);
+    // 실제 자기 삭제의 두 갈래를 같은 Kernel 소유 객체에서 실행한다. 마지막 포인터는 삭제 뒤 재사용하지 않는다.
+    for (const bool rectangular:{false,true}) {
+        const auto closingToken=hooks.createMana(parent,0);session.CursorDropSettings().cursorGump=closingToken;
+        auto* closing=dynamic_cast<CursorManaProcess*>(core.kernel.Get(closingToken));CHECK(closing);std::array<Sid,8> closingMarkers{}; // 원본 종료가 반납할 실제 표시 목록이다.
+        // 삭제 전에 목록을 저장하며 원형/사각형 두 프레임의 끝을 따로 관찰한다.
+        for (std::size_t index=0;index<closingMarkers.size();++index) closingMarkers[index]=Sid{static_cast<std::uint16_t>(Get(closing->Fields().bytes,12+4*index))};
+        if (rectangular) {
+            // 사각형의 표시 객체가 모두 끝난 입력을 실제 월드 삭제로 준비한다.
+            for (const auto marker:closingMarkers) CHECK(surfaces.Destroy(marker,0));
+            // 원본 사각형 frame은 SID0 목록에서 Kill 후 마지막 시각을 계속 쓴다.
+            for (std::size_t index=0;index<30;++index) Put(closing->Fields().bytes,12+4*index,0);
+            Put(closing->Fields().bytes,0x98,1);Put(closing->Fields().bytes,0x88,5);
+        } else hooks.processEvent(closingToken,3,0,0);
+        closing->RunFrame();CHECK(!core.kernel.Get(closingToken) && core.kernel.Size()==baseline && session.CursorDropSettings().cursorGump==0);
+        // 실제 자기 삭제가 끝난 뒤에는 SID와 Kernel 상태만 읽는다.
+        for (const auto marker:closingMarkers) CHECK(core.pool.Slot(marker)[11]&1);
+        CHECK(Get(core.pool.Slot(parent),6,2)==0 && core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0 && core.bookkeeping.depth==0);
+    }
+}

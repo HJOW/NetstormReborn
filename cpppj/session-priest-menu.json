@@ -21,12 +21,12 @@
     "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
     "cpppj/src/client/GameWorld.h": "57adef4cb282f91c27ebdac68846b09883494f8406abdd7517d5267bd44a93fc",
     "cpppj/src/client/GameWorld.cpp": "0c7c8431cfdc1bcb911b3c50f8c9e409e95b14fa788a9d53960c950ade95c01d",
-    "cpppj/src/client/RawCampaignSession.h": "cc9506063a8dd85fecd081e9e570996dfb100faec035318312e5a709a2419354",
-    "cpppj/src/client/RawCampaignSession.cpp": "1f7d888ea736e08a87bc892f2d309031b053a1324885afeae73af832f3120551",
+    "cpppj/src/client/RawCampaignSession.h": "25fb015f71b52348bf38624add1dad4290681939ff9258aea98a2ea40a453463",
+    "cpppj/src/client/RawCampaignSession.cpp": "1652cafd2488e0ab42b4829849666a790926bf396bce0e46a78b0cd16305a47a",
     "cpppj/src/client/RawPriestMenu.h": "5364d92d3af5b9b81a0477df5c005fcfc4a1ef7f6817894bd337250ce4d0e43d",
     "cpppj/src/client/RawPriestMenu.cpp": "f30be4e91f2141d1000f4a75d9f41619024d20f6cb024f68b8ffb483b1eddcf7",
-    "cpppj/src/client/RawCampaignLifetimeBindings.h": "f7c7bb580be2152ec83e474dd1a84b6079b14bc9760e6c70b1a7dba034d92f1d",
-    "cpppj/src/client/RawCampaignLifetimeBindings.cpp": "e36af28a35b3d3ab025029c0682a05f65a35a8f575b49226edfbd1df0ad75fb2",
+    "cpppj/src/client/RawCampaignLifetimeBindings.h": "3114556500601a63ab28b40a27003a8a9e4737e11fa63b2ada8edf4a9a7aefd1",
+    "cpppj/src/client/RawCampaignLifetimeBindings.cpp": "d9c3c3a134b5b451267336c20c81dd1db3dea2d597fba636d65abca4f6c1d6e8",
     "cpppj/src/o/RawCarrierContentNotice.h": "88c1a1a14c7e22dab3e185cf797472783422cde2783c58d3600e65f85a004c7d",
     "cpppj/src/o/RawCarrierContentNotice.cpp": "b4c012ea2966e432fd60c4beb65de3e0a3a73df6ff9d64a798bd6bcb5e468599",
     "cpppj/src/o/RawContentParentNotice.cpp": "9c7132c54bdd4f739bde24ad80f7b2f90bf39869300e9b5b01786487dfcfe986",
@@ -38,14 +38,14 @@
     "cpppj/src/o/SpStore.cpp": "2319a90807d423b72b0e47e51101bc9ea1618f234c65e26b704c017313f4268a",
     "cpppj/src/o/SquidReward.cpp": "a29c11afe56a477c470956b1ed0a0678d059340806537ce08b43bf6b6aa1375d",
     "cpppj/tests/PriestMenuTests.cpp": "a7b76f4b807941334f1dc6c089b156a59c72347e93b7898ff0bda018c73ca1c4",
-    "cpppj/tests/CampaignSessionTests.cpp": "5b41aa8c14303c00e4906185d8d3c487b8390dd2f020ff44b16ac7b51b0f7aa7",
+    "cpppj/tests/CampaignSessionTests.cpp": "d89ecff205bf63e19de47cfd36d895eacda45c7e48620aeb13ad0fe9340f5d79",
     "cpppj/tests/CarrierContentNoticeTests.cpp": "82ed556e50d599e2d08f594e309129a7d92a7d5e994a6a81f794342f518ed76c",
     "cpppj/tests/fixtures/priestmenu-x86.tsv": "2dda11277f2b67f1a69447ea7cb1694e989a08ed513dbf9819e14bfbf3ce6208",
     "cpppj/tests/fixtures/carrier-content-notice-x86.tsv": "c8a21b68d3b0b6e271d04950022366eab9abd3069ff5a9ce3b53746f1fb4d4bf",
     "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
     "tools/decomp_carrier_content_notice.py": "dbb32841a7019edbcb411f75094046c8bf0e20b4ed503e109a14b79a79d8a94c",
     "cpppj/src/o/CMakeLists.txt": "c84659874163c54863d0de3c252858446f7e58e4e4df956d72ea4430cd79b538",
-    "cpppj/tests/CMakeLists.txt": "f932d354f00051f6807c2ccf95a7a3bdd53173fd79c8f104ae3e986e612c5723"
+    "cpppj/tests/CMakeLists.txt": "b850f423d0be8c30b22478834953b1f83dbe250243c869104153c5761ff5a3dd"
   },
   "validation": {
     "configuration": "Release",
@@ -71,5 +71,56 @@
     "새 통지 body는 전체 분기를 복원했으나 Session의 폭탄/포획 표시·음향/TYPE 추가DWORD·할당/타이머·genus 조회는 실제 서비스가 선택될 때 공급해야 한다.",
     "원문1은 풀 주소 전역 미설정으로 무효였고 제외했다. 원문2는 투영 helper 미허용으로 중단했다. 정상 근거는 원문3뿐이다.",
     "실제 Client Construct 활성/커서 표시·건설 확정/사용자 완주/저장·다음 미션은 미완료이며 DirectDraw는 이번 범위에서 제외한다."
+  ],
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "unit": 124,
+      "reason": "실제 커서 마나와 전용 표시 및 입증된 공통 수명을 Session에 연결",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "cc9506063a8dd85fecd081e9e570996dfb100faec035318312e5a709a2419354",
+          "current": "25fb015f71b52348bf38624add1dad4290681939ff9258aea98a2ea40a453463"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "1f7d888ea736e08a87bc892f2d309031b053a1324885afeae73af832f3120551",
+          "current": "1652cafd2488e0ab42b4829849666a790926bf396bce0e46a78b0cd16305a47a"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignLifetimeBindings.h",
+          "previous": "f7c7bb580be2152ec83e474dd1a84b6079b14bc9760e6c70b1a7dba034d92f1d",
+          "current": "3114556500601a63ab28b40a27003a8a9e4737e11fa63b2ada8edf4a9a7aefd1"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignLifetimeBindings.cpp",
+          "previous": "e36af28a35b3d3ab025029c0682a05f65a35a8f575b49226edfbd1df0ad75fb2",
+          "current": "d9c3c3a134b5b451267336c20c81dd1db3dea2d597fba636d65abca4f6c1d6e8"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "5b41aa8c14303c00e4906185d8d3c487b8390dd2f020ff44b16ac7b51b0f7aa7",
+          "current": "9e11ad9b798c2940bf5f63499b333368ed7df0914dee09c3ce210155736a33c0"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "f932d354f00051f6807c2ccf95a7a3bdd53173fd79c8f104ae3e986e612c5723",
+          "current": "b850f423d0be8c30b22478834953b1f83dbe250243c869104153c5761ff5a3dd"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 124,
+      "reason": "실제 원형/사각형 frame의 Kernel 자기 삭제 검사 추가",
+      "pins": [
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "9e11ad9b798c2940bf5f63499b333368ed7df0914dee09c3ce210155736a33c0",
+          "current": "d89ecff205bf63e19de47cfd36d895eacda45c7e48620aeb13ad0fe9340f5d79"
+        }
+      ]
+    }
   ]
 }

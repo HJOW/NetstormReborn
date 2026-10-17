@@ -1,0 +1,127 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "entries": [
+    "00473770",
+    "004ad670",
+    "00499240"
+  ],
+  "manualRanges": [
+    "00473770-004737b2",
+    "004ad670-004ad677"
+  ],
+  "uniqueInputs": 432,
+  "normalReturns": 864,
+  "precisionDifferentInputs": [],
+  "actualDisplayCalls": [
+    {
+      "alternate": 216,
+      "bounds": 144,
+      "dirty": 144
+    },
+    {
+      "alternate": 216,
+      "bounds": 144,
+      "dirty": 144
+    }
+  ],
+  "sha256": {
+    "cpppj/tests/fixtures/cursor-mana-display-x86.tsv": "a4538ccefab60ad875c2c0d6e0b1a2283ab541a0c234b2b92853826b7314f844",
+    "extracted/creation/originals/functions.tsv": "42b14fee0b262fd92c833ec51db3cf772e92fd56b6ccbdc1c589955eb347ccb7",
+    "extracted/display/originals/functions.tsv": "408c4530becac3e2ce5112b436e23b32437a729b36ec6b0ebae5b2da81eb51b4",
+    "extracted/pop/helpers-originals/functions.tsv": "fc21935402ba4781899da2002c5f844061e53150d0bddeeaa597f29b81d58cb8",
+    "extracted/pop/originals/functions.tsv": "5b3241e336bcc1dea4c188121e3c458d3aef3414c5b6e9c4590db8c126414568",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/sid/originals/functions.tsv": "3034dd0d393ebdfd77f2e9fafe8a5b252d5437f1e71ab94541cc229e8ef8694b",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_creation_oracle.py": "646adc1ca6c9eaeac08a9c700324ae05ba1727416bc62070e0a066afc07dc053",
+    "tools/decomp_cursor_mana_display.py": "022021b22c8e2c900feb725399185181148e6ec7c84ebcaa513a1f542fe1b61b",
+    "tools/decomp_display_oracle.py": "bd9a42431cdef96d3fb13accf78d5a0d6a3155243b1bbc0362d58e79f662f7a4",
+    "tools/decomp_oracle.py": "227b9a8b703cfd81d05ac4a7c72a42eaecf9c804fc028680466a19a591f2335d",
+    "tools/decomp_pop_oracle.py": "2a50f34e6b229d5ea4611f7073877ca1e165e0bf841f32c83f17d300b6113bb6",
+    "tools/decomp_sid_oracle.py": "7bfd7b95b26724b1793d407a4ad6654972b2aaa3bf04e4c206cc357670b68dff",
+    "tools/decomp_unpop_oracle.py": "8eea637aeb340f49932c83823e116114e342772f88c975c398012eff2ef1d07d",
+    "cpppj/src/CMakeLists.txt": "a0ce72c79685631ce627defcc392fb06df32131c835594b570569404e1929a4a",
+    "cpppj/src/client/RawCampaignLifetimeBindings.cpp": "d9c3c3a134b5b451267336c20c81dd1db3dea2d597fba636d65abca4f6c1d6e8",
+    "cpppj/src/client/RawCampaignLifetimeBindings.h": "3114556500601a63ab28b40a27003a8a9e4737e11fa63b2ada8edf4a9a7aefd1",
+    "cpppj/src/client/RawCampaignSession.cpp": "1652cafd2488e0ab42b4829849666a790926bf396bce0e46a78b0cd16305a47a",
+    "cpppj/src/client/RawCampaignSession.h": "25fb015f71b52348bf38624add1dad4290681939ff9258aea98a2ea40a453463",
+    "cpppj/src/o/SquidDisplay.cpp": "47dd928d6df4a53c8debb0dd67c56fe62f4c530a1dd07cd31bae81cc7468faac",
+    "cpppj/src/o/SquidPop.cpp": "c57e6263de140459d3c109f9163b59ea1193e7038e2a46ce74b577cbdebae7a7",
+    "cpppj/src/o/SquidUnpop.cpp": "000e315fc0aead83fc423afc3293b3fd6176a211c1dc5b297d642e8dbea06ce2",
+    "cpppj/tests/CMakeLists.txt": "b850f423d0be8c30b22478834953b1f83dbe250243c869104153c5761ff5a3dd",
+    "cpppj/tests/CampaignSessionTests.cpp": "d89ecff205bf63e19de47cfd36d895eacda45c7e48620aeb13ad0fe9340f5d79",
+    "cpppj/tests/PopTests.cpp": "2815679f07e4c9873dc70b925e9e6c16e44864d3be191c636650954a12d4cea4",
+    "cpppj/tests/UnpopTests.cpp": "e0ac9391654c79aabfafb7f57516371e540317bd95d335abb61d85f0fea17f94",
+    "cpppj/src/client/RawCursorMana.cpp": "b8ab58679249a18387757eb2eb93c7405e566a4a9fc02ed018b2046a7d751f7b",
+    "cpppj/src/client/RawCursorMana.h": "f363a35504b216243604734bcb9c7567943797c4b879b9f101b16763d9d3821a",
+    "cpppj/tests/CursorManaTests.cpp": "84b4c5aab77872135916da08e74cc5339957d3c32209b5274b713f413a76bbd2"
+  },
+  "limitations": [
+    "473770은 현재 정밀표에 빠진 함수여서 PE의 실제67바이트/ret와 가상 표를 직접 확인했다. 정밀 산출물을 수정하지 않았다.",
+    "기존 공통 표시 관찰기의 실제 bounds/clip/dirty/Reset/Create와 보조 범위 자료를 재사용하며 읽은 자료를 모두 고정한다.",
+    "실제 OS 창/게임/GUI 실행은 아니다."
+  ],
+  "protectedFileSha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6"
+  },
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "unit": 124,
+      "reason": "실제 원형/사각형 frame의 Kernel 자기 삭제 검사 추가",
+      "pins": [
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "9e11ad9b798c2940bf5f63499b333368ed7df0914dee09c3ce210155736a33c0",
+          "current": "d89ecff205bf63e19de47cfd36d895eacda45c7e48620aeb13ad0fe9340f5d79"
+        }
+      ]
+    }
+  ],
+  "productValidation": {
+    "configuration": "Release",
+    "build": {
+      "attempt": 11,
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0,
+      "log": "extracted/goal-cursor-mana-20261017-build11.log"
+    },
+    "focused": {
+      "cursorMana": 3,
+      "actualSession": 1,
+      "oldPop": 3,
+      "oldUnpop": 4,
+      "failed": 0
+    },
+    "ctest": {
+      "total": 1500,
+      "passed": 1500,
+      "failed": 0,
+      "exitCode": 0,
+      "seconds": 233.58,
+      "log": "extracted/goal-cursor-mana-20261017-ctest.log",
+      "outputLog": "extracted/goal-cursor-mana-20261017-ctest-output.log"
+    },
+    "earlierCtestBeforeSelfDeleteCases": {
+      "passed": 1500,
+      "seconds": 233.98,
+      "log": "extracted/goal-cursor-mana-20261017-ctest1.log"
+    },
+    "actualSession": {
+      "samePoolWorldHostKernel": true,
+      "createdMovedHiddenRestoredRemoved": true,
+      "parentDeletionReleasesProcessAndMarkers": true,
+      "sphereAndRectangularFrameSelfDeletion": true
+    },
+    "constructorRectangularElseEntered": false,
+    "modernVerifyTools": 15,
+    "originalOrCloneGameRun": false,
+    "guiRun": false,
+    "actualClientTakeConnected": false,
+    "goalComplete": false
+  }
+}

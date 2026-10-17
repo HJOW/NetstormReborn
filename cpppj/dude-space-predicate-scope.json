@@ -111,7 +111,7 @@
     },
     "files": {
       "cpppj/dude-space.json": "d5f5f7e4d3e3fbfc99a5183cdae45e00fe2a1e1e79d5d687e9b3cb52631d5e78",
-      "cpppj/src/o/SquidUnpop.cpp": "c090a5c43f22ec5c59f6885bde124889b1fc3004260c271ea4556879e6263a41",
+      "cpppj/src/o/SquidUnpop.cpp": "000e315fc0aead83fc423afc3293b3fd6176a211c1dc5b297d642e8dbea06ce2",
       "cpppj/tests/DudeSpaceTests.cpp": "d4ad98bc757b744b18836ec5bb19d2c0c0973005fd4f6ec1d0edda52f564b624",
       "cpppj/tests/DudeSpaceSupport.h": "e77396ff164bf83e577f2c1694e967b57da9a67f8f9a0bea42d4182fcc182242",
       "cpppj/tests/fixtures/dude-space-x86.tsv": "1c931c029fe455c96325aecc37245d83dc78d94ba285b686783cfd9dd154600e",
@@ -119,5 +119,19 @@
     }
   },
   "tool_sha256": "7b7cf84a7f740208102d11265419d629e9cddacabf6a2c803e65d79c18a26cba",
-  "scope": "실제 Dude70의 flags2=02000400은 spot504442ff와 교집합0이고 flags1=28040010의 surface800도0이다. 따라서 Unpop은 해시/상태/표시를 실제 실행하되 foot크기 guard/spot순회에는 들어가지 않는다. 최초48 보고서의 pending_shared_foot0=true는 당시 잘못된 초안이며 이 successor의 false가 현재 소비자 경계다. 정상실행48 중 Unpop-only의 목적지label만 다른12반복은 PE에 공급되지 않아 새고유로 세지 않으며 실제고유는36이다. 기존 보고서/tool/fixture/source 전체 원문은 불변이고 sharedUnpop 수정0이다. 이 자료를 실제 zero-foot spot분기 실행 근거로 세지 않는다."
+  "scope": "실제 Dude70의 flags2=02000400은 spot504442ff와 교집합0이고 flags1=28040010의 surface800도0이다. 따라서 Unpop은 해시/상태/표시를 실제 실행하되 foot크기 guard/spot순회에는 들어가지 않는다. 최초48 보고서의 pending_shared_foot0=true는 당시 잘못된 초안이며 이 successor의 false가 현재 소비자 경계다. 정상실행48 중 Unpop-only의 목적지label만 다른12반복은 PE에 공급되지 않아 새고유로 세지 않으며 실제고유는36이다. 기존 보고서/tool/fixture/source 전체 원문은 불변이고 sharedUnpop 수정0이다. 이 자료를 실제 zero-foot spot분기 실행 근거로 세지 않는다.",
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "unit": 124,
+      "reason": "실제 커서 마나와 전용 표시 및 입증된 공통 수명을 Session에 연결",
+      "pins": [
+        {
+          "path": "cpppj/src/o/SquidUnpop.cpp",
+          "previous": "c090a5c43f22ec5c59f6885bde124889b1fc3004260c271ea4556879e6263a41",
+          "current": "000e315fc0aead83fc423afc3293b3fd6176a211c1dc5b297d642e8dbea06ce2"
+        }
+      ]
+    }
+  ]
 }
