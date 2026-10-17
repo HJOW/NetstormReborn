@@ -1,0 +1,85 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-17",
+  "unit": 136,
+  "baseCommit": "c7e9e8b",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16"
+  },
+  "currentSources": {
+    "cpppj/src/CMakeLists.txt": "aa8053fae523788fbb4dfcc7d8618fe95f802624fdd85351f88ffbbbace03d59",
+    "cpppj/src/client/RawCampaignCursor.cpp": "e2bb7eb1c1747833b8bd42a2ff2ba7378376c09afa846fd00047b26d5682a693",
+    "cpppj/src/client/RawCampaignCursor.h": "7b60c29e7f3af2681c86bb3b0c5d1ac843d6e0f99e35ed41863de73a30044b14",
+    "cpppj/src/client/RawCampaignSession.cpp": "35fb5589cdde65bdd4d339c5ac7c5fe2028e3b0def3fa2105b27226be283389b",
+    "cpppj/src/client/RawCursorActions.cpp": "5db1799e6ec86520abb8a9f3a9174fc21df4cabcf2789a069b45d03419483e59",
+    "cpppj/src/client/RawCursorActions.h": "afeb79d0f318d1afb5371d4ba3b9de0dbde8b6fda27f52f16479d3d0f0e530d3",
+    "cpppj/src/client/UberGump.cpp": "8a3f6a89636747fe1a9dc70011951c921131ecf04aff8b950f7d966ef5f70c70",
+    "cpppj/src/client/UserInput.cpp": "a8cf72e99c88ef31fd518e0ea2609c4d9970ff2f4dcde39a2e7edba16003bd2a",
+    "cpppj/src/client/UserInput.h": "8c27579e2993518d84cd37e6fea4313a34d8a66dd291ba0ece00b26e91ac395d",
+    "cpppj/tests/CMakeLists.txt": "f983e4d12e69969ad3b6739ed71b19c0c831d1e3bc83ec3b2b6d074bb6caa4e4",
+    "cpppj/tests/CampaignSessionTests.cpp": "17c2fbca1c31cf4034ba3de0703913f694bf4e3f7e49805b164706035a9d6058",
+    "cpppj/tests/CursorActionsTests.cpp": "adcbfb672de4ac2cdb4ba2358d1e554bf41bc0136aaccb1a1fca579a8aefacf8"
+  },
+  "protectedFileSha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6"
+  },
+  "source_sha256": {
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/refined/originalCD/Netstorm.c": "9306f621576571c85280f9e25f024e3ec8b7b68c5c8ec6731c1f109dc3f25ebb",
+    "extracted/refined/originalCD/functions.tsv": "453aa383c27baf8eefa00d97bf44051d18460150556511c2eb7a46f111e92def"
+  },
+  "nativeReports": {
+    "cpppj/cursor-actions.json": "096c3577a5183d552cc220123b2079f13be58203454b3836c495426290c89457"
+  },
+  "nativeContext": {
+    "actions": "446a10/446a40/446a70의 전체289입력/578정상반환/정밀도차이0/명령17250; 실제 보존GP/스택/canary/x87 균형",
+    "boundaries": "Activate/Create/커서선택/음향/ContainedLookup/Range는 현재값 변경을 포함한 명시 경계다. 새 부모 관측에 하위 몸체 실행을 합산하지 않는다.",
+    "caller": "4d9bbb..4d9c2e의 보호 PE 정렬 명령과 정밀 C를 함께 확인: 좌클릭Drop, 좌키-2/우키+2, 우클릭rotmode0이면+2/그외-2; release 필터는 상위에 있다. 이 거대 UserInput 전체의 새 CPU 실행은 아니다.",
+    "initial": "보호 PE5325c8의 초기 깊이1을 같은 세션에 적용; 기본0인 빈 커서를 활성으로 처리하지 않음",
+    "cd": "10.72 Lock43c740/Unlock43c780/Rotate43d510; Rotate가 두 helper를 호출하고 같은 사정거리 분기를 갖는 점을 정밀 C로 기록. 새 실행10.78전용."
+  },
+  "integration": {
+    "actions": "같은 현재 커서 깊이/방향/TYPE포인터/첫SID/특별Wind타입/Range프로세스타입을 읽고 실제 Activate/Create/RawContainedLookup/Range를 사용",
+    "input": "실제 UserInput.Event의 활성 커서 분기 및 UberGump의 활성 ESC 우선 처리. 현재 rotmode/snap/cannotPlace를 읽음. 나머지 선택/이동/카메라 전체는 여전히 부분 구현.",
+    "position": "UberGump.Input이 큐 처리 전 현재 마우스를 한번 폴링해 실제 위치 갱신에 공유하고 기존 UI Poll에도 같은 값을 사용. Tick은 카메라 변경 후 같은 폴링 좌표로 갱신.",
+    "reuse": "Range 재생성 증거는 실제 Host의 등록 순환값/현재 Form·부모/Kernel 수명이다. 원본의 슬롯/PID 재사용을 금지하는 검사로 바꾸지 않음."
+  },
+  "testInputs": {
+    "native": "고정 원본289행의 전체 전역과 효과 순서; 잠금0/중첩/감김, signed 방향 경계, callback 뒤 재조회, Range 반환0/1",
+    "session": "단위134의 명시 준비75/GUI 반환8 Form/완성76; 실제 잠금/해제/원본±2/ESC 및 현재 Range 수명",
+    "headless": "실제 Client와 Configuration/UserInput을 만들되 Run은 호출하지 않음. 설정 변경/현재 마우스/밖 좌표 무시/키와release/ESC를 확인. GUI 장치 effects는 명시 검사 경계.",
+    "drop": "기존 Drop 통합 검사를 실제 UserInput.Event에서 시작해 Local예측/반환/비용/25바이트/RawPacketDispatch/서버 전체 Request/Builder완료까지 확인. 로그인된 LocalMissionTransport 전체를 대신하지 않음."
+  },
+  "validation": {
+    "releaseBuild": 3,
+    "buildExit": 0,
+    "warnings": 0,
+    "errors": 0,
+    "focusedCases": 14,
+    "focusedFailedChecks": 0,
+    "newCases": 4,
+    "fullSuite": 1551,
+    "nativeEvidenceVerifiers": 42,
+    "fullFailedChecks": 0,
+    "ctestExit": 0,
+    "ctestSeconds": 261.05,
+    "ctestTotalSeconds": 261.08,
+    "stagedFiles": 52,
+    "currentSourcePins": 12,
+    "updatedReports": 33,
+    "updatedPins": 104,
+    "preservedHistoricalPins": 95,
+    "protectedFiles": 3
+  },
+  "remaining": [
+    "실제 Client SetEffects의 전체 장치·선택·부모Gump와 원본 객체/사제/생산 메뉴",
+    "실제 로그인된 로컬 전송 두 끝/큐잉/등록 수명",
+    "실제 생산 완료/경제/AI/전체 Kernel",
+    "Early Missions1~6/캠페인1-1~1-2/데모3 사용자 자연 완주/승패/저장/다음 미션과 전체 원본 동일성",
+    "전체화면 DirectDraw 수정은 요청 범위에서 제외"
+  ]
+}

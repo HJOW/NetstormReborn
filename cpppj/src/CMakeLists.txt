@@ -44,3 +44,6 @@ target_sources(netstorm PRIVATE client/RawCampaignCursor.cpp client/RawCampaignC
 
 # 실제 커서 수집/dirty 표시와 세 원본 색 변환표다.
 target_sources(netstorm PRIVATE client/PreviewColorMaps.cpp client/PreviewColorMaps.h client/RawCampaignCursorDisplay.cpp client/RawCampaignCursorDisplay.h)
+
+# 현재 커서 잠금/회전의 실제 세 몸체다.
+target_sources(netstorm PRIVATE client/RawCursorActions.cpp client/RawCursorActions.h)

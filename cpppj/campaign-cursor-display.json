@@ -8,7 +8,7 @@
     "date": "2026-10-16"
   },
   "currentSources": {
-    "cpppj/src/CMakeLists.txt": "abf7e84a08d79f53456456767ca6cb7bc144b7f6672e71a1154772313f9b48d0",
+    "cpppj/src/CMakeLists.txt": "aa8053fae523788fbb4dfcc7d8618fe95f802624fdd85351f88ffbbbace03d59",
     "cpppj/src/client/GameWorld.cpp": "1122dd3668d1c301768a8a5a1ff91c7240bee4507deafa0503729df68d2b4787",
     "cpppj/src/client/OwnerColorMaps.cpp": "1dc23bab259f2bdbb6e88d7e12c4427a50f76304c8aa11cc6309800d0da7e620",
     "cpppj/src/client/OwnerColorMaps.h": "aed5d31073e2015b4d0773eef376a302d122c024a04f90533d0882fd28121abf",
@@ -16,16 +16,16 @@
     "cpppj/src/client/PreviewCollection.h": "7e199768ba725cf4847428aaa8574d0fbbdc871fbc02c8882109b6803083f302",
     "cpppj/src/client/PreviewColorMaps.cpp": "263d4f110d32cf16f928ea239b9454189681594fd1eaeb403a7a23428aec2970",
     "cpppj/src/client/PreviewColorMaps.h": "1a091519d93750861a901111c9cc0c01b9abbdcea85b81a6f1ba916d0b770911",
-    "cpppj/src/client/RawCampaignCursor.cpp": "8e23f42d98e0058ba79d143ecbc697c74590377048639e7cb63d0d54c08b1ffc",
-    "cpppj/src/client/RawCampaignCursor.h": "7c9062685b2f8b8551aab8001b280c1d793c3a1edff14dc114970d20d90fb642",
+    "cpppj/src/client/RawCampaignCursor.cpp": "e2bb7eb1c1747833b8bd42a2ff2ba7378376c09afa846fd00047b26d5682a693",
+    "cpppj/src/client/RawCampaignCursor.h": "7b60c29e7f3af2681c86bb3b0c5d1ac843d6e0f99e35ed41863de73a30044b14",
     "cpppj/src/client/RawCampaignCursorDisplay.cpp": "8e3f58a74524806c727a1ea81ed725495a22fc41270a77fd6457342925a80117",
     "cpppj/src/client/RawCampaignCursorDisplay.h": "e30e775cf87189bfa1dfeb8a26075decd485dea5e2d366056df8579dcc2f5b73",
-    "cpppj/src/client/RawCampaignSession.cpp": "f6496464a28e6834afbe10a79a70e47c69eb0ef8cd490e1a3ad3c838059e0bf4",
+    "cpppj/src/client/RawCampaignSession.cpp": "35fb5589cdde65bdd4d339c5ac7c5fe2028e3b0def3fa2105b27226be283389b",
     "cpppj/src/client/Renderer.cpp": "5a36413dc3cf1bfa2c12a57823dc0c44a37ad3f01952ff14f17fdb0ab5b1ff11",
     "cpppj/src/client/Renderer.h": "b6bcd1c739f94173876bb8f9ecbbf2ae34bc48bbe092c6a1bad3454f3a950f55",
-    "cpppj/src/client/UberGump.cpp": "c9e2ac8666ebcc162616674d3d6a127ffc6ef33e1102318299ce0b507e84e23e",
-    "cpppj/tests/CMakeLists.txt": "539635dedf774da6163e0702fa0f076db8fb6398b5b7b7de02af2509a255a7d5",
-    "cpppj/tests/CampaignSessionTests.cpp": "64e68631cd5039223726287c65b050b48480f1284e5042c2e921ea378d1ca14b",
+    "cpppj/src/client/UberGump.cpp": "8a3f6a89636747fe1a9dc70011951c921131ecf04aff8b950f7d966ef5f70c70",
+    "cpppj/tests/CMakeLists.txt": "f983e4d12e69969ad3b6739ed71b19c0c831d1e3bc83ec3b2b6d074bb6caa4e4",
+    "cpppj/tests/CampaignSessionTests.cpp": "17c2fbca1c31cf4034ba3de0703913f694bf4e3f7e49805b164706035a9d6058",
     "cpppj/tests/PreviewColorMapsTests.cpp": "5019672dc1589cace9bb92690be4bf9786ab8257770794cb51fdff87cf937311",
     "cpppj/tests/RendererTests.cpp": "fb868b30dcd882c0c2add47d3a66434e4cb34bf514f4ce8a7102a0a3ed2995c8"
   },
@@ -92,5 +92,49 @@
     "실제 생산 완료/경제/AI/전체 Kernel",
     "Early Missions1~6/캠페인1-1~1-2/데모3 사용자 자연 완주/승패/저장/다음 미션과 전체 원본 동일성",
     "전체화면 DirectDraw 수정은 현재 범위 제외"
+  ],
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "unit": 136,
+      "reason": "실제 커서 잠금/회전/Range와 UserInput 현재 설정·마우스 연결",
+      "pins": [
+        {
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "abf7e84a08d79f53456456767ca6cb7bc144b7f6672e71a1154772313f9b48d0",
+          "current": "aa8053fae523788fbb4dfcc7d8618fe95f802624fdd85351f88ffbbbace03d59"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignCursor.cpp",
+          "previous": "8e23f42d98e0058ba79d143ecbc697c74590377048639e7cb63d0d54c08b1ffc",
+          "current": "e2bb7eb1c1747833b8bd42a2ff2ba7378376c09afa846fd00047b26d5682a693"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignCursor.h",
+          "previous": "7c9062685b2f8b8551aab8001b280c1d793c3a1edff14dc114970d20d90fb642",
+          "current": "7b60c29e7f3af2681c86bb3b0c5d1ac843d6e0f99e35ed41863de73a30044b14"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "f6496464a28e6834afbe10a79a70e47c69eb0ef8cd490e1a3ad3c838059e0bf4",
+          "current": "35fb5589cdde65bdd4d339c5ac7c5fe2028e3b0def3fa2105b27226be283389b"
+        },
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "previous": "c9e2ac8666ebcc162616674d3d6a127ffc6ef33e1102318299ce0b507e84e23e",
+          "current": "8a3f6a89636747fe1a9dc70011951c921131ecf04aff8b950f7d966ef5f70c70"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "539635dedf774da6163e0702fa0f076db8fb6398b5b7b7de02af2509a255a7d5",
+          "current": "f983e4d12e69969ad3b6739ed71b19c0c831d1e3bc83ec3b2b6d074bb6caa4e4"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "64e68631cd5039223726287c65b050b48480f1284e5042c2e921ea378d1ca14b",
+          "current": "17c2fbca1c31cf4034ba3de0703913f694bf4e3f7e49805b164706035a9d6058"
+        }
+      ]
+    }
   ]
 }

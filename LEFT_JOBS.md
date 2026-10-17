@@ -1,5 +1,16 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-17 단위136 완료: 현재 커서 잠금·회전·실제 UserInput (`HJOW-Athlon`)
+
+- [x] AGENTS·두 LEFT·기준 `c7e9e8b`와 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16**을 확인했다. 새 디컴파일/게임/GUI 실행은 없고 보호 PE 격리 CPU 실행만 추가했다. [작업 기록](docs/exe/cpp-cursor-actions-20261017.md), `cpppj/cursor-actions.json`, `cpppj/campaign-cursor-actions.json`, 접두부 `extracted/goal-cursor-actions-20261017-`를 남겼다. 전체 목표는 active다.
+- [x] 실제446a10/446a40/446a70의 **289입력/578정상반환/53·64비트 차이0/명령17,250**을 관측했다. native3가 최종이다. 세 부모 전체의 보존GP/스택/canary/x87 균형을 검사하며 Activate/Create/커서/음향/ContainedLookup/Range는 명시 경계다. 기대값은 원본 반환의 전역과 효과 순서만 사용한다.
+- [x] 같은 RawCursorActions/RawCampaignCursor가 현재 잠금/방향/TYPE포인터/첫SID/특별Wind/51타입을 참조한다. signed 마스크 꼬리·DWORD 깊이 감김·callback 뒤 재조회를 보존하고 실제 Activate/Create/RawContainedLookup/Range에 연결했다. 보호 PE5325c8의 초기잠금1을 Session에 적용했다. Range 재생성은 실제 등록 순환값/Form·부모/Kernel로 검증하며 원본의 슬롯/PID 재사용을 금지하지 않는다.
+- [x] 4d9bbb..4d9c2e의 정렬 PE 명령은 좌클릭Drop/좌키-2/우키+2/우클릭rotmode0이면+2·그외-2다. 실제 UserInput.Event와 활성ESC 우선 처리를 연결했고 현재 rotmode/snap/cannotPlace를 읽는다. UberGump는 큐 처리 전에 현재 마우스를 한 번 폴링해 커서/기존UI에 공유하고 Tick은 카메라 변경 후 갱신한다. 나머지 선택/이동/카메라 및 거대UserInput 전체는 부분 복원이다.
+- [x] 실제 Client/Configuration/UserInput의 headless 검사(Run 미호출)는 현재 설정·좌표·회전·release·ESC를 통과한다. 기존 배치 통합 검사도 실제 UserInput.Event 좌클릭→Local예측/반환/비용/25바이트/RawPacketDispatch/서버 전체 Request/교체/Builder완료를 통과한다. 명시 준비75/GUI 반환8 Form/완성76 및 외부 GUI effects는 생산 완료/제공 메뉴 행/실제 로그인 전송 검증을 대신하지 않는다.
+- [x] 빌드1의 검사 Scene 이름 충돌/없는 Lines 참조는 수정했다. 최종 **Release 빌드3 종료0/경고0/오류0**, 집중 **14개/실패0**, 전체 **1,551개/실패0/CTest종료0/261.05초(전체261.08초)**, 새4개다. 원본 근거 **42종** 및 새 도구 최종SHA 감사 통과. 스테이징52파일·제품12·기존33보고서의현재104핀 갱신/과거95핀 보존·보호3SHA·UTF-8/LF·기존CMake접두/fixture/AGENTS/DN 불변을 확인했다.
+- [x] 10.72 대조는43c740/43c780/43d510이며 CD 회전은 두 helper를 호출한다. 이번 새 실행/연결은10.78 전용이고 기존CD자료는 수정하지 않았다. 커밋 메시지는 **20261017-36 CP 현재 커서 잠금 회전과 실제 입력 분기 연결**이며 push하지 않는다.
+- [ ] 다음: 실제 Client SetEffects의 장치/선택/부모 Gump와 원본 객체·사제·생산 메뉴를 연결한다. 실제 로그인된 로컬 전송 두 끝/등록 수명/큐잉, 생산 완료·경제/AI·전체 Kernel, Early Missions1~6/캠페인1-1~1-2/데모3의 자연 완주·승패·저장·다음 미션과 전체 동일성은 미완료다. 임의 성공 callback으로 대신하지 않으며 전체화면 DirectDraw 수정은 제외한다.
+
 ## 2026-10-17 단위135 완료: 실제 커서 수집·Draw·전용 팔레트 (`HJOW-Athlon`)
 
 - [x] AGENTS·두 LEFT·기준 `4e00fc1`과 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16**을 확인했다. 새 디컴파일/게임/GUI 실행은 없고 보호 PE의 격리 CPU 관측만 추가했다. [작업 기록](docs/exe/cpp-campaign-cursor-display-20261017.md), `cpppj/campaign-cursor-display.json`, 접두부 `extracted/goal-cursor-display-20261017-`를 남겼다. 전체 목표는 active다.

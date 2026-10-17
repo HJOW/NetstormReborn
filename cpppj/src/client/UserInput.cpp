@@ -1,5 +1,6 @@
 #include "client/UserInput.h"
 #include "client/ClientMain.h"
+#include "client/RawCampaignCursor.h"
 #include <algorithm>
 #include <cmath>
 
@@ -15,6 +16,9 @@ UserInput::UserInput(Client& client,GameWorld& world) : client_(client),world_(w
 // 원본의 좌클릭 이동과 우클릭 메뉴를 구분한다.
 std::optional<o::SquidId> UserInput::Event(InputEvent event) {
     if ((event.code & InputCode::kOutside)!=0) return {};
+    ReadCursorOptions();std::int32_t rotateMode=0; // 원본 rotmode의 누락 기본값0이다.
+    client_.Configuration().ReadInt("rotmode",rotateMode);
+    if (world_.Session().Cursor().HandleInput(event,static_cast<std::uint32_t>(rotateMode))) return {};
     const auto key=(event.code>>InputCode::kVirtualKeyShift)&255u;
     const bool release=(event.code & InputCode::kRelease)!=0;
     if (key>=8) {
@@ -41,14 +45,27 @@ void UserInput::Tick() {
     const double wall=client_.Time().wall,delta=std::clamp(wall-lastWall_,0.0,0.05); lastWall_=wall;
     if (!client_.Active()) { Cancel(); return; }
     const auto held=[&](unsigned key) { return held_[key] || (client_.Poll(key<<InputCode::kVirtualKeyShift).code & InputCode::kRelease)==0; };
-    int x=(held(kRight)?1:0)-(held(kLeft)?1:0),y=(held(kDown)?1:0)-(held(kUp)?1:0);
+    const bool cursorActive=world_.Session().CursorDropSettings().lockDepth==0; // 활성 커서의 좌우키는 원본 회전으로 소비한다.
+    int x=cursorActive ? 0 : (held(kRight)?1:0)-(held(kLeft)?1:0),y=(held(kDown)?1:0)-(held(kUp)?1:0);
     const auto mouse=client_.Poll(InputCode::kMiddleButton);
     if ((mouse.code & InputCode::kOutside)==0 && (held(kAlt) || (mouse.code & InputCode::kRelease)==0)) {
         x=(mouse.x>client_.GetScreen().Width()/2+16)-(mouse.x<client_.GetScreen().Width()/2-16);
         y=(mouse.y>client_.GetScreen().Height()/2+16)-(mouse.y<client_.GetScreen().Height()/2-16);
     }
-    const int amount=static_cast<int>(std::lround(delta*kCameraPixelsPerSecond)); world_.Scroll(x*amount,y*amount);
+    const int amount=static_cast<int>(std::lround(delta*kCameraPixelsPerSecond)); world_.Scroll(x*amount,y*amount);UpdateCursor(mouse);
 }
 // 메뉴/비활성으로 건너뛴 키 올림 사건이 다음 월드 조작에 남지 않게 한다.
 void UserInput::Cancel() { held_.fill(false); lastWall_=client_.Time().wall; }
+}
+
+// 원본에 등록된 두 DWORD는 누락 시 BSS0이며 현재 설정을 해당 소비 시점에 읽는다.
+void netstorm::client::UserInput::ReadCursorOptions() {
+    std::int32_t snap=0,cannotPlace=0; // 두 설정의 별도 원본 전역이다.
+    client_.Configuration().ReadInt("cursorSnapToGrid",snap);client_.Configuration().ReadInt("cursorShowCannotPlace",cannotPlace);
+    auto& cursor=world_.Session().Cursor();cursor.SnapToGrid()=static_cast<std::uint32_t>(snap);cursor.Placement().placementFlags=static_cast<std::uint32_t>(cannotPlace);
+}
+// 원본445330의 깊이0 조건에서만 실제 정수 마우스 갱신446b50을 호출한다.
+void netstorm::client::UserInput::UpdateCursor(InputEvent mouse) {
+    if ((mouse.code&InputCode::kOutside) || world_.Session().CursorDropSettings().lockDepth) return;
+    ReadCursorOptions();world_.Session().Cursor().Update(mouse.x,mouse.y);
 }

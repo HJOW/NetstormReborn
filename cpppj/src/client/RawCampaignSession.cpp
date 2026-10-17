@@ -114,7 +114,7 @@ struct RawCampaignSession::Impl {
     RawWorldCore core; // 같은 Pool/장부/해시의 참조만 유지한다.
     std::unique_ptr<RawCampaignCursor> cursor; // 같은 실제 Form/마나/위치/로컬 예측 몸체를 설치 뒤 소유한다.
     SoundView cursorView{}; // 마우스 위치의 실제 투영에도 현재 단일 카메라/화면 원점을 사용한다.
-    CursorDropState cursorDrop; // 실제 취득/배치/취소가 공유할 커서 상태이며 마나 토큰도 같은 저장소다.
+    CursorDropState cursorDrop{.lockDepth=1}; // 보호 PE5325c8의 초기 잠금1이며  실제 취득/배치/취소가 공유할 커서 상태이며 마나 토큰도 같은 저장소다.
     CursorManaGlobals cursorManaGlobals; // 현재 마나 종류/반경과 월드 좌표 제한 전역이다.
     std::unique_ptr<RawCursorMana> cursorMana; // Kernel을 먼저 비운 뒤 해제하는 실제 마나 프레임/수명 몸체다.
     EnergySupplyState energyState; // 마나 반경과 별개인 실제 제곱 반경 및 공급 전역이다.
@@ -1194,8 +1194,12 @@ struct RawCampaignSession::Impl {
         game.placement.mayPlace=[this](const CanonPlacementQuery& query) { const auto result=MayPlaceGameplay(query);cursor->Placement().obstruction=gameplayPlacement.placement.blockedRelation;return result ? 1U : 0U; };
         game.placement.processEvent=game.lifecycle.processEvent;
         game.placement.project=[this](float x,float y) { const auto point=SoundToScreen(cursorView,x,y);return ScreenPoint{point.x,point.y}; };
+        game.removeRange=[this](Sid parent,std::uint32_t type) {
+            RawContainedLookup lookup(core.pool,[this](Sid target,std::uint32_t flags) { if (!world.Destroy(target,flags)) throw std::logic_error("회전 사정거리 실제 가상 삭제 거부"); });
+            static_cast<void>(lookup.Find(parent,type,0,true));
+        };
         game.moveBuilder=[this](std::uint32_t owner,Sid target,std::uint32_t low,std::uint32_t high) { static_cast<void>(buildingMover->Move(owner,target,low,high)); };
-        cursor=std::make_unique<RawCampaignCursor>(CampaignCursorData{world,assets.game,gameplayPlacement.geometry,metadata.frames,*contentForms,*contained,hp,random,*construction,cursorDrop,gameplayPlacement.preview.blocked,sp,playerState.playerKnown,contentCamera},std::move(game));
+        cursor=std::make_unique<RawCampaignCursor>(CampaignCursorData{world,assets.game,gameplayPlacement.geometry,metadata.frames,*contentForms,*contained,hp,random,*construction,cursorDrop,gameplayPlacement.preview.blocked,sp,playerState.playerKnown,gunTargetState.windArcherType,cursorRangeGlobals.processType,contentCamera},std::move(game));
         std::array<ScreenColor,256> palette; // 현재 파일 팔레트를 원본 논리 검정/흰색 끝점으로 준비한다.
         // RGB와 예약 BYTE의 현재 파일 값을 그대로 공급한다.
         for (std::size_t index=0;index<palette.size();++index) { const auto color=assets.game.Palette().Color(static_cast<std::uint8_t>(index));palette[index]={color.blue,color.green,color.red,assets.game.Palette().Reserved(static_cast<std::uint8_t>(index)).value_or(0)}; }

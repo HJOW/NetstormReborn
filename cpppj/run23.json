@@ -182,7 +182,7 @@
     "cpppj/hist/run23-success2/install.h": "2d42c64bfd2e49e9f1bdb5218c8e0e3f47d5029e24a9c1e2c65180aaf08cf02a",
     "cpppj/priestdamage.json": "48dc6441097cfc1ae2a2f88a0cf4b1e8881dc9d1f88323908049c7733dd4a18c",
     "cpppj/run22.json": "3758f5cdad3bd38fd7ec2f0cc44f2ce3aebcd00cad6eef97657a0ea6a307c292",
-    "cpppj/src/CMakeLists.txt": "abf7e84a08d79f53456456767ca6cb7bc144b7f6672e71a1154772313f9b48d0",
+    "cpppj/src/CMakeLists.txt": "aa8053fae523788fbb4dfcc7d8618fe95f802624fdd85351f88ffbbbace03d59",
     "cpppj/src/app/CanonMayPlaceInspect.cpp": "27eda46bca500c898abeb9a3a7c4e8588b38e061b579c84cbf6c032c6d46dda9",
     "cpppj/src/app/FrameBindingInspect.cpp": "042602919b0531fb1cbaf3941dc6597bee73944bbf0d571dacfd638bb45dd07c",
     "cpppj/src/app/FrameBindingInspect.h": "4e187ca41f8c34ed52c022b58a57327a554a723e3e26ee88a1ae152c99de3fce",
@@ -366,8 +366,8 @@
     "cpppj/src/client/TileGroupCollection.h": "2b503b5e0bea78d80637ddc5708aed9b8fe846a8ea61a2f03159416d62a55f80",
     "cpppj/src/client/UberGump.cpp": "7c7e852388d278762d0b2036502c6b4918375f67b772b180f66beac2367fc912",
     "cpppj/src/client/UberGump.h": "66672f1eb96fadae4ff729b95ef3021818e090def0951a51654a7c2d24b455c8",
-    "cpppj/src/client/UserInput.cpp": "9aff49b08ab63e97dbfc437885e0a424367f10ac51f4ff4ead04d34eae15b1ac",
-    "cpppj/src/client/UserInput.h": "140e5b230a3a717aba3a8c41705a6b8e9ec49e7eca734492cdb29e536a7087be",
+    "cpppj/src/client/UserInput.cpp": "a8cf72e99c88ef31fd518e0ea2609c4d9970ff2f4dcde39a2e7edba16003bd2a",
+    "cpppj/src/client/UserInput.h": "8c27579e2993518d84cd37e6fea4313a34d8a66dd291ba0ece00b26e91ac395d",
     "cpppj/src/client/VFXDraw.cpp": "d4c95ba9875659715bdb234b56baf7084d2abc6f5f4f879d1247cb309f0f5ad4",
     "cpppj/src/client/VFXDraw.h": "953079a93732127a0e2861f4d091328c37209c25dab7330d2a978afb52896894",
     "cpppj/src/client/VFXLine.cpp": "6f0a0d1f59532f0a4cb3ae3045efc46908c77a2f0d62ccc8f41741274330cc45",
@@ -1547,6 +1547,28 @@
           "path": "cpppj/tests/RendererTests.cpp",
           "previous": "63005d693471cdd282ad6bfacff49a8d58ab8c835ba24f752a9e450436e8fbba",
           "current": "fb868b30dcd882c0c2add47d3a66434e4cb34bf514f4ce8a7102a0a3ed2995c8"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 136,
+      "reason": "실제 커서 잠금/회전/Range와 UserInput 현재 설정·마우스 연결",
+      "pins": [
+        {
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "abf7e84a08d79f53456456767ca6cb7bc144b7f6672e71a1154772313f9b48d0",
+          "current": "aa8053fae523788fbb4dfcc7d8618fe95f802624fdd85351f88ffbbbace03d59"
+        },
+        {
+          "path": "cpppj/src/client/UserInput.cpp",
+          "previous": "9aff49b08ab63e97dbfc437885e0a424367f10ac51f4ff4ead04d34eae15b1ac",
+          "current": "a8cf72e99c88ef31fd518e0ea2609c4d9970ff2f4dcde39a2e7edba16003bd2a"
+        },
+        {
+          "path": "cpppj/src/client/UserInput.h",
+          "previous": "140e5b230a3a717aba3a8c41705a6b8e9ec49e7eca734492cdb29e536a7087be",
+          "current": "8c27579e2993518d84cd37e6fea4313a34d8a66dd291ba0ece00b26e91ac395d"
         }
       ]
     }

@@ -30,7 +30,7 @@
     "cpppj/tests/TypeRequiredEnergyTests.cpp": "0802ab400413ec5da3f2d03a4ac6b6f88e2d088915646609a2ca0bb39a02b05c",
     "cpppj/src/o/CMakeLists.txt": "3d0010c676da1156f5223bfcaa207887a88910a4cf50733a7b2e9e515f939c48",
     "cpppj/src/client/CMakeLists.txt": "8bb17d335554c16e6ff3300134492a264bfa425dfafd52062ecf0062f523d87c",
-    "cpppj/tests/CMakeLists.txt": "539635dedf774da6163e0702fa0f076db8fb6398b5b7b7de02af2509a255a7d5"
+    "cpppj/tests/CMakeLists.txt": "f983e4d12e69969ad3b6739ed71b19c0c831d1e3bc83ec3b2b6d074bb6caa4e4"
   },
   "product_validation": {
     "configuration": "Release",
@@ -1416,6 +1416,18 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "d7173af70d76e71528687996332c829890f0ba120aeb7c019a07086102161bcd",
           "current": "539635dedf774da6163e0702fa0f076db8fb6398b5b7b7de02af2509a255a7d5"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 136,
+      "reason": "실제 커서 잠금/회전/Range와 UserInput 현재 설정·마우스 연결",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "539635dedf774da6163e0702fa0f076db8fb6398b5b7b7de02af2509a255a7d5",
+          "current": "f983e4d12e69969ad3b6739ed71b19c0c831d1e3bc83ec3b2b6d074bb6caa4e4"
         }
       ]
     }

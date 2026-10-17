@@ -19,6 +19,7 @@ struct CampaignCursorGame {
     CursorPlacementHooks placement; // 같은 에너지/전체 MayPlace/Graph/프로세스/투영이다.
     std::function<void()> prepare; // 각 공개 명령 직전에 같은 현재 소유자/모드를 반영한다.
     std::function<void(std::uint32_t,o::Sid,std::uint32_t,std::uint32_t)> moveBuilder; // 같은 실제134/23/39를 시작한다.
+    std::function<void(o::Sid,std::uint32_t)> removeRange; // 같은 실제 contained 조회/삭제의 순번0·삭제1이다.
     std::function<void()> playDrop; // 단일 실제 이름표의 droppiece.wav를 재생한다.
 };
 // 모든 참조는 이 커서보다 오래 살아야 한다. 월드나 카메라의 사본을 소유하지 않는다.
@@ -36,6 +37,8 @@ struct CampaignCursorData {
     const std::array<std::uint8_t,144>& grid; // 실제 현재 MayPlace가 쓴 열 우선 격자다.
     o::ScrambledSpStore& sp; // 현재 단일 SP와 추적 offset/순열이다.
     const std::uint32_t& playerKnown; // 실제595344 DWORD다.
+    const std::uint32_t& windType; // 사정거리와 같은 현재 특별 Wind 타입이다.
+    const std::uint32_t& rangeProcessType; // 사정거리와 같은 현재51 프로세스 타입이다.
     const std::array<std::uint32_t,2>& camera; // 현재497490 카메라 float비트를 매 이동마다 읽는다.
 };
 // 원본 각각의 몸체를 같은 상태에 조립하며 미연결 UI를 빈 성공으로 처리하지 않는다.
@@ -54,6 +57,10 @@ public:
     void Take(o::Sid form,std::uint32_t flags); // 실제00447000의 전체 DWORD flags를 전달한다.
     void Cancel(); // 잠긴 상태에서도 실제 꼬리 정리/프로세스 반납을 실행한다.
     void Update(std::int32_t x,std::int32_t y); // 실제00446b50으로 현재 마우스/카메라를 반영한다.
+    void Lock(std::uint32_t skipCursor); // 실제446a10의 현재 중첩 깊이를 증가시킨다.
+    void Unlock(); // 실제446a40의 목록 재생성/커서 선택을 실행한다.
+    void Rotate(std::int32_t step); // 실제446a70의 signed 방향·사정거리 수명을 실행한다.
+    bool HandleInput(InputEvent event,std::uint32_t rotateMode); // 활성 커서의 실제 좌클릭/좌우키/우클릭/ESC 분기다.
     void Drop(); // 실제004473e0→4433b0→같은 Place/Builder→25바이트 송신을 실행한다.
     void Bind(PriestMenuHooks& hooks); // 실제 사제 메뉴 취득을 이 단일 커서에 연결한다.
     CursorLifecycleState& Lifecycle(); // 현재30SID/추상 타입/측정 상태를 빌린다.

@@ -8,12 +8,12 @@
     "date": "2026-10-16"
   },
   "currentSources": {
-    "cpppj/src/CMakeLists.txt": "abf7e84a08d79f53456456767ca6cb7bc144b7f6672e71a1154772313f9b48d0",
+    "cpppj/src/CMakeLists.txt": "aa8053fae523788fbb4dfcc7d8618fe95f802624fdd85351f88ffbbbace03d59",
     "cpppj/src/client/RawCampaignConstructionBindings.cpp": "ee1d38d554fb25e502d0dc54cb19a55f501a45860e5612ca9666ca0f7ec2d2cf",
     "cpppj/src/client/RawCampaignConstructionBindings.h": "9d16b7a6b2ff2c5033dcf1b8a8ff1c73429715c8444f5553c84afe1a93c6ef65",
-    "cpppj/src/client/RawCampaignCursor.cpp": "8e23f42d98e0058ba79d143ecbc697c74590377048639e7cb63d0d54c08b1ffc",
-    "cpppj/src/client/RawCampaignCursor.h": "7c9062685b2f8b8551aab8001b280c1d793c3a1edff14dc114970d20d90fb642",
-    "cpppj/src/client/RawCampaignSession.cpp": "f6496464a28e6834afbe10a79a70e47c69eb0ef8cd490e1a3ad3c838059e0bf4",
+    "cpppj/src/client/RawCampaignCursor.cpp": "e2bb7eb1c1747833b8bd42a2ff2ba7378376c09afa846fd00047b26d5682a693",
+    "cpppj/src/client/RawCampaignCursor.h": "7b60c29e7f3af2681c86bb3b0c5d1ac843d6e0f99e35ed41863de73a30044b14",
+    "cpppj/src/client/RawCampaignSession.cpp": "35fb5589cdde65bdd4d339c5ac7c5fe2028e3b0def3fa2105b27226be283389b",
     "cpppj/src/client/RawCampaignSession.h": "8b0cc82f468e9c014d87ae963d5991418403f7e5c12aca6622e53f9aa89b8c5c",
     "cpppj/src/client/RawCursorLifecycle.cpp": "fce0a2a2eed2fc50169d36b85ac2766dd4b2b8b4b060f17966950601a103e1ce",
     "cpppj/src/client/RawCursorLifecycle.h": "537111c145676234c0f8ad032ca3b68e660f8e1d4245cc0e02f228c53066fd1b",
@@ -23,7 +23,7 @@
     "cpppj/src/client/RawSurfaceWorld.h": "9b81a62af3656b5b71d0bce5ff7fabeffec84ae6b3ebdc0f71533a7ac58e0fd5",
     "cpppj/src/o/ContentFormLifetime.cpp": "eb4239239c706c6c494ae428dd64bd9aba0927c0a5b3bd8a19c9e2e697904fdc",
     "cpppj/src/o/ContentFormLifetime.h": "9c483590c4655b6ea974b980f144a05633f85dcc3a279b01c30c967daa0190e1",
-    "cpppj/tests/CampaignSessionTests.cpp": "64e68631cd5039223726287c65b050b48480f1284e5042c2e921ea378d1ca14b"
+    "cpppj/tests/CampaignSessionTests.cpp": "17c2fbca1c31cf4034ba3de0703913f694bf4e3f7e49805b164706035a9d6058"
   },
   "protectedFileSha256": {
     "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
@@ -117,6 +117,38 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "f394dce6db3dfe4de3ae5df16e57e63c5b5d7011c347369ccdfac0a48760e89f",
           "current": "64e68631cd5039223726287c65b050b48480f1284e5042c2e921ea378d1ca14b"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 136,
+      "reason": "실제 커서 잠금/회전/Range와 UserInput 현재 설정·마우스 연결",
+      "pins": [
+        {
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "abf7e84a08d79f53456456767ca6cb7bc144b7f6672e71a1154772313f9b48d0",
+          "current": "aa8053fae523788fbb4dfcc7d8618fe95f802624fdd85351f88ffbbbace03d59"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignCursor.cpp",
+          "previous": "8e23f42d98e0058ba79d143ecbc697c74590377048639e7cb63d0d54c08b1ffc",
+          "current": "e2bb7eb1c1747833b8bd42a2ff2ba7378376c09afa846fd00047b26d5682a693"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignCursor.h",
+          "previous": "7c9062685b2f8b8551aab8001b280c1d793c3a1edff14dc114970d20d90fb642",
+          "current": "7b60c29e7f3af2681c86bb3b0c5d1ac843d6e0f99e35ed41863de73a30044b14"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "f6496464a28e6834afbe10a79a70e47c69eb0ef8cd490e1a3ad3c838059e0bf4",
+          "current": "35fb5589cdde65bdd4d339c5ac7c5fe2028e3b0def3fa2105b27226be283389b"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "64e68631cd5039223726287c65b050b48480f1284e5042c2e921ea378d1ca14b",
+          "current": "17c2fbca1c31cf4034ba3de0703913f694bf4e3f7e49805b164706035a9d6058"
         }
       ]
     }

@@ -1,0 +1,41 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "lastDecompileDate": "2026-10-16",
+  "date": "2026-10-17",
+  "unit": 136,
+  "controls": [
+    639,
+    895
+  ],
+  "entries": [
+    "00446a10",
+    "00446a40",
+    "00446a70"
+  ],
+  "uniqueInputs": 289,
+  "normalReturns": 578,
+  "instructionObservations": 17250,
+  "precisionDifferentInputs": [],
+  "nativeCalls": {
+    "00446a10": 72,
+    "00446a40": 128,
+    "00446a70": 378
+  },
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+    "tools/decomp_cursor_previews.py": "33ed19d9b6409ad49e6db93081e951b8d105f170ce7a530363689aa9fda6c7c0",
+    "tools/decomp_cursor_position.py": "e15bcdbc4c6be9c131c30f15416c945d650dba9f7dc6def404b47f63c635c212",
+    "tools/decomp_cursor_actions.py": "d2e88ec1e9fdd60b89d3c0ddf28e7250ba5a29f81475ff736db3a3bda6124f8b",
+    "cpppj/tests/fixtures/cursor-actions-x86.tsv": "cf7ed24a65ed0b93d9800251e42c373f9d9de5ac398425346d8e782edc3f846b"
+  },
+  "limitations": [
+    "실제 세 부모 몸체와 보존GP/스택/canary/x87 균형만 새 실행; Activate/Create/커서/음향/ContainedLookup/Range는 명시 효과다.",
+    "경계 뒤 현재 잠금·방향·Gump·TYPE포인터·첫SID 재조회와 signed 마스크 꼬리를 기록한다.",
+    "10.78 전용이며 CD 비교 주소만 문서화한다. 실제 Client 전체 입력·생산 GUI·사용자 자연 플레이는 별도다."
+  ]
+}

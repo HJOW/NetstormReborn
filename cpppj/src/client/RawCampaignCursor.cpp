@@ -2,6 +2,7 @@
 #include "client/RawCampaignCursor.h"
 #include "client/RawCampaignCursorDisplay.h"
 #include "client/RawCursorPreviews.h"
+#include "client/RawCursorActions.h"
 #include <stdexcept>
 #include <utility>
 
@@ -35,6 +36,7 @@ struct RawCampaignCursor::Impl {
     std::unique_ptr<o::RegularProcess> pendingTimer; // 실제 할당 성공부터 반환 조각에 타이머를 부착할 때까지 예약한다.
     std::unique_ptr<RawCursorReturnPiece> returned; // 같은 난수/contained의 조각 반환이다.
     std::unique_ptr<o::RawConstructionLocal> local; // 실제 예측 배치/Builder/요청 송신이다.
+    std::unique_ptr<RawCursorActions> actions; // 같은 잠금/방향/Range의 실제 세 부모 몸체다.
     std::unique_ptr<RawCursorDrop> drop; // 실제 상위 비용/잠금/정리 순서다.
 
     // 다른 풀을 섞지 않고 실제 하위들을 먼저 만든 뒤 수명 몸체로 순환 연결한다.
@@ -112,6 +114,11 @@ struct RawCampaignCursor::Impl {
         dropHooks.refresh=Current(effects.drop.refresh,"커서 변경 갱신");
         dropHooks.closeGump=Current(effects.drop.closeGump,"커서 Gump 닫기");
         drop=std::make_unique<RawCursorDrop>(core.pool,core.types,data.drop,std::move(dropHooks));
+        CursorActionHooks actionHooks; // 기존 실제 하위 몸체만 같은 커서에 연결한다.
+        actionHooks.activate=[this](std::uint32_t force) { lifecycle->Activate(force); };actionHooks.createPreviews=[this] { previews->Create(); };
+        actionHooks.selectCursor=Current(effects.lifecycle.selectCursor,"하드웨어 커서 선택");actionHooks.sound=game.lifecycle.sound;
+        actionHooks.removeRange=game.removeRange;actionHooks.createRange=game.lifecycle.createRange;
+        actions=std::make_unique<RawCursorActions>(core.types,data.drop,lifecycleState,data.windType,data.rangeProcessType,std::move(actionHooks));
         display=std::make_unique<RawCampaignCursorDisplay>(core,CursorPreviewSource{core.pool,data.drop,lifecycleState,placementState,core.bridgeState,data.grid},data.assets,data.sp,data.playerKnown);
     }
     // 실제 가상 삭제의 거부를 성공한 임시 정리로 처리하지 않는다.
@@ -137,6 +144,23 @@ void RawCampaignCursor::Cancel() { impl_->Prepare();impl_->lifecycle->Cancel(); 
 // 같은 현재 카메라 비트를 읽는 실제 위치 몸체를 호출한다.
 void RawCampaignCursor::Update(std::int32_t x,std::int32_t y) { impl_->Prepare();impl_->position->Update(x,y); }
 // 실제 로컬 예측 이후 상위 비용과 임시 객체 정리를 수행한다.
+// 현재 전역을 준비한 뒤 원본 중첩 잠금/해제/회전을 같은 상태에 실행한다.
+void RawCampaignCursor::Lock(std::uint32_t skipCursor) { impl_->Prepare();impl_->actions->Lock(skipCursor); }
+void RawCampaignCursor::Unlock() { impl_->Prepare();impl_->actions->Unlock(); } // 깊이0 전이에서만 실제 목록을 다시 만든다.
+void RawCampaignCursor::Rotate(std::int32_t step) { impl_->Prepare();impl_->actions->Rotate(step); } // 현재 Range/TYPE도 같은 몸체다.
+// 원본4d9bbb..4d9c2e의 활성 커서 분기이며 release는 그 앞의 공통 필터에서 제외된다.
+bool RawCampaignCursor::HandleInput(InputEvent event,std::uint32_t rotateMode) {
+    if (impl_->data.drop.lockDepth || (event.code&(InputCode::kRelease|InputCode::kOutside))) return false;
+    switch (event.code&0x03ffffffU) {
+    case InputCode::kLeftButton:Drop();return true;
+    case InputCode::kRightButton:Rotate(rotateMode ? -2 : 2);return true;
+    case 0x250000:Rotate(-2);return true;
+    case 0x270000:Rotate(2);return true;
+    case 0x1b:Cancel();Current(impl_->effects.lifecycle.closePopups,"팝업 닫기")();return true;
+    default:return false;
+    }
+}
+// 실제 내려놓기는 기존 Local/비용/송신과 같은 상태를 사용한다.
 void RawCampaignCursor::Drop() { impl_->Prepare();impl_->drop->Drop(); }
 // 메뉴의 전체 DWORD 플래그와 원래 Form을 그대로 전달한다.
 void RawCampaignCursor::Bind(PriestMenuHooks& hooks) { hooks.takePreview=[this](o::Sid form,std::uint32_t flags) { Take(form,flags); }; }

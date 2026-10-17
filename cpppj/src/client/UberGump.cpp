@@ -362,6 +362,7 @@ void UberGump::Event(InputEvent event) {
     // 원본 ESC 글자 사건. 초기 브리핑은 확인 버튼으로만 닫는다.
     if ((event.code & 0xffffu) == 0x1b && (event.code & InputCode::kRelease) == 0) {
         if (state_.phase == ClientPhase::Briefing || state_.phase == ClientPhase::LoadingMission) return;
+        if (world_ && userInput_ && state_.phase==ClientPhase::Mission && popup_.empty() && !world_->Session().CursorDropSettings().lockDepth) { userInput_->Event(event);return; }
         if (!popup_.empty()) state_.Post({"Menu", "close"});
         else if (mission_ && state_.phase == ClientPhase::Mission) state_.Post({"Menu", "game"});
         else if (state_.phase == ClientPhase::Dialog) state_.Post({"Tell", "Blank"});
@@ -389,9 +390,11 @@ void UberGump::Event(InputEvent event) {
 // 네이티브 입력 큐의 버튼 사건과 폴링 좌표를 같은 Gump 판정기에 전달한다.
 bool UberGump::Input() {
     // 사건 순서를 유지한다. 첫 상태 전환만 다음 프레임에 예약된다.
+    const auto mouse=client_.Poll(InputCode::kLeftButton); // 원본처럼 큐 처리 전에 현재 마우스 위치를 갱신한다.
+    if (userInput_ && state_.phase==ClientPhase::Mission && popup_.empty()) userInput_->UpdateCursor(mouse);
     while (!client_.Input().Empty()) Event(client_.Input().Pop(false));
     if (warnings_->Idle()) rebuild_=true;
-    const auto mouse = client_.Poll(InputCode::kLeftButton);
+
     if (rawButtons_->Poll(mouse)) rebuild_=true;
     if (input_.Move({mouse.x, mouse.y}, (mouse.code & InputCode::kOutside) == 0)) rebuild_ = true;
     if (userInput_ && state_.phase==ClientPhase::Mission && popup_.empty()) userInput_->Tick();

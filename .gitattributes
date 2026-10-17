@@ -1230,3 +1230,14 @@ cpppj/tests/fixtures/preview-colors-x86.tsv text eol=lf
 cpppj/tests/fixtures/owner-hsl-colors-x86.tsv text eol=lf
 tools/decomp_preview_colors.py text eol=lf
 tools/decomp_owner_hsl_colors.py text eol=lf
+
+# 현재 커서 잠금/회전과 원본 관측의 바이트 SHA를 보존한다.
+cpppj/src/client/RawCursorActions.cpp text eol=lf
+cpppj/src/client/RawCursorActions.h text eol=lf
+cpppj/src/client/UserInput.cpp text eol=lf
+cpppj/src/client/UserInput.h text eol=lf
+cpppj/tests/CursorActionsTests.cpp text eol=lf
+cpppj/cursor-actions.json text eol=lf
+cpppj/campaign-cursor-actions.json text eol=lf
+cpppj/tests/fixtures/cursor-actions-x86.tsv text eol=lf
+tools/decomp_cursor_actions.py text eol=lf

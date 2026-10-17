@@ -1325,3 +1325,8 @@ set_source_files_properties(PreviewColorMapsTests.cpp PROPERTIES COMPILE_DEFINIT
 # 실제 CRT 기본 정밀도의 소유자 HSL 전용5종과64비트 별도 관측이다.
 set_property(SOURCE PreviewColorMapsTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS
     "NETSTORM_OWNER_HSL_COLORS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/owner-hsl-colors-x86.tsv\"")
+
+# 실제 잠금/해제/회전의 두 정밀도 원본289행이다.
+target_sources(netstorm_tests PRIVATE CursorActionsTests.cpp)
+set_source_files_properties(CursorActionsTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CURSOR_ACTIONS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/cursor-actions-x86.tsv\"")
