@@ -101,3 +101,6 @@ target_sources(netstorm PRIVATE o/RawGeyserLifetime.cpp o/RawGeyserLifetime.h)
 
 # 원본 네 방향 회피와 임시BFS/도착시각 최소값 선택이다.
 target_sources(netstorm PRIVATE o/RawCarrierEscape.cpp o/RawCarrierEscape.h)
+
+# 실제 크리스탈 크랩 포획과60h 수신 몸체다.
+target_sources(netstorm PRIVATE o/RawCarrierSteal.cpp o/RawCarrierSteal.h)

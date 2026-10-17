@@ -8,6 +8,7 @@
 #include "o/RawGeyserMined.h"
 #include "o/RawGeyserLifetime.h"
 #include "o/RawCarrierEscape.h"
+#include "o/RawCarrierSteal.h"
 #include "o/RawPacketDispatch.h"
 #include "client/AiTypeRequiredEnergy.h"
 #include "o/RawGameRandomSeed.h"
@@ -294,6 +295,9 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawCarrierFalling> carrierFalling; // 같은 표면/Player/권한에서 캐리어 낙하와 포획 사제 해방을 처리한다.
     std::unique_ptr<RawCarrierTask> carrierTask; // 실제 현재 Regular/SharedRegular task와 double 기한을 갱신한다.
     std::unique_ptr<RawCarrierFallStart> carrierFallStart; // 현재 이동 삭제/선택 해제/복귀 좌표/즉시 해방을 수행한다.
+    std::uint32_t stealHaltCounter{}; // 모든 크랩이 공유하는00545428이다.
+    FormPacketHeader stealHeader{0x60,1,10}; // 실제40acf0의 현재 포획 헤더다.
+    std::unique_ptr<RawCarrierSteal> carrierSteal; // 같은 내용물/공간/방향 동맹/이동/전역 음향의 실제 포획이다.
     CarrierTransferState carrierTransferState; // 미등록187 분기의 공유 주기/재시도/마지막 기증자와 현재 헤더다.
     std::unique_ptr<RawCarrierTransfer> carrierTransfer; // 실제 내용물 재부착/491/송신/이동 삭제와 연결한다.
     BoardTargetState boardTargetState; // 실제 월드 초기화 후의 실패점 두 float다.
@@ -730,6 +734,7 @@ struct RawCampaignSession::Impl {
         InstallContents(worldHooks.assets);
         ConnectConstruction(); // 실제공통삭제후설치뒤같은noIsland VT의표면가상분배를첫객체전등록한다.
         ConnectDamageable(); // 같은 공통 삭제와 신전/사제 해방의 파생 하위를 첫 객체 전에 연결한다.
+        ConnectCarrierSteal(); // 최초 크랩 Pop의 실제492예약/공통 장부다.
         ConnectCarrierRegular(); // 첫491예약/프레임 전에 같은 내용물 그림과 만료 삭제를 연결한다.
         ConnectSunAviary(); // 실제 타입32/flags8 부착과 현재48BYTE 필드를 같은 Kernel에 등록한다.
         ConnectRainAviary(); // 실제 타입60/flags8 부착과 별도 Frame/0x73 패킷을 구성한다.
@@ -1058,6 +1063,28 @@ struct RawCampaignSession::Impl {
         ProcessFormTransmission hooks;
         hooks.writeData=[this,fallback](SquidProcess& process,bool parentChanged) { auto* flying=dynamic_cast<FlyerProcess*>(&process);writingFlyer=flying!=nullptr;auto* rain=dynamic_cast<RainAviaryProcess*>(&process);writingRainAviary=rain!=nullptr;auto* current=dynamic_cast<SunAviaryProcess*>(&process);writingSunAviary=current!=nullptr;if (flying) return static_cast<std::int32_t>(flying->WritePacket(flyerPacket,parentChanged));if (rain) return static_cast<std::int32_t>(rain->WritePacket(rainAviaryPacket,parentChanged));if (current) return static_cast<std::int32_t>(current->WritePacket(sunAviaryPacket,parentChanged));if (!fallback.writeData) throw std::logic_error("다른 실제 프로세스 writer 미연결");return fallback.writeData(process,parentChanged); };
         hooks.transmit=[this,fallback](std::int32_t length) { if (writingFlyer) { if (length<0 || static_cast<std::size_t>(length)>flyerPacket.size()) throw std::out_of_range("비행 실제 패킷 길이 오류");services.formPacket(std::span<const std::uint8_t>(flyerPacket).first(static_cast<std::size_t>(length)));return; }if (writingRainAviary) { if (length<0 || static_cast<std::size_t>(length)>rainAviaryPacket.size()) throw std::out_of_range("맨 오 워 풀 실제 패킷 길이 오류");services.formPacket(std::span<const std::uint8_t>(rainAviaryPacket).first(static_cast<std::size_t>(length)));return; }if (writingSunAviary) { if (length<0 || static_cast<std::size_t>(length)>sunAviaryPacket.size()) throw std::out_of_range("훨리베이스 실제 패킷 길이 오류");services.formPacket(std::span<const std::uint8_t>(sunAviaryPacket).first(static_cast<std::size_t>(length)));return; }if (!fallback.transmit) throw std::logic_error("다른 실제 프로세스 송신 미연결");fallback.transmit(length); };return hooks;
+    }
+    // 저장 크랩의 첫Pop 전 전용492예약과 같은 공통장부를 연결한다.
+    void ConnectCarrierSteal() {
+        CarrierStealHooks steal;
+        steal.find=[this](Sid parent,std::uint32_t mask,std::uint32_t kind,std::uint32_t index) { return priests->Carrier().FindContained(parent,mask,kind,index); };
+        steal.detach=[this](Sid form,std::uint32_t flags) { if (flags) throw std::logic_error("포획 Unpop flags 오류");contentForms->Unpop(form); };
+        steal.attach=[this](Sid form,Sid parent,std::uint32_t flags) { contentForms->Attach(form,parent,flags); };
+        steal.preview=[this](Sid parent) { StartSelectionContentPreview(core.pool,parent,objectState.loadingDepth,[this](Sid sid,std::uint32_t event,float payload) { static_cast<void>(core.processes.AddRegular(sid,event,payload)); },SessionMissing<void>()); };
+        steal.broadcast=[this](std::span<const std::uint8_t> packet) { broadcast->Send(packet); };
+        steal.movementType=[this](std::uint32_t type) { return priests->MovementProcessType(type); };
+        steal.removeMovement=[this](Sid sid,std::uint32_t type) { RawContainedLookup lookup(core.pool,[this](Sid target,std::uint32_t flags) { static_cast<void>(world.Destroy(target,flags)); });static_cast<void>(lookup.Find(sid,type,0,true)); };
+        steal.goHome=[this](Sid sid) { if (!carrierTarget) throw std::logic_error("이동 설치 전 크랩 귀환");static_cast<void>(carrierTarget->GoHome(sid)); };
+        steal.sound=[this](std::string_view name,std::uint32_t loop,std::uint32_t volume,std::uint32_t pan,std::uint32_t priority,std::uint32_t limit) {
+            if (!services.sound.play) throw std::logic_error("크리스탈 크랩 실제 전역 소리 미연결");services.sound.play(soundNames.Lookup(name),loop,volume,pan,priority,limit);
+        };
+        steal.commonHalt=[this](Sid sid) { if (!motion) throw std::logic_error("이동 설치 전 크랩 정지");return motion->CommonHalt(sid); };
+        steal.allocateRegular=[this] { try { pendingCarrierTask=std::make_unique<RegularProcess>(0,0.0F);return true; }catch (const std::bad_alloc&) { return false; } };
+        steal.regular=[this](Sid sid,std::uint32_t event,float delay) { if (!pendingCarrierTask || delay!=1.0F) throw std::logic_error("크랩 Regular 예약 누락");auto* reserved=pendingCarrierTask.get();std::destroy_at(reserved);std::construct_at(reserved,event,delay);auto* task=static_cast<RegularProcess*>(core.processes.Attach(std::move(pendingCarrierTask),46,sid,0x50));task->ResetTask(event,core.processState.now); };
+        steal.check=[this](Sid sid) { static_cast<void>(priests->CarrierCheck().Check(sid)); };
+        steal.damageablePostPop=[this](Sid sid,std::uint32_t flags) { carrier->DamageablePostPop(sid,flags); };
+        carrierSteal=std::make_unique<RawCarrierSteal>(core.pool,core.hash,core.types,assetState.boss,globals.editor,assetState.localOwner,alliances,motionState.halt.carrierType,motionState.carrier.priestType,stealHeader,stealHaltCounter,std::move(steal));
+        core.postPop.SetCarrierStealPostPop(carrierSteal.get());
     }
     // 실제 Carrier 내용물 그림/표시/타이머를 현재 Session의 한 풀·시계·공유 타입에 연결한다.
     void ConnectCarrierRegular() {
@@ -1526,7 +1553,7 @@ struct RawCampaignSession::Impl {
         effects.path.constructionArrival=[this](Sid sid,std::uint32_t,std::uint32_t) { const auto type=core.pool.Slot(sid)[10];if (type==134) return buildArrival->Arrive(sid);if (type==105) return manaArrival->Arrive(sid);throw std::logic_error("실제 건설 도착 타입 오류"); };
         if (!effects.cleanup.reserveShared) effects.cleanup.reserveShared=[] { return true; };
         FillMissing(effects.cleanup.ritual);FillMissing(effects.cleanup.refund);
-        FillMissing(effects.halt.carrierPickup);
+
         effects.carrier.genusAt=[this](float x,float y,std::uint32_t genus) {
             RawSquidFinder finder(core.pool,core.hash,core.types);
             // 실제 일반 getter의 첫 현재 후보/표면 생략 순서를 사용한다.
@@ -1607,6 +1634,7 @@ struct RawCampaignSession::Impl {
         transfer.chooseGeyser=effects.carrier.chooseGeyser;transfer.goGeyser=effects.carrier.goGeyser;
         transfer.goHome=effects.carrierGoHome;FillMissing(transfer.goHome);
         transfer.commonHalt=[this](Sid sid) { if (!motion) throw std::logic_error("현재 이동 연결 전 고갈된 캐리어 정지");return motion->CommonHalt(sid); };
+        effects.halt.carrierPickup=[this](Sid sid) { return carrierSteal->Try(sid); };
         carrierTransfer=std::make_unique<RawCarrierTransfer>(core.pool,core.hash,core.types,assetState.boss,globals.editor,assetState.localOwner,carrierTransferState,std::move(transfer));
         effects.halt.nuggetTransfer=[this](Sid sid) { return carrierTransfer->Transfer(sid); };
         FillMissing(effects.priest.neutralReturn);
@@ -1638,6 +1666,7 @@ struct RawCampaignSession::Impl {
         try { world.ClearProcesses(); }
         catch (const std::exception& error) { std::fprintf(stderr,"실제 Session Kernel 정리 실패: %s\n",error.what()); }
         catch (...) { std::fprintf(stderr,"실제 Session Kernel 정리 실패: 알 수 없는 예외\n"); }
+        core.postPop.SetCarrierStealPostPop(nullptr); // 장기 크랩 몸체보다 먼저 가상 분배를 반납한다.
         core.postPop.SetPlayerPostPop(nullptr);
         core.postPop.SetBuriedPostPop(nullptr); // 장기 모듈 해제 뒤 파생 포인터를 남기지 않는다.
         core.postPop.SetFlyerPostPop(nullptr); // 비행 장기 몸체 해제 뒤 공통 분배에 포인터를 남기지 않는다.
@@ -1727,6 +1756,8 @@ void RawCampaignSession::RegisterConstructionCommands(RawPacketDispatch& dispatc
 void RawCampaignSession::RegisterCarrierCommands(RawPacketDispatch& dispatch) {
     if (!impl_->loaded) throw std::logic_error("미설치 Session의 채취 수신 등록");RegisterGeyserMined(dispatch,*impl_->geyserMined);
     dispatch.Register(0x5b,[this](std::uint32_t,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->ReceiveGeyserMined(packet); });
+    dispatch.Observe(0x60,{});dispatch.Version(0x60,1,0);dispatch.RequireLength(0x60,10);
+    dispatch.Register(0x60,[this](std::uint32_t owner,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->carrierSteal->Receive(owner,0,packet); });
 }
 // 원본 부모 설치 전의 임의 공간 쓰기를 거부하며 같은 현재 noIsland 전역으로 요청을 구성한다.
 bool RawCampaignSession::ConfirmSupport(float x,float y) {
@@ -1936,4 +1967,6 @@ RawSurfaceWorld& RawCampaignSession::World() { return impl_->world; }
 RawWorldCore RawCampaignSession::Core() { return impl_->core; }
 const SquidReward& RawCampaignSession::HitPoints() const { return impl_->hp; }
 const RawPriestWorldBindings& RawCampaignSession::Priests() const { return *impl_->priests; }
+// 같은 현재 포획 몸체를 실제 요청과 수신 검사에서 빌린다.
+const RawCarrierSteal& RawCampaignSession::CarrierSteal() const { if (!impl_->loaded || !impl_->carrierSteal) throw std::logic_error("미설치 Session의 크랩 포획");return *impl_->carrierSteal; }
 }

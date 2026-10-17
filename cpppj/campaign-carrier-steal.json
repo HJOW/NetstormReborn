@@ -1,0 +1,154 @@
+{
+  "unit": 157,
+  "date": "2026-10-18",
+  "host": "HJOW-Athlon",
+  "baseCommit": "562c41c",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16"
+  },
+  "status": "크랩포획및전용배치후처리단위완료/11스테이지전체목표진행중",
+  "currentSources": {
+    "cpppj/src/o/RawCarrierSteal.h": "1612395f673dbda326b350eeb1cbf76a32a5a727569132355c4f0a486c7bcc9b",
+    "cpppj/src/o/RawCarrierSteal.cpp": "fd25cb306d2a4acd19f619d59e141254cc69346c3f0d27e7acbb25cbd776af07",
+    "cpppj/src/o/SquidPostPop.cpp": "7c2546f934c29f70166f65679bfc1a5a01848262bfae0435a212aab9aa646774",
+    "cpppj/src/o/SquidPostPop.h": "ae4a1fcf045c5beb06494a74cb18681c7ea74586335233bc161af278ed4b2601",
+    "cpppj/src/client/RawCampaignSession.cpp": "4ea0f98026d11d31d4b4489e7305dded7410bcbc88019b0350669697a74cf717",
+    "cpppj/src/client/RawCampaignSession.h": "a1ef8a6b33b728349b4cdbda634429586c5bfae667f857d0ecafe13e839c728d",
+    "cpppj/src/CMakeLists.txt": "dd084a63fc35b0e37bbb5158c7c52939eebe837ed989d398fc8451029009758d",
+    "cpppj/tests/CMakeLists.txt": "64d386fa1beb0f16fea3870ea77d566b12215711210fde2ba97b4896ba03b2c8",
+    "cpppj/tests/CampaignSessionTests.cpp": "93c2af1fd85f09ab6cef74dc66a4733bbd9947c9ec8961df46f104fab92a973e",
+    "cpppj/tests/CarrierStealTests.cpp": "233fe7aba55a5c620a6f7440f4c0a6838dfec54d868b33243305e66e1fbd8ebf",
+    "tools/decomp_carrier_steal.py": "a6e7171636127f108fec09bb01c1fefaf2d3d9c201c8d1fcbda3bf11df4e39f5",
+    "docs/exe/cpp-carrier-steal-20261018.md": "dbc0c8d971ec93269fa1017ecb54da31046a69d16bdd637d86e0dfbb4cd05d76",
+    "cpppj/src/o/RawCarrierPostPop.cpp": "606eb9914b4a961aa2573e4699f3dbeef615d087deb0b0e3f2a53a0678240544",
+    "cpppj/src/o/RawCarrierPostPop.h": "472a1c7d60d4fa9b3514027455b6983018c2f862554b2944eeb653042e9f4282",
+    "cpppj/src/o/RawCarrierRegular.cpp": "a164805423a92cef4e3d6dcf26571cbc0931c08db0a506cad72f80c4206501be",
+    "cpppj/src/o/RawCarrierContentNotice.cpp": "b4c012ea2966e432fd60c4beb65de3e0a3a73df6ff9d64a798bd6bcb5e468599",
+    "cpppj/src/o/SquidForms.cpp": "013e35f13121c1447cee1b00014e2bcdd453c0ab29207af05e2fe1345d574080",
+    "cpppj/src/o/RawContainedCreate.cpp": "54ac5f440300896af9fc25bfc98315ae5efe3e99b393fce348f006e09c3cbf97",
+    "cpppj/src/o/RawSquidFinder.cpp": "f7947c488c45aa7632d0a705a863c0fe5262c3ea1c29c17ea23c56ed4249e4e2"
+  },
+  "nativeReports": {
+    "cpppj/carrier-steal.json": "132c41c2ae50f3720c9353ff509c34d6c4d1bbde235b1d04d8381e8ea3538583"
+  },
+  "nativeContext": {
+    "uniqueInputs": 1105,
+    "normalReturns": 2210,
+    "instructions": 182586,
+    "nativeCalls": {
+      "00429ed0": 1046,
+      "004ac200": 1432,
+      "0040acf0": 388,
+      "004df230": 388,
+      "004267c0": 772,
+      "0042ab80": 240,
+      "0042abb0": 600
+    },
+    "precisionDifferentInputs": [],
+    "virtualTable": {
+      "0x10": "0x4af780",
+      "0x14": "0x426890",
+      "0x18": "0x44b9e0",
+      "0x20": "0x42abb0",
+      "0x24": "0x429560",
+      "0x38": "0x42ab80",
+      "0x7c": "0x44b2b0",
+      "0x80": "0x4ad0f0",
+      "0x84": "0x4ad110",
+      "0xcc": "0x426fc0"
+    },
+    "boundaries": "429ed0/4267c0/42ab80/42abb0/40acf0/4df230/4ac200 전체. 일반 finder/내용물 조회/가상 detach·attach/426080 예약/전역 음향/송신/타입 getter/이동 매핑·삭제/귀환/공통Halt/new28/Regular생성/가상check/DamageablePostPop은 명시 효과 경계다. C++에서는 실제 일반 finder를 재사용한다. GP/retN/SEH/canary/x87/코드·읽기·쓰기 범위를 검사했다. 전체 경제/자연 채취·완주/게임 창 실행 검증이 아니다."
+  },
+  "protected": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "AGENTS.md": "7addbf9b31c42f29aab7c93faa865eb6de8590a600d17202a297cf7122bdf979",
+    "LEFT_JOBS.dotnetpj.md": "0c067e1d12879dbf2212cbd64c8f9f60e65b590df910418f025027ed84f80ec2"
+  },
+  "originalFixtureBeforeCppReplaySha256": "1229ca074c9db61da8cacbbe8f8f5510bd69fe4baa0432037f7b0631db08cbb8",
+  "compiledNormalizedSources": {
+    "cpppj/src/o/SquidPostPop.cpp": "aafcfee9aa4bc490e68f04af918e2e57406c40071949bdab6c1d004ed3d4289c",
+    "cpppj/src/o/SquidPostPop.h": "d6d8e6c15c2b60eb5dbf4efe78be6fd4f37fcc39dd9f14aabc9dcfbf716c8f9a"
+  },
+  "validation": {
+    "release": {
+      "builds": [
+        "build3",
+        "build4",
+        "build5"
+      ],
+      "warnings": 0,
+      "errors": 0
+    },
+    "focused": {
+      "tests": 3,
+      "failedChecks": 0,
+      "exitCode": 0
+    },
+    "full": {
+      "tests": 1628,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "seconds": 201.5,
+      "ctestSeconds": 201.54
+    },
+    "audit": {
+      "tools": 78,
+      "passed": 67,
+      "knownFailures": 11,
+      "newFailures": 0
+    },
+    "references": {
+      "pop": 4600,
+      "postPop": 984,
+      "carrierPostPop": 7344,
+      "passed": 3
+    },
+    "entry": {
+      "passed": 5,
+      "originalsUnchanged": true,
+      "scope": "campaign1-1/1-2 briefing→world와tutorial1~3 briefing"
+    },
+    "pinMaintenance": {
+      "reports": 52,
+      "pins": 163,
+      "history": "현재핀과unit157 추가만역치환하면HEAD의과거전체JSON과동일"
+    }
+  },
+  "integration": [
+    "같은실제생성자/Pop/TYPE156 전용492/1초/46/현재시각",
+    "원본1-1의실제골렘40/BFS/Host 프레임Halt에서크랩포획및같은40 자기삭제",
+    "현재역방향동맹/내용물·부모체인/491/전역소리6인자/소리뒤실제peer 송신/기증자실제이동삭제",
+    "실제60h 등록과ffff 기증자무시/free 무효과/정상내용물재부착/시계·삭제·장부깊이"
+  ],
+  "limitations": [
+    "실제검사의owner3 크랩은현재신전·귀환대상이없다.귀환42와자연왕복검증이아니다.",
+    "크랩42ab80은독립원문재생검증이며실제42 경로가상Halt 연결은남아있다.",
+    "일반428e00의4f/9바이트/서버9 요청및426520 수신은별도미완료다.",
+    "42/38/41 경로·5040c0의42ae80·실제AI 간헐천등록/제거·전략·Client명령소비자·생산·경제·AI·11스테이지승패·저장·다음미션·자연완주·전체동일성은미완료다.",
+    "DirectDraw/10.72/멀티플레이/한국어UI 복원범위를추가하지않았다."
+  ],
+  "logSha256": {
+    "extracted/goal-carrier-steal-20261018-build1.log": "f4f68f08d2e56df137437d8690db00508733dadabf8d23835fc1f22baf564fa8",
+    "extracted/goal-carrier-steal-20261018-build2.log": "0c4e03f9d8b4792a9c6a8bcdb582b2c2c28c4fcd360af012a364620e55623e83",
+    "extracted/goal-carrier-steal-20261018-build3.log": "3c434fafa24e2f2cbe89a478eed7678abc8b7e9cda521379c186ace61433e0ea",
+    "extracted/goal-carrier-steal-20261018-build4.log": "f430d61af6b8987ddf4c6059807bf9551d9f43ef6b798697f6fa03ec98e0f892",
+    "extracted/goal-carrier-steal-20261018-build5.log": "68daf5268753a6f0253917d033a76282e07803e3b45f8c1951a34f7cbc6a3d34",
+    "extracted/goal-carrier-steal-20261018-focused1.log": "b862f90a5bedf281b82a45ab4885aae1bbc5dc3c2beadb90a373b0b2d9fc6eea",
+    "extracted/goal-carrier-steal-20261018-focused2.log": "b3fef26db22c88d08150d84c9575146daa9f60f2cb6cb7eb66b6380cd4419747",
+    "extracted/goal-carrier-steal-20261018-focused3.log": "30745730f0b6e8f138d8a01dfafd61e8b16efbde4398c104c54efdc62aab7eed",
+    "extracted/goal-carrier-steal-20261018-ctest1.log": "fbbef262fb6c010c4cf70d3dec0902e0dd7c8a50bc0112d52a2cf083da06307d",
+    "extracted/goal-carrier-steal-20261018-LastTest.log": "de0ff140875bd4458e1e1bd315eff17e0a1d5d0b962969abaf851bc43abb5104",
+    "extracted/goal-carrier-steal-20261018-native1.log": "3be87ea251202e29dcc971860844aa44ee09484b061ecd3bbe17288c223cb33e",
+    "extracted/goal-carrier-steal-20261018-native2.log": "90f979addc2eb5f3f9adfc847ead83463dec5e8ce065d82c65f598a059718132",
+    "extracted/goal-carrier-steal-20261018-native3.log": "90f979addc2eb5f3f9adfc847ead83463dec5e8ce065d82c65f598a059718132",
+    "extracted/goal-carrier-steal-20261018-native4.log": "e72e94aaa1fc2ebb8033cfdab87ac9b5deed55d568567de2f9ee9dd588e38820",
+    "extracted/goal-carrier-steal-20261018-native5.log": "e72e94aaa1fc2ebb8033cfdab87ac9b5deed55d568567de2f9ee9dd588e38820",
+    "extracted/goal-carrier-steal-20261018-verify-final.json": "1639749cc914373e4aeb8aea56932f4dc63d58b68b78a94678c97c61f3ab0f05",
+    "extracted/goal-carrier-steal-20261018-postpop-reference-audit.json": "e296db6ab08f50ac8e4551164774eaffe18f71be6bf3ea2a5b3fcace87062225",
+    "extracted/goal-carrier-steal-20261018-compiled-source-normalized.json": "090cddb6576d24e2c8b986571ab5bd040953fe04af0ac8690769ac33f40b6915",
+    "extracted/goal-carrier-steal-20261018-entry/results.json": "21e3e1b65b367ce32f1640c2b5df437763c315beab6ff08f447d2911fa7fe1e0"
+  }
+}

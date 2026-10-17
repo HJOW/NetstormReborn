@@ -1428,3 +1428,8 @@ set_source_files_properties(GeyserLifetimeTests.cpp PROPERTIES COMPILE_DEFINITIO
 target_sources(netstorm_tests PRIVATE CarrierEscapeTests.cpp)
 set_source_files_properties(CarrierEscapeTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_CARRIER_ESCAPE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/carrier-escape-x86.tsv\"")
+
+# 실제 크랩 포획/수신 원문과 같은 전체 효과를 대조한다.
+target_sources(netstorm_tests PRIVATE CarrierStealTests.cpp)
+set_source_files_properties(CarrierStealTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CARRIER_STEAL_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/carrier-steal-x86.tsv\"")

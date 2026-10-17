@@ -1,0 +1,45 @@
+{
+  "virtualTable": {
+    "0x10": "0x4af780",
+    "0x14": "0x426890",
+    "0x18": "0x44b9e0",
+    "0x20": "0x42abb0",
+    "0x24": "0x429560",
+    "0x38": "0x42ab80",
+    "0x7c": "0x44b2b0",
+    "0x80": "0x4ad0f0",
+    "0x84": "0x4ad110",
+    "0xcc": "0x426fc0"
+  },
+  "host": "HJOW-Athlon",
+  "date": "2026-10-18",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16"
+  },
+  "uniqueInputs": 1105,
+  "normalReturns": 2210,
+  "instructions": 182586,
+  "nativeCalls": {
+    "00429ed0": 1046,
+    "004ac200": 1432,
+    "0040acf0": 388,
+    "004df230": 388,
+    "004267c0": 772,
+    "0042ab80": 240,
+    "0042abb0": 600
+  },
+  "precisionDifferentInputs": [],
+  "boundaries": "429ed0/4267c0/42ab80/42abb0/40acf0/4df230/4ac200 전체. 일반 finder/내용물 조회/가상 detach·attach/426080 예약/전역 음향/송신/타입 getter/이동 매핑·삭제/귀환/공통Halt/new28/Regular생성/가상check/DamageablePostPop은 명시 효과 경계다. C++에서는 실제 일반 finder를 재사용한다. GP/retN/SEH/canary/x87/코드·읽기·쓰기 범위를 검사했다. 전체 경제/자연 채취·완주/게임 창 실행 검증이 아니다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "tools/decomp_carrier_steal.py": "a6e7171636127f108fec09bb01c1fefaf2d3d9c201c8d1fcbda3bf11df4e39f5",
+    "tools/decomp_carrier_falling.py": "f8702db0708a543b73213c8df9154503afe977767a11bd7c150b639ee1b587a6",
+    "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "tools/decomp_cursor_position.py": "e15bcdbc4c6be9c131c30f15416c945d650dba9f7dc6def404b47f63c635c212",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "cpppj/tests/fixtures/carrier-steal-x86.tsv": "1229ca074c9db61da8cacbbe8f8f5510bd69fe4baa0432037f7b0631db08cbb8"
+  }
+}

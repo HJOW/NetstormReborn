@@ -10,6 +10,7 @@ namespace netstorm::o {
 class RawPriestPostPopTail;
 class RawForcefieldPostPop;
 class RawCarrierPostPop;
+class RawCarrierSteal; // 크랩의 전용492예약과공통후처리몸체다.
 class RawAssetPostPop;
 class RawFactoryPostPop;
 class RawRunePostPop; // Rune166의 실제304/건설/공통후처리몸체를명시연결한다.
@@ -75,6 +76,8 @@ public:
     bool HandlesForcefield(Sid sid) const;
     // 실제 +0x20이 Damageable/Carrier 몸체인 가상 표를 같은 풀의 완성한 몸체에 연결한다.
     // 해당 몸체의 base 경계는 이 객체의 PostPopBase여야 하며 nullptr은 연결을 해제한다.
+    void SetCarrierStealPostPop(const RawCarrierSteal* postPop); // 같은풀의크랩전용몸체를등록하며nullptr은해제한다.
+    bool HandlesCarrierSteal(Sid sid) const; // 등록과실제VT503f20을모두검사한다.
     void SetCarrierPostPop(const RawCarrierPostPop* postPop);
     // 가상 표가 직접 Carrier 후처리를 사용하며 그 전체 몸체가 연결됐는가.
     bool HandlesCarrier(Sid sid) const;
@@ -144,6 +147,7 @@ private:
     std::function<void(Sid,std::uint32_t)> surfacePrefix_; // noIsland 최초 등록의 프레임/받침/소유자 효과.
     const RawPriestPostPopTail* priestPostPop_{}; // 전체 wrapper다. 접두처럼 공통 장부를 추가 호출하지 않는다.
     const RawForcefieldPostPop* forcefieldPostPop_{}; // 예약 접두 뒤 공통 후처리는 이 인스턴스가 한 번 호출한다.
+    const RawCarrierSteal* carrierStealPostPop_{}; // 크랩의 실제 파생 후처리이며 직접Carrier몸체와구별한다.
     const RawCarrierPostPop* carrierPostPop_{}; // 직접 Damageable/Carrier 가상 후처리다. 파생 재정의는 별도로 복원한다.
     const RawAssetPostPop* assetPostPop_{}; // 초기 요새 건물의 전체 후처리다. 내부에서 공통 깊이를 한 번 줄인다.
     const RawFactoryPostPop* factoryPostPop_{}; // 같은 해시/목록의 Factory wrapper를 실행하고 공통 깊이를 한 번 줄인다.

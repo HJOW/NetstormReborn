@@ -3,6 +3,7 @@
 #include "o/RawPriestPostPopTail.h"
 #include "o/RawForcefieldLifecycle.h"
 #include "o/RawCarrierPostPop.h"
+#include "o/RawCarrierSteal.h"
 #include "o/RawAssetPostPop.h"
 #include "o/RawFactoryPostPop.h"
 #include "o/RawRunePostPop.h"
@@ -77,7 +78,7 @@ bool SquidPostPop::HandlesIsland(Sid sid) const {
     return islandPrefix_ && Vtable(pool_.Slot(sid))==expected;
 }
 // 파생 표는 서로 다른 주소이므로 한 종류만 참이 된다.
-bool SquidPostPop::HandlesDerived(Sid sid) const { return HandlesBridge(sid) || HandlesIsland(sid) || HandlesSurface(sid) || HandlesPriest(sid) || HandlesForcefield(sid) || HandlesCarrier(sid) || HandlesDamageable(sid) || HandlesAsset(sid) || HandlesFactory(sid) || HandlesRune(sid) || HandlesDais(sid) || HandlesDude(sid) || HandlesPlayer(sid) || HandlesBuried(sid) || HandlesFlyer(sid); }
+bool SquidPostPop::HandlesDerived(Sid sid) const { return HandlesCarrierSteal(sid) || HandlesBridge(sid) || HandlesIsland(sid) || HandlesSurface(sid) || HandlesPriest(sid) || HandlesForcefield(sid) || HandlesCarrier(sid) || HandlesDamageable(sid) || HandlesAsset(sid) || HandlesFactory(sid) || HandlesRune(sid) || HandlesDais(sid) || HandlesDude(sid) || HandlesPlayer(sid) || HandlesBuried(sid) || HandlesFlyer(sid); }
 // 단일 풀과 실제 전체 몸체 둘 다 확인한다.
 void SquidPostPop::SetFlyerPostPop(const RawFlyerPostPop* postPop) { if (postPop && &postPop->Pool()!=&pool_) throw std::invalid_argument("비행 PostPop/공통 풀 불일치");flyerPostPop_=postPop; }
 bool SquidPostPop::HandlesFlyer(Sid sid) const { return flyerPostPop_ && flyerPostPop_->Handles(sid); } // 다른 비행 파생 표를 임의로 허용하지 않는다.
@@ -127,6 +128,10 @@ void SquidPostPop::SetAssetPostPop(const RawAssetPostPop* postPop) {
 }
 // 전용 body의 PE 가상 표 조회를 사용한다. 등록된 객체의 Validate가 필요한 외부 효과도 검사한다.
 bool SquidPostPop::HandlesAsset(Sid sid) const { return assetPostPop_ && assetPostPop_->Handles(sid); }
+// 크랩의 별도492예약을 생략하지 않도록 직접Carrier 표를 확장하지 않는다.
+void SquidPostPop::SetCarrierStealPostPop(const RawCarrierSteal* postPop) { if (postPop && &postPop->Pool()!=&pool_) throw std::invalid_argument("크랩 PostPop/공통 풀 불일치");carrierStealPostPop_=postPop; }
+// 실제 등록한 같은풀/정확한가상표만 지원한다.
+bool SquidPostPop::HandlesCarrierSteal(Sid sid) const { return carrierStealPostPop_ && carrierStealPostPop_->Handles(sid); }
 // 기존 직접 호출 몸체를 같은 월드의 가상 분배에 연결한다. 주소 표만으로 미연결 효과를 허용하지 않는다.
 void SquidPostPop::SetCarrierPostPop(const RawCarrierPostPop* postPop) {
     if (postPop && &postPop->Pool()!=&pool_) throw std::invalid_argument("Carrier Pop/후처리 풀 불일치");
@@ -281,6 +286,11 @@ void SquidPostPop::Activate(Sid sid,std::uint32_t flags) {
         priestPostPop_->PostPop(sid,flags);
         if (state_.depth!=before) throw std::logic_error("사제 Activate 공통 깊이 불일치");
         return;
+    }
+    // 크랩은492예약/현재검사뒤자체내부에서공통장부를한번실행한다.
+    if (HandlesCarrierSteal(sid)) {
+        carrierStealPostPop_->PostPop(sid,flags);
+        if (state_.depth!=before) throw std::logic_error("크랩 Activate 공통 깊이 불일치");return;
     }
     // 두 직접 몸체도 같은 flags의 공통 장부를 내부에서 한 번 호출한다.
     if (HandlesCarrier(sid) || HandlesDamageable(sid)) {

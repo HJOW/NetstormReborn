@@ -13,6 +13,7 @@
 #include "o/RawMissionAiSettings.h"
 #include "o/RawGeyserAiRegistration.h"
 #include "o/RawSunAviaryProcess.h"
+#include "o/RawCarrierSteal.h"
 #include "client/RawShapeToBuffer.h"
 #include "client/OwnerColorMaps.h"
 #include <unordered_set>
@@ -1359,4 +1360,33 @@ TEST_CASE(CampaignSession_CarrierMiningRegisteredReceiverExhaustsGeyser) {
     auto geyserRaw=core.pool.AllocatedBytes(geyser);const auto oldState=geyserRaw[11];geyserRaw[11]|=1;const auto notices=external.notices;CHECK(dispatch.Dispatch(connection,packet));CHECK(Get(core.pool.Slot(geyser),12,2)==200 && external.notices==notices);geyserRaw[11]=oldState; // free 상태의 무효과를 확인한 뒤 원래 살아 있는 상태로 복구한다.
     CHECK(dispatch.Dispatch(connection,packet));CHECK(received.size()==2 && received[0]==std::vector<std::uint8_t>(packet.begin(),packet.end()) && connection.depth==0);
     CHECK((core.pool.Slot(geyser)[11]&3)!=0 || core.pool.Slot(geyser)[10]!=122);CHECK(session.CarrierChoice().ChooseGeyser(golem)!=geyser);CHECK(external.notices>notices);CHECK(core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0 && core.bookkeeping.depth==0);
+}
+
+// 실제1-1의 내용물을 크랩으로 옮기고 원래 기증자의 실제40 경로와 송신 전 효과를 검사한다.
+TEST_CASE(CampaignSession_CarrierStealUsesActualContentMovementAndReceiver) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();
+    std::vector<std::array<std::uint32_t,6>> sounds; // 실제 장치 경계의 원본6인자다.
+    services.sound.play=[&](SoundHandle sound,std::uint32_t loop,std::uint32_t volume,std::uint32_t pan,std::uint32_t priority,std::uint32_t limit) { sounds.push_back({sound,loop,volume,pan,priority,limit});return sound; };
+    RawCampaignSession* current{};Sid crab{},donor{},content{};std::vector<std::vector<std::uint8_t>> sent;bool attachedAtSend{},soundAtSend{}; // 송신 시점의 같은 실제 체인/소리 상태다.
+    services.battlePeers[2]=[&](std::span<const std::uint8_t> packet) { if (packet.size()==10 && packet[1]==0x60) { sent.emplace_back(packet.begin(),packet.end());attachedAtSend=SquidForms(current->Core().pool).Parent(content)==crab;soundAtSend=!sounds.empty() && sounds.back()[0]==external.names.Lookup("crabSteal.wav"); } };
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));current=&session;CHECK(Throws([&] { static_cast<void>(session.CarrierSteal()); }));session.Load();auto core=session.Core();
+    const Sid priest{static_cast<std::uint16_t>(session.FindPriestParticipation(1))};CHECK(priest.value);if (!priest.value) return;const auto raw=core.pool.Slot(priest);const RawPathPoint point{std::bit_cast<float>(Get(raw,14)),std::bit_cast<float>(Get(raw,18))};
+    // 세번째owner에는 현재 신전/귀환 대상이 없다.42 경로 미복원을 우회하는 대체 경로를 공급하지 않는다.
+    crab=session.World().Create(156,2);donor=session.World().Create(133,2);
+    // 같은 실제 지면/해시에서 두 운반체를 생성·소유한다.
+    for (const auto sid:{crab,donor}) { session.World().Pop(sid,point.x,point.y,0);core.owner.Set(sid,sid==crab ? 3U : 2U); }
+    const auto* timer=core.processes.FindEvent(crab,0x492);CHECK(timer && timer->Payload()==1.0F && timer->Time()==core.processState.now);if (timer) CHECK(core.pool.Slot(timer->Form())[10]==46);
+    CHECK(session.StartCarrierMovement({donor,point,1,0,0,0,0}));RawContainedLookup lookup(core.pool,[](Sid,std::uint32_t) { throw std::logic_error("포획 검사 조회에서 삭제 금지"); });const auto oldPath=lookup.Find(donor,40);CHECK(oldPath.value);
+    content=session.CreateContained(donor,154,0,0x20,0,0);CHECK(SquidForms(core.pool).Parent(content)==donor);const auto before=session.Sp(3);
+    // 실제 역방향만 적대다. 정방향의 동맹값은 포획을 금지하지 않는다.
+    session.Alliances()[3*9+2]=1;session.Alliances()[2*9+3]=0;auto players=session.PlayerRecords();players[2*0xb4+0x50]|=1;
+    auto* moving=dynamic_cast<RawPathProcess*>(core.processes.FromForm(oldPath));CHECK(moving && !moving->Runtime().Finished());if (!moving) return;
+    moving->RunFrame(); // 실제40의Halt가포획을실행하며같은40이삭제된다.복귀뒤포인터를읽지않는다.
+    CHECK(attachedAtSend && soundAtSend && sent.size()==1);CHECK(SquidForms(core.pool).Parent(content)==crab);CHECK(!lookup.Find(donor,40).value && !core.processes.FromForm(oldPath));CHECK(session.Priests().Carrier().FindContained(crab,0x20,0,0)==content);CHECK(!session.Priests().Carrier().FindContained(donor,0x20,0,0).value);CHECK(session.Sp(3)==before);
+    CHECK(!sounds.empty() && (sounds.back()==std::array<std::uint32_t,6>{external.names.Lookup("crabSteal.wav"),0,0,0,1,0}));const auto* preview=core.processes.FindEvent(crab,0x491);CHECK(preview && preview->Event()==0x491);
+    CHECK(session.CarrierSteal().Try(crab)==10 && sent.size()==1);CHECK(&session.CarrierSteal().Pool()==&core.pool);
+    // 원본60h 수신은 기증자WORD를 무시하고 현재 두free 비트만 관문으로 사용한다.
+    std::vector<std::vector<std::uint8_t>> recorded;RawPacketDispatch dispatch(OriginalEdition::Patch1078,CommandDevice(recorded));session.RegisterCarrierCommands(dispatch);const auto& registration=dispatch.Registration(0x60);CHECK(registration.length==10 && registration.version==1 && registration.mismatch==0 && !registration.observer);
+    std::array<std::uint8_t,10> packet{1,0x60,10,0};Put(packet,4,donor.value,2);Put(packet,6,content.value,2);Put(packet,8,0xffff,2);PacketConnection connection;connection.sender=8;auto bytes=core.pool.AllocatedBytes(content);const auto state=bytes[11];bytes[11]|=1;const auto count=sounds.size();CHECK(dispatch.Dispatch(connection,packet));CHECK(Get(core.pool.Slot(content),16,2)==crab.value && sounds.size()==count);bytes[11]=state;
+    CHECK(dispatch.Dispatch(connection,packet));CHECK(SquidForms(core.pool).Parent(content)==donor && sounds.size()==count+1 && recorded.size()==2 && connection.depth==0);CHECK(core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0 && core.bookkeeping.depth==0);
 }
