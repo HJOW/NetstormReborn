@@ -54,10 +54,10 @@ struct CursorDropHooks {
     std::function<void(std::uint32_t,o::Sid)> guiReceive; // Gump +0x28: 내려놓은 미리보기 SID를 통지한다.
     std::function<void(std::uint32_t,std::uint32_t,std::uint32_t)> returnPiece; // 기존 WORD 플래그·두 번째 연관 번호·품질.
     std::function<void(std::uint32_t)> activatePreview,selectCursor; // 00445aa0 / CD 0043cf40 및 하드웨어 커서 선택.
-    // refresh: 변경한 대상의 현재 상태를 갱신하는 콜백.
+    // refresh: 원본004d5c90의 실제 선택 변경이다. Drop은(0,0,1)로 선택을 해제한다.
     std::function<void(std::uint32_t,std::uint32_t,std::uint32_t)> refresh;
-    // closeGump: 연결된 Gump를 닫는 콜백.
-    std::function<void(std::uint32_t,std::uint32_t,std::uint32_t,std::uint32_t)> closeGump; // Gump +0x1c(3,0,0).
+    // closeGump: 현재 cursorManaProcess의 가상+1c에(3,0,0)을 보내는 콜백이다. UI 토큰과 구별한다.
+    std::function<void(std::uint32_t,std::uint32_t,std::uint32_t,std::uint32_t)> closeGump;
 };
 // raw Form 필드와 현재 커서 전역을 사용한다. 실제 입력/GUI 루프 연결은 이 몸체와 별도다.
 class RawCursorDrop {

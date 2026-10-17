@@ -60,12 +60,12 @@
     "fixture_identical_after_output_encoding_update": true,
     "cursor_intermittent_failure_root_cause_unresolved": true,
     "sha256": {
-      "cpppj/src/client/RawObjectMenu.h": "41436f4f64e69da224fe045ff4bc4a68352e603d61ed342d7f29a3075645c082",
-      "cpppj/src/client/RawObjectMenu.cpp": "ef92b668ec60c211d8a54722f864664d4262a25358ce0f2b1aaa95d572a558d5",
+      "cpppj/src/client/RawObjectMenu.h": "47fa941dc9fe3becb679f297ea29c8f7cc662aa44d1e6f91c5643739aa905e9a",
+      "cpppj/src/client/RawObjectMenu.cpp": "f64429574e0fd57e325cd99b47e3c46197979b5047d879b1a9693fda7d58a1ef",
       "cpppj/tests/ObjectMenuTests.cpp": "7485055d8b76db99eb8e2fc117f9d89eb4892c2620112c1afbb1ed267710aa37",
       "cpppj/tests/RawMenuControlsTests.cpp": "df26ef116d9971df27bf12f1f857a398dec99ecfe0d72d82c13600244b17d1dd",
       "cpppj/src/client/CMakeLists.txt": "8bb17d335554c16e6ff3300134492a264bfa425dfafd52062ecf0062f523d87c",
-      "cpppj/tests/CMakeLists.txt": "f983e4d12e69969ad3b6739ed71b19c0c831d1e3bc83ec3b2b6d074bb6caa4e4"
+      "cpppj/tests/CMakeLists.txt": "fe85134c12002da7e8271c43680ab1a254d34413ea3b5d187fb763ef493991ae"
     }
   },
   "integration_updates": [
@@ -349,6 +349,28 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "539635dedf774da6163e0702fa0f076db8fb6398b5b7b7de02af2509a255a7d5",
           "current": "f983e4d12e69969ad3b6739ed71b19c0c831d1e3bc83ec3b2b6d074bb6caa4e4"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 137,
+      "reason": "현재 Client 커서 장치와 실제 Gump 트리·강조·프로세스 통지 연결",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "f983e4d12e69969ad3b6739ed71b19c0c831d1e3bc83ec3b2b6d074bb6caa4e4",
+          "current": "fe85134c12002da7e8271c43680ab1a254d34413ea3b5d187fb763ef493991ae"
+        },
+        {
+          "path": "cpppj/src/client/RawObjectMenu.h",
+          "previous": "41436f4f64e69da224fe045ff4bc4a68352e603d61ed342d7f29a3075645c082",
+          "current": "47fa941dc9fe3becb679f297ea29c8f7cc662aa44d1e6f91c5643739aa905e9a"
+        },
+        {
+          "path": "cpppj/src/client/RawObjectMenu.cpp",
+          "previous": "ef92b668ec60c211d8a54722f864664d4262a25358ce0f2b1aaa95d572a558d5",
+          "current": "f64429574e0fd57e325cd99b47e3c46197979b5047d879b1a9693fda7d58a1ef"
         }
       ]
     }

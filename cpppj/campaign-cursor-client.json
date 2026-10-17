@@ -1,0 +1,158 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-17",
+  "unit": 137,
+  "baseCommit": "f69dc67",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16"
+  },
+  "currentSources": {
+    "cpppj/src/CMakeLists.txt": "f307d187ef0cc892334c74198407070df34d9b5df08502b579cad1135c19685b",
+    "cpppj/src/client/CampaignCursorClientEffects.cpp": "f062844066e8db3e6419aa2cf9ac4c9043188f2d95ed0a274de8b0f8c23c2ffa",
+    "cpppj/src/client/CampaignCursorClientEffects.h": "4ae92870ccfc7e2431bad380e4b4858a020d59af221c001c7c47b5c4ff266328",
+    "cpppj/src/client/GameWorld.cpp": "6f1c2bb5a44a98039f2c0709164ec27911fa0893282377120c35e5e05fd3b7fa",
+    "cpppj/src/client/GameWorld.h": "a8606419c9753965231813d4cc5391614a4b892ac1d716b534ef5b84c88b79f3",
+    "cpppj/src/client/RawButtonControls.cpp": "07b2dcb3c2d1b55ad6e149ffe3844d28b3d63d14c72df1daed10b5d0e365c465",
+    "cpppj/src/client/RawButtonControls.h": "09953758c00910471eae95308233eaa13d1e894e3118285b62fe643e5148585a",
+    "cpppj/src/client/RawCampaignCursor.cpp": "d1c12ed9e16c11771470abfae09d0a2bfccda51dc49be5b90c4a4c78604f961c",
+    "cpppj/src/client/RawCampaignCursor.h": "0c4aa17d5acf5cd03fd9d651c33de2fedd115c622e9f75f1c469edb462c775ce",
+    "cpppj/src/client/RawCampaignSession.cpp": "a5f5f1f43b329dee360ef78172a1a83eb42a078e5356a54a2c0c8f5e0fa5b88f",
+    "cpppj/src/client/RawCampaignSession.h": "3f53a60579de94dc4698a34cd2cc7e18973929100c108b5fa758d89976e6bb1b",
+    "cpppj/src/client/RawCarrierMenu.cpp": "4a0fada9b8ac9d00eab37955189a8ac669d26f1d22559deae229a6ce3637dc1e",
+    "cpppj/src/client/RawCarrierMenu.h": "e4ef0cccd8c956ccf6c167a7b08e0a9350f46206e08a9670dbaed6272d7749d8",
+    "cpppj/src/client/RawCursorDrop.h": "61de4218af3ad691e3be7a2a56902e5e35c0f7cdc10ba52b858f626010f13e5b",
+    "cpppj/src/client/RawMenuControls.cpp": "ebac0335fa245a15d6441c5d5748103c430f3fcc8b40203f10502bff9b3927d1",
+    "cpppj/src/client/RawMenuControls.h": "d90f553b4597823270fc2a77f9fef575e8cdb3de644ac0da017aace246686fbb",
+    "cpppj/src/client/RawObjectMenu.cpp": "f64429574e0fd57e325cd99b47e3c46197979b5047d879b1a9693fda7d58a1ef",
+    "cpppj/src/client/RawObjectMenu.h": "47fa941dc9fe3becb679f297ea29c8f7cc662aa44d1e6f91c5643739aa905e9a",
+    "cpppj/src/client/RawUserHighlight.cpp": "3ac1867b7da1f553b0fb46103207df3886f31a332e1332456b2590b089438767",
+    "cpppj/src/client/RawUserHighlight.h": "a19046a0a3061565a82b7463307e4886c3b9f6db0151d02ada619d5a32c3f90a",
+    "cpppj/src/client/UberGump.cpp": "d9304a5e1c2f15d39f78baf85af69bbfa7cfd1b68819e8a83f5298eec7c07432",
+    "cpppj/src/client/UserInput.cpp": "9575d895408cb355415abb025d1eda5dab8267be63a450864ecd3e6a00d6c5bb",
+    "cpppj/src/o/SquidFactory.h": "439126b14875597ae876ab82d1699d414fa15fdf76ec9ac83f6794d32595c549",
+    "cpppj/src/o/SquidReward.h": "59cf154a0aa681fbce7bdf445728afc582409bd9af9b24e5b135e435e92aa362",
+    "cpppj/tests/CMakeLists.txt": "fe85134c12002da7e8271c43680ab1a254d34413ea3b5d187fb763ef493991ae",
+    "cpppj/tests/CampaignCursorClientEffectsTests.cpp": "a87b47e02dfd422019acca2efccc9899b937a33057552b177e182d9ea0f1794b",
+    "cpppj/tests/CampaignObjectMenuTests.cpp": "80bc0749d476597ba6ecf75f396da025ee7fafe7666eaf6e7e6dd3212125ab2c",
+    "cpppj/tests/CampaignSessionTests.cpp": "964400205960599492a269d374aaaa7e46ff7f7b6e3968a992d0a447dc16bf2a",
+    "cpppj/tests/RawButtonCursorBoundaryTests.cpp": "1f24a7464493536890611554b51d41bdeb477fa23190a909933ebd0ef1873684",
+    "cpppj/tests/UserHighlightTests.cpp": "a23f97791f61415d333d3d99b33ec56e6ec67423a021da43473934fadd3a57ab",
+    "cpppj/tests/fixtures/user-highlight-x86.tsv": "e1d0bc9dbf434de9c897a6fcac4af50f2be637318ab3a52d3795273cf734ed78"
+  },
+  "protectedFileSha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6"
+  },
+  "source_sha256": {
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/refined/originalCD/Netstorm.c": "9306f621576571c85280f9e25f024e3ec8b7b68c5c8ec6731c1f109dc3f25ebb",
+    "extracted/refined/originalCD/functions.tsv": "453aa383c27baf8eefa00d97bf44051d18460150556511c2eb7a46f111e92def"
+  },
+  "nativeReports": {
+    "cpppj/user-highlight.json": "58c4ed2e84402b0f42ee0761dc7e77e452855d21e7ca29ef9e6e4e56acd929ea"
+  },
+  "nativeContext": {
+    "entries": [
+      "004d5480",
+      "004d5bb0"
+    ],
+    "uniqueInputs": 178,
+    "normalReturns": 356,
+    "instructions": 6296,
+    "precisionDifferentInputs": [],
+    "boundaries": "커서 장치/역투영/이동 강조는 명시 경계이며 실제 선택 SID를 지우지 않음. 모드5는 역투영 이전 선택 스냅샷을 유지. 새 실행10.78전용; CD41ad10은 기존 정밀 C 기록만 보존."
+  },
+  "integration": {
+    "client": "실제 UberGump의 SetEffects; 같은 현재 Cursor/FontStore/원본 번역바이트/폴링/Renderer dirty",
+    "gumps": "465ed0 직계 Pick;4651b0 자식우선 성공토큰;+24 게임SID;직접+28의DWORD;sticky Kill 예약과 지연 Cleanup",
+    "replacement": "교체 후 고정 마우스의 GumpsChanged가 기존 Query/dirty/커서선택을 재실행; 폐기 토큰의 깊이를 합성하지 않음",
+    "highlight": "같은 GameWorld 선택의 참조와 별도 강조/TYPE/현재 폴링좌표; 실제 모드5 이동 강조 하위는 미연결",
+    "process": "Drop.closeGump는 같은 game.lifecycle.processEvent/실제 Host·Kernel Mana/Range Notify(3,0,0); 외부 UI 콜백 미사용",
+    "menus": "같은 세션 사제→Carrier→Damageable→객체→Player +a8 작성 체인/기술·SP·HP·배치·실제 커서 취득. +ac 공통Open/자연UI 명령 소비는 미완료.",
+    "modes": "Player 메뉴 fort 경계는 fa0=core.bridgeState.mission; fb8 요새모드/fa4 후처리와 구별",
+    "previewDaisDeletion": "현재 Dais TYPE/VT507950/extra bit8 미리보기만 공통Destroy→DamageablePre→실제 Player +94/+98,+8c/+90의 현재SID 일치쌍 정리→DamageablePost. 일반 Dais 전체 수명은 미연결."
+  },
+  "testInputs": {
+    "menu": "실제 +a8 작성의 제공 건설 행과 현재 SP관문/원본 DWORD/InputQueue/같은 ContentForm 취득; peer22/Player2는 명시 입력이고 실제 로그인 아님",
+    "cursor": "명시128 Form/GUI 수신의 실제 Range 종료 통지; 고정마우스 실제 RawButtonControls 교체 후 수집; 선택 유지/현재 폴링",
+    "limits": "실제 생산 완료/제공 생산 메뉴/로컬 로그인 양끝 송신/사용자 자연 완주를 대신하지 않음"
+  },
+  "validation": {
+    "pending": [
+      "focusedAfterFinalFixtureFix",
+      "ctest",
+      "nativeEvidenceForFinalSources",
+      "cloneEntryForFinalSources"
+    ],
+    "newCases": 14,
+    "releaseBuild": {
+      "latest": 4,
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0,
+      "earlierSuccessfulBuilds": [
+        2,
+        3
+      ],
+      "log": "extracted/goal-cursor-client-20261017-build4.log",
+      "scope": "최종 메뉴 fixture 수정 후 빌드만 완료"
+    },
+    "interruptedBuild": {
+      "number": 1,
+      "reason": "편집 중 소스 재컴파일을 루트 자신의 해당 프로세스만 중지한 뒤 빌드를 다시 시작"
+    },
+    "focused": {
+      "latestRun": "extracted/goal-cursor-client-20261017-focus3-{1..5}.log",
+      "cases": 27,
+      "passed": 26,
+      "failed": 1,
+      "failedCase": "CampaignObjectMenus_ActualChainAndBuildSelection",
+      "failure": "headless MenuServices의 현재 선택 소비자 미연결로 명시 오류",
+      "lastFix": "MenuServices에 현재 선택 getter와 ClearSelection 처리 추가. 실제 GameWorld의 선택 소비자를 기본0으로 대체하지 않음.",
+      "reverifiedAfterLastFix": false,
+      "initialFailures": [
+        "TYPE165 Dais 미리보기 삭제 소비자 미연결",
+        "Range 부모 삭제 후 프로세스가 남는다는 잘못된 검사 기대"
+      ]
+    },
+    "ctest": {
+      "status": "notRun",
+      "expectedRegisteredCases": 1565,
+      "expectedCountIsNotPassCount": true,
+      "reason": "사용자 최종 지시에 따라 다음으로 보류"
+    },
+    "nativeEvidenceVerifiers": 48,
+    "nativeVerifierFailures": 0,
+    "nativeEvidenceScope": "마지막 Dais 미리보기 수정 전 통과. 최종 소스에 대한 재실행은 보류. SHA 핀 갱신은 실행 검증이 아님.",
+    "nativeEvidenceLog": "extracted/goal-cursor-client-20261017-verify-final.log",
+    "cloneEntryRuns": 5,
+    "cloneEntryFailures": 0,
+    "cloneEntryOriginalsUnchanged": true,
+    "cloneEntryBuild": 2,
+    "cloneEntryFinalSourcesReverified": false,
+    "entryScope": "1-1/1-2 브리핑→Play Mission→월드; tutorial1/2/3 브리핑. 마지막 수정 전 결과이며 자연 완주 증거 아님.",
+    "finalVerificationDeferredByUser": true,
+    "stagedAudit": {
+      "status": "passed",
+      "files": 89,
+      "productAndTestFiles": 31,
+      "existingReports": 53,
+      "currentPins": 181,
+      "protectedFileHashes": 3,
+      "scope": "정적 Git 범위·바이트 핀·보호 파일·UTF-8/LF·기존 fixture/CMake/역사 보존. 제품 검사/게임 실행 아님"
+    }
+  },
+  "userPauseRequest": "해당 부분 수정까지만 하고 테스트는 다음으로 넘긴다. 인수인계 문서와 로컬 git 커밋 후 목표 일시중지·종료. 완료한 서브 AI3명은 추가 작업 없이 대기.",
+  "remaining": [
+    "재개 후 CampaignObjectMenus_ 집중 재검증부터 수행. 마지막 fixture 수정은 빌드4만 통과했고 최종 집중/전체 CTest/원본 감사/클론 회귀는 보류.",
+    "원본4adb30 공통+ac/제목4ada70·4ad780(type,count,owner,sid)/425f90/같은Pool GumpFormHost 수명/객체부착 완료 입구·실제 DWORD 명령 소비자",
+    "실제 선택4d5c90/비용 표시/기록/로그인된 LocalMissionTransport 양끝·큐잉·등록 수명",
+    "생산 메뉴·완료/경제/AI/전체Kernel 및 대상11스테이지 자연완주·승패·저장·다음미션·전체동일성"
+  ],
+  "excluded": "전체화면 DirectDraw 수정",
+  "unitStatus": "handedOffWithVerificationDeferredByUser",
+  "localCommitMessage": "20261017-37 CP 현재 커서 장치와 실제 Gump 및 객체 메뉴 체인 연결"
+}

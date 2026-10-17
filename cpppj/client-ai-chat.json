@@ -57,7 +57,7 @@
     "cpppj/src/client/ClientMain.cpp": "ea8cf56db9d82a306fb7d2fcdb66ad5f48ab2d1dd039081dcd6bfd4be13a861d",
     "cpppj/src/client/UberGump.h": "7c4c7164e4966e022f1403a7b76bd1342b7338497764eb68c5c68d4d411222d9",
     "cpppj/src/client/UberGump.cpp": "9e9483f858f612b200ff41e26c7eeacbca7f49dddee1f07b881f3b8e2ca30796",
-    "cpppj/src/client/GameWorld.h": "57adef4cb282f91c27ebdac68846b09883494f8406abdd7517d5267bd44a93fc",
+    "cpppj/src/client/GameWorld.h": "a8606419c9753965231813d4cc5391614a4b892ac1d716b534ef5b84c88b79f3",
     "cpppj/src/client/GameWorld.cpp": "e28f09f0bdf193ead41bfaa6ed683ddd4e2b9225f93aad16246644a6aba3ba89",
     "cpppj/src/client/RawCampaignSession.h": "89619ba3f728dc0bcf084c0f64b229cbc186cc6bdb6793af039475c8a11dccb5",
     "cpppj/src/client/RawCampaignSession.cpp": "22c9e79597673e640901aaca83740237b7c3c3dfd8c341edfae67dff77fdf489",
@@ -112,6 +112,18 @@
         }
       },
       "previous_fixture_preserved": true
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 137,
+      "reason": "현재 Client 커서 장치와 실제 Gump 트리·강조·프로세스 통지 연결",
+      "pins": [
+        {
+          "path": "cpppj/src/client/GameWorld.h",
+          "previous": "57adef4cb282f91c27ebdac68846b09883494f8406abdd7517d5267bd44a93fc",
+          "current": "a8606419c9753965231813d4cc5391614a4b892ac1d716b534ef5b84c88b79f3"
+        }
+      ]
     }
   ]
 }

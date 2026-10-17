@@ -62,6 +62,17 @@ public:
     std::uint32_t RegisteredGump(std::uint32_t id) const;
     // 등록된 대상 자신의 가상+28만 실행한다. 전체 트리 Route/재귀 분배를 수행하지 않는다.
     std::uint32_t HandleGump(std::uint32_t token,std::uint32_t event,std::uint32_t first,std::uint32_t second);
+    // 00465ed0: 루트 직계 자식만 현재 화면 경계/visible/dead/signed 깊이로 고른다. 월드 영역은0이다.
+    std::uint32_t PickGump(ScreenPoint point) const;
+    // 004651b0: 자식 우선의 필터/가상 처리를 실행하고 성공한 Gump 토큰을 반환한다.
+    // 직접 가상 반환이 필요한 커서 허용 플래그/수신은 HandleGump를 사용한다.
+    std::uint32_t DispatchGump(std::uint32_t token,std::uint32_t event,std::uint32_t first,std::uint32_t second,bool includeHidden=false) const;
+    // 원본 +0x24 parentSid를 현재 조회한다. UI 부모 토큰(+0x14) 및 Form 포인터(+0x28)와 구별한다.
+    std::uint32_t GumpParentSid(std::uint32_t token) const;
+    // 원본 +0x30의 현재 전체 DWORD 깊이를 읽는다. signed 해석은 원본 소비자가 결정한다.
+    std::uint32_t GumpDepth(std::uint32_t token) const;
+    // 00466710의 루트 직계 팝업 Kill만 요청한다. 현재 callback이 끝나기 전에 Cleanup하지 않는다.
+    void RequestClosePopups();
     // 현재 raw value/pressed 중 하나라도 비영인 첫 돌 버튼 번호다.
     std::optional<int> Pressed() const;
     // 커서가 월드로 이동해도 release를 같은 raw 캡처에 먼저 전달할지 판정한다.

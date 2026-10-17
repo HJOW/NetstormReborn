@@ -112,7 +112,8 @@ struct RawCampaignCursor::Impl {
         dropHooks.returnPiece=[this](std::uint32_t flags,std::uint32_t source,std::uint32_t quality) { returnState.type=data.drop.type;returned->Return(flags,source,quality); };
         dropHooks.activatePreview=[this](std::uint32_t force) { lifecycle->Activate(force); };
         dropHooks.refresh=Current(effects.drop.refresh,"커서 변경 갱신");
-        dropHooks.closeGump=Current(effects.drop.closeGump,"커서 Gump 닫기");
+        // 원본 cursorManaProcess의 가상+1c다. UI 토큰으로 바꾸지 않고 같은 Host의 현재 프로세스에 보낸다.
+        dropHooks.closeGump=Current(game.lifecycle.processEvent,"현재 커서 프로세스 통지");
         drop=std::make_unique<RawCursorDrop>(core.pool,core.types,data.drop,std::move(dropHooks));
         CursorActionHooks actionHooks; // 기존 실제 하위 몸체만 같은 커서에 연결한다.
         actionHooks.activate=[this](std::uint32_t force) { lifecycle->Activate(force); };actionHooks.createPreviews=[this] { previews->Create(); };
@@ -143,6 +144,12 @@ void RawCampaignCursor::Take(o::Sid form,std::uint32_t flags) { impl_->Prepare()
 void RawCampaignCursor::Cancel() { impl_->Prepare();impl_->lifecycle->Cancel(); }
 // 같은 현재 카메라 비트를 읽는 실제 위치 몸체를 호출한다.
 void RawCampaignCursor::Update(std::int32_t x,std::int32_t y) { impl_->Prepare();impl_->position->Update(x,y); }
+// 원본의 장기 UI 포인터 대신 교체되는 호스트 토큰이므로 이전 깊이를 다음 수집에 넘기지 않는다.
+void RawCampaignCursor::GumpsChanged() {
+    if (impl_->data.drop.lockDepth || !impl_->data.drop.preview.value) return;
+    impl_->Prepare();impl_->placement->Prepare();impl_->placement->Query();impl_->placement->Prepare();
+    Current(impl_->effects.lifecycle.selectCursor,"하드웨어 커서 선택")(impl_->data.drop.legalGump ? 3U : 2U);
+}
 // 실제 로컬 예측 이후 상위 비용과 임시 객체 정리를 수행한다.
 // 현재 전역을 준비한 뒤 원본 중첩 잠금/해제/회전을 같은 상태에 실행한다.
 void RawCampaignCursor::Lock(std::uint32_t skipCursor) { impl_->Prepare();impl_->actions->Lock(skipCursor); }

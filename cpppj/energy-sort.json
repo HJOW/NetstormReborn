@@ -25,10 +25,10 @@
     "tools/decomp_energy_supply.py": "a18c1913de8e3462dc30e21d1cbb62541600655630d8605c594ecc860d200434",
     "tools/decomp_energy_sort.py": "a203949bf138366de9812342953ecfe050dfa588a0c1df4536b5973284caf5ef",
     "cpppj/tests/fixtures/energy-sort-x86.tsv": "58f67ad1e9207c2b7793101100855d504c6167de92ee0176adf3be816489ab4e",
-    "cpppj/tests/CMakeLists.txt": "f983e4d12e69969ad3b6739ed71b19c0c831d1e3bc83ec3b2b6d074bb6caa4e4",
-    "cpppj/src/client/RawCampaignSession.h": "8b0cc82f468e9c014d87ae963d5991418403f7e5c12aca6622e53f9aa89b8c5c",
-    "cpppj/src/client/RawCampaignSession.cpp": "35fb5589cdde65bdd4d339c5ac7c5fe2028e3b0def3fa2105b27226be283389b",
-    "cpppj/tests/CampaignSessionTests.cpp": "17c2fbca1c31cf4034ba3de0703913f694bf4e3f7e49805b164706035a9d6058",
+    "cpppj/tests/CMakeLists.txt": "fe85134c12002da7e8271c43680ab1a254d34413ea3b5d187fb763ef493991ae",
+    "cpppj/src/client/RawCampaignSession.h": "3f53a60579de94dc4698a34cd2cc7e18973929100c108b5fa758d89976e6bb1b",
+    "cpppj/src/client/RawCampaignSession.cpp": "a5f5f1f43b329dee360ef78172a1a83eb42a078e5356a54a2c0c8f5e0fa5b88f",
+    "cpppj/tests/CampaignSessionTests.cpp": "964400205960599492a269d374aaaa7e46ff7f7b6e3968a992d0a447dc16bf2a",
     "cpppj/src/o/RawEnergySupply.h": "16298ecafac440612cf5722175fe7adade050e9bdd67015f8308fd37077998be",
     "cpppj/src/o/RawEnergySupply.cpp": "c5597f73998872c29ecb266356405d084ad36b24c6248a3cfc1a1bc43d55f495",
     "cpppj/src/o/RawConstructionBuilder.h": "134e353fb2fae37b9e8726197f3d80ab1b3b9819e6a19bf6a876481b55ef33d4",
@@ -355,6 +355,33 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "64e68631cd5039223726287c65b050b48480f1284e5042c2e921ea378d1ca14b",
           "current": "17c2fbca1c31cf4034ba3de0703913f694bf4e3f7e49805b164706035a9d6058"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 137,
+      "reason": "현재 Client 커서 장치와 실제 Gump 트리·강조·프로세스 통지 연결",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "f983e4d12e69969ad3b6739ed71b19c0c831d1e3bc83ec3b2b6d074bb6caa4e4",
+          "current": "fe85134c12002da7e8271c43680ab1a254d34413ea3b5d187fb763ef493991ae"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "17c2fbca1c31cf4034ba3de0703913f694bf4e3f7e49805b164706035a9d6058",
+          "current": "964400205960599492a269d374aaaa7e46ff7f7b6e3968a992d0a447dc16bf2a"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "8b0cc82f468e9c014d87ae963d5991418403f7e5c12aca6622e53f9aa89b8c5c",
+          "current": "3f53a60579de94dc4698a34cd2cc7e18973929100c108b5fa758d89976e6bb1b"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "35fb5589cdde65bdd4d339c5ac7c5fe2028e3b0def3fa2105b27226be283389b",
+          "current": "a5f5f1f43b329dee360ef78172a1a83eb42a078e5356a54a2c0c8f5e0fa5b88f"
         }
       ]
     }

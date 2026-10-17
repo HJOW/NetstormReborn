@@ -47,3 +47,9 @@ target_sources(netstorm PRIVATE client/PreviewColorMaps.cpp client/PreviewColorM
 
 # 현재 커서 잠금/회전의 실제 세 몸체다.
 target_sources(netstorm PRIVATE client/RawCursorActions.cpp client/RawCursorActions.h)
+
+# 현재 Client 장치와 단일 Gump 트리를 실제 커서에 공급한다.
+target_sources(netstorm PRIVATE client/CampaignCursorClientEffects.cpp client/CampaignCursorClientEffects.h)
+
+# 원본 선택과 별개인 강조 모드/마우스 타입의 현재 상태를 처리한다.
+target_sources(netstorm PRIVATE client/RawUserHighlight.cpp client/RawUserHighlight.h)

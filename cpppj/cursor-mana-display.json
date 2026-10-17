@@ -41,16 +41,16 @@
     "tools/decomp_pop_oracle.py": "2a50f34e6b229d5ea4611f7073877ca1e165e0bf841f32c83f17d300b6113bb6",
     "tools/decomp_sid_oracle.py": "7bfd7b95b26724b1793d407a4ad6654972b2aaa3bf04e4c206cc357670b68dff",
     "tools/decomp_unpop_oracle.py": "8eea637aeb340f49932c83823e116114e342772f88c975c398012eff2ef1d07d",
-    "cpppj/src/CMakeLists.txt": "aa8053fae523788fbb4dfcc7d8618fe95f802624fdd85351f88ffbbbace03d59",
+    "cpppj/src/CMakeLists.txt": "f307d187ef0cc892334c74198407070df34d9b5df08502b579cad1135c19685b",
     "cpppj/src/client/RawCampaignLifetimeBindings.cpp": "2eb0d3fc16e6967b54271c0365991e0ebd8f3d57ef6412aa92d4c4d21fbb01c3",
     "cpppj/src/client/RawCampaignLifetimeBindings.h": "6f4be73b52279abf308c8a3e6d8962271560e47c25996f7a03fca09f8cd063e8",
-    "cpppj/src/client/RawCampaignSession.cpp": "35fb5589cdde65bdd4d339c5ac7c5fe2028e3b0def3fa2105b27226be283389b",
-    "cpppj/src/client/RawCampaignSession.h": "8b0cc82f468e9c014d87ae963d5991418403f7e5c12aca6622e53f9aa89b8c5c",
+    "cpppj/src/client/RawCampaignSession.cpp": "a5f5f1f43b329dee360ef78172a1a83eb42a078e5356a54a2c0c8f5e0fa5b88f",
+    "cpppj/src/client/RawCampaignSession.h": "3f53a60579de94dc4698a34cd2cc7e18973929100c108b5fa758d89976e6bb1b",
     "cpppj/src/o/SquidDisplay.cpp": "adff73d1c710cf295aed17e2a06cb90294e1399e5e455d423659f37c336f3dc6",
     "cpppj/src/o/SquidPop.cpp": "61f8db73c663d5d7c8880d73bc310cf7884e361bb76402e0946241e02b7dcd17",
     "cpppj/src/o/SquidUnpop.cpp": "f9a932b6ee543cc2ee051d6f67afb0c56fca1f325cc51d29ca3d0dc3adf26fef",
-    "cpppj/tests/CMakeLists.txt": "f983e4d12e69969ad3b6739ed71b19c0c831d1e3bc83ec3b2b6d074bb6caa4e4",
-    "cpppj/tests/CampaignSessionTests.cpp": "17c2fbca1c31cf4034ba3de0703913f694bf4e3f7e49805b164706035a9d6058",
+    "cpppj/tests/CMakeLists.txt": "fe85134c12002da7e8271c43680ab1a254d34413ea3b5d187fb763ef493991ae",
+    "cpppj/tests/CampaignSessionTests.cpp": "964400205960599492a269d374aaaa7e46ff7f7b6e3968a992d0a447dc16bf2a",
     "cpppj/tests/PopTests.cpp": "250b9a9fd863142026c29ef68c75ea7c8bea6871ed0a42df9bafee4e2b072d48",
     "cpppj/tests/UnpopTests.cpp": "af6cd4c73db3f50d707d1b7cc896f991a7c5222177b7bd4252054bbe826af9cc",
     "cpppj/src/client/RawCursorMana.cpp": "b8ab58679249a18387757eb2eb93c7405e566a4a9fc02ed018b2046a7d751f7b",
@@ -514,6 +514,38 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "64e68631cd5039223726287c65b050b48480f1284e5042c2e921ea378d1ca14b",
           "current": "17c2fbca1c31cf4034ba3de0703913f694bf4e3f7e49805b164706035a9d6058"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 137,
+      "reason": "현재 Client 커서 장치와 실제 Gump 트리·강조·프로세스 통지 연결",
+      "pins": [
+        {
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "aa8053fae523788fbb4dfcc7d8618fe95f802624fdd85351f88ffbbbace03d59",
+          "current": "f307d187ef0cc892334c74198407070df34d9b5df08502b579cad1135c19685b"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "f983e4d12e69969ad3b6739ed71b19c0c831d1e3bc83ec3b2b6d074bb6caa4e4",
+          "current": "fe85134c12002da7e8271c43680ab1a254d34413ea3b5d187fb763ef493991ae"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "17c2fbca1c31cf4034ba3de0703913f694bf4e3f7e49805b164706035a9d6058",
+          "current": "964400205960599492a269d374aaaa7e46ff7f7b6e3968a992d0a447dc16bf2a"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "35fb5589cdde65bdd4d339c5ac7c5fe2028e3b0def3fa2105b27226be283389b",
+          "current": "a5f5f1f43b329dee360ef78172a1a83eb42a078e5356a54a2c0c8f5e0fa5b88f"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "8b0cc82f468e9c014d87ae963d5991418403f7e5c12aca6622e53f9aa89b8c5c",
+          "current": "3f53a60579de94dc4698a34cd2cc7e18973929100c108b5fa758d89976e6bb1b"
         }
       ]
     }

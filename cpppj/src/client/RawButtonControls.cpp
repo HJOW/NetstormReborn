@@ -205,6 +205,30 @@ std::uint32_t RawButtonControls::HandleGump(std::uint32_t token,std::uint32_t ev
     if (!token || !impl_->Node(token)) throw std::out_of_range("현재 직접 Gump 가상 처리 대상 없음");
     return impl_->Handle(token,event,first,second);
 }
+// 커서 Query의465ed0은 전체 자식 선택466020과 달리 루트 직계 자식만 검사한다.
+std::uint32_t RawButtonControls::PickGump(ScreenPoint point) const { return impl_->events->PickTopLevel(point); }
+// 같은 등록표/수명/현재 노드로4651b0을 호출하며 성공 처리기의 DWORD를 토큰으로 대체하는 원본 계약을 유지한다.
+std::uint32_t RawButtonControls::DispatchGump(std::uint32_t token,std::uint32_t event,std::uint32_t first,std::uint32_t second,bool includeHidden) const {
+    if (!token || !impl_->Node(token)) throw std::out_of_range("현재 재귀 Gump 처리 대상 없음");
+    return impl_->events->Dispatch(token,event,first,second,includeHidden);
+}
+// 원본 커서의cursorLegalGump->parentSid는 UI 트리 부모가 아니라+24의게임 SID다.
+std::uint32_t RawButtonControls::GumpParentSid(std::uint32_t token) const {
+    const auto* node=token ? impl_->Node(token) : nullptr;
+    if (!node) throw std::out_of_range("현재 Gump 부모 SID 조회 대상 없음");
+    return node->object;
+}
+// 캐시를 만들지 않아 파생 부착/깊이 갱신 직후에도 현재 저장 필드를 읽는다.
+std::uint32_t RawButtonControls::GumpDepth(std::uint32_t token) const {
+    const auto* node=token ? impl_->Node(token) : nullptr;
+    if (!node) throw std::out_of_range("현재 Gump 깊이 조회 대상 없음");
+    return node->depth;
+}
+// 같은 메뉴 처리기가 사용하는 현재 루트/수명에 Kill을 요청하고 실제 해제는 기존 후속 정리에 맡긴다.
+void RawButtonControls::RequestClosePopups() {
+    if (!impl_->menus) throw std::logic_error("실제 Gump 팝업 수명 처리기 미연결");
+    impl_->menus->RequestClosePopups();
+}
 // 렌더링이 이전 어댑터의 캡처 사본을 조회하지 않게 현재 raw 상태만 읽는다.
 std::optional<int> RawButtonControls::Pressed() const {
     // 표시 명령 번호 순서는 부모 트리 방문 순서와 구별한다.

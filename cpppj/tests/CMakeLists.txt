@@ -1330,3 +1330,15 @@ set_property(SOURCE PreviewColorMapsTests.cpp APPEND PROPERTY COMPILE_DEFINITION
 target_sources(netstorm_tests PRIVATE CursorActionsTests.cpp)
 set_source_files_properties(CursorActionsTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_CURSOR_ACTIONS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/cursor-actions-x86.tsv\"")
+
+# 커서의 실제 최상위 선택/재귀 수신/현재 부모 조회 경계를 검사한다.
+target_sources(netstorm_tests PRIVATE RawButtonCursorBoundaryTests.cpp)
+target_sources(netstorm_tests PRIVATE CampaignCursorClientEffectsTests.cpp)
+
+# 같은 세션의 사제/Carrier/회수/객체/Player 메뉴 체인과 실제 정수 명령을 검사한다.
+target_sources(netstorm_tests PRIVATE CampaignObjectMenuTests.cpp)
+
+# 원본 강조/마우스 초기화의178입력을 두 정밀도의 격리 실행과 대조한다.
+target_sources(netstorm_tests PRIVATE UserHighlightTests.cpp)
+set_source_files_properties(UserHighlightTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_USER_HIGHLIGHT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/user-highlight-x86.tsv\"")

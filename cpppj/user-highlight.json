@@ -1,0 +1,41 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "lastDecompileDate": "2026-10-16",
+  "date": "2026-10-17",
+  "controls": [
+    639,
+    895
+  ],
+  "entries": [
+    "004d5480",
+    "004d5bb0"
+  ],
+  "uniqueInputs": 178,
+  "normalReturns": 356,
+  "instructionObservations": 6296,
+  "precisionDifferentInputs": [],
+  "nativeCalls": {
+    "004d5bb0": 296,
+    "004d5480": 330
+  },
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+    "tools/decomp_cursor_previews.py": "33ed19d9b6409ad49e6db93081e951b8d105f170ce7a530363689aa9fda6c7c0",
+    "tools/decomp_cursor_position.py": "e15bcdbc4c6be9c131c30f15416c945d650dba9f7dc6def404b47f63c635c212",
+    "tools/decomp_user_highlight.py": "5af9e358e9e572fe7f2bb768cff2fdbdff0d09f22c71f67d0563a57dca0ef645",
+    "cpppj/tests/fixtures/user-highlight-x86.tsv": "e1d0bc9dbf434de9c897a6fcac4af50f2be637318ab3a52d3795273cf734ed78",
+    "cpppj/src/client/RawUserHighlight.h": "a19046a0a3061565a82b7463307e4886c3b9f6db0151d02ada619d5a32c3f90a",
+    "cpppj/src/client/RawUserHighlight.cpp": "3ac1867b7da1f553b0fb46103207df3886f31a332e1332456b2590b089438767",
+    "cpppj/tests/UserHighlightTests.cpp": "a23f97791f61415d333d3d99b33ec56e6ec67423a021da43473934fadd3a57ab"
+  },
+  "limitations": [
+    "실제4d5bb0/4d5480 전체 몸체와 보존GP/스택/canary/x87 균형을 실행했다. 커서4a4410/역투영4971e0/이동 강조4284a0는 명시 경계다.",
+    "실제 선택4d5c90/다중선택4d5490 및 Carrier 이동 강조의 내부 몸체/GUI/게임은 실행하지 않는다.",
+    "10.78 전용이다. CD Highlight0041ad10은 정적 대응 기록이며 이번 신규 실행이 아니다."
+  ]
+}

@@ -188,7 +188,7 @@
     "cpppj/src/o/RawFortRandomPlacement.cpp": "88f7d4b28ef28c9f28c627152509a1d62bc58b6e75d0bda03e6c093d9d227e52",
     "cpppj/src/o/RawFortRandomPlacement.h": "79bba31820344fbe9e29da1c1aeb2e4100cf5d83365b1466d61eb3be6966104e",
     "cpppj/src/o/SquidFactory.cpp": "9773bb2d4f5b7dd0114fbb9406a95080e6f919a1106efe5b6a15ef8ed68e39e0",
-    "cpppj/src/o/SquidFactory.h": "70394e3a27fd8c768c851445b0c03a8b321914eea66fb530bd004d094ba0f5d4",
+    "cpppj/src/o/SquidFactory.h": "439126b14875597ae876ab82d1699d414fa15fdf76ec9ac83f6794d32595c549",
     "cpppj/src/o/TypeConstructors.inc": "bfac943af8c22cf91a0c267200f3e94133b021f2fe0e02507544978a7e08bd27",
     "cpppj/tests/FarmClusterTests.cpp": "c21896900126b47ce2cbccd40559f4d49b997fe9f077890e774601daafcd4e2b",
     "cpppj/tests/fixtures/farmcluster-x86.tsv": "c5e53132543b400050630a81ca9df677d1595eed595ef757fb1398b7ac19db24",
@@ -230,5 +230,19 @@
     "new_native_observations": 0,
     "explicit_empty_frame_constructions": 2,
     "existing_python_dependency_hashes_added": 2
-  }
+  },
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "unit": 137,
+      "reason": "현재 Client 커서 장치·Gump 트리·강조와 같은 세션 객체 메뉴 체인 연결",
+      "pins": [
+        {
+          "path": "cpppj/src/o/SquidFactory.h",
+          "previous": "70394e3a27fd8c768c851445b0c03a8b321914eea66fb530bd004d094ba0f5d4",
+          "current": "439126b14875597ae876ab82d1699d414fa15fdf76ec9ac83f6794d32595c549"
+        }
+      ]
+    }
+  ]
 }

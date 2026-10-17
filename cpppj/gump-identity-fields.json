@@ -219,11 +219,11 @@
       "trackedFullscreenMarkerRestored": true
     },
     "sourceSha256": {
-      "cpppj/src/client/RawMenuControls.h": "7c91668a0f3a6219494893fe31f4378a47359faf5d22d1242ebc07af98742366",
-      "cpppj/src/client/RawMenuControls.cpp": "285e0e7c6c8fd3b4f00bbe42bbaa018afc6e4629dbf2855d90dd6d13716380a9",
-      "cpppj/src/client/RawButtonControls.h": "596feb0580f735049aae1d3619ced12fcd8702bb4c4adcab684674626226f1f9",
-      "cpppj/src/client/RawButtonControls.cpp": "7c382a110a7187a7af3d227e09922cf8d43a4e9827ce6d82a862fbcd74021906",
-      "cpppj/src/client/UberGump.cpp": "8a3f6a89636747fe1a9dc70011951c921131ecf04aff8b950f7d966ef5f70c70",
+      "cpppj/src/client/RawMenuControls.h": "d90f553b4597823270fc2a77f9fef575e8cdb3de644ac0da017aace246686fbb",
+      "cpppj/src/client/RawMenuControls.cpp": "ebac0335fa245a15d6441c5d5748103c430f3fcc8b40203f10502bff9b3927d1",
+      "cpppj/src/client/RawButtonControls.h": "09953758c00910471eae95308233eaa13d1e894e3118285b62fe643e5148585a",
+      "cpppj/src/client/RawButtonControls.cpp": "07b2dcb3c2d1b55ad6e149ffe3844d28b3d63d14c72df1daed10b5d0e365c465",
+      "cpppj/src/client/UberGump.cpp": "d9304a5e1c2f15d39f78baf85af69bbfa7cfd1b68819e8a83f5298eec7c07432",
       "cpppj/src/client/TextGump.cpp": "8f501caa7ba39352386060e81c79835eb75e070e6231d22e879b3c17142c5804",
       "cpppj/src/client/ScrollingTextGumpWidgets.cpp": "6ef03644d61c31ca94c11f163b6774f2f5f608727209ff57adf6c9cc4c73c849",
       "cpppj/src/client/ScrollGumpWidgets.cpp": "378d5b65e02f8e5e1693fca50b2a3582e07e53b0f3e2df4ffe36c3fb618f435b",
@@ -254,6 +254,38 @@
           "path": "cpppj/src/client/UberGump.cpp",
           "previous": "c9e2ac8666ebcc162616674d3d6a127ffc6ef33e1102318299ce0b507e84e23e",
           "current": "8a3f6a89636747fe1a9dc70011951c921131ecf04aff8b950f7d966ef5f70c70"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 137,
+      "reason": "현재 Client 커서 장치와 실제 Gump 트리·강조·프로세스 통지 연결",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawMenuControls.h",
+          "previous": "7c91668a0f3a6219494893fe31f4378a47359faf5d22d1242ebc07af98742366",
+          "current": "d90f553b4597823270fc2a77f9fef575e8cdb3de644ac0da017aace246686fbb"
+        },
+        {
+          "path": "cpppj/src/client/RawMenuControls.cpp",
+          "previous": "285e0e7c6c8fd3b4f00bbe42bbaa018afc6e4629dbf2855d90dd6d13716380a9",
+          "current": "ebac0335fa245a15d6441c5d5748103c430f3fcc8b40203f10502bff9b3927d1"
+        },
+        {
+          "path": "cpppj/src/client/RawButtonControls.h",
+          "previous": "596feb0580f735049aae1d3619ced12fcd8702bb4c4adcab684674626226f1f9",
+          "current": "09953758c00910471eae95308233eaa13d1e894e3118285b62fe643e5148585a"
+        },
+        {
+          "path": "cpppj/src/client/RawButtonControls.cpp",
+          "previous": "7c382a110a7187a7af3d227e09922cf8d43a4e9827ce6d82a862fbcd74021906",
+          "current": "07b2dcb3c2d1b55ad6e149ffe3844d28b3d63d14c72df1daed10b5d0e365c465"
+        },
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "previous": "8a3f6a89636747fe1a9dc70011951c921131ecf04aff8b950f7d966ef5f70c70",
+          "current": "d9304a5e1c2f15d39f78baf85af69bbfa7cfd1b68819e8a83f5298eec7c07432"
         }
       ]
     }

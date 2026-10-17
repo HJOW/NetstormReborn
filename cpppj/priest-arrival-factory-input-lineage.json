@@ -69,7 +69,7 @@
     "cpppj/src/o/SidPool.cpp": "0f72cb4540e5d28ff63e5ce9078d8591b733f192c8ee6c8c5bf486b93cfd16f0",
     "cpppj/src/o/SidPool.h": "dede45b0aed7bcbc896b8da80d72540c266d9e5a56b99878efbf4f2abad6448d",
     "cpppj/src/o/SquidFactory.cpp": "9773bb2d4f5b7dd0114fbb9406a95080e6f919a1106efe5b6a15ef8ed68e39e0",
-    "cpppj/src/o/SquidFactory.h": "70394e3a27fd8c768c851445b0c03a8b321914eea66fb530bd004d094ba0f5d4",
+    "cpppj/src/o/SquidFactory.h": "439126b14875597ae876ab82d1699d414fa15fdf76ec9ac83f6794d32595c549",
     "cpppj/src/o/SquidHash.cpp": "9ceffaf0d4c995cb5901b7c49eceae575b9441e8e08dec8cd92e504821fa20ca",
     "cpppj/src/o/SquidHash.h": "ee3c9fbc61c659e8a62b0d9675f028ca3ca1b29cc364abc49680bdb1a5e50ac7",
     "cpppj/src/o/SquidPop.cpp": "dc45a23ebe2078f6f27cd481028247553b566898ca445fb2e227a2f44b3743bd",
@@ -79,7 +79,7 @@
     "cpppj/src/o/SquidProcess.cpp": "2b78ac83db1bbb474f224845ae288d696b30d996a489ee292ac09a1af16986ad",
     "cpppj/src/o/SquidProcess.h": "827a9789c2a6b66ac7b98181e49e8c0fa19713755bb62fccababb7ae2a0d0589",
     "cpppj/src/o/SquidReward.cpp": "a29c11afe56a477c470956b1ed0a0678d059340806537ce08b43bf6b6aa1375d",
-    "cpppj/src/o/SquidReward.h": "221e142133a1e3a73f65ff6979d73859b7701912ab84cde9dc6a9fe565ccd2e7",
+    "cpppj/src/o/SquidReward.h": "59cf154a0aa681fbce7bdf445728afc582409bd9af9b24e5b135e435e92aa362",
     "cpppj/src/o/SquidUnpop.cpp": "f9a932b6ee543cc2ee051d6f67afb0c56fca1f325cc51d29ca3d0dc3adf26fef",
     "cpppj/src/o/SquidUnpop.h": "36635a51668570c7ae1df71e507f1f7d6d4fd1b141ccf0529165428034e5aad9",
     "cpppj/tests/CarrierArrivalSupport.h": "711263ae85caf9cb748b2db1dace990c8066b74b453403af86e5c43d1618fedd",
@@ -311,6 +311,23 @@
           "path": "cpppj/src/o/RawPathProcess.cpp",
           "previous": "ae48353ef2132eaf0d5d382703891420941387e2c03dcbf8d1a1489e0abbae89",
           "current": "15e0b7f5097323d5431da841e47b892501c1911e74648c76686c7c66561667c0"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 137,
+      "reason": "현재 Client 커서 장치·Gump 트리·강조와 같은 세션 객체 메뉴 체인 연결",
+      "pins": [
+        {
+          "path": "cpppj/src/o/SquidFactory.h",
+          "previous": "70394e3a27fd8c768c851445b0c03a8b321914eea66fb530bd004d094ba0f5d4",
+          "current": "439126b14875597ae876ab82d1699d414fa15fdf76ec9ac83f6794d32595c549"
+        },
+        {
+          "path": "cpppj/src/o/SquidReward.h",
+          "previous": "221e142133a1e3a73f65ff6979d73859b7701912ab84cde9dc6a9fe565ccd2e7",
+          "current": "59cf154a0aa681fbce7bdf445728afc582409bd9af9b24e5b135e435e92aa362"
         }
       ]
     }

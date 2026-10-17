@@ -47,15 +47,15 @@
   ],
   "baseCommit": "aa054a6",
   "currentSources": {
-    "cpppj/src/client/RawCampaignSession.cpp": "35fb5589cdde65bdd4d339c5ac7c5fe2028e3b0def3fa2105b27226be283389b",
-    "cpppj/src/client/RawCampaignSession.h": "8b0cc82f468e9c014d87ae963d5991418403f7e5c12aca6622e53f9aa89b8c5c",
+    "cpppj/src/client/RawCampaignSession.cpp": "a5f5f1f43b329dee360ef78172a1a83eb42a078e5356a54a2c0c8f5e0fa5b88f",
+    "cpppj/src/client/RawCampaignSession.h": "3f53a60579de94dc4698a34cd2cc7e18973929100c108b5fa758d89976e6bb1b",
     "cpppj/src/client/RawCampaignConstructionBindings.cpp": "ee1d38d554fb25e502d0dc54cb19a55f501a45860e5612ca9666ca0f7ec2d2cf",
     "cpppj/src/client/RawCampaignConstructionBindings.h": "9d16b7a6b2ff2c5033dcf1b8a8ff1c73429715c8444f5553c84afe1a93c6ef65",
     "cpppj/src/o/CMakeLists.txt": "3d0010c676da1156f5223bfcaa207887a88910a4cf50733a7b2e9e515f939c48",
     "cpppj/src/o/RawConstructionCommand.cpp": "6bbc699ba2fdda0bf9de46d9386da677acb9d70bcd297a490f6fe210ceeab15a",
     "cpppj/src/o/RawConstructionCommand.h": "7db4c56243619ccd34bf4fa40bacf50ff42a57b1804f0a740183c39d824eea7a",
-    "cpppj/tests/CMakeLists.txt": "f983e4d12e69969ad3b6739ed71b19c0c831d1e3bc83ec3b2b6d074bb6caa4e4",
-    "cpppj/tests/CampaignSessionTests.cpp": "17c2fbca1c31cf4034ba3de0703913f694bf4e3f7e49805b164706035a9d6058",
+    "cpppj/tests/CMakeLists.txt": "fe85134c12002da7e8271c43680ab1a254d34413ea3b5d187fb763ef493991ae",
+    "cpppj/tests/CampaignSessionTests.cpp": "964400205960599492a269d374aaaa7e46ff7f7b6e3968a992d0a447dc16bf2a",
     "cpppj/tests/ConstructionCommandTests.cpp": "8ca02e9dbb4574f9f758ba2bb7408d1dd542eb9618e92ac1c0a9048a704eb154"
   },
   "protectedFileSha256": {
@@ -170,6 +170,33 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "64e68631cd5039223726287c65b050b48480f1284e5042c2e921ea378d1ca14b",
           "current": "17c2fbca1c31cf4034ba3de0703913f694bf4e3f7e49805b164706035a9d6058"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 137,
+      "reason": "현재 Client 커서 장치와 실제 Gump 트리·강조·프로세스 통지 연결",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "f983e4d12e69969ad3b6739ed71b19c0c831d1e3bc83ec3b2b6d074bb6caa4e4",
+          "current": "fe85134c12002da7e8271c43680ab1a254d34413ea3b5d187fb763ef493991ae"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "17c2fbca1c31cf4034ba3de0703913f694bf4e3f7e49805b164706035a9d6058",
+          "current": "964400205960599492a269d374aaaa7e46ff7f7b6e3968a992d0a447dc16bf2a"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "35fb5589cdde65bdd4d339c5ac7c5fe2028e3b0def3fa2105b27226be283389b",
+          "current": "a5f5f1f43b329dee360ef78172a1a83eb42a078e5356a54a2c0c8f5e0fa5b88f"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "8b0cc82f468e9c014d87ae963d5991418403f7e5c12aca6622e53f9aa89b8c5c",
+          "current": "3f53a60579de94dc4698a34cd2cc7e18973929100c108b5fa758d89976e6bb1b"
         }
       ]
     }

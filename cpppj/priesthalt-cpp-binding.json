@@ -29,7 +29,7 @@
     "cpppj/src/o/SquidHash.cpp": "9ceffaf0d4c995cb5901b7c49eceae575b9441e8e08dec8cd92e504821fa20ca",
     "cpppj/src/o/SquidHash.h": "ee3c9fbc61c659e8a62b0d9675f028ca3ca1b29cc364abc49680bdb1a5e50ac7",
     "cpppj/src/o/SquidReward.cpp": "a29c11afe56a477c470956b1ed0a0678d059340806537ce08b43bf6b6aa1375d",
-    "cpppj/src/o/SquidReward.h": "221e142133a1e3a73f65ff6979d73859b7701912ab84cde9dc6a9fe565ccd2e7",
+    "cpppj/src/o/SquidReward.h": "59cf154a0aa681fbce7bdf445728afc582409bd9af9b24e5b135e435e92aa362",
     "cpppj/tests/fixtures/priesthalt-x86.tsv": "409016d64bf67a636cd963b19483edc87971e093350ef455ff990ec054b2b1d7",
     "cpppj/tests/PriestHaltTests.cpp": "e129c0966cd074a88e3ce40b3e197c8ef8ec90b64b335bd4b04430e9ce556a64",
     "cpppj/tests/RawSceneSupport.h": "7ef30acb24babc688384ab50f57573a87d004b68b8baa0d0a64c897baad23a4f",
@@ -48,5 +48,19 @@
     "cpppj/hist/priesthalt-i-e7bbe/cpppj/tests/fixtures/priesthalt-x86.tsv": "910d101bbe19f22524cc03a03aad5be4579aaf1ac186a2e88eef68cad42e6065",
     "cpppj/hist/priesthalt-i-e7bbe/tools/decomp_priesthalt_oracle.py": "0ceafe16e5cf373158738ec5f180470650661ef081002259d26bdbc11e365d2b"
   },
-  "scope": "원본864는 최종 Native 보고서에서 한 번만 합산한다. 기존CarrierCheck/HP/finder·20smoke·이전 미등록864는 새합산0. 전체사제Halt/공통검색 반환을 대조하되 가상공간/낙하·큰포획/너겟전달은 명시 외부 입력이다. 실제 같은Host 걷기/CarrierArrival/전체포획/RPC/UI/캠페인 완료는 후속이다."
+  "scope": "원본864는 최종 Native 보고서에서 한 번만 합산한다. 기존CarrierCheck/HP/finder·20smoke·이전 미등록864는 새합산0. 전체사제Halt/공통검색 반환을 대조하되 가상공간/낙하·큰포획/너겟전달은 명시 외부 입력이다. 실제 같은Host 걷기/CarrierArrival/전체포획/RPC/UI/캠페인 완료는 후속이다.",
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "unit": 137,
+      "reason": "현재 Client 커서 장치·Gump 트리·강조와 같은 세션 객체 메뉴 체인 연결",
+      "pins": [
+        {
+          "path": "cpppj/src/o/SquidReward.h",
+          "previous": "221e142133a1e3a73f65ff6979d73859b7701912ab84cde9dc6a9fe565ccd2e7",
+          "current": "59cf154a0aa681fbce7bdf445728afc582409bd9af9b24e5b135e435e92aa362"
+        }
+      ]
+    }
+  ]
 }

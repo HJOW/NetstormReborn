@@ -22,7 +22,7 @@
     "cpppj/tests/BridgeConnectTests.cpp": "16e2d952e252c2a264a859182f261487ca50101e34eb7036ea6d66242b9aae11",
     "cpppj/tests/CursorPreviewTests.cpp": "ed217ca7021e4ed5af0fb7aa91fda7af1c2f67b0cb75307157a0a7ace0c86799",
     "cpppj/src/client/CMakeLists.txt": "8bb17d335554c16e6ff3300134492a264bfa425dfafd52062ecf0062f523d87c",
-    "cpppj/tests/CMakeLists.txt": "f983e4d12e69969ad3b6739ed71b19c0c831d1e3bc83ec3b2b6d074bb6caa4e4",
+    "cpppj/tests/CMakeLists.txt": "fe85134c12002da7e8271c43680ab1a254d34413ea3b5d187fb763ef493991ae",
     "cpppj/tests/CursorPreviewSupport.h": "fa4e6b6d54bbc564af308ffd154f2ced7482a131c542222c0342e6019d6c9084"
   },
   "limitations": [
@@ -254,6 +254,18 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "539635dedf774da6163e0702fa0f076db8fb6398b5b7b7de02af2509a255a7d5",
           "current": "f983e4d12e69969ad3b6739ed71b19c0c831d1e3bc83ec3b2b6d074bb6caa4e4"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 137,
+      "reason": "현재 Client 커서 장치와 실제 Gump 트리·강조·프로세스 통지 연결",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "f983e4d12e69969ad3b6739ed71b19c0c831d1e3bc83ec3b2b6d074bb6caa4e4",
+          "current": "fe85134c12002da7e8271c43680ab1a254d34413ea3b5d187fb763ef493991ae"
         }
       ]
     }

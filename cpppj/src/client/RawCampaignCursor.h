@@ -10,7 +10,7 @@ class RawCampaignCursorDisplay; // 같은 커서의 실제 수집/Draw/픽셀 �
 struct CampaignCursorEffects {
     CursorLifecycleHooks lifecycle; // 강조/커서 선택/팝업/번역/측정/마우스만 소비한다.
     CursorPlacementHooks placement; // Gump 조회/수신/부모와 dirty 사각형만 소비한다.
-    CursorDropHooks drop; // 기록/금액 표시/GUI 수신/표시 갱신/닫기만 소비한다.
+    CursorDropHooks drop; // 기록/금액 표시/GUI 수신/실제 선택 변경만 소비한다. closeGump는 같은 게임 프로세스다.
     std::function<void(std::uint32_t,std::span<const std::uint8_t>)> send; // 목적지9의 실제25바이트를 전송기에 넘긴다.
 };
 // 세션의 장기 게임 몸체와 현재 공유 상태다. 장치 효과와 별도로 공급한다.
@@ -57,6 +57,7 @@ public:
     void Take(o::Sid form,std::uint32_t flags); // 실제00447000의 전체 DWORD flags를 전달한다.
     void Cancel(); // 잠긴 상태에서도 실제 꼬리 정리/프로세스 반납을 실행한다.
     void Update(std::int32_t x,std::int32_t y); // 실제00446b50으로 현재 마우스/카메라를 반영한다.
+    void GumpsChanged(); // 호스트 UI 트리 교체 뒤 정지한 마우스의 현재 Gump/표시 경계만 다시 조회한다.
     void Lock(std::uint32_t skipCursor); // 실제446a10의 현재 중첩 깊이를 증가시킨다.
     void Unlock(); // 실제446a40의 목록 재생성/커서 선택을 실행한다.
     void Rotate(std::int32_t step); // 실제446a70의 signed 방향·사정거리 수명을 실행한다.

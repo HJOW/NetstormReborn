@@ -11,6 +11,7 @@
 #include "client/GameWorld.h"
 #include "client/RawCampaignCursor.h"
 #include "client/RawCampaignCursorDisplay.h"
+#include "client/CampaignCursorClientEffects.h"
 #include "client/UserInput.h"
 #include "client/WindowTitle.h"
 #include "client/WarningMessages.h"
@@ -286,6 +287,13 @@ void UberGump::BeginMission(std::string name) {
     world_->Resize(client_.GetScreen().Width(),client_.GetScreen().Height());
     // 직전 미션의 날씨 팔레트가 유지된 재진입도 현재 화면 색을 사용한다.
     world_->SetPalette(client_.GetScreen().Palette());
+    // 같은 단일 커서에 현재 장치/트리를 공급한다. 선택/비용 안내/전송의 미복원 경계는 그대로 남긴다.
+    auto cursorEffects=MakeCampaignCursorClientEffects(client_,*rawButtons_);
+    UserHighlightHooks highlightHooks;highlightHooks.selectCursor=cursorEffects.lifecycle.selectCursor;
+    auto highlight=std::make_shared<RawUserHighlight>(world_->HighlightSettings(),std::move(highlightHooks)); // 모드5의 이동 강조는 실제 하위 연결 전 명시 오류다.
+    cursorEffects.lifecycle.highlight=[highlight](std::uint32_t mode) { highlight->Highlight(mode); };
+    world_->Session().Cursor().SetEffects(std::move(cursorEffects));
+    world_->Session().Cursor().Display().SetExternal([this](std::uint32_t token) { return rawButtons_->GumpDepth(token); },{});
     briefingSections_.clear(); briefingIndex_ = 0;
     // 원본 초기 브리핑은 A.이며 A1. 등은 본문 Tell 명령이 넘긴다.
     if (mission_->Section("A.")) briefingSections_.push_back("A.");
@@ -618,6 +626,7 @@ void UberGump::Compose() {
             regions=menus.Controls();
         }
         input_.SetControls(std::move(regions));
+        if (world_) world_->Session().Cursor().GumpsChanged(); // 고정 마우스에서도 교체 전 UI 토큰의 깊이를 읽지 않는다.
         // 새 페이지는 같은 raw 노드로 한 번 다시 합성하며 중간 어댑터 그림은 화면에 제출하지 않는다.
         controlsChanged_=false;Compose();return;
     }

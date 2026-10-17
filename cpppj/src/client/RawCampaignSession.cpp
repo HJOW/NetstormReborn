@@ -13,6 +13,7 @@
 #include "o/RawBoardApproach.h"
 #include <map>
 #include "client/RawCursorPosition.h"
+#include "client/RawCarrierDropPoint.h"
 #include "o/RawProcessRemoval.h"
 #include "o/RawSquidLevel.h"
 #include "o/RawPlayerTemplateState.h"
@@ -103,6 +104,33 @@ std::uint32_t Read(std::span<const std::uint8_t> raw,std::size_t offset) {
         (static_cast<std::uint32_t>(raw[offset+2])<<16)|(static_cast<std::uint32_t>(raw[offset+3])<<24);
 }
 }
+// 메뉴의 현재 원문/참조와 자식 우선 소멸 순서를 한 고정 주소에 보관한다.
+struct RawCampaignObjectMenus::Impl {
+    CampaignObjectMenuUi ui; // GUI·Chat·정적 문자열과 현재 외부 getter의 수명 소유자다.
+    CarrierDropPointState dropState; // PE의 지도 한계256/실패점0,0이며 같은 위치 계산기가 직접 읽는다.
+    CarrierMenuState carrierState; // 공통 객체 상태/실제 CD SP와 같은 참조를 읽고 PATCH는 현재 getter를 사용한다.
+    std::unique_ptr<RawPlayerIdentity> identity; // 실제 Player9와 Client Chat 원문을 빌린다.
+    std::unique_ptr<RawContainedLookup> lookup; // 같은 풀의 현재 이동 프로세스 종속 조회/가상 삭제 몸체다.
+    std::unique_ptr<RawCarrierDropPoint> dropPoint; // 전체 MayPlace/현재 중심을 사용하는 실제 위치 몸체다.
+    std::unique_ptr<RawPlayerMenu> player; // 현재 사제 상태/동맹/정적 asksend 문자열을 읽는 끝 부모다.
+    std::unique_ptr<RawObjectMenu> object; // 같은 Player 메뉴와 실제 HP/회수 계산을 사용한다.
+    std::unique_ptr<RawCarrierMenu> carrier; // 사제의 비가상 기본 호출이 참조하는 실제 Carrier 메뉴다.
+    std::unique_ptr<RawPriestMenu> priest; // 같은 기술/SP/커서 취득과 위 전체 부모 체인을 사용한다.
+    // 같은 현재 전역의 참조를 먼저 구성한다. 생성 중 메뉴/게임 효과를 실행하지 않는다.
+    Impl(CampaignObjectMenuUi input,float& cdSp):ui(std::move(input)),carrierState{ui.objectState.localOwner,ui.objectState.editor,dropState.mapLimit,cdSp,ui.objectState.helpCommand} {}
+};
+// factory의 완성된 단일 주소만 넘겨받는다.
+RawCampaignObjectMenus::RawCampaignObjectMenus(std::unique_ptr<Impl> impl):impl_(std::move(impl)) {}
+RawCampaignObjectMenus::~RawCampaignObjectMenus()=default; // 필드 역순으로 사제→Carrier→객체→Player→Identity를 해제한다.
+// 원본 파생별 메뉴 작성만 위임하며 어떤 항목도 임의 활성화하지 않는다.
+void RawCampaignObjectMenus::OpenPriest(Sid sid) const { impl_->priest->Open(sid); }
+void RawCampaignObjectMenus::OpenCarrier(Sid sid) const { impl_->carrier->Open(sid); } // 실제 가상 메뉴가 Carrier인 caller가 선택한다.
+void RawCampaignObjectMenus::OpenDamageable(Sid sid) const { impl_->object->OpenDamageable(sid); } // 실제 Damageable 회수 관문을 보존한다.
+void RawCampaignObjectMenus::OpenObject(Sid sid) const { impl_->object->Open(sid); } // 기본 메뉴를 파생 기능의 대체 성공으로 쓰지 않는다.
+// Open과 동일한 실제 세션 커서/현재 금액으로 건설 선택을 수행한다.
+bool RawCampaignObjectMenus::SelectBuild(std::uint32_t type,Sid priest) const { return impl_->priest->SelectBuild(type,priest); }
+// 정적 Player 버퍼는 메뉴 체인이 살아 있는 동안 같은 원본 토큰으로 조회한다.
+std::string_view RawCampaignObjectMenus::TextParameter(std::uint32_t token) const { return impl_->player->TextParameter(token); }
 // 실제 월드/상태와 모든 callback 대상을 같은 고정 주소에 소유한다.
 struct RawCampaignSession::Impl {
     RawCampaignSessionServices services; // 실제 클라이언트의 선택 서비스이며 검사 관찰 기본값을 사용하지 않는다.
@@ -653,6 +681,11 @@ struct RawCampaignSession::Impl {
         worldHooks.destroy=construction->Destroy(lifetime->Destroy(hits->Destroy(services.destroy)));
         auto previousEffects=std::move(worldHooks.assets.emit); // 다른 기존 파생/전송/선택 처리기를 유지한다.
         worldHooks.assets.emit=[this,previous=std::move(previousEffects)](const SquidDestroyEvent& event) {
+            // 다이스 미리보기의 extra8은44afd0의 큰 일반 전처리를 건너뛴다. 실제 VT/타입/비트를 모두 확인한다.
+            if (PreviewDais(event.sid)) {
+                if (event.effect==SquidDestroyEffect::PreDestroy) { damageablePre->PreDestroy(event.sid,event.flags);return; }
+                if (event.effect==SquidDestroyEffect::PostDestroy) { DestroyPreviewDaisSlots(event.sid);damageablePostState.battle=core.ownerMode.battle;damageablePostState.boss=assetState.boss;damageablePost->PostDestroy(event.sid,event.flags);return; }
+            }
             if (PlainDamageable(event.sid) || SunFence(event.sid)) {
                 if (event.effect==SquidDestroyEffect::PreDestroy) { if (SunFence(event.sid)) fenceLifetime->PreDestroy(event.sid,event.flags);else damageablePre->PreDestroy(event.sid,event.flags);return; }
                 if (event.effect==SquidDestroyEffect::PostDestroy) { damageablePostState.battle=core.ownerMode.battle;damageablePostState.boss=assetState.boss;damageablePost->PostDestroy(event.sid,event.flags);return; }
@@ -673,7 +706,7 @@ struct RawCampaignSession::Impl {
         };
         auto previousDestroy=std::move(worldHooks.destroy); // 실제 신전 VT의 공통+10만 추가 분배한다.
         worldHooks.destroy=[this,previous=std::move(previousDestroy)](Sid sid,std::uint32_t flags,const SquidDestroyHooks& hooks) {
-            if (Vortex(sid) || FenceCommon(sid) || Flyer(sid) || VisualDummy(sid) || PlainDamageable(sid) || SunFence(sid)) return core.virtualDestroy.Destroy(sid,flags,hooks);return previous(sid,flags,hooks);
+            if (Vortex(sid) || FenceCommon(sid) || Flyer(sid) || VisualDummy(sid) || PlainDamageable(sid) || SunFence(sid) || PreviewDais(sid)) return core.virtualDestroy.Destroy(sid,flags,hooks);return previous(sid,flags,hooks);
         };
         buriedRegular=std::make_unique<RawBuriedRegular>(core.pool,core.frames,core.frame,random);
         auto actualRegular=hits->Handler(combat->Handler(assetBindings->Handler(buriedRegular->Handler(priests->RegularHandler([this](Sid sid,std::uint32_t event,std::uint32_t count,float payload) {
@@ -770,6 +803,16 @@ struct RawCampaignSession::Impl {
         const auto table=Read(core.pool.Slot(sid),0);
         // 현재 VT를 매 호출 다시 읽고 주소가 같은 순수 수명 몸체만 공유한다.
         for (const auto known:kPlainDamageableTables) if (known==table) return true;return false;
+    }
+    // 실제507950/+10=4af780이며 extra8일 때44afd0의선행 일반 효과가 없다. 살아 있는 다이스 전체로 확장하지 않는다.
+    bool PreviewDais(Sid sid) const { const auto raw=core.pool.Slot(sid);return raw[10]==runeState.daisType && Read(raw,0)==0x00507950 && (raw[40]&8)!=0; }
+    // 449580/기존 RawDaisLifecycle.PostDestroy의 두 SID 쌍을 같은 실제9×b4 Player 저장소에 연결한다.
+    void DestroyPreviewDaisSlots(Sid sid) {
+        const auto owner=core.pool.Slot(sid)[34];if (!owner) return;
+        if (owner>8) throw std::out_of_range("다이스 미리보기 현재 Player 범위 오류");
+        auto record=std::span(players).subspan(static_cast<std::size_t>(owner)*180,180);
+        // 원본은 second94/98을 먼저, first8c/90을 다음에 처리하며 일치하지 않는 쌍은 보존한다.
+        for (const std::size_t offset:{0x94U,0x8cU}) if (Read(record,offset)==sid.value) { Put(record,offset,0);Put(record,offset+4,Read(record,offset)); }
     }
     // 썬 바리케이드의 특수457990 전처리는 다른 일반 Damageable에 적용하지 않는다.
     bool SunFence(Sid sid) const { const auto raw=core.pool.Slot(sid);return raw[10]==136 && Read(raw,0)==0x509470; }
@@ -1455,6 +1498,54 @@ std::unique_ptr<RawPriestMenu> RawCampaignSession::MakePriestMenu(PriestMenuHook
     hooks.money=[current](std::uint32_t owner) { return std::bit_cast<float>(current->sp.Get(owner)); };
     return std::make_unique<RawPriestMenu>(current->core.pool,current->core.types,current->core.frames,current->players,
         current->constructionExcludedTypes,current->contentFinder,state,std::move(hooks));
+}
+// 원본 사제/Carrier/회수/공통 객체/Player 몸체를 같은 현재 월드와 실제 Client 경계로 조립한다.
+std::unique_ptr<RawCampaignObjectMenus> RawCampaignSession::MakeObjectMenus(CampaignObjectMenuUi ui) {
+    if (!impl_->loaded) throw std::logic_error("설치 전 실제 Session 객체 메뉴 체인 요청");
+    auto* current=impl_.get(); // 반환 체인의 모든 게임 getter가 빌리는 고정 주소다.
+    auto menus=std::make_unique<RawCampaignObjectMenus::Impl>(std::move(ui),current->rewardState.cdLocalSp);auto* chain=menus.get();
+    auto& inputs=chain->ui; // 이 주소는 반환 객체의 수명 동안 바뀌지 않는다.
+    inputs.objectState.localOwnerRead=[current] { return current->playerState.battleOwner; };
+    inputs.objectState.editorRead=[current] { return current->globals.editor!=0; };
+    inputs.objectState.specialRead=[current] { return current->playerState.special; };
+    inputs.objectState.chargeBlockedRead=[current] { return current->globals.missionPost; };
+    auto reads=inputs.identity; // 주소/실패 이름/선택적 metadata는 현재 Client의 실제 입력을 유지한다.
+    reads.localOwner=inputs.objectState.localOwnerRead;reads.subscriber=[current] { return current->globals.mySubscriber; };
+    reads.battle=[current] { return current->core.ownerMode.battle; };reads.editor=inputs.objectState.editorRead;
+    reads.metamap=[current] { return current->core.ownerMode.challenge; };
+    reads.name=[current] { const auto end=std::find(current->handle.begin(),current->handle.end(),std::uint8_t{});if (end==current->handle.end()) throw std::logic_error("현재 Session 이름 NUL 누락");return std::string_view(reinterpret_cast<const char*>(current->handle.data()),static_cast<std::size_t>(end-current->handle.begin())); };
+    chain->identity=std::make_unique<RawPlayerIdentity>(current->core.pool.Edition(),current->players,inputs.meta,inputs.chat,std::move(reads));
+    auto player=inputs.player; // 실제 Chat/허용/통신/서식은 caller의 동일 Client 경계다.
+    player.mission=[current] { return current->globals.missionPost; };player.fort=[current] { return current->core.bridgeState.mission; }; // Player 메뉴의 fort 경계는00594fa0이며 inFortMode00594fb8과 다르다.
+    player.money=[current](std::uint32_t owner) { return std::bit_cast<float>(current->sp.Get(owner)); };
+    chain->player=std::make_unique<RawPlayerMenu>(*chain->identity,current->alliances,current->hiddenPlayers,current->priestState.priests.ownerState,inputs.playerState,std::move(player));
+    auto object=inputs.object; // GUI/설정/문자열 토큰은 유지하며 게임 계산만 현재 실제 몸체로 교체한다.
+    object.hasHitPoints=[current](Sid sid) { return current->hp.HasHitPoints(sid); };
+    const auto derivedCount=object.count; // 원본83VT 중 두 파생 가상80만 외부 실제 분배기를 요구한다.
+    object.count=[current,derivedCount](Sid sid) {
+        const auto raw=current->core.pool.Slot(sid);const auto type=static_cast<std::size_t>(raw[10]);
+        if (type>=current->core.types.size() || Read(raw,0)!=current->core.factory.ConstructorVtable(current->core.types[type])) throw std::logic_error("현재 객체 메뉴 가상80 VT 미연결");
+        const auto table=Read(raw,0); // 보호 PE의 나머지81 생성 VT는 모두 실제 base004ad0f0을 가리킨다.
+        if (table==0x5076b8U || table==0x507950U) { if (!derivedCount) throw std::logic_error("객체 메뉴 파생 가상80 미연결");return derivedCount(sid); }
+        return current->level->Get(sid);
+    };
+    object.salvageRefund=[current](Sid sid,std::uint32_t type,std::uint32_t count) { return current->hp.SalvageRefund(sid,type,std::bit_cast<std::int32_t>(count)); };
+    BindObjectMenuIdentity(object,*chain->identity);BindObjectPlayerMenu(object,*chain->player);
+    chain->object=std::make_unique<RawObjectMenu>(current->core.pool,current->core.types,inputs.objectState,std::move(object));
+    CarrierDropPointHooks point;point.mayPlace=[current](const CanonPlacementQuery& query) { current->PrepareConstruction();return current->MayPlaceGameplay(query); };
+    point.center=[current](Sid sid) { return current->gunTarget->Center(sid); };
+    chain->dropPoint=std::make_unique<RawCarrierDropPoint>(current->core.pool,current->core.types,chain->dropState,std::move(point));
+    chain->lookup=std::make_unique<RawContainedLookup>(current->core.pool,[current](Sid sid,std::uint32_t flags) { if (!current->world.Destroy(sid,flags)) throw std::logic_error("현재 메뉴 종속 가상 삭제 거부"); });
+    auto carrier=inputs.carrier; // 현재 이동/Host/위치/SP를 같은 월드에 연결한다.
+    BindCarrierMenuWorld(carrier,current->core.pool,current->priests->PriestState(),current->core.processes,*chain->lookup,current->hp,
+        [current](std::uint32_t type) { return current->priests->MovementProcessType(type); },[current](Sid sid) { return current->core.processes.FromForm(sid)!=nullptr; });
+    BindCarrierMenuDropPoint(carrier,current->core.pool,*chain->dropPoint);BindCarrierMenuBase(carrier,*chain->object);
+    carrier.money=[current](std::uint32_t owner) { return std::bit_cast<float>(current->sp.Get(owner)); };
+    chain->carrierState.localOwnerRead=inputs.objectState.localOwnerRead;chain->carrierState.editorRead=inputs.objectState.editorRead;
+    chain->carrier=std::make_unique<RawCarrierMenu>(current->core.pool,current->core.types,current->contentFinder,chain->carrierState,std::move(carrier));
+    auto priest=inputs.priest;priest.takePreview={}; // 검사/별도 취득 callback 대신 항상 같은 세션의 실제 커서를 사용한다.
+    BindPriestMenuCarrier(priest,*chain->carrier);chain->priest=MakePriestMenu(std::move(priest));
+    return std::unique_ptr<RawCampaignObjectMenus>(new RawCampaignObjectMenus(std::move(menus)));
 }
 // 기본 번호/특수 모드는 같은 장기 상태를 빌리며 getter를 새 캐시로 바꾸지 않는다.
 PriestMenuState& RawCampaignSession::PriestMenuSettings() { return impl_->priestMenu; }

@@ -16,6 +16,8 @@ struct ObjectMenuState {
     std::uint32_t hurtCommand{0x030000e2},destroyCommand{0x03000015},makeYoursCommand{0x030000af}; // 원본 직접 객체 명령이다.
     std::uint32_t helpCommand{0x02000017},tellCommand{0x02000095},salvageCommand{0x0200005d}; // 원본 도움말/문자열 안내/회수 명령이다.
     std::optional<std::string> helpWord; // PATCH0054db38/CD0052e8cc의 NUL 포인터와 실제 문자열을 구별한다.
+    std::function<std::uint32_t()> localOwnerRead,denySalvageRead; // 실제 세션의 현재 소유자/회수 금지 전역을 각 분기에서 읽는다.
+    std::function<bool()> editorRead,specialRead,chargeBlockedRead; // 현재 DWORD/모드를 값형 fixture와 구별하여 직접 조회한다.
 };
 // 메뉴 계산 밖의 실제 가상 조회·환불·현재 설정·번역·Player 메뉴를 공급한다.
 struct ObjectMenuHooks {
@@ -43,6 +45,11 @@ public:
     // PATCH0044ca00/CD004628a0: 현재 슬롯의 조건과 명시 타입/개수를 각각 보존한다.
     void AddSalvage(o::Sid sid,std::uint32_t type,std::uint32_t count) const;
 private:
+    std::uint32_t LocalOwner() const; // getter가 있으면 같은 현재 Player 번호를 원본 읽기 시점에 조회한다.
+    bool Editor() const; // 실제 편집 DWORD의 현재 비영 여부를 읽는다.
+    bool Special() const; // 실제 특수 모드를 매 분기에서 읽는다.
+    bool ChargeBlocked() const; // 실제 미션 전역의 현재 값을 읽는다.
+    std::uint32_t DenySalvage() const; // 회수 금지 전역은 환불/메뉴 callback 뒤 다시 읽는다.
     // 현재 물리 슬롯/TYPE/소유자만 조회하며 원본에 없는 생존 필터를 추가하지 않는다.
     std::span<const std::uint8_t> Raw(o::Sid sid) const;
     const o::RiftTypeRecord& Type(std::uint32_t type) const;

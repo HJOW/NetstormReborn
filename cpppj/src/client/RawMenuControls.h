@@ -59,6 +59,8 @@ public:
     void Open(ScreenPoint point,const std::function<void(const MenuGumpWidgets&,const MenuGumpControls&,const MenuGump&)>& builder);
     // 실제 루트 직계 sticky 팝업을 Kill하고 같은 삭제 큐를 정리한다.
     void Close();
+    // 원본00466710처럼 현재 루트 팝업을 Kill만 한다. callback 반환 전에는 노드/등록을 해제하지 않는다.
+    void RequestClosePopups();
     // 실제 메뉴 생성 전에 현재 파일 팔레트의 색 전역을 공급한다.
     void SetPalette(const PaletteColorTable& palette);
     // 현재 Client 픽셀에 원본 수집/정렬/Draw를 실행한다. 배경/그림/글자 모두 실제8비트 클립을 공유한다.

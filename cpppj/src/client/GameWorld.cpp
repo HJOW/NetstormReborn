@@ -361,6 +361,10 @@ o::SquidId GameWorld::Pick(ScreenPoint point) const {
 }
 // 없는 객체 또는 비선택 타입을 선택하지 않는다.
 void GameWorld::Select(o::SquidId id) { const auto* object=Object(id); selected_=object && object->selectable ? id : 0; changed_=true; }
+// 처리기 수명 동안 같은 선택/마우스 전역을 공유하며 선택 번호를 복사하지 않는다.
+UserHighlightState GameWorld::HighlightSettings() { return {highlightMode_,selected_,mouseType_,mousePoint_.x,mousePoint_.y}; }
+// 폴링 후 키/마우스 사건이 함께 조회할 현재 화면 위치다.
+void GameWorld::SetMousePoint(ScreenPoint point) { mousePoint_=point; }
 // 선택한 유닛의 주인이 나일 때만 명령을 적용한다.
 bool GameWorld::MoveSelected(ScreenPoint point) {
     if (campaign_) {

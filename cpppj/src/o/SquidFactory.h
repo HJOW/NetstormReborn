@@ -30,14 +30,15 @@ public:
     void PostCreate(Sid sid);
     // 004ad4a0 ↔ CD 004ae120. zOrder만 갱신하며 owner·HP는 보존한다.
     void PostTake(Sid sid);
+    // 현재 TYPE 생성자의 실제 최종 VT 기록값이다. 메뉴 등 가상 분배기는 이 값과 현재 raw VT를 먼저 대조한다.
+    // 호스트 함수 포인터로 역참조하지 않으며 미등록 생성자는 기존 조회와 같이 거부한다.
+    std::uint32_t ConstructorVtable(const RiftTypeRecord& type) const;
 private:
     // 주소 산술 전에 타입 범위와 원본 생성자 지원 여부를 검증한다.
     const RiftTypeRecord& Type(std::uint32_t number,bool requireSupported) const;
     std::span<std::uint8_t> LiveBytes(Sid sid);
     // 원본 생성자의 쓰기 순서/폭/OR 비트를 보존한다. 호출 전에 지원 여부를 검사한다.
     void ApplyConstructor(std::span<std::uint8_t> bytes,const RiftTypeRecord& type) const;
-    // 복원된 자산은 공통 Unpop을 사용한다. 최종 vtable 기록값으로 기존 객체를 확인한다.
-    std::uint32_t ConstructorVtable(const RiftTypeRecord& type) const;
     // 원본 32비트 vtable 값은 기록할 뿐 호스트에서 역참조하지 않는다.
     std::uint32_t BaseVtable() const;
     // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.

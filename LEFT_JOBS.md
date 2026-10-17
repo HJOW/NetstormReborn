@@ -1,5 +1,21 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-17 단위137 인계: 실제 Client 커서 장치·Gump 트리·강조·객체 메뉴 체인 — 최종 메뉴 수정 미재검증 (`HJOW-Athlon`)
+
+- [x] AGENTS·두 LEFT·깨끗한 기준 `f69dc67`과 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16**을 확인했다. 새 디컴파일/원본 게임 실행은 없다. [작업 기록](docs/exe/cpp-cursor-client-effects-20261017.md). 전체화면 DirectDraw 수정은 제외한다. **사용자 최종 지시: 해당 부분 수정까지만 하고 테스트는 다음으로 넘긴다. 인수인계·로컬 커밋 후 목표를 일시중지하고 종료한다.** 서브 AI 3명은 모두 작업을 마쳤으며 추가 일을 맡기지 않았다. 이후 단계는 재개 요청 전 시작하지 않는다.
+- [x] 현재 Client의 실제 `SetEffects`와 커서 장치/번역 바이트/같은 FontStore 측정/폴링/현재 Renderer dirty를 연결했다. 같은 Gump 트리의465ed0 직계 선택·4651b0 재귀 성공 토큰·직접+28 DWORD·+24 부모 게임 SID/현재 깊이·466710 Kill 예약을 구별했다. 즉시 Cleanup하지 않으며 UI 교체 뒤 고정 마우스는 기존 Query/dirty/커서 선택을 재실행한다.
+- [x] 원본 강조4d5480/4d5bb0의 새 **178입력/356부모 정상반환/정밀도 차이0/6,296명령**을 관측했다. `RawUserHighlight`는 같은 GameWorld 선택을 읽기만 하며 별도 모드/TYPE/폴링 좌표를 공유한다. Drop의 닫기 통지는 UI 대신 같은 Host/Kernel의 실제 Mana/Range Notify(3,0,0)로 수정했다. 실제 선택4d5c90·비용 안내·송신을 빈 성공으로 채우지 않았다.
+- [x] `Session.MakeObjectMenus`가 실제 사제/Carrier/Damageable/객체/Player **+a8 작성 체인**과 같은 기술/SP/HP/배치/커서 취득을 묶는다. 값형 fixture를 보존하며 현재 상태 getter를 추가하고 기존 환불/VT 조회를 공개 재사용한다. 검토에서 찾은 Player 메뉴의fa0/fb8 혼용은 같은 `core.bridgeState.mission`으로 수정했다. 실제 subscriber0을1로 바꾸지 않았으며 peer22는 명시 검사 입력이다.
+- [x] 원본 근거 **48종은 마지막 Dais 미리보기 수정 전 통과**했다. 새 실제 트리/장치 바이트·현재 폴링/강조/Range 통지/고정마우스 토큰 교체/메뉴 행과 정수 입력 검사를 추가했다. 기존 fixture/원본 기대 출력은 바꾸지 않고 현재 제품 SHA 핀만 단위137 이력으로 갱신하며 과거 핀은 보존한다. SHA 갱신은 최종 소스의 원본 대조 재실행을 뜻하지 않는다. 로그 `extracted/goal-cursor-client-20261017-verify-final.log`.
+- [x] **빌드2 실행 파일**의 클론 창 회귀 **5회/종료0**: 1-1/1-2 브리핑→Play Mission→실제 월드 진입, tutorial1/2/3 브리핑을 확인했다. `extracted/goal-cursor-client-20261017-entry/results.json`은 `originals_unchanged=true`다. 마지막 Dais/검사 수정 뒤에는 재실행하지 않았으며 사용자 자연 완주나 나머지 미션까지의 검증으로 확대하지 않는다.
+- [x] 초기 메뉴 검사의 TYPE165 미리보기 삭제 미연결을 수정했다. 원본 VT507950·extra bit8인 **Dais 미리보기만** 공통 Destroy/DamageablePre에 연결하고, 449580의 실제 Player9×180 기록 +94/+98 및 +8c/+90 쌍을 현재 SID 일치 때만 정리한 뒤 기존 DamageablePost를 호출한다. 일반 살아 있는 Dais 수명은 미연결로 남는다. Range 검사의 잘못된 잔존 기대는 실제 마지막 Prepare의 종료 필드와 부모 삭제 후 Kernel 반납을 확인하도록 수정했다.
+- [x] Release **빌드2·3·4 모두 종료0/경고0/오류0**이다. 빌드1은 편집 중 소스 재컴파일이어서 루트의 해당 프로세스만 중지했다. 마지막 메뉴 fixture 수정 직후 시작한 빌드4는 사용자 최종 지시 뒤 완료 결과만 회수했고 새 검사는 실행하지 않았다. 로그 접두부 `extracted/goal-cursor-client-20261017-build`.
+- [x] 인계 시 정적 스테이징 감사는89파일·제품/검사31파일·기존53보고서의현재181핀·보호3SHA·UTF-8/LF·기존fixture/CMake/역사 보존을 확인했다. AGENTS/원본/DN은 변경하지 않았다. 이 확인은 Git과 자료 일관성 점검이며 보류한 제품 테스트를 대신하지 않는다.
+- [ ] **최종 검증 보류:** 마지막 집중 실행은 **27개 중 26개 성공, 메뉴1개 실패**다(`focus3-{1..5}.log`). 실패 `CampaignObjectMenus_ActualChainAndBuildSelection`은 headless `MenuServices`의 현재 선택 소비자가 빠져 명시 오류가 났다. 이 fixture에 현재 선택 getter와 ClearSelection 처리만 추가했으며 **그 뒤 재검증하지 않았다**. 실제 GameWorld의 기존 선택 소비자를 기본0으로 대체하지 않았다. 신규 검사는14개이고 이번 단위의 전체 CTest는 미실시다(예상1,565개를 통과 수로 기록하지 않는다). 원본48종/클론5회도 최종 수정 뒤 미재실행이다. 사용자 지시에 따라 이 상태를 인계하고 **`20261017-37 CP 현재 커서 장치와 실제 Gump 및 객체 메뉴 체인 연결`**로 로컬 커밋 후 일시중지한다. push하지 않는다.
+- [ ] **재개 시 첫 작업:** AGENTS/두 LEFT와 마지막 디컴파일 호스트를 확인한 뒤 현재 소스 빌드 상태 및 `CampaignObjectMenus_` 집중 검사를 먼저 확인한다. 실패 해결 후 필요한 전체 CTest·최종 원본 근거 감사·클론 진입 회귀를 수행한다. 로그 `extracted/goal-cursor-client-20261017-focus3-4.log`와 마지막 fixture 수정을 출발점으로 삼는다. 재개 지시 전 검사나 다음 구현을 시작하지 않는다.
+- [ ] **다음 실제 UI:** 공통+ac `4adb30`은 extra bit 거부→다이스의 같은 좌표 제단(164) 위임→BeginFancy→제목4ada70/4ad780(**실제4인자 type/count/owner/sid**)→실제+a8→425f90 위치/475cf0 객체부착→반환1이다. 현재+a8 factory를 전체Open으로 확대해 주장하지 않는다. TYPE float+44/class+aa, 현재 메뉴 baseWidth와 원본 정수 감김, 같은 Session Pool의 GumpFormHost/부모 삭제 알림, RawMenuControls의 객체부착 완료 입구 및 원본 DWORD 명령 소비자가 필요하다.29개 다른 파생+a8을 일반Damageable로 대체하지 않는다. 실제 우클릭 메뉴는 게임을 정지하지 않는다.
+- [ ] 실제 로그인된 LocalMissionTransport 양 끝/큐잉/등록 수명, 생산 메뉴/완료·경제/AI·전체 Kernel, Early Missions1~6/캠페인1-1~1-2/데모3의 자연 완주·승패·저장·다음 미션 및 전체 동일성은 미완료다.
+
 ## 2026-10-17 단위136 완료: 현재 커서 잠금·회전·실제 UserInput (`HJOW-Athlon`)
 
 - [x] AGENTS·두 LEFT·기준 `c7e9e8b`와 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16**을 확인했다. 새 디컴파일/게임/GUI 실행은 없고 보호 PE 격리 CPU 실행만 추가했다. [작업 기록](docs/exe/cpp-cursor-actions-20261017.md), `cpppj/cursor-actions.json`, `cpppj/campaign-cursor-actions.json`, 접두부 `extracted/goal-cursor-actions-20261017-`를 남겼다. 전체 목표는 active다.

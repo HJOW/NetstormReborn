@@ -1,0 +1,154 @@
+// 실제 세션의 사제/Carrier/객체/Player 메뉴를 같은 원본 Gump 입력과 커서 취득에 연결한다.
+#include "DudeSpawnSupport.h"
+#include "client/RawCampaignSession.h"
+#include "client/RawCampaignCursor.h"
+#include "client/RawButtonControls.h"
+#include "client/RawMenuControls.h"
+
+using namespace netstorm::client;
+namespace {
+// 보호 자산의 실제 세션을 설치하기 위한 장치/번역만 명시한다. 게임 계산/생성 결과를 공급하지 않는다.
+struct MenuServices {
+    SoundList names{OriginalEdition::Patch1078}; // 실제 같은 이름표를 세션보다 오래 유지한다.
+    std::array<std::uint8_t,4> you{'Y','o','u',0}; // 원본 부모의 명시 영어 번역 입력이다.
+    Sid selected{}; // 이 headless UI의 현재 선택이며 미리보기 삭제도 같은 값을 조회한다.
+    // 선택되는 장치/설정 경계만 공급하며 미복원 하위를 성공으로 채우지 않는다.
+    RawCampaignSessionServices Make() {
+        names.Initialize();RawCampaignSessionServices result;result.soundNames=&names;result.unixSeconds=[] { return 946684800; };
+        result.sound.wallSeconds=[] { return 100.0; };result.sound.play=[](SoundHandle sound,std::uint32_t,std::uint32_t,std::uint32_t,std::uint32_t,std::uint32_t) { return sound; };
+        result.sound.playLoopAt=[](float,float,SoundHandle current,SoundHandle sound) { return current ? current : sound; };
+        result.sound.playOnceAt=[](float,float,SoundHandle sound,std::uint32_t,std::uint32_t) { return sound; };
+        result.sound.stop=[](SoundHandle) {};result.sound.isPlaying=[](SoundHandle) { return 0U; };
+        result.install.translateYou=[this] { return std::span<const std::uint8_t>(you); };
+        result.install.setConfig=[](std::string_view,std::span<const std::uint8_t>) {};result.install.refreshWindowTitle=[] {};result.install.resetCamera=[] {};
+        result.ownership.refreshProduction=[] {};result.ownership.themeMode=[] { return 0U; };
+        result.assets.postPop.playImpactSound=[](std::uint32_t) {};result.assets.queueCommand=[](std::uint32_t,std::int32_t,std::int32_t) {};
+        result.priest.shield.noticeSound=[](const PriestShieldNotice&) {};result.priest.shield.translate=[](std::string_view key) { return std::string(key); };result.priest.shield.tell=[](std::string_view) {};
+        result.deletion.selected=[this] { return selected; };
+        result.deletion.emit=[this](const SquidDestroyEvent& event) { if (event.effect==SquidDestroyEffect::ClearSelection) { selected={};return; }throw std::logic_error("메뉴 검사 다른 실제 삭제 효과 미연결"); };
+        result.player.log=[](std::uint32_t,std::string_view) {};return result;
+    }
+};
+// 실제 서식의 인자 순서만 처리하는 명시 영어 UI 경계다. 원본 게임 조건은 계산하지 않는다.
+std::string PrintMenu(std::string_view pattern,std::span<const PriestMenuArgument> values) {
+    std::string result;std::size_t argument=0;
+    // 원본 고정 %s/%d/%%의 현재 인자만 순서대로 출력한다.
+    for (std::size_t index=0;index<pattern.size();++index) {
+        if (pattern[index]!='%') { result+=pattern[index];continue; }
+        if (++index>=pattern.size()) throw std::logic_error("메뉴 검사 서식 끝");if (pattern[index]=='%') { result+='%';continue; }
+        if (argument>=values.size()) throw std::logic_error("메뉴 검사 인자 부족");
+        if (pattern[index]=='s') result+=std::get<std::string>(values[argument++]);else if (pattern[index]=='d') result+=std::to_string(std::get<std::int32_t>(values[argument++]));else throw std::logic_error("메뉴 검사 서식 종류");
+    }
+    CHECK(argument==values.size());return result;
+}
+// 동일 보호 글꼴/등록표/입력 큐와 메뉴 작성기의 한 수명을 제공한다.
+struct ActualMenuUi {
+    const netstorm::test::dudespawn::DudeAssets& assets; // 실제 보호 TYPE/SHP/팔레트를 읽는 같은 입력이다.
+    FontStore fonts; // 원본 글리프와 메뉴 측정이 사용하는 실제 글꼴 캐시다.
+    RawButtonControls buttons; // 기존 실제 공통 트리/생성/수명/입력이다.
+    RawMenuControls* menus{}; // 공통 트리에 연결된 메뉴 처리기를 빌린다.
+    InputQueue commands; // 실제 메뉴가 전달한 원본 정수 명령을 보관한다.
+    InputEvent mouse{InputCode::kRelease,320,240}; // 현재 장치 입력의 명시 외부 경계다.
+    std::array<std::uint8_t,100*48> chat{}; // 실제 Identity가 직접 빌리는 명시 Client Chat100 원문이다.
+    std::array<std::uint32_t,3> permissions{}; // 송금/제안/해제의 현재 외부 허용 DWORD 입력이다.
+    std::vector<std::string> tells; // 실제 건설 선택 관문이 요청한 Tell 키다.
+    std::vector<std::array<std::uint32_t,3>> buildRows; // 실제 사제 작성기의 command/parameter/enabled 관찰이다.
+    std::uint32_t cursor{},highlight{},address{}; // 현재 장치/강조 모드/Identity 주소 입력이다.
+    // 창/게임 실행 없이 같은 자산과 실제 공통 UI 처리기를 준비한다.
+    explicit ActualMenuUi(const netstorm::test::dudespawn::DudeAssets& source):assets(source),fonts(source.files,"Arial"),buttons(OriginalEdition::Patch1078,{[] { return 0.0; },[this](std::uint32_t) { return mouse; },[] {}}) {
+        RawMenuHooks hooks;hooks.command=[this](std::uint32_t code,std::uint32_t id,std::uint32_t parameter) { commands.PushCommand(code,std::bit_cast<std::int32_t>(id),std::bit_cast<std::int32_t>(parameter)); };
+        hooks.readInt=[](std::string_view,std::int32_t& value) { value=0; };hooks.sound=[](std::string_view) {};hooks.poll=[this](std::uint32_t) { return mouse; };hooks.cursor=[this](std::uint32_t value) { cursor=value; };
+        menus=&buttons.EnableMenus(source.game,fonts,std::move(hooks));menus->SetPalette(Palette());
+        const auto& type=source.game.Find("fortGump");const auto frame=source.game.FrameIndex(type,"A00",0);const auto metrics=source.game.Shapes().SquidMetrics(type.block,frame);
+        buttons.SetControls({}, {},1024,768,{static_cast<std::uint32_t>(70+type.block),static_cast<std::uint32_t>(frame),metrics.width,metrics.height,ButtonColors(Palette())});
+    }
+    // 현재 보호 RGB를 원본 색표 계산기에 입력한다.
+    PaletteColorTable Palette() const {
+        std::array<std::uint32_t,256> logical{};
+        // 원본 DWORD의 낮은 바이트부터 RGB를 쓴다.
+        for (std::size_t index=0;index<logical.size();++index) { const auto color=assets.game.Palette().Color(static_cast<std::uint8_t>(index));logical[index]=color.red|(std::uint32_t(color.green)<<8)|(std::uint32_t(color.blue)<<16); }
+        return BuildPaletteColorTable(logical,OriginalEdition::Patch1078);
+    }
+    // Caller UI가 실제 controlled 작성기와 동일한 수명으로 연결되는 입력이다.
+    CampaignObjectMenuUi Hooks(RawCampaignSession& session,const MenuGumpWidgets& widgets,const MenuGumpControls& controls,const MenuGump& raw) {
+        CampaignObjectMenuUi result;result.chat=chat;result.objectState.helpWord="About";
+        result.objectState.localOwner=8;result.objectState.editor=true;result.objectState.special=true;result.objectState.chargeBlocked=false; // 잘못된 값형 사본을 두어도 실제 세션 getter가 원본 현재 값을 읽어야 한다.
+        result.identity.address=[this] { return address; };result.identity.unknownName=[] { return std::string_view("SOMEONE"); };
+        result.priest.format=result.carrier.format=result.object.format=PrintMenu;
+        result.priest.description=result.carrier.description=[&session](std::uint32_t type) { return session.Core().types[type].description; };
+        result.priest.tell=[this](std::string_view key) { tells.emplace_back(key); };
+        result.player.translate=[](std::string_view key) { return std::string(key); };result.player.print=PrintMenu;
+        result.player.allowSend=[this] { return permissions[0]!=0; };result.player.allowOffer=[this] { return permissions[1]!=0; };result.player.allowBreak=[this] { return permissions[2]!=0; };
+        result.player.ignored=[](std::uint32_t) { return false; };result.player.whispered=[](std::uint32_t) { return std::uint8_t{}; }; // 명시 빈 Chat 보조 목록 입력이다.
+        result.player.assertion=[](PlayerMenuAssertion) { throw std::logic_error("실제 메뉴 검사 Player 진단"); };
+        BindPriestMenuControls(result.priest,widgets,controls,raw);BindCarrierMenuControls(result.carrier,controls);BindPlayerMenuControls(result.player,widgets,controls,raw);
+        const auto item=result.priest.item;result.priest.item=[this,item](std::string_view label,std::uint32_t command,std::uint32_t parameter,bool enabled) { buildRows.push_back({command,parameter,enabled ? 1U : 0U});item(label,command,parameter,enabled); };
+        result.object.itemCount=[&raw] { return raw.ItemCount(); };result.object.separator=[&controls] { controls.AddSeparator(); };
+        result.object.item=[&controls](std::string_view label,std::uint32_t command,const ObjectMenuParameter& parameter) { if (!std::holds_alternative<std::uint32_t>(parameter)) throw std::logic_error("검사에서 선택하지 않은 정적 문자열");controls.AddText(label,command,std::get<std::uint32_t>(parameter)); };
+        result.object.submenu=[&controls](std::string_view label,std::uint32_t child) { controls.AddSubmenu(label,child); };result.object.setConfig=[](std::string_view,std::string_view) {};
+        return result;
+    }
+    // 실제 트리의 폴링/입력 처리기로 선택한다. 명령 callback을 직접 호출하지 않는다.
+    void Click(ScreenPoint point) { mouse={InputCode::kLeftButton,point.x,point.y};buttons.Poll(mouse);buttons.Event(mouse); }
+    // 커서 장치/화면 경계만 공급하며 실제 취득/배치 계산은 세션이 수행한다.
+    CampaignCursorEffects CursorEffects() {
+        CampaignCursorEffects effects;effects.lifecycle.highlight=[this](std::uint32_t mode) { highlight=mode; };effects.lifecycle.selectCursor=[this](std::uint32_t value) { cursor=value; };
+        effects.lifecycle.closePopups=[this] { menus->Close(); };effects.lifecycle.translate=[](std::string_view key) { return std::string(key); };
+        effects.lifecycle.measure=[this](std::string_view value,const std::array<std::uint32_t,8>&) { return std::array<std::int32_t,2>{fonts.Get(0).Measure(value),fonts.Get(0).Height()}; };effects.lifecycle.mouse=[this] { return ScreenPoint{mouse.x,mouse.y}; };
+        effects.placement.gumpAt=[](std::int32_t,std::int32_t) { return 0U; };effects.placement.invalidate=[](ScreenRect,std::uint32_t) {};return effects;
+    }
+};
+}
+// 실제 생성된 건설 행의 현재 금액 관문과 같은 커서 취득, 기본 객체/Player 메뉴 및 실제 정수 명령 입력을 확인한다.
+TEST_CASE(CampaignObjectMenus_ActualChainAndBuildSelection) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);MenuServices external;ActualMenuUi ui(assets);
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",external.Make());session.Load();
+    const Sid priest{static_cast<std::uint16_t>(session.FindPriestParticipation(1))};CHECK(priest.value);std::unique_ptr<RawCampaignObjectMenus> chain;
+    ui.menus->Open({320,240},[&](const auto& widgets,const auto& controls,const auto& menus) { widgets.BeginVertical();chain=session.MakeObjectMenus(ui.Hooks(session,widgets,controls,menus));chain->OpenPriest(priest); });
+    const auto knowledge=ui.menus->Point("View Netstorm Knowledge");CHECK(knowledge.has_value());CHECK(ui.menus->Point("About").has_value());CHECK(ui.menus->Point("Player").has_value());CHECK(!ui.menus->Point("Destroy").has_value());
+    if (knowledge) ui.Click(*knowledge);const auto command=ui.commands.Pop(false);CHECK(command.code==session.PriestMenuSettings().knowledgeCommand && command.x!=0 && command.y==0);
+    const auto target=session.PriestMenuSettings().dais;const auto row=std::find_if(ui.buildRows.begin(),ui.buildRows.end(),[&](const auto& value) { return value[0]==session.PriestMenuSettings().buildCommand && (value[1]>>16)==target; });
+    CHECK(row!=ui.buildRows.end());if (row==ui.buildRows.end()) return;CHECK(((*row)[1]&0xffffU)==priest.value && (*row)[2]==1);
+    session.SetSp(1,0);CHECK(!chain->SelectBuild((*row)[1]>>16,Sid{static_cast<std::uint16_t>((*row)[1])}));CHECK(ui.tells==std::vector<std::string>({"BuildNoBucks"}));CHECK(!session.CursorDropSettings().preview.value);
+    session.SetSp(1,100000);session.Cursor().SetEffects(ui.CursorEffects());const auto before=session.Sp(1);CHECK(chain->SelectBuild((*row)[1]>>16,Sid{static_cast<std::uint16_t>((*row)[1])}));
+    const auto form=session.CursorDropSettings().preview;CHECK(form.value && session.Core().pool.Slot(form)[10]==6);CHECK(Get(session.Core().pool.Slot(form),18,2)==target);CHECK(session.CursorDropSettings().costFlags==0x160 && session.Sp(1)==before);
+    const auto preview=session.Cursor().Lifecycle().previews[0];CHECK(session.Core().pool.Slot(preview)[10]==target && (session.Core().pool.Slot(preview)[40]&8));
+    auto records=session.PlayerRecords();Put(records,180+0x94,preview.value);Put(records,180+0x98,123);Put(records,180+0x8c,priest.value);Put(records,180+0x90,456); // 실제 등록 쌍 하나만 일치시키고 다른 쌍은 표식으로 보존한다.
+    session.Cursor().Cancel();ui.menus->Close();chain.reset();CHECK(!ui.menus->HasMenus());
+    CHECK(Get(records,180+0x94)==0 && Get(records,180+0x98)==0 && Get(records,180+0x8c)==priest.value && Get(records,180+0x90)==456);
+}
+// 원본 슬롯의 TYPE/가상 개수 snapshot을 그대로 사용하며 현재 HP 환불만 계산하는 공개 입구다.
+TEST_CASE(CampaignObjectMenus_ActualRefundAndUninstalledGuard) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);MenuServices external;
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",external.Make());
+    CHECK(Throws([&] { static_cast<void>(session.MakeObjectMenus({})); }));session.Load();const Sid priest{static_cast<std::uint16_t>(session.FindPriestParticipation(1))};const auto raw=session.Core().pool.Slot(priest);const auto& hp=session.HitPoints();
+    const auto count=std::uint32_t(raw[11]>>5);const auto before=session.Sp(1);CHECK(hp.SalvageRefund(priest,raw[10],static_cast<std::int32_t>(count))==hp.Plan(priest,1,true).refund);CHECK(session.Sp(1)==before);
+    ActualMenuUi ui(assets);std::unique_ptr<RawCampaignObjectMenus> chain;
+    ui.menus->Open({320,240},[&](const auto& widgets,const auto& controls,const auto& menus) { widgets.BeginVertical();auto hooks=ui.Hooks(session,widgets,controls,menus);hooks.priest.tell={};chain=session.MakeObjectMenus(std::move(hooks));chain->OpenPriest(priest); });
+    session.SetSp(1,0);CHECK(Throws([&] { static_cast<void>(chain->SelectBuild(session.PriestMenuSettings().dais,priest)); }));
+    ui.menus->Close();chain.reset();
+}
+// 명시 현재 peer 기록으로 원본 Player 전체 메뉴를 선택한다. 실제 로그인/전송 완주를 대신하는 검사는 아니다.
+TEST_CASE(CampaignObjectMenus_CurrentPeerPlayerMenuUsesActualInput) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);MenuServices external;ActualMenuUi ui(assets);
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",external.Make());session.Load();
+    auto players=session.PlayerRecords();Put(players,2*180+0x2c,22);players[2*180+0x50]=0x22;const std::string name="Current peer";std::copy(name.begin(),name.end(),players.begin()+2*180+0xc);players[2*180+0xc+name.size()]=0;
+    const Sid priest{static_cast<std::uint16_t>(session.FindPriestParticipation(2))};CHECK(priest.value);std::unique_ptr<RawCampaignObjectMenus> chain;
+    ui.menus->Open({320,240},[&](const auto& widgets,const auto& controls,const auto& menus) { widgets.BeginVertical();chain=session.MakeObjectMenus(ui.Hooks(session,widgets,controls,menus));chain->OpenPriest(priest); });
+    const auto player=ui.menus->Point("Player");CHECK(player.has_value());if (player) {
+        ui.Click(*player);
+        // 실제 원본 하위 메뉴 확장의 두 프레임을 같은 트리에서 진행한다.
+        for (std::uint32_t frame=0;frame<2;++frame) ui.buttons.Poll({InputCode::kRelease,player->x,player->y});
+        const auto find=ui.menus->Point("Find Priest!");CHECK(find.has_value());CHECK(!ui.menus->Point("Request Alliance").has_value());if (find) ui.Click(*find);
+    }
+    const auto command=ui.commands.Pop(false);CHECK(command.code==0x020000b8 && command.y==2);ui.menus->Close();chain.reset();
+    session.Core().bridgeState.mission=false; // 같은00594fa0을 명시 변경하여00594fb8이나 상수1을 읽는 오연결을 검출한다.
+    ui.menus->Open({320,240},[&](const auto& widgets,const auto& controls,const auto& menus) { widgets.BeginVertical();chain=session.MakeObjectMenus(ui.Hooks(session,widgets,controls,menus));chain->OpenPriest(priest); });
+    const auto changed=ui.menus->Point("Player");CHECK(changed.has_value());if (changed) {
+        ui.Click(*changed);
+        // 같은 현재 미션 전역을 읽어 달라진 원본 Player 하위 메뉴를 실제 확장한다.
+        for (std::uint32_t frame=0;frame<2;++frame) ui.buttons.Poll({InputCode::kRelease,changed->x,changed->y});
+        CHECK(ui.menus->Point("Request Alliance").has_value());
+    }
+    ui.menus->Close();chain.reset();session.Core().bridgeState.mission=true;
+}

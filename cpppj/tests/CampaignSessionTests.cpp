@@ -7,6 +7,8 @@
 #include "client/RawCursorPlacement.h"
 #include "client/RawCampaignCursor.h"
 #include "client/RawCampaignCursorDisplay.h"
+#include "client/CampaignCursorClientEffects.h"
+#include "client/RawButtonControls.h"
 #include "client/GumpVisual.h"
 #include "o/RawMissionAiSettings.h"
 #include "o/RawGeyserAiRegistration.h"
@@ -1180,4 +1182,71 @@ TEST_CASE(CampaignSession_CursorUserInputReadsCurrentSettingsAndMouse) {
     input.UpdateCursor({InputCode::kOutside,900,700});CHECK(drop.x==x);input.Event({InputCode::kRightButton,ui.mouse.x,ui.mouse.y});CHECK(drop.direction==2);config.Set("rotmode","1");input.Event({InputCode::kRightButton,ui.mouse.x,ui.mouse.y});CHECK(drop.direction==0);
     input.Event({0x270000,0,0});CHECK(drop.direction==2);input.Event({0x250000|InputCode::kShift,0,0});CHECK(drop.direction==0);input.Event({InputCode::kRightButton|InputCode::kRelease,0,0});CHECK(drop.direction==0 && ui.sent.empty() && session.Sp(1)==5000);
     input.Event({0x1b,0,0});CHECK(drop.lockDepth==1 && !drop.preview.value);input.UpdateCursor({0,1000,700});CHECK(drop.x==x);
+}
+
+// 내려놓기의+1c(3,0,0)는 같은 실제 Range 프로세스에 도달하며 UI 닫기 콜백으로 대체하지 않는다.
+TEST_CASE(CampaignSession_CursorDropNotifiesActualRangeProcess) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);
+    SessionServicesFixture external;auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());
+    GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",external.Services(),{1024,768});
+    auto& session=world.Session();auto& cursor=session.Cursor();const auto core=session.Core();SessionCursorUi ui;
+    const Sid priest{static_cast<std::uint16_t>(session.FindPriestParticipation(1))};
+    auto effects=ui.Effects();std::size_t received{},wrongClose{};std::uint32_t rangeToken{};bool closedObserved=false; // GUI 수신만 명시 입력이며 Range의 실제 몸체는 대체하지 않는다.
+    effects.placement.invalidate=[&](ScreenRect,std::uint32_t) {
+        ++ui.dirty;auto* actual=dynamic_cast<CursorRangeProcess*>(core.kernel.Get(rangeToken));
+        if (actual && Get(actual->Fields().bytes,0x1b8)==1) closedObserved=true; // 마지막 실제 Prepare는 부모 삭제 전 Notify의 종료 필드를 읽는다.
+    };
+    effects.placement.gumpAt=[](std::int32_t,std::int32_t) { return 77U; };
+    effects.placement.accept=[](std::uint32_t token,std::uint32_t event,std::uint32_t,std::uint32_t,std::uint32_t) { CHECK(event==0x0200003f);return token; };
+    effects.placement.parent=effects.drop.guiParent=[priest](std::uint32_t token) { CHECK(token==77);return priest.value; };
+    effects.drop.guiFlags=[](std::uint32_t token) { CHECK(token==77);return 0U; };
+    effects.drop.guiReceive=[&](std::uint32_t token,Sid form) { CHECK(token==77 && form==session.CursorDropSettings().preview);++received; };
+    effects.drop.closeGump=[&](auto,auto,auto,auto) { ++wrongClose; };
+    cursor.SetEffects(std::move(effects));
+    const auto form=cursor.Contents().Create(priest,128,0,0x20,0x10,0); // 명시 Form 입력이며 실제 생산 완료/메뉴 제공 행의 검증은 아니다.
+    cursor.Take(form,0x100);auto& drop=session.CursorDropSettings();
+    const auto token=drop.cursorGump;rangeToken=token;auto* range=dynamic_cast<CursorRangeProcess*>(core.kernel.Get(token));
+    CHECK(range && token && drop.legalGump==77 && drop.legal);if (!range) return;
+    CHECK(Get(range->Fields().bytes,0x1b8)==0);cursor.Drop();
+    CHECK(received==1 && wrongClose==0 && drop.lockDepth==1 && !drop.preview.value && !drop.cursorGump);
+    CHECK(closedObserved && core.kernel.Get(token)==nullptr); // 실제 종료 통지 뒤 부모 미리보기 삭제가 종속 Range를 반납한다.
+    CHECK(SquidForms(core.pool).Parent(form)==priest); // GUI 수신은 실제 같은 ContentForm 부착을 사용한다.
+}
+
+// 강조 해제가 실제 월드의 현재 선택을 지우지 않고 폴링 좌표/마우스TYPE만 별도 상태로 공유한다.
+TEST_CASE(CampaignSession_CursorHighlightSharesSelectionWithoutClearingIt) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);
+    SessionServicesFixture external;auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());
+    GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",external.Services(),{1024,768});
+    const auto priest=world.Session().FindPriestParticipation(1);world.Select(priest);auto state=world.HighlightSettings();
+    CHECK(state.selectedSid==priest && priest!=0);state.mode=5;state.mouseType=128;
+    world.SetMousePoint({-33,91});CHECK(state.mouseX==-33 && state.mouseY==91);
+    UserHighlightHooks hooks;std::vector<std::uint32_t> cursors;hooks.selectCursor=[&](std::uint32_t cursor) { cursors.push_back(cursor); };
+    RawUserHighlight highlight(state,std::move(hooks));highlight.Highlight(0);
+    CHECK(state.mode==0 && state.mouseType==0 && state.selectedSid==priest && cursors==std::vector<std::uint32_t>{1});
+    highlight.Highlight(0);CHECK(cursors.size()==1);world.Select(0);CHECK(state.selectedSid==0);
+}
+
+// 마우스가 움직이지 않아도 UI 교체 뒤 수집은 새 토큰의 현재 깊이를 읽어야 한다.
+TEST_CASE(CampaignSession_CursorRequeriesReplacedGumpsAtStationaryMouse) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);
+    SessionServicesFixture external;auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());
+    GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",external.Services(),{1024,768});
+    auto& session=world.Session();auto& cursor=session.Cursor();SessionCursorUi ui;RawButtonControls controls(OriginalEdition::Patch1078);
+    const std::array<GumpControl,1> buttons{{{0,{-10000,-10000,10000,10000},false,true,false}}};
+    const std::array<std::string,1> labels{{"Current"}};const RawButtonAssets background{90,0,20,16,{7,255,13}};
+    controls.SetControls(buttons,labels,1024,768,background);
+    auto effects=ui.Effects();BindCampaignCursorGumps(effects,controls);cursor.SetEffects(std::move(effects));
+    cursor.Display().SetExternal([&](std::uint32_t token) { return controls.GumpDepth(token); },{});
+    const Sid priest{static_cast<std::uint16_t>(session.FindPriestParticipation(1))};
+    const auto form=cursor.Contents().Create(priest,128,0,0x20,0x10,0);cursor.Take(form,0x100);
+    const auto old=cursor.Lifecycle().currentGump;const auto x=session.CursorDropSettings().x,y=session.CursorDropSettings().y;
+    CHECK(old && old==controls.PickGump({session.CursorDropSettings().screenX,session.CursorDropSettings().screenY}));
+    controls.SetControls(buttons,labels,1024,768,background);const auto current=controls.PickGump({session.CursorDropSettings().screenX,session.CursorDropSettings().screenY});
+    CHECK(current && current!=old);cursor.Update(ui.mouse.x,ui.mouse.y); // 원본446b50의 위치 불변 경로는 Query하지 않는다.
+    CHECK(cursor.Lifecycle().currentGump==old);cursor.GumpsChanged();
+    CHECK(cursor.Lifecycle().currentGump==current && session.CursorDropSettings().x==x && session.CursorDropSettings().y==y);
+    cursor.Display().Sprites({0,0,1024,768},2); // 폐기 토큰 조회라면 여기서 out_of_range로 실패한다.
+    controls.SetControls({},labels,1024,768,background);cursor.GumpsChanged();CHECK(cursor.Lifecycle().currentGump==0);
+    cursor.Cancel();cursor.GumpsChanged();CHECK(session.CursorDropSettings().lockDepth==1);
 }

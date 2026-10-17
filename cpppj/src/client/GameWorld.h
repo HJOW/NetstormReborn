@@ -6,6 +6,7 @@
 #include "client/RawSurfaceWorld.h"
 #include "client/RawCampaignSession.h"
 #include "client/Sound.h"
+#include "client/RawUserHighlight.h"
 #include "o/BaseProcess.h"
 #include "o/Player.h"
 #include "o/Squid.h"
@@ -52,6 +53,10 @@ public:
     o::SquidId Pick(ScreenPoint point) const;
     // 선택 번호를 현재 월드에서 검증하고 표시를 갱신한다.
     void Select(o::SquidId id);
+    // 강조는 같은 현재 선택을 읽기만 한다. 마우스 모드/TYPE/좌표를 별도 원본 전역으로 빌린다.
+    UserHighlightState HighlightSettings();
+    // 입력 폴링의 현재 화면 좌표를 강조 역투영과 공유한다.
+    void SetMousePoint(ScreenPoint point);
     // 선택한 내 이동 유닛에 땅 좌클릭 명령을 내린다. 실패해도 선택은 해제한다.
     bool MoveSelected(ScreenPoint point);
     // 현재 스프라이트·지형의 깊이 순 목록을 수집한다. 정적 InspectView를 거치지 않는다.
@@ -149,6 +154,8 @@ private:
     int width_{},height_{},scrollX_{},scrollY_{};
     // selected_: 현재 선택한 객체·컨트롤의 번호 또는 토큰.
     o::SquidId selected_{};
+    std::uint32_t highlightMode_{},mouseType_{}; // 원본5cae90/5caea4이며 현재 선택 SID와 구별한다.
+    ScreenPoint mousePoint_{}; // 원본5cae94/98의 현재 화면 좌표다.
     // changed_: 상태 변경으로 후속 갱신이 필요한지.
     bool changed_{true};
 };

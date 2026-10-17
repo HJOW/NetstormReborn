@@ -68,7 +68,7 @@
     "cpppj/hist/run18-run3/test.cpp": "8aec8423d2e67a772336e3984fdff90e65f645dffcfbf24e817cc0aa5af94df2",
     "cpppj/hist/run18-run4/focused.log": "2cf49d4b7f1371e78fe40a7794b66b86b75df79f6ea4e641460fca8634ccdb9c",
     "cpppj/hist/run18-run4/test.cpp": "bc3b9bd2204d65a2be2fe0c862f32b207ade6aaec1ed4c1fcca0443a0c6b5d29",
-    "cpppj/src/CMakeLists.txt": "aa8053fae523788fbb4dfcc7d8618fe95f802624fdd85351f88ffbbbace03d59",
+    "cpppj/src/CMakeLists.txt": "f307d187ef0cc892334c74198407070df34d9b5df08502b579cad1135c19685b",
     "cpppj/src/app/CanonMayPlaceInspect.cpp": "27eda46bca500c898abeb9a3a7c4e8588b38e061b579c84cbf6c032c6d46dda9",
     "cpppj/src/app/FrameBindingInspect.cpp": "042602919b0531fb1cbaf3941dc6597bee73944bbf0d571dacfd638bb45dd07c",
     "cpppj/src/app/FrameBindingInspect.h": "4e187ca41f8c34ed52c022b58a57327a554a723e3e26ee88a1ae152c99de3fce",
@@ -181,7 +181,7 @@
     "cpppj/src/client/RawCampaignWorldRuntime.cpp": "c8013d0c7e3b1b3b9f3196a202397d4f24c17c592186cf2fec201820ba7e473c",
     "cpppj/src/client/RawCampaignWorldRuntime.h": "4832ee863ef658efb14479c720c0ffa47104c1bcbdd1d042adb4d3f2330f0f97",
     "cpppj/src/client/RawCursorDrop.cpp": "f0942036950dfbb0085c48f2bb76bdd2d4edc9fb7c870cdbf7d9fc83e65dddd4",
-    "cpppj/src/client/RawCursorDrop.h": "c486d2604d46407ff8ace3961cabb880e327dc29e13407e3cfb2004ee33e1450",
+    "cpppj/src/client/RawCursorDrop.h": "61de4218af3ad691e3be7a2a56902e5e35c0f7cdc10ba52b858f626010f13e5b",
     "cpppj/src/client/RawCursorReturnPiece.cpp": "a3a9c37acb04681ffa56440de871ae1ab13407ed616d2234cb721755c4dbacd3",
     "cpppj/src/client/RawCursorReturnPiece.h": "32dddb4d97e6219aadc6a4a5fecc98bfb3208c9fc8a0dfc5c7bde54e696656c0",
     "cpppj/src/client/RawFortWorldLoadBinding.cpp": "0e0b00b42fc839745a8992348d94f0763586355f3fc12f4dfa6c171931094eed",
@@ -244,7 +244,7 @@
     "cpppj/src/client/TileGroupCollection.h": "2b503b5e0bea78d80637ddc5708aed9b8fe846a8ea61a2f03159416d62a55f80",
     "cpppj/src/client/UberGump.cpp": "7c7e852388d278762d0b2036502c6b4918375f67b772b180f66beac2367fc912",
     "cpppj/src/client/UberGump.h": "66672f1eb96fadae4ff729b95ef3021818e090def0951a51654a7c2d24b455c8",
-    "cpppj/src/client/UserInput.cpp": "a8cf72e99c88ef31fd518e0ea2609c4d9970ff2f4dcde39a2e7edba16003bd2a",
+    "cpppj/src/client/UserInput.cpp": "9575d895408cb355415abb025d1eda5dab8267be63a450864ecd3e6a00d6c5bb",
     "cpppj/src/client/UserInput.h": "8c27579e2993518d84cd37e6fea4313a34d8a66dd291ba0ece00b26e91ac395d",
     "cpppj/src/client/VFXDraw.cpp": "d4c95ba9875659715bdb234b56baf7084d2abc6f5f4f879d1247cb309f0f5ad4",
     "cpppj/src/client/VFXDraw.h": "953079a93732127a0e2861f4d091328c37209c25dab7330d2a978afb52896894",
@@ -578,7 +578,7 @@
     "cpppj/src/o/SquidDisplay.cpp": "1f157fbf842ef5603f9634d7d2a349cb37b64e1ae057f4db712a36432b4b35e4",
     "cpppj/src/o/SquidDisplay.h": "83ed777ce826ec37cc2a72808ffd3658b8f6bcb9644efcf31f203fc6da363be7",
     "cpppj/src/o/SquidFactory.cpp": "6221de3262944b7105ae57dacc67ee8cee3e237b62240d5d3a2fd777a5706aed",
-    "cpppj/src/o/SquidFactory.h": "9a2b50ead267868364024a9fb0306e6fbf224486b87479a79c531ad2f3607708",
+    "cpppj/src/o/SquidFactory.h": "439126b14875597ae876ab82d1699d414fa15fdf76ec9ac83f6794d32595c549",
     "cpppj/src/o/SquidFinder.cpp": "f3d08c7c52643341a6059297bbc8e6bada08c3c1d0e15cedf3419ea8ccf5331e",
     "cpppj/src/o/SquidFinder.h": "9122ee542dc6fac99713891236210bbdb8744afaf2192c25fcde6d5f61d3778c",
     "cpppj/src/o/SquidFormDispatch.cpp": "7b99db01715582f8994e5a72cac470c155171a861e0da0ed91f70759f218f23a",
@@ -600,7 +600,7 @@
     "cpppj/src/o/SquidProcess.cpp": "2b78ac83db1bbb474f224845ae288d696b30d996a489ee292ac09a1af16986ad",
     "cpppj/src/o/SquidProcess.h": "827a9789c2a6b66ac7b98181e49e8c0fa19713755bb62fccababb7ae2a0d0589",
     "cpppj/src/o/SquidReward.cpp": "a29c11afe56a477c470956b1ed0a0678d059340806537ce08b43bf6b6aa1375d",
-    "cpppj/src/o/SquidReward.h": "221e142133a1e3a73f65ff6979d73859b7701912ab84cde9dc6a9fe565ccd2e7",
+    "cpppj/src/o/SquidReward.h": "59cf154a0aa681fbce7bdf445728afc582409bd9af9b24e5b135e435e92aa362",
     "cpppj/src/o/SquidSpatial.cpp": "d6d38d116ba6a41ad59b1200159578fed2e3236841633a34af661abe61603f36",
     "cpppj/src/o/SquidSpatial.h": "a5fe1fec719015fca4f30c4caba6fcd71c28de84cad03108ce7559fcb2ec41d6",
     "cpppj/src/o/SquidUnpop.cpp": "f9a932b6ee543cc2ee051d6f67afb0c56fca1f325cc51d29ca3d0dc3adf26fef",
@@ -1331,6 +1331,38 @@
           "path": "cpppj/src/client/UserInput.h",
           "previous": "140e5b230a3a717aba3a8c41705a6b8e9ec49e7eca734492cdb29e536a7087be",
           "current": "8c27579e2993518d84cd37e6fea4313a34d8a66dd291ba0ece00b26e91ac395d"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 137,
+      "reason": "현재 Client 커서 장치와 실제 Gump 트리·강조·프로세스 통지 연결",
+      "pins": [
+        {
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "aa8053fae523788fbb4dfcc7d8618fe95f802624fdd85351f88ffbbbace03d59",
+          "current": "f307d187ef0cc892334c74198407070df34d9b5df08502b579cad1135c19685b"
+        },
+        {
+          "path": "cpppj/src/client/RawCursorDrop.h",
+          "previous": "c486d2604d46407ff8ace3961cabb880e327dc29e13407e3cfb2004ee33e1450",
+          "current": "61de4218af3ad691e3be7a2a56902e5e35c0f7cdc10ba52b858f626010f13e5b"
+        },
+        {
+          "path": "cpppj/src/client/UserInput.cpp",
+          "previous": "a8cf72e99c88ef31fd518e0ea2609c4d9970ff2f4dcde39a2e7edba16003bd2a",
+          "current": "9575d895408cb355415abb025d1eda5dab8267be63a450864ecd3e6a00d6c5bb"
+        },
+        {
+          "path": "cpppj/src/o/SquidFactory.h",
+          "previous": "9a2b50ead267868364024a9fb0306e6fbf224486b87479a79c531ad2f3607708",
+          "current": "439126b14875597ae876ab82d1699d414fa15fdf76ec9ac83f6794d32595c549"
+        },
+        {
+          "path": "cpppj/src/o/SquidReward.h",
+          "previous": "221e142133a1e3a73f65ff6979d73859b7701912ab84cde9dc6a9fe565ccd2e7",
+          "current": "59cf154a0aa681fbce7bdf445728afc582409bd9af9b24e5b135e435e92aa362"
         }
       ]
     }

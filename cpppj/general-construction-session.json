@@ -9,13 +9,13 @@
   "baseCommit": "cbe9585",
   "edition": "PATCH10.78",
   "currentSources": {
-    "cpppj/src/client/RawCampaignSession.cpp": "35fb5589cdde65bdd4d339c5ac7c5fe2028e3b0def3fa2105b27226be283389b",
-    "cpppj/src/client/RawCampaignSession.h": "8b0cc82f468e9c014d87ae963d5991418403f7e5c12aca6622e53f9aa89b8c5c",
+    "cpppj/src/client/RawCampaignSession.cpp": "a5f5f1f43b329dee360ef78172a1a83eb42a078e5356a54a2c0c8f5e0fa5b88f",
+    "cpppj/src/client/RawCampaignSession.h": "3f53a60579de94dc4698a34cd2cc7e18973929100c108b5fa758d89976e6bb1b",
     "cpppj/src/client/RawCampaignConstructionBindings.cpp": "ee1d38d554fb25e502d0dc54cb19a55f501a45860e5612ca9666ca0f7ec2d2cf",
     "cpppj/src/client/RawCampaignConstructionBindings.h": "9d16b7a6b2ff2c5033dcf1b8a8ff1c73429715c8444f5553c84afe1a93c6ef65",
     "cpppj/src/o/RawConstructionPlace.cpp": "c90e759306d3452eb9c400f6bb252a68f8f89cff6f1ff9fe7b051a8e390618ff",
     "cpppj/src/o/RawConstructionPlace.h": "d12819f99d45323e56428c0a28919bdf06026b23e26f1e0d1c681b025a5bbf0e",
-    "cpppj/tests/CampaignSessionTests.cpp": "17c2fbca1c31cf4034ba3de0703913f694bf4e3f7e49805b164706035a9d6058"
+    "cpppj/tests/CampaignSessionTests.cpp": "964400205960599492a269d374aaaa7e46ff7f7b6e3968a992d0a447dc16bf2a"
   },
   "protectedFileSha256": {
     "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
@@ -182,6 +182,28 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "64e68631cd5039223726287c65b050b48480f1284e5042c2e921ea378d1ca14b",
           "current": "17c2fbca1c31cf4034ba3de0703913f694bf4e3f7e49805b164706035a9d6058"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 137,
+      "reason": "현재 Client 커서 장치와 실제 Gump 트리·강조·프로세스 통지 연결",
+      "pins": [
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "17c2fbca1c31cf4034ba3de0703913f694bf4e3f7e49805b164706035a9d6058",
+          "current": "964400205960599492a269d374aaaa7e46ff7f7b6e3968a992d0a447dc16bf2a"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "35fb5589cdde65bdd4d339c5ac7c5fe2028e3b0def3fa2105b27226be283389b",
+          "current": "a5f5f1f43b329dee360ef78172a1a83eb42a078e5356a54a2c0c8f5e0fa5b88f"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "8b0cc82f468e9c014d87ae963d5991418403f7e5c12aca6622e53f9aa89b8c5c",
+          "current": "3f53a60579de94dc4698a34cd2cc7e18973929100c108b5fa758d89976e6bb1b"
         }
       ]
     }

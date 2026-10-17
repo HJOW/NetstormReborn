@@ -66,6 +66,7 @@ void netstorm::client::UserInput::ReadCursorOptions() {
 }
 // 원본445330의 깊이0 조건에서만 실제 정수 마우스 갱신446b50을 호출한다.
 void netstorm::client::UserInput::UpdateCursor(InputEvent mouse) {
+    world_.SetMousePoint({mouse.x,mouse.y}); // 강조/커서 모두 같은 현재 폴링 좌표를 사용한다.
     if ((mouse.code&InputCode::kOutside) || world_.Session().CursorDropSettings().lockDepth) return;
     ReadCursorOptions();world_.Session().Cursor().Update(mouse.x,mouse.y);
 }

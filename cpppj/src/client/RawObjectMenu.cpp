@@ -25,6 +25,16 @@ const o::RiftTypeRecord& RawObjectMenu::Type(std::uint32_t type) const {
 }
 // PATCH+22/CD+20의 BYTE를 현재 슬롯에서 읽는다.
 std::uint32_t RawObjectMenu::Owner(o::Sid sid) const { return Raw(sid)[pool_.Edition()==o::OriginalEdition::Patch1078 ? 34 : 32]; }
+// 값형 독립 입력을 보존하면서 실제 세션의 현재 전역을 읽는다.
+std::uint32_t RawObjectMenu::LocalOwner() const { return state_.localOwnerRead ? state_.localOwnerRead() : state_.localOwner; }
+// 원본 편집 전역의 각 소비 시점을 합치지 않는다.
+bool RawObjectMenu::Editor() const { return state_.editorRead ? state_.editorRead() : state_.editor; }
+// 호출 중 변경된 특수 모드도 다음 분기에 반영한다.
+bool RawObjectMenu::Special() const { return state_.specialRead ? state_.specialRead() : state_.special; }
+// 현재 미션 전역을 별도 스냅숏으로 고정하지 않는다.
+bool RawObjectMenu::ChargeBlocked() const { return state_.chargeBlockedRead ? state_.chargeBlockedRead() : state_.chargeBlocked; }
+// 환불/메뉴 작성 뒤 같은 현재 회수 금지 DWORD를 재조회한다.
+std::uint32_t RawObjectMenu::DenySalvage() const { return state_.denySalvageRead ? state_.denySalvageRead() : state_.denySalvage; }
 // 번역된 고정 서식만 허용하고 호스트 스택 버퍼 초과는 예외로 거부한다.
 std::string RawObjectMenu::Format(std::string_view key,std::initializer_list<PriestMenuArgument> arguments) const {
     auto text=Required(hooks_.format)(key,{arguments.begin(),arguments.size()});const auto nul=text.find('\0');if (nul!=std::string::npos) text.resize(nul);
@@ -33,15 +43,15 @@ std::string RawObjectMenu::Format(std::string_view key,std::initializer_list<Pri
 // Player 하위 메뉴의 번역 시점은 PATCH가 생성 전이고 CD는 생성 후다.
 void RawObjectMenu::Open(o::Sid sid) const {
     Raw(sid);
-    if (state_.editor) Required(hooks_.item)("Destroy",state_.destroyCommand,std::uint32_t(sid.value));
-    else if (state_.special && state_.chargeBlocked) {
+    if (Editor()) Required(hooks_.item)("Destroy",state_.destroyCommand,std::uint32_t(sid.value));
+    else if (Special() && ChargeBlocked()) {
         if (Required(hooks_.hasHitPoints)(sid)) Required(hooks_.item)("CHEAT Hurt Me!",state_.hurtCommand,std::uint32_t(sid.value));
         Required(hooks_.item)("CHEAT Destroy",state_.destroyCommand,std::uint32_t(sid.value));
         Required(hooks_.item)("CHEAT Make Yours",state_.makeYoursCommand,std::uint32_t(sid.value));
     }
     if (!state_.helpWord) throw std::logic_error("원본 객체 메뉴 helpWord NULL");
     Required(hooks_.item)(*state_.helpWord,state_.helpCommand,std::uint32_t(Raw(sid)[10]));
-    if (state_.editor || state_.special) {
+    if (Editor() || Special()) {
         const auto label=Format("CHEAT Set Owner");Required(hooks_.item)(label,state_.tellCommand,std::string("SetOwner"));
     }
     if (Owner(sid)) {
@@ -55,7 +65,7 @@ void RawObjectMenu::Open(o::Sid sid) const {
 }
 // 가상 조회 콜백이 슬롯의 타입을 바꿀 수 있으므로 판본별 원본 인자 snapshot 시점을 지킨다.
 void RawObjectMenu::OpenDamageable(o::Sid sid) const {
-    if (Owner(sid)==state_.localOwner) {
+    if (Owner(sid)==LocalOwner()) {
         if (pool_.Edition()==o::OriginalEdition::Patch1078) {
             const auto type=Raw(sid)[10];const auto count=Required(hooks_.count)(sid);AddSalvage(sid,type,count);
         } else {
@@ -66,16 +76,16 @@ void RawObjectMenu::OpenDamageable(o::Sid sid) const {
 }
 // raw 타입 조건과 명시 타입의 flags2를 구분한다. 음수 환불은DWORD부호 반전 후 원본%d로 출력한다.
 void RawObjectMenu::AddSalvage(o::Sid sid,std::uint32_t type,std::uint32_t count) const {
-    if (Owner(sid)!=state_.localOwner) return;
+    if (Owner(sid)!=LocalOwner()) return;
     const auto currentType=Raw(sid)[10];const auto& current=Type(currentType);
     if (!(current.flags2&0x200) && currentType!=state_.growingRainBlocker && current.cost==0.0F) return;
-    if (type==state_.nugget || state_.editor) return;
+    if (type==state_.nugget || Editor()) return;
     const auto refund=Required(hooks_.salvageRefund)(sid,type,count);
     const auto amount=refund<0 ? std::bit_cast<std::int32_t>(0U-std::bit_cast<std::uint32_t>(refund)) : refund;
     const auto label=Format(refund<0 ? "Salvage costs %d~[IfortGump.3]" : "Salvage gains %d~[IfortGump.3]",{amount});
     const auto flags=Type(type).flags2;
     if (Required(hooks_.itemCount)()) Required(hooks_.separator)();
-    if (state_.denySalvage) { Required(hooks_.item)(label,state_.tellCommand,std::string("DenySalvage"));return; }
+    if (DenySalvage()) { Required(hooks_.item)(label,state_.tellCommand,std::string("DenySalvage"));return; }
     Required(hooks_.setConfig)("global.salvageSid",std::to_string(sid.value));
     if (flags&0x200) { Required(hooks_.item)(label,state_.tellCommand,std::string("SalvageVortex"));return; }
     if (flags&0x4000) { Required(hooks_.item)(label,state_.tellCommand,std::string("SalvageInf"));return; }

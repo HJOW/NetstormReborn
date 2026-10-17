@@ -19,6 +19,8 @@
 #include "o/RawDamageablePostDestroy.h"
 #include "client/CameraHome.h"
 #include "client/RawPriestMenu.h"
+#include "client/RawCarrierMenu.h"
+#include "client/RawPlayerMenu.h"
 #include "o/RawCarrierContentNotice.h"
 #include "client/RawCursorMana.h"
 #include "client/RawCursorRange.h"
@@ -28,6 +30,36 @@
 namespace netstorm::client {
 class RawCampaignCursor; // 세션과 같은 실제 커서/로컬 예측의 고정 주소 소유자다.
 struct CursorPlacementHooks; // 실제 커서 배치의 설명/에너지 경계만 연결할 때 사용한다.
+// 실제 Client의 메뉴 작성·번역·Chat·정적 문자열 수명을 공급한다. 게임 계산 훅은 factory가 같은 세션으로 교체한다.
+struct CampaignObjectMenuUi {
+    std::span<const std::uint8_t> chat,meta; // 현재 Client Chat100×48과 선택적 metamap40×460 원문이며 복사하지 않는다.
+    o::PlayerIdentityReads identity; // 주소/실패 이름의 실제 현재 getter다. 현재 이름/subscriber/모드는 같은 세션이 연결한다.
+    ObjectMenuState objectState; // 현재 도움말 문자열/회수 금지·명령 전역이다. owner/모드는 세션 getter로 교체한다.
+    PlayerMenuState playerState; // 실제 asksend 정적 버퍼와 명령 토큰이며 반환 체인이 수명을 소유한다.
+    PriestMenuHooks priest; // 실제 GUI/번역/Tell이다. 게임 조회·생성·커서 취득은 세션이 공급한다.
+    CarrierMenuHooks carrier; // 실제 GUI/번역/타입 설명이다. 지면·이동·위치·SP는 세션이 공급한다.
+    ObjectMenuHooks object; // 실제 GUI/서식/설정/문자열 토큰이다. 두 미복원 파생 가상80만 count 경계를 사용한다.
+    PlayerMenuHooks player; // 실제 Chat 상태/통신/허용 전역/GUI다. 현재 미션·요새·SP는 세션이 공급한다.
+};
+// 사제→Carrier→Damageable→공통 객체→Player의 실제 몸체를 한 수명으로 소유한다.
+// 같은 세션/Client/Gump 트리는 이 객체보다 오래 살아야 하며 다음 메뉴 생성 전 이전 메뉴를 닫아야 한다.
+class RawCampaignObjectMenus {
+public:
+    ~RawCampaignObjectMenus(); // 참조 대상인 부모 모듈보다 먼저 자식 메뉴 몸체를 해제한다.
+    RawCampaignObjectMenus(const RawCampaignObjectMenus&)=delete; // 훅의 고정 주소와 정적 문자열 수명을 보존한다.
+    RawCampaignObjectMenus& operator=(const RawCampaignObjectMenus&)=delete; // 서로 다른 세션 체인의 대입을 금지한다.
+    void OpenPriest(o::Sid sid) const; // 루트 메뉴 한 칸을 caller가 만든 뒤 실제 사제 Open을 작성한다.
+    void OpenCarrier(o::Sid sid) const; // 원본 가상 메뉴가 Carrier일 때만 같은 전체 부모 체인을 작성한다.
+    void OpenDamageable(o::Sid sid) const; // 원본 가상 메뉴가 Damageable일 때 실제 회수/공통 체인을 작성한다.
+    void OpenObject(o::Sid sid) const; // 원본 기본 객체 메뉴를 작성한다. 파생 메뉴를 임의로 이 함수로 대체하지 않는다.
+    bool SelectBuild(std::uint32_t type,o::Sid priest) const; // 같은 Open의 현재 기술/SP 관문과 실제 세션 커서 취득을 실행한다.
+    std::string_view TextParameter(std::uint32_t token) const; // Player의 현재 정적 asksend 토큰만 해석한다.
+private:
+    friend class RawCampaignSession; // 같은 실제 세션 factory만 내부 참조를 구성할 수 있다.
+    struct Impl; // 현재 입력/상태와 원본 메뉴 계층의 고정 주소 소유자다.
+    explicit RawCampaignObjectMenus(std::unique_ptr<Impl> impl); // factory가 완전히 구성한 몸체만 받는다.
+    std::unique_ptr<Impl> impl_; // Gump/Session보다 먼저 반납한다.
+};
 // 미션 입력/정지/UI 수명은 실제 UberGump의 현재 저장소와 동작을 빌린다.
 struct CampaignMissionOutcomeUi {
     std::function<std::uint32_t()> demo; // 현재 미션 Demo DWORD를 읽는다.
@@ -174,6 +206,9 @@ public:
     // 같은 Pool/Host/기술/허용/SP/실제 ContentForm 생성에 연결한 메뉴다. UI·번역·Tell·커서 취득만 caller가 공급한다.
     // 반환 객체는 Session보다 먼저 해제한다. 설치 전에는 메뉴/내용물 생성을 허용하지 않는다.
     std::unique_ptr<RawPriestMenu> MakePriestMenu(PriestMenuHooks hooks);
+    // caller는 기존 Bind*MenuControls로 같은 Gump 작성기를 공급한다. 미공급 Chat/번역/통신 분기는 선택 시 오류다.
+    // 반환 체인은 메뉴가 열린 동안 유지하고 월드 교체/Session 해제 전에 반납한다.
+    std::unique_ptr<RawCampaignObjectMenus> MakeObjectMenus(CampaignObjectMenuUi ui);
     // 현재 타입/명령·특수 모드의 장기 저장소다. 알려진 공통 전역은 실제 getter로 연결한다.
     PriestMenuState& PriestMenuSettings();
     // 0052f7e0의 TYPE 번호 제외 목록이다. 공간 앵커의 SID 추가 목록과 별개로 소유한다.

@@ -31,7 +31,7 @@
     "cpppj/src/o/SquidHash.cpp": "9ceffaf0d4c995cb5901b7c49eceae575b9441e8e08dec8cd92e504821fa20ca",
     "cpppj/src/o/SquidHash.h": "ee3c9fbc61c659e8a62b0d9675f028ca3ca1b29cc364abc49680bdb1a5e50ac7",
     "cpppj/src/o/SquidReward.cpp": "a29c11afe56a477c470956b1ed0a0678d059340806537ce08b43bf6b6aa1375d",
-    "cpppj/src/o/SquidReward.h": "221e142133a1e3a73f65ff6979d73859b7701912ab84cde9dc6a9fe565ccd2e7",
+    "cpppj/src/o/SquidReward.h": "59cf154a0aa681fbce7bdf445728afc582409bd9af9b24e5b135e435e92aa362",
     "cpppj/tests/fixtures/priesthalt-x86.tsv": "44a098cf999666322e0a3460bffc159b680792e5fdf06b89e5a6cf2644ba251c",
     "cpppj/tests/PriestHaltTests.cpp": "e129c0966cd074a88e3ce40b3e197c8ef8ec90b64b335bd4b04430e9ce556a64",
     "cpppj/tests/RawSceneSupport.h": "7ef30acb24babc688384ab50f57573a87d004b68b8baa0d0a64c897baad23a4f",
@@ -76,5 +76,19 @@
     "cpppj/hist/priesthalt-b-f9d20/tools/decomp_priesthalt_oracle.py": "e8f7d9aa82f46181d9d87f37d6895be248b5a075ca95b6ecbeddb72c4e293a9d",
     "cpppj/hist/priesthalt-b-f9d20/tools/ghidra/carrierarrival-functions.json": "7eac4c5bb71e91e4ef467297ecb95ec72a1298e89efb3dc2215efd41e2a9ecea"
   },
-  "scope": "최종864를 원본보고서에서 한 번만 합산한다. 이전 미등록864/초기20smoke/기존CarrierCheck·HP·finder 관찰은 재합산0. hash1과 지면 충돌의 전체35원문을 보존하고 지면주소만 분리한다. 같은864 입력/부모raw는 동일하며 특정후보 호출120행/반환50행만 변경된다. 실제 가상공간/낙하·큰포획/너겟전달은 여전히 명시 외부 입력이고 전체걷기/Arrival/포획/RPC/캠페인 완료는 후속이다."
+  "scope": "최종864를 원본보고서에서 한 번만 합산한다. 이전 미등록864/초기20smoke/기존CarrierCheck·HP·finder 관찰은 재합산0. hash1과 지면 충돌의 전체35원문을 보존하고 지면주소만 분리한다. 같은864 입력/부모raw는 동일하며 특정후보 호출120행/반환50행만 변경된다. 실제 가상공간/낙하·큰포획/너겟전달은 여전히 명시 외부 입력이고 전체걷기/Arrival/포획/RPC/캠페인 완료는 후속이다.",
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "unit": 137,
+      "reason": "현재 Client 커서 장치·Gump 트리·강조와 같은 세션 객체 메뉴 체인 연결",
+      "pins": [
+        {
+          "path": "cpppj/src/o/SquidReward.h",
+          "previous": "221e142133a1e3a73f65ff6979d73859b7701912ab84cde9dc6a9fe565ccd2e7",
+          "current": "59cf154a0aa681fbce7bdf445728afc582409bd9af9b24e5b135e435e92aa362"
+        }
+      ]
+    }
+  ]
 }

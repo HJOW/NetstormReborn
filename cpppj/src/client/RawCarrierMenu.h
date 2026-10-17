@@ -13,6 +13,8 @@ struct CarrierMenuState {
     std::uint32_t& helpCommand; // 기존 공통 객체 메뉴와 같은 도움말 명령이다.
     std::uint32_t priestType{158}; // PATCH005412d0/CD0051cbbc의 초기값이다.
     std::uint32_t dropCommand{0x03000076},castCommand{0x0300011a}; // PATCH005428d0/00542b38이다. CD는 Drop 명령을 Cast에도 사용한다.
+    std::function<std::uint32_t()> localOwnerRead; // 실제 세션의 같은 현재 Player 번호를 각 조회 시점에 읽는다.
+    std::function<bool()> editorRead; // DWORD 편집 전역을 bool 사본으로 동기화하지 않고 직접 읽는다.
 };
 // 큰 위치/현재 이동 조회와 번역/메뉴/분산 SP만 실제 호출자가 공급한다.
 struct CarrierMenuHooks {
@@ -39,6 +41,8 @@ public:
     // 현재 전체 내용물 순서로 Carrying/Drop/Cast/About을 작성하고 기본 메뉴를 마지막에 호출한다.
     void Open(o::Sid carrier) const;
 private:
+    std::uint32_t LocalOwner() const; // 현재 getter 또는 독립 fixture의 참조 전역을 읽는다.
+    bool Editor() const; // 현재 getter 또는 기존 편집 참조를 읽는다.
     // 현재 물리 슬롯/TYPE/WORD/소유자만 읽고 원본에 없는 free/dead 필터는 추가하지 않는다.
     std::span<const std::uint8_t> Raw(o::Sid sid) const;
     const o::RiftTypeRecord& Type(std::uint32_t type) const;

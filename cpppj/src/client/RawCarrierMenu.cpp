@@ -61,17 +61,17 @@ void RawCarrierMenu::Open(o::Sid carrier) const {
             if (immobile || flying) { suffix=Format(immobile ? "~r~E(Not while paralyzed)" : "~r~E(Not while flying)");enabled=false; }
             else if (flags&1) {
                 const auto amount=patch ? Required(hooks_.patchCost)(type) : Truncate(Type(type).cost);
-                if (patch) { const auto sp=Required(hooks_.money)(state_.localOwner);enabled=state_.editor || static_cast<double>(amount)<=static_cast<double>(sp); }
-                else enabled=state_.editor || !(state_.cdSp<static_cast<float>(amount));
+                if (patch) { const auto sp=Required(hooks_.money)(LocalOwner());enabled=Editor() || static_cast<double>(amount)<=static_cast<double>(sp); }
+                else enabled=Editor() || !(state_.cdSp<static_cast<float>(amount));
                 suffix=Format("for %s%d~[IfortGump.3]",{std::string(enabled ? "" : "~r~E"),amount});
             }
             if (suffix.size()>=128) throw std::length_error("Carrier 메뉴 원본128바이트 안내 초과");
             if (!(flags&1)) {
                 const auto label=Format("Carrying: ~i%s~.\n",{description});Required(hooks_.header)(label);
-                if (Owner(carrier)==state_.localOwner) {
+                if (Owner(carrier)==LocalOwner()) {
                     const auto text=Format("%sDrop~. ~i%s~. %s",{std::string(enabled ? "" : "~r~E"),description,suffix});Required(hooks_.item)(text,state_.dropCommand,carrier.value,!immobile && enabled);
                 }
-            } else if (Owner(carrier)==state_.localOwner) {
+            } else if (Owner(carrier)==LocalOwner()) {
                 const bool blocked=Required(hooks_.hasEvent)(carrier,0x493);bool building=false;
                 if (patch && Raw(carrier)[10]==state_.priestType) building=Required(hooks_.hasEvent)(carrier,0x25d);
                 const auto text=Format("%sCast~. ~i%s~.~[I%d.*] %s",{std::string(enabled ? "" : "~r~E"),description,static_cast<std::int32_t>(type),suffix});
@@ -82,6 +82,10 @@ void RawCarrierMenu::Open(o::Sid carrier) const {
     }
     Required(hooks_.damageableMenu)(carrier);
 }
+// 현재 세션 연결이 있으면 명령/금액 callback 뒤에도 같은 Player 전역을 다시 읽는다.
+std::uint32_t RawCarrierMenu::LocalOwner() const { return state_.localOwnerRead ? state_.localOwnerRead() : state_.localOwner; }
+// 기존 두 판본의 값형 fixture 경로는 그대로 유지한다.
+bool RawCarrierMenu::Editor() const { return state_.editorRead ? state_.editorRead() : state_.editor; }
 // 작성할 문자열과 전체DWORD 인자를 기존 실제 controlled 메뉴에 넘긴다.
 void BindCarrierMenuControls(CarrierMenuHooks& hooks,const MenuGumpControls& controls) {
     hooks.header=[&controls](std::string_view text) { controls.AddHeader(text); };

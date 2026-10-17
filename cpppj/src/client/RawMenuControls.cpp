@@ -196,6 +196,8 @@ void RawMenuControls::Open(ScreenPoint point,const std::function<void(const Menu
 }
 // 원본의 sticky 팝업 삭제를 같은 수명 경로로 실행한다.
 void RawMenuControls::Close() { auto& s=*impl_;s.input->ClosePopups();s.common.lifetime.Cleanup();s.common.changed(); }
+// 커서 Take 등의 실행 중 스택이 현재 메뉴를 참조할 수 있으므로 원본의 지연 삭제 시점을 보존한다.
+void RawMenuControls::RequestClosePopups() { auto& s=*impl_;s.input->ClosePopups();s.common.changed(); }
 // 파일 팔레트의 실제 기본색을 생성 전역과 Draw 전역에 함께 공급한다.
 void RawMenuControls::SetPalette(const PaletteColorTable& palette) {
     const auto dim=std::find_if(palette.named.begin(),palette.named.end(),[](const NamedPaletteColor& color) { return color.red==47 && color.green==24 && color.blue==17; }); // 원본005c78d0/CD0055bad4의 실제 목표 RGB다.

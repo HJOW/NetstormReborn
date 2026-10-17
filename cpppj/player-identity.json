@@ -57,8 +57,8 @@
     "sha256": {
       "cpppj/src/o/RawPlayerIdentity.h": "331f03a8693685a6bf1f4fadc24e7cdee4c5a1c8813d3a7cc02c46697a09c6c4",
       "cpppj/src/o/RawPlayerIdentity.cpp": "3dc55d9fd0fac8fd4fb7d2caf3f4fc46618c6df9416709aaf1548629daf99e41",
-      "cpppj/src/client/RawObjectMenu.h": "41436f4f64e69da224fe045ff4bc4a68352e603d61ed342d7f29a3075645c082",
-      "cpppj/src/client/RawObjectMenu.cpp": "ef92b668ec60c211d8a54722f864664d4262a25358ce0f2b1aaa95d572a558d5",
+      "cpppj/src/client/RawObjectMenu.h": "47fa941dc9fe3becb679f297ea29c8f7cc662aa44d1e6f91c5643739aa905e9a",
+      "cpppj/src/client/RawObjectMenu.cpp": "f64429574e0fd57e325cd99b47e3c46197979b5047d879b1a9693fda7d58a1ef",
       "cpppj/tests/PlayerIdentityTests.cpp": "36f77b04d42a18eb21ea177c53ed4b3996d39ac3a3e1fc8e7b7ddf91be1dbbc4",
       "cpppj/tests/ObjectMenuTests.cpp": "7485055d8b76db99eb8e2fc117f9d89eb4892c2620112c1afbb1ed267710aa37",
       "cpppj/tests/RawMenuControlsTests.cpp": "df26ef116d9971df27bf12f1f857a398dec99ecfe0d72d82c13600244b17d1dd"
@@ -88,6 +88,23 @@
         "exit_code": 0,
         "seconds": 227.4
       }
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 137,
+      "reason": "현재 Client 커서 장치·Gump 트리·강조와 같은 세션 객체 메뉴 체인 연결",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawObjectMenu.h",
+          "previous": "41436f4f64e69da224fe045ff4bc4a68352e603d61ed342d7f29a3075645c082",
+          "current": "47fa941dc9fe3becb679f297ea29c8f7cc662aa44d1e6f91c5643739aa905e9a"
+        },
+        {
+          "path": "cpppj/src/client/RawObjectMenu.cpp",
+          "previous": "ef92b668ec60c211d8a54722f864664d4262a25358ce0f2b1aaa95d572a558d5",
+          "current": "f64429574e0fd57e325cd99b47e3c46197979b5047d879b1a9693fda7d58a1ef"
+        }
+      ]
     }
   ]
 }
