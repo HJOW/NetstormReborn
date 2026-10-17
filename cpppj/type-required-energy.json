@@ -28,9 +28,9 @@
     "cpppj/src/client/AiTypeRequiredEnergy.cpp": "a77ecbbece0a23b295c26e35ba5f788ea1c61a660b95880a83abc6988ef559c0",
     "cpppj/tests/fixtures/type-required-energy-x86.tsv": "8bcb3e215c958f5df0a395365059f5481801b1660569f2f04c0720f394f14f4c",
     "cpppj/tests/TypeRequiredEnergyTests.cpp": "0802ab400413ec5da3f2d03a4ac6b6f88e2d088915646609a2ca0bb39a02b05c",
-    "cpppj/src/o/CMakeLists.txt": "f906381aeb39546a2677a036cf7a0f5efc5043ec97d2a9bef48e64dd92df7990",
+    "cpppj/src/o/CMakeLists.txt": "831fd106a0f7c048a97d23bb7341b9b8b5a7a0c3c74629e25e40326a994bc717",
     "cpppj/src/client/CMakeLists.txt": "8bb17d335554c16e6ff3300134492a264bfa425dfafd52062ecf0062f523d87c",
-    "cpppj/tests/CMakeLists.txt": "3dabffbe720e847dddb7cf6b86f98525757255eaac708588a6588ea2b61fc97c"
+    "cpppj/tests/CMakeLists.txt": "f9f01cf1461e8a290fd9d996bfcdca73e354de80b4a6890dddbd5a3a83ebd87d"
   },
   "product_validation": {
     "configuration": "Release",
@@ -1353,6 +1353,23 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "d0f37b499c2404075453292a3ef5be88defc86d8307d0ed631da53e376e83915",
           "current": "3dabffbe720e847dddb7cf6b86f98525757255eaac708588a6588ea2b61fc97c"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 129,
+      "reason": "실제 마나 볼트 주기/현재 카메라/도착 뒤 타이머와 Session 연결",
+      "pins": [
+        {
+          "path": "cpppj/src/o/CMakeLists.txt",
+          "previous": "f906381aeb39546a2677a036cf7a0f5efc5043ec97d2a9bef48e64dd92df7990",
+          "current": "831fd106a0f7c048a97d23bb7341b9b8b5a7a0c3c74629e25e40326a994bc717"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "3dabffbe720e847dddb7cf6b86f98525757255eaac708588a6588ea2b61fc97c",
+          "current": "f9f01cf1461e8a290fd9d996bfcdca73e354de80b4a6890dddbd5a3a83ebd87d"
         }
       ]
     }

@@ -302,3 +302,6 @@ target_sources(netstorm PRIVATE RawManaBoltArrival.cpp RawManaBoltArrival.h)
 
 # 실제 비행/마나 도착이 공유하는 ProcessFinder 전체 제거다.
 target_sources(netstorm PRIVATE RawProcessRemoval.cpp RawProcessRemoval.h)
+
+# 실제 마나 볼트의 주기 프레임/현재 대상 옆 위치 조정이다.
+target_sources(netstorm PRIVATE RawManaBoltRegular.cpp RawManaBoltRegular.h)

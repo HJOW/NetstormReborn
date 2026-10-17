@@ -1,5 +1,17 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-17 단위129 완료: 마나 볼트 주기 동작·도착 뒤 실제 타이머 연결 (`HJOW-Athlon`)
+
+- [x] AGENTS.md·양 LEFT·깨끗한8bf7620과 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16**을 확인했다. 새 내보내기·원본/클론 게임·GUI 실행은 없다. 전체 목표는 active다. [작업 기록](docs/exe/cpp-mana-bolt-regular-20261017.md). 로그/관측 접두사는`extracted/goal-mana-regular-20261017-`다.
+- [x] `RawManaBoltRegular`가 실제45a8e0의 현재 signed 글자 구간/카운트 나머지·event0/count0 소리·Frame.Set0·event1 현재 Target/abstract 재검사·없으면 자기 삭제/-1·자기 TYPE **frame0** SHP 폭/핫스폿·unsigned WORD12+1 간격16·현재 투영/역투영·Unpop0/Pop0·현재0.05를 복원했다. 정확한105/509810만 같은 Session의 실제 Regular 분배에 연결했다.
+- [x] 실제497490의 FILD32×단정도 역배율→float 저장을 공통`RawCursorPosition::CameraFromPixels`로 복원했다. 같은`SetParticleView`가 정수59a91c/920과 float59a900/904를 함께 갱신한다. 기존`SoundToScreen`/`ScreenToWorld`를 재사용하며 네 카메라 입력의 실제 원본 비트를 직접 대조했다.4971e0 진입의 실제 출력 포인터/X/Y 스택을 관측해 디컴파일의 unaff_EBX를 임의 인자로 옮기지 않았다.
+- [x] Native **196고유 입력/392정상 반환/322,906명령/두 정밀도 차이0**이다. C++가 반환/현재 frame/최종 좌표 비트/모든 효과 순서/카메라 비트를 전부 대조했다. 최초 음수 인수 인코딩 오류는 DWORD 비트 보존으로 해결하고 실패 관측은 최종 근거에서 제외했다.
+- [x] 실제thewarbegins의 Factory/Owner/Pop으로 abstract 레인 제네레이터76과105를 만들고 같은 Frame/World/Host/Kernel/clock에서 **Regular0 초기 소리/프레임→비행39→도착의 기존46/61 제거와 새event1→현재 카메라319/127 위치 조정→대상 abstract 해제 뒤105/Regular 실제 삭제**를 통과했다. 초기 검사의 Kernel 번호 공백 기대는 새 타이머의 즉시 번호 재사용 때문에 잘못됐으며, 원래event0/61의 부재와 새event1 존재를 확인하도록 고쳤다. 구현의 할당 순서는 바꾸지 않았다.
+- [x] 최종 **Release 빌드4 종료0·경고0·오류0**, 새 집중2개와 기존 커서 위치3개 통과, 전체 **1,522개 모두 통과·실패0·CTest 종료0·241.12초(전체241.15초)**다. 현대 `--verify` **23개**와 현재제품9개/보호3개 SHA·UTF-8/LF·새 문자·CMake 기존 접두/기존 fixture 불변을 감사했다. 기존15보고서의 현재 HEAD 핀38개만 이력과 갱신하고 과거128핀은 보존했다. AGENTS/DN/보호 원본은 불변이다.
+- [x] 이 인수인계를 포함해 **20261017-29 CP 마나 볼트 주기 동작과 실제 도착 타이머 연결 복원**으로 로컬 커밋한다. push하지 않는다.
+- [ ] **다음 실제 플레이:** `MakeConstructionBuilder`의 실제 접근점41db70과 move/speed를 같은 Session의`StartConstructionMovement`/실제`RawPathRuntime.Count/Time/Prepare`에 연결한다. Builder의 현재 반환 view는`currentStep`/`arrivalTimes` 값형이며 실제+10 nVert와+186c0 진행 인덱스를 혼동하지 않는다. 실제 Builder 읽기 오프셋과 Runtime 시각 배열 시작 차이를 원본에서 다시 확인한 뒤 view를 연결한다. 공유 공급원/TYPE/현재 시계와 이번105 Regular는 유지한다.
+- [ ] 실제 서버 건설 시작 소비자와 일반 Construction Process/Frame/Visual, Client 전체DWORD 메뉴→실제 ContentForm6 Take/위치/수집/그리기/내려놓기, 생산/경제/AI 전략, GUI 시작/진행/승패·저장·다음 미션·사용자 자연 완주와 전체 원본 동일성은 남았다. CD47cb90은 이번 범위에서 복원하지 않았고 전체화면 DirectDraw도 계속 제외다.
+
 ## 2026-10-17 단위128 완료: 실제 건설 운반 경로·마나 볼트 도착/표시 (`HJOW-Athlon`)
 
 - [x] AGENTS.md·양 LEFT·깨끗한504a92a과 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16**을 다시 확인했다. 새 내보내기·원본/클론 게임·GUI 실행은 없다. 전체 목표는 active다. [작업 기록](docs/exe/cpp-construction-flight-20261017.md). 로그/원문 접두사는`extracted/goal-build-path-20261017-`다.
@@ -11,7 +23,7 @@
 - [x] 최종 **Release 빌드12 종료0·경고0·오류0**, 전체 **1,520개 모두 통과·실패0·CTest 종료0·248.57초(전체248.60초)**다. 전체1차의 기존 미복원 분류2검사/6체크 실패는 기존 fixture를 보존한 채 이번에 검증한105/134만 별도 허용하여 해결했다. 현대 `--verify` **22개**와 스테이징86파일/현재제품26개/보호3개 SHA·UTF-8/LF·새 문자·CMake 기존 접두를 감사했다. 기존46보고서의 현재 HEAD 핀230개만 이력과 갱신했고 과거211핀은 보존했다. AGENTS/DN/보호 원본과 기존 fixture는 불변이다.
 - [x] 이 인수인계를 포함해 **20261017-28 CP 건설 운반 경로와 마나 볼트 도착 및 표시 복원**으로 로컬 커밋한다. push하지 않는다.
 - [ ] **다음 실제 플레이:** `MakeConstructionBuilder`의 접근점41db70과 move/speed를 같은 Session의 `StartConstructionMovement`/실제 `RawPathRuntime.Count/Time/Prepare`에 연결한다. Builder 반환 view의 실제+10은 **nVert**이며+186c0 진행 인덱스와 혼동하지 않는다. 현재 단위127에서 연결한 공유 선택/TYPE/현재 시계는 유지한다. 실제 서버 건설 시작 소비자와 일반 Construction Process/Frame/Visual도 조립해야 한다.
-- [ ] **다음105 Regular:** 실제45a8e0의 event0/count0 `influenceIcon.wav`·현재 글자 구간/카운트 frame, event1의 현재 Target 재검색/abstract 검사/없으면 가상 삭제와-1, 자기 TYPE의 **frame0** SHP 폭+hotspot·WORD12+1 간격16·현재 카메라 투영/역투영·Unpop/Pop·0.05를 복원해 Session Regular 분배에 연결한다. 역투영 호출의 디컴파일 unaff_EBX 표기는 원본 명령/격리 호출로 확인한다. 현재 Builder가 만든105의 Regular는 아직 실행할 수 없다.
+- [x] **다음105 Regular — 단위129 완료:** 실제45a8e0의 프레임/현재 Target/화면 위치/반환 및 같은 Session Regular 연결을 위 단위129에서 완료했다.196개 원본 입력과 실제 초기 타이머→비행→도착 타이머→위치/삭제 흐름을 검증했다. Builder 전체 조립과 일반 건설/사용자 자연 플레이는 계속 남았다.
 - [ ] **전체 목표:** Client 전체DWORD 메뉴→실제 ContentForm6 Take/위치/수집/그리기/내려놓기, 일반 건설·생산/경제/AI 전략, GUI 시작/진행/승패·저장·다음 미션, 사용자 자연 완주와 전체 원본 동일성은 남았다. GumpForm3은 별도 UI 수명이다. 10.72 비행39는 이번 범위에서 허용하지 않았으며 전체화면 DirectDraw도 계속 제외다.
 
 ## 2026-10-17 단위127 완료: 실제 공급원 정렬·건설 운반 공유 선택 (`HJOW-Athlon`)

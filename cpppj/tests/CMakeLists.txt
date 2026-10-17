@@ -1297,3 +1297,8 @@ set_property(SOURCE ConstructionArrivalTests.cpp APPEND PROPERTY COMPILE_DEFINIT
 # 실제 마나 볼트105의 별도 부분 표시 관측이다.
 set_property(SOURCE CursorManaTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS
     "NETSTORM_MANA_BOLT_DISPLAY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/mana-bolt-display-x86.tsv\"")
+
+# 실제 마나 볼트 Regular/투영/역투영의 독립 관측이다.
+target_sources(netstorm_tests PRIVATE ManaBoltRegularTests.cpp)
+set_source_files_properties(ManaBoltRegularTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_MANA_BOLT_REGULAR_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/mana-bolt-regular-x86.tsv\"")

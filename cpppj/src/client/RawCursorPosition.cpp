@@ -25,6 +25,10 @@ RawCursorPosition::RawCursorPosition(CursorDropState& drop,const CursorPlacement
     :drop_(drop),placement_(placement),snapToGrid_(snapToGrid),camera_(camera),hooks_(std::move(hooks)) {
     if (edition!=o::OriginalEdition::Patch1078) throw std::invalid_argument("커서 위치 갱신10.78 판본 계약 오류");
 }
+// 실제497490의 fild32×단정도 역배율 뒤 최종 float 저장이다. 별도 사본의 카메라를 추정하지 않는다.
+std::array<std::uint32_t,2> RawCursorPosition::CameraFromPixels(std::int32_t x,std::int32_t y) {
+    return {std::bit_cast<std::uint32_t>(static_cast<float>(static_cast<double>(x)*kInverseX)),std::bit_cast<std::uint32_t>(static_cast<float>(static_cast<double>(y)*kInverseY))};
+}
 // 실제 fild32는 정수를 먼저 float로 좁히지 않는다. Y와 X 모두 마지막 저장에서만 좁힌다.
 std::array<float,2> RawCursorPosition::ScreenToWorld(std::int32_t x,std::int32_t y,const std::array<std::uint32_t,2>& camera) {
     const float worldY=static_cast<float>(static_cast<double>(Add(y,11))*static_cast<double>(kInverseY)+static_cast<double>(std::bit_cast<float>(camera[1])));

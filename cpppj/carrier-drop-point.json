@@ -186,7 +186,7 @@
     "cpppj/src/client/RawCarrierDropPoint.cpp": "a0c2130de14992eb2f3debda71840b9e0c9889398d17cfd92c2c8cb050b2acd5",
     "cpppj/tests/CarrierDropPointTests.cpp": "65a1f6834bad63ad10548fb4b0b96c26fc7e869a1f2447e07254190237f51b7c",
     "cpppj/src/client/CMakeLists.txt": "8bb17d335554c16e6ff3300134492a264bfa425dfafd52062ecf0062f523d87c",
-    "cpppj/tests/CMakeLists.txt": "3dabffbe720e847dddb7cf6b86f98525757255eaac708588a6588ea2b61fc97c",
+    "cpppj/tests/CMakeLists.txt": "f9f01cf1461e8a290fd9d996bfcdca73e354de80b4a6890dddbd5a3a83ebd87d",
     "cpppj/src/client/RawCarrierMenu.h": "549eb57a893ffbb4aee1bdd5945fffb2e8a5fc45ec9cb9a294420f0737a292bd",
     "cpppj/src/client/RawCarrierMenu.cpp": "0cea02b171cccc0909d96d55ccc09551dfabfec0d65473b14ff687a28eae7e88",
     "cpppj/src/o/RawCanonPlacementPipeline.h": "4c52d14dea023e6c5251c528b1afd6955e10d8d25a31e9766b4d79faa286e8fc",
@@ -299,6 +299,18 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "d0f37b499c2404075453292a3ef5be88defc86d8307d0ed631da53e376e83915",
           "current": "3dabffbe720e847dddb7cf6b86f98525757255eaac708588a6588ea2b61fc97c"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 129,
+      "reason": "실제 마나 볼트 주기/현재 카메라/도착 뒤 타이머와 Session 연결",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "3dabffbe720e847dddb7cf6b86f98525757255eaac708588a6588ea2b61fc97c",
+          "current": "f9f01cf1461e8a290fd9d996bfcdca73e354de80b4a6890dddbd5a3a83ebd87d"
         }
       ]
     }

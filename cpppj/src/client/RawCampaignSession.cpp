@@ -7,6 +7,8 @@
 #include "o/RawSquidFinder.h"
 #include "o/RawConstructionArrival.h"
 #include "o/RawManaBoltArrival.h"
+#include "o/RawManaBoltRegular.h"
+#include "client/RawCursorPosition.h"
 #include "o/RawProcessRemoval.h"
 #include "o/RawSquidLevel.h"
 #include "o/RawPlayerTemplateState.h"
@@ -219,6 +221,7 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawContentParentNotice> contentNotice; // 부모의 실제 현재 VT로 기본/파생 +24를 분배한다.
     bool contentSavedGame{}; // 이 생성자는 새 미션 경로이며005c85d4 저장 게임은 선택하지 않는다.
     std::array<std::int32_t,2> contentScreenOrigin{}; // 같은 GameWorld의 현재59a91c/920이며 SetParticleView에서 함께 공급한다.
+    std::array<std::uint32_t,2> contentCamera{}; // 같은 scroll pixel을497490으로 변환한59a900/904 float 비트다.
     std::uint32_t contentBombBlocked{}; // 005453e8의 초기0이며 폭탄 시각 효과 억제 전역이다.
     std::unique_ptr<RawCarrierContentNotice> carrierContentNotice; // 실제 Walker/Carrier/사제의 가상+24 전체 몸체다.
 
@@ -289,6 +292,8 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawConstructionArrival> buildArrival; // 같은 풀/해시에서 건설 대상을 찾는다.
     ManaBoltArrivalState manaArrivalState; // 실제105의 도착 뒤 두 프로세스 종류/예약 간격이다.
     std::unique_ptr<RawManaBoltArrival> manaArrival; // 같은 풀에서 비행 도착의 실제 분기를 실행한다.
+    ManaBoltRegularState manaRegularState; // 실제105 주기의 현재0.05/간격16 전역이다.
+    std::unique_ptr<RawManaBoltRegular> manaRegular; // 같은 Target/Frame/현재 카메라/가상 공간을 연결한다.
     std::unique_ptr<RegularProcess> manaPendingRegular; // new28 성공 뒤 실제 부착까지 소유하는 예약이다.
     RawPathDataHeader pathHeader; // 실제 경로 writer가 사용하는 현재 프로토콜 header다.
     std::array<std::uint8_t,16384> pathBuffer{}; // 원본 경로 직렬화의 현재 송신 버퍼다.
@@ -651,6 +656,7 @@ struct RawCampaignSession::Impl {
         buriedRegular=std::make_unique<RawBuriedRegular>(core.pool,core.frames,core.frame,random);
         auto actualRegular=hits->Handler(combat->Handler(assetBindings->Handler(buriedRegular->Handler(priests->RegularHandler([this](Sid sid,std::uint32_t event,std::uint32_t count,float payload) {
             if (playerRegular->Handles(sid)) return playerRegular->Handle(sid,event,count,payload);
+            if (manaRegular && manaRegular->Handles(sid)) return manaRegular->Run(sid,event,count);
             throw std::logic_error("캠페인 현재 Kernel의 다른 실제 Regular 부모 미연결: TYPE"+
                 std::to_string(core.pool.Slot(sid)[10])+" event"+std::to_string(event));
         })))));
@@ -1086,6 +1092,15 @@ struct RawCampaignSession::Impl {
         manaHooks.addRegular=[this](Sid sid,std::uint32_t event,float delay) { if (!manaPendingRegular || delay!=manaArrivalState.delay) throw std::logic_error("마나 볼트 Regular 예약 누락");auto* regular=static_cast<RegularProcess*>(core.processes.Attach(std::move(manaPendingRegular),manaArrivalState.regularType,sid,0x50));regular->ResetTask(event,core.processState.now); };
         manaHooks.destroy=[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); };
         manaArrival=std::make_unique<RawManaBoltArrival>(core.pool,core.hash,core.types,manaArrivalState,std::move(manaHooks));
+        ManaBoltRegularHooks regularHooks;
+        regularHooks.setFrame=[this](Sid sid,std::int32_t frame,std::uint32_t flags) { core.frame.Set(sid,frame,flags); };
+        regularHooks.sound=[this](float x,float y,std::string_view name) { services.sound.playOnceAt(x,y,soundNames.Lookup(name),0,0); };
+        regularHooks.project=[this](float x,float y) { const auto point=SoundToScreen({contentScreenOrigin[0],contentScreenOrigin[1]},x,y);return std::array<std::int32_t,2>{point.x,point.y}; };
+        regularHooks.inverse=[this](std::int32_t x,std::int32_t y) { return RawCursorPosition::ScreenToWorld(x,y,contentCamera); };
+        regularHooks.unpop=[this](Sid sid,std::uint32_t flags) { world.Unpop(sid,flags); };
+        regularHooks.pop=[this](Sid sid,float x,float y,std::uint32_t flags) { world.Pop(sid,x,y,flags); };
+        regularHooks.destroy=[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); };
+        manaRegular=std::make_unique<RawManaBoltRegular>(core.pool,core.types,core.frames,core.shapes,*manaArrival,manaRegularState,std::move(regularHooks));
         motionState.halt.battle=true;anchorState.graphReady=1;anchorState.fenceType=90;anchorState.windArcherType=140;
         anchor=std::make_unique<RawPlayerPlacementAnchor>(core.pool,core.types,core.hash.Entries(0),core.bookkeeping,additional,contentFinder,anchorState);
         auto effects=services.motion;
@@ -1154,7 +1169,11 @@ void RawCampaignSession::ResetCamera(CameraHomeState& state,std::function<void(s
 // 현재 같은 시각을 공격/소리/실제 Kernel에 공급한다.
 void RawCampaignSession::RunFrame(FrameTime time,bool paused) { impl_->assetBindings->PrepareFrame(time.game);impl_->combat->PrepareFrame(time);impl_->particles->PrepareFrame(time.game);impl_->soundState.frame=static_cast<std::uint32_t>(time.number);impl_->world.RunFrame(time,paused); }
 // 해상도/카메라 변경과 동일 위치 효과음의 view를 process11에도 전달한다.
-void RawCampaignSession::SetParticleView(SoundView view,SurfaceDisplayHooks display) { impl_->contentScreenOrigin={view.cameraX,view.cameraY};impl_->particles->SetView(view,std::move(display)); }
+void RawCampaignSession::SetParticleView(SoundView view,SurfaceDisplayHooks display) {
+    impl_->contentScreenOrigin={view.cameraX,view.cameraY};
+    impl_->contentCamera=RawCursorPosition::CameraFromPixels(view.cameraX,view.cameraY);
+    impl_->particles->SetView(view,std::move(display));
+}
 // 현재 단일 raw 표시 목록에서 SHP와 같은 정렬 항목을 만든다.
 std::vector<RenderSprite> RawCampaignSession::ParticleSprites(ScreenRect clip) const { return impl_->particles->Sprites(clip); }
 // 실제 표시 소유자이며 별도 검사용 모형이 아니다.

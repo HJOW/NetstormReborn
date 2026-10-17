@@ -19,6 +19,7 @@ public:
     void Update(std::int32_t mouseX,std::int32_t mouseY) const;
     // 4971e0: 정수 감김 뒤 원본 float 역배율/현재 카메라를 x87 중간 정밀도로 합한다.
     static std::array<float,2> ScreenToWorld(std::int32_t x,std::int32_t y,const std::array<std::uint32_t,2>& camera);
+    static std::array<std::uint32_t,2> CameraFromPixels(std::int32_t x,std::int32_t y); // 실제497490: scroll pixel을 먼저 float로 좁히지 않고 현재 float 카메라 비트를 만든다.
     // 41d770: _ftol signed64 결과의 하위signed DWORD를 float로 다시 저장한다. 반올림/floor가 아니다.
     static std::array<float,2> TruncatePoint(std::array<float,2> point);
 private:

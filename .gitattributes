@@ -1161,3 +1161,9 @@ cpppj/src/o/RawProcessRemoval.h text eol=lf
 cpppj/tests/ConstructionArrivalTests.cpp text eol=lf
 cpppj/tests/RawPathRuntimeTests.cpp text eol=lf
 cpppj/tests/fixtures/construction-path-vtables.tsv text eol=lf
+
+# 단위129 마나 볼트 주기와 현재 카메라 관측의 SHA를 유지한다.
+cpppj/mana-bolt-regular.json text eol=lf
+cpppj/src/o/RawManaBoltRegular.cpp text eol=lf
+cpppj/src/o/RawManaBoltRegular.h text eol=lf
+cpppj/tests/ManaBoltRegularTests.cpp text eol=lf

@@ -21,8 +21,8 @@
     "tools/decomp_cursor_previews.py": "33ed19d9b6409ad49e6db93081e951b8d105f170ce7a530363689aa9fda6c7c0",
     "tools/decomp_cursor_position.py": "e15bcdbc4c6be9c131c30f15416c945d650dba9f7dc6def404b47f63c635c212",
     "cpppj/tests/fixtures/cursor-position-x86.tsv": "0c72511664e3837087714999c900e27ea6b70b1f15a0cc121d71988b3072927c",
-    "cpppj/src/client/RawCursorPosition.h": "fcbe257368195120e52b46d9375c379feb59eecd9c1d5b256d753d6adaff8442",
-    "cpppj/src/client/RawCursorPosition.cpp": "e3686f74e4b45866a64a349f9fd35e22fa4865b9226fcd1d297f14753227a639",
+    "cpppj/src/client/RawCursorPosition.h": "acef07ed2737b798d36034457c63e75e1bfde25c9068b4bd3a2c224bd8dab723",
+    "cpppj/src/client/RawCursorPosition.cpp": "db3b59d8211cee4f22583db354962f2da543512bd78ad86ed91c8725f0dda7a4",
     "cpppj/src/client/RawCursorLifecycle.h": "93071d00170ceb87e7c1f0424d03e5b02705ffbf9c7e731198f5a99f3bcafd0b",
     "cpppj/src/client/RawCursorLifecycle.cpp": "ae6b21d763638a5ff74267aad5730450b39ade182b4eb3247d460a2890dcf5e4",
     "cpppj/src/client/RawCursorPreviews.h": "63b07afad11e3008f2c55e848c9d7f48f41e62741d759db92ff4c8e3eaf4981a",
@@ -32,7 +32,7 @@
     "cpppj/tests/CursorPositionTests.cpp": "111ab2b59d662bacc5b51bb44d54fccec4260df86f15502e370a35d7d13a73f1",
     "cpppj/tests/CursorPreviewSupport.h": "fa4e6b6d54bbc564af308ffd154f2ced7482a131c542222c0342e6019d6c9084",
     "cpppj/src/client/CMakeLists.txt": "8bb17d335554c16e6ff3300134492a264bfa425dfafd52062ecf0062f523d87c",
-    "cpppj/tests/CMakeLists.txt": "3dabffbe720e847dddb7cf6b86f98525757255eaac708588a6588ea2b61fc97c"
+    "cpppj/tests/CMakeLists.txt": "f9f01cf1461e8a290fd9d996bfcdca73e354de80b4a6890dddbd5a3a83ebd87d"
   },
   "limitations": [
     "실제 정수 위치 갱신/역투영/CRT 절삭을 실행한다. 단독 입력의 Activate/Create/선택은 명시 효과다.",
@@ -174,6 +174,28 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "d0f37b499c2404075453292a3ef5be88defc86d8307d0ed631da53e376e83915",
           "current": "3dabffbe720e847dddb7cf6b86f98525757255eaac708588a6588ea2b61fc97c"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 129,
+      "reason": "실제 마나 볼트 주기/현재 카메라/도착 뒤 타이머와 Session 연결",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCursorPosition.h",
+          "previous": "fcbe257368195120e52b46d9375c379feb59eecd9c1d5b256d753d6adaff8442",
+          "current": "acef07ed2737b798d36034457c63e75e1bfde25c9068b4bd3a2c224bd8dab723"
+        },
+        {
+          "path": "cpppj/src/client/RawCursorPosition.cpp",
+          "previous": "e3686f74e4b45866a64a349f9fd35e22fa4865b9226fcd1d297f14753227a639",
+          "current": "db3b59d8211cee4f22583db354962f2da543512bd78ad86ed91c8725f0dda7a4"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "3dabffbe720e847dddb7cf6b86f98525757255eaac708588a6588ea2b61fc97c",
+          "current": "f9f01cf1461e8a290fd9d996bfcdca73e354de80b4a6890dddbd5a3a83ebd87d"
         }
       ]
     }

@@ -5,6 +5,7 @@
 #include "client/RawCursorPlacement.h"
 #include "o/RawMissionAiSettings.h"
 #include "o/RawGeyserAiRegistration.h"
+#include "o/RawSunAviaryProcess.h"
 #include "client/RawShapeToBuffer.h"
 #include "client/OwnerColorMaps.h"
 #include <unordered_set>
@@ -772,4 +773,21 @@ TEST_CASE(CampaignSession_ConstructionTeleportUsesActualSurfacePath) {
     // 같은 실제 시계만 전진시키고 경로 자신이 삭제되면 즉시 호출을 끝낸다.
     for (int step=0;step<2000 && core.kernel.Get(pid);++step) { core.processState.now=step*0.02;path->RunFrame(); }
     CHECK(core.kernel.Get(pid)==nullptr);CHECK((core.pool.Slot(builder)[11]&3)!=0);
+}
+// 실제 타이머0→비행→도착의46/61 교체→타이머1 위치 조정→대상 완료 뒤 자기 삭제를 조립한다.
+TEST_CASE(CampaignSession_ManaBoltRegularFollowsArrivalAndCurrentTarget) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();services.unitLost=[&](Sid) { ++external.notices; };
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services),{1024,768});auto& session=world.Session();auto core=session.Core();const auto origin=EmptySessionSupport(core);const float x=static_cast<float>(origin.x+2),y=static_cast<float>(origin.y+2);
+    const auto target=session.World().Create(76);core.owner.Set(target,1);core.pool.AllocatedBytes(target)[40]|=1;session.World().Pop(target,x,y,0);
+    const auto bolt=session.World().Create(105,2);core.owner.Set(bolt,1);session.World().Pop(bolt,x,y,0);const auto notices=external.notices;
+    auto* initial=core.processes.AddRegular(bolt,0,0.05f);core.processes.AddSharedRegular(bolt,9,0.05f);
+    core.processState.now=initial->Time();initial->RunFrame();CHECK(initial->Count()==1 && initial->Payload()==0.05f);CHECK(external.notices>notices);
+    auto* path=session.StartConstructionMovement({bolt,{x,y},1,0,0,0,0});CHECK(path!=nullptr);if (!path) return;const auto pathId=core.kernel.Find(*path);const auto began=core.processState.now;
+    // 실제 이동만 실행하여 같은 Target에서 도착의 Regular 교체를 확인한다.
+    for (int step=0;step<2000 && core.kernel.Get(pathId);++step) { core.processState.now=began+step*0.02;path->RunFrame(); }
+    CHECK(core.kernel.Get(pathId)==nullptr);CHECK(core.processes.FindEvent(bolt,0)==nullptr);CHECK(!FindAttachedProcess(core.pool,bolt,61).value);CHECK((core.pool.Slot(bolt)[11]&3)==0); // 반납한 Kernel 번호는 새 event1이 즉시 재사용할 수 있다.
+    auto* arrived=core.processes.FindEvent(bolt,1);CHECK(arrived!=nullptr);if (!arrived) return;const auto arrivedId=core.kernel.Find(*arrived);
+    core.display.SetView({319,127,65536,{0,0,1024,768}});session.SetParticleView({319,127,0,0,1024,768},{});core.processState.now=arrived->Time();arrived->RunFrame();
+    CHECK(arrived->Count()==1 && arrived->Payload()==0.05f);CHECK(Get(core.pool.Slot(bolt),14)!=std::bit_cast<std::uint32_t>(x) || Get(core.pool.Slot(bolt),18)!=std::bit_cast<std::uint32_t>(y));
+    core.pool.AllocatedBytes(target)[40]&=static_cast<std::uint8_t>(~1U);core.processState.now=arrived->Time();arrived->RunFrame();CHECK(core.kernel.Get(arrivedId)==nullptr);CHECK((core.pool.Slot(bolt)[11]&3)!=0);
 }
