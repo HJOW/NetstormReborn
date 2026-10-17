@@ -223,7 +223,7 @@
       "cpppj/src/client/RawMenuControls.cpp": "e1d3a27c5330b52727e18447c97b02f6a7f82cb0ceeb9bf55aad874b744720f1",
       "cpppj/src/client/RawButtonControls.h": "372d15ad4ab423ef9869fab470ad1f4b5c75cb0ebc12503edd2bb7a6f3f240d6",
       "cpppj/src/client/RawButtonControls.cpp": "5d9568d2a6c461e9dd474cc584db62389ca3eb576e780fdeb6e9a39f1ee55baf",
-      "cpppj/src/client/UberGump.cpp": "e374f00c4d17ec9ed4ef0246eb332a00cfd9567fc6956619c74489b818319757",
+      "cpppj/src/client/UberGump.cpp": "6e2e48d717b5893b423d5d3c8de39c8342cc73b00d06646d6aa776d80469cb06",
       "cpppj/src/client/TextGump.cpp": "8f501caa7ba39352386060e81c79835eb75e070e6231d22e879b3c17142c5804",
       "cpppj/src/client/ScrollingTextGumpWidgets.cpp": "6ef03644d61c31ca94c11f163b6774f2f5f608727209ff57adf6c9cc4c73c849",
       "cpppj/src/client/ScrollGumpWidgets.cpp": "378d5b65e02f8e5e1693fca50b2a3582e07e53b0f3e2df4ffe36c3fb618f435b",
@@ -336,6 +336,19 @@
           "path": "cpppj/src/client/UberGump.cpp",
           "previous": "471b592cf1e784c63db34bc109eb3d38785481018b403cef0afa98d98622d10b",
           "current": "e374f00c4d17ec9ed4ef0246eb332a00cfd9567fc6956619c74489b818319757"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 165,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/productValidation/sourceSha256",
+          "path": "cpppj/src/client/UberGump.cpp",
+          "previous": "e374f00c4d17ec9ed4ef0246eb332a00cfd9567fc6956619c74489b818319757",
+          "current": "6e2e48d717b5893b423d5d3c8de39c8342cc73b00d06646d6aa776d80469cb06"
         }
       ]
     }

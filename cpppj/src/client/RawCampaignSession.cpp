@@ -178,6 +178,9 @@ struct RawCampaignSession::Impl {
     struct Login; //같은실제원본로그인과현재전송의고정주소 소유자다.
     std::shared_ptr<Login> login; //불완전타입의수명은실제모듈구성뒤에반납한다.
     std::function<void(std::int32_t,std::int32_t)> connectionAssign; //현재로컬pending 재배치를 실제참여모듈에연결한다.
+    CarrierInputState inputState; //같은 Carrier.cpp 커서/희생/진단 전역이다.
+    std::array<CarrierInputType,188> inputAudio{}; //현재 TYPE+78/+80의 음향 핸들이다.
+    CarrierDropPointState inputDropState; //같은 지도 한계/실패점을 기존 위치 계산기에 공급한다.
     RawCampaignSessionServices services; // 실제 클라이언트의 선택 서비스이며 검사 관찰 기본값을 사용하지 않는다.
 
     SessionAssets assets; // 보호 archive의 현재 실제 자료다.
@@ -1808,6 +1811,7 @@ struct RawCampaignSession::Impl {
 
 };
 #include "client/RawCampaignSessionLogin.inc"
+#include "client/RawCampaignCarrierInput.inc"
 
 //같은원본처리기가참여성공/Ready/월드설치를수행한다.강제owner/flags쓰기를추가하지않는다.
 void RawCampaignSession::LoadLocalConnection() {

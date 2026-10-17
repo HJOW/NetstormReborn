@@ -1,3 +1,4 @@
+#include "client/CampaignUserInputServices.h"
 // 원본 004d0120·004cebf0·004cf270·004ce580의 메뉴/명령 흐름을 표시 기반과 연결한다.
 // 전체 Gump/StyleText와 게임 규칙은 후속이다. 저장 미션 월드는 GameWorld에 연결한다.
 #include "client/UberGump.h"
@@ -297,9 +298,8 @@ void UberGump::BeginMission(std::string name) {
     world_->SetPalette(client_.GetScreen().Palette());
     // 같은 단일 커서에 현재 장치/트리를 공급한다. 선택/비용 안내/전송의 미복원 경계는 그대로 남긴다.
     auto cursorEffects=MakeCampaignCursorClientEffects(client_,*rawButtons_);
-    UserHighlightHooks highlightHooks;highlightHooks.selectCursor=cursorEffects.lifecycle.selectCursor;
-    auto highlight=std::make_shared<RawUserHighlight>(world_->HighlightSettings(),std::move(highlightHooks)); // 모드5의 이동 강조는 실제 하위 연결 전 명시 오류다.
-    cursorEffects.lifecycle.highlight=[highlight](std::uint32_t mode) { highlight->Highlight(mode); };
+    BindCampaignUserInputServices(client_,*world_,cursorEffects.lifecycle.selectCursor);
+    cursorEffects.lifecycle.highlight=[this](std::uint32_t mode) { world_->Highlight(mode); };
     world_->Session().Cursor().SetEffects(std::move(cursorEffects));
     world_->Session().Cursor().Display().SetExternal([this](std::uint32_t token) { return rawButtons_->GumpDepth(token); },{});
     briefingSections_.clear(); briefingIndex_ = 0;

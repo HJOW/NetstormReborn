@@ -57,6 +57,12 @@ public:
     void Select(o::SquidId id);
     // 강조는 같은 현재 선택을 읽기만 한다. 마우스 모드/TYPE/좌표를 별도 원본 전역으로 빌린다.
     UserHighlightState HighlightSettings();
+    // 실제 선택/강조/운반체 명령을 같은 현재 저장소와 Client 장치에 연결한다.
+    void BindUserInput(UserSelectionHooks selection,UserHighlightHooks highlight,CarrierInputHooks carrier);
+    void Highlight(std::uint32_t mode); // 건설 커서와 선택이 같은 원본 강조 몸체를 쓴다.
+    void UpdateMovementCursor(); // 현재 폴링 점으로 이동 커서를 다시 평가한다.
+    std::uint32_t InputMode() const { return highlightMode_; } // 선택과 다른 현재 원본 강조 모드를 읽는다.
+
     // 입력 폴링의 현재 화면 좌표를 강조 역투영과 공유한다.
     void SetMousePoint(ScreenPoint point);
     // 선택한 내 이동 유닛에 땅 좌클릭 명령을 내린다. 실패해도 선택은 해제한다.
@@ -131,6 +137,8 @@ private:
     std::vector<Tile> tiles_;
     // surfaces_: 표면 객체의 공간·연결·수명 처리 자료.
     std::unique_ptr<RawSurfaceWorld> surfaces_;
+    struct Input; // 같은 선택/강조/명령 및 기억점/다중 선택의 고정 주소 소유자다.
+    std::unique_ptr<Input> input_; // 현재 Client 장치를 설치한 뒤 원본 입력을 처리한다.
     std::unique_ptr<RawCampaignSession> campaign_; // 실제 설치/전투/경로/HP/현재 Kernel의 단일 수명 소유자다.
     CameraHomeState cameraHome_; // 실제 화면 크기·초기 시야 억제 깊이·요청/변환 갱신 번호를 보관한다.
     // surfaceTime_: 표면 프레임 갱신에 누적한 게임 시각(초).

@@ -5,18 +5,18 @@
   "normalReturns": 864,
   "precisionDifferentInputs": [],
   "sha256": {
-    "cpppj/src/CMakeLists.txt": "4a161874d436220480319b695c006badf5032924a6c03139cbb6a7cf7bc7f116",
+    "cpppj/src/CMakeLists.txt": "aeb81f738c13d031ff454bbf5ae54eac3b00529b9201cc01b8265a1fdfb5fa30",
     "cpppj/src/client/RawCampaignLifetimeBindings.cpp": "2eb0d3fc16e6967b54271c0365991e0ebd8f3d57ef6412aa92d4c4d21fbb01c3",
     "cpppj/src/client/RawCampaignLifetimeBindings.h": "6f4be73b52279abf308c8a3e6d8962271560e47c25996f7a03fca09f8cd063e8",
-    "cpppj/src/client/RawCampaignSession.cpp": "4d831f540fa3fac33097c2e6a3fd52009105620287c5745e2c4daeb63bd7bcda",
-    "cpppj/src/client/RawCampaignSession.h": "c1d372021f024b7c45d625a7f16843738f9a77221eeaf85876d909dd639d1508",
+    "cpppj/src/client/RawCampaignSession.cpp": "f971993c58c43b11b5a04f2f1f0688c892268e9ed4b8528c079d8f2db32f6bae",
+    "cpppj/src/client/RawCampaignSession.h": "4f5cfe2c558636c184e205a7dfa02e89ee72b2f9140a292619dcfb35bbb1ca03",
     "cpppj/src/client/RawCursorMana.cpp": "b8ab58679249a18387757eb2eb93c7405e566a4a9fc02ed018b2046a7d751f7b",
     "cpppj/src/client/RawCursorMana.h": "f363a35504b216243604734bcb9c7567943797c4b879b9f101b16763d9d3821a",
     "cpppj/src/o/SquidDisplay.cpp": "adff73d1c710cf295aed17e2a06cb90294e1399e5e455d423659f37c336f3dc6",
     "cpppj/src/o/SquidPop.cpp": "61f8db73c663d5d7c8880d73bc310cf7884e361bb76402e0946241e02b7dcd17",
     "cpppj/src/o/SquidUnpop.cpp": "f9a932b6ee543cc2ee051d6f67afb0c56fca1f325cc51d29ca3d0dc3adf26fef",
-    "cpppj/tests/CMakeLists.txt": "ee8abf06ee9fc0f6eb349424597d29d64e578a3b4ff2ad785d79fd88f9dd4da6",
-    "cpppj/tests/CampaignSessionTests.cpp": "23484e24e91f574fb3d92ce3f2199fab52a8c04a67a7aef2f5143d3dc20bfaad",
+    "cpppj/tests/CMakeLists.txt": "e81b2e494a8bf03b255b76f0e9c001344dcdf6ace39789618a613555530e6d62",
+    "cpppj/tests/CampaignSessionTests.cpp": "d63eb5f5b31dec45d99809dd990fb2da3d1b298f5dd632037d19f23814a094b7",
     "cpppj/tests/CursorManaTests.cpp": "3f9aa47024782b0afe4f165a2145fa4f27706d8b5b7c1434f8e94c65a5318daa",
     "cpppj/tests/PopTests.cpp": "250b9a9fd863142026c29ef68c75ea7c8bea6871ed0a42df9bafee4e2b072d48",
     "cpppj/tests/UnpopTests.cpp": "af6cd4c73db3f50d707d1b7cc896f991a7c5222177b7bd4252054bbe826af9cc",
@@ -1151,6 +1151,43 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "58592b3cdc555e8b7203a82997b89134f73db5e67ca3aaa4b3a4033055d459e0",
           "current": "23484e24e91f574fb3d92ce3f2199fab52a8c04a67a7aef2f5143d3dc20bfaad"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 165,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "4a161874d436220480319b695c006badf5032924a6c03139cbb6a7cf7bc7f116",
+          "current": "aeb81f738c13d031ff454bbf5ae54eac3b00529b9201cc01b8265a1fdfb5fa30"
+        },
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "4d831f540fa3fac33097c2e6a3fd52009105620287c5745e2c4daeb63bd7bcda",
+          "current": "f971993c58c43b11b5a04f2f1f0688c892268e9ed4b8528c079d8f2db32f6bae"
+        },
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "c1d372021f024b7c45d625a7f16843738f9a77221eeaf85876d909dd639d1508",
+          "current": "4f5cfe2c558636c184e205a7dfa02e89ee72b2f9140a292619dcfb35bbb1ca03"
+        },
+        {
+          "group": "/sha256",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "ee8abf06ee9fc0f6eb349424597d29d64e578a3b4ff2ad785d79fd88f9dd4da6",
+          "current": "e81b2e494a8bf03b255b76f0e9c001344dcdf6ace39789618a613555530e6d62"
+        },
+        {
+          "group": "/sha256",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "23484e24e91f574fb3d92ce3f2199fab52a8c04a67a7aef2f5143d3dc20bfaad",
+          "current": "d63eb5f5b31dec45d99809dd990fb2da3d1b298f5dd632037d19f23814a094b7"
         }
       ]
     }

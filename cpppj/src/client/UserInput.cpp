@@ -16,6 +16,7 @@ UserInput::UserInput(Client& client,GameWorld& world) : client_(client),world_(w
 // 원본의 좌클릭 이동과 우클릭 메뉴를 구분한다.
 std::optional<o::SquidId> UserInput::Event(InputEvent event) {
     if ((event.code & InputCode::kOutside)!=0) return {};
+    world_.SetMousePoint({event.x,event.y}); // 선택 시 모드5의 역투영도 같은 현재 클릭 좌표를 사용한다.
     ReadCursorOptions();std::int32_t rotateMode=0; // 원본 rotmode의 누락 기본값0이다.
     client_.Configuration().ReadInt("rotmode",rotateMode);
     if (world_.Session().Cursor().HandleInput(event,static_cast<std::uint32_t>(rotateMode))) return {};
@@ -35,8 +36,8 @@ std::optional<o::SquidId> UserInput::Event(InputEvent event) {
     const auto mouse=event.code & 0x00ffffffu;
     if (mouse==InputCode::kRightButton) return world_.Pick(point);
     if (mouse==InputCode::kLeftButton) {
-        const auto object=world_.Pick(point);
-        if (object) world_.Select(object); else world_.MoveSelected(point);
+        if (world_.InputMode()==2 || world_.InputMode()==5) world_.MoveSelected(point);
+        else world_.Select(world_.Pick(point));
     }
     return {};
 }
@@ -67,6 +68,7 @@ void netstorm::client::UserInput::ReadCursorOptions() {
 // 원본445330의 깊이0 조건에서만 실제 정수 마우스 갱신446b50을 호출한다.
 void netstorm::client::UserInput::UpdateCursor(InputEvent mouse) {
     world_.SetMousePoint({mouse.x,mouse.y}); // 강조/커서 모두 같은 현재 폴링 좌표를 사용한다.
-    if ((mouse.code&InputCode::kOutside) || world_.Session().CursorDropSettings().lockDepth) return;
+    if (mouse.code&InputCode::kOutside) return;
+    if (world_.Session().CursorDropSettings().lockDepth) { world_.UpdateMovementCursor();return; }
     ReadCursorOptions();world_.Session().Cursor().Update(mouse.x,mouse.y);
 }

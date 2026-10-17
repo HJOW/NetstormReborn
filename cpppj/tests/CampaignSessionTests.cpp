@@ -533,12 +533,26 @@ TEST_CASE(CampaignSession_ActualWarBeginsGameWorld) { CheckSessionWorld("thewarb
 TEST_CASE(CampaignSession_ActualMasterGameWorld) { CheckSessionWorld("masterofwhirligigs"); }
 
 // 같은 production GameWorld의 선택/좌클릭은 원본 BFS/Host54를 만들고 현재 슬롯을 이동한다.
+// 실제 로그인 소비자를 선택하며 성공 플래그/Ready를 입력하지 않는다.
+void UseWorldTestLogin(RawCampaignSessionServices& services) {
+    services.ai.participation.clearChat=[](std::uint32_t channel) { CHECK(channel==0x40 || channel==0x80); };services.ai.participation.addChat=[](std::uint32_t,std::string_view,std::uint32_t channel) { CHECK(channel==0x20 || channel==0x40 || channel==0x80); }; //로그인 Player/Alliance가 호출하는 실제 Chat 장치 경계를 관측한다.
+    CampaignLoginServices login;login.configInt=[](std::string_view,std::int32_t fallback) { return fallback; };login.wallSeconds=[] { return 100.25; };login.clock=[] { return 100250U; };
+    login.refresh=[] {};login.playerUiBusy=[] { return false; };login.playerNotice=[](std::uint32_t kind,std::uint32_t owner,std::uint32_t) { CHECK((kind==3 || kind==5) && owner<9); };login.log=[](std::string_view) {};services.localLogin=std::move(login);
+}
+// 장치 효과는 관측하고 실제 게임/선택/강조/전송은 같은 제품 몸체가 수행한다.
+std::shared_ptr<std::vector<std::uint32_t>> BindWorldTestInput(GameWorld& world) {
+    const auto cursors=std::make_shared<std::vector<std::uint32_t>>();UserSelectionHooks selection;selection.paused=[&world] { return world.paused && world.paused() ? 1U : 0U; };
+    selection.dump=[&world](Sid sid) { CHECK(world.Session().Core().pool.Slot(sid)[10]>=70); };selection.assertion=selection.previewAssertion=[] { throw std::logic_error("실제 월드 선택 검사 예상 밖 진단"); };
+    UserHighlightHooks highlight;highlight.selectCursor=[cursors](std::uint32_t kind) { cursors->push_back(kind); };CarrierInputHooks carrier;carrier.selectCursor=highlight.selectCursor;carrier.assertion=[](std::uint32_t line) { throw std::logic_error("실제 월드 운반체 입력 진단 "+std::to_string(line)); };
+    world.BindUserInput(std::move(selection),std::move(highlight),std::move(carrier));return cursors;
+}
 void CheckSessionMovement(bool actualBroadcast) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
     auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());
     auto services=external.Services();
     if (actualBroadcast) { services.assets.sendGunPacket={};services.pathPacket={}; }
-    GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services),{1024,768});world.Resize(1024,768);
+    UseWorldTestLogin(services);
+    GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services),{1024,768});world.Resize(1024,768);const auto cursors=BindWorldTestInput(world);CHECK(world.Session().LocalConnectionPhase()==14);
     auto core=world.Surfaces().Core();Sid priest{};
     // 현재 raw 내 사제만 선택한다.
     for (const auto& object:world.Surfaces().Objects()) if (object.object.type==158 && object.object.owner==1) { priest=object.sid;break; }
@@ -552,7 +566,7 @@ void CheckSessionMovement(bool actualBroadcast) {
         const int px=x+dx,py=y+dy;if (px<2 || py<2 || px>=254 || py>=254) continue;
         if ((core.spots[py*256+px]&7)==2 && anchor.GraphAt(static_cast<float>(px),static_cast<float>(py))==graph) { goal={px,py};found=true;break; }
     }
-    CHECK(found);world.Select(priest.value);CHECK(world.MoveSelected(world.ToScreen(goal.x,goal.y)));
+    CHECK(found);world.SetMousePoint(world.ToScreen(x,y));world.Select(priest.value);CHECK(world.InputMode()==5 && !cursors->empty());CHECK(world.MoveSelected(*world.Point("cell:"+std::to_string(goal.x)+','+std::to_string(goal.y))));
     bool path=false,moved=false;
     // 실제 현재 Kernel을 실행하고 화면 뷰도 같은 슬롯의 현재 위치를 따라가는지 확인한다.
     for (std::uint32_t frame=0;frame<480;++frame) {
@@ -1322,7 +1336,7 @@ TEST_CASE(CampaignSession_CursorHighlightSharesSelectionWithoutClearingIt) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);
     SessionServicesFixture external;auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());
     GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",external.Services(),{1024,768});
-    const auto priest=world.Session().FindPriestParticipation(1);world.Select(priest);auto state=world.HighlightSettings();
+    const auto boundCursors=BindWorldTestInput(world);const auto priest=world.Session().FindPriestParticipation(1);const auto* object=world.Object(priest);CHECK(object);world.SetMousePoint(world.ToScreen(object->x,object->y));world.Select(priest);auto state=world.HighlightSettings();CHECK(!boundCursors->empty());
     CHECK(state.selectedSid==priest && priest!=0);state.mode=5;state.mouseType=128;
     world.SetMousePoint({-33,91});CHECK(state.mouseX==-33 && state.mouseY==91);
     UserHighlightHooks hooks;std::vector<std::uint32_t> cursors;hooks.selectCursor=[&](std::uint32_t cursor) { cursors.push_back(cursor); };
@@ -1594,4 +1608,23 @@ TEST_CASE(CampaignSession_LocalLoginActualHandshakeAndWorldLoad) {
     //기존Kernel이실제사제이동/도착/자연삭제를수행하도록연속시각만공급한다.
     for (std::uint64_t frame=0;frame<1000 && core.processState.now<end+.25;++frame) { const auto now=start+static_cast<double>(frame)*.025;session.PumpLocalConnection();session.RunFrame({now,100.25+(now-start),frame ? .025 : 0.0,frame},false);if (!core.processes.FromForm(form)) break; }
     CHECK(!core.processes.FromForm(form) && std::bit_cast<float>(Get(core.pool.Slot(priest),14))==90 && std::bit_cast<float>(Get(core.pool.Slot(priest),18))==108 && session.Sp(1)==sp);CHECK(Throws([&] { session.LoadLocalConnection(); }));
+}
+
+// 실제 월드 UI의 선택/호버/클릭이 같은 로그인 전송으로 사제·골렘·벌룬을 이동한다.
+TEST_CASE(CampaignSession_WorldInputActualLoginThreeCarriersAndKernel) {
+    // 세 종류는 별개 실제 미션에서 검사하여 선택/전송 수명이 섞이지 않게 한다.
+    for (const std::uint32_t kind:{158U,133U,111U}) {
+        const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();UseWorldTestLogin(services);
+        auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services),{1024,768});world.Resize(1024,768);const auto cursors=BindWorldTestInput(world);auto& session=world.Session();auto core=session.Core();CHECK(session.LocalConnectionPhase()==14);
+        const auto parent=kind==158 ? Sid{static_cast<std::uint16_t>(session.FindPriestParticipation(1))} : session.World().Create(kind,2);CHECK(parent.value);if (!parent.value) continue;
+        if (kind!=158) { session.World().Pop(parent,kind==133 ? 94.0F : 98.0F,kind==133 ? 108.0F : 122.0F,0);core.owner.Set(parent,1); }world.Step(0);
+        const auto raw=core.pool.Slot(parent);const RawPathPoint source{std::bit_cast<float>(Get(raw,14)),std::bit_cast<float>(Get(raw,18))},destination=kind==111 ? RawPathPoint{102,122} : RawPathPoint{90,108};const auto sp=session.Sp(1);const auto movement=session.Priests().MovementProcessType(kind);const auto before=session.LocalConnectionPackets().size();
+        world.SetMousePoint(world.ToScreen(source.x,source.y));world.Select(parent.value);CHECK(world.InputMode()==5 && world.HighlightSettings().selectedSid==parent.value && (core.pool.Slot(parent)[40]&4));CHECK(!FindAttachedProcess(core.pool,parent,movement).value);
+        const auto point=world.Point("cell:"+std::to_string(static_cast<int>(destination.x))+','+std::to_string(static_cast<int>(destination.y)));CHECK(point.has_value());world.SetMousePoint(*point);world.UpdateMovementCursor();CHECK(!cursors->empty() && cursors->back()==18);CHECK(world.MoveSelected(*point));CHECK(!world.HighlightSettings().selectedSid && world.InputMode()==0 && !(core.pool.Slot(parent)[40]&4));CHECK(!FindAttachedProcess(core.pool,parent,movement).value && session.LocalConnectionPackets().size()==before);
+        session.PumpLocalConnection();CHECK(session.LocalConnectionPackets().size()==before+1 && session.LocalConnectionPackets().back()==0x40);const auto form=FindAttachedProcess(core.pool,parent,movement);auto* path=dynamic_cast<RawPathProcess*>(core.processes.FromForm(form));CHECK(path);if (!path) continue;const auto end=path->Runtime().Time(path->Runtime().Count()-1);std::size_t frames{};
+        // 게임 시각만 전진시키고 실제 Kernel의 자연 도착/경로 반납을 기다린다.
+        for (;frames<3000 && core.processState.now<end+.5;++frames) { world.Step(.025);if (!core.processes.FromForm(form)) break; }
+        CHECK(!core.processes.FromForm(form) && frames>1 && std::bit_cast<float>(Get(core.pool.Slot(parent),14))==destination.x && std::bit_cast<float>(Get(core.pool.Slot(parent),18))==destination.y);CHECK(session.Sp(1)==sp && !core.bookkeeping.depth && !core.destroy.PreDepth() && !core.destroy.PostDepth());
+        std::cout<<"실제 월드 선택/호버/클릭 TYPE"<<kind<<" 로그인/40h/자연이동 "<<frames<<"프레임 관측\n";
+    }
 }

@@ -125,3 +125,8 @@ target_sources(netstorm PRIVATE o/RawCarrierMove.cpp o/RawCarrierMove.h)
 
 # 같은Session의원본로그인/로컬전송수명과실제Client장치경계다.
 target_sources(netstorm PRIVATE client/CampaignLoginServices.h client/RawCampaignSessionLogin.inc)
+
+target_sources(netstorm PRIVATE client/RawCarrierInput.h client/RawCarrierInput.cpp)
+
+# 실제 Client 입력 장치와 동일 월드의 선택/강조/명령 연결부다.
+target_sources(netstorm PRIVATE client/GameWorldInput.inc client/RawCampaignCarrierInput.inc client/CampaignUserInputServices.h client/CampaignUserInputServices.cpp)

@@ -32,16 +32,16 @@
     "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
     "tools/decomp_cursor_mana.py": "00cfea4f089b06b1b8f1b0cc61f0cf4f93bd33aa16aaa0715a95c66187a9f888",
     "tools/decomp_fence_lifetime.py": "d470de69c26be1c0c50ededee28a45e9f452f40b48837efd809044b394a535a7",
-    "cpppj/src/client/RawCampaignSession.cpp": "4d831f540fa3fac33097c2e6a3fd52009105620287c5745e2c4daeb63bd7bcda",
+    "cpppj/src/client/RawCampaignSession.cpp": "f971993c58c43b11b5a04f2f1f0688c892268e9ed4b8528c079d8f2db32f6bae",
     "cpppj/tests/fixtures/fence-lifetime-x86.tsv": "f3e5be8c131684bc679dba1fb7d27f431ace773495800e92ced8fd7ac856155b",
-    "cpppj/src/CMakeLists.txt": "4a161874d436220480319b695c006badf5032924a6c03139cbb6a7cf7bc7f116",
+    "cpppj/src/CMakeLists.txt": "aeb81f738c13d031ff454bbf5ae54eac3b00529b9201cc01b8265a1fdfb5fa30",
     "cpppj/src/client/RawCampaignLifetimeBindings.cpp": "2eb0d3fc16e6967b54271c0365991e0ebd8f3d57ef6412aa92d4c4d21fbb01c3",
     "cpppj/src/client/RawCampaignLifetimeBindings.h": "6f4be73b52279abf308c8a3e6d8962271560e47c25996f7a03fca09f8cd063e8",
-    "cpppj/src/client/RawCampaignSession.h": "c1d372021f024b7c45d625a7f16843738f9a77221eeaf85876d909dd639d1508",
+    "cpppj/src/client/RawCampaignSession.h": "4f5cfe2c558636c184e205a7dfa02e89ee72b2f9140a292619dcfb35bbb1ca03",
     "cpppj/src/o/RawGunTarget.cpp": "7fbcc542cc48449f414494ccca7abeb351d75ecc861d45d1d0a517833e485229",
     "cpppj/src/o/RawGunTarget.h": "486e6d411905a3b1a996c6900f390bb3ee229bb8f10ff31fbfd77977cc4b2513",
-    "cpppj/tests/CMakeLists.txt": "ee8abf06ee9fc0f6eb349424597d29d64e578a3b4ff2ad785d79fd88f9dd4da6",
-    "cpppj/tests/CampaignSessionTests.cpp": "23484e24e91f574fb3d92ce3f2199fab52a8c04a67a7aef2f5143d3dc20bfaad",
+    "cpppj/tests/CMakeLists.txt": "e81b2e494a8bf03b255b76f0e9c001344dcdf6ace39789618a613555530e6d62",
+    "cpppj/tests/CampaignSessionTests.cpp": "d63eb5f5b31dec45d99809dd990fb2da3d1b298f5dd632037d19f23814a094b7",
     "cpppj/src/client/RawCursorRange.cpp": "965b5bce38bdceb3d31cc63cbae3fc8db5da57ccb3bf8c71be81f23ec548ec2e",
     "cpppj/src/client/RawCursorRange.h": "5aa384b5432bd6fbee04ae0fc9bf65acf685d45b66553f8b91866261fcd79758",
     "cpppj/src/o/RawFenceLifetime.cpp": "f24971d75e0ad7ee97739ee00964b2ec71be8a127c0ecd1bbc6b29797bb45ddf",
@@ -1224,6 +1224,43 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "58592b3cdc555e8b7203a82997b89134f73db5e67ca3aaa4b3a4033055d459e0",
           "current": "23484e24e91f574fb3d92ce3f2199fab52a8c04a67a7aef2f5143d3dc20bfaad"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 165,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "4d831f540fa3fac33097c2e6a3fd52009105620287c5745e2c4daeb63bd7bcda",
+          "current": "f971993c58c43b11b5a04f2f1f0688c892268e9ed4b8528c079d8f2db32f6bae"
+        },
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "4a161874d436220480319b695c006badf5032924a6c03139cbb6a7cf7bc7f116",
+          "current": "aeb81f738c13d031ff454bbf5ae54eac3b00529b9201cc01b8265a1fdfb5fa30"
+        },
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "c1d372021f024b7c45d625a7f16843738f9a77221eeaf85876d909dd639d1508",
+          "current": "4f5cfe2c558636c184e205a7dfa02e89ee72b2f9140a292619dcfb35bbb1ca03"
+        },
+        {
+          "group": "/sha256",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "ee8abf06ee9fc0f6eb349424597d29d64e578a3b4ff2ad785d79fd88f9dd4da6",
+          "current": "e81b2e494a8bf03b255b76f0e9c001344dcdf6ace39789618a613555530e6d62"
+        },
+        {
+          "group": "/sha256",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "23484e24e91f574fb3d92ce3f2199fab52a8c04a67a7aef2f5143d3dc20bfaad",
+          "current": "d63eb5f5b31dec45d99809dd990fb2da3d1b298f5dd632037d19f23814a094b7"
         }
       ]
     }

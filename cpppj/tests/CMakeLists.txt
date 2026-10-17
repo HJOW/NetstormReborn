@@ -1468,3 +1468,6 @@ set_source_files_properties(CarrierMoveTests.cpp PROPERTIES COMPILE_DEFINITIONS
 target_sources(netstorm_tests PRIVATE PlayerStateExpandTests.cpp)
 set_source_files_properties(PlayerStateExpandTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_PLAYER_STATE_EXPAND_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/player-state-expand-x86.tsv\"")
+
+target_sources(netstorm_tests PRIVATE CarrierInputTests.cpp)
+target_compile_definitions(netstorm_tests PRIVATE NETSTORM_CARRIER_INPUT_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/carrier-input-x86.tsv")

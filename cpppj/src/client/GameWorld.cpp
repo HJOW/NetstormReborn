@@ -1,5 +1,7 @@
 #include "client/GameWorld.h"
 #include "client/RawCampaignCursor.h"
+#include "client/RawCursorPosition.h"
+#include <bit>
 #include "client/SquidRenderer.h"
 #include "client/PriestPlacementAssets.h"
 #include "o/RawPathAnimation.h"
@@ -34,6 +36,7 @@ int Theme(std::string_view theme) { return theme=="thunder" ? 1 : theme=="wind" 
 // TSV의 한 필드 안에 줄바꿈/탭을 넣지 않는다.
 std::string Field(std::string value) { std::replace(value.begin(),value.end(),'\t',' '); std::replace(value.begin(),value.end(),'\n',' '); std::replace(value.begin(),value.end(),'\r',' '); return value; }
 }
+#include "client/GameWorldInput.inc"
 // 저장 위치와 파일 필드를 유지하여 표시와 이동이 공유하는 월드를 만든다.
 GameWorld::GameWorld(const GameAssets& assets,const o::FortTemplate& fort,o::MissionPlayers players)
     : assets_(assets),ground_(std::make_unique<o::GroundGrid>()),players_(std::move(players)) {
@@ -286,7 +289,7 @@ void GameWorld::RunFrame() {
 void GameWorld::Step(double seconds) {
     if (!std::isfinite(seconds) || seconds<0) throw std::invalid_argument("월드 시간차 범위 오류");
     surfaceTime_.game+=seconds;surfaceTime_.delta=seconds;++surfaceTime_.number;SurfaceView();
-    if (campaign_) { surfaceTime_.wall+=seconds;campaign_->RunFrame(surfaceTime_,false);RefreshCampaignObjects();return; }
+    if (campaign_) { surfaceTime_.wall+=seconds;campaign_->PumpLocalConnection();campaign_->RunFrame(surfaceTime_,false);RefreshCampaignObjects();return; }
     surfaces_->RunFrame(surfaceTime_,false);RefreshSurfaceGround();AdvanceObjects(seconds);
 }
 // 비표면 유닛의 관찰 기반 이동은 raw 표면 렌더링과 구별한다.
@@ -364,7 +367,10 @@ o::SquidId GameWorld::Pick(ScreenPoint point) const {
     return picked;
 }
 // 없는 객체 또는 비선택 타입을 선택하지 않는다.
-void GameWorld::Select(o::SquidId id) { const auto* object=Object(id); selected_=object && object->selectable ? id : 0; changed_=true; }
+void GameWorld::Select(o::SquidId id) {
+    if (campaign_) { if (!input_) throw std::logic_error("실제 선택 장치 미설치");static_cast<void>(input_->selection->Select(id,0,1));changed_=true;return; }
+    const auto* object=Object(id);selected_=object && object->selectable ? id : 0;changed_=true;
+}
 // 처리기 수명 동안 같은 선택/마우스 전역을 공유하며 선택 번호를 복사하지 않는다.
 UserHighlightState GameWorld::HighlightSettings() { return {highlightMode_,selected_,mouseType_,mousePoint_.x,mousePoint_.y}; }
 // 폴링 후 키/마우스 사건이 함께 조회할 현재 화면 위치다.
@@ -372,10 +378,8 @@ void GameWorld::SetMousePoint(ScreenPoint point) { mousePoint_=point; }
 // 선택한 유닛의 주인이 나일 때만 명령을 적용한다.
 bool GameWorld::MoveSelected(ScreenPoint point) {
     if (campaign_) {
-        const auto id=selected_;selected_=0;changed_=true;const auto* view=Object(id);
-        if (!view || view->owner!=1 || view->type!=static_cast<int>(o::kPriestType)) return false;
-        const o::Sid sid{static_cast<std::uint16_t>(id)};if (campaign_->Priests().PriestState().Immobile(sid)) return false;
-        return campaign_->MovePriest(sid,{static_cast<float>((point.x+scrollX_)/16.0),static_cast<float>((point.y+scrollY_)/11.0)});
+        if (!input_) throw std::logic_error("실제 클릭 명령 장치 미설치");const auto number=selected_;const auto projected=input_->Project(point);const auto truncated=RawCursorPosition::TruncatePoint({projected.x,projected.y}); //원본 Userinput.cpp는4971e0→41d770 뒤42a360을 호출한다. 호버의 거의 올림과 구별한다.
+        input_->carrier->Commit(number,{truncated[0],truncated[1]});changed_=true;return number!=0;
     }
     RefreshSurfaceGround();
     const auto id=selected_; selected_=0; changed_=true; if (id==0 || id>objects_.size()) return false;
@@ -510,7 +514,7 @@ std::optional<ColorMap> GameWorld::Remap(const TypeAsset& type,int owner) const 
 }
 // 같은 변환을 사용하여 자동 입력의 그림 중심점/월드 칸을 찾는다.
 std::optional<ScreenPoint> GameWorld::Point(std::string_view label) const {
-    if (label.starts_with("cell:")) { const auto comma=label.find(','); if (comma==std::string_view::npos) return {}; const int x=std::stoi(std::string(label.substr(5,comma-5))),y=std::stoi(std::string(label.substr(comma+1))); return ToScreen(x,y); }
+    if (label.starts_with("cell:")) { const auto comma=label.find(','); if (comma==std::string_view::npos) return {}; const int x=std::stoi(std::string(label.substr(5,comma-5))),y=std::stoi(std::string(label.substr(comma+1))); return ToScreen(x-.5,y-.5); } //원본4971e0의+16/+11 역투영에서 논리 칸(x,y)의 내부를 클릭한다. 경계점은 다음 칸이다.
     if (!label.starts_with("world:")) return {}; const auto wanted=o::AsciiLower(label.substr(6));
     // 원본 타입 파일 이름의 첫 내 객체를 고른다.
     for (const auto& object:objects_) if (object.owner==1 && object.selectable) {
@@ -541,6 +545,11 @@ void GameWorld::CheckMissionOutcome() {
 std::string GameWorld::Report(bool mask) const {
     std::ostringstream out; out.precision(12);
     out<<"world\t"<<objects_.size()<<'\t'<<tiles_.size()<<"\nselected\t"<<selected_<<"\ncamera\t"<<scrollX_<<'\t'<<scrollY_<<"\n";
+    if (campaign_) {
+        out<<"raw_input\t"<<selected_<<'\t'<<highlightMode_<<'\t'<<campaign_->LocalConnectionPhase()<<'\t'<<campaign_->LocalConnectionPackets().size()<<"\nraw_packets";
+        // 실제 소비된 종류만 진단하며 별도 명령 성공 플래그를 만들지 않는다.
+        for (const auto kind:campaign_->LocalConnectionPackets()) out<<'\t'<<std::uint32_t(kind);out<<'\n';
+    }
     // 활성 플레이어와 머리 값/저장 상태를 서로 다른 열에 기록한다.
     for (const auto& p:players_.players) if (p.active) out<<"player\t"<<p.number<<'\t'<<p.stormPower<<'\t'<<p.color<<'\t'<<p.allies<<'\t'<<Field(p.name)<<'\t'<<Field(p.startingTech)<<'\t'<<p.storedTechnology.items.size()<<'\t'<<p.storedDeck.size()<<"\n";
     // 원본 저장 레코드와 이동 중의 좌표를 대조한다.

@@ -1,0 +1,2032 @@
+{
+  "unit": 165,
+  "base": "0cb53fa",
+  "host": "HJOW-Athlon",
+  "date": "2026-10-18",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16"
+  },
+  "scope": "PATCH10.78 실제 Client의 같은 선택/강조/마우스 저장소에서4277f0/4284a0/42a360/426290을 원본 선택·실제로그인전송·서버40h·현재Kernel에 연결했다. 전체Userinput/화면hit test/메뉴·건설·희생UI·완주 증거는 아니다.",
+  "currentSources": {
+    "cpppj/src/CMakeLists.txt": "aeb81f738c13d031ff454bbf5ae54eac3b00529b9201cc01b8265a1fdfb5fa30",
+    "cpppj/src/client/GameWorld.cpp": "72d3101d85af6dd73b72abe04f64922d8effa02661f90c7a2c8dad2b97eb3c5b",
+    "cpppj/src/client/GameWorld.h": "2d56a2593d88b389577d0f4a8449a059f706269bea7ba7b1f032d8b5bb5eba98",
+    "cpppj/src/client/RawCampaignSession.cpp": "f971993c58c43b11b5a04f2f1f0688c892268e9ed4b8528c079d8f2db32f6bae",
+    "cpppj/src/client/RawCampaignSession.h": "4f5cfe2c558636c184e205a7dfa02e89ee72b2f9140a292619dcfb35bbb1ca03",
+    "cpppj/src/client/UberGump.cpp": "6e2e48d717b5893b423d5d3c8de39c8342cc73b00d06646d6aa776d80469cb06",
+    "cpppj/src/client/UserInput.cpp": "fd1bee42a48c4a33098114e813a7909d449791671fb0e313b76efc55216c20bd",
+    "cpppj/tests/CMakeLists.txt": "e81b2e494a8bf03b255b76f0e9c001344dcdf6ace39789618a613555530e6d62",
+    "cpppj/tests/CampaignSessionTests.cpp": "d63eb5f5b31dec45d99809dd990fb2da3d1b298f5dd632037d19f23814a094b7",
+    "tools/cpp_campaign_entry_smoke.py": "59b39e067a2e51cc7f6358d8adc198e4cbd5682bc6109e9b1e0407fa7f3550aa",
+    "cpppj/src/client/RawCarrierInput.h": "27db41be147df6a13b60aa9faa68751dc1d54a09fae5945ee0e9f762f5979be4",
+    "cpppj/src/client/RawCarrierInput.cpp": "7f54b8a61c0d94e04e709d93aa138fe34d698cc90af2a9301259f232c93b0da6",
+    "cpppj/src/client/RawCampaignCarrierInput.inc": "15f5bf33d19b7453144b281327a7268ff795d0b6ede20b5c84dbb7955b700a1a",
+    "cpppj/src/client/GameWorldInput.inc": "3e6b1f1aa9af0631bdf1602eadfe5048c873a5d979aca26e624b64bb78472d64",
+    "cpppj/src/client/CampaignUserInputServices.h": "b84ad888baff4008979738c8396405016a3da847f76ac8104219e1744395859f",
+    "cpppj/src/client/CampaignUserInputServices.cpp": "249cde8633941771cb380ce79fccdeaefeeff37d11540662116252dba34c4cdd",
+    "cpppj/tests/CarrierInputTests.cpp": "6ba4c9175b6aea6b9d58e8ee43e8257415f1f3104767bfbb6d3882fb8348ca5d",
+    "tools/decomp_carrier_input.py": "221d5cf0fcc98e7631e2783d9ea02027d87f43841392f9284aa60fc8852c9fa3"
+  },
+  "nativeReports": {
+    "cpppj/carrier-input.json": "3d9f420e68e50c96acd2141674ad08cf5640b634405874fec81aa192d983478b"
+  },
+  "nativeContext": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-18",
+    "lastPreciseDecompile": {
+      "host": "HJOW-Athlon",
+      "date": "2026-10-16"
+    },
+    "uniqueInputs": 454,
+    "normalReturns": 908,
+    "instructions": 397366,
+    "nativeCalls": {
+      "004277f0": 766,
+      "004ac200": 2456,
+      "0049a840": 4070,
+      "0041d7a0": 1204,
+      "004e49c0": 2408,
+      "0040e880": 748,
+      "0041d0d0": 1496,
+      "0040e800": 1496,
+      "0040e8f0": 748,
+      "0040e960": 748,
+      "004ac1e0": 672,
+      "004487a0": 38,
+      "004284a0": 132,
+      "0042a360": 322,
+      "004ac550": 942,
+      "00426290": 312
+    },
+    "precisionDifferentInputs": [],
+    "boundaries": "4277f0/4284a0/42a360/426290와TYPE/반올림/사각형/제단점전체실행. 기존큰후보·지면·Graph·Drop·이동송신·포획·희생UI·음향·난수는명시경계다. GP/retN/canary/SEH/x87/실행·읽기·쓰기범위/점·현재전역/전체6raw50BYTE/현재TYPE·음향stamp/효과뒤재독을대조했다. 실제게임·자연완주증거가아니다.",
+    "sha256": {
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "tools/decomp_carrier_input.py": "221d5cf0fcc98e7631e2783d9ea02027d87f43841392f9284aa60fc8852c9fa3",
+      "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+      "tools/decomp_cursor_position.py": "e15bcdbc4c6be9c131c30f15416c945d650dba9f7dc6def404b47f63c635c212",
+      "tools/decomp_carrier_falling.py": "f8702db0708a543b73213c8df9154503afe977767a11bd7c150b639ee1b587a6",
+      "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+      "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+      "cpppj/tests/fixtures/carrier-input-x86.tsv": "86c9873814dc1c9a78bf7e2b66e20d348387c091d98492ae7909d80fbdbdcb11"
+    }
+  },
+  "protected": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "AGENTS.md": "7addbf9b31c42f29aab7c93faa865eb6de8590a600d17202a297cf7122bdf979",
+    "LEFT_JOBS.dotnetpj.md": "0c067e1d12879dbf2212cbd64c8f9f60e65b590df910418f025027ed84f80ec2"
+  },
+  "originalFixturesBeforeCppReplay": {
+    "tools/decomp_carrier_input.py": "221d5cf0fcc98e7631e2783d9ea02027d87f43841392f9284aa60fc8852c9fa3",
+    "cpppj/carrier-input.json": "3d9f420e68e50c96acd2141674ad08cf5640b634405874fec81aa192d983478b",
+    "cpppj/tests/fixtures/carrier-input-x86.tsv": "86c9873814dc1c9a78bf7e2b66e20d348387c091d98492ae7909d80fbdbdcb11"
+  },
+  "firstReplay": "최종유효454원문은 C++ 작성 전 동결했다. 첫C++는 음향이름 연속번호 가정에서row163이 실패했다. 실제 표는 사제1/3·골렘1/2/4/5이므로 검사/실제장치의 표만 정정했고 fixture/도구/원본보고서는 불변이다.",
+  "invalidInitialObservation": "첫 격리관측은 수정한 호출자에Unicorn번역캐시가 남아42a360/426290 실제실행이 없었다. initial-*로보존하고캐시제거/4상위진입횟수관문뒤native3으로재관측했다. 무효 최초관측은 독립 검증 성공으로 합산하지 않는다.",
+  "validation": {
+    "build": {
+      "log": "extracted/goal-carrier-input-20261018-build6.log",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0
+    },
+    "focused": {
+      "native": {
+        "log": "extracted/goal-carrier-input-20261018-focused2.log",
+        "tests": 1
+      },
+      "integration": {
+        "log": "extracted/goal-carrier-input-20261018-integration4.log",
+        "tests": 1
+      },
+      "oldMove": {
+        "log": "extracted/goal-carrier-input-20261018-old-move2.log",
+        "tests": 1
+      },
+      "oldHighlight": {
+        "log": "extracted/goal-carrier-input-20261018-old-highlight2.log",
+        "tests": 1
+      },
+      "oldBroadcast": {
+        "log": "extracted/goal-carrier-input-20261018-old-broadcast2.log",
+        "tests": 1
+      }
+    },
+    "full": {
+      "tests": 1651,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "seconds": 232.08,
+      "totalSeconds": 232.11,
+      "ctestLog": "extracted/goal-carrier-input-20261018-ctest1.log",
+      "lastTestLog": "extracted/goal-carrier-input-20261018-LastTest.log"
+    },
+    "audit": {
+      "tools": 89,
+      "passed": 78,
+      "knownFailures": 11,
+      "newFailures": 0
+    },
+    "entry": {
+      "passed": 6,
+      "originalsUnchanged": true
+    },
+    "goalEntries": {
+      "passed": 11,
+      "originalsUnchanged": true
+    }
+  },
+  "integrationLog": "실제 월드 선택/호버/클릭 TYPE158 로그인/40h/자연이동 88프레임 관측\r\n실제 월드 선택/호버/클릭 TYPE133 로그인/40h/자연이동 80프레임 관측\r\n실제 월드 선택/호버/클릭 TYPE111 로그인/40h/자연이동 292프레임 관측\r\n[ OK ] CampaignSession_WorldInputActualLoginThreeCarriersAndKernel\r\n1 test(s), 0 failed check(s)\r\n",
+  "integrationInputs": "세 별개 실제1-1 로그인/World: 초기사제와추가생성골렘94,108/벌룬98,122를owner1로 Pop. 선택activateMove1/호버/실제클릭을 같은 현재장치에전달한다. 사제·골렘90,108/벌룬102,122는 논리칸내부의 실제클릭 좌표로 요청한다. 성공owner/Ready/경로·도착결과는 주입하지 않았다. 추가유닛생산/사용자전체자연완주의 증거는 아니다.",
+  "clickCoordinates": "실제 OS 마우스는 원본4971e0(+16/+11)→41d770→42a360이다. 자동cell:x,y는 경계가 아닌 논리칸내부(x-.5,y-.5)를 클릭한다. 원본 역투영/커서평가의 거의올림을 임의로 바꾸지 않았다.",
+  "uiInputPipeline": {
+    "selectionMode": 5,
+    "loginPhase": 14,
+    "receivedBefore": 12,
+    "receivedAfter": 13,
+    "newTypes": [
+      64
+    ]
+  },
+  "currentPinMaintenance": {
+    "reports": 62,
+    "pins": 226,
+    "pastRecordsPreserved": true
+  },
+  "preservedFailures": [
+    "무효 첫 Unicorn 호출자 캐시 관측과재관측음향인접DWORD문자열오류",
+    "첫C++ 사제이름표 연속번호가정",
+    "통합검사변수중복/auto타입추론빌드실패",
+    "테스트Chat장치미연결",
+    "클릭전절삭누락과기존자동경계점으로1칸이동차이"
+  ],
+  "remaining": [
+    "원본전체Userinput/화면hit test·다중선택·수정키·카메라/선택그림/재귀Dump44dab0 VT+70서식",
+    "427070 운반물내려놓기/4498e0 희생조건·494eb0 의식/희생UI/진단표시",
+    "실제건설메뉴/cursor취득·배치·생산·SP/경제/AI전략",
+    "전체11단계자연플레이·승패·저장·다음미션·완주·원본동일성"
+  ],
+  "logSha256": {
+    "extracted/goal-carrier-input-20261018-LastTest.log": "0e12d72da7570f208c4767e67c48c0f642c5ddbb872abd52ceda49b1a55dae3c",
+    "extracted/goal-carrier-input-20261018-audit1.log": "a1a079adcc0413df740e276a2a5b0c3619e05ee96820ff7a03c08554c21857f4",
+    "extracted/goal-carrier-input-20261018-audit2.log": "a1a079adcc0413df740e276a2a5b0c3619e05ee96820ff7a03c08554c21857f4",
+    "extracted/goal-carrier-input-20261018-build1.log": "e8f392b4a1ffbc655e609057eea3271e951860f1069cc98153ac49b105af0329",
+    "extracted/goal-carrier-input-20261018-build2.log": "ed223158ca61da590a3450adc1631ff69c82eefaa38687e928eead41ae36eca8",
+    "extracted/goal-carrier-input-20261018-build3.log": "11ed1948def7e7bfec4e4a5dd5ccf0840039d621a3f50a254999485e89793d44",
+    "extracted/goal-carrier-input-20261018-build4.log": "68daf5268753a6f0253917d033a76282e07803e3b45f8c1951a34f7cbc6a3d34",
+    "extracted/goal-carrier-input-20261018-build5.log": "0f160c27c262ba31f6c06d546f1a65227649a1916c7fcc36fcaf60ae9920ecb2",
+    "extracted/goal-carrier-input-20261018-build6.log": "0f160c27c262ba31f6c06d546f1a65227649a1916c7fcc36fcaf60ae9920ecb2",
+    "extracted/goal-carrier-input-20261018-ctest1.log": "03b1862aa377ed75fc66ecad597c25ad13bce38536d38efec644ebec6edad9f2",
+    "extracted/goal-carrier-input-20261018-entry1.log": "4ae8071767e73521570575475deb8537071c2b9db9929b6dc7b1f181c5d77202",
+    "extracted/goal-carrier-input-20261018-entry2.log": "51355eaf3f2c50f37b3853d0b242a740d14359b4f1de43023e670327270551cf",
+    "extracted/goal-carrier-input-20261018-entry3.log": "31c0b9025401c81fbfd80e43203d9e7030ab8588a019e22710f6bfc7c3a5cfae",
+    "extracted/goal-carrier-input-20261018-focused1.log": "58c08df195fa97d753749e06392e500990aab6f75e713e7956c19deff7e6f706",
+    "extracted/goal-carrier-input-20261018-focused2.log": "0a622626aa9126324590007b604e9a27fc67ac4355f98420de60672fc0a6c3d5",
+    "extracted/goal-carrier-input-20261018-goal-entry1.log": "45c1eee9aa0a6dda3519fe8ac4fcf426bf94132bb199d97050b9cc54ac53e578",
+    "extracted/goal-carrier-input-20261018-integration1.log": "7bd6cd2f58b98aa420dce7a58cab5f0cd48e4e4737e7fecb855a4d37636d2cf0",
+    "extracted/goal-carrier-input-20261018-integration2.log": "281751552d67624daf34013bfe8869df0266134209f736cfa4689e7e0a8594e9",
+    "extracted/goal-carrier-input-20261018-integration3.log": "bb63edb8b151b9b0e82be9f3dbbabe940e95d2110cfd464ce494ecae2cf85a60",
+    "extracted/goal-carrier-input-20261018-integration4.log": "80bb6bd81e425f5dbf55c3a2306c3defc993cbf41946a9a28a0b17ba87b78c63",
+    "extracted/goal-carrier-input-20261018-native-verify1.log": "8a2df46e0172ca9c4962917acefa6318346e17a6130034c1b3974acf29ab5277",
+    "extracted/goal-carrier-input-20261018-native1.log": "bf4532df8beb145fc0ea4c6d5ddab42965827c761cd741be3b3430c2c1353371",
+    "extracted/goal-carrier-input-20261018-native2.log": "56cd3b93713a59bd652af61ce774772c6362d4797f05abe2dd6ba59aeb670205",
+    "extracted/goal-carrier-input-20261018-native3.log": "cce88f75903c58e3489a7a73e61cd9556f533b559f98eba8bf1bd48aefe3393d",
+    "extracted/goal-carrier-input-20261018-old-broadcast1.log": "ae175d3e8cb6c99f6574abcbfbbc86fb9aaa5a8f32a43ec725968b75c60b1550",
+    "extracted/goal-carrier-input-20261018-old-broadcast2.log": "ae175d3e8cb6c99f6574abcbfbbc86fb9aaa5a8f32a43ec725968b75c60b1550",
+    "extracted/goal-carrier-input-20261018-old-highlight1.log": "3d474b32f8186cd91245b02cdd7cc47607fcec76bb7e4ac1cb36f1cb9bcd926b",
+    "extracted/goal-carrier-input-20261018-old-highlight2.log": "3d474b32f8186cd91245b02cdd7cc47607fcec76bb7e4ac1cb36f1cb9bcd926b",
+    "extracted/goal-carrier-input-20261018-old-move1.log": "aefa6bc9cf7ae94d1dd82442b8ab86989b2aaafcc156592dc83d591ff3377fc3",
+    "extracted/goal-carrier-input-20261018-old-move2.log": "aefa6bc9cf7ae94d1dd82442b8ab86989b2aaafcc156592dc83d591ff3377fc3",
+    "extracted/goal-carrier-input-20261018-native-freeze.json": "973e430744ae3d3c96b92d41f2fbca708df34eaa3bc61f708e45f5c50fc556ef",
+    "extracted/goal-carrier-input-20261018-sources.json": "9f0b8e4836ebdb5654c1fa5d7931c05305c415c9362d226d0660eb84c039f86c",
+    "extracted/goal-carrier-input-20261018-pin-updates.json": "db07e82b17e144f74c20c0776208f360c78678c63d2f8768c1a7bce195b3a914",
+    "extracted/goal-carrier-input-20261018-verify-final.json": "e320f30c60be1c8be5d8b7f168e37406c30bcf2d60f087c44e127783b572fb67"
+  },
+  "goalEntryContext": {
+    "scope": "CLI --mission/실제 UI 버튼으로11개 플레이 진입. 사용자 메뉴 선택·자연 명령·승패·저장·완주/원본 전체 동일성은 미검증.",
+    "runs": [
+      {
+        "mission": "tutorial1",
+        "passed": true,
+        "clicks": [
+          "MORE",
+          "OK"
+        ],
+        "observations": [
+          {
+            "frame": 4,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A."
+            ],
+            "controls": {
+              "MORE": [
+                "1",
+                "0",
+                "474",
+                "494",
+                "549",
+                "514",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial1",
+              "Tutorial",
+              "3"
+            ],
+            "raw_world": [
+              "0.234",
+              "4",
+              "6",
+              "0",
+              "0",
+              "5000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-carrier-input-20261018-goal-entry1/tutorial1/0",
+            "exitCode": 0
+          },
+          {
+            "frame": 6,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A1."
+            ],
+            "controls": {
+              "BACK": [
+                "1",
+                "0",
+                "435",
+                "417",
+                "510",
+                "437",
+                "0"
+              ],
+              "OK": [
+                "1",
+                "0",
+                "514",
+                "417",
+                "589",
+                "437",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial1",
+              "Tutorial",
+              "3"
+            ],
+            "raw_world": [
+              "0.222",
+              "6",
+              "6",
+              "0",
+              "0",
+              "5000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-carrier-input-20261018-goal-entry1/tutorial1/1",
+            "exitCode": 0
+          },
+          {
+            "frame": 8,
+            "phase": [
+              "4"
+            ],
+            "paused": [
+              "0"
+            ],
+            "page": [
+              "mission"
+            ],
+            "controls": {
+              "Game": [
+                "1",
+                "0",
+                "4",
+                "4",
+                "79",
+                "24",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial1",
+              "Tutorial",
+              "3"
+            ],
+            "raw_world": [
+              "0.218",
+              "8",
+              "6",
+              "0",
+              "0",
+              "5000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-carrier-input-20261018-goal-entry1/tutorial1/2",
+            "exitCode": 0
+          }
+        ]
+      },
+      {
+        "mission": "tutorial2",
+        "passed": true,
+        "clicks": [
+          "MORE",
+          "MORE",
+          "OK"
+        ],
+        "observations": [
+          {
+            "frame": 4,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A."
+            ],
+            "controls": {
+              "MORE": [
+                "1",
+                "0",
+                "474",
+                "431",
+                "549",
+                "451",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial2",
+              "Tutorial",
+              "2"
+            ],
+            "raw_world": [
+              "0.235",
+              "4",
+              "5",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-carrier-input-20261018-goal-entry1/tutorial2/0",
+            "exitCode": 0
+          },
+          {
+            "frame": 6,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A1."
+            ],
+            "controls": {
+              "BACK": [
+                "1",
+                "0",
+                "435",
+                "492",
+                "510",
+                "512",
+                "0"
+              ],
+              "MORE": [
+                "1",
+                "0",
+                "514",
+                "492",
+                "589",
+                "512",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial2",
+              "Tutorial",
+              "2"
+            ],
+            "raw_world": [
+              "0.233",
+              "6",
+              "5",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-carrier-input-20261018-goal-entry1/tutorial2/1",
+            "exitCode": 0
+          },
+          {
+            "frame": 8,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A2."
+            ],
+            "controls": {
+              "BACK": [
+                "1",
+                "0",
+                "435",
+                "466",
+                "510",
+                "486",
+                "0"
+              ],
+              "OK": [
+                "1",
+                "0",
+                "514",
+                "466",
+                "589",
+                "486",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial2",
+              "Tutorial",
+              "2"
+            ],
+            "raw_world": [
+              "0.218",
+              "8",
+              "5",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-carrier-input-20261018-goal-entry1/tutorial2/2",
+            "exitCode": 0
+          },
+          {
+            "frame": 10,
+            "phase": [
+              "4"
+            ],
+            "paused": [
+              "0"
+            ],
+            "page": [
+              "mission"
+            ],
+            "controls": {
+              "Game": [
+                "1",
+                "0",
+                "4",
+                "4",
+                "79",
+                "24",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial2",
+              "Tutorial",
+              "2"
+            ],
+            "raw_world": [
+              "0.218",
+              "10",
+              "5",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-carrier-input-20261018-goal-entry1/tutorial2/3",
+            "exitCode": 0
+          }
+        ]
+      },
+      {
+        "mission": "tutorial3",
+        "passed": true,
+        "clicks": [
+          "MORE",
+          "OK"
+        ],
+        "observations": [
+          {
+            "frame": 4,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A."
+            ],
+            "controls": {
+              "MORE": [
+                "1",
+                "0",
+                "474",
+                "473",
+                "549",
+                "493",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial3",
+              "Tutorial",
+              "37"
+            ],
+            "raw_world": [
+              "0.234",
+              "4",
+              "16",
+              "0",
+              "0",
+              "16800",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-carrier-input-20261018-goal-entry1/tutorial3/0",
+            "exitCode": 0
+          },
+          {
+            "frame": 6,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A1."
+            ],
+            "controls": {
+              "BACK": [
+                "1",
+                "0",
+                "435",
+                "459",
+                "510",
+                "479",
+                "0"
+              ],
+              "OK": [
+                "1",
+                "0",
+                "514",
+                "459",
+                "589",
+                "479",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial3",
+              "Tutorial",
+              "37"
+            ],
+            "raw_world": [
+              "0.249",
+              "6",
+              "16",
+              "0",
+              "0",
+              "16800",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-carrier-input-20261018-goal-entry1/tutorial3/1",
+            "exitCode": 0
+          },
+          {
+            "frame": 8,
+            "phase": [
+              "4"
+            ],
+            "paused": [
+              "0"
+            ],
+            "page": [
+              "mission"
+            ],
+            "controls": {
+              "Game": [
+                "1",
+                "0",
+                "4",
+                "4",
+                "79",
+                "24",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial3",
+              "Tutorial",
+              "37"
+            ],
+            "raw_world": [
+              "0.26",
+              "8",
+              "16",
+              "0",
+              "0",
+              "16800",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-carrier-input-20261018-goal-entry1/tutorial3/2",
+            "exitCode": 0
+          }
+        ]
+      },
+      {
+        "mission": "tutorial4",
+        "passed": true,
+        "clicks": [
+          "MORE",
+          "OK"
+        ],
+        "observations": [
+          {
+            "frame": 4,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A."
+            ],
+            "controls": {
+              "MORE": [
+                "1",
+                "0",
+                "474",
+                "492",
+                "549",
+                "512",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial4",
+              "Tutorial",
+              "65"
+            ],
+            "raw_world": [
+              "0.226",
+              "4",
+              "26",
+              "0",
+              "0",
+              "23400",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-carrier-input-20261018-goal-entry1/tutorial4/0",
+            "exitCode": 0
+          },
+          {
+            "frame": 6,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A1."
+            ],
+            "controls": {
+              "BACK": [
+                "1",
+                "0",
+                "435",
+                "424",
+                "510",
+                "444",
+                "0"
+              ],
+              "OK": [
+                "1",
+                "0",
+                "514",
+                "424",
+                "589",
+                "444",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial4",
+              "Tutorial",
+              "65"
+            ],
+            "raw_world": [
+              "0.248",
+              "6",
+              "26",
+              "0",
+              "0",
+              "23400",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-carrier-input-20261018-goal-entry1/tutorial4/1",
+            "exitCode": 0
+          },
+          {
+            "frame": 8,
+            "phase": [
+              "4"
+            ],
+            "paused": [
+              "0"
+            ],
+            "page": [
+              "mission"
+            ],
+            "controls": {
+              "Game": [
+                "1",
+                "0",
+                "4",
+                "4",
+                "79",
+                "24",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial4",
+              "Tutorial",
+              "65"
+            ],
+            "raw_world": [
+              "0.243",
+              "8",
+              "26",
+              "0",
+              "0",
+              "23400",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-carrier-input-20261018-goal-entry1/tutorial4/2",
+            "exitCode": 0
+          }
+        ]
+      },
+      {
+        "mission": "tutorial5",
+        "passed": true,
+        "clicks": [
+          "MORE",
+          "OK"
+        ],
+        "observations": [
+          {
+            "frame": 4,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A."
+            ],
+            "controls": {
+              "MORE": [
+                "1",
+                "0",
+                "474",
+                "489",
+                "549",
+                "509",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial5",
+              "Tutorial",
+              "55"
+            ],
+            "raw_world": [
+              "0.294",
+              "4",
+              "23",
+              "0",
+              "0",
+              "21600",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-carrier-input-20261018-goal-entry1/tutorial5/0",
+            "exitCode": 0
+          },
+          {
+            "frame": 6,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A1."
+            ],
+            "controls": {
+              "BACK": [
+                "1",
+                "0",
+                "435",
+                "480",
+                "510",
+                "500",
+                "0"
+              ],
+              "OK": [
+                "1",
+                "0",
+                "514",
+                "480",
+                "589",
+                "500",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial5",
+              "Tutorial",
+              "55"
+            ],
+            "raw_world": [
+              "0.253",
+              "6",
+              "23",
+              "0",
+              "0",
+              "21600",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-carrier-input-20261018-goal-entry1/tutorial5/1",
+            "exitCode": 0
+          },
+          {
+            "frame": 8,
+            "phase": [
+              "4"
+            ],
+            "paused": [
+              "0"
+            ],
+            "page": [
+              "mission"
+            ],
+            "controls": {
+              "Game": [
+                "1",
+                "0",
+                "4",
+                "4",
+                "79",
+                "24",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial5",
+              "Tutorial",
+              "55"
+            ],
+            "raw_world": [
+              "0.249",
+              "8",
+              "23",
+              "0",
+              "0",
+              "21600",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-carrier-input-20261018-goal-entry1/tutorial5/2",
+            "exitCode": 0
+          }
+        ]
+      },
+      {
+        "mission": "tutorial6",
+        "passed": true,
+        "clicks": [
+          "MORE",
+          "MORE",
+          "MORE",
+          "OK"
+        ],
+        "observations": [
+          {
+            "frame": 4,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A."
+            ],
+            "controls": {
+              "MORE": [
+                "1",
+                "0",
+                "474",
+                "459",
+                "549",
+                "479",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial6",
+              "Tutorial",
+              "60"
+            ],
+            "raw_world": [
+              "0.234",
+              "4",
+              "29",
+              "0",
+              "0",
+              "23100",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-carrier-input-20261018-goal-entry1/tutorial6/0",
+            "exitCode": 0
+          },
+          {
+            "frame": 6,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A1."
+            ],
+            "controls": {
+              "BACK": [
+                "1",
+                "0",
+                "435",
+                "493",
+                "510",
+                "513",
+                "0"
+              ],
+              "MORE": [
+                "1",
+                "0",
+                "514",
+                "493",
+                "589",
+                "513",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial6",
+              "Tutorial",
+              "60"
+            ],
+            "raw_world": [
+              "0.231",
+              "6",
+              "29",
+              "0",
+              "0",
+              "23100",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-carrier-input-20261018-goal-entry1/tutorial6/1",
+            "exitCode": 0
+          },
+          {
+            "frame": 8,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A2."
+            ],
+            "controls": {
+              "BACK": [
+                "1",
+                "0",
+                "435",
+                "509",
+                "510",
+                "529",
+                "0"
+              ],
+              "MORE": [
+                "1",
+                "0",
+                "514",
+                "509",
+                "589",
+                "529",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial6",
+              "Tutorial",
+              "60"
+            ],
+            "raw_world": [
+              "0.234",
+              "8",
+              "29",
+              "0",
+              "0",
+              "23100",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-carrier-input-20261018-goal-entry1/tutorial6/2",
+            "exitCode": 0
+          },
+          {
+            "frame": 10,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A3."
+            ],
+            "controls": {
+              "BACK": [
+                "1",
+                "0",
+                "435",
+                "459",
+                "510",
+                "479",
+                "0"
+              ],
+              "OK": [
+                "1",
+                "0",
+                "514",
+                "459",
+                "589",
+                "479",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial6",
+              "Tutorial",
+              "60"
+            ],
+            "raw_world": [
+              "0.256",
+              "10",
+              "29",
+              "0",
+              "0",
+              "23100",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-carrier-input-20261018-goal-entry1/tutorial6/3",
+            "exitCode": 0
+          },
+          {
+            "frame": 12,
+            "phase": [
+              "4"
+            ],
+            "paused": [
+              "0"
+            ],
+            "page": [
+              "mission"
+            ],
+            "controls": {
+              "Game": [
+                "1",
+                "0",
+                "4",
+                "4",
+                "79",
+                "24",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial6",
+              "Tutorial",
+              "60"
+            ],
+            "raw_world": [
+              "0.252",
+              "12",
+              "26",
+              "0",
+              "0",
+              "23100",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-carrier-input-20261018-goal-entry1/tutorial6/4",
+            "exitCode": 0
+          }
+        ]
+      },
+      {
+        "mission": "thewarbegins",
+        "passed": true,
+        "clicks": [
+          "Play Mission"
+        ],
+        "observations": [
+          {
+            "frame": 4,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A."
+            ],
+            "controls": {
+              "Review Knowledge": [
+                "0",
+                "0",
+                "406",
+                "459",
+                "528",
+                "479",
+                "0"
+              ],
+              "Play Mission": [
+                "1",
+                "0",
+                "532",
+                "459",
+                "618",
+                "479",
+                "0"
+              ]
+            },
+            "mission": [
+              "thewarbegins",
+              "Tutorial",
+              "172"
+            ],
+            "raw_world": [
+              "0.25",
+              "4",
+              "34",
+              "0",
+              "0",
+              "45100",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-carrier-input-20261018-goal-entry1/thewarbegins/0",
+            "exitCode": 0
+          },
+          {
+            "frame": 6,
+            "phase": [
+              "4"
+            ],
+            "paused": [
+              "0"
+            ],
+            "page": [
+              "mission"
+            ],
+            "controls": {
+              "Game": [
+                "1",
+                "0",
+                "4",
+                "4",
+                "79",
+                "24",
+                "0"
+              ]
+            },
+            "mission": [
+              "thewarbegins",
+              "Tutorial",
+              "172"
+            ],
+            "raw_world": [
+              "0.243",
+              "6",
+              "34",
+              "0",
+              "0",
+              "45100",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-carrier-input-20261018-goal-entry1/thewarbegins/1",
+            "exitCode": 0
+          }
+        ]
+      },
+      {
+        "mission": "masterofwhirligigs",
+        "passed": true,
+        "clicks": [
+          "Play Mission"
+        ],
+        "observations": [
+          {
+            "frame": 4,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A."
+            ],
+            "controls": {
+              "Review Knowledge": [
+                "0",
+                "0",
+                "406",
+                "452",
+                "528",
+                "472",
+                "0"
+              ],
+              "Play Mission": [
+                "1",
+                "0",
+                "532",
+                "452",
+                "618",
+                "472",
+                "0"
+              ]
+            },
+            "mission": [
+              "masterofwhirligigs",
+              "Tutorial",
+              "115"
+            ],
+            "raw_world": [
+              "0.234",
+              "4",
+              "26",
+              "0",
+              "0",
+              "35600",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-carrier-input-20261018-goal-entry1/masterofwhirligigs/0",
+            "exitCode": 0
+          },
+          {
+            "frame": 6,
+            "phase": [
+              "4"
+            ],
+            "paused": [
+              "0"
+            ],
+            "page": [
+              "mission"
+            ],
+            "controls": {
+              "Game": [
+                "1",
+                "0",
+                "4",
+                "4",
+                "79",
+                "24",
+                "0"
+              ]
+            },
+            "mission": [
+              "masterofwhirligigs",
+              "Tutorial",
+              "115"
+            ],
+            "raw_world": [
+              "0.234",
+              "6",
+              "26",
+              "0",
+              "0",
+              "35600",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-carrier-input-20261018-goal-entry1/masterofwhirligigs/1",
+            "exitCode": 0
+          }
+        ]
+      },
+      {
+        "mission": "demostormrages",
+        "passed": true,
+        "clicks": [],
+        "observations": [
+          {
+            "frame": 4,
+            "phase": [
+              "4"
+            ],
+            "paused": [
+              "0"
+            ],
+            "page": [
+              "mission"
+            ],
+            "controls": {
+              "Game": [
+                "1",
+                "0",
+                "4",
+                "4",
+                "79",
+                "24",
+                "0"
+              ]
+            },
+            "mission": [
+              "demostormrages",
+              "Tutorial",
+              "72"
+            ],
+            "raw_world": [
+              "0.326",
+              "4",
+              "26",
+              "0",
+              "0",
+              "34800",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-carrier-input-20261018-goal-entry1/demostormrages/0",
+            "exitCode": 0
+          }
+        ]
+      },
+      {
+        "mission": "guardmyback",
+        "passed": true,
+        "clicks": [
+          "Play Mission"
+        ],
+        "observations": [
+          {
+            "frame": 4,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A."
+            ],
+            "controls": {
+              "Review Knowledge": [
+                "0",
+                "0",
+                "406",
+                "480",
+                "528",
+                "500",
+                "0"
+              ],
+              "Play Mission": [
+                "1",
+                "0",
+                "532",
+                "480",
+                "618",
+                "500",
+                "0"
+              ]
+            },
+            "mission": [
+              "guardmyback",
+              "Tutorial",
+              "422"
+            ],
+            "raw_world": [
+              "0.281",
+              "4",
+              "74",
+              "0",
+              "0",
+              "90000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "2",
+              "1",
+              "3",
+              "4"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-carrier-input-20261018-goal-entry1/guardmyback/0",
+            "exitCode": 0
+          },
+          {
+            "frame": 6,
+            "phase": [
+              "4"
+            ],
+            "paused": [
+              "0"
+            ],
+            "page": [
+              "mission"
+            ],
+            "controls": {
+              "Game": [
+                "1",
+                "0",
+                "4",
+                "4",
+                "79",
+                "24",
+                "0"
+              ]
+            },
+            "mission": [
+              "guardmyback",
+              "Tutorial",
+              "422"
+            ],
+            "raw_world": [
+              "0.282",
+              "6",
+              "72",
+              "0",
+              "0",
+              "90000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "2",
+              "1",
+              "3",
+              "4"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-carrier-input-20261018-goal-entry1/guardmyback/1",
+            "exitCode": 0
+          }
+        ]
+      },
+      {
+        "mission": "dissolvedalliance",
+        "passed": true,
+        "clicks": [
+          "Play Mission"
+        ],
+        "observations": [
+          {
+            "frame": 4,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A."
+            ],
+            "controls": {
+              "Review Knowledge": [
+                "0",
+                "0",
+                "406",
+                "445",
+                "528",
+                "465",
+                "0"
+              ],
+              "Play Mission": [
+                "1",
+                "0",
+                "532",
+                "445",
+                "618",
+                "465",
+                "0"
+              ]
+            },
+            "mission": [
+              "dissolvedalliance",
+              "Tutorial",
+              "432"
+            ],
+            "raw_world": [
+              "0.267",
+              "4",
+              "60",
+              "0",
+              "0",
+              "68800",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "3",
+              "2"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-carrier-input-20261018-goal-entry1/dissolvedalliance/0",
+            "exitCode": 0
+          },
+          {
+            "frame": 6,
+            "phase": [
+              "4"
+            ],
+            "paused": [
+              "0"
+            ],
+            "page": [
+              "mission"
+            ],
+            "controls": {
+              "Game": [
+                "1",
+                "0",
+                "4",
+                "4",
+                "79",
+                "24",
+                "0"
+              ]
+            },
+            "mission": [
+              "dissolvedalliance",
+              "Tutorial",
+              "432"
+            ],
+            "raw_world": [
+              "0.259",
+              "6",
+              "60",
+              "0",
+              "0",
+              "68800",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "3",
+              "2"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-carrier-input-20261018-goal-entry1/dissolvedalliance/1",
+            "exitCode": 0
+          }
+        ]
+      }
+    ],
+    "originals_unchanged": true
+  },
+  "entryContext": {
+    "runs": [
+      {
+        "mission": "thewarbegins",
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\originals",
+          "--mission",
+          "thewarbegins",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "10",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0",
+          "--ui-script",
+          "extracted\\goal-carrier-input-20261018-entry3\\thewarbegins\\steps.tsv",
+          "--ui-report",
+          "extracted\\goal-carrier-input-20261018-entry3\\thewarbegins\\states.tsv"
+        ],
+        "exit_code": 0,
+        "stderr": "로컬 미션 상태 8\r\n로컬 미션 상태 9\r\n로컬 미션 상태 10\r\nNo Central Island.\r\n로컬 Fort 전송\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\n로컬 미션 상태 13\r\nlogin status timer start\r\n로컬 미션 상태 14\r\nSeting Priest State\r\nDone\r\nMoveing Camera\r\nDone\r\n",
+        "raw_objects": 1875,
+        "camera": [
+          "976",
+          "793"
+        ],
+        "passed": true
+      },
+      {
+        "mission": "masterofwhirligigs",
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\originals",
+          "--mission",
+          "masterofwhirligigs",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "10",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0",
+          "--ui-script",
+          "extracted\\goal-carrier-input-20261018-entry3\\masterofwhirligigs\\steps.tsv",
+          "--ui-report",
+          "extracted\\goal-carrier-input-20261018-entry3\\masterofwhirligigs\\states.tsv"
+        ],
+        "exit_code": 0,
+        "stderr": "로컬 미션 상태 8\r\n로컬 미션 상태 9\r\n로컬 미션 상태 10\r\nNo Central Island.\r\n로컬 Fort 전송\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\n로컬 미션 상태 13\r\nlogin status timer start\r\n로컬 미션 상태 14\r\nSeting Priest State\r\nDone\r\nMoveing Camera\r\nDone\r\n",
+        "raw_objects": 1754,
+        "camera": [
+          "320",
+          "221"
+        ],
+        "passed": true
+      },
+      {
+        "mission": "tutorial1",
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\originals",
+          "--mission",
+          "tutorial1",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "10",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0",
+          "--ui-script",
+          "extracted\\goal-carrier-input-20261018-entry3\\tutorial1\\steps.tsv",
+          "--ui-report",
+          "extracted\\goal-carrier-input-20261018-entry3\\tutorial1\\states.tsv"
+        ],
+        "exit_code": 0,
+        "stderr": "로컬 미션 상태 8\r\n로컬 미션 상태 9\r\n로컬 미션 상태 10\r\nNo Central Island.\r\n로컬 Fort 전송\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\n로컬 미션 상태 13\r\nlogin status timer start\r\n로컬 미션 상태 14\r\nSeting Priest State\r\nDone\r\nMoveing Camera\r\nDone\r\n",
+        "passed": true
+      },
+      {
+        "mission": "tutorial2",
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\originals",
+          "--mission",
+          "tutorial2",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "10",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0",
+          "--ui-script",
+          "extracted\\goal-carrier-input-20261018-entry3\\tutorial2\\steps.tsv",
+          "--ui-report",
+          "extracted\\goal-carrier-input-20261018-entry3\\tutorial2\\states.tsv"
+        ],
+        "exit_code": 0,
+        "stderr": "로컬 미션 상태 8\r\n로컬 미션 상태 9\r\n로컬 미션 상태 10\r\nNo Central Island.\r\n로컬 Fort 전송\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\n로컬 미션 상태 13\r\nlogin status timer start\r\n로컬 미션 상태 14\r\nSeting Priest State\r\nDone\r\nMoveing Camera\r\nDone\r\n",
+        "passed": true
+      },
+      {
+        "mission": "tutorial3",
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\originals",
+          "--mission",
+          "tutorial3",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "10",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0",
+          "--ui-script",
+          "extracted\\goal-carrier-input-20261018-entry3\\tutorial3\\steps.tsv",
+          "--ui-report",
+          "extracted\\goal-carrier-input-20261018-entry3\\tutorial3\\states.tsv"
+        ],
+        "exit_code": 0,
+        "stderr": "로컬 미션 상태 8\r\n로컬 미션 상태 9\r\n로컬 미션 상태 10\r\nNo Central Island.\r\n로컬 Fort 전송\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\n로컬 미션 상태 13\r\nlogin status timer start\r\n로컬 미션 상태 14\r\nSeting Priest State\r\nDone\r\nMoveing Camera\r\nDone\r\n",
+        "passed": true
+      },
+      {
+        "mission": "thewarbegins",
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\originals",
+          "--mission",
+          "thewarbegins",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "2000",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0",
+          "--ui-script",
+          "extracted\\goal-carrier-input-20261018-entry3\\thewarbegins-movement\\steps.tsv",
+          "--ui-report",
+          "extracted\\goal-carrier-input-20261018-entry3\\thewarbegins-movement\\states.tsv"
+        ],
+        "exit_code": 0,
+        "stderr": "로컬 미션 상태 8\r\n로컬 미션 상태 9\r\n로컬 미션 상태 10\r\nNo Central Island.\r\n로컬 Fort 전송\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\n로컬 미션 상태 13\r\nlogin status timer start\r\n로컬 미션 상태 14\r\nSeting Priest State\r\nDone\r\nMoveing Camera\r\nDone\r\n선택 객체 SID 15000 TYPE 158\r\n[29] SORE LOSER TEST: [29] STARTING.\r\n",
+        "raw_objects": 1875,
+        "camera": [
+          "976",
+          "793"
+        ],
+        "movement": {
+          "sid": 15000,
+          "from": [
+            "94",
+            "108"
+          ],
+          "to": [
+            "90",
+            "108"
+          ],
+          "game_before": "0.397",
+          "game_after": "49.503",
+          "inputPipeline": {
+            "selectionMode": 5,
+            "loginPhase": 14,
+            "receivedBefore": 12,
+            "receivedAfter": 13,
+            "newTypes": [
+              64
+            ]
+          }
+        },
+        "passed": true
+      }
+    ],
+    "originals_unchanged": true
+  },
+  "goalEntryObservationSha256": {
+    "extracted/goal-carrier-input-20261018-goal-entry1/results.json": "252e3d5afeb03dfa0b0584f01b65216ea01ec3d9af7f25d8d4d8f7f716a0eaa7",
+    "extracted/goal-carrier-input-20261018-entry3/results.json": "d0db3c727ed7fb5ec0d582199ed9a592de06057f24bf7d26e4028bbd74f31988"
+  },
+  "goalStatus": "active"
+}

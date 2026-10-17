@@ -57,7 +57,7 @@
     "cpppj/src/client/ClientMain.cpp": "ea8cf56db9d82a306fb7d2fcdb66ad5f48ab2d1dd039081dcd6bfd4be13a861d",
     "cpppj/src/client/UberGump.h": "7c4c7164e4966e022f1403a7b76bd1342b7338497764eb68c5c68d4d411222d9",
     "cpppj/src/client/UberGump.cpp": "9e9483f858f612b200ff41e26c7eeacbca7f49dddee1f07b881f3b8e2ca30796",
-    "cpppj/src/client/GameWorld.h": "ffad5f61489bbab4c8d8ddce550334eb6d19c970ae041b9dbd277372ed53a359",
+    "cpppj/src/client/GameWorld.h": "2d56a2593d88b389577d0f4a8449a059f706269bea7ba7b1f032d8b5bb5eba98",
     "cpppj/src/client/GameWorld.cpp": "e28f09f0bdf193ead41bfaa6ed683ddd4e2b9225f93aad16246644a6aba3ba89",
     "cpppj/src/client/RawCampaignSession.h": "89619ba3f728dc0bcf084c0f64b229cbc186cc6bdb6793af039475c8a11dccb5",
     "cpppj/src/client/RawCampaignSession.cpp": "22c9e79597673e640901aaca83740237b7c3c3dfd8c341edfae67dff77fdf489",
@@ -135,6 +135,19 @@
           "path": "cpppj/src/client/GameWorld.h",
           "previous": "a8606419c9753965231813d4cc5391614a4b892ac1d716b534ef5b84c88b79f3",
           "current": "ffad5f61489bbab4c8d8ddce550334eb6d19c970ae041b9dbd277372ed53a359"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 165,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/client/GameWorld.h",
+          "previous": "ffad5f61489bbab4c8d8ddce550334eb6d19c970ae041b9dbd277372ed53a359",
+          "current": "2d56a2593d88b389577d0f4a8449a059f706269bea7ba7b1f032d8b5bb5eba98"
         }
       ]
     }

@@ -68,10 +68,19 @@ def check(mission, play, movement=False, combat=False, output=OUT):
         selected = int(observed['selected']['selected'][0])
         before = observed['selected']['objects'][selected]
         after = observed['after']['objects'][selected]
+        # 같은 실제 선택/강조/로그인 전송이 클릭 전후 원본40h를 소비했는지 확인한다.
+        input_before, input_command = observed['selected']['raw_input'], observed['command']['raw_input']
+        packets_before = list(map(int, observed['selected']['raw_packets']))
+        packets_command = list(map(int, observed['command']['raw_packets']))
+        assert input_before[:3] == [str(selected), '5', '14'] and input_command[:3] == ['0', '0', '14']
+        assert int(input_before[3]) == len(packets_before) and int(input_command[3]) == len(packets_command)
+        assert packets_command == packets_before + [0x40]
         assert before[5:7] != after[5:7] and after[5:7] == ['90', '108']
         assert observed['after']['raw_world'][6:9] == ['0', '0', '0']
         record['movement'] = {'sid': selected, 'from': before[5:7], 'to': after[5:7],
-                              'game_before': observed['command']['raw_world'][0], 'game_after': observed['after']['raw_world'][0]}
+                              'game_before': observed['command']['raw_world'][0], 'game_after': observed['after']['raw_world'][0],
+                              'inputPipeline': {'selectionMode': 5, 'loginPhase': 14, 'receivedBefore': len(packets_before),
+                                                'receivedAfter': len(packets_command), 'newTypes': [0x40]}}
     if combat:
         selected = int(observed['selected']['selected'][0])
         before = observed['selected']['objects'][selected]

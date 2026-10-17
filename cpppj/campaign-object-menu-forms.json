@@ -12,11 +12,11 @@
     "cpppj/src/client/CampaignClientServices.cpp": "552a80348ea1606fec4f6bb9459962db68589d8cdfc9fbd9d8c084dcc897716f",
     "cpppj/src/client/RawButtonControls.cpp": "5d9568d2a6c461e9dd474cc584db62389ca3eb576e780fdeb6e9a39f1ee55baf",
     "cpppj/src/client/RawButtonControls.h": "372d15ad4ab423ef9869fab470ad1f4b5c75cb0ebc12503edd2bb7a6f3f240d6",
-    "cpppj/src/client/RawCampaignSession.cpp": "4d831f540fa3fac33097c2e6a3fd52009105620287c5745e2c4daeb63bd7bcda",
-    "cpppj/src/client/RawCampaignSession.h": "c1d372021f024b7c45d625a7f16843738f9a77221eeaf85876d909dd639d1508",
+    "cpppj/src/client/RawCampaignSession.cpp": "f971993c58c43b11b5a04f2f1f0688c892268e9ed4b8528c079d8f2db32f6bae",
+    "cpppj/src/client/RawCampaignSession.h": "4f5cfe2c558636c184e205a7dfa02e89ee72b2f9140a292619dcfb35bbb1ca03",
     "cpppj/src/client/RawMenuControls.cpp": "e1d3a27c5330b52727e18447c97b02f6a7f82cb0ceeb9bf55aad874b744720f1",
     "cpppj/src/client/RawMenuControls.h": "92b7db6b2d4fa00641d814a9e0e6b76bf649b7789302cb1dc306abd87c99023d",
-    "cpppj/src/client/UberGump.cpp": "e374f00c4d17ec9ed4ef0246eb332a00cfd9567fc6956619c74489b818319757",
+    "cpppj/src/client/UberGump.cpp": "6e2e48d717b5893b423d5d3c8de39c8342cc73b00d06646d6aa776d80469cb06",
     "cpppj/tests/CampaignObjectMenuTests.cpp": "fea9198ea2150c42bb523f7ac9298c2f819acd1fc9b9887b53020c206ad62563"
   },
   "unchangedExistingModules": {
@@ -590,6 +590,31 @@
           "path": "cpppj/src/client/UberGump.cpp",
           "previous": "471b592cf1e784c63db34bc109eb3d38785481018b403cef0afa98d98622d10b",
           "current": "e374f00c4d17ec9ed4ef0246eb332a00cfd9567fc6956619c74489b818319757"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 165,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "4d831f540fa3fac33097c2e6a3fd52009105620287c5745e2c4daeb63bd7bcda",
+          "current": "f971993c58c43b11b5a04f2f1f0688c892268e9ed4b8528c079d8f2db32f6bae"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "c1d372021f024b7c45d625a7f16843738f9a77221eeaf85876d909dd639d1508",
+          "current": "4f5cfe2c558636c184e205a7dfa02e89ee72b2f9140a292619dcfb35bbb1ca03"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/UberGump.cpp",
+          "previous": "e374f00c4d17ec9ed4ef0246eb332a00cfd9567fc6956619c74489b818319757",
+          "current": "6e2e48d717b5893b423d5d3c8de39c8342cc73b00d06646d6aa776d80469cb06"
         }
       ]
     }
