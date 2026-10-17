@@ -2,6 +2,7 @@
 #include "client/RawButtonControls.h"
 #include "client/RawMenuControls.h"
 #include "client/StoneButtonGump.h"
+#include "client/GumpFormBinding.h"
 #include <algorithm>
 #include <bit>
 #include <map>
@@ -61,6 +62,7 @@ struct RawButtonControls::Impl {
         tree=std::make_unique<GumpTree>(create,treeState,std::move(treeHooks));
         GumpLifetimeHooks lifeHooks;lifeHooks.node=[this](auto token) { return Node(token); };
         lifeHooks.push=[this](auto token) { tree->Push(token); };
+        lifeHooks.deleteForm=[this](std::uint32_t form,std::uint32_t flags) { if (!hooks.deleteForm) throw std::logic_error("현재UI Form삭제소비자미연결");hooks.deleteForm(form,flags); };
         lifeHooks.deletingDestructor=[this](auto token,auto flags) {
             if (menus && menus->Node(token)) menus->DeleteScalar(token,flags);else if (stones.contains(token)) stone->DeleteScalar(token,flags);else lifetime->DeleteScalar(token,flags);
         };
@@ -195,6 +197,12 @@ RawMenuControls& RawButtonControls::EnableMenus(const GameAssets& assets,FontSto
 }
 // 별도 메뉴 트리 사본을 만들지 않고 같은 현재 확장 계층을 반환한다.
 RawMenuControls* RawButtonControls::Menus() const { return impl_->menus.get(); }
+// Form소유ID는알림시점의등록표에서해석하고기본가상+4의지연Kill만요청한다.
+o::GumpFormNotice RawButtonControls::ObjectNotice() const {
+    auto* current=impl_.get();return MakeGumpFormNotice(current->create,[current](std::uint32_t token,o::Sid object) {
+        ReleaseGumpObject(*current->lifetime,token,object);current->changed=true;
+    });
+}
 // 원본00463ff0과 같은 실제 등록 배열을 요청 시 읽는다. 등록 없는0은 그대로 반환한다.
 std::uint32_t RawButtonControls::RegisteredGump(std::uint32_t id) const {
     if (id>=impl_->create.entries.size()) throw std::out_of_range("현재 Gump 등록ID 물리 범위 오류");

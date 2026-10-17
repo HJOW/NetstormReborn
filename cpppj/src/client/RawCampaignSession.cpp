@@ -257,6 +257,7 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawFortFinishOwner> finish; // 같은9 Player의 최초 지역을 읽는다.
     ContainedCreateState contentState; // 저장 내용물은 실제 Form6으로 생성한다.
     std::unique_ptr<ContentFormHost> contentForms; // ProcessForm과 다른 실제 Form6의 정렬 부착 몸체다.
+    std::unique_ptr<GumpFormHost> gumpForms; // 같은Pool의실제Form3와현재UI등록ID/부모삭제알림수명이다.
     std::unique_ptr<RawContentParentNotice> contentNotice; // 부모의 실제 현재 VT로 기본/파생 +24를 분배한다.
     bool contentSavedGame{}; // 이 생성자는 새 미션 경로이며005c85d4 저장 게임은 선택하지 않는다.
     std::array<std::int32_t,2> contentScreenOrigin{}; // 같은 GameWorld의 현재59a91c/920이며 SetParticleView에서 함께 공급한다.
@@ -1103,6 +1104,9 @@ struct RawCampaignSession::Impl {
     }
     // 첫 실제 객체 이전에 같은 공통 삭제/내용물/Player 통지/기술 모듈을 한 번 연결한다.
     void InstallContents(const SquidDestroyHooks& deletion) {
+        gumpForms=std::make_unique<GumpFormHost>(core.pool,core.factory,core.types,core.destroy,
+            [this](std::uint32_t owner,Sid parent) { if (!services.gumpNotice) throw std::logic_error("현재Session GumpForm UI통지미연결");services.gumpNotice(owner,parent); },core.forms.Hooks());
+        core.forms.Bind(*gumpForms); // 실제월드삭제의혼합Form체인이같은호스트로돌아온다.
         FillMissing(services.unitLost);
         world.BindDeletion(hp,deletion.selected,MakeCampaignDeletionEffects(deletion,services.unitLost));
         world.DeletionState().silentType=147; // PATCH005412a4의 실제 초기 타입이다.
@@ -1559,6 +1563,8 @@ std::unique_ptr<RawObjectMenuOpen> RawCampaignSession::MakeObjectMenuOpen(Object
     hooks.range=[current](std::uint32_t type) { if (type>=current->gunTypes.size()) throw std::out_of_range("객체 메뉴 현재 사정거리TYPE 범위 오류");return current->gunTypes[type].range; };
     return std::make_unique<RawObjectMenuOpen>(current->core.pool,current->core.types,std::move(hooks));
 }
+// 초기설치이전에는Form생성/부착을노출하지않는다. 별도UI전용풀을만들지않는다.
+GumpFormHost& RawCampaignSession::GumpForms() { if (!impl_->loaded || !impl_->gumpForms) throw std::logic_error("설치 전 실제 Session GumpForm 요청");return *impl_->gumpForms; }
 // 기본 번호/특수 모드는 같은 장기 상태를 빌리며 getter를 새 캐시로 바꾸지 않는다.
 PriestMenuState& RawCampaignSession::PriestMenuSettings() { return impl_->priestMenu; }
 // 원본 TYPE 제외 목록을 현재 값으로 빌린다. 다른 SID/생산 금지 표와 합치지 않는다.

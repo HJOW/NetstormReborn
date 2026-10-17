@@ -55,8 +55,8 @@
     "cpppj/tests/fixtures/energy-supply-x86.tsv": "d020d2165be81e8db054c63804976ddd9a50876e3765243e7f7fcc38f2299802",
     "cpppj/src/CMakeLists.txt": "f307d187ef0cc892334c74198407070df34d9b5df08502b579cad1135c19685b",
     "cpppj/tests/CMakeLists.txt": "e16d86562d18e8a6d7d23c511b6871a2a5459843c73286dc201203abaa5aaec3",
-    "cpppj/src/client/RawCampaignSession.h": "d25593c9bfed100c5900a8c56e447e097ff7c42a968db69de7ee221af78b9a64",
-    "cpppj/src/client/RawCampaignSession.cpp": "743893d3824fe9b7915ab9dd32f568484e6ebd902c7a5390c4f4d81581902a84",
+    "cpppj/src/client/RawCampaignSession.h": "1499e7139b7904a5d3a9484f2e7d38aa5ce76b4267e7f7e1fe6f2636cc0dae50",
+    "cpppj/src/client/RawCampaignSession.cpp": "65c90c8a5135f732e628e54a4940dc922ead69044378aa6b839803a6fcb8e16f",
     "cpppj/tests/CampaignSessionTests.cpp": "964400205960599492a269d374aaaa7e46ff7f7b6e3968a992d0a447dc16bf2a",
     "cpppj/src/o/RawEnergySupply.h": "16298ecafac440612cf5722175fe7adade050e9bdd67015f8308fd37077998be",
     "cpppj/src/o/RawEnergySupply.cpp": "c5597f73998872c29ecb266356405d084ad36b24c6248a3cfc1a1bc43d55f495",
@@ -811,6 +811,25 @@
           "path": "cpppj/src/client/RawCampaignSession.cpp",
           "previous": "a5f5f1f43b329dee360ef78172a1a83eb42a078e5356a54a2c0c8f5e0fa5b88f",
           "current": "743893d3824fe9b7915ab9dd32f568484e6ebd902c7a5390c4f4d81581902a84"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 140,
+      "reason": "같은 Session의 객체 GumpForm과 실제 메뉴 부착/삭제 연결에 따른 현재 제품 SHA 갱신. 과거 SHA/원본 fixture는 보존하며 새 원본 전체 실행을 뜻하지 않는다.",
+      "pins": [
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "d25593c9bfed100c5900a8c56e447e097ff7c42a968db69de7ee221af78b9a64",
+          "current": "1499e7139b7904a5d3a9484f2e7d38aa5ce76b4267e7f7e1fe6f2636cc0dae50"
+        },
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "743893d3824fe9b7915ab9dd32f568484e6ebd902c7a5390c4f4d81581902a84",
+          "current": "65c90c8a5135f732e628e54a4940dc922ead69044378aa6b839803a6fcb8e16f"
         }
       ]
     }

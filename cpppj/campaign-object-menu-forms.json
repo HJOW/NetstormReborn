@@ -1,0 +1,116 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-17",
+  "unit": 140,
+  "baseCommit": "ed49269",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16"
+  },
+  "currentSources": {
+    ".gitattributes": "18cccb2879050d0f4f98e77c0991dd438415c0d929a1d42165f907dfad88fc0b",
+    "cpppj/src/client/CampaignClientServices.cpp": "deb067662fe4fcd5324bab710c7b06fb7ce5f661f4078227946adc4fa92db72a",
+    "cpppj/src/client/RawButtonControls.cpp": "5d9568d2a6c461e9dd474cc584db62389ca3eb576e780fdeb6e9a39f1ee55baf",
+    "cpppj/src/client/RawButtonControls.h": "372d15ad4ab423ef9869fab470ad1f4b5c75cb0ebc12503edd2bb7a6f3f240d6",
+    "cpppj/src/client/RawCampaignSession.cpp": "65c90c8a5135f732e628e54a4940dc922ead69044378aa6b839803a6fcb8e16f",
+    "cpppj/src/client/RawCampaignSession.h": "1499e7139b7904a5d3a9484f2e7d38aa5ce76b4267e7f7e1fe6f2636cc0dae50",
+    "cpppj/src/client/RawMenuControls.cpp": "e1d3a27c5330b52727e18447c97b02f6a7f82cb0ceeb9bf55aad874b744720f1",
+    "cpppj/src/client/RawMenuControls.h": "92b7db6b2d4fa00641d814a9e0e6b76bf649b7789302cb1dc306abd87c99023d",
+    "cpppj/src/client/UberGump.cpp": "471b592cf1e784c63db34bc109eb3d38785481018b403cef0afa98d98622d10b",
+    "cpppj/tests/CampaignObjectMenuTests.cpp": "295f85011778d75761aa0edc9eec11725a7d08ba04c28cd3def94a60ad48f436"
+  },
+  "unchangedExistingModules": {
+    "cpppj/src/o/GumpFormHost.cpp": "f4045100a4642fdb432cee4f0c223079810176c68235140950fa0a1490f112a4",
+    "cpppj/src/o/GumpFormHost.h": "08e248caddee37439d3e7614a09cd12b2af3bcad79d88115d9dd1529b06865ee",
+    "cpppj/src/o/SquidFormDispatch.cpp": "7b99db01715582f8994e5a72cac470c155171a861e0da0ed91f70759f218f23a",
+    "cpppj/src/client/GumpFormBinding.cpp": "11fae3bee065e8ea1c794a9300f936b8b6e9fdca637b93117a430384ffdcda77",
+    "cpppj/src/client/GumpFormBinding.h": "db73e0cb75a3b35f7a20368673db6805ce8ba5fd47428e1d5bb6f37359d23ca5",
+    "cpppj/src/client/MenuGump.cpp": "9738a69d18151ca3b4d10d91e99622addcf0a89af12f66cc082ff5bb432631a4",
+    "cpppj/src/client/MenuGumpWidgets.cpp": "68c6a1f30c5b4af5530b0782ad6526c5fe775c8acf5c6fa311ead74af7641fee",
+    "cpppj/src/client/GumpLifetime.cpp": "c0b7bacd2f1ed87a2b5e9c0854d2f89200574f1408d7ac738cec891a185ca57a"
+  },
+  "protectedFileSha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6"
+  },
+  "integration": {
+    "session": "같은Pool/Factory/공통Destroy/혼합종속SquidFormDispatch의실제Form3",
+    "notice": "현재등록ID조회→기본가상+4 ReleaseGumpObject→Kill만요청. 실제UI노드/등록해제는나중Cleanup.",
+    "menu": "기존BindMenuGumpForms재사용/현재Session호스트getter/475cf0→가상+3c→실제객체부착/OpenAttached뒤controlled0",
+    "client": "현재world를매Form효과에조회/ClearWorld에서같은Session이살아있을때메뉴·Form먼저반납",
+    "limits": "임시우클릭입구미교체. 실제제목4ada70·4ad780/파생VT분배/Client명령본문/자연사용자메뉴·완주검증아님."
+  },
+  "validation": {
+    "releaseBuilds": [
+      {
+        "number": 1,
+        "exitCode": 0,
+        "warnings": 0,
+        "errors": 0
+      },
+      {
+        "number": 2,
+        "exitCode": 0,
+        "warnings": 0,
+        "errors": 0
+      },
+      {
+        "number": 3,
+        "exitCode": 0,
+        "warnings": 0,
+        "errors": 0
+      }
+    ],
+    "finalBuildLog": "extracted/goal-object-menu-forms-20261017-build3.log",
+    "focused": {
+      "menuCases": 6,
+      "newCases": 2,
+      "extraCases": 28,
+      "failures": 0,
+      "menuLog": "extracted/goal-object-menu-forms-20261017-focus-final.log",
+      "zeroMatchFilter": "첫 GumpForm 필터는 일치0으로실패. FormTake_/FormLifecycle_로수정하며0개를통과수로세지않음."
+    },
+    "ctest": {
+      "cases": 1571,
+      "failures": 0,
+      "exitCode": 0,
+      "seconds": 213.23,
+      "totalSeconds": 213.26,
+      "log": "extracted/goal-object-menu-forms-20261017-ctest.log"
+    },
+    "nativeEvidence": {
+      "verifiers": 58,
+      "passed": 47,
+      "existingFailures": 11,
+      "newFailures": 0,
+      "log": "extracted/goal-object-menu-forms-20261017-verify-final.json",
+      "scope": "기존원본근거재감사/기대fixture불변/새CPU기대값생성없음"
+    },
+    "cloneEntry": {
+      "runs": 5,
+      "failures": 0,
+      "originalsUnchanged": true,
+      "results": "extracted/goal-object-menu-forms-20261017-entry/results.json",
+      "scope": "1-1/1-2브리핑→Play Mission→월드와tutorial1/2/3브리핑. 새객체메뉴자연진입/자연완주아님."
+    },
+    "pinUpdates": {
+      "reports": 22,
+      "pins": 54,
+      "previousHashesPreserved": true
+    },
+    "protectedFilesUnchanged": 3,
+    "existingFixturesAndCMakeUnchanged": true
+  },
+  "testBoundaries": [
+    "자연설치사제의실제+a8·공통Open→Form부착/실제About입력→0x02000017큐/닫기뒤기존첫종속슬롯전체원문복구. 제목은명시입력/Client도움말본문미실행.",
+    "명시실제Form3부모의world.Destroy→자식Form알림→UI Kill→중첩Form삭제→반납/나중Cleanup. 일반자산모든파생삭제나자연우클릭완료를대신하지않음."
+  ],
+  "remaining": [
+    "실제제목4ada70·4ad780의type/count/owner/sid4인자",
+    "현재VT별파생+a8/+ac와실제Client DWORD명령본문/시간을정지하지않는원본우클릭입구",
+    "생산/경제/AI/로그인된로컬전송양끝·큐잉·등록수명/전체Kernel/대상11스테이지자연완주·승패·저장·다음미션·전체동일성"
+  ],
+  "excluded": "전체화면DirectDraw수정",
+  "localCommitMessage": "20261017-40 CP 같은 세션의 객체 Form과 메뉴 부착 및 삭제 수명 연결"
+}

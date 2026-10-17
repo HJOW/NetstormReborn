@@ -4,6 +4,7 @@
 #include "client/GumpVisual.h"
 #include "client/GumpBackground.h"
 #include "o/RiftType.h"
+#include "o/GumpFormHost.h"
 #include <functional>
 #include <memory>
 #include <string>
@@ -32,6 +33,7 @@ struct RawButtonHooks {
     std::function<InputEvent(std::uint32_t)> poll;
     // sound: 해당 동작의 소리를 재생하는 콜백.
     std::function<void()> sound;
+    std::function<void(std::uint32_t,std::uint32_t)> deleteForm; // 현재Session의UI종속Form을같은공통삭제로반납한다.
 };
 // 안정된 파생 저장소와 실제 원본 UI 처리기를 소유한다. 메뉴 행은 기존 메뉴 어댑터가 처리한다.
 class RawButtonControls {
@@ -58,6 +60,8 @@ public:
     RawMenuControls& EnableMenus(const GameAssets& assets,FontStore& fonts,RawMenuHooks hooks);
     // 연결된 실제 메뉴를 빌린다. 연결 전에는 nullptr다.
     RawMenuControls* Menus() const;
+    // 실제현재등록표→가상+4의기본/메뉴Kill알림이다. 반환콜백은이UI보다먼저해제한다.
+    o::GumpFormNotice ObjectNotice() const;
     // Player 내용물 통지는 현재 등록ID를 직접 조회하며 생산 갱신 사건으로 바꾸지 않는다.
     std::uint32_t RegisteredGump(std::uint32_t id) const;
     // 등록된 대상 자신의 가상+28만 실행한다. 전체 트리 Route/재귀 분배를 수행하지 않는다.

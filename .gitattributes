@@ -1251,3 +1251,8 @@ cpppj/object-menu-open.json text eol=lf
 cpppj/campaign-object-menu-open.json text eol=lf
 cpppj/campaign-cursor-client.json text eol=lf
 tools/decomp_object_menu_open.py text eol=lf
+
+# 같은Session의객체Form/UI연결과검증기록을LF로유지한다.
+cpppj/src/client/RawButtonControls.* text eol=lf
+cpppj/src/client/CampaignClientServices.cpp text eol=lf
+cpppj/campaign-object-menu-forms.json text eol=lf

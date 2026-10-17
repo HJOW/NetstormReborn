@@ -1,6 +1,7 @@
 // 원본 메뉴 계층의 실제 처리기를 단일 Client 등록표·트리·입력·표면에 조립한다.
 #include "client/RawMenuControls.h"
 #include "client/DrawSort.h"
+#include "client/GumpFormBinding.h"
 #include <algorithm>
 #include <bit>
 #include <sstream>
@@ -69,6 +70,12 @@ struct RawMenuControls::Impl {
     std::unique_ptr<MenuGumpControls> controls; // 기존 원본 항목/체크/제목/하위 메뉴 래퍼다.
     std::unique_ptr<MenuGumpInput> input; // 기존 선택/하위 메뉴/명령/닫기다.
 
+    // 기존GumpFormBinding을그대로재사용하며각효과마다현재호스트/판본을검증한다.
+    MenuGumpWidgetHooks FormHooks() {
+        if (!hooks.objectForms) throw std::logic_error("현재메뉴 실제GumpFormHost미연결");
+        MenuGumpWidgetHooks result;BindMenuGumpForms(common.create,widgetState,result,hooks.objectForms());return result;
+    }
+
     // 모든 가상 훅은 실제 호출 때 현재 파생 저장소를 재조회한다.
     Impl(RawMenuTree supplied,const GameAssets& suppliedAssets,FontStore& suppliedFonts,RawMenuHooks suppliedHooks)
         :common(std::move(supplied)),assets(suppliedAssets),fonts(suppliedFonts),hooks(std::move(suppliedHooks)),metrics(fonts,suppliedAssets.Edition()),backgroundAssets(assets),markupAssets(assets) {
@@ -108,9 +115,13 @@ struct RawMenuControls::Impl {
         titleWidgets=std::make_unique<ScrollingTextGumpWidgets>(common.create,titleState,common.factory,common.tree,common.lifetime,common.events,common.input,fragments,*buffers,*title,*sliderWidgets,std::move(tw));
         titleMarkup=std::make_unique<ScrollingTextGumpMarkup>(*title,*style,*pictures,*markup,ScrollingTextGumpMarkupHooks{[this](auto token) { return Find(titles,token); },common.node});
         MenuGumpHooks gm;gm.node=[this](auto token) { return Find(menus,token); };gm.baseNode=common.node;gm.push=[this](auto token) { common.tree.Push(token); };gm.pop=[this](auto token) { const auto* node=common.node(token);common.attach(token,node->x,node->y,0,0); };gm.attach=common.attach;
+        BindMenuGumpObjectAttach(gm,[this](std::uint32_t token) { return menus.contains(token) ? widgets.get() : nullptr; });
         gm.redraw=[this](auto token,auto erase) { Redraw(token,erase); };gm.baseRedraw=[this](auto,bool) { common.changed(); };menu=std::make_unique<MenuGump>(common.create,menuState,common.lifetime,std::move(gm));
         MenuGumpLayoutHooks lh;lh.node=[this](auto token) { return Find(menus,token); };lh.baseNode=common.node;lh.push=[this](auto token) { common.tree.Push(token); };lh.attach=common.attach;BindMenuLayoutText(lh,metrics);BindMenuLayoutStyleText(lh,*style);BindMenuTitleLayout(lh,*title);
         layout=std::make_unique<MenuGumpLayout>(common.create,*menu,std::move(lh));MenuGumpWidgetHooks mw;mw.node=[this](auto token) { return Find(menus,token); };mw.base=common.node;mw.allocate=[this](auto bytes) { return Allocate(bytes,0); };mw.attach=common.attach;
+        mw.objectForm=[this](std::uint32_t type,std::uint32_t flags) { return FormHooks().objectForm(type,flags); };
+        mw.formOwner=[this](std::uint32_t form,std::uint32_t owner) { FormHooks().formOwner(form,owner); };
+        mw.formObject=[this](std::uint32_t form,std::uint32_t object,std::uint32_t flags) { FormHooks().formObject(form,object,flags); };
         mw.selectionNotice=[](auto,auto) { throw std::logic_error("메뉴 선택 외부 callback 미연결"); };widgets=std::make_unique<MenuGumpWidgets>(common.create,menuState,widgetState,*backgroundCreate,*decoration,*titleWidgets,*layout,*style,common.lifetime,common.collection,common.tree,std::move(mw));
         MenuGumpControlHooks ch;ch.node=[this](auto token) { return Find(menus,token); };ch.base=common.node;ch.readInt=hooks.readInt;controls=std::make_unique<MenuGumpControls>(common.create,menuState,*menu,*layout,*titleMarkup,std::move(ch));
         MenuGumpInputHooks ih;ih.node=[this](auto token) { return Find(menus,token); };ih.base=common.node;
@@ -193,6 +204,13 @@ void RawMenuControls::Release(std::uint32_t token) { auto& s=*impl_;s.menus.eras
 void RawMenuControls::Open(ScreenPoint point,const std::function<void(const MenuGumpWidgets&,const MenuGumpControls&,const MenuGump&)>& builder) {
     Close();auto& s=*impl_;if (!builder || s.menuState.index) throw std::invalid_argument("실제 메뉴 builder/controlled 스택 계약 오류");
     builder(*s.widgets,*s.controls,*s.menu);if (s.menuState.index!=1) throw std::logic_error("실제 메뉴 builder 루트 한 칸 필요");s.popup=s.menu->Current();s.menu->AttachCurrent(point.x,point.y,s.common.create.collection.root);s.common.changed();
+}
+// 원본객체Open이이미부착한같은메뉴를기록한다. 호스트의자동두번째부착은수행하지않는다.
+void RawMenuControls::OpenAttached(const std::function<std::uint32_t(const MenuGumpWidgets&,const MenuGumpControls&,const MenuGump&)>& builder) {
+    Close();auto& s=*impl_;if (!builder || s.menuState.index) throw std::invalid_argument("객체메뉴 builder/controlled 스택계약오류");
+    const auto root=builder(*s.widgets,*s.controls,*s.menu);if (s.menuState.index) throw std::logic_error("객체메뉴 부착뒤controlled스택잔존");
+    if (root && (!s.menus.contains(root) || s.common.node(root)->parent!=s.common.create.collection.root)) throw std::logic_error("객체메뉴 실제루트부착필요");
+    s.popup=root;s.common.changed();
 }
 // 원본의 sticky 팝업 삭제를 같은 수명 경로로 실행한다.
 void RawMenuControls::Close() { auto& s=*impl_;s.input->ClosePopups();s.common.lifetime.Cleanup();s.common.changed(); }

@@ -219,11 +219,11 @@
       "trackedFullscreenMarkerRestored": true
     },
     "sourceSha256": {
-      "cpppj/src/client/RawMenuControls.h": "d90f553b4597823270fc2a77f9fef575e8cdb3de644ac0da017aace246686fbb",
-      "cpppj/src/client/RawMenuControls.cpp": "ebac0335fa245a15d6441c5d5748103c430f3fcc8b40203f10502bff9b3927d1",
-      "cpppj/src/client/RawButtonControls.h": "09953758c00910471eae95308233eaa13d1e894e3118285b62fe643e5148585a",
-      "cpppj/src/client/RawButtonControls.cpp": "07b2dcb3c2d1b55ad6e149ffe3844d28b3d63d14c72df1daed10b5d0e365c465",
-      "cpppj/src/client/UberGump.cpp": "d9304a5e1c2f15d39f78baf85af69bbfa7cfd1b68819e8a83f5298eec7c07432",
+      "cpppj/src/client/RawMenuControls.h": "92b7db6b2d4fa00641d814a9e0e6b76bf649b7789302cb1dc306abd87c99023d",
+      "cpppj/src/client/RawMenuControls.cpp": "e1d3a27c5330b52727e18447c97b02f6a7f82cb0ceeb9bf55aad874b744720f1",
+      "cpppj/src/client/RawButtonControls.h": "372d15ad4ab423ef9869fab470ad1f4b5c75cb0ebc12503edd2bb7a6f3f240d6",
+      "cpppj/src/client/RawButtonControls.cpp": "5d9568d2a6c461e9dd474cc584db62389ca3eb576e780fdeb6e9a39f1ee55baf",
+      "cpppj/src/client/UberGump.cpp": "471b592cf1e784c63db34bc109eb3d38785481018b403cef0afa98d98622d10b",
       "cpppj/src/client/TextGump.cpp": "8f501caa7ba39352386060e81c79835eb75e070e6231d22e879b3c17142c5804",
       "cpppj/src/client/ScrollingTextGumpWidgets.cpp": "6ef03644d61c31ca94c11f163b6774f2f5f608727209ff57adf6c9cc4c73c849",
       "cpppj/src/client/ScrollGumpWidgets.cpp": "378d5b65e02f8e5e1693fca50b2a3582e07e53b0f3e2df4ffe36c3fb618f435b",
@@ -286,6 +286,43 @@
           "path": "cpppj/src/client/UberGump.cpp",
           "previous": "8a3f6a89636747fe1a9dc70011951c921131ecf04aff8b950f7d966ef5f70c70",
           "current": "d9304a5e1c2f15d39f78baf85af69bbfa7cfd1b68819e8a83f5298eec7c07432"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 140,
+      "reason": "같은 Session의 객체 GumpForm과 실제 메뉴 부착/삭제 연결에 따른 현재 제품 SHA 갱신. 과거 SHA/원본 fixture는 보존하며 새 원본 전체 실행을 뜻하지 않는다.",
+      "pins": [
+        {
+          "group": "/productValidation/sourceSha256",
+          "path": "cpppj/src/client/RawMenuControls.h",
+          "previous": "d90f553b4597823270fc2a77f9fef575e8cdb3de644ac0da017aace246686fbb",
+          "current": "92b7db6b2d4fa00641d814a9e0e6b76bf649b7789302cb1dc306abd87c99023d"
+        },
+        {
+          "group": "/productValidation/sourceSha256",
+          "path": "cpppj/src/client/RawMenuControls.cpp",
+          "previous": "ebac0335fa245a15d6441c5d5748103c430f3fcc8b40203f10502bff9b3927d1",
+          "current": "e1d3a27c5330b52727e18447c97b02f6a7f82cb0ceeb9bf55aad874b744720f1"
+        },
+        {
+          "group": "/productValidation/sourceSha256",
+          "path": "cpppj/src/client/RawButtonControls.h",
+          "previous": "09953758c00910471eae95308233eaa13d1e894e3118285b62fe643e5148585a",
+          "current": "372d15ad4ab423ef9869fab470ad1f4b5c75cb0ebc12503edd2bb7a6f3f240d6"
+        },
+        {
+          "group": "/productValidation/sourceSha256",
+          "path": "cpppj/src/client/RawButtonControls.cpp",
+          "previous": "07b2dcb3c2d1b55ad6e149ffe3844d28b3d63d14c72df1daed10b5d0e365c465",
+          "current": "5d9568d2a6c461e9dd474cc584db62389ca3eb576e780fdeb6e9a39f1ee55baf"
+        },
+        {
+          "group": "/productValidation/sourceSha256",
+          "path": "cpppj/src/client/UberGump.cpp",
+          "previous": "d9304a5e1c2f15d39f78baf85af69bbfa7cfd1b68819e8a83f5298eec7c07432",
+          "current": "471b592cf1e784c63db34bc109eb3d38785481018b403cef0afa98d98622d10b"
         }
       ]
     }

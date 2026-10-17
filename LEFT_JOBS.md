@@ -1,5 +1,15 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-17 단위140 완료: 같은Session 객체Form/메뉴 부착·삭제 수명 (`HJOW-Athlon`)
+
+- [x] 기준 `ed49269`, 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16**이다. 새 디컴파일·원본 실행·전체화면DirectDraw수정은 없다. 기존GumpFormHost/GumpFormBinding/가상분배/메뉴부착몸체를 재사용한다. [작업 기록](docs/exe/cpp-object-menu-forms-20261017.md).
+- [x] Session의같은Pool/공통삭제/혼합종속분배에실제Form3을등록하고현재UI등록ID→기본가상+4의지연Kill을연결했다. RawMenuControls는현재Session호스트getter로기존BindMenuGumpForms를재사용하며475cf0→메뉴가상+3c가실제AttachObject까지도달한다. OpenAttached는builder가이미부착한루트를기록하고controlled스택0을확인한다.
+- [x] 실제Client는현재world를매효과에서조회하며ClearWorld가같은Session이살아있을때팝업/Form을먼저닫는다. 이전월드호스트포인터를UI에캐시하지않는다. 실제우클릭임시메뉴와제목/원본DWORD명령소비자는아직교체하지않았다.
+- [x] Release빌드1·2·3 모두 **종료0·경고0·오류0**, 객체메뉴집중 **6개**(새2개)·기존집중28개가통과했다. 실제About행의원본입력→0x02000017 DWORD큐와닫기뒤기존종속첫슬롯전체원문복구도확인했다. 부모삭제검사는명시Form3부모이며일반자산의모든파생삭제/자연메뉴완료를대신하지않는다. 첫GumpForm필터는일치0으로실패해올바른필터로수정했고0개를성공수로세지않았다.
+- [x] 최종 전체CTest **1,571개·실패0·종료0·213.23초**, 원본근거58종 **47종성공·기존11종실패·새실패0**다. 기존22보고서의현재54핀을갱신/과거보존했고기존fixture/CMake/AGENTS/원본/DN은바꾸지않았다. 보호SHA3·UTF-8/LF를확인했다. 최신클론진입5회모두성공·originals_unchanged=true이며1-1/1-2월드와tutorial1/2/3브리핑범위다. 새객체메뉴의자연진입/사용자완주는검증하지않았다.
+- [x] 로그접두부 `extracted/goal-object-menu-forms-20261017-`, 연결보고서 `cpppj/campaign-object-menu-forms.json`이다. 인계뒤 **`20261017-40 CP 같은 세션의 객체 Form과 메뉴 부착 및 삭제 수명 연결`** 로로컬커밋하며push하지않는다. 전체목표는active다.
+- [ ] 다음은실제제목4ada70·4ad780(type/count/owner/sid4인자), 현재VT별+a8/+ac, Client DWORD명령소비자와게임시간을정지하지않는원본우클릭입구다. 생산/경제/AI/로그인된로컬전송및대상11스테이지자연완주·승패·저장·다음미션/전체동일성은미완료다.
+
 ## 2026-10-17 단위139 완료: 공통 객체 메뉴Open/위치와 현재Session 연결 (`HJOW-Athlon`)
 
 - [x] 단위138의 `aff315d`를 기준으로 작업한다. 현재/마지막 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-16**이며 새 디컴파일·원본 게임 실행·전체화면 DirectDraw 수정은 없다. [작업 기록](docs/exe/cpp-object-menu-open-20261017.md).

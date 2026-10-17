@@ -75,6 +75,7 @@ RawCampaignSessionServices MakeCampaignClientServices(Client& client,RawButtonCo
     services.assets.postPop.refreshProduction=services.ownership.refreshProduction; // 신전 PostPop도 동일한 사건을 보낸다.
     // Player 부모 통지는 현재 등록표와 대상 가상+28을 직접 사용한다.
     services.playerContent.gump=[&controls](std::uint32_t id) { return controls.RegisteredGump(id); };
+    services.gumpNotice=controls.ObjectNotice(); // 같은등록표와기본/메뉴의가상+4가부모삭제를지연Kill로받는다.
     services.playerContent.handle=[&controls](std::uint32_t token,std::uint32_t event,std::uint32_t form,std::uint32_t reason) {
         static_cast<void>(controls.HandleGump(token,event,form,reason));
     };

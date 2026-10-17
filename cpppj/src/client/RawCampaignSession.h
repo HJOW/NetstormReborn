@@ -104,6 +104,7 @@ struct RawCampaignSessionServices {
     o::CarrierContentNoticeHooks carrierContent; // 실제 Carrier 폭탄/포획 표시·음향·공간 효과이며 선택한 분기만 필수다.
     std::function<void(std::uint32_t,std::string_view)> cursorRangeDiagnostic; // 실제 사정거리 color29 진단 출력이며 해당 분기에서만 필요하다.
     o::ContentLifetimeHooks contentLifetime; // 같은 ContentForm의 실제 커서/수입/AI 지갑/소리 경계다.
+    o::GumpFormNotice gumpNotice; // 현재등록ID에서실제UI의가상+4로부모삭제를통지한다. UI는Session보다오래살아야한다.
     o::PlayerContentNoticeHooks playerContent; // 같은 현재 Gump 등록표와 대상 자신의 가상 처리를 공급한다.
     o::SquidAssetDestroy destroy; // 다른 파생 자산의 실제 가상 삭제 분배기다.
     o::FormPopTransmit dependencyTransmit; // 감시 Form의 현재 서버 송신 소비자다.
@@ -213,6 +214,8 @@ public:
     // 공통Open의제단/투영/내용물/사정거리를같은현재월드에연결한다. GUI·실제가상분배는caller가공급한다.
     // 반환몸체와모든GUI참조는Session보다먼저해제한다. 제목/파생메뉴의미연결은원래오류를유지한다.
     std::unique_ptr<RawObjectMenuOpen> MakeObjectMenuOpen(ObjectMenuOpenHooks hooks);
+    // 같은풀/공통삭제/혼합종속분배에등록한실제GumpFormHost다. UI는월드반납전에연결메뉴를닫아야한다.
+    o::GumpFormHost& GumpForms();
     // 현재 타입/명령·특수 모드의 장기 저장소다. 알려진 공통 전역은 실제 getter로 연결한다.
     PriestMenuState& PriestMenuSettings();
     // 0052f7e0의 TYPE 번호 제외 목록이다. 공간 앵커의 SID 추가 목록과 별개로 소유한다.

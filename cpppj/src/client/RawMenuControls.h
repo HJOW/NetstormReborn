@@ -6,6 +6,7 @@
 #include "client/MenuGumpInput.h"
 #include "client/MenuGumpDraw.h"
 #include "client/StoneButtonGump.h"
+#include "o/GumpFormHost.h"
 #include <memory>
 
 namespace netstorm::client {
@@ -33,6 +34,7 @@ struct RawMenuHooks {
     std::function<void(std::string_view)> sound; // 원본 openGump/openSubGump 음향이다.
     std::function<InputEvent(std::uint32_t)> poll; // 실제 현재 마우스 폴링이다.
     std::function<void(std::uint32_t)> cursor; // 실제 커서 리소스 선택이다.
+    std::function<o::GumpFormHost&()> objectForms; // 매Form효과에서현재Session의같은호스트를조회한다. 메뉴보다먼저Session을반납하지않는다.
 };
 // 가상 분배만 조립한다. 개별 생성/배치/입력/출력의 계산은 기존 원본 몸체를 그대로 사용한다.
 class RawMenuControls {
@@ -57,6 +59,9 @@ public:
     void Release(std::uint32_t token);
     // 이전 sticky 메뉴를 닫고 실제 controlled 생성/작성/부착을 실행한다. builder는 루트 메뉴를 한 칸 남겨야 한다.
     void Open(ScreenPoint point,const std::function<void(const MenuGumpWidgets&,const MenuGumpControls&,const MenuGump&)>& builder);
+    // builder가원본객체부착까지마치고루트메뉴토큰(거부시0)을반환한다. controlled스택은0칸이어야한다.
+    // 원본Open/위치의계산을반복하거나마우스점에다시부착하지않는다.
+    void OpenAttached(const std::function<std::uint32_t(const MenuGumpWidgets&,const MenuGumpControls&,const MenuGump&)>& builder);
     // 실제 루트 직계 sticky 팝업을 Kill하고 같은 삭제 큐를 정리한다.
     void Close();
     // 원본00466710처럼 현재 루트 팝업을 Kill만 한다. callback 반환 전에는 노드/등록을 해제하지 않는다.

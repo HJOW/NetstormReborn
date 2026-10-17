@@ -47,6 +47,7 @@ struct ActualMenuUi {
     FontStore fonts; // 원본 글리프와 메뉴 측정이 사용하는 실제 글꼴 캐시다.
     RawButtonControls buttons; // 기존 실제 공통 트리/생성/수명/입력이다.
     RawMenuControls* menus{}; // 공통 트리에 연결된 메뉴 처리기를 빌린다.
+    RawCampaignSession* currentSession{}; // Form효과가매번조회하는현재실제Session이며메뉴를닫은뒤해제한다.
     InputQueue commands; // 실제 메뉴가 전달한 원본 정수 명령을 보관한다.
     InputEvent mouse{InputCode::kRelease,320,240}; // 현재 장치 입력의 명시 외부 경계다.
     std::array<std::uint8_t,100*48> chat{}; // 실제 Identity가 직접 빌리는 명시 Client Chat100 원문이다.
@@ -55,9 +56,12 @@ struct ActualMenuUi {
     std::vector<std::array<std::uint32_t,3>> buildRows; // 실제 사제 작성기의 command/parameter/enabled 관찰이다.
     std::uint32_t cursor{},highlight{},address{}; // 현재 장치/강조 모드/Identity 주소 입력이다.
     // 창/게임 실행 없이 같은 자산과 실제 공통 UI 처리기를 준비한다.
-    explicit ActualMenuUi(const netstorm::test::dudespawn::DudeAssets& source):assets(source),fonts(source.files,"Arial"),buttons(OriginalEdition::Patch1078,{[] { return 0.0; },[this](std::uint32_t) { return mouse; },[] {}}) {
+    explicit ActualMenuUi(const netstorm::test::dudespawn::DudeAssets& source):assets(source),fonts(source.files,"Arial"),buttons(OriginalEdition::Patch1078,{[] { return 0.0; },[this](std::uint32_t) { return mouse; },[] {},[this](std::uint32_t form,std::uint32_t flags) {
+        if (!currentSession || form>65535U) throw std::logic_error("검사현재Form삭제호스트미연결");currentSession->GumpForms().Destroy(Sid{static_cast<std::uint16_t>(form)},flags);
+    }}) {
         RawMenuHooks hooks;hooks.command=[this](std::uint32_t code,std::uint32_t id,std::uint32_t parameter) { commands.PushCommand(code,std::bit_cast<std::int32_t>(id),std::bit_cast<std::int32_t>(parameter)); };
         hooks.readInt=[](std::string_view,std::int32_t& value) { value=0; };hooks.sound=[](std::string_view) {};hooks.poll=[this](std::uint32_t) { return mouse; };hooks.cursor=[this](std::uint32_t value) { cursor=value; };
+        hooks.objectForms=[this]() -> GumpFormHost& { if (!currentSession) throw std::logic_error("검사현재메뉴Form호스트미연결");return currentSession->GumpForms(); };
         menus=&buttons.EnableMenus(source.game,fonts,std::move(hooks));menus->SetPalette(Palette());
         const auto& type=source.game.Find("fortGump");const auto frame=source.game.FrameIndex(type,"A00",0);const auto metrics=source.game.Shapes().SquidMetrics(type.block,frame);
         buttons.SetControls({}, {},1024,768,{static_cast<std::uint32_t>(70+type.block),static_cast<std::uint32_t>(frame),metrics.width,metrics.height,ButtonColors(Palette())});
@@ -169,4 +173,43 @@ TEST_CASE(CampaignObjectMenus_ActualCommonOpenUsesCurrentWorld) {
     positions.clear();open->Position(priest);session.SetParticleView({17,-23,0,0,1024,768},{});open->Position(priest);
     CHECK(positions.size()==2);if (positions.size()==2) CHECK(positions[1][0]==positions[0][0]-17 && positions[1][1]==positions[0][1]+23);
     const auto original=session.Core().pool.Slot(priest);CHECK(!(original[40]&1)); // 자연설치객체의허용비트를검사하기위해직접고치지않았다.
+}
+
+// 공통Open→실제사제+a8→같은Pool Form3부착→닫기의종속복구를확인한다. 제목만명시입력이다.
+TEST_CASE(CampaignObjectMenus_ActualObjectFormBindingAndClose) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);MenuServices external;ActualMenuUi ui(assets); // 실제자산/공통UI수명이다.
+    auto services=external.Make();services.gumpNotice=ui.buttons.ObjectNotice();auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());
+    RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));CHECK(Throws([&] { static_cast<void>(session.GumpForms()); }));session.Load();ui.currentSession=&session;
+    const Sid priest{static_cast<std::uint16_t>(session.FindPriestParticipation(1))};const auto head=Get(session.Core().pool.Slot(priest),6,2);const auto previous=head ? Hex(session.Core().pool.Slot(Sid{static_cast<std::uint16_t>(head)})) : std::string{};std::uint32_t root{},result{}; // 자연설치사제의기존종속원문과새메뉴다.
+    std::unique_ptr<RawCampaignObjectMenus> chain;ui.menus->OpenAttached([&](const auto& widgets,const auto& controls,const auto& menus) {
+        ObjectMenuOpenHooks hooks;hooks.beginFancy=[&] { root=widgets.BeginFancy(); };hooks.summary=[&](Sid sid) { CHECK(sid==priest);controls.AddTitle("Explicit summary boundary"); };
+        hooks.populate=[&](Sid sid) { chain=session.MakeObjectMenus(ui.Hooks(session,widgets,controls,menus));chain->OpenPriest(sid); };
+        hooks.menuWidth=[&] { return ui.menus->Node(menus.Current())->baseWidth; };hooks.screenWidth=[] { return 1024; };
+        hooks.attach=[&](Sid sid,std::int32_t x,std::int32_t y) { menus.AttachObjectCurrent(sid.value,x,y); };
+        auto open=session.MakeObjectMenuOpen(std::move(hooks));result=open->Open(priest,{InputCode::kRightButton,320,240});return root;
+    });
+    CHECK(result==1 && root);const auto* node=ui.menus->Node(root);CHECK(node && (node->flags&0x40) && node->object==priest.value);
+    if (node) {
+        const Sid form{static_cast<std::uint16_t>(node->form)};const auto core=session.Core();CHECK(form.value && core.pool.Slot(form)[10]==3);CHECK(session.GumpForms().Parent(form)==priest);CHECK(session.GumpForms().Owner(form)==node->id);
+        CHECK(Get(core.pool.Slot(priest),6,2)==form.value && Get(core.pool.Slot(form),4,2)==head);const auto about=ui.menus->Point("About");CHECK(about.has_value());
+        if (about) ui.Click(*about);const auto command=ui.commands.Pop(false);CHECK(command.code==0x02000017 && command.y==core.pool.Slot(priest)[10]); // 실제원본메뉴입력→DWORD큐를통과하며Client명령본문은실행하지않는다.
+        ui.menus->Close();CHECK(core.pool.Slot(form)[11]&1);CHECK(Get(core.pool.Slot(priest),6,2)==head);
+        if (head) CHECK(Hex(core.pool.Slot(Sid{static_cast<std::uint16_t>(head)}))==previous);
+    }
+    CHECK(!ui.menus->HasMenus());chain.reset();ui.currentSession=nullptr;
+}
+
+// 살아있는실제Form부모의월드삭제가자식Form통지→UI Kill→중첩삭제→지연Cleanup으로진행한다.
+TEST_CASE(CampaignObjectMenus_ActualParentDeletionAndDeferredUiCleanup) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);MenuServices external;ActualMenuUi ui(assets); // 모든Form은같은실제Session풀에서만생성한다.
+    auto services=external.Make();services.gumpNotice=ui.buttons.ObjectNotice();auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());
+    RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));session.Load();ui.currentSession=&session;auto& forms=session.GumpForms();const auto parent=forms.Create(2);std::uint32_t root{};
+    ui.menus->OpenAttached([&](const auto& widgets,const auto& controls,const auto& menus) { root=widgets.BeginFancy();controls.AddTitle("Form lifetime boundary");controls.AddText("Owned",0x02000017,100);menus.AttachObjectCurrent(parent.value,320,240);return root; });
+    const auto* node=ui.menus->Node(root);CHECK(node);if (node) {
+        const Sid form{static_cast<std::uint16_t>(node->form)};const auto id=node->id;CHECK(forms.Parent(form)==parent);CHECK(ui.buttons.RegisteredGump(id)==root);
+        CHECK(session.World().Destroy(parent));CHECK(session.Core().pool.Slot(parent)[11]&1);CHECK(session.Core().pool.Slot(form)[11]&1);
+        CHECK(ui.menus->Node(root) && (ui.menus->Node(root)->flags&0x10000));CHECK(ui.buttons.RegisteredGump(id)==root); // Kill뒤에도같은노드/등록은Cleanup까지남는다.
+        ui.menus->Close();CHECK(!ui.menus->Node(root));CHECK(!ui.buttons.RegisteredGump(id));
+    }
+    CHECK(!ui.menus->HasMenus());ui.currentSession=nullptr;
 }
