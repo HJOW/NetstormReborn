@@ -5,6 +5,8 @@
 namespace netstorm::client {
 class Client;
 class RawButtonControls;
+class GameWorld; // 같은 실제 카메라 재설정을 사용하는 현재 월드다.
+struct CampaignMissionStartEffects; // 실제 미션 Start의 장치/할당 경계를 반환한다.
 // 실제 UI 소유자가 공급하는 경계다. 월드 생성 중에도 호출할 수 있어야 한다.
 struct CampaignClientUi {
     std::function<void()> refreshWindowTitle; // 현재 MissionScript의 설정 제목을 실제 창에 적용한다.
@@ -17,4 +19,6 @@ void BindCampaignAiClientServices(Client& client,CampaignAiServices& ai);
 // 클라이언트와 UI 대상은 반환값을 사용하는 세션 및 모든 프로세스보다 오래 살아야 한다.
 // 게임 계산·Form 송신·내용물 통지 등 미복원 경계는 채우지 않는다. 실제 GameWorld가 카메라를 공급한다.
 RawCampaignSessionServices MakeCampaignClientServices(Client& client,RawButtonControls& controls,CampaignClientUi ui);
+// Client/월드/명령 Gump 수명은 반환한 실제 Start 효과보다 오래 유지해야 한다.
+CampaignMissionStartEffects MakeCampaignMissionStartEffects(Client& client,GameWorld& world,std::function<void()> refreshCommandGump);
 }

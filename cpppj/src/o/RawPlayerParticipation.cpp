@@ -91,6 +91,17 @@ void RawPlayerParticipation::AddAlly(std::uint32_t owner,std::uint32_t target) c
         Require(hooks_.sendAlliance)(9,owner,Read(owner,kAllies));
     }
 }
+// 원본의 수신 버퍼 직접 쓰기와 같은 Player/방향별 동맹/현재 Chat 재구성을 실행한다.
+void RawPlayerParticipation::ReceiveAlliance(std::span<std::uint8_t> packet,const std::function<void(std::span<const std::uint8_t>)>& broadcast) const {
+    if (packet.size()<9) throw std::out_of_range("동맹 수신의 실제9BYTE 미만 입력");
+    const auto owner=std::uint32_t(packet[4]);Player(owner); // 원본 유효0..8 owner 계약을 변경 전에 확인한다.
+    std::uint32_t mask=1U<<(owner&31);
+    // 비정렬 packet+5의 현재 DWORD를 원본 순서로 조립한다.
+    for (std::size_t index=0;index<4;++index) mask|=std::uint32_t(packet[5+index])<<(index*8);
+    // 원본은 입력 packet에도 self bit를 기록하므로 broadcast가 같은 변경 바이트를 읽는다.
+    for (std::size_t index=0;index<4;++index) packet[5+index]=static_cast<std::uint8_t>(mask>>(index*8));
+    Put(owner,kAllies,mask);SetAlliance(owner,mask);Require(broadcast)(packet);
+}
 // 실제 AI 생성은 상위의00417e50/00416860이며 이 필드 setter가 대신 생성하지 않는다.
 void RawPlayerParticipation::AttachBrain(std::uint32_t owner,std::uint32_t brain) const {
     if (Read(owner,kBrain)) Require(hooks_.assertion)(PlayerParticipationAssertion::BrainAlreadyAssigned);

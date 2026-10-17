@@ -1,0 +1,3819 @@
+{
+  "unit": 166,
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16"
+  },
+  "base": "30cc125",
+  "scope": "실제 Client의 로컬 로그인/현재 Script/Session/음악 뒤 Mission Start와 StartDemo. 전체11단계 자연 완주/전략AI/승패/저장/다음미션은 미완료.",
+  "implementation": [
+    "원본004b6dd0 음악 뒤00463a40→가상+28/004c2b20를 실제 Client에서 한 번 실행한다.",
+    "같은 MissionRuntime gate/start state와 Session의 실제 미션 제한/AI 기본 전역, SP/기술/사제/AI를 사용한다. 설정 미정 바이트는 현재 CRT 힙 입력이다.",
+    "일반 MissionBegin의demo0과 StartDemo→00463a00의demo1 직접 쓰기를 구별한다. 스크립트demo키로 모드를 정하지 않는다. 실제 데모 제목/안내/로컬 AI를 연결한다.",
+    "원본0048f6a0의3d/버전1/9BYTE 요청을 같은 실제 로컬 전송에 연결한다. 실제00491220의 입력 버퍼 자기bit/Player mask/방향표/Chat/broadcast 순서를 실행한다. 수신 버퍼는 실제 LocalMissionTransport의 mutable vector다.",
+    "refreshSp는 같은 실제 SP를 읽는 화면을 갱신하고 resetCamera는 기존 원본 카메라 선택기다. 전용00548740 Gump는 원본 초기0 분기이며 nonzero는 명시 거부한다. 세계randGeysers도 미연결 요청 시 명시 거부한다.11원문은 이를 요청하지 않는다."
+  ],
+  "nativeContext": {
+    "edition": "10.78",
+    "entry": "00491220",
+    "scope": "전체 수신/실제00490ea0. Chat/진단/004e2e30 broadcast는 관측 경계. 원본 게임 창 실행 없음.",
+    "uniqueInputs": 288,
+    "normalReturns": 576,
+    "instructions": 191484,
+    "precisionDifferentInputs": 0,
+    "sha256": {
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "tools/decomp_player_alliance_packet.py": "217a61ba4193f031ac6c8148ecee828ccd805c20e7c6358afb68d2e998c23285",
+      "tools/decomp_player_participation.py": "f43100ce44ff51c28135fa914b76d59a2703722a65c2ac523a7481e267a93fe7",
+      "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+      "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+      "cpppj/tests/fixtures/player-alliance-packet-x86.tsv": "8765e66aa2fac76b2c8ad9870fdd5459bd56097a442baddc1d21a62c1fd8a6f6"
+    }
+  },
+  "originalBeforeCpp": {
+    "tools/decomp_player_alliance_packet.py": "217a61ba4193f031ac6c8148ecee828ccd805c20e7c6358afb68d2e998c23285",
+    "cpppj/player-alliance-packet.json": "15f410f9be1180d96e0b6a0a148e2499ec4a51937f285fb1fa7118f42a9065cb",
+    "cpppj/tests/fixtures/player-alliance-packet-x86.tsv": "8765e66aa2fac76b2c8ad9870fdd5459bd56097a442baddc1d21a62c1fd8a6f6"
+  },
+  "currentSources": {
+    "cpppj/src/client/CampaignClientServices.cpp": "4566373b792d67b289fe125779e0574a5f57008d69e4267bf63ac83b21527b5f",
+    "cpppj/src/client/CampaignClientServices.h": "69fbabe821be65505d6cef62b3063b3cf49dae3f1a420b3293a9ffcbdcc7238c",
+    "cpppj/src/client/GameWorld.cpp": "9f988b9780dd80b292b8ec48e147eb56b5302a5abd5ac79d2edea803f1f5f80e",
+    "cpppj/src/client/GameWorld.h": "8957348f8c4f02f41f938846b0fa468557557916afc708a4d1a9bd70248e7b13",
+    "cpppj/src/client/RawCampaignSession.cpp": "841cbcbea52286c3193827e4aca8ecdc048f0517ebdcc2bcb86ec6ea6d8e0298",
+    "cpppj/src/client/RawCampaignSession.h": "6978c49e497e1ac37dba5be35df19c6bf3a6492f7f4a9a7e76c56d4455cbcd20",
+    "cpppj/src/client/RawCampaignSessionLogin.inc": "c815818b076fd22b9b16cbdca5bc3c66460befd9c8028f1e35d74f88f3b842ae",
+    "cpppj/src/client/UberGump.cpp": "909f1c47c9514892307935807e9c75c99df97051fe4802c46565c74b0964bb7e",
+    "cpppj/src/client/UberGump.h": "da31b95fbb071083add9a81b16db9ffe34e0fff8980f9590503895814997ddd5",
+    "cpppj/src/o/RawPlayerParticipation.cpp": "682b1cf72b1889d2bf44540446d5cba40c24679e9e99055b154155224185dec7",
+    "cpppj/src/o/RawPlayerParticipation.h": "22d0031dd843733a9452f9ee497d79e7028a40915524bf11ca4ff59b549b1cb4",
+    "cpppj/tests/CMakeLists.txt": "a9d9e8fb94823089dd875a68aa672569e84ace4ab3c7af9b92c573abffd0e7ae",
+    "cpppj/tests/CampaignSessionTests.cpp": "9626f493b99885097409123e0aaf054c7138a413cdcf767ea4ceb1dc714bdf79",
+    "cpppj/tests/PlayerParticipationTests.cpp": "bc12a931238ba42474504a56c6217253173f37c43021fb31f203814f20f22e3b",
+    "tools/cpp_goal_stage_entry_smoke.py": "26556480ac205c1ca4a8abb3b90910e7daa7f7307bfcb88b7c791496d7f04b9a",
+    "tools/decomp_player_alliance_packet.py": "217a61ba4193f031ac6c8148ecee828ccd805c20e7c6358afb68d2e998c23285",
+    "tools/cpp_demo_start_smoke.py": "fe6456f215631287e5918f0a2fcfb5c27815c1918a75965d353f818c126fd94d"
+  },
+  "protected": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "AGENTS.md": "7addbf9b31c42f29aab7c93faa865eb6de8590a600d17202a297cf7122bdf979",
+    "LEFT_JOBS.dotnetpj.md": "0c067e1d12879dbf2212cbd64c8f9f60e65b590df910418f025027ed84f80ec2"
+  },
+  "validation": {
+    "build": {
+      "log": "extracted/goal-mission-start-client-20261018-build4.log",
+      "warnings": 0,
+      "errors": 0
+    },
+    "focused": {
+      "start": {
+        "log": "extracted/goal-mission-start-client-20261018-focused-start1.log",
+        "tests": 3
+      },
+      "playerParticipation": {
+        "log": "extracted/goal-mission-start-client-20261018-focused-native2.log",
+        "tests": 3
+      },
+      "loginStart": {
+        "log": "extracted/goal-mission-start-client-20261018-focused-login2.log",
+        "tests": 1
+      }
+    },
+    "full": {
+      "tests": 1653,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "seconds": 247.58,
+      "ctestSeconds": 247.61,
+      "lastTestLog": "extracted/goal-mission-start-client-20261018-LastTest.log",
+      "ctestLog": "extracted/goal-mission-start-client-20261018-ctest1.log"
+    },
+    "audit": {
+      "tools": 90,
+      "passed": 79,
+      "existingFailed": 11,
+      "newFailed": 0,
+      "report": "extracted/goal-mission-start-client-20261018-verify-final.json"
+    },
+    "visualReview": "GuardMyBack/after.bmp에서 실제 SP1200과 월드를 확인했다."
+  },
+  "goalEntry": {
+    "scope": "CLI --mission/실제 UI 버튼으로11개 플레이 진입. 사용자 메뉴 선택·자연 명령·승패·저장·완주/원본 전체 동일성은 미검증.",
+    "runs": [
+      {
+        "mission": "tutorial1",
+        "passed": true,
+        "clicks": [
+          "MORE",
+          "OK"
+        ],
+        "observations": [
+          {
+            "frame": 4,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A."
+            ],
+            "controls": {
+              "MORE": [
+                "1",
+                "0",
+                "474",
+                "494",
+                "549",
+                "514",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial1",
+              "Tutorial",
+              "3"
+            ],
+            "raw_world": [
+              "0.249",
+              "4",
+              "6",
+              "0",
+              "0",
+              "5000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.202",
+              "0"
+            ],
+            "mission_rules": [
+              "1",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-mission-start-client-20261018-goal-entry2/tutorial1/0",
+            "exitCode": 0
+          },
+          {
+            "frame": 6,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A1."
+            ],
+            "controls": {
+              "BACK": [
+                "1",
+                "0",
+                "435",
+                "417",
+                "510",
+                "437",
+                "0"
+              ],
+              "OK": [
+                "1",
+                "0",
+                "514",
+                "417",
+                "589",
+                "437",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial1",
+              "Tutorial",
+              "3"
+            ],
+            "raw_world": [
+              "0.242",
+              "6",
+              "6",
+              "0",
+              "0",
+              "5000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.197",
+              "0"
+            ],
+            "mission_rules": [
+              "1",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-mission-start-client-20261018-goal-entry2/tutorial1/1",
+            "exitCode": 0
+          },
+          {
+            "frame": 8,
+            "phase": [
+              "4"
+            ],
+            "paused": [
+              "0"
+            ],
+            "page": [
+              "mission"
+            ],
+            "controls": {
+              "Game": [
+                "1",
+                "0",
+                "4",
+                "4",
+                "79",
+                "24",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial1",
+              "Tutorial",
+              "3"
+            ],
+            "raw_world": [
+              "0.223",
+              "8",
+              "6",
+              "0",
+              "0",
+              "5000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.192",
+              "0"
+            ],
+            "mission_rules": [
+              "1",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-mission-start-client-20261018-goal-entry2/tutorial1/2",
+            "exitCode": 0
+          }
+        ],
+        "expectedStart": {
+          "money": 0,
+          "technology": [],
+          "demo": 0
+        }
+      },
+      {
+        "mission": "tutorial2",
+        "passed": true,
+        "clicks": [
+          "MORE",
+          "MORE",
+          "OK"
+        ],
+        "observations": [
+          {
+            "frame": 4,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A."
+            ],
+            "controls": {
+              "MORE": [
+                "1",
+                "0",
+                "474",
+                "431",
+                "549",
+                "451",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial2",
+              "Tutorial",
+              "2"
+            ],
+            "raw_world": [
+              "0.213",
+              "4",
+              "5",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.181",
+              "0"
+            ],
+            "mission_rules": [
+              "1",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "10000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunArcher"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-mission-start-client-20261018-goal-entry2/tutorial2/0",
+            "exitCode": 0
+          },
+          {
+            "frame": 6,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A1."
+            ],
+            "controls": {
+              "BACK": [
+                "1",
+                "0",
+                "435",
+                "492",
+                "510",
+                "512",
+                "0"
+              ],
+              "MORE": [
+                "1",
+                "0",
+                "514",
+                "492",
+                "589",
+                "512",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial2",
+              "Tutorial",
+              "2"
+            ],
+            "raw_world": [
+              "0.216",
+              "6",
+              "5",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.183",
+              "0"
+            ],
+            "mission_rules": [
+              "1",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "10000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunArcher"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-mission-start-client-20261018-goal-entry2/tutorial2/1",
+            "exitCode": 0
+          },
+          {
+            "frame": 8,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A2."
+            ],
+            "controls": {
+              "BACK": [
+                "1",
+                "0",
+                "435",
+                "466",
+                "510",
+                "486",
+                "0"
+              ],
+              "OK": [
+                "1",
+                "0",
+                "514",
+                "466",
+                "589",
+                "486",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial2",
+              "Tutorial",
+              "2"
+            ],
+            "raw_world": [
+              "0.203",
+              "8",
+              "5",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.172",
+              "0"
+            ],
+            "mission_rules": [
+              "1",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "10000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunArcher"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-mission-start-client-20261018-goal-entry2/tutorial2/2",
+            "exitCode": 0
+          },
+          {
+            "frame": 10,
+            "phase": [
+              "4"
+            ],
+            "paused": [
+              "0"
+            ],
+            "page": [
+              "mission"
+            ],
+            "controls": {
+              "Game": [
+                "1",
+                "0",
+                "4",
+                "4",
+                "79",
+                "24",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial2",
+              "Tutorial",
+              "2"
+            ],
+            "raw_world": [
+              "0.203",
+              "10",
+              "5",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.172",
+              "0"
+            ],
+            "mission_rules": [
+              "1",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "10000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunArcher"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-mission-start-client-20261018-goal-entry2/tutorial2/3",
+            "exitCode": 0
+          }
+        ],
+        "expectedStart": {
+          "money": 10000,
+          "technology": [
+            "sunArcher"
+          ],
+          "demo": 0
+        }
+      },
+      {
+        "mission": "tutorial3",
+        "passed": true,
+        "clicks": [
+          "MORE",
+          "OK"
+        ],
+        "observations": [
+          {
+            "frame": 4,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A."
+            ],
+            "controls": {
+              "MORE": [
+                "1",
+                "0",
+                "474",
+                "473",
+                "549",
+                "493",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial3",
+              "Tutorial",
+              "37"
+            ],
+            "raw_world": [
+              "0.229",
+              "4",
+              "15",
+              "0",
+              "0",
+              "11800",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.182",
+              "0"
+            ],
+            "mission_rules": [
+              "1",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "2000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunArcher",
+              "sunWalker"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-mission-start-client-20261018-goal-entry2/tutorial3/0",
+            "exitCode": 0
+          },
+          {
+            "frame": 6,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A1."
+            ],
+            "controls": {
+              "BACK": [
+                "1",
+                "0",
+                "435",
+                "459",
+                "510",
+                "479",
+                "0"
+              ],
+              "OK": [
+                "1",
+                "0",
+                "514",
+                "459",
+                "589",
+                "479",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial3",
+              "Tutorial",
+              "37"
+            ],
+            "raw_world": [
+              "0.234",
+              "6",
+              "15",
+              "0",
+              "0",
+              "11800",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.187",
+              "0"
+            ],
+            "mission_rules": [
+              "1",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "2000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunArcher",
+              "sunWalker"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-mission-start-client-20261018-goal-entry2/tutorial3/1",
+            "exitCode": 0
+          },
+          {
+            "frame": 8,
+            "phase": [
+              "4"
+            ],
+            "paused": [
+              "0"
+            ],
+            "page": [
+              "mission"
+            ],
+            "controls": {
+              "Game": [
+                "1",
+                "0",
+                "4",
+                "4",
+                "79",
+                "24",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial3",
+              "Tutorial",
+              "37"
+            ],
+            "raw_world": [
+              "0.239",
+              "8",
+              "15",
+              "0",
+              "0",
+              "11800",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.186",
+              "0"
+            ],
+            "mission_rules": [
+              "1",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "2000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunArcher",
+              "sunWalker"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-mission-start-client-20261018-goal-entry2/tutorial3/2",
+            "exitCode": 0
+          }
+        ],
+        "expectedStart": {
+          "money": 2000,
+          "technology": [
+            "sunArcher",
+            "sunWalker"
+          ],
+          "demo": 0
+        }
+      },
+      {
+        "mission": "tutorial4",
+        "passed": true,
+        "clicks": [
+          "MORE",
+          "OK"
+        ],
+        "observations": [
+          {
+            "frame": 4,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A."
+            ],
+            "controls": {
+              "MORE": [
+                "1",
+                "0",
+                "474",
+                "492",
+                "549",
+                "512",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial4",
+              "Tutorial",
+              "65"
+            ],
+            "raw_world": [
+              "0.234",
+              "4",
+              "25",
+              "0",
+              "0",
+              "18400",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.187",
+              "0"
+            ],
+            "mission_rules": [
+              "0",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "2000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunArcher",
+              "windBattery",
+              "sunWalker"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-mission-start-client-20261018-goal-entry2/tutorial4/0",
+            "exitCode": 0
+          },
+          {
+            "frame": 6,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A1."
+            ],
+            "controls": {
+              "BACK": [
+                "1",
+                "0",
+                "435",
+                "424",
+                "510",
+                "444",
+                "0"
+              ],
+              "OK": [
+                "1",
+                "0",
+                "514",
+                "424",
+                "589",
+                "444",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial4",
+              "Tutorial",
+              "65"
+            ],
+            "raw_world": [
+              "0.222",
+              "6",
+              "25",
+              "0",
+              "0",
+              "18400",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.171",
+              "0"
+            ],
+            "mission_rules": [
+              "0",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "2000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunArcher",
+              "windBattery",
+              "sunWalker"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-mission-start-client-20261018-goal-entry2/tutorial4/1",
+            "exitCode": 0
+          },
+          {
+            "frame": 8,
+            "phase": [
+              "4"
+            ],
+            "paused": [
+              "0"
+            ],
+            "page": [
+              "mission"
+            ],
+            "controls": {
+              "Game": [
+                "1",
+                "0",
+                "4",
+                "4",
+                "79",
+                "24",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial4",
+              "Tutorial",
+              "65"
+            ],
+            "raw_world": [
+              "0.219",
+              "8",
+              "25",
+              "0",
+              "0",
+              "18400",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.171",
+              "0"
+            ],
+            "mission_rules": [
+              "0",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "2000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunArcher",
+              "windBattery",
+              "sunWalker"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-mission-start-client-20261018-goal-entry2/tutorial4/2",
+            "exitCode": 0
+          }
+        ],
+        "expectedStart": {
+          "money": 2000,
+          "technology": [
+            "sunArcher",
+            "sunWalker",
+            "windBattery"
+          ],
+          "demo": 0
+        }
+      },
+      {
+        "mission": "tutorial5",
+        "passed": true,
+        "clicks": [
+          "MORE",
+          "OK"
+        ],
+        "observations": [
+          {
+            "frame": 4,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A."
+            ],
+            "controls": {
+              "MORE": [
+                "1",
+                "0",
+                "474",
+                "489",
+                "549",
+                "509",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial5",
+              "Tutorial",
+              "55"
+            ],
+            "raw_world": [
+              "0.247",
+              "4",
+              "23",
+              "0",
+              "0",
+              "21600",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.173",
+              "0"
+            ],
+            "mission_rules": [
+              "0",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "4000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "536870912",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunArcher",
+              "windBattery",
+              "sunBlocker",
+              "sunCannon",
+              "sunWalker"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-mission-start-client-20261018-goal-entry2/tutorial5/0",
+            "exitCode": 0
+          },
+          {
+            "frame": 6,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A1."
+            ],
+            "controls": {
+              "BACK": [
+                "1",
+                "0",
+                "435",
+                "480",
+                "510",
+                "500",
+                "0"
+              ],
+              "OK": [
+                "1",
+                "0",
+                "514",
+                "480",
+                "589",
+                "500",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial5",
+              "Tutorial",
+              "55"
+            ],
+            "raw_world": [
+              "0.249",
+              "6",
+              "23",
+              "0",
+              "0",
+              "21600",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.186",
+              "0"
+            ],
+            "mission_rules": [
+              "0",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "4000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "536870912",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunArcher",
+              "windBattery",
+              "sunBlocker",
+              "sunCannon",
+              "sunWalker"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-mission-start-client-20261018-goal-entry2/tutorial5/1",
+            "exitCode": 0
+          },
+          {
+            "frame": 8,
+            "phase": [
+              "4"
+            ],
+            "paused": [
+              "0"
+            ],
+            "page": [
+              "mission"
+            ],
+            "controls": {
+              "Game": [
+                "1",
+                "0",
+                "4",
+                "4",
+                "79",
+                "24",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial5",
+              "Tutorial",
+              "55"
+            ],
+            "raw_world": [
+              "0.297",
+              "8",
+              "23",
+              "0",
+              "0",
+              "21600",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.233",
+              "0"
+            ],
+            "mission_rules": [
+              "0",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "4000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "536870912",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunArcher",
+              "windBattery",
+              "sunBlocker",
+              "sunCannon",
+              "sunWalker"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-mission-start-client-20261018-goal-entry2/tutorial5/2",
+            "exitCode": 0
+          }
+        ],
+        "expectedStart": {
+          "money": 4000,
+          "technology": [
+            "sunArcher",
+            "sunBlocker",
+            "sunCannon",
+            "sunWalker",
+            "windBattery"
+          ],
+          "demo": 0
+        }
+      },
+      {
+        "mission": "tutorial6",
+        "passed": true,
+        "clicks": [
+          "MORE",
+          "MORE",
+          "MORE",
+          "OK"
+        ],
+        "observations": [
+          {
+            "frame": 4,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A."
+            ],
+            "controls": {
+              "MORE": [
+                "1",
+                "0",
+                "474",
+                "459",
+                "549",
+                "479",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial6",
+              "Tutorial",
+              "60"
+            ],
+            "raw_world": [
+              "0.287",
+              "4",
+              "29",
+              "0",
+              "0",
+              "23100",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.223",
+              "0"
+            ],
+            "mission_rules": [
+              "0",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "7500",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "536870912",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "windBattery",
+              "windBalloon"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-mission-start-client-20261018-goal-entry2/tutorial6/0",
+            "exitCode": 0
+          },
+          {
+            "frame": 6,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A1."
+            ],
+            "controls": {
+              "BACK": [
+                "1",
+                "0",
+                "435",
+                "493",
+                "510",
+                "513",
+                "0"
+              ],
+              "MORE": [
+                "1",
+                "0",
+                "514",
+                "493",
+                "589",
+                "513",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial6",
+              "Tutorial",
+              "60"
+            ],
+            "raw_world": [
+              "0.229",
+              "6",
+              "29",
+              "0",
+              "0",
+              "23100",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.182",
+              "0"
+            ],
+            "mission_rules": [
+              "0",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "7500",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "536870912",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "windBattery",
+              "windBalloon"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-mission-start-client-20261018-goal-entry2/tutorial6/1",
+            "exitCode": 0
+          },
+          {
+            "frame": 8,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A2."
+            ],
+            "controls": {
+              "BACK": [
+                "1",
+                "0",
+                "435",
+                "509",
+                "510",
+                "529",
+                "0"
+              ],
+              "MORE": [
+                "1",
+                "0",
+                "514",
+                "509",
+                "589",
+                "529",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial6",
+              "Tutorial",
+              "60"
+            ],
+            "raw_world": [
+              "0.234",
+              "8",
+              "29",
+              "0",
+              "0",
+              "23100",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.187",
+              "0"
+            ],
+            "mission_rules": [
+              "0",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "7500",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "536870912",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "windBattery",
+              "windBalloon"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-mission-start-client-20261018-goal-entry2/tutorial6/2",
+            "exitCode": 0
+          },
+          {
+            "frame": 10,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A3."
+            ],
+            "controls": {
+              "BACK": [
+                "1",
+                "0",
+                "435",
+                "459",
+                "510",
+                "479",
+                "0"
+              ],
+              "OK": [
+                "1",
+                "0",
+                "514",
+                "459",
+                "589",
+                "479",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial6",
+              "Tutorial",
+              "60"
+            ],
+            "raw_world": [
+              "0.233",
+              "10",
+              "29",
+              "0",
+              "0",
+              "23100",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.18",
+              "0"
+            ],
+            "mission_rules": [
+              "0",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "7500",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "536870912",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "windBattery",
+              "windBalloon"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-mission-start-client-20261018-goal-entry2/tutorial6/3",
+            "exitCode": 0
+          },
+          {
+            "frame": 12,
+            "phase": [
+              "4"
+            ],
+            "paused": [
+              "0"
+            ],
+            "page": [
+              "mission"
+            ],
+            "controls": {
+              "Game": [
+                "1",
+                "0",
+                "4",
+                "4",
+                "79",
+                "24",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial6",
+              "Tutorial",
+              "60"
+            ],
+            "raw_world": [
+              "0.234",
+              "12",
+              "26",
+              "0",
+              "0",
+              "23100",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.172",
+              "0"
+            ],
+            "mission_rules": [
+              "0",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "7500",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "536870912",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "windBattery",
+              "windBalloon"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-mission-start-client-20261018-goal-entry2/tutorial6/4",
+            "exitCode": 0
+          }
+        ],
+        "expectedStart": {
+          "money": 7500,
+          "technology": [
+            "windBalloon",
+            "windBattery"
+          ],
+          "demo": 0
+        }
+      },
+      {
+        "mission": "thewarbegins",
+        "passed": true,
+        "clicks": [
+          "Play Mission"
+        ],
+        "observations": [
+          {
+            "frame": 4,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A."
+            ],
+            "controls": {
+              "Review Knowledge": [
+                "0",
+                "0",
+                "406",
+                "459",
+                "528",
+                "479",
+                "0"
+              ],
+              "Play Mission": [
+                "1",
+                "0",
+                "532",
+                "459",
+                "618",
+                "479",
+                "0"
+              ]
+            },
+            "mission": [
+              "thewarbegins",
+              "Tutorial",
+              "172"
+            ],
+            "raw_world": [
+              "0.499",
+              "4",
+              "34",
+              "0",
+              "0",
+              "45100",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.437",
+              "0"
+            ],
+            "mission_rules": [
+              "0",
+              "0",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "3000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "536870912",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunAviary",
+              "rainBattery",
+              "sunCannon",
+              "sunWalker"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-mission-start-client-20261018-goal-entry2/thewarbegins/0",
+            "exitCode": 0
+          },
+          {
+            "frame": 6,
+            "phase": [
+              "4"
+            ],
+            "paused": [
+              "0"
+            ],
+            "page": [
+              "mission"
+            ],
+            "controls": {
+              "Game": [
+                "1",
+                "0",
+                "4",
+                "4",
+                "79",
+                "24",
+                "0"
+              ]
+            },
+            "mission": [
+              "thewarbegins",
+              "Tutorial",
+              "172"
+            ],
+            "raw_world": [
+              "0.234",
+              "6",
+              "34",
+              "0",
+              "0",
+              "45100",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.187",
+              "0"
+            ],
+            "mission_rules": [
+              "0",
+              "0",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "3000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "536870912",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunAviary",
+              "rainBattery",
+              "sunCannon",
+              "sunWalker"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-mission-start-client-20261018-goal-entry2/thewarbegins/1",
+            "exitCode": 0
+          }
+        ],
+        "expectedStart": {
+          "money": 3000,
+          "technology": [
+            "rainBattery",
+            "sunAviary",
+            "sunCannon",
+            "sunWalker"
+          ],
+          "demo": 0
+        }
+      },
+      {
+        "mission": "masterofwhirligigs",
+        "passed": true,
+        "clicks": [
+          "Play Mission"
+        ],
+        "observations": [
+          {
+            "frame": 4,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A."
+            ],
+            "controls": {
+              "Review Knowledge": [
+                "0",
+                "0",
+                "406",
+                "452",
+                "528",
+                "472",
+                "0"
+              ],
+              "Play Mission": [
+                "1",
+                "0",
+                "532",
+                "452",
+                "618",
+                "472",
+                "0"
+              ]
+            },
+            "mission": [
+              "masterofwhirligigs",
+              "Tutorial",
+              "115"
+            ],
+            "raw_world": [
+              "0.497",
+              "4",
+              "26",
+              "0",
+              "0",
+              "35600",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.416",
+              "0"
+            ],
+            "mission_rules": [
+              "0",
+              "0",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "2000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "536870912",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunArcher",
+              "windBattery",
+              "sunCannon",
+              "sunWalker"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-mission-start-client-20261018-goal-entry2/masterofwhirligigs/0",
+            "exitCode": 0
+          },
+          {
+            "frame": 6,
+            "phase": [
+              "4"
+            ],
+            "paused": [
+              "0"
+            ],
+            "page": [
+              "mission"
+            ],
+            "controls": {
+              "Game": [
+                "1",
+                "0",
+                "4",
+                "4",
+                "79",
+                "24",
+                "0"
+              ]
+            },
+            "mission": [
+              "masterofwhirligigs",
+              "Tutorial",
+              "115"
+            ],
+            "raw_world": [
+              "0.234",
+              "6",
+              "26",
+              "0",
+              "0",
+              "35600",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.183",
+              "0"
+            ],
+            "mission_rules": [
+              "0",
+              "0",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "2000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "536870912",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunArcher",
+              "windBattery",
+              "sunCannon",
+              "sunWalker"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-mission-start-client-20261018-goal-entry2/masterofwhirligigs/1",
+            "exitCode": 0
+          }
+        ],
+        "expectedStart": {
+          "money": 2000,
+          "technology": [
+            "sunArcher",
+            "sunCannon",
+            "sunWalker",
+            "windBattery"
+          ],
+          "demo": 0
+        }
+      },
+      {
+        "mission": "demostormrages",
+        "passed": true,
+        "clicks": [],
+        "observations": [
+          {
+            "frame": 4,
+            "phase": [
+              "4"
+            ],
+            "paused": [
+              "0"
+            ],
+            "page": [
+              "mission"
+            ],
+            "controls": {
+              "Game": [
+                "1",
+                "0",
+                "4",
+                "4",
+                "79",
+                "24",
+                "0"
+              ]
+            },
+            "mission": [
+              "demostormrages",
+              "Tutorial",
+              "72"
+            ],
+            "raw_world": [
+              "0.338",
+              "4",
+              "26",
+              "0",
+              "0",
+              "34800",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.19",
+              "360.19"
+            ],
+            "mission_rules": [
+              "0",
+              "0",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "2400",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "536870912",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-mission-start-client-20261018-goal-entry2/demostormrages/0",
+            "exitCode": 0
+          }
+        ],
+        "expectedStart": {
+          "money": 2400,
+          "technology": [],
+          "demo": 0
+        }
+      },
+      {
+        "mission": "guardmyback",
+        "passed": true,
+        "clicks": [
+          "Play Mission"
+        ],
+        "observations": [
+          {
+            "frame": 4,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A."
+            ],
+            "controls": {
+              "Review Knowledge": [
+                "0",
+                "0",
+                "406",
+                "480",
+                "528",
+                "500",
+                "0"
+              ],
+              "Play Mission": [
+                "1",
+                "0",
+                "532",
+                "480",
+                "618",
+                "500",
+                "0"
+              ]
+            },
+            "mission": [
+              "guardmyback",
+              "Tutorial",
+              "422"
+            ],
+            "raw_world": [
+              "0.259",
+              "4",
+              "74",
+              "0",
+              "0",
+              "90000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "2",
+              "1",
+              "3",
+              "4"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.18",
+              "360.18"
+            ],
+            "mission_rules": [
+              "0",
+              "0",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "1200",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "536870912",
+              "536892288",
+              "536913664",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunArcher",
+              "sunAviary",
+              "windBattery",
+              "sunBlocker",
+              "sunBalloon",
+              "sunCannon",
+              "sunWalker"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-mission-start-client-20261018-goal-entry2/guardmyback/0",
+            "exitCode": 0
+          },
+          {
+            "frame": 6,
+            "phase": [
+              "4"
+            ],
+            "paused": [
+              "0"
+            ],
+            "page": [
+              "mission"
+            ],
+            "controls": {
+              "Game": [
+                "1",
+                "0",
+                "4",
+                "4",
+                "79",
+                "24",
+                "0"
+              ]
+            },
+            "mission": [
+              "guardmyback",
+              "Tutorial",
+              "422"
+            ],
+            "raw_world": [
+              "0.422",
+              "6",
+              "72",
+              "0",
+              "0",
+              "90000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "2",
+              "1",
+              "3",
+              "4"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.202",
+              "360.202"
+            ],
+            "mission_rules": [
+              "0",
+              "0",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "1200",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "536870912",
+              "536892288",
+              "536913664",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunArcher",
+              "sunAviary",
+              "windBattery",
+              "sunBlocker",
+              "sunBalloon",
+              "sunCannon",
+              "sunWalker"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-mission-start-client-20261018-goal-entry2/guardmyback/1",
+            "exitCode": 0
+          }
+        ],
+        "expectedStart": {
+          "money": 1200,
+          "technology": [
+            "sunArcher",
+            "sunAviary",
+            "sunBalloon",
+            "sunBlocker",
+            "sunCannon",
+            "sunWalker",
+            "windBattery"
+          ],
+          "demo": 0
+        }
+      },
+      {
+        "mission": "dissolvedalliance",
+        "passed": true,
+        "clicks": [
+          "Play Mission"
+        ],
+        "observations": [
+          {
+            "frame": 4,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A."
+            ],
+            "controls": {
+              "Review Knowledge": [
+                "0",
+                "0",
+                "406",
+                "445",
+                "528",
+                "465",
+                "0"
+              ],
+              "Play Mission": [
+                "1",
+                "0",
+                "532",
+                "445",
+                "618",
+                "465",
+                "0"
+              ]
+            },
+            "mission": [
+              "dissolvedalliance",
+              "Tutorial",
+              "432"
+            ],
+            "raw_world": [
+              "0.281",
+              "4",
+              "60",
+              "0",
+              "0",
+              "68800",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "3",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.187",
+              "360.187"
+            ],
+            "mission_rules": [
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "4000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "536870912",
+              "536892288",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunAviary",
+              "windBattery",
+              "sunBlocker",
+              "sunCannon",
+              "sunWalker",
+              "windWalker",
+              "windAviary",
+              "windArcher",
+              "windBalloon",
+              "windBlocker"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-mission-start-client-20261018-goal-entry2/dissolvedalliance/0",
+            "exitCode": 0
+          },
+          {
+            "frame": 6,
+            "phase": [
+              "4"
+            ],
+            "paused": [
+              "0"
+            ],
+            "page": [
+              "mission"
+            ],
+            "controls": {
+              "Game": [
+                "1",
+                "0",
+                "4",
+                "4",
+                "79",
+                "24",
+                "0"
+              ]
+            },
+            "mission": [
+              "dissolvedalliance",
+              "Tutorial",
+              "432"
+            ],
+            "raw_world": [
+              "0.534",
+              "6",
+              "60",
+              "0",
+              "0",
+              "68800",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "3",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.454",
+              "360.454"
+            ],
+            "mission_rules": [
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "4000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "536870912",
+              "536892288",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunAviary",
+              "windBattery",
+              "sunBlocker",
+              "sunCannon",
+              "sunWalker",
+              "windWalker",
+              "windAviary",
+              "windArcher",
+              "windBalloon",
+              "windBlocker"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-mission-start-client-20261018-goal-entry2/dissolvedalliance/1",
+            "exitCode": 0
+          }
+        ],
+        "expectedStart": {
+          "money": 4000,
+          "technology": [
+            "sunAviary",
+            "sunBlocker",
+            "sunCannon",
+            "sunWalker",
+            "windArcher",
+            "windAviary",
+            "windBalloon",
+            "windBattery",
+            "windBlocker",
+            "windWalker"
+          ],
+          "demo": 0
+        }
+      }
+    ],
+    "originals_unchanged": true
+  },
+  "demoEntry": {
+    "scope": "실제 메인 메뉴→StartDemo→시작 자금/기술/AI/원본15초 안내 timeout. 전략AI/전투 완주/승패/자동재시작은 미검증.",
+    "runs": [
+      {
+        "mission": "DemoStormRages",
+        "label": "The Storm Rages",
+        "passed": true,
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\originals",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "1102",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=16",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\goal-mission-start-client-20261018-demo-entry2\\DemoStormRages\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\goal-mission-start-client-20261018-demo-entry2\\DemoStormRages\\states.tsv"
+        ],
+        "started": {
+          "start": [
+            "1",
+            "1",
+            "1",
+            "0.39",
+            "360.39"
+          ],
+          "sp": [
+            "0",
+            "2400",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          "technology": [
+            "thunderBattery",
+            "thunderCannon",
+            "bulf",
+            "thunderArcher"
+          ],
+          "brains": [
+            "0",
+            "536870912",
+            "536892288",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ]
+        },
+        "after": {
+          "phase": [
+            "4"
+          ],
+          "paused": [
+            "0"
+          ],
+          "time": [
+            "20.277",
+            "35.374"
+          ]
+        },
+        "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-mission-start-client-20261018-demo-entry2/DemoStormRages"
+      },
+      {
+        "mission": "GuardMyBack",
+        "label": "Demo of \"Guard My Back\"",
+        "passed": true,
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\originals",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "1102",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=16",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\goal-mission-start-client-20261018-demo-entry2\\GuardMyBack\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\goal-mission-start-client-20261018-demo-entry2\\GuardMyBack\\states.tsv"
+        ],
+        "started": {
+          "start": [
+            "1",
+            "1",
+            "1",
+            "0.389",
+            "360.389"
+          ],
+          "sp": [
+            "0",
+            "1200",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          "technology": [
+            "sunArcher",
+            "sunAviary",
+            "windBattery",
+            "sunBlocker",
+            "sunBalloon",
+            "sunCannon",
+            "sunWalker"
+          ],
+          "brains": [
+            "0",
+            "536870912",
+            "536892288",
+            "536913664",
+            "536935040",
+            "0",
+            "0",
+            "0",
+            "0"
+          ]
+        },
+        "after": {
+          "phase": [
+            "4"
+          ],
+          "paused": [
+            "0"
+          ],
+          "time": [
+            "20.342",
+            "35.454"
+          ]
+        },
+        "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-mission-start-client-20261018-demo-entry2/GuardMyBack"
+      },
+      {
+        "mission": "DissolvedAlliance",
+        "label": "Demo of \"Dissolved Alliance\"",
+        "passed": true,
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\originals",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "1102",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=16",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\goal-mission-start-client-20261018-demo-entry2\\DissolvedAlliance\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\goal-mission-start-client-20261018-demo-entry2\\DissolvedAlliance\\states.tsv"
+        ],
+        "started": {
+          "start": [
+            "1",
+            "1",
+            "1",
+            "0.359",
+            "360.359"
+          ],
+          "sp": [
+            "0",
+            "4000",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          "technology": [
+            "sunAviary",
+            "windBattery",
+            "sunBlocker",
+            "sunCannon",
+            "sunWalker",
+            "windWalker",
+            "windAviary",
+            "windArcher",
+            "windBalloon",
+            "windBlocker"
+          ],
+          "brains": [
+            "0",
+            "536870912",
+            "536892288",
+            "536913664",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ]
+        },
+        "after": {
+          "phase": [
+            "4"
+          ],
+          "paused": [
+            "0"
+          ],
+          "time": [
+            "19.786",
+            "34.888"
+          ]
+        },
+        "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-mission-start-client-20261018-demo-entry2/DissolvedAlliance"
+      }
+    ],
+    "originals_unchanged": true
+  },
+  "entry": {
+    "runs": [
+      {
+        "mission": "thewarbegins",
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\originals",
+          "--mission",
+          "thewarbegins",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "10",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0",
+          "--ui-script",
+          "extracted\\goal-mission-start-client-20261018-entry1\\thewarbegins\\steps.tsv",
+          "--ui-report",
+          "extracted\\goal-mission-start-client-20261018-entry1\\thewarbegins\\states.tsv"
+        ],
+        "exit_code": 0,
+        "stderr": "로컬 미션 상태 8\r\n로컬 미션 상태 9\r\n로컬 미션 상태 10\r\nNo Central Island.\r\n로컬 Fort 전송\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\n로컬 미션 상태 13\r\nlogin status timer start\r\n로컬 미션 상태 14\r\nSeting Priest State\r\nDone\r\nMoveing Camera\r\nDone\r\n",
+        "raw_objects": 1876,
+        "camera": [
+          "976",
+          "793"
+        ],
+        "passed": true
+      },
+      {
+        "mission": "masterofwhirligigs",
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\originals",
+          "--mission",
+          "masterofwhirligigs",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "10",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0",
+          "--ui-script",
+          "extracted\\goal-mission-start-client-20261018-entry1\\masterofwhirligigs\\steps.tsv",
+          "--ui-report",
+          "extracted\\goal-mission-start-client-20261018-entry1\\masterofwhirligigs\\states.tsv"
+        ],
+        "exit_code": 0,
+        "stderr": "로컬 미션 상태 8\r\n로컬 미션 상태 9\r\n로컬 미션 상태 10\r\nNo Central Island.\r\n로컬 Fort 전송\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\n로컬 미션 상태 13\r\nlogin status timer start\r\n로컬 미션 상태 14\r\nSeting Priest State\r\nDone\r\nMoveing Camera\r\nDone\r\n",
+        "raw_objects": 1755,
+        "camera": [
+          "320",
+          "221"
+        ],
+        "passed": true
+      },
+      {
+        "mission": "tutorial1",
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\originals",
+          "--mission",
+          "tutorial1",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "10",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0",
+          "--ui-script",
+          "extracted\\goal-mission-start-client-20261018-entry1\\tutorial1\\steps.tsv",
+          "--ui-report",
+          "extracted\\goal-mission-start-client-20261018-entry1\\tutorial1\\states.tsv"
+        ],
+        "exit_code": 0,
+        "stderr": "로컬 미션 상태 8\r\n로컬 미션 상태 9\r\n로컬 미션 상태 10\r\nNo Central Island.\r\n로컬 Fort 전송\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\n로컬 미션 상태 13\r\nlogin status timer start\r\n로컬 미션 상태 14\r\nSeting Priest State\r\nDone\r\nMoveing Camera\r\nDone\r\n",
+        "passed": true
+      },
+      {
+        "mission": "tutorial2",
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\originals",
+          "--mission",
+          "tutorial2",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "10",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0",
+          "--ui-script",
+          "extracted\\goal-mission-start-client-20261018-entry1\\tutorial2\\steps.tsv",
+          "--ui-report",
+          "extracted\\goal-mission-start-client-20261018-entry1\\tutorial2\\states.tsv"
+        ],
+        "exit_code": 0,
+        "stderr": "로컬 미션 상태 8\r\n로컬 미션 상태 9\r\n로컬 미션 상태 10\r\nNo Central Island.\r\n로컬 Fort 전송\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\n로컬 미션 상태 13\r\nlogin status timer start\r\n로컬 미션 상태 14\r\nSeting Priest State\r\nDone\r\nMoveing Camera\r\nDone\r\n",
+        "passed": true
+      },
+      {
+        "mission": "tutorial3",
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\originals",
+          "--mission",
+          "tutorial3",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "10",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0",
+          "--ui-script",
+          "extracted\\goal-mission-start-client-20261018-entry1\\tutorial3\\steps.tsv",
+          "--ui-report",
+          "extracted\\goal-mission-start-client-20261018-entry1\\tutorial3\\states.tsv"
+        ],
+        "exit_code": 0,
+        "stderr": "로컬 미션 상태 8\r\n로컬 미션 상태 9\r\n로컬 미션 상태 10\r\nNo Central Island.\r\n로컬 Fort 전송\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\n로컬 미션 상태 13\r\nlogin status timer start\r\n로컬 미션 상태 14\r\nSeting Priest State\r\nDone\r\nMoveing Camera\r\nDone\r\n",
+        "passed": true
+      },
+      {
+        "mission": "thewarbegins",
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\originals",
+          "--mission",
+          "thewarbegins",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "2000",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0",
+          "--ui-script",
+          "extracted\\goal-mission-start-client-20261018-entry1\\thewarbegins-movement\\steps.tsv",
+          "--ui-report",
+          "extracted\\goal-mission-start-client-20261018-entry1\\thewarbegins-movement\\states.tsv"
+        ],
+        "exit_code": 0,
+        "stderr": "로컬 미션 상태 8\r\n로컬 미션 상태 9\r\n로컬 미션 상태 10\r\nNo Central Island.\r\n로컬 Fort 전송\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\n로컬 미션 상태 13\r\nlogin status timer start\r\n로컬 미션 상태 14\r\nSeting Priest State\r\nDone\r\nMoveing Camera\r\nDone\r\n선택 객체 SID 15000 TYPE 158\r\n[29] SORE LOSER TEST: [29] STARTING.\r\n",
+        "raw_objects": 1876,
+        "camera": [
+          "976",
+          "793"
+        ],
+        "movement": {
+          "sid": 15000,
+          "from": [
+            "94",
+            "108"
+          ],
+          "to": [
+            "90",
+            "108"
+          ],
+          "game_before": "0.359",
+          "game_after": "51.546",
+          "inputPipeline": {
+            "selectionMode": 5,
+            "loginPhase": 14,
+            "receivedBefore": 12,
+            "receivedAfter": 13,
+            "newTypes": [
+              64
+            ]
+          }
+        },
+        "passed": true
+      }
+    ],
+    "originals_unchanged": true
+  },
+  "logSha256": {
+    "extracted/goal-mission-start-client-20261018-build1.log": "b7a7586daa12e4fadcf405ccf3b4e1a4e4dadceb772291eca9a5d0211e571808",
+    "extracted/goal-mission-start-client-20261018-goal-entry1.log": "8a553079fb0361b002314108e29d293c1546e67eb42e90ca78e67c67aef1aab8",
+    "extracted/goal-mission-start-client-20261018-focused-start1.log": "1454b631af5baa6be4bc4af2ca0b6f8ba8ac3fd8983f40cc9513613048a77808",
+    "extracted/goal-mission-start-client-20261018-alliance-native1.log": "02ddffb8aa3c7a779da822f311abb69abf69e72f00448edb50027fd724bd0367",
+    "extracted/goal-mission-start-client-20261018-alliance-native2.log": "48fe0fee5f66fea8c9f02b8e74352094d6af2f72df873ef05219877f0ba4a74a",
+    "extracted/goal-mission-start-client-20261018-build2.log": "021daa4393b5fc92f60dfa35f1e9268f189631fe56810afd6ae4c62be1c621fe",
+    "extracted/goal-mission-start-client-20261018-demo-entry1.log": "b3d92ee030ce2d2b7627863d269ae5f5a2a15eabd7074b6cbd9a792e38323945",
+    "extracted/goal-mission-start-client-20261018-focused-native1.log": "f1910e7881a8632657254863d4e6943ed235494784a8fec7ecc2758a5a6c31a1",
+    "extracted/goal-mission-start-client-20261018-focused-login1.log": "6205759a3cda20acebab74d901d0fdf72de466298b961ba5a420e9b8503deb63",
+    "extracted/goal-mission-start-client-20261018-build3.log": "db2a9c71a2b66588d0c78cb7068fef58e470b061eb3ee65a858192ae6579d15b",
+    "extracted/goal-mission-start-client-20261018-demo-entry2.log": "f45313b29108982e4a239d98e3ead93e7b8f12b5f12659f9106f65ef185d5d75",
+    "extracted/goal-mission-start-client-20261018-build4.log": "68daf5268753a6f0253917d033a76282e07803e3b45f8c1951a34f7cbc6a3d34",
+    "extracted/goal-mission-start-client-20261018-focused-native2.log": "98883240baf51974ccc1c7fc4581b6b162a85d84dbf52f5595f1877848950c1f",
+    "extracted/goal-mission-start-client-20261018-focused-login2.log": "b493f5dfac518ad463e0efe07c8809b398615726788db9703742b621681cd1ae",
+    "extracted/goal-mission-start-client-20261018-ctest1.log": "3e82b2ca2998d0ede2d01b4a02a1389eef36d1388395d1b436ec91b2b77d7af6",
+    "extracted/goal-mission-start-client-20261018-audit1.log": "baa9602c5b54fc8984833989f8130891ac5069ea818d871310a6e1b453b88412",
+    "extracted/goal-mission-start-client-20261018-goal-entry2.log": "45c1eee9aa0a6dda3519fe8ac4fcf426bf94132bb199d97050b9cc54ac53e578",
+    "extracted/goal-mission-start-client-20261018-entry1.log": "31c0b9025401c81fbfd80e43203d9e7030ab8588a019e22710f6bfc7c3a5cfae",
+    "extracted/goal-mission-start-client-20261018-LastTest.log": "cc907755db4f1b6e6f68e6c3590e0f8fe243b2f20e49cf57f185ce7db86b1f50",
+    "extracted/goal-mission-start-client-20261018-verify-final.json": "ae80efb1cced0fa78a3cb233c358cc44c36b2bab7221c5d6b1cfaa520e25dc99",
+    "extracted/goal-mission-start-client-20261018-pin-updates.json": "c4cd41564b3cb165228e4f94913b0cac153089c06a753afa9f1148db70e5d163",
+    "extracted/goal-mission-start-client-20261018-alliance-freeze.json": "4847efda6243e0c23afcdf431b38a526bc46bd39b0607fefeab8ba763cd1f610",
+    "extracted/goal-mission-start-client-20261018-sources.json": "f7932745d62dc90cffaff7a1b47f9683477000b56a74ffeed76f8304598359d8"
+  },
+  "observationSha256": {
+    "extracted/goal-mission-start-client-20261018-demo-entry2/DemoStormRages/after.bmp": "51bab20936094e3fb33d635ce6ac937e24750bc3b55d6b59499b1f5cb591880e",
+    "extracted/goal-mission-start-client-20261018-demo-entry2/DemoStormRages/started.bmp": "63b6d9bea43846c53324abeab05573fc4b86396d4dfa55c268afe572d4160216",
+    "extracted/goal-mission-start-client-20261018-demo-entry2/DemoStormRages/states.tsv": "e6f2252bf0430f74ff69629e79b905455a1d91edb30b1d98e00a59b0f18448a5",
+    "extracted/goal-mission-start-client-20261018-demo-entry2/DemoStormRages/stderr.log": "a4f8d401477aa5da1fb7728e68bebda2720234b1357719f069b890be12b2e727",
+    "extracted/goal-mission-start-client-20261018-demo-entry2/DemoStormRages/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-mission-start-client-20261018-demo-entry2/DemoStormRages/steps.tsv": "5604669e211007a8d787b49378f5b48a0e05ea912facdd5ece5826c1d73d49cd",
+    "extracted/goal-mission-start-client-20261018-demo-entry2/DissolvedAlliance/after.bmp": "e77cd4085bc029aa4e2829aa52f4c6459356603d11dd288317f57de0b6e406d1",
+    "extracted/goal-mission-start-client-20261018-demo-entry2/DissolvedAlliance/started.bmp": "fbd72d3a318798945d36cee7b2c1e61c4319ca3733a97f0a70dc0a6deeea3990",
+    "extracted/goal-mission-start-client-20261018-demo-entry2/DissolvedAlliance/states.tsv": "05c648334e3e93bae13ea2dd6c167941f1a8794e3ec0fe1ddc062ccfacdae18c",
+    "extracted/goal-mission-start-client-20261018-demo-entry2/DissolvedAlliance/stderr.log": "a4f8d401477aa5da1fb7728e68bebda2720234b1357719f069b890be12b2e727",
+    "extracted/goal-mission-start-client-20261018-demo-entry2/DissolvedAlliance/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-mission-start-client-20261018-demo-entry2/DissolvedAlliance/steps.tsv": "d1c3fb3090bdba39991c2e5fd0d9f2a91b3bbf928847f7e7822ea93030b52699",
+    "extracted/goal-mission-start-client-20261018-demo-entry2/GuardMyBack/after.bmp": "814c39da37decd36f181aba5301a76521f0b1b229edf9bbfbdde87b0075a8ba6",
+    "extracted/goal-mission-start-client-20261018-demo-entry2/GuardMyBack/started.bmp": "ef433e4ca884a0ff72a51e003be4a67fd43f3ec453502bf3d811b5d36d452715",
+    "extracted/goal-mission-start-client-20261018-demo-entry2/GuardMyBack/states.tsv": "056322fb35c689b2e106ea47aa7dd98ae8c71e627588fe0b668a97aa376b32c5",
+    "extracted/goal-mission-start-client-20261018-demo-entry2/GuardMyBack/stderr.log": "a4f8d401477aa5da1fb7728e68bebda2720234b1357719f069b890be12b2e727",
+    "extracted/goal-mission-start-client-20261018-demo-entry2/GuardMyBack/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-mission-start-client-20261018-demo-entry2/GuardMyBack/steps.tsv": "ade25d1da09e286278c0438e4a51d93325d2e0f9d4f0a896ac73c5abd9a2e16d",
+    "extracted/goal-mission-start-client-20261018-demo-entry2/results.json": "8346bb4280ab9bf6ae7d9723dab848c8038c54110d69a3bf4e34237ee5f51700",
+    "extracted/goal-mission-start-client-20261018-entry1/masterofwhirligigs/briefing.bmp": "6618c2e9c9ca6abaedaa74a66d4d187c8babd83d18e7318c7cefb715039e582b",
+    "extracted/goal-mission-start-client-20261018-entry1/masterofwhirligigs/mission.bmp": "2e803812380677af65e2b70afe72c4f585a05c58becd37fa62da3bd549fb0526",
+    "extracted/goal-mission-start-client-20261018-entry1/masterofwhirligigs/result.json": "46d06cb4ad919e34ef85014fbb06e4970740aa63b21cd7d81f49fa2cfeadc516",
+    "extracted/goal-mission-start-client-20261018-entry1/masterofwhirligigs/states.tsv": "41ac17a782dc6432a6e42b7320bd3e854c108a1deb5c8366bd07eba4086c2a95",
+    "extracted/goal-mission-start-client-20261018-entry1/masterofwhirligigs/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-mission-start-client-20261018-entry1/masterofwhirligigs/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-mission-start-client-20261018-entry1/masterofwhirligigs/steps.tsv": "8caf3afa0b4d7de777e2d61f8020e67d7fb6b77460cdd927e6a50f169faf418d",
+    "extracted/goal-mission-start-client-20261018-entry1/results.json": "117ce4c1844a54f773b298c4c49008870a33b64c8d864fbe901e8a6015cfeee2",
+    "extracted/goal-mission-start-client-20261018-entry1/thewarbegins-movement/after.bmp": "db5c3cbde3cf59c2d7f93bb91add059e4cf90b1edda5310443428f8e49d156f6",
+    "extracted/goal-mission-start-client-20261018-entry1/thewarbegins-movement/briefing.bmp": "3020dec480b97b3a4fecb8980450b6393bc80b35a52800a82e9598e0c587ebdc",
+    "extracted/goal-mission-start-client-20261018-entry1/thewarbegins-movement/mission.bmp": "ceba3a78de328aaba0462142f4774d401981a613827b9ae14ed8c6c9ef8c2355",
+    "extracted/goal-mission-start-client-20261018-entry1/thewarbegins-movement/result.json": "7952a99fe509d20ac9b49cb404abda37c85412806989c09eb1f77f62689dc2ce",
+    "extracted/goal-mission-start-client-20261018-entry1/thewarbegins-movement/states.tsv": "cc4157e614ced662230e0542832c6f0914c46189e2fcf610957ca36541008cc1",
+    "extracted/goal-mission-start-client-20261018-entry1/thewarbegins-movement/stderr.log": "197c308ea9fa1056d6a787adce92efe2af608eb0e085ddb7de3c75ef3b89af2e",
+    "extracted/goal-mission-start-client-20261018-entry1/thewarbegins-movement/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-mission-start-client-20261018-entry1/thewarbegins-movement/steps.tsv": "6aad838dc041023da38548b159f8d3707174ee848cc8e5f78e3761c3ce3dc5ed",
+    "extracted/goal-mission-start-client-20261018-entry1/thewarbegins/briefing.bmp": "04b59107388197493382f9e3ced25e66e74beec4ae84e010d5831e3fd78bb979",
+    "extracted/goal-mission-start-client-20261018-entry1/thewarbegins/mission.bmp": "efb8f7ce36864396bbccd5be2f3ec7f4aebc6b43882951bb0b9a8048914691df",
+    "extracted/goal-mission-start-client-20261018-entry1/thewarbegins/result.json": "1cbb92ca30b81787369897df0032293bb9e0e2ffd977e2fbfa3f10b35c633d91",
+    "extracted/goal-mission-start-client-20261018-entry1/thewarbegins/states.tsv": "e3ca6b4f653b9e64a3d331e3be488cba5588f0dbb20254836ba2c1240f56bdab",
+    "extracted/goal-mission-start-client-20261018-entry1/thewarbegins/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-mission-start-client-20261018-entry1/thewarbegins/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-mission-start-client-20261018-entry1/thewarbegins/steps.tsv": "1e3ff0a4c00afd226394ebb316473b4c4377bb911d56e0f9e2538c3bc5c7f725",
+    "extracted/goal-mission-start-client-20261018-entry1/tutorial1/briefing.bmp": "bd35bf712750ed065fec67f2457ffa142d0e9edede220c9b0a01b1700dbadf57",
+    "extracted/goal-mission-start-client-20261018-entry1/tutorial1/result.json": "f06c3aecd5952712d3512a17f89c96963a30970e0bea81feb1994fc618f10489",
+    "extracted/goal-mission-start-client-20261018-entry1/tutorial1/states.tsv": "4b6b5da495e62a6a7f375f7ed6d66ea94fa2caa5efea43f4c267db50f8c4c0dc",
+    "extracted/goal-mission-start-client-20261018-entry1/tutorial1/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-mission-start-client-20261018-entry1/tutorial1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-mission-start-client-20261018-entry1/tutorial1/steps.tsv": "97b3bbc4fc0fcd871a0862b63b289832eaefe558dd869f39ded34702cb0d6024",
+    "extracted/goal-mission-start-client-20261018-entry1/tutorial2/briefing.bmp": "c36912272e9175e1357e4f8c0f47ee1bf9ed6a5c0f61f4a4637d3bf76b5907a9",
+    "extracted/goal-mission-start-client-20261018-entry1/tutorial2/result.json": "7b57f8750f676c74939e257273c1cb8bcff2f30a7e621b32a6840e43072b4566",
+    "extracted/goal-mission-start-client-20261018-entry1/tutorial2/states.tsv": "69b802023ef710ddfba83e4e051504f4af33491da7a656b66b464faab8001353",
+    "extracted/goal-mission-start-client-20261018-entry1/tutorial2/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-mission-start-client-20261018-entry1/tutorial2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-mission-start-client-20261018-entry1/tutorial2/steps.tsv": "f6501708632f45761cc2dac9d0b1387f0f7a1f273ccc600afee7d8e75f2fc421",
+    "extracted/goal-mission-start-client-20261018-entry1/tutorial3/briefing.bmp": "080d9d77b2a81122d074c86b2cb11a60857753d35c6fe10f8b4b1a047d20206a",
+    "extracted/goal-mission-start-client-20261018-entry1/tutorial3/result.json": "cc3cd6e6b26342e59ee0995ba588f3e588a8d124fa5d866a7a6d52e6ea71a9ed",
+    "extracted/goal-mission-start-client-20261018-entry1/tutorial3/states.tsv": "2b5f1637b2d8ad3267c5e5a43c37d2836ae6c97e73b81536015aaa45bb7da563",
+    "extracted/goal-mission-start-client-20261018-entry1/tutorial3/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-mission-start-client-20261018-entry1/tutorial3/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-mission-start-client-20261018-entry1/tutorial3/steps.tsv": "07c2ca431e552ade18a6791d9a3055335c141d032d2062d0a3ccbd8dde5caa1b",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/demostormrages/0/current.bmp": "1dcee04851b3e762ed3620c91629b0f834646352cf0b62c17c6eb58d5ab720b2",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/demostormrages/0/states.tsv": "c88a95786dc70710feb2636206dc7d4a994b4e6ce04d5dfa8e296a49a0c43312",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/demostormrages/0/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/demostormrages/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/demostormrages/0/steps.tsv": "b9d8050bcee4665affd4e1b46dc7abae2af4c13f302d5f1853ce6a4b408a5ceb",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/dissolvedalliance/0/current.bmp": "996c0a3409734e5c486f0316c5cf6a0870e306d19a8ca189b6d2cb1b5e2ada9a",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/dissolvedalliance/0/states.tsv": "69e5bd49787c146e43411e5495375f844d5055c4ddd06b9ea47c89710e76a3b3",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/dissolvedalliance/0/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/dissolvedalliance/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/dissolvedalliance/0/steps.tsv": "5d164180df290fc7e37ef7a35e99dbe79f80650bf6dad2901e765e7e5dbe7729",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/dissolvedalliance/1/current.bmp": "90914dc16e90f1b7d6212942887ff4276480fbd9908526a4e9b4dce3c743b4aa",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/dissolvedalliance/1/states.tsv": "d47a2eee581b71827cd55ba06a87d52ebf2715a42fad2d6360d85065613a12e5",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/dissolvedalliance/1/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/dissolvedalliance/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/dissolvedalliance/1/steps.tsv": "3aab603ebfefaa8f3be4dd8463303a6ef73cbaaca626239a8cecad2e6473e22b",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/guardmyback/0/current.bmp": "396260f0746a0dbec5869363ee28b26a31c08734612177400d7d388967d14496",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/guardmyback/0/states.tsv": "02ca1c5a17a9c240b1dd25dd542f4ca79efca313e0deeafebbd7a412cbe31ac9",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/guardmyback/0/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/guardmyback/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/guardmyback/0/steps.tsv": "64c5dfc3f3591671f1d5d47397920e96abe16e4cd6282362511e9f3b97e8600a",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/guardmyback/1/current.bmp": "b8734ac1d59553d927c78c09b5a8c9d8478f6c093455a59d5ed796506012bf9b",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/guardmyback/1/states.tsv": "2263fed91b2939bc27a464403391c6181e5a4b3d171351fa1b43af24135b5d94",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/guardmyback/1/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/guardmyback/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/guardmyback/1/steps.tsv": "dccd4d78ac21cf4b2eabba1e2e3a5fe5718be9e612d1d65917a48191b5d7e0fe",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/masterofwhirligigs/0/current.bmp": "570a592dae82bfe284a4b2600e9cbd0065e86e4c2bc4788c9c6c49644fd58d3e",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/masterofwhirligigs/0/states.tsv": "06c7e2ea305db0de9d33df52d00ccb3245c2053a4bd50b2cf63586d5705b5a38",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/masterofwhirligigs/0/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/masterofwhirligigs/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/masterofwhirligigs/0/steps.tsv": "e751d9d57b2ac4c7fa89b618543e918c79961ecb357b2ff0c56ee3088b53b9dd",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/masterofwhirligigs/1/current.bmp": "a17ce8d356fc25118dfcbbc9385eaece2cabffb62d22e6eadcced95b10b19051",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/masterofwhirligigs/1/states.tsv": "e229e1d40ece664d8f46eb0089d49cc8377860e3eb68da66268135a24bd13f03",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/masterofwhirligigs/1/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/masterofwhirligigs/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/masterofwhirligigs/1/steps.tsv": "a9aff66b61159ef4024c993f989a4e23433ed6c27b1099bd6adc0a7c723733b4",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/results.json": "a8ae5ce97a82f6d1e814633da62183b2de37688e79083ebda1a11bab5fe31734",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/thewarbegins/0/current.bmp": "d19b9d8307ed39897d51c3718d3fc117d382db6bbf27b1efa2318f4291d644ce",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/thewarbegins/0/states.tsv": "77200aa5519c3389df2203cf1de23921ce4ef1238bbe78a2e986566d0c4ef695",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/thewarbegins/0/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/thewarbegins/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/thewarbegins/0/steps.tsv": "52300dfb00d740d6508f408133549aff74ce0ddaa2ea697d603896a4c083be22",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/thewarbegins/1/current.bmp": "41a14151f069a22667a61d42eb960b52869914324b502afab673d2edaa1b51d9",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/thewarbegins/1/states.tsv": "faad231dd6241d951d2b2e31e10e49d1d2397c5e48b56f599effa92863e0555d",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/thewarbegins/1/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/thewarbegins/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/thewarbegins/1/steps.tsv": "60ddcb9cf66e42baa1e6b34d90224ba64182efd080a0a9ac3b277301ff141880",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial1/0/current.bmp": "5da9fcae01806006859b677f9e58c6e90e912b87cd1dc376b15ea8db902290ac",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial1/0/states.tsv": "be5af07c7e5f0bc7c43e619eeb67e52bc34e8258a8b2cb114b2c605df2a05131",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial1/0/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial1/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial1/0/steps.tsv": "fda2d41bbe24e29d5395fff4cbb17824283080c29f84f392c43ad24570d6cf29",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial1/1/current.bmp": "771be04a4488f529eef4cf60d49be5c495e51fea3be9735800e866c48811746e",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial1/1/states.tsv": "abe6e20d73cb94cd96aeffd5a64b60a1bcd5d01b71712b4666e799ccc87f55a5",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial1/1/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial1/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial1/1/steps.tsv": "47107444c6dc176e9ebd198a971a64b6ef2c33750dcb5bc08c7b33b18cffe63c",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial1/2/current.bmp": "b1c58fde62f72cb6b888a268ce71f597b8b848c2553954041b36ea1390b330fa",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial1/2/states.tsv": "b62ff578c96c9294267cc393d1e503ebca1f066a5f7bd13b82cccf62bc46f83b",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial1/2/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial1/2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial1/2/steps.tsv": "4d57ea32420c615b1347f10c7af9e0417b7f4dc849a7b370e94da1e04b6ea0b1",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial2/0/current.bmp": "2b5696cdf05653d709c9da0f212ba8a14d21a402292056d2ff9ef3d225707943",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial2/0/states.tsv": "6c08063de9a5e08e0237b14643dc5cf4dd2810e8f60276a950d45932a572af90",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial2/0/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial2/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial2/0/steps.tsv": "15514f7600886015c8df0a98e2e66a2e00fe1f09e2f7bec832f982bcdffa8913",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial2/1/current.bmp": "382a3d0cfe7309a136afab090ed6f77ad94dc770a61bde33d7486c35bfcaeb04",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial2/1/states.tsv": "d4d89caf1c4bc96b52cb9fc53c64b9eaedfa5e5bebb9dbaf42f9404ed24c241b",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial2/1/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial2/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial2/1/steps.tsv": "1cd88248f432fe4d0d8cd9493578ef870e622bff97092d176f6855364dca013a",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial2/2/current.bmp": "15e868ff094bd2fcf33337981b51df8cc812c6a9faa909646036eadc7fc1a6a6",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial2/2/states.tsv": "7c4817b486b06ec8293e8c35ff496095262a1569243c121152d06dafd2387e5f",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial2/2/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial2/2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial2/2/steps.tsv": "7c57fd370b6cddaa581b9e64b167a14a47c3bf93a6de0a43dce4544268b78170",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial2/3/current.bmp": "8e30786e5a98a5398c0365b75758f034125d3784db865f2d02fd004cbcf8a9e8",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial2/3/states.tsv": "45fedcfa580949891d4d4e34037c5cd9f49878b87e0c93cab7f638a87cb0f2e4",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial2/3/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial2/3/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial2/3/steps.tsv": "576ed0bc5c82a82b26b2b792ab36bec1863eb1be65d411d5d0bbde01502fd2bb",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial3/0/current.bmp": "ef70f93c14b6aaf5c3c2fe4e726f3dba904202eddff9a9f82270a6a574826886",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial3/0/states.tsv": "8d3a0e6aca2e4113889b6424b46c00a85ac35b9053904b1a3fb1fba159914850",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial3/0/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial3/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial3/0/steps.tsv": "fce4723bb60644baa38d5e7c9d74256909b2059cf3a903f10f977409c92134d2",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial3/1/current.bmp": "db4f594369b8e7d34f7531fab1a1e50248b78da4d51099d92086ed8be2e1b48b",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial3/1/states.tsv": "2a4614aa4d8d01d7f5c1d5f83c7ef1eaefb369c4d9396b4ae60f6de81f0c43b4",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial3/1/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial3/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial3/1/steps.tsv": "4fd3866299e3afa99d060b2889f2520e717fb10d9afb0eac53ec46500af124df",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial3/2/current.bmp": "4b3d272fa8bfd54266d6a706bae8ec24b28268237a45d2ff75cc6766c4b3460b",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial3/2/states.tsv": "b98e198b8fb881406281c6894828950fc6daa3fa307e272d2e0815aae74bdeb8",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial3/2/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial3/2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial3/2/steps.tsv": "fe0442a91c762551b724e5bce67585fba417a56d1d9b9cf3c0b632c9db92b20a",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial4/0/current.bmp": "e6b48144f891e0d3453fa951ece2cf8e39088dcc3b785d641ff32e890b3725e0",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial4/0/states.tsv": "66f05f074bf8dd7b185ba36379fc642b4e656ecefc8c8268991b8070056bf2ef",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial4/0/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial4/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial4/0/steps.tsv": "d89ee71dbfcb5a6c17ba1c5843887b887650dc2a2481f6b725955676a8c4b238",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial4/1/current.bmp": "b5dcaddfe76e6b3eba5c2a660ec43a3571e0710c12418d5ff167d1841b5219a1",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial4/1/states.tsv": "e9d0152c113911d31f183a312cc250eec9147d32b4d1291958c55dc85cb0a413",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial4/1/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial4/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial4/1/steps.tsv": "f29fe60b6392407744b635370cb91c86eae09601f015a57c15b648cfa584a765",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial4/2/current.bmp": "718cb845b15737bb54e72d1ae204d84aa3ec76ddf9c79736c167e3ce813aabbc",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial4/2/states.tsv": "0d6812c931cb8b8d8e0d46ac893613a69725fcde0c1cda9f574dffcac8986dbb",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial4/2/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial4/2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial4/2/steps.tsv": "6839b9de2b9d9eed4eba668406098d6823133aeb1c42d29a816c2685833a5906",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial5/0/current.bmp": "4f80e15b64191d662d4bc2b9faf9c7796e33c9c8c9f68212cb4b1d45907c8e94",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial5/0/states.tsv": "668c0bdccf55f3b26c1cffc805508868062f7c9a4a64925def42cc9ba4fbf614",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial5/0/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial5/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial5/0/steps.tsv": "52c40185552672b98d1ed84486904cb95ddcdfc5f85a184f087af05561e6ee9c",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial5/1/current.bmp": "26a7c77a08eb37c54bd910e42e107b917e10e427f0c947e67040d5f76a455c58",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial5/1/states.tsv": "19c0256d49a87401610e1a63519da76fb99fb385351e5d3ca42aa100b5cf8834",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial5/1/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial5/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial5/1/steps.tsv": "b6bafc6138f3c803fdc81942b349d6ee267f46894a7c519f36945a7dd2e17140",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial5/2/current.bmp": "c84664a24df7301473a4d3bad8583660aabd14fc4e7494097b7f910150bcc190",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial5/2/states.tsv": "92c59cf9c70031ba7adb3baea84c25fa9cf9fe445270aa977ff05107c35dd3df",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial5/2/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial5/2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial5/2/steps.tsv": "38b506957202504cd094818e96ef8945c444307ce757c4c7f1493e89c86f0b5d",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial6/0/current.bmp": "1deccac61818ae078a749b988b0c0c58b1e48c9eb16cdd203013c42ec20b8fdc",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial6/0/states.tsv": "9dcb76826ebdcaa43c5f6d9d2c8b5ebe7c24a237008829c6a185b8568a3dc93a",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial6/0/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial6/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial6/0/steps.tsv": "4e66449dfa9f046e7df6d5e35f1c3955e643be0b8fe16259fe451175f3e086ef",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial6/1/current.bmp": "12643d143fd24c8bc6273cfa9dcd4792129444aad34132e8e7097325135cf9cd",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial6/1/states.tsv": "d4c06033e01221058c4620aa5ce6d78b191eef30e09c741880e6721ac2ed86b4",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial6/1/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial6/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial6/1/steps.tsv": "5d4382f179a40f4a1cc7c5cfe1433f29c8a856ecc43a174f81843795515b87e9",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial6/2/current.bmp": "239cab9c1763ff678e10810e272167fad0d24f293057bcf3585ea3241c4892b3",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial6/2/states.tsv": "8c2f3b2d78f3f0081cc855231071b6719d1269f0ac2a81b8acf3bfee4a792886",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial6/2/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial6/2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial6/2/steps.tsv": "8e5c23424825545f06a255c9b0d466204536eb88599547fbaa00cb39e7c01d3c",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial6/3/current.bmp": "d8e25686d84efe731b804fcf109881dd3d569b4714c638122dda4286f8fdf447",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial6/3/states.tsv": "f56997d6057bf3146a331870029f93854f5be57fbe6c235745127d973b18a920",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial6/3/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial6/3/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial6/3/steps.tsv": "5a5855c7842312f8e0649dfb1289aa86442b5c9648a72f690ab486c2fac89b7d",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial6/4/current.bmp": "e4f1e66d38761c3ee2c19f43e138926f063dd0aaf61731fa5b8c994a9592584c",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial6/4/states.tsv": "8aec07fdfd9599887a60fd40ffd02d6d5c43b052b61cd08dd0010e1b9547ffc9",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial6/4/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial6/4/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-mission-start-client-20261018-goal-entry2/tutorial6/4/steps.tsv": "882fe13202b99f98ee4e23ef39f7239040c3d6e536b14a43f50e0948287bf984"
+  },
+  "retainedFailures": [
+    "goal-entry1의GuardMyBack 실제 동맹 전송 누락",
+    "native1의과거분리export경로없음→현재전체정밀범위사용/native2동결",
+    "첫native C++검사의헤더행파싱실패/범위접근→헤더건너뜀과조기종료",
+    "새로그인/Start검사의AI할당입력누락/바이트변환경고/람다인자오류",
+    "demo-entry1의1100프레임만으로15초walltime경과가정오류→원본sleepPerLoop16으로실제대기"
+  ],
+  "remaining": [
+    "실제 객체/Construct 메뉴·원본 명령 큐·건설 커서·배치/생산/경제",
+    "현재 FrameGate/Guide/Outcome의 실제 자동 연결과 전략AI/채취 자연왕복",
+    "희생 조건/의식·운반물 내려놓기·진단 가상서식·다중선택/수정키/전체 단축키",
+    "11단계 자연완주/승패/저장/다음미션/기존 게임 전체 동일성"
+  ]
+}

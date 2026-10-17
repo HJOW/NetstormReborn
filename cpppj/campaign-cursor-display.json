@@ -9,7 +9,7 @@
   },
   "currentSources": {
     "cpppj/src/CMakeLists.txt": "aeb81f738c13d031ff454bbf5ae54eac3b00529b9201cc01b8265a1fdfb5fa30",
-    "cpppj/src/client/GameWorld.cpp": "72d3101d85af6dd73b72abe04f64922d8effa02661f90c7a2c8dad2b97eb3c5b",
+    "cpppj/src/client/GameWorld.cpp": "9f988b9780dd80b292b8ec48e147eb56b5302a5abd5ac79d2edea803f1f5f80e",
     "cpppj/src/client/OwnerColorMaps.cpp": "1dc23bab259f2bdbb6e88d7e12c4427a50f76304c8aa11cc6309800d0da7e620",
     "cpppj/src/client/OwnerColorMaps.h": "aed5d31073e2015b4d0773eef376a302d122c024a04f90533d0882fd28121abf",
     "cpppj/src/client/PreviewCollection.cpp": "6a067ab897f31fd8bc9c046f91ac40f15c815563b74c26757bf023a9eaf3255c",
@@ -20,12 +20,12 @@
     "cpppj/src/client/RawCampaignCursor.h": "0c4aa17d5acf5cd03fd9d651c33de2fedd115c622e9f75f1c469edb462c775ce",
     "cpppj/src/client/RawCampaignCursorDisplay.cpp": "8e3f58a74524806c727a1ea81ed725495a22fc41270a77fd6457342925a80117",
     "cpppj/src/client/RawCampaignCursorDisplay.h": "e30e775cf87189bfa1dfeb8a26075decd485dea5e2d366056df8579dcc2f5b73",
-    "cpppj/src/client/RawCampaignSession.cpp": "f971993c58c43b11b5a04f2f1f0688c892268e9ed4b8528c079d8f2db32f6bae",
+    "cpppj/src/client/RawCampaignSession.cpp": "841cbcbea52286c3193827e4aca8ecdc048f0517ebdcc2bcb86ec6ea6d8e0298",
     "cpppj/src/client/Renderer.cpp": "5a36413dc3cf1bfa2c12a57823dc0c44a37ad3f01952ff14f17fdb0ab5b1ff11",
     "cpppj/src/client/Renderer.h": "b6bcd1c739f94173876bb8f9ecbbf2ae34bc48bbe092c6a1bad3454f3a950f55",
-    "cpppj/src/client/UberGump.cpp": "6e2e48d717b5893b423d5d3c8de39c8342cc73b00d06646d6aa776d80469cb06",
-    "cpppj/tests/CMakeLists.txt": "e81b2e494a8bf03b255b76f0e9c001344dcdf6ace39789618a613555530e6d62",
-    "cpppj/tests/CampaignSessionTests.cpp": "d63eb5f5b31dec45d99809dd990fb2da3d1b298f5dd632037d19f23814a094b7",
+    "cpppj/src/client/UberGump.cpp": "909f1c47c9514892307935807e9c75c99df97051fe4802c46565c74b0964bb7e",
+    "cpppj/tests/CMakeLists.txt": "a9d9e8fb94823089dd875a68aa672569e84ace4ab3c7af9b92c573abffd0e7ae",
+    "cpppj/tests/CampaignSessionTests.cpp": "9626f493b99885097409123e0aaf054c7138a413cdcf767ea4ceb1dc714bdf79",
     "cpppj/tests/PreviewColorMapsTests.cpp": "5019672dc1589cace9bb92690be4bf9786ab8257770794cb51fdff87cf937311",
     "cpppj/tests/RendererTests.cpp": "fb868b30dcd882c0c2add47d3a66434e4cb34bf514f4ce8a7102a0a3ed2995c8"
   },
@@ -915,6 +915,43 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "23484e24e91f574fb3d92ce3f2199fab52a8c04a67a7aef2f5143d3dc20bfaad",
           "current": "d63eb5f5b31dec45d99809dd990fb2da3d1b298f5dd632037d19f23814a094b7"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 166,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/GameWorld.cpp",
+          "previous": "72d3101d85af6dd73b72abe04f64922d8effa02661f90c7a2c8dad2b97eb3c5b",
+          "current": "9f988b9780dd80b292b8ec48e147eb56b5302a5abd5ac79d2edea803f1f5f80e"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "f971993c58c43b11b5a04f2f1f0688c892268e9ed4b8528c079d8f2db32f6bae",
+          "current": "841cbcbea52286c3193827e4aca8ecdc048f0517ebdcc2bcb86ec6ea6d8e0298"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/UberGump.cpp",
+          "previous": "6e2e48d717b5893b423d5d3c8de39c8342cc73b00d06646d6aa776d80469cb06",
+          "current": "909f1c47c9514892307935807e9c75c99df97051fe4802c46565c74b0964bb7e"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "e81b2e494a8bf03b255b76f0e9c001344dcdf6ace39789618a613555530e6d62",
+          "current": "a9d9e8fb94823089dd875a68aa672569e84ace4ab3c7af9b92c573abffd0e7ae"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "d63eb5f5b31dec45d99809dd990fb2da3d1b298f5dd632037d19f23814a094b7",
+          "current": "9626f493b99885097409123e0aaf054c7138a413cdcf767ea4ceb1dc714bdf79"
         }
       ]
     }

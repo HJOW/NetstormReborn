@@ -67,7 +67,7 @@ private:
     // 대기 중인 명령을 실행한다. 지원하지 않는 명령은 실제 동작으로 가장하지 않는다.
     void Execute(const DialogAction& action);
     // 미션 스크립트·요새를 먼저 검증하고 Loading→Briefing으로 넘긴다.
-    void BeginMission(std::string name);
+    void BeginMission(std::string name,std::uint32_t demo=0);
     // 이미 읽힌 원본 브리핑 섹션 이름을 순서대로 연다.
     void AdvanceBriefing();
     // 현재 미션 자원을 해제하고 기본 메뉴로 돌아간다.
@@ -109,6 +109,9 @@ private:
     std::vector<DialogAction> actions_;
     // mission_: 미션 이름에 맞는 스크립트를 읽고 섹션을 선택하는 처리기 (std::unique_ptr<MissionScript>).
     std::unique_ptr<MissionScript> mission_;
+    struct MissionRuntime; // 같은 미션의 Start/프레임 게이트 상태와 실제 연결을 고정 주소로 소유한다.
+    std::unique_ptr<MissionRuntime> missionRuntime_; // 월드와 스크립트보다 먼저 해제한다.
+    std::uint32_t commandGump_{}; // 원본00548740의 초기0이다. 현재 Client는 이 전용 Gump를 아직 생성하지 않는다.
     // world_: 미션 지도와 객체 상태를 갱신하고 월드 그림을 수집하는 프로세스 (GameWorld).
     GameWorld* world_{};
     // worldProcess_: 월드 프로세스.

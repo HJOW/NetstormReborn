@@ -1,5 +1,7 @@
 // 기존 원본 몸체의 단일 저장소 조립을 실제 클라이언트 세션이 소유한다.
 #include "client/RawCampaignSession.h"
+#include "o/RawMissionStart.h"
+#include "o/RawMissionAiSettings.h"
 #include "client/RawCampaignCursor.h"
 #include "client/PriestPlacementAssets.h"
 #include "client/RawCampaignGunQueries.h"
@@ -178,6 +180,7 @@ struct RawCampaignSession::Impl {
     struct Login; //같은실제원본로그인과현재전송의고정주소 소유자다.
     std::shared_ptr<Login> login; //불완전타입의수명은실제모듈구성뒤에반납한다.
     std::function<void(std::int32_t,std::int32_t)> connectionAssign; //현재로컬pending 재배치를 실제참여모듈에연결한다.
+    std::function<void(std::uint32_t,std::uint32_t,std::uint32_t)> connectionAlliance; // 실제 동맹 요청을 같은 로그인 전송에 연결한다.
     CarrierInputState inputState; //같은 Carrier.cpp 커서/희생/진단 전역이다.
     std::array<CarrierInputType,188> inputAudio{}; //현재 TYPE+78/+80의 음향 핸들이다.
     CarrierDropPointState inputDropState; //같은 지도 한계/실패점을 기존 위치 계산기에 공급한다.
@@ -221,6 +224,8 @@ struct RawCampaignSession::Impl {
     std::uint32_t aiExcludedType{133},aiMissionFallback{}; // 실제 sunWalker 분류 제외 번호와 현재 getter를 사용할 때 읽지 않는 값형 호환 저장소다.
     bool loaded{}; // 같은 실제 저장 부모와 이동 설치가 정상 종료했을 때만 AI 생성 요청을 허용한다.
     MissionOutcomeState outcomeState; // 미션 종료까지 유지하는43개 사건 잠금이며 입력 배열은 현재 원문 연결로 대체한다.
+    MissionStartGlobals missionStart; // 실제 Start가 쓰는 미션 제한 전역의 유일한 저장소다.
+    MissionAiSettingsState missionAiSettings; // 실제600BYTE 설정 초기화가 읽는 현재 기본 전역이다.
     std::unique_ptr<RawRegionOwner> regionOwner; // 동일 Pool/hash0에서 현재 지면 소유자 BYTE를 읽는다.
     std::unique_ptr<RawMissionOutcome> outcome; // 같은 Player9/동맹/사제/HP/영역의 현재 입력을 매 조회 읽는다.
     FortFinishOwnerState finishState; // 실제 미션 chaffMode의 자연 반환 조건이다.
@@ -1358,6 +1363,11 @@ struct RawCampaignSession::Impl {
         auto hooks=services.ai.participation; // brain 수명은 외부 관찰 callback에 맡기지 않는다.
         const auto otherAssign=hooks.assignConnection; //독립검사의실제전송경계는로컬연결을선택하지않을때유지한다.
         hooks.assignConnection=[this,otherAssign](std::int32_t pending,std::int32_t owner) { if (connectionAssign) connectionAssign(pending,owner);else { if (!otherAssign) throw std::logic_error("실제로그인 연결재배치 미연결");otherAssign(pending,owner); } };
+        const auto otherAlliance=hooks.sendAlliance; // 독립 검사의 명시 전송은 실제 로컬 로그인이 없을 때 유지한다.
+        hooks.sendAlliance=[this,otherAlliance](std::uint32_t target,std::uint32_t owner,std::uint32_t mask) {
+            if (connectionAlliance) connectionAlliance(target,owner,mask);
+            else { if (!otherAlliance) throw std::logic_error("실제 동맹 요청 전송 미연결");otherAlliance(target,owner,mask); }
+        };
         hooks.destructBrain=[this](std::uint32_t token) { aiConstructor->Destruct(token); };
         hooks.freeBrain=[this](std::uint32_t token) { aiConstructor->FreeBody(token); };
         participation=std::make_unique<RawPlayerParticipation>(core.pool.Edition(),players,alliances,hiddenPlayers,participationState,std::move(hooks));
@@ -1868,6 +1878,10 @@ std::uint32_t RawCampaignSession::Editor() const { return impl_->globals.editor;
 float RawCampaignSession::Sp(std::uint32_t owner) const { return std::bit_cast<float>(impl_->sp.Get(owner)); }
 // Set의 실제 난수 잡음 쓰기도 같은 저장소/게임 난수를 사용한다.
 void RawCampaignSession::SetSp(std::uint32_t owner,float value) { impl_->sp.Set(owner,std::bit_cast<std::uint32_t>(value)); }
+// 회수/승천/포획 등의 후속 소비자가 Start의 실제 쓰기를 복사 없이 읽는다.
+MissionStartGlobals& RawCampaignSession::MissionStartSettings() { return impl_->missionStart; }
+// 별도 임시 기본값을 만들지 않고 같은 세션의 AI 설정 전역을 빌린다.
+MissionAiSettingsState& RawCampaignSession::MissionAiSettings() { return impl_->missionAiSettings; }
 // 후속 소비자는 현재 같은 원문 배열의 주소와 offset을 검사할 수 있다.
 const ScrambledSpStore& RawCampaignSession::SpStore() const { return impl_->sp; }
 // 원본 로그인/AI 초기화와 승패 판정은 같은9 Player 바이트를 공유한다.

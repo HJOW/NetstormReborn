@@ -90,11 +90,11 @@ public:
     RawSurfaceWorld& Surfaces();
     // Client 명령/메뉴는 표시와 같은 실제 Session을 빌린다. 이전 값형 어댑터에서의 혼용은 거부한다.
     RawCampaignSession& Session();
+    // 원본 미션 Start와 로더가 같은 현재 카메라 선택/표시 갱신을 사용한다.
+    void ResetCampaignCamera();
 private:
     // 현재 실제 슬롯에서 읽기 전용 UI 뷰만 갱신하며 별도 게임 상태를 진행하지 않는다.
     void RefreshCampaignObjects();
-    // 원본 로더의 Graph 재구성 뒤 현재 raw 풀에서 초기 카메라를 선택하여 실제 표시 원점을 갱신한다.
-    void ResetCampaignCamera();
     // 월드 지형 타일의 타입·프레임·좌표·소유자·깊이이다.
     struct Tile { /* type: 객체 종류를 구별하는 타입 자료. */ const TypeAsset* type{}; /* frame: 타입에서 사용할 그림 프레임 번호. */ std::size_t frame{}; /* x: X 좌표. */ /* y: Y 좌표. */ /* owner: 객체나 지역을 소유한 플레이어 번호. */ int x{},y{},owner{}; /* depth: 출력이나 이벤트 후보의 깊이 값. */ std::int16_t depth{}; };
     // 청크 순서의 저장 객체를 월드 좌표에 생성한다.

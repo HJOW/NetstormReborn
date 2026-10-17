@@ -36,7 +36,7 @@
 #include "o/RawEnergySupply.h"
 #include "o/RawConstructionBuilder.h"
 #include "client/RawCampaignParticles.h"
-namespace netstorm::o { class RawCarrierSteal; class RawCarrierPickup; class RawCarrierMove; class RawGemReward; } // 포획 몸체의 고정 참조만 공개한다.
+namespace netstorm::o { class RawCarrierSteal; class RawCarrierPickup; class RawCarrierMove; class RawGemReward; struct MissionStartGlobals; struct MissionAiSettingsState; } // 포획 몸체와 미션 시작 전역의 고정 참조만 공개한다.
 namespace netstorm::client {
 class RawCampaignCursor; // 세션과 같은 실제 커서/로컬 예측의 고정 주소 소유자다.
 struct CursorPlacementHooks; // 실제 커서 배치의 설명/에너지 경계만 연결할 때 사용한다.
@@ -174,6 +174,10 @@ public:
     float Sp(std::uint32_t owner) const;
     // 원본0040edb0처럼 직접 float비트만 쓴다. AddSp의 지갑/화면 갱신을 대신 호출하지 않는다.
     void SetSp(std::uint32_t owner,float value);
+    // 같은 미션의 회수·승천·포획·간헐천 설정을 Start와 후속 게임 명령이 직접 공유한다.
+    o::MissionStartGlobals& MissionStartSettings();
+    // 원본 AI 설정 기본 전역(3/2500)과 진단 상태를 같은 세션의 Start에서 사용한다.
+    o::MissionAiSettingsState& MissionAiSettings();
     // 같은 실제32×9 원문 배열/offset/추적주소를 읽기만 한다. 별도 SP 저장소를 생성하지 않는다.
     const o::ScrambledSpStore& SpStore() const;
     // 실제 로그인/AI 초기화가 사용하는 동일9 Player 원문을 빌린다. 프레임별 사본을 만들지 않는다.

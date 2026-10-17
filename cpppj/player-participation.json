@@ -31,7 +31,22 @@
     "tools/decomp_priestmenu.py": "02fcb4d010e0558e969eaf3e9c55bc21d14779d8eb147d3fc2ecbcaeca7a9c2c",
     "cpppj/src/o/RawPlayerParticipation.cpp": "039641ef6a777345d47019bdbd045d8e9ecf927070b27a41957ce72633235b8f",
     "cpppj/src/o/RawPlayerParticipation.h": "79d2b5e8f0b7f77bc32dcd59c0b2501dbc108400d4066d541086d346e65eaf27",
-    "cpppj/tests/PlayerParticipationTests.cpp": "1cafa8796c73d4c5dbe2f3edb57377415bd9f30df398ba578071f455075998bb",
+    "cpppj/tests/PlayerParticipationTests.cpp": "bc12a931238ba42474504a56c6217253173f37c43021fb31f203814f20f22e3b",
     "cpppj/tests/fixtures/player-participation-x86.tsv": "77d1e5af049d3f4e6faf591de6fc4814d4a6225d46581a7961844ca8979d8278"
-  }
+  },
+  "integration_updates": [
+    {
+      "date": "2026-10-18",
+      "unit": 166,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/sha256",
+          "path": "cpppj/tests/PlayerParticipationTests.cpp",
+          "previous": "1cafa8796c73d4c5dbe2f3edb57377415bd9f30df398ba578071f455075998bb",
+          "current": "bc12a931238ba42474504a56c6217253173f37c43021fb31f203814f20f22e3b"
+        }
+      ]
+    }
+  ]
 }

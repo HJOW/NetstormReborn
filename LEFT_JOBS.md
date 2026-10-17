@@ -1,5 +1,17 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-18 단위166 완료: 실제 미션 Start와 데모·동맹 전송 연결 (HJOW-Athlon)
+
+- [x] 기준30cc125/깨끗한트리에서AGENTS/양LEFT재독. 현재/마지막정밀디컴파일PC **HJOW-Athlon / 2026-10-16** 일치. 새디컴파일·보호원본/AGENTS/DN/DirectDraw변경·원본게임창없음. [작업기록](docs/exe/cpp-mission-start-client-20261018.md).
+- [x] 실제Client에서Start호출이없어1-1의실제SP0/기술없음을발견했다. 기존004c2b20을원본004b6dd0의음악뒤00463a40→가상+28순서로같은로그인/Script/Session에연결했다. 같은장기gate/시작상태와제한/AI기본전역·현재실제SP/기술/사제/AI/힙입력/화면/카메라다. 명령Gump초기0분기이며nonzero/세계randGeysers미연결은명시거부한다. 보호11원문은randGeysers를요청하지않는다.
+- [x] 일반MissionBegin의demo0/StartDemo의00463a00직접1기록을구별했다. 스크립트demo키로모드를추정하지않는다. 실제Demo목록/현재제목/안내/로컬AI를연결했다. 현재FrameGate/Guide/Outcome/전략AI전체자동연결은별도후속이다.
+- [x] GuardMyBack의실제시작실패가AI동맹전송누락을드러냈다. 원본3d/version1/9BYTE요청을같은로그인전송에연결하고00491220의동일수신버퍼자기bit/Player mask/방향표/현재Chat/broadcast를복원했다. 독립원문 **288입력·576정상반환·191484명령·53/64차이0**이며C++전동결3종불변이다. 기존608원문은보존했다.
+- [x] 초기과거export경로없음/native2동결, 첫C++헤더행접근/검사AI할당입력누락·BYTE경고/람다인자오류,15초walltime의프레임수오해를수정하고실패로그를보존했다. 원문기대값을수정하지않았다.
+- [x] build4경고0/오류0, 집중Start3/Player3/실제로그인Start1, **전체1653개실패0/247.58초**(CTest247.61초). 감사90도구79통과/기존11실패동일/새0. 실제일반11진입의원본SP·기술/demo0/AI, 메인Demo3의demo1/로컬AI/자연15초안내종료, 기존5진입+실제1-1이동PASS/originals_unchanged=true다. GuardMyBack화면실제SP1200확인. 진입을자연완주로확대하지않는다.
+- [x] 제품cpppj/campaign-mission-start-client.json/원문cpppj/player-alliance-packet.json/로그접두extracted/goal-mission-start-client-20261018-다. 보호SHA·57보고서191현재핀/과거전체JSON·CMake접두/기존fixture·UTF8/LF·인덱스바이트를확인한뒤 **20261018-16 CP 실제 미션 시작과 데모 및 동맹 전송 연결**로로컬커밋한다. push없음/goal active다.
+- [ ] **다음우선:**실제ObjectMenu/Construct임시비활성어댑터를원본메뉴·명령큐·커서취득·배치/생산·경제에연결한다. 메뉴초안5파일은extracted/goal-object-menu-client-20261018-drafts에바이트보존되어있으며이단위에컴파일/커밋하지않았다. 기존메뉴원문/미복원파생VT거부경계를이어간다.
+- [ ] **남은범위:**현재FrameGate/Guide/Outcome자동연결·전략AI/자연운반왕복·희생조건/의식UI·운반물내려놓기·진단가상서식·전체Userinput/단축키·상태7/파일저장·38/41/187·11단계자연완주/승패/저장/다음미션/전체동일성이다.
+
 ## 2026-10-18 단위165 완료: 원본 운반체 커서 평가와 실제 사용자 명령 (HJOW-Athlon)
 
 - [x] 기준0cb53fa/깨끗한트리에서AGENTS/양LEFT 재독. 직전164는로그인/State확장/회귀/커밋을완료했고직전165첫턴은원문·제품초안/확인된build1대기로진척했다. 현재/마지막정밀디컴파일PC **HJOW-Athlon / 2026-10-16** 일치. 보호원본·AGENTS·DN·DirectDraw변경/새디컴파일없음. [상세기록](docs/exe/cpp-carrier-input-20261018.md).

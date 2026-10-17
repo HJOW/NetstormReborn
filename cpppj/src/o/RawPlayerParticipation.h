@@ -45,6 +45,8 @@ public:
     void SetAlliance(std::uint32_t owner,std::uint32_t mask) const;
     // 0048f6a0: 지정 방향의 한 bit/한 cell만 켜며 battle이면 현재 mask를 서버9에 요청한다.
     void AddAlly(std::uint32_t owner,std::uint32_t target) const;
+    // 00491220: 같은 수신 packet의 자기 bit→Player mask→방향표/Chat→broadcast 순서를 보존한다.
+    void ReceiveAlliance(std::span<std::uint8_t> packet,const std::function<void(std::span<const std::uint8_t>)>& broadcast) const;
     // 004911a0: 실제 생성 소유자가 전달한 opaque32 brain을 +b0에 기록하고 flags20을 켠다.
     // 기존 brain은 assert만 보고 덮어쓰며 임의로 해제하지 않는다. 0 입력도 원본 필드쓰기와 동일하다.
     void AttachBrain(std::uint32_t owner,std::uint32_t brain) const;

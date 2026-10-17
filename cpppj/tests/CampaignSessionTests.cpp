@@ -1,4 +1,5 @@
 #include "client/ClientMain.h"
+#include "client/RawCampaignMissionStartBindings.h"
 #include "client/UserInput.h"
 // 생산 세션과 GameWorld의 표시/선택/명령이 같은 실제 raw 월드를 사용하는지 검사한다.
 #include "DudeSpawnSupport.h"
@@ -1626,5 +1627,29 @@ TEST_CASE(CampaignSession_WorldInputActualLoginThreeCarriersAndKernel) {
         for (;frames<3000 && core.processState.now<end+.5;++frames) { world.Step(.025);if (!core.processes.FromForm(form)) break; }
         CHECK(!core.processes.FromForm(form) && frames>1 && std::bit_cast<float>(Get(core.pool.Slot(parent),14))==destination.x && std::bit_cast<float>(Get(core.pool.Slot(parent),18))==destination.y);CHECK(session.Sp(1)==sp && !core.bookkeeping.depth && !core.destroy.PreDepth() && !core.destroy.PostDepth());
         std::cout<<"실제 월드 선택/호버/클릭 TYPE"<<kind<<" 로그인/40h/자연이동 "<<frames<<"프레임 관측\n";
+    }
+}
+
+// 실제 로컬 로그인 뒤 Start의 현재 설정/자금/기술/AI와3d 동맹 송수신이 같은 Session을 사용하는지 확인한다.
+TEST_CASE(CampaignSession_LocalLoginMissionStartAiAlliances) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);
+    // 일반 미션과 StartDemo는 같은 보호 요새를 사용하지만 로컬 AI 포함 여부가 다르다.
+    for (const std::uint32_t demo:{0U,1U}) {
+        ConfigInterface config([&](std::string_view path) { return assets.files.TryRead(path); });
+        config.Configuration().Assign("DataDir=\"d\"\ncurrentLanguage=\"english\"\nmissionSpec=\"{DataDir}\\{local.1}.{currentLanguage}\"\nfortSpec=\"{DataDir}\\{local.1}.fort\"\n[END]\n");
+        MissionScript script(config,"GuardMyBack");CHECK(script.Loaded());SessionServicesFixture external;auto services=external.Services();std::size_t receivedAlliances{},chat{},refresh{},commands{},cameras{},settings{}; // 실제 경계의 호출 수만 관찰한다.
+        CampaignLoginServices login;login.configInt=[](std::string_view,std::int32_t fallback) { return fallback; };login.wallSeconds=[] { return 100.25; };login.clock=[] { return 100250U; };login.refresh=[&] { ++refresh; };login.playerUiBusy=[] { return false; };login.playerNotice=[](std::uint32_t,std::uint32_t,std::uint32_t) {};login.log=[](std::string_view) {};
+        login.observePacket=[&](std::uint32_t,bool,std::uint32_t,std::span<const std::uint8_t> packet) { if (packet[1]==0x3d) { CHECK(packet.size()==9 && packet[0]==1 && packet[2]==9);++receivedAlliances; } };
+        services.ai.allocationBytes=[](std::span<std::uint8_t> bytes) { std::fill(bytes.begin(),bytes.end(),static_cast<std::uint8_t>(0xa7)); }; // 실제 생성자 미정 바이트의 명시 검사 입력이다.
+        services.ai.defaultName=[] { return std::string("AI"); };services.localLogin=std::move(login);services.ai.participation.clearChat=[&](std::uint32_t) { ++chat; };services.ai.participation.addChat=[&](std::uint32_t,std::string_view,std::uint32_t) { ++chat; };
+        auto fort=FortTemplate::Parse(assets.files.Read(script.FortPath()),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),script.FortName(),std::move(services));session.LoadLocalConnection();CHECK(session.LocalConnectionPhase()==14 && session.Sp(1)==0);
+        MissionFrameGateState gate;gate.demo=demo;MissionStartState state;CampaignMissionStartEffects effects;
+        effects.settingsBytes=[&](std::uint32_t,std::span<std::uint8_t> bytes) { std::fill(bytes.begin(),bytes.end(),static_cast<std::uint8_t>(0xa7));++settings; };effects.gameSeconds=[] { return 123.5; };effects.refreshSp=[&] { ++refresh; };effects.refreshCommandGump=[&] { ++commands; };effects.resetCamera=[&] { ++cameras; };effects.randomGeysers=[] { throw std::logic_error("보호 GuardMyBack에 없는 세계 랜덤 간헐천 입력"); };
+        RawCampaignMissionStartBindings start(session,script,gate,state,session.MissionStartSettings(),session.MissionAiSettings(),std::move(effects));start.Start();
+        CHECK(gate.started==1 && state.sequence==1 && gate.demo==demo && gate.startSeconds==123.5 && gate.demoEndSeconds==483.5 && commands==1 && cameras==1 && settings>=3);
+        CHECK(session.Participation().Brain(2)!=0 && session.Participation().Brain(3)!=0 && session.Participation().Brain(4)!=0 && (session.Participation().Brain(1)!=0)==(demo!=0));
+        CHECK(session.Sp(1)==1200 && session.MissionStartSettings().ordinaryGeysers==1 && session.FindTechnology(1,133).value!=0);CHECK(receivedAlliances==0); // 실제 송신은 아직 flush하지 않은 상태다.
+        const auto before=session.LocalConnectionPackets().size();session.PumpLocalConnection();CHECK(session.LocalConnectionPhase()==14 && receivedAlliances>0 && session.LocalConnectionPackets().size()>before && chat>0);
+        CHECK(session.Alliances()[2*9+2]==1 && session.Alliances()[3*9+3]==1 && session.Alliances()[4*9+4]==1 && session.Core().bookkeeping.depth==0);
     }
 }

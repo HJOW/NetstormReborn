@@ -6,6 +6,7 @@
 #include "client/ClientAudio.h"
 #include "client/ClientMain.h"
 #include "client/CampaignClientServices.h"
+#include "client/RawCampaignMissionStartBindings.h"
 #include "client/GifImage.h"
 #include "client/GumpVisual.h"
 #include "client/GumpBackground.h"
@@ -104,12 +105,22 @@ std::string FontBytes(std::string_view text) {
 // 현재 단계에서 실제 처리 경로가 있는 메뉴 명령만 활성화한다.
 bool Supported(std::string_view command) {
     const auto name = o::AsciiLower(command);
-    return name == "tell" || name == "missionbegin" || name == "donothing" || name == "missionabort" || name == "leavebattle" ||
+    return name == "tell" || name == "missionbegin" || name == "startdemo" || name == "donothing" || name == "missionabort" || name == "leavebattle" ||
         name == "quit" || name == "menu" || name == "toggle" || name == "resolution" || name == "volume" || name == "resume";
 }
 // 자동 검사 보고에는 개행/탭을 제거하여 한 항목 한 줄을 유지한다.
 std::string Field(std::string text) { std::replace(text.begin(), text.end(), '\t', ' '); std::replace(text.begin(), text.end(), '\n', ' '); std::replace(text.begin(), text.end(), '\r', ' '); return text; }
 }
+
+// 원본 Mission의 같은+68/+70/+88 상태를 실제 Start와 후속 프레임 소비자에 보존한다.
+struct UberGump::MissionRuntime {
+    o::MissionFrameGateState gate; // demo/started/시각/안내 단계의 유일한 현재 미션 저장소다.
+    o::MissionStartState state; // Start의 순번/현재 tellAt 항목/필드를 동일 수명으로 유지한다.
+    RawCampaignMissionStartBindings start; // 같은 Script/Session/전역을 참조하며 생성만으로 시작하지 않는다.
+    // 원본00482bf0의 초기 demo0은 일반 MissionBegin,00463a00의 직접 쓰기는 StartDemo가 공급한다.
+    MissionRuntime(RawCampaignSession& session,MissionScript& script,std::uint32_t demo,CampaignMissionStartEffects effects)
+        :start(session,script,gate,state,session.MissionStartSettings(),session.MissionAiSettings(),std::move(effects)) { gate.demo=demo; }
+};
 
 // 원본 GIF는 색 표의 RGB를 쓰지 않고 파일의 번호를 화면 팔레트에 바로 쓴다(00419ec0→004dae60).
 UberGump::UberGump(Client& client) : client_(client) {
@@ -159,6 +170,7 @@ void UberGump::ClearWorld() {
     if (world_ && rawButtons_ && rawButtons_->Menus()) rawButtons_->Menus()->Close(); // 같은Form을반납한뒤에만Session/월드포인터를해제한다.
     client_.ClearThunderFlashes();
     if (world_) client_.GetRenderer().SetExtraCollection({}); // 월드 반납 전에 빌린 실제 커서 수집/Draw callback을 해제한다.
+    missionRuntime_.reset(); // 같은 Session/Script를 참조하는 Start를 대상보다 먼저 해제한다.
     userInput_.reset();
     const auto process=worldProcess_; // 해제 중의 현재 subscriber 조회가 파괴 중인 월드를 따라가지 않도록 번호만 보관한다.
     world_=nullptr; worldProcess_=0;
@@ -251,17 +263,18 @@ void UberGump::MainMenu() {
     state_.phase = ClientPhase::MainMenu; pageName_ = "main"; popup_.clear(); page_ = {}; input_.Cancel();
     client_.Pause(false); RefreshWindowTitle(); RebuildControls();
 }
-// 현재 일반 미션의 원본 제목 설정을 적용한다. Demo/편집/테스트 미션은 해당 진입 구현과 함께 모드를 공급해야 한다.
+// 현재 미션의 원본 제목 설정을 적용한다. 데모 모드는 같은 미션 객체의 직접 기록을 읽는다.
 void UberGump::RefreshWindowTitle() {
-    WindowTitleState state; // 현재 메뉴는 요새 없음, 살아 있는 MissionScript는 일반 미션 상태다.
+    WindowTitleState state; // 현재 메뉴는 요새 없음이며 데모 여부는 같은 실제 미션 필드다.
     if (mission_) { state.fortName=mission_->FortName();state.mission=true; }
+    if (missionRuntime_) state.demo=missionRuntime_->gate.demo!=0;
     netstorm::client::RefreshWindowTitle(state,{
         [this](std::string_view key,std::optional<std::string_view> argument) { return client_.Configuration().PathSpec(key,argument); },
         [this] { return mission_ ? mission_->Get("title").value_or(std::string()) : std::string(); },
         [this](std::string_view title) { client_.Title(title); }});
 }
 // 미션 종류를 확인하고 원본 스크립트·요새에서 실제 월드 초기 상태를 만든다.
-void UberGump::BeginMission(std::string name) {
+void UberGump::BeginMission(std::string name,std::uint32_t demo) {
     ClearWorld(); mission_.reset();
     mission_ = std::make_unique<MissionScript>(client_.Configuration(), name);
     if (!mission_->Loaded()) throw std::runtime_error("Missing mission: " + name);
@@ -290,6 +303,11 @@ void UberGump::BeginMission(std::string name) {
         [this]() { return client_.GetRenderer().FullRedrawPending(); },
         [this](o::SquidDisplayRect rect,std::uint32_t flags) { client_.GetRenderer().Invalidate({rect.left,rect.top,rect.right,rect.bottom},flags); }};
     world_=world.get(); worldProcess_=client_.GetKernel().Add(std::move(world));
+    missionRuntime_=std::make_unique<MissionRuntime>(world_->Session(),*mission_,demo,
+        MakeCampaignMissionStartEffects(client_,*world_,[this] {
+            // 원본0042e440은 현재00548740이0이면 아무 메시지도 보내지 않는다.
+            if (commandGump_!=0) throw std::logic_error("미션 Start의 전용 명령 Gump0042e440 수신 미연결");
+        }));
     world_->BeginLocalConnection(); //전역subscriber 조회가같은월드를보는상태에서Zone/로그인/월드로드를실행한다.
     userInput_=std::make_unique<UserInput>(client_,*world_);
     // 브리핑으로 게임 시계가 멈추기 전에도 첫 카메라/표시 영역이 음악·효과음에 전달되게 한다.
@@ -304,11 +322,14 @@ void UberGump::BeginMission(std::string name) {
     world_->Session().Cursor().Display().SetExternal([this](std::uint32_t token) { return rawButtons_->GumpDepth(token); },{});
     briefingSections_.clear(); briefingIndex_ = 0;
     // 원본 초기 브리핑은 A.이며 A1. 등은 본문 Tell 명령이 넘긴다.
-    if (mission_->Section("A.")) briefingSections_.push_back("A.");
+    if (missionRuntime_->gate.demo!=0) briefingSections_.push_back("Demo");
+    else if (mission_->Section("A.")) briefingSections_.push_back("A.");
     state_.phase = ClientPhase::LoadingMission; pageName_ = "loading"; popup_.clear(); page_ = {}; RebuildControls();
     RefreshWindowTitle(); client_.Pause(true);
     // 원본 004b6dd0의 미션 시작 절차(전투 여부를 켜고 FUN_00469fc0): 난수로 고른 원소 곡으로 전투 음악을 시작한다.
     if (client_.Audio()) client_.Audio()->StartScene(true);
+    // 원본004b6dd0의 음악 시작 뒤00463a40→가상+28을 같은 실제 로그인/월드에 한 번 실행한다.
+    missionRuntime_->start.Start();
 }
 // 첫 브리핑을 표시하거나 브리핑 종료 뒤 실제 월드 입력과 표시를 활성화한다.
 void UberGump::AdvanceBriefing() {
@@ -448,6 +469,7 @@ void UberGump::Execute(const DialogAction& action) {
     if (command == "quit") { quit_ = true; return; }
     if (command == "tell") { Tell(action.argument, state_.phase == ClientPhase::Briefing); return; }
     if (command == "missionbegin") { BeginMission(action.argument); return; }
+    if (command == "startdemo") { BeginMission(action.argument,1);return; }
     if (command == "missionabort" || command == "leavebattle") {
         MainMenu();
         // 전투를 떠나면 메뉴 곡으로 돌아간다. 원본은 004b2df0(전투 값이 남은 채 Start)과 결과 화면 종료 004b7453(ser22.mus 요청)으로 나누어 하며, 클론은 하나로 합쳤다.
@@ -665,6 +687,12 @@ std::string UberGump::Report() const {
     if (mission_) {
         out << "mission\t" << Field(mission_->Name()) << '\t' << Field(mission_->MissionType()) << '\t' << fortObjects_ << "\n";
         out<<"mission_progress\t"<<client_.Configuration().GetInt("Done"+mission_->Name())<<'\n'; // 실제안내Config명령과같은저장값을검사보고에서읽는다.
+        if (missionRuntime_) {
+            const auto& gate=missionRuntime_->gate;const auto& state=missionRuntime_->state; // 실제 Start의 최종 표식과 중간 쓰기를 읽는다.
+            out<<"mission_start\t"<<gate.started<<'\t'<<state.sequence<<'\t'<<gate.demo<<'\t'<<gate.startSeconds<<'\t'<<gate.demoEndSeconds<<'\n';
+            const auto& settings=world_->Session().MissionStartSettings(); // 원본 게임 명령이 공유할 같은 제한 전역이다.
+            out<<"mission_rules\t"<<settings.denySalvage<<'\t'<<settings.denyAscend<<'\t'<<settings.allowAnyCapture<<'\t'<<settings.ordinaryGeysers<<'\n';
+        }
     }
     if (world_) out<<world_->Report();
     // 화면/월드와 같은 프레임에 위치 효과음이 실제로 읽는 여섯 값을 기록한다. 소리 없는 실행에는 항목을 만들지 않는다.

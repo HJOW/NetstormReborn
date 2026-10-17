@@ -1,0 +1,17 @@
+{
+  "edition": "10.78",
+  "entry": "00491220",
+  "scope": "전체 수신/실제00490ea0. Chat/진단/004e2e30 broadcast는 관측 경계. 원본 게임 창 실행 없음.",
+  "uniqueInputs": 288,
+  "normalReturns": 576,
+  "instructions": 191484,
+  "precisionDifferentInputs": 0,
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_player_alliance_packet.py": "217a61ba4193f031ac6c8148ecee828ccd805c20e7c6358afb68d2e998c23285",
+    "tools/decomp_player_participation.py": "f43100ce44ff51c28135fa914b76d59a2703722a65c2ac523a7481e267a93fe7",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "cpppj/tests/fixtures/player-alliance-packet-x86.tsv": "8765e66aa2fac76b2c8ad9870fdd5459bd56097a442baddc1d21a62c1fd8a6f6"
+  }
+}

@@ -34,8 +34,8 @@
     "cpppj/src/client/RawCampaignSession.cpp": "48dbb4918972c6f75dbded75303e288598428b59501edbbeae4c46c01964c3fb",
     "cpppj/src/client/AiTypeRequiredEnergy.h": "fc68f0306d0807515cdec66743f6641c986a4585e9a7de64af32fda30be05ef6",
     "cpppj/src/client/AiTypeRequiredEnergy.cpp": "869c8193f7f74d8497a610fa893d5aba1854ced7da71e0db7709c31f9dd6d31f",
-    "cpppj/src/o/RawPlayerParticipation.h": "f81add0213f964bd96205a754f40f887731aed6e0499f5b04740ef903d2b9cc9",
-    "cpppj/src/o/RawPlayerParticipation.cpp": "0eab593fc053a9ad72145628acef6ea7863e4e2269a20ed03bb0d2b70b8849db",
+    "cpppj/src/o/RawPlayerParticipation.h": "22d0031dd843733a9452f9ee497d79e7028a40915524bf11ca4ff59b549b1cb4",
+    "cpppj/src/o/RawPlayerParticipation.cpp": "682b1cf72b1889d2bf44540446d5cba40c24679e9e99055b154155224185dec7",
     "cpppj/src/o/RawAiBrain.h": "8be51d55642492fbd9360fdc572b44da8876a29447020b526a8451d88e069724",
     "cpppj/src/o/RawAiBrain.cpp": "827c6d75630994df87f04bfe98814f2cebe1d8e0af4f1d78534a29a9852d37bd",
     "cpppj/src/o/RawAiBrainInitialUpdate.h": "1e72f644502e022a326427735f244ae10094969b8202b467ed42e855a6960f44",
@@ -77,5 +77,26 @@
   "validationLogSha256": {
     "extracted/goal-session-ai-combat-build.log": "524ba3305cbed603f843c642903555432ec2ecb48e913be2f4bc0b6cbeaafa3e",
     "extracted/goal-session-ai-combat-focused.log": "a2d1e0a2b407b691633d33fb0284e2cc2fc783ef1ec3ccdc3d466b23e783956c"
-  }
+  },
+  "integration_updates": [
+    {
+      "date": "2026-10-18",
+      "unit": 166,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/o/RawPlayerParticipation.h",
+          "previous": "f81add0213f964bd96205a754f40f887731aed6e0499f5b04740ef903d2b9cc9",
+          "current": "22d0031dd843733a9452f9ee497d79e7028a40915524bf11ca4ff59b549b1cb4"
+        },
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/o/RawPlayerParticipation.cpp",
+          "previous": "0eab593fc053a9ad72145628acef6ea7863e4e2269a20ed03bb0d2b70b8849db",
+          "current": "682b1cf72b1889d2bf44540446d5cba40c24679e9e99055b154155224185dec7"
+        }
+      ]
+    }
+  ]
 }

@@ -9,9 +9,13 @@ from cpp_campaign_entry_smoke import ROOT,EXE
 from cpp_world_smoke import states
 from cpp_smoke_files import preserve_game_settings
 from cpp_renderer_smoke import snapshots
+from cpp_fort_smoke import script_value
+from cpp_menu_smoke import source
+from taff import TaffArchive
 
 MISSIONS=('tutorial1','tutorial2','tutorial3','tutorial4','tutorial5','tutorial6',
           'thewarbegins','masterofwhirligigs','demostormrages','guardmyback','dissolvedalliance') #원본 Early6/캠페인2/데모3이다.
+ARCHIVE=TaffArchive(ROOT/'originals/netstorm.tarc') #시작 기대값은 C++ 보고서와 독립인 보호 원문에서 읽는다.
 MAX_CLICKS=20 #잘못된 페이지 순환이 무한 창 실행으로 이어지지 않게 하는 검사 한계다.
 
 def probe(mission,clicks,index,output):
@@ -39,10 +43,15 @@ def probe(mission,clicks,index,output):
     return dict(frame=frame,phase=current['phase'],paused=current['paused'],page=current['page'],
                 controls=current['controls'],mission=current['mission'],raw_world=current['raw_world'],
                 priestOwners=[v[1] for v in current['objects'].values() if v[0]=='priest'],
+                mission_start=current['mission_start'],mission_rules=current['mission_rules'],
+                raw_session=current['raw_session'],raw_sp=current['raw_sp'],raw_brains=current['raw_brains'],raw_technology=current['raw_technology'],
                 directory=directory.as_posix(),exitCode=result.returncode)
 
 def check(mission,output):
     """MORE/OK/Play Mission은 현재 실제 보고서에서 확인한 경우에만 누른다."""
+    script=source(ROOT/'originals',ARCHIVE,f'd/{mission}.english').decode('cp1252') #원본 미션의 시작 입력이다.
+    money=int(script_value(script,'myStartMoney') or '0') #실제 원본은 atol 뒤 float로 쓴다. 이11개 입력은 정확한 정수다.
+    technology=sorted(filter(None,(script_value(script,'myTech') or '').split(';'))) #타입 번호 순서와 독립인 이름 집합을 대조한다.
     clicks=[] #성공적으로 관측한 입력 접두이며 내부 페이지/게임 상태를 직접 쓰지 않는다.
     observations=[] #각 실행의 실제 프레임/컨트롤/월드 상태다.
     record=dict(mission=mission,passed=False,clicks=clicks,observations=observations)
@@ -53,6 +62,13 @@ def check(mission,output):
             observations.append(current)
             if current['phase']==['4'] and current['paused']==['0']:
                 assert '1' in current['priestOwners'] and current['raw_world'][6:9]==['0','0','0'],current
+                assert current['mission_start'][:3]==['1','1','0'],current
+                assert current['raw_session']==['1','1'] and float(current['raw_sp'][1])==money,current
+                assert sorted(current['raw_technology'])==technology,current
+                assert current['raw_brains'][1]=='0',current #CLI MissionBegin은 이름이 데모여도 로컬 AI를 만들지 않는다.
+                if mission in ('thewarbegins','masterofwhirligigs'):
+                    assert int(current['raw_brains'][2])!=0,current
+                record['expectedStart']=dict(money=money,technology=technology,demo=0)
                 record['passed']=True
                 break
             assert current['phase']==['3'] and current['paused']==['1'],current

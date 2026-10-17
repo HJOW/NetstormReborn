@@ -549,6 +549,19 @@ std::string GameWorld::Report(bool mask) const {
         out<<"raw_input\t"<<selected_<<'\t'<<highlightMode_<<'\t'<<campaign_->LocalConnectionPhase()<<'\t'<<campaign_->LocalConnectionPackets().size()<<"\nraw_packets";
         // 실제 소비된 종류만 진단하며 별도 명령 성공 플래그를 만들지 않는다.
         for (const auto kind:campaign_->LocalConnectionPackets()) out<<'\t'<<std::uint32_t(kind);out<<'\n';
+        out<<"raw_session\t"<<campaign_->LocalOwner()<<'\t'<<campaign_->PlayerKnown()<<"\nraw_sp";
+        // 화면용 MissionPlayers 사본과 구별하여 실제 분산 SP의 모든 owner를 읽는다.
+        for (std::uint32_t owner=0;owner<9;++owner) out<<'\t'<<campaign_->Sp(owner);
+        out<<"\nraw_brains";
+        // 실제 Player9에 부착된 AI 포인터만 기록하며 aiName에서 추정하지 않는다.
+        for (std::uint32_t owner=0;owner<9;++owner) out<<'\t'<<campaign_->Participation().Brain(owner);
+        out<<"\nraw_technology";
+        // 실제 로컬 Player의 같은 기술 내용물 체인을 원본 타입 번호 순서로 조회한다.
+        for (std::size_t index=0;index<assets_.Types().size();++index) {
+            const auto type=static_cast<std::int32_t>(index+o::kFirstAssetTypeNumber); // 목록의 실제 원본 TYPE 번호다.
+            if (campaign_->FindTechnology(static_cast<std::int32_t>(campaign_->LocalOwner()),type).value) out<<'\t'<<assets_.Types()[index].assetName;
+        }
+        out<<'\n';
     }
     // 활성 플레이어와 머리 값/저장 상태를 서로 다른 열에 기록한다.
     for (const auto& p:players_.players) if (p.active) out<<"player\t"<<p.number<<'\t'<<p.stormPower<<'\t'<<p.color<<'\t'<<p.allies<<'\t'<<Field(p.name)<<'\t'<<Field(p.startingTech)<<'\t'<<p.storedTechnology.items.size()<<'\t'<<p.storedDeck.size()<<"\n";

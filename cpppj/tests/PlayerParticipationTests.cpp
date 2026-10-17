@@ -76,6 +76,24 @@ TEST_CASE(PlayerParticipation_Native608) {
     }
     CHECK(count==608);
 }
+// 원본 수신288개 입력의 전체 Player/방향표/현재 packet과 모든 효과를 두 정밀도 원문에 대조한다.
+TEST_CASE(PlayerParticipation_AlliancePacketNative288) {
+    std::size_t count{}; // 실제로 재생한 고유 원본 입력 수다.
+    // 기대 출력은 C++ 작성 전에 동결한 원본 전체 함수의 반환만 사용한다.
+    for (const auto& row:LoadFixture(NETSTORM_PLAYER_ALLIANCE_PACKET_FIXTURE).rows) {
+        if (row[0]=="input") continue;
+        const auto values=Split(row[0],',');CHECK(values.size()==5 && row.size()==9);
+        if (values.size()!=5 || row.size()!=9) return;
+        const std::vector<std::string> fields{values[0],"1","1515870810","0","0","0",values[2],values[3],values[4],"0","0","341","7002"};
+        ParticipationScene scene(fields);auto runtime=scene.Runtime();std::array<std::uint8_t,41> storage;storage.fill(0xa7);
+        auto packet=std::span<std::uint8_t>(storage).subspan(16,9);packet[0]=1;packet[1]=0x3d;packet[2]=9;packet[3]=0;packet[4]=static_cast<std::uint8_t>(std::stoul(values[0]));ParticipationPut(packet,5,static_cast<std::uint32_t>(std::stoull(values[1])));
+        runtime.ReceiveAlliance(packet,[&](std::span<const std::uint8_t> bytes) { CHECK(bytes.data()==packet.data());scene.Add("B,"+ParticipationHex(bytes)); });
+        const std::vector<std::string> actual{ParticipationHex(scene.players),scene.AllyBytes(),scene.trace.empty() ? "-" : scene.trace,ParticipationHex(packet)};
+        CHECK(actual==std::vector<std::string>(row.begin()+1,row.begin()+5));CHECK(actual==std::vector<std::string>(row.begin()+5,row.end()));
+        CHECK(std::all_of(storage.begin(),storage.begin()+16,[](auto byte) { return byte==0xa7; }) && std::all_of(storage.begin()+25,storage.end(),[](auto byte) { return byte==0xa7; }));++count;
+    }
+    CHECK(count==288);
+}
 // 같은brain토큰은파괴/반납경계가모두끝날때까지조회되며flags20은해제뒤에도원본대로유지된다.
 TEST_CASE(PlayerParticipation_BrainLifetimeAndDirectionalRows) {
     ParticipationScene scene(Split("1,1,0,0,0,0,0,1,0,0,0,0,7002",','));auto runtime=scene.Runtime();runtime.AttachBrain(1,7002);CHECK(runtime.Brain(1)==7002);

@@ -1471,3 +1471,7 @@ set_source_files_properties(PlayerStateExpandTests.cpp PROPERTIES COMPILE_DEFINI
 
 target_sources(netstorm_tests PRIVATE CarrierInputTests.cpp)
 target_compile_definitions(netstorm_tests PRIVATE NETSTORM_CARRIER_INPUT_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/carrier-input-x86.tsv")
+
+# 동맹 수신 원문은 해당 검사 소스만 다시 컴파일하도록 개별 정의로 연결한다.
+set_property(SOURCE PlayerParticipationTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS
+    "NETSTORM_PLAYER_ALLIANCE_PACKET_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/player-alliance-packet-x86.tsv\"")

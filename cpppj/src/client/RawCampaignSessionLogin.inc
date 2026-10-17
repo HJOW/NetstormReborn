@@ -98,12 +98,22 @@ struct RawCampaignSession::Impl::Login {
         timing.saveReconnect=[this] { if (!s.globals.missionPost) throw std::logic_error("일반전투 재접속 저장 미연결"); };timing.closeProgress=effects.refresh;timing.log=[this](MissionLoginTimerLog,std::string_view text) { Need(effects.log)(text); };
         timer=std::make_unique<RawMissionLoginTimer>(OriginalEdition::Patch1078,MissionLoginTimerState{loginEnd,timeout,begin,scriptBreak,requestPhase,baseClock},counts,MissionLoginTimerReads{[this] { return saved; },[this] { return s.core.processState.server; },[this] { return s.objectState.mission; },[this] { return s.globals.missionPost; },[this] { return s.assetState.boss; },[this] { return s.gunState.checking; }},std::move(timing));
         RegisterMissionLogin(transport->Dispatch(),*server);RegisterMissionClientPackets(transport->Dispatch(),*client);RegisterMissionMetadata(transport->Dispatch(),*metadata);RegisterMissionSettingsPacket(transport->Dispatch(),*settings);
+        // 원본3d 등록의 observer는0040b380의 빈 반환이고 version1/mismatch0이다.
+        transport->Dispatch().Observe(0x3d,[](std::uint32_t) {});transport->Dispatch().Version(0x3d,1,0);
+        transport->Dispatch().Register(0x3d,[this](std::uint32_t,PacketConnection&,std::span<const std::uint8_t> bytes) {
+            // 이 분배기는 LocalMissionTransport의 mutable vector만 수신한다. 같은 실제 버퍼에 원본 self bit를 쓴다.
+            s.participation->ReceiveAlliance({const_cast<std::uint8_t*>(bytes.data()),bytes.size()},[this](std::span<const std::uint8_t> packet) { s.broadcast->Send(packet); });
+        });
     }
     MissionLoginPlayerCounts counts{OriginalEdition::Patch1078,s.players}; //같은 Player9의 현재 집계를 타이머에 공급한다.
     //원본 미션 부모의 로컬 Zone을 설치하고 실제 상태8에서 접속한다.
     void Begin() {
         s.globals.loginSubscriber=1;s.globals.mySubscriber=s.globals.loginSubscriber; //4c3290의 원본54265c 초기1 복사다. owner/접속 성공과 별개다.
         s.connectionAssign=[this](std::int32_t pending,std::int32_t player) { transport->AssignConnection(pending,player);s.services.battlePeers.at(static_cast<std::size_t>(player))=transport->Peer(static_cast<std::uint32_t>(player)); };
+        s.connectionAlliance=[this](std::uint32_t target,std::uint32_t owner,std::uint32_t mask) {
+            std::array<std::uint8_t,9> packet{1,0x3d,9,0}; // 원본0040a780/0052ede2의 version1/type3d/length9다.
+            packet[4]=static_cast<std::uint8_t>(owner);Put(packet,5,mask);Send(static_cast<std::int32_t>(target),packet);
+        };
         s.services.ai.localTransport=[this] { return transport->IsOpen(); };s.services.carrierRequest=[this](std::int32_t target,std::span<const std::uint8_t> bytes) { Send(target,bytes); };
         const auto zone=netstorm::zacket::MakeLocalMissionZone();netstorm::zacket::LocalMissionZoneHooks hooks;hooks.loginTimeout=[this] { return Need(effects.configInt)("loginTimeout",30); };hooks.seconds=effects.wallSeconds;
         hooks.storeName=[](std::uint32_t subscriber,std::string_view name) { SanitizeMissionPlayerName(subscriber,{reinterpret_cast<std::uint8_t*>(const_cast<char*>(name.data())),name.size()+1}); };
