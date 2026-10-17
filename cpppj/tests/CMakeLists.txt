@@ -1274,3 +1274,11 @@ set_source_files_properties(CursorRangeTests.cpp PROPERTIES COMPILE_DEFINITIONS
 target_sources(netstorm_tests PRIVATE FenceLifetimeTests.cpp)
 set_source_files_properties(FenceLifetimeTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_FENCE_LIFETIME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fence-lifetime-x86.tsv\"")
+
+# 실제 원문 반환/문자열/공유 공급 목록의 전체 결과를 대조한다.
+target_sources(netstorm_tests PRIVATE EnergySupplyTests.cpp)
+set_source_files_properties(EnergySupplyTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_ENERGY_SUPPLY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/energy-supply-x86.tsv\"")
+
+set_property(SOURCE EnergySupplyTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS
+    "NETSTORM_ENERGY_PROVIDER_VTABLES_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/energy-provider-vtables.tsv\"")

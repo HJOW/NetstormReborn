@@ -30,7 +30,7 @@
     "cpppj/tests/TypeRequiredEnergyTests.cpp": "0802ab400413ec5da3f2d03a4ac6b6f88e2d088915646609a2ca0bb39a02b05c",
     "cpppj/src/o/CMakeLists.txt": "c84659874163c54863d0de3c252858446f7e58e4e4df956d72ea4430cd79b538",
     "cpppj/src/client/CMakeLists.txt": "8bb17d335554c16e6ff3300134492a264bfa425dfafd52062ecf0062f523d87c",
-    "cpppj/tests/CMakeLists.txt": "687f283a950b897c92cfca118f23b86de2192ed710a1fcc651c48685a7a221ba"
+    "cpppj/tests/CMakeLists.txt": "9dc34335f2f606b142e8f5ba295e11c54c92498de07d38917da041d36a325b22"
   },
   "product_validation": {
     "configuration": "Release",
@@ -1283,6 +1283,18 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "b850f423d0be8c30b22478834953b1f83dbe250243c869104153c5761ff5a3dd",
           "current": "687f283a950b897c92cfca118f23b86de2192ed710a1fcc651c48685a7a221ba"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 126,
+      "reason": "실제 공급 장부256칸/선택30칸 및 커서 에너지 판정의 Session 연결",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "687f283a950b897c92cfca118f23b86de2192ed710a1fcc651c48685a7a221ba",
+          "current": "9dc34335f2f606b142e8f5ba295e11c54c92498de07d38917da041d36a325b22"
         }
       ]
     }

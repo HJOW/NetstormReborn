@@ -21,8 +21,8 @@
     "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
     "cpppj/src/client/GameWorld.h": "57adef4cb282f91c27ebdac68846b09883494f8406abdd7517d5267bd44a93fc",
     "cpppj/src/client/GameWorld.cpp": "0c7c8431cfdc1bcb911b3c50f8c9e409e95b14fa788a9d53960c950ade95c01d",
-    "cpppj/src/client/RawCampaignSession.h": "1b801ce2f93cc1c9b0cdcffcb486513338ae175e64f6616fb0fd79330f259ffc",
-    "cpppj/src/client/RawCampaignSession.cpp": "2f75dbbed2cd1ada2b0ff5e5611d3f623dd705bf32cfebfc6162300fcd4e0413",
+    "cpppj/src/client/RawCampaignSession.h": "0ad38e5ba9cd1fd01d6bc1620c01f1ddfce7d31118303e59ef7f21885723be2e",
+    "cpppj/src/client/RawCampaignSession.cpp": "9c2ae6632a257cdced76dc4d3af778bae9b5b90cbcb1a47ad198d66edcb97813",
     "cpppj/src/client/RawPriestMenu.h": "5364d92d3af5b9b81a0477df5c005fcfc4a1ef7f6817894bd337250ce4d0e43d",
     "cpppj/src/client/RawPriestMenu.cpp": "f30be4e91f2141d1000f4a75d9f41619024d20f6cb024f68b8ffb483b1eddcf7",
     "cpppj/src/client/RawCampaignLifetimeBindings.h": "6f4be73b52279abf308c8a3e6d8962271560e47c25996f7a03fca09f8cd063e8",
@@ -38,14 +38,14 @@
     "cpppj/src/o/SpStore.cpp": "2319a90807d423b72b0e47e51101bc9ea1618f234c65e26b704c017313f4268a",
     "cpppj/src/o/SquidReward.cpp": "a29c11afe56a477c470956b1ed0a0678d059340806537ce08b43bf6b6aa1375d",
     "cpppj/tests/PriestMenuTests.cpp": "a7b76f4b807941334f1dc6c089b156a59c72347e93b7898ff0bda018c73ca1c4",
-    "cpppj/tests/CampaignSessionTests.cpp": "3e74241700d3a4992d087296a3b019a27dbb3ddea24388a97dcae28c480bf11d",
+    "cpppj/tests/CampaignSessionTests.cpp": "a3c3dfeafef99605eee7d9bbee5ee582fb7111296b648032a4d6b356d7e1e1de",
     "cpppj/tests/CarrierContentNoticeTests.cpp": "82ed556e50d599e2d08f594e309129a7d92a7d5e994a6a81f794342f518ed76c",
     "cpppj/tests/fixtures/priestmenu-x86.tsv": "2dda11277f2b67f1a69447ea7cb1694e989a08ed513dbf9819e14bfbf3ce6208",
     "cpppj/tests/fixtures/carrier-content-notice-x86.tsv": "c8a21b68d3b0b6e271d04950022366eab9abd3069ff5a9ce3b53746f1fb4d4bf",
     "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
     "tools/decomp_carrier_content_notice.py": "dbb32841a7019edbcb411f75094046c8bf0e20b4ed503e109a14b79a79d8a94c",
     "cpppj/src/o/CMakeLists.txt": "c84659874163c54863d0de3c252858446f7e58e4e4df956d72ea4430cd79b538",
-    "cpppj/tests/CMakeLists.txt": "687f283a950b897c92cfca118f23b86de2192ed710a1fcc651c48685a7a221ba"
+    "cpppj/tests/CMakeLists.txt": "9dc34335f2f606b142e8f5ba295e11c54c92498de07d38917da041d36a325b22"
   },
   "validation": {
     "configuration": "Release",
@@ -156,6 +156,33 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "b850f423d0be8c30b22478834953b1f83dbe250243c869104153c5761ff5a3dd",
           "current": "687f283a950b897c92cfca118f23b86de2192ed710a1fcc651c48685a7a221ba"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 126,
+      "reason": "실제 공급 장부256칸/선택30칸 및 커서 에너지 판정의 Session 연결",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "1b801ce2f93cc1c9b0cdcffcb486513338ae175e64f6616fb0fd79330f259ffc",
+          "current": "0ad38e5ba9cd1fd01d6bc1620c01f1ddfce7d31118303e59ef7f21885723be2e"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "2f75dbbed2cd1ada2b0ff5e5611d3f623dd705bf32cfebfc6162300fcd4e0413",
+          "current": "9c2ae6632a257cdced76dc4d3af778bae9b5b90cbcb1a47ad198d66edcb97813"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "3e74241700d3a4992d087296a3b019a27dbb3ddea24388a97dcae28c480bf11d",
+          "current": "a3c3dfeafef99605eee7d9bbee5ee582fb7111296b648032a4d6b356d7e1e1de"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "687f283a950b897c92cfca118f23b86de2192ed710a1fcc651c48685a7a221ba",
+          "current": "9dc34335f2f606b142e8f5ba295e11c54c92498de07d38917da041d36a325b22"
         }
       ]
     }

@@ -22,8 +22,10 @@
 #include "o/RawCarrierContentNotice.h"
 #include "client/RawCursorMana.h"
 #include "client/RawCursorRange.h"
+#include "o/RawEnergySupply.h"
 #include "client/RawCampaignParticles.h"
 namespace netstorm::client {
+struct CursorPlacementHooks; // 실제 커서 배치의 설명/에너지 경계만 연결할 때 사용한다.
 // 미션 입력/정지/UI 수명은 실제 UberGump의 현재 저장소와 동작을 빌린다.
 struct CampaignMissionOutcomeUi {
     std::function<std::uint32_t()> demo; // 현재 미션 Demo DWORD를 읽는다.
@@ -172,6 +174,12 @@ public:
     CursorRangeGlobals& CursorRangeSettings();
     // 실제 마나·사정거리 생성과 공통 제거/이벤트를 같은 Host/Kernel에 연결한다.
     void BindCursorRange(CursorLifecycleHooks& hooks);
+    // 현재 공급원/비대칭 동맹/TYPE mana/마지막 선택 목록으로 계산하는 실제 몸체다.
+    const o::RawEnergySupply& EnergySupply() const;
+    o::EnergySupplyState& EnergySettings(); // 실제 공급 제곱 반경·userCheat/ignore/동맹 전역이다.
+    o::SquidPostPopList& EnergySources(); // 이후 Builder도 같은 lastSource30 저장소를 빌린다.
+    // 실제4734d0의 전체 DWORD와 문구를 커서 Query에 연결한다. GUI/공간 판정은 유지한다.
+    void BindCursorEnergy(CursorPlacementHooks& hooks);
     // 화면/명령은 같은 현재 raw 월드와 HP를 읽는다.
     RawSurfaceWorld& World();
     // 같은 월드의 현재 Pool/장부/Host 참조를 빌린다.

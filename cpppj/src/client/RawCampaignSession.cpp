@@ -11,6 +11,7 @@
 #include "o/RawProjectileGeometry.h"
 #include "o/RawFormPacket.h"
 #include "o/RawFenceLifetime.h"
+#include "client/RawCursorPlacement.h"
 #include "o/RawContentParentNotice.h"
 #include "o/RawPlayerDamageNotice.h"
 #include "o/RawFenceTarget.h"
@@ -104,6 +105,9 @@ struct RawCampaignSession::Impl {
     CursorDropState cursorDrop; // 실제 취득/배치/취소가 공유할 커서 상태이며 마나 토큰도 같은 저장소다.
     CursorManaGlobals cursorManaGlobals; // 현재 마나 종류/반경과 월드 좌표 제한 전역이다.
     std::unique_ptr<RawCursorMana> cursorMana; // Kernel을 먼저 비운 뒤 해제하는 실제 마나 프레임/수명 몸체다.
+    EnergySupplyState energyState; // 마나 반경과 별개인 실제 제곱 반경 및 공급 전역이다.
+    SquidPostPopList energySources{std::vector<std::uint32_t>(kEnergySourceCapacity),0}; // 4fcb80의 실제30칸 lastSource다.
+    std::unique_ptr<RawEnergySupply> energySupply; // 현재 장부 공급원/동맹/타입을 직접 읽는 실제 배치 에너지다.
     GameRandom random; // 게임 난수의 명시 초기 입력이다.
     ScrambledSpStore sp; // 같은 게임 난수를 사용하는 실제 패치 SP 저장소다.
     SquidRewardState rewardState; // 실제 HP getter의 장기 전역이다.
@@ -318,6 +322,7 @@ struct RawCampaignSession::Impl {
         priestState.priests.priests.entries.resize(100);assetState.residences.entries.resize(100);
         assetState.temples.entries.resize(100);assetState.outposts.entries.resize(100);assetState.geysers.entries.resize(100);
         core.bookkeeping.factories.entries.resize(kCampaignFactoryCapacity); // 첫저장객체Pop전에예약하여원본Append의capacity0생략을방지한다.
+        core.bookkeeping.providers.entries.resize(kEnergyProviderCapacity); // 원본4fcb60의256칸을 첫 실제 공급자 Pop 전에 확보한다.
         // 원본 Player의 첫 지역 sentinel은9기록에 직접 쓴다. 별도 playerRegions 배열을 사용하지 않는다.
         for (std::uint32_t owner=0;owner<9;++owner) {
             Put(players,owner*0xb4+0x78,127);Put(players,owner*0xb4+0x54,1U<<owner);
@@ -423,6 +428,9 @@ struct RawCampaignSession::Impl {
         }
         gunMode=std::make_unique<RawGunMode>(core.pool,core.frames,gunState.windArcherType);
         gunTarget=std::make_unique<RawGunTarget>(core.pool,core.hash,core.types,gunTypes,core.shapes,gunTargetState);
+        EnergySupplyHooks energyHooks;energyHooks.providerEntry=EnergyProviderEntry;energyHooks.requirement=BindAiTypeRequiredEnergy(assets.game,core.types);
+        EnergySupplyReads energyReads;energyReads.editor=[this] { return globals.editor; };energyReads.special=[this] { return playerState.special ? 1U : 0U; };energyReads.mission=[this] { return globals.missionPost ? 1U : 0U; };
+        energySupply=std::make_unique<RawEnergySupply>(core.pool,core.types,core.bookkeeping.providers,energySources,alliances,cursorManaGlobals.mapLimit,energyState,std::move(energyHooks),std::move(energyReads));
         CursorManaHooks cursorManaHooks;BindCursorManaWorld(cursorManaHooks,world,[this](Sid sid) { return gunTarget->Center(sid); });
         cursorMana=std::make_unique<RawCursorMana>(core.pool,core.types,core.processState,cursorManaGlobals,cursorDrop,std::move(cursorManaHooks));
         CursorRangeHooks rangeHooks;BindCursorManaWorld(rangeHooks.world,world,[this](Sid sid) { return gunTarget->Center(sid); });
@@ -1232,6 +1240,17 @@ CursorRangeGlobals& RawCampaignSession::CursorRangeSettings() { return impl_->cu
 // 설치/소유권 확인 뒤 실제 두 프로세스와 공통 현재 Kernel 분배기를 연결한다.
 void RawCampaignSession::BindCursorRange(CursorLifecycleHooks& hooks) {
     BindCursorMana(hooks);BindCursorRangeLifecycle(hooks,impl_->core.processes,*impl_->cursorRange);
+}
+// 실제 동일 장부의 공급원과 현재 TYPE/동맹을 조회한다.
+const RawEnergySupply& RawCampaignSession::EnergySupply() const { return *impl_->energySupply; }
+// 호출자가 바꾼 원본 공급 설정을 다음 실제 조회에서 읽는다.
+EnergySupplyState& RawCampaignSession::EnergySettings() { return impl_->energyState; }
+// 커서 조회 뒤 생산/Builder도 실제 같은 선택 목록을 소비하게 한다.
+SquidPostPopList& RawCampaignSession::EnergySources() { return impl_->energySources; }
+// 도달한 실제 에너지 판정만 연결하며 다른 GUI/공간 효과를 기본 성공으로 만들지 않는다.
+void RawCampaignSession::BindCursorEnergy(CursorPlacementHooks& hooks) {
+    if (!impl_->loaded) throw std::logic_error("미설치 Session의 커서 에너지 연결");
+    hooks.describe=[this](std::string& text,float x,float y,std::uint32_t type,std::uint32_t owner) { return impl_->energySupply->Evaluate(text,x,y,type,owner); };
 }
 // 화면과 입력은 같은 살아 있는 상태를 읽는다.
 RawSurfaceWorld& RawCampaignSession::World() { return impl_->world; }

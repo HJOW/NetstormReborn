@@ -2,6 +2,7 @@
 #include "DudeSpawnSupport.h"
 #include "client/GameWorld.h"
 #include "client/AiTypeRequiredEnergy.h"
+#include "client/RawCursorPlacement.h"
 #include "o/RawMissionAiSettings.h"
 #include "o/RawGeyserAiRegistration.h"
 #include "client/RawShapeToBuffer.h"
@@ -702,4 +703,34 @@ TEST_CASE(CampaignSession_CursorRangeActualWorldAndSharedLifetime) {
         CHECK(core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0 && core.bookkeeping.depth==0);
     }
     CHECK(diagnostics.empty());
+}
+
+// 실제 미션의 공급 장부/TYPE mana/방향별 동맹/같은30칸 목록을 커서 판정에 연결한다.
+TEST_CASE(CampaignSession_CursorEnergyActualProvidersAndSharedSources) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());
+    auto services=external.Services();std::vector<Sid> lostSounds; // 실제 클라이언트의 unitLost.wav 장치 요청만 외부에서 관찰한다.
+    services.unitLost=[&](Sid sid) { lostSounds.push_back(sid); };
+    GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services),{1024,768});
+    auto& session=world.Session();auto core=session.Core();const auto before=core.bookkeeping.providers.count;const auto origin=EmptySessionSupport(core);const auto created=session.World().Create(76); // 실제 Rain 제네레이터이며 원본 Factory/Owner/Pop이 공급 장부를 등록한다.
+    core.owner.Set(created,1);session.World().Pop(created,static_cast<float>(origin.x+2),static_cast<float>(origin.y+2),0);
+    const auto providers=core.bookkeeping.providers.Items();CHECK(core.bookkeeping.providers.entries.size()==kEnergyProviderCapacity);CHECK(providers.size()==before+1 && providers.back()==created.value);
+    const Sid source=created;const auto raw=core.pool.Slot(source);const auto& type=core.types[raw[10]];const auto owner=static_cast<std::uint32_t>(raw[34]);
+    const float x=static_cast<float>(static_cast<double>(std::bit_cast<float>(Get(raw,14)))-type.footX*0.5),y=static_cast<float>(static_cast<double>(std::bit_cast<float>(Get(raw,18)))-type.footY*0.5);
+    CHECK(&session.EnergySupply().Pool()==&core.pool && session.EnergySources().entries.size()==kEnergySourceCapacity);
+    CHECK(session.EnergySupply().Covers(source,{},x,y,0,0));CHECK(!session.EnergySupply().Covers(source,{},x+22,y,0,0));CHECK(session.EnergySupply().Covers(source,{},x+22,y,0.001f,0));
+    constexpr std::uint32_t target=75; // 실제 Wind 제네레이터의 명시 mana="s"이며 다른 원소 공급원 한 개로 충족한다.
+    CursorPlacementHooks hooks;session.BindCursorEnergy(hooks);std::string label;CHECK(hooks.describe(label,x,y,target,owner)>0 && label=="S");
+    auto& selected=session.EnergySources();CHECK(selected.count>0);const auto storage=selected.entries.data();const auto selectedSource=selected.entries.front();CHECK(session.EnergySupply().TakeSource()==selectedSource && selected.entries.front()==0 && selected.entries.data()==storage);
+    auto alliances=session.Alliances();std::fill(alliances.begin(),alliances.end(),0);const auto other=(owner+1)%9;
+    const auto contains=[&] { const auto current=selected.Items();return std::find(current.begin(),current.end(),source.value)!=current.end(); }; // 실제 마지막 선택 목록을 직접 읽는다.
+    hooks.describe(label,x,y,target,other);CHECK(!contains());alliances[owner*9+other]=1;hooks.describe(label,x,y,target,other);CHECK(contains());
+    // 반대 방향의 동맹을 대신 읽으면 이 검사가 실패한다.
+    alliances[owner*9+other]=0;alliances[other*9+owner]=1;hooks.describe(label,x,y,target,other);CHECK(!contains());
+    session.EnergySettings().allied=0;alliances[owner*9+other]=1;hooks.describe(label,x,y,target,other);CHECK(!contains());
+    // 동일 실제 공급 설정을 다음 가상 범위 호출에서 즉시 읽는다.
+    session.EnergySettings().radiusSquared=0;CHECK(!session.EnergySupply().Covers(source,{},x,y,0,0));session.EnergySettings().radiusSquared=484;
+    CHECK(session.World().Destroy(created,0));CHECK(core.bookkeeping.providers.count==before);hooks.describe(label,x,y,target,owner);CHECK(!contains());
+    CHECK(lostSounds.size()==1 && lostSounds.front()==created);
+    CHECK(core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0 && core.bookkeeping.depth==0);
 }

@@ -57,16 +57,16 @@
     "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
     "tools/decomp_cursor_mana.py": "00cfea4f089b06b1b8f1b0cc61f0cf4f93bd33aa16aaa0715a95c66187a9f888",
     "cpppj/tests/fixtures/cursor-mana-x86.tsv": "13bc12de4bee7790d44ce4138249221a49f26740538e0e9ebca9fb22348adc38",
-    "cpppj/src/CMakeLists.txt": "d57ce7c787ea9a7ba42218a7e8b25a39fb60a551130387b6838e59788b628e7b",
+    "cpppj/src/CMakeLists.txt": "c6788ec0b508c34f26406203a824455adc59d87a1a5aa80ab2bfda476e91021b",
     "cpppj/src/client/RawCampaignLifetimeBindings.cpp": "93d3e0040fe883d6da64622098be929103c1f07aea00e6c4a9a5c652d15958af",
     "cpppj/src/client/RawCampaignLifetimeBindings.h": "6f4be73b52279abf308c8a3e6d8962271560e47c25996f7a03fca09f8cd063e8",
-    "cpppj/src/client/RawCampaignSession.cpp": "2f75dbbed2cd1ada2b0ff5e5611d3f623dd705bf32cfebfc6162300fcd4e0413",
-    "cpppj/src/client/RawCampaignSession.h": "1b801ce2f93cc1c9b0cdcffcb486513338ae175e64f6616fb0fd79330f259ffc",
+    "cpppj/src/client/RawCampaignSession.cpp": "9c2ae6632a257cdced76dc4d3af778bae9b5b90cbcb1a47ad198d66edcb97813",
+    "cpppj/src/client/RawCampaignSession.h": "0ad38e5ba9cd1fd01d6bc1620c01f1ddfce7d31118303e59ef7f21885723be2e",
     "cpppj/src/o/SquidDisplay.cpp": "47dd928d6df4a53c8debb0dd67c56fe62f4c530a1dd07cd31bae81cc7468faac",
     "cpppj/src/o/SquidPop.cpp": "c57e6263de140459d3c109f9163b59ea1193e7038e2a46ce74b577cbdebae7a7",
     "cpppj/src/o/SquidUnpop.cpp": "000e315fc0aead83fc423afc3293b3fd6176a211c1dc5b297d642e8dbea06ce2",
-    "cpppj/tests/CMakeLists.txt": "687f283a950b897c92cfca118f23b86de2192ed710a1fcc651c48685a7a221ba",
-    "cpppj/tests/CampaignSessionTests.cpp": "3e74241700d3a4992d087296a3b019a27dbb3ddea24388a97dcae28c480bf11d",
+    "cpppj/tests/CMakeLists.txt": "9dc34335f2f606b142e8f5ba295e11c54c92498de07d38917da041d36a325b22",
+    "cpppj/tests/CampaignSessionTests.cpp": "a3c3dfeafef99605eee7d9bbee5ee582fb7111296b648032a4d6b356d7e1e1de",
     "cpppj/tests/PopTests.cpp": "2815679f07e4c9873dc70b925e9e6c16e44864d3be191c636650954a12d4cea4",
     "cpppj/tests/UnpopTests.cpp": "e0ac9391654c79aabfafb7f57516371e540317bd95d335abb61d85f0fea17f94",
     "cpppj/src/client/RawCursorMana.cpp": "b8ab58679249a18387757eb2eb93c7405e566a4a9fc02ed018b2046a7d751f7b",
@@ -135,6 +135,38 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "d89ecff205bf63e19de47cfd36d895eacda45c7e48620aeb13ad0fe9340f5d79",
           "current": "3e74241700d3a4992d087296a3b019a27dbb3ddea24388a97dcae28c480bf11d"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 126,
+      "reason": "실제 공급 장부256칸/선택30칸 및 커서 에너지 판정의 Session 연결",
+      "pins": [
+        {
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "d57ce7c787ea9a7ba42218a7e8b25a39fb60a551130387b6838e59788b628e7b",
+          "current": "c6788ec0b508c34f26406203a824455adc59d87a1a5aa80ab2bfda476e91021b"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "2f75dbbed2cd1ada2b0ff5e5611d3f623dd705bf32cfebfc6162300fcd4e0413",
+          "current": "9c2ae6632a257cdced76dc4d3af778bae9b5b90cbcb1a47ad198d66edcb97813"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "1b801ce2f93cc1c9b0cdcffcb486513338ae175e64f6616fb0fd79330f259ffc",
+          "current": "0ad38e5ba9cd1fd01d6bc1620c01f1ddfce7d31118303e59ef7f21885723be2e"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "687f283a950b897c92cfca118f23b86de2192ed710a1fcc651c48685a7a221ba",
+          "current": "9dc34335f2f606b142e8f5ba295e11c54c92498de07d38917da041d36a325b22"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "3e74241700d3a4992d087296a3b019a27dbb3ddea24388a97dcae28c480bf11d",
+          "current": "a3c3dfeafef99605eee7d9bbee5ee582fb7111296b648032a4d6b356d7e1e1de"
         }
       ]
     }

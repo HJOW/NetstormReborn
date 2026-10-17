@@ -35,3 +35,6 @@ target_sources(netstorm PRIVATE client/RawCursorRange.cpp client/RawCursorRange.
 
 # 실제 펜스 연결 해제/이웃 갱신/가상 전처리 수명이다.
 target_sources(netstorm PRIVATE o/RawFenceLifetime.cpp o/RawFenceLifetime.h)
+
+# 실제 에너지 공급 수집/요구 문자 대응/범위 판정과 공유 목록이다.
+target_sources(netstorm PRIVATE o/RawEnergySupply.cpp o/RawEnergySupply.h o/EnergyProviderVtables.inc)

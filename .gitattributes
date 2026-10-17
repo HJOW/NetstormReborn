@@ -1097,3 +1097,14 @@ cpppj/tests/fixtures/fence-lifetime-x86.tsv text eol=lf
 cpppj/cursor-range.json text eol=lf
 cpppj/fence-lifetime.json text eol=lf
 docs/exe/cpp-cursor-range-20261017.md text eol=lf
+
+# 실제 에너지 공급의 소스/관측/의존 해시 바이트를 LF로 보존한다.
+cpppj/src/o/RawEnergySupply.h text eol=lf
+cpppj/src/o/RawEnergySupply.cpp text eol=lf
+cpppj/src/o/EnergyProviderVtables.inc text eol=lf
+cpppj/tests/EnergySupplyTests.cpp text eol=lf
+cpppj/tests/fixtures/energy-supply-x86.tsv text eol=lf
+cpppj/tests/fixtures/energy-provider-vtables.tsv text eol=lf
+tools/decomp_energy_supply.py text eol=lf
+cpppj/energy-supply.json text eol=lf
+docs/exe/cpp-energy-supply-20261017.md text eol=lf

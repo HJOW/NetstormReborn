@@ -1,0 +1,458 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "entries": [
+    "004730c0",
+    "00473330",
+    "004734d0",
+    "00473570",
+    "0041c0f0",
+    "0041c170",
+    "0049a840",
+    "0049ae80",
+    "0049a900",
+    "004ac550",
+    "004ac970",
+    "0040e800",
+    "0040e880",
+    "0040e8f0",
+    "0041d0d0",
+    "004e5f7b",
+    "004e5eb2"
+  ],
+  "uniqueInputs": 1058,
+  "normalReturns": 2116,
+  "instructions": 4539020,
+  "actualEntries": {
+    "00473330": 1408,
+    "004e5f7b": 1382,
+    "thread-locale-boundary": 1382,
+    "004e5eb2": 1382,
+    "004734d0": 182,
+    "004730c0": 800,
+    "0049a840": 62364,
+    "0049ae80": 800,
+    "0040e880": 800,
+    "0041d0d0": 1600,
+    "0040e800": 1600,
+    "0040e8f0": 800,
+    "0041c170": 30620,
+    "004ac550": 30620,
+    "0049a900": 30620,
+    "004ac970": 29972,
+    "0041c0f0": 480,
+    "00473570": 24
+  },
+  "precisionDifferentInputs": [],
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "tools/decomp_energy_supply.py": "a18c1913de8e3462dc30e21d1cbb62541600655630d8605c594ecc860d200434",
+    "cpppj/tests/fixtures/unpop-vtables.tsv": "d149c425723b9be5f8f1808f37f08e951b93a8f0dca069db4eaffa9fb07f5197",
+    "cpppj/src/o/EnergyProviderVtables.inc": "af3d24a14a5957fe5969a2288b0c3948144bfde7afc8e30b6a54325bf71bc8aa",
+    "cpppj/tests/fixtures/energy-provider-vtables.tsv": "21022817bb7106b346b7be01a30078a61ce9ac4ed11ed0341b5db888886a9d63",
+    "cpppj/tests/fixtures/energy-supply-x86.tsv": "d020d2165be81e8db054c63804976ddd9a50876e3765243e7f7fcc38f2299802",
+    "cpppj/src/CMakeLists.txt": "c6788ec0b508c34f26406203a824455adc59d87a1a5aa80ab2bfda476e91021b",
+    "cpppj/tests/CMakeLists.txt": "9dc34335f2f606b142e8f5ba295e11c54c92498de07d38917da041d36a325b22",
+    "cpppj/src/client/RawCampaignSession.h": "0ad38e5ba9cd1fd01d6bc1620c01f1ddfce7d31118303e59ef7f21885723be2e",
+    "cpppj/src/client/RawCampaignSession.cpp": "9c2ae6632a257cdced76dc4d3af778bae9b5b90cbcb1a47ad198d66edcb97813",
+    "cpppj/tests/CampaignSessionTests.cpp": "a3c3dfeafef99605eee7d9bbee5ee582fb7111296b648032a4d6b356d7e1e1de",
+    "cpppj/src/o/RawEnergySupply.h": "0bcb3621d80154bf3a4ea9b3559a8f264f03a8222a596b7eb4fec98374ccab1d",
+    "cpppj/src/o/RawEnergySupply.cpp": "0b6690712e863ba9d93d8777243d58de7eecb318198b8e1fa3ccb4615d6621b9",
+    "cpppj/tests/EnergySupplyTests.cpp": "a5ce81b2b36556dbef880b4fcda93113d2ec2041b8442578d2d35f501033bd6d"
+  },
+  "limitations": [
+    "수집/문자 대응/배치/소비/공급 두 가상/TYPE 조회/발자국/클램프/toupper는 실제 명령이다.",
+    "OS 스레드 locale 조회만 보호 PE의 현재 C locale 포인터를 공급하는 명시 경계다.",
+    "독립 명시 raw/TYPE/문자열/목록/전역 입력이며 실제 GUI 또는 사용자 플레이 증거는 아니다."
+  ],
+  "providerVtables": [
+    {
+      "vtable": "00501dd0",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "00501ea0",
+      "entry": "0041c170"
+    },
+    {
+      "vtable": "00502370",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "00502448",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "00502510",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "005025d8",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "005026a0",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "00502778",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "00502840",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "00502908",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "005029d0",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "00502aa8",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "00502b70",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "00502c38",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "00502cf0",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "00502db0",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "00502e68",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "00502f30",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "00502ff8",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "005030c0",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "00503188",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "00503360",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "005034c8",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "00503d80",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "00503e50",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "00503f20",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "00503ff0",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "005040c0",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "00504198",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "00506d98",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "00506e50",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "00506f08",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "005070c0",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "005075d8",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "005076b8",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "00507770",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "00507950",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "00508cc8",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "00509148",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "00509210",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "005092d0",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "00509388",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "00509470",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "005096a0",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "00509758",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "00509810",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "00509930",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "005099e8",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "00509aa0",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "00509b98",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "0050a050",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "0050a1e8",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "0050a388",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "0050a748",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "0050a820",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "0050a8e8",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "0050b570",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "0050b6e8",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "0050b7c0",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "0050b888",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "0050b9b8",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "0050bad0",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "0050c3b0",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "0050c9f0",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "0050cc08",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "0050da88",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "0050db78",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "0050dc30",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "0050e568",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "0050e668",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "0050e738",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "0050e888",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "0050e940",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "0050ea08",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "0050ead0",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "0050eb98",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "0050ee08",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "0050f210",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "0050f540",
+      "entry": "0041c0f0"
+    },
+    {
+      "vtable": "005196f0",
+      "entry": "0041c170"
+    },
+    {
+      "vtable": "005197a8",
+      "entry": "0041c170"
+    },
+    {
+      "vtable": "00519860",
+      "entry": "0041c170"
+    },
+    {
+      "vtable": "00519918",
+      "entry": "0041c170"
+    }
+  ],
+  "originalListCapacities": {
+    "providers": 256,
+    "lastSources": 30,
+    "providerInitializer": "004fcb60",
+    "lastSourceInitializer": "004fcb80"
+  },
+  "protectedFileSha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6"
+  },
+  "productValidation": {
+    "releaseBuild": {
+      "log": "extracted/goal-energy-20261017-build7.log",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0
+    },
+    "focused": {
+      "energySupply": 3,
+      "actualSession": 1,
+      "failed": 0,
+      "energyLog": "extracted/goal-energy-20261017-focused3.log",
+      "sessionLog": "extracted/goal-energy-20261017-session-focused5.log"
+    },
+    "fullRegression": {
+      "tests": 1509,
+      "failed": 0,
+      "ctestExitCode": 0,
+      "testSeconds": 237.02,
+      "totalSeconds": 237.05,
+      "log": "extracted/goal-energy-20261017-ctest.log",
+      "output": "extracted/goal-energy-20261017-ctest-output.log"
+    },
+    "dependencyVerifiers": {
+      "count": 18,
+      "failed": 0,
+      "log": "extracted/goal-energy-20261017-verify18.log"
+    },
+    "integrationPins": {
+      "reportsUpdated": 20,
+      "pinsUpdated": 39,
+      "historicalPinsPreserved": 93,
+      "currentProductSources": 9
+    },
+    "actualSessionFactoryOwnerPopProviderRegistration": true,
+    "actualSessionSharedSourcesAndAsymmetricAlliances": true,
+    "actualSessionProviderDeletionAndUnitLostRequest": true,
+    "originalOrCloneGameLaunched": false,
+    "guiOrHumanPlayVerified": false,
+    "clientMenuCursorIntegrated": false,
+    "generalConstructionIntegrated": false,
+    "overallGoalComplete": false
+  }
+}

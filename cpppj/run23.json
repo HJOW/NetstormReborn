@@ -182,7 +182,7 @@
     "cpppj/hist/run23-success2/install.h": "2d42c64bfd2e49e9f1bdb5218c8e0e3f47d5029e24a9c1e2c65180aaf08cf02a",
     "cpppj/priestdamage.json": "48dc6441097cfc1ae2a2f88a0cf4b1e8881dc9d1f88323908049c7733dd4a18c",
     "cpppj/run22.json": "3758f5cdad3bd38fd7ec2f0cc44f2ce3aebcd00cad6eef97657a0ea6a307c292",
-    "cpppj/src/CMakeLists.txt": "d57ce7c787ea9a7ba42218a7e8b25a39fb60a551130387b6838e59788b628e7b",
+    "cpppj/src/CMakeLists.txt": "c6788ec0b508c34f26406203a824455adc59d87a1a5aa80ab2bfda476e91021b",
     "cpppj/src/app/CanonMayPlaceInspect.cpp": "27eda46bca500c898abeb9a3a7c4e8588b38e061b579c84cbf6c032c6d46dda9",
     "cpppj/src/app/FrameBindingInspect.cpp": "042602919b0531fb1cbaf3941dc6597bee73944bbf0d571dacfd638bb45dd07c",
     "cpppj/src/app/FrameBindingInspect.h": "4e187ca41f8c34ed52c022b58a57327a554a723e3e26ee88a1ae152c99de3fce",
@@ -1325,6 +1325,18 @@
           "path": "cpppj/src/CMakeLists.txt",
           "previous": "a0ce72c79685631ce627defcc392fb06df32131c835594b570569404e1929a4a",
           "current": "d57ce7c787ea9a7ba42218a7e8b25a39fb60a551130387b6838e59788b628e7b"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 126,
+      "reason": "실제 공급 장부256칸/선택30칸 및 커서 에너지 판정의 Session 연결",
+      "pins": [
+        {
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "d57ce7c787ea9a7ba42218a7e8b25a39fb60a551130387b6838e59788b628e7b",
+          "current": "c6788ec0b508c34f26406203a824455adc59d87a1a5aa80ab2bfda476e91021b"
         }
       ]
     }
