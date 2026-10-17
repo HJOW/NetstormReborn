@@ -21,8 +21,8 @@
     "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
     "tools/decomp_cursor_type_range.py": "6b4a37505b4156861db4eefeccfe2cd43fae6ac38cccbcf891d13ee8764dc251",
     "cpppj/tests/fixtures/cursor-type-range-x86.tsv": "cf2a3db28cd78c5089e7102a33b86b5ab3908e2f7137bf09de592d33df69b824",
-    "cpppj/src/client/RawCursorLifecycle.h": "93071d00170ceb87e7c1f0424d03e5b02705ffbf9c7e731198f5a99f3bcafd0b",
-    "cpppj/src/client/RawCursorLifecycle.cpp": "ae6b21d763638a5ff74267aad5730450b39ade182b4eb3247d460a2890dcf5e4",
+    "cpppj/src/client/RawCursorLifecycle.h": "537111c145676234c0f8ad032ca3b68e660f8e1d4245cc0e02f228c53066fd1b",
+    "cpppj/src/client/RawCursorLifecycle.cpp": "fce0a2a2eed2fc50169d36b85ac2766dd4b2b8b4b060f17966950601a103e1ce",
     "cpppj/tests/CursorLifecycleTests.cpp": "33711957a8ec13e32bcd7e63b97a499055ec40a2370345ea0ecc258f220f44e9",
     "cpppj/tests/PreviewDrawTests.cpp": "a27ab5bc86ac1ec487013707ac7674a0e53d17ab9bc27a9ebcc2f9eacef4975c",
     "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
@@ -66,5 +66,24 @@
     },
     "actualClientCursorProcessConnected": false,
     "goalComplete": false
-  }
+  },
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "unit": 134,
+      "reason": "같은 실제 커서/ContentForm/로컬 예측/Builder/25바이트 송신 연결",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCursorLifecycle.h",
+          "previous": "93071d00170ceb87e7c1f0424d03e5b02705ffbf9c7e731198f5a99f3bcafd0b",
+          "current": "537111c145676234c0f8ad032ca3b68e660f8e1d4245cc0e02f228c53066fd1b"
+        },
+        {
+          "path": "cpppj/src/client/RawCursorLifecycle.cpp",
+          "previous": "ae6b21d763638a5ff74267aad5730450b39ade182b4eb3247d460a2890dcf5e4",
+          "current": "fce0a2a2eed2fc50169d36b85ac2766dd4b2b8b4b060f17966950601a103e1ce"
+        }
+      ]
+    }
+  ]
 }

@@ -65,6 +65,8 @@ private:
 };
 // 취득/취소/내려놓기가 같은 실제 위치 판정과 화면 준비 몸체를 사용하게 한다.
 void BindCursorPlacement(CursorLifecycleHooks& lifecycle,CursorDropHooks& drop,RawCursorPlacement& placement);
+// 같은 실제 자산의 Canon/SHP만 연결한다. 장치나 배치 계산을 대체하지 않는다.
+void BindCursorPlacementAssets(CursorPlacementHooks& hooks,const GameAssets& assets,const o::PriestPlacementGeometryState& geometry);
 // 현재 자산의 프레임/Canon 패턴과 같은 배치 처리 흐름/출력기를 연결한다. GUI와 설명/지역은 유지한다.
 void BindCursorPlacementWorld(CursorPlacementHooks& hooks,const o::SidPool& pool,const GameAssets& assets,
     const o::PriestPlacementGeometryState& geometry,o::RawCanonPlacementPipeline& placement,Renderer& renderer);

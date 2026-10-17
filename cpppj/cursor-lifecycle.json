@@ -45,8 +45,8 @@
       "outputLog": "extracted/goal-cursor-lifecycle-20261017-ctest-output.log"
     },
     "sourceSha256": {
-      "cpppj/src/client/RawCursorLifecycle.h": "93071d00170ceb87e7c1f0424d03e5b02705ffbf9c7e731198f5a99f3bcafd0b",
-      "cpppj/src/client/RawCursorLifecycle.cpp": "ae6b21d763638a5ff74267aad5730450b39ade182b4eb3247d460a2890dcf5e4",
+      "cpppj/src/client/RawCursorLifecycle.h": "537111c145676234c0f8ad032ca3b68e660f8e1d4245cc0e02f228c53066fd1b",
+      "cpppj/src/client/RawCursorLifecycle.cpp": "fce0a2a2eed2fc50169d36b85ac2766dd4b2b8b4b060f17966950601a103e1ce",
       "cpppj/tests/CursorLifecycleTests.cpp": "33711957a8ec13e32bcd7e63b97a499055ec40a2370345ea0ecc258f220f44e9"
     }
   },
@@ -82,6 +82,23 @@
           "path": "cpppj/tests/CursorLifecycleTests.cpp",
           "previous": "464a48cf5d670a94c0e9aa500bec31ea9147ac237669c86e2e7d0f12f5b38be5",
           "current": "33711957a8ec13e32bcd7e63b97a499055ec40a2370345ea0ecc258f220f44e9"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 134,
+      "reason": "같은 실제 커서/ContentForm/로컬 예측/Builder/25바이트 송신 연결",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCursorLifecycle.h",
+          "previous": "93071d00170ceb87e7c1f0424d03e5b02705ffbf9c7e731198f5a99f3bcafd0b",
+          "current": "537111c145676234c0f8ad032ca3b68e660f8e1d4245cc0e02f228c53066fd1b"
+        },
+        {
+          "path": "cpppj/src/client/RawCursorLifecycle.cpp",
+          "previous": "ae6b21d763638a5ff74267aad5730450b39ade182b4eb3247d460a2890dcf5e4",
+          "current": "fce0a2a2eed2fc50169d36b85ac2766dd4b2b8b4b060f17966950601a103e1ce"
         }
       ]
     }

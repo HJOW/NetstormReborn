@@ -21,8 +21,8 @@
     "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
     "cpppj/src/client/GameWorld.h": "57adef4cb282f91c27ebdac68846b09883494f8406abdd7517d5267bd44a93fc",
     "cpppj/src/client/GameWorld.cpp": "0c7c8431cfdc1bcb911b3c50f8c9e409e95b14fa788a9d53960c950ade95c01d",
-    "cpppj/src/client/RawCampaignSession.h": "a339b719f4e208790732c1323a5ba7a4a72f5911db4fba78968afdd4d2b9e8eb",
-    "cpppj/src/client/RawCampaignSession.cpp": "2a85b1235f1ea99fb66961d637f191c73549ad189e08b8126e34673e29dc491f",
+    "cpppj/src/client/RawCampaignSession.h": "8b0cc82f468e9c014d87ae963d5991418403f7e5c12aca6622e53f9aa89b8c5c",
+    "cpppj/src/client/RawCampaignSession.cpp": "91efb317e48d472e496b96f0f98b784b086acbaa875152582078f3b372ded7ec",
     "cpppj/src/client/RawPriestMenu.h": "5364d92d3af5b9b81a0477df5c005fcfc4a1ef7f6817894bd337250ce4d0e43d",
     "cpppj/src/client/RawPriestMenu.cpp": "f30be4e91f2141d1000f4a75d9f41619024d20f6cb024f68b8ffb483b1eddcf7",
     "cpppj/src/client/RawCampaignLifetimeBindings.h": "6f4be73b52279abf308c8a3e6d8962271560e47c25996f7a03fca09f8cd063e8",
@@ -38,7 +38,7 @@
     "cpppj/src/o/SpStore.cpp": "2319a90807d423b72b0e47e51101bc9ea1618f234c65e26b704c017313f4268a",
     "cpppj/src/o/SquidReward.cpp": "a29c11afe56a477c470956b1ed0a0678d059340806537ce08b43bf6b6aa1375d",
     "cpppj/tests/PriestMenuTests.cpp": "a7b76f4b807941334f1dc6c089b156a59c72347e93b7898ff0bda018c73ca1c4",
-    "cpppj/tests/CampaignSessionTests.cpp": "058c87ef19570411baee5459321070ceb57d6a965e6b6c91b76a428573d5049f",
+    "cpppj/tests/CampaignSessionTests.cpp": "f394dce6db3dfe4de3ae5df16e57e63c5b5d7011c347369ccdfac0a48760e89f",
     "cpppj/tests/CarrierContentNoticeTests.cpp": "82ed556e50d599e2d08f594e309129a7d92a7d5e994a6a81f794342f518ed76c",
     "cpppj/tests/fixtures/priestmenu-x86.tsv": "2dda11277f2b67f1a69447ea7cb1694e989a08ed513dbf9819e14bfbf3ce6208",
     "cpppj/tests/fixtures/carrier-content-notice-x86.tsv": "c8a21b68d3b0b6e271d04950022366eab9abd3069ff5a9ce3b53746f1fb4d4bf",
@@ -428,6 +428,28 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "bfc500dc462287984f94118cfad9b630149023924fde65414e5950dfb2f2df3e",
           "current": "d7173af70d76e71528687996332c829890f0ba120aeb7c019a07086102161bcd"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 134,
+      "reason": "같은 실제 커서/ContentForm/로컬 예측/Builder/25바이트 송신 연결",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "a339b719f4e208790732c1323a5ba7a4a72f5911db4fba78968afdd4d2b9e8eb",
+          "current": "8b0cc82f468e9c014d87ae963d5991418403f7e5c12aca6622e53f9aa89b8c5c"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "2a85b1235f1ea99fb66961d637f191c73549ad189e08b8126e34673e29dc491f",
+          "current": "91efb317e48d472e496b96f0f98b784b086acbaa875152582078f3b372ded7ec"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "058c87ef19570411baee5459321070ceb57d6a965e6b6c91b76a428573d5049f",
+          "current": "f394dce6db3dfe4de3ae5df16e57e63c5b5d7011c347369ccdfac0a48760e89f"
         }
       ]
     }

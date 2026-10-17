@@ -151,7 +151,7 @@
     "cpppj/hist/run21-fail3/focused.log": "123039fdee5e1755fb8eb0e4150bee208886b5d83ed6366705164d9c05dcb601",
     "cpppj/hist/run21-fail3/install.h": "d0ebfb3c587c6f19941a4bdff8f38981e5d0bb2e354699fd7a54c8393d2ea50c",
     "cpppj/run20.json": "32392f746feb46f4dc1ef51c23d38a2e04a36e3abaa9fde4b676c2c17ed699a2",
-    "cpppj/src/CMakeLists.txt": "c6788ec0b508c34f26406203a824455adc59d87a1a5aa80ab2bfda476e91021b",
+    "cpppj/src/CMakeLists.txt": "923a616e7647a31bc8054750bc04f59e0ecd391f82189ca99e629f6a8aa9cc41",
     "cpppj/src/app/CanonMayPlaceInspect.cpp": "27eda46bca500c898abeb9a3a7c4e8588b38e061b579c84cbf6c032c6d46dda9",
     "cpppj/src/app/FrameBindingInspect.cpp": "042602919b0531fb1cbaf3941dc6597bee73944bbf0d571dacfd638bb45dd07c",
     "cpppj/src/app/FrameBindingInspect.h": "4e187ca41f8c34ed52c022b58a57327a554a723e3e26ee88a1ae152c99de3fce",
@@ -362,8 +362,8 @@
     "cpppj/src/o/ConstructionVisualSystem.h": "65e292f7fd4b13654468424f73d7662d99d12f9507e4d3eecf6eb35f0dbab2a6",
     "cpppj/src/o/ContentFormHost.cpp": "cb21effe599b73f6ca85d826c6f85f0e3f6f41e956fbc80cf344a06674d20cb4",
     "cpppj/src/o/ContentFormHost.h": "8653814bdfbe2c0b82957014ca65f7c17381bf428dc3671a7254ec14324c441f",
-    "cpppj/src/o/ContentFormLifetime.cpp": "3d8495e7eb7c7e20c4f9d36c015feecf27798e2269c8454bdd5f2d7a5f67c32d",
-    "cpppj/src/o/ContentFormLifetime.h": "e7ac3f4a17817d550306e7308554d398d716791085ff5fbdc627881abc85af26",
+    "cpppj/src/o/ContentFormLifetime.cpp": "eb4239239c706c6c494ae428dd64bd9aba0927c0a5b3bd8a19c9e2e697904fdc",
+    "cpppj/src/o/ContentFormLifetime.h": "9c483590c4655b6ea974b980f144a05633f85dcc3a279b01c30c967daa0190e1",
     "cpppj/src/o/DependFormHost.cpp": "d06add1b954c208811f3ffd477532601835996e7157140b6300414d62f8410d7",
     "cpppj/src/o/DependFormHost.h": "91a9e8cd9cc67683ef73283ac7db7e0ace13e931df265158bb9b939c8c5c1abd",
     "cpppj/src/o/DerivedConstructors.inc": "fac1a032778ba7e6745476904a13446c36b79625e38c40120195bc009a798b00",
@@ -1447,6 +1447,28 @@
           "path": "cpppj/src/o/RawConstructionPlace.h",
           "previous": "04b204d48496ad8db14886e12c2ec70ed8fb7165619daf5ee69ce2287830d691",
           "current": "d12819f99d45323e56428c0a28919bdf06026b23e26f1e0d1c681b025a5bbf0e"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 134,
+      "reason": "같은 실제 커서/ContentForm/로컬 예측/Builder/25바이트 송신 연결",
+      "pins": [
+        {
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "c6788ec0b508c34f26406203a824455adc59d87a1a5aa80ab2bfda476e91021b",
+          "current": "923a616e7647a31bc8054750bc04f59e0ecd391f82189ca99e629f6a8aa9cc41"
+        },
+        {
+          "path": "cpppj/src/o/ContentFormLifetime.cpp",
+          "previous": "3d8495e7eb7c7e20c4f9d36c015feecf27798e2269c8454bdd5f2d7a5f67c32d",
+          "current": "eb4239239c706c6c494ae428dd64bd9aba0927c0a5b3bd8a19c9e2e697904fdc"
+        },
+        {
+          "path": "cpppj/src/o/ContentFormLifetime.h",
+          "previous": "e7ac3f4a17817d550306e7308554d398d716791085ff5fbdc627881abc85af26",
+          "current": "9c483590c4655b6ea974b980f144a05633f85dcc3a279b01c30c967daa0190e1"
         }
       ]
     }

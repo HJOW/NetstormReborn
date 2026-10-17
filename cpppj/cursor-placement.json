@@ -17,8 +17,8 @@
     "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
     "tools/decomp_cursor_placement.py": "6c4e191a60923df578f16cc36cf47474267ebdb4159d541d1033362146e2f810",
     "cpppj/tests/fixtures/cursor-placement-x86.tsv": "92948f3001f745d088ec58fb8212f3a42e6c02514e1c69fef7e77bc3a12e742f",
-    "cpppj/src/client/RawCursorPlacement.h": "9da2051c1797b9114e6883e5c170e238d77d6b0fcdddcf9dac88906f8f32a61d",
-    "cpppj/src/client/RawCursorPlacement.cpp": "cf1a0d4cfbd0cf2118db90c00b45fa7ea59300b1bf5d4011ec12d268115a2c48",
+    "cpppj/src/client/RawCursorPlacement.h": "1e00874a18228650f79cc1b0fb4130818b5fc124727abbc482feb0983e85446e",
+    "cpppj/src/client/RawCursorPlacement.cpp": "64c57e1581716ad63ebf952aa9c4b7ce4c432ec20f3ca23dcfeede6fcf8a1a46",
     "cpppj/tests/CursorPlacementTests.cpp": "a03f225bbf82cce49a770d111b2d4d24f5c496cde97560f3f55c6bce50dad997",
     "cpppj/src/client/CMakeLists.txt": "8bb17d335554c16e6ff3300134492a264bfa425dfafd52062ecf0062f523d87c",
     "cpppj/tests/CMakeLists.txt": "d7173af70d76e71528687996332c829890f0ba120aeb7c019a07086102161bcd"
@@ -220,6 +220,23 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "bfc500dc462287984f94118cfad9b630149023924fde65414e5950dfb2f2df3e",
           "current": "d7173af70d76e71528687996332c829890f0ba120aeb7c019a07086102161bcd"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 134,
+      "reason": "같은 실제 커서/ContentForm/로컬 예측/Builder/25바이트 송신 연결",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCursorPlacement.h",
+          "previous": "9da2051c1797b9114e6883e5c170e238d77d6b0fcdddcf9dac88906f8f32a61d",
+          "current": "1e00874a18228650f79cc1b0fb4130818b5fc124727abbc482feb0983e85446e"
+        },
+        {
+          "path": "cpppj/src/client/RawCursorPlacement.cpp",
+          "previous": "cf1a0d4cfbd0cf2118db90c00b45fa7ea59300b1bf5d4011ec12d268115a2c48",
+          "current": "64c57e1581716ad63ebf952aa9c4b7ce4c432ec20f3ca23dcfeede6fcf8a1a46"
         }
       ]
     }

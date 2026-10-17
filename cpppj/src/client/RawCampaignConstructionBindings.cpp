@@ -136,9 +136,13 @@ struct RawCampaignConstructionBindings::Impl {
     void Destroy(o::Sid sid,std::uint32_t flags) const {
         if (!world.Destroy(sid,flags)) throw std::logic_error("캠페인 받침/간헐천의 실제 가상 삭제 거부");
     }
-    // 실제Factory가설치한noIsland VT에만기존표면수명을허용하며타입번호일치만으로확장하지않는다.
+    // 실제 Factory의 noIsland와 커서 임시 받침 VT를 구별하며 타입 번호만으로 표면 삭제를 허용하지 않는다.
     bool Support(o::Sid sid) const {
-        const auto raw=core.pool.Slot(sid);return raw[10]==state.place.noIslandType && ConstructionVtable(raw)==o::kPatchNoIslandVtable;
+        const auto raw=core.pool.Slot(sid);const auto table=ConstructionVtable(raw);
+        if (raw[10]==state.place.noIslandType && table==o::kPatchNoIslandVtable) return true;
+        // 커서가 만든 void/buried 받침 둘도 실제 표면/공통 수명을 실행한다. 살아 있는 일반 섬으로 범위를 넓히지 않는다.
+        return (raw[11]&4) && (raw[40]&8) && ((raw[10]==core.bridgeState.islandType && table==o::kPatchIslandVtable) ||
+            (raw[10]==core.bridgeState.stalagType && table==o::kPatchStalagVtable));
     }
 };
 // 실제세션의장기자료를복사하지않고같은주소의하위모듈을구성한다.
@@ -151,6 +155,8 @@ RawCampaignConstructionBindings::RawCampaignConstructionBindings(RawSurfaceWorld
 RawCampaignConstructionBindings::~RawCampaignConstructionBindings()=default;
 // 일반 서버 요청도 원본 확정/통지/배치 몸체를 그대로 사용한다. 배치 가능 판정은 호출자의 선행 책임이다.
 bool RawCampaignConstructionBindings::Confirm(const o::ConstructionConfirmRequest& request) const { impl_->ValidateState();return impl_->confirm->Confirm(request); }
+// 로컬 예측은 서버 확정/통지와 같은 실제 배치기를 사용한다.
+o::ConstructionLocalHooks RawCampaignConstructionBindings::BindLocal(o::ConstructionLocalHooks hooks) const { return o::MakeConstructionLocalHooks(impl_->core.pool,impl_->core.factory,*impl_->place,std::move(hooks)); }
 // 전체 요청의 실제 공간/받침 검사와 현재 원본 확정만 실행한다.
 bool RawCampaignConstructionBindings::Request(const o::ConstructionConfirmRequest& value) const { impl_->ValidateState();return impl_->requestBody->Request(value); }
 // 원본 수신은 요청 실패 때 같은 실제 Place에서 환불/취소를 요청한다.
@@ -167,7 +173,7 @@ const o::RawLocalGeyser& RawCampaignConstructionBindings::LocalGeysers() const {
 const o::RawPlayerGeyserBounds& RawCampaignConstructionBindings::PlayerBounds() const { return *impl_->bounds; }
 // 최종화이후실제송신에넘긴동일버퍼만노출한다.
 std::span<const std::uint8_t> RawCampaignConstructionBindings::LastPacket() const { return std::span<const std::uint8_t>(impl_->packet).first(impl_->packetLength); }
-// 실제noIsland의pre/post는같은공통보상/Graph와SurfacePostDestroy를실행한다. 다른효과는기존현재분배로보낸다.
+// 실제 noIsland와 임시 받침의 pre/post는 같은 표면/공통 수명을 실행한다. 다른 효과는 기존 분배를 보존한다.
 o::SquidDestroyHooks RawCampaignConstructionBindings::DestroyHooks(o::SquidDestroyHooks fallback) const {
     auto hooks=fallback;hooks.emit=[this,surfaces=impl_->core.surfaces.Hooks(),fallback=std::move(fallback)](const o::SquidDestroyEvent& event) {
         if (impl_->Support(event.sid) && (event.effect==o::SquidDestroyEffect::PreDestroy || event.effect==o::SquidDestroyEffect::PostDestroy)) {
@@ -176,7 +182,7 @@ o::SquidDestroyHooks RawCampaignConstructionBindings::DestroyHooks(o::SquidDestr
         if (!fallback.emit) throw std::logic_error("다른 캠페인 건설 자산 삭제 효과 미연결");fallback.emit(event);
     };return hooks;
 }
-// Form분배가제공하는같은현재hooks로dead/종속/Unpop/PrePost깊이/실제반납까지실행한다.
+// Form 분배의 현재 hooks로 noIsland/임시 받침의 dead/종속/Unpop/깊이/반납을 모두 실행한다.
 o::SquidAssetDestroy RawCampaignConstructionBindings::Destroy(o::SquidAssetDestroy fallback) const {
     return [this,fallback=std::move(fallback)](o::Sid sid,std::uint32_t flags,const o::SquidDestroyHooks& hooks) {
         if (impl_->Support(sid)) return impl_->core.virtualDestroy.Destroy(sid,flags,hooks);

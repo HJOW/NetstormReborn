@@ -73,6 +73,8 @@ private:
 void BindCursorLifecycle(PriestMenuHooks& priest,CursorDropHooks& drop,RawCursorLifecycle& lifecycle);
 // 00474240은 TYPE 번호로 현재 group/flags2를 읽는다. SHP 블록 토큰을 받지 않는다.
 bool HasCursorRange(std::span<const o::RiftTypeRecord> types,std::uint32_t typeNumber);
+// 장치 없이 같은 SHP/defaultFrame/TYPE 조회를 연결하며 기존 측정기를 유지한다.
+void BindCursorLifecycleAssets(CursorLifecycleHooks& hooks,const GameAssets& assets);
 // 실제 글자 측정·SHP/defaultFrame·TYPE 번호와 사정거리 판정을 기존 자산 저장소에 연결한다.
 void BindCursorLifecycleAssets(CursorLifecycleHooks& hooks,const GameAssets& assets,const GumpText& text);
 }

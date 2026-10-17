@@ -116,8 +116,8 @@
     "initialFailureLogPreserved": true
   },
   "sha256": {
-    "cpppj/src/client/RawCampaignConstructionBindings.h": "54c600c4696e0ae753d2c8bfa720e8e3265c9877b5d379e391907511d9f2ff24",
-    "cpppj/src/client/RawCampaignConstructionBindings.cpp": "9172dba73289abb3db36e47cfccc31956356930a086b3dc2165df72eb87c76ac",
+    "cpppj/src/client/RawCampaignConstructionBindings.h": "9d16b7a6b2ff2c5033dcf1b8a8ff1c73429715c8444f5553c84afe1a93c6ef65",
+    "cpppj/src/client/RawCampaignConstructionBindings.cpp": "ee1d38d554fb25e502d0dc54cb19a55f501a45860e5612ca9666ca0f7ec2d2cf",
     "cpppj/src/client/RawCampaignSession.h": "22f17f2a2dfbd71c5995e498b870e9d0ab27cfb3d2b532f6ce2fcdc032479244",
     "cpppj/src/client/RawCampaignSession.cpp": "36b23f4e6c6b557ceaf908de235f6451938f10bdde86cac3fa715eafe8d71ea1",
     "cpppj/src/client/CampaignClientServices.cpp": "86407af96a1a5ccaaa16ba158f205bbe66fa97c88f091629b1516eb6f2395ed3",
@@ -260,6 +260,23 @@
           "path": "cpppj/src/client/RawCampaignConstructionBindings.cpp",
           "previous": "66ca96a011f73fb54cfee4cb0a896556de37320ec21ff7eb8d9aec92bd486500",
           "current": "9172dba73289abb3db36e47cfccc31956356930a086b3dc2165df72eb87c76ac"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 134,
+      "reason": "같은 실제 커서/ContentForm/로컬 예측/Builder/25바이트 송신 연결",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignConstructionBindings.h",
+          "previous": "54c600c4696e0ae753d2c8bfa720e8e3265c9877b5d379e391907511d9f2ff24",
+          "current": "9d16b7a6b2ff2c5033dcf1b8a8ff1c73429715c8444f5553c84afe1a93c6ef65"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignConstructionBindings.cpp",
+          "previous": "9172dba73289abb3db36e47cfccc31956356930a086b3dc2165df72eb87c76ac",
+          "current": "ee1d38d554fb25e502d0dc54cb19a55f501a45860e5612ca9666ca0f7ec2d2cf"
         }
       ]
     }

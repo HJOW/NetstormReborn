@@ -38,3 +38,6 @@ target_sources(netstorm PRIVATE o/RawFenceLifetime.cpp o/RawFenceLifetime.h)
 
 # 실제 에너지 공급 수집/요구 문자 대응/범위 판정과 공유 목록이다.
 target_sources(netstorm PRIVATE o/RawEnergySupply.cpp o/RawEnergySupply.h o/EnergyProviderVtables.inc)
+
+# 같은 월드의 실제 커서와 로컬 예측 건설을 조립한다.
+target_sources(netstorm PRIVATE client/RawCampaignCursor.cpp client/RawCampaignCursor.h)

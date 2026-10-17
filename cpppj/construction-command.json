@@ -47,15 +47,15 @@
   ],
   "baseCommit": "aa054a6",
   "currentSources": {
-    "cpppj/src/client/RawCampaignSession.cpp": "2a85b1235f1ea99fb66961d637f191c73549ad189e08b8126e34673e29dc491f",
-    "cpppj/src/client/RawCampaignSession.h": "a339b719f4e208790732c1323a5ba7a4a72f5911db4fba78968afdd4d2b9e8eb",
-    "cpppj/src/client/RawCampaignConstructionBindings.cpp": "9172dba73289abb3db36e47cfccc31956356930a086b3dc2165df72eb87c76ac",
-    "cpppj/src/client/RawCampaignConstructionBindings.h": "54c600c4696e0ae753d2c8bfa720e8e3265c9877b5d379e391907511d9f2ff24",
+    "cpppj/src/client/RawCampaignSession.cpp": "91efb317e48d472e496b96f0f98b784b086acbaa875152582078f3b372ded7ec",
+    "cpppj/src/client/RawCampaignSession.h": "8b0cc82f468e9c014d87ae963d5991418403f7e5c12aca6622e53f9aa89b8c5c",
+    "cpppj/src/client/RawCampaignConstructionBindings.cpp": "ee1d38d554fb25e502d0dc54cb19a55f501a45860e5612ca9666ca0f7ec2d2cf",
+    "cpppj/src/client/RawCampaignConstructionBindings.h": "9d16b7a6b2ff2c5033dcf1b8a8ff1c73429715c8444f5553c84afe1a93c6ef65",
     "cpppj/src/o/CMakeLists.txt": "3d0010c676da1156f5223bfcaa207887a88910a4cf50733a7b2e9e515f939c48",
     "cpppj/src/o/RawConstructionCommand.cpp": "6bbc699ba2fdda0bf9de46d9386da677acb9d70bcd297a490f6fe210ceeab15a",
     "cpppj/src/o/RawConstructionCommand.h": "7db4c56243619ccd34bf4fa40bacf50ff42a57b1804f0a740183c39d824eea7a",
     "cpppj/tests/CMakeLists.txt": "d7173af70d76e71528687996332c829890f0ba120aeb7c019a07086102161bcd",
-    "cpppj/tests/CampaignSessionTests.cpp": "058c87ef19570411baee5459321070ceb57d6a965e6b6c91b76a428573d5049f",
+    "cpppj/tests/CampaignSessionTests.cpp": "f394dce6db3dfe4de3ae5df16e57e63c5b5d7011c347369ccdfac0a48760e89f",
     "cpppj/tests/ConstructionCommandTests.cpp": "8ca02e9dbb4574f9f758ba2bb7408d1dd542eb9618e92ac1c0a9048a704eb154"
   },
   "protectedFileSha256": {
@@ -95,5 +95,39 @@
       "testSeconds": 236.45,
       "totalSeconds": 236.48
     }
-  }
+  },
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "unit": 134,
+      "reason": "같은 실제 커서/ContentForm/로컬 예측/Builder/25바이트 송신 연결",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "2a85b1235f1ea99fb66961d637f191c73549ad189e08b8126e34673e29dc491f",
+          "current": "91efb317e48d472e496b96f0f98b784b086acbaa875152582078f3b372ded7ec"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "a339b719f4e208790732c1323a5ba7a4a72f5911db4fba78968afdd4d2b9e8eb",
+          "current": "8b0cc82f468e9c014d87ae963d5991418403f7e5c12aca6622e53f9aa89b8c5c"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignConstructionBindings.cpp",
+          "previous": "9172dba73289abb3db36e47cfccc31956356930a086b3dc2165df72eb87c76ac",
+          "current": "ee1d38d554fb25e502d0dc54cb19a55f501a45860e5612ca9666ca0f7ec2d2cf"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignConstructionBindings.h",
+          "previous": "54c600c4696e0ae753d2c8bfa720e8e3265c9877b5d379e391907511d9f2ff24",
+          "current": "9d16b7a6b2ff2c5033dcf1b8a8ff1c73429715c8444f5553c84afe1a93c6ef65"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "058c87ef19570411baee5459321070ceb57d6a965e6b6c91b76a428573d5049f",
+          "current": "f394dce6db3dfe4de3ae5df16e57e63c5b5d7011c347369ccdfac0a48760e89f"
+        }
+      ]
+    }
+  ]
 }

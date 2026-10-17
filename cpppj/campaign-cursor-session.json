@@ -1,0 +1,90 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-17",
+  "unit": 134,
+  "baseCommit": "ad64c18",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16"
+  },
+  "currentSources": {
+    "cpppj/src/CMakeLists.txt": "923a616e7647a31bc8054750bc04f59e0ecd391f82189ca99e629f6a8aa9cc41",
+    "cpppj/src/client/RawCampaignConstructionBindings.cpp": "ee1d38d554fb25e502d0dc54cb19a55f501a45860e5612ca9666ca0f7ec2d2cf",
+    "cpppj/src/client/RawCampaignConstructionBindings.h": "9d16b7a6b2ff2c5033dcf1b8a8ff1c73429715c8444f5553c84afe1a93c6ef65",
+    "cpppj/src/client/RawCampaignCursor.cpp": "d029571c36c61e1c5580c19b56251d20be91a0c9e531b5316ab741e23a8ce631",
+    "cpppj/src/client/RawCampaignCursor.h": "06601a319cf218c34509e24598b375a8b4292a9946721520ec7d672fcd52aa00",
+    "cpppj/src/client/RawCampaignSession.cpp": "91efb317e48d472e496b96f0f98b784b086acbaa875152582078f3b372ded7ec",
+    "cpppj/src/client/RawCampaignSession.h": "8b0cc82f468e9c014d87ae963d5991418403f7e5c12aca6622e53f9aa89b8c5c",
+    "cpppj/src/client/RawCursorLifecycle.cpp": "fce0a2a2eed2fc50169d36b85ac2766dd4b2b8b4b060f17966950601a103e1ce",
+    "cpppj/src/client/RawCursorLifecycle.h": "537111c145676234c0f8ad032ca3b68e660f8e1d4245cc0e02f228c53066fd1b",
+    "cpppj/src/client/RawCursorPlacement.cpp": "64c57e1581716ad63ebf952aa9c4b7ce4c432ec20f3ca23dcfeede6fcf8a1a46",
+    "cpppj/src/client/RawCursorPlacement.h": "1e00874a18228650f79cc1b0fb4130818b5fc124727abbc482feb0983e85446e",
+    "cpppj/src/client/RawSurfaceWorld.cpp": "64be8bc4e7f9c48dfa725e2b1ee8bb07f096077323ee3d988b1f181ac0d3b8f2",
+    "cpppj/src/client/RawSurfaceWorld.h": "9b81a62af3656b5b71d0bce5ff7fabeffec84ae6b3ebdc0f71533a7ac58e0fd5",
+    "cpppj/src/o/ContentFormLifetime.cpp": "eb4239239c706c6c494ae428dd64bd9aba0927c0a5b3bd8a19c9e2e697904fdc",
+    "cpppj/src/o/ContentFormLifetime.h": "9c483590c4655b6ea974b980f144a05633f85dcc3a279b01c30c967daa0190e1",
+    "cpppj/tests/CampaignSessionTests.cpp": "f394dce6db3dfe4de3ae5df16e57e63c5b5d7011c347369ccdfac0a48760e89f"
+  },
+  "protectedFileSha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6"
+  },
+  "source_sha256": {
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/refined/originals/vtables.tsv": "2151f08f1d1ea08841964b3a3fa77bf5b744ccd928eda86cc466de1c3d633766"
+  },
+  "nativeContext": {
+    "factoryTake": "0043ec00 / 0043eda7..0043edca: Form.flags8이면 취득41, 아니면1; 실제 PE 경계에서 정렬 해제한 명령과 정밀 C를 함께 읽음",
+    "cursor": "기존 Take/Cancel/Activate/Query/Prepare/Previews/Position/Drop/ReturnPiece/Local/Place/Builder/Command 몸체를 조립하며 새 계산/PE 실행을 추가하지 않음",
+    "region": "462bc0/462c80의 GraphFor 결과254는NULL, 다른 값은 같은 GraphRecord를 나타내는 번호+1 토큰으로 보존",
+    "cd": "이번 세션 조립은10.78 전용이며 기존10.72 수명/Drop/Local fixture는 수정하지 않음"
+  },
+  "integration": {
+    "cursor": "Session.Load 뒤 단일 장기 소유, 같은 CursorDrop/카메라/현재 Canon 패턴/Pool/TYPE/에너지/전체 MayPlace/마나/사정거리",
+    "lifetime": "현재 ContentForm 삭제 시 CursorDrop.preview getter; 잠금 중에도 실제 Cancel 꼬리/Activate1 실행; 임시94/95는 실제 VT+void+buried 조건으로 기존 표면/공통 삭제",
+    "local": "같은 실제 Factory/Place/Contained/Regular/Builder 및0x3e25바이트 송신; 송신은 상위 SP 차감 전이므로 전송기는 원본처럼 큐잉 필요",
+    "ui": "선택한 GUI/장치/송신 경계는 현재 callback 저장소를 다시 읽으며 미연결은 명시 오류; 실제 Client 입력/그리기 연결은 남음"
+  },
+  "testInputs": {
+    "menu": "실제 SelectBuild 처리기에75를 명시 입력하며 이75가 Open의 원본 메뉴 행에 포함된다는 주장은 아님",
+    "ready": "복제 Fort의 준비75; 부모 containerListFlags10이 저장 BYTE보다 우선함을 확인",
+    "gui": "같은 실제 contained 생성기로 공장 GUI 반환8/quality3 Form을 명시 생성; 생산 완료를 대신 검증하지 않음",
+    "power": "실제 Create/Owner/Pop으로 완성76 공급원 명시 입력; 에너지/MayPlace/SourceAllowed/권한/force 우회 없음",
+    "camera": "GameWorld 초기 Home과 별개로 명시0카메라 및 별도137/91카메라에서 실제 마우스 변환",
+    "endToEnd": "실제 Drop→Local 예측/Return/Builder→실제25바이트 큐 경계→상위 비용→RawPacketDispatch→서버 전체 Request/교체→같은134/23→30/17완료. 실제 로그인된 LocalMissionTransport 두 끝/전체 Kernel 진행은 아님"
+  },
+  "validation": {
+    "releaseBuild": 10,
+    "buildExit": 0,
+    "warnings": 0,
+    "errors": 0,
+    "focusedCases": 8,
+    "focusedFailedChecks": 0,
+    "newCases": 5,
+    "fullSuite": 1542,
+    "nativeEvidenceVerifiers": 36,
+    "additionalHistoricalContentVerifier": "기록 줄 끝/누락 추출물로 미통과, 원본 근거 수정 없음",
+    "fullFailedChecks": 0,
+    "ctestExit": 0,
+    "ctestSeconds": 221.54,
+    "ctestTotalSeconds": 221.58,
+    "fullSuiteBuild": 9,
+    "finalDifference": "최종10은 일반 표면 삭제 연결의 설명 주석만 교정, 동작 변경 없음"
+  },
+  "remaining": [
+    "실제 Client의 메뉴/Gump/생산 GUI/커서 Draw/입력/장치 소비자 연결",
+    "실제 로컬 전송 로그인/등록 수명과 큐잉",
+    "실제 생산 완료/경제/AI/전체 Kernel",
+    "Early Missions1~6/캠페인1-1~1-2/데모3의 사용자 자연 완주/승패/저장/다음 미션 및 전체 원본 동일성",
+    "전체화면 DirectDraw 수정은 현재 범위 제외"
+  ],
+  "fixtureLineEndingAudit": {
+    "report": "cpppj/contentlifetime.json",
+    "previousRecordedSha256": "ee370eb8e5c92be1236856dc213c26566c23b1365344c4cc56d909984df313be",
+    "headAndCurrentLfSha256": "5e701e7b56e3060cdc23b45fb5647f67ea42bb8f3b08cb3068e506b27307ec66",
+    "unchangedFixture": true,
+    "historicalVerifierLimitation": "추가 ContentLifetime 감사는 기록CRLF/HEAD LF 차이와 추출 creation.c/functions.tsv 부재로 현재 실행 불가다. 기존 기록/기대 SHA/fixture/실행기는 수정하지 않았다. C++의 기존 두 판본396행 재생은 전체 회귀에 포함한다."
+  }
+}

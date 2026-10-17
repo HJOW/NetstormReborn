@@ -60,8 +60,8 @@
     "cpppj/hist/dais-ritual-47665/cpppj/tests/DaisRitualConsumerTests.cpp": "9223b7c68f6ed18a00f0fee8d0f7fee81840bb4c3f8b08b36ce05f1ca5900cfc",
     "cpppj/src/o/ContentFormHost.cpp": "5b6c7689e7c2a9aa4803583f9486d22d3004311c9766ee426c4ee8adc0b60890",
     "cpppj/src/o/ContentFormHost.h": "fec4ff5c6bdd65fde79350f506fee99cec8a3ff3802a7cdae155fd00a2e62a3f",
-    "cpppj/src/o/ContentFormLifetime.cpp": "96b479579643004765faf1552b102689ea2403c5918c963bd02f14d7f86387a7",
-    "cpppj/src/o/ContentFormLifetime.h": "34a27c1f8dbdd72f660dc7c75d8d897848a34cae19c1680ffd7f7ba3794d7395",
+    "cpppj/src/o/ContentFormLifetime.cpp": "eb4239239c706c6c494ae428dd64bd9aba0927c0a5b3bd8a19c9e2e697904fdc",
+    "cpppj/src/o/ContentFormLifetime.h": "9c483590c4655b6ea974b980f144a05633f85dcc3a279b01c30c967daa0190e1",
     "cpppj/src/o/RawAltarSacrifice.cpp": "987b5a4654bcf8bd66c7eaef93258b36f92f14707f95de1101f652bfaf24893b",
     "cpppj/src/o/RawAltarSacrifice.h": "b5ea76ade31afcc5e075060d4847c2db774f97456c1f7d5678c979c8c027e964",
     "cpppj/src/o/RawCarrierPostPop.cpp": "8603cb70101e6472fa36b25d0b2ecb1cc438b4658c1d2264b47ff8a17d95b780",
@@ -127,6 +127,23 @@
           "path": "cpppj/src/o/SquidUnpop.cpp",
           "previous": "000e315fc0aead83fc423afc3293b3fd6176a211c1dc5b297d642e8dbea06ce2",
           "current": "f9a932b6ee543cc2ee051d6f67afb0c56fca1f325cc51d29ca3d0dc3adf26fef"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 134,
+      "reason": "같은 실제 커서/ContentForm/로컬 예측/Builder/25바이트 송신 연결",
+      "pins": [
+        {
+          "path": "cpppj/src/o/ContentFormLifetime.cpp",
+          "previous": "96b479579643004765faf1552b102689ea2403c5918c963bd02f14d7f86387a7",
+          "current": "eb4239239c706c6c494ae428dd64bd9aba0927c0a5b3bd8a19c9e2e697904fdc"
+        },
+        {
+          "path": "cpppj/src/o/ContentFormLifetime.h",
+          "previous": "34a27c1f8dbdd72f660dc7c75d8d897848a34cae19c1680ffd7f7ba3794d7395",
+          "current": "9c483590c4655b6ea974b980f144a05633f85dcc3a279b01c30c967daa0190e1"
         }
       ]
     }

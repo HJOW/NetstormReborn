@@ -26,6 +26,7 @@
 #include "o/RawConstructionBuilder.h"
 #include "client/RawCampaignParticles.h"
 namespace netstorm::client {
+class RawCampaignCursor; // 세션과 같은 실제 커서/로컬 예측의 고정 주소 소유자다.
 struct CursorPlacementHooks; // 실제 커서 배치의 설명/에너지 경계만 연결할 때 사용한다.
 // 미션 입력/정지/UI 수명은 실제 UberGump의 현재 저장소와 동작을 빌린다.
 struct CampaignMissionOutcomeUi {
@@ -179,6 +180,8 @@ public:
     o::SquidPostPopList& ConstructionExcludedTypes();
     // 실제 Client 커서가 같은 취득/내려놓기/프로세스 토큰을 공유하는 단일 상태다.
     CursorDropState& CursorDropSettings();
+    // 설치 뒤 실제 수명/위치/미리보기/내려놓기/로컬 예측을 소유한 단일 커서를 빌린다.
+    RawCampaignCursor& Cursor();
     // 현재 맵 경계·마나 반경/대체점과 타입 전역을 같은 프로세스 몸체에 공급한다.
     CursorManaGlobals& CursorManaSettings();
     // 실제 Session의 마나 월드 객체와 Host/Kernel 생성·제거·이벤트를 연결한다. 설치 후에만 허용한다.

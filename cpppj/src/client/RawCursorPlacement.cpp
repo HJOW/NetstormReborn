@@ -125,10 +125,8 @@ const o::SidPool& RawCursorPlacement::Pool() const { return pool_; }
 void BindCursorPlacement(CursorLifecycleHooks& lifecycle,CursorDropHooks& drop,RawCursorPlacement& placement) {
     lifecycle.queryCursor=drop.queryCursor=[&placement] { placement.Query(); };lifecycle.prepareCursor=drop.prepareCursor=[&placement] { placement.Prepare(); };
 }
-// 실제 Canon/SHP/배치/dirty 출력만 연결한다. 누락된 GUI/지역은 명시 경계로 유지한다.
-void BindCursorPlacementWorld(CursorPlacementHooks& hooks,const o::SidPool& pool,const GameAssets& assets,
-    const o::PriestPlacementGeometryState& geometry,o::RawCanonPlacementPipeline& placement,Renderer& renderer) {
-    if (&pool!=&placement.Pool() || assets.Edition()!=pool.Edition() || pool.Edition()!=o::OriginalEdition::Patch1078) throw std::invalid_argument("커서 위치 실제 월드 계약 오류");
+// 장치와 독립적으로 실제 Canon 반복자와 SHP 헤더 조회만 공급한다.
+void BindCursorPlacementAssets(CursorPlacementHooks& hooks,const GameAssets& assets,const o::PriestPlacementGeometryState& geometry) {
     hooks.walk=[&assets,&geometry](o::CanonTypeQuery query,const std::function<bool(CursorCanonCell)>& visit) {
         const auto& asset=Asset(assets,query.type);const auto frames=asset.definition.FrameTable();
         auto decoder=o::DecodeCanonType(frames,asset.definition.specialFrames.defaultFrame,geometry.patternTypes,query,assets.Edition());
@@ -141,6 +139,12 @@ void BindCursorPlacementWorld(CursorPlacementHooks& hooks,const o::SidPool& pool
         const auto image=assets.Shapes().SquidMetrics(asset.block,static_cast<std::size_t>(frame));
         return CursorCostImage{static_cast<std::uint32_t>(asset.block+1),image.width,image.height,image.hotspotX,image.hotspotY};
     };
+}
+// 실제 Canon/SHP/배치/dirty 출력만 연결한다. 누락된 GUI/지역은 명시 경계로 유지한다.
+void BindCursorPlacementWorld(CursorPlacementHooks& hooks,const o::SidPool& pool,const GameAssets& assets,
+    const o::PriestPlacementGeometryState& geometry,o::RawCanonPlacementPipeline& placement,Renderer& renderer) {
+    if (&pool!=&placement.Pool() || assets.Edition()!=pool.Edition() || pool.Edition()!=o::OriginalEdition::Patch1078) throw std::invalid_argument("커서 위치 실제 월드 계약 오류");
+    BindCursorPlacementAssets(hooks,assets,geometry);
     hooks.mayPlace=[&placement](const o::CanonPlacementQuery& query) { return static_cast<std::uint32_t>(placement.MayPlace(query)); };
     hooks.invalidate=[&renderer](ScreenRect rect,std::uint32_t flags) { renderer.Invalidate(rect,flags); };
 }

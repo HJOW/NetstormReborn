@@ -124,6 +124,8 @@ public:
     void Load(std::span<const SurfaceSeed> seeds);
     // 같은 풀에 실제 미션 모듈을 구성할 때 사용한다. 반환 참조의 수명은 이 월드와 같다.
     RawWorldCore Core();
+    // 미리보기도 같은 실제 연결 생성기와 현재 표면 전역을 사용한다.
+    o::RawBridgeConnect& BridgeConnections();
     // 같은 저장소를 사용하는 자산/Regular/Form 전송/낙하/로딩 경계를 설치한다. 미연결 콜백을 생략하지 않는다.
     void BindRuntime(RawWorldRuntimeHooks hooks);
     // 첫 객체 생성 전에 공통 삭제의 관찰 경계를 실제 보상/현재 선택/선택해제·소리 소비자로 한 번 교체한다.

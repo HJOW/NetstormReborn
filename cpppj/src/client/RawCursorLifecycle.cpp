@@ -122,7 +122,7 @@ bool HasCursorRange(std::span<const o::RiftTypeRecord> types,std::uint32_t typeN
     const auto& type=types[typeNumber];return type.group==0 || type.group==1 || (type.flags2&0x100)!=0 || type.group==6 || type.group==3;
 }
 // 실제 TYPE 번호와 specialFrame·같은 SHP 추가 헤더를 구별한다. 별도 타입/프레임 사본을 만들지 않는다.
-void BindCursorLifecycleAssets(CursorLifecycleHooks& hooks,const GameAssets& assets,const GumpText& text) {
+void BindCursorLifecycleAssets(CursorLifecycleHooks& hooks,const GameAssets& assets) {
     if (assets.Edition()!=o::OriginalEdition::Patch1078) throw std::invalid_argument("커서 자산10.78 판본 계약 오류");
     hooks.defaultArgument=[&assets](std::uint32_t type) { return static_cast<std::uint32_t>(Asset(assets,type).definition.specialFrames.defaultFrame); };
     hooks.typeNumber=[&assets](std::uint32_t type) {
@@ -135,6 +135,10 @@ void BindCursorLifecycleAssets(CursorLifecycleHooks& hooks,const GameAssets& ass
         const auto metrics=assets.Shapes().SquidMetrics(asset.block,frame);
         return CursorCostImage{static_cast<std::uint32_t>(asset.block+1),metrics.width,metrics.height,metrics.hotspotX,metrics.hotspotY};
     };
+}
+// 기존 글자 출력기를 쓰는 호출자는 자산 조회와 실제 측정을 함께 연결한다.
+void BindCursorLifecycleAssets(CursorLifecycleHooks& hooks,const GameAssets& assets,const GumpText& text) {
+    BindCursorLifecycleAssets(hooks,assets);
     hooks.measure=[&text](std::string_view value,const std::array<std::uint32_t,8>& context) {
         const std::string terminated(value);std::int32_t width{},height{};text.Measure(std::span(terminated.c_str(),terminated.size()+1),DecodeGumpTextContext(context),width,height,-1);return std::array{width,height};
     };

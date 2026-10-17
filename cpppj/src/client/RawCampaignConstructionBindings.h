@@ -3,6 +3,7 @@
 #include "client/RawSurfaceWorld.h"
 #include "o/RawBattleBroadcast.h"
 #include "o/RawConstructionNotice.h"
+#include "o/RawConstructionLocal.h"
 #include "o/RawConstructionCommand.h"
 #include "o/RawConstructionPacket.h"
 #include "o/RawLocalGeyser.h"
@@ -51,6 +52,8 @@ public:
     RawCampaignConstructionBindings& operator=(const RawCampaignConstructionBindings&)=delete; // 현재 callback의 고정 주소를 보존한다.
     // MayPlace를 통과한 일반 서버 요청을 원본 기준점 검사→SID 확보→송신→직접 통지 순서로 확정한다.
     bool Confirm(const o::ConstructionConfirmRequest& request) const;
+    // 로컬 예측도 같은 Factory/Place를 사용하며 나머지 Form/반환/송신 경계를 유지한다.
+    o::ConstructionLocalHooks BindLocal(o::ConstructionLocalHooks hooks) const;
     // 일반 요청은 실제 MayPlace/abstract 충돌/밀어내기/받침/본 확정을 차례로 실행한다.
     bool Request(const o::ConstructionConfirmRequest& request) const;
     // 같은 실제0x3e 수신의 비용 선검사와 실패 환불을 실행한다.

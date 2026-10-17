@@ -1195,3 +1195,16 @@ cpppj/tests/fixtures/construction-command-write-x86.tsv text eol=lf
 cpppj/tests/fixtures/construction-command-receive-x86.tsv text eol=lf
 tools/decomp_construction_command.py text eol=lf
 tools/ghidra/constructionrequest-functions.json text eol=lf
+
+# 같은 커서/ContentForm/로컬 예측의 현재 소스 SHA를 체크아웃마다 보존한다.
+cpppj/src/client/RawCampaignCursor.cpp text eol=lf
+cpppj/src/client/RawCampaignCursor.h text eol=lf
+cpppj/src/client/RawCampaignSession.cpp text eol=lf
+cpppj/src/client/RawCampaignSession.h text eol=lf
+cpppj/src/client/RawCursorLifecycle.cpp text eol=lf
+cpppj/src/client/RawCursorLifecycle.h text eol=lf
+cpppj/src/client/RawCursorPlacement.cpp text eol=lf
+cpppj/src/client/RawCursorPlacement.h text eol=lf
+cpppj/src/o/ContentFormLifetime.cpp text eol=lf
+cpppj/src/o/ContentFormLifetime.h text eol=lf
+cpppj/campaign-cursor-session.json text eol=lf

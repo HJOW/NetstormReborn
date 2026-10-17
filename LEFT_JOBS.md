@@ -1,5 +1,18 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-17 단위134 완료: 단일 커서/ContentForm/실제 로컬 예측·반환·비용 (`HJOW-Athlon`)
+
+- [x] AGENTS·양 LEFT·깨끗한ad64c18과 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16**을 확인했다. 새 디컴파일·PE CPU·게임·GUI 실행은 없다. 보호 PE의43ec00 정렬 명령/기존 정밀 C·가상 표만 읽었다. 전체 목표는 active다. [작업 기록](docs/exe/cpp-campaign-cursor-20261017.md), `cpppj/campaign-cursor-session.json`, 접두사`extracted/goal-campaign-cursor-20261017-`를 남겼다.
+- [x] Session.Load가 단일 `RawCampaignCursor`를 소유한다. 같은 Take/Cancel/Activate/Query/Prepare/미리보기 생성·재사용/마우스/Drop/ReturnPiece/Local과 현재 CursorDrop/카메라/Canon/Pool/TYPE/에너지/전체 MayPlace/마나/사정거리를 묶었다. 실제 장치 callback은 선택 시 현재 저장소를 읽으며 미연결은 오류다. 별도 성공/치수/배치 판정을 만들지 않았다.
+- [x] ContentForm 삭제는 현재 `CursorDrop.preview` getter를 사용하며 기존 값형 fixture는 유지한다. 잠겨도 실제 Cancel 꼬리/Activate1/프로세스·목록 정리를 실행한다. Form 분리/정렬 부착/현재 부모 통지는 같은 Host/가상 분배다. void/buried 임시94/95는 실제 VT까지 확인해 기존 표면/공통 삭제에 연결하며 일반 살아 있는 섬으로 확장하지 않았다.
+- [x] Drop→Local의 실제 Form 삭제/반환→Factory SID/같은 Place 예측→실제134/23·공급105/39→9에25바이트 송신→상위 SP 차감→커서 정리를 연결했다. 반환은 같은 contained 생성기/난수/실제 메모리 예약/Kernel Regular46이다. 송신은 SP 차감 전 경계이므로 실제 전송기는 원본처럼 큐잉해야 하며 같은 호출에서 서버 수신을 직접 실행해서는 안 된다.
+- [x] 원본43ec00의flags8→취득41/기본1을 정밀 C와 정렬 명령으로 확인했다. 검사에서는 복제 Fort의 준비75(부모 listFlags10 우선), 실제 생성기의 GUI 반환8/품질3 Form과 실제 생성/Pop의 완성76 공급원을 명시 입력했다. 생산 완료를 대신 검증하지 않았다. 에너지/MayPlace/SourceAllowed/권한/force는 우회하지 않았다. 초기 Home 카메라를0으로 착각한 검사 입력도 수정했다. SelectBuild75 검사는 처리기 입력이며 원본 Open 메뉴 행이75를 제공한다는 뜻은 아니다.
+- [x] 집중 **8개/실패0(새5개)**가 실제 취득/이동/취소, 현재 Form 외부 삭제/잠금 꼬리, 실제 예측/반환/SP/25바이트→RawPacketDispatch→전체 서버 요청/교체→같은134/23→30/17 완료, 장치 누락/교체와 반환 품질/타이머를 검사했다. 전체 **1,542개/실패0/CTest 종료0/221.54초(전체221.58초)**, 최종 **Release 빌드10 종료0/경고0/오류0**다. 전체는 빌드9로 실행했고 최종10은 삭제 연결 설명 주석만 바뀌었다.
+- [x] 기존 근거36종 통과다. 추가 ContentLifetime 감사는 기록CRLF/동일HEAD·현재LF 차이와 당시 추출 creation.c/functions.tsv 부재로 미통과다. LF→CRLF SHA가 기존 기대값과 같음을 증명했으며 기존 기록/기대 SHA/fixture/실행기를 수정하지 않았다. 기존 두 판본396행 C++ 재생은 전체에 포함한다. 보호3개 SHA·제품16개·현재 HEAD에 맞던31보고서102핀과 과거85핀 보존·UTF-8/LF·기존 CMake 접두/fixture/AGENTS/DN 불변을 감사한다.
+- [x] 인수인계 후 **20261017-34 CP 단일 커서 수명과 실제 로컬 예측 건설 연결**로 로컬 커밋하며 push하지 않는다.
+- [ ] **다음 실제 Client:** `UserInput.cpp`는 현재 임시 선택/이동/카메라 입력이고 원본 커서 명령과 연결 전이다. 실제 장치/번역·글자 측정/Gump 조회·허용·부모/생산 GUI/금액·dirty·갱신 소비자와 입력/메뉴 전체 DWORD/커서 수집·그리기를 연결한다. PreviewCollection/PreviewDraw의 기존 현재 CursorPreviewSource 연결을 재사용한다. `MakePriestMenu`는 takePreview가 없을 때만 이번 세션 커서를 기본 연결하므로 실제 Client가 만든 메뉴의 연결을 별도로 확인한다.
+- [ ] **전송/게임 부모:** 실제 로그인된 LocalMissionTransport 두 끝/등록 해제/큐 수명을 연결한다. 실제 생산 완료·경제/AI·전체 Kernel, Early Missions1~6/캠페인1-1~1-2/데모3의 사용자 자연 완주·승패/저장/다음 미션과 전체 동일성은 미완료다. 이번 명시 입력/선택 실행 검사를 이 범위로 확대하지 않는다. 전체화면 DirectDraw 수정은 제외다.
+
 ## 2026-10-17 단위133 완료: 실제0x3e 요청25바이트·서버 수신·전체 MayPlace (`HJOW-Athlon`)
 
 - [x] AGENTS.md·양 LEFT·깨끗한aa054a6과 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16**을 확인했다. 새 디컴파일·원본/클론 게임·GUI 실행은 없다. 보호 PE의 CPU 메모리 격리 관측만 추가했다. 전체 목표는 active다. [작업 기록](docs/exe/cpp-construction-command-20261017.md), `cpppj/construction-command.json`, 접두사`extracted/goal-local-construction-20261017-`를 남겼다.

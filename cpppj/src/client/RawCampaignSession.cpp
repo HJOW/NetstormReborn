@@ -1,5 +1,6 @@
 // 기존 원본 몸체의 단일 저장소 조립을 실제 클라이언트 세션이 소유한다.
 #include "client/RawCampaignSession.h"
+#include "client/RawCampaignCursor.h"
 #include "client/PriestPlacementAssets.h"
 #include "client/RawCampaignGunQueries.h"
 #include "client/AiTypeRequiredEnergy.h"
@@ -111,6 +112,8 @@ struct RawCampaignSession::Impl {
     std::uint32_t terrainType{97}; // 실제 월드 생성과 영역 소유자 getter가 함께 읽는 isle 타입 전역이다.
     RawSurfaceWorld world; // 모든 생성/Pop/Graph가 사용하는 단일 raw 월드다.
     RawWorldCore core; // 같은 Pool/장부/해시의 참조만 유지한다.
+    std::unique_ptr<RawCampaignCursor> cursor; // 같은 실제 Form/마나/위치/로컬 예측 몸체를 설치 뒤 소유한다.
+    SoundView cursorView{}; // 마우스 위치의 실제 투영에도 현재 단일 카메라/화면 원점을 사용한다.
     CursorDropState cursorDrop; // 실제 취득/배치/취소가 공유할 커서 상태이며 마나 토큰도 같은 저장소다.
     CursorManaGlobals cursorManaGlobals; // 현재 마나 종류/반경과 월드 좌표 제한 전역이다.
     std::unique_ptr<RawCursorMana> cursorMana; // Kernel을 먼저 비운 뒤 해제하는 실제 마나 프레임/수명 몸체다.
@@ -1075,7 +1078,11 @@ struct RawCampaignSession::Impl {
         contentForms=std::make_unique<ContentFormHost>(core.pool,core.types,
             [this](Sid parent,Sid form,std::uint32_t reason) { contentNotice->Notice(parent,form,reason); },services.dependencyTransmit);
         auto contentEffects=services.contentLifetime;
-        FillMissing(contentEffects.cancelCursor);FillMissing(contentEffects.localNotice);FillMissing(contentEffects.remoteNotice);
+        contentEffects.cancelCursor=[this] {
+            if (!cursor) throw std::logic_error("현재 ContentForm 커서 수명 미설치");cursor->Cancel();
+        };
+        contentLifetimeState.currentCursor=[this] { return cursorDrop.preview; };
+        FillMissing(contentEffects.localNotice);FillMissing(contentEffects.remoteNotice);
         FillMissing(contentEffects.wallet);FillMissing(contentEffects.addSp);FillMissing(contentEffects.sound);
         contentLifetimeState.localOwner=assetState.localOwner;contentLifetimeState.boss=assetState.boss;
         contentLifetimeState.notice=0x020000b4; // PATCH005429c4의 실제 수입 명령 초기값이다.
@@ -1158,6 +1165,37 @@ struct RawCampaignSession::Impl {
         // 현재 원본 섬의 제한/존재 DWORD만 읽고 Player/owner를 새로 만들지 않는다.
         for (std::size_t index=0;index<gameplayRegions.size();++index) gameplayRegions[index]={Read(islandBytes,4+index*32),Read(islandBytes,8+index*32)};
         return gameplayPipeline->MayPlace(query);
+    }
+    // 같은 현재 커서/에너지/배치/수명/건설을 한 번 조립한다. UI 소비자는 이후 실제 장치가 연결한다.
+    void ConnectCursor() {
+        if (cursor) throw std::logic_error("실제 캠페인 커서 중복 연결");CampaignCursorGame game;
+        game.prepare=[this] { PrepareConstruction();gameplayPlacement.geometry.patternTypes=constructionState.confirm.patternTypes;cursorDrop.localPlayer=playerState.battleOwner;cursorDrop.battle=core.ownerMode.battle ? 1U : 0U;cursorDrop.blocked=globals.missionPost; };
+        game.lifecycle.source=[this](Sid form) { return SquidForms(core.pool).Parent(form); };
+        game.lifecycle.sourceNotice=[this](Sid parent,Sid form,std::uint32_t reason) { contentNotice->Notice(parent,form,reason); };
+        game.lifecycle.detach=[this](Sid sid,std::uint32_t flags) {
+            if (core.pool.Slot(sid)[10]==6) { if (flags) throw std::logic_error("커서 ContentForm 분리 flags0 계약");contentForms->Unpop(sid); }
+            else world.Unpop(sid,flags);
+        };
+        game.lifecycle.unpop=[this](Sid sid,std::uint32_t flags) {
+            const auto raw=core.pool.Slot(sid);
+            if (raw[10]==6) { SquidForms(core.pool).Pop(sid,flags);return; }
+            world.Pop(sid,std::bit_cast<float>(Read(raw,14)),std::bit_cast<float>(Read(raw,18)),flags);
+        }; // 원본 가상+4c는 void 해제/복귀 Pop이며 +48 분리와 구별한다.
+        game.lifecycle.destroy=[this](Sid sid,std::uint32_t flags) { if (!world.Destroy(sid,flags)) throw std::logic_error("커서 실제 가상 삭제 거부"); };
+        game.lifecycle.addLocalSp=[this](float delta) { hp.AddSp(playerState.battleOwner,delta); };
+        game.lifecycle.sound=[this](std::string_view name) {
+            if (!services.sound.play) throw std::logic_error("커서 실제 소리 장치 미연결");services.sound.play(soundNames.Lookup(name),0,0,0,0,0);
+        };
+        game.playDrop=[play=game.lifecycle.sound] { play("droppiece.wav"); };
+        BindCursorManaLifecycle(game.lifecycle,core.processes,core.kernel,*cursorMana);BindCursorRangeLifecycle(game.lifecycle,core.processes,*cursorRange);
+        game.placement.describe=[this](std::string& text,float x,float y,std::uint32_t type,std::uint32_t owner) { return energySupply->Evaluate(text,x,y,type,owner); };
+        game.placement.source=game.lifecycle.source;
+        game.placement.region=[this](Sid sid) { const auto graph=anchor->GraphFor(sid.value);return graph==254 ? 0 : static_cast<std::int32_t>(graph+1); }; // 원본 GraphRecord 포인터의 NULL/같음만 보존하는 토큰이다.
+        game.placement.mayPlace=[this](const CanonPlacementQuery& query) { const auto result=MayPlaceGameplay(query);cursor->Placement().obstruction=gameplayPlacement.placement.blockedRelation;return result ? 1U : 0U; };
+        game.placement.processEvent=game.lifecycle.processEvent;
+        game.placement.project=[this](float x,float y) { const auto point=SoundToScreen(cursorView,x,y);return ScreenPoint{point.x,point.y}; };
+        game.moveBuilder=[this](std::uint32_t owner,Sid target,std::uint32_t low,std::uint32_t high) { static_cast<void>(buildingMover->Move(owner,target,low,high)); };
+        cursor=std::make_unique<RawCampaignCursor>(CampaignCursorData{world,assets.game,gameplayPlacement.geometry,metadata.frames,*contentForms,*contained,hp,random,*construction,cursorDrop,contentCamera},std::move(game));
     }
     // 같은 Session 전역을 건설 시작/프레임 직전에 갱신한다. 별도 건설 시계를 만들지 않는다.
     void PrepareBuilding(double now) {
@@ -1282,7 +1320,7 @@ RawCampaignSession::RawCampaignSession(const GameAssets& assets,const BaseFileSy
 // Impl이 Kernel을 비운 뒤 실제 모듈을 해제한다.
 RawCampaignSession::~RawCampaignSession()=default;
 // 동일 원본 부모를 실행한다.
-void RawCampaignSession::Load() { impl_->runtime->Load();impl_->ConnectBuilding();impl_->ConnectMotion();impl_->buildingMover=impl_->MakeBuilder(impl_->buildingMoverState,{});impl_->ConnectGameplayPlacement();impl_->loaded=true; }
+void RawCampaignSession::Load() { impl_->runtime->Load();impl_->ConnectBuilding();impl_->ConnectMotion();impl_->buildingMover=impl_->MakeBuilder(impl_->buildingMoverState,{});impl_->ConnectGameplayPlacement();impl_->ConnectCursor();impl_->loaded=true; }
 // UI의 현재 크기/변경 전역을 빌리며 게임 소유자·모드는 실제 세션에서 다시 읽는다.
 void RawCampaignSession::ResetCamera(CameraHomeState& state,std::function<void(std::int32_t,std::int32_t)> apply) const {
     state.localPlayer=impl_->assetState.localOwner;state.fort=impl_->core.ownerMode.fort;
@@ -1299,7 +1337,7 @@ void RawCampaignSession::RunFrame(FrameTime time,bool paused) { impl_->PrepareBu
 // 해상도/카메라 변경과 동일 위치 효과음의 view를 process11에도 전달한다.
 void RawCampaignSession::SetParticleView(SoundView view,SurfaceDisplayHooks display) {
     impl_->contentScreenOrigin={view.cameraX,view.cameraY};
-    impl_->contentCamera=RawCursorPosition::CameraFromPixels(view.cameraX,view.cameraY);
+    impl_->cursorView=view;impl_->contentCamera=RawCursorPosition::CameraFromPixels(view.cameraX,view.cameraY);
     impl_->particles->SetView(view,std::move(display));
 }
 // 현재 단일 raw 표시 목록에서 SHP와 같은 정렬 항목을 만든다.
@@ -1404,6 +1442,7 @@ std::unique_ptr<RawPriestMenu> RawCampaignSession::MakePriestMenu(PriestMenuHook
     state.chargeBlockedRead=[current] { return current->globals.missionPost; };
     BindPriestMenuWorld(hooks,current->core.pool,current->priests->PriestState(),current->core.processes,
         *current->player,current->priests->Carrier(),current->hp,*current->contained);
+    if (!hooks.takePreview) current->cursor->Bind(hooks); // 실제 UI가 별도 취득 소비자를 주지 않으면 같은 세션 커서를 사용한다.
     hooks.allowed=[current](std::uint32_t type) { return current->totalMade->Allowed(static_cast<std::int32_t>(type)); };
     hooks.money=[current](std::uint32_t owner) { return std::bit_cast<float>(current->sp.Get(owner)); };
     return std::make_unique<RawPriestMenu>(current->core.pool,current->core.types,current->core.frames,current->players,
@@ -1415,6 +1454,8 @@ PriestMenuState& RawCampaignSession::PriestMenuSettings() { return impl_->priest
 SquidPostPopList& RawCampaignSession::ConstructionExcludedTypes() { return impl_->constructionExcludedTypes; }
 // UI와 실제 마나 프로세스가 동일한 현재 커서 토큰을 공유한다.
 CursorDropState& RawCampaignSession::CursorDropSettings() { return impl_->cursorDrop; }
+// 실제 설치 이후 같은 커서를 빌리며 새 몸체나 상태를 만들지 않는다.
+RawCampaignCursor& RawCampaignSession::Cursor() { if (!impl_->loaded || !impl_->cursor) throw std::logic_error("설치 전 실제 커서 요청");return *impl_->cursor; }
 // 이후 커서/맵 명령도 프레임이 읽는 같은 전역을 갱신한다.
 CursorManaGlobals& RawCampaignSession::CursorManaSettings() { return impl_->cursorManaGlobals; }
 // 실제 Session 소유의 생성·표시·공간·가상 삭제·중심과 현재 Host/Kernel을 조립한다.

@@ -57,7 +57,7 @@ std::array<float,2> ContentFormLifetime::Center(Sid parent) const {
 // 커서 취소는 내용물 kind 검사보다 먼저이며 콜백 뒤 현재 슬롯에서 다시 읽는다.
 void ContentFormLifetime::PreDestroy(Sid form) const {
     if (!IsContentForm(form) || (pool_.Slot(form)[kState]&kFree)) throw std::logic_error("Content preDestroy 슬롯 오류");
-    if (state_.cursor==form || Word(form,kParent)==form.value) {
+    if ((state_.currentCursor ? state_.currentCursor() : state_.cursor)==form || Word(form,kParent)==form.value) {
         if (!hooks_.cancelCursor) throw std::invalid_argument("Content 커서 취소 경계 필요");hooks_.cancelCursor();
     }
     // CD는 공통 깊이 반납만 하며 패치판에만 너겟 알림/선지급 효과가 있다.

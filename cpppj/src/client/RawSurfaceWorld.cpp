@@ -311,6 +311,8 @@ std::vector<SurfaceSnapshot> RawSurfaceWorld::Objects() const {
 // 변경은 Renderer 억제 여부와 무관하게 한 번만 소비한다.
 bool RawSurfaceWorld::TakeChanged() { return std::exchange(impl_->changed,false); }
 // 기존 저장 객체 보고와 구별되는 현재 raw 슬롯/Graph/프로세스 상태다.
+// 실제 월드가 소유한 연결 생성기를 빌리며 별도 생성기를 만들지 않는다.
+o::RawBridgeConnect& RawSurfaceWorld::BridgeConnections() { return *impl_->connect; }
 std::string RawSurfaceWorld::Report() const {
     std::ostringstream out;out.precision(12);std::uint32_t surfaces=0,graphs=0;
     // 예약 0번 다음의 실제 연결 성분을 센다.
