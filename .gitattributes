@@ -1320,3 +1320,13 @@ cpppj/nugget-regular.json text eol=lf
 cpppj/campaign-nugget-regular.json text eol=lf
 tools/decomp_nugget_regular.py text eol=lf
 docs/exe/cpp-nugget-regular-20261017.md text eol=lf
+
+cpppj/src/o/RawCarrierFalling.h text eol=lf
+cpppj/src/o/RawCarrierFalling.cpp text eol=lf
+cpppj/tests/CarrierFallingTests.cpp text eol=lf
+tools/decomp_carrier_falling.py text eol=lf
+cpppj/tests/fixtures/carrier-falling-x86.tsv text eol=lf
+cpppj/carrier-falling.json text eol=lf
+cpppj/campaign-carrier-falling.json text eol=lf
+docs/exe/cpp-carrier-falling-20261017.md text eol=lf
+cpppj/tests/fixtures/carrier-falling-vtables.tsv text eol=lf

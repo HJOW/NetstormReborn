@@ -1,5 +1,19 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-17 단위148 완료: 캐리어 낙하와 포획 사제 해방 (`HJOW-Athlon`)
+
+- [x] 기준 `f915b76`, 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16** 일치다. AGENTS·양 LEFT를 UTF-8로 재독했다. 새 디컴파일/원본 게임 실행/DirectDraw 수정은 없다. [작업 기록](docs/exe/cpp-carrier-falling-20261017.md).
+- [x] `RawCarrierFalling`이4225b0/426ef0/426c80/40e800을 복원했다. signed 좌표/hash0/현재 코드20, signed count/가속 낙하/z20/상한254/권한별 반환, 현재kind/WORD/owner/복귀좌표/VT 재조회와 사제 해방이다. 같은 Session의 실제 생성/소유권/공간/사제낙하/삭제에 연결했다.
+- [x] 실제 사제 보호막167의 공통 수명, priestFall/priestFree 음향과 해방 통지의 일반 genus 조회, 다섯 직접 Carrier의 전후 수명도 연결했다.5040c0의 별도42ae80은 제외한다. 사제 SetOwner(0)의 실제 전투 동작은 기억한 원래 소유자1로 복귀한다.
+- [x] 독립 PE8몸체 전체 **9,884입력·19,768정상반환·1,215,106명령·53/64차이0**, 원본VT8행이다. 첫 도구의 입력 내장 호출자/Unicorn 캐시 오류를 고정 코드·인자 메모리로 수정해 새 원문182행을 재관측했다. 거부 자료는 ignored extracted에 보존했고 기존 커밋 fixture는 불변이다. 이후 재관측9884행은 바이트 동일하다.
+- [x] 최종 집중 **3개**: 원문 전체/늦은 효과와 물리 코드 범위/실제 Session 캐리어5105의 가속 낙하·z20·사제 생성/원래 소유자/기억WORD/위치/낙하예약·두 실제 음향 요청·Form/부모/예약삭제다. Player 복귀 좌표는4287d0 이후의 명시 초기 입력이며 시작 함수나 전체Kernel/다른AI/자연입력을 실행한 검증으로 확대하지 않는다.
+- [x] 최종 Release빌드9 경고0·오류0/집중3성공이다. 빌드1/3~9성공,2는 검사 auto PID/SID 혼합 컴파일 오류1개를 분리해 고쳤다. 최종 전체CTest **1,595개·실패0·종료0·212.36초**(CTest212.40초), 원본 감사66종 **55성공·기존11실패·새실패0**다. 기존43보고서102현재핀만 갱신하고 과거를 보존했다.
+- [x] 클론 진입5회PASS/originals_unchanged=true다.1-1/1-2브리핑→월드/tutorial1~3브리핑만 예외호스트에서 실행했다. 보호SHA3/기존CMake접두·fixture/AGENTS·원본·DN 불변/UTF-8·LF·과거 이력을 확인했다. 단위148의 모든 명령은 종료했고 대기 없음이다. 로그접두부 `extracted/goal-carrier-falling-20261017-`, 연결보고서 `cpppj/campaign-carrier-falling.json`.
+- [x] 인수인계 뒤 **`20261017-48 CP 캐리어 낙하와 포획 사제 해방 및 수명 연결 복원`** 으로 로컬커밋한다. push하지 않으며 전체 목표active다.
+- [ ] **다음 우선:**4287d0 자연 낙하 시작과426db0 공통 task 예약을 복원한다. 시작은 기존5105가 있으면 즉시1; boss면488fe0(type,0,1)→4b1a90; extra4면선택해제4d5c90(0,0,1); kind-only4b26f0으로사제찾기→캡처위치를41d7a0으로거의올림→원래owner의Player+a8/ac기록→현재boss면즉시426c80→426db0(5105,0)이다. **41d7a0 bias는0.99999F(502310)**로4225b0의0.9999F와다르다.
+- [ ] 426db0은FindEventMasked(fff0,5100); 없으면new28뒤5105는Regular46,다른task는SharedRegular61을payload5.0으로생성; 기존5105는요청task가다르면진단후5105유지; 그외기존task교체; count0/시간은 `double(floatDelay+float(currentDoubleNow))`다. 실제 시간 덧셈의 float/x87 저장 시점은 명령으로 확인해야 한다. new실패뒤NULL+10쓰기는 정상성공으로 바꾸지 않는다. 기존Regular.ResetTask/FindEventMasked/두종류Attach를 재사용할 수 있다.
+- [ ] 429010 회피/5040c0 별도전처리, 실제 Client선택·비정지 우클릭·원본 DWORD 소비자/생산·경제·AI·로그인된 로컬전송과11스테이지 자연완주·승패·저장·다음미션/전체동일성은 미완료다.
+
 ## 2026-10-17 단위147 완료: 너겟 왕복 프레임/지면/가속 낙하 (`HJOW-Athlon`)
 
 - [x] 기준 `f724baa`, 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16** 일치다. AGENTS·양LEFT/깨끗한트리를재독했고직전목표턴은3단위커밋의진행턴이다. 새디컴파일/원본게임실행/DirectDraw수정은없다. [작업기록](docs/exe/cpp-nugget-regular-20261017.md).

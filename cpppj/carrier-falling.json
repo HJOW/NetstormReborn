@@ -1,0 +1,38 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-17",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16"
+  },
+  "controls": [
+    639,
+    895
+  ],
+  "uniqueInputs": 9884,
+  "normalReturns": 19768,
+  "instructions": 1215106,
+  "nativeCalls": {
+    "004225b0": 3024,
+    "004e49c0": 6048,
+    "004ac200": 1566,
+    "0049a840": 2430,
+    "004ac550": 864,
+    "00426ef0": 4480,
+    "00426c80": 12320,
+    "0040e800": 6720
+  },
+  "precisionDifferentInputs": [],
+  "boundaries": "4225b0/426ef0/426c80/40e800/TYPEgetter/_ftol 전체. 검색4ac9f0/4b26f0·생성/WORD/현재 가상 효과/복귀하는 진단은 명시 경계. 현재 TYPE/Owner/VT 재조회·캡처 좌표 검사. 실제 caller float32/GP/스택/canary/SEH/x87/코드·읽기·쓰기 범위 검사. 실제 OS/게임 창 없음.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "tools/decomp_carrier_falling.py": "f8702db0708a543b73213c8df9154503afe977767a11bd7c150b639ee1b587a6",
+    "tools/decomp_nugget_regular.py": "5a55630da35c054c5230336b3c8750504c73fdfe03b6c7a5033cacb1d98d729e",
+    "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "cpppj/tests/fixtures/carrier-falling-x86.tsv": "15f5eebe0a06307036e1e863a0c516e12d919f0303da8d0ab8ee3753db774367",
+    "cpppj/tests/fixtures/carrier-falling-vtables.tsv": "650e40b5f93b31014cb2e6988f681ca91a5f777c2b7698297202818476bbab54"
+  }
+}

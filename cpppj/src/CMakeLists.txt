@@ -71,3 +71,6 @@ target_sources(netstorm PRIVATE o/RawNuggetPostPop.cpp o/RawNuggetPostPop.h)
 
 # 너겟의왕복프레임/지면조회/가속낙하와실제게임난수다.
 target_sources(netstorm PRIVATE o/RawNuggetRegular.cpp o/RawNuggetRegular.h)
+
+# 캐리어의 실제 다리 판정/낙하/포획 사제 해방이다.
+target_sources(netstorm PRIVATE o/RawCarrierFalling.cpp o/RawCarrierFalling.h)

@@ -1378,3 +1378,8 @@ set_source_files_properties(NuggetPostPopTests.cpp PROPERTIES COMPILE_DEFINITION
 target_sources(netstorm_tests PRIVATE NuggetRegularTests.cpp)
 set_source_files_properties(NuggetRegularTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_NUGGET_REGULAR_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/nugget-regular-x86.tsv\"")
+
+# 캐리어 낙하/해방의 독립 PE 원문을 재생한다.
+target_sources(netstorm_tests PRIVATE CarrierFallingTests.cpp)
+set_source_files_properties(CarrierFallingTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CARRIER_FALLING_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/carrier-falling-x86.tsv\";NETSTORM_CARRIER_FALLING_VTABLES=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/carrier-falling-vtables.tsv\"")

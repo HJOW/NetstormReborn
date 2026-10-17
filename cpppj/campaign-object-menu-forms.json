@@ -8,16 +8,16 @@
     "date": "2026-10-16"
   },
   "currentSources": {
-    ".gitattributes": "5a09780fc24a357d7e8a09424ea259e16e2ac988c06d24c4e40fa6433e833e82",
+    ".gitattributes": "312017592c21a6b517ec359daaaec61aa273f16f5af8bc5612e7dfd1bf528f5e",
     "cpppj/src/client/CampaignClientServices.cpp": "deb067662fe4fcd5324bab710c7b06fb7ce5f661f4078227946adc4fa92db72a",
     "cpppj/src/client/RawButtonControls.cpp": "5d9568d2a6c461e9dd474cc584db62389ca3eb576e780fdeb6e9a39f1ee55baf",
     "cpppj/src/client/RawButtonControls.h": "372d15ad4ab423ef9869fab470ad1f4b5c75cb0ebc12503edd2bb7a6f3f240d6",
-    "cpppj/src/client/RawCampaignSession.cpp": "0e5b27ea8bda1e8c821c919ce4589fe40df70a1a481923f94c1da0070dca06ec",
+    "cpppj/src/client/RawCampaignSession.cpp": "ad2667626274a0da0ac2730f487abb665378690e5e3738345bc80001dcd89f38",
     "cpppj/src/client/RawCampaignSession.h": "b63d3540024b9eef248329d84fd9cde386c6e799dee06ea2ddaf8ee68f7d21a4",
     "cpppj/src/client/RawMenuControls.cpp": "e1d3a27c5330b52727e18447c97b02f6a7f82cb0ceeb9bf55aad874b744720f1",
     "cpppj/src/client/RawMenuControls.h": "92b7db6b2d4fa00641d814a9e0e6b76bf649b7789302cb1dc306abd87c99023d",
     "cpppj/src/client/UberGump.cpp": "471b592cf1e784c63db34bc109eb3d38785481018b403cef0afa98d98622d10b",
-    "cpppj/tests/CampaignObjectMenuTests.cpp": "95857ea3ffe7590359bf7f4afcc6ea12789f8cb32b8ea75fecdc92a496fd5d53"
+    "cpppj/tests/CampaignObjectMenuTests.cpp": "fe0b7cf2898773410f446d546ee25a4efbb93e44f103fa9642f779d8afcf2e63"
   },
   "unchangedExistingModules": {
     "cpppj/src/o/GumpFormHost.cpp": "f4045100a4642fdb432cee4f0c223079810176c68235140950fa0a1490f112a4",
@@ -268,6 +268,31 @@
           "path": "cpppj/tests/CampaignObjectMenuTests.cpp",
           "previous": "120224ae61396c16375332ac28afd520049839dfee0cb920e500f388e487fd97",
           "current": "95857ea3ffe7590359bf7f4afcc6ea12789f8cb32b8ea75fecdc92a496fd5d53"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 148,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": ".gitattributes",
+          "previous": "5a09780fc24a357d7e8a09424ea259e16e2ac988c06d24c4e40fa6433e833e82",
+          "current": "312017592c21a6b517ec359daaaec61aa273f16f5af8bc5612e7dfd1bf528f5e"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "0e5b27ea8bda1e8c821c919ce4589fe40df70a1a481923f94c1da0070dca06ec",
+          "current": "ad2667626274a0da0ac2730f487abb665378690e5e3738345bc80001dcd89f38"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignObjectMenuTests.cpp",
+          "previous": "95857ea3ffe7590359bf7f4afcc6ea12789f8cb32b8ea75fecdc92a496fd5d53",
+          "current": "fe0b7cf2898773410f446d546ee25a4efbb93e44f103fa9642f779d8afcf2e63"
         }
       ]
     }

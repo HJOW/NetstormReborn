@@ -21,6 +21,7 @@
 #include "o/RawContentPreviewProcess.h"
 #include "o/RawNuggetPostPop.h"
 #include "o/RawNuggetRegular.h"
+#include "o/RawCarrierFalling.h"
 #include "o/RawPlayerTemplateState.h"
 #include "o/RawArcherTypeData.h"
 #include "o/RawProjectileGeometry.h"
@@ -280,6 +281,7 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RegularProcess> pendingNuggetRegular; // 원본 new28과 생성자를 같은 실제 할당으로 연결한다.
     std::vector<std::int32_t> nuggetAFrames; // 같은188TYPE의A구간실제프레임수다.
     std::unique_ptr<RawNuggetRegular> nuggetRegular; // 기존너겟예약의왕복프레임/지면/낙하/삭제를소비한다.
+    std::unique_ptr<RawCarrierFalling> carrierFalling; // 같은 표면/Player/권한에서 캐리어 낙하와 포획 사제 해방을 처리한다.
     std::unique_ptr<GumpFormHost> gumpForms; // 같은Pool의실제Form3와현재UI등록ID/부모삭제알림수명이다.
     std::unique_ptr<RawContentParentNotice> contentNotice; // 부모의 실제 현재 VT로 기본/파생 +24를 분배한다.
     bool contentSavedGame{}; // 이 생성자는 새 미션 경로이며005c85d4 저장 게임은 선택하지 않는다.
@@ -449,7 +451,11 @@ struct RawCampaignSession::Impl {
             if (!sounds->Add(parent,sound,alternate,flags)) throw std::logic_error("실제 보호막 Sound47 부착 실패");
         };
         FillMissing(priestEffects.shield.noticeSound);FillMissing(priestEffects.shield.translate);FillMissing(priestEffects.shield.tell);
-        FillMissing(priestEffects.fallSound);FillMissing(priestEffects.otherWalkerFall);
+        // 4941f0 끝의 현재 좌표 priestFall.wav(flags0)를 같은 실제 위치 음향 장치로 전달한다.
+        if (!priestEffects.fallSound) priestEffects.fallSound=[this](Sid,float x,float y) {
+            if (!services.sound.playOnceAt) throw std::logic_error("사제 낙하 실제 위치 음향 미연결");services.sound.playOnceAt(x,y,soundNames.Lookup("priestFall.wav"),0,0);
+        };
+        FillMissing(priestEffects.otherWalkerFall);
         priestEffects.regen.refresh=[this](Sid sid) { core.display.Update(core.pool.Slot(sid)); };
         FillMissing(priestEffects.regen.neutralAction);
         // 회전과 뒤의 읽기를 분리하여 중립 동작/측정이 바꾼 현재 SP 전역도 원본 시점에 조회한다.
@@ -716,7 +722,11 @@ struct RawCampaignSession::Impl {
                 if (event.effect==SquidDestroyEffect::PreDestroy) { if (SunFence(event.sid)) fenceLifetime->PreDestroy(event.sid,event.flags);else damageablePre->PreDestroy(event.sid,event.flags);return; }
                 if (event.effect==SquidDestroyEffect::PostDestroy) { damageablePostState.battle=core.ownerMode.battle;damageablePostState.boss=assetState.boss;damageablePost->PostDestroy(event.sid,event.flags);return; }
             }
-            if (FenceCommon(event.sid) || VisualDummy(event.sid)) { //실제 세 가상 표의+14/+18은 공통004b0950/004b0840이다.
+            if (PlainCarrierLifetime(event.sid)) {
+                if (event.effect==SquidDestroyEffect::PreDestroy) { priests->Carrier().PreDestroy(event.sid,event.flags);return; }
+                if (event.effect==SquidDestroyEffect::PostDestroy) { damageablePostState.battle=core.ownerMode.battle;damageablePostState.boss=assetState.boss;damageablePost->PostDestroy(event.sid,event.flags);return; }
+            }
+            if (FenceCommon(event.sid) || VisualDummy(event.sid) || PriestForcefield(event.sid)) { // 실제 보호막도 +14/+18이 공통004b0950/004b0840이다.
                 if (event.effect==SquidDestroyEffect::PreDestroy) { world.CommonDeletion().PreDestroy(event.sid,event.flags);return; }
                 if (event.effect==SquidDestroyEffect::PostDestroy) { world.CommonDeletion().PostDestroy(event.sid,event.flags);return; }
             }
@@ -732,7 +742,7 @@ struct RawCampaignSession::Impl {
         };
         auto previousDestroy=std::move(worldHooks.destroy); // 실제 신전 VT의 공통+10만 추가 분배한다.
         worldHooks.destroy=[this,previous=std::move(previousDestroy)](Sid sid,std::uint32_t flags,const SquidDestroyHooks& hooks) {
-            if (Vortex(sid) || FenceCommon(sid) || Flyer(sid) || VisualDummy(sid) || PlainDamageable(sid) || SunFence(sid) || Nugget(sid) || PreviewDais(sid)) return core.virtualDestroy.Destroy(sid,flags,hooks);return previous(sid,flags,hooks);
+            if (Vortex(sid) || FenceCommon(sid) || Flyer(sid) || VisualDummy(sid) || PlainDamageable(sid) || SunFence(sid) || Nugget(sid) || PreviewDais(sid) || PriestForcefield(sid) || PlainCarrierLifetime(sid)) return core.virtualDestroy.Destroy(sid,flags,hooks);return previous(sid,flags,hooks);
         };
         buriedRegular=std::make_unique<RawBuriedRegular>(core.pool,core.frames,core.frame,random);
         auto actualRegular=hits->Handler(combat->Handler(assetBindings->Handler(buriedRegular->Handler(priests->RegularHandler([this](Sid sid,std::uint32_t event,std::uint32_t count,float payload) {
@@ -848,6 +858,10 @@ struct RawCampaignSession::Impl {
     bool SunFence(Sid sid) const { const auto raw=core.pool.Slot(sid);return raw[10]==136 && Read(raw,0)==0x509470; }
     // 보호50dc30의+14는484f80→44b4b0 thunk이며+18/+10도기존Damageable/공통삭제다. 메뉴 범위와는 별개다.
     bool Nugget(Sid sid) const { const auto raw=core.pool.Slot(sid);return raw[10]==154 && Read(raw,0)==0x50dc30U; }
+    // 실제 사제 보호막167/507770의 공통 수명만 추가한다. 펜스 보호막170과 구별한다.
+    bool PriestForcefield(Sid sid) const { const auto raw=core.pool.Slot(sid);return raw[10]==167 && Read(raw,0)==0x507770U; }
+    // 다섯 직접 Carrier의 +14=426890/+18=44b9e0이다. 5040c0은 별도42ae80이므로 포함하지 않는다.
+    bool PlainCarrierLifetime(Sid sid) const { return carrierRegular && carrierRegular->Handles(sid) && Read(core.pool.Slot(sid),0)!=0x5040c0U; }
     // 실제 PE의 신전 네 가상 표를 판정하며 다른 자산을 타입 이름만으로 허용하지 않는다.
     bool Vortex(Sid sid) const {
         const auto table=Read(core.pool.Slot(sid),0);return table==0x005196f0 || table==0x005197a8 || table==0x00519860 || table==0x00519918;
@@ -1072,11 +1086,23 @@ struct RawCampaignSession::Impl {
             contentPreviewProcess->Construct(pendingContentPreview->Fields(),parent,duration);
         };
         hooks.refresh=[this](Sid sid) { core.display.Update(core.pool.Slot(sid)); };
-        hooks.needsEscape=SessionMissing<bool,float,float>(); // 4225b0은 별도 원본 관측 뒤 실제 지면/프레임 표에 연결한다.
+        CarrierFallingHooks falling;falling.find=hooks.find;falling.create=hooks.create;falling.setWord=hooks.setWord;falling.setOwner=hooks.setOwner;falling.pop=hooks.pop;
+        falling.findKind=[this](Sid parent,std::uint32_t kind) {
+            RawContainedFinder finder(core.pool,contentFinder);
+            // 4b26f0(parent,kind,0,0)은 mask 없이 WORD18이 같은 첫 Form6을 반환한다.
+            for (auto sid=finder.Begin(parent);sid.value;sid=finder.Next()) { const auto raw=core.pool.Slot(sid);if ((std::uint32_t(raw[18])|(std::uint32_t(raw[19])<<8))==kind) return sid; }
+            return Sid{};
+        };
+        falling.destroy=[this](Sid sid,std::uint32_t flags) { static_cast<void>(world.Destroy(sid,flags)); };
+        falling.unpop=[this](Sid sid,std::uint32_t flags) { world.Unpop(sid,flags); };
+        falling.fallWalker=[this](Sid sid) { return priests->FallWalker(sid); };
+        falling.assertion=[](std::uint32_t line) { throw std::logic_error("원본 Carrier.cpp 낙하 진단 "+std::to_string(line)); };
+        carrierFalling=std::make_unique<RawCarrierFalling>(core.pool,core.types,core.frames,core.hash.Entries(0),players,assetState.boss,gunState.checking,priestState.movement.priest,cursorManaGlobals.mapLimit,std::move(falling));
+        hooks.needsEscape=[this](float x,float y) { return carrierFalling->NeedsEscape(x,y)!=0; };
         hooks.movementType=[this](std::uint32_t type) { return priests->MovementProcessType(type); };
         hooks.hasPath=[this](Sid sid,std::uint32_t type) { RawContainedLookup lookup(core.pool,[this](Sid target,std::uint32_t flags) { static_cast<void>(world.Destroy(target,flags)); });return lookup.Find(sid,type).value!=0; };
         hooks.escape=[this](Sid sid,float delay,std::uint32_t event) { if (!services.motion.carrier.escape) throw std::logic_error("현재 Carrier 회피429010 미연결");static_cast<void>(services.motion.carrier.escape(sid,delay,event)); };
-        hooks.falling=SessionMissing<float,Sid,std::uint32_t>(); // 5105의426ef0은 빈 성공 대신 미복원 큰 하위를 요구한다.
+        hooks.falling=[this](Sid sid,std::uint32_t count) { return carrierFalling->Fall(sid,count); };
         hooks.damageable=[this](Sid sid,std::uint32_t event,std::uint32_t count,float payload) { return assetBindings->Regular().DamageableHandle(sid,event,count,payload); };
         carrierRegular=std::make_unique<RawCarrierRegular>(core.pool,core.types,carrierRegularTypes,assetState.boss,std::move(hooks));
     }
@@ -1241,6 +1267,10 @@ struct RawCampaignSession::Impl {
             StartSelectionContentPreview(core.pool,parent,objectState.loadingDepth,[this](Sid sid,std::uint32_t event,float payload) { static_cast<void>(core.processes.AddRegular(sid,event,payload)); },SessionMissing<void>());
         };
         carrierEffects.typeAt=[this](float x,float y,std::uint32_t type) { return world.Find(x,y,type); };
+        carrierEffects.genusAt=[this](float x,float y,std::uint32_t genus) { return damageablePost->GenusAt(x,y,genus); }; // 같은 실제4b2070/일반 finder를 사용한다.
+        if (!carrierEffects.freeSound) carrierEffects.freeSound=[this](std::string_view name) {
+            if (!services.sound.play) throw std::logic_error("사제 해방 실제 전역 음향 미연결");services.sound.play(soundNames.Lookup(name),0,0,0,1,0); // 4a9cb0의 원본6인자다.
+        };
         carrierContentNotice=std::make_unique<RawCarrierContentNotice>(core.pool,core.types,
             CarrierContentNoticeState{contentSavedGame,objectState.loadingDepth,contentBombBlocked,playerState.battleOwner,priestState.movement.priest,contentScreenOrigin[0],contentScreenOrigin[1],priestState.movement.rainWalker},std::move(carrierEffects));
         auto otherParentNotice=services.contentNotice;

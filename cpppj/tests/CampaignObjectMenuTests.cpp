@@ -329,3 +329,35 @@ TEST_CASE(CampaignNuggetRegular_ActualAnimationAndFallLifecycle) {
     }
     CHECK(moved && sawZ && (core.pool.Slot(nugget)[11]&1U));CHECK(!core.kernel.Get(fallingPid));CHECK(core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0);
 }
+// 실제 Carrier의 5105 예약을 진행해 포획 Form에서 새 사제 생성/배치/낙하 예약/기존 부모 삭제까지 확인한다.
+TEST_CASE(CampaignCarrierFalling_ActualCapturedPriestRelease) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);MenuServices external;
+    auto services=external.Make();std::vector<std::array<std::uint32_t,3>> sounds;std::vector<std::array<std::uint32_t,6>> globalSounds; // 실제 위치/전역 음향 장치 경계의 요청만 기록한다.
+    services.sound.playOnceAt=[&](float x,float y,SoundHandle sound,std::uint32_t flags,std::uint32_t extra) { CHECK(flags==0 && extra==0);sounds.push_back({std::bit_cast<std::uint32_t>(x),std::bit_cast<std::uint32_t>(y),sound});return sound; };
+    services.sound.play=[&](SoundHandle sound,std::uint32_t loop,std::uint32_t volume,std::uint32_t pan,std::uint32_t priority,std::uint32_t maximum) { globalSounds.push_back({sound,loop,volume,pan,priority,maximum});return sound; };
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));session.Load();auto core=session.Core();sounds.clear();
+    const auto carrier=session.World().Create(135,2);session.World().Pop(carrier,10.5F,10.5F,0);CHECK(Get(core.pool.Slot(carrier),0)==0x503e50U);
+    const auto content=session.CreateContained(carrier,158,0x1281,0x20,0x10,0);CHECK(content.value && Get(core.pool.Slot(content),12,2)==0x1281U);
+    const auto records=session.PlayerRecords();const Sid existing{static_cast<std::uint16_t>(session.FindPriestParticipation(1))};CHECK(existing.value);
+    const auto homeX=Get(core.pool.Slot(existing),14),homeY=Get(core.pool.Slot(existing),18);CHECK(std::bit_cast<float>(homeX)>0 && std::bit_cast<float>(homeY)>0);
+    Put(records,0xb4+0xa8,homeX);Put(records,0xb4+0xac,homeY); // 낙하 시작4287d0이 남기는 복귀 좌표의 명시 초기 입력이다. 그 시작 부모는 이번 통합 검사에서 실행하지 않는다.
+    std::vector<std::uint16_t> oldPriests; // 기존 실제 사제는 새 생성 결과로 오인하지 않는다.
+    // 현재 살아 있는 사제 번호만 저장한다. 결과 번호/위치는 주입하지 않는다.
+    for (std::uint32_t sid=1;sid<core.pool.Capacity();++sid) { const auto raw=core.pool.Slot(Sid{static_cast<std::uint16_t>(sid)});if (raw[10]==158 && !(raw[11]&3U)) oldPriests.push_back(static_cast<std::uint16_t>(sid)); }
+    auto* falling=core.processes.AddRegular(carrier,0x5105,0.01F);CHECK(falling);if (!falling) return;const auto pid=core.kernel.Find(*falling);const auto form=falling->Form();bool moved{},sawZ{};
+    // 해당 캐리어의 실제 예약만 진행하며 전체 Kernel/다른 AI/사용자 입력 완주와 구별한다.
+    for (std::uint32_t step=0;step<105 && !(core.pool.Slot(carrier)[11]&1U);++step) {
+        CHECK(core.kernel.Get(pid)==falling);if (core.kernel.Get(pid)!=falling) break;core.processState.now=std::max(core.processState.now,falling->Time());falling->RunFrame();
+        if (!(core.pool.Slot(carrier)[11]&1U)) { moved=moved || std::bit_cast<float>(Get(core.pool.Slot(carrier),18))>10.5F;sawZ=sawZ || core.pool.Slot(carrier)[35]==20; }
+    }
+    CHECK(moved && sawZ && (core.pool.Slot(carrier)[11]&1U));CHECK(core.pool.Slot(content)[11]&1U);CHECK(core.pool.Slot(form)[11]&1U);CHECK(!core.kernel.Get(pid));Sid released{};
+    // 실제 생성된 새 사제의 번호/소유자/기억 WORD/좌표/낙하 예약을 관측한다.
+    for (std::uint32_t sid=1;sid<core.pool.Capacity();++sid) {
+        const auto current=Sid{static_cast<std::uint16_t>(sid)};const auto raw=core.pool.Slot(current);
+        if (raw[10]==158 && !(raw[11]&3U) && std::find(oldPriests.begin(),oldPriests.end(),current.value)==oldPriests.end()) { CHECK(!released.value);released=current; }
+    }
+    CHECK(released.value);if (released.value) { const auto raw=core.pool.Slot(released);CHECK(Get(raw,12,2)==0x1281U);CHECK(raw[34]==1);CHECK(Get(raw,14)==homeX && Get(raw,18)==homeY);CHECK(core.processes.FindEvent(released,0x25b)); } // 실제 사제 SetOwner(0)은 전투에서 기억한 원래 소유자1을 복원한다.
+    CHECK(std::find(sounds.begin(),sounds.end(),std::array<std::uint32_t,3>{homeX,homeY,external.names.Lookup("priestFall.wav")})!=sounds.end());
+    CHECK(std::find(globalSounds.begin(),globalSounds.end(),std::array<std::uint32_t,6>{external.names.Lookup("priestFree.wav"),0,0,0,1,0})!=globalSounds.end());
+    CHECK(core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0);
+}
