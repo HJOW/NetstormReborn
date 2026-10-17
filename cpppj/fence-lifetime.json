@@ -32,16 +32,16 @@
     "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
     "tools/decomp_cursor_mana.py": "00cfea4f089b06b1b8f1b0cc61f0cf4f93bd33aa16aaa0715a95c66187a9f888",
     "tools/decomp_fence_lifetime.py": "d470de69c26be1c0c50ededee28a45e9f452f40b48837efd809044b394a535a7",
-    "cpppj/src/client/RawCampaignSession.cpp": "4ea0f98026d11d31d4b4489e7305dded7410bcbc88019b0350669697a74cf717",
+    "cpppj/src/client/RawCampaignSession.cpp": "e1d5b096b3e4f661ca5d59b8991135b3593c1adae5e15747fdfd5b66b5b599ba",
     "cpppj/tests/fixtures/fence-lifetime-x86.tsv": "f3e5be8c131684bc679dba1fb7d27f431ace773495800e92ced8fd7ac856155b",
-    "cpppj/src/CMakeLists.txt": "dd084a63fc35b0e37bbb5158c7c52939eebe837ed989d398fc8451029009758d",
+    "cpppj/src/CMakeLists.txt": "c8d9b21785c6344eaef9a9371c160f57176ddb913a6aa0d0c9beb64329598e79",
     "cpppj/src/client/RawCampaignLifetimeBindings.cpp": "2eb0d3fc16e6967b54271c0365991e0ebd8f3d57ef6412aa92d4c4d21fbb01c3",
     "cpppj/src/client/RawCampaignLifetimeBindings.h": "6f4be73b52279abf308c8a3e6d8962271560e47c25996f7a03fca09f8cd063e8",
-    "cpppj/src/client/RawCampaignSession.h": "a1ef8a6b33b728349b4cdbda634429586c5bfae667f857d0ecafe13e839c728d",
+    "cpppj/src/client/RawCampaignSession.h": "7ace914173f58482da4aef2d10d19b334daecd02f383bcdc4e40493235f4aac9",
     "cpppj/src/o/RawGunTarget.cpp": "7fbcc542cc48449f414494ccca7abeb351d75ecc861d45d1d0a517833e485229",
     "cpppj/src/o/RawGunTarget.h": "486e6d411905a3b1a996c6900f390bb3ee229bb8f10ff31fbfd77977cc4b2513",
-    "cpppj/tests/CMakeLists.txt": "64d386fa1beb0f16fea3870ea77d566b12215711210fde2ba97b4896ba03b2c8",
-    "cpppj/tests/CampaignSessionTests.cpp": "93c2af1fd85f09ab6cef74dc66a4733bbd9947c9ec8961df46f104fab92a973e",
+    "cpppj/tests/CMakeLists.txt": "3f8ffb8265d2f577649de36a1e9f430c22fe1350a45fad69aa34fdd3a6205318",
+    "cpppj/tests/CampaignSessionTests.cpp": "636e999bbc159c1d8670630390a2070a54826e1fca6b6cc3e4c50b705cfcebad",
     "cpppj/src/client/RawCursorRange.cpp": "965b5bce38bdceb3d31cc63cbae3fc8db5da57ccb3bf8c71be81f23ec548ec2e",
     "cpppj/src/client/RawCursorRange.h": "5aa384b5432bd6fbee04ae0fc9bf65acf685d45b66553f8b91866261fcd79758",
     "cpppj/src/o/RawFenceLifetime.cpp": "f24971d75e0ad7ee97739ee00964b2ec71be8a127c0ecd1bbc6b29797bb45ddf",
@@ -983,6 +983,43 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "5cb36ee64032a9e8c2017c662f44cc28e57153bc6baf302c649bd85f26ec03e0",
           "current": "93c2af1fd85f09ab6cef74dc66a4733bbd9947c9ec8961df46f104fab92a973e"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 158,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "4ea0f98026d11d31d4b4489e7305dded7410bcbc88019b0350669697a74cf717",
+          "current": "e1d5b096b3e4f661ca5d59b8991135b3593c1adae5e15747fdfd5b66b5b599ba"
+        },
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "dd084a63fc35b0e37bbb5158c7c52939eebe837ed989d398fc8451029009758d",
+          "current": "c8d9b21785c6344eaef9a9371c160f57176ddb913a6aa0d0c9beb64329598e79"
+        },
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "a1ef8a6b33b728349b4cdbda634429586c5bfae667f857d0ecafe13e839c728d",
+          "current": "7ace914173f58482da4aef2d10d19b334daecd02f383bcdc4e40493235f4aac9"
+        },
+        {
+          "group": "/sha256",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "64d386fa1beb0f16fea3870ea77d566b12215711210fde2ba97b4896ba03b2c8",
+          "current": "3f8ffb8265d2f577649de36a1e9f430c22fe1350a45fad69aa34fdd3a6205318"
+        },
+        {
+          "group": "/sha256",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "93c2af1fd85f09ab6cef74dc66a4733bbd9947c9ec8961df46f104fab92a973e",
+          "current": "636e999bbc159c1d8670630390a2070a54826e1fca6b6cc3e4c50b705cfcebad"
         }
       ]
     }

@@ -38,7 +38,7 @@
     "cpppj/src/o/RawPriestState.cpp": "e1433d2703ec4750247628e40597a074301bfce82b4597c1bdf09d7aab4d5aa5",
     "cpppj/src/o/RawPriestState.h": "2d3b43c86011d9c030fc4272453a247815a95d529a59cada53c145f235fcd380",
     "cpppj/src/o/SidPool.cpp": "0f72cb4540e5d28ff63e5ce9078d8591b733f192c8ee6c8c5bf486b93cfd16f0",
-    "cpppj/src/o/SidPool.h": "5aae3c23e7376b0c1c3da5a96e736738335d1e1bf060db41e1b748535ff75ee1",
+    "cpppj/src/o/SidPool.h": "21d77e1995b8697dba3f4e6cc9ae16501c573f417fd7019cf4a459b0e6fe521a",
     "cpppj/src/o/SquidFrame.cpp": "d38aa3f5fbb191aaeadf4f808a7fc51e2ee5a558b9605c9dd8660224435d1e62",
     "cpppj/src/o/SquidFrame.h": "faab1f3ac968b01bb727f374c1cc8b6bdc6b7e3123052e7ed4ae1849f0285b8b",
     "cpppj/src/o/SquidHash.cpp": "9ceffaf0d4c995cb5901b7c49eceae575b9441e8e08dec8cd92e504821fa20ca",
@@ -192,6 +192,19 @@
           "path": "cpppj/src/o/SidPool.h",
           "previous": "fbac21d016818c4f3436d2848658b628ff1ebcfe1ce2bee7c78596726ec077c4",
           "current": "5aae3c23e7376b0c1c3da5a96e736738335d1e1bf060db41e1b748535ff75ee1"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 158,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/SidPool.h",
+          "previous": "5aae3c23e7376b0c1c3da5a96e736738335d1e1bf060db41e1b748535ff75ee1",
+          "current": "21d77e1995b8697dba3f4e6cc9ae16501c573f417fd7019cf4a459b0e6fe521a"
         }
       ]
     }

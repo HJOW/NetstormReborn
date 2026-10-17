@@ -1,0 +1,43 @@
+{
+  "contentFormParentNotice": {
+    "vtable": 5317128,
+    "entry": 4309248,
+    "code": "c20800"
+  },
+  "typeRecordStride": 500,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-18",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16"
+  },
+  "uniqueInputs": 2657,
+  "normalReturns": 5314,
+  "instructions": 1195390,
+  "nativeCalls": {
+    "00428e00": 388,
+    "004ac200": 13164,
+    "0049a840": 13164,
+    "0040a9a0": 308,
+    "004df230": 308,
+    "00426520": 4806,
+    "0040eb80": 4384,
+    "004b2270": 4384,
+    "004b1b20": 10784,
+    "0044daa0": 6400,
+    "004264d0": 2392
+  },
+  "precisionDifferentInputs": [],
+  "boundaries": "428e00/426520/4264d0/40a9a0/4df230/4ac200/49a840/40eb80/4b2270/4b1b20/44daa0 전체. 후보426900/서버송신/권한진단/오벨리스크변환/입력큐/기존내용물조회/보충부모/실제Content생성/가상삭제·Unpop·Attach는명시효과경계다. C++는같은실제종속finder와현재TYPE를쓴다. GP/retN/SEH/canary/x87/실행·읽기·쓰기범위/전체9슬롯/현재전역/패킷/호출순서·인자·임시dead를검사했다. 실제게임창·전체경제·자연완주검증이아니다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "tools/decomp_carrier_pickup.py": "9274285be2c6954c11d9211ce95ec322fe8f80bac0daf345b386a4f8c121f6cf",
+    "tools/decomp_carrier_falling.py": "f8702db0708a543b73213c8df9154503afe977767a11bd7c150b639ee1b587a6",
+    "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+    "tools/decomp_cursor_position.py": "e15bcdbc4c6be9c131c30f15416c945d650dba9f7dc6def404b47f63c635c212",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "cpppj/tests/fixtures/carrier-pickup-x86.tsv": "2245911a825393ecf233e261f486b47efce2ce941339fc5dd123023f0a02441e"
+  }
+}

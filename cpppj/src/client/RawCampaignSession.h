@@ -33,7 +33,7 @@
 #include "o/RawEnergySupply.h"
 #include "o/RawConstructionBuilder.h"
 #include "client/RawCampaignParticles.h"
-namespace netstorm::o { class RawCarrierSteal; } // 포획 몸체의 고정 참조만 공개한다.
+namespace netstorm::o { class RawCarrierSteal; class RawCarrierPickup; } // 포획 몸체의 고정 참조만 공개한다.
 namespace netstorm::client {
 class RawCampaignCursor; // 세션과 같은 실제 커서/로컬 예측의 고정 주소 소유자다.
 struct CursorPlacementHooks; // 실제 커서 배치의 설명/에너지 경계만 연결할 때 사용한다.
@@ -122,6 +122,7 @@ struct RawCampaignSessionServices {
     SoundProcessHooks sound; // 실제 같은 SoundPlayer/벽시계에 연결한 재생·정지 경계다.
     std::function<void(std::span<const std::uint8_t>)> pathPacket; // 실제 Path 직렬화 버퍼의 송신 소비자다.
     std::function<void(std::span<const std::uint8_t>)> formPacket; // 실제 감시/내용물/삭제 직렬화 후의 송신 경계다. 없으면 동일 BattleBroadcast를 사용한다.
+    std::function<void(std::int32_t,std::span<const std::uint8_t>)> carrierRequest; //4e2dc0의실제로컬전송/연결장치다.직접서버처리로대체하지않는다.
     o::BattlePacketPeers battlePeers; // 실제0..8 연결 객체 표다. 단독 캠페인은 NULL 연결이며 별도 송신 관찰 함수가 필요하지 않다.
 };
 // 초기 객체 생성부터 Kernel 해제까지 동일 주소에서 실제 모듈과 상태를 소유한다.
@@ -190,7 +191,7 @@ public:
     bool RequestConstruction(const o::ConstructionConfirmRequest& request);
     // 같은 실제0x3e 수신을 기존 RawPacketDispatch 또는 LocalMissionTransport.Dispatch에 등록한다.
     void RegisterConstructionCommands(o::RawPacketDispatch& dispatch);
-    // 같은 실제0x5b 채취와0x60 포획 수신을 현재 캠페인 처리기에 등록한다.
+    // 같은 실제0x4f 일반포획/0x5b 채취/0x60 크랩포획 수신을현재캠페인에등록한다.
     void RegisterCarrierCommands(o::RawPacketDispatch& dispatch);
     // 원본 MayPlace를 통과한 일반 서버 요청의 기준점/송신/직접 통지/실제 배치를 실행한다.
     bool ConfirmConstruction(const o::ConstructionConfirmRequest& request);
@@ -259,6 +260,8 @@ public:
     std::unique_ptr<o::RawConstructionBuilder> MakeConstructionBuilder(o::ConstructionBuilderState& state,o::ConstructionBuilderHooks hooks);
     o::RawPathProcess* StartConstructionMovement(o::RawPathStartRequest request); // 같은 월드의 실제134/105를 각각23/39 경로로 움직인다.
     o::RawPathProcess* StartCarrierMovement(o::RawPathStartRequest request); // 같은 실제 썬 워커133의40 경로를 시작한다.다른Halt는 별도 경계다.
+    void RequestCarrierPickup(o::Sid parent); //같은실제후보/헤더/서버9 전송을요청하며설치후에만허용한다.
+    const o::RawCarrierPickup& CarrierPickup() const; //실제4f 요청/수신/기존내용물삭제몸체를빌린다.
     const o::RawCarrierSteal& CarrierSteal() const; // 같은 실제 포획/로컬 수신/방향 동맹을 빌린다.
     const o::RawCarrierTransfer& CarrierTransfer() const; // 현재 같은 풀의 로컬 전달 수신/주기/공유 상태를 빌린다.
     const o::RawCarrierTarget& CarrierTarget() const; // 현재 같은 월드의 일반 대상 접근/간헐천 이동/귀환을 실행한다.

@@ -308,7 +308,7 @@
     "cpppj/hist/run20-regression/unpop.cpp": "89ee0eb425b59778c216314eccb6dd09909a57118fb032cab1013c3f3345233c",
     "cpppj/run19.json": "6d9888fa7bcf7b1e13dd408db59a26410e9e3cef6d1fad987e20c464d6e0dc76",
     "cpppj/squid-level.json": "5d61185c834c2e195394000248d768f37a95a2056027c4d020c66b83b74f4c68",
-    "cpppj/src/CMakeLists.txt": "dd084a63fc35b0e37bbb5158c7c52939eebe837ed989d398fc8451029009758d",
+    "cpppj/src/CMakeLists.txt": "c8d9b21785c6344eaef9a9371c160f57176ddb913a6aa0d0c9beb64329598e79",
     "cpppj/src/app/CanonMayPlaceInspect.cpp": "27eda46bca500c898abeb9a3a7c4e8588b38e061b579c84cbf6c032c6d46dda9",
     "cpppj/src/app/FrameBindingInspect.cpp": "042602919b0531fb1cbaf3941dc6597bee73944bbf0d571dacfd638bb45dd07c",
     "cpppj/src/app/FrameBindingInspect.h": "4e187ca41f8c34ed52c022b58a57327a554a723e3e26ee88a1ae152c99de3fce",
@@ -820,7 +820,7 @@
     "cpppj/src/o/RiftType.h": "6861baebea2e47f0ac175fdabd7ff7aa09fd53bb978bbdf6b0ffd4ca70455f5a",
     "cpppj/src/o/RiftTypeTable.cpp": "be867bf2fe94ac73a58fd798651f0a39e026d5d9c2617cda16f64cf3df780d83",
     "cpppj/src/o/SidPool.cpp": "7bc612330f3b631cf8141be5e7a9ae51cefe8caee3ea3eb68be38252d68a6887",
-    "cpppj/src/o/SidPool.h": "5aae3c23e7376b0c1c3da5a96e736738335d1e1bf060db41e1b748535ff75ee1",
+    "cpppj/src/o/SidPool.h": "21d77e1995b8697dba3f4e6cc9ae16501c573f417fd7019cf4a459b0e6fe521a",
     "cpppj/src/o/SpStore.cpp": "010b2c3c0b60d089d10a059bb63618d029eec3d3ea341f1bacf7426e71a85ba9",
     "cpppj/src/o/SpStore.h": "5bb676a1593e7583a69ef45238f7045009b1cf0fff751649e40833226e80b817",
     "cpppj/src/o/Squid.cpp": "167f1af3b609b0f051da3a7484c5a12020cd4d266ca62577603a98d49f21173b",
@@ -2292,6 +2292,25 @@
           "path": "cpppj/src/CMakeLists.txt",
           "previous": "abd332c83a3201c6a29f36adf997ec3605504c5cb82c5081974c3c5c4596d818",
           "current": "dd084a63fc35b0e37bbb5158c7c52939eebe837ed989d398fc8451029009758d"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 158,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "dd084a63fc35b0e37bbb5158c7c52939eebe837ed989d398fc8451029009758d",
+          "current": "c8d9b21785c6344eaef9a9371c160f57176ddb913a6aa0d0c9beb64329598e79"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/SidPool.h",
+          "previous": "5aae3c23e7376b0c1c3da5a96e736738335d1e1bf060db41e1b748535ff75ee1",
+          "current": "21d77e1995b8697dba3f4e6cc9ae16501c573f417fd7019cf4a459b0e6fe521a"
         }
       ]
     }

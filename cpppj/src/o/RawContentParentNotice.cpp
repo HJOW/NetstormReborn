@@ -23,6 +23,8 @@ std::uint32_t RawContentParentNotice::NativeEntry(Sid parent) const {
     std::uint32_t table=0; // 비정렬 DWORD의 little endian 조립 결과다.
     // 원본 32비트 VT 주소 네 바이트만 읽는다.
     for (std::size_t i=0;i<4;++i) table|=std::uint32_t(raw[i])<<(i*8);
+    // 포획대상의내용물은새ContentForm에재부착된다.실제512208+24도공통빈ret8이다.
+    if (pool_.Edition()==OriginalEdition::Patch1078 && table==0x512208U) return 0x41c100U;
     const auto entries=pool_.Edition()==OriginalEdition::Patch1078 ? std::span<const ContentNoticeEntry>(kPatchContentNotices) :
         std::span<const ContentNoticeEntry>(kCdContentNotices); // 판본별 실제 생성자 표다.
     // 생성자에서 실제 사용할 수 있는 VT만 허용한다.

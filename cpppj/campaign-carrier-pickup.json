@@ -1,0 +1,187 @@
+{
+  "unit": 158,
+  "date": "2026-10-18",
+  "host": "HJOW-Athlon",
+  "baseCommit": "524cafd",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16"
+  },
+  "status": "일반포획요청·서버변환단위완료/11스테이지전체목표진행중",
+  "currentSources": {
+    "cpppj/src/o/RawCarrierPickup.h": "f9f900aaabe01dbee75778e210ddcd8c9853bb4cbbc0fba12cd103b8d15a0dc4",
+    "cpppj/src/o/RawCarrierPickup.cpp": "627a2e9b2b49ce2516e038676090ad2606646289d4634db0a72476ec6a611e7c",
+    "cpppj/src/o/RawContentParentNotice.cpp": "030dbe976907e7a0ed4acc0cf8592af06debb6dab3f33f5a4ea282393a91756d",
+    "cpppj/src/o/SidPool.h": "21d77e1995b8697dba3f4e6cc9ae16501c573f417fd7019cf4a459b0e6fe521a",
+    "cpppj/src/client/RawCampaignSession.cpp": "e1d5b096b3e4f661ca5d59b8991135b3593c1adae5e15747fdfd5b66b5b599ba",
+    "cpppj/src/client/RawCampaignSession.h": "7ace914173f58482da4aef2d10d19b334daecd02f383bcdc4e40493235f4aac9",
+    "cpppj/src/CMakeLists.txt": "c8d9b21785c6344eaef9a9371c160f57176ddb913a6aa0d0c9beb64329598e79",
+    "cpppj/tests/CMakeLists.txt": "3f8ffb8265d2f577649de36a1e9f430c22fe1350a45fad69aa34fdd3a6205318",
+    "cpppj/tests/CampaignSessionTests.cpp": "636e999bbc159c1d8670630390a2070a54826e1fca6b6cc3e4c50b705cfcebad",
+    "cpppj/tests/CarrierPickupTests.cpp": "555b58844bd62cdf1cae5bf96ad2775dcbd415287b66eb3a755a50d1211789a4",
+    "cpppj/tests/fixtures/carrier-pickup-x86.tsv": "2245911a825393ecf233e261f486b47efce2ce941339fc5dd123023f0a02441e",
+    "tools/decomp_carrier_pickup.py": "9274285be2c6954c11d9211ce95ec322fe8f80bac0daf345b386a4f8c121f6cf",
+    "docs/exe/cpp-carrier-pickup-20261018.md": "4f4f230563f2f46a1f5cea7caea412d0c8bac3b42c264a86d4a9e0269c7a52e5",
+    "cpppj/src/client/RawPriestWorldBindings.cpp": "982722ce738ad8011c8f3efe2d6c351c22dd01fafd14a721f2c1f4dba11c7ed5",
+    "cpppj/src/o/RawPriestPreDestroy.cpp": "333c5b9ccc768c8b91e61cdf0a1b81e7af3a6cf6004d564599b7d40bd1de9341",
+    "cpppj/src/o/RawDamageablePostDestroy.cpp": "c70069e2dc850b8f1496aee07008c03ffb1655ff5943365334a4938ead99fb18",
+    "cpppj/src/o/RawContainedCreate.cpp": "54ac5f440300896af9fc25bfc98315ae5efe3e99b393fce348f006e09c3cbf97",
+    "cpppj/src/o/RawContainedFinder.cpp": "3a7c0ca4530d019de4ba9fcb714991ac3d53703612d8bd5c865346e69fe9b8df",
+    "cpppj/src/o/RawPriestOwner.cpp": "51cf38d27ffc29ea5d890539344d76300dd89db9d02099462312ccf7dab6bc24",
+    "cpppj/src/zacket/LocalMissionTransport.cpp": "9eca9a66112df27a580d8f159bcea58d9d2aa35ffbe35d3bbc8f3182049e09ff"
+  },
+  "nativeReports": {
+    "cpppj/carrier-pickup.json": "a1a15b52ba9b8f938db39866f200313b57d6155b31660c85647b9d373fa406b1"
+  },
+  "nativeContext": {
+    "uniqueInputs": 2657,
+    "normalReturns": 5314,
+    "instructions": 1195390,
+    "nativeCalls": {
+      "00428e00": 388,
+      "004ac200": 13164,
+      "0049a840": 13164,
+      "0040a9a0": 308,
+      "004df230": 308,
+      "00426520": 4806,
+      "0040eb80": 4384,
+      "004b2270": 4384,
+      "004b1b20": 10784,
+      "0044daa0": 6400,
+      "004264d0": 2392
+    },
+    "precisionDifferentInputs": [],
+    "typeRecordStride": 500,
+    "contentFormParentNotice": {
+      "vtable": 5317128,
+      "entry": 4309248,
+      "code": "c20800"
+    },
+    "boundaries": "428e00/426520/4264d0/40a9a0/4df230/4ac200/49a840/40eb80/4b2270/4b1b20/44daa0 전체. 후보426900/서버송신/권한진단/오벨리스크변환/입력큐/기존내용물조회/보충부모/실제Content생성/가상삭제·Unpop·Attach는명시효과경계다. C++는같은실제종속finder와현재TYPE를쓴다. GP/retN/SEH/canary/x87/실행·읽기·쓰기범위/전체9슬롯/현재전역/패킷/호출순서·인자·임시dead를검사했다. 실제게임창·전체경제·자연완주검증이아니다."
+  },
+  "protected": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "AGENTS.md": "7addbf9b31c42f29aab7c93faa865eb6de8590a600d17202a297cf7122bdf979",
+    "LEFT_JOBS.dotnetpj.md": "0c067e1d12879dbf2212cbd64c8f9f60e65b590df910418f025027ed84f80ec2"
+  },
+  "originalFixtureBeforeCppReplaySha256": "2245911a825393ecf233e261f486b47efce2ce941339fc5dd123023f0a02441e",
+  "validation": {
+    "release": {
+      "build": "build6",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0
+    },
+    "focused": {
+      "log": "focused4",
+      "tests": 4,
+      "failedChecks": 0,
+      "exitCode": 0
+    },
+    "full": {
+      "tests": 1632,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "seconds": 213.8,
+      "ctestSeconds": 213.83
+    },
+    "audit": {
+      "tools": 79,
+      "passed": 68,
+      "knownFailures": 11,
+      "newFailures": 0
+    },
+    "references": {
+      "containedInputs": 2415,
+      "parentNoticeRows": {
+        "originals": 83,
+        "originalCD": 68
+      },
+      "passed": 2
+    },
+    "entry": {
+      "passed": 5,
+      "originalsUnchanged": true,
+      "scope": "campaign1-1/1-2 briefing→world와tutorial1~3 briefing"
+    },
+    "pinMaintenance": {
+      "reports": 64,
+      "pins": 191,
+      "history": "현재핀과unit158 이력을역치환하면HEAD 과거전체JSON과동일"
+    }
+  },
+  "staticBindings": {
+    "sound": {
+      "propertyAddress": "0x5107d0",
+      "propertyBytes": "7069636b7570536f756e6400",
+      "assignmentAddress": "0x49db09",
+      "assignmentBytes": "89437c",
+      "soundCallAddress": "0x429720",
+      "argumentsCode": "6a006a016a006a006a008bcee8342e08008b407c50e82bfe070083c418",
+      "parameters": [
+        "current TYPE+0x7c",
+        0,
+        0,
+        0,
+        1,
+        0
+      ]
+    },
+    "priestDelete": {
+      "vtable": 5304848,
+      "slots": {
+        "0x10": "0x4af780",
+        "0x14": "0x4919b0",
+        "0x18": "0x44b9e0"
+      },
+      "binding": "같은WorldDestroy에실제RawPriestPreDestroy 래퍼와RawDamageablePostDestroy를연결. TYPE158 및정확한VT를함께확인한다."
+    }
+  },
+  "integration": [
+    "실제1-1지도 골렘40도착→후보→4f/9바이트/서버9전송",
+    "실제LocalMissionTransport buffer/Flush/Poll/등록서버수신",
+    "현재입력큐030000b1와실제TYPE6 생성·현재QA·종속Form 이동·원객체가상삭제",
+    "실제pickupSound 속성/현재SoundList/전역6인자 및고유사제삭제·참여목록"
+  ],
+  "limitations": [
+    "원본관측의큰게임효과·장치·가상삭제/부착은명시경계다. 실제게임창관측이아니다.",
+    "연결·새사제전투전원소유자설정은명시초기입력이며로그인/전체생성/자연UI 포획검증이아니다.",
+    "4620c0/461f00 오벨리스크보상변환과485e40 전역보충부모는명시미연결이다.",
+    "실제42/38/41 경로·5040c0의42ae80·AI간헐천등록/제거·전략·Client명령소비/생산/경제·11스테이지 자연왕복/승패/저장/다음미션/완주·전체동일성미완료.",
+    "CD10.72포획/DirectDraw/멀티플레이/한국어UI는이번변경범위가아니다."
+  ],
+  "compiledNormalizedSources": {
+    "cpppj/src/o/RawContentParentNotice.cpp": "030dbe976907e7a0ed4acc0cf8592af06debb6dab3f33f5a4ea282393a91756d"
+  },
+  "logSha256": {
+    "extracted/goal-carrier-pickup-20261018-LastTest.log": "ce143ca5e679bb11a7b94da0abfd8932b028aeb452cce6589f20cbc3091c1b23",
+    "extracted/goal-carrier-pickup-20261018-audit1.log": "428ebc7d003069aa52161a01fa3cefa7107fb737cd1a214e2b48fd294024138b",
+    "extracted/goal-carrier-pickup-20261018-audit2.log": "428ebc7d003069aa52161a01fa3cefa7107fb737cd1a214e2b48fd294024138b",
+    "extracted/goal-carrier-pickup-20261018-audit3.log": "428ebc7d003069aa52161a01fa3cefa7107fb737cd1a214e2b48fd294024138b",
+    "extracted/goal-carrier-pickup-20261018-build2.log": "eed75d7ed95772222c791cc52d7bbc25ace2bf97162f1fa0af2cc123bef10119",
+    "extracted/goal-carrier-pickup-20261018-build3.log": "7e30c97e258d4f41cb2f4afaca1b9d625576eb9017ac977d0d31b8a9ef7c5dde",
+    "extracted/goal-carrier-pickup-20261018-build4.log": "c63aecf1d806d7701cf972d7c2cfb086ba70b9cda85a9631a3c37afe93362a6a",
+    "extracted/goal-carrier-pickup-20261018-build5.log": "11e6279d78bae19c92ddd8e7b074d13c71e3fb1a4fad3447b21d2414586a8754",
+    "extracted/goal-carrier-pickup-20261018-build6.log": "68daf5268753a6f0253917d033a76282e07803e3b45f8c1951a34f7cbc6a3d34",
+    "extracted/goal-carrier-pickup-20261018-compiled-source-normalized.json": "030fb6793ad6ab90fed3f1a4214da5fe1eeeafd09a9dfa7d32f2a367b629447c",
+    "extracted/goal-carrier-pickup-20261018-ctest1.log": "d953d632bf6e192c82dc533c519bb09672d1252a7bd815bc9a745f36e405c236",
+    "extracted/goal-carrier-pickup-20261018-entry/results.json": "a0daa22fb767b677be20cbff2315f76d64cbb34879b5edd061ad5a85e983a135",
+    "extracted/goal-carrier-pickup-20261018-entry1.log": "530bf9254a3b0be59b099d237909bd3be07412d0f47949f546997ffdb8b1e681",
+    "extracted/goal-carrier-pickup-20261018-focused1.log": "5b081e7e2164662c8289251f6eb17491b9bc59fc9042197c2bd88bc618a8a3d3",
+    "extracted/goal-carrier-pickup-20261018-focused2.log": "f1750ddcb8643835fa6fb542db45e72670820778551801177e941bd9ca13679e",
+    "extracted/goal-carrier-pickup-20261018-focused3.log": "3b632f5e5ddb6fdc4fd895bf8e81dacc17ec83ba9b75528e0b4000da3729f699",
+    "extracted/goal-carrier-pickup-20261018-focused4.log": "20776d2fa2e211b1f1eefb49a024e0f336c7b4e19025a4456e60c3455086332c",
+    "extracted/goal-carrier-pickup-20261018-guard1.log": "55e37af63a630c0460cc7fcfbf60b776a8c3060ab37dc069747f04ec4f256cf7",
+    "extracted/goal-carrier-pickup-20261018-library-build1.log": "e81c21818429191f619c7243785c44f947c33d63cc3aea307b9afc079c4a0b40",
+    "extracted/goal-carrier-pickup-20261018-native1.log": "65afce77d2bd49dd00a8c7ad60292025075fd662c0269f9c4297427eeed2117a",
+    "extracted/goal-carrier-pickup-20261018-native2.log": "6d5ff30af09ec34cd6d67b01ca94c6664f81708252855213aa0e9f0025370312",
+    "extracted/goal-carrier-pickup-20261018-native3.log": "e8631568d81658b6a6f41cc3803cd2157c72a3f8adcb654f335a507067378aef",
+    "extracted/goal-carrier-pickup-20261018-native4.log": "e8631568d81658b6a6f41cc3803cd2157c72a3f8adcb654f335a507067378aef",
+    "extracted/goal-carrier-pickup-20261018-priest-delete-binding.json": "bb272ab01221e3400a4676328ed520403574c0e78437c60b3001892a6467659d",
+    "extracted/goal-carrier-pickup-20261018-reference-audit.json": "8cef0c2dfb3e75b1a182568d8d0d73597c7e827e4a064db81c1c222665794e7b",
+    "extracted/goal-carrier-pickup-20261018-sound-binding.json": "48458aff2a770989f06147cc4b3c6f2b059c9ef54345c152f964d8e02aa4bf9e",
+    "extracted/goal-carrier-pickup-20261018-verify-final.json": "9166c2296239ad20398ff7adaf7006f122f8abacac3d9d796b0ccb3bc3a6c21f"
+  }
+}

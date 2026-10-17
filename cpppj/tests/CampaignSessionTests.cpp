@@ -14,6 +14,8 @@
 #include "o/RawGeyserAiRegistration.h"
 #include "o/RawSunAviaryProcess.h"
 #include "o/RawCarrierSteal.h"
+#include "o/RawCarrierPickup.h"
+#include "zacket/LocalMissionTransport.h"
 #include "client/RawShapeToBuffer.h"
 #include "client/OwnerColorMaps.h"
 #include <unordered_set>
@@ -1389,4 +1391,56 @@ TEST_CASE(CampaignSession_CarrierStealUsesActualContentMovementAndReceiver) {
     std::vector<std::vector<std::uint8_t>> recorded;RawPacketDispatch dispatch(OriginalEdition::Patch1078,CommandDevice(recorded));session.RegisterCarrierCommands(dispatch);const auto& registration=dispatch.Registration(0x60);CHECK(registration.length==10 && registration.version==1 && registration.mismatch==0 && !registration.observer);
     std::array<std::uint8_t,10> packet{1,0x60,10,0};Put(packet,4,donor.value,2);Put(packet,6,content.value,2);Put(packet,8,0xffff,2);PacketConnection connection;connection.sender=8;auto bytes=core.pool.AllocatedBytes(content);const auto state=bytes[11];bytes[11]|=1;const auto count=sounds.size();CHECK(dispatch.Dispatch(connection,packet));CHECK(Get(core.pool.Slot(content),16,2)==crab.value && sounds.size()==count);bytes[11]=state;
     CHECK(dispatch.Dispatch(connection,packet));CHECK(SquidForms(core.pool).Parent(content)==donor && sounds.size()==count+1 && recorded.size()==2 && connection.depth==0);CHECK(core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0 && core.bookkeeping.depth==0);
+}
+
+namespace {
+// 명시적으로이미연결된단독미션의두실제끝을준비한다.로그인성공을재현한것으로계산하지않는다.
+struct SessionPickupWire {
+    std::vector<std::vector<std::uint8_t>> recorded; // 실제등록분배기의기록전체바이트다.
+    netstorm::zacket::LocalMissionTransport transport; // 실제buffer/집합/서버분배큐다.
+    // Session/현재Player기록은이연결보다오래살아야한다.
+    explicit SessionPickupWire(RawCampaignSession& session):transport(session.PlayerRecords(),session.Core().processState.server,CommandDevice(recorded)) {
+        transport.RegisterLogin([](std::uint32_t,PacketConnection&,std::span<const std::uint8_t>) { throw std::logic_error("포획검사에서로그인요청선택금지"); });
+        transport.Open(6799);transport.AssignConnection(-1,1);session.PlayerRecords()[0xb4+0x50]|=1;session.RegisterCarrierCommands(transport.Dispatch());
+        const auto& registration=transport.Dispatch().Registration(0x4f);CHECK(registration.length==9 && registration.version==1 && registration.mismatch==0 && !registration.observer);
+    }
+};
+// 원본지도의실제한지점경로를시작하고끝시각의프레임을실행한다.도착결과는주입하지않는다.
+void ArriveForPickup(RawCampaignSession& session,Sid parent,RawPathPoint point) {
+    const auto core=session.Core();CHECK(session.StartCarrierMovement({parent,point,1,0,0,0,0}));RawContainedLookup lookup(core.pool,[](Sid,std::uint32_t) { throw std::logic_error("포획이동검사조회에서삭제금지"); });const auto form=lookup.Find(parent,40);CHECK(form.value);if (!form.value) return;auto* path=dynamic_cast<RawPathProcess*>(core.processes.FromForm(form));CHECK(path && path->Runtime().Count()>0);if (!path || !path->Runtime().Count()) return;
+    core.processState.now=path->Runtime().Time(path->Runtime().Count()-1)+0.01;path->RunFrame(); // 도착이경로를삭제할수있어복귀뒤포인터를읽지않는다.
+}
+}
+// 실제도착은요청만버퍼에넣고Flush/Poll 뒤서버가너겟을같은내용물로변환한다.
+TEST_CASE(CampaignSession_CarrierPickupNuggetThroughActualLocalTransport) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;InputQueue input;netstorm::zacket::LocalMissionTransport* wire{};auto services=external.Services();
+    services.assets.queueCommand=[&](std::uint32_t command,std::int32_t first,std::int32_t second) { input.PushCommand(command,first,second); };
+    services.carrierRequest=[&](std::int32_t owner,std::span<const std::uint8_t> packet) { CHECK(wire && owner==9);if (!wire) throw std::logic_error("포획실제로컬연결미설치");CHECK(wire->Send(owner,packet)); };
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));CHECK(Throws([&] { session.RequestCarrierPickup(Sid{50}); }));session.Load();auto core=session.Core();SessionPickupWire link(session);wire=&link.transport;
+    const RawPathPoint point{98,122};const auto golem=session.World().Create(133,2),nugget=session.World().Create(154,2);session.World().Pop(golem,point.x,point.y,0);core.owner.Set(golem,1);session.World().Pop(nugget,point.x,point.y,0);const auto argument=Get(core.pool.Slot(nugget),12,2);const auto sp=session.Sp(1);
+    // 로딩및원본부모가먼저남긴사건은소비하고이번도착의새명령만확인한다.
+    while (!input.Empty()) static_cast<void>(input.Pop(false));
+    ArriveForPickup(session,golem,point);CHECK(link.recorded.empty() && link.transport.QueuedFrames()==0);CHECK((core.pool.Slot(nugget)[11]&3)==0 && !session.Priests().Carrier().FindContained(golem,0x20,154,0).value);CHECK(input.Empty());
+    link.transport.Flush();CHECK(link.transport.QueuedFrames()==1);CHECK(link.transport.Poll()==1 && link.transport.QueuedFrames()==0);const auto content=session.Priests().Carrier().FindContained(golem,0x20,154,0);CHECK(content.value);if (!content.value) return;
+    CHECK(core.pool.Slot(content)[10]==6 && Get(core.pool.Slot(content),12,2)==argument && SquidForms(core.pool).Parent(content)==golem);CHECK((core.pool.Slot(nugget)[11]&1)!=0);CHECK(session.Sp(1)==sp);CHECK(link.recorded.size()==1 && link.recorded[0].size()==9 && Get(link.recorded[0],4,2)==golem.value && Get(link.recorded[0],6,2)==nugget.value && link.recorded[0][8]==154);
+    const auto event=input.Pop(false);CHECK(event.code==0x030000b1 && event.x==nugget.value && event.y==golem.value && input.Empty());CHECK(link.transport.Server().depth==0 && core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0 && core.bookkeeping.depth==0);wire=nullptr;
+}
+// 실제저HP 사제와기술내용물을포획Form으로옮긴뒤원사제삭제/참여목록을확인한다.
+TEST_CASE(CampaignSession_CarrierPickupPriestMovesNestedContents) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;InputQueue input;netstorm::zacket::LocalMissionTransport* wire{};auto services=external.Services();
+    std::vector<std::array<std::uint32_t,6>> pickupSounds; // 실제사제포획이읽은현재TYPE 음향의6인자다.
+    services.sound.play=[&](SoundHandle sound,std::uint32_t loop,std::uint32_t volume,std::uint32_t pan,std::uint32_t priority,std::uint32_t limit) { pickupSounds.push_back({sound,loop,volume,pan,priority,limit});return sound; };
+    services.assets.queueCommand=[&](std::uint32_t command,std::int32_t first,std::int32_t second) { input.PushCommand(command,first,second); };
+    services.carrierRequest=[&](std::int32_t owner,std::span<const std::uint8_t> packet) { if (!wire) throw std::logic_error("사제포획실제로컬연결미설치");CHECK(owner==9 && wire->Send(owner,packet)); };
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));session.Load();auto core=session.Core();SessionPickupWire link(session);wire=&link.transport;
+    const RawPathPoint point{98,122};const auto golem=session.World().Create(133,2),priest=session.World().Create(158,2);session.World().Pop(golem,point.x,point.y,0);core.owner.Set(golem,1);// 새 사제의 원래 소유자는 명시적인 전투 전 초기 입력으로 전용 가상 SetOwner에 전달하고 현재 전투 모드를 복구한다.
+    const bool battle=core.ownerMode.battle;core.ownerMode.battle=false;session.Priests().SetOwner(priest,3);core.ownerMode.battle=battle;session.World().Pop(priest,point.x,point.y,0);CHECK((Get(core.pool.Slot(priest),12,2)&0x7f)==3);session.Priests().SetHitPoints(priest,session.HitPoints().MaxHitPoints(priest)/2-1);CHECK(session.Priests().PriestState().GroundImmobile(priest));
+    const auto child=session.CreateContained(priest,75,0,4,0,0);const auto argument=Get(core.pool.Slot(priest),12,2);CHECK(SquidForms(core.pool).Parent(child)==priest && session.FindPriestParticipation(3)==priest.value);
+    // 실제사제HP전환의표시사건을소비하고새포획통지를구별한다.
+    while (!input.Empty()) static_cast<void>(input.Pop(false));
+    ArriveForPickup(session,golem,point);CHECK(link.recorded.empty() && (core.pool.Slot(priest)[11]&3)==0);link.transport.Flush();CHECK(link.transport.Poll()==1);const auto captured=session.Priests().Carrier().FindContained(golem,0x20,158,0);CHECK(captured.value);if (!captured.value) return;
+    CHECK(SquidForms(core.pool).Parent(captured)==golem && Get(core.pool.Slot(captured),12,2)==argument);CHECK(SquidForms(core.pool).Parent(child)==captured);CHECK(session.Priests().Carrier().FindContained(captured,4,75,0)==child);CHECK((core.pool.Slot(priest)[11]&1)!=0 && session.FindPriestParticipation(3)==golem.value);
+    const auto livePriests=session.Priests().Priests().priests.Items();CHECK(std::find(livePriests.begin(),livePriests.end(),priest.value)==livePriests.end()); // 실제4919b0이같은사제등록목록에서도원객체를제거했다.CHECK(link.recorded.size()==1 && link.recorded[0][8]==158);
+    const std::array<std::uint32_t,6> expectedSound{external.names.Lookup("golemPickup.wav"),0,0,0,1,0};CHECK(std::find(pickupSounds.begin(),pickupSounds.end(),expectedSound)!=pickupSounds.end());
+    const auto event=input.Pop(false);CHECK(event.code==0x030000b1 && event.x==priest.value && event.y==golem.value);CHECK(link.transport.Server().depth==0 && core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0 && core.bookkeeping.depth==0);wire=nullptr;
 }

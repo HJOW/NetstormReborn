@@ -1433,3 +1433,8 @@ set_source_files_properties(CarrierEscapeTests.cpp PROPERTIES COMPILE_DEFINITION
 target_sources(netstorm_tests PRIVATE CarrierStealTests.cpp)
 set_source_files_properties(CarrierStealTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_CARRIER_STEAL_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/carrier-steal-x86.tsv\"")
+
+# 일반포획의실제요청/서버/종속finder 원문을대조한다.
+target_sources(netstorm_tests PRIVATE CarrierPickupTests.cpp)
+set_source_files_properties(CarrierPickupTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CARRIER_PICKUP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/carrier-pickup-x86.tsv\"")
