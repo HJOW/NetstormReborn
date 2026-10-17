@@ -1470,3 +1470,33 @@ TEST_CASE(CampaignSession_GemRewardActualSelectionPopAndDestroy) {
         std::cout<<"실제오벨리스크변환 mode"<<mode<<" TYPE"<<std::uint32_t(type)<<' '<<core.types[type].name<<'\n';
     }
 }
+
+// 실제도착/4f 로컬전송이보상내용물과원본번개·Sound47까지생성하고같은Kernel에서진행한다.
+TEST_CASE(CampaignSession_LightningScreenPickupThroughActualLocalTransport) {
+    // 서로새로운두실제세션에서저장QA와현재추첨의4f 끝경로를함께검사한다.
+    for (const std::uint32_t savedQA:{113U,0U}) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();InputQueue input;netstorm::zacket::LocalMissionTransport* wire{};RawCampaignSession* current{};Sid buried{},golem{},reward{};std::uint32_t kind{};bool revealedAtQueue{}; // 실제연결과입력통지시점의동일객체다.
+    double wall=100.123456789;std::vector<std::array<std::uint32_t,6>> globalSounds;std::vector<SoundHandle> atSounds; // 장치입력시각과실제재생인자만기록한다.
+    services.production.allocationBytes=[](std::span<std::uint8_t> raw) { std::fill(raw.begin(),raw.end(),std::uint8_t{0xa7}); };services.sound.wallSeconds=[&] { return wall; };
+    services.sound.play=[&](SoundHandle sound,std::uint32_t loop,std::uint32_t volume,std::uint32_t pan,std::uint32_t priority,std::uint32_t limit) { globalSounds.push_back({sound,loop,volume,pan,priority,limit});external.playing.insert(sound);return sound; };
+    services.sound.playOnceAt=[&](float,float,SoundHandle sound,std::uint32_t loop,std::uint32_t priority) { CHECK(loop==0 && priority==0);atSounds.push_back(sound);return sound; };
+    services.carrierRequest=[&](std::int32_t target,std::span<const std::uint8_t> packet) { CHECK(wire && target==9);if (!wire) throw std::logic_error("획득번개 실제로컬연결 미설치");CHECK(wire->Send(target,packet)); };
+    services.assets.queueCommand=[&](std::uint32_t code,std::int32_t first,std::int32_t second) { input.PushCommand(code,first,second);if (code==0x030000b1) { reward=Sid{static_cast<std::uint16_t>(first)};const auto core=current->Core();kind=core.pool.Slot(reward)[10];revealedAtQueue=(core.pool.Slot(buried)[11]&1) && (core.types[kind].flags2&0x100U) && second==golem.value; } };
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));current=&session;session.Load();auto core=session.Core();SessionPickupWire link(session);wire=&link.transport;
+    Renderer renderer(1024,768);session.SetParticleView({1400,1000,0,0,1024,768},{[&] { return renderer.FullRedrawPending(); },[&](SquidDisplayRect rect,std::uint32_t flags) { renderer.Invalidate({rect.left,rect.top,rect.right,rect.bottom},flags); }});
+    const RawPathPoint point{98,122};golem=session.World().Create(133,2);buried=session.World().Create(112,2);session.World().Pop(golem,point.x,point.y,0);core.owner.Set(golem,1);session.World().Pop(buried,point.x,point.y,0);Put(core.pool.AllocatedBytes(buried),12,savedQA,2); // 실제최초Pop뒤저장Point Blast 또는빈QA라는변환시점초기입력만준비한다.
+    while (!input.Empty()) static_cast<void>(input.Pop(false));const auto sp=session.Sp(1);ArriveForPickup(session,golem,point);CHECK(link.recorded.empty() && input.Empty());link.transport.Flush();CHECK(link.transport.Poll()==1 && revealedAtQueue);
+    const auto content=session.Priests().Carrier().FindContained(golem,1,kind,0);CHECK(content.value && SquidForms(core.pool).Parent(content)==golem);CHECK((core.pool.Slot(reward)[11]&1) && session.Sp(1)==sp && link.recorded.size()==1 && link.recorded[0][8]==112);
+    const auto event=input.Pop(false);CHECK(event.code==0x030000b1 && event.x==reward.value && event.y==golem.value);
+    const auto boltForm=FindAttachedProcess(core.pool,golem,19),soundForm=FindAttachedProcess(core.pool,golem,47);auto* bolt=dynamic_cast<LightningVisualProcess*>(core.processes.FromForm(boltForm));auto* sound=dynamic_cast<SoundProcess*>(core.processes.FromForm(soundForm));CHECK(bolt && sound);if (!bolt || !sound) return;
+    const auto token=bolt->Fields().registration.token;CHECK(bolt->Fields().particles.values.size()==120 && bolt->Fields().registration.zOrder==-25 && Get(bolt->Fields().path.bytes,32)==std::bit_cast<std::uint32_t>(5.0F));CHECK(Get(bolt->Fields().path.bytes,4)==std::bit_cast<std::uint32_t>(1000.0F) && Get(bolt->Fields().path.bytes,0)==Get(bolt->Fields().path.bytes,8));
+    const auto name=assets.game.Types()[kind-70].definition.String("activeSound");const auto pickup=name && !name->empty() ? external.names.Lookup(*name) : SoundHandle{}; // 실제현재TYPE+6c를같은이름표로확인한다.CHECK(sound->Sound()==pickup && sound->Alternate()==0 && sound->Flags()==12 && sound->StartTime()==wall+1.5);CHECK(std::find(atSounds.begin(),atSounds.end(),external.names.Lookup("thunderCrack.wav"))!=atSounds.end());
+    const auto game=core.processState.now,beginWall=wall;bool rendered{}; // 생성결과를주입하지않고실제전체Kernel과현재Renderer를진행한다.
+    for (std::uint64_t frame=1;frame<=85;++frame) {
+        wall=beginWall+static_cast<double>(frame)*.025;session.RunFrame({game+static_cast<double>(frame)*.025,wall,.025,frame},false);
+        if (frame<=20 && session.Particles().Rendering().Lookup(token)) { auto sprites=session.ParticleSprites({0,0,1024,768});std::erase_if(sprites,[](const auto& sprite) { return sprite.order.depth!=-25; });renderer.SetScene(std::move(sprites));const auto image=renderer.SceneImage();rendered=rendered || std::any_of(image.indices.begin(),image.indices.end(),[](auto color) { return color!=0; }); }
+    }
+    const std::array<std::uint32_t,6> expected{pickup,0,0,0,8,0};CHECK(rendered && std::count(globalSounds.begin(),globalSounds.end(),expected)==1);CHECK(std::find(atSounds.begin(),atSounds.end(),external.names.Lookup("shortZap.wav"))!=atSounds.end());CHECK(!core.processes.FromForm(soundForm) && !core.processes.FromForm(boltForm) && !session.Particles().Rendering().Lookup(token));CHECK(core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0 && core.bookkeeping.depth==0 && link.transport.Server().depth==0);wire=nullptr;
+    std::cout<<"실제4f 획득 QA"<<savedQA<<" TYPE"<<kind<<" 픽셀/지연재생/자연효과삭제 통과\n";
+    }
+}

@@ -14,6 +14,13 @@ LightningCreateResult CreateLightning(const SidPool& pool,Sid parent,Sid target,
     if (!create) throw std::invalid_argument("빔 wrapper 실제 생성 경계 누락");const auto process=create(parent,target,std::move(sound));
     return {process ? LightningCreateStatus::Created : LightningCreateStatus::AllocationFailed,{},process};
 }
+// 카메라는호출시점값이며확보효과가바꿔도이미계산한정수양끝을다시계산하지않는다.
+LightningVisualProcess* CreateLightningAtScreen(Sid parent,std::array<std::int32_t,2> from,std::array<std::int32_t,2> to,float life,std::int32_t cameraX,std::int32_t cameraY,
+    const std::function<LightningVisualProcess*(Sid,std::array<std::int32_t,2>,std::array<std::int32_t,2>,float,std::string)>& create) {
+    if (!create) throw std::invalid_argument("화면빔 실제확보/생성 경계누락");
+    const auto add=[](std::int32_t value,std::int32_t camera) { return std::bit_cast<std::int32_t>(std::bit_cast<std::uint32_t>(value)+std::bit_cast<std::uint32_t>(camera)); }; // 원본add의32비트감김이다.
+    from={add(from[0],cameraX),add(from[1],cameraY)};to={add(to[0],cameraX),add(to[1],cameraY)};return create(parent,from,to,life,"shortZap.wav");
+}
 namespace {
 // 보호10.78의 실제 process19·120입자·stride24·공유 색 객체/경로 확보량이다.
 constexpr std::uint32_t kProcessType=19,kParticleCount=120,kParticleBytes=24,kPaletteBytes=8,kPathBytes=64;
@@ -36,6 +43,14 @@ RawLightningLifetime::RawLightningLifetime(const SidPool& pool,RawRenderRegistry
 }
 // 공통 등록/부착이 끝나야 파생 생성 필드를 설정한다. 초기화 중 Run/Draw는 상위 ready가 막는다.
 void RawLightningLifetime::Initialize(LightningFrameFields& fields,std::uint32_t token,Sid parent,Sid target,std::optional<std::string> sound) const {
+    InitializeBase(fields,token,parent);
+    if (fields.registration.parent<0 || fields.registration.parent>65535) throw std::out_of_range("빔 생성 현재 부모 SID 오류");
+    const Sid current{static_cast<std::uint16_t>(fields.registration.parent)};const auto raw=pool_.Slot(current);
+    if (!raw[6] && !raw[7]) throw std::logic_error("빔 생성 현재 부모 head 원본 assert");
+    path_.Initialize(fields.path,current,target,token);fields.jitter=static_cast<float>(static_cast<double>(Distance(fields.path))*kJitterScale);fields.sound=std::move(sound);
+}
+// target형과직접좌표형이같은원본생성접두를공유한다.
+void RawLightningLifetime::InitializeBase(LightningFrameFields& fields,std::uint32_t token,Sid parent) const {
     registry_.Construct(fields.registration,token,parent,kProcessType);
     fields.particles.values.clear();fields.particles.total=0;fields.particles.owner=token;fields.lastTime=fields.elapsed=0;fields.first=false;
     if (!hooks_.reserve(kParticleCount*kParticleBytes)) throw std::bad_alloc();
@@ -47,10 +62,16 @@ void RawLightningLifetime::Initialize(LightningFrameFields& fields,std::uint32_t
     }
     fields.palette=state_.palette;fields.registration.zOrder=kDepth;
     if (!hooks_.reserve(kPathBytes)) throw std::bad_alloc();fields.pathAllocated=true;
-    if (fields.registration.parent<0 || fields.registration.parent>65535) throw std::out_of_range("빔 생성 현재 부모 SID 오류");
-    const Sid current{static_cast<std::uint16_t>(fields.registration.parent)};const auto raw=pool_.Slot(current);
-    if (!raw[6] && !raw[7]) throw std::logic_error("빔 생성 현재 부모 head 원본 assert");
-    path_.Initialize(fields.path,current,target,token);fields.jitter=static_cast<float>(static_cast<double>(Distance(fields.path))*kJitterScale);fields.sound=std::move(sound);
+}
+// 직접경로에는부모head/type/가짜target를추가로읽는절차가없다.
+void RawLightningLifetime::InitializePoints(LightningFrameFields& fields,std::uint32_t token,Sid parent,std::array<float,2> from,std::array<float,2> to,float life,std::optional<std::string> sound) const {
+    InitializeBase(fields,token,parent);path_.InitializePoints(fields.path,from,to,token);fields.jitter=static_cast<float>(static_cast<double>(Distance(fields.path))*kJitterScale);
+    if (life!=0.0F) {
+        const auto bits=std::bit_cast<std::uint32_t>(life); // NaN도원본비교처럼수명필드에그대로쓴다.
+        // 실제4바이트수명만쓰고다른경로필드는보존한다.
+        for (std::size_t i=0;i<4;++i) fields.path.bytes[32+i]=static_cast<std::uint8_t>(bits>>(8*i));
+    }
+    fields.sound=std::move(sound);
 }
 // native free는 필드의 포인터/개수 자체를 지우지 않는다. 호스트 입자 vector 저장소만 반납한다.
 void RawLightningLifetime::Destroy(LightningFrameFields& fields,std::uint32_t flags,const std::function<void(LightningRelease)>& release) const {

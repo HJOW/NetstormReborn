@@ -1,0 +1,22 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-18",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16"
+  },
+  "uniqueInputs": 96,
+  "normalReturns": 192,
+  "instructions": 3536,
+  "precisionDifferentInputs": [],
+  "boundaries": "41e960 전체. 4605d0 폭발/4a9d70 위치소리/4b0950 큰공통전처리는명시효과경계다. GP/retN/SEH/canary/x87/실행·쓰기범위를검사했다. 게임/창/전체삭제검증이아니다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_bomb_predestroy.py": "847b44fe503ae83c88ebfb8679dbc22c1ee19311329cb69dddc86f4c4301a152",
+    "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+    "tools/decomp_cursor_position.py": "e15bcdbc4c6be9c131c30f15416c945d650dba9f7dc6def404b47f63c635c212",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "cpppj/tests/fixtures/bomb-predestroy-x86.tsv": "e095dac1311425f16bc3ae3c76a8f8f8f48fdb86690d7ca6aff1b1453e44ecd3"
+  }
+}

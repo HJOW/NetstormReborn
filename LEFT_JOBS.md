@@ -1,5 +1,18 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-18 단위160 완료: 보상 획득 번개·지연 소리와 실제4f 변환 (HJOW-Athlon)
+
+- [x] 기준a192ea5/깨끗한트리. 직전목표턴은제품/독립원본/회귀/커밋의진행턴이다. AGENTS/양LEFT 재독, 현재/마지막정밀디컴파일PC **HJOW-Athlon / 2026-10-16** 일치. 보호원본/AGENTS/DN/DirectDraw/새디컴파일/원본게임실행없음. [작업기록](docs/exe/cpp-lightning-screen-20261018.md).
+- [x] 단위159의보상획득번개/지연Sound47 미연결을해결했다. 실제472770의camera signedDWORD감김→객체확보104→float좌표→471e70/471ca0 직접좌표를기존19빔/120입자/팔레트/경로/Host/Frame·Draw·dirty·VFX에연결했다. 가짜표적SID를만들지않는다. 기존표적생성과실제등록/확보/실패정리·공통생성접두를공유한다.
+- [x] 실제activeSound 파서49d959/49d9a1→TYPE+6c/단일SoundList와현재좌표음향을연결했다. 원본new40 성공예약을같은실제호스트SoundProcess 생성에넘겨47/alternate0/flags12로부착하고Delay의실제418084 fadd qword처럼double wall+float1.5를저장한다. 현재픽업음+7c도유지한다.
+- [x] 첫실제4f 검사는보상TYPE113 삭제미연결로실패했다. creator420e40/VT502370/+14=41e960을확인해기본Squid라는초기가정을교정했다. RawBombPreDestroy의최초extra9·flags100000→실제폭발→현재좌표explosion.wav→비가상공통전처리를복원했다. 다른5개Bomb VT의공통+14와정확한전처리/후처리를분리했다.
+- [x] 독립직접좌표 **147입력/정상반환534회(직접96/wrapper148/소멸240/타이머50)/9199468명령/53·64차이0**, Bomb **96입력/192정상반환/3536명령/차이0**다. 각각첫C++재생전fixture동결후그대로통과했다. 큰new/free/Host부착/double wall/폭발·위치소리·공통전처리는명시경계다. GP/retN/SEH/canary/x87/실행·쓰기·선택자료를검사한다.
+- [x] 초기147입력의동일팔레트중복관측은PID14304 정체성/CPU증가를확인뒤설계개선목적으로종료(CPU1235.8125초)했다. timeout판정이아니며그시점새원문/report 없음. 현재GIFCLOUD RGBX가같음을확인한기존독립원문55입력의11색만458480 명시경계로재사용했다. 원본PE/관측기/fixture SHA를확인하고C++결과를읽지않는다. 신규4몸체/147입력/전체출력은유지하며이번관측에서팔레트전체를다시실행했다고세지않는다.
+- [x] 두새1-1 Session의골렘40 실제도착→buffer→Flush/Poll→4f→오벨리스크변환→내용물/19빔/47소리→전체Kernel85프레임/실제Renderer픽셀/정확히한번지연재생/효과·Form제거/depth0을성공했다. 저장QA113→TYPE113/빈QA0→TYPE119,카메라1400/1000,현재activeSound를검사했다. 이미연결된owner1과변환시점QA만명시입력이다. 전체로그인/Client UI 자연명령/왕복·승패·완주로확대하지않는다.
+- [x] 최종 **Release build3 경고0·오류0, 집중3개, 전체1637개 실패0 / 209.55초**(CTest 209.59초). 주감사82도구71통과/기존11실패집합동일/새0. 참조6도구216/55/250/1731/18381/14472 verify 통과. 클론진입5PASS/originals_unchanged=true,보호5종SHA/현재핀55보고서170개/과거전체JSON역치환/기존fixture·CMake접두·인계/UTF8·LF·공백·커밋인덱스바이트를확인한다. 모든핸들종료/대기없음.
+- [ ] 다음우선은 **485e40 전역보충**의실제mode/boss 관문이다. 단독미션의반환도현재SessionMissing을통과해야해반복보상획득을막을수있다. 원본mode관문을복원하고비미션의40e050 배치는별도실제하위로구분한다. 실제42/38/41/5040c0의42ae80, Client전송/명령소비, AI간헐천등록/제거·전략·생산/경제, 전체11스테이지자연왕복·승패·저장·다음미션·완주/동일성은미완료이며goal active다.
+- [x] 제품cpppj/campaign-lightning-screen.json, 독립cpppj/lightning-screen.json 및bomb-predestroy.json, 로그접두extracted/goal-lightning-screen-20261018-. 인계뒤 **20261018-10 CP 보상 획득 번개와 지연 음향의 실제 전송 흐름 복원**으로로컬커밋한다. 원격push하지않는다.
+
 ## 2026-10-18 단위159 완료: 오벨리스크 보상 추첨·포획 변환 (HJOW-Athlon)
 
 - [x] 기준318bfd1/깨끗한트리. 직전목표턴은제품변경/독립원본/회귀/커밋의진행턴이다. AGENTS/양LEFT 재독, 현재/마지막정밀디컴파일PC HJOW-Athlon / 2026-10-16 일치. 보호원본/AGENTS/DN/DirectDraw/새디컴파일/원본게임실행없음.

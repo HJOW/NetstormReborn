@@ -199,7 +199,7 @@
     "cpppj/hist/run22-warn1/install.h": "20bf7e3c62cc9db8b84776948609a6088d406dfb7427fa34dbcddad45f65934f",
     "cpppj/projectile-geom.json": "bdc13b02a7303524f08e67e892fdfbc9f833a934273a4337d20520d7b23f0bc5",
     "cpppj/run21.json": "a794e0d3095ed2a00c1329cd95a1272f8f927a26b521b8fd2c56f7a8b08f402a",
-    "cpppj/src/CMakeLists.txt": "a929e7b8c34a60695b5e6fb2cfacd0e23096323cc4870807627ae96cac2c4b62",
+    "cpppj/src/CMakeLists.txt": "dd60e00a38103f278f83671bf51a3d2b235cdf36831b48033f7df02803986818",
     "cpppj/src/app/CanonMayPlaceInspect.cpp": "27eda46bca500c898abeb9a3a7c4e8588b38e061b579c84cbf6c032c6d46dda9",
     "cpppj/src/app/FrameBindingInspect.cpp": "042602919b0531fb1cbaf3941dc6597bee73944bbf0d571dacfd638bb45dd07c",
     "cpppj/src/app/FrameBindingInspect.h": "4e187ca41f8c34ed52c022b58a57327a554a723e3e26ee88a1ae152c99de3fce",
@@ -357,8 +357,8 @@
     "cpppj/src/client/SoundMusicRuntime.h": "a369a94fb9736ac6a01ffd139d32b85e936551f5b705a3990f800ccc8de50189",
     "cpppj/src/client/SoundMusicSelection.cpp": "b1496178c951f97d3296444233a215a564c627a73c264b32ce4dc661ea6ffb63",
     "cpppj/src/client/SoundMusicSelection.h": "50da30255dac40f13a728376fbb4dbb9ff2d96d10cb63491e98ce0f9c32da762",
-    "cpppj/src/client/SoundProcess.cpp": "43813f9cfc9f96f8c032315883d418b432d44fca2a21613c813480c55b587d8e",
-    "cpppj/src/client/SoundProcess.h": "e0d1725448c7aa84367b231199d3a0d9950864b5de9969f27b98b07f3b025bed",
+    "cpppj/src/client/SoundProcess.cpp": "211d934b00419741eb584d90501429bc71ee550a013f34df50bfffc9f0d4f1b2",
+    "cpppj/src/client/SoundProcess.h": "e5d672e71b6c9484a7258eec0d04482cee7bec1da7f234b6d53fb2c54f6ac575",
     "cpppj/src/client/SoundSceneMusic.cpp": "89729a963d5e3b113ce22296aba7af9dc407660d1fbc476a126a6e594833f5c0",
     "cpppj/src/client/SoundSceneMusic.h": "d817a8eb1ab9e83ed991d03c9422fd47530796e832eaec477a4c18c3cb8ef043",
     "cpppj/src/client/SpriteDraw.cpp": "7ebec59557d9e856f178aaddb52662676216b06dd490c25696b10d913926c5ee",
@@ -1978,6 +1978,31 @@
           "path": "cpppj/src/CMakeLists.txt",
           "previous": "c8d9b21785c6344eaef9a9371c160f57176ddb913a6aa0d0c9beb64329598e79",
           "current": "a929e7b8c34a60695b5e6fb2cfacd0e23096323cc4870807627ae96cac2c4b62"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 160,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "a929e7b8c34a60695b5e6fb2cfacd0e23096323cc4870807627ae96cac2c4b62",
+          "current": "dd60e00a38103f278f83671bf51a3d2b235cdf36831b48033f7df02803986818"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/client/SoundProcess.cpp",
+          "previous": "43813f9cfc9f96f8c032315883d418b432d44fca2a21613c813480c55b587d8e",
+          "current": "211d934b00419741eb584d90501429bc71ee550a013f34df50bfffc9f0d4f1b2"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/client/SoundProcess.h",
+          "previous": "e0d1725448c7aa84367b231199d3a0d9950864b5de9969f27b98b07f3b025bed",
+          "current": "e5d672e71b6c9484a7258eec0d04482cee7bec1da7f234b6d53fb2c54f6ac575"
         }
       ]
     }

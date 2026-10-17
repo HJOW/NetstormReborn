@@ -1,0 +1,64 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-18",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16"
+  },
+  "uniqueInputs": 147,
+  "normalReturns": {
+    "constructor": 96,
+    "destructor": 240,
+    "wrapper": 148,
+    "timer": 50
+  },
+  "instructions": 9199468,
+  "nativeCalls": {
+    "00439de0": 244,
+    "00471e70": 240,
+    "00488190": 240,
+    "00487fd0": 240,
+    "new-boundary": 512,
+    "004437f0": 32,
+    "attach-boundary": 240,
+    "00488100": 240,
+    "00487ab0": 240,
+    "palette-fixture-cold-boundary": 120,
+    "00471ca0": 240,
+    "00471df0": 240,
+    "00471e10": 240,
+    "free-boundary": 720,
+    "00423aa0": 240,
+    "0040f1b0": 240,
+    "00487880": 240,
+    "0041bd00": 240,
+    "palette-warm-return-boundary": 120,
+    "00472770": 148,
+    "object-new-boundary": 148,
+    "00418070": 50
+  },
+  "precisionDifferentInputs": [],
+  "paletteBoundary": {
+    "fixture": "cpppj/tests/fixtures/lightning-lifetime-x86.tsv",
+    "row": "case0",
+    "precision": 639,
+    "rgbxSha256": "1f48f181c93cd010416f4e7ca38856146e7d107dc9e488a2f23639a302f0a24a",
+    "paletteHex": "4d0000004f00000051000000bc000000b7000000c00000005d000000c3000000c3000000b60000001f000000",
+    "scope": "동일GIFCLOUD RGBX의이미독립관측한458480 팔레트결과만명시경계로재사용한다. 신규4몸체/147입력/나머지등록·경로·소멸전체는매번실제PE를실행한다."
+  },
+  "boundaries": "471e70/471ca0/472770/418070 전체와기존공통등록/경로소멸전체. 동일GIFCLOUD 팔레트는기존독립원문과입력이같음을확인해명시경계로재사용한다. new/free/Host부착및double wall공급도명시경계다. wrapper 좌표는현재camera signedDWORD감김뒤float저장이다. shortZap 리터럴/팔레트/경로/목록포인터만의미토큰화한다. GP/retN/SEH/canary/x87/실행·읽기·쓰기범위를검사했다. 전체Frame/Draw/게임창/자연플레이검증이아니다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/d/GIFCLOUD.COL": "785a2cda6ac1d3e295d375815b6d9650720683099db7c249382d598b5da00532",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_lightning_screen.py": "6c11ea6f39d76e414cee05af1c415b382addde69900ddabbf1e2944744a6f7ea",
+    "tools/decomp_lightning_lifetime.py": "85b816d4a0e153f4d1a73777eebe35c1c04b9415a1983dc776b193c20ad81825",
+    "tools/decomp_lightning_path.py": "9e19f521ec61aa2a1f2dc0514cedcb3d93b3f32a91ffd1de917108f3209d710a",
+    "tools/decomp_fierytail_lifetime.py": "4f9998ca709ff75e124e3c736e6d2a9a3139bfd24a9856477b13683d34f5f51a",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "cpppj/lightning-lifetime.json": "082a2586856487112c2da076bb8dfdd531fe96272868ff9a6eeada0b333889d5",
+    "cpppj/tests/fixtures/lightning-lifetime-x86.tsv": "cb4229dc5837044fb5ed3b6d952254ef86aec582798acfc9457056aed57655da",
+    "cpppj/tests/fixtures/lightning-screen-x86.tsv": "2f6d62e1fb8f2db130e5148bce59c4d83d1a2596dc556535235e333f1ba48256"
+  }
+}

@@ -52,6 +52,13 @@ void RawLightningPath::Initialize(LightningPathFields& fields,Sid source,Sid tar
     Float(fields,16,static_cast<float>(dx));Float(fields,20,static_cast<float>(dy));Float(fields,24,static_cast<float>(std::sqrt(dx*dx+dy*dy)));Float(fields,28,static_cast<float>(std::atan2(-dy,dx)));
     Float(fields,32,2);Word(fields,56,0);Word(fields,60,owner);
 }
+// 직접좌표생성자는타입/중심/SID/배율보정을읽지않는다.
+void RawLightningPath::InitializePoints(LightningPathFields& fields,std::array<float,2> from,std::array<float,2> to,std::uint32_t owner) const {
+    if (!owner) throw std::invalid_argument("직접빔 경로 소유토큰0");std::fill(fields.bytes.begin(),fields.bytes.begin()+16,std::uint8_t{});
+    Float(fields,0,from[0]);Float(fields,4,from[1]);Float(fields,8,to[0]);Float(fields,12,to[1]);
+    const double dx=static_cast<double>(from[0])-to[0],dy=static_cast<double>(from[1])-to[1]; // 실제fstp 전의넓은차를거리/각도에도쓴다.
+    Float(fields,16,static_cast<float>(dx));Word(fields,60,owner);Word(fields,56,0);Float(fields,32,2);Float(fields,20,static_cast<float>(dy));Float(fields,24,static_cast<float>(std::sqrt(dx*dx+dy*dy)));Float(fields,28,static_cast<float>(std::atan2(-dy,dx)));
+}
 // owner/현재 꼬리만 확인하고 입자의 기존 수명/미사용 필드를 고쳐 주지 않는다.
 void RawLightningPath::Validate(const LightningPathFields& fields,const LightningParticles& particles) {
     if (!particles.owner || Word(fields,60)!=particles.owner || particles.total<0 || static_cast<std::size_t>(particles.total)>particles.values.size() || particles.values.size()>static_cast<std::size_t>(std::numeric_limits<std::int32_t>::max()))

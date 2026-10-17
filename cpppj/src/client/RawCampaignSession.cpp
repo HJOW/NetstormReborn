@@ -11,6 +11,7 @@
 #include "o/RawCarrierSteal.h"
 #include "o/RawCarrierPickup.h"
 #include "o/RawGemReward.h"
+#include "o/RawBombPreDestroy.h"
 #include "o/RawPacketDispatch.h"
 #include "client/AiTypeRequiredEnergy.h"
 #include "o/RawGameRandomSeed.h"
@@ -250,6 +251,7 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawAiDamage> aiDamage; // 같은 AI 본체·목록에 실제 피해 대상/공격자 반응을 기록한다.
     std::unique_ptr<RawCampaignHitBindings> hits; // 같은 피해/감시/충돌/주변Dude/자산수명 처리기다.
     SoundList& soundNames; // 실제 보호막 파일명의 원본 이름표/opaque handle 조회다.
+    std::unique_ptr<void,void(*)(void*)> pendingPickupSound{nullptr,[](void* storage) { ::operator delete(storage); }}; // 원본new40 성공부터실제Sound47 생성까지의단일예약메모리다.
     SoundProcessState soundState; // 실제47 프로세스의 현재 frame/TYPE 중복 재생 전역이다.
     std::unique_ptr<SoundProcessSystem> sounds; // 같은 Host/Kernel의 실제 보호막 sound47 수명을 수행한다.
     std::vector<ArcherTypeData> archerTypes; // 원본 orientations/클러스터 수의 실제 보충 표다.
@@ -343,6 +345,7 @@ struct RawCampaignSession::Impl {
     DamageableReleaseState damageableReleaseState; // 해방 요청마다 같은 현재 전투 모드를 공급한다.
     DamageablePostDestroyState damageablePostState; // 삭제 후의 현재 전투/권한 전역이다.
     std::unique_ptr<RawDamageableRelease> damageableRelease; // 같은 풀/내용물/사제 실제 생성으로 해방한다.
+    std::unique_ptr<RawBombPreDestroy> bombPre; // 실제502370의고유41e960 전처리다.다른Bomb 파생은공통전처리다.
     std::unique_ptr<RawDamageablePreDestroy> damageablePre; // 공통 삭제와 같은 깊이/Graph/장부를 사용한다.
     std::unique_ptr<RawFlyerPreDestroy> flyerPre; //144의 현재+8 WORD 대상 삭제 뒤 실제 Damageable Pre다.
     std::unique_ptr<RawDamageablePostDestroy> damageablePost; // 같은 실제 예약/다리/공통 후처리다.
@@ -776,7 +779,8 @@ struct RawCampaignSession::Impl {
             }
             // 실제 사제 +18은44b9e0이다. 고유 +14는 뒤의 사제 전처리 래퍼가 먼저 실행한다.
             if (PriestLifetime(event.sid) && event.effect==SquidDestroyEffect::PostDestroy) { damageablePostState.battle=core.ownerMode.battle;damageablePostState.boss=assetState.boss;damageablePost->PostDestroy(event.sid,event.flags);return; }
-            if (FenceCommon(event.sid) || VisualDummy(event.sid) || PriestForcefield(event.sid) || BuriedLifetime(event.sid)) { // 실제 보호막도 +14/+18이 공통004b0950/004b0840이다.
+            if (BombLifetime(event.sid) && bombPre->Handles(event.sid) && event.effect==SquidDestroyEffect::PreDestroy) { bombPre->PreDestroy(event.sid,event.flags);return; } // 실제고유전처리는공통절앞에서처리한다.
+            if (FenceCommon(event.sid) || VisualDummy(event.sid) || PriestForcefield(event.sid) || BuriedLifetime(event.sid) || BombLifetime(event.sid)) { // 실제 보호막도 +14/+18이 공통004b0950/004b0840이다.
                 if (event.effect==SquidDestroyEffect::PreDestroy) { world.CommonDeletion().PreDestroy(event.sid,event.flags);return; }
                 if (event.effect==SquidDestroyEffect::PostDestroy) { world.CommonDeletion().PostDestroy(event.sid,event.flags);return; }
             }
@@ -793,7 +797,7 @@ struct RawCampaignSession::Impl {
         worldHooks.assets=priests->DestroyHooks(std::move(worldHooks.assets)); // 실제4919b0의 목록·보호막·Carrier 전처리를 같은 삭제 호출에 연결한다.
         auto previousDestroy=std::move(worldHooks.destroy); // 실제 신전 VT의 공통+10만 추가 분배한다.
         worldHooks.destroy=[this,previous=std::move(previousDestroy)](Sid sid,std::uint32_t flags,const SquidDestroyHooks& hooks) {
-            if (geyserLifetime->Handles(sid) || Vortex(sid) || FenceCommon(sid) || Flyer(sid) || VisualDummy(sid) || PlainDamageable(sid) || SunFence(sid) || Nugget(sid) || PreviewDais(sid) || PriestForcefield(sid) || PlainCarrierLifetime(sid) || PriestLifetime(sid) || BuriedLifetime(sid)) return core.virtualDestroy.Destroy(sid,flags,hooks);return previous(sid,flags,hooks);
+            if (geyserLifetime->Handles(sid) || Vortex(sid) || FenceCommon(sid) || Flyer(sid) || VisualDummy(sid) || PlainDamageable(sid) || SunFence(sid) || Nugget(sid) || PreviewDais(sid) || PriestForcefield(sid) || PlainCarrierLifetime(sid) || PriestLifetime(sid) || BuriedLifetime(sid) || BombLifetime(sid)) return core.virtualDestroy.Destroy(sid,flags,hooks);return previous(sid,flags,hooks);
         };
         buriedRegular=std::make_unique<RawBuriedRegular>(core.pool,core.frames,core.frame,random);
         auto actualRegular=hits->Handler(combat->Handler(assetBindings->Handler(buriedRegular->Handler(priests->RegularHandler([this](Sid sid,std::uint32_t event,std::uint32_t count,float payload) {
@@ -916,6 +920,12 @@ struct RawCampaignSession::Impl {
     bool PriestLifetime(Sid sid) const { const auto raw=core.pool.Slot(sid);return raw[10]==kPriestType && Read(raw,0)==kPatchPriestVtable; }
     // 실제50a748의+14=41f910은공통4b0950으로가는jmp이며+10/+18도공통4af780/4b0840이다.
     bool BuriedLifetime(Sid sid) const { const auto raw=core.pool.Slot(sid);return std::uint32_t(raw[10])==gemRewardState.buriedType && Read(raw,0)==0x50a748U; }
+    // 원본여섯Bomb 생성자표의+10/+18은공통이며502370의+14만41e960이다.정확한VT만추가한다.
+    bool BombLifetime(Sid sid) const {
+        const auto raw=core.pool.Slot(sid);if (raw[10]>=core.types.size() || !(core.types[raw[10]].flags2&0x100U)) return false;
+        // 현재PE에서공통수명또는고유41e960을확인한가상표들이다.
+        for (const auto table:{0x502370U,0x502448U,0x502510U,0x502ff8U,0x5030c0U,0x503188U,0x501dd0U}) if (Read(raw,0)==table) return true;return false;
+    }
     bool PlainCarrierLifetime(Sid sid) const { return carrierRegular && carrierRegular->Handles(sid) && Read(core.pool.Slot(sid),0)!=0x5040c0U; }
     // 실제 PE의 신전 네 가상 표를 판정하며 다른 자산을 타입 이름만으로 허용하지 않는다.
     bool Vortex(Sid sid) const {
@@ -1237,6 +1247,7 @@ struct RawCampaignSession::Impl {
         pre.validateBase=[this](Sid sid,std::uint32_t flags) { world.CommonDeletion().ValidatePre(sid,flags); };
         pre.base=[this](Sid sid,std::uint32_t flags) { world.CommonDeletion().PreDestroy(sid,flags); };
         pre.releaseContained=[this](Sid sid) { damageableReleaseState.battle=core.ownerMode.battle;damageableRelease->Release(sid); };
+        bombPre=std::make_unique<RawBombPreDestroy>(core.pool,BombPreDestroyHooks{pre.explosion,[this](float x,float y) { if (!services.sound.playOnceAt) throw std::logic_error("Bomb 실제폭발음향 미연결");services.sound.playOnceAt(x,y,soundNames.Lookup("explosion.wav"),0,0); },pre.base}); // 큰폭발과공통전처리는같은실제몸체를공유한다.
         damageablePre=std::make_unique<RawDamageablePreDestroy>(core.pool,core.spots,contentFinder,damageablePreState,std::move(pre));priests->BindDamageable(*damageablePre);
         flyerPre=std::make_unique<RawFlyerPreDestroy>(core.pool,FlyerPreDestroyHooks{[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); },[this](Sid sid,std::uint32_t flags) { damageablePre->PreDestroy(sid,flags); }});
         auto post=services.damageablePost;FillMissing(post.dropDude);FillMissing(post.dropIsland);
@@ -1382,15 +1393,28 @@ struct RawCampaignSession::Impl {
         carrierEffects.checkCarrier=[this](Sid parent) {
             StartSelectionContentPreview(core.pool,parent,objectState.loadingDepth,[this](Sid sid,std::uint32_t event,float payload) { static_cast<void>(core.processes.AddRegular(sid,event,payload)); },SessionMissing<void>());
         };
-        const auto otherTypeWord=carrierEffects.typeWord; // 아직별도인폭탄TYPE+6c 경계는보존한다.
+        const auto otherTypeWord=carrierEffects.typeWord; // 실제activeSound+6c/pickupSound+7c 이외의현재조회만보존한다.
         carrierEffects.typeWord=[this,otherTypeWord](std::uint32_t type,std::size_t offset) {
-            if (offset!=0x7c) { if (!otherTypeWord) throw std::logic_error("Carrier의다른현재TYPE DWORD 미연결");return otherTypeWord(type,offset); }
+            if (offset!=0x7c && offset!=0x6c) { if (!otherTypeWord) throw std::logic_error("Carrier의다른현재TYPE DWORD 미연결");return otherTypeWord(type,offset); }
             if (type<70 || type-70>=assets.game.Types().size()) throw std::out_of_range("포획소리현재TYPE 범위오류");
-            const auto name=assets.game.Types()[type-70].definition.String("pickupSound"); //49db09는이속성의Lookup 결과를TYPE+7c에쓴다.
+            const auto name=assets.game.Types()[type-70].definition.String(offset==0x6c ? "activeSound" : "pickupSound"); //49d9a1/49db09는각속성의Lookup 결과를TYPE+6c/+7c에쓴다.
             return name && !name->empty() ? soundNames.Lookup(*name) : SoundHandle{};
         };
         if (!carrierEffects.sound) carrierEffects.sound=[this](std::uint32_t sound) {
             if (!services.sound.play) throw std::logic_error("포획실제전역음향미연결");services.sound.play(sound,0,0,0,1,0); //42970b의현재TYPE+7c/반복0/음량0/좌우0/우선1/한도0이다.
+        };
+        if (!carrierEffects.bolt) carrierEffects.bolt=[this](Sid parent,std::array<std::int32_t,2> first,std::array<std::int32_t,2> last,float life) { if (!particles) throw std::logic_error("획득번개 실제표시시스템 미설치");static_cast<void>(particles->AddScreenBolt(parent,first,last,life)); };
+        if (!carrierEffects.soundAt) carrierEffects.soundAt=[this](float x,float y,std::string_view name) { if (!services.sound.playOnceAt) throw std::logic_error("획득번개 실제위치음향 미연결");services.sound.playOnceAt(x,y,soundNames.Lookup(name),0,0); };
+        if (!carrierEffects.allocate) carrierEffects.allocate=[this](std::uint32_t amount) {
+            if (amount!=40 || pendingPickupSound) throw std::logic_error("획득Sound47 예약크기/중첩 오류");pendingPickupSound.reset(::operator new(sizeof(SoundProcess),std::nothrow));return pendingPickupSound ? 1U : 0U; // 원본40 요청은호스트객체의실제크기로한번확보한다.
+        };
+        if (!carrierEffects.create) carrierEffects.create=[this](std::uint32_t reservation,Sid parent,std::uint32_t sound,std::uint32_t alternate,std::uint32_t flags) {
+            if (reservation!=1 || !pendingPickupSound) throw std::logic_error("획득Sound47 실제예약 누락");auto* storage=pendingPickupSound.release();SoundProcess* process{}; // 같은성공예약의소유권을생성자로넘긴다.
+            try { process=new(storage) SoundProcess(*sounds,sound,alternate,flags); }catch (...) { ::operator delete(storage);throw; }
+            auto* attached=dynamic_cast<SoundProcess*>(core.processes.Attach(std::unique_ptr<SoundProcess>(process),soundState.processType,parent,0x10));return attached ? std::uint32_t(attached->Form().value) : 0U;
+        };
+        if (!carrierEffects.duration) carrierEffects.duration=[this](std::uint32_t token,float delay) {
+            if (token>65535) throw std::out_of_range("획득Sound47 Form번호범위");auto* process=dynamic_cast<SoundProcess*>(core.processes.FromForm(Sid{static_cast<std::uint16_t>(token)}));if (!process) throw std::logic_error("획득Sound47 현재객체 누락");process->Delay(delay);
         };
         carrierEffects.typeAt=[this](float x,float y,std::uint32_t type) { return world.Find(x,y,type); };
         carrierEffects.genusAt=[this](float x,float y,std::uint32_t genus) { return damageablePost->GenusAt(x,y,genus); }; // 같은 실제4b2070/일반 finder를 사용한다.

@@ -105,6 +105,8 @@ SoundHandle SoundProcess::Alternate() const { return alternate_; }
 std::uint32_t SoundProcess::Flags() const { return flags_; }
 double SoundProcess::StartTime() const { return startTime_; }
 void SoundProcess::SetStartTime(double time) { startTime_=time; }
+// 벽시각을float로먼저자르지않고실제fadd qword와같은double합을보관한다.
+void SoundProcess::Delay(float seconds) { startTime_=static_cast<double>(seconds)+system_.hooks_.wallSeconds(); }
 
 // 실행 중에 빠진 효과를 만나지 않도록 구성 단계에서 확인한다.
 SoundProcessSystem::SoundProcessSystem(o::SquidProcessHost& host,SoundProcessState& state,SoundProcessHooks hooks)

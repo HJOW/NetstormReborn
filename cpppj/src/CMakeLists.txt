@@ -110,3 +110,6 @@ target_sources(netstorm PRIVATE o/RawCarrierPickup.cpp o/RawCarrierPickup.h)
 
 # 오벨리스크의 실제 임시Deck 추첨과 보상 변환이다.
 target_sources(netstorm PRIVATE o/RawDeckDraw.cpp o/RawDeckDraw.h o/RawGemReward.cpp o/RawGemReward.h)
+
+# 보상 Bomb의 고유 전처리와 실제 공통 삭제 연결이다.
+target_sources(netstorm PRIVATE o/RawBombPreDestroy.cpp o/RawBombPreDestroy.h)

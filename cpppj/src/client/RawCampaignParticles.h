@@ -29,6 +29,8 @@ public:
     void Add(std::uint32_t type,o::Sid parent);
     // 실제 wrapper의 생존 검사 뒤 공유 빔을 같은 Host/표시 목록에 생성한다. NULL 파일명은 무음이다.
     o::LightningCreateResult AddBeam(o::Sid parent,o::Sid target,std::optional<std::string> sound);
+    // 실제472770의화면좌표→현재카메라→직접좌표빔을같은Host/표시수명에생성한다.
+    o::LightningVisualProcess* AddScreenBolt(o::Sid parent,std::array<std::int32_t,2> from,std::array<std::int32_t,2> to,float life);
     // 실제 wrapper의 세 종류 파편을 같은 Host/Renderer에 생성한다. 확보 실패는nullptr다.
     o::ShrapnelVisualProcess* AddShrapnel(o::Sid source,o::ShrapnelKind kind);
     // 같은 표시 목록에 실제 건설 캡처/최대 HP를 연결한다. 첫 건설 전에 한 번만 호출한다.

@@ -28,6 +28,10 @@ struct LightningCreateResult {
 // create는 객체 확보 실패를 nullptr로 반환한다. named wrapper는 sound="shortZap.wav"를 전달한다.
 LightningCreateResult CreateLightning(const SidPool& pool,Sid parent,Sid target,std::optional<std::string> sound,
     const std::function<LightningVisualProcess*(Sid,Sid,std::optional<std::string>)>& create);
+//00472770은현재카메라를signedDWORD감김으로더한뒤104바이트확보/float변환/생성을요청한다.
+// create는확보뒤에만전달된정수좌표를float로변환해야한다.실패는nullptr이며음향파일명은shortZap.wav다.
+LightningVisualProcess* CreateLightningAtScreen(Sid parent,std::array<std::int32_t,2> from,std::array<std::int32_t,2> to,float life,std::int32_t cameraX,std::int32_t cameraY,
+    const std::function<LightningVisualProcess*(Sid,std::array<std::int32_t,2>,std::array<std::int32_t,2>,float,std::string)>& create);
 // 실제 생성/삭제 순서와 필드 저장을 실행한다. Host/Kernel 소유권은 호출자가 관리한다.
 class RawLightningLifetime {
 public:
@@ -37,9 +41,13 @@ public:
     // 등록/부착→120입자→공유 색→깊이−25→현재 부모의 경로→거리×float0.025→파일명 순서다.
     // delta/scaledDelta와 경로 생성자가 쓰지 않는 바이트를 보존한다. 실패한 등록 정리는 호출자 책임이다.
     void Initialize(LightningFrameFields& fields,std::uint32_t token,Sid parent,Sid target,std::optional<std::string> sound) const;
+    //00471e70: 실제직접좌표경로/선택수명과파일명이며life가0일때만기본2를보존한다.
+    void InitializePoints(LightningFrameFields& fields,std::uint32_t token,Sid parent,std::array<float,2> from,std::array<float,2> to,float life,std::optional<std::string> sound) const;
     // 경로→입자→공통 등록/base→flags bit0 객체 반납 순서다. release는 예외/수명 변경을 일으키지 않아야 한다.
     void Destroy(LightningFrameFields& fields,std::uint32_t flags,const std::function<void(LightningRelease)>& release) const;
 private:
+    // 두생성자가공유하는실제등록/부착/입자/팔레트/경로확보순서다.
+    void InitializeBase(LightningFrameFields& fields,std::uint32_t token,Sid parent) const;
     const SidPool& pool_; // 부착 콜백 뒤의 현재 부모 head를 읽는 같은 풀이다.
     RawRenderRegistry& registry_; // 다른 효과와 공유하는 실제 원본 표시 목록이다.
     const RawLightningPath& path_; // 현재 부모/표적의 실제 생성 시 snapshot이다.

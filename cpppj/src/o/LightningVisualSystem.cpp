@@ -45,15 +45,24 @@ LightningFrameHooks LightningVisualSystem::FrameHooks(LightningVisualProcess* pr
 }
 // ready 전 재진입은 파생 필드를 읽지 않는다. 원본 공통 부착 순서를 바꾸지 않는다.
 LightningVisualProcess* LightningVisualSystem::Add(Sid parent,Sid target,std::optional<std::string> sound) {
+    return AddImpl(parent,[&](LightningFrameFields& fields,std::uint32_t token) { lifetime_.Initialize(fields,token,parent,target,std::move(sound)); });
+}
+// float변환은실제객체확보가성공한뒤공통등록/Host부착보다먼저수행한다.
+LightningVisualProcess* LightningVisualSystem::AddAtScreen(Sid parent,std::array<std::int32_t,2> from,std::array<std::int32_t,2> to,float life,std::optional<std::string> sound) {
+    std::array<float,2> first{},last{}; // 확보뒤원문fild/fstp가저장할양끝이다.
+    return AddImpl(parent,[&](LightningFrameFields& fields,std::uint32_t token) { lifetime_.InitializePoints(fields,token,parent,first,last,life,std::move(sound)); },[&] { first={static_cast<float>(from[0]),static_cast<float>(from[1])};last={static_cast<float>(to[0]),static_cast<float>(to[1])}; });
+}
+// 두실제생성자에같은Host/표시목록소유권과실패정리를적용한다.
+LightningVisualProcess* LightningVisualSystem::AddImpl(Sid parent,const std::function<void(LightningFrameFields&,std::uint32_t)>& initialize,const std::function<void()>& prepare) {
     if (!parent.value || creating_) throw std::invalid_argument("빔 Host 부모/중첩 생성 오류");CheckScale();std::uint32_t token=0;creating_=true;
     try {
-        pending_=std::make_unique<LightningVisualProcess>(*this);auto* process=pending_.get();
+        pending_=std::make_unique<LightningVisualProcess>(*this);auto* process=pending_.get();if (prepare) prepare();
         token=rendering_.Track(process->fields_.registration,[this](RenderProcessFields& fields,std::uint32_t type,Sid source,std::uint32_t flags) {
             if (!pending_ || &pending_->fields_.registration!=&fields) throw std::logic_error("빔 부착 객체 불일치");
             auto* attached=rendering_.Host().Attach(std::move(pending_),type,source,flags);if (!attached) throw std::logic_error("빔 실제 부모 부착 실패");
             fields.form=attached->Form().value;fields.parent=attached->Parent().value;
         },[process] { process->Draw(); });processes_.emplace(token,process);
-        lifetime_.Initialize(process->fields_,token,parent,target,std::move(sound));
+        initialize(process->fields_,token);
         if (!processes_.contains(token)) throw std::logic_error("빔 생성 중 객체 삭제");
         process->ready_=true;rendering_.Ready(token);creating_=false;return process;
     } catch (...) {

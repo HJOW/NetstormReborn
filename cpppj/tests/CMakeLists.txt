@@ -1443,3 +1443,8 @@ set_source_files_properties(CarrierPickupTests.cpp PROPERTIES COMPILE_DEFINITION
 target_sources(netstorm_tests PRIVATE GemRewardTests.cpp)
 set_source_files_properties(GemRewardTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_GEM_REWARD_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/gem-reward-x86.tsv\"")
+
+# 직접좌표빔/화면wrapper/지연소리의독립원문을대조한다.
+target_sources(netstorm_tests PRIVATE LightningScreenTests.cpp)
+set_source_files_properties(LightningScreenTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_LIGHTNING_SCREEN_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/lightning-screen-x86.tsv\";NETSTORM_BOMB_PREDESTROY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/bomb-predestroy-x86.tsv\"")

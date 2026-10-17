@@ -93,6 +93,12 @@ o::LightningCreateResult RawCampaignParticles::AddBeam(o::Sid parent,o::Sid targ
         catch (const std::bad_alloc&) { return static_cast<o::LightningVisualProcess*>(nullptr); }
     });
 }
+// 현재viewport와공유색/표시목록을사용하며대체표적SID를만들지않는다.
+o::LightningVisualProcess* RawCampaignParticles::AddScreenBolt(o::Sid parent,std::array<std::int32_t,2> from,std::array<std::int32_t,2> to,float life) {
+    return o::CreateLightningAtScreen(parent,from,to,life,view_.cameraX,view_.cameraY,[this](o::Sid source,std::array<std::int32_t,2> first,std::array<std::int32_t,2> last,float duration,std::string name) {
+        if (!sound_) throw std::logic_error("화면빔 실제파일명 음향미연결");try { return lightning_.AddAtScreen(source,first,last,duration,std::move(name)); }catch (const std::bad_alloc&) { return static_cast<o::LightningVisualProcess*>(nullptr); }
+    });
+}
 // 실제 캡처 그림은 원본 준비 몸체가 읽고 현재8비트 장치에 같은 색 번호를 쓴다.
 o::ShrapnelSystemHooks RawCampaignParticles::ShrapnelHooks(CampaignShrapnelHooks input) {
     o::ShrapnelSystemHooks hooks;hooks.lifetime=std::move(input.lifetime);hooks.destroyUnpaired=std::move(input.destroyUnpaired);

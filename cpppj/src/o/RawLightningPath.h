@@ -34,6 +34,8 @@ public:
         std::function<std::array<float,2>(Sid)> center);
     // 00471b20: 생성 시 양끝/거리/각도를 snapshot하고 미사용 바이트는 보존한다.
     void Initialize(LightningPathFields& fields,Sid source,Sid target,std::uint32_t owner) const;
+    //00471ca0: 이미정수화된픽셀양끝을직접저장하고원래미정바이트는보존한다.
+    void InitializePoints(LightningPathFields& fields,std::array<float,2> from,std::array<float,2> to,std::uint32_t owner) const;
     // 004720f0: 흔들리지 않는 시작점을 추가하고 step0.15·진행0·기본 각도를 저장한다.
     void Seed(LightningPathFields& fields,LightningParticles& particles) const;
     // 00472180: 현재 진행까지 재귀 가지를 만들며1에 도달하면 끝점을 한 번 추가한다.

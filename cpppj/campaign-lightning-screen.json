@@ -1,0 +1,278 @@
+{
+  "unit": 160,
+  "date": "2026-10-18",
+  "host": "HJOW-Athlon",
+  "baseCommit": "a192ea5",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16"
+  },
+  "status": "보상획득직접번개·지연소리·실제4f단위완료/전체11스테이지진행중",
+  "currentSources": {
+    "cpppj/src/o/RawLightningPath.h": "b50bbc51ece895b48a948a3cf6d52cdf13a09b8275ab44aecd9d63e91a3c2ac8",
+    "cpppj/src/o/RawLightningPath.cpp": "262321cc772b5fbdd51790a553b76f3ad7d52b76c8b8a4a53a0cf0f41775b272",
+    "cpppj/src/o/RawLightningLifetime.h": "c30d6afcec8e641dad176b80317a64cba68e8a4d82137555aab96fdd6fb01791",
+    "cpppj/src/o/RawLightningLifetime.cpp": "756ca4c4b4de3e74087cc73563d4707a7e0959ad08146fa5bbe94036961f8b44",
+    "cpppj/src/o/LightningVisualSystem.h": "1ca7bc9aa90385e550eb4863513c09d0c372ef9c25071f20bcf1243a6865e2bb",
+    "cpppj/src/o/LightningVisualSystem.cpp": "a8fdd43a2a748b94d7615fc710476f6a2e7627621ea22c50af6f81e6e499fc5b",
+    "cpppj/src/client/RawCampaignParticles.h": "b687c247c1eaea29b7a41da06a3194aad176d46855f7005e81d75002f76971ce",
+    "cpppj/src/client/RawCampaignParticles.cpp": "b74ba0cfd8ffc50d8d8435f7c257631fa061881afe9312c2297dcc5449ed4270",
+    "cpppj/src/client/SoundProcess.h": "e5d672e71b6c9484a7258eec0d04482cee7bec1da7f234b6d53fb2c54f6ac575",
+    "cpppj/src/client/SoundProcess.cpp": "211d934b00419741eb584d90501429bc71ee550a013f34df50bfffc9f0d4f1b2",
+    "cpppj/src/client/RawCampaignSession.cpp": "55aa0251fb16d34ca8fa95cab25abe61b5a13d736611e8cafe1388e9b4666c2c",
+    "cpppj/src/CMakeLists.txt": "dd60e00a38103f278f83671bf51a3d2b235cdf36831b48033f7df02803986818",
+    "cpppj/tests/CMakeLists.txt": "275600087e95b10d1d7f0f498968926b3638709f6ad5d0b5f2237cc4078685dc",
+    "cpppj/tests/CampaignSessionTests.cpp": "c0b79109ad4243ab0681e441724a0e4b8293f70194a37d46c80c746444e2bd10",
+    "cpppj/src/o/RawBombPreDestroy.h": "0cf2422a487e7d85ec7c8f69001594f4fc68394f6b57d48a3065eae4cd39f07e",
+    "cpppj/src/o/RawBombPreDestroy.cpp": "0300ca6d21f298fb2752ddfc6fb4126c4f066e19f72a26354d2dcbb59a8ba830",
+    "cpppj/tests/LightningScreenTests.cpp": "60293a6937fc70e9c8538b607a548f1616e7e2b86eae15a6b6f5245c0eeebd42",
+    "tools/decomp_lightning_screen.py": "6c11ea6f39d76e414cee05af1c415b382addde69900ddabbf1e2944744a6f7ea",
+    "tools/decomp_bomb_predestroy.py": "847b44fe503ae83c88ebfb8679dbc22c1ee19311329cb69dddc86f4c4301a152",
+    "docs/exe/cpp-lightning-screen-20261018.md": "ab06f909875511a36d7d4b6c897423591449ffc7da88cb1d7bd1bd6d131ae254",
+    "cpppj/tests/fixtures/lightning-screen-x86.tsv": "2f6d62e1fb8f2db130e5148bce59c4d83d1a2596dc556535235e333f1ba48256",
+    "cpppj/tests/fixtures/bomb-predestroy-x86.tsv": "e095dac1311425f16bc3ae3c76a8f8f8f48fdb86690d7ca6aff1b1453e44ecd3",
+    "cpppj/src/o/RawCarrierContentNotice.cpp": "b4c012ea2966e432fd60c4beb65de3e0a3a73df6ff9d64a798bd6bcb5e468599",
+    "cpppj/src/o/RawCarrierPickup.cpp": "627a2e9b2b49ce2516e038676090ad2606646289d4634db0a72476ec6a611e7c",
+    "cpppj/src/o/RawGemReward.cpp": "a071c8c765e1b6bb11bb6c9caafc543f7a5dc34157f02d814710f77817e47423",
+    "cpppj/src/o/TypeConstructors.inc": "bfac943af8c22cf91a0c267200f3e94133b021f2fe0e02507544978a7e08bd27",
+    "cpppj/src/o/DerivedConstructors.inc": "fac1a032778ba7e6745476904a13446c36b79625e38c40120195bc009a798b00"
+  },
+  "nativeReports": {
+    "cpppj/lightning-screen.json": "32f6b79029b96e3f647e2662d0d9f4a3a718860fbbbd49070d4036c122c50f74",
+    "cpppj/bomb-predestroy.json": "51857f8c0a11aa1d0ef1b0485327fc1adbce7ec6758e13672c018ed611a88ff2"
+  },
+  "nativeContext": {
+    "lightning": {
+      "uniqueInputs": 147,
+      "normalReturns": {
+        "constructor": 96,
+        "destructor": 240,
+        "wrapper": 148,
+        "timer": 50
+      },
+      "instructions": 9199468,
+      "nativeCalls": {
+        "00439de0": 244,
+        "00471e70": 240,
+        "00488190": 240,
+        "00487fd0": 240,
+        "new-boundary": 512,
+        "004437f0": 32,
+        "attach-boundary": 240,
+        "00488100": 240,
+        "00487ab0": 240,
+        "palette-fixture-cold-boundary": 120,
+        "00471ca0": 240,
+        "00471df0": 240,
+        "00471e10": 240,
+        "free-boundary": 720,
+        "00423aa0": 240,
+        "0040f1b0": 240,
+        "00487880": 240,
+        "0041bd00": 240,
+        "palette-warm-return-boundary": 120,
+        "00472770": 148,
+        "object-new-boundary": 148,
+        "00418070": 50
+      },
+      "precisionDifferentInputs": [],
+      "paletteBoundary": {
+        "fixture": "cpppj/tests/fixtures/lightning-lifetime-x86.tsv",
+        "row": "case0",
+        "precision": 639,
+        "rgbxSha256": "1f48f181c93cd010416f4e7ca38856146e7d107dc9e488a2f23639a302f0a24a",
+        "paletteHex": "4d0000004f00000051000000bc000000b7000000c00000005d000000c3000000c3000000b60000001f000000",
+        "scope": "동일GIFCLOUD RGBX의이미독립관측한458480 팔레트결과만명시경계로재사용한다. 신규4몸체/147입력/나머지등록·경로·소멸전체는매번실제PE를실행한다."
+      },
+      "boundaries": "471e70/471ca0/472770/418070 전체와기존공통등록/경로소멸전체. 동일GIFCLOUD 팔레트는기존독립원문과입력이같음을확인해명시경계로재사용한다. new/free/Host부착및double wall공급도명시경계다. wrapper 좌표는현재camera signedDWORD감김뒤float저장이다. shortZap 리터럴/팔레트/경로/목록포인터만의미토큰화한다. GP/retN/SEH/canary/x87/실행·읽기·쓰기범위를검사했다. 전체Frame/Draw/게임창/자연플레이검증이아니다."
+    },
+    "bomb": {
+      "uniqueInputs": 96,
+      "normalReturns": 192,
+      "instructions": 3536,
+      "precisionDifferentInputs": [],
+      "boundaries": "41e960 전체. 4605d0 폭발/4a9d70 위치소리/4b0950 큰공통전처리는명시효과경계다. GP/retN/SEH/canary/x87/실행·쓰기범위를검사했다. 게임/창/전체삭제검증이아니다."
+    }
+  },
+  "protected": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "AGENTS.md": "7addbf9b31c42f29aab7c93faa865eb6de8590a600d17202a297cf7122bdf979",
+    "LEFT_JOBS.dotnetpj.md": "0c067e1d12879dbf2212cbd64c8f9f60e65b590df910418f025027ed84f80ec2"
+  },
+  "originalFixturesBeforeCppReplay": {
+    "cpppj/tests/fixtures/lightning-screen-x86.tsv": "2f6d62e1fb8f2db130e5148bce59c4d83d1a2596dc556535235e333f1ba48256",
+    "cpppj/tests/fixtures/bomb-predestroy-x86.tsv": "e095dac1311425f16bc3ae3c76a8f8f8f48fdb86690d7ca6aff1b1453e44ecd3"
+  },
+  "bindingEvidence": {
+    "activeSoundPropertyAddress": 5310464,
+    "activeSoundProperty": "616374697665536f756e6400",
+    "assignmentAddress": 4839841,
+    "assignmentCode": "89436c",
+    "delayAddress": 4292720,
+    "delayFaddAddress": 4292740,
+    "delayFaddCode": "dc00",
+    "wrapperAddress": 4663152,
+    "pointsConstructor": 4660848,
+    "pointsPathConstructor": 4660384,
+    "defaultLifeCode": "00000000",
+    "pointBlastType113Constructor": 4329024,
+    "pointBlastVtable": 5251952,
+    "pointBlastPre": 4319584,
+    "bombVtables": [
+      {
+        "constructor": 4329024,
+        "vtable": 5251952,
+        "slots": {
+          "0x10": "0x4af780",
+          "0x14": "0x41e960",
+          "0x18": "0x4b0840"
+        }
+      },
+      {
+        "constructor": 4329056,
+        "vtable": 5252168,
+        "slots": {
+          "0x10": "0x4af780",
+          "0x14": "0x4b0950",
+          "0x18": "0x4b0840"
+        }
+      },
+      {
+        "constructor": 4329088,
+        "vtable": 5252368,
+        "slots": {
+          "0x10": "0x4af780",
+          "0x14": "0x4b0950",
+          "0x18": "0x4b0840"
+        }
+      },
+      {
+        "constructor": 4329536,
+        "vtable": 5255160,
+        "slots": {
+          "0x10": "0x4af780",
+          "0x14": "0x4b0950",
+          "0x18": "0x4b0840"
+        }
+      },
+      {
+        "constructor": 4329568,
+        "vtable": 5255360,
+        "slots": {
+          "0x10": "0x4af780",
+          "0x14": "0x4b0950",
+          "0x18": "0x4b0840"
+        }
+      },
+      {
+        "constructor": 4329600,
+        "vtable": 5255560,
+        "slots": {
+          "0x10": "0x4af780",
+          "0x14": "0x4b0950",
+          "0x18": "0x4b0840"
+        }
+      }
+    ]
+  },
+  "observationRedesign": {
+    "pid": 14304,
+    "command": "\"C:\\Program Files\\Python\\313\\python.exe\" tools/decomp_lightning_screen.py",
+    "cpuSeconds": 1235.8125,
+    "reason": "동일GIFCLOUD 팔레트계산의147입력중복을기존독립원문으로경계재사용한다. 새4몸체/147입력/전체상태비교를보존한다. 관측시간만료나진행실패로판정한것이아니다.",
+    "fixtureExists": false,
+    "reportExists": false
+  },
+  "validation": {
+    "release": {
+      "builds": [
+        "build1",
+        "build2",
+        "build3"
+      ],
+      "warnings": 0,
+      "errors": 0,
+      "exitCode": 0
+    },
+    "focused": {
+      "tests": 3,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "focused1"
+    },
+    "full": {
+      "tests": 1637,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "seconds": 209.55,
+      "ctestSeconds": 209.59
+    },
+    "audit": {
+      "tools": 82,
+      "passed": 71,
+      "knownFailures": 11,
+      "newFailures": 0
+    },
+    "references": {
+      "tools": 6,
+      "passed": 6,
+      "reportedCounts": [
+        216,
+        55,
+        250,
+        1731,
+        18381,
+        14472
+      ]
+    },
+    "entry": {
+      "passed": 5,
+      "originalsUnchanged": true,
+      "scope": "campaign1-1/1-2 briefing→world와tutorial1~3 briefing"
+    },
+    "pinMaintenance": {
+      "reports": 55,
+      "pins": 170,
+      "history": "현재핀과unit160 이력만역치환하면HEAD 과거전체JSON과동일"
+    }
+  },
+  "integration": [
+    "실제40도착/4f buffer·Flush/Poll/현재서버수신/오벨리스크변환/TYPE6내용물",
+    "현재카메라의19직접좌표경로·120입자/같은공통표시목록·Renderer·VFX 비영픽셀",
+    "같은실제예약메모리/Sound47/activeSound/alternate0/flags12/double벽시각+1.5",
+    "QA113→TYPE113 및QA0→TYPE119의고유/공통Bomb삭제와전체Kernel85프레임",
+    "즉시thunderCrack/최초shortZap/지연전역6인자정확히한번/19·47Form 및표시토큰자연제거/장부·삭제·전송depth0"
+  ],
+  "limitations": [
+    "new/free/Host부착/double wall 및큰폭발·공통전처리·위치소리는독립원본의명시경계다.",
+    "동일GIFCLOUD RGBX의458480 팔레트는기존독립원문55입력의색11개만명시경계로재사용한다. 신규4몸체와147입력/나머지전체상태는PE를그대로실행했다. C++팔레트결과를기대값으로사용하지않았다.",
+    "이미연결된owner1/변환시점QA는명시초기입력이다. 전체로그인/Client UI 자연명령/자연왕복·완주검증이아니다.",
+    "485e40 전역보충/실제42·38·41/5040c0의42ae80/Client전송·명령소비/AI·생산·경제/11스테이지자연왕복·승패·저장·다음미션·완주/전체동일성은미완료다.",
+    "CD10.72 새생성·지연타이머/멀티플레이/한국어UI/DirectDraw는이번복원범위가아니다."
+  ],
+  "logSha256": {
+    "extracted/goal-lightning-screen-20261018-LastTest.log": "0cce7f78e0e945a872e70f58a351d6adf76673be96f03adc22bd66d9d33028a6",
+    "extracted/goal-lightning-screen-20261018-audit1.log": "2ce56ad655ff3a49010582ea2c05612361f008845a8ff8516932083bb07edc12",
+    "extracted/goal-lightning-screen-20261018-binding-evidence.json": "a31f2e6463e85967a1a8b59749cc00955cb2c7d66aed9343b1c63ae834c13835",
+    "extracted/goal-lightning-screen-20261018-bomb-focused1.log": "f537734d73fdc4270e57f790d77eb9e367e54889406f9c0535864cd09980d701",
+    "extracted/goal-lightning-screen-20261018-bomb-native1.log": "1cb18b6938fd53e5abfcf5cc6e4e394b7e8d69552839297131f8c973478c10c2",
+    "extracted/goal-lightning-screen-20261018-bomb-vtables.json": "0c25931dd8d30ebba245ba3cef29853f79739c06c25f5b1334f27047b51ae222",
+    "extracted/goal-lightning-screen-20261018-build1.log": "536e685e73fff45e57468f0567eefbf80a3d052c72c682052555c80012411386",
+    "extracted/goal-lightning-screen-20261018-build2.log": "aec27d146007b8ea1518bd650c19186b4e2ab6268bc054f2f3507298f0ec7fb8",
+    "extracted/goal-lightning-screen-20261018-build3.log": "68daf5268753a6f0253917d033a76282e07803e3b45f8c1951a34f7cbc6a3d34",
+    "extracted/goal-lightning-screen-20261018-ctest1.log": "5c73a6474407e59d00efd35f0612dfcda3d865cf6f0f235dbdbdb1ff364fb866",
+    "extracted/goal-lightning-screen-20261018-entry/results.json": "f7a9594f44a2a14e1d1f5a8f3174eae9dd0adbd4721598099d8fd5244317fa13",
+    "extracted/goal-lightning-screen-20261018-entry1.log": "530bf9254a3b0be59b099d237909bd3be07412d0f47949f546997ffdb8b1e681",
+    "extracted/goal-lightning-screen-20261018-focused1.log": "a8cafc5401f3740b6893e876a185756e18577433e5589ea72717af559ff57b8d",
+    "extracted/goal-lightning-screen-20261018-integration1.log": "181199bf4d63bd888c98727da935c20318a57574eaad2d3d884bb7c490362113",
+    "extracted/goal-lightning-screen-20261018-integration2.log": "5329e94104f8604b3f78543f7f736e564f42bc9e6a3359da0b7a70c62833cc82",
+    "extracted/goal-lightning-screen-20261018-integration3.log": "4d5ac05c342b1ce34d0bbbf1f00f8528c431ed4ae181eab654b4af3cf1a4efe6",
+    "extracted/goal-lightning-screen-20261018-native1.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-lightning-screen-20261018-native2.log": "dfdb28e0bfd80dbc0621c7cdb5c0c1a448ec67ea13d14a6b465ffc7ce9aee093",
+    "extracted/goal-lightning-screen-20261018-reference-audit.json": "e864177522bc13f89f065f90658fd60ebd3e5b5e5774655e83f271586651ced6",
+    "extracted/goal-lightning-screen-20261018-slow-observer-stop.json": "dda48d92bb5a4dee479de578607b59f7ca186ba17f5c8d957dbf87fcac6a655f",
+    "extracted/goal-lightning-screen-20261018-verify-final.json": "5c3f0e69001f4792e524c1a9cc706f212d8a58682122686eafe9c63d43cb949e"
+  }
+}

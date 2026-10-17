@@ -100,6 +100,8 @@ public:
     double StartTime() const;
     // 시작 시각을 정한다. 원본 호출자는 생성 직후 "현재 벽시계 + 지연"을 +0x20에 적어 지연 재생을 만든다(예: 0044a0be~0044a0e4).
     void SetStartTime(double time);
+    //00418070은현재double벽시각에float지연을넓게더해실제시작시각으로저장한다.
+    void Delay(float seconds);
 private:
     // 부모의 현재 타입에 현재 프레임 번호를 적는다. 재생 함수가 돌아온 뒤의 값을 다시 읽는다.
     void MarkTypeFrame();

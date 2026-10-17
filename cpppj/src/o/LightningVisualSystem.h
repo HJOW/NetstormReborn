@@ -45,10 +45,14 @@ public:
     LightningVisualSystem& operator=(const LightningVisualSystem&)=delete; // 다른 월드로 복사하지 않는다.
     // 등록→실제 부착→입자/공유 색/경로 초기화 순서다. 실패하면 등록/Kernel도 정리한다.
     LightningVisualProcess* Add(Sid parent,Sid target,std::optional<std::string> sound);
+    // 실제104확보뒤화면복원정수양끝을float로변환해직접좌표생성자를실행한다.
+    LightningVisualProcess* AddAtScreen(Sid parent,std::array<std::int32_t,2> from,std::array<std::int32_t,2> to,float life,std::optional<std::string> sound);
     // 공통 목록 전체와 구별한 실제 process19 수다.
     std::size_t Size() const;
 private:
     friend class LightningVisualProcess;
+    // 객체확보→좌표준비→공통등록/부착→선택한실제생성자→ready의공유수명이다.
+    LightningVisualProcess* AddImpl(Sid parent,const std::function<void(LightningFrameFields&,std::uint32_t)>& initialize,const std::function<void()>& prepare={});
     // 같은 전역인 프레임/수집 배율을 검사하고 경로 생성 배율에 반영한다.
     void CheckScale();
     // 현재 객체의 소진 요청을 실제 Host.Kill(flags0)에 연결한다.
