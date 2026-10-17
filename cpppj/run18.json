@@ -68,7 +68,7 @@
     "cpppj/hist/run18-run3/test.cpp": "8aec8423d2e67a772336e3984fdff90e65f645dffcfbf24e817cc0aa5af94df2",
     "cpppj/hist/run18-run4/focused.log": "2cf49d4b7f1371e78fe40a7794b66b86b75df79f6ea4e641460fca8634ccdb9c",
     "cpppj/hist/run18-run4/test.cpp": "bc3b9bd2204d65a2be2fe0c862f32b207ade6aaec1ed4c1fcca0443a0c6b5d29",
-    "cpppj/src/CMakeLists.txt": "45615598a4600cf2f6e5dcd42359ab2640f143daac708a0447e6d2caa18f4f06",
+    "cpppj/src/CMakeLists.txt": "8ca9af42a6c0ece47063322780f4d70dc1cc03354bf6eea5131f140233ce23f3",
     "cpppj/src/app/CanonMayPlaceInspect.cpp": "27eda46bca500c898abeb9a3a7c4e8588b38e061b579c84cbf6c032c6d46dda9",
     "cpppj/src/app/FrameBindingInspect.cpp": "042602919b0531fb1cbaf3941dc6597bee73944bbf0d571dacfd638bb45dd07c",
     "cpppj/src/app/FrameBindingInspect.h": "4e187ca41f8c34ed52c022b58a57327a554a723e3e26ee88a1ae152c99de3fce",
@@ -568,7 +568,7 @@
     "cpppj/src/o/RiftType.h": "6861baebea2e47f0ac175fdabd7ff7aa09fd53bb978bbdf6b0ffd4ca70455f5a",
     "cpppj/src/o/RiftTypeTable.cpp": "be867bf2fe94ac73a58fd798651f0a39e026d5d9c2617cda16f64cf3df780d83",
     "cpppj/src/o/SidPool.cpp": "7bc612330f3b631cf8141be5e7a9ae51cefe8caee3ea3eb68be38252d68a6887",
-    "cpppj/src/o/SidPool.h": "f56b3fd3b8c4cc0697afadb0d97ef4b7c62808103283c856c46bf68b59f0f35a",
+    "cpppj/src/o/SidPool.h": "fbac21d016818c4f3436d2848658b628ff1ebcfe1ce2bee7c78596726ec077c4",
     "cpppj/src/o/SpStore.cpp": "010b2c3c0b60d089d10a059bb63618d029eec3d3ea341f1bacf7426e71a85ba9",
     "cpppj/src/o/SpStore.h": "5bb676a1593e7583a69ef45238f7045009b1cf0fff751649e40833226e80b817",
     "cpppj/src/o/Squid.cpp": "167f1af3b609b0f051da3a7484c5a12020cd4d266ca62577603a98d49f21173b",
@@ -1376,6 +1376,25 @@
           "path": "cpppj/src/CMakeLists.txt",
           "previous": "f307d187ef0cc892334c74198407070df34d9b5df08502b579cad1135c19685b",
           "current": "45615598a4600cf2f6e5dcd42359ab2640f143daac708a0447e6d2caa18f4f06"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 143,
+      "reason": "실제 선택+7c/사정거리 종류/491 입구와 같은Session 마나·사정거리·Host·표시를 연결했다. 오분류한 훅 이름을 교정하고 SidPool의 원본 bit 쓰기 권한만 추가했다. 직전 HEAD와 같던 현재 핀만 갱신하며 이전 값을 보존한다.",
+      "pins": [
+        {
+          "group": "files",
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "45615598a4600cf2f6e5dcd42359ab2640f143daac708a0447e6d2caa18f4f06",
+          "current": "8ca9af42a6c0ece47063322780f4d70dc1cc03354bf6eea5131f140233ce23f3"
+        },
+        {
+          "group": "files",
+          "path": "cpppj/src/o/SidPool.h",
+          "previous": "f56b3fd3b8c4cc0697afadb0d97ef4b7c62808103283c856c46bf68b59f0f35a",
+          "current": "fbac21d016818c4f3436d2848658b628ff1ebcfe1ce2bee7c78596726ec077c4"
         }
       ]
     }

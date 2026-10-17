@@ -8,16 +8,16 @@
     "date": "2026-10-16"
   },
   "currentSources": {
-    ".gitattributes": "1fe38a7e99bb9de9f0cf36571b4217fb0427bdaa65d3124de859ebbc4d887c89",
+    ".gitattributes": "09039021cbb282ab442a202d4233a9fa48f766f3f06407acda3eb900e4372601",
     "cpppj/src/client/CampaignClientServices.cpp": "deb067662fe4fcd5324bab710c7b06fb7ce5f661f4078227946adc4fa92db72a",
     "cpppj/src/client/RawButtonControls.cpp": "5d9568d2a6c461e9dd474cc584db62389ca3eb576e780fdeb6e9a39f1ee55baf",
     "cpppj/src/client/RawButtonControls.h": "372d15ad4ab423ef9869fab470ad1f4b5c75cb0ebc12503edd2bb7a6f3f240d6",
-    "cpppj/src/client/RawCampaignSession.cpp": "f5fd8fcbe2f6b2d20daba173a0fcf6987b56f105be2eca2374bcf284ed0eb877",
-    "cpppj/src/client/RawCampaignSession.h": "7e8206da0091e1ed9e73a683f58cdd8229cb5a8251e7f09882ab7486bc28abeb",
+    "cpppj/src/client/RawCampaignSession.cpp": "e86bf974ddb3ef6913bfdc8c1ddf9aef987ff5aa1468a64d6e7084c9ecbc4ecd",
+    "cpppj/src/client/RawCampaignSession.h": "87d1a5fa5f1c991f9c2b2bc0c80c656c1e1862481ac4eeffb2d5a540e34adc26",
     "cpppj/src/client/RawMenuControls.cpp": "e1d3a27c5330b52727e18447c97b02f6a7f82cb0ceeb9bf55aad874b744720f1",
     "cpppj/src/client/RawMenuControls.h": "92b7db6b2d4fa00641d814a9e0e6b76bf649b7789302cb1dc306abd87c99023d",
     "cpppj/src/client/UberGump.cpp": "471b592cf1e784c63db34bc109eb3d38785481018b403cef0afa98d98622d10b",
-    "cpppj/tests/CampaignObjectMenuTests.cpp": "2cda2c4f5ae708ea51de898c878edaa6cdccd3de039f8f927afbfa9c39e86fce"
+    "cpppj/tests/CampaignObjectMenuTests.cpp": "56e76a33cd0c6d4f174ee5330375344f623f9a3aff28f8a8c5e15a5f8d129bf1"
   },
   "unchangedExistingModules": {
     "cpppj/src/o/GumpFormHost.cpp": "f4045100a4642fdb432cee4f0c223079810176c68235140950fa0a1490f112a4",
@@ -155,6 +155,37 @@
           "path": ".gitattributes",
           "previous": "68ac33ee3c1433a1dacc5154baca6dfd0c531ed2e0481671dc91777875fadd07",
           "current": "1fe38a7e99bb9de9f0cf36571b4217fb0427bdaa65d3124de859ebbc4d887c89"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 143,
+      "reason": "실제 선택+7c/사정거리 종류/491 입구와 같은Session 마나·사정거리·Host·표시를 연결했다. 오분류한 훅 이름을 교정하고 SidPool의 원본 bit 쓰기 권한만 추가했다. 직전 HEAD와 같던 현재 핀만 갱신하며 이전 값을 보존한다.",
+      "pins": [
+        {
+          "group": "currentSources",
+          "path": ".gitattributes",
+          "previous": "1fe38a7e99bb9de9f0cf36571b4217fb0427bdaa65d3124de859ebbc4d887c89",
+          "current": "09039021cbb282ab442a202d4233a9fa48f766f3f06407acda3eb900e4372601"
+        },
+        {
+          "group": "currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "f5fd8fcbe2f6b2d20daba173a0fcf6987b56f105be2eca2374bcf284ed0eb877",
+          "current": "e86bf974ddb3ef6913bfdc8c1ddf9aef987ff5aa1468a64d6e7084c9ecbc4ecd"
+        },
+        {
+          "group": "currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "7e8206da0091e1ed9e73a683f58cdd8229cb5a8251e7f09882ab7486bc28abeb",
+          "current": "87d1a5fa5f1c991f9c2b2bc0c80c656c1e1862481ac4eeffb2d5a540e34adc26"
+        },
+        {
+          "group": "currentSources",
+          "path": "cpppj/tests/CampaignObjectMenuTests.cpp",
+          "previous": "2cda2c4f5ae708ea51de898c878edaa6cdccd3de039f8f927afbfa9c39e86fce",
+          "current": "56e76a33cd0c6d4f174ee5330375344f623f9a3aff28f8a8c5e15a5f8d129bf1"
         }
       ]
     }

@@ -70,8 +70,8 @@ struct SelectionScene {
         hooks.selectNotice=[this](Sid sid,std::uint32_t on) { Event("N",{sid.value,on,selected});Mutate(sid.value==55 ? 1U : sid.value==56 ? 12U : sid.value==51 ? 2U : on ? 6U : 0U); };
         hooks.refresh=[this](Sid sid) { Event("R",{sid.value,selected});Mutate(sid.value!=51 ? 7U : 0U); };
         hooks.processNotice=[this](Sid sid,std::uint32_t event,std::uint32_t info,std::uint32_t value) { Event("F",{sid.value});Event("Q",{event,info,value});Mutate(11); };
-        hooks.dump=[this](Sid sid) { Event("D",{sid.value});Mutate(3); };hooks.production=[this](Sid sid,std::uint32_t flag) { Event("T",{sid.value,flag}); };
-        hooks.movableType=[this](std::uint32_t type) { Event("V",{type});Mutate(4);return row[15]; };hooks.prepareCarrier=[this](Sid sid,std::uint32_t flag) { Event("C",{sid.value,flag});Mutate(5); };
+        hooks.dump=[this](Sid sid) { Event("D",{sid.value});Mutate(3); };hooks.showMana=[this](Sid sid,std::uint32_t flag) { Event("T",{sid.value,flag}); };
+        hooks.rangeType=[this](std::uint32_t type) { Event("V",{type});Mutate(4);return row[15]; };hooks.showRange=[this](Sid sid,std::uint32_t flag) { Event("C",{sid.value,flag});Mutate(5); };
         hooks.content=[this](Sid sid) { Event("I",{sid.value,1,0,0});return Sid{static_cast<std::uint16_t>(row[16])}; };hooks.altar=[this](Sid sid) { Event("A",{sid.value});Mutate(9);return Sid{static_cast<std::uint16_t>(row[18])}; };
         hooks.moving=[this](Sid sid) { Event("M",{sid.value});return row[17]; };hooks.movementPreview=[this](Sid sid) { Event("E",{sid.value}); };
         hooks.highlight=[&highlight](std::uint32_t value) { highlight.Highlight(value); };hooks.assertion=[this] { Event("!");trace+=":selectedSid:3841"; };

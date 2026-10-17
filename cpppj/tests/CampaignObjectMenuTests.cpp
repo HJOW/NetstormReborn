@@ -4,6 +4,7 @@
 #include "client/RawCampaignCursor.h"
 #include "client/RawButtonControls.h"
 #include "client/RawMenuControls.h"
+#include "client/RawUserHighlight.h"
 #include "o/OriginalText.h"
 
 using namespace netstorm::client;
@@ -235,4 +236,24 @@ TEST_CASE(CampaignObjectMenus_ActualSummaryUsesCurrentIdentityAndAlliance) {
     Put(players,2*180+0x2c,0);open();CHECK(std::find(ui.infoLines.begin(),ui.infoLines.end(),"\nAlly: ~iSOMEONE~.")!=ui.infoLines.end());ui.menus->Close();chain.reset();
     const auto hitPoints=session.Priests().PriestState().CurrentHitPoints(priest);Put(session.Core().pool.AllocatedBytes(priest),26,1); // 실제492090을선택하기위한명시저HP입력이며피해/자연전투검증은아니다.
     open();CHECK(std::find(ui.infoLines.begin(),ui.infoLines.end(),"~yCapturable!~.\n")!=ui.infoLines.end());ui.menus->Close();chain.reset();Put(session.Core().pool.AllocatedBytes(priest),26,std::bit_cast<std::uint32_t>(hitPoints));
+}
+
+// 같은Session의 실제선택bit/표시/491Regular와50ProcessForm 통지를 실행한다. UI/진단은 명시 경계다.
+TEST_CASE(CampaignUserSelection_SamePoolMarksRegularAndManaNotice) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);MenuServices external;
+    std::uint32_t selected{},mouseType{},mode{};std::array<std::uint32_t,2> remembered{};std::array<std::uint32_t,0> multiple{};std::int32_t count{},mouseX{},mouseY{}; // 명시 UI의 같은 현재 저장소다.
+    auto services=external.Make();services.deletion.selected=[&] { return Sid{static_cast<std::uint16_t>(selected)}; }; // 삭제도 선택의 같은 저장소를 읽는다.
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));
+    const UserSelectionState state{selected,mouseType,remembered,multiple,count};CHECK(Throws([&] { static_cast<void>(session.MakeUserSelection(state,{})); }));session.Load();
+    const Sid priest{static_cast<std::uint16_t>(session.FindPriestParticipation(1))};CHECK(priest.value);auto core=session.Core();CHECK(!(core.pool.Slot(priest)[40]&9));
+    std::uint32_t dumps{},cursors{};UserHighlightHooks device;device.selectCursor=[&](std::uint32_t) { ++cursors; };RawUserHighlight highlight({mode,selected,mouseType,mouseX,mouseY},std::move(device)); // 같은 실제 강조 몸체이며 이 검사는 mode5 역투영을 선택하지 않는다.
+    UserSelectionHooks hooks;hooks.paused=[] { return 0U; };hooks.enabled=[] { return 1U; };hooks.blocked=[] { return 0U; };hooks.dump=[&](Sid sid) { CHECK(sid==priest);++dumps; };hooks.highlight=[&](std::uint32_t value) { highlight.Highlight(value); };
+    hooks.assertion=hooks.previewAssertion=[] { throw std::logic_error("선택 통합 검사 예상 밖 진단"); };
+    hooks.selectNotice=[](Sid,std::uint32_t) { throw std::logic_error("실제 선택bit로 교체하지 않음"); };hooks.refresh=[](Sid) { throw std::logic_error("실제 표시로 교체하지 않음"); };hooks.movementPreview=hooks.refresh;
+    hooks.rangeType=[](std::uint32_t) -> std::uint32_t { throw std::logic_error("실제 사정거리 종류로 교체하지 않음"); };hooks.showMana=hooks.showRange=hooks.selectNotice;
+    auto selection=session.MakeUserSelection(state,std::move(hooks));CHECK(selection->Select(priest.value,0,0)==priest.value);CHECK(selected==priest.value && dumps==1 && (core.pool.Slot(priest)[40]&4));
+    const auto* preview=core.processes.FindEvent(priest,0x491);CHECK(preview && preview->Payload()==std::bit_cast<float>(0x3e4ccccdU)); // 실제 Regular 생성까지 검증하며491 프레임 소비를 대신하지 않는다.
+    CursorLifecycleHooks mana;session.BindCursorMana(mana);const auto token=mana.createMana(priest,0);auto* process=dynamic_cast<CursorManaProcess*>(core.kernel.Get(token));CHECK(process && process->Parent()==priest);
+    if (process) CHECK(Get(process->Fields().bytes,0x94)==0);CHECK(selection->Select(0,0,1)==0);CHECK(selected==0 && !(core.pool.Slot(priest)[40]&4));if (process) CHECK(Get(process->Fields().bytes,0x94)==1);
+    CHECK(dumps==1 && cursors==0); // 같은 mode0은 불필요한 장치 커서 변경을 하지 않는다.
 }

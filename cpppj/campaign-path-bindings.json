@@ -38,7 +38,7 @@
     "cpppj/src/o/RawPriestState.cpp": "e1433d2703ec4750247628e40597a074301bfce82b4597c1bdf09d7aab4d5aa5",
     "cpppj/src/o/RawPriestState.h": "2d3b43c86011d9c030fc4272453a247815a95d529a59cada53c145f235fcd380",
     "cpppj/src/o/SidPool.cpp": "0f72cb4540e5d28ff63e5ce9078d8591b733f192c8ee6c8c5bf486b93cfd16f0",
-    "cpppj/src/o/SidPool.h": "dede45b0aed7bcbc896b8da80d72540c266d9e5a56b99878efbf4f2abad6448d",
+    "cpppj/src/o/SidPool.h": "fbac21d016818c4f3436d2848658b628ff1ebcfe1ce2bee7c78596726ec077c4",
     "cpppj/src/o/SquidFrame.cpp": "d38aa3f5fbb191aaeadf4f808a7fc51e2ee5a558b9605c9dd8660224435d1e62",
     "cpppj/src/o/SquidFrame.h": "faab1f3ac968b01bb727f374c1cc8b6bdc6b7e3123052e7ed4ae1849f0285b8b",
     "cpppj/src/o/SquidHash.cpp": "9ceffaf0d4c995cb5901b7c49eceae575b9441e8e08dec8cd92e504821fa20ca",
@@ -105,6 +105,19 @@
           "path": "cpppj/src/o/RawPathProcess.cpp",
           "previous": "ae48353ef2132eaf0d5d382703891420941387e2c03dcbf8d1a1489e0abbae89",
           "current": "15e0b7f5097323d5431da841e47b892501c1911e74648c76686c7c66561667c0"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 143,
+      "reason": "실제 선택+7c/사정거리 종류/491 입구와 같은Session 마나·사정거리·Host·표시를 연결했다. 오분류한 훅 이름을 교정하고 SidPool의 원본 bit 쓰기 권한만 추가했다. 직전 HEAD와 같던 현재 핀만 갱신하며 이전 값을 보존한다.",
+      "pins": [
+        {
+          "group": "files",
+          "path": "cpppj/src/o/SidPool.h",
+          "previous": "dede45b0aed7bcbc896b8da80d72540c266d9e5a56b99878efbf4f2abad6448d",
+          "current": "fbac21d016818c4f3436d2848658b628ff1ebcfe1ce2bee7c78596726ec077c4"
         }
       ]
     }

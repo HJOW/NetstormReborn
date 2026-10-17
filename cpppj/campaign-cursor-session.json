@@ -8,13 +8,13 @@
     "date": "2026-10-16"
   },
   "currentSources": {
-    "cpppj/src/CMakeLists.txt": "45615598a4600cf2f6e5dcd42359ab2640f143daac708a0447e6d2caa18f4f06",
+    "cpppj/src/CMakeLists.txt": "8ca9af42a6c0ece47063322780f4d70dc1cc03354bf6eea5131f140233ce23f3",
     "cpppj/src/client/RawCampaignConstructionBindings.cpp": "ee1d38d554fb25e502d0dc54cb19a55f501a45860e5612ca9666ca0f7ec2d2cf",
     "cpppj/src/client/RawCampaignConstructionBindings.h": "9d16b7a6b2ff2c5033dcf1b8a8ff1c73429715c8444f5553c84afe1a93c6ef65",
     "cpppj/src/client/RawCampaignCursor.cpp": "d1c12ed9e16c11771470abfae09d0a2bfccda51dc49be5b90c4a4c78604f961c",
     "cpppj/src/client/RawCampaignCursor.h": "0c4aa17d5acf5cd03fd9d651c33de2fedd115c622e9f75f1c469edb462c775ce",
-    "cpppj/src/client/RawCampaignSession.cpp": "f5fd8fcbe2f6b2d20daba173a0fcf6987b56f105be2eca2374bcf284ed0eb877",
-    "cpppj/src/client/RawCampaignSession.h": "7e8206da0091e1ed9e73a683f58cdd8229cb5a8251e7f09882ab7486bc28abeb",
+    "cpppj/src/client/RawCampaignSession.cpp": "e86bf974ddb3ef6913bfdc8c1ddf9aef987ff5aa1468a64d6e7084c9ecbc4ecd",
+    "cpppj/src/client/RawCampaignSession.h": "87d1a5fa5f1c991f9c2b2bc0c80c656c1e1862481ac4eeffb2d5a540e34adc26",
     "cpppj/src/client/RawCursorLifecycle.cpp": "fce0a2a2eed2fc50169d36b85ac2766dd4b2b8b4b060f17966950601a103e1ce",
     "cpppj/src/client/RawCursorLifecycle.h": "537111c145676234c0f8ad032ca3b68e660f8e1d4245cc0e02f228c53066fd1b",
     "cpppj/src/client/RawCursorPlacement.cpp": "64c57e1581716ad63ebf952aa9c4b7ce4c432ec20f3ca23dcfeede6fcf8a1a46",
@@ -256,6 +256,31 @@
           "path": "cpppj/src/CMakeLists.txt",
           "previous": "f307d187ef0cc892334c74198407070df34d9b5df08502b579cad1135c19685b",
           "current": "45615598a4600cf2f6e5dcd42359ab2640f143daac708a0447e6d2caa18f4f06"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 143,
+      "reason": "실제 선택+7c/사정거리 종류/491 입구와 같은Session 마나·사정거리·Host·표시를 연결했다. 오분류한 훅 이름을 교정하고 SidPool의 원본 bit 쓰기 권한만 추가했다. 직전 HEAD와 같던 현재 핀만 갱신하며 이전 값을 보존한다.",
+      "pins": [
+        {
+          "group": "currentSources",
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "45615598a4600cf2f6e5dcd42359ab2640f143daac708a0447e6d2caa18f4f06",
+          "current": "8ca9af42a6c0ece47063322780f4d70dc1cc03354bf6eea5131f140233ce23f3"
+        },
+        {
+          "group": "currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "f5fd8fcbe2f6b2d20daba173a0fcf6987b56f105be2eca2374bcf284ed0eb877",
+          "current": "e86bf974ddb3ef6913bfdc8c1ddf9aef987ff5aa1468a64d6e7084c9ecbc4ecd"
+        },
+        {
+          "group": "currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "7e8206da0091e1ed9e73a683f58cdd8229cb5a8251e7f09882ab7486bc28abeb",
+          "current": "87d1a5fa5f1c991f9c2b2bc0c80c656c1e1862481ac4eeffb2d5a540e34adc26"
         }
       ]
     }

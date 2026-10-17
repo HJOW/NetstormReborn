@@ -32,7 +32,7 @@
     "cpppj/tests/CursorPositionTests.cpp": "111ab2b59d662bacc5b51bb44d54fccec4260df86f15502e370a35d7d13a73f1",
     "cpppj/tests/CursorPreviewSupport.h": "fa4e6b6d54bbc564af308ffd154f2ced7482a131c542222c0342e6019d6c9084",
     "cpppj/src/client/CMakeLists.txt": "78725b028b113f3e2c815aebcc41847d2f79fc8acdcd237f4a75a05aa9854a3b",
-    "cpppj/tests/CMakeLists.txt": "575ab2a11dcb8ac965cdde3a47e86ea32b6fe352665b4c2782902ba0c4e67017"
+    "cpppj/tests/CMakeLists.txt": "e521a7468afa1af12c3b0b4831199e755eeed94a2fcc60e2e85f4517677a3f7c"
   },
   "limitations": [
     "실제 정수 위치 갱신/역투영/CRT 절삭을 실행한다. 단독 입력의 Activate/Create/선택은 명시 효과다.",
@@ -334,6 +334,19 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "b4d541e91686cd7407ecdd5fcf9e0373f26588a16e67b173b49f3ead85a2de78",
           "current": "575ab2a11dcb8ac965cdde3a47e86ea32b6fe352665b4c2782902ba0c4e67017"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 143,
+      "reason": "실제 선택+7c/사정거리 종류/491 입구와 같은Session 마나·사정거리·Host·표시를 연결했다. 오분류한 훅 이름을 교정하고 SidPool의 원본 bit 쓰기 권한만 추가했다. 직전 HEAD와 같던 현재 핀만 갱신하며 이전 값을 보존한다.",
+      "pins": [
+        {
+          "group": "sha256",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "575ab2a11dcb8ac965cdde3a47e86ea32b6fe352665b4c2782902ba0c4e67017",
+          "current": "e521a7468afa1af12c3b0b4831199e755eeed94a2fcc60e2e85f4517677a3f7c"
         }
       ]
     }

@@ -8,12 +8,12 @@
     "date": "2026-10-16"
   },
   "currentSources": {
-    ".gitattributes": "1fe38a7e99bb9de9f0cf36571b4217fb0427bdaa65d3124de859ebbc4d887c89",
-    "cpppj/src/CMakeLists.txt": "45615598a4600cf2f6e5dcd42359ab2640f143daac708a0447e6d2caa18f4f06",
-    "cpppj/tests/CMakeLists.txt": "575ab2a11dcb8ac965cdde3a47e86ea32b6fe352665b4c2782902ba0c4e67017",
-    "cpppj/src/client/RawUserSelection.h": "06ec081a903a191401447bb0fd2eadbefed7cc4d91a112dab3bdab0a60634ec6",
-    "cpppj/src/client/RawUserSelection.cpp": "a25ebad3469fd5a554e9e48b8514b69df484cefb891e50ca0c6253380ecc5506",
-    "cpppj/tests/UserSelectionTests.cpp": "156d91e2b1f052430e7419a7e8c853b47324ddccf5e09a9bed1d39f321568c07",
+    ".gitattributes": "09039021cbb282ab442a202d4233a9fa48f766f3f06407acda3eb900e4372601",
+    "cpppj/src/CMakeLists.txt": "8ca9af42a6c0ece47063322780f4d70dc1cc03354bf6eea5131f140233ce23f3",
+    "cpppj/tests/CMakeLists.txt": "e521a7468afa1af12c3b0b4831199e755eeed94a2fcc60e2e85f4517677a3f7c",
+    "cpppj/src/client/RawUserSelection.h": "674c28f74149ae174710476da2ed84e68cb3e87b99d0a0fd8f1c26bd8860770b",
+    "cpppj/src/client/RawUserSelection.cpp": "81c83c7b3c6081ca21026ca524f5f0a70ff60e6e8fe5a9ac3c52e987542cafd9",
+    "cpppj/tests/UserSelectionTests.cpp": "8022b877b881de536166c3119ab49cb572d198eb9bb758098560515a68107a22",
     "cpppj/tests/fixtures/user-selection-x86.tsv": "1bc0b81da3e8f62eff6b16887dad8adc27305b5a5fed1637029706639a0c93cd",
     "tools/decomp_user_selection.py": "79cc31f6c9cf391853126cfbb6885e7adeb0477ea27472c70def72ab501f897c"
   },
@@ -996,5 +996,50 @@
     ]
   },
   "goalsStatus": "active",
-  "workRecordSha256": "de26799db85a94653b8f3160397d3768d7abfce9647bffe7f0cfd8191b7237e8"
+  "workRecordSha256": "de26799db85a94653b8f3160397d3768d7abfce9647bffe7f0cfd8191b7237e8",
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "unit": 143,
+      "reason": "실제 선택+7c/사정거리 종류/491 입구와 같은Session 마나·사정거리·Host·표시를 연결했다. 오분류한 훅 이름을 교정하고 SidPool의 원본 bit 쓰기 권한만 추가했다. 직전 HEAD와 같던 현재 핀만 갱신하며 이전 값을 보존한다.",
+      "pins": [
+        {
+          "group": "currentSources",
+          "path": ".gitattributes",
+          "previous": "1fe38a7e99bb9de9f0cf36571b4217fb0427bdaa65d3124de859ebbc4d887c89",
+          "current": "09039021cbb282ab442a202d4233a9fa48f766f3f06407acda3eb900e4372601"
+        },
+        {
+          "group": "currentSources",
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "45615598a4600cf2f6e5dcd42359ab2640f143daac708a0447e6d2caa18f4f06",
+          "current": "8ca9af42a6c0ece47063322780f4d70dc1cc03354bf6eea5131f140233ce23f3"
+        },
+        {
+          "group": "currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "575ab2a11dcb8ac965cdde3a47e86ea32b6fe352665b4c2782902ba0c4e67017",
+          "current": "e521a7468afa1af12c3b0b4831199e755eeed94a2fcc60e2e85f4517677a3f7c"
+        },
+        {
+          "group": "currentSources",
+          "path": "cpppj/src/client/RawUserSelection.h",
+          "previous": "06ec081a903a191401447bb0fd2eadbefed7cc4d91a112dab3bdab0a60634ec6",
+          "current": "674c28f74149ae174710476da2ed84e68cb3e87b99d0a0fd8f1c26bd8860770b"
+        },
+        {
+          "group": "currentSources",
+          "path": "cpppj/src/client/RawUserSelection.cpp",
+          "previous": "a25ebad3469fd5a554e9e48b8514b69df484cefb891e50ca0c6253380ecc5506",
+          "current": "81c83c7b3c6081ca21026ca524f5f0a70ff60e6e8fe5a9ac3c52e987542cafd9"
+        },
+        {
+          "group": "currentSources",
+          "path": "cpppj/tests/UserSelectionTests.cpp",
+          "previous": "156d91e2b1f052430e7419a7e8c853b47324ddccf5e09a9bed1d39f321568c07",
+          "current": "8022b877b881de536166c3119ab49cb572d198eb9bb758098560515a68107a22"
+        }
+      ]
+    }
+  ]
 }

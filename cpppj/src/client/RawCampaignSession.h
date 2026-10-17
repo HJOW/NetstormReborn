@@ -22,6 +22,7 @@
 #include "client/RawCarrierMenu.h"
 #include "client/RawObjectMenuOpen.h"
 #include "client/RawObjectMenuInfo.h"
+#include "client/RawUserSelection.h"
 #include "client/RawPlayerMenu.h"
 #include "o/RawCarrierContentNotice.h"
 #include "client/RawCursorMana.h"
@@ -218,6 +219,9 @@ public:
     // 공통Open의제단/투영/내용물/사정거리를같은현재월드에연결한다. GUI·실제가상분배는caller가공급한다.
     // 반환몸체와모든GUI참조는Session보다먼저해제한다. 제목/파생메뉴의미연결은원래오류를유지한다.
     std::unique_ptr<RawObjectMenuOpen> MakeObjectMenuOpen(ObjectMenuOpenHooks hooks);
+    // 실제 선택 비트/표시/Host/마나·사정거리/내용물/제단/491생성을 같은 Session에 연결한다.
+    // 현재 UI 관문·강조·진단 dump는 caller가 공급하며 반환 몸체는 Session보다 먼저 해제한다.
+    std::unique_ptr<RawUserSelection> MakeUserSelection(UserSelectionState state,UserSelectionHooks hooks);
     // 같은풀/공통삭제/혼합종속분배에등록한실제GumpFormHost다. UI는월드반납전에연결메뉴를닫아야한다.
     o::GumpFormHost& GumpForms();
     // 현재 타입/명령·특수 모드의 장기 저장소다. 알려진 공통 전역은 실제 getter로 연결한다.

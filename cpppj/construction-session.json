@@ -9,8 +9,8 @@
   "edition": "PATCH10.78",
   "baseCommit": "3330211",
   "currentSources": {
-    "cpppj/src/client/RawCampaignSession.cpp": "f5fd8fcbe2f6b2d20daba173a0fcf6987b56f105be2eca2374bcf284ed0eb877",
-    "cpppj/src/client/RawCampaignSession.h": "7e8206da0091e1ed9e73a683f58cdd8229cb5a8251e7f09882ab7486bc28abeb",
+    "cpppj/src/client/RawCampaignSession.cpp": "e86bf974ddb3ef6913bfdc8c1ddf9aef987ff5aa1468a64d6e7084c9ecbc4ecd",
+    "cpppj/src/client/RawCampaignSession.h": "87d1a5fa5f1c991f9c2b2bc0c80c656c1e1862481ac4eeffb2d5a540e34adc26",
     "cpppj/src/client/RawCampaignParticles.cpp": "8916546c2570f5bf03238062671ce8c3edab9b796865c70e3716328712b5db3e",
     "cpppj/src/client/RawCampaignParticles.h": "f1ea87839f7538b0714be13f586a4c30cbff1e9975edf2eec138dfafaf424f69",
     "cpppj/tests/CampaignSessionTests.cpp": "964400205960599492a269d374aaaa7e46ff7f7b6e3968a992d0a447dc16bf2a"
@@ -252,6 +252,25 @@
           "path": "cpppj/src/client/RawCampaignSession.h",
           "previous": "1499e7139b7904a5d3a9484f2e7d38aa5ce76b4267e7f7e1fe6f2636cc0dae50",
           "current": "7e8206da0091e1ed9e73a683f58cdd8229cb5a8251e7f09882ab7486bc28abeb"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 143,
+      "reason": "실제 선택+7c/사정거리 종류/491 입구와 같은Session 마나·사정거리·Host·표시를 연결했다. 오분류한 훅 이름을 교정하고 SidPool의 원본 bit 쓰기 권한만 추가했다. 직전 HEAD와 같던 현재 핀만 갱신하며 이전 값을 보존한다.",
+      "pins": [
+        {
+          "group": "currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "f5fd8fcbe2f6b2d20daba173a0fcf6987b56f105be2eca2374bcf284ed0eb877",
+          "current": "e86bf974ddb3ef6913bfdc8c1ddf9aef987ff5aa1468a64d6e7084c9ecbc4ecd"
+        },
+        {
+          "group": "currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "7e8206da0091e1ed9e73a683f58cdd8229cb5a8251e7f09882ab7486bc28abeb",
+          "current": "87d1a5fa5f1c991f9c2b2bc0c80c656c1e1862481ac4eeffb2d5a540e34adc26"
         }
       ]
     }

@@ -1,0 +1,577 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-17",
+  "unit": 143,
+  "baseCommit": "e95ed13",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16"
+  },
+  "currentSources": {
+    ".gitattributes": "09039021cbb282ab442a202d4233a9fa48f766f3f06407acda3eb900e4372601",
+    "cpppj/src/CMakeLists.txt": "8ca9af42a6c0ece47063322780f4d70dc1cc03354bf6eea5131f140233ce23f3",
+    "cpppj/tests/CMakeLists.txt": "e521a7468afa1af12c3b0b4831199e755eeed94a2fcc60e2e85f4517677a3f7c",
+    "cpppj/src/client/RawCampaignSession.cpp": "e86bf974ddb3ef6913bfdc8c1ddf9aef987ff5aa1468a64d6e7084c9ecbc4ecd",
+    "cpppj/src/client/RawCampaignSession.h": "87d1a5fa5f1c991f9c2b2bc0c80c656c1e1862481ac4eeffb2d5a540e34adc26",
+    "cpppj/src/client/RawUserSelection.cpp": "81c83c7b3c6081ca21026ca524f5f0a70ff60e6e8fe5a9ac3c52e987542cafd9",
+    "cpppj/src/client/RawUserSelection.h": "674c28f74149ae174710476da2ed84e68cb3e87b99d0a0fd8f1c26bd8860770b",
+    "cpppj/src/o/SidPool.h": "fbac21d016818c4f3436d2848658b628ff1ebcfe1ce2bee7c78596726ec077c4",
+    "cpppj/tests/CampaignObjectMenuTests.cpp": "56e76a33cd0c6d4f174ee5330375344f623f9a3aff28f8a8c5e15a5f8d129bf1",
+    "cpppj/tests/UserSelectionTests.cpp": "8022b877b881de536166c3119ab49cb572d198eb9bb758098560515a68107a22",
+    "cpppj/src/o/RawSquidSelection.cpp": "1c652caa97931cdb416db831ac1ad7974e6468a474176b82919af14c8a967b13",
+    "cpppj/src/o/RawSquidSelection.h": "abde6982cc1285df1833efb957ee99454aeb72ec05f17c1fc4d26d58ab3fe185",
+    "cpppj/src/o/SelectionVtables.inc": "2ea1016a215572388211ba0b21ac2240af69a3b46b05dfa9f479a7964d9dffcc",
+    "cpppj/tests/SquidSelectionTests.cpp": "37801b60b8e050ca55003dce2e2f655b052aaa6ef7c1476ad0ba4a0067401079",
+    "cpppj/tests/fixtures/squid-selection-x86.tsv": "fa1d2a0cf63a02b5701a957ee7da7cac6325e18f1081e8eb1e8090a205a29e92",
+    "tools/decomp_squid_selection.py": "dea333096bdcd4ab838491a20dd07062c4669b6097b8df7f8b52fbc16be90ac0"
+  },
+  "nativeReports": {
+    "cpppj/squid-selection.json": "8b74e9baeb368ae71d021e0baf469d7d7118e117c4c399d4b5382aa60b2110d8",
+    "cpppj/user-selection.json": "557f47f6c3cf44dcdbad0293f7ec474df681f7e753bae9e17810f076f9ab1310"
+  },
+  "protectedFileSha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6"
+  },
+  "nativeContext": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-17",
+    "lastPreciseDecompile": {
+      "host": "HJOW-Athlon",
+      "date": "2026-10-16"
+    },
+    "vtables": [
+      [
+        5250512,
+        4309168,
+        4904192
+      ],
+      [
+        5250720,
+        4502192,
+        4904192
+      ],
+      [
+        5251952,
+        4309168,
+        4904192
+      ],
+      [
+        5252168,
+        4309168,
+        4904192
+      ],
+      [
+        5252368,
+        4309168,
+        4904192
+      ],
+      [
+        5252568,
+        4309168,
+        4904192
+      ],
+      [
+        5252768,
+        4309168,
+        4904192
+      ],
+      [
+        5252984,
+        4309168,
+        4904192
+      ],
+      [
+        5253184,
+        4309168,
+        4904192
+      ],
+      [
+        5253384,
+        4309168,
+        4904192
+      ],
+      [
+        5253584,
+        4309168,
+        4904192
+      ],
+      [
+        5253800,
+        4309168,
+        4904192
+      ],
+      [
+        5254000,
+        4309168,
+        4904192
+      ],
+      [
+        5254200,
+        4309168,
+        4904192
+      ],
+      [
+        5254384,
+        4309168,
+        4904192
+      ],
+      [
+        5254576,
+        4309168,
+        4904192
+      ],
+      [
+        5254760,
+        4309168,
+        4904192
+      ],
+      [
+        5254960,
+        4309168,
+        4904192
+      ],
+      [
+        5255160,
+        4309168,
+        4904192
+      ],
+      [
+        5255360,
+        4309168,
+        4904192
+      ],
+      [
+        5255560,
+        4309168,
+        4904192
+      ],
+      [
+        5256032,
+        4309168,
+        4904192
+      ],
+      [
+        5256392,
+        4309168,
+        4904192
+      ],
+      [
+        5258624,
+        4502192,
+        4904192
+      ],
+      [
+        5258832,
+        4502192,
+        4904192
+      ],
+      [
+        5259040,
+        4502192,
+        4904192
+      ],
+      [
+        5259248,
+        4502192,
+        4904192
+      ],
+      [
+        5259456,
+        4502192,
+        4904192
+      ],
+      [
+        5259672,
+        4502192,
+        4904192
+      ],
+      [
+        5270936,
+        4309168,
+        4904192
+      ],
+      [
+        5271120,
+        4309168,
+        4904192
+      ],
+      [
+        5271304,
+        4309168,
+        4904192
+      ],
+      [
+        5271744,
+        4309168,
+        4904192
+      ],
+      [
+        5273048,
+        4309168,
+        4904192
+      ],
+      [
+        5273272,
+        4502192,
+        4904192
+      ],
+      [
+        5273456,
+        4309168,
+        4904192
+      ],
+      [
+        5273936,
+        4502192,
+        4904192
+      ],
+      [
+        5278920,
+        4309168,
+        4904192
+      ],
+      [
+        5280072,
+        4502192,
+        4904192
+      ],
+      [
+        5280272,
+        4502192,
+        4904192
+      ],
+      [
+        5280464,
+        4309168,
+        4904192
+      ],
+      [
+        5280648,
+        4309168,
+        4904192
+      ],
+      [
+        5280880,
+        4502192,
+        4904192
+      ],
+      [
+        5281440,
+        4309168,
+        4904192
+      ],
+      [
+        5281624,
+        4309168,
+        4904192
+      ],
+      [
+        5281808,
+        4309168,
+        4566160
+      ],
+      [
+        5282096,
+        4502192,
+        4904192
+      ],
+      [
+        5282280,
+        4502192,
+        4904192
+      ],
+      [
+        5282464,
+        4502192,
+        4904192
+      ],
+      [
+        5282712,
+        4309168,
+        4904192
+      ],
+      [
+        5283920,
+        4502192,
+        4904192
+      ],
+      [
+        5284328,
+        4502192,
+        4904192
+      ],
+      [
+        5284744,
+        4502192,
+        4904192
+      ],
+      [
+        5285704,
+        4309168,
+        4904192
+      ],
+      [
+        5285920,
+        4502192,
+        4904192
+      ],
+      [
+        5286120,
+        4502192,
+        4904192
+      ],
+      [
+        5289328,
+        4309168,
+        4904192
+      ],
+      [
+        5289704,
+        4502192,
+        4904192
+      ],
+      [
+        5289920,
+        4502192,
+        4904192
+      ],
+      [
+        5290120,
+        4502192,
+        4904192
+      ],
+      [
+        5290424,
+        4502192,
+        4904192
+      ],
+      [
+        5290704,
+        4502192,
+        4904192
+      ],
+      [
+        5292976,
+        4309168,
+        4667248
+      ],
+      [
+        5294576,
+        4309168,
+        4687808
+      ],
+      [
+        5295112,
+        4309168,
+        4690352
+      ],
+      [
+        5298824,
+        4502192,
+        4904192
+      ],
+      [
+        5299064,
+        4309168,
+        4904192
+      ],
+      [
+        5299248,
+        4502192,
+        4904192
+      ],
+      [
+        5301608,
+        4502192,
+        4904192
+      ],
+      [
+        5301864,
+        4502192,
+        4904192
+      ],
+      [
+        5302072,
+        4502192,
+        4904192
+      ],
+      [
+        5302408,
+        4309168,
+        4904192
+      ],
+      [
+        5302592,
+        4502192,
+        4904192
+      ],
+      [
+        5302792,
+        4502192,
+        4904192
+      ],
+      [
+        5302992,
+        4502192,
+        4904192
+      ],
+      [
+        5303192,
+        4309168,
+        4904192
+      ],
+      [
+        5303816,
+        4309168,
+        4904192
+      ],
+      [
+        5304848,
+        4502192,
+        4904192
+      ],
+      [
+        5305664,
+        4309168,
+        4904192
+      ],
+      [
+        5347056,
+        4502192,
+        4904192
+      ],
+      [
+        5347240,
+        4502192,
+        4904192
+      ],
+      [
+        5347424,
+        4502192,
+        4904192
+      ],
+      [
+        5347608,
+        4502192,
+        4904192
+      ]
+    ],
+    "controls": [
+      639,
+      895
+    ],
+    "uniqueInputs": 5600,
+    "normalReturns": 11200,
+    "instructions": 157084,
+    "nativeCalls": {
+      "0041c0b0": 720,
+      "0044b2b0": 9816,
+      "00474240": 104,
+      "00426080": 560
+    },
+    "precisionDifferentInputs": [],
+    "boundaries": "표시+88/할당/Regular496e80/진단은명시입력. 선택bit/사정거리종류/491생성입구전체실행. 원본/OS창실행없음.",
+    "sha256": {
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "cpppj/src/o/DerivedConstructors.inc": "fac1a032778ba7e6745476904a13446c36b79625e38c40120195bc009a798b00",
+      "tools/decomp_squid_selection.py": "dea333096bdcd4ab838491a20dd07062c4669b6097b8df7f8b52fbc16be90ac0",
+      "cpppj/tests/fixtures/squid-selection-x86.tsv": "fa1d2a0cf63a02b5701a957ee7da7cac6325e18f1081e8eb1e8090a205a29e92",
+      "cpppj/src/o/SelectionVtables.inc": "2ea1016a215572388211ba0b21ac2240af69a3b46b05dfa9f479a7964d9dffcc"
+    }
+  },
+  "validation": {
+    "builds": [
+      {
+        "number": 1,
+        "exitCode": 1,
+        "librarySucceeded": true,
+        "executableSucceeded": true,
+        "reason": "검사응답파일/프로세스를검증한뒤/MP4병렬재개를위해검사CL만의도적으로중단했다.",
+        "expectedStopError": "MSB6006 CL.exe -1",
+        "logSha256": "44b583fd785e0a2a267676b487466a8bb5c3f6d589f4d0086282e568c9c4cf99"
+      },
+      {
+        "number": 2,
+        "exitCode": 0,
+        "warnings": 0,
+        "errors": 0,
+        "localCompilerProcesses": 4,
+        "logSha256": "776d34036922f2e861905da863712617f1eb01b97fe441d61d548cf42e035a11"
+      },
+      {
+        "number": 3,
+        "exitCode": 0,
+        "warnings": 0,
+        "errors": 0,
+        "localCompilerProcesses": 4,
+        "logSha256": "213a56bba065093089aadee9690021b36c8e7a7ec7ee362e4b706c39b6340b45"
+      }
+    ],
+    "focused": {
+      "uniqueCases": 6,
+      "failedChecks": 0,
+      "finalLogs": {
+        "extracted/goal-squid-selection-20261017-focus3.log": "6da3ab32f4bf7c15b66c5b8c18b95addda3dddd6582d1146248a345984f37e74",
+        "extracted/goal-squid-selection-20261017-focus4.log": "eaff7f8eaef57dacda0a65962d0d2f17f679ae85a3a421634fad5801e4d98526"
+      }
+    },
+    "ctest": {
+      "cases": 1580,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "seconds": 191.6,
+      "logSha256": "6ef173340c220350a8840b82c34d64326feb3d4f881143ada6803364e68b9cae"
+    },
+    "nativeAudit": {
+      "total": 61,
+      "passed": 50,
+      "existingFailures": [
+        "tools/analyze_campaign_target_path.py",
+        "tools/decomp_chat_channels.py",
+        "tools/decomp_constructionarrival_oracle.py",
+        "tools/decomp_factorypostpop_oracle.py",
+        "tools/decomp_guntarget_oracle.py",
+        "tools/decomp_menulayout_oracle.py",
+        "tools/decomp_metadisplaydirty_oracle.py",
+        "tools/decomp_pathdata_oracle.py",
+        "tools/decomp_pathprepare_oracle.py",
+        "tools/decomp_pathruntime_oracle.py",
+        "tools/decomp_unpop_oracle.py"
+      ],
+      "newFailures": [],
+      "logSha256": "b298b625bc88a75bd73e99722f7ef2ca0ab7c8451a421a033f19e4c2eb72137b"
+    },
+    "pinUpdates": {
+      "reports": 49,
+      "pins": 121,
+      "previousPreserved": true,
+      "logSha256": "69b882b8d12b81d83a59608253b64a656f939164dda4f005f08e9e6860c69c4b"
+    },
+    "cloneEntry": "실제Client입구미변경으로클론창진입검사는반복하지않았다. 단위141의5회진입을새선택/자연우클릭/완주증거로확대하지않는다."
+  },
+  "discoveredBindingError": {
+    "nativeCaller": "00429560",
+    "callsite": "0042977f",
+    "nativeTarget": "00426080",
+    "wrongCurrentTarget": "00426fc0",
+    "currentBinding": "InstallContents carrierEffects.checkCarrier -> RawPriestWorldBindings::CheckCarrier",
+    "resolution": "42a750의491내용물표시/428700소비자를복원한뒤같은내용물표시예약헬퍼로교체한다.",
+    "proofSha256": "654156cd9f483b494496d4c75b16d73c1792060e8b296390ed3f3968607aa9e2"
+  },
+  "scope": {
+    "completed": [
+      "83VT의실제선택bit/표시전통지·사정거리종류·491내용물표시생성입구",
+      "같은Session의선택·표시·Host·마나/사정거리·내용물·제단·491예약·음향연결"
+    ],
+    "remaining": [
+      "491내용물표시/428700소비자와기존잘못된Carrier내용물통지연결교정",
+      "실제Client선택/UI관문·강조·dump·비정지객체메뉴·설명/번역/문자열수명·VT분배/DWORD소비자",
+      "로컬로그인/전송·생산/경제/AI·대상11스테이지자연완주/승패/저장/다음미션/전체동일성"
+    ]
+  },
+  "workRecordSha256": "6d81c1b0297d2c5e5c6984c098e943d7e071016ed993cebaef7a38987ab29f89",
+  "goalsStatus": "active"
+}

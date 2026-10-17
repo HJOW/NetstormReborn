@@ -1273,3 +1273,14 @@ cpppj/user-selection.json text eol=lf
 tools/decomp_user_selection.py text eol=lf
 cpppj/campaign-user-selection.json text eol=lf
 docs/exe/cpp-user-selection-20261017.md text eol=lf
+
+# 새 객체 선택 효과와 원본 관찰은 UTF-8/LF로 보존한다.
+cpppj/src/o/RawSquidSelection.* text eol=lf
+cpppj/src/o/SelectionVtables.inc text eol=lf
+cpppj/tests/SquidSelectionTests.cpp text eol=lf
+cpppj/tests/fixtures/squid-selection-x86.tsv text eol=lf
+cpppj/squid-selection.json text eol=lf
+cpppj/campaign-selection-effects.json text eol=lf
+tools/decomp_squid_selection.py text eol=lf
+docs/exe/cpp-selection-effects-20261017.md text eol=lf
+cpppj/src/o/SidPool.h text eol=lf

@@ -15,7 +15,7 @@ struct UserSelectionState {
     std::span<const std::uint32_t> multiple; // 005caf2c의 다중 선택 배열이며 정리 중에도 현재 항목을 읽는다.
     std::int32_t& multipleCount; // 005caf34의 signed 개수이며 통지 뒤 다음 반복 조건에서 다시 읽는다.
 };
-// 현재 게임 전역과 실제 파생 가상함수·생산·이동·장치만 공급한다. 도달한 경계의 누락은 오류다.
+// 현재 게임 전역과 실제 파생 가상함수·마나/사정거리·이동·장치만 공급한다. 도달한 경계의 누락은 오류다.
 struct UserSelectionHooks {
     std::function<std::uint32_t()> paused,enabled,blocked; // 460de0/5434e4/463b50의 별도 첫 관문이다.
     std::function<std::uint32_t()> localOwner,editor; // 540c70/5c85a4를 실제 이동 강조 분기에서 읽는다.
@@ -24,14 +24,15 @@ struct UserSelectionHooks {
     std::function<void(o::Sid)> refresh; // 객체 가상+88이며 앞선 통지가 바꾼 현재 VT로 호출한다.
     std::function<void(o::Sid,std::uint32_t,std::uint32_t,std::uint32_t)> processNotice; // ProcessFinder 대상의 실제 프로세스 가상+1c다.
     std::function<void(o::Sid)> dump; // 44dab0의 재귀 진단이며 원본 호출 순서를 생략하지 않는다.
-    std::function<void(o::Sid,std::uint32_t)> production,prepareCarrier; // 4741d0/474900의 객체와0 인자다.
-    std::function<std::uint32_t(std::uint32_t)> movableType; // 474240의 현재 타입별 조회다.
+    std::function<void(o::Sid,std::uint32_t)> showMana,showRange; // 4741d0/474900의 실제 마나/사정거리 생성이며 둘째0은Form미지정이다.
+    std::function<std::uint32_t(std::uint32_t)> rangeType; // 474240의 사정거리 종류이며 이동 가능 판정과 다르다.
     std::function<o::Sid(o::Sid)> content,altar; // 4ac9f0(1,0,0)/447930의 현재 내용물과 같은 위치 제단이다.
     std::function<std::uint32_t(o::Sid)> moving; // 425ed0의 현재 운반/이동 상태다.
     std::function<void(o::Sid)> movementPreview; // 426080의 실제491 Regular 생성 경계다.
     std::function<void(std::uint32_t)> highlight; // 같은 현재 전역을 사용하는 RawUserHighlight::Highlight다.
     std::function<void(std::uint32_t,std::uint32_t,std::string_view,std::uint32_t)> sound; // 4a9d70의 두 float 비트/이름/0이다.
     std::function<void()> assertion; // selectedSid 진단 뒤 현재 선택을 다시 읽는다. 임의 성공을 만들지 않는다.
+    std::function<void()> previewAssertion; // 426080의 !s.isForm() 진단 뒤 현재 TYPE를 다시 읽는다.
 };
 // PATCH10.78의 전체 선택 부모와 짧은 관련 몸체다. Select의 둘째·셋째 인자는 독립 DWORD다.
 class RawUserSelection {

@@ -8,7 +8,7 @@
     "date": "2026-10-16"
   },
   "currentSources": {
-    "cpppj/src/CMakeLists.txt": "45615598a4600cf2f6e5dcd42359ab2640f143daac708a0447e6d2caa18f4f06",
+    "cpppj/src/CMakeLists.txt": "8ca9af42a6c0ece47063322780f4d70dc1cc03354bf6eea5131f140233ce23f3",
     "cpppj/src/client/GameWorld.cpp": "6f1c2bb5a44a98039f2c0709164ec27911fa0893282377120c35e5e05fd3b7fa",
     "cpppj/src/client/OwnerColorMaps.cpp": "1dc23bab259f2bdbb6e88d7e12c4427a50f76304c8aa11cc6309800d0da7e620",
     "cpppj/src/client/OwnerColorMaps.h": "aed5d31073e2015b4d0773eef376a302d122c024a04f90533d0882fd28121abf",
@@ -20,11 +20,11 @@
     "cpppj/src/client/RawCampaignCursor.h": "0c4aa17d5acf5cd03fd9d651c33de2fedd115c622e9f75f1c469edb462c775ce",
     "cpppj/src/client/RawCampaignCursorDisplay.cpp": "8e3f58a74524806c727a1ea81ed725495a22fc41270a77fd6457342925a80117",
     "cpppj/src/client/RawCampaignCursorDisplay.h": "e30e775cf87189bfa1dfeb8a26075decd485dea5e2d366056df8579dcc2f5b73",
-    "cpppj/src/client/RawCampaignSession.cpp": "f5fd8fcbe2f6b2d20daba173a0fcf6987b56f105be2eca2374bcf284ed0eb877",
+    "cpppj/src/client/RawCampaignSession.cpp": "e86bf974ddb3ef6913bfdc8c1ddf9aef987ff5aa1468a64d6e7084c9ecbc4ecd",
     "cpppj/src/client/Renderer.cpp": "5a36413dc3cf1bfa2c12a57823dc0c44a37ad3f01952ff14f17fdb0ab5b1ff11",
     "cpppj/src/client/Renderer.h": "b6bcd1c739f94173876bb8f9ecbbf2ae34bc48bbe092c6a1bad3454f3a950f55",
     "cpppj/src/client/UberGump.cpp": "471b592cf1e784c63db34bc109eb3d38785481018b403cef0afa98d98622d10b",
-    "cpppj/tests/CMakeLists.txt": "575ab2a11dcb8ac965cdde3a47e86ea32b6fe352665b4c2782902ba0c4e67017",
+    "cpppj/tests/CMakeLists.txt": "e521a7468afa1af12c3b0b4831199e755eeed94a2fcc60e2e85f4517677a3f7c",
     "cpppj/tests/CampaignSessionTests.cpp": "964400205960599492a269d374aaaa7e46ff7f7b6e3968a992d0a447dc16bf2a",
     "cpppj/tests/PreviewColorMapsTests.cpp": "5019672dc1589cace9bb92690be4bf9786ab8257770794cb51fdff87cf937311",
     "cpppj/tests/RendererTests.cpp": "fb868b30dcd882c0c2add47d3a66434e4cb34bf514f4ce8a7102a0a3ed2995c8"
@@ -256,6 +256,31 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "b4d541e91686cd7407ecdd5fcf9e0373f26588a16e67b173b49f3ead85a2de78",
           "current": "575ab2a11dcb8ac965cdde3a47e86ea32b6fe352665b4c2782902ba0c4e67017"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 143,
+      "reason": "실제 선택+7c/사정거리 종류/491 입구와 같은Session 마나·사정거리·Host·표시를 연결했다. 오분류한 훅 이름을 교정하고 SidPool의 원본 bit 쓰기 권한만 추가했다. 직전 HEAD와 같던 현재 핀만 갱신하며 이전 값을 보존한다.",
+      "pins": [
+        {
+          "group": "currentSources",
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "45615598a4600cf2f6e5dcd42359ab2640f143daac708a0447e6d2caa18f4f06",
+          "current": "8ca9af42a6c0ece47063322780f4d70dc1cc03354bf6eea5131f140233ce23f3"
+        },
+        {
+          "group": "currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "f5fd8fcbe2f6b2d20daba173a0fcf6987b56f105be2eca2374bcf284ed0eb877",
+          "current": "e86bf974ddb3ef6913bfdc8c1ddf9aef987ff5aa1468a64d6e7084c9ecbc4ecd"
+        },
+        {
+          "group": "currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "575ab2a11dcb8ac965cdde3a47e86ea32b6fe352665b4c2782902ba0c4e67017",
+          "current": "e521a7468afa1af12c3b0b4831199e755eeed94a2fcc60e2e85f4517677a3f7c"
         }
       ]
     }

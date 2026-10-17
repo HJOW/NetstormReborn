@@ -16,6 +16,7 @@
 #include "client/RawCarrierDropPoint.h"
 #include "o/RawProcessRemoval.h"
 #include "o/RawSquidLevel.h"
+#include "o/RawSquidSelection.h"
 #include "o/RawPlayerTemplateState.h"
 #include "o/RawArcherTypeData.h"
 #include "o/RawProjectileGeometry.h"
@@ -1583,6 +1584,26 @@ std::unique_ptr<RawObjectMenuOpen> RawCampaignSession::MakeObjectMenuOpen(Object
 }
 // 초기설치이전에는Form생성/부착을노출하지않는다. 별도UI전용풀을만들지않는다.
 GumpFormHost& RawCampaignSession::GumpForms() { if (!impl_->loaded || !impl_->gumpForms) throw std::logic_error("설치 전 실제 Session GumpForm 요청");return *impl_->gumpForms; }
+// 큰 UI/현재 관문을 보존하고 같은 월드가 이미 소유하는 게임 계산·표시 프로세스만 연결한다.
+std::unique_ptr<RawUserSelection> RawCampaignSession::MakeUserSelection(UserSelectionState state,UserSelectionHooks hooks) {
+    if (!impl_->loaded) throw std::logic_error("설치 전 실제 Session 선택 요청");auto* current=impl_.get(); // 반환 몸체가 빌리는 같은 장기 Session이다.
+    hooks.localOwner=[current] { return current->playerState.battleOwner; };hooks.editor=[current] { return current->globals.editor; };
+    hooks.dais=[current] { return current->runeState.daisType; };hooks.manaProcess=[current] { return current->cursorManaGlobals.processType; };hooks.rangeProcess=[current] { return current->cursorRangeGlobals.processType; };
+    hooks.refresh=[current](Sid sid) { current->core.display.Update(current->core.pool.Slot(sid)); };
+    const auto marks=std::make_shared<RawSquidSelection>(current->core.pool,hooks.refresh); // 실제+7c의 표시 전 비트와 반환 몸체의 수명을 함께 유지한다.
+    hooks.selectNotice=[marks](Sid sid,std::uint32_t on) { marks->Mark(sid,on); };
+    hooks.processNotice=[current](Sid form,std::uint32_t event,std::uint32_t info,std::uint32_t value) { auto* process=current->core.processes.FromForm(form);if (!process) throw std::logic_error("선택의 실제 ProcessForm/Kernel 미일치");process->Notify(event,info,value); };
+    hooks.showMana=[current](Sid parent,std::uint32_t form) { if (form>65535U) throw std::out_of_range("선택 마나 Form WORD 오류");static_cast<void>(CreateCursorManaProcess(current->core.processes,*current->cursorMana,parent,Sid{static_cast<std::uint16_t>(form)})); };
+    hooks.showRange=[current](Sid parent,std::uint32_t form) { if (form>65535U) throw std::out_of_range("선택 사정거리 Form WORD 오류");static_cast<void>(CreateCursorRangeProcess(current->core.processes,*current->cursorRange,parent,Sid{static_cast<std::uint16_t>(form)})); };
+    hooks.rangeType=[current](std::uint32_t type) { if (type>=current->core.types.size()) throw std::out_of_range("선택 사정거리 TYPE 오류");return SelectionUsesRange(current->core.types[type]) ? 1U : 0U; };
+    hooks.content=[current](Sid parent) { return current->priests->Carrier().FindContained(parent,1,0,0); };
+    hooks.altar=[current](Sid parent) { const auto raw=current->core.pool.Slot(parent);return current->world.Find(std::bit_cast<float>(Read(raw,14)),std::bit_cast<float>(Read(raw,18)),current->runeState.altarType); };
+    hooks.moving=[current](Sid parent) { return current->core.processes.FindEvent(parent,0x493)!=nullptr ? 1U : 0U; };
+    const auto previewAssertion=hooks.previewAssertion; // 서로 다른 원본 진단을 selectedSid 진단으로 합치지 않는다.
+    hooks.movementPreview=[current,previewAssertion](Sid parent) { StartSelectionContentPreview(current->core.pool,parent,current->objectState.loadingDepth,[current](Sid sid,std::uint32_t event,float payload) { static_cast<void>(current->core.processes.AddRegular(sid,event,payload)); },previewAssertion); };
+    hooks.sound=[current](std::uint32_t x,std::uint32_t y,std::string_view name,std::uint32_t flags) { if (!current->services.sound.playOnceAt) throw std::logic_error("선택 실제 위치 소리 미연결");current->services.sound.playOnceAt(std::bit_cast<float>(x),std::bit_cast<float>(y),current->soundNames.Lookup(name),flags,0); };
+    return std::make_unique<RawUserSelection>(current->core.pool,current->core.types,state,std::move(hooks));
+}
 // 기본 번호/특수 모드는 같은 장기 상태를 빌리며 getter를 새 캐시로 바꾸지 않는다.
 PriestMenuState& RawCampaignSession::PriestMenuSettings() { return impl_->priestMenu; }
 // 원본 TYPE 제외 목록을 현재 값으로 빌린다. 다른 SID/생산 금지 표와 합치지 않는다.

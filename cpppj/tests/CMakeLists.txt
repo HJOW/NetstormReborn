@@ -1353,3 +1353,8 @@ target_sources(netstorm_tests PRIVATE ObjectMenuInfoTests.cpp)
 target_sources(netstorm_tests PRIVATE UserSelectionTests.cpp)
 set_source_files_properties(UserSelectionTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_USER_SELECTION_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/user-selection-x86.tsv\"")
+
+# 객체 선택 효과의83VT/전체BYTE와 생성 입구 원문을 재생한다.
+target_sources(netstorm_tests PRIVATE SquidSelectionTests.cpp)
+set_source_files_properties(SquidSelectionTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_SQUID_SELECTION_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/squid-selection-x86.tsv\"")

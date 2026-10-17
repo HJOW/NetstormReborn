@@ -5,17 +5,17 @@
   "normalReturns": 864,
   "precisionDifferentInputs": [],
   "sha256": {
-    "cpppj/src/CMakeLists.txt": "45615598a4600cf2f6e5dcd42359ab2640f143daac708a0447e6d2caa18f4f06",
+    "cpppj/src/CMakeLists.txt": "8ca9af42a6c0ece47063322780f4d70dc1cc03354bf6eea5131f140233ce23f3",
     "cpppj/src/client/RawCampaignLifetimeBindings.cpp": "2eb0d3fc16e6967b54271c0365991e0ebd8f3d57ef6412aa92d4c4d21fbb01c3",
     "cpppj/src/client/RawCampaignLifetimeBindings.h": "6f4be73b52279abf308c8a3e6d8962271560e47c25996f7a03fca09f8cd063e8",
-    "cpppj/src/client/RawCampaignSession.cpp": "f5fd8fcbe2f6b2d20daba173a0fcf6987b56f105be2eca2374bcf284ed0eb877",
-    "cpppj/src/client/RawCampaignSession.h": "7e8206da0091e1ed9e73a683f58cdd8229cb5a8251e7f09882ab7486bc28abeb",
+    "cpppj/src/client/RawCampaignSession.cpp": "e86bf974ddb3ef6913bfdc8c1ddf9aef987ff5aa1468a64d6e7084c9ecbc4ecd",
+    "cpppj/src/client/RawCampaignSession.h": "87d1a5fa5f1c991f9c2b2bc0c80c656c1e1862481ac4eeffb2d5a540e34adc26",
     "cpppj/src/client/RawCursorMana.cpp": "b8ab58679249a18387757eb2eb93c7405e566a4a9fc02ed018b2046a7d751f7b",
     "cpppj/src/client/RawCursorMana.h": "f363a35504b216243604734bcb9c7567943797c4b879b9f101b16763d9d3821a",
     "cpppj/src/o/SquidDisplay.cpp": "adff73d1c710cf295aed17e2a06cb90294e1399e5e455d423659f37c336f3dc6",
     "cpppj/src/o/SquidPop.cpp": "61f8db73c663d5d7c8880d73bc310cf7884e361bb76402e0946241e02b7dcd17",
     "cpppj/src/o/SquidUnpop.cpp": "f9a932b6ee543cc2ee051d6f67afb0c56fca1f325cc51d29ca3d0dc3adf26fef",
-    "cpppj/tests/CMakeLists.txt": "575ab2a11dcb8ac965cdde3a47e86ea32b6fe352665b4c2782902ba0c4e67017",
+    "cpppj/tests/CMakeLists.txt": "e521a7468afa1af12c3b0b4831199e755eeed94a2fcc60e2e85f4517677a3f7c",
     "cpppj/tests/CampaignSessionTests.cpp": "964400205960599492a269d374aaaa7e46ff7f7b6e3968a992d0a447dc16bf2a",
     "cpppj/tests/CursorManaTests.cpp": "3f9aa47024782b0afe4f165a2145fa4f27706d8b5b7c1434f8e94c65a5318daa",
     "cpppj/tests/PopTests.cpp": "250b9a9fd863142026c29ef68c75ea7c8bea6871ed0a42df9bafee4e2b072d48",
@@ -469,6 +469,37 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "b4d541e91686cd7407ecdd5fcf9e0373f26588a16e67b173b49f3ead85a2de78",
           "current": "575ab2a11dcb8ac965cdde3a47e86ea32b6fe352665b4c2782902ba0c4e67017"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 143,
+      "reason": "실제 선택+7c/사정거리 종류/491 입구와 같은Session 마나·사정거리·Host·표시를 연결했다. 오분류한 훅 이름을 교정하고 SidPool의 원본 bit 쓰기 권한만 추가했다. 직전 HEAD와 같던 현재 핀만 갱신하며 이전 값을 보존한다.",
+      "pins": [
+        {
+          "group": "sha256",
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "45615598a4600cf2f6e5dcd42359ab2640f143daac708a0447e6d2caa18f4f06",
+          "current": "8ca9af42a6c0ece47063322780f4d70dc1cc03354bf6eea5131f140233ce23f3"
+        },
+        {
+          "group": "sha256",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "f5fd8fcbe2f6b2d20daba173a0fcf6987b56f105be2eca2374bcf284ed0eb877",
+          "current": "e86bf974ddb3ef6913bfdc8c1ddf9aef987ff5aa1468a64d6e7084c9ecbc4ecd"
+        },
+        {
+          "group": "sha256",
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "7e8206da0091e1ed9e73a683f58cdd8229cb5a8251e7f09882ab7486bc28abeb",
+          "current": "87d1a5fa5f1c991f9c2b2bc0c80c656c1e1862481ac4eeffb2d5a540e34adc26"
+        },
+        {
+          "group": "sha256",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "575ab2a11dcb8ac965cdde3a47e86ea32b6fe352665b4c2782902ba0c4e67017",
+          "current": "e521a7468afa1af12c3b0b4831199e755eeed94a2fcc60e2e85f4517677a3f7c"
         }
       ]
     }

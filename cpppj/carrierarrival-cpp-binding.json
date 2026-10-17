@@ -69,7 +69,7 @@
     "cpppj/src/o/RawSquidNeighbors.cpp": "189febb21e1a29b605ccdf95e56ac88b2b2ee40dac68874df501fe5a37c24d02",
     "cpppj/src/o/RawSquidNeighbors.h": "1d223e803abd49e59dc45fb41e68cc65227af2d6e31b3d6904d99b4d00849dbc",
     "cpppj/src/o/SidPool.cpp": "0f72cb4540e5d28ff63e5ce9078d8591b733f192c8ee6c8c5bf486b93cfd16f0",
-    "cpppj/src/o/SidPool.h": "dede45b0aed7bcbc896b8da80d72540c266d9e5a56b99878efbf4f2abad6448d",
+    "cpppj/src/o/SidPool.h": "fbac21d016818c4f3436d2848658b628ff1ebcfe1ce2bee7c78596726ec077c4",
     "cpppj/src/o/SquidFactory.cpp": "9773bb2d4f5b7dd0114fbb9406a95080e6f919a1106efe5b6a15ef8ed68e39e0",
     "cpppj/src/o/SquidFactory.h": "439126b14875597ae876ab82d1699d414fa15fdf76ec9ac83f6794d32595c549",
     "cpppj/src/o/SquidHash.cpp": "9ceffaf0d4c995cb5901b7c49eceae575b9441e8e08dec8cd92e504821fa20ca",
@@ -163,6 +163,19 @@
           "path": "cpppj/src/o/SquidReward.h",
           "previous": "221e142133a1e3a73f65ff6979d73859b7701912ab84cde9dc6a9fe565ccd2e7",
           "current": "59cf154a0aa681fbce7bdf445728afc582409bd9af9b24e5b135e435e92aa362"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 143,
+      "reason": "실제 선택+7c/사정거리 종류/491 입구와 같은Session 마나·사정거리·Host·표시를 연결했다. 오분류한 훅 이름을 교정하고 SidPool의 원본 bit 쓰기 권한만 추가했다. 직전 HEAD와 같던 현재 핀만 갱신하며 이전 값을 보존한다.",
+      "pins": [
+        {
+          "group": "files",
+          "path": "cpppj/src/o/SidPool.h",
+          "previous": "dede45b0aed7bcbc896b8da80d72540c266d9e5a56b99878efbf4f2abad6448d",
+          "current": "fbac21d016818c4f3436d2848658b628ff1ebcfe1ce2bee7c78596726ec077c4"
         }
       ]
     }

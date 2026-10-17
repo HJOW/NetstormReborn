@@ -1,5 +1,17 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-17 단위143 완료: 선택 가상 통지·같은Session 마나/사정거리/491 연결 (`HJOW-Athlon`)
+
+- [x] 기준 `e95ed13`, 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16** 일치다. AGENTS·양LEFT를 재독했다. 새 디컴파일·원본 게임/창 실행·DirectDraw 수정은 없다. [작업 기록](docs/exe/cpp-selection-effects-20261017.md).
+- [x] `RawSquidSelection`이83VT의41c0b0/44b2b0·extra bit2·Damageable의 쓰기 전+88을 복원한다. 474240 사정거리 종류와426080의 로딩/extra/TYPE 재조회·491/0.2 내용물 표시 예약도 복원했다. 새 독립 PE 관찰 **5,600입력·11,200정상반환·157,084명령·정밀도차이0**다. 초기 index형 신규 입력은 `extracted/goal-squid-selection-20261017-indexed-input/`에 보존하고 최종 입력은 실제VT DWORD다. 기존 fixture는 바꾸지 않았다.
+- [x] 단위142의 production/prepareCarrier/movableType는 실제로 마나 생성4741d0/사정거리 생성474900/사정거리 종류474240이었다. showMana/showRange/rangeType으로 교정했다. 새 헬퍼는 실제491 내용을 반영해StartSelectionContentPreview이며 기존movementPreview훅 이름만 호환명으로 남긴다.
+- [x] MakeUserSelection은 같은Pool/TYPE/표시/ProcessHost·마나/사정거리·내용물/제단·현재493/491예약·음향에 연결한다. 실제 사제bit2와491 Regular, 실제50프로세스 event3→flag94 통지가 통과했다. UI관문·강조·dump/진단은caller 경계이며491 프레임/실제Client입구는 미연결이다. 자연 우클릭/플레이 완료를 주장하지 않는다.
+- [x] 빌드1은라이브러리/실행파일을완료했다. 로컬CPU4개/cl /?의/MP[n]지원과 현재workspace의검사응답파일을확인후검사CL만의도적으로중단했다(MSB6006/-1). 기존CL환경을보존·복구해/MP4로재개한빌드2와명칭정리빌드3은 **종료0·경고0·오류0**이다. 최종집중 **6개 성공**, 전체CTest **1,580개·실패0·종료0·191.60초**다. 90796/64690/35058은모두정상종료했으며새빌드대기핸들은없다.
+- [x] 최종 원본 감사61종 **50종성공·기존11종실패·새실패0**다. 기존49보고서121현재핀만갱신/이전값보존했고과거이력은유지했다. 보호SHA3·기존CMake접두·새파일UTF-8/LF와SidPool.h의LF고정을확인했다. AGENTS/원본/DN은바꾸지않았다. 실제Client입구미변경으로클론창진입은반복하지않았고이전5회성공을새선택검증으로확대하지않는다.
+- [x] 로그접두부 `extracted/goal-squid-selection-20261017-`, 연결보고서 `cpppj/campaign-selection-effects.json`이다. 인계뒤 **`20261017-43 CP 선택 가상 통지와 같은 세션 마나 및 사정거리 연결`** 로로컬커밋하며push하지않는다. 전체목표active다.
+- [ ] **다음 우선교정:** InstallContents의carrierEffects.checkCarrier는원본426080에대응하지만현재priests->CheckCarrier(426fc0 지면검사)에잘못연결돼있다. 보호PE의42977f `call 426080`으로확인했다. 정적근거 `extracted/goal-squid-selection-20261017-content-binding-call.json`. 실제사제+5c494580→Carrier42a750의491내용물표시와428700표시조각프로세스를복원한뒤같은새헬퍼로교체해내용물통지를끝까지연결한다. 생성만연결하고미복원프레임을성공으로바꾸지않는다.
+- [ ] 이후 실제Client 선택 저장소/시계·강조/dump·비정지객체메뉴/49af80설명·번역/정적문자열수명·VT별+a8/+ac·원본DWORD소비자를연결한다. 로컬로그인·전송/생산/경제/AI와대상11스테이지자연완주·승패·저장·다음미션·전체동일성은미완료다.
+
 ## 2026-10-17 단위142 완료: 실제 세 인자 선택과 사제/Carrier/Archer 메뉴 입구 (`HJOW-Athlon`)
 
 - [x] 기준 `c09f7a0`, 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16**이다. AGENTS·양LEFT를 재독했다. 새 디컴파일·원본 게임 실행·DirectDraw 수정은 없다.

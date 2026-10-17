@@ -66,9 +66,9 @@ std::uint32_t RawUserSelection::Select(std::uint32_t number,std::uint32_t forceS
         ClearMultiple();if (state_.selected) { Raw(state_.selected);ClearPrevious(o::Sid{static_cast<std::uint16_t>(state_.selected)}); }
         if (!number || (Raw(number)[11]&2)) { Need(hooks_.highlight)(0);return 0; }
         const o::Sid sid{static_cast<std::uint16_t>(number)};Need(hooks_.dump)(sid);
-        if (Type(Raw(number)[10]).flags1&0x10000000U) Need(hooks_.production)(sid,0);
-        if (Need(hooks_.movableType)(Raw(number)[10])) Need(hooks_.prepareCarrier)(sid,0);
-        if ((Type(Raw(number)[10]).flags2&0x30000U) && Need(hooks_.content)(sid).value) Need(hooks_.prepareCarrier)(sid,0);
+        if (Type(Raw(number)[10]).flags1&0x10000000U) Need(hooks_.showMana)(sid,0);
+        if (Need(hooks_.rangeType)(Raw(number)[10])) Need(hooks_.showRange)(sid,0);
+        if ((Type(Raw(number)[10]).flags2&0x30000U) && Need(hooks_.content)(sid).value) Need(hooks_.showRange)(sid,0);
         if (Raw(number)[10]==Need(hooks_.dais)()) {
             const auto altar=Need(hooks_.altar)(sid); // 원본40ea40은 상태 없이 물리 범위만 확인한다.
             if (altar.value && altar.value<pool_.Capacity()) { number=altar.value;continue; }

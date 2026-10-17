@@ -56,3 +56,6 @@ target_sources(netstorm PRIVATE client/RawUserHighlight.cpp client/RawUserHighli
 
 # 세 인자 선택과 다중 선택 정리 및 사제/Carrier/Archer 메뉴 입구다.
 target_sources(netstorm PRIVATE client/RawUserSelection.cpp client/RawUserSelection.h)
+
+# 원본 선택 가상+7c와 사정거리/491 생성 입구다.
+target_sources(netstorm PRIVATE o/RawSquidSelection.cpp o/RawSquidSelection.h o/SelectionVtables.inc)
