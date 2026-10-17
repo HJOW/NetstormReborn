@@ -116,3 +116,6 @@ target_sources(netstorm PRIVATE o/RawNuggetReplenish.cpp o/RawNuggetReplenish.h)
 
 # 보상 Bomb의 고유 전처리와 실제 공통 삭제 연결이다.
 target_sources(netstorm PRIVATE o/RawBombPreDestroy.cpp o/RawBombPreDestroy.h)
+
+# 벌룬의 실제 고도 프레임·그림자 후처리와 삭제를 연결한다.
+target_sources(netstorm PRIVATE o/RawBalloonFrame.cpp o/RawBalloonFrame.h o/RawBalloonBody.cpp o/RawBalloonBody.h)

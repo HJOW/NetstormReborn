@@ -13,11 +13,11 @@
     "cpppj/src/o/RawCarrierMining.cpp": "d1f19cbd62d0ae98132cd5f1eedb01cb0e691b41bb60c636242f3fd64ad2e96d",
     "cpppj/src/o/RawGeyserLifetime.h": "9ce17cdf6115fb1f10f384571e63eba497270df25cce5cd18153e656f57e8cc3",
     "cpppj/src/o/RawGeyserLifetime.cpp": "f5ae34492f817e15aa2a9bcba3de2dac8d92dd51ea36ed011c1c9ed36435add3",
-    "cpppj/src/client/RawCampaignSession.cpp": "9c1ead4136a7d61433a681f085afe66f950c62d289bf3e7208a67b8c08790e6c",
+    "cpppj/src/client/RawCampaignSession.cpp": "4b17554eb50322a2c0fe65c48de412eccb75c812441273d4f61f4ca21252d5c5",
     "cpppj/src/client/RawCampaignSession.h": "44468ab67ff1827853b0bd59516259d7439e52b67703f9276db78784ec303a68",
-    "cpppj/src/CMakeLists.txt": "fa951043f560d3a4a68312ab64ffc3fa08625510011cd0052bb5281abf4baccd",
-    "cpppj/tests/CMakeLists.txt": "07621f6f2974e46d0f8477970918f8f2ae951de670682d133c2e5df4a3c0fa38",
-    "cpppj/tests/CampaignSessionTests.cpp": "0b8e4b857533d700519b5063d77be975008fc315eee10e0411e591bfe8e65498",
+    "cpppj/src/CMakeLists.txt": "83c2c9e1e8697014f89ed77fd74253abb2e73e3f75465750aef0fd8d362d0d3d",
+    "cpppj/tests/CMakeLists.txt": "d0656eac4cb00a9da5efdf9541b80ebfa4a6e09c279bc9c84950a348a08544c8",
+    "cpppj/tests/CampaignSessionTests.cpp": "e31ee73e26df5e5c3a8aa32814529a0433759f371c3ca9fb5196b89841f5bd12",
     "cpppj/tests/CarrierMiningTests.cpp": "d5ad45133e2cd7b5eb4086d75ea758a08015f520bdede0412e3f1fadbda756c7",
     "cpppj/tests/GeyserLifetimeTests.cpp": "2db2753066f8ef1eff850d11fe7e5a43354d5fa79c3c16bc17167f1a7d35b2e1",
     "tools/decomp_carrier_mining.py": "78cae56c40bdc066a033af750a00b8349d2504696b383db9a65239821ce27c13",
@@ -32,7 +32,7 @@
     "cpppj/src/o/RawConstructionEffects.cpp": "97b8adc3cfc9f35e84579d29af9ef4f982f24c06fee77c1dac9d40774cf5c739",
     "cpppj/src/o/RawCarrierArrival.h": "a6fa676986cd46235b5cfdb1646e78554d76f0ee7ee8b002e7d3edac258de406",
     "cpppj/src/o/RawCarrierArrival.cpp": "1e63d7f9cb0a18ddb4a10b7c642e54873e8f46ab98deec6d3f63b334199979df",
-    "cpppj/src/o/RawPathProcess.cpp": "c95903a9fc3c1507ca4b45f7fa93b5d9b2f2626fe050e236850eca21f5581624",
+    "cpppj/src/o/RawPathProcess.cpp": "75557b1b9c481c089b466b9e4dd9c27aadae28905e43379b5c7ac7cc8bcd7683",
     "cpppj/src/o/RawBattleBroadcast.cpp": "5a6c9f8eb6644578a40448fb81ba1522028e9060cf310e217ba7e50baeb9e2f7",
     "cpppj/src/o/RawPacketDispatch.cpp": "3f9628dad2707355aa7e10419ebbab17e25578e595d2335e03d48d1a1303928a"
   },
@@ -398,6 +398,43 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "c0b79109ad4243ab0681e441724a0e4b8293f70194a37d46c80c746444e2bd10",
           "current": "0b8e4b857533d700519b5063d77be975008fc315eee10e0411e591bfe8e65498"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 162,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "9c1ead4136a7d61433a681f085afe66f950c62d289bf3e7208a67b8c08790e6c",
+          "current": "4b17554eb50322a2c0fe65c48de412eccb75c812441273d4f61f4ca21252d5c5"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "fa951043f560d3a4a68312ab64ffc3fa08625510011cd0052bb5281abf4baccd",
+          "current": "83c2c9e1e8697014f89ed77fd74253abb2e73e3f75465750aef0fd8d362d0d3d"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "07621f6f2974e46d0f8477970918f8f2ae951de670682d133c2e5df4a3c0fa38",
+          "current": "d0656eac4cb00a9da5efdf9541b80ebfa4a6e09c279bc9c84950a348a08544c8"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "0b8e4b857533d700519b5063d77be975008fc315eee10e0411e591bfe8e65498",
+          "current": "e31ee73e26df5e5c3a8aa32814529a0433759f371c3ca9fb5196b89841f5bd12"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/o/RawPathProcess.cpp",
+          "previous": "c95903a9fc3c1507ca4b45f7fa93b5d9b2f2626fe050e236850eca21f5581624",
+          "current": "75557b1b9c481c089b466b9e4dd9c27aadae28905e43379b5c7ac7cc8bcd7683"
         }
       ]
     }

@@ -1,0 +1,25 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-18",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16"
+  },
+  "uniqueInputs": 233,
+  "normalReturns": {
+    "0042ac90": 274,
+    "0042ae80": 192
+  },
+  "instructions": 32326,
+  "precisionDifferentInputs": [],
+  "boundaries": "42ac90/42ae80와 실제 TYPE getter/CRT 몸체. 생성·가상Pop/Unpop/삭제/check·큰Damageable후처리/전처리·contained finder/485e40은 명시효과 경계다. C++는 기존 실제 Carrier/contained finder를 재사용한다. GP/retN/canary/SEH/x87/코드·쓰기범위/150BYTE·현재전역·효과 전체를 대조한다. 게임·OS·전체수명 검증이 아니다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_balloon_body.py": "d4384ab0eb23267a955aa6458a15517444ffe28941961012f2d688b2ff8293f9",
+    "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+    "tools/decomp_cursor_position.py": "e15bcdbc4c6be9c131c30f15416c945d650dba9f7dc6def404b47f63c635c212",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "cpppj/tests/fixtures/balloon-body-x86.tsv": "025f0a64da997418e805812250c16a752b989ebb4dd7154aeab8ea5df9be19fa"
+  }
+}

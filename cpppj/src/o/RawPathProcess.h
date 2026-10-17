@@ -18,6 +18,7 @@ struct RawPathProcessState {
     std::array<std::uint32_t,5> groundTypes{158,137,156,135,187}; // 00427da0의 허용 타입이며 CD는 마지막 empty를 제외한다.
     std::uint32_t blockingGenus{0x10444200}; // 005325b4/CD0053fc28: 도착 칸의 원본 겹침 제거 부류다.
     std::uint32_t wormProcess{40},sunWalkerType{133},emptyType{187}; // PATCH40의 실제 부착 검사와 현재 두 부모 타입이다.
+    std::uint32_t balloonProcess{42},balloonType{111}; //00541118/00541214의 현재 벌룬 이동·화염 타입이다.
 };
 // 실제 가상 효과 및 아직 복원되지 않은 큰 하위 몸체의 경계다. 누락을 실행 가능한 빈 효과로 바꾸지 않는다.
 struct RawPathProcessHooks {
@@ -32,6 +33,7 @@ struct RawPathProcessHooks {
     std::function<void(Sid,RawPathPoint,std::uint32_t,std::uint32_t)> clearBlocked; // 00443800/CD004d2450의 실제 겹침 정리다.
     std::function<void(RawPathRuntime&,Sid,std::uint32_t)> cleanup; // 0048aa00의 예약·결정·사제 의식·대상 삭제 하위 몸체다.
     std::function<std::uint64_t()> observationStamp; // CD의 진단 시계 읽기이며 게임 now와 별개다.
+    std::function<void(float,float)> balloonFlame; //벌룬42의 현재 위치 balloonFlame.wav/loop0 장치다.
 };
 // same pool/hash/spot/Kernel 위에서 원본 이동 프로세스를 실행한다. 별도 좌표/공간 복사본을 만들지 않는다.
 class RawPathProcess final:public SquidProcess {
@@ -39,7 +41,7 @@ public:
     // 타입 표·프레임·실제 SHP·지도·상태는 프로세스보다 오래 살아야 한다. 생성만으로 부착하지 않는다.
     RawPathProcess(SidPool& pool,const SquidHash& hash,std::span<const RiftTypeRecord> types,
         std::span<const RiftTypeFrames> frames,std::span<const SquidDisplayShape> shapes,std::span<const std::uint8_t> spots,
-        RawPathProcessState& state,RawPathProcessHooks hooks,bool priest,bool flying=false,bool worm=false); // worm40은54와 같은 frame/도착/Init을 사용한다.
+        RawPathProcessState& state,RawPathProcessHooks hooks,bool priest,bool flying=false,bool worm=false,bool balloon=false); //42는 별도 Init/고도 프레임과 기존 공통 도착을 사용한다.
     std::uint32_t MovementType() const; // 실제 종류가 사용하는 현재23/39/54 프로세스 번호다.
     // 원본 destructor는 deadFlag를 켠다. shared watch는 부모 callback이 this를 지운 뒤의 역참조를 막는다.
     ~RawPathProcess() override;
@@ -97,6 +99,7 @@ private:
     bool priest_{};
     bool flying_{}; // 실제48af00/48af90/48af50 분배이며 false generic23과 다르다.
     bool worm_{}; // 실제50e4c4의 공유48bb40/48bd90과 별도48bde0 부착을 선택한다.
+    bool balloon_{}; //50e2b8의48acd0/48ad60/48ad20과 기존48b340 도착을 사용한다.
     // runtime_: 원본 필드 배치를 사용하는 실행 중 상태.
     RawPathRuntime runtime_;
     std::shared_ptr<bool> alive_=std::make_shared<bool>(true); // 원본 destructor의 stack deadFlag 대체이며 게임 상태를 대체하지 않는다.

@@ -9,11 +9,11 @@
   "edition": "PATCH10.78",
   "baseCommit": "3330211",
   "currentSources": {
-    "cpppj/src/client/RawCampaignSession.cpp": "9c1ead4136a7d61433a681f085afe66f950c62d289bf3e7208a67b8c08790e6c",
+    "cpppj/src/client/RawCampaignSession.cpp": "4b17554eb50322a2c0fe65c48de412eccb75c812441273d4f61f4ca21252d5c5",
     "cpppj/src/client/RawCampaignSession.h": "44468ab67ff1827853b0bd59516259d7439e52b67703f9276db78784ec303a68",
     "cpppj/src/client/RawCampaignParticles.cpp": "b74ba0cfd8ffc50d8d8435f7c257631fa061881afe9312c2297dcc5449ed4270",
     "cpppj/src/client/RawCampaignParticles.h": "b687c247c1eaea29b7a41da06a3194aad176d46855f7005e81d75002f76971ce",
-    "cpppj/tests/CampaignSessionTests.cpp": "0b8e4b857533d700519b5063d77be975008fc315eee10e0411e591bfe8e65498"
+    "cpppj/tests/CampaignSessionTests.cpp": "e31ee73e26df5e5c3a8aa32814529a0433759f371c3ca9fb5196b89841f5bd12"
   },
   "protectedFileSha256": {
     "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
@@ -592,6 +592,25 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "c0b79109ad4243ab0681e441724a0e4b8293f70194a37d46c80c746444e2bd10",
           "current": "0b8e4b857533d700519b5063d77be975008fc315eee10e0411e591bfe8e65498"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 162,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "9c1ead4136a7d61433a681f085afe66f950c62d289bf3e7208a67b8c08790e6c",
+          "current": "4b17554eb50322a2c0fe65c48de412eccb75c812441273d4f61f4ca21252d5c5"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "0b8e4b857533d700519b5063d77be975008fc315eee10e0411e591bfe8e65498",
+          "current": "e31ee73e26df5e5c3a8aa32814529a0433759f371c3ca9fb5196b89841f5bd12"
         }
       ]
     }

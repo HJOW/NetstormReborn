@@ -24,8 +24,8 @@
     "cpppj/src/o/RawMetadisplayDirty.cpp": "078f2fd93f92fbaf8ca11d08ff7b4677db29b812cbeefa4d60e5473ec968f897",
     "cpppj/src/o/RawPathData.h": "21faf1f4095819996b79996b5036c731a06aac44edb3e5b358d1f3ebb1047430",
     "cpppj/src/o/RawPathData.cpp": "38a2665489e998835caa07cbedb81516fae6f5e33270529a6d40f5d76d3a6a45",
-    "cpppj/src/o/RawPathProcess.h": "4143e265d2a5d103435f288bcc75f1257281c8d3bdc38f688a6e548a433a035e",
-    "cpppj/src/o/RawPathProcess.cpp": "c95903a9fc3c1507ca4b45f7fa93b5d9b2f2626fe050e236850eca21f5581624",
+    "cpppj/src/o/RawPathProcess.h": "2aebb2b4d2bbc3aaf2b582660264fd0af088a363b32161b6157d05f05dcce924",
+    "cpppj/src/o/RawPathProcess.cpp": "75557b1b9c481c089b466b9e4dd9c27aadae28905e43379b5c7ac7cc8bcd7683",
     "cpppj/src/o/RawFactoryPostPop.h": "1a58f8d6ba6140a812a419ab86e14793911c5a542d6ae94ed430f6f3fbbbdeb7",
     "cpppj/src/o/RawFactoryPostPop.cpp": "a1eda413fc18691e1acbccebfeec0b80b0caa7d816b0d0f23da50006f3cff262",
     "cpppj/src/o/RawAssetPostPop.h": "5fa157f1f186e6816d8e5515bad7a70e4a661c16b21b3f363ac71174127798d1",
@@ -284,6 +284,25 @@
           "path": "cpppj/src/o/SidPool.h",
           "previous": "5aae3c23e7376b0c1c3da5a96e736738335d1e1bf060db41e1b748535ff75ee1",
           "current": "21d77e1995b8697dba3f4e6cc9ae16501c573f417fd7019cf4a459b0e6fe521a"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 162,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/o/RawPathProcess.h",
+          "previous": "4143e265d2a5d103435f288bcc75f1257281c8d3bdc38f688a6e548a433a035e",
+          "current": "2aebb2b4d2bbc3aaf2b582660264fd0af088a363b32161b6157d05f05dcce924"
+        },
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/o/RawPathProcess.cpp",
+          "previous": "c95903a9fc3c1507ca4b45f7fa93b5d9b2f2626fe050e236850eca21f5581624",
+          "current": "75557b1b9c481c089b466b9e4dd9c27aadae28905e43379b5c7ac7cc8bcd7683"
         }
       ]
     }

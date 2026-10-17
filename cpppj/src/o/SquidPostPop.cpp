@@ -4,6 +4,7 @@
 #include "o/RawForcefieldLifecycle.h"
 #include "o/RawCarrierPostPop.h"
 #include "o/RawCarrierSteal.h"
+#include "o/RawBalloonBody.h"
 #include "o/RawAssetPostPop.h"
 #include "o/RawFactoryPostPop.h"
 #include "o/RawRunePostPop.h"
@@ -78,7 +79,10 @@ bool SquidPostPop::HandlesIsland(Sid sid) const {
     return islandPrefix_ && Vtable(pool_.Slot(sid))==expected;
 }
 // 파생 표는 서로 다른 주소이므로 한 종류만 참이 된다.
-bool SquidPostPop::HandlesDerived(Sid sid) const { return HandlesCarrierSteal(sid) || HandlesBridge(sid) || HandlesIsland(sid) || HandlesSurface(sid) || HandlesPriest(sid) || HandlesForcefield(sid) || HandlesCarrier(sid) || HandlesDamageable(sid) || HandlesAsset(sid) || HandlesFactory(sid) || HandlesRune(sid) || HandlesDais(sid) || HandlesDude(sid) || HandlesPlayer(sid) || HandlesBuried(sid) || HandlesFlyer(sid); }
+bool SquidPostPop::HandlesDerived(Sid sid) const { return HandlesCarrierSteal(sid) || HandlesBridge(sid) || HandlesIsland(sid) || HandlesSurface(sid) || HandlesPriest(sid) || HandlesForcefield(sid) || HandlesCarrier(sid) || HandlesDamageable(sid) || HandlesAsset(sid) || HandlesFactory(sid) || HandlesRune(sid) || HandlesDais(sid) || HandlesDude(sid) || HandlesPlayer(sid) || HandlesBuried(sid) || HandlesFlyer(sid) || HandlesBalloon(sid); }
+// 정확한5040c0과 같은 풀의 장기 몸체를 확인한다.
+void SquidPostPop::SetBalloonPostPop(const RawBalloonBody* postPop) { if (postPop && &postPop->Pool()!=&pool_) throw std::invalid_argument("벌룬 PostPop/공통 풀 불일치");balloonPostPop_=postPop; }
+bool SquidPostPop::HandlesBalloon(Sid sid) const { return balloonPostPop_ && balloonPostPop_->Handles(sid); } //동일 생성자 표 이외는 처리하지 않는다.
 // 단일 풀과 실제 전체 몸체 둘 다 확인한다.
 void SquidPostPop::SetFlyerPostPop(const RawFlyerPostPop* postPop) { if (postPop && &postPop->Pool()!=&pool_) throw std::invalid_argument("비행 PostPop/공통 풀 불일치");flyerPostPop_=postPop; }
 bool SquidPostPop::HandlesFlyer(Sid sid) const { return flyerPostPop_ && flyerPostPop_->Handles(sid); } // 다른 비행 파생 표를 임의로 허용하지 않는다.
@@ -211,6 +215,7 @@ void SquidPostPop::Validate(Sid sid,std::uint32_t flags,const RawGraphPop* pop) 
     if (HandlesDude(sid)) dudePostPop_->Validate(sid,flags);
     if (HandlesPlayer(sid)) playerPostPop_->Validate(sid,flags,pop);
     if (HandlesBuried(sid)) buriedPostPop_->Validate(sid,flags,pop);
+    if (HandlesBalloon(sid)) balloonPostPop_->Validate(sid,flags);
     if (HandlesForcefield(sid)) forcefieldPostPop_->Validate(sid);
     if (HandlesAsset(sid)) assetPostPop_->Validate(sid,flags,pop);
     if (HandlesFactory(sid)) factoryPostPop_->Validate(sid,flags,pop);
@@ -247,6 +252,8 @@ void SquidPostPop::ValidateBase(Sid sid,std::uint32_t flags,const RawGraphPop* p
 // 성공한 공간 Pop의 flags로 가상 후처리를 분배한다. 전체 사제 wrapper는 자기 공통 깊이를 감소시킨다.
 void SquidPostPop::Activate(Sid sid,std::uint32_t flags) {
     Validate(sid,flags);const auto before=state_.depth; ++state_.depth;
+    // 벌룬의 재귀 그림자 Pop은 내부 Damageable을 통해 각 공통 깊이를 끝낸다.
+    if (HandlesBalloon(sid)) { balloonPostPop_->PostPop(sid,flags);if (state_.depth!=before) throw std::logic_error("벌룬 Activate 공통 깊이 불일치");return; }
     // 맨 오 워는 자신의 그림자 재귀 Pop과 Damageable 뒤 공통 깊이를 한 번 줄인다.
     if (HandlesFlyer(sid)) {
         flyerPostPop_->PostPop(sid,flags);

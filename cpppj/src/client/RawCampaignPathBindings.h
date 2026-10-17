@@ -21,6 +21,7 @@ struct RawCampaignPathEffects {
     std::function<std::uint64_t()> observationStamp; // CD 관찰 시계이며 원본 게임 시각과 별개다. 미연결이면 기존 Process의0 입력을 유지한다.
     std::function<std::uint32_t(o::Sid,std::uint32_t,std::uint32_t)> constructionArrival; // 검증한134/105의 실제 부모 도착 분배다. 필요한 시작에서만 요구한다.
     std::function<std::uint32_t(o::Sid,std::uint32_t,std::uint32_t)> carrierArrival; // 썬 워커/empty의 실제429800을 같은 Carrier 모듈로 호출한다.
+    std::function<void(float,float)> balloonFlame; //현재 위치의 실제 balloonFlame.wav/loop0 장치다.
 };
 // 경로 계산과 프레임 실행을 새 이동 모형으로 대체하지 않는 같은 월드 연결부다.
 // 참조하는 월드/사제/도착/cleanup/상태/effects는 이 객체 및 부착한 Path보다 오래 살아야 한다.

@@ -1,0 +1,2193 @@
+{
+  "unit": 162,
+  "date": "2026-10-18",
+  "host": "HJOW-Athlon",
+  "baseCommit": "e7d9ff9",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16"
+  },
+  "status": "벌룬42와 그림자 수명 연결. 전체11스테이지 자연 플레이 목표는 미완료.",
+  "currentSources": {
+    "cpppj/src/CMakeLists.txt": "83c2c9e1e8697014f89ed77fd74253abb2e73e3f75465750aef0fd8d362d0d3d",
+    "cpppj/src/client/RawCampaignSession.cpp": "4b17554eb50322a2c0fe65c48de412eccb75c812441273d4f61f4ca21252d5c5",
+    "cpppj/src/client/RawCampaignPathBindings.cpp": "0d36db062813bc9ea5b204fd06f1cf4bc0c43b6f71ede35aae851285fdbdcdb1",
+    "cpppj/src/client/RawCampaignPathBindings.h": "6ac357c4b2724907eb183be465f5f031f7164c2fdbc474de308d12acf4edc329",
+    "cpppj/src/o/RawPathRuntime.cpp": "4f051a4e5c50de3a99cb856c80dcccf7988ee1000fec9f66942f6e4e8999e639",
+    "cpppj/src/o/RawPathRuntime.h": "92cb4cce037b704ecb6f2b2910c97fdf5634a519ba181931f357c6383529532c",
+    "cpppj/src/o/RawPathProcess.cpp": "75557b1b9c481c089b466b9e4dd9c27aadae28905e43379b5c7ac7cc8bcd7683",
+    "cpppj/src/o/RawPathProcess.h": "2aebb2b4d2bbc3aaf2b582660264fd0af088a363b32161b6157d05f05dcce924",
+    "cpppj/src/o/RawPathStart.cpp": "9dbe404e4d377a362213cffd1da8a42b65816aaf54830fc5708379b9d528edab",
+    "cpppj/src/o/SquidPostPop.cpp": "0e6f552bafeab1be94ba07919b928535e774ce54e121d775df514c9b6645d4e6",
+    "cpppj/src/o/SquidPostPop.h": "b4bfb4886068b9dd98bed52b9f56f17e1c25e50b123b4fdd6b165f2054bcdf1d",
+    "cpppj/tests/CMakeLists.txt": "d0656eac4cb00a9da5efdf9541b80ebfa4a6e09c279bc9c84950a348a08544c8",
+    "cpppj/tests/CampaignSessionTests.cpp": "e31ee73e26df5e5c3a8aa32814529a0433759f371c3ca9fb5196b89841f5bd12",
+    "cpppj/src/o/RawBalloonFrame.cpp": "71390bf0c48ed94bd6381b15c812b5a6702cd94e02528692f7ac5d1b6f18ab05",
+    "cpppj/src/o/RawBalloonFrame.h": "3c50521f9a4a132e33b627fcf609e6028ff2cfbbc6b757434f06b4b3d7b90c8d",
+    "cpppj/src/o/RawBalloonBody.cpp": "ae406292ac8d2be18bbdd2aaf46dc0a845e3b06c989d51af4219d722a5881f61",
+    "cpppj/src/o/RawBalloonBody.h": "496b1cef9c7a0f32290e2244e978f4b3133ca08d159811adda5810ccf9807c34",
+    "cpppj/tests/BalloonPathTests.cpp": "da26217d95fa22d8b6b3384472d64bcb412e1ecd841ca79f37433ed0f00fa796",
+    "tools/decomp_balloon_path.py": "804d7ec6d49b050d5139262fd7ca794c08db1deeb0348e9f8f489db21c6984e4",
+    "tools/decomp_balloon_body.py": "d4384ab0eb23267a955aa6458a15517444ffe28941961012f2d688b2ff8293f9",
+    "tools/decomp_balloon_body_height.py": "79cc5c1919957d33087a4be06726d699a5a130c0f2d8a094dca2ebcea49c5fc3",
+    "tools/cpp_goal_stage_entry_smoke.py": "149e70359c33cad3b9fdc12b8ead20e5904c88be617a6303820dd780e2636388"
+  },
+  "nativeReports": {
+    "cpppj/balloon-path.json": "673e8391dae024e4f6f3a806651bb91ddf499f715a51478490e3b56d4b695d7d",
+    "cpppj/balloon-body.json": "216a6b3b610e0a69aabd2fd978378c23e88a65cfea619fbad3e1d551ea6b1e11",
+    "cpppj/balloon-body-height.json": "7922112158fba332246589c91d3aaa858db4ebd50c7ce75eead8ea673059715f"
+  },
+  "nativeContext": {
+    "cpppj/balloon-path.json": {
+      "host": "HJOW-Athlon",
+      "date": "2026-10-18",
+      "lastPreciseDecompile": {
+        "host": "HJOW-Athlon",
+        "date": "2026-10-16"
+      },
+      "uniqueInputs": 688,
+      "normalReturns": {
+        "0048be70": 1376,
+        "0048acd0": 288,
+        "0048ad60": 1076
+      },
+      "instructions": 14038870,
+      "nativeCalls": {
+        "0048be70": 1376,
+        "0048b2c0": 1370,
+        "0048acd0": 288,
+        "00488d00": 288,
+        "004882e0": 1008,
+        "0041ce90": 288,
+        "0048ad60": 1076,
+        "0048a330": 1056,
+        "0041bfb0": 1348,
+        "004e49c0": 562,
+        "00425e20": 390,
+        "00488f40": 390,
+        "00488f80": 380,
+        "0041cd60": 190,
+        "00488f10": 190,
+        "004ac550": 146,
+        "0049a840": 146
+      },
+      "precisionDifferentInputs": [],
+      "vtables": {
+        "0x50e2b8": [
+          "0x48b6a0",
+          "0x4437f0",
+          "0x4895b0",
+          "0x48aa00",
+          "0x40b380",
+          "0x4437f0",
+          "0x48ad60",
+          "0x480260",
+          "0x48acd0",
+          "0x48b340",
+          "0x489ff0",
+          "0x48ad20",
+          "0x48a200"
+        ],
+        "0x50e284": [
+          "0x48b6a0",
+          "0x4437f0",
+          "0x4895b0",
+          "0x48aa00",
+          "0x40b380",
+          "0x4437f0",
+          "0x48a950",
+          "0x480260",
+          "0x48bb10",
+          "0x48b340",
+          "0x489ff0",
+          "0x48b680",
+          "0x48a200"
+        ],
+        "0x50e2ec": [
+          "0x48b6a0",
+          "0x4437f0",
+          "0x4895b0",
+          "0x48aa00",
+          "0x40b380",
+          "0x4437f0",
+          "0x48af90",
+          "0x480260",
+          "0x48af00",
+          "0x48b340",
+          "0x489ff0",
+          "0x48af50",
+          "0x48a200"
+        ]
+      },
+      "boundaries": "48be70/48b2c0/48acd0/488d00/48ad60와 실제 Step/좌표·각도·TYPE/CRT 하위를 실행했다. new/Halt/큰도착/가상공간/음향은 명시경계다. 전체100080BYTE/부모50BYTE/관찰전역/효과를 대조한다. GP/retN/canary/SEH/x87/코드·읽기·쓰기 범위를 검사한다. 원본게임·OS·창/전체42 이동 검증이 아니다.",
+      "sha256": {
+        "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "tools/decomp_balloon_path.py": "804d7ec6d49b050d5139262fd7ca794c08db1deeb0348e9f8f489db21c6984e4",
+        "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+        "tools/decomp_cursor_position.py": "e15bcdbc4c6be9c131c30f15416c945d650dba9f7dc6def404b47f63c635c212",
+        "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+        "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+        "cpppj/tests/fixtures/balloon-path-x86.tsv": "be32994968c78fb4b3b365cd90e7e8064ff687c62b4f7b3269794f0eef4a5c30"
+      }
+    },
+    "cpppj/balloon-body.json": {
+      "host": "HJOW-Athlon",
+      "date": "2026-10-18",
+      "lastPreciseDecompile": {
+        "host": "HJOW-Athlon",
+        "date": "2026-10-16"
+      },
+      "uniqueInputs": 233,
+      "normalReturns": {
+        "0042ac90": 274,
+        "0042ae80": 192
+      },
+      "instructions": 32326,
+      "precisionDifferentInputs": [],
+      "boundaries": "42ac90/42ae80와 실제 TYPE getter/CRT 몸체. 생성·가상Pop/Unpop/삭제/check·큰Damageable후처리/전처리·contained finder/485e40은 명시효과 경계다. C++는 기존 실제 Carrier/contained finder를 재사용한다. GP/retN/canary/SEH/x87/코드·쓰기범위/150BYTE·현재전역·효과 전체를 대조한다. 게임·OS·전체수명 검증이 아니다.",
+      "sha256": {
+        "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "tools/decomp_balloon_body.py": "d4384ab0eb23267a955aa6458a15517444ffe28941961012f2d688b2ff8293f9",
+        "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+        "tools/decomp_cursor_position.py": "e15bcdbc4c6be9c131c30f15416c945d650dba9f7dc6def404b47f63c635c212",
+        "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+        "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+        "cpppj/tests/fixtures/balloon-body-x86.tsv": "025f0a64da997418e805812250c16a752b989ebb4dd7154aeab8ea5df9be19fa"
+      }
+    },
+    "cpppj/balloon-body-height.json": {
+      "host": "HJOW-Athlon",
+      "date": "2026-10-18",
+      "lastPreciseDecompile": {
+        "host": "HJOW-Athlon",
+        "date": "2026-10-16"
+      },
+      "uniqueInputs": 256,
+      "normalReturns": {
+        "0042ac90": 512
+      },
+      "instructions": 51836,
+      "precisionDifferentInputs": [],
+      "boundaries": "42ac90의 같은 원문/경계를 재사용한다. 기존233입력/fixture/관측기는 변경하지 않는다. C++ 결과를 읽지 않는다.",
+      "sha256": {
+        "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "tools/decomp_balloon_body_height.py": "79cc5c1919957d33087a4be06726d699a5a130c0f2d8a094dca2ebcea49c5fc3",
+        "tools/decomp_balloon_body.py": "d4384ab0eb23267a955aa6458a15517444ffe28941961012f2d688b2ff8293f9",
+        "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+        "tools/decomp_cursor_position.py": "e15bcdbc4c6be9c131c30f15416c945d650dba9f7dc6def404b47f63c635c212",
+        "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+        "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+        "cpppj/tests/fixtures/balloon-body-height-x86.tsv": "eb760c5a444713f601fa37c83cb69c1f5d9b2fab5bf66bdef294cf680f88d7b5"
+      }
+    }
+  },
+  "protected": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "AGENTS.md": "7addbf9b31c42f29aab7c93faa865eb6de8590a600d17202a297cf7122bdf979",
+    "LEFT_JOBS.dotnetpj.md": "0c067e1d12879dbf2212cbd64c8f9f60e65b590df910418f025027ed84f80ec2"
+  },
+  "originalFixturesBeforeCppReplay": {
+    "cpppj/tests/fixtures/balloon-path-x86.tsv": "be32994968c78fb4b3b365cd90e7e8064ff687c62b4f7b3269794f0eef4a5c30",
+    "cpppj/tests/fixtures/balloon-body-x86.tsv": "025f0a64da997418e805812250c16a752b989ebb4dd7154aeab8ea5df9be19fa",
+    "cpppj/tests/fixtures/balloon-body-height-x86.tsv": "eb760c5a444713f601fa37c83cb69c1f5d9b2fab5bf66bdef294cf680f88d7b5"
+  },
+  "bindingEvidence": {
+    "0x48ad20": [
+      "0048ad20 mov eax, dword ptr [0x541118]",
+      "0048ad25 push esi",
+      "0048ad26 push edi",
+      "0048ad27 mov edi, dword ptr [esp + 0xc]",
+      "0048ad2b push eax",
+      "0048ad2c push edi",
+      "0048ad2d mov esi, ecx",
+      "0048ad2f call 0x4b27a0",
+      "0048ad34 mov ecx, dword ptr [esp + 0x1c]",
+      "0048ad38 mov edx, dword ptr [esp + 0x18]",
+      "0048ad3c mov eax, dword ptr [0x541118]",
+      "0048ad41 add esp, 8",
+      "0048ad44 push ecx",
+      "0048ad45 push edx",
+      "0048ad46 push edi",
+      "0048ad47 push eax",
+      "0048ad48 mov ecx, esi",
+      "0048ad4a call 0x41bd20",
+      "0048ad4f pop edi",
+      "0048ad50 pop esi"
+    ],
+    "0x48acd0": [
+      "0048acd0 mov eax, dword ptr [esp + 4]",
+      "0048acd4 imul eax, eax, 0x32",
+      "0048acd7 push esi",
+      "0048acd8 mov esi, ecx",
+      "0048acda mov ecx, dword ptr [0x5c8464]",
+      "0048ace0 movzx edx, byte ptr [eax + ecx + 0x1e]",
+      "0048ace5 add eax, ecx",
+      "0048ace7 mov ecx, dword ptr [esp + 0x10]",
+      "0048aceb push edx",
+      "0048acec mov edx, dword ptr [esp + 0x10]",
+      "0048acf0 push 0x2c",
+      "0048acf2 push ecx",
+      "0048acf3 mov ecx, dword ptr [eax + 0x12]",
+      "0048acf6 push edx",
+      "0048acf7 mov edx, dword ptr [eax + 0xe]",
+      "0048acfa push ecx",
+      "0048acfb push edx",
+      "0048acfc lea eax, [esi + 0x10]",
+      "0048acff push eax",
+      "0048ad00 call 0x488d00",
+      "0048ad05 add esp, 0x1c",
+      "0048ad08 mov dword ptr [esi + 0x186c0], 0",
+      "0048ad12 pop esi",
+      "0048ad13 ret 0x14"
+    ],
+    "0x42ad52": [
+      "0042ad52 movzx eax, byte ptr [esi + 0x1e]",
+      "0042ad56 mov ecx, dword ptr [esi + 0xe]",
+      "0042ad59 mov edx, dword ptr [esi + 0x12]",
+      "0042ad5c mov dword ptr [esp + 0x10], eax",
+      "0042ad60 mov dword ptr [esp + 0x1c], ecx",
+      "0042ad64 fild dword ptr [esp + 0x10]",
+      "0042ad68 mov dword ptr [esp + 0x20], edx",
+      "0042ad6c mov edx, dword ptr [edi]",
+      "0042ad6e push 0",
+      "0042ad70 fmul dword ptr [0x504194]",
+      "0042ad76 mov byte ptr [edi + 0x23], bl",
+      "0042ad79 fld dword ptr [0x500ee4]",
+      "0042ad7f fmul st(1)",
+      "0042ad81 fadd dword ptr [esp + 0x20]",
+      "0042ad85 fadd dword ptr [0x5022ec]",
+      "0042ad8b fstp dword ptr [esp + 0x14]",
+      "0042ad8f mov ecx, dword ptr [esp + 0x14]",
+      "0042ad93 fadd dword ptr [esp + 0x24]",
+      "0042ad97 fsub dword ptr [0x504190]",
+      "0042ad9d fstp dword ptr [esp + 0x18]",
+      "0042ada1 mov eax, dword ptr [esp + 0x18]",
+      "0042ada5 push eax",
+      "0042ada6 push ecx",
+      "0042ada7 mov ecx, edi",
+      "0042ada9 call dword ptr [edx + 0x90]"
+    ],
+    "0x42ae80": [
+      "0042ae80 push esi",
+      "0042ae81 mov esi, ecx",
+      "0042ae83 mov ax, word ptr [esi + 8]",
+      "0042ae87 test ax, ax",
+      "0042ae8a je 0x42aea0",
+      "0042ae8c movzx ecx, ax",
+      "0042ae8f mov eax, dword ptr [0x5c8464]",
+      "0042ae94 imul ecx, ecx, 0x32",
+      "0042ae97 add ecx, eax",
+      "0042ae99 mov eax, dword ptr [ecx]",
+      "0042ae9b push 0",
+      "0042ae9d call dword ptr [eax + 0x10]",
+      "0042aea0 mov ecx, dword ptr [esp + 8]",
+      "0042aea4 push ecx",
+      "0042aea5 mov ecx, esi",
+      "0042aea7 call 0x44b4b0",
+      "0042aeac mov eax, dword ptr [0x540bc4]",
+      "0042aeb1 test eax, eax",
+      "0042aeb3 je 0x42aecb",
+      "0042aeb5 push 0",
+      "0042aeb7 push 0",
+      "0042aeb9 push 1",
+      "0042aebb mov ecx, esi",
+      "0042aebd call 0x4ac9f0",
+      "0042aec2 test eax, eax",
+      "0042aec4 je 0x42aecb",
+      "0042aec6 call 0x485e40",
+      "0042aecb pop esi"
+    ],
+    "parentVtable": {
+      "0x10": "0x4af780",
+      "0x14": "0x42ae80",
+      "0x18": "0x44b9e0",
+      "0x20": "0x42ac90",
+      "0x38": "0x42a5f0",
+      "0x3c": "0x429800",
+      "0x40": "0x4437f0",
+      "0x44": "0x427750",
+      "0x48": "0x4afe50",
+      "0x90": "0x4b02d0",
+      "0xcc": "0x426fc0"
+    },
+    "originalSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "typeConstructors": {
+      "42": "0x48be70",
+      "111": "0x42b010",
+      "141": "0x42b010"
+    }
+  },
+  "validation": {
+    "build": {
+      "log": "extracted/goal-balloon-path-20261018-build4.log",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0
+    },
+    "focused": {
+      "log": "extracted/goal-balloon-path-20261018-focused2.log",
+      "tests": 2
+    },
+    "integration": {
+      "log": "extracted/goal-balloon-path-20261018-integration3.log",
+      "tests": 1
+    },
+    "full": {
+      "tests": 1643,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "seconds": 211.68,
+      "totalSeconds": 211.72
+    },
+    "audit": {
+      "tools": 86,
+      "passed": 75,
+      "knownFailures": 11,
+      "newFailures": 0
+    },
+    "entries": {
+      "passed": 5,
+      "originalsUnchanged": true
+    }
+  },
+  "integrationLog": "실제 벌룬 TYPE111 42/고도/그림자/착륙/삭제 294프레임 통과\r\n실제 벌룬 TYPE141 42/고도/그림자/착륙/삭제 194프레임 통과\r\n[ OK ] CampaignSession_BalloonFlightShadowAndLandingThroughActualKernel\r\n1 test(s), 0 failed check(s)\r\n",
+  "goalEntryContext": {
+    "scope": "CLI --mission/실제 UI 버튼으로11개 플레이 진입. 사용자 메뉴 선택·자연 명령·승패·저장·완주/원본 전체 동일성은 미검증.",
+    "runs": [
+      {
+        "mission": "tutorial1",
+        "passed": true,
+        "clicks": [
+          "MORE",
+          "OK"
+        ],
+        "observations": [
+          {
+            "frame": 4,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A."
+            ],
+            "controls": {
+              "MORE": [
+                "1",
+                "0",
+                "474",
+                "494",
+                "549",
+                "514",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial1",
+              "Tutorial",
+              "3"
+            ],
+            "raw_world": [
+              "0.188",
+              "4",
+              "6",
+              "0",
+              "0",
+              "5000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial1/0",
+            "exitCode": 0
+          },
+          {
+            "frame": 6,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A1."
+            ],
+            "controls": {
+              "BACK": [
+                "1",
+                "0",
+                "435",
+                "417",
+                "510",
+                "437",
+                "0"
+              ],
+              "OK": [
+                "1",
+                "0",
+                "514",
+                "417",
+                "589",
+                "437",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial1",
+              "Tutorial",
+              "3"
+            ],
+            "raw_world": [
+              "0.186",
+              "6",
+              "6",
+              "0",
+              "0",
+              "5000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial1/1",
+            "exitCode": 0
+          },
+          {
+            "frame": 8,
+            "phase": [
+              "4"
+            ],
+            "paused": [
+              "0"
+            ],
+            "page": [
+              "mission"
+            ],
+            "controls": {
+              "Game": [
+                "1",
+                "0",
+                "4",
+                "4",
+                "79",
+                "24",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial1",
+              "Tutorial",
+              "3"
+            ],
+            "raw_world": [
+              "0.187",
+              "8",
+              "6",
+              "0",
+              "0",
+              "5000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial1/2",
+            "exitCode": 0
+          }
+        ]
+      },
+      {
+        "mission": "tutorial2",
+        "passed": true,
+        "clicks": [
+          "MORE",
+          "MORE",
+          "OK"
+        ],
+        "observations": [
+          {
+            "frame": 4,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A."
+            ],
+            "controls": {
+              "MORE": [
+                "1",
+                "0",
+                "474",
+                "431",
+                "549",
+                "451",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial2",
+              "Tutorial",
+              "2"
+            ],
+            "raw_world": [
+              "0.189",
+              "4",
+              "5",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial2/0",
+            "exitCode": 0
+          },
+          {
+            "frame": 6,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A1."
+            ],
+            "controls": {
+              "BACK": [
+                "1",
+                "0",
+                "435",
+                "492",
+                "510",
+                "512",
+                "0"
+              ],
+              "MORE": [
+                "1",
+                "0",
+                "514",
+                "492",
+                "589",
+                "512",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial2",
+              "Tutorial",
+              "2"
+            ],
+            "raw_world": [
+              "0.201",
+              "6",
+              "5",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial2/1",
+            "exitCode": 0
+          },
+          {
+            "frame": 8,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A2."
+            ],
+            "controls": {
+              "BACK": [
+                "1",
+                "0",
+                "435",
+                "466",
+                "510",
+                "486",
+                "0"
+              ],
+              "OK": [
+                "1",
+                "0",
+                "514",
+                "466",
+                "589",
+                "486",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial2",
+              "Tutorial",
+              "2"
+            ],
+            "raw_world": [
+              "0.201",
+              "8",
+              "5",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial2/2",
+            "exitCode": 0
+          },
+          {
+            "frame": 10,
+            "phase": [
+              "4"
+            ],
+            "paused": [
+              "0"
+            ],
+            "page": [
+              "mission"
+            ],
+            "controls": {
+              "Game": [
+                "1",
+                "0",
+                "4",
+                "4",
+                "79",
+                "24",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial2",
+              "Tutorial",
+              "2"
+            ],
+            "raw_world": [
+              "0.218",
+              "10",
+              "5",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial2/3",
+            "exitCode": 0
+          }
+        ]
+      },
+      {
+        "mission": "tutorial3",
+        "passed": true,
+        "clicks": [
+          "MORE",
+          "OK"
+        ],
+        "observations": [
+          {
+            "frame": 4,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A."
+            ],
+            "controls": {
+              "MORE": [
+                "1",
+                "0",
+                "474",
+                "473",
+                "549",
+                "493",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial3",
+              "Tutorial",
+              "37"
+            ],
+            "raw_world": [
+              "0.216",
+              "4",
+              "16",
+              "0",
+              "0",
+              "16800",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial3/0",
+            "exitCode": 0
+          },
+          {
+            "frame": 6,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A1."
+            ],
+            "controls": {
+              "BACK": [
+                "1",
+                "0",
+                "435",
+                "459",
+                "510",
+                "479",
+                "0"
+              ],
+              "OK": [
+                "1",
+                "0",
+                "514",
+                "459",
+                "589",
+                "479",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial3",
+              "Tutorial",
+              "37"
+            ],
+            "raw_world": [
+              "0.211",
+              "6",
+              "16",
+              "0",
+              "0",
+              "16800",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial3/1",
+            "exitCode": 0
+          },
+          {
+            "frame": 8,
+            "phase": [
+              "4"
+            ],
+            "paused": [
+              "0"
+            ],
+            "page": [
+              "mission"
+            ],
+            "controls": {
+              "Game": [
+                "1",
+                "0",
+                "4",
+                "4",
+                "79",
+                "24",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial3",
+              "Tutorial",
+              "37"
+            ],
+            "raw_world": [
+              "0.223",
+              "8",
+              "16",
+              "0",
+              "0",
+              "16800",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial3/2",
+            "exitCode": 0
+          }
+        ]
+      },
+      {
+        "mission": "tutorial4",
+        "passed": true,
+        "clicks": [
+          "MORE",
+          "OK"
+        ],
+        "observations": [
+          {
+            "frame": 4,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A."
+            ],
+            "controls": {
+              "MORE": [
+                "1",
+                "0",
+                "474",
+                "492",
+                "549",
+                "512",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial4",
+              "Tutorial",
+              "65"
+            ],
+            "raw_world": [
+              "0.232",
+              "4",
+              "26",
+              "0",
+              "0",
+              "23400",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial4/0",
+            "exitCode": 0
+          },
+          {
+            "frame": 6,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A1."
+            ],
+            "controls": {
+              "BACK": [
+                "1",
+                "0",
+                "435",
+                "424",
+                "510",
+                "444",
+                "0"
+              ],
+              "OK": [
+                "1",
+                "0",
+                "514",
+                "424",
+                "589",
+                "444",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial4",
+              "Tutorial",
+              "65"
+            ],
+            "raw_world": [
+              "0.212",
+              "6",
+              "26",
+              "0",
+              "0",
+              "23400",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial4/1",
+            "exitCode": 0
+          },
+          {
+            "frame": 8,
+            "phase": [
+              "4"
+            ],
+            "paused": [
+              "0"
+            ],
+            "page": [
+              "mission"
+            ],
+            "controls": {
+              "Game": [
+                "1",
+                "0",
+                "4",
+                "4",
+                "79",
+                "24",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial4",
+              "Tutorial",
+              "65"
+            ],
+            "raw_world": [
+              "0.209",
+              "8",
+              "26",
+              "0",
+              "0",
+              "23400",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial4/2",
+            "exitCode": 0
+          }
+        ]
+      },
+      {
+        "mission": "tutorial5",
+        "passed": true,
+        "clicks": [
+          "MORE",
+          "OK"
+        ],
+        "observations": [
+          {
+            "frame": 4,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A."
+            ],
+            "controls": {
+              "MORE": [
+                "1",
+                "0",
+                "474",
+                "489",
+                "549",
+                "509",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial5",
+              "Tutorial",
+              "55"
+            ],
+            "raw_world": [
+              "0.251",
+              "4",
+              "23",
+              "0",
+              "0",
+              "21600",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial5/0",
+            "exitCode": 0
+          },
+          {
+            "frame": 6,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A1."
+            ],
+            "controls": {
+              "BACK": [
+                "1",
+                "0",
+                "435",
+                "480",
+                "510",
+                "500",
+                "0"
+              ],
+              "OK": [
+                "1",
+                "0",
+                "514",
+                "480",
+                "589",
+                "500",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial5",
+              "Tutorial",
+              "55"
+            ],
+            "raw_world": [
+              "0.217",
+              "6",
+              "23",
+              "0",
+              "0",
+              "21600",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial5/1",
+            "exitCode": 0
+          },
+          {
+            "frame": 8,
+            "phase": [
+              "4"
+            ],
+            "paused": [
+              "0"
+            ],
+            "page": [
+              "mission"
+            ],
+            "controls": {
+              "Game": [
+                "1",
+                "0",
+                "4",
+                "4",
+                "79",
+                "24",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial5",
+              "Tutorial",
+              "55"
+            ],
+            "raw_world": [
+              "0.22",
+              "8",
+              "23",
+              "0",
+              "0",
+              "21600",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial5/2",
+            "exitCode": 0
+          }
+        ]
+      },
+      {
+        "mission": "tutorial6",
+        "passed": true,
+        "clicks": [
+          "MORE",
+          "MORE",
+          "MORE",
+          "OK"
+        ],
+        "observations": [
+          {
+            "frame": 4,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A."
+            ],
+            "controls": {
+              "MORE": [
+                "1",
+                "0",
+                "474",
+                "459",
+                "549",
+                "479",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial6",
+              "Tutorial",
+              "60"
+            ],
+            "raw_world": [
+              "0.218",
+              "4",
+              "29",
+              "0",
+              "0",
+              "23100",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial6/0",
+            "exitCode": 0
+          },
+          {
+            "frame": 6,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A1."
+            ],
+            "controls": {
+              "BACK": [
+                "1",
+                "0",
+                "435",
+                "493",
+                "510",
+                "513",
+                "0"
+              ],
+              "MORE": [
+                "1",
+                "0",
+                "514",
+                "493",
+                "589",
+                "513",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial6",
+              "Tutorial",
+              "60"
+            ],
+            "raw_world": [
+              "0.202",
+              "6",
+              "29",
+              "0",
+              "0",
+              "23100",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial6/1",
+            "exitCode": 0
+          },
+          {
+            "frame": 8,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A2."
+            ],
+            "controls": {
+              "BACK": [
+                "1",
+                "0",
+                "435",
+                "509",
+                "510",
+                "529",
+                "0"
+              ],
+              "MORE": [
+                "1",
+                "0",
+                "514",
+                "509",
+                "589",
+                "529",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial6",
+              "Tutorial",
+              "60"
+            ],
+            "raw_world": [
+              "0.234",
+              "8",
+              "29",
+              "0",
+              "0",
+              "23100",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial6/2",
+            "exitCode": 0
+          },
+          {
+            "frame": 10,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A3."
+            ],
+            "controls": {
+              "BACK": [
+                "1",
+                "0",
+                "435",
+                "459",
+                "510",
+                "479",
+                "0"
+              ],
+              "OK": [
+                "1",
+                "0",
+                "514",
+                "459",
+                "589",
+                "479",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial6",
+              "Tutorial",
+              "60"
+            ],
+            "raw_world": [
+              "0.218",
+              "10",
+              "29",
+              "0",
+              "0",
+              "23100",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial6/3",
+            "exitCode": 0
+          },
+          {
+            "frame": 12,
+            "phase": [
+              "4"
+            ],
+            "paused": [
+              "0"
+            ],
+            "page": [
+              "mission"
+            ],
+            "controls": {
+              "Game": [
+                "1",
+                "0",
+                "4",
+                "4",
+                "79",
+                "24",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial6",
+              "Tutorial",
+              "60"
+            ],
+            "raw_world": [
+              "0.23",
+              "12",
+              "26",
+              "0",
+              "0",
+              "23100",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial6/4",
+            "exitCode": 0
+          }
+        ]
+      },
+      {
+        "mission": "thewarbegins",
+        "passed": true,
+        "clicks": [
+          "Play Mission"
+        ],
+        "observations": [
+          {
+            "frame": 4,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A."
+            ],
+            "controls": {
+              "Review Knowledge": [
+                "0",
+                "0",
+                "406",
+                "459",
+                "528",
+                "479",
+                "0"
+              ],
+              "Play Mission": [
+                "1",
+                "0",
+                "532",
+                "459",
+                "618",
+                "479",
+                "0"
+              ]
+            },
+            "mission": [
+              "thewarbegins",
+              "Tutorial",
+              "172"
+            ],
+            "raw_world": [
+              "0.202",
+              "4",
+              "34",
+              "0",
+              "0",
+              "45100",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/thewarbegins/0",
+            "exitCode": 0
+          },
+          {
+            "frame": 6,
+            "phase": [
+              "4"
+            ],
+            "paused": [
+              "0"
+            ],
+            "page": [
+              "mission"
+            ],
+            "controls": {
+              "Game": [
+                "1",
+                "0",
+                "4",
+                "4",
+                "79",
+                "24",
+                "0"
+              ]
+            },
+            "mission": [
+              "thewarbegins",
+              "Tutorial",
+              "172"
+            ],
+            "raw_world": [
+              "0.226",
+              "6",
+              "34",
+              "0",
+              "0",
+              "45100",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/thewarbegins/1",
+            "exitCode": 0
+          }
+        ]
+      },
+      {
+        "mission": "masterofwhirligigs",
+        "passed": true,
+        "clicks": [
+          "Play Mission"
+        ],
+        "observations": [
+          {
+            "frame": 4,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A."
+            ],
+            "controls": {
+              "Review Knowledge": [
+                "0",
+                "0",
+                "406",
+                "452",
+                "528",
+                "472",
+                "0"
+              ],
+              "Play Mission": [
+                "1",
+                "0",
+                "532",
+                "452",
+                "618",
+                "472",
+                "0"
+              ]
+            },
+            "mission": [
+              "masterofwhirligigs",
+              "Tutorial",
+              "115"
+            ],
+            "raw_world": [
+              "0.218",
+              "4",
+              "26",
+              "0",
+              "0",
+              "35600",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/masterofwhirligigs/0",
+            "exitCode": 0
+          },
+          {
+            "frame": 6,
+            "phase": [
+              "4"
+            ],
+            "paused": [
+              "0"
+            ],
+            "page": [
+              "mission"
+            ],
+            "controls": {
+              "Game": [
+                "1",
+                "0",
+                "4",
+                "4",
+                "79",
+                "24",
+                "0"
+              ]
+            },
+            "mission": [
+              "masterofwhirligigs",
+              "Tutorial",
+              "115"
+            ],
+            "raw_world": [
+              "0.22",
+              "6",
+              "26",
+              "0",
+              "0",
+              "35600",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/masterofwhirligigs/1",
+            "exitCode": 0
+          }
+        ]
+      },
+      {
+        "mission": "demostormrages",
+        "passed": true,
+        "clicks": [],
+        "observations": [
+          {
+            "frame": 4,
+            "phase": [
+              "4"
+            ],
+            "paused": [
+              "0"
+            ],
+            "page": [
+              "mission"
+            ],
+            "controls": {
+              "Game": [
+                "1",
+                "0",
+                "4",
+                "4",
+                "79",
+                "24",
+                "0"
+              ]
+            },
+            "mission": [
+              "demostormrages",
+              "Tutorial",
+              "72"
+            ],
+            "raw_world": [
+              "0.291",
+              "4",
+              "26",
+              "0",
+              "0",
+              "34800",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/demostormrages/0",
+            "exitCode": 0
+          }
+        ]
+      },
+      {
+        "mission": "guardmyback",
+        "passed": true,
+        "clicks": [
+          "Play Mission"
+        ],
+        "observations": [
+          {
+            "frame": 4,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A."
+            ],
+            "controls": {
+              "Review Knowledge": [
+                "0",
+                "0",
+                "406",
+                "480",
+                "528",
+                "500",
+                "0"
+              ],
+              "Play Mission": [
+                "1",
+                "0",
+                "532",
+                "480",
+                "618",
+                "500",
+                "0"
+              ]
+            },
+            "mission": [
+              "guardmyback",
+              "Tutorial",
+              "422"
+            ],
+            "raw_world": [
+              "0.265",
+              "4",
+              "74",
+              "0",
+              "0",
+              "90000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "2",
+              "1",
+              "3",
+              "4"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/guardmyback/0",
+            "exitCode": 0
+          },
+          {
+            "frame": 6,
+            "phase": [
+              "4"
+            ],
+            "paused": [
+              "0"
+            ],
+            "page": [
+              "mission"
+            ],
+            "controls": {
+              "Game": [
+                "1",
+                "0",
+                "4",
+                "4",
+                "79",
+                "24",
+                "0"
+              ]
+            },
+            "mission": [
+              "guardmyback",
+              "Tutorial",
+              "422"
+            ],
+            "raw_world": [
+              "0.249",
+              "6",
+              "72",
+              "0",
+              "0",
+              "90000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "2",
+              "1",
+              "3",
+              "4"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/guardmyback/1",
+            "exitCode": 0
+          }
+        ]
+      },
+      {
+        "mission": "dissolvedalliance",
+        "passed": true,
+        "clicks": [
+          "Play Mission"
+        ],
+        "observations": [
+          {
+            "frame": 4,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A."
+            ],
+            "controls": {
+              "Review Knowledge": [
+                "0",
+                "0",
+                "406",
+                "445",
+                "528",
+                "465",
+                "0"
+              ],
+              "Play Mission": [
+                "1",
+                "0",
+                "532",
+                "445",
+                "618",
+                "465",
+                "0"
+              ]
+            },
+            "mission": [
+              "dissolvedalliance",
+              "Tutorial",
+              "432"
+            ],
+            "raw_world": [
+              "0.244",
+              "4",
+              "60",
+              "0",
+              "0",
+              "68800",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "3",
+              "2"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/dissolvedalliance/0",
+            "exitCode": 0
+          },
+          {
+            "frame": 6,
+            "phase": [
+              "4"
+            ],
+            "paused": [
+              "0"
+            ],
+            "page": [
+              "mission"
+            ],
+            "controls": {
+              "Game": [
+                "1",
+                "0",
+                "4",
+                "4",
+                "79",
+                "24",
+                "0"
+              ]
+            },
+            "mission": [
+              "dissolvedalliance",
+              "Tutorial",
+              "432"
+            ],
+            "raw_world": [
+              "0.228",
+              "6",
+              "60",
+              "0",
+              "0",
+              "68800",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "3",
+              "2"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/dissolvedalliance/1",
+            "exitCode": 0
+          }
+        ]
+      }
+    ],
+    "originals_unchanged": true
+  },
+  "goalEntryObservationSha256": {
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial1/0/steps.tsv": "aa7ec7272cefc64f920de7e4e49c01f85bd063cffd78363cf5eb2c342adaa323",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial1/0/current.bmp": "b36c7a0a3fcd7fca70fb1f96215267bffaa3c6a8dbbf8fe050af3aa7877feb8f",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial1/0/states.tsv": "a4c82cde83d7ef2d2cdea81ac3719704e25fd9f38498fc2ea50590a0fbf154d5",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial1/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial1/0/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial1/1/steps.tsv": "a859b239999cdfb99634ec7adf81ac2ebc64f1168d6f585daeff66c82f0e0621",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial1/1/current.bmp": "b20b17c33117e0f3899dea6433fae62c12f060e366f7f0a5214085c48f211bc1",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial1/1/states.tsv": "96981720e036c31068d107d685795eac21bb4d9d86131b66516a7d5fd167184d",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial1/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial1/1/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial1/2/steps.tsv": "0087775e1b3492527d5457821259f4b2a42b38112cb1f08c0b859a6f574266e8",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial1/2/current.bmp": "acb3b85493f8faf30324b0a44725d9386cd0d3205e2d8b45e86e690c506591f8",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial1/2/states.tsv": "245ccc19f80a9bbebb812d3538771a61b6b3aed92ec75fa1e1e9cef68f42ca02",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial1/2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial1/2/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial2/0/steps.tsv": "62e53a2c7f135f518ba0280802b8d774401b72feaba11746ef25f2b6e49c27e1",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial2/0/current.bmp": "53dc5665c7b5a29100301c6e64ce9ea5c653be838d8d8cdd6c34f997992c5cd3",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial2/0/states.tsv": "3bd9bff44cd2a906819eba36ed39a781bff7f91d73c3d2573c67544427e54bd4",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial2/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial2/0/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial2/1/steps.tsv": "92b0bb3e118c7edb0b993c97112069dc8bcb03a680d53a58d61cbf26f0e51bef",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial2/1/current.bmp": "059a676130ebd67a4b67ee3dc534c50fe54c4a47dfbf3d9da2e3c1ce9aa6ac63",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial2/1/states.tsv": "91c48e2f2ae1d1906351508ea15c852113d64dbcfdc48d4a4db07f94401de6e3",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial2/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial2/1/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial2/2/steps.tsv": "d22e0a0a527717c5d2c337072a2b63edc0f35c607cc21bce09c519588c921745",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial2/2/current.bmp": "b987190ca471c30193ba5ebe98e8ce36359f25eaf264a7dd1f3685e9ed218ae2",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial2/2/states.tsv": "e1357fcb8b8459c3a979ec90055df4d7e185e4427a67748c7c03db9f5b6a5f84",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial2/2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial2/2/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial2/3/steps.tsv": "1f5b299267348e94bcf040013bafcc651dec9fd3ebc0dd7c4cd406f0132fcb79",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial2/3/current.bmp": "c0337e835864ffd21c59e8c27ce53c18c80b41d66f92ba9be5a3c3b19c124375",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial2/3/states.tsv": "054762916ab81652a8c4d52003f3166ffe8488bb491da2d91b2656d254f04d8c",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial2/3/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial2/3/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial3/0/steps.tsv": "e172edd2caa02cbc11488f0717e895962dcc783297b3074b03b12268d69ee751",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial3/0/current.bmp": "0e7a8214e07d28dd281d893573dbc6c4d1997196218aaa6fb81c099af94d627e",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial3/0/states.tsv": "ea6908730f3ef139aa22d88aa0849758430670f91d80ef7601a4afcd336c7fd3",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial3/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial3/0/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial3/1/steps.tsv": "07025957b410497ada84fe5dc60597a84f5411eeca9f0b043469ae4cd14bc601",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial3/1/current.bmp": "6a488070601f02537c3ac5675531112ea7599169f865bf426da097f7bacf035c",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial3/1/states.tsv": "cf81f3ee579224d65948d2329479da8c4bb570330bb1e6adc3ccd2344d7efa27",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial3/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial3/1/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial3/2/steps.tsv": "55524728c56f795f3aacc8ab4843b054f4312d1b8701f46eba0119babd7a8363",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial3/2/current.bmp": "e6850d12717323a283c9db31abab77a990c247ecc99dd2290231079a77a96cb1",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial3/2/states.tsv": "faa67a7b491d0fe4e904a1c6ce276b2ec9772ddbadaa7c0c8b0fcd8c45820e3e",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial3/2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial3/2/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial4/0/steps.tsv": "17e2e492f26b7c88f8bf52c11c2324c4103c2671675170a14d10fb4d677069f3",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial4/0/current.bmp": "d1d062ecd4627f32345d4472be29ee96d550bb2f9376684096dbcdda48ced376",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial4/0/states.tsv": "4e6b1d7b65a14f91848ac9029f9b219d089d5d06827e53e211f37dd301f01a89",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial4/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial4/0/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial4/1/steps.tsv": "a3288f8babaf14493b827e9832b7617f23c5d95fc911207364eb03a2860e77e5",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial4/1/current.bmp": "839cddf33800e872e91945b1fac6779b08204b4014f7dbe2f6153b371a45730a",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial4/1/states.tsv": "a8359749b96ba41fdbe044c59776e4db77bc55c3cfbd8815a979c7a7ea4cd764",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial4/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial4/1/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial4/2/steps.tsv": "4f27010e15c1e0b8b970ad0d06ad6030f399fc80613a29019c9bd65470ecc4c9",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial4/2/current.bmp": "d6c0f982649ae167565db6e2c4de641bd12840aaba3ca6dbbf4c2ae76878786d",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial4/2/states.tsv": "4465b38a373b1b18f0a6f4f67a7ff08cea0f57c5746cccb819f3fb16c1d93b11",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial4/2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial4/2/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial5/0/steps.tsv": "7f9f5566111b56a004f7f02be2da3e4a6d33e69c234e0e6ffb2d3db4e9726747",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial5/0/current.bmp": "2065222d81f16b02261a1d4a688b7eb66ea8fa308773d2f525c20d684588793b",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial5/0/states.tsv": "d0a7dbb66b5005c5587c4ea4a5718d65bbe592b34bccf60eae8accc26aa32fb3",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial5/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial5/0/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial5/1/steps.tsv": "b8046efd66cae90ffa307c0d3b1ab08c21f27e3ddfaca4a2fde1865a38c25f10",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial5/1/current.bmp": "a77b5354017bd251c0ee8249f655fd7292717796a2b3e9afdcecbac2993101c5",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial5/1/states.tsv": "d34134b916f342067308791478631471a4bba9ac9c605691ffcbe446ef250c44",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial5/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial5/1/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial5/2/steps.tsv": "3583b8d26071a5b5554e504d754b75d9621310bdb8567a5b4c81e295e9237e61",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial5/2/current.bmp": "0b355e81e76cb05d91cc62d98eb1cc1583781f3a89170c628f1111d0724d2909",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial5/2/states.tsv": "49d79cf94a70a4850691f9257dd922b679e61f7feeb6d726846908dd24b3b5fe",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial5/2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial5/2/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial6/0/steps.tsv": "613efa09c39c6ac01d64086072aed7771bd1c90f96678c36d0a1040b24303eac",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial6/0/current.bmp": "a6936269e55e4ea08bbdbe2f7ab4882f112194d5643ee48e6b8ce79a9ae01e99",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial6/0/states.tsv": "68461345a11c08e7df3e91261dbf6221146710f967330f9aba5f6e379d11ef16",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial6/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial6/0/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial6/1/steps.tsv": "edaf79975a9c950b545f2a066df90122171be7d02192d29b7dc5bc5ec50b7da6",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial6/1/current.bmp": "39502aa83810cb2368f18ad6de57b80cef2aa5ccae01dbd0bc5731a59b33ec26",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial6/1/states.tsv": "1540a27d212e42f09ca32d90154d52be02f67bdb6d7a208cf42e51d2a57fea31",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial6/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial6/1/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial6/2/steps.tsv": "99317f1b53af43c4a2b4e5fe04039ca3b0b3c21f16f3ab37184d8501fe9fcea0",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial6/2/current.bmp": "63b239f9fc6505965315dfa7bb131f7201c8141cc253f0ea5f48858299fdd475",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial6/2/states.tsv": "af58953c240e31555cd46b40293254b70a54f4b128a9611be0e13fd25db13b65",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial6/2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial6/2/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial6/3/steps.tsv": "bb08659510e719482547f01dd35cd684aea28886770270645415aa74557772ba",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial6/3/current.bmp": "b808d5b98dc18ac400287f35ba6d2ac10f443bf7c263450f544284655b13948d",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial6/3/states.tsv": "32d2b829408aa11ea368738e7211e2616806aed666c5eb5f29d0a26eb90c57c7",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial6/3/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial6/3/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial6/4/steps.tsv": "4181a7094b47e8342e9f8ebafb4d1f7db74a4b392043faf7fbe43c189a5385d3",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial6/4/current.bmp": "43b92d7825f7f439d63d297a7b988395c9446dfc36e2f657f246bb54f28283b9",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial6/4/states.tsv": "e617dc7fc8dc13b8b5f82622f5eb0cf4013afea15dbadc6152e300135e2ea532",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial6/4/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/tutorial6/4/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/thewarbegins/0/steps.tsv": "24a126cec93a71b161f87595198713c5b4c2f664a3c15630d02f64e856c9a661",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/thewarbegins/0/current.bmp": "ee712e51c77aaa4de1f4f7b56410943356d9e1a6db594d0bfc1d8a48fc2ec4cf",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/thewarbegins/0/states.tsv": "249b6cfd6f18188744b555fe0406a689ed31f763f22074641dad2d36ae344c96",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/thewarbegins/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/thewarbegins/0/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/thewarbegins/1/steps.tsv": "5e5eef546a9af662278bce93a9d26b07dfb4eb694ce662a63a9629c3a703df8a",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/thewarbegins/1/current.bmp": "755ca99cb3b9984cab22096f4268e3a0e242f5a504346a05ba01e04ea3868f49",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/thewarbegins/1/states.tsv": "1a74547ccb915920690bbcf7ed01f83fabb6e8fd6fa9ab1223ef531943389075",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/thewarbegins/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/thewarbegins/1/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/masterofwhirligigs/0/steps.tsv": "d8a2151b2440cae21864b299d6f8540709cf93ff19790a2717280d3a9c1b44b7",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/masterofwhirligigs/0/current.bmp": "e09eb99d183c5defe1c29d5e01dfa881d4726e0727643f112267629e5a0137c8",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/masterofwhirligigs/0/states.tsv": "5039ce0184478856d3fca2dd9e497969f3e4efff8377f99e26f8e037949611ad",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/masterofwhirligigs/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/masterofwhirligigs/0/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/masterofwhirligigs/1/steps.tsv": "4e78f9057f2813f9a5571fce49f7e18fda3b2981258b23f3a7b3f41e50ca7271",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/masterofwhirligigs/1/current.bmp": "8df94a82d4b5e1eff1350dde6df7ffb8b4e7981a1e817fde27778b1986271439",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/masterofwhirligigs/1/states.tsv": "2ba48112a6d9a9735d215b512b5d601e8a273cd2ee50e089608296908355ffd5",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/masterofwhirligigs/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/masterofwhirligigs/1/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/demostormrages/0/steps.tsv": "c7e13a3678ef43ea130b8978bb5ac120f1e9098189d249359634c2ed5907cdb0",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/demostormrages/0/current.bmp": "086ad66528f104350b534c3cec3170f34dfc33782f251c9b7e526f0ccea30236",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/demostormrages/0/states.tsv": "3790e7ac530d0266d71ab7e6f7838969ca93bbbf8a14060ab67e020afd194314",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/demostormrages/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/demostormrages/0/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/guardmyback/0/steps.tsv": "f41e5437495ac01ae04010b7c56f05808c61fae133bae605f7c817324a9003c7",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/guardmyback/0/current.bmp": "0589668e56f6ad26d2691863f249d2ebf6045fe7fb069975d5e27580eda4dd4b",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/guardmyback/0/states.tsv": "cb5e1a11816884fcc8f5decabbb8f4d6e3c10b2c4365e273ac054ac882ff2428",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/guardmyback/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/guardmyback/0/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/guardmyback/1/steps.tsv": "52360394a430ab13d428f661ac216b553101c4bbf761167502b6e26c3f6e6d71",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/guardmyback/1/current.bmp": "0585907446758a27575e78884548a7e60debd624e2988a364c5582c237ccebda",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/guardmyback/1/states.tsv": "7bc353dd197257e658843c0817dce3cfe6c44c7d1cc396f73dc916d3d7b2bfef",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/guardmyback/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/guardmyback/1/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/dissolvedalliance/0/steps.tsv": "0fbcb7283654862c91a881ac4e8178eef6b9175ba2e6123e278331d025956fbe",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/dissolvedalliance/0/current.bmp": "adf387e80db68603788cb4fef77a40bd7329bd029e5ae757d2c322316ca4aff6",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/dissolvedalliance/0/states.tsv": "3581520f3e9bc2346c26e6a4fd1840ebdfe9f4837a6bbb410278245c92f63f79",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/dissolvedalliance/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/dissolvedalliance/0/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/dissolvedalliance/1/steps.tsv": "0efbc889a42ae7b9dc094e8b06556b294c8c71d2fd9407d148c0e7c94bcdec6b",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/dissolvedalliance/1/current.bmp": "f1de94c358d424ddcc1c301db22384efa2072a383f1023224814fa62da33a152",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/dissolvedalliance/1/states.tsv": "2cca82e30a74f62f484e4e8df1122d48dffb260b56b813c24757164c2f81ee31",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/dissolvedalliance/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "H:/T5Workspace/NetstormReborn/extracted/goal-balloon-path-20261018-goal-pages3/dissolvedalliance/1/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "limitations": [
+    "이미 로드한1-1 Session의 owner1/시작98,122/목적102,122를 명시 입력했다. UI 선택/자연 명령/로그인/전체11스테이지 완주를 증명하지 않는다.",
+    "실제38/41/187 전용Halt, Client전송/명령소비, AI간헐천 등록/제거·전략·생산/경제, 비미션40e050과11스테이지 자연왕복·승패·저장·다음미션/동일성은 남아 있다.",
+    "원본 new/Halt/큰도착·공간·음향과 큰 Damageable/finder/보충 부모는 각 독립 관측의 명시 경계다. 세션 검사는 기존 실제 하위를 사용한다.",
+    "unitLost는 실제 Client의 unitLost.wav 장치 경계다. 새 검사에서는 부모만 통지받는지 기록했다. 기존 실제 Client 소비자는 이미 연결되어 있다."
+  ],
+  "logSha256": {
+    "extracted/goal-balloon-path-20261018-audit1.log": "3e5d6da6e273a12b3998c741cad60635700a3cfca9276eab1a2e6866de8feb08",
+    "extracted/goal-balloon-path-20261018-audit2.log": "a01c62f1746ea54046bff5f25395be99aa9106b79cce0e3139e9b0e06dc995a7",
+    "extracted/goal-balloon-path-20261018-binding-evidence.json": "5b0891b07e12c4e3e9f837e02318a52dd6c84b563f08aece742d223d1224534e",
+    "extracted/goal-balloon-path-20261018-body-native-fixture-before-cpp-replay.sha256": "b1726c59f9f3fef165161b5953cd09acd117b62c18afb79df30e460824953b32",
+    "extracted/goal-balloon-path-20261018-body-native1.log": "a573f30f15555b224af2f182a630ad2f78adbeeb9c4ae6263bce237cc0e023fd",
+    "extracted/goal-balloon-path-20261018-build1.log": "c5834e781fdcaf6bdab66964dc105f2e512a263f2ceb6ff586b5516b2739b608",
+    "extracted/goal-balloon-path-20261018-build2.log": "5b1297f1388338ae9da07230c929ecab284c85cf52d8f4a8671a8ef39fae0c26",
+    "extracted/goal-balloon-path-20261018-build3.log": "c1dcb2752b3788fd4bb6cdc7bd062700fb14952560e0352954334029f511cd50",
+    "extracted/goal-balloon-path-20261018-build4.log": "68daf5268753a6f0253917d033a76282e07803e3b45f8c1951a34f7cbc6a3d34",
+    "extracted/goal-balloon-path-20261018-ctest1.log": "2aaec464ed6aa4b4c5a4694be4cebf3314512b9aae2da7dab65fca946d49678e",
+    "extracted/goal-balloon-path-20261018-entry/results.json": "f079aa7347c4eced6d1cd3474ebb4a66cfcd9807d581c82c107181c49dc8d64d",
+    "extracted/goal-balloon-path-20261018-entry1.log": "530bf9254a3b0be59b099d237909bd3be07412d0f47949f546997ffdb8b1e681",
+    "extracted/goal-balloon-path-20261018-focused1.log": "e834f107f1b7650096714be80015f1132300963d0ed09eaed6ce9fd08e3cc582",
+    "extracted/goal-balloon-path-20261018-focused2.log": "498d8cc03bcfbc2f24eaf80a5136ed8bce8c1d72fd279fa3977b3eacfa82a99a",
+    "extracted/goal-balloon-path-20261018-goal-entry/results.json": "e0841a92a2256a833db693418dc86a9ba653256e8a7aa0155b39f84f502d0630",
+    "extracted/goal-balloon-path-20261018-goal-entry.py": "6ebb147a3ff5f24b62c4072c811e664c33abee77a976f4d248f3354ff4046cfe",
+    "extracted/goal-balloon-path-20261018-goal-entry1.log": "b3b83988e2277d78e0c01668cd3814ee495ec9be22ef2a27915145167d5e7668",
+    "extracted/goal-balloon-path-20261018-goal-pages/results.json": "f100094a173542d602d98b28461a91247e6896e5f73451d06d4f292570f2d79f",
+    "extracted/goal-balloon-path-20261018-goal-pages.py": "47f0a896aaee096d66e1d69a572c6917309b2e524e88a16d58c06ed2f5936ede",
+    "extracted/goal-balloon-path-20261018-goal-pages1.log": "a122e35da3eeb443796a660dab585b524f99b32b84f8efa78d9600185061796c",
+    "extracted/goal-balloon-path-20261018-goal-pages2/results.json": "ca58de2c9efc3b0dbfee38fd9a822d314acdc70794e6d335befab787022e66d2",
+    "extracted/goal-balloon-path-20261018-goal-pages2.log": "2bc7e152e5858ffc634aa36fbbe7eccd35c06d0f7a3473d330a34511dd0664f7",
+    "extracted/goal-balloon-path-20261018-goal-pages2.py": "cfd22af5bd70fe989b76715995f4723383196ba6ee21c871a6d9bcf58dda72b1",
+    "extracted/goal-balloon-path-20261018-goal-pages3/results.json": "ee08d46ce8c418c37cc8b1df0b8266fb119c96d8c665b381221b3a152bf3203e",
+    "extracted/goal-balloon-path-20261018-goal-pages3.log": "45c1eee9aa0a6dda3519fe8ac4fcf426bf94132bb199d97050b9cc54ac53e578",
+    "extracted/goal-balloon-path-20261018-height-native-fixture-before-cpp-replay.sha256": "c46a3e604907e58fcd7f0fdf1c4d4ce13313d722c21877ca44ba7c2637c2f36a",
+    "extracted/goal-balloon-path-20261018-height-native1.log": "3ecc10bf868c485483b48c4c14deeca0c8cb6e7b39a88ee6d378800567f5e329",
+    "extracted/goal-balloon-path-20261018-integration1.log": "4cf838505db1ca64da830d8c9a257b7d5c09d74cd373d5bb1ec8535e335dbe4d",
+    "extracted/goal-balloon-path-20261018-integration2.log": "8a1212a552ce26542b3fb6c244bffed55b84201aaf5dad20abe6ec3e7357fa61",
+    "extracted/goal-balloon-path-20261018-integration3.log": "06a1288682598a80c0f7d07dfc16489ee8899e4e9695bbf07e009176ab353168",
+    "extracted/goal-balloon-path-20261018-LastTest.log": "4577d4a55479c5688b704d0d87a6a000456498074eedebf6738e8ca690e1de5d",
+    "extracted/goal-balloon-path-20261018-native-fixture-before-cpp-replay.sha256": "4243cfe2476d9ab02e00493602340f28b9e5fc579f19288ee01a01649711216a",
+    "extracted/goal-balloon-path-20261018-native1.log": "6a42e71a567ccba046ad6c62dc3fef87abec7c921cdbecc2bd1850fc34cb8f29",
+    "extracted/goal-balloon-path-20261018-native2.log": "1290c1449beab19117a0b460188e8f466f3178232a6926b26c0ec815b2073f58",
+    "extracted/goal-balloon-path-20261018-native3.log": "83044e66e04d3f08e1afb6c6664b88425efd259d204fa601605b0e183d124db2",
+    "extracted/goal-balloon-path-20261018-native4.log": "1029903e572e781ce8f6f44ebff9324e852ed42714d097faf0456b462cbebed4",
+    "extracted/goal-balloon-path-20261018-native5.log": "a6d44127c4113bd0a5668a25d705c6a63de0acc75016e0ed7f59688ede9f5ad4",
+    "extracted/goal-balloon-path-20261018-pin-updates.json": "ea28d8f452e3ecdb92aa29c29221932ad07f8a85e8b135482dede98e1d9a6e53",
+    "extracted/goal-balloon-path-20261018-verify-final.json": "371d86cd8bf6023d33577e7a0f19cc669068ddfb34ea27da6f5ab451f20e80a3"
+  }
+}

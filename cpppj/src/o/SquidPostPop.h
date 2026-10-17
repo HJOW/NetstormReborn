@@ -19,6 +19,7 @@ class RawDudePostPop; // Dude70의 실제 idle/population/I 프레임·공통후
 class RawPlayerWorld; // Player152의 실제 최초 기록·예약·공통후처리를 연결한다.
 class RawBuriedPostPop; // buried112의 최초 예약/QA/공통후처리를 같은 풀에 연결한다.
 class RawFlyerPostPop; // 맨 오 워의 실제 프로세스/그림자/공통 후처리를 연결한다.
+class RawBalloonBody; //벌룬의 별도 그림자/고도 후처리를 연결한다.
 // 객체 후처리 Pop 등록한 대상과 그 개수를 보관하는 목록이다.
 struct SquidPostPopList {
     std::vector<std::uint32_t> entries; // 원본 미리 확보한 DWORD 배열. entries.size()가 capacity다.
@@ -111,6 +112,8 @@ public:
     bool HandlesBuried(Sid sid) const; // 원본 가상 표와 등록된 전체 몸체가 일치하는가.
     void SetFlyerPostPop(const RawFlyerPostPop* postPop); // 같은 풀의 맨 오 워 전체 몸체를 등록하며 nullptr은 해제한다.
     bool HandlesFlyer(Sid sid) const; // 실제0050a388만 전체 몸체로 분배한다.
+    void SetBalloonPostPop(const RawBalloonBody* postPop); //같은 풀의5040c0 전체 몸체이며 nullptr은 해제한다.
+    bool HandlesBalloon(Sid sid) const; //다른 비행 파생을 일반 Carrier로 합치지 않는다.
     // 이 인스턴스가 처리할 수 있는 파생 postPop인가. Pop이 공간 변경 전에 묻는다.
     bool HandlesDerived(Sid sid) const;
     // 공간 변경 전 연결된 그래프의 최종 Pop 상태·미복원 영역/AI/배치 효과·목록·비용을 확인한다.
@@ -131,6 +134,7 @@ public:
     const SidPool& Pool() const;
 private:
     const RawFlyerPostPop* flyerPostPop_{}; // 같은 현재 server/TYPE/공통 장부를 쓰는 장기 몸체다.
+    const RawBalloonBody* balloonPostPop_{}; //벌룬의 그림자 재귀 Pop 뒤 공통 깊이를 한 번 끝낸다.
     const RawBuriedPostPop* buriedPostPop_{}; // 장기 현재 전투/로딩과 같은 공통 장부를 사용하는 전용 몸체다.
     // 패치 encoded cost와 CD float cost의 누적 절삭·DWORD 감김을 계산한다.
     std::int32_t TotalCost(std::size_t type) const;

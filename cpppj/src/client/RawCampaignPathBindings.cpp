@@ -54,21 +54,22 @@ std::unique_ptr<o::RawPathProcess> RawCampaignPathBindings::Create(bool priest) 
 }
 // 세 실제 가상 표의 Init/frame/Attach 차이를 유지하며23을39로 대체하지 않는다.
 std::unique_ptr<o::RawPathProcess> RawCampaignPathBindings::CreateType(std::uint32_t type) {
-    const bool priest=type==processState_.priestProcess,flying=type==processState_.flyProcess,worm=type==processState_.wormProcess;
-    if (!priest && !flying && !worm && type!=processState_.teleportProcess) throw std::logic_error("다른 캠페인 경로 생성자 미연결");
+    const bool priest=type==processState_.priestProcess,flying=type==processState_.flyProcess,worm=type==processState_.wormProcess,balloon=type==processState_.balloonProcess;
+    if (!priest && !flying && !worm && !balloon && type!=processState_.teleportProcess) throw std::logic_error("다른 캠페인 경로 생성자 미연결");
     o::RawPathProcessHooks hooks;
     hooks.unpop=[this](o::Sid sid,std::uint32_t flags) { world_.Unpop(sid,flags); };
     hooks.repop=[this](o::Sid sid,std::uint32_t flags) { world_.Repop(sid,flags); };
     hooks.pop=[this](o::Sid sid,o::RawPathPoint point,std::uint32_t flags) { world_.Pop(sid,point.x,point.y,flags); };
-    hooks.halt=[this,priest,worm](o::Sid sid) { if (priest) return halt_.Halt(sid);if (worm) { ValidateCarrier(sid);return halt_.CommonHalt(sid); }ValidateConstruction(sid);return 10U; }; // 웜 부모는42a5f0이고134/105의4ac990은10이다.
-    hooks.arrival=[this,priest,worm](o::Sid sid,std::uint32_t first,std::uint32_t second) { if (priest) return arrival_.Arrival(sid,first,second);if (worm) { ValidateCarrier(sid);if (!effects_.carrierArrival) throw std::logic_error("웜40 실제 Carrier 도착 미연결");return effects_.carrierArrival(sid,first,second); }ValidateConstruction(sid);if (!effects_.constructionArrival) throw std::logic_error("실제 건설 운반 도착 미연결");return effects_.constructionArrival(sid,first,second); };
+    hooks.halt=[this,priest,worm,balloon](o::Sid sid) { if (priest) return halt_.Halt(sid);if (worm || balloon) { ValidateCarrier(sid);return halt_.CommonHalt(sid); }ValidateConstruction(sid);return 10U; }; //두 지원 Carrier의 +38은42a5f0이다.
+    hooks.arrival=[this,priest,worm,balloon](o::Sid sid,std::uint32_t first,std::uint32_t second) { if (priest) return arrival_.Arrival(sid,first,second);if (worm || balloon) { ValidateCarrier(sid);if (!effects_.carrierArrival) throw std::logic_error("실제 Carrier 도착 미연결");return effects_.carrierArrival(sid,first,second); }ValidateConstruction(sid);if (!effects_.constructionArrival) throw std::logic_error("실제 건설 운반 도착 미연결");return effects_.constructionArrival(sid,first,second); };
     hooks.soundId=effects_.soundId;hooks.stepSound=effects_.stepSound;hooks.clearBlocked=effects_.arrivalBlocked;
     hooks.retarget=effects_.retarget;hooks.observationStamp=effects_.observationStamp;
+    hooks.balloonFlame=effects_.balloonFlame;
     hooks.cleanup=[this](o::RawPathRuntime& runtime,o::Sid parent,std::uint32_t flags) {
         (void)flags;cleanup_.AfterSpatial(runtime,parent);
     };
     hooks=o::MakePathSearchHooks(core_.pool,search_,std::move(hooks));
-    return std::make_unique<o::RawPathProcess>(core_.pool,core_.hash,core_.types,core_.frames,core_.shapes,core_.spots,processState_,std::move(hooks),priest,flying,worm);
+    return std::make_unique<o::RawPathProcess>(core_.pool,core_.hash,core_.types,core_.frames,core_.shapes,core_.spots,processState_,std::move(hooks),priest,flying,worm,balloon);
 }
 // 가상 주소를 호스트에서 실행하지 않고 두 실제 부모의 생성자 표만 허용한다.
 void RawCampaignPathBindings::ValidateConstruction(o::Sid parent) const {
@@ -84,7 +85,9 @@ o::RawPathProcess* RawCampaignPathBindings::StartConstruction(o::RawPathStartReq
 void RawCampaignPathBindings::ValidateCarrier(o::Sid parent) const {
     if (core_.pool.Edition()!=o::OriginalEdition::Patch1078 || parent.value<5 || parent.value>=core_.pool.Capacity()) throw std::invalid_argument("웜40 부모 판본/SID 오류");
     const auto raw=core_.pool.AllocatedBytes(parent);const auto table=Vtable(raw);
-    if ((raw[11]&9) || raw[10]!=processState_.sunWalkerType || table!=0x50e568U || priests_.MovementProcessType(raw[10])!=processState_.wormProcess) throw std::logic_error("웜40 실제 부모 타입/가상 표/이동 종류 오류: empty42ac60은 별도 미연결");
+    const auto movement=priests_.MovementProcessType(raw[10]);const bool worm=raw[10]==processState_.sunWalkerType && table==0x50e568U && movement==processState_.wormProcess; //기존 골렘의 정확한 부모다.
+    const bool balloon=(raw[10]==111 || raw[10]==141) && table==0x5040c0U && movement==processState_.balloonProcess; //두 원본 벌룬의 동일한 전용 VT다.
+    if ((raw[11]&9) || (!worm && !balloon)) throw std::logic_error("Carrier 실제 부모 타입/가상 표/이동 종류 오류: empty42ac60은 별도 미연결");
 }
 // 원본 생성/Init/Prepare/Attach와 부모 통지를 생략하지 않는다.
 o::RawPathProcess* RawCampaignPathBindings::StartCarrier(o::RawPathStartRequest request) { ValidateCarrier(request.parent);return start_->Start(request); }
@@ -96,7 +99,7 @@ o::RawPathProcess* RawCampaignPathBindings::StartPriest(o::RawPathStartRequest r
 o::RawPathProcess* RawCampaignPathBindings::CurrentPath(o::Sid parent) const {
     if (parent.value<5 || parent.value>=core_.pool.Capacity()) throw std::out_of_range("캠페인 현재 Path 부모 SID 범위");
     const auto raw=core_.pool.Slot(parent);std::uint32_t movement=kActualPriestProcess;
-    if (raw[10]!=startState_.priestType) { if (raw[10]==processState_.sunWalkerType || raw[10]==processState_.emptyType) ValidateCarrier(parent);else ValidateConstruction(parent);movement=priests_.MovementProcessType(raw[10]); }
+    if (raw[10]!=startState_.priestType) { if (raw[10]==processState_.sunWalkerType || raw[10]==processState_.emptyType || raw[10]==111 || raw[10]==141) ValidateCarrier(parent);else ValidateConstruction(parent);movement=priests_.MovementProcessType(raw[10]); }
     const auto form=lookup_.Find(parent,movement);if (!form.value) return nullptr;
     auto* process=dynamic_cast<o::RawPathProcess*>(core_.processes.FromForm(form));
     if (!process || &process->Pool()!=&core_.pool || process->Parent()!=parent || process->Form()!=form)

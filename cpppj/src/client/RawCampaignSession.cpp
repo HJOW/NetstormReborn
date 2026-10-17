@@ -12,6 +12,7 @@
 #include "o/RawCarrierPickup.h"
 #include "o/RawGemReward.h"
 #include "o/RawNuggetReplenish.h"
+#include "o/RawBalloonBody.h"
 #include "o/RawBombPreDestroy.h"
 #include "o/RawPacketDispatch.h"
 #include "client/AiTypeRequiredEnergy.h"
@@ -82,15 +83,16 @@
 #include <cmath>
 #include <limits>
 #include <new>
+#include <source_location>
 using namespace netstorm::o;
 namespace netstorm::client {
 namespace {
-// 아직 미공급인 실제 하위는 선택 시 구체적 함수 인자형을 포함한 오류를 반환한다.
-template<class Result,class... Args> std::function<Result(Args...)> SessionMissing() {
-    return [](Args...)->Result { throw std::logic_error(std::string("실제 세션 하위 소비자 미연결: ")+__FUNCSIG__); };
+// 아직 미공급인 실제 하위는 선택 시 인자형과 최초 연결 위치를 포함한 오류를 반환한다.
+template<class Result,class... Args> std::function<Result(Args...)> SessionMissing(std::source_location where=std::source_location::current()) {
+    return [where](Args...)->Result { throw std::logic_error(std::string("실제 세션 하위 소비자 미연결: ")+where.file_name()+":"+std::to_string(where.line())+": "+__FUNCSIG__); };
 }
-// optional 경계를 성공으로 채우지 않고 실제 선택 시 요청을 보고한다.
-template<class Result,class... Args> void FillMissing(std::function<Result(Args...)>& callback) { if (!callback) callback=SessionMissing<Result,Args...>(); }
+// optional 경계를 성공으로 채우지 않고 최초 caller의 실제 연결 위치를 보존한다.
+template<class Result,class... Args> void FillMissing(std::function<Result(Args...)>& callback,std::source_location where=std::source_location::current()) { if (!callback) callback=SessionMissing<Result,Args...>(where); }
 // 동일 풀의 실제 예약/부착 실패를 즉시 보고한다.
 void SessionCheck(bool value) { if (!value) throw std::logic_error("실제 캠페인 세션 예약/자료 조건 오류"); }
 // 하나의 실제 클라이언트 소리 이름표만 사용한다.
@@ -232,6 +234,7 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawCampaignOwnership> ownership; // 실제 Vortex/섬/Player/지역 연결이다.
     CarrierPostPopState carrierState; // Damageable의 실제 로딩 전역이다.
     std::unique_ptr<RawCarrierPostPop> carrier; // 같은 공통 장부와 실제 지면 소유자 경계다.
+    std::unique_ptr<RawBalloonBody> balloonBody; //같은 풀/실제 그림자/전용 후처리와 그림자 우선 삭제다.
     AssetRegularState regularState; // 실제 예약 사건의 현재 전역이다.
     GunProcessState gunState; // 실제 Gun 초기 Form/시각/서버 전역이다.
     GunTargetState gunTargetState; // 실제 자기 동맹/검색의 현재 상태다.
@@ -539,6 +542,10 @@ struct RawCampaignSession::Impl {
         ownership=std::make_unique<RawCampaignOwnership>(world,*islands,assetState,players,metadata.frames,themes,random,paint,votes,vortexRevision,97,121,std::move(ownerEffects));
         carrier=std::make_unique<RawCarrierPostPop>(core.pool,core.types,carrierState,
             MakeCarrierPostPopHooks(core.pool,core.postPop,[this](Sid sid) { static_cast<void>(priests->CheckCarrier(sid)); },[this](float x,float y,std::uint8_t owner) { world.SetSupportOwner(x,y,owner); }));
+        BalloonBodyHooks balloon;balloon.frames=[this](std::uint32_t type) { return static_cast<std::int32_t>(core.frames[type].Codes().size()); };
+        balloon.create=[this](std::uint32_t type,std::uint32_t flags) { return world.Create(type,flags); };balloon.pop=[this](Sid sid,float x,float y,std::uint32_t flags) { world.Pop(sid,x,y,flags); };
+        balloon.unpop=[this](Sid sid,std::uint32_t flags) { world.Unpop(sid,flags); };balloon.destroy=[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); };balloon.check=[this](Sid sid) { static_cast<void>(priests->CheckCarrier(sid)); };
+        balloonBody=std::make_unique<RawBalloonBody>(core.pool,core.types,core.spots,assetState.boss,*carrier,priests->Carrier(),std::move(balloon));core.postPop.SetBalloonPostPop(balloonBody.get());
         // 빈/내장 타입을 포함해 실제 TYPE+98의 판본 초기값과 파싱값을 같은 번호의 모든 소비자에게 전달한다.
         for (std::size_t type=0;type<core.types.size();++type) {
             gunTypes[type].theme=core.types[type].theme;themes[type]=std::bit_cast<std::uint32_t>(core.types[type].theme);elements[type]=core.types[type].theme;
@@ -774,8 +781,8 @@ struct RawCampaignSession::Impl {
                 if (event.effect==SquidDestroyEffect::PreDestroy) { if (SunFence(event.sid)) fenceLifetime->PreDestroy(event.sid,event.flags);else damageablePre->PreDestroy(event.sid,event.flags);return; }
                 if (event.effect==SquidDestroyEffect::PostDestroy) { damageablePostState.battle=core.ownerMode.battle;damageablePostState.boss=assetState.boss;damageablePost->PostDestroy(event.sid,event.flags);return; }
             }
-            if (PlainCarrierLifetime(event.sid)) {
-                if (event.effect==SquidDestroyEffect::PreDestroy) { priests->Carrier().PreDestroy(event.sid,event.flags);return; }
+            if (PlainCarrierLifetime(event.sid) || balloonBody->Handles(event.sid)) {
+                if (event.effect==SquidDestroyEffect::PreDestroy) { if (balloonBody->Handles(event.sid)) balloonBody->PreDestroy(event.sid,event.flags);else priests->Carrier().PreDestroy(event.sid,event.flags);return; }
                 if (event.effect==SquidDestroyEffect::PostDestroy) { damageablePostState.battle=core.ownerMode.battle;damageablePostState.boss=assetState.boss;damageablePost->PostDestroy(event.sid,event.flags);return; }
             }
             // 실제 사제 +18은44b9e0이다. 고유 +14는 뒤의 사제 전처리 래퍼가 먼저 실행한다.
@@ -798,7 +805,7 @@ struct RawCampaignSession::Impl {
         worldHooks.assets=priests->DestroyHooks(std::move(worldHooks.assets)); // 실제4919b0의 목록·보호막·Carrier 전처리를 같은 삭제 호출에 연결한다.
         auto previousDestroy=std::move(worldHooks.destroy); // 실제 신전 VT의 공통+10만 추가 분배한다.
         worldHooks.destroy=[this,previous=std::move(previousDestroy)](Sid sid,std::uint32_t flags,const SquidDestroyHooks& hooks) {
-            if (geyserLifetime->Handles(sid) || Vortex(sid) || FenceCommon(sid) || Flyer(sid) || VisualDummy(sid) || PlainDamageable(sid) || SunFence(sid) || Nugget(sid) || PreviewDais(sid) || PriestForcefield(sid) || PlainCarrierLifetime(sid) || PriestLifetime(sid) || BuriedLifetime(sid) || BombLifetime(sid)) return core.virtualDestroy.Destroy(sid,flags,hooks);return previous(sid,flags,hooks);
+            if (geyserLifetime->Handles(sid) || Vortex(sid) || FenceCommon(sid) || Flyer(sid) || balloonBody->Handles(sid) || VisualDummy(sid) || PlainDamageable(sid) || SunFence(sid) || Nugget(sid) || PreviewDais(sid) || PriestForcefield(sid) || PlainCarrierLifetime(sid) || PriestLifetime(sid) || BuriedLifetime(sid) || BombLifetime(sid)) return core.virtualDestroy.Destroy(sid,flags,hooks);return previous(sid,flags,hooks);
         };
         buriedRegular=std::make_unique<RawBuriedRegular>(core.pool,core.frames,core.frame,random);
         auto actualRegular=hits->Handler(combat->Handler(assetBindings->Handler(buriedRegular->Handler(priests->RegularHandler([this](Sid sid,std::uint32_t event,std::uint32_t count,float payload) {
@@ -1617,6 +1624,7 @@ struct RawCampaignSession::Impl {
         motionState.halt.battle=true;anchorState.graphReady=1;anchorState.fenceType=90;anchorState.windArcherType=140;
         anchor=std::make_unique<RawPlayerPlacementAnchor>(core.pool,core.types,core.hash.Entries(0),core.bookkeeping,additional,contentFinder,anchorState);
         auto effects=services.motion;
+        effects.path.balloonFlame=[this](float x,float y) { if (!services.sound.playOnceAt) throw std::logic_error("벌룬 화염 위치 음향 미연결");services.sound.playOnceAt(x,y,soundNames.Lookup("balloonFlame.wav"),0,0); };
         effects.path.startBlocked=[this](RawPathPoint point,std::uint32_t type,std::uint32_t owner) { PrepareBuilding(core.processState.now);static_cast<void>(buildingEffects->Displace(point.x,point.y,type,owner)); };
         effects.path.arrivalBlocked=[this](Sid,RawPathPoint point,std::uint32_t type,std::uint32_t owner) { PrepareBuilding(core.processState.now);static_cast<void>(buildingEffects->Displace(point.x,point.y,type,owner)); };
         effects.path.constructionArrival=[this](Sid sid,std::uint32_t,std::uint32_t) { const auto type=core.pool.Slot(sid)[10];if (type==134) return buildArrival->Arrive(sid);if (type==105) return manaArrival->Arrive(sid);throw std::logic_error("실제 건설 도착 타입 오류"); };
@@ -1667,7 +1675,7 @@ struct RawCampaignSession::Impl {
         target.start=[this](RawPathStartRequest request)->CarrierPathResult {
             if (!motion) throw std::logic_error("현재 이동 설치 전 운반 대상 시작");const auto kind=core.pool.Slot(request.parent)[10];RawPathProcess* path{}; // 실제 시작의 반환 포인터를 호스트 폭으로 보관한다.
             if (kind==priestState.movement.priest) path=motion->Paths().StartPriest(request);
-            else if (kind==133) path=motion->Paths().StartCarrier(request);
+            else if (kind==133 || kind==111 || kind==141) path=motion->Paths().StartCarrier(request);
             else if (kind==priestState.movement.teleport || kind==priestState.movement.manaBolt) path=motion->Paths().StartConstruction(request);
             else throw std::logic_error("다른 실제 운반 경로38/41/42 미복원 경계");return reinterpret_cast<CarrierPathResult>(path);
         };
@@ -1753,6 +1761,7 @@ struct RawCampaignSession::Impl {
         core.postPop.SetPlayerPostPop(nullptr);
         core.postPop.SetBuriedPostPop(nullptr); // 장기 모듈 해제 뒤 파생 포인터를 남기지 않는다.
         core.postPop.SetFlyerPostPop(nullptr); // 비행 장기 몸체 해제 뒤 공통 분배에 포인터를 남기지 않는다.
+        core.postPop.SetBalloonPostPop(nullptr); //벌룬 그림자 몸체 해제 뒤 공통 분배에 포인터를 남기지 않는다.
     }
 
 };

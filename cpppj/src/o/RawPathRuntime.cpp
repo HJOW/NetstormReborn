@@ -28,11 +28,12 @@ RawPathLayout RawPathRuntime::Layout(OriginalEdition edition) {
     return {600,0x2f28,0x12d8,0x2598,0x2ef8,0x2f00,0x2f04,0x2f08,0x2f0c,0x2f10,0x2f14,0x2f24,0x503d28,0x503d60,0x503eb0};
 }
 // 미초기화 heap 입력을 보존하면서 실제 원본 생성자에서 쓰는 부분만 지운다.
-RawPathRuntime::RawPathRuntime(OriginalEdition edition,bool priest,std::uint8_t heapFill,bool flying,bool worm)
+RawPathRuntime::RawPathRuntime(OriginalEdition edition,bool priest,std::uint8_t heapFill,bool flying,bool worm,bool balloon)
     :edition_(edition),layout_(Layout(edition)),bytes_(layout_.size,heapFill) {
     Write(0,priest ? layout_.priestVtable : layout_.teleportVtable);Write(4,0);Write(8,0);Write(0x10,0);
     if (flying) { if (edition!=OriginalEdition::Patch1078 || priest) throw std::invalid_argument("실제 fly39 생성자 판본/종류 오류");Write(0,0x50e2ec); }
     if (worm) { if (edition!=OriginalEdition::Patch1078 || priest || flying) throw std::invalid_argument("실제 worm40 생성자 판본/종류 오류");Write(0,0x50e4c4); }
+    if (balloon) { if (edition!=OriginalEdition::Patch1078 || priest || flying || worm) throw std::invalid_argument("실제 벌룬42 생성자 판본/종류 오류");Write(0,0x50e2b8); }
     // 원본 두 생성자 모두 시각 배열 전체만 0으로 만들고 꼭짓점/방향 배열은 보존한다.
     for (std::size_t i=0;i<layout_.capacity;++i) Write(layout_.times+i*8,0,8);
     Write(layout_.nextFrame,0,8);
@@ -42,13 +43,22 @@ RawPathRuntime::RawPathRuntime(OriginalEdition edition,bool priest,std::uint8_t 
     Write(tail,0);Write(tail+4,0);
 }
 // 실제 비행 Init은 생성자의 기존 count를 초기화하지 않고 두 꼭짓점을 추가한다.
-void RawPathRuntime::InitializeFlight(RawPathPoint parent,RawPathPoint destination) {
+void RawPathRuntime::InitializeFlight(RawPathPoint parent,RawPathPoint destination,std::int32_t cruiseHeight,std::uint8_t currentHeight) {
     if (edition_!=OriginalEdition::Patch1078) throw std::invalid_argument("CD 비행 Init 미복원");
     const auto append=[this](RawPathPoint point,std::int32_t direction) {
         const auto index=Count();if (index<0 || static_cast<std::size_t>(index)+1>=layout_.capacity) throw std::out_of_range("비행 경로 append 범위 오류");
         Write(0x14+static_cast<std::size_t>(index)*8,Bits(point.x));Write(0x18+static_cast<std::size_t>(index)*8,Bits(point.y));Write(layout_.times+static_cast<std::size_t>(index)*8,0,8);Write(layout_.directions+static_cast<std::size_t>(index)*4,std::bit_cast<std::uint32_t>(direction));Write(0x10,static_cast<std::uint32_t>(index)+1);
     }; // 4882e0의 좌표/방향/시각 쓰기와 마지막 count 증가 순서다.
-    append(parent,0);append(destination,RawSquidNeighbors::Direction(parent.x,parent.y,destination.x,destination.y));ResetCurrent();
+    constexpr float kHeightToCell=0.09090909361839294F; //ROM504194의 실제 고도→칸 배율이다.
+    append(parent,0);const auto rise=static_cast<float>(static_cast<double>(cruiseHeight)*kHeightToCell); //첫 fild/fmul/fstp DWORD다.
+    if (static_cast<std::int32_t>(currentHeight)<std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(cruiseHeight)-1U)) append({parent.x,static_cast<float>(static_cast<double>(parent.y)-(static_cast<double>(rise)-static_cast<double>(currentHeight)*kHeightToCell))},0);
+    if (cruiseHeight) append({destination.x,static_cast<float>(static_cast<double>(destination.y)-rise)},0);
+    append(destination,RawSquidNeighbors::Direction(parent.x,parent.y,destination.x,destination.y));ResetCurrent();
+}
+// 경로 개수 밖이어도 실제 배열/인접8BYTE 안이면 원본 읽기를 보존한다.
+double RawPathRuntime::PhysicalTime(std::int32_t index) const {
+    if (index< -1 || index>=static_cast<std::int32_t>(layout_.capacity)) throw std::out_of_range("벌룬 고도 시각의 물리 배열 범위");
+    return std::bit_cast<double>(Read(static_cast<std::size_t>(static_cast<std::int64_t>(layout_.times)+static_cast<std::int64_t>(index)*8),8));
 }
 // 같은 실제 QWORD 예약 시각을 bit 그대로 읽는다.
 double RawPathRuntime::NextFrame() const { return std::bit_cast<double>(Read(layout_.nextFrame,8)); }

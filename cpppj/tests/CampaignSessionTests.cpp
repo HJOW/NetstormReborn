@@ -1522,3 +1522,27 @@ TEST_CASE(CampaignSession_RepeatedRewardPickupThroughActualLocalTransport) {
     }
     CHECK(index==2);wire=nullptr;
 }
+
+// 실제 두 벌룬의 첫 그림자 Pop→42 이륙/이동/착륙→그림자 우선 삭제를 같은 Kernel로 진행한다.
+TEST_CASE(CampaignSession_BalloonFlightShadowAndLandingThroughActualKernel) {
+    // 같은 VT를 쓰는 원본 벌룬111과 에어 쉽141을 서로 새 세션에서 검증한다.
+    for (const std::uint32_t kind:{111U,141U}) {
+        const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();double wall=100;std::vector<SoundHandle> sounds;std::vector<Sid> lost; //같은 실제 음향 이름표와 장치 시각·전역소리 요청 입력이다.
+        services.sound.wallSeconds=[&] { return wall; };services.sound.playOnceAt=[&](float,float,SoundHandle sound,std::uint32_t loop,std::uint32_t priority) { CHECK(!loop && !priority);sounds.push_back(sound);return sound; };
+        services.unitLost=[&](Sid sid) { lost.push_back(sid); }; //실제 Client의 unitLost.wav 장치 경계다. 삭제 관문의 결과를 기록한다.
+        auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));session.Load();auto core=session.Core();const auto parent=session.World().Create(kind,2);session.World().Pop(parent,98,122,0);core.owner.Set(parent,1);
+        const auto shadow=Sid{static_cast<std::uint16_t>(Get(core.pool.Slot(parent),8,2))};CHECK(shadow.value && (core.pool.Slot(shadow)[40]&8));if (!shadow.value) continue;CHECK(core.pool.Slot(shadow)[10]==kind && core.pool.Slot(shadow)[35]==0xec);
+        const auto packets=external.packets.size();CHECK(session.StartCarrierMovement({parent,{102,122},1,0,0,0,0}));const auto form=FindAttachedProcess(core.pool,parent,42);auto* path=dynamic_cast<RawPathProcess*>(core.processes.FromForm(form));CHECK(path && path->Runtime().Count()==4);if (!path) continue;CHECK(Get(path->Runtime().Bytes(),0)==0x50e2b8 && external.packets.size()>packets);
+        const auto begin=core.processState.now,end=path->Runtime().Time(path->Runtime().Count()-1);bool rose{},landed{};std::size_t frames{};const auto sp=session.Sp(1); //끝 시각은 실제 Prepare가 계산한 값이다.
+        // 현재 이동 시각을 연속 공급하며 전체 Kernel의 실제42/그림자 공간 후처리를 실행한다.
+        for (std::uint64_t frame=0;frame<1000 && core.processState.now<end+0.25;++frame) {
+            const auto now=begin+static_cast<double>(frame)*.025;wall=100+(now-begin);session.RunFrame({now,wall,frame ? .025 : 0.0,frame},false);++frames;
+            const auto raw=core.pool.Slot(parent);if (raw[30]) { rose=true;CHECK(raw[35]==0xe2 && core.pool.Slot(shadow)[35]==0xe6); }
+            if (!core.processes.FromForm(form)) { landed=true;break; }
+        }
+        CHECK(rose && landed && frames>2 && core.pool.Slot(parent)[30]==0);CHECK(std::bit_cast<float>(Get(core.pool.Slot(parent),14))==102.0F && std::bit_cast<float>(Get(core.pool.Slot(parent),18))==122.0F);CHECK(session.Sp(1)==sp && core.pool.Slot(shadow)[35]==0xec);
+        const auto flame=external.names.Lookup("balloonFlame.wav");CHECK((std::find(sounds.begin(),sounds.end(),flame)!=sounds.end())==(kind==111));CHECK(Get(core.pool.Slot(shadow),36)==core.frames[kind].Codes().size()+Get(core.pool.Slot(parent),36));
+        CHECK(session.World().Destroy(parent,0));CHECK((core.pool.Slot(parent)[11]&1) && (core.pool.Slot(shadow)[11]&1));CHECK(lost==std::vector<Sid>{parent});CHECK(core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0 && core.bookkeeping.depth==0);
+        std::cout<<"실제 벌룬 TYPE"<<kind<<" 42/고도/그림자/착륙/삭제 "<<frames<<"프레임 통과\n";
+    }
+}

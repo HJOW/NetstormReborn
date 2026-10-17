@@ -1453,3 +1453,8 @@ set_source_files_properties(LightningScreenTests.cpp PROPERTIES COMPILE_DEFINITI
 target_sources(netstorm_tests PRIVATE NuggetReplenishTests.cpp)
 set_source_files_properties(NuggetReplenishTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_NUGGET_REPLENISH_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/nugget-replenish-x86.tsv\"")
+
+# 벌룬42와 그림자 후처리의 새 독립 원문을 대조한다.
+target_sources(netstorm_tests PRIVATE BalloonPathTests.cpp)
+set_source_files_properties(BalloonPathTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_BALLOON_PATH_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/balloon-path-x86.tsv\";NETSTORM_BALLOON_BODY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/balloon-body-x86.tsv\";NETSTORM_BALLOON_BODY_HEIGHT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/balloon-body-height-x86.tsv\"")

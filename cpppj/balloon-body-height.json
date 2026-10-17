@@ -1,0 +1,25 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-18",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16"
+  },
+  "uniqueInputs": 256,
+  "normalReturns": {
+    "0042ac90": 512
+  },
+  "instructions": 51836,
+  "precisionDifferentInputs": [],
+  "boundaries": "42ac90의 같은 원문/경계를 재사용한다. 기존233입력/fixture/관측기는 변경하지 않는다. C++ 결과를 읽지 않는다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_balloon_body_height.py": "79cc5c1919957d33087a4be06726d699a5a130c0f2d8a094dca2ebcea49c5fc3",
+    "tools/decomp_balloon_body.py": "d4384ab0eb23267a955aa6458a15517444ffe28941961012f2d688b2ff8293f9",
+    "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+    "tools/decomp_cursor_position.py": "e15bcdbc4c6be9c131c30f15416c945d650dba9f7dc6def404b47f63c635c212",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "cpppj/tests/fixtures/balloon-body-height-x86.tsv": "eb760c5a444713f601fa37c83cb69c1f5d9b2fab5bf66bdef294cf680f88d7b5"
+  }
+}

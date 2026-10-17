@@ -1,0 +1,92 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-18",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16"
+  },
+  "uniqueInputs": 688,
+  "normalReturns": {
+    "0048be70": 1376,
+    "0048acd0": 288,
+    "0048ad60": 1076
+  },
+  "instructions": 14038870,
+  "nativeCalls": {
+    "0048be70": 1376,
+    "0048b2c0": 1370,
+    "0048acd0": 288,
+    "00488d00": 288,
+    "004882e0": 1008,
+    "0041ce90": 288,
+    "0048ad60": 1076,
+    "0048a330": 1056,
+    "0041bfb0": 1348,
+    "004e49c0": 562,
+    "00425e20": 390,
+    "00488f40": 390,
+    "00488f80": 380,
+    "0041cd60": 190,
+    "00488f10": 190,
+    "004ac550": 146,
+    "0049a840": 146
+  },
+  "precisionDifferentInputs": [],
+  "vtables": {
+    "0x50e2b8": [
+      "0x48b6a0",
+      "0x4437f0",
+      "0x4895b0",
+      "0x48aa00",
+      "0x40b380",
+      "0x4437f0",
+      "0x48ad60",
+      "0x480260",
+      "0x48acd0",
+      "0x48b340",
+      "0x489ff0",
+      "0x48ad20",
+      "0x48a200"
+    ],
+    "0x50e284": [
+      "0x48b6a0",
+      "0x4437f0",
+      "0x4895b0",
+      "0x48aa00",
+      "0x40b380",
+      "0x4437f0",
+      "0x48a950",
+      "0x480260",
+      "0x48bb10",
+      "0x48b340",
+      "0x489ff0",
+      "0x48b680",
+      "0x48a200"
+    ],
+    "0x50e2ec": [
+      "0x48b6a0",
+      "0x4437f0",
+      "0x4895b0",
+      "0x48aa00",
+      "0x40b380",
+      "0x4437f0",
+      "0x48af90",
+      "0x480260",
+      "0x48af00",
+      "0x48b340",
+      "0x489ff0",
+      "0x48af50",
+      "0x48a200"
+    ]
+  },
+  "boundaries": "48be70/48b2c0/48acd0/488d00/48ad60와 실제 Step/좌표·각도·TYPE/CRT 하위를 실행했다. new/Halt/큰도착/가상공간/음향은 명시경계다. 전체100080BYTE/부모50BYTE/관찰전역/효과를 대조한다. GP/retN/canary/SEH/x87/코드·읽기·쓰기 범위를 검사한다. 원본게임·OS·창/전체42 이동 검증이 아니다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_balloon_path.py": "804d7ec6d49b050d5139262fd7ca794c08db1deeb0348e9f8f489db21c6984e4",
+    "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+    "tools/decomp_cursor_position.py": "e15bcdbc4c6be9c131c30f15416c945d650dba9f7dc6def404b47f63c635c212",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "cpppj/tests/fixtures/balloon-path-x86.tsv": "be32994968c78fb4b3b365cd90e7e8064ff687c62b4f7b3269794f0eef4a5c30"
+  }
+}
