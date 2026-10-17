@@ -132,6 +132,31 @@ TEST_CASE(CampaignSession_PathRetargetRunsRealCarrierFrames) {
     else CHECK(replacement.value!=0 && external.packets.size()==packets); // 실제 끊긴 섬의 접근 실패는 기존40만 삭제한다.
     CHECK(core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0);
 }
+// 같은 실제 Host40이 목적지에 도착해서 내용물 생성→통지 송신→현재 수량 차감까지 실행한다.
+TEST_CASE(CampaignSession_CarrierMiningNaturalArrivalUsesSameWorld) {
+    // 실제 도착에서 잔량 유지와 마지막 너겟의 자연 고갈을 각각 새 월드로 실행한다.
+    for (const auto initialQuantity:{400U,200U}) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();
+    RawCampaignSession* live{};Sid golem{},geyser{};std::vector<std::vector<std::uint8_t>> mined;std::uint32_t quantityAtSend{},contentAtSend{}; // 실제 송신 경계에서 로컬 수량 차감 전 상태를 관찰한다.
+    services.battlePeers[2]=[&](std::span<const std::uint8_t> packet) {
+        if (packet.size()!=6 || packet[1]!=0x5b) return;CHECK(live && geyser.value && golem.value);if (!live) return;
+        mined.emplace_back(packet.begin(),packet.end());quantityAtSend=Get(live->Core().pool.Slot(geyser),12,2);contentAtSend=live->Priests().Carrier().FindContained(golem,0x20,154,0).value;
+    };
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));live=&session;session.Load();const auto core=session.Core();
+    const Sid priest{static_cast<std::uint16_t>(session.FindPriestParticipation(1))};CHECK(priest.value);if (!priest.value) return;const auto priestRaw=core.pool.Slot(priest);
+    golem=session.World().Create(133,2);session.World().Pop(golem,std::bit_cast<float>(Get(priestRaw,14)),std::bit_cast<float>(Get(priestRaw,18)),0);core.owner.Set(golem,1);geyser=session.CarrierChoice().ChooseGeyser(golem);CHECK(geyser.value);if (!geyser.value) return;
+    Put(core.pool.AllocatedBytes(geyser),12,initialQuantity,2);CHECK(core.types[154].cost==200); // 한 번 또는 두 번의 채취분을 초기 입력한다. 너겟/차감 결과는 입력하지 않는다.
+    const auto playerBytes=session.PlayerRecords();auto players=std::span<std::uint8_t>(const_cast<std::uint8_t*>(playerBytes.data()),playerBytes.size());players[2*0xb4+0x50]|=1; // 실제 접속 플래그와 실제 peer를 함께 준비한다.
+    const auto rectangle=core.neighbors.Footprint(geyser);session.World().Unpop(golem,0);session.World().Pop(golem,rectangle.right,rectangle.bottom,0);const auto started=session.CarrierTarget().GoGeyser(golem,geyser);CHECK(started);if (!started) return;
+    auto* path=reinterpret_cast<RawPathProcess*>(started);const auto form=path->Form();const auto limit=path->Runtime().Count()+2;core.processState.now=path->Runtime().Time(path->Runtime().Count()-1);const auto sp=session.Sp(1);
+    // 실제 한 꼭짓점씩 진행하고 삭제된 Form을 다시 호출하지 않는다. 도착 좌표/수신을 직접 호출하지 않는다.
+    for (int i=0;i<limit;++i) { auto* current=dynamic_cast<RawPathProcess*>(core.processes.FromForm(form));if (!current) break;current->RunFrame(); }
+    const auto content=session.Priests().Carrier().FindContained(golem,0x20,154,0);CHECK(content.value && Get(core.pool.Slot(content),18,2)==154);
+    CHECK(mined.size()==1 && mined.front()==std::vector<std::uint8_t>({1,0x5b,6,0,static_cast<std::uint8_t>(geyser.value),static_cast<std::uint8_t>(geyser.value>>8)}));CHECK(quantityAtSend==initialQuantity && contentAtSend==content.value);CHECK(session.Sp(1)==sp);
+    if (initialQuantity==400) CHECK(Get(core.pool.Slot(geyser),12,2)==200);else CHECK((core.pool.Slot(geyser)[11]&3)!=0 || core.pool.Slot(geyser)[10]!=122);
+    RawContainedLookup lookup(core.pool,[](Sid,std::uint32_t) { throw std::logic_error("채취 후 조회에서 삭제 금지"); });CHECK(!lookup.Find(golem,40).value);CHECK(core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0);
+    }
+}
 // 실제Stage3가읽을전역과직접SP지정이동일Session의원문32×9분산배열에만영향을주어야한다.
 TEST_CASE(CampaignSession_MissionInputsUseSameScrambledSpSlots) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
@@ -1298,4 +1323,18 @@ TEST_CASE(CampaignSession_CursorRequeriesReplacedGumpsAtStationaryMouse) {
     cursor.Display().Sprites({0,0,1024,768},2); // 폐기 토큰 조회라면 여기서 out_of_range로 실패한다.
     controls.SetControls({},labels,1024,768,background);cursor.GumpsChanged();CHECK(cursor.Lifecycle().currentGump==0);
     cursor.Cancel();cursor.GumpsChanged();CHECK(session.CursorDropSettings().lockDepth==1);
+}
+
+// 실제5b 등록/분배가 현재 지면을 차감하고 고갈한 자산의 실제 삭제·공간·목록까지 갱신한다.
+TEST_CASE(CampaignSession_CarrierMiningRegisteredReceiverExhaustsGeyser) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",external.Services());
+    std::vector<std::vector<std::uint8_t>> received;RawPacketDispatch dispatch(OriginalEdition::Patch1078,CommandDevice(received));CHECK(Throws([&] { session.RegisterCarrierCommands(dispatch); }));session.Load();session.RegisterCarrierCommands(dispatch);const auto core=session.Core();
+    const auto& registration=dispatch.Registration(0x5b);CHECK(registration.length==6 && registration.version==1 && registration.mismatch==0 && !registration.observer);
+    const Sid priest{static_cast<std::uint16_t>(session.FindPriestParticipation(1))};CHECK(priest.value);if (!priest.value) return;const auto position=core.pool.Slot(priest);const auto golem=session.World().Create(133,2);session.World().Pop(golem,std::bit_cast<float>(Get(position,14)),std::bit_cast<float>(Get(position,18)),0);core.owner.Set(golem,1);
+    const auto geyser=session.CarrierChoice().ChooseGeyser(golem);CHECK(geyser.value);if (!geyser.value) return;Put(core.pool.AllocatedBytes(geyser),12,200,2);CHECK(core.types[154].cost==200);
+    const std::array<std::uint8_t,6> packet{1,0x5b,6,0,static_cast<std::uint8_t>(geyser.value),static_cast<std::uint8_t>(geyser.value>>8)};PacketConnection connection;connection.sender=7;
+    auto geyserRaw=core.pool.AllocatedBytes(geyser);const auto oldState=geyserRaw[11];geyserRaw[11]|=1;const auto notices=external.notices;CHECK(dispatch.Dispatch(connection,packet));CHECK(Get(core.pool.Slot(geyser),12,2)==200 && external.notices==notices);geyserRaw[11]=oldState; // free 상태의 무효과를 확인한 뒤 원래 살아 있는 상태로 복구한다.
+    CHECK(dispatch.Dispatch(connection,packet));CHECK(received.size()==2 && received[0]==std::vector<std::uint8_t>(packet.begin(),packet.end()) && connection.depth==0);
+    CHECK((core.pool.Slot(geyser)[11]&3)!=0 || core.pool.Slot(geyser)[10]!=122);CHECK(session.CarrierChoice().ChooseGeyser(golem)!=geyser);CHECK(external.notices>notices);CHECK(core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0 && core.bookkeeping.depth==0);
 }

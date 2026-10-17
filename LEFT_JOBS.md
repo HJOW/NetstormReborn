@@ -1,5 +1,18 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-18 단위155 완료: 실제 채취 통지와 간헐천 고갈 수명 (`HJOW-Athlon`)
+
+- [x] 기준 `cd6c03a`, 직전목표턴은제품변경/관측/회귀/커밋의진행턴이다. 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16** 일치. AGENTS/양 LEFT 재독/깨끗한트리확인. 새디컴파일·보호원본수정·원본게임창실행·DirectDraw수정없음. [작업 기록](docs/exe/cpp-carrier-mining-20261018.md).
+- [x] `RawCarrierMining`이실제429800의40ac20헤더/지면SID→4e2e30송신→4266c0로컬수신을연결했다. 현재헤더/bit7제거/길이비보정/송신뒤같은버퍼를보존한다. 실제현재연결표·같은난수/Pool/Hash/TYPE·실제음향/가상삭제/생성/Pop의기존RawGeyserMined를쓴다. `RegisterCarrierCommands`의5b/길이6/version1/mismatch0/빈observer도같은현재handler다. 현재boss/checking/nuggetType을각수신직전에공급한다. 아래단위154의minedPacket 미연결항목을해결했다.
+- [x] 실제도착의시작/도착443800겹침정리도기존RawConstructionEffects.Displace에현재상태로연결했다. 고갈검사가고유삭제미연결을드러내어 `RawGeyserLifetime`485580/485540을복원했다. 실제VT50da88/+10공통4af780/+14고유485580/+18고유485540이다. 기본프레임가상→raw36직접DWORD→표시한번→현재extra→AI0→현재목록모든중복제거/꼬리보존→DamageablePre, 현재editor/extra→조건부섬정리→DamageablePost순서다. 다른파생삭제를일반성공으로풀지않았다.
+- [x] 새통지 **864입력·1728정상반환·502848명령**, 고유수명 **2016입력·4032정상반환·122304명령**이며모두53/64차이0이다. 전자는전체429800의명시boss1/AI1/빈내용물/유효간헐천계약에서통지조각을비교한다. 후자는고유두함수/40ea00전체이며가상getter·표시/AI/섬/큰Damageable는경계다. GP/retN/SEH/x87/명령·접근범위/효과·전체raw·물리목록/수명앞뒤canary를검사했다. 기존수량2312행(정상2304/assert8)·건설효과원문은보존했고새입력으로합산하지않는다.
+- [x] 실제1-1간헐천15095섬모서리와초기잔량400/200만준비한두새Session에서실제선택기/BFS/Host40/시계로도착했다. 너겟생성→peer송신시내용물존재·차감전잔량→실제로컬수신의400→200과200→고갈삭제를확인했다. 실제귀환경로는끊긴섬이라실패/새40없음이며SP그대로다. 별도실제5b단일분배는free입력무효과/잔량200고갈·목록·공통삭제·공간/깊이복구를검사했다. 자연왕복/SP수입/전체Kernel·완주는아니다. 첫free복구검사오류와두번째실제고유삭제미연결실패로그를보존했다.
+- [x] 최종Release build4 **경고0·오류0**, 집중 **4+2성공**, 최종전체CTest **1621개·실패0·종료0·217.55초**(CTest217.58초)다. 보강전전체205.44초도통과했다. 주감사76종 **65성공·직전기존11실패·새실패0**. 참조감사3종의기존SHA/이름변경이력불일치는참조소스·목록의HEAD개행정규화불변/기존fixture당시SHA일치로구분해 `reference-audit.json`에기록했다. 과거보고서·기대값을덮어쓰지않는다.
+- [x] 기존50보고서153현재핀/과거전체JSON역치환/CMake접두/기존fixture·보호SHA·AGENTS·DN/새UTF-8·LF를확인했다. 클론진입5PASS/originals_unchanged=true이며1-1/1-2briefing→world/tutorial1~3briefing범위다. 모든핸들종료/대기없음이다. 제품 `cpppj/campaign-carrier-mining.json`, 독립 `cpppj/carrier-mining.json`/`cpppj/geyser-lifetime.json`, 로그접두 `extracted/goal-carrier-mining-20261018-`다.
+- [x] 인수인계뒤 **`20261018-05 CP 골렘의 실제 채취 통지와 간헐천 고갈 수명 연결`** 으로로컬커밋한다. push하지않고전체11스테이지goal active다.
+- [ ] **다음우선/주소정정:**Halt의carrierPickup은 **429ed0**(특정TYPE156), CarrierArrival의pickup은 **428e00**(별도포획요청)이다. 두몸체와429010회피를원본대로연결한다. 실제AI의간헐천등록/제거하위는기존RawGeyserAiRegistration이nonnull에서명시거부하므로단독미션의AI실행후속으로유지한다. 편집섬정리내부의기존미연결효과도유지한다.
+- [ ] **남은범위:**38·41·42경로/5040c0의42ae80/실제Client명령소비자·생산·경제·AI/11스테이지자연운반·왕복·승패·저장·다음미션·완주/전체동일성은미완료다. 미등록187그래픽거부를유지한다. 이번단위로채취통지/고갈은실제연결했지만플레이전체완료로보지않는다.
+
 ## 2026-10-18 단위154 완료: 운반 경로의 대상 재확인과 프레임 연결 (`HJOW-Athlon`)
 
 - [x] 기준 `87c37af`, 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16** 일치. AGENTS/양 LEFT 재독. 원본 수정·새 디컴파일·원본 게임 창 실행·DirectDraw 수정은 없다. [작업 기록](docs/exe/cpp-path-retarget-20261018.md).

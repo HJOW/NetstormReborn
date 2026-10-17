@@ -1413,3 +1413,13 @@ set_source_files_properties(CarrierChoiceTests.cpp PROPERTIES COMPILE_DEFINITION
 target_sources(netstorm_tests PRIVATE PathRetargetTests.cpp)
 set_source_files_properties(PathRetargetTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_PATH_RETARGET_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/path-retarget-x86.tsv\"")
+
+# 실제 헤더/송신/로컬 수신의 보호PE864행이다.
+target_sources(netstorm_tests PRIVATE CarrierMiningTests.cpp)
+set_source_files_properties(CarrierMiningTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CARRIER_MINING_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/carrier-mining-x86.tsv\"")
+
+# 간헐천의 고유 전처리/후처리와 실제 중복 제거2016행이다.
+target_sources(netstorm_tests PRIVATE GeyserLifetimeTests.cpp)
+set_source_files_properties(GeyserLifetimeTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_GEYSER_LIFETIME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/geyser-lifetime-x86.tsv\"")

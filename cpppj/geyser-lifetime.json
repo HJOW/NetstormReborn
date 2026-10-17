@@ -1,0 +1,36 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-18",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16"
+  },
+  "uniqueInputs": 2016,
+  "normalReturns": 4032,
+  "instructions": 122304,
+  "nativeCalls": {
+    "00485580": 2016,
+    "0040ea00": 672,
+    "00485540": 2016
+  },
+  "precisionDifferentInputs": [],
+  "originalVtable": {
+    "0x10": "0x4af780",
+    "0x14": "0x485580",
+    "0x18": "0x485540",
+    "0x78": "0x4acfe0",
+    "0x88": "0x4ad500"
+  },
+  "boundaries": "485580/485540/40ea00 전체실행. 가상기본프레임/표시/AI/섬정리/큰Damageablepre·post는명시경계다. 직접frameDWORD/효과뒤현재extra·목록/모든중복제거·물리꼬리보존과전체raw/현재editor·count/효과순서를대조했다. GP/retN/SEH/앞뒤canary/x87/명령·읽기·쓰기범위를검사했다. CD/nonnullAI하위/편집섬정리내부/실제게임창·완주검증은아니다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "tools/decomp_geyser_lifetime.py": "895c16edf79a71a5f97d5f4eacbb7fad68262accb592bdf26771bcc878b88bb1",
+    "tools/decomp_carrier_falling.py": "f8702db0708a543b73213c8df9154503afe977767a11bd7c150b639ee1b587a6",
+    "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+    "tools/decomp_cursor_position.py": "e15bcdbc4c6be9c131c30f15416c945d650dba9f7dc6def404b47f63c635c212",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "cpppj/tests/fixtures/geyser-lifetime-x86.tsv": "2d2a608cdfe3948fb19430989895e31a5fc34659f31f9152c5f372364264446f"
+  }
+}

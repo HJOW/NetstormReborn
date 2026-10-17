@@ -92,3 +92,9 @@ target_sources(netstorm PRIVATE o/RawCarrierChoice.cpp o/RawCarrierChoice.h)
 
 # 운반 경로의 실제 대상 재확인과 새 이동의 Runtime 수명을 보존한다.
 target_sources(netstorm PRIVATE o/RawPathRetarget.cpp o/RawPathRetarget.h)
+
+# 실제 채취 통지의 작성/송신/로컬 수량 차감을 같은 월드에 연결한다.
+target_sources(netstorm PRIVATE o/RawCarrierMining.cpp o/RawCarrierMining.h)
+
+# 고갈한 간헐천의 고유 프레임/AI·목록 제거와 공통 삭제 순서다.
+target_sources(netstorm PRIVATE o/RawGeyserLifetime.cpp o/RawGeyserLifetime.h)

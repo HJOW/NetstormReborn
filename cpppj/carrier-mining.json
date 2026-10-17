@@ -1,0 +1,33 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-18",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16"
+  },
+  "uniqueInputs": 864,
+  "normalReturns": 1728,
+  "instructions": 502848,
+  "nativeCalls": {
+    "00429800": 1728,
+    "004ac200": 6912,
+    "0049a840": 8640,
+    "004ac1e0": 1728,
+    "0040ac20": 1728,
+    "004df230": 1728
+  },
+  "createdNuggetBoundary": 1728,
+  "precisionDifferentInputs": [],
+  "boundaries": "전체429800 및 실제40ac20/4df230/TYPE getter를 실행했다. boss1/AI1/owner1/빈내용물/유효간헐천/Graph같음 계약이며 다른 현재 조회/내용물생성/송신/로컬수량수신은 명시 큰 경계다. 새C++비교범위는 그 안의6바이트통지작성·송신→로컬수신·현재헤더/지면상태다. 수량/고갈본문은 기존geysermined2312행 별도이고 전체429800 모든분기/실제게임창/완주 검증은 아니다. GP/retN/SEH/x87/명령·읽기·쓰기범위를검사했다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "tools/decomp_carrier_mining.py": "78cae56c40bdc066a033af750a00b8349d2504696b383db9a65239821ce27c13",
+    "tools/decomp_carrier_falling.py": "f8702db0708a543b73213c8df9154503afe977767a11bd7c150b639ee1b587a6",
+    "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+    "tools/decomp_cursor_position.py": "e15bcdbc4c6be9c131c30f15416c945d650dba9f7dc6def404b47f63c635c212",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "cpppj/tests/fixtures/carrier-mining-x86.tsv": "b2a0bcaf272a6ae890313bc832e6a24a51847ddef5d1961ddb0ef42d6e1b9c77"
+  }
+}

@@ -189,6 +189,8 @@ public:
     bool RequestConstruction(const o::ConstructionConfirmRequest& request);
     // 같은 실제0x3e 수신을 기존 RawPacketDispatch 또는 LocalMissionTransport.Dispatch에 등록한다.
     void RegisterConstructionCommands(o::RawPacketDispatch& dispatch);
+    // 같은 실제0x5b 채취 수신을 현재 캠페인의 수량/고갈 처리기에 등록한다.
+    void RegisterCarrierCommands(o::RawPacketDispatch& dispatch);
     // 원본 MayPlace를 통과한 일반 서버 요청의 기준점/송신/직접 통지/실제 배치를 실행한다.
     bool ConfirmConstruction(const o::ConstructionConfirmRequest& request);
     // 설치 뒤 로컬 간헐천의 noIsland/Player0 받침만 실제 서버 확정 사슬로 만든다.

@@ -4,6 +4,10 @@
 #include "client/PriestPlacementAssets.h"
 #include "client/RawCampaignGunQueries.h"
 #include "o/RawPathRetarget.h"
+#include "o/RawCarrierMining.h"
+#include "o/RawGeyserMined.h"
+#include "o/RawGeyserLifetime.h"
+#include "o/RawPacketDispatch.h"
 #include "client/AiTypeRequiredEnergy.h"
 #include "o/RawGameRandomSeed.h"
 #include "o/RawSquidFinder.h"
@@ -297,6 +301,11 @@ struct RawCampaignSession::Impl {
     CarrierChoiceState carrierChoiceState; // 실제 후보의 경로 비교/현재 타입/임시 거리 전역이다.
     std::unique_ptr<RawCarrierChoice> carrierChoice; // 현재 Player+7c/AI/자산 목록과 같은 BFS를 사용한다.
     std::unique_ptr<RawPathRetarget> pathRetarget; //489ff0의 실제 대상 재확인을 현재 내용물/선택/이동에 연결한다.
+    GeyserMinedState geyserMinedState; // 현재 권한/타입을 각 수신 직전 실제 전역에서 공급한다.
+    FormPacketHeader miningHeader{0x5b,1,6}; //40ac20의 실제 초기 메시지/프로토콜/길이다.
+    std::unique_ptr<RawGeyserMined> geyserMined; // 같은 난수/공간/가상 삭제/생성의 기존 원본 수량 몸체다.
+    std::unique_ptr<RawGeyserLifetime> geyserLifetime; // 고갈한 지면의 고유 AI/목록/기본 프레임과 공통 수명이다.
+    std::unique_ptr<RawCarrierMining> carrierMining; // 실제 너겟 생성 뒤 송신→로컬 수신을 실행한다.
     std::unique_ptr<RegularProcess> pendingCarrierTask; // 원본 new28과 생성자가 공유하는 하나의 확보 메모리다.
     std::unique_ptr<GumpFormHost> gumpForms; // 같은Pool의실제Form3와현재UI등록ID/부모삭제알림수명이다.
     std::unique_ptr<RawContentParentNotice> contentNotice; // 부모의 실제 현재 VT로 기본/파생 +24를 분배한다.
@@ -733,6 +742,10 @@ struct RawCampaignSession::Impl {
         worldHooks.destroy=construction->Destroy(lifetime->Destroy(hits->Destroy(services.destroy)));
         auto previousEffects=std::move(worldHooks.assets.emit); // 다른 기존 파생/전송/선택 처리기를 유지한다.
         worldHooks.assets.emit=[this,previous=std::move(previousEffects)](const SquidDestroyEvent& event) {
+            if (geyserLifetime->Handles(event.sid)) {
+                if (event.effect==SquidDestroyEffect::PreDestroy) { geyserLifetime->PreDestroy(event.sid,event.flags);return; }
+                if (event.effect==SquidDestroyEffect::PostDestroy) { geyserLifetime->PostDestroy(event.sid,event.flags);return; }
+            }
             // 다이스 미리보기의 extra8은44afd0의 큰 일반 전처리를 건너뛴다. 실제 VT/타입/비트를 모두 확인한다.
             if (PreviewDais(event.sid)) {
                 if (event.effect==SquidDestroyEffect::PreDestroy) { damageablePre->PreDestroy(event.sid,event.flags);return; }
@@ -762,7 +775,7 @@ struct RawCampaignSession::Impl {
         };
         auto previousDestroy=std::move(worldHooks.destroy); // 실제 신전 VT의 공통+10만 추가 분배한다.
         worldHooks.destroy=[this,previous=std::move(previousDestroy)](Sid sid,std::uint32_t flags,const SquidDestroyHooks& hooks) {
-            if (Vortex(sid) || FenceCommon(sid) || Flyer(sid) || VisualDummy(sid) || PlainDamageable(sid) || SunFence(sid) || Nugget(sid) || PreviewDais(sid) || PriestForcefield(sid) || PlainCarrierLifetime(sid)) return core.virtualDestroy.Destroy(sid,flags,hooks);return previous(sid,flags,hooks);
+            if (geyserLifetime->Handles(sid) || Vortex(sid) || FenceCommon(sid) || Flyer(sid) || VisualDummy(sid) || PlainDamageable(sid) || SunFence(sid) || Nugget(sid) || PreviewDais(sid) || PriestForcefield(sid) || PlainCarrierLifetime(sid)) return core.virtualDestroy.Destroy(sid,flags,hooks);return previous(sid,flags,hooks);
         };
         buriedRegular=std::make_unique<RawBuriedRegular>(core.pool,core.frames,core.frame,random);
         auto actualRegular=hits->Handler(combat->Handler(assetBindings->Handler(buriedRegular->Handler(priests->RegularHandler([this](Sid sid,std::uint32_t event,std::uint32_t count,float payload) {
@@ -1182,6 +1195,14 @@ struct RawCampaignSession::Impl {
         vortex.damageablePre=[this](Sid sid,std::uint32_t flags) { damageablePre->PreDestroy(sid,flags); };vortex.refreshProduction=services.ownership.refreshProduction;
         vortex.assertion=SessionMissing<void,std::uint32_t>();
         vortexPre=std::make_unique<RawVortexPreDestroy>(core.pool,players,assetState.temples,assetState.residences,assetState.outposts,objectState.loadingDepth,std::move(vortex));
+        GeyserLifetimeHooks geyser;
+        geyser.defaultFrame=[this](Sid sid) { const auto type=core.pool.Slot(sid)[10];if (type<70 || type-70>=assets.game.Types().size()) throw std::out_of_range("간헐천 기본 프레임 TYPE 오류");return static_cast<std::uint32_t>(assets.game.Types()[type-70].definition.specialFrames.defaultFrame); };
+        geyser.update=[this](Sid sid) { core.display.Update(core.pool.Slot(sid)); };
+        geyser.registerAi=[this](Sid sid,std::uint32_t state) { RawGeyserAiRegistration(core.pool.Edition(),players).Register(sid.value,state); };
+        geyser.damageablePre=[this](Sid sid,std::uint32_t flags) { damageablePre->PreDestroy(sid,flags); };
+        geyser.damageablePost=[this](Sid sid,std::uint32_t flags) { damageablePostState.battle=core.ownerMode.battle;damageablePostState.boss=assetState.boss;damageablePost->PostDestroy(sid,flags); };
+        geyser.dropIsland=[this](float x,float y,std::uint32_t flags,std::uint32_t owner) { PrepareBuilding(core.processState.now);buildingEffects->DropIsland(x,y,flags,owner); };
+        geyserLifetime=std::make_unique<RawGeyserLifetime>(core.pool,assetState.geysers,globals.editor,std::move(geyser));
     }
     // 각 명시 요청에서 현재 실제 소유자/서버/권한/요새/타입만 공급한다. Player/자원/지도는 복사하지 않는다.
     void PrepareConstruction() {
@@ -1465,6 +1486,11 @@ struct RawCampaignSession::Impl {
         hooks.push=[this](float x,float y,std::uint32_t type,std::uint32_t owner) { static_cast<void>(buildingEffects->Displace(x,y,type,owner)); };
         building=std::make_unique<RawConstructionProcess>(core.pool,core.types,buildingState,std::move(hooks),&core.processes);
     }
+    // 송신 효과 뒤 또는 외부 수신 직전에 실제 현재 전역을 같은 기존 handler에 공급한다.
+    void ReceiveGeyserMined(std::span<const std::uint8_t> packet) {
+        geyserMinedState.boss=assetState.boss;geyserMinedState.checking=gunState.checking;geyserMinedState.nuggetType=motionState.carrier.nuggetType;
+        geyserMined->HandlePacket(packet);
+    }
     // 설치를 마친 동일 Graph/Host에 실제 사제 경로 모듈을 한 번 연결한다.
     void ConnectMotion() {
         if (motion) throw std::logic_error("실제 세션 경로 중복 연결");
@@ -1492,6 +1518,8 @@ struct RawCampaignSession::Impl {
         motionState.halt.battle=true;anchorState.graphReady=1;anchorState.fenceType=90;anchorState.windArcherType=140;
         anchor=std::make_unique<RawPlayerPlacementAnchor>(core.pool,core.types,core.hash.Entries(0),core.bookkeeping,additional,contentFinder,anchorState);
         auto effects=services.motion;
+        effects.path.startBlocked=[this](RawPathPoint point,std::uint32_t type,std::uint32_t owner) { PrepareBuilding(core.processState.now);static_cast<void>(buildingEffects->Displace(point.x,point.y,type,owner)); };
+        effects.path.arrivalBlocked=[this](Sid,RawPathPoint point,std::uint32_t type,std::uint32_t owner) { PrepareBuilding(core.processState.now);static_cast<void>(buildingEffects->Displace(point.x,point.y,type,owner)); };
         effects.path.constructionArrival=[this](Sid sid,std::uint32_t,std::uint32_t) { const auto type=core.pool.Slot(sid)[10];if (type==134) return buildArrival->Arrive(sid);if (type==105) return manaArrival->Arrive(sid);throw std::logic_error("실제 건설 도착 타입 오류"); };
         if (!effects.cleanup.reserveShared) effects.cleanup.reserveShared=[] { return true; };
         FillMissing(effects.cleanup.ritual);FillMissing(effects.cleanup.refund);
@@ -1540,7 +1568,18 @@ struct RawCampaignSession::Impl {
         retarget.goReturn=effects.carrier.goReturn;retarget.goGeyser=effects.carrier.goGeyser;
         pathRetarget=std::make_unique<RawPathRetarget>(core.pool,motionState.carrier.nuggetType,std::move(retarget));
         effects.path.retarget=[this](RawPathRuntime& runtime,Sid initialParent) { pathRetarget->Update(runtime,initialParent); };
-        FillMissing(effects.carrier.minedPacket);FillMissing(effects.carrier.cdAddSp);FillMissing(effects.carrier.cdOwnerPacket);FillMissing(effects.carrier.playAt);FillMissing(effects.carrier.robust);
+        GeyserMinedHooks mined;
+        mined.sound=[this](float x,float y,std::string_view name,std::uint32_t flags) { services.sound.playOnceAt(x,y,soundNames.Lookup(name),flags,0); };
+        mined.destroy=[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); };
+        mined.create=[this](std::uint32_t type,std::uint32_t flags) { return world.Create(type,flags); };
+        mined.pop=[this](Sid sid,float x,float y,std::uint32_t flags) { world.Pop(sid,x,y,flags); };
+        geyserMined=std::make_unique<RawGeyserMined>(core.pool,core.hash,core.types,random,geyserMinedState,std::move(mined));
+        CarrierMiningHooks mining;
+        mining.broadcast=[this](std::span<const std::uint8_t> packet) { broadcast->Send(packet); };
+        mining.receive=[this](std::span<const std::uint8_t> packet) { ReceiveGeyserMined(packet); };
+        carrierMining=std::make_unique<RawCarrierMining>(core.pool,miningHeader,std::move(mining));
+        effects.carrier.minedPacket=[this](Sid geyser) { carrierMining->Notify(geyser); };
+        FillMissing(effects.carrier.cdAddSp);FillMissing(effects.carrier.cdOwnerPacket);FillMissing(effects.carrier.playAt);FillMissing(effects.carrier.robust);
         CarrierTransferHooks transfer;
         transfer.find=[this](Sid parent,std::uint32_t mask,std::uint32_t kind,std::uint32_t index) { return priests->Carrier().FindContained(parent,mask,kind,index); };
         transfer.detach=[this](Sid form,std::uint32_t flags) { if (flags) throw std::logic_error("너겟 전달의 실제 Unpop flags 오류");contentForms->Unpop(form); };
@@ -1563,7 +1602,7 @@ struct RawCampaignSession::Impl {
             const auto sound=assets.game.Types()[core.pool.Slot(sid)[10]-70].definition.String("stepSound");
             return sound && !sound->empty() ? soundNames.Lookup(*sound) : 0U;
         };
-        FillMissing(effects.path.stepSound);FillMissing(effects.path.startBlocked);FillMissing(effects.path.arrivalBlocked);
+        FillMissing(effects.path.stepSound);
         motion=std::make_unique<RawCampaignMotionBindings>(world,*priests,*islands,*contained,*anchor,hp,metadata.frames,motionState,start,process,std::move(effects));
         FillMissing(services.pathPacket);
         auto pathTx=motion->Paths().Transmission(pathHeader,pathBuffer,[this](std::int32_t length) {
@@ -1668,6 +1707,11 @@ bool RawCampaignSession::MayPlaceConstruction(const CanonPlacementQuery& query) 
 bool RawCampaignSession::RequestConstruction(const ConstructionConfirmRequest& request) { if (!impl_->loaded) throw std::logic_error("미설치 Session의 건설 요청");impl_->PrepareConstruction();return impl_->construction->Request(request); }
 // 기존 실제 패킷 분배기/로컬 전송이 같은 서버 수신 몸체를 호출한다.
 void RawCampaignSession::RegisterConstructionCommands(RawPacketDispatch& dispatch) { if (!impl_->loaded) throw std::logic_error("미설치 Session의 건설 수신 등록");impl_->construction->Register(dispatch,[this] { impl_->PrepareConstruction(); }); }
+// 실제 초기 등록과 같은 버전/정책/빈 observer이며 수신 시점의 현재 권한/타입을 읽는다.
+void RawCampaignSession::RegisterCarrierCommands(RawPacketDispatch& dispatch) {
+    if (!impl_->loaded) throw std::logic_error("미설치 Session의 채취 수신 등록");RegisterGeyserMined(dispatch,*impl_->geyserMined);
+    dispatch.Register(0x5b,[this](std::uint32_t,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->ReceiveGeyserMined(packet); });
+}
 // 원본 부모 설치 전의 임의 공간 쓰기를 거부하며 같은 현재 noIsland 전역으로 요청을 구성한다.
 bool RawCampaignSession::ConfirmSupport(float x,float y) {
     if (!impl_->loaded) throw std::logic_error("실제 Session 설치 전 받침 확정 요청");

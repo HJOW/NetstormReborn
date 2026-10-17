@@ -1,0 +1,193 @@
+{
+  "unit": 155,
+  "date": "2026-10-18",
+  "host": "HJOW-Athlon",
+  "baseCommit": "cd6c03a",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16"
+  },
+  "status": "실제채취·고갈단위완료/11스테이지전체목표진행중",
+  "currentSources": {
+    "cpppj/src/o/RawCarrierMining.h": "103f066b9ec685b85eae1906dd8e57aaa707ac06ae5402b46ad7f9da6c950374",
+    "cpppj/src/o/RawCarrierMining.cpp": "d1f19cbd62d0ae98132cd5f1eedb01cb0e691b41bb60c636242f3fd64ad2e96d",
+    "cpppj/src/o/RawGeyserLifetime.h": "9ce17cdf6115fb1f10f384571e63eba497270df25cce5cd18153e656f57e8cc3",
+    "cpppj/src/o/RawGeyserLifetime.cpp": "f5ae34492f817e15aa2a9bcba3de2dac8d92dd51ea36ed011c1c9ed36435add3",
+    "cpppj/src/client/RawCampaignSession.cpp": "cca86616811ab843a95f78a254a92491422de0a6e8249da3f7edbf6a870ecb49",
+    "cpppj/src/client/RawCampaignSession.h": "495b793d7468fec47885451a6be1d0765f22cc1d64ed3c5560ca3707f5efa3de",
+    "cpppj/src/CMakeLists.txt": "772d6bcc3cf5197f25391f1dfa345c2d4e4509d788131328bad8f5b0d8c50db2",
+    "cpppj/tests/CMakeLists.txt": "23a7eff8b3ebba1abb9c862924d48922b3c4370b8a029a9105cebf9ef8cc4f71",
+    "cpppj/tests/CampaignSessionTests.cpp": "47c8169b3b6628ce2f49a0a6fd0e67d288ed62972310ad24c97b87eee741dc34",
+    "cpppj/tests/CarrierMiningTests.cpp": "d5ad45133e2cd7b5eb4086d75ea758a08015f520bdede0412e3f1fadbda756c7",
+    "cpppj/tests/GeyserLifetimeTests.cpp": "2db2753066f8ef1eff850d11fe7e5a43354d5fa79c3c16bc17167f1a7d35b2e1",
+    "tools/decomp_carrier_mining.py": "78cae56c40bdc066a033af750a00b8349d2504696b383db9a65239821ce27c13",
+    "tools/decomp_geyser_lifetime.py": "895c16edf79a71a5f97d5f4eacbb7fad68262accb592bdf26771bcc878b88bb1",
+    "docs/exe/cpp-carrier-mining-20261018.md": "7cb66419ce32c30ce804913d5b787edfdbcd08a9a4406b069d591adfd254d574",
+    "cpppj/src/o/RawGeyserMined.h": "c1489cd8c7818626429802a79541f6f5022a8133c9ca0762e17344992e5bd202",
+    "cpppj/src/o/RawGeyserMined.cpp": "9e5e8f6ff201fa6bfacf530f0a33271beaf26909c3d1fd050928f27679eb6839",
+    "cpppj/tests/GeyserMinedTests.cpp": "a5eb618206c8a35d92d52a39202e8d94bb6f8295a8196a769d203f30095f76dd",
+    "cpppj/src/o/RawGeyserAiRegistration.h": "47a3de633d1eb88c3fff574b7392da8753f1d4dc659de941abceb4e3dd77ae7d",
+    "cpppj/src/o/RawGeyserAiRegistration.cpp": "1f0c6f4c96f677e661e0182879a229f1ebd13ec9ef10179942790e73313a97fe",
+    "cpppj/src/o/RawConstructionEffects.h": "86f63784b064a9ea0c1706c3a2b854496ffcfee3b5a6e5c3cde7d86d3538c550",
+    "cpppj/src/o/RawConstructionEffects.cpp": "97b8adc3cfc9f35e84579d29af9ef4f982f24c06fee77c1dac9d40774cf5c739",
+    "cpppj/src/o/RawCarrierArrival.h": "a6fa676986cd46235b5cfdb1646e78554d76f0ee7ee8b002e7d3edac258de406",
+    "cpppj/src/o/RawCarrierArrival.cpp": "1e63d7f9cb0a18ddb4a10b7c642e54873e8f46ab98deec6d3f63b334199979df",
+    "cpppj/src/o/RawPathProcess.cpp": "c95903a9fc3c1507ca4b45f7fa93b5d9b2f2626fe050e236850eca21f5581624",
+    "cpppj/src/o/RawBattleBroadcast.cpp": "5a6c9f8eb6644578a40448fb81ba1522028e9060cf310e217ba7e50baeb9e2f7",
+    "cpppj/src/o/RawPacketDispatch.cpp": "3f9628dad2707355aa7e10419ebbab17e25578e595d2335e03d48d1a1303928a"
+  },
+  "nativeReports": {
+    "cpppj/carrier-mining.json": "9e889d23cd31fc7d1db998239687adc795921dc3b40bd32e446ae39b3248448a",
+    "cpppj/geyser-lifetime.json": "ab89e15c557b9721194dfbce7a1a4035cb879bcabeab8a300fa5a71f68520611"
+  },
+  "nativeContext": {
+    "carrierMining": {
+      "uniqueInputs": 864,
+      "normalReturns": 1728,
+      "instructions": 502848,
+      "nativeCalls": {
+        "00429800": 1728,
+        "004ac200": 6912,
+        "0049a840": 8640,
+        "004ac1e0": 1728,
+        "0040ac20": 1728,
+        "004df230": 1728
+      },
+      "createdNuggetBoundary": 1728,
+      "precisionDifferentInputs": [],
+      "boundaries": "전체429800 및 실제40ac20/4df230/TYPE getter를 실행했다. boss1/AI1/owner1/빈내용물/유효간헐천/Graph같음 계약이며 다른 현재 조회/내용물생성/송신/로컬수량수신은 명시 큰 경계다. 새C++비교범위는 그 안의6바이트통지작성·송신→로컬수신·현재헤더/지면상태다. 수량/고갈본문은 기존geysermined2312행 별도이고 전체429800 모든분기/실제게임창/완주 검증은 아니다. GP/retN/SEH/x87/명령·읽기·쓰기범위를검사했다."
+    },
+    "geyserLifetime": {
+      "uniqueInputs": 2016,
+      "normalReturns": 4032,
+      "instructions": 122304,
+      "nativeCalls": {
+        "00485580": 2016,
+        "0040ea00": 672,
+        "00485540": 2016
+      },
+      "precisionDifferentInputs": [],
+      "originalVtable": {
+        "0x10": "0x4af780",
+        "0x14": "0x485580",
+        "0x18": "0x485540",
+        "0x78": "0x4acfe0",
+        "0x88": "0x4ad500"
+      },
+      "boundaries": "485580/485540/40ea00 전체실행. 가상기본프레임/표시/AI/섬정리/큰Damageablepre·post는명시경계다. 직접frameDWORD/효과뒤현재extra·목록/모든중복제거·물리꼬리보존과전체raw/현재editor·count/효과순서를대조했다. GP/retN/SEH/앞뒤canary/x87/명령·읽기·쓰기범위를검사했다. CD/nonnullAI하위/편집섬정리내부/실제게임창·완주검증은아니다."
+    }
+  },
+  "referenceFixtures": {
+    "cpppj/tests/fixtures/geysermined-x86.tsv": "29abf72063278eecebd954401b6af4a2e67fe8ad236e51bb60ce3db141bfd5aa",
+    "cpppj/tests/fixtures/constructioneffects-x86.tsv": "e4700757b9e4e12a2bdfc09325e3bfd387d684343bed80f22efa12e8ac6c4091"
+  },
+  "validation": {
+    "build": {
+      "final": "build4",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0
+    },
+    "focused": {
+      "carrierMining": 4,
+      "geyserLifetime": 2,
+      "failedChecks": 0,
+      "exitCode": 0
+    },
+    "full": {
+      "tests": 1621,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "seconds": 217.55,
+      "ctestSeconds": 217.58
+    },
+    "audit": {
+      "tools": 76,
+      "passed": 65,
+      "priorKnownFailures": 11,
+      "newFailures": 0
+    },
+    "referenceAudit": {
+      "tools": 3,
+      "priorShaOrLineageFailures": 3,
+      "unchangedHeadAfterNewlineNormalization": true,
+      "originalFixtureShaPreserved": true
+    },
+    "pins": {
+      "reports": 50,
+      "count": 153,
+      "historyPreserved": true
+    },
+    "entry": {
+      "runs": 5,
+      "passed": 5,
+      "originalsUnchanged": true,
+      "scope": "1-1/1-2briefing→world/tutorial1~3briefing"
+    }
+  },
+  "actualWorld": {
+    "stage": "thewarbegins",
+    "geyser": 15095,
+    "initialInput": "간헐천섬모서리의초기골렘/잔량400·200/명시peer2와접속플래그",
+    "naturalCases": [
+      {
+        "initialQuantity": 400,
+        "quantityAfter": 200
+      },
+      {
+        "initialQuantity": 200,
+        "geyserDestroyed": true
+      }
+    ],
+    "createdNuggetBeforeSend": true,
+    "sendBeforeQuantityChange": true,
+    "packetLength": 6,
+    "spChanged": false,
+    "returnPathStarted": false,
+    "registeredReceiverFreeSkipped": true,
+    "registeredReceiverExhaustsGeyser": true,
+    "scope": "실제선택기/BFS/Host40/도착/내용물생성/현재연결표송신/로컬수신·난수·수량/고유삭제·목록·공간/생존watch. 자연왕복·SP수입·전체Kernel·완주아님"
+  },
+  "limits": [
+    "10.78전용/독립관측의큰조회·효과경계와제품의실제연결을구별한다",
+    "nonnullAI의간헐천등록·제거하위/편집섬정리내부는기존미연결을명시거부한다",
+    "Halt429ed0/CarrierArrival428e00/429010회피/38·41·42경로/5040c0전처리미완료",
+    "실제Client명령소비자·생산·경제·AI/11스테이지자연왕복·승패·저장·다음미션·전체동일성미완료",
+    "미등록187그래픽거부유지/원본DirectDraw수정없음"
+  ],
+  "protected": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "AGENTS.md": "7addbf9b31c42f29aab7c93faa865eb6de8590a600d17202a297cf7122bdf979",
+    "LEFT_JOBS.dotnetpj.md": "0c067e1d12879dbf2212cbd64c8f9f60e65b590df910418f025027ed84f80ec2"
+  },
+  "logSha256": {
+    "extracted/goal-carrier-mining-20261018-native1.log": "ce08234d64a189acf07955dd41ee5844e69d74ee54085ec53a6b8b83a332fc65",
+    "extracted/goal-carrier-mining-20261018-lifetime-native1.log": "53eb7f94be09e466f811a7fb00fbd8798899375110105161647020466f0ca18b",
+    "extracted/goal-carrier-mining-20261018-build1.log": "0ce0c3f5c2d174907231793d576258d1d47571200d94d6029f15c61487f674ca",
+    "extracted/goal-carrier-mining-20261018-build2.log": "68daf5268753a6f0253917d033a76282e07803e3b45f8c1951a34f7cbc6a3d34",
+    "extracted/goal-carrier-mining-20261018-build3.log": "658bd1afe6f36c04cf1d178a5f20e6e7ba765826b82999ee1186e8e1664d00fd",
+    "extracted/goal-carrier-mining-20261018-build4.log": "a436dcdbc0ac6a1dc77fb2d17c49d6854e510629f580f1f5e5ab982b45edda38",
+    "extracted/goal-carrier-mining-20261018-focused1.log": "db0ad5da8c618bbde5704b129733d739af18fe0d470a3f14740b50ff876fe1e5",
+    "extracted/goal-carrier-mining-20261018-focused2.log": "edbe6ceb1879826a3d593c826ddaa9964b02fa1bb0cd7f576438e26d55f8d906",
+    "extracted/goal-carrier-mining-20261018-focused3.log": "e6d690748c4cab64823cbdd436a9b7f9e2da93a86553c941366b0f5f5805574a",
+    "extracted/goal-carrier-mining-20261018-focused4.log": "e6d690748c4cab64823cbdd436a9b7f9e2da93a86553c941366b0f5f5805574a",
+    "extracted/goal-carrier-mining-20261018-lifetime-focused1.log": "57999a994fc85bb126c63c41ef357fd30c9a32330b3d2163c351899532fc62ee",
+    "extracted/goal-carrier-mining-20261018-lifetime-focused2.log": "57999a994fc85bb126c63c41ef357fd30c9a32330b3d2163c351899532fc62ee",
+    "extracted/goal-carrier-mining-20261018-ctest1.log": "6ddd0400e3d1723512826a2225fe56d9a61b673e6bc68518e4473c492bf78f48",
+    "extracted/goal-carrier-mining-20261018-LastTest.log": "2553e12e9e7366b3ba1af4c7e90818974ad683ca53bc3de3ca26e6ed148ada6a",
+    "extracted/goal-carrier-mining-20261018-ctest2.log": "f0ed829d5e876581a290b06d98d1bdbb7314f54bcf3cd2137e39e6fa380a3b67",
+    "extracted/goal-carrier-mining-20261018-LastTest2.log": "6f190319f8ac57bfb29035ba469d427b32eeb939b2208293c058248d8084b90f",
+    "extracted/goal-carrier-mining-20261018-pin-updates.json": "97b695063db5780dc2a3d7d27dd83454686b67681c658222eefc7993a80d3957",
+    "extracted/goal-carrier-mining-20261018-pin-maintenance.log": "a81bcb94a448638dbd53ae4ba972cc02cf71ed8b5a1a0c0c7aa7ae38a44e1a7a",
+    "extracted/goal-carrier-mining-20261018-verify-final.json": "5c238b1df37f0d66dc542d99c88f4271d26040663fd1186eb3ea61fab2a8b6b5",
+    "extracted/goal-carrier-mining-20261018-reference-audit.json": "a9a41ebf6ced9afcfd0d0bfb4c1d8b7e84722b2c95c945bbab2731088acabaa3",
+    "extracted/goal-carrier-mining-20261018-audit.log": "d9c58a1c87366bfe5a0f5acd5ca00e33391498adb52bd4d455e63341d141f3c9",
+    "extracted/goal-carrier-mining-20261018-entry.log": "530bf9254a3b0be59b099d237909bd3be07412d0f47949f546997ffdb8b1e681",
+    "extracted/goal-carrier-mining-20261018-entry/results.json": "4c0dd00db43e2ce82cc63a73909c709715f94706ad59ed0cb209a8dca242dc2d"
+  },
+  "commitMessage": "20261018-05 CP 골렘의 실제 채취 통지와 간헐천 고갈 수명 연결",
+  "goalStatus": "active",
+  "pushed": false
+}
