@@ -1,5 +1,16 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-18 단위153 완료: 골렘의 귀환·간헐천 후보 선택과 현재 AI 연결 (`HJOW-Athlon`)
+
+- [x] 기준 `52e714f`, 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16** 일치. AGENTS/양 LEFT 재독. 보호 원본 수정·새 디컴파일·원본 게임 창 실행·DirectDraw 수정은 없다. [작업 기록](docs/exe/cpp-carrier-choice-20261018.md).
+- [x] `RawCarrierChoice`428ea0/429420/4280a0을 실제Session에연결했다. 현재Player+7c/outposts/geysers/두순회차이/500개상한/중복/일반접근점/현재타입/현재시각/원본정렬/실제BFS·Prepare를보존한다. 거친점수는 **거리/speed의ftol하위WORD+8**이다. **428210 FDIV가정밀디컴파일C에누락**되어첫대조가실패했으며바이너리추적으로구현을수정했다. 관측원문은수정하지않았다. 경로없을때거친점수유지/엄격한최소값/마지막540bfc의DWORD복사도같다.
+- [x] 독립원본 **721입력·1,442정상반환·30,384,330명령·53/64차이0**, 확보/해제각758회다. 기존707행전체를보존하고14입력만추가했다. 세상위/실제CRT·기하·TYPE·AI·cardinal·Prepare·ftol·stack probe를실행했다. 큰Footprint/BFS배열/검증/Graph/진단/메모리확보는명시경계다. 선택/효과/직접배열/현재전역/전체raw Adler/초기시각5000개0/GP·스택·SEH·canary·x87·코드·접근범위를대조했다.
+- [x] 상위CarrierArrival도현재Player+b0를읽는다. 기존406도착원문을반대값의옛bool표+현재getter로도재생했다. 실제Session검사는후보평가의기존40·패킷보존, 실제귀환시작, 초기위치의단일간헐천실패시기존40삭제·새패킷없음, 원래간헐천섬모서리의2개이상꼭짓점BFS/Host40시작, 실제AI2부착·해제와GoReturn보존을확인했다. 성공조건의초기위치만준비했으며경로·선택·시각은공급하지않았다. 자연운반/전체Kernel완주검증은아니다.
+- [x] 최초집중594check실패뒤FDIV누락과검사초기조건을수정했다. 입력채움C4244/임시진단cout헤더누락빌드오류도로그에보존했다. 최종build8 **경고0·오류0**, 집중 **4성공**, 전체CTest **1,612개·실패0·종료0·204.28초**(CTest204.31초)다. 감사73종 **62성공·기존11실패·새실패0**, 기존64보고서268현재핀/과거전체JSON/CMake접두/기존fixture·AGENTS·원본·DN/새UTF-8·LF를확인했다. 클론진입5PASS/originals_unchanged=true이며1-1/1-2briefing→world/tutorial1~3briefing범위다. 모든핸들종료/대기없음이다.
+- [x] 로그접두 `extracted/goal-carrier-choice-20261018-`, 독립 `cpppj/carrier-choice.json`, 제품 `cpppj/campaign-carrier-choice.json`이다. 인수인계뒤 **`20261018-03 CP 골렘 귀환과 간헐천 후보 평가 및 현재 AI 연결 복원`** 으로로컬커밋한다. push하지않고전체goal active다.
+- [ ] **다음최우선:**`effects.path.retarget`은아직미연결이다. 대상A/B가있는40의프레임Halt가여기를방문하므로실제489ff0의남은대상사망분기를복원한다. 살아있는대상은무효과통과/죽은B+너겟은428ea0→4276a0/죽은A+너겟없음은429420→427600이다. 새이동이옛Runtime을삭제할수있다. hooks주석489ff0은별도하위가아닌전체Halt주소다. `extracted/goal-carrier-choice-20261018-halt-read.c`를참고한다. 이번선택기완료가전체운반프레임완료를뜻하지않는다.
+- [ ] **후속:**carrier/halt pickup(428e00), geyser mined packet/경제,429010회피,443800시작·도착겹침정리,38/41/42경로,5040c0의42ae80,실제Client명령소비자/AI/11스테이지자연운반·완주·승패·저장·다음미션/전체동일성은미완료다. 미등록187 그래픽경로거부를유지한다.
+
 ## 2026-10-18 단위152 완료: 골렘 후보의 원본 주소 비교와 동률 정렬 (`HJOW-Athlon`)
 
 - [x] 기준 `b7932e8`, 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16** 일치. AGENTS/양 LEFT 재독. 원본 수정·새 디컴파일·게임 창 실행·DirectDraw 수정은 없다. [작업 기록](docs/exe/cpp-carrier-candidate-sort-20261018.md).

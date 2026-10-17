@@ -293,6 +293,8 @@ struct RawCampaignSession::Impl {
     BoardTargetState boardTargetState; // 실제 월드 초기화 후의 실패점 두 float다.
     std::unique_ptr<RawBoardTarget> boardTarget; // 건설 Graph 순회와 다른 일반 접근점/변 중간점이다.
     std::unique_ptr<RawCarrierTarget> carrierTarget; // 같은 실제 Player AI/발자국/Path 시작과 귀환 선택을 공유한다.
+    CarrierChoiceState carrierChoiceState; // 실제 후보의 경로 비교/현재 타입/임시 거리 전역이다.
+    std::unique_ptr<RawCarrierChoice> carrierChoice; // 현재 Player+7c/AI/자산 목록과 같은 BFS를 사용한다.
     std::unique_ptr<RegularProcess> pendingCarrierTask; // 원본 new28과 생성자가 공유하는 하나의 확보 메모리다.
     std::unique_ptr<GumpFormHost> gumpForms; // 같은Pool의실제Form3와현재UI등록ID/부모삭제알림수명이다.
     std::unique_ptr<RawContentParentNotice> contentNotice; // 부모의 실제 현재 VT로 기본/파생 +24를 분배한다.
@@ -1500,8 +1502,22 @@ struct RawCampaignSession::Impl {
             return Sid{};
         };
         FillMissing(effects.carrier.cdPriestPickupPriest);FillMissing(effects.carrier.pickup);FillMissing(effects.carrier.escape);
-        FillMissing(effects.carrier.chooseReturn);FillMissing(effects.carrier.chooseGeyser);
         boardTarget=std::make_unique<RawBoardTarget>(boardTargetState,[](std::uint32_t line) { throw std::logic_error("원본 Boardcoord.cpp 대상 접근 진단 "+std::to_string(line)); });
+        CarrierChoiceHooks choice;
+        choice.movement=[this](Sid sid) {
+            const auto kind=core.pool.Slot(sid)[10];if (kind<70 || kind-70>=assets.game.Types().size()) return std::array<float,2>{};
+            const auto& definition=assets.game.Types()[kind-70].definition;return std::array<float,2>{static_cast<float>(definition.Number("speed").value_or(0)),static_cast<float>(definition.Number("turningSpeed").value_or(0))};
+        };
+        choice.footprint=[this](Sid sid) { return core.neighbors.Footprint(sid); };
+        choice.search=[this](RawPathRuntime& temporary,Sid parent,RawPathPoint source,RawPathPoint destination,std::uint32_t flags) { if (!motion) throw std::logic_error("현재 이동 설치 전 운반 후보 탐색");static_cast<void>(motion->Paths().SearchCandidate(temporary,parent,source,destination,flags)); };
+        choice.validReturn=[this](Sid parent,Sid candidate) { if (!motion) throw std::logic_error("현재 이동 설치 전 귀환 후보 검사");return motion->CarrierArrival().ValidReturn(parent,candidate); };
+        choice.validGeyser=[this](Sid parent,Sid candidate) { if (!motion) throw std::logic_error("현재 이동 설치 전 간헐천 후보 검사");return motion->CarrierArrival().ValidGeyser(parent,candidate); };
+        choice.graphFor=[this](Sid sid) { return anchor->GraphFor(sid.value); };
+        choice.assertion=[](std::uint32_t line) { throw std::logic_error("원본 Carrier.cpp 후보 선택 진단 "+std::to_string(line)); };
+        carrierChoice=std::make_unique<RawCarrierChoice>(core.pool,core.types,players,assetState.outposts,assetState.geysers,core.processState.now,gunState.checking,*boardTarget,carrierChoiceState,std::move(choice));
+        effects.carrier.chooseReturn=[this](Sid sid) { return carrierChoice->ChooseReturn(sid); };
+        effects.carrier.chooseGeyser=[this](Sid sid) { return carrierChoice->ChooseGeyser(sid); };
+        effects.carrier.currentControlled=[this](std::uint32_t owner) { return participation->Brain(owner)!=0; };
         CarrierTargetHooks target;
         target.footprint=[this](Sid sid) { return core.neighbors.Footprint(sid); };
         target.start=[this](RawPathStartRequest request)->CarrierPathResult {
@@ -1843,6 +1859,8 @@ RawPathProcess* RawCampaignSession::StartCarrierMovement(RawPathStartRequest req
 const RawCarrierTransfer& RawCampaignSession::CarrierTransfer() const { if (!impl_->loaded || !impl_->carrierTransfer) throw std::logic_error("미설치 Session의 캐리어 전달");return *impl_->carrierTransfer; }
 // 외부 명령과 같은 운반 도착 몸체가 실제 하나의 대상 이동 처리기를 사용한다.
 const RawCarrierTarget& RawCampaignSession::CarrierTarget() const { if (!impl_->loaded || !impl_->carrierTarget) throw std::logic_error("미설치 Session의 운반 대상 이동");return *impl_->carrierTarget; }
+// 외부 요청과 도착/전달이 같은 실제 후보 선택기를 공유한다.
+const RawCarrierChoice& RawCampaignSession::CarrierChoice() const { if (!impl_->loaded || !impl_->carrierChoice) throw std::logic_error("미설치 Session의 운반 후보 선택");return *impl_->carrierChoice; }
 // 화면과 입력은 같은 살아 있는 상태를 읽는다.
 RawSurfaceWorld& RawCampaignSession::World() { return impl_->world; }
 RawWorldCore RawCampaignSession::Core() { return impl_->core; }

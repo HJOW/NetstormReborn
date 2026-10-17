@@ -44,7 +44,7 @@ std::int32_t RawCarrierArrival::Cell(float value,bool biased) {
     return static_cast<std::int32_t>(adjusted);
 }
 // 실제 owner0은 Player AI 배열을 조회하지 않고 거짓이다.
-bool RawCarrierArrival::Controlled(Sid sid) const { const auto owner=Owner(sid);if (owner>=state_.controlledOwners.size()) throw std::out_of_range("Carrier 도착 Player 범위");return owner && state_.controlledOwners[owner]; }
+bool RawCarrierArrival::Controlled(Sid sid) const { const auto owner=Owner(sid);if (owner>=state_.controlledOwners.size()) throw std::out_of_range("Carrier 도착 Player 범위");return owner && (hooks_.currentControlled ? hooks_.currentControlled(owner) : state_.controlledOwners[owner]); }
 // 동맹표의 두 순서를 같다고 가정하지 않는다.
 bool RawCarrierArrival::Allied(std::uint32_t first,std::uint32_t second) const { if (first>=9 || second>=9) throw std::out_of_range("Carrier 도착 동맹표 범위");return state_.alliances[first*9+second]!=0; }
 // 원본 공통 정상 반환 접두를 goto 분기에서도 빠뜨리지 않는다.

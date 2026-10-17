@@ -82,8 +82,8 @@
     }
   },
   "files": {
-    "cpppj/src/o/RawCarrierArrival.cpp": "1ce744b92bb3faa0c30b4ae8b76f4787e1cd42b9971d4a41c1cbfc9def11e6a3",
-    "cpppj/src/o/RawCarrierArrival.h": "4f4afc5e967924aab027e161c21d1dc4554f3b1438aca9331b3fca8902d20f9f",
+    "cpppj/src/o/RawCarrierArrival.cpp": "1e63d7f9cb0a18ddb4a10b7c642e54873e8f46ab98deec6d3f63b334199979df",
+    "cpppj/src/o/RawCarrierArrival.h": "a6fa676986cd46235b5cfdb1646e78554d76f0ee7ee8b002e7d3edac258de406",
     "cpppj/tests/fixtures/carrierarrival-x86.tsv": "1414a203ded7276d096c5ab5bbba4c9849dca315a3df2e972a7556331efe42c2",
     "extracted/bridgeeffects/originalCD/creation.c": "76acd15962cfadb844dd6689014a8a67ee0fc744d16c5a32528d4cafdb7fb911",
     "extracted/bridgeeffects/originalCD/functions.tsv": "b99e5f65a90d402a49be3353263e66080fbf1d3825b19685d7a49edd2e4c4abd",
@@ -123,5 +123,26 @@
     "tools/decomp_priesthalt_oracle.py": "947f5326f185408786adfb5464d3818d0806cb151c5d202b1a98abee0ce65381",
     "tools/ghidra/carrierarrival-functions.json": "7eac4c5bb71e91e4ef467297ecb95ec72a1298e89efb3dc2215efd41e2a9ecea"
   },
-  "scope": "실제 CarrierArrival의 조회/깊이/권한/끝회피검색. 현재 Path lookup/큰 회피 반환/설정은 명시 외부 입력. 포획/운반/SP/프로토콜/실제걷기·전체Arrival 하위효과/캠페인은 후속. 기존Halt864/BFS/Bridge 관찰 재합산0."
+  "scope": "실제 CarrierArrival의 조회/깊이/권한/끝회피검색. 현재 Path lookup/큰 회피 반환/설정은 명시 외부 입력. 포획/운반/SP/프로토콜/실제걷기·전체Arrival 하위효과/캠페인은 후속. 기존Halt864/BFS/Bridge 관찰 재합산0.",
+  "integration_updates": [
+    {
+      "date": "2026-10-18",
+      "unit": 153,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawCarrierArrival.cpp",
+          "previous": "1ce744b92bb3faa0c30b4ae8b76f4787e1cd42b9971d4a41c1cbfc9def11e6a3",
+          "current": "1e63d7f9cb0a18ddb4a10b7c642e54873e8f46ab98deec6d3f63b334199979df"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawCarrierArrival.h",
+          "previous": "4f4afc5e967924aab027e161c21d1dc4554f3b1438aca9331b3fca8902d20f9f",
+          "current": "a6fa676986cd46235b5cfdb1646e78554d76f0ee7ee8b002e7d3edac258de406"
+        }
+      ]
+    }
+  ]
 }

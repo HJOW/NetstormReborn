@@ -25,10 +25,10 @@
     "tools/decomp_energy_supply.py": "a18c1913de8e3462dc30e21d1cbb62541600655630d8605c594ecc860d200434",
     "tools/decomp_energy_sort.py": "a203949bf138366de9812342953ecfe050dfa588a0c1df4536b5973284caf5ef",
     "cpppj/tests/fixtures/energy-sort-x86.tsv": "58f67ad1e9207c2b7793101100855d504c6167de92ee0176adf3be816489ab4e",
-    "cpppj/tests/CMakeLists.txt": "794e324f586ed472cdcd777ed3159952faca723ac6e67d101bc10f4755d2611d",
-    "cpppj/src/client/RawCampaignSession.h": "ae38ba2c4f2b74fd67be7b8e5b8fe6083c0756b4865887686192f997f04a5a72",
-    "cpppj/src/client/RawCampaignSession.cpp": "72da6c6c1139dd703d7a0754374f3f957495180ef7acbb827237d97742a1abb2",
-    "cpppj/tests/CampaignSessionTests.cpp": "964400205960599492a269d374aaaa7e46ff7f7b6e3968a992d0a447dc16bf2a",
+    "cpppj/tests/CMakeLists.txt": "f6f7d6c46ff9dacf49c46037330ef0fcc0052edbcb7c78a908540903159241aa",
+    "cpppj/src/client/RawCampaignSession.h": "95a84650fd81b3b3c6cb3601f47d444f7b6ba3056ac8aab31de40c17c1cff38b",
+    "cpppj/src/client/RawCampaignSession.cpp": "26d4fa65f5dd103b8955f5eb0272a71759b5d5fec0bd89ee85fe0a26e3bb6d47",
+    "cpppj/tests/CampaignSessionTests.cpp": "5748886e19454fe0b18c85dacc94ee2aad220ac4b9baedbedb48245e2904cd4b",
     "cpppj/src/o/RawEnergySupply.h": "16298ecafac440612cf5722175fe7adade050e9bdd67015f8308fd37077998be",
     "cpppj/src/o/RawEnergySupply.cpp": "c5597f73998872c29ecb266356405d084ad36b24c6248a3cfc1a1bc43d55f495",
     "cpppj/src/o/RawConstructionBuilder.h": "134e353fb2fae37b9e8726197f3d80ab1b3b9819e6a19bf6a876481b55ef33d4",
@@ -666,6 +666,37 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "339fab10b33d455e42a58f14e70b9ad41a35ebd913f59d3842e5a6e7bc9cff89",
           "current": "794e324f586ed472cdcd777ed3159952faca723ac6e67d101bc10f4755d2611d"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 153,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/sha256",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "794e324f586ed472cdcd777ed3159952faca723ac6e67d101bc10f4755d2611d",
+          "current": "f6f7d6c46ff9dacf49c46037330ef0fcc0052edbcb7c78a908540903159241aa"
+        },
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "ae38ba2c4f2b74fd67be7b8e5b8fe6083c0756b4865887686192f997f04a5a72",
+          "current": "95a84650fd81b3b3c6cb3601f47d444f7b6ba3056ac8aab31de40c17c1cff38b"
+        },
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "72da6c6c1139dd703d7a0754374f3f957495180ef7acbb827237d97742a1abb2",
+          "current": "26d4fa65f5dd103b8955f5eb0272a71759b5d5fec0bd89ee85fe0a26e3bb6d47"
+        },
+        {
+          "group": "/sha256",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "964400205960599492a269d374aaaa7e46ff7f7b6e3968a992d0a447dc16bf2a",
+          "current": "5748886e19454fe0b18c85dacc94ee2aad220ac4b9baedbedb48245e2904cd4b"
         }
       ]
     }

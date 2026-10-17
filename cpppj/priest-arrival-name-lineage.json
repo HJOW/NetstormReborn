@@ -17,15 +17,15 @@
   "tool_sha256": "78c40c9397da18c89d6011d3e5b6df4d0bdc3de16bf930d52e6f7682555f56c2",
   "files": {
     "cpppj/carrierarrival-cpp-binding.json": "cdd7f4f326374614506721e310261d866f7c0fed70c0a533922d51f51b872ce2",
-    "cpppj/carrierarrival.json": "89153976369a05b6b3e03a52698ecfb72b799d99fdda19c2a92db70b2fed5492",
+    "cpppj/carrierarrival.json": "709ed1f24fa22be42f205457581c8f48289436e5cf7d90217c8b6918508ebd4d",
     "cpppj/genus-at-public-lineage.json": "09ea929176813ccfcd01468980c3745ed9cc0ad55f8a39c3ab38362af165073f",
     "cpppj/priesthalt-cpp-binding.json": "ab5bf49556061f260f73523cf1cde181a6d06ac2c038859233e2ddee1f5d558f",
     "cpppj/priesthalt.json": "2762a74909ed6d75f470fe8943d0cdc7ca5bb78a0f862939d754d990b423617d",
     "cpppj/priesthalt-spots-successor.json": "d0476a7b3fff79c06ecadb2c23b557897f650afcd5d880ccda3ddd0b348eaaac",
     "cpppj/src/o/RawCanonPlacementTerrain.cpp": "0f4739d260b97b9db17ce0bbe9ceadc91c90c8cb76e4c053524b8609f7542a37",
     "cpppj/src/o/RawCanonPlacementTerrain.h": "d68b1b83f5220d300e84479fb59bb6b9086147a91b0d2e78d4c32bd4e17cbfed",
-    "cpppj/src/o/RawCarrierArrival.cpp": "1ce744b92bb3faa0c30b4ae8b76f4787e1cd42b9971d4a41c1cbfc9def11e6a3",
-    "cpppj/src/o/RawCarrierArrival.h": "4f4afc5e967924aab027e161c21d1dc4554f3b1438aca9331b3fca8902d20f9f",
+    "cpppj/src/o/RawCarrierArrival.cpp": "1e63d7f9cb0a18ddb4a10b7c642e54873e8f46ab98deec6d3f63b334199979df",
+    "cpppj/src/o/RawCarrierArrival.h": "a6fa676986cd46235b5cfdb1646e78554d76f0ee7ee8b002e7d3edac258de406",
     "cpppj/src/o/RawCarrierCheck.cpp": "c5a8e6ebd5b160b3199d415ee42d3a28627e142d0db9a927f718587128fafe01",
     "cpppj/src/o/RawCarrierCheck.h": "0338d2e56abd091fe74f0a15f74a994faa75887a1e4fefbd1fa4317a4e86731f",
     "cpppj/src/o/RawCarrierPostPop.cpp": "8603cb70101e6472fa36b25d0b2ecb1cc438b4658c1d2264b47ff8a17d95b780",
@@ -67,7 +67,7 @@
     "cpppj/src/o/RawSquidNeighbors.cpp": "189febb21e1a29b605ccdf95e56ac88b2b2ee40dac68874df501fe5a37c24d02",
     "cpppj/src/o/RawSquidNeighbors.h": "1d223e803abd49e59dc45fb41e68cc65227af2d6e31b3d6904d99b4d00849dbc",
     "cpppj/src/o/SidPool.cpp": "0f72cb4540e5d28ff63e5ce9078d8591b733f192c8ee6c8c5bf486b93cfd16f0",
-    "cpppj/src/o/SidPool.h": "fbac21d016818c4f3436d2848658b628ff1ebcfe1ce2bee7c78596726ec077c4",
+    "cpppj/src/o/SidPool.h": "5aae3c23e7376b0c1c3da5a96e736738335d1e1bf060db41e1b748535ff75ee1",
     "cpppj/src/o/SquidFactory.cpp": "9773bb2d4f5b7dd0114fbb9406a95080e6f919a1106efe5b6a15ef8ed68e39e0",
     "cpppj/src/o/SquidFactory.h": "439126b14875597ae876ab82d1699d414fa15fdf76ec9ac83f6794d32595c549",
     "cpppj/src/o/SquidHash.cpp": "9ceffaf0d4c995cb5901b7c49eceae575b9441e8e08dec8cd92e504821fa20ca",
@@ -82,8 +82,8 @@
     "cpppj/src/o/SquidReward.h": "59cf154a0aa681fbce7bdf445728afc582409bd9af9b24e5b135e435e92aa362",
     "cpppj/src/o/SquidUnpop.cpp": "f9a932b6ee543cc2ee051d6f67afb0c56fca1f325cc51d29ca3d0dc3adf26fef",
     "cpppj/src/o/SquidUnpop.h": "36635a51668570c7ae1df71e507f1f7d6d4fd1b141ccf0529165428034e5aad9",
-    "cpppj/tests/CarrierArrivalSupport.h": "711263ae85caf9cb748b2db1dace990c8066b74b453403af86e5c43d1618fedd",
-    "cpppj/tests/CarrierArrivalTests.cpp": "7b7f94c8e142fd4fe81f620038c005bb07f06fccbc151d2baa0fe7faed2a9b5a",
+    "cpppj/tests/CarrierArrivalSupport.h": "ab3b51fa485834acf41cc3934b0917b919edff0ea1351547a5ad247690bede56",
+    "cpppj/tests/CarrierArrivalTests.cpp": "accd2553072d85c4f1df068a2dea74bc2328e56313151df913571e60036f9a2c",
     "cpppj/tests/PriestHaltTests.cpp": "e129c0966cd074a88e3ce40b3e197c8ef8ec90b64b335bd4b04430e9ce556a64",
     "cpppj/tests/PriestPathArrivalHostTests.cpp": "4deed59c917dacffb21653aa73b2edb4cd8fc159fd4c78e27c671ec635b95fb0",
     "cpppj/tests/RawSceneSupport.h": "7ef30acb24babc688384ab50f57573a87d004b68b8baa0d0a64c897baad23a4f",
@@ -363,6 +363,49 @@
           "path": "cpppj/src/o/RawPathRuntime.h",
           "previous": "1ea416e522e69d4ccadef34f1000a704a38e507f8ad021afe5fcedfa093149b4",
           "current": "b74e6c9947182ef327a50be4921921d43ac1a62063e8cf02a193e3045359a667"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 153,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/carrierarrival.json",
+          "previous": "89153976369a05b6b3e03a52698ecfb72b799d99fdda19c2a92db70b2fed5492",
+          "current": "709ed1f24fa22be42f205457581c8f48289436e5cf7d90217c8b6918508ebd4d"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawCarrierArrival.cpp",
+          "previous": "1ce744b92bb3faa0c30b4ae8b76f4787e1cd42b9971d4a41c1cbfc9def11e6a3",
+          "current": "1e63d7f9cb0a18ddb4a10b7c642e54873e8f46ab98deec6d3f63b334199979df"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawCarrierArrival.h",
+          "previous": "4f4afc5e967924aab027e161c21d1dc4554f3b1438aca9331b3fca8902d20f9f",
+          "current": "a6fa676986cd46235b5cfdb1646e78554d76f0ee7ee8b002e7d3edac258de406"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/SidPool.h",
+          "previous": "fbac21d016818c4f3436d2848658b628ff1ebcfe1ce2bee7c78596726ec077c4",
+          "current": "5aae3c23e7376b0c1c3da5a96e736738335d1e1bf060db41e1b748535ff75ee1"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/tests/CarrierArrivalSupport.h",
+          "previous": "711263ae85caf9cb748b2db1dace990c8066b74b453403af86e5c43d1618fedd",
+          "current": "ab3b51fa485834acf41cc3934b0917b919edff0ea1351547a5ad247690bede56"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/tests/CarrierArrivalTests.cpp",
+          "previous": "7b7f94c8e142fd4fe81f620038c005bb07f06fccbc151d2baa0fe7faed2a9b5a",
+          "current": "accd2553072d85c4f1df068a2dea74bc2328e56313151df913571e60036f9a2c"
         }
       ]
     }

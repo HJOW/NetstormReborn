@@ -64,6 +64,8 @@ private:
     friend class RawBuildingSpace;
     // 원본 선택 가상+7c는 물리 범위 안 free/dead 슬롯의 extra에도 한 비트를 쓴다.
     friend class RawSquidSelection;
+    // 운반 후보 평가는 물리 범위 안 free/dead 후보의 임시 거리 WORD+8도 갱신한다.
+    friend class RawCarrierChoice;
     // 원본 short next 필드를 little endian으로 읽거나 쓴다. serverHead는 0번 슬롯+14의 겹친 객체다.
     std::uint16_t ReadNext(std::size_t offset) const;
     void WriteNext(std::size_t offset,std::uint16_t next);

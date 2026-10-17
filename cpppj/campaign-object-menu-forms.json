@@ -12,8 +12,8 @@
     "cpppj/src/client/CampaignClientServices.cpp": "deb067662fe4fcd5324bab710c7b06fb7ce5f661f4078227946adc4fa92db72a",
     "cpppj/src/client/RawButtonControls.cpp": "5d9568d2a6c461e9dd474cc584db62389ca3eb576e780fdeb6e9a39f1ee55baf",
     "cpppj/src/client/RawButtonControls.h": "372d15ad4ab423ef9869fab470ad1f4b5c75cb0ebc12503edd2bb7a6f3f240d6",
-    "cpppj/src/client/RawCampaignSession.cpp": "72da6c6c1139dd703d7a0754374f3f957495180ef7acbb827237d97742a1abb2",
-    "cpppj/src/client/RawCampaignSession.h": "ae38ba2c4f2b74fd67be7b8e5b8fe6083c0756b4865887686192f997f04a5a72",
+    "cpppj/src/client/RawCampaignSession.cpp": "26d4fa65f5dd103b8955f5eb0272a71759b5d5fec0bd89ee85fe0a26e3bb6d47",
+    "cpppj/src/client/RawCampaignSession.h": "95a84650fd81b3b3c6cb3601f47d444f7b6ba3056ac8aab31de40c17c1cff38b",
     "cpppj/src/client/RawMenuControls.cpp": "e1d3a27c5330b52727e18447c97b02f6a7f82cb0ceeb9bf55aad874b744720f1",
     "cpppj/src/client/RawMenuControls.h": "92b7db6b2d4fa00641d814a9e0e6b76bf649b7789302cb1dc306abd87c99023d",
     "cpppj/src/client/UberGump.cpp": "471b592cf1e784c63db34bc109eb3d38785481018b403cef0afa98d98622d10b",
@@ -374,6 +374,25 @@
           "path": "cpppj/tests/CampaignObjectMenuTests.cpp",
           "previous": "78ca23440d06e1cb42596d63b4a53b75af24ab37af9238e6fef6900909bc9fd1",
           "current": "fea9198ea2150c42bb523f7ac9298c2f819acd1fc9b9887b53020c206ad62563"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 153,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "72da6c6c1139dd703d7a0754374f3f957495180ef7acbb827237d97742a1abb2",
+          "current": "26d4fa65f5dd103b8955f5eb0272a71759b5d5fec0bd89ee85fe0a26e3bb6d47"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "ae38ba2c4f2b74fd67be7b8e5b8fe6083c0756b4865887686192f997f04a5a72",
+          "current": "95a84650fd81b3b3c6cb3601f47d444f7b6ba3056ac8aab31de40c17c1cff38b"
         }
       ]
     }

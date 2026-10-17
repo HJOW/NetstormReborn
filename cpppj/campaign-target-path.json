@@ -61,7 +61,7 @@
     "extracted/finder/originalCD/functions.tsv": "60cf1f9e4a7832ebe882a869af2bd2cd69e549e761fb03d7d4d64bb5fb3c5935",
     "extracted/guntarget-helper/originalCD/functions.tsv": "f77d7e5217b3ce4b55969bb6c044ff145238f29fc4aeed7e4394ab0657ad86fe",
     "extracted/guntarget-distance-angle/originalCD/functions.tsv": "349d60dae29ca9af0c2dd5426eaf142218c800914d3b2acd973765bc8417564e",
-    "cpppj/src/o/SidPool.h": "fbac21d016818c4f3436d2848658b628ff1ebcfe1ce2bee7c78596726ec077c4",
+    "cpppj/src/o/SidPool.h": "5aae3c23e7376b0c1c3da5a96e736738335d1e1bf060db41e1b748535ff75ee1",
     "extracted/finder/originals/functions.tsv": "7ee781ffc6200c8f6b231381c4dae7ce88e5c0158f4b8effb222090bf8345704",
     "extracted/guntarget-helper/originals/creation.c": "b218a5a45005ad198139f653e173d46277148a862465b2a54ca23965b40fdc25",
     "extracted/guntarget-helper/originals/functions.tsv": "4de1eb8040ba73dc5cb780b85cca82780ccd2697ea77407beab92f26a3e2af6a",
@@ -258,6 +258,19 @@
           "path": "cpppj/src/o/RawPathProcess.cpp",
           "previous": "15e0b7f5097323d5431da841e47b892501c1911e74648c76686c7c66561667c0",
           "current": "c95903a9fc3c1507ca4b45f7fa93b5d9b2f2626fe050e236850eca21f5581624"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 153,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/o/SidPool.h",
+          "previous": "fbac21d016818c4f3436d2848658b628ff1ebcfe1ce2bee7c78596726ec077c4",
+          "current": "5aae3c23e7376b0c1c3da5a96e736738335d1e1bf060db41e1b748535ff75ee1"
         }
       ]
     }

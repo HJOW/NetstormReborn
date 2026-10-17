@@ -41,6 +41,7 @@ public:
     // 원본134/VT5070c0의23과105/VT509810의39만 실제 분배로 시작한다.
     o::RawPathProcess* StartConstruction(o::RawPathStartRequest request);
     o::RawPathProcess* StartCarrier(o::RawPathStartRequest request); // 검증한133의 실제40 생성/시작/가상 통지를 실행한다.187의42ac60은 별도 경계다.
+    bool SearchCandidate(o::RawPathRuntime& temporary,o::Sid parent,o::RawPathPoint start,o::RawPathPoint destination,std::uint32_t flags); // 후보 평가가 같은 BFS/작업 전역을 사용한다. Process/Form을 만들지 않는다.
     // 현재 종속 체인의 실제54 Form을 조회하고 같은 Host의 기존 Path 객체를 반환한다.
     o::RawPathProcess* CurrentPath(o::Sid parent) const;
     // CarrierArrival 등 순환 연결에서 같은 실제 현재 Path 저장소를 빌린다.

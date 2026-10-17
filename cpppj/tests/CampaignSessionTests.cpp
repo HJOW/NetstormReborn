@@ -16,6 +16,7 @@
 #include "client/RawShapeToBuffer.h"
 #include "client/OwnerColorMaps.h"
 #include <unordered_set>
+#include <iostream>
 using namespace netstorm::client;
 namespace {
 // 장치/UI/송신은 명시 검사 경계이며 생산 세션의 게임 계산을 대체하지 않는다.
@@ -82,6 +83,30 @@ CellPoint EmptySessionSupport(const RawWorldCore& core) {
         }
     }
     throw std::logic_error("보호 Session의 빈3×3 받침 입력 위치 부재");
+}
+// 현재 목록 선택은 실제 BFS를 쓰되 기존40/Form/패킷을 유지하고 귀환 명령에서만 새 경로를 만든다.
+TEST_CASE(CampaignCarrierChoice_ActualListsBfsHomeAndCurrentAi) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();
+    services.ai.allocationBytes=[](std::span<std::uint8_t> bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0x71}); };
+    services.ai.participation.clearChat=[](std::uint32_t) {};services.ai.participation.addChat=[](std::uint32_t,std::string_view,std::uint32_t) {};
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));session.Load();auto core=session.Core();const Sid priest{static_cast<std::uint16_t>(session.FindPriestParticipation(1))};CHECK(priest.value);if (!priest.value) return;
+    const auto raw=core.pool.Slot(priest);const RawPathPoint point{std::bit_cast<float>(Get(raw,14)),std::bit_cast<float>(Get(raw,18))};const auto golem=session.World().Create(133,2);session.World().Pop(golem,point.x,point.y,0);core.owner.Set(golem,1);
+    auto* initial=session.StartCarrierMovement({golem,point,1,0,0,0,0});CHECK(initial);if (!initial) return;const auto form=initial->Form();const auto pid=core.kernel.Find(*initial);const auto packets=external.packets.size();
+    SquidPostPopList candidates{{priest.value},1};CHECK(session.CarrierChoice().Evaluate(candidates,golem,golem)==priest);CHECK(core.processes.FromForm(form)==initial && core.kernel.Get(pid)==initial && external.packets.size()==packets);CHECK(&session.CarrierChoice().Pool()==&core.pool);
+    const Sid home{static_cast<std::uint16_t>(Get(session.PlayerRecords(),0xb4+0x7c))};CHECK(home.value);const auto chosen=session.CarrierChoice().ChooseReturn(golem);CHECK(chosen==home);CHECK(core.processes.FromForm(form)==initial && external.packets.size()==packets);
+    const auto returning=session.CarrierTarget().GoHome(golem);CHECK(returning);if (!returning) return;auto* path=reinterpret_cast<RawPathProcess*>(returning);CHECK(path->Parent()==golem && path->MovementType()==40 && path->Runtime().Count()>0);CHECK(external.packets.size()==packets+1);
+    const auto selected=session.CarrierChoice().ChooseGeyser(golem);CHECK(selected.value && core.pool.Slot(selected)[10]==122);CHECK(core.processes.FromForm(path->Form())==path && external.packets.size()==packets+1);
+    const auto beforeFailure=external.packets.size();CHECK(!session.CarrierTarget().GoGeyser(golem,selected));
+    RawContainedLookup lookup(core.pool,[](Sid,std::uint32_t) { throw std::logic_error("후보 검사 조회에서 삭제 금지"); });CHECK(!lookup.Find(golem,40).value && external.packets.size()==beforeFailure); // 초기 지도의 끊긴 접근은 원본처럼 기존40을 지우고 새 경로를 만들지 않는다.
+    const auto rectangle=core.neighbors.Footprint(selected);const auto collector=session.World().Create(133,2);session.World().Pop(collector,rectangle.right,rectangle.bottom,0);core.owner.Set(collector,1); // 간헐천 섬의 모서리를 초기 위치로 사용한다. 결과 경로는 실제 BFS가 계산한다.
+    const auto mining=session.CarrierTarget().GoGeyser(collector,selected);
+    if (!mining) {
+        const auto current=core.pool.Slot(collector);const RawPathPoint source{std::bit_cast<float>(Get(current,14)),std::bit_cast<float>(Get(current,18))};BoardTargetState targetState;RawBoardTarget target(targetState);const auto destination=target.Nearest(core.neighbors.Footprint(selected),source,1);
+        RawPathSearchState inspectState;RawPathSearch inspect(core.pool,core.hash,core.spots,core.types,core.frames,inspectState);RawPathRuntime probe(OriginalEdition::Patch1078);const auto reachable=inspect.Search(probe,collector,source,destination,0);
+        std::cout<<"간헐천 접근 진단 owner="<<unsigned(current[34])<<" brain="<<session.Participation().Brain(current[34])<<" target="<<selected.value<<" state="<<unsigned(core.pool.Slot(selected)[11])<<" source="<<source.x<<','<<source.y<<" dest="<<destination.x<<','<<destination.y<<" graphs="<<unsigned(inspect.GraphAt(source).value_or(254))<<','<<unsigned(inspect.GraphAt(destination).value_or(254))<<" surface="<<inspect.SurfaceAt(source).value<<','<<inspect.SurfaceAt(destination).value<<" search="<<reachable<<" count="<<probe.Count()<<'\n';
+    }
+    CHECK(mining);if (!mining) return;auto* current=reinterpret_cast<RawPathProcess*>(mining);CHECK(current->Parent()==collector && current->MovementType()==40 && current->Runtime().Count()>1);const auto currentForm=current->Form();
+    const auto ai=session.CreateAi(2,SessionAiSettings("Explicit","sunCannon"));CHECK(ai && session.Participation().Brain(2)==ai);const auto beforeAi=external.packets.size();core.owner.Set(collector,2);CHECK(session.CarrierTarget().GoReturn(collector,home)==0 && core.processes.FromForm(currentForm)==current && external.packets.size()==beforeAi);session.RemoveAi(2);CHECK(!session.Participation().Brain(2));core.owner.Set(collector,1);CHECK(core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0);
 }
 // 실제Stage3가읽을전역과직접SP지정이동일Session의원문32×9분산배열에만영향을주어야한다.
 TEST_CASE(CampaignSession_MissionInputsUseSameScrambledSpSlots) {

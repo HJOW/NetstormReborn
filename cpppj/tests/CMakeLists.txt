@@ -1403,3 +1403,8 @@ set_source_files_properties(CarrierTargetTests.cpp PROPERTIES COMPILE_DEFINITION
 target_sources(netstorm_tests PRIVATE CarrierCandidateSortTests.cpp)
 set_source_files_properties(CarrierCandidateSortTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_CARRIER_CANDIDATE_SORT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/carrier-candidate-sort-x86.tsv\"")
+
+# 골렘의 후보 수집·거리·원본 정렬·실제 Prepare 독립 원문이다.
+target_sources(netstorm_tests PRIVATE CarrierChoiceTests.cpp)
+set_source_files_properties(CarrierChoiceTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CARRIER_CHOICE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/carrier-choice-x86.tsv\"")

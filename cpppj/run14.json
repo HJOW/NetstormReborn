@@ -191,7 +191,7 @@
     "cpppj/tests/fixtures/geyser-ai-registration-x86.tsv": "d7b6d2a738a8c84fe5b9ec8ebe92776bb7a9d69bd0e55684aff0e58304e89850",
     "cpppj/priesthalt.json": "2762a74909ed6d75f470fe8943d0cdc7ca5bb78a0f862939d754d990b423617d",
     "cpppj/tests/fixtures/priesthalt-x86.tsv": "44a098cf999666322e0a3460bffc159b680792e5fdf06b89e5a6cf2644ba251c",
-    "cpppj/carrierarrival.json": "89153976369a05b6b3e03a52698ecfb72b799d99fdda19c2a92db70b2fed5492",
+    "cpppj/carrierarrival.json": "709ed1f24fa22be42f205457581c8f48289436e5cf7d90217c8b6918508ebd4d",
     "cpppj/tests/fixtures/carrierarrival-x86.tsv": "1414a203ded7276d096c5ab5bbba4c9849dca315a3df2e972a7556331efe42c2",
     "cpppj/player-world.json": "da706f844ab0c6a8a7f23e6e03a6d5549dde79e0a0bde65f2a6d96937217526b",
     "cpppj/tests/fixtures/player-world-x86.tsv": "c53c5f89f6734cbc89535199a69d0348f5f051192ce9e7c339c55565caa5c53b",
@@ -259,8 +259,8 @@
     "cpppj/src/o/RawPlayerWorld.cpp": "c3a40006ab856ad1d8784231c29926be7cbeacdd5658e8d35c6d146d9eb9d644",
     "cpppj/src/o/RawPriestHalt.h": "bab52be7833b12dd3bca34bc27920f9eaedb263802c8099e34eef3b313e89751",
     "cpppj/src/o/RawPriestHalt.cpp": "374346e3ef06b04c59c544b5f6298cbf82c935f8c6f2f292d8e4bf2144f65742",
-    "cpppj/src/o/RawCarrierArrival.h": "4f4afc5e967924aab027e161c21d1dc4554f3b1438aca9331b3fca8902d20f9f",
-    "cpppj/src/o/RawCarrierArrival.cpp": "1ce744b92bb3faa0c30b4ae8b76f4787e1cd42b9971d4a41c1cbfc9def11e6a3",
+    "cpppj/src/o/RawCarrierArrival.h": "a6fa676986cd46235b5cfdb1646e78554d76f0ee7ee8b002e7d3edac258de406",
+    "cpppj/src/o/RawCarrierArrival.cpp": "1e63d7f9cb0a18ddb4a10b7c642e54873e8f46ab98deec6d3f63b334199979df",
     "cpppj/src/o/RawPriestArrival.h": "33ca15f327ab858b673395e63c932051827e8b2ee71f80bedce7899c7476aac9",
     "cpppj/src/o/RawPriestArrival.cpp": "6552e43202269a1c2dfabbc8dcd11878f320a34e95dba9691c870d3e7859b806",
     "cpppj/src/client/RawShapeToBuffer.h": "0d957cb5d99e2042ff04dbea766bb05e79560b390ffe82976388692ae5b259bb",
@@ -270,11 +270,11 @@
     "cpppj/tests/DudeSpaceTests.cpp": "d4ad98bc757b744b18836ec5bb19d2c0c0973005fd4f6ec1d0edda52f564b624",
     "cpppj/tests/GeyserAiRegistrationTests.cpp": "974e135f4025fb42d81da1668c99a12c4c8c7f1265353fb5b82c3a0cea7e8843",
     "cpppj/tests/PriestHaltTests.cpp": "e129c0966cd074a88e3ce40b3e197c8ef8ec90b64b335bd4b04430e9ce556a64",
-    "cpppj/tests/CarrierArrivalTests.cpp": "7b7f94c8e142fd4fe81f620038c005bb07f06fccbc151d2baa0fe7faed2a9b5a",
+    "cpppj/tests/CarrierArrivalTests.cpp": "accd2553072d85c4f1df068a2dea74bc2328e56313151df913571e60036f9a2c",
     "cpppj/tests/PriestPathArrivalHostTests.cpp": "a7bc16ff4279a6e3c26959dc95b93d913b8504922db52bcbee6e8be38d7959f2",
     "cpppj/tests/PlayerWorldTests.cpp": "fe10cc0a9464d85499d9fa27b2d30af7a87583348a886072865cd5899de55098",
     "cpppj/tests/DudeSpaceSupport.h": "e77396ff164bf83e577f2c1694e967b57da9a67f8f9a0bea42d4182fcc182242",
-    "cpppj/tests/CarrierArrivalSupport.h": "711263ae85caf9cb748b2db1dace990c8066b74b453403af86e5c43d1618fedd",
+    "cpppj/tests/CarrierArrivalSupport.h": "ab3b51fa485834acf41cc3934b0917b919edff0ea1351547a5ad247690bede56",
     "cpppj/tests/DudeSpawnSupport.h": "0ae6dc924037731855b6e5e7ecd695f4e78e5f0673e7f5c1efc48e55379796ba",
     "cpppj/src/o/CMakeLists.txt": "3254400ea40a0e2871769327587656602b2077f34024ef221b0ce6e41b0f0c38",
     "cpppj/src/client/CMakeLists.txt": "77c84903cede45bf73f75f319e2fc545813680e9e67f483065135fc45ab15bd0",
@@ -301,6 +301,43 @@
           "path": "cpppj/burningsources.json",
           "previous": "133502425eece71d1737a3c4e0316e64355dd4e22dbaeea1775474340316a624",
           "current": "deb8d3c741b1b0e876ff5a7809c482ad2616c2ef8a760e5dfaf7f2295b142bd2"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 153,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/carrierarrival.json",
+          "previous": "89153976369a05b6b3e03a52698ecfb72b799d99fdda19c2a92db70b2fed5492",
+          "current": "709ed1f24fa22be42f205457581c8f48289436e5cf7d90217c8b6918508ebd4d"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawCarrierArrival.h",
+          "previous": "4f4afc5e967924aab027e161c21d1dc4554f3b1438aca9331b3fca8902d20f9f",
+          "current": "a6fa676986cd46235b5cfdb1646e78554d76f0ee7ee8b002e7d3edac258de406"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawCarrierArrival.cpp",
+          "previous": "1ce744b92bb3faa0c30b4ae8b76f4787e1cd42b9971d4a41c1cbfc9def11e6a3",
+          "current": "1e63d7f9cb0a18ddb4a10b7c642e54873e8f46ab98deec6d3f63b334199979df"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/tests/CarrierArrivalTests.cpp",
+          "previous": "7b7f94c8e142fd4fe81f620038c005bb07f06fccbc151d2baa0fe7faed2a9b5a",
+          "current": "accd2553072d85c4f1df068a2dea74bc2328e56313151df913571e60036f9a2c"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/tests/CarrierArrivalSupport.h",
+          "previous": "711263ae85caf9cb748b2db1dace990c8066b74b453403af86e5c43d1618fedd",
+          "current": "ab3b51fa485834acf41cc3934b0917b919edff0ea1351547a5ad247690bede56"
         }
       ]
     }

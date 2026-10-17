@@ -1,0 +1,166 @@
+{
+  "unit": 153,
+  "date": "2026-10-18",
+  "host": "HJOW-Athlon",
+  "baseCommit": "52e714f",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16"
+  },
+  "status": "이번선택기·현재AI단위완료/운반프레임·전체플레이목표진행중",
+  "currentSources": {
+    "cpppj/src/o/SidPool.h": "5aae3c23e7376b0c1c3da5a96e736738335d1e1bf060db41e1b748535ff75ee1",
+    "cpppj/src/o/RawCarrierArrival.h": "a6fa676986cd46235b5cfdb1646e78554d76f0ee7ee8b002e7d3edac258de406",
+    "cpppj/src/o/RawCarrierArrival.cpp": "1e63d7f9cb0a18ddb4a10b7c642e54873e8f46ab98deec6d3f63b334199979df",
+    "cpppj/src/client/RawCampaignPathBindings.h": "ce83a2a4f5e609cd54ca929bfe0cac569e26d33372c83b1eb5d644b6601904ed",
+    "cpppj/src/client/RawCampaignPathBindings.cpp": "876b5c4b972f3a89fa8836ae0112437f9bbecf7db5a09f0a8b433ab0636b7bf7",
+    "cpppj/src/client/RawCampaignSession.h": "95a84650fd81b3b3c6cb3601f47d444f7b6ba3056ac8aab31de40c17c1cff38b",
+    "cpppj/src/client/RawCampaignSession.cpp": "26d4fa65f5dd103b8955f5eb0272a71759b5d5fec0bd89ee85fe0a26e3bb6d47",
+    "cpppj/src/CMakeLists.txt": "a39881701201bec12a66b5594b88ed694f997825b61df7730a49bc4cc938dcef",
+    "cpppj/tests/CMakeLists.txt": "f6f7d6c46ff9dacf49c46037330ef0fcc0052edbcb7c78a908540903159241aa",
+    "cpppj/tests/CarrierArrivalSupport.h": "ab3b51fa485834acf41cc3934b0917b919edff0ea1351547a5ad247690bede56",
+    "cpppj/tests/CarrierArrivalTests.cpp": "accd2553072d85c4f1df068a2dea74bc2328e56313151df913571e60036f9a2c",
+    "cpppj/tests/CampaignSessionTests.cpp": "5748886e19454fe0b18c85dacc94ee2aad220ac4b9baedbedb48245e2904cd4b",
+    "cpppj/src/o/RawCarrierChoice.h": "2fedbc83180495e739ab33a68949ce1a0a38ce0eafdaee726e3cccc94b985658",
+    "cpppj/src/o/RawCarrierChoice.cpp": "60104693cef32dbf1607961dab1628ef52113829ef58eaeece9094932027fad1",
+    "cpppj/tests/CarrierChoiceTests.cpp": "5c3d6c6c66dd1769c4eb83c523115d54c17a8904b37ecd7b6115125af067c25f",
+    "tools/decomp_carrier_choice.py": "c2b326948c3df722bcb01496ec8266265e304b2e608130edd7921e62fc2c4a41",
+    "docs/exe/cpp-carrier-choice-20261018.md": "83764a2ce84e7654b556e8e59a45ba1357f7119fa248617dc910d04743f8782a",
+    "cpppj/src/o/RawCarrierCandidateSort.h": "d6772fee26dab5961e379781030a469a52fb940462f44c67b16d9cc33b97a61f",
+    "cpppj/src/o/RawCarrierCandidateSort.cpp": "a7749297ad70712a059aea52088cfd41c0880801a4f72c68d2b1548495a5bc69",
+    "cpppj/src/o/RawBoardTarget.h": "d3b2ce06c29732b03068471f763ef8c556360d1a641c8aa23da0db29e1cd98d9",
+    "cpppj/src/o/RawBoardTarget.cpp": "0a113af217f40762da9a69f9d02dece3fa904e0da54ddf5aed746718b3bddf51",
+    "cpppj/src/o/RawPathRuntime.h": "b74e6c9947182ef327a50be4921921d43ac1a62063e8cf02a193e3045359a667",
+    "cpppj/src/o/RawPathRuntime.cpp": "e771d3c17baf7c9e96b7da65a7b20c2171a8b82d75ccee94d091689036c5d42d",
+    "cpppj/src/o/RawPathSearch.h": "471c37aaeff1f5b7e157f52bfb20984c55e993fa59f7c33696fb42772107a7ac",
+    "cpppj/src/o/RawPathSearch.cpp": "a7597d758972707a48ab25260af4ba877798c9c91ed01e0471d84819005d2858",
+    "cpppj/src/o/RawPlayerParticipation.h": "f81add0213f964bd96205a754f40f887731aed6e0499f5b04740ef903d2b9cc9",
+    "cpppj/src/o/RawPlayerParticipation.cpp": "0eab593fc053a9ad72145628acef6ea7863e4e2269a20ed03bb0d2b70b8849db"
+  },
+  "nativeReports": {
+    "cpppj/carrier-choice.json": "55c63a67d83606a506d3d510c5eeeb5657489449925b1b8d4e2d6600729a82b6"
+  },
+  "nativeContext": {
+    "uniqueInputs": 721,
+    "normalReturns": 1442,
+    "instructions": 30384330,
+    "nativeCalls": {
+      "004280a0": 1640,
+      "004e4a40": 1640,
+      "004ac550": 1556,
+      "0049a840": 105276,
+      "0040f100": 1556,
+      "004ac200": 1364,
+      "004ac1e0": 102356,
+      "0041d530": 103440,
+      "0041ce90": 103440,
+      "0041d400": 103440,
+      "0041cfc0": 51618,
+      "004e49c0": 51122,
+      "004e6010": 1640,
+      "004e5fa0": 1070,
+      "00428020": 100198,
+      "00488fb0": 598,
+      "00488e20": 494,
+      "0041cd60": 496,
+      "00428ea0": 560,
+      "00429420": 342
+    },
+    "allocations": 758,
+    "frees": 758,
+    "precisionDifferentInputs": [],
+    "boundaries": "428ea0/429420/4280a0/428020/실제 CRT정렬/41d530·400·ce90·cfc0·cd60/488e20/488fb0/TYPE·AI getter/ftol/stack probe 전체. Footprint/BFS/후보유효성/Graph/진단/2000바이트확보·해제는명시경계다. 호스트재생의미관측임시꼬리초기화/OOM은검증범위밖이다. GP/retN/SEH/canary/x87/명령·읽기·쓰기범위/전체raw Adler와효과순서를검사한다. 실제 게임창·자연완주검증은아니다."
+  },
+  "nativeExtension": {
+    "originalRows": 707,
+    "addedRows": 14,
+    "originalFixtureSha256": "7c8f97b5e0434355756d004220ffc3161305489899479579e91f4b455c5fbe92",
+    "prefixUnchanged": true
+  },
+  "validation": {
+    "build": {
+      "final": "build8",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0
+    },
+    "focused": {
+      "final": "focused5",
+      "tests": 4,
+      "failedChecks": 0,
+      "exitCode": 0
+    },
+    "full": {
+      "tests": 1612,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "seconds": 204.28,
+      "ctestSeconds": 204.31
+    },
+    "audit": {
+      "tools": 73,
+      "passed": 62,
+      "knownFailures": 11,
+      "newFailures": 0
+    },
+    "pinMaintenance": {
+      "reports": 64,
+      "pins": 268,
+      "historyExact": true
+    },
+    "cloneEntry": {
+      "runs": 5,
+      "passed": 5,
+      "originalsUnchanged": true,
+      "scope": "1-1/1-2 briefing→world와tutorial1~3 briefing"
+    }
+  },
+  "initialFailures": [
+    "정밀디컴파일C가누락한428210 FDIV를바이너리추적으로확인했다. CPP를거리/speed로수정했고원문은보존했다.",
+    "검사입력C4244와임시진단cout헤더누락을수정했다.",
+    "Session성공조건은실제통행가능모서리초기위치로준비하고초기위치의원래실패동작도유지했다."
+  ],
+  "protected": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "AGENTS.md": "7addbf9b31c42f29aab7c93faa865eb6de8590a600d17202a297cf7122bdf979",
+    "LEFT_JOBS.dotnetpj.md": "0c067e1d12879dbf2212cbd64c8f9f60e65b590df910418f025027ed84f80ec2"
+  },
+  "logSha256": {
+    "extracted/goal-carrier-choice-20261018-build1.log": "9ff8f69b3997c65bc88eaa538029a3e42fffc436863bd588e6ab74691885b0c5",
+    "extracted/goal-carrier-choice-20261018-build2.log": "7f010d34d09b4423bc412e6914c69630e2596a1a5a73018e37a22916a9b3f0fa",
+    "extracted/goal-carrier-choice-20261018-build3.log": "33016820cc43fd45a0022d821655f9b3118a0d6529d851d3d9ff9333439aa8eb",
+    "extracted/goal-carrier-choice-20261018-build4.log": "68daf5268753a6f0253917d033a76282e07803e3b45f8c1951a34f7cbc6a3d34",
+    "extracted/goal-carrier-choice-20261018-build5.log": "68daf5268753a6f0253917d033a76282e07803e3b45f8c1951a34f7cbc6a3d34",
+    "extracted/goal-carrier-choice-20261018-build6.log": "68daf5268753a6f0253917d033a76282e07803e3b45f8c1951a34f7cbc6a3d34",
+    "extracted/goal-carrier-choice-20261018-build7.log": "68daf5268753a6f0253917d033a76282e07803e3b45f8c1951a34f7cbc6a3d34",
+    "extracted/goal-carrier-choice-20261018-build8.log": "68daf5268753a6f0253917d033a76282e07803e3b45f8c1951a34f7cbc6a3d34",
+    "extracted/goal-carrier-choice-20261018-focused1.log": "d76ef10ddbb94947836927f6e332f53717e804f84074ce2d5306ce6ee9e69ea7",
+    "extracted/goal-carrier-choice-20261018-focused2.log": "0558d2729b461b8b4165c54a879c86371969a9811a62362ceef111db8c0ca4aa",
+    "extracted/goal-carrier-choice-20261018-focused3.log": "2c7b403237c4bbec5a5f1a3a479d09accecf36e505edd5a8fb6c9ed873449e21",
+    "extracted/goal-carrier-choice-20261018-focused4.log": "459b8bd6b2cd748b83b695666c2b42c475c8fe3ac20d16f59ed2d211ac483d30",
+    "extracted/goal-carrier-choice-20261018-focused5.log": "9e6e0060dcc95f1e6d35600869566fb43b2c8e51b8d84fd32dfe313016942518",
+    "extracted/goal-carrier-choice-20261018-native1.log": "bf9cbb5a95215170bd1b067c88d0b401f27b59aae338ab25f0e0514f99e06c99",
+    "extracted/goal-carrier-choice-20261018-native2.log": "64ccc85415fc70093df090c332d7d3d9d8902ee12548b8ed68969c6cd447095f",
+    "extracted/goal-carrier-choice-20261018-native1.tsv": "7c8f97b5e0434355756d004220ffc3161305489899479579e91f4b455c5fbe92",
+    "extracted/goal-carrier-choice-20261018-native1.json": "022bde5596e09ea919da8537bf4d7a88be3f31e7a48011ae4a067b821a03f230",
+    "extracted/goal-carrier-choice-20261018-session1.log": "ee39c495208c38835a18d0368668e103a87c095dcc01dac0709a8e6fa0049fa7",
+    "extracted/goal-carrier-choice-20261018-session2.log": "f42b6ffc4ca869812ed26fafb24a213a631d0e6383ed012070f2b648798f7d46",
+    "extracted/goal-carrier-choice-20261018-ctest1.log": "7f56b80edc3790c8970dd9ade3eee16281f91abcd9c9c1b5c6176451908b6302",
+    "extracted/goal-carrier-choice-20261018-LastTest.log": "d713488fced599436175b1ad9cc13a9d058956a8663f22a022f0e2dc2f5f1eeb",
+    "extracted/goal-carrier-choice-20261018-pins-final.log": "d00188ec063010cec96f7a104d854937a684543d90d1fbafc9621602e2acf797",
+    "extracted/goal-carrier-choice-20261018-pin-updates.json": "4a26604531f932e24243372ad68d81eb65122d7c3d0238b4df3605f4a760038e",
+    "extracted/goal-carrier-choice-20261018-audit-final.log": "fb7d9d2bf932b587a6b6a9e20dcd6c0543a723e36f36092ee9edb956522c6cf9",
+    "extracted/goal-carrier-choice-20261018-verify-final.json": "0acbf7044381723bfa2efd96a22d486e0c4eff797d2bce307cecafde4d2db602",
+    "extracted/goal-carrier-choice-20261018-entry.log": "530bf9254a3b0be59b099d237909bd3be07412d0f47949f546997ffdb8b1e681",
+    "extracted/goal-carrier-choice-20261018-entry/results.json": "cd18a5929aca02f0d171e321d51404f7bf9bf558bd4f1307b00b3b557e393737"
+  },
+  "remaining": [
+    "40의489ff0대상사망/재확인fragment와미연결effects.path.retarget",
+    "pickup·mined packet·경제·429010·443800",
+    "38/41/42·실제Client명령소비자·AI·11스테이지자연운반과완주·승패·저장·다음미션"
+  ],
+  "intendedCommit": "20261018-03 CP 골렘 귀환과 간헐천 후보 평가 및 현재 AI 연결 복원",
+  "push": false
+}

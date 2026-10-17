@@ -27,6 +27,7 @@
 #include "o/RawCarrierContentNotice.h"
 #include "o/RawCarrierTransfer.h"
 #include "o/RawCarrierTarget.h"
+#include "o/RawCarrierChoice.h"
 #include "client/RawCursorMana.h"
 #include "client/RawCursorRange.h"
 #include "o/RawEnergySupply.h"
@@ -257,6 +258,7 @@ public:
     o::RawPathProcess* StartCarrierMovement(o::RawPathStartRequest request); // 같은 실제 썬 워커133의40 경로를 시작한다.다른Halt는 별도 경계다.
     const o::RawCarrierTransfer& CarrierTransfer() const; // 현재 같은 풀의 로컬 전달 수신/주기/공유 상태를 빌린다.
     const o::RawCarrierTarget& CarrierTarget() const; // 현재 같은 월드의 일반 대상 접근/간헐천 이동/귀환을 실행한다.
+    const o::RawCarrierChoice& CarrierChoice() const; // 현재 실제 Player/목록/Graph/BFS의 귀환·간헐천 선택기를 빌린다.
     // 화면/명령은 같은 현재 raw 월드와 HP를 읽는다.
     RawSurfaceWorld& World();
     // 같은 월드의 현재 Pool/장부/Host 참조를 빌린다.

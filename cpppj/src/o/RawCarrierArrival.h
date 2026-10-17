@@ -14,7 +14,7 @@ struct CarrierArrivalState {
     bool boss{true},debug{},allowAlliedPickup{}; // 현재 권한/패치Robust 검사/친구 사제 pickup 허용 전역이다.
     std::uint32_t priestType{158},nuggetType{154},daisType{165},geyserType{122},outpostType{126},isleStalagType{84}; // 원래 mutable 타입 getter들이다.
     std::array<std::uint32_t,81> alliances{}; // [carrierOwner*9+candidateOwner]와 반대 방향을 임의 통합하지 않는다.
-    std::array<bool,9> controlledOwners{}; // 실제 Player+0xb0/CD+0xa8 AI 포인터의0 아님을 공급한다.
+    std::array<bool,9> controlledOwners{}; // 독립 원문 재생의 입력이다. 실제 Session은 아래 currentControlled로 현재 Player를 읽는다.
 };
 // 각 큰 운반/포획/경제/프로토콜/회피 몸체는 호출되면 필수 실제 효과를 공급해야 한다.
 struct CarrierArrivalHooks {
@@ -31,6 +31,7 @@ struct CarrierArrivalHooks {
     std::function<void(std::uint32_t)> cdOwnerPacket; // CD0040abd0→004c0380의 실제 owner 갱신 요청/목록 흐름이다.
     std::function<void(float,float,std::string_view,std::uint32_t)> playAt; // CD 너겟 반환의 현재 returnPlace 중심 guy.wav/flags0이다.
     std::function<bool(Sid)> robust; // 패치 마지막004afd00의 현재 객체/내용물 전체 실제 검사를 공급한다.
+    std::function<bool(std::uint32_t)> currentControlled; // 현재 owner의 실제 Player+b0/CD+a8 조회다. 미연결 원문 재생만 controlledOwners 입력을 사용한다.
 };
 // 큰 하위 효과 경계와 순수 조회를 분리하며 기존 완료 bodies를 다시 작성하지 않는다.
 class RawCarrierArrival {

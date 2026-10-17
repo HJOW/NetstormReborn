@@ -86,3 +86,6 @@ target_sources(netstorm PRIVATE o/RawBoardTarget.cpp o/RawBoardTarget.h o/RawCar
 
 # 골렘 후보 비교기의 주소 감김과 구형 CRT 동률 순서다.
 target_sources(netstorm PRIVATE o/RawCarrierCandidateSort.cpp o/RawCarrierCandidateSort.h)
+
+# 골렘의 실제 귀환·간헐천 목록과 임시 BFS/시각 평가다.
+target_sources(netstorm PRIVATE o/RawCarrierChoice.cpp o/RawCarrierChoice.h)
