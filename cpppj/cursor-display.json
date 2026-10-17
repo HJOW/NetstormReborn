@@ -39,14 +39,14 @@
     "cpppj/src/client/PreviewDraw.h": "39ef0204066978f6351a094b1a908012e2ddce32eb688c529bfa7cfa2137f9d1",
     "cpppj/src/client/PreviewDraw.cpp": "45f40e2cced1e6911e4c8fadfea79a303c4573a6134697aaf3a1dd0631e7be45",
     "cpppj/src/client/RawCursorDrop.h": "c486d2604d46407ff8ace3961cabb880e327dc29e13407e3cfb2004ee33e1450",
-    "cpppj/src/client/RawCursorLifecycle.h": "2f945a627677997d31f6e05f42021049e9af486017109faf1978187ef517903f",
-    "cpppj/src/client/RawCursorLifecycle.cpp": "b6ceb2db9080d9d1411f519564bd727e421b5a7f529ce6df009f2876b4acb9d3",
+    "cpppj/src/client/RawCursorLifecycle.h": "93071d00170ceb87e7c1f0424d03e5b02705ffbf9c7e731198f5a99f3bcafd0b",
+    "cpppj/src/client/RawCursorLifecycle.cpp": "ae6b21d763638a5ff74267aad5730450b39ade182b4eb3247d460a2890dcf5e4",
     "cpppj/src/client/RawCursorPlacement.h": "9da2051c1797b9114e6883e5c170e238d77d6b0fcdddcf9dac88906f8f32a61d",
     "cpppj/src/o/RawBridgeConnect.h": "3ce1ed2f4cf63ae28f75d1a9d84f2c4d00d92cca9f6e30732a6e06bb45a546ad",
     "cpppj/src/o/RawCanonPlacementPipeline.h": "4c52d14dea023e6c5251c528b1afd6955e10d8d25a31e9766b4d79faa286e8fc",
     "cpppj/tests/CursorPreviewBindingSupport.h": "324ab94b2d23c33f96bf257089d77a54f88ede7bbe4f4288d070fdf08cc02b4e",
     "cpppj/tests/PreviewCollectionTests.cpp": "c6faebfc2502d50278b1d0ee772206d3e4f4f63d0cb9af7aa45fbe62fe246892",
-    "cpppj/tests/PreviewDrawTests.cpp": "aeafbb82a3d086229cec59f5b8b4808730d51b47f406346ac45f3a5701cbda5f"
+    "cpppj/tests/PreviewDrawTests.cpp": "a27ab5bc86ac1ec487013707ac7674a0e53d17ab9bc27a9ebcc2f9eacef4975c"
   },
   "validation": {
     "configuration": "Release",
@@ -77,5 +77,29 @@
     "원문 표본105개를 두 정밀도로 새 실행했다. 게임/OS 호출은 없다. 기계어 관찰은 픽셀/번역/글꼴 경계를 유지한다.",
     "공통 수집/정렬/분배/픽셀은 검사 장면에서 연결한다. 실제 Client/Session/입력·건설/사용자 완주는 미완료다.",
     "화면 표시용 옵션/기호/소유자 표와 경고·비용 텍스트는 기존 출력 상태/콜백을 실제 상위 계층에서 공급해야 한다."
+  ],
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "unit": 123,
+      "reason": "커서 TYPE 번호와 SHP 토큰 분리 및 실제 사정거리 판정 연결",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCursorLifecycle.h",
+          "previous": "2f945a627677997d31f6e05f42021049e9af486017109faf1978187ef517903f",
+          "current": "93071d00170ceb87e7c1f0424d03e5b02705ffbf9c7e731198f5a99f3bcafd0b"
+        },
+        {
+          "path": "cpppj/src/client/RawCursorLifecycle.cpp",
+          "previous": "b6ceb2db9080d9d1411f519564bd727e421b5a7f529ce6df009f2876b4acb9d3",
+          "current": "ae6b21d763638a5ff74267aad5730450b39ade182b4eb3247d460a2890dcf5e4"
+        },
+        {
+          "path": "cpppj/tests/PreviewDrawTests.cpp",
+          "previous": "aeafbb82a3d086229cec59f5b8b4808730d51b47f406346ac45f3a5701cbda5f",
+          "current": "a27ab5bc86ac1ec487013707ac7674a0e53d17ab9bc27a9ebcc2f9eacef4975c"
+        }
+      ]
+    }
   ]
 }

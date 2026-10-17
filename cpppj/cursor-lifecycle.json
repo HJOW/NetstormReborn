@@ -45,9 +45,45 @@
       "outputLog": "extracted/goal-cursor-lifecycle-20261017-ctest-output.log"
     },
     "sourceSha256": {
-      "cpppj/src/client/RawCursorLifecycle.h": "2f945a627677997d31f6e05f42021049e9af486017109faf1978187ef517903f",
-      "cpppj/src/client/RawCursorLifecycle.cpp": "b6ceb2db9080d9d1411f519564bd727e421b5a7f529ce6df009f2876b4acb9d3",
-      "cpppj/tests/CursorLifecycleTests.cpp": "66fbcfd8a678dfadd3a6b2473253dec6fa00459ae305f7c9f98c3a053a50a81d"
+      "cpppj/src/client/RawCursorLifecycle.h": "93071d00170ceb87e7c1f0424d03e5b02705ffbf9c7e731198f5a99f3bcafd0b",
+      "cpppj/src/client/RawCursorLifecycle.cpp": "ae6b21d763638a5ff74267aad5730450b39ade182b4eb3247d460a2890dcf5e4",
+      "cpppj/tests/CursorLifecycleTests.cpp": "33711957a8ec13e32bcd7e63b97a499055ec40a2370345ea0ecc258f220f44e9"
     }
-  }
+  },
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "unit": 123,
+      "reason": "커서 TYPE 번호와 SHP 토큰 분리 및 실제 사정거리 판정 연결",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCursorLifecycle.h",
+          "previous": "2f945a627677997d31f6e05f42021049e9af486017109faf1978187ef517903f",
+          "current": "93071d00170ceb87e7c1f0424d03e5b02705ffbf9c7e731198f5a99f3bcafd0b"
+        },
+        {
+          "path": "cpppj/src/client/RawCursorLifecycle.cpp",
+          "previous": "b6ceb2db9080d9d1411f519564bd727e421b5a7f529ce6df009f2876b4acb9d3",
+          "current": "ae6b21d763638a5ff74267aad5730450b39ade182b4eb3247d460a2890dcf5e4"
+        },
+        {
+          "path": "cpppj/tests/CursorLifecycleTests.cpp",
+          "previous": "66fbcfd8a678dfadd3a6b2473253dec6fa00459ae305f7c9f98c3a053a50a81d",
+          "current": "464a48cf5d670a94c0e9aa500bec31ea9147ac237669c86e2e7d0f12f5b38be5"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-17",
+      "unit": 123,
+      "reason": "최종 실제 자산 검사 소스의 TYPE128 및 경로/타입 연결 수정",
+      "pins": [
+        {
+          "path": "cpppj/tests/CursorLifecycleTests.cpp",
+          "previous": "464a48cf5d670a94c0e9aa500bec31ea9147ac237669c86e2e7d0f12f5b38be5",
+          "current": "33711957a8ec13e32bcd7e63b97a499055ec40a2370345ea0ecc258f220f44e9"
+        }
+      ]
+    }
+  ]
 }

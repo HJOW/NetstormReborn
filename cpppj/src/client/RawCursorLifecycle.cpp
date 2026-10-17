@@ -92,8 +92,8 @@ void RawCursorLifecycle::Take(o::Sid preview,std::uint32_t flags) const {
         drop_.cursorGump=Need(hooks_.createMana)(state_.previews[0],0);
         if (state_.currentGump && drop_.cursorGump) Need(hooks_.processEvent)(drop_.cursorGump,1,1,0);
     }
-    const auto shape=Need(hooks_.defaultShape)(state_.abstractType);
-    if (Need(hooks_.hasRange)(shape)) drop_.cursorGump=Need(hooks_.createRange)(state_.previews[0],0);
+    const auto typeNumber=Need(hooks_.typeNumber)(state_.abstractType);
+    if (Need(hooks_.hasRange)(typeNumber)) drop_.cursorGump=Need(hooks_.createRange)(state_.previews[0],0);
     Need(hooks_.queryCursor)();state_.warningContext[2]=state_.warningFont;state_.warningWidth=state_.warningHeight=0;
     // 각 문구의 현재 측정 결과를 개별 저장하고 signed 최대값을 갱신한다.
     for (std::size_t index=0;index<kWarnings.size();++index) {
@@ -116,11 +116,19 @@ void BindCursorLifecycle(PriestMenuHooks& priest,CursorDropHooks& drop,RawCursor
     priest.takePreview=[&lifecycle](o::Sid sid,std::uint32_t flags) { lifecycle.Take(sid,flags); };
     drop.activatePreview=[&lifecycle](std::uint32_t force) { lifecycle.Activate(force); };drop.invalidGui=[&lifecycle] { lifecycle.Cancel(); };
 }
-// 실제 TYPE의 specialFrame과 같은 SHP의 추가 헤더를 사용한다. 별도 프레임 목록을 만들지 않는다.
+// 원본의 네 group 또는 flags2의0x100만 검사하며 현재 TYPE 저장소를 매번 읽는다.
+bool HasCursorRange(std::span<const o::RiftTypeRecord> types,std::uint32_t typeNumber) {
+    if (typeNumber>=types.size()) throw std::out_of_range("커서 사정거리 현재 TYPE 범위 오류");
+    const auto& type=types[typeNumber];return type.group==0 || type.group==1 || (type.flags2&0x100)!=0 || type.group==6 || type.group==3;
+}
+// 실제 TYPE 번호와 specialFrame·같은 SHP 추가 헤더를 구별한다. 별도 타입/프레임 사본을 만들지 않는다.
 void BindCursorLifecycleAssets(CursorLifecycleHooks& hooks,const GameAssets& assets,const GumpText& text) {
     if (assets.Edition()!=o::OriginalEdition::Patch1078) throw std::invalid_argument("커서 자산10.78 판본 계약 오류");
     hooks.defaultArgument=[&assets](std::uint32_t type) { return static_cast<std::uint32_t>(Asset(assets,type).definition.specialFrames.defaultFrame); };
-    hooks.defaultShape=[&assets](std::uint32_t type) { return static_cast<std::uint32_t>(Asset(assets,type).block+1); };
+    hooks.typeNumber=[&assets](std::uint32_t type) {
+        if (type>=assets.TypeTable().Types().size()) throw std::out_of_range("커서 현재 TYPE 번호 범위 오류");return type;
+    };
+    hooks.hasRange=[&assets](std::uint32_t type) { return HasCursorRange(assets.TypeTable().Types(),type); };
     hooks.costImage=[&assets](std::uint32_t type,std::uint32_t frame) {
         const auto& asset=Asset(assets,type);const auto count=asset.definition.FrameTable().Codes().size();const auto flags=assets.TypeTable().Types()[type].flags1;
         if (frame>=count*((flags&0x440000) ? 2U : 1U)) throw std::logic_error("커서 비용 그림 frameCheck 원본 진단");

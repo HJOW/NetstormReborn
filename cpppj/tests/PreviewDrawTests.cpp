@@ -199,7 +199,7 @@ TEST_CASE(PreviewDraw_CurrentCursorProtectedAssetBinding) {
     const auto binding=MakeCursorPreviewAssetShapes(assets,0xfffffffe,lifecycle);
     CHECK(binding(0xfffffffe).database==&assets.Shapes() && binding(0xfffffffe).block==assets.Types()[92-70].block);
     CHECK(binding(123).block==assets.Types()[123-70].block);
-    lifecycle.costImage=hooks.defaultShape(123);CHECK(binding(0xfffffffe).block==assets.Types()[123-70].block);
+    lifecycle.costImage=hooks.costImage(123,3).token;CHECK(binding(0xfffffffe).block==assets.Types()[123-70].block);
     lifecycle.costImage=0;CHECK(Throws([&] { binding(0xfffffffe); }));
     lifecycle.costImage=static_cast<std::uint32_t>(assets.Shapes().Blocks().size()+1);CHECK(Throws([&] { binding(0xfffffffe); }));
 }

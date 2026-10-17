@@ -1060,3 +1060,7 @@ tools/decomp_carrier_content_notice.py text eol=lf
 cpppj/carrier-content-notice.json text eol=lf
 cpppj/session-priest-menu.json text eol=lf
 docs/exe/cpp-session-priest-menu-20261017.md text eol=lf
+cpppj/cursor-type-range.json text eol=lf
+cpppj/tests/fixtures/cursor-type-range-x86.tsv text eol=lf
+tools/decomp_cursor_type_range.py text eol=lf
+docs/exe/cpp-cursor-type-range-20261017.md text eol=lf

@@ -35,8 +35,8 @@ struct CursorLifecycleHooks {
     std::function<void(std::uint32_t,std::uint32_t)> removeProcess; // 현재 마나 프로세스의 실제0041bf10(process,0)이다.
     std::function<std::uint32_t(o::Sid,std::uint32_t)> createMana,createRange; // 004741d0/00474900(firstPreview,0)이다.
     std::function<void(std::uint32_t,std::uint32_t,std::uint32_t,std::uint32_t)> processEvent; // 프로세스 가상+1c(1,1,0)이다.
-    std::function<std::uint32_t(std::uint32_t)> defaultArgument,defaultShape; // 현재 TYPE+118과0049adc0(TYPE)다.
-    std::function<bool(std::uint32_t)> hasRange; // 실제00474240(SHP)다.
+    std::function<std::uint32_t(std::uint32_t)> defaultArgument,typeNumber; // 현재 TYPE+118과0049adc0(TYPE)의 번호 반환이다.
+    std::function<bool(std::uint32_t)> hasRange; // 실제00474240(TYPE 번호)의 현재 group/flags2 판정이다.
     std::function<std::string(std::string_view)> translate; // 원본 다섯 문구의 현재 번역이다.
     std::function<std::array<std::int32_t,2>(std::string_view,const std::array<std::uint32_t,8>&)> measure; // 실제004a3df0(text,w,h,context,-1)다.
     std::function<CursorCostImage(std::uint32_t,std::uint32_t)> costImage; // 원본 frameCheck 뒤 SHP 물리프레임3의 추가 헤더다.
@@ -71,6 +71,8 @@ private:
 };
 // 사제 선택의 실제 Form 취득과 내려놓기의 잠금/정리를 같은 수명 몸체에 연결한다.
 void BindCursorLifecycle(PriestMenuHooks& priest,CursorDropHooks& drop,RawCursorLifecycle& lifecycle);
-// 번역 이외의 실제 글자 측정과 SHP/defaultFrame 조회를 기존 자산 저장소에 연결한다.
+// 00474240은 TYPE 번호로 현재 group/flags2를 읽는다. SHP 블록 토큰을 받지 않는다.
+bool HasCursorRange(std::span<const o::RiftTypeRecord> types,std::uint32_t typeNumber);
+// 실제 글자 측정·SHP/defaultFrame·TYPE 번호와 사정거리 판정을 기존 자산 저장소에 연결한다.
 void BindCursorLifecycleAssets(CursorLifecycleHooks& hooks,const GameAssets& assets,const GumpText& text);
 }

@@ -1,0 +1,70 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "entries": [
+    "0049adc0",
+    "00474240",
+    "0049a840"
+  ],
+  "uniqueInputs": 854,
+  "normalReturns": 3416,
+  "instructions": 50116,
+  "actualEntries": {
+    "0049adc0": 1708,
+    "00474240": 1708,
+    "0049a840": 1708
+  },
+  "precisionDifferentInputs": [],
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "tools/decomp_cursor_type_range.py": "6b4a37505b4156861db4eefeccfe2cd43fae6ac38cccbcf891d13ee8764dc251",
+    "cpppj/tests/fixtures/cursor-type-range-x86.tsv": "cf2a3db28cd78c5089e7102a33b86b5ab3908e2f7137bf09de592d33df69b824",
+    "cpppj/src/client/RawCursorLifecycle.h": "93071d00170ceb87e7c1f0424d03e5b02705ffbf9c7e731198f5a99f3bcafd0b",
+    "cpppj/src/client/RawCursorLifecycle.cpp": "ae6b21d763638a5ff74267aad5730450b39ade182b4eb3247d460a2890dcf5e4",
+    "cpppj/tests/CursorLifecycleTests.cpp": "33711957a8ec13e32bcd7e63b97a499055ec40a2370345ea0ecc258f220f44e9",
+    "cpppj/tests/PreviewDrawTests.cpp": "a27ab5bc86ac1ec487013707ac7674a0e53d17ab9bc27a9ebcc2f9eacef4975c",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6"
+  },
+  "limitations": [
+    "49adc0·474240·49a840의 실제 몸체와 호출 ABI를 실행했다. 전체 게임/GUI 실행은 아니다.",
+    "기존565수명 관측의 getter/predicate 경계 입력은 그대로 보존한다.",
+    "마나/사정거리 프로세스 생성·프레임·표시·Client 입력 연결은 남아 있다."
+  ],
+  "productValidation": {
+    "configuration": "Release",
+    "build": {
+      "attempt": 4,
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0,
+      "log": "extracted/goal-cursor-type-range-20261017-build4.log"
+    },
+    "focused": {
+      "cursorLifecycleTests": 5,
+      "previewDrawTests": 11,
+      "failed": 0
+    },
+    "ctest": {
+      "total": 1496,
+      "passed": 1496,
+      "failed": 0,
+      "exitCode": 0,
+      "seconds": 221.32,
+      "log": "extracted/goal-cursor-type-range-20261017-ctest.log",
+      "outputLog": "extracted/goal-cursor-type-range-20261017-ctest-output.log"
+    },
+    "sourceAudit": {
+      "modernVerifyTools": 13,
+      "passed": 13,
+      "legacyLifecycleFixtureUnchanged": true,
+      "originalGameRun": false,
+      "cloneGameRun": false,
+      "guiRun": false
+    },
+    "actualClientCursorProcessConnected": false,
+    "goalComplete": false
+  }
+}

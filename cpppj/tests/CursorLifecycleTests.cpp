@@ -68,7 +68,8 @@ struct CursorScene {
         hooks.createMana=[this](Sid first,std::uint32_t flags) { Event("M",{first.value,flags});state.currentGump=input[ManaGump] ? 45U : 0U;return input[Mana] ? 1U : 0U; };
         hooks.createRange=[this](Sid first,std::uint32_t flags) { Event("G",{first.value,flags});return 2U; };
         hooks.processEvent=[this](std::uint32_t process,std::uint32_t event,std::uint32_t first,std::uint32_t second) { Event("E",{process,event,first,second}); };
-        hooks.defaultShape=[this](std::uint32_t type) { Event("F",{type});return 1U; };hooks.hasRange=[this](std::uint32_t shape) { Event("L",{shape});return input[Range]!=0; };
+        // 기존565관측은 getter를 외부 입력1로 바꿨다. 실제 번호/판정의 근거는 별도854원문이다.
+        hooks.typeNumber=[this](std::uint32_t type) { Event("F",{type});return 1U; };hooks.hasRange=[this](std::uint32_t typeNumber) { Event("L",{typeNumber});return input[Range]!=0; };
         hooks.queryCursor=[this] { Event("Q");state.currentGump=46; };hooks.translate=[](std::string_view text) { return std::string(text); };
         hooks.measure=[this](std::string_view text,const std::array<std::uint32_t,8>& context) {
             std::string words;
@@ -129,7 +130,37 @@ TEST_CASE(CursorLifecycle_ProtectedAssetsAndActualText) {
     FontStore fonts(files,"Arial");GumpText text(fonts);CursorLifecycleHooks hooks;BindCursorLifecycleAssets(hooks,assets,text);
     CHECK(hooks.defaultArgument(123)==static_cast<std::uint32_t>(assets.Types()[123-70].definition.specialFrames.defaultFrame));
     const auto image=hooks.costImage(92,3);const auto metrics=assets.Shapes().SquidMetrics(assets.Types()[92-70].block,3);
-    CHECK(image.token==hooks.defaultShape(92) && image.width==metrics.width && image.height==metrics.height && image.hotspotX==metrics.hotspotX && image.hotspotY==metrics.hotspotY);
+    CHECK(image.token==static_cast<std::uint32_t>(assets.Types()[92-70].block+1) && image.width==metrics.width && image.height==metrics.height && image.hotspotX==metrics.hotspotX && image.hotspotY==metrics.hotspotY);
     CursorLifecycleState state;const auto measured=hooks.measure("123",state.costContext);std::int32_t width{},height{};text.Measure(std::span("123",4),DecodeGumpTextContext(state.costContext),width,height,-1);CHECK(measured[0]==width && measured[1]==height);
-    CHECK(Throws([&] { hooks.defaultArgument(69); }));CHECK(Throws([&] { hooks.defaultShape(188); }));CHECK(Throws([&] { hooks.costImage(92,10000); }));
+    CHECK(Throws([&] { hooks.defaultArgument(69); }));CHECK(Throws([&] { hooks.typeNumber(188); }));CHECK(Throws([&] { hooks.costImage(92,10000); }));
+}
+
+// 실제49adc0/474240/49a840의 저장 원문을 사용하며 출력 판정을 테스트에서 재계산하지 않는다.
+TEST_CASE(CursorLifecycle_NativeTypeNumberAndRange) {
+    std::vector<RiftTypeRecord> types(188); // 각 독립 입력의 현재 group/flags2 저장소다.
+    std::size_t count{}; // 실제 고유 입력의 대조 수다.
+    const auto fixture=std::filesystem::path(NETSTORM_CURSOR_LIFECYCLE_FIXTURE).parent_path()/"cursor-type-range-x86.tsv"; // 기존 수명 기대값과 구별한다.
+    // 입력을 같은 TYPE 칸에 덮어써 현재 값 변경도 이전 판정에 묶이지 않게 한다.
+    for (const auto& row:LoadFixture(fixture.string().c_str()).rows) {
+        CHECK(row.size()==5);const auto type=Number(row[0]);types[type].group=std::bit_cast<std::int32_t>(Number(row[1]));types[type].flags2=Number(row[2]);
+        CHECK(type==Number(row[3]));CHECK(HasCursorRange(types,type)==(Number(row[4])!=0));++count;
+    }
+    CHECK(count==854);CHECK(Throws([&] { HasCursorRange(types,188); }));
+    CHECK(Throws([&] { HasCursorRange(std::span<const RiftTypeRecord>{},0); }));
+}
+// 자산 연결기가 SHP 토큰 대신 실제 TYPE 번호를 사정거리 판정에 전달하고 Take가 그 판정을 소비한다.
+TEST_CASE(CursorLifecycle_ActualAssetTypeRangeDuringTake) {
+    const auto root=std::filesystem::path(__FILE__).parent_path().parent_path().parent_path()/"originals"; // 읽기 전용 보호 자산의 루트다.
+    BaseFileSystem files(root);files.RegisterArchive(root/"netstorm.tarc");GameAssets assets(files,OriginalEdition::Patch1078);
+    FontStore fonts(files,"Arial");GumpText text(fonts);CursorLifecycleHooks actual;BindCursorLifecycleAssets(actual,assets,text);
+    // 내장 타입0~69도 번호 변환은 유효하며 자산 블록을 요구하지 않는다.
+    for (std::uint32_t type=0;type<188;++type) CHECK(actual.typeNumber(type)==type);
+    CHECK(actual.hasRange(actual.typeNumber(128)));CHECK(!actual.hasRange(actual.typeNumber(92)));
+    CHECK(Throws([&] { actual.hasRange(188); }));
+    CursorScene scene;scene.Prepare(Numbers(LoadFixture(NETSTORM_CURSOR_LIFECYCLE_FIXTURE).rows.front()[0]));
+    scene.types.assign(assets.TypeTable().Types().begin(),assets.TypeTable().Types().end());Put(scene.pool.AllocatedBytes(Sid{50}),18,128,2);
+    auto hooks=scene.Hooks();hooks.defaultArgument=actual.defaultArgument;hooks.typeNumber=actual.typeNumber;hooks.hasRange=actual.hasRange; // 외부 생성 효과만 기존 명시 관측 경계를 유지한다.
+    RawCursorLifecycle logic(scene.pool,scene.types,scene.drop,scene.state,hooks);logic.Take(Sid{50},0x160);
+    CHECK(scene.state.abstractType==128 && scene.drop.type==128 && scene.drop.cursorGump==2);
+    CHECK(scene.trace.find("G:100:0")!=std::string::npos);
 }
