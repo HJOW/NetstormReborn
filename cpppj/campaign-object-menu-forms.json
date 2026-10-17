@@ -12,12 +12,12 @@
     "cpppj/src/client/CampaignClientServices.cpp": "deb067662fe4fcd5324bab710c7b06fb7ce5f661f4078227946adc4fa92db72a",
     "cpppj/src/client/RawButtonControls.cpp": "5d9568d2a6c461e9dd474cc584db62389ca3eb576e780fdeb6e9a39f1ee55baf",
     "cpppj/src/client/RawButtonControls.h": "372d15ad4ab423ef9869fab470ad1f4b5c75cb0ebc12503edd2bb7a6f3f240d6",
-    "cpppj/src/client/RawCampaignSession.cpp": "1e296de7ff596c61745ce3745daac9b8fd4cf25bcc3d82e2ec4aac9606b6b59d",
-    "cpppj/src/client/RawCampaignSession.h": "40c421a1839bc41d001d4d443dc9e227be027f4fda4d03c4086b1f19bcbe3948",
+    "cpppj/src/client/RawCampaignSession.cpp": "72da6c6c1139dd703d7a0754374f3f957495180ef7acbb827237d97742a1abb2",
+    "cpppj/src/client/RawCampaignSession.h": "ae38ba2c4f2b74fd67be7b8e5b8fe6083c0756b4865887686192f997f04a5a72",
     "cpppj/src/client/RawMenuControls.cpp": "e1d3a27c5330b52727e18447c97b02f6a7f82cb0ceeb9bf55aad874b744720f1",
     "cpppj/src/client/RawMenuControls.h": "92b7db6b2d4fa00641d814a9e0e6b76bf649b7789302cb1dc306abd87c99023d",
     "cpppj/src/client/UberGump.cpp": "471b592cf1e784c63db34bc109eb3d38785481018b403cef0afa98d98622d10b",
-    "cpppj/tests/CampaignObjectMenuTests.cpp": "78ca23440d06e1cb42596d63b4a53b75af24ab37af9238e6fef6900909bc9fd1"
+    "cpppj/tests/CampaignObjectMenuTests.cpp": "fea9198ea2150c42bb523f7ac9298c2f819acd1fc9b9887b53020c206ad62563"
   },
   "unchangedExistingModules": {
     "cpppj/src/o/GumpFormHost.cpp": "f4045100a4642fdb432cee4f0c223079810176c68235140950fa0a1490f112a4",
@@ -349,6 +349,31 @@
           "path": "cpppj/tests/CampaignObjectMenuTests.cpp",
           "previous": "54a8f70a07e50693b0db721c102cd3498e3cbb68e058af0e24b6461909aa0175",
           "current": "78ca23440d06e1cb42596d63b4a53b75af24ab37af9238e6fef6900909bc9fd1"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 151,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "1e296de7ff596c61745ce3745daac9b8fd4cf25bcc3d82e2ec4aac9606b6b59d",
+          "current": "72da6c6c1139dd703d7a0754374f3f957495180ef7acbb827237d97742a1abb2"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "40c421a1839bc41d001d4d443dc9e227be027f4fda4d03c4086b1f19bcbe3948",
+          "current": "ae38ba2c4f2b74fd67be7b8e5b8fe6083c0756b4865887686192f997f04a5a72"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignObjectMenuTests.cpp",
+          "previous": "78ca23440d06e1cb42596d63b4a53b75af24ab37af9238e6fef6900909bc9fd1",
+          "current": "fea9198ea2150c42bb523f7ac9298c2f819acd1fc9b9887b53020c206ad62563"
         }
       ]
     }

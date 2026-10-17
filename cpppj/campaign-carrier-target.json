@@ -1,0 +1,447 @@
+{
+  "unit": 151,
+  "date": "2026-10-18",
+  "started": "2026-10-17",
+  "host": "HJOW-Athlon",
+  "baseCommit": "92b7526",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16"
+  },
+  "status": "이번단위완료/전체사용자플레이목표진행중",
+  "currentSources": {
+    "cpppj/src/o/RawBoardTarget.h": "d3b2ce06c29732b03068471f763ef8c556360d1a641c8aa23da0db29e1cd98d9",
+    "cpppj/src/o/RawBoardTarget.cpp": "0a113af217f40762da9a69f9d02dece3fa904e0da54ddf5aed746718b3bddf51",
+    "cpppj/src/o/RawCarrierTarget.h": "49e6340d4b120f87894cd07126c94fbf212a5e4d477bd44bdff22190e86f793d",
+    "cpppj/src/o/RawCarrierTarget.cpp": "82c9b3862969d5e664ed6acff2f63f97340898463c22347a667f278d9d519f08",
+    "cpppj/src/client/RawCampaignSession.h": "ae38ba2c4f2b74fd67be7b8e5b8fe6083c0756b4865887686192f997f04a5a72",
+    "cpppj/src/client/RawCampaignSession.cpp": "72da6c6c1139dd703d7a0754374f3f957495180ef7acbb827237d97742a1abb2",
+    "cpppj/src/client/RawCampaignPathBindings.h": "2b7f0cf76e10e66a9bd9d7678c92393a657997e9248742a8f7895b8bd026674c",
+    "cpppj/src/client/RawCampaignPathBindings.cpp": "b89ed98f6b8edeeb0a4cc471cf91cc83b87f0d695dd7b0acbbfebfa0dbbed216",
+    "cpppj/src/o/RawPathStart.h": "576188b61294a25b8abb6caa7bc129c56e21804a2fb79cf5de74cd25421a568f",
+    "cpppj/src/o/RawPathStart.cpp": "ae0c53e1bfb97c293ad92dcd7f3165f5bb803a3867a53ec84da9280e97772323",
+    "cpppj/src/o/RawSquidNeighbors.h": "1d223e803abd49e59dc45fb41e68cc65227af2d6e31b3d6904d99b4d00849dbc",
+    "cpppj/src/o/RawSquidNeighbors.cpp": "189febb21e1a29b605ccdf95e56ac88b2b2ee40dac68874df501fe5a37c24d02",
+    "cpppj/src/o/RawCarrierArrival.cpp": "1ce744b92bb3faa0c30b4ae8b76f4787e1cd42b9971d4a41c1cbfc9def11e6a3",
+    "cpppj/tests/CarrierTargetTests.cpp": "7ca2aa993bae751e63e973190da5eefb9259d1cfb544899bb108e89d26912400",
+    "cpppj/tests/CampaignObjectMenuTests.cpp": "fea9198ea2150c42bb523f7ac9298c2f819acd1fc9b9887b53020c206ad62563",
+    "cpppj/src/CMakeLists.txt": "b3a552aa0a7f2f5b61666cc009112ce5c1de62425fe4f4955d93fe574f269b4f",
+    "cpppj/tests/CMakeLists.txt": "339fab10b33d455e42a58f14e70b9ad41a35ebd913f59d3842e5a6e7bc9cff89",
+    "tools/native_carrier_geometry.cpp": "c471a0ce9889c730bb1a3b6a4659fe0eb0fea2d854b7007524fb93cd56fa34e8",
+    "tools/carrier-geometry-hardware/CMakeLists.txt": "918768180d59716d3c0d46ac8955edd89ce2963237dae7eff3435fbd0e0287a3",
+    "tools/decomp_carrier_target.py": "5869d80a3bde70e576f055d8fa6336364fb217343ec5cf7984eb763d99fc718f",
+    "tools/decomp_carrier_target_hardware.py": "ea06b7179740cac56de1aad6849d93eae6fa34c741e29b0aae20bbcc3975722c"
+  },
+  "nativeReports": {
+    "cpppj/carrier-target.json": "1402a4a87eb18b289b56d7be396688622d9a61fce07fb10cef57b343f2e8d76f",
+    "cpppj/carrier-target-hardware.json": "29b3be0bf9e6663e5b9f2f09e16c2a8151f59b9a6a28ef76ae0cefa1a75142ca"
+  },
+  "nativeContext": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-17",
+    "lastPreciseDecompile": {
+      "host": "HJOW-Athlon",
+      "date": "2026-10-16"
+    },
+    "uniqueInputs": 2245,
+    "normalReturns": 4490,
+    "instructions": 474608,
+    "nativeCalls": {
+      "0041d400": 3912,
+      "0041d530": 2748,
+      "0041ce90": 2748,
+      "004894e0": 612,
+      "004276a0": 864,
+      "0040f100": 1728,
+      "00427600": 864,
+      "004ac200": 240,
+      "0049a840": 240,
+      "00428fd0": 144,
+      "004af170": 2
+    },
+    "precisionDifferentInputs": [],
+    "boundaries": "41d400/41d530/41ce90/4894e0/427600/4276a0/428fd0/40f100/4ac200/49a840/4af170 전체. 발자국4ade70/경로시작489080/귀환선택428ea0/진단 및초기화의4abb10·4952d0은명시경계다. GP/retN/SEH/canary/x87/명령·읽기·쓰기범위를검사했다. 큰후보선택/자연운반·채취·완주/게임창실행검증이아니다.",
+    "sha256": {
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "tools/decomp_carrier_target.py": "5869d80a3bde70e576f055d8fa6336364fb217343ec5cf7984eb763d99fc718f",
+      "tools/decomp_carrier_falling.py": "f8702db0708a543b73213c8df9154503afe977767a11bd7c150b639ee1b587a6",
+      "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+      "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+      "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+      "cpppj/tests/fixtures/carrier-target-x86.tsv": "7ec562c25de1439cf420ddeb6f6f18207ced85dc78f2abbc996c604b52423e45"
+    }
+  },
+  "hardwareContext": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-18",
+    "lastPreciseDecompile": {
+      "host": "HJOW-Athlon",
+      "date": "2026-10-16"
+    },
+    "entries": [
+      "0041d400",
+      "0041d530",
+      "0041ce90"
+    ],
+    "normalReturns": 2040,
+    "uniqueInputs": 1020,
+    "emulatorDifferences": [
+      {
+        "index": 29,
+        "control": 639,
+        "emulator": "2139095041,2139095041,3323740160,3323740160",
+        "hardware": "2143289345,2143289345,3323740160,3323740160",
+        "status": 1
+      },
+      {
+        "index": 29,
+        "control": 895,
+        "emulator": "2139095041,2139095041,3323740160,3323740160",
+        "hardware": "2143289345,2143289345,3323740160,3323740160",
+        "status": 1
+      },
+      {
+        "index": 35,
+        "control": 639,
+        "emulator": "2139095041,2139095041,3323740160,3323740160",
+        "hardware": "2143289345,2143289345,3323740160,3323740160",
+        "status": 1
+      },
+      {
+        "index": 35,
+        "control": 895,
+        "emulator": "2139095041,2139095041,3323740160,3323740160",
+        "hardware": "2143289345,2143289345,3323740160,3323740160",
+        "status": 1
+      },
+      {
+        "index": 41,
+        "control": 639,
+        "emulator": "2139095041,2139095041,3323740160,3323740160",
+        "hardware": "2143289345,2143289345,3323740160,3323740160",
+        "status": 1
+      },
+      {
+        "index": 41,
+        "control": 895,
+        "emulator": "2139095041,2139095041,3323740160,3323740160",
+        "hardware": "2143289345,2143289345,3323740160,3323740160",
+        "status": 1
+      },
+      {
+        "index": 71,
+        "control": 639,
+        "emulator": "2139095041,2139095041,3323740160,3323740160",
+        "hardware": "2143289345,2143289345,3323740160,3323740160",
+        "status": 1
+      },
+      {
+        "index": 71,
+        "control": 895,
+        "emulator": "2139095041,2139095041,3323740160,3323740160",
+        "hardware": "2143289345,2143289345,3323740160,3323740160",
+        "status": 1
+      },
+      {
+        "index": 77,
+        "control": 639,
+        "emulator": "2139095041,2139095041,3323740160,3323740160",
+        "hardware": "2143289345,2143289345,3323740160,3323740160",
+        "status": 1
+      },
+      {
+        "index": 77,
+        "control": 895,
+        "emulator": "2139095041,2139095041,3323740160,3323740160",
+        "hardware": "2143289345,2143289345,3323740160,3323740160",
+        "status": 1
+      },
+      {
+        "index": 83,
+        "control": 639,
+        "emulator": "2139095041,2139095041,3323740160,3323740160",
+        "hardware": "2143289345,2143289345,3323740160,3323740160",
+        "status": 1
+      },
+      {
+        "index": 83,
+        "control": 895,
+        "emulator": "2139095041,2139095041,3323740160,3323740160",
+        "hardware": "2143289345,2143289345,3323740160,3323740160",
+        "status": 1
+      },
+      {
+        "index": 113,
+        "control": 639,
+        "emulator": "2139095041,2139095041,3323740160,3323740160",
+        "hardware": "2143289345,2143289345,3323740160,3323740160",
+        "status": 1
+      },
+      {
+        "index": 113,
+        "control": 895,
+        "emulator": "2139095041,2139095041,3323740160,3323740160",
+        "hardware": "2143289345,2143289345,3323740160,3323740160",
+        "status": 1
+      },
+      {
+        "index": 119,
+        "control": 639,
+        "emulator": "2139095041,2139095041,3323740160,3323740160",
+        "hardware": "2143289345,2143289345,3323740160,3323740160",
+        "status": 1
+      },
+      {
+        "index": 119,
+        "control": 895,
+        "emulator": "2139095041,2139095041,3323740160,3323740160",
+        "hardware": "2143289345,2143289345,3323740160,3323740160",
+        "status": 1
+      },
+      {
+        "index": 125,
+        "control": 639,
+        "emulator": "2139095041,2139095041,3323740160,3323740160",
+        "hardware": "2143289345,2143289345,3323740160,3323740160",
+        "status": 1
+      },
+      {
+        "index": 125,
+        "control": 895,
+        "emulator": "2139095041,2139095041,3323740160,3323740160",
+        "hardware": "2143289345,2143289345,3323740160,3323740160",
+        "status": 1
+      },
+      {
+        "index": 155,
+        "control": 639,
+        "emulator": "2139095041,2139095041,3323740160,3323740160",
+        "hardware": "2143289345,2143289345,3323740160,3323740160",
+        "status": 1
+      },
+      {
+        "index": 155,
+        "control": 895,
+        "emulator": "2139095041,2139095041,3323740160,3323740160",
+        "hardware": "2143289345,2143289345,3323740160,3323740160",
+        "status": 1
+      },
+      {
+        "index": 161,
+        "control": 639,
+        "emulator": "2139095041,2139095041,3323740160,3323740160",
+        "hardware": "2143289345,2143289345,3323740160,3323740160",
+        "status": 1
+      },
+      {
+        "index": 161,
+        "control": 895,
+        "emulator": "2139095041,2139095041,3323740160,3323740160",
+        "hardware": "2143289345,2143289345,3323740160,3323740160",
+        "status": 1
+      },
+      {
+        "index": 167,
+        "control": 639,
+        "emulator": "2139095041,2139095041,3323740160,3323740160",
+        "hardware": "2143289345,2143289345,3323740160,3323740160",
+        "status": 1
+      },
+      {
+        "index": 167,
+        "control": 895,
+        "emulator": "2139095041,2139095041,3323740160,3323740160",
+        "hardware": "2143289345,2143289345,3323740160,3323740160",
+        "status": 1
+      },
+      {
+        "index": 197,
+        "control": 639,
+        "emulator": "2139095041,2139095041,3323740160,3323740160",
+        "hardware": "2143289345,2143289345,3323740160,3323740160",
+        "status": 1
+      },
+      {
+        "index": 197,
+        "control": 895,
+        "emulator": "2139095041,2139095041,3323740160,3323740160",
+        "hardware": "2143289345,2143289345,3323740160,3323740160",
+        "status": 1
+      },
+      {
+        "index": 203,
+        "control": 639,
+        "emulator": "2139095041,2139095041,3323740160,3323740160",
+        "hardware": "2143289345,2143289345,3323740160,3323740160",
+        "status": 1
+      },
+      {
+        "index": 203,
+        "control": 895,
+        "emulator": "2139095041,2139095041,3323740160,3323740160",
+        "hardware": "2143289345,2143289345,3323740160,3323740160",
+        "status": 1
+      },
+      {
+        "index": 209,
+        "control": 639,
+        "emulator": "2139095041,2139095041,3323740160,3323740160",
+        "hardware": "2143289345,2143289345,3323740160,3323740160",
+        "status": 1
+      },
+      {
+        "index": 209,
+        "control": 895,
+        "emulator": "2139095041,2139095041,3323740160,3323740160",
+        "hardware": "2143289345,2143289345,3323740160,3323740160",
+        "status": 1
+      },
+      {
+        "index": 239,
+        "control": 639,
+        "emulator": "2139095041,2139095041,3323740160,3323740160",
+        "hardware": "2143289345,2143289345,3323740160,3323740160",
+        "status": 1
+      },
+      {
+        "index": 239,
+        "control": 895,
+        "emulator": "2139095041,2139095041,3323740160,3323740160",
+        "hardware": "2143289345,2143289345,3323740160,3323740160",
+        "status": 1
+      },
+      {
+        "index": 245,
+        "control": 639,
+        "emulator": "2139095041,2139095041,3323740160,3323740160",
+        "hardware": "2143289345,2143289345,3323740160,3323740160",
+        "status": 1
+      },
+      {
+        "index": 245,
+        "control": 895,
+        "emulator": "2139095041,2139095041,3323740160,3323740160",
+        "hardware": "2143289345,2143289345,3323740160,3323740160",
+        "status": 1
+      },
+      {
+        "index": 251,
+        "control": 639,
+        "emulator": "2139095041,2139095041,3323740160,3323740160",
+        "hardware": "2143289345,2143289345,3323740160,3323740160",
+        "status": 1
+      },
+      {
+        "index": 251,
+        "control": 895,
+        "emulator": "2139095041,2139095041,3323740160,3323740160",
+        "hardware": "2143289345,2143289345,3323740160,3323740160",
+        "status": 1
+      }
+    ],
+    "helperExecutableObservedSha256": "fa40f6c960446f924052130fc29ffa176b8c10bfc2fe363a762a9eb20c7869c1",
+    "controls": [
+      639,
+      895
+    ],
+    "boundaries": "원본 PE의 기하 세 함수와 상수/실패점을 실제 Win32 x87에서 실행했다. 보호 파일은 읽기 전용이고 별도 helper 전용 큰 섹션에 복사한다. 원본 엔트리/import/게임 초기화/창은 실행하지 않는다. 진단만 명시 callback이다. 반환 포인터/입력 사각형/출력 양쪽 canary/제어어·TOP0과 복사 이미지 전체의 허용2DWORD 외 불변을 검사한다. helper 자체의 Win32 프로세스는 실행한다. 18개입력/두정밀도36회에서 Unicorn의 FLD/FSTP signaling NaN quiet 누락을 기록하며 이전 관측은 바꾸지 않는다.",
+    "sha256": {
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "tools/native_carrier_geometry.cpp": "c471a0ce9889c730bb1a3b6a4659fe0eb0fea2d854b7007524fb93cd56fa34e8",
+      "tools/carrier-geometry-hardware/CMakeLists.txt": "918768180d59716d3c0d46ac8955edd89ce2963237dae7eff3435fbd0e0287a3",
+      "tools/decomp_carrier_target_hardware.py": "ea06b7179740cac56de1aad6849d93eae6fa34c741e29b0aae20bbcc3975722c",
+      "tools/decomp_carrier_target.py": "5869d80a3bde70e576f055d8fa6336364fb217343ec5cf7984eb763d99fc718f",
+      "cpppj/tests/fixtures/carrier-target-x86.tsv": "7ec562c25de1439cf420ddeb6f6f18207ced85dc78f2abbc996c604b52423e45",
+      "cpppj/tests/fixtures/carrier-target-hardware.tsv": "d3b55267077f3ed7416b6923bf96cefdfa96264aa2a7968827514c531196043c"
+    }
+  },
+  "emulatorVersionObserved": "2.1.4",
+  "protectedFileSha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6"
+  },
+  "workRecord": "docs/exe/cpp-carrier-target-20261017.md",
+  "workRecordSha256": "67100c1b650969d90d3eeb825b9413a6e63f15fbf2cffd1075e6f5f06eece016",
+  "validation": {
+    "build": {
+      "runs": 2,
+      "exit": 0,
+      "warnings": 0,
+      "errors": 0
+    },
+    "hardwareBuild": {
+      "method": "독립 CMake Win32",
+      "exit": 0,
+      "warnings": 0,
+      "errors": 0
+    },
+    "initialFocused": {
+      "cases": 3,
+      "failedChecks": 18,
+      "failedCases": 1,
+      "reason": "실제CPU2040관측으로Unicorn signalingNaN quiet누락18입력/두정밀도36회확인. 에뮬레이터원문불변/실제CPU기하기대값별도."
+    },
+    "focused": {
+      "cases": 3,
+      "failed": 0,
+      "exit": 0
+    },
+    "transferRegression": {
+      "cases": 3,
+      "failed": 0,
+      "exit": 0
+    },
+    "fallRegression": {
+      "cases": 5,
+      "failed": 0,
+      "exit": 0
+    },
+    "ctest": {
+      "cases": 1606,
+      "failed": 0,
+      "exit": 0,
+      "testSeconds": 197.5,
+      "ctestSeconds": 197.54
+    },
+    "nativeAudit": {
+      "tools": 71,
+      "passed": 60,
+      "existingFailures": 11,
+      "newFailures": 0
+    },
+    "currentPins": {
+      "reports": 46,
+      "pins": 126
+    },
+    "entrySmoke": {
+      "runs": 5,
+      "passed": 5,
+      "originalsUnchanged": true,
+      "boundaries": "1-1/1-2briefing→world/tutorial1~3briefing"
+    },
+    "logsPrefix": "extracted/goal-carrier-target-20261017-"
+  },
+  "boundaries": [
+    "독립에뮬레이터2245입력/4490정상반환과실제CPU기하1020입력/2040정상반환을구별한다. 실제CPU는진단만callback/원본기하3함수다. 원본엔트리/import/게임초기화/창을실행하지않는다.",
+    "하드웨어의출력canary/반환/입력사각형/CW·TOP0/전체이미지허용2DWORD외불변은검사했지만tag/매접근트랩을검증했다고주장하지않는다. 에뮬레이터는별도로GP/retN/SEH/canary/x87tag/접근범위를검사한다.",
+    "C++기하는실제CPU53비트결과를쓰고64비트관측도보존한다. 나머지상위명령은에뮬레이터원문이다. 이전관측은덮어쓰지않았다.",
+    "Session통합은실제골렘/사제의대상시작·기존40교체/실제BFS·Host·패킷과간헐천유형거부다. 자연채취/운반/전체Kernel/완주검증이아니다.",
+    "428ea0/429420/4280a0후보선택/상위CarrierArrival현재AI연결/38·41·42경로/429010회피/실제Client명령·경제·AI/11스테이지자연완주·승패·저장·다음미션/전체동일성은미완료다."
+  ],
+  "logSha256": {
+    "extracted/goal-carrier-target-20261017-build1.log": "82241a8972ee8937b511f102ca5f4380fcfa198e231c6aadadc99acd133eee36",
+    "extracted/goal-carrier-target-20261017-build2.log": "7b51ce23c410597f925016651da4bf6475ac9580cecc5f47df5477c3c93a98d5",
+    "extracted/goal-carrier-target-20261017-focused1.log": "f75228e0c9a083d7b0b18312616d5c1581f432d9c6739e714fd497b1e66701cd",
+    "extracted/goal-carrier-target-20261017-focused2.log": "a1723c6e8e3a4400fa0203a94ec76e4fca0a57d79afc6ec7efbff814877d62cd",
+    "extracted/goal-carrier-target-20261017-fall-regression.log": "8f9cfbca1e52f12f266952744ee10e56fa8f23aeb3046808faf303dad2cdc94e",
+    "extracted/goal-carrier-target-20261017-transfer-regression.log": "6a466f6cfa3e7ff3abe937758f2d02eb0f2829385b2de97c75581b6dfcd5deaa",
+    "extracted/goal-carrier-target-20261017-ctest.log": "689c7ab8566c1ed8e67a4b0bad58a728d75ee6171794c661a99135d35aaf2154",
+    "extracted/goal-carrier-target-20261017-verify-final.json": "a0ba07b854fe29711aafcf76c674e1c7bc659f3a88264af66b57df69b7a3a65c",
+    "extracted/goal-carrier-target-20261017-entry/results.json": "a05d3abe90ce467e78f5465e8fdcaeaf6ee8119509fe9d022952d7760963ebc4",
+    "extracted/goal-carrier-target-20261017-hardware-cmake-configure.log": "0058c44a8603770282f6815216c79e9da066319d5ac28637fe63c3679fcd1ad9",
+    "extracted/goal-carrier-target-20261017-hardware-cmake-build.log": "276afb58e239811366f680013d429ec49a41c42723ae60f5714c963a8e66b0ed"
+  }
+}

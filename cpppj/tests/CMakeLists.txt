@@ -1393,3 +1393,8 @@ set_source_files_properties(CarrierFallStartTests.cpp PROPERTIES COMPILE_DEFINIT
 target_sources(netstorm_tests PRIVATE CarrierTransferTests.cpp)
 set_source_files_properties(CarrierTransferTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_CARRIER_TRANSFER_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/carrier-transfer-x86.tsv\"")
+
+# 운반 대상과 일반 접근점의 독립 원문2245개다.
+target_sources(netstorm_tests PRIVATE CarrierTargetTests.cpp)
+set_source_files_properties(CarrierTargetTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CARRIER_TARGET_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/carrier-target-x86.tsv\";NETSTORM_CARRIER_TARGET_HARDWARE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/carrier-target-hardware.tsv\"")

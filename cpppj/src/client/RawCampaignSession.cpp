@@ -290,6 +290,9 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawCarrierFallStart> carrierFallStart; // 현재 이동 삭제/선택 해제/복귀 좌표/즉시 해방을 수행한다.
     CarrierTransferState carrierTransferState; // 미등록187 분기의 공유 주기/재시도/마지막 기증자와 현재 헤더다.
     std::unique_ptr<RawCarrierTransfer> carrierTransfer; // 실제 내용물 재부착/491/송신/이동 삭제와 연결한다.
+    BoardTargetState boardTargetState; // 실제 월드 초기화 후의 실패점 두 float다.
+    std::unique_ptr<RawBoardTarget> boardTarget; // 건설 Graph 순회와 다른 일반 접근점/변 중간점이다.
+    std::unique_ptr<RawCarrierTarget> carrierTarget; // 같은 실제 Player AI/발자국/Path 시작과 귀환 선택을 공유한다.
     std::unique_ptr<RegularProcess> pendingCarrierTask; // 원본 new28과 생성자가 공유하는 하나의 확보 메모리다.
     std::unique_ptr<GumpFormHost> gumpForms; // 같은Pool의실제Form3와현재UI등록ID/부모삭제알림수명이다.
     std::unique_ptr<RawContentParentNotice> contentNotice; // 부모의 실제 현재 VT로 기본/파생 +24를 분배한다.
@@ -1497,7 +1500,22 @@ struct RawCampaignSession::Impl {
             return Sid{};
         };
         FillMissing(effects.carrier.cdPriestPickupPriest);FillMissing(effects.carrier.pickup);FillMissing(effects.carrier.escape);
-        FillMissing(effects.carrier.chooseReturn);FillMissing(effects.carrier.chooseGeyser);FillMissing(effects.carrier.goReturn);FillMissing(effects.carrier.goGeyser);
+        FillMissing(effects.carrier.chooseReturn);FillMissing(effects.carrier.chooseGeyser);
+        boardTarget=std::make_unique<RawBoardTarget>(boardTargetState,[](std::uint32_t line) { throw std::logic_error("원본 Boardcoord.cpp 대상 접근 진단 "+std::to_string(line)); });
+        CarrierTargetHooks target;
+        target.footprint=[this](Sid sid) { return core.neighbors.Footprint(sid); };
+        target.start=[this](RawPathStartRequest request)->CarrierPathResult {
+            if (!motion) throw std::logic_error("현재 이동 설치 전 운반 대상 시작");const auto kind=core.pool.Slot(request.parent)[10];RawPathProcess* path{}; // 실제 시작의 반환 포인터를 호스트 폭으로 보관한다.
+            if (kind==priestState.movement.priest) path=motion->Paths().StartPriest(request);
+            else if (kind==133) path=motion->Paths().StartCarrier(request);
+            else if (kind==priestState.movement.teleport || kind==priestState.movement.manaBolt) path=motion->Paths().StartConstruction(request);
+            else throw std::logic_error("다른 실제 운반 경로38/41/42 미복원 경계");return reinterpret_cast<CarrierPathResult>(path);
+        };
+        target.chooseReturn=effects.carrier.chooseReturn;
+        carrierTarget=std::make_unique<RawCarrierTarget>(core.pool,core.types,players,assetState.boss,*boardTarget,std::move(target));
+        effects.carrier.goReturn=[this](Sid sid,Sid place) { static_cast<void>(carrierTarget->GoReturn(sid,place)); };
+        effects.carrier.goGeyser=[this](Sid sid,Sid geyser) { static_cast<void>(carrierTarget->GoGeyser(sid,geyser)); };
+        effects.carrierGoHome=[this](Sid sid) { static_cast<void>(carrierTarget->GoHome(sid)); };
         FillMissing(effects.carrier.minedPacket);FillMissing(effects.carrier.cdAddSp);FillMissing(effects.carrier.cdOwnerPacket);FillMissing(effects.carrier.playAt);FillMissing(effects.carrier.robust);
         CarrierTransferHooks transfer;
         transfer.find=[this](Sid parent,std::uint32_t mask,std::uint32_t kind,std::uint32_t index) { return priests->Carrier().FindContained(parent,mask,kind,index); };
@@ -1823,6 +1841,8 @@ RawPathProcess* RawCampaignSession::StartConstructionMovement(RawPathStartReques
 RawPathProcess* RawCampaignSession::StartCarrierMovement(RawPathStartRequest request) { if (!impl_->loaded || !impl_->motion) throw std::logic_error("미설치 Session의 Carrier 이동");return impl_->motion->Paths().StartCarrier(request); }
 // 원본 네트워크/내부 명령 소비자는 같은 실제 처리기를 사용한다.
 const RawCarrierTransfer& RawCampaignSession::CarrierTransfer() const { if (!impl_->loaded || !impl_->carrierTransfer) throw std::logic_error("미설치 Session의 캐리어 전달");return *impl_->carrierTransfer; }
+// 외부 명령과 같은 운반 도착 몸체가 실제 하나의 대상 이동 처리기를 사용한다.
+const RawCarrierTarget& RawCampaignSession::CarrierTarget() const { if (!impl_->loaded || !impl_->carrierTarget) throw std::logic_error("미설치 Session의 운반 대상 이동");return *impl_->carrierTarget; }
 // 화면과 입력은 같은 살아 있는 상태를 읽는다.
 RawSurfaceWorld& RawCampaignSession::World() { return impl_->world; }
 RawWorldCore RawCampaignSession::Core() { return impl_->core; }

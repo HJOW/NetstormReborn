@@ -80,3 +80,6 @@ target_sources(netstorm PRIVATE o/RawCarrierTask.cpp o/RawCarrierTask.h o/RawCar
 
 # 미등록187 정지 분기와 실제 너겟 전달 수신 명령이다.
 target_sources(netstorm PRIVATE o/RawCarrierTransfer.cpp o/RawCarrierTransfer.h)
+
+# 운반체의 실제 대상 접근점과 경로 시작/귀환 명령이다.
+target_sources(netstorm PRIVATE o/RawBoardTarget.cpp o/RawBoardTarget.h o/RawCarrierTarget.cpp o/RawCarrierTarget.h)

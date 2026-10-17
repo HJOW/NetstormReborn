@@ -1,0 +1,36 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-17",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16"
+  },
+  "uniqueInputs": 2245,
+  "normalReturns": 4490,
+  "instructions": 474608,
+  "nativeCalls": {
+    "0041d400": 3912,
+    "0041d530": 2748,
+    "0041ce90": 2748,
+    "004894e0": 612,
+    "004276a0": 864,
+    "0040f100": 1728,
+    "00427600": 864,
+    "004ac200": 240,
+    "0049a840": 240,
+    "00428fd0": 144,
+    "004af170": 2
+  },
+  "precisionDifferentInputs": [],
+  "boundaries": "41d400/41d530/41ce90/4894e0/427600/4276a0/428fd0/40f100/4ac200/49a840/4af170 전체. 발자국4ade70/경로시작489080/귀환선택428ea0/진단 및초기화의4abb10·4952d0은명시경계다. GP/retN/SEH/canary/x87/명령·읽기·쓰기범위를검사했다. 큰후보선택/자연운반·채취·완주/게임창실행검증이아니다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "tools/decomp_carrier_target.py": "5869d80a3bde70e576f055d8fa6336364fb217343ec5cf7984eb763d99fc718f",
+    "tools/decomp_carrier_falling.py": "f8702db0708a543b73213c8df9154503afe977767a11bd7c150b639ee1b587a6",
+    "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "cpppj/tests/fixtures/carrier-target-x86.tsv": "7ec562c25de1439cf420ddeb6f6f18207ced85dc78f2abbc996c604b52423e45"
+  }
+}

@@ -1,5 +1,17 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-18 단위151 완료: 골렘의 실제 대상 접근과 간헐천·귀환 이동 (`HJOW-Athlon`)
+
+- [x] 기준 `92b7526`, 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16** 일치. AGENTS/양 LEFT 재독. 골렘은 내부sunWalker/TYPE133이다. 새 디컴파일/원본 엔트리·게임 초기화·게임 창 실행/DirectDraw 수정은 없다. 별도 Win32 관측기는 기하 함수만 실행했다. [작업 기록](docs/exe/cpp-carrier-target-20261017.md).
+- [x] `RawBoardTarget`41d530/41d400과 `RawCarrierTarget`4894e0/427600/4276a0/428fd0을 복원했다. 일반 대상의 첫 접근점→북/동/남/서 재시도, 단일 귀환·간헐천 접근, 현재Player+b0 AI 검사, 최초사각형/명령 보존, 발자국 전후 좌표 조회 시점이다. 같은Session의 실제Footprint/23·39·40·54 PathStart/BFS/Prepare/Host/부모통지/직렬화에 연결했다.
+- [x] 독립 에뮬레이터 **2,245입력·4,490정상 반환·474,608명령·53/64차이0**다.4af170 실패점 초기화/40f100/4ac200/49a840도 실제 명령이다. 발자국/경로시작/귀환선택/진단·초기화 하위는 명시 경계다.
+- [x] 첫 집중은 통합·현재AI 2성공/원문대조18개check실패였다. 실제x87 기하 **1,020입력·2,040정상반환**으로 이18입력/두정밀도36회가 현재Unicorn2.1.4의FLD/FSTP signaling NaN quiet누락임을 확인했다. 구현은 실제CPU와일치하므로유지했다. 에뮬레이터원문은불변/하드웨어자료별도/기하검사는실제CPU결과다. Win32helper는전용섹션의보호PE복사본에서기하3함수만실행하고원본엔트리/import를구동하지않는다. 출력canary/입력사각형/반환포인터/CW·TOP0/이미지의허용2DWORD외불변을확인했다. hardware fixture재관측바이트도같다.
+- [x] 제품Release build1/2 경고0·오류0, 별도CMake Win32helper최종빌드 성공이다. 초기helper 인라인문법/정렬오류와주소예약충돌은로그에보존했다. 최종집중 **3성공**, 전달 **3성공**, 낙하시작 **5성공**, 전체CTest **1,606개·실패0·종료0·197.50초**(CTest197.54초)다. 실제통합은골렘/사제대상시작·기존40교체·같은종속체인/패킷과잘못된간헐천요청의현재경로보존범위다. 모든핸들종료/대기없음이다.
+- [x] 감사71종 **60성공·기존11실패·새실패0**, 기존46보고서126현재핀/과거전체이력/CMake접두/기존fixture·AGENTS·원본·DN/보호SHA3/새UTF-8·LF를확인했다. 클론진입5회PASS/originals_unchanged=true이며1-1/1-2briefing→world/tutorial1~3briefing범위다.
+- [x] 로그접두 `extracted/goal-carrier-target-20261017-`; 독립 `cpppj/carrier-target.json`/`cpppj/carrier-target-hardware.json`, 제품 `cpppj/campaign-carrier-target.json`. 인수인계뒤 **`20261018-01 CP 골렘의 실제 대상 접근과 간헐천 및 귀환 이동 복원`** 으로로컬커밋한다. push하지않고전체goal active다.
+- [ ] **다음우선:**428ea0/429420 귀환·간헐천 후보선택과4280a0 평가를복원한다. `extracted/goal-carrier-return-20261017-read.c`를읽는다. 후보WORD+8 거리/원래ring목록/qsort동률/BFS·Prepare·현재시각을보존한다. 일반41d530은완료한RawBoardTarget을재사용하고건설41db70과혼동하지않는다.
+- [ ] **상위현재AI연결:**RawCarrierArrival::Controlled는아직state.controlledOwners표를쓴다. 이번40f100의현재Player+b0조회와별도이므로같은현재저장소를연결해야한다.38/41/42 경로/429010회피/5040c0의42ae80/실제Client명령소비자/생산·경제·AI/11스테이지자연운반·완주·승패·저장·다음미션/전체동일성은미완료다. 미등록187 그래픽경로거부를유지한다.
+
 ## 2026-10-17 명칭 재확인 완료: `sunWalker`는 골렘 (`HJOW-Athlon`)
 
 - [x] 사용자 요청으로 AGENTS/양 LEFT/깨끗한 작업 트리를 재독했다. 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16** 일치이며 새 디컴파일·게임 창 실행·코드 수정은 없다.
@@ -17,8 +29,8 @@
 - [x] Release build1/2/3 모두 경고0·오류0. 첫 집중은 독립2성공/잘못된187 통합1실패였고 수정 후 최종 집중 **3성공**, 낙하 시작 회귀 **5성공**, 전체 CTest **1,603개·실패0·종료0·214.75초**(CTest214.79초)다. 모든 핸들 종료/대기 없음이다.
 - [x] 감사69종 **58성공·기존11실패·새실패0**, 기존45보고서138현재핀/과거 전체 이력/CMake 접두/기존 fixture·AGENTS·원본·DN/보호SHA3/새 UTF-8·LF를 확인했다. 클론 진입5회PASS/originals_unchanged=true이며1-1/1-2briefing→world/tutorial1~3briefing범위다.
 - [x] 로그 접두 `extracted/goal-carrier-transfer-20261017-`, 제품 `cpppj/campaign-carrier-transfer.json`. 인수인계 뒤 **`20261017-50 CP 너겟 전달 수신과 미등록 타입 정지 분기 복원`** 로 로컬 커밋한다. push하지 않고 전체 goal active다.
-- [ ] **다음 우선:**실제 운반체의4894e0 대상 접근 이동,427600/4276a0/428fd0,429420/428ea0 선택과4280a0 후보평가를 복원한다. `extracted/goal-carrier-return-20261017-read.c`를 준비했다. 기존 RawSquidNeighbors.Footprint/RawBoardApproach는 재사용하되41d530과41db70을 혼동하지 않는다.4280a0의 후보WORD+8 거리/qsort 동률/원래 ring목록 순서/BFS·Prepare·현재 시각도 보존해야 한다. 미등록187의 그래픽을 임의 생성하지 않는다.
-- [ ] 429010 회피 준비는 직전 인계를 따른다.38/41/42 실제 경로와5040c0의42ae80도 미완료다. 현재429420/427600/428fd0은 Session 외부 필수 경계이며 실제 Client 명령 소비자/생산·경제·AI/11스테이지 자연 완주·승패·저장·다음미션/전체 동일성은 미완료다.
+- [x] **단위151 완료:**4894e0/427600/4276a0/428fd0과41d530/41d400을 실제Session에 연결했다. 남은428ea0/429420/4280a0 후보선택 및 상위현재AI연결은 최신인계를 따른다. 미등록187을 플레이자산으로 만들지 않는다.
+- [ ] 429010 회피 준비는 직전 인계를 따른다.38/41/42 실제 경로와5040c0의42ae80도 미완료다. 단위151에서427600/428fd0은복원했고429420/428ea0 후보선택은아직필수경계이며 실제 Client 명령 소비자/생산·경제·AI/11스테이지 자연 완주·승패·저장·다음미션/전체 동일성은 미완료다.
 
 ## 2026-10-17 단위149 완료: 자연 낙하 시작과 썬 워커 실제 경로 (`HJOW-Athlon`)
 

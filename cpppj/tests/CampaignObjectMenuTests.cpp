@@ -417,3 +417,14 @@ TEST_CASE(CampaignCarrierTransfer_ActualFormReceiveAndPreview) {
     CHECK(lookup.Find(donor,40).value);CHECK(core.kernel.Get(oldPid)==movement);CHECK(core.processes.FindEvent(receiver,0x491));CHECK(geyserRequests==0 && homeRequests==0 && !requestedHome.value); // 426830 자체는 기증자의 이동 삭제/경제·귀환을 실행하지 않는다.
     CHECK(session.CarrierTransfer().Transfer(receiver)==10);CHECK(geyserRequests==0 && homeRequests==0); // 이미 받은 너겟은 추가 전달/재시작을 만들지 않는다.
 }
+
+// 같은 미션의 실제 골렘/사제를 사용해 일반 접근점과 원본 BFS/Host40 시작을 확인한다.
+TEST_CASE(CampaignCarrierTarget_ActualBfsTargetStartAndReturn) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);MenuServices external;std::size_t packets{}; // 실제 직렬화된 경로 전송만 관찰한다.
+    auto services=external.Make();services.dependencyTransmit=[](Sid,std::uint32_t) {};services.pathPacket=[&](std::span<const std::uint8_t> bytes) { CHECK(!bytes.empty());++packets; };services.motion.path.stepSound=[](Sid,float,float,std::uint32_t) {};
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));session.Load();auto core=session.Core();const Sid priest{static_cast<std::uint16_t>(session.FindPriestParticipation(1))};CHECK(priest.value);const auto raw=core.pool.Slot(priest);const auto x=std::bit_cast<float>(Get(raw,14)),y=std::bit_cast<float>(Get(raw,18));
+    const auto golem=session.World().Create(133,2);session.World().Pop(golem,x,y,0);core.owner.Set(golem,1);const auto first=session.CarrierTarget().GoReturn(golem,priest);CHECK(first);if (!first) return;auto* path=reinterpret_cast<RawPathProcess*>(first);CHECK(path->Parent()==golem && path->MovementType()==40 && path->Runtime().Count()>0);CHECK(core.processes.FromForm(path->Form())==path && packets==1);CHECK(&session.CarrierTarget().Pool()==&core.pool);
+    const auto form=path->Form();CHECK(session.CarrierTarget().GoGeyser(golem,priest)==0);CHECK(core.processes.FromForm(form)==path && packets==1); // 사제를 간헐천으로 취급하지 않고 현재 경로를 유지한다.
+    const auto second=session.CarrierTarget().StartTarget(golem,priest,1,0);CHECK(second);if (!second) return;auto* current=reinterpret_cast<RawPathProcess*>(second);CHECK(current->Parent()==golem && current->MovementType()==40 && packets==2);CHECK(core.processes.FromForm(current->Form())==current);RawContainedLookup lookup(core.pool,[](Sid,std::uint32_t) { throw std::logic_error("대상 이동 검사에서 삭제 조회 금지"); });CHECK(lookup.Find(golem,40)==current->Form());CHECK(!lookup.Find(golem,40,1).value); // 기존 경로 교체는 같은 실제 종속 체인에 하나만 남긴다.
+    CHECK(core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0);
+}
