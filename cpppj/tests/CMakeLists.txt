@@ -1423,3 +1423,8 @@ set_source_files_properties(CarrierMiningTests.cpp PROPERTIES COMPILE_DEFINITION
 target_sources(netstorm_tests PRIVATE GeyserLifetimeTests.cpp)
 set_source_files_properties(GeyserLifetimeTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_GEYSER_LIFETIME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/geyser-lifetime-x86.tsv\"")
+
+# 실제 회피1807입력의 깊이/좌표/시각/효과와 전체raw다.
+target_sources(netstorm_tests PRIVATE CarrierEscapeTests.cpp)
+set_source_files_properties(CarrierEscapeTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CARRIER_ESCAPE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/carrier-escape-x86.tsv\"")

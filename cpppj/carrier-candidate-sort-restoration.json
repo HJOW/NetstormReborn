@@ -12,8 +12,8 @@
     "cpppj/src/o/RawCarrierCandidateSort.h": "d6772fee26dab5961e379781030a469a52fb940462f44c67b16d9cc33b97a61f",
     "cpppj/src/o/RawCarrierCandidateSort.cpp": "a7749297ad70712a059aea52088cfd41c0880801a4f72c68d2b1548495a5bc69",
     "cpppj/tests/CarrierCandidateSortTests.cpp": "0899bcd133f09fd587e42105e6e790b68eb622021242d63c87748d36b1820a4e",
-    "cpppj/src/CMakeLists.txt": "772d6bcc3cf5197f25391f1dfa345c2d4e4509d788131328bad8f5b0d8c50db2",
-    "cpppj/tests/CMakeLists.txt": "23a7eff8b3ebba1abb9c862924d48922b3c4370b8a029a9105cebf9ef8cc4f71",
+    "cpppj/src/CMakeLists.txt": "abd332c83a3201c6a29f36adf997ec3605504c5cb82c5081974c3c5c4596d818",
+    "cpppj/tests/CMakeLists.txt": "f6cdf94af2f5163d8fc6609e7d672d47053befe24c4e86eb4108ba17fc106c91",
     "tools/decomp_carrier_candidate_sort.py": "b33e27d24a1d4f2bf4cabbb6958164f8d1e6cbf672c1f0aa1c2635b0b96d20d1",
     "docs/exe/cpp-carrier-candidate-sort-20261018.md": "9e79257a499cde7bab8038aa3aee3928376e2233d88c88c62199c0f48d48d950"
   },
@@ -143,6 +143,25 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "dbffc6fb45c1ca5496869827b3be220de3899ce35267f9fb3247a2205254d018",
           "current": "23a7eff8b3ebba1abb9c862924d48922b3c4370b8a029a9105cebf9ef8cc4f71"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 156,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "772d6bcc3cf5197f25391f1dfa345c2d4e4509d788131328bad8f5b0d8c50db2",
+          "current": "abd332c83a3201c6a29f36adf997ec3605504c5cb82c5081974c3c5c4596d818"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "23a7eff8b3ebba1abb9c862924d48922b3c4370b8a029a9105cebf9ef8cc4f71",
+          "current": "f6cdf94af2f5163d8fc6609e7d672d47053befe24c4e86eb4108ba17fc106c91"
         }
       ]
     }

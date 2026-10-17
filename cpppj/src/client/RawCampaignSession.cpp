@@ -7,6 +7,7 @@
 #include "o/RawCarrierMining.h"
 #include "o/RawGeyserMined.h"
 #include "o/RawGeyserLifetime.h"
+#include "o/RawCarrierEscape.h"
 #include "o/RawPacketDispatch.h"
 #include "client/AiTypeRequiredEnergy.h"
 #include "o/RawGameRandomSeed.h"
@@ -306,6 +307,8 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawGeyserMined> geyserMined; // 같은 난수/공간/가상 삭제/생성의 기존 원본 수량 몸체다.
     std::unique_ptr<RawGeyserLifetime> geyserLifetime; // 고갈한 지면의 고유 AI/목록/기본 프레임과 공통 수명이다.
     std::unique_ptr<RawCarrierMining> carrierMining; // 실제 너겟 생성 뒤 송신→로컬 수신을 실행한다.
+    CarrierEscapeState carrierEscapeState; // 실제 겹친 방향표17DWORD다.
+    std::unique_ptr<RawCarrierEscape> carrierEscape; // 현재 경로 깊이/공간/임시BFS/새이동을 연결한다.
     std::unique_ptr<RegularProcess> pendingCarrierTask; // 원본 new28과 생성자가 공유하는 하나의 확보 메모리다.
     std::unique_ptr<GumpFormHost> gumpForms; // 같은Pool의실제Form3와현재UI등록ID/부모삭제알림수명이다.
     std::unique_ptr<RawContentParentNotice> contentNotice; // 부모의 실제 현재 VT로 기본/파생 +24를 분배한다.
@@ -1531,7 +1534,7 @@ struct RawCampaignSession::Impl {
                 if (core.types[core.pool.Slot(sid)[10]].flags2&genus) return sid;
             return Sid{};
         };
-        FillMissing(effects.carrier.cdPriestPickupPriest);FillMissing(effects.carrier.pickup);FillMissing(effects.carrier.escape);
+        FillMissing(effects.carrier.cdPriestPickupPriest);FillMissing(effects.carrier.pickup);
         boardTarget=std::make_unique<RawBoardTarget>(boardTargetState,[](std::uint32_t line) { throw std::logic_error("원본 Boardcoord.cpp 대상 접근 진단 "+std::to_string(line)); });
         CarrierChoiceHooks choice;
         choice.movement=[this](Sid sid) {
@@ -1544,6 +1547,7 @@ struct RawCampaignSession::Impl {
         choice.validGeyser=[this](Sid parent,Sid candidate) { if (!motion) throw std::logic_error("현재 이동 설치 전 간헐천 후보 검사");return motion->CarrierArrival().ValidGeyser(parent,candidate); };
         choice.graphFor=[this](Sid sid) { return anchor->GraphFor(sid.value); };
         choice.assertion=[](std::uint32_t line) { throw std::logic_error("원본 Carrier.cpp 후보 선택 진단 "+std::to_string(line)); };
+        const auto movement=choice.movement; // 같은 현재 TYPE 속성 getter를 회피 후보 평가에도 사용한다.
         carrierChoice=std::make_unique<RawCarrierChoice>(core.pool,core.types,players,assetState.outposts,assetState.geysers,core.processState.now,gunState.checking,*boardTarget,carrierChoiceState,std::move(choice));
         effects.carrier.chooseReturn=[this](Sid sid) { return carrierChoice->ChooseReturn(sid); };
         effects.carrier.chooseGeyser=[this](Sid sid) { return carrierChoice->ChooseGeyser(sid); };
@@ -1557,11 +1561,23 @@ struct RawCampaignSession::Impl {
             else if (kind==priestState.movement.teleport || kind==priestState.movement.manaBolt) path=motion->Paths().StartConstruction(request);
             else throw std::logic_error("다른 실제 운반 경로38/41/42 미복원 경계");return reinterpret_cast<CarrierPathResult>(path);
         };
+        const auto startEscape=target.start; // 같은489080 분배/실제BFS/Host/직렬화 시작이다.
         target.chooseReturn=effects.carrier.chooseReturn;
         carrierTarget=std::make_unique<RawCarrierTarget>(core.pool,core.types,players,assetState.boss,*boardTarget,std::move(target));
         effects.carrier.goReturn=[this](Sid sid,Sid place) { static_cast<void>(carrierTarget->GoReturn(sid,place)); };
         effects.carrier.goGeyser=[this](Sid sid,Sid geyser) { static_cast<void>(carrierTarget->GoGeyser(sid,geyser)); };
         effects.carrierGoHome=[this](Sid sid) { static_cast<void>(carrierTarget->GoHome(sid)); };
+        CarrierEscapeHooks escape;
+        escape.path=[this](Sid sid) { if (!motion) throw std::logic_error("현재 이동 설치 전 회피 깊이 조회");return motion->Paths().CurrentRuntime(sid); };
+        escape.random=[this](std::int32_t low,std::int32_t high) { if (high<=low) throw std::invalid_argument("회피 난수 구간 오류");return low+static_cast<std::int32_t>(random.Next(static_cast<std::uint32_t>(high-low))); };
+        escape.start=[startEscape](Sid sid,RawPathPoint destination) { const auto result=startEscape({sid,destination,0,0,0,0,0});return result ? &reinterpret_cast<RawPathProcess*>(result)->Runtime() : nullptr; };
+        escape.blocker=[genusAt=effects.carrier.genusAt](RawPathPoint point) { return genusAt(point.x,point.y,0x10000); };
+        escape.search=[this](RawPathRuntime& temporary,Sid parent,RawPathPoint source,RawPathPoint destination,std::uint32_t flags) { if (!motion) throw std::logic_error("현재 이동 설치 전 회피 탐색");static_cast<void>(motion->Paths().SearchCandidate(temporary,parent,source,destination,flags)); };
+        escape.movement=movement;escape.valid=[this](RawPathPoint point) { return carrierFalling->ValidPoint(point.x,point.y); };
+        escape.assertion=[](std::uint32_t line) { throw std::logic_error("원본 Carrier.cpp 회피 깊이 진단 "+std::to_string(line)); };
+        carrierEscape=std::make_unique<RawCarrierEscape>(core.pool,core.hash,core.types,core.spots,core.processState.now,gunState.checking,carrierChoiceState.cardinalTypes,carrierEscapeState,std::move(escape));
+        services.motion.carrier.escape=[this](Sid sid,float distance,std::uint32_t event) { return carrierEscape->Run(sid,distance,event); };
+        effects.carrier.escape=services.motion.carrier.escape;
         PathRetargetHooks retarget;
         retarget.find=[this](Sid sid,std::uint32_t mask,std::uint32_t type,std::uint32_t index) { return priests->Carrier().FindContained(sid,mask,type,index); };
         retarget.chooseReturn=effects.carrier.chooseReturn;retarget.chooseGeyser=effects.carrier.chooseGeyser;
@@ -1911,6 +1927,8 @@ RawPathProcess* RawCampaignSession::StartCarrierMovement(RawPathStartRequest req
 const RawCarrierTransfer& RawCampaignSession::CarrierTransfer() const { if (!impl_->loaded || !impl_->carrierTransfer) throw std::logic_error("미설치 Session의 캐리어 전달");return *impl_->carrierTransfer; }
 // 외부 명령과 같은 운반 도착 몸체가 실제 하나의 대상 이동 처리기를 사용한다.
 const RawCarrierTarget& RawCampaignSession::CarrierTarget() const { if (!impl_->loaded || !impl_->carrierTarget) throw std::logic_error("미설치 Session의 운반 대상 이동");return *impl_->carrierTarget; }
+// 기존CarrierRegular의지연호출과부모도착도이몸체를공유한다.
+std::uint32_t RawCampaignSession::EscapeCarrier(Sid parent,float distance,std::uint32_t event) { if (!impl_->loaded || !impl_->carrierEscape) throw std::logic_error("미설치 Session의 Carrier 회피");return impl_->carrierEscape->Run(parent,distance,event); }
 // 외부 요청과 도착/전달이 같은 실제 후보 선택기를 공유한다.
 const RawCarrierChoice& RawCampaignSession::CarrierChoice() const { if (!impl_->loaded || !impl_->carrierChoice) throw std::logic_error("미설치 Session의 운반 후보 선택");return *impl_->carrierChoice; }
 // 화면과 입력은 같은 살아 있는 상태를 읽는다.

@@ -151,7 +151,7 @@
     "cpppj/hist/run21-fail3/focused.log": "123039fdee5e1755fb8eb0e4150bee208886b5d83ed6366705164d9c05dcb601",
     "cpppj/hist/run21-fail3/install.h": "d0ebfb3c587c6f19941a4bdff8f38981e5d0bb2e354699fd7a54c8393d2ea50c",
     "cpppj/run20.json": "32392f746feb46f4dc1ef51c23d38a2e04a36e3abaa9fde4b676c2c17ed699a2",
-    "cpppj/src/CMakeLists.txt": "772d6bcc3cf5197f25391f1dfa345c2d4e4509d788131328bad8f5b0d8c50db2",
+    "cpppj/src/CMakeLists.txt": "abd332c83a3201c6a29f36adf997ec3605504c5cb82c5081974c3c5c4596d818",
     "cpppj/src/app/CanonMayPlaceInspect.cpp": "27eda46bca500c898abeb9a3a7c4e8588b38e061b579c84cbf6c032c6d46dda9",
     "cpppj/src/app/FrameBindingInspect.cpp": "042602919b0531fb1cbaf3941dc6597bee73944bbf0d571dacfd638bb45dd07c",
     "cpppj/src/app/FrameBindingInspect.h": "4e187ca41f8c34ed52c022b58a57327a554a723e3e26ee88a1ae152c99de3fce",
@@ -1836,6 +1836,19 @@
           "path": "cpppj/src/CMakeLists.txt",
           "previous": "fd7f38fbb07f952eef2d2625072077e0b05da2f18e3ce15bf8879a3b4a582ca8",
           "current": "772d6bcc3cf5197f25391f1dfa345c2d4e4509d788131328bad8f5b0d8c50db2"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 156,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "772d6bcc3cf5197f25391f1dfa345c2d4e4509d788131328bad8f5b0d8c50db2",
+          "current": "abd332c83a3201c6a29f36adf997ec3605504c5cb82c5081974c3c5c4596d818"
         }
       ]
     }

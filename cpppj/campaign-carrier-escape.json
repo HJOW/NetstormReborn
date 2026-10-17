@@ -1,0 +1,188 @@
+{
+  "unit": 156,
+  "date": "2026-10-18",
+  "host": "HJOW-Athlon",
+  "baseCommit": "850ae86",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16"
+  },
+  "status": "실제회피단위완료/11스테이지전체목표진행중",
+  "currentSources": {
+    "cpppj/src/o/RawCarrierEscape.h": "6ffa9c05432ef293e30275426ef97821edbd93f252ece69c6efbbda88c2ea18c",
+    "cpppj/src/o/RawCarrierEscape.cpp": "75c32b0c7d84525eedd7121103ef3d58335ae623d06c1a358aa3b6bd5ccac04d",
+    "cpppj/src/client/RawCampaignSession.cpp": "5f7519574b4f0efa37eb76f163bee4d5544d9b541dfdee3d98d6052e4164b842",
+    "cpppj/src/client/RawCampaignSession.h": "ff3dd42be9b4bf3e1d09643fff4f773e5923536e5f414373181e40d7efcc7ff1",
+    "cpppj/src/CMakeLists.txt": "abd332c83a3201c6a29f36adf997ec3605504c5cb82c5081974c3c5c4596d818",
+    "cpppj/tests/CMakeLists.txt": "f6cdf94af2f5163d8fc6609e7d672d47053befe24c4e86eb4108ba17fc106c91",
+    "cpppj/tests/CampaignSessionTests.cpp": "5cb36ee64032a9e8c2017c662f44cc28e57153bc6baf302c649bd85f26ec03e0",
+    "cpppj/tests/CarrierEscapeTests.cpp": "172521eb7e8b6bed4e9615874f60d6404d1d8b5236bf806470021beb82bfda1d",
+    "tools/decomp_carrier_escape.py": "6e78b7d83f0d502681bc70225e7c2c3705aa2d33d9cb0eb8708f47b9c71261d1",
+    "docs/exe/cpp-carrier-escape-20261018.md": "a556120fa5b1384b5aecfab1cc89199cb78febbca66c412a27e4cc6f6f5d9eaf",
+    "cpppj/src/o/RawPathRuntime.h": "b74e6c9947182ef327a50be4921921d43ac1a62063e8cf02a193e3045359a667",
+    "cpppj/src/o/RawPathRuntime.cpp": "e771d3c17baf7c9e96b7da65a7b20c2171a8b82d75ccee94d091689036c5d42d",
+    "cpppj/src/o/RawPathSearch.h": "471c37aaeff1f5b7e157f52bfb20984c55e993fa59f7c33696fb42772107a7ac",
+    "cpppj/src/o/RawPathSearch.cpp": "a7597d758972707a48ab25260af4ba877798c9c91ed01e0471d84819005d2858",
+    "cpppj/src/o/RawCarrierChoice.h": "2fedbc83180495e739ab33a68949ce1a0a38ce0eafdaee726e3cccc94b985658",
+    "cpppj/src/o/RawCarrierChoice.cpp": "60104693cef32dbf1607961dab1628ef52113829ef58eaeece9094932027fad1",
+    "cpppj/src/o/RawCarrierFalling.h": "053f770faf58d4afd2c11f20c2f1608ba72ffd8202b8d983ecb15bb6da3240e8",
+    "cpppj/src/o/RawCarrierFalling.cpp": "792cf6ac33b52ba476fdedc8ea22e0649aa5201b75b214fba1cb3519cd80682f",
+    "cpppj/src/o/RawCarrierRegular.h": "ada769f00c757f3fa15664da0acf790f4656416b333959acb9dbef60d819e13c",
+    "cpppj/src/o/RawCarrierRegular.cpp": "a164805423a92cef4e3d6dcf26571cbc0931c08db0a506cad72f80c4206501be",
+    "cpppj/src/client/RawCampaignPathBindings.h": "ce83a2a4f5e609cd54ca929bfe0cac569e26d33372c83b1eb5d644b6601904ed",
+    "cpppj/src/client/RawCampaignPathBindings.cpp": "876b5c4b972f3a89fa8836ae0112437f9bbecf7db5a09f0a8b433ab0636b7bf7"
+  },
+  "nativeReports": {
+    "cpppj/carrier-escape.json": "f0c1abcd618598639f4aa8d24a3f72da699aa9a13ed91737f4108c8db162f35a"
+  },
+  "nativeContext": {
+    "uniqueInputs": 1807,
+    "normalReturns": 3614,
+    "instructions": 7932298,
+    "nativeCalls": {
+      "00429010": 3614,
+      "004e4a40": 3614,
+      "00427d30": 3614,
+      "004e49c0": 15192,
+      "004ac200": 1436,
+      "0049a840": 3676,
+      "00422230": 752,
+      "0041d7a0": 752,
+      "0040e800": 752,
+      "004ac1e0": 1120,
+      "00488fb0": 640,
+      "004ac550": 1120,
+      "00488e20": 560,
+      "0041cd60": 560,
+      "0041cfc0": 560,
+      "00425e20": 560
+    },
+    "oldRuntimeDeletions": 1176,
+    "originalDirections": [
+      0,
+      1,
+      1,
+      1,
+      0,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      0,
+      1,
+      1,
+      1,
+      0,
+      -1,
+      0
+    ],
+    "precisionDifferentInputs": [],
+    "boundaries": "전체429010/427d30/실제TYPE·cardinal·좌표·ftol·Prepare·경로시각·stack probe를실행했다. 현재경로조회/난수반환/일반finder결과/BFS입력배열/새이동시작/복귀진단은명시경계다. 새경로깊이/기존Runtime삭제후무접근/효과순서·인자/전체부모·후보raw/현재checking·시각과GP/retN/SEH/canary/x87/명령·읽기·쓰기범위를검사했다. BFS계산·실제게임창·자연완주는아니다."
+  },
+  "originalFixtureBeforeImplementationFixSha256": "b2fc27887a3b5478e5a761161ac3fa5ec483908dfb6fee3ef5197ed897748c9f",
+  "validation": {
+    "build": {
+      "final": "build4",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0
+    },
+    "focused": {
+      "final": "focused2",
+      "tests": 4,
+      "failedChecks": 0,
+      "exitCode": 0
+    },
+    "full": {
+      "tests": 1625,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "seconds": 223.29,
+      "ctestSeconds": 223.33
+    },
+    "audit": {
+      "tools": 77,
+      "passed": 66,
+      "priorKnownFailures": 11,
+      "newFailures": 0
+    },
+    "pins": {
+      "reports": 51,
+      "count": 158,
+      "historyPreserved": true
+    },
+    "entry": {
+      "runs": 5,
+      "passed": 5,
+      "originalsUnchanged": true,
+      "scope": "1-1/1-2briefing→world/tutorial1~3briefing"
+    }
+  },
+  "actualWorld": {
+    "stage": "thewarbegins",
+    "initialInput": "원래사제위치의새골렘/기존실제40",
+    "ordinaryDepths": [
+      1,
+      2,
+      3
+    ],
+    "ordinaryPacketIncrements": [
+      1,
+      1,
+      1
+    ],
+    "cappedReturn": 1000,
+    "cappedPathAndPacketPreserved": true,
+    "surfaceFallbackNewPath": true,
+    "surfaceFallbackDepth": 1,
+    "surfaceFallbackVerticesGreaterThanOne": true,
+    "scope": "실제BFS/Prepare/Host40/직렬화/현재깊이. 결과경로·시각입력없음/사용자UI명령·자연회피반복·운반왕복·전체Kernel완주아님"
+  },
+  "recoveredConstants": {
+    "flightDistanceGate": 1.0,
+    "flightDistanceGateAddress": "0x005012d0",
+    "maximumDepth": 3,
+    "directionBaseAddress": "0x0052f83c",
+    "directionDwords": 17
+  },
+  "limits": [
+    "10.78전용/독립관측의큰효과경계와제품의실제연결을구별한다",
+    "물리방향/spot범위밖은호스트진단이며임의성공값을만들지않는다",
+    "다른운반38·41·42경로/포획429ed0·428e00/5040c0전처리미완료",
+    "실제Client명령소비자·생산·경제·AI/11스테이지자연왕복·승패·저장·다음미션·전체동일성미완료",
+    "미등록187그래픽거부유지/원본DirectDraw수정없음"
+  ],
+  "protected": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "AGENTS.md": "7addbf9b31c42f29aab7c93faa865eb6de8590a600d17202a297cf7122bdf979",
+    "LEFT_JOBS.dotnetpj.md": "0c067e1d12879dbf2212cbd64c8f9f60e65b590df910418f025027ed84f80ec2"
+  },
+  "logSha256": {
+    "extracted/goal-carrier-escape-20261018-native1.log": "6673e1b1cf214dde4ff964b90d277963a93bc953887409129683c7d085c2567d",
+    "extracted/goal-carrier-escape-20261018-native2.log": "dbe42115dee6d66fff2745ec9756c89d6375ce65ad7ff76733e03ba749220255",
+    "extracted/goal-carrier-escape-20261018-native3.log": "07737ae26dd08b695db816f96df9fbb9c38185b78d7016ad92d28ae516ec2849",
+    "extracted/goal-carrier-escape-20261018-native4.log": "8da3a8c6aa3133140c759c681be904a0449f376e465b9e9944e56681af775e5d",
+    "extracted/goal-carrier-escape-20261018-native5.log": "8da3a8c6aa3133140c759c681be904a0449f376e465b9e9944e56681af775e5d",
+    "extracted/goal-carrier-escape-20261018-native-fixture-before-comment.sha256": "fbe063be91ef07d9ca1e1537bc73d8817fb7d9f30cc092f9158e6e28be291512",
+    "extracted/goal-carrier-escape-20261018-build1.log": "09899d49374737dba7a7ecca0bc8bebd9d7f651de4346ff3bf206f1cb5f256be",
+    "extracted/goal-carrier-escape-20261018-build2.log": "64802a2ecc49e0e7758418b3c558bb12137dcba5238d7253907139c09aea3fb5",
+    "extracted/goal-carrier-escape-20261018-build3.log": "118117c9dc94a8ba8e9ead9c86fcf0d0ba9af767805527e26b0f5fba227717bb",
+    "extracted/goal-carrier-escape-20261018-build4.log": "d0599953ecde260767c53229557249da0ec7578be5e395ad6d347efb01863aad",
+    "extracted/goal-carrier-escape-20261018-focused1.log": "f508490da2c766381754d23b5bc1318a34616cf9d9ba1bf6cabe35833de128bb",
+    "extracted/goal-carrier-escape-20261018-focused2.log": "1c651c9cea5821109bbcc3ca7377e3924c0997ff3c619aee63dc09c35d822ffe",
+    "extracted/goal-carrier-escape-20261018-ctest1.log": "14263f46ad1a0fc68e7b486f651b88684b59d61c664105a5d3ec62dc89648862",
+    "extracted/goal-carrier-escape-20261018-LastTest.log": "48f6b54befa7bdc3225b650c98ebe50f12dc8721e16048578cc350fb28bd3c62",
+    "extracted/goal-carrier-escape-20261018-pin-updates.json": "a0879fec0682daf71799d2fbcb2e928625423b21948493443523782988bc8393",
+    "extracted/goal-carrier-escape-20261018-pin-maintenance.log": "ad581ffb2869ed5dc1445bcbafbbb2ae463eb5ed2ae7e3fc0f057be88644614e",
+    "extracted/goal-carrier-escape-20261018-verify-final.json": "f31fd4337d6e25155b77e25c767717c2b2c370119c433e002e6686b6f9b88c95",
+    "extracted/goal-carrier-escape-20261018-audit.log": "e781a6faf49c84b69fd64fc7e9633dcd5b0aacc0cc3a7d7264a71d3cf26f352a",
+    "extracted/goal-carrier-escape-20261018-entry.log": "530bf9254a3b0be59b099d237909bd3be07412d0f47949f546997ffdb8b1e681",
+    "extracted/goal-carrier-escape-20261018-entry/results.json": "95b3c215661f8d7f609155e877e23ac6e679da6789cfd87eb940af14aca940f4"
+  },
+  "commitMessage": "20261018-06 CP 캐리어 회피의 실제 경로 선택과 깊이 제한 복원",
+  "goalStatus": "active",
+  "pushed": false
+}

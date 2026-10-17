@@ -157,6 +157,28 @@ TEST_CASE(CampaignSession_CarrierMiningNaturalArrivalUsesSameWorld) {
     RawContainedLookup lookup(core.pool,[](Sid,std::uint32_t) { throw std::logic_error("채취 후 조회에서 삭제 금지"); });CHECK(!lookup.Find(golem,40).value);CHECK(core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0);
     }
 }
+// 실제회피가같은Host40/BFS/직렬화로기존경로를바꾸고현재깊이3의추가요청은보존한다.
+TEST_CASE(CampaignSession_CarrierEscapeUsesRealPathsAndDepthCap) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",external.Services());session.Load();const auto core=session.Core();
+    const Sid priest{static_cast<std::uint16_t>(session.FindPriestParticipation(1))};CHECK(priest.value);if (!priest.value) return;const auto raw=core.pool.Slot(priest);const RawPathPoint point{std::bit_cast<float>(Get(raw,14)),std::bit_cast<float>(Get(raw,18))};
+    const auto golem=session.World().Create(133,2);session.World().Pop(golem,point.x,point.y,0);core.owner.Set(golem,1);CHECK(session.StartCarrierMovement({golem,point,1,0,0,0,0}));
+    RawContainedLookup lookup(core.pool,[](Sid,std::uint32_t) { throw std::logic_error("실제회피조회에서삭제금지"); });std::int32_t depth{};RawPathProcess* current{};
+    // 현재같은초기위치에서실제새경로세개를계속요청한다. 경로/도착시각은입력하지않는다.
+    for (const auto event:{0U,2U,4U}) {
+        const auto packets=external.packets.size();CHECK(session.EscapeCarrier(golem,1,event)==1001);const auto form=lookup.Find(golem,40);CHECK(form.value);if (!form.value) return;current=dynamic_cast<RawPathProcess*>(core.processes.FromForm(form));CHECK(current);if (!current) return;
+        CHECK(current->Runtime().MoveAwayDepth()==++depth && current->Runtime().Count()>0 && current->Parent()==golem && external.packets.size()==packets+1);
+    }
+    const auto packets=external.packets.size();const auto form=current->Form();CHECK(session.EscapeCarrier(golem,2,0)==1000);CHECK(core.processes.FromForm(form)==current && current->Runtime().MoveAwayDepth()==3 && external.packets.size()==packets);CHECK(core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0);
+}
+// 장애물회피는현재지도surface후보를실제BFS/Prepare로평가한뒤새40에깊이를기록한다.
+TEST_CASE(CampaignSession_CarrierEscapeSurfaceFallbackUsesRealBfs) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",external.Services());session.Load();const auto core=session.Core();
+    const Sid priest{static_cast<std::uint16_t>(session.FindPriestParticipation(1))};CHECK(priest.value);if (!priest.value) return;const auto raw=core.pool.Slot(priest);const RawPathPoint point{std::bit_cast<float>(Get(raw,14)),std::bit_cast<float>(Get(raw,18))};const auto golem=session.World().Create(133,2);session.World().Pop(golem,point.x,point.y,0);core.owner.Set(golem,1);CHECK(session.StartCarrierMovement({golem,point,1,0,0,0,0}));
+    const auto packets=external.packets.size();CHECK(session.EscapeCarrier(golem,5,0x1da1a)==1001);RawContainedLookup lookup(core.pool,[](Sid,std::uint32_t) { throw std::logic_error("실제회피조회에서삭제금지"); });const auto form=lookup.Find(golem,40);CHECK(form.value);if (!form.value) return;auto* current=dynamic_cast<RawPathProcess*>(core.processes.FromForm(form));CHECK(current);if (!current) return;
+    CHECK(current->Runtime().MoveAwayDepth()==1 && current->Runtime().Count()>1 && external.packets.size()==packets+1);CHECK(core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0);
+}
 // 실제Stage3가읽을전역과직접SP지정이동일Session의원문32×9분산배열에만영향을주어야한다.
 TEST_CASE(CampaignSession_MissionInputsUseSameScrambledSpSlots) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;

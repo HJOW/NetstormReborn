@@ -98,3 +98,6 @@ target_sources(netstorm PRIVATE o/RawCarrierMining.cpp o/RawCarrierMining.h)
 
 # 고갈한 간헐천의 고유 프레임/AI·목록 제거와 공통 삭제 순서다.
 target_sources(netstorm PRIVATE o/RawGeyserLifetime.cpp o/RawGeyserLifetime.h)
+
+# 원본 네 방향 회피와 임시BFS/도착시각 최소값 선택이다.
+target_sources(netstorm PRIVATE o/RawCarrierEscape.cpp o/RawCarrierEscape.h)

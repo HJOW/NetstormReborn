@@ -308,7 +308,7 @@
     "cpppj/hist/run20-regression/unpop.cpp": "89ee0eb425b59778c216314eccb6dd09909a57118fb032cab1013c3f3345233c",
     "cpppj/run19.json": "6d9888fa7bcf7b1e13dd408db59a26410e9e3cef6d1fad987e20c464d6e0dc76",
     "cpppj/squid-level.json": "5d61185c834c2e195394000248d768f37a95a2056027c4d020c66b83b74f4c68",
-    "cpppj/src/CMakeLists.txt": "772d6bcc3cf5197f25391f1dfa345c2d4e4509d788131328bad8f5b0d8c50db2",
+    "cpppj/src/CMakeLists.txt": "abd332c83a3201c6a29f36adf997ec3605504c5cb82c5081974c3c5c4596d818",
     "cpppj/src/app/CanonMayPlaceInspect.cpp": "27eda46bca500c898abeb9a3a7c4e8588b38e061b579c84cbf6c032c6d46dda9",
     "cpppj/src/app/FrameBindingInspect.cpp": "042602919b0531fb1cbaf3941dc6597bee73944bbf0d571dacfd638bb45dd07c",
     "cpppj/src/app/FrameBindingInspect.h": "4e187ca41f8c34ed52c022b58a57327a554a723e3e26ee88a1ae152c99de3fce",
@@ -2266,6 +2266,19 @@
           "path": "cpppj/src/CMakeLists.txt",
           "previous": "fd7f38fbb07f952eef2d2625072077e0b05da2f18e3ce15bf8879a3b4a582ca8",
           "current": "772d6bcc3cf5197f25391f1dfa345c2d4e4509d788131328bad8f5b0d8c50db2"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 156,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "772d6bcc3cf5197f25391f1dfa345c2d4e4509d788131328bad8f5b0d8c50db2",
+          "current": "abd332c83a3201c6a29f36adf997ec3605504c5cb82c5081974c3c5c4596d818"
         }
       ]
     }
