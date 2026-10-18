@@ -1,0 +1,125 @@
+{
+  "unit": 184,
+  "date": "2026-10-18",
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "lastDecompileDate": "2026-10-16",
+  "baseline": "f130e0d4fdc63f9a026665177368a8da7ab1de35",
+  "goalComplete": false,
+  "fidelity": {
+    "complete": false,
+    "edition": "10.78",
+    "scope": "QuickHelpRequest004c5c00 요청 선택/원래 주제 전달/현재 가상 부착",
+    "clientConnected": false,
+    "bodyParserImplemented": false,
+    "quickHelpWindowImplemented": false,
+    "historyStorageImplemented": false,
+    "cd1072": "미검증"
+  },
+  "native": {
+    "unit": 184,
+    "host": "HJOW-Athlon",
+    "lastDecompileHost": "HJOW-Athlon",
+    "lastDecompileDate": "2026-10-16",
+    "rows": 985,
+    "normalReturns": 1970,
+    "instructions": 537804,
+    "precisionDifferences": 0,
+    "nativeCalls": {
+      "004c5c00": 1970,
+      "004e65ed": 1960,
+      "004ef510": 1960
+    },
+    "sha256": {
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+      "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+      "tools/decomp_quick_help_request.py": "079b2550822d46c49579e9cffaf95e164ae3d6a29530ecc390d9f6d93939b3fd",
+      "cpppj/tests/fixtures/quick-help-request-x86.tsv": "8126552d1d05397d769167e86b922ea1a79cff9c5056c2927897d90364116233"
+    },
+    "limits": [
+      "실제4c5c00/4e65ed/4ef510의 분기/문자열 비교를 실행한다. 타입 조회·순수%s서식·4c52c0이력·4c5970창·가상Push/Attach와 C로케일 thread getter는 명시 외부 경계다.",
+      "전체 본문/창/Client 연결·CD10.72·게임 동일성의 증거가 아니다. 원본 스택 밖을 읽는 짧은 접미 입력 및80바이트 초과 입력은 동결 대상으로 만들지 않았다."
+    ]
+  },
+  "nativeFreeze": {
+    "cpppj/quick-help-request.json": "482eec215ac346c4ff7c9812e73140e473dce267e5da99a22640464b4dcd2461",
+    "cpppj/tests/fixtures/quick-help-request-x86.tsv": "8126552d1d05397d769167e86b922ea1a79cff9c5056c2927897d90364116233",
+    "tools/decomp_quick_help_request.py": "079b2550822d46c49579e9cffaf95e164ae3d6a29530ecc390d9f6d93939b3fd"
+  },
+  "protected": {
+    "AGENTS.md": "7addbf9b31c42f29aab7c93faa865eb6de8590a600d17202a297cf7122bdf979",
+    "LEFT_JOBS.dotnetpj.md": "0c067e1d12879dbf2212cbd64c8f9f60e65b590df910418f025027ed84f80ec2",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "originals/d/GIFCLOUD.COL": "785a2cda6ac1d3e295d375815b6d9650720683099db7c249382d598b5da00532"
+  },
+  "currentSources": {
+    "cpppj/src/client/CMakeLists.txt": "201936b3366bc9a17cff0d46864fd0edfdabc721f115500a3e53b74dccfcd37f",
+    "cpppj/tests/CMakeLists.txt": "7d0e158bfbfb15bc54a24cdd227c6cc838714b84a0a82e60f9c66e6affd6fdfe",
+    "cpppj/src/client/QuickHelpRequest.h": "f1047e2c382fdb077864b5ef86036954092182ad903a2c648cdf9bf4e23867e5",
+    "cpppj/src/client/QuickHelpRequest.cpp": "4133146285adb82806679819621d44ee8e6f5f6fd411c543e85c230c1216316e",
+    "cpppj/tests/QuickHelpRequestTests.cpp": "a5cc030e80732b5f6e696e93d6284c8e870aff9f92573f94f0dd16886c08ce94",
+    "tools/decomp_quick_help_request.py": "079b2550822d46c49579e9cffaf95e164ae3d6a29530ecc390d9f6d93939b3fd"
+  },
+  "validation": {
+    "build": {
+      "config": "Release",
+      "warnings": 0,
+      "errors": 0
+    },
+    "focused": {
+      "tests": 2,
+      "rows": 985,
+      "failed": 0
+    },
+    "fullTestsExecuted": false,
+    "guiExecuted": false,
+    "stageEntriesExecuted": false,
+    "audit": {
+      "tools": 110,
+      "passed": 99,
+      "knownFailures": [
+        "tools/analyze_campaign_target_path.py",
+        "tools/decomp_chat_channels.py",
+        "tools/decomp_constructionarrival_oracle.py",
+        "tools/decomp_factorypostpop_oracle.py",
+        "tools/decomp_guntarget_oracle.py",
+        "tools/decomp_menulayout_oracle.py",
+        "tools/decomp_metadisplaydirty_oracle.py",
+        "tools/decomp_pathdata_oracle.py",
+        "tools/decomp_pathprepare_oracle.py",
+        "tools/decomp_pathruntime_oracle.py",
+        "tools/decomp_unpop_oracle.py"
+      ],
+      "newFailures": 0
+    },
+    "pins": {
+      "reports": 65,
+      "items": 82
+    }
+  },
+  "logSha256": {
+    "extracted/goal-quick-help-request-20261018-native1.log": "62880433a43876bee312cd55077fb56d3e69dacad4523d6b06454a0002d0c8a3",
+    "extracted/goal-quick-help-request-20261018-build1.log": "e2442a90d6142db1af0208aa43801f8795bf1dc9622204096d2ceb3ca03db004",
+    "extracted/goal-quick-help-request-20261018-focused1.log": "1b560ac49e4a82c191fcbdeb2c7a72493c14ada1fc43447073528ef097d008b7",
+    "extracted/goal-quick-help-request-20261018-audit1.log": "b581a05e2075ec70760d8b922156d6221695a7278dd0d182f69274c1b86dd3cf"
+  },
+  "evidenceSha256": {
+    "extracted/goal-quick-help-request-20261018-sources.json": "a5adee65cc767a1db5cf0fd0d22b34967f36ec34e6072ed3c863558c09a6ad97",
+    "extracted/goal-quick-help-request-20261018-native-freeze.json": "5111a474bb8a82a0c04954bbaffcbadc228172fd1185f9059da0ee99d4fe6d31",
+    "extracted/goal-quick-help-request-20261018-protected.json": "f4d873ab2c204c3d82f22cebca9535a513518d24cc1c3942115d0f11520dd8c3",
+    "extracted/goal-quick-help-request-20261018-pin-updates.json": "783111787551ef90964fe017257e1d61bb84b48f985646ab239e84cc2d0449f1",
+    "extracted/goal-quick-help-request-20261018-verify-final.json": "70637252693aca5b9ddbec607e20c267abf770efb7cada72daa7f16ffc0986ee"
+  },
+  "remaining": [
+    "원본4c4c00/4c4cc0 Quick Help 파생 HTML의 주제/동적 정보 및 원문 링크 처리,4c5970 본문/그림 창,4c52c0 실제 이력 저장소를 이어서 구현해야 한다.",
+    "이번 요청 처리기는 라이브러리에 등록했으나 Client About02000017 호출에는 아직 연결하지 않았다. 현재About 선택은 기존 미연결 상태이며 일반Tell로 바꾸지 않는다.",
+    "캐논 배치/전투 테스트는 사용자 요청대로 보류한다. 운반 왕복·희생·승패·후속 미션·전략AI 및11단계 자연 완주/전체 동일성도 미완료다."
+  ],
+  "excluded": [
+    "사용자가 보류한 캐논 배치/전투 창 테스트",
+    "원본Win10/11 전체화면DirectDraw 오류",
+    "AGENTS/보호 원본/dotnetpj 수정·새 디컴파일·원격push"
+  ]
+}

@@ -25,7 +25,7 @@
     "tools/decomp_energy_supply.py": "a18c1913de8e3462dc30e21d1cbb62541600655630d8605c594ecc860d200434",
     "tools/decomp_energy_sort.py": "a203949bf138366de9812342953ecfe050dfa588a0c1df4536b5973284caf5ef",
     "cpppj/tests/fixtures/energy-sort-x86.tsv": "58f67ad1e9207c2b7793101100855d504c6167de92ee0176adf3be816489ab4e",
-    "cpppj/tests/CMakeLists.txt": "62dc8c0f8e57681b649b7598f8e71f0d60bc504a3e77495f146f297eecdb8027",
+    "cpppj/tests/CMakeLists.txt": "7d0e158bfbfb15bc54a24cdd227c6cc838714b84a0a82e60f9c66e6affd6fdfe",
     "cpppj/src/client/RawCampaignSession.h": "9b8778ad3d884db1f91c1d03b8500485d73399a6b0c94c066a040c824c41e7e6",
     "cpppj/src/client/RawCampaignSession.cpp": "6a1533de4d7a9f0ed09c0c4a2b59077498e9d0aa0487119e8461381e2d9867ab",
     "cpppj/tests/CampaignSessionTests.cpp": "2a7f2aad0d79a0071cffd3565b5f5cd8a3983f7e44c520ca3c9aacd22bb9e047",
@@ -1428,6 +1428,19 @@
           "path": "cpppj/src/client/RawCampaignSession.cpp",
           "previous": "f5a4835133edc828d65390d1f4c9e25ab3cf68a6bfb0e3dc696e68d49013961c",
           "current": "6a1533de4d7a9f0ed09c0c4a2b59077498e9d0aa0487119e8461381e2d9867ab"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 184,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/sha256",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "62dc8c0f8e57681b649b7598f8e71f0d60bc504a3e77495f146f297eecdb8027",
+          "current": "7d0e158bfbfb15bc54a24cdd227c6cc838714b84a0a82e60f9c66e6affd6fdfe"
         }
       ]
     }

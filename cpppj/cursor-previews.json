@@ -21,8 +21,8 @@
     "cpppj/src/o/RawBridgeConnect.cpp": "d61934e4375b6e1630f735ee685ddd2aa788316ee1b8cb9cf5c668fba1a1b0f5",
     "cpppj/tests/BridgeConnectTests.cpp": "16e2d952e252c2a264a859182f261487ca50101e34eb7036ea6d66242b9aae11",
     "cpppj/tests/CursorPreviewTests.cpp": "ed217ca7021e4ed5af0fb7aa91fda7af1c2f67b0cb75307157a0a7ace0c86799",
-    "cpppj/src/client/CMakeLists.txt": "0b51a7c8632f0171cee77ffefd21814e48a1ac9c6b7b70fd72dd3e755bcafb65",
-    "cpppj/tests/CMakeLists.txt": "62dc8c0f8e57681b649b7598f8e71f0d60bc504a3e77495f146f297eecdb8027",
+    "cpppj/src/client/CMakeLists.txt": "201936b3366bc9a17cff0d46864fd0edfdabc721f115500a3e53b74dccfcd37f",
+    "cpppj/tests/CMakeLists.txt": "7d0e158bfbfb15bc54a24cdd227c6cc838714b84a0a82e60f9c66e6affd6fdfe",
     "cpppj/tests/CursorPreviewSupport.h": "fa4e6b6d54bbc564af308ffd154f2ced7482a131c542222c0342e6019d6c9084"
   },
   "limitations": [
@@ -873,6 +873,25 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "921f5464983352309a998ba124184bc838cfa4c098a1053ee2dd9131c4410d4c",
           "current": "62dc8c0f8e57681b649b7598f8e71f0d60bc504a3e77495f146f297eecdb8027"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 184,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/client/CMakeLists.txt",
+          "previous": "0b51a7c8632f0171cee77ffefd21814e48a1ac9c6b7b70fd72dd3e755bcafb65",
+          "current": "201936b3366bc9a17cff0d46864fd0edfdabc721f115500a3e53b74dccfcd37f"
+        },
+        {
+          "group": "/sha256",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "62dc8c0f8e57681b649b7598f8e71f0d60bc504a3e77495f146f297eecdb8027",
+          "current": "7d0e158bfbfb15bc54a24cdd227c6cc838714b84a0a82e60f9c66e6affd6fdfe"
         }
       ]
     }

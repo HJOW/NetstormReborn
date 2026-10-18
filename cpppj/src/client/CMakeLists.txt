@@ -165,3 +165,6 @@ target_sources(netstorm PRIVATE ProductionHintGump.h ProductionHintGump.cpp)
 
 # 실제 생산 항목 우클릭 정보 작성기를 연결한다.
 target_sources(netstorm PRIVATE InventoryAboutMenu.h InventoryAboutMenu.cpp)
+
+# 실제 Quick Help 요청의 주제/이력/창·가상 부착 계층을 복원한다.
+target_sources(netstorm PRIVATE QuickHelpRequest.h QuickHelpRequest.cpp)

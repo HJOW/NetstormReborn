@@ -86,7 +86,7 @@
     "cpppj/build/bin/Release/NetstormCpp.exe": "bc5d0ba087b7ecf22225ff35217c3d6ab84441c92a54bf4d977afa49c8944f48"
   },
   "currentSources": {
-    "cpppj/src/client/CMakeLists.txt": "0b51a7c8632f0171cee77ffefd21814e48a1ac9c6b7b70fd72dd3e755bcafb65",
+    "cpppj/src/client/CMakeLists.txt": "201936b3366bc9a17cff0d46864fd0edfdabc721f115500a3e53b74dccfcd37f",
     "cpppj/src/client/CampaignObjectMenuClient.cpp": "742c9b026c8c3a4019236d2fa3967df4731c145d577e4cbd753fa2a003d16117",
     "cpppj/src/client/CampaignObjectMenuClient.h": "b5c3e294d6fcc836f904a64ad2537a14128ea2f72c2e9bf1a4f9bcaeecd58151",
     "cpppj/src/client/MenuGumpWidgets.cpp": "33acda5b10a39d19cab04f867d42b2c6dde48530ad62ea651750eba6446d003f",
@@ -97,7 +97,7 @@
     "cpppj/src/client/RawProductionControls.cpp": "eb296d77e6c04d6d8e80b0a4c151992d9857bd33b06a288d08a76d414a6a05b1",
     "cpppj/src/client/RawProductionControls.h": "67046f35d49cb863978ef917777820793aa9156daa678519fac525ed001df264",
     "cpppj/src/client/UberGump.cpp": "7a0d2ce97d70126f0964b30896eccdf872fc64e9113bb3a4caaf7fe2372cf949",
-    "cpppj/tests/CMakeLists.txt": "62dc8c0f8e57681b649b7598f8e71f0d60bc504a3e77495f146f297eecdb8027",
+    "cpppj/tests/CMakeLists.txt": "7d0e158bfbfb15bc54a24cdd227c6cc838714b84a0a82e60f9c66e6affd6fdfe",
     "docs/exe/cpp-production-feedback-20261018.md": "5bf8f29e3a77eb8e5ad0a38b2de4ea9a823b0b34da76b5367053f8b779265b9e",
     "cpppj/src/client/InventoryAboutMenu.h": "140e9ddfe334534354ae475e9ff7290848ab78cedd38ad6a45f1dd6891e83f9e",
     "cpppj/src/client/InventoryAboutMenu.cpp": "4a2b55d72ccb4ea8b5d96ccd2f2d2c366df8073520e6b81e503178839986345b",
@@ -275,5 +275,26 @@
   "excluded": [
     "원본 Win10/11 전체화면 DirectDraw 결함",
     "AGENTS/보호 원본 수정·새 정밀 디컴파일·dotnetpj·원격 push"
+  ],
+  "integration_updates": [
+    {
+      "date": "2026-10-18",
+      "unit": 184,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/CMakeLists.txt",
+          "previous": "0b51a7c8632f0171cee77ffefd21814e48a1ac9c6b7b70fd72dd3e755bcafb65",
+          "current": "201936b3366bc9a17cff0d46864fd0edfdabc721f115500a3e53b74dccfcd37f"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "62dc8c0f8e57681b649b7598f8e71f0d60bc504a3e77495f146f297eecdb8027",
+          "current": "7d0e158bfbfb15bc54a24cdd227c6cc838714b84a0a82e60f9c66e6affd6fdfe"
+        }
+      ]
+    }
   ]
 }

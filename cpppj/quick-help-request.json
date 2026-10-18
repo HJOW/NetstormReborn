@@ -1,0 +1,26 @@
+{
+  "unit": 184,
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "lastDecompileDate": "2026-10-16",
+  "rows": 985,
+  "normalReturns": 1970,
+  "instructions": 537804,
+  "precisionDifferences": 0,
+  "nativeCalls": {
+    "004c5c00": 1970,
+    "004e65ed": 1960,
+    "004ef510": 1960
+  },
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+    "tools/decomp_quick_help_request.py": "079b2550822d46c49579e9cffaf95e164ae3d6a29530ecc390d9f6d93939b3fd",
+    "cpppj/tests/fixtures/quick-help-request-x86.tsv": "8126552d1d05397d769167e86b922ea1a79cff9c5056c2927897d90364116233"
+  },
+  "limits": [
+    "실제4c5c00/4e65ed/4ef510의 분기/문자열 비교를 실행한다. 타입 조회·순수%s서식·4c52c0이력·4c5970창·가상Push/Attach와 C로케일 thread getter는 명시 외부 경계다.",
+    "전체 본문/창/Client 연결·CD10.72·게임 동일성의 증거가 아니다. 원본 스택 밖을 읽는 짧은 접미 입력 및80바이트 초과 입력은 동결 대상으로 만들지 않았다."
+  ]
+}

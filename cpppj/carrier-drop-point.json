@@ -185,8 +185,8 @@
     "cpppj/src/client/RawCarrierDropPoint.h": "e57a82a5afd40fbfd482bb494a1d1c60d754dc70174bd1b801ee45fac7d645ac",
     "cpppj/src/client/RawCarrierDropPoint.cpp": "a0c2130de14992eb2f3debda71840b9e0c9889398d17cfd92c2c8cb050b2acd5",
     "cpppj/tests/CarrierDropPointTests.cpp": "65a1f6834bad63ad10548fb4b0b96c26fc7e869a1f2447e07254190237f51b7c",
-    "cpppj/src/client/CMakeLists.txt": "0b51a7c8632f0171cee77ffefd21814e48a1ac9c6b7b70fd72dd3e755bcafb65",
-    "cpppj/tests/CMakeLists.txt": "62dc8c0f8e57681b649b7598f8e71f0d60bc504a3e77495f146f297eecdb8027",
+    "cpppj/src/client/CMakeLists.txt": "201936b3366bc9a17cff0d46864fd0edfdabc721f115500a3e53b74dccfcd37f",
+    "cpppj/tests/CMakeLists.txt": "7d0e158bfbfb15bc54a24cdd227c6cc838714b84a0a82e60f9c66e6affd6fdfe",
     "cpppj/src/client/RawCarrierMenu.h": "e4ef0cccd8c956ccf6c167a7b08e0a9350f46206e08a9670dbaed6272d7749d8",
     "cpppj/src/client/RawCarrierMenu.cpp": "4a0fada9b8ac9d00eab37955189a8ac669d26f1d22559deae229a6ce3637dc1e",
     "cpppj/src/o/RawCanonPlacementPipeline.h": "4c52d14dea023e6c5251c528b1afd6955e10d8d25a31e9766b4d79faa286e8fc",
@@ -988,6 +988,25 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "921f5464983352309a998ba124184bc838cfa4c098a1053ee2dd9131c4410d4c",
           "current": "62dc8c0f8e57681b649b7598f8e71f0d60bc504a3e77495f146f297eecdb8027"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 184,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/client/CMakeLists.txt",
+          "previous": "0b51a7c8632f0171cee77ffefd21814e48a1ac9c6b7b70fd72dd3e755bcafb65",
+          "current": "201936b3366bc9a17cff0d46864fd0edfdabc721f115500a3e53b74dccfcd37f"
+        },
+        {
+          "group": "/sha256",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "62dc8c0f8e57681b649b7598f8e71f0d60bc504a3e77495f146f297eecdb8027",
+          "current": "7d0e158bfbfb15bc54a24cdd227c6cc838714b84a0a82e60f9c66e6affd6fdfe"
         }
       ]
     }
