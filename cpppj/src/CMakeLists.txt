@@ -133,3 +133,6 @@ target_sources(netstorm PRIVATE client/GameWorldInput.inc client/RawCampaignCarr
 
 # 실제 Factory 수집/원본 일반 Draw와 세 소스 색표다.
 target_sources(netstorm PRIVATE client/SpriteColorMaps.cpp client/SpriteColorMaps.h client/RawCampaignFactoryDisplay.cpp client/RawCampaignFactoryDisplay.h)
+
+# 원본 Factory의 실제 생산/지식/마나/CRT정렬 메뉴다.
+target_sources(netstorm PRIVATE client/RawFactoryMenu.cpp client/RawFactoryMenu.h)

@@ -1,0 +1,79 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-18",
+  "unit": 171,
+  "rows": 76,
+  "counts": {
+    "Open": 39,
+    "Mana": 32,
+    "Slots": 5
+  },
+  "controls": [
+    639,
+    895
+  ],
+  "precisionDifferences": 0,
+  "normalReturns": 153,
+  "instructions": 535924,
+  "nativeCalls": {
+    "0x472e60": 1,
+    "0x4754b0": 78,
+    "0x454c00": 74,
+    "0x4540d0": 68,
+    "0x4e4a40": 68,
+    "0x4752b0": 68,
+    "0x453f60": 68,
+    "0x4ad0f0": 136,
+    "0x4ad0a0": 136,
+    "0x454040": 78,
+    "0x473020": 74,
+    "0x4735c0": 166,
+    "0x4ac970": 1682,
+    "0x492960": 314,
+    "0x4e6010": 68,
+    "0x4e5fa0": 70,
+    "0x453f70": 784,
+    "0x4e49c0": 48
+  },
+  "boundaries": {
+    "0x4e5f7b": 11,
+    "0x477ae0": 210,
+    "0x4ada70": 74,
+    "0x4de9a0": 534,
+    "0x477ee0": 136,
+    "0x49a840": 4864,
+    "0x4b2270": 68,
+    "0x478020": 130,
+    "0x477cb0": 456,
+    "0x475c00": 136,
+    "0x478160": 136,
+    "0x4c2630": 68,
+    "0x4a89c0": 884,
+    "0x4b9320": 74,
+    "0x48fc60": 68,
+    "0x4acac0": 1204,
+    "0x49af80": 342,
+    "0x44f760": 314,
+    "0x44f4d0": 314,
+    "0x41c7a0": 306,
+    "0x40ec50": 48,
+    "0x44cbd0": 74,
+    "0x475cf0": 74,
+    "0x4e65ed": 392,
+    "0x4c2400": 28,
+    "0x4b1b20": 28
+  },
+  "sha256": {
+    "cpppj/tests/fixtures/factory-menu-x86.tsv": "e69d2c8bc2ed31511f45591a2ae428db4265efb0c195b59b017341b397310899",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_factory_menu.py": "bd889d1fe373053c80fe804517858cf83102fbf36cbe724d989e4aa0c3e605cc",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9"
+  },
+  "limits": [
+    "전체 Factory 메뉴/마나 문자열/지식 행/CRT정렬 실제 실행. TYPE·현재 목록·SP·Deck 포함 여부는 명시 입력 조회 경계",
+    "GUI 작성/번역·printf/C로캘toupper·stricmp/스레드 임시 버퍼는 관측 경계. 원본 게임/OS/새 디컴파일 없음",
+    "10.78만 관측. CD 대응은 전체 정밀 코드에 보존하며 새 검증은 후속"
+  ]
+}

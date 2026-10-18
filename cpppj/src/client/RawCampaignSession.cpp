@@ -154,6 +154,8 @@ struct RawCampaignObjectMenus::Impl {
     std::unique_ptr<RawObjectMenu> object; // 같은 Player 메뉴와 실제 HP/회수 계산을 사용한다.
     std::unique_ptr<RawObjectMenuInfo> info; // 같은가상count/Identity/동맹/Player/포획몸체와controlled제목이다.
     std::unique_ptr<RawCarrierMenu> carrier; // 사제의 비가상 기본 호출이 참조하는 실제 Carrier 메뉴다.
+    FactoryMenuState factoryState; // 원본 Factory 메뉴의 현재 타입/명령 전역이다.
+    std::unique_ptr<RawFactoryMenu> factoryMenu; // 같은 생산 Deck/기술/메뉴를 빌리는 실제 Factory +a8다.
     std::unique_ptr<RawPriestMenu> priest; // 같은 기술/SP/커서 취득과 위 전체 부모 체인을 사용한다.
     // 같은 현재 전역의 참조를 먼저 구성한다. 생성 중 메뉴/게임 효과를 실행하지 않는다.
     Impl(CampaignObjectMenuUi input,float& cdSp):ui(std::move(input)),carrierState{ui.objectState.localOwner,ui.objectState.editor,dropState.mapLimit,cdSp,ui.objectState.helpCommand} {}
@@ -162,6 +164,7 @@ struct RawCampaignObjectMenus::Impl {
 RawCampaignObjectMenus::RawCampaignObjectMenus(std::unique_ptr<Impl> impl):impl_(std::move(impl)) {}
 RawCampaignObjectMenus::~RawCampaignObjectMenus()=default; // 필드 역순으로 사제→Carrier→객체→Player→Identity를 해제한다.
 // 원본 파생별 메뉴 작성만 위임하며 어떤 항목도 임의 활성화하지 않는다.
+void RawCampaignObjectMenus::OpenFactory(Sid sid) const { impl_->factoryMenu->Open(sid); } // 현재 실제 Factory 가상 메뉴만 실행한다.
 void RawCampaignObjectMenus::OpenPriest(Sid sid) const { impl_->priest->Open(sid); }
 void RawCampaignObjectMenus::OpenCarrier(Sid sid) const { impl_->carrier->Open(sid); } // 실제 가상 메뉴가 Carrier인 caller가 선택한다.
 void RawCampaignObjectMenus::OpenDamageable(Sid sid) const { impl_->object->OpenDamageable(sid); } // 실제 Damageable 회수 관문을 보존한다.
@@ -2073,6 +2076,16 @@ std::unique_ptr<RawCampaignObjectMenus> RawCampaignSession::MakeObjectMenus(Camp
     chain->carrier=std::make_unique<RawCarrierMenu>(current->core.pool,current->core.types,current->contentFinder,chain->carrierState,std::move(carrier));
     auto priest=inputs.priest;priest.takePreview={}; // 검사/별도 취득 callback 대신 항상 같은 세션의 실제 커서를 사용한다.
     BindPriestMenuCarrier(priest,*chain->carrier);chain->priest=MakePriestMenu(std::move(priest));
+    auto factory=inputs.factory; // GUI/번역을 보존하고 실제 현재 게임 조회만 같은 Session에 연결한다.
+    factory.localOwner=[current] { return current->playerState.battleOwner; };factory.editor=[current] { return current->globals.editor!=0; };
+    factory.capacity=[current](Sid sid) { return current->production->FactoryCapacity(sid); };factory.level=[current](Sid sid) { return current->level->Get(sid); };
+    factory.currentTechnology=[current] { return current->player->CurrentTechnology(); };
+    factory.technologyType=[current](Sid parent,std::uint32_t index) { const auto sid=current->priests->Carrier().FindContained(parent,4,0,index);return sid.value ? (Read(current->core.pool.Slot(sid),18)&0xffffU) : 0U; };
+    factory.allowed=[current](std::uint32_t type) { return current->production->Allowed(static_cast<std::int32_t>(type)); };factory.inProduction=[current](std::uint32_t type) { return current->production->Contains(type); };
+    factory.cost=[current](std::uint32_t type) { return current->hp.TypeCostUnits(type); };factory.money=[current](std::uint32_t owner) { return std::bit_cast<float>(current->sp.Get(owner)); };
+    factory.mana=[current](std::uint32_t type) { if (type<70) return std::string{};const auto value=current->assets.game.Types()[type-70].definition.String("mana");return value ? std::string(*value) : std::string{}; };
+    factory.baseMenu=[chain](Sid sid) { chain->object->OpenDamageable(sid); };
+    chain->factoryMenu=std::make_unique<RawFactoryMenu>(current->core.pool,current->core.types,current->contentFinder,current->constructionExcludedTypes,chain->factoryState,std::move(factory));
     return std::unique_ptr<RawCampaignObjectMenus>(new RawCampaignObjectMenus(std::move(menus)));
 }
 // 공통Open의게임조회만현재Session으로교체한다. GUI몸체/가상+a8/+ac의대체성공은추가하지않는다.

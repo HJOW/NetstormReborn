@@ -15,15 +15,15 @@
     "실제 World.Report에 현재 같은 슬롯의 state/extra/HP 저장 비트를 병렬 행으로 추가해 GUI 완공을 판정한다. 기존 raw_object 열은 보존한다. --completion은 같은 실제 입력만으로 건설 중/완공까지 검사한다."
   ],
   "currentSources": {
-    "cpppj/src/client/RawCampaignSession.cpp": "1e401edcc39f9d0c3dc4a2d7b04d2f91fbe01fa47a480306217d7b89405cd8af",
+    "cpppj/src/client/RawCampaignSession.cpp": "3b11a577d8e307292f0bfe1280f3392dcb61bf7e7043bfb919aa55b2632f36a6",
     "cpppj/src/client/RawShapeToBuffer.cpp": "a6e46ce3d717dd312323268a0bb1ebcd020d992c583d9a3d6e069588fbb50eab",
     "cpppj/src/client/RawShapeToBuffer.h": "f3788fbcdacd21dd4dabac2c63c96fbd4d28e1c27c9a19cf8b6519f98852a119",
     "cpppj/src/client/RawSurfaceWorld.cpp": "f3b1199c44bda39e74c1b8fcb424576a9a91fffc6e2d841d3a79abc469cc5dc7",
     "cpppj/src/o/CMakeLists.txt": "484d120616e312b75abe4a69a105cb6fc300a9d3965535cd9620ec5ab663a6e1",
-    "cpppj/tests/CMakeLists.txt": "0a4bfb693118cca965cd932341ade3b29b42c484a8c0aad08f821891ae54d509",
+    "cpppj/tests/CMakeLists.txt": "710ac27699ae0c3cf48e4b9175b648e4af571e83c8fd5f13cc817c753a20abdb",
     "cpppj/tests/CampaignSessionTests.cpp": "fbe93163d865a6ebe8adb48db980a3170da2d5b3a5c7be921785ce39839082a8",
     "cpppj/tests/ShapeToBufferTests.cpp": "0dc5ddc7f71ce2b7a12ff4dcaae45a47b4c7d6fefa676129fb19b5556e3312ab",
-    "tools/cpp_priest_construction_smoke.py": "738029d4170096d0d86503e89f148a0ecf262429998ee5a822dd0a3e0dcebc9b",
+    "tools/cpp_priest_construction_smoke.py": "42e462bba5ddb36a8c4121b88b995258899648b55468147d340d0c71172c0bd0",
     "cpppj/src/o/RawFactoryDraw.h": "1a6ced2b13c6a50083dea365028524f6d46f2b80821106b61b6573fda44d41ac",
     "cpppj/src/o/RawFactoryDraw.cpp": "d988a9cff39df162fb792809f689fe5b4220c3f18a9be617374d044a597ca4da",
     "tools/decomp_factory_capture.py": "e5dd681fa0d5aa74779c7873c10814eff9ad15e193f7cb7322661c6ca02e27f1",
@@ -4935,6 +4935,31 @@
           "path": "tools/cpp_priest_construction_smoke.py",
           "previous": "d1e3597a7f9f56a2fcaa8f7cb1648d339a0c457d6241a35b6c7ab8331efa592b",
           "current": "738029d4170096d0d86503e89f148a0ecf262429998ee5a822dd0a3e0dcebc9b"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 171,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "1e401edcc39f9d0c3dc4a2d7b04d2f91fbe01fa47a480306217d7b89405cd8af",
+          "current": "3b11a577d8e307292f0bfe1280f3392dcb61bf7e7043bfb919aa55b2632f36a6"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "0a4bfb693118cca965cd932341ade3b29b42c484a8c0aad08f821891ae54d509",
+          "current": "710ac27699ae0c3cf48e4b9175b648e4af571e83c8fd5f13cc817c753a20abdb"
+        },
+        {
+          "group": "/currentSources",
+          "path": "tools/cpp_priest_construction_smoke.py",
+          "previous": "738029d4170096d0d86503e89f148a0ecf262429998ee5a822dd0a3e0dcebc9b",
+          "current": "42e462bba5ddb36a8c4121b88b995258899648b55468147d340d0c71172c0bd0"
         }
       ]
     }

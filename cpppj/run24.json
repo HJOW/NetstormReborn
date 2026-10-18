@@ -125,7 +125,7 @@
     "cpppj/hist/run24-base/cpppj/tests/CMakeLists.txt": "38b1bdb0a61e211f82e4d08c775abf2a7669debd6167c24e7cb3cddc74b75b81",
     "cpppj/hist/run24-base/cpppj/tests/CampaignInstallSupport.h": "2d42c64bfd2e49e9f1bdb5218c8e0e3f47d5029e24a9c1e2c65180aaf08cf02a",
     "cpppj/run23.json": "e29f9286a2c79f91ba40b843f7e8618404154b261c876ef89281e26607f9fbf1",
-    "cpppj/src/CMakeLists.txt": "c99bf39b2463c358a80f52c9ab1e2c9e5e669bcbc25b602d0340473df3f0b863",
+    "cpppj/src/CMakeLists.txt": "8bcbbd1445cf96d31be4573fad443d8fe2248455bdda11abd9015f94821b7b26",
     "cpppj/src/app/CanonMayPlaceInspect.cpp": "27eda46bca500c898abeb9a3a7c4e8588b38e061b579c84cbf6c032c6d46dda9",
     "cpppj/src/app/FrameBindingInspect.cpp": "042602919b0531fb1cbaf3941dc6597bee73944bbf0d571dacfd638bb45dd07c",
     "cpppj/src/app/FrameBindingInspect.h": "4e187ca41f8c34ed52c022b58a57327a554a723e3e26ee88a1ae152c99de3fce",
@@ -2072,6 +2072,19 @@
           "path": "cpppj/src/CMakeLists.txt",
           "previous": "aeb81f738c13d031ff454bbf5ae54eac3b00529b9201cc01b8265a1fdfb5fa30",
           "current": "c99bf39b2463c358a80f52c9ab1e2c9e5e669bcbc25b602d0340473df3f0b863"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 171,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "c99bf39b2463c358a80f52c9ab1e2c9e5e669bcbc25b602d0340473df3f0b863",
+          "current": "8bcbbd1445cf96d31be4573fad443d8fe2248455bdda11abd9015f94821b7b26"
         }
       ]
     }

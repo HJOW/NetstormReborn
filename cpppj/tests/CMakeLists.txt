@@ -1489,3 +1489,8 @@ set_property(SOURCE ShapeToBufferTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS
 target_sources(netstorm_tests PRIVATE SpriteColorMapsTests.cpp)
 set_source_files_properties(SpriteColorMapsTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_SPRITE_COLORS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/sprite-colors-x86.tsv\"")
+
+# Factory 전체 메뉴와 마나 문자열의 독립 원문을 이 검사 소스에만 연결한다.
+target_sources(netstorm_tests PRIVATE FactoryMenuTests.cpp)
+set_source_files_properties(FactoryMenuTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_FACTORY_MENU_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/factory-menu-x86.tsv\"")

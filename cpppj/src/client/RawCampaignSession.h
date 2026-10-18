@@ -21,6 +21,7 @@
 #include "o/RawDamageablePostDestroy.h"
 #include "client/CameraHome.h"
 #include "client/RawPriestMenu.h"
+#include "client/RawFactoryMenu.h"
 #include "client/RawCarrierMenu.h"
 #include "client/RawObjectMenuOpen.h"
 #include "client/RawObjectMenuInfo.h"
@@ -46,6 +47,7 @@ struct CampaignObjectMenuUi {
     o::PlayerIdentityReads identity; // 주소/실패 이름의 실제 현재 getter다. 현재 이름/subscriber/모드는 같은 세션이 연결한다.
     ObjectMenuState objectState; // 현재 도움말 문자열/회수 금지·명령 전역이다. owner/모드는 세션 getter로 교체한다.
     PlayerMenuState playerState; // 실제 asksend 정적 버퍼와 명령 토큰이며 반환 체인이 수명을 소유한다.
+    FactoryMenuHooks factory; // 실제 Factory 생산/지식 메뉴의 번역/controlled 작성 경계다.
     PriestMenuHooks priest; // 실제 GUI/번역/Tell이다. 게임 조회·생성·커서 취득은 세션이 공급한다.
     CarrierMenuHooks carrier; // 실제 GUI/번역/타입 설명이다. 지면·이동·위치·SP는 세션이 공급한다.
     ObjectMenuHooks object; // 실제 GUI/서식/설정/문자열 토큰이다. 두 미복원 파생 가상80만 count 경계를 사용한다.
@@ -59,6 +61,7 @@ public:
     ~RawCampaignObjectMenus(); // 참조 대상인 부모 모듈보다 먼저 자식 메뉴 몸체를 해제한다.
     RawCampaignObjectMenus(const RawCampaignObjectMenus&)=delete; // 훅의 고정 주소와 정적 문자열 수명을 보존한다.
     RawCampaignObjectMenus& operator=(const RawCampaignObjectMenus&)=delete; // 서로 다른 세션 체인의 대입을 금지한다.
+    void OpenFactory(o::Sid sid) const; // 실제 Factory +a8의 생산/지식/기본 Damageable 체인을 작성한다.
     void OpenPriest(o::Sid sid) const; // 루트 메뉴 한 칸을 caller가 만든 뒤 실제 사제 Open을 작성한다.
     void OpenCarrier(o::Sid sid) const; // 원본 가상 메뉴가 Carrier일 때만 같은 전체 부모 체인을 작성한다.
     void OpenDamageable(o::Sid sid) const; // 원본 가상 메뉴가 Damageable일 때 실제 회수/공통 체인을 작성한다.

@@ -27,6 +27,7 @@ public:
     std::uint32_t Open(o::Sid object,const InputEvent& event) const;
     // 425f90: 현재 객체 투영→첫 Form kind 사정거리→현재 메뉴 폭/화면 폭의 signed DWORD 계산이다.
     void Position(o::Sid object) const;
+    std::uint32_t OpenFactory(o::Sid object,const InputEvent& event) const; // 4754b0은 위치 보정/선택/제단 위임 없이 같은 사건 좌표에 부착한다.
 private:
     std::span<const std::uint8_t> Raw(o::Sid object) const; // 생존/void 필터 없이 실제 물리 슬롯을 읽는다.
     const o::RiftTypeRecord& Type(std::uint32_t number) const; // 현재 TYPE 표의 범위를 확인한다.

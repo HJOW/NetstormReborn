@@ -9,6 +9,7 @@ from cpp_campaign_entry_smoke import ROOT, EXE
 from cpp_renderer_smoke import snapshots
 from cpp_smoke_files import preserve_game_settings
 from cpp_world_smoke import states
+from cpp_priest_build_menu_smoke import menu_items
 
 
 def asset_fields(path):
@@ -26,7 +27,8 @@ def asset_fields(path):
 
 def main():
     """같은 실제 시작 자금/기술로 GUI만 조작하며 원본 보호 자료와 관측 결과를 보존한다."""
-    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--output',type=Path,required=True);parser.add_argument('--completion',action='store_true');parser.add_argument('--select-workshop',action='store_true');args=parser.parse_args()
+    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--output',type=Path,required=True);parser.add_argument('--completion',action='store_true');parser.add_argument('--select-workshop',action='store_true');parser.add_argument('--factory-menu',action='store_true');args=parser.parse_args()
+    if args.factory_menu:args.select_workshop=True
     if args.select_workshop:args.completion=True
     output=args.output.resolve()
     if output.exists() and any(output.iterdir()):raise RuntimeError('새 관측 경로가 필요합니다: '+str(output))
@@ -39,9 +41,14 @@ def main():
         steps.extend([(500,'report','building'),(500,'snapshot',str(output/'building.bmp')),(950,'report','completed'),(950,'snapshot',str(output/'completed.bmp'))])
     if args.select_workshop:
         steps.extend([(975,'click','world:sunFactory'),(980,'report','selectedWorkshop'),(980,'snapshot',str(output/'selected-workshop.bmp'))])
+    if args.factory_menu:
+        steps.extend([(990,'right','world:sunFactory'),(1000,'report','factoryOpened'),(1000,'snapshot',str(output/'factory-opened.bmp')),
+                      (1005,'click','Put Knowledge into Production'),(1020,'report','factoryKnowledge'),(1020,'snapshot',str(output/'factory-knowledge.bmp')),
+                      (1025,'esc',''),(1030,'report','factoryClosed'),(1040,'right','world:sunFactory'),(1055,'click','View Current Production'),
+                      (1070,'report','factoryProduction'),(1070,'snapshot',str(output/'factory-production.bmp'))])
     script=output/'steps.tsv';report=output/'states.tsv'
     script.write_text(''.join(f'{frame}\t{operation}\t{argument}\n' for frame,operation,argument in steps),encoding='utf-8',newline='\n')
-    command=[str(EXE),'--run',str(ROOT/'originals'),'--mission','thewarbegins','--window','--no-audio','--frames','983' if args.select_workshop else '953' if args.completion else '233',
+    command=[str(EXE),'--run',str(ROOT/'originals'),'--mission','thewarbegins','--window','--no-audio','--frames','1073' if args.factory_menu else '983' if args.select_workshop else '953' if args.completion else '233',
              '--set','SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8','--ui-script',str(script),'--ui-report',str(report)]
     before=snapshots(ROOT/'originals')
     with preserve_game_settings(ROOT/'originals','d'):
@@ -82,11 +89,26 @@ def main():
         assert current['raw_input'][0]==str(target) and current['phase']==['4'] and current['popup']==[''] and raw[1]&4
         assert raw[2]==3000 and current['raw_sp'][1]=='2200'
         selected=dict(passed=True,sid=target,raw=raw,input=current['raw_input'])
+    factory=None
+    if args.factory_menu:
+        menus=menu_items(report);target=completion['sid']
+        for label in ('factoryOpened','factoryKnowledge','factoryClosed','factoryProduction'):
+            current=observed[label];assert current['phase']==['4'] and current['paused']==['0'] and current['popup']==[''] and current['raw_sp'][1]=='2200'
+        root=[row for row in menus['factoryOpened'] if row['visible']]
+        assert any(row['label']=='Put Knowledge into Production' for row in root) and any(row['label']=='View Current Production' for row in root)
+        assert any(row['command']==0x03000032 and row['parameter']==target for row in root)
+        knowledge=[row for row in menus['factoryKnowledge'] if row['visible']]
+        cannon=next(row for row in knowledge if row['command']==0x03000080 and row['parameter']==((128<<16)|target))
+        assert not cannon['flags']&0x200,cannon
+        production=[row for row in menus['factoryProduction'] if row['visible']]
+        # 실제 TYPE128이 썬 캐논이다. 머리글은 항목 보고에 없으므로 빈 생산 창의 실제 도움말 자식 항목을 확인한다.
+        assert any(row['command']==0x02000017 and row['parameter']!=85 for row in production),production
+        factory=dict(passed=True,sid=target,root=root,knowledge=knowledge,production=production,scope='원본 메뉴 작성/우클릭 진입/하위 열기만 검증. 연구·업그레이드 명령 실행은 후속이다.')
     summary=dict(passed=True,scope='실제GUI 사제 메뉴/TYPE85 배치/실제3e왕복/SP 차감/원본 서식 비용 표시·이동·지연삭제/사제 경로 이동.'+(' 같은 워크샾의 HP 자연 증가·3000 완공·abstract 해제까지 확인했다. 미션 완주 검사는 아니다.' if args.completion else ' 자연 건설·완공은 --completion 모드로 검사한다.'),
                  command=command,originals_unchanged=unchanged,newPacketTypes=after_packets[len(before_packets):],workshops=workshops,priestBefore=priest,priestMoving=moved,
-                 selection=selected,completion=completion,observed={label:{key:record[key] for key in ('time','raw_input','raw_cursor','raw_sp','raw_menus','raw_sp_gump') if key in record} for label,record in observed.items()})
+                 factoryMenus=factory,selection=selected,completion=completion,observed={label:{key:record[key] for key in ('time','raw_input','raw_cursor','raw_sp','raw_menus','raw_sp_gump') if key in record} for label,record in observed.items()})
     (output/'results.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
-    print(json.dumps(dict(passed=True,newPacketTypes=summary['newPacketTypes'],workshops=workshops,priestBefore=priest,priestMoving=moved,completion=completion,selection=selected,originals_unchanged=unchanged),ensure_ascii=False))
+    print(json.dumps(dict(passed=True,newPacketTypes=summary['newPacketTypes'],workshops=workshops,priestBefore=priest,priestMoving=moved,completion=completion,selection=selected,factoryMenus=factory,originals_unchanged=unchanged),ensure_ascii=False))
 
 
 if __name__=='__main__':main()

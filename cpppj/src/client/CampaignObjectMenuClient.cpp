@@ -82,6 +82,8 @@ struct CampaignObjectMenuClient::Impl {
         ui.priest.format=ui.carrier.format=ui.object.format=[this](std::string_view key,std::span<const PriestMenuArgument> arguments) { return PrintMenu(Translate(key),arguments); };
         ui.priest.description=ui.carrier.description=[this](std::uint32_t type) { const auto types=world->Session().Core().types;if (type>=types.size()) throw std::out_of_range("현재 객체 메뉴 설명 TYPE 범위");return Translate(types[type].description); };
         ui.priest.tell=[this](std::string_view key) { tell(key); };
+        ui.factory.format=ui.priest.format;ui.factory.description=ui.priest.description;
+        ui.factory.helpWord=[this] { std::string word;if (!client.Configuration().ReadString("helpWord",word)) throw std::logic_error("Factory 실제 도움말 원문 미설치");const auto bytes=o::EncodeOriginalText(word);return std::string(bytes.begin(),bytes.end()); };
         ui.player.translate=[this](std::string_view key) { return Translate(key); };ui.player.print=PrintMenu;
         ui.player.allowSend=[this] { return world->Session().BattleOption(13)!=0; };ui.player.allowOffer=[this] { return world->Session().BattleOption(11)!=0; };ui.player.allowBreak=[this] { return world->Session().BattleOption(12)!=0; };
         ui.player.ignored=[this](std::uint32_t subscriber) { return std::find(ignored.begin(),ignored.end(),subscriber)!=ignored.end(); };
@@ -92,6 +94,7 @@ struct CampaignObjectMenuClient::Impl {
         ui.info.translate=ui.player.translate;ui.info.description=ui.priest.description;ui.info.print=PrintMenu;
         ui.info.substitute=[this](std::string_view source) { const auto text=client.Configuration().SubstituteLocal(o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(source.data()),source.size()}));const auto bytes=o::EncodeOriginalText(text);return std::string(bytes.begin(),bytes.end()); };
         BindPriestMenuControls(ui.priest,widgets,controls,raw);BindCarrierMenuControls(ui.carrier,controls);BindPlayerMenuControls(ui.player,widgets,controls,raw);BindObjectMenuInfoControls(ui.info,controls);
+        BindFactoryMenuControls(ui.factory,widgets,controls,raw,[this](std::string_view text) { return Static(text); });
         BindObjectMenuControls(ui.object,controls,raw,client.Configuration(),[this](std::string_view text) { return Static(text); });
         return ui;
     }
@@ -101,6 +104,7 @@ struct CampaignObjectMenuClient::Impl {
         // 실제 슬롯의 비정렬 DWORD를 그대로 읽는다.
         for (std::size_t index=0;index<4;++index) vt|=std::uint32_t(raw[index])<<(index*8);
         switch (ObjectMenuSlots(vt).populate) {
+        case 0x454c00:chain->OpenFactory(sid);break;
         case 0x494870:chain->OpenPriest(sid);break;
         case 0x4288f0:chain->OpenCarrier(sid);break;
         case 0x44cbd0:chain->OpenDamageable(sid);break;
@@ -115,6 +119,7 @@ struct CampaignObjectMenuClient::Impl {
         for (std::size_t index=0;index<4;++index) vt|=std::uint32_t(bytes[index])<<(index*8);
         const auto common=[this](o::Sid object,const InputEvent& input) { return opener->Open(object,input); };
         switch (ObjectMenuSlots(vt).open) {
+        case 0x4754b0:return opener->OpenFactory(sid,event);
         case 0x4adb30:return common(sid,event);
         case 0x4268c0:case 0x492080:return world->OpenSelectionMenu(sid,event,false,common);
         case 0x41e660:return world->OpenSelectionMenu(sid,event,true,common);

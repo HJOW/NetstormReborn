@@ -50,6 +50,11 @@ std::uint32_t RawObjectMenuOpen::Open(o::Sid object,const InputEvent& event) con
     else Required(hooks_.attach)(object,event.x,event.y);
     return 1;
 }
+// 원본 Factory +ac는 건설 중 거부 뒤 생성/제목/파생 작성/사건 좌표 부착만 수행한다.
+std::uint32_t RawObjectMenuOpen::OpenFactory(o::Sid object,const InputEvent& event) const {
+    if (Raw(object)[40]&1U) return 0;
+    Required(hooks_.beginFancy)();Required(hooks_.summary)(object);Required(hooks_.populate)(object);Required(hooks_.attach)(object,event.x,event.y);return 1;
+}
 // 음수와INT_MIN의 절댓값도DWORD로 유지하여 signed overflow 없이 실제 명령 결과를 재현한다.
 void RawObjectMenuOpen::Position(o::Sid object) const {
     const auto raw=Raw(object);const auto point=Required(hooks_.project)(std::bit_cast<float>(Read(raw,14,4)),std::bit_cast<float>(Read(raw,18,4)));
