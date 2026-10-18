@@ -47,9 +47,9 @@ public:
     ~RawButtonControls();
     RawButtonControls(const RawButtonControls&)=delete;
     RawButtonControls& operator=(const RawButtonControls&)=delete;
-    // 기존 자식을 실제 Kill/Cleanup한 뒤 돌 버튼/배경을 생성·부착한다. 루트와 serial은 유지한다.
+    // 기본은 기존 자식을 Kill/Cleanup한다. preserveWorldUi이면 이 페이지의 돌 버튼만 반납하고 같은 월드 UI를 유지한다.
     void SetControls(std::span<const GumpControl> controls,std::span<const std::string> labels,
-        int width,int height,RawButtonAssets assets);
+        int width,int height,RawButtonAssets assets,bool preserveWorldUi=false);
     // 실제 GumpInput::Route와 부모 click 통지로 활성화된 화면 명령 번호를 반환한다.
     std::optional<int> Event(InputEvent event);
     // 원본 등록표 Broadcast/Idle에 현재 폴링 좌표를 전달하고 누름 그림 변경 여부를 반환한다.

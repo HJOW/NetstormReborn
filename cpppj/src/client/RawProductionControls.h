@@ -18,6 +18,7 @@ public:
     ~RawProductionControls(); // 공통 노드 삭제가 끝난 뒤 처리기를 반납한다.
     void Close(); // 월드보다 먼저 모든 연결 Form과 자식을 반납한다.
     void Open(); // 원본43e640/43ddd0 및 초기43ec00 사건이다.
+    void Resize(int screenHeight); // 기존 하단80 예약을 유지하며 같은 패널을 새 화면 높이에 재부착한다. 같은 높이는 수명을 바꾸지 않는다.
     GumpCreateNode* Node(std::uint32_t token) const; // 같은 실제 파생 주소다.
     GumpBackgroundNode* Background(std::uint32_t token) const; // 같은 배경 자식이다.
     void Attach(std::uint32_t token,float x,float y,std::uint32_t parent,std::uint32_t mode); // 실제 파생 부착이다.

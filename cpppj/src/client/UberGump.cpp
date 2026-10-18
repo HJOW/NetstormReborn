@@ -476,6 +476,13 @@ void UberGump::Event(InputEvent event) {
         const bool ui=mouseButton && (rawButtons_->PickGump({event.x,event.y})!=0 || std::any_of(input_.Controls().begin(),input_.Controls().end(),[&](const GumpControl& control) { return GumpControlInput::Contains(control.rect,{event.x,event.y}); }));
         if (!ui && !rawButtons_->HasCapture()) { if (const auto id=userInput_->Event(event)) { if (*id) OpenObjectMenu(*id,event); else world_->Select(0); } return; }
     }
+    if (popup_.empty() && (state_.phase==ClientPhase::Dialog || state_.phase==ClientPhase::Briefing)) {
+        const auto mouse=event.code&0x03ffffffU; // 모달 안내의 현재 실제 버튼 영역만 마우스 입력을 받는다.
+        const bool mouseButton=mouse==InputCode::kLeftButton || mouse==InputCode::kRightButton || mouse==InputCode::kMiddleButton; // 뗌도 같은 대상에 전달한다.
+        if (mouseButton && !rawButtons_->HasCapture() && std::none_of(input_.Controls().begin(),input_.Controls().end(),[&](const GumpControl& control) {
+            return GumpControlInput::Contains(control.rect,{event.x,event.y});
+        })) return; // 보존한 생산 패널을 안내창 뒤에서 조작하지 않는다.
+    }
     const auto old=rawButtons_->Pressed();auto activated=rawButtons_->Event(event);
     // 메뉴 행은 현재 어댑터에서 누름 즉시 실행한다. 돌 버튼 명령은 실제 부모 click 통지만 사용한다.
     if (popup_.empty() && !activated && std::any_of(input_.Controls().begin(),input_.Controls().end(),[&](const GumpControl& control) {
@@ -608,6 +615,10 @@ void UberGump::Compose() {
             canvas = std::make_shared<IndexedImage>(client_.GetRenderer().SceneImage());
         }
     }
+    if (world_ && popup_.empty() && (state_.phase==ClientPhase::Dialog || state_.phase==ClientPhase::Briefing) && rawButtons_->Production()) {
+        // 같은 살아 있는 패널을 먼저 그린 뒤 아래에서 모달 본문/테두리를 합성한다.
+        rawButtons_->Menus()->Draw(canvas->indices,width,height,client_.GetScreen().Colors(),client_.GetScreen().ShadeMaps());
+    }
     if (controls) { labels_.clear(); actions_.clear(); input_.Cancel();rawButtons_->Cancel(); }
     // 같은 순서의 영역/라벨/명령을 제출한다. 그림만 갱신할 때도 번호가 유지된다.
     const auto control = [&](const DialogItem& item, ScreenRect r) {
@@ -716,15 +727,16 @@ void UberGump::Compose() {
         // 원본 돌 버튼의 63바이트 라벨은 UTF-8가 아닌 기존 게임 글꼴 바이트를 사용한다.
         for (const auto& label:labels_) originalLabels.push_back(FontBytes(label));
         if (popup_.empty()) rawButtons_->SetControls(regions,originalLabels,width,height,{buttonTextureType_,buttonTextureFrame_,
-            static_cast<std::int16_t>(buttonTextureMetrics_.width),static_cast<std::int16_t>(buttonTextureMetrics_.height),buttonColors});
-        if (popup_.empty() && state_.phase==ClientPhase::Mission && world_) {
-            auto& production=rawButtons_->EnableProduction(world_->Session(),client_.Assets(),RawProductionHooks{
+            static_cast<std::int16_t>(buttonTextureMetrics_.width),static_cast<std::int16_t>(buttonTextureMetrics_.height),buttonColors},world_!=nullptr);
+        if (popup_.empty() && world_) {
+            if (!rawButtons_->Production()) rawButtons_->EnableProduction(world_->Session(),client_.Assets(),RawProductionHooks{
                 [this] { return client_.WallSeconds(); },[this](std::string_view name) { client_.WorldAudio().Sounds().PlayByName(name,0,0,0,0,0); },
                 [this](std::string_view key) { state_.Post({"Tell",std::string(key)}); },
                 [this](std::string_view key,std::int32_t fallback) { client_.Configuration().ReadInt(key,fallback);return fallback; },
                 [this](std::string_view key) { return FontBytes(client_.Translate(o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(key.data()),key.size()}))); },
                 [this](const InventoryItemNode& item,ScreenPoint point,const std::function<bool(o::Sid)>& affordable) { if (!world_ || !objectMenus_) throw std::logic_error("생산 정보의 현재 월드 없음");return objectMenus_->OpenProduction(*world_,item,point,affordable); }});
-            production.SetPalette(client_.GetScreen().Palette());
+            auto& production=*rawButtons_->Production(); // 같은 미션의 안내/복귀는 예산/등록ID를 재생성하지 않는다.
+            production.Resize(height);production.SetPalette(client_.GetScreen().Palette());
         }
         if (!popup_.empty()) {
             auto& menus=*rawButtons_->Menus();menus.SetPalette(client_.GetScreen().Colors());

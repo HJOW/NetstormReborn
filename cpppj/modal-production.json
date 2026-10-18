@@ -1,0 +1,126 @@
+{
+  "unit": 204,
+  "date": "2026-10-19",
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "lastDecompileDate": "2026-10-16",
+  "newDecompile": false,
+  "originalGameExecutions": 0,
+  "baseline": "6d43661eb44d33e3bc1972341cd8ebd275cb31a2",
+  "sources": {
+    "cpppj/src/client/RawButtonControls.cpp": "22ea0450231c3b81b1b74a6f56d52f6e5706f9c24543f8898f4e32131c0a6962",
+    "cpppj/src/client/RawButtonControls.h": "548d27ebba1a23f585763222ff428fd257456e79e47ae83ac38849712528ece1",
+    "cpppj/src/client/RawProductionControls.cpp": "a6edd49e5a486449f4b23f3092719f7f1342ee86f66d1325867c306f52056d31",
+    "cpppj/src/client/RawProductionControls.h": "8826c67edd4bc027f1d060bcd1e0fe5aa4638c4683b05fd6d2c57e931c90b346",
+    "cpppj/src/client/UberGump.cpp": "3e54edae2da7f540cdb046f443a22c0a0141cd1a14cff69ad6e9346b3c8d39ff",
+    "cpppj/tests/CampaignSessionTests.cpp": "995750555da9f30df739414ffd02da613be6e93ece9c313f390105b5a7e30ea6",
+    "tools/cpp_modal_production_smoke.py": "9827512ec6c31f9f8e9ccb668ebb85a51e91448a80a1891389655a1b0f069f75",
+    "cpppj/tests/fixtures/modal-production-ui-input.tsv": "504058b9d75bda8f8eef260dd236bd62236e68f4e2fbd1fc6cab691cd42d9ff8",
+    "tools/cpp_tutorial_harvest_smoke.py": "58606aae2a86d99360f650fc7e5f27785aabca54b53a0856c17ba7f3a9d0a22b",
+    "cpppj/src/client/GumpTree.cpp": "b623d624f056ef2117dea2393334e1d8b30666b2d8243e49dc53e5e56b633c56",
+    "cpppj/src/client/GumpLifetime.cpp": "c0b7bacd2f1ed87a2b5e9c0854d2f89200574f1408d7ac738cec891a185ca57a",
+    "cpppj/src/client/GumpFrame.cpp": "8b11b43508eb63675acd1d29d39974814575dcf437089a2c76632deec7b19871",
+    "cpppj/src/o/RawTutorialOne.cpp": "fadee3aacb1e75da92826375bfbf9d1fd9ba8c0360eff72eee53fa929a308ee9",
+    "cpppj/src/o/RawMissionFrameGate.cpp": "c591ce1c294a8c645008da04a6d5366182d42247f4505716e85d0ae4d6c5f4dc",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6"
+  },
+  "evidence": {
+    "extracted/goal-modal-production-20261019-sources.json": "25f0c7569afc6c06c559b0def56832f4a9abdb44015e892965b09b87386b69ac",
+    "extracted/goal-modal-production-20261019-build6.log": "ff1931554f65570b4bac5489a9be3976bfecc09198566d39d0fe55dca01357c8",
+    "extracted/goal-modal-production-20261019-focused-final.stdout": "65c29b65651daea9299127314155b65f75b37bee950ee511f5b3678ff2ef220a",
+    "extracted/goal-modal-production-20261019-focused-final.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-modal-production-20261019-tests-final.json": "9efce158936bf80b9d2cfb920170e11835dd5699c27b2a34c766c1d856467a81",
+    "extracted/goal-modal-production-20261019-tests-final.stdout": "9a9fec7044fc113e20afa070eabfebf6a7314b2b147653bfff1de5bac8dd4358",
+    "extracted/goal-modal-production-20261019-tests-final.stderr": "79e2480bde0296407e865b4a37f3b49c9c027d653a2260e3a4215348db0f0663",
+    "extracted/goal-modal-production-20261019-entry/results.json": "556746f2a815e91bb25be0d680e625fddc5cb7d86af5bf99559a3d5ab77f3403",
+    "extracted/goal-modal-production-20261019-pin-updates.json": "acd777b0effa2dffbc5c73a50e584c47d8bcbef37b508339411a5cf7646c3830",
+    "extracted/goal-modal-production-20261019-gui4/execution.json": "ae737d8e60adf5f8a99db632a215f2f081a78d9ed0d8452316d51943648ad2c7",
+    "extracted/goal-modal-production-20261019-gui4/states.tsv": "cf47dd842c152813cb4d0a4f6c5e569bd2453951c8c4fb7d6abd67e3d22774db",
+    "extracted/goal-modal-production-20261019-gui4/results.json": "ddcc2a4d334e7ca201644addf1edf9513d821fbfb37b403875cda61261cd65e1",
+    "extracted/goal-modal-production-20261019-gui4/steps.tsv": "7981456dda5f30c96a23793a13b21210e188d1933b8269c4ee5f3e7277eac097",
+    "extracted/goal-modal-production-20261019-gui4/goal.bmp": "a333766b92ae3662207c9747d215031dd96f2099489edecb73b639b2fae9e7d1",
+    "extracted/goal-modal-production-20261019-gui4/blocked.bmp": "c64a4933fbc0fe23975a8863bb9bbc5d06c940e3619cfbb4c88f3407c96e4e9b",
+    "extracted/goal-modal-production-20261019-gui4/next.bmp": "90e6def9b72d48ca66765676106643943a7641c309a94ad7676ae9ebf2082ff3",
+    "extracted/goal-modal-production-20261019-gui1/execution.json": "ae737d8e60adf5f8a99db632a215f2f081a78d9ed0d8452316d51943648ad2c7",
+    "extracted/goal-modal-production-20261019-gui1/states.tsv": "e14b9ffac56648640cfeaef4c0bc68dc7521c5b8a7480b87a8ef83f6f742eca1",
+    "extracted/goal-modal-production-20261019-gui1/results.json": "69a5d5b728fdd66c3066c3ea24ebd1435017891cbe9fdb3904e10b735ace48b3",
+    "extracted/goal-modal-production-20261019-gui1/goal.bmp": "89c2fe2d3d975e89727561a8350566303b9afdfc0b0325b9e7bc9e6db4189041",
+    "extracted/goal-modal-production-20261019-gui2/execution.json": "1a7506d0f0a80c7e1fe1ddb1a31ebad3a141040f2fee7a4a4e38b607ff3cc978",
+    "extracted/goal-modal-production-20261019-gui2/states.tsv": "32ff9fa7f570dd932e145040947c4946bc20a3b0ae806bd6113ba698366f1eaa",
+    "extracted/goal-modal-production-20261019-gui3/execution.json": "1a7506d0f0a80c7e1fe1ddb1a31ebad3a141040f2fee7a4a4e38b607ff3cc978",
+    "extracted/goal-modal-production-20261019-gui3/states.tsv": "fa659b226751dd524e4a28b7185a1c64820a93a8827819b71c7d8cc99cc7aca7",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/goal-modal-production-20261019-verify-final.json": "c2414ff271bef57490f27a7176ed582826f388b7308d2bb066bbaf4b5558ca46"
+  },
+  "observation": {
+    "returnCode": 0,
+    "originalsUnchanged": true,
+    "stages": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G"
+    ],
+    "money": [
+      0.0,
+      200.0,
+      400.0,
+      600.0
+    ],
+    "doneBefore": 0,
+    "doneAfter": 1,
+    "priest": 15002,
+    "distinctPositions": 18,
+    "movePackets": 1,
+    "lastGameTime": 89.009,
+    "nextMission": "tutorial2",
+    "nextSp": 10000,
+    "naturalTutorialOneComplete": true,
+    "goalComplete": false,
+    "scope": "실제 A~G/합법 다리·회전/간헐천 연결/한 번의 사제 명령/세 번 채취·귀환/SP600/완료0→1/다음 튜토리얼 진입이다. Early2 진행과11단계 전체 동일성은 별도다.",
+    "sameProductionPanel": true,
+    "modalInputBlocked": true,
+    "finalDisplayedBudget": 600,
+    "productionIdentity": [
+      "20",
+      "3"
+    ],
+    "panelObservations": 55
+  },
+  "nativeStatic": {
+    "closePopups": "00466710/root direct children mask4000h; production E00h retained",
+    "budgetIdle": "0043e530/100 if difference>300,10 if>30,1 otherwise; wall-clock flash; no pause check",
+    "production": "0043e640/0043ddd0",
+    "newNativeExecutions": 0
+  },
+  "validation": {
+    "buildWarnings": 0,
+    "buildErrors": 0,
+    "focusedTestPassed": true,
+    "fullTests": {
+      "count": 1722,
+      "failed": 0,
+      "seconds": 268.85
+    },
+    "entry": {
+      "passed": 11,
+      "originalsUnchanged": true
+    },
+    "audit": {
+      "tools": 138,
+      "passed": 123,
+      "historicalFailures": 15,
+      "newFailures": 0
+    }
+  },
+  "pins": {
+    "reports": 62,
+    "items": 100
+  },
+  "goalComplete": false,
+  "fullFidelityVerified": false
+}

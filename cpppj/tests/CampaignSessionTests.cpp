@@ -2390,3 +2390,34 @@ TEST_CASE(CampaignTutorialOne_ActualSessionFrameAndInputPauseOwnership) {
     CHECK(runtime.Event({0x020000d3U,0,0})==1 && gate.stage=='B' && depth==1); // 정지 중 수동 단계 명령도 같은 원본 관문에서 거부한다.
     CHECK(session.Sp(1)==0 && session.TotalMade().BuiltForGenus(4)==0 && session.Core().bookkeeping.depth==0 && session.Core().destroy.PreDepth()==0 && session.Core().destroy.PostDepth()==0);
 }
+
+
+// 실제 영어 Start의10000SP와 같은 패널/예산/등록ID가 모달 페이지 교체와 화면 변경을 견디는지 확인한다.
+TEST_CASE(CampaignProduction_ModalPagesPreservePanelBudgetAndResize) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();RawButtonControls* active{};double wall=100; // 실제 UI/벽시계의 외부 경계다.
+    services.production.allocationBytes=[](std::span<std::uint8_t> bytes) { CHECK(bytes.size()==kProductionDeckBytes);std::fill(bytes.begin(),bytes.end(),std::uint8_t{0xa7}); }; // 원본 생성자가 보존하는 할당 바이트의 명시 입력이다.
+    services.production.effects.configInt=[](std::string_view key) { CHECK(key=="getTeleportTechFree");return 0; };services.production.effects.modeAssertion=[] { throw std::logic_error("실제 튜토리얼 생산 모드 진단"); };services.sound.wallSeconds=[&] { return wall; };
+    services.playerContent.gump=[&](auto id) { return active ? active->RegisteredGump(id) : 0U; };services.playerContent.handle=[&](auto token,auto event,auto first,auto second) { CHECK(active);return active->HandleGump(token,event,first,second); };
+    services.ai.participation.addChat=[&](std::uint32_t,std::string_view,std::uint32_t) { ++external.notices; };services.ai.participation.clearChat=[&](std::uint32_t) { ++external.notices; };
+    ConfigInterface config([&](std::string_view path) { return assets.files.TryRead(path); });config.Configuration().Assign("DataDir=\"d\"\ncurrentLanguage=\"english\"\nmissionSpec=\"{DataDir}\\{local.1}.{currentLanguage}\"\nfortSpec=\"{DataDir}\\{local.1}.fort\"\n[END]\n");MissionScript script(config,"Tutorial2");CHECK(script.Loaded());
+    CampaignLoginServices login;login.configInt=[](std::string_view,std::int32_t fallback) { return fallback; };login.wallSeconds=[&] { return wall; };login.clock=[] { return 100000U; };login.refresh=[] {};login.playerUiBusy=[] { return false; };login.playerNotice=[](std::uint32_t,std::uint32_t,std::uint32_t) {};login.log=[](std::string_view) {};
+    services.localLogin=std::move(login);auto fort=FortTemplate::Parse(assets.files.Read(script.FortPath()),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),script.FortName(),std::move(services));session.LoadLocalConnection();CHECK(session.LocalConnectionPhase()==14);
+    MissionFrameGateState gate;MissionStartState startState;CampaignMissionStartEffects startEffects; // 자금은 검사 setter가 아닌 원래 영어 Start가 지정한다.
+    startEffects.settingsBytes=[](std::uint32_t,std::span<std::uint8_t>) { throw std::logic_error("AI off Tutorial2의 AI 생성 도달"); };startEffects.gameSeconds=[] { return 0.0; };startEffects.refreshSp=[] {};startEffects.refreshCommandGump=[] {};startEffects.resetCamera=[] {};startEffects.randomGeysers=[] { throw std::logic_error("보호 Tutorial2 Start의 세계 간헐천 생성"); };
+    RawCampaignMissionStartBindings start(session,script,gate,startState,session.MissionStartSettings(),session.MissionAiSettings(),std::move(startEffects));start.Start();CHECK(session.Sp(1)==10000 && session.PlayerKnown()==1);
+    FontStore fonts(assets.files,"Arial");RawButtonControls controls(OriginalEdition::Patch1078,{[&] { return wall; },{},{},[&](auto form,auto flags) { session.GumpForms().Destroy({static_cast<std::uint16_t>(form)},flags); }});active=&controls;
+    RawMenuHooks hooks;hooks.command=[](auto,auto,auto) {};hooks.readInt=[](auto,std::int32_t&) {};hooks.sound=[](auto) {};hooks.poll=[](auto) { return InputEvent{InputCode::kRelease,500,350}; };hooks.cursor=[](auto) {};hooks.objectForms=[&]() -> GumpFormHost& { return session.GumpForms(); };hooks.gameSeconds=[] { return 0.0; };
+    controls.EnableMenus(assets.game,fonts,std::move(hooks));const auto& texture=assets.game.Find("fortGump");const auto metrics=assets.game.Shapes().SquidMetrics(texture.block,0);const RawButtonAssets buttonAssets{static_cast<std::uint32_t>(texture.block+70),0,metrics.width,metrics.height,{}}; // 실제 버튼 텍스처와 공통 트리다.
+    const std::array<GumpControl,1> game{{{0,{84,4,160,26},false,true,false}}},dialog{{{0,{470,400,550,423},false,true,false}}};const std::array<std::string,1> gameLabels{{"Game"}},dialogLabels{{"OK"}}; // 현재 페이지의 실제 버튼들이다.
+    controls.SetControls(game,gameLabels,1024,768,buttonAssets);
+    auto& panel=controls.EnableProduction(session,assets.game,{[&] { return wall; },[](std::string_view) {},[](std::string_view) { throw std::logic_error("모달 수명 검사에서 예기치 않은 Tell"); },[](std::string_view key,std::int32_t fallback) { return key=="useProductTimers" ? 0 : fallback; }});
+    const auto summary=[&] { const auto text=controls.Production()->Report();return text.substr(0,text.find('\n')); }; // 같은 실제 root/id/크기/예산만 읽는다.
+    // 게임 프레임을 실행하지 않고 실제 UI idle만 호출해 원본 예산 애니메이션을 수렴시킨다.
+    for (int frame=0;frame<200;++frame) { wall+=.025;controls.Poll({InputCode::kRelease,500,350}); }
+    const auto before=summary();CHECK(before.ends_with("\t10000"));const auto* identity=&panel; // 현재 패널 주소와 실제 예산을 보존한다.
+    controls.SetControls(dialog,dialogLabels,1024,768,buttonAssets,true);CHECK(controls.Production()==identity && summary()==before);
+    // 같은 모달 페이지를 반복 생성해도 패널이나 예산/등록ID를 재생성하지 않는다.
+    for (int page=0;page<4;++page) { controls.SetControls(dialog,dialogLabels,1024,768,buttonAssets,true);wall+=.025;controls.Poll({InputCode::kRelease,500,350});CHECK(controls.Production()==identity && summary()==before); }
+    controls.SetControls(game,gameLabels,1024,600,buttonAssets,true);panel.Resize(600);CHECK(controls.Production()==identity && summary().ends_with("\t80\t520\t10000"));const auto resized=summary();panel.Resize(600);CHECK(summary()==resized);
+    controls.SetControls(game,gameLabels,1024,600,buttonAssets);CHECK(controls.Production()==nullptr);active=nullptr;CHECK(session.Core().bookkeeping.depth==0 && session.Core().destroy.PreDepth()==0 && session.Core().destroy.PostDepth()==0); // 기존 전체 반납 경로도 유지한다.
+}

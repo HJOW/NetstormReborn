@@ -210,6 +210,13 @@ void RawProductionControls::Close() {
     impl_->common.lifetime.Cleanup();if (impl_->rootToken) { impl_->common.lifetime.Kill(impl_->rootToken);impl_->common.lifetime.Cleanup();impl_->rootToken=0; } } // 같은 자식 우선 수명으로 닫는다.
 RawProductionControls::~RawProductionControls() { impl_->menus.SetExternalGumps({}); } // 공유 출력의 참조부터 끊는다.
 void RawProductionControls::Open() { impl_->Open(); } // 실제 생성과 첫 갱신이다.
+// 예산/아이템/등록ID를 재생성하지 않고 기존 Attach의 자식 재배치만 수행한다.
+void RawProductionControls::Resize(int screenHeight) {
+    if (screenHeight<=80 || !impl_->rootToken) throw std::invalid_argument("생산 패널 화면 높이/수명 오류");
+    const float height=static_cast<float>(screenHeight-80); // 기존 Open의 하단 예약과 같은 값이다.
+    if (impl_->root.baseHeight==height) return;
+    impl_->root.baseHeight=impl_->root.height=height;impl_->common.tree.Push(impl_->rootToken);impl_->Attach(impl_->rootToken,0,0,impl_->common.create.collection.root,0);
+}
 GumpCreateNode* RawProductionControls::Node(std::uint32_t token) const { return impl_->Node(token); } // 같은 저장소다.
 GumpBackgroundNode* RawProductionControls::Background(std::uint32_t token) const { return Find(impl_->backgrounds,token); } // 같은 배경이다.
 void RawProductionControls::Attach(std::uint32_t token,float x,float y,std::uint32_t parent,std::uint32_t mode) { impl_->Attach(token,x,y,parent,mode); } // 가상+20이다.

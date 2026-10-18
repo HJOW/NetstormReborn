@@ -138,10 +138,15 @@ struct RawButtonControls::Impl {
         return 0;
     }
     // 자식 먼저 Kill한 실제 큐를 비우며 루트/serial/count를 임의 초기화하지 않는다.
-    void Clear() {
-        // Kill이 root.child를 바꾸므로 현재 머리를 매번 읽는다.
-        while (Node(root)->child) lifetime->Kill(Node(root)->child);
-        lifetime->Cleanup();production.reset();controls.clear();activated.reset();
+    void Clear(bool preserveWorldUi=false) {
+        if (preserveWorldUi) {
+            // 이 페이지가 만든 돌 버튼과 그 배경만 같은 자식 우선 수명으로 반납한다.
+            for (const auto& control:controls) lifetime->Kill(control.second);
+        } else {
+            // Kill이 root.child를 바꾸므로 현재 머리를 매번 읽는다.
+            while (Node(root)->child) lifetime->Kill(Node(root)->child);
+        }
+        lifetime->Cleanup();if (!preserveWorldUi) production.reset();controls.clear();activated.reset();
     }
 };
 // 구현 주소는 생성 이후 이동하지 않아 순환 훅이 안정된 처리기를 조회한다.
@@ -150,7 +155,7 @@ RawButtonControls::RawButtonControls(o::OriginalEdition edition,RawButtonHooks h
 RawButtonControls::~RawButtonControls() { impl_->Clear();impl_->lifetime->Kill(impl_->root);impl_->lifetime->Cleanup(); }
 // 쓰기 전에 전체 화면 입력을 검증하고 이전 페이지를 실제 수명 경로로 정리한다.
 void RawButtonControls::SetControls(std::span<const GumpControl> controls,std::span<const std::string> labels,
-    int width,int height,RawButtonAssets assets) {
+    int width,int height,RawButtonAssets assets,bool preserveWorldUi) {
     auto& state=*impl_;if (width<=0 || height<=0 || controls.size()*2+1>=kGumpRegistryCapacity) throw std::out_of_range("raw 버튼 화면/개수 범위 오류");
     std::map<int,bool> ids;
     // 메뉴 행은 다른 실제 처리기의 대상이므로 돌 버튼 등록에 포함하지 않는다.
@@ -158,7 +163,7 @@ void RawButtonControls::SetControls(std::span<const GumpControl> controls,std::s
         if (control.id<0 || static_cast<std::size_t>(control.id)>=labels.size() || !ids.emplace(control.id,true).second ||
             control.rect.right<=control.rect.left || control.rect.bottom<=control.rect.top) throw std::invalid_argument("raw 버튼 입력 오류");
     }
-    state.Clear();state.assets=assets;state.backgroundAsset={assets.type,assets.type};state.backgroundFrame={assets.width,assets.height};
+    state.Clear(preserveWorldUi);state.assets=assets;state.backgroundAsset={assets.type,assets.type};state.backgroundFrame={assets.width,assets.height};
     state.stoneState.palette=assets.palette;state.stoneState.backgroundType=assets.type;state.stoneState.backgroundFrame=assets.frame;
     state.create.screenWidth=width;state.create.screenHeight=height;auto& root=*state.Node(state.root);
     root.baseWidth=root.width=static_cast<float>(width);root.baseHeight=root.height=static_cast<float>(height);
