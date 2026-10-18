@@ -96,7 +96,7 @@
     "cpppj/src/client/RawMenuControls.cpp": "7cf3686cabed1d61e6f61b46a2c6d9f153b2a8ce4c5faee6cac3a01683555bb4",
     "cpppj/src/client/RawProductionControls.cpp": "eb296d77e6c04d6d8e80b0a4c151992d9857bd33b06a288d08a76d414a6a05b1",
     "cpppj/src/client/RawProductionControls.h": "67046f35d49cb863978ef917777820793aa9156daa678519fac525ed001df264",
-    "cpppj/src/client/UberGump.cpp": "c2c34c54f6caa47344c9db18f6745cb80d4eee16ae94870ef302aac672de715e",
+    "cpppj/src/client/UberGump.cpp": "9cec22d2a9b0e49d91844bcb4ecdcd1cc80571d417922a39cf2f6b813fc3ad38",
     "cpppj/tests/CMakeLists.txt": "889efbf2ee9336dad4a80cae9bc811c380d9e955b2746743b049efcbae9d27ae",
     "docs/exe/cpp-production-feedback-20261018.md": "5bf8f29e3a77eb8e5ad0a38b2de4ea9a823b0b34da76b5367053f8b779265b9e",
     "cpppj/src/client/InventoryAboutMenu.h": "140e9ddfe334534354ae475e9ff7290848ab78cedd38ad6a45f1dd6891e83f9e",
@@ -638,6 +638,19 @@
           "path": "cpppj/src/client/UberGump.cpp",
           "previous": "43206b0770410d51a18a3630beb2dd97728885267c862fa9a1bd1019ee55fe82",
           "current": "c2c34c54f6caa47344c9db18f6745cb80d4eee16ae94870ef302aac672de715e"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 203,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/UberGump.cpp",
+          "previous": "c2c34c54f6caa47344c9db18f6745cb80d4eee16ae94870ef302aac672de715e",
+          "current": "9cec22d2a9b0e49d91844bcb4ecdcd1cc80571d417922a39cf2f6b813fc3ad38"
         }
       ]
     }

@@ -133,7 +133,7 @@
     "cpppj/src/client/RawCampaignSession.cpp": "940749f6687b7d65418f3dc7b8b9a75c8cd07fc8ee78cb408480274008b18c88",
     "cpppj/src/client/RawCampaignSession.h": "e3c869f14573f938c2e2fac22dcd0b3f18dc4517921fd8ebdcf04d3993d9193a",
     "cpppj/src/client/RawSurfaceWorld.cpp": "d6ebba7d5175b98dd5ddabba6de4744a977434913b4eb8b9c2e39068e7b94832",
-    "cpppj/src/client/UberGump.cpp": "c2c34c54f6caa47344c9db18f6745cb80d4eee16ae94870ef302aac672de715e",
+    "cpppj/src/client/UberGump.cpp": "9cec22d2a9b0e49d91844bcb4ecdcd1cc80571d417922a39cf2f6b813fc3ad38",
     "cpppj/src/o/CMakeLists.txt": "531d0fd71823841eb97eebb5046f878c52fa44d82142af3fdff9c0fb68c2497a",
     "cpppj/src/o/RawFactoryResearch.h": "5cd0dc8a306e50725710d3124e3af6def870ec2fe001f3dfcf6e2e183bfc2202",
     "cpppj/tests/CMakeLists.txt": "889efbf2ee9336dad4a80cae9bc811c380d9e955b2746743b049efcbae9d27ae",
@@ -6740,6 +6740,19 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "ff150edde0596349c7b6155caac9de7df3dbea9c42237eccc8fb535a3c736f16",
           "current": "c6e7d4e27e8f69ffbbc08aaeb86ff98eef32d65bcf906c49712fb1a4464a1603"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 203,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/UberGump.cpp",
+          "previous": "c2c34c54f6caa47344c9db18f6745cb80d4eee16ae94870ef302aac672de715e",
+          "current": "9cec22d2a9b0e49d91844bcb4ecdcd1cc80571d417922a39cf2f6b813fc3ad38"
         }
       ]
     }

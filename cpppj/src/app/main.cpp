@@ -630,7 +630,25 @@ int RunClient(std::vector<std::string> arguments) {
         client.beforeInput = [&](netstorm::client::Client& c) {
             // 이번 프레임의 입력만 실제 InputQueue에 넣는다.
             for (std::size_t i = next; i < steps.size() && steps[i].frame == c.Time().number; ++i) {
-                const auto& step = steps[i]; using namespace netstorm::client;
+                auto step = steps[i]; using namespace netstorm::client; // 조건부 검사 입력도 같은 실제 분배기를 사용하며 원래 계획은 변경하지 않는다.
+                if (step.operation=="when") {
+                    const auto first=step.argument.find(";;"),second=first==std::string::npos ? first : step.argument.find(";;",first+2); // 조건/동작/인자를 나누는 검사 전용 구분자다.
+                    if (first==std::string::npos || second==std::string::npos) throw std::invalid_argument("UI when needs regex;;operation;;argument");
+                    const auto condition=step.argument.substr(0,first); // 현재 실제 보고서에 대한 읽기 전용 조건이다.
+                    const auto observed=c.Menu()->Report();bool allowed=true;std::size_t begin=0; // 조건은 같은 시점의 실제 보고서 하나를 읽는다.
+                    // &&로 나눈 각 정규식을 검사한다. 앞의 !는 관측 조건의 부정이며 게임 상태를 쓰지 않는다.
+                    while (begin<=condition.size()) {
+                        const auto end=condition.find("&&",begin);const auto part=condition.substr(begin,end==std::string::npos ? end : end-begin); // 현재 한 조건이다.
+                        if (part.empty() || part=="!") throw std::invalid_argument("UI when empty condition");
+                        const bool negate=part.front()=='!'; // 각 단일 조건의 긍정/부정만 허용한다.
+                        if (std::regex_search(observed,std::regex(negate ? part.substr(1) : part))==negate) { allowed=false;break; }
+                        if (end==std::string::npos) break;begin=end+2;
+                    }
+                    if (!allowed) continue;
+                    const auto operation=step.argument.substr(first+2,second-first-2),argument=step.argument.substr(second+2); // 원래 입력 큐가 소비할 같은 동작/인자다.
+                    if (operation!="click" && operation!="click-if" && operation!="up-if" && operation!="down" && operation!="up" && operation!="right" && operation!="outside" && operation!="esc" && operation!="key" && operation!="keyup") throw std::invalid_argument("UI when supports input operations only");
+                    step.operation=operation;step.argument=argument;
+                }
                 if (step.operation == "snapshot" || step.operation == "report" || step.operation=="refresh") continue;
                 // 직전 완성 프레임의 실제 상태가 조건을 만족할 때만 다음 검사 입력으로 진행한다.
                 if (step.operation=="require") {

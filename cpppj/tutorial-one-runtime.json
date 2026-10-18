@@ -12,11 +12,11 @@
     "cpppj/src/client/RawButtonControls.h": "3ca9b33fcb45af1156a964c319966378a8bc7b0583587269bef1ff8905f27554",
     "cpppj/src/client/RawCampaignSession.cpp": "940749f6687b7d65418f3dc7b8b9a75c8cd07fc8ee78cb408480274008b18c88",
     "cpppj/src/client/RawCampaignSession.h": "e3c869f14573f938c2e2fac22dcd0b3f18dc4517921fd8ebdcf04d3993d9193a",
-    "cpppj/src/client/UberGump.cpp": "c2c34c54f6caa47344c9db18f6745cb80d4eee16ae94870ef302aac672de715e",
+    "cpppj/src/client/UberGump.cpp": "9cec22d2a9b0e49d91844bcb4ecdcd1cc80571d417922a39cf2f6b813fc3ad38",
     "cpppj/src/client/UberGump.h": "eb7f755056912e3b8b71c4a7ab05f2ea8379541fff4313a7f6b0f6b5b8d168e9",
     "cpppj/tests/CampaignSessionTests.cpp": "c6e7d4e27e8f69ffbbc08aaeb86ff98eef32d65bcf906c49712fb1a4464a1603",
     "tools/cpp_goal_stage_entry_smoke.py": "cc303556ea1af7c5c33be84e835e8a8545077603a04600996cb98d962994e690",
-    "cpppj/src/app/main.cpp": "e7fe28668abb156e109de1820ac593b30e3adc9ba328147d10c0f0db588c87a9",
+    "cpppj/src/app/main.cpp": "9395c790b1a31c7e36f76b55cea3dd89ee7fdc769e694dc7d2fbdaa7e9eb7cd8",
     "cpppj/src/client/RawCampaignTutorialOneBindings.cpp": "8bdd3c4b37a38700f1241fceb2f7f3c3fda0bb2d55ae82cdcb8959be0866447a",
     "cpppj/src/client/RawCampaignTutorialOneBindings.h": "919baed9f70a97b8347e798ad19dc1269c177329151555db4c952f6d7a76369e",
     "tools/cpp_tutorial_one_smoke.py": "179ec4c4db51200be4960feb7b48ce33e2626277557191403b708d57b7aeb12a",
@@ -115,5 +115,26 @@
     "F8 Guide/기타 입력의 실제 원본 분배",
     "Early2~6 전용 처리기 및 캠페인·데모 공통 프레임 연결",
     "캠페인 자연 포획/희생/승리와11단계 자연 완주"
+  ],
+  "integration_updates": [
+    {
+      "date": "2026-10-19",
+      "unit": 203,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/sources",
+          "path": "cpppj/src/client/UberGump.cpp",
+          "previous": "c2c34c54f6caa47344c9db18f6745cb80d4eee16ae94870ef302aac672de715e",
+          "current": "9cec22d2a9b0e49d91844bcb4ecdcd1cc80571d417922a39cf2f6b813fc3ad38"
+        },
+        {
+          "group": "/sources",
+          "path": "cpppj/src/app/main.cpp",
+          "previous": "e7fe28668abb156e109de1820ac593b30e3adc9ba328147d10c0f0db588c87a9",
+          "current": "9395c790b1a31c7e36f76b55cea3dd89ee7fdc769e694dc7d2fbdaa7e9eb7cd8"
+        }
+      ]
+    }
   ]
 }

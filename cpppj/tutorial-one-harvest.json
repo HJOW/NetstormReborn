@@ -1,0 +1,112 @@
+{
+  "unit": 203,
+  "date": "2026-10-19",
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "lastDecompileDate": "2026-10-16",
+  "newDecompile": false,
+  "originalGameExecutions": 0,
+  "baseline": "c445683592e712662385e01036cabe2031e65a40",
+  "sources": {
+    "cpppj/src/client/GameWorld.cpp": "07aa1f5d4d4a144997fd8627184180914e3357e417016e1e59bb08bed8f4fc07",
+    "cpppj/src/client/UberGump.cpp": "9cec22d2a9b0e49d91844bcb4ecdcd1cc80571d417922a39cf2f6b813fc3ad38",
+    "cpppj/src/app/main.cpp": "9395c790b1a31c7e36f76b55cea3dd89ee7fdc769e694dc7d2fbdaa7e9eb7cd8",
+    "tools/cpp_tutorial_harvest_smoke.py": "58606aae2a86d99360f650fc7e5f27785aabca54b53a0856c17ba7f3a9d0a22b",
+    "cpppj/tests/fixtures/tutorial-one-harvest-ui-input.tsv": "9217cefd46f3e245704c0d10904e060327ca67a3417359fa7f450205630ef325",
+    "cpppj/src/o/RawTutorialOne.cpp": "fadee3aacb1e75da92826375bfbf9d1fd9ba8c0360eff72eee53fa929a308ee9",
+    "cpppj/src/o/RawTutorialOne.h": "7c76133f137bcce59a8696ed3d8e2c8228c612d029299ee763d602b2dc126504",
+    "cpppj/src/o/RawMissionFrameGate.cpp": "c591ce1c294a8c645008da04a6d5366182d42247f4505716e85d0ae4d6c5f4dc",
+    "cpppj/src/o/RawMissionFrameGate.h": "93feacfb8b1fa1276737f8b1af6bc044c1ecda75bc4a82375728d650a43791be",
+    "cpppj/src/client/RawCampaignTutorialOneBindings.cpp": "8bdd3c4b37a38700f1241fceb2f7f3c3fda0bb2d55ae82cdcb8959be0866447a",
+    "cpppj/src/client/RawCampaignSession.cpp": "940749f6687b7d65418f3dc7b8b9a75c8cd07fc8ee78cb408480274008b18c88",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6"
+  },
+  "evidence": {
+    "extracted/goal-early-harvest-20261019-sources.json": "10bfc2a6f3c1be70472946e003b74536b96e7c83c31fd91f0bc658b254d6443b",
+    "extracted/goal-early-harvest-20261019-build4.log": "ab5667f9c83efcc5d5723bb026fc31463b548169603256c3fb37daef4f87eb9c",
+    "extracted/goal-early-harvest-20261019-tests-final.log": "ffce4caf83339ce445f7395a5b88aa1d9f614c62d804a5db8864f7303c198dcb",
+    "extracted/goal-early-harvest-20261019-ctest-final.log": "8eae0631c011e8c62edc8427c69ff8f0449c6ac5c4f06876503ab6fb23cbc5ba",
+    "extracted/goal-early-harvest-20261019-entry/results.json": "070aa5c6cb18e4df5a444055570d7d20695dd8d1eca672d053952c65b2e306de",
+    "extracted/goal-early-harvest-20261019-verify-final.json": "b65c8f09c5659b5d5eb1b49860dd4065d50a91b870a6618f90bc0f332a0e6e84",
+    "extracted/goal-early-harvest-20261019-pin-updates.json": "61c7c9dabd126c0e75ab909b7f629cd58b6e744aaf3fff5bbef15f7dbf6c5532",
+    "extracted/goal-early-harvest-20261019-gui7/execution.json": "ae737d8e60adf5f8a99db632a215f2f081a78d9ed0d8452316d51943648ad2c7",
+    "extracted/goal-early-harvest-20261019-gui7/states.tsv": "163eb2249c3f20b20847bb6ef5f7aac40357bbcf023af554698fc5e13b64df34",
+    "extracted/goal-early-harvest-20261019-gui7/cycle23.bmp": "008e20331ef22a4c28e528d7951f2c1838904453d0f4337e2f87cd5ebe94859c",
+    "extracted/goal-early-harvest-20261019-gui8/execution.json": "ae737d8e60adf5f8a99db632a215f2f081a78d9ed0d8452316d51943648ad2c7",
+    "extracted/goal-early-harvest-20261019-gui8/states.tsv": "9eb092ea5995dd9bff31167db4db8fa19e2bf61128a8aa1bc829f16882fbdce7",
+    "extracted/goal-early-harvest-20261019-gui8/results.json": "32e58a270bf98e89e65902e238cdb7d0e0629dc5f30522968490989eaed75be7",
+    "extracted/goal-early-harvest-20261019-gui8/steps.tsv": "1aba350171e9eacbd7c63e2c5b8ce76201d6fe047cda108b50ba0f3d3324179a",
+    "extracted/goal-early-harvest-20261019-gui8/goal.bmp": "8d5118a6feb4ecf3865c4642f42f73c92b26acbd6de93d214663327b5006899a",
+    "extracted/goal-early-harvest-20261019-gui8/next.bmp": "f7fa8ac4ebf51caa5d46cad104d7e6eb10c352d9d6480c1e0843d97369915497",
+    "extracted/goal-early-harvest-20261019-nugget.type.txt": "3e868e1d0133b2526e9c0d754fe3897ea796293392a030d5ac87504d958ba17f",
+    "extracted/goal-early-harvest-20261019-tutorial2.english.txt": "4a78bb1ad9bb01dee0a0fef91db9efd36aa70bdcccaca165c1305c81188386ad",
+    "docs/exe/cpp-tutorial-harvest-20261019.md": "044555e3708d248c2dd4def098d43323f467d9cab6936002c65543003cff6afd"
+  },
+  "observation": {
+    "returnCode": 0,
+    "originalsUnchanged": true,
+    "stages": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G"
+    ],
+    "money": [
+      0.0,
+      200.0,
+      400.0,
+      600.0
+    ],
+    "doneBefore": 0,
+    "doneAfter": 1,
+    "priest": 15002,
+    "distinctPositions": 17,
+    "movePackets": 1,
+    "lastGameTime": 117.383,
+    "nextMission": "tutorial2",
+    "nextSp": 10000,
+    "naturalTutorialOneComplete": true,
+    "goalComplete": false,
+    "scope": "실제 A~G/합법 다리·회전/간헐천 연결/한 번의 사제 명령/세 번 채취·귀환/SP600/완료0→1/다음 튜토리얼 진입이다. Early2 진행과11단계 전체 동일성은 별도다."
+  },
+  "validation": {
+    "build": "build4/Release warnings0/errors0",
+    "fullTests": {
+      "count": 1721,
+      "failed": 0,
+      "seconds": 260.74
+    },
+    "entry": {
+      "passed": 11,
+      "originalsUnchanged": true
+    },
+    "audit": {
+      "tools": 137,
+      "passed": 122,
+      "historicalFailures": 15,
+      "newFailures": 0
+    },
+    "pins": {
+      "reports": 25,
+      "items": 36
+    },
+    "fixtures": {
+      "existingUnchanged": 418,
+      "newManualInput": 1,
+      "newNative": 0
+    },
+    "protectedFiles": 2127
+  },
+  "goalComplete": false,
+  "fullFidelityVerified": false,
+  "remaining": [
+    "안내창 뒤 SP표시·생산 패널 수명과 원본 모달 합성 대조",
+    "F8 Guide 및 기타 원본 키 분배",
+    "Early2~6 실제 전용 판정 연결·자연 완주",
+    "캠페인1-1/1-2·데모3 자연 완주/전체 동일성"
+  ]
+}

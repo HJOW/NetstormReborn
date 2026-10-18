@@ -9,6 +9,7 @@
 #include "o/OriginalText.h"
 #include "o/RawRainVortexDraw.h"
 #include "o/RawTempleDraw.h"
+#include "o/CanonDecoder.h"
 #include <algorithm>
 #include <cmath>
 #include <limits>
@@ -528,6 +529,43 @@ std::optional<ColorMap> GameWorld::Remap(const TypeAsset& type,int owner) const 
 }
 // 같은 변환을 사용하여 자동 입력의 그림 중심점/월드 칸을 찾는다.
 std::optional<ScreenPoint> GameWorld::Point(std::string_view label) const {
+    // 자동 입력 전용: 실제 다리 패턴의 새 칸이 목표에 가장 가까워지는 합법 마우스 위치만 찾는다.
+    if (label.starts_with("placement-reach:")) {
+        if (!campaign_) return {};
+        const auto comma=label.find(',');if (comma==std::string_view::npos) return {}; // 검사 목표의 원본 월드 좌표다.
+        const auto targetX=std::stoi(std::string(label.substr(16,comma-16))),targetY=std::stoi(std::string(label.substr(comma+1))); // 검사자가 선택한 두 칸이다.
+        if (targetX<1 || targetX>255 || targetY<1 || targetY>255) return {};
+        const auto& bridge=assets_.Find("bridge");const auto bridgeType=static_cast<std::uint32_t>(bridge.block+o::kFirstAssetTypeNumber); // 현재 다리 타입이다.
+        const auto& drop=campaign_->CursorDropSettings();const auto& placement=campaign_->Cursor().Placement(); // 취득한 실제 조각과 미리보기다.
+        if (drop.lockDepth || !drop.preview.value || drop.type!=bridgeType || placement.imageWidth<=0 || placement.imageHeight<=0) return {};
+        const auto patterns=o::BridgePatterns(assets_.Edition());const auto frames=bridge.definition.FrameTable(); // 보호 원문 패턴/프레임 코드다.
+        if (drop.argument>=patterns.size()) throw std::out_of_range("검사 다리 패턴 번호 범위");
+        constexpr int radius=24; // 목표 주변에서만 조회한다.
+        std::optional<ScreenPoint> nearest;double bestReach=std::numeric_limits<double>::infinity(),bestOrigin=bestReach; // 새 칸 거리/기준점 거리 순서다.
+        // 실제 화면 안에서만 현재 조각의 허용을 조회한다.
+        for (int x=std::max(1,targetX-radius);x<=std::min(255,targetX+radius);++x) {
+            // 실제 커서/원본 배치 규칙을 통과한 현재 방향만 측정하며 결과를 만들지 않는다.
+            for (int y=std::max(1,targetY-radius);y<=std::min(255,targetY+radius);++y) {
+                const ScreenPoint mouse{x*16-scrollX_-placement.hotspotX+placement.imageWidth/2,y*11-scrollY_-placement.hotspotY+placement.imageHeight/2}; // 실제 기준점의 역산이다.
+                if (mouse.x<80 || mouse.x>=width_ || mouse.y<28 || mouse.y>=height_) continue;
+                campaign_->Cursor().Update(mouse.x,mouse.y);if (!drop.legal) continue;
+                o::CanonDecoder decoder(frames,patterns[drop.argument],std::bit_cast<std::int32_t>(drop.direction),drop.x,drop.y); // 현재 조각을 원본 반복자로 펼친다.
+                double reach=std::numeric_limits<double>::infinity(); // 이미 있는 다리와 겹치는 칸은 전진으로 세지 않는다.
+                // 유효한 Canon 칸만 읽으며 현재 월드를 변경하지 않는다.
+                while (decoder.Valid()) {
+                    if (!campaign_->World().Find(decoder.X(),decoder.Y(),bridgeType).value) {
+                        const double dx=static_cast<double>(decoder.X())-targetX,dy=static_cast<double>(decoder.Y())-targetY; // 목표와 새 칸 거리다.
+                        reach=std::min(reach,dx*dx+dy*dy);
+                    }
+                    decoder.Advance();
+                }
+                const double dx=static_cast<double>(drop.x)-targetX,dy=static_cast<double>(drop.y)-targetY,origin=dx*dx+dy*dy; // 동률의 기준점 거리다.
+                if (std::isfinite(reach) && (reach<bestReach || (reach==bestReach && origin<bestOrigin))) { nearest=mouse;bestReach=reach;bestOrigin=origin; }
+            }
+        }
+        if (nearest) campaign_->Cursor().Update(nearest->x,nearest->y); // 마우스만 복원하고 실제 건설은 후속 좌클릭이 수행한다.
+        return nearest;
+    }
     // 자동 입력 전용: 실제 커서의 공간/공급 판정을 통과한 가까운 화면 좌표를 찾는다. 건설은 이후 실제 클릭이 수행한다.
     if (label.starts_with("placement-near:") || label.starts_with("placement-fire:")) {
         if (!campaign_) return {};const auto comma=label.find(',');if (comma==std::string_view::npos) return {};
@@ -598,6 +636,7 @@ std::string GameWorld::Report(bool mask) const {
         for (const auto kind:campaign_->LocalConnectionPackets()) out<<'\t'<<std::uint32_t(kind);out<<'\n';
         out<<"raw_session\t"<<campaign_->LocalOwner()<<'\t'<<campaign_->PlayerKnown();
         const auto& drop=campaign_->CursorDropSettings();const auto& placement=campaign_->Cursor().Placement(); // 실제 배치/원본 입력과 같은 저장소다.
+        out<<"\nraw_piece\t"<<drop.argument<<'\t'<<drop.direction; // 실제 무작위 조각 번호/현재 회전을 관찰하며 취득 상태를 변경하지 않는다.
         out<<"\nraw_cursor\t"<<drop.lockDepth<<'\t'<<drop.legal<<'\t'<<drop.type<<'\t'<<drop.preview.value<<'\t'<<drop.x<<'\t'<<drop.y<<'\t'<<drop.inputFlags<<'\t'<<drop.costFlags<<'\t'<<placement.placementAllowed<<'\t'<<placement.spaceAllowed<<'\t'<<placement.sourceAllowed<<"\nraw_sp";
         // 화면용 MissionPlayers 사본과 구별하여 실제 분산 SP의 모든 owner를 읽는다.
         for (std::uint32_t owner=0;owner<9;++owner) out<<'\t'<<campaign_->Sp(owner);

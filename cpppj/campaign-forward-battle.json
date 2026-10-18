@@ -115,8 +115,8 @@
     "originals/d/GIFCLOUD.COL": "785a2cda6ac1d3e295d375815b6d9650720683099db7c249382d598b5da00532"
   },
   "currentSources": {
-    "cpppj/src/client/GameWorld.cpp": "b2bca515fffbca6f151a5ccabd021ab9c8e4331cc014b57eca0e5e9264de1d59",
-    "cpppj/src/client/UberGump.cpp": "c2c34c54f6caa47344c9db18f6745cb80d4eee16ae94870ef302aac672de715e",
+    "cpppj/src/client/GameWorld.cpp": "07aa1f5d4d4a144997fd8627184180914e3357e417016e1e59bb08bed8f4fc07",
+    "cpppj/src/client/UberGump.cpp": "9cec22d2a9b0e49d91844bcb4ecdcd1cc80571d417922a39cf2f6b813fc3ad38",
     "cpppj/src/client/RawCampaignSession.cpp": "940749f6687b7d65418f3dc7b8b9a75c8cd07fc8ee78cb408480274008b18c88",
     "cpppj/src/client/RawCampaignSession.h": "e3c869f14573f938c2e2fac22dcd0b3f18dc4517921fd8ebdcf04d3993d9193a",
     "cpppj/tests/CMakeLists.txt": "889efbf2ee9336dad4a80cae9bc811c380d9e955b2746743b049efcbae9d27ae",
@@ -1948,6 +1948,25 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "ff150edde0596349c7b6155caac9de7df3dbea9c42237eccc8fb535a3c736f16",
           "current": "c6e7d4e27e8f69ffbbc08aaeb86ff98eef32d65bcf906c49712fb1a4464a1603"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 203,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/GameWorld.cpp",
+          "previous": "b2bca515fffbca6f151a5ccabd021ab9c8e4331cc014b57eca0e5e9264de1d59",
+          "current": "07aa1f5d4d4a144997fd8627184180914e3357e417016e1e59bb08bed8f4fc07"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/UberGump.cpp",
+          "previous": "c2c34c54f6caa47344c9db18f6745cb80d4eee16ae94870ef302aac672de715e",
+          "current": "9cec22d2a9b0e49d91844bcb4ecdcd1cc80571d417922a39cf2f6b813fc3ad38"
         }
       ]
     }
