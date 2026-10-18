@@ -1,0 +1,399 @@
+{
+  "unit": 200,
+  "date": "2026-10-19",
+  "baseline": "1d7410bc92073c02ddffd421d7f3945a43b19074",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16",
+    "newDecompile": false
+  },
+  "sources": {
+    "tools/cpp_campaign_forward_smoke.py": "a2d80da805838d22747deddf9d65e2daa947da6026764a64e60f41dc21bd00b8",
+    "cpppj/tests/fixtures/campaign-forward-ui-input.tsv": "b4c8e831fe0669dc0d9b9626db80486414d78899e2ade3f7fe1aa7030d05857e",
+    "cpppj/src/client/GameWorld.cpp": "b2bca515fffbca6f151a5ccabd021ab9c8e4331cc014b57eca0e5e9264de1d59",
+    "cpppj/src/client/RawCampaignSession.cpp": "d52756c9e19834952843d35e909c1fbab5edb9c2a40b594dd4c1e8d2622f1b76",
+    "cpppj/src/client/RawCampaignRitual.inc": "58bedee7b6bd9673e2ce45ac016f9421ef33ac4bd974e306dd54f83c631fe9f0",
+    "cpppj/tests/CampaignSessionTests.cpp": "530ae4a707f6f82b4eaeab6c3f7f30471da1de5314ea544abdca9075fa1cdb41"
+  },
+  "evidence": {
+    "extracted/goal-natural-capture-20261019-baseline.json": "1809950c7c7ba932b847c197d52886159303c181736efe59d1794f49cf625f22",
+    "extracted/goal-natural-capture-20261019-session-before.cpp": "530ae4a707f6f82b4eaeab6c3f7f30471da1de5314ea544abdca9075fa1cdb41",
+    "extracted/goal-natural-capture-20261019-build1.log": "e9378176e15b860c96cd9513b51aa6ea9ae64b151a4f298dc96e245a1735b27b",
+    "extracted/goal-natural-capture-20261019-focused1.log": "84f829de3a067a1b0d20d5fa468bc2631d284952aaf1092f74f440b35e874ca6",
+    "extracted/goal-natural-capture-20261019-test-first.cpp": "fa7f3e9261ee126b6b9ce11340d1ae88867f20ef58ced861e194ba4d8ca62ae4",
+    "extracted/goal-natural-capture-20261019-build2.log": "68daf5268753a6f0253917d033a76282e07803e3b45f8c1951a34f7cbc6a3d34",
+    "extracted/goal-natural-capture-20261019-focused2.log": "868c943962a177e65c88d41727a4702f2eda7d7575d473b737a68a60bd40959e",
+    "extracted/goal-natural-capture-20261019-gui1.py": "fe94058c9aa80b75df02d4c8d5ec9ae7a067c7f58e612af1827b75d046671f44",
+    "extracted/goal-natural-capture-20261019-gui1.log": "357f9c647641a02a15c9ed43d9e57dab386b4c6f6054c8a73d0321c66b8866cf",
+    "extracted/goal-natural-capture-20261019-test-second.cpp": "8e9ed1bb2648c2d4d510c33e8bfdff3ed3c74be9dd0ce297fc9d6955ef717b34",
+    "extracted/goal-natural-capture-20261019-build3.log": "68daf5268753a6f0253917d033a76282e07803e3b45f8c1951a34f7cbc6a3d34",
+    "extracted/goal-natural-capture-20261019-focused3.log": "cd4a2a467eb21448f4bdd49abc33b39967625f00c6df3606f1e51c74e6b05b76",
+    "extracted/goal-natural-capture-20261019-test-third.cpp": "eb2935fdb1bd1db549e185befb2f4eb988fd6749064f9d483be98501e904cbec",
+    "extracted/goal-natural-capture-20261019-build4.log": "68daf5268753a6f0253917d033a76282e07803e3b45f8c1951a34f7cbc6a3d34",
+    "extracted/goal-natural-capture-20261019-focused4.log": "87a9ddcd1ad6209f5fd966fad58e96de60e23d7dbdd98012e9c03319e6054725",
+    "extracted/goal-natural-capture-20261019-test-fourth.cpp": "02e2b22d740bfedc2b203e5668253e665f5667a338186e494ab4d1aedcb04f0f",
+    "extracted/goal-natural-capture-20261019-build5.log": "68daf5268753a6f0253917d033a76282e07803e3b45f8c1951a34f7cbc6a3d34",
+    "extracted/goal-natural-capture-20261019-focused5.log": "6aab0266b9d974494e42624093507092935b3dcee798fdd2df3a8043dc8d299f",
+    "extracted/goal-natural-capture-20261019-unchanged-product.json": "ffdbf8e63cf58a7755e395fcb2c1a5d886b4f70afecbef7ed4d20f2686f6399f",
+    "extracted/goal-natural-capture-20261019-test-fifth.cpp": "d169b1d9a57042e09d3c9c10d82fa0e1bdd8090fd7e68a406bf9aa12e00186b9",
+    "extracted/goal-natural-capture-20261019-build6.log": "68daf5268753a6f0253917d033a76282e07803e3b45f8c1951a34f7cbc6a3d34",
+    "extracted/goal-natural-capture-20261019-focused6.log": "52fa84c7ee308d3d11774decd7f5fca8c80f9d6761f7625c984d6ea4742e8912",
+    "extracted/goal-natural-capture-20261019-test-sixth.cpp": "a77bacf3cd713782350daf174bd98645508afed588053b503dbfd03bb8d704a6",
+    "extracted/goal-natural-capture-20261019-build7.log": "68daf5268753a6f0253917d033a76282e07803e3b45f8c1951a34f7cbc6a3d34",
+    "extracted/goal-natural-capture-20261019-original-mission.english": "db4fb183bc12c3b3f2f20e7a6c1ffb9d9ed0aac5401e6001372464c897ae9b96",
+    "extracted/goal-natural-capture-20261019-focused7.log": "4419cb4570c252a0d2ff92cfcb36a3684100d7447f8e37b392a51a031a55c724",
+    "extracted/goal-natural-capture-20261019-test-seventh.cpp": "3ac3ef0f1ace3791a63239c2419cf1800c48151888739416f57338ee4b260f9c",
+    "extracted/goal-natural-capture-20261019-build8.log": "68daf5268753a6f0253917d033a76282e07803e3b45f8c1951a34f7cbc6a3d34",
+    "extracted/goal-natural-capture-20261019-focused8.log": "59e81e1218466df79a3177bbe54b59ec2f3af542e600c8a7ff2108d9aead5841",
+    "extracted/goal-natural-capture-20261019-test-eighth.cpp": "240f27adbc60050138392aa1dd0cd83d3fdbd260b25034c8804885aff0b3b057",
+    "extracted/goal-natural-capture-20261019-unfinished-capture.cpp": "240f27adbc60050138392aa1dd0cd83d3fdbd260b25034c8804885aff0b3b057",
+    "extracted/goal-natural-capture-20261019-build-final.log": "68daf5268753a6f0253917d033a76282e07803e3b45f8c1951a34f7cbc6a3d34",
+    "extracted/goal-natural-capture-20261019-inspect.log": "e282ab981e53963346b4c9f733f1a06e96f45ca66e5ba591835acac4f8907557",
+    "extracted/goal-natural-capture-20261019-gui1/steps.tsv": "ecdc54c41d9c9e91d652bf4394c3128c05423c4b8245f4c4d125eb5ca4a3f33a",
+    "extracted/goal-natural-capture-20261019-gui1/frame4300.bmp": "844fcc9e619758cf9f5db30aee6976b12904a5f3a4cc4b0456e5798f67214315",
+    "extracted/goal-natural-capture-20261019-gui1/frame5120.bmp": "9d3004308f842355beb7dc16c583367f7a3c961d32973ca2440f50d0ea3a6e97",
+    "extracted/goal-natural-capture-20261019-gui1/frame6300.bmp": "cf5f75d6a7221ea7d7ce805777e738649d7e12ba4ff4801d560d2ad111bcea93",
+    "extracted/goal-natural-capture-20261019-gui1/frame7030.bmp": "c1fa9fc04cb4000cb707318f0665803e96289ef089493d343fb2dba1cca2f0b1",
+    "extracted/goal-natural-capture-20261019-gui1/frame10000.bmp": "3a0a8f386d35c83dad95a3781e2bbbb1b5f69ce8f5d45ee6c2685d9d0dc7c6a3",
+    "extracted/goal-natural-capture-20261019-gui1/frame12000.bmp": "11596a1478f2bd88e0fd5f12261471b9540f341dd06d9984bacedfac1063627c",
+    "extracted/goal-natural-capture-20261019-gui1/frame14000.bmp": "22d0b6b3e26b6ae4a9e892693daf7e6f6c4e4c32065428c085b57bb5d640b27a",
+    "extracted/goal-natural-capture-20261019-gui1/frame16000.bmp": "cb612615c5584f3b4a3f51c75c1c9db58e4f67650a54846b56f3f8ac1c94792e",
+    "extracted/goal-natural-capture-20261019-gui1/frame18000.bmp": "1cae717a5ef610def522484ae565ea7e2f70d3bc2947c15d218799a9ced072da",
+    "extracted/goal-natural-capture-20261019-gui1/frame20000.bmp": "29191a303de915849d5e0e20f7ad0d549a50b9f3ce1dd1ef103935ebeff05639",
+    "extracted/goal-natural-capture-20261019-gui1/states.tsv": "1575867452053f6a3dbbe2ff29dd30d2bc3600a4cbed6957f6688a25cf2c1760",
+    "extracted/goal-natural-capture-20261019-gui1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-natural-capture-20261019-gui1/stderr.log": "197c308ea9fa1056d6a787adce92efe2af608eb0e085ddb7de3c75ef3b89af2e",
+    "extracted/goal-natural-capture-20261019-gui1/results.json": "1bf003298131efa7ff0542c345c7993caa355b3c808f51fc5e226d3a65146597",
+    "extracted/goal-natural-capture-20261019-ctest-final.log": "fa2a4f87304471823b0f299b12473f3b598c043da5acb98ee5c30f223caa28d6",
+    "extracted/goal-natural-capture-20261019-tests-final.log": "0b70e869c54f46bbf8c4ac4a087c9c6fca38df08ea12e8b2392b06b4e3dd7a1e",
+    "extracted/goal-natural-capture-20261019-verify-final.json": "8fde9f85038d7800080aa67dc37e8315f37fb120e99122ae8c26ad965e5582a0",
+    "extracted/goal-natural-capture-20261019-audit.log": "9fe26c91038a177c7feabe08544ff279ef6634640fd432fc2db0f0ea00ed6e48",
+    "extracted/goal-natural-capture-20261019-guard1.log": "02b7106f3d6467847b4fa2fc1a825ae2b6cdca62009e38df45ac0730653e53af",
+    "extracted/goal-natural-capture-20261019-guard2.log": "4d83d6d91d7d4c05d86950cb1ab0bd3c9dd379c7c231f287ab5b7cf2cdd302da"
+  },
+  "observationDirectory": "extracted/goal-natural-capture-20261019-gui1",
+  "observation": {
+    "returnCode": 0,
+    "originalsUnchanged": true,
+    "maximumGameTime": 918.396,
+    "prepares": {
+      "prepareWorkshop": [
+        "0",
+        "1",
+        "85",
+        "77",
+        "109",
+        "107",
+        "32",
+        "352",
+        "1",
+        "1",
+        "1"
+      ],
+      "prepareGenerator1": [
+        "0",
+        "1",
+        "76",
+        "152",
+        "99",
+        "109",
+        "8",
+        "65",
+        "1",
+        "1",
+        "1"
+      ],
+      "prepareGenerator2": [
+        "0",
+        "1",
+        "76",
+        "201",
+        "112",
+        "108",
+        "8",
+        "65",
+        "1",
+        "1",
+        "1"
+      ],
+      "prepareCannon": [
+        "0",
+        "1",
+        "128",
+        "101",
+        "116",
+        "118",
+        "8",
+        "65",
+        "1",
+        "1",
+        "1"
+      ],
+      "prepareForwardGenerator": [
+        "0",
+        "1",
+        "76",
+        "224",
+        "122",
+        "116",
+        "8",
+        "65",
+        "1",
+        "1",
+        "1"
+      ],
+      "prepareBridge0": [
+        "0",
+        "1",
+        "82",
+        "73",
+        "124",
+        "118",
+        "64",
+        "513",
+        "1",
+        "1",
+        "1"
+      ],
+      "prepareBridge1": [
+        "0",
+        "1",
+        "82",
+        "3518",
+        "124",
+        "119",
+        "64",
+        "513",
+        "1",
+        "1",
+        "1"
+      ],
+      "prepareBridge2": [
+        "0",
+        "1",
+        "82",
+        "1910",
+        "124",
+        "122",
+        "64",
+        "513",
+        "1",
+        "1",
+        "1"
+      ],
+      "prepareBridge3": [
+        "0",
+        "1",
+        "82",
+        "12195",
+        "123",
+        "119",
+        "64",
+        "513",
+        "1",
+        "1",
+        "1"
+      ],
+      "prepareBridge4": [
+        "0",
+        "1",
+        "82",
+        "4224",
+        "123",
+        "121",
+        "64",
+        "513",
+        "1",
+        "1",
+        "1"
+      ],
+      "prepareBridge5": [
+        "0",
+        "1",
+        "82",
+        "7551",
+        "124",
+        "125",
+        "64",
+        "513",
+        "1",
+        "1",
+        "1"
+      ],
+      "prepareBridge6": [
+        "0",
+        "1",
+        "82",
+        "355",
+        "123",
+        "122",
+        "64",
+        "513",
+        "1",
+        "1",
+        "1"
+      ],
+      "prepareBridge7": [
+        "0",
+        "1",
+        "82",
+        "7590",
+        "125",
+        "128",
+        "64",
+        "513",
+        "1",
+        "1",
+        "1"
+      ],
+      "prepareBridge8": [
+        "0",
+        "1",
+        "82",
+        "8489",
+        "122",
+        "124",
+        "64",
+        "513",
+        "1",
+        "1",
+        "1"
+      ],
+      "prepareBridge9": [
+        "0",
+        "1",
+        "82",
+        "9541",
+        "122",
+        "120",
+        "64",
+        "513",
+        "1",
+        "1",
+        "1"
+      ],
+      "prepareBridge10": [
+        "0",
+        "1",
+        "82",
+        "13026",
+        "121",
+        "123",
+        "64",
+        "513",
+        "1",
+        "1",
+        "1"
+      ],
+      "prepareBridge11": [
+        "0",
+        "1",
+        "82",
+        "14271",
+        "125",
+        "116",
+        "64",
+        "513",
+        "1",
+        "1",
+        "1"
+      ],
+      "prepareForwardCannon": [
+        "0",
+        "1",
+        "128",
+        "255",
+        "129",
+        "126",
+        "8",
+        "65",
+        "1",
+        "1",
+        "1"
+      ]
+    },
+    "firstEnemyAbsence": {
+      "15010": {
+        "type": 71,
+        "label": "combat2600",
+        "game": "117.927"
+      },
+      "15004": {
+        "type": 71,
+        "label": "combat3000",
+        "game": "136.864"
+      },
+      "15006": {
+        "type": 71,
+        "label": "combat3000",
+        "game": "136.864"
+      },
+      "15008": {
+        "type": 71,
+        "label": "combat3000",
+        "game": "136.864"
+      },
+      "15012": {
+        "type": 71,
+        "label": "combat3000",
+        "game": "136.864"
+      },
+      "15015": {
+        "type": 75,
+        "label": "combat3700",
+        "game": "169.148"
+      },
+      "15019": {
+        "type": 78,
+        "label": "combat9300",
+        "game": "428.818"
+      },
+      "15035": {
+        "type": 78,
+        "label": "combat12200",
+        "game": "562.365"
+      },
+      "15017": {
+        "type": 123,
+        "label": "combat19100",
+        "game": "880.349"
+      }
+    },
+    "priestStillAlive": true,
+    "goalComplete": false,
+    "scope": "실제 창의 건설/자연 전투/신전 부재다. 자연 포획/희생/미션 승리 증거가 아니다."
+  },
+  "goalComplete": false,
+  "naturalCaptureVerified": false,
+  "missionVictoryVerified": false,
+  "originalGameRuns": 0,
+  "newNativeOracleInputs": 0,
+  "productChanged": false,
+  "oldSessionTestsRestoredExactly": true,
+  "unfinishedCaptureProbe": {
+    "attempts": 8,
+    "path": "extracted/goal-natural-capture-20261019-unfinished-capture.cpp",
+    "reason": "실제 캐논 발자국의 두 빈 다리 칸과 최종 배치 거부. 주변을 먼저 채운 전술 입력을 재구성해야 한다. HP/SP/포획 결과 주입이나 배치 규칙 완화는 하지 않는다."
+  },
+  "previousEntryProof": {
+    "path": "extracted/goal-campaign-sacrifice-finish-20261019-committed.json",
+    "scope": "직전199의 실제11진입. 이번 제품 실행파일 SHA가 동일하므로 별도 재실행하지 않는다."
+  },
+  "observedExecutableSha256": "3f718931676bf5181f372cf0cd7dab3f2ab8225f4fb29a7806ebb68a7e0c4c88",
+  "validation": {
+    "build": "Release 경고/오류0",
+    "fullTests": {
+      "count": 1718,
+      "failed": 0,
+      "seconds": 264.2
+    },
+    "audit": {
+      "tools": 133,
+      "passed": 118,
+      "historicalFailures": 15,
+      "newFailures": 0
+    },
+    "guard": "기존 LEFT의 문자를 새 범위로 잘못 검사한 첫 실패 보존. 새 절만 검사하도록 보완한 보호/원문/5파일 검사 통과."
+  }
+}
