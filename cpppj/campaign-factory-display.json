@@ -59,8 +59,8 @@
     "cpppj/src/CMakeLists.txt": "945332cd1c5b131d7e35d0ae7fb15762597c41be26ffea267b18e8b3d048efd8",
     "cpppj/src/client/GameWorld.cpp": "7354694cf70e61d27ef1991390513a042c7a102f537f9d0cfb1f5438bb2a1f9e",
     "cpppj/src/client/GameWorld.h": "63a8da986aab6ab35f1938c8de5c9197d12cca4e17859cb8daba5d5f52946e73",
-    "cpppj/tests/CMakeLists.txt": "17eef31cff19a97642806d3980eda0465ee811e1146150391275f0765eaf9885",
-    "cpppj/tests/CampaignSessionTests.cpp": "3bc6fd7121a4a72da06c99f61aa11178edb163182d02b74b1b652377f5559663",
+    "cpppj/tests/CMakeLists.txt": "921f5464983352309a998ba124184bc838cfa4c098a1053ee2dd9131c4410d4c",
+    "cpppj/tests/CampaignSessionTests.cpp": "2a7f2aad0d79a0071cffd3565b5f5cd8a3983f7e44c520ca3c9aacd22bb9e047",
     "tools/cpp_priest_construction_smoke.py": "93524c9e1fb58e7e589fc25c7507e105e750b96cb66ad7ddbf9a58aae2756c2c",
     "cpppj/src/client/SpriteColorMaps.h": "616d6afb5af4bb505f0f780b05cbc9dec4058026b43ba898be5719a5ab233e54",
     "cpppj/src/client/SpriteColorMaps.cpp": "9a2d39e42ba43fb32baf622923e4fa5a2629f0ae8c186dd3f2d1bb34a0dd9c61",
@@ -5131,6 +5131,25 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "259b8c3178bb2b3498ca76818c49db41c2ed544ff7fca6c272da61856b15e72b",
           "current": "3bc6fd7121a4a72da06c99f61aa11178edb163182d02b74b1b652377f5559663"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 181,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "17eef31cff19a97642806d3980eda0465ee811e1146150391275f0765eaf9885",
+          "current": "921f5464983352309a998ba124184bc838cfa4c098a1053ee2dd9131c4410d4c"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "3bc6fd7121a4a72da06c99f61aa11178edb163182d02b74b1b652377f5559663",
+          "current": "2a7f2aad0d79a0071cffd3565b5f5cd8a3983f7e44c520ca3c9aacd22bb9e047"
         }
       ]
     }

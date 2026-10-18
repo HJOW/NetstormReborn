@@ -1,0 +1,438 @@
+{
+  "unit": 181,
+  "date": "2026-10-18",
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "lastDecompileDate": "2026-10-16",
+  "baseline": "2a0963d34687b9ac71e41225b897b36838064b53",
+  "goalComplete": false,
+  "fidelity": {
+    "complete": false,
+    "edition": "10.78",
+    "scope": "생산 SP/재고 부족 안내의 동일 Gump/StyleText/벽시계/수명 연결",
+    "aboutImplemented": false,
+    "cd1072": "미검증"
+  },
+  "nativeCapture": {
+    "host": "HJOW-Athlon",
+    "lastDecompileHost": "HJOW-Athlon",
+    "unit": 181,
+    "rows": 126,
+    "normalReturns": 252,
+    "instructions": 30228,
+    "counts": {
+      "C": 18,
+      "I": 12,
+      "D": 12,
+      "X": 12,
+      "W": 72
+    },
+    "precisionDifferences": 0,
+    "nativeCalls": {
+      "004728d0": 180,
+      "004729d0": 24,
+      "00472a00": 24,
+      "00472a50": 24,
+      "00472a70": 24,
+      "00472be0": 72,
+      "00465260": 144,
+      "00472d20": 72
+    },
+    "sha256": {
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+      "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+      "tools/decomp_production_hint.py": "1cbd43d781e675dd780189bfa056ef844c82f2a07c8d082eb2f5bb5473ef4550",
+      "cpppj/tests/fixtures/production-hint-x86.tsv": "de2e73e104769163f2af876dd8bb41d16c1b0e15d0a33518e624b430d216d629"
+    },
+    "limits": [
+      "실제 안내 생성/4초 Idle/Draw/소멸과 두 안내 wrapper/입력 사각형 setter다. TextGump/문자열 heap·번역/시계/측정/그리기/가상 부착·삭제는 명시 경계다.",
+      "TextGump 경계는 기존 실제 모듈로 연결하며 새 원문은 파생 필드/효과의 순서와 원본 덧셈·단정도 저장을 비교한다. 포인터는 head/소유 문자열의 비영 의미만 정규화한다.",
+      "10.78만 관측하며 원본 게임/창/OS 실행·보호 파일 변경·새 디컴파일은 없다. 전체 생산 패널/미션 자연 완주 증명은 아니다."
+    ]
+  },
+  "aboutObservation": {
+    "host": "HJOW-Athlon",
+    "lastDecompileHost": "HJOW-Athlon",
+    "unit": 181,
+    "rows": 1296,
+    "normalReturns": 2592,
+    "instructions": 418968,
+    "precisionDifferences": 0,
+    "nativeCalls": {
+      "0043d330": 2592,
+      "004e49c0": 3456,
+      "004af010": 2592,
+      "0043cb30": 864
+    },
+    "sha256": {
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+      "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+      "tools/decomp_inventory_about.py": "90580a67ffeaf649e541d0455ba7343df6100d04c9d941892e7f6e6320546a52",
+      "cpppj/tests/fixtures/inventory-about-x86.tsv": "e4e426da56fe1958bce6ece767ef964b7ddd0ef017ad101dfa56a55b2130d9d7"
+    },
+    "limits": [
+      "실제43d330/4af010/49aa30/43cb30/_ftol의 비용·허용·환불과 조건/현재 필드 읽기를 실행한다. 메뉴/번역·정보 작성/순수 서식/현재 SP/위치·음향은 명시 경계다.",
+      "NULL/빈/Help와6종류·회수flags·편집/정수 큰 비용·NaN SP를 교차한다. 실제 메뉴/Session/GUI 연결은 별도 검사이며 CD/전체 게임 동일성의 증거는 아니다."
+    ]
+  },
+  "nativeFreeze": {
+    "tools/decomp_production_hint.py": "1cbd43d781e675dd780189bfa056ef844c82f2a07c8d082eb2f5bb5473ef4550",
+    "cpppj/production-hint.json": "49361cc2233a3ece6a07f066a1a3e17e4bc22fe755d37a9b3d814334db544b21",
+    "cpppj/tests/fixtures/production-hint-x86.tsv": "de2e73e104769163f2af876dd8bb41d16c1b0e15d0a33518e624b430d216d629",
+    "tools/decomp_inventory_about.py": "90580a67ffeaf649e541d0455ba7343df6100d04c9d941892e7f6e6320546a52",
+    "cpppj/inventory-about.json": "bcfab715cde2496732236b09b6698ed84f299584331437d3818cb779c915243d",
+    "cpppj/tests/fixtures/inventory-about-x86.tsv": "e4e426da56fe1958bce6ece767ef964b7ddd0ef017ad101dfa56a55b2130d9d7"
+  },
+  "protected": {
+    "AGENTS.md": "7addbf9b31c42f29aab7c93faa865eb6de8590a600d17202a297cf7122bdf979",
+    "LEFT_JOBS.dotnetpj.md": "0c067e1d12879dbf2212cbd64c8f9f60e65b590df910418f025027ed84f80ec2",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "originals/d/GIFCLOUD.COL": "785a2cda6ac1d3e295d375815b6d9650720683099db7c249382d598b5da00532"
+  },
+  "observedGuiBinary": {
+    "cpppj/build/bin/Release/NetstormCpp.exe": "1160e2d1e65510648989ca39ee9f9f8183595239edd6fd7d8cc889bf56453e7c"
+  },
+  "currentSources": {
+    "cpppj/src/client/CMakeLists.txt": "00e205d4b299c382fa751ac2312ef9314a1baf894e00a40593280845b0f3a8c8",
+    "cpppj/src/client/RawProductionControls.cpp": "872ef029bd281a538f87b5efb64e72b164f2ffd002055ffaaa8e3eb1f93a73a2",
+    "cpppj/src/client/RawProductionControls.h": "1b243dda75bdaff96dcc6ec84a6438cabce9f7082fce6fbc9405e2c90dc75422",
+    "cpppj/src/client/UberGump.cpp": "6cea87e36ace1710f9de90652a87184d0e04803bd1be6c63b47b3258eda4f256",
+    "cpppj/tests/CMakeLists.txt": "921f5464983352309a998ba124184bc838cfa4c098a1053ee2dd9131c4410d4c",
+    "cpppj/tests/CampaignSessionTests.cpp": "2a7f2aad0d79a0071cffd3565b5f5cd8a3983f7e44c520ca3c9aacd22bb9e047",
+    "tools/cpp_production_panel_smoke.py": "724988401741b93176a8a8d85a043ba712335b8c2cce85930f11016eae1a1e50",
+    "cpppj/src/client/ProductionHintGump.h": "2a20c54f2a6ac90c4097715db46b7379c39ea69f4fbdcf93d14a2ec158b3cf07",
+    "cpppj/src/client/ProductionHintGump.cpp": "629a1c381ff25a51161d092bdf449d39b6d9f2ae5a1b56474901779f3a665056",
+    "cpppj/tests/ProductionHintGumpTests.cpp": "8e83c9b5268d1184fa3444888d4fb71bba67a8d36580430f65cfb0431dee8299",
+    "tools/decomp_production_hint.py": "1cbd43d781e675dd780189bfa056ef844c82f2a07c8d082eb2f5bb5473ef4550",
+    "cpppj/production-hint.json": "49361cc2233a3ece6a07f066a1a3e17e4bc22fe755d37a9b3d814334db544b21",
+    "cpppj/tests/fixtures/production-hint-x86.tsv": "de2e73e104769163f2af876dd8bb41d16c1b0e15d0a33518e624b430d216d629",
+    "tools/decomp_inventory_about.py": "90580a67ffeaf649e541d0455ba7343df6100d04c9d941892e7f6e6320546a52",
+    "cpppj/inventory-about.json": "bcfab715cde2496732236b09b6698ed84f299584331437d3818cb779c915243d",
+    "cpppj/tests/fixtures/inventory-about-x86.tsv": "e4e426da56fe1958bce6ece767ef964b7ddd0ef017ad101dfa56a55b2130d9d7"
+  },
+  "logSha256": {
+    "extracted/goal-production-feedback-20261018-about-native2.log": "2f9f0f359eee2b19634ffef49aa3103bc871848dfa3d2516769f6cf1a263624c",
+    "extracted/goal-production-feedback-20261018-about-smoke1.log": "3428cce9f433680d9ea8737502da3ab0082c921c2beb025d74fd00d33d0df0e1",
+    "extracted/goal-production-feedback-20261018-about-smoke2.log": "69fe8e67410d3d3dea1bc4a50b3438eba99277c207f18a5c7571e55b0e036cd9",
+    "extracted/goal-production-feedback-20261018-audit1.log": "494b68cac7c702350a6867da224785f5ede1c3c81736fb5287467406f1e7c91d",
+    "extracted/goal-production-feedback-20261018-build1.log": "dac14b2f3213fbef849d236a140840ae256b4bde919a453ea4a6524e2a111408",
+    "extracted/goal-production-feedback-20261018-build2.log": "f6da41144d049c1c6318aa0df9d6e201c8f6afa0fab2a5f0d0e61fdea1d2fe2a",
+    "extracted/goal-production-feedback-20261018-build3.log": "b0b17a866989a1f4ca844b5513e0e9181ca00324e6d56c34afdc30d9b13bc3d5",
+    "extracted/goal-production-feedback-20261018-build4.log": "68daf5268753a6f0253917d033a76282e07803e3b45f8c1951a34f7cbc6a3d34",
+    "extracted/goal-production-feedback-20261018-build5.log": "69f000fab06db8066370947f281f9b190f7d846c8a6ff6848b197368819c4ad8",
+    "extracted/goal-production-feedback-20261018-build6.log": "ed6631b7efc62c297034f02eb3f7d3f8ffdaeb4ceac51dcf3221ce49852ea15b",
+    "extracted/goal-production-feedback-20261018-ctest1.log": "782628f3663ad8b8445f9229c3ce253aaeae2426e9751a71d00bd54486e31cae",
+    "extracted/goal-production-feedback-20261018-gui-default1.log": "82c595b7b0368d1f0aac5bfc838169bac5b86e57349ac07f97f9041ddf82cc17",
+    "extracted/goal-production-feedback-20261018-gui-empty1.log": "9f7f3d7ffa89837ddc8962907b9a4806f00b5e084ddb35d2e8e254f42321b37e",
+    "extracted/goal-production-feedback-20261018-gui-empty2.log": "c84c90186b8cc2616adeee80b8ff0ee97aaa1cbb746ffa9b7020008607624cc4",
+    "extracted/goal-production-feedback-20261018-hint-native1.log": "8f85bd5c7307766a10ce7517be29ac692e649840526641ae5f0bb8660f96fc0c",
+    "extracted/goal-production-feedback-20261018-hint-smoke1.log": "669c73b0c14081630faab2a5131d908daf99962398102387917db4d19a79e394",
+    "extracted/goal-production-feedback-20261018-hint-test1.log": "678060184e5ab8c9b0b93be1f5b234c938ecd4341ca2b26fc0e114185e89d67d",
+    "extracted/goal-production-feedback-20261018-LastTest1.log": "f42cc6c9481013912bbf1560f9d3c9ad1138dd97bd2fd9068f2e50e2804307b7",
+    "extracted/goal-production-feedback-20261018-session-test1.log": "bc48931f2fe333e71ed3b4f23ab4e97792fba2f2e10756713d4c5d6f3e4fd940",
+    "extracted/goal-production-feedback-20261018-session-test2.log": "911cf08e854a6dda19334eb89a4d2190cee0dd41dc384de9972873fe4ca7b24a",
+    "extracted/goal-production-feedback-20261018-session-test3.log": "0fa4f5354af3375cfc2fc4a732cee9126359b6d8b37bfda1554ddeaac021df8d",
+    "extracted/goal-production-feedback-20261018-stages1.log": "45c1eee9aa0a6dda3519fe8ac4fcf426bf94132bb199d97050b9cc54ac53e578"
+  },
+  "evidenceSha256": {
+    "extracted/goal-production-feedback-20261018-sources.json": "0781a5b8416a7633c0f168308f41c067417b2eef20e2176e3a1dd78289e12b39",
+    "extracted/goal-production-feedback-20261018-pin-updates.json": "d6c1a60b6608393c0fcc475aa9e78da5374d113ddcbb1d8a1800db34da9182e7",
+    "extracted/goal-production-feedback-20261018-verify-final.json": "36ce5624d3eaa48b9f2e7ab587b713dd04f5a2fa9816cca6397691d9d05b2aed",
+    "extracted/goal-production-feedback-20261018-native-freeze.json": "79a8c6162a8e838eeca81e8bc753b44c6aecf3fd52cf7fa9911b049766a1917a",
+    "extracted/goal-production-feedback-20261018-gui-binary.json": "11c310e49296ca0503bd3b7e74ca5be8847f5b54467bf43cc6db558c1f6a64ad",
+    "extracted/goal-production-feedback-20261018-stages1/results.json": "b7d77e5820c2b8a4e62d7b874c21d6194921d6ddd75923e24a12a903bc96e35b",
+    "extracted/goal-production-feedback-20261018-gui-default1/summary.json": "f3f6e28a3b894495505134ae469336bc91873cfd27ea39cf0d2be757dff2711b",
+    "extracted/goal-production-feedback-20261018-gui-default1/states.tsv": "cfe5e25c597cd78102c11679d665da3cbdad54b11f91e9a8c2f02142ac3f9d8b",
+    "extracted/goal-production-feedback-20261018-gui-empty2/summary.json": "95757e32c606e7f720623447ec3ffaf13f59a40dc75494f1ea50b2b22c9b065d",
+    "extracted/goal-production-feedback-20261018-gui-empty2/states.tsv": "1d3fedf73fd8581b69a39e6ceb20f4cdeb6b04bb9f58a35be967fea2778661e5",
+    "extracted/goal-production-feedback-20261018-gui-empty2/empty-inventory.bmp": "5704a0e33501aa604c0a7e00cac4897213da517cea97104db8b70a71995f67fc"
+  },
+  "validation": {
+    "full": {
+      "tests": 1677,
+      "failed": 0,
+      "seconds": 207.23,
+      "ctestSeconds": 207.27
+    },
+    "nativeCpp": {
+      "tests": 1,
+      "rows": 126
+    },
+    "session": {
+      "tests": 1,
+      "flow": "실제 생산5회로 SP200/재고0 생성; 실패 취득·차감 없음;4초 경계/마우스 이탈/교체/종료 정리"
+    },
+    "gui": {
+      "gui-default1": {
+        "passed": true,
+        "originalsUnchanged": true,
+        "failureHint": false,
+        "hints": {
+          "preparedWorkshop": [],
+          "placedWorkshop": [],
+          "completedWorkshop": [],
+          "researched": [],
+          "taken": [],
+          "preparedCannon": [],
+          "placedCannon": [],
+          "after": [],
+          "scrolled": [],
+          "stopped": []
+        },
+        "productTimers": false,
+        "content": [
+          "141",
+          "101",
+          "128",
+          "0",
+          "166",
+          "80",
+          "270",
+          "134"
+        ],
+        "taken": [
+          "0",
+          "1",
+          "128",
+          "101",
+          "64",
+          "94",
+          "8",
+          "65",
+          "1",
+          "1",
+          "1"
+        ],
+        "prepared": [
+          "0",
+          "1",
+          "128",
+          "101",
+          "94",
+          "111",
+          "8",
+          "65",
+          "1",
+          "1",
+          "1"
+        ],
+        "sp": [
+          "2200",
+          "1800"
+        ],
+        "cannons": {
+          "15184": [
+            "128",
+            "1",
+            "16",
+            "94",
+            "111"
+          ]
+        },
+        "camera": [
+          [
+            "976",
+            "793"
+          ],
+          [
+            "1370",
+            "793"
+          ],
+          [
+            "1370",
+            "793"
+          ]
+        ],
+        "bridges": [
+          [
+            "73",
+            "0",
+            "2",
+            "62",
+            "64"
+          ],
+          [
+            "76",
+            "8",
+            "2",
+            "72",
+            "64"
+          ]
+        ],
+        "stocks": [
+          3,
+          2,
+          2
+        ],
+        "limits": [
+          "한 지점의 실제 UI 건설/연구/생산/Take/배치/완공과 키 누름/해제 및 다리 공급·재고 관측이며 공격·미션 완주 판정은 별도"
+        ]
+      },
+      "gui-empty2": {
+        "passed": true,
+        "originalsUnchanged": true,
+        "failureHint": true,
+        "hints": {
+          "preparedWorkshop": [],
+          "placedWorkshop": [],
+          "completedWorkshop": [],
+          "researched": [],
+          "taken": [],
+          "preparedCannon": [],
+          "placedCannon": [],
+          "emptyInventory": [
+            [
+              "183",
+              "176",
+              "180",
+              "51.780000000000001",
+              "4243841",
+              "~0~w~ENone in inventory"
+            ]
+          ],
+          "after": [],
+          "scrolled": [],
+          "stopped": []
+        },
+        "productTimers": true,
+        "content": [
+          "155",
+          "101",
+          "128",
+          "0",
+          "166",
+          "80",
+          "270",
+          "148"
+        ],
+        "taken": [
+          "0",
+          "1",
+          "128",
+          "101",
+          "64",
+          "94",
+          "8",
+          "65",
+          "1",
+          "1",
+          "1"
+        ],
+        "prepared": [
+          "0",
+          "1",
+          "128",
+          "101",
+          "94",
+          "111",
+          "8",
+          "65",
+          "1",
+          "1",
+          "1"
+        ],
+        "sp": [
+          "2200",
+          "1800"
+        ],
+        "cannons": {
+          "15184": [
+            "128",
+            "1",
+            "16",
+            "94",
+            "111"
+          ]
+        },
+        "camera": [
+          [
+            "976",
+            "793"
+          ],
+          [
+            "1506",
+            "793"
+          ],
+          [
+            "1506",
+            "793"
+          ]
+        ],
+        "bridges": [
+          [
+            "73",
+            "0",
+            "2",
+            "62",
+            "64"
+          ],
+          [
+            "76",
+            "8",
+            "2",
+            "72",
+            "64"
+          ]
+        ],
+        "stocks": [
+          1,
+          0,
+          1
+        ],
+        "limits": [
+          "한 지점의 실제 UI 건설/연구/생산/Take/배치/완공과 키 누름/해제 및 다리 공급·재고 관측이며 공격·미션 완주 판정은 별도"
+        ]
+      }
+    },
+    "stageEntries": {
+      "count": 11,
+      "missions": [
+        "tutorial1",
+        "tutorial2",
+        "tutorial3",
+        "tutorial4",
+        "tutorial5",
+        "tutorial6",
+        "thewarbegins",
+        "masterofwhirligigs",
+        "demostormrages",
+        "guardmyback",
+        "dissolvedalliance"
+      ],
+      "naturalCompletion": false
+    },
+    "audit": {
+      "tools": 108,
+      "passed": 97,
+      "knownFailures": [
+        "tools/analyze_campaign_target_path.py",
+        "tools/decomp_chat_channels.py",
+        "tools/decomp_constructionarrival_oracle.py",
+        "tools/decomp_factorypostpop_oracle.py",
+        "tools/decomp_guntarget_oracle.py",
+        "tools/decomp_menulayout_oracle.py",
+        "tools/decomp_metadisplaydirty_oracle.py",
+        "tools/decomp_pathdata_oracle.py",
+        "tools/decomp_pathprepare_oracle.py",
+        "tools/decomp_pathruntime_oracle.py",
+        "tools/decomp_unpop_oracle.py"
+      ],
+      "newFailures": 0
+    },
+    "pins": {
+      "reports": 68,
+      "items": 142
+    }
+  },
+  "remaining": [
+    "생산 항목 우클릭43d330의 실제 메뉴/Form/Help 명령 연결. 이번1296입력은 관측만 완료했으며 제품은 기존 명시 거부 경로다.",
+    "실제 썬 캐논 공격/운반 왕복/희생/승패/후속 미션과 전략AI,11단계 자연 완주와 원본 전체 동일성은 미완료다."
+  ],
+  "excluded": [
+    "원본 Win10/11 전체화면 DirectDraw 결함",
+    "AGENTS/보호 원본 수정·새 정밀 디컴파일·dotnetpj·원격 push"
+  ]
+}

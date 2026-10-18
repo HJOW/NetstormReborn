@@ -16,7 +16,7 @@
     "cpppj/src/client/RawCampaignSession.h": "708c73cd9f83b6a32496a782151ec35cbecb469a7f9c4f136819a5ae57b70288",
     "cpppj/src/client/RawMenuControls.cpp": "521a34d2d7660a18a90435074c1f2893f4c24ca600d81d3a5cf18b745226459c",
     "cpppj/src/client/RawMenuControls.h": "70cf632cf282ea15c98c45ca1b8fba8b720dafb07eebc2a022723dfc35e3b1fa",
-    "cpppj/src/client/UberGump.cpp": "09ae6c715bbfb82f9517ea7f1d11a4d4801d8a01af34c6d48e1831791996c06b",
+    "cpppj/src/client/UberGump.cpp": "6cea87e36ace1710f9de90652a87184d0e04803bd1be6c63b47b3258eda4f256",
     "cpppj/tests/CampaignObjectMenuTests.cpp": "fea9198ea2150c42bb523f7ac9298c2f819acd1fc9b9887b53020c206ad62563"
   },
   "unchangedExistingModules": {
@@ -883,6 +883,19 @@
           "path": "cpppj/src/client/RawCampaignSession.cpp",
           "previous": "99e082e181299b20ed713c6f4f72d0bc5ab3f3c46457b1ea47486fac6cca41a3",
           "current": "f5a4835133edc828d65390d1f4c9e25ab3cf68a6bfb0e3dc696e68d49013961c"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 181,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/UberGump.cpp",
+          "previous": "09ae6c715bbfb82f9517ea7f1d11a4d4801d8a01af34c6d48e1831791996c06b",
+          "current": "6cea87e36ace1710f9de90652a87184d0e04803bd1be6c63b47b3258eda4f256"
         }
       ]
     }

@@ -13,7 +13,7 @@
     "cpppj/src/client/RawCampaignSession.h": "708c73cd9f83b6a32496a782151ec35cbecb469a7f9c4f136819a5ae57b70288",
     "cpppj/src/client/RawCampaignParticles.cpp": "b74ba0cfd8ffc50d8d8435f7c257631fa061881afe9312c2297dcc5449ed4270",
     "cpppj/src/client/RawCampaignParticles.h": "b687c247c1eaea29b7a41da06a3194aad176d46855f7005e81d75002f76971ce",
-    "cpppj/tests/CampaignSessionTests.cpp": "3bc6fd7121a4a72da06c99f61aa11178edb163182d02b74b1b652377f5559663"
+    "cpppj/tests/CampaignSessionTests.cpp": "2a7f2aad0d79a0071cffd3565b5f5cd8a3983f7e44c520ca3c9aacd22bb9e047"
   },
   "protectedFileSha256": {
     "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
@@ -906,6 +906,19 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "259b8c3178bb2b3498ca76818c49db41c2ed544ff7fca6c272da61856b15e72b",
           "current": "3bc6fd7121a4a72da06c99f61aa11178edb163182d02b74b1b652377f5559663"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 181,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "3bc6fd7121a4a72da06c99f61aa11178edb163182d02b74b1b652377f5559663",
+          "current": "2a7f2aad0d79a0071cffd3565b5f5cd8a3983f7e44c520ca3c9aacd22bb9e047"
         }
       ]
     }

@@ -19,7 +19,9 @@ def repeated(report,key):
 
 # 이미 검증한 게임 동작을 같은 원본 UI 명령으로 실행하고 결과만 읽는다.
 def main():
-    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--output',type=Path,required=True);parser.add_argument('--product-timers',action='store_true');args=parser.parse_args();out=args.output.resolve()
+    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--output',type=Path,required=True);parser.add_argument('--product-timers',action='store_true');parser.add_argument('--failure-hint',action='store_true');args=parser.parse_args();
+    if args.failure_hint and not args.product_timers:parser.error('재고0 안내 관측은 --product-timers도 필요하다')
+    out=args.output.resolve()
     if out.exists() and any(out.iterdir()):raise RuntimeError('새 관측 경로 필요')
     out.mkdir(parents=True,exist_ok=True)
     steps=[(5,'click','Play Mission'),(7,'right','world:priest'),(35,'click','Construct'),(65,'click','Workshop'),(95,'click',' Build Sun Workshop for 800'),
@@ -30,6 +32,9 @@ def main():
            (1130,'up','cell:94,109'),(1140,'report','preparedCannon'),(1150,'click','cell:94,109'),(1160,'report','placedCannon'),(1160,'snapshot',str(out/'placed.bmp')),
            (2400,'report','after'),(2400,'snapshot',str(out/'after.bmp')),
            (2405,'key','right'),(2425,'keyup','right'),(2426,'report','scrolled'),(2440,'report','stopped')]
+    # 실제 첫 생산으로 수량이0인 항목을 다시 클릭한다. 상태/실패값은 주입하지 않는다.
+    if args.failure_hint:
+        steps.extend([(1600,'click','production:128'),(1610,'report','emptyInventory'),(1610,'snapshot',str(out/'empty-inventory.bmp'))]);steps.sort(key=lambda row:row[0])
     script=out/'steps.tsv';report=out/'states.tsv';script.write_text(''.join(f'{frame}\t{op}\t{arg}\n' for frame,op,arg in steps),encoding='utf-8',newline='\n')
     command=[str(EXE),'--run',str(ROOT/'originals'),'--mission','thewarbegins','--window','--no-audio','--frames','2443','--set',f'SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers={int(args.product_timers)}','--ui-script',str(script),'--ui-report',str(report)]
     before=snapshots(ROOT/'originals')
@@ -57,7 +62,12 @@ def main():
     for label in ('researched','placedCannon','after'):
         stock=[row for row in contents[label] if row[1]=='128' and int(row[2])&8];assert len(stock)==1,stock;stocks.append(int(stock[0][3]))
     assert stocks==([1,0,1] if args.product_timers else [3,2,2]),stocks
-    summary=dict(passed=True,originalsUnchanged=unchanged,productTimers=args.product_timers,content=source[0],taken=taken['raw_cursor'],prepared=observed['preparedCannon']['raw_cursor'],sp=[researched['raw_sp'][1],placed['raw_sp'][1]],cannons=cannons,camera=camera,bridges=bridges,stocks=stocks,limits=['한 지점의 실제 UI 건설/연구/생산/Take/배치/완공과 키 누름/해제 및 다리 공급·재고 관측이며 공격·미션 완주 판정은 별도'])
+    hints=repeated(report,'raw_production_hint')
+    # 같은 실제 커서/SP/소유 문자열과 이후 공통 수명 정리 결과를 읽는다.
+    if args.failure_hint:
+        failure=observed['emptyInventory'];hint=hints['emptyInventory'];assert len(hint)==1 and hint[0][-1]=='~0~w~ENone in inventory',hint
+        assert failure['raw_cursor'][0]!='0' and failure['raw_sp']==placed['raw_sp'] and not hints['after'],(failure['raw_cursor'],failure['raw_sp'],hints['after'])
+    summary=dict(passed=True,originalsUnchanged=unchanged,failureHint=args.failure_hint,hints=hints,productTimers=args.product_timers,content=source[0],taken=taken['raw_cursor'],prepared=observed['preparedCannon']['raw_cursor'],sp=[researched['raw_sp'][1],placed['raw_sp'][1]],cannons=cannons,camera=camera,bridges=bridges,stocks=stocks,limits=['한 지점의 실제 UI 건설/연구/생산/Take/배치/완공과 키 누름/해제 및 다리 공급·재고 관측이며 공격·미션 완주 판정은 별도'])
     (out/'summary.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2)+'\n',encoding='utf-8');print(json.dumps(summary,ensure_ascii=False))
 
 # 명시 CLI 요청에서만 클론 창을 실행한다.

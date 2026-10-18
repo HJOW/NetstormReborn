@@ -675,7 +675,8 @@ void UberGump::Compose() {
             auto& production=rawButtons_->EnableProduction(world_->Session(),client_.Assets(),RawProductionHooks{
                 [this] { return client_.WallSeconds(); },[this](std::string_view name) { client_.WorldAudio().Sounds().PlayByName(name,0,0,0,0,0); },
                 [this](std::string_view key) { state_.Post({"Tell",std::string(key)}); },
-                [this](std::string_view key,std::int32_t fallback) { client_.Configuration().ReadInt(key,fallback);return fallback; }});
+                [this](std::string_view key,std::int32_t fallback) { client_.Configuration().ReadInt(key,fallback);return fallback; },
+                [this](std::string_view key) { return FontBytes(client_.Translate(o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(key.data()),key.size()}))); }});
             production.SetPalette(client_.GetScreen().Palette());
         }
         if (!popup_.empty()) {

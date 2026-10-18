@@ -69,8 +69,8 @@
     "originals/d/GIFCLOUD.COL": "785a2cda6ac1d3e295d375815b6d9650720683099db7c249382d598b5da00532"
   },
   "currentSources": {
-    "cpppj/src/client/CMakeLists.txt": "d2463c8e635ce3e6d82bc55105489461d1758f6a5819c7748cf6d1108a91ae4d",
-    "cpppj/tests/CMakeLists.txt": "17eef31cff19a97642806d3980eda0465ee811e1146150391275f0765eaf9885",
+    "cpppj/src/client/CMakeLists.txt": "00e205d4b299c382fa751ac2312ef9314a1baf894e00a40593280845b0f3a8c8",
+    "cpppj/tests/CMakeLists.txt": "921f5464983352309a998ba124184bc838cfa4c098a1053ee2dd9131c4410d4c",
     "cpppj/src/client/ImageGump.h": "15376cf28db04c2582f3c5616ea0cfb2b5b202ec6a02c2aa55c8311b53d13316",
     "cpppj/src/client/ImageGump.cpp": "743e9b79acc24ca0b34430b73fba3b3d96ea50c7729c1821f317f8ded812a7cd",
     "cpppj/tests/ImageGumpTests.cpp": "4d1e0fd152abe55d08d9f94dc745c395a3a4588ec2c7062068eab3b1e769baa5",
@@ -206,6 +206,25 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "3e200bbf9836698412da1bb62fd2defaf0049e6723709e8c5e8af2bb59e5b490",
           "current": "17eef31cff19a97642806d3980eda0465ee811e1146150391275f0765eaf9885"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 181,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/CMakeLists.txt",
+          "previous": "d2463c8e635ce3e6d82bc55105489461d1758f6a5819c7748cf6d1108a91ae4d",
+          "current": "00e205d4b299c382fa751ac2312ef9314a1baf894e00a40593280845b0f3a8c8"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "17eef31cff19a97642806d3980eda0465ee811e1146150391275f0765eaf9885",
+          "current": "921f5464983352309a998ba124184bc838cfa4c098a1053ee2dd9131c4410d4c"
         }
       ]
     }

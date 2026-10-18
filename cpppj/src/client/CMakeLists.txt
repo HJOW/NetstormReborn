@@ -159,3 +159,6 @@ target_sources(netstorm PRIVATE ImageGump.h ImageGump.cpp)
 
 # 실제 생산 내용물 항목의 자식 배치·입력·장식·비용을 복원한다.
 target_sources(netstorm PRIVATE InventoryItemGump.h InventoryItemGump.cpp)
+
+# 같은 생산 실패 안내 파생을 공통 Gump 트리에 연결한다.
+target_sources(netstorm PRIVATE ProductionHintGump.h ProductionHintGump.cpp)

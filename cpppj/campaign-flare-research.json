@@ -133,11 +133,11 @@
     "cpppj/src/client/RawCampaignSession.cpp": "f5a4835133edc828d65390d1f4c9e25ab3cf68a6bfb0e3dc696e68d49013961c",
     "cpppj/src/client/RawCampaignSession.h": "708c73cd9f83b6a32496a782151ec35cbecb469a7f9c4f136819a5ae57b70288",
     "cpppj/src/client/RawSurfaceWorld.cpp": "d6ebba7d5175b98dd5ddabba6de4744a977434913b4eb8b9c2e39068e7b94832",
-    "cpppj/src/client/UberGump.cpp": "09ae6c715bbfb82f9517ea7f1d11a4d4801d8a01af34c6d48e1831791996c06b",
+    "cpppj/src/client/UberGump.cpp": "6cea87e36ace1710f9de90652a87184d0e04803bd1be6c63b47b3258eda4f256",
     "cpppj/src/o/CMakeLists.txt": "8c72f4fb78c7fafefa85dad32a08ed980fb9d0e37e9600359dcdc4b87cc0a3d0",
     "cpppj/src/o/RawFactoryResearch.h": "5cd0dc8a306e50725710d3124e3af6def870ec2fe001f3dfcf6e2e183bfc2202",
-    "cpppj/tests/CMakeLists.txt": "17eef31cff19a97642806d3980eda0465ee811e1146150391275f0765eaf9885",
-    "cpppj/tests/CampaignSessionTests.cpp": "3bc6fd7121a4a72da06c99f61aa11178edb163182d02b74b1b652377f5559663",
+    "cpppj/tests/CMakeLists.txt": "921f5464983352309a998ba124184bc838cfa4c098a1053ee2dd9131c4410d4c",
+    "cpppj/tests/CampaignSessionTests.cpp": "2a7f2aad0d79a0071cffd3565b5f5cd8a3983f7e44c520ca3c9aacd22bb9e047",
     "cpppj/tests/FactoryResearchTests.cpp": "73801f93e0273a9b49538735884d1afb7250257511a5a4cd619659ca2b90d881",
     "tools/cpp_priest_construction_smoke.py": "93524c9e1fb58e7e589fc25c7507e105e750b96cb66ad7ddbf9a58aae2756c2c",
     "tools/decomp_flare.py": "1d2560364693e266f7da65fdf4c6631e920c398687398056b66340daa0c20825",
@@ -6192,6 +6192,31 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "259b8c3178bb2b3498ca76818c49db41c2ed544ff7fca6c272da61856b15e72b",
           "current": "3bc6fd7121a4a72da06c99f61aa11178edb163182d02b74b1b652377f5559663"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 181,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/UberGump.cpp",
+          "previous": "09ae6c715bbfb82f9517ea7f1d11a4d4801d8a01af34c6d48e1831791996c06b",
+          "current": "6cea87e36ace1710f9de90652a87184d0e04803bd1be6c63b47b3258eda4f256"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "17eef31cff19a97642806d3980eda0465ee811e1146150391275f0765eaf9885",
+          "current": "921f5464983352309a998ba124184bc838cfa4c098a1053ee2dd9131c4410d4c"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "3bc6fd7121a4a72da06c99f61aa11178edb163182d02b74b1b652377f5559663",
+          "current": "2a7f2aad0d79a0071cffd3565b5f5cd8a3983f7e44c520ca3c9aacd22bb9e047"
         }
       ]
     }

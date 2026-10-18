@@ -29,8 +29,8 @@
     "cpppj/tests/fixtures/type-required-energy-x86.tsv": "8bcb3e215c958f5df0a395365059f5481801b1660569f2f04c0720f394f14f4c",
     "cpppj/tests/TypeRequiredEnergyTests.cpp": "0802ab400413ec5da3f2d03a4ac6b6f88e2d088915646609a2ca0bb39a02b05c",
     "cpppj/src/o/CMakeLists.txt": "8c72f4fb78c7fafefa85dad32a08ed980fb9d0e37e9600359dcdc4b87cc0a3d0",
-    "cpppj/src/client/CMakeLists.txt": "d2463c8e635ce3e6d82bc55105489461d1758f6a5819c7748cf6d1108a91ae4d",
-    "cpppj/tests/CMakeLists.txt": "17eef31cff19a97642806d3980eda0465ee811e1146150391275f0765eaf9885"
+    "cpppj/src/client/CMakeLists.txt": "00e205d4b299c382fa751ac2312ef9314a1baf894e00a40593280845b0f3a8c8",
+    "cpppj/tests/CMakeLists.txt": "921f5464983352309a998ba124184bc838cfa4c098a1053ee2dd9131c4410d4c"
   },
   "product_validation": {
     "configuration": "Release",
@@ -2033,6 +2033,25 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "3e200bbf9836698412da1bb62fd2defaf0049e6723709e8c5e8af2bb59e5b490",
           "current": "17eef31cff19a97642806d3980eda0465ee811e1146150391275f0765eaf9885"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 181,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/client/CMakeLists.txt",
+          "previous": "d2463c8e635ce3e6d82bc55105489461d1758f6a5819c7748cf6d1108a91ae4d",
+          "current": "00e205d4b299c382fa751ac2312ef9314a1baf894e00a40593280845b0f3a8c8"
+        },
+        {
+          "group": "/sha256",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "17eef31cff19a97642806d3980eda0465ee811e1146150391275f0765eaf9885",
+          "current": "921f5464983352309a998ba124184bc838cfa4c098a1053ee2dd9131c4410d4c"
         }
       ]
     }

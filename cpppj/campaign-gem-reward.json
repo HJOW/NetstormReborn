@@ -17,8 +17,8 @@
     "cpppj/src/client/RawCampaignSession.cpp": "f5a4835133edc828d65390d1f4c9e25ab3cf68a6bfb0e3dc696e68d49013961c",
     "cpppj/src/client/RawCampaignSession.h": "708c73cd9f83b6a32496a782151ec35cbecb469a7f9c4f136819a5ae57b70288",
     "cpppj/src/CMakeLists.txt": "945332cd1c5b131d7e35d0ae7fb15762597c41be26ffea267b18e8b3d048efd8",
-    "cpppj/tests/CMakeLists.txt": "17eef31cff19a97642806d3980eda0465ee811e1146150391275f0765eaf9885",
-    "cpppj/tests/CampaignSessionTests.cpp": "3bc6fd7121a4a72da06c99f61aa11178edb163182d02b74b1b652377f5559663",
+    "cpppj/tests/CMakeLists.txt": "921f5464983352309a998ba124184bc838cfa4c098a1053ee2dd9131c4410d4c",
+    "cpppj/tests/CampaignSessionTests.cpp": "2a7f2aad0d79a0071cffd3565b5f5cd8a3983f7e44c520ca3c9aacd22bb9e047",
     "cpppj/tests/GemRewardTests.cpp": "f0cb013a5ef4da53823684fd5ea1fc5ae934c771fabb827dc77bac9391e84cce",
     "tools/decomp_gem_reward.py": "9af183bfb0771406746c3eacce223412ac5450a0f334ff6480a0fc7358b15232",
     "cpppj/tests/fixtures/gem-reward-x86.tsv": "4aa9033630b83976e528f354bb0df89e4f4226911b0a3d5e9c2c810c0a94bd09",
@@ -724,6 +724,25 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "259b8c3178bb2b3498ca76818c49db41c2ed544ff7fca6c272da61856b15e72b",
           "current": "3bc6fd7121a4a72da06c99f61aa11178edb163182d02b74b1b652377f5559663"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 181,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "17eef31cff19a97642806d3980eda0465ee811e1146150391275f0765eaf9885",
+          "current": "921f5464983352309a998ba124184bc838cfa4c098a1053ee2dd9131c4410d4c"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "3bc6fd7121a4a72da06c99f61aa11178edb163182d02b74b1b652377f5559663",
+          "current": "2a7f2aad0d79a0071cffd3565b5f5cd8a3983f7e44c520ca3c9aacd22bb9e047"
         }
       ]
     }

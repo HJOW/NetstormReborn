@@ -20,8 +20,8 @@
     "cpppj/src/o/RawPathStart.cpp": "9dbe404e4d377a362213cffd1da8a42b65816aaf54830fc5708379b9d528edab",
     "cpppj/src/o/SquidPostPop.cpp": "0e6f552bafeab1be94ba07919b928535e774ce54e121d775df514c9b6645d4e6",
     "cpppj/src/o/SquidPostPop.h": "b4bfb4886068b9dd98bed52b9f56f17e1c25e50b123b4fdd6b165f2054bcdf1d",
-    "cpppj/tests/CMakeLists.txt": "17eef31cff19a97642806d3980eda0465ee811e1146150391275f0765eaf9885",
-    "cpppj/tests/CampaignSessionTests.cpp": "3bc6fd7121a4a72da06c99f61aa11178edb163182d02b74b1b652377f5559663",
+    "cpppj/tests/CMakeLists.txt": "921f5464983352309a998ba124184bc838cfa4c098a1053ee2dd9131c4410d4c",
+    "cpppj/tests/CampaignSessionTests.cpp": "2a7f2aad0d79a0071cffd3565b5f5cd8a3983f7e44c520ca3c9aacd22bb9e047",
     "cpppj/src/o/RawBalloonFrame.cpp": "71390bf0c48ed94bd6381b15c812b5a6702cd94e02528692f7ac5d1b6f18ab05",
     "cpppj/src/o/RawBalloonFrame.h": "3c50521f9a4a132e33b627fcf609e6028ff2cfbbc6b757434f06b4b3d7b90c8d",
     "cpppj/src/o/RawBalloonBody.cpp": "ae406292ac8d2be18bbdd2aaf46dc0a845e3b06c989d51af4219d722a5881f61",
@@ -2608,6 +2608,25 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "259b8c3178bb2b3498ca76818c49db41c2ed544ff7fca6c272da61856b15e72b",
           "current": "3bc6fd7121a4a72da06c99f61aa11178edb163182d02b74b1b652377f5559663"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 181,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "17eef31cff19a97642806d3980eda0465ee811e1146150391275f0765eaf9885",
+          "current": "921f5464983352309a998ba124184bc838cfa4c098a1053ee2dd9131c4410d4c"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "3bc6fd7121a4a72da06c99f61aa11178edb163182d02b74b1b652377f5559663",
+          "current": "2a7f2aad0d79a0071cffd3565b5f5cd8a3983f7e44c520ca3c9aacd22bb9e047"
         }
       ]
     }

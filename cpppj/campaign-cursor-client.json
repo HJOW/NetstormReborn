@@ -28,14 +28,14 @@
     "cpppj/src/client/RawObjectMenu.h": "47fa941dc9fe3becb679f297ea29c8f7cc662aa44d1e6f91c5643739aa905e9a",
     "cpppj/src/client/RawUserHighlight.cpp": "3ac1867b7da1f553b0fb46103207df3886f31a332e1332456b2590b089438767",
     "cpppj/src/client/RawUserHighlight.h": "a19046a0a3061565a82b7463307e4886c3b9f6db0151d02ada619d5a32c3f90a",
-    "cpppj/src/client/UberGump.cpp": "09ae6c715bbfb82f9517ea7f1d11a4d4801d8a01af34c6d48e1831791996c06b",
+    "cpppj/src/client/UberGump.cpp": "6cea87e36ace1710f9de90652a87184d0e04803bd1be6c63b47b3258eda4f256",
     "cpppj/src/client/UserInput.cpp": "fd1bee42a48c4a33098114e813a7909d449791671fb0e313b76efc55216c20bd",
     "cpppj/src/o/SquidFactory.h": "439126b14875597ae876ab82d1699d414fa15fdf76ec9ac83f6794d32595c549",
     "cpppj/src/o/SquidReward.h": "59cf154a0aa681fbce7bdf445728afc582409bd9af9b24e5b135e435e92aa362",
-    "cpppj/tests/CMakeLists.txt": "17eef31cff19a97642806d3980eda0465ee811e1146150391275f0765eaf9885",
+    "cpppj/tests/CMakeLists.txt": "921f5464983352309a998ba124184bc838cfa4c098a1053ee2dd9131c4410d4c",
     "cpppj/tests/CampaignCursorClientEffectsTests.cpp": "f04679442eea66764f77ab814314c9edd1790dca1f61f39e95eb29804b78d92b",
     "cpppj/tests/CampaignObjectMenuTests.cpp": "fea9198ea2150c42bb523f7ac9298c2f819acd1fc9b9887b53020c206ad62563",
-    "cpppj/tests/CampaignSessionTests.cpp": "3bc6fd7121a4a72da06c99f61aa11178edb163182d02b74b1b652377f5559663",
+    "cpppj/tests/CampaignSessionTests.cpp": "2a7f2aad0d79a0071cffd3565b5f5cd8a3983f7e44c520ca3c9aacd22bb9e047",
     "cpppj/tests/RawButtonCursorBoundaryTests.cpp": "1f24a7464493536890611554b51d41bdeb477fa23190a909933ebd0ef1873684",
     "cpppj/tests/UserHighlightTests.cpp": "a23f97791f61415d333d3d99b33ec56e6ec67423a021da43473934fadd3a57ab",
     "cpppj/tests/fixtures/user-highlight-x86.tsv": "e1d0bc9dbf434de9c897a6fcac4af50f2be637318ab3a52d3795273cf734ed78"
@@ -1605,6 +1605,31 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "259b8c3178bb2b3498ca76818c49db41c2ed544ff7fca6c272da61856b15e72b",
           "current": "3bc6fd7121a4a72da06c99f61aa11178edb163182d02b74b1b652377f5559663"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 181,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/UberGump.cpp",
+          "previous": "09ae6c715bbfb82f9517ea7f1d11a4d4801d8a01af34c6d48e1831791996c06b",
+          "current": "6cea87e36ace1710f9de90652a87184d0e04803bd1be6c63b47b3258eda4f256"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "17eef31cff19a97642806d3980eda0465ee811e1146150391275f0765eaf9885",
+          "current": "921f5464983352309a998ba124184bc838cfa4c098a1053ee2dd9131c4410d4c"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "3bc6fd7121a4a72da06c99f61aa11178edb163182d02b74b1b652377f5559663",
+          "current": "2a7f2aad0d79a0071cffd3565b5f5cd8a3983f7e44c520ca3c9aacd22bb9e047"
         }
       ]
     }

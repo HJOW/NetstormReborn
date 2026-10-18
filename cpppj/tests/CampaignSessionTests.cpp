@@ -1771,7 +1771,7 @@ TEST_CASE(CampaignSession_LocalLoginWorkshopHasActualPlacement) {
     std::cout<<"실제 연구58h/예측"<<prediction.value<<"→서버"<<authoritative.value<<"/현재Deck/플레어12→후속"<<peak<<"→0 통과\n";
     std::cout<<"실제1-1 썬 워크샾 자연 건설 SID"<<target.value<<" 시작"<<began<<" 완료"<<end<<" HP"<<maximum<<"\n";
     {
-        FontStore fonts(assets.files,"Arial");double wall=100;std::size_t gets{}; // 실제 원본 글꼴/장치 입력 경계다.
+        FontStore fonts(assets.files,"Arial");double wall=100;bool productTimers{};std::size_t gets{}; // 실제 원본 글꼴/장치 입력 경계다.
         RawButtonControls controls(OriginalEdition::Patch1078,{[&] { return wall; },{}, {},[&](auto form,auto flags) { session.GumpForms().Destroy({static_cast<std::uint16_t>(form)},flags); }});activeProductionUi=&controls;
         RawMenuHooks hooks;hooks.command=[](auto,auto,auto) {};hooks.readInt=[](auto,std::int32_t& value) { value=0; };hooks.sound=[](auto) {};hooks.poll=[](auto) { return InputEvent{InputCode::kRelease,500,350}; };hooks.cursor=[](auto) {};
         hooks.objectForms=[&]() -> GumpFormHost& { return session.GumpForms(); };hooks.gameSeconds=[&] { return core.processState.now; };
@@ -1781,7 +1781,7 @@ TEST_CASE(CampaignSession_LocalLoginWorkshopHasActualPlacement) {
         const auto colors=BuildPaletteColorTable(logical);menus.SetPalette(colors);const auto& fortGump=assets.game.Find("fortGump");const auto metrics=assets.game.Shapes().SquidMetrics(fortGump.block,0);
         const std::array<GumpControl,1> buttons{{{0,{84,4,160,26},false,true,false}}};const std::array<std::string,1> labels{{"Game"}};
         controls.SetControls(buttons,labels,1024,768,{static_cast<std::uint32_t>(fortGump.block+70),0,metrics.width,metrics.height,ButtonColors(colors)});
-        auto& production=controls.EnableProduction(session,assets.game,{[&] { return wall; },[&](std::string_view name) { CHECK(name=="getPiece.wav");++gets; },[](auto) { throw std::logic_error("생산 검사 예상 밖 Tell"); },[](std::string_view key,std::int32_t fallback) { return key=="useProductTimers" ? 0 : fallback; }});production.SetPalette(palette);
+        auto& production=controls.EnableProduction(session,assets.game,{[&] { return wall; },[&](std::string_view name) { CHECK(name=="getPiece.wav");++gets; },[](auto) { throw std::logic_error("생산 검사 예상 밖 Tell"); },[&](std::string_view key,std::int32_t fallback) { return key=="useProductTimers" ? static_cast<std::int32_t>(productTimers) : fallback; },[](std::string_view text) { return std::string(text); }});production.SetPalette(palette);
         CHECK(controls.RegisteredGump(3) && production.Node(controls.RegisteredGump(3)));CHECK(production.Report().find("\t128\t")!=std::string::npos);
         std::vector<std::uint8_t> pixels(1024*768,0x5a);menus.Draw(pixels,1024,768,colors,BuildGumpShadeMaps(logical));CHECK(std::any_of(pixels.begin(),pixels.end(),[](auto pixel) { return pixel!=0x5a; }));
         std::cout<<"실제 초기 에너지 공급원 "<<core.bookkeeping.providers.count<<"/Cannon level"<<core.types[128].level<<"/theme"<<core.types[128].theme<<"/요구"<<BindAiTypeRequiredEnergy(assets.game,core.types)(128)<<"\n";
@@ -1849,7 +1849,30 @@ TEST_CASE(CampaignSession_LocalLoginWorkshopHasActualPlacement) {
                 }
             }
         }
-        controls.DisableProduction();CHECK(!controls.Production());CHECK(session.Sp(1)==1800);activeProductionUi=nullptr;
+        // 실제 취득/허용점/서버 배치로만 SP와 재고를 소비한다. 실패값을 주입하지 않는다.
+        for (std::uint32_t extra=0;extra<4;++extra) {
+            const auto current=production.Point(128);CHECK(current.has_value());if (!current) break;
+            const auto priorMoney=session.Sp(1);const auto previousGets=gets;controls.Event({InputCode::kLeftButton,current->x,current->y});CHECK(gets==previousGets+1 && session.CursorDropSettings().lockDepth==0);
+            CursorPlacementPoint(session,ui);session.Cursor().Drop();session.PumpLocalConnection();session.Cursor().Cancel();CHECK(session.Sp(1)==priorMoney-400);
+            const auto beganMore=core.processState.now,wallMore=wall; // 실제 반환 내용물의 선택 잠금 Regular도 자연 진행한다.
+            // 다음 클릭은 원본 반환 지연과 건설이 지난 실제 프레임에서 수행한다.
+            for (std::uint64_t frame=1;frame<=720;++frame) { const auto now=beganMore+static_cast<double>(frame)/60;wall=wallMore+(now-beganMore);session.RunFrame({now,wall,1.0/60,frame},false);controls.Poll({InputCode::kRelease,500,350});menus.CleanupFrame(); }
+            if (extra==1) {
+                productTimers=true;const auto zero=production.Point(128);CHECK(zero.has_value());const auto noTake=gets;
+                if (zero) controls.Event({InputCode::kLeftButton,zero->x,zero->y});
+                CHECK(gets==noTake && session.Sp(1)==1000 && session.CursorDropSettings().lockDepth!=0);CHECK(production.Report().find("~0~w~ENone in inventory")!=std::string::npos);
+                menus.Draw(pixels,1024,768,colors,BuildGumpShadeMaps(logical));wall+=3.999;controls.Poll({InputCode::kRelease,500,350});menus.CleanupFrame();CHECK(production.Report().find("raw_production_hint\t")!=std::string::npos);
+                wall+=0.001;controls.Poll({InputCode::kRelease,500,350});menus.CleanupFrame();CHECK(production.Report().find("raw_production_hint\t")==std::string::npos);productTimers=false;
+            }
+        }
+        CHECK(session.Sp(1)==200);const auto insufficient=production.Point(128);CHECK(insufficient.has_value());const auto noTake=gets;
+        if (insufficient) controls.Event({InputCode::kLeftButton,insufficient->x,insufficient->y});CHECK(gets==noTake && session.Sp(1)==200 && session.CursorDropSettings().lockDepth!=0);
+        CHECK(production.Report().find("~0~w~ENot enough Storm Power to build this")!=std::string::npos && production.Report().find("raw_production_budget_flash\t10\t")!=std::string::npos);
+        menus.Draw(pixels,1024,768,colors,BuildGumpShadeMaps(logical));
+        // 같은 종류 안내의 실제 교체와 루트 형제의 생산 종료 시 정리를 함께 확인한다.
+        if (insufficient) controls.Event({InputCode::kLeftButton,insufficient->x,insufficient->y});menus.CleanupFrame();
+        CHECK(production.Report().find("raw_production_hint\t")==production.Report().rfind("raw_production_hint\t"));
+        controls.DisableProduction();CHECK(!controls.Production());CHECK(session.Sp(1)==200);activeProductionUi=nullptr;
     }
 
 }

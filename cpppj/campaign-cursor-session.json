@@ -23,7 +23,7 @@
     "cpppj/src/client/RawSurfaceWorld.h": "278604c3b2b58bb13dfb1d8574efd48cd8d353e71e0c342498286f19f233cd03",
     "cpppj/src/o/ContentFormLifetime.cpp": "eb4239239c706c6c494ae428dd64bd9aba0927c0a5b3bd8a19c9e2e697904fdc",
     "cpppj/src/o/ContentFormLifetime.h": "9c483590c4655b6ea974b980f144a05633f85dcc3a279b01c30c967daa0190e1",
-    "cpppj/tests/CampaignSessionTests.cpp": "3bc6fd7121a4a72da06c99f61aa11178edb163182d02b74b1b652377f5559663"
+    "cpppj/tests/CampaignSessionTests.cpp": "2a7f2aad0d79a0071cffd3565b5f5cd8a3983f7e44c520ca3c9aacd22bb9e047"
   },
   "protectedFileSha256": {
     "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
@@ -1117,6 +1117,19 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "259b8c3178bb2b3498ca76818c49db41c2ed544ff7fca6c272da61856b15e72b",
           "current": "3bc6fd7121a4a72da06c99f61aa11178edb163182d02b74b1b652377f5559663"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 181,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "3bc6fd7121a4a72da06c99f61aa11178edb163182d02b74b1b652377f5559663",
+          "current": "2a7f2aad0d79a0071cffd3565b5f5cd8a3983f7e44c520ca3c9aacd22bb9e047"
         }
       ]
     }

@@ -1547,3 +1547,8 @@ set_source_files_properties(BridgeCollapseTests.cpp PROPERTIES COMPILE_DEFINITIO
 # 실제 extra2의 가상 기본/추가 그림과 전체600개 캡처 원문도 같은 검사에 공급한다.
 set_property(SOURCE BridgeCollapseTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS
     "NETSTORM_BRIDGE_EXTRA_CAPTURE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/bridge-extra-capture-x86.tsv\"")
+
+# 동결한 실제 생산 실패 안내126입력을 대조한다.
+target_sources(netstorm_tests PRIVATE ProductionHintGumpTests.cpp)
+set_source_files_properties(ProductionHintGumpTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_PRODUCTION_HINT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/production-hint-x86.tsv\"")

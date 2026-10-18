@@ -169,14 +169,14 @@
     "cpppj/src/client/RawButtonControls.cpp": "1e31ef93cd819be30a75bcada1e9eba98adfae917a8db925a4845bfd37a2ef92",
     "cpppj/src/client/RawCampaignSession.cpp": "f5a4835133edc828d65390d1f4c9e25ab3cf68a6bfb0e3dc696e68d49013961c",
     "cpppj/src/client/RawCampaignSession.h": "708c73cd9f83b6a32496a782151ec35cbecb469a7f9c4f136819a5ae57b70288",
-    "cpppj/src/client/RawProductionControls.cpp": "084f931364f7c9bfc96e7dd54c1a523be51089d47effe3f6c8cc4c43d9474f9a",
-    "cpppj/src/client/RawProductionControls.h": "f8a482e14d48f0b20868df289dae295f52bc09b2e2937e1c1a560b797ff0c8a6",
-    "cpppj/src/client/UberGump.cpp": "09ae6c715bbfb82f9517ea7f1d11a4d4801d8a01af34c6d48e1831791996c06b",
+    "cpppj/src/client/RawProductionControls.cpp": "872ef029bd281a538f87b5efb64e72b164f2ffd002055ffaaa8e3eb1f93a73a2",
+    "cpppj/src/client/RawProductionControls.h": "1b243dda75bdaff96dcc6ec84a6438cabce9f7082fce6fbc9405e2c90dc75422",
+    "cpppj/src/client/UberGump.cpp": "6cea87e36ace1710f9de90652a87184d0e04803bd1be6c63b47b3258eda4f256",
     "cpppj/src/o/RawSquidNeighbors.cpp": "88ec2ee9dbaad0627d1ceb3629199361d860ba137f50d12fe0410a8cbbefa3f2",
     "cpppj/src/o/RawSquidNeighbors.h": "edb19d4782b671d6be80c9f7690b9455d200ef7dbe2df51059d5ca0c4a66175c",
-    "cpppj/tests/CMakeLists.txt": "17eef31cff19a97642806d3980eda0465ee811e1146150391275f0765eaf9885",
-    "cpppj/tests/CampaignSessionTests.cpp": "3bc6fd7121a4a72da06c99f61aa11178edb163182d02b74b1b652377f5559663",
-    "tools/cpp_production_panel_smoke.py": "550b8c6af03d17b5c9591a5a21c11adc8cb75ddf3e27e8181b126c4b62d15054",
+    "cpppj/tests/CMakeLists.txt": "921f5464983352309a998ba124184bc838cfa4c098a1053ee2dd9131c4410d4c",
+    "cpppj/tests/CampaignSessionTests.cpp": "2a7f2aad0d79a0071cffd3565b5f5cd8a3983f7e44c520ca3c9aacd22bb9e047",
+    "tools/cpp_production_panel_smoke.py": "724988401741b93176a8a8d85a043ba712335b8c2cce85930f11016eae1a1e50",
     "cpppj/neighbor-boundary.json": "f867eca090662fcf3b5309055274552d0b826c6b2bc5929058ee604b595a2289",
     "cpppj/production-idle.json": "98765db8f237106b9b13db4fc3c09a8d02b0627a767dd76aa75d174b100c6f74",
     "cpppj/src/client/RawProductionMaintenance.cpp": "db448007a50c4bc3f7f018ebf075bff7f4df536d3eb71782bf56c1f4b4e49123",
@@ -595,6 +595,49 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "259b8c3178bb2b3498ca76818c49db41c2ed544ff7fca6c272da61856b15e72b",
           "current": "3bc6fd7121a4a72da06c99f61aa11178edb163182d02b74b1b652377f5559663"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 181,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawProductionControls.cpp",
+          "previous": "084f931364f7c9bfc96e7dd54c1a523be51089d47effe3f6c8cc4c43d9474f9a",
+          "current": "872ef029bd281a538f87b5efb64e72b164f2ffd002055ffaaa8e3eb1f93a73a2"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawProductionControls.h",
+          "previous": "f8a482e14d48f0b20868df289dae295f52bc09b2e2937e1c1a560b797ff0c8a6",
+          "current": "1b243dda75bdaff96dcc6ec84a6438cabce9f7082fce6fbc9405e2c90dc75422"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/UberGump.cpp",
+          "previous": "09ae6c715bbfb82f9517ea7f1d11a4d4801d8a01af34c6d48e1831791996c06b",
+          "current": "6cea87e36ace1710f9de90652a87184d0e04803bd1be6c63b47b3258eda4f256"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "17eef31cff19a97642806d3980eda0465ee811e1146150391275f0765eaf9885",
+          "current": "921f5464983352309a998ba124184bc838cfa4c098a1053ee2dd9131c4410d4c"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "3bc6fd7121a4a72da06c99f61aa11178edb163182d02b74b1b652377f5559663",
+          "current": "2a7f2aad0d79a0071cffd3565b5f5cd8a3983f7e44c520ca3c9aacd22bb9e047"
+        },
+        {
+          "group": "/currentSources",
+          "path": "tools/cpp_production_panel_smoke.py",
+          "previous": "550b8c6af03d17b5c9591a5a21c11adc8cb75ddf3e27e8181b126c4b62d15054",
+          "current": "724988401741b93176a8a8d85a043ba712335b8c2cce85930f11016eae1a1e50"
         }
       ]
     }

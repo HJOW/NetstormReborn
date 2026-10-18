@@ -10,13 +10,13 @@
   "status": "단독 미션의 반복 보상 획득을 실제 모드 관문에 연결. 전체11스테이지 완주 목표는 미완료.",
   "currentSources": {
     "cpppj/src/CMakeLists.txt": "945332cd1c5b131d7e35d0ae7fb15762597c41be26ffea267b18e8b3d048efd8",
-    "cpppj/tests/CMakeLists.txt": "17eef31cff19a97642806d3980eda0465ee811e1146150391275f0765eaf9885",
+    "cpppj/tests/CMakeLists.txt": "921f5464983352309a998ba124184bc838cfa4c098a1053ee2dd9131c4410d4c",
     "cpppj/src/client/RawCampaignSession.cpp": "f5a4835133edc828d65390d1f4c9e25ab3cf68a6bfb0e3dc696e68d49013961c",
     "cpppj/src/o/RawPlayerGeyserBounds.cpp": "4983ae36fcebb76a06068c68500f2184dc2c14f816c6513b9cf1492353c69a96",
     "cpppj/src/o/RawPlayerGeyserBounds.h": "dbd25cda206a7e53e21b9c35d1d9f1ff53505196c5a32e00e187391545547a14",
     "cpppj/src/o/RawNuggetReplenish.cpp": "a89f08e3f9a17d3088506fc423e0e9680bc150094ea42de733b914ecd6dab464",
     "cpppj/src/o/RawNuggetReplenish.h": "d243249f6af02a1b51388ca5603ea70659e28ebdb38f789fd70dbb8c6b16f428",
-    "cpppj/tests/CampaignSessionTests.cpp": "3bc6fd7121a4a72da06c99f61aa11178edb163182d02b74b1b652377f5559663",
+    "cpppj/tests/CampaignSessionTests.cpp": "2a7f2aad0d79a0071cffd3565b5f5cd8a3983f7e44c520ca3c9aacd22bb9e047",
     "cpppj/tests/NuggetReplenishTests.cpp": "ab8045f3d99a0da3303c33f94fab68eca90de50f22920a061c337182aa2857fb",
     "tools/decomp_nugget_replenish.py": "343fcd950078734e0c2651f65c80b56c3ca2e69db9023e36350741c942b2d720"
   },
@@ -712,6 +712,25 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "259b8c3178bb2b3498ca76818c49db41c2ed544ff7fca6c272da61856b15e72b",
           "current": "3bc6fd7121a4a72da06c99f61aa11178edb163182d02b74b1b652377f5559663"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 181,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "17eef31cff19a97642806d3980eda0465ee811e1146150391275f0765eaf9885",
+          "current": "921f5464983352309a998ba124184bc838cfa4c098a1053ee2dd9131c4410d4c"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "3bc6fd7121a4a72da06c99f61aa11178edb163182d02b74b1b652377f5559663",
+          "current": "2a7f2aad0d79a0071cffd3565b5f5cd8a3983f7e44c520ca3c9aacd22bb9e047"
         }
       ]
     }

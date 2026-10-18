@@ -1,6 +1,7 @@
 // 43e640/43ddd0/43ec00을 기존 격자·항목·SHP·글자 및 현재 Session에 조립한다.
 #include "client/RawProductionControls.h"
 #include "client/InventoryItemGump.h"
+#include "client/ProductionHintGump.h"
 #include "client/ImageGump.h"
 #include "client/OwnerColorMaps.h"
 #include "client/ProductionColorMaps.h"
@@ -39,6 +40,8 @@ struct RawProductionControls::Impl {
     PriestPlacementAssets geometry;o::PriestPlacementShapeState measureState;o::RawCanonPixelShape measure; // 실제 전체 Canon 경계/프레임이다.
     GumpDrawState hitClip;std::vector<std::uint8_t> hitBytes;ColorMap hitColors{};GumpPixelTarget hitTarget; // 원본 이미지 hit의 실제200×200 임시 표면이다.
     std::unique_ptr<ImageGumpPixelTarget> hitRaster;ImageGumpHooks activeImage;const GumpBackgroundDraw* activeBackground{}; // 실제 현재 출력 문맥이다.
+    ProductionHintState hintState;std::unique_ptr<ProductionHintGump> hint;std::map<std::uint32_t,std::unique_ptr<ProductionHintNode>> hints; // 공통 루트에 붙는 실제 실패 안내다.
+    std::map<std::uint32_t,std::string> hintStrings;std::uint32_t hintStringSerial{0x70000000U}; // 원본 strdup/free의 단일 소유 문자열이다.
     std::unique_ptr<InventoryGump> grid;std::unique_ptr<InventoryItemGump> item;std::unique_ptr<ImageGump> image; // 기존 원본 전체 몸체다.
     // 모든 훅은 실행 시 현재 공통 노드와 같은 Session을 재조회한다.
     Impl(RawMenuTree tree,RawMenuControls& menu,RawCampaignSession& game,const GameAssets& data,ProductionMaintenanceGlobals& globals,ProductionMaintenancePanel& panel,RawProductionHooks supplied)
@@ -76,6 +79,16 @@ struct RawProductionControls::Impl {
             // 원본은 텔레포트 격자를 먼저, 다리 격자를 뒤에 Push/가상부착한다.
             for (const auto& [token,bit]:std::array<std::pair<std::uint32_t,std::uint32_t>,2>{{{teleportGrid,1},{bridgeGrid,2}}}) if (mask&bit) { common.tree.Push(token);const auto& n=*grids.at(token);grid->AttachGrid(token,n.x,n.y,0,0); }common.changed();
         });
+        ProductionHintHooks ph;ph.node=[this](auto token) { return Find(hints,token); };ph.now=hooks.now;
+        ph.allocate=[this](auto size) { if (size!=0xb8) throw std::logic_error("생산 안내 할당 크기 오류");const auto token=common.token();hints.emplace(token,std::make_unique<ProductionHintNode>());return token; };
+        ph.constructText=[this](auto token) { menus.TextBackend().Construct(token,0,0,6,0); };ph.kill=[this](auto token) { common.lifetime.Kill(token);common.changed(); };
+        ph.duplicate=[this](std::string_view text) { if (hintStringSerial==0xffffffffU) throw std::overflow_error("생산 안내 문자열 토큰 소진");const auto token=++hintStringSerial;hintStrings.emplace(token,text);return token; };
+        ph.string=[this](auto token)->std::string_view { return hintStrings.at(token); };ph.free=[this](auto token) { if (hintStrings.erase(token)!=1) throw std::logic_error("생산 안내 문자열 중복 반납"); };
+        ph.translate=[this](auto key) { if (!hooks.translate) throw std::logic_error("생산 안내 번역 미연결");return hooks.translate(key); };ph.style=[this](auto token,auto text) { Style(token,text); };
+        ph.fit=[this](auto token,auto x,auto y) { menus.TextBackend().Fit(token,x,y); };ph.idle=[this](auto token,bool enabled) { common.lifetime.SetIdle(token,enabled); };
+        ph.bounds=[this](auto token) { return common.collection.Bounds(token); };ph.position=[this](auto token) { return common.collection.Position(token); };ph.draw=[this](auto head,auto p) { menus.StyleBackend().Draw(head,p); };
+        ph.attach=[this](auto token,float x,float y,auto parent,auto mode) { common.tree.Attach(token,x,y,parent,mode); };ph.deleteText=[this](auto token,auto flags) { return menus.TextBackend().DeleteScalar(token,flags); };
+        hint=std::make_unique<ProductionHintGump>(common.create,hintState,std::move(ph));
         menus.SetExternalGumps({[this](auto token) { return Text(token); },[this](auto token) { return Node(token)!=nullptr; },[this](auto token,auto& target,auto& currentColors,auto& background) { Draw(token,target,currentColors,background); }});
     }
     // 현재 원본 공유 전역은 실제 Session에서 매 가상 호출 직전에 읽는다.
@@ -83,10 +96,10 @@ struct RawProductionControls::Impl {
     // 외부 기본 생성자/수명은 같은 파생 기본 주소만 본다.
     GumpCreateNode* Node(std::uint32_t token) const {
         if (token==rootToken && token) return const_cast<GumpCreateNode*>(&root);if (token==budgetToken && token) return const_cast<BudgetNode*>(&budget);
-        if (auto* n=Find(grids,token)) return n;if (auto* n=Find(items,token)) return n;if (auto* n=Find(images,token)) return n;if (auto* n=Find(texts,token)) return n;return Find(backgrounds,token);
+        if (auto* n=Find(grids,token)) return n;if (auto* n=Find(items,token)) return n;if (auto* n=Find(images,token)) return n;if (auto* n=Find(texts,token)) return n;if (auto* n=Find(hints,token)) return n;return Find(backgrounds,token);
     }
     // 실제 TextGump 파생만 같은 글자 처리기에 공급한다.
-    TextGumpNode* Text(std::uint32_t token) const { return token==budgetToken && token ? const_cast<BudgetNode*>(&budget) : Find(texts,token); }
+    TextGumpNode* Text(std::uint32_t token) const { if (token==budgetToken && token) return const_cast<BudgetNode*>(&budget);if (auto* n=Find(hints,token)) return n;return Find(texts,token); }
     // 삭제 중 머리가 바뀌므로 매번 현재 실제 child를 읽는다.
     void ClearChildren(std::uint32_t token) { while (common.node(token)->child) common.lifetime.Kill(common.node(token)->child); }
     // 4644e0은0부모에 무동작이며 이전 Form을 먼저 지우지 않는다.
@@ -131,15 +144,22 @@ struct RawProductionControls::Impl {
         common.tree.Push(teleportGrid);auto& d=*grids.at(teleportGrid);d.baseHeight=root.baseHeight-d.y;d.height=d.baseHeight*d.scale;const auto& c=*backgrounds.at(middle);grid->AttachGrid(teleportGrid,0,c.y+c.baseHeight,rootToken,0);
         ++backgrounds.at(top)->depth;budget.depth=backgrounds.at(top)->depth-1;++backgrounds.at(middle)->depth;++backgrounds.at(bottom)->depth;
     }
-    // 클릭된 실제 내용물 SID를 그대로447000에 넘긴다. 실패 피드백의 미복원은 명시 거부한다.
+    // 464020은 등록 인덱스가 아니라 +2c 일련번호로 살아 있는 노드를 찾는다.
+    std::uint32_t Reference(std::uint32_t serial) const {
+        // 원본 검색은 루트 칸0을 제외하며 죽은 노드는 건너뛴다.
+        for (std::size_t i=1;i<common.create.entries.size();++i) if (const auto token=common.create.entries[i]) { const auto* n=common.node(token);if (n && n->serial==serial && !(n->flags&0x10000)) return token; }return 0;
+    }
+    // 실제 항목 일련번호의 현재 화면 위치에서 원본 실패 안내를 생성한다.
+    void Failure(bool empty,std::uint32_t serial) { const auto reference=Reference(serial);const auto p=common.collection.Position(reference);hint->Show(empty,p.x,p.y,reference);common.changed(); }
+    // 클릭된 실제 내용물 SID를 그대로447000에 넘기며 실패는 취득 전에 안내한다.
     std::uint32_t Handle(std::uint32_t token,std::uint32_t event,std::uint32_t first,std::uint32_t second) {
         Prepare();if (grids.contains(token)) return grid->HandleGrid(token,event,first,second);if (items.contains(token)) return item->Handle(token,event,first,second);if (token!=rootToken) return 0;
         const auto code=event&0x03ffffffU;
         if (code==0x02000008) {
             const auto raw=session.Core().pool.Slot({static_cast<std::uint16_t>(first)});if ((Word(raw,20)&0x100) || session.CursorDropSettings().lockDepth==0) return 1;
             if (Word(raw,20)&8) {
-                if (!item->Affordable({static_cast<std::uint16_t>(first)})) { budget.flash=10;budget.until=hooks.now()+kFlashInterval;throw std::logic_error("생산 SP 부족 원본 tooltip 미연결"); }
-                if (stock && !raw[30]) throw std::logic_error("생산 재고 없음 원본 tooltip 미연결");
+                if (!item->Affordable({static_cast<std::uint16_t>(first)})) { budget.flash=10;budget.until=hooks.now()+kFlashInterval;Failure(false,second);return 1; }
+                if (stock && !raw[30]) { Failure(true,second);return 1; }
             }
             if (!session.Core().types[Word(raw,18)].flags2) return 1;session.Cursor().Take({static_cast<std::uint16_t>(first)},(Word(raw,20)&8) ? 0x41U : 1U);hooks.sound("getPiece.wav");common.changed();return 1;
         }
@@ -153,7 +173,7 @@ struct RawProductionControls::Impl {
     }
     // 43e530의 금액 표시와43ef10의 dirty/부모 재연결→공급/내용물 유지 순서다.
     void Idle(std::uint32_t token) {
-        Prepare();if (token==budgetToken) {
+        Prepare();if (hints.contains(token)) { hint->Idle(token);return; }if (token==budgetToken) {
             const auto target=session.PlayerKnown() ? static_cast<std::int32_t>(session.Sp(owner)) : 0;
             if (budget.flash && budget.until<=hooks.now()) { --budget.flash;budget.until=hooks.now()+kFlashInterval;BudgetText(); }
             if (budget.amount!=target) { const auto distance=static_cast<std::int64_t>(target)-budget.amount;budget.amount+=distance<0 ? (distance<-300 ? -100 : distance<-30 ? -10 : -1) : (distance>300 ? 100 : distance>30 ? 10 : 1);if (session.Core().ownerMode.fort) budget.amount=target;BudgetText(); }
@@ -177,14 +197,17 @@ struct RawProductionControls::Impl {
     }
     // 같은 공통 정렬/클립/표면에서 실제 각 파생 Draw를 호출한다.
     void Draw(std::uint32_t token,GumpPixelTarget& target,GumpGlyphColorState& current,GumpBackgroundDraw& background) {
-        Prepare();if (Text(token)) { menus.TextBackend().Draw(token);return; }if (backgrounds.contains(token)) { background.Draw(token);return; }
+        Prepare();if (hints.contains(token)) { hint->Draw(token);return; }if (Text(token)) { menus.TextBackend().Draw(token);return; }if (backgrounds.contains(token)) { background.Draw(token);return; }
         if (items.contains(token)) { activeBackground=&background;try { item->Draw(token); } catch (...) { activeBackground=nullptr;throw; }activeBackground=nullptr;return; }
         if (images.contains(token)) { ImageGumpPixelTarget raster(target,assets,current.vfxColors,[this](auto color) { return Color(color); });activeImage=raster.Hooks({});try { image->Draw(token); } catch (...) { activeImage={};throw; }activeImage={}; }
     }
 };
 // 공통 분배가 호출하기 전에 저장소/훅을 준비하고 Open은 소유자 설치 뒤 실행한다.
 RawProductionControls::RawProductionControls(RawMenuTree tree,RawMenuControls& menus,RawCampaignSession& session,const GameAssets& assets,ProductionMaintenanceGlobals& globals,ProductionMaintenancePanel& panel,RawProductionHooks hooks):impl_(std::make_unique<Impl>(std::move(tree),menus,session,assets,globals,panel,std::move(hooks))) {} // 같은 상태를 빌리고 별도 사본을 만들지 않는다.
-void RawProductionControls::Close() { if (impl_->rootToken) { impl_->common.lifetime.Kill(impl_->rootToken);impl_->common.lifetime.Cleanup();impl_->rootToken=0; } } // 같은 자식 우선 수명으로 닫는다.
+void RawProductionControls::Close() {
+    // 안내는 생산 루트의 형제이므로 같은 수명 처리기로 별도 삭제한다.
+    for (const auto& [token,n]:impl_->hints) if (!(n->flags&0x10000)) impl_->common.lifetime.Kill(token);
+    impl_->common.lifetime.Cleanup();if (impl_->rootToken) { impl_->common.lifetime.Kill(impl_->rootToken);impl_->common.lifetime.Cleanup();impl_->rootToken=0; } } // 같은 자식 우선 수명으로 닫는다.
 RawProductionControls::~RawProductionControls() { impl_->menus.SetExternalGumps({}); } // 공유 출력의 참조부터 끊는다.
 void RawProductionControls::Open() { impl_->Open(); } // 실제 생성과 첫 갱신이다.
 GumpCreateNode* RawProductionControls::Node(std::uint32_t token) const { return impl_->Node(token); } // 같은 저장소다.
@@ -193,14 +216,14 @@ void RawProductionControls::Attach(std::uint32_t token,float x,float y,std::uint
 std::uint32_t RawProductionControls::Handle(std::uint32_t token,std::uint32_t event,std::uint32_t first,std::uint32_t second) { return impl_->Handle(token,event,first,second); } // 가상+28이다.
 void RawProductionControls::Idle(std::uint32_t token) { impl_->Idle(token); } // 같은 현재 idle 표다.
 void RawProductionControls::ParentGone(std::uint32_t token,std::uint32_t parent) { if (impl_->grids.contains(token)) impl_->grid->ParentGone(token,parent);else impl_->common.lifetime.Kill(token); } // 가상+4를 구별한다.
-void RawProductionControls::DeleteScalar(std::uint32_t token,std::uint32_t flags) { if (impl_->Text(token)) impl_->menus.TextBackend().DeleteScalar(token,flags);else impl_->common.lifetime.DeleteScalar(token,flags); } // 같은 자식 우선 소멸이다.
-void RawProductionControls::Release(std::uint32_t token) { auto& s=*impl_;s.grids.erase(token);s.items.erase(token);s.images.erase(token);s.texts.erase(token);s.backgrounds.erase(token); } // 실제 release만 저장소를 반납한다.
+void RawProductionControls::DeleteScalar(std::uint32_t token,std::uint32_t flags) { if (impl_->hints.contains(token)) impl_->hint->DeleteScalar(token,flags);else if (impl_->Text(token)) impl_->menus.TextBackend().DeleteScalar(token,flags);else impl_->common.lifetime.DeleteScalar(token,flags); } // 같은 자식 우선 소멸이다.
+void RawProductionControls::Release(std::uint32_t token) { auto& s=*impl_;s.grids.erase(token);s.items.erase(token);s.images.erase(token);s.texts.erase(token);s.backgrounds.erase(token);s.hints.erase(token); } // 실제 release만 저장소를 반납한다.
 // 파일 팔레트 변경만 색표를 다시 만들며 일시 번개에는 재계산하지 않는다.
 void RawProductionControls::SetPalette(std::span<const ScreenColor> palette) {
     if (palette.size()!=256) throw std::invalid_argument("생산 팔레트256색 필요");std::array<std::uint32_t,256> logical{};
     // 원본 PALETTEENTRY의 성분 순서를 보존한다.
     for (std::size_t i=0;i<logical.size();++i) logical[i]=std::uint32_t(palette[i].red)|(std::uint32_t(palette[i].green)<<8)|(std::uint32_t(palette[i].blue)<<16)|(std::uint32_t(palette[i].reserved)<<24);
-    auto& s=*impl_;s.colors=BuildProductionColorMaps(logical);s.shades=BuildGumpShadeMaps(logical);
+    auto& s=*impl_;s.colors=BuildProductionColorMaps(logical);s.shades=BuildGumpShadeMaps(logical);const auto paletteColors=BuildPaletteColorTable(logical);s.hintState.white=paletteColors.basic[7];s.hintState.black=paletteColors.basic[0];
     // 전용 HSL 표도 원본에 등록된 다섯 TYPE만 생성한다.
     for (const auto type:kSpecial) s.ownerColors[type]=BuildSpecialOwnerColorMaps(logical,type);
 }
@@ -217,6 +240,9 @@ std::string RawProductionControls::Report() const {
     }
     // 각 현재 항목의 원본 내용물과 실제 경계를 기록한다.
     for (const auto& [token,n]:s.items) { const auto r=s.common.collection.Bounds(token);const auto raw=s.session.Core().pool.Slot({static_cast<std::uint16_t>(n->content)});out<<"raw_production_item\t"<<token<<'\t'<<n->content<<'\t'<<Word(raw,18)<<'\t'<<r.left<<'\t'<<r.top<<'\t'<<r.right<<'\t'<<r.bottom<<'\t'<<n->serial<<'\n'; }
+    out<<"raw_production_budget_flash\t"<<s.budget.flash<<'\t'<<s.budget.until<<'\n';
+    // 진단도 같은 소유 문자열과 실제 만료 시각을 읽는다.
+    for (const auto& [token,n]:s.hints) out<<"raw_production_hint\t"<<token<<'\t'<<n->serial<<'\t'<<n->reference<<'\t'<<n->until<<'\t'<<n->flags<<'\t'<<s.hintStrings.at(n->owned)<<'\n';
     return out.str();
 }
 }

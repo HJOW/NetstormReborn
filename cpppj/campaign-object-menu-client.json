@@ -16,7 +16,7 @@
     "커서의25BYTE를 Session.SendLocalPacket으로 같은 실제 Login 전송에 보낸다. 기존3e 수신 등록을 재사용한다. 실제로그인/Start/원본커서허용점109,107/Drop의SP3000→2200/실제3e 수신을 장치 경계의 headless 검사에서 확인했다."
   ],
   "currentSources": {
-    "cpppj/src/client/CMakeLists.txt": "d2463c8e635ce3e6d82bc55105489461d1758f6a5819c7748cf6d1108a91ae4d",
+    "cpppj/src/client/CMakeLists.txt": "00e205d4b299c382fa751ac2312ef9314a1baf894e00a40593280845b0f3a8c8",
     "cpppj/src/client/GameWorld.cpp": "7354694cf70e61d27ef1991390513a042c7a102f537f9d0cfb1f5438bb2a1f9e",
     "cpppj/src/client/GameWorld.h": "63a8da986aab6ab35f1938c8de5c9197d12cca4e17859cb8daba5d5f52946e73",
     "cpppj/src/client/GameWorldInput.inc": "f03ba61623c0d8a1ed2a1108eaebff769486cc925bc8872626061f045758efd7",
@@ -26,9 +26,9 @@
     "cpppj/src/client/RawMenuControls.h": "70cf632cf282ea15c98c45ca1b8fba8b720dafb07eebc2a022723dfc35e3b1fa",
     "cpppj/src/client/Renderer.cpp": "29729e6b728f19e7cddfc4c193e1a719733c8b4c5934e8b0a864697fa8a4b4a2",
     "cpppj/src/client/Renderer.h": "d72b42478b0bbe275a02494181722ee4f3f4ed4d474966e56c9df30958f31ac2",
-    "cpppj/src/client/UberGump.cpp": "09ae6c715bbfb82f9517ea7f1d11a4d4801d8a01af34c6d48e1831791996c06b",
+    "cpppj/src/client/UberGump.cpp": "6cea87e36ace1710f9de90652a87184d0e04803bd1be6c63b47b3258eda4f256",
     "cpppj/src/client/UberGump.h": "4f3ae5c624ea7db55d37a10cb7bedfb21129dc02f7414712baabd0eb6df59d2b",
-    "cpppj/tests/CampaignSessionTests.cpp": "3bc6fd7121a4a72da06c99f61aa11178edb163182d02b74b1b652377f5559663",
+    "cpppj/tests/CampaignSessionTests.cpp": "2a7f2aad0d79a0071cffd3565b5f5cd8a3983f7e44c520ca3c9aacd22bb9e047",
     "cpppj/tests/RendererTests.cpp": "6aae8f544e9cb6a01738ee45a2c0eba57354106896ea59735db6842c318185cf",
     "cpppj/src/client/CampaignObjectMenuClient.h": "750c6c997baedf3e5015aaef18b4008ecb1c24c10a076f297973cf68b2caf471",
     "cpppj/src/client/CampaignObjectMenuClient.cpp": "c1ca82efcf8f4f6fd8969b5724d102f1004a42915619b634168765a72c0ccd1c",
@@ -5702,6 +5702,31 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "259b8c3178bb2b3498ca76818c49db41c2ed544ff7fca6c272da61856b15e72b",
           "current": "3bc6fd7121a4a72da06c99f61aa11178edb163182d02b74b1b652377f5559663"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 181,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/CMakeLists.txt",
+          "previous": "d2463c8e635ce3e6d82bc55105489461d1758f6a5819c7748cf6d1108a91ae4d",
+          "current": "00e205d4b299c382fa751ac2312ef9314a1baf894e00a40593280845b0f3a8c8"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/UberGump.cpp",
+          "previous": "09ae6c715bbfb82f9517ea7f1d11a4d4801d8a01af34c6d48e1831791996c06b",
+          "current": "6cea87e36ace1710f9de90652a87184d0e04803bd1be6c63b47b3258eda4f256"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "3bc6fd7121a4a72da06c99f61aa11178edb163182d02b74b1b652377f5559663",
+          "current": "2a7f2aad0d79a0071cffd3565b5f5cd8a3983f7e44c520ca3c9aacd22bb9e047"
         }
       ]
     }

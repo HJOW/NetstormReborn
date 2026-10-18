@@ -26,7 +26,7 @@
     "cpppj/tests/CarrierTargetTests.cpp": "7ca2aa993bae751e63e973190da5eefb9259d1cfb544899bb108e89d26912400",
     "cpppj/tests/CampaignObjectMenuTests.cpp": "fea9198ea2150c42bb523f7ac9298c2f819acd1fc9b9887b53020c206ad62563",
     "cpppj/src/CMakeLists.txt": "945332cd1c5b131d7e35d0ae7fb15762597c41be26ffea267b18e8b3d048efd8",
-    "cpppj/tests/CMakeLists.txt": "17eef31cff19a97642806d3980eda0465ee811e1146150391275f0765eaf9885",
+    "cpppj/tests/CMakeLists.txt": "921f5464983352309a998ba124184bc838cfa4c098a1053ee2dd9131c4410d4c",
     "tools/native_carrier_geometry.cpp": "c471a0ce9889c730bb1a3b6a4659fe0eb0fea2d854b7007524fb93cd56fa34e8",
     "tools/carrier-geometry-hardware/CMakeLists.txt": "918768180d59716d3c0d46ac8955edd89ce2963237dae7eff3435fbd0e0287a3",
     "tools/decomp_carrier_target.py": "5869d80a3bde70e576f055d8fa6336364fb217343ec5cf7984eb763d99fc718f",
@@ -1197,6 +1197,19 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "3e200bbf9836698412da1bb62fd2defaf0049e6723709e8c5e8af2bb59e5b490",
           "current": "17eef31cff19a97642806d3980eda0465ee811e1146150391275f0765eaf9885"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 181,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "17eef31cff19a97642806d3980eda0465ee811e1146150391275f0765eaf9885",
+          "current": "921f5464983352309a998ba124184bc838cfa4c098a1053ee2dd9131c4410d4c"
         }
       ]
     }
