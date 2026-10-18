@@ -10,8 +10,8 @@
   "currentSources": {
     ".gitattributes": "3e8d869648cde0415d1a91e9b22d5a7ed7e5c0585923a189bfd37aa33229f3a8",
     "cpppj/src/CMakeLists.txt": "945332cd1c5b131d7e35d0ae7fb15762597c41be26ffea267b18e8b3d048efd8",
-    "cpppj/tests/CMakeLists.txt": "3e200bbf9836698412da1bb62fd2defaf0049e6723709e8c5e8af2bb59e5b490",
-    "cpppj/src/client/RawCampaignSession.cpp": "99e082e181299b20ed713c6f4f72d0bc5ab3f3c46457b1ea47486fac6cca41a3",
+    "cpppj/tests/CMakeLists.txt": "17eef31cff19a97642806d3980eda0465ee811e1146150391275f0765eaf9885",
+    "cpppj/src/client/RawCampaignSession.cpp": "f5a4835133edc828d65390d1f4c9e25ab3cf68a6bfb0e3dc696e68d49013961c",
     "cpppj/src/client/RawCampaignSession.h": "708c73cd9f83b6a32496a782151ec35cbecb469a7f9c4f136819a5ae57b70288",
     "cpppj/tests/CampaignObjectMenuTests.cpp": "fea9198ea2150c42bb523f7ac9298c2f819acd1fc9b9887b53020c206ad62563",
     "cpppj/src/o/RawAssetPostPop.cpp": "cc3f8f7f0356152b8f60cd499992771f31dc554a7427e2d20fd432a4ce05b245",
@@ -1000,6 +1000,25 @@
           "path": "cpppj/src/client/RawCampaignSession.h",
           "previous": "92f17ca78bd706f65290060ba948be8d7945dade28170821ef4169ec693b3440",
           "current": "708c73cd9f83b6a32496a782151ec35cbecb469a7f9c4f136819a5ae57b70288"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 180,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "3e200bbf9836698412da1bb62fd2defaf0049e6723709e8c5e8af2bb59e5b490",
+          "current": "17eef31cff19a97642806d3980eda0465ee811e1146150391275f0765eaf9885"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "99e082e181299b20ed713c6f4f72d0bc5ab3f3c46457b1ea47486fac6cca41a3",
+          "current": "f5a4835133edc828d65390d1f4c9e25ab3cf68a6bfb0e3dc696e68d49013961c"
         }
       ]
     }

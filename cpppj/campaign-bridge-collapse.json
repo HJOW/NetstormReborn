@@ -1,0 +1,522 @@
+{
+  "unit": 180,
+  "date": "2026-10-18",
+  "host": "HJOW-Athlon",
+  "baseline": "071d1c0e",
+  "lastDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16",
+    "changed": false
+  },
+  "nativeCapture": {
+    "host": "HJOW-Athlon",
+    "lastDecompileHost": "HJOW-Athlon",
+    "unit": 180,
+    "rows": 603,
+    "captureInputs": 600,
+    "wrapperInputs": 3,
+    "normalReturns": 2406,
+    "instructions": 14087706,
+    "precisionDifferences": 0,
+    "nativeCalls": {
+      "00460600": 3,
+      "0043ba00": 600,
+      "0043b950": 600,
+      "004a7db0": 600,
+      "004ac550": 1200,
+      "0049a840": 1200,
+      "00419850": 600,
+      "004daa70": 60,
+      "00401d92": 60,
+      "004dabe0": 540,
+      "0040227e": 540,
+      "004daab0": 540,
+      "0040229f": 540,
+      "004021b5": 3,
+      "00402796": 27
+    },
+    "sha256": {
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "originals/d/_shapes.shp": "c878353c8054208deef832e34c514b30fe670e175505b129333a5728ba70f68e",
+      "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+      "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+      "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+      "tools/decomp_owner_capture.py": "349f568e919ed4566543e4c89e0551d134ac9b11374b6d12b57498c2ab749a7c",
+      "tools/shp.py": "4cb8bee6ed773e29e8658ddb315594ebf5ac005ea5b96c6b760a177029515bfd",
+      "tools/decomp_bridge_collapse.py": "fed91be41ef652906d1bfaeb3b4ec1d18ba64270ae7a0967a612d7b284bccc2e",
+      "cpppj/tests/fixtures/bridge-collapse-x86.tsv": "69cd1dd8de485d4fdc6b7b517441c21be1dde160315bedc9bfcd2861acef8083"
+    },
+    "limits": [
+      "실제460600의 source/kind2 전달과 cdecl 반환을 관찰한다.4604a0 생성 효과는 여기서 명시 경계이며 기존 파편 수명648행과 구별한다.",
+      "실제 일반 색표/현재 owner 선택/보호60프레임/캡처/RLE의600입력 전체 픽셀이다. new만 격리 heap이며 양정밀도 차이0이다.",
+      "현재 TYPE/기준점0/단위 배율/소유자 색 입력이다. 전체 초기화/추가 가상 그림/CD판/전체 다리 파괴 수명의 새 원본 대조로 확대하지 않는다."
+    ]
+  },
+  "nativeExtra": {
+    "host": "HJOW-Athlon",
+    "lastDecompileHost": "HJOW-Athlon",
+    "unit": 180,
+    "rows": 600,
+    "normalReturns": 2400,
+    "instructions": 14117544,
+    "precisionDifferences": 0,
+    "debugLife": 0,
+    "sameAsPrevious600": true,
+    "nativeCalls": {
+      "0043ba00": 600,
+      "0043b950": 600,
+      "004a7db0": 600,
+      "004ac550": 1200,
+      "0049a840": 1200,
+      "00419850": 600,
+      "004222f0": 600,
+      "004daa70": 60,
+      "00401d92": 60,
+      "004223c0": 600,
+      "004dabe0": 540,
+      "0040227e": 540,
+      "004daab0": 540,
+      "0040229f": 540,
+      "004021b5": 3,
+      "00402796": 27
+    },
+    "sha256": {
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "originals/d/_shapes.shp": "c878353c8054208deef832e34c514b30fe670e175505b129333a5728ba70f68e",
+      "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+      "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+      "tools/decomp_owner_capture.py": "349f568e919ed4566543e4c89e0551d134ac9b11374b6d12b57498c2ab749a7c",
+      "tools/decomp_bridge_collapse.py": "fed91be41ef652906d1bfaeb3b4ec1d18ba64270ae7a0967a612d7b284bccc2e",
+      "tools/decomp_bridge_extra_capture.py": "8549c5c2637cd5f5ce5308cdae189a51618d23a580ef1f6b55136fbfcd7700fa",
+      "cpppj/tests/fixtures/bridge-collapse-x86.tsv": "69cd1dd8de485d4fdc6b7b517441c21be1dde160315bedc9bfcd2861acef8083",
+      "cpppj/tests/fixtures/bridge-extra-capture-x86.tsv": "927198ff3a7979b50e1c57e63349f1740aa99aae11eb8714f1dfd2dff6dfd5c1"
+    },
+    "limits": [
+      "실제4222f0의 현재 DWORD 프레임 반환/4223c0의 debug0 ret8과 전체 capture/mapped RLE를 실행한다. 두 가상 그림 대체0이다.",
+      "현재 extra2/기준점0/단위 배율/owner0·9색/60프레임의600입력이며 이전603행과 별개로 동결한다.",
+      "debugLife5453ac의 PE 기본0만 확인했다. 개발용 수명 숫자 표시1의 글꼴/출력/CD판은 새 증명 범위가 아니다."
+    ]
+  },
+  "nativeFreeze": {
+    "tools/decomp_bridge_collapse.py": "fed91be41ef652906d1bfaeb3b4ec1d18ba64270ae7a0967a612d7b284bccc2e",
+    "cpppj/bridge-collapse.json": "91c1012a3d0a54de33effc1329f5d16b8917719b4f207b96d30af43c61aeffde",
+    "cpppj/tests/fixtures/bridge-collapse-x86.tsv": "69cd1dd8de485d4fdc6b7b517441c21be1dde160315bedc9bfcd2861acef8083"
+  },
+  "extraFreeze": {
+    "tools/decomp_bridge_extra_capture.py": "8549c5c2637cd5f5ce5308cdae189a51618d23a580ef1f6b55136fbfcd7700fa",
+    "cpppj/bridge-extra-capture.json": "846253ae3feb12b3d7e5c08f9ee7fae48830acc1b76468017cb63df211d5c2d4",
+    "cpppj/tests/fixtures/bridge-extra-capture-x86.tsv": "927198ff3a7979b50e1c57e63349f1740aa99aae11eb8714f1dfd2dff6dfd5c1"
+  },
+  "protected": {
+    "AGENTS.md": "7addbf9b31c42f29aab7c93faa865eb6de8590a600d17202a297cf7122bdf979",
+    "LEFT_JOBS.dotnetpj.md": "0c067e1d12879dbf2212cbd64c8f9f60e65b590df910418f025027ed84f80ec2",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "originals/d/GIFCLOUD.COL": "785a2cda6ac1d3e295d375815b6d9650720683099db7c249382d598b5da00532"
+  },
+  "observedGuiBinary": {
+    "cpppj/build/bin/Release/NetstormCpp.exe": "df78bd4e4814e241bc969bee8486924571c307aed7c12f0057e2e2ad61b960e1"
+  },
+  "currentSources": {
+    "cpppj/src/client/RawSurfaceWorld.h": "278604c3b2b58bb13dfb1d8574efd48cd8d353e71e0c342498286f19f233cd03",
+    "cpppj/src/client/RawSurfaceWorld.cpp": "d6ebba7d5175b98dd5ddabba6de4744a977434913b4eb8b9c2e39068e7b94832",
+    "cpppj/src/client/RawCampaignSession.cpp": "f5a4835133edc828d65390d1f4c9e25ab3cf68a6bfb0e3dc696e68d49013961c",
+    "cpppj/tests/RawSurfaceWorldTests.cpp": "a3e7276ffe7e05798158b4f43133da6a77e903456ead2c89f7477833d6c8f123",
+    "cpppj/tests/CampaignSessionTests.cpp": "3bc6fd7121a4a72da06c99f61aa11178edb163182d02b74b1b652377f5559663",
+    "cpppj/tests/CMakeLists.txt": "17eef31cff19a97642806d3980eda0465ee811e1146150391275f0765eaf9885",
+    "cpppj/tests/CampaignInstallSupport.h": "e139ab79385c65e8e60b8a12a6ed60696832a01fb75e9f72271c38cd067100bd",
+    "tools/decomp_bridge_collapse.py": "fed91be41ef652906d1bfaeb3b4ec1d18ba64270ae7a0967a612d7b284bccc2e",
+    "cpppj/bridge-collapse.json": "91c1012a3d0a54de33effc1329f5d16b8917719b4f207b96d30af43c61aeffde",
+    "cpppj/tests/fixtures/bridge-collapse-x86.tsv": "69cd1dd8de485d4fdc6b7b517441c21be1dde160315bedc9bfcd2861acef8083",
+    "cpppj/tests/BridgeCollapseTests.cpp": "bf79fb95b22e67a5cdc6be5d65ac01d3372af5028af591e760a15804007c9343",
+    "tools/decomp_bridge_extra_capture.py": "8549c5c2637cd5f5ce5308cdae189a51618d23a580ef1f6b55136fbfcd7700fa",
+    "cpppj/bridge-extra-capture.json": "846253ae3feb12b3d7e5c08f9ee7fae48830acc1b76468017cb63df211d5c2d4",
+    "cpppj/tests/fixtures/bridge-extra-capture-x86.tsv": "927198ff3a7979b50e1c57e63349f1740aa99aae11eb8714f1dfd2dff6dfd5c1",
+    "cpppj/src/o/RawBridgeDraw.h": "e7edf7894f82e9668d54d648bd8e2a1ad889a1eac56c82c17c457148fa840d51"
+  },
+  "logSha256": {
+    "extracted/goal-bridge-collapse-20261018-audit1.log": "631a667d369070efec2e4693097b364eef95f3b569069e76a02401b5f2c6d88a",
+    "extracted/goal-bridge-collapse-20261018-audit2.log": "631a667d369070efec2e4693097b364eef95f3b569069e76a02401b5f2c6d88a",
+    "extracted/goal-bridge-collapse-20261018-audit3.log": "e5d2e2531a31eaeaaee584fe28228987ce1b04fdd76a2769d992c22f8809bb15",
+    "extracted/goal-bridge-collapse-20261018-audit4.log": "e5d2e2531a31eaeaaee584fe28228987ce1b04fdd76a2769d992c22f8809bb15",
+    "extracted/goal-bridge-collapse-20261018-audit5.log": "e5d2e2531a31eaeaaee584fe28228987ce1b04fdd76a2769d992c22f8809bb15",
+    "extracted/goal-bridge-collapse-20261018-build1.log": "f6d588f9091b58758d9f228d6e50380dd4e82cb56cd22ee1dc6bd749dff56a72",
+    "extracted/goal-bridge-collapse-20261018-build2.log": "44e88b99ae8444375d4cc2f39ee10251b5e86e83e04fb4dee84d504d570ba8ca",
+    "extracted/goal-bridge-collapse-20261018-build3.log": "0f00c6d6bdcc7f80110e19c26523ad16e0a6ced9113d6ab61b32ecfff67f07fa",
+    "extracted/goal-bridge-collapse-20261018-build4.log": "68daf5268753a6f0253917d033a76282e07803e3b45f8c1951a34f7cbc6a3d34",
+    "extracted/goal-bridge-collapse-20261018-build5.log": "34e37533a9ef9b04cfe3f6754b3ce4990ed67e38c2dfdd7e6c421bac29c115b8",
+    "extracted/goal-bridge-collapse-20261018-campaign1.log": "c05a9f17ac3b20422c41453e605b4c4407b11d19ddde8235f748e1856ea61847",
+    "extracted/goal-bridge-collapse-20261018-ctest1.log": "652927b5c0c0d0ccc1f87e8adcc23277bce95f927296a04d528106a03210b33f",
+    "extracted/goal-bridge-collapse-20261018-ctest2.log": "ea2bec68f1e6a1bd453cecf3cdc057c23bd97d4365266827120f9354bcd2c7fa",
+    "extracted/goal-bridge-collapse-20261018-edit.log": "e0e8637c0ed65454b41d907228467ff0027e22be96ea01f0f8f6e155eccd5db9",
+    "extracted/goal-bridge-collapse-20261018-extra-native1.log": "c36bbe5ac97f3467cea513e074e84b5a7185a2cd3bb2dab66321e5d52a8ba1d7",
+    "extracted/goal-bridge-collapse-20261018-extra-smoke1.log": "14fae4e1f66914a4363f8cf97aa1dfc4d8cefadec63f72e2f484c44ee3d23387",
+    "extracted/goal-bridge-collapse-20261018-gui-default1.log": "94755ffe971cd5b038776ea7228512f5a75aa1804934bc298683de611579f244",
+    "extracted/goal-bridge-collapse-20261018-gui-timers1.log": "65f6d1314d49fe111e9eb1459bd277f1772b124bacc692af00f56d8b0ddd93ff",
+    "extracted/goal-bridge-collapse-20261018-LastTest.log": "ef5d94730e7a619ea38c2f71550e1e9874a3b00f13e652ed331015328e2fdc64",
+    "extracted/goal-bridge-collapse-20261018-LastTest2.log": "cd99a90338244facdf9185f8b017fffbcf65923aea16c59abc5807ccd0d52226",
+    "extracted/goal-bridge-collapse-20261018-manowar1.log": "33b49fe1373cfdae7aa188d1b7e725ba074d5bfcf64690993a6b63b1a29abf03",
+    "extracted/goal-bridge-collapse-20261018-native-cpp1.log": "c84212396e7b0151074c9fa8b0f44b00c709261b7b1644d7f703bad9c0c6a753",
+    "extracted/goal-bridge-collapse-20261018-native-cpp2.log": "57165874829b3f37ea5d1c629b497327eccfc7757dce98ffd801b58434dc9e8f",
+    "extracted/goal-bridge-collapse-20261018-native-smoke1.log": "5f55830bc1230837921a07d24a953205f34fd5d13f020eeafb5c92d1b2656cb5",
+    "extracted/goal-bridge-collapse-20261018-native1.log": "c2f0d761ff41cdb9451139555aae1ae4964db6219ce405fe845978d70923ec54",
+    "extracted/goal-bridge-collapse-20261018-session1.log": "63d8dabd4a3aea89a4fb04d1d20446f86512c180b83221e544a167d26a8e446c",
+    "extracted/goal-bridge-collapse-20261018-session2.log": "af8b56e4cbcc494b94e176dc68929cdf7aed1b08f8a15d11a7c03bda2ad611c2",
+    "extracted/goal-bridge-collapse-20261018-session3.log": "0fa4f5354af3375cfc2fc4a732cee9126359b6d8b37bfda1554ddeaac021df8d",
+    "extracted/goal-bridge-collapse-20261018-stages1.log": "45c1eee9aa0a6dda3519fe8ac4fcf426bf94132bb199d97050b9cc54ac53e578",
+    "extracted/goal-bridge-collapse-20261018-supply1.log": "767151f576b290e51334d63b07e6c489848a399dd7353799e08ed51fd8bed661",
+    "extracted/goal-bridge-collapse-20261018-surface1.log": "8627d3809313b1701b95950d3a459a9713ee58945d11ed270a91497b9c5f9017"
+  },
+  "evidenceSha256": {
+    "extracted/goal-bridge-collapse-20261018-sources.json": "b66051ec6a5252cd68ff62d3e435de64ce62bcbc9f3f94687fb4eeb839604bbb",
+    "extracted/goal-bridge-collapse-20261018-pin-updates.json": "8dfb7f5854c39817baa3eecbd0409ed0f800e7731119ab61a39a804b1f354644",
+    "extracted/goal-bridge-collapse-20261018-verify-final.json": "89120d54cad5c1cf131695937ff6ca6c521075a495d7918abba16f544afb5c9d",
+    "extracted/goal-bridge-collapse-20261018-native-freeze.json": "924b81d11a8a5febd2c1ddbad2448ac841485830c2813e1cb6d7032613baadfa",
+    "extracted/goal-bridge-collapse-20261018-extra-freeze.json": "a7207dd32f67d4d6fcdef2224f1b34ef1eaecd5e4063f42043aa6a22dbbbee89",
+    "extracted/goal-bridge-collapse-20261018-gui-binary.json": "c10159b62418bb603702def9568146339e05366722503f6215b02994d4172e5e",
+    "extracted/goal-bridge-collapse-20261018-stages1/results.json": "dc89a12062a4deda86c176696b555c8ab0d75e2aacb559358afb1ffe9cac6a21",
+    "extracted/goal-bridge-collapse-20261018-supply1/summary.json": "d7cea5075e4df97e87224ca6ef1a658e7717613ff9bbfa8cfc6f2ff1461288b1",
+    "extracted/goal-bridge-collapse-20261018-supply1/states.tsv": "4e9c594c7ab5d88e242f50576cb7fdfb198997770a7b527de751fd64050b551a",
+    "extracted/goal-bridge-collapse-20261018-gui-default1/summary.json": "179becab2d306d9318e18d39b1b62d1c85e620a2e0475cf6ac8e98b4c591ad31",
+    "extracted/goal-bridge-collapse-20261018-gui-default1/states.tsv": "1fc472aa6d7ab3522138fcd8e6ef1b1a2328987dbf3fe938f1e0e6391b4b9e8c",
+    "extracted/goal-bridge-collapse-20261018-gui-timers1/summary.json": "8761f800856902487e12ef56516329b9499eb147ace7245af4a5239c9d13333a",
+    "extracted/goal-bridge-collapse-20261018-gui-timers1/states.tsv": "6be7103fa90660b88861593a75f3d2eebd216a2da6c5e0e14aea130cde45c263",
+    "extracted/goal-bridge-collapse-20261018-supply1/placed.bmp": "ac1994165425309f4aa31e433fb83cbab8fc9cecb53fec61e1b1ba356f522543",
+    "extracted/goal-bridge-collapse-20261018-gui-default1/after.bmp": "95e9db7215bc4c57897ed3a13a9dce80c6afdba625141bc30f2889825054c956",
+    "extracted/goal-bridge-collapse-20261018-gui-timers1/after.bmp": "2b7634b9a5cfa8d425b3da73105f8f2884864cf9f1c55e754522b2bb986b3c8e"
+  },
+  "validation": {
+    "build": 5,
+    "warnings": 0,
+    "errors": 0,
+    "full": {
+      "tests": 1676,
+      "failedChecks": 0,
+      "seconds": 206.53,
+      "ctestSeconds": 209.89
+    },
+    "focused": {
+      "nativeCapture": 1,
+      "actualPlacementAndBridgeDestruction": 1,
+      "surface": 7,
+      "manowar": 1,
+      "campaign": 161
+    },
+    "actualBridge": {
+      "explicitEvent": 9873,
+      "removedLinks": 1,
+      "shrapnelKind": 2,
+      "ownerCapture": true,
+      "rendered": true,
+      "moved": true,
+      "naturallyExpired": true,
+      "dummyAndPairReleased": true,
+      "positionalSoundRequests": 1,
+      "sp": 1800
+    },
+    "actualClient": {
+      "bridge": {
+        "passed": true,
+        "originalsUnchanged": true,
+        "early": [
+          [
+            "73",
+            "0",
+            "1",
+            "62",
+            "64"
+          ]
+        ],
+        "mature": [
+          [
+            "73",
+            "0",
+            "2",
+            "62",
+            "64"
+          ],
+          [
+            "74",
+            "5",
+            "2",
+            "72",
+            "64"
+          ]
+        ],
+        "maintenance": [
+          "0",
+          "2",
+          "31.736999999999998",
+          "3000",
+          "15002",
+          "2",
+          "31.019000000000002"
+        ],
+        "taken": [
+          "0",
+          "1",
+          "82",
+          "73",
+          "62",
+          "76",
+          "64",
+          "513",
+          "1",
+          "0",
+          "1"
+        ],
+        "prepared": [
+          "0",
+          "1",
+          "82",
+          "73",
+          "108",
+          "96",
+          "64",
+          "513",
+          "1",
+          "1",
+          "1"
+        ],
+        "serverBridges": {
+          "15181": [
+            "82",
+            "1",
+            "35",
+            "108",
+            "96"
+          ]
+        },
+        "refilled": [
+          [
+            "82",
+            "19",
+            "2",
+            "385",
+            "64"
+          ],
+          [
+            "74",
+            "5",
+            "2",
+            "72",
+            "64"
+          ]
+        ],
+        "limits": [
+          "실제 미션의 자동 공급/품질 회복·아이콘 클릭·배치·재공급이며 공격·미션 완주 증거는 별도"
+        ]
+      },
+      "default": {
+        "passed": true,
+        "originalsUnchanged": true,
+        "productTimers": false,
+        "content": [
+          "145",
+          "101",
+          "128",
+          "0",
+          "166",
+          "80",
+          "270",
+          "138"
+        ],
+        "taken": [
+          "0",
+          "1",
+          "128",
+          "101",
+          "64",
+          "94",
+          "8",
+          "65",
+          "1",
+          "1",
+          "1"
+        ],
+        "prepared": [
+          "0",
+          "1",
+          "128",
+          "101",
+          "94",
+          "111",
+          "8",
+          "65",
+          "1",
+          "1",
+          "1"
+        ],
+        "sp": [
+          "2200",
+          "1800"
+        ],
+        "cannons": {
+          "15184": [
+            "128",
+            "1",
+            "16",
+            "94",
+            "111"
+          ]
+        },
+        "camera": [
+          [
+            "976",
+            "793"
+          ],
+          [
+            "1514",
+            "793"
+          ],
+          [
+            "1514",
+            "793"
+          ]
+        ],
+        "bridges": [
+          [
+            "73",
+            "0",
+            "2",
+            "62",
+            "64"
+          ],
+          [
+            "76",
+            "20",
+            "2",
+            "72",
+            "64"
+          ]
+        ],
+        "stocks": [
+          3,
+          2,
+          2
+        ],
+        "limits": [
+          "한 지점의 실제 UI 건설/연구/생산/Take/배치/완공과 키 누름/해제 및 다리 공급·재고 관측이며 공격·미션 완주 판정은 별도"
+        ]
+      },
+      "timers": {
+        "passed": true,
+        "originalsUnchanged": true,
+        "productTimers": true,
+        "content": [
+          "155",
+          "101",
+          "128",
+          "0",
+          "166",
+          "80",
+          "270",
+          "148"
+        ],
+        "taken": [
+          "0",
+          "1",
+          "128",
+          "101",
+          "64",
+          "94",
+          "8",
+          "65",
+          "1",
+          "1",
+          "1"
+        ],
+        "prepared": [
+          "0",
+          "1",
+          "128",
+          "101",
+          "94",
+          "111",
+          "8",
+          "65",
+          "1",
+          "1",
+          "1"
+        ],
+        "sp": [
+          "2200",
+          "1800"
+        ],
+        "cannons": {
+          "15184": [
+            "128",
+            "1",
+            "16",
+            "94",
+            "111"
+          ]
+        },
+        "camera": [
+          [
+            "976",
+            "793"
+          ],
+          [
+            "1513",
+            "793"
+          ],
+          [
+            "1513",
+            "793"
+          ]
+        ],
+        "bridges": [
+          [
+            "73",
+            "0",
+            "2",
+            "62",
+            "64"
+          ],
+          [
+            "76",
+            "8",
+            "2",
+            "72",
+            "64"
+          ]
+        ],
+        "stocks": [
+          1,
+          0,
+          1
+        ],
+        "limits": [
+          "한 지점의 실제 UI 건설/연구/생산/Take/배치/완공과 키 누름/해제 및 다리 공급·재고 관측이며 공격·미션 완주 판정은 별도"
+        ]
+      }
+    },
+    "stageEntry": {
+      "runs": 11,
+      "passed": true,
+      "naturalCompletion": false
+    },
+    "audit": {
+      "tools": 106,
+      "passed": 95,
+      "existingFailed": 11,
+      "newFailed": 0
+    }
+  },
+  "integrationPins": {
+    "reports": 77,
+    "pins": 177
+  },
+  "fidelity": {
+    "complete": false,
+    "limits": [
+      "원본 bridgeeffects/파편 수명/프레임을 같은 실제 월드에 연결했다. 이번 새 원본 대조1203입력은 wrapper와600+600 캡처이며 전체 파괴/모든 walker 조합의 새 통합 x86 대조라는 주장은 아니다.",
+      "추가 그림은 실제5453ac의 PE 기본0과 getter/ret8을 검증했다. 개발용 수명 숫자 표시1/글꼴 출력/CD판의 추가 그림은 미복원이며 빈 효과로 통과시키지 않는다.",
+      "실제 UI로 생성한 서버 다리에2691 사건을 예약한 것은 명시 검사 입력이다. 이후 파괴·파편·상호 의존/소진·소리는 같은 실제 전체 Kernel이다. 플레이어 행동에 의한 자연 붕괴 시작/모든 공격 원인까지 입증한 것으로 확대하지 않는다.",
+      "GUI는 다리 공급/배치·캐논 완공과 두 재고 설정/키 회귀다. 붕괴 픽셀은 실제 Renderer를 사용한 세션 검사이며 이번 GUI 녹화에서 붕괴를 직접 유발한 증거는 아니다.",
+      "다른 파생 source의 전용/추가 그림, SP 부족/재고0 피드백·About, 실제 캐논 공격/운반 왕복/희생·승패·다음 미션/전략AI와11단계 자연 완주·전체 원본 동일성은 미완료다."
+    ]
+  },
+  "goalComplete": false
+}

@@ -1,4 +1,5 @@
 #include "client/RawProductionControls.h"
+#include "o/RawBridgeDraw.h"
 #include "client/RawMenuControls.h"
 #include "client/ClientMain.h"
 #include "client/RawCampaignMissionStartBindings.h"
@@ -1660,6 +1661,10 @@ TEST_CASE(CampaignSession_LocalLoginMissionStartAiAlliances) {
 // 실제 로그인/Start·허용점·3e 왕복 뒤 자연6700/건설30·HP 증가·완공·소리 반납까지 같은 세션에서 검사한다.
 TEST_CASE(CampaignSession_LocalLoginWorkshopHasActualPlacement) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();RawButtonControls* activeProductionUi{}; // 같은 실제 내용물 알림의 현재 UI다.
+    std::vector<std::array<float,2>> bridgeSounds;auto previousSound=std::move(services.sound.playOnceAt); // 실제 위치 소리 요청을 기존 장치 경계와 함께 관찰한다.
+    services.sound.playOnceAt=[&external,&bridgeSounds,previous=std::move(previousSound)](float x,float y,SoundHandle sound,std::uint32_t first,std::uint32_t second) {
+        if (sound==external.names.Lookup("bridgeFall.wav")) { CHECK(first==0 && second==0);bridgeSounds.push_back({x,y}); }return previous(x,y,sound,first,second);
+    };
     services.playerContent.gump=[&](auto id) { return activeProductionUi ? activeProductionUi->RegisteredGump(id) : 0U; };services.playerContent.handle=[&](auto token,auto event,auto form,auto reason) { if (!activeProductionUi) throw std::logic_error("생산 검사 UI 수명 오류");return activeProductionUi->HandleGump(token,event,form,reason); };services.gumpNotice=[&](auto id,auto parent) { if (activeProductionUi) activeProductionUi->ObjectNotice()(id,parent); };
     CampaignLoginServices login;login.configInt=[](std::string_view,std::int32_t fallback) { return fallback; };login.wallSeconds=[] { return 100.25; };login.clock=[] { return 100250U; };login.refresh=[] {};login.playerUiBusy=[] { return false; };login.playerNotice=[](std::uint32_t,std::uint32_t,std::uint32_t) {};login.log=[](std::string_view) {};
     services.production.allocationBytes=[](std::span<std::uint8_t> bytes) { CHECK(bytes.size()==kProductionDeckBytes);std::fill(bytes.begin(),bytes.end(),std::uint8_t{0xa7}); }; // 생성자가 초기화하지 않는 실제 할당 바이트의 명시 입력이다.
@@ -1809,6 +1814,39 @@ TEST_CASE(CampaignSession_LocalLoginWorkshopHasActualPlacement) {
                 for (auto sid=supply.Begin({static_cast<std::uint16_t>(session.CurrentTechnologyParent())});sid.value;sid=supply.Next()) if (Get(core.pool.Slot(sid),20,2)&0x40) { CHECK(core.pool.Slot(sid)[30]==2);++supplied; }
                 CHECK(supplied==static_cast<std::size_t>(session.BattleOption(1)*2+2));
                 std::cout<<"실제 다리 클릭/Take/서버 배치/자동 재공급·품질 회복 통과\n";
+                const auto placed=session.World().Find(static_cast<float>(bridgePoint.x),static_cast<float>(bridgePoint.y),82);CHECK(placed.value>=core.pool.Layout().serverFirst);
+                if (placed.value) {
+                    const auto original=core.pool.Slot(placed);const auto x=std::bit_cast<float>(Get(original,14)),y=std::bit_cast<float>(Get(original,18)); // 실제 배치 좌표를 소리/더미와 대조한다.
+                    const auto maps=BuildStandardOwnerColorMaps(82,core.bridgeState.bridgeType);std::array<std::uint32_t,188> tokens{};tokens[82]=1;ShapeToBufferState captureState;captureState.addTypeHotspot=true;captureState.ownerTypeMaps=tokens;
+                    captureState.ownerColors=[&](std::uint32_t type,std::uint32_t owner)->std::span<const std::uint8_t> { CHECK(type==82);return maps.at(static_cast<std::size_t>(core.bridgeState.ownerColors.at(owner))); };
+                    BridgeDrawState drawState;RawBridgeDraw bridgeDraw(core.pool,drawState);captureState.mainFrame=[&](Sid sid) { return bridgeDraw.MainFrame(sid); };captureState.additional=[&](Sid sid,ConstructionVisualImage&,std::int32_t px,std::int32_t py) { bridgeDraw.Additional(sid,px,py); }; // 실제 extra2의 같은 검증된 가상 몸체다.
+                    RawShapeToBuffer capture(core.pool,core.types,core.shapes,assets.game.Shapes(),captureState);const auto expected=capture.Capture(placed);const auto soundsBefore=bridgeSounds.size();
+                    Renderer renderer(1024,768);session.SetParticleView({static_cast<int>(x*16)-256,static_cast<int>(y*11)-256,0,0,1024,768},{[&] { return renderer.FullRedrawPending(); },[&](SquidDisplayRect rect,std::uint32_t flags) { renderer.Invalidate({rect.left,rect.top,rect.right,rect.bottom},flags); }});
+                    std::vector<Sid> attachedLinks;
+                    // 실제 가상 전처리가 정리할 연결 객체의 현재 두 참조를 파괴 전에 읽는다.
+                    for (std::uint32_t number=5;number<core.pool.Capacity();++number) { const Sid sid{static_cast<std::uint16_t>(number)};const auto link=core.pool.Slot(sid);if (!(link[11]&3U) && link[10]==155 && (Get(link,8,2)==placed.value || Get(link,12,2)==placed.value)) attachedLinks.push_back(sid); }
+                    CHECK(!attachedLinks.empty());
+                    auto* request=core.processes.AddRegular(placed,kBridgeDestroyEvent,0);CHECK(request!=nullptr);const auto collapseStarted=core.processState.now,wallAt=wall; // 사건은 명시 검사 입력이며 처리/파괴/파편/후속 소진은 실제 전체 Kernel이다.
+                    session.RunFrame({collapseStarted+1.0/60,wallAt+1.0/60,1.0/60,20001},false);CHECK((core.pool.Slot(placed)[11]&1U)!=0 && bridgeSounds.size()==soundsBefore+1 && (bridgeSounds.back()==std::array<float,2>{x,y}));
+                    // 삭제된 현재 다리를 참조한 실제 연결 객체도 같은 재귀 삭제에서 반납돼야 한다.
+                    for (const auto sid:attachedLinks) CHECK(core.pool.Slot(sid)[11]&1U);
+                    std::cout<<"실제 다리 연결 객체 정리 "<<attachedLinks.size()<<"개\n";
+                    ShrapnelVisualProcess* effect=nullptr;
+                    // 실제 같은 표시 목록과 Host에서 새 process16을 찾는다.
+                    for (const auto token:session.Particles().Rendering().Slots()) { const auto* fields=session.Particles().Rendering().Lookup(token);if (!fields) continue;auto* candidate=dynamic_cast<ShrapnelVisualProcess*>(core.processes.FromForm({static_cast<std::uint16_t>(fields->form)}));if (candidate) { CHECK(effect==nullptr);effect=candidate; } }
+                    CHECK(effect!=nullptr);
+                    if (effect) {
+                        const auto& fields=effect->Fields();CHECK(fields.image.pixels==expected.pixels && fields.image.width==expected.width && fields.image.height==expected.height && fields.image.hotspotX==expected.hotspotX && fields.image.hotspotY==expected.hotspotY && std::bit_cast<std::uint32_t>(fields.gravity)==0x3f99999aU && fields.total>0);
+                        const auto token=fields.registration.token;const Sid form{static_cast<std::uint16_t>(fields.registration.form)},dummy{static_cast<std::uint16_t>(fields.registration.parent)};CHECK(core.pool.Slot(dummy)[10]==110 && core.pool.Slot(form)[10]==16 && core.dependencies.Has(form,dummy) && std::bit_cast<float>(Get(core.pool.Slot(dummy),14))==x && std::bit_cast<float>(Get(core.pool.Slot(dummy),18))==y);
+                        renderer.SetScene(session.ParticleSprites({0,0,1024,768}));const auto firstImage=renderer.SceneImage();CHECK(std::any_of(firstImage.indices.begin(),firstImage.indices.end(),[](auto color) { return color!=0; }));bool moved=false;
+                        // 원본 그림의 입자가 실제 시각 갱신만으로 이동/소진하고 같은 상호 의존으로 해제되는지 확인한다.
+                        for (std::uint64_t frame=2;frame<=360;++frame) { const auto now=collapseStarted+static_cast<double>(frame)/60;session.RunFrame({now,wallAt+(now-collapseStarted),1.0/60,20000+frame},false);wall=wallAt+(now-collapseStarted);controls.Poll({InputCode::kRelease,500,350});menus.CleanupFrame();if (frame==12) { renderer.SetScene(session.ParticleSprites({0,0,1024,768}));const auto next=renderer.SceneImage();moved=next.indices!=firstImage.indices && std::any_of(next.indices.begin(),next.indices.end(),[](auto color) { return color!=0; }); } }
+                        CHECK(moved && !session.Particles().Rendering().Lookup(token) && (core.pool.Slot(form)[11]&1U) && (core.pool.Slot(dummy)[11]&1U));
+                        CHECK(!core.destroy.PreDepth() && !core.destroy.PostDepth() && !core.bookkeeping.depth && session.Sp(1)==1800 && bridgeSounds.size()==soundsBefore+1);
+                        std::cout<<"실제 서버 다리2691/가상 파괴/소유자 캡처·종류2 픽셀/위치 소리1회/자연 소진·더미 해제 통과\n";
+                    }
+                    session.SetParticleView({0,0,0,0,1024,768},{}); // 지역 Renderer가 해제되기 전에 빌린 장치 경계를 반납한다.
+                }
             }
         }
         controls.DisableProduction();CHECK(!controls.Production());CHECK(session.Sp(1)==1800);activeProductionUi=nullptr;

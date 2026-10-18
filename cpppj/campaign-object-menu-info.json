@@ -10,11 +10,11 @@
   "currentSources": {
     ".gitattributes": "3e8d869648cde0415d1a91e9b22d5a7ed7e5c0585923a189bfd37aa33229f3a8",
     "cpppj/src/client/CMakeLists.txt": "d2463c8e635ce3e6d82bc55105489461d1758f6a5819c7748cf6d1108a91ae4d",
-    "cpppj/src/client/RawCampaignSession.cpp": "99e082e181299b20ed713c6f4f72d0bc5ab3f3c46457b1ea47486fac6cca41a3",
+    "cpppj/src/client/RawCampaignSession.cpp": "f5a4835133edc828d65390d1f4c9e25ab3cf68a6bfb0e3dc696e68d49013961c",
     "cpppj/src/client/RawCampaignSession.h": "708c73cd9f83b6a32496a782151ec35cbecb469a7f9c4f136819a5ae57b70288",
     "cpppj/src/o/RawPlayerIdentity.cpp": "96c5c91ae865f10f9deba31b59ed9bac40df16c1d38d38d37329100732cfd49c",
     "cpppj/src/o/RawPlayerIdentity.h": "fe72fe29c2286a6ee6850affe138d9447516bdab1be3e5ab581f58438cc9b0ff",
-    "cpppj/tests/CMakeLists.txt": "3e200bbf9836698412da1bb62fd2defaf0049e6723709e8c5e8af2bb59e5b490",
+    "cpppj/tests/CMakeLists.txt": "17eef31cff19a97642806d3980eda0465ee811e1146150391275f0765eaf9885",
     "cpppj/tests/CampaignObjectMenuTests.cpp": "fea9198ea2150c42bb523f7ac9298c2f819acd1fc9b9887b53020c206ad62563",
     "cpppj/src/client/RawObjectMenuInfo.cpp": "a9baa8625fb0f1c6c789f235e4d5b6020186a6fe49fc53a6f603c2c09d67c8dd",
     "cpppj/src/client/RawObjectMenuInfo.h": "6e494e34fa1092f5cba931bd0c7507ca9650483eabb4a268e8b72e96005eabea",
@@ -1061,6 +1061,25 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "807452e78888684907414eb31cc6b5da2c9c123b4c1fb6b8a6b620974337b78a",
           "current": "3e200bbf9836698412da1bb62fd2defaf0049e6723709e8c5e8af2bb59e5b490"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 180,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "99e082e181299b20ed713c6f4f72d0bc5ab3f3c46457b1ea47486fac6cca41a3",
+          "current": "f5a4835133edc828d65390d1f4c9e25ab3cf68a6bfb0e3dc696e68d49013961c"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "3e200bbf9836698412da1bb62fd2defaf0049e6723709e8c5e8af2bb59e5b490",
+          "current": "17eef31cff19a97642806d3980eda0465ee811e1146150391275f0765eaf9885"
         }
       ]
     }

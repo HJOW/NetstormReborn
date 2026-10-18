@@ -156,6 +156,9 @@ TEST_CASE(RawSurfaceWorld_RuntimeSharesStorageAndCurrentDispatch) {
             [&](std::int32_t length) { CHECK(length==8);++sends; }};
         hooks.walkerFall=[](Sid)->bool { throw std::logic_error("이번 검사는 낙하를 만들지 않습니다"); };
         hooks.loadingDepth=[&](std::uint32_t depth) { depths.push_back(depth); };
+        hooks.bridgeEffect=[](const BridgeLifecycleEvent&) { throw std::logic_error("이번 저장소 검사는 실제 다리를 파괴하지 않습니다"); }; // 효과가 생기면 빈 성공으로 통과시키지 않는다.
+        auto missingEffect=hooks;missingEffect.bridgeEffect={};const auto beforeRuntime=world->Report(); // 실제 효과 소비자만 빠진 설치도 객체/월드 변경 전에 거부한다.
+        CHECK(Throws([&] { world->BindRuntime(std::move(missingEffect)); }) && world->Report()==beforeRuntime);
         world->BindRuntime(std::move(hooks));CHECK(core.hash.Entries(0).data()==world->Core().hash.Entries(0).data());
         world->BeginLoad();const auto object=world->Create(type);core.owner.Set(object,1);world->Pop(object,25,25,9);world->FinishLoad();
         CHECK(world->Objects().size()==1 && world->Objects()[0].sid==object && world->Objects()[0].object.x==25);

@@ -1,0 +1,45 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "unit": 180,
+  "rows": 600,
+  "normalReturns": 2400,
+  "instructions": 14117544,
+  "precisionDifferences": 0,
+  "debugLife": 0,
+  "sameAsPrevious600": true,
+  "nativeCalls": {
+    "0043ba00": 600,
+    "0043b950": 600,
+    "004a7db0": 600,
+    "004ac550": 1200,
+    "0049a840": 1200,
+    "00419850": 600,
+    "004222f0": 600,
+    "004daa70": 60,
+    "00401d92": 60,
+    "004223c0": 600,
+    "004dabe0": 540,
+    "0040227e": 540,
+    "004daab0": 540,
+    "0040229f": 540,
+    "004021b5": 3,
+    "00402796": 27
+  },
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originals/d/_shapes.shp": "c878353c8054208deef832e34c514b30fe670e175505b129333a5728ba70f68e",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "tools/decomp_owner_capture.py": "349f568e919ed4566543e4c89e0551d134ac9b11374b6d12b57498c2ab749a7c",
+    "tools/decomp_bridge_collapse.py": "fed91be41ef652906d1bfaeb3b4ec1d18ba64270ae7a0967a612d7b284bccc2e",
+    "tools/decomp_bridge_extra_capture.py": "8549c5c2637cd5f5ce5308cdae189a51618d23a580ef1f6b55136fbfcd7700fa",
+    "cpppj/tests/fixtures/bridge-collapse-x86.tsv": "69cd1dd8de485d4fdc6b7b517441c21be1dde160315bedc9bfcd2861acef8083",
+    "cpppj/tests/fixtures/bridge-extra-capture-x86.tsv": "927198ff3a7979b50e1c57e63349f1740aa99aae11eb8714f1dfd2dff6dfd5c1"
+  },
+  "limits": [
+    "실제4222f0의 현재 DWORD 프레임 반환/4223c0의 debug0 ret8과 전체 capture/mapped RLE를 실행한다. 두 가상 그림 대체0이다.",
+    "현재 extra2/기준점0/단위 배율/owner0·9색/60프레임의600입력이며 이전603행과 별개로 동결한다.",
+    "debugLife5453ac의 PE 기본0만 확인했다. 개발용 수명 숫자 표시1의 글꼴/출력/CD판은 새 증명 범위가 아니다."
+  ]
+}

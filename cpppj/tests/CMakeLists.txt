@@ -1538,3 +1538,12 @@ set_source_files_properties(ProductionMaintenanceTests.cpp PROPERTIES COMPILE_DE
 # 실제0/0 커서 미리보기의 원본 발자국 경계 관측도 같은 검사에 연결한다.
 set_property(SOURCE ProductionMaintenanceTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS
     "NETSTORM_NEIGHBOR_BOUNDARY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/neighbor-boundary-x86.tsv\"")
+
+# 다리 wrapper와 보호60프레임/9색 캡처의 독립 원본 전체를 대조한다.
+target_sources(netstorm_tests PRIVATE BridgeCollapseTests.cpp)
+set_source_files_properties(BridgeCollapseTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_BRIDGE_COLLAPSE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/bridge-collapse-x86.tsv\"")
+
+# 실제 extra2의 가상 기본/추가 그림과 전체600개 캡처 원문도 같은 검사에 공급한다.
+set_property(SOURCE BridgeCollapseTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS
+    "NETSTORM_BRIDGE_EXTRA_CAPTURE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/bridge-extra-capture-x86.tsv\"")

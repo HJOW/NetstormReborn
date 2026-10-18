@@ -913,7 +913,7 @@
     "cpppj/tests/RawPathStartTests.cpp": "b5dcda9c5e3a3634fe70bc3a5a35be3ef96eb520779ec6dcca3dad84cab34a0b",
     "cpppj/tests/RawPriestWorldBindingsTests.cpp": "fe77e5893c96e392db4218b6087de3286ed60e0382c5770740c76ea0b69826f4",
     "cpppj/tests/RawSceneSupport.h": "87b79d463f38e142b1aa768384af28a08b404a276a6b989e90dd53b393642919",
-    "cpppj/tests/RawSurfaceWorldTests.cpp": "a4518961fa2fdd74076b7527db76314c4c5de0cd0b671ce57535b9322c6b6a0a",
+    "cpppj/tests/RawSurfaceWorldTests.cpp": "a3e7276ffe7e05798158b4f43133da6a77e903456ead2c89f7477833d6c8f123",
     "cpppj/tests/RecoveryTests.cpp": "13a424ca934a33fffcf29a3a6795764c2c46fe8db9a02b518be6ca45e1c6be38",
     "cpppj/tests/RegionOwnershipTests.cpp": "c1f5a9e52cb835a6ebe685293b1b333bb1d2a785d930575ff85324a12f82fdc7",
     "cpppj/tests/RegionPaintTests.cpp": "3b45525f557739561adb2e3f0ad9ffa43dd5855bd08b5b153f317ac44771e206",
@@ -2152,6 +2152,19 @@
           "path": "cpppj/src/o/RawSquidNeighbors.h",
           "previous": "1d223e803abd49e59dc45fb41e68cc65227af2d6e31b3d6904d99b4d00849dbc",
           "current": "edb19d4782b671d6be80c9f7690b9455d200ef7dbe2df51059d5ca0c4a66175c"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 180,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/tests/RawSurfaceWorldTests.cpp",
+          "previous": "a4518961fa2fdd74076b7527db76314c4c5de0cd0b671ce57535b9322c6b6a0a",
+          "current": "a3e7276ffe7e05798158b4f43133da6a77e903456ead2c89f7477833d6c8f123"
         }
       ]
     }

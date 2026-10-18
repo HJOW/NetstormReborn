@@ -3,6 +3,7 @@
 #include "client/RawProductionMaintenance.h"
 #include "o/CanonDecoder.h"
 #include "o/RawBridgeEvents.h"
+#include "o/RawBridgeDraw.h"
 #include "o/RawMissionStart.h"
 #include "o/RawFactoryDraw.h"
 #include "o/RawMissionAiSettings.h"
@@ -301,8 +302,9 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawFenceTarget> fenceTarget; // 같은 해시/배리어 끝점/현재 동맹의 실제 표적 코너 계산이다.
     std::unique_ptr<RawCampaignArcherBindings> combat; // 같은 Archer/Missile 생성/공간/Host를 소유한다.
     CrtRandom particleCrt{CrtRandom::Borrow(crt)}; // 실제 시드 초기화/지형이 소비한 현재 CRT DWORD를 함께 사용한다.
-    std::array<std::uint32_t,188> shrapnelMapTokens{}; // 원본 일반 소유자 색표가 복원된144의 실제 토큰이다.
-    OwnerColorMaps shrapnelOwnerColors; // 현재 원본 후보로 만든144의9×256 색표다.
+    std::array<std::uint32_t,188> shrapnelMapTokens{}; // 원본 일반 소유자 색표가 복원된 다리/144의 실제 토큰이다.
+    std::map<std::uint32_t,OwnerColorMaps> shrapnelOwnerColors; // 현재 원본 후보로 만든 TYPE별9×256 색표이며 실제 소유자 색을 매번 선택한다.
+    BridgeDrawState bridgeDrawState;std::unique_ptr<RawBridgeDraw> bridgeDraw; // 같은 기본0 수명 숫자 전역과 실제 다리 캡처 가상 몸체다.
     ShapeToBufferState shrapnelCaptureState; // 원본 fixed16/추가 TYPE 기준점/현재 소유자 색 선택이다.
     std::unique_ptr<RawShapeToBuffer> shrapnelCapture; // 같은 raw/보호 SHP의 실제 캡처이며 표시보다 오래 산다.
     std::unique_ptr<RawCampaignParticles> particles; // 같은 Host/Kernel/Renderer의 실제11/19/16 표시다.
@@ -697,17 +699,22 @@ struct RawCampaignSession::Impl {
             },[this](Sid sid) { core.building.NotifySurface(sid); }}));
         projectileGeometry=std::make_unique<RawProjectileGeometry>(core.pool,core.types,projectileTypes,16.0F,11.0F,gunMode.get());
         fenceTarget=std::make_unique<RawFenceTarget>(core.pool,core.hash,core.types,projectileTypes,*gunTarget,gunTargetState,gunState);
-        shrapnelMapTokens[144]=1;shrapnelOwnerColors=BuildStandardOwnerColorMaps(144,core.bridgeState.bridgeType);shrapnelCaptureState.ownerTypeMaps=shrapnelMapTokens;
+        // 실제43be30은59ab28=0인 일반 초기 상태에서 다리와 맨 오 워에 각각 일반 색표를 설치한다.
+        for (const auto type:{core.bridgeState.bridgeType,144U}) { shrapnelMapTokens.at(type)=1;shrapnelOwnerColors.emplace(type,BuildStandardOwnerColorMaps(type,core.bridgeState.bridgeType)); }
+        shrapnelCaptureState.ownerTypeMaps=shrapnelMapTokens;
         shrapnelCaptureState.addTypeHotspot=true; // 실제00542414의 PE 초기 DWORD는1이며 캡처 후 TYPE 기준점을 더한다.
         shrapnelCaptureState.ownerColors=[this](std::uint32_t type,std::uint32_t owner)->std::span<const std::uint8_t> {
-            if (type!=144 || owner>=core.bridgeState.ownerColors.size()) throw std::out_of_range("파편 캡처 현재 타입/owner 색표 오류");
-            const auto color=core.bridgeState.ownerColors[owner];if (color<0 || color>8) throw std::out_of_range("파편 캡처 현재 소유자 색 번호 오류");return shrapnelOwnerColors[static_cast<std::size_t>(color)];
+            if (!shrapnelOwnerColors.contains(type) || owner>=core.bridgeState.ownerColors.size()) throw std::out_of_range("파편 캡처 현재 타입/owner 색표 오류");
+            const auto color=core.bridgeState.ownerColors[owner];if (color<0 || color>8) throw std::out_of_range("파편 캡처 현재 소유자 색 번호 오류");return shrapnelOwnerColors.at(type)[static_cast<std::size_t>(color)];
         };
+        bridgeDraw=std::make_unique<RawBridgeDraw>(core.pool,bridgeDrawState);
+        shrapnelCaptureState.mainFrame=[this](Sid sid) { return bridgeDraw->MainFrame(sid); };
+        shrapnelCaptureState.additional=[this](Sid sid,ConstructionVisualImage&,std::int32_t x,std::int32_t y) { bridgeDraw->Additional(sid,x,y); }; // 실제 기본0 분기를 같은 캡처에서 실행한다.
         shrapnelCapture=std::make_unique<RawShapeToBuffer>(core.pool,core.types,core.shapes,assets.game.Shapes(),shrapnelCaptureState);
         CampaignShrapnelHooks shrapnel;shrapnel.crt=&particleCrt;shrapnel.lifetime.create=[this](std::uint32_t type,std::uint32_t flags) { return world.Create(type,flags); };
         shrapnel.lifetime.pop=[this](Sid sid,float x,float y,std::uint32_t flags) { world.Pop(sid,x,y,flags); };
         shrapnel.lifetime.depend=[this](Sid form,Sid dummy) { static_cast<void>(core.dependencies.Create(form,dummy)); };
-        shrapnel.lifetime.capture=[this](Sid sid) { if (!Flyer(sid)) throw std::logic_error("다른 실제 파편 source의 전용 색표/추가 그림 미복원 TYPE"+std::to_string(core.pool.Slot(sid)[10]));return shrapnelCapture->Capture(sid); };
+        shrapnel.lifetime.capture=[this](Sid sid) { if (!Flyer(sid) && !BridgeLifetime(sid)) throw std::logic_error("다른 실제 파편 source의 전용 색표/추가 그림 미복원 TYPE"+std::to_string(core.pool.Slot(sid)[10]));return shrapnelCapture->Capture(sid); };
         shrapnel.destroyUnpaired=[this](Sid sid) { world.Destroy(sid,0); };
         particles=std::make_unique<RawCampaignParticles>(core,random,assets.game.Palette(),[this](float x,float y,std::string_view name) {
             if (!services.sound.playOnceAt) throw std::logic_error("캠페인 빔 실제 파일명 음향 미연결");services.sound.playOnceAt(x,y,soundNames.Lookup(name),0,0);
@@ -817,8 +824,8 @@ struct RawCampaignSession::Impl {
         worldHooks.destroy=construction->Destroy(lifetime->Destroy(hits->Destroy(services.destroy)));
         auto previousEffects=std::move(worldHooks.assets.emit); // 다른 기존 파생/전송/선택 처리기를 유지한다.
         worldHooks.assets.emit=[this,previous=std::move(previousEffects)](const SquidDestroyEvent& event) {
-            // 실제 다리 VT의 extra9(예측1/미리보기8)은 기존 Bridge Pre/Post가 고유 효과를 건너뛰고 공통 수명을 실행한다.
-            if ((AbstractBridgeLifetime(event.sid) || BridgeConnector(event.sid)) && (event.effect==SquidDestroyEffect::PreDestroy || event.effect==SquidDestroyEffect::PostDestroy)) { core.surfaces.Hooks().emit(event);return; }
+            // 실제 다리 VT의 일반/예측/미리보기 모두 같은 Pre/Post를 쓰며 extra9의 효과 생략은 원본 몸체가 판단한다.
+            if ((BridgeLifetime(event.sid) || BridgeConnector(event.sid)) && (event.effect==SquidDestroyEffect::PreDestroy || event.effect==SquidDestroyEffect::PostDestroy)) { core.surfaces.Hooks().emit(event);return; }
             if (geyserLifetime->Handles(event.sid)) {
                 if (event.effect==SquidDestroyEffect::PreDestroy) { geyserLifetime->PreDestroy(event.sid,event.flags);return; }
                 if (event.effect==SquidDestroyEffect::PostDestroy) { geyserLifetime->PostDestroy(event.sid,event.flags);return; }
@@ -856,7 +863,7 @@ struct RawCampaignSession::Impl {
         worldHooks.assets=priests->DestroyHooks(std::move(worldHooks.assets)); // 실제4919b0의 목록·보호막·Carrier 전처리를 같은 삭제 호출에 연결한다.
         auto previousDestroy=std::move(worldHooks.destroy); // 실제 신전 VT의 공통+10만 추가 분배한다.
         worldHooks.destroy=[this,previous=std::move(previousDestroy)](Sid sid,std::uint32_t flags,const SquidDestroyHooks& hooks) {
-            if (AbstractBridgeLifetime(sid) || BridgeConnector(sid) || geyserLifetime->Handles(sid) || Vortex(sid) || FenceCommon(sid) || Flyer(sid) || balloonBody->Handles(sid) || VisualDummy(sid) || PlainDamageable(sid) || SunFence(sid) || Nugget(sid) || PreviewDais(sid) || PriestForcefield(sid) || PlainCarrierLifetime(sid) || PriestLifetime(sid) || BuriedLifetime(sid) || BombLifetime(sid)) return core.virtualDestroy.Destroy(sid,flags,hooks);return previous(sid,flags,hooks);
+            if (BridgeLifetime(sid) || BridgeConnector(sid) || geyserLifetime->Handles(sid) || Vortex(sid) || FenceCommon(sid) || Flyer(sid) || balloonBody->Handles(sid) || VisualDummy(sid) || PlainDamageable(sid) || SunFence(sid) || Nugget(sid) || PreviewDais(sid) || PriestForcefield(sid) || PlainCarrierLifetime(sid) || PriestLifetime(sid) || BuriedLifetime(sid) || BombLifetime(sid)) return core.virtualDestroy.Destroy(sid,flags,hooks);return previous(sid,flags,hooks);
         };
         buriedRegular=std::make_unique<RawBuriedRegular>(core.pool,core.frames,core.frame,random);
         auto actualRegular=hits->Handler(combat->Handler(assetBindings->Handler(buriedRegular->Handler(priests->RegularHandler([this](Sid sid,std::uint32_t event,std::uint32_t count,float payload) {
@@ -875,12 +882,18 @@ struct RawCampaignSession::Impl {
         })))));
         actualRegular=flare->Handler(std::move(actualRegular)); // 실제5096a0만 플레어 주기/삭제 경로로 분배한다.
         actualRegular=fenceRegular->Handler(std::move(actualRegular)); //실제 가상 표가 맞는 펜스만 먼저 처리한다.
+        actualRegular=MakeBridgeRegularHandler(core.pool,core.bridgeEvents,std::move(actualRegular)); // 실제5034c8의2691 삭제/2692 끝 칸 변환도 같은 Kernel에서 실행한다.
         // 실제 사건이 실패하면 당시 부모/사건/횟수를 남기고 같은 예외를 전파한다. 성공/상태 되돌림으로 대신하지 않는다.
         worldHooks.regular=[this,handler=std::move(actualRegular)](Sid sid,std::uint32_t event,std::uint32_t count,float payload) {
             try { return handler(sid,event,count,payload); }
             catch (...) { std::fprintf(stderr,"실제 Regular 실패 SID%u TYPE%u event%u count%u payload%08x\n",sid.value,sid.value<core.pool.Capacity() ? core.pool.Slot(sid)[10] : 0xffffU,event,count,std::bit_cast<std::uint32_t>(payload));throw; }
         };
         worldHooks.transmit=AviaryTransmission(assetBindings->Transmission());worldHooks.walkerFall=[this](Sid sid) { return priests->FallWalker(sid); };
+        worldHooks.bridgeEffect=[this](const BridgeLifecycleEvent& event) {
+            if (event.effect==BridgeLifecycleEffect::NotifyRemoval) { static_cast<void>(particles->AddShrapnel(event.sid,ShrapnelKind::Variant2));return; } // 실제460600은 source와 종류2를4604a0에 전달한다.
+            if (event.effect==BridgeLifecycleEffect::FallSound) { if (!services.sound.playOnceAt) throw std::logic_error("실제 다리 낙하 위치 소리 미연결");services.sound.playOnceAt(event.x,event.y,soundNames.Lookup("bridgeFall.wav"),0,0);return; }
+            throw std::logic_error("다리 파편/소리 경계의 다른 수명 효과");
+        };
         worldHooks.loadingDepth=[this](std::uint32_t depth) { objectState.loadingDepth=depth;carrierState.loadingDepth=depth;priests->SetLoadingDepth(depth);assetBindings->SetLoadingDepth(depth); };
         world.BindRuntime(std::move(worldHooks));
         placement.geometry=metadata.geometry;placement.placement.localPlayer=1;placement.permission.alliances.fill(1);
@@ -989,8 +1002,8 @@ struct RawCampaignSession::Impl {
         // 현재 VT를 매 호출 다시 읽고 주소가 같은 순수 수명 몸체만 공유한다.
         for (const auto known:kPlainDamageableTables) if (known==table) return true;return false;
     }
-    // 실제5034c8/+10=4220f0/+14=4221b0/+18=422300에서 extra9인 예측/미리보기만 기존 다리 수명에 연결한다.
-    bool AbstractBridgeLifetime(Sid sid) const { const auto raw=core.pool.Slot(sid);return raw[10]==core.bridgeState.bridgeType && Read(raw,0)==kPatchBridgeVtable && (raw[40]&9)!=0; }
+    // 실제5034c8/+10=4220f0/+14=4221b0/+18=422300의 같은 다리 수명이며 거부/extra 조건은 기존 원본 몸체가 처리한다.
+    bool BridgeLifetime(Sid sid) const { const auto raw=core.pool.Slot(sid);return raw[10]==core.bridgeState.bridgeType && Read(raw,0)==kPatchBridgeVtable; }
     // TYPE155 생성자422720의503360은+10/+14/+18이 각각 공통4af780/4b0950/4b0840이다.
     bool BridgeConnector(Sid sid) const { const auto raw=core.pool.Slot(sid);return raw[10]==core.bridgeState.connectorType && Read(raw,0)==0x503360U; }
     // 실제507950/+10=4af780이며 extra8일 때44afd0의선행 일반 효과가 없다. 살아 있는 다이스 전체로 확장하지 않는다.

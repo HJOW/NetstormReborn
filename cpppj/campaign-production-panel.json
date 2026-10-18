@@ -325,15 +325,15 @@
     "cpppj/src/client/InventoryGump.cpp": "0a90a5a9cc763d2675cbf47fa10a1cde68fddabcdc86a2758629f1e77842bece",
     "cpppj/src/client/RawButtonControls.cpp": "1e31ef93cd819be30a75bcada1e9eba98adfae917a8db925a4845bfd37a2ef92",
     "cpppj/src/client/RawButtonControls.h": "d49ab77d71b4d10beea6c2a5e466a87289874092592c86bc879cd971fab64180",
-    "cpppj/src/client/RawCampaignSession.cpp": "99e082e181299b20ed713c6f4f72d0bc5ab3f3c46457b1ea47486fac6cca41a3",
+    "cpppj/src/client/RawCampaignSession.cpp": "f5a4835133edc828d65390d1f4c9e25ab3cf68a6bfb0e3dc696e68d49013961c",
     "cpppj/src/client/RawCampaignSession.h": "708c73cd9f83b6a32496a782151ec35cbecb469a7f9c4f136819a5ae57b70288",
     "cpppj/src/client/RawMenuControls.cpp": "521a34d2d7660a18a90435074c1f2893f4c24ca600d81d3a5cf18b745226459c",
     "cpppj/src/client/RawMenuControls.h": "70cf632cf282ea15c98c45ca1b8fba8b720dafb07eebc2a022723dfc35e3b1fa",
     "cpppj/src/client/UberGump.cpp": "09ae6c715bbfb82f9517ea7f1d11a4d4801d8a01af34c6d48e1831791996c06b",
     "cpppj/src/o/RawContainedFinder.cpp": "b3bfedcc598e04ab1a4755ee77adff8a331d1be941975fe379dc705612d9a3a2",
     "cpppj/src/o/RawGraph.cpp": "d392ffd6e52f10adfc25bffa44ae4ae51e81a91201864d6fc168ddcb66be5a22",
-    "cpppj/tests/CMakeLists.txt": "3e200bbf9836698412da1bb62fd2defaf0049e6723709e8c5e8af2bb59e5b490",
-    "cpppj/tests/CampaignSessionTests.cpp": "259b8c3178bb2b3498ca76818c49db41c2ed544ff7fca6c272da61856b15e72b",
+    "cpppj/tests/CMakeLists.txt": "17eef31cff19a97642806d3980eda0465ee811e1146150391275f0765eaf9885",
+    "cpppj/tests/CampaignSessionTests.cpp": "3bc6fd7121a4a72da06c99f61aa11178edb163182d02b74b1b652377f5559663",
     "cpppj/tests/CarrierPreDestroyTests.cpp": "706b7e55165c168bbc9056cdf23e3439f60d7cd628b1fc4b7c47651e80fcf6b2",
     "cpppj/production-colors.json": "735f209fd1f1a866be49b0c8fb8652708e29997efbb4c1ab08e9cd9fe42f2dc4",
     "cpppj/src/client/ProductionColorMaps.cpp": "0476a2df1a78cf2486bbbb07891554296445df80688583cdf81163c42e6857e3",
@@ -568,6 +568,31 @@
           "path": "tools/cpp_production_panel_smoke.py",
           "previous": "9151157115c6416fdc7ca1a8cf8d448f0acca9c5c5bd3e2d4a93d009b3ca1a6b",
           "current": "550b8c6af03d17b5c9591a5a21c11adc8cb75ddf3e27e8181b126c4b62d15054"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 180,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "99e082e181299b20ed713c6f4f72d0bc5ab3f3c46457b1ea47486fac6cca41a3",
+          "current": "f5a4835133edc828d65390d1f4c9e25ab3cf68a6bfb0e3dc696e68d49013961c"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "3e200bbf9836698412da1bb62fd2defaf0049e6723709e8c5e8af2bb59e5b490",
+          "current": "17eef31cff19a97642806d3980eda0465ee811e1146150391275f0765eaf9885"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "259b8c3178bb2b3498ca76818c49db41c2ed544ff7fca6c272da61856b15e72b",
+          "current": "3bc6fd7121a4a72da06c99f61aa11178edb163182d02b74b1b652377f5559663"
         }
       ]
     }

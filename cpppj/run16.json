@@ -39,7 +39,7 @@
     "cpppj/src/o/RawAssetPostPop.h": "9052dd2063fd04f1a9674f44ea8b4b100b067a3e551923564588f99fead19fc1",
     "cpppj/tests/AssetPostPopTests.cpp": "a8651007aad5baef16c7ff19b388844920830f4ab85d0379b29539a569987252",
     "cpppj/tests/CMakeLists.txt": "583e8a54e6302852833aaf8b6a9c6b981677b4c4a603d56f4608138141a8f61e",
-    "cpppj/tests/RawSurfaceWorldTests.cpp": "a4518961fa2fdd74076b7527db76314c4c5de0cd0b671ce57535b9322c6b6a0a",
+    "cpppj/tests/RawSurfaceWorldTests.cpp": "a3e7276ffe7e05798158b4f43133da6a77e903456ead2c89f7477833d6c8f123",
     "cpppj/tests/fixtures/asset-player-x86.tsv": "9562745a755606ed0492e8a457d1c5f97822f073896882db282e04bbb992c3a4",
     "cpppj/tests/fixtures/assetpostpop-x86.tsv": "706afb7e0bd78de2527e97a1ec1bbe1f35a202aafbd2c81a0dc8d77d99198741",
     "extracted/run16-all.log": "75e90e86c08bf993b1cde92726b88421c1de720b68f2744e14825c1f455f1911",
@@ -124,6 +124,19 @@
           "path": "cpppj/src/client/RawCampaignPathBindings.h",
           "previous": "ce83a2a4f5e609cd54ca929bfe0cac569e26d33372c83b1eb5d644b6601904ed",
           "current": "6ac357c4b2724907eb183be465f5f031f7164c2fdbc474de308d12acf4edc329"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 180,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/tests/RawSurfaceWorldTests.cpp",
+          "previous": "a4518961fa2fdd74076b7527db76314c4c5de0cd0b671ce57535b9322c6b6a0a",
+          "current": "a3e7276ffe7e05798158b4f43133da6a77e903456ead2c89f7477833d6c8f123"
         }
       ]
     }

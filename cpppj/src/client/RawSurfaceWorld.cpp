@@ -135,7 +135,7 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
             [this](o::Sid sid,float x,float y) { o::ScheduleBridgeFall(*host,sid,x,y); },
             [this](o::Sid sid,std::uint32_t flags) { Destroy(sid,flags); },
             [this](o::Sid sid) { if (runtimeBound) { if (!runtime.walkerFall(sid)) throw std::logic_error("월드 낙하 처리 실패"); }else ++walkerFalls; },
-            [this](const o::BridgeLifecycleEvent&) { ++effectRequests; }});
+            [this](const o::BridgeLifecycleEvent& event) { if (runtimeBound) runtime.bridgeEffect(event);else ++effectRequests; }}); // 단독 기하 검사의 관찰과 실제 Session의 파편/소리를 구별한다.
         o::BridgeEventHooks eventHooks;
         // 실제 사건의 삭제/재등록도 같은 가상 경로와 SHP 공급을 사용한다.
         eventHooks.notifySurface=objects.notifySurface;eventHooks.create=[this](std::uint32_t type) { changed=true;return factory->Create(type); };
@@ -204,7 +204,7 @@ void RawSurfaceWorld::BindRuntime(RawWorldRuntimeHooks hooks) {
     for (std::uint32_t id=5;id<s.pool.Capacity();++id)
         if (!(s.pool.Slot(o::Sid{static_cast<std::uint16_t>(id)})[11]&1)) throw std::logic_error("월드 runtime 설치 전 객체가 존재합니다");
     if (!hooks.assets.emit || !hooks.assets.selected || !hooks.destroy || !hooks.regular || !hooks.transmit.writeData ||
-        !hooks.transmit.transmit || !hooks.walkerFall || !hooks.loadingDepth) throw std::invalid_argument("월드 runtime 필수 경계 누락");
+        !hooks.transmit.transmit || !hooks.walkerFall || !hooks.loadingDepth || !hooks.bridgeEffect) throw std::invalid_argument("월드 runtime 필수 경계 누락");
     s.formDispatch->SetAssets(hooks.assets,hooks.destroy);s.host->SetRegularHandler(hooks.regular);s.host->SetFormTransmit(hooks.transmit);
     s.runtime=std::move(hooks);s.runtimeBound=true;s.runtime.loadingDepth(s.loadState.loadingDepth);
 }

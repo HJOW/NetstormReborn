@@ -292,6 +292,7 @@ struct InstallScene {
                 std::to_string(core.pool.Slot(sid)[10])+" event"+std::to_string(event));
         }))));
         worldHooks.transmit=assetBindings->Transmission();worldHooks.walkerFall=[this](Sid sid) { return priests->FallWalker(sid); };
+        worldHooks.bridgeEffect=[](const BridgeLifecycleEvent&) { throw std::logic_error("공통 설치/이동 검사 장면의 다리 파편/소리 경계 미연결"); }; // 필수 경계를 명시하며 실제 파편 검사는 같은 Session에서 수행한다.
         worldHooks.loadingDepth=[this](std::uint32_t depth) { objectState.loadingDepth=depth;carrierState.loadingDepth=depth;priests->SetLoadingDepth(depth);assetBindings->SetLoadingDepth(depth); };
         world.BindRuntime(std::move(worldHooks));
         placement.geometry=metadata.geometry;placement.placement.localPlayer=1;placement.permission.alliances.fill(1);

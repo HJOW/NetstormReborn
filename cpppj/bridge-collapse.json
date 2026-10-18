@@ -1,0 +1,44 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "unit": 180,
+  "rows": 603,
+  "captureInputs": 600,
+  "wrapperInputs": 3,
+  "normalReturns": 2406,
+  "instructions": 14087706,
+  "precisionDifferences": 0,
+  "nativeCalls": {
+    "00460600": 3,
+    "0043ba00": 600,
+    "0043b950": 600,
+    "004a7db0": 600,
+    "004ac550": 1200,
+    "0049a840": 1200,
+    "00419850": 600,
+    "004daa70": 60,
+    "00401d92": 60,
+    "004dabe0": 540,
+    "0040227e": 540,
+    "004daab0": 540,
+    "0040229f": 540,
+    "004021b5": 3,
+    "00402796": 27
+  },
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originals/d/_shapes.shp": "c878353c8054208deef832e34c514b30fe670e175505b129333a5728ba70f68e",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "tools/decomp_owner_capture.py": "349f568e919ed4566543e4c89e0551d134ac9b11374b6d12b57498c2ab749a7c",
+    "tools/shp.py": "4cb8bee6ed773e29e8658ddb315594ebf5ac005ea5b96c6b760a177029515bfd",
+    "tools/decomp_bridge_collapse.py": "fed91be41ef652906d1bfaeb3b4ec1d18ba64270ae7a0967a612d7b284bccc2e",
+    "cpppj/tests/fixtures/bridge-collapse-x86.tsv": "69cd1dd8de485d4fdc6b7b517441c21be1dde160315bedc9bfcd2861acef8083"
+  },
+  "limits": [
+    "실제460600의 source/kind2 전달과 cdecl 반환을 관찰한다.4604a0 생성 효과는 여기서 명시 경계이며 기존 파편 수명648행과 구별한다.",
+    "실제 일반 색표/현재 owner 선택/보호60프레임/캡처/RLE의600입력 전체 픽셀이다. new만 격리 heap이며 양정밀도 차이0이다.",
+    "현재 TYPE/기준점0/단위 배율/소유자 색 입력이다. 전체 초기화/추가 가상 그림/CD판/전체 다리 파괴 수명의 새 원본 대조로 확대하지 않는다."
+  ]
+}

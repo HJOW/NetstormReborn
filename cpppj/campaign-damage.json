@@ -143,7 +143,7 @@
       "cpppj/src/o/RawAiDamage.h": "425fb62eb0421aae079c4bf01b200ec47f664342985bb4cc912bc587490815e2",
       "cpppj/src/o/CampaignDamageVtables.inc": "d5e9575934d1add7c00d64d7b6ae16be94198a3ef38ec077f4637ae6bbfc6a51",
       "cpppj/tests/CMakeLists.txt": "ccce5d8e0717623aaa7956a72a7ac2b06c46aab6b1d0a0331f3270e5cc32df5d",
-      "cpppj/tests/CampaignInstallSupport.h": "adebbbdf1654f52c6a8d608d1ec91170431dcea319f9b2fd78dcf6e0ec05898f",
+      "cpppj/tests/CampaignInstallSupport.h": "e139ab79385c65e8e60b8a12a6ed60696832a01fb75e9f72271c38cd067100bd",
       "cpppj/tests/CampaignMissionStartTests.cpp": "91e2ebc91b9b548271568ae55dfb1ff0cbd0df5aadd374e51a21454a5a737f18",
       "cpppj/tests/CampaignDamageTests.cpp": "e04539f267b47b3c1006743122f2c55548e2927ca235c8fbe25aaf5e0d8a4e28",
       "cpppj/tests/AiDamageTests.cpp": "63c17f0e20cd132818bf15a6ec17bd020fcc0d0cf65e2ba328a0f71d32fa6ef5"
@@ -244,6 +244,19 @@
           "path": "cpppj/src/client/CampaignClientServices.h",
           "previous": "d0b19f5feecbf90d8536e63227fc2892ffb6bab99077d78b1ff23a4a3bd50897",
           "current": "69fbabe821be65505d6cef62b3063b3cf49dae3f1a420b3293a9ffcbdcc7238c"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 180,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/integration_snapshot/current_cpp_sha256",
+          "path": "cpppj/tests/CampaignInstallSupport.h",
+          "previous": "adebbbdf1654f52c6a8d608d1ec91170431dcea319f9b2fd78dcf6e0ec05898f",
+          "current": "e139ab79385c65e8e60b8a12a6ed60696832a01fb75e9f72271c38cd067100bd"
         }
       ]
     }
