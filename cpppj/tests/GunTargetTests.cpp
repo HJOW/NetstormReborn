@@ -3,6 +3,8 @@
 #include "o/RawGunTarget.h"
 #include "o/SquidFactory.h"
 #include <cstdio>
+#include "DudeSpawnSupport.h"
+#include "client/SquidRenderer.h"
 using namespace netstorm::o;
 using namespace netstorm::test::rawscene;
 namespace {
@@ -64,10 +66,10 @@ struct GunTargetScene {
             type.hotspotX=scene ? 2 : 0;type.hotspotY=scene ? -3 : 0;
             targetTypes[number].range=std::bit_cast<float>(input[4]);targetTypes[number].theme=static_cast<std::int32_t>(input[3]);targetTypes[number].directionFrames={0,1,2,3};
             auto& shape=shapes[number];shape.loaded=true;shape.frameCount=4;shape.frames.resize(4);
-            // 실제 sprite 헤더 입력의 signed short 값을 순서대로 옮긴다.
+            // 기존 native가 header+20/+22에 설치한 signed short 포구 입력을 정확한 필드로 옮긴다. 기대 원문은 바꾸지 않는다.
             for (std::size_t i=0;i<shape.frames.size();++i) {
-                shape.frames[i].hotspotX=static_cast<std::int16_t>(scene ? 3*static_cast<int>(i)-4 : 0);
-                shape.frames[i].hotspotY=static_cast<std::int16_t>(scene ? static_cast<int>(i)-2 : 0);
+                shape.frames[i].muzzleX=static_cast<std::int16_t>(scene ? 3*static_cast<int>(i)-4 : 0);
+                shape.frames[i].muzzleY=static_cast<std::int16_t>(scene ? static_cast<int>(i)-2 : 0);
             }
         }
         // 수량/owner는 현재 raw 슬롯이고 후보 flags는 현재 타입 표에서 다시 읽는다.
@@ -179,4 +181,18 @@ TEST_CASE(rawGunTarget_actual_gun_frame_fire) {
     // 방향에 맞지 않는 현재 프레임에서는 실제 MayFire가 거부해 ClearTarget/상태1/전송을 실행한다.
     Put(raw,36,1);Put(fields.bytes,28,7);Put(fields.bytes,16,static_cast<std::uint32_t>(std::bit_cast<std::uint64_t>(state.now)));Put(fields.bytes,20,static_cast<std::uint32_t>(std::bit_cast<std::uint64_t>(state.now)>>32));
     gun.Frame(fields);CHECK(fields.Stage()==1);CHECK(fields.Target()==Sid{});CHECK(fields.Time()==12.25);CHECK(events==std::vector<std::string>({"D:5:15050","P"}));
+}
+
+// 보호 원본SHP의 화면 기준점/포구가 다른 실제 자산48행으로 전체 사정선4DWORD를 대조한다.
+TEST_CASE(GunTarget_ActualCannonAssetRay48) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SidPool pool(OriginalEdition::Patch1078,24000);SquidHash hash; // 자산 getter와 동일 판본의 실제 독립 저장소다.
+    const auto types=assets.game.TypeTable().Types();const auto shapes=netstorm::client::SquidRenderer::Shapes(assets.game,OriginalEdition::Patch1078);std::vector<GunTargetType> targets(types.size());GunTargetState state; // 같은 실제 로더의 TYPE/SHP 자료다.
+    targets[128].range=static_cast<float>(assets.game.Find("sunCannon").definition.Number("range").value());targets[128].theme=types[128].theme;CHECK(types[128].hotspotX==0 && types[128].hotspotY==6);
+    RawGunTarget logic(pool,hash,types,targets,shapes,state);const auto path=std::filesystem::path(NETSTORM_GUNTARGET_FIXTURE).parent_path()/"cannon-asset-ray-x86.tsv";std::size_t count{}; // 기존 fixture 디렉터리의 새 독립 원문이다.
+    // 입력/기대 바이트는 새 계산으로 만들지 않고 동결한 실제 원본 전체를 읽는다.
+    for (const auto& row:LoadFixture(path.string().c_str()).rows) {
+        CHECK(row.size()==2);if (row.size()!=2) return;const auto input=Split(row[0],',');const auto x=std::bit_cast<float>(Number(input[0])),y=std::bit_cast<float>(Number(input[1]));const GunTargetQuery query{x,y,x-1.5f,y-1.5f,128,0,1,0};
+        const auto actual=RectBits(logic.CannonRay(query,static_cast<std::int32_t>(Number(input[2]))));if (actual!=row[1]) std::printf("실제 캐논 자산 사정선 차이 %s %s\n",row[0].c_str(),actual.c_str());CHECK(actual==row[1]);++count;
+    }
+    CHECK(count==48);
 }

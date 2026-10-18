@@ -32,7 +32,7 @@ struct GunTargetState {
     bool showRanges{}; // 원본 진단 사각형 그리기를 켠다. 필요한 sink가 없으면 예외다.
     std::uint32_t sunCannonType{128},sunFenceType{136},windArcherType{140},thunderArcherType{148}; // 원본 전역 타입 번호다.
     float windHalfAngle{30}; // 005409c0/CD0051a198: 크로스보우 관측각의 절반이다.
-    float scaleX{16},scaleY{11}; // Cannon SHP 핫스폿을 칸 좌표로 바꾸는 현재 픽셀 배율이다.
+    float scaleX{16},scaleY{11}; // Cannon SHP 포구를 칸 좌표로 바꾸는 현재 픽셀 배율이다.
     std::array<std::uint32_t,kPlayerCount+1> allyMasks{}; // Player+54의 소유자별 동맹 비트 마스크다.
     std::array<std::uint8_t,kPlayerCount+1> playerFlags{}; // Player+50의 진단 ray 표시 억제 bit20이다.
     std::function<std::uint32_t(std::uint32_t)> allyMaskRead; // 실제 세션의 현재 Player+54를 해당 원본 읽기 위치에서 조회한다. 없으면 독립 검사 배열을 사용한다.
@@ -61,7 +61,7 @@ public:
     bool MayShoot(const GunTargetQuery& query,Sid target) const;
     // 0046b070/CD00434c30: 썬 캐논의 현재 프레임 방향 검사 뒤 실제 MayTarget을 부른다. 투사체 생성이 아니다.
     bool MayFire(const GunTargetQuery& query,Sid target) const;
-    // 00469190/CD00434d60: 지정 방향의 SHP 핫스폿·사거리 사각형이다. 실제4DWORD 반환을 보존한다.
+    // 00469190/CD00434d60: 지정 방향의 SHP 포구·사거리 사각형이다. 실제4DWORD 반환을 보존한다.
     GunTargetRect CannonRay(const GunTargetQuery& query,std::int32_t direction) const;
     // 현재 객체의 발자국이다. 기본 extended=true는 공격 검색이며 false는 사정거리 표시의 원본 flags0이다.
     GunTargetRect Footprint(Sid target,bool extended=true) const;

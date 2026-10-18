@@ -1,0 +1,44 @@
+{
+  "unit": 185,
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "lastDecompileDate": "2026-10-16",
+  "rows": 48,
+  "normalReturns": 96,
+  "instructions": 29042,
+  "precisionDifferences": 0,
+  "nativeCalls": {
+    "00469190": 96,
+    "00469120": 96,
+    "0049a840": 96,
+    "0049ace0": 48,
+    "004d4c60": 48,
+    "00419850": 48,
+    "0041d180": 96,
+    "0040e880": 48,
+    "0041d0d0": 192,
+    "0040e800": 96,
+    "0040e8f0": 48,
+    "0041d3e0": 48,
+    "0041d2d0": 48,
+    "004e49c0": 192,
+    "0041d3f0": 20
+  },
+  "shapeSha256": "c878353c8054208deef832e34c514b30fe670e175505b129333a5728ba70f68e",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+    "tools/cpp_assets_smoke.py": "ee604ec3d084215e806b673c9fba8db53467ac010cc5763a5f47a6f1a1bd4d13",
+    "tools/shp.py": "4cb8bee6ed773e29e8658ddb315594ebf5ac005ea5b96c6b760a177029515bfd",
+    "tools/taff.py": "461860cdfc9451b85a8694dd30fd2c56c1cfdf5c6bb7ab8f63a4089971889795",
+    "tools/decomp_cannon_asset_ray.py": "5e08db9e72fe4327df8aef49f139d00ca49bc716879a41e9c8a6be30996ba659",
+    "cpppj/tests/fixtures/cannon-asset-ray-x86.tsv": "7e74bd7c76044f719a02fb20a98b1cab3512a8fd87b82f31cbac24629edd67a9",
+    "originals/d/_shapes.shp": "c878353c8054208deef832e34c514b30fe670e175505b129333a5728ba70f68e"
+  },
+  "limits": [
+    "실제 자산은 보호SHP의 전체36바이트이며 TYPE128/range20/theme3/hotspot0,6/scale16,11은 명시 입력이다. 계산·TYPE/SHP getter·CRT를 실행하고 외부 계산 대체는 없다.",
+    "CD10.72/전체 전투/미션 자연 완주 증거는 아니다."
+  ]
+}

@@ -296,7 +296,7 @@
     "cpppj/src/client/SoundSceneMusic.h": "d817a8eb1ab9e83ed991d03c9422fd47530796e832eaec477a4c18c3cb8ef043",
     "cpppj/src/client/SpriteDraw.cpp": "7ebec59557d9e856f178aaddb52662676216b06dd490c25696b10d913926c5ee",
     "cpppj/src/client/SpriteDraw.h": "579f2983f68ad91efd1ec2d7484d7c126996cc49e2faa125e9827c70e05ab519",
-    "cpppj/src/client/SquidRenderer.cpp": "cc910d0b73703cc32019189e1a1ff6f32c868a4afb73cf3c61b48e485580f6f9",
+    "cpppj/src/client/SquidRenderer.cpp": "ff98d57e03dd1087ee34ac3012fe76c359877055dbdbe70a16ff465fa6c85a6f",
     "cpppj/src/client/SquidRenderer.h": "68ecc34f6646bd49e548274d6aa7b4f5b8cea4ea7919b59c5d0120f7df7715e2",
     "cpppj/src/client/State.cpp": "09124fe5e91393f7426b6f6358339f864f61cc338b227c60d32f402d430c2a02",
     "cpppj/src/client/State.h": "8176b65becc5a095599c2f75018e268735fd2c4fa19b71eccff1d287722ddeb9",
@@ -662,7 +662,7 @@
     "cpppj/src/o/SquidDestroyLifecycle.cpp": "75a6d698b2e800acc38ef008f3f32da2efc665286a7995a2e20d499bd40215fd",
     "cpppj/src/o/SquidDestroyLifecycle.h": "f1352b9e3a55bf413538fa53995db646ce29f288f23477baf81b5cefa0b7cea4",
     "cpppj/src/o/SquidDisplay.cpp": "adff73d1c710cf295aed17e2a06cb90294e1399e5e455d423659f37c336f3dc6",
-    "cpppj/src/o/SquidDisplay.h": "83ed777ce826ec37cc2a72808ffd3658b8f6bcb9644efcf31f203fc6da363be7",
+    "cpppj/src/o/SquidDisplay.h": "aa8bf6fe22cfafb729053710e1fec6ef77a2c9bee40c51b05cb363ba57f413d7",
     "cpppj/src/o/SquidFactory.cpp": "6221de3262944b7105ae57dacc67ee8cee3e237b62240d5d3a2fd777a5706aed",
     "cpppj/src/o/SquidFactory.h": "439126b14875597ae876ab82d1699d414fa15fdf76ec9ac83f6794d32595c549",
     "cpppj/src/o/SquidFinder.cpp": "f3d08c7c52643341a6059297bbc8e6bada08c3c1d0e15cedf3419ea8ccf5331e",
@@ -2184,6 +2184,25 @@
           "path": "cpppj/src/client/MenuGumpWidgets.h",
           "previous": "6d52136ffe9d70e98a237d86cc1b0594d4ec0cd2e256c1c4953a22c74654975b",
           "current": "6c08ba088e1eef635fedd1d5610442fe8755629588226d3ec410fd39285a112e"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 185,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/src/client/SquidRenderer.cpp",
+          "previous": "cc910d0b73703cc32019189e1a1ff6f32c868a4afb73cf3c61b48e485580f6f9",
+          "current": "ff98d57e03dd1087ee34ac3012fe76c359877055dbdbe70a16ff465fa6c85a6f"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/SquidDisplay.h",
+          "previous": "83ed777ce826ec37cc2a72808ffd3658b8f6bcb9644efcf31f203fc6da363be7",
+          "current": "aa8bf6fe22cfafb729053710e1fec6ef77a2c9bee40c51b05cb363ba57f413d7"
         }
       ]
     }

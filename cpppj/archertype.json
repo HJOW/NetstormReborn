@@ -71,7 +71,7 @@
   "files": {
     "cpppj/gunarcher.json": "800a7e46518762529c15953d4b66ed8dd4429a9795efd38658c8b590880a044d",
     "cpppj/src/client/GameAssets.cpp": "4dc81dc3ddd517c7079c46fcf843d3aff7ccb2771709ad6e65e5682c0c41c6a8",
-    "cpppj/src/client/SquidRenderer.cpp": "2f022fb49565f71bf9aa7a146b023912487f2e2ecffe42b4ac3445bf905bbf7f",
+    "cpppj/src/client/SquidRenderer.cpp": "ff98d57e03dd1087ee34ac3012fe76c359877055dbdbe70a16ff465fa6c85a6f",
     "cpppj/src/o/DerivedConstructors.inc": "fac1a032778ba7e6745476904a13446c36b79625e38c40120195bc009a798b00",
     "cpppj/src/o/Kernel.cpp": "3fece4276cf1ffc2950910642964be63f9db271446d15068c6cedd0ca7240a04",
     "cpppj/src/o/RawArcherAnimation.cpp": "a1abcc4d7529e95a120d11f65a0414693e35f1c514296fd0b2eed1818913c73d",
@@ -185,6 +185,19 @@
           "path": "cpppj/src/o/SquidUnpop.cpp",
           "previous": "000e315fc0aead83fc423afc3293b3fd6176a211c1dc5b297d642e8dbea06ce2",
           "current": "f9a932b6ee543cc2ee051d6f67afb0c56fca1f325cc51d29ca3d0dc3adf26fef"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 185,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/src/client/SquidRenderer.cpp",
+          "previous": "2f022fb49565f71bf9aa7a146b023912487f2e2ecffe42b4ac3445bf905bbf7f",
+          "current": "ff98d57e03dd1087ee34ac3012fe76c359877055dbdbe70a16ff465fa6c85a6f"
         }
       ]
     }

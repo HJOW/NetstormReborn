@@ -23,7 +23,7 @@
   "files": {
     "cpppj/src/client/RawShapeToBuffer.cpp": "a25daa6a79c7edbfee525ed6a64156cb71d2b1ceee996c7d0a4a002af0ced3d4",
     "cpppj/src/client/RawShapeToBuffer.h": "0d957cb5d99e2042ff04dbea766bb05e79560b390ffe82976388692ae5b259bb",
-    "cpppj/src/client/SquidRenderer.cpp": "2f022fb49565f71bf9aa7a146b023912487f2e2ecffe42b4ac3445bf905bbf7f",
+    "cpppj/src/client/SquidRenderer.cpp": "ff98d57e03dd1087ee34ac3012fe76c359877055dbdbe70a16ff465fa6c85a6f",
     "cpppj/src/client/VFXDraw.cpp": "1de6889912f1f18cc83e0efc7cc33a43216e063730aaca7917aad8bf5a8c37b7",
     "cpppj/src/client/VFXDraw.h": "3ac09a428f585449877a89cb3fbd8a1f92755bb635c8c5778519f827ce3cf9bc",
     "cpppj/tests/fixtures/shape-to-buffer-x86.tsv": "d92bc1a292b8f44cb87ec59ffec881f7e97db4c4b6680af92ad554af2d7c89c1",
@@ -111,6 +111,19 @@
           "path": "cpppj/tests/ShapeToBufferTests.cpp",
           "previous": "67dd7ac14fb89b601d9be8d32331094b9d16cc4fa685f3385727c200475e9591",
           "current": "0dc5ddc7f71ce2b7a12ff4dcaae45a47b4c7d6fefa676129fb19b5556e3312ab"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 185,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/src/client/SquidRenderer.cpp",
+          "previous": "2f022fb49565f71bf9aa7a146b023912487f2e2ecffe42b4ac3445bf905bbf7f",
+          "current": "ff98d57e03dd1087ee34ac3012fe76c359877055dbdbe70a16ff465fa6c85a6f"
         }
       ]
     }

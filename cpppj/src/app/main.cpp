@@ -8,6 +8,7 @@
 #include <fstream>
 #include <sstream>
 #include <map>
+#include <regex>
 #include <stdexcept>
 #include <optional>
 #include <string>
@@ -612,6 +613,8 @@ int RunClient(std::vector<std::string> arguments) {
     if (!view.empty()) inspect.emplace(client, view);
     const auto steps = uiScript.empty() ? std::vector<UiStep>() : ReadUiSteps(uiScript);
     std::size_t next = 0; std::string report;
+    // 성공/실패 모두 같은 현재 관측을 보존한다. 이 쓰기는 검사 출력 경로만 사용한다.
+    const auto saveUiReport=[&] { if (!uiReport.empty()) netstorm::platform::WriteFileBytes(uiReport,std::span<const std::uint8_t>(reinterpret_cast<const std::uint8_t*>(report.data()),report.size())); };
     // UI 스크립트의 마지막 마우스 좌표/왼쪽 버튼 상태다. 실제 커서를 움직이지 않고 폴링과 사건을 일치시킨다.
     std::optional<netstorm::client::InputEvent> scriptPointer;
     UiKernelTell* kernelTell{}; // 커널이 소유한 검사 전용 프로세스다. Client::Run 동안만 사용한다.
@@ -629,6 +632,16 @@ int RunClient(std::vector<std::string> arguments) {
             for (std::size_t i = next; i < steps.size() && steps[i].frame == c.Time().number; ++i) {
                 const auto& step = steps[i]; using namespace netstorm::client;
                 if (step.operation == "snapshot" || step.operation == "report" || step.operation=="refresh") continue;
+                // 직전 완성 프레임의 실제 상태가 조건을 만족할 때만 다음 검사 입력으로 진행한다.
+                if (step.operation=="require") {
+                    if (step.argument.empty()) throw std::invalid_argument("UI require 조건이 비어 있음");
+                    const auto observed=c.Menu()->Report();report+="frame\t"+std::to_string(step.frame)+"\trequire"+std::to_string(step.frame)+"\n"+observed;
+                    if (!std::regex_search(observed,std::regex(step.argument))) {
+                        if (!uiReport.empty()) c.Capture(uiReport.string()+".failed.bmp");
+                        throw std::runtime_error("UI require 실패: "+step.argument);
+                    }
+                    continue;
+                }
                 // 입력 처리 뒤의 실제 Kernel 단계까지 Tell을 지연한다. 일반 클릭 명령 경로와 구별한다.
                 if (step.operation=="kernel-tell") {
                     if (!kernelTell) {
@@ -679,9 +692,10 @@ int RunClient(std::vector<std::string> arguments) {
             }
         };
     }
-    const int result = client.Run();
+    int result{}; // 검사 도중 예외도 기존 관측을 보존한 뒤 호출자에게 전달한다.
+    try { result=client.Run(); } catch (...) { saveUiReport();throw; }
+    saveUiReport();
     if (!uiScript.empty() && next < steps.size()) throw std::runtime_error("UI script ended before all steps ran");
-    if (!uiReport.empty()) netstorm::platform::WriteFileBytes(uiReport, std::span<const std::uint8_t>(reinterpret_cast<const std::uint8_t*>(report.data()), report.size()));
     if (renderStats) {
         const auto counts = client.RenderCounts();
         std::printf("Renderer draws=%llu presents=%llu\n", static_cast<unsigned long long>(counts.first), static_cast<unsigned long long>(counts.second));

@@ -49,11 +49,26 @@
     "cpppj/src/o/RawGunProcess.h": "cbb10a7a9625f426d595767ada3b1a1fe9626610eae4c6e7a9a5870d77088e2f",
     "cpppj/src/o/RawGunProcess.cpp": "b07261cffb85f47889866d2544b9651d7730e0712e90e049c4f816503bd34428",
     "cpppj/src/o/RawFenceTarget.cpp": "0e338dbf5fe3ee18d7215b4c986ec37cdc0f241726c9acafc52bb2aa880d6d75",
-    "cpppj/tests/GunTargetTests.cpp": "6d3d1209000c9b36b78f2bdf3cae10e721098a41ec347ebe7edfcb6ca9719d1c",
+    "cpppj/tests/GunTargetTests.cpp": "e3c5506385af4678241bebf53e3c7681a58b53d8e25b94b754dc448a51054587",
     "cpppj/tests/GunProcessTests.cpp": "5eae89266eb3b1e8681c648148cfadab679152abb3439ba85de8e7c410261828",
     "cpppj/tests/FenceTargetTests.cpp": "e2cab0033a969992326893d37ccabccc4b78920bee0d296cb26a44762e7506c3",
     "cpppj/tests/fixtures/guntarget-x86.tsv": "8625065722057d8a1e2e5e45fe4fd0bc89895941e8fc168d2c49464155153892",
     "cpppj/tests/fixtures/gunprocess-x86.tsv": "d13077033f5e3154e9109a93e7350ce4cbf33b365d03b297db95fa7159c058e7",
     "cpppj/tests/fixtures/fence-target-x86.tsv": "d3586ba6885ef0fdb5238e0d220f970aaa568086ef5ee81dae0d4d32fbf23446"
-  }
+  },
+  "integration_updates": [
+    {
+      "date": "2026-10-18",
+      "unit": 185,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/sha256",
+          "path": "cpppj/tests/GunTargetTests.cpp",
+          "previous": "6d3d1209000c9b36b78f2bdf3cae10e721098a41ec347ebe7edfcb6ca9719d1c",
+          "current": "e3c5506385af4678241bebf53e3c7681a58b53d8e25b94b754dc448a51054587"
+        }
+      ]
+    }
+  ]
 }

@@ -131,7 +131,8 @@ GunTargetRect RawGunTarget::CannonRay(const GunTargetQuery& query,std::int32_t d
         types_[query.type].maxHitPoints==-0x22222223 || types_[query.type].maxHitPoints==-0x32323233))
         throw std::out_of_range("Gun Cannon frameCheck 원본 assert");
     const auto& header=shape.frames[static_cast<std::size_t>(frame)];const auto& type=types_[query.type];
-    float x=static_cast<float>(static_cast<double>(header.hotspotX)/state_.scaleX+query.x),y=static_cast<float>(static_cast<double>(header.hotspotY)/state_.scaleY+query.y);
+    // 원본00469190은 화면 그림 기준점이 아닌 SHP+20/+22 포구를 읽는다.
+    float x=static_cast<float>(static_cast<double>(header.muzzleX)/state_.scaleX+query.x),y=static_cast<float>(static_cast<double>(header.muzzleY)/state_.scaleY+query.y);
     x=static_cast<float>(static_cast<double>(-type.hotspotX)/state_.scaleX+x);y=static_cast<float>(static_cast<double>(-type.hotspotY)/state_.scaleY+y);
     const float endX=static_cast<float>(static_cast<double>(kDx[static_cast<std::size_t>(direction)])*targetTypes_[query.type].range+x);
     const float endY=static_cast<float>(static_cast<double>(kDy[static_cast<std::size_t>(direction)])*targetTypes_[query.type].range+y);

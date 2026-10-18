@@ -27,6 +27,8 @@
 #include "client/OwnerColorMaps.h"
 #include <unordered_set>
 #include <iostream>
+#include <set>
+#include "o/RawGunProcess.h"
 #include <type_traits>
 using namespace netstorm::client;
 //BYTE변환의임시DWORD를원본공유owner로빌리는오류를거부한다.
@@ -1658,8 +1660,9 @@ TEST_CASE(CampaignSession_LocalLoginMissionStartAiAlliances) {
     }
 }
 
-// 실제 로그인/Start·허용점·3e 왕복 뒤 자연6700/건설30·HP 증가·완공·소리 반납까지 같은 세션에서 검사한다.
-TEST_CASE(CampaignSession_LocalLoginWorkshopHasActualPlacement) {
+namespace {
+// 같은 실제 로그인/건설/연구/생산 흐름으로 기본 회귀와 제네레이터 연장 전투를 구분해 검사한다.
+void NaturalWorkshopPlacement(bool combat) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();RawButtonControls* activeProductionUi{}; // 같은 실제 내용물 알림의 현재 UI다.
     std::vector<std::array<float,2>> bridgeSounds;auto previousSound=std::move(services.sound.playOnceAt); // 실제 위치 소리 요청을 기존 장치 경계와 함께 관찰한다.
     services.sound.playOnceAt=[&external,&bridgeSounds,previous=std::move(previousSound)](float x,float y,SoundHandle sound,std::uint32_t first,std::uint32_t second) {
@@ -1678,7 +1681,7 @@ TEST_CASE(CampaignSession_LocalLoginWorkshopHasActualPlacement) {
     MissionFrameGateState gate;MissionStartState state;CampaignMissionStartEffects effects;effects.settingsBytes=[](std::uint32_t,std::span<std::uint8_t> bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0xa7}); };effects.gameSeconds=[] { return 123.5; };effects.refreshSp=[] {};effects.refreshCommandGump=[] {};effects.resetCamera=[] {};effects.randomGeysers=[] { throw std::logic_error("보호1-1에없는세계랜덤간헐천"); };
     RawCampaignMissionStartBindings start(session,script,gate,state,session.MissionStartSettings(),session.MissionAiSettings(),std::move(effects));start.Start();CHECK(session.Sp(1)==3000 && gate.started==1);
     SessionCursorUi ui;auto cursorEffects=ui.Effects();cursorEffects.send=[&](std::uint32_t target,std::span<const std::uint8_t> packet) { CHECK(target==9 && packet.size()==25 && packet[1]==0x3e);session.SendLocalPacket(static_cast<std::int32_t>(target),packet); };session.Cursor().SetEffects(std::move(cursorEffects));session.Cursor().SnapToGrid()=1;SessionPriestMenuUi menuUi;auto menu=CursorMenu(session,menuUi);const Sid priest{static_cast<std::uint16_t>(session.FindPriestParticipation(1))};CHECK(menu->SelectBuild(85,priest));
-    const auto point=CursorPlacementPoint(session,ui);std::cout<<"실제1-1 썬 워크샾 배치 허용점 "<<point.x<<','<<point.y<<"\n";CHECK(session.CursorDropSettings().legal && session.Sp(1)==3000);
+    const auto point=combat ? CellPoint{109,107} : CursorPlacementPoint(session,ui);if (combat) { session.SetParticleView({0,0,0,0,1024,768},{});ui.Point(session,point,0,0,false); }std::cout<<"실제1-1 썬 워크샾 배치 허용점 "<<point.x<<','<<point.y<<"\n";CHECK(session.CursorDropSettings().legal && session.Sp(1)==3000);
     const auto before=session.LocalConnectionPackets().size();session.Cursor().Drop();CHECK(session.Sp(1)==2200 && ui.shown==1 && session.LocalConnectionPackets().size()==before);
     session.PumpLocalConnection();CHECK(session.LocalConnectionPhase()==14 && session.LocalConnectionPackets().size()>before && std::find(session.LocalConnectionPackets().begin()+static_cast<std::ptrdiff_t>(before),session.LocalConnectionPackets().end(),std::uint8_t{0x3e})!=session.LocalConnectionPackets().end());session.Cursor().Cancel();
     auto core=session.Core();Sid target{}; // 실제3e 수신이 만든 같은 소유자/위치의 서버 워크샾을 조회한다.
@@ -1770,6 +1773,11 @@ TEST_CASE(CampaignSession_LocalLoginWorkshopHasActualPlacement) {
     CHECK(session.SelectFactoryKnowledge(target,0x03000080U,(128U<<16)|target.value)==1);session.PumpLocalConnection();CHECK(researchPackets.size()==2 && liveFlares().empty() && session.Priests().Carrier().FindContained(target,16,128,0)==authoritative);
     std::cout<<"실제 연구58h/예측"<<prediction.value<<"→서버"<<authoritative.value<<"/현재Deck/플레어12→후속"<<peak<<"→0 통과\n";
     std::cout<<"실제1-1 썬 워크샾 자연 건설 SID"<<target.value<<" 시작"<<began<<" 완료"<<end<<" HP"<<maximum<<"\n";
+    if (combat) {
+        // 원본1-1 기술의 레인 제네레이터를 같은 지식 선택/서버 수신/내용물 갱신으로 연구한다.
+        CHECK(session.SelectFactoryKnowledge(target,0x03000080U,(76U<<16)|target.value)==1);session.PumpLocalConnection();session.UpdateProductionContents();
+        CHECK(session.Production().Contains(76) && session.Sp(1)==2200);
+    }
     {
         FontStore fonts(assets.files,"Arial");double wall=100;bool productTimers{};std::size_t gets{}; // 실제 원본 글꼴/장치 입력 경계다.
         RawButtonControls controls(OriginalEdition::Patch1078,{[&] { return wall; },{}, {},[&](auto form,auto flags) { session.GumpForms().Destroy({static_cast<std::uint16_t>(form)},flags); }});activeProductionUi=&controls;
@@ -1785,11 +1793,63 @@ TEST_CASE(CampaignSession_LocalLoginWorkshopHasActualPlacement) {
         CHECK(controls.RegisteredGump(3) && production.Node(controls.RegisteredGump(3)));CHECK(production.Report().find("\t128\t")!=std::string::npos);
         std::vector<std::uint8_t> pixels(1024*768,0x5a);menus.Draw(pixels,1024,768,colors,BuildGumpShadeMaps(logical));CHECK(std::any_of(pixels.begin(),pixels.end(),[](auto pixel) { return pixel!=0x5a; }));
         std::cout<<"실제 초기 에너지 공급원 "<<core.bookkeeping.providers.count<<"/Cannon level"<<core.types[128].level<<"/theme"<<core.types[128].theme<<"/요구"<<BindAiTypeRequiredEnergy(assets.game,core.types)(128)<<"\n";
+        // 완공한 첫 제네레이터의 현재 공급을 이용해 두 번째 제네레이터까지 정상 건설한다.
+        if (combat) for (std::uint32_t generatorIndex=0;generatorIndex<2;++generatorIndex) {
+            const auto generatorClick=production.Point(76);CHECK(generatorClick.has_value());if (!generatorClick) return; // 실제 생산 클릭 좌표다.
+            controls.Event({InputCode::kLeftButton,generatorClick->x,generatorClick->y});CHECK(session.CursorDropSettings().type==76 && gets==generatorIndex+1);
+            session.SetParticleView({0,0,0,0,1024,768},{});std::optional<CellPoint> generatorPoint;double nearest=1e9; // 전방 캐논에 가장 가까운 실제 허용 후보를 선택한다.
+            // 원본 공급/공간/커서 판정을 모두 통과하는 위치만 전략 후보로 쓴다.
+            for (int x=90;x<=115;++x) {
+                // 워크샾 위아래를 포함해 실제 지도에서 허용 여부를 질의한다.
+                for (int y=90;y<=130;++y) {
+                    const auto distance=(x-118.0)*(x-118.0)+(y-115.0)*(y-115.0);if (distance>=nearest) continue;
+                    ui.Point(session,{x,y},0,0,false);if (session.CursorDropSettings().legal) { nearest=distance;generatorPoint=CellPoint{x,y}; }
+                }
+            }
+            CHECK(generatorPoint.has_value());if (!generatorPoint) return;ui.Point(session,*generatorPoint);std::cout<<"실제 제네레이터 허용점 "<<session.CursorDropSettings().x<<","<<session.CursorDropSettings().y<<"\n";
+            session.Cursor().Drop();session.PumpLocalConnection();session.Cursor().Cancel();CHECK(session.Sp(1)==2200-400*(generatorIndex+1));
+            const auto generatorBegan=core.processState.now,generatorWall=wall; // 실제 건설 시작 시각이다.
+            // 제네레이터의 HP와 완공은 같은 Kernel이 실제 시간으로 갱신한다.
+            for (std::uint64_t frame=1;frame<=2400;++frame) { const auto now=generatorBegan+static_cast<double>(frame)/60;wall=generatorWall+(now-generatorBegan);session.RunFrame({now,wall,1.0/60,frame},false);controls.Poll({InputCode::kRelease,500,350});menus.CleanupFrame(); }
+            const auto generators=ConstructionLive(core,76);CHECK(generators.size()==generatorIndex+1); // 실제 서버 건물이다.
+            // 이 단계까지 생성한 모든 실제 제네레이터의 완공/HP를 읽는다.
+            for (auto generator:generators) CHECK(!(core.pool.Slot(generator)[40]&1U) && Get(core.pool.Slot(generator),26)==700);
+        }
         const auto click=production.Point(128);CHECK(click.has_value());
-        if (click) { CHECK(controls.PickGump(*click)==controls.RegisteredGump(3));controls.Event({InputCode::kLeftButton,click->x,click->y});CHECK(session.CursorDropSettings().preview==teleport && session.CursorDropSettings().type==128 && session.CursorDropSettings().lockDepth==0 && gets==1);
-            const auto cannonPoint=CursorPlacementPoint(session,ui);std::cout<<"실제 생산 썬 캐논 배치 허용점 "<<cannonPoint.x<<","<<cannonPoint.y<<"\n";
-            session.Cursor().Drop();session.PumpLocalConnection();CHECK(session.Sp(1)==1800);session.Cursor().Cancel();
+        if (click) { CHECK(controls.PickGump(*click)==controls.RegisteredGump(3));controls.Event({InputCode::kLeftButton,click->x,click->y});CHECK(session.CursorDropSettings().preview==teleport && session.CursorDropSettings().type==128 && session.CursorDropSettings().lockDepth==0 && gets==(combat ? 3U : 1U));
+            const auto cannonPoint=combat ? CellPoint{118,118} : CursorPlacementPoint(session,ui);if (combat) {
+                ui.Point(session,cannonPoint,0,0,false);const auto& placement=session.Cursor().Placement();const auto& drop=session.CursorDropSettings();std::string supply; // 같은 배치 거부 원인의 현재 진단이다.
+                session.EnergySupply().Collect(supply,drop.x,drop.y,128,1);std::cout<<"캐논 실제좌표 "<<drop.x<<","<<drop.y<<" legal"<<drop.legal<<" 에너지"<<placement.descriptionAllowed<<" 공간"<<placement.placementAllowed<<" 공급문자"<<supply<<" 반경제곱"<<session.EnergySettings().radiusSquared<<"\n";
+                // 현재 공급 장부의 실제 위치/소유자/가상 표를 읽는다.
+                for (auto number:core.bookkeeping.providers.Items()) { const auto raw=core.pool.Slot({static_cast<std::uint16_t>(number)});std::cout<<"공급 "<<number<<" type"<<unsigned(raw[10])<<" owner"<<unsigned(raw[34])<<" xy"<<std::bit_cast<float>(Get(raw,14))<<","<<std::bit_cast<float>(Get(raw,18))<<" vt"<<Get(raw,0)<<"\n"; }
+                CHECK(drop.legal);if (!drop.legal) return;
+            }std::cout<<"실제 생산 썬 캐논 배치 허용점 "<<cannonPoint.x<<","<<cannonPoint.y<<"\n";
+            session.Cursor().Drop();session.PumpLocalConnection();CHECK(session.Sp(1)==(combat ? 1000 : 1800));session.Cursor().Cancel();
             const auto cannonBegan=core.processState.now,cannonWall=wall;std::size_t completedCannons{}; // 실제 후속 Kernel이 완료한 캐논을 관찰한다.
+            if (combat) {
+                const auto cannons=ConstructionLive(core,128);CHECK(cannons.size()==1);if (cannons.size()!=1) return;const auto cannon=cannons.front(); // 실제 배치한 캐논이다.
+                std::set<std::uint32_t> stages,targets,frames;bool missileSeen{},hitSeen{};std::map<std::uint16_t,std::uint32_t> enemyHp; // 현재 실제 과정의 관측 집합이다.
+                // 실제 표적이 발사기라고 미리 단정하지 않고 모든 살아 있는 적 피해 자산의 HP를 읽는다.
+                for (std::uint32_t number=core.pool.Layout().serverFirst;number<core.pool.Capacity();++number) {
+                    const Sid sid{static_cast<std::uint16_t>(number)};const auto raw=core.pool.Slot(sid);if (!(raw[11]&3U) && raw[10]>=70 && raw[34]==2 && (core.types[raw[10]].flags1&0x10U)) enemyHp.emplace(sid.value,Get(raw,26));
+                }
+                CHECK(enemyHp.size()>=5);
+                // 실제 Kernel로 첫 적중까지만 검사한다. 저HP Burning14 연결과 그 이후 전투는 별도 미완료 경계다.
+                for (std::uint64_t frame=1;frame<=3600 && !hitSeen;++frame) {
+                    const auto now=cannonBegan+static_cast<double>(frame)/60;wall=cannonWall+(now-cannonBegan);session.RunFrame({now,wall,1.0/60,frame},false);controls.Poll({InputCode::kRelease,500,350});menus.CleanupFrame();
+                    const auto form=FindAttachedProcess(core.pool,cannon,34);if (const auto* process=dynamic_cast<GunProcess*>(core.processes.FromForm(form))) { stages.insert(process->Fields().Stage());if (process->Fields().Target().value) targets.insert(process->Fields().Target().value); }
+                    if (!(core.pool.Slot(cannon)[40]&1U)) frames.insert(Get(core.pool.Slot(cannon),36));
+                    // 현재 살아 있는 소유자1 탄체의 실제 존재만 관찰한다.
+                    for (auto sid:ConstructionLive(core,80)) if (core.pool.Slot(sid)[34]==1) missileSeen=true;
+                    // 삭제/HP 감소는 실제 슬롯의 결과에서 읽으며 결과를 쓰지 않는다.
+                    for (const auto& [number,hp]:enemyHp) { const auto raw=core.pool.Slot({number});if ((raw[11]&3U) || Get(raw,26)<hp) { if (!hitSeen) std::cout<<"실제 피해 대상"<<number<<" TYPE"<<unsigned(raw[10])<<" HP"<<hp<<"→"<<Get(raw,26)<<"\n";hitSeen=true; } }
+                }
+                // 선택한 실제 표적 번호도 기록해 특정 적 종류의 사전 가정을 피한다.
+                for (auto sid:targets) std::cout<<"실제 캐논 표적 SID"<<sid<<" TYPE"<<unsigned(core.pool.Slot({static_cast<std::uint16_t>(sid)})[10])<<"\n";
+                CHECK(!targets.empty() && stages.count(2) && stages.count(5));CHECK(missileSeen && hitSeen && frames.size()>1);CHECK(session.Sp(1)==1000);
+                std::cout<<"실제 제네레이터 연장/캐논 자연 첫 적중 표적"<<targets.size()<<"/단계"<<stages.size()<<"/완공 그림"<<frames.size()<<"/탄체"<<missileSeen<<"/적 HP 감소"<<hitSeen<<"\n";
+                controls.DisableProduction();activeProductionUi=nullptr;return;
+            }
             // 반환 내용물 Regular의 count0/10초/count1과 실제 캐논 건설을 자연 실행한다.
             for (std::uint64_t frame=1;frame<=2400;++frame) { const auto now=cannonBegan+static_cast<double>(frame)/60;session.RunFrame({now,cannonWall+(now-cannonBegan),1.0/60,frame},false);wall=cannonWall+(now-cannonBegan);controls.Poll({InputCode::kRelease,500,350});menus.CleanupFrame(); }
             // 현재 서버 풀에서 살아 있는 내 완공 캐논을 직접 읽는다.
@@ -1876,3 +1936,9 @@ TEST_CASE(CampaignSession_LocalLoginWorkshopHasActualPlacement) {
     }
 
 }
+
+} // 자연 플레이 검사 경계다.
+// 제네레이터를 추가하지 않는 기존 건설/재고/부족 안내 회귀를 유지한다.
+TEST_CASE(CampaignSession_LocalLoginWorkshopHasActualPlacement) { NaturalWorkshopPlacement(false); }
+// 전방 배치는 실제 레인 제네레이터를 연구/완공한 뒤 실행한다.
+TEST_CASE(CampaignSession_LocalLoginGeneratorExtendsCannonFirstHit) { NaturalWorkshopPlacement(true); }

@@ -183,7 +183,7 @@
     ".gitattributes": "c2b3aa652dfa422b8bbd0dd82a7760cd2dd28ae5cf66bfc5b7d65887d32d8cce",
     "cpppj/burningsources.json": "deb8d3c741b1b0e876ff5a7809c482ad2616c2ef8a760e5dfaf7f2295b142bd2",
     "cpppj/tests/fixtures/burningsources-x86.tsv": "84abec71ace3f1cc634fbca2f3e4eec843f5d2ceb4595f7601f1db93f0b4eedd",
-    "cpppj/shape-to-buffer.json": "8ebcf5c682dbeba3cc7619b5a565f8ccc200d6f99f5ade6ce0e02055a76e086a",
+    "cpppj/shape-to-buffer.json": "cf2dad25690e3cfd10d125e60408a1b02c9193ee16041028d52749f463acb05a",
     "cpppj/tests/fixtures/shape-to-buffer-x86.tsv": "d92bc1a292b8f44cb87ec59ffec881f7e97db4c4b6680af92ad554af2d7c89c1",
     "cpppj/dude-space.json": "667f920700404b4118145effa95b2034231e0398be6ee3878ac9531da36a6068",
     "cpppj/tests/fixtures/dude-space-x86.tsv": "1c931c029fe455c96325aecc37245d83dc78d94ba285b686783cfd9dd154600e",
@@ -357,6 +357,19 @@
           "path": "cpppj/tests/ShapeToBufferTests.cpp",
           "previous": "67dd7ac14fb89b601d9be8d32331094b9d16cc4fa685f3385727c200475e9591",
           "current": "0dc5ddc7f71ce2b7a12ff4dcaae45a47b4c7d6fefa676129fb19b5556e3312ab"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 185,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/shape-to-buffer.json",
+          "previous": "8ebcf5c682dbeba3cc7619b5a565f8ccc200d6f99f5ade6ce0e02055a76e086a",
+          "current": "cf2dad25690e3cfd10d125e60408a1b02c9193ee16041028d52749f463acb05a"
         }
       ]
     }
