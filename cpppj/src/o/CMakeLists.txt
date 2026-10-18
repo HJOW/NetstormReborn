@@ -332,3 +332,6 @@ target_sources(netstorm PRIVATE RawSunFlyerFrame.cpp RawSunFlyerFrame.h)
 
 # 세 템플의 현재 기본 프레임과 윈드/썬더 전용Draw를 같은 원본 자료로 처리한다.
 target_sources(netstorm PRIVATE RawTempleDraw.cpp RawTempleDraw.h)
+
+# 실제 Burning14의 출력/해제와 공통 프레임gate를 같은 원본 자료에 연결한다.
+target_sources(netstorm PRIVATE RawBurningLifetimeDraw.cpp RawBurningLifetimeDraw.h BurningVisualSystem.cpp BurningVisualSystem.h)

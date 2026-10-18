@@ -46,11 +46,11 @@
     }
   },
   "files": {
-    "cpppj/burningparticle.json": "0379319f21a2622e9cae9b2b0280dc520501ddc54cef8874fb3f08065a59aac9",
-    "cpppj/burningprocess-constructor.json": "7861dbee116af646b68e54877a766e7506fc859b231d5aeb561d783c3e385f01",
+    "cpppj/burningparticle.json": "c208a0273c089377f18adb198c69932c23c732f3b9981da21a0bb22b1d2bdb96",
+    "cpppj/burningprocess-constructor.json": "2a44363ad03fe5d81b48327b1ca72b127e8f40fb7316eb8e66d2b04e52369e4a",
     "cpppj/src/o/RawBurningSources.cpp": "66a175d6f74156a8c7e92cf705add0601767595b845890568843f85d1450afc6",
     "cpppj/src/o/RawBurningSources.h": "ce80a8babc7b28a2176ebd425e34aba1269cbffb1c1c8b66f39cbc487e2ac800",
-    "cpppj/src/o/RawBurningVisual.cpp": "9521fe84204f87283fb4c9f2b5b3ebbccf8bca749b76a9bebf4691f563ade522",
+    "cpppj/src/o/RawBurningVisual.cpp": "6d4b4654483abe7f87632a166a9af3bbedbd1b20e253ebd95ce6a1ebc35ffc92",
     "cpppj/src/o/RawBurningVisual.h": "54aa4dfa1f816c18685f3023c9e27d5193ff55b3f91e6c0426361db4fb240f69",
     "cpppj/src/o/SpStore.cpp": "61723355bccecc352ff415d79434767fec6bfb776ba411cb096bb8b2046fd37a",
     "cpppj/src/o/SpStore.h": "10e25c2956dc7e917de784865a38341a045a0ed76b49785aaaf67b9f674c4797",
@@ -109,6 +109,31 @@
           "path": "cpppj/burningprocess-constructor.json",
           "previous": "10f01daf4a2efcf4f61c37132a21d8dd8defbb783d1eb802291bded82b1dbfd1",
           "current": "7861dbee116af646b68e54877a766e7506fc859b231d5aeb561d783c3e385f01"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 190,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/burningparticle.json",
+          "previous": "0379319f21a2622e9cae9b2b0280dc520501ddc54cef8874fb3f08065a59aac9",
+          "current": "c208a0273c089377f18adb198c69932c23c732f3b9981da21a0bb22b1d2bdb96"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/burningprocess-constructor.json",
+          "previous": "7861dbee116af646b68e54877a766e7506fc859b231d5aeb561d783c3e385f01",
+          "current": "2a44363ad03fe5d81b48327b1ca72b127e8f40fb7316eb8e66d2b04e52369e4a"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawBurningVisual.cpp",
+          "previous": "9521fe84204f87283fb4c9f2b5b3ebbccf8bca749b76a9bebf4691f563ade522",
+          "current": "6d4b4654483abe7f87632a166a9af3bbedbd1b20e253ebd95ce6a1ebc35ffc92"
         }
       ]
     }

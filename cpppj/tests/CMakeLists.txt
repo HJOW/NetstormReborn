@@ -36,7 +36,11 @@ set_source_files_properties(ShrapnelFrameTests.cpp PROPERTIES COMPILE_DEFINITION
     "NETSTORM_SHRAPNEL_FRAME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/shrapnel-frame-x86.tsv\"")
 set_source_files_properties(FlyerPreDestroyTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_FLYER_PREDESTROY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/flyer-predestroy-x86.tsv\"")
+# 실제 연소 출력/수명과 공통 프레임gate의 독립 원문을 새 검사에만 공급한다.
+set_source_files_properties(BurningLifetimeDrawTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_BURNING_LIFETIME_DRAW_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/burning-lifetime-draw-x86.tsv\";NETSTORM_RENDER_FRAME_GATE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/render-frame-gate-x86.tsv\";NETSTORM_BURNING_ARCHER_CAPTURE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/burning-archer-capture-x86.tsv\"")
 add_executable(netstorm_tests
+    BurningLifetimeDrawTests.cpp
     ShrapnelFrameTests.cpp
     FlyerPreDestroyTests.cpp
     VanderFireTests.cpp

@@ -1,0 +1,14 @@
+{
+  "unit": 190,
+  "rows": 88,
+  "returns": 176,
+  "instructions": 3512,
+  "boundary": "실제+78/+a4/TYPE조회. 현재 header 반환과 그림 제출만 선언 경계. 전체 캡처/픽셀/전투는 별도.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_burning_archer_capture.py": "45da1ad3c4c90740e701058188f57a8eba6a46c45b62203127e62784aaa0fd2c",
+    "tools/decomp_temple_draw.py": "b94a1b635e83af4af3808d3666d3dd56067a44e88c22ecfbd4fe9396000dab24",
+    "cpppj/tests/fixtures/burning-archer-capture-x86.tsv": "27fc2c6de576fc6550d5b9f0250c073918f21850e0f32bd6139d6fc4ac1862ee"
+  }
+}

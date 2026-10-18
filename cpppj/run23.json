@@ -439,7 +439,7 @@
     "cpppj/src/o/RawBurningFrame.h": "a8eb3aefeb0a1fb6afbe4aadc31cdbf0fdab5345355a661ed1e01699d23c56c7",
     "cpppj/src/o/RawBurningSources.cpp": "66a175d6f74156a8c7e92cf705add0601767595b845890568843f85d1450afc6",
     "cpppj/src/o/RawBurningSources.h": "ce80a8babc7b28a2176ebd425e34aba1269cbffb1c1c8b66f39cbc487e2ac800",
-    "cpppj/src/o/RawBurningVisual.cpp": "9521fe84204f87283fb4c9f2b5b3ebbccf8bca749b76a9bebf4691f563ade522",
+    "cpppj/src/o/RawBurningVisual.cpp": "6d4b4654483abe7f87632a166a9af3bbedbd1b20e253ebd95ce6a1ebc35ffc92",
     "cpppj/src/o/RawBurningVisual.h": "54aa4dfa1f816c18685f3023c9e27d5193ff55b3f91e6c0426361db4fb240f69",
     "cpppj/src/o/RawCampaignWorldLoad.cpp": "89e879705ca786d6f3b06b5d5e7f89af2723991768ad11cca61be5394886b7a6",
     "cpppj/src/o/RawCampaignWorldLoad.h": "0b08303977f130b0a3c6f651f2fe0fd69e1754ebc80e771cc92b7b89590dbbd5",
@@ -2264,6 +2264,19 @@
           "path": "cpppj/src/o/SquidDisplay.h",
           "previous": "83ed777ce826ec37cc2a72808ffd3658b8f6bcb9644efcf31f203fc6da363be7",
           "current": "aa8bf6fe22cfafb729053710e1fec6ef77a2c9bee40c51b05cb363ba57f413d7"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 190,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawBurningVisual.cpp",
+          "previous": "9521fe84204f87283fb4c9f2b5b3ebbccf8bca749b76a9bebf4691f563ade522",
+          "current": "6d4b4654483abe7f87632a166a9af3bbedbd1b20e253ebd95ce6a1ebc35ffc92"
         }
       ]
     }

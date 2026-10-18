@@ -25,8 +25,8 @@
     }
   },
   "files": {
-    "cpppj/burningprocess-constructor.json": "7861dbee116af646b68e54877a766e7506fc859b231d5aeb561d783c3e385f01",
-    "cpppj/src/o/RawBurningVisual.cpp": "9521fe84204f87283fb4c9f2b5b3ebbccf8bca749b76a9bebf4691f563ade522",
+    "cpppj/burningprocess-constructor.json": "2a44363ad03fe5d81b48327b1ca72b127e8f40fb7316eb8e66d2b04e52369e4a",
+    "cpppj/src/o/RawBurningVisual.cpp": "6d4b4654483abe7f87632a166a9af3bbedbd1b20e253ebd95ce6a1ebc35ffc92",
     "cpppj/src/o/RawBurningVisual.h": "54aa4dfa1f816c18685f3023c9e27d5193ff55b3f91e6c0426361db4fb240f69",
     "cpppj/tests/BurningParticleTests.cpp": "f51e8c735beb07dfa86400cb6ce83e771a7e5f7c1a652cce58aa03ac4a177ed3",
     "cpppj/tests/fixtures/burningparticle-x86.tsv": "2d157284340561db003a70b51697d7f2922a89e4b8d9df3871394179f5a795a3",
@@ -63,6 +63,25 @@
           "path": "cpppj/burningprocess-constructor.json",
           "previous": "10f01daf4a2efcf4f61c37132a21d8dd8defbb783d1eb802291bded82b1dbfd1",
           "current": "7861dbee116af646b68e54877a766e7506fc859b231d5aeb561d783c3e385f01"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 190,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/burningprocess-constructor.json",
+          "previous": "7861dbee116af646b68e54877a766e7506fc859b231d5aeb561d783c3e385f01",
+          "current": "2a44363ad03fe5d81b48327b1ca72b127e8f40fb7316eb8e66d2b04e52369e4a"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawBurningVisual.cpp",
+          "previous": "9521fe84204f87283fb4c9f2b5b3ebbccf8bca749b76a9bebf4691f563ade522",
+          "current": "6d4b4654483abe7f87632a166a9af3bbedbd1b20e253ebd95ce6a1ebc35ffc92"
         }
       ]
     }

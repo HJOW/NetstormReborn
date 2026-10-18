@@ -46,7 +46,7 @@
   },
   "files": {
     "cpppj/constructionlifetime.json": "1a90de4df40b1f032cd1d28bc0ccab564da087826c9948c2869aca79093b4557",
-    "cpppj/src/o/RawBurningVisual.cpp": "9521fe84204f87283fb4c9f2b5b3ebbccf8bca749b76a9bebf4691f563ade522",
+    "cpppj/src/o/RawBurningVisual.cpp": "6d4b4654483abe7f87632a166a9af3bbedbd1b20e253ebd95ce6a1ebc35ffc92",
     "cpppj/src/o/RawBurningVisual.h": "54aa4dfa1f816c18685f3023c9e27d5193ff55b3f91e6c0426361db4fb240f69",
     "cpppj/src/o/RawConstructionLifetime.cpp": "8e4da7a0213868697ea7df931ea132e880ccde80931a948d737cf7d5cdfb0835",
     "cpppj/src/o/RawConstructionLifetime.h": "b799dd50d8c33bd5e2191c1aa6874b8144b6b037154b71ffa87760f47984f37a",
@@ -89,6 +89,19 @@
           "path": "cpppj/constructionlifetime.json",
           "previous": "25c8c965883efe72438d6c62698754884be332a2bf017f0e07f4b9dbb17788df",
           "current": "1a90de4df40b1f032cd1d28bc0ccab564da087826c9948c2869aca79093b4557"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 190,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawBurningVisual.cpp",
+          "previous": "9521fe84204f87283fb4c9f2b5b3ebbccf8bca749b76a9bebf4691f563ade522",
+          "current": "6d4b4654483abe7f87632a166a9af3bbedbd1b20e253ebd95ce6a1ebc35ffc92"
         }
       ]
     }

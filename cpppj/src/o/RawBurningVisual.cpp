@@ -10,7 +10,7 @@ namespace {
 // 생성자 고정150입자와 실제32비트 메모리의 확보량이다.
 constexpr std::uint32_t kParticles=150,kParticleBytes=24,kPaletteBytes=8;
 // 보호 PE가 공급하는 주황색 두끝점과 공통 색띠 보정이다.
-constexpr std::array<double,3> kFirst{1.0,245.0/255.0,117.0/255.0},kLast{1.0,115.0/255.0,7.0/255.0};
+constexpr std::array<double,3> kFirst{1.0,115.0/255.0,7.0/255.0},kLast{1.0,245.0/255.0,117.0/255.0}; // 실제 cold 생성자의 시작 주황→끝 밝은색 순서다.
 constexpr double kGradientNoise=2.4;
 }
 // 공통표시 등록은 현재같은 풀을 사용하며 정상메모리 경계가 반드시 필요하다.

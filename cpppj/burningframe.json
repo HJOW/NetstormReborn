@@ -55,7 +55,7 @@
     "cpppj/src/o/RawBurningFrame.h": "a8eb3aefeb0a1fb6afbe4aadc31cdbf0fdab5345355a661ed1e01699d23c56c7",
     "cpppj/src/o/RawBurningSources.cpp": "66a175d6f74156a8c7e92cf705add0601767595b845890568843f85d1450afc6",
     "cpppj/src/o/RawBurningSources.h": "ce80a8babc7b28a2176ebd425e34aba1269cbffb1c1c8b66f39cbc487e2ac800",
-    "cpppj/src/o/RawBurningVisual.cpp": "9521fe84204f87283fb4c9f2b5b3ebbccf8bca749b76a9bebf4691f563ade522",
+    "cpppj/src/o/RawBurningVisual.cpp": "6d4b4654483abe7f87632a166a9af3bbedbd1b20e253ebd95ce6a1ebc35ffc92",
     "cpppj/src/o/RawBurningVisual.h": "54aa4dfa1f816c18685f3023c9e27d5193ff55b3f91e6c0426361db4fb240f69",
     "cpppj/tests/BurningFrameTests.cpp": "b0f18bd9e691ae73ed8a4de12fab30bed2f96ae7d46e72872fdadc74fa7ba4d7",
     "cpppj/tests/fixtures/burningframe-x86.tsv": "8b09c3d54803039df92c36374537ff316fbd8062ffbaa02913e89dc0d4fdbcc6",
@@ -142,5 +142,20 @@
     "heap만 요청크기와격리반환경계다. nonzero소리/재캡처free·mappedowner/추가가상그림·실제Draw/Host삭제·캠페인월드는후속이다.",
     "정상53비트x87에서timer elapsed는이전double그대로사용하며패치x이동은넓은vx합을유지/CD는저장float를재읽는다.",
     "CDsignedDWORDlife와Patchorderedfloatlife를quietNaN/inf/음수0에서도구분한다. 좌표/시각은유한이며diagnostic전역0이다."
+  ],
+  "integration_updates": [
+    {
+      "date": "2026-10-18",
+      "unit": 190,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawBurningVisual.cpp",
+          "previous": "9521fe84204f87283fb4c9f2b5b3ebbccf8bca749b76a9bebf4691f563ade522",
+          "current": "6d4b4654483abe7f87632a166a9af3bbedbd1b20e253ebd95ce6a1ebc35ffc92"
+        }
+      ]
+    }
   ]
 }

@@ -22,9 +22,9 @@
     "cpppj/build/bin/Release/NetstormCpp.exe": "7d6687087e5a64316b90fbd9f73128cd0b4957396c404c63b2eeb1a8856dfbf4",
     "cpppj/build/bin/Release/netstorm_tests.exe": "b7f9552243ff5fbe2c3be43e46c67b53edf5cc1e25ea3bbb31e9ce42a7042e83",
     "cpppj/burningframe-draft-lineage.json": "45bcaecf9feadb576ff11a4880eee9592e6f2de4efeb7a42b931dcaa842f3d5d",
-    "cpppj/burningframe.json": "28c6315a3fa1c03acfb36989606ea9fd2c2fce52d81e04151008a24851475308",
+    "cpppj/burningframe.json": "651c730f12a5b081ef5407341b3906b66dc814e48d7fd4012050eff399a5811a",
     "cpppj/campaign-path-bindings.json": "823d4ca9669849945f492dece0389cd92d92b9c0fa9beca27edbd1b0747a7a59",
-    "cpppj/run15-corrections.json": "c4458b45c19a69cbc50cc961a18ffdc3c5506b27907e49fa847487b33a2dfae4",
+    "cpppj/run15-corrections.json": "1fadf6583ec33e99bc64f0f22d292815fc98a0b92b4a92341ef90a03703c4686",
     "cpppj/campaign-worldload.json": "c8dcbc696501c32cf887045f39f6f8e1fe4e2591416691554980fed561630758",
     "cpppj/hist/campaign-run-092de/capture.json": "a577e964d5ebcb34eabb62fdfc2cdde21dd62de512e3e5037e543e206654e0f6",
     "cpppj/player-regular.json": "27a574e8d4feac68c6599680fd6e9817f34a1f08c7ebc576f46901b353882d93",
@@ -183,6 +183,25 @@
           "path": "cpppj/tests/PlayerRegularTests.cpp",
           "previous": "691f83150cd786369635ecf748289c97e9166d285f422b469dda82790030ce31",
           "current": "c5dc6f89b8ee7e6ed21c7720d1e11a8c019022f079eb7f62024833ed47e56afe"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 190,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/burningframe.json",
+          "previous": "28c6315a3fa1c03acfb36989606ea9fd2c2fce52d81e04151008a24851475308",
+          "current": "651c730f12a5b081ef5407341b3906b66dc814e48d7fd4012050eff399a5811a"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/run15-corrections.json",
+          "previous": "c4458b45c19a69cbc50cc961a18ffdc3c5506b27907e49fa847487b33a2dfae4",
+          "current": "1fadf6583ec33e99bc64f0f22d292815fc98a0b92b4a92341ef90a03703c4686"
         }
       ]
     }

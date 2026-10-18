@@ -694,12 +694,14 @@ struct RawCampaignSession::Impl {
         FillMissing(hitEffects.general.realTime);FillMissing(hitEffects.general.warningEvent);
         // MessageBoard::Show의 현재00594fa4 억제 조건을 같은 미션 전역에서 읽고 실제 UI 삭제에 적용한다.
         hitEffects.general.warningEvent=[this,remove=std::move(hitEffects.general.warningEvent)] { if (!globals.missionPost) remove(); };
-        FillMissing(hitEffects.burning.create);FillMissing(hitEffects.burning.bulfSound);
+        if (!hitEffects.burning.create) hitEffects.burning.create=[this](Sid victim) { const auto* process=particles->AddBurning(victim,1);return process ? process->Form() : Sid{}; };
+        if (!hitEffects.burning.bulfSound) hitEffects.burning.bulfSound=[this](Sid,float x,float y) { if (!services.sound.playOnceAt) throw std::logic_error("불프 피격 위치 음향 미연결");services.sound.playOnceAt(x,y,soundNames.Lookup("bulfHurt.wav"),0,0); };
         // 건설 중 신전 피격은 기존 같은30 Form의 끝 시각과 실제 가상88 표시를 갱신한다.
         if (!hitEffects.vortex.constructionType) hitEffects.vortex.constructionType=[this] { return buildingState.processType; };
         if (!hitEffects.vortex.resetEnd) hitEffects.vortex.resetEnd=[this](Sid form,std::uint32_t amount) { PrepareConstruction();building->ResetEndFromForm(form,amount); };
         if (!hitEffects.vortex.refresh) hitEffects.vortex.refresh=[this](Sid victim) { core.display.Update(core.pool.Slot(victim),0); };
-        FillMissing(hitEffects.dudes.createBurning);FillMissing(hitEffects.dudes.pathEndpoint);FillMissing(hitEffects.dudes.startPath);
+        if (!hitEffects.dudes.createBurning) hitEffects.dudes.createBurning=[this](Sid victim) { static_cast<void>(particles->AddBurning(victim,0)); };
+        FillMissing(hitEffects.dudes.pathEndpoint);FillMissing(hitEffects.dudes.startPath);
         hits=std::make_unique<RawCampaignHitBindings>(world,*priests,hp,random,dudeSpeeds,assetState.residences,
             priestDamageState,generalDamageState,burningState,impactState,std::move(hitEffects));
         // 미복원 가상 피해는 실제 공격자/표적 TYPE를 기록해 다음 원본 복원 지점을 식별한다.
@@ -1727,6 +1729,15 @@ struct RawCampaignSession::Impl {
         buildingState.now=now;buildingState.boss=assetState.boss;buildingState.localPlayer=playerState.battleOwner;
         buildingEffectsState.alliances=alliances;buildingEffectsState.server=core.processState.server;
     }
+    // Renderer와 캡처가 같은 전용 템플 몸체/실제 조건부 음향을 사용한다.
+    void DrawTempleFrames(Sid sid,const std::function<void(std::int32_t)>& frame) const {
+        const auto raw=core.pool.Slot(sid);
+        if (IsRainVortex(core.pool.Edition(),raw)) {
+            DrawRainVortex(core.pool.Edition(),raw,core.frames[raw[10]],{frame,[this] { if (!services.sound.play) throw std::logic_error("레인 신전 상승음 실제 재생 미연결");services.sound.play(soundNames.Lookup("templeAscend.wav"),0,0,0,0,0); }});return;
+        }
+        if (core.pool.Edition()!=OriginalEdition::Patch1078 || !IsPatchTemple(raw)) throw std::invalid_argument("다른 판본/가상표 템플 Draw 미복원");
+        DrawWindThunderTemple(raw,core.frames[raw[10]],assets.game.Types()[raw[10]-kFirstAssetTypeNumber].definition.specialFrames.baseFrame,frame);
+    }
     // 원본30/17을 같은 Host/표시/최대 HP/음향/가상 공간에 연결한다.
     void ConnectBuilding() {
         if (building) throw std::logic_error("실제 건설 프로세스 중복 연결");
@@ -1741,8 +1752,18 @@ struct RawCampaignSession::Impl {
             const auto color=core.bridgeState.ownerColors[owner];if (color<0 || color>8) throw std::out_of_range("건설 현재 소유자 색 번호 오류");return buildingOwnerColors[static_cast<std::size_t>(color)];
         };
         factoryDraw=std::make_unique<RawFactoryDraw>(core.pool,core.frames);
-        buildingCaptureState.mainFrame=[this](Sid sid) { return factoryDraw->MainFrame(sid); };
+        buildingCaptureState.mainFrame=[this](Sid sid) { const auto raw=core.pool.Slot(sid);if (IsPatchTemple(raw) || IsBurningArcherCapture(raw)) return assets.game.Types()[raw[10]-70].definition.specialFrames.baseFrame;return factoryDraw->MainFrame(sid); };
         buildingCaptureState.additional=[this](Sid sid,ConstructionVisualImage& image,std::int32_t x,std::int32_t y) {
+            if (IsPatchTemple(core.pool.Slot(sid))) {
+                if (core.pool.Slot(sid)[40]&0x10U) throw std::logic_error("추상 템플 실제 캡처 색상 미연결");const auto type=core.pool.Slot(sid)[10]; // 현재 일반 템플의 실제SHP snapshot이다.
+                DrawTempleFrames(sid,[this,&image,x,y,type](std::int32_t frame) { if (frame<0) throw std::out_of_range("템플 캡처 음수 프레임");static_cast<void>(DrawShape(image.pixels,image.width,image.height,assets.game.Shapes(),type-70,static_cast<std::size_t>(frame),x,y,{0,0,image.width-1,image.height-1})); });return;
+            }
+            const auto raw=core.pool.Slot(sid);
+            if (IsBurningArcherCapture(raw)) {
+                if (raw[40]&0x10U) throw std::logic_error("추상 발사기 실제 캡처 색상 미연결");const auto current=static_cast<std::uint32_t>(raw[36])|(static_cast<std::uint32_t>(raw[37])<<8)|(static_cast<std::uint32_t>(raw[38])<<16)|(static_cast<std::uint32_t>(raw[39])<<24); // 실제 캡처의 현재 헤더/포구다.
+                const auto& header=core.shapes[raw[10]].frames.at(current);
+                DrawBurningArcherCapture(raw,assets.game.Types()[raw[10]-70].definition.specialFrames.baseFrame,header.muzzleX,header.muzzleY,[this,&image](auto type,auto frame,auto px,auto py) { static_cast<void>(DrawShape(image.pixels,image.width,image.height,assets.game.Shapes(),type-70,frame,px,py,{0,0,image.width-1,image.height-1})); },x,y);return;
+            }
             factoryDraw->Additional(sid,x,y,[this,&image](std::int32_t px,std::int32_t py,std::uint32_t type,std::int32_t frame) {
                 const auto& shape=core.shapes[type];if (!shape.loaded) return;
                 if (frame<0 || frame>=shape.frameCount) throw std::logic_error("Factory 추가 그림의 현재 프레임 원본 진단");
@@ -1752,6 +1773,7 @@ struct RawCampaignSession::Impl {
         };
         buildingCapture=std::make_unique<RawShapeToBuffer>(core.pool,core.types,core.shapes,assets.game.Shapes(),buildingCaptureState);
         particles->ConnectConstruction([this](Sid sid) { return buildingCapture->Capture(sid); },[this](Sid sid) { return hp.MaxHitPoints(sid); });
+        particles->ConnectBurning([this](Sid sid) { return buildingCapture->Capture(sid); },[this](std::uint32_t sound) { if (!sound) return;if (!services.sound.stop) throw std::logic_error("Burning 실제 소리 정지 미연결");services.sound.stop(sound); });
         ConstructionEffectsHooks effects; // 밀어내기에 필요한 현재 이동 종류/내용물 삭제/가상 공간이다.
         effects.pathType=[this](std::uint32_t type) { return SelectMovementProcessType(core.pool.Edition(),core.types,priestState.movement,type); };
         effects.clearPath=[this](Sid sid,std::uint32_t type) { RawContainedLookup lookup(core.pool,[this](Sid target,std::uint32_t flags) { world.Destroy(target,flags); });static_cast<void>(lookup.Find(sid,type,0,true)); };
@@ -2011,7 +2033,7 @@ void RawCampaignSession::StartConstruction(Sid parent,float duration) {
     impl_->PrepareBuilding(impl_->core.processState.now);impl_->building->Start(parent,duration);
 }
 // 현재 같은 시각을 공격/소리/실제 Kernel에 공급한다.
-void RawCampaignSession::RunFrame(FrameTime time,bool paused) { impl_->flyerPaused=paused;impl_->PrepareBuilding(time.game);impl_->assetBindings->PrepareFrame(time.game);impl_->combat->PrepareFrame(time);impl_->particles->PrepareFrame(time.game);impl_->soundState.frame=static_cast<std::uint32_t>(time.number);impl_->world.RunFrame(time,paused); }
+void RawCampaignSession::RunFrame(FrameTime time,bool paused) { impl_->flyerPaused=paused;impl_->PrepareBuilding(time.game);impl_->assetBindings->PrepareFrame(time.game);impl_->combat->PrepareFrame(time);impl_->particles->PrepareFrame(time.game,static_cast<std::uint32_t>(time.number),impl_->rewardState.priestQuarterHp);impl_->soundState.frame=static_cast<std::uint32_t>(time.number);impl_->world.RunFrame(time,paused); }
 // 해상도/카메라 변경과 동일 위치 효과음의 view를 process11에도 전달한다.
 void RawCampaignSession::SetParticleView(SoundView view,SurfaceDisplayHooks display) {
     impl_->contentScreenOrigin={view.cameraX,view.cameraY};
@@ -2167,11 +2189,7 @@ void RawCampaignSession::DrawRainTemple(Sid sid,const std::function<void(std::in
     }});
 }
 // 실제 같은 TYPE의 baseFrame/구간 표를 현재 raw 전용 가상표로 분배한다.
-void RawCampaignSession::DrawTemple(Sid sid,const std::function<void(std::int32_t)>& frame) const {
-    const auto raw=impl_->core.pool.Slot(sid);if (IsRainVortex(impl_->core.pool.Edition(),raw)) { DrawRainTemple(sid,frame);return; }
-    if (impl_->core.pool.Edition()!=OriginalEdition::Patch1078 || !IsPatchTemple(raw)) throw std::invalid_argument("다른 판본/가상표 템플 Draw 미복원");
-    DrawWindThunderTemple(raw,impl_->core.frames[raw[10]],impl_->assets.game.Types()[raw[10]-kFirstAssetTypeNumber].definition.specialFrames.baseFrame,frame);
-}
+void RawCampaignSession::DrawTemple(Sid sid,const std::function<void(std::int32_t)>& frame) const { impl_->DrawTempleFrames(sid,frame); }
 // 실제 설치된 Session의 게임 계산을 연결하고 UI의 실제 번역/작성/커서 소비자는 보존한다.
 std::unique_ptr<RawPriestMenu> RawCampaignSession::MakePriestMenu(PriestMenuHooks hooks) {
     if (!impl_->loaded) throw std::logic_error("설치 전 실제 Session 사제 메뉴 요청");

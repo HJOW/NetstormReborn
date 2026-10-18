@@ -1662,7 +1662,7 @@ TEST_CASE(CampaignSession_LocalLoginMissionStartAiAlliances) {
 
 namespace {
 // 같은 실제 로그인/건설/연구/생산 흐름으로 기본 회귀와 제네레이터 연장 전투를 구분해 검사한다.
-void NaturalWorkshopPlacement(bool combat) {
+void NaturalWorkshopPlacement(bool combat,bool burning=false) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();RawButtonControls* activeProductionUi{}; // 같은 실제 내용물 알림의 현재 UI다.
     std::vector<std::array<float,2>> bridgeSounds;auto previousSound=std::move(services.sound.playOnceAt); // 실제 위치 소리 요청을 기존 장치 경계와 함께 관찰한다.
     services.sound.playOnceAt=[&external,&bridgeSounds,previous=std::move(previousSound)](float x,float y,SoundHandle sound,std::uint32_t first,std::uint32_t second) {
@@ -1828,19 +1828,29 @@ void NaturalWorkshopPlacement(bool combat) {
             const auto cannonBegan=core.processState.now,cannonWall=wall;std::size_t completedCannons{}; // 실제 후속 Kernel이 완료한 캐논을 관찰한다.
             if (combat) {
                 const auto cannons=ConstructionLive(core,128);CHECK(cannons.size()==1);if (cannons.size()!=1) return;const auto cannon=cannons.front(); // 실제 배치한 캐논이다.
-                std::set<std::uint32_t> stages,targets,frames;bool missileSeen{},hitSeen{};std::map<std::uint16_t,std::uint32_t> enemyHp; // 현재 실제 과정의 관측 집합이다.
+                std::set<std::uint32_t> stages,targets,frames;bool missileSeen{},hitSeen{};std::size_t burnFrames{},burnPixels{};bool burnCaptured{},burnEmitted{};std::map<std::uint16_t,std::uint32_t> enemyHp; // 현재 실제 과정의 관측 집합이다.
                 // 실제 표적이 발사기라고 미리 단정하지 않고 모든 살아 있는 적 피해 자산의 HP를 읽는다.
                 for (std::uint32_t number=core.pool.Layout().serverFirst;number<core.pool.Capacity();++number) {
                     const Sid sid{static_cast<std::uint16_t>(number)};const auto raw=core.pool.Slot(sid);if (!(raw[11]&3U) && raw[10]>=70 && raw[34]==2 && (core.types[raw[10]].flags1&0x10U)) enemyHp.emplace(sid.value,Get(raw,26));
                 }
                 CHECK(enemyHp.size()>=5);
-                // 실제 Kernel로 첫 적중까지만 검사한다. 저HP Burning14 연결과 그 이후 전투는 별도 미완료 경계다.
-                for (std::uint64_t frame=1;frame<=3600 && !hitSeen;++frame) {
+                if (burning) session.SetParticleView({1344,976,0,0,1024,768},{}); // 자연 전투의 현재 자산/연소 영역이 viewport에 들어오는 카메라 입력이다.
+                // 기본 검사는 첫 적중, 연소 검사는 자연 저HP 생성 후240프레임의 실제 캡처/입자/출력까지 진행한다.
+                for (std::uint64_t frame=1;frame<=7200 && (burning ? burnFrames<240 : !hitSeen);++frame) {
                     const auto now=cannonBegan+static_cast<double>(frame)/60;wall=cannonWall+(now-cannonBegan);session.RunFrame({now,wall,1.0/60,frame},false);controls.Poll({InputCode::kRelease,500,350});menus.CleanupFrame();
                     const auto form=FindAttachedProcess(core.pool,cannon,34);if (const auto* process=dynamic_cast<GunProcess*>(core.processes.FromForm(form))) { stages.insert(process->Fields().Stage());if (process->Fields().Target().value) targets.insert(process->Fields().Target().value); }
                     if (!(core.pool.Slot(cannon)[40]&1U)) frames.insert(Get(core.pool.Slot(cannon),36));
                     // 현재 살아 있는 소유자1 탄체의 실제 존재만 관찰한다.
                     for (auto sid:ConstructionLive(core,80)) if (core.pool.Slot(sid)[34]==1) missileSeen=true;
+                    if (burning) {
+                        bool present{}; // 같은 실제14 등록/Form의 현재 상태만 읽는다.
+                        for (const auto token:session.Particles().Rendering().Slots()) { // 일반 표시 목록에서 자연 생성된 실제14만 관찰한다.
+                            const auto* r=session.Particles().Rendering().Lookup(token);if (!r) continue;const auto* effect=dynamic_cast<BurningVisualProcess*>(core.processes.FromForm({static_cast<std::uint16_t>(r->form)}));if (!effect) continue;present=true;const auto& f=effect->Fields();CHECK(f.capacity==150 && f.mode==1);if (f.stage>=1 && !f.image.pixels.empty() && !f.rows.empty()) burnCaptured=true;
+                            for (const auto& particle:f.particles) if (particle.life>0 && !particle.source) burnEmitted=true; // source가 아닌 실제 이동 입자다.
+                        }
+                        if (present) ++burnFrames;
+                        if (present) { Renderer particles(1024,768);particles.SetScene(session.ParticleSprites({0,0,1024,768}));std::vector<std::uint8_t> burningPixels(1024*768,255);particles.Draw(burningPixels,1024,255);burnPixels+=static_cast<std::size_t>(std::count_if(burningPixels.begin(),burningPixels.end(),[](auto value) { return value!=255; })); }
+                    }
                     // 삭제/HP 감소는 실제 슬롯의 결과에서 읽으며 결과를 쓰지 않는다.
                     for (const auto& [number,hp]:enemyHp) { const auto raw=core.pool.Slot({number});if ((raw[11]&3U) || Get(raw,26)<hp) { if (!hitSeen) std::cout<<"실제 피해 대상"<<number<<" TYPE"<<unsigned(raw[10])<<" HP"<<hp<<"→"<<Get(raw,26)<<"\n";hitSeen=true; } }
                 }
@@ -1848,6 +1858,7 @@ void NaturalWorkshopPlacement(bool combat) {
                 for (auto sid:targets) std::cout<<"실제 캐논 표적 SID"<<sid<<" TYPE"<<unsigned(core.pool.Slot({static_cast<std::uint16_t>(sid)})[10])<<"\n";
                 CHECK(!targets.empty() && stages.count(2) && stages.count(5));CHECK(missileSeen && hitSeen && frames.size()>1);CHECK(session.Sp(1)==1000);
                 std::cout<<"실제 제네레이터 연장/캐논 자연 첫 적중 표적"<<targets.size()<<"/단계"<<stages.size()<<"/완공 그림"<<frames.size()<<"/탄체"<<missileSeen<<"/적 HP 감소"<<hitSeen<<"\n";
+                if (burning) { CHECK(burnFrames==240 && burnCaptured && burnEmitted && burnPixels>0);std::cout<<"자연 저HP Burning14: 실제 프레임"<<burnFrames<<"/캡처"<<burnCaptured<<"/이동입자"<<burnEmitted<<"/표시 픽셀"<<burnPixels<<"\n"; }
                 controls.DisableProduction();activeProductionUi=nullptr;return;
             }
             // 반환 내용물 Regular의 count0/10초/count1과 실제 캐논 건설을 자연 실행한다.
@@ -1974,4 +1985,22 @@ TEST_CASE(CampaignTempleDraw_Native264BodyPixels) {
         CHECK(body && shadow);Renderer selected(512,400);selected.SetScene(sprites);std::vector<std::uint8_t> pixels(512*400,7);selected.Draw(pixels,512,7);CHECK(std::any_of(pixels.begin(),pixels.end(),[](auto value) { return value!=7; }));
     }
     CHECK(cases==264 && compared>1000000);std::cerr<<"실제 템플 표시 소비자: 합성 입력"<<cases<<"개 본체"<<compared<<"픽셀 일치. 썬더 실전 창 검증 별도\n";
+}
+
+// 기존 로그인/생산 클릭/허용점/두 제네레이터/캐논 전투에서 HP 주입 없이 실제14를 관찰한다.
+TEST_CASE(CampaignBurning_NaturalGeneratorCannonCombat) { NaturalWorkshopPlacement(true,true); }
+// 수명 검사는 HP 감소/피해자 삭제를 명시 입력으로 구분하며 자연 전투 완주로 세지 않는다.
+TEST_CASE(CampaignBurning_ActualHostRecoveryAndDeletion) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());
+    RawCampaignSession session(assets.game,assets.files,std::move(fort),"TheWarBegins",external.Services());session.Load();auto core=session.Core();const Sid temple{15002};auto raw=core.pool.AllocatedBytes(temple);CHECK(raw[10]==124);const auto maximum=Get(raw,26);Put(raw,26,maximum/4); // 회복·삭제 경로의 명시 HP 입력이다.
+    DamageableBurningState burningState;DamageableBurningHooks hooks; // 회복 몸체에 같은 실제 Form/Host 경계를 연결하는 명시 검사 조립이다.
+    hooks.find=[&](Sid victim,std::uint32_t type,std::uint32_t index) { CHECK(index==0);return FindAttachedProcess(core.pool,victim,type); };
+    hooks.create=[&](Sid victim) { const auto* effect=const_cast<RawCampaignParticles&>(session.Particles()).AddBurning(victim,1);return effect ? effect->Form() : Sid{}; };hooks.destroy=[&](Sid form,std::uint32_t flags) { session.World().Destroy(form,flags); };
+    RawDamageableBurning burning(core.pool,core.types,session.HitPoints(),burningState,std::move(hooks));session.SetParticleView({1168,1036,0,0,1024,768},{});const auto form=burning.Refresh(temple);auto* effect=dynamic_cast<BurningVisualProcess*>(core.processes.FromForm(form));CHECK(effect);if (!effect) return;const auto token=effect->Fields().registration.token;std::size_t drawn{};
+    for (std::uint64_t frame=1;frame<=180;++frame) { // 실제 Kernel의 gate/초기 캡처/연소점/입자/Renderer를 함께 실행한다.
+        session.RunFrame({frame/40.0,100+frame/40.0,.025,frame},false);Renderer renderer(1024,768);renderer.SetScene(session.ParticleSprites({0,0,1024,768}));std::vector<std::uint8_t> pixels(1024*768,255);renderer.Draw(pixels,1024,255);drawn+=static_cast<std::size_t>(std::count_if(pixels.begin(),pixels.end(),[](auto color) { return color!=255; }));
+    }
+    CHECK(effect->Fields().stage==2 && effect->Fields().total>0 && drawn>0);Put(raw,26,maximum);CHECK(!burning.Refresh(temple).value); // 실제 회복 판정이 기존14를 바로 삭제한다. source의 최소1 규칙을 임의0으로 바꾸지 않는다.
+    CHECK(!session.Particles().Rendering().Lookup(token) && !core.processes.FromForm(form));Put(raw,26,maximum/4);const auto second=burning.Refresh(temple);auto* next=dynamic_cast<BurningVisualProcess*>(core.processes.FromForm(second));CHECK(next);if (!next) return;const auto nextToken=next->Fields().registration.token;
+    session.World().Destroy(temple,0x800);CHECK(!session.Particles().Rendering().Lookup(nextToken) && !core.processes.FromForm(second));CHECK(!core.destroy.PreDepth() && !core.destroy.PostDepth());std::cout<<"실제14 캡처/표시"<<drawn<<"픽셀·회복 삭제·피해 부모 삭제 정리 통과\n";
 }

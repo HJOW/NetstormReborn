@@ -183,7 +183,7 @@
     "extracted/run13-rawAltarSacrifice_final.log": "3182e1a70ced824bc48f7ffd6894e7deca3860b76fbb025a481a42ac6221e1b5",
     "extracted/run13-all-final.log": "d7f23f4918e85d842be06ea32fa2466a6933cd9af674a3d442de53b378065f4b",
     "extracted/run13-build-final.log": "dd53dc1e329e8819380b455b3dbe824ec777c2777fadcd349a1bf2966320e8ae",
-    "cpppj/run12.json": "8487c9e2edf348b876e621e12445a8477aff068f13f10b7eb74af1be3011374b",
+    "cpppj/run12.json": "1061745cc455fb78ad9c2d4d77765ee220c9de65c100e374e638968d936154e8",
     "cpppj/src/o/CMakeLists.txt": "7df86efa098dfbaac10a7ea5b1d24d371ec8c988412a332351dd599c695fed40",
     "cpppj/src/client/CMakeLists.txt": "17391e20258a3718babb815621c7ae955baae1b1917e400a1f1a0a6654e408cf",
     "cpppj/tests/CMakeLists.txt": "eb371908d4da367244ceb91f0f016a671dafadbfff7f31d9be90c95cb890a3b2",
@@ -231,6 +231,19 @@
           "path": "cpppj/run12.json",
           "previous": "e703f76dfec675953a0620ca0bed4ce6bec61b7579f64aa1c0c6f9784827d443",
           "current": "8487c9e2edf348b876e621e12445a8477aff068f13f10b7eb74af1be3011374b"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 190,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/run12.json",
+          "previous": "8487c9e2edf348b876e621e12445a8477aff068f13f10b7eb74af1be3011374b",
+          "current": "1061745cc455fb78ad9c2d4d77765ee220c9de65c100e374e638968d936154e8"
         }
       ]
     }

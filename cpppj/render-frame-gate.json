@@ -1,0 +1,11 @@
+{
+  "unit": 190,
+  "rows": 128,
+  "instructions": 820,
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_render_frame_gate.py": "01f27d259269042a06c5ee589ee1b352a4327abe6775fe82bef84b56c26983dd",
+    "tools/decomp_burningprocess_oracle.py": "79c2393c6db28291b3c68bbdb3e5da367aedf89c5b2c6d8049a64494df0e655d",
+    "cpppj/tests/fixtures/render-frame-gate-x86.tsv": "1eb5872cee58d17dce60a28fe80d5b7dba329632251c6d6b400a8f2dcdf0b8b7"
+  }
+}

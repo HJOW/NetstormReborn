@@ -1,0 +1,31 @@
+{
+  "unit": 190,
+  "date": "2026-10-18",
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "lastDecompileDate": "2026-10-16",
+  "rows": 655,
+  "precisionDifferences": 0,
+  "stats": [
+    {
+      "control": "0x27f",
+      "returns": 655,
+      "instructions": 91617,
+      "assertions": 0
+    },
+    {
+      "control": "0x37f",
+      "returns": 655,
+      "instructions": 91617,
+      "assertions": 0
+    }
+  ],
+  "boundaries": "실제 ctor/Draw/색조회/소멸/표시등록/base. gradient/병합·힙/Host부착/소리는 선언 경계이며 실제 game/캡처/Frame/장치/전투 완주 증거가 아니다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_burningprocess_oracle.py": "79c2393c6db28291b3c68bbdb3e5da367aedf89c5b2c6d8049a64494df0e655d",
+    "tools/decomp_burning_lifetime_draw.py": "f5a4e7971e0319845f2863b1ebb68cfa2c04db528456a39d29671bec6d4932b0",
+    "cpppj/tests/fixtures/burning-lifetime-draw-x86.tsv": "9e5d319e8325b53b587a41a1091e7dd13ac32ef6cf09fa44578b102dbc0a550c"
+  }
+}

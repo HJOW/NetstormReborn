@@ -9,6 +9,7 @@
 #include "o/FieryTailVisualSystem.h"
 #include "o/LightningVisualSystem.h"
 #include "o/ShrapnelVisualSystem.h"
+#include "o/BurningVisualSystem.h"
 
 namespace netstorm::client {
 // 같은 Session의 실제 dummy/공간/캡처/의존과 부착 전 실패 삭제 경계다.
@@ -37,8 +38,10 @@ public:
     void ConnectConstruction(std::function<o::ConstructionVisualImage(o::Sid)> capture,std::function<std::int32_t(o::Sid)> maximum);
     // 실제17 표시와 캡처/입자를 만들며 부모 완료 뒤 같은 Kernel에서 종료한다.
     o::ConstructionVisualProcess* AddConstruction(o::Sid parent,bool instant);
+    void ConnectBurning(std::function<o::ConstructionVisualImage(o::Sid)> capture,std::function<void(std::uint32_t)> stopSound); // 같은14의 실제 캡처/장치 정지를 설치한다.
+    o::BurningVisualProcess* AddBurning(o::Sid victim,std::uint32_t mode); // 실제0/1 wrapper의 확보 실패는nullptr다.
     // 같은 전체 Kernel 실행 직전 현재 게임 시각을 공급한다.
-    void PrepareFrame(double now);
+    void PrepareFrame(double now,std::uint32_t frameNumber=0,bool weakenedMana=false); // 원본 현재DWORD frame과 약화 마나도 같은 월드에서 공급한다.
     // 현재 실제 카메라/표시 영역과 장치 재생성에도 유효한 dirty 경계를 갱신한다.
     void SetView(SoundView view,SurfaceDisplayHooks display);
     // 같은 원본 수집/깊이 키로 SHP와 함께 정렬할 직접 그리기 항목을 만든다.
@@ -90,5 +93,13 @@ private:
     std::vector<o::ParticleGradient> constructionGradients_; // 생성자가 요청하는 두 실제 색 띠다.
     std::unique_ptr<o::ConstructionVisualSystem> construction_; // 같은 표시 목록/Host/난수를 쓰는 실제17 수명이다.
     std::unique_ptr<o::ShrapnelVisualSystem> shrapnel_; // 실제 세계/캡처 경계가 제공된 Session의 process16이다.
+    o::BurningVisualState burningVisual_; // 같은 월드의 실제14/첫 공유 색 표다.
+    o::BurningSourcesState burningSources_; // 같은 현재 약화 마나 옵션이다.
+    o::BurningFrameState burningFrame_; // 현재 시각/카메라/16·11/바람이다. 바람 초기화의 전체Client 복원은 후속이다.
+    o::BurningDrawPalette burningColors_; // 실제8색과 인접 DWORD snapshot이다.
+    ParticlePaletteMemory burningMemory_; // 다른 표시와 공유하지 않는 실제8색 할당이다.
+    std::vector<o::ParticleGradient> burningGradients_; // 첫 생성자의 실제 색 띠 한 개다.
+    std::uint32_t burningFrameNumber_{}; // 실제487940 gate가 읽는 현재55b4a8이다.
+    std::unique_ptr<o::BurningVisualSystem> burning_; // 모든 하위가 살아 있을 때 먼저 해제하는 실제14 수명이다.
 };
 }

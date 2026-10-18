@@ -121,14 +121,16 @@ o::ShrapnelVisualProcess* RawCampaignParticles::AddShrapnel(o::Sid source,o::Shr
     try { return shrapnel_->Add(source,kind); }catch (const std::bad_alloc&) { return nullptr; }
 }
 // 원본 게임 시각을 별도 고정 틱이나 벽시각으로 대체하지 않는다.
-void RawCampaignParticles::PrepareFrame(double now) {
+void RawCampaignParticles::PrepareFrame(double now,std::uint32_t frameNumber,bool weakenedMana) {
     if (!std::isfinite(now)) throw std::invalid_argument("캠페인 입자 게임 시각 오류");frame_.now=now;constructionFrame_.now=now;
+    burningFrame_.now=now;burningFrameNumber_=frameNumber;burningSources_.weakenedMana=weakenedMana;
     if (constructionMemory_.Count()) constructionColors_.entries=constructionMemory_.Snapshot();
 }
 // 카메라가 바뀌면 표시 영역을 함께 다시 그린다. 같은 view 호출도 대기 dirty를 장치에 전달한다.
 void RawCampaignParticles::SetView(SoundView view,SurfaceDisplayHooks display) {
     const bool changed=view.cameraX!=view_.cameraX || view.cameraY!=view_.cameraY || view.left!=view_.left || view.top!=view_.top || view.right!=view_.right || view.bottom!=view_.bottom;
     view_=view;frame_.cameraX=static_cast<float>(view.cameraX);frame_.cameraY=static_cast<float>(view.cameraY);constructionFrame_.cameraX=frame_.cameraX;constructionFrame_.cameraY=frame_.cameraY;display_=std::move(display);
+    burningFrame_.cameraX=frame_.cameraX;burningFrame_.cameraY=frame_.cameraY;burningFrame_.viewport={view.left,view.top,view.right,view.bottom};
     if (changed) { pending_=DirtyRegions(view.right,view.bottom);pending_.InvalidateAll(); }FlushDirty();
 }
 // 원본 현재/이전 영역 요청을 실제 renderer 또는 제한된 대기 표로 보낸다.
@@ -167,7 +169,7 @@ std::vector<RenderSprite> RawCampaignParticles::Sprites(ScreenRect clip) {
 void RawCampaignParticles::Draw(std::uint32_t token,std::span<std::uint8_t> pixels,int pitch,int height,ScreenRect clip) {
     if (!rendering_.Lookup(token)) return;if (target_) throw std::logic_error("입자 표면 중첩 그리기 오류");
     target_=Target{pixels,pitch,height,clip};
-    try { if (memory_.Count()) colors_.readable=memory_.Snapshot();rendering_.DrawToken(token); }
+    try { if (memory_.Count()) colors_.readable=memory_.Snapshot();if (burningMemory_.Count()) burningColors_.readable=burningMemory_.Snapshot();rendering_.DrawToken(token); }
     catch (...) { target_.reset();throw; }
     target_.reset();
 }
@@ -212,5 +214,28 @@ void RawCampaignParticles::ConnectConstruction(std::function<o::ConstructionVisu
 o::ConstructionVisualProcess* RawCampaignParticles::AddConstruction(o::Sid parent,bool instant) {
     if (!construction_) throw std::logic_error("실제 건설 표시 미연결");return construction_->Add(parent,instant);
 }
+// 첫 색 표도 원본 gradient/병합 몸체로 만들고 실제 같은 단일 표시 목록을 사용한다.
+void RawCampaignParticles::ConnectBurning(std::function<o::ConstructionVisualImage(o::Sid)> capture,std::function<void(std::uint32_t)> stopSound) {
+    if (burning_ || !capture || !stopSound) throw std::invalid_argument("실제 Burning 연결 중복/필수 경계 누락");o::BurningSystemHooks hooks;
+    hooks.visual.reserve=[](std::uint32_t bytes) { if (bytes!=3600 && bytes!=8) throw std::logic_error("Burning 실제 확보량 오류");return true; }; // 실제 vector/공유 색 객체가 저장소를 소유한다.
+    hooks.visual.createPalette=[] { return 4U; }; // 색 번호와 다른 공유 객체 토큰이다.
+    hooks.visual.gradient=[this](std::array<double,3> from,std::array<double,3> to,std::uint32_t count,double width) {
+        std::array<std::uint32_t,256> logical{}; // 같은 원본 COL RGBX 입력이다.
+        for (std::size_t index=0;index<logical.size();++index) { const auto color=source_.Color(static_cast<std::uint8_t>(index));logical[index]=std::uint32_t(color.red)|(std::uint32_t(color.green)<<8)|(std::uint32_t(color.blue)<<16); } // 실제 전체 팔레트 순서를 유지한다.
+        burningGradients_.push_back(o::BuildParticleGradient(logical,from,to,static_cast<std::int32_t>(count),width));
+    };
+    hooks.visual.buildPalette=[this](std::uint32_t token) {
+        if (token!=4 || burningGradients_.size()!=1) throw std::logic_error("Burning 실제 첫 색표 연결 오류");burningMemory_.Assign(o::MergeParticleGradients(burningGradients_));burningColors_={static_cast<std::int32_t>(burningMemory_.Count()),burningMemory_.Snapshot()};burningGradients_.clear();
+    };
+    hooks.frame.capture=std::move(capture);hooks.frame.stopSound=std::move(stopSound);
+    hooks.invalidate=[this](o::SquidDisplayRect rect) { Invalidate({rect.left,rect.top,rect.right,rect.bottom}); };
+    hooks.clip=[this] { if (!target_) throw std::logic_error("Burning 실제 VFX clip 미연결");const auto& clip=target_->clip;return o::SquidDisplayRect{clip.left,clip.top,clip.right,clip.bottom}; };
+    hooks.pixel=[this](std::int32_t x,std::int32_t y,std::uint8_t color) { if (!target_ || x<0 || x>=target_->pitch || y<0 || y>=target_->height) throw std::out_of_range("Burning 실제 표면/좌표 오류");target_->pixels[static_cast<std::size_t>(y)*target_->pitch+x]=color; };
+    hooks.release=[](o::BurningRelease) {}; // 실제 버퍼와 객체는 원본 몸체/Kernel이 반납한다.
+    burningFrame_.pixelScaleX=renderState_.scaleX;burningFrame_.pixelScaleY=renderState_.scaleY;burningFrame_.cameraX=static_cast<float>(view_.cameraX);burningFrame_.cameraY=static_cast<float>(view_.cameraY);burningFrame_.viewport={view_.left,view_.top,view_.right,view_.bottom};
+    burning_=std::make_unique<o::BurningVisualSystem>(rendering_,random_,core_.types,burningVisual_,burningSources_,burningFrame_,burningColors_,burningFrameNumber_,std::move(hooks));
+}
+// wrapper의new90 실패만 자연0이며 실제 미연결/계산 오류를 숨기지 않는다.
+o::BurningVisualProcess* RawCampaignParticles::AddBurning(o::Sid victim,std::uint32_t mode) { if (!burning_) throw std::logic_error("실제 Burning14 캡처/수명 미연결");try { return burning_->Add(victim,mode); }catch (const std::bad_alloc&) { return nullptr; } }
 
 }

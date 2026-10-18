@@ -181,7 +181,7 @@
     "tools/analyze_campaign_runtime4.py": "f988e5162560d05ab9b7c7bc6c7c6b06db52775067f77d84b9cc9997021d1941",
     "tools/analyze_campaign_runtime6.py": "6446b0f2f20b4c26a74301cbb62f933cb7110f64692aea4e0cb4bf0ba19dcfce",
     ".gitattributes": "c2b3aa652dfa422b8bbd0dd82a7760cd2dd28ae5cf66bfc5b7d65887d32d8cce",
-    "cpppj/burningsources.json": "deb8d3c741b1b0e876ff5a7809c482ad2616c2ef8a760e5dfaf7f2295b142bd2",
+    "cpppj/burningsources.json": "abdc33fb3a44bc312589d02ef3b3544f5576bdc28a925884da9bee8077686444",
     "cpppj/tests/fixtures/burningsources-x86.tsv": "84abec71ace3f1cc634fbca2f3e4eec843f5d2ceb4595f7601f1db93f0b4eedd",
     "cpppj/shape-to-buffer.json": "cf2dad25690e3cfd10d125e60408a1b02c9193ee16041028d52749f463acb05a",
     "cpppj/tests/fixtures/shape-to-buffer-x86.tsv": "d92bc1a292b8f44cb87ec59ffec881f7e97db4c4b6680af92ad554af2d7c89c1",
@@ -370,6 +370,19 @@
           "path": "cpppj/shape-to-buffer.json",
           "previous": "8ebcf5c682dbeba3cc7619b5a565f8ccc200d6f99f5ade6ce0e02055a76e086a",
           "current": "cf2dad25690e3cfd10d125e60408a1b02c9193ee16041028d52749f463acb05a"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 190,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/burningsources.json",
+          "previous": "deb8d3c741b1b0e876ff5a7809c482ad2616c2ef8a760e5dfaf7f2295b142bd2",
+          "current": "abdc33fb3a44bc312589d02ef3b3544f5576bdc28a925884da9bee8077686444"
         }
       ]
     }
