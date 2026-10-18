@@ -302,15 +302,15 @@
     "cpppj/src/client/RawCampaignCarrierInput.inc": "2da03a40e490938fbd05b4f08706306a8ac3ca2fc4eaa4d5c967bfa08e7fc0f1",
     "cpppj/src/client/RawCampaignPathBindings.cpp": "2fc59e6cd111db8c953e388d1856c8e6103a8b6852461c2d3df89ec84a4f4314",
     "cpppj/src/client/RawCampaignPathBindings.h": "82d9565ece60f24300977681dffdaad57a660fdccca38b4db305d5a1d262b8b0",
-    "cpppj/src/client/RawCampaignSession.cpp": "15c2b16be0d88e6c1fa3d5644c48d348ff8a93e96dde18082ceff11874e6b8e5",
+    "cpppj/src/client/RawCampaignSession.cpp": "a26e19d72fee59b528116a2f3843058f96d82dd7d1698ef2dcfe6779adce33c3",
     "cpppj/src/client/RawCampaignSession.h": "a6d142e8d485ccf10ea834c59947a4606c5d0c033ef4b2ad00b09a0cc389a641",
     "cpppj/src/o/RawTempleRitual.cpp": "4da7a7c1516a35016897471780d92be973f3d238dfd4bf5c36548a9fe9b803bb",
     "cpppj/src/o/RawTempleRitual.h": "e5b853c7bfd9ca70c18c97d7b3f3a6e14b6e6d0ca89a6e5269e5117838937741",
     "cpppj/tests/AltarSacrificeTests.cpp": "3bcf850f018f097b44142038da311c135ae72c3b5c1e075856269f41b2adc0a1",
     "cpppj/tests/CMakeLists.txt": "16dd4ad98bd79b0d42a32a67bb6b8ad72343ad6eebbef60cecbf0e9a36224ca9",
-    "cpppj/tests/CampaignSessionTests.cpp": "de7c8ad290102b298770dee1a4bb4d6d4e7395f9e1b6d7c781379dce2071985c",
+    "cpppj/tests/CampaignSessionTests.cpp": "3d129ca4d958710ec0d6fd068fdad168a19df790fd0ec7047ea8c074d3c29e7d",
     "cpppj/tests/DaisBridgeTests.cpp": "3ddf0775e4388acad8f0a9b28d9340e8f40c24a5f66dcc980c05f7c51f3622a7",
-    "cpppj/tests/DaisLifecycleTests.cpp": "340e04e4c7fcd708b64e5f1283cc2b3c51b50e9fb906001a0edfe978ded812d9",
+    "cpppj/tests/DaisLifecycleTests.cpp": "30f2901c1e18d470e8b45ed3fb334ccd30774c0f6cefb1118ff9b886f46927b7",
     "cpppj/tests/DaisProgressTests.cpp": "2580113c0336b92d2a39efe957350d5ed25ee1af42e1f5de32e28991b3a2dacb",
     "cpppj/tests/DaisRegularTests.cpp": "6d948c39e276ed391aa1b675cb3a1d17bfab6f4c2c65934face1d42e6b84337f",
     "cpppj/tests/TempleRitualTests.cpp": "c7a397e4573f5776fb65067c5b8acfb5074d30ca30f43db7399c7416ed59fe46",
@@ -319,7 +319,7 @@
     "cpppj/tests/fixtures/priest-sacrifice-request-x86.tsv": "b0ee93daba823701bab57a5a74314251436be61ddfc7e080b02a6bc90146856f",
     "cpppj/src/o/RawPriestSacrificeRequest.h": "862c74b13191c3392a88d781f64d655755b9d57656e25950cad376d5b8c1265e",
     "cpppj/src/o/RawPriestSacrificeRequest.cpp": "600747cb205419985d13a74dce383f3d5af575a5333d0bc128b2ad1cc3080bcd",
-    "cpppj/src/client/RawCampaignRitual.inc": "6a17685f30938101dcb55c8fe2c97fabd53f0d1c8aa18b59c0c3f0f254ffea95",
+    "cpppj/src/client/RawCampaignRitual.inc": "fccae5d611cdfb2d4091720fbae150336d96b0593da06409e9300e5147060410",
     "cpppj/tests/PriestSacrificeRequestTests.cpp": "7ff575bd651d2217f0ac7d1b7bab817b7ac62d7b224c8658ce99cec6e5cfe8c4",
     "tools/decomp_ritual_shape_offsets.py": "a72baae56fc20de0de5335acf5f02c5e1a2020d052b22d04ce6dac169e64b694",
     "cpppj/ritual-shape-offsets.json": "96c98644d6c37ecaf6b3aefb6dff4b51a6ee6379dc27ff7087945ca82ac0a93b",
@@ -789,6 +789,37 @@
           "path": "cpppj/src/client/RawCampaignRitual.inc",
           "previous": "738dff29948c116d91392a8e31972a4c1656020092d0b8054b67189fa26a0f49",
           "current": "6a17685f30938101dcb55c8fe2c97fabd53f0d1c8aa18b59c0c3f0f254ffea95"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 196,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "15c2b16be0d88e6c1fa3d5644c48d348ff8a93e96dde18082ceff11874e6b8e5",
+          "current": "a26e19d72fee59b528116a2f3843058f96d82dd7d1698ef2dcfe6779adce33c3"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "de7c8ad290102b298770dee1a4bb4d6d4e7395f9e1b6d7c781379dce2071985c",
+          "current": "3d129ca4d958710ec0d6fd068fdad168a19df790fd0ec7047ea8c074d3c29e7d"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/DaisLifecycleTests.cpp",
+          "previous": "340e04e4c7fcd708b64e5f1283cc2b3c51b50e9fb906001a0edfe978ded812d9",
+          "current": "30f2901c1e18d470e8b45ed3fb334ccd30774c0f6cefb1118ff9b886f46927b7"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignRitual.inc",
+          "previous": "6a17685f30938101dcb55c8fe2c97fabd53f0d1c8aa18b59c0c3f0f254ffea95",
+          "current": "fccae5d611cdfb2d4091720fbae150336d96b0593da06409e9300e5147060410"
         }
       ]
     }

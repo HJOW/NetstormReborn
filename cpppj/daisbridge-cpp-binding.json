@@ -39,8 +39,8 @@
     "cpppj/src/o/RawCarrierPreDestroy.h": "bee50008bc4a1ebafb7c7cfd81d36a75753c718c26818d00831101e2c330dd7a",
     "cpppj/src/o/RawContainedLookup.cpp": "418921ae7f41be8c059293e1201c2539716da9e2c01808373c233e8f3d48437e",
     "cpppj/src/o/RawContainedLookup.h": "6b61feb38ffcb4a4ef021dcc39cbc759274e91b8d476f2caa14f0cf771b74410",
-    "cpppj/src/o/RawDaisRegular.cpp": "c1a167728b02f382cbae23454e4aba1046c91a7284dbe4c6e206e856ccc4c433",
-    "cpppj/src/o/RawDaisRegular.h": "fdc080a0ae1ff54909a1cf59a6b9be626e7a7d96c5103072c9325d13efb88ed3",
+    "cpppj/src/o/RawDaisRegular.cpp": "5f48cd4e706a8a904a6a03b19b2f1e235fed581159291132b632df557c4fadb2",
+    "cpppj/src/o/RawDaisRegular.h": "6d69e7b9c01b9dcc908fa0e8d2b4170f60536d9c571565e0fd1128db35fe7b73",
     "cpppj/src/o/RawPathCleanup.cpp": "3c8de01449f2773d859b31dd3485480d5cc6fbfdb9a82dae5effc4b0d9491da8",
     "cpppj/src/o/RawPathCleanup.h": "ae5012944517d2ca56cd1c19629d50c64ff65d9ee3d43f0d87b1bbe5ba0fa8d0",
     "cpppj/src/o/RawPathData.cpp": "38a2665489e998835caa07cbedb81516fae6f5e33270529a6d40f5d76d3a6a45",
@@ -265,6 +265,25 @@
           "path": "cpppj/src/o/RawTempleRitual.h",
           "previous": "d1f5ab197e92539a0c4904a5f73c0aba60392c587e20cc9a6fbfc54a881acf73",
           "current": "e5b853c7bfd9ca70c18c97d7b3f3a6e14b6e6d0ca89a6e5269e5117838937741"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 196,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawDaisRegular.cpp",
+          "previous": "c1a167728b02f382cbae23454e4aba1046c91a7284dbe4c6e206e856ccc4c433",
+          "current": "5f48cd4e706a8a904a6a03b19b2f1e235fed581159291132b632df557c4fadb2"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawDaisRegular.h",
+          "previous": "fdc080a0ae1ff54909a1cf59a6b9be626e7a7d96c5103072c9325d13efb88ed3",
+          "current": "6d69e7b9c01b9dcc908fa0e8d2b4170f60536d9c571565e0fd1128db35fe7b73"
         }
       ]
     }

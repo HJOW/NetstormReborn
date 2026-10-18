@@ -21,6 +21,12 @@ struct DaisRegularState {
     std::array<std::uint8_t,kPlayerCount+1> grantFlags{}; // 획득 시 지우는 patchPlayer+71/CDPlayer+69 BYTE다.
     std::uint32_t selectedType{},voiceCue{}; // 로컬 획득 타입 선택과 희생 종료에서 멈추는 전역 cue다.
     bool debug{}; // 패치의 사제 genus/깊이/경로 생성 assert를 확인한다. CD는 읽지 않는다.
+    std::span<std::uint8_t> playerRecords; // 실제9 Player 기록이며 비어 있으면 독립 원본 검사의 기존 배열을 사용한다.
+    OriginalEdition playerEdition{OriginalEdition::Patch1078}; // 기록의0xb4/0xac 및 필드 폭을 판본대로 해석한다.
+    void BindPlayerRecords(OriginalEdition edition,std::span<std::uint8_t> records); // 정확9기록을 같은 다이스 수명/획득이 공유한다.
+    std::uint8_t GrantFlag(std::uint32_t owner) const; // 현재+71/CD+69 BYTE를 효과 뒤 다시 읽는다.
+    void SetGrantFlag(std::uint32_t owner,std::uint8_t value); // 같은 현재 BYTE만 쓰고 다른 필드를 보존한다.
+    void SetPlayerResult(std::uint32_t owner,std::uint32_t value); // 현재+a0/CD+98 결과 DWORD를 같은 기록에 쓴다.
 };
 // 원본 chat 인자는 문장으로 추정하지 않고 요청 종류/현재 owner/원래 owner/상태값으로 넘긴다.
 struct DaisChat {

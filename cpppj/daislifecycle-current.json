@@ -105,9 +105,9 @@
     }
   },
   "files": {
-    "cpppj/src/o/RawDaisLifecycle.cpp": "b1b059a8701afcf9dd31a1efc44c13e15c5d27138f8bd1bd60a469eccb2670e1",
-    "cpppj/src/o/RawDaisLifecycle.h": "f319e757a65b541ef068418d154c369f0e39b4a77b08fd0b09dd0af472e7f365",
-    "cpppj/tests/DaisLifecycleTests.cpp": "340e04e4c7fcd708b64e5f1283cc2b3c51b50e9fb906001a0edfe978ded812d9",
+    "cpppj/src/o/RawDaisLifecycle.cpp": "e5d735f9ecea927d815c8cffe32b6bf5e14849aa4c72c1ee2710031c289f2c00",
+    "cpppj/src/o/RawDaisLifecycle.h": "f5eed7df17f021e3c80091c50603f66828e21b5d8397137ffe3223e7e5d65b10",
+    "cpppj/tests/DaisLifecycleTests.cpp": "30f2901c1e18d470e8b45ed3fb334ccd30774c0f6cefb1118ff9b886f46927b7",
     "cpppj/tests/fixtures/daislifecycle-current-x86.tsv": "916cbbdf0648018009729bb9e0d9ca1738880725498a52b5ebf3544a9f04b9e7",
     "extracted/altarsacrifice/originalCD/creation.c": "e5034176c7a40f40d247cd4fcf0a799b9df577bd383f2ce3e0bd0c18bedb6b08",
     "extracted/altarsacrifice/originalCD/functions.tsv": "6cf8241dbe95315404adaff317c75655a443a3139b5cef7670140f608edd4fc7",
@@ -176,6 +176,31 @@
           "path": "cpppj/tests/DaisLifecycleTests.cpp",
           "previous": "7bfa99f40e12b3796b6109ba8fed36c7cfdb911fbb8d898ba43cf0438d187ba4",
           "current": "340e04e4c7fcd708b64e5f1283cc2b3c51b50e9fb906001a0edfe978ded812d9"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 196,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawDaisLifecycle.cpp",
+          "previous": "b1b059a8701afcf9dd31a1efc44c13e15c5d27138f8bd1bd60a469eccb2670e1",
+          "current": "e5d735f9ecea927d815c8cffe32b6bf5e14849aa4c72c1ee2710031c289f2c00"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawDaisLifecycle.h",
+          "previous": "f319e757a65b541ef068418d154c369f0e39b4a77b08fd0b09dd0af472e7f365",
+          "current": "f5eed7df17f021e3c80091c50603f66828e21b5d8397137ffe3223e7e5d65b10"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/tests/DaisLifecycleTests.cpp",
+          "previous": "340e04e4c7fcd708b64e5f1283cc2b3c51b50e9fb906001a0edfe978ded812d9",
+          "current": "30f2901c1e18d470e8b45ed3fb334ccd30774c0f6cefb1118ff9b886f46927b7"
         }
       ]
     }

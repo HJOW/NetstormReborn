@@ -113,9 +113,9 @@
     ".gitattributes": "d8cc896fceacbb0e76b8e314b8a1adf508aaada810929b088a4d66cc9af98e8b",
     "cpppj/archertype.json": "641d8e0499c02b08036351a1f2c58bae3c46081da754b932aeabca01bf109c76",
     "cpppj/tests/fixtures/archertype-x86.tsv": "c892b554dc1f9baa161d3ca72fc1c3f891daef4e04eea44172b050c6c0e0580f",
-    "cpppj/daisregular-core.json": "948bb7bfbcaa0a5716c45bf802724d48aa54e70e2324c6ce5fe5a33f56482f50",
+    "cpppj/daisregular-core.json": "7f0e448be4ada1dae58dff8d50a43360e45d1aebf568cd4aef011b611e3456b9",
     "cpppj/tests/fixtures/daisregular-core-x86.tsv": "1af508f4d7c13401e6e9c3a5daacde2f941a83ad94332624d2b61b11173394f8",
-    "cpppj/altarsacrifice.json": "17b6cdb69171cb53a90de5f331cc46509c5e05acbbc0d3c8c70d0f2581d6bc42",
+    "cpppj/altarsacrifice.json": "9d73aa6b2adf6ea61fe6441ff6129c0739d44e9bf8281d497dc8766c2b1818ad",
     "cpppj/tests/fixtures/altarsacrifice-x86.tsv": "10ff5e1a36607b575a7de140023ee353263ea79da90991b2d58f03cd2ddccac1",
     "cpppj/islandbuilder.json": "07db88ee1f760eeefb35498c46cb1e82a40e3c44e5a398da9da9f12e5ff835bc",
     "cpppj/tests/fixtures/islandbuilder-x86.tsv": "8048e92b263b026d17d02ccf7ddf8b0a3fefa0240970c8581cf5a3ea2b6c60a4",
@@ -140,7 +140,7 @@
     "tools/analyze_dude_regular_reset_lineage.py": "c5dea09870c605552b8ca6626465328c96141476224319beeee977c75b383bee",
     "cpppj/archertype-draft-lineage.json": "7b35c854f7972fc1701b1507a78c9166ab5a66988c27d74bab0325fdfe26ff90",
     "cpppj/archertype-pop-lineage.json": "f534edbe5bd267e3a0f24022eeff23390060c80e4844b31a87062edc4a0374ee",
-    "cpppj/altarsacrifice-successor.json": "f3272f59952098122e590b90a55cca7c9903d96c06b243884bbdcd7ea7346963",
+    "cpppj/altarsacrifice-successor.json": "b3224ff5a975ba9b1e3c9173bfdb11b35b2192a7c47b4fc4c46ca2b1a38c1f63",
     "cpppj/islandbuilder-decoder-lineage.json": "81ee818daa7dd5bec2e1cdcb761a6618edbc5fb38d41490d64b2d6340a357f7a",
     "cpppj/islandbuilder-comment-lineage.json": "3b52fd4e4d9f1453fc360e91c479682be384f58fdf6f677168b81a614f3dc982",
     "cpppj/islandbuilder-partial-profile-lineage.json": "d4ec102c9dbd32e795035a890b1d51ab267ad5ca982654c667ac230a2e19d37c",
@@ -168,8 +168,8 @@
     "cpppj/hist/campaign-run-f239e/first-record-failure.log": "3fa2e88ad34aa34e166a3fa9f41d4dadaadd1e06ac9d7590f4c34d44ccacfdd3",
     "cpppj/src/o/RawArcherTypeData.h": "0b300a29c6d19ab77f8a7d8ce47715b6679ff5571389484b61e9fd1d1d45b47b",
     "cpppj/src/o/RawArcherTypeData.cpp": "8f637aea87127777b76480a23dedf2f6c920634eb06d6d6e3efc1d95bb8a3f4f",
-    "cpppj/src/o/RawDaisRegular.h": "fdc080a0ae1ff54909a1cf59a6b9be626e7a7d96c5103072c9325d13efb88ed3",
-    "cpppj/src/o/RawDaisRegular.cpp": "c1a167728b02f382cbae23454e4aba1046c91a7284dbe4c6e206e856ccc4c433",
+    "cpppj/src/o/RawDaisRegular.h": "6d69e7b9c01b9dcc908fa0e8d2b4170f60536d9c571565e0fd1128db35fe7b73",
+    "cpppj/src/o/RawDaisRegular.cpp": "5f48cd4e706a8a904a6a03b19b2f1e235fed581159291132b632df557c4fadb2",
     "cpppj/src/o/RawAltarSacrifice.h": "b5ea76ade31afcc5e075060d4847c2db774f97456c1f7d5678c979c8c027e964",
     "cpppj/src/o/RawAltarSacrifice.cpp": "987b5a4654bcf8bd66c7eaef93258b36f92f14707f95de1101f652bfaf24893b",
     "cpppj/src/o/RawDaisLifecycle.h": "1a994f4d6f0e7dfbf2e6b7232740cb94eb9a0f61ecd663b8262d2c36762d5c88",
@@ -243,6 +243,43 @@
           "path": "cpppj/tests/AltarSacrificeTests.cpp",
           "previous": "b920c0644365682a1067005957c78b521f5ce751836e93986540a3193bc2780b",
           "current": "3bcf850f018f097b44142038da311c135ae72c3b5c1e075856269f41b2adc0a1"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 196,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/daisregular-core.json",
+          "previous": "948bb7bfbcaa0a5716c45bf802724d48aa54e70e2324c6ce5fe5a33f56482f50",
+          "current": "7f0e448be4ada1dae58dff8d50a43360e45d1aebf568cd4aef011b611e3456b9"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/altarsacrifice.json",
+          "previous": "17b6cdb69171cb53a90de5f331cc46509c5e05acbbc0d3c8c70d0f2581d6bc42",
+          "current": "9d73aa6b2adf6ea61fe6441ff6129c0739d44e9bf8281d497dc8766c2b1818ad"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/altarsacrifice-successor.json",
+          "previous": "f3272f59952098122e590b90a55cca7c9903d96c06b243884bbdcd7ea7346963",
+          "current": "b3224ff5a975ba9b1e3c9173bfdb11b35b2192a7c47b4fc4c46ca2b1a38c1f63"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawDaisRegular.h",
+          "previous": "fdc080a0ae1ff54909a1cf59a6b9be626e7a7d96c5103072c9325d13efb88ed3",
+          "current": "6d69e7b9c01b9dcc908fa0e8d2b4170f60536d9c571565e0fd1128db35fe7b73"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawDaisRegular.cpp",
+          "previous": "c1a167728b02f382cbae23454e4aba1046c91a7284dbe4c6e206e856ccc4c433",
+          "current": "5f48cd4e706a8a904a6a03b19b2f1e235fed581159291132b632df557c4fadb2"
         }
       ]
     }

@@ -60,10 +60,10 @@
   },
   "currentSources": {
     "cpppj/src/CMakeLists.txt": "dd0f00ff768b18549bf3c0d3e1abe20ac13ee81b407f13e335b8de71b45271f2",
-    "cpppj/src/client/RawCampaignRitual.inc": "6a17685f30938101dcb55c8fe2c97fabd53f0d1c8aa18b59c0c3f0f254ffea95",
-    "cpppj/src/client/RawCampaignSession.cpp": "15c2b16be0d88e6c1fa3d5644c48d348ff8a93e96dde18082ceff11874e6b8e5",
+    "cpppj/src/client/RawCampaignRitual.inc": "fccae5d611cdfb2d4091720fbae150336d96b0593da06409e9300e5147060410",
+    "cpppj/src/client/RawCampaignSession.cpp": "a26e19d72fee59b528116a2f3843058f96d82dd7d1698ef2dcfe6779adce33c3",
     "cpppj/tests/CMakeLists.txt": "16dd4ad98bd79b0d42a32a67bb6b8ad72343ad6eebbef60cecbf0e9a36224ca9",
-    "cpppj/tests/CampaignSessionTests.cpp": "de7c8ad290102b298770dee1a4bb4d6d4e7395f9e1b6d7c781379dce2071985c",
+    "cpppj/tests/CampaignSessionTests.cpp": "3d129ca4d958710ec0d6fd068fdad168a19df790fd0ec7047ea8c074d3c29e7d",
     "tools/decomp_priest_ritual_frame.py": "85430a70710fde4cd7429c03cd9f4c336fa57bb5ddd77bf0029e6df4979cb054",
     "cpppj/priest-ritual-frame.json": "f915a33b38c9708c3bf080fe8a2e7bc01ad78f3897a56b9bfe609f8d12817fe8",
     "cpppj/tests/fixtures/priest-ritual-frame-x86.tsv": "f9b7cb8cf07feb33ab4e045c832555192ca600b499812d95e2fd7fe808b9710f",
@@ -103,8 +103,8 @@
     "sha256": {
       "cpppj/src/client/SoundProcess.cpp": "211d934b00419741eb584d90501429bc71ee550a013f34df50bfffc9f0d4f1b2",
       "cpppj/src/client/SoundProcess.h": "e5d672e71b6c9484a7258eec0d04482cee7bec1da7f234b6d53fb2c54f6ac575",
-      "cpppj/src/o/RawDaisRegular.cpp": "c1a167728b02f382cbae23454e4aba1046c91a7284dbe4c6e206e856ccc4c433",
-      "cpppj/src/o/RawDaisRegular.h": "fdc080a0ae1ff54909a1cf59a6b9be626e7a7d96c5103072c9325d13efb88ed3"
+      "cpppj/src/o/RawDaisRegular.cpp": "5f48cd4e706a8a904a6a03b19b2f1e235fed581159291132b632df557c4fadb2",
+      "cpppj/src/o/RawDaisRegular.h": "6d69e7b9c01b9dcc908fa0e8d2b4170f60536d9c571565e0fd1128db35fe7b73"
     }
   },
   "nativeInstructionAccounting": {
@@ -360,5 +360,44 @@
     "실제 Dais/제단 최초Pop·내용물 통지·보상 선택과 Altar24·희생 완료/승리. 현재는 선택mask4가 없어 원본처럼 다섯 Rune 뒤 대기한다",
     "Dais stopVoice와 획득/UI 관련10개는 명시 미연결이며 빈 성공으로 처리하지 않는다",
     "자연 포획/운반·실제 창 의식, 전진 플랫폼/신전 파괴, Dude 초기화/드롭·아이스147·훨리기그 무기/귀환·전략AI·11단계 자연 완주와 전체 원본 동일성"
+  ],
+  "integration_updates": [
+    {
+      "date": "2026-10-19",
+      "unit": 196,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignRitual.inc",
+          "previous": "6a17685f30938101dcb55c8fe2c97fabd53f0d1c8aa18b59c0c3f0f254ffea95",
+          "current": "fccae5d611cdfb2d4091720fbae150336d96b0593da06409e9300e5147060410"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "15c2b16be0d88e6c1fa3d5644c48d348ff8a93e96dde18082ceff11874e6b8e5",
+          "current": "a26e19d72fee59b528116a2f3843058f96d82dd7d1698ef2dcfe6779adce33c3"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "de7c8ad290102b298770dee1a4bb4d6d4e7395f9e1b6d7c781379dce2071985c",
+          "current": "3d129ca4d958710ec0d6fd068fdad168a19df790fd0ec7047ea8c074d3c29e7d"
+        },
+        {
+          "group": "/soundReuse/sha256",
+          "path": "cpppj/src/o/RawDaisRegular.cpp",
+          "previous": "c1a167728b02f382cbae23454e4aba1046c91a7284dbe4c6e206e856ccc4c433",
+          "current": "5f48cd4e706a8a904a6a03b19b2f1e235fed581159291132b632df557c4fadb2"
+        },
+        {
+          "group": "/soundReuse/sha256",
+          "path": "cpppj/src/o/RawDaisRegular.h",
+          "previous": "fdc080a0ae1ff54909a1cf59a6b9be626e7a7d96c5103072c9325d13efb88ed3",
+          "current": "6d69e7b9c01b9dcc908fa0e8d2b4170f60536d9c571565e0fd1128db35fe7b73"
+        }
+      ]
+    }
   ]
 }

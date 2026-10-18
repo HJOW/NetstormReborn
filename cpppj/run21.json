@@ -474,10 +474,10 @@
     "cpppj/src/o/RawContainedLookup.h": "6b61feb38ffcb4a4ef021dcc39cbc759274e91b8d476f2caa14f0cf771b74410",
     "cpppj/src/o/RawDaisContentNotice.cpp": "b9e133088cc63b2e3edd85e3001691fd9f7b9c4975300b65d9a77ff0d2723426",
     "cpppj/src/o/RawDaisContentNotice.h": "b6f9537d0ee19137440f0f63f10ea5436b6acafdcead95270792f6d2810fbc6f",
-    "cpppj/src/o/RawDaisLifecycle.cpp": "b1b059a8701afcf9dd31a1efc44c13e15c5d27138f8bd1bd60a469eccb2670e1",
-    "cpppj/src/o/RawDaisLifecycle.h": "f319e757a65b541ef068418d154c369f0e39b4a77b08fd0b09dd0af472e7f365",
-    "cpppj/src/o/RawDaisRegular.cpp": "c1a167728b02f382cbae23454e4aba1046c91a7284dbe4c6e206e856ccc4c433",
-    "cpppj/src/o/RawDaisRegular.h": "fdc080a0ae1ff54909a1cf59a6b9be626e7a7d96c5103072c9325d13efb88ed3",
+    "cpppj/src/o/RawDaisLifecycle.cpp": "e5d735f9ecea927d815c8cffe32b6bf5e14849aa4c72c1ee2710031c289f2c00",
+    "cpppj/src/o/RawDaisLifecycle.h": "f5eed7df17f021e3c80091c50603f66828e21b5d8397137ffe3223e7e5d65b10",
+    "cpppj/src/o/RawDaisRegular.cpp": "5f48cd4e706a8a904a6a03b19b2f1e235fed581159291132b632df557c4fadb2",
+    "cpppj/src/o/RawDaisRegular.h": "6d69e7b9c01b9dcc908fa0e8d2b4170f60536d9c571565e0fd1128db35fe7b73",
     "cpppj/src/o/RawDamageableBurning.cpp": "70f763107dd0a8ec1934fc15d61f2b76d21513cd9931c39beea5a455665e30a6",
     "cpppj/src/o/RawDamageableBurning.h": "aaa63da16cc567245c04044c2d112c04999e485b81566e6dae6a4ed4a8d164f9",
     "cpppj/src/o/RawDamageableHit.cpp": "0241f2b64ae7ca087c9e24fb1cbd59ed358e99cb61819c86fbfd5e3ab756e31c",
@@ -788,7 +788,7 @@
     "cpppj/tests/CursorDropTests.cpp": "fa6b14faf43f86d772b47efcdca060af447403c4ebccaa17f2cdc47ed1823b21",
     "cpppj/tests/DaisBridgeTests.cpp": "3ddf0775e4388acad8f0a9b28d9340e8f40c24a5f66dcc980c05f7c51f3622a7",
     "cpppj/tests/DaisContentNoticeTests.cpp": "0910eea05e084038064d47340c0bba546b74b292f6a25491db8fecb1744fe1d3",
-    "cpppj/tests/DaisLifecycleTests.cpp": "340e04e4c7fcd708b64e5f1283cc2b3c51b50e9fb906001a0edfe978ded812d9",
+    "cpppj/tests/DaisLifecycleTests.cpp": "30f2901c1e18d470e8b45ed3fb334ccd30774c0f6cefb1118ff9b886f46927b7",
     "cpppj/tests/DaisProgressTests.cpp": "2580113c0336b92d2a39efe957350d5ed25ee1af42e1f5de32e28991b3a2dacb",
     "cpppj/tests/DaisRegularTests.cpp": "6d948c39e276ed391aa1b675cb3a1d17bfab6f4c2c65934face1d42e6b84337f",
     "cpppj/tests/DaisRitualConsumerTests.cpp": "d7281b79127c73900f1b4e68292e8b51e4ed7d386d57cc0ee90f6b78cc7e45e5",
@@ -2302,6 +2302,43 @@
           "path": "cpppj/src/CMakeLists.txt",
           "previous": "db65c86795904ce8929fcd469008e42591ce86e539d2139aee9b53a588fdfa5f",
           "current": "dd0f00ff768b18549bf3c0d3e1abe20ac13ee81b407f13e335b8de71b45271f2"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 196,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawDaisLifecycle.cpp",
+          "previous": "b1b059a8701afcf9dd31a1efc44c13e15c5d27138f8bd1bd60a469eccb2670e1",
+          "current": "e5d735f9ecea927d815c8cffe32b6bf5e14849aa4c72c1ee2710031c289f2c00"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawDaisLifecycle.h",
+          "previous": "f319e757a65b541ef068418d154c369f0e39b4a77b08fd0b09dd0af472e7f365",
+          "current": "f5eed7df17f021e3c80091c50603f66828e21b5d8397137ffe3223e7e5d65b10"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawDaisRegular.cpp",
+          "previous": "c1a167728b02f382cbae23454e4aba1046c91a7284dbe4c6e206e856ccc4c433",
+          "current": "5f48cd4e706a8a904a6a03b19b2f1e235fed581159291132b632df557c4fadb2"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawDaisRegular.h",
+          "previous": "fdc080a0ae1ff54909a1cf59a6b9be626e7a7d96c5103072c9325d13efb88ed3",
+          "current": "6d69e7b9c01b9dcc908fa0e8d2b4170f60536d9c571565e0fd1128db35fe7b73"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/tests/DaisLifecycleTests.cpp",
+          "previous": "340e04e4c7fcd708b64e5f1283cc2b3c51b50e9fb906001a0edfe978ded812d9",
+          "current": "30f2901c1e18d470e8b45ed3fb334ccd30774c0f6cefb1118ff9b886f46927b7"
         }
       ]
     }

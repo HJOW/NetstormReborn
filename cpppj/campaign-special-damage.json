@@ -59,7 +59,7 @@
   "currentSources": {
     "cpppj/src/client/RawCampaignHitBindings.cpp": "fe6c9e3d7ed0e3106cc9773ef1e852985eb0805c38eab283c63c8d82c0f89b83",
     "cpppj/src/client/RawCampaignHitBindings.h": "143b27b14df75669a0a79805c801e51f0aa7d7de90082d881094bb3fdbf1349d",
-    "cpppj/src/client/RawCampaignSession.cpp": "15c2b16be0d88e6c1fa3d5644c48d348ff8a93e96dde18082ceff11874e6b8e5",
+    "cpppj/src/client/RawCampaignSession.cpp": "a26e19d72fee59b528116a2f3843058f96d82dd7d1698ef2dcfe6779adce33c3",
     "cpppj/src/o/CMakeLists.txt": "531d0fd71823841eb97eebb5046f878c52fa44d82142af3fdff9c0fb68c2497a",
     "cpppj/tests/CMakeLists.txt": "16dd4ad98bd79b0d42a32a67bb6b8ad72343ad6eebbef60cecbf0e9a36224ca9",
     "tools/decomp_special_damage.py": "1c92b56b1c000238486f67c6b8ea31eed677e8ce598305d528a24a65cd6c0628",
@@ -493,6 +493,19 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "21bd45a29dd3e12e823655856464233c4a766a0eb28b6b1aae96012c76caf2b8",
           "current": "16dd4ad98bd79b0d42a32a67bb6b8ad72343ad6eebbef60cecbf0e9a36224ca9"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 196,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "15c2b16be0d88e6c1fa3d5644c48d348ff8a93e96dde18082ceff11874e6b8e5",
+          "current": "a26e19d72fee59b528116a2f3843058f96d82dd7d1698ef2dcfe6779adce33c3"
         }
       ]
     }

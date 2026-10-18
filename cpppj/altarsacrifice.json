@@ -196,8 +196,8 @@
   "files": {
     "cpppj/src/o/RawAltarSacrifice.cpp": "987b5a4654bcf8bd66c7eaef93258b36f92f14707f95de1101f652bfaf24893b",
     "cpppj/src/o/RawAltarSacrifice.h": "b5ea76ade31afcc5e075060d4847c2db774f97456c1f7d5678c979c8c027e964",
-    "cpppj/src/o/RawDaisRegular.cpp": "c1a167728b02f382cbae23454e4aba1046c91a7284dbe4c6e206e856ccc4c433",
-    "cpppj/src/o/RawDaisRegular.h": "fdc080a0ae1ff54909a1cf59a6b9be626e7a7d96c5103072c9325d13efb88ed3",
+    "cpppj/src/o/RawDaisRegular.cpp": "5f48cd4e706a8a904a6a03b19b2f1e235fed581159291132b632df557c4fadb2",
+    "cpppj/src/o/RawDaisRegular.h": "6d69e7b9c01b9dcc908fa0e8d2b4170f60536d9c571565e0fd1128db35fe7b73",
     "cpppj/tests/AltarSacrificeTests.cpp": "3bcf850f018f097b44142038da311c135ae72c3b5c1e075856269f41b2adc0a1",
     "cpppj/tests/DaisRegularTests.cpp": "6d948c39e276ed391aa1b675cb3a1d17bfab6f4c2c65934face1d42e6b84337f",
     "cpppj/tests/fixtures/altarsacrifice-x86.tsv": "10ff5e1a36607b575a7de140023ee353263ea79da90991b2d58f03cd2ddccac1",
@@ -269,6 +269,25 @@
           "path": "cpppj/tests/DaisRegularTests.cpp",
           "previous": "95ab33f6dbf170375d1d7ccc109f15f4bdfda3fbf7e50bb96f6f3b5a4f093527",
           "current": "6d948c39e276ed391aa1b675cb3a1d17bfab6f4c2c65934face1d42e6b84337f"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 196,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawDaisRegular.cpp",
+          "previous": "c1a167728b02f382cbae23454e4aba1046c91a7284dbe4c6e206e856ccc4c433",
+          "current": "5f48cd4e706a8a904a6a03b19b2f1e235fed581159291132b632df557c4fadb2"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawDaisRegular.h",
+          "previous": "fdc080a0ae1ff54909a1cf59a6b9be626e7a7d96c5103072c9325d13efb88ed3",
+          "current": "6d69e7b9c01b9dcc908fa0e8d2b4170f60536d9c571565e0fd1128db35fe7b73"
         }
       ]
     }

@@ -84,6 +84,8 @@
 #include "o/RawDaisRegular.h"
 #include "o/RawPriestSacrificeRequest.h"
 #include "o/RawPriestRitualFrame.h"
+#include "o/RawDaisLifecycle.h"
+#include "o/RawDaisContentNotice.h"
 #include "o/RawVortexPreDestroy.h"
 #include "o/RawBuriedPostPop.h"
 #include "o/RawBuriedRegular.h"
@@ -263,6 +265,15 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawTempleRitual> templeRitual; // 같은 SHP/지면/생성/Host의 의식 단계 몸체다.
     std::unique_ptr<RawRunePostPop> runePostPop; // 같은 실제 룬 건설/304 후처리다.
     std::unique_ptr<DaisRegularState> daisState; // 현재 원본 상태 참조와 방향별 동맹이다.
+    double loginEnd{}; // 실제005c85f0의 로그인 종료 벽시각이며 로그인과 Dais 최초Pop이 같은 값을 읽는다.
+    AltarSacrificeState altarState; // 실제 제단 저항 주기/확률이며 난수는 같은 게임 저장소를 사용한다.
+    std::unique_ptr<RawFrameAdvance> ritualAdvance; // 같은 SquidFrame으로 제단20/22/24 프레임을 진행한다.
+    std::unique_ptr<RawAltarSacrifice> altarSacrifice; // 같은 포획/해방/저항과 다이스 파생 전처리다.
+    std::unique_ptr<DaisLifecycleState> daisLifecycleState; // 실제 로그인/로딩 및 공유 Player 기록을 빌린다.
+    std::unique_ptr<RawDaisLifecycle> daisLifecycle; // 실제165/164 최초Pop과 파생 삭제 전체 몸체다.
+    std::unique_ptr<DaisContentNoticeState> daisNoticeState; // 현재 사제/로컬/cue의 별도 포획 내용물 통지 상태다.
+    std::unique_ptr<RawDaisContentNotice> daisNotice; // 내용물 부모+24에서 실제 제단O/원래 owner를 갱신한다.
+    std::function<void(Sid)> ritualExplosion; // 공통 피해 전처리와 제단24가 같은 실제4605d0 폭발 효과를 사용한다.
     std::unique_ptr<RawDaisRegular> daisRegular; // 기존 원본 자격/의식 이동/단계 진행이다.
     std::unique_ptr<RawPriestSacrificeRequest> sacrificeRequest; // 사용자 입력과 서버40h가 공유하는 wrapper다.
     std::unique_ptr<void,void(*)(void*)> pendingRitualSound{nullptr,[](void* storage) { ::operator delete(storage); }}; // Dais 지연 소리의 new40 확보 한 번을 같은 Sound47 생성까지 보관한다.
@@ -888,9 +899,9 @@ struct RawCampaignSession::Impl {
                 if (event.effect==SquidDestroyEffect::PostDestroy) { geyserLifetime->PostDestroy(event.sid,event.flags);return; }
             }
             // 다이스 미리보기의 extra8은44afd0의 큰 일반 전처리를 건너뛴다. 실제 VT/타입/비트를 모두 확인한다.
-            if (PreviewDais(event.sid)) {
-                if (event.effect==SquidDestroyEffect::PreDestroy) { damageablePre->PreDestroy(event.sid,event.flags);return; }
-                if (event.effect==SquidDestroyEffect::PostDestroy) { DestroyPreviewDaisSlots(event.sid);PrepareDamageablePost();damageablePost->PostDestroy(event.sid,event.flags);return; }
+            if (daisLifecycle && daisLifecycle->Handles(event.sid)) {
+                if (event.effect==SquidDestroyEffect::PreDestroy) { PrepareRitual();if (altarSacrifice->Handles(event.sid)) daisLifecycle->AltarPreDestroy(event.sid,event.flags);else altarSacrifice->DaisPreDestroy(event.sid,event.flags);return; }
+                if (event.effect==SquidDestroyEffect::PostDestroy) { daisLifecycle->PostDestroy(event.sid,event.flags);return; }
             }
             if (PlainDamageable(event.sid) || SunFence(event.sid) || Nugget(event.sid)) {
                 if (event.effect==SquidDestroyEffect::PreDestroy) { if (SunFence(event.sid)) fenceLifetime->PreDestroy(event.sid,event.flags);else damageablePre->PreDestroy(event.sid,event.flags);return; }
@@ -920,11 +931,12 @@ struct RawCampaignSession::Impl {
         worldHooks.assets=priests->DestroyHooks(std::move(worldHooks.assets)); // 실제4919b0의 목록·보호막·Carrier 전처리를 같은 삭제 호출에 연결한다.
         auto previousDestroy=std::move(worldHooks.destroy); // 실제 신전 VT의 공통+10만 추가 분배한다.
         worldHooks.destroy=[this,previous=std::move(previousDestroy)](Sid sid,std::uint32_t flags,const SquidDestroyHooks& hooks) {
-            if (BridgeLifetime(sid) || BridgeConnector(sid) || geyserLifetime->Handles(sid) || Vortex(sid) || FenceCommon(sid) || Flyer(sid) || balloonBody->Handles(sid) || VisualDummy(sid) || PlainDamageable(sid) || SunFence(sid) || Nugget(sid) || PreviewDais(sid) || PriestForcefield(sid) || PlainCarrierLifetime(sid) || PriestLifetime(sid) || BuriedLifetime(sid) || BombLifetime(sid) || RuneLifetime(sid)) return core.virtualDestroy.Destroy(sid,flags,hooks);return previous(sid,flags,hooks);
+            if (BridgeLifetime(sid) || BridgeConnector(sid) || geyserLifetime->Handles(sid) || Vortex(sid) || FenceCommon(sid) || Flyer(sid) || balloonBody->Handles(sid) || VisualDummy(sid) || PlainDamageable(sid) || SunFence(sid) || Nugget(sid) || (daisLifecycle && daisLifecycle->Handles(sid)) || PriestForcefield(sid) || PlainCarrierLifetime(sid) || PriestLifetime(sid) || BuriedLifetime(sid) || BombLifetime(sid) || RuneLifetime(sid)) return core.virtualDestroy.Destroy(sid,flags,hooks);return previous(sid,flags,hooks);
         };
         buriedRegular=std::make_unique<RawBuriedRegular>(core.pool,core.frames,core.frame,random);
         auto actualRegular=hits->Handler(combat->Handler(assetBindings->Handler(buriedRegular->Handler(priests->RegularHandler([this](Sid sid,std::uint32_t event,std::uint32_t count,float payload) {
             if (daisRegular && daisRegular->Handles(sid)) { PrepareRitual();return daisRegular->Handle(sid,event,count,payload); }
+            if (altarSacrifice && altarSacrifice->Handles(sid)) { PrepareRitual();return altarSacrifice->Handle(sid,event,count,payload); }
             if (playerRegular->Handles(sid)) return playerRegular->Handle(sid,event,count,payload);
             if (manaRegular && manaRegular->Handles(sid)) return manaRegular->Run(sid,event,count);
             if (nuggetRegular && nuggetRegular->Handles(sid)) return nuggetRegular->Handle(sid,event,count,payload);
@@ -1071,16 +1083,6 @@ struct RawCampaignSession::Impl {
     bool BridgeConnector(Sid sid) const { const auto raw=core.pool.Slot(sid);return raw[10]==core.bridgeState.connectorType && Read(raw,0)==0x503360U; }
     // Rune166/VT5075d8의+14/+18은 공통4b0950/4b0840이다. Damageable 전처리/드롭으로 대체하지 않는다.
     bool RuneLifetime(Sid sid) const { const auto raw=core.pool.Slot(sid);return raw[10]==runeState.runeType && Read(raw,0)==0x5075d8U; }
-    // 실제507950/+10=4af780이며 extra8일 때44afd0의선행 일반 효과가 없다. 살아 있는 다이스 전체로 확장하지 않는다.
-    bool PreviewDais(Sid sid) const { const auto raw=core.pool.Slot(sid);return raw[10]==runeState.daisType && Read(raw,0)==0x00507950 && (raw[40]&8)!=0; }
-    // 449580/기존 RawDaisLifecycle.PostDestroy의 두 SID 쌍을 같은 실제9×b4 Player 저장소에 연결한다.
-    void DestroyPreviewDaisSlots(Sid sid) {
-        const auto owner=core.pool.Slot(sid)[34];if (!owner) return;
-        if (owner>8) throw std::out_of_range("다이스 미리보기 현재 Player 범위 오류");
-        auto record=std::span(players).subspan(static_cast<std::size_t>(owner)*180,180);
-        // 원본은 second94/98을 먼저, first8c/90을 다음에 처리하며 일치하지 않는 쌍은 보존한다.
-        for (const std::size_t offset:{0x94U,0x8cU}) if (Read(record,offset)==sid.value) { Put(record,offset,0);Put(record,offset+4,Read(record,offset)); }
-    }
     // 썬 바리케이드의 특수457990 전처리는 다른 일반 Damageable에 적용하지 않는다.
     bool SunFence(Sid sid) const { const auto raw=core.pool.Slot(sid);return raw[10]==136 && Read(raw,0)==0x509470; }
     // 보호50dc30의+14는484f80→44b4b0 thunk이며+18/+10도기존Damageable/공통삭제다. 메뉴 범위와는 별개다.
@@ -1461,7 +1463,7 @@ struct RawCampaignSession::Impl {
         pre.base=[this](Sid sid,std::uint32_t flags) { world.CommonDeletion().PreDestroy(sid,flags); };
         pre.releaseContained=[this](Sid sid) { damageableReleaseState.battle=core.ownerMode.battle;damageableRelease->Release(sid); };
         bombPre=std::make_unique<RawBombPreDestroy>(core.pool,BombPreDestroyHooks{pre.explosion,[this](float x,float y) { if (!services.sound.playOnceAt) throw std::logic_error("Bomb 실제폭발음향 미연결");services.sound.playOnceAt(x,y,soundNames.Lookup("explosion.wav"),0,0); },pre.base}); // 큰폭발과공통전처리는같은실제몸체를공유한다.
-        damageablePre=std::make_unique<RawDamageablePreDestroy>(core.pool,core.spots,contentFinder,damageablePreState,std::move(pre));priests->BindDamageable(*damageablePre);
+        ritualExplosion=pre.explosion;damageablePre=std::make_unique<RawDamageablePreDestroy>(core.pool,core.spots,contentFinder,damageablePreState,std::move(pre));priests->BindDamageable(*damageablePre);
         flyerPre=std::make_unique<RawFlyerPreDestroy>(core.pool,FlyerPreDestroyHooks{[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); },[this](Sid sid,std::uint32_t flags) { damageablePre->PreDestroy(sid,flags); }});
         auto post=services.damageablePost;
         if (!post.dropDude) post.dropDude=[this](Sid source,std::int32_t index,bool randomPoint) { dudeDrop->Drop(source,index,randomPoint); };
@@ -1654,6 +1656,7 @@ struct RawCampaignSession::Impl {
             CarrierContentNoticeState{contentSavedGame,objectState.loadingDepth,contentBombBlocked,playerState.battleOwner,priestState.movement.priest,contentScreenOrigin[0],contentScreenOrigin[1],priestState.movement.rainWalker},std::move(carrierEffects));
         auto otherParentNotice=services.contentNotice;
         ContentFormNotice parentNotice=[this,other=std::move(otherParentNotice)](Sid parent,Sid form,std::uint32_t reason) {
+            if (daisNotice && daisNotice->Handles(parent)) { daisNotice->Notice(parent,form,reason);return; }
             if (factoryResearch && factoryResearch->HandlesNotice(parent)) { factoryResearch->Notice(parent,form,reason);return; }
             if (carrierContentNotice->Handles(parent)) { carrierContentNotice->Notice(parent,form,reason);return; }
             if (!other) throw std::logic_error("다른 캠페인 내용물 실제 부모 통지 미연결");other(parent,form,reason);

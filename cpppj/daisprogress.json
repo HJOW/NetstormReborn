@@ -179,8 +179,8 @@
   "files": {
     "cpppj/src/o/RawAltarSacrifice.cpp": "987b5a4654bcf8bd66c7eaef93258b36f92f14707f95de1101f652bfaf24893b",
     "cpppj/src/o/RawAltarSacrifice.h": "b5ea76ade31afcc5e075060d4847c2db774f97456c1f7d5678c979c8c027e964",
-    "cpppj/src/o/RawDaisRegular.cpp": "c1a167728b02f382cbae23454e4aba1046c91a7284dbe4c6e206e856ccc4c433",
-    "cpppj/src/o/RawDaisRegular.h": "fdc080a0ae1ff54909a1cf59a6b9be626e7a7d96c5103072c9325d13efb88ed3",
+    "cpppj/src/o/RawDaisRegular.cpp": "5f48cd4e706a8a904a6a03b19b2f1e235fed581159291132b632df557c4fadb2",
+    "cpppj/src/o/RawDaisRegular.h": "6d69e7b9c01b9dcc908fa0e8d2b4170f60536d9c571565e0fd1128db35fe7b73",
     "cpppj/tests/fixtures/daisprogress-x86.tsv": "20f5ddd2486a3b592db3a4f77a8f18200a9ec4f46cec5f43355d86cf1f215cea",
     "extracted/altarsacrifice/originalCD/creation.c": "e5034176c7a40f40d247cd4fcf0a799b9df577bd383f2ce3e0bd0c18bedb6b08",
     "extracted/altarsacrifice/originalCD/functions.tsv": "6cf8241dbe95315404adaff317c75655a443a3139b5cef7670140f608edd4fc7",
@@ -232,5 +232,26 @@
     "tools/ghidra/runepostpop-functions.json": "7c81be957505c039f275dfd2a94c6109454a2d3d42cbb90fc58708a62158662e",
     "tools/ghidra/templeritual-functions.json": "2d8fabc0bcb8774371707aad07bc36dbe6011b0dcf5208a15f1c7cf745748cec"
   },
-  "scope": "실제Progress/Rune304/감김306와제단payload. 음향장치/벽시계/가상공간/Factory/마지막전체Damageable는명시경계. Bridge 실제Path와전체같은Host/Pool 의식소비자는아직미완료."
+  "scope": "실제Progress/Rune304/감김306와제단payload. 음향장치/벽시계/가상공간/Factory/마지막전체Damageable는명시경계. Bridge 실제Path와전체같은Host/Pool 의식소비자는아직미완료.",
+  "integration_updates": [
+    {
+      "date": "2026-10-19",
+      "unit": 196,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawDaisRegular.cpp",
+          "previous": "c1a167728b02f382cbae23454e4aba1046c91a7284dbe4c6e206e856ccc4c433",
+          "current": "5f48cd4e706a8a904a6a03b19b2f1e235fed581159291132b632df557c4fadb2"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawDaisRegular.h",
+          "previous": "fdc080a0ae1ff54909a1cf59a6b9be626e7a7d96c5103072c9325d13efb88ed3",
+          "current": "6d69e7b9c01b9dcc908fa0e8d2b4170f60536d9c571565e0fd1128db35fe7b73"
+        }
+      ]
+    }
+  ]
 }

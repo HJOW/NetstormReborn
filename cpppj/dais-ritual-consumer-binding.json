@@ -52,9 +52,9 @@
     "cpppj/dais-postpop-lineage.json": "84ee44dea93b419aeacc0c4373f31417e0155598c5793d2673d957d654da1f99",
     "cpppj/daiscontentnotice.json": "c19e57e53ad014c56a84dbf7b95dceed3745054fe57fd2de6402090a920dc293",
     "cpppj/daiscontentnotice-successor.json": "1cc5fb93b17c7cac79f7273be392086e7bd251a05fdb1a0660066b417ebf6000",
-    "cpppj/daislifecycle-current.json": "542801f0fc802480520ef1347d1e89d984e112f565eea18b9252748dac538348",
+    "cpppj/daislifecycle-current.json": "d4291f82156b0f19af9dd0ddd0c2a9cd526b38c2f9053b1ee79680121fb80fbe",
     "cpppj/daislifecycle-current-successor.json": "ab6de655d74a296ad39a7d5d9e06a1cc504590537b778da75af6e0ef984717d2",
-    "cpppj/daisprogress.json": "231f0f5c69197cf430830e483f0a9dff1585e437f9740e9f149641030b5dc31c",
+    "cpppj/daisprogress.json": "4e3b872afadfbb30a14284e73fb98f7e576cf9641473d074e57e0d0b1af048c7",
     "cpppj/damageablepostdestroy.json": "83ee40686f3029ba90e93a1b027bd1b5113eb8625847d3e361c630005818c616",
     "cpppj/damageablepostdestroy-lineage.json": "d78b3c443b76add24307b86d6af23f8bcb1a13f635b5067edd33868d1f68fae3",
     "cpppj/hist/dais-ritual-47665/cpppj/tests/DaisRitualConsumerTests.cpp": "9223b7c68f6ed18a00f0fee8d0f7fee81840bb4c3f8b08b36ce05f1ca5900cfc",
@@ -70,10 +70,10 @@
     "cpppj/src/o/RawCarrierPreDestroy.h": "bee50008bc4a1ebafb7c7cfd81d36a75753c718c26818d00831101e2c330dd7a",
     "cpppj/src/o/RawDaisContentNotice.cpp": "b9e133088cc63b2e3edd85e3001691fd9f7b9c4975300b65d9a77ff0d2723426",
     "cpppj/src/o/RawDaisContentNotice.h": "b6f9537d0ee19137440f0f63f10ea5436b6acafdcead95270792f6d2810fbc6f",
-    "cpppj/src/o/RawDaisLifecycle.cpp": "b1b059a8701afcf9dd31a1efc44c13e15c5d27138f8bd1bd60a469eccb2670e1",
-    "cpppj/src/o/RawDaisLifecycle.h": "f319e757a65b541ef068418d154c369f0e39b4a77b08fd0b09dd0af472e7f365",
-    "cpppj/src/o/RawDaisRegular.cpp": "c1a167728b02f382cbae23454e4aba1046c91a7284dbe4c6e206e856ccc4c433",
-    "cpppj/src/o/RawDaisRegular.h": "fdc080a0ae1ff54909a1cf59a6b9be626e7a7d96c5103072c9325d13efb88ed3",
+    "cpppj/src/o/RawDaisLifecycle.cpp": "e5d735f9ecea927d815c8cffe32b6bf5e14849aa4c72c1ee2710031c289f2c00",
+    "cpppj/src/o/RawDaisLifecycle.h": "f5eed7df17f021e3c80091c50603f66828e21b5d8397137ffe3223e7e5d65b10",
+    "cpppj/src/o/RawDaisRegular.cpp": "5f48cd4e706a8a904a6a03b19b2f1e235fed581159291132b632df557c4fadb2",
+    "cpppj/src/o/RawDaisRegular.h": "6d69e7b9c01b9dcc908fa0e8d2b4170f60536d9c571565e0fd1128db35fe7b73",
     "cpppj/src/o/RawDamageablePostDestroy.cpp": "c70069e2dc850b8f1496aee07008c03ffb1655ff5943365334a4938ead99fb18",
     "cpppj/src/o/RawDamageablePostDestroy.h": "16404ca3857f952ab7809ed370d68b36158e2c834290d76eb4bbc85b2b3fdf03",
     "cpppj/src/o/RawDamageablePreDestroy.cpp": "9090ded5973c22c6cb75d45dc04be75fe7996cd6449fb10cc875759fdde36a11",
@@ -174,6 +174,49 @@
           "path": "cpppj/daislifecycle-current.json",
           "previous": "ebddbaf5d99a5ef65d2fba8140316571cdec4e3f8de7b2dcd4b131fa4b4ffb29",
           "current": "542801f0fc802480520ef1347d1e89d984e112f565eea18b9252748dac538348"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 196,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/daislifecycle-current.json",
+          "previous": "542801f0fc802480520ef1347d1e89d984e112f565eea18b9252748dac538348",
+          "current": "d4291f82156b0f19af9dd0ddd0c2a9cd526b38c2f9053b1ee79680121fb80fbe"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/daisprogress.json",
+          "previous": "231f0f5c69197cf430830e483f0a9dff1585e437f9740e9f149641030b5dc31c",
+          "current": "4e3b872afadfbb30a14284e73fb98f7e576cf9641473d074e57e0d0b1af048c7"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawDaisLifecycle.cpp",
+          "previous": "b1b059a8701afcf9dd31a1efc44c13e15c5d27138f8bd1bd60a469eccb2670e1",
+          "current": "e5d735f9ecea927d815c8cffe32b6bf5e14849aa4c72c1ee2710031c289f2c00"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawDaisLifecycle.h",
+          "previous": "f319e757a65b541ef068418d154c369f0e39b4a77b08fd0b09dd0af472e7f365",
+          "current": "f5eed7df17f021e3c80091c50603f66828e21b5d8397137ffe3223e7e5d65b10"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawDaisRegular.cpp",
+          "previous": "c1a167728b02f382cbae23454e4aba1046c91a7284dbe4c6e206e856ccc4c433",
+          "current": "5f48cd4e706a8a904a6a03b19b2f1e235fed581159291132b632df557c4fadb2"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawDaisRegular.h",
+          "previous": "fdc080a0ae1ff54909a1cf59a6b9be626e7a7d96c5103072c9325d13efb88ed3",
+          "current": "6d69e7b9c01b9dcc908fa0e8d2b4170f60536d9c571565e0fd1128db35fe7b73"
         }
       ]
     }

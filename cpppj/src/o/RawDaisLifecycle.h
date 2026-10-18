@@ -12,7 +12,7 @@ struct DaisPlayerSlots {
 };
 // 로딩/게임초기시각/원래플레이어 저장소를 실제 공통모듈과 공유한다.
 struct DaisLifecycleState {
-    double& gameTime; // patch005c85f0/CD00564db8의현재초기게임시각이다. Process clock.now와 다른 전역이다.
+    double& gameTime; // 기존 API명이며 실제patch005c85f0/CD00564db8 로그인 종료 벽시각이다. Process clock.now가 아니다.
     CarrierPostPopState& loading; // 같은 DamageablePostPop의 loadingDepth 전역이다.
     std::array<DaisPlayerSlots,kPlayerCount+1> players{}; // owner0..8의현재Player 필드를저장한다.
 };
@@ -50,6 +50,8 @@ public:
 private:
     std::uint32_t Owner(Sid sid) const; // 현재raw ownerBYTE를효과뒤다시읽는다.
     void Player(std::uint32_t owner) const; // 현재owner0..8저장범위다.
+    std::uint32_t PlayerField(std::uint32_t owner,std::size_t field) const; // first/mirror/second/mirror/home DWORD를 현재 기록 또는 독립 입력에서 읽는다.
+    void SetPlayerField(std::uint32_t owner,std::size_t field,std::uint32_t value) const; // SID 쌍을 원본 DWORD 폭으로 바꾼다.
     void DaisPostPop(Sid sid,std::uint32_t flags) const; // 실제165최초Pop과현재player등록/경고분기다.
     void WriteFrame(Sid sid,std::int32_t frame) const; // 로딩초기화의표시없는직접쓰기다.
     SidPool& pool_; // 실제현재raw풀이다.

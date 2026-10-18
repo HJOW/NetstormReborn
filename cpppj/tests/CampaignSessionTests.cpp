@@ -2256,3 +2256,23 @@ TEST_CASE(CampaignSacrifice_Native30ActualShapeOffsets) {
     }
     CHECK(count==30);CHECK(core.shapes[165].frames[3].hotspotX==107 && core.shapes[165].frames[3].muzzleX==-89);std::cout<<"실제 의식 헤더30입력/Anchor·Point 전수 일치: 표시107,96과 목표-89,-46 구별\n";
 }
+
+// 실제 Factory/전체Pop의 제단 생성·Player 등록과 부착 통지/제단 저항을 확인한다. 자연 포획 입력은 아니다.
+TEST_CASE(CampaignDais_ActualFactoryPopAndCapturedNotice) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();InputQueue commands;netstorm::zacket::LocalMissionTransport* wire{};std::vector<std::string> music;services.carrierRequest=[&](std::int32_t owner,std::span<const std::uint8_t> packet) { CHECK(wire);if (wire) wire->Send(owner,packet); };services.requestMusic=[&](std::string_view name) { music.emplace_back(name); };services.assets.queueCommand=[&](std::uint32_t command,std::int32_t x,std::int32_t y) { commands.PushCommand(command,x,y); }; // 실제 입력 큐와 자산을 쓴다.
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));session.Load();auto core=session.Core();SessionPickupWire link(session);wire=&link.transport;const auto dais=session.World().Create(165);core.owner.Set(dais,1);session.World().Pop(dais,100,111,0); // 합법 배치/UI 건설 검사가 아닌 명시 생성 위치다.
+    const auto altars=ConstructionLive(core,164);CHECK(altars.size()==1);if (altars.size()!=1) return;const auto altar=altars[0];CHECK(Get(core.pool.Slot(dais),36)==3 && Get(core.pool.Slot(altar),36)==0);CHECK(core.pool.Slot(altar)[34]==1 && core.processes.FindEvent(altar,21));CHECK(Get(session.PlayerRecords(),0xb4+0x8c)==dais.value && Get(session.PlayerRecords(),0xb4+0x90)==dais.value); // 전체Pop이 실제Player와 같은 풀을 바꿨는지 확인한다.
+    while (!commands.Empty()) static_cast<void>(commands.Pop(false)); // 기존 로드 명령과 이번 부착 명령을 구분한다.
+    const auto captured=session.CreateContained(dais,158,0x82,32,0,0);CHECK(Get(core.pool.Slot(altar),12,2)==2);CHECK(Get(core.pool.Slot(altar),36)==static_cast<std::uint32_t>(core.frames[164].Run('O').first));CHECK((core.pool.Slot(captured)[11]&3U)==0); // 원래owner의 하위7비트와 O프레임은 실제 부모 통지가 쓴다.
+    const auto notice=commands.Pop(false);CHECK(notice.code==0x020000d7 && notice.x==0 && notice.y==0); // PE00542a50의 실제 명령을 음향 정지로 바꾸지 않는다.
+    const auto began=core.processState.now;for (std::uint64_t step=1;step<=160;++step) session.RunFrame({began+double(step)*.025,100+double(step)*.025,.025,1000+step},false); // 같은 Kernel에서 제단21/20 또는22를 진행한다.
+    CHECK(core.processes.FindEvent(altar,21));
+    const Sid priest{static_cast<std::uint16_t>(session.FindPriestParticipation(1))};const RawPathPoint point{100,111};auto input=session.MakeCarrierInput({});auto target=point;CHECK(input->Evaluate(priest,target)==0x11);session.RequestCarrierMove(priest,target,1);link.transport.Flush();CHECK(link.transport.Poll()==1 && link.recorded.size()==1 && music==std::vector<std::string>{"sacrifice.mus"}); // 실제 공간의 Dais를 사용자 이동 명령으로 선택한다.
+    const auto ritualBegan=core.processState.now;std::size_t born{},retired{};bool live{}; // 결과를 쓰지 않고 실제 룬 수명의 전이를 센다.
+    for (std::uint64_t step=1;step<=8000 && retired<5;++step) { // 최대200초 동안 경로 도착과 다섯 룬을 같은 Kernel에서 진행한다.
+        const auto now=ritualBegan+double(step)*.025;session.RunFrame({now,100+now,.025,2000+step},false);const auto runes=ConstructionLive(core,166);const bool current=!runes.empty();if (current && !live) ++born;if (!current && live) ++retired;live=current;
+    }
+    CHECK(born==5 && retired==5 && Get(core.pool.Slot(dais),36)==47 && !core.processes.FindEvent(priest,604));CHECK((core.pool.Slot(captured)[11]&3U)==0); // 보상 선택/희생 완료를 주입하지 않는다.
+    std::cout<<"전체Pop 실제 Dais 해시"<<std::uint32_t(core.pool.Slot(dais)[33])<<"/UI17→40h→경로→룬5 자연 진행\n";
+    std::cout<<"실제 Dais"<<dais.value<<"/제단"<<altar.value<<" 생성·Player 등록·내용물O/owner2 통지·4초 저항 진행\n";
+}

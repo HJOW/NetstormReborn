@@ -26,6 +26,23 @@ std::int32_t Integer(float value) {
     return static_cast<std::int32_t>(value);
 }
 }
+// 실제 Player 기록은 장기 주소를 빌리며 판본별 정확한9기록 크기를 요구한다.
+void DaisRegularState::BindPlayerRecords(OriginalEdition edition,std::span<std::uint8_t> records) {
+    if (records.size()!=9U*(edition==OriginalEdition::Patch1078 ? 0xb4U : 0xacU)) throw std::invalid_argument("다이스 실제 Player 기록 크기 오류");playerRecords=records;playerEdition=edition;
+}
+// 독립 입력과 실제 세션 기록을 같은 현재 조회 규칙으로 읽는다.
+std::uint8_t DaisRegularState::GrantFlag(std::uint32_t owner) const {
+    if (owner>kPlayerCount) throw std::out_of_range("다이스 grant Player 범위");return playerRecords.empty() ? grantFlags[owner] : playerRecords[owner*(playerEdition==OriginalEdition::Patch1078 ? 0xb4U : 0xacU)+(playerEdition==OriginalEdition::Patch1078 ? 0x71U : 0x69U)];
+}
+// 실제 BYTE 하나만 쓰며 독립 검사의 배열 동작은 그대로 유지한다.
+void DaisRegularState::SetGrantFlag(std::uint32_t owner,std::uint8_t value) {
+    if (owner>kPlayerCount) throw std::out_of_range("다이스 grant Player 범위");if (playerRecords.empty()) grantFlags[owner]=value;else playerRecords[owner*(playerEdition==OriginalEdition::Patch1078 ? 0xb4U : 0xacU)+(playerEdition==OriginalEdition::Patch1078 ? 0x71U : 0x69U)]=value;
+}
+// 결과의DWORD 폭과 바이트 순서를 보존한다.
+void DaisRegularState::SetPlayerResult(std::uint32_t owner,std::uint32_t value) {
+    if (owner>kPlayerCount) throw std::out_of_range("다이스 결과 Player 범위");if (playerRecords.empty()) { playerResults[owner]=value;return; }const auto at=owner*(playerEdition==OriginalEdition::Patch1078 ? 0xb4U : 0xacU)+(playerEdition==OriginalEdition::Patch1078 ? 0xa0U : 0x98U); // 판본별 결과 필드다.
+    for (std::size_t index=0;index<4;++index) playerRecords[at+index]=static_cast<std::uint8_t>(value>>(index*8)); // 인접 필드는 변경하지 않는다.
+}
 // 같은 풀과 실제 필수효과의 누락을 첫 원본 상태 변경 전에 거부한다.
 RawDaisRegular::RawDaisRegular(SidPool& pool,const SquidHash& hash,std::span<const RiftTypeRecord> types,std::span<const RiftTypeFrames> frames,
     const RawTempleRitual& ritual,const RawRunePostPop& rune,const RawCarrierPreDestroy& carrier,SquidProcessHost& host,
@@ -139,7 +156,7 @@ void RawDaisRegular::BridgeCommand(Sid dais,Sid priest,std::uint32_t currentStag
 }
 // patch의비로컬획득과CD의생략분기를추가추정없이보존한다.
 void RawDaisRegular::GrantCapturedType(std::uint32_t type,std::uint32_t owner) const {
-    Player(owner);const bool local=owner==state_.localOwner;state_.grantFlags[owner]=0;const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
+    Player(owner);const bool local=owner==state_.localOwner;state_.SetGrantFlag(owner,0);const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
     if (type==state_.nuggetType) { if (local) { hooks_.addLocalSp(5000);hooks_.chat({DaisChat::Kind::Stormpower}); }else if (patch) hooks_.normalizeForeignSp(owner);return; }
     if (type==state_.noIslandType) { if (local) hooks_.localSpecial(0);return; }
     if (local) { hooks_.localType(type);state_.selectedType=type; }else if (patch) hooks_.grantForeignType(owner,type);
@@ -148,11 +165,11 @@ void RawDaisRegular::GrantCapturedType(std::uint32_t type,std::uint32_t owner) c
 void RawDaisRegular::FinishSacrifice(Sid dais) const {
     hooks_.stopVoice(state_.voiceCue,0,0);const auto altar=rune_.AltarAt(dais);if (!altar.value) throw std::logic_error("Dais altarSid assert");hooks_.setFrame(altar,First(altar,'P'),0);const auto originalOwner=Read(pool_.Slot(altar),12,2);
     if (!state_.rune.suppressDuration && Contained(dais,4,pool_.Slot(dais)[10]).value) {
-        const auto count=ritual_.Count(dais);if (count>=kUpgradeFirst.size()) throw std::out_of_range("Dais 다음 첫 프레임 범위");hooks_.setFrame(dais,kUpgradeFirst[count],0);Player(Owner(dais));state_.playerResults[Owner(dais)]=ritual_.Count(dais);
+        const auto count=ritual_.Count(dais);if (count>=kUpgradeFirst.size()) throw std::out_of_range("Dais 다음 첫 프레임 범위");hooks_.setFrame(dais,kUpgradeFirst[count],0);Player(Owner(dais));state_.SetPlayerResult(Owner(dais),ritual_.Count(dais));
         auto captured=Contained(dais,0,pool_.Slot(dais)[10]);if (captured.value && captured.value<pool_.Capacity()) hooks_.destroy(captured,kConsumedFlags);captured=Contained(dais,0,state_.ritual.priestType);
         if (captured.value && captured.value<pool_.Capacity()) { hooks_.destroy(captured,kConsumedFlags);auto raw=pool_.AllocatedBytes(altar);raw[12]=raw[13]=0; }
         if (Owner(dais)==state_.localOwner) hooks_.chat({DaisChat::Kind::Upgrade});
-    } else { const auto type=CapturedWord(dais);if (!state_.rune.suppressDuration) GrantCapturedType(type,Owner(dais));Player(Owner(dais));state_.playerResults[Owner(dais)]=type; }
+    } else { const auto type=CapturedWord(dais);if (!state_.rune.suppressDuration) GrantCapturedType(type,Owner(dais));Player(Owner(dais));state_.SetPlayerResult(Owner(dais),type); }
     // 원본은항상플레이어1..8을순서대로갱신한다.
     for (std::uint32_t owner=1;owner<=kPlayerCount;++owner) hooks_.refreshOwner(owner);
     if (!state_.rune.suppressDuration) {

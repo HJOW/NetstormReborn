@@ -22,7 +22,7 @@ struct RawCampaignSession::Impl::Login {
     bool simul{},saved{},adjust{};std::uint8_t overrideFlags{},title{},battleByte{}; //현재단독미션의설정/저장/제목과BYTE 상태다.
     std::uint32_t pendingStamp{},activeStamp{},zoneWord{},begin{},fortCount{},lastPlayer{},predictable{},beginSeed{},battleSeed{},burst{},clockStamp{},baseClock{},central{},archipelago{},optionValue{},outpost{},coreActive{}; //원본로그인전역의 실제현재저장소다.
     std::uint32_t zonePending{},ticks{},source{},randomSeed{},metaRefresh{},metaRebuild{},scriptBreak{},requestPhase{},uiMode{},inputMode{}; //원본상태/입력/타이머가 공유하는DWORD다.
-    double captureEnd{},connectEnd{},activityEnd{},loginEnd{},wall{};std::int32_t timeout{}; //서로 다른 원본 벽시각 타이머다.
+    double captureEnd{},connectEnd{},activityEnd{},wall{};std::int32_t timeout{}; //서로 다른 원본 벽시각 타이머다.
     std::array<std::uint32_t,7> settingValues{1,0,0,0,0,1,8}; //실제초기7DWORD이며현재패널/디버그전역을서로별개로보존한다.
     std::vector<std::uint8_t> wireTypes; //실제수신한패킷종류의 진단기록이며 분기를 대신하지 않는다.
     //선택한 실제 장치가 빠지면 그 지점에서 명시 오류를 보인다.
@@ -93,10 +93,10 @@ struct RawCampaignSession::Impl::Login {
         MissionClientPacketHooks receive;receive.clock=effects.clock;receive.wallSeconds=effects.wallSeconds;receive.runState=[this] { state->Run(); };receive.resetCamera=s.services.install.resetCamera;receive.refreshSp=effects.refresh;
         receive.updateRange=[this] { options->UpdateRange(); };receive.requiredEnergy=[this] { return options->TypeCost(); };receive.setEnergyType=[this](float value) { options->SetSelectedTypeCost(value); };receive.readOptionValue=[this] { return options->CurrentValue(); };
         receive.addChat=s.services.ai.participation.addChat;receive.playerUiBusy=effects.playerUiBusy;receive.playerNotice=effects.playerNotice;receive.send=send;receive.sendReady=[this](std::uint32_t target) { server->SendReady(target); };
-        client=std::make_unique<RawMissionClientPackets>(s.players,*s.participation,s.sp,MissionClientPacketState{s.core.processState.server,s.assetState.boss,s.globals.missionPost,saved,s.core.ownerMode.challenge,s.assetState.inBattle,s.globals.editor,outpost,s.playerState,beginSeed,battleSeed,s.revision,optionValue,begin,clockStamp,baseClock,blocks[1][0],blocks[3][0],blocks[3][14],blocks[4][0],source,coreActive,captureEnd,loginEnd,currentCore,cachedCore,Zone(),s.battleOptions,s.handle,s.hiddenPlayers},std::move(receive));
+        client=std::make_unique<RawMissionClientPackets>(s.players,*s.participation,s.sp,MissionClientPacketState{s.core.processState.server,s.assetState.boss,s.globals.missionPost,saved,s.core.ownerMode.challenge,s.assetState.inBattle,s.globals.editor,outpost,s.playerState,beginSeed,battleSeed,s.revision,optionValue,begin,clockStamp,baseClock,blocks[1][0],blocks[3][0],blocks[3][14],blocks[4][0],source,coreActive,captureEnd,s.loginEnd,currentCore,cachedCore,Zone(),s.battleOptions,s.handle,s.hiddenPlayers},std::move(receive));
         MissionLoginTimerHooks timing;timing.configInt=[this](std::string_view key) { return Need(effects.configInt)(key,30); };timing.wallSeconds=effects.wallSeconds;timing.clock=effects.clock;timing.broadcast=[this](std::span<const std::uint8_t> bytes) { if (effects.observePacket) Need(effects.log)("Timer broadcast local"+std::to_string(s.assetState.localOwner)+"\n");s.broadcast->Send(bytes); };timing.priestRefresh=[this](std::uint32_t player) { s.priestParticipation->Refresh(player); };
         timing.saveReconnect=[this] { if (!s.globals.missionPost) throw std::logic_error("일반전투 재접속 저장 미연결"); };timing.closeProgress=effects.refresh;timing.log=[this](MissionLoginTimerLog,std::string_view text) { Need(effects.log)(text); };
-        timer=std::make_unique<RawMissionLoginTimer>(OriginalEdition::Patch1078,MissionLoginTimerState{loginEnd,timeout,begin,scriptBreak,requestPhase,baseClock},counts,MissionLoginTimerReads{[this] { return saved; },[this] { return s.core.processState.server; },[this] { return s.objectState.mission; },[this] { return s.globals.missionPost; },[this] { return s.assetState.boss; },[this] { return s.gunState.checking; }},std::move(timing));
+        timer=std::make_unique<RawMissionLoginTimer>(OriginalEdition::Patch1078,MissionLoginTimerState{s.loginEnd,timeout,begin,scriptBreak,requestPhase,baseClock},counts,MissionLoginTimerReads{[this] { return saved; },[this] { return s.core.processState.server; },[this] { return s.objectState.mission; },[this] { return s.globals.missionPost; },[this] { return s.assetState.boss; },[this] { return s.gunState.checking; }},std::move(timing));
         RegisterMissionLogin(transport->Dispatch(),*server);RegisterMissionClientPackets(transport->Dispatch(),*client);RegisterMissionMetadata(transport->Dispatch(),*metadata);RegisterMissionSettingsPacket(transport->Dispatch(),*settings);
         // 원본3d 등록의 observer는0040b380의 빈 반환이고 version1/mismatch0이다.
         transport->Dispatch().Observe(0x3d,[](std::uint32_t) {});transport->Dispatch().Version(0x3d,1,0);
@@ -123,5 +123,5 @@ struct RawCampaignSession::Impl::Login {
         if (!s.loaded || blocks[1][0]!=14 || !(s.players[s.playerState.battleOwner*0xb4+0x50]&1)) throw std::logic_error("실제 로컬 미션 로그인 미완료");
     }
     //현재 송신을flush한 뒤 실제 큐를 분배한다. 프레임 계산은 기존Kernel이 수행한다.
-    void Pump() { wall=Need(effects.wallSeconds)();transport->Flush();static_cast<void>(transport->Poll());if (loginEnd!=0.0) timer->Run(false); }
+    void Pump() { wall=Need(effects.wallSeconds)();transport->Flush();static_cast<void>(transport->Poll());if (s.loginEnd!=0.0) timer->Run(false); }
 };

@@ -17,7 +17,46 @@ void AddRitualRegular(Sid sid,std::uint32_t event,float payload,std::uint32_t ty
     auto* attached=static_cast<RegularProcess*>(core.processes.Attach(std::move(pendingRitualRegular),type,sid,0x50)); // 서버/로컬61·46 Form 정책을 그대로 사용한다.
     if (attached) attached->SetNextTime(core.processState.now);
 }
-// 의식 자격/이동/초기 Rune 진행을 연결한다. 희생 완료의 장치/UI/파생 수명 미복원은 명시 오류로 남긴다.
+// 실제452fe0의 세 인자를 단일 클라이언트 입력 큐로 보낸다. 기존 stopVoice hook명은 API 호환을 위해 유지한다.
+void RitualCommand(std::uint32_t command,std::uint32_t first,std::uint32_t second) {
+    if (!services.assets.queueCommand) throw std::logic_error("다이스 실제 입력 명령 큐 미연결");services.assets.queueCommand(command,std::bit_cast<std::int32_t>(first),std::bit_cast<std::int32_t>(second));
+}
+// 실제164/165 최초Pop·제단20~24·내용물 부모+24·파생 삭제를 같은 월드에 연결한다.
+void ConnectDaisLifecycle() {
+    ritualAdvance=std::make_unique<RawFrameAdvance>(core.pool,core.frames,core.frame);
+    AltarSacrificeHooks altar; // 실제 같은 난수/프레임/경로/폭발과 명령 큐다.
+    altar.destroy=[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); };
+    altar.reserveShared=[this] { return ReserveRitualRegular(); };
+    altar.playAt=[this](float x,float y,std::string_view name,std::uint32_t flags) { if (!services.sound.playOnceAt) throw std::logic_error("제단 실제 위치 음향 미연결");services.sound.playOnceAt(x,y,soundNames.Lookup(name),flags,0); };
+    altar.playGlobal=[this](std::string_view name,std::uint32_t loop,std::uint32_t volume,std::uint32_t pan,std::uint32_t priority,std::uint32_t limit) { if (!services.sound.play) throw std::logic_error("제단 실제 전역 음향 미연결");services.sound.play(soundNames.Lookup(name),loop,volume,pan,priority,limit); };
+    altar.removeAnimation=ritualExplosion; // 원본4605d0은 일반 폭발 효과이며 피해 전처리와 같은 몸체를 쓴다.
+    altar.unpop=[this](Sid sid,std::uint32_t flags) { world.Unpop(sid,flags); };altar.repop=[this](Sid sid,std::uint32_t flags) { world.Repop(sid,flags); };
+    altar.setOwner=[this](Sid sid,std::uint32_t owner) { core.owner.Set(sid,owner); };altar.pop=[this](Sid sid,float x,float y,std::uint32_t flags) { world.Pop(sid,x,y,flags); };
+    altar.escapeEffect=[this](Sid sid,float distance,std::uint32_t event) { if (!carrierEscape) throw std::logic_error("제단 해방 실제 회피 설치 전 호출");static_cast<void>(carrierEscape->Run(sid,distance,event)); };
+    altar.refreshOwner=[this](std::uint32_t owner) { priestParticipation->Refresh(owner); };
+    altar=MakeAltarSacrificeHooks(core.pool,core.frame,core.processes,core.factory,assetBindings->Regular(),random,std::move(altar));
+    altar.addShared=[this](Sid sid,std::uint32_t event,float payload) { AddRitualRegular(sid,event,payload,61); }; // 앞서 확보한 같은 Regular를 사용한다.
+    altarSacrifice=std::make_unique<RawAltarSacrifice>(core.pool,core.hash,core.types,core.frames,core.neighbors,*runePostPop,*templeRitual,priests->Carrier(),*daisRegular,*ritualAdvance,core.processes,*damageablePre,*daisState,altarState,std::move(altar));
+    daisLifecycleState=std::make_unique<DaisLifecycleState>(DaisLifecycleState{loginEnd,carrierState});
+    DaisLifecycleHooks life; // 같은 현재 Player 기록과 실제 공간·생성·예약의 수명 효과다.
+    life.setFrame=[this](Sid sid,std::int32_t frame,std::uint32_t flags) { core.frame.Set(sid,frame,flags); };
+    life.unpop=[this](Sid sid,std::uint32_t flags) { world.Unpop(sid,flags); };life.repop=[this](Sid sid,std::uint32_t flags) { world.Repop(sid,flags); };
+    life.create=[this](std::uint32_t type,std::uint32_t flags) { return core.factory.Create(type,flags); };life.setOwner=[this](Sid sid,std::uint32_t owner) { core.owner.Set(sid,owner); };life.pop=[this](Sid sid,float x,float y,std::uint32_t flags) { world.Pop(sid,x,y,flags); };
+    life.reserveRegular=[this] { return ReserveRitualRegular(); };life.addRegular=[this](Sid sid,std::uint32_t event,float payload) { AddRitualRegular(sid,event,payload,46); };
+    life.surface=[this](float x,float y) { return RawPathSurfaceAt(core.hash,{x,y}); };
+    life.hasIsland=[this](Sid sid) { const auto genus=core.types[core.pool.Slot(sid)[10]].flags2;return (genus&2U)!=0 && (genus&0x1000000U)==0; }; // 실제4acdf0은 TYPE genus를 검사한다.
+    life.islandNumber=[this](Sid sid) { const auto raw=core.pool.Slot(sid);const auto genus=core.types[raw[10]].flags2;if (!(genus&0x1000006U)) throw std::logic_error("다이스 원본 섬 번호 genus 진단");return (genus&4U) ? 127U : Read(raw,8)&0xffffU; }; // 실제4acda0의 WORD/다리 분기다.
+    life.option=[this](std::string_view key) { if (!services.construction.configInt) throw std::logic_error("다이스 현재 설정 조회 미연결");return services.construction.configInt(key,0)!=0; };
+    FillMissing(life.chat); // 별도 경고 UI가 필요한 분기는 명시 경계로 남긴다.
+    life.destroy=[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); };life.damageablePostDestroy=[this](Sid sid,std::uint32_t flags) { PrepareDamageablePost();damageablePost->PostDestroy(sid,flags); };
+    daisLifecycle=std::make_unique<RawDaisLifecycle>(core.pool,core.hash,core.types,core.neighbors,*templeRitual,*altarSacrifice,*carrier,*damageablePre,*daisState,altarState,*daisLifecycleState,std::move(life));core.postPop.SetDaisPostPop(daisLifecycle.get());
+    daisNoticeState=std::make_unique<DaisContentNoticeState>(DaisContentNoticeState{priestState.movement.priest,playerState.battleOwner,0x020000d7});
+    DaisContentNoticeHooks notice; // plain 제단 프레임/WORD와 원본 입력 명령의 실제 부모 통지다.
+    notice.unpop=[this](Sid sid,std::uint32_t flags) { world.Unpop(sid,flags); };notice.repop=[this](Sid sid,std::uint32_t flags) { world.Repop(sid,flags); };
+    notice.stopVoice=[this](std::uint32_t cue,std::uint32_t first,std::uint32_t second) { RitualCommand(cue,first,second); };notice.notifySurface=[this](Sid sid) { core.building.NotifySurface(sid); };
+    daisNotice=std::make_unique<RawDaisContentNotice>(core.pool,core.frames,*runePostPop,*daisNoticeState,std::move(notice));
+}
+// 의식 자격/이동/룬 진행을 연결한다. 희생 완료의 획득/UI 미복원은 명시 오류로 남긴다.
 void ConnectRitual() {
     ritualLookup=std::make_unique<RawContainedLookup>(core.pool,[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); });
     PriestRitualFrameHooks frame; // 실제 같은 Host/Frame/위치 소리로604를 처리한다.
@@ -43,6 +82,7 @@ void ConnectRitual() {
     rune.startConstruction=[this](Sid sid,float duration) { PrepareBuilding(core.processState.now);building->Start(sid,duration); };
     runePostPop=std::make_unique<RawRunePostPop>(core.pool,core.hash,core.types,runeState,core.postPop,std::move(rune));core.postPop.SetRunePostPop(runePostPop.get());
     daisState=std::make_unique<DaisRegularState>(DaisRegularState{ritualState,runeState,core.processState,rewardState,playerState.battleOwner});
+    daisState->BindPlayerRecords(core.pool.Edition(),players);daisState->voiceCue=0x020000df; // PE00542a70의 실제 희생 종료 명령이다.
     DaisRegularHooks dais; // 실제 의식 이동/초기 진행의 필수 효과와 아직 미연결인 후반 경계다.
     dais.setFrame=[this](Sid sid,std::int32_t value,std::uint32_t flags) { core.frame.Set(sid,value,flags); };
     dais.destroy=[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); };
@@ -60,7 +100,7 @@ void ConnectRitual() {
     };
     dais.wallSeconds=services.sound.wallSeconds;
     dais.setSoundStart=[this](std::uintptr_t form,double time) { if (form>65535) throw std::out_of_range("다이스 소리 Form 번호 범위");auto* process=dynamic_cast<SoundProcess*>(core.processes.FromForm(Sid{static_cast<std::uint16_t>(form)}));if (!process) throw std::logic_error("다이스 현재 Sound47 누락");process->SetStartTime(time); }; // 같은 절대 시각을 쓰며 벽시계를 다시 읽지 않는다.
-    FillMissing(dais.stopVoice);
+    dais.stopVoice=[this](std::uint32_t cue,std::uint32_t first,std::uint32_t second) { RitualCommand(cue,first,second); }; // 기존 hook명과 달리 실제452fe0은 입력 명령 큐다.
     FillMissing(dais.addLocalSp);FillMissing(dais.normalizeForeignSp);FillMissing(dais.grantForeignType);FillMissing(dais.localSpecial);FillMissing(dais.localType);FillMissing(dais.refreshOwner);FillMissing(dais.refreshLocal);FillMissing(dais.priestExists);FillMissing(dais.multiplayerStatus);FillMissing(dais.chat);
     daisRegular=std::make_unique<RawDaisRegular>(core.pool,core.hash,core.types,core.frames,*templeRitual,*runePostPop,priests->Carrier(),core.processes,*ritualLookup,motion->Paths().Starter(),*daisState,std::move(dais));
     PriestSacrificeRequestHooks request; // 두 wrapper는 실제 같은 Dais/내용물/음악을 호출한다.
@@ -75,5 +115,5 @@ void ConnectRitual() {
     };
     request.command=[this](Sid dais,Sid priest,std::uint32_t current) { PrepareRitual();daisRegular->BridgeCommand(dais,priest,current); };
     request.music=[this](std::string_view name) { if (!services.requestMusic) throw std::logic_error("희생 의식 실제 음악 요청 미연결");services.requestMusic(name); };
-    sacrificeRequest=std::make_unique<RawPriestSacrificeRequest>(core.pool,motionState.cleanup.nuggetType,playerState.battleOwner,std::move(request));PrepareRitual();
+    sacrificeRequest=std::make_unique<RawPriestSacrificeRequest>(core.pool,motionState.cleanup.nuggetType,playerState.battleOwner,std::move(request));PrepareRitual();ConnectDaisLifecycle();
 }
