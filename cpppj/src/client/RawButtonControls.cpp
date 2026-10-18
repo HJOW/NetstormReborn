@@ -23,6 +23,7 @@ constexpr std::uint32_t kRefreshProductionEvent=0x02000003;
 }
 // 기본·돌 버튼·배경은 같은 기본 노드 주소로 조회되며 저장소 이동은 하지 않는다.
 struct RawButtonControls::Impl {
+    ProductionMaintenanceGlobals productionGlobals;ProductionMaintenancePanel productionPanel; // 전역 TYPE 시계/추첨 순번과 현재 월드 패널 필드는 다시 그려도 보존한다.
     // create: 등록 표 +0이 실제 루트다. 외부에서 표를 바꿀 때 collection.root도 같은 토큰으로 맞춰야 한다 (GumpCreateState).
     GumpCreateState create;/* life: 원본의 고정 크기 idle/overlay/삭제/dialog 표와 현재 삭제 전역이다 (GumpLifetimeState). */ GumpLifetimeState life;/* treeState: 원본 지도 화면 영역과 패치판의 밀어내기 링크 진단 전역이다 (GumpTreeState). */ GumpTreeState treeState;/* eventState: 원본 전체 트리 커서 선택의 현재 좌표/필터/최소 signed 깊이/선택 토큰 전역이다 (GumpEventState). */ GumpEventState eventState;/* inputState: overlay 처리기는 호출자의 사건 대신 원본의 별도 사건 코드 전역을 사용한다 (GumpInputState). */ GumpInputState inputState;
     // buttonState: 실행 중 문자열 ID 전역 네 개와 기본 버튼 색 BYTE다. 사건 ID는 호출자가 실제 초기화 값을 공급한다 (ButtonGumpState).
@@ -208,10 +209,10 @@ RawProductionControls& RawButtonControls::EnableProduction(RawCampaignSession& s
         [&s](auto token) { const auto it=s.backgrounds.find(token);return it==s.backgrounds.end() ? nullptr : it->second.get(); },
         [&s] { return ++s.nextToken; },[&s](auto token) { return s.Node(token); },
         [&s](auto token,float x,float y,auto parent,auto mode) { s.Attach(token,x,y,parent,mode); },[&s] { s.changed=true; }};
-    s.production=std::make_unique<RawProductionControls>(std::move(tree),*s.menus,session,assets,std::move(hooks));s.production->Open();return *s.production;
+    s.production=std::make_unique<RawProductionControls>(std::move(tree),*s.menus,session,assets,s.productionGlobals,s.productionPanel,std::move(hooks));s.production->Open();return *s.production;
 }
 RawProductionControls* RawButtonControls::Production() const { return impl_->production.get(); } // 같은 현재 처리기다.
-void RawButtonControls::DisableProduction() { if (impl_->production) { impl_->production->Close();impl_->production.reset(); } } // 월드보다 먼저 반납한다.
+void RawButtonControls::DisableProduction() { if (impl_->production) { impl_->production->Close();impl_->production.reset(); }impl_->productionPanel={}; } // 월드를 떠날 때 패널 필드만 새로 만들며 TYPE 시계와 순번은 전역 수명을 유지한다.
 
 // Form소유ID는알림시점의등록표에서해석하고기본가상+4의지연Kill만요청한다.
 o::GumpFormNotice RawButtonControls::ObjectNotice() const {

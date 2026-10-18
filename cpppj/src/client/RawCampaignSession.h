@@ -40,6 +40,7 @@
 namespace netstorm::o { class RawCarrierSteal; class RawCarrierPickup; class RawCarrierMove; class RawGemReward; struct MissionStartGlobals; struct MissionAiSettingsState; } // 포획 몸체와 미션 시작 전역의 고정 참조만 공개한다.
 namespace netstorm::client {
 class RawCampaignCursor; // 세션과 같은 실제 커서/로컬 예측의 고정 주소 소유자다.
+class RawProductionMaintenance;struct ProductionMaintenanceGlobals;struct ProductionMaintenancePanel; // 생산 전역/패널의 단일 상태를 빌리는 실제 유지 처리기다.
 struct CursorPlacementHooks; // 실제 커서 배치의 설명/에너지 경계만 연결할 때 사용한다.
 // 실제 Client의 메뉴 작성·번역·Chat·정적 문자열 수명을 공급한다. 게임 계산 훅은 factory가 같은 세션으로 교체한다.
 struct CampaignObjectMenuUi {
@@ -176,6 +177,7 @@ public:
     void SynchronizeProductionContents(); // 실제43ec00(first1)의43df80 직접 호출이다.
     const o::ContainedFinderState& ProductionFinder() const; // 같은 현재 내용물 검색 전역이다.
     bool UpdateProductionContents(); // 실제현재모드/부모/dirty→Deck 재계산→43df80 단락이다.
+    std::unique_ptr<RawProductionMaintenance> MakeProductionMaintenance(ProductionMaintenanceGlobals& globals,ProductionMaintenancePanel& panel,std::function<double()> wall,std::function<void(std::uint32_t)> refresh); // 같은 현재 Player/SP/난수/생성/삭제를 실제 UI 유지에 연결한다.
     // 실제 PlayerWorld가 공유하는00595344 DWORD를 읽는다. subscriber/Ready와 합치지 않는다.
     std::uint32_t PlayerKnown() const;
     // 실제 캠페인 로더와 같은005c85a4 DWORD를 읽는다.

@@ -2,14 +2,16 @@
 #pragma once
 #include "client/RawMenuControls.h"
 #include "client/RawCampaignSession.h"
+#include "client/RawProductionMaintenance.h"
 namespace netstorm::client {
 struct RawProductionHooks {
     std::function<double()> now; // 원본 벽 시계다.
     std::function<void(std::string_view)> sound,tell; // 실제 음향과 미션 알림이다.
+    std::function<std::int32_t(std::string_view,std::int32_t)> configInt; // 같은 현재 Client 설정과 원본 누락 기본값이다.
 };
 class RawProductionControls {
 public:
-    RawProductionControls(RawMenuTree tree,RawMenuControls& menus,RawCampaignSession& session,const GameAssets& assets,RawProductionHooks hooks); // 단일 현재 월드에 연결한다.
+    RawProductionControls(RawMenuTree tree,RawMenuControls& menus,RawCampaignSession& session,const GameAssets& assets,ProductionMaintenanceGlobals& globals,ProductionMaintenancePanel& panel,RawProductionHooks hooks); // 단일 현재 월드와 전역/패널의 실제 수명에 연결한다.
     ~RawProductionControls(); // 공통 노드 삭제가 끝난 뒤 처리기를 반납한다.
     void Close(); // 월드보다 먼저 모든 연결 Form과 자식을 반납한다.
     void Open(); // 원본43e640/43ddd0 및 초기43ec00 사건이다.

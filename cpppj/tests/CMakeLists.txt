@@ -1529,3 +1529,12 @@ set_source_files_properties(InventoryItemGumpTests.cpp PROPERTIES COMPILE_DEFINI
 target_sources(netstorm_tests PRIVATE ProductionColorMapsTests.cpp)
 set_source_files_properties(ProductionColorMapsTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_PRODUCTION_COLORS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/production-colors-x86.tsv\"")
+
+# 독립 원본86입력의 전체 생산 상태와 효과 순서를 검사한다.
+target_sources(netstorm_tests PRIVATE ProductionMaintenanceTests.cpp)
+set_source_files_properties(ProductionMaintenanceTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_PRODUCTION_IDLE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/production-idle-x86.tsv\"")
+
+# 실제0/0 커서 미리보기의 원본 발자국 경계 관측도 같은 검사에 연결한다.
+set_property(SOURCE ProductionMaintenanceTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS
+    "NETSTORM_NEIGHBOR_BOUNDARY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/neighbor-boundary-x86.tsv\"")

@@ -52,7 +52,7 @@ private:
         // frame: 사용할 그림 프레임 또는 프레임 처리 자료.
         FrameCode frame{};
     };
-    // 지도 안 유한 좌표·양수 발자국을 확인한 뒤 원본 1..255 모서리 보정을 적용한다.
+    // 유한 임시 좌표·양수 발자국을 확인한 뒤 원본 점 유효성/1..255 모서리 보정을 적용한다.
     Object ReadObject(Sid sid,bool readFrame) const;
     // source 발자국 spot의 AND와 후보 기준점 spot을 서로 구별한다.
     bool Interior(const Object& source) const;

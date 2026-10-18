@@ -5,6 +5,7 @@
 #include <bit>
 #include <cmath>
 #include <stdexcept>
+#include <string>
 
 namespace netstorm::o {
 namespace {
@@ -49,11 +50,13 @@ RawSquidNeighbors::Object RawSquidNeighbors::ReadObject(Sid sid,bool readFrame) 
     if (number<kFirstAssetTypeNumber || number>=types_.size()) throw std::out_of_range("raw 이웃 자산 타입 오류");
     const auto& type=types_[number];
     const float x=std::bit_cast<float>(Read(raw,kX)),y=std::bit_cast<float>(Read(raw,kY));
-    if (!std::isfinite(x) || !std::isfinite(y) || x<kFirstCell || y<kFirstCell || x>=kWorldCells || y>=kWorldCells ||
+    if (!std::isfinite(x) || !std::isfinite(y) ||
         type.footX<1 || type.footY<1 || type.footX>kWorldCells || type.footY>kWorldCells)
-        throw std::out_of_range("raw 이웃 좌표/발자국 오류");
-    Object object{std::clamp(x-static_cast<float>(type.footX-1),kFirstCell,kLastCell),
-        std::clamp(y-static_cast<float>(type.footY-1),kFirstCell,kLastCell),x,y,
+        throw std::out_of_range("raw 이웃 좌표/발자국 오류 SID="+std::to_string(sid.value)+" TYPE="+std::to_string(number)+" x="+std::to_string(x)+" y="+std::to_string(y)+" foot="+std::to_string(type.footX)+","+std::to_string(type.footY));
+    // 실제49ae80의 모서리 확장은 원래 두 좌표가 모두(0,256) 안일 때만 이전 점을 보존한다.
+    const float left=std::clamp(x-static_cast<float>(type.footX-1),kFirstCell,kLastCell),top=std::clamp(y-static_cast<float>(type.footY-1),kFirstCell,kLastCell);
+    const bool valid=x>0 && x<kWorldCells && y>0 && y<kWorldCells; // 초기(0,0) 미리보기는 보정된 한 점이 된다.
+    Object object{valid ? std::min(x,left) : left,valid ? std::min(y,top) : top,valid ? std::max(x,left) : left,valid ? std::max(y,top) : top,
         x-static_cast<float>(type.footX)*0.5f,y-static_cast<float>(type.footY)*0.5f,number,{}};
     if (readFrame) {
         const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
@@ -85,10 +88,11 @@ int RawSquidNeighbors::Direction(float fromX,float fromY,float toX,float toY) {
 // 004ab880 ↔ CD 00487810: 발자국 전체의 spot 비트를 AND한다.
 bool RawSquidNeighbors::Interior(const Object& source) const {
     std::uint8_t bits=0xff;
-    // 정수 절삭 후 y/x 순서로 발자국을 읽는다.
-    for (int y=static_cast<int>(source.top);y<=static_cast<int>(source.bottom);++y)
-        // 오른쪽 아래 값이 255.x여도 칸 번호는 255다.
-        for (int x=static_cast<int>(source.left);x<=static_cast<int>(source.right);++x)
+    const int left=std::clamp(static_cast<int>(source.left),1,255),right=std::clamp(static_cast<int>(source.right),1,255),top=std::clamp(static_cast<int>(source.top),1,255),bottom=std::clamp(static_cast<int>(source.bottom),1,255); // 원본4ab880은 네 정수 모서리를 각각 보정한다.
+    // 정수 절삭/보정 후 원본 y/x 순서로 발자국을 읽는다.
+    for (int y=top;y<=bottom;++y)
+        // 오른쪽 아래 값이255.x여도 실제 spot 칸은255다.
+        for (int x=left;x<=right;++x)
             bits=static_cast<std::uint8_t>(bits&spots_[static_cast<std::size_t>(y*kWorldCells+x)]);
     return (bits&kInterior)!=0;
 }

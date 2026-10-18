@@ -199,7 +199,7 @@
     "cpppj/hist/run22-warn1/install.h": "20bf7e3c62cc9db8b84776948609a6088d406dfb7427fa34dbcddad45f65934f",
     "cpppj/projectile-geom.json": "bdc13b02a7303524f08e67e892fdfbc9f833a934273a4337d20520d7b23f0bc5",
     "cpppj/run21.json": "a794e0d3095ed2a00c1329cd95a1272f8f927a26b521b8fd2c56f7a8b08f402a",
-    "cpppj/src/CMakeLists.txt": "0d374d3a7a0c535175207285f81341067c4e5b50c8d7dadf00a80e377ff7fe21",
+    "cpppj/src/CMakeLists.txt": "945332cd1c5b131d7e35d0ae7fb15762597c41be26ffea267b18e8b3d048efd8",
     "cpppj/src/app/CanonMayPlaceInspect.cpp": "27eda46bca500c898abeb9a3a7c4e8588b38e061b579c84cbf6c032c6d46dda9",
     "cpppj/src/app/FrameBindingInspect.cpp": "042602919b0531fb1cbaf3941dc6597bee73944bbf0d571dacfd638bb45dd07c",
     "cpppj/src/app/FrameBindingInspect.h": "4e187ca41f8c34ed52c022b58a57327a554a723e3e26ee88a1ae152c99de3fce",
@@ -695,8 +695,8 @@
     "cpppj/src/o/RawSquidHitPoints.h": "b2ede7095eb575c39e7e92ba6ca3cca9d7b3ed409baf61bf18a1caa066837b8c",
     "cpppj/src/o/RawSquidLevel.cpp": "fd5b4fa7a00300d5f28fc15ec5007482ea996d0045656962b1e38db0c946fb78",
     "cpppj/src/o/RawSquidLevel.h": "1176c3ecb724c1b87130b3d3c016f9b5938ba0f69d783e666624f04a4926c8aa",
-    "cpppj/src/o/RawSquidNeighbors.cpp": "189febb21e1a29b605ccdf95e56ac88b2b2ee40dac68874df501fe5a37c24d02",
-    "cpppj/src/o/RawSquidNeighbors.h": "1d223e803abd49e59dc45fb41e68cc65227af2d6e31b3d6904d99b4d00849dbc",
+    "cpppj/src/o/RawSquidNeighbors.cpp": "88ec2ee9dbaad0627d1ceb3629199361d860ba137f50d12fe0410a8cbbefa3f2",
+    "cpppj/src/o/RawSquidNeighbors.h": "edb19d4782b671d6be80c9f7690b9455d200ef7dbe2df51059d5ca0c4a66175c",
     "cpppj/src/o/RawSquidRegion.cpp": "145faef2b42bebdac217052884719e38a5530400a5b15141d75fe514490fe675",
     "cpppj/src/o/RawSquidRegion.h": "46017cfdf318d897f360d816064a4168d3d8946be581e51853bb592bf11ef90b",
     "cpppj/src/o/RawSurfaceLifecycle.cpp": "49d7eb66e77d473c9f6ba8d45d19e3f7491bbb8fa677ec707162390a6670310c",
@@ -2211,6 +2211,31 @@
           "path": "cpppj/tests/CarrierPreDestroyTests.cpp",
           "previous": "23babf052f9fe2a9f521c7c714fed5c4ca72b369a00bac5e4625538a1f2ff616",
           "current": "706b7e55165c168bbc9056cdf23e3439f60d7cd628b1fc4b7c47651e80fcf6b2"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 179,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "0d374d3a7a0c535175207285f81341067c4e5b50c8d7dadf00a80e377ff7fe21",
+          "current": "945332cd1c5b131d7e35d0ae7fb15762597c41be26ffea267b18e8b3d048efd8"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawSquidNeighbors.cpp",
+          "previous": "189febb21e1a29b605ccdf95e56ac88b2b2ee40dac68874df501fe5a37c24d02",
+          "current": "88ec2ee9dbaad0627d1ceb3629199361d860ba137f50d12fe0410a8cbbefa3f2"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawSquidNeighbors.h",
+          "previous": "1d223e803abd49e59dc45fb41e68cc65227af2d6e31b3d6904d99b4d00849dbc",
+          "current": "edb19d4782b671d6be80c9f7690b9455d200ef7dbe2df51059d5ca0c4a66175c"
         }
       ]
     }

@@ -1776,7 +1776,7 @@ TEST_CASE(CampaignSession_LocalLoginWorkshopHasActualPlacement) {
         const auto colors=BuildPaletteColorTable(logical);menus.SetPalette(colors);const auto& fortGump=assets.game.Find("fortGump");const auto metrics=assets.game.Shapes().SquidMetrics(fortGump.block,0);
         const std::array<GumpControl,1> buttons{{{0,{84,4,160,26},false,true,false}}};const std::array<std::string,1> labels{{"Game"}};
         controls.SetControls(buttons,labels,1024,768,{static_cast<std::uint32_t>(fortGump.block+70),0,metrics.width,metrics.height,ButtonColors(colors)});
-        auto& production=controls.EnableProduction(session,assets.game,{[&] { return wall; },[&](std::string_view name) { CHECK(name=="getPiece.wav");++gets; },[](auto) { throw std::logic_error("생산 검사 예상 밖 Tell"); }});production.SetPalette(palette);
+        auto& production=controls.EnableProduction(session,assets.game,{[&] { return wall; },[&](std::string_view name) { CHECK(name=="getPiece.wav");++gets; },[](auto) { throw std::logic_error("생산 검사 예상 밖 Tell"); },[](std::string_view key,std::int32_t fallback) { return key=="useProductTimers" ? 0 : fallback; }});production.SetPalette(palette);
         CHECK(controls.RegisteredGump(3) && production.Node(controls.RegisteredGump(3)));CHECK(production.Report().find("\t128\t")!=std::string::npos);
         std::vector<std::uint8_t> pixels(1024*768,0x5a);menus.Draw(pixels,1024,768,colors,BuildGumpShadeMaps(logical));CHECK(std::any_of(pixels.begin(),pixels.end(),[](auto pixel) { return pixel!=0x5a; }));
         std::cout<<"실제 초기 에너지 공급원 "<<core.bookkeeping.providers.count<<"/Cannon level"<<core.types[128].level<<"/theme"<<core.types[128].theme<<"/요구"<<BindAiTypeRequiredEnergy(assets.game,core.types)(128)<<"\n";
@@ -1784,12 +1784,32 @@ TEST_CASE(CampaignSession_LocalLoginWorkshopHasActualPlacement) {
         if (click) { CHECK(controls.PickGump(*click)==controls.RegisteredGump(3));controls.Event({InputCode::kLeftButton,click->x,click->y});CHECK(session.CursorDropSettings().preview==teleport && session.CursorDropSettings().type==128 && session.CursorDropSettings().lockDepth==0 && gets==1);
             const auto cannonPoint=CursorPlacementPoint(session,ui);std::cout<<"실제 생산 썬 캐논 배치 허용점 "<<cannonPoint.x<<","<<cannonPoint.y<<"\n";
             session.Cursor().Drop();session.PumpLocalConnection();CHECK(session.Sp(1)==1800);session.Cursor().Cancel();
-            const auto cannonBegan=core.processState.now;std::size_t completedCannons{}; // 실제 후속 Kernel이 완료한 캐논을 관찰한다.
+            const auto cannonBegan=core.processState.now,cannonWall=wall;std::size_t completedCannons{}; // 실제 후속 Kernel이 완료한 캐논을 관찰한다.
             // 반환 내용물 Regular의 count0/10초/count1과 실제 캐논 건설을 자연 실행한다.
-            for (std::uint64_t frame=1;frame<=2400;++frame) { const auto now=cannonBegan+static_cast<double>(frame)/60;session.RunFrame({now,now,1.0/60,frame},false);wall=now;controls.Poll({InputCode::kRelease,500,350});menus.CleanupFrame(); }
+            for (std::uint64_t frame=1;frame<=2400;++frame) { const auto now=cannonBegan+static_cast<double>(frame)/60;session.RunFrame({now,cannonWall+(now-cannonBegan),1.0/60,frame},false);wall=cannonWall+(now-cannonBegan);controls.Poll({InputCode::kRelease,500,350});menus.CleanupFrame(); }
             // 현재 서버 풀에서 살아 있는 내 완공 캐논을 직접 읽는다.
             for (std::uint32_t number=core.pool.Layout().serverFirst;number<core.pool.Capacity();++number) { const auto raw=core.pool.Slot({static_cast<std::uint16_t>(number)});if (!(raw[11]&3) && raw[10]==128 && raw[34]==1 && !(raw[40]&1)) ++completedCannons; }
             CHECK(completedCannons==1);
+            const auto bridgeClick=production.Point(82);CHECK(bridgeClick.has_value());
+            if (bridgeClick) {
+                // 실제 표시된 다리 아이콘을 클릭하며 생성/허용/SP 값을 검사에서 주입하지 않는다.
+                controls.Event({InputCode::kLeftButton,bridgeClick->x,bridgeClick->y});const auto preview=session.CursorDropSettings().preview;
+                CHECK(preview.value && session.CursorDropSettings().type==82 && session.CursorDropSettings().lockDepth==0 && gets==2);
+                const auto bridgePoint=CursorPlacementPoint(session,ui);std::cout<<"실제 공급 다리 배치 허용점 "<<bridgePoint.x<<","<<bridgePoint.y<<"\n";
+                const auto bridges=[&] { std::size_t total{};
+                    // 서버의 실제 살아 있는 다리만 센다. 미리보기/내용물은 포함하지 않는다.
+                    for (std::uint32_t number=core.pool.Layout().serverFirst;number<core.pool.Capacity();++number) { const auto raw=core.pool.Slot({static_cast<std::uint16_t>(number)});if (!(raw[11]&3) && raw[10]==82) ++total; }return total;
+                };
+                const auto bridgeCountBefore=bridges();session.Cursor().Drop();session.PumpLocalConnection();session.Cursor().Cancel();CHECK(bridges()>bridgeCountBefore && session.Sp(1)==1800);
+                const auto bridgeBegan=core.processState.now,bridgeWall=wall; // 벽시각은 초기100초에서 단조 증가시킨다.
+                // 사용한 칸이 실제1초 공급으로 보충되고6초 게임 시각 뒤 정상 품질이 되는 과정을 실행한다.
+                for (std::uint64_t frame=1;frame<=480;++frame) { const auto now=bridgeBegan+static_cast<double>(frame)/60;session.RunFrame({now,bridgeWall+(now-bridgeBegan),1.0/60,frame},false);wall=bridgeWall+(now-bridgeBegan);controls.Poll({InputCode::kRelease,500,350});menus.CleanupFrame(); }
+                RawContainedFinder supply(core.pool,session.ProductionFinder());std::size_t supplied{};
+                // 같은 기술 체인의 모든 공급 다리를 원문으로 다시 확인한다.
+                for (auto sid=supply.Begin({static_cast<std::uint16_t>(session.CurrentTechnologyParent())});sid.value;sid=supply.Next()) if (Get(core.pool.Slot(sid),20,2)&0x40) { CHECK(core.pool.Slot(sid)[30]==2);++supplied; }
+                CHECK(supplied==static_cast<std::size_t>(session.BattleOption(1)*2+2));
+                std::cout<<"실제 다리 클릭/Take/서버 배치/자동 재공급·품질 회복 통과\n";
+            }
         }
         controls.DisableProduction();CHECK(!controls.Production());CHECK(session.Sp(1)==1800);activeProductionUi=nullptr;
     }

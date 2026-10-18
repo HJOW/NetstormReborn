@@ -148,8 +148,8 @@
     "cpppj/src/o/RawPriestRitualActions.h": "ccc14f6b619803f544dd377d578927af5942c5c99d50429f4540ed0261b981bd",
     "cpppj/src/o/RawRunePostPop.cpp": "ca10766ced498c5aab0c92fbcca0d0d4ad39c5d9e5c91ce7865dd0523b2f6ab0",
     "cpppj/src/o/RawRunePostPop.h": "057c813ed8dcb33eab75554f9368645e77d4b85b61df76a22e64f52dcc82d5ee",
-    "cpppj/src/o/RawSquidNeighbors.cpp": "030b8685da739d65b53b5602a89ed98b4c1ff0e7f22690fc77294d3aeb90630b",
-    "cpppj/src/o/RawSquidNeighbors.h": "15116a1d69e6ab9718f556ae59cb5f1e12e484d286c3f6f69a25aa5d1912d484",
+    "cpppj/src/o/RawSquidNeighbors.cpp": "88ec2ee9dbaad0627d1ceb3629199361d860ba137f50d12fe0410a8cbbefa3f2",
+    "cpppj/src/o/RawSquidNeighbors.h": "edb19d4782b671d6be80c9f7690b9455d200ef7dbe2df51059d5ca0c4a66175c",
     "cpppj/src/o/RawTempleRitual.cpp": "fee9b37873c162ea621595d819b05db4bdea5c28fb62a3b44908aca064530595",
     "cpppj/src/o/RawTempleRitual.h": "d1f5ab197e92539a0c4904a5f73c0aba60392c587e20cc9a6fbfc54a881acf73",
     "cpppj/src/o/SquidFrame.cpp": "d38aa3f5fbb191aaeadf4f808a7fc51e2ee5a558b9605c9dd8660224435d1e62",
@@ -296,6 +296,25 @@
           "path": "cpppj/src/o/RawPathRuntime.h",
           "previous": "b74e6c9947182ef327a50be4921921d43ac1a62063e8cf02a193e3045359a667",
           "current": "92cb4cce037b704ecb6f2b2910c97fdf5634a519ba181931f357c6383529532c"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 179,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/unchanged_files",
+          "path": "cpppj/src/o/RawSquidNeighbors.cpp",
+          "previous": "030b8685da739d65b53b5602a89ed98b4c1ff0e7f22690fc77294d3aeb90630b",
+          "current": "88ec2ee9dbaad0627d1ceb3629199361d860ba137f50d12fe0410a8cbbefa3f2"
+        },
+        {
+          "group": "/unchanged_files",
+          "path": "cpppj/src/o/RawSquidNeighbors.h",
+          "previous": "15116a1d69e6ab9718f556ae59cb5f1e12e484d286c3f6f69a25aa5d1912d484",
+          "current": "edb19d4782b671d6be80c9f7690b9455d200ef7dbe2df51059d5ca0c4a66175c"
         }
       ]
     }

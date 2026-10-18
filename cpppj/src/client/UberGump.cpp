@@ -454,7 +454,6 @@ bool UberGump::Input() {
     if (warnings_->Idle()) rebuild_=true;
 
     if (!client_.Paused()) rawButtons_->Menus()->CleanupFrame(); // 원본의 비정지 갱신은 삭제 정리 뒤 같은 idle 표를 실행한다.
-    if (world_ && state_.phase==ClientPhase::Mission && world_->Session().UpdateProductionContents()) rebuild_=true; // 같은 현재 Gump idle의 생산 내용물 동기화다.
     if (rawButtons_->Poll(mouse)) rebuild_=true;
     if (input_.Move({mouse.x, mouse.y}, (mouse.code & InputCode::kOutside) == 0)) rebuild_ = true;
     if (userInput_ && state_.phase==ClientPhase::Mission && popup_.empty()) userInput_->Tick();
@@ -675,7 +674,8 @@ void UberGump::Compose() {
         if (popup_.empty() && state_.phase==ClientPhase::Mission && world_) {
             auto& production=rawButtons_->EnableProduction(world_->Session(),client_.Assets(),RawProductionHooks{
                 [this] { return client_.WallSeconds(); },[this](std::string_view name) { client_.WorldAudio().Sounds().PlayByName(name,0,0,0,0,0); },
-                [this](std::string_view key) { state_.Post({"Tell",std::string(key)}); }});
+                [this](std::string_view key) { state_.Post({"Tell",std::string(key)}); },
+                [this](std::string_view key,std::int32_t fallback) { client_.Configuration().ReadInt(key,fallback);return fallback; }});
             production.SetPalette(client_.GetScreen().Palette());
         }
         if (!popup_.empty()) {

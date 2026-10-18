@@ -1,0 +1,575 @@
+{
+  "unit": 179,
+  "date": "2026-10-18",
+  "host": "HJOW-Athlon",
+  "baseline": "3447c500",
+  "lastDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16",
+    "changed": false
+  },
+  "nativeIdle": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-18",
+    "unit": 179,
+    "rows": 86,
+    "normalReturns": 172,
+    "instructions": 155838,
+    "defaultControl": 575,
+    "defaultPrecisionBits": 53,
+    "precisionDifferences": 1,
+    "precisionDetails": [
+      {
+        "input": [
+          1,
+          0,
+          5,
+          9,
+          9,
+          4,
+          0,
+          1,
+          0,
+          4618554007859127910,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1140457472,
+          0,
+          64,
+          0,
+          1,
+          3,
+          3,
+          2,
+          0
+        ],
+        "columns": [
+          1
+        ],
+        "primary": [
+          "000000000000f03f,500,9",
+          "00f040120700000000000600010000000000520040000000000000000000017900000000000000000000000000000000000000f040120800000000000600000000000000800008000000000000000000010000000000000000000000000000000000000000f0401200000000000006000000000000008500080000000000000000000100000000000000000000000000000000000000",
+          "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000003e4000000000000000000000000000000000000000000000000000000000000000000000000000003e40000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+          "1",
+          "R:10000;C:5,82,0,64,16,0;U:1;U:2"
+        ],
+        "extended": [
+          "000000000000f03f,500,9",
+          "00f040120700000000000600010000000000520040000000000000000000017800000000000000000000000000000000000000f040120800000000000600000000000000800008000000000000000000010000000000000000000000000000000000000000f0401200000000000006000000000000008500080000000000000000000100000000000000000000000000000000000000",
+          "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000003e4000000000000000000000000000000000000000000000000000000000000000000000000000003e40000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+          "1",
+          "R:10000;C:5,82,0,64,16,0;U:1;U:2"
+        ]
+      }
+    ],
+    "controls": [
+      639,
+      895
+    ],
+    "nativeCalls": {
+      "0x4e81da": 1,
+      "0x4f2a7b": 1,
+      "0x4f2a49": 1,
+      "0x4f2929": 1,
+      "0x4f29bb": 1,
+      "0x43ef10": 172,
+      "0x4b2270": 334,
+      "0x4b1b20": 1336,
+      "0x44daa0": 1002,
+      "0x40f100": 166,
+      "0x4180a0": 162,
+      "0x418070": 186,
+      "0x4257c0": 154,
+      "0x4af0e0": 148,
+      "0x4e49c0": 434,
+      "0x4af0b0": 120,
+      "0x40ee90": 486,
+      "0x40eb80": 2
+    },
+    "boundaries": {
+      "0x48fc60": 944,
+      "0x48fc90": 166,
+      "0x44f760": 166,
+      "0x460d70": 1004,
+      "0x4558c0": 154,
+      "0x4afa70": 154,
+      "0x40ec50": 822,
+      "0x4c2400": 328,
+      "0x1240e010": 292,
+      "0x1240e020": 292,
+      "0x1240e000": 10
+    },
+    "sha256": {
+      "tools/decomp_production_idle.py": "46b49072b89e0a01463bb7a5cebcd360f81ff1dcf4897a4d0026908cd93b33dd",
+      "tools/decomp_factory_menu.py": "bd889d1fe373053c80fe804517858cf83102fbf36cbe724d989e4aa0c3e605cc",
+      "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+      "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+      "cpppj/tests/fixtures/production-idle-x86.tsv": "d8b5ac6f180d70225b16a726a6b36d75069545206aa1b579882ff013bcc3ec91"
+    },
+    "limits": [
+      "43ef10 전체 진입에서 공급·품질·재고·금액 전환의 실제 계산을 실행한다. 현재 기술/SP/허용표 조회·난수 입력·생성/삭제·UI 효과는 명시 경계다. 생성·삭제 경계는 풀을 바꾸지 않으며 같은 실물 사슬의 연결은 별도 게임 검사로 검증한다.",
+      "기준은 원본 CRT __setdefaultprecision을 직접 실행해 확인한53비트(027f)다. 보조64비트(037f)와 다른 입력도 제거하지 않고 차이를 별도 보존한다.",
+      "초기 perTYPE 시계는 확보된 배열이고 dirty=0/부모 부착/보호 추적 정상 입력이다. 공통 초기화/Deck 동기화/재부착/보호 추적 전체 분기를 새 대조로 확대하지 않는다.10.78만 관측하며 원본 게임 창/새 디컴파일/보호 파일 변경 없음."
+    ]
+  },
+  "nativeBoundary": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-18",
+    "rows": 18,
+    "normalReturns": 72,
+    "controls": [
+      639,
+      895
+    ],
+    "precisionDifferences": 0,
+    "sha256": {
+      "tools/decomp_neighbor_boundary.py": "02df8d0e8c0c0482a74489252f063e7785abef07f1c1e9015c1dbe3dccd575b3",
+      "tools/decomp_neighbor_oracle.py": "3b0791e322aa3741b1316401d43a79f8cd011283643176d995f89922223115f5",
+      "tools/decomp_bridgeevent_oracle.py": "f85efae5dbbedce6e49b4eddd4e4b1a6ccfdcc394ec215d740082e6f759347a9",
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "cpppj/tests/fixtures/neighbor-boundary-x86.tsv": "a0ba755d3333de2e9d688543b284c14a2e5ca79774c384bd4ed79e54969b6296",
+      "extracted/bridgeevent/originals/creation.c": "98b7be841a2e6cd8fb6c975527b161dce284c0f2ed96bcdcaea5f0e26223aff1",
+      "extracted/bridgeevent/originals/functions.tsv": "b97a2cb196b560d3ac3796fe53e679dfa7f150adef6b16e51a3cdf89fa8d9bb7",
+      "extracted/graphremove/originals/creation.c": "08fc021ba770c21bf298a5e5e547dee7ad500cfac334fce29e30e34253deba22",
+      "extracted/graphremove/originals/functions.tsv": "804ff5b28df9aeec65f968d26e660e266ed4a160a64a5d44c223f222219cc3b4",
+      "extracted/graphremove/originals/geometry/creation.c": "e3ad29a66b1b88964ede5cd0c4c921c0df6ac07cf8935180e5004f38dd51d3ca",
+      "extracted/graphremove/originals/geometry/functions.tsv": "ced17335d5e0a8b25e97ae7d05019f43bdaef60955b0a024ca21d2096713587e"
+    },
+    "limits": [
+      "10.78 실제4ade70/49ae80과4b23e0 전체의 유한 임시 좌표 입력이다. 원래20/21에 준비한 같은 raw source의 좌표만 덮어쓰며 다른 후보는 없다. 미등록 커서 미리보기의 발자국/빈 첫 이웃 경계이며 비유한 좌표나 모든 탐색 후보 조합의 증거는 아니다."
+    ]
+  },
+  "nativeFreeze": {
+    "tools/decomp_production_idle.py": "46b49072b89e0a01463bb7a5cebcd360f81ff1dcf4897a4d0026908cd93b33dd",
+    "cpppj/production-idle.json": "98765db8f237106b9b13db4fc3c09a8d02b0627a767dd76aa75d174b100c6f74",
+    "cpppj/tests/fixtures/production-idle-x86.tsv": "d8b5ac6f180d70225b16a726a6b36d75069545206aa1b579882ff013bcc3ec91"
+  },
+  "boundaryFreeze": {
+    "tools/decomp_neighbor_boundary.py": "02df8d0e8c0c0482a74489252f063e7785abef07f1c1e9015c1dbe3dccd575b3",
+    "cpppj/neighbor-boundary.json": "f867eca090662fcf3b5309055274552d0b826c6b2bc5929058ee604b595a2289",
+    "cpppj/tests/fixtures/neighbor-boundary-x86.tsv": "a0ba755d3333de2e9d688543b284c14a2e5ca79774c384bd4ed79e54969b6296"
+  },
+  "protected": {
+    "AGENTS.md": "7addbf9b31c42f29aab7c93faa865eb6de8590a600d17202a297cf7122bdf979",
+    "LEFT_JOBS.dotnetpj.md": "0c067e1d12879dbf2212cbd64c8f9f60e65b590df910418f025027ed84f80ec2",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "originals/d/GIFCLOUD.COL": "785a2cda6ac1d3e295d375815b6d9650720683099db7c249382d598b5da00532"
+  },
+  "currentSources": {
+    "cpppj/src/CMakeLists.txt": "945332cd1c5b131d7e35d0ae7fb15762597c41be26ffea267b18e8b3d048efd8",
+    "cpppj/src/client/RawButtonControls.cpp": "1e31ef93cd819be30a75bcada1e9eba98adfae917a8db925a4845bfd37a2ef92",
+    "cpppj/src/client/RawCampaignSession.cpp": "99e082e181299b20ed713c6f4f72d0bc5ab3f3c46457b1ea47486fac6cca41a3",
+    "cpppj/src/client/RawCampaignSession.h": "708c73cd9f83b6a32496a782151ec35cbecb469a7f9c4f136819a5ae57b70288",
+    "cpppj/src/client/RawProductionControls.cpp": "084f931364f7c9bfc96e7dd54c1a523be51089d47effe3f6c8cc4c43d9474f9a",
+    "cpppj/src/client/RawProductionControls.h": "f8a482e14d48f0b20868df289dae295f52bc09b2e2937e1c1a560b797ff0c8a6",
+    "cpppj/src/client/UberGump.cpp": "09ae6c715bbfb82f9517ea7f1d11a4d4801d8a01af34c6d48e1831791996c06b",
+    "cpppj/src/o/RawSquidNeighbors.cpp": "88ec2ee9dbaad0627d1ceb3629199361d860ba137f50d12fe0410a8cbbefa3f2",
+    "cpppj/src/o/RawSquidNeighbors.h": "edb19d4782b671d6be80c9f7690b9455d200ef7dbe2df51059d5ca0c4a66175c",
+    "cpppj/tests/CMakeLists.txt": "3e200bbf9836698412da1bb62fd2defaf0049e6723709e8c5e8af2bb59e5b490",
+    "cpppj/tests/CampaignSessionTests.cpp": "259b8c3178bb2b3498ca76818c49db41c2ed544ff7fca6c272da61856b15e72b",
+    "tools/cpp_production_panel_smoke.py": "550b8c6af03d17b5c9591a5a21c11adc8cb75ddf3e27e8181b126c4b62d15054",
+    "cpppj/neighbor-boundary.json": "f867eca090662fcf3b5309055274552d0b826c6b2bc5929058ee604b595a2289",
+    "cpppj/production-idle.json": "98765db8f237106b9b13db4fc3c09a8d02b0627a767dd76aa75d174b100c6f74",
+    "cpppj/src/client/RawProductionMaintenance.cpp": "db448007a50c4bc3f7f018ebf075bff7f4df536d3eb71782bf56c1f4b4e49123",
+    "cpppj/src/client/RawProductionMaintenance.h": "0512297c7de139dba5095f999c5ada301ad3c47c633c9d048bf30cdba174c749",
+    "cpppj/tests/ProductionMaintenanceTests.cpp": "53664e3ebec714ecc8595d5b06a0a5087e4c24d78ec9b39cdf068723e14ffadd",
+    "cpppj/tests/fixtures/neighbor-boundary-x86.tsv": "a0ba755d3333de2e9d688543b284c14a2e5ca79774c384bd4ed79e54969b6296",
+    "cpppj/tests/fixtures/production-idle-x86.tsv": "d8b5ac6f180d70225b16a726a6b36d75069545206aa1b579882ff013bcc3ec91",
+    "tools/cpp_bridge_supply_smoke.py": "a01d37be56454e5a694c7415e8258bdc9918027d0938b8e406edd96512ff71e5",
+    "tools/decomp_neighbor_boundary.py": "02df8d0e8c0c0482a74489252f063e7785abef07f1c1e9015c1dbe3dccd575b3",
+    "tools/decomp_production_idle.py": "46b49072b89e0a01463bb7a5cebcd360f81ff1dcf4897a4d0026908cd93b33dd"
+  },
+  "logSha256": {
+    "extracted/goal-production-idle-20261018-audit1.log": "277639f1a52717fc001cff1ac3faa6e3bed075c5b086b20326f804b79a24741e",
+    "extracted/goal-production-idle-20261018-audit2.log": "3dce8b6ed074cdd115479711726033ff2307c0243563ed376547e7a2d19d6efa",
+    "extracted/goal-production-idle-20261018-boundary1.log": "d05f8b9ce74f1018cddd881b2dc98bb5cc588961e02e614279593f4043d05b4b",
+    "extracted/goal-production-idle-20261018-boundary2.log": "97880b29b65918fec79ddc8d23465463e2b9801d4e818be7a6de3e4ec8a1548d",
+    "extracted/goal-production-idle-20261018-build1.log": "eb8d4f117055a42446287ec337fb5c7f573ef37e5f9652ee95217234d7307827",
+    "extracted/goal-production-idle-20261018-build10.log": "2d7524c473237190adee0d54ebfb8830756302ff7f58d9a7b63f7b1abe85e314",
+    "extracted/goal-production-idle-20261018-build2.log": "83e9366b95f0035762893d71375742474d6bb6f0f5f219f32f7583240d7d04a3",
+    "extracted/goal-production-idle-20261018-build3.log": "3a5ed3c2286dc742ccfdec1f76a52301b3fd607133f998357faaf57969b6d0c0",
+    "extracted/goal-production-idle-20261018-build4.log": "68daf5268753a6f0253917d033a76282e07803e3b45f8c1951a34f7cbc6a3d34",
+    "extracted/goal-production-idle-20261018-build5.log": "c63aecf1d806d7701cf972d7c2cfb086ba70b9cda85a9631a3c37afe93362a6a",
+    "extracted/goal-production-idle-20261018-build6.log": "c63aecf1d806d7701cf972d7c2cfb086ba70b9cda85a9631a3c37afe93362a6a",
+    "extracted/goal-production-idle-20261018-build7.log": "c63aecf1d806d7701cf972d7c2cfb086ba70b9cda85a9631a3c37afe93362a6a",
+    "extracted/goal-production-idle-20261018-build8.log": "bf02a325f692418440bb1dadf9e6dcfc6843f9b5468fd9ccf29f6b7f15c02204",
+    "extracted/goal-production-idle-20261018-build9.log": "7e7bea5fa6b1f11ee8bb8891681dbe49f10731379de40bbca23fe69874994a59",
+    "extracted/goal-production-idle-20261018-ctest1.log": "5341250a3c642aa94a7a05038dfe8c5c6f7983587feee36360a23f1d925bccc7",
+    "extracted/goal-production-idle-20261018-cursor-debug1.log": "8532cc68243d8c338b2d8191b296aade71799efcae92fadcb4ea7998cb77660a",
+    "extracted/goal-production-idle-20261018-cursor-debug2.log": "a9f475e35595013b89262f0e18314fe8e3b7ef6de1c0d0c5298e1717774f84ca",
+    "extracted/goal-production-idle-20261018-focused1.log": "13a252d41fc8ef8c5d92ca2718ab7df382575f123f7fb5e1392232bf00e23e15",
+    "extracted/goal-production-idle-20261018-focused2.log": "13a252d41fc8ef8c5d92ca2718ab7df382575f123f7fb5e1392232bf00e23e15",
+    "extracted/goal-production-idle-20261018-focused3.log": "4626a34c4763be74ed7aedb52f2806e4b407f824510fb1bdbc13de177c2217cd",
+    "extracted/goal-production-idle-20261018-gui-default1.log": "fa28c9f622846e0852831eb0a0476e00bcdd9c914b44f2449f1a4fc0976c40b0",
+    "extracted/goal-production-idle-20261018-gui-timers1.log": "83108b747b57428dc574c6a0735ba8d81c284bc0ef72fcb8a0cf1f0014e4cc4e",
+    "extracted/goal-production-idle-20261018-LastTest.log": "610e88b80d312b2d6727c4bd32d0e3ab0ca422512e4c43af8eb0876afdf0db25",
+    "extracted/goal-production-idle-20261018-native1.log": "540147b432ea6a6a21cd23cb58318527dbf5e5ecb39c10886ca0824d6251e92b",
+    "extracted/goal-production-idle-20261018-native2.log": "1e71fcfdadb6d4bf28d1b2c4163cc9c951112f02651cf9d6f6c493715c365076",
+    "extracted/goal-production-idle-20261018-native3.log": "dac3d7f1d3b1b5d3ddeeec09a31d6be66e4b6fdc8e340793006de04fdb935b9d",
+    "extracted/goal-production-idle-20261018-native4.log": "fde556d97fba46bfc2ca15fa4db31d7fd9f4c764e427b2b7ca8ca182557154a7",
+    "extracted/goal-production-idle-20261018-native5.log": "9d6510465d3ed125e724fab1647ad6cd55ca6518cabbd1602e7733d7170ddf6d",
+    "extracted/goal-production-idle-20261018-native6.log": "3714d022ccd6c5f6f20a78c5cfd8f152ed870169b064ae4c33c5e906c6678cc6",
+    "extracted/goal-production-idle-20261018-native7.log": "6f113483a60383209e3c0da0586782d67d1961d44d8af36c8ef12ac291e38f6c",
+    "extracted/goal-production-idle-20261018-native8.log": "163cbbb2a39c21c215751f65750fd6d21bc7b5be55ed776652d5119e22738c1e",
+    "extracted/goal-production-idle-20261018-precision.log": "33b8c6cdbfd8d1450aee648c14c978a69dcdb0f8f0e4d37a465fa0167b45c8bd",
+    "extracted/goal-production-idle-20261018-session1.log": "e4ebfe1b772868b25696d52bf24f8fca5bd5e12da48a65f0f9e52c06f027cb70",
+    "extracted/goal-production-idle-20261018-session10.log": "01d33e7bfef5ed7bb70154c546bc155fb6f7d5e8400b2539cfc1c120e55fa6ca",
+    "extracted/goal-production-idle-20261018-session2.log": "e4ebfe1b772868b25696d52bf24f8fca5bd5e12da48a65f0f9e52c06f027cb70",
+    "extracted/goal-production-idle-20261018-session3.log": "e427bc9c11d3ad2876e3708b3c817824aedbbaf56fc8386fb5bafa3193cd4e3b",
+    "extracted/goal-production-idle-20261018-session4.log": "9780393d424e1c64600673c9c7501035a06bd136f09d563635c8a1e002852861",
+    "extracted/goal-production-idle-20261018-session5.log": "7bec9a57caf6cbe8867787536755b8f47d98a630eaa6467b18e484c3a3ea31a8",
+    "extracted/goal-production-idle-20261018-session6.log": "a5a2909dc8151f0256d4394a5cee9e3417c44e40bdf61f22173e31c4ba3cd555",
+    "extracted/goal-production-idle-20261018-session7.log": "01d33e7bfef5ed7bb70154c546bc155fb6f7d5e8400b2539cfc1c120e55fa6ca",
+    "extracted/goal-production-idle-20261018-stages1.log": "45c1eee9aa0a6dda3519fe8ac4fcf426bf94132bb199d97050b9cc54ac53e578",
+    "extracted/goal-production-idle-20261018-supply1.log": "4b8097b18dc9d9b41885f2e50c7532cbc87f93c0e1675b2b43f66119e88ab421",
+    "extracted/goal-production-idle-20261018-supply2.log": "406481f81c3ca65e546bf7fe9633407a34c34ddf349b2bfc1e1ffe6dcde81b30",
+    "extracted/goal-production-idle-20261018-supply3.log": "510a325b266991992f16e496c8a0944dbab780e48875d6c50878cc71cba9dfb9",
+    "extracted/goal-production-idle-20261018-supply4.log": "356448ba2d479297d41962dbc682718cf4a8d006fab154e768a2db195eb61a11",
+    "extracted/goal-production-idle-20261018-verify1.log": "06099f9da41e1aa7f7a10df59404897f08f946054807d32d17cf30db17ccd79b"
+  },
+  "evidenceSha256": {
+    "extracted/goal-production-idle-20261018-sources.json": "42059826ad2b9aa918f6f0de90220051ebc510d4c52e1a3010fc0a1ab5b72c0d",
+    "extracted/goal-production-idle-20261018-pin-updates.json": "813fd6230cd47cd8bbe943f2a20baa8fdcd34001ff0e28a83db66439ec6e62d0",
+    "extracted/goal-production-idle-20261018-verify-final.json": "409e1aff4bb17913d4ca1282dce40b17199a2e4da385e462642566cbe3e4aeed",
+    "extracted/goal-production-idle-20261018-bridge-preview-vtable.json": "78558bcf4f84523d3b6d143b163856f3e0938777cccc9024ac416020f5e0e6fc",
+    "extracted/goal-production-idle-20261018-connector-vtable.json": "9f60422cf71216cf896efeac051a23d542aeb73781a8f3ae18908dca084a64ce",
+    "extracted/goal-production-idle-20261018-cursor-debug1/stderr.log": "61bfb4c64c3da845f4ee2e06aa16d8a75bf7fca78d9448d34b2cb3b13bc2378b",
+    "extracted/goal-production-idle-20261018-cursor-debug2/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-production-idle-20261018-stages1/results.json": "7ab97b3ae8d4919e2ba034f969008bb89b5bf9725d7353f35a13739806bda92d",
+    "extracted/goal-production-idle-20261018-supply4/summary.json": "931d401e7c7f227e33b6f04c955ad9c54ac390f0ffec5b64c6ae999802d740cb",
+    "extracted/goal-production-idle-20261018-supply4/states.tsv": "5d79b982a4b68265141896acefe0864c733996e376295cdd1f7a182c5dd93c69",
+    "extracted/goal-production-idle-20261018-gui-default1/summary.json": "a7596ba35098a6d5c74148ff2e22f0803b3c36d060dc4fb7e8e4248a1a0f77f0",
+    "extracted/goal-production-idle-20261018-gui-default1/states.tsv": "4cfb4f7151d9c0ef8020fb1de6d110a4df07887f432f7975ceab404909651426",
+    "extracted/goal-production-idle-20261018-gui-timers1/summary.json": "922afcb5c074c375b9939087b2804901c6401998183b56d1e7a5937c73c53b68",
+    "extracted/goal-production-idle-20261018-gui-timers1/states.tsv": "168fb523407ba2af906e3c53ee1b98d2de468b1f95a5572ec533250c77f1c0c3"
+  },
+  "validation": {
+    "build": 10,
+    "warnings": 0,
+    "errors": 0,
+    "full": {
+      "tests": 1675,
+      "failedChecks": 0,
+      "seconds": 205.88,
+      "ctestSeconds": 205.92
+    },
+    "focused": {
+      "native": 2,
+      "naturalConstructionAndBridge": 1
+    },
+    "actualClient": {
+      "bridge": {
+        "passed": true,
+        "originalsUnchanged": true,
+        "early": [
+          [
+            "73",
+            "0",
+            "1",
+            "62",
+            "64"
+          ]
+        ],
+        "mature": [
+          [
+            "73",
+            "0",
+            "2",
+            "62",
+            "64"
+          ],
+          [
+            "74",
+            "22",
+            "2",
+            "72",
+            "64"
+          ]
+        ],
+        "maintenance": [
+          "0",
+          "2",
+          "31.655999999999999",
+          "3000",
+          "15002",
+          "2",
+          "31.050999999999998"
+        ],
+        "taken": [
+          "0",
+          "1",
+          "82",
+          "73",
+          "62",
+          "76",
+          "64",
+          "513",
+          "1",
+          "0",
+          "1"
+        ],
+        "prepared": [
+          "0",
+          "1",
+          "82",
+          "73",
+          "108",
+          "96",
+          "64",
+          "513",
+          "1",
+          "1",
+          "1"
+        ],
+        "serverBridges": {
+          "15181": [
+            "82",
+            "1",
+            "35",
+            "108",
+            "96"
+          ]
+        },
+        "refilled": [
+          [
+            "83",
+            "4",
+            "2",
+            "394",
+            "64"
+          ],
+          [
+            "74",
+            "22",
+            "2",
+            "72",
+            "64"
+          ]
+        ],
+        "limits": [
+          "실제 미션의 자동 공급/품질 회복·아이콘 클릭·배치·재공급이며 공격·미션 완주 증거는 별도"
+        ]
+      },
+      "default": {
+        "passed": true,
+        "originalsUnchanged": true,
+        "productTimers": false,
+        "content": [
+          "141",
+          "101",
+          "128",
+          "0",
+          "166",
+          "80",
+          "270",
+          "134"
+        ],
+        "taken": [
+          "0",
+          "1",
+          "128",
+          "101",
+          "64",
+          "94",
+          "8",
+          "65",
+          "1",
+          "1",
+          "1"
+        ],
+        "prepared": [
+          "0",
+          "1",
+          "128",
+          "101",
+          "94",
+          "111",
+          "8",
+          "65",
+          "1",
+          "1",
+          "1"
+        ],
+        "sp": [
+          "2200",
+          "1800"
+        ],
+        "cannons": {
+          "15184": [
+            "128",
+            "1",
+            "16",
+            "94",
+            "111"
+          ]
+        },
+        "camera": [
+          [
+            "976",
+            "793"
+          ],
+          [
+            "1529",
+            "793"
+          ],
+          [
+            "1529",
+            "793"
+          ]
+        ],
+        "bridges": [
+          [
+            "73",
+            "0",
+            "2",
+            "62",
+            "64"
+          ],
+          [
+            "76",
+            "8",
+            "2",
+            "72",
+            "64"
+          ]
+        ],
+        "stocks": [
+          3,
+          2,
+          2
+        ],
+        "limits": [
+          "한 지점의 실제 UI 건설/연구/생산/Take/배치/완공과 키 누름/해제 및 다리 공급·재고 관측이며 공격·미션 완주 판정은 별도"
+        ]
+      },
+      "timers": {
+        "passed": true,
+        "originalsUnchanged": true,
+        "productTimers": true,
+        "content": [
+          "147",
+          "101",
+          "128",
+          "0",
+          "166",
+          "80",
+          "270",
+          "140"
+        ],
+        "taken": [
+          "0",
+          "1",
+          "128",
+          "101",
+          "64",
+          "94",
+          "8",
+          "65",
+          "1",
+          "1",
+          "1"
+        ],
+        "prepared": [
+          "0",
+          "1",
+          "128",
+          "101",
+          "94",
+          "111",
+          "8",
+          "65",
+          "1",
+          "1",
+          "1"
+        ],
+        "sp": [
+          "2200",
+          "1800"
+        ],
+        "cannons": {
+          "15184": [
+            "128",
+            "1",
+            "16",
+            "94",
+            "111"
+          ]
+        },
+        "camera": [
+          [
+            "976",
+            "793"
+          ],
+          [
+            "1527",
+            "793"
+          ],
+          [
+            "1527",
+            "793"
+          ]
+        ],
+        "bridges": [
+          [
+            "73",
+            "0",
+            "2",
+            "62",
+            "64"
+          ],
+          [
+            "76",
+            "1",
+            "2",
+            "72",
+            "64"
+          ]
+        ],
+        "stocks": [
+          1,
+          0,
+          1
+        ],
+        "limits": [
+          "한 지점의 실제 UI 건설/연구/생산/Take/배치/완공과 키 누름/해제 및 다리 공급·재고 관측이며 공격·미션 완주 판정은 별도"
+        ]
+      }
+    },
+    "stageEntry": {
+      "runs": 11,
+      "passed": true,
+      "naturalCompletion": false
+    },
+    "audit": {
+      "tools": 104,
+      "passed": 93,
+      "existingFailed": 11,
+      "newFailed": 0
+    }
+  },
+  "integrationPins": {
+    "reports": 82,
+    "pins": 296
+  },
+  "fidelity": {
+    "complete": false,
+    "limits": [
+      "43ef10의 다리 공급·품질/재고·비용 전환을 같은 내용물과 실제 생성/삭제/UI에 연결했다. 공통 초기화·dirty/재부착·보호 추적을 포함한 전체 함수 모든 바이트/분기의 대조라는 주장은 아니다.",
+      "기준53비트는 원본 CRT 기본 정밀도 설정으로 확인했다. 보조64비트의6.1초 타이머 차이1건은 제거하지 않고 별도 보존한다.",
+      "이웃 경계는10.78의 유한 임시 좌표/빈 후보18입력이다. 모든 후보 조합·비유한 입력·CD판의 새 경계 대조로 확대하지 않는다.",
+      "다리 extra9(예측/미리보기)의 수명과 실제503360 연결 객체만 연결했다. 일반 서버 다리 파괴의 가상 분배/파편·소리 소비자는 아직 미완료다.",
+      "About/도움말·SP 부족/재고0 tooltip·삭제 사건0a·일부 모드/정책 전역·상위 드래그 프레임/지도 영역과 나머지 원본 입력/표시 복원은 계속 남는다.",
+      "자연 건설·연구·캐논 완공과 다리 배치/재공급을 확인했으나 캐논 공격·운반 왕복·희생·승패·다음 미션·전략AI·목표11단계 자연 완주/전체 동일성은 미완료다."
+    ]
+  },
+  "goalComplete": false
+}

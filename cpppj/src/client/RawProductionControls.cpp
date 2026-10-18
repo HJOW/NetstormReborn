@@ -28,11 +28,12 @@ constexpr std::array<std::uint32_t,5> kSpecial{111,141,137,94,97}; // 실제 전
 // 현재 월드를 참조하는 처리기/원본 파생 필드의 단일 고정 주소 소유자다.
 struct RawProductionControls::Impl {
     RawMenuTree common;RawMenuControls& menus;RawCampaignSession& session;const GameAssets& assets;RawProductionHooks hooks; // 공통 상태와 외부 장치다.
+    ProductionMaintenanceGlobals& productionGlobals;ProductionMaintenancePanel& productionPanel;std::unique_ptr<RawProductionMaintenance> maintenance; // 전역/패널의 단일 상태와 같은 Session 유지 몸체다.
     GumpCreateNode root;std::uint32_t rootToken{},budgetToken{},top{},middle{},bottom{},bridgeGrid{},teleportGrid{},separator{},slotLimit{}; // 43e640의 실제 자식 포인터다.
     std::map<std::uint32_t,std::unique_ptr<InventoryGridNode>> grids;std::map<std::uint32_t,std::unique_ptr<InventoryItemNode>> items; // 같은 현재 SID 격자/항목이다.
     std::map<std::uint32_t,std::unique_ptr<ImageGumpNode>> images;std::map<std::uint32_t,std::unique_ptr<TextGumpNode>> texts; // 실제 자식 그림/수량이다.
     std::map<std::uint32_t,std::unique_ptr<GumpBackgroundNode>> backgrounds;BudgetNode budget; // 배경과 실제 예산 파생이다.
-    std::uint32_t owner{},stock{1},inputDisabled{},lastType{},bridgeType{82},backgroundType{},backgroundFrame{},policyFirst{},policyByte{}; // 현재 owner 캐시와 원본 UI 전역의 초기값이다.
+    std::uint32_t owner{},inputDisabled{},lastType{},bridgeType{82},backgroundType{},backgroundFrame{},policyFirst{},policyByte{};std::uint32_t& stock; // 현재 owner/정책과 공유하는 실제5318f4 설정이다.
     bool editor{};float pixelsX{16},pixelsY{11};ScreenPoint point{},shadow{5,5};std::uint32_t cursorFlags{}; // 현재 원본 배율/커서 전역이다.
     std::vector<std::uint32_t> ownerMaps;std::map<std::uint32_t,OwnerColorMaps> ownerColors;ProductionColorMaps colors;GumpShadeMaps shades; // 실제 원본 색표와 존재 토큰이다.
     PriestPlacementAssets geometry;o::PriestPlacementShapeState measureState;o::RawCanonPixelShape measure; // 실제 전체 Canon 경계/프레임이다.
@@ -40,10 +41,10 @@ struct RawProductionControls::Impl {
     std::unique_ptr<ImageGumpPixelTarget> hitRaster;ImageGumpHooks activeImage;const GumpBackgroundDraw* activeBackground{}; // 실제 현재 출력 문맥이다.
     std::unique_ptr<InventoryGump> grid;std::unique_ptr<InventoryItemGump> item;std::unique_ptr<ImageGump> image; // 기존 원본 전체 몸체다.
     // 모든 훅은 실행 시 현재 공통 노드와 같은 Session을 재조회한다.
-    Impl(RawMenuTree tree,RawMenuControls& menu,RawCampaignSession& game,const GameAssets& data,RawProductionHooks supplied)
-        :common(std::move(tree)),menus(menu),session(game),assets(data),hooks(std::move(supplied)),ownerMaps(data.TypeTable().Types().size()),geometry(data),
+    Impl(RawMenuTree tree,RawMenuControls& menu,RawCampaignSession& game,const GameAssets& data,ProductionMaintenanceGlobals& globals,ProductionMaintenancePanel& panel,RawProductionHooks supplied)
+        :common(std::move(tree)),menus(menu),session(game),assets(data),hooks(std::move(supplied)),productionGlobals(globals),productionPanel(panel),stock(globals.stockEnabled),ownerMaps(data.TypeTable().Types().size()),geometry(data),
         measure(game.Core().pool,data.TypeTable().Types(),geometry.frames,geometry.shapes,geometry.hotspots,geometry.geometry,measureState),hitBytes(40000,255),hitTarget(hitBytes,200,200,hitClip) {
-        if (!hooks.now || !hooks.sound || !hooks.tell || assets.Edition()!=o::OriginalEdition::Patch1078) throw std::invalid_argument("실제 생산 패널 연결/판본 오류");
+        if (!hooks.now || !hooks.sound || !hooks.tell || !hooks.configInt || assets.Edition()!=o::OriginalEdition::Patch1078) throw std::invalid_argument("실제 생산 패널 연결/판본 오류");
         backgroundType=static_cast<std::uint32_t>(assets.Find("fortGump").block+o::kFirstAssetTypeNumber);SetGumpDrawClip(hitClip,{0,0,200,200});
         // 원본의 일반 소유자 표만 즉시 만들고 전용 표는 파일 팔레트 설치 때 만든다.
         for (const auto type:kStandard) { ownerMaps.at(type)=0x100000U+type*2304U;ownerColors.emplace(type,BuildStandardOwnerColorMaps(type,bridgeType)); }
@@ -71,10 +72,14 @@ struct RawProductionControls::Impl {
         h.imageHit=[this](auto token,float x,float y) { return image->Hit(token,x,y); };h.denied=[this](auto first,auto flags) { return first==policyFirst && static_cast<std::uint8_t>(flags)==policyByte ? 1U : 0U; };h.tell=hooks.tell;
         h.forward=[this](auto token,auto event,auto first,auto second) { return common.events.Bubble(token,event,first,second); };h.about=[](auto,auto,auto)->std::uint32_t { throw std::logic_error("생산 항목 About 메뉴 미연결"); };
         item=std::make_unique<InventoryItemGump>(session.Core().pool,InventoryItemState{owner,editor,stock,inputDisabled,lastType,bridgeType,pixelsX,pixelsY,backgroundType,backgroundFrame},std::move(h));
+        maintenance=session.MakeProductionMaintenance(productionGlobals,productionPanel,hooks.now,[this](std::uint32_t mask) {
+            // 원본은 텔레포트 격자를 먼저, 다리 격자를 뒤에 Push/가상부착한다.
+            for (const auto& [token,bit]:std::array<std::pair<std::uint32_t,std::uint32_t>,2>{{{teleportGrid,1},{bridgeGrid,2}}}) if (mask&bit) { common.tree.Push(token);const auto& n=*grids.at(token);grid->AttachGrid(token,n.x,n.y,0,0); }common.changed();
+        });
         menus.SetExternalGumps({[this](auto token) { return Text(token); },[this](auto token) { return Node(token)!=nullptr; },[this](auto token,auto& target,auto& currentColors,auto& background) { Draw(token,target,currentColors,background); }});
     }
     // 현재 원본 공유 전역은 실제 Session에서 매 가상 호출 직전에 읽는다.
-    void Prepare() { owner=session.LocalOwner();editor=session.Editor()!=0;point={session.CursorDropSettings().screenX,session.CursorDropSettings().screenY};cursorFlags=session.CursorDropSettings().inputFlags; }
+    void Prepare() { owner=session.LocalOwner();editor=session.Editor()!=0;stock=static_cast<std::uint32_t>(hooks.configInt("useProductTimers",1));productionGlobals.bridgeType=session.Core().bridgeState.bridgeType;point={session.CursorDropSettings().screenX,session.CursorDropSettings().screenY};cursorFlags=session.CursorDropSettings().inputFlags; }
     // 외부 기본 생성자/수명은 같은 파생 기본 주소만 본다.
     GumpCreateNode* Node(std::uint32_t token) const {
         if (token==rootToken && token) return const_cast<GumpCreateNode*>(&root);if (token==budgetToken && token) return const_cast<BudgetNode*>(&budget);
@@ -106,7 +111,8 @@ struct RawProductionControls::Impl {
         Prepare();rootToken=common.token();common.factory.Construct(rootToken,0,0,0,1);root.vtable=0x5069c0;root.command=44;root.flags|=0xe00;root.baseWidth=root.width=40;root.baseHeight=root.height=static_cast<float>(common.create.screenHeight);common.lifetime.SetIdle(rootToken,true);
         budgetToken=common.token();menus.TextBackend().Construct(budgetToken,0,0,0,0);budget.vtable=0x506948;common.lifetime.SetIdle(budgetToken,true);budget.alignFlags|=4;common.tree.Attach(budgetToken,0,0,rootToken,0);BudgetText();
         top=Background(40,root.baseHeight,4);auto& a=*backgrounds.at(top);a.alignFlags|=1;a.baseHeight=a.height=23;common.tree.Attach(top,0,0,rootToken,0);
-        slotLimit=static_cast<std::uint32_t>(session.BattleOption(1))*2+2;bridgeGrid=common.token();grids.emplace(bridgeGrid,std::make_unique<InventoryGridNode>());grid->ConstructGrid(bridgeGrid,2,static_cast<std::int32_t>(slotLimit/2),0x40);auto& b=*grids.at(bridgeGrid);b.fixed=1;b.baseHeight=b.height=static_cast<float>(slotLimit*36/2);b.acceptedCursor=0x40;b.alignFlags|=1;b.itemScale=std::bit_cast<float>(0x3f2147aeU);common.attach(bridgeGrid,0,26,rootToken,0);
+        if (!productionPanel.initialized) { productionPanel.bridgeUntil=hooks.now();productionPanel.initialized=true; } // 원본43e640은+c8을 생성 시 현재 벽시각으로 초기화한다.
+        slotLimit=static_cast<std::uint32_t>(session.BattleOption(1))*2+2;productionPanel.slots=static_cast<std::int32_t>(slotLimit);bridgeGrid=common.token();grids.emplace(bridgeGrid,std::make_unique<InventoryGridNode>());grid->ConstructGrid(bridgeGrid,2,static_cast<std::int32_t>(slotLimit/2),0x40);auto& b=*grids.at(bridgeGrid);b.fixed=1;b.baseHeight=b.height=static_cast<float>(slotLimit*36/2);b.acceptedCursor=0x40;b.alignFlags|=1;b.itemScale=std::bit_cast<float>(0x3f2147aeU);common.attach(bridgeGrid,0,26,rootToken,0);
         middle=Background(40,root.baseHeight,2);auto& c=*backgrounds.at(middle);c.alignFlags|=1;c.baseHeight=c.height=b.baseHeight;common.tree.Attach(middle,0,26,rootToken,0);
         teleportGrid=common.token();grids.emplace(teleportGrid,std::make_unique<InventoryGridNode>());grid->ConstructGrid(teleportGrid,1,6,8);auto& d=*grids.at(teleportGrid);d.baseHeight=d.height=250;d.acceptedCursor=8;d.alignFlags|=1;common.attach(teleportGrid,0,c.y+c.baseHeight,rootToken,0);
         bottom=Background(40,root.baseHeight,2);auto& e=*backgrounds.at(bottom);e.alignFlags|=1;e.baseHeight=e.height=250;common.tree.Attach(bottom,0,d.y,rootToken,0);
@@ -145,16 +151,18 @@ struct RawProductionControls::Impl {
         }
         return 0;
     }
-    // 43e530의 완만한 금액 표시와43ef10의 현재 격자 부모 재연결 단락이다.
+    // 43e530의 금액 표시와43ef10의 dirty/부모 재연결→공급/내용물 유지 순서다.
     void Idle(std::uint32_t token) {
         Prepare();if (token==budgetToken) {
             const auto target=session.PlayerKnown() ? static_cast<std::int32_t>(session.Sp(owner)) : 0;
             if (budget.flash && budget.until<=hooks.now()) { --budget.flash;budget.until=hooks.now()+kFlashInterval;BudgetText(); }
             if (budget.amount!=target) { const auto distance=static_cast<std::int64_t>(target)-budget.amount;budget.amount+=distance<0 ? (distance<-300 ? -100 : distance<-30 ? -10 : -1) : (distance>300 ? 100 : distance>30 ? 10 : 1);if (session.Core().ownerMode.fort) budget.amount=target;BudgetText(); }
         } else if (token==rootToken) {
-            const auto parent=session.CurrentTechnologyParent();if (!parent || editor) return;
+            if (session.UpdateProductionContents()) common.changed();
+            const auto parent=session.CurrentTechnologyParent();const auto& mode=session.Core().ownerMode;if (!parent || (!mode.fort && !mode.battle) || mode.challenge) return;
             // 원본은 실제 부모가 바뀐 격자만 Push/Bind/재부착한다.
-            for (const auto current:{bridgeGrid,teleportGrid}) if (grids.at(current)->object!=parent) { common.tree.Push(current);Bind(current,parent);auto& n=*grids.at(current);grid->AttachGrid(current,n.x,n.y,0,0); }
+            if (!editor) for (const auto current:{bridgeGrid,teleportGrid}) if (grids.at(current)->object!=parent) { common.tree.Push(current);Bind(current,parent);auto& n=*grids.at(current);grid->AttachGrid(current,n.x,n.y,0,0); }
+            maintenance->Run();
         } else if (auto* n=Find(items,token)) {
             if (!n->blink) { common.lifetime.SetIdle(token,false);n->flags|=1;common.changed();auto raw=session.Core().pool.AllocatedBytes({static_cast<std::uint16_t>(n->content)});raw[21]&=0xfd; }
             else if (n->blinkUntil<=hooks.now()) { --n->blink;n->blinkUntil=hooks.now()+0.1;n->flags^=1;common.changed(); }
@@ -175,7 +183,7 @@ struct RawProductionControls::Impl {
     }
 };
 // 공통 분배가 호출하기 전에 저장소/훅을 준비하고 Open은 소유자 설치 뒤 실행한다.
-RawProductionControls::RawProductionControls(RawMenuTree tree,RawMenuControls& menus,RawCampaignSession& session,const GameAssets& assets,RawProductionHooks hooks):impl_(std::make_unique<Impl>(std::move(tree),menus,session,assets,std::move(hooks))) {}
+RawProductionControls::RawProductionControls(RawMenuTree tree,RawMenuControls& menus,RawCampaignSession& session,const GameAssets& assets,ProductionMaintenanceGlobals& globals,ProductionMaintenancePanel& panel,RawProductionHooks hooks):impl_(std::make_unique<Impl>(std::move(tree),menus,session,assets,globals,panel,std::move(hooks))) {} // 같은 상태를 빌리고 별도 사본을 만들지 않는다.
 void RawProductionControls::Close() { if (impl_->rootToken) { impl_->common.lifetime.Kill(impl_->rootToken);impl_->common.lifetime.Cleanup();impl_->rootToken=0; } } // 같은 자식 우선 수명으로 닫는다.
 RawProductionControls::~RawProductionControls() { impl_->menus.SetExternalGumps({}); } // 공유 출력의 참조부터 끊는다.
 void RawProductionControls::Open() { impl_->Open(); } // 실제 생성과 첫 갱신이다.
@@ -198,7 +206,15 @@ void RawProductionControls::SetPalette(std::span<const ScreenColor> palette) {
 }
 // 자동 입력도 실제 항목/내용물 SID/화면 경계를 읽는다.
 std::string RawProductionControls::Report() const {
-    const auto& s=*impl_;std::ostringstream out;out<<"raw_production_gump\t"<<s.rootToken<<'\t'<<s.root.id<<'\t'<<s.root.width<<'\t'<<s.root.height<<'\t'<<s.budget.amount<<'\n';
+    const auto& s=*impl_;std::ostringstream out;out.precision(17);out<<"raw_production_gump\t"<<s.rootToken<<'\t'<<s.root.id<<'\t'<<s.root.width<<'\t'<<s.root.height<<'\t'<<s.budget.amount<<'\n';
+    out<<"raw_production_maintenance\t"<<s.productionGlobals.stockEnabled<<'\t'<<s.productionGlobals.sequence<<'\t'<<s.productionPanel.bridgeUntil<<'\t'<<s.productionPanel.oldMoney<<'\t'<<s.productionPanel.temple<<'\t'<<s.productionPanel.slots<<'\t'<<s.session.Core().processState.now<<'\n';
+    o::RawContainedFinder finder(s.session.Core().pool,s.session.ProductionFinder());
+    // 진단은 표시 항목 사본이 아니라 같은 현재 기술의 실제 내용물/종료값을 읽는다.
+    for (auto sid=finder.Begin({static_cast<std::uint16_t>(s.session.CurrentTechnologyParent())});sid.value;sid=finder.Next()) {
+        const auto raw=s.session.Core().pool.Slot(sid);const auto kind=Word(raw,18),flags=Word(raw,20);
+        if (flags&0x40) out<<"raw_production_bridge\t"<<sid.value<<'\t'<<Word(raw,12)<<'\t'<<std::uint32_t(raw[30])<<'\t'<<std::bit_cast<std::int32_t>(Word(raw,31)|(Word(raw,33)<<16))<<'\t'<<flags<<'\n';
+        if ((flags&8) && !s.productionGlobals.stockUntil.empty()) out<<"raw_production_stock_timer\t"<<kind<<'\t'<<s.productionGlobals.stockUntil.at(kind)<<'\n';
+    }
     // 각 현재 항목의 원본 내용물과 실제 경계를 기록한다.
     for (const auto& [token,n]:s.items) { const auto r=s.common.collection.Bounds(token);const auto raw=s.session.Core().pool.Slot({static_cast<std::uint16_t>(n->content)});out<<"raw_production_item\t"<<token<<'\t'<<n->content<<'\t'<<Word(raw,18)<<'\t'<<r.left<<'\t'<<r.top<<'\t'<<r.right<<'\t'<<r.bottom<<'\t'<<n->serial<<'\n'; }
     return out.str();

@@ -1,5 +1,8 @@
 // 기존 원본 몸체의 단일 저장소 조립을 실제 클라이언트 세션이 소유한다.
 #include "client/RawCampaignSession.h"
+#include "client/RawProductionMaintenance.h"
+#include "o/CanonDecoder.h"
+#include "o/RawBridgeEvents.h"
 #include "o/RawMissionStart.h"
 #include "o/RawFactoryDraw.h"
 #include "o/RawMissionAiSettings.h"
@@ -814,6 +817,8 @@ struct RawCampaignSession::Impl {
         worldHooks.destroy=construction->Destroy(lifetime->Destroy(hits->Destroy(services.destroy)));
         auto previousEffects=std::move(worldHooks.assets.emit); // 다른 기존 파생/전송/선택 처리기를 유지한다.
         worldHooks.assets.emit=[this,previous=std::move(previousEffects)](const SquidDestroyEvent& event) {
+            // 실제 다리 VT의 extra9(예측1/미리보기8)은 기존 Bridge Pre/Post가 고유 효과를 건너뛰고 공통 수명을 실행한다.
+            if ((AbstractBridgeLifetime(event.sid) || BridgeConnector(event.sid)) && (event.effect==SquidDestroyEffect::PreDestroy || event.effect==SquidDestroyEffect::PostDestroy)) { core.surfaces.Hooks().emit(event);return; }
             if (geyserLifetime->Handles(event.sid)) {
                 if (event.effect==SquidDestroyEffect::PreDestroy) { geyserLifetime->PreDestroy(event.sid,event.flags);return; }
                 if (event.effect==SquidDestroyEffect::PostDestroy) { geyserLifetime->PostDestroy(event.sid,event.flags);return; }
@@ -851,7 +856,7 @@ struct RawCampaignSession::Impl {
         worldHooks.assets=priests->DestroyHooks(std::move(worldHooks.assets)); // 실제4919b0의 목록·보호막·Carrier 전처리를 같은 삭제 호출에 연결한다.
         auto previousDestroy=std::move(worldHooks.destroy); // 실제 신전 VT의 공통+10만 추가 분배한다.
         worldHooks.destroy=[this,previous=std::move(previousDestroy)](Sid sid,std::uint32_t flags,const SquidDestroyHooks& hooks) {
-            if (geyserLifetime->Handles(sid) || Vortex(sid) || FenceCommon(sid) || Flyer(sid) || balloonBody->Handles(sid) || VisualDummy(sid) || PlainDamageable(sid) || SunFence(sid) || Nugget(sid) || PreviewDais(sid) || PriestForcefield(sid) || PlainCarrierLifetime(sid) || PriestLifetime(sid) || BuriedLifetime(sid) || BombLifetime(sid)) return core.virtualDestroy.Destroy(sid,flags,hooks);return previous(sid,flags,hooks);
+            if (AbstractBridgeLifetime(sid) || BridgeConnector(sid) || geyserLifetime->Handles(sid) || Vortex(sid) || FenceCommon(sid) || Flyer(sid) || balloonBody->Handles(sid) || VisualDummy(sid) || PlainDamageable(sid) || SunFence(sid) || Nugget(sid) || PreviewDais(sid) || PriestForcefield(sid) || PlainCarrierLifetime(sid) || PriestLifetime(sid) || BuriedLifetime(sid) || BombLifetime(sid)) return core.virtualDestroy.Destroy(sid,flags,hooks);return previous(sid,flags,hooks);
         };
         buriedRegular=std::make_unique<RawBuriedRegular>(core.pool,core.frames,core.frame,random);
         auto actualRegular=hits->Handler(combat->Handler(assetBindings->Handler(buriedRegular->Handler(priests->RegularHandler([this](Sid sid,std::uint32_t event,std::uint32_t count,float payload) {
@@ -984,6 +989,10 @@ struct RawCampaignSession::Impl {
         // 현재 VT를 매 호출 다시 읽고 주소가 같은 순수 수명 몸체만 공유한다.
         for (const auto known:kPlainDamageableTables) if (known==table) return true;return false;
     }
+    // 실제5034c8/+10=4220f0/+14=4221b0/+18=422300에서 extra9인 예측/미리보기만 기존 다리 수명에 연결한다.
+    bool AbstractBridgeLifetime(Sid sid) const { const auto raw=core.pool.Slot(sid);return raw[10]==core.bridgeState.bridgeType && Read(raw,0)==kPatchBridgeVtable && (raw[40]&9)!=0; }
+    // TYPE155 생성자422720의503360은+10/+14/+18이 각각 공통4af780/4b0950/4b0840이다.
+    bool BridgeConnector(Sid sid) const { const auto raw=core.pool.Slot(sid);return raw[10]==core.bridgeState.connectorType && Read(raw,0)==0x503360U; }
     // 실제507950/+10=4af780이며 extra8일 때44afd0의선행 일반 효과가 없다. 살아 있는 다이스 전체로 확장하지 않는다.
     bool PreviewDais(Sid sid) const { const auto raw=core.pool.Slot(sid);return raw[10]==runeState.daisType && Read(raw,0)==0x00507950 && (raw[40]&8)!=0; }
     // 449580/기존 RawDaisLifecycle.PostDestroy의 두 SID 쌍을 같은 실제9×b4 Player 저장소에 연결한다.
@@ -1973,6 +1982,22 @@ bool RawCampaignSession::UpdateProductionContents() {
     if (s.core.ownerMode.challenge || !s.player->CurrentTechnology()) return false;
     if (!s.core.bookkeeping.productionDirty) return false;
     s.core.bookkeeping.productionDirty=0;static_cast<void>(s.production->Refresh(s.playerState.templateOwner));s.productionSync->Synchronize();return true;
+}
+
+// 유지 계산에 새 월드 사본을 주지 않고 같은 장기 Player/Pool/설정을 매 호출 시 조회한다.
+std::unique_ptr<RawProductionMaintenance> RawCampaignSession::MakeProductionMaintenance(ProductionMaintenanceGlobals& globals,ProductionMaintenancePanel& panel,std::function<double()> wall,std::function<void(std::uint32_t)> refresh) {
+    auto* current=impl_.get();ProductionMaintenanceReads reads;
+    reads.active=[current] { return current->loaded && (current->core.ownerMode.fort || current->core.ownerMode.battle) && !current->core.ownerMode.challenge; };
+    reads.technology=[current] { return current->player->CurrentTechnology(); };reads.templateTechnology=[current] { return current->player->Technology(static_cast<std::int32_t>(current->playerState.templateOwner)); };
+    reads.temple=[current] { return Read(current->players,current->playerState.templateOwner*0xb4U+0x7c); };reads.editor=[this] { return Editor(); };
+    reads.generatorTimer=[current] { return current->login ? current->login->settingValues[0] : 1U; };reads.stockRate=[current] { return current->battleOptions.at(2); };
+    reads.artificial=[current](Sid parent) { const auto owner=current->core.pool.Slot(parent)[34];if (owner>=9) throw std::out_of_range("생산 유지 현재 AI 소유자 범위");return owner && Read(current->players,owner*0xb4U+0xb0)!=0; };
+    ProductionMaintenanceHooks hooks;hooks.wallSeconds=std::move(wall);hooks.gameSeconds=[current] { return current->core.processState.now; };hooks.money=[this] { return PlayerKnown() ? Sp(LocalOwner()) : 0.0F; };
+    hooks.touchDeck=[current] { static_cast<void>(current->productionDeck->Get(current->playerState.templateOwner)); };
+    hooks.pattern=[current] { return static_cast<std::uint32_t>(SelectBridgePattern(static_cast<std::int32_t>(current->random.Next(10000)))); };
+    hooks.create=[current](Sid parent,std::uint32_t type,std::uint32_t argument,std::uint32_t flags,std::uint32_t attach,std::uint32_t quality) { static_cast<void>(current->contained->Create(parent,type,argument,flags,attach,quality)); };
+    hooks.destroy=[current](Sid sid) { current->world.Destroy(sid,0); };hooks.allowed=[current](std::uint32_t type) { return current->production->Allowed(static_cast<std::int32_t>(type)); };hooks.cost=[current](std::uint32_t type) { return current->hp.TypeCostUnits(type); };hooks.refresh=std::move(refresh);
+    return std::make_unique<RawProductionMaintenance>(current->core.pool,current->core.types.size(),current->contentFinder,globals,panel,std::move(reads),std::move(hooks));
 }
 
 // 실제 Player 생성/현재 기술/참여가 같은 DWORD를 읽는다.

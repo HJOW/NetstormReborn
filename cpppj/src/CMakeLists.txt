@@ -139,3 +139,6 @@ target_sources(netstorm PRIVATE client/RawFactoryMenu.cpp client/RawFactoryMenu.
 
 # 실제 Client 생산 패널과 원본 비활성/선행 색표다.
 target_sources(netstorm PRIVATE client/ProductionColorMaps.cpp client/ProductionColorMaps.h client/RawProductionControls.cpp client/RawProductionControls.h)
+
+# 원본 생산 유지의 다리 공급·품질/재고와 비용 전환이다.
+target_sources(netstorm PRIVATE client/RawProductionMaintenance.cpp client/RawProductionMaintenance.h)

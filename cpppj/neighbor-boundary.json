@@ -1,0 +1,27 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-18",
+  "rows": 18,
+  "normalReturns": 72,
+  "controls": [
+    639,
+    895
+  ],
+  "precisionDifferences": 0,
+  "sha256": {
+    "tools/decomp_neighbor_boundary.py": "02df8d0e8c0c0482a74489252f063e7785abef07f1c1e9015c1dbe3dccd575b3",
+    "tools/decomp_neighbor_oracle.py": "3b0791e322aa3741b1316401d43a79f8cd011283643176d995f89922223115f5",
+    "tools/decomp_bridgeevent_oracle.py": "f85efae5dbbedce6e49b4eddd4e4b1a6ccfdcc394ec215d740082e6f759347a9",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "cpppj/tests/fixtures/neighbor-boundary-x86.tsv": "a0ba755d3333de2e9d688543b284c14a2e5ca79774c384bd4ed79e54969b6296",
+    "extracted/bridgeevent/originals/creation.c": "98b7be841a2e6cd8fb6c975527b161dce284c0f2ed96bcdcaea5f0e26223aff1",
+    "extracted/bridgeevent/originals/functions.tsv": "b97a2cb196b560d3ac3796fe53e679dfa7f150adef6b16e51a3cdf89fa8d9bb7",
+    "extracted/graphremove/originals/creation.c": "08fc021ba770c21bf298a5e5e547dee7ad500cfac334fce29e30e34253deba22",
+    "extracted/graphremove/originals/functions.tsv": "804ff5b28df9aeec65f968d26e660e266ed4a160a64a5d44c223f222219cc3b4",
+    "extracted/graphremove/originals/geometry/creation.c": "e3ad29a66b1b88964ede5cd0c4c921c0df6ac07cf8935180e5004f38dd51d3ca",
+    "extracted/graphremove/originals/geometry/functions.tsv": "ced17335d5e0a8b25e97ae7d05019f43bdaef60955b0a024ca21d2096713587e"
+  },
+  "limits": [
+    "10.78 실제4ade70/49ae80과4b23e0 전체의 유한 임시 좌표 입력이다. 원래20/21에 준비한 같은 raw source의 좌표만 덮어쓰며 다른 후보는 없다. 미등록 커서 미리보기의 발자국/빈 첫 이웃 경계이며 비유한 좌표나 모든 탐색 후보 조합의 증거는 아니다."
+  ]
+}
