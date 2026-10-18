@@ -20,8 +20,8 @@
     "cpppj/src/client/RawMenuControls.h": "70cf632cf282ea15c98c45ca1b8fba8b720dafb07eebc2a022723dfc35e3b1fa",
     "cpppj/src/client/RawMenuControls.cpp": "7cf3686cabed1d61e6f61b46a2c6d9f153b2a8ce4c5faee6cac3a01683555bb4",
     "cpppj/src/client/CampaignCursorClientEffects.cpp": "a3248a08922f8b4fdad05d2e2844db55f96196ccd58d55827b034dad17a55f72",
-    "cpppj/src/client/UberGump.cpp": "7a0d2ce97d70126f0964b30896eccdf872fc64e9113bb3a4caaf7fe2372cf949",
-    "cpppj/tests/CMakeLists.txt": "883cdf0fcacb2ff128f8c8313952fc45f5cb682f17a06af085461a515fb4cf67",
+    "cpppj/src/client/UberGump.cpp": "79692b0f94b82a078f58a82aafd2f64c19130fdd07aeba1a52f16a6cb793edc6",
+    "cpppj/tests/CMakeLists.txt": "cbcfcc747b8e626bba8dcce869ffe470a08e71100153c00b46e1336b68c5e3ad",
     "cpppj/tests/RawMenuControlsTests.cpp": "5ce029d5ba102c1784696d8df58e3f3691b6bdf01671b013793a6e504fbfc4f4",
     "cpppj/tests/CampaignCursorClientEffectsTests.cpp": "f04679442eea66764f77ab814314c9edd1790dca1f61f39e95eb29804b78d92b",
     "cpppj/src/client/FloatingSpGump.h": "36df57018c209f1e007727899f85c78f62840e450b740f9de34e7d0ee789d841",
@@ -5164,6 +5164,25 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "8ad6c6520b634837f8e6e7e2a0de4ac32bef1230770e640bf92b08ddc1122ef6",
           "current": "883cdf0fcacb2ff128f8c8313952fc45f5cb682f17a06af085461a515fb4cf67"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 191,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/UberGump.cpp",
+          "previous": "7a0d2ce97d70126f0964b30896eccdf872fc64e9113bb3a4caaf7fe2372cf949",
+          "current": "79692b0f94b82a078f58a82aafd2f64c19130fdd07aeba1a52f16a6cb793edc6"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "883cdf0fcacb2ff128f8c8313952fc45f5cb682f17a06af085461a515fb4cf67",
+          "current": "cbcfcc747b8e626bba8dcce869ffe470a08e71100153c00b46e1336b68c5e3ad"
         }
       ]
     }

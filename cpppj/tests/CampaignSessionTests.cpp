@@ -1662,7 +1662,7 @@ TEST_CASE(CampaignSession_LocalLoginMissionStartAiAlliances) {
 
 namespace {
 // 같은 실제 로그인/건설/연구/생산 흐름으로 기본 회귀와 제네레이터 연장 전투를 구분해 검사한다.
-void NaturalWorkshopPlacement(bool combat,bool burning=false) {
+void NaturalWorkshopPlacement(bool combat,bool burning=false,CellPoint cannonLocation={118,118}) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();RawButtonControls* activeProductionUi{}; // 같은 실제 내용물 알림의 현재 UI다.
     std::vector<std::array<float,2>> bridgeSounds;auto previousSound=std::move(services.sound.playOnceAt); // 실제 위치 소리 요청을 기존 장치 경계와 함께 관찰한다.
     services.sound.playOnceAt=[&external,&bridgeSounds,previous=std::move(previousSound)](float x,float y,SoundHandle sound,std::uint32_t first,std::uint32_t second) {
@@ -1817,7 +1817,7 @@ void NaturalWorkshopPlacement(bool combat,bool burning=false) {
         }
         const auto click=production.Point(128);CHECK(click.has_value());
         if (click) { CHECK(controls.PickGump(*click)==controls.RegisteredGump(3));controls.Event({InputCode::kLeftButton,click->x,click->y});CHECK(session.CursorDropSettings().preview==teleport && session.CursorDropSettings().type==128 && session.CursorDropSettings().lockDepth==0 && gets==(combat ? 3U : 1U));
-            const auto cannonPoint=combat ? CellPoint{118,118} : CursorPlacementPoint(session,ui);if (combat) {
+            const auto cannonPoint=combat ? cannonLocation : CursorPlacementPoint(session,ui);if (combat) {
                 ui.Point(session,cannonPoint,0,0,false);const auto& placement=session.Cursor().Placement();const auto& drop=session.CursorDropSettings();std::string supply; // 같은 배치 거부 원인의 현재 진단이다.
                 session.EnergySupply().Collect(supply,drop.x,drop.y,128,1);std::cout<<"캐논 실제좌표 "<<drop.x<<","<<drop.y<<" legal"<<drop.legal<<" 에너지"<<placement.descriptionAllowed<<" 공간"<<placement.placementAllowed<<" 공급문자"<<supply<<" 반경제곱"<<session.EnergySettings().radiusSquared<<"\n";
                 // 현재 공급 장부의 실제 위치/소유자/가상 표를 읽는다.
@@ -2004,3 +2004,60 @@ TEST_CASE(CampaignBurning_ActualHostRecoveryAndDeletion) {
     CHECK(!session.Particles().Rendering().Lookup(token) && !core.processes.FromForm(form));Put(raw,26,maximum/4);const auto second=burning.Refresh(temple);auto* next=dynamic_cast<BurningVisualProcess*>(core.processes.FromForm(second));CHECK(next);if (!next) return;const auto nextToken=next->Fields().registration.token;
     session.World().Destroy(temple,0x800);CHECK(!session.Particles().Rendering().Lookup(nextToken) && !core.processes.FromForm(second));CHECK(!core.destroy.PreDepth() && !core.destroy.PostDepth());std::cout<<"실제14 캡처/표시"<<drawn<<"픽셀·회복 삭제·피해 부모 삭제 정리 통과\n";
 }
+
+// 원본181입력의 캡처/모든 픽셀을 실제 Session의 파편16 생성 경로에서 대조한다.
+// raw/TYPE 기준점만 명시 입력이며 실제 미션 진행이나 썬더 실전 장면 검증으로 세지 않는다.
+TEST_CASE(CampaignTempleShrapnel_Native181CapturePixels) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;std::size_t captureSounds{};auto services=external.Services();auto play=services.sound.play;services.sound.play=[&captureSounds,play](auto... args) { ++captureSounds;return play(args...); };auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());
+    RawCampaignSession session(assets.game,assets.files,std::move(fort),"TheWarBegins",std::move(services));session.Load();auto core=session.Core();const Sid source{15002};auto raw=core.pool.AllocatedBytes(source);const std::vector<std::uint8_t> saved(raw.begin(),raw.end());std::size_t cases{},pixels{};
+    for (const auto& row:netstorm::test::rawscene::LoadFixture(NETSTORM_TEMPLE_CAPTURE_FIXTURE).rows) { // 원본 기대 열은 실행 뒤 비교에만 쓴다.
+        CHECK(row.size()==10);const auto type=assets.game.TypeTable().Find(row[0]);CHECK(type>=70);std::uint32_t table{}; // 동결 관측의 실제 다섯VT 입력이다.
+        if (type==123) table=0x519860;else if (type==124) table=0x5196f0;else if (type==125) table=0x519918;else if (type==71) table=0x50b888;else if (type==128) table=0x50b9b8;else { CHECK(false);return; }
+        auto& definition=const_cast<RiftTypeRecord&>(core.types[type]);const auto hotX=definition.hotspotX,hotY=definition.hotspotY;definition.hotspotX=-2;definition.hotspotY=3; // 이 세션만 소유하는 TYPE의 명시 native 입력이다.
+        Put(raw,0,table);raw[10]=static_cast<std::uint8_t>(type);raw[11]=0;Put(raw,12,std::stoul(row[2]),2);raw[34]=static_cast<std::uint8_t>(std::stoul(row[4]));raw[40]=static_cast<std::uint8_t>(std::stoul(row[3]));Put(raw,36,std::stoul(row[1]));const auto notices=captureSounds;
+        auto* effect=const_cast<RawCampaignParticles&>(session.Particles()).AddShrapnel(source,ShrapnelKind::Explosion);CHECK(effect);if (!effect) return;const auto& image=effect->Fields().image;
+        const auto metadata=std::to_string(image.width)+','+std::to_string(image.height)+','+std::to_string(image.hotspotX)+','+std::to_string(image.hotspotY);const bool same=metadata==row[5] && netstorm::test::rawscene::Hex(image.pixels)==row[6] && image.pixels.size()==std::stoul(row[7]);
+        if (!same) std::cerr<<"실제 파편 캡처 차이 "<<row[0]<<" frame"<<row[1]<<" word"<<row[2]<<" extra"<<row[3]<<" meta"<<metadata<<" 원본"<<row[5]<<'\n';CHECK(same && row[8]=="1" && captureSounds-notices==std::stoul(row[9]));pixels+=image.pixels.size();++cases;
+        const auto form=effect->Form(),dummy=effect->Parent();const auto token=effect->Fields().registration.token;CHECK(core.dependencies.Has(form,dummy));core.processes.Kill(*effect,0);CHECK(!session.Particles().Rendering().Lookup(token) && (core.pool.Slot(dummy)[11]&1U));definition.hotspotX=hotX;definition.hotspotY=hotY;std::copy(saved.begin(),saved.end(),raw.begin());
+    }
+    CHECK(cases==181 && pixels==2684495);std::cout<<"실제 Session 파편 캡처: 합성"<<cases<<"입력/원본"<<pixels<<"픽셀 일치·모든 의존 더미 정리\n";
+}
+// 저장된 실제 윈드/레인 템플의 폭발 삭제와 같은 Kernel의 자연 파편 소진을 확인한다.
+TEST_CASE(CampaignTempleShrapnel_ActualWindRainExplosionLifetime) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);
+    for (const auto mission:{"tutorial5","thewarbegins"}) { // 썬더는 위 명시 캡처 입력이며 이 실제 장면 둘에 포함하지 않는다.
+        SessionServicesFixture external;auto services=external.Services();services.deletion={};services.deletion.selected=[] { return Sid{}; };services.dependencyTransmit={};services.formPacket=[&](std::span<const std::uint8_t> packet) { external.packets.emplace_back(packet.begin(),packet.end()); };
+        ConfigInterface config([&](std::string_view path) { return assets.files.TryRead(path); });config.Configuration().Assign("DataDir=\"d\"\ncurrentLanguage=\"english\"\nmissionSpec=\"{DataDir}\\{local.1}.{currentLanguage}\"\nfortSpec=\"{DataDir}\\{local.1}.fort\"\n[END]\n");MissionScript script(config,mission); // 미션 이름과 저장fort 이름을 동일시하지 않고 실제 지정을 읽는다.
+        auto fort=FortTemplate::Parse(assets.files.Read(script.FortPath()),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),script.FortName(),std::move(services));session.Load();auto core=session.Core();Sid source; // 실제 보호 미션의 현재 owner1 템플이다.
+        for (const auto& object:session.World().Objects()) if (object.object.owner==1 && object.object.type==(std::string_view(mission)=="tutorial5" ? 123U : 124U)) { CHECK(!source.value);source=object.sid; } // 검사에서 템플을 만들지 않는다.
+        CHECK(source.value);if (!source.value) return;const auto before=core.pool.Slot(source);const auto x=std::bit_cast<float>(Get(before,14)),y=std::bit_cast<float>(Get(before,18));const auto depth=std::bit_cast<std::int8_t>(before[35]);Renderer renderer(1024,768);session.SetParticleView({static_cast<int>(x*16)-512,static_cast<int>(y*11)-384,0,0,1024,768},{[&] { return renderer.FullRedrawPending(); },[&](SquidDisplayRect rect,std::uint32_t flags) { renderer.Invalidate({rect.left,rect.top,rect.right,rect.bottom},flags); }});
+        session.World().Destroy(source,0x100000);CHECK(core.pool.Slot(source)[11]&1U);ShrapnelVisualProcess* effect{};
+        for (const auto token:session.Particles().Rendering().Slots()) { const auto* f=session.Particles().Rendering().Lookup(token);if (!f) continue;auto* candidate=dynamic_cast<ShrapnelVisualProcess*>(core.processes.FromForm({static_cast<std::uint16_t>(f->form)}));if (candidate && f->zOrder==depth) { CHECK(!effect);effect=candidate; } } // 실제16/더미 쌍만 선택한다.
+        CHECK(effect);if (!effect) return;const auto form=effect->Form(),dummy=effect->Parent();const auto token=effect->Fields().registration.token;CHECK(core.dependencies.Has(form,dummy) && effect->Fields().total>0);std::size_t drawn{};
+        for (std::uint64_t frame=1;frame<=160;++frame) { // 실제4초 동안 중력/색 출력/소진/의존 더미 삭제까지 진행한다.
+            session.RunFrame({frame*.025,100+frame*.025,.025,frame},false);renderer.SetScene(session.ParticleSprites({0,0,1024,768}));std::vector<std::uint8_t> pixels(1024*768,255);renderer.Draw(pixels,1024,255);renderer.Present([](ScreenRect) {});drawn+=static_cast<std::size_t>(std::count_if(pixels.begin(),pixels.end(),[](auto color) { return color!=255; }));
+        }
+        CHECK(drawn>0 && !session.Particles().Rendering().Lookup(token) && !core.processes.FromForm(form) && (core.pool.Slot(dummy)[11]&1U));CHECK(!core.destroy.PreDepth() && !core.destroy.PostDepth() && !core.bookkeeping.depth);session.SetParticleView({0,0,0,0,1024,768},{});std::cout<<mission<<" 실제 템플 폭발/파편 출력"<<drawn<<"픽셀·자연 소진/더미 정리 통과\n";
+    }
+}
+
+namespace {
+// 실제 원본 데이터에서 생성한 분배 표를 검사에도 같은 현재 상수로 읽는다.
+#include "client/CampaignDamageableRegularTables.inc"
+}
+// 새 함수 실행 수에 넣지 않는 실제83VT 데이터와 세 현재 C++ 분배 범위를 전수 대조한다.
+TEST_CASE(CampaignTempleShrapnel_Native83RegularTables) {
+    std::size_t count{};
+    for (const auto& row:netstorm::test::rawscene::LoadFixture(NETSTORM_DAMAGEABLE_REGULAR_TABLES_FIXTURE).rows) { // 기대 주소는 실제 PE 데이터에서만 읽는다.
+        const auto table=static_cast<std::uint32_t>(std::stoul(row[0])),hit=static_cast<std::uint32_t>(std::stoul(row[2]));CHECK((std::find(kCommonDamageableRegularTables.begin(),kCommonDamageableRegularTables.end(),table)!=kCommonDamageableRegularTables.end())==(row[3]=="1"));CHECK((std::find(kGeneralDamageableHitTables.begin(),kGeneralDamageableHitTables.end(),table)!=kGeneralDamageableHitTables.end())==(hit==0x44c8e0U));CHECK((std::find(kBaseDamageableHitTables.begin(),kBaseDamageableHitTables.end(),table)!=kBaseDamageableHitTables.end())==(hit==0x4add10U));++count;
+    }
+    CHECK(count==83);
+}
+// 폭발이 예약한6699/count의 실제 공통 Handle→지면 효과→가상98→HP/연소를 같은 Kernel에서 검증한다.
+TEST_CASE(CampaignTempleShrapnel_QueuedDamageOwnsActualHpAndBurning) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"TheWarBegins",external.Services());session.Load();auto core=session.Core();const Sid target{15006};CHECK(core.pool.Slot(target)[10]==71 && Get(core.pool.Slot(target),26)==300);
+    auto* request=core.processes.AddRegular(target,6699,0);CHECK(request);if (!request) return;request->SetInitialCount(65687); // 실제 창에서 관찰한owner1/피해151의 명시 예약 입력이다. 결과 HP는 쓰지 않는다.
+    session.RunFrame({.1,100.1,.1,1},false);CHECK(Get(core.pool.Slot(target),26)==149);const auto form=FindAttachedProcess(core.pool,target,14);CHECK(form.value);const auto* burning=dynamic_cast<BurningVisualProcess*>(core.processes.FromForm(form));CHECK(burning && burning->Fields().victim==target && burning->Fields().mode==1);std::cout<<"실제6699 예약: HP300→149/모드1 연소14 생성 통과\n";
+}
+// 같은 두 제네레이터 뒤 적 발사기 사정거리 바깥의 합법 캐논 후보를 자연 건설/전투로 확인한다.
+TEST_CASE(CampaignTempleShrapnel_NaturalSafeCannonCombat) { NaturalWorkshopPlacement(true,true,{116,118}); }

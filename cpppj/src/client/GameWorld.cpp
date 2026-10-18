@@ -528,6 +528,11 @@ std::optional<ColorMap> GameWorld::Remap(const TypeAsset& type,int owner) const 
 }
 // 같은 변환을 사용하여 자동 입력의 그림 중심점/월드 칸을 찾는다.
 std::optional<ScreenPoint> GameWorld::Point(std::string_view label) const {
+    // 자동 입력의 건설 목표는 현재 미리보기 치수/기준점으로 마우스 위치만 역산한다. 배치 판정/생성은 실제 클릭 경로를 사용한다.
+    if (label.starts_with("placement:")) {
+        if (!campaign_) return {};const auto comma=label.find(',');if (comma==std::string_view::npos) return {};const auto x=std::stoi(std::string(label.substr(10,comma-10))),y=std::stoi(std::string(label.substr(comma+1)));if (x<0 || x>=256 || y<0 || y>=256) return {};
+        const auto& p=campaign_->Cursor().Placement();if (p.imageWidth<=0 || p.imageHeight<=0) return {};return ScreenPoint{x*16-scrollX_-p.hotspotX+p.imageWidth/2,y*11-scrollY_-p.hotspotY+p.imageHeight/2};
+    }
     if (label.starts_with("cell:")) { const auto comma=label.find(','); if (comma==std::string_view::npos) return {}; const int x=std::stoi(std::string(label.substr(5,comma-5))),y=std::stoi(std::string(label.substr(comma+1))); return ToScreen(x-.5,y-.5); } //원본4971e0의+16/+11 역투영에서 논리 칸(x,y)의 내부를 클릭한다. 경계점은 다음 칸이다.
     if (!label.starts_with("world:")) return {}; const auto wanted=o::AsciiLower(label.substr(6));
     // 원본 타입 파일 이름의 첫 내 객체를 고른다.

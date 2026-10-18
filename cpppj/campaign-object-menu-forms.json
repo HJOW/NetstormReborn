@@ -12,11 +12,11 @@
     "cpppj/src/client/CampaignClientServices.cpp": "4566373b792d67b289fe125779e0574a5f57008d69e4267bf63ac83b21527b5f",
     "cpppj/src/client/RawButtonControls.cpp": "1e31ef93cd819be30a75bcada1e9eba98adfae917a8db925a4845bfd37a2ef92",
     "cpppj/src/client/RawButtonControls.h": "d49ab77d71b4d10beea6c2a5e466a87289874092592c86bc879cd971fab64180",
-    "cpppj/src/client/RawCampaignSession.cpp": "8969c7d0363026a330fc93e76eb9d972e10963ce754db5dbdf6e948016d3637c",
+    "cpppj/src/client/RawCampaignSession.cpp": "5df7716b23701f4f93af416c7ca6aedae4901e16bd4be77710ed14b53c2fd743",
     "cpppj/src/client/RawCampaignSession.h": "511aa12a84e83386833cff1a9ffc7c42a7a683e808c9a8d61fc94262b7e4a232",
     "cpppj/src/client/RawMenuControls.cpp": "7cf3686cabed1d61e6f61b46a2c6d9f153b2a8ce4c5faee6cac3a01683555bb4",
     "cpppj/src/client/RawMenuControls.h": "70cf632cf282ea15c98c45ca1b8fba8b720dafb07eebc2a022723dfc35e3b1fa",
-    "cpppj/src/client/UberGump.cpp": "7a0d2ce97d70126f0964b30896eccdf872fc64e9113bb3a4caaf7fe2372cf949",
+    "cpppj/src/client/UberGump.cpp": "79692b0f94b82a078f58a82aafd2f64c19130fdd07aeba1a52f16a6cb793edc6",
     "cpppj/tests/CampaignObjectMenuTests.cpp": "fea9198ea2150c42bb523f7ac9298c2f819acd1fc9b9887b53020c206ad62563"
   },
   "unchangedExistingModules": {
@@ -1004,6 +1004,25 @@
           "path": "cpppj/src/client/RawCampaignSession.cpp",
           "previous": "8fefbbf9e3ddc9d6a59308acacd34e63fdfd4d676a3b2bd6505f7a229184cf2b",
           "current": "8969c7d0363026a330fc93e76eb9d972e10963ce754db5dbdf6e948016d3637c"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 191,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "8969c7d0363026a330fc93e76eb9d972e10963ce754db5dbdf6e948016d3637c",
+          "current": "5df7716b23701f4f93af416c7ca6aedae4901e16bd4be77710ed14b53c2fd743"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/UberGump.cpp",
+          "previous": "7a0d2ce97d70126f0964b30896eccdf872fc64e9113bb3a4caaf7fe2372cf949",
+          "current": "79692b0f94b82a078f58a82aafd2f64c19130fdd07aeba1a52f16a6cb793edc6"
         }
       ]
     }

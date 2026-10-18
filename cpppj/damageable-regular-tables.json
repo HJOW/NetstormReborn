@@ -1,0 +1,19 @@
+{
+  "unit": 191,
+  "scope": "실제 PE 데이터83행. 새 함수 실행 관찰0/OS0. 기존 원본대조 몸체에 전달할 분배만 복원한다.",
+  "rows": 83,
+  "groups": {
+    "kCommonDamageableRegularTables": 13,
+    "kGeneralDamageableHitTables": 31,
+    "kBaseDamageableHitTables": 45
+  },
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "cpppj/src/o/CampaignDamageVtables.inc": "d5e9575934d1add7c00d64d7b6ae16be94198a3ef38ec077f4637ae6bbfc6a51",
+    "cpppj/src/o/RawAssetRegular.cpp": "09c48cbec14c7732b6941e43f2e1db12a33727f2910511c9e575bfcabfcc10e2",
+    "cpppj/src/o/RawDamageableHit.cpp": "ed432708aa90bda0a314b0d463ba8d8d794525dbcd423d248ae05287e27dec22",
+    "tools/decomp_damageable_regular_tables.py": "bd9944095f22aafe38f101b8f2f6af6143c8ce751c0b20ca14272b266905d631",
+    "cpppj/tests/fixtures/damageable-regular-tables-x86.tsv": "d416db32c2bda15776a0876c73dd79ea4dc01d73c423d57627434288380eac92",
+    "cpppj/src/client/CampaignDamageableRegularTables.inc": "b496ef4cd8401037dd06857892e2e1f285ae8bced7ef06a50573b271e4d93b64"
+  }
+}

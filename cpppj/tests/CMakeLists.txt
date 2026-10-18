@@ -1586,3 +1586,11 @@ set_source_files_properties(SunFlyerFrameTests.cpp PROPERTIES COMPILE_DEFINITION
 target_sources(netstorm_tests PRIVATE TempleDrawTests.cpp)
 target_compile_definitions(netstorm_tests PRIVATE
     "NETSTORM_TEMPLE_DRAW_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/temple-draw-x86.tsv\"")
+
+# 실제 Session 파편 이미지 전체를 새 원본 캡처와 대조한다. 다른 검사 정의는 바꾸지 않는다.
+set_property(SOURCE CampaignSessionTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS
+    "NETSTORM_TEMPLE_CAPTURE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/temple-capture-x86.tsv\"")
+
+# 실제83VT의 공통 Handle/HP 분배 데이터를 새 통합 검사에만 공급한다.
+set_property(SOURCE CampaignSessionTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS
+    "NETSTORM_DAMAGEABLE_REGULAR_TABLES_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/damageable-regular-tables-x86.tsv\"")

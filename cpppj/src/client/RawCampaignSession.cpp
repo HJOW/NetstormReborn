@@ -6,6 +6,7 @@
 #include "o/RawBridgeDraw.h"
 #include "o/RawMissionStart.h"
 #include "o/RawFactoryDraw.h"
+#include "o/RawDudeDrop.h"
 #include "o/RawMissionAiSettings.h"
 #include "client/RawCampaignCursor.h"
 #include "client/PriestPlacementAssets.h"
@@ -118,6 +119,9 @@ template<class Result,class... Args> void FillMissing(std::function<Result(Args.
 void SessionCheck(bool value) { if (!value) throw std::logic_error("실제 캠페인 세션 예약/자료 조건 오류"); }
 // 하나의 실제 클라이언트 소리 이름표만 사용한다.
 SoundList& RequireSounds(const RawCampaignSessionServices& services) { if (!services.soundNames) throw std::invalid_argument("세션의 실제 SoundList 누락");return *services.soundNames; }
+// 실제 PE의 +5c/+98 조합만 원본 공통 Handle/HP 몸체로 전달한다.
+#include "client/CampaignDamageableRegularTables.inc"
+template<std::size_t Count> bool HasRegularTable(const std::array<std::uint32_t,Count>& tables,std::uint32_t table) { return std::find(tables.begin(),tables.end(),table)!=tables.end(); } // 새 타입 이름 추정 없이 현재VT 기록값을 대조한다.
 // 현재 원본 초기 다리/받침/미션 전역이다.
 BridgeConnectState CampaignLinks() { BridgeConnectState result;result.bridgeType=82;result.islandType=94;result.stalagType=95;result.connectorType=155;result.noIslandType=157;result.battle=true;result.mission=true;return result; }
 constexpr std::size_t kCampaignFactoryCapacity=500; // PATCH004fc990의push1f4→0044fb20이확보하는실제0055a4d0목록의DWORD수다.
@@ -291,6 +295,12 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawPlayerDamageNotice> playerDamage; // 같은 Player9/모드의 실제 AI 조회와 피해 통지 래퍼다.
     std::unique_ptr<RawAiDamage> aiDamage; // 같은 AI 본체·목록에 실제 피해 대상/공격자 반응을 기록한다.
     std::unique_ptr<RawCampaignHitBindings> hits; // 같은 피해/감시/충돌/주변Dude/자산수명 처리기다.
+    SquidPostPopList dudePopulation; // 실제 PE의0055a4f0/4/8 초기 포인터·capacity·count는0이다. 임의 생성 한도를 만들지 않는다.
+    DudeSpawnState dudeSpawnState{dudePopulation}; // 생성과 최초 Pop이 같은 현재 목록을 사용한다.
+    std::unique_ptr<RawDudeSpawn> dudeSpawn; // 실제 factory/owner/가상Pop 생성 몸체다.
+    std::unique_ptr<RawDudePostPop> dudePostPop; // 같은 population/idle/I 프레임과 공통 후처리다.
+    std::unique_ptr<RawDudeTask> dudeTask; // 같은 Host의 masked Regular 조회/생성과 float 지연이다.
+    std::unique_ptr<RawDudeDrop> dudeDrop; // 실제 무작위/진입점 드롭과 두 난수 소비를 연결한다.
     SoundList& soundNames; // 실제 보호막 파일명의 원본 이름표/opaque handle 조회다.
     std::unique_ptr<void,void(*)(void*)> pendingPickupSound{nullptr,[](void* storage) { ::operator delete(storage); }}; // 원본new40 성공부터실제Sound47 생성까지의단일예약메모리다.
     std::unique_ptr<void,void(*)(void*)> pendingSunFlyerSound{nullptr,[](void* storage) { ::operator delete(storage); }}; // 훨리기그 첫Pop의new40 성공부터같은Sound47 생성까지의예약이다.
@@ -726,7 +736,12 @@ struct RawCampaignSession::Impl {
         CampaignShrapnelHooks shrapnel;shrapnel.crt=&particleCrt;shrapnel.lifetime.create=[this](std::uint32_t type,std::uint32_t flags) { return world.Create(type,flags); };
         shrapnel.lifetime.pop=[this](Sid sid,float x,float y,std::uint32_t flags) { world.Pop(sid,x,y,flags); };
         shrapnel.lifetime.depend=[this](Sid form,Sid dummy) { static_cast<void>(core.dependencies.Create(form,dummy)); };
-        shrapnel.lifetime.capture=[this](Sid sid) { if (!Flyer(sid) && !BridgeLifetime(sid)) throw std::logic_error("다른 실제 파편 source의 전용 색표/추가 그림 미복원 TYPE"+std::to_string(core.pool.Slot(sid)[10]));return shrapnelCapture->Capture(sid); };
+        shrapnel.lifetime.capture=[this](Sid sid) {
+            const auto raw=core.pool.Slot(sid);
+            // 원본 전체 캡처/가상Draw/RLE를 대조한 세 템플과71/128은 같은 일반색 캡처를 재사용한다.
+            if (IsPatchTemple(raw) || IsBurningArcherCapture(raw)) { if (!buildingCapture) throw std::logic_error("실제 템플/발사기 파편 캡처 설치 전 호출");return buildingCapture->Capture(sid); }
+            if (!Flyer(sid) && !BridgeLifetime(sid)) throw std::logic_error("다른 실제 파편 source의 전용 색표/추가 그림 미복원 TYPE"+std::to_string(raw[10]));return shrapnelCapture->Capture(sid);
+        };
         shrapnel.destroyUnpaired=[this](Sid sid) { world.Destroy(sid,0); };
         particles=std::make_unique<RawCampaignParticles>(core,random,assets.game.Palette(),[this](float x,float y,std::string_view name) {
             if (!services.sound.playOnceAt) throw std::logic_error("캠페인 빔 실제 파일명 음향 미연결");services.sound.playOnceAt(x,y,soundNames.Lookup(name),0,0);
@@ -768,6 +783,20 @@ struct RawCampaignSession::Impl {
         combat=std::make_unique<RawCampaignArcherBindings>(world,*gunTarget,random,archerTypes,metadata.frames,missileTypes,archerState,missileState,std::move(combatEffects));
         auto assetEffects=services.assets;assetEffects.postPop.reserveRegular=[] { return true; };
         assetEffects.postPop.nuggetPostPop=[this](Sid sid,std::uint32_t flags) { if (!nuggetPostPop) throw std::logic_error("현재 너겟 PostPop 미설치");nuggetPostPop->PostPop(sid,flags); };
+        if (!assetEffects.regular.damageGround) assetEffects.regular=MakeAssetGunImpactHooks(hits->Impact(),std::move(assetEffects.regular));
+        if (!assetEffects.regular.hitPoints) assetEffects.regular.hitPoints=[this](Sid victim,std::uint32_t amount,std::int32_t owner,std::uint32_t attacker) -> std::int32_t {
+            if (attacker>65535U) throw std::out_of_range("예약 피해의 공격자 SID 범위 오류");const auto table=Read(core.pool.Slot(victim),0);const auto damage=std::bit_cast<std::int32_t>(amount);const Sid source{static_cast<std::uint16_t>(attacker)};
+            if (HasRegularTable(kGeneralDamageableHitTables,table)) return hits->GeneralDamage().Hit(victim,damage,static_cast<std::uint32_t>(owner),source);
+            if (HasRegularTable(kBaseDamageableHitTables,table)) return hits->GeneralDamage().BaseHit(victim,damage,static_cast<std::uint32_t>(owner),source);
+            if (PriestLifetime(victim)) return hits->PriestDamage().Hit(victim,damage,static_cast<std::uint32_t>(owner),source);
+            if (Vortex(victim)) {
+                VortexDamageHooks hooks;hooks.constructionType=[this] { return buildingState.processType; };
+                hooks.find=[this](Sid parent,std::uint32_t type,std::uint32_t index,bool remove) { RawContainedLookup lookup(core.pool,[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); });return lookup.Find(parent,type,index,remove); };
+                hooks.resetEnd=[this](Sid form,std::uint32_t amount) { if (!building) throw std::logic_error("예약 신전 피해의 건설 연결 누락");PrepareConstruction();building->ResetEndFromForm(form,amount); };hooks.refresh=[this](Sid sid) { core.display.Update(core.pool.Slot(sid),0); };
+                hooks.general=[this](Sid sid,std::int32_t amount,std::uint32_t owner,Sid source) { return hits->GeneralDamage().Hit(sid,amount,owner,source); };return RawVortexDamage(core.pool,victim,damage,static_cast<std::uint32_t>(owner),source,hooks);
+            }
+            throw std::logic_error("예약 피해의 다른 실제 가상98 미복원 TYPE"+std::to_string(core.pool.Slot(victim)[10]));
+        };
         // Damageable의 실제6700 재시도는 같은30/17/47·시계·HP·수명을 사용하는 기존 건설 시작으로 전달한다.
         assetEffects.regular.startConstruction=[this](Sid parent,float duration) {
             if (!building) throw std::logic_error("실제 건설 시작의 세션 처리기 미설치");PrepareBuilding(core.processState.now);building->Start(parent,duration);
@@ -845,18 +874,18 @@ struct RawCampaignSession::Impl {
             // 다이스 미리보기의 extra8은44afd0의 큰 일반 전처리를 건너뛴다. 실제 VT/타입/비트를 모두 확인한다.
             if (PreviewDais(event.sid)) {
                 if (event.effect==SquidDestroyEffect::PreDestroy) { damageablePre->PreDestroy(event.sid,event.flags);return; }
-                if (event.effect==SquidDestroyEffect::PostDestroy) { DestroyPreviewDaisSlots(event.sid);damageablePostState.battle=core.ownerMode.battle;damageablePostState.boss=assetState.boss;damageablePost->PostDestroy(event.sid,event.flags);return; }
+                if (event.effect==SquidDestroyEffect::PostDestroy) { DestroyPreviewDaisSlots(event.sid);PrepareDamageablePost();damageablePost->PostDestroy(event.sid,event.flags);return; }
             }
             if (PlainDamageable(event.sid) || SunFence(event.sid) || Nugget(event.sid)) {
                 if (event.effect==SquidDestroyEffect::PreDestroy) { if (SunFence(event.sid)) fenceLifetime->PreDestroy(event.sid,event.flags);else damageablePre->PreDestroy(event.sid,event.flags);return; }
-                if (event.effect==SquidDestroyEffect::PostDestroy) { damageablePostState.battle=core.ownerMode.battle;damageablePostState.boss=assetState.boss;damageablePost->PostDestroy(event.sid,event.flags);return; }
+                if (event.effect==SquidDestroyEffect::PostDestroy) { PrepareDamageablePost();damageablePost->PostDestroy(event.sid,event.flags);return; }
             }
             if (PlainCarrierLifetime(event.sid) || balloonBody->Handles(event.sid)) {
                 if (event.effect==SquidDestroyEffect::PreDestroy) { if (balloonBody->Handles(event.sid)) balloonBody->PreDestroy(event.sid,event.flags);else priests->Carrier().PreDestroy(event.sid,event.flags);return; }
-                if (event.effect==SquidDestroyEffect::PostDestroy) { damageablePostState.battle=core.ownerMode.battle;damageablePostState.boss=assetState.boss;damageablePost->PostDestroy(event.sid,event.flags);return; }
+                if (event.effect==SquidDestroyEffect::PostDestroy) { PrepareDamageablePost();damageablePost->PostDestroy(event.sid,event.flags);return; }
             }
             // 실제 사제 +18은44b9e0이다. 고유 +14는 뒤의 사제 전처리 래퍼가 먼저 실행한다.
-            if (PriestLifetime(event.sid) && event.effect==SquidDestroyEffect::PostDestroy) { damageablePostState.battle=core.ownerMode.battle;damageablePostState.boss=assetState.boss;damageablePost->PostDestroy(event.sid,event.flags);return; }
+            if (PriestLifetime(event.sid) && event.effect==SquidDestroyEffect::PostDestroy) { PrepareDamageablePost();damageablePost->PostDestroy(event.sid,event.flags);return; }
             if (BombLifetime(event.sid) && bombPre->Handles(event.sid) && event.effect==SquidDestroyEffect::PreDestroy) { bombPre->PreDestroy(event.sid,event.flags);return; } // 실제고유전처리는공통절앞에서처리한다.
             if (FenceCommon(event.sid) || VisualDummy(event.sid) || PriestForcefield(event.sid) || BuriedLifetime(event.sid) || BombLifetime(event.sid)) { // 실제 보호막도 +14/+18이 공통004b0950/004b0840이다.
                 if (event.effect==SquidDestroyEffect::PreDestroy) { world.CommonDeletion().PreDestroy(event.sid,event.flags);return; }
@@ -864,11 +893,11 @@ struct RawCampaignSession::Impl {
             }
             if (Flyer(event.sid)) {
                 if (event.effect==SquidDestroyEffect::PreDestroy) { flyerPre->PreDestroy(event.sid,event.flags);return; }
-                if (event.effect==SquidDestroyEffect::PostDestroy) { damageablePostState.battle=core.ownerMode.battle;damageablePostState.boss=assetState.boss;damageablePost->PostDestroy(event.sid,event.flags);return; }
+                if (event.effect==SquidDestroyEffect::PostDestroy) { PrepareDamageablePost();damageablePost->PostDestroy(event.sid,event.flags);return; }
             }
             if (Vortex(event.sid)) {
                 if (event.effect==SquidDestroyEffect::PreDestroy) { vortexPre->PreDestroy(event.sid,event.flags);return; }
-                if (event.effect==SquidDestroyEffect::PostDestroy) { damageablePostState.battle=core.ownerMode.battle;damageablePostState.boss=assetState.boss;damageablePost->PostDestroy(event.sid,event.flags);return; }
+                if (event.effect==SquidDestroyEffect::PostDestroy) { PrepareDamageablePost();damageablePost->PostDestroy(event.sid,event.flags);return; }
             }
             previous(event);
         };
@@ -889,6 +918,8 @@ struct RawCampaignSession::Impl {
             const bool priest=raw[10]==kPriestType && Read(raw,0)==kPatchPriestVtable;
             // 사제의 다섯 고유 사건은 파생 처리기가 담당한다. 나머지만 원본 기본 Carrier로 넘긴다.
             if (carrierRegular->Handles(sid) || (priest && (event<0x259U || event>0x25dU))) return carrierRegular->Handle(sid,event,count,payload);
+            // 원본 가상5c가44b900이고98이기존Base/Damageable인13개VT만 공통 예약 피해/재건설로 분배한다.
+            if (HasRegularTable(kCommonDamageableRegularTables,Read(raw,0))) return assetBindings->Regular().DamageableHandle(sid,event,count,payload);
             throw std::logic_error("캠페인 현재 Kernel의 다른 실제 Regular 부모 미연결: TYPE"+
                 std::to_string(core.pool.Slot(sid)[10])+" event"+std::to_string(event));
         })))));
@@ -1377,8 +1408,15 @@ struct RawCampaignSession::Impl {
         hooks.damageable=[this](Sid sid,std::uint32_t event,std::uint32_t count,float payload) { return assetBindings->Regular().DamageableHandle(sid,event,count,payload); };
         carrierRegular=std::make_unique<RawCarrierRegular>(core.pool,core.types,carrierRegularTypes,assetState.boss,std::move(hooks));
     }
+    // 실제 PostDestroy의 세 전역은 각 호출 직전에 같은 현재 월드에서 읽는다.
+    void PrepareDamageablePost() { damageablePostState.battle=core.ownerMode.battle;damageablePostState.boss=assetState.boss;damageablePostState.dudeCount=static_cast<std::int32_t>(dudePopulation.count); }
     // 실제 Damageable 해방/공통 삭제와 신전 Pre를 같은 현재 월드에 조립한다.
     void ConnectDamageable() {
+        if (dudeDrop) throw std::logic_error("실제 Dude 드롭 중복 연결");
+        dudeSpawn=std::make_unique<RawDudeSpawn>(core.pool,core.factory,core.owner,dudeSpawnState,DudeSpawnHooks{[this](Sid sid,float x,float y,std::uint32_t flags) { world.Pop(sid,x,y,flags); }});
+        dudePostPop=std::make_unique<RawDudePostPop>(core.pool,core.frames,dudeSpawnState,MakeDudePostPopHooks(core.pool,core.frame,core.postPop));core.postPop.SetDudePostPop(dudePostPop.get());
+        DudeTaskHooks task;task.notifySurface=[this](Sid sid) { core.building.NotifySurface(sid); };dudeTask=std::make_unique<RawDudeTask>(core.pool,DudeTaskState{core.processState,core.bridgeState.bridgeType},MakeDudeTaskHostHooks(core.pool,core.processes,std::move(task)));
+        dudeDrop=std::make_unique<RawDudeDrop>(core.pool,core.types,*dudeSpawn,*dudeTask,hits->Dudes(),random);
         DamageableReleaseHooks release;release.create=[this](std::uint32_t type,std::uint32_t flags) { return world.Create(type,flags); };
         release.setOwner=[this](Sid sid,std::uint32_t owner) { ownership->SetOwner(sid,owner); };
         release.pop=[this](Sid sid,float x,float y,std::uint32_t flags) { world.Pop(sid,x,y,flags); };release.notifySurface=[this](Sid sid) { core.building.NotifySurface(sid); };
@@ -1403,7 +1441,9 @@ struct RawCampaignSession::Impl {
         bombPre=std::make_unique<RawBombPreDestroy>(core.pool,BombPreDestroyHooks{pre.explosion,[this](float x,float y) { if (!services.sound.playOnceAt) throw std::logic_error("Bomb 실제폭발음향 미연결");services.sound.playOnceAt(x,y,soundNames.Lookup("explosion.wav"),0,0); },pre.base}); // 큰폭발과공통전처리는같은실제몸체를공유한다.
         damageablePre=std::make_unique<RawDamageablePreDestroy>(core.pool,core.spots,contentFinder,damageablePreState,std::move(pre));priests->BindDamageable(*damageablePre);
         flyerPre=std::make_unique<RawFlyerPreDestroy>(core.pool,FlyerPreDestroyHooks{[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); },[this](Sid sid,std::uint32_t flags) { damageablePre->PreDestroy(sid,flags); }});
-        auto post=services.damageablePost;FillMissing(post.dropDude);FillMissing(post.dropIsland);
+        auto post=services.damageablePost;
+        if (!post.dropDude) post.dropDude=[this](Sid source,std::int32_t index,bool randomPoint) { dudeDrop->Drop(source,index,randomPoint); };
+        if (!post.dropIsland) post.dropIsland=[this](float x,float y,std::uint32_t flags,std::uint32_t owner) { if (!buildingEffects) throw std::logic_error("파괴 후 실제 받침 정리 설치 전 호출");PrepareBuilding(core.processState.now);buildingEffects->DropIsland(x,y,flags,owner); };
         post.regular=[this](Sid sid,std::uint32_t event,float payload,std::uint32_t count) { auto* process=core.processes.AddRegular(sid,event,payload);if (!process) throw std::bad_alloc();process->SetInitialCount(count); };
         post.hasBridgeFall=[this](Sid sid) { return HasScheduledBridgeFall(core.processes,sid); };post.notifySurface=[this](Sid sid) { core.building.NotifySurface(sid); };
         post.displayUpdate=[this](Sid sid) { core.display.Update(core.pool.Slot(sid)); };post.destroy=[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); };
@@ -1421,7 +1461,7 @@ struct RawCampaignSession::Impl {
         geyser.update=[this](Sid sid) { core.display.Update(core.pool.Slot(sid)); };
         geyser.registerAi=[this](Sid sid,std::uint32_t state) { RawGeyserAiRegistration(core.pool.Edition(),players).Register(sid.value,state); };
         geyser.damageablePre=[this](Sid sid,std::uint32_t flags) { damageablePre->PreDestroy(sid,flags); };
-        geyser.damageablePost=[this](Sid sid,std::uint32_t flags) { damageablePostState.battle=core.ownerMode.battle;damageablePostState.boss=assetState.boss;damageablePost->PostDestroy(sid,flags); };
+        geyser.damageablePost=[this](Sid sid,std::uint32_t flags) { PrepareDamageablePost();damageablePost->PostDestroy(sid,flags); };
         geyser.dropIsland=[this](float x,float y,std::uint32_t flags,std::uint32_t owner) { PrepareBuilding(core.processState.now);buildingEffects->DropIsland(x,y,flags,owner); };
         geyserLifetime=std::make_unique<RawGeyserLifetime>(core.pool,assetState.geysers,globals.editor,std::move(geyser));
     }
@@ -1982,6 +2022,7 @@ struct RawCampaignSession::Impl {
         try { world.ClearProcesses(); }
         catch (const std::exception& error) { std::fprintf(stderr,"실제 Session Kernel 정리 실패: %s\n",error.what()); }
         catch (...) { std::fprintf(stderr,"실제 Session Kernel 정리 실패: 알 수 없는 예외\n"); }
+        core.postPop.SetDudePostPop(nullptr); // 생성/최초 Pop 모듈보다 먼저 파생 분배를 반납한다.
         core.postPop.SetCarrierStealPostPop(nullptr); // 장기 크랩 몸체보다 먼저 가상 분배를 반납한다.
         core.postPop.SetPlayerPostPop(nullptr);
         core.postPop.SetBuriedPostPop(nullptr); // 장기 모듈 해제 뒤 파생 포인터를 남기지 않는다.
