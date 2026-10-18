@@ -14,7 +14,7 @@
     "cpppj/src/o/RawCarrierPreDestroy.h": "d1f5903fc44c51dc7c6985ff073851b31f46f3f6fdd1a972cb568440cf7d173a",
     "cpppj/src/o/RawCarrierPreDestroy.cpp": "18a4daeff34834590cfbc4d1b73f64475a009b4815a88ac98aa76f5b1e618c95",
     "cpppj/src/o/RawContainedFinder.h": "ebce363e0a9fbebcd3604fcdfb39e89b1ac1b36a0624fb4ccdccebebb8c9c0a8",
-    "cpppj/src/o/RawContainedFinder.cpp": "3a7c0ca4530d019de4ba9fcb714991ac3d53703612d8bd5c865346e69fe9b8df",
+    "cpppj/src/o/RawContainedFinder.cpp": "b3bfedcc598e04ab1a4755ee77adff8a331d1be941975fe379dc705612d9a3a2",
     "cpppj/src/o/RawContainedCreate.h": "f095756ee7515a66808967d2d42ce07879dc215b24a3451f27bb6d45653a8ed9",
     "cpppj/src/o/RawContainedCreate.cpp": "54ac5f440300896af9fc25bfc98315ae5efe3e99b393fce348f006e09c3cbf97",
     "cpppj/src/o/ContentFormHost.h": "8653814bdfbe2c0b82957014ca65f7c17381bf428dc3671a7254ec14324c441f",
@@ -130,6 +130,19 @@
           "path": "cpppj/src/o/RawPlayerContentNotice.cpp",
           "previous": "81e9630abc19b52efad5680d82acab806a22f5849f849d3823a335822a0f6e24",
           "current": "17aedeb4b2648e39b2107f11d2fb093706e5dced4591a51e67f24f9db489a2ec"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 178,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/current_sources",
+          "path": "cpppj/src/o/RawContainedFinder.cpp",
+          "previous": "3a7c0ca4530d019de4ba9fcb714991ac3d53703612d8bd5c865346e69fe9b8df",
+          "current": "b3bfedcc598e04ab1a4755ee77adff8a331d1be941975fe379dc705612d9a3a2"
         }
       ]
     }

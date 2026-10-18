@@ -111,7 +111,7 @@
     "cpppj/hist/run25-base/cpppj/tests/CMakeLists.txt": "aace64ebdc1678bfdf480a70fec47e0daa06290dd956cbe40f49593c07c4ecbe",
     "cpppj/hist/run25-base/cpppj/tests/CampaignInstallSupport.h": "2d42c64bfd2e49e9f1bdb5218c8e0e3f47d5029e24a9c1e2c65180aaf08cf02a",
     "cpppj/hist/run25-base/cpppj/tests/CampaignWorldLoadTests.cpp": "3f104339ae0ff4ef53e366b50c801427e7a268d8991731a67677e73fbac68326",
-    "cpppj/src/CMakeLists.txt": "8bcbbd1445cf96d31be4573fad443d8fe2248455bdda11abd9015f94821b7b26",
+    "cpppj/src/CMakeLists.txt": "0d374d3a7a0c535175207285f81341067c4e5b50c8d7dadf00a80e377ff7fe21",
     "cpppj/src/app/CanonMayPlaceInspect.cpp": "27eda46bca500c898abeb9a3a7c4e8588b38e061b579c84cbf6c032c6d46dda9",
     "cpppj/src/app/FrameBindingInspect.cpp": "042602919b0531fb1cbaf3941dc6597bee73944bbf0d571dacfd638bb45dd07c",
     "cpppj/src/app/FrameBindingInspect.h": "4e187ca41f8c34ed52c022b58a57327a554a723e3e26ee88a1ae152c99de3fce",
@@ -152,7 +152,7 @@
     "cpppj/src/client/GumpBackgroundCreate.cpp": "f34c1753f05f691d6c2ac798f812f6437fba8bb32635da73e44012e451ad1e36",
     "cpppj/src/client/GumpBackgroundCreate.h": "be1ac4353ca146e252c1b24879ca0920bf3f32864d4ade828240ac1c6c9d6e00",
     "cpppj/src/client/GumpBackgroundDraw.cpp": "0f932005479c69f33fccafb234cd3fd02a5ffc105132715e132e865865187450",
-    "cpppj/src/client/GumpBackgroundDraw.h": "1a9513284c2bd6ba5ee9412ac869feb4d9692760e2257ae0ce5b813fcc36aaa9",
+    "cpppj/src/client/GumpBackgroundDraw.h": "b0a22d73cb6cabef1079313235abdedc344e31203c5ad5c0c618457b7673a7b3",
     "cpppj/src/client/GumpCollection.cpp": "d913b1ad8a6c786bfbae8820e0db09a7ec900b2674c8c49ba92541b475ea259b",
     "cpppj/src/client/GumpCollection.h": "be01a38a567319195e579ec3c055320294411c3437935ba367e8c70901b2f1a7",
     "cpppj/src/client/GumpCreate.cpp": "4eb77de7063d33238c6bee30b8a282c89506c38172be0c4131afc7b843c33cd9",
@@ -434,7 +434,7 @@
     "cpppj/src/o/RawConstructionVisual.h": "e8151567d6d3e18c0c96bf389687a3a4cee27d8efbf64475b5c38630242a1045",
     "cpppj/src/o/RawContainedCreate.cpp": "54ac5f440300896af9fc25bfc98315ae5efe3e99b393fce348f006e09c3cbf97",
     "cpppj/src/o/RawContainedCreate.h": "f095756ee7515a66808967d2d42ce07879dc215b24a3451f27bb6d45653a8ed9",
-    "cpppj/src/o/RawContainedFinder.cpp": "3a7c0ca4530d019de4ba9fcb714991ac3d53703612d8bd5c865346e69fe9b8df",
+    "cpppj/src/o/RawContainedFinder.cpp": "b3bfedcc598e04ab1a4755ee77adff8a331d1be941975fe379dc705612d9a3a2",
     "cpppj/src/o/RawContainedFinder.h": "ebce363e0a9fbebcd3604fcdfb39e89b1ac1b36a0624fb4ccdccebebb8c9c0a8",
     "cpppj/src/o/RawContainedLookup.cpp": "418921ae7f41be8c059293e1201c2539716da9e2c01808373c233e8f3d48437e",
     "cpppj/src/o/RawContainedLookup.h": "6b61feb38ffcb4a4ef021dcc39cbc759274e91b8d476f2caa14f0cf771b74410",
@@ -735,7 +735,7 @@
     "cpppj/tests/CarrierArrivalTests.cpp": "accd2553072d85c4f1df068a2dea74bc2328e56313151df913571e60036f9a2c",
     "cpppj/tests/CarrierCheckTests.cpp": "e5f69a9c42163338fe20b39f354e835573c7518f8acd82ae78d5fdefa9d0e8e1",
     "cpppj/tests/CarrierPostPopTests.cpp": "dd84c89f342c2429ca0133b44e0978f9610874ff8e71fa7447588382daf79f86",
-    "cpppj/tests/CarrierPreDestroyTests.cpp": "23babf052f9fe2a9f521c7c714fed5c4ca72b369a00bac5e4625538a1f2ff616",
+    "cpppj/tests/CarrierPreDestroyTests.cpp": "706b7e55165c168bbc9056cdf23e3439f60d7cd628b1fc4b7c47651e80fcf6b2",
     "cpppj/tests/ClientAudioTests.cpp": "302b9d5d35f7e1b555336c21a6478eacdaffcd62320c8103e051df2f5e48a87d",
     "cpppj/tests/ClientMainTests.cpp": "e6f9c02352a3649d0f19264fa97d9352117f8914db0296d6373e9d3fcbbb2522",
     "cpppj/tests/ConfigInterfaceTests.cpp": "1e58c50ea1b39c5ea7ab6d615018f7e2d324260a25ab4873a2d2b2f7df38934d",
@@ -2067,6 +2067,37 @@
           "path": "cpppj/src/CMakeLists.txt",
           "previous": "c99bf39b2463c358a80f52c9ab1e2c9e5e669bcbc25b602d0340473df3f0b863",
           "current": "8bcbbd1445cf96d31be4573fad443d8fe2248455bdda11abd9015f94821b7b26"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 178,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "8bcbbd1445cf96d31be4573fad443d8fe2248455bdda11abd9015f94821b7b26",
+          "current": "0d374d3a7a0c535175207285f81341067c4e5b50c8d7dadf00a80e377ff7fe21"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/client/GumpBackgroundDraw.h",
+          "previous": "1a9513284c2bd6ba5ee9412ac869feb4d9692760e2257ae0ce5b813fcc36aaa9",
+          "current": "b0a22d73cb6cabef1079313235abdedc344e31203c5ad5c0c618457b7673a7b3"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawContainedFinder.cpp",
+          "previous": "3a7c0ca4530d019de4ba9fcb714991ac3d53703612d8bd5c865346e69fe9b8df",
+          "current": "b3bfedcc598e04ab1a4755ee77adff8a331d1be941975fe379dc705612d9a3a2"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/tests/CarrierPreDestroyTests.cpp",
+          "previous": "23babf052f9fe2a9f521c7c714fed5c4ca72b369a00bac5e4625538a1f2ff616",
+          "current": "706b7e55165c168bbc9056cdf23e3439f60d7cd628b1fc4b7c47651e80fcf6b2"
         }
       ]
     }

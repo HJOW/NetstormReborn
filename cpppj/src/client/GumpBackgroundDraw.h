@@ -42,9 +42,9 @@ public:
     void Draw(std::uint32_t token) const;
     // 같은 전체 배경 분배를 명시 rect에서 실행한다. 단색/체크/무배경은 자산 조회가 필요 없다.
     void Background(ScreenRect rect,std::uint32_t flags,std::uint32_t type,std::uint32_t frame) const;
-private:
     // 각 질감 pass는 자산 조회 뒤 현재 클립을 저장하고 정상/예외 반환에서 복구한다. 색 표는 복구하지 않는다.
     void Texture(ScreenRect rect,std::uint32_t flags,std::uint32_t type,std::uint32_t frame) const;
+private:
     // collection_: 화면 밖 자식 통과, 최상위 삭제 필터, 원본의 루트별 제한 개수를 보존하는 UI 수집기다 (GumpCollection).
     const GumpCollection& collection_;
     // clip_: 출력을 제한하는 클리핑 영역 또는 상태.

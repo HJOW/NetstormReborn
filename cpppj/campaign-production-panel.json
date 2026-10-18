@@ -1,0 +1,506 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-18",
+  "unit": 178,
+  "baseline": "dbe5549",
+  "lastDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16",
+    "changed": false
+  },
+  "nativeColors": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-18",
+    "unit": 178,
+    "controls": [
+      639,
+      895
+    ],
+    "rows": 3,
+    "normalReturns": 12,
+    "precisionDifferences": 0,
+    "instructions": 8578645,
+    "nativeCalls": {
+      "00439de0": 6,
+      "0043c010": 6
+    },
+    "assertions": 0,
+    "boundaries": {},
+    "files": {
+      "cpppj/tests/fixtures/production-colors-x86.tsv": "2d249420eebd10b843ab063ef660d8f6d2e30dd0abbd3bf59d9fa98d21d197e7",
+      "extracted/gumpbackground/originals/creation.c": "27eb8b91b31efd7579872ec373f77e6046d089ee8882f7936d9580c9530f4977",
+      "extracted/gumpbackground/originals/functions.tsv": "16f342ccfe19127c285dc12bb66450c59b1ca1a7564bfb75ace6c11a71afa215",
+      "originals/d/GIFCLOUD.COL": "785a2cda6ac1d3e295d375815b6d9650720683099db7c249382d598b5da00532",
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "tools/decomp_gumpbackground_oracle.py": "21905551a392adc1be9e2f992de2d2c1b19a9f8b37c2beeb240f284e9a372228",
+      "tools/decomp_gumpvisual_oracle.py": "b7c70b2e10036bb9c938c34ad8d4a7ca9a30b5d2082f218d0b5914a6941b1658",
+      "tools/decomp_owner_oracle.py": "5a837ad7fd233d9d75c7241d52fbf2e5a508e24dc158d091f243a13ab698e7fb",
+      "tools/decomp_production_colors.py": "51b1b512361dfac31b08314a5a5b586832bca5741186f9928de0c7f4cb81d893"
+    },
+    "limits": [
+      "10.78 전체 팔레트 생성의 두256바이트 출력만 새 관측; 다른 일곱 표의 새 복원 주장은 아님",
+      "명명 색 빨강은 입력 DWORD, CRT/장치/게임/파일 캐시는 실행하지 않음",
+      "기존 gumpbackground 허용 몸체/스택/보존 레지스터/x87 균형/쓰기 감사를 그대로 사용"
+    ]
+  },
+  "nativeFreeze": {
+    "tools/decomp_production_colors.py": "51b1b512361dfac31b08314a5a5b586832bca5741186f9928de0c7f4cb81d893",
+    "cpppj/production-colors.json": "735f209fd1f1a866be49b0c8fb8652708e29997efbb4c1ab08e9cd9fe42f2dc4",
+    "cpppj/tests/fixtures/production-colors-x86.tsv": "2d249420eebd10b843ab063ef660d8f6d2e30dd0abbd3bf59d9fa98d21d197e7"
+  },
+  "zeroParent": {
+    "rows": [
+      {
+        "head": 0,
+        "kind": 6,
+        "observed": [
+          0,
+          0
+        ]
+      },
+      {
+        "head": 128,
+        "kind": 6,
+        "observed": [
+          0,
+          128
+        ]
+      },
+      {
+        "head": 128,
+        "kind": 3,
+        "observed": [
+          0,
+          0
+        ]
+      }
+    ],
+    "returns": 6,
+    "instructions": 220,
+    "filter": "0x44daa0",
+    "precisionDifferences": 0,
+    "protected": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236"
+  },
+  "fractionalGraph": [
+    {
+      "edition": "originals",
+      "control": 639,
+      "offset": 0,
+      "outputs": [
+        [
+          "-",
+          3778446709,
+          983044,
+          "1,0,0;3,0,0"
+        ],
+        [
+          0,
+          3778446709,
+          2147483650,
+          "1,0,0;3,0,0"
+        ]
+      ]
+    },
+    {
+      "edition": "originals",
+      "control": 639,
+      "offset": -0.5,
+      "outputs": [
+        [
+          "-",
+          3778446709,
+          983044,
+          "1,0,0;3,0,0"
+        ],
+        [
+          0,
+          3778446709,
+          2147483650,
+          "1,0,0;3,0,0"
+        ]
+      ]
+    },
+    {
+      "edition": "originals",
+      "control": 639,
+      "offset": 0.5,
+      "outputs": [
+        [
+          "-",
+          3778446709,
+          983044,
+          "1,0,0;3,0,0"
+        ],
+        [
+          0,
+          3778446709,
+          2147483650,
+          "1,0,0;3,0,0"
+        ]
+      ]
+    },
+    {
+      "edition": "originals",
+      "control": 895,
+      "offset": 0,
+      "outputs": [
+        [
+          "-",
+          3778446709,
+          983044,
+          "1,0,0;3,0,0"
+        ],
+        [
+          0,
+          3778446709,
+          2147483650,
+          "1,0,0;3,0,0"
+        ]
+      ]
+    },
+    {
+      "edition": "originals",
+      "control": 895,
+      "offset": -0.5,
+      "outputs": [
+        [
+          "-",
+          3778446709,
+          983044,
+          "1,0,0;3,0,0"
+        ],
+        [
+          0,
+          3778446709,
+          2147483650,
+          "1,0,0;3,0,0"
+        ]
+      ]
+    },
+    {
+      "edition": "originals",
+      "control": 895,
+      "offset": 0.5,
+      "outputs": [
+        [
+          "-",
+          3778446709,
+          983044,
+          "1,0,0;3,0,0"
+        ],
+        [
+          0,
+          3778446709,
+          2147483650,
+          "1,0,0;3,0,0"
+        ]
+      ]
+    },
+    {
+      "edition": "originalCD",
+      "control": 639,
+      "offset": 0,
+      "outputs": [
+        [
+          "-",
+          3778446709,
+          983044,
+          "1,0,0;3,0,0"
+        ],
+        [
+          0,
+          3778446709,
+          2147483650,
+          "1,0,0;3,0,0"
+        ]
+      ]
+    },
+    {
+      "edition": "originalCD",
+      "control": 639,
+      "offset": -0.5,
+      "outputs": [
+        [
+          "-",
+          3778446709,
+          983044,
+          "1,0,0;3,0,0"
+        ],
+        [
+          0,
+          3778446709,
+          2147483650,
+          "1,0,0;3,0,0"
+        ]
+      ]
+    },
+    {
+      "edition": "originalCD",
+      "control": 639,
+      "offset": 0.5,
+      "outputs": [
+        [
+          "-",
+          3778446709,
+          983044,
+          "1,0,0;3,0,0"
+        ],
+        [
+          0,
+          3778446709,
+          2147483650,
+          "1,0,0;3,0,0"
+        ]
+      ]
+    },
+    {
+      "edition": "originalCD",
+      "control": 895,
+      "offset": 0,
+      "outputs": [
+        [
+          "-",
+          3778446709,
+          983044,
+          "1,0,0;3,0,0"
+        ],
+        [
+          0,
+          3778446709,
+          2147483650,
+          "1,0,0;3,0,0"
+        ]
+      ]
+    },
+    {
+      "edition": "originalCD",
+      "control": 895,
+      "offset": -0.5,
+      "outputs": [
+        [
+          "-",
+          3778446709,
+          983044,
+          "1,0,0;3,0,0"
+        ],
+        [
+          0,
+          3778446709,
+          2147483650,
+          "1,0,0;3,0,0"
+        ]
+      ]
+    },
+    {
+      "edition": "originalCD",
+      "control": 895,
+      "offset": 0.5,
+      "outputs": [
+        [
+          "-",
+          3778446709,
+          983044,
+          "1,0,0;3,0,0"
+        ],
+        [
+          0,
+          3778446709,
+          2147483650,
+          "1,0,0;3,0,0"
+        ]
+      ]
+    }
+  ],
+  "protected": {
+    "AGENTS.md": "7addbf9b31c42f29aab7c93faa865eb6de8590a600d17202a297cf7122bdf979",
+    "LEFT_JOBS.dotnetpj.md": "0c067e1d12879dbf2212cbd64c8f9f60e65b590df910418f025027ed84f80ec2",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "originals/d/GIFCLOUD.COL": "785a2cda6ac1d3e295d375815b6d9650720683099db7c249382d598b5da00532"
+  },
+  "currentSources": {
+    "cpppj/src/CMakeLists.txt": "0d374d3a7a0c535175207285f81341067c4e5b50c8d7dadf00a80e377ff7fe21",
+    "cpppj/src/app/main.cpp": "ad4e6d88c98308342887cddb66ff4fe78703f41fb5088ee856c3d0ad574595c9",
+    "cpppj/src/client/GumpBackgroundDraw.h": "b0a22d73cb6cabef1079313235abdedc344e31203c5ad5c0c618457b7673a7b3",
+    "cpppj/src/client/InventoryGump.cpp": "0a90a5a9cc763d2675cbf47fa10a1cde68fddabcdc86a2758629f1e77842bece",
+    "cpppj/src/client/RawButtonControls.cpp": "c5bac58d2f4686f730fb88ebe2cf9605e477cd98eda519d1a0d8e03d457a1322",
+    "cpppj/src/client/RawButtonControls.h": "d49ab77d71b4d10beea6c2a5e466a87289874092592c86bc879cd971fab64180",
+    "cpppj/src/client/RawCampaignSession.cpp": "2db8af2ba2956528377b14ab0f534d388d520cd521c79b6697b66591781f6052",
+    "cpppj/src/client/RawCampaignSession.h": "92f17ca78bd706f65290060ba948be8d7945dade28170821ef4169ec693b3440",
+    "cpppj/src/client/RawMenuControls.cpp": "521a34d2d7660a18a90435074c1f2893f4c24ca600d81d3a5cf18b745226459c",
+    "cpppj/src/client/RawMenuControls.h": "70cf632cf282ea15c98c45ca1b8fba8b720dafb07eebc2a022723dfc35e3b1fa",
+    "cpppj/src/client/UberGump.cpp": "8ef2a3caf97acee49ea276efb812d96098d1ebc06f32cece2ccf14ef7a9fe05f",
+    "cpppj/src/o/RawContainedFinder.cpp": "b3bfedcc598e04ab1a4755ee77adff8a331d1be941975fe379dc705612d9a3a2",
+    "cpppj/src/o/RawGraph.cpp": "d392ffd6e52f10adfc25bffa44ae4ae51e81a91201864d6fc168ddcb66be5a22",
+    "cpppj/tests/CMakeLists.txt": "807452e78888684907414eb31cc6b5da2c9c123b4c1fb6b8a6b620974337b78a",
+    "cpppj/tests/CampaignSessionTests.cpp": "df2f828b33914a6440eb43cd327f969739591b296b6d085a4187a5e77f62910e",
+    "cpppj/tests/CarrierPreDestroyTests.cpp": "706b7e55165c168bbc9056cdf23e3439f60d7cd628b1fc4b7c47651e80fcf6b2",
+    "cpppj/production-colors.json": "735f209fd1f1a866be49b0c8fb8652708e29997efbb4c1ab08e9cd9fe42f2dc4",
+    "cpppj/src/client/ProductionColorMaps.cpp": "0476a2df1a78cf2486bbbb07891554296445df80688583cdf81163c42e6857e3",
+    "cpppj/src/client/ProductionColorMaps.h": "901355a51c733e8949da0fd6f92992ce892bcbf5e84e37d2c3f312afccd17313",
+    "cpppj/src/client/RawProductionControls.cpp": "50867c9678fae96a532466d0889a97af17381875b3186e8c394760fdf27ba373",
+    "cpppj/src/client/RawProductionControls.h": "f8c4f0b6f200711c36dbe3c69c87b5608ed1dec57db9a05679887cb5903ea0ea",
+    "cpppj/tests/ProductionColorMapsTests.cpp": "54073089bd7eed2184924ed308d99aac81c47db21ebf7fe43b7bf9a9b20aa3b2",
+    "cpppj/tests/fixtures/production-colors-x86.tsv": "2d249420eebd10b843ab063ef660d8f6d2e30dd0abbd3bf59d9fa98d21d197e7",
+    "tools/cpp_production_panel_smoke.py": "9151157115c6416fdc7ca1a8cf8d448f0acca9c5c5bd3e2d4a93d009b3ca1a6b",
+    "tools/decomp_production_colors.py": "51b1b512361dfac31b08314a5a5b586832bca5741186f9928de0c7f4cb81d893"
+  },
+  "logSha256": {
+    "extracted/goal-production-panel-20261018-audit1.log": "5e9011508721f2e3172c14a1a983f0f0c0b14ced3ba5bed2d9b2130f5c72368c",
+    "extracted/goal-production-panel-20261018-audit2.log": "5e9011508721f2e3172c14a1a983f0f0c0b14ced3ba5bed2d9b2130f5c72368c",
+    "extracted/goal-production-panel-20261018-audit3.log": "5e9011508721f2e3172c14a1a983f0f0c0b14ced3ba5bed2d9b2130f5c72368c",
+    "extracted/goal-production-panel-20261018-audit4.log": "5e9011508721f2e3172c14a1a983f0f0c0b14ced3ba5bed2d9b2130f5c72368c",
+    "extracted/goal-production-panel-20261018-audit5.log": "a8d00a29f077016e46ca615e6b229c8bed31815f30fcde7363b8d0cbbc45f5a8",
+    "extracted/goal-production-panel-20261018-build1.log": "4c62ae55a9e3b79735d354aa919720e9435cb5db3de112dbb2db315635a96cb7",
+    "extracted/goal-production-panel-20261018-build10.log": "30ffb94c4d566518aeeb43199698f1730a9f9ab1d6adf54ec3f345f89bfea4fe",
+    "extracted/goal-production-panel-20261018-build11.log": "be8fd99b6697e0e1fd3ffa2a221a2e22e0fdb618d4b60cef4613cc3635251461",
+    "extracted/goal-production-panel-20261018-build2.log": "db5009d7832e501439978e80a08760d06773f66349785ce6400957536ef7a97b",
+    "extracted/goal-production-panel-20261018-build3.log": "4351f37cb8fa1b0b4def38822017cf54a0bc6a9fc14dddfad4607a9cd45e9d6f",
+    "extracted/goal-production-panel-20261018-build4.log": "ab5667f9c83efcc5d5723bb026fc31463b548169603256c3fb37daef4f87eb9c",
+    "extracted/goal-production-panel-20261018-build5.log": "68daf5268753a6f0253917d033a76282e07803e3b45f8c1951a34f7cbc6a3d34",
+    "extracted/goal-production-panel-20261018-build6.log": "68daf5268753a6f0253917d033a76282e07803e3b45f8c1951a34f7cbc6a3d34",
+    "extracted/goal-production-panel-20261018-build7.log": "f849dafaed50a02edcce8a9c96d553e3210e8b01264cf9df9b2a54cd35105983",
+    "extracted/goal-production-panel-20261018-build8.log": "1a9e2f3b7bb53714cf14e2a9c5758e30b3a025e51706639d6013982acb80144b",
+    "extracted/goal-production-panel-20261018-build9.log": "eed5e1ee4886014682a4a005dc68081d7a7e8d60ac103dd9bb84fb62a9d26335",
+    "extracted/goal-production-panel-20261018-carrier-focused.log": "0415207c2df7860d415ee436bcb2c02ba05201a2d7e4d4790ace33a0b688c95a",
+    "extracted/goal-production-panel-20261018-colors-focused1.log": "0d639e5cee2556f035cf0d2657c21553306aadac1f2d717e5d208a6baa083f0b",
+    "extracted/goal-production-panel-20261018-colors-focused2.log": "0d639e5cee2556f035cf0d2657c21553306aadac1f2d717e5d208a6baa083f0b",
+    "extracted/goal-production-panel-20261018-colors-native1.log": "0c4d566263346b646d51c1970defa26bc57321dc5f91761599ff06b5c76f0eee",
+    "extracted/goal-production-panel-20261018-colors-verify.log": "8930a9fa87017316a57e1ffd9093328c2f97a8f4ecc3fa2c4583c6786768da73",
+    "extracted/goal-production-panel-20261018-ctest1.log": "c1f35c7cb5f9500f32971c1017d4335fe29c874b00633c59e3e96b5f49e84d22",
+    "extracted/goal-production-panel-20261018-ctest2.log": "aa615641691be0281feeea6f536caf963aa92f309ecb42286730c32179bdfd2b",
+    "extracted/goal-production-panel-20261018-ctest3.log": "48bc9b2cfe75bddea72a0e7524b6fa2e69e631d0e7960489d72864bb089958ee",
+    "extracted/goal-production-panel-20261018-ctest4.log": "c7ee9f5aa1c107bfffa97f59a40f73347ba16980e10957796fd9701b059a5d66",
+    "extracted/goal-production-panel-20261018-fractional-graph.log": "c74536f70645f43cbe5b017d1ac1fbef5fd11dacbd61909503ded15df03e55d3",
+    "extracted/goal-production-panel-20261018-grid-focused.log": "255d0e0bc8b1f3cfb180aa5f218b387be8340055ff5f756fb9b01943997db9cb",
+    "extracted/goal-production-panel-20261018-gui1.log": "59ac5aa96de97eca2fab0ce31da05dcce37ae639ca1b6736346cc6764576ca7f",
+    "extracted/goal-production-panel-20261018-gui2.log": "8f0f41d383a29e70a8ccce14e469055bd4ab504f353031c0f39ae429570d3408",
+    "extracted/goal-production-panel-20261018-gui3.log": "0aa8c07eba47de4d77d68b65eb4c93a83951e7d94b30dbae7bd4549191fe2bfa",
+    "extracted/goal-production-panel-20261018-gui4.log": "e7abcda4c743e1de25ed8ee5d3ac89c50e127fad42cd198a2b653f6364a1e1c5",
+    "extracted/goal-production-panel-20261018-gui5.log": "f92cb1ddcd37de1baa03ccc6e288ee6efe56fc7e09854358e3a92132fa5b58d9",
+    "extracted/goal-production-panel-20261018-gui6.log": "f92cb1ddcd37de1baa03ccc6e288ee6efe56fc7e09854358e3a92132fa5b58d9",
+    "extracted/goal-production-panel-20261018-gui7.log": "2324db99f0b6feb11d4fa868fc66a2e2c33e7cd145c9915fef6e339c21846408",
+    "extracted/goal-production-panel-20261018-image-focused.log": "c4986fb1cb2dfcd6d419bdfb964dad668162599a70df4b33efaad1963f3866b6",
+    "extracted/goal-production-panel-20261018-item-focused.log": "455fcb21a5ab22f2945bf9bd1b1583dd1a225454d212873ded80a4711b9055fc",
+    "extracted/goal-production-panel-20261018-keyboard-before.log": "c25ba5f57073a884747f7b34b933658c09ac77003ac2432e0ecae2edec0681f0",
+    "extracted/goal-production-panel-20261018-LastTest-failed1.log": "773e1f860fd1d33453f806aecbaa0312a5fd1a03501c8516c68a4088fca78a5a",
+    "extracted/goal-production-panel-20261018-LastTest.log": "1b9908373bcdc2c2f75e907c44b331bdf70d70b417f1e1164b7003dc784a988f",
+    "extracted/goal-production-panel-20261018-legacy-gui.log": "f12e4126aadf55f61e3678800119f04579175a96eb6e6b28390acb82f28ef10d",
+    "extracted/goal-production-panel-20261018-menu-focused8.log": "6ed0477e02b5b4cd5c829c332133ada80aef5f344a89ad517869bfe056020789",
+    "extracted/goal-production-panel-20261018-menus-focused.log": "6ed0477e02b5b4cd5c829c332133ada80aef5f344a89ad517869bfe056020789",
+    "extracted/goal-production-panel-20261018-session-focused1.log": "2616c9523b278225a70a7bec50d7099fdac512947dec20c7d92a56966d6bd714",
+    "extracted/goal-production-panel-20261018-session-focused2.log": "2616c9523b278225a70a7bec50d7099fdac512947dec20c7d92a56966d6bd714",
+    "extracted/goal-production-panel-20261018-session-focused3.log": "1fdb6fe0571b5125bb52b1c7cfa2f3c1127b19af1fa26f50ea444107709991c0",
+    "extracted/goal-production-panel-20261018-session-focused4.log": "ef93726746f92fa0c0408e7983a157f5db3769f018e89b0cd54ba858fca9c562",
+    "extracted/goal-production-panel-20261018-session-focused5.log": "c221c590553582d1a658c26c94617fb8c8324ea542d8e7eac0b6dedb81edbbc1",
+    "extracted/goal-production-panel-20261018-session-focused6.log": "e4ebfe1b772868b25696d52bf24f8fca5bd5e12da48a65f0f9e52c06f027cb70",
+    "extracted/goal-production-panel-20261018-session-focused7.log": "e4ebfe1b772868b25696d52bf24f8fca5bd5e12da48a65f0f9e52c06f027cb70",
+    "extracted/goal-production-panel-20261018-session-focused8.log": "e4ebfe1b772868b25696d52bf24f8fca5bd5e12da48a65f0f9e52c06f027cb70",
+    "extracted/goal-production-panel-20261018-stages.log": "45c1eee9aa0a6dda3519fe8ac4fcf426bf94132bb199d97050b9cc54ac53e578",
+    "extracted/goal-production-panel-20261018-zero-focused1.log": "af7b6d2c27a2bf936b4bd708cc9f6e170a7e44e180f28422b6eb90fc45b28b1a",
+    "extracted/goal-production-panel-20261018-zero-focused2.log": "93ec8ed1948f84081e2eccf7c30c8690f8cbddef1b2a4e4d13852f9ac4ffa9e9",
+    "extracted/goal-production-panel-20261018-zero-parent.log": "2aebc561174894f6ef6fca0632bb650aa6d05beed18c10d58d660b270440f068",
+    "extracted/goal-production-panel-20261018-zero-parent2.log": "67e61779bfa162c6d408718a1ca80c5ae7b47e07954c15ac517653ccc5afa107"
+  },
+  "evidenceSha256": {
+    "extracted/goal-production-panel-20261018-verify-final.json": "5ac2e3e2ba13f2bedc22e9d30e33dfc9582a0cc84f6fd7d668d5b8d783208a6b",
+    "extracted/goal-production-panel-20261018-pin-updates.json": "da2c4e429e9a3c77789ae99441ce71d7337e120b3c74f1e98b4ec620bbc96302",
+    "extracted/goal-production-panel-20261018-sources.json": "59c8f8719f1f823191042279905a2854acfd631f472944e6e53dbd338ff16ee7",
+    "extracted/goal-production-panel-20261018-keyboard-before/states.tsv": "a04c11a4b00bb7e339d780acf2c17e9b0f139016ad1beb03df2abcf8a5f3f2bb",
+    "extracted/goal-production-panel-20261018-graph-eol.json": "311c0e95133896e35d04e194cc9e648eaf042a52c3e695ea50e887b64fe67c98",
+    "extracted/goal-production-panel-20261018-zero-parent.py": "1c00a757eea15746d4a5bc3be235a8c9d509fb132e235a25656c1c25a2a58b3a",
+    "extracted/goal-production-panel-20261018-zero-parent.json": "9b2354e4fc33fcc1da8c6dba3fe68dcc453b4a647b59d440d9d4542881ea1e25",
+    "extracted/goal-production-panel-20261018-fractional-graph.py": "aa8260254d5bd37e4d89027b0aad4f5a55bf6e9c67a6c24edb3f3c21023c6612",
+    "extracted/goal-production-panel-20261018-fractional-graph.json": "05c7d7df17b55abd267024bed7e025cd5289be42b01ea06ecb88e9243941f51e",
+    "extracted/goal-production-panel-20261018-gui7/summary.json": "2d273a9a26c809c67570182f7bdaacdc17cad6a92dec8c74818f66cafa7fdfea",
+    "extracted/goal-production-panel-20261018-gui7/states.tsv": "26a93f2d3304ed3dc3315db7ee0610cc2c33e4b92e24fe947a15a9de49a59724",
+    "extracted/goal-production-panel-20261018-stages/results.json": "1c305562f74acf5ad4b249382dfa8c2671526297e823ab6c5933d91e8b0aa396",
+    "extracted/goal-production-panel-20261018-legacy-gui/results.json": "a259a86d13243253911c62dd4b3aefa6cdabcd6d1b51adcacb7db0dc7068ef02"
+  },
+  "validation": {
+    "build": 11,
+    "warnings": 0,
+    "errors": 0,
+    "full": {
+      "tests": 1673,
+      "failedChecks": 0,
+      "seconds": 224.89,
+      "ctestSeconds": 224.92
+    },
+    "audit": {
+      "tools": 102,
+      "passed": 91,
+      "existingFailed": 11,
+      "newFailed": 0
+    },
+    "actualClient": {
+      "uiFrames": 2443,
+      "contentSid": 99,
+      "sameTakeSid": true,
+      "camera": [
+        [
+          "976",
+          "793"
+        ],
+        [
+          "1476",
+          "793"
+        ],
+        [
+          "1476",
+          "793"
+        ]
+      ],
+      "serverCannon": 15184,
+      "cannonFieldsPlaced": [
+        0,
+        129,
+        0
+      ],
+      "cannonFieldsAfter": [
+        0,
+        128,
+        600
+      ],
+      "sp": [
+        "2200",
+        "1800"
+      ],
+      "stock": [
+        3,
+        2
+      ],
+      "returnedContentSid": 156,
+      "returnedFlags": [
+        264,
+        8
+      ],
+      "originalsUnchanged": true
+    },
+    "goalStageEntry": {
+      "build": 9,
+      "runs": 11,
+      "passed": true,
+      "completion": false
+    },
+    "legacyConstructionResearch": {
+      "build": 9,
+      "passed": true
+    }
+  },
+  "integrationPins": {
+    "reports": 77,
+    "pins": 295
+  },
+  "fidelity": {
+    "complete": false,
+    "limits": [
+      "43e640/43ddd0/43ec00의 생성·기본 배치·선택/갱신 단락을 실제 Client에 연결했다. 전체 함수의 모든 바이트/분기를 원본 런타임과 대조한 주장은 아니다.",
+      "상위 드래그 프레임/지도 영역 배치는 후속이다. 현재 왼쪽80/하단80 배치는 원본 초기값을 연결한 상태다.",
+      "43ef10은 기존 dirty→Deck/내용물 동기화와 현재 격자 부모 재연결만이다. 다리 공급/품질/재고 보충/비용 변화 갱신을 복원해야 한다.",
+      "우클릭 About/일반 도움말, SP 부족·재고0 tooltip, 삭제 사건0a·일부 모드/정책·입력 전역, 범용 window의 drag/링크는 미연결이다. 선택된 미복원 tooltip/About을 성공으로 가장하지 않으며 현재 오류를 낸다.",
+      "실제 캐논 한 지점 배치·완공은 확인했으나 공격·다리 진행/운반 왕복·희생·승패·다음 미션·전략AI/11단계 자연 완주·전체 원본 동일성은 미완료다."
+    ]
+  },
+  "goalComplete": false
+}

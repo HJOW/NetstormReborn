@@ -858,7 +858,11 @@ struct RawCampaignSession::Impl {
             if (playerRegular->Handles(sid)) return playerRegular->Handle(sid,event,count,payload);
             if (manaRegular && manaRegular->Handles(sid)) return manaRegular->Run(sid,event,count);
             if (nuggetRegular && nuggetRegular->Handles(sid)) return nuggetRegular->Handle(sid,event,count,payload);
-            const auto raw=core.pool.Slot(sid);const bool priest=raw[10]==kPriestType && Read(raw,0)==kPatchPriestVtable;
+            const auto raw=core.pool.Slot(sid);
+            // 실제 ContentForm+5c(4af070)는 count0에서 payload를 반환하고 양수count에서 선택을 풀어 재부착한다.
+            // 기존 ContentFormHost::Damage는 이 원본 몸체의 보존 API명이며 피해를 전달하는 경로가 아니다.
+            if (raw[10]==6 && Read(raw,0)==0x512208U) return contentForms->Damage(sid,std::bit_cast<std::int32_t>(count),payload);
+            const bool priest=raw[10]==kPriestType && Read(raw,0)==kPatchPriestVtable;
             // 사제의 다섯 고유 사건은 파생 처리기가 담당한다. 나머지만 원본 기본 Carrier로 넘긴다.
             if (carrierRegular->Handles(sid) || (priest && (event<0x259U || event>0x25dU))) return carrierRegular->Handle(sid,event,count,payload);
             throw std::logic_error("캠페인 현재 Kernel의 다른 실제 Regular 부모 미연결: TYPE"+
@@ -1960,6 +1964,9 @@ std::uint32_t RawCampaignSession::CurrentSubscriber() const { return impl_->glob
 std::uint32_t RawCampaignSession::LocalOwner() const { return impl_->playerState.battleOwner; }
 // 원본48fc60의 현재 기술 부모를 값 복사 없이 같은 Player 저장소에서 읽는다.
 std::uint32_t RawCampaignSession::CurrentTechnologyParent() const { return impl_->player->CurrentTechnology(); }
+// 실제 생산 패널의 명시 갱신과 반복자는 같은 현재 장기 몸체를 사용한다.
+void RawCampaignSession::SynchronizeProductionContents() { if (!impl_->loaded) throw std::logic_error("설치 전 생산 패널 갱신");impl_->productionSync->Synchronize(); }
+const ContainedFinderState& RawCampaignSession::ProductionFinder() const { return impl_->contentFinder; }
 // 원본43ef10의 생산 단락만 현재 Gump idle 위치에서 실행한다. 나머지HUD/공급 주기는 별도 몸체다.
 bool RawCampaignSession::UpdateProductionContents() {
     auto& s=*impl_;if (!s.loaded || (!s.core.ownerMode.fort && !s.core.ownerMode.battle && !s.core.ownerMode.challenge)) return false;

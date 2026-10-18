@@ -10,6 +10,9 @@
 #include <string>
 
 namespace netstorm::client {
+class RawCampaignSession; // 생산 패널과 같은 현재 실제 월드다.
+struct RawProductionHooks; // 현재 생산 UI 장치 효과다.
+class RawProductionControls; // 같은 등록표의 실제 생산 파생 처리기다.
 class RawMenuControls; // 같은 트리에 연결하는 실제 메뉴 처리기다.
 struct RawMenuHooks; // 현재 Client의 메뉴 외부 효과다.
 class GameAssets; // Client가 소유하는 실제 TYPE/SHP 저장소다.
@@ -60,6 +63,9 @@ public:
     RawMenuControls& EnableMenus(const GameAssets& assets,FontStore& fonts,RawMenuHooks hooks);
     // 연결된 실제 메뉴를 빌린다. 연결 전에는 nullptr다.
     RawMenuControls* Menus() const;
+    RawProductionControls& EnableProduction(RawCampaignSession& session,const GameAssets& assets,RawProductionHooks hooks); // 현재 미션 패널을 조립한다.
+    RawProductionControls* Production() const; // 현재 살아 있는 패널 처리기다.
+    void DisableProduction(); // Session 해제 전에 연결 노드/참조를 반납한다.
     // 실제현재등록표→가상+4의기본/메뉴Kill알림이다. 반환콜백은이UI보다먼저해제한다.
     o::GumpFormNotice ObjectNotice() const;
     // Player 내용물 통지는 현재 등록ID를 직접 조회하며 생산 갱신 사건으로 바꾸지 않는다.

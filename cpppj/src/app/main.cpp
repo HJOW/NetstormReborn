@@ -617,9 +617,12 @@ int RunClient(std::vector<std::string> arguments) {
     UiKernelTell* kernelTell{}; // 커널이 소유한 검사 전용 프로세스다. Client::Run 동안만 사용한다.
     if (!uiScript.empty()) {
         if (!view.empty()) throw std::invalid_argument("UI script cannot be combined with --view");
-        // 왼쪽 버튼 폴링만 스크립트가 공급한다. 키보드 등 다른 폴링은 실제 장치 경로를 유지한다.
+        // UI 검사 마우스는 같은 좌표를 쓴다. 가운데 폴링이 실제 바탕 화면 위치로 커서를 덮지 않게 한다.
         client.inspectPoll=[&](std::uint32_t code) -> std::optional<netstorm::client::InputEvent> {
-            return code==netstorm::client::InputCode::kLeftButton ? scriptPointer : std::nullopt;
+            using namespace netstorm::client;
+            if (!scriptPointer || (code!=InputCode::kLeftButton && code!=InputCode::kRightButton && code!=InputCode::kMiddleButton)) return std::nullopt;
+            auto event=*scriptPointer;event.code=(event.code&(InputCode::kOutside|InputCode::kRelease))|code;
+            if (code!=InputCode::kLeftButton) event.code|=InputCode::kRelease;return event;
         };
         client.beforeInput = [&](netstorm::client::Client& c) {
             // 이번 프레임의 입력만 실제 InputQueue에 넣는다.

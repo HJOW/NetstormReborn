@@ -100,7 +100,7 @@ TEST_CASE(carrier_predestroy_guards_and_priest_binding) {
         scene.slots[0][10]=6;reject(kSource);scene.slots[0][10]=255;reject(kSource);scene.slots[0][10]=158;
         hooks=scene.Hooks();hooks.validateDamageable=[](Sid,std::uint32_t) { throw std::logic_error("하위 효과 미복원"); };
         RawCarrierPreDestroy blocked(scene.pool,scene.state,hooks);const auto before=scene.Slots();CHECK(Throws([&] { blocked.PreDestroy(kSource,1); }));CHECK(scene.events.empty() && scene.Slots()==before);
-        CHECK(Throws([&] { carrier.FindContained({0},1,0,0); }));
+        CHECK(carrier.FindContained({0},1,0,0)==Sid{}); // 원본 Begin은 실제0번 head를 읽으며 SID0 자체를 거부하지 않는다.
         Put(scene.slots[0],6,60,2);scene.slots[1][10]=6;Put(scene.slots[1],20,1,2);Put(scene.slots[1],4,60,2);
         CHECK(carrier.FindContained(kSource,1,0,0)==Sid{60});CHECK(Throws([&] { carrier.FindContained(kSource,1,0,1); }));
         Put(scene.slots[1],4,65535,2);CHECK(Throws([&] { carrier.FindContained(kSource,1,0,1); }));Put(scene.slots[1],4,0,2);

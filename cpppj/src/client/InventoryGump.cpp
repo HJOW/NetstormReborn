@@ -61,7 +61,7 @@ void InventoryGump::AttachGrid(std::uint32_t token,float x,float y,std::uint32_t
     auto& node=Grid(token);Need(hooks_.clearChildren)(token);Need(hooks_.baseAttach)(token,x,y,parent,mode);
     o::RawContainedFinder finder(pool_,finder_);std::uint32_t maximum{};
     // 첫 순회는 mask에 맞는 slot BYTE+1의 최댓값이다. 빈 목록/불일치만 있으면0이다.
-    for (auto sid=finder.Begin(Content(node.object));sid.value;sid=finder.Next()) {
+    for (auto sid=finder.Begin(node.object ? Content(node.object) : o::Sid{});sid.value;sid=finder.Next()) {
         const auto raw=pool_.Slot(sid);if (Flags(raw)&node.contentMask) maximum=std::max(maximum,std::uint32_t(raw[23])+1U);
     }
     auto columns=node.minimumColumns,rows=node.minimumRows;
@@ -77,7 +77,7 @@ void InventoryGump::AttachGrid(std::uint32_t token,float x,float y,std::uint32_t
     if (!columns || !rows) throw std::domain_error("생산 격자 원본 0열/행 나눗셈 경로");
     node.cellWidth=static_cast<float>(static_cast<double>(node.width)/columns);node.cellHeight=static_cast<float>(static_cast<double>(node.height)/rows);
     // 두 번째 순회는 현재 목록과 현재 mask를 다시 읽어 실제 내용물 SID로 항목을 만든다.
-    for (auto sid=finder.Begin(Content(node.object));sid.value;sid=finder.Next()) {
+    for (auto sid=finder.Begin(node.object ? Content(node.object) : o::Sid{});sid.value;sid=finder.Next()) {
         const auto raw=pool_.Slot(sid);if (!(Flags(raw)&node.contentMask)) continue;const auto slot=static_cast<std::int32_t>(raw[23]);
         const auto child=Need(hooks_.allocateItem)(kItemSize);
         if (!child) throw std::bad_alloc(); // 원본은 이 뒤 null을 역참조하므로 성공으로 바꾸지 않는다.

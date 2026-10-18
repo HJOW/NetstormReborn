@@ -21,7 +21,7 @@
     "cpppj/src/o/RawCarrierPreDestroy.h": "d1f5903fc44c51dc7c6985ff073851b31f46f3f6fdd1a972cb568440cf7d173a",
     "cpppj/src/o/RawCarrierPreDestroy.cpp": "18a4daeff34834590cfbc4d1b73f64475a009b4815a88ac98aa76f5b1e618c95",
     "cpppj/src/o/RawContainedFinder.h": "ebce363e0a9fbebcd3604fcdfb39e89b1ac1b36a0624fb4ccdccebebb8c9c0a8",
-    "cpppj/src/o/RawContainedFinder.cpp": "3a7c0ca4530d019de4ba9fcb714991ac3d53703612d8bd5c865346e69fe9b8df",
+    "cpppj/src/o/RawContainedFinder.cpp": "b3bfedcc598e04ab1a4755ee77adff8a331d1be941975fe379dc705612d9a3a2",
     "cpppj/src/o/RawAltarSacrifice.h": "1df83640935f495e4b6687c41ac5d181a8947f2bc6f349659870acea225b89c3",
     "cpppj/src/o/RawAltarSacrifice.cpp": "c45c6083846aa97aec3d1dc0cd2dda2d0beab45fcd7addb07c755d1e2482f464",
     "cpppj/src/o/RawSquidFinder.h": "e84bf53e772117ecfbc913eabbf460e86f1e687d79cb3f48f2f9c7db8893ed63",
@@ -161,6 +161,19 @@
           "path": "cpppj/src/o/SidPool.h",
           "previous": "5aae3c23e7376b0c1c3da5a96e736738335d1e1bf060db41e1b748535ff75ee1",
           "current": "21d77e1995b8697dba3f4e6cc9ae16501c573f417fd7019cf4a459b0e6fe521a"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 178,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/current_sources",
+          "path": "cpppj/src/o/RawContainedFinder.cpp",
+          "previous": "3a7c0ca4530d019de4ba9fcb714991ac3d53703612d8bd5c865346e69fe9b8df",
+          "current": "b3bfedcc598e04ab1a4755ee77adff8a331d1be941975fe379dc705612d9a3a2"
         }
       ]
     }

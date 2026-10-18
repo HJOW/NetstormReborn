@@ -173,6 +173,8 @@ public:
     // 같은 실제 PlayerWorld의00540c70을 읽는다. 자산/UI 어댑터의 로컬 번호 사본을 사용하지 않는다.
     std::uint32_t LocalOwner() const;
     std::uint32_t CurrentTechnologyParent() const; // 현재48fc60의 실제 기술 부모다.
+    void SynchronizeProductionContents(); // 실제43ec00(first1)의43df80 직접 호출이다.
+    const o::ContainedFinderState& ProductionFinder() const; // 같은 현재 내용물 검색 전역이다.
     bool UpdateProductionContents(); // 실제현재모드/부모/dirty→Deck 재계산→43df80 단락이다.
     // 실제 PlayerWorld가 공유하는00595344 DWORD를 읽는다. subscriber/Ready와 합치지 않는다.
     std::uint32_t PlayerKnown() const;

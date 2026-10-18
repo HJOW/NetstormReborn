@@ -89,9 +89,9 @@
   },
   "currentSources": {
     "cpppj/src/client/CMakeLists.txt": "d2463c8e635ce3e6d82bc55105489461d1758f6a5819c7748cf6d1108a91ae4d",
-    "cpppj/tests/CMakeLists.txt": "9cf0151099351834b47aba2b6eff4b04751b460580eeb02725effd7b618f79d7",
+    "cpppj/tests/CMakeLists.txt": "807452e78888684907414eb31cc6b5da2c9c123b4c1fb6b8a6b620974337b78a",
     "cpppj/src/client/InventoryGump.h": "f9f6a36fc41479a374958200583a95d68d26fa516696a26c59e63886dc917b0d",
-    "cpppj/src/client/InventoryGump.cpp": "321adaf293102930166c72a04da600cf19079f7f3d860decc86342151d23b238",
+    "cpppj/src/client/InventoryGump.cpp": "0a90a5a9cc763d2675cbf47fa10a1cde68fddabcdc86a2758629f1e77842bece",
     "cpppj/tests/InventoryGumpTests.cpp": "9a6e4200af9b205c5a058c445aa1e0ee17d477f44df7d7243dbee6b9851ae491",
     "tools/decomp_inventory_grid.py": "2ed6d9f5463e698a545c2e38032aa9fb144070753092a1a95064fb10f4a0ad40",
     "cpppj/tests/fixtures/inventory-grid-x86.tsv": "e58dd7725294925c2e9ff69c39521591ddedbabc8c21e2b8ee3034643c71aa0c",
@@ -205,6 +205,25 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "3078716f01858a641a1b3f9ff98fc5d1e36df810d60fa67b5ad7d31c07d3f2b6",
           "current": "9cf0151099351834b47aba2b6eff4b04751b460580eeb02725effd7b618f79d7"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 178,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "9cf0151099351834b47aba2b6eff4b04751b460580eeb02725effd7b618f79d7",
+          "current": "807452e78888684907414eb31cc6b5da2c9c123b4c1fb6b8a6b620974337b78a"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/InventoryGump.cpp",
+          "previous": "321adaf293102930166c72a04da600cf19079f7f3d860decc86342151d23b238",
+          "current": "0a90a5a9cc763d2675cbf47fa10a1cde68fddabcdc86a2758629f1e77842bece"
         }
       ]
     }

@@ -136,3 +136,6 @@ target_sources(netstorm PRIVATE client/SpriteColorMaps.cpp client/SpriteColorMap
 
 # 원본 Factory의 실제 생산/지식/마나/CRT정렬 메뉴다.
 target_sources(netstorm PRIVATE client/RawFactoryMenu.cpp client/RawFactoryMenu.h)
+
+# 실제 Client 생산 패널과 원본 비활성/선행 색표다.
+target_sources(netstorm PRIVATE client/ProductionColorMaps.cpp client/ProductionColorMaps.h client/RawProductionControls.cpp client/RawProductionControls.h)

@@ -16,7 +16,7 @@ Sid Link(std::span<const std::uint8_t> raw,std::size_t offset) {
 RawContainedFinder::RawContainedFinder(const SidPool& pool,const ContainedFinderState& state):pool_(pool),state_(state) {}
 // Begin의 허용 표식은 패치 assert만 우회하며 후보의 타입 조건은 바꾸지 않는다.
 Sid RawContainedFinder::Begin(Sid parent,bool allowDead) {
-    if (!parent.value || parent.value>=pool_.Capacity()) throw std::out_of_range("contained finder 부모 SID 오류");
+    if (parent.value>=pool_.Capacity()) throw std::out_of_range("contained finder 부모 SID 오류");
     const auto raw=pool_.Slot(parent);
     if (pool_.Edition()==OriginalEdition::Patch1078 && state_.checkingDead && (raw[kState]&kDead) && !state_.boss && !allowDead)
         throw std::logic_error("권한 없는 dead 부모 종속 조회 assert 경로");

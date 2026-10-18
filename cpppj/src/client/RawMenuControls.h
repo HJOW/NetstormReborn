@@ -10,6 +10,12 @@
 #include <memory>
 
 namespace netstorm::client {
+// 같은 수집/정렬/클립 안에서 생산 패널의 원본 파생 Draw를 호출한다.
+struct RawMenuExternalGumps {
+    std::function<TextGumpNode*(std::uint32_t)> text; // 같은 TextGump/StyleText가 읽는 외부 텍스트 노드다.
+    std::function<bool(std::uint32_t)> owns; // 공통 등록표의 현재 생산 노드인지 판정한다.
+    std::function<void(std::uint32_t,GumpPixelTarget&,GumpGlyphColorState&,GumpBackgroundDraw&)> draw; // 현재 실제 픽셀/색/배경 문맥이다.
+};
 // 돌 버튼이 이미 사용하는 단일 트리의 실제 처리기다. 원본 상태/등록표 사본을 생성하지 않는다.
 struct RawMenuTree {
     GumpCreateState& create; // 공통 등록표와 루트다.
@@ -46,6 +52,10 @@ public:
     ~RawMenuControls();
     RawMenuControls(const RawMenuControls&)=delete; // 고정 주소를 참조하는 훅을 복사하지 않는다.
     RawMenuControls& operator=(const RawMenuControls&)=delete; // 같은 저장소/처리기를 유지한다.
+    void SetExternalGumps(RawMenuExternalGumps hooks); // 생산 패널의 현재 저장소를 같은 출력 계층에 연결/해제한다.
+    const TextGump& TextBackend() const; // 수량/예산도 기존 원본 한 줄 글자 처리기를 공유한다.
+    const StyleText& StyleBackend() const; // 생산 글자도 같은 실제 조각·글꼴·그림 파서를 공유한다.
+    const GumpBackgroundCreate& BackgroundBackend() const; // 실제 TYPE/SHP를 읽는 같은 배경 생성기다.
     // 공통 기본 생성/가상 분배에서 현재 파생 노드를 직접 조회한다. 없는 토큰은 nullptr다.
     GumpCreateNode* Node(std::uint32_t token) const;
     StoneButtonGumpNode* Button(std::uint32_t token) const;

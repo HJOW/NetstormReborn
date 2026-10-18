@@ -91,6 +91,8 @@ void RawGraph::Region(Sid sid,const RawGraphPop* pop,std::span<const std::uint8_
                     if (bytes[11]&(kFree|kContained)) throw std::logic_error("그래프 영역 후보 상태 오류");
                     if (bytes[extraOffset]&kBuried) continue;
                     if (bytes[10]<kFirstAssetTypeNumber || bytes[10]>=types_.size()) throw std::logic_error("그래프 영역 후보 타입 오류");
+                    // 실제 일반 탐색의 비표면은 그래프를 바꾸지 않는다. 이동 객체의 소수 좌표를 표면 정수로 검증하지 않는다.
+                    if (!(types_[bytes[10]].flags1&TypeFlag1::kSurface)) continue;
                     const int ax=Coordinate(pop && candidate==sid ? pop->x : std::bit_cast<float>(Read(bytes,14)));
                     const int ay=Coordinate(pop && candidate==sid ? pop->y : std::bit_cast<float>(Read(bytes,18)));
                     // 원본 패치 일반 탐색은 유효 좌표 밖을 건너뛰고 CD는 assert한다. 이 경로는 정상 입력만 받는다.
@@ -246,8 +248,11 @@ RawGraph::Plan RawGraph::Calculate(Sid sid,Operation operation,std::uint8_t targ
     if (operation==Operation::Region || (add && (state&7))) return plan;
     std::vector<bool> required(pool_.Capacity()); if (!global) required[sid.value]=true;
     // 0단계 머리만 읽는다. 전체 발자국을 가짜 객체 번호로 채우거나 다른 해시 단계를 섞지 않는다.
-    for (auto id:map) if (id) {
+    for (auto& id:map) if (id) {
         if (id<5 || id>kMaximumId || id>=pool_.Capacity()) throw std::out_of_range("raw 그래프 해시 SID 오류");
+        const auto candidate=pool_.Slot(Sid{id});
+        // 로컬 표면 스냅샷에만 비표면 필터를 적용한다. 살아 있는 실제 해시/좌표/다음 링크는 변경하지 않는다.
+        if (!(candidate[11]&(kFree|kContained|kVoid)) && candidate[10]>=kFirstAssetTypeNumber && candidate[10]<types_.size() && !(types_[candidate[10]].flags1&TypeFlag1::kSurface)) { id=0;continue; }
         required[id]=true;
     }
     std::vector<SurfaceObject> objects; std::vector<GraphMembership> members;

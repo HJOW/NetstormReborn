@@ -1,3 +1,4 @@
+#include "client/RawProductionControls.h"
 #include "client/CampaignUserInputServices.h"
 // 원본 004d0120·004cebf0·004cf270·004ce580의 메뉴/명령 흐름을 표시 기반과 연결한다.
 // 전체 Gump/StyleText와 게임 규칙은 후속이다. 저장 미션 월드는 GameWorld에 연결한다.
@@ -177,6 +178,7 @@ UberGump::~UberGump() { ClearWorld(); }
 // 입력 참조를 먼저 없애고 커널의 실제 소유권을 해제한다. 위치 효과음은 카메라 0의 전체 메뉴 영역으로 되돌린다.
 void UberGump::ClearWorld() {
     if (world_ && rawButtons_ && rawButtons_->Menus()) rawButtons_->Menus()->Close(); // 같은Form을반납한뒤에만Session/월드포인터를해제한다.
+    if (rawButtons_) rawButtons_->DisableProduction(); // 실제 Session보다 먼저 UI Form을 반납한다.
     client_.ClearThunderFlashes();
     if (world_) client_.GetRenderer().SetExtraCollection({}); // 월드 반납 전에 빌린 실제 커서 수집/Draw callback을 해제한다.
     client_.GetRenderer().SetOverlayProcedure({}); // 실제 메뉴 픽셀 소비자가 반납한 월드를 다시 읽지 않도록 먼저 제거한다.
@@ -426,7 +428,10 @@ void UberGump::Event(InputEvent event) {
         static_cast<void>(rawButtons_->Event(event));rebuild_=true;return;
     }
     if (world_ && userInput_ && state_.phase==ClientPhase::Mission && popup_.empty()) {
-        const bool ui=std::any_of(input_.Controls().begin(),input_.Controls().end(),[&](const GumpControl& control) { return GumpControlInput::Contains(control.rect,{event.x,event.y}); });
+        // 가상키도 상위16비트에 있으므로 버튼과 정확히 일치할 때만 좌표로 UI를 가린다.
+        const auto mouse=event.code&0x03ffffffu;
+        const bool mouseButton=mouse==InputCode::kLeftButton || mouse==InputCode::kRightButton || mouse==InputCode::kMiddleButton;
+        const bool ui=mouseButton && (rawButtons_->PickGump({event.x,event.y})!=0 || std::any_of(input_.Controls().begin(),input_.Controls().end(),[&](const GumpControl& control) { return GumpControlInput::Contains(control.rect,{event.x,event.y}); }));
         if (!ui && !rawButtons_->HasCapture()) { if (const auto id=userInput_->Event(event)) { if (*id) OpenObjectMenu(*id,event); else world_->Select(0); } return; }
     }
     const auto old=rawButtons_->Pressed();auto activated=rawButtons_->Event(event);
@@ -479,6 +484,7 @@ void UberGump::Refresh() { rebuild_=true;client_.GetRenderer().InvalidateAll(); 
 void UberGump::PaletteChanged() {
     if (world_) world_->SetPalette(client_.GetScreen().Palette());
     rawButtons_->SetPalette(ButtonColors(client_.GetScreen().Colors()));
+    if (rawButtons_->Production()) rawButtons_->Production()->SetPalette(client_.GetScreen().Palette());
     Refresh();
 }
 // 선택한 원본 명령의 작은 부분집합. 지원하지 않는 항목은 활성화하지 않는다.
@@ -593,8 +599,8 @@ void UberGump::Compose() {
     }
     if (state_.phase == ClientPhase::Mission && popup_.empty()) {
         // 현재 연결한 Game 메뉴와 실제 로컬 Storm Power를 월드 위에 표시한다.
-        button({"Game", {"Menu", "game"}}, 4, 4, kButtonWidth);
-        if (world_) text.push_back({&font,"Storm Power: "+std::to_string(static_cast<long long>(world_->Session().Sp(world_->Session().LocalOwner()))),width-200,6,255,0,{1,1},true,false});
+        button({"Game", {"Menu", "game"}}, 84, 4, kButtonWidth);
+
         appendWarnings();client_.GetRenderer().SetBackground(canvas); client_.GetRenderer().SetScene(std::move(worldSprites), std::move(text));
         if (world_) client_.GetRenderer().SetOverlay(world_->SelectionImage());
         if (rawButtons_->Menus()->HasOverlay()) {
@@ -666,6 +672,12 @@ void UberGump::Compose() {
         for (const auto& label:labels_) originalLabels.push_back(FontBytes(label));
         if (popup_.empty()) rawButtons_->SetControls(regions,originalLabels,width,height,{buttonTextureType_,buttonTextureFrame_,
             static_cast<std::int16_t>(buttonTextureMetrics_.width),static_cast<std::int16_t>(buttonTextureMetrics_.height),buttonColors});
+        if (popup_.empty() && state_.phase==ClientPhase::Mission && world_) {
+            auto& production=rawButtons_->EnableProduction(world_->Session(),client_.Assets(),RawProductionHooks{
+                [this] { return client_.WallSeconds(); },[this](std::string_view name) { client_.WorldAudio().Sounds().PlayByName(name,0,0,0,0,0); },
+                [this](std::string_view key) { state_.Post({"Tell",std::string(key)}); }});
+            production.SetPalette(client_.GetScreen().Palette());
+        }
         if (!popup_.empty()) {
             auto& menus=*rawButtons_->Menus();menus.SetPalette(client_.GetScreen().Colors());
             menus.Open({width/2+2,height/2-27},[&](const MenuGumpWidgets& widgets,const MenuGumpControls& controls,const MenuGump&) {
@@ -687,6 +699,7 @@ void UberGump::Compose() {
 }
 // 자동 검사는 라벨 좌표를 읽고 실제 버튼 입력을 보낸다. 명령을 직접 호출하지 않는다.
 std::optional<ScreenPoint> UberGump::ControlPoint(std::string_view label) const {
+    if (rawButtons_->Production() && label.starts_with("production:")) return rawButtons_->Production()->Point(static_cast<std::uint32_t>(std::stoul(std::string(label.substr(11)))));
     if (world_ && (label.starts_with("world:") || label.starts_with("cell:"))) return world_->Point(label);
     if (objectMenus_ && objectMenus_->Active()) if (const auto point=rawButtons_->Menus()->Point(FontBytes(label))) return point;
     // 동일 라벨의 첫 영역을 선택한다.

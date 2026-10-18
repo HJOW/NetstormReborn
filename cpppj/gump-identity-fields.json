@@ -219,11 +219,11 @@
       "trackedFullscreenMarkerRestored": true
     },
     "sourceSha256": {
-      "cpppj/src/client/RawMenuControls.h": "6089fe0bf7610010269dc0e38f3788e2c59daac4fe6b3d8b17dd711841fef5ca",
-      "cpppj/src/client/RawMenuControls.cpp": "e0114aa8f670e3f5dbaa49252572ee5479def7006db6e84fdec57aa182c1904c",
-      "cpppj/src/client/RawButtonControls.h": "372d15ad4ab423ef9869fab470ad1f4b5c75cb0ebc12503edd2bb7a6f3f240d6",
-      "cpppj/src/client/RawButtonControls.cpp": "5d9568d2a6c461e9dd474cc584db62389ca3eb576e780fdeb6e9a39f1ee55baf",
-      "cpppj/src/client/UberGump.cpp": "3be959763ad50059ca75069af12cb2fc2bb695545324a80d5883ac0973d0f24c",
+      "cpppj/src/client/RawMenuControls.h": "70cf632cf282ea15c98c45ca1b8fba8b720dafb07eebc2a022723dfc35e3b1fa",
+      "cpppj/src/client/RawMenuControls.cpp": "521a34d2d7660a18a90435074c1f2893f4c24ca600d81d3a5cf18b745226459c",
+      "cpppj/src/client/RawButtonControls.h": "d49ab77d71b4d10beea6c2a5e466a87289874092592c86bc879cd971fab64180",
+      "cpppj/src/client/RawButtonControls.cpp": "c5bac58d2f4686f730fb88ebe2cf9605e477cd98eda519d1a0d8e03d457a1322",
+      "cpppj/src/client/UberGump.cpp": "8ef2a3caf97acee49ea276efb812d96098d1ebc06f32cece2ccf14ef7a9fe05f",
       "cpppj/src/client/TextGump.cpp": "8f501caa7ba39352386060e81c79835eb75e070e6231d22e879b3c17142c5804",
       "cpppj/src/client/ScrollingTextGumpWidgets.cpp": "6ef03644d61c31ca94c11f163b6774f2f5f608727209ff57adf6c9cc4c73c849",
       "cpppj/src/client/ScrollGumpWidgets.cpp": "378d5b65e02f8e5e1693fca50b2a3582e07e53b0f3e2df4ffe36c3fb618f435b",
@@ -438,6 +438,43 @@
           "path": "cpppj/src/client/UberGump.cpp",
           "previous": "7f0e52e4ba5b226ee874481d587d71790ef289be2df52b1bdeacdfb7da6ae9d4",
           "current": "3be959763ad50059ca75069af12cb2fc2bb695545324a80d5883ac0973d0f24c"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 178,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/productValidation/sourceSha256",
+          "path": "cpppj/src/client/RawMenuControls.h",
+          "previous": "6089fe0bf7610010269dc0e38f3788e2c59daac4fe6b3d8b17dd711841fef5ca",
+          "current": "70cf632cf282ea15c98c45ca1b8fba8b720dafb07eebc2a022723dfc35e3b1fa"
+        },
+        {
+          "group": "/productValidation/sourceSha256",
+          "path": "cpppj/src/client/RawMenuControls.cpp",
+          "previous": "e0114aa8f670e3f5dbaa49252572ee5479def7006db6e84fdec57aa182c1904c",
+          "current": "521a34d2d7660a18a90435074c1f2893f4c24ca600d81d3a5cf18b745226459c"
+        },
+        {
+          "group": "/productValidation/sourceSha256",
+          "path": "cpppj/src/client/RawButtonControls.h",
+          "previous": "372d15ad4ab423ef9869fab470ad1f4b5c75cb0ebc12503edd2bb7a6f3f240d6",
+          "current": "d49ab77d71b4d10beea6c2a5e466a87289874092592c86bc879cd971fab64180"
+        },
+        {
+          "group": "/productValidation/sourceSha256",
+          "path": "cpppj/src/client/RawButtonControls.cpp",
+          "previous": "5d9568d2a6c461e9dd474cc584db62389ca3eb576e780fdeb6e9a39f1ee55baf",
+          "current": "c5bac58d2f4686f730fb88ebe2cf9605e477cd98eda519d1a0d8e03d457a1322"
+        },
+        {
+          "group": "/productValidation/sourceSha256",
+          "path": "cpppj/src/client/UberGump.cpp",
+          "previous": "3be959763ad50059ca75069af12cb2fc2bb695545324a80d5883ac0973d0f24c",
+          "current": "8ef2a3caf97acee49ea276efb812d96098d1ebc06f32cece2ccf14ef7a9fe05f"
         }
       ]
     }

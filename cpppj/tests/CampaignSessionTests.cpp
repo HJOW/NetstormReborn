@@ -1,3 +1,5 @@
+#include "client/RawProductionControls.h"
+#include "client/RawMenuControls.h"
 #include "client/ClientMain.h"
 #include "client/RawCampaignMissionStartBindings.h"
 #include "client/UserInput.h"
@@ -1657,7 +1659,8 @@ TEST_CASE(CampaignSession_LocalLoginMissionStartAiAlliances) {
 
 // 실제 로그인/Start·허용점·3e 왕복 뒤 자연6700/건설30·HP 증가·완공·소리 반납까지 같은 세션에서 검사한다.
 TEST_CASE(CampaignSession_LocalLoginWorkshopHasActualPlacement) {
-    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();RawButtonControls* activeProductionUi{}; // 같은 실제 내용물 알림의 현재 UI다.
+    services.playerContent.gump=[&](auto id) { return activeProductionUi ? activeProductionUi->RegisteredGump(id) : 0U; };services.playerContent.handle=[&](auto token,auto event,auto form,auto reason) { if (!activeProductionUi) throw std::logic_error("생산 검사 UI 수명 오류");return activeProductionUi->HandleGump(token,event,form,reason); };services.gumpNotice=[&](auto id,auto parent) { if (activeProductionUi) activeProductionUi->ObjectNotice()(id,parent); };
     CampaignLoginServices login;login.configInt=[](std::string_view,std::int32_t fallback) { return fallback; };login.wallSeconds=[] { return 100.25; };login.clock=[] { return 100250U; };login.refresh=[] {};login.playerUiBusy=[] { return false; };login.playerNotice=[](std::uint32_t,std::uint32_t,std::uint32_t) {};login.log=[](std::string_view) {};
     services.production.allocationBytes=[](std::span<std::uint8_t> bytes) { CHECK(bytes.size()==kProductionDeckBytes);std::fill(bytes.begin(),bytes.end(),std::uint8_t{0xa7}); }; // 생성자가 초기화하지 않는 실제 할당 바이트의 명시 입력이다.
     services.production.effects.configInt=[](std::string_view key) { CHECK(key=="getTeleportTechFree");return 0; };services.production.effects.modeAssertion=[] { throw std::logic_error("실제 연구의 Fort/Battle 모드 진단"); };
@@ -1762,4 +1765,33 @@ TEST_CASE(CampaignSession_LocalLoginWorkshopHasActualPlacement) {
     CHECK(session.SelectFactoryKnowledge(target,0x03000080U,(128U<<16)|target.value)==1);session.PumpLocalConnection();CHECK(researchPackets.size()==2 && liveFlares().empty() && session.Priests().Carrier().FindContained(target,16,128,0)==authoritative);
     std::cout<<"실제 연구58h/예측"<<prediction.value<<"→서버"<<authoritative.value<<"/현재Deck/플레어12→후속"<<peak<<"→0 통과\n";
     std::cout<<"실제1-1 썬 워크샾 자연 건설 SID"<<target.value<<" 시작"<<began<<" 완료"<<end<<" HP"<<maximum<<"\n";
+    {
+        FontStore fonts(assets.files,"Arial");double wall=100;std::size_t gets{}; // 실제 원본 글꼴/장치 입력 경계다.
+        RawButtonControls controls(OriginalEdition::Patch1078,{[&] { return wall; },{}, {},[&](auto form,auto flags) { session.GumpForms().Destroy({static_cast<std::uint16_t>(form)},flags); }});activeProductionUi=&controls;
+        RawMenuHooks hooks;hooks.command=[](auto,auto,auto) {};hooks.readInt=[](auto,std::int32_t& value) { value=0; };hooks.sound=[](auto) {};hooks.poll=[](auto) { return InputEvent{InputCode::kRelease,500,350}; };hooks.cursor=[](auto) {};
+        hooks.objectForms=[&]() -> GumpFormHost& { return session.GumpForms(); };hooks.gameSeconds=[&] { return core.processState.now; };
+        auto& menus=controls.EnableMenus(assets.game,fonts,std::move(hooks));std::array<std::uint32_t,256> logical{};
+        // 같은 파일 팔레트의 실제 RGB 번호를 공급한다.
+        for (std::size_t i=0;i<logical.size();++i) logical[i]=std::uint32_t(palette[i].red)|(std::uint32_t(palette[i].green)<<8)|(std::uint32_t(palette[i].blue)<<16);
+        const auto colors=BuildPaletteColorTable(logical);menus.SetPalette(colors);const auto& fortGump=assets.game.Find("fortGump");const auto metrics=assets.game.Shapes().SquidMetrics(fortGump.block,0);
+        const std::array<GumpControl,1> buttons{{{0,{84,4,160,26},false,true,false}}};const std::array<std::string,1> labels{{"Game"}};
+        controls.SetControls(buttons,labels,1024,768,{static_cast<std::uint32_t>(fortGump.block+70),0,metrics.width,metrics.height,ButtonColors(colors)});
+        auto& production=controls.EnableProduction(session,assets.game,{[&] { return wall; },[&](std::string_view name) { CHECK(name=="getPiece.wav");++gets; },[](auto) { throw std::logic_error("생산 검사 예상 밖 Tell"); }});production.SetPalette(palette);
+        CHECK(controls.RegisteredGump(3) && production.Node(controls.RegisteredGump(3)));CHECK(production.Report().find("\t128\t")!=std::string::npos);
+        std::vector<std::uint8_t> pixels(1024*768,0x5a);menus.Draw(pixels,1024,768,colors,BuildGumpShadeMaps(logical));CHECK(std::any_of(pixels.begin(),pixels.end(),[](auto pixel) { return pixel!=0x5a; }));
+        std::cout<<"실제 초기 에너지 공급원 "<<core.bookkeeping.providers.count<<"/Cannon level"<<core.types[128].level<<"/theme"<<core.types[128].theme<<"/요구"<<BindAiTypeRequiredEnergy(assets.game,core.types)(128)<<"\n";
+        const auto click=production.Point(128);CHECK(click.has_value());
+        if (click) { CHECK(controls.PickGump(*click)==controls.RegisteredGump(3));controls.Event({InputCode::kLeftButton,click->x,click->y});CHECK(session.CursorDropSettings().preview==teleport && session.CursorDropSettings().type==128 && session.CursorDropSettings().lockDepth==0 && gets==1);
+            const auto cannonPoint=CursorPlacementPoint(session,ui);std::cout<<"실제 생산 썬 캐논 배치 허용점 "<<cannonPoint.x<<","<<cannonPoint.y<<"\n";
+            session.Cursor().Drop();session.PumpLocalConnection();CHECK(session.Sp(1)==1800);session.Cursor().Cancel();
+            const auto cannonBegan=core.processState.now;std::size_t completedCannons{}; // 실제 후속 Kernel이 완료한 캐논을 관찰한다.
+            // 반환 내용물 Regular의 count0/10초/count1과 실제 캐논 건설을 자연 실행한다.
+            for (std::uint64_t frame=1;frame<=2400;++frame) { const auto now=cannonBegan+static_cast<double>(frame)/60;session.RunFrame({now,now,1.0/60,frame},false);wall=now;controls.Poll({InputCode::kRelease,500,350});menus.CleanupFrame(); }
+            // 현재 서버 풀에서 살아 있는 내 완공 캐논을 직접 읽는다.
+            for (std::uint32_t number=core.pool.Layout().serverFirst;number<core.pool.Capacity();++number) { const auto raw=core.pool.Slot({static_cast<std::uint16_t>(number)});if (!(raw[11]&3) && raw[10]==128 && raw[34]==1 && !(raw[40]&1)) ++completedCannons; }
+            CHECK(completedCannons==1);
+        }
+        controls.DisableProduction();CHECK(!controls.Production());CHECK(session.Sp(1)==1800);activeProductionUi=nullptr;
+    }
+
 }

@@ -1524,3 +1524,8 @@ set_source_files_properties(ImageGumpTests.cpp PROPERTIES COMPILE_DEFINITIONS
 target_sources(netstorm_tests PRIVATE InventoryItemGumpTests.cpp)
 set_source_files_properties(InventoryItemGumpTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_INVENTORY_ITEM_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/inventory-item-x86.tsv\"")
+
+# 실제 생산 아이콘 두 색표와 생성 직후 격자 부모0을 검사한다.
+target_sources(netstorm_tests PRIVATE ProductionColorMapsTests.cpp)
+set_source_files_properties(ProductionColorMapsTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_PRODUCTION_COLORS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/production-colors-x86.tsv\"")

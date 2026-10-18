@@ -13,7 +13,7 @@
     "tools/decomp_graph_reset.py": "6ca42fdd647153bc168c57c22edafcc11a4a01ea7d187bf0126c2a851e0399ea",
     "tools/decomp_local_mission_transport.py": "db71da65079aa9a985a3a833edd224f089ba9a20137d92042551cb346937eb78",
     "cpppj/src/o/RawGraph.h": "3300336f25d5669a05859e50c3f4903cd7ea05bded2ce43d2be68707f5428cd5",
-    "cpppj/src/o/RawGraph.cpp": "5c19ce26e1e8949f05e4bc81db18cc648c1826ffbca7be3c478bf36ee2dc2043",
+    "cpppj/src/o/RawGraph.cpp": "d392ffd6e52f10adfc25bffa44ae4ae51e81a91201864d6fc168ddcb66be5a22",
     "cpppj/tests/GraphResetTests.cpp": "fe3888fbae14ad14ab9b83d92cb1705c880d7a17b54154731b44b3de959e5912",
     "cpppj/tests/fixtures/graph-reset-x86.tsv": "48fc211e1d99eab562ceabb1112f5e9031343c0e7e46ce5a0bdfa020a946fa79"
   },
@@ -51,5 +51,20 @@
     "previous": "d3bf293fa8030e3a6f7160015496fbb0790543fdf35224ad56b37ead6c95087c",
     "current": "3300336f25d5669a05859e50c3f4903cd7ea05bded2ce43d2be68707f5428cd5",
     "meaning": "검사한 CRLF 헤더를 LF로만 정규화했다. C++ 토큰 변경은 없다."
-  }
+  },
+  "integration_updates": [
+    {
+      "date": "2026-10-18",
+      "unit": 178,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/o/RawGraph.cpp",
+          "previous": "5c19ce26e1e8949f05e4bc81db18cc648c1826ffbca7be3c478bf36ee2dc2043",
+          "current": "d392ffd6e52f10adfc25bffa44ae4ae51e81a91201864d6fc168ddcb66be5a22"
+        }
+      ]
+    }
+  ]
 }

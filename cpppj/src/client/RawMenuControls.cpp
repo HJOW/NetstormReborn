@@ -20,6 +20,7 @@ struct RawMenuControls::Impl {
     RawMenuTree common; // Client 돌 버튼과 같은 공통 상태/처리기다.
     const GameAssets& assets; // 보호 TYPE/SHP를 읽는 같은 자산 저장소다.
     FontStore& fonts; // Client 글꼴 캐시를 공유한다.
+    RawMenuExternalGumps external; // 같은 실제 표면의 생산 파생 저장소와 Draw다.
     RawMenuHooks hooks; // 실제 설정/명령/음향/마우스 경계다.
     PaletteColorTable palette; // 현재 파일 팔레트의 실제 색 번호다.
     GumpText metrics; // 기존 원본 일반 글자 측정기다.
@@ -110,7 +111,7 @@ struct RawMenuControls::Impl {
         sh.textDraw=[this](auto bytes,auto point,const auto& context) { if (!activeText) throw std::logic_error("메뉴 글자 실제 Draw 문맥 없음");activeText->Draw(bytes,point,DecodeGumpTextContext(context)); };
         style=std::make_unique<StyleText>(fragments,std::move(sh),assets.Edition());StyleTextBufferHooks bh;BindStyleTextBufferFonts(bh,metrics);BindStyleTextBufferMarkup(bh,*pictures);buffers=std::make_unique<StyleTextBufferStore>(fragments,*style,std::move(bh),[](auto) {});
         costText=std::make_unique<TextGump>(common.create,costTextState,common.factory,common.lifetime,common.collection,clip,*style,
-            TextGumpHooks{[this](auto token) -> TextGumpNode* { return Find(costs,token); },common.node});
+            TextGumpHooks{[this](auto token) -> TextGumpNode* { return Find(costs,token) ? Find(costs,token) : (external.text ? external.text(token) : nullptr); },common.node});
         if (assets.Edition()==o::OriginalEdition::Patch1078) {
             FloatingSpGumpHooks fh;fh.node=[this](auto token) { return Find(costs,token); };
             fh.now=[this] { if (!hooks.gameSeconds) throw std::logic_error("비용 표시의 실제 게임 시계 미연결");return hooks.gameSeconds(); };
@@ -167,7 +168,7 @@ struct RawMenuControls::Impl {
     // 화살표 배경처럼 공통 생성자가 소유한 실제 자식도 같은 출력 가지에 포함한다.
     bool OwnsBranch(std::uint32_t token) const {
         // 현재 실제 부모를 따라가며 메뉴 소유 조상을 찾는다.
-        for (auto current=token;current;current=common.node(current)->parent) if (Node(current)) return true;return false;
+        for (auto current=token;current;current=common.node(current)->parent) if (Node(current) || (external.owns && external.owns(current))) return true;return false;
     }
     // 배경을 공유하는 파생 객체만 현재 배경 필드로 연결한다.
     GumpBackgroundNode* Background(std::uint32_t token) const {
@@ -196,6 +197,11 @@ struct RawMenuControls::Impl {
 RawMenuControls::RawMenuControls(RawMenuTree tree,const GameAssets& assets,FontStore& fonts,RawMenuHooks hooks):impl_(std::make_unique<Impl>(std::move(tree),assets,fonts,std::move(hooks))) {}
 // 노드는 소유자의 공통 GumpLifetime으로 먼저 삭제한다.
 RawMenuControls::~RawMenuControls()=default;
+// 실제 생산 자식도 기존 파서/글리프/배경과 같은 현재 문맥을 사용한다.
+void RawMenuControls::SetExternalGumps(RawMenuExternalGumps hooks) { impl_->external=std::move(hooks); }
+const TextGump& RawMenuControls::TextBackend() const { return *impl_->costText; } // 같은 한 줄 처리기다.
+const StyleText& RawMenuControls::StyleBackend() const { return *impl_->style; } // 같은 조각 소유자다.
+const GumpBackgroundCreate& RawMenuControls::BackgroundBackend() const { return *impl_->backgroundCreate; } // 같은 실제 자산이다.
 // 공통 생성과 분배는 별도 기본 노드 복사본을 만들지 않는다.
 GumpCreateNode* RawMenuControls::Node(std::uint32_t token) const { return impl_->Node(token); }
 // 스크롤 화살표도 같은 ButtonGump 상태를 사용한다.
@@ -253,7 +259,7 @@ void RawMenuControls::Draw(std::span<std::uint8_t> pixels,int pitch,int height,c
         ~ResetDraw() { state.activeText=nullptr;state.activeBackground={};state.activePicture={}; } // 정상/예외 반환의 같은 정리다.
     } reset{s};
     draw.draw=[&](auto token) {
-        if (s.costs.contains(token)) s.costText->Draw(token);else if (s.decorations.contains(token)) s.decoration->Draw(token);else if (s.titles.contains(token)) s.title->Draw(token);else if (s.arrows.contains(token)) s.sliderWidgets->DrawArrow(token,s.common.collection,text,target);
+        if (s.external.owns && s.external.owns(token)) s.external.draw(token,target,s.colors,*s.backgroundDraw);else if (s.costs.contains(token)) s.costText->Draw(token);else if (s.decorations.contains(token)) s.decoration->Draw(token);else if (s.titles.contains(token)) s.title->Draw(token);else if (s.arrows.contains(token)) s.sliderWidgets->DrawArrow(token,s.common.collection,text,target);
         else if (s.thumbs.contains(token)) s.sliderWidgets->DrawThumb(token,s.common.collection,*s.backgroundDraw);else if (s.Background(token)) s.backgroundDraw->Draw(token);
     };
     MenuGumpDrawHooks mh;mh.node=[&](auto token) { return Find(s.menus,token); };mh.base=s.common.node;GumpDecorationPixelTarget decorationPixels(target,s.assets);BindMenuGumpDrawAssets(mh,s.assets,decorationPixels);
@@ -301,7 +307,7 @@ void RawMenuControls::CleanupFrame() { impl_->common.lifetime.Cleanup(); }
 bool RawMenuControls::HasOverlay() const {
     auto& s=*impl_;
     // 이 계층의 실제 각 노드가 공통 트리에서 표시되는지 조회한다.
-    for (const auto token:s.common.create.entries) if (s.Node(token)) {
+    for (const auto token:s.common.create.entries) if (s.Node(token) || (s.external.owns && s.external.owns(token))) {
         bool visible=true;
         // 숨긴 부모 아래 표시 노드를 출력 대상으로 만들지 않는다.
         for (auto current=token;current;current=s.common.node(current)->parent) { const auto flags=s.common.node(current)->flags;if (!(flags&1) || (flags&0x10000)) { visible=false;break; } }
