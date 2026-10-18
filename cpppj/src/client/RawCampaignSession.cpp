@@ -689,6 +689,10 @@ struct RawCampaignSession::Impl {
         // MessageBoard::Show의 현재00594fa4 억제 조건을 같은 미션 전역에서 읽고 실제 UI 삭제에 적용한다.
         hitEffects.general.warningEvent=[this,remove=std::move(hitEffects.general.warningEvent)] { if (!globals.missionPost) remove(); };
         FillMissing(hitEffects.burning.create);FillMissing(hitEffects.burning.bulfSound);
+        // 건설 중 신전 피격은 기존 같은30 Form의 끝 시각과 실제 가상88 표시를 갱신한다.
+        if (!hitEffects.vortex.constructionType) hitEffects.vortex.constructionType=[this] { return buildingState.processType; };
+        if (!hitEffects.vortex.resetEnd) hitEffects.vortex.resetEnd=[this](Sid form,std::uint32_t amount) { PrepareConstruction();building->ResetEndFromForm(form,amount); };
+        if (!hitEffects.vortex.refresh) hitEffects.vortex.refresh=[this](Sid victim) { core.display.Update(core.pool.Slot(victim),0); };
         FillMissing(hitEffects.dudes.createBurning);FillMissing(hitEffects.dudes.pathEndpoint);FillMissing(hitEffects.dudes.startPath);
         hits=std::make_unique<RawCampaignHitBindings>(world,*priests,hp,random,dudeSpeeds,assetState.residences,
             priestDamageState,generalDamageState,burningState,impactState,std::move(hitEffects));

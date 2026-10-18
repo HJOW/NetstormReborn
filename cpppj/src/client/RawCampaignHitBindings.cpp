@@ -24,6 +24,7 @@ struct RawCampaignHitBindings::Impl {
     std::unique_ptr<o::RawDamageableBurning> burning; // 현재 HP/효과 분기의 실제 몸체다.
     std::unique_ptr<o::RawPriestDamage> priestDamage; // 실제 회복 취소/HP1/감시 해제를 수행한다.
     std::unique_ptr<o::RawDamageableHit> generalDamage; // 현재 일반 HP·방어·경고·서버 죽음의 실제 몸체다.
+    o::VortexDamageHooks vortex; // 같은 현재30 Form과 일반 피해를 사용하는 신전 분배 경계다.
     std::unique_ptr<o::RawDudeNotice> dudes; // 실제 finder/현재task/거주 구역 대피 요청 처리기다.
     std::unique_ptr<o::RawGunImpact> impact; // 같은 Factory/Host의 실제 anim 생성/예약/삭제다.
     // 모든 callback은 동일 Core와 외부 장기 상태만 읽는다.
@@ -51,9 +52,18 @@ struct RawCampaignHitBindings::Impl {
         general.destroy=[this](o::Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); };
         general.unrealize=[this](o::Sid sid) { core.display.Update(core.pool.Slot(sid),0); };
         general.islandAt=[this](float x,float y) { return o::RawPathSurfaceAt(core.hash,{x,y}); };
+        // 실제48ef70 가상 표인 윈드 타워만 방향 방어로 연결하고 다른 파생 경계는 보존한다.
+        general.rejectDamage=[this,fallback=std::move(general.rejectDamage)](o::Sid victim,o::Sid attacker) {
+            if (core.pool.Edition()==o::OriginalEdition::Patch1078 && HitTable(core.pool.Slot(victim))==0x50ead0U)
+                return o::RawWindTowerDefense(core.pool,core.types,core.frames,victim,attacker);
+            if (!fallback) throw std::logic_error("캠페인 다른 파생 실제 방어 미연결");return fallback(victim,attacker);
+        };
         general=o::MakeRawSquidDefenseHooks(core.pool,kCampaignDamageDefenseEntries,std::move(general));
         general=o::MakeDamageableHitBurningHooks(core.pool,*burning,std::move(general));
         generalDamage=std::make_unique<o::RawDamageableHit>(core.pool,core.types,generalState,std::move(general));
+        vortex=std::move(effects.vortex);
+        vortex.find=[this](o::Sid victim,std::uint32_t type,std::uint32_t index,bool remove) { return contained.Find(victim,type,index,remove); };
+        vortex.general=[this](o::Sid victim,std::int32_t amount,std::uint32_t owner,o::Sid attacker) { return generalDamage->Hit(victim,amount,owner,attacker); };
         auto notice=std::move(effects.dudes);
         notice.setFrame=[this](o::Sid sid,std::int32_t frame,std::uint32_t flags) { core.frame.Set(sid,frame,flags); };
         notice.notifySurface=[this](o::Sid sid) { core.building.NotifySurface(sid); };
@@ -85,6 +95,15 @@ RawCampaignHitBindings::~RawCampaignHitBindings()=default;
 // 현재 raw VT의 실제 피격 진입을 대조하고 사제·일반·특수 파생을 구별한다.
 o::GunHitHooks RawCampaignHitBindings::DamageHooks(o::GunHitHooks hooks) const {
     hooks=o::MakeDamageableGunHitHooks(*impl_->generalDamage,kCampaignDamageHitEntries,std::move(hooks));
+    // 원본 대응표에서 가상98이4dba40인 신전만 실제 특수 분배로 보낸다.
+    hooks.damage=[this,fallback=std::move(hooks.damage)](o::Sid victim,std::int32_t amount,std::uint8_t owner,o::Sid attacker) {
+        const auto table=HitTable(impl_->core.pool.Slot(victim)); // 호출 시점의 현재 가상 표다.
+        // 타입 이름 대신 검증된 실제 가상 진입 주소를 대조한다.
+        for (const auto& entry:kCampaignDamageHitEntries) if (entry.vtable==table && entry.address==0x4dba40U) {
+            static_cast<void>(o::RawVortexDamage(impl_->core.pool,victim,amount,owner,attacker,impl_->vortex));return;
+        }
+        if (!fallback) throw std::logic_error("캠페인 다른 실제 피해 미연결");fallback(victim,amount,owner,attacker);
+    };
     auto fallback=std::move(hooks.damage);return o::MakePriestGunHitHooks(impl_->core.pool,*impl_->priestDamage,std::move(hooks),std::move(fallback));
 }
 // 실제 충돌 생성/주변 통지/피해 시간 압축을 기존 Missile 몸체에 연결한다.

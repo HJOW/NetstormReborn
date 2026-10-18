@@ -6,6 +6,7 @@
 #include "o/RawDudeNotice.h"
 #include "o/RawGunImpact.h"
 #include "o/RawDamageableHit.h"
+#include "o/RawSpecialDamage.h"
 #include <memory>
 namespace netstorm::client {
 // 기존 실제 몸체가 아직 다른 소비자에 맡기는 선택 경계다. 미연결 효과는 도달 시 거부한다.
@@ -14,6 +15,7 @@ struct RawCampaignHitEffects {
     o::DamageableBurningHooks burning; // nonzero damageEffect의 실제 생성 및 소리 소비자다.
     o::DudeNoticeHooks dudes; // 실제 Burning0/기존 경로 endpoint/대피 경로 생성 경계다.
     o::DamageableHitHooks general; // 실제 가상 방어·현재 소유자 피해 통지·섬 경고 UI/음향 경계다.
+    o::VortexDamageHooks vortex; // 같은 실제 건설30/끝 시각/표시의 신전 피해 경계다.
 };
 // 기존 피격/충돌 계산을 재구현하지 않고 같은 World/Host/HP/난수/감시에 연결한다.
 class RawCampaignHitBindings {

@@ -128,7 +128,7 @@
       "cpppj/src/client/CampaignClientServices.cpp": "4566373b792d67b289fe125779e0574a5f57008d69e4267bf63ac83b21527b5f",
       "cpppj/src/client/CampaignClientServices.h": "69fbabe821be65505d6cef62b3063b3cf49dae3f1a420b3293a9ffcbdcc7238c",
       "cpppj/src/client/RawCampaignHitBindings.cpp": "4e279ff1709724554faef72883cad8d7580c9a965c87f55fcb3b280d5ceb1c5c",
-      "cpppj/src/client/RawCampaignHitBindings.h": "8c1ab2e210d52dc66978cd142f83815589d9c3954e448ea846d8b01c88dfcccf",
+      "cpppj/src/client/RawCampaignHitBindings.h": "143b27b14df75669a0a79805c801e51f0aa7d7de90082d881094bb3fdbf1349d",
       "cpppj/src/client/RawCampaignSession.cpp": "806bbfd99f08761b130498f53970734b89d255121cb63c26eb6021a318531494",
       "cpppj/src/client/UberGump.cpp": "dde67e30799a4b62084dfbdaae12d304a9ac02e4f519b1d4b11fae7c5a7516e1",
       "cpppj/src/client/WarningMessages.cpp": "16fc489a7fdd92bb1ef8976aef8a074bedfc96345616b702f80d124b7e5a5ae9",
@@ -257,6 +257,19 @@
           "path": "cpppj/tests/CampaignInstallSupport.h",
           "previous": "adebbbdf1654f52c6a8d608d1ec91170431dcea319f9b2fd78dcf6e0ec05898f",
           "current": "e139ab79385c65e8e60b8a12a6ed60696832a01fb75e9f72271c38cd067100bd"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 186,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/integration_snapshot/current_cpp_sha256",
+          "path": "cpppj/src/client/RawCampaignHitBindings.h",
+          "previous": "8c1ab2e210d52dc66978cd142f83815589d9c3954e448ea846d8b01c88dfcccf",
+          "current": "143b27b14df75669a0a79805c801e51f0aa7d7de90082d881094bb3fdbf1349d"
         }
       ]
     }

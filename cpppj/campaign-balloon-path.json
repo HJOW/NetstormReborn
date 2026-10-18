@@ -10,7 +10,7 @@
   "status": "벌룬42와 그림자 수명 연결. 전체11스테이지 자연 플레이 목표는 미완료.",
   "currentSources": {
     "cpppj/src/CMakeLists.txt": "945332cd1c5b131d7e35d0ae7fb15762597c41be26ffea267b18e8b3d048efd8",
-    "cpppj/src/client/RawCampaignSession.cpp": "6a1533de4d7a9f0ed09c0c4a2b59077498e9d0aa0487119e8461381e2d9867ab",
+    "cpppj/src/client/RawCampaignSession.cpp": "21cb2dd9692a507109c6d5e141e130eaf6143132d816d6b3dd6117519e4f39cf",
     "cpppj/src/client/RawCampaignPathBindings.cpp": "0d36db062813bc9ea5b204fd06f1cf4bc0c43b6f71ede35aae851285fdbdcdb1",
     "cpppj/src/client/RawCampaignPathBindings.h": "6ac357c4b2724907eb183be465f5f031f7164c2fdbc474de308d12acf4edc329",
     "cpppj/src/o/RawPathRuntime.cpp": "4f051a4e5c50de3a99cb856c80dcccf7988ee1000fec9f66942f6e4e8999e639",
@@ -20,7 +20,7 @@
     "cpppj/src/o/RawPathStart.cpp": "9dbe404e4d377a362213cffd1da8a42b65816aaf54830fc5708379b9d528edab",
     "cpppj/src/o/SquidPostPop.cpp": "0e6f552bafeab1be94ba07919b928535e774ce54e121d775df514c9b6645d4e6",
     "cpppj/src/o/SquidPostPop.h": "b4bfb4886068b9dd98bed52b9f56f17e1c25e50b123b4fdd6b165f2054bcdf1d",
-    "cpppj/tests/CMakeLists.txt": "7d0e158bfbfb15bc54a24cdd227c6cc838714b84a0a82e60f9c66e6affd6fdfe",
+    "cpppj/tests/CMakeLists.txt": "8641e7ac86784beb1fbe37b4908df1898574cf6c80bd641b40f65aff0d1d6d48",
     "cpppj/tests/CampaignSessionTests.cpp": "e92bbf5d99392b05f92dcb2fda5de226f824631088aec127fb7219f36b344a5e",
     "cpppj/src/o/RawBalloonFrame.cpp": "71390bf0c48ed94bd6381b15c812b5a6702cd94e02528692f7ac5d1b6f18ab05",
     "cpppj/src/o/RawBalloonFrame.h": "3c50521f9a4a132e33b627fcf609e6028ff2cfbbc6b757434f06b4b3d7b90c8d",
@@ -2672,6 +2672,25 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "2a7f2aad0d79a0071cffd3565b5f5cd8a3983f7e44c520ca3c9aacd22bb9e047",
           "current": "e92bbf5d99392b05f92dcb2fda5de226f824631088aec127fb7219f36b344a5e"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 186,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "6a1533de4d7a9f0ed09c0c4a2b59077498e9d0aa0487119e8461381e2d9867ab",
+          "current": "21cb2dd9692a507109c6d5e141e130eaf6143132d816d6b3dd6117519e4f39cf"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "7d0e158bfbfb15bc54a24cdd227c6cc838714b84a0a82e60f9c66e6affd6fdfe",
+          "current": "8641e7ac86784beb1fbe37b4908df1898574cf6c80bd641b40f65aff0d1d6d48"
         }
       ]
     }

@@ -323,3 +323,6 @@ target_sources(netstorm PRIVATE RawFlare.cpp RawFlare.h)
 
 # 현재 생산Deck/기술 부모의 원본teleport 내용물 동기화다.
 target_sources(netstorm PRIVATE RawProductionSync.cpp RawProductionSync.h)
+
+# 신전 건설 중 피해와 윈드 타워의 현재 방향 방어를 같은 월드에 연결한다.
+target_sources(netstorm PRIVATE RawSpecialDamage.cpp RawSpecialDamage.h)

@@ -1562,3 +1562,8 @@ set_source_files_properties(InventoryAboutMenuTests.cpp PROPERTIES COMPILE_DEFIN
 target_sources(netstorm_tests PRIVATE QuickHelpRequestTests.cpp)
 set_source_files_properties(QuickHelpRequestTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_QUICK_HELP_REQUEST_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/quick-help-request-x86.tsv\"")
+
+# 새 C++ 전에 동결한 실제 신전/윈드 타워432입력을 현재 같은 월드 자료로 대조한다.
+target_sources(netstorm_tests PRIVATE SpecialDamageTests.cpp)
+set_source_files_properties(SpecialDamageTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_SPECIAL_DAMAGE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/special-damage-x86.tsv\"")

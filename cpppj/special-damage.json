@@ -1,0 +1,28 @@
+{
+  "unit": 186,
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "lastDecompileDate": "2026-10-16",
+  "rows": 432,
+  "normalReturns": 864,
+  "instructions": 41452,
+  "precisionDifferences": 0,
+  "nativeCalls": {
+    "004dba40": 192,
+    "0048ef70": 672,
+    "004ac200": 1008,
+    "0049a840": 1260,
+    "004adea0": 168,
+    "0049a900": 168,
+    "0041ce90": 84,
+    "004ac550": 84
+  },
+  "boundaries": "실제4dba40 분기와48ef70/중심/TYPE getter/4방향/CRT 전체.4b1a90 lookup/443dc0 기존 건설 끝 시각/가상88 표시/44c8e0 기존 일반피해는 명시 반환·인수/순서 경계다. HP·죽음·미션 완주/다른 판본 증거가 아니다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+    "tools/decomp_special_damage.py": "1c92b56b1c000238486f67c6b8ea31eed677e8ce598305d528a24a65cd6c0628",
+    "cpppj/tests/fixtures/special-damage-x86.tsv": "039030961fa2a1d086b43799c79faa5d2801044f421c77ed0a8b70417443d2a5"
+  }
+}
