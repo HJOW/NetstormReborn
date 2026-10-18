@@ -428,8 +428,8 @@
     "cpppj/src/o/RawCanonPlacementSurrounding.h": "3e76adee8b610a9fbfb958a64a39d2a3b5590c46859efcb42bbfc1cbb10cdc48",
     "cpppj/src/o/RawCanonPlacementTerrain.cpp": "1268d45f07491b7ea9d5b69116c283a323e5d5e2b7d05d48a0bdea75182d17f3",
     "cpppj/src/o/RawCanonPlacementTerrain.h": "78b7c406b5ccef3ae85504595952b04034d7ccbd8fd98512b1e299efc37dfd45",
-    "cpppj/src/o/RawCarrierArrival.cpp": "1e63d7f9cb0a18ddb4a10b7c642e54873e8f46ab98deec6d3f63b334199979df",
-    "cpppj/src/o/RawCarrierArrival.h": "a6fa676986cd46235b5cfdb1646e78554d76f0ee7ee8b002e7d3edac258de406",
+    "cpppj/src/o/RawCarrierArrival.cpp": "05d47b6beb2267351faf0efff7ca6967010088b37ead976881a0c6dde6881610",
+    "cpppj/src/o/RawCarrierArrival.h": "56355d323b96e074d549319884f492928ccec8a5c3530db745588cbeb2bcded3",
     "cpppj/src/o/RawCarrierCheck.cpp": "93ca7c872f91e4ef1e83c31988b37f63900577478716a27277b69425108ea579",
     "cpppj/src/o/RawCarrierCheck.h": "18769cfb7eaa5783ac22483bcf8da4c8a41df01f7d936bc1b900e59b28f99479",
     "cpppj/src/o/RawCarrierPostPop.cpp": "606eb9914b4a961aa2573e4699f3dbeef615d087deb0b0e3f2a53a0678240544",
@@ -2339,6 +2339,25 @@
           "path": "cpppj/tests/DaisLifecycleTests.cpp",
           "previous": "340e04e4c7fcd708b64e5f1283cc2b3c51b50e9fb906001a0edfe978ded812d9",
           "current": "30f2901c1e18d470e8b45ed3fb334ccd30774c0f6cefb1118ff9b886f46927b7"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 197,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawCarrierArrival.cpp",
+          "previous": "1e63d7f9cb0a18ddb4a10b7c642e54873e8f46ab98deec6d3f63b334199979df",
+          "current": "05d47b6beb2267351faf0efff7ca6967010088b37ead976881a0c6dde6881610"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawCarrierArrival.h",
+          "previous": "a6fa676986cd46235b5cfdb1646e78554d76f0ee7ee8b002e7d3edac258de406",
+          "current": "56355d323b96e074d549319884f492928ccec8a5c3530db745588cbeb2bcded3"
         }
       ]
     }

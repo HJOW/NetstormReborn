@@ -92,9 +92,9 @@
     "originals/d/GIFCLOUD.COL": "785a2cda6ac1d3e295d375815b6d9650720683099db7c249382d598b5da00532"
   },
   "currentSources": {
-    "cpppj/src/client/RawCampaignSession.cpp": "a26e19d72fee59b528116a2f3843058f96d82dd7d1698ef2dcfe6779adce33c3",
+    "cpppj/src/client/RawCampaignSession.cpp": "fb53c00a05c038374a4ccaf9e43b105790d1d9ac28c180b1e61efb3d24ea238f",
     "cpppj/tests/CMakeLists.txt": "16dd4ad98bd79b0d42a32a67bb6b8ad72343ad6eebbef60cecbf0e9a36224ca9",
-    "cpppj/tests/CampaignSessionTests.cpp": "3d129ca4d958710ec0d6fd068fdad168a19df790fd0ec7047ea8c074d3c29e7d",
+    "cpppj/tests/CampaignSessionTests.cpp": "4391efc5570f2ee2885cf36acd8563ce32667cab48c17fb3862ce68419cfea78",
     "tools/decomp_generator_capture.py": "d5b8b31e5c9c0ab00f24236460af8b63f86412e5115537d56f6f71feb6238b0f",
     "cpppj/generator-capture.json": "177c4bd3b90673160f0b4fe9b50c499ee6eda65838f09eed78b7c8f4ddf9506b",
     "cpppj/tests/fixtures/generator-capture-x86.tsv": "5db59d411828a19c8ef4f236058d14b3a7d1658fc2e8ab1a4571986ab3dcf1a1"
@@ -552,6 +552,25 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "de7c8ad290102b298770dee1a4bb4d6d4e7395f9e1b6d7c781379dce2071985c",
           "current": "3d129ca4d958710ec0d6fd068fdad168a19df790fd0ec7047ea8c074d3c29e7d"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 197,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "a26e19d72fee59b528116a2f3843058f96d82dd7d1698ef2dcfe6779adce33c3",
+          "current": "fb53c00a05c038374a4ccaf9e43b105790d1d9ac28c180b1e61efb3d24ea238f"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "3d129ca4d958710ec0d6fd068fdad168a19df790fd0ec7047ea8c074d3c29e7d",
+          "current": "4391efc5570f2ee2885cf36acd8563ce32667cab48c17fb3862ce68419cfea78"
         }
       ]
     }

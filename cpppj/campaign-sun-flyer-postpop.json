@@ -59,7 +59,7 @@
   "currentSources": {
     "cpppj/src/o/RawFlyerProcess.h": "1107c2a73163e0c3024c822cf614c9d02f7aa36d75fc81cfd0a6df58e36b6345",
     "cpppj/src/o/RawFlyerProcess.cpp": "bc5d68f980251febe080e280db07727f7d5cc7bbbf9d84780d8d8d31a86f44f1",
-    "cpppj/src/client/RawCampaignSession.cpp": "a26e19d72fee59b528116a2f3843058f96d82dd7d1698ef2dcfe6779adce33c3",
+    "cpppj/src/client/RawCampaignSession.cpp": "fb53c00a05c038374a4ccaf9e43b105790d1d9ac28c180b1e61efb3d24ea238f",
     "cpppj/tests/CMakeLists.txt": "16dd4ad98bd79b0d42a32a67bb6b8ad72343ad6eebbef60cecbf0e9a36224ca9",
     "cpppj/tests/CampaignMissionStartTests.cpp": "03e1719afd07bc3915052bfe2d4eedf2a37080b3f3b5ac041133cef165e59df5",
     "tools/decomp_sun_flyer_postpop.py": "d9e457589d70c582e364c1146e7d54a57647e7d56a194e22e8772de89a85ee78",
@@ -497,6 +497,19 @@
           "path": "cpppj/src/client/RawCampaignSession.cpp",
           "previous": "15c2b16be0d88e6c1fa3d5644c48d348ff8a93e96dde18082ceff11874e6b8e5",
           "current": "a26e19d72fee59b528116a2f3843058f96d82dd7d1698ef2dcfe6779adce33c3"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 197,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "a26e19d72fee59b528116a2f3843058f96d82dd7d1698ef2dcfe6779adce33c3",
+          "current": "fb53c00a05c038374a4ccaf9e43b105790d1d9ac28c180b1e61efb3d24ea238f"
         }
       ]
     }

@@ -32,6 +32,7 @@ struct CarrierArrivalHooks {
     std::function<void(float,float,std::string_view,std::uint32_t)> playAt; // CD 너겟 반환의 현재 returnPlace 중심 guy.wav/flags0이다.
     std::function<bool(Sid)> robust; // 패치 마지막004afd00의 현재 객체/내용물 전체 실제 검사를 공급한다.
     std::function<bool(std::uint32_t)> currentControlled; // 현재 owner의 실제 Player+b0/CD+a8 조회다. 미연결 원문 재생만 controlledOwners 입력을 사용한다.
+    std::function<std::uint32_t(std::uint32_t,std::uint32_t)> currentAlliance; // 실제 세션의 현재 방향별9×9 DWORD를 매 판정 때 읽는다. 독립 원문 재생은 기존 배열을 유지한다.
 };
 // 큰 하위 효과 경계와 순수 조회를 분리하며 기존 완료 bodies를 다시 작성하지 않는다.
 class RawCarrierArrival {

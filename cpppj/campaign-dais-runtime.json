@@ -95,13 +95,13 @@
   },
   "currentSources": {
     "cpppj/src/client/RawCampaignRitual.inc": "fccae5d611cdfb2d4091720fbae150336d96b0593da06409e9300e5147060410",
-    "cpppj/src/client/RawCampaignSession.cpp": "a26e19d72fee59b528116a2f3843058f96d82dd7d1698ef2dcfe6779adce33c3",
+    "cpppj/src/client/RawCampaignSession.cpp": "fb53c00a05c038374a4ccaf9e43b105790d1d9ac28c180b1e61efb3d24ea238f",
     "cpppj/src/client/RawCampaignSessionLogin.inc": "3a2b40c9dec5df78d6d77cd0b13b5e438b4b21b12e956ba799ede27f51fc8cdc",
     "cpppj/src/o/RawDaisLifecycle.cpp": "e5d735f9ecea927d815c8cffe32b6bf5e14849aa4c72c1ee2710031c289f2c00",
     "cpppj/src/o/RawDaisLifecycle.h": "f5eed7df17f021e3c80091c50603f66828e21b5d8397137ffe3223e7e5d65b10",
     "cpppj/src/o/RawDaisRegular.cpp": "5f48cd4e706a8a904a6a03b19b2f1e235fed581159291132b632df557c4fadb2",
     "cpppj/src/o/RawDaisRegular.h": "6d69e7b9c01b9dcc908fa0e8d2b4170f60536d9c571565e0fd1128db35fe7b73",
-    "cpppj/tests/CampaignSessionTests.cpp": "3d129ca4d958710ec0d6fd068fdad168a19df790fd0ec7047ea8c074d3c29e7d",
+    "cpppj/tests/CampaignSessionTests.cpp": "4391efc5570f2ee2885cf36acd8563ce32667cab48c17fb3862ce68419cfea78",
     "cpppj/tests/DaisLifecycleTests.cpp": "30f2901c1e18d470e8b45ed3fb334ccd30774c0f6cefb1118ff9b886f46927b7"
   },
   "binaries": {
@@ -353,5 +353,26 @@
     "현재 ConnectRitual은 ConnectMotion 뒤 설치된다. 저장된 Dais의 초기 로드/실전 창 의식은 아직 검증하지 않았다",
     "off-home 경고 UI, 보상 선택/획득 UI10경계와 희생 완료/실제 파생 삭제·해방/BadTeamDead·후속 미션",
     "실제 전진 사격 플랫폼/신전 파괴·Dude 초기화/드롭·아이스147·훨리기그 무기/귀환·전략AI·11단계 자연 완주·원본 전체 동일성"
+  ],
+  "integration_updates": [
+    {
+      "date": "2026-10-19",
+      "unit": 197,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "a26e19d72fee59b528116a2f3843058f96d82dd7d1698ef2dcfe6779adce33c3",
+          "current": "fb53c00a05c038374a4ccaf9e43b105790d1d9ac28c180b1e61efb3d24ea238f"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "3d129ca4d958710ec0d6fd068fdad168a19df790fd0ec7047ea8c074d3c29e7d",
+          "current": "4391efc5570f2ee2885cf36acd8563ce32667cab48c17fb3862ce68419cfea78"
+        }
+      ]
+    }
   ]
 }

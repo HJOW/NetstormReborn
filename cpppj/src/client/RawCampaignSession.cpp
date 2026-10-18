@@ -1893,6 +1893,7 @@ struct RawCampaignSession::Impl {
         motionState.halt.battle=true;anchorState.graphReady=1;anchorState.fenceType=90;anchorState.windArcherType=140;
         anchor=std::make_unique<RawPlayerPlacementAnchor>(core.pool,core.types,core.hash.Entries(0),core.bookkeeping,additional,contentFinder,anchorState);
         auto effects=services.motion;
+        effects.carrier.currentAlliance=[this](std::uint32_t first,std::uint32_t second) { if (first>=9 || second>=9) throw std::out_of_range("운반 도착 현재 동맹 번호 범위");return alliances[first*9+second]; }; // 로그인/수신/AI가 공유하는 현재 DWORD를 읽고 별도 빈 사본으로 대신하지 않는다.
         effects.path.balloonFlame=[this](float x,float y) { if (!services.sound.playOnceAt) throw std::logic_error("벌룬 화염 위치 음향 미연결");services.sound.playOnceAt(x,y,soundNames.Lookup("balloonFlame.wav"),0,0); };
         effects.path.startBlocked=[this](RawPathPoint point,std::uint32_t type,std::uint32_t owner) { PrepareBuilding(core.processState.now);static_cast<void>(buildingEffects->Displace(point.x,point.y,type,owner)); };
         effects.path.arrivalBlocked=[this](Sid,RawPathPoint point,std::uint32_t type,std::uint32_t owner) { PrepareBuilding(core.processState.now);static_cast<void>(buildingEffects->Displace(point.x,point.y,type,owner)); };

@@ -15,14 +15,14 @@
     "cpppj/src/o/RawCarrierTarget.h": "49e6340d4b120f87894cd07126c94fbf212a5e4d477bd44bdff22190e86f793d",
     "cpppj/src/o/RawCarrierTarget.cpp": "82c9b3862969d5e664ed6acff2f63f97340898463c22347a667f278d9d519f08",
     "cpppj/src/client/RawCampaignSession.h": "a6d142e8d485ccf10ea834c59947a4606c5d0c033ef4b2ad00b09a0cc389a641",
-    "cpppj/src/client/RawCampaignSession.cpp": "a26e19d72fee59b528116a2f3843058f96d82dd7d1698ef2dcfe6779adce33c3",
+    "cpppj/src/client/RawCampaignSession.cpp": "fb53c00a05c038374a4ccaf9e43b105790d1d9ac28c180b1e61efb3d24ea238f",
     "cpppj/src/client/RawCampaignPathBindings.h": "82d9565ece60f24300977681dffdaad57a660fdccca38b4db305d5a1d262b8b0",
     "cpppj/src/client/RawCampaignPathBindings.cpp": "2fc59e6cd111db8c953e388d1856c8e6103a8b6852461c2d3df89ec84a4f4314",
     "cpppj/src/o/RawPathStart.h": "576188b61294a25b8abb6caa7bc129c56e21804a2fb79cf5de74cd25421a568f",
     "cpppj/src/o/RawPathStart.cpp": "9dbe404e4d377a362213cffd1da8a42b65816aaf54830fc5708379b9d528edab",
     "cpppj/src/o/RawSquidNeighbors.h": "edb19d4782b671d6be80c9f7690b9455d200ef7dbe2df51059d5ca0c4a66175c",
     "cpppj/src/o/RawSquidNeighbors.cpp": "88ec2ee9dbaad0627d1ceb3629199361d860ba137f50d12fe0410a8cbbefa3f2",
-    "cpppj/src/o/RawCarrierArrival.cpp": "1e63d7f9cb0a18ddb4a10b7c642e54873e8f46ab98deec6d3f63b334199979df",
+    "cpppj/src/o/RawCarrierArrival.cpp": "05d47b6beb2267351faf0efff7ca6967010088b37ead976881a0c6dde6881610",
     "cpppj/tests/CarrierTargetTests.cpp": "7ca2aa993bae751e63e973190da5eefb9259d1cfb544899bb108e89d26912400",
     "cpppj/tests/CampaignObjectMenuTests.cpp": "fea9198ea2150c42bb523f7ac9298c2f819acd1fc9b9887b53020c206ad62563",
     "cpppj/src/CMakeLists.txt": "dd0f00ff768b18549bf3c0d3e1abe20ac13ee81b407f13e335b8de71b45271f2",
@@ -1493,6 +1493,25 @@
           "path": "cpppj/src/client/RawCampaignSession.cpp",
           "previous": "15c2b16be0d88e6c1fa3d5644c48d348ff8a93e96dde18082ceff11874e6b8e5",
           "current": "a26e19d72fee59b528116a2f3843058f96d82dd7d1698ef2dcfe6779adce33c3"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 197,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "a26e19d72fee59b528116a2f3843058f96d82dd7d1698ef2dcfe6779adce33c3",
+          "current": "fb53c00a05c038374a4ccaf9e43b105790d1d9ac28c180b1e61efb3d24ea238f"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/o/RawCarrierArrival.cpp",
+          "previous": "1e63d7f9cb0a18ddb4a10b7c642e54873e8f46ab98deec6d3f63b334199979df",
+          "current": "05d47b6beb2267351faf0efff7ca6967010088b37ead976881a0c6dde6881610"
         }
       ]
     }

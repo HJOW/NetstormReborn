@@ -15,7 +15,7 @@
   "tool_sha256": "ebe1a10a9d57b89de7786a1c0e9eea6dabcbc15fb3e57559daada5916ecbe553",
   "files": {
     "cpppj/carrierarrival-cpp-binding.json": "cdd7f4f326374614506721e310261d866f7c0fed70c0a533922d51f51b872ce2",
-    "cpppj/carrierarrival.json": "709ed1f24fa22be42f205457581c8f48289436e5cf7d90217c8b6918508ebd4d",
+    "cpppj/carrierarrival.json": "9a176114d23a6d22089421f1e58dc6524949b5877753a1cbf13691db88ce9ad2",
     "cpppj/genus-at-public-lineage.json": "09ea929176813ccfcd01468980c3745ed9cc0ad55f8a39c3ab38362af165073f",
     "cpppj/priest-arrival-name-lineage.json": "6f15c0250413440791867910df355c8c1333a6f23833590453125c0dc3f34d0f",
     "cpppj/priest-arrival-test-syntax-lineage.json": "137bb4b9997e21a3989339a16a3fab9a5ce1c124474ae7bc9b841c817abcb993",
@@ -24,8 +24,8 @@
     "cpppj/priesthalt-spots-successor.json": "d0476a7b3fff79c06ecadb2c23b557897f650afcd5d880ccda3ddd0b348eaaac",
     "cpppj/src/o/RawCanonPlacementTerrain.cpp": "0f4739d260b97b9db17ce0bbe9ceadc91c90c8cb76e4c053524b8609f7542a37",
     "cpppj/src/o/RawCanonPlacementTerrain.h": "d68b1b83f5220d300e84479fb59bb6b9086147a91b0d2e78d4c32bd4e17cbfed",
-    "cpppj/src/o/RawCarrierArrival.cpp": "1e63d7f9cb0a18ddb4a10b7c642e54873e8f46ab98deec6d3f63b334199979df",
-    "cpppj/src/o/RawCarrierArrival.h": "a6fa676986cd46235b5cfdb1646e78554d76f0ee7ee8b002e7d3edac258de406",
+    "cpppj/src/o/RawCarrierArrival.cpp": "05d47b6beb2267351faf0efff7ca6967010088b37ead976881a0c6dde6881610",
+    "cpppj/src/o/RawCarrierArrival.h": "56355d323b96e074d549319884f492928ccec8a5c3530db745588cbeb2bcded3",
     "cpppj/src/o/RawCarrierCheck.cpp": "c5a8e6ebd5b160b3199d415ee42d3a28627e142d0db9a927f718587128fafe01",
     "cpppj/src/o/RawCarrierCheck.h": "0338d2e56abd091fe74f0a15f74a994faa75887a1e4fefbd1fa4317a4e86731f",
     "cpppj/src/o/RawCarrierPostPop.cpp": "8603cb70101e6472fa36b25d0b2ecb1cc438b4658c1d2264b47ff8a17d95b780",
@@ -478,6 +478,31 @@
           "path": "cpppj/src/o/RawSquidNeighbors.h",
           "previous": "1d223e803abd49e59dc45fb41e68cc65227af2d6e31b3d6904d99b4d00849dbc",
           "current": "edb19d4782b671d6be80c9f7690b9455d200ef7dbe2df51059d5ca0c4a66175c"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 197,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/carrierarrival.json",
+          "previous": "709ed1f24fa22be42f205457581c8f48289436e5cf7d90217c8b6918508ebd4d",
+          "current": "9a176114d23a6d22089421f1e58dc6524949b5877753a1cbf13691db88ce9ad2"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawCarrierArrival.cpp",
+          "previous": "1e63d7f9cb0a18ddb4a10b7c642e54873e8f46ab98deec6d3f63b334199979df",
+          "current": "05d47b6beb2267351faf0efff7ca6967010088b37ead976881a0c6dde6881610"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawCarrierArrival.h",
+          "previous": "a6fa676986cd46235b5cfdb1646e78554d76f0ee7ee8b002e7d3edac258de406",
+          "current": "56355d323b96e074d549319884f492928ccec8a5c3530db745588cbeb2bcded3"
         }
       ]
     }

@@ -302,13 +302,13 @@
     "cpppj/src/client/RawCampaignCarrierInput.inc": "2da03a40e490938fbd05b4f08706306a8ac3ca2fc4eaa4d5c967bfa08e7fc0f1",
     "cpppj/src/client/RawCampaignPathBindings.cpp": "2fc59e6cd111db8c953e388d1856c8e6103a8b6852461c2d3df89ec84a4f4314",
     "cpppj/src/client/RawCampaignPathBindings.h": "82d9565ece60f24300977681dffdaad57a660fdccca38b4db305d5a1d262b8b0",
-    "cpppj/src/client/RawCampaignSession.cpp": "a26e19d72fee59b528116a2f3843058f96d82dd7d1698ef2dcfe6779adce33c3",
+    "cpppj/src/client/RawCampaignSession.cpp": "fb53c00a05c038374a4ccaf9e43b105790d1d9ac28c180b1e61efb3d24ea238f",
     "cpppj/src/client/RawCampaignSession.h": "a6d142e8d485ccf10ea834c59947a4606c5d0c033ef4b2ad00b09a0cc389a641",
     "cpppj/src/o/RawTempleRitual.cpp": "4da7a7c1516a35016897471780d92be973f3d238dfd4bf5c36548a9fe9b803bb",
     "cpppj/src/o/RawTempleRitual.h": "e5b853c7bfd9ca70c18c97d7b3f3a6e14b6e6d0ca89a6e5269e5117838937741",
     "cpppj/tests/AltarSacrificeTests.cpp": "3bcf850f018f097b44142038da311c135ae72c3b5c1e075856269f41b2adc0a1",
     "cpppj/tests/CMakeLists.txt": "16dd4ad98bd79b0d42a32a67bb6b8ad72343ad6eebbef60cecbf0e9a36224ca9",
-    "cpppj/tests/CampaignSessionTests.cpp": "3d129ca4d958710ec0d6fd068fdad168a19df790fd0ec7047ea8c074d3c29e7d",
+    "cpppj/tests/CampaignSessionTests.cpp": "4391efc5570f2ee2885cf36acd8563ce32667cab48c17fb3862ce68419cfea78",
     "cpppj/tests/DaisBridgeTests.cpp": "3ddf0775e4388acad8f0a9b28d9340e8f40c24a5f66dcc980c05f7c51f3622a7",
     "cpppj/tests/DaisLifecycleTests.cpp": "30f2901c1e18d470e8b45ed3fb334ccd30774c0f6cefb1118ff9b886f46927b7",
     "cpppj/tests/DaisProgressTests.cpp": "2580113c0336b92d2a39efe957350d5ed25ee1af42e1f5de32e28991b3a2dacb",
@@ -820,6 +820,25 @@
           "path": "cpppj/src/client/RawCampaignRitual.inc",
           "previous": "6a17685f30938101dcb55c8fe2c97fabd53f0d1c8aa18b59c0c3f0f254ffea95",
           "current": "fccae5d611cdfb2d4091720fbae150336d96b0593da06409e9300e5147060410"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 197,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "a26e19d72fee59b528116a2f3843058f96d82dd7d1698ef2dcfe6779adce33c3",
+          "current": "fb53c00a05c038374a4ccaf9e43b105790d1d9ac28c180b1e61efb3d24ea238f"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "3d129ca4d958710ec0d6fd068fdad168a19df790fd0ec7047ea8c074d3c29e7d",
+          "current": "4391efc5570f2ee2885cf36acd8563ce32667cab48c17fb3862ce68419cfea78"
         }
       ]
     }

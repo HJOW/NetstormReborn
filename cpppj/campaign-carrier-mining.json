@@ -13,11 +13,11 @@
     "cpppj/src/o/RawCarrierMining.cpp": "d1f19cbd62d0ae98132cd5f1eedb01cb0e691b41bb60c636242f3fd64ad2e96d",
     "cpppj/src/o/RawGeyserLifetime.h": "9ce17cdf6115fb1f10f384571e63eba497270df25cce5cd18153e656f57e8cc3",
     "cpppj/src/o/RawGeyserLifetime.cpp": "f5ae34492f817e15aa2a9bcba3de2dac8d92dd51ea36ed011c1c9ed36435add3",
-    "cpppj/src/client/RawCampaignSession.cpp": "a26e19d72fee59b528116a2f3843058f96d82dd7d1698ef2dcfe6779adce33c3",
+    "cpppj/src/client/RawCampaignSession.cpp": "fb53c00a05c038374a4ccaf9e43b105790d1d9ac28c180b1e61efb3d24ea238f",
     "cpppj/src/client/RawCampaignSession.h": "a6d142e8d485ccf10ea834c59947a4606c5d0c033ef4b2ad00b09a0cc389a641",
     "cpppj/src/CMakeLists.txt": "dd0f00ff768b18549bf3c0d3e1abe20ac13ee81b407f13e335b8de71b45271f2",
     "cpppj/tests/CMakeLists.txt": "16dd4ad98bd79b0d42a32a67bb6b8ad72343ad6eebbef60cecbf0e9a36224ca9",
-    "cpppj/tests/CampaignSessionTests.cpp": "3d129ca4d958710ec0d6fd068fdad168a19df790fd0ec7047ea8c074d3c29e7d",
+    "cpppj/tests/CampaignSessionTests.cpp": "4391efc5570f2ee2885cf36acd8563ce32667cab48c17fb3862ce68419cfea78",
     "cpppj/tests/CarrierMiningTests.cpp": "d5ad45133e2cd7b5eb4086d75ea758a08015f520bdede0412e3f1fadbda756c7",
     "cpppj/tests/GeyserLifetimeTests.cpp": "2db2753066f8ef1eff850d11fe7e5a43354d5fa79c3c16bc17167f1a7d35b2e1",
     "tools/decomp_carrier_mining.py": "78cae56c40bdc066a033af750a00b8349d2504696b383db9a65239821ce27c13",
@@ -30,8 +30,8 @@
     "cpppj/src/o/RawGeyserAiRegistration.cpp": "1f0c6f4c96f677e661e0182879a229f1ebd13ec9ef10179942790e73313a97fe",
     "cpppj/src/o/RawConstructionEffects.h": "86f63784b064a9ea0c1706c3a2b854496ffcfee3b5a6e5c3cde7d86d3538c550",
     "cpppj/src/o/RawConstructionEffects.cpp": "97b8adc3cfc9f35e84579d29af9ef4f982f24c06fee77c1dac9d40774cf5c739",
-    "cpppj/src/o/RawCarrierArrival.h": "a6fa676986cd46235b5cfdb1646e78554d76f0ee7ee8b002e7d3edac258de406",
-    "cpppj/src/o/RawCarrierArrival.cpp": "1e63d7f9cb0a18ddb4a10b7c642e54873e8f46ab98deec6d3f63b334199979df",
+    "cpppj/src/o/RawCarrierArrival.h": "56355d323b96e074d549319884f492928ccec8a5c3530db745588cbeb2bcded3",
+    "cpppj/src/o/RawCarrierArrival.cpp": "05d47b6beb2267351faf0efff7ca6967010088b37ead976881a0c6dde6881610",
     "cpppj/src/o/RawPathProcess.cpp": "75557b1b9c481c089b466b9e4dd9c27aadae28905e43379b5c7ac7cc8bcd7683",
     "cpppj/src/o/RawBattleBroadcast.cpp": "5a6c9f8eb6644578a40448fb81ba1522028e9060cf310e217ba7e50baeb9e2f7",
     "cpppj/src/o/RawPacketDispatch.cpp": "3f9628dad2707355aa7e10419ebbab17e25578e595d2335e03d48d1a1303928a"
@@ -1260,6 +1260,37 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "de7c8ad290102b298770dee1a4bb4d6d4e7395f9e1b6d7c781379dce2071985c",
           "current": "3d129ca4d958710ec0d6fd068fdad168a19df790fd0ec7047ea8c074d3c29e7d"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 197,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "a26e19d72fee59b528116a2f3843058f96d82dd7d1698ef2dcfe6779adce33c3",
+          "current": "fb53c00a05c038374a4ccaf9e43b105790d1d9ac28c180b1e61efb3d24ea238f"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "3d129ca4d958710ec0d6fd068fdad168a19df790fd0ec7047ea8c074d3c29e7d",
+          "current": "4391efc5570f2ee2885cf36acd8563ce32667cab48c17fb3862ce68419cfea78"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/o/RawCarrierArrival.h",
+          "previous": "a6fa676986cd46235b5cfdb1646e78554d76f0ee7ee8b002e7d3edac258de406",
+          "current": "56355d323b96e074d549319884f492928ccec8a5c3530db745588cbeb2bcded3"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/o/RawCarrierArrival.cpp",
+          "previous": "1e63d7f9cb0a18ddb4a10b7c642e54873e8f46ab98deec6d3f63b334199979df",
+          "current": "05d47b6beb2267351faf0efff7ca6967010088b37ead976881a0c6dde6881610"
         }
       ]
     }

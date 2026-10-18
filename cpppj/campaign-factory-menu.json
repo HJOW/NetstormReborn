@@ -105,7 +105,7 @@
     "cpppj/src/client/RawObjectMenuOpen.h": "cb8124fe182ee1586128587ec4fa8a6fe152a1312550742aa21007c67b40b587",
     "cpppj/src/client/RawObjectMenuOpen.cpp": "a077dad61ac2c980fb578b642fd7b22b75f5e81fa936bb92ae9402eae61fca86",
     "cpppj/src/client/RawCampaignSession.h": "a6d142e8d485ccf10ea834c59947a4606c5d0c033ef4b2ad00b09a0cc389a641",
-    "cpppj/src/client/RawCampaignSession.cpp": "a26e19d72fee59b528116a2f3843058f96d82dd7d1698ef2dcfe6779adce33c3",
+    "cpppj/src/client/RawCampaignSession.cpp": "fb53c00a05c038374a4ccaf9e43b105790d1d9ac28c180b1e61efb3d24ea238f",
     "cpppj/src/client/CampaignObjectMenuClient.cpp": "742c9b026c8c3a4019236d2fa3967df4731c145d577e4cbd753fa2a003d16117",
     "tools/cpp_priest_construction_smoke.py": "93524c9e1fb58e7e589fc25c7507e105e750b96cb66ad7ddbf9a58aae2756c2c",
     "cpppj/src/client/RawFactoryMenu.h": "09430420ae7ef1f8f37ee51863f66df6115aff138450b95442202ca50632b689",
@@ -5879,6 +5879,19 @@
           "path": "cpppj/src/client/RawCampaignSession.cpp",
           "previous": "15c2b16be0d88e6c1fa3d5644c48d348ff8a93e96dde18082ceff11874e6b8e5",
           "current": "a26e19d72fee59b528116a2f3843058f96d82dd7d1698ef2dcfe6779adce33c3"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 197,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "a26e19d72fee59b528116a2f3843058f96d82dd7d1698ef2dcfe6779adce33c3",
+          "current": "fb53c00a05c038374a4ccaf9e43b105790d1d9ac28c180b1e61efb3d24ea238f"
         }
       ]
     }
