@@ -22,7 +22,7 @@ struct RawCampaignFactoryDisplay::Impl {
     OwnerColorMaps outpost; // 원본43be30의 아웃포스트 일반9색 표다.
     bool ready{}; // 파일 팔레트가 설치되기 전에 출력하지 않는다.
 
-    // 플레어의+78은 TYPE+128이며+a4는 빈41c100이다. 현재 프레임은 일반 Draw가 읽는다.
+    // 플레어의+78은 TYPE+128 baseFrame이며+a4는 빈41c100이다. -1의gumpFrame 대체는 일반 Draw가 처리한다.
     bool Flare(o::Sid sid) const {
         const auto raw=core.pool.Slot(sid);return raw[10]==106 && raw[0]==0xa0 && raw[1]==0x96 && raw[2]==0x50 && raw[3]==0;
     }
@@ -50,7 +50,7 @@ struct RawCampaignFactoryDisplay::Impl {
         if ((raw[40]&4U) && (raw[40]&0x30U)) throw std::logic_error("Factory 선택 상태 프로세스 목록 표시 미연결");
         state.now=core.processState.now;state.ownerPalettes.assign(core.bridgeState.ownerColors.begin(),core.bridgeState.ownerColors.end());
         SpritePixelTarget target(pixels,pitch,height,clip,MakeSpriteAssetShapes(assets,state),[this](auto mode,auto type,auto owner) { return Color(mode,type,owner); });
-        SpriteDrawHooks rules;rules.virtualFrame=[this](o::Sid object) { return Flare(object) ? std::bit_cast<std::int32_t>(views.at(core.pool.Slot(object)[10]).gumpFrame) : factory.MainFrame(object); };rules.surface=MakeSpriteSurfaceLookup(core.hash);
+        SpriteDrawHooks rules;rules.virtualFrame=[this](o::Sid object) { return Flare(object) ? assets.Types()[core.pool.Slot(object)[10]-o::kFirstAssetTypeNumber].definition.specialFrames.baseFrame : factory.MainFrame(object); };rules.surface=MakeSpriteSurfaceLookup(core.hash);
         rules.resource=[this](o::Sid object)->std::optional<SpriteResourceStatus> {
             if (core.processes.FindEvent(object,0x493)) throw std::logic_error("Factory 자원 내용물 막대 표시 미연결");return std::nullopt;
         };

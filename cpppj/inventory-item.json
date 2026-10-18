@@ -1,0 +1,70 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-18",
+  "unit": 177,
+  "rows": 132,
+  "counts": {
+    "Attach": 43,
+    "Handle": 43,
+    "Draw": 6,
+    "Afford": 40
+  },
+  "normalReturns": 264,
+  "instructions": 88312,
+  "controls": [
+    639,
+    895
+  ],
+  "precisionDifferences": 0,
+  "nativeCalls": {
+    "0x43ce40": 86,
+    "0x49a840": 262,
+    "0x419fc0": 160,
+    "0x4642c0": 270,
+    "0x4198f0": 160,
+    "0x419cb0": 160,
+    "0x4af010": 156,
+    "0x4bb170": 110,
+    "0x4756a0": 110,
+    "0x49aa30": 12,
+    "0x43d4c0": 86,
+    "0x419cd0": 14,
+    "0x43cdc0": 12,
+    "0x4e49c0": 16
+  },
+  "boundaries": {
+    "0x464c60": 86,
+    "0x4662b0": 86,
+    "0x4ac140": 86,
+    "0x43cbd0": 84,
+    "0x425c20": 84,
+    "0x4e4391": 270,
+    "0x425860": 160,
+    "0x40ec50": 156,
+    "0x4a89c0": 110,
+    "0x4bc800": 110,
+    "0x4bb310": 110,
+    "0x4e0620": 10,
+    "0x4650a0": 86,
+    "0x445330": 92,
+    "0x4c2790": 6,
+    "0x4cf960": 2,
+    "0x464e90": 28,
+    "0x43d330": 4,
+    "0x465690": 8
+  },
+  "sha256": {
+    "tools/decomp_inventory_item.py": "b11bec967f5f64c005fcafdd4cf4043cb1e286b87efeed0f1eb6b35c6419e603",
+    "tools/decomp_inventory_image.py": "bb28701491e4299b733f93bcfe41aff68b44db92e7249cca750cc044c583d8af",
+    "tools/decomp_factory_menu.py": "bd889d1fe373053c80fe804517858cf83102fbf36cbe724d989e4aa0c3e605cc",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "cpppj/tests/fixtures/inventory-item-x86.tsv": "2e0dd1216399d96cdb76e68f8d8ef1aa017b398376e3ec23a7d195518aaac749"
+  },
+  "limits": [
+    "43ce40/43d4c0/43cdc0/4af010과 실제 이미지·기본·TextGump 생성/프레임 검색·TYPE/CRT를 실행한다. 측정·decoder 입력/부착·수명·검사·SP/문자열 작성·맞춤/지식·정책·전달·적중·About/장식은 명시 경계다.",
+    "게임/OS/창 실행·보호 파일 변경/새 디컴파일 없음. 실제 Client 생산 패널과 자연 플레이 완주의 증거는 아니다."
+  ]
+}

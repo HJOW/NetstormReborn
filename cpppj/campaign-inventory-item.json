@@ -1,0 +1,229 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-18",
+  "unit": 177,
+  "baseline": "cd2b9d5",
+  "lastDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16",
+    "changed": false
+  },
+  "native": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-18",
+    "unit": 177,
+    "rows": 132,
+    "counts": {
+      "Attach": 43,
+      "Handle": 43,
+      "Draw": 6,
+      "Afford": 40
+    },
+    "normalReturns": 264,
+    "instructions": 88312,
+    "controls": [
+      639,
+      895
+    ],
+    "precisionDifferences": 0,
+    "nativeCalls": {
+      "0x43ce40": 86,
+      "0x49a840": 262,
+      "0x419fc0": 160,
+      "0x4642c0": 270,
+      "0x4198f0": 160,
+      "0x419cb0": 160,
+      "0x4af010": 156,
+      "0x4bb170": 110,
+      "0x4756a0": 110,
+      "0x49aa30": 12,
+      "0x43d4c0": 86,
+      "0x419cd0": 14,
+      "0x43cdc0": 12,
+      "0x4e49c0": 16
+    },
+    "boundaries": {
+      "0x464c60": 86,
+      "0x4662b0": 86,
+      "0x4ac140": 86,
+      "0x43cbd0": 84,
+      "0x425c20": 84,
+      "0x4e4391": 270,
+      "0x425860": 160,
+      "0x40ec50": 156,
+      "0x4a89c0": 110,
+      "0x4bc800": 110,
+      "0x4bb310": 110,
+      "0x4e0620": 10,
+      "0x4650a0": 86,
+      "0x445330": 92,
+      "0x4c2790": 6,
+      "0x4cf960": 2,
+      "0x464e90": 28,
+      "0x43d330": 4,
+      "0x465690": 8
+    },
+    "sha256": {
+      "tools/decomp_inventory_item.py": "b11bec967f5f64c005fcafdd4cf4043cb1e286b87efeed0f1eb6b35c6419e603",
+      "tools/decomp_inventory_image.py": "bb28701491e4299b733f93bcfe41aff68b44db92e7249cca750cc044c583d8af",
+      "tools/decomp_factory_menu.py": "bd889d1fe373053c80fe804517858cf83102fbf36cbe724d989e4aa0c3e605cc",
+      "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+      "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+      "cpppj/tests/fixtures/inventory-item-x86.tsv": "2e0dd1216399d96cdb76e68f8d8ef1aa017b398376e3ec23a7d195518aaac749"
+    },
+    "limits": [
+      "43ce40/43d4c0/43cdc0/4af010과 실제 이미지·기본·TextGump 생성/프레임 검색·TYPE/CRT를 실행한다. 측정·decoder 입력/부착·수명·검사·SP/문자열 작성·맞춤/지식·정책·전달·적중·About/장식은 명시 경계다.",
+      "게임/OS/창 실행·보호 파일 변경/새 디컴파일 없음. 실제 Client 생산 패널과 자연 플레이 완주의 증거는 아니다."
+    ]
+  },
+  "nativeFreeze": {
+    "tools/decomp_inventory_item.py": "b11bec967f5f64c005fcafdd4cf4043cb1e286b87efeed0f1eb6b35c6419e603",
+    "cpppj/inventory-item.json": "be41b1c1b7eef72952d47f6c828cece2ecfc327575a730b8744962972a7954bb",
+    "cpppj/tests/fixtures/inventory-item-x86.tsv": "2e0dd1216399d96cdb76e68f8d8ef1aa017b398376e3ec23a7d195518aaac749"
+  },
+  "protected": {
+    "AGENTS.md": "7addbf9b31c42f29aab7c93faa865eb6de8590a600d17202a297cf7122bdf979",
+    "LEFT_JOBS.dotnetpj.md": "0c067e1d12879dbf2212cbd64c8f9f60e65b590df910418f025027ed84f80ec2",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "originals/d/GIFCLOUD.COL": "785a2cda6ac1d3e295d375815b6d9650720683099db7c249382d598b5da00532"
+  },
+  "currentSources": {
+    "cpppj/src/client/CMakeLists.txt": "d2463c8e635ce3e6d82bc55105489461d1758f6a5819c7748cf6d1108a91ae4d",
+    "cpppj/tests/CMakeLists.txt": "9cf0151099351834b47aba2b6eff4b04751b460580eeb02725effd7b618f79d7",
+    "cpppj/src/client/RawCampaignFactoryDisplay.cpp": "eb1616bfbe72012a8cf1ab4ac73339e4b728677f1c1b6c0760f51847addb453f",
+    "cpppj/src/client/InventoryItemGump.h": "cfc4fe37509f916d8e53caff49713ce946eaf10e03bd9fa1c53507c53900826d",
+    "cpppj/src/client/InventoryItemGump.cpp": "8ee1e67ccf4231e88a8b49dcdb67a3d0a3b08e724fac372d58bd5f8a1a9f81d2",
+    "cpppj/tests/InventoryItemGumpTests.cpp": "a62515c54a3c68d6b7ce082670cbb53d88422994864c359894e0c478c873bf69",
+    "tools/decomp_inventory_item.py": "b11bec967f5f64c005fcafdd4cf4043cb1e286b87efeed0f1eb6b35c6419e603",
+    "cpppj/tests/fixtures/inventory-item-x86.tsv": "2e0dd1216399d96cdb76e68f8d8ef1aa017b398376e3ec23a7d195518aaac749",
+    "cpppj/inventory-item.json": "be41b1c1b7eef72952d47f6c828cece2ecfc327575a730b8744962972a7954bb"
+  },
+  "logSha256": {
+    "extracted/goal-inventory-contents-20261018-audit1.log": "312531c695829ed4c4a7e85190e2c8a9291e09e371e0b87d4164e432c4c2af28",
+    "extracted/goal-inventory-contents-20261018-build1.log": "c78e40a0510cb7ef4154e9beec2bec5fc0ae7a0549b24141f85fc6f10d758c18",
+    "extracted/goal-inventory-contents-20261018-build2.log": "32929a4637c67f1269f52eef1e657169e860f7ad5c78acc40d94c0d455bf6843",
+    "extracted/goal-inventory-contents-20261018-build3.log": "8f3b8d21b97dadd42e275d8623700716d62013cb09af73c6b3a5f55836220ea2",
+    "extracted/goal-inventory-contents-20261018-ctest1.log": "d46762a74aa8f6bba97c4f4ae4ca2196990e027bb0b06193ed7f2f7d5239610c",
+    "extracted/goal-inventory-contents-20261018-focused1.log": "46bbfcbb063bc52e691648568a8f7771c4d2bf0e4a9de0a6a69280b59ccdda6c",
+    "extracted/goal-inventory-contents-20261018-focused2.log": "455fcb21a5ab22f2945bf9bd1b1583dd1a225454d212873ded80a4711b9055fc",
+    "extracted/goal-inventory-contents-20261018-focused3.log": "455fcb21a5ab22f2945bf9bd1b1583dd1a225454d212873ded80a4711b9055fc",
+    "extracted/goal-inventory-contents-20261018-LastTest.log": "98c2afb37af90c95b31d3daf4f2e8daafc13c3f8cf54f4fa2f708f4e6dd5624a",
+    "extracted/goal-inventory-contents-20261018-native1.log": "c46131c1b338d6a98e1e874a580cb77e9365b1bebff19d71927c843ea206b318",
+    "extracted/goal-inventory-contents-20261018-native2.log": "c46131c1b338d6a98e1e874a580cb77e9365b1bebff19d71927c843ea206b318",
+    "extracted/goal-inventory-contents-20261018-roundtrip1.log": "2616c9523b278225a70a7bec50d7099fdac512947dec20c7d92a56966d6bd714"
+  },
+  "baseFrameCorrection": {
+    "function": "004acfe0",
+    "bytes": "0fb6410a50e856d8feff8b802801000083c404c3",
+    "normalReturns": 6,
+    "instructions": 66,
+    "controls": [
+      639,
+      895
+    ],
+    "precisionDifferences": 0,
+    "rows": [
+      {
+        "gumpFrame": 3,
+        "baseFrame": -1,
+        "returned": 4294967295
+      },
+      {
+        "gumpFrame": -1,
+        "baseFrame": 7,
+        "returned": 7
+      },
+      {
+        "gumpFrame": 999,
+        "baseFrame": -2147483648,
+        "returned": 2147483648
+      }
+    ],
+    "roles": {
+      "gumpFrame": "TYPE+11c",
+      "defaultFrame": "TYPE+118",
+      "baseFrame": "TYPE+128"
+    },
+    "oldStaticMeaningWasIncorrect": true,
+    "oldStaticSha256": "82d9e65dc7e049f547d6a2b06d299d390daea6446bfb4799b7af19408ddd5b67",
+    "limits": [
+      "실제 전체4acfe0/TYPE getter의 독립3입력·6정상 반환이다. 원본 TYPE callback은gump/default/base 플래그의 실제저장 offset으로 역할을 확인했다.",
+      "기존173 static JSON의 meaning만 잘못됐고원문20바이트는같다. 과거 관측 파일/기대값은수정하지 않는다."
+    ]
+  },
+  "evidenceSha256": {
+    "extracted/goal-inventory-contents-20261018-base-frame-proof.json": "afab534c8e05077dae06493a47735b2a381ff9ee54ca579c306d22b73b0815c6"
+  },
+  "validation": {
+    "full": {
+      "tests": 1671,
+      "failedChecks": 0,
+      "seconds": 220.73,
+      "ctestSeconds": 220.77,
+      "build": 3
+    },
+    "build": {
+      "number": 3,
+      "warnings": 0,
+      "errors": 0
+    },
+    "focused": {
+      "tests": 2,
+      "failedChecks": 0
+    },
+    "roundtrip": {
+      "tests": 1,
+      "failedChecks": 0,
+      "naturalWorkshopResearchAndFlareEnd": true
+    },
+    "audit": {
+      "tools": 101,
+      "passed": 90,
+      "existingFailed": 11,
+      "newFailed": 0
+    },
+    "nativeComparison": {
+      "rows": 132,
+      "allItemAndChildBytes": true,
+      "allCallsArgumentsAndOrder": true
+    },
+    "actualAssets": {
+      "types": [
+        133,
+        128
+      ],
+      "contentSid": 128,
+      "chain": [
+        "RawContainedFinder",
+        "InventoryGump",
+        "InventoryItemGump",
+        "ImageGump",
+        "VFX",
+        "투명클릭",
+        "02000008/같은내용물SID/현재serial"
+      ],
+      "registeredNodesBeforeDelete": 4,
+      "registeredNodesAfterDelete": 1,
+      "actualClientPanel": false
+    },
+    "guiRun": false
+  },
+  "integrationPins": {
+    "reports": 59,
+    "pins": 75
+  },
+  "fidelity": {
+    "complete": false,
+    "scope": "실제 생산 항목 몸체·기존 격자/그림·입력·수명 조립. 실제 Client 생산창은 후속.",
+    "limits": [
+      "이번은 실제 내용물 항목의 자식·수량/클릭·장식·비용 몸체와 기존 격자→실제자산·그림·같은SID 전달·수명의 headless 조립이다. Client 생산 패널은 아직 없다.",
+      "Native132의 측정·decoder·외부 GUI/정책/SP/문자열·맞춤/적중/About/장식은 명시 경계다. C++ 실제자산 검사는 기존 전체 측정/decoder/ImageGump/VFX를 연결하지만 About·수량 글리프의 실제 Client 연결은 후속이다.",
+      "556038 비활성/556338 선행 실제 색표·현재owner 공급, 패널43e640/43ddd0/43ec00→447000 커서와43ef10 나머지 다리·품질/수량·비용 갱신이 남는다.",
+      "썬 캐논 배치·공격/도움말·회수·업그레이드/CD/운반왕복·희생·승패·다음 미션·전략AI/11단계 자연 완주·전체 원본 동일성은 미완료다."
+    ]
+  },
+  "goalComplete": false
+}

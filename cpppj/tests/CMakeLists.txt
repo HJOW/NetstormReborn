@@ -1519,3 +1519,8 @@ set_source_files_properties(InventoryGumpTests.cpp PROPERTIES COMPILE_DEFINITION
 target_sources(netstorm_tests PRIVATE ImageGumpTests.cpp)
 set_source_files_properties(ImageGumpTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_INVENTORY_IMAGE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/inventory-image-x86.tsv\"")
+
+# 독립 원본132행과 실제 패턴·그림 자식·클릭 SID를 대조한다.
+target_sources(netstorm_tests PRIVATE InventoryItemGumpTests.cpp)
+set_source_files_properties(InventoryItemGumpTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_INVENTORY_ITEM_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/inventory-item-x86.tsv\"")

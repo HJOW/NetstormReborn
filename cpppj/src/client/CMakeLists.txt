@@ -156,3 +156,6 @@ target_sources(netstorm PRIVATE InventoryGump.h InventoryGump.cpp)
 
 # 생산 아이콘의 실제 SHP Gump와 VFX 출력/투명 적중을 연결한다.
 target_sources(netstorm PRIVATE ImageGump.h ImageGump.cpp)
+
+# 실제 생산 내용물 항목의 자식 배치·입력·장식·비용을 복원한다.
+target_sources(netstorm PRIVATE InventoryItemGump.h InventoryItemGump.cpp)
