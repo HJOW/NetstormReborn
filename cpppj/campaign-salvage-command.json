@@ -1,0 +1,137 @@
+{
+  "unit": 201,
+  "date": "2026-10-19",
+  "baseline": "ce0afa08ba730ee559af14cc7274cc28d4677a07",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16",
+    "newDecompile": false
+  },
+  "sources": {
+    "cpppj/src/CMakeLists.txt": "dc93067f7759849e630647688fa09684944a0f5aec5bf7d774d429227e600599",
+    "cpppj/tests/CMakeLists.txt": "889efbf2ee9336dad4a80cae9bc811c380d9e955b2746743b049efcbae9d27ae",
+    "cpppj/src/client/RawCampaignSession.cpp": "2efb1ffe0595bd6ec1318fb965d8c984653899839761f5cca6db9b71345e6308",
+    "cpppj/src/client/RawCampaignSession.h": "90823254ec3ed04ef3c59224088dbdb2a641fc285a91ea7cd0480fa3c226eb45",
+    "cpppj/src/client/CampaignObjectMenuClient.cpp": "c32a7af93abce548c3aa335015eb160cd1ea40164790aea31ffad2f866745862",
+    "cpppj/src/client/CampaignObjectMenuClient.h": "2d88a574f2b2feb27d4d2bf46761f58664521cb24b73af2b301741905b9deb73",
+    "cpppj/src/client/UberGump.cpp": "43206b0770410d51a18a3630beb2dd97728885267c862fa9a1bd1019ee55fe82",
+    "cpppj/tests/CampaignSessionTests.cpp": "ff150edde0596349c7b6155caac9de7df3dbea9c42237eccc8fb535a3c736f16",
+    "cpppj/src/o/RawSalvageCommand.h": "94784346b6f1887d765a7819ba82536b33d7c210412324e15ed4c60534cae58f",
+    "cpppj/src/o/RawSalvageCommand.cpp": "4927b7d72027a059c2c7b016a8dab658cb87c75735a66f6d9e534f246b14aad8",
+    "cpppj/tests/SalvageCommandTests.cpp": "17be179074806dbb09d78d6edcffde6d42c38b82943b1a0fbcac57e1232fdba1",
+    "tools/decomp_salvage_command.py": "8692ef5c2192722edff4a885105f83b04eec549e0a9cfed941288b6d0b6dd57a",
+    "tools/cpp_salvage_smoke.py": "eec877219c1fd85aa536b904389007598f7f39b3369db073715b81710741b4d7"
+  },
+  "evidence": {
+    "extracted/goal-salvage-command-20261019-baseline.json": "0016155e6f201c5b3897519e98d793044e327abbd1079097ce0ee1e5697903a2",
+    "extracted/goal-salvage-command-20261019-native1.log": "4266be5bc9defda5dd7aebafb21831d20e209fa5905505492f3a7ea9b0497a35",
+    "extracted/goal-salvage-command-20261019-native1-invalid.tsv": "21590679c2dfc04096215b696caccbc4da03af530022d219c5dad26369d63dde",
+    "extracted/goal-salvage-command-20261019-native1-invalid.json": "46917dd49ef1c23bb9ff14a5bfbedf41547ff034a9640b1f2d32680d70d67868",
+    "extracted/goal-salvage-command-20261019-native1-invalid-tool.py": "11199205a4abdca92d1157e9d4b877bb57cca026fa3811c41e3aa35fdee9b83e",
+    "extracted/goal-salvage-command-20261019-native2.log": "55115db533bdd3c1c287a805680d160d8e269afe0f09a7577fdf5e0335fcf009",
+    "extracted/goal-salvage-command-20261019-native2-smallpool-freeze.json": "0bae17add006595c43072674d97031f879500637bd561a30fbe8cb10d6bb5215",
+    "extracted/goal-salvage-command-20261019-native2-smallpool.tsv": "9ffcb18c49f86db7f87e3727cd8d5a53b89033cbca8d71ef1c98610d579a817c",
+    "extracted/goal-salvage-command-20261019-native2-smallpool.json": "cb5fc1f547a49a8b45e39c6dc55230d965cb5e99d2c3207a460da430a9dffd12",
+    "extracted/goal-salvage-command-20261019-native2-smallpool-tool.py": "73883596e2761677aa3f85334b25414f6937f8e13b3f8a3b864038e82a0ef882",
+    "extracted/goal-salvage-command-20261019-native3.log": "55115db533bdd3c1c287a805680d160d8e269afe0f09a7577fdf5e0335fcf009",
+    "extracted/goal-salvage-command-20261019-native-freeze.json": "863628166ed21cb1cd7fe0b336ce8e057e6b77dd4254e39c52cfea28df38eda0",
+    "extracted/goal-salvage-command-20261019-build1.log": "a7c69b0545c87f4be8f4059296d7f1a706bdb9730ed97a46afb9a45572329f02",
+    "extracted/goal-salvage-command-20261019-focused1.log": "e28cca38289ca921bcda8c7fb5ef90fd9d8dc13e51e1b5a70ed470608572001b",
+    "extracted/goal-salvage-command-20261019-cpp-before-length-fix.cpp": "07a790516a847d5880c838b22adf77eb3e6ea234ae0797e85360aa46c27d81f2",
+    "extracted/goal-salvage-command-20261019-build2.log": "9bafdddd9065c156fc40d2d47abe1c5cc3f6f17a823fc24497ca0827c97b8942",
+    "extracted/goal-salvage-command-20261019-focused2.log": "48efcaeb30dc30b04a6a4c80ded3c16ce9169a90a995f410d8fbfaedbb9ec556",
+    "extracted/goal-salvage-command-20261019-session-tests-before.cpp": "530ae4a707f6f82b4eaeab6c3f7f30471da1de5314ea544abdca9075fa1cdb41",
+    "extracted/goal-salvage-command-20261019-build3.log": "c0bb93889bb56be34bff77789f928d700dff3e5a56ea703d03a6c2bfaeb4df39",
+    "extracted/goal-salvage-command-20261019-focused3-session.log": "a5e06ffcdc3d464f050d3f91893d5871357fac9863efbf3934f89f7c99eaf0ac",
+    "extracted/goal-salvage-command-20261019-session-before-shadow-fix.cpp": "f6fc1c04a94352d643fae4ab12b0d8360016d0652b6183411e63263c5d657ced",
+    "extracted/goal-salvage-command-20261019-build4.log": "68daf5268753a6f0253917d033a76282e07803e3b45f8c1951a34f7cbc6a3d34",
+    "extracted/goal-salvage-command-20261019-pin.log": "ee0802676ecb001544bae5f805fc87f0732527b460ca06a237f28a325b880915",
+    "extracted/goal-salvage-command-20261019-pin-updates.json": "b0b060b317546b739215c2f391929ff0674fb0b073b3754660a0195de8f44046",
+    "extracted/goal-salvage-command-20261019-gui1.log": "453be31ca5f0b6e16bcd2a1051c0d1a1e0da13741c285f47641e2dbdcd321d21",
+    "extracted/goal-salvage-command-20261019-sources.json": "326132d1c9dc1f83e3daab420cf1e969dd04ed1c883f8245c08ceaa478db5edc",
+    "extracted/goal-salvage-command-20261019-gui1/steps.tsv": "3242e9effbab9ba34b374ed8e77a667ca1adc3072afef28ce0a2c0acfb618028",
+    "extracted/goal-salvage-command-20261019-gui1/menu.bmp": "23fdefe7ea0eab8191994656da10c96490e694085266a6b888bbc51ae3d55cd2",
+    "extracted/goal-salvage-command-20261019-gui1/collapse.bmp": "c3eb3bf563b7f6039c2a170c12bf57fa34a76e6446e7d0809022d7bfa1d7993b",
+    "extracted/goal-salvage-command-20261019-gui1/settled.bmp": "f3a02bef7ed3198575bc23f3c001924c326159c38df473ad1b0a47d851653037",
+    "extracted/goal-salvage-command-20261019-gui1/states.tsv": "76037477ed8cd064394b4a3b98eba56066ca84304d815350d31aaf838844a589",
+    "extracted/goal-salvage-command-20261019-gui1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-salvage-command-20261019-gui1/stderr.log": "197c308ea9fa1056d6a787adce92efe2af608eb0e085ddb7de3c75ef3b89af2e",
+    "extracted/goal-salvage-command-20261019-gui1/execution.json": "ae737d8e60adf5f8a99db632a215f2f081a78d9ed0d8452316d51943648ad2c7",
+    "extracted/goal-salvage-command-20261019-gui1/results.json": "118f5da88ecabca0327b64175413151dd7de698a9c79f40e76e4ec4b26940513",
+    "extracted/goal-salvage-command-20261019-native-lineage.json": "85d2e7954674fee06df1833f26c6b773429a97d955f695134de316b6102abecb",
+    "extracted/goal-salvage-command-20261019-ctest-final.log": "f61f4fa6fb719121f2603666b104e7788a8a538ed40500fd73bb7edb09576802",
+    "extracted/goal-salvage-command-20261019-tests-final.log": "27bffe439cc943cc13fa4d878cfc1af5b9155a61875298c167296f1c50c8d4b1",
+    "extracted/goal-salvage-command-20261019-entry.log": "45c1eee9aa0a6dda3519fe8ac4fcf426bf94132bb199d97050b9cc54ac53e578",
+    "extracted/goal-salvage-command-20261019-audit.log": "f3c3ada241bff3afae23907c22845c462b388b14bbdb4bf583854f080481babf",
+    "extracted/goal-salvage-command-20261019-verify-final.json": "53976e29a965195ac2630d9dfdcb139151314d49d1a9dfdf110111f48e73dcae",
+    "extracted/goal-salvage-command-20261019-tutorial-reference-audit.txt": "06892f84c88dc3a2d0767cf5126c0714553ca166c70f3b4447b7c98527da4102",
+    "extracted/goal-salvage-command-20261019-entry/results.json": "b6dc2118e1898d04292088133c0902638f7125b30a6c66c0cee59ddaf105ffff",
+    "extracted/goal-salvage-command-20261019-guard1.log": "2530177df0bff701dbd19bf4f30029b6c637d941b2d5ed74b3ffd2438723b8e4"
+  },
+  "observationDirectory": "extracted/goal-salvage-command-20261019-gui1",
+  "observation": {
+    "returnCode": 0,
+    "originalsUnchanged": true,
+    "cannon": 15187,
+    "spBefore": 1075.0,
+    "spAfter": 1175.0,
+    "lastGameTime": 156.298,
+    "goalComplete": false,
+    "scope": "실제 건설/우클릭 메뉴/54h 회수 환불·삭제와 후속 붕괴 표시다. 자연 사제 포획/미션 승리는 별도다."
+  },
+  "goalComplete": false,
+  "naturalCaptureVerified": false,
+  "missionVictoryVerified": false,
+  "originalGameRuns": 0,
+  "cd1072NewObservations": 0,
+  "nativeProof": {
+    "uniqueInputs": 3458,
+    "normalReturns": 6916,
+    "instructionsIncludingCallerAndBoundaries": 296228,
+    "functions": {
+      "request": 1971,
+      "send": 400,
+      "receive": 1087
+    },
+    "precisionDifferentInputs": [],
+    "fixture": "cpppj/tests/fixtures/salvage-command-x86.tsv",
+    "preCppComparisonFreeze": "extracted/goal-salvage-command-20261019-native-freeze.json",
+    "preProductSmallPoolFreeze": "extracted/goal-salvage-command-20261019-native2-smallpool-freeze.json",
+    "lineage": {
+      "rows": 3458,
+      "unchangedAfterCapacityAndBoundarySidRenaming": true,
+      "scope": "제품 작성 전에 동결한 유효100슬롯 관측과 실제24000풀의 추가 원본 관측을 비교했다. capacity100↔24000 및 경계SID99/100↔23999/24000 외 모든 원본 출력이 같다. C++ 결과를 기대값으로 사용하지 않았다."
+    }
+  },
+  "preservedObservations": {
+    "invalidFirst": "THUNK 실행 캐시 때문에 모든 op가 요청을 호출했다. 별도 보존/근거에서 제외. 함수별 실행 횟수와 캐시 무효화로 교정.",
+    "second": "100슬롯 합성 메모리의 유효 관측을 별도 보존. C++실제 풀 계약24000에 맞춘 입력3차로 전수대조했다.",
+    "cppMismatch": "직렬화 길이0/3 최소4보정의160차이를 제품에서 제거. 기존 원본 기대와 모든 다른 비교는 유지."
+  },
+  "validation": {
+    "build": "Release 경고/오류0",
+    "focused": "원본3458 전수/실제 자연 건설54h 회수 통과",
+    "fullTests": {
+      "count": 1720,
+      "failed": 0,
+      "seconds": 287.19
+    },
+    "entry": {
+      "passed": 11,
+      "originalsUnchanged": true
+    },
+    "audit": {
+      "tools": 135,
+      "passed": 120,
+      "historicalFailures": 15,
+      "newFailures": 0
+    },
+    "pins": {
+      "reports": 96,
+      "items": 322
+    }
+  },
+  "scope": "실제 캐논 회수의 원본 관문/송수신/기존 환불·붕괴·삭제/Client 메뉴 연결이다. 자연 사제 약화·포획/희생/승리·11완주는 아직 미완료다.",
+  "followup": "RawTutorialOne/Two/Later는 현재 자체6파일에만 참조된다. 실제 Early 전용 프레임/입력 연결을 다음 우선 추적한다."
+}

@@ -170,7 +170,7 @@
     "cpppj/hist/run19-native1/oracle.py": "edfe224fd394b8618f84266bbcb46384b56364b798ad73792f6f6ed3944c9748",
     "cpppj/run18.json": "beb9c998d370194514f5bfb126bf2a97f1315320c9d2a1ef6ea0b0c76378d0fd",
     "cpppj/squid-level.json": "5d61185c834c2e195394000248d768f37a95a2056027c4d020c66b83b74f4c68",
-    "cpppj/src/CMakeLists.txt": "dd0f00ff768b18549bf3c0d3e1abe20ac13ee81b407f13e335b8de71b45271f2",
+    "cpppj/src/CMakeLists.txt": "dc93067f7759849e630647688fa09684944a0f5aec5bf7d774d429227e600599",
     "cpppj/src/app/CanonMayPlaceInspect.cpp": "27eda46bca500c898abeb9a3a7c4e8588b38e061b579c84cbf6c032c6d46dda9",
     "cpppj/src/app/FrameBindingInspect.cpp": "042602919b0531fb1cbaf3941dc6597bee73944bbf0d571dacfd638bb45dd07c",
     "cpppj/src/app/FrameBindingInspect.h": "4e187ca41f8c34ed52c022b58a57327a554a723e3e26ee88a1ae152c99de3fce",
@@ -2299,6 +2299,19 @@
           "path": "cpppj/src/o/RawCarrierArrival.h",
           "previous": "a6fa676986cd46235b5cfdb1646e78554d76f0ee7ee8b002e7d3edac258de406",
           "current": "56355d323b96e074d549319884f492928ccec8a5c3530db745588cbeb2bcded3"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 201,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "dd0f00ff768b18549bf3c0d3e1abe20ac13ee81b407f13e335b8de71b45271f2",
+          "current": "dc93067f7759849e630647688fa09684944a0f5aec5bf7d774d429227e600599"
         }
       ]
     }

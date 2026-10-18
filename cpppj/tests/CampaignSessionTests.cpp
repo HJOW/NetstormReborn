@@ -1663,7 +1663,7 @@ TEST_CASE(CampaignSession_LocalLoginMissionStartAiAlliances) {
 
 namespace {
 // 같은 실제 로그인/건설/연구/생산으로 기본 회귀·제네레이터 연장·forward=true의 전진 공략을 검사한다.
-void NaturalWorkshopPlacement(bool combat,bool burning=false,CellPoint cannonLocation={118,118},bool forward=false) {
+void NaturalWorkshopPlacement(bool combat,bool burning=false,CellPoint cannonLocation={118,118},bool forward=false,bool reclaim=false) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();RawButtonControls* activeProductionUi{}; // 같은 실제 내용물 알림의 현재 UI다.
     std::vector<std::array<float,2>> bridgeSounds;auto previousSound=std::move(services.sound.playOnceAt); // 실제 위치 소리 요청을 기존 장치 경계와 함께 관찰한다.
     services.sound.playOnceAt=[&external,&bridgeSounds,previous=std::move(previousSound)](float x,float y,SoundHandle sound,std::uint32_t first,std::uint32_t second) {
@@ -1674,7 +1674,7 @@ void NaturalWorkshopPlacement(bool combat,bool burning=false,CellPoint cannonLoc
     services.production.allocationBytes=[](std::span<std::uint8_t> bytes) { CHECK(bytes.size()==kProductionDeckBytes);std::fill(bytes.begin(),bytes.end(),std::uint8_t{0xa7}); }; // 생성자가 초기화하지 않는 실제 할당 바이트의 명시 입력이다.
     services.production.effects.configInt=[](std::string_view key) { CHECK(key=="getTeleportTechFree");return 0; };services.production.effects.modeAssertion=[] { throw std::logic_error("실제 연구의 Fort/Battle 모드 진단"); };
     RawCampaignSession* activeSession{};std::vector<std::vector<std::uint8_t>> researchPackets; // 실제 송신과58h 수신 원문의 관측이다.
-    services.carrierRequest=[&](std::int32_t target,std::span<const std::uint8_t> packet) { CHECK(activeSession && target==9 && packet.size()==16 && packet[1]==0x58);if (!activeSession) throw std::logic_error("연구 실제 전송 미설치");activeSession->SendLocalPacket(target,packet); };
+    services.carrierRequest=[&](std::int32_t target,std::span<const std::uint8_t> packet) { CHECK(activeSession && target==9 && ((packet.size()==16 && packet[1]==0x58) || (reclaim && packet.size()==8 && packet[1]==0x54)));if (!activeSession) throw std::logic_error("연구 실제 전송 미설치");activeSession->SendLocalPacket(target,packet); };
     login.observePacket=[&](std::uint32_t,bool,std::uint32_t,std::span<const std::uint8_t> packet) { if (packet[1]==0x58) researchPackets.emplace_back(packet.begin(),packet.end()); };
     services.localLogin=std::move(login);services.ai.allocationBytes=[](std::span<std::uint8_t> bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0xa7}); };services.ai.defaultName=[] { return std::string("AI"); };services.ai.participation.clearChat=[](std::uint32_t) {};services.ai.participation.addChat=[](std::uint32_t,std::string_view,std::uint32_t) {};
     ConfigInterface config([&](std::string_view path) { return assets.files.TryRead(path); });config.Configuration().Assign("DataDir=\"d\"\ncurrentLanguage=\"english\"\nmissionSpec=\"{DataDir}\\{local.1}.{currentLanguage}\"\nfortSpec=\"{DataDir}\\{local.1}.fort\"\n[END]\n");MissionScript script(config,"TheWarBegins");
@@ -1896,6 +1896,15 @@ void NaturalWorkshopPlacement(bool combat,bool burning=false,CellPoint cannonLoc
                     }
                     std::cout<<"전진 자연 공격 신전HP"<<initialTempleHp<<"→"<<Get(core.pool.Slot(temple),26)<<" flags"<<unsigned(core.pool.Slot(temple)[11])<<" 표적";for (auto observedTarget:forwardTargets) std::cout<<observedTarget<<",";std::cout<<"\n"; // 최종 자연 진행 상태와 표적을 기록한다.
                     CHECK(core.pool.Slot(temple)[11]&3U);
+                }
+                if (reclaim) {
+                    const auto reclaimedCannons=ConstructionLive(core,128);CHECK(reclaimedCannons.size()==1);if (reclaimedCannons.size()!=1) return;const auto reclaimedCannon=reclaimedCannons.front(); // 앞의 실제 연구/생산/배치/자연 완공 결과만 회수한다.
+                    CHECK(Get(core.pool.Slot(reclaimedCannon),26)==600 && core.types[128].cost==400);const auto money=session.Sp(1);const auto beforePackets=session.LocalConnectionPackets().size(); // 원래400비용/완전HP의 독립 회수 기대100이다.
+                    session.RequestSalvage(reclaimedCannon.value);CHECK(session.Sp(1)==money && !(core.pool.Slot(reclaimedCannon)[11]&3U) && session.LocalConnectionPackets().size()==beforePackets); // 요청에서 삭제/환불 결과를 직접 만들지 않는다.
+                    session.PumpLocalConnection();CHECK(session.Sp(1)==money+100 && (core.pool.Slot(reclaimedCannon)[11]&1U) && ConstructionLive(core,128).empty());
+                    CHECK(std::count(session.LocalConnectionPackets().begin()+static_cast<std::ptrdiff_t>(beforePackets),session.LocalConnectionPackets().end(),std::uint8_t{0x54})==1);const auto afterMoney=session.Sp(1);session.RequestSalvage(reclaimedCannon.value);session.PumpLocalConnection();CHECK(session.Sp(1)==afterMoney); // 같은 반납SID의 두 번째 회수는 보상을 중복 지급하지 않는다.
+                    for (std::uint64_t frame=1;frame<=360;++frame) { const auto now=core.processState.now+1.0/60;wall+=1.0/60;session.RunFrame({now,wall,1.0/60,120000+frame},false);controls.Poll({InputCode::kRelease,500,350});menus.CleanupFrame(); } // 같은 Kernel의 실제 붕괴와 종속 정리를 자연 진행한다.
+                    CHECK(!core.destroy.PreDepth() && !core.destroy.PostDepth() && !core.bookkeeping.depth);std::cout<<"자연 캐논"<<reclaimedCannon.value<<" 실제54h 회수 SP"<<money<<"→"<<session.Sp(1)<<"/반납·붕괴 정리 완료\n";
                 }
                 controls.DisableProduction();activeProductionUi=nullptr;return;
             }
@@ -2133,6 +2142,9 @@ TEST_CASE(CampaignGeneratorShrapnel_ActualSavedWindExplosionLifetime) {
 
 // 같은 실제 초기 자원/연구/생산으로 전방 공급과 두 번째 캐논을 건설해 적 신전까지 자연 공략한다.
 TEST_CASE(CampaignForwardBattle_NaturalTempleAssault) { NaturalWorkshopPlacement(true,true,{116,118},true); }
+
+// 실제 자금/연구/제네레이터·캐논 건설 뒤 같은 로컬54h가 환불/붕괴/삭제를 실행한다.
+TEST_CASE(CampaignSalvage_NaturalCannonActualTransportRefundCollapse) { NaturalWorkshopPlacement(true,false,{118,118},false,true); }
 
 // 실제 파편 생성이 반환한 스톤/아이스 타워의 모든 픽셀을 제품 전에 동결한120입력과 대조한다.
 TEST_CASE(CampaignForwardBattle_Native120CapturePixels) {

@@ -19,6 +19,7 @@
 #include "o/RawCarrierSteal.h"
 #include "o/RawCarrierPickup.h"
 #include "o/RawCarrierMove.h"
+#include "o/RawSalvageCommand.h"
 #include "o/RawMissionLogin.h"
 #include "o/RawMissionClientPackets.h"
 #include "o/RawMissionServerPackets.h"
@@ -383,6 +384,8 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawGemReward> gemReward; //같은게임난수/TYPE제외목록/시각/월드의보상선택·변환이다.
     CarrierMoveState carrierMoveState; //같은40h 요청의 현재 BYTE/BYTE/WORD다.
     std::unique_ptr<RawCarrierMove> carrierMove; //실제 요청/서버관문과 같은 경로/후보/현재 전송을 공유한다.
+    std::unique_ptr<SalvageCommandState> salvageState; // 실제 미션/로컬/제단 전역과 현재54h 헤더를 빌린다.
+    std::unique_ptr<RawSalvageCommand> salvageCommand; // 회수 관문·실제 환불·가상 삭제를 같은 전송에 연결한다.
     CarrierPickupState carrierPickupState; //같은현재4f 헤더/입력명령/특정내용물타입이다.
     std::unique_ptr<RawCarrierPickup> carrierPickup; //같은풀/현재후보/내용물/종속/입력/서버전송을연결한다.
     std::uint32_t stealHaltCounter{}; // 모든 크랩이 공유하는00545428이다.
@@ -2012,6 +2015,15 @@ struct RawCampaignSession::Impl {
         FillMissing(effects.path.stepSound);
         motion=std::make_unique<RawCampaignMotionBindings>(world,*priests,*islands,*contained,*anchor,hp,metadata.frames,motionState,start,process,std::move(effects));
         ConnectRitual();
+        salvageState=std::make_unique<SalvageCommandState>(SalvageCommandState{playerState.battleOwner,missionStart.denySalvage,gunState.checking,globals.missionPost,assetState.boss,runeState.altarType,runeState.daisType,motionState.carrier.nuggetType});
+        SalvageCommandHooks salvage; // 요청은 전송만 하고 실제 서버 수신에서 기존 몸체를 호출한다.
+        salvage.daisAt=[this](Sid sid) { return altarSacrifice->DaisAt(sid); };
+        salvage.tell=[this](std::string_view key) { if (!services.priest.shield.tell) throw std::logic_error("회수 금지의 실제 Tell 소비자 미연결");services.priest.shield.tell(key); };
+        salvage.assertion=[](std::uint32_t line) { throw std::logic_error("원본 회수 명령 진단 "+std::to_string(line)); };
+        salvage.send=services.carrierRequest;
+        salvage.refund=[this](Sid sid,std::uint32_t owner,bool value) { static_cast<void>(hp.Refund(sid,owner,value)); };
+        salvage.destroy=[this](Sid sid,std::uint32_t flags) { static_cast<void>(world.Destroy(sid,flags)); };
+        salvageCommand=std::make_unique<RawSalvageCommand>(core.pool,core.types,*salvageState,std::move(salvage));
         CarrierMoveHooks move; //실제40h는 현재 선택/동일 Graph/Host/경로 시작을 공유한다.
         move.selected=[this] { if (!services.deletion.selected) throw std::logic_error("이동 요청의 현재 선택 조회 미연결");return services.deletion.selected(); };
         move.select=[this](std::uint32_t sid,std::uint32_t force,std::uint32_t activate) { auto link=activeSelection.lock();if (!link || !link->selection) throw std::logic_error("이동 요청의 현재 선택 수명 미연결");static_cast<void>(link->selection->Select(sid,force,activate)); };
@@ -2201,7 +2213,12 @@ bool RawCampaignSession::MayPlaceConstruction(const CanonPlacementQuery& query) 
 // 실제 서버 요청 전체를 현재 모드로 실행한다. 일반 Confirm으로 바로 건너뛰지 않는다.
 bool RawCampaignSession::RequestConstruction(const ConstructionConfirmRequest& request) { if (!impl_->loaded) throw std::logic_error("미설치 Session의 건설 요청");impl_->PrepareConstruction();return impl_->construction->Request(request); }
 // 기존 실제 패킷 분배기/로컬 전송이 같은 서버 수신 몸체를 호출한다.
-void RawCampaignSession::RegisterConstructionCommands(RawPacketDispatch& dispatch) { if (!impl_->loaded) throw std::logic_error("미설치 Session의 건설 수신 등록");impl_->construction->Register(dispatch,[this] { impl_->PrepareConstruction(); }); }
+void RawCampaignSession::RegisterConstructionCommands(RawPacketDispatch& dispatch) {
+    if (!impl_->loaded) throw std::logic_error("미설치 Session의 건설 수신 등록");impl_->construction->Register(dispatch,[this] { impl_->PrepareConstruction(); });
+    // 원본 등록 표의54h 버전1/정책0/8바이트/빈 observer와 같은 수신이다.
+    dispatch.Observe(0x54,{});dispatch.Version(0x54,1,0);dispatch.RequireLength(0x54,8);
+    dispatch.Register(0x54,[this](std::uint32_t sender,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->salvageCommand->Receive(sender,packet); });
+}
 // 실제 초기 등록과 같은 버전/정책/빈 observer이며 수신 시점의 현재 권한/타입을 읽는다.
 void RawCampaignSession::RegisterCarrierCommands(RawPacketDispatch& dispatch) {
     if (!impl_->loaded) throw std::logic_error("미설치 Session의 채취 수신 등록");RegisterGeyserMined(dispatch,*impl_->geyserMined);
@@ -2215,6 +2232,8 @@ void RawCampaignSession::RegisterCarrierCommands(RawPacketDispatch& dispatch) {
 }
 // 요청은 실제 선택/중복 검사와 전송만 수행하고 직접 Start를 부르지 않는다.
 void RawCampaignSession::RequestCarrierMove(Sid parent,RawPathPoint destination,std::uint32_t sacrifice) { CarrierMove().Request(parent,destination,sacrifice); }
+// 사용자 회수 명령은 같은 서버 요청을 보내며 결과/환불/삭제를 직접 만들지 않는다.
+void RawCampaignSession::RequestSalvage(std::uint32_t sid) { if (!impl_->loaded || !impl_->salvageCommand) throw std::logic_error("미설치Session의 실제 회수 요청");impl_->salvageCommand->Request(sid); }
 // 설치 뒤 같은 실제 요청/수신 모듈만 빌린다.
 const RawCarrierMove& RawCampaignSession::CarrierMove() const { if (!impl_->loaded || !impl_->carrierMove) throw std::logic_error("미설치Session의 이동 명령");return *impl_->carrierMove; }
 // 원본 부모 설치 전의 임의 공간 쓰기를 거부하며 같은 현재 noIsland 전역으로 요청을 구성한다.

@@ -170,11 +170,12 @@ bool CampaignObjectMenuClient::Active() const {
     const auto& s=*impl_;const auto* node=s.root ? s.buttons.Menus()->Node(s.root) : nullptr;
     return node && (node->flags&1) && !(node->flags&0x10000);
 }
-// 메뉴가 이미 닫히도록 예약했어도 같은 체인의 현재 기술/SP/커서 취득을 실행한다.
+// 메뉴가 이미 닫히도록 예약했어도 같은 세계의 현재 연구/건설/회수 요청을 실행한다.
 bool CampaignObjectMenuClient::Command(const InputEvent& event) {
-    const auto command=event.code&0x03ffffffU;if (command!=0x02000060U && command!=0x03000080U) return false;
+    const auto command=event.code&0x03ffffffU;if (command!=0x02000060U && command!=0x03000080U && command!=0x0200005dU) return false;
     auto& s=*impl_;if (!s.world || !s.chain) throw std::logic_error("실제 사제 건설 메뉴의 현재 월드 수명 없음");
     const auto parameter=std::bit_cast<std::uint32_t>(event.y);
+    if (command==0x0200005dU) { s.world->Session().RequestSalvage(parameter);return true; }
     if (command==0x03000080U) { static_cast<void>(s.world->Session().SelectFactoryKnowledge(o::Sid{static_cast<std::uint16_t>(parameter)},event.code,parameter));return true; }
     static_cast<void>(s.chain->SelectBuild(parameter>>16,o::Sid{static_cast<std::uint16_t>(parameter)}));return true;
 }

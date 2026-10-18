@@ -1623,3 +1623,8 @@ set_property(SOURCE CampaignSessionTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS
 target_sources(netstorm_tests PRIVATE PriestRitualFrameTests.cpp)
 set_source_files_properties(PriestRitualFrameTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_PRIEST_RITUAL_FRAME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/priest-ritual-frame-x86.tsv\"")
+
+# 독립 원본의 회수 요청/54h 송수신3458입력을 같은 실제 몸체와 대조한다.
+target_sources(netstorm_tests PRIVATE SalvageCommandTests.cpp)
+set_source_files_properties(SalvageCommandTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_SALVAGE_COMMAND_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/salvage-command-x86.tsv\"")

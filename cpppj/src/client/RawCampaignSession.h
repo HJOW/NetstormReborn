@@ -222,6 +222,8 @@ public:
     bool RequestConstruction(const o::ConstructionConfirmRequest& request);
     // 같은 실제0x3e 수신을 기존 RawPacketDispatch 또는 LocalMissionTransport.Dispatch에 등록한다.
     void RegisterConstructionCommands(o::RawPacketDispatch& dispatch);
+    // 실제44c420의 현재 제단/금지 관문을 거쳐54h만 요청한다. 환불/삭제는 등록된 서버 수신에서 실행한다.
+    void RequestSalvage(std::uint32_t sid);
     // 같은 실제58h 수신과 현재 입력의signedWORD 지식 선택을 연결한다.
     void RegisterFactoryResearchCommands(o::RawPacketDispatch& dispatch);
     std::uint32_t SelectFactoryKnowledge(o::Sid parent,std::uint32_t code,std::uint32_t parameter); // 실제 생성·예측·송신 몸체다.

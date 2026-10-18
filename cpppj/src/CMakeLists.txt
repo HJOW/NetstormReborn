@@ -148,3 +148,6 @@ target_sources(netstorm PRIVATE o/RawPriestSacrificeRequest.cpp o/RawPriestSacri
 
 # 사제604 의식 애니메이션의 실제 반복 몸체다.
 target_sources(netstorm PRIVATE o/RawPriestRitualFrame.cpp o/RawPriestRitualFrame.h)
+
+# 실제 회수 관문과54h 일반 삭제 요청/서버 수신을 같은 세계에 연결한다.
+target_sources(netstorm PRIVATE o/RawSalvageCommand.cpp o/RawSalvageCommand.h)

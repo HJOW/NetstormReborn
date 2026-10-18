@@ -125,7 +125,7 @@
     "cpppj/hist/run24-base/cpppj/tests/CMakeLists.txt": "38b1bdb0a61e211f82e4d08c775abf2a7669debd6167c24e7cb3cddc74b75b81",
     "cpppj/hist/run24-base/cpppj/tests/CampaignInstallSupport.h": "2d42c64bfd2e49e9f1bdb5218c8e0e3f47d5029e24a9c1e2c65180aaf08cf02a",
     "cpppj/run23.json": "e29f9286a2c79f91ba40b843f7e8618404154b261c876ef89281e26607f9fbf1",
-    "cpppj/src/CMakeLists.txt": "dd0f00ff768b18549bf3c0d3e1abe20ac13ee81b407f13e335b8de71b45271f2",
+    "cpppj/src/CMakeLists.txt": "dc93067f7759849e630647688fa09684944a0f5aec5bf7d774d429227e600599",
     "cpppj/src/app/CanonMayPlaceInspect.cpp": "27eda46bca500c898abeb9a3a7c4e8588b38e061b579c84cbf6c032c6d46dda9",
     "cpppj/src/app/FrameBindingInspect.cpp": "042602919b0531fb1cbaf3941dc6597bee73944bbf0d571dacfd638bb45dd07c",
     "cpppj/src/app/FrameBindingInspect.h": "4e187ca41f8c34ed52c022b58a57327a554a723e3e26ee88a1ae152c99de3fce",
@@ -2347,6 +2347,19 @@
           "path": "cpppj/src/o/RawCarrierArrival.h",
           "previous": "a6fa676986cd46235b5cfdb1646e78554d76f0ee7ee8b002e7d3edac258de406",
           "current": "56355d323b96e074d549319884f492928ccec8a5c3530db745588cbeb2bcded3"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 201,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "dd0f00ff768b18549bf3c0d3e1abe20ac13ee81b407f13e335b8de71b45271f2",
+          "current": "dc93067f7759849e630647688fa09684944a0f5aec5bf7d774d429227e600599"
         }
       ]
     }

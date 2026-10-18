@@ -1,0 +1,31 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-19",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16"
+  },
+  "uniqueInputs": 3458,
+  "normalReturns": 6916,
+  "instructions": 296228,
+  "nativeCalls": {
+    "0044c420": 3942,
+    "004437c0": 2336,
+    "0040aaa0": 2336,
+    "004df230": 2336,
+    "0049a840": 60,
+    "004436f0": 2174
+  },
+  "precisionDifferentInputs": [],
+  "boundaries": "44c420/4437c0/4436f0/40aaa0/4df230/49a840 전체. typed DaisAt/진단/Tell/전송/환불/가상Destroy는 명시 큰 하위 경계다. 두 x87/전체 raw 세 슬롯·현재 전역·caller packet/GP·ABI·canary/실행·읽기·쓰기 범위를 확인한다. 게임/OS/실제 사용자 회수/완주 증거는 아니다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "tools/decomp_salvage_command.py": "8692ef5c2192722edff4a885105f83b04eec549e0a9cfed941288b6d0b6dd57a",
+    "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+    "tools/decomp_cursor_position.py": "e15bcdbc4c6be9c131c30f15416c945d650dba9f7dc6def404b47f63c635c212",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "cpppj/tests/fixtures/salvage-command-x86.tsv": "ecf9bff0c09a7e6fb38a016da38ac012c82b6012ab9f19c21880d8eaeeb6b308"
+  }
+}
