@@ -25,8 +25,8 @@
     "cpppj/src/o/RawCarrierArrival.cpp": "1e63d7f9cb0a18ddb4a10b7c642e54873e8f46ab98deec6d3f63b334199979df",
     "cpppj/tests/CarrierTargetTests.cpp": "7ca2aa993bae751e63e973190da5eefb9259d1cfb544899bb108e89d26912400",
     "cpppj/tests/CampaignObjectMenuTests.cpp": "fea9198ea2150c42bb523f7ac9298c2f819acd1fc9b9887b53020c206ad62563",
-    "cpppj/src/CMakeLists.txt": "aeb81f738c13d031ff454bbf5ae54eac3b00529b9201cc01b8265a1fdfb5fa30",
-    "cpppj/tests/CMakeLists.txt": "2c93e5e70bf4d040be4f4eceacb2afd9adff68e3574790622299adc440de2e4c",
+    "cpppj/src/CMakeLists.txt": "c99bf39b2463c358a80f52c9ab1e2c9e5e669bcbc25b602d0340473df3f0b863",
+    "cpppj/tests/CMakeLists.txt": "0a4bfb693118cca965cd932341ade3b29b42c484a8c0aad08f821891ae54d509",
     "tools/native_carrier_geometry.cpp": "c471a0ce9889c730bb1a3b6a4659fe0eb0fea2d854b7007524fb93cd56fa34e8",
     "tools/carrier-geometry-hardware/CMakeLists.txt": "918768180d59716d3c0d46ac8955edd89ce2963237dae7eff3435fbd0e0287a3",
     "tools/decomp_carrier_target.py": "5869d80a3bde70e576f055d8fa6336364fb217343ec5cf7984eb763d99fc718f",
@@ -952,6 +952,25 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "546d079ab26024859935ce5f6fd8008f1ed4503c4cb7d9c6a0fbbd038356cd62",
           "current": "2c93e5e70bf4d040be4f4eceacb2afd9adff68e3574790622299adc440de2e4c"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 170,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "aeb81f738c13d031ff454bbf5ae54eac3b00529b9201cc01b8265a1fdfb5fa30",
+          "current": "c99bf39b2463c358a80f52c9ab1e2c9e5e669bcbc25b602d0340473df3f0b863"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "2c93e5e70bf4d040be4f4eceacb2afd9adff68e3574790622299adc440de2e4c",
+          "current": "0a4bfb693118cca965cd932341ade3b29b42c484a8c0aad08f821891ae54d509"
         }
       ]
     }

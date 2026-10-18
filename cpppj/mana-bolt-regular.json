@@ -67,8 +67,8 @@
     "cpppj/src/client/RawCursorPosition.cpp": "db3b59d8211cee4f22583db354962f2da543512bd78ad86ed91c8725f0dda7a4",
     "cpppj/src/client/RawCursorPosition.h": "acef07ed2737b798d36034457c63e75e1bfde25c9068b4bd3a2c224bd8dab723",
     "cpppj/src/o/CMakeLists.txt": "484d120616e312b75abe4a69a105cb6fc300a9d3965535cd9620ec5ab663a6e1",
-    "cpppj/tests/CMakeLists.txt": "2c93e5e70bf4d040be4f4eceacb2afd9adff68e3574790622299adc440de2e4c",
-    "cpppj/tests/CampaignSessionTests.cpp": "ceb857ebfbb35ea3d3b7fb6281a77f8b332f2955eb575de6b4ce325b786651e8",
+    "cpppj/tests/CMakeLists.txt": "0a4bfb693118cca965cd932341ade3b29b42c484a8c0aad08f821891ae54d509",
+    "cpppj/tests/CampaignSessionTests.cpp": "fbe93163d865a6ebe8adb48db980a3170da2d5b3a5c7be921785ce39839082a8",
     "cpppj/tests/ManaBoltRegularTests.cpp": "3531f9ec3de58ad435557223606e16994d0f235b193780fab7700a06e96e8d5d",
     "cpppj/src/client/Sound.cpp": "30f85f35c1e5c75d1214ec5df2f3d86c7552fa060a1068905f77cb164cfd8ee3",
     "cpppj/src/client/Sound.h": "d8820c78a72db8c30241bed470c85b5b07a36cc1b0737b96e81563836285623f",
@@ -87,8 +87,8 @@
     "cpppj/src/o/CMakeLists.txt": "484d120616e312b75abe4a69a105cb6fc300a9d3965535cd9620ec5ab663a6e1",
     "cpppj/src/o/RawManaBoltRegular.cpp": "4ea2499c6cf66978607e42ad0c84486d11ca5cf32e6deb58281e35fbd9aefdde",
     "cpppj/src/o/RawManaBoltRegular.h": "c0f4822f6a25c63644f507d31b3946e1f8a7ba6b1185e5c09a97e625d56e8011",
-    "cpppj/tests/CMakeLists.txt": "2c93e5e70bf4d040be4f4eceacb2afd9adff68e3574790622299adc440de2e4c",
-    "cpppj/tests/CampaignSessionTests.cpp": "ceb857ebfbb35ea3d3b7fb6281a77f8b332f2955eb575de6b4ce325b786651e8",
+    "cpppj/tests/CMakeLists.txt": "0a4bfb693118cca965cd932341ade3b29b42c484a8c0aad08f821891ae54d509",
+    "cpppj/tests/CampaignSessionTests.cpp": "fbe93163d865a6ebe8adb48db980a3170da2d5b3a5c7be921785ce39839082a8",
     "cpppj/tests/ManaBoltRegularTests.cpp": "3531f9ec3de58ad435557223606e16994d0f235b193780fab7700a06e96e8d5d"
   },
   "protectedFileSha256": {
@@ -1462,6 +1462,37 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "9211b230a3819788c79003fee65b8de002aed2441b049a9b460e430ec9f2f508",
           "current": "ceb857ebfbb35ea3d3b7fb6281a77f8b332f2955eb575de6b4ce325b786651e8"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 170,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/sha256",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "2c93e5e70bf4d040be4f4eceacb2afd9adff68e3574790622299adc440de2e4c",
+          "current": "0a4bfb693118cca965cd932341ade3b29b42c484a8c0aad08f821891ae54d509"
+        },
+        {
+          "group": "/sha256",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "ceb857ebfbb35ea3d3b7fb6281a77f8b332f2955eb575de6b4ce325b786651e8",
+          "current": "fbe93163d865a6ebe8adb48db980a3170da2d5b3a5c7be921785ce39839082a8"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "2c93e5e70bf4d040be4f4eceacb2afd9adff68e3574790622299adc440de2e4c",
+          "current": "0a4bfb693118cca965cd932341ade3b29b42c484a8c0aad08f821891ae54d509"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "ceb857ebfbb35ea3d3b7fb6281a77f8b332f2955eb575de6b4ce325b786651e8",
+          "current": "fbe93163d865a6ebe8adb48db980a3170da2d5b3a5c7be921785ce39839082a8"
         }
       ]
     }

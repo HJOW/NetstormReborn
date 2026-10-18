@@ -9,10 +9,10 @@
   },
   "scope": "PATCH10.78 실제 Client의 동일 Session 로컬 Zone/접속/원본 Login/상태8·9·10·13·14/타이머/명령 전송과 기존 짧은 State 확장 연결. 전체 UI/상태7 부모/자연완주 증거는 아니다.",
   "currentSources": {
-    "cpppj/src/CMakeLists.txt": "aeb81f738c13d031ff454bbf5ae54eac3b00529b9201cc01b8265a1fdfb5fa30",
+    "cpppj/src/CMakeLists.txt": "c99bf39b2463c358a80f52c9ab1e2c9e5e669bcbc25b602d0340473df3f0b863",
     "cpppj/src/client/CampaignClientServices.cpp": "4566373b792d67b289fe125779e0574a5f57008d69e4267bf63ac83b21527b5f",
-    "cpppj/src/client/GameWorld.cpp": "97e41469fbe965647f736e3c506e1f0c83abe4f04b121078b39b5c328e2c7b1e",
-    "cpppj/src/client/GameWorld.h": "3dbe474db82b47dc6113724a36adcb59d7ad68ab2d514b3bad57f99fcf056c80",
+    "cpppj/src/client/GameWorld.cpp": "fbe5e9e2f95b9acd3db589f9110fbfe79ba35c5dbb3d7ef1d61992ca7cf6b3b1",
+    "cpppj/src/client/GameWorld.h": "63a8da986aab6ab35f1938c8de5c9197d12cca4e17859cb8daba5d5f52946e73",
     "cpppj/src/client/RawCampaignSession.cpp": "1e401edcc39f9d0c3dc4a2d7b04d2f91fbe01fa47a480306217d7b89405cd8af",
     "cpppj/src/client/RawCampaignSession.h": "5979a1512864ee3f2f185a0bbb61114245908439e93545913cfdd003b665a1ac",
     "cpppj/src/client/RawSurfaceWorld.cpp": "f3b1199c44bda39e74c1b8fcb424576a9a91fffc6e2d841d3a79abc469cc5dc7",
@@ -27,8 +27,8 @@
     "cpppj/src/o/RawPlayerTemplateState.h": "94d77a52e0d7d3f218732b27acf4039d293dae1b4041a723db88669a51c4b77e",
     "cpppj/src/zacket/LocalMissionTransport.cpp": "f659b7bbcfcd3923147472a099fcf74c04014e0005eff3e46d273898c4a2d92a",
     "cpppj/src/zacket/LocalMissionTransport.h": "cb2a6db9ba11d2be26699fa0675ecc4a2714969b58c96a94275071fbd3464ee2",
-    "cpppj/tests/CMakeLists.txt": "2c93e5e70bf4d040be4f4eceacb2afd9adff68e3574790622299adc440de2e4c",
-    "cpppj/tests/CampaignSessionTests.cpp": "ceb857ebfbb35ea3d3b7fb6281a77f8b332f2955eb575de6b4ce325b786651e8",
+    "cpppj/tests/CMakeLists.txt": "0a4bfb693118cca965cd932341ade3b29b42c484a8c0aad08f821891ae54d509",
+    "cpppj/tests/CampaignSessionTests.cpp": "fbe93163d865a6ebe8adb48db980a3170da2d5b3a5c7be921785ce39839082a8",
     "cpppj/tests/LocalMissionTransportTests.cpp": "4091601c094ddeb30f2795aaa7c991770196fcfdf2c1d1ed9da9f124ac8d1938",
     "tools/cpp_campaign_entry_smoke.py": "59b39e067a2e51cc7f6358d8adc198e4cbd5682bc6109e9b1e0407fa7f3550aa",
     "cpppj/tests/PlayerRegularTests.cpp": "c5dc6f89b8ee7e6ed21c7720d1e11a8c019022f079eb7f62024833ed47e56afe",
@@ -2222,6 +2222,43 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "9211b230a3819788c79003fee65b8de002aed2441b049a9b460e430ec9f2f508",
           "current": "ceb857ebfbb35ea3d3b7fb6281a77f8b332f2955eb575de6b4ce325b786651e8"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 170,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "aeb81f738c13d031ff454bbf5ae54eac3b00529b9201cc01b8265a1fdfb5fa30",
+          "current": "c99bf39b2463c358a80f52c9ab1e2c9e5e669bcbc25b602d0340473df3f0b863"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/GameWorld.cpp",
+          "previous": "97e41469fbe965647f736e3c506e1f0c83abe4f04b121078b39b5c328e2c7b1e",
+          "current": "fbe5e9e2f95b9acd3db589f9110fbfe79ba35c5dbb3d7ef1d61992ca7cf6b3b1"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/GameWorld.h",
+          "previous": "3dbe474db82b47dc6113724a36adcb59d7ad68ab2d514b3bad57f99fcf056c80",
+          "current": "63a8da986aab6ab35f1938c8de5c9197d12cca4e17859cb8daba5d5f52946e73"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "2c93e5e70bf4d040be4f4eceacb2afd9adff68e3574790622299adc440de2e4c",
+          "current": "0a4bfb693118cca965cd932341ade3b29b42c484a8c0aad08f821891ae54d509"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "ceb857ebfbb35ea3d3b7fb6281a77f8b332f2955eb575de6b4ce325b786651e8",
+          "current": "fbe93163d865a6ebe8adb48db980a3170da2d5b3a5c7be921785ce39839082a8"
         }
       ]
     }

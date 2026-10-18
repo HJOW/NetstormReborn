@@ -20,10 +20,10 @@
     "cpppj/src/client/RawShapeToBuffer.h": "f3788fbcdacd21dd4dabac2c63c96fbd4d28e1c27c9a19cf8b6519f98852a119",
     "cpppj/src/client/RawSurfaceWorld.cpp": "f3b1199c44bda39e74c1b8fcb424576a9a91fffc6e2d841d3a79abc469cc5dc7",
     "cpppj/src/o/CMakeLists.txt": "484d120616e312b75abe4a69a105cb6fc300a9d3965535cd9620ec5ab663a6e1",
-    "cpppj/tests/CMakeLists.txt": "2c93e5e70bf4d040be4f4eceacb2afd9adff68e3574790622299adc440de2e4c",
-    "cpppj/tests/CampaignSessionTests.cpp": "ceb857ebfbb35ea3d3b7fb6281a77f8b332f2955eb575de6b4ce325b786651e8",
+    "cpppj/tests/CMakeLists.txt": "0a4bfb693118cca965cd932341ade3b29b42c484a8c0aad08f821891ae54d509",
+    "cpppj/tests/CampaignSessionTests.cpp": "fbe93163d865a6ebe8adb48db980a3170da2d5b3a5c7be921785ce39839082a8",
     "cpppj/tests/ShapeToBufferTests.cpp": "0dc5ddc7f71ce2b7a12ff4dcaae45a47b4c7d6fefa676129fb19b5556e3312ab",
-    "tools/cpp_priest_construction_smoke.py": "d1e3597a7f9f56a2fcaa8f7cb1648d339a0c457d6241a35b6c7ab8331efa592b",
+    "tools/cpp_priest_construction_smoke.py": "738029d4170096d0d86503e89f148a0ecf262429998ee5a822dd0a3e0dcebc9b",
     "cpppj/src/o/RawFactoryDraw.h": "1a6ced2b13c6a50083dea365028524f6d46f2b80821106b61b6573fda44d41ac",
     "cpppj/src/o/RawFactoryDraw.cpp": "d988a9cff39df162fb792809f689fe5b4220c3f18a9be617374d044a597ca4da",
     "tools/decomp_factory_capture.py": "e5dd681fa0d5aa74779c7873c10814eff9ad15e193f7cb7322661c6ca02e27f1",
@@ -4911,5 +4911,32 @@
     "최우선: 화면 본체의 원본 SpriteDraw 건설 중 색상/Factory 기본·추가 그림 통합. 기존 간이 제출을 완전 동일한 화면으로 합산하지 않는다.",
     "워크샾 메뉴·Knowledge·생산/나머지 파생 그림·메뉴/비단위 추가 그림 배율·mapped 추가 캡처 검증/CD 대응",
     "비용 표시 객체 참조/Chat 입력·접두·원격·메타/FrameGate·Guide·Outcome·전략AI·운반왕복·희생·내려놓기/상태7·저장/38·41·187/11스테이지 자연 완주·승패·다음 미션·전체 동일성"
+  ],
+  "integration_updates": [
+    {
+      "date": "2026-10-18",
+      "unit": 170,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "2c93e5e70bf4d040be4f4eceacb2afd9adff68e3574790622299adc440de2e4c",
+          "current": "0a4bfb693118cca965cd932341ade3b29b42c484a8c0aad08f821891ae54d509"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "ceb857ebfbb35ea3d3b7fb6281a77f8b332f2955eb575de6b4ce325b786651e8",
+          "current": "fbe93163d865a6ebe8adb48db980a3170da2d5b3a5c7be921785ce39839082a8"
+        },
+        {
+          "group": "/currentSources",
+          "path": "tools/cpp_priest_construction_smoke.py",
+          "previous": "d1e3597a7f9f56a2fcaa8f7cb1648d339a0c457d6241a35b6c7ab8331efa592b",
+          "current": "738029d4170096d0d86503e89f148a0ecf262429998ee5a822dd0a3e0dcebc9b"
+        }
+      ]
+    }
   ]
 }

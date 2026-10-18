@@ -128,7 +128,7 @@
     "cpppj/hist/run26-draft/RawBattleBroadcast.cpp": "0c88515bdfc87fc05310087ad360ea94ee9a95666329aaec09ea896a04744f13",
     "cpppj/hist/run26-draft/battle-bcast-x86.tsv": "d7da6351dca0e671136a4a81926662815762b2c3466e0d6413d1587b1415d732",
     "cpppj/hist/run26-draft/decomp_battle_bcast.py": "95a96ec4e3ffe37e5e906f8cd30546c5594e74fe0ddda045683339ecd7e2e3f7",
-    "cpppj/src/CMakeLists.txt": "aeb81f738c13d031ff454bbf5ae54eac3b00529b9201cc01b8265a1fdfb5fa30",
+    "cpppj/src/CMakeLists.txt": "c99bf39b2463c358a80f52c9ab1e2c9e5e669bcbc25b602d0340473df3f0b863",
     "cpppj/src/app/CanonMayPlaceInspect.cpp": "27eda46bca500c898abeb9a3a7c4e8588b38e061b579c84cbf6c032c6d46dda9",
     "cpppj/src/app/FrameBindingInspect.cpp": "042602919b0531fb1cbaf3941dc6597bee73944bbf0d571dacfd638bb45dd07c",
     "cpppj/src/app/FrameBindingInspect.h": "4e187ca41f8c34ed52c022b58a57327a554a723e3e26ee88a1ae152c99de3fce",
@@ -2070,6 +2070,19 @@
           "path": "cpppj/tests/ShapeToBufferTests.cpp",
           "previous": "67dd7ac14fb89b601d9be8d32331094b9d16cc4fa685f3385727c200475e9591",
           "current": "0dc5ddc7f71ce2b7a12ff4dcaae45a47b4c7d6fefa676129fb19b5556e3312ab"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 170,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "aeb81f738c13d031ff454bbf5ae54eac3b00529b9201cc01b8265a1fdfb5fa30",
+          "current": "c99bf39b2463c358a80f52c9ab1e2c9e5e669bcbc25b602d0340473df3f0b863"
         }
       ]
     }

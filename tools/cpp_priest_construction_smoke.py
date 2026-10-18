@@ -26,7 +26,8 @@ def asset_fields(path):
 
 def main():
     """같은 실제 시작 자금/기술로 GUI만 조작하며 원본 보호 자료와 관측 결과를 보존한다."""
-    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--output',type=Path,required=True);parser.add_argument('--completion',action='store_true');args=parser.parse_args()
+    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--output',type=Path,required=True);parser.add_argument('--completion',action='store_true');parser.add_argument('--select-workshop',action='store_true');args=parser.parse_args()
+    if args.select_workshop:args.completion=True
     output=args.output.resolve()
     if output.exists() and any(output.iterdir()):raise RuntimeError('새 관측 경로가 필요합니다: '+str(output))
     output.mkdir(parents=True,exist_ok=True)
@@ -36,9 +37,11 @@ def main():
            (200,'report','moving'),(200,'snapshot',str(output/'moving.bmp')),(230,'report','costDeleted'),(230,'snapshot',str(output/'cost-deleted.bmp'))]
     if args.completion:
         steps.extend([(500,'report','building'),(500,'snapshot',str(output/'building.bmp')),(950,'report','completed'),(950,'snapshot',str(output/'completed.bmp'))])
+    if args.select_workshop:
+        steps.extend([(975,'click','world:sunFactory'),(980,'report','selectedWorkshop'),(980,'snapshot',str(output/'selected-workshop.bmp'))])
     script=output/'steps.tsv';report=output/'states.tsv'
     script.write_text(''.join(f'{frame}\t{operation}\t{argument}\n' for frame,operation,argument in steps),encoding='utf-8',newline='\n')
-    command=[str(EXE),'--run',str(ROOT/'originals'),'--mission','thewarbegins','--window','--no-audio','--frames','953' if args.completion else '233',
+    command=[str(EXE),'--run',str(ROOT/'originals'),'--mission','thewarbegins','--window','--no-audio','--frames','983' if args.select_workshop else '953' if args.completion else '233',
              '--set','SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8','--ui-script',str(script),'--ui-report',str(report)]
     before=snapshots(ROOT/'originals')
     with preserve_game_settings(ROOT/'originals','d'):
@@ -73,11 +76,17 @@ def main():
         assert building['raw_sp'][1]==completed['raw_sp'][1]=='2200' and completed['raw_objects'][target][-2:]==['109','107']
         assert completed['phase']==['4'] and completed['paused']==['0'] and completed['popup']==['']
         completion=dict(passed=True,sid=target,placed=before_fields,building=during_fields,completed=after_fields,gameSeconds=[building['time'][0],completed['time'][0]])
+    selected=None
+    if args.select_workshop:
+        current=observed['selectedWorkshop'];target=completion['sid'];raw=asset_fields(report)['selectedWorkshop'][target]
+        assert current['raw_input'][0]==str(target) and current['phase']==['4'] and current['popup']==[''] and raw[1]&4
+        assert raw[2]==3000 and current['raw_sp'][1]=='2200'
+        selected=dict(passed=True,sid=target,raw=raw,input=current['raw_input'])
     summary=dict(passed=True,scope='실제GUI 사제 메뉴/TYPE85 배치/실제3e왕복/SP 차감/원본 서식 비용 표시·이동·지연삭제/사제 경로 이동.'+(' 같은 워크샾의 HP 자연 증가·3000 완공·abstract 해제까지 확인했다. 미션 완주 검사는 아니다.' if args.completion else ' 자연 건설·완공은 --completion 모드로 검사한다.'),
                  command=command,originals_unchanged=unchanged,newPacketTypes=after_packets[len(before_packets):],workshops=workshops,priestBefore=priest,priestMoving=moved,
-                 completion=completion,observed={label:{key:record[key] for key in ('time','raw_input','raw_cursor','raw_sp','raw_menus','raw_sp_gump') if key in record} for label,record in observed.items()})
+                 selection=selected,completion=completion,observed={label:{key:record[key] for key in ('time','raw_input','raw_cursor','raw_sp','raw_menus','raw_sp_gump') if key in record} for label,record in observed.items()})
     (output/'results.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
-    print(json.dumps(dict(passed=True,newPacketTypes=summary['newPacketTypes'],workshops=workshops,priestBefore=priest,priestMoving=moved,completion=completion,originals_unchanged=unchanged),ensure_ascii=False))
+    print(json.dumps(dict(passed=True,newPacketTypes=summary['newPacketTypes'],workshops=workshops,priestBefore=priest,priestMoving=moved,completion=completion,selection=selected,originals_unchanged=unchanged),ensure_ascii=False))
 
 
 if __name__=='__main__':main()

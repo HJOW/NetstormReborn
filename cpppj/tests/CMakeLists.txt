@@ -1484,3 +1484,8 @@ set_source_files_properties(FloatingSpGumpTests.cpp PROPERTIES COMPILE_DEFINITIO
 # Factory의 실제 가상 그림/전체 RLE 원문은 해당 캡처 검사에만 공급한다.
 set_property(SOURCE ShapeToBufferTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS
     "NETSTORM_FACTORY_CAPTURE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/factory-capture-x86.tsv\"")
+
+# 일반 자산의 독립 원본 세 색표를 이 검사 소스에만 연결한다.
+target_sources(netstorm_tests PRIVATE SpriteColorMapsTests.cpp)
+set_source_files_properties(SpriteColorMapsTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_SPRITE_COLORS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/sprite-colors-x86.tsv\"")

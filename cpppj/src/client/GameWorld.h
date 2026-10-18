@@ -14,6 +14,7 @@
 #include <map>
 
 namespace netstorm::client {
+class RawCampaignFactoryDisplay; // 같은 실제 풀의 원본 Factory 화면 출력기다.
 // 미션 지도와 객체 상태를 갱신하고 월드 그림을 수집하는 프로세스이다.
 class GameWorld : public o::BaseProcess {
 public:
@@ -142,6 +143,7 @@ private:
     struct Input; // 같은 선택/강조/명령 및 기억점/다중 선택의 고정 주소 소유자다.
     std::unique_ptr<Input> input_; // 현재 Client 장치를 설치한 뒤 원본 입력을 처리한다.
     std::unique_ptr<RawCampaignSession> campaign_; // 실제 설치/전투/경로/HP/현재 Kernel의 단일 수명 소유자다.
+    std::unique_ptr<RawCampaignFactoryDisplay> factoryDisplay_; // Session보다 먼저 해제할 실제 Factory 그림/선택 출력기다.
     CameraHomeState cameraHome_; // 실제 화면 크기·초기 시야 억제 깊이·요청/변환 갱신 번호를 보관한다.
     // surfaceTime_: 표면 프레임 갱신에 누적한 게임 시각(초).
     o::FrameTime surfaceTime_{};

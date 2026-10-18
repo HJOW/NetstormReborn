@@ -4,6 +4,7 @@
 // 생산 세션과 GameWorld의 표시/선택/명령이 같은 실제 raw 월드를 사용하는지 검사한다.
 #include "DudeSpawnSupport.h"
 #include "client/GameWorld.h"
+#include "client/RawCampaignFactoryDisplay.h"
 #include "client/AiTypeRequiredEnergy.h"
 #include "client/RawCursorPlacement.h"
 #include "client/RawCampaignCursor.h"
@@ -1674,6 +1675,27 @@ TEST_CASE(CampaignSession_LocalLoginWorkshopHasActualPlacement) {
         if (!(raw[11]&3) && raw[10]==85 && raw[34]==1 && std::bit_cast<float>(Get(raw,14))==point.x && std::bit_cast<float>(Get(raw,18))==point.y) { CHECK(!target.value);target=sid; }
     }
     CHECK(target.value && (core.pool.Slot(target)[40]&1));if (!target.value) return;
+    RawCampaignFactoryDisplay display(core,assets.game);std::array<ScreenColor,256> palette{}; // 실제 Session의 같은 풀/SHP를 그리는 제품 표시기다.
+    // 명시 파일 팔레트만 설치하며 HP/프레임/완공 필드는 쓰지 않는다.
+    for (std::size_t i=0;i<palette.size();++i) { const auto color=assets.game.Palette().Color(static_cast<std::uint8_t>(i));palette[i]={color.blue,color.green,color.red,0}; }
+    display.SetPalette(palette);CHECK(display.Handles(target) && !display.Handles(priest));
+    // 실제 공간 수집의 본체/그림자 두 항목과 dirty 출력이 현재 슬롯의 건설 상태를 따르는지 확인한다.
+    const auto render=[&](bool dead) {
+        const ScreenRect clip{0,28,1024,768};const int cameraX=static_cast<int>(point.x*16)-512,cameraY=static_cast<int>(point.y*11)-384;
+        const auto sprites=display.Sprites(clip,cameraX,cameraY,session.LocalOwner());std::size_t count{};std::uint64_t hash=1469598103934665603ULL;
+        // 같은 실제 배치점의 항목만 검사하고 다른 워크샾 출력과 혼합하지 않는다.
+        for (const auto& sprite:sprites) if (sprite.order.x==point.x && (sprite.order.y==point.y || sprite.order.y==static_cast<float>(static_cast<double>(point.y)-0.1))) {
+            CHECK(sprite.procedure && !sprite.database && sprite.order.depth==std::bit_cast<std::int8_t>(core.pool.Slot(target)[35]));if (!sprite.procedure) continue;
+            const bool shadow=sprite.order.y!=point.y;std::vector<std::uint8_t> pixels(1024*768,255);sprite.procedure->draw(pixels,1024,768,clip);
+            const auto changed=std::count_if(pixels.begin(),pixels.end(),[](auto pixel) { return pixel!=255; });CHECK((changed>0)==(!shadow || !dead));
+            // 헤더의 메뉴 영역은 실제 dirty clip 밖이므로 어떤 상태에서도 덮지 않는다.
+            CHECK(std::all_of(pixels.begin(),pixels.begin()+28*1024,[](auto pixel) { return pixel==255; }));
+            // 자연 완공 전후의 실제 픽셀 관측만 비교하며 기대 그림을 계산하지 않는다.
+            for (const auto pixel:pixels) { hash^=pixel;hash*=1099511628211ULL; }++count;
+        }
+        CHECK(count==2);return hash;
+    };
+    const auto placedPixels=render(true);bool renderedProgress{};
     bool started{},progress{},completed{};double began{},end{};Sid construction{}; // 실제 자연 과정에서 관찰한 필드다.
     const auto origin=core.processState.now;const auto maximum=session.HitPoints().MaxHitPoints(target); // 현재 실제 TYPE/HP 처리기다.
     // 시간만 전진시켜 같은 Kernel/Regular/경로/건설 몸체가 시작과 완료를 선택하도록 한다.
@@ -1687,10 +1709,12 @@ TEST_CASE(CampaignSession_LocalLoginWorkshopHasActualPlacement) {
         }
         if (started) {
             const auto hp=static_cast<std::int32_t>(Get(core.pool.Slot(target),26));if (hp>0 && hp<maximum) progress=true;
+            if (progress && !renderedProgress) { CHECK(render(true)==placedPixels);renderedProgress=true; } // 본체는 원본 건설 색, 그림자는 원본 생략을 유지한다.
             completed=!(core.pool.Slot(target)[40]&1);
             if (completed) CHECK(now>=end && !form.value && !core.processes.FromForm(construction));
         }
     }
+    CHECK(renderedProgress && render(false)!=placedPixels);
     CHECK(started && progress && completed && end>began);CHECK(Get(core.pool.Slot(target),26)==static_cast<std::uint32_t>(maximum));
     CHECK(!FindAttachedProcess(core.pool,target,30).value && !FindAttachedProcess(core.pool,target,47).value);
     CHECK((core.pool.Slot(target)[11]&7)==0 && session.Sp(1)==2200 && !core.bookkeeping.depth);

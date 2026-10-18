@@ -21,14 +21,14 @@
     "cpppj/src/client/RawMenuControls.cpp": "e0114aa8f670e3f5dbaa49252572ee5479def7006db6e84fdec57aa182c1904c",
     "cpppj/src/client/CampaignCursorClientEffects.cpp": "a3248a08922f8b4fdad05d2e2844db55f96196ccd58d55827b034dad17a55f72",
     "cpppj/src/client/UberGump.cpp": "2c4a64a28e45bc6613a1dc40bb3ef9a8375bf4278444b1585eaf9f7db84ced34",
-    "cpppj/tests/CMakeLists.txt": "2c93e5e70bf4d040be4f4eceacb2afd9adff68e3574790622299adc440de2e4c",
+    "cpppj/tests/CMakeLists.txt": "0a4bfb693118cca965cd932341ade3b29b42c484a8c0aad08f821891ae54d509",
     "cpppj/tests/RawMenuControlsTests.cpp": "5ce029d5ba102c1784696d8df58e3f3691b6bdf01671b013793a6e504fbfc4f4",
     "cpppj/tests/CampaignCursorClientEffectsTests.cpp": "f04679442eea66764f77ab814314c9edd1790dca1f61f39e95eb29804b78d92b",
     "cpppj/src/client/FloatingSpGump.h": "36df57018c209f1e007727899f85c78f62840e450b740f9de34e7d0ee789d841",
     "cpppj/src/client/FloatingSpGump.cpp": "5b4a690cf8769a47b330c89d99a054ce8e6f983fef1a45172be67530b598e683",
     "cpppj/tests/FloatingSpGumpTests.cpp": "f296d65c98502f81d24d34d05a9f7a950675506003c0ccb134adb25fe6f4ad36",
     "tools/decomp_floating_sp.py": "fb929f22789726a90c5dd98e74aa70bb319ff03153349cd8db76b3ce8b0d204c",
-    "tools/cpp_priest_construction_smoke.py": "d1e3597a7f9f56a2fcaa8f7cb1648d339a0c457d6241a35b6c7ab8331efa592b",
+    "tools/cpp_priest_construction_smoke.py": "738029d4170096d0d86503e89f148a0ecf262429998ee5a822dd0a3e0dcebc9b",
     "cpppj/tests/fixtures/floating-sp-x86.tsv": "89c61652ca97026e9b3d9a9c8e294292d6d6d2e7e87c3fbc7d67b864463a4aeb",
     "cpppj/floating-sp.json": "8a00e9285a32146747c579b791a275fdf5c9941610afc8316af41415044836a0"
   },
@@ -4803,6 +4803,25 @@
           "path": "tools/cpp_priest_construction_smoke.py",
           "previous": "42d2f995fbefd63b8b4e0475aedca4036b275eeb77eaa0abc6c9a2ddf3debb92",
           "current": "d1e3597a7f9f56a2fcaa8f7cb1648d339a0c457d6241a35b6c7ab8331efa592b"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 170,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "2c93e5e70bf4d040be4f4eceacb2afd9adff68e3574790622299adc440de2e4c",
+          "current": "0a4bfb693118cca965cd932341ade3b29b42c484a8c0aad08f821891ae54d509"
+        },
+        {
+          "group": "/currentSources",
+          "path": "tools/cpp_priest_construction_smoke.py",
+          "previous": "d1e3597a7f9f56a2fcaa8f7cb1648d339a0c457d6241a35b6c7ab8331efa592b",
+          "current": "738029d4170096d0d86503e89f148a0ecf262429998ee5a822dd0a3e0dcebc9b"
         }
       ]
     }

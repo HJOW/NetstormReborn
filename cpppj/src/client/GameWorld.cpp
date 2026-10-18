@@ -1,4 +1,5 @@
 #include "client/GameWorld.h"
+#include "client/RawCampaignFactoryDisplay.h"
 #include "client/RawCampaignCursor.h"
 #include "client/RawCursorPosition.h"
 #include <bit>
@@ -78,13 +79,19 @@ GameWorld::GameWorld(const GameAssets& assets,const o::BaseFileSystem& files,o::
     };
     const bool connect=services.localLogin.has_value(); //실제Client는로그인서버가Load를호출한다.
     campaign_=std::make_unique<RawCampaignSession>(assets,files,std::move(fort),std::move(mission),std::move(services));
+    if (assets_.Edition()==o::OriginalEdition::Patch1078) {
+        factoryDisplay_=std::make_unique<RawCampaignFactoryDisplay>(campaign_->Core(),assets_);std::array<ScreenColor,256> palette{};
+        // Client가 파일 팔레트를 설치하기 전에도 실제 자산의 동일256색을 사용한다.
+        for (std::size_t i=0;i<palette.size();++i) { const auto color=assets_.Palette().Color(static_cast<std::uint8_t>(i));palette[i]={color.blue,color.green,color.red,0}; }
+        factoryDisplay_->SetPalette(palette);
+    }
     if (deferConnection) { if (!connect) throw std::logic_error("실제Client 지연로그인 장치 누락");return; }
     if (connect) campaign_->LoadLocalConnection();else campaign_->Load();RefreshCampaignObjects();
 }
 //Client.CurrentSubscriber가현재Session을반환하는등록이끝난뒤에만실제로그인을시작한다.
 void GameWorld::BeginLocalConnection() { if (!campaign_) throw std::logic_error("실제Session 없는 로그인 요청");campaign_->LoadLocalConnection();RefreshCampaignObjects(); }
 // 세션의 실제 Kernel/음향/Form 콜백은 나머지 월드 멤버가 살아 있는 동안 정리한다.
-GameWorld::~GameWorld() { campaign_.reset(); }
+GameWorld::~GameWorld() { factoryDisplay_.reset();campaign_.reset(); }
 // 초기 카메라의 원본 좌표를 clamp나 신전 우선 선택 없이 현재 raw 표시와 음향 원점에 전달한다.
 void GameWorld::ResetCampaignCamera() {
     cameraHome_.width=width_;cameraHome_.height=height_;
@@ -148,6 +155,7 @@ void GameWorld::SetPalette(std::span<const ScreenColor> palette) {
     // 색 번호는 유지하고 RGB만 교체한다.
     for (std::size_t i=0;i<palette_.size();++i) palette_[i]={palette[i].red,palette[i].green,palette[i].blue};
     if (campaign_) campaign_->Cursor().SetPalette(palette); // 실제 커서도 같은 파일 팔레트의 원본 색표를 사용한다.
+    if (factoryDisplay_) factoryDisplay_->SetPalette(palette); // 원본 SpriteDraw도 같은 파일 팔레트에서만 색표를 만든다.
     remaps_.clear();changed_=true;
 }
 // 연결 방향 후보와 원소별 묶음에서 지면/절벽의 실제 클러스터를 고른다.
@@ -423,6 +431,7 @@ std::vector<RenderSprite> GameWorld::Sprites() const {
     for (const auto& snapshot:(campaign_ ? campaign_->World() : *surfaces_).Objects()) {
         const auto& object=snapshot.object;if (object.type<o::kFirstAssetTypeNumber || object.type-o::kFirstAssetTypeNumber>=assets_.Types().size()) continue;
         const auto& type=assets_.Types()[object.type-o::kFirstAssetTypeNumber];
+        if (factoryDisplay_ && factoryDisplay_->Handles(snapshot.sid)) continue; // 원본 수집/가상 Draw가 제출한 같은 본체를 중복 출력하지 않는다.
         const auto name=o::AsciiLower(type.assetName);if (name=="noisland") continue;
         const auto depth=name=="islandstalag" ? kCliffDepth : (name=="isle" || name=="island" ? kLandDepth : kObjectDepth);
         if (campaign_) {
@@ -448,6 +457,8 @@ std::vector<RenderSprite> GameWorld::Sprites() const {
         const auto& type=assets_.Types()[static_cast<std::size_t>(object.type-o::kFirstAssetTypeNumber)];
         add(type,object.frame,object.x,object.y,object.owner,kObjectDepth,false);
     }
+    // Factory 본체/그림자는 원본 수집 깊이와 y보정을 유지하고 공통 장면 정렬에 넣는다.
+    if (factoryDisplay_) for (auto& sprite:factoryDisplay_->Sprites(clip,scrollX_,scrollY_,campaign_->LocalOwner())) result.push_back(std::move(sprite));
     // 실제 입자도 같은 Renderer 정렬에 넣으며 화면의 뒤에 별도 overlay로 덮지 않는다.
     if (campaign_) for (auto& sprite:campaign_->ParticleSprites(clip)) result.push_back(std::move(sprite));
     return result;
@@ -461,7 +472,9 @@ std::uint8_t GameWorld::Color(int r,int g,int b) const {
 }
 // 선택 표시의 비례와 사각형 위치는 영상 근거의 어댑터이며 Gump 원본 함수 전체는 후속이다.
 std::shared_ptr<IndexedImage> GameWorld::SelectionImage() const {
-    if (!selected_) return {}; const auto* object=Object(selected_); if (!object) return {};
+    if (!selected_) return {};
+    if (factoryDisplay_ && factoryDisplay_->Handles(o::Sid{static_cast<std::uint16_t>(selected_)})) return {}; // 원본 Draw의 괄호/체력 막대와 중복하지 않는다.
+    const auto* object=Object(selected_); if (!object) return {};
     auto image=std::make_shared<IndexedImage>(); image->width=width_; image->height=height_; image->indices.resize(static_cast<std::size_t>(width_)*height_); image->opacity.resize(image->indices.size());
     const auto cyan=Color(0,255,255),green=Color(0,255,0); const auto p=ToScreen(object->x,object->y); const auto r=Bounds(*object);
     // 게임 영역 안의 한 픽셀만 투명 선택 표시 위에 기록한다.

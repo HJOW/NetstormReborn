@@ -130,3 +130,6 @@ target_sources(netstorm PRIVATE client/RawCarrierInput.h client/RawCarrierInput.
 
 # 실제 Client 입력 장치와 동일 월드의 선택/강조/명령 연결부다.
 target_sources(netstorm PRIVATE client/GameWorldInput.inc client/RawCampaignCarrierInput.inc client/CampaignUserInputServices.h client/CampaignUserInputServices.cpp)
+
+# 실제 Factory 수집/원본 일반 Draw와 세 소스 색표다.
+target_sources(netstorm PRIVATE client/SpriteColorMaps.cpp client/SpriteColorMaps.h client/RawCampaignFactoryDisplay.cpp client/RawCampaignFactoryDisplay.h)
