@@ -1,5 +1,11 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-18 명칭 재확인 완료: 썬 워커는 골렘 (HJOW-Athlon)
+
+- [x] AGENTS/양 LEFT를 다시 읽고 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16** 일치를 확인했다. 원본10.78 아카이브의 `d/sunwalker.type`을 읽기 전용 `--read-archive`로 확인한 결과 `typename sunwalker`, `description="Golem"`, `class="Ground Transport"`이며 그림·음향도 `golem`을 참조한다. `--dump-types originals`의 TYPE133 `sunWalker`/그룹 `walker`, 공유 JSON의 `Golem`→`골렘`과 일치한다.
+- [x] [명칭 대응표](docs/unit-source-name-map.md)의 기존 골렘 근거 절에 이번 재확인 날짜와 결과를 반영했다. 문서 두 개만 검증·커밋하며 코드/미션 키는 유지한다. UTF-8·변경 범위·보호 자료 불변을 확인했고 문서 수정이므로 빌드/게임 실행은 하지 않았다. **20261018-28 CM 썬 워커와 골렘 명칭 대응 원본 재확인**으로 로컬 커밋하며 push하지 않는다.
+- [ ] 기존 전체 goal은 active다. 직전177의 실제 Client 생산 패널 조립 후속을 유지한다. 진행 중인 생산 색표 도구/보고서/fixture 세 파일은 이 명칭 커밋에서 제외한다. 해당 원본 색표 생성은 3입력/12정상 반환/두 정밀도 차이0까지 완료했으며 C++ 연결과 제품 검증은 아직이다.
+
 ## 2026-10-18 단위177 완료: 생산 내용물 항목 배치·입력과 실제 격자 조립 (HJOW-Athlon)
 
 - [x] 기준cd2b9d5에서 AGENTS/양 LEFT 재독. 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16** 일치. 새 디컴파일·보호 원본/AGENTS/DN/DirectDraw 변경·게임 창 실행 없음. [작업 기록](docs/exe/cpp-inventory-item-20261018.md).
