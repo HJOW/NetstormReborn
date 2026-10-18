@@ -16,7 +16,7 @@
     "커서의25BYTE를 Session.SendLocalPacket으로 같은 실제 Login 전송에 보낸다. 기존3e 수신 등록을 재사용한다. 실제로그인/Start/원본커서허용점109,107/Drop의SP3000→2200/실제3e 수신을 장치 경계의 headless 검사에서 확인했다."
   ],
   "currentSources": {
-    "cpppj/src/client/CMakeLists.txt": "b430423cb42e61cd75fc9aeeff7f1c9fed72b935119c84f737bd85d87df31c34",
+    "cpppj/src/client/CMakeLists.txt": "11851a540f7c43e99988621071454c4f1fe0c9d7cbde29030ebd59d530b9b8c4",
     "cpppj/src/client/GameWorld.cpp": "7354694cf70e61d27ef1991390513a042c7a102f537f9d0cfb1f5438bb2a1f9e",
     "cpppj/src/client/GameWorld.h": "63a8da986aab6ab35f1938c8de5c9197d12cca4e17859cb8daba5d5f52946e73",
     "cpppj/src/client/GameWorldInput.inc": "f03ba61623c0d8a1ed2a1108eaebff769486cc925bc8872626061f045758efd7",
@@ -5570,6 +5570,19 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "ca5e6b9f88237c733a4fab7fd2f86943f272cbb1ef988ebda777e079beb4fe2b",
           "current": "6b03a6bf14634792d4c68653ae44e542e5d03497355985cc2384de1863bd505c"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 175,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/CMakeLists.txt",
+          "previous": "b430423cb42e61cd75fc9aeeff7f1c9fed72b935119c84f737bd85d87df31c34",
+          "current": "11851a540f7c43e99988621071454c4f1fe0c9d7cbde29030ebd59d530b9b8c4"
         }
       ]
     }

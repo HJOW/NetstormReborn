@@ -1,0 +1,172 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-18",
+  "unit": 175,
+  "baseline": "5d817c1",
+  "lastDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16",
+    "changed": false
+  },
+  "native": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-18",
+    "unit": 175,
+    "rows": 170,
+    "counts": {
+      "Grid": 4,
+      "Item": 18,
+      "Attach": 114,
+      "Handle": 32,
+      "Gone": 2
+    },
+    "normalReturns": 636,
+    "instructions": 140120,
+    "controls": [
+      639,
+      895
+    ],
+    "crtCpuInput": {
+      "sse2": 1,
+      "mxcsr": 8064
+    },
+    "precisionDifferences": 0,
+    "nativeCalls": {
+      "0x43d790": 304,
+      "0x4642c0": 576,
+      "0x43e120": 272,
+      "0x43d690": 18,
+      "0x43e1e0": 228,
+      "0x4e6e10": 210,
+      "0x4e49c0": 348,
+      "0x43d850": 64,
+      "0x43d9c0": 4
+    },
+    "boundaries": {
+      "0x4e0620": 4,
+      "0x465330": 18,
+      "0x460d70": 18,
+      "0x464c60": 228,
+      "0x466750": 228,
+      "0x4b2270": 456,
+      "0x4b1b20": 584,
+      "0x4e4391": 236,
+      "0x43ce40": 236,
+      "0x20000100": 16,
+      "0x464e90": 16,
+      "0x464560": 12,
+      "0x464990": 36,
+      "0x4650a0": 8,
+      "0x4248e0": 8,
+      "0x446e70": 8,
+      "0x4644e0": 4
+    },
+    "sha256": {
+      "tools/decomp_inventory_grid.py": "2ed6d9f5463e698a545c2e38032aa9fb144070753092a1a95064fb10f4a0ad40",
+      "tools/decomp_factory_menu.py": "bd889d1fe373053c80fe804517858cf83102fbf36cbe724d989e4aa0c3e605cc",
+      "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+      "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+      "cpppj/tests/fixtures/inventory-grid-x86.tsv": "e58dd7725294925c2e9ff69c39521591ddedbabc8c21e2b8ee3034643c71aa0c"
+    },
+    "limits": [
+      "43d790/43e120/43d690/43e1e0/43d850/43d9c0 전체와 실제 기본 생성자·ceil/ftol을 실행한다. 목록 순회/할당·idle/시계/기본부착/자식 항목 부착/통지의 가상부착·Push/부모·좌표·범위/전달·기본처리는 명시 경계다.",
+      "10.78만 관측. 게임 창/OS 호출/보호 파일 변경/새 디컴파일 없음. 항목 아이콘/전체 생산 패널의 실제 Client 연결·미션 완주 증거는 아니다."
+    ]
+  },
+  "nativeFreeze": {
+    "tools/decomp_inventory_grid.py": "2ed6d9f5463e698a545c2e38032aa9fb144070753092a1a95064fb10f4a0ad40",
+    "cpppj/inventory-grid.json": "5d4c0882e01ab448b8d53aa83b1b27fb6ce464fd7d05ce02f62ee9deac2bb845",
+    "cpppj/tests/fixtures/inventory-grid-x86.tsv": "e58dd7725294925c2e9ff69c39521591ddedbabc8c21e2b8ee3034643c71aa0c"
+  },
+  "protected": {
+    "AGENTS.md": "7addbf9b31c42f29aab7c93faa865eb6de8590a600d17202a297cf7122bdf979",
+    "LEFT_JOBS.dotnetpj.md": "0c067e1d12879dbf2212cbd64c8f9f60e65b590df910418f025027ed84f80ec2",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "originals/d/GIFCLOUD.COL": "785a2cda6ac1d3e295d375815b6d9650720683099db7c249382d598b5da00532"
+  },
+  "currentSources": {
+    "cpppj/src/client/CMakeLists.txt": "11851a540f7c43e99988621071454c4f1fe0c9d7cbde29030ebd59d530b9b8c4",
+    "cpppj/tests/CMakeLists.txt": "c90f8115269f141762affe7174d164b3a9bd37616376e7441097c082cad3bd7d",
+    "cpppj/src/client/InventoryGump.h": "f9f6a36fc41479a374958200583a95d68d26fa516696a26c59e63886dc917b0d",
+    "cpppj/src/client/InventoryGump.cpp": "321adaf293102930166c72a04da600cf19079f7f3d860decc86342151d23b238",
+    "cpppj/tests/InventoryGumpTests.cpp": "9a6e4200af9b205c5a058c445aa1e0ee17d477f44df7d7243dbee6b9851ae491",
+    "tools/decomp_inventory_grid.py": "2ed6d9f5463e698a545c2e38032aa9fb144070753092a1a95064fb10f4a0ad40",
+    "cpppj/tests/fixtures/inventory-grid-x86.tsv": "e58dd7725294925c2e9ff69c39521591ddedbabc8c21e2b8ee3034643c71aa0c",
+    "cpppj/inventory-grid.json": "5d4c0882e01ab448b8d53aa83b1b27fb6ce464fd7d05ce02f62ee9deac2bb845"
+  },
+  "logSha256": {
+    "extracted/goal-inventory-grid-20261018-audit1.log": "a8d38bd54af782de98153f795b1d4db6a63e74c6d48f24472509eaa250240df5",
+    "extracted/goal-inventory-grid-20261018-build1.log": "4349717a53139e0ddbfb8bf4fb98b1d3e0367867d5047f48086e0f61ee73e464",
+    "extracted/goal-inventory-grid-20261018-build2.log": "42fd938c727c45d067a80a631fd3486296e2505e43a6214a9bf5d93dca0af368",
+    "extracted/goal-inventory-grid-20261018-build3.log": "42fd938c727c45d067a80a631fd3486296e2505e43a6214a9bf5d93dca0af368",
+    "extracted/goal-inventory-grid-20261018-build4.log": "67d131c684d6bb24b372a5528d12e99b0cdd1b90b37dc11713ff0afc48b1702e",
+    "extracted/goal-inventory-grid-20261018-build5.log": "42fd938c727c45d067a80a631fd3486296e2505e43a6214a9bf5d93dca0af368",
+    "extracted/goal-inventory-grid-20261018-ctest1.log": "049c6183936892f9def1080abbc3e04e7752049021d04b780c1a7991f6b6aa9f",
+    "extracted/goal-inventory-grid-20261018-focused1.log": "696f5fd268c2f0e96f361cd91c84cb63f4aeb6b1dcb2f981a528b9e86990958f",
+    "extracted/goal-inventory-grid-20261018-focused2.log": "f97ef66aeb1d1c817ec59f81b63efb2b5b4af3380b650f53979b9cb862183977",
+    "extracted/goal-inventory-grid-20261018-focused3.log": "255d0e0bc8b1f3cfb180aa5f218b387be8340055ff5f756fb9b01943997db9cb",
+    "extracted/goal-inventory-grid-20261018-focused4.log": "255d0e0bc8b1f3cfb180aa5f218b387be8340055ff5f756fb9b01943997db9cb",
+    "extracted/goal-inventory-grid-20261018-LastTest.log": "cac2dcd7cd6145d93e25e198d0edb1f2b35fac76d86f698dd5ba43f6ccc491b6",
+    "extracted/goal-inventory-grid-20261018-native1.log": "3cba9229663eaf95168ef95899aa3aec8ed9b5c11181507e297687eceb45edf6",
+    "extracted/goal-inventory-grid-20261018-native2.log": "800e1e142a1c81a04c947bd98af14c1715a86e43ad0a07b4c9018c7db0db4ddf",
+    "extracted/goal-inventory-grid-20261018-native3.log": "b7b6123f79713882fa63e5e49d19e759882d9745d5f2155734519a43d724334a",
+    "extracted/goal-inventory-grid-20261018-native4.log": "d1c36c873f202f801edeaae516b9a54d34d20b1f6fb3c8f50545328389e384c1",
+    "extracted/goal-inventory-grid-20261018-native5.log": "2f30b234c63de2d463ab0e79f5c804825f1b51989fc6e18ef29958a7ff30dd1a"
+  },
+  "validation": {
+    "full": {
+      "tests": 1667,
+      "failedChecks": 0,
+      "seconds": 216.2,
+      "ctestSeconds": 216.23,
+      "build": 4,
+      "finalDifference": "검사 주석의 한 글자만 한국어로 교정했다. 실행 본문은 동일하다."
+    },
+    "finalBuild": {
+      "number": 5,
+      "warnings": 0,
+      "errors": 0,
+      "focusedTests": 2,
+      "failedChecks": 0
+    },
+    "audit": {
+      "tools": 99,
+      "passed": 88,
+      "existingFailed": 11,
+      "newFailed": 0
+    },
+    "nativeComparison": {
+      "rows": 170,
+      "allNodeBytes": true,
+      "allItemBytes": true,
+      "effects": true,
+      "excludedTrace": [
+        "기존 RawContainedFinder 내부 Begin/Next 호출의 경계 로그"
+      ]
+    },
+    "sharedTree": "실제 GumpCreate/GumpTree/GumpLifetime/RawContainedFinder에서 재부착·자식 교체·지연 삭제·등록 반납 통과",
+    "guiRun": false
+  },
+  "commentCorrection": {
+    "before": "e12985a38c1a6cea185726491b611c2642a12d409894721564f1106081104f19",
+    "after": "9a6e4200af9b205c5a058c445aa1e0ee17d477f44df7d7243dbee6b9851ae491",
+    "onlyComment": true
+  },
+  "integrationPins": {
+    "reports": 57,
+    "pins": 69
+  },
+  "fidelity": {
+    "complete": false,
+    "scope": "독립 생산 격자 몸체와 공통 트리 검사. 실제 Client HUD 연결은 후속.",
+    "limits": [
+      "이번은 생산 격자/항목 생성·점멸 시작/격자 부착·통지·부모 삭제 몸체와 실제 공통 등록표·트리·수명 검사다. Client의 실제 생산 패널은 아직 연결하지 않았다.",
+      "항목43ce40의 패턴 아이콘·419fc0 그림 자식/43cdc0 장식·43d4c0 클릭/패널43e640·43ec00→447000 실제 커서 취득과43ef10 나머지 다리·수량·비용 갱신은 후속이다.",
+      "썬 캐논 배치·공격/도움말·회수·업그레이드·마나 아이콘/CD/운반왕복·희생·승패·다음 미션·전략AI/11단계 자연 완주·전체 원본 동일성은 미완료다."
+    ]
+  },
+  "goalComplete": false
+}

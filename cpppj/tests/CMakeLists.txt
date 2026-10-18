@@ -1509,3 +1509,8 @@ set_source_files_properties(FlareTests.cpp PROPERTIES COMPILE_DEFINITIONS
 target_sources(netstorm_tests PRIVATE ProductionSyncTests.cpp)
 set_source_files_properties(ProductionSyncTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_PRODUCTION_SYNC_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/production-sync-x86.tsv\"")
+
+# 독립 원본170행의 격자/항목 전체 바이트와 실제 공통 트리 수명을 대조한다.
+target_sources(netstorm_tests PRIVATE InventoryGumpTests.cpp)
+set_source_files_properties(InventoryGumpTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_INVENTORY_GRID_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/inventory-grid-x86.tsv\"")

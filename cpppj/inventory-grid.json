@@ -1,0 +1,67 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-18",
+  "unit": 175,
+  "rows": 170,
+  "counts": {
+    "Grid": 4,
+    "Item": 18,
+    "Attach": 114,
+    "Handle": 32,
+    "Gone": 2
+  },
+  "normalReturns": 636,
+  "instructions": 140120,
+  "controls": [
+    639,
+    895
+  ],
+  "crtCpuInput": {
+    "sse2": 1,
+    "mxcsr": 8064
+  },
+  "precisionDifferences": 0,
+  "nativeCalls": {
+    "0x43d790": 304,
+    "0x4642c0": 576,
+    "0x43e120": 272,
+    "0x43d690": 18,
+    "0x43e1e0": 228,
+    "0x4e6e10": 210,
+    "0x4e49c0": 348,
+    "0x43d850": 64,
+    "0x43d9c0": 4
+  },
+  "boundaries": {
+    "0x4e0620": 4,
+    "0x465330": 18,
+    "0x460d70": 18,
+    "0x464c60": 228,
+    "0x466750": 228,
+    "0x4b2270": 456,
+    "0x4b1b20": 584,
+    "0x4e4391": 236,
+    "0x43ce40": 236,
+    "0x20000100": 16,
+    "0x464e90": 16,
+    "0x464560": 12,
+    "0x464990": 36,
+    "0x4650a0": 8,
+    "0x4248e0": 8,
+    "0x446e70": 8,
+    "0x4644e0": 4
+  },
+  "sha256": {
+    "tools/decomp_inventory_grid.py": "2ed6d9f5463e698a545c2e38032aa9fb144070753092a1a95064fb10f4a0ad40",
+    "tools/decomp_factory_menu.py": "bd889d1fe373053c80fe804517858cf83102fbf36cbe724d989e4aa0c3e605cc",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "cpppj/tests/fixtures/inventory-grid-x86.tsv": "e58dd7725294925c2e9ff69c39521591ddedbabc8c21e2b8ee3034643c71aa0c"
+  },
+  "limits": [
+    "43d790/43e120/43d690/43e1e0/43d850/43d9c0 전체와 실제 기본 생성자·ceil/ftol을 실행한다. 목록 순회/할당·idle/시계/기본부착/자식 항목 부착/통지의 가상부착·Push/부모·좌표·범위/전달·기본처리는 명시 경계다.",
+    "10.78만 관측. 게임 창/OS 호출/보호 파일 변경/새 디컴파일 없음. 항목 아이콘/전체 생산 패널의 실제 Client 연결·미션 완주 증거는 아니다."
+  ]
+}
