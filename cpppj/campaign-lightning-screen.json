@@ -19,10 +19,10 @@
     "cpppj/src/client/RawCampaignParticles.cpp": "08317368d2c12e6d5c78224c3a568048b577b32eae89e401d47550f59e0ee0d3",
     "cpppj/src/client/SoundProcess.h": "e5d672e71b6c9484a7258eec0d04482cee7bec1da7f234b6d53fb2c54f6ac575",
     "cpppj/src/client/SoundProcess.cpp": "211d934b00419741eb584d90501429bc71ee550a013f34df50bfffc9f0d4f1b2",
-    "cpppj/src/client/RawCampaignSession.cpp": "e0d66fbac99540cefe5e43a2ce6bcbc9b1e1b25d1e21c55eb8c67c592a9ae2fa",
+    "cpppj/src/client/RawCampaignSession.cpp": "25d9c5d9a8a003b51b49e145eb1c53e0db604574a77426be28f5bbf970d138eb",
     "cpppj/src/CMakeLists.txt": "945332cd1c5b131d7e35d0ae7fb15762597c41be26ffea267b18e8b3d048efd8",
-    "cpppj/tests/CMakeLists.txt": "5c981db7bbf32f6aadd3dcf4caf1bb46dfdbc34220effa4ab82bcfd40e0ed711",
-    "cpppj/tests/CampaignSessionTests.cpp": "ddbcb92e8690edfdea1d2821c2243764071ce240c482e378aa2c74f580c840b2",
+    "cpppj/tests/CMakeLists.txt": "f8e834bc78cfbbe87ba57d7a7600fd41537ab8d0be1274a50d16a907cf259173",
+    "cpppj/tests/CampaignSessionTests.cpp": "081225e0b602e67b344d85b12607fb0a34a8e37d4231925305fe0369161e639d",
     "cpppj/src/o/RawBombPreDestroy.h": "0cf2422a487e7d85ec7c8f69001594f4fc68394f6b57d48a3065eae4cd39f07e",
     "cpppj/src/o/RawBombPreDestroy.cpp": "0300ca6d21f298fb2752ddfc6fb4126c4f066e19f72a26354d2dcbb59a8ba830",
     "cpppj/tests/LightningScreenTests.cpp": "60293a6937fc70e9c8538b607a548f1616e7e2b86eae15a6b6f5245c0eeebd42",
@@ -982,6 +982,31 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "649a7d107d55f49eb86df8b7fddb9a16e4b14337e2c60f895df15730cbaa3b42",
           "current": "ddbcb92e8690edfdea1d2821c2243764071ce240c482e378aa2c74f580c840b2"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 193,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "e0d66fbac99540cefe5e43a2ce6bcbc9b1e1b25d1e21c55eb8c67c592a9ae2fa",
+          "current": "25d9c5d9a8a003b51b49e145eb1c53e0db604574a77426be28f5bbf970d138eb"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "5c981db7bbf32f6aadd3dcf4caf1bb46dfdbc34220effa4ab82bcfd40e0ed711",
+          "current": "f8e834bc78cfbbe87ba57d7a7600fd41537ab8d0be1274a50d16a907cf259173"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "ddbcb92e8690edfdea1d2821c2243764071ce240c482e378aa2c74f580c840b2",
+          "current": "081225e0b602e67b344d85b12607fb0a34a8e37d4231925305fe0369161e639d"
         }
       ]
     }

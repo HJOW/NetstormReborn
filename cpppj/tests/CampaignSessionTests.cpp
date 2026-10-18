@@ -1661,8 +1661,8 @@ TEST_CASE(CampaignSession_LocalLoginMissionStartAiAlliances) {
 }
 
 namespace {
-// 같은 실제 로그인/건설/연구/생산 흐름으로 기본 회귀와 제네레이터 연장 전투를 구분해 검사한다.
-void NaturalWorkshopPlacement(bool combat,bool burning=false,CellPoint cannonLocation={118,118}) {
+// 같은 실제 로그인/건설/연구/생산으로 기본 회귀·제네레이터 연장·forward=true의 전진 공략을 검사한다.
+void NaturalWorkshopPlacement(bool combat,bool burning=false,CellPoint cannonLocation={118,118},bool forward=false) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();RawButtonControls* activeProductionUi{}; // 같은 실제 내용물 알림의 현재 UI다.
     std::vector<std::array<float,2>> bridgeSounds;auto previousSound=std::move(services.sound.playOnceAt); // 실제 위치 소리 요청을 기존 장치 경계와 함께 관찰한다.
     services.sound.playOnceAt=[&external,&bridgeSounds,previous=std::move(previousSound)](float x,float y,SoundHandle sound,std::uint32_t first,std::uint32_t second) {
@@ -1859,6 +1859,43 @@ void NaturalWorkshopPlacement(bool combat,bool burning=false,CellPoint cannonLoc
                 CHECK(!targets.empty() && stages.count(2) && stages.count(5));CHECK(missileSeen && hitSeen && frames.size()>1);CHECK(session.Sp(1)==1000);
                 std::cout<<"실제 제네레이터 연장/캐논 자연 첫 적중 표적"<<targets.size()<<"/단계"<<stages.size()<<"/완공 그림"<<frames.size()<<"/탄체"<<missileSeen<<"/적 HP 감소"<<hitSeen<<"\n";
                 if (burning) { CHECK(burnFrames==240 && burnCaptured && burnEmitted && burnPixels>0);std::cout<<"자연 저HP Burning14: 실제 프레임"<<burnFrames<<"/캡처"<<burnCaptured<<"/이동입자"<<burnEmitted<<"/표시 픽셀"<<burnPixels<<"\n"; }
+                if (forward) {
+                    session.SetParticleView({0,0,0,0,1024,768},{});const Sid temple{15017};const auto initialTempleHp=Get(core.pool.Slot(temple),26); // 실제 남은 적 윈드 신전의 현재 HP를 읽는다.
+                    const auto firingAt=[&](float x,float y) { const auto& type=core.types[128];return session.GunTargeting().MayTarget({x,y,static_cast<float>(x-type.footX*.5),static_cast<float>(y-type.footY*.5),128,0,1,0},temple); }; // 실제 창의 불가127,121과 자연 공략129,126을 같은 원본 ray로 구별한다.
+                    CHECK(!firingAt(127,121) && firingAt(129,126));
+                    const auto plan=netstorm::test::rawscene::LoadFixture(NETSTORM_FORWARD_BATTLE_PLAN);std::uint64_t forwardFrame=90000,battleFrames=0; // 수동 전술 입력이며 원본 기대값/HP/SP가 아니다.
+                    const auto tickForward=[&] { const auto now=core.processState.now+1.0/60;wall+=1.0/60;session.RunFrame({now,wall,1.0/60,++forwardFrame},false);controls.Poll({InputCode::kRelease,500,350});menus.CleanupFrame(); }; // 실제 시계/입력/메뉴 정리를 한 프레임씩 진행한다.
+                    for (const auto& command:plan.rows) { // 같은 실제 생산/커서/서버 경로에 명시 전략 입력을 순서대로 적용한다.
+                        CHECK(command.size()==5);if (command.size()!=5) return;const auto wait=std::stoul(command[4]);
+                        if (command[0]=="battle-window") { battleFrames=wait;continue; } // 마지막 자연 공격의 최대 시간만 전술 입력으로 지정한다.
+                        if (command[0]=="wait-dead") {
+                            const Sid watched{static_cast<std::uint16_t>(std::stoul(command[1]))};
+                            for (std::uint64_t frame=0;frame<wait && !(core.pool.Slot(watched)[11]&3U);++frame) tickForward(); // 표적 삭제는 Kernel의 자연 공격 결과로만 기다린다.
+                            std::cout<<"전진 이전 자연 삭제 대기 SID"<<watched.value<<" time"<<core.processState.now<<" flags"<<unsigned(core.pool.Slot(watched)[11])<<"\n";CHECK(core.pool.Slot(watched)[11]&3U);continue;
+                        }
+                        CHECK(command[0]=="build" || command[0]=="build-fire");
+                        const auto type=static_cast<std::uint32_t>(std::stoul(command[1]));const CellPoint preferred{std::stoi(command[2]),std::stoi(command[3])};const auto icon=production.Point(type);CHECK(icon.has_value());if (!icon) return;controls.Event({InputCode::kLeftButton,icon->x,icon->y});CHECK(session.CursorDropSettings().type==type);
+                        std::optional<CellPoint> place;double nearest=1e9; // 허용된 후보 중 지정 목표에 가까운 칸만 택한다.
+                        for (int x=116;x<=146;++x) { // 적 섬까지의 실제 전방 지도 칸이다.
+                            for (int y=110;y<=135;++y) { // 발자국 전체의 공간/공급 조건을 실제 미리보기로 검사한다.
+                                const auto distance=(x-preferred.x)*(x-preferred.x)+(y-preferred.y)*(y-preferred.y);if (distance>=nearest) continue;ui.Point(session,{x,y},0,0,false);if (session.CursorDropSettings().legal && (command[0]!="build-fire" || firingAt(session.CursorDropSettings().x,session.CursorDropSettings().y))) { nearest=distance;place=CellPoint{x,y}; }
+                            }
+                        }
+                        ui.Point(session,preferred,0,0,false);const auto& rejected=session.Cursor().Placement();std::cout<<"전진 목표 판정 "<<preferred.x<<","<<preferred.y<<" desc"<<rejected.descriptionAllowed<<" place"<<rejected.placementAllowed<<" source"<<rejected.sourceAllowed<<" text"<<rejected.description<<"\n";CHECK(place.has_value());if (!place) return;ui.Point(session,*place);const auto money=session.Sp(1);std::cout<<"전진 실제 허용 TYPE"<<type<<" 위치"<<place->x<<","<<place->y<<" SP"<<money<<"\n";
+                        session.Cursor().Drop();session.PumpLocalConnection();session.Cursor().Cancel();CHECK(session.Sp(1)==money-core.types[type].cost);
+                        for (std::uint64_t frame=0;frame<wait;++frame) tickForward(); // 실제 반환/건설/전투 시간을 진행한다.
+                        const auto live=ConstructionLive(core,type);std::cout<<"전진 건설 뒤 TYPE"<<type<<" 생존"<<live.size()<<" 신전HP"<<Get(core.pool.Slot(temple),26)<<"\n";for (auto built:live) std::cout<<"  내 자산"<<built.value<<" HP"<<Get(core.pool.Slot(built),26)<<" extra"<<unsigned(core.pool.Slot(built)[40])<<" xy"<<std::bit_cast<float>(Get(core.pool.Slot(built),14))<<","<<std::bit_cast<float>(Get(core.pool.Slot(built),18))<<"\n"; // 건설 중 피격/생존과 실제 좌표를 관찰한다.
+                    }
+                    std::set<std::uint32_t> forwardTargets; // 실제 추가 캐논들의 표적만 관찰한다.
+                    for (std::uint64_t frame=1;frame<=battleFrames && !(core.pool.Slot(temple)[11]&3U);++frame) { // 지정한 최대 시간 동안 실제 자연 공격으로 신전 파괴를 기다린다.
+                        tickForward();if (frame%6000==0) std::cout<<"전진 공격 경과 "<<frame/60<<"초 신전HP"<<Get(core.pool.Slot(temple),26)<<"\n"; // 긴 공략의 실제 피해 진행을 관찰한다.
+                        for (const auto gun:ConstructionLive(core,128)) { // 가상 표적/HP 결과를 새 값으로 덮어쓰지 않는다.
+                            const auto form=FindAttachedProcess(core.pool,gun,34);if (const auto* process=dynamic_cast<GunProcess*>(core.processes.FromForm(form))) if (process->Fields().Target().value) forwardTargets.insert(process->Fields().Target().value);
+                        }
+                    }
+                    std::cout<<"전진 자연 공격 신전HP"<<initialTempleHp<<"→"<<Get(core.pool.Slot(temple),26)<<" flags"<<unsigned(core.pool.Slot(temple)[11])<<" 표적";for (auto observedTarget:forwardTargets) std::cout<<observedTarget<<",";std::cout<<"\n"; // 최종 자연 진행 상태와 표적을 기록한다.
+                    CHECK(core.pool.Slot(temple)[11]&3U);
+                }
                 controls.DisableProduction();activeProductionUi=nullptr;return;
             }
             // 반환 내용물 Regular의 count0/10초/count1과 실제 캐논 건설을 자연 실행한다.
@@ -2091,4 +2128,39 @@ TEST_CASE(CampaignGeneratorShrapnel_ActualSavedWindExplosionLifetime) {
         session.RunFrame({frame*.025,100+frame*.025,.025,frame},false);renderer.SetScene(session.ParticleSprites({0,0,1024,768}));std::vector<std::uint8_t> pixels(1024*768,255);renderer.Draw(pixels,1024,255);renderer.Present([](ScreenRect) {});drawn+=static_cast<std::size_t>(std::count_if(pixels.begin(),pixels.end(),[](auto color) { return color!=255; }));
     }
     CHECK(drawn>0 && !session.Particles().Rendering().Lookup(token) && !core.processes.FromForm(form) && (core.pool.Slot(dummy)[11]&1U));CHECK(!core.destroy.PreDepth() && !core.destroy.PostDepth() && !core.bookkeeping.depth);session.SetParticleView({0,0,0,0,1024,768},{});std::cout<<"실제 저장 윈드 제네레이터 폭발: 전체 입자"<<drawn<<"픽셀·자연 소진/의존 더미 정리 통과\n";
+}
+
+// 같은 실제 초기 자원/연구/생산으로 전방 공급과 두 번째 캐논을 건설해 적 신전까지 자연 공략한다.
+TEST_CASE(CampaignForwardBattle_NaturalTempleAssault) { NaturalWorkshopPlacement(true,true,{116,118},true); }
+
+// 실제 파편 생성이 반환한 스톤/아이스 타워의 모든 픽셀을 제품 전에 동결한120입력과 대조한다.
+TEST_CASE(CampaignForwardBattle_Native120CapturePixels) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();std::size_t soundCalls{};auto play=services.sound.play;services.sound.play=[&soundCalls,play](auto... args) { ++soundCalls;return play(args...); };auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());
+    RawCampaignSession session(assets.game,assets.files,std::move(fort),"TheWarBegins",std::move(services));session.Load();auto core=session.Core();const Sid source{15002};auto raw=core.pool.AllocatedBytes(source);const std::vector<std::uint8_t> saved(raw.begin(),raw.end());std::size_t cases{},pixels{};
+    for (const auto& row:netstorm::test::rawscene::LoadFixture(NETSTORM_BLOCKER_CAPTURE_FIXTURE).rows) { // 기대 픽셀은 실행 뒤 비교에만 사용하며 현재 결과를 주입하지 않는다.
+        CHECK(row.size()==9);const auto type=assets.game.TypeTable().Find(row[0]);CHECK((type==78 || type==147) && assets.game.Types()[type-70].definition.specialFrames.baseFrame==-1);
+        auto& definition=const_cast<RiftTypeRecord&>(core.types[type]);const auto hotX=definition.hotspotX,hotY=definition.hotspotY;definition.hotspotX=-2;definition.hotspotY=3; // 동결 원본과 같은 이 세션 소유 TYPE의 명시 기준점이다.
+        Put(raw,0,0x50e940U);raw[10]=static_cast<std::uint8_t>(type);raw[11]=0;Put(raw,12,std::stoul(row[2]),2);raw[34]=static_cast<std::uint8_t>(std::stoul(row[4]));raw[40]=static_cast<std::uint8_t>(std::stoul(row[3]));Put(raw,36,std::stoul(row[1]));const auto notices=soundCalls;
+        auto* effect=const_cast<RawCampaignParticles&>(session.Particles()).AddShrapnel(source,ShrapnelKind::Explosion);CHECK(effect);if (!effect) return;const auto& image=effect->Fields().image;
+        const auto metadata=std::to_string(image.width)+','+std::to_string(image.height)+','+std::to_string(image.hotspotX)+','+std::to_string(image.hotspotY);CHECK(metadata==row[5] && netstorm::test::rawscene::Hex(image.pixels)==row[6] && image.pixels.size()==std::stoul(row[7]) && row[8]=="1" && notices==soundCalls);pixels+=image.pixels.size();++cases;
+        const auto form=effect->Form(),dummy=effect->Parent();const auto token=effect->Fields().registration.token;CHECK(core.dependencies.Has(form,dummy));core.processes.Kill(*effect,0);CHECK(!session.Particles().Rendering().Lookup(token) && (core.pool.Slot(dummy)[11]&1U));definition.hotspotX=hotX;definition.hotspotY=hotY;std::copy(saved.begin(),saved.end(),raw.begin());
+    }
+    CHECK(cases==120 && pixels==1317660);std::cout<<"실제 타워 파편 캡처: 합성"<<cases<<"입력/원본"<<pixels<<"픽셀 일치·모든 의존 더미 정리\n";
+}
+
+
+// 실제1-1 저장 스톤 타워에 명시 폭발을 요청하고 같은 Kernel의 파편 소진/후처리를 검사한다.
+TEST_CASE(CampaignForwardBattle_ActualSavedStoneExplosionLifetime) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();services.deletion={};services.deletion.selected=[] { return Sid{}; };services.dependencyTransmit={};services.formPacket=[&](std::span<const std::uint8_t> packet) { external.packets.emplace_back(packet.begin(),packet.end()); };
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"TheWarBegins",std::move(services));session.Load();auto core=session.Core();const Sid source{15019};const auto before=core.pool.Slot(source);CHECK(before[10]==78 && before[34]==2 && Get(before,26)==2000);
+    const auto x=std::bit_cast<float>(Get(before,14)),y=std::bit_cast<float>(Get(before,18));Renderer renderer(1024,768);session.SetParticleView({static_cast<int>(x*16)-512,static_cast<int>(y*11)-384,0,0,1024,768},{[&] { return renderer.FullRedrawPending(); },[&](SquidDisplayRect rect,std::uint32_t flags) { renderer.Invalidate({rect.left,rect.top,rect.right,rect.bottom},flags); }});
+    session.World().Destroy(source,0x100000);CHECK(core.pool.Slot(source)[11]&1U);ShrapnelVisualProcess* effect{};
+    for (const auto token:session.Particles().Rendering().Slots()) { // 파괴 직후 생성된 실제16/110 쌍만 선택한다.
+        const auto* fields=session.Particles().Rendering().Lookup(token);if (!fields) continue;auto* candidate=dynamic_cast<ShrapnelVisualProcess*>(core.processes.FromForm({static_cast<std::uint16_t>(fields->form)}));if (candidate) { CHECK(!effect);effect=candidate; }
+    }
+    CHECK(effect);if (!effect) return;const auto form=effect->Form(),dummy=effect->Parent();const auto token=effect->Fields().registration.token;CHECK(effect->Fields().total>0 && core.dependencies.Has(form,dummy));std::size_t drawn{};
+    for (std::uint64_t frame=1;frame<=160;++frame) { // 실제4초 동안 중력/출력/자연 소진과 의존 더미 삭제를 진행한다.
+        session.RunFrame({frame*.025,100+frame*.025,.025,frame},false);renderer.SetScene(session.ParticleSprites({0,0,1024,768}));std::vector<std::uint8_t> pixels(1024*768,255);renderer.Draw(pixels,1024,255);renderer.Present([](ScreenRect) {});drawn+=static_cast<std::size_t>(std::count_if(pixels.begin(),pixels.end(),[](auto color) { return color!=255; }));
+    }
+    CHECK(drawn>0 && !session.Particles().Rendering().Lookup(token) && !core.processes.FromForm(form) && (core.pool.Slot(dummy)[11]&1U));CHECK(!core.destroy.PreDepth() && !core.destroy.PostDepth() && !core.bookkeeping.depth);session.SetParticleView({0,0,0,0,1024,768},{});std::cout<<"실제 저장 스톤 타워 폭발: 전체 입자"<<drawn<<"픽셀·자연 소진/의존 더미 정리 통과\n";
 }

@@ -92,9 +92,9 @@
     "originals/d/GIFCLOUD.COL": "785a2cda6ac1d3e295d375815b6d9650720683099db7c249382d598b5da00532"
   },
   "currentSources": {
-    "cpppj/src/client/RawCampaignSession.cpp": "e0d66fbac99540cefe5e43a2ce6bcbc9b1e1b25d1e21c55eb8c67c592a9ae2fa",
-    "cpppj/tests/CMakeLists.txt": "5c981db7bbf32f6aadd3dcf4caf1bb46dfdbc34220effa4ab82bcfd40e0ed711",
-    "cpppj/tests/CampaignSessionTests.cpp": "ddbcb92e8690edfdea1d2821c2243764071ce240c482e378aa2c74f580c840b2",
+    "cpppj/src/client/RawCampaignSession.cpp": "25d9c5d9a8a003b51b49e145eb1c53e0db604574a77426be28f5bbf970d138eb",
+    "cpppj/tests/CMakeLists.txt": "f8e834bc78cfbbe87ba57d7a7600fd41537ab8d0be1274a50d16a907cf259173",
+    "cpppj/tests/CampaignSessionTests.cpp": "081225e0b602e67b344d85b12607fb0a34a8e37d4231925305fe0369161e639d",
     "tools/decomp_generator_capture.py": "d5b8b31e5c9c0ab00f24236460af8b63f86412e5115537d56f6f71feb6238b0f",
     "cpppj/generator-capture.json": "177c4bd3b90673160f0b4fe9b50c499ee6eda65838f09eed78b7c8f4ddf9506b",
     "cpppj/tests/fixtures/generator-capture-x86.tsv": "5db59d411828a19c8ef4f236058d14b3a7d1658fc2e8ab1a4571986ab3dcf1a1"
@@ -459,5 +459,32 @@
     "Dude 실제 초기화 후 population/간접 초기화·드롭/mode0 대피와 과거 출처SHA14종 감사",
     "실제 바람/설정·다른 입자gate·다른 파생 캡처·썬더 저장 미션 창",
     "훨리기그 명령/공격/귀환·Quick Help·운반·희생·승패·다음 미션/전략AI 및11단계 자연 완주"
+  ],
+  "integration_updates": [
+    {
+      "date": "2026-10-18",
+      "unit": 193,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "e0d66fbac99540cefe5e43a2ce6bcbc9b1e1b25d1e21c55eb8c67c592a9ae2fa",
+          "current": "25d9c5d9a8a003b51b49e145eb1c53e0db604574a77426be28f5bbf970d138eb"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "5c981db7bbf32f6aadd3dcf4caf1bb46dfdbc34220effa4ab82bcfd40e0ed711",
+          "current": "f8e834bc78cfbbe87ba57d7a7600fd41537ab8d0be1274a50d16a907cf259173"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "ddbcb92e8690edfdea1d2821c2243764071ce240c482e378aa2c74f580c840b2",
+          "current": "081225e0b602e67b344d85b12607fb0a34a8e37d4231925305fe0369161e639d"
+        }
+      ]
+    }
   ]
 }

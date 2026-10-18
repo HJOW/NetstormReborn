@@ -152,8 +152,8 @@ std::uint32_t Read(std::span<const std::uint8_t> raw,std::size_t offset) {
     return static_cast<std::uint32_t>(raw[offset])|(static_cast<std::uint32_t>(raw[offset+1])<<8)|
         (static_cast<std::uint32_t>(raw[offset+2])<<16)|(static_cast<std::uint32_t>(raw[offset+3])<<24);
 }
-// 세 제네레이터의 실제 생성자 VT만 기본 프레임/빈 추가 그림 캡처로 분배한다.
-bool IsGeneratorCapture(std::span<const std::uint8_t> raw) { return raw[10]>=75 && raw[10]<=77 && Read(raw,0)==0x501ea0U; }
+// 원본 전체 캡처를 대조한 제네레이터·스톤/아이스 타워의 TYPE 기본/빈 추가 그림을 선택한다.
+bool IsPlainBuildingCapture(std::span<const std::uint8_t> raw) { return (raw[10]>=75 && raw[10]<=77 && Read(raw,0)==0x501ea0U) || ((raw[10]==78 || raw[10]==147) && Read(raw,0)==0x50e940U); }
 }
 // 메뉴의 현재 원문/참조와 자식 우선 소멸 순서를 한 고정 주소에 보관한다.
 struct RawCampaignObjectMenus::Impl {
@@ -740,8 +740,8 @@ struct RawCampaignSession::Impl {
         shrapnel.lifetime.depend=[this](Sid form,Sid dummy) { static_cast<void>(core.dependencies.Create(form,dummy)); };
         shrapnel.lifetime.capture=[this](Sid sid) {
             const auto raw=core.pool.Slot(sid);
-            // 원본 전체 캡처/가상Draw/RLE를 대조한 템플·71/128·세 제네레이터는 같은 일반색 캡처를 재사용한다.
-            if (IsPatchTemple(raw) || IsBurningArcherCapture(raw) || IsGeneratorCapture(raw)) { if (!buildingCapture) throw std::logic_error("실제 건물 파편 캡처 설치 전 호출");return buildingCapture->Capture(sid); }
+            // 원본 전체 캡처/가상Draw/RLE를 대조한 템플·71/128·제네레이터·두 타워는 같은 일반색 캡처를 재사용한다.
+            if (IsPatchTemple(raw) || IsBurningArcherCapture(raw) || IsPlainBuildingCapture(raw)) { if (!buildingCapture) throw std::logic_error("실제 건물 파편 캡처 설치 전 호출");return buildingCapture->Capture(sid); }
             if (!Flyer(sid) && !BridgeLifetime(sid)) throw std::logic_error("다른 실제 파편 source의 전용 색표/추가 그림 미복원 TYPE"+std::to_string(raw[10]));return shrapnelCapture->Capture(sid);
         };
         shrapnel.destroyUnpaired=[this](Sid sid) { world.Destroy(sid,0); };
@@ -1043,7 +1043,9 @@ struct RawCampaignSession::Impl {
     }
     // 가상 주소를 호출하지 않고 검증한 일반 Damageable의 실제 표만 선택한다.
     bool PlainDamageable(Sid sid) const {
-        const auto table=Read(core.pool.Slot(sid),0);
+        const auto raw=core.pool.Slot(sid);const auto table=Read(raw,0);
+        // 스톤78의 전용48edf0은 현재147 비교를 건너뛰고44b9e0만 부른다. 같은VT의 아이스147 재생성을 공통화하지 않는다.
+        if (raw[10]==78 && table==0x50e940U) return true;
         // 현재 VT를 매 호출 다시 읽고 주소가 같은 순수 수명 몸체만 공유한다.
         for (const auto known:kPlainDamageableTables) if (known==table) return true;return false;
     }
@@ -1794,14 +1796,14 @@ struct RawCampaignSession::Impl {
             const auto color=core.bridgeState.ownerColors[owner];if (color<0 || color>8) throw std::out_of_range("건설 현재 소유자 색 번호 오류");return buildingOwnerColors[static_cast<std::size_t>(color)];
         };
         factoryDraw=std::make_unique<RawFactoryDraw>(core.pool,core.frames);
-        buildingCaptureState.mainFrame=[this](Sid sid) { const auto raw=core.pool.Slot(sid);if (IsPatchTemple(raw) || IsBurningArcherCapture(raw) || IsGeneratorCapture(raw)) return assets.game.Types()[raw[10]-70].definition.specialFrames.baseFrame;return factoryDraw->MainFrame(sid); };
+        buildingCaptureState.mainFrame=[this](Sid sid) { const auto raw=core.pool.Slot(sid);if (IsPatchTemple(raw) || IsBurningArcherCapture(raw) || IsPlainBuildingCapture(raw)) return assets.game.Types()[raw[10]-70].definition.specialFrames.baseFrame;return factoryDraw->MainFrame(sid); };
         buildingCaptureState.additional=[this](Sid sid,ConstructionVisualImage& image,std::int32_t x,std::int32_t y) {
             if (IsPatchTemple(core.pool.Slot(sid))) {
                 if (core.pool.Slot(sid)[40]&0x10U) throw std::logic_error("추상 템플 실제 캡처 색상 미연결");const auto type=core.pool.Slot(sid)[10]; // 현재 일반 템플의 실제SHP snapshot이다.
                 DrawTempleFrames(sid,[this,&image,x,y,type](std::int32_t frame) { if (frame<0) throw std::out_of_range("템플 캡처 음수 프레임");static_cast<void>(DrawShape(image.pixels,image.width,image.height,assets.game.Shapes(),type-70,static_cast<std::size_t>(frame),x,y,{0,0,image.width-1,image.height-1})); });return;
             }
             const auto raw=core.pool.Slot(sid);
-            if (IsGeneratorCapture(raw)) return; // 원본+a4=41c100은 추가/추상 비트와 관계없이 빈ret8이다.
+            if (IsPlainBuildingCapture(raw)) return; // 원본+a4=41c100은 추가/추상 비트와 관계없이 빈ret8이다.
             if (IsBurningArcherCapture(raw)) {
                 if (raw[40]&0x10U) throw std::logic_error("추상 발사기 실제 캡처 색상 미연결");const auto current=static_cast<std::uint32_t>(raw[36])|(static_cast<std::uint32_t>(raw[37])<<8)|(static_cast<std::uint32_t>(raw[38])<<16)|(static_cast<std::uint32_t>(raw[39])<<24); // 실제 캡처의 현재 헤더/포구다.
                 const auto& header=core.shapes[raw[10]].frames.at(current);
@@ -2360,6 +2362,8 @@ PriestMenuState& RawCampaignSession::PriestMenuSettings() { return impl_->priest
 SquidPostPopList& RawCampaignSession::ConstructionExcludedTypes() { return impl_->constructionExcludedTypes; }
 // UI와 실제 마나 프로세스가 동일한 현재 커서 토큰을 공유한다.
 CursorDropState& RawCampaignSession::CursorDropSettings() { return impl_->cursorDrop; }
+// 현재 풀/동맹/타입/물리 헤더를 공유하는 실제 사격 판정기를 조회 전용으로 빌린다.
+const RawGunTarget& RawCampaignSession::GunTargeting() const { if (!impl_->gunTarget) throw std::logic_error("실제 Gun 표적 판정 설치 전 조회");return *impl_->gunTarget; }
 // 실제 설치 이후 같은 커서를 빌리며 새 몸체나 상태를 만들지 않는다.
 RawCampaignCursor& RawCampaignSession::Cursor() { if (!impl_->loaded || !impl_->cursor) throw std::logic_error("설치 전 실제 커서 요청");return *impl_->cursor; }
 // 이후 커서/맵 명령도 프레임이 읽는 같은 전역을 갱신한다.

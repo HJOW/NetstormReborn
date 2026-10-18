@@ -528,6 +528,34 @@ std::optional<ColorMap> GameWorld::Remap(const TypeAsset& type,int owner) const 
 }
 // 같은 변환을 사용하여 자동 입력의 그림 중심점/월드 칸을 찾는다.
 std::optional<ScreenPoint> GameWorld::Point(std::string_view label) const {
+    // 자동 입력 전용: 실제 커서의 공간/공급 판정을 통과한 가까운 화면 좌표를 찾는다. 건설은 이후 실제 클릭이 수행한다.
+    if (label.starts_with("placement-near:") || label.starts_with("placement-fire:")) {
+        if (!campaign_) return {};const auto comma=label.find(',');if (comma==std::string_view::npos) return {};
+        const bool firing=label.starts_with("placement-fire:");const auto second=firing ? label.find(',',comma+1) : std::string_view::npos;if (firing && second==std::string_view::npos) return {};
+        const auto targetX=std::stoi(std::string(label.substr(15,comma-15))),targetY=std::stoi(std::string(label.substr(comma+1,firing ? second-comma-1 : std::string_view::npos)));if (targetX<1 || targetX>255 || targetY<1 || targetY>255) return {};
+        const auto number=firing ? std::stoul(std::string(label.substr(second+1))) : 0UL;if (number>65535UL || (firing && (!number || campaign_->CursorDropSettings().type!=128))) return {};const o::Sid target{static_cast<std::uint16_t>(number)};const auto core=campaign_->Core();
+        const auto& placement=campaign_->Cursor().Placement();if (placement.imageWidth<=0 || placement.imageHeight<=0) return {};
+        constexpr int radius=24; // 목표 주변24칸에서만 찾으며 다른 지역으로 임의 이동하지 않는다.
+        std::optional<ScreenPoint> nearest;double distanceLimit=1e9;std::size_t legalCount{},firingCount{};std::array<float,7> requested{}; // 허용/사격 후보와 실패 시 요청 칸의 실제 진단이다.
+        for (int x=std::max(1,targetX-radius);x<=std::min(255,targetX+radius);++x) { // 현재 보드 안의 후보만 질의한다.
+            for (int y=std::max(1,targetY-radius);y<=std::min(255,targetY+radius);++y) { // 미리보기 전체가 실제 허용되는지 검사한다.
+                const double distance=(x-targetX)*(x-targetX)+(y-targetY)*(y-targetY);if (distance>=distanceLimit) continue;
+                const ScreenPoint mouse{x*16-scrollX_-placement.hotspotX+placement.imageWidth/2,y*11-scrollY_-placement.hotspotY+placement.imageHeight/2};
+                if (mouse.x<80 || mouse.x>=width_ || mouse.y<28 || mouse.y>=height_) continue; // 고정 사이드바/상단 메뉴와 화면 밖은 클릭하지 않는다.
+                campaign_->Cursor().Update(mouse.x,mouse.y);const auto& drop=campaign_->CursorDropSettings();
+                if (firing && x==targetX && y==targetY) requested={drop.x,drop.y,static_cast<float>(drop.legal),static_cast<float>(placement.descriptionAllowed),static_cast<float>(placement.placementAllowed),static_cast<float>(placement.sourceAllowed),static_cast<float>(drop.localPlayer)};
+                if (!drop.legal) continue;++legalCount;
+                if (firing) { // 실제 원본 MayTarget/포구 ray가 지정 적을 칠 수 있는 합법 캐논 자리만 선택한다.
+                    const auto& type=core.types[128];const o::GunTargetQuery query{drop.x,drop.y,static_cast<float>(drop.x-type.footX*.5),static_cast<float>(drop.y-type.footY*.5),128,0,drop.localPlayer,0};if ((core.pool.Slot(target)[11]&3U) || !campaign_->GunTargeting().MayTarget(query,target)) continue;
+                }
+                ++firingCount;
+                nearest=mouse;distanceLimit=distance;
+            }
+        }
+        if (nearest) campaign_->Cursor().Update(nearest->x,nearest->y);
+        else if (firing) std::fprintf(stderr,"자동 사격 자리 없음: legal%zu fire%zu 요청(%g,%g) legal%g desc%g place%g source%g owner%g snap%u camera%d,%d\n",legalCount,firingCount,requested[0],requested[1],requested[2],requested[3],requested[4],requested[5],requested[6],campaign_->Cursor().SnapToGrid(),scrollX_,scrollY_); // 자동 입력 실패의 실제 판정을 기록하며 성공으로 대체하지 않는다.
+        return nearest;
+    }
     // 자동 입력의 건설 목표는 현재 미리보기 치수/기준점으로 마우스 위치만 역산한다. 배치 판정/생성은 실제 클릭 경로를 사용한다.
     if (label.starts_with("placement:")) {
         if (!campaign_) return {};const auto comma=label.find(',');if (comma==std::string_view::npos) return {};const auto x=std::stoi(std::string(label.substr(10,comma-10))),y=std::stoi(std::string(label.substr(comma+1)));if (x<0 || x>=256 || y<0 || y>=256) return {};

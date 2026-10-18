@@ -290,6 +290,8 @@ public:
     void BindCursorRange(CursorLifecycleHooks& hooks);
     // 현재 공급원/비대칭 동맹/TYPE mana/마지막 선택 목록으로 계산하는 실제 몸체다.
     const o::RawEnergySupply& EnergySupply() const;
+    // 사정거리 표시/자동 입력이 실제 GunProcess와 같은 현재 원본 표적 판정을 읽는다. 목표나 게임 상태를 바꾸지 않는다.
+    const o::RawGunTarget& GunTargeting() const;
     o::EnergySupplyState& EnergySettings(); // 실제 공급 제곱 반경·userCheat/ignore/동맹 전역이다.
     o::SquidPostPopList& EnergySources(); // 이후 Builder도 같은 lastSource30 저장소를 빌린다.
     // 실제4734d0의 전체 DWORD와 문구를 커서 Query에 연결한다. GUI/공간 판정은 유지한다.

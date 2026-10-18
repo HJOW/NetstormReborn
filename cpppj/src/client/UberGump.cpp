@@ -702,7 +702,7 @@ void UberGump::Compose() {
 // 자동 검사는 라벨 좌표를 읽고 실제 버튼 입력을 보낸다. 명령을 직접 호출하지 않는다.
 std::optional<ScreenPoint> UberGump::ControlPoint(std::string_view label) const {
     if (rawButtons_->Production() && label.starts_with("production:")) return rawButtons_->Production()->Point(static_cast<std::uint32_t>(std::stoul(std::string(label.substr(11)))));
-    if (world_ && (label.starts_with("world:") || label.starts_with("cell:") || label.starts_with("placement:"))) return world_->Point(label);
+    if (world_ && (label.starts_with("world:") || label.starts_with("cell:") || label.starts_with("placement:") || label.starts_with("placement-near:") || label.starts_with("placement-fire:"))) return world_->Point(label);
     if (objectMenus_ && objectMenus_->Active()) if (const auto point=rawButtons_->Menus()->Point(FontBytes(label))) return point;
     // 동일 라벨의 첫 영역을 선택한다.
     for (const auto& control : input_.Controls()) if (labels_.at(static_cast<std::size_t>(control.id)) == label)

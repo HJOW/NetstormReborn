@@ -1598,3 +1598,11 @@ set_property(SOURCE CampaignSessionTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS
 # 세 제네레이터의 실제 전체 캡처180입력은 해당 세션 검사에만 공급한다.
 set_property(SOURCE CampaignSessionTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS
     "NETSTORM_GENERATOR_CAPTURE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/generator-capture-x86.tsv\"")
+
+# 전진 공략의 수동 UI/생산 명령 입력이다. 원본 함수 기대값 fixture와 구별한다.
+set_property(SOURCE CampaignSessionTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS
+    "NETSTORM_FORWARD_BATTLE_PLAN=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/campaign-forward-battle-plan.tsv\"")
+
+# 타워의 실제 전체 캡처120입력을 같은 세션의 생성 결과와 대조한다.
+set_property(SOURCE CampaignSessionTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS
+    "NETSTORM_BLOCKER_CAPTURE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/blocker-capture-x86.tsv\"")
