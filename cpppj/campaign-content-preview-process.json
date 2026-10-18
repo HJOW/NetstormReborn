@@ -10,7 +10,7 @@
   "currentSources": {
     ".gitattributes": "3e8d869648cde0415d1a91e9b22d5a7ed7e5c0585923a189bfd37aa33229f3a8",
     "cpppj/src/CMakeLists.txt": "945332cd1c5b131d7e35d0ae7fb15762597c41be26ffea267b18e8b3d048efd8",
-    "cpppj/tests/CMakeLists.txt": "cbcfcc747b8e626bba8dcce869ffe470a08e71100153c00b46e1336b68c5e3ad",
+    "cpppj/tests/CMakeLists.txt": "5c981db7bbf32f6aadd3dcf4caf1bb46dfdbc34220effa4ab82bcfd40e0ed711",
     "cpppj/src/o/RawContentPreviewProcess.cpp": "6be7f8997e59d046856a9c7d44d6882360d4b4cd510caba12b515b92554bc6c1",
     "cpppj/src/o/RawContentPreviewProcess.h": "e7690b3b77969d7057b2373baf42ce33367ace295f75a0aa8ee48f56aa150699",
     "cpppj/tests/ContentPreviewProcessTests.cpp": "99eb74565511fd1740a57a87414edc6e601cf8a61603a2f36dfde90bf294172c",
@@ -844,6 +844,19 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "883cdf0fcacb2ff128f8c8313952fc45f5cb682f17a06af085461a515fb4cf67",
           "current": "cbcfcc747b8e626bba8dcce869ffe470a08e71100153c00b46e1336b68c5e3ad"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 192,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "cbcfcc747b8e626bba8dcce869ffe470a08e71100153c00b46e1336b68c5e3ad",
+          "current": "5c981db7bbf32f6aadd3dcf4caf1bb46dfdbc34220effa4ab82bcfd40e0ed711"
         }
       ]
     }

@@ -1594,3 +1594,7 @@ set_property(SOURCE CampaignSessionTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS
 # 실제83VT의 공통 Handle/HP 분배 데이터를 새 통합 검사에만 공급한다.
 set_property(SOURCE CampaignSessionTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS
     "NETSTORM_DAMAGEABLE_REGULAR_TABLES_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/damageable-regular-tables-x86.tsv\"")
+
+# 세 제네레이터의 실제 전체 캡처180입력은 해당 세션 검사에만 공급한다.
+set_property(SOURCE CampaignSessionTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS
+    "NETSTORM_GENERATOR_CAPTURE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/generator-capture-x86.tsv\"")
