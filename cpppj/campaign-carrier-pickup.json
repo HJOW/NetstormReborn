@@ -13,11 +13,11 @@
     "cpppj/src/o/RawCarrierPickup.cpp": "627a2e9b2b49ce2516e038676090ad2606646289d4634db0a72476ec6a611e7c",
     "cpppj/src/o/RawContentParentNotice.cpp": "030dbe976907e7a0ed4acc0cf8592af06debb6dab3f33f5a4ea282393a91756d",
     "cpppj/src/o/SidPool.h": "21d77e1995b8697dba3f4e6cc9ae16501c573f417fd7019cf4a459b0e6fe521a",
-    "cpppj/src/client/RawCampaignSession.cpp": "fb53c00a05c038374a4ccaf9e43b105790d1d9ac28c180b1e61efb3d24ea238f",
-    "cpppj/src/client/RawCampaignSession.h": "a6d142e8d485ccf10ea834c59947a4606c5d0c033ef4b2ad00b09a0cc389a641",
+    "cpppj/src/client/RawCampaignSession.cpp": "d52756c9e19834952843d35e909c1fbab5edb9c2a40b594dd4c1e8d2622f1b76",
+    "cpppj/src/client/RawCampaignSession.h": "e17214bc5d367e381f2f34d2cd73a2f9b8452c990044ee38af375977b7a02674",
     "cpppj/src/CMakeLists.txt": "dd0f00ff768b18549bf3c0d3e1abe20ac13ee81b407f13e335b8de71b45271f2",
-    "cpppj/tests/CMakeLists.txt": "16dd4ad98bd79b0d42a32a67bb6b8ad72343ad6eebbef60cecbf0e9a36224ca9",
-    "cpppj/tests/CampaignSessionTests.cpp": "c93ddbf3c95ae7ebf3c7ee9cd025d471a3d41f60fa6cfb0171f6bcd13629458e",
+    "cpppj/tests/CMakeLists.txt": "34b1cd6daeb73134a9a2a148fb503f334dc8527e6a9ac141e61cb8b0018231b1",
+    "cpppj/tests/CampaignSessionTests.cpp": "530ae4a707f6f82b4eaeab6c3f7f30471da1de5314ea544abdca9075fa1cdb41",
     "cpppj/tests/CarrierPickupTests.cpp": "555b58844bd62cdf1cae5bf96ad2775dcbd415287b66eb3a755a50d1211789a4",
     "cpppj/tests/fixtures/carrier-pickup-x86.tsv": "2245911a825393ecf233e261f486b47efce2ce941339fc5dd123023f0a02441e",
     "tools/decomp_carrier_pickup.py": "9274285be2c6954c11d9211ce95ec322fe8f80bac0daf345b386a4f8c121f6cf",
@@ -1181,6 +1181,37 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "4391efc5570f2ee2885cf36acd8563ce32667cab48c17fb3862ce68419cfea78",
           "current": "c93ddbf3c95ae7ebf3c7ee9cd025d471a3d41f60fa6cfb0171f6bcd13629458e"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 199,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "fb53c00a05c038374a4ccaf9e43b105790d1d9ac28c180b1e61efb3d24ea238f",
+          "current": "d52756c9e19834952843d35e909c1fbab5edb9c2a40b594dd4c1e8d2622f1b76"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "a6d142e8d485ccf10ea834c59947a4606c5d0c033ef4b2ad00b09a0cc389a641",
+          "current": "e17214bc5d367e381f2f34d2cd73a2f9b8452c990044ee38af375977b7a02674"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "16dd4ad98bd79b0d42a32a67bb6b8ad72343ad6eebbef60cecbf0e9a36224ca9",
+          "current": "34b1cd6daeb73134a9a2a148fb503f334dc8527e6a9ac141e61cb8b0018231b1"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "c93ddbf3c95ae7ebf3c7ee9cd025d471a3d41f60fa6cfb0171f6bcd13629458e",
+          "current": "530ae4a707f6f82b4eaeab6c3f7f30471da1de5314ea544abdca9075fa1cdb41"
         }
       ]
     }

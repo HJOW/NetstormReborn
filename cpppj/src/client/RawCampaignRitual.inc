@@ -1,5 +1,6 @@
 // Impl 안에 포함하며 기존 의식/내용물/Path/Kernel을 단일 현재 월드에 연결한다.
 void PrepareRitual() {
+    runeState.suppressDuration=globals.missionPost; // 원본00594fa4는 룬 시간·다이스 후처리·희생 완료가 함께 읽는 현재 미션 상태다.
     for (std::uint32_t owner=0;owner<=kPlayerCount;++owner) runeState.playerFlags[owner]=players[owner*0xb4+0x50]; // 룬 건설시간도 같은 현재 Player flag를 읽는다.
     ritualState.boss=assetState.boss;ritualState.priestType=priestState.movement.priest;ritualState.runeType=runeState.runeType;
     for (std::size_t index=0;index<alliances.size();++index) daisState->alliances[index]=std::bit_cast<std::int32_t>(alliances[index]); // 현재 방향별 DWORD 비트를 부호 변환 없이 공유한다.
@@ -101,7 +102,14 @@ void ConnectRitual() {
     dais.wallSeconds=services.sound.wallSeconds;
     dais.setSoundStart=[this](std::uintptr_t form,double time) { if (form>65535) throw std::out_of_range("다이스 소리 Form 번호 범위");auto* process=dynamic_cast<SoundProcess*>(core.processes.FromForm(Sid{static_cast<std::uint16_t>(form)}));if (!process) throw std::logic_error("다이스 현재 Sound47 누락");process->SetStartTime(time); }; // 같은 절대 시각을 쓰며 벽시계를 다시 읽지 않는다.
     dais.stopVoice=[this](std::uint32_t cue,std::uint32_t first,std::uint32_t second) { RitualCommand(cue,first,second); }; // 기존 hook명과 달리 실제452fe0은 입력 명령 큐다.
-    FillMissing(dais.addLocalSp);FillMissing(dais.normalizeForeignSp);FillMissing(dais.grantForeignType);FillMissing(dais.localSpecial);FillMissing(dais.localType);FillMissing(dais.refreshOwner);FillMissing(dais.refreshLocal);FillMissing(dais.priestExists);FillMissing(dais.multiplayerStatus);FillMissing(dais.chat);
+    dais.addLocalSp=[this](float delta) { hp.AddSp(playerState.battleOwner,delta); }; // 원본40eec0과 같은 분산 SP/AI지갑/표시 갱신을 사용하며 직접 결과값을 쓰지 않는다.
+    dais.refreshOwner=[this](std::uint32_t owner) { priestParticipation->Refresh(owner); }; // 원본495060의 실제 목록/포획 조회와 같은ownerState 갱신이다.
+    dais.priestExists=[this](std::uint32_t owner) { if (!outcome) throw std::logic_error("희생 완료의 현재 참여 판정 설치 전 호출");return outcome->PriestDead(owner); }; // 기존hook명과 달리 실제4922e0은 사망 여부다. 원본 호출부의 부정을 유지한다.
+    dais.chat=[this](const DaisChat& notice) {
+        if (notice.kind!=DaisChat::Kind::Stormpower && notice.kind!=DaisChat::Kind::Upgrade) throw std::logic_error("멀티플레이 희생 사망 안내 미연결");
+        if (!services.priest.shield.tell) throw std::logic_error("희생 완료의 실제 Tell 소비자 미연결");services.priest.shield.tell(notice.kind==DaisChat::Kind::Stormpower ? "SacrificeForStormpower" : "AltarUpgrade");
+    }; // 원본4cf960은 같은Tell(key,0) wrapper다. 멀티플레이 이름/상태 인자 안내는 별도 경계로 남긴다.
+    FillMissing(dais.normalizeForeignSp);FillMissing(dais.grantForeignType);FillMissing(dais.localSpecial);FillMissing(dais.localType);FillMissing(dais.refreshLocal);FillMissing(dais.multiplayerStatus);
     daisRegular=std::make_unique<RawDaisRegular>(core.pool,core.hash,core.types,core.frames,*templeRitual,*runePostPop,priests->Carrier(),core.processes,*ritualLookup,motion->Paths().Starter(),*daisState,std::move(dais));
     PriestSacrificeRequestHooks request; // 두 wrapper는 실제 같은 Dais/내용물/음악을 호출한다.
     request.allowed=[this](Sid dais,Sid priest) { PrepareRitual();return daisRegular->CanBridge(dais,priest); };

@@ -2221,16 +2221,16 @@ void ActualSacrificeSession(bool followup) {
             const auto direction=RawPathAnimation::Direction(core.frames[158],static_cast<std::int32_t>(Get(core.pool.Slot(priest),36)));if (current && direction>=10 && direction<=14) bands[static_cast<std::size_t>(direction-10)]=true;
             if (frame!=lastFrame || (step%20==0 && current)) std::cout<<"의식 후속 game"<<now<<"/Dais"<<frame<<"/Rune"<<runes.size()<<"/생성"<<born<<"/삭제"<<retired<<"/사제"<<Get(core.pool.Slot(priest),36)<<"\n";lastFrame=frame;
             if (!readyAt && born==5 && retired==5) {
-                CHECK(frame==47 && std::all_of(bands.begin(),bands.end(),[](bool seen) { return seen; }) && !core.processes.FindEvent(priest,604));readyAt=now;
+                CHECK(frame==static_cast<std::uint32_t>(core.frames[165].Run('N').first) && std::all_of(bands.begin(),bands.end(),[](bool seen) { return seen; }) && !core.processes.FindEvent(priest,604));readyAt=now;
                 delayed={lookup.Find(dais,47,0),lookup.Find(dais,47,1)};CHECK(delayed[0].value && delayed[1].value && !lookup.Find(dais,47,2).value);std::vector<double> starts;
                 for (const auto soundForm:delayed) { // 실제 붙은47의 두 절대 시작 시각과 flags를 확인한다.
                     auto* sound=dynamic_cast<SoundProcess*>(core.processes.FromForm(soundForm));CHECK(sound && sound->Parent()==dais && sound->Flags()==0xc && !sound->Current());if (sound) starts.push_back(sound->StartTime());
                 }
                 std::sort(starts.begin(),starts.end());CHECK(starts.size()==2);if (starts.size()==2) { CHECK_NEAR(starts[0],wall+2.799999952316284,1e-12);CHECK_NEAR(starts[1],wall+4.0,1e-12); }
-                std::cout<<"실제 Rune5 생성/완공·삭제/K..O/단계47·두 지연음 예약 game"<<now<<"\n";
+                std::cout<<"실제 Rune5 생성/완공·삭제/K..O/미션 제단이탈N·두 지연음 예약 game"<<now<<"\n";
             }
             if (readyAt && now>readyAt+4.5) { // 실제 벽시계 이후 한 번 재생과 Sound47 자연 삭제까지 관찰한다.
-                CHECK(!core.processes.FromForm(delayed[0]) && !core.processes.FromForm(delayed[1]));CHECK(std::count(globalSounds.begin(),globalSounds.end(),external.names.Lookup("priestSacrifice2.wav"))==1);CHECK(std::count(globalSounds.begin(),globalSounds.end(),external.names.Lookup("thunderCrack.wav"))==1);CHECK(Get(core.pool.Slot(dais),36)==47 && (core.pool.Slot(captured)[11]&3U)==0);CHECK(drawn>0);std::cout<<"의식 룬 단계 완료/두 지연음 재생·자연 소진/전체 입자 표면"<<drawn<<"픽셀, 보상 선택 이후/희생 완료는 미검증\n";session.SetParticleView({0,0,0,0,1024,768},{});return;
+                CHECK(!core.processes.FromForm(delayed[0]) && !core.processes.FromForm(delayed[1]));CHECK(std::count(globalSounds.begin(),globalSounds.end(),external.names.Lookup("priestSacrifice2.wav"))==1);CHECK(std::count(globalSounds.begin(),globalSounds.end(),external.names.Lookup("thunderCrack.wav"))==1);CHECK(Get(core.pool.Slot(dais),36)==static_cast<std::uint32_t>(core.frames[165].Run('N').first+2) && (core.pool.Slot(captured)[11]&3U)==0);CHECK(drawn>0);std::cout<<"의식 룬 단계 완료/두 지연음 재생·자연 소진/전체 입자 표면"<<drawn<<"픽셀, 최종 희생 완료는 별도 실제 건설 검사\n";session.SetParticleView({0,0,0,0,1024,768},{});return;
             }
         }
         CHECK(readyAt>0);
@@ -2261,7 +2261,7 @@ TEST_CASE(CampaignSacrifice_Native30ActualShapeOffsets) {
 TEST_CASE(CampaignDais_ActualFactoryPopAndCapturedNotice) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();InputQueue commands;netstorm::zacket::LocalMissionTransport* wire{};std::vector<std::string> music;services.carrierRequest=[&](std::int32_t owner,std::span<const std::uint8_t> packet) { CHECK(wire);if (wire) wire->Send(owner,packet); };services.requestMusic=[&](std::string_view name) { music.emplace_back(name); };services.assets.queueCommand=[&](std::uint32_t command,std::int32_t x,std::int32_t y) { commands.PushCommand(command,x,y); }; // 실제 입력 큐와 자산을 쓴다.
     auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));session.Load();auto core=session.Core();SessionPickupWire link(session);wire=&link.transport;const auto dais=session.World().Create(165);core.owner.Set(dais,1);session.World().Pop(dais,100,111,0); // 합법 배치/UI 건설 검사가 아닌 명시 생성 위치다.
-    const auto altars=ConstructionLive(core,164);CHECK(altars.size()==1);if (altars.size()!=1) return;const auto altar=altars[0];CHECK(Get(core.pool.Slot(dais),36)==3 && Get(core.pool.Slot(altar),36)==0);CHECK(core.pool.Slot(altar)[34]==1 && core.processes.FindEvent(altar,21));CHECK(Get(session.PlayerRecords(),0xb4+0x8c)==dais.value && Get(session.PlayerRecords(),0xb4+0x90)==dais.value); // 전체Pop이 실제Player와 같은 풀을 바꿨는지 확인한다.
+    const auto altars=ConstructionLive(core,164);CHECK(altars.size()==1);if (altars.size()!=1) return;const auto altar=altars[0];CHECK(Get(core.pool.Slot(dais),36)==0 && Get(core.pool.Slot(altar),36)==0);CHECK(core.pool.Slot(altar)[34]==1 && core.processes.FindEvent(altar,21));CHECK(Get(session.PlayerRecords(),0xb4+0x8c)==dais.value && Get(session.PlayerRecords(),0xb4+0x90)==dais.value); // 전체Pop이 실제Player와 같은 풀을 바꿨는지 확인한다.
     while (!commands.Empty()) static_cast<void>(commands.Pop(false)); // 기존 로드 명령과 이번 부착 명령을 구분한다.
     const auto captured=session.CreateContained(dais,158,0x82,32,0,0);CHECK(Get(core.pool.Slot(altar),12,2)==2);CHECK(Get(core.pool.Slot(altar),36)==static_cast<std::uint32_t>(core.frames[164].Run('O').first));CHECK((core.pool.Slot(captured)[11]&3U)==0); // 원래owner의 하위7비트와 O프레임은 실제 부모 통지가 쓴다.
     const auto notice=commands.Pop(false);CHECK(notice.code==0x020000d7 && notice.x==0 && notice.y==0); // PE00542a50의 실제 명령을 음향 정지로 바꾸지 않는다.
@@ -2272,14 +2272,16 @@ TEST_CASE(CampaignDais_ActualFactoryPopAndCapturedNotice) {
     for (std::uint64_t step=1;step<=8000 && retired<5;++step) { // 최대200초 동안 경로 도착과 다섯 룬을 같은 Kernel에서 진행한다.
         const auto now=ritualBegan+double(step)*.025;session.RunFrame({now,100+now,.025,2000+step},false);const auto runes=ConstructionLive(core,166);const bool current=!runes.empty();if (current && !live) ++born;if (!current && live) ++retired;live=current;
     }
-    CHECK(born==5 && retired==5 && Get(core.pool.Slot(dais),36)==47 && !core.processes.FindEvent(priest,604));CHECK((core.pool.Slot(captured)[11]&3U)==0); // 보상 선택/희생 완료를 주입하지 않는다.
+    CHECK(born==5 && retired==5 && Get(core.pool.Slot(dais),36)==static_cast<std::uint32_t>(core.frames[165].Run('N').first) && !core.processes.FindEvent(priest,604));CHECK((core.pool.Slot(captured)[11]&3U)==0); // 보상 선택/희생 완료를 주입하지 않는다.
     std::cout<<"전체Pop 실제 Dais 해시"<<std::uint32_t(core.pool.Slot(dais)[33])<<"/UI17→40h→경로→룬5 자연 진행\n";
     std::cout<<"실제 Dais"<<dais.value<<"/제단"<<altar.value<<" 생성·Player 등록·내용물O/owner2 통지·4초 저항 진행\n";
 }
 
-// 원래1-1의 사제 메뉴/실제 커서 허용·예측·패킷·Builder로 다이스를 건설한다. 원본지형/금액을 바꾸지 않는다.
-TEST_CASE(CampaignDais_ActualPriestMenuCursorConstruction) {
-    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;RawCampaignSession* currentSession{};Sid observedGolem{};std::array<float,2> noticePoint{};std::size_t deliveryNotices{};auto services=external.Services();const auto queue=services.assets.queueCommand;services.assets.queueCommand=[&](std::uint32_t command,std::int32_t x,std::int32_t y) { queue(command,x,y);if (command==0x020000d7 && currentSession && observedGolem.value) { const auto raw=currentSession->Core().pool.Slot(observedGolem);noticePoint={std::bit_cast<float>(Get(raw,14)),std::bit_cast<float>(Get(raw,18))};++deliveryNotices; } };UseWorldTestLogin(services);services.ai.allocationBytes=[](std::span<std::uint8_t> bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0xa7}); };services.ai.defaultName=[] { return std::string("AI"); };auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services),{1024,768});auto& session=world.Session();currentSession=&session;auto core=session.Core();SessionCursorUi ui;auto& cursor=session.Cursor();cursor.SetEffects(ui.Effects());cursor.SnapToGrid()=1; // 장치/입력 관찰만 대체하며 계산은 같은 세션이다.
+namespace {
+// 원래1-1의 실제 건설/운반 입력을 공유한다. finish가 참이면 같은 현재 미션에서 클릭/희생 완료까지 진행한다.
+void ActualBuiltDaisDelivery(bool finish) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;RawCampaignSession* currentSession{};Sid observedGolem{};std::array<float,2> noticePoint{};std::size_t deliveryNotices{};std::vector<std::string> ritualTells,ritualMusic;std::size_t spRefreshes{};auto services=external.Services(); // 같은 실제 장치/Tell 요청만 관찰한다.
+    services.refreshSp=[&] { ++spRefreshes; };services.priest.shield.tell=[&](std::string_view key) { ritualTells.emplace_back(key); };services.requestMusic=[&](std::string_view name) { ritualMusic.emplace_back(name); };const auto queue=services.assets.queueCommand;services.assets.queueCommand=[&](std::uint32_t command,std::int32_t x,std::int32_t y) { queue(command,x,y);if (command==0x020000d7 && currentSession && observedGolem.value) { const auto raw=currentSession->Core().pool.Slot(observedGolem);noticePoint={std::bit_cast<float>(Get(raw,14)),std::bit_cast<float>(Get(raw,18))};++deliveryNotices; } };UseWorldTestLogin(services);services.ai.allocationBytes=[](std::span<std::uint8_t> bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0xa7}); };services.ai.defaultName=[] { return std::string("AI"); };auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services),{1024,768});auto& session=world.Session();currentSession=&session;auto core=session.Core();SessionCursorUi ui;auto& cursor=session.Cursor();cursor.SetEffects(ui.Effects());cursor.SnapToGrid()=1; // 장치/입력 관찰만 대체하며 계산은 같은 세션이다.
     ConfigInterface config([&](std::string_view path) { return assets.files.TryRead(path); });config.Configuration().Assign("DataDir=\"d\"\ncurrentLanguage=\"english\"\nmissionSpec=\"{DataDir}\\{local.1}.{currentLanguage}\"\nfortSpec=\"{DataDir}\\{local.1}.fort\"\n[END]\n");MissionScript script(config,"TheWarBegins");CHECK(script.Loaded());MissionFrameGateState gate;MissionStartState startState;CampaignMissionStartEffects startEffects; // 원래 영어 스크립트의 실제 Start로 자금/기술/AI를 적용한다.
     startEffects.settingsBytes=[](std::uint32_t,std::span<std::uint8_t> bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0xa7}); };startEffects.gameSeconds=[&] { return core.processState.now; };startEffects.refreshSp=[] {};startEffects.refreshCommandGump=[] {};startEffects.resetCamera=[] {};startEffects.randomGeysers=[] { throw std::logic_error("원래1-1에 없는 세계 랜덤 간헐천 요청"); };
     RawCampaignMissionStartBindings start(session,script,gate,startState,session.MissionStartSettings(),session.MissionAiSettings(),std::move(startEffects));start.Start();CHECK(gate.started==1); // 별도 SetSp/기술 주입을 하지 않는다.
@@ -2297,8 +2299,26 @@ TEST_CASE(CampaignDais_ActualPriestMenuCursorConstruction) {
     std::cout<<"제단 전달 통지 시점"<<noticePoint[0]<<","<<noticePoint[1]<<"/현재 자기동맹"<<session.Alliances()[10]<<"/전달"<<delivered.value<<"\n";CHECK(deliveryNotices==1 && noticePoint[0]==point.x-3 && noticePoint[1]==point.y-3 && session.Alliances()[10]==1);
     CHECK(delivered.value && delivered!=held);CHECK((core.pool.Slot(held)[11]&3U)!=0 && !session.Priests().Carrier().FindContained(golem,32,158,0).value);if (!delivered.value) return;CHECK(Get(core.pool.Slot(delivered),12,2)==0x82);CHECK(Get(core.pool.Slot(altars[0]),12,2)==2 && RawPathAnimation::Direction(core.frames[164],static_cast<std::int32_t>(Get(core.pool.Slot(altars[0]),36)))==14); // 전달 결과/제단O는 실제 도착과 부모 통지가 쓴다.
     std::cout<<"명시 포획 운반 입력→실제 커서3/40h/이동/제단 전달"<<delivered.value<<"/제단O·owner2 갱신\n";
-
+    if (!finish) return;
+    const auto beforeFinish=session.Sp(1);const auto refreshBefore=spRefreshes;CarrierInputHooks ritualHooks;std::size_t menus{}; // 현재 실제 자금과 보상창 호출을 관찰하며 완료값을 쓰지 않는다.
+    ritualHooks.showSacrifice=[&](std::uint32_t) { ++menus;throw std::logic_error("캠페인에 없는 멀티플레이 보상창"); };ritualHooks.assertion=[](std::uint32_t line) { throw std::logic_error("실제 희생 클릭 진단 "+std::to_string(line)); };
+    auto ritualInput=session.MakeCarrierInput(std::move(ritualHooks));RawPathPoint altarPoint{static_cast<float>(point.x),static_cast<float>(point.y)};CHECK(ritualInput->Evaluate(priest,altarPoint)==0x11);ritualInput->Commit(priest.value,altarPoint);session.PumpLocalConnection();CHECK(menus==0 && ritualMusic==std::vector<std::string>{"sacrifice.mus"});
+    const auto finishBegan=core.processState.now;std::size_t born{},retired{};bool wasLive{}; // 실제 룬/다이스 수명의 전이를 읽는다.
+    for (std::uint64_t step=1;step<=12000 && !(core.pool.Slot(target)[11]&3U);++step) { // 같은Kernel/로컬전송으로 최대300초 진행한다.
+        const auto now=finishBegan+double(step)*.025;session.PumpLocalConnection();session.RunFrame({now,100+now,.025,20000+step},false);const bool live=!ConstructionLive(core,166).empty();if (live && !wasLive) ++born;if (!live && wasLive) ++retired;wasLive=live;
+    }
+    CHECK(born==5 && retired==5 && menus==0);CHECK((core.pool.Slot(target)[11]&3U)!=0 && (core.pool.Slot(altars[0])[11]&3U)!=0 && (core.pool.Slot(delivered)[11]&3U)!=0);CHECK(session.Sp(1)==beforeFinish+5000 && spRefreshes==refreshBefore+1);CHECK(ritualTells==std::vector<std::string>{"SacrificeForStormpower"});
+    CHECK(session.Priests().Priests().ownerState[1]==0); // 원래 적 사제가 살아 있는 명시 포획 입력이므로 승리를 주장하지 않는다.
+    for (std::uint32_t owner=1;owner<=8;++owner) { // Finish의8명갱신이같은현재조회/저장소를소비했는지확인한다.
+        const auto found=session.FindPriestParticipation(owner);const auto expected=!found ? 2U : core.pool.Slot(Sid{static_cast<std::uint16_t>(found)})[10]==158 ? 0U : 1U;CHECK(session.Priests().Priests().ownerState[owner]==expected);
+    }
+    CHECK(!core.destroy.PreDepth() && !core.destroy.PostDepth() && !core.bookkeeping.depth);std::cout<<"실제 캠페인 희생 완료: 룬5/메뉴0/다이스·제단·포획 삭제/SP"<<beforeFinish<<"→"<<session.Sp(1)<<"/표시1/Tell1/참여8명 갱신\n";
 }
+}
+// 기존 실제 메뉴/건설/명시 운반 회귀를 동일 입력과 종료점에서 실행한다.
+TEST_CASE(CampaignDais_ActualPriestMenuCursorConstruction) { ActualBuiltDaisDelivery(false); }
+// 같은 사용자 건설 결과와 명시 운반 입력 뒤 실제 희생 클릭/완료·SP를 확인한다. 자연 포획/미션 승리를 주입하지 않는다.
+TEST_CASE(CampaignDais_ActualCampaignSacrificeFinish) { ActualBuiltDaisDelivery(true); }
 
 // 캠페인의 실제Commit은 멀티플레이 보상창을 호출하지 않고 같은40h/의식 경로를 계속 사용한다. 자연 포획을 증명하는 검사는 아니다.
 TEST_CASE(CampaignSacrifice_ClickSkipsMultiplayerMenuAndKeepsRitualRequest) {
@@ -2313,6 +2333,6 @@ TEST_CASE(CampaignSacrifice_ClickSkipsMultiplayerMenuAndKeepsRitualRequest) {
     for (std::uint64_t step=1;step<=8000 && retired<5;++step) { // 기존 요청 뒤 실제 다섯 룬 진행이 유지되는지 확인한다.
         const auto now=began+double(step)*.025;session.RunFrame({now,100+now,.025,step},false);const bool live=!ConstructionLive(core,166).empty();if (live && !wasLive) ++born;if (!live && wasLive) ++retired;wasLive=live;
     }
-    CHECK(born==5 && retired==5 && menus==0 && Get(core.pool.Slot(dais),36)==47);CHECK((core.pool.Slot(captured)[11]&3U)==0 && !core.processes.FindEvent(priest,604)); // 캠페인 보상·희생 완료는 별도 원본 경로이며 여기서 주입하지 않는다.
+    CHECK(born==5 && retired==5 && menus==0 && Get(core.pool.Slot(dais),36)==static_cast<std::uint32_t>(core.frames[165].Run('N').first));CHECK((core.pool.Slot(captured)[11]&3U)==0 && !core.processes.FindEvent(priest,604)); // 캠페인 보상·희생 완료는 별도 원본 경로이며 여기서 주입하지 않는다.
     std::cout<<"실제 캠페인 클릭: 멀티플레이 보상창0/40h1/의식 음악1/룬5 생성·소진, 희생 완료는 별도\n";
 }

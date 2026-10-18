@@ -101,6 +101,7 @@ struct CampaignProductionServices {
 };
 // 게임 계산을 대신하지 않고 실제 클라이언트 UI/음향/전송의 선택 경계를 공급한다.
 struct RawCampaignSessionServices {
+    std::function<void()> refreshSp; // 같은 실제 Reward.AddSp의0043dad0 표시 요청이다. 장치 없는 독립 검사는 비워 둘 수 있다.
     std::optional<CampaignLoginServices> localLogin; //실제Client는 원본 로컬로그인을 사용하며 독립 모듈 검사는 명시Load를 유지한다.
     std::function<std::int32_t()> unixSeconds; // 실제 time32의 현재 Unix 초다.
     RawPriestWorldEffects priest; // 원본 소유자 통지/보호막 안내/음향 등의 실제 외부 소비자다.

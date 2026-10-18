@@ -298,17 +298,17 @@
   },
   "currentSources": {
     "cpppj/src/CMakeLists.txt": "dd0f00ff768b18549bf3c0d3e1abe20ac13ee81b407f13e335b8de71b45271f2",
-    "cpppj/src/client/CampaignClientServices.cpp": "5fe1351ea5d1c9893e420a991b2d153d6a220c06d907dbaa7d51bdbb27008476",
+    "cpppj/src/client/CampaignClientServices.cpp": "6760b4bf315f6f7af71d8163e6258b72a186c2921fb536986399c4b10409ac25",
     "cpppj/src/client/RawCampaignCarrierInput.inc": "5f7586171e8d3fc0b7a12e7bad502a33eeda171a41d859469c03367d930aad1b",
     "cpppj/src/client/RawCampaignPathBindings.cpp": "2fc59e6cd111db8c953e388d1856c8e6103a8b6852461c2d3df89ec84a4f4314",
     "cpppj/src/client/RawCampaignPathBindings.h": "82d9565ece60f24300977681dffdaad57a660fdccca38b4db305d5a1d262b8b0",
-    "cpppj/src/client/RawCampaignSession.cpp": "fb53c00a05c038374a4ccaf9e43b105790d1d9ac28c180b1e61efb3d24ea238f",
-    "cpppj/src/client/RawCampaignSession.h": "a6d142e8d485ccf10ea834c59947a4606c5d0c033ef4b2ad00b09a0cc389a641",
+    "cpppj/src/client/RawCampaignSession.cpp": "d52756c9e19834952843d35e909c1fbab5edb9c2a40b594dd4c1e8d2622f1b76",
+    "cpppj/src/client/RawCampaignSession.h": "e17214bc5d367e381f2f34d2cd73a2f9b8452c990044ee38af375977b7a02674",
     "cpppj/src/o/RawTempleRitual.cpp": "4da7a7c1516a35016897471780d92be973f3d238dfd4bf5c36548a9fe9b803bb",
     "cpppj/src/o/RawTempleRitual.h": "e5b853c7bfd9ca70c18c97d7b3f3a6e14b6e6d0ca89a6e5269e5117838937741",
     "cpppj/tests/AltarSacrificeTests.cpp": "3bcf850f018f097b44142038da311c135ae72c3b5c1e075856269f41b2adc0a1",
-    "cpppj/tests/CMakeLists.txt": "16dd4ad98bd79b0d42a32a67bb6b8ad72343ad6eebbef60cecbf0e9a36224ca9",
-    "cpppj/tests/CampaignSessionTests.cpp": "c93ddbf3c95ae7ebf3c7ee9cd025d471a3d41f60fa6cfb0171f6bcd13629458e",
+    "cpppj/tests/CMakeLists.txt": "34b1cd6daeb73134a9a2a148fb503f334dc8527e6a9ac141e61cb8b0018231b1",
+    "cpppj/tests/CampaignSessionTests.cpp": "530ae4a707f6f82b4eaeab6c3f7f30471da1de5314ea544abdca9075fa1cdb41",
     "cpppj/tests/DaisBridgeTests.cpp": "3ddf0775e4388acad8f0a9b28d9340e8f40c24a5f66dcc980c05f7c51f3622a7",
     "cpppj/tests/DaisLifecycleTests.cpp": "30f2901c1e18d470e8b45ed3fb334ccd30774c0f6cefb1118ff9b886f46927b7",
     "cpppj/tests/DaisProgressTests.cpp": "2580113c0336b92d2a39efe957350d5ed25ee1af42e1f5de32e28991b3a2dacb",
@@ -319,7 +319,7 @@
     "cpppj/tests/fixtures/priest-sacrifice-request-x86.tsv": "b0ee93daba823701bab57a5a74314251436be61ddfc7e080b02a6bc90146856f",
     "cpppj/src/o/RawPriestSacrificeRequest.h": "862c74b13191c3392a88d781f64d655755b9d57656e25950cad376d5b8c1265e",
     "cpppj/src/o/RawPriestSacrificeRequest.cpp": "600747cb205419985d13a74dce383f3d5af575a5333d0bc128b2ad1cc3080bcd",
-    "cpppj/src/client/RawCampaignRitual.inc": "fccae5d611cdfb2d4091720fbae150336d96b0593da06409e9300e5147060410",
+    "cpppj/src/client/RawCampaignRitual.inc": "58bedee7b6bd9673e2ce45ac016f9421ef33ac4bd974e306dd54f83c631fe9f0",
     "cpppj/tests/PriestSacrificeRequestTests.cpp": "7ff575bd651d2217f0ac7d1b7bab817b7ac62d7b224c8658ce99cec6e5cfe8c4",
     "tools/decomp_ritual_shape_offsets.py": "a72baae56fc20de0de5335acf5f02c5e1a2020d052b22d04ce6dac169e64b694",
     "cpppj/ritual-shape-offsets.json": "96c98644d6c37ecaf6b3aefb6dff4b51a6ee6379dc27ff7087945ca82ac0a93b",
@@ -858,6 +858,49 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "4391efc5570f2ee2885cf36acd8563ce32667cab48c17fb3862ce68419cfea78",
           "current": "c93ddbf3c95ae7ebf3c7ee9cd025d471a3d41f60fa6cfb0171f6bcd13629458e"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 199,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/CampaignClientServices.cpp",
+          "previous": "5fe1351ea5d1c9893e420a991b2d153d6a220c06d907dbaa7d51bdbb27008476",
+          "current": "6760b4bf315f6f7af71d8163e6258b72a186c2921fb536986399c4b10409ac25"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "fb53c00a05c038374a4ccaf9e43b105790d1d9ac28c180b1e61efb3d24ea238f",
+          "current": "d52756c9e19834952843d35e909c1fbab5edb9c2a40b594dd4c1e8d2622f1b76"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "a6d142e8d485ccf10ea834c59947a4606c5d0c033ef4b2ad00b09a0cc389a641",
+          "current": "e17214bc5d367e381f2f34d2cd73a2f9b8452c990044ee38af375977b7a02674"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "16dd4ad98bd79b0d42a32a67bb6b8ad72343ad6eebbef60cecbf0e9a36224ca9",
+          "current": "34b1cd6daeb73134a9a2a148fb503f334dc8527e6a9ac141e61cb8b0018231b1"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "c93ddbf3c95ae7ebf3c7ee9cd025d471a3d41f60fa6cfb0171f6bcd13629458e",
+          "current": "530ae4a707f6f82b4eaeab6c3f7f30471da1de5314ea544abdca9075fa1cdb41"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignRitual.inc",
+          "previous": "fccae5d611cdfb2d4091720fbae150336d96b0593da06409e9300e5147060410",
+          "current": "58bedee7b6bd9673e2ce45ac016f9421ef33ac4bd974e306dd54f83c631fe9f0"
         }
       ]
     }

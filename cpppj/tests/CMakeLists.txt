@@ -1217,6 +1217,9 @@ set_source_files_properties(ShrapnelLifetimeTests.cpp PROPERTIES COMPILE_DEFINIT
     "NETSTORM_SHRAPNEL_LIFETIME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/shrapnel-lifetime-x86.tsv\"")
 set_source_files_properties(OwnerCaptureTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_OWNER_CAPTURE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/owner-capture-x86.tsv\"")
+# 실제 제단90프레임/전체 색표·추가 그림 비트의 독립 원본 픽셀이다.
+set_property(SOURCE OwnerCaptureTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS
+    "NETSTORM_ALTAR_CAPTURE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/altar-capture-x86.tsv\"")
 
 # 실제 커서 취득/취소/임시 삭제의 전체 원문과 보호 자산 연결을 비교한다.
 target_sources(netstorm_tests PRIVATE CursorLifecycleTests.cpp)

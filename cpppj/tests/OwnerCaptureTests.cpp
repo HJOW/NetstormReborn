@@ -73,3 +73,21 @@ TEST_CASE(ShapeToBuffer_NativeMappedOwnerPixels) {
     }
     CHECK(count==480);
 }
+
+// 실제 제단의 모든90프레임/소유자색/추가·추상 비트와 배율을 원본 전체 픽셀로 비교한다.
+TEST_CASE(ShapeToBuffer_AltarNative1824Pixels) {
+    Assets assets;assets.types[164].hotspotX=-2;assets.types[164].hotspotY=3;SidPool pool(OriginalEdition::Patch1078,32768,true); // 원본 관측과 같은 명시 TYPE 기준점이다.
+    for (std::uint16_t sid=5;sid<=50;++sid) CHECK(pool.Allocate(2)==Sid{sid}); // 실제 source50까지 같은 슬롯을 확보한다.
+    const auto maps=netstorm::client::BuildStandardOwnerColorMaps(164,82);std::size_t count{}; // 기존 표준 생성기이며 원본43ba00의 동일 제단/다리 인수다.
+    for (const auto& row:LoadFixture(NETSTORM_ALTAR_CAPTURE_FIXTURE).rows) { // 독립 원문1824개를 읽기만 하며 기대값을 다시 만들지 않는다.
+        CHECK(row.size()==9);if (row.size()!=9) return;const auto frame=Number(row[0]),owner=Number(row[1]),color=Number(row[2]),extra=Number(row[4]);auto raw=pool.AllocatedBytes(Sid{50});std::fill(raw.begin(),raw.end(),std::uint8_t{});Put(raw,0,0x5076b8);raw[10]=164;raw[34]=static_cast<std::uint8_t>(owner);raw[40]=static_cast<std::uint8_t>(extra);Put(raw,36,frame);
+        std::vector<std::uint32_t> tokens(188);tokens[164]=1;std::size_t mainCalls{},additionalCalls{},colorCalls{};netstorm::client::ShapeToBufferState state;state.zoom=std::bit_cast<std::int32_t>(Number(row[3]));state.addTypeHotspot=true;state.ownerTypeMaps=tokens; // 현재 입력/실제 소비 횟수만 분리해서 관찰한다.
+        state.ownerColors=[&](std::uint32_t type,std::uint32_t who)->std::span<const std::uint8_t> { CHECK(type==164 && who==owner);++colorCalls;return maps.at(color); };
+        state.mainFrame=[&](Sid sid) { CHECK(sid==Sid{50});++mainCalls;return assets.game.Types()[164-70].definition.specialFrames.baseFrame; }; // 실제+78은 현재 TYPE+128이다.
+        state.additional=[&](Sid sid,ConstructionVisualImage&,std::int32_t,std::int32_t) { CHECK(sid==Sid{50});++additionalCalls; }; // 실제+a4는 빈ret8이며 추상 비트도 그림을 추가하지 않는다.
+        netstorm::client::RawShapeToBuffer capture(pool,assets.types,assets.shapes,assets.game.Shapes(),state);const auto before=std::vector<std::uint8_t>(raw.begin(),raw.end());const auto image=capture.Capture(Sid{50});std::vector<std::uint8_t> metadata;
+        for (const auto value:{image.width,image.height,image.hotspotX,image.hotspotY}) Append(metadata,value); // 원본 signed DWORD 메타를 같은 폭으로 직렬화한다.
+        CHECK(metadata==Decode(row[5]) && row[5]==row[7]);CHECK(image.pixels==Decode(row[6]) && row[6]==row[8]);CHECK(std::equal(before.begin(),before.end(),raw.begin()));CHECK(mainCalls==((extra&2U) ? 1U : 0U) && additionalCalls==mainCalls && colorCalls==(owner ? 1U : 0U));++count;
+    }
+    CHECK(count==1824);
+}

@@ -1,0 +1,26 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-19",
+  "lastDecompileHost": "HJOW-Athlon",
+  "lastDecompileDate": "2026-10-16",
+  "frames": 90,
+  "baseFrame": -1,
+  "uniqueInputs": 1824,
+  "normalReturns": 7296,
+  "captureReturns": 3648,
+  "ownerMapReturns": 3648,
+  "pixels": 23817308,
+  "precisionDifferentInputs": [],
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originals/d/_shapes.shp": "c878353c8054208deef832e34c514b30fe670e175505b129333a5728ba70f68e",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_altar_capture.py": "48b30a273963d1ef8c4ad9ca09f66dbef8c17957c0accec0300036d593531a56",
+    "tools/decomp_owner_capture.py": "349f568e919ed4566543e4c89e0551d134ac9b11374b6d12b57498c2ab749a7c",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "tools/shp.py": "4cb8bee6ed773e29e8658ddb315594ebf5ac005ea5b96c6b760a177029515bfd",
+    "cpppj/tests/fixtures/altar-capture-x86.tsv": "c4af9b9180ee1e7eefa1b22a933d565e2bdffd00df9578f8e8a54104fdf693cf"
+  },
+  "scope": "실제제단164/VT5076b8 +78=4acfe0/+a4=빈41c100·표준소유자색·캡처/RLE전체픽셀. TYPE기준점−2,3/소유자색번호/양수fixed16/raw는명시입력,힙만장치경계. CD10.72/실제전체게임실행은0. 기존원본fixture는바꾸지않는다."
+}

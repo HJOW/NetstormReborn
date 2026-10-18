@@ -947,7 +947,7 @@
   "currentSources": {
     "cpppj/src/client/CampaignUserInputServices.cpp": "7b22008ca86929c1c7523bde5d0d6d265197dc032d2f2502d2e356f6e923f86c",
     "cpppj/src/client/RawCampaignCarrierInput.inc": "5f7586171e8d3fc0b7a12e7bad502a33eeda171a41d859469c03367d930aad1b",
-    "cpppj/tests/CampaignSessionTests.cpp": "c93ddbf3c95ae7ebf3c7ee9cd025d471a3d41f60fa6cfb0171f6bcd13629458e"
+    "cpppj/tests/CampaignSessionTests.cpp": "530ae4a707f6f82b4eaeab6c3f7f30471da1de5314ea544abdca9075fa1cdb41"
   },
   "binaries": {
     "cpppj/build/bin/Release/NetstormCpp.exe": "68d431b41b6e2f366cc0f33f2b4f1681a67bd70c6f1751ecc837a8ac36d726c5",
@@ -1166,5 +1166,20 @@
     "extracted/goal-sacrifice-menu-20261019-sources.json": "695ef24495da908f50d0b01865f59daa1ecf3700bceb0cd7187ab97dbd3cd8ea",
     "extracted/goal-sacrifice-menu-20261019-test-before-fix.cpp": "9201974b1fb675e51d27035d0e2fbd094b74fd241012e37a3f1d68a8ad33c8e1",
     "extracted/goal-sacrifice-menu-20261019-verify-final.json": "293b0e48585b8015b9a8c81b2cda295fbe125b75b7307096655d7cd7b54eb4c0"
-  }
+  },
+  "integration_updates": [
+    {
+      "date": "2026-10-19",
+      "unit": 199,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "c93ddbf3c95ae7ebf3c7ee9cd025d471a3d41f60fa6cfb0171f6bcd13629458e",
+          "current": "530ae4a707f6f82b4eaeab6c3f7f30471da1de5314ea544abdca9075fa1cdb41"
+        }
+      ]
+    }
+  ]
 }

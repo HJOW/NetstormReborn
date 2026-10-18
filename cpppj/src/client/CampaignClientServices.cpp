@@ -115,6 +115,7 @@ RawCampaignSessionServices MakeCampaignClientServices(Client& client,RawButtonCo
     // 00493d30은 004a89c0으로 인자 없는 Tell 키를 포맷한다. Xlat으로 섹션 이름을 바꾸지 않는다.
     services.priest.shield.translate=[](std::string_view key) { return std::string(key); };
     services.priest.shield.tell=std::move(ui.tell); // 실제 Tell이 안내 창과 게임 시계 정지를 처리한다.
+    services.refreshSp=[&client] { client.GetRenderer().InvalidateAll();if (client.Menu()) client.Menu()->Refresh(); }; // 원본43dad0의 같은 실제 화면/SP 표시 갱신이며 별도 SP 사본을 만들지 않는다.
     services.hit.general.warningEvent=[remove=std::move(ui.removeMessage)] { remove(12,0,0); }; // 원본 섬 경고는 종류12 삭제 뒤 음향·Tell 순서다.
     services.priest.fallSound=MakePriestFallSound(player); // 사제 낙하의 현재 위치/파일명/반복 없음이다.
     // Vortex PostPop의 TYPE+74 전역 재생은 반복·음량·좌우·우선·한도가 모두 0이다.
