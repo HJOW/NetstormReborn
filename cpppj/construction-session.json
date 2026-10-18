@@ -9,7 +9,7 @@
   "edition": "PATCH10.78",
   "baseCommit": "3330211",
   "currentSources": {
-    "cpppj/src/client/RawCampaignSession.cpp": "21cb2dd9692a507109c6d5e141e130eaf6143132d816d6b3dd6117519e4f39cf",
+    "cpppj/src/client/RawCampaignSession.cpp": "9afae15f62ccf809145be8c0f5addaf7207f22038738c3a25f1d1650f2e595d7",
     "cpppj/src/client/RawCampaignSession.h": "9b8778ad3d884db1f91c1d03b8500485d73399a6b0c94c066a040c824c41e7e6",
     "cpppj/src/client/RawCampaignParticles.cpp": "b74ba0cfd8ffc50d8d8435f7c257631fa061881afe9312c2297dcc5449ed4270",
     "cpppj/src/client/RawCampaignParticles.h": "b687c247c1eaea29b7a41da06a3194aad176d46855f7005e81d75002f76971ce",
@@ -964,6 +964,19 @@
           "path": "cpppj/src/client/RawCampaignSession.cpp",
           "previous": "6a1533de4d7a9f0ed09c0c4a2b59077498e9d0aa0487119e8461381e2d9867ab",
           "current": "21cb2dd9692a507109c6d5e141e130eaf6143132d816d6b3dd6117519e4f39cf"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 187,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "21cb2dd9692a507109c6d5e141e130eaf6143132d816d6b3dd6117519e4f39cf",
+          "current": "9afae15f62ccf809145be8c0f5addaf7207f22038738c3a25f1d1650f2e595d7"
         }
       ]
     }

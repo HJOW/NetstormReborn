@@ -100,7 +100,7 @@
     "cpppj/src/client/RawProductionControls.cpp": "eb296d77e6c04d6d8e80b0a4c151992d9857bd33b06a288d08a76d414a6a05b1",
     "cpppj/src/client/RawProductionControls.h": "67046f35d49cb863978ef917777820793aa9156daa678519fac525ed001df264",
     "cpppj/src/client/UberGump.cpp": "7a0d2ce97d70126f0964b30896eccdf872fc64e9113bb3a4caaf7fe2372cf949",
-    "cpppj/tests/CMakeLists.txt": "8641e7ac86784beb1fbe37b4908df1898574cf6c80bd641b40f65aff0d1d6d48",
+    "cpppj/tests/CMakeLists.txt": "d92c46b46c7e909a7b5c98a45676960024d0593a41f4e6d30b5ea6a65a44284b",
     "cpppj/tests/CampaignSessionTests.cpp": "e92bbf5d99392b05f92dcb2fda5de226f824631088aec127fb7219f36b344a5e",
     "tools/cpp_production_panel_smoke.py": "724988401741b93176a8a8d85a043ba712335b8c2cce85930f11016eae1a1e50",
     "cpppj/src/client/ProductionHintGump.h": "2a20c54f2a6ac90c4097715db46b7379c39ea69f4fbdcf93d14a2ec158b3cf07",
@@ -515,6 +515,19 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "7d0e158bfbfb15bc54a24cdd227c6cc838714b84a0a82e60f9c66e6affd6fdfe",
           "current": "8641e7ac86784beb1fbe37b4908df1898574cf6c80bd641b40f65aff0d1d6d48"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 187,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "8641e7ac86784beb1fbe37b4908df1898574cf6c80bd641b40f65aff0d1d6d48",
+          "current": "d92c46b46c7e909a7b5c98a45676960024d0593a41f4e6d30b5ea6a65a44284b"
         }
       ]
     }

@@ -59,9 +59,9 @@
   "currentSources": {
     "cpppj/src/client/RawCampaignHitBindings.cpp": "fe6c9e3d7ed0e3106cc9773ef1e852985eb0805c38eab283c63c8d82c0f89b83",
     "cpppj/src/client/RawCampaignHitBindings.h": "143b27b14df75669a0a79805c801e51f0aa7d7de90082d881094bb3fdbf1349d",
-    "cpppj/src/client/RawCampaignSession.cpp": "21cb2dd9692a507109c6d5e141e130eaf6143132d816d6b3dd6117519e4f39cf",
+    "cpppj/src/client/RawCampaignSession.cpp": "9afae15f62ccf809145be8c0f5addaf7207f22038738c3a25f1d1650f2e595d7",
     "cpppj/src/o/CMakeLists.txt": "35aa68d4fc512846505f39a9dea20253735fb3187f75ba223cbdb3997424d61e",
-    "cpppj/tests/CMakeLists.txt": "8641e7ac86784beb1fbe37b4908df1898574cf6c80bd641b40f65aff0d1d6d48",
+    "cpppj/tests/CMakeLists.txt": "d92c46b46c7e909a7b5c98a45676960024d0593a41f4e6d30b5ea6a65a44284b",
     "tools/decomp_special_damage.py": "1c92b56b1c000238486f67c6b8ea31eed677e8ce598305d528a24a65cd6c0628",
     "cpppj/special-damage.json": "803e9476ba5812bd1620c43c64e90429d9486cc8a575b883a302a3ac8f2500f0",
     "cpppj/tests/fixtures/special-damage-x86.tsv": "039030961fa2a1d086b43799c79faa5d2801044f421c77ed0a8b70417443d2a5",
@@ -305,5 +305,26 @@
     "Burning14 생성/캡처/Frame/Draw/삭제 실제 표시·Host 연결 후 동일 전체 캐논 전투 재검사",
     "Quick Help 본문/전용 창/이력과Client About 연결",
     "운반·희생·승패·후속 미션·전략AI 및11단계 자연 완주/원본 전체 동일성"
+  ],
+  "integration_updates": [
+    {
+      "date": "2026-10-18",
+      "unit": 187,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "21cb2dd9692a507109c6d5e141e130eaf6143132d816d6b3dd6117519e4f39cf",
+          "current": "9afae15f62ccf809145be8c0f5addaf7207f22038738c3a25f1d1650f2e595d7"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "8641e7ac86784beb1fbe37b4908df1898574cf6c80bd641b40f65aff0d1d6d48",
+          "current": "d92c46b46c7e909a7b5c98a45676960024d0593a41f4e6d30b5ea6a65a44284b"
+        }
+      ]
+    }
   ]
 }

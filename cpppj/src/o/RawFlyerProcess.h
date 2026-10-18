@@ -7,6 +7,7 @@ namespace netstorm::o {
 // 기본 outer0/inner+30과 맨 오 워 추가 필드까지 같은112BYTE로 보존한다.
 struct FlyerProcessFields {
     std::array<std::uint8_t,0x70> bytes{}; // 생성자가 건드리지 않는 padding도 caller 입력이다.
+    std::array<std::uint8_t,0x18> sunTail{}; // 훨리기그0x88 객체의+70..87이다. 기존112바이트 관측과 별도로 보존한다.
     Sid Form() const; // outer+34의 현재 Form이다.
     Sid Parent() const; // outer+38의 현재 부모다.
     Sid Home() const; // outer+a의 홈 WORD다.
@@ -33,6 +34,7 @@ public:
     RawFlyerProcess(SidPool& pool,std::span<const RiftTypeRecord> types,FlyerProcessGlobals globals,FlyerProcessHooks hooks); // PATCH 자료의 수명/크기를 확인한다.
     void Construct(FlyerProcessFields& fields,Sid parent,Sid home,std::uint32_t speed,float parameter) const; // 0045c340의 쓰기와 inner 부착 순서다.
     static void SpecializeRain(FlyerProcessFields& fields); // 부착이 끝난 뒤0045fac0의 맨 오 워 추가 쓰기다.
+    static void SpecializeSun(FlyerProcessFields& fields); // 부착 뒤45ef30의 전용 표/104·112·120 타이머와84 필드만 쓴다.
     void Bind(Sid flyer,Sid home) const; // 0045c1b0의 genus 검사/첫 Form 조회/dirty2/홈 WORD 쓰기다.
     void Frame(FlyerProcessFields& fields) const; // 실제 미복원 Frame은 명시 하위 오류다.
     void Notify(FlyerProcessFields& fields,std::uint32_t message,std::uint32_t info1,std::uint32_t info2) const; // 원본 notify를 명시 소비자로 전달한다.
@@ -64,6 +66,7 @@ private:
 struct FlyerPostPopType {
     std::uint32_t speed{}; // 실제 float speed의 IEEE 비트다.
     std::int32_t frames{}; // TYPE+114의 전체 물리 프레임 수다.
+    std::uint32_t impactSound{},activeSound{}; // TYPE+74/+6c의 현재 소리 이름표 토큰이다.
 };
 // 현재 가상 생성/표시/후처리의 실제 큰 경계를 연결한다.
 struct FlyerPostPopHooks {
@@ -75,13 +78,18 @@ struct FlyerPostPopHooks {
     std::function<void(Sid)> initializeUnit; // 004d4e10의 현재1/8초 압축 QA 시각/표면 통지다. __ftol은 난수가 아니다.
     std::function<std::array<float,2>(Sid)> shadowOffset; // 현재 가상+c8의 두float다.
     std::function<void(Sid,std::uint32_t)> damageable; // 같은 실제0044bf80과 공통 장부다.
+    std::function<bool()> allocateSunProcess; // 훨리기그 전용new0x88을 먼저 확보한다.
+    std::function<void(Sid,Sid,std::uint32_t,float)> createSunProcess; // 같은136바이트의 기본 생성·부착 뒤 전용 쓰기다.
+    std::function<void(Sid,std::uint32_t)> repop; // 최초 훨리베이스의frame10 뒤 실제 가상4c 재배치다.
+    std::function<bool()> allocateSound; // 첫Pop의new0x28은 서버/클라이언트 모두 요청한다.
+    std::function<void(Sid,std::uint32_t,std::uint32_t,std::uint32_t)> createSound; // 확보한 같은47 객체에 부모/74/6c/flags1을 전달한다.
 };
-// TYPE144/0050a388의 실제 파생 PostPop만 등록한다.
+// 실제 맨 오 워144/훨리기그73의 두 전용 PostPop과 공통45e6b0을 등록한다.
 class RawFlyerPostPop {
 public:
     RawFlyerPostPop(SidPool& pool,std::span<const RiftTypeRecord> types,std::span<const FlyerPostPopType> details,const bool& server,FlyerPostPopHooks hooks); // PATCH와 보충 표의 동일 번호를 확인한다.
-    bool Handles(Sid sid) const; // 주소 표를 실제 완성한 맨 오 워 몸체로 한정한다.
-    void PostPop(Sid sid,std::uint32_t flags) const; // 0045fac0→0045e6b0→Damageable의 실제 순서다.
+    bool Handles(Sid sid) const; // 실제 두 전용 가상 표에 한정하며 다른 비행체는 별도 복원이 필요하다.
+    void PostPop(Sid sid,std::uint32_t flags) const; // 전용45fac0/45ef30→45e6b0→Damageable의 실제 순서다.
     const SidPool& Pool() const; // 공통 PostPop과 같은 풀인지 확인한다.
 private:
     SidPool& pool_; // 비행체와 그림자가 공유하는 실제 풀이다.

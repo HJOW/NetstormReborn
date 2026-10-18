@@ -1,0 +1,27 @@
+{
+  "unit": 187,
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "lastDecompileDate": "2026-10-16",
+  "rows": 391,
+  "normalReturns": 782,
+  "instructions": 96894,
+  "precisionDifferences": 0,
+  "nativeCalls": {
+    "0045ef30": 782,
+    "0045e6b0": 782,
+    "004ac550": 1180,
+    "0049a840": 1180,
+    "0045ef10": 462,
+    "0045c340": 110
+  },
+  "boundaries": "45ef30/기본 비행45c340/45e6b0/그림자45ef10/TYPE getter 전체.힙/Host부착/음향생성/홈·그림자Pop·Unpop·Repop/시각/공통장부는 명시 경계다. 전체 전용 비행 Frame/통지·홈파괴/음향장치/미션 완주는 포함하지 않는다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_flyer_postpop.py": "f87db63e6223bf422f95b117ea30ae7350269aff854c37822df96cdd788ec317",
+    "tools/decomp_local_mission_transport.py": "db71da65079aa9a985a3a833edd224f089ba9a20137d92042551cb346937eb78",
+    "tools/decomp_sun_flyer_postpop.py": "d9e457589d70c582e364c1146e7d54a57647e7d56a194e22e8772de89a85ee78",
+    "cpppj/tests/fixtures/sun-flyer-postpop-x86.tsv": "c7693afd860973b51efad4321894bbfddec6eb058dea041dac0e56307ca22bda"
+  }
+}

@@ -4,6 +4,7 @@
 #include "o/RawSunAviaryProcess.h"
 #include "o/RawRainAviaryProcess.h"
 #include "o/RawFlyerProcess.h"
+#include "client/SoundProcess.h"
 #include <unordered_set>
 #include <map>
 
@@ -463,3 +464,34 @@ void CheckStartedDemoAiReaction(bool tracked) {
 TEST_CASE(CampaignDamage_StartedDemoUntrackedAiNaturalReturn) { CheckStartedDemoAiReaction(false); }
 // 명시 감시 목록 초기 입력 뒤 실제 자연 피격이 같은 AI의 두 공격자 목록을 갱신한다.
 TEST_CASE(CampaignDamage_StartedDemoTrackedAiReaction) { CheckStartedDemoAiReaction(true); }
+
+// 실제 Tutorial5의 자연 훨리기그 생성과 같은 Host/홈/그림자/소리를 관찰한다. 이후 비행 완주 검사는 아니다.
+TEST_CASE(CampaignSunFlyer_Tutorial5NaturalPostPop) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);ConfigInterface config([&](std::string_view path) { return assets.files.TryRead(path); });ConfigureStart(config);MissionScript script(config,"Tutorial5");
+    StartExternal external;auto fort=FortTemplate::Parse(assets.files.Read(script.FortPath()),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),script.FortName(),external.Services());session.Load();
+    GameClock clock;MissionFrameGateState gate;MissionStartState state;MissionStartGlobals globals;MissionAiSettingsState ai;ai.stuffRefreshRate=4;
+    auto effects=external.Effects();effects.gameSeconds=[&] { return clock.GameSeconds(0); };RawCampaignMissionStartBindings start(session,script,gate,state,globals,ai,std::move(effects));start.Start();
+    bool observed{},frameBoundary{}; // 자연 생성 후 첫 전용Frame 경계에 도달했는지는 완료 판정과 구별한다.
+    // 실제 원래 배치/시계/서버 명령으로 첫 생성까지만 진행하며 소유자·HP·좌표·대상을 쓰지 않는다.
+    for (std::uint32_t frame=1;frame<=1200 && !observed;++frame) {
+        try { session.RunFrame(clock.Capture(frame*25),false); }
+        catch (const std::logic_error& error) { if (std::string_view(error.what()).find("훨리기그 전용 비행 Frame0045d2c0 미연결")==std::string_view::npos) throw;frameBoundary=true; }
+        const auto core=session.Core(); // 같은 실제 Kernel/슬롯에서 새 프로세스를 찾는다.
+        // 보조 프로세스를 만들지 않고 현재 실제31 Form의 훨리기그 전용 생성 결과만 확인한다.
+        for (ProcessId id=1;id<=core.kernel.Capacity();++id) {
+            const auto* process=dynamic_cast<const FlyerProcess*>(core.kernel.Get(id));if (!process || Get(process->Fields().bytes,0)!=0x509f24U) continue;
+            const auto& fields=process->Fields();const auto sid=process->Parent(),home=fields.Home();const auto raw=core.pool.Slot(sid); // 실제 생성 결과의 부모/홈이다.
+            CHECK(raw[10]==73 && Get(raw,0)==0x50a1e8 && fields.Parent()==sid && fields.Form()==process->Form());CHECK(Get(fields.bytes,48)==0x509f04 && Get(fields.bytes,20)==0x3f19999a);
+            // 원본45e6b0의4d4e10은 QA를 발사 시각으로 덮는다. 홈은 앞서 저장한 같은 프로세스+a에서 읽는다.
+            CHECK(home.value && core.pool.Slot(home)[10]==72 && core.pool.Slot(home)[34]==raw[34]);
+            const Sid shadow{static_cast<std::uint16_t>(Get(raw,8,2))};CHECK(shadow.value && core.pool.Slot(shadow)[10]==73 && (core.pool.Slot(shadow)[40]&8U));
+            CHECK((core.pool.Slot(shadow)[11]&7U)==0 && FindAttachedProcess(core.pool,sid,31)==process->Form());
+            const auto sound=FindAttachedProcess(core.pool,sid,47);const auto* voice=dynamic_cast<const SoundProcess*>(core.processes.FromForm(sound));CHECK(sound.value && voice && voice->Flags()==1); // 실제 생성된 같은 소리47 객체다.
+            if (voice) { const auto& definition=assets.game.Find("sunFlyer").definition;const auto impact=definition.String("impactSound"),active=definition.String("activeSound");CHECK(voice->Sound()==(impact && !impact->empty() ? external.sounds.Lookup(*impact) : 0U));CHECK(voice->Alternate()==(active && !active->empty() ? external.sounds.Lookup(*active) : 0U)); }
+            std::fprintf(stderr,"실제 Tutorial5 훨리기그 생성: frame%u game%.6f SID%u home%u frame%u 현재QA%u shadow%u sound47=%u 전용Frame미연결%d\n",frame,clock.GameSeconds(frame*25),sid.value,home.value,Get(core.pool.Slot(home),36),Get(raw,12,2),shadow.value,sound.value,frameBoundary);
+            observed=true;break;
+        }
+        CHECK(!frameBoundary || observed);if (frameBoundary) break;
+    }
+    CHECK(observed && session.Core().bookkeeping.depth==0 && gate.started==1);
+}

@@ -291,6 +291,7 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawCampaignHitBindings> hits; // 같은 피해/감시/충돌/주변Dude/자산수명 처리기다.
     SoundList& soundNames; // 실제 보호막 파일명의 원본 이름표/opaque handle 조회다.
     std::unique_ptr<void,void(*)(void*)> pendingPickupSound{nullptr,[](void* storage) { ::operator delete(storage); }}; // 원본new40 성공부터실제Sound47 생성까지의단일예약메모리다.
+    std::unique_ptr<void,void(*)(void*)> pendingSunFlyerSound{nullptr,[](void* storage) { ::operator delete(storage); }}; // 훨리기그 첫Pop의new40 성공부터같은Sound47 생성까지의예약이다.
     SoundProcessState soundState; // 실제47 프로세스의 현재 frame/TYPE 중복 재생 전역이다.
     std::unique_ptr<SoundProcessSystem> sounds; // 같은 Host/Kernel의 실제 보호막 sound47 수명을 수행한다.
     std::vector<ArcherTypeData> archerTypes; // 원본 orientations/클러스터 수의 실제 보충 표다.
@@ -420,7 +421,7 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawSquidFinder> flyerFinder; // 한 비행체 표적 검색의 같은 일반 finder 커서를 보관한다.
     std::uint32_t flyerProcessEnd{63},flyerDependType{1}; // PATCH의 실제 프로세스 상한/의존 타입 전역이다.
     std::uint32_t windFlyerType{138}; // PATCH00541280의 현재 더스트 데빌 타입이다.
-    std::unique_ptr<RawFlyerPostPop> flyerPostPop; // 맨 오 워의 실제 프로세스/그림자/압축 시각 후처리다.
+    std::unique_ptr<RawFlyerPostPop> flyerPostPop; // 맨 오 워/훨리기그의 실제 생성·그림자·압축 시각 후처리다.
     std::uint32_t flyerProcessType{31}; // PATCH005410ec의 현재 공통 비행 프로세스 타입이다.
     std::array<std::uint8_t,64> flyerPacket{};bool writingFlyer{}; // 실제0x39 상태 writer와 송신의 단일 버퍼/선택 표식이다.
     std::unique_ptr<FlyerProcess> pendingFlyer; // 기본 생성자의 부착 경계까지 단일 프로세스 소유권을 보관한다.
@@ -1121,8 +1122,9 @@ struct RawCampaignSession::Impl {
             if (!pendingFlyer || &pendingFlyer->Fields()!=&fields) throw std::logic_error("비행 생성자의 현재 원문/소유권 불일치");
             if (!core.processes.Attach(std::move(pendingFlyer),type,parent,flags)) throw std::logic_error("비행 생성자의 free/dead 부모 부착 거부");
         };
-        hooks.frame=[this](FlyerProcessFields& fields) { flyerFrame->Frame(fields); };
-        hooks.notify=[this](FlyerProcessFields& fields,std::uint32_t message,std::uint32_t a,std::uint32_t b) { flyerFrame->Notify(fields,message,a,b); };hooks.parentDying=[this](FlyerProcessFields& fields) { flyerFrame->ParentDying(fields); };
+        hooks.frame=[this](FlyerProcessFields& fields) { if (Read(fields.bytes,0)==0x509f24U) throw std::logic_error("훨리기그 전용 비행 Frame0045d2c0 미연결");flyerFrame->Frame(fields); };
+        hooks.notify=[this](FlyerProcessFields& fields,std::uint32_t message,std::uint32_t a,std::uint32_t b) { if (Read(fields.bytes,0)==0x509f24U) throw std::logic_error("훨리기그 전용 통지0045bd60 미연결");flyerFrame->Notify(fields,message,a,b); };
+        hooks.parentDying=[this](FlyerProcessFields& fields) { if (Read(fields.bytes,0)==0x509f24U) throw std::logic_error("훨리기그 전용 홈파괴0045beb0 미연결");flyerFrame->ParentDying(fields); };
         flyer=std::make_unique<RawFlyerProcess>(core.pool,core.types,FlyerProcessGlobals{core.processState.server,core.processState.now,flyerProcessType},std::move(hooks));
         ConnectFlyerFrame(); // 최초 Pop/Kernel보다 먼저 현재 같은 Frame 소비자를 설치한다.
         FlyerPostPopHooks post;post.allocateRainProcess=[this] {
@@ -1133,12 +1135,33 @@ struct RawCampaignSession::Impl {
             if (!pendingFlyer) throw std::logic_error("비행 생성자의 실제 할당 누락");auto* current=pendingFlyer.get();
             flyer->Construct(current->Fields(),parent,home,speed,parameter);RawFlyerProcess::SpecializeRain(current->Fields()); // 실제 부착/첫 패킷 뒤에 전용 표를 쓴다.
         };
+        post.allocateSunProcess=[this] {
+            auto* allocation=std::malloc(0x88);if (!allocation) return false;FlyerProcessFields fields; // 원본136바이트의 미정 꼬리까지 같은 입력으로 보존한다.
+            std::memcpy(fields.bytes.data(),allocation,0x70);std::memcpy(fields.sunTail.data(),static_cast<const std::uint8_t*>(allocation)+0x70,0x18);std::free(allocation);
+            if (pendingFlyer) throw std::logic_error("훨리기그 생성자 부착의 예상 밖 재진입");pendingFlyer=std::make_unique<FlyerProcess>(*flyer,std::move(fields));return true;
+        };
+        post.createSunProcess=[this](Sid parent,Sid home,std::uint32_t speed,float parameter) {
+            if (!pendingFlyer) throw std::logic_error("훨리기그 생성자의 실제 할당 누락");auto* current=pendingFlyer.get(); // 기본 생성자 부착 뒤에도 같은 객체다.
+            flyer->Construct(current->Fields(),parent,home,speed,parameter);RawFlyerProcess::SpecializeSun(current->Fields());
+        };
+        post.repop=[this](Sid sid,std::uint32_t flags) { world.Repop(sid,flags); };
+        post.allocateSound=[this] {
+            if (pendingSunFlyerSound) throw std::logic_error("훨리기그 Sound47 중복 예약");pendingSunFlyerSound.reset(::operator new(sizeof(SoundProcess),std::nothrow));return pendingSunFlyerSound!=nullptr;
+        };
+        post.createSound=[this](Sid parent,std::uint32_t sound,std::uint32_t alternate,std::uint32_t flags) {
+            if (!pendingSunFlyerSound) throw std::logic_error("훨리기그 Sound47 실제 예약 누락");auto* storage=pendingSunFlyerSound.release();SoundProcess* process{}; // 같은 확보의 소유권을 생성자로 옮긴다.
+            try { process=new(storage) SoundProcess(*sounds,sound,alternate,flags); }catch (...) { ::operator delete(storage);throw; }
+            static_cast<void>(core.processes.Attach(std::unique_ptr<SoundProcess>(process),soundState.processType,parent,0x10));
+        };
         post.create=[this](std::uint32_t type,std::uint32_t flags) { return world.Create(type,flags); };post.pop=[this](Sid sid,float x,float y,std::uint32_t flags) { world.Pop(sid,x,y,flags); };
         post.unpop=[this](Sid sid,std::uint32_t flags) { world.Unpop(sid,flags); };post.initializeUnit=[this](Sid sid) { gunHit->SetTime(sid,core.processState.now); };
-        post.shadowOffset=[this](Sid sid) { if (Read(core.pool.Slot(sid),0)!=0x50a388) throw std::logic_error("다른 비행체 그림자 offset 미복원");return std::array<float,2>{0.5f,0.5f}; }; // 실제0045faa0의 두 상수다.
+        post.shadowOffset=[this](Sid sid) { const auto table=Read(core.pool.Slot(sid),0);if (table==0x50a1e8U) return std::array<float,2>{-0.6f,3.5f};if (table!=0x50a388U) throw std::logic_error("다른 비행체 그림자 offset 미복원");return std::array<float,2>{0.5f,0.5f}; }; // 실제45ef10/45faa0의 두 상수다.
         post.damageable=[this](Sid sid,std::uint32_t flags) { carrier->DamageablePostPop(sid,flags); };
         std::vector<FlyerPostPopType> details(core.types.size()); // 실제 불변 TYPE의 speed/전체 물리 프레임 수다.
-        for (const auto& asset:assets.game.Types()) { const auto type=70+asset.block;details[type].speed=std::bit_cast<std::uint32_t>(static_cast<float>(asset.definition.Number("speed").value_or(0)));details[type].frames=static_cast<std::int32_t>(core.frames[type].Codes().size()); } // 원본 같은 번호의 표만 보충한다.
+        for (const auto& asset:assets.game.Types()) {
+            const auto type=70+asset.block;details[type].speed=std::bit_cast<std::uint32_t>(static_cast<float>(asset.definition.Number("speed").value_or(0)));details[type].frames=static_cast<std::int32_t>(core.frames[type].Codes().size()); // 원본 같은 번호의 불변 표다.
+            const auto impact=asset.definition.String("impactSound"),active=asset.definition.String("activeSound");details[type].impactSound=impact && !impact->empty() ? soundNames.Lookup(*impact) : 0U;details[type].activeSound=active && !active->empty() ? soundNames.Lookup(*active) : 0U;
+        }
         flyerPostPop=std::make_unique<RawFlyerPostPop>(core.pool,core.types,details,core.processState.server,std::move(post));core.postPop.SetFlyerPostPop(flyerPostPop.get());
     }
     // 원본 제어/프레임·표적 검색을 같은 실제 큰 소비자에 연결하고 미복원 무기는 선택 시 구체적으로 거부한다.

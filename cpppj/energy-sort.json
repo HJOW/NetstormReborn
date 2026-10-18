@@ -25,9 +25,9 @@
     "tools/decomp_energy_supply.py": "a18c1913de8e3462dc30e21d1cbb62541600655630d8605c594ecc860d200434",
     "tools/decomp_energy_sort.py": "a203949bf138366de9812342953ecfe050dfa588a0c1df4536b5973284caf5ef",
     "cpppj/tests/fixtures/energy-sort-x86.tsv": "58f67ad1e9207c2b7793101100855d504c6167de92ee0176adf3be816489ab4e",
-    "cpppj/tests/CMakeLists.txt": "8641e7ac86784beb1fbe37b4908df1898574cf6c80bd641b40f65aff0d1d6d48",
+    "cpppj/tests/CMakeLists.txt": "d92c46b46c7e909a7b5c98a45676960024d0593a41f4e6d30b5ea6a65a44284b",
     "cpppj/src/client/RawCampaignSession.h": "9b8778ad3d884db1f91c1d03b8500485d73399a6b0c94c066a040c824c41e7e6",
-    "cpppj/src/client/RawCampaignSession.cpp": "21cb2dd9692a507109c6d5e141e130eaf6143132d816d6b3dd6117519e4f39cf",
+    "cpppj/src/client/RawCampaignSession.cpp": "9afae15f62ccf809145be8c0f5addaf7207f22038738c3a25f1d1650f2e595d7",
     "cpppj/tests/CampaignSessionTests.cpp": "e92bbf5d99392b05f92dcb2fda5de226f824631088aec127fb7219f36b344a5e",
     "cpppj/src/o/RawEnergySupply.h": "16298ecafac440612cf5722175fe7adade050e9bdd67015f8308fd37077998be",
     "cpppj/src/o/RawEnergySupply.cpp": "c5597f73998872c29ecb266356405d084ad36b24c6248a3cfc1a1bc43d55f495",
@@ -1473,6 +1473,25 @@
           "path": "cpppj/src/client/RawCampaignSession.cpp",
           "previous": "6a1533de4d7a9f0ed09c0c4a2b59077498e9d0aa0487119e8461381e2d9867ab",
           "current": "21cb2dd9692a507109c6d5e141e130eaf6143132d816d6b3dd6117519e4f39cf"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 187,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/sha256",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "8641e7ac86784beb1fbe37b4908df1898574cf6c80bd641b40f65aff0d1d6d48",
+          "current": "d92c46b46c7e909a7b5c98a45676960024d0593a41f4e6d30b5ea6a65a44284b"
+        },
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "21cb2dd9692a507109c6d5e141e130eaf6143132d816d6b3dd6117519e4f39cf",
+          "current": "9afae15f62ccf809145be8c0f5addaf7207f22038738c3a25f1d1650f2e595d7"
         }
       ]
     }

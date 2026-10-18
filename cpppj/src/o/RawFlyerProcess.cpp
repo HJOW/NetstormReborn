@@ -37,6 +37,11 @@ void RawFlyerProcess::Construct(FlyerProcessFields& fields,Sid parent,Sid home,s
     Need(hooks_.attach)(fields,parent,globals_.processType,8);
 }
 void RawFlyerProcess::SpecializeRain(FlyerProcessFields& fields) { Put(fields.bytes,0,0x509f60);Put(fields.bytes,kInner,0x509f40);Time(fields,96,0);Time(fields,104,0);Put(fields.bytes,84,0); } // 생성·부착 뒤의 실제 추가 쓰기다.
+// 원본은 생성자가 건드리지 않는+80/+84를 초기화하지 않는다. 전용 첫Frame에서 쓴다.
+void RawFlyerProcess::SpecializeSun(FlyerProcessFields& fields) {
+    Put(fields.bytes,0,0x509f24);Put(fields.bytes,kInner,0x509f04);Time(fields,104,0);
+    std::fill_n(fields.sunTail.begin(),16,std::uint8_t{});Put(fields.bytes,84,0);
+}
 // 첫 실제 nondead Form만 갱신하며 없으면 원문처럼 자연 반환한다.
 void RawFlyerProcess::Bind(Sid flyer,Sid home) const {
     if (!(types_.at(pool_.Slot(flyer)[10]).flags2&0x100000U)) Need(hooks_.assertion)(0x904);
@@ -70,11 +75,21 @@ std::uint16_t FlyerProcess::WritePacket(std::span<std::uint8_t> packet,bool pare
 RawFlyerPostPop::RawFlyerPostPop(SidPool& pool,std::span<const RiftTypeRecord> types,std::span<const FlyerPostPopType> details,const bool& server,FlyerPostPopHooks hooks):pool_(pool),types_(types.begin(),types.end()),details_(details.begin(),details.end()),server_(server),hooks_(std::move(hooks)) {
     if (pool.Edition()!=OriginalEdition::Patch1078 || types.size()!=188 || details.size()!=188) throw std::invalid_argument("비행 후처리는 PATCH188 타입만 복원했습니다");
 }
-bool RawFlyerPostPop::Handles(Sid sid) const { return Read(pool_.Slot(sid),0)==0x50a388U; } // 실제 맨 오 워 가상 표다.
+bool RawFlyerPostPop::Handles(Sid sid) const { const auto table=Read(pool_.Slot(sid),0);return table==0x50a388U || table==0x50a1e8U; } // 두 실제 전용 가상 표다.
 // 실제0045e6b0은 TYPE 포인터를 처음 snapshot하고 효과 뒤에도 그 TYPE의 현재 프레임 수를 사용한다.
 void RawFlyerPostPop::PostPop(Sid sid,std::uint32_t flags) const {
     if (!Handles(sid)) throw std::invalid_argument("다른 비행 파생 PostPop 미복원");
-    if ((flags&1U) && server_ && Need(hooks_.allocateRainProcess)()) { const auto home=Sid{static_cast<std::uint16_t>(Read(pool_.Slot(sid),12,2))};const auto speed=details_.at(pool_.Slot(sid)[10]).speed;Need(hooks_.createRainProcess)(sid,home,speed,0.5f); }
+    const bool sun=Read(pool_.Slot(sid),0)==0x50a1e8U; // 효과가 가상 표를 바꿔도 진입한 전용 몸체를 유지한다.
+    if (sun && (flags&1U)) {
+        const auto& original=details_.at(pool_.Slot(sid)[10]); // 홈/확보/부착 전에 읽은 TYPE 포인터다.
+        if (server_) {
+            const Sid home{static_cast<std::uint16_t>(Read(pool_.Slot(sid),12,2))}; // 두 가상 공간 효과가 공유하는 최초 홈이다.
+            Need(hooks_.unpop)(home,0);Put(pool_.AllocatedBytes(home),36,10);Need(hooks_.repop)(home,0);
+            if (Need(hooks_.allocateSunProcess)()) Need(hooks_.createSunProcess)(sid,Sid{static_cast<std::uint16_t>(Read(pool_.Slot(sid),12,2))},original.speed,0.6f);
+        }
+        if (Need(hooks_.allocateSound)()) Need(hooks_.createSound)(sid,original.impactSound,original.activeSound,1);
+    }
+    if (!sun && (flags&1U) && server_ && Need(hooks_.allocateRainProcess)()) { const auto home=Sid{static_cast<std::uint16_t>(Read(pool_.Slot(sid),12,2))};const auto speed=details_.at(pool_.Slot(sid)[10]).speed;Need(hooks_.createRainProcess)(sid,home,speed,0.5f); }
     const auto type=pool_.Slot(sid)[10];const auto& details=details_.at(type); // 프로세스 생성 효과가 끝난 현재 TYPE다.
     if (flags&1U) {
         if (std::bit_cast<std::int32_t>(Read(pool_.Slot(sid),36))<details.frames && (types_.at(type).flags1&0x400000U)) {

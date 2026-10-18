@@ -22,8 +22,8 @@
     "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
     "tools/decomp_flyer_postpop.py": "f87db63e6223bf422f95b117ea30ae7350269aff854c37822df96cdd788ec317",
     "tools/decomp_local_mission_transport.py": "db71da65079aa9a985a3a833edd224f089ba9a20137d92042551cb346937eb78",
-    "cpppj/src/o/RawFlyerProcess.h": "c30e63614af13e9675013562fdc26ffd01f045ef9770cb8b1c39de38b7e1d653",
-    "cpppj/src/o/RawFlyerProcess.cpp": "9029e835f9637a0bd30c08084eae956c05890b05b83d9a43885e3d53711ba6cb",
+    "cpppj/src/o/RawFlyerProcess.h": "a2d0495e6fb014cf9943c87a6c1428b130f179f44c92a2cce13637e38ee9865f",
+    "cpppj/src/o/RawFlyerProcess.cpp": "484ee6f5db4a59d46660d955922650aac8243d0d2bec398d6525c07c026282f9",
     "cpppj/tests/FlyerPostPopTests.cpp": "15f35b689f22127b967e43f7481212300487eb8afc1766f994ad1f7a99a3ec8e",
     "cpppj/tests/fixtures/flyer-postpop-x86.tsv": "111beec5675ad2fcd8edc4fd2fb7b5dbe2c129d8b3c796f58b68ec3a7c8d456f"
   },
@@ -145,5 +145,26 @@
       "cpppj/build/bin/Release/netstorm_tests.exe": "d6c651892a205885d32edd81559c44c40d6b1d6e2a946a0ca0103b308da4a025",
       "cpppj/build/bin/Release/NetstormCpp.exe": "2951dac82a772a4bcc1fd24ffbf0e352f3d24530a35a216d339574b1c7940e68"
     }
-  }
+  },
+  "integration_updates": [
+    {
+      "date": "2026-10-18",
+      "unit": 187,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/o/RawFlyerProcess.h",
+          "previous": "c30e63614af13e9675013562fdc26ffd01f045ef9770cb8b1c39de38b7e1d653",
+          "current": "a2d0495e6fb014cf9943c87a6c1428b130f179f44c92a2cce13637e38ee9865f"
+        },
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/o/RawFlyerProcess.cpp",
+          "previous": "9029e835f9637a0bd30c08084eae956c05890b05b83d9a43885e3d53711ba6cb",
+          "current": "484ee6f5db4a59d46660d955922650aac8243d0d2bec398d6525c07c026282f9"
+        }
+      ]
+    }
+  ]
 }

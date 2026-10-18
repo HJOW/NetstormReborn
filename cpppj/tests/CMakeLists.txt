@@ -1567,3 +1567,8 @@ set_source_files_properties(QuickHelpRequestTests.cpp PROPERTIES COMPILE_DEFINIT
 target_sources(netstorm_tests PRIVATE SpecialDamageTests.cpp)
 set_source_files_properties(SpecialDamageTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_SPECIAL_DAMAGE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/special-damage-x86.tsv\"")
+
+# 훨리기그의 실제136바이트 생성/홈/소리/그림자391입력을 대조한다.
+target_sources(netstorm_tests PRIVATE SunFlyerPostPopTests.cpp)
+set_source_files_properties(SunFlyerPostPopTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_SUN_FLYER_POSTPOP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/sun-flyer-postpop-x86.tsv\"")
