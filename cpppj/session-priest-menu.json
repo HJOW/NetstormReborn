@@ -45,7 +45,7 @@
     "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
     "tools/decomp_carrier_content_notice.py": "dbb32841a7019edbcb411f75094046c8bf0e20b4ed503e109a14b79a79d8a94c",
     "cpppj/src/o/CMakeLists.txt": "3d0010c676da1156f5223bfcaa207887a88910a4cf50733a7b2e9e515f939c48",
-    "cpppj/tests/CMakeLists.txt": "a9d9e8fb94823089dd875a68aa672569e84ace4ab3c7af9b92c573abffd0e7ae"
+    "cpppj/tests/CMakeLists.txt": "546d079ab26024859935ce5f6fd8008f1ed4503c4cb7d9c6a0fbbd038356cd62"
   },
   "validation": {
     "configuration": "Release",
@@ -1309,6 +1309,19 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "9626f493b99885097409123e0aaf054c7138a413cdcf767ea4ceb1dc714bdf79",
           "current": "9211b230a3819788c79003fee65b8de002aed2441b049a9b460e430ec9f2f508"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 168,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/sha256",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "a9d9e8fb94823089dd875a68aa672569e84ace4ab3c7af9b92c573abffd0e7ae",
+          "current": "546d079ab26024859935ce5f6fd8008f1ed4503c4cb7d9c6a0fbbd038356cd62"
         }
       ]
     }

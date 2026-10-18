@@ -2,6 +2,7 @@
 #include "client/RawMenuControls.h"
 #include "client/DrawSort.h"
 #include "client/GumpFormBinding.h"
+#include "client/FloatingSpGump.h"
 #include <algorithm>
 #include <bit>
 #include <sstream>
@@ -47,6 +48,10 @@ struct RawMenuControls::Impl {
     std::map<std::uint32_t,std::unique_ptr<ScrollGumpArrowNode>> arrows; // 공통 ButtonGump와 공유하는 화살표다.
     std::map<std::uint32_t,std::unique_ptr<ScrollGumpThumbNode>> thumbs; // 실제 배경 손잡이다.
     std::map<std::uint32_t,std::unique_ptr<GumpBackgroundNode>> backgrounds; // 화살표가 소유하는 실제 배경이다.
+    std::map<std::uint32_t,std::unique_ptr<FloatingSpGumpNode>> costs; // 같은 실제 트리의 비용 표시 노드다.
+    TextGumpState costTextState; // 한 줄 TextGump의 실제 종류 BYTE45다.
+    std::unique_ptr<TextGump> costText; // 같은 조각/클립/기본 생성·수명을 사용하는 한 줄 표시기다.
+    std::unique_ptr<FloatingSpGump> costGump; // 원본10.78 비용 표시의 생성/Idle/삭제다.
     GumpBackgroundAssets backgroundAssets; // 실제 모든 TYPE/SHP 헤더다.
     MarkupAssets markupAssets; // 실제 그림 조각 자산/기준점이다.
     GumpBackgroundDrawHooks activeBackground; // Draw 동안만 현재 실제 픽셀 대상에 연결된다.
@@ -104,6 +109,19 @@ struct RawMenuControls::Impl {
         StyleTextHooks sh;BindStyleTextFonts(sh,metrics);BindStyleTextPalette(sh,palette);BindMarkup(sh,*pictures);sh=markup->Hooks(std::move(sh));
         sh.textDraw=[this](auto bytes,auto point,const auto& context) { if (!activeText) throw std::logic_error("메뉴 글자 실제 Draw 문맥 없음");activeText->Draw(bytes,point,DecodeGumpTextContext(context)); };
         style=std::make_unique<StyleText>(fragments,std::move(sh),assets.Edition());StyleTextBufferHooks bh;BindStyleTextBufferFonts(bh,metrics);BindStyleTextBufferMarkup(bh,*pictures);buffers=std::make_unique<StyleTextBufferStore>(fragments,*style,std::move(bh),[](auto) {});
+        costText=std::make_unique<TextGump>(common.create,costTextState,common.factory,common.lifetime,common.collection,clip,*style,
+            TextGumpHooks{[this](auto token) -> TextGumpNode* { return Find(costs,token); },common.node});
+        if (assets.Edition()==o::OriginalEdition::Patch1078) {
+            FloatingSpGumpHooks fh;fh.node=[this](auto token) { return Find(costs,token); };
+            fh.now=[this] { if (!hooks.gameSeconds) throw std::logic_error("비용 표시의 실제 게임 시계 미연결");return hooks.gameSeconds(); };
+            fh.allocate=[this](auto bytes) { return Allocate(bytes,3); };fh.constructText=[this](auto token) { costText->Construct(token,0,0,0,0); };
+            fh.clearText=[this](auto token) { costText->Clear(token); };fh.fitText=[this](auto token) { costText->Fit(token); };
+            fh.styledText=[this](auto token,std::string_view text) { auto& node=*Find(costs,token);style->Parse(node.head,text,node.textContext); };
+            fh.idle=[this](auto token,bool enabled) { common.lifetime.SetIdle(token,enabled); };fh.redraw=[this](auto,bool) { common.changed(); };
+            fh.kill=[this](auto token) { common.lifetime.Kill(token); };fh.attach=common.attach;
+            fh.reference=[](auto,auto) { throw std::logic_error("비용 표시00464540의 실제 객체 참조 미연결"); };
+            fh.deleteText=[this](auto token,auto flags) { return costText->DeleteScalar(token,flags); };costGump=std::make_unique<FloatingSpGump>(common.create,std::move(fh));
+        }
         ScrollGumpHooks sl;sl.node=[this](auto token) { return Find(sliders,token); };sl.thumbNode=[this](auto token) { return Find(thumbs,token); };sl.baseNode=common.node;sl.push=[this](auto token) { common.tree.Push(token); };sl.attach=common.attach;sl.redraw=[this](auto,bool) { common.changed(); };sl.poll=hooks.poll;
         slider=std::make_unique<ScrollGump>(common.create,sliderState,common.tree,common.collection,common.events,common.input,std::move(sl));
         ScrollGumpWidgetHooks sw;sw.node=[this](auto token) { return Find(sliders,token); };sw.arrow=[this](auto token) { return Find(arrows,token); };sw.thumb=[this](auto token) { return Find(thumbs,token); };sw.base=common.node;
@@ -138,12 +156,13 @@ struct RawMenuControls::Impl {
         else if ((bytes==0xd8 || bytes==0xd4) && context==2) thumbs.emplace(token,std::make_unique<ScrollGumpThumbNode>());
         else if (bytes==0x178) arrows.emplace(token,std::make_unique<ScrollGumpArrowNode>());
         else if (bytes==0x38 && context==1) return token;
+        else if (bytes==0xb8 && context==3) costs.emplace(token,std::make_unique<FloatingSpGumpNode>());
         else throw std::logic_error("원본 메뉴 파생 할당 크기/문맥 오류");return token;
     }
     // 모든 공통 처리는 같은 실제 파생 기본 주소를 받는다.
     GumpCreateNode* Node(std::uint32_t token) const {
         if (auto* n=Find(menus,token)) return n;if (auto* n=Find(decorations,token)) return n;if (auto* n=Find(titles,token)) return n;if (auto* n=Find(sliders,token)) return n;
-        if (auto* n=Find(arrows,token)) return n;if (auto* n=Find(thumbs,token)) return n;return Find(backgrounds,token);
+        if (auto* n=Find(arrows,token)) return n;if (auto* n=Find(thumbs,token)) return n;if (auto* n=Find(costs,token)) return n;return Find(backgrounds,token);
     }
     // 화살표 배경처럼 공통 생성자가 소유한 실제 자식도 같은 출력 가지에 포함한다.
     bool OwnsBranch(std::uint32_t token) const {
@@ -190,16 +209,16 @@ std::uint32_t RawMenuControls::Handle(std::uint32_t token,std::uint32_t event,st
 // 현재 대상의 실제 표시 통지를 실행한다.
 void RawMenuControls::Broadcast(std::uint32_t token,std::uint32_t event,std::uint32_t first,std::uint32_t second) const { impl_->Broadcast(token,event,first,second); }
 // 원본 메뉴 확장 프레임을 진행한다.
-void RawMenuControls::Idle(std::uint32_t token) const { if (impl_->menus.contains(token)) impl_->menu->Idle(token); }
+void RawMenuControls::Idle(std::uint32_t token) const { if (impl_->menus.contains(token)) impl_->menu->Idle(token);else if (impl_->costs.contains(token)) impl_->costGump->Idle(token); }
 // 같은 Client에 실제 재그리기 요청을 전달한다.
 void RawMenuControls::Redraw(std::uint32_t token,bool erase) const { impl_->Redraw(token,erase); }
 // 원본 파서·제목·메뉴가 소유한 자원을 각 소멸자로 반납한다.
 void RawMenuControls::DeleteScalar(std::uint32_t token,std::uint32_t flags) const {
     auto& s=*impl_;if (s.menus.contains(token)) s.widgets->DeleteScalar(token,flags);else if (s.titles.contains(token)) s.titleWidgets->DeleteScalar(token,flags);
-    else if (s.decorations.contains(token)) s.decoration->DeleteScalar(token,flags);else if (s.sliders.contains(token) || s.thumbs.contains(token) || s.arrows.contains(token)) s.sliderWidgets->DeleteScalar(token,flags);else s.common.lifetime.DeleteScalar(token,flags);
+    else if (s.decorations.contains(token)) s.decoration->DeleteScalar(token,flags);else if (s.costs.contains(token)) s.costGump->DeleteScalar(token,flags);else if (s.sliders.contains(token) || s.thumbs.contains(token) || s.arrows.contains(token)) s.sliderWidgets->DeleteScalar(token,flags);else s.common.lifetime.DeleteScalar(token,flags);
 }
 // 공통 scalar의 release만 실제 저장소를 지운다.
-void RawMenuControls::Release(std::uint32_t token) { auto& s=*impl_;s.menus.erase(token);s.decorations.erase(token);s.titles.erase(token);s.sliders.erase(token);s.arrows.erase(token);s.thumbs.erase(token);s.backgrounds.erase(token); }
+void RawMenuControls::Release(std::uint32_t token) { auto& s=*impl_;s.menus.erase(token);s.decorations.erase(token);s.titles.erase(token);s.sliders.erase(token);s.arrows.erase(token);s.thumbs.erase(token);s.backgrounds.erase(token);s.costs.erase(token); }
 // controlled 스택의 실제 루트 메뉴를 공통 루트에 부착한다.
 void RawMenuControls::Open(ScreenPoint point,const std::function<void(const MenuGumpWidgets&,const MenuGumpControls&,const MenuGump&)>& builder) {
     Close();auto& s=*impl_;if (!builder || s.menuState.index) throw std::invalid_argument("실제 메뉴 builder/controlled 스택 계약 오류");
@@ -234,7 +253,7 @@ void RawMenuControls::Draw(std::span<std::uint8_t> pixels,int pitch,int height,c
         ~ResetDraw() { state.activeText=nullptr;state.activeBackground={};state.activePicture={}; } // 정상/예외 반환의 같은 정리다.
     } reset{s};
     draw.draw=[&](auto token) {
-        if (s.decorations.contains(token)) s.decoration->Draw(token);else if (s.titles.contains(token)) s.title->Draw(token);else if (s.arrows.contains(token)) s.sliderWidgets->DrawArrow(token,s.common.collection,text,target);
+        if (s.costs.contains(token)) s.costText->Draw(token);else if (s.decorations.contains(token)) s.decoration->Draw(token);else if (s.titles.contains(token)) s.title->Draw(token);else if (s.arrows.contains(token)) s.sliderWidgets->DrawArrow(token,s.common.collection,text,target);
         else if (s.thumbs.contains(token)) s.sliderWidgets->DrawThumb(token,s.common.collection,*s.backgroundDraw);else if (s.Background(token)) s.backgroundDraw->Draw(token);
     };
     MenuGumpDrawHooks mh;mh.node=[&](auto token) { return Find(s.menus,token); };mh.base=s.common.node;GumpDecorationPixelTarget decorationPixels(target,s.assets);BindMenuGumpDrawAssets(mh,s.assets,decorationPixels);
@@ -272,6 +291,24 @@ std::vector<GumpControl> RawMenuControls::Controls() const {
 }
 // 원본 생성/소멸 개수와 실제 현재 표시 여부를 구분해 인스턴스 생존을 반환한다.
 bool RawMenuControls::HasMenus() const { return impl_->menuState.instances!=0; }
+// 동일 원본 처리기를 통해 실제 비용 표시를 생성한다. 다른 판본을 추정하지 않는다.
+std::uint32_t RawMenuControls::ShowSp(std::int32_t cost,std::int32_t x,std::int32_t y,std::uint32_t reference) {
+    auto& s=*impl_;if (!s.costGump) throw std::logic_error("현재 판본의 비용 표시 미복원");const auto token=s.costGump->Show(cost,x,y,reference);s.common.changed();return token;
+}
+// 입력/메뉴 콜백이 반환한 뒤 동일 등록표의 가상 소멸/해제를 수행한다.
+void RawMenuControls::CleanupFrame() { impl_->common.lifetime.Cleanup(); }
+// 현재 실제 노드와 모든 부모의 visible/dead를 읽어 숨긴 메뉴·삭제 예약 표시를 제외한다.
+bool RawMenuControls::HasOverlay() const {
+    auto& s=*impl_;
+    // 이 계층의 실제 각 노드가 공통 트리에서 표시되는지 조회한다.
+    for (const auto token:s.common.create.entries) if (s.Node(token)) {
+        bool visible=true;
+        // 숨긴 부모 아래 표시 노드를 출력 대상으로 만들지 않는다.
+        for (auto current=token;current;current=s.common.node(current)->parent) { const auto flags=s.common.node(current)->flags;if (!(flags&1) || (flags&0x10000)) { visible=false;break; } }
+        if (visible) return true;
+    }
+    return false;
+}
 // 원본 트리의 현재 visible/dead/부모 관계를 따라 실제 표시 메뉴의 경계를 읽는다.
 bool RawMenuControls::Contains(ScreenPoint point) const {
     auto& s=*impl_;
@@ -288,6 +325,8 @@ bool RawMenuControls::Contains(ScreenPoint point) const {
 std::string RawMenuControls::Report() const {
     auto& s=*impl_;std::ostringstream out;out<<"raw_menus\t"<<s.menuState.instances<<'\t'<<s.menuState.index<<'\t'<<s.menus.size()<<'\t'<<s.titles.size()<<'\t'<<s.fragments.fragments.size()<<'\n';
     out<<"raw_menu_input\t"<<s.lastInput[0]<<'\t'<<s.lastInput[1]<<'\t'<<s.lastInput[2]<<'\t'<<s.lastInput[3]<<'\n';
+    // 비용 표시도 같은 등록 토큰·원본 현재 필드와 소유 문자열 체인을 보고한다.
+    for (const auto& [token,node]:s.costs) out<<"raw_sp_gump\t"<<token<<'\t'<<node->id<<'\t'<<node->parent<<'\t'<<node->flags<<'\t'<<node->x<<'\t'<<node->y<<'\t'<<node->velocity<<'\t'<<node->acceleration<<'\t'<<node->stamp<<'\t'<<node->head<<'\n';
     // 실제 각 메뉴의 현재 배치/선택/확장/링크를 같은 저장소에서 보고한다.
     for (const auto& [token,node]:s.menus) { const auto rect=s.common.collection.Bounds(token);out<<"raw_menu\t"<<token<<'\t'<<node->id<<'\t'<<node->parent<<'\t'<<node->flags<<'\t'<<node->menuFlags<<'\t'<<node->selection<<'\t'<<node->expanding<<'\t'<<rect.left<<'\t'<<rect.top<<'\t'<<rect.right<<'\t'<<rect.bottom<<'\n'; }
     // 사용자 검사도 실제 현재 StyleText/명령/배치와 모든 부모의 표시 상태만 읽는다.

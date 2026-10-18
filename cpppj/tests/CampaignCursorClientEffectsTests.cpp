@@ -21,6 +21,9 @@ TEST_CASE(CampaignCursorClientEffects_CurrentPollAndOriginalTextPreserveOtherEff
     CHECK(effects.lifecycle.translate("caf\xc3\xa9")=="caf\xe9");
     effects.lifecycle.highlight(4);effects.lifecycle.closePopups();effects.send(9,std::array<std::uint8_t,25>{});
     CHECK(selected==4 && closed==1 && sent==34);
-    CHECK(!effects.drop.refresh && !effects.drop.showSp && !effects.drop.record && !effects.drop.battleRefresh);
+    CHECK(!effects.drop.refresh && effects.drop.showSp && !effects.drop.record && !effects.drop.battleRefresh);
+    bool missingTree{}; // 실제 비용 표시는 공통 Gump 계층이 없으면 빈 성공 대신 오류로 거부해야 한다.
+    try { effects.drop.showSp(800,10,20,0); } catch (const std::logic_error&) { missingTree=true; }
+    CHECK(missingTree);
     CHECK(effects.lifecycle.measure && effects.lifecycle.selectCursor && effects.placement.invalidate);
 }

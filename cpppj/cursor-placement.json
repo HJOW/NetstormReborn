@@ -20,8 +20,8 @@
     "cpppj/src/client/RawCursorPlacement.h": "1e00874a18228650f79cc1b0fb4130818b5fc124727abbc482feb0983e85446e",
     "cpppj/src/client/RawCursorPlacement.cpp": "64c57e1581716ad63ebf952aa9c4b7ce4c432ec20f3ca23dcfeede6fcf8a1a46",
     "cpppj/tests/CursorPlacementTests.cpp": "a03f225bbf82cce49a770d111b2d4d24f5c496cde97560f3f55c6bce50dad997",
-    "cpppj/src/client/CMakeLists.txt": "02073c55c11cfce5eaef3bf72bdb3d4f2e6ad5bba663c8b37150b31a93f5cabb",
-    "cpppj/tests/CMakeLists.txt": "a9d9e8fb94823089dd875a68aa672569e84ace4ab3c7af9b92c573abffd0e7ae"
+    "cpppj/src/client/CMakeLists.txt": "b430423cb42e61cd75fc9aeeff7f1c9fed72b935119c84f737bd85d87df31c34",
+    "cpppj/tests/CMakeLists.txt": "546d079ab26024859935ce5f6fd8008f1ed4503c4cb7d9c6a0fbbd038356cd62"
   },
   "limitations": [
     "세 커서 몸체와 실제 CRT 절삭/floor만 실행한다. decoder/SHP/설명/GUI/지역/투영/화면 갱신은 명시 경계다.",
@@ -649,6 +649,25 @@
           "path": "cpppj/src/client/CMakeLists.txt",
           "previous": "78725b028b113f3e2c815aebcc41847d2f79fc8acdcd237f4a75a05aa9854a3b",
           "current": "02073c55c11cfce5eaef3bf72bdb3d4f2e6ad5bba663c8b37150b31a93f5cabb"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 168,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/client/CMakeLists.txt",
+          "previous": "02073c55c11cfce5eaef3bf72bdb3d4f2e6ad5bba663c8b37150b31a93f5cabb",
+          "current": "b430423cb42e61cd75fc9aeeff7f1c9fed72b935119c84f737bd85d87df31c34"
+        },
+        {
+          "group": "/sha256",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "a9d9e8fb94823089dd875a68aa672569e84ace4ab3c7af9b92c573abffd0e7ae",
+          "current": "546d079ab26024859935ce5f6fd8008f1ed4503c4cb7d9c6a0fbbd038356cd62"
         }
       ]
     }

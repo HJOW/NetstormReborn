@@ -61,7 +61,7 @@
       "cpppj/src/client/RawObjectMenu.cpp": "f64429574e0fd57e325cd99b47e3c46197979b5047d879b1a9693fda7d58a1ef",
       "cpppj/tests/PlayerIdentityTests.cpp": "36f77b04d42a18eb21ea177c53ed4b3996d39ac3a3e1fc8e7b7ddf91be1dbbc4",
       "cpppj/tests/ObjectMenuTests.cpp": "7485055d8b76db99eb8e2fc117f9d89eb4892c2620112c1afbb1ed267710aa37",
-      "cpppj/tests/RawMenuControlsTests.cpp": "df26ef116d9971df27bf12f1f857a398dec99ecfe0d72d82c13600244b17d1dd"
+      "cpppj/tests/RawMenuControlsTests.cpp": "5ce029d5ba102c1784696d8df58e3f3691b6bdf01671b013793a6e504fbfc4f4"
     }
   },
   "integration_updates": [
@@ -122,6 +122,19 @@
           "path": "cpppj/src/o/RawPlayerIdentity.cpp",
           "previous": "3dc55d9fd0fac8fd4fb7d2caf3f4fc46618c6df9416709aaf1548629daf99e41",
           "current": "96c5c91ae865f10f9deba31b59ed9bac40df16c1d38d38d37329100732cfd49c"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 168,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/product_validation/sha256",
+          "path": "cpppj/tests/RawMenuControlsTests.cpp",
+          "previous": "df26ef116d9971df27bf12f1f857a398dec99ecfe0d72d82c13600244b17d1dd",
+          "current": "5ce029d5ba102c1784696d8df58e3f3691b6bdf01671b013793a6e504fbfc4f4"
         }
       ]
     }

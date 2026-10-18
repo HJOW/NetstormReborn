@@ -50,7 +50,7 @@
       "cpppj/src/o/RawPlayerIdentity.h": "fe72fe29c2286a6ee6850affe138d9447516bdab1be3e5ab581f58438cc9b0ff",
       "cpppj/src/o/RawPlayerIdentity.cpp": "96c5c91ae865f10f9deba31b59ed9bac40df16c1d38d38d37329100732cfd49c",
       "cpppj/tests/PlayerMenuTests.cpp": "3097ac8bbf9c9a3fd463a9ae55daf5b5134fa1bf31fa97fbd237e87e9c2ca73d",
-      "cpppj/tests/RawMenuControlsTests.cpp": "df26ef116d9971df27bf12f1f857a398dec99ecfe0d72d82c13600244b17d1dd"
+      "cpppj/tests/RawMenuControlsTests.cpp": "5ce029d5ba102c1784696d8df58e3f3691b6bdf01671b013793a6e504fbfc4f4"
     }
   },
   "integration_updates": [
@@ -70,6 +70,19 @@
           "path": "cpppj/src/o/RawPlayerIdentity.cpp",
           "previous": "3dc55d9fd0fac8fd4fb7d2caf3f4fc46618c6df9416709aaf1548629daf99e41",
           "current": "96c5c91ae865f10f9deba31b59ed9bac40df16c1d38d38d37329100732cfd49c"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 168,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/product_validation/sha256",
+          "path": "cpppj/tests/RawMenuControlsTests.cpp",
+          "previous": "df26ef116d9971df27bf12f1f857a398dec99ecfe0d72d82c13600244b17d1dd",
+          "current": "5ce029d5ba102c1784696d8df58e3f3691b6bdf01671b013793a6e504fbfc4f4"
         }
       ]
     }

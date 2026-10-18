@@ -1171,6 +1171,19 @@
           "current": "9211b230a3819788c79003fee65b8de002aed2441b049a9b460e430ec9f2f508"
         }
       ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 168,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "a9d9e8fb94823089dd875a68aa672569e84ace4ab3c7af9b92c573abffd0e7ae",
+          "current": "546d079ab26024859935ce5f6fd8008f1ed4503c4cb7d9c6a0fbbd038356cd62"
+        }
+      ]
     }
   ],
   "currentSources": {
@@ -1193,7 +1206,7 @@
     "cpppj/src/o/SquidDisplay.cpp": "adff73d1c710cf295aed17e2a06cb90294e1399e5e455d423659f37c336f3dc6",
     "cpppj/src/o/SquidPop.cpp": "61f8db73c663d5d7c8880d73bc310cf7884e361bb76402e0946241e02b7dcd17",
     "cpppj/src/o/SquidUnpop.cpp": "f9a932b6ee543cc2ee051d6f67afb0c56fca1f325cc51d29ca3d0dc3adf26fef",
-    "cpppj/tests/CMakeLists.txt": "a9d9e8fb94823089dd875a68aa672569e84ace4ab3c7af9b92c573abffd0e7ae",
+    "cpppj/tests/CMakeLists.txt": "546d079ab26024859935ce5f6fd8008f1ed4503c4cb7d9c6a0fbbd038356cd62",
     "cpppj/tests/CampaignSessionTests.cpp": "9211b230a3819788c79003fee65b8de002aed2441b049a9b460e430ec9f2f508",
     "cpppj/tests/ConstructionArrivalTests.cpp": "3282c1768168e0301078a78de6d7e692d84d917bef5866bf1da22bd0c1b4b6f4",
     "cpppj/tests/CursorManaTests.cpp": "3f9aa47024782b0afe4f165a2145fa4f27706d8b5b7c1434f8e94c65a5318daa",

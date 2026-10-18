@@ -14,9 +14,9 @@
     "cpppj/src/client/GameWorld.h": "3dbe474db82b47dc6113724a36adcb59d7ad68ab2d514b3bad57f99fcf056c80",
     "cpppj/src/client/RawCampaignSession.cpp": "bf62ab047f0add6fc0f6f4148f829367adccf6122de357b8647fe88e246c7fc2",
     "cpppj/src/client/RawCampaignSession.h": "5979a1512864ee3f2f185a0bbb61114245908439e93545913cfdd003b665a1ac",
-    "cpppj/src/client/UberGump.cpp": "3654c6a3ec3fdb25ed11d1ea3f86354020c4c1372cb25eb451d26c9d035a7919",
+    "cpppj/src/client/UberGump.cpp": "2c4a64a28e45bc6613a1dc40bb3ef9a8375bf4278444b1585eaf9f7db84ced34",
     "cpppj/src/client/UserInput.cpp": "fd1bee42a48c4a33098114e813a7909d449791671fb0e313b76efc55216c20bd",
-    "cpppj/tests/CMakeLists.txt": "a9d9e8fb94823089dd875a68aa672569e84ace4ab3c7af9b92c573abffd0e7ae",
+    "cpppj/tests/CMakeLists.txt": "546d079ab26024859935ce5f6fd8008f1ed4503c4cb7d9c6a0fbbd038356cd62",
     "cpppj/tests/CampaignSessionTests.cpp": "9211b230a3819788c79003fee65b8de002aed2441b049a9b460e430ec9f2f508",
     "tools/cpp_campaign_entry_smoke.py": "59b39e067a2e51cc7f6358d8adc198e4cbd5682bc6109e9b1e0407fa7f3550aa",
     "cpppj/src/client/RawCarrierInput.h": "27db41be147df6a13b60aa9faa68751dc1d54a09fae5945ee0e9f762f5979be4",
@@ -2125,6 +2125,25 @@
           "path": "cpppj/src/client/GameWorldInput.inc",
           "previous": "3e6b1f1aa9af0631bdf1602eadfe5048c873a5d979aca26e624b64bb78472d64",
           "current": "f03ba61623c0d8a1ed2a1108eaebff769486cc925bc8872626061f045758efd7"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 168,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/UberGump.cpp",
+          "previous": "3654c6a3ec3fdb25ed11d1ea3f86354020c4c1372cb25eb451d26c9d035a7919",
+          "current": "2c4a64a28e45bc6613a1dc40bb3ef9a8375bf4278444b1585eaf9f7db84ced34"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "a9d9e8fb94823089dd875a68aa672569e84ace4ab3c7af9b92c573abffd0e7ae",
+          "current": "546d079ab26024859935ce5f6fd8008f1ed4503c4cb7d9c6a0fbbd038356cd62"
         }
       ]
     }

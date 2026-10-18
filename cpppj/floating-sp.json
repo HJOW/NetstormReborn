@@ -1,0 +1,23 @@
+{
+  "edition": "10.78",
+  "entries": [
+    "0043db70",
+    "0043dc50",
+    "0043dd20",
+    "0043e620",
+    "004d3080",
+    "004bc790"
+  ],
+  "scope": "실제 생성/래퍼/Idle/파생 scalar·TextGump 소멸 전체. Text 생성/문자열/측정/기본소멸·할당·가상 재그리기/부착/객체참조·idle등록/Kill은 효과 관측 경계. 원본 창 실행 없음.",
+  "uniqueInputs": 426,
+  "normalReturns": 852,
+  "instructions": 41006,
+  "precisionDifferentInputs": 0,
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_floating_sp.py": "fb929f22789726a90c5dd98e74aa70bb319ff03153349cd8db76b3ce8b0d204c",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "cpppj/tests/fixtures/floating-sp-x86.tsv": "89c61652ca97026e9b3d9a9c8e294292d6d6d2e7e87c3fbc7d67b864463a4aeb"
+  }
+}

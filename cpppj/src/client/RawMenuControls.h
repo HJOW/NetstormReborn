@@ -35,6 +35,7 @@ struct RawMenuHooks {
     std::function<InputEvent(std::uint32_t)> poll; // 실제 현재 마우스 폴링이다.
     std::function<void(std::uint32_t)> cursor; // 실제 커서 리소스 선택이다.
     std::function<o::GumpFormHost&()> objectForms; // 매Form효과에서현재Session의같은호스트를조회한다. 메뉴보다먼저Session을반납하지않는다.
+    std::function<double()> gameSeconds; // 비용 표시의0055b4d0 현재 게임 시각이다. 벽시계와 구별한다.
 };
 // 가상 분배만 조립한다. 개별 생성/배치/입력/출력의 계산은 기존 원본 몸체를 그대로 사용한다.
 class RawMenuControls {
@@ -74,6 +75,12 @@ public:
     std::optional<ScreenPoint> Point(std::string_view label) const;
     std::vector<GumpControl> Controls() const;
     bool HasMenus() const;
+    // 실제 비용 표시를 같은 루트/StyleText/idle/수명에 생성한다. 원본 커서의 reference는0이다.
+    std::uint32_t ShowSp(std::int32_t cost,std::int32_t x,std::int32_t y,std::uint32_t reference=0);
+    // 메뉴 또는 비용 표시 중 현재 실제 표시 노드가 있는지 원본 visible/dead로 읽는다.
+    bool HasOverlay() const;
+    // 원본004662b0의 같은 지연 삭제 큐를 정리한다. Client는 비정지 프레임의 Idle 전에 호출한다.
+    void CleanupFrame();
     // 모든 부모가 visible인 실제 메뉴/자식 안인지 읽는다. 하위 메뉴를 루트 사각형으로 자르지 않는다.
     bool Contains(ScreenPoint point) const;
     std::string Report() const;

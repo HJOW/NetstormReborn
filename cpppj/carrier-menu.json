@@ -50,7 +50,7 @@
       "cpppj/src/client/RawCarrierMenu.h": "e4ef0cccd8c956ccf6c167a7b08e0a9350f46206e08a9670dbaed6272d7749d8",
       "cpppj/src/client/RawCarrierMenu.cpp": "4a0fada9b8ac9d00eab37955189a8ac669d26f1d22559deae229a6ce3637dc1e",
       "cpppj/tests/CarrierMenuTests.cpp": "2cd7dfcaffb42c49ab5916e3521263bee768a6eed94a8ee66bca3567c39d2313",
-      "cpppj/tests/RawMenuControlsTests.cpp": "df26ef116d9971df27bf12f1f857a398dec99ecfe0d72d82c13600244b17d1dd"
+      "cpppj/tests/RawMenuControlsTests.cpp": "5ce029d5ba102c1784696d8df58e3f3691b6bdf01671b013793a6e504fbfc4f4"
     }
   },
   "integration_updates": [
@@ -100,6 +100,19 @@
           "path": "cpppj/src/client/RawCarrierMenu.cpp",
           "previous": "0cea02b171cccc0909d96d55ccc09551dfabfec0d65473b14ff687a28eae7e88",
           "current": "4a0fada9b8ac9d00eab37955189a8ac669d26f1d22559deae229a6ce3637dc1e"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 168,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/product_validation/sha256",
+          "path": "cpppj/tests/RawMenuControlsTests.cpp",
+          "previous": "df26ef116d9971df27bf12f1f857a398dec99ecfe0d72d82c13600244b17d1dd",
+          "current": "5ce029d5ba102c1784696d8df58e3f3691b6bdf01671b013793a6e504fbfc4f4"
         }
       ]
     }

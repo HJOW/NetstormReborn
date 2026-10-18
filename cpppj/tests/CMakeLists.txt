@@ -1475,3 +1475,8 @@ target_compile_definitions(netstorm_tests PRIVATE NETSTORM_CARRIER_INPUT_FIXTURE
 # 동맹 수신 원문은 해당 검사 소스만 다시 컴파일하도록 개별 정의로 연결한다.
 set_property(SOURCE PlayerParticipationTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS
     "NETSTORM_PLAYER_ALLIANCE_PACKET_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/player-alliance-packet-x86.tsv\"")
+
+# 독립 비용 표시 원문은 이 소스에만 경로를 공급한다.
+target_sources(netstorm_tests PRIVATE FloatingSpGumpTests.cpp)
+set_source_files_properties(FloatingSpGumpTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_FLOATING_SP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/floating-sp-x86.tsv\"")

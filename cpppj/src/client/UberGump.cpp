@@ -163,6 +163,7 @@ UberGump::UberGump(Client& client) : client_(client) {
     menuHooks.sound=[this](std::string_view name) { client_.WorldAudio().Sounds().PlayByName(name,0,0,0,0,0); };
     menuHooks.poll=[this](auto code) { return client_.Poll(code); };menuHooks.cursor=[this](auto number) { client_.GetCursor().Set(static_cast<int>(number)); };
     menuHooks.objectForms=[this]() -> o::GumpFormHost& { if (!world_) throw std::logic_error("현재Client 메뉴Form의월드미설치");return world_->Session().GumpForms(); };
+    menuHooks.gameSeconds=[this] { return client_.Time().game; }; // 비용 표시도 같은 프레임의 게임 시각을 읽는다.
     rawButtons_->EnableMenus(client_.Assets(),client_.Fonts(),std::move(menuHooks)).SetPalette(client_.GetScreen().Colors());
     objectMenus_=std::make_unique<CampaignObjectMenuClient>(client_,*rawButtons_,[this](std::string_view key) { state_.Post({"Tell",std::string(key)}); });
     warnings_=std::make_unique<WarningMessages>(client_.Fonts(),client_.GetScreen().Colors(),[this] { return client_.WallSeconds(); },[this] {
@@ -324,11 +325,15 @@ void UberGump::BeginMission(std::string name,std::uint32_t demo) {
     world_->Resize(client_.GetScreen().Width(),client_.GetScreen().Height());
     // 직전 미션의 날씨 팔레트가 유지된 재진입도 현재 화면 색을 사용한다.
     world_->SetPalette(client_.GetScreen().Palette());
-    // 같은 단일 커서에 현재 장치/트리를 공급한다. 선택/비용 안내/전송의 미복원 경계는 그대로 남긴다.
+    // 같은 단일 커서에 현재 장치/트리·비용 표시·선택 해제·실제 로그인 전송을 공급한다.
     auto cursorEffects=MakeCampaignCursorClientEffects(client_,*rawButtons_);
     cursorEffects.send=[session=&world_->Session()](std::uint32_t target,std::span<const std::uint8_t> packet) { session->SendLocalPacket(std::bit_cast<std::int32_t>(target),packet); };
     BindCampaignUserInputServices(client_,*world_,cursorEffects.lifecycle.selectCursor);
     cursorEffects.lifecycle.highlight=[this](std::uint32_t mode) { world_->Highlight(mode); };
+    cursorEffects.drop.refresh=[this](std::uint32_t sid,std::uint32_t force,std::uint32_t move) {
+        // 원본Drop의004d5c90(0,0,1)을 같은 실제 선택으로 전달한다. Select 파사드는 둘째0/셋째1을 보존한다.
+        if (force || move!=1) throw std::logic_error("현재 커서 선택 변경의 실제 인자 계약 오류");world_->Select(sid);
+    };
     world_->Session().Cursor().SetEffects(std::move(cursorEffects));
     world_->Session().Cursor().Display().SetExternal([this](std::uint32_t token) { return rawButtons_->GumpDepth(token); },{});
     briefingSections_.clear(); briefingIndex_ = 0;
@@ -443,6 +448,7 @@ bool UberGump::Input() {
     while (!client_.Input().Empty()) Event(client_.Input().Pop(false));
     if (warnings_->Idle()) rebuild_=true;
 
+    if (!client_.Paused()) rawButtons_->Menus()->CleanupFrame(); // 원본의 비정지 갱신은 삭제 정리 뒤 같은 idle 표를 실행한다.
     if (rawButtons_->Poll(mouse)) rebuild_=true;
     if (input_.Move({mouse.x, mouse.y}, (mouse.code & InputCode::kOutside) == 0)) rebuild_ = true;
     if (userInput_ && state_.phase==ClientPhase::Mission && popup_.empty()) userInput_->Tick();
@@ -590,7 +596,7 @@ void UberGump::Compose() {
         if (world_) text.push_back({&font,"Storm Power: "+std::to_string(static_cast<long long>(world_->Session().Sp(world_->Session().LocalOwner()))),width-200,6,255,0,{1,1},true,false});
         appendWarnings();client_.GetRenderer().SetBackground(canvas); client_.GetRenderer().SetScene(std::move(worldSprites), std::move(text));
         if (world_) client_.GetRenderer().SetOverlay(world_->SelectionImage());
-        if (objectMenus_ && objectMenus_->Active()) {
+        if (rawButtons_->Menus()->HasOverlay()) {
             client_.GetRenderer().SetOverlayProcedure(RenderProcedure{all,[this](std::span<std::uint8_t> pixels,int pitch,int height,ScreenRect clip) {
                 rawButtons_->Menus()->Draw(pixels,pitch,height,client_.GetScreen().Colors(),client_.GetScreen().ShadeMaps(),clip);
             }});

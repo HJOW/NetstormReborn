@@ -23,12 +23,14 @@ struct MenuClient {
     std::vector<std::array<std::uint32_t,3>> commands; // 원본 입력이 전달한 전체 command/id/parameter다.
     std::vector<std::string> sounds; // 실제 원본 입력 경로의 이름별 음향 요청이다.
     std::uint32_t cursor{}; // 제목 입력이 선택한 실제 커서 번호다.
+    double gameSeconds{}; // 비용 표시는 벽시계 대신 이 현재 게임 시각을 읽는다.
     // 게임/창을 열지 않고 실제 보호 자산과 모든 복원 모듈을 조립한다.
     explicit MenuClient(OriginalEdition edition=OriginalEdition::Patch1078):root(std::filesystem::path(__FILE__).parent_path().parent_path().parent_path()/"originals"),files(root),assets(Register(),edition),fonts(files,"Arial"),
         buttons(edition,{[] { return 0.0; },[this](auto) { return poll; },[] {}}) {
         RawMenuHooks hooks;hooks.command=[this](auto command,auto id,auto argument) { commands.push_back({command,id,argument}); };
         hooks.readInt=[](std::string_view,std::int32_t& value) { value=0; };hooks.sound=[this](std::string_view name) { sounds.emplace_back(name); };
         hooks.poll=[this](auto) { return poll; };hooks.cursor=[this](auto value) { cursor=value; };
+        hooks.gameSeconds=[this] { return gameSeconds; };
         menus=&buttons.EnableMenus(assets,fonts,std::move(hooks));menus->SetPalette(Palette());Resize(640,480);
     }
     // GameAssets 생성보다 먼저 실제 archive를 등록한다.
@@ -49,6 +51,28 @@ struct MenuClient {
     // 실제 현재 트리의 hover와 누름을 통과시킨다. 명령 callback을 직접 호출하지 않는다.
     void Click(ScreenPoint point) { poll={InputCode::kLeftButton,point.x,point.y};buttons.Poll(poll);buttons.Event(poll); }
 };
+}
+// 같은 실제 트리/원본 StyleText/아이콘/클립/idle와 다음 프레임 지연 해제를 검사한다.
+TEST_CASE(RawMenuControls_FloatingSpActualPixelsAndLifetime) {
+    MenuClient client;client.gameSeconds=3.25;
+    const auto token=client.menus->ShowSp(800,200,200);const auto* node=client.menus->Node(token);
+    CHECK(node && node->vtable==0x50688c && node->depth==0xffffffd8U && node->parent==client.buttons.RegisteredGump(0));
+    CHECK(!client.menus->HasMenus() && client.menus->HasOverlay());if (!node) return;
+    CHECK(node->baseWidth>0 && node->baseHeight>0 && node->width==node->baseWidth && node->height==node->baseHeight);
+    constexpr int height=480,pitch=647; // 실제 픽셀과 행 padding을 분리한다.
+    std::vector<std::uint8_t> pixels(pitch*height,0x5a);std::array<std::uint32_t,256> logical{};
+    // 보호 팔레트 그대로 그림/글리프 명암 표를 만든다.
+    for (std::size_t index=0;index<logical.size();++index) { const auto color=client.assets.Palette().Color(static_cast<std::uint8_t>(index));logical[index]=color.red|(static_cast<std::uint32_t>(color.green)<<8)|(static_cast<std::uint32_t>(color.blue)<<16); }
+    client.menus->Draw(pixels,pitch,height,client.Palette(),BuildGumpShadeMaps(logical));
+    CHECK(std::any_of(pixels.begin(),pixels.end(),[](auto value) { return value!=0x5a; }));
+    // 실제 원본 클립은 비용 표시 경계 밖과 모든 행 padding을 보존한다.
+    for (int y=0;y<height;++y) for (int x=0;x<pitch;++x) if (x<200 || y<200 || x>=200+node->width || y>=200+node->height) CHECK(pixels[static_cast<std::size_t>(y)*pitch+x]==0x5a);
+    client.gameSeconds=3.5;CHECK(client.buttons.Poll({InputCode::kRelease,0,0}));CHECK(node->y==200);
+    client.gameSeconds=3.75;client.buttons.Poll({InputCode::kRelease,0,0});CHECK(node->y==199.5F);
+    // 원본은 위치가 음수가 될 때 Kill만 하고 다음 비정지 프레임 정리에서 실제 저장소를 반납한다.
+    for (int frame=0;frame<100 && client.menus->HasOverlay();++frame) { client.gameSeconds+=0.25;client.buttons.Poll({InputCode::kRelease,0,0}); }
+    CHECK(!client.menus->HasOverlay() && client.menus->Node(token));client.menus->CleanupFrame();CHECK(!client.menus->Node(token));
+    CHECK(client.menus->Report().find("raw_sp_gump\t")==std::string::npos);
 }
 // 같은 등록표에서 실제 원본 메뉴 명령/전체 DWORD·비활성 행을 검사한다.
 TEST_CASE(RawMenuControls_CommonTreeInputAndDisabledItem) {

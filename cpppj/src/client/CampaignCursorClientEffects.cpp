@@ -1,5 +1,6 @@
 // 커서의 외부 경계를 실제 장치/원본 트리 처리기에 연결하며 성공 값을 합성하지 않는다.
 #include "client/CampaignCursorClientEffects.h"
+#include "client/RawMenuControls.h"
 #include "client/ClientMain.h"
 #include "client/RawButtonControls.h"
 #include "o/OriginalText.h"
@@ -32,6 +33,9 @@ void BindCampaignCursorGumps(CampaignCursorEffects& effects,RawButtonControls& c
 // 장치는 사용 시 조회하여 해상도/Renderer 교체 뒤에도 이전 포인터를 보관하지 않는다.
 CampaignCursorEffects MakeCampaignCursorClientEffects(Client& client,RawButtonControls& controls,CampaignCursorEffects effects) {
     BindCampaignCursorGumps(effects,controls);
+    effects.drop.showSp=[&controls](auto cost,auto x,auto y,auto reference) {
+        auto* gumps=controls.Menus();if (!gumps) throw std::logic_error("커서 비용 표시의 실제 Gump 트리 미연결");gumps->ShowSp(cost,x,y,reference);
+    };
     effects.lifecycle.selectCursor=[&client](std::uint32_t number) { client.GetCursor().Set(std::bit_cast<std::int32_t>(number)); };
     effects.lifecycle.translate=[&client](std::string_view key) { return CursorBytes(client,key); };
     effects.lifecycle.measure=[&client](std::string_view bytes,const std::array<std::uint32_t,8>& words) {

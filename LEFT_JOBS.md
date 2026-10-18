@@ -1,5 +1,17 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-18 단위168 완료: 원본 비용 표시와 실제 워크샾 배치 연결 (HJOW-Athlon)
+
+- [x] 기준01cc839/깨끗한 트리에서 AGENTS/양 LEFT 재독. 직전167은 실제 사제 메뉴·커서/전송·전체1655·화면·커밋의 진행 턴이다. 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-16** 일치. 새 디컴파일·보호 원본/AGENTS/DN/DirectDraw 변경·원본 게임 창 없음. [작업 기록](docs/exe/cpp-floating-sp-client-20261018.md).
+- [x] 원본0043db70/43dc50/43dd20/43e620→4d3080→4bc790 비용 표시를 복원했다. 원본 클래스 이름은 미확정/CD판은 후속이다. 같은 실제 TextGump/StyleText/글꼴·fortGump.3 아이콘/팔레트·clip/등록표/루트/idle/지연 삭제를 쓴다. 실제 GUI reference0은 연결했으며 reference비0의00464540 객체 부착은 명시 미연결이다.
+- [x] x87의 double 시간 차이 저장/현재 시각 기록→첫 Redraw→float y+=velocity→경계→두번째 Redraw→float velocity+=acceleration*double elapsed와 unordered 분기를 보존했다. 실제 범위 이탈은 idle해제/Kill/다음 비정지 Cleanup 해제다. 메뉴가 닫혀도 비용을 그리며 원본 Cleanup→Idle 순서다.
+- [x] 독립 native **426입력·852정상 반환·41006명령·53/64차이0**을 C++ 전에 동결하고 필드 비트/가상 효과 순서 전부 일치했다. 실제 픽셀/경계 밖 padding·상승·지연 해제도 검사했다. 전체 float 공간 동일성으로 확대하지 않는다.
+- [x] 실제 Drop의Select(0,0,1)을 같은 RawUserSelection에 연결했다. 실제1-1 메뉴→Sun Workshop800→유효 앵커109,107 배치로 TYPE85/15181·SP3000→2200·새3e 수신·선택/커서해제·노란800/아이콘 상승·삭제·사제 경로 이동 PASS다. 원본 파일 불변/화면 직접 확인. 기존167의 비용 표시 최우선 항목은 완료했다.
+- [x] native1의 SEH fs:0 누락/build1의 미사용width C4189/probe1의 선택 해제 누락을 수정했고 실패 로그를 보존했다. 첫 전체검사의 낡은 비용표시 미연결 기대1건을 갱신하고 전체를 재실행했다. build4 경고0/오류0, 집중3, **전체1657 실패0/197.09초**(CTest 197.39초), 감사92도구81통과/기존11실패 동일/새0. 목표11진입/기존 메뉴/5진입+1-1이동도 PASS다.
+- [x] 제품cpppj/campaign-floating-sp-client.json/native cpppj/floating-sp.json/로그 접두extracted/goal-sp-gump-20261018-다. 보호SHA/동결3종/55보고서84핀/과거 전체JSON/기존378fixture/UTF8·CMake접두/인덱스 바이트를 검사한 뒤 **20261018-18 CP 원본 비용 표시와 실제 워크샾 배치 입력 연결**로 로컬 커밋한다. push없음/goal active다.
+- [ ] **다음 최우선:**더 긴 GUI probe2는 도착 뒤 TYPE85/Regular event6700에서 실제 건설 프로세스 시작 미연결로 중단한다. RawCampaignAssetBindings::RegularHooks의startConstruction을 같은 Session의 기존 PrepareBuilding/RawConstructionProcess::Start(parent,0)에 연결하고 자연 도착·건설·완공을 검사한다. 실패 경계를 빈 성공으로 우회하지 않는다.
+- [ ] **전체 남은 범위:**비용 표시 객체 참조/나머지 파생 메뉴·Knowledge·생산·명령/Chat편집·접두·원격·메타/FrameGate·Guide·Outcome·전략AI/운반왕복·희생·내려놓기/상태7·저장/38·41·187/11단계 자연 완주·승패·다음 미션·기존 전체 동일성이다.
+
 ## 2026-10-18 단위167 완료: 실제 사제 메뉴와 건설 선택 연결 (HJOW-Athlon)
 
 - [x] 기준4963da2/깨끗한트리에서AGENTS/양LEFT재독. 직전166은Start/데모/동맹·전체1653·화면·커밋의진행턴이다. 현재/마지막정밀디컴파일PC **HJOW-Athlon / 2026-10-16** 일치. 새디컴파일·보호원본/AGENTS/DN/DirectDraw변경·원본게임창없음. [작업기록](docs/exe/cpp-object-menu-client-20261018.md).

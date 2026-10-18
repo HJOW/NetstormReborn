@@ -63,9 +63,9 @@
       "cpppj/src/client/RawObjectMenu.h": "47fa941dc9fe3becb679f297ea29c8f7cc662aa44d1e6f91c5643739aa905e9a",
       "cpppj/src/client/RawObjectMenu.cpp": "f64429574e0fd57e325cd99b47e3c46197979b5047d879b1a9693fda7d58a1ef",
       "cpppj/tests/ObjectMenuTests.cpp": "7485055d8b76db99eb8e2fc117f9d89eb4892c2620112c1afbb1ed267710aa37",
-      "cpppj/tests/RawMenuControlsTests.cpp": "df26ef116d9971df27bf12f1f857a398dec99ecfe0d72d82c13600244b17d1dd",
-      "cpppj/src/client/CMakeLists.txt": "02073c55c11cfce5eaef3bf72bdb3d4f2e6ad5bba663c8b37150b31a93f5cabb",
-      "cpppj/tests/CMakeLists.txt": "a9d9e8fb94823089dd875a68aa672569e84ace4ab3c7af9b92c573abffd0e7ae"
+      "cpppj/tests/RawMenuControlsTests.cpp": "5ce029d5ba102c1784696d8df58e3f3691b6bdf01671b013793a6e504fbfc4f4",
+      "cpppj/src/client/CMakeLists.txt": "b430423cb42e61cd75fc9aeeff7f1c9fed72b935119c84f737bd85d87df31c34",
+      "cpppj/tests/CMakeLists.txt": "546d079ab26024859935ce5f6fd8008f1ed4503c4cb7d9c6a0fbbd038356cd62"
     }
   },
   "integration_updates": [
@@ -747,6 +747,31 @@
           "path": "cpppj/src/client/CMakeLists.txt",
           "previous": "78725b028b113f3e2c815aebcc41847d2f79fc8acdcd237f4a75a05aa9854a3b",
           "current": "02073c55c11cfce5eaef3bf72bdb3d4f2e6ad5bba663c8b37150b31a93f5cabb"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 168,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/product_validation/sha256",
+          "path": "cpppj/tests/RawMenuControlsTests.cpp",
+          "previous": "df26ef116d9971df27bf12f1f857a398dec99ecfe0d72d82c13600244b17d1dd",
+          "current": "5ce029d5ba102c1784696d8df58e3f3691b6bdf01671b013793a6e504fbfc4f4"
+        },
+        {
+          "group": "/product_validation/sha256",
+          "path": "cpppj/src/client/CMakeLists.txt",
+          "previous": "02073c55c11cfce5eaef3bf72bdb3d4f2e6ad5bba663c8b37150b31a93f5cabb",
+          "current": "b430423cb42e61cd75fc9aeeff7f1c9fed72b935119c84f737bd85d87df31c34"
+        },
+        {
+          "group": "/product_validation/sha256",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "a9d9e8fb94823089dd875a68aa672569e84ace4ab3c7af9b92c573abffd0e7ae",
+          "current": "546d079ab26024859935ce5f6fd8008f1ed4503c4cb7d9c6a0fbbd038356cd62"
         }
       ]
     }

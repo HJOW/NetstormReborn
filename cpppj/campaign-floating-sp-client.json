@@ -1,0 +1,4789 @@
+{
+  "unit": 168,
+  "base": "01cc839",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16"
+  },
+  "scope": "원본 비용 표시 Gump와 실제 GUI 워크샾 배치/3e왕복/SP 차감/사제 이동. 사제 도착 뒤 실제 건설 프로세스 시작은 미연결이며 완공/미션 완주로 합산하지 않는다.",
+  "implementation": [
+    "원본0043db70/43dc50/43dd20/43e620→4d3080→4bc790을 현재 PE/정밀 산출물로 확인했다. 원본 클래스 이름은 미확정이다. CD10.72 몸체는 이번 복원 대상이 아니다.",
+    "같은 TextGump/StyleText/보호 글꼴·fortGump.3 아이콘/현재 팔레트·dirty clip/등록표/루트/idle/지연 삭제를 사용한다. 별도 토스트·화면 문자 대체·빈 callback이 아니다.",
+    "원본 double 게임 시간 차이 저장→현재 시각 기록→첫 Redraw(false)→float y+=velocity→경계 검사→두번째 Redraw(false)→float velocity+=acceleration*double elapsed 순서다. 범위 이탈은 idle 해제 뒤 Kill한다. NaN의 unordered parity 분기를 보존한다.",
+    "현재 Client가 같은 게임 시각을 공급하고 메뉴가 닫혀도 비용 표시를 선택 뒤/소프트웨어 커서 앞에 그린다. 비정지 갱신의 Cleanup→Idle 순서로 같은 지연 큐를 정리한다.",
+    "실제 Drop의004d5c90(0,0,1)을 GameWorld의 같은 RawUserSelection에 연결한다. SP 차감/로컬 예측/실제3e 송수신은 기존 몸체를 사용한다.",
+    "원본 래퍼의 reference!=0 분기는 native 효과 관측에 포함했지만 현재 Client의00464540 객체 부착은 명시 미연결이다. 실제 GUI 커서 배치는 원본처럼 reference0이다."
+  ],
+  "currentSources": {
+    "cpppj/src/client/CMakeLists.txt": "b430423cb42e61cd75fc9aeeff7f1c9fed72b935119c84f737bd85d87df31c34",
+    "cpppj/src/client/RawMenuControls.h": "6089fe0bf7610010269dc0e38f3788e2c59daac4fe6b3d8b17dd711841fef5ca",
+    "cpppj/src/client/RawMenuControls.cpp": "e0114aa8f670e3f5dbaa49252572ee5479def7006db6e84fdec57aa182c1904c",
+    "cpppj/src/client/CampaignCursorClientEffects.cpp": "a3248a08922f8b4fdad05d2e2844db55f96196ccd58d55827b034dad17a55f72",
+    "cpppj/src/client/UberGump.cpp": "2c4a64a28e45bc6613a1dc40bb3ef9a8375bf4278444b1585eaf9f7db84ced34",
+    "cpppj/tests/CMakeLists.txt": "546d079ab26024859935ce5f6fd8008f1ed4503c4cb7d9c6a0fbbd038356cd62",
+    "cpppj/tests/RawMenuControlsTests.cpp": "5ce029d5ba102c1784696d8df58e3f3691b6bdf01671b013793a6e504fbfc4f4",
+    "cpppj/tests/CampaignCursorClientEffectsTests.cpp": "f04679442eea66764f77ab814314c9edd1790dca1f61f39e95eb29804b78d92b",
+    "cpppj/src/client/FloatingSpGump.h": "36df57018c209f1e007727899f85c78f62840e450b740f9de34e7d0ee789d841",
+    "cpppj/src/client/FloatingSpGump.cpp": "5b4a690cf8769a47b330c89d99a054ce8e6f983fef1a45172be67530b598e683",
+    "cpppj/tests/FloatingSpGumpTests.cpp": "f296d65c98502f81d24d34d05a9f7a950675506003c0ccb134adb25fe6f4ad36",
+    "tools/decomp_floating_sp.py": "fb929f22789726a90c5dd98e74aa70bb319ff03153349cd8db76b3ce8b0d204c",
+    "tools/cpp_priest_construction_smoke.py": "42d2f995fbefd63b8b4e0475aedca4036b275eeb77eaa0abc6c9a2ddf3debb92",
+    "cpppj/tests/fixtures/floating-sp-x86.tsv": "89c61652ca97026e9b3d9a9c8e294292d6d6d2e7e87c3fbc7d67b864463a4aeb",
+    "cpppj/floating-sp.json": "8a00e9285a32146747c579b791a275fdf5c9941610afc8316af41415044836a0"
+  },
+  "protected": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "AGENTS.md": "7addbf9b31c42f29aab7c93faa865eb6de8590a600d17202a297cf7122bdf979",
+    "LEFT_JOBS.dotnetpj.md": "0c067e1d12879dbf2212cbd64c8f9f60e65b590df910418f025027ed84f80ec2"
+  },
+  "native": {
+    "edition": "10.78",
+    "entries": [
+      "0043db70",
+      "0043dc50",
+      "0043dd20",
+      "0043e620",
+      "004d3080",
+      "004bc790"
+    ],
+    "scope": "실제 생성/래퍼/Idle/파생 scalar·TextGump 소멸 전체. Text 생성/문자열/측정/기본소멸·할당·가상 재그리기/부착/객체참조·idle등록/Kill은 효과 관측 경계. 원본 창 실행 없음.",
+    "uniqueInputs": 426,
+    "normalReturns": 852,
+    "instructions": 41006,
+    "precisionDifferentInputs": 0,
+    "sha256": {
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "tools/decomp_floating_sp.py": "fb929f22789726a90c5dd98e74aa70bb319ff03153349cd8db76b3ce8b0d204c",
+      "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+      "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+      "cpppj/tests/fixtures/floating-sp-x86.tsv": "89c61652ca97026e9b3d9a9c8e294292d6d6d2e7e87c3fbc7d67b864463a4aeb"
+    }
+  },
+  "nativeFreeze": {
+    "tools/decomp_floating_sp.py": "fb929f22789726a90c5dd98e74aa70bb319ff03153349cd8db76b3ce8b0d204c",
+    "cpppj/floating-sp.json": "8a00e9285a32146747c579b791a275fdf5c9941610afc8316af41415044836a0",
+    "cpppj/tests/fixtures/floating-sp-x86.tsv": "89c61652ca97026e9b3d9a9c8e294292d6d6d2e7e87c3fbc7d67b864463a4aeb"
+  },
+  "validation": {
+    "build": {
+      "log": "extracted/goal-sp-gump-20261018-build4.log",
+      "warnings": 0,
+      "errors": 0
+    },
+    "focused": {
+      "native": {
+        "log": "extracted/goal-sp-gump-20261018-focused-native1.log",
+        "tests": 1
+      },
+      "pixels": {
+        "log": "extracted/goal-sp-gump-20261018-focused-pixels1.log",
+        "tests": 1
+      },
+      "effects": {
+        "log": "extracted/goal-sp-gump-20261018-focused-effects1.log",
+        "tests": 1
+      }
+    },
+    "full": {
+      "tests": 1657,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "seconds": 197.09,
+      "ctestSeconds": 197.39,
+      "lastTestLog": "extracted/goal-sp-gump-20261018-LastTest.log",
+      "ctestLog": "extracted/goal-sp-gump-20261018-ctest2.log"
+    },
+    "audit": {
+      "tools": 92,
+      "passed": 81,
+      "existingFailed": 11,
+      "newFailed": 0,
+      "report": "extracted/goal-sp-gump-20261018-verify-final.json"
+    },
+    "visualReview": [
+      "probe2/menu.bmp의 실제 노란 비용800·SP아이콘·워크샾",
+      "placement1/cost-deleted.bmp의 비용 표시 제거와 사제 이동"
+    ]
+  },
+  "placement": {
+    "passed": true,
+    "scope": "실제GUI 사제 메뉴/TYPE85 배치/실제3e왕복/SP 차감/원본 서식 비용 표시·이동·지연삭제/사제 경로 이동. 도착 뒤 건설 프로세스 시작/완공·미션 완주는 별도 후속이다.",
+    "command": [
+      "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+      "--run",
+      "H:\\T5Workspace\\NetstormReborn\\originals",
+      "--mission",
+      "thewarbegins",
+      "--window",
+      "--no-audio",
+      "--frames",
+      "233",
+      "--set",
+      "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8",
+      "--ui-script",
+      "H:\\T5Workspace\\NetstormReborn\\extracted\\goal-sp-gump-20261018-placement1\\steps.tsv",
+      "--ui-report",
+      "H:\\T5Workspace\\NetstormReborn\\extracted\\goal-sp-gump-20261018-placement1\\states.tsv"
+    ],
+    "originals_unchanged": true,
+    "newPacketTypes": [
+      62
+    ],
+    "workshops": {
+      "15181": [
+        "85",
+        "1",
+        "0",
+        "109",
+        "107"
+      ]
+    },
+    "priestBefore": [
+      "158",
+      "1",
+      "0",
+      "94",
+      "108"
+    ],
+    "priestMoving": [
+      "158",
+      "1",
+      "12",
+      "97.7191009521",
+      "104.280899048"
+    ],
+    "observed": {
+      "prepared": {
+        "time": [
+          "2.941",
+          "3.109"
+        ],
+        "raw_input": [
+          "15000",
+          "0",
+          "14",
+          "12"
+        ],
+        "raw_cursor": [
+          "0",
+          "1",
+          "85",
+          "72",
+          "109",
+          "107",
+          "32",
+          "352",
+          "1",
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "0",
+          "3000",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_menus": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ]
+      },
+      "placed": {
+        "time": [
+          "3.533",
+          "3.701"
+        ],
+        "raw_input": [
+          "0",
+          "0",
+          "14",
+          "13"
+        ],
+        "raw_cursor": [
+          "2",
+          "1",
+          "85",
+          "0",
+          "109",
+          "107",
+          "32",
+          "352",
+          "1",
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "0",
+          "2200",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_menus": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "3"
+        ],
+        "raw_sp_gump": [
+          "56",
+          "3",
+          "1",
+          "4194433",
+          "691",
+          "375.214",
+          "-0.844",
+          "-2",
+          "3.533",
+          "129"
+        ]
+      },
+      "moving": {
+        "time": [
+          "6.095",
+          "6.263"
+        ],
+        "raw_input": [
+          "0",
+          "0",
+          "14",
+          "13"
+        ],
+        "raw_cursor": [
+          "2",
+          "1",
+          "85",
+          "0",
+          "109",
+          "107",
+          "32",
+          "352",
+          "1",
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "0",
+          "2200",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_menus": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "3"
+        ],
+        "raw_sp_gump": [
+          "56",
+          "3",
+          "1",
+          "4194433",
+          "691",
+          "102.214",
+          "-5.968",
+          "-2",
+          "6.095",
+          "129"
+        ]
+      },
+      "costDeleted": {
+        "time": [
+          "7.08",
+          "7.248"
+        ],
+        "raw_input": [
+          "0",
+          "0",
+          "14",
+          "13"
+        ],
+        "raw_cursor": [
+          "2",
+          "1",
+          "85",
+          "0",
+          "109",
+          "107",
+          "32",
+          "352",
+          "1",
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "0",
+          "2200",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_menus": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ]
+      }
+    }
+  },
+  "menuEntry": {
+    "passed": true,
+    "scope": "실제 사제 메뉴/원본 정수명령/TYPE85 커서취득·취소·재개방. 실제배치 클릭은 원본 비용표시Gump 미연결로 별도 후속이며 이 검사의 성공에 합산하지 않는다.",
+    "command": [
+      "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+      "--run",
+      "H:\\T5Workspace\\NetstormReborn\\originals",
+      "--mission",
+      "thewarbegins",
+      "--window",
+      "--no-audio",
+      "--frames",
+      "151",
+      "--set",
+      "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8",
+      "--ui-script",
+      "H:\\T5Workspace\\NetstormReborn\\extracted\\goal-sp-gump-20261018-menu-entry1\\steps.tsv",
+      "--ui-report",
+      "H:\\T5Workspace\\NetstormReborn\\extracted\\goal-sp-gump-20261018-menu-entry1\\states.tsv"
+    ],
+    "originals_unchanged": true,
+    "build": {
+      "token": 45,
+      "index": 0,
+      "flags": 66697,
+      "command": 33554528,
+      "parameter": 5585560,
+      "visible": true,
+      "label": " Build Sun Workshop for 800"
+    },
+    "observed": {
+      "opened": {
+        "time": [
+          "0.919",
+          "1.091"
+        ],
+        "raw_menus": [
+          "5",
+          "0",
+          "5",
+          "3",
+          "78"
+        ],
+        "raw_cursor": [
+          "1",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_input": [
+          "15000",
+          "0",
+          "14",
+          "12"
+        ],
+        "raw_sp": [
+          "0",
+          "3000",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ]
+      },
+      "construct": {
+        "time": [
+          "1.732",
+          "1.904"
+        ],
+        "raw_menus": [
+          "5",
+          "0",
+          "5",
+          "3",
+          "78"
+        ],
+        "raw_cursor": [
+          "1",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_input": [
+          "15000",
+          "0",
+          "14",
+          "12"
+        ],
+        "raw_sp": [
+          "0",
+          "3000",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ]
+      },
+      "workshop": {
+        "time": [
+          "2.533",
+          "2.705"
+        ],
+        "raw_menus": [
+          "5",
+          "0",
+          "5",
+          "3",
+          "78"
+        ],
+        "raw_cursor": [
+          "1",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_input": [
+          "15000",
+          "0",
+          "14",
+          "12"
+        ],
+        "raw_sp": [
+          "0",
+          "3000",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ]
+      },
+      "taken": {
+        "time": [
+          "2.857",
+          "3.029"
+        ],
+        "raw_menus": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_cursor": [
+          "0",
+          "1",
+          "85",
+          "72",
+          "120",
+          "115",
+          "32",
+          "352",
+          "1",
+          "1",
+          "1"
+        ],
+        "raw_input": [
+          "15000",
+          "0",
+          "14",
+          "12"
+        ],
+        "raw_sp": [
+          "0",
+          "3000",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ]
+      },
+      "cancelled": {
+        "time": [
+          "3.2",
+          "3.372"
+        ],
+        "raw_menus": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_cursor": [
+          "1",
+          "1",
+          "85",
+          "0",
+          "120",
+          "115",
+          "32",
+          "352",
+          "1",
+          "1",
+          "1"
+        ],
+        "raw_input": [
+          "15000",
+          "0",
+          "14",
+          "12"
+        ],
+        "raw_sp": [
+          "0",
+          "3000",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ]
+      },
+      "reopened": {
+        "time": [
+          "4.061",
+          "4.233"
+        ],
+        "raw_menus": [
+          "5",
+          "0",
+          "5",
+          "3",
+          "78"
+        ],
+        "raw_cursor": [
+          "1",
+          "1",
+          "85",
+          "0",
+          "120",
+          "115",
+          "32",
+          "352",
+          "1",
+          "1",
+          "1"
+        ],
+        "raw_input": [
+          "15000",
+          "0",
+          "14",
+          "12"
+        ],
+        "raw_sp": [
+          "0",
+          "3000",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ]
+      },
+      "closed": {
+        "time": [
+          "4.312",
+          "4.484"
+        ],
+        "raw_menus": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_cursor": [
+          "1",
+          "1",
+          "85",
+          "0",
+          "120",
+          "115",
+          "32",
+          "352",
+          "1",
+          "1",
+          "1"
+        ],
+        "raw_input": [
+          "15000",
+          "0",
+          "14",
+          "12"
+        ],
+        "raw_sp": [
+          "0",
+          "3000",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ]
+      }
+    },
+    "items": {
+      "opened": [
+        {
+          "token": 24,
+          "index": 0,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Construct"
+        },
+        {
+          "token": 24,
+          "index": 1,
+          "flags": 66689,
+          "command": 33554592,
+          "parameter": 0,
+          "visible": true,
+          "label": "View Netstorm Knowledge"
+        },
+        {
+          "token": 24,
+          "index": 2,
+          "flags": 65552,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": ""
+        },
+        {
+          "token": 24,
+          "index": 3,
+          "flags": 66689,
+          "command": 33554455,
+          "parameter": 158,
+          "visible": true,
+          "label": "About"
+        },
+        {
+          "token": 24,
+          "index": 4,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Player"
+        },
+        {
+          "token": 34,
+          "index": 0,
+          "flags": 67104,
+          "command": 0,
+          "parameter": 0,
+          "visible": false,
+          "label": "Temple"
+        },
+        {
+          "token": 34,
+          "index": 1,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": false,
+          "label": "Workshop"
+        },
+        {
+          "token": 34,
+          "index": 2,
+          "flags": 66689,
+          "command": 33554528,
+          "parameter": 10828440,
+          "visible": false,
+          "label": "Build Level 1 Altar for 500"
+        },
+        {
+          "token": 44,
+          "index": 0,
+          "flags": 67201,
+          "command": 33554528,
+          "parameter": 8075928,
+          "visible": false,
+          "label": " Build Wind Temple for 5000"
+        },
+        {
+          "token": 44,
+          "index": 1,
+          "flags": 67201,
+          "command": 33554528,
+          "parameter": 8141464,
+          "visible": false,
+          "label": " Build Rain Temple for 5000"
+        },
+        {
+          "token": 44,
+          "index": 2,
+          "flags": 67201,
+          "command": 33554528,
+          "parameter": 8207000,
+          "visible": false,
+          "label": " Build Thunder Temple for 5000"
+        },
+        {
+          "token": 45,
+          "index": 0,
+          "flags": 66689,
+          "command": 33554528,
+          "parameter": 5585560,
+          "visible": false,
+          "label": " Build Sun Workshop for 800"
+        },
+        {
+          "token": 45,
+          "index": 1,
+          "flags": 67201,
+          "command": 33554528,
+          "parameter": 5651096,
+          "visible": false,
+          "label": " Build Wind Workshop for 1000"
+        },
+        {
+          "token": 45,
+          "index": 2,
+          "flags": 67201,
+          "command": 33554528,
+          "parameter": 5716632,
+          "visible": false,
+          "label": " Build Rain Workshop for 1000"
+        },
+        {
+          "token": 45,
+          "index": 3,
+          "flags": 67201,
+          "command": 33554528,
+          "parameter": 5782168,
+          "visible": false,
+          "label": " Build Thunder Workshop for 1000"
+        },
+        {
+          "token": 46,
+          "index": 0,
+          "flags": 66689,
+          "command": 33554616,
+          "parameter": 1,
+          "visible": false,
+          "label": "Find Priest!"
+        }
+      ],
+      "construct": [
+        {
+          "token": 24,
+          "index": 0,
+          "flags": 66600,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Construct"
+        },
+        {
+          "token": 24,
+          "index": 1,
+          "flags": 66689,
+          "command": 33554592,
+          "parameter": 0,
+          "visible": true,
+          "label": "View Netstorm Knowledge"
+        },
+        {
+          "token": 24,
+          "index": 2,
+          "flags": 65552,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": ""
+        },
+        {
+          "token": 24,
+          "index": 3,
+          "flags": 66689,
+          "command": 33554455,
+          "parameter": 158,
+          "visible": true,
+          "label": "About"
+        },
+        {
+          "token": 24,
+          "index": 4,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Player"
+        },
+        {
+          "token": 34,
+          "index": 0,
+          "flags": 67104,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Temple"
+        },
+        {
+          "token": 34,
+          "index": 1,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Workshop"
+        },
+        {
+          "token": 34,
+          "index": 2,
+          "flags": 66689,
+          "command": 33554528,
+          "parameter": 10828440,
+          "visible": true,
+          "label": "Build Level 1 Altar for 500"
+        },
+        {
+          "token": 44,
+          "index": 0,
+          "flags": 67201,
+          "command": 33554528,
+          "parameter": 8075928,
+          "visible": false,
+          "label": " Build Wind Temple for 5000"
+        },
+        {
+          "token": 44,
+          "index": 1,
+          "flags": 67201,
+          "command": 33554528,
+          "parameter": 8141464,
+          "visible": false,
+          "label": " Build Rain Temple for 5000"
+        },
+        {
+          "token": 44,
+          "index": 2,
+          "flags": 67201,
+          "command": 33554528,
+          "parameter": 8207000,
+          "visible": false,
+          "label": " Build Thunder Temple for 5000"
+        },
+        {
+          "token": 45,
+          "index": 0,
+          "flags": 66689,
+          "command": 33554528,
+          "parameter": 5585560,
+          "visible": false,
+          "label": " Build Sun Workshop for 800"
+        },
+        {
+          "token": 45,
+          "index": 1,
+          "flags": 67201,
+          "command": 33554528,
+          "parameter": 5651096,
+          "visible": false,
+          "label": " Build Wind Workshop for 1000"
+        },
+        {
+          "token": 45,
+          "index": 2,
+          "flags": 67201,
+          "command": 33554528,
+          "parameter": 5716632,
+          "visible": false,
+          "label": " Build Rain Workshop for 1000"
+        },
+        {
+          "token": 45,
+          "index": 3,
+          "flags": 67201,
+          "command": 33554528,
+          "parameter": 5782168,
+          "visible": false,
+          "label": " Build Thunder Workshop for 1000"
+        },
+        {
+          "token": 46,
+          "index": 0,
+          "flags": 66689,
+          "command": 33554616,
+          "parameter": 1,
+          "visible": false,
+          "label": "Find Priest!"
+        }
+      ],
+      "workshop": [
+        {
+          "token": 24,
+          "index": 0,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Construct"
+        },
+        {
+          "token": 24,
+          "index": 1,
+          "flags": 66689,
+          "command": 33554592,
+          "parameter": 0,
+          "visible": true,
+          "label": "View Netstorm Knowledge"
+        },
+        {
+          "token": 24,
+          "index": 2,
+          "flags": 65552,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": ""
+        },
+        {
+          "token": 24,
+          "index": 3,
+          "flags": 66689,
+          "command": 33554455,
+          "parameter": 158,
+          "visible": true,
+          "label": "About"
+        },
+        {
+          "token": 24,
+          "index": 4,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Player"
+        },
+        {
+          "token": 34,
+          "index": 0,
+          "flags": 67104,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Temple"
+        },
+        {
+          "token": 34,
+          "index": 1,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Workshop"
+        },
+        {
+          "token": 34,
+          "index": 2,
+          "flags": 66689,
+          "command": 33554528,
+          "parameter": 10828440,
+          "visible": true,
+          "label": "Build Level 1 Altar for 500"
+        },
+        {
+          "token": 44,
+          "index": 0,
+          "flags": 67201,
+          "command": 33554528,
+          "parameter": 8075928,
+          "visible": false,
+          "label": " Build Wind Temple for 5000"
+        },
+        {
+          "token": 44,
+          "index": 1,
+          "flags": 67201,
+          "command": 33554528,
+          "parameter": 8141464,
+          "visible": false,
+          "label": " Build Rain Temple for 5000"
+        },
+        {
+          "token": 44,
+          "index": 2,
+          "flags": 67201,
+          "command": 33554528,
+          "parameter": 8207000,
+          "visible": false,
+          "label": " Build Thunder Temple for 5000"
+        },
+        {
+          "token": 45,
+          "index": 0,
+          "flags": 66697,
+          "command": 33554528,
+          "parameter": 5585560,
+          "visible": true,
+          "label": " Build Sun Workshop for 800"
+        },
+        {
+          "token": 45,
+          "index": 1,
+          "flags": 67201,
+          "command": 33554528,
+          "parameter": 5651096,
+          "visible": true,
+          "label": " Build Wind Workshop for 1000"
+        },
+        {
+          "token": 45,
+          "index": 2,
+          "flags": 67201,
+          "command": 33554528,
+          "parameter": 5716632,
+          "visible": true,
+          "label": " Build Rain Workshop for 1000"
+        },
+        {
+          "token": 45,
+          "index": 3,
+          "flags": 67201,
+          "command": 33554528,
+          "parameter": 5782168,
+          "visible": true,
+          "label": " Build Thunder Workshop for 1000"
+        },
+        {
+          "token": 46,
+          "index": 0,
+          "flags": 66689,
+          "command": 33554616,
+          "parameter": 1,
+          "visible": false,
+          "label": "Find Priest!"
+        }
+      ],
+      "taken": [],
+      "cancelled": [],
+      "reopened": [
+        {
+          "token": 56,
+          "index": 0,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Construct"
+        },
+        {
+          "token": 56,
+          "index": 1,
+          "flags": 66689,
+          "command": 33554592,
+          "parameter": 0,
+          "visible": true,
+          "label": "View Netstorm Knowledge"
+        },
+        {
+          "token": 56,
+          "index": 2,
+          "flags": 65552,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": ""
+        },
+        {
+          "token": 56,
+          "index": 3,
+          "flags": 66689,
+          "command": 33554455,
+          "parameter": 158,
+          "visible": true,
+          "label": "About"
+        },
+        {
+          "token": 56,
+          "index": 4,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Player"
+        },
+        {
+          "token": 66,
+          "index": 0,
+          "flags": 67104,
+          "command": 0,
+          "parameter": 0,
+          "visible": false,
+          "label": "Temple"
+        },
+        {
+          "token": 66,
+          "index": 1,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": false,
+          "label": "Workshop"
+        },
+        {
+          "token": 66,
+          "index": 2,
+          "flags": 66689,
+          "command": 33554528,
+          "parameter": 10828440,
+          "visible": false,
+          "label": "Build Level 1 Altar for 500"
+        },
+        {
+          "token": 76,
+          "index": 0,
+          "flags": 67201,
+          "command": 33554528,
+          "parameter": 8075928,
+          "visible": false,
+          "label": " Build Wind Temple for 5000"
+        },
+        {
+          "token": 76,
+          "index": 1,
+          "flags": 67201,
+          "command": 33554528,
+          "parameter": 8141464,
+          "visible": false,
+          "label": " Build Rain Temple for 5000"
+        },
+        {
+          "token": 76,
+          "index": 2,
+          "flags": 67201,
+          "command": 33554528,
+          "parameter": 8207000,
+          "visible": false,
+          "label": " Build Thunder Temple for 5000"
+        },
+        {
+          "token": 77,
+          "index": 0,
+          "flags": 66689,
+          "command": 33554528,
+          "parameter": 5585560,
+          "visible": false,
+          "label": " Build Sun Workshop for 800"
+        },
+        {
+          "token": 77,
+          "index": 1,
+          "flags": 67201,
+          "command": 33554528,
+          "parameter": 5651096,
+          "visible": false,
+          "label": " Build Wind Workshop for 1000"
+        },
+        {
+          "token": 77,
+          "index": 2,
+          "flags": 67201,
+          "command": 33554528,
+          "parameter": 5716632,
+          "visible": false,
+          "label": " Build Rain Workshop for 1000"
+        },
+        {
+          "token": 77,
+          "index": 3,
+          "flags": 67201,
+          "command": 33554528,
+          "parameter": 5782168,
+          "visible": false,
+          "label": " Build Thunder Workshop for 1000"
+        },
+        {
+          "token": 78,
+          "index": 0,
+          "flags": 66689,
+          "command": 33554616,
+          "parameter": 1,
+          "visible": false,
+          "label": "Find Priest!"
+        }
+      ],
+      "closed": []
+    }
+  },
+  "goalEntry": {
+    "scope": "CLI --mission/실제 UI 버튼으로11개 플레이 진입. 사용자 메뉴 선택·자연 명령·승패·저장·완주/원본 전체 동일성은 미검증.",
+    "runs": [
+      {
+        "mission": "tutorial1",
+        "passed": true,
+        "clicks": [
+          "MORE",
+          "OK"
+        ],
+        "observations": [
+          {
+            "frame": 4,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A."
+            ],
+            "controls": {
+              "MORE": [
+                "1",
+                "0",
+                "474",
+                "494",
+                "549",
+                "514",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial1",
+              "Tutorial",
+              "3"
+            ],
+            "raw_world": [
+              "0.219",
+              "4",
+              "6",
+              "0",
+              "0",
+              "5000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.189",
+              "0"
+            ],
+            "mission_rules": [
+              "1",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-sp-gump-20261018-goal-entry1/tutorial1/0",
+            "exitCode": 0
+          },
+          {
+            "frame": 6,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A1."
+            ],
+            "controls": {
+              "BACK": [
+                "1",
+                "0",
+                "435",
+                "417",
+                "510",
+                "437",
+                "0"
+              ],
+              "OK": [
+                "1",
+                "0",
+                "514",
+                "417",
+                "589",
+                "437",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial1",
+              "Tutorial",
+              "3"
+            ],
+            "raw_world": [
+              "0.205",
+              "6",
+              "6",
+              "0",
+              "0",
+              "5000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.171",
+              "0"
+            ],
+            "mission_rules": [
+              "1",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-sp-gump-20261018-goal-entry1/tutorial1/1",
+            "exitCode": 0
+          },
+          {
+            "frame": 8,
+            "phase": [
+              "4"
+            ],
+            "paused": [
+              "0"
+            ],
+            "page": [
+              "mission"
+            ],
+            "controls": {
+              "Game": [
+                "1",
+                "0",
+                "4",
+                "4",
+                "79",
+                "24",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial1",
+              "Tutorial",
+              "3"
+            ],
+            "raw_world": [
+              "0.234",
+              "8",
+              "6",
+              "0",
+              "0",
+              "5000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.203",
+              "0"
+            ],
+            "mission_rules": [
+              "1",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-sp-gump-20261018-goal-entry1/tutorial1/2",
+            "exitCode": 0
+          }
+        ],
+        "expectedStart": {
+          "money": 0,
+          "technology": [],
+          "demo": 0
+        }
+      },
+      {
+        "mission": "tutorial2",
+        "passed": true,
+        "clicks": [
+          "MORE",
+          "MORE",
+          "OK"
+        ],
+        "observations": [
+          {
+            "frame": 4,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A."
+            ],
+            "controls": {
+              "MORE": [
+                "1",
+                "0",
+                "474",
+                "431",
+                "549",
+                "451",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial2",
+              "Tutorial",
+              "2"
+            ],
+            "raw_world": [
+              "0.248",
+              "4",
+              "5",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.203",
+              "0"
+            ],
+            "mission_rules": [
+              "1",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "10000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunArcher"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-sp-gump-20261018-goal-entry1/tutorial2/0",
+            "exitCode": 0
+          },
+          {
+            "frame": 6,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A1."
+            ],
+            "controls": {
+              "BACK": [
+                "1",
+                "0",
+                "435",
+                "492",
+                "510",
+                "512",
+                "0"
+              ],
+              "MORE": [
+                "1",
+                "0",
+                "514",
+                "492",
+                "589",
+                "512",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial2",
+              "Tutorial",
+              "2"
+            ],
+            "raw_world": [
+              "0.218",
+              "6",
+              "5",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.187",
+              "0"
+            ],
+            "mission_rules": [
+              "1",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "10000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunArcher"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-sp-gump-20261018-goal-entry1/tutorial2/1",
+            "exitCode": 0
+          },
+          {
+            "frame": 8,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A2."
+            ],
+            "controls": {
+              "BACK": [
+                "1",
+                "0",
+                "435",
+                "466",
+                "510",
+                "486",
+                "0"
+              ],
+              "OK": [
+                "1",
+                "0",
+                "514",
+                "466",
+                "589",
+                "486",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial2",
+              "Tutorial",
+              "2"
+            ],
+            "raw_world": [
+              "0.233",
+              "8",
+              "5",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.202",
+              "0"
+            ],
+            "mission_rules": [
+              "1",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "10000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunArcher"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-sp-gump-20261018-goal-entry1/tutorial2/2",
+            "exitCode": 0
+          },
+          {
+            "frame": 10,
+            "phase": [
+              "4"
+            ],
+            "paused": [
+              "0"
+            ],
+            "page": [
+              "mission"
+            ],
+            "controls": {
+              "Game": [
+                "1",
+                "0",
+                "4",
+                "4",
+                "79",
+                "24",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial2",
+              "Tutorial",
+              "2"
+            ],
+            "raw_world": [
+              "0.23",
+              "10",
+              "5",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.199",
+              "0"
+            ],
+            "mission_rules": [
+              "1",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "10000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunArcher"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-sp-gump-20261018-goal-entry1/tutorial2/3",
+            "exitCode": 0
+          }
+        ],
+        "expectedStart": {
+          "money": 10000,
+          "technology": [
+            "sunArcher"
+          ],
+          "demo": 0
+        }
+      },
+      {
+        "mission": "tutorial3",
+        "passed": true,
+        "clicks": [
+          "MORE",
+          "OK"
+        ],
+        "observations": [
+          {
+            "frame": 4,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A."
+            ],
+            "controls": {
+              "MORE": [
+                "1",
+                "0",
+                "474",
+                "473",
+                "549",
+                "493",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial3",
+              "Tutorial",
+              "37"
+            ],
+            "raw_world": [
+              "0.234",
+              "4",
+              "15",
+              "0",
+              "0",
+              "11800",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.188",
+              "0"
+            ],
+            "mission_rules": [
+              "1",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "2000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunArcher",
+              "sunWalker"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-sp-gump-20261018-goal-entry1/tutorial3/0",
+            "exitCode": 0
+          },
+          {
+            "frame": 6,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A1."
+            ],
+            "controls": {
+              "BACK": [
+                "1",
+                "0",
+                "435",
+                "459",
+                "510",
+                "479",
+                "0"
+              ],
+              "OK": [
+                "1",
+                "0",
+                "514",
+                "459",
+                "589",
+                "479",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial3",
+              "Tutorial",
+              "37"
+            ],
+            "raw_world": [
+              "0.21",
+              "6",
+              "15",
+              "0",
+              "0",
+              "11800",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.179",
+              "0"
+            ],
+            "mission_rules": [
+              "1",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "2000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunArcher",
+              "sunWalker"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-sp-gump-20261018-goal-entry1/tutorial3/1",
+            "exitCode": 0
+          },
+          {
+            "frame": 8,
+            "phase": [
+              "4"
+            ],
+            "paused": [
+              "0"
+            ],
+            "page": [
+              "mission"
+            ],
+            "controls": {
+              "Game": [
+                "1",
+                "0",
+                "4",
+                "4",
+                "79",
+                "24",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial3",
+              "Tutorial",
+              "37"
+            ],
+            "raw_world": [
+              "0.218",
+              "8",
+              "15",
+              "0",
+              "0",
+              "11800",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.173",
+              "0"
+            ],
+            "mission_rules": [
+              "1",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "2000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunArcher",
+              "sunWalker"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-sp-gump-20261018-goal-entry1/tutorial3/2",
+            "exitCode": 0
+          }
+        ],
+        "expectedStart": {
+          "money": 2000,
+          "technology": [
+            "sunArcher",
+            "sunWalker"
+          ],
+          "demo": 0
+        }
+      },
+      {
+        "mission": "tutorial4",
+        "passed": true,
+        "clicks": [
+          "MORE",
+          "OK"
+        ],
+        "observations": [
+          {
+            "frame": 4,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A."
+            ],
+            "controls": {
+              "MORE": [
+                "1",
+                "0",
+                "474",
+                "492",
+                "549",
+                "512",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial4",
+              "Tutorial",
+              "65"
+            ],
+            "raw_world": [
+              "0.234",
+              "4",
+              "25",
+              "0",
+              "0",
+              "18400",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.194",
+              "0"
+            ],
+            "mission_rules": [
+              "0",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "2000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunArcher",
+              "windBattery",
+              "sunWalker"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-sp-gump-20261018-goal-entry1/tutorial4/0",
+            "exitCode": 0
+          },
+          {
+            "frame": 6,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A1."
+            ],
+            "controls": {
+              "BACK": [
+                "1",
+                "0",
+                "435",
+                "424",
+                "510",
+                "444",
+                "0"
+              ],
+              "OK": [
+                "1",
+                "0",
+                "514",
+                "424",
+                "589",
+                "444",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial4",
+              "Tutorial",
+              "65"
+            ],
+            "raw_world": [
+              "0.25",
+              "6",
+              "25",
+              "0",
+              "0",
+              "18400",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.204",
+              "0"
+            ],
+            "mission_rules": [
+              "0",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "2000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunArcher",
+              "windBattery",
+              "sunWalker"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-sp-gump-20261018-goal-entry1/tutorial4/1",
+            "exitCode": 0
+          },
+          {
+            "frame": 8,
+            "phase": [
+              "4"
+            ],
+            "paused": [
+              "0"
+            ],
+            "page": [
+              "mission"
+            ],
+            "controls": {
+              "Game": [
+                "1",
+                "0",
+                "4",
+                "4",
+                "79",
+                "24",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial4",
+              "Tutorial",
+              "65"
+            ],
+            "raw_world": [
+              "0.249",
+              "8",
+              "25",
+              "0",
+              "0",
+              "18400",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.206",
+              "0"
+            ],
+            "mission_rules": [
+              "0",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "2000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunArcher",
+              "windBattery",
+              "sunWalker"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-sp-gump-20261018-goal-entry1/tutorial4/2",
+            "exitCode": 0
+          }
+        ],
+        "expectedStart": {
+          "money": 2000,
+          "technology": [
+            "sunArcher",
+            "sunWalker",
+            "windBattery"
+          ],
+          "demo": 0
+        }
+      },
+      {
+        "mission": "tutorial5",
+        "passed": true,
+        "clicks": [
+          "MORE",
+          "OK"
+        ],
+        "observations": [
+          {
+            "frame": 4,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A."
+            ],
+            "controls": {
+              "MORE": [
+                "1",
+                "0",
+                "474",
+                "489",
+                "549",
+                "509",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial5",
+              "Tutorial",
+              "55"
+            ],
+            "raw_world": [
+              "0.281",
+              "4",
+              "23",
+              "0",
+              "0",
+              "21600",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.203",
+              "0"
+            ],
+            "mission_rules": [
+              "0",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "4000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "536870912",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunArcher",
+              "windBattery",
+              "sunBlocker",
+              "sunCannon",
+              "sunWalker"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-sp-gump-20261018-goal-entry1/tutorial5/0",
+            "exitCode": 0
+          },
+          {
+            "frame": 6,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A1."
+            ],
+            "controls": {
+              "BACK": [
+                "1",
+                "0",
+                "435",
+                "480",
+                "510",
+                "500",
+                "0"
+              ],
+              "OK": [
+                "1",
+                "0",
+                "514",
+                "480",
+                "589",
+                "500",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial5",
+              "Tutorial",
+              "55"
+            ],
+            "raw_world": [
+              "0.27",
+              "6",
+              "23",
+              "0",
+              "0",
+              "21600",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.186",
+              "0"
+            ],
+            "mission_rules": [
+              "0",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "4000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "536870912",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunArcher",
+              "windBattery",
+              "sunBlocker",
+              "sunCannon",
+              "sunWalker"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-sp-gump-20261018-goal-entry1/tutorial5/1",
+            "exitCode": 0
+          },
+          {
+            "frame": 8,
+            "phase": [
+              "4"
+            ],
+            "paused": [
+              "0"
+            ],
+            "page": [
+              "mission"
+            ],
+            "controls": {
+              "Game": [
+                "1",
+                "0",
+                "4",
+                "4",
+                "79",
+                "24",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial5",
+              "Tutorial",
+              "55"
+            ],
+            "raw_world": [
+              "0.265",
+              "8",
+              "23",
+              "0",
+              "0",
+              "21600",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.189",
+              "0"
+            ],
+            "mission_rules": [
+              "0",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "4000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "536870912",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunArcher",
+              "windBattery",
+              "sunBlocker",
+              "sunCannon",
+              "sunWalker"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-sp-gump-20261018-goal-entry1/tutorial5/2",
+            "exitCode": 0
+          }
+        ],
+        "expectedStart": {
+          "money": 4000,
+          "technology": [
+            "sunArcher",
+            "sunBlocker",
+            "sunCannon",
+            "sunWalker",
+            "windBattery"
+          ],
+          "demo": 0
+        }
+      },
+      {
+        "mission": "tutorial6",
+        "passed": true,
+        "clicks": [
+          "MORE",
+          "MORE",
+          "MORE",
+          "OK"
+        ],
+        "observations": [
+          {
+            "frame": 4,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A."
+            ],
+            "controls": {
+              "MORE": [
+                "1",
+                "0",
+                "474",
+                "459",
+                "549",
+                "479",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial6",
+              "Tutorial",
+              "60"
+            ],
+            "raw_world": [
+              "0.262",
+              "4",
+              "29",
+              "0",
+              "0",
+              "23100",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.215",
+              "0"
+            ],
+            "mission_rules": [
+              "0",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "7500",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "536870912",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "windBattery",
+              "windBalloon"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-sp-gump-20261018-goal-entry1/tutorial6/0",
+            "exitCode": 0
+          },
+          {
+            "frame": 6,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A1."
+            ],
+            "controls": {
+              "BACK": [
+                "1",
+                "0",
+                "435",
+                "493",
+                "510",
+                "513",
+                "0"
+              ],
+              "MORE": [
+                "1",
+                "0",
+                "514",
+                "493",
+                "589",
+                "513",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial6",
+              "Tutorial",
+              "60"
+            ],
+            "raw_world": [
+              "0.24",
+              "6",
+              "29",
+              "0",
+              "0",
+              "23100",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.195",
+              "0"
+            ],
+            "mission_rules": [
+              "0",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "7500",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "536870912",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "windBattery",
+              "windBalloon"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-sp-gump-20261018-goal-entry1/tutorial6/1",
+            "exitCode": 0
+          },
+          {
+            "frame": 8,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A2."
+            ],
+            "controls": {
+              "BACK": [
+                "1",
+                "0",
+                "435",
+                "509",
+                "510",
+                "529",
+                "0"
+              ],
+              "MORE": [
+                "1",
+                "0",
+                "514",
+                "509",
+                "589",
+                "529",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial6",
+              "Tutorial",
+              "60"
+            ],
+            "raw_world": [
+              "0.256",
+              "8",
+              "29",
+              "0",
+              "0",
+              "23100",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.205",
+              "0"
+            ],
+            "mission_rules": [
+              "0",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "7500",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "536870912",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "windBattery",
+              "windBalloon"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-sp-gump-20261018-goal-entry1/tutorial6/2",
+            "exitCode": 0
+          },
+          {
+            "frame": 10,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A3."
+            ],
+            "controls": {
+              "BACK": [
+                "1",
+                "0",
+                "435",
+                "459",
+                "510",
+                "479",
+                "0"
+              ],
+              "OK": [
+                "1",
+                "0",
+                "514",
+                "459",
+                "589",
+                "479",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial6",
+              "Tutorial",
+              "60"
+            ],
+            "raw_world": [
+              "0.257",
+              "10",
+              "29",
+              "0",
+              "0",
+              "23100",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.203",
+              "0"
+            ],
+            "mission_rules": [
+              "0",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "7500",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "536870912",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "windBattery",
+              "windBalloon"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-sp-gump-20261018-goal-entry1/tutorial6/3",
+            "exitCode": 0
+          },
+          {
+            "frame": 12,
+            "phase": [
+              "4"
+            ],
+            "paused": [
+              "0"
+            ],
+            "page": [
+              "mission"
+            ],
+            "controls": {
+              "Game": [
+                "1",
+                "0",
+                "4",
+                "4",
+                "79",
+                "24",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial6",
+              "Tutorial",
+              "60"
+            ],
+            "raw_world": [
+              "0.249",
+              "12",
+              "26",
+              "0",
+              "0",
+              "23100",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.197",
+              "0"
+            ],
+            "mission_rules": [
+              "0",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "7500",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "536870912",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "windBattery",
+              "windBalloon"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-sp-gump-20261018-goal-entry1/tutorial6/4",
+            "exitCode": 0
+          }
+        ],
+        "expectedStart": {
+          "money": 7500,
+          "technology": [
+            "windBalloon",
+            "windBattery"
+          ],
+          "demo": 0
+        }
+      },
+      {
+        "mission": "thewarbegins",
+        "passed": true,
+        "clicks": [
+          "Play Mission"
+        ],
+        "observations": [
+          {
+            "frame": 4,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A."
+            ],
+            "controls": {
+              "Review Knowledge": [
+                "0",
+                "0",
+                "406",
+                "459",
+                "528",
+                "479",
+                "0"
+              ],
+              "Play Mission": [
+                "1",
+                "0",
+                "532",
+                "459",
+                "618",
+                "479",
+                "0"
+              ]
+            },
+            "mission": [
+              "thewarbegins",
+              "Tutorial",
+              "172"
+            ],
+            "raw_world": [
+              "0.242",
+              "4",
+              "34",
+              "0",
+              "0",
+              "45100",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.187",
+              "0"
+            ],
+            "mission_rules": [
+              "0",
+              "0",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "3000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "536870912",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunAviary",
+              "rainBattery",
+              "sunCannon",
+              "sunWalker"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-sp-gump-20261018-goal-entry1/thewarbegins/0",
+            "exitCode": 0
+          },
+          {
+            "frame": 6,
+            "phase": [
+              "4"
+            ],
+            "paused": [
+              "0"
+            ],
+            "page": [
+              "mission"
+            ],
+            "controls": {
+              "Game": [
+                "1",
+                "0",
+                "4",
+                "4",
+                "79",
+                "24",
+                "0"
+              ]
+            },
+            "mission": [
+              "thewarbegins",
+              "Tutorial",
+              "172"
+            ],
+            "raw_world": [
+              "0.285",
+              "6",
+              "34",
+              "0",
+              "0",
+              "45100",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.217",
+              "0"
+            ],
+            "mission_rules": [
+              "0",
+              "0",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "3000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "536870912",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunAviary",
+              "rainBattery",
+              "sunCannon",
+              "sunWalker"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-sp-gump-20261018-goal-entry1/thewarbegins/1",
+            "exitCode": 0
+          }
+        ],
+        "expectedStart": {
+          "money": 3000,
+          "technology": [
+            "rainBattery",
+            "sunAviary",
+            "sunCannon",
+            "sunWalker"
+          ],
+          "demo": 0
+        }
+      },
+      {
+        "mission": "masterofwhirligigs",
+        "passed": true,
+        "clicks": [
+          "Play Mission"
+        ],
+        "observations": [
+          {
+            "frame": 4,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A."
+            ],
+            "controls": {
+              "Review Knowledge": [
+                "0",
+                "0",
+                "406",
+                "452",
+                "528",
+                "472",
+                "0"
+              ],
+              "Play Mission": [
+                "1",
+                "0",
+                "532",
+                "452",
+                "618",
+                "472",
+                "0"
+              ]
+            },
+            "mission": [
+              "masterofwhirligigs",
+              "Tutorial",
+              "115"
+            ],
+            "raw_world": [
+              "0.246",
+              "4",
+              "26",
+              "0",
+              "0",
+              "35600",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.184",
+              "0"
+            ],
+            "mission_rules": [
+              "0",
+              "0",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "2000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "536870912",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunArcher",
+              "windBattery",
+              "sunCannon",
+              "sunWalker"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-sp-gump-20261018-goal-entry1/masterofwhirligigs/0",
+            "exitCode": 0
+          },
+          {
+            "frame": 6,
+            "phase": [
+              "4"
+            ],
+            "paused": [
+              "0"
+            ],
+            "page": [
+              "mission"
+            ],
+            "controls": {
+              "Game": [
+                "1",
+                "0",
+                "4",
+                "4",
+                "79",
+                "24",
+                "0"
+              ]
+            },
+            "mission": [
+              "masterofwhirligigs",
+              "Tutorial",
+              "115"
+            ],
+            "raw_world": [
+              "0.262",
+              "6",
+              "26",
+              "0",
+              "0",
+              "35600",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.201",
+              "0"
+            ],
+            "mission_rules": [
+              "0",
+              "0",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "2000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "536870912",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunArcher",
+              "windBattery",
+              "sunCannon",
+              "sunWalker"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-sp-gump-20261018-goal-entry1/masterofwhirligigs/1",
+            "exitCode": 0
+          }
+        ],
+        "expectedStart": {
+          "money": 2000,
+          "technology": [
+            "sunArcher",
+            "sunCannon",
+            "sunWalker",
+            "windBattery"
+          ],
+          "demo": 0
+        }
+      },
+      {
+        "mission": "demostormrages",
+        "passed": true,
+        "clicks": [],
+        "observations": [
+          {
+            "frame": 4,
+            "phase": [
+              "4"
+            ],
+            "paused": [
+              "0"
+            ],
+            "page": [
+              "mission"
+            ],
+            "controls": {
+              "Game": [
+                "1",
+                "0",
+                "4",
+                "4",
+                "79",
+                "24",
+                "0"
+              ]
+            },
+            "mission": [
+              "demostormrages",
+              "Tutorial",
+              "72"
+            ],
+            "raw_world": [
+              "0.345",
+              "4",
+              "26",
+              "0",
+              "0",
+              "34800",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.218",
+              "360.218"
+            ],
+            "mission_rules": [
+              "0",
+              "0",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "2400",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "536870912",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-sp-gump-20261018-goal-entry1/demostormrages/0",
+            "exitCode": 0
+          }
+        ],
+        "expectedStart": {
+          "money": 2400,
+          "technology": [],
+          "demo": 0
+        }
+      },
+      {
+        "mission": "guardmyback",
+        "passed": true,
+        "clicks": [
+          "Play Mission"
+        ],
+        "observations": [
+          {
+            "frame": 4,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A."
+            ],
+            "controls": {
+              "Review Knowledge": [
+                "0",
+                "0",
+                "406",
+                "480",
+                "528",
+                "500",
+                "0"
+              ],
+              "Play Mission": [
+                "1",
+                "0",
+                "532",
+                "480",
+                "618",
+                "500",
+                "0"
+              ]
+            },
+            "mission": [
+              "guardmyback",
+              "Tutorial",
+              "422"
+            ],
+            "raw_world": [
+              "0.315",
+              "4",
+              "74",
+              "0",
+              "0",
+              "90000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "2",
+              "1",
+              "3",
+              "4"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.214",
+              "360.214"
+            ],
+            "mission_rules": [
+              "0",
+              "0",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "1200",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "536870912",
+              "536892288",
+              "536913664",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunArcher",
+              "sunAviary",
+              "windBattery",
+              "sunBlocker",
+              "sunBalloon",
+              "sunCannon",
+              "sunWalker"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-sp-gump-20261018-goal-entry1/guardmyback/0",
+            "exitCode": 0
+          },
+          {
+            "frame": 6,
+            "phase": [
+              "4"
+            ],
+            "paused": [
+              "0"
+            ],
+            "page": [
+              "mission"
+            ],
+            "controls": {
+              "Game": [
+                "1",
+                "0",
+                "4",
+                "4",
+                "79",
+                "24",
+                "0"
+              ]
+            },
+            "mission": [
+              "guardmyback",
+              "Tutorial",
+              "422"
+            ],
+            "raw_world": [
+              "0.276",
+              "6",
+              "72",
+              "0",
+              "0",
+              "90000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "2",
+              "1",
+              "3",
+              "4"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.193",
+              "360.193"
+            ],
+            "mission_rules": [
+              "0",
+              "0",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "1200",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "536870912",
+              "536892288",
+              "536913664",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunArcher",
+              "sunAviary",
+              "windBattery",
+              "sunBlocker",
+              "sunBalloon",
+              "sunCannon",
+              "sunWalker"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-sp-gump-20261018-goal-entry1/guardmyback/1",
+            "exitCode": 0
+          }
+        ],
+        "expectedStart": {
+          "money": 1200,
+          "technology": [
+            "sunArcher",
+            "sunAviary",
+            "sunBalloon",
+            "sunBlocker",
+            "sunCannon",
+            "sunWalker",
+            "windBattery"
+          ],
+          "demo": 0
+        }
+      },
+      {
+        "mission": "dissolvedalliance",
+        "passed": true,
+        "clicks": [
+          "Play Mission"
+        ],
+        "observations": [
+          {
+            "frame": 4,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A."
+            ],
+            "controls": {
+              "Review Knowledge": [
+                "0",
+                "0",
+                "406",
+                "445",
+                "528",
+                "465",
+                "0"
+              ],
+              "Play Mission": [
+                "1",
+                "0",
+                "532",
+                "445",
+                "618",
+                "465",
+                "0"
+              ]
+            },
+            "mission": [
+              "dissolvedalliance",
+              "Tutorial",
+              "432"
+            ],
+            "raw_world": [
+              "0.289",
+              "4",
+              "60",
+              "0",
+              "0",
+              "68800",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "3",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.208",
+              "360.208"
+            ],
+            "mission_rules": [
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "4000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "536870912",
+              "536892288",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunAviary",
+              "windBattery",
+              "sunBlocker",
+              "sunCannon",
+              "sunWalker",
+              "windWalker",
+              "windAviary",
+              "windArcher",
+              "windBalloon",
+              "windBlocker"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-sp-gump-20261018-goal-entry1/dissolvedalliance/0",
+            "exitCode": 0
+          },
+          {
+            "frame": 6,
+            "phase": [
+              "4"
+            ],
+            "paused": [
+              "0"
+            ],
+            "page": [
+              "mission"
+            ],
+            "controls": {
+              "Game": [
+                "1",
+                "0",
+                "4",
+                "4",
+                "79",
+                "24",
+                "0"
+              ]
+            },
+            "mission": [
+              "dissolvedalliance",
+              "Tutorial",
+              "432"
+            ],
+            "raw_world": [
+              "0.278",
+              "6",
+              "60",
+              "0",
+              "0",
+              "68800",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "3",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.191",
+              "360.191"
+            ],
+            "mission_rules": [
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "4000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "536870912",
+              "536892288",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunAviary",
+              "windBattery",
+              "sunBlocker",
+              "sunCannon",
+              "sunWalker",
+              "windWalker",
+              "windAviary",
+              "windArcher",
+              "windBalloon",
+              "windBlocker"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-sp-gump-20261018-goal-entry1/dissolvedalliance/1",
+            "exitCode": 0
+          }
+        ],
+        "expectedStart": {
+          "money": 4000,
+          "technology": [
+            "sunAviary",
+            "sunBlocker",
+            "sunCannon",
+            "sunWalker",
+            "windArcher",
+            "windAviary",
+            "windBalloon",
+            "windBattery",
+            "windBlocker",
+            "windWalker"
+          ],
+          "demo": 0
+        }
+      }
+    ],
+    "originals_unchanged": true
+  },
+  "entry": {
+    "runs": [
+      {
+        "mission": "thewarbegins",
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\originals",
+          "--mission",
+          "thewarbegins",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "10",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0",
+          "--ui-script",
+          "extracted\\goal-sp-gump-20261018-entry1\\thewarbegins\\steps.tsv",
+          "--ui-report",
+          "extracted\\goal-sp-gump-20261018-entry1\\thewarbegins\\states.tsv"
+        ],
+        "exit_code": 0,
+        "stderr": "로컬 미션 상태 8\r\n로컬 미션 상태 9\r\n로컬 미션 상태 10\r\nNo Central Island.\r\n로컬 Fort 전송\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\n로컬 미션 상태 13\r\nlogin status timer start\r\n로컬 미션 상태 14\r\nSeting Priest State\r\nDone\r\nMoveing Camera\r\nDone\r\n",
+        "raw_objects": 1876,
+        "camera": [
+          "976",
+          "793"
+        ],
+        "passed": true
+      },
+      {
+        "mission": "masterofwhirligigs",
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\originals",
+          "--mission",
+          "masterofwhirligigs",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "10",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0",
+          "--ui-script",
+          "extracted\\goal-sp-gump-20261018-entry1\\masterofwhirligigs\\steps.tsv",
+          "--ui-report",
+          "extracted\\goal-sp-gump-20261018-entry1\\masterofwhirligigs\\states.tsv"
+        ],
+        "exit_code": 0,
+        "stderr": "로컬 미션 상태 8\r\n로컬 미션 상태 9\r\n로컬 미션 상태 10\r\nNo Central Island.\r\n로컬 Fort 전송\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\n로컬 미션 상태 13\r\nlogin status timer start\r\n로컬 미션 상태 14\r\nSeting Priest State\r\nDone\r\nMoveing Camera\r\nDone\r\n",
+        "raw_objects": 1755,
+        "camera": [
+          "320",
+          "221"
+        ],
+        "passed": true
+      },
+      {
+        "mission": "tutorial1",
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\originals",
+          "--mission",
+          "tutorial1",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "10",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0",
+          "--ui-script",
+          "extracted\\goal-sp-gump-20261018-entry1\\tutorial1\\steps.tsv",
+          "--ui-report",
+          "extracted\\goal-sp-gump-20261018-entry1\\tutorial1\\states.tsv"
+        ],
+        "exit_code": 0,
+        "stderr": "로컬 미션 상태 8\r\n로컬 미션 상태 9\r\n로컬 미션 상태 10\r\nNo Central Island.\r\n로컬 Fort 전송\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\n로컬 미션 상태 13\r\nlogin status timer start\r\n로컬 미션 상태 14\r\nSeting Priest State\r\nDone\r\nMoveing Camera\r\nDone\r\n",
+        "passed": true
+      },
+      {
+        "mission": "tutorial2",
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\originals",
+          "--mission",
+          "tutorial2",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "10",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0",
+          "--ui-script",
+          "extracted\\goal-sp-gump-20261018-entry1\\tutorial2\\steps.tsv",
+          "--ui-report",
+          "extracted\\goal-sp-gump-20261018-entry1\\tutorial2\\states.tsv"
+        ],
+        "exit_code": 0,
+        "stderr": "로컬 미션 상태 8\r\n로컬 미션 상태 9\r\n로컬 미션 상태 10\r\nNo Central Island.\r\n로컬 Fort 전송\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\n로컬 미션 상태 13\r\nlogin status timer start\r\n로컬 미션 상태 14\r\nSeting Priest State\r\nDone\r\nMoveing Camera\r\nDone\r\n",
+        "passed": true
+      },
+      {
+        "mission": "tutorial3",
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\originals",
+          "--mission",
+          "tutorial3",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "10",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0",
+          "--ui-script",
+          "extracted\\goal-sp-gump-20261018-entry1\\tutorial3\\steps.tsv",
+          "--ui-report",
+          "extracted\\goal-sp-gump-20261018-entry1\\tutorial3\\states.tsv"
+        ],
+        "exit_code": 0,
+        "stderr": "로컬 미션 상태 8\r\n로컬 미션 상태 9\r\n로컬 미션 상태 10\r\nNo Central Island.\r\n로컬 Fort 전송\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\n로컬 미션 상태 13\r\nlogin status timer start\r\n로컬 미션 상태 14\r\nSeting Priest State\r\nDone\r\nMoveing Camera\r\nDone\r\n",
+        "passed": true
+      },
+      {
+        "mission": "thewarbegins",
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\originals",
+          "--mission",
+          "thewarbegins",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "2000",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0",
+          "--ui-script",
+          "extracted\\goal-sp-gump-20261018-entry1\\thewarbegins-movement\\steps.tsv",
+          "--ui-report",
+          "extracted\\goal-sp-gump-20261018-entry1\\thewarbegins-movement\\states.tsv"
+        ],
+        "exit_code": 0,
+        "stderr": "로컬 미션 상태 8\r\n로컬 미션 상태 9\r\n로컬 미션 상태 10\r\nNo Central Island.\r\n로컬 Fort 전송\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\n로컬 미션 상태 13\r\nlogin status timer start\r\n로컬 미션 상태 14\r\nSeting Priest State\r\nDone\r\nMoveing Camera\r\nDone\r\n선택 객체 SID 15000 TYPE 158\r\n[29] SORE LOSER TEST: [29] STARTING.\r\n",
+        "raw_objects": 1876,
+        "camera": [
+          "976",
+          "793"
+        ],
+        "movement": {
+          "sid": 15000,
+          "from": [
+            "94",
+            "108"
+          ],
+          "to": [
+            "90",
+            "108"
+          ],
+          "game_before": "0.395",
+          "game_after": "50.833",
+          "inputPipeline": {
+            "selectionMode": 5,
+            "loginPhase": 14,
+            "receivedBefore": 12,
+            "receivedAfter": 13,
+            "newTypes": [
+              64
+            ]
+          }
+        },
+        "passed": true
+      }
+    ],
+    "originals_unchanged": true
+  },
+  "nextConstructionBoundary": {
+    "passed": false,
+    "observed": {
+      "exitCode": 1,
+      "stderr": "로컬 미션 상태 8\r\n로컬 미션 상태 9\r\n로컬 미션 상태 10\r\nNo Central Island.\r\n로컬 Fort 전송\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\n로컬 미션 상태 13\r\nlogin status timer start\r\n로컬 미션 상태 14\r\nSeting Priest State\r\nDone\r\nMoveing Camera\r\nDone\r\n선택 객체 SID 15000 TYPE 158\r\n[29] SORE LOSER TEST: [29] STARTING.\r\n실제 Regular 실패 SID15181 TYPE85 event6700 count0 payload3f800000\r\n캠페인 실제 건설 프로세스 시작 미연결\r\n",
+      "originals_unchanged": true
+    },
+    "location": "RawCampaignAssetBindings::RegularHooks의startConstruction: 실제Damageable event6700/RawConstructionProcess::Start(parent,0) 미연결"
+  },
+  "retainedFailures": [
+    "첫 전체검사의 비용표시 미연결 기대1건: 새 연결/실제 Gump 없음 거부 검사로 갱신 후 전체 재실행",
+    "native1의 격리 fs:0 메모리 누락: SEH 전용 가상 페이지/호출 전후 복귀 검사 추가 후 원본426입력 동결",
+    "build1의 미사용width C4189: 제거 후 build4 경고0",
+    "probe1의 실제 선택 해제 미연결: 같은 RawUserSelection의 원본(0,0,1)에 연결",
+    "probe2의 실제 건설 프로세스 시작 미연결: 다음 단위에 실제 기존 building->Start/PrepareBuilding 연결 필요"
+  ],
+  "historyMaintenance": {
+    "reports": 55,
+    "pins": 84,
+    "journal": "extracted/goal-sp-gump-20261018-pin-updates.json"
+  },
+  "logSha256": {
+    "extracted/goal-sp-gump-20261018-native1.log": "2bdf7766a77cad8a023f0a4a8eb32e3416287287d5105352b08a1c5b5f35d79b",
+    "extracted/goal-sp-gump-20261018-native2.log": "ca2215b67dda6a89fc44236bb4508c05b98e31448c587c171c92d38a82e000ec",
+    "extracted/goal-sp-gump-20261018-native3.log": "ca2215b67dda6a89fc44236bb4508c05b98e31448c587c171c92d38a82e000ec",
+    "extracted/goal-sp-gump-20261018-build1.log": "ff0626ca53851041b5e8297bb32de8c2508cb38639530a8b8d676e300b33ff2f",
+    "extracted/goal-sp-gump-20261018-focused-pixels1.log": "2d9ff2ee70e931242afbd0b8ab6234afc07604a3b73c6ded8ad523b7b38618fc",
+    "extracted/goal-sp-gump-20261018-focused-native1.log": "63bf04c7b5044b5137a8aa52186f9bff8e2a253064c2159bacb1f5e451934b6c",
+    "extracted/goal-sp-gump-20261018-probe1.log": "13405ad6f9c5e49c69425ca190c0cbdb89f90705daf9a27abedb806ce33f1bfd",
+    "extracted/goal-sp-gump-20261018-build2.log": "be8fd99b6697e0e1fd3ffa2a221a2e22e0fdb618d4b60cef4613cc3635251461",
+    "extracted/goal-sp-gump-20261018-probe2.log": "41bd4b668ecb37286f124dcc7e0beae94644283440ffc868f4df506e83c0ce76",
+    "extracted/goal-sp-gump-20261018-probe3.log": "e478c11fab8f0d8cc75198548c0a455cb64e2a807b8f682232dc52e34d1743a5",
+    "extracted/goal-sp-gump-20261018-build3.log": "fbc535d1890909f77f7354e2463221e0729b1da1ae9fe79ca312ccaa5e6d036b",
+    "extracted/goal-sp-gump-20261018-placement1.log": "e7b407931e1d9afb6ac55daf784585d17d9a7aa11e08fb053e728ab9dac3f01b",
+    "extracted/goal-sp-gump-20261018-ctest1.log": "589ac8dec507f8d96643d583deeb1a21191d1e53cdeab5e2dee0aae83b930921",
+    "extracted/goal-sp-gump-20261018-menu-entry1.log": "b8b12d5c86a243ed145405e3c5d1a16895f3371f5d6b401b52082bfc97a5805c",
+    "extracted/goal-sp-gump-20261018-goal-entry1.log": "45c1eee9aa0a6dda3519fe8ac4fcf426bf94132bb199d97050b9cc54ac53e578",
+    "extracted/goal-sp-gump-20261018-audit.log": "89379e78c5e0cfc41e91ed1e39e1209901708e8ea3292fbbfdaa9f43a16b5db3",
+    "extracted/goal-sp-gump-20261018-entry1.log": "31c0b9025401c81fbfd80e43203d9e7030ab8588a019e22710f6bfc7c3a5cfae",
+    "extracted/goal-sp-gump-20261018-LastTest.log": "c2705823a514d1b7678348ec3d0fa901f69bad52f1c6c4faf1339c1f8f7ab6d6",
+    "extracted/goal-sp-gump-20261018-LastTest-failure1.log": "f1821a47095f7c5e62e8cd208126f00fe026707fdf26811fcf3e7e7c79b65eea",
+    "extracted/goal-sp-gump-20261018-build4.log": "dd350ef69cb72fa021dd5ff8b41d3ef3662c2fe3f937f599568a88d6ac5bc26f",
+    "extracted/goal-sp-gump-20261018-audit-final.log": "89379e78c5e0cfc41e91ed1e39e1209901708e8ea3292fbbfdaa9f43a16b5db3",
+    "extracted/goal-sp-gump-20261018-focused-effects1.log": "61dc989715512508f46b0b08367bc4fcbf34b93954b097b2b1dd6d08267cc7ad",
+    "extracted/goal-sp-gump-20261018-ctest2.log": "c834c610fe09305d37a2993fc01ec5817a943141249c4a61028b212f84d4c705",
+    "extracted/goal-sp-gump-20261018-freeze.json": "63f8e44236616c21ae10966fd014f465138ea3610209f15fcce324671505cb7b",
+    "extracted/goal-sp-gump-20261018-sources.json": "a036d51995d7ae268b25d379e8e909c0dd222886c1d1363003d2573c761cd6f9",
+    "extracted/goal-sp-gump-20261018-pin-updates.json": "151a432b040251c168ea460dfd5b3b0ad7ad2fe71c0d6186b441f7f77c0ca23e",
+    "extracted/goal-sp-gump-20261018-verify-final.json": "7e608668ce9e8206fb911d5b009c4d3e1b2ab0ccaa1100922edccfacf2243803",
+    "extracted/goal-sp-gump-20261018-probe1/result.json": "5796d09e54bbb59c8ae3a9ddfcacbb394c132bf38769eaeadb366a4a27559e29",
+    "extracted/goal-sp-gump-20261018-probe2/result.json": "c6695151a90c7ebcf339bd767985b5afe8d77d90522f4797888924717e18ae68",
+    "extracted/goal-sp-gump-20261018-read.c": "a4168457d5b43ee7505ddb3a37120d6bf25552cc14441ec6b34bada26e78db70"
+  },
+  "observationSha256": {
+    "extracted/goal-sp-gump-20261018-entry1/masterofwhirligigs/briefing.bmp": "19fb9e705c6e7a7878277a375faf00acd401d8b58c0e8f6e73f6038a5ca5c209",
+    "extracted/goal-sp-gump-20261018-entry1/masterofwhirligigs/mission.bmp": "01344723f456fb762abd1ade2e9f4caec00120ad475b540fd7fab54f03afa8f1",
+    "extracted/goal-sp-gump-20261018-entry1/masterofwhirligigs/result.json": "35ed5640f27889ee430399949bfc8e650942b17b25ce1de19bd1e256b90683fb",
+    "extracted/goal-sp-gump-20261018-entry1/masterofwhirligigs/states.tsv": "f1f76919bf5913f17ca568cfebfa48bfd56344c3ecf67b05212cb96af6a9fc4a",
+    "extracted/goal-sp-gump-20261018-entry1/masterofwhirligigs/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sp-gump-20261018-entry1/masterofwhirligigs/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sp-gump-20261018-entry1/masterofwhirligigs/steps.tsv": "f13a4cd76347cf94d012d3c3f874355a490956f08af7314c9feb9449e7d7f371",
+    "extracted/goal-sp-gump-20261018-entry1/results.json": "6b2b382aca8d7145f64bf3cc4e4436e1dded10dd3c55a008246aa84f8768f36e",
+    "extracted/goal-sp-gump-20261018-entry1/thewarbegins-movement/after.bmp": "347dc89bb30bdbc92efcb4d41ebbc385d4c56175fc8614ec69792f11bcdb05de",
+    "extracted/goal-sp-gump-20261018-entry1/thewarbegins-movement/briefing.bmp": "6248a7f0e5d521920ce1342992ab658aa06de3cb828f392e434427ebe4818e5a",
+    "extracted/goal-sp-gump-20261018-entry1/thewarbegins-movement/mission.bmp": "7b0850824555e3f17744f3bebc3f901cd91cf8f86bb994156c77332ec934813d",
+    "extracted/goal-sp-gump-20261018-entry1/thewarbegins-movement/result.json": "5c955ad0a73cd249c89dc632866feab9189f0bbad96e9ae7839ca52b8adfa5c6",
+    "extracted/goal-sp-gump-20261018-entry1/thewarbegins-movement/states.tsv": "c8283622b9b1003da32ba8933e66ee2b229ece0f2e6c6843bc6787405a5e8760",
+    "extracted/goal-sp-gump-20261018-entry1/thewarbegins-movement/stderr.log": "197c308ea9fa1056d6a787adce92efe2af608eb0e085ddb7de3c75ef3b89af2e",
+    "extracted/goal-sp-gump-20261018-entry1/thewarbegins-movement/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sp-gump-20261018-entry1/thewarbegins-movement/steps.tsv": "ec5f836ce4a00dd31346d2734024d1110c3fbbf3f459b95b75bd2360156eea2b",
+    "extracted/goal-sp-gump-20261018-entry1/thewarbegins/briefing.bmp": "22ddf4fdd23c1048b6bfa58a367b9d1300cb415ad16b5e7e3a0030559d3c5dbc",
+    "extracted/goal-sp-gump-20261018-entry1/thewarbegins/mission.bmp": "09688dc1618a390af678c69e16376b6891ec4eac621082a140e32c2dc919c917",
+    "extracted/goal-sp-gump-20261018-entry1/thewarbegins/result.json": "9b50d8cc12ec04e7e2396c807c6a945f3cf07169b7c01d13cf000e507ea494e2",
+    "extracted/goal-sp-gump-20261018-entry1/thewarbegins/states.tsv": "b0f617e3bfea86a0be3ece88bbefa6901bcf46d42e5451dea1d3e90cd5990f09",
+    "extracted/goal-sp-gump-20261018-entry1/thewarbegins/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sp-gump-20261018-entry1/thewarbegins/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sp-gump-20261018-entry1/thewarbegins/steps.tsv": "25555d922915c31ea42cb1c99c38e2cfce745b9abf8d1c1febcd40f34f21f784",
+    "extracted/goal-sp-gump-20261018-entry1/tutorial1/briefing.bmp": "82d93577f3d15537fd34f748c38a49b8b816dbb8abd0f6e49b8c4f3e82c204c8",
+    "extracted/goal-sp-gump-20261018-entry1/tutorial1/result.json": "6beaecb01cc5951fe29c56624a481e85ac0b34e4c41d3abd0b73f3dfde360129",
+    "extracted/goal-sp-gump-20261018-entry1/tutorial1/states.tsv": "9d859aebbc7ed2a1fe5df5963ce7a3a8369cac0135c46c53b2a5ba286480fff2",
+    "extracted/goal-sp-gump-20261018-entry1/tutorial1/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sp-gump-20261018-entry1/tutorial1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sp-gump-20261018-entry1/tutorial1/steps.tsv": "409f11cdd43e210be4ef07f2542e60f864a490a63fc452317f55c871f3dfd989",
+    "extracted/goal-sp-gump-20261018-entry1/tutorial2/briefing.bmp": "3713186b41d1295b871e958cb0eb743179306564efc45d6f3b6c2474cd1e377b",
+    "extracted/goal-sp-gump-20261018-entry1/tutorial2/result.json": "a4e7d6e52c70d6aa571a8562b42f31309db02afe34d1106440b32ac94bc807ea",
+    "extracted/goal-sp-gump-20261018-entry1/tutorial2/states.tsv": "40c6fa00f8db31679dfdf5d8b594b13a8d8a050895f022b2f2cc1a5891b10f2b",
+    "extracted/goal-sp-gump-20261018-entry1/tutorial2/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sp-gump-20261018-entry1/tutorial2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sp-gump-20261018-entry1/tutorial2/steps.tsv": "de93a1a0309003d3986caf0f903ec05a2a6affabfcf8eddc8c31ff5d9e0ffc38",
+    "extracted/goal-sp-gump-20261018-entry1/tutorial3/briefing.bmp": "8443ca9cd905199a793670305f3442b7e8f587c37d7e718379e401beed11d116",
+    "extracted/goal-sp-gump-20261018-entry1/tutorial3/result.json": "4c5d5462e11d912285f7ff562eb688cafa3be58fc1f676fa7b8b4d6b10836f90",
+    "extracted/goal-sp-gump-20261018-entry1/tutorial3/states.tsv": "06f691062dcafeada239d0104bc0bdacf1a81c618adfbea6a495ee38c17c114e",
+    "extracted/goal-sp-gump-20261018-entry1/tutorial3/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sp-gump-20261018-entry1/tutorial3/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sp-gump-20261018-entry1/tutorial3/steps.tsv": "4c626dfac1c7f92f6983b072c22ef3f382c8dc8d0072a522b3554497396918a3",
+    "extracted/goal-sp-gump-20261018-goal-entry1/demostormrages/0/current.bmp": "d4727dc9e65265625376c8b50008974ec7ff07b56f96e8ceb9974a96e74a011a",
+    "extracted/goal-sp-gump-20261018-goal-entry1/demostormrages/0/states.tsv": "aabc4f80723c1f85ea906c0e669c9fbcb190fe8601c6ccfc9736f9d20463d7e3",
+    "extracted/goal-sp-gump-20261018-goal-entry1/demostormrages/0/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sp-gump-20261018-goal-entry1/demostormrages/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sp-gump-20261018-goal-entry1/demostormrages/0/steps.tsv": "76144f3116bb0b72496c899d9d69dcd92a62ada2ad613eaff7df39707bcfccf4",
+    "extracted/goal-sp-gump-20261018-goal-entry1/dissolvedalliance/0/current.bmp": "2d904c721c0db695a6f683b3329a214d0d832657d77b2e67a0044b7a8d1b1705",
+    "extracted/goal-sp-gump-20261018-goal-entry1/dissolvedalliance/0/states.tsv": "34b96711fa430beb13ea100d6c9ed16d5ad6474d388123c4b5bfbf4057d60a51",
+    "extracted/goal-sp-gump-20261018-goal-entry1/dissolvedalliance/0/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sp-gump-20261018-goal-entry1/dissolvedalliance/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sp-gump-20261018-goal-entry1/dissolvedalliance/0/steps.tsv": "9c627de06761b7b35ae245d523073db0c87449bb0f1449419a715f62c90e9c12",
+    "extracted/goal-sp-gump-20261018-goal-entry1/dissolvedalliance/1/current.bmp": "6e90a0ba07e34d0e705dd2cb43789b74c8fb25247d4aa5a383ea27a85209e892",
+    "extracted/goal-sp-gump-20261018-goal-entry1/dissolvedalliance/1/states.tsv": "1bb5169d63b54793a02d28bf78f308a787bcd7f3e9cac366bed4ddba0f1b496d",
+    "extracted/goal-sp-gump-20261018-goal-entry1/dissolvedalliance/1/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sp-gump-20261018-goal-entry1/dissolvedalliance/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sp-gump-20261018-goal-entry1/dissolvedalliance/1/steps.tsv": "7c8cbc95b8972406083e14935a9d3135312f51064227792cbbcf14235d9cd1d8",
+    "extracted/goal-sp-gump-20261018-goal-entry1/guardmyback/0/current.bmp": "fe1f9bad797ebe43b1e4d1c135507f84b127cee5d70106fa3dabff4e55f49acf",
+    "extracted/goal-sp-gump-20261018-goal-entry1/guardmyback/0/states.tsv": "bf1966668c71f21bf301e398086c11a421ff8c2c2aedae82fad84e5606aa9671",
+    "extracted/goal-sp-gump-20261018-goal-entry1/guardmyback/0/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sp-gump-20261018-goal-entry1/guardmyback/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sp-gump-20261018-goal-entry1/guardmyback/0/steps.tsv": "67c086abf5573469e80b230b6d6610ec00ec5ad337fde6b57ff0f1a623e92fa1",
+    "extracted/goal-sp-gump-20261018-goal-entry1/guardmyback/1/current.bmp": "ef4e01da08e0eb36e004de430255c2ff3c06242915f75b82a81407580c1f1ecc",
+    "extracted/goal-sp-gump-20261018-goal-entry1/guardmyback/1/states.tsv": "c8ca17a66aa64254db1cf394c332bc7ae89db18f4f4b1e5bfc874ccde54e0595",
+    "extracted/goal-sp-gump-20261018-goal-entry1/guardmyback/1/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sp-gump-20261018-goal-entry1/guardmyback/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sp-gump-20261018-goal-entry1/guardmyback/1/steps.tsv": "7c686d8af4fe9969aa45be0ba55aff835cb9d319f3d30005d7b0266bf37d2056",
+    "extracted/goal-sp-gump-20261018-goal-entry1/masterofwhirligigs/0/current.bmp": "115c6a5fe701686de3c30c7fd9a8c9e484ecccce7a1ad5837d8c2a5982d54743",
+    "extracted/goal-sp-gump-20261018-goal-entry1/masterofwhirligigs/0/states.tsv": "dd66fe820b3afb26d05864b61aba95b52a4c7d59f4dfe8be16864515e3cc50ee",
+    "extracted/goal-sp-gump-20261018-goal-entry1/masterofwhirligigs/0/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sp-gump-20261018-goal-entry1/masterofwhirligigs/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sp-gump-20261018-goal-entry1/masterofwhirligigs/0/steps.tsv": "54ee4c79690393543b8705d3f09bfa41db6c067a064f706b2ceabfbc8f940d3b",
+    "extracted/goal-sp-gump-20261018-goal-entry1/masterofwhirligigs/1/current.bmp": "80a8a3353b81c9f73b329df235d0eafb59726e10cd9e835e0ebef6a8ccecb774",
+    "extracted/goal-sp-gump-20261018-goal-entry1/masterofwhirligigs/1/states.tsv": "0aa6fa99804bfb77183b0261b73425da481f6176d938ef61c172f2064ce5d882",
+    "extracted/goal-sp-gump-20261018-goal-entry1/masterofwhirligigs/1/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sp-gump-20261018-goal-entry1/masterofwhirligigs/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sp-gump-20261018-goal-entry1/masterofwhirligigs/1/steps.tsv": "8d6d7e6239e1db3dcf2e64abd5d25b88065ad9a87b061add1b25b25761e6652f",
+    "extracted/goal-sp-gump-20261018-goal-entry1/results.json": "493cbc5d268c31f9c806ad3d4d2595c398c19eac8e252cc2e6d5829bf629ce32",
+    "extracted/goal-sp-gump-20261018-goal-entry1/thewarbegins/0/current.bmp": "46e1fa62d4dcb04e09368a615aab7c48dc0e77005309b3033d1b56fc2f3ab5ea",
+    "extracted/goal-sp-gump-20261018-goal-entry1/thewarbegins/0/states.tsv": "dcbfb019d35ea23faa0c76bca7e5dbecf2850004dea5aad7e4a66183fb5726ba",
+    "extracted/goal-sp-gump-20261018-goal-entry1/thewarbegins/0/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sp-gump-20261018-goal-entry1/thewarbegins/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sp-gump-20261018-goal-entry1/thewarbegins/0/steps.tsv": "78db410448e5616a84a2e26316e13b3ce6fdb221f57eac179463a4392316c423",
+    "extracted/goal-sp-gump-20261018-goal-entry1/thewarbegins/1/current.bmp": "90de3aa079285a5a6d1475a184a84ac7b17b493072ad573673bdf61e5328a663",
+    "extracted/goal-sp-gump-20261018-goal-entry1/thewarbegins/1/states.tsv": "391eff6a935092c7949097b7a55dec65d4f5f310ea3d71aa285ec49eeb160444",
+    "extracted/goal-sp-gump-20261018-goal-entry1/thewarbegins/1/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sp-gump-20261018-goal-entry1/thewarbegins/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sp-gump-20261018-goal-entry1/thewarbegins/1/steps.tsv": "8e9144319ddb78fe4b153dd2fe871c72c57994eca75f34ae94e2b4c0d24f9689",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial1/0/current.bmp": "82c8e495477733be2928b9721629c35e7a34076f3c7612329ba793ec4909e8fa",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial1/0/states.tsv": "a169e92b98f57d64fda4807e84d120c06ed328194e64beec942fc7dc23a5873d",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial1/0/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial1/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial1/0/steps.tsv": "3db5169437c8acbc630f9f60205ed949a59be186c632fa0d80dedee81e119c4b",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial1/1/current.bmp": "473156304441af4e49da36135608e51d5f3b3c2880ab407c0f0552ee6790a751",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial1/1/states.tsv": "d53efdbca74e5af27efe6ee10df56b6410357be4ad8d3d851d0c983327999605",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial1/1/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial1/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial1/1/steps.tsv": "980f756489662a154ee101fa0c74f4618cc306ab71d30dc4930e27e085fe74f0",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial1/2/current.bmp": "7b3ea5a433ebb6b5fe3dc3f57b5c9598107fa4ea449595a3f61c81a96d6b51e0",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial1/2/states.tsv": "6e89c95a067bee66c16b392450232d20ce88b164f107f5209ee79c14b37122ab",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial1/2/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial1/2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial1/2/steps.tsv": "eb84980d33a8579843ca361c46d514e4c3d7b6fb8999e2281425c821ceadf573",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial2/0/current.bmp": "2f240b2f2fdc59fd309333bb9104ec7fb995994232684b0663329827fb257c94",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial2/0/states.tsv": "5d00e38b1605d76333b780f0c131fc76629597119ea58e268d811c416360402c",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial2/0/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial2/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial2/0/steps.tsv": "55c79f7df6be8799fe772ff0dc4b307c49c36dd0e713318673edf60b6dc26d3b",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial2/1/current.bmp": "1af4e3de73032d3c7374abcb7cf82526d37402d1c7d202ba7d493f6a2599bb2f",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial2/1/states.tsv": "e6c86b8455d4f22c809823c7cc8b1e4fc9b16af2ebe0e6d345729362ecc918b9",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial2/1/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial2/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial2/1/steps.tsv": "c2ac2aadeed8f4bc81607b0c0b9d25d906b5a33c9bc78d8aed081e028ef5f8c6",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial2/2/current.bmp": "c078330cfcf666bc197a97d34a91472e456eb2ff36697e812ca2e6345176a101",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial2/2/states.tsv": "3497bfa5468d851ffa2e54ad965eb38df22d8d07177aacb9e1ed5207583f0017",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial2/2/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial2/2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial2/2/steps.tsv": "9a249eb3f2f7ec998f7131ee396fa40fcc185fd170f451f0c14ca520c31b6f67",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial2/3/current.bmp": "9e451ff7c32d8cbc0dca0b62ec1d4bf5a04bf7ad36d56db242b4d79fb54878a7",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial2/3/states.tsv": "32d10521c1668489c5da838771364cbdbebe9071df7b46c0bcf0e2003f276038",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial2/3/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial2/3/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial2/3/steps.tsv": "64f199d63ae63798ba18d59e19bd6a164d314d8aee10e16d75b892e30a0358df",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial3/0/current.bmp": "f5149a1bce8feb06c27e35826edb48a8476e45ac6bca5bf3038d416d922045a8",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial3/0/states.tsv": "eef1d9d0f8d482fb8f59daef395610f7881578555f48c95490706150e5181313",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial3/0/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial3/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial3/0/steps.tsv": "5a308c3288c45c1998a9eb53e1a0f7f6bed4b0fe5b705114a1cac1b39d43c333",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial3/1/current.bmp": "689f4393d5636eda8eb039758f7d77165178330810312fe3f0a96ea330015098",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial3/1/states.tsv": "f794aac9b187bdb4fab60e504b2402d32e8910daac3eeabe16803001f5028f51",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial3/1/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial3/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial3/1/steps.tsv": "ef9bdf30830e6baa6b6b41cea50c791f9dedaa42fe59d551630f26d90c2af1c0",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial3/2/current.bmp": "86e56913b0f34d426aa2e149ae7725a17b7c1a264a6dbd49beade975195ac857",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial3/2/states.tsv": "a06efbba3e1cbbe80af8977bcae1d7edc1d1cbf8cdd6dcd2e58a23a6cbd2b5d0",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial3/2/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial3/2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial3/2/steps.tsv": "3fcd8f50b736702e00c11e7c2338e25a7fd238cfc1c20615671dfdd3e566f5bf",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial4/0/current.bmp": "e5408e8f145a2744d7a929c26f4ae75223c4075df40cb13de39f7d8882bcad36",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial4/0/states.tsv": "d5bc3ca30294d677234feb1582b27dfc665ddecc73c9fe16f48bcf9c13609260",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial4/0/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial4/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial4/0/steps.tsv": "f2f91c67d3f3328e3166eb6b34c6bd46532da34b390bb0948b68a3368e5e4a7a",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial4/1/current.bmp": "1fc835a11c11c9a9fedad9d977811a004c7b6ba917fb11c4190a253611ca75a2",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial4/1/states.tsv": "c2783ee734e5928a9ade136b1df2e54f9189ac6b0f969a8b4a33b50558a307f0",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial4/1/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial4/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial4/1/steps.tsv": "a9e3c3dec818b41a82afb6ee1f1dacebd23bfbff8335f1fbbff3e899080dc79e",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial4/2/current.bmp": "8e1cfff6cabffb40a0901b1d20cc5725559bd335a59c298fd2cc0e3a283a7834",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial4/2/states.tsv": "ec9bc2e4229a073d6aa9a8c65f67ac6504c0991169d9e40abbd44fd1ab858761",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial4/2/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial4/2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial4/2/steps.tsv": "9436c03fba2ecf5fb32777444339b87710091f8141b8bb3b9b758c901a0efa65",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial5/0/current.bmp": "ddb31bf1bb1c96df8cae2b91ee042fcb0af3a0b567840d32838a61c4ec162d0c",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial5/0/states.tsv": "c56147b83fb136144552e4044d2104a999ccfd7a209da1841c90e5ffd9d59717",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial5/0/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial5/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial5/0/steps.tsv": "5010312d33e481f6e6e1d9c4ef6ab0f5404f626f9491b375b3057a6e04303c5c",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial5/1/current.bmp": "6f5b7fd60124161449ac2b47a99a399ceb026beb27542a07404e38ba4da33797",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial5/1/states.tsv": "557ec7fcd90225425fda1f5f546ce5bf37f3a13d5d8f3eec138421953ea1cd32",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial5/1/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial5/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial5/1/steps.tsv": "58664a71f0abef18c92a50dad065d979849f6c821115ac77894880dc9b56ea62",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial5/2/current.bmp": "60d12d31a0b194eabe9b90e35eb44bc9e322a53ce67bd558a1a0daf4b9255178",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial5/2/states.tsv": "e142deba53d871a91845f7ac540bb6908e7dbc13b576c3229df03c3675324cdd",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial5/2/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial5/2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial5/2/steps.tsv": "a56dc0a693f3d6d15cfe75109499827773845c8c0873c124890b7304d1c0c155",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial6/0/current.bmp": "e0f9cd24b7a2d0e8400d984d862a65c5e84c42a46b335e69ebe983c137cbdcea",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial6/0/states.tsv": "116839646455edc18f835d204ae82b1995cda1b8738a9c567b1836fffa0eed76",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial6/0/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial6/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial6/0/steps.tsv": "6e85d06062dd26243a02bc270e5a467e0a016f56198f43714bb14168b4dbea02",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial6/1/current.bmp": "b080d2e3626bcffe5640aea0db7cb37de468b209a21e371dce88d270bdf41f27",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial6/1/states.tsv": "d36f2c2831694f10631bfdfc544539ff88f3e1891babc5ada847a3e4e6dbc339",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial6/1/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial6/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial6/1/steps.tsv": "a8fe5a35885ea01d6bb9667427ad0936116cade57225f203c42195943ddd9ccb",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial6/2/current.bmp": "8367c273f7659d7a585a475159bf5ead9691bc897431967023af00a47177f72a",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial6/2/states.tsv": "5aa3f2ed20ff96b74536d1622adf1a75cbf649ea1f686953f42b8e294bc5ff38",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial6/2/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial6/2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial6/2/steps.tsv": "fd1520e176b6fc6c51509c54ed419976a655fc4ffed45c54a691f09accd5cd64",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial6/3/current.bmp": "faa117689b7a1b8dc95ba41230e10cef69c20530dd7e5110e8e0d68beefb80c2",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial6/3/states.tsv": "525777a22333530cba19ba28a71c7913a38398447167b58496e1df6f3d01052f",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial6/3/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial6/3/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial6/3/steps.tsv": "ed47671d7f4bd4818894932ac341245eda160c4122c76247211bf7870f81c1d4",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial6/4/current.bmp": "4685f08efd138a55ae6a62f9d0c32b0420ab2745287e776e88ccda61afcb85e3",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial6/4/states.tsv": "f5f105459956602ff44f966827b75b3cc2e158b147ed382f4ecb2f1daaaabf7f",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial6/4/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial6/4/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sp-gump-20261018-goal-entry1/tutorial6/4/steps.tsv": "30976bed61b0e916137be05f5e665a6604d26db3991cd5ef10f7149044799a82",
+    "extracted/goal-sp-gump-20261018-menu-entry1/closed.bmp": "231688ca0469ebc2b1fb4a7f54c0c8893493b4554af620c46020b6fe568bcdb1",
+    "extracted/goal-sp-gump-20261018-menu-entry1/opened.bmp": "9ee4becbf43155fbb7ccf889173737a42a6e9b1387aa233e3e8c69771d1dac06",
+    "extracted/goal-sp-gump-20261018-menu-entry1/results.json": "8857ff399b07316a605fd0d2fa0c8657d972b129f9123f1d6543d645063ae514",
+    "extracted/goal-sp-gump-20261018-menu-entry1/states.tsv": "47d731b273275b88ad1116f6eafe6ef8ae995ca6becc353c133104459ec48567",
+    "extracted/goal-sp-gump-20261018-menu-entry1/stderr.log": "6022452ccd2b1fb6d22e9e245111af2bd3ac20a51a2980a7f447fd323fcedae8",
+    "extracted/goal-sp-gump-20261018-menu-entry1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sp-gump-20261018-menu-entry1/steps.tsv": "4e6bccd8feb504e23eab671dcd6d297371e9ebfc3d6fac7283c138460f1d0427",
+    "extracted/goal-sp-gump-20261018-menu-entry1/taken.bmp": "d0b6003fb2384c3b28d6bc414054cd92b392b2cd1a27a168649805e67ecf7246",
+    "extracted/goal-sp-gump-20261018-menu-entry1/workshop.bmp": "4f247f40d854c7cbf660825513244083df9a9e2ca189c5847996b79030b6366c",
+    "extracted/goal-sp-gump-20261018-placement1/cost-deleted.bmp": "906fa33b275db049d5c6a049eb967a00c489cfa8637e4be2a4aeae5430f03e27",
+    "extracted/goal-sp-gump-20261018-placement1/moving.bmp": "5e2f77aeca634cb9ea49d901c2b39bcf7d7d12a9f72bfeacc5263014f80493df",
+    "extracted/goal-sp-gump-20261018-placement1/placed.bmp": "40ef2515e2db5ee11389daec793c7616eed04813ee8a40c34cf9cc8421e67686",
+    "extracted/goal-sp-gump-20261018-placement1/results.json": "0e799f58ef35265eded13cbd7672948e9f3883222b4b2c000787e79517e46907",
+    "extracted/goal-sp-gump-20261018-placement1/states.tsv": "c06a14b04d3d656105b0addd997fef733da8b48d771935e4d11f18805bfaad10",
+    "extracted/goal-sp-gump-20261018-placement1/stderr.log": "197c308ea9fa1056d6a787adce92efe2af608eb0e085ddb7de3c75ef3b89af2e",
+    "extracted/goal-sp-gump-20261018-placement1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sp-gump-20261018-placement1/steps.tsv": "be2bbd3e53dd606f3925f72ac738e3a352d04178d1ab1ceb68d93ffe7575ac59"
+  },
+  "remaining": [
+    "최우선: 실제 Damageable Regular의 startConstruction을 같은 Session의 기존 RawConstructionProcess::Start/PrepareBuilding에 연결해 자연 도착·건설·완공 GUI 검사",
+    "비용 표시 reference!=0 객체 부착/나머지 파생 메뉴·Knowledge·생산·명령",
+    "Chat 입력/접두·원격·메타/FrameGate·Guide·Outcome·전략AI·운반왕복/희생·내려놓기/상태7·저장/38·41·187/11스테이지 자연 완주·승패·다음 미션·전체 동일성"
+  ]
+}
