@@ -86,6 +86,7 @@
 #include "o/RawRainAviaryProcess.h"
 #include "o/RawFlyerProcess.h"
 #include "o/RawFlyerFrame.h"
+#include "o/RawSunFlyerFrame.h"
 #include "o/RawFlyerTarget.h"
 #include "o/RawDamageableRelease.h"
 #include "o/RawFlyerPreDestroy.h"
@@ -303,7 +304,7 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawFenceTarget> fenceTarget; // 같은 해시/배리어 끝점/현재 동맹의 실제 표적 코너 계산이다.
     std::unique_ptr<RawCampaignArcherBindings> combat; // 같은 Archer/Missile 생성/공간/Host를 소유한다.
     CrtRandom particleCrt{CrtRandom::Borrow(crt)}; // 실제 시드 초기화/지형이 소비한 현재 CRT DWORD를 함께 사용한다.
-    std::array<std::uint32_t,188> shrapnelMapTokens{}; // 원본 일반 소유자 색표가 복원된 다리/144의 실제 토큰이다.
+    std::array<std::uint32_t,188> shrapnelMapTokens{}; // 원본 일반 소유자 색표가 복원된 다리/73/144의 실제 토큰이다.
     std::map<std::uint32_t,OwnerColorMaps> shrapnelOwnerColors; // 현재 원본 후보로 만든 TYPE별9×256 색표이며 실제 소유자 색을 매번 선택한다.
     BridgeDrawState bridgeDrawState;std::unique_ptr<RawBridgeDraw> bridgeDraw; // 같은 기본0 수명 숫자 전역과 실제 다리 캡처 가상 몸체다.
     ShapeToBufferState shrapnelCaptureState; // 원본 fixed16/추가 TYPE 기준점/현재 소유자 색 선택이다.
@@ -417,6 +418,9 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawRainAviaryProcess> rainAviary; // 같은 현재 Kernel/풀의 맨 오 워 풀 전용 상태 기계다.
     std::unique_ptr<RawFlyerProcess> flyer; // 같은 실제 Host의 공통 비행 생성/전송/홈 연결이다.
     std::unique_ptr<RawFlyerFrame> flyerFrame; // 같은 현재 시각/부모/표적/소리 장부의 실제 비행 Frame 제어다.
+    std::unique_ptr<RawSunFlyerFrame> sunFlyerFrame; // 같은136바이트를 소비하는 훨리기그 전용45d2c0이다.
+    bool flyerPaused{}; // 현재 RunFrame의 실제 일시정지 판정이며 SID 상태와 구별한다.
+    std::uint32_t sunBombType{163}; // PATCH005412e4의 현재 훨리기그 폭탄 번호다.
     std::unique_ptr<RawFlyerTarget> flyerTarget; // 같은 현재 풀/의존/실제 공간 검색의 표적 선택·경쟁·포위다.
     std::unique_ptr<RawSquidFinder> flyerFinder; // 한 비행체 표적 검색의 같은 일반 finder 커서를 보관한다.
     std::uint32_t flyerProcessEnd{63},flyerDependType{1}; // PATCH의 실제 프로세스 상한/의존 타입 전역이다.
@@ -704,8 +708,8 @@ struct RawCampaignSession::Impl {
             },[this](Sid sid) { core.building.NotifySurface(sid); }}));
         projectileGeometry=std::make_unique<RawProjectileGeometry>(core.pool,core.types,projectileTypes,16.0F,11.0F,gunMode.get());
         fenceTarget=std::make_unique<RawFenceTarget>(core.pool,core.hash,core.types,projectileTypes,*gunTarget,gunTargetState,gunState);
-        // 실제43be30은59ab28=0인 일반 초기 상태에서 다리와 맨 오 워에 각각 일반 색표를 설치한다.
-        for (const auto type:{core.bridgeState.bridgeType,144U}) { shrapnelMapTokens.at(type)=1;shrapnelOwnerColors.emplace(type,BuildStandardOwnerColorMaps(type,core.bridgeState.bridgeType)); }
+        // 실제43be30은59ab28=0에서 다리·훨리기그·맨 오 워에 각각 일반 색표를 설치한다.
+        for (const auto type:{core.bridgeState.bridgeType,73U,144U}) { shrapnelMapTokens.at(type)=1;shrapnelOwnerColors.emplace(type,BuildStandardOwnerColorMaps(type,core.bridgeState.bridgeType)); }
         shrapnelCaptureState.ownerTypeMaps=shrapnelMapTokens;
         shrapnelCaptureState.addTypeHotspot=true; // 실제00542414의 PE 초기 DWORD는1이며 캡처 후 TYPE 기준점을 더한다.
         shrapnelCaptureState.ownerColors=[this](std::uint32_t type,std::uint32_t owner)->std::span<const std::uint8_t> {
@@ -1048,7 +1052,7 @@ struct RawCampaignSession::Impl {
         const auto raw=core.pool.Slot(sid);const auto table=Read(raw,0);return (raw[10]==90 && table==0x005092d0) || (raw[10]==170 && table==0x00509388);
     }
     //144의 전용 Pre/Damageable Post가 확인된 실제 가상 표만 선택한다.
-    bool Flyer(Sid sid) const { const auto raw=core.pool.Slot(sid);return raw[10]==144 && Read(raw,0)==0x0050a388; }
+    bool Flyer(Sid sid) const { const auto raw=core.pool.Slot(sid);return (raw[10]==144 && Read(raw,0)==0x0050a388) || (raw[10]==73 && Read(raw,0)==0x0050a1e8); } // 두 전용표의 Pre14/Post18은 같은45e7e0/44b9e0이다.
     //110의 실제 공통 Pre/Post/Pop 가상 표이며 다른 자산에 일반화하지 않는다.
     bool VisualDummy(Sid sid) const { const auto raw=core.pool.Slot(sid);return raw[10]==110 && Read(raw,0)==0x0050eb98; }
     // 같은 현재 원문/Host의 생성·프레임·QA·패킷을 연결한다. 미복원 BaseFlyer 하위는 선택 시 거부한다.
@@ -1122,9 +1126,11 @@ struct RawCampaignSession::Impl {
             if (!pendingFlyer || &pendingFlyer->Fields()!=&fields) throw std::logic_error("비행 생성자의 현재 원문/소유권 불일치");
             if (!core.processes.Attach(std::move(pendingFlyer),type,parent,flags)) throw std::logic_error("비행 생성자의 free/dead 부모 부착 거부");
         };
-        hooks.frame=[this](FlyerProcessFields& fields) { if (Read(fields.bytes,0)==0x509f24U) throw std::logic_error("훨리기그 전용 비행 Frame0045d2c0 미연결");flyerFrame->Frame(fields); };
-        hooks.notify=[this](FlyerProcessFields& fields,std::uint32_t message,std::uint32_t a,std::uint32_t b) { if (Read(fields.bytes,0)==0x509f24U) throw std::logic_error("훨리기그 전용 통지0045bd60 미연결");flyerFrame->Notify(fields,message,a,b); };
-        hooks.parentDying=[this](FlyerProcessFields& fields) { if (Read(fields.bytes,0)==0x509f24U) throw std::logic_error("훨리기그 전용 홈파괴0045beb0 미연결");flyerFrame->ParentDying(fields); };
+        hooks.frame=[this](FlyerProcessFields& fields) { if (Read(fields.bytes,0)==0x509f24U) sunFlyerFrame->Frame(fields);else flyerFrame->Frame(fields); };
+        hooks.notify=[this](FlyerProcessFields& fields,std::uint32_t message,std::uint32_t a,std::uint32_t b) { flyerFrame->Notify(fields,message,a,b); };
+        hooks.parentDying=[this](FlyerProcessFields& fields) { if (Read(fields.bytes,0)==0x509f24U) sunFlyerFrame->ParentDying(fields);else flyerFrame->ParentDying(fields); };
+        hooks.pieces=[this](Sid parent) { static_cast<void>(particles->AddShrapnel(parent,ShrapnelKind::Explosion)); };
+        hooks.destroy=[this](Sid parent,std::uint32_t flags) { static_cast<void>(world.Destroy(parent,flags)); };
         flyer=std::make_unique<RawFlyerProcess>(core.pool,core.types,FlyerProcessGlobals{core.processState.server,core.processState.now,flyerProcessType},std::move(hooks));
         ConnectFlyerFrame(); // 최초 Pop/Kernel보다 먼저 현재 같은 Frame 소비자를 설치한다.
         FlyerPostPopHooks post;post.allocateRainProcess=[this] {
@@ -1172,16 +1178,18 @@ struct RawCampaignSession::Impl {
         };
         hooks.sidRobust=[this](Sid sid,bool live) { if (!sid.value || sid.value==0xffff) return false;if (live && gunState.checking) throw std::logic_error("비행 개발자 SID 상세진단004ac040 미복원");return true; }; // checking0의004ac140은 추가 raw 검사를 하지 않는다.
         hooks.destroy=[this](Sid sid,std::uint32_t flags) { static_cast<void>(world.Destroy(sid,flags)); };
-        hooks.finish=[](FlyerProcessFields&) { throw std::logic_error("비행 종료0045bc30/004605f0 미복원"); };
-        hooks.otherFrame=[](FlyerProcessFields&)->std::int32_t { throw std::logic_error("다른 플라이어 outer+8 Frame 미복원"); };
-        hooks.offset=[this](Sid sid,bool) { if (Read(core.pool.Slot(sid),0)!=0x50a388) throw std::logic_error("다른 플라이어 이동 offset 미복원");return std::array<float,2>{1,0}; }; // 실제 맨 오 워0045fa80의+cc/+d0은1/0이다.
+        hooks.finish=[this](FlyerProcessFields& fields) { flyer->Finish(fields); };
+        hooks.otherFrame=[this](FlyerProcessFields& fields)->std::int32_t { if (Read(fields.bytes,0)==0x509f24U) return sunFlyerFrame->Animation(fields);throw std::logic_error("다른 플라이어 outer+8 Frame 미복원"); };
+        hooks.sunInitialize=[this](FlyerProcessFields& fields) { sunFlyerFrame->Initialize(fields); };
+        hooks.sunNotify=[this](FlyerProcessFields& fields,std::uint32_t message,std::uint32_t first,std::uint32_t second) { sunFlyerFrame->Notify(fields,message,first,second); };
+        hooks.offset=[this](Sid sid,bool home) { const auto table=Read(core.pool.Slot(sid),0);if (table==0x50a1e8) return std::array<float,2>{2,home ? -2.5f : -4.0f};if (table!=0x50a388) throw std::logic_error("다른 플라이어 이동 offset 미복원");return std::array<float,2>{1,0}; }; // 실제Sun45eed0/45eef0과Rain45fa80이다.
         hooks.scatter=[this](Sid target,Sid flyer) { return flyerTarget->Scatter(target,flyer); };
         hooks.refreshTime=[this](Sid sid) { gunHit->SetTime(sid,core.processState.now); };hooks.hit=[this](Sid sid,Sid target) { gunHit->Hit(sid,target,core.processState.now); };
         hooks.removeSound=[this](Sid sid,std::uint32_t type) {
             const auto form=FindAttachedProcess(core.pool,sid,type);if (form.value && (core.processState.server || (form.value>4 && form.value<core.pool.Layout().serverFirst))) static_cast<void>(world.Destroy(form,0)); // 원본004b1a90(0,1)은 첫 일치 하나를 실제 삭제한다.
         };
         hooks.unpop=[this](Sid sid,std::uint32_t flags) { world.Unpop(sid,flags); };hooks.pop=[this](Sid sid,float x,float y,std::uint32_t flags) { world.Pop(sid,x,y,flags); };hooks.repop=[this](Sid sid,std::uint32_t flags) { world.Repop(sid,flags); };
-        hooks.movedCell=[this](Sid sid) { if (Read(core.pool.Slot(sid),0)!=0x50a388) throw std::logic_error("다른 비행체 칸 이동+d4 미복원"); }; // TYPE144의 실제+d4=004437f0은 ret인 빈 몸체다.
+        hooks.movedCell=[this](Sid sid) { if (!Flyer(sid)) throw std::logic_error("다른 비행체 칸 이동+d4 미복원"); }; // TYPE73/144의 실제+d4=004437f0은 같은ret 몸체다.
         hooks.checkForms=[this](Sid sid) { return flyerFrame->CheckForms(sid); };
         hooks.mayTarget=[this](Sid sid,Sid target) {
             const auto raw=core.pool.Slot(sid);const auto center=gunTarget->Center(sid);const GunTargetQuery query{std::bit_cast<float>(Read(raw,14)),std::bit_cast<float>(Read(raw,18)),center[0],center[1],raw[10],std::bit_cast<std::int32_t>(gunMode->Get(sid)),raw[34],std::bit_cast<std::int32_t>(Read(raw,36))};return gunTarget->MayTarget(query,target);
@@ -1191,7 +1199,7 @@ struct RawCampaignSession::Impl {
         hooks.findTarget=[this](FlyerProcessFields& fields) { flyerTarget->Find(fields); };
         hooks.addDepend=[this](Sid target,Sid form) { static_cast<void>(core.dependencies.Create(target,form)); };hooks.removeDepend=[this](Sid form,Sid target) { core.dependencies.Remove(form,target,0); };
         hooks.refreshForm=[this](FlyerProcessFields& fields) { auto* process=dynamic_cast<FlyerProcess*>(core.processes.FromForm(fields.Form()));if (!process || &process->Fields()!=&fields) throw std::logic_error("비행 Frame 현재 Host/raw 이미지 불일치");core.processes.RefreshForm(*process); };
-        hooks.returnDelay=[](FlyerProcessFields&) { return 10000000.0; }; // 실제0045c2e0이 읽는00509ce0 float의 정확한 값이다.
+        hooks.returnDelay=[](FlyerProcessFields& fields) { return Read(fields.bytes,0)==0x509f24U ? RawSunFlyerFrame::ReturnDelay() : 10000000.0; }; // Sun45e170은60초, Rain45c2e0은10000000초다.
         hooks.command=SessionMissing<void,Sid,std::uint32_t>();
         hooks.sunProcess=[this](Sid sid,std::uint32_t type)->SunAviaryProcessFields& { const auto form=FindAttachedProcess(core.pool,sid,type);auto* process=form.value ? dynamic_cast<SunAviaryProcess*>(core.processes.FromForm(form)) : nullptr;if (!process) throw std::logic_error("착륙 대상의 실제 훨리베이스 프로세스 미연결");return process->Fields(); };
         hooks.refreshSun=[this](SunAviaryProcessFields& fields) { auto* process=dynamic_cast<SunAviaryProcess*>(core.processes.FromForm(fields.Form()));if (!process || &process->Fields()!=&fields) throw std::logic_error("착륙 훨리베이스 Host/raw 이미지 불일치");core.processes.RefreshForm(*process); };
@@ -1210,20 +1218,28 @@ struct RawCampaignSession::Impl {
         hooks.sound=[this](float x,float y,std::uint32_t token) { if (!services.sound.playOnceAt) throw std::logic_error("맨 오 워 실제 발사 소리 미연결");services.sound.playOnceAt(x,y,token,0,0); };
         std::vector<FlyerFrameType> details(core.types.size()); // 같은 이미 파싱한 TYPE 사거리와 실제 사운드 이름표 토큰이다.
         for (std::size_t type=0;type<details.size();++type) details[type]={gunTypes[type].range,missileTypes[type].firingSound}; // 현재 단일 TYPE 번호를 유지한다.
+        SunFlyerFrameHooks sun;sun.assertion=hooks.assertion;sun.robust=hooks.sidRobust;sun.destroy=hooks.destroy;sun.unpop=hooks.unpop;sun.pop=hooks.pop;sun.repop=hooks.repop;sun.mayTarget=hooks.mayTarget;sun.sound=hooks.sound;sun.runCount=hooks.runCount; // 같은 실제 가상 공간/표적/소리 경계를 공유한다.
+        sun.create=[this](std::uint32_t type,std::uint32_t flags) { return world.Create(type,flags); };
+        sun.baseFrame=[this](FlyerProcessFields& fields) { flyerFrame->BaseFrame(fields); };
+        sun.baseNotify=[this](FlyerProcessFields& fields,std::uint32_t message,std::uint32_t first,std::uint32_t second) { flyerFrame->BaseNotify(fields,message,first,second); };
+        sun.baseParentDying=[this](FlyerProcessFields& fields) { flyerFrame->ParentDying(fields); };
+        std::vector<SunFlyerFrameType> bombs(core.types.size()); // +170은A개수,+134는B첫번호,+174는B개수의 원본 값 그대로다.
+        for (std::size_t type=0;type<bombs.size();++type) bombs[type]={core.frames[type].Run('A').count,core.frames[type].Run('B').first,core.frames[type].Run('B').count,missileTypes[type].firingSound}; // end를first+count로 교체하지 않는다.
         flyerFrame=std::make_unique<RawFlyerFrame>(core.pool,core.types,details,std::span(soundState.typeFrames).first(core.types.size()),FlyerFrameGlobals{core.processState.server,assetState.boss,gunState.checking,core.processState.now,soundState.frame,sunFlyerType,windFlyerType,rainFlyerType,sunAviaryType,soundState.processType},std::move(hooks));
+        sunFlyerFrame=std::make_unique<RawSunFlyerFrame>(core.pool,core.shapes,bombs,SunFlyerFrameGlobals{assetState.boss,flyerPaused,core.processState.now,sunBombType},std::move(sun));
         ConnectFlyerTarget(); // 첫 Kernel 프레임 이전에 같은 표적 선택 본체를 설치한다.
     }
     // 원본의 일반 finder/의존 watcher/현재 Host 부모/표적 문맥을 동일 월드에 연결한다.
     void ConnectFlyerTarget() {
         FlyerTargetHooks hooks;hooks.assertion=SessionMissing<void,std::uint32_t>();
         hooks.checkForms=[this](Sid sid) { return flyerFrame->CheckForms(sid); };
-        hooks.offset=[this](Sid sid) { if (Read(core.pool.Slot(sid),0)!=0x50a388) throw std::logic_error("다른 플라이어 검색 offset 미복원");return std::array<float,2>{1,0}; }; // 실제 맨 오 워0045fa80의+cc다.
+        hooks.offset=[this](Sid sid) { const auto table=Read(core.pool.Slot(sid),0);if (table==0x50a1e8) return std::array<float,2>{2,-4};if (table!=0x50a388) throw std::logic_error("다른 플라이어 검색 offset 미복원");return std::array<float,2>{1,0}; }; // Sun45eed0/Rain45fa80의 실제+cc다.
         hooks.begin=[this](SquidSearchArea area,std::uint32_t flags) { flyerFinder=std::make_unique<RawSquidFinder>(core.pool,core.hash,core.types);return flyerFinder->Begin(area,flags); };
         hooks.next=[this] { if (!flyerFinder) throw std::logic_error("비행 표적 일반 finder 커서 누락");return flyerFinder->Next(); };
         hooks.mayTarget=[this](Sid sid,Sid target) { const auto raw=core.pool.Slot(sid);const auto center=gunTarget->Center(sid);const GunTargetQuery query{std::bit_cast<float>(Read(raw,14)),std::bit_cast<float>(Read(raw,18)),center[0],center[1],raw[10],std::bit_cast<std::int32_t>(gunMode->Get(sid)),raw[34],std::bit_cast<std::int32_t>(Read(raw,36))};return gunTarget->MayTarget(query,target); };
         hooks.watcher=[this](Sid form) { return core.dependencies.Watcher(form); };
         hooks.processParent=[this](Sid form) { const auto* process=core.processes.FromForm(form);if (!process) throw std::logic_error("비행 경쟁의 현재 Host 프로세스 조회 실패");return process->Parent(); };
-        hooks.returnDelay=[](FlyerProcessFields&) { return 10000000.0; }; // 현재 맨 오 워 outer+c의 실제0045c2e0이다.
+        hooks.returnDelay=[](FlyerProcessFields& fields) { return Read(fields.bytes,0)==0x509f24U ? RawSunFlyerFrame::ReturnDelay() : 10000000.0; }; // 같은 현재 전용표의 반환 지연이다.
         hooks.command=SessionMissing<void,Sid,std::uint32_t>();
         std::vector<float> ranges(core.types.size()); // 파싱한 같은188TYPE의 실제 사거리다.
         for (std::size_t type=0;type<ranges.size();++type) ranges[type]=gunTypes[type].range; // 별도 추정 사거리를 만들지 않는다.
@@ -1994,7 +2010,7 @@ void RawCampaignSession::StartConstruction(Sid parent,float duration) {
     impl_->PrepareBuilding(impl_->core.processState.now);impl_->building->Start(parent,duration);
 }
 // 현재 같은 시각을 공격/소리/실제 Kernel에 공급한다.
-void RawCampaignSession::RunFrame(FrameTime time,bool paused) { impl_->PrepareBuilding(time.game);impl_->assetBindings->PrepareFrame(time.game);impl_->combat->PrepareFrame(time);impl_->particles->PrepareFrame(time.game);impl_->soundState.frame=static_cast<std::uint32_t>(time.number);impl_->world.RunFrame(time,paused); }
+void RawCampaignSession::RunFrame(FrameTime time,bool paused) { impl_->flyerPaused=paused;impl_->PrepareBuilding(time.game);impl_->assetBindings->PrepareFrame(time.game);impl_->combat->PrepareFrame(time);impl_->particles->PrepareFrame(time.game);impl_->soundState.frame=static_cast<std::uint32_t>(time.number);impl_->world.RunFrame(time,paused); }
 // 해상도/카메라 변경과 동일 위치 효과음의 view를 process11에도 전달한다.
 void RawCampaignSession::SetParticleView(SoundView view,SurfaceDisplayHooks display) {
     impl_->contentScreenOrigin={view.cameraX,view.cameraY};

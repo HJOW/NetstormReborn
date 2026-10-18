@@ -74,7 +74,7 @@
   "currentSources": {
     "cpppj/src/app/main.cpp": "7286c250772db4b370e6fc46c4c3a287f1509a1eabb16f7e70bcc6c6e263ebce",
     "cpppj/src/client/SquidRenderer.cpp": "ff98d57e03dd1087ee34ac3012fe76c359877055dbdbe70a16ff465fa6c85a6f",
-    "cpppj/src/o/RawGunTarget.cpp": "052a4cbcce0899dadffc28fee75986d6ae49bca7dec67965123ed5a50ba3b12a",
+    "cpppj/src/o/RawGunTarget.cpp": "7ac9b51af58949ce8c23f9854679a7685468ba798768db0a1158f25b0ff95f14",
     "cpppj/src/o/RawGunTarget.h": "cfc9f229f1b1ed225188ef5600ea7f575304f7c5cd537b6e6d803caa7d8486a0",
     "cpppj/src/o/SquidDisplay.h": "aa8bf6fe22cfafb729053710e1fec6ef77a2c9bee40c51b05cb363ba57f413d7",
     "cpppj/tests/CampaignSessionTests.cpp": "e92bbf5d99392b05f92dcb2fda5de226f824631088aec127fb7219f36b344a5e",
@@ -378,5 +378,20 @@
     "Burning14 생성/캡처/Frame/Draw/삭제 실제 표시·Host 연결 후 전체 전투 재검사",
     "Quick Help 본문/전용 창/이력과Client About 연결",
     "운반·희생·승패·후속 미션·전략AI 및11단계 자연 완주/전체 동일성"
+  ],
+  "integration_updates": [
+    {
+      "date": "2026-10-18",
+      "unit": 188,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/o/RawGunTarget.cpp",
+          "previous": "052a4cbcce0899dadffc28fee75986d6ae49bca7dec67965123ed5a50ba3b12a",
+          "current": "7ac9b51af58949ce8c23f9854679a7685468ba798768db0a1158f25b0ff95f14"
+        }
+      ]
+    }
   ]
 }

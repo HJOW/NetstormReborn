@@ -57,11 +57,11 @@
     "originals/d/GIFCLOUD.COL": "785a2cda6ac1d3e295d375815b6d9650720683099db7c249382d598b5da00532"
   },
   "currentSources": {
-    "cpppj/src/o/RawFlyerProcess.h": "a2d0495e6fb014cf9943c87a6c1428b130f179f44c92a2cce13637e38ee9865f",
-    "cpppj/src/o/RawFlyerProcess.cpp": "484ee6f5db4a59d46660d955922650aac8243d0d2bec398d6525c07c026282f9",
-    "cpppj/src/client/RawCampaignSession.cpp": "9afae15f62ccf809145be8c0f5addaf7207f22038738c3a25f1d1650f2e595d7",
-    "cpppj/tests/CMakeLists.txt": "d92c46b46c7e909a7b5c98a45676960024d0593a41f4e6d30b5ea6a65a44284b",
-    "cpppj/tests/CampaignMissionStartTests.cpp": "a4b9396a37a0d3cbc805da93ac7e54a1ed5d149826a4cf65a0bb3e2c767027c8",
+    "cpppj/src/o/RawFlyerProcess.h": "1107c2a73163e0c3024c822cf614c9d02f7aa36d75fc81cfd0a6df58e36b6345",
+    "cpppj/src/o/RawFlyerProcess.cpp": "bc5d68f980251febe080e280db07727f7d5cc7bbbf9d84780d8d8d31a86f44f1",
+    "cpppj/src/client/RawCampaignSession.cpp": "eaa65bee94ad74c578ea0538afad5a62fa917f07a770e868224dd1365de5dd4a",
+    "cpppj/tests/CMakeLists.txt": "7343386d297567d15ddef05e61dcc742670adbfad48e0389cb545372e8180f4e",
+    "cpppj/tests/CampaignMissionStartTests.cpp": "03e1719afd07bc3915052bfe2d4eedf2a37080b3f3b5ac041133cef165e59df5",
     "tools/decomp_sun_flyer_postpop.py": "d9e457589d70c582e364c1146e7d54a57647e7d56a194e22e8772de89a85ee78",
     "cpppj/sun-flyer-postpop.json": "1fd1b1fdedcf110d59d368f8fe3b08e15760e153c722cb0d1874873ea1f5f26e",
     "cpppj/tests/fixtures/sun-flyer-postpop-x86.tsv": "c7693afd860973b51efad4321894bbfddec6eb058dea041dac0e56307ca22bda",
@@ -315,5 +315,44 @@
     "Burning14 생성/캡처/Frame/Draw/삭제와 전체 캐논 전투 재검사",
     "Quick Help 본문/전용 창/이력과Client About 연결",
     "운반·희생·승패·후속 미션·전략AI 및11단계 자연 완주/원본 전체 동일성"
+  ],
+  "integration_updates": [
+    {
+      "date": "2026-10-18",
+      "unit": 188,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/o/RawFlyerProcess.h",
+          "previous": "a2d0495e6fb014cf9943c87a6c1428b130f179f44c92a2cce13637e38ee9865f",
+          "current": "1107c2a73163e0c3024c822cf614c9d02f7aa36d75fc81cfd0a6df58e36b6345"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/o/RawFlyerProcess.cpp",
+          "previous": "484ee6f5db4a59d46660d955922650aac8243d0d2bec398d6525c07c026282f9",
+          "current": "bc5d68f980251febe080e280db07727f7d5cc7bbbf9d84780d8d8d31a86f44f1"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "9afae15f62ccf809145be8c0f5addaf7207f22038738c3a25f1d1650f2e595d7",
+          "current": "eaa65bee94ad74c578ea0538afad5a62fa917f07a770e868224dd1365de5dd4a"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "d92c46b46c7e909a7b5c98a45676960024d0593a41f4e6d30b5ea6a65a44284b",
+          "current": "7343386d297567d15ddef05e61dcc742670adbfad48e0389cb545372e8180f4e"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignMissionStartTests.cpp",
+          "previous": "a4b9396a37a0d3cbc805da93ac7e54a1ed5d149826a4cf65a0bb3e2c767027c8",
+          "current": "03e1719afd07bc3915052bfe2d4eedf2a37080b3f3b5ac041133cef165e59df5"
+        }
+      ]
+    }
   ]
 }

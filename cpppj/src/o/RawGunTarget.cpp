@@ -190,7 +190,8 @@ bool RawGunTarget::MayShoot(const GunTargetQuery& query,Sid target) const {
 }
 // 실제 Damageable·서버 번호·소유자·사제 수량만 검사하며 dead/free state 필터를 추가하지 않는다.
 bool RawGunTarget::MayTarget(const GunTargetQuery& query,Sid target) const {
-    Validate(query);if (!target.value || target.value>=pool_.Capacity()) throw std::out_of_range("Gun 후보 SID 오류");
+    // PATCH46af80은 정상 빈 SID0/TYPE0을 읽고 hasHP에서 거부한다. CD의 미관측 경계는 유지한다.
+    Validate(query);if (target.value>=pool_.Capacity() || (!target.value && pool_.Edition()!=OriginalEdition::Patch1078)) throw std::out_of_range("Gun 후보 SID 오류");
     const auto raw=pool_.Slot(target);const auto number=raw[10];if (number>=types_.size()) throw std::out_of_range("Gun 후보 타입 오류");
     const auto& type=types_[number];const auto extra=raw[pool_.Edition()==OriginalEdition::Patch1078 ? 40U : 35U];
     if ((type.flags2&kDais) ? !(extra&1) : !(type.flags1&kHitPoints)) return false;

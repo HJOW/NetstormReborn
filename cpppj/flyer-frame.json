@@ -26,8 +26,8 @@
     "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
     "tools/decomp_flyer_frame.py": "c67f5954b8166d1792fca78faf7f082e1ef25358ef5a5183c12afb89f45d69a2",
     "tools/decomp_local_mission_transport.py": "db71da65079aa9a985a3a833edd224f089ba9a20137d92042551cb346937eb78",
-    "cpppj/src/o/RawFlyerFrame.h": "695af9b9a800869681fc0589e65b9ade96f58fba30814448b37a500fb1ab05b3",
-    "cpppj/src/o/RawFlyerFrame.cpp": "14328231b8acfa0cf63d453d8ff76d4f31530309b80f61dfb73c5cffdddb02f1",
+    "cpppj/src/o/RawFlyerFrame.h": "0c3f5b5e3bbe52ac34e00fe37819f3a490011596919b715045a0c983899cb92a",
+    "cpppj/src/o/RawFlyerFrame.cpp": "7752144c626f831c64bf0959ad8f9579d67bae1c87def2dcd0f1797b306f2049",
     "cpppj/tests/FlyerFrameTests.cpp": "26252f6809f8262960fcaaee695251ba1eab7d7db0738c91f176bd46afe1ccba",
     "cpppj/tests/fixtures/flyer-frame-x86.tsv": "627270d186495d6929cac8a1d4e74c29e92c69294558e020b7d774854b0dfc85"
   },
@@ -124,5 +124,26 @@
     "after_unit": 86,
     "after_documentation_and_local_commit": true,
     "next_unit_started": false
-  }
+  },
+  "integration_updates": [
+    {
+      "date": "2026-10-18",
+      "unit": 188,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/o/RawFlyerFrame.h",
+          "previous": "695af9b9a800869681fc0589e65b9ade96f58fba30814448b37a500fb1ab05b3",
+          "current": "0c3f5b5e3bbe52ac34e00fe37819f3a490011596919b715045a0c983899cb92a"
+        },
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/o/RawFlyerFrame.cpp",
+          "previous": "14328231b8acfa0cf63d453d8ff76d4f31530309b80f61dfb73c5cffdddb02f1",
+          "current": "7752144c626f831c64bf0959ad8f9579d67bae1c87def2dcd0f1797b306f2049"
+        }
+      ]
+    }
+  ]
 }

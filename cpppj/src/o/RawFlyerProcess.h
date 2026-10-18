@@ -27,6 +27,8 @@ struct FlyerProcessHooks {
     std::function<void(FlyerProcessFields&)> frame; // 0045d630/0045c9d0의 별도 실제 몸체다. 누락을 성공으로 버리지 않는다.
     std::function<void(FlyerProcessFields&,std::uint32_t,std::uint32_t,std::uint32_t)> notify; // 0045b760의 서버 표적 해제 몸체다.
     std::function<void(FlyerProcessFields&)> parentDying; // 0045b7a0의 홈 통지 몸체다.
+    std::function<void(Sid)> pieces; // 실제4605f0의 현재 비행체 파편 생성이다.
+    std::function<void(Sid,std::uint32_t)> destroy; // 종료45bc30 뒤 현재 부모의 가상10 삭제다.
 };
 // 같은 풀의 실제 공통 프로세스 생성/전송과 홈 갱신만 담당한다.
 class RawFlyerProcess {
@@ -39,6 +41,7 @@ public:
     void Frame(FlyerProcessFields& fields) const; // 실제 미복원 Frame은 명시 하위 오류다.
     void Notify(FlyerProcessFields& fields,std::uint32_t message,std::uint32_t info1,std::uint32_t info2) const; // 원본 notify를 명시 소비자로 전달한다.
     void ParentDying(FlyerProcessFields& fields) const; // 원본 홈의 부모 사망 통지를 전달한다.
+    void Finish(FlyerProcessFields& fields) const; // 45bc30의 서버 진단→현재 파편→현재 부모 가상 삭제8 순서다.
     static std::uint16_t WriteProcess(FlyerProcessFields& fields,std::span<std::uint8_t> packet,bool includeParent,bool force=false,std::uint8_t protocol=1,std::uint8_t message=0x39); // 0045c310→0045aed0의 WORD/DWORD/double writer다.
     const SidPool& Pool() const; // 다른 Host의 필드와 혼합하지 않도록 검사한다.
 private:

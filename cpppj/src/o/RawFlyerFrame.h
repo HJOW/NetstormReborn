@@ -55,6 +55,8 @@ struct FlyerFrameHooks {
     std::function<std::int32_t(Sid)> runCount; // 004af110의 현재 프레임 글자 개수다.
     std::function<void(Sid,Sid,std::uint32_t)> launch; // 맨 오 워의00472690(flyer,target,0)이다.
     std::function<void(float,float,std::uint32_t)> sound; // 실제004a9c30의 한 번 재생이다.
+    std::function<void(FlyerProcessFields&)> sunInitialize; // 정확한 훨리기그 전용표의45bd00 초기화다.
+    std::function<void(FlyerProcessFields&,std::uint32_t,std::uint32_t,std::uint32_t)> sunNotify; // 정확한 전용표의45bd60 통지다.
 };
 // 제어와 수치를 직접 복원하며 표적 검색/의존/장치의 큰 몸체는 명시적으로 요구한다.
 class RawFlyerFrame {
@@ -67,6 +69,7 @@ public:
     std::int32_t RainFrame(FlyerProcessFields& fields) const; // 0045bf50의 현재 프레임/발사/타입별 중복 소리 억제다.
     void ClearTarget(FlyerProcessFields& fields) const; // 0045b6f0의 의존 해제/현재 dirty/WORD/통지/전송 순서다.
     void Notify(FlyerProcessFields& fields,std::uint32_t message,std::uint32_t info1,std::uint32_t info2) const; // 0045b760의 실제 선택된 사건만 처리한다.
+    void BaseNotify(FlyerProcessFields& fields,std::uint32_t message,std::uint32_t info1,std::uint32_t info2) const; // 전용 통지가 다른 사건을 실제45b760으로 넘길 때 쓴다.
     void ParentDying(FlyerProcessFields& fields) const; // 0045b7a0의 현재 홈 생존/타입/통지 관문이다.
     bool CheckForms(Sid parent) const; // 004ad730의 자산/종속 타입·free/void 체인 검사다.
     const SidPool& Pool() const; // 다른 월드의 Frame 연결을 거부한다.

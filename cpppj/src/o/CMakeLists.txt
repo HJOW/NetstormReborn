@@ -326,3 +326,6 @@ target_sources(netstorm PRIVATE RawProductionSync.cpp RawProductionSync.h)
 
 # 신전 건설 중 피해와 윈드 타워의 현재 방향 방어를 같은 월드에 연결한다.
 target_sources(netstorm PRIVATE RawSpecialDamage.cpp RawSpecialDamage.h)
+
+# 실제 훨리기그 전용 초기화/폭탄/통지/장식 프레임이다.
+target_sources(netstorm PRIVATE RawSunFlyerFrame.cpp RawSunFlyerFrame.h)

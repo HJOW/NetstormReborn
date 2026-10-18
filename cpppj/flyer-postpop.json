@@ -22,8 +22,8 @@
     "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
     "tools/decomp_flyer_postpop.py": "f87db63e6223bf422f95b117ea30ae7350269aff854c37822df96cdd788ec317",
     "tools/decomp_local_mission_transport.py": "db71da65079aa9a985a3a833edd224f089ba9a20137d92042551cb346937eb78",
-    "cpppj/src/o/RawFlyerProcess.h": "a2d0495e6fb014cf9943c87a6c1428b130f179f44c92a2cce13637e38ee9865f",
-    "cpppj/src/o/RawFlyerProcess.cpp": "484ee6f5db4a59d46660d955922650aac8243d0d2bec398d6525c07c026282f9",
+    "cpppj/src/o/RawFlyerProcess.h": "1107c2a73163e0c3024c822cf614c9d02f7aa36d75fc81cfd0a6df58e36b6345",
+    "cpppj/src/o/RawFlyerProcess.cpp": "bc5d68f980251febe080e280db07727f7d5cc7bbbf9d84780d8d8d31a86f44f1",
     "cpppj/tests/FlyerPostPopTests.cpp": "15f35b689f22127b967e43f7481212300487eb8afc1766f994ad1f7a99a3ec8e",
     "cpppj/tests/fixtures/flyer-postpop-x86.tsv": "111beec5675ad2fcd8edc4fd2fb7b5dbe2c129d8b3c796f58b68ec3a7c8d456f"
   },
@@ -163,6 +163,25 @@
           "path": "cpppj/src/o/RawFlyerProcess.cpp",
           "previous": "9029e835f9637a0bd30c08084eae956c05890b05b83d9a43885e3d53711ba6cb",
           "current": "484ee6f5db4a59d46660d955922650aac8243d0d2bec398d6525c07c026282f9"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 188,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/o/RawFlyerProcess.h",
+          "previous": "a2d0495e6fb014cf9943c87a6c1428b130f179f44c92a2cce13637e38ee9865f",
+          "current": "1107c2a73163e0c3024c822cf614c9d02f7aa36d75fc81cfd0a6df58e36b6345"
+        },
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/o/RawFlyerProcess.cpp",
+          "previous": "484ee6f5db4a59d46660d955922650aac8243d0d2bec398d6525c07c026282f9",
+          "current": "bc5d68f980251febe080e280db07727f7d5cc7bbbf9d84780d8d8d31a86f44f1"
         }
       ]
     }

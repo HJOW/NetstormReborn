@@ -1572,3 +1572,8 @@ set_source_files_properties(SpecialDamageTests.cpp PROPERTIES COMPILE_DEFINITION
 target_sources(netstorm_tests PRIVATE SunFlyerPostPopTests.cpp)
 set_source_files_properties(SunFlyerPostPopTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_SUN_FLYER_POSTPOP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/sun-flyer-postpop-x86.tsv\"")
+
+# 제품 전 동결한 전용 비행/폭탄/통지/장식/종료/빈 표적410행이다.
+target_sources(netstorm_tests PRIVATE SunFlyerFrameTests.cpp)
+set_source_files_properties(SunFlyerFrameTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_SUN_FLYER_FRAME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/sun-flyer-frame-x86.tsv\"")

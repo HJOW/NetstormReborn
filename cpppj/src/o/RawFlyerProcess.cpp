@@ -51,6 +51,10 @@ void RawFlyerProcess::Bind(Sid flyer,Sid home) const {
 void RawFlyerProcess::Frame(FlyerProcessFields& fields) const { Need(hooks_.frame)(fields); } // 아직 미복원인 큰 Frame을 조용히 생략하지 않는다.
 void RawFlyerProcess::Notify(FlyerProcessFields& fields,std::uint32_t message,std::uint32_t info1,std::uint32_t info2) const { Need(hooks_.notify)(fields,message,info1,info2); } // 실제 선택 통지를 유지한다.
 void RawFlyerProcess::ParentDying(FlyerProcessFields& fields) const { Need(hooks_.parentDying)(fields); } // 홈 파괴 통지를 유지한다.
+// 파편 효과 뒤 부모가 바뀌면 원본처럼 그 현재 부모를 다시 읽어 삭제한다.
+void RawFlyerProcess::Finish(FlyerProcessFields& fields) const {
+    if (!globals_.server) Need(hooks_.assertion)(0x41d);Need(hooks_.pieces)(fields.Parent());Need(hooks_.destroy)(fields.Parent(),8);
+}
 // 파생 writer는 기본 직렬화를 사용한다. 추가96/104 타이머는 이 패킷에 포함되지 않는다.
 std::uint16_t RawFlyerProcess::WriteProcess(FlyerProcessFields& fields,std::span<std::uint8_t> packet,bool includeParent,bool force,std::uint8_t protocol,std::uint8_t message) {
     const auto parent=(includeParent || force) ? Read(fields.bytes,kParent) : 0U;const auto dirty=force ? 0xffU : fields.bytes[kDirty];

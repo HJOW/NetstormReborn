@@ -495,3 +495,32 @@ TEST_CASE(CampaignSunFlyer_Tutorial5NaturalPostPop) {
     }
     CHECK(observed && session.Core().bookkeeping.depth==0 && gate.started==1);
 }
+
+// 실제 Tutorial5의 초기 배치와 시계로 훨리기그 전용Frame·그림자를60초간 확인한다. 공격/귀환/완주 검사는 별도다.
+TEST_CASE(CampaignSunFlyer_Tutorial5NaturalDedicatedFrames60Seconds) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);ConfigInterface config([&](std::string_view path) { return assets.files.TryRead(path); });ConfigureStart(config);MissionScript script(config,"Tutorial5");
+    StartExternal external;auto fort=FortTemplate::Parse(assets.files.Read(script.FortPath()),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),script.FortName(),external.Services());session.Load();
+    GameClock clock;MissionFrameGateState gate;MissionStartState state;MissionStartGlobals globals;MissionAiSettingsState ai;ai.stuffRefreshRate=4;
+    auto effects=external.Effects();effects.gameSeconds=[&] { return clock.GameSeconds(0); };RawCampaignMissionStartBindings start(session,script,gate,state,globals,ai,std::move(effects));start.Start();
+    Sid body{};std::uint32_t born{},observations{};std::set<std::uint32_t> animation; // 자연 생성 뒤 실제 같은 몸체/프레임의 관측만 모은다.
+    // 실제 초기 배치/기존 전투를 그대로 진행하며 위치·표적·타이머·HP를 주입하지 않는다.
+    for (std::uint32_t frame=1;frame<=2400;++frame) {
+        session.RunFrame(clock.Capture(frame*25),false);const auto core=session.Core();
+        if (!body.value) {
+            // 현재 실제 Kernel에서만 새 훨리기그를 찾는다.
+            for (ProcessId id=1;id<=core.kernel.Capacity();++id) { const auto* process=dynamic_cast<const FlyerProcess*>(core.kernel.Get(id));if (process && Get(process->Fields().bytes,0)==0x509f24U) { body=process->Parent();born=frame;break; } }
+        }
+        if (!body.value || frame==born) continue;
+        const auto form=FindAttachedProcess(core.pool,body,31);const auto* process=dynamic_cast<const FlyerProcess*>(core.processes.FromForm(form));CHECK(process);if (!process) return;
+        const auto& fields=process->Fields();const auto raw=core.pool.Slot(body);const Sid shadow{static_cast<std::uint16_t>(Get(raw,8,2))}; // 같은 실제 전용 필드/그림자 연결이다.
+        CHECK(Get(fields.bytes,84)==1 && Get(fields.bytes,96)==0 && Get(fields.sunTail,0)==0 && Get(fields.sunTail,4)==0);
+        CHECK(Get(fields.sunTail,16)==std::bit_cast<std::uint32_t>(-10000.0f) && Get(fields.sunTail,20)==std::bit_cast<std::uint32_t>(-10000.0f));
+        CHECK(shadow.value && !(raw[11]&7U));if (!shadow.value) return;const auto shade=core.pool.Slot(shadow);
+        CHECK(shade[10]==73 && !(shade[11]&7U) && (shade[40]&8U));CHECK(Get(shade,36)==Get(raw,36)+core.frames[73].Codes().size());
+        CHECK(Get(shade,14)==std::bit_cast<std::uint32_t>(static_cast<float>(static_cast<double>(std::bit_cast<float>(Get(raw,14)))-.6f)));
+        CHECK(Get(shade,18)==std::bit_cast<std::uint32_t>(static_cast<float>(static_cast<double>(std::bit_cast<float>(Get(raw,18)))+3.5f)));
+        animation.insert(Get(raw,36));++observations;CHECK(core.bookkeeping.depth==0);
+    }
+    CHECK(born==409 && observations==1991 && animation.size()>1 && gate.started==1); // 실제60초 중 생성 뒤1991Frame을 실행한다.
+    std::fprintf(stderr,"실제 Tutorial5 전용 훨리기그: game60초 body%u birth%u 이후%uFrame 장식%zu종/그림자 일치, 공격·귀환 별도\n",body.value,born,observations,animation.size());
+}

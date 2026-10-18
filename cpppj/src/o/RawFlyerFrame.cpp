@@ -64,7 +64,11 @@ void RawFlyerFrame::ClearTarget(FlyerProcessFields& fields) const {
     Need(hooks_.removeDepend)(fields.Form(),target);fields.bytes[kDirty]|=4;Put(fields.bytes,kTarget,0,2);Notify(fields,1,0,0);Need(hooks_.refreshForm)(fields);
 }
 // 실제 메시지1 등은 빈 몸체다. 사건2/server일 때만 표적을 해제한다.
-void RawFlyerFrame::Notify(FlyerProcessFields& fields,std::uint32_t message,std::uint32_t,std::uint32_t info2) const {
+void RawFlyerFrame::Notify(FlyerProcessFields& fields,std::uint32_t message,std::uint32_t info1,std::uint32_t info2) const {
+    if (Read(fields.bytes,0)==0x509f24U) { Need(hooks_.sunNotify)(fields,message,info1,info2);return; }BaseNotify(fields,message,info1,info2);
+}
+// 실제 공통45b760은 메시지1을 생략하며, 전용45bd60은 호출자가 먼저 분배한다.
+void RawFlyerFrame::BaseNotify(FlyerProcessFields& fields,std::uint32_t message,std::uint32_t,std::uint32_t info2) const {
     if (message!=2 || !globals_.server) return;if (info2!=Target(fields).value) Need(hooks_.assertion)(0x2ba);ClearTarget(fields);
 }
 // 더스트 데빌과0/ffff 홈은 통지를 생략한다. 현재 홈이 실제 live일 때만 가상+34다.
@@ -94,7 +98,7 @@ bool RawFlyerFrame::ReturnHome(FlyerProcessFields& fields,Sid parent,Sid home) c
 }
 // 초기화/메모리/표적/이동/프레임 및 서버 후반을 원본 순서대로 실행한다.
 void RawFlyerFrame::BaseFrame(FlyerProcessFields& fields) const {
-    if (!Read(fields.bytes,kInitialized)) Initialize(fields,Read(fields.bytes,0)==0x509f60U);
+    if (!Read(fields.bytes,kInitialized)) { if (Read(fields.bytes,0)==0x509f24U) Need(hooks_.sunInitialize)(fields);else Initialize(fields,Read(fields.bytes,0)==0x509f60U); }
     if (pool_.Slot(fields.Parent())[11]&2U) return;if (pool_.Slot(fields.Parent())[11]&1U) return;
     if (globals_.checking && !Need(hooks_.robust)(fields)) Need(hooks_.assertion)(0x42c);
     if (fields.Home().value && !Need(hooks_.sidRobust)(fields.Home(),false)) Need(hooks_.assertion)(0x431);
