@@ -24,7 +24,7 @@
     "cpppj/src/client/Renderer.cpp": "29729e6b728f19e7cddfc4c193e1a719733c8b4c5934e8b0a864697fa8a4b4a2",
     "cpppj/src/client/Renderer.h": "d72b42478b0bbe275a02494181722ee4f3f4ed4d474966e56c9df30958f31ac2",
     "cpppj/src/client/UberGump.cpp": "3be959763ad50059ca75069af12cb2fc2bb695545324a80d5883ac0973d0f24c",
-    "cpppj/tests/CMakeLists.txt": "c90f8115269f141762affe7174d164b3a9bd37616376e7441097c082cad3bd7d",
+    "cpppj/tests/CMakeLists.txt": "3078716f01858a641a1b3f9ff98fc5d1e36df810d60fa67b5ad7d31c07d3f2b6",
     "cpppj/tests/CampaignSessionTests.cpp": "6b03a6bf14634792d4c68653ae44e542e5d03497355985cc2384de1863bd505c",
     "cpppj/tests/PreviewColorMapsTests.cpp": "5019672dc1589cace9bb92690be4bf9786ab8257770794cb51fdff87cf937311",
     "cpppj/tests/RendererTests.cpp": "6aae8f544e9cb6a01738ee45a2c0eba57354106896ea59735db6842c318185cf"
@@ -1195,6 +1195,19 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "85d612cf12e67be3693f5c34ebf79ea876302247be73ea8b243d743e17d9f6ff",
           "current": "c90f8115269f141762affe7174d164b3a9bd37616376e7441097c082cad3bd7d"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 176,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "c90f8115269f141762affe7174d164b3a9bd37616376e7441097c082cad3bd7d",
+          "current": "3078716f01858a641a1b3f9ff98fc5d1e36df810d60fa67b5ad7d31c07d3f2b6"
         }
       ]
     }

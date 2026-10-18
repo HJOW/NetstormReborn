@@ -16,7 +16,7 @@
     "cpppj/src/client/RawCampaignSession.h": "021b8281143aee451881f14839bc433ca71b5e5626a12626449b32156459d59b",
     "cpppj/src/client/UberGump.cpp": "3be959763ad50059ca75069af12cb2fc2bb695545324a80d5883ac0973d0f24c",
     "cpppj/src/client/UserInput.cpp": "fd1bee42a48c4a33098114e813a7909d449791671fb0e313b76efc55216c20bd",
-    "cpppj/tests/CMakeLists.txt": "c90f8115269f141762affe7174d164b3a9bd37616376e7441097c082cad3bd7d",
+    "cpppj/tests/CMakeLists.txt": "3078716f01858a641a1b3f9ff98fc5d1e36df810d60fa67b5ad7d31c07d3f2b6",
     "cpppj/tests/CampaignSessionTests.cpp": "6b03a6bf14634792d4c68653ae44e542e5d03497355985cc2384de1863bd505c",
     "tools/cpp_campaign_entry_smoke.py": "59b39e067a2e51cc7f6358d8adc198e4cbd5682bc6109e9b1e0407fa7f3550aa",
     "cpppj/src/client/RawCarrierInput.h": "27db41be147df6a13b60aa9faa68751dc1d54a09fae5945ee0e9f762f5979be4",
@@ -2343,6 +2343,19 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "85d612cf12e67be3693f5c34ebf79ea876302247be73ea8b243d743e17d9f6ff",
           "current": "c90f8115269f141762affe7174d164b3a9bd37616376e7441097c082cad3bd7d"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 176,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "c90f8115269f141762affe7174d164b3a9bd37616376e7441097c082cad3bd7d",
+          "current": "3078716f01858a641a1b3f9ff98fc5d1e36df810d60fa67b5ad7d31c07d3f2b6"
         }
       ]
     }

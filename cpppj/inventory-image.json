@@ -1,0 +1,48 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-18",
+  "unit": 176,
+  "rows": 221,
+  "normalReturns": 442,
+  "instructions": 73666,
+  "controls": [
+    639,
+    895
+  ],
+  "precisionDifferences": 0,
+  "nativeCalls": {
+    "0x419fc0": 18,
+    "0x4642c0": 18,
+    "0x4198f0": 36,
+    "0x49a840": 440,
+    "0x419990": 324,
+    "0x40da40": 132,
+    "0x4e49c0": 1740,
+    "0x419cd0": 80,
+    "0x419cb0": 2
+  },
+  "boundaries": {
+    "0x419850": 36,
+    "0x464740": 324,
+    "0x4daa70": 28,
+    "0x4dabe0": 388,
+    "0x4daab0": 96,
+    "0x4daaf0": 72,
+    "0x4dab40": 292,
+    "0x4daca0": 80,
+    "0x466750": 2
+  },
+  "sha256": {
+    "tools/decomp_inventory_image.py": "bb28701491e4299b733f93bcfe41aff68b44db92e7249cca750cc044c583d8af",
+    "tools/decomp_factory_menu.py": "bd889d1fe373053c80fe804517858cf83102fbf36cbe724d989e4aa0c3e605cc",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "cpppj/tests/fixtures/inventory-image-x86.tsv": "eaa1d5cd4a13575a677f3e3530c38b29b4cc71eefb435f7ccbaa4e5c56ebee34"
+  },
+  "limits": [
+    "419fc0/4198f0/419990/419cd0/419cb0와 기본 생성·TYPE/localowner getter/CRT ftol의 실제 전체 명령이다. 헤더·현재 위치/색표/VFX 그리기·적중/기본 부착은 명시 경계다.",
+    "게임/OS/창 실행·원본 파일 변경/새 디컴파일 없음. VFX 픽셀 자체와 실제 Client 생산 패널 연결은 별도 검사다."
+  ]
+}

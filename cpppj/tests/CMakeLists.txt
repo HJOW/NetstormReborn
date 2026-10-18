@@ -1514,3 +1514,8 @@ set_source_files_properties(ProductionSyncTests.cpp PROPERTIES COMPILE_DEFINITIO
 target_sources(netstorm_tests PRIVATE InventoryGumpTests.cpp)
 set_source_files_properties(InventoryGumpTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_INVENTORY_GRID_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/inventory-grid-x86.tsv\"")
+
+# 이미지 Gump의 독립 원본221행과 실제 자산 픽셀/적중을 대조한다.
+target_sources(netstorm_tests PRIVATE ImageGumpTests.cpp)
+set_source_files_properties(ImageGumpTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_INVENTORY_IMAGE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/inventory-image-x86.tsv\"")

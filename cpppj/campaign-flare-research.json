@@ -136,7 +136,7 @@
     "cpppj/src/client/UberGump.cpp": "3be959763ad50059ca75069af12cb2fc2bb695545324a80d5883ac0973d0f24c",
     "cpppj/src/o/CMakeLists.txt": "8c72f4fb78c7fafefa85dad32a08ed980fb9d0e37e9600359dcdc4b87cc0a3d0",
     "cpppj/src/o/RawFactoryResearch.h": "5cd0dc8a306e50725710d3124e3af6def870ec2fe001f3dfcf6e2e183bfc2202",
-    "cpppj/tests/CMakeLists.txt": "c90f8115269f141762affe7174d164b3a9bd37616376e7441097c082cad3bd7d",
+    "cpppj/tests/CMakeLists.txt": "3078716f01858a641a1b3f9ff98fc5d1e36df810d60fa67b5ad7d31c07d3f2b6",
     "cpppj/tests/CampaignSessionTests.cpp": "6b03a6bf14634792d4c68653ae44e542e5d03497355985cc2384de1863bd505c",
     "cpppj/tests/FactoryResearchTests.cpp": "73801f93e0273a9b49538735884d1afb7250257511a5a4cd619659ca2b90d881",
     "tools/cpp_priest_construction_smoke.py": "93524c9e1fb58e7e589fc25c7507e105e750b96cb66ad7ddbf9a58aae2756c2c",
@@ -6055,6 +6055,19 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "85d612cf12e67be3693f5c34ebf79ea876302247be73ea8b243d743e17d9f6ff",
           "current": "c90f8115269f141762affe7174d164b3a9bd37616376e7441097c082cad3bd7d"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 176,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "c90f8115269f141762affe7174d164b3a9bd37616376e7441097c082cad3bd7d",
+          "current": "3078716f01858a641a1b3f9ff98fc5d1e36df810d60fa67b5ad7d31c07d3f2b6"
         }
       ]
     }

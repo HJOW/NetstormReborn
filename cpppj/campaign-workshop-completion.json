@@ -20,7 +20,7 @@
     "cpppj/src/client/RawShapeToBuffer.h": "f3788fbcdacd21dd4dabac2c63c96fbd4d28e1c27c9a19cf8b6519f98852a119",
     "cpppj/src/client/RawSurfaceWorld.cpp": "bd8c852d6bd133943d5b35daf700d19ff8d5ff344f55115489108cf2bbf1fcd7",
     "cpppj/src/o/CMakeLists.txt": "8c72f4fb78c7fafefa85dad32a08ed980fb9d0e37e9600359dcdc4b87cc0a3d0",
-    "cpppj/tests/CMakeLists.txt": "c90f8115269f141762affe7174d164b3a9bd37616376e7441097c082cad3bd7d",
+    "cpppj/tests/CMakeLists.txt": "3078716f01858a641a1b3f9ff98fc5d1e36df810d60fa67b5ad7d31c07d3f2b6",
     "cpppj/tests/CampaignSessionTests.cpp": "6b03a6bf14634792d4c68653ae44e542e5d03497355985cc2384de1863bd505c",
     "cpppj/tests/ShapeToBufferTests.cpp": "0dc5ddc7f71ce2b7a12ff4dcaae45a47b4c7d6fefa676129fb19b5556e3312ab",
     "tools/cpp_priest_construction_smoke.py": "93524c9e1fb58e7e589fc25c7507e105e750b96cb66ad7ddbf9a58aae2756c2c",
@@ -5072,6 +5072,19 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "85d612cf12e67be3693f5c34ebf79ea876302247be73ea8b243d743e17d9f6ff",
           "current": "c90f8115269f141762affe7174d164b3a9bd37616376e7441097c082cad3bd7d"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 176,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "c90f8115269f141762affe7174d164b3a9bd37616376e7441097c082cad3bd7d",
+          "current": "3078716f01858a641a1b3f9ff98fc5d1e36df810d60fa67b5ad7d31c07d3f2b6"
         }
       ]
     }

@@ -21,7 +21,7 @@
     "cpppj/src/client/SoundProcess.cpp": "211d934b00419741eb584d90501429bc71ee550a013f34df50bfffc9f0d4f1b2",
     "cpppj/src/client/RawCampaignSession.cpp": "82f3a63d68046b2078ef66fd1d548b412d544a73c29e9b9e1b516e16feb4b8a8",
     "cpppj/src/CMakeLists.txt": "8bcbbd1445cf96d31be4573fad443d8fe2248455bdda11abd9015f94821b7b26",
-    "cpppj/tests/CMakeLists.txt": "c90f8115269f141762affe7174d164b3a9bd37616376e7441097c082cad3bd7d",
+    "cpppj/tests/CMakeLists.txt": "3078716f01858a641a1b3f9ff98fc5d1e36df810d60fa67b5ad7d31c07d3f2b6",
     "cpppj/tests/CampaignSessionTests.cpp": "6b03a6bf14634792d4c68653ae44e542e5d03497355985cc2384de1863bd505c",
     "cpppj/src/o/RawBombPreDestroy.h": "0cf2422a487e7d85ec7c8f69001594f4fc68394f6b57d48a3065eae4cd39f07e",
     "cpppj/src/o/RawBombPreDestroy.cpp": "0300ca6d21f298fb2752ddfc6fb4126c4f066e19f72a26354d2dcbb59a8ba830",
@@ -636,6 +636,19 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "85d612cf12e67be3693f5c34ebf79ea876302247be73ea8b243d743e17d9f6ff",
           "current": "c90f8115269f141762affe7174d164b3a9bd37616376e7441097c082cad3bd7d"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 176,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "c90f8115269f141762affe7174d164b3a9bd37616376e7441097c082cad3bd7d",
+          "current": "3078716f01858a641a1b3f9ff98fc5d1e36df810d60fa67b5ad7d31c07d3f2b6"
         }
       ]
     }

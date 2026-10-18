@@ -1,0 +1,153 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-18",
+  "unit": 176,
+  "baseline": "c455150",
+  "lastDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16",
+    "changed": false
+  },
+  "native": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-18",
+    "unit": 176,
+    "rows": 221,
+    "normalReturns": 442,
+    "instructions": 73666,
+    "controls": [
+      639,
+      895
+    ],
+    "precisionDifferences": 0,
+    "nativeCalls": {
+      "0x419fc0": 18,
+      "0x4642c0": 18,
+      "0x4198f0": 36,
+      "0x49a840": 440,
+      "0x419990": 324,
+      "0x40da40": 132,
+      "0x4e49c0": 1740,
+      "0x419cd0": 80,
+      "0x419cb0": 2
+    },
+    "boundaries": {
+      "0x419850": 36,
+      "0x464740": 324,
+      "0x4daa70": 28,
+      "0x4dabe0": 388,
+      "0x4daab0": 96,
+      "0x4daaf0": 72,
+      "0x4dab40": 292,
+      "0x4daca0": 80,
+      "0x466750": 2
+    },
+    "sha256": {
+      "tools/decomp_inventory_image.py": "bb28701491e4299b733f93bcfe41aff68b44db92e7249cca750cc044c583d8af",
+      "tools/decomp_factory_menu.py": "bd889d1fe373053c80fe804517858cf83102fbf36cbe724d989e4aa0c3e605cc",
+      "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+      "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+      "cpppj/tests/fixtures/inventory-image-x86.tsv": "eaa1d5cd4a13575a677f3e3530c38b29b4cc71eefb435f7ccbaa4e5c56ebee34"
+    },
+    "limits": [
+      "419fc0/4198f0/419990/419cd0/419cb0와 기본 생성·TYPE/localowner getter/CRT ftol의 실제 전체 명령이다. 헤더·현재 위치/색표/VFX 그리기·적중/기본 부착은 명시 경계다.",
+      "게임/OS/창 실행·원본 파일 변경/새 디컴파일 없음. VFX 픽셀 자체와 실제 Client 생산 패널 연결은 별도 검사다."
+    ]
+  },
+  "nativeFreeze": {
+    "tools/decomp_inventory_image.py": "bb28701491e4299b733f93bcfe41aff68b44db92e7249cca750cc044c583d8af",
+    "cpppj/inventory-image.json": "0417d7206cb6fbc976b85fcf4d7148478453ffec4442c4a76c4f793f6d3fac68",
+    "cpppj/tests/fixtures/inventory-image-x86.tsv": "eaa1d5cd4a13575a677f3e3530c38b29b4cc71eefb435f7ccbaa4e5c56ebee34"
+  },
+  "protected": {
+    "AGENTS.md": "7addbf9b31c42f29aab7c93faa865eb6de8590a600d17202a297cf7122bdf979",
+    "LEFT_JOBS.dotnetpj.md": "0c067e1d12879dbf2212cbd64c8f9f60e65b590df910418f025027ed84f80ec2",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "originals/d/GIFCLOUD.COL": "785a2cda6ac1d3e295d375815b6d9650720683099db7c249382d598b5da00532"
+  },
+  "currentSources": {
+    "cpppj/src/client/CMakeLists.txt": "1d5111ad90b18e6da672f9021e238cb9c75a34263ccac5f3610e53c2901425d0",
+    "cpppj/tests/CMakeLists.txt": "3078716f01858a641a1b3f9ff98fc5d1e36df810d60fa67b5ad7d31c07d3f2b6",
+    "cpppj/src/client/ImageGump.h": "15376cf28db04c2582f3c5616ea0cfb2b5b202ec6a02c2aa55c8311b53d13316",
+    "cpppj/src/client/ImageGump.cpp": "743e9b79acc24ca0b34430b73fba3b3d96ea50c7729c1821f317f8ded812a7cd",
+    "cpppj/tests/ImageGumpTests.cpp": "4d1e0fd152abe55d08d9f94dc745c395a3a4588ec2c7062068eab3b1e769baa5",
+    "tools/decomp_inventory_image.py": "bb28701491e4299b733f93bcfe41aff68b44db92e7249cca750cc044c583d8af",
+    "cpppj/tests/fixtures/inventory-image-x86.tsv": "eaa1d5cd4a13575a677f3e3530c38b29b4cc71eefb435f7ccbaa4e5c56ebee34",
+    "cpppj/inventory-image.json": "0417d7206cb6fbc976b85fcf4d7148478453ffec4442c4a76c4f793f6d3fac68"
+  },
+  "logSha256": {
+    "extracted/goal-inventory-item-20261018-audit1.log": "362520a10e16829a6684f81e15534942493efe71958aea4e371eda051c2af7d9",
+    "extracted/goal-inventory-item-20261018-build1.log": "0079c37cc1b68e7a7d88873473cf281886546ad82630d5065567807e9f12a7e6",
+    "extracted/goal-inventory-item-20261018-build2.log": "83922a7daaf92519cc33f9ee2fb9a9ee64efceb44fcee4b514fef2d8ee84bf14",
+    "extracted/goal-inventory-item-20261018-ctest1.log": "10f252faf40c4c9c616958e059d29716b1d59259e3f8c3b5bf772ed3235949ae",
+    "extracted/goal-inventory-item-20261018-focused1.log": "c4986fb1cb2dfcd6d419bdfb964dad668162599a70df4b33efaad1963f3866b6",
+    "extracted/goal-inventory-item-20261018-focused2.log": "c4986fb1cb2dfcd6d419bdfb964dad668162599a70df4b33efaad1963f3866b6",
+    "extracted/goal-inventory-item-20261018-image-native1.log": "9ef7e64cb0b9811bde77e0a168ed4686bff846781c0bc6c79c5a01ccf739f2b5",
+    "extracted/goal-inventory-item-20261018-image-native2.log": "70ed8803c0be5aa40f6e3f10e18ea603ea41cfa9c3431ff4b46b684ffc217dba",
+    "extracted/goal-inventory-item-20261018-LastTest.log": "2028472da7c50e415343e382bf93e1b87d4e7149ce532fe1711b665527a54f67"
+  },
+  "validation": {
+    "full": {
+      "tests": 1669,
+      "failedChecks": 0,
+      "seconds": 222.66,
+      "ctestSeconds": 222.7,
+      "build": 2
+    },
+    "build": {
+      "number": 2,
+      "warnings": 0,
+      "errors": 0
+    },
+    "focused": {
+      "tests": 2,
+      "failedChecks": 0
+    },
+    "audit": {
+      "tools": 100,
+      "passed": 89,
+      "existingFailed": 11,
+      "newFailed": 0
+    },
+    "nativeComparison": {
+      "rows": 221,
+      "allNodeBytes": true,
+      "allCallArgumentsAndOrder": true
+    },
+    "actualAssets": {
+      "types": [
+        128,
+        133
+      ],
+      "scales": [
+        1,
+        0.63,
+        -1,
+        0
+      ],
+      "hitMatchesRenderedNon255": true,
+      "selectedColor": "기존 실제556438 dark표",
+      "clipAndPaddingPreserved": true,
+      "limits": "실제 새ImageGump/VFX 출력과 독립 경로의 적중 일치다. 원본221행은 VFX 호출 경계이며 새 전체 원본 픽셀 기대값은 아니다."
+    },
+    "guiRun": false
+  },
+  "integrationPins": {
+    "reports": 58,
+    "pins": 71
+  },
+  "fidelity": {
+    "complete": false,
+    "scope": "실제 SHP 이미지 Gump·일반/배율 VFX·투명 적중. 실제 Client 생산창은 후속.",
+    "limits": [
+      "이번은 생산 아이콘의 ImageGump 몸체/실제 자산·VFX·투명 적중 연결이다. Client 생산 패널과 InventoryItem43ce40/43d4c0은 아직 연결하지 않았다.",
+      "556038 비활성/556338 선행 그림의 실제 색표 생성·현재owner 색표 공급은 소비자 연결이 필요하다. 누락 색표를 항등으로 대체하지 않는다. 선택색556438은 기존 원본 dark표로 실제 자산 검사했다.",
+      "43ce40 아이콘 자식/수량 글자·43cdc0 장식/43d4c0 클릭/43e640·43ddd0·43ec00 패널→447000과43ef10 나머지 다리·수량·비용 갱신은 후속이다.",
+      "썬 캐논 배치·공격/도움말·회수·업그레이드/CD/운반왕복·희생·승패·다음 미션·전략AI/11단계 자연 완주·전체 원본 동일성은 미완료다."
+    ]
+  },
+  "goalComplete": false
+}

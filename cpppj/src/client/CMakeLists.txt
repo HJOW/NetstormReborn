@@ -153,3 +153,6 @@ target_sources(netstorm PRIVATE FloatingSpGump.h FloatingSpGump.cpp)
 
 # 실제 생산 격자와 내용물 항목의 원본 생성/배치/통지를 복원한다.
 target_sources(netstorm PRIVATE InventoryGump.h InventoryGump.cpp)
+
+# 생산 아이콘의 실제 SHP Gump와 VFX 출력/투명 적중을 연결한다.
+target_sources(netstorm PRIVATE ImageGump.h ImageGump.cpp)
