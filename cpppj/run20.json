@@ -308,7 +308,7 @@
     "cpppj/hist/run20-regression/unpop.cpp": "89ee0eb425b59778c216314eccb6dd09909a57118fb032cab1013c3f3345233c",
     "cpppj/run19.json": "6d9888fa7bcf7b1e13dd408db59a26410e9e3cef6d1fad987e20c464d6e0dc76",
     "cpppj/squid-level.json": "5d61185c834c2e195394000248d768f37a95a2056027c4d020c66b83b74f4c68",
-    "cpppj/src/CMakeLists.txt": "945332cd1c5b131d7e35d0ae7fb15762597c41be26ffea267b18e8b3d048efd8",
+    "cpppj/src/CMakeLists.txt": "db65c86795904ce8929fcd469008e42591ce86e539d2139aee9b53a588fdfa5f",
     "cpppj/src/app/CanonMayPlaceInspect.cpp": "27eda46bca500c898abeb9a3a7c4e8588b38e061b579c84cbf6c032c6d46dda9",
     "cpppj/src/app/FrameBindingInspect.cpp": "042602919b0531fb1cbaf3941dc6597bee73944bbf0d571dacfd638bb45dd07c",
     "cpppj/src/app/FrameBindingInspect.h": "4e187ca41f8c34ed52c022b58a57327a554a723e3e26ee88a1ae152c99de3fce",
@@ -420,8 +420,8 @@
     "cpppj/src/client/RawCampaignMotionBindings.h": "6b196fba2833df49bb4882300dbeded4ff68bb2e340b8881338c19c17ef7060d",
     "cpppj/src/client/RawCampaignOwnership.cpp": "960af85c2b29897a853f2f08e8a78283e87b5c04a7595ca9e62924e2c455c6c5",
     "cpppj/src/client/RawCampaignOwnership.h": "f53be166d29d72a8fbcda53fe2e476932e50a392be04c4d5a1a91d56d90c41a1",
-    "cpppj/src/client/RawCampaignPathBindings.cpp": "0d36db062813bc9ea5b204fd06f1cf4bc0c43b6f71ede35aae851285fdbdcdb1",
-    "cpppj/src/client/RawCampaignPathBindings.h": "6ac357c4b2724907eb183be465f5f031f7164c2fdbc474de308d12acf4edc329",
+    "cpppj/src/client/RawCampaignPathBindings.cpp": "2fc59e6cd111db8c953e388d1856c8e6103a8b6852461c2d3df89ec84a4f4314",
+    "cpppj/src/client/RawCampaignPathBindings.h": "82d9565ece60f24300977681dffdaad57a660fdccca38b4db305d5a1d262b8b0",
     "cpppj/src/client/RawCampaignWorldRuntime.cpp": "c8013d0c7e3b1b3b9f3196a202397d4f24c17c592186cf2fec201820ba7e473c",
     "cpppj/src/client/RawCampaignWorldRuntime.h": "4832ee863ef658efb14479c720c0ffa47104c1bcbdd1d042adb4d3f2330f0f97",
     "cpppj/src/client/RawCursorDrop.cpp": "f0942036950dfbb0085c48f2bb76bdd2d4edc9fb7c870cdbf7d9fc83e65dddd4",
@@ -804,8 +804,8 @@
     "cpppj/src/o/RawSquidRegion.h": "46017cfdf318d897f360d816064a4168d3d8946be581e51853bb592bf11ef90b",
     "cpppj/src/o/RawSurfaceLifecycle.cpp": "49d7eb66e77d473c9f6ba8d45d19e3f7491bbb8fa677ec707162390a6670310c",
     "cpppj/src/o/RawSurfaceLifecycle.h": "e94d81db2da04ed535b8359527c0e854af960a381398b821e1f2cb4864d85ebb",
-    "cpppj/src/o/RawTempleRitual.cpp": "fee9b37873c162ea621595d819b05db4bdea5c28fb62a3b44908aca064530595",
-    "cpppj/src/o/RawTempleRitual.h": "d1f5ab197e92539a0c4904a5f73c0aba60392c587e20cc9a6fbfc54a881acf73",
+    "cpppj/src/o/RawTempleRitual.cpp": "4da7a7c1516a35016897471780d92be973f3d238dfd4bf5c36548a9fe9b803bb",
+    "cpppj/src/o/RawTempleRitual.h": "e5b853c7bfd9ca70c18c97d7b3f3a6e14b6e6d0ca89a6e5269e5117838937741",
     "cpppj/src/o/RawTerrainContext.cpp": "203547106def3802bcd2070c916bfdc62e714586885c6f7f4df7b1a5ce18f3f1",
     "cpppj/src/o/RawTerrainContext.h": "debce2664dc50d88797b25cdfaf02318bdffc6b9bcd38a012930599bc3c13e40",
     "cpppj/src/o/RawTerrainGrowth.cpp": "0d65e9156726ea90be2db07f61812a6d92113913509c481893e8b08a8f749952",
@@ -875,7 +875,7 @@
     "cpppj/src/platform/FileOutput.cpp": "3a5177e4c106ae84458fb2c1ab5b0ce284c42ee418d2faf925b3a20f3fe7c3fe",
     "cpppj/src/platform/FileOutput.h": "1c2e793741bbc75a2eeaac27dc66e38e19231f02eb9920a82e9297941426dbb3",
     "cpppj/src/zacket/CMakeLists.txt": "6bcf91fbc6e3fec06867e0db9b9e52a2471f10b51c6f6138af91cfbedd8212ca",
-    "cpppj/tests/AltarSacrificeTests.cpp": "b920c0644365682a1067005957c78b521f5ce751836e93986540a3193bc2780b",
+    "cpppj/tests/AltarSacrificeTests.cpp": "3bcf850f018f097b44142038da311c135ae72c3b5c1e075856269f41b2adc0a1",
     "cpppj/tests/ArcherAnimationTests.cpp": "d2b171bb32d6c3bf64bb4d625cb944f42772b5f558ee52f6c081968595ca3c30",
     "cpppj/tests/ArcherMissileTests.cpp": "9c73ce787d67c22d658ea289491cceb6ea4dd235beef9cbf27950bd65582f400",
     "cpppj/tests/ArcherTypeDataTests.cpp": "5059f913a1442dd3d5e9d9fd900b1a2ce4efab5bff6628812dea49de3ff8fd05",
@@ -942,11 +942,11 @@
     "cpppj/tests/ContentLifetimeTests.cpp": "8510d209811232b0f608b111dffbab5da20a47bd980d94555194b4e68fd88040",
     "cpppj/tests/CreationTests.cpp": "b7e72638506211b09813bd618aeeb98cdd69324d5ce59aebabdba1a62f35316a",
     "cpppj/tests/CursorDropTests.cpp": "fa6b14faf43f86d772b47efcdca060af447403c4ebccaa17f2cdc47ed1823b21",
-    "cpppj/tests/DaisBridgeTests.cpp": "4b98116984802558d993dee8a444497ad5f14329ae03e065244b4f8cb41a8ee7",
+    "cpppj/tests/DaisBridgeTests.cpp": "3ddf0775e4388acad8f0a9b28d9340e8f40c24a5f66dcc980c05f7c51f3622a7",
     "cpppj/tests/DaisContentNoticeTests.cpp": "0910eea05e084038064d47340c0bba546b74b292f6a25491db8fecb1744fe1d3",
-    "cpppj/tests/DaisLifecycleTests.cpp": "7bfa99f40e12b3796b6109ba8fed36c7cfdb911fbb8d898ba43cf0438d187ba4",
-    "cpppj/tests/DaisProgressTests.cpp": "6e8d437815d1b8cd191d4e9fc4c4310538d85de0347722f0ede081c75362c192",
-    "cpppj/tests/DaisRegularTests.cpp": "95ab33f6dbf170375d1d7ccc109f15f4bdfda3fbf7e50bb96f6f3b5a4f093527",
+    "cpppj/tests/DaisLifecycleTests.cpp": "340e04e4c7fcd708b64e5f1283cc2b3c51b50e9fb906001a0edfe978ded812d9",
+    "cpppj/tests/DaisProgressTests.cpp": "2580113c0336b92d2a39efe957350d5ed25ee1af42e1f5de32e28991b3a2dacb",
+    "cpppj/tests/DaisRegularTests.cpp": "6d948c39e276ed391aa1b675cb3a1d17bfab6f4c2c65934face1d42e6b84337f",
     "cpppj/tests/DaisRitualConsumerTests.cpp": "d7281b79127c73900f1b4e68292e8b51e4ed7d386d57cc0ee90f6b78cc7e45e5",
     "cpppj/tests/DamageableHitTests.cpp": "811f951fa0370ebe26c2cf6c4faae36567379659dd2035eb8f4c35097e33480b",
     "cpppj/tests/DamageablePostDestroyHostTests.cpp": "1cff10d68fb521e57fdeeb7f27900a292fc7f1013b134534748c4d494894509a",
@@ -1099,7 +1099,7 @@
     "cpppj/tests/SurfaceLifecycleInspect.h": "79959110d8f14c71cd1d9915c43a8642eccbf025c7e364c15e8fc5876afa56e5",
     "cpppj/tests/SurfaceLifecycleTests.cpp": "4536e4c2b98d344cbc21ad8cd97556a28e4452b2eb1ef616490dcd6690dfd6c5",
     "cpppj/tests/SurfaceTests.cpp": "3bd1e175a363fda72432cd44355f457101107c5e6a54e55d225fc7e624083a25",
-    "cpppj/tests/TempleRitualTests.cpp": "93cb36182f961449ba897b8fd87ec85cf745e04d33941f8cbbda8cf4f059e1ca",
+    "cpppj/tests/TempleRitualTests.cpp": "c7a397e4573f5776fb65067c5b8acfb5074d30ca30f43db7399c7416ed59fe46",
     "cpppj/tests/TerrainContextTests.cpp": "687b7f4312c456934e38b38661f63368eb10206dd52c5a6d1ead84a0823746d5",
     "cpppj/tests/TerrainGrowthTests.cpp": "2afa05205d3b8a0d4bd0f6db208b493f40da0b3855e1145ea26460d196f04b50",
     "cpppj/tests/TerrainStampTests.cpp": "f74a080dabac3369080943b37209e51427ca256705c9ce70d6400d0d3182260a",
@@ -2646,6 +2646,79 @@
           "path": "cpppj/src/o/RawBurningVisual.cpp",
           "previous": "9521fe84204f87283fb4c9f2b5b3ebbccf8bca749b76a9bebf4691f563ade522",
           "current": "6d4b4654483abe7f87632a166a9af3bbedbd1b20e253ebd95ce6a1ebc35ffc92"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 194,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "945332cd1c5b131d7e35d0ae7fb15762597c41be26ffea267b18e8b3d048efd8",
+          "current": "db65c86795904ce8929fcd469008e42591ce86e539d2139aee9b53a588fdfa5f"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/client/RawCampaignPathBindings.cpp",
+          "previous": "0d36db062813bc9ea5b204fd06f1cf4bc0c43b6f71ede35aae851285fdbdcdb1",
+          "current": "2fc59e6cd111db8c953e388d1856c8e6103a8b6852461c2d3df89ec84a4f4314"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/client/RawCampaignPathBindings.h",
+          "previous": "6ac357c4b2724907eb183be465f5f031f7164c2fdbc474de308d12acf4edc329",
+          "current": "82d9565ece60f24300977681dffdaad57a660fdccca38b4db305d5a1d262b8b0"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawTempleRitual.cpp",
+          "previous": "fee9b37873c162ea621595d819b05db4bdea5c28fb62a3b44908aca064530595",
+          "current": "4da7a7c1516a35016897471780d92be973f3d238dfd4bf5c36548a9fe9b803bb"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawTempleRitual.h",
+          "previous": "d1f5ab197e92539a0c4904a5f73c0aba60392c587e20cc9a6fbfc54a881acf73",
+          "current": "e5b853c7bfd9ca70c18c97d7b3f3a6e14b6e6d0ca89a6e5269e5117838937741"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/tests/AltarSacrificeTests.cpp",
+          "previous": "b920c0644365682a1067005957c78b521f5ce751836e93986540a3193bc2780b",
+          "current": "3bcf850f018f097b44142038da311c135ae72c3b5c1e075856269f41b2adc0a1"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/tests/DaisBridgeTests.cpp",
+          "previous": "4b98116984802558d993dee8a444497ad5f14329ae03e065244b4f8cb41a8ee7",
+          "current": "3ddf0775e4388acad8f0a9b28d9340e8f40c24a5f66dcc980c05f7c51f3622a7"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/tests/DaisLifecycleTests.cpp",
+          "previous": "7bfa99f40e12b3796b6109ba8fed36c7cfdb911fbb8d898ba43cf0438d187ba4",
+          "current": "340e04e4c7fcd708b64e5f1283cc2b3c51b50e9fb906001a0edfe978ded812d9"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/tests/DaisProgressTests.cpp",
+          "previous": "6e8d437815d1b8cd191d4e9fc4c4310538d85de0347722f0ede081c75362c192",
+          "current": "2580113c0336b92d2a39efe957350d5ed25ee1af42e1f5de32e28991b3a2dacb"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/tests/DaisRegularTests.cpp",
+          "previous": "95ab33f6dbf170375d1d7ccc109f15f4bdfda3fbf7e50bb96f6f3b5a4f093527",
+          "current": "6d948c39e276ed391aa1b675cb3a1d17bfab6f4c2c65934face1d42e6b84337f"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/tests/TempleRitualTests.cpp",
+          "previous": "93cb36182f961449ba897b8fd87ec85cf745e04d33941f8cbbda8cf4f059e1ca",
+          "current": "c7a397e4573f5776fb65067c5b8acfb5074d30ca30f43db7399c7416ed59fe46"
         }
       ]
     }

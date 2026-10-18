@@ -117,10 +117,10 @@
   "currentSources": {
     "cpppj/src/client/GameWorld.cpp": "b2bca515fffbca6f151a5ccabd021ab9c8e4331cc014b57eca0e5e9264de1d59",
     "cpppj/src/client/UberGump.cpp": "d9821a1778502ebe48eeada018bb69f1ebe56d08592a4765ff0cfc10fe05418e",
-    "cpppj/src/client/RawCampaignSession.cpp": "25d9c5d9a8a003b51b49e145eb1c53e0db604574a77426be28f5bbf970d138eb",
-    "cpppj/src/client/RawCampaignSession.h": "d5ed2ce459529e5760e3c3864182965fab4e8d7c303baf82c931a892da5f2f7c",
-    "cpppj/tests/CMakeLists.txt": "f8e834bc78cfbbe87ba57d7a7600fd41537ab8d0be1274a50d16a907cf259173",
-    "cpppj/tests/CampaignSessionTests.cpp": "081225e0b602e67b344d85b12607fb0a34a8e37d4231925305fe0369161e639d",
+    "cpppj/src/client/RawCampaignSession.cpp": "d7d6aff8ee655c2506eb38f8d0d1a6fd68c4e854ba5fbf9f6371be7cb4b719ce",
+    "cpppj/src/client/RawCampaignSession.h": "a6d142e8d485ccf10ea834c59947a4606c5d0c033ef4b2ad00b09a0cc389a641",
+    "cpppj/tests/CMakeLists.txt": "21bd45a29dd3e12e823655856464233c4a766a0eb28b6b1aae96012c76caf2b8",
+    "cpppj/tests/CampaignSessionTests.cpp": "9c2712ec395bb50eddf95ea2eb807aa9fa2b33d9907f738f68d3d441078abae8",
     "tools/decomp_blocker_capture.py": "2089d9b92a7c91d9d22570316923f4035148ab61dc37bf519f8f957edd7d461d",
     "cpppj/blocker-capture.json": "0e64987b6c95c7c4aac9906a96c4a711676a8f51074f133976c2c6a80bbde5cd",
     "cpppj/tests/fixtures/blocker-capture-x86.tsv": "97bb9290d2777e8218d4bc5a9094e0ae669e72eb121c349fd3a9a57375427587",
@@ -1743,5 +1743,38 @@
     "사제 포획/운반·제단 UI 허용4498e0/의식 시작494eb0과 기존 RawDaisRegular/RawAltarSacrifice를 같은 Session에 연결해 BadTeamDead 승리·후속 미션 확인",
     "아이스147의 재생성 포함 전용 후처리, 실제Dude population 초기화/드롭·대피 및 과거 출처SHA14종 감사",
     "실제 바람/설정·다른 입자gate·썬더 저장 미션 창·훨리기그 후속·전략AI와11단계 자연 완주"
+  ],
+  "integration_updates": [
+    {
+      "date": "2026-10-18",
+      "unit": 194,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "25d9c5d9a8a003b51b49e145eb1c53e0db604574a77426be28f5bbf970d138eb",
+          "current": "d7d6aff8ee655c2506eb38f8d0d1a6fd68c4e854ba5fbf9f6371be7cb4b719ce"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "d5ed2ce459529e5760e3c3864182965fab4e8d7c303baf82c931a892da5f2f7c",
+          "current": "a6d142e8d485ccf10ea834c59947a4606c5d0c033ef4b2ad00b09a0cc389a641"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "f8e834bc78cfbbe87ba57d7a7600fd41537ab8d0be1274a50d16a907cf259173",
+          "current": "21bd45a29dd3e12e823655856464233c4a766a0eb28b6b1aae96012c76caf2b8"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "081225e0b602e67b344d85b12607fb0a34a8e37d4231925305fe0369161e639d",
+          "current": "9c2712ec395bb50eddf95ea2eb807aa9fa2b33d9907f738f68d3d441078abae8"
+        }
+      ]
+    }
   ]
 }

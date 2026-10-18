@@ -17,7 +17,7 @@ void TempleAssets(std::vector<RiftTypeRecord>& types,std::vector<RiftTypeFrames>
     for (const auto type:{158U,165U,166U}) {
         const auto count=type==165 ? 180U : type==166 ? 6U : 32U;types[type].maxHitPoints=200;types[type].flags1=16;types[type].footX=types[type].footY=type==165 ? 3 : 1;shapes[type].loaded=true;shapes[type].frameCount=static_cast<int>(count);std::vector<FrameCode> codes;
         // SHP integer hotspot은입력이며목표점의계산은원본/복원몸체가각각한다.
-        for (std::uint32_t index=0;index<count;++index) { shapes[type].frames.push_back({16,11,static_cast<std::int16_t>((index%5)*16),static_cast<std::int16_t>((index%5)*11),1,1});codes.push_back({static_cast<std::uint8_t>(type==165 ? side : 'A'),'P',static_cast<std::uint8_t>(index+1),0}); }
+        for (std::uint32_t index=0;index<count;++index) { shapes[type].frames.push_back({16,11,static_cast<std::int16_t>((index%5)*16),static_cast<std::int16_t>((index%5)*11),1,1,0,0,static_cast<std::int16_t>((index%5)*16),static_cast<std::int16_t>((index%5)*11)});codes.push_back({static_cast<std::uint8_t>(type==165 ? side : 'A'),'P',static_cast<std::uint8_t>(index+1),0}); }
         // 사제first-table은A둘/K..P각하나다. 이후P는해당첫프레임을바꾸지않는다.
         if (type==158) for (std::uint32_t index=2;index<count;++index) codes[index].side=static_cast<std::uint8_t>(index<8 ? 'K'+index-2 : 'P');
         frames[type]=RiftTypeFrames(std::move(codes));

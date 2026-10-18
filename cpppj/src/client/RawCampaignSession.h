@@ -128,6 +128,7 @@ struct RawCampaignSessionServices {
     o::FormPopTransmit dependencyTransmit; // 감시 Form의 현재 서버 송신 소비자다.
     std::function<void(o::Sid,o::Sid,std::uint32_t)> contentNotice; // 실제 내용물 부모 통지다.
     SoundList* soundNames{}; // 클라이언트의 단일 실제 이름표를 공유한다. 별도 토큰표를 만들지 않는다.
+    std::function<void(std::string_view)> requestMusic; // 기존 ClientAudio의 실제 의식 곡 요청이다.
     SoundProcessHooks sound; // 실제 같은 SoundPlayer/벽시계에 연결한 재생·정지 경계다.
     std::function<void(std::span<const std::uint8_t>)> pathPacket; // 실제 Path 직렬화 버퍼의 송신 소비자다.
     std::function<void(std::span<const std::uint8_t>)> formPacket; // 실제 감시/내용물/삭제 직렬화 후의 송신 경계다. 없으면 동일 BattleBroadcast를 사용한다.

@@ -22,7 +22,7 @@ void BridgeAssets(std::vector<RiftTypeRecord>& types,std::vector<RiftTypeFrames>
     for (const auto& [type,pattern]:patterns) {
         types[type].footX=types[type].footY=type==165 ? 3 : 1;types[type].maxHitPoints=200;types[type].flags1=16;std::vector<FrameCode> codes;
         // 원본의 signed short 핫스폿은 Temple.StagePoint가 실제로 읽는다.
-        for (std::size_t index=0;index<pattern.size();++index) { codes.push_back({static_cast<std::uint8_t>(pattern[index]),'P',static_cast<std::uint8_t>(index+1),0});shapes[type].frames.push_back({1,1,static_cast<std::int16_t>((index%5)*16),static_cast<std::int16_t>((index%5)*11),1,1}); }
+        for (std::size_t index=0;index<pattern.size();++index) { codes.push_back({static_cast<std::uint8_t>(pattern[index]),'P',static_cast<std::uint8_t>(index+1),0});shapes[type].frames.push_back({1,1,static_cast<std::int16_t>((index%5)*16),static_cast<std::int16_t>((index%5)*11),1,1,0,0,static_cast<std::int16_t>((index%5)*16),static_cast<std::int16_t>((index%5)*11)}); }
         frames[type]=RiftTypeFrames(std::move(codes));shapes[type].loaded=true;shapes[type].frameCount=static_cast<std::int32_t>(pattern.size());
     }
     // 원본 입력의 surface83/사제158 코드 포인터가 공유되어 최종 표면 코드도 AP가 된다.

@@ -1772,14 +1772,57 @@
           "current": "081225e0b602e67b344d85b12607fb0a34a8e37d4231925305fe0369161e639d"
         }
       ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 194,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignPathBindings.cpp",
+          "previous": "0d36db062813bc9ea5b204fd06f1cf4bc0c43b6f71ede35aae851285fdbdcdb1",
+          "current": "2fc59e6cd111db8c953e388d1856c8e6103a8b6852461c2d3df89ec84a4f4314"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignPathBindings.h",
+          "previous": "6ac357c4b2724907eb183be465f5f031f7164c2fdbc474de308d12acf4edc329",
+          "current": "82d9565ece60f24300977681dffdaad57a660fdccca38b4db305d5a1d262b8b0"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "25d9c5d9a8a003b51b49e145eb1c53e0db604574a77426be28f5bbf970d138eb",
+          "current": "d7d6aff8ee655c2506eb38f8d0d1a6fd68c4e854ba5fbf9f6371be7cb4b719ce"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "d5ed2ce459529e5760e3c3864182965fab4e8d7c303baf82c931a892da5f2f7c",
+          "current": "a6d142e8d485ccf10ea834c59947a4606c5d0c033ef4b2ad00b09a0cc389a641"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "f8e834bc78cfbbe87ba57d7a7600fd41537ab8d0be1274a50d16a907cf259173",
+          "current": "21bd45a29dd3e12e823655856464233c4a766a0eb28b6b1aae96012c76caf2b8"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "081225e0b602e67b344d85b12607fb0a34a8e37d4231925305fe0369161e639d",
+          "current": "9c2712ec395bb50eddf95ea2eb807aa9fa2b33d9907f738f68d3d441078abae8"
+        }
+      ]
     }
   ],
   "currentSources": {
     "cpppj/src/client/RawCampaignLifetimeBindings.cpp": "5ddc44fc6776aebbd50e6249221141dec90fca1abe827886f19b14c968bd4582",
-    "cpppj/src/client/RawCampaignPathBindings.cpp": "0d36db062813bc9ea5b204fd06f1cf4bc0c43b6f71ede35aae851285fdbdcdb1",
-    "cpppj/src/client/RawCampaignPathBindings.h": "6ac357c4b2724907eb183be465f5f031f7164c2fdbc474de308d12acf4edc329",
-    "cpppj/src/client/RawCampaignSession.cpp": "25d9c5d9a8a003b51b49e145eb1c53e0db604574a77426be28f5bbf970d138eb",
-    "cpppj/src/client/RawCampaignSession.h": "d5ed2ce459529e5760e3c3864182965fab4e8d7c303baf82c931a892da5f2f7c",
+    "cpppj/src/client/RawCampaignPathBindings.cpp": "2fc59e6cd111db8c953e388d1856c8e6103a8b6852461c2d3df89ec84a4f4314",
+    "cpppj/src/client/RawCampaignPathBindings.h": "82d9565ece60f24300977681dffdaad57a660fdccca38b4db305d5a1d262b8b0",
+    "cpppj/src/client/RawCampaignSession.cpp": "d7d6aff8ee655c2506eb38f8d0d1a6fd68c4e854ba5fbf9f6371be7cb4b719ce",
+    "cpppj/src/client/RawCampaignSession.h": "a6d142e8d485ccf10ea834c59947a4606c5d0c033ef4b2ad00b09a0cc389a641",
     "cpppj/src/o/CMakeLists.txt": "531d0fd71823841eb97eebb5046f878c52fa44d82142af3fdff9c0fb68c2497a",
     "cpppj/src/o/RawManaBoltArrival.cpp": "0a747951767966b2fdfb80928397e2d73ae33cb28ff76b4b3b73e3499e4c96b6",
     "cpppj/src/o/RawManaBoltArrival.h": "9866ffe90c4a298a24afd11e685b50c1bc16c8df52f32aefcc5d4f9d108f0639",
@@ -1794,8 +1837,8 @@
     "cpppj/src/o/SquidDisplay.cpp": "adff73d1c710cf295aed17e2a06cb90294e1399e5e455d423659f37c336f3dc6",
     "cpppj/src/o/SquidPop.cpp": "61f8db73c663d5d7c8880d73bc310cf7884e361bb76402e0946241e02b7dcd17",
     "cpppj/src/o/SquidUnpop.cpp": "f9a932b6ee543cc2ee051d6f67afb0c56fca1f325cc51d29ca3d0dc3adf26fef",
-    "cpppj/tests/CMakeLists.txt": "f8e834bc78cfbbe87ba57d7a7600fd41537ab8d0be1274a50d16a907cf259173",
-    "cpppj/tests/CampaignSessionTests.cpp": "081225e0b602e67b344d85b12607fb0a34a8e37d4231925305fe0369161e639d",
+    "cpppj/tests/CMakeLists.txt": "21bd45a29dd3e12e823655856464233c4a766a0eb28b6b1aae96012c76caf2b8",
+    "cpppj/tests/CampaignSessionTests.cpp": "9c2712ec395bb50eddf95ea2eb807aa9fa2b33d9907f738f68d3d441078abae8",
     "cpppj/tests/ConstructionArrivalTests.cpp": "3282c1768168e0301078a78de6d7e692d84d917bef5866bf1da22bd0c1b4b6f4",
     "cpppj/tests/CursorManaTests.cpp": "3f9aa47024782b0afe4f165a2145fa4f27706d8b5b7c1434f8e94c65a5318daa",
     "cpppj/tests/PopTests.cpp": "250b9a9fd863142026c29ef68c75ea7c8bea6871ed0a42df9bafee4e2b072d48",

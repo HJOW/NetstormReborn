@@ -150,8 +150,8 @@
     "cpppj/src/o/RawRunePostPop.h": "057c813ed8dcb33eab75554f9368645e77d4b85b61df76a22e64f52dcc82d5ee",
     "cpppj/src/o/RawSquidNeighbors.cpp": "88ec2ee9dbaad0627d1ceb3629199361d860ba137f50d12fe0410a8cbbefa3f2",
     "cpppj/src/o/RawSquidNeighbors.h": "edb19d4782b671d6be80c9f7690b9455d200ef7dbe2df51059d5ca0c4a66175c",
-    "cpppj/src/o/RawTempleRitual.cpp": "fee9b37873c162ea621595d819b05db4bdea5c28fb62a3b44908aca064530595",
-    "cpppj/src/o/RawTempleRitual.h": "d1f5ab197e92539a0c4904a5f73c0aba60392c587e20cc9a6fbfc54a881acf73",
+    "cpppj/src/o/RawTempleRitual.cpp": "4da7a7c1516a35016897471780d92be973f3d238dfd4bf5c36548a9fe9b803bb",
+    "cpppj/src/o/RawTempleRitual.h": "e5b853c7bfd9ca70c18c97d7b3f3a6e14b6e6d0ca89a6e5269e5117838937741",
     "cpppj/src/o/SquidFrame.cpp": "d38aa3f5fbb191aaeadf4f808a7fc51e2ee5a558b9605c9dd8660224435d1e62",
     "cpppj/src/o/SquidFrame.h": "faab1f3ac968b01bb727f374c1cc8b6bdc6b7e3123052e7ed4ae1849f0285b8b",
     "cpppj/src/o/SquidPop.cpp": "dc45a23ebe2078f6f27cd481028247553b566898ca445fb2e227a2f44b3743bd",
@@ -315,6 +315,25 @@
           "path": "cpppj/src/o/RawSquidNeighbors.h",
           "previous": "15116a1d69e6ab9718f556ae59cb5f1e12e484d286c3f6f69a25aa5d1912d484",
           "current": "edb19d4782b671d6be80c9f7690b9455d200ef7dbe2df51059d5ca0c4a66175c"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 194,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/unchanged_files",
+          "path": "cpppj/src/o/RawTempleRitual.cpp",
+          "previous": "fee9b37873c162ea621595d819b05db4bdea5c28fb62a3b44908aca064530595",
+          "current": "4da7a7c1516a35016897471780d92be973f3d238dfd4bf5c36548a9fe9b803bb"
+        },
+        {
+          "group": "/unchanged_files",
+          "path": "cpppj/src/o/RawTempleRitual.h",
+          "previous": "d1f5ab197e92539a0c4904a5f73c0aba60392c587e20cc9a6fbfc54a881acf73",
+          "current": "e5b853c7bfd9ca70c18c97d7b3f3a6e14b6e6d0ca89a6e5269e5117838937741"
         }
       ]
     }

@@ -115,7 +115,7 @@
     "cpppj/tests/fixtures/archertype-x86.tsv": "c892b554dc1f9baa161d3ca72fc1c3f891daef4e04eea44172b050c6c0e0580f",
     "cpppj/daisregular-core.json": "948bb7bfbcaa0a5716c45bf802724d48aa54e70e2324c6ce5fe5a33f56482f50",
     "cpppj/tests/fixtures/daisregular-core-x86.tsv": "1af508f4d7c13401e6e9c3a5daacde2f941a83ad94332624d2b61b11173394f8",
-    "cpppj/altarsacrifice.json": "59bdbb1758846dffba4bbe351ce1b3bff9b4dff7e8ca5f007921849088c4c772",
+    "cpppj/altarsacrifice.json": "17b6cdb69171cb53a90de5f331cc46509c5e05acbbc0d3c8c70d0f2581d6bc42",
     "cpppj/tests/fixtures/altarsacrifice-x86.tsv": "10ff5e1a36607b575a7de140023ee353263ea79da90991b2d58f03cd2ddccac1",
     "cpppj/islandbuilder.json": "07db88ee1f760eeefb35498c46cb1e82a40e3c44e5a398da9da9f12e5ff835bc",
     "cpppj/tests/fixtures/islandbuilder-x86.tsv": "8048e92b263b026d17d02ccf7ddf8b0a3fefa0240970c8581cf5a3ea2b6c60a4",
@@ -140,7 +140,7 @@
     "tools/analyze_dude_regular_reset_lineage.py": "c5dea09870c605552b8ca6626465328c96141476224319beeee977c75b383bee",
     "cpppj/archertype-draft-lineage.json": "7b35c854f7972fc1701b1507a78c9166ab5a66988c27d74bab0325fdfe26ff90",
     "cpppj/archertype-pop-lineage.json": "f534edbe5bd267e3a0f24022eeff23390060c80e4844b31a87062edc4a0374ee",
-    "cpppj/altarsacrifice-successor.json": "5df0f2a0c663427ef12903e7a0a3ca5b5d0e2dd6c8cc6691e74fd2ad3495731b",
+    "cpppj/altarsacrifice-successor.json": "f3272f59952098122e590b90a55cca7c9903d96c06b243884bbdcd7ea7346963",
     "cpppj/islandbuilder-decoder-lineage.json": "81ee818daa7dd5bec2e1cdcb761a6618edbc5fb38d41490d64b2d6340a357f7a",
     "cpppj/islandbuilder-comment-lineage.json": "3b52fd4e4d9f1453fc360e91c479682be384f58fdf6f677168b81a614f3dc982",
     "cpppj/islandbuilder-partial-profile-lineage.json": "d4ec102c9dbd32e795035a890b1d51ab267ad5ca982654c667ac230a2e19d37c",
@@ -185,8 +185,8 @@
     "cpppj/src/o/SquidProcess.h": "96f0b2275393d53307b01d36732f51fc8bcb8c341b2d15339d3f5a37cb702bcd",
     "cpppj/src/o/SquidProcess.cpp": "188376ba728d8544d0bfafb92cc6f66403aea92434a81fa98efe894ed9f042e5",
     "cpppj/tests/ArcherTypeDataTests.cpp": "5059f913a1442dd3d5e9d9fd900b1a2ce4efab5bff6628812dea49de3ff8fd05",
-    "cpppj/tests/DaisRegularTests.cpp": "95ab33f6dbf170375d1d7ccc109f15f4bdfda3fbf7e50bb96f6f3b5a4f093527",
-    "cpppj/tests/AltarSacrificeTests.cpp": "b920c0644365682a1067005957c78b521f5ce751836e93986540a3193bc2780b",
+    "cpppj/tests/DaisRegularTests.cpp": "6d948c39e276ed391aa1b675cb3a1d17bfab6f4c2c65934face1d42e6b84337f",
+    "cpppj/tests/AltarSacrificeTests.cpp": "3bcf850f018f097b44142038da311c135ae72c3b5c1e075856269f41b2adc0a1",
     "cpppj/tests/IslandBuilderTests.cpp": "c135950964f41eeb553ecf1f9daa5e358b0f952a010221d777b1c0c8fc9a66da",
     "cpppj/tests/FortMoneyLoadTests.cpp": "756e55785b50b0e8f4c51a28c3147121ca37c940d04398fbe32b0313728c0210",
     "cpppj/tests/DudeNoticeTests.cpp": "e89cdccb4b047e31006b0f9b2ac8362417d5888f400c9f9e276668a820735b6f",
@@ -212,6 +212,37 @@
           "path": "cpppj/daisregular-core.json",
           "previous": "7767b88f635be1f8810f4547572ebde32589a372a4b40d118c7a6796fc747c4c",
           "current": "948bb7bfbcaa0a5716c45bf802724d48aa54e70e2324c6ce5fe5a33f56482f50"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 194,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/altarsacrifice.json",
+          "previous": "59bdbb1758846dffba4bbe351ce1b3bff9b4dff7e8ca5f007921849088c4c772",
+          "current": "17b6cdb69171cb53a90de5f331cc46509c5e05acbbc0d3c8c70d0f2581d6bc42"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/altarsacrifice-successor.json",
+          "previous": "5df0f2a0c663427ef12903e7a0a3ca5b5d0e2dd6c8cc6691e74fd2ad3495731b",
+          "current": "f3272f59952098122e590b90a55cca7c9903d96c06b243884bbdcd7ea7346963"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/tests/DaisRegularTests.cpp",
+          "previous": "95ab33f6dbf170375d1d7ccc109f15f4bdfda3fbf7e50bb96f6f3b5a4f093527",
+          "current": "6d948c39e276ed391aa1b675cb3a1d17bfab6f4c2c65934face1d42e6b84337f"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/tests/AltarSacrificeTests.cpp",
+          "previous": "b920c0644365682a1067005957c78b521f5ce751836e93986540a3193bc2780b",
+          "current": "3bcf850f018f097b44142038da311c135ae72c3b5c1e075856269f41b2adc0a1"
         }
       ]
     }

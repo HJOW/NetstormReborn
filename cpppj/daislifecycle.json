@@ -103,7 +103,7 @@
   "files": {
     "cpppj/src/o/RawDaisLifecycle.cpp": "bb4289ac6ba5862e1daf0fa48c72f2abe621ec56a2734102f9f20567edf0c856",
     "cpppj/src/o/RawDaisLifecycle.h": "1a994f4d6f0e7dfbf2e6b7232740cb94eb9a0f61ecd663b8262d2c36762d5c88",
-    "cpppj/tests/DaisLifecycleTests.cpp": "7bfa99f40e12b3796b6109ba8fed36c7cfdb911fbb8d898ba43cf0438d187ba4",
+    "cpppj/tests/DaisLifecycleTests.cpp": "340e04e4c7fcd708b64e5f1283cc2b3c51b50e9fb906001a0edfe978ded812d9",
     "cpppj/tests/fixtures/daislifecycle-x86.tsv": "0a3b6ddee8f50793f9ce540987ff1dec37cc8d2ea525da2c487aae72effdd9e0",
     "extracted/altarsacrifice/originalCD/creation.c": "e5034176c7a40f40d247cd4fcf0a799b9df577bd383f2ce3e0bd0c18bedb6b08",
     "extracted/altarsacrifice/originalCD/functions.tsv": "6cf8241dbe95315404adaff317c75655a443a3139b5cef7670140f608edd4fc7",
@@ -160,5 +160,20 @@
     "tools/ghidra/runepostpop-functions.json": "7c81be957505c039f275dfd2a94c6109454a2d3d42cbb90fc58708a62158662e",
     "tools/ghidra/templeritual-functions.json": "2d8fabc0bcb8774371707aad07bc36dbe6011b0dcf5208a15f1c7cf745748cec"
   },
-  "scope": "Dais/Altar5/5 상위수명. 가상공간/Factory/소리/UI/지면조회 및 마지막전체Damageable는명시경계. 전체파괴/의식완료주장없음."
+  "scope": "Dais/Altar5/5 상위수명. 가상공간/Factory/소리/UI/지면조회 및 마지막전체Damageable는명시경계. 전체파괴/의식완료주장없음.",
+  "integration_updates": [
+    {
+      "date": "2026-10-18",
+      "unit": 194,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/tests/DaisLifecycleTests.cpp",
+          "previous": "7bfa99f40e12b3796b6109ba8fed36c7cfdb911fbb8d898ba43cf0438d187ba4",
+          "current": "340e04e4c7fcd708b64e5f1283cc2b3c51b50e9fb906001a0edfe978ded812d9"
+        }
+      ]
+    }
+  ]
 }

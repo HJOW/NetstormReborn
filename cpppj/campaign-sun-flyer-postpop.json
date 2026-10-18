@@ -59,8 +59,8 @@
   "currentSources": {
     "cpppj/src/o/RawFlyerProcess.h": "1107c2a73163e0c3024c822cf614c9d02f7aa36d75fc81cfd0a6df58e36b6345",
     "cpppj/src/o/RawFlyerProcess.cpp": "bc5d68f980251febe080e280db07727f7d5cc7bbbf9d84780d8d8d31a86f44f1",
-    "cpppj/src/client/RawCampaignSession.cpp": "25d9c5d9a8a003b51b49e145eb1c53e0db604574a77426be28f5bbf970d138eb",
-    "cpppj/tests/CMakeLists.txt": "f8e834bc78cfbbe87ba57d7a7600fd41537ab8d0be1274a50d16a907cf259173",
+    "cpppj/src/client/RawCampaignSession.cpp": "d7d6aff8ee655c2506eb38f8d0d1a6fd68c4e854ba5fbf9f6371be7cb4b719ce",
+    "cpppj/tests/CMakeLists.txt": "21bd45a29dd3e12e823655856464233c4a766a0eb28b6b1aae96012c76caf2b8",
     "cpppj/tests/CampaignMissionStartTests.cpp": "03e1719afd07bc3915052bfe2d4eedf2a37080b3f3b5ac041133cef165e59df5",
     "tools/decomp_sun_flyer_postpop.py": "d9e457589d70c582e364c1146e7d54a57647e7d56a194e22e8772de89a85ee78",
     "cpppj/sun-flyer-postpop.json": "1fd1b1fdedcf110d59d368f8fe3b08e15760e153c722cb0d1874873ea1f5f26e",
@@ -446,6 +446,25 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "5c981db7bbf32f6aadd3dcf4caf1bb46dfdbc34220effa4ab82bcfd40e0ed711",
           "current": "f8e834bc78cfbbe87ba57d7a7600fd41537ab8d0be1274a50d16a907cf259173"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 194,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "25d9c5d9a8a003b51b49e145eb1c53e0db604574a77426be28f5bbf970d138eb",
+          "current": "d7d6aff8ee655c2506eb38f8d0d1a6fd68c4e854ba5fbf9f6371be7cb4b719ce"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "f8e834bc78cfbbe87ba57d7a7600fd41537ab8d0be1274a50d16a907cf259173",
+          "current": "21bd45a29dd3e12e823655856464233c4a766a0eb28b6b1aae96012c76caf2b8"
         }
       ]
     }

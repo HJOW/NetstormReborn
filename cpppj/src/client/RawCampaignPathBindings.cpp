@@ -125,6 +125,8 @@ o::ProcessFormTransmission RawCampaignPathBindings::Transmission(o::RawPathDataH
 }
 // root가 소유한 모든 도착/운반 모듈은 이 풀 참조로 혼합 연결을 확인할 수 있다.
 const o::SidPool& RawCampaignPathBindings::Pool() const { return core_.pool; }
+// 의식의 추가 Prepare/끝점/깊이 처리가 기존 현재 시작 몸체를 재사용한다.
+o::RawPathStart& RawCampaignPathBindings::Starter() const { return *start_; }
 // 기존 경로를 지우거나 새 경로를 부착하지 않고 원본 후보용 임시 Path만 채운다.
 bool RawCampaignPathBindings::SearchCandidate(o::RawPathRuntime& temporary,o::Sid parent,o::RawPathPoint start,o::RawPathPoint destination,std::uint32_t flags) { return search_.Search(temporary,parent,start,destination,flags); }
 }

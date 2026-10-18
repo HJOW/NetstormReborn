@@ -142,3 +142,6 @@ target_sources(netstorm PRIVATE client/ProductionColorMaps.cpp client/Production
 
 # 원본 생산 유지의 다리 공급·품질/재고와 비용 전환이다.
 target_sources(netstorm PRIVATE client/RawProductionMaintenance.cpp client/RawProductionMaintenance.h)
+
+# 사제 제단 자격/희생 wrapper의 실제 요청 몸체다.
+target_sources(netstorm PRIVATE o/RawPriestSacrificeRequest.cpp o/RawPriestSacrificeRequest.h)

@@ -81,6 +81,8 @@
 #include "o/RawAiDamage.h"
 #include "o/RawPriestLookup.h"
 #include "o/RawRunePostPop.h"
+#include "o/RawDaisRegular.h"
+#include "o/RawPriestSacrificeRequest.h"
 #include "o/RawVortexPreDestroy.h"
 #include "o/RawBuriedPostPop.h"
 #include "o/RawBuriedRegular.h"
@@ -253,6 +255,15 @@ struct RawCampaignSession::Impl {
     AssetPostPopState assetState; // 실제 신전/거주 구역/간헐천/아웃포스트 목록이다.
     RawPriestWorldState priestState; // 실제 사제/Carrier/보호막 장기 전역이다.
     RunePostPopState runeState; // PATCH005412e8/ec/f0의 현재Altar164/Dais165/Rune166이며 후속 실제 의식도 같은 저장소를 사용한다.
+    TempleRitualState ritualState; // 같은 현재 권한/사제/룬 타입의 의식 상태다.
+    std::unique_ptr<RawContainedLookup> ritualLookup; // 의식과 내용물 제거가 같은 실제 종속 체인을 읽는다.
+    std::unique_ptr<RawPriestRitualActions> ritualActions; // 같은 사제 K..P 프레임/604 예약이다.
+    std::unique_ptr<RawTempleRitual> templeRitual; // 같은 SHP/지면/생성/Host의 의식 단계 몸체다.
+    std::unique_ptr<RawRunePostPop> runePostPop; // 같은 실제 룬 건설/304 후처리다.
+    std::unique_ptr<DaisRegularState> daisState; // 현재 원본 상태 참조와 방향별 동맹이다.
+    std::unique_ptr<RawDaisRegular> daisRegular; // 기존 원본 자격/의식 이동/단계 진행이다.
+    std::unique_ptr<RawPriestSacrificeRequest> sacrificeRequest; // 사용자 입력과 서버40h가 공유하는 wrapper다.
+    std::unique_ptr<RegularProcess> pendingRitualRegular; // 실제 확보 한 번을 예약/생성/부착까지 유지한다.
     PlayerWorldState playerState; // 현재 battleOwner와 templateOwner는 별도 상태다.
     FortObjectLoadState objectState; // 저장객체의 실제 미션/로딩 상태다.
     CampaignWorldGlobals globals; // 실제 로그인과 missionPost의 장기 전역이다.
@@ -910,6 +921,7 @@ struct RawCampaignSession::Impl {
         };
         buriedRegular=std::make_unique<RawBuriedRegular>(core.pool,core.frames,core.frame,random);
         auto actualRegular=hits->Handler(combat->Handler(assetBindings->Handler(buriedRegular->Handler(priests->RegularHandler([this](Sid sid,std::uint32_t event,std::uint32_t count,float payload) {
+            if (daisRegular && daisRegular->Handles(sid)) { PrepareRitual();return daisRegular->Handle(sid,event,count,payload); }
             if (playerRegular->Handles(sid)) return playerRegular->Handle(sid,event,count,payload);
             if (manaRegular && manaRegular->Handles(sid)) return manaRegular->Run(sid,event,count);
             if (nuggetRegular && nuggetRegular->Handles(sid)) return nuggetRegular->Handle(sid,event,count,payload);
@@ -1877,7 +1889,8 @@ struct RawCampaignSession::Impl {
         effects.path.arrivalBlocked=[this](Sid,RawPathPoint point,std::uint32_t type,std::uint32_t owner) { PrepareBuilding(core.processState.now);static_cast<void>(buildingEffects->Displace(point.x,point.y,type,owner)); };
         effects.path.constructionArrival=[this](Sid sid,std::uint32_t,std::uint32_t) { const auto type=core.pool.Slot(sid)[10];if (type==134) return buildArrival->Arrive(sid);if (type==105) return manaArrival->Arrive(sid);throw std::logic_error("실제 건설 도착 타입 오류"); };
         if (!effects.cleanup.reserveShared) effects.cleanup.reserveShared=[] { return true; };
-        FillMissing(effects.cleanup.ritual);FillMissing(effects.cleanup.refund);
+        effects.cleanup.ritual=[this](Sid dais,Sid priest,std::uint32_t mode) { if (!templeRitual) throw std::logic_error("의식 설치 전 Path 정리");PrepareRitual();templeRitual->Ritual(dais,priest,mode); };
+        FillMissing(effects.cleanup.refund);
 
         effects.carrier.genusAt=[this](float x,float y,std::uint32_t genus) {
             RawSquidFinder finder(core.pool,core.hash,core.types);
@@ -1988,6 +2001,7 @@ struct RawCampaignSession::Impl {
         };
         FillMissing(effects.path.stepSound);
         motion=std::make_unique<RawCampaignMotionBindings>(world,*priests,*islands,*contained,*anchor,hp,metadata.frames,motionState,start,process,std::move(effects));
+        ConnectRitual();
         CarrierMoveHooks move; //실제40h는 현재 선택/동일 Graph/Host/경로 시작을 공유한다.
         move.selected=[this] { if (!services.deletion.selected) throw std::logic_error("이동 요청의 현재 선택 조회 미연결");return services.deletion.selected(); };
         move.select=[this](std::uint32_t sid,std::uint32_t force,std::uint32_t activate) { auto link=activeSelection.lock();if (!link || !link->selection) throw std::logic_error("이동 요청의 현재 선택 수명 미연결");static_cast<void>(link->selection->Select(sid,force,activate)); };
@@ -2006,7 +2020,7 @@ struct RawCampaignSession::Impl {
             return Sid{};
         };
         move.geyser=[this](Sid parent,Sid geyser)->RawPathRuntime* { const auto result=carrierTarget->GoGeyser(parent,geyser);return result ? &reinterpret_cast<RawPathProcess*>(result)->Runtime() : nullptr; };
-        move.altarAllowed=SessionMissing<bool,Sid,Sid>();move.sacrifice=SessionMissing<void,Sid,Sid>(); //실제 의식 조건/시작 미복원을 성공으로 대체하지 않는다.
+        move.altarAllowed=[this](Sid dais,Sid priest) { return sacrificeRequest->Allowed(dais,priest); };move.sacrifice=[this](Sid priest,Sid dais) { sacrificeRequest->Begin(priest,dais); }; // 같은 실제 자격/내용물 제거/의식 이동/음악 순서다.
         move.start=[startMove](RawPathStartRequest request)->RawPathRuntime* { const auto result=startMove(request);return result ? &reinterpret_cast<RawPathProcess*>(result)->Runtime() : nullptr; };
         carrierMove=std::make_unique<RawCarrierMove>(core.pool,core.types,core.ownerMode.fort,carrierMoveState,std::move(move));
         FillMissing(services.pathPacket);
@@ -2016,6 +2030,7 @@ struct RawCampaignSession::Impl {
         });
         core.processes.SetFormTransmit(AviaryTransmission(assetBindings->Transmission(std::move(pathTx))));
     }
+    #include "client/RawCampaignRitual.inc"
     // 외부 콜백이 참조하는 모듈을 해제하기 전에 현재 Kernel을 비운다.
     ~Impl() {
         // 다른 AI의 손상/외부 예외가 나더라도 나머지 실제 brain과 Kernel 정리를 계속하고 오류를 남긴다.
@@ -2032,6 +2047,7 @@ struct RawCampaignSession::Impl {
         core.postPop.SetPlayerPostPop(nullptr);
         core.postPop.SetBuriedPostPop(nullptr); // 장기 모듈 해제 뒤 파생 포인터를 남기지 않는다.
         core.postPop.SetFlyerPostPop(nullptr); // 비행 장기 몸체 해제 뒤 공통 분배에 포인터를 남기지 않는다.
+        core.postPop.SetRunePostPop(nullptr); // 같은 Rune 몸체를 해제하기 전에 공통 분배의 참조를 정리한다.
         core.postPop.SetBalloonPostPop(nullptr); //벌룬 그림자 몸체 해제 뒤 공통 분배에 포인터를 남기지 않는다.
     }
 

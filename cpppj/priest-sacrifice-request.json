@@ -1,0 +1,22 @@
+{
+  "edition": "10.78",
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "lastDecompileDate": "2026-10-16",
+  "uniqueInputs": 128,
+  "normalReturns": 256,
+  "instructions": 4616,
+  "entries": {
+    "4495584": 96,
+    "4804272": 160
+  },
+  "gameRuns": 0,
+  "scope": "4498e0/494eb0 wrapper만.449710/내용물4b26f0/449900/음악469db0은 호출 인자·순서 관측 경계이며 기존 Dais/Path/음악 몸체 관측과 중복 합산하지 않는다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_priest_sacrifice_request.py": "7560b9cbccf08755f388a561b778d59f1257c27b4d07816dcbdfaf51b7b4f7a1",
+    "cpppj/tests/fixtures/priest-sacrifice-request-x86.tsv": "b0ee93daba823701bab57a5a74314251436be61ddfc7e080b02a6bc90146856f"
+  }
+}

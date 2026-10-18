@@ -22,7 +22,7 @@ std::unique_ptr<RawCarrierInput> RawCampaignSession::MakeCarrierInput(CarrierInp
     hooks.validGeyser=[s](Sid sid,Sid target) { return s->motion->CarrierArrival().ValidGeyser(sid,target); };
     hooks.returnPlace=[s](RawPathPoint p) { return s->motion->Cleanup().ReturnPlaceAt(p.x,p.y,0); };
     hooks.daisAt=[s](RawPathPoint p) { return s->damageablePost->GenusAt(p.x,p.y,0x400000); };
-    hooks.altarAllowed=SessionMissing<bool,Sid,Sid>();
+    hooks.altarAllowed=[s](Sid dais,Sid priest) { return s->sacrificeRequest->Allowed(dais,priest); }; // 실제 서버40h와 같은 현재 Dais 자격 판정이다.
     hooks.localOwner=[s] { return s->playerState.battleOwner; };hooks.checking=[s] { return s->gunState.checking; };
     hooks.earlySacrifice=[s] { if (s->globals.missionPost) return false;throw std::logic_error("일반전투 희생 제한시간 부모 미연결"); };
     hooks.select=[s](std::uint32_t sid,std::uint32_t force,std::uint32_t activate) { auto link=s->activeSelection.lock();if (!link || !link->selection) throw std::logic_error("운반체 입력의 현재 선택 수명 미연결");static_cast<void>(link->selection->Select(sid,force,activate)); };

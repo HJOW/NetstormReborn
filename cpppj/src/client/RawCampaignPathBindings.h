@@ -55,6 +55,7 @@ public:
     o::ProcessFormTransmission Transmission(o::RawPathDataHeader& header,std::span<std::uint8_t> buffer,
         std::function<void(std::int32_t)> transport,o::ProcessFormTransmission other={}) const;
     // 외부 도착/프로토콜 모듈이 다른 월드 경로를 연결하지 않게 실제 풀을 제공한다.
+    o::RawPathStart& Starter() const; // 의식 이동도 같은 원본 Start/BFS/Prepare/Host를 직접 재사용한다.
     const o::SidPool& Pool() const;
 private:
     // 실제 현재 parent의 raw 타입/가상 표와 살아 있는 자산 상태를 검사한다.

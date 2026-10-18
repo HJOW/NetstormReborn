@@ -59,9 +59,9 @@
   "currentSources": {
     "cpppj/src/client/RawCampaignHitBindings.cpp": "fe6c9e3d7ed0e3106cc9773ef1e852985eb0805c38eab283c63c8d82c0f89b83",
     "cpppj/src/client/RawCampaignHitBindings.h": "143b27b14df75669a0a79805c801e51f0aa7d7de90082d881094bb3fdbf1349d",
-    "cpppj/src/client/RawCampaignSession.cpp": "25d9c5d9a8a003b51b49e145eb1c53e0db604574a77426be28f5bbf970d138eb",
+    "cpppj/src/client/RawCampaignSession.cpp": "d7d6aff8ee655c2506eb38f8d0d1a6fd68c4e854ba5fbf9f6371be7cb4b719ce",
     "cpppj/src/o/CMakeLists.txt": "531d0fd71823841eb97eebb5046f878c52fa44d82142af3fdff9c0fb68c2497a",
-    "cpppj/tests/CMakeLists.txt": "f8e834bc78cfbbe87ba57d7a7600fd41537ab8d0be1274a50d16a907cf259173",
+    "cpppj/tests/CMakeLists.txt": "21bd45a29dd3e12e823655856464233c4a766a0eb28b6b1aae96012c76caf2b8",
     "tools/decomp_special_damage.py": "1c92b56b1c000238486f67c6b8ea31eed677e8ce598305d528a24a65cd6c0628",
     "cpppj/special-damage.json": "803e9476ba5812bd1620c43c64e90429d9486cc8a575b883a302a3ac8f2500f0",
     "cpppj/tests/fixtures/special-damage-x86.tsv": "039030961fa2a1d086b43799c79faa5d2801044f421c77ed0a8b70417443d2a5",
@@ -455,6 +455,25 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "5c981db7bbf32f6aadd3dcf4caf1bb46dfdbc34220effa4ab82bcfd40e0ed711",
           "current": "f8e834bc78cfbbe87ba57d7a7600fd41537ab8d0be1274a50d16a907cf259173"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 194,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "25d9c5d9a8a003b51b49e145eb1c53e0db604574a77426be28f5bbf970d138eb",
+          "current": "d7d6aff8ee655c2506eb38f8d0d1a6fd68c4e854ba5fbf9f6371be7cb4b719ce"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "f8e834bc78cfbbe87ba57d7a7600fd41537ab8d0be1274a50d16a907cf259173",
+          "current": "21bd45a29dd3e12e823655856464233c4a766a0eb28b6b1aae96012c76caf2b8"
         }
       ]
     }

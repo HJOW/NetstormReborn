@@ -110,10 +110,10 @@
     "cpppj/squidhitpoints-lineage.json": "b45bab9e3f4177fd8d0d7f8b1883024594e79550250b657ffc37e8997a6e74ba",
     "cpppj/src/o/RawSquidHitPoints.cpp": "da3ebda20f092efd23939e17b75c09c21c5608921888e8b99844d8635d3375f5",
     "cpppj/src/o/RawSquidHitPoints.h": "b2ede7095eb575c39e7e92ba6ca3cca9d7b3ed409baf61bf18a1caa066837b8c",
-    "cpppj/src/o/RawTempleRitual.cpp": "fee9b37873c162ea621595d819b05db4bdea5c28fb62a3b44908aca064530595",
-    "cpppj/src/o/RawTempleRitual.h": "d1f5ab197e92539a0c4904a5f73c0aba60392c587e20cc9a6fbfc54a881acf73",
+    "cpppj/src/o/RawTempleRitual.cpp": "4da7a7c1516a35016897471780d92be973f3d238dfd4bf5c36548a9fe9b803bb",
+    "cpppj/src/o/RawTempleRitual.h": "e5b853c7bfd9ca70c18c97d7b3f3a6e14b6e6d0ca89a6e5269e5117838937741",
     "cpppj/tests/fixtures/templeritual-x86.tsv": "6ad3c0abef4a2af956e949ae54e7005d89811c0287bd9d5328e94efa3a98be65",
-    "cpppj/tests/TempleRitualTests.cpp": "93cb36182f961449ba897b8fd87ec85cf745e04d33941f8cbbda8cf4f059e1ca",
+    "cpppj/tests/TempleRitualTests.cpp": "c7a397e4573f5776fb65067c5b8acfb5074d30ca30f43db7399c7416ed59fe46",
     "extracted/pathcleanup/originalCD/creation.c": "04f9971bb13ea3d8bcbdba18a473cdd9222188a083fdb4aba02745f30aaaa769",
     "extracted/pathcleanup/originalCD/functions.tsv": "d033d69ba177638816190b60bbaeb57b327a49e8fad001a0c2899ad4d05d9c92",
     "extracted/pathcleanup/originals/creation.c": "3d28d0a1811b6f925b6ca249ee98dd9283e16c1f633acc36a4da0ee2fa485804",
@@ -149,6 +149,31 @@
           "path": "cpppj/squidhitpoints-lineage.json",
           "previous": "053e49a89779946a8f0b3a31ec743824f2b927b6e81f2bee87622ea71e3b02be",
           "current": "b45bab9e3f4177fd8d0d7f8b1883024594e79550250b657ffc37e8997a6e74ba"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 194,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawTempleRitual.cpp",
+          "previous": "fee9b37873c162ea621595d819b05db4bdea5c28fb62a3b44908aca064530595",
+          "current": "4da7a7c1516a35016897471780d92be973f3d238dfd4bf5c36548a9fe9b803bb"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawTempleRitual.h",
+          "previous": "d1f5ab197e92539a0c4904a5f73c0aba60392c587e20cc9a6fbfc54a881acf73",
+          "current": "e5b853c7bfd9ca70c18c97d7b3f3a6e14b6e6d0ca89a6e5269e5117838937741"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/tests/TempleRitualTests.cpp",
+          "previous": "93cb36182f961449ba897b8fd87ec85cf745e04d33941f8cbbda8cf4f059e1ca",
+          "current": "c7a397e4573f5776fb65067c5b8acfb5074d30ca30f43db7399c7416ed59fe46"
         }
       ]
     }

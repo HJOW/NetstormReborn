@@ -14,10 +14,10 @@
     "cpppj/src/o/RawBoardTarget.cpp": "0a113af217f40762da9a69f9d02dece3fa904e0da54ddf5aed746718b3bddf51",
     "cpppj/src/o/RawCarrierTarget.h": "49e6340d4b120f87894cd07126c94fbf212a5e4d477bd44bdff22190e86f793d",
     "cpppj/src/o/RawCarrierTarget.cpp": "82c9b3862969d5e664ed6acff2f63f97340898463c22347a667f278d9d519f08",
-    "cpppj/src/client/RawCampaignSession.h": "d5ed2ce459529e5760e3c3864182965fab4e8d7c303baf82c931a892da5f2f7c",
-    "cpppj/src/client/RawCampaignSession.cpp": "25d9c5d9a8a003b51b49e145eb1c53e0db604574a77426be28f5bbf970d138eb",
-    "cpppj/src/client/RawCampaignPathBindings.h": "6ac357c4b2724907eb183be465f5f031f7164c2fdbc474de308d12acf4edc329",
-    "cpppj/src/client/RawCampaignPathBindings.cpp": "0d36db062813bc9ea5b204fd06f1cf4bc0c43b6f71ede35aae851285fdbdcdb1",
+    "cpppj/src/client/RawCampaignSession.h": "a6d142e8d485ccf10ea834c59947a4606c5d0c033ef4b2ad00b09a0cc389a641",
+    "cpppj/src/client/RawCampaignSession.cpp": "d7d6aff8ee655c2506eb38f8d0d1a6fd68c4e854ba5fbf9f6371be7cb4b719ce",
+    "cpppj/src/client/RawCampaignPathBindings.h": "82d9565ece60f24300977681dffdaad57a660fdccca38b4db305d5a1d262b8b0",
+    "cpppj/src/client/RawCampaignPathBindings.cpp": "2fc59e6cd111db8c953e388d1856c8e6103a8b6852461c2d3df89ec84a4f4314",
     "cpppj/src/o/RawPathStart.h": "576188b61294a25b8abb6caa7bc129c56e21804a2fb79cf5de74cd25421a568f",
     "cpppj/src/o/RawPathStart.cpp": "9dbe404e4d377a362213cffd1da8a42b65816aaf54830fc5708379b9d528edab",
     "cpppj/src/o/RawSquidNeighbors.h": "edb19d4782b671d6be80c9f7690b9455d200ef7dbe2df51059d5ca0c4a66175c",
@@ -25,8 +25,8 @@
     "cpppj/src/o/RawCarrierArrival.cpp": "1e63d7f9cb0a18ddb4a10b7c642e54873e8f46ab98deec6d3f63b334199979df",
     "cpppj/tests/CarrierTargetTests.cpp": "7ca2aa993bae751e63e973190da5eefb9259d1cfb544899bb108e89d26912400",
     "cpppj/tests/CampaignObjectMenuTests.cpp": "fea9198ea2150c42bb523f7ac9298c2f819acd1fc9b9887b53020c206ad62563",
-    "cpppj/src/CMakeLists.txt": "945332cd1c5b131d7e35d0ae7fb15762597c41be26ffea267b18e8b3d048efd8",
-    "cpppj/tests/CMakeLists.txt": "f8e834bc78cfbbe87ba57d7a7600fd41537ab8d0be1274a50d16a907cf259173",
+    "cpppj/src/CMakeLists.txt": "db65c86795904ce8929fcd469008e42591ce86e539d2139aee9b53a588fdfa5f",
+    "cpppj/tests/CMakeLists.txt": "21bd45a29dd3e12e823655856464233c4a766a0eb28b6b1aae96012c76caf2b8",
     "tools/native_carrier_geometry.cpp": "c471a0ce9889c730bb1a3b6a4659fe0eb0fea2d854b7007524fb93cd56fa34e8",
     "tools/carrier-geometry-hardware/CMakeLists.txt": "918768180d59716d3c0d46ac8955edd89ce2963237dae7eff3435fbd0e0287a3",
     "tools/decomp_carrier_target.py": "5869d80a3bde70e576f055d8fa6336364fb217343ec5cf7984eb763d99fc718f",
@@ -1412,6 +1412,49 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "5c981db7bbf32f6aadd3dcf4caf1bb46dfdbc34220effa4ab82bcfd40e0ed711",
           "current": "f8e834bc78cfbbe87ba57d7a7600fd41537ab8d0be1274a50d16a907cf259173"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 194,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "d5ed2ce459529e5760e3c3864182965fab4e8d7c303baf82c931a892da5f2f7c",
+          "current": "a6d142e8d485ccf10ea834c59947a4606c5d0c033ef4b2ad00b09a0cc389a641"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "25d9c5d9a8a003b51b49e145eb1c53e0db604574a77426be28f5bbf970d138eb",
+          "current": "d7d6aff8ee655c2506eb38f8d0d1a6fd68c4e854ba5fbf9f6371be7cb4b719ce"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignPathBindings.h",
+          "previous": "6ac357c4b2724907eb183be465f5f031f7164c2fdbc474de308d12acf4edc329",
+          "current": "82d9565ece60f24300977681dffdaad57a660fdccca38b4db305d5a1d262b8b0"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignPathBindings.cpp",
+          "previous": "0d36db062813bc9ea5b204fd06f1cf4bc0c43b6f71ede35aae851285fdbdcdb1",
+          "current": "2fc59e6cd111db8c953e388d1856c8e6103a8b6852461c2d3df89ec84a4f4314"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "945332cd1c5b131d7e35d0ae7fb15762597c41be26ffea267b18e8b3d048efd8",
+          "current": "db65c86795904ce8929fcd469008e42591ce86e539d2139aee9b53a588fdfa5f"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "f8e834bc78cfbbe87ba57d7a7600fd41537ab8d0be1274a50d16a907cf259173",
+          "current": "21bd45a29dd3e12e823655856464233c4a766a0eb28b6b1aae96012c76caf2b8"
         }
       ]
     }

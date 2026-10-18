@@ -16,7 +16,7 @@ void ProgressAssets(std::vector<RiftTypeRecord>& types,std::vector<RiftTypeFrame
     for (const auto& [type,pattern]:patterns) {
         types[type].footX=types[type].footY=type==165 ? 3 : 1;std::vector<FrameCode> codes;
         // 원본 입력의 number/variant와 signed short 핫스폿을 준비한다.
-        for (std::size_t index=0;index<pattern.size();++index) { codes.push_back({static_cast<std::uint8_t>(pattern[index]),'P',static_cast<std::uint8_t>(index+1),0});shapes[type].frames.push_back({16,11,static_cast<std::int16_t>((index%5)*16),static_cast<std::int16_t>((index%5)*11),1,1}); }
+        for (std::size_t index=0;index<pattern.size();++index) { codes.push_back({static_cast<std::uint8_t>(pattern[index]),'P',static_cast<std::uint8_t>(index+1),0});shapes[type].frames.push_back({16,11,static_cast<std::int16_t>((index%5)*16),static_cast<std::int16_t>((index%5)*11),1,1,0,0,static_cast<std::int16_t>((index%5)*16),static_cast<std::int16_t>((index%5)*11)}); }
         frames[type]=RiftTypeFrames(std::move(codes));shapes[type].loaded=true;shapes[type].frameCount=static_cast<int>(pattern.size());
     }
     // Temple helper의 세 자산 HP 입력을 앞668 관찰과 동일하게 공급한다.

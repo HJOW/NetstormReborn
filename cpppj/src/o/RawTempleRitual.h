@@ -65,7 +65,7 @@ private:
     // 원본 float 좌표 두 개와 현재 owner BYTE를 별도 raw 조회로 읽는다.
     TempleRitualPoint Position(Sid sid) const;
     std::uint32_t Owner(Sid sid) const; // 원본 effect 뒤에도 현재 owner를 읽도록 값을 보관하지 않는다.
-    // 현재 타입의SHP배열에서 원본 signed short 핫스폿을 읽고 손상 범위는 사전에 거부한다.
+    // 현재 타입의SHP 헤더+20/+22인 signed short 의식 목표점을 읽는다. 표시 기준점과 구별한다.
     std::array<std::int16_t,2> Hotspot(std::uint32_t type,std::int32_t frame) const;
     // 각 축의 정수픽셀/현재scale 덧셈 뒤단정도로 저장한다.
     TempleRitualPoint AddPixels(TempleRitualPoint point,std::int32_t x,std::int32_t y) const;

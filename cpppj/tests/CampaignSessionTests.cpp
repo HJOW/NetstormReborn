@@ -21,6 +21,7 @@
 #include "o/RawCarrierSteal.h"
 #include "o/RawCarrierPickup.h"
 #include "o/RawCarrierMove.h"
+#include "o/RawTempleRitual.h"
 #include "o/RawGemReward.h"
 #include "zacket/LocalMissionTransport.h"
 #include "client/RawShapeToBuffer.h"
@@ -2163,4 +2164,59 @@ TEST_CASE(CampaignForwardBattle_ActualSavedStoneExplosionLifetime) {
         session.RunFrame({frame*.025,100+frame*.025,.025,frame},false);renderer.SetScene(session.ParticleSprites({0,0,1024,768}));std::vector<std::uint8_t> pixels(1024*768,255);renderer.Draw(pixels,1024,255);renderer.Present([](ScreenRect) {});drawn+=static_cast<std::size_t>(std::count_if(pixels.begin(),pixels.end(),[](auto color) { return color!=255; }));
     }
     CHECK(drawn>0 && !session.Particles().Rendering().Lookup(token) && !core.processes.FromForm(form) && (core.pool.Slot(dummy)[11]&1U));CHECK(!core.destroy.PreDepth() && !core.destroy.PostDepth() && !core.bookkeeping.depth);session.SetParticleView({0,0,0,0,1024,768},{});std::cout<<"실제 저장 스톤 타워 폭발: 전체 입자"<<drawn<<"픽셀·자연 소진/의존 더미 정리 통과\n";
+}
+
+// 실제 자산의 명시 Dais/제단/포획 Form 입력 뒤 UI 자격과18BYTE→서버40h→같은54 경로를 확인한다. 자연 포획/최초Pop/희생 완료 검사는 아니다.
+TEST_CASE(CampaignSacrifice_ActualUiAndLocalPacketToRitualPath) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();netstorm::zacket::LocalMissionTransport* wire{};std::vector<std::string> music;std::vector<std::uint32_t> income;std::size_t incomeSounds{}; // 실제 자산과 명시 장치/전송 관찰이다.
+    services.deletion.selected=[] { return Sid{}; };services.carrierRequest=[&](std::int32_t owner,std::span<const std::uint8_t> packet) { CHECK(wire);wire->Send(owner,packet); };services.requestMusic=[&](std::string_view name) { music.emplace_back(name); };
+    services.contentLifetime.localNotice=[&](std::uint32_t command) { income.push_back(command); };services.contentLifetime.sound=[&](float x,float y) { CHECK(std::isfinite(x) && std::isfinite(y));++incomeSounds; }; // 실제 클라이언트의 입력 큐/장치에 해당하는 명시 관찰이다. 지갑/SP는 실제 Reward를 사용한다.
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));session.Load();auto core=session.Core();SessionPickupWire link(session);wire=&link.transport;
+    const Sid priest{static_cast<std::uint16_t>(session.FindPriestParticipation(1))};CHECK(priest.value);if (!priest.value) return;const auto priestRaw=core.pool.Slot(priest);const auto& daisHotspot=core.shapes[165].frames.at(3);const auto& runeHotspot=core.shapes[166].frames.at(0); // 실제0단계 좌표를 결정하는 두 SHP 헤더다.
+    const auto graphAt=[&](float x,float y) { const auto sid=core.hash.Entries(0)[static_cast<std::size_t>(y)*256+static_cast<std::size_t>(x)];return sid ? std::uint32_t(core.pool.Slot(Sid{sid})[30]) : 254U; }; // 현재 원본 surface/Graph 입력만 읽는다.
+    const auto sourceGraph=graphAt(std::bit_cast<float>(Get(priestRaw,14)),std::bit_cast<float>(Get(priestRaw,18)));RawPathPoint point{};double nearest=1e9; // 같은 현재 Graph에서 장소와0단계 목표점이 모두 있는 입력을 고른다.
+    for (int y=90;y<120;++y) { // 원래 사제의 시작 섬 주변을 검사한다.
+        for (int x=85;x<120;++x) { // 길/배치 성공을 주입하지 않고 실제 지면/Graph로 입력 위치만 고른다.
+            const float tx=static_cast<float>(double(x)+double(daisHotspot.muzzleX)/16.0+double(runeHotspot.muzzleX)/16.0),ty=static_cast<float>(double(y)+double(daisHotspot.muzzleY)/11.0+double(runeHotspot.muzzleY)/11.0);const auto cell=static_cast<std::size_t>(ty)*256+static_cast<std::size_t>(tx); // 실제 단계0 SHP 목표점의 입력 기하다.
+            if (graphAt(float(x),float(y))!=sourceGraph || graphAt(tx,ty)!=sourceGraph || !(core.spots[y*256+x]&6U) || (core.spots[y*256+x]&8U) || !(core.spots[cell]&6U) || (core.spots[cell]&8U)) continue;
+            const double dx=double(tx)-std::bit_cast<float>(Get(priestRaw,14)),dy=double(ty)-std::bit_cast<float>(Get(priestRaw,18)),distance=dx*dx+dy*dy;if (distance<1 || distance>=nearest) continue;point={float(x),float(y)};nearest=distance;
+        }
+    }
+    CHECK(nearest<1e9);if (nearest>=1e9) return;const auto sp=session.Sp(1); // 현재 결과 HP/자원/길은 바꾸지 않는다.
+    std::cout<<"의식 입력: 사제"<<std::bit_cast<float>(Get(priestRaw,14))<<","<<std::bit_cast<float>(Get(priestRaw,18))<<"/Dais"<<point.x<<","<<point.y<<"/Graph"<<sourceGraph<<"\n";
+    const auto input=[&](std::uint32_t type,std::int32_t frame) { // 최초Pop 미연결과 구별하는 합성 현재 raw/해시 입력이다. 원본 자산 표는 수정하지 않는다.
+        const auto sid=core.factory.Create(type,0);auto raw=core.pool.AllocatedBytes(sid);raw[11]&=static_cast<std::uint8_t>(~4U);raw[34]=1;Put(raw,14,std::bit_cast<std::uint32_t>(point.x));Put(raw,18,std::bit_cast<std::uint32_t>(point.y));Put(raw,36,static_cast<std::uint32_t>(frame));const auto& header=core.shapes[type].frames.at(static_cast<std::size_t>(frame));const auto level=SquidHash::ObjectLevel(core.types[type].flags2,header.cellWidth,header.cellHeight);raw[33]=static_cast<std::uint8_t>(level);auto& head=core.hash.Bucket(level,point.x,point.y);Put(raw,4,head,2);head=sid.value;return sid;
+    };
+    std::cout<<"제단 실제 프레임: 개수"<<core.frames[164].Codes().size()<<" P"<<core.frames[164].Run('P').first<<" K"<<core.frames[164].Run('K').first<<" L"<<core.frames[164].Run('L').first<<"\n"; // 실제 자산의 입력 프레임 구성 진단이다.
+    const auto dais=input(165,3),altar=input(164,0);const auto captured=core.factory.CreateContained(0);auto capturedRaw=core.pool.AllocatedBytes(captured);capturedRaw[11]=0x10;Put(capturedRaw,12,2,2);Put(capturedRaw,16,dais.value,2);Put(capturedRaw,18,158,2);Put(capturedRaw,20,32,2);Put(core.pool.AllocatedBytes(dais),6,captured.value,2); // 포획 내용물의 원래owner2/kind158/mask32 명시 입력이다.
+    auto ui=session.MakeCarrierInput({});auto target=point;CHECK(ui->Evaluate(priest,target)==0x11 && target.x==point.x && target.y==point.y);
+    Put(capturedRaw,20,0,2);target=point;CHECK(ui->Evaluate(priest,target)!=0x11);Put(capturedRaw,20,32,2); // 포획 대상 없이는 의식 자격이 나지 않는다.
+    const auto ready=Get(core.pool.Slot(altar),36);Put(core.pool.AllocatedBytes(altar),36,static_cast<std::uint32_t>(core.frames[164].Run('L').first));target=point;CHECK(ui->Evaluate(priest,target)!=0x11);Put(core.pool.AllocatedBytes(altar),36,ready); // 실제 존재하는L 구간의 제단도 거부한다. K 구간은 이 실제 자산에 없다.
+    target=point;CHECK(ui->Evaluate(priest,target)==0x11);const auto nugget=session.CreateContained(priest,154,0,32,0x10,0);CHECK(nugget.value);session.RequestCarrierMove(priest,target,1);CHECK(link.recorded.empty() && music.empty() && !FindAttachedProcess(core.pool,priest,54).value);link.transport.Flush();CHECK(link.transport.Poll()==1 && link.recorded.size()==1);
+    if (!link.recorded.empty()) { const auto& packet=link.recorded.front();CHECK(packet.size()==18 && packet[1]==0x40 && Get(packet,14)==1); }
+    const auto form=FindAttachedProcess(core.pool,priest,54);auto* path=dynamic_cast<RawPathProcess*>(core.processes.FromForm(form));CHECK(path);if (path) { CHECK(path->Runtime().MoveAwayDepth()==1 && Get(path->Runtime().Bytes(),0x186e4)==dais.value && Get(path->Runtime().Bytes(),0x186e8)==0);CHECK(path->Runtime().Count()>0);std::cout<<"실제 희생 요청: UI17/40h/54 경로 깊이1·목표Dais"<<dais.value<<"/"<<path->Runtime().Count()<<"점\n"; }
+    CHECK((core.pool.Slot(nugget)[11]&3U)!=0); // wrapper가 같은 실제 내용물 조회/삭제로 너겟 Form을 제거한다.
+    if (path) { // 결과 좌표를 쓰지 않고 같은 Kernel을25ms씩 진행해 도착/PathCleanup→의식을 실행한다.
+        const auto began=core.processState.now;std::uint64_t steps{}; // 시작 명령의 현재 시각과 실제 실행 횟수다.
+        for (std::uint64_t step=1;step<=4000 && core.processes.FromForm(form)==path;++step) { // 예상 끝 시각으로 한 번 건너뛰면 아직 걷기/회전이 끝나지 않을 수 있다.
+            const auto now=began+double(step)*.025;session.RunFrame({now,100+now,.025,step},false);steps=step;
+        }
+        CHECK(!core.processes.FromForm(form));CHECK(core.processes.FindEvent(dais,0x307));CHECK(Get(core.pool.Slot(priest),36)==static_cast<std::uint32_t>(core.frames[158].Run('K').first));std::cout<<"명시 제단 입력 뒤 도착 관측: "<<steps<<"프레임/사제frame"<<Get(core.pool.Slot(priest),36)<<"/307:"<<(core.processes.FindEvent(dais,0x307)!=nullptr)<<"/DaisExtra"<<std::uint32_t(core.pool.Slot(dais)[40])<<"/DaisHash"<<std::uint32_t(core.pool.Slot(dais)[33])<<"/사제위치"<<std::bit_cast<float>(Get(core.pool.Slot(priest),14))<<","<<std::bit_cast<float>(Get(core.pool.Slot(priest),18))<<"\n";
+    }
+    CHECK(music==std::vector<std::string>{"sacrifice.mus"} && session.Sp(1)==sp+core.types[154].cost && income==std::vector<std::uint32_t>{0x020000b4} && incomeSounds==1);CHECK((core.pool.Slot(priest)[11]&3U)==0 && !link.transport.Server().depth);
+}
+
+// 실제 보호 SHP의 표시 기준점과 다른 의식 목표점으로 독립 원본30입력/Anchor·Point120반환을 대조한다.
+TEST_CASE(CampaignSacrifice_Native30ActualShapeOffsets) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",external.Services());session.Load();auto core=session.Core();const auto dais=core.factory.Create(165,0);auto raw=core.pool.AllocatedBytes(dais);raw[34]=1;Put(raw,36,3); // 원본 관측과 같은 명시 count1/frame3 부모 입력이다.
+    PriestRitualActionHooks action; // 이 좌표 조회에서 프레임/생성/장치 요청은 허용하지 않는다.
+    action.setFrame=[](Sid,std::int32_t,std::uint32_t) { throw std::logic_error("좌표 검사에서 의식 동작 요청"); };action.reserveShared=[]()->bool { throw std::logic_error("좌표 검사에서 예약 요청"); };action.addShared=[](Sid,std::uint32_t,float) { throw std::logic_error("좌표 검사에서 부착 요청"); };RawPriestRitualActions actions(core.pool,core.frames,std::move(action));
+    TempleRitualHooks hooks; // 순수 Anchor/Point 실행 이외 하위 효과가 호출되면 실패한다.
+    hooks.create=[](std::uint32_t,std::uint32_t)->Sid { throw std::logic_error("좌표 검사에서 생성 요청"); };hooks.setHitPoints=[](Sid,std::int32_t) { throw std::logic_error("좌표 검사에서 HP 요청"); };hooks.setOwner=[](Sid,std::uint32_t) { throw std::logic_error("좌표 검사에서 owner 요청"); };hooks.pop=[](Sid,float,float,std::uint32_t) { throw std::logic_error("좌표 검사에서 Pop 요청"); };hooks.playAt=[](float,float,std::string_view,std::uint32_t) { throw std::logic_error("좌표 검사에서 장치 요청"); };hooks.reserveShared=[]()->bool { throw std::logic_error("좌표 검사에서 예약 요청"); };hooks.addShared=[](Sid,std::uint32_t,float) { throw std::logic_error("좌표 검사에서 부착 요청"); };
+    TempleRitualState state;std::vector<std::uint8_t> spots(65536);RawTempleRitual ritual(core.pool,core.hash,core.types,core.frames,core.shapes,spots,core.neighbors,session.HitPoints(),actions,state,std::move(hooks));std::size_t count{}; // 실제 원본 헤더/TYPE와 명시 균일 지면 입력을 사용한다.
+    const auto bytes=[](TempleRitualPoint point) { std::array<std::uint8_t,8> result{};Put(result,0,std::bit_cast<std::uint32_t>(point.x));Put(result,4,std::bit_cast<std::uint32_t>(point.y));return netstorm::test::rawscene::Hex(result); }; // x87의 실제 단정도 저장 바이트를 비교한다.
+    for (const auto& row:netstorm::test::rawscene::LoadFixture(NETSTORM_RITUAL_SHAPE_OFFSETS_FIXTURE).rows) { // 기대 좌표는 원본 fixture에서만 읽는다.
+        CHECK(row.size()==6);if (row.size()!=6) continue;const auto stage=netstorm::test::rawscene::Number(row[0]);std::fill(spots.begin(),spots.end(),static_cast<std::uint8_t>(netstorm::test::rawscene::Number(row[1])));Put(raw,14,netstorm::test::rawscene::Number(row[2]));Put(raw,18,netstorm::test::rawscene::Number(row[3]));CHECK(bytes(ritual.StageAnchor(dais,stage))==row[4]);CHECK(bytes(ritual.StagePoint(dais,stage))==row[5]);++count;
+    }
+    CHECK(count==30);CHECK(core.shapes[165].frames[3].hotspotX==107 && core.shapes[165].frames[3].muzzleX==-89);std::cout<<"실제 의식 헤더30입력/Anchor·Point 전수 일치: 표시107,96과 목표-89,-46 구별\n";
 }

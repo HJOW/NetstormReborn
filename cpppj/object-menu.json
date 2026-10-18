@@ -65,7 +65,7 @@
       "cpppj/tests/ObjectMenuTests.cpp": "7485055d8b76db99eb8e2fc117f9d89eb4892c2620112c1afbb1ed267710aa37",
       "cpppj/tests/RawMenuControlsTests.cpp": "5ce029d5ba102c1784696d8df58e3f3691b6bdf01671b013793a6e504fbfc4f4",
       "cpppj/src/client/CMakeLists.txt": "201936b3366bc9a17cff0d46864fd0edfdabc721f115500a3e53b74dccfcd37f",
-      "cpppj/tests/CMakeLists.txt": "f8e834bc78cfbbe87ba57d7a7600fd41537ab8d0be1274a50d16a907cf259173"
+      "cpppj/tests/CMakeLists.txt": "21bd45a29dd3e12e823655856464233c4a766a0eb28b6b1aae96012c76caf2b8"
     }
   },
   "integration_updates": [
@@ -1107,6 +1107,19 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "5c981db7bbf32f6aadd3dcf4caf1bb46dfdbc34220effa4ab82bcfd40e0ed711",
           "current": "f8e834bc78cfbbe87ba57d7a7600fd41537ab8d0be1274a50d16a907cf259173"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 194,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/product_validation/sha256",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "f8e834bc78cfbbe87ba57d7a7600fd41537ab8d0be1274a50d16a907cf259173",
+          "current": "21bd45a29dd3e12e823655856464233c4a766a0eb28b6b1aae96012c76caf2b8"
         }
       ]
     }

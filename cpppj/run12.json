@@ -128,7 +128,7 @@
     "tools/analyze_campaign_runtime4.py": "f988e5162560d05ab9b7c7bc6c7c6b06db52775067f77d84b9cc9997021d1941",
     "tools/analyze_campaign_runtime6.py": "6446b0f2f20b4c26a74301cbb62f933cb7110f64692aea4e0cb4bf0ba19dcfce",
     ".gitattributes": "a1a1f73304a7b518a4225b2cd98bd8c312df6f3bf13bdd9bb157d2c82a5d2c7d",
-    "cpppj/daislifecycle-current.json": "ebddbaf5d99a5ef65d2fba8140316571cdec4e3f8de7b2dcd4b131fa4b4ffb29",
+    "cpppj/daislifecycle-current.json": "542801f0fc802480520ef1347d1e89d984e112f565eea18b9252748dac538348",
     "cpppj/tests/fixtures/daislifecycle-current-x86.tsv": "916cbbdf0648018009729bb9e0d9ca1738880725498a52b5ebf3544a9f04b9e7",
     "cpppj/daisprogress.json": "231f0f5c69197cf430830e483f0a9dff1585e437f9740e9f149641030b5dc31c",
     "cpppj/tests/fixtures/daisprogress-x86.tsv": "20f5ddd2486a3b592db3a4f77a8f18200a9ec4f46cec5f43355d86cf1f215cea",
@@ -161,7 +161,7 @@
     "cpppj/daisprogress-cpp-binding.json": "09323a93b171f2b1fd8063db1b04adab6e7467a6ceced34afcfa460bc23fe275",
     "cpppj/daislifecycle-current-successor.json": "ab6de655d74a296ad39a7d5d9e06a1cc504590537b778da75af6e0ef984717d2",
     "cpppj/dais-ritual-consumer-binding.json": "3949bcd5c0218420e871f3167300c8bc0bd7f8b10a522c89776632e58b641421",
-    "cpppj/daisprogress-cpp-correction.json": "7368cd7634257ce82924955359936f583db08cbf57f30c414227090eb484bd6d",
+    "cpppj/daisprogress-cpp-correction.json": "5c45915e49ac95f16ab74a21aacce2fade262de76f4552cae48062c8d2ae857d",
     "cpppj/damageablepostdestroy-lineage.json": "d78b3c443b76add24307b86d6af23f8bcb1a13f635b5067edd33868d1f68fae3",
     "cpppj/damageablepost-host-binding.json": "889be672b63e24daf211cffd87e861ccf7e2645a0e48a98d328112065dc8a144",
     "cpppj/damageablepost-host-group-lineage.json": "aa9ba6d9c4649305196cd73877b2f5ed41edf5851d8b89df51e81ba579175b28",
@@ -188,7 +188,7 @@
     "extracted/run12-rawDaisRegular_final.log": "2152a5f678ad3ddc711fe5f923c2ffcf1fdf1880346ffe7a62842d426c2bb065",
     "extracted/run12-all-final.log": "da22f6f1650e6122bcbd63571760995a5d021c7a7a13bee4d92fc9e737ebc733",
     "extracted/run12-build-final.log": "76b10d8bbc38ea6623ccb66a8277f0b079d5fb06bdfe962f6a7407f9df6e9caa",
-    "cpppj/run11.json": "a0258def86a9c07a8a6840a77db44acad89e542ecd72ba1747ab9b4ff4602976",
+    "cpppj/run11.json": "b96dc1f72482eb0a2df544259cfea12e2f4d3476f01586cfcbb18001bb598f73",
     "cpppj/src/o/CMakeLists.txt": "2fcbbc0ba5d9f92b359278132a0b87218687251589da7a70629119a7fb3defd5",
     "cpppj/tests/CMakeLists.txt": "e088563097b83e81dc7d284391a12bb0b5bcab9d06b7ec441b58f93764e41b72",
     "cpppj/src/o/SquidProcess.h": "827a9789c2a6b66ac7b98181e49e8c0fa19713755bb62fccababb7ae2a0d0589",
@@ -207,8 +207,8 @@
     "cpppj/src/o/RawDudeTask.cpp": "ab8117c744b165a41c4edffa0aa7434e6ac42d65235048d8270ed8c153a748b3",
     "cpppj/src/o/RawDaisContentNotice.h": "b6f9537d0ee19137440f0f63f10ea5436b6acafdcead95270792f6d2810fbc6f",
     "cpppj/src/o/RawDaisContentNotice.cpp": "b9e133088cc63b2e3edd85e3001691fd9f7b9c4975300b65d9a77ff0d2723426",
-    "cpppj/tests/DaisLifecycleTests.cpp": "7bfa99f40e12b3796b6109ba8fed36c7cfdb911fbb8d898ba43cf0438d187ba4",
-    "cpppj/tests/DaisProgressTests.cpp": "6e8d437815d1b8cd191d4e9fc4c4310538d85de0347722f0ede081c75362c192",
+    "cpppj/tests/DaisLifecycleTests.cpp": "340e04e4c7fcd708b64e5f1283cc2b3c51b50e9fb906001a0edfe978ded812d9",
+    "cpppj/tests/DaisProgressTests.cpp": "2580113c0336b92d2a39efe957350d5ed25ee1af42e1f5de32e28991b3a2dacb",
     "cpppj/tests/DamageablePostDestroyTests.cpp": "80f00aac6a93ead2befddeec89c43537819f22ea5062d2b15a91b31057b26faa",
     "cpppj/tests/DamageablePostDestroyHostTests.cpp": "1cff10d68fb521e57fdeeb7f27900a292fc7f1013b134534748c4d494894509a",
     "cpppj/tests/BurningVisualTests.cpp": "2471a86ff78a442a044f8738cf48c882324e8c71bc74df45892396c9368d8660",
@@ -276,6 +276,43 @@
           "path": "cpppj/src/o/RawBurningVisual.cpp",
           "previous": "9521fe84204f87283fb4c9f2b5b3ebbccf8bca749b76a9bebf4691f563ade522",
           "current": "6d4b4654483abe7f87632a166a9af3bbedbd1b20e253ebd95ce6a1ebc35ffc92"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 194,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/daislifecycle-current.json",
+          "previous": "ebddbaf5d99a5ef65d2fba8140316571cdec4e3f8de7b2dcd4b131fa4b4ffb29",
+          "current": "542801f0fc802480520ef1347d1e89d984e112f565eea18b9252748dac538348"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/daisprogress-cpp-correction.json",
+          "previous": "7368cd7634257ce82924955359936f583db08cbf57f30c414227090eb484bd6d",
+          "current": "5c45915e49ac95f16ab74a21aacce2fade262de76f4552cae48062c8d2ae857d"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/run11.json",
+          "previous": "a0258def86a9c07a8a6840a77db44acad89e542ecd72ba1747ab9b4ff4602976",
+          "current": "b96dc1f72482eb0a2df544259cfea12e2f4d3476f01586cfcbb18001bb598f73"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/tests/DaisLifecycleTests.cpp",
+          "previous": "7bfa99f40e12b3796b6109ba8fed36c7cfdb911fbb8d898ba43cf0438d187ba4",
+          "current": "340e04e4c7fcd708b64e5f1283cc2b3c51b50e9fb906001a0edfe978ded812d9"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/tests/DaisProgressTests.cpp",
+          "previous": "6e8d437815d1b8cd191d4e9fc4c4310538d85de0347722f0ede081c75362c192",
+          "current": "2580113c0336b92d2a39efe957350d5ed25ee1af42e1f5de32e28991b3a2dacb"
         }
       ]
     }

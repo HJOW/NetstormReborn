@@ -48,7 +48,7 @@
   ],
   "scope": "상위Altar/DaisPre/Finish관찰및Frame입력교정. 실제전체DamageablePostDestroy/파생Pop및GameWorld의의식완주는완료로세지않는다.",
   "files": {
-    "cpppj/altarsacrifice.json": "59bdbb1758846dffba4bbe351ce1b3bff9b4dff7e8ca5f007921849088c4c772",
+    "cpppj/altarsacrifice.json": "17b6cdb69171cb53a90de5f331cc46509c5e05acbbc0d3c8c70d0f2581d6bc42",
     "cpppj/hist/altarsacrifi-6e4d0/cpppj/altarsacrifice.json": "8357b782582d046c48172dd44e20de2f86055aa4c49e3dba147f032e810c7e5b",
     "cpppj/hist/altarsacrifi-6e4d0/cpppj/src/o/RawAltarSacrifice.cpp": "c45c6083846aa97aec3d1dc0cd2dda2d0beab45fcd7addb07c755d1e2482f464",
     "cpppj/hist/altarsacrifi-6e4d0/cpppj/src/o/RawAltarSacrifice.h": "1df83640935f495e4b6687c41ac5d181a8947f2bc6f349659870acea225b89c3",
@@ -69,5 +69,20 @@
     "cpppj/tests/fixtures/altarsacrifice-x86.tsv": "10ff5e1a36607b575a7de140023ee353263ea79da90991b2d58f03cd2ddccac1",
     "tools/analyze_altarsacrifice_successor.py": "1123baea89efbf9f7420db133dd9701fcde01ca32105b06bb1f76a1fb1018ba7",
     "tools/decomp_altarsacrifice_oracle.py": "1d10306453d260e41582fe070b3fe0309f8f9c11c6f2be4e6d1566f6e441dc0e"
-  }
+  },
+  "integration_updates": [
+    {
+      "date": "2026-10-18",
+      "unit": 194,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/altarsacrifice.json",
+          "previous": "59bdbb1758846dffba4bbe351ce1b3bff9b4dff7e8ca5f007921849088c4c772",
+          "current": "17b6cdb69171cb53a90de5f331cc46509c5e05acbbc0d3c8c70d0f2581d6bc42"
+        }
+      ]
+    }
+  ]
 }

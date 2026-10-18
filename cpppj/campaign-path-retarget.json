@@ -11,10 +11,10 @@
   "currentSources": {
     "cpppj/src/o/RawPathRetarget.h": "bc69deb9620ee94bf7a35eb1f8262a635bfd54d78aac668d76084bf3cba67722",
     "cpppj/src/o/RawPathRetarget.cpp": "76f960440f8908f16acd525be61dbb76d2905b84c50e03cbd13a2e319753eb24",
-    "cpppj/src/client/RawCampaignSession.cpp": "25d9c5d9a8a003b51b49e145eb1c53e0db604574a77426be28f5bbf970d138eb",
-    "cpppj/src/CMakeLists.txt": "945332cd1c5b131d7e35d0ae7fb15762597c41be26ffea267b18e8b3d048efd8",
-    "cpppj/tests/CMakeLists.txt": "f8e834bc78cfbbe87ba57d7a7600fd41537ab8d0be1274a50d16a907cf259173",
-    "cpppj/tests/CampaignSessionTests.cpp": "081225e0b602e67b344d85b12607fb0a34a8e37d4231925305fe0369161e639d",
+    "cpppj/src/client/RawCampaignSession.cpp": "d7d6aff8ee655c2506eb38f8d0d1a6fd68c4e854ba5fbf9f6371be7cb4b719ce",
+    "cpppj/src/CMakeLists.txt": "db65c86795904ce8929fcd469008e42591ce86e539d2139aee9b53a588fdfa5f",
+    "cpppj/tests/CMakeLists.txt": "21bd45a29dd3e12e823655856464233c4a766a0eb28b6b1aae96012c76caf2b8",
+    "cpppj/tests/CampaignSessionTests.cpp": "9c2712ec395bb50eddf95ea2eb807aa9fa2b33d9907f738f68d3d441078abae8",
     "cpppj/tests/PathRetargetTests.cpp": "07b2e79eda167bea7a9934db91863c2730d908a48cdfe8f4c905ac6588de9be0",
     "tools/decomp_path_retarget.py": "abd243287cf0b8c440e4bf9ba83dd40a2ab980374613201fd3c00f1273aa670a",
     "docs/exe/cpp-path-retarget-20261018.md": "57daa01e0ea691b9821188baa94bb629e17460e1deee6cba9ec8163f6690157a",
@@ -27,7 +27,7 @@
     "cpppj/src/o/RawCarrierTarget.h": "49e6340d4b120f87894cd07126c94fbf212a5e4d477bd44bdff22190e86f793d",
     "cpppj/src/o/RawCarrierTarget.cpp": "82c9b3862969d5e664ed6acff2f63f97340898463c22347a667f278d9d519f08",
     "cpppj/src/client/RawCampaignMotionBindings.cpp": "532ab06cd71c6eb3eba5aa042a6204e59c282014b13b68400241c2079a2556bb",
-    "cpppj/src/client/RawCampaignPathBindings.cpp": "0d36db062813bc9ea5b204fd06f1cf4bc0c43b6f71ede35aae851285fdbdcdb1"
+    "cpppj/src/client/RawCampaignPathBindings.cpp": "2fc59e6cd111db8c953e388d1856c8e6103a8b6852461c2d3df89ec84a4f4314"
   },
   "nativeReports": {
     "cpppj/path-retarget.json": "5b7730ec331ed05dcfa1c6a640bdac7c5f42738a8404fa74a90053824d2e628a"
@@ -1084,6 +1084,43 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "ddbcb92e8690edfdea1d2821c2243764071ce240c482e378aa2c74f580c840b2",
           "current": "081225e0b602e67b344d85b12607fb0a34a8e37d4231925305fe0369161e639d"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 194,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "25d9c5d9a8a003b51b49e145eb1c53e0db604574a77426be28f5bbf970d138eb",
+          "current": "d7d6aff8ee655c2506eb38f8d0d1a6fd68c4e854ba5fbf9f6371be7cb4b719ce"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "945332cd1c5b131d7e35d0ae7fb15762597c41be26ffea267b18e8b3d048efd8",
+          "current": "db65c86795904ce8929fcd469008e42591ce86e539d2139aee9b53a588fdfa5f"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "f8e834bc78cfbbe87ba57d7a7600fd41537ab8d0be1274a50d16a907cf259173",
+          "current": "21bd45a29dd3e12e823655856464233c4a766a0eb28b6b1aae96012c76caf2b8"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "081225e0b602e67b344d85b12607fb0a34a8e37d4231925305fe0369161e639d",
+          "current": "9c2712ec395bb50eddf95ea2eb807aa9fa2b33d9907f738f68d3d441078abae8"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignPathBindings.cpp",
+          "previous": "0d36db062813bc9ea5b204fd06f1cf4bc0c43b6f71ede35aae851285fdbdcdb1",
+          "current": "2fc59e6cd111db8c953e388d1856c8e6103a8b6852461c2d3df89ec84a4f4314"
         }
       ]
     }

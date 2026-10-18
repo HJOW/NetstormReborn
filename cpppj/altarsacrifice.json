@@ -198,8 +198,8 @@
     "cpppj/src/o/RawAltarSacrifice.h": "b5ea76ade31afcc5e075060d4847c2db774f97456c1f7d5678c979c8c027e964",
     "cpppj/src/o/RawDaisRegular.cpp": "c1a167728b02f382cbae23454e4aba1046c91a7284dbe4c6e206e856ccc4c433",
     "cpppj/src/o/RawDaisRegular.h": "fdc080a0ae1ff54909a1cf59a6b9be626e7a7d96c5103072c9325d13efb88ed3",
-    "cpppj/tests/AltarSacrificeTests.cpp": "b920c0644365682a1067005957c78b521f5ce751836e93986540a3193bc2780b",
-    "cpppj/tests/DaisRegularTests.cpp": "95ab33f6dbf170375d1d7ccc109f15f4bdfda3fbf7e50bb96f6f3b5a4f093527",
+    "cpppj/tests/AltarSacrificeTests.cpp": "3bcf850f018f097b44142038da311c135ae72c3b5c1e075856269f41b2adc0a1",
+    "cpppj/tests/DaisRegularTests.cpp": "6d948c39e276ed391aa1b675cb3a1d17bfab6f4c2c65934face1d42e6b84337f",
     "cpppj/tests/fixtures/altarsacrifice-x86.tsv": "10ff5e1a36607b575a7de140023ee353263ea79da90991b2d58f03cd2ddccac1",
     "extracted/altarsacrifice/originalCD/creation.c": "e5034176c7a40f40d247cd4fcf0a799b9df577bd383f2ce3e0bd0c18bedb6b08",
     "extracted/altarsacrifice/originalCD/functions.tsv": "6cf8241dbe95315404adaff317c75655a443a3139b5cef7670140f608edd4fc7",
@@ -251,5 +251,26 @@
     "tools/ghidra/templeritual-functions.json": "2d8fabc0bcb8774371707aad07bc36dbe6011b0dcf5208a15f1c7cf745748cec"
   },
   "game_runs": 0,
-  "scope": "실제제단/해방/Dais전처리/Finish 상위 몸체. Frame/가상공간/공통Damageable/음향/UI/FromForm·Type효과 경계. 실제같은Host/Pool C++소비자는후속."
+  "scope": "실제제단/해방/Dais전처리/Finish 상위 몸체. Frame/가상공간/공통Damageable/음향/UI/FromForm·Type효과 경계. 실제같은Host/Pool C++소비자는후속.",
+  "integration_updates": [
+    {
+      "date": "2026-10-18",
+      "unit": 194,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/tests/AltarSacrificeTests.cpp",
+          "previous": "b920c0644365682a1067005957c78b521f5ce751836e93986540a3193bc2780b",
+          "current": "3bcf850f018f097b44142038da311c135ae72c3b5c1e075856269f41b2adc0a1"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/tests/DaisRegularTests.cpp",
+          "previous": "95ab33f6dbf170375d1d7ccc109f15f4bdfda3fbf7e50bb96f6f3b5a4f093527",
+          "current": "6d948c39e276ed391aa1b675cb3a1d17bfab6f4c2c65934face1d42e6b84337f"
+        }
+      ]
+    }
+  ]
 }

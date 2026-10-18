@@ -102,6 +102,7 @@ RawCampaignSessionServices MakeCampaignClientServices(Client& client,RawButtonCo
         std::int32_t value=1; // 설정 누락 시 원본이 유지하는 기본값이다.
         client.Configuration().ReadInt("theammode",value);return std::bit_cast<std::uint32_t>(value);
     };
+    services.requestMusic=[&audio](std::string_view name) { audio.RequestMusic(name); }; // 희생 wrapper도 같은 실제 장면 음악 상태를 사용한다.
     services.soundNames=&audio.Names(); // TYPE 소리와 보호막 프로세스가 공유하는 유일한 이름표다.
     // 정지와 무관한 실제 벽시계 및 실제 장치의 재생·정지·재생 여부를 사용한다.
     services.sound=MakeSoundProcessHooks(player,[&client] { return client.WallSeconds(); });

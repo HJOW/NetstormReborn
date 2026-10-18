@@ -11,8 +11,8 @@
   "tool_sha256": "e50f6af3f1a4505e86fcad843ad9fbaf54c10f634cc0f848a37ac5ee5df88308",
   "files": {
     "cpppj/priest-arrival-test-syntax-lineage.json": "137bb4b9997e21a3989339a16a3fab9a5ce1c124474ae7bc9b841c817abcb993",
-    "cpppj/src/client/RawCampaignPathBindings.cpp": "0d36db062813bc9ea5b204fd06f1cf4bc0c43b6f71ede35aae851285fdbdcdb1",
-    "cpppj/src/client/RawCampaignPathBindings.h": "6ac357c4b2724907eb183be465f5f031f7164c2fdbc474de308d12acf4edc329",
+    "cpppj/src/client/RawCampaignPathBindings.cpp": "2fc59e6cd111db8c953e388d1856c8e6103a8b6852461c2d3df89ec84a4f4314",
+    "cpppj/src/client/RawCampaignPathBindings.h": "82d9565ece60f24300977681dffdaad57a660fdccca38b4db305d5a1d262b8b0",
     "cpppj/src/client/RawPriestWorldBindings.cpp": "f8c54dfcce6b31cbf96de451c5853e3fb97127f1eee9bcab80844a756a693b69",
     "cpppj/src/client/RawPriestWorldBindings.h": "581e4e155cdff0d13bb9ae455801b156ba3afb72d73395069ecf2995b49acd24",
     "cpppj/src/client/RawSurfaceWorld.cpp": "e58d0b3daa6d12fffd075d3326de5ced82bd8ca8e4b921649405f4750574f0cb",
@@ -254,6 +254,25 @@
           "path": "cpppj/src/o/RawPathStart.cpp",
           "previous": "ae0c53e1bfb97c293ad92dcd7f3165f5bb803a3867a53ec84da9280e97772323",
           "current": "9dbe404e4d377a362213cffd1da8a42b65816aaf54830fc5708379b9d528edab"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 194,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/src/client/RawCampaignPathBindings.cpp",
+          "previous": "0d36db062813bc9ea5b204fd06f1cf4bc0c43b6f71ede35aae851285fdbdcdb1",
+          "current": "2fc59e6cd111db8c953e388d1856c8e6103a8b6852461c2d3df89ec84a4f4314"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/client/RawCampaignPathBindings.h",
+          "previous": "6ac357c4b2724907eb183be465f5f031f7164c2fdbc474de308d12acf4edc329",
+          "current": "82d9565ece60f24300977681dffdaad57a660fdccca38b4db305d5a1d262b8b0"
         }
       ]
     }

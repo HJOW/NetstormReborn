@@ -86,13 +86,13 @@
   },
   "currentSources": {
     "cpppj/src/o/CMakeLists.txt": "531d0fd71823841eb97eebb5046f878c52fa44d82142af3fdff9c0fb68c2497a",
-    "cpppj/src/client/RawCampaignSession.h": "d5ed2ce459529e5760e3c3864182965fab4e8d7c303baf82c931a892da5f2f7c",
-    "cpppj/src/client/RawCampaignSession.cpp": "25d9c5d9a8a003b51b49e145eb1c53e0db604574a77426be28f5bbf970d138eb",
+    "cpppj/src/client/RawCampaignSession.h": "a6d142e8d485ccf10ea834c59947a4606c5d0c033ef4b2ad00b09a0cc389a641",
+    "cpppj/src/client/RawCampaignSession.cpp": "d7d6aff8ee655c2506eb38f8d0d1a6fd68c4e854ba5fbf9f6371be7cb4b719ce",
     "cpppj/src/client/RawCampaignFactoryDisplay.h": "d2434f7d291754651b9810411235659ca35f393443423340818a261599640f2e",
     "cpppj/src/client/RawCampaignFactoryDisplay.cpp": "c93640d0b659789ffb74d6b4a0d71b1f18522638480dd7b0508259747260ee06",
     "cpppj/src/client/GameWorld.cpp": "b2bca515fffbca6f151a5ccabd021ab9c8e4331cc014b57eca0e5e9264de1d59",
-    "cpppj/tests/CMakeLists.txt": "f8e834bc78cfbbe87ba57d7a7600fd41537ab8d0be1274a50d16a907cf259173",
-    "cpppj/tests/CampaignSessionTests.cpp": "081225e0b602e67b344d85b12607fb0a34a8e37d4231925305fe0369161e639d",
+    "cpppj/tests/CMakeLists.txt": "21bd45a29dd3e12e823655856464233c4a766a0eb28b6b1aae96012c76caf2b8",
+    "cpppj/tests/CampaignSessionTests.cpp": "9c2712ec395bb50eddf95ea2eb807aa9fa2b33d9907f738f68d3d441078abae8",
     "tools/decomp_temple_draw.py": "b94a1b635e83af4af3808d3666d3dd56067a44e88c22ecfbd4fe9396000dab24",
     "tools/check_temple_scene.py": "5ce0641612f94c92bea40703e75472125317167d063433f3469ff5b88400dd19",
     "cpppj/temple-draw.json": "08f2b87d34a3d29ee35f4c479ce4eca45be47aee0c6d774d3fee875220fb665e",
@@ -1213,6 +1213,37 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "ddbcb92e8690edfdea1d2821c2243764071ce240c482e378aa2c74f580c840b2",
           "current": "081225e0b602e67b344d85b12607fb0a34a8e37d4231925305fe0369161e639d"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 194,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "d5ed2ce459529e5760e3c3864182965fab4e8d7c303baf82c931a892da5f2f7c",
+          "current": "a6d142e8d485ccf10ea834c59947a4606c5d0c033ef4b2ad00b09a0cc389a641"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "25d9c5d9a8a003b51b49e145eb1c53e0db604574a77426be28f5bbf970d138eb",
+          "current": "d7d6aff8ee655c2506eb38f8d0d1a6fd68c4e854ba5fbf9f6371be7cb4b719ce"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "f8e834bc78cfbbe87ba57d7a7600fd41537ab8d0be1274a50d16a907cf259173",
+          "current": "21bd45a29dd3e12e823655856464233c4a766a0eb28b6b1aae96012c76caf2b8"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "081225e0b602e67b344d85b12607fb0a34a8e37d4231925305fe0369161e639d",
+          "current": "9c2712ec395bb50eddf95ea2eb807aa9fa2b33d9907f738f68d3d441078abae8"
         }
       ]
     }

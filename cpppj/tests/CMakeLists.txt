@@ -1606,3 +1606,12 @@ set_property(SOURCE CampaignSessionTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS
 # 타워의 실제 전체 캡처120입력을 같은 세션의 생성 결과와 대조한다.
 set_property(SOURCE CampaignSessionTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS
     "NETSTORM_BLOCKER_CAPTURE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/blocker-capture-x86.tsv\"")
+
+# 사제 희생 wrapper의 독립128입력은 이 검사에서만 읽는다.
+target_sources(netstorm_tests PRIVATE PriestSacrificeRequestTests.cpp)
+set_source_files_properties(PriestSacrificeRequestTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_PRIEST_SACRIFICE_REQUEST_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/priest-sacrifice-request-x86.tsv\"")
+
+# 실제 보호 SHP의 의식 목표점 원문을 같은 Session 조회 검사에서만 읽는다.
+set_property(SOURCE CampaignSessionTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS
+    "NETSTORM_RITUAL_SHAPE_OFFSETS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/ritual-shape-offsets-x86.tsv\"")

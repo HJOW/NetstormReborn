@@ -33,8 +33,8 @@
     "cpppj/src/client/CMakeLists.txt": "24fe88f70687bf85c95418a8054e93b99a0878c90bc6b5c7d58ec597a6d4db94",
     "cpppj/src/client/RawCampaignAssetBindings.cpp": "7747a030b9916bd58e4c7fb9d04e7a39a0814ca4b11111436999b831fe14f8bf",
     "cpppj/src/client/RawCampaignAssetBindings.h": "eb33fc606d131e561811a82540acb10d5cd33817894ad34ea90b23bb9763edb4",
-    "cpppj/src/client/RawCampaignPathBindings.cpp": "0d36db062813bc9ea5b204fd06f1cf4bc0c43b6f71ede35aae851285fdbdcdb1",
-    "cpppj/src/client/RawCampaignPathBindings.h": "6ac357c4b2724907eb183be465f5f031f7164c2fdbc474de308d12acf4edc329",
+    "cpppj/src/client/RawCampaignPathBindings.cpp": "2fc59e6cd111db8c953e388d1856c8e6103a8b6852461c2d3df89ec84a4f4314",
+    "cpppj/src/client/RawCampaignPathBindings.h": "82d9565ece60f24300977681dffdaad57a660fdccca38b4db305d5a1d262b8b0",
     "cpppj/src/o/CMakeLists.txt": "934423d7577f2b20eec66d10af67dd8bf18b04d75c3c0efa0695090312564be6",
     "cpppj/src/o/RawBurningFrame.cpp": "c517b282e39f2ccc5636c9424c6578f81a8f0ffc2c88a6d344b164b1c6021e9d",
     "cpppj/src/o/RawBurningFrame.h": "a8eb3aefeb0a1fb6afbe4aadc31cdbf0fdab5345355a661ed1e01699d23c56c7",
@@ -202,6 +202,25 @@
           "path": "cpppj/run15-corrections.json",
           "previous": "c4458b45c19a69cbc50cc961a18ffdc3c5506b27907e49fa847487b33a2dfae4",
           "current": "1fadf6583ec33e99bc64f0f22d292815fc98a0b92b4a92341ef90a03703c4686"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 194,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/src/client/RawCampaignPathBindings.cpp",
+          "previous": "0d36db062813bc9ea5b204fd06f1cf4bc0c43b6f71ede35aae851285fdbdcdb1",
+          "current": "2fc59e6cd111db8c953e388d1856c8e6103a8b6852461c2d3df89ec84a4f4314"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/client/RawCampaignPathBindings.h",
+          "previous": "6ac357c4b2724907eb183be465f5f031f7164c2fdbc474de308d12acf4edc329",
+          "current": "82d9565ece60f24300977681dffdaad57a660fdccca38b4db305d5a1d262b8b0"
         }
       ]
     }

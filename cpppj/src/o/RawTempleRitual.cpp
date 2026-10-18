@@ -65,12 +65,12 @@ std::uint32_t RawTempleRitual::Stage(Sid temple,std::int32_t frame) const {
     if (frame==-1) frame=CurrentFrame(temple);const auto relative=std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(frame)-static_cast<std::uint32_t>(kCountFirst[Count(temple)]));
     if (relative<11) return 0;if (relative<22) return 1;if (relative<33) return 2;if (relative<44) return 3;return relative<=54 ? 4U : 5U;
 }
-// 추상 레이어를 요청하지 않는 실제 typeSHP frame의 signed short 핫스폿이다.
+// 원본419850 반환 헤더+20/+22의 의식 목표점이다. 표시 기준점(+1c/+1e)과 구별한다.
 std::array<std::int16_t,2> RawTempleRitual::Hotspot(std::uint32_t type,std::int32_t frame) const {
     if (type>=shapes_.size() || frame<0) throw std::out_of_range("신전 의식 SHP 타입/프레임 범위");const auto& shape=shapes_[type];
     const auto limit=static_cast<std::int64_t>(shape.frameCount)*((types_[type].flags1&0x440000) ? 2 : 1);
     if (!shape.loaded || frame>=limit || static_cast<std::size_t>(frame)>=shape.frames.size()) throw std::out_of_range("신전 의식 SHP frameCheck 오류");
-    const auto& current=shape.frames[static_cast<std::size_t>(frame)];return {current.hotspotX,current.hotspotY};
+    const auto& current=shape.frames[static_cast<std::size_t>(frame)];return {current.muzzleX,current.muzzleY};
 }
 // 원본 x87의 int/float+float 계산은 각 축 저장에서만 단정도로 좁힌다.
 TempleRitualPoint RawTempleRitual::AddPixels(TempleRitualPoint point,std::int32_t x,std::int32_t y) const {

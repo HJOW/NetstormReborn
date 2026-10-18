@@ -53,8 +53,8 @@
     "cpppj/src/client/BurningFrameCapture.h": "536fecc436d79053f6d78b67bf0b381567ca2588cdc51bd33e69bfa76033cdc0",
     "cpppj/src/client/RawCampaignAssetBindings.cpp": "7747a030b9916bd58e4c7fb9d04e7a39a0814ca4b11111436999b831fe14f8bf",
     "cpppj/src/client/RawCampaignAssetBindings.h": "eb33fc606d131e561811a82540acb10d5cd33817894ad34ea90b23bb9763edb4",
-    "cpppj/src/client/RawCampaignPathBindings.cpp": "0d36db062813bc9ea5b204fd06f1cf4bc0c43b6f71ede35aae851285fdbdcdb1",
-    "cpppj/src/client/RawCampaignPathBindings.h": "6ac357c4b2724907eb183be465f5f031f7164c2fdbc474de308d12acf4edc329",
+    "cpppj/src/client/RawCampaignPathBindings.cpp": "2fc59e6cd111db8c953e388d1856c8e6103a8b6852461c2d3df89ec84a4f4314",
+    "cpppj/src/client/RawCampaignPathBindings.h": "82d9565ece60f24300977681dffdaad57a660fdccca38b4db305d5a1d262b8b0",
     "cpppj/src/o/RawBurningFrame.cpp": "abfe7fbc7e69d8116baa83b4663c9ccfb874dc3ac1a15e671aea61fbe479a27d",
     "cpppj/src/o/RawBurningFrame.h": "a8eb3aefeb0a1fb6afbe4aadc31cdbf0fdab5345355a661ed1e01699d23c56c7",
     "cpppj/src/o/RawCampaignWorldLoad.cpp": "89e879705ca786d6f3b06b5d5e7f89af2723991768ad11cca61be5394886b7a6",
@@ -193,6 +193,25 @@
           "path": "cpppj/burningframe.json",
           "previous": "28c6315a3fa1c03acfb36989606ea9fd2c2fce52d81e04151008a24851475308",
           "current": "651c730f12a5b081ef5407341b3906b66dc814e48d7fd4012050eff399a5811a"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 194,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/src/client/RawCampaignPathBindings.cpp",
+          "previous": "0d36db062813bc9ea5b204fd06f1cf4bc0c43b6f71ede35aae851285fdbdcdb1",
+          "current": "2fc59e6cd111db8c953e388d1856c8e6103a8b6852461c2d3df89ec84a4f4314"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/client/RawCampaignPathBindings.h",
+          "previous": "6ac357c4b2724907eb183be465f5f031f7164c2fdbc474de308d12acf4edc329",
+          "current": "82d9565ece60f24300977681dffdaad57a660fdccca38b4db305d5a1d262b8b0"
         }
       ]
     }

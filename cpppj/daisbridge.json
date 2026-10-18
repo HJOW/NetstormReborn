@@ -652,8 +652,8 @@
     "cpppj/src/o/RawPathStart.h": "576188b61294a25b8abb6caa7bc129c56e21804a2fb79cf5de74cd25421a568f",
     "cpppj/src/o/RawRunePostPop.cpp": "ca10766ced498c5aab0c92fbcca0d0d4ad39c5d9e5c91ce7865dd0523b2f6ab0",
     "cpppj/src/o/RawRunePostPop.h": "057c813ed8dcb33eab75554f9368645e77d4b85b61df76a22e64f52dcc82d5ee",
-    "cpppj/src/o/RawTempleRitual.cpp": "fee9b37873c162ea621595d819b05db4bdea5c28fb62a3b44908aca064530595",
-    "cpppj/src/o/RawTempleRitual.h": "d1f5ab197e92539a0c4904a5f73c0aba60392c587e20cc9a6fbfc54a881acf73",
+    "cpppj/src/o/RawTempleRitual.cpp": "4da7a7c1516a35016897471780d92be973f3d238dfd4bf5c36548a9fe9b803bb",
+    "cpppj/src/o/RawTempleRitual.h": "e5b853c7bfd9ca70c18c97d7b3f3a6e14b6e6d0ca89a6e5269e5117838937741",
     "cpppj/tests/fixtures/daisbridge-x86.tsv": "f2ccd4f6499e54356a1f6dd6e68d9ceab02f30aa388b7f86ed79e584216f0b17",
     "extracted/bridgeeffects/originalCD/creation.c": "76acd15962cfadb844dd6689014a8a67ee0fc744d16c5a32528d4cafdb7fb911",
     "extracted/bridgeeffects/originalCD/functions.tsv": "b99e5f65a90d402a49be3353263e66080fbf1d3825b19685d7a49edd2e4c4abd",
@@ -834,6 +834,25 @@
           "path": "cpppj/src/o/RawPathStart.cpp",
           "previous": "ae0c53e1bfb97c293ad92dcd7f3165f5bb803a3867a53ec84da9280e97772323",
           "current": "9dbe404e4d377a362213cffd1da8a42b65816aaf54830fc5708379b9d528edab"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 194,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawTempleRitual.cpp",
+          "previous": "fee9b37873c162ea621595d819b05db4bdea5c28fb62a3b44908aca064530595",
+          "current": "4da7a7c1516a35016897471780d92be973f3d238dfd4bf5c36548a9fe9b803bb"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawTempleRitual.h",
+          "previous": "d1f5ab197e92539a0c4904a5f73c0aba60392c587e20cc9a6fbfc54a881acf73",
+          "current": "e5b853c7bfd9ca70c18c97d7b3f3a6e14b6e6d0ca89a6e5269e5117838937741"
         }
       ]
     }
