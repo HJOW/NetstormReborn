@@ -94,7 +94,7 @@
   "currentSources": {
     "cpppj/src/client/RawCampaignSession.cpp": "fb53c00a05c038374a4ccaf9e43b105790d1d9ac28c180b1e61efb3d24ea238f",
     "cpppj/tests/CMakeLists.txt": "16dd4ad98bd79b0d42a32a67bb6b8ad72343ad6eebbef60cecbf0e9a36224ca9",
-    "cpppj/tests/CampaignSessionTests.cpp": "4391efc5570f2ee2885cf36acd8563ce32667cab48c17fb3862ce68419cfea78",
+    "cpppj/tests/CampaignSessionTests.cpp": "c93ddbf3c95ae7ebf3c7ee9cd025d471a3d41f60fa6cfb0171f6bcd13629458e",
     "tools/decomp_generator_capture.py": "d5b8b31e5c9c0ab00f24236460af8b63f86412e5115537d56f6f71feb6238b0f",
     "cpppj/generator-capture.json": "177c4bd3b90673160f0b4fe9b50c499ee6eda65838f09eed78b7c8f4ddf9506b",
     "cpppj/tests/fixtures/generator-capture-x86.tsv": "5db59d411828a19c8ef4f236058d14b3a7d1658fc2e8ab1a4571986ab3dcf1a1"
@@ -571,6 +571,19 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "3d129ca4d958710ec0d6fd068fdad168a19df790fd0ec7047ea8c074d3c29e7d",
           "current": "4391efc5570f2ee2885cf36acd8563ce32667cab48c17fb3862ce68419cfea78"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 198,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "4391efc5570f2ee2885cf36acd8563ce32667cab48c17fb3862ce68419cfea78",
+          "current": "c93ddbf3c95ae7ebf3c7ee9cd025d471a3d41f60fa6cfb0171f6bcd13629458e"
         }
       ]
     }

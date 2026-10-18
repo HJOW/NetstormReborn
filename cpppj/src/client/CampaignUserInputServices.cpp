@@ -19,7 +19,9 @@ void BindCampaignUserInputServices(Client& client,GameWorld& world,std::function
     carrier.assertion=[](std::uint32_t line) { throw std::logic_error("원본 Carrier.cpp 사용자입력 진단 "+std::to_string(line)); };
     carrier.dropCargo=[](o::Sid,std::uint32_t) { throw std::logic_error("원본427070 운반물 내려놓기 요청 미연결"); };
     carrier.earlyLocal=[] { throw std::logic_error("원본4cf960 조기 희생 안내 UI 미연결"); };carrier.earlyRemote=[](std::uint32_t) { throw std::logic_error("원본 EarlySacrifice 원격 안내 미연결"); };
-    carrier.showSacrifice=[](std::uint32_t) { throw std::logic_error("원본4cfc10 희생 진행 UI 미연결"); };
+    // TODO: 원본4cfc10의 SacrificeMenu는 일반/멀티플레이 보상 선택 창이다. 캠페인/튜토리얼은 Session의 현재missionPost 관문에서 생략한다.
+    // 사용자 지시로 멀티플레이 UI 복원은 해당 구현 단계까지 임시 생략한다. 의식 이동·룬·캠페인 보상 처리에는 성공값을 주입하지 않는다.
+    carrier.showSacrifice=[](std::uint32_t) {};
     carrier.marker=[](o::RawPathPoint,std::uint32_t) { throw std::logic_error("원본434970 이동 진단 표시 미연결"); };carrier.refreshCursor=[] { throw std::logic_error("원본4a46d0 이동 진단 커서 갱신 미연결"); };
     world.BindUserInput(std::move(selection),std::move(highlight),std::move(carrier));
 }

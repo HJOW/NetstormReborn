@@ -40,7 +40,7 @@
     "cpppj/src/client/RawCampaignSession.cpp": "fb53c00a05c038374a4ccaf9e43b105790d1d9ac28c180b1e61efb3d24ea238f",
     "cpppj/src/o/RawCarrierArrival.cpp": "05d47b6beb2267351faf0efff7ca6967010088b37ead976881a0c6dde6881610",
     "cpppj/src/o/RawCarrierArrival.h": "56355d323b96e074d549319884f492928ccec8a5c3530db745588cbeb2bcded3",
-    "cpppj/tests/CampaignSessionTests.cpp": "4391efc5570f2ee2885cf36acd8563ce32667cab48c17fb3862ce68419cfea78"
+    "cpppj/tests/CampaignSessionTests.cpp": "c93ddbf3c95ae7ebf3c7ee9cd025d471a3d41f60fa6cfb0171f6bcd13629458e"
   },
   "binaries": {
     "cpppj/build/bin/Release/NetstormCpp.exe": "f4c51d0b421f3cba1574153de47d9ca5a3b38503829a2d088204b0f58f8563c5",
@@ -418,5 +418,20 @@
     "CampaignUserInputServices.cpp의 showSacrifice는 원본4cfc10 희생 진행 UI 미연결 오류를 던진다. 실제 사제 클릭/UI·보상 선택을 연결해야 한다",
     "자연 적 신전 파괴/사제 약화·포획/운반과 실제 창 전달, 희생 완료/BadTeamDead/후속 미션은 남는다. 현재 명시 운반 입력을 자연 포획으로 합산하지 않는다",
     "초기 저장Dais 로드·off-home 경고·획득/UI10경계·실제 파생 삭제/해방, Dude 초기화/드롭·아이스147·훨리기그 무기/귀환·전략AI·11단계 자연 완주 및 원본 전체 동일성"
+  ],
+  "integration_updates": [
+    {
+      "date": "2026-10-19",
+      "unit": 198,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "4391efc5570f2ee2885cf36acd8563ce32667cab48c17fb3862ce68419cfea78",
+          "current": "c93ddbf3c95ae7ebf3c7ee9cd025d471a3d41f60fa6cfb0171f6bcd13629458e"
+        }
+      ]
+    }
   ]
 }

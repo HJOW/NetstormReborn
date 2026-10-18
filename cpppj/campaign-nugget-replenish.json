@@ -16,7 +16,7 @@
     "cpppj/src/o/RawPlayerGeyserBounds.h": "dbd25cda206a7e53e21b9c35d1d9f1ff53505196c5a32e00e187391545547a14",
     "cpppj/src/o/RawNuggetReplenish.cpp": "a89f08e3f9a17d3088506fc423e0e9680bc150094ea42de733b914ecd6dab464",
     "cpppj/src/o/RawNuggetReplenish.h": "d243249f6af02a1b51388ca5603ea70659e28ebdb38f789fd70dbb8c6b16f428",
-    "cpppj/tests/CampaignSessionTests.cpp": "4391efc5570f2ee2885cf36acd8563ce32667cab48c17fb3862ce68419cfea78",
+    "cpppj/tests/CampaignSessionTests.cpp": "c93ddbf3c95ae7ebf3c7ee9cd025d471a3d41f60fa6cfb0171f6bcd13629458e",
     "cpppj/tests/NuggetReplenishTests.cpp": "ab8045f3d99a0da3303c33f94fab68eca90de50f22920a061c337182aa2857fb",
     "tools/decomp_nugget_replenish.py": "343fcd950078734e0c2651f65c80b56c3ca2e69db9023e36350741c942b2d720"
   },
@@ -1058,6 +1058,19 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "3d129ca4d958710ec0d6fd068fdad168a19df790fd0ec7047ea8c074d3c29e7d",
           "current": "4391efc5570f2ee2885cf36acd8563ce32667cab48c17fb3862ce68419cfea78"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 198,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "4391efc5570f2ee2885cf36acd8563ce32667cab48c17fb3862ce68419cfea78",
+          "current": "c93ddbf3c95ae7ebf3c7ee9cd025d471a3d41f60fa6cfb0171f6bcd13629458e"
         }
       ]
     }

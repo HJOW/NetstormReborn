@@ -1,0 +1,1170 @@
+{
+  "unit": 198,
+  "date": "2026-10-19",
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "lastDecompileDate": "2026-10-16",
+  "baseline": "2f80eb788e7426caa9e57bb12427627a8f6941e7",
+  "goalComplete": false,
+  "fidelity": {
+    "complete": false,
+    "originalMissionMenuSuppression": true,
+    "clientMultiplayerMenuTemporarilySkippedByUser": true,
+    "multiplayerRewardUiRestored": false,
+    "campaignSacrificeComplete": false,
+    "naturalCaptureVerified": false,
+    "actualWindowSacrificeClickVerified": false,
+    "all11MissionsNaturallyComplete": false
+  },
+  "decision": {
+    "user": "희생 전 보상 선택 창이 멀티플레이 전용이면 오류 없이 임시 생략하고 주석을 남기라는 지시",
+    "originalGate": "4cfc10은00594fa4가비영이면SID/Count/Tell에접근하지않고즉시반환",
+    "missionConstructor": "482bf0이594fa0/594fa4를각각1로설정",
+    "currentMode": "MakeCarrierInput이같은globals.missionPost를호출시점에읽음",
+    "temporaryScope": "실제Client의비미션보상창callback도TODO와함께무동작;가상보상/자동SP선택없음"
+  },
+  "native": {
+    "unit": 198,
+    "host": "HJOW-Athlon",
+    "lastDecompileHost": "HJOW-Athlon",
+    "lastDecompileDate": "2026-10-16",
+    "uniqueInputs": 150,
+    "normalReturns": 300,
+    "calls": {
+      "004cfc10": 300
+    },
+    "instructions": 4176,
+    "rows": [
+      {
+        "firstCount": -1,
+        "secondCount": -1,
+        "missionMode": 0,
+        "trace": "C:64;C:64;Q:5361637269666963654d656e752836342c2d312c3129:0"
+      },
+      {
+        "firstCount": -1,
+        "secondCount": -1,
+        "missionMode": 1,
+        "trace": "-"
+      },
+      {
+        "firstCount": -1,
+        "secondCount": -1,
+        "missionMode": 2,
+        "trace": "-"
+      },
+      {
+        "firstCount": -1,
+        "secondCount": -1,
+        "missionMode": 4294967295,
+        "trace": "-"
+      },
+      {
+        "firstCount": -1,
+        "secondCount": 0,
+        "missionMode": 0,
+        "trace": "C:64;C:64;Q:5361637269666963654d656e752836342c302c3129:0"
+      },
+      {
+        "firstCount": -1,
+        "secondCount": 0,
+        "missionMode": 1,
+        "trace": "-"
+      },
+      {
+        "firstCount": -1,
+        "secondCount": 0,
+        "missionMode": 2,
+        "trace": "-"
+      },
+      {
+        "firstCount": -1,
+        "secondCount": 0,
+        "missionMode": 4294967295,
+        "trace": "-"
+      },
+      {
+        "firstCount": -1,
+        "secondCount": 1,
+        "missionMode": 0,
+        "trace": "C:64;C:64;Q:5361637269666963654d656e752836342c312c3129:0"
+      },
+      {
+        "firstCount": -1,
+        "secondCount": 1,
+        "missionMode": 1,
+        "trace": "-"
+      },
+      {
+        "firstCount": -1,
+        "secondCount": 1,
+        "missionMode": 2,
+        "trace": "-"
+      },
+      {
+        "firstCount": -1,
+        "secondCount": 1,
+        "missionMode": 4294967295,
+        "trace": "-"
+      },
+      {
+        "firstCount": -1,
+        "secondCount": 2,
+        "missionMode": 0,
+        "trace": "C:64;C:64;Q:5361637269666963654d656e752836342c322c3129:0"
+      },
+      {
+        "firstCount": -1,
+        "secondCount": 2,
+        "missionMode": 1,
+        "trace": "-"
+      },
+      {
+        "firstCount": -1,
+        "secondCount": 2,
+        "missionMode": 2,
+        "trace": "-"
+      },
+      {
+        "firstCount": -1,
+        "secondCount": 2,
+        "missionMode": 4294967295,
+        "trace": "-"
+      },
+      {
+        "firstCount": -1,
+        "secondCount": 3,
+        "missionMode": 0,
+        "trace": "C:64;C:64;Q:5361637269666963654d656e752836342c332c3129:0"
+      },
+      {
+        "firstCount": -1,
+        "secondCount": 3,
+        "missionMode": 1,
+        "trace": "-"
+      },
+      {
+        "firstCount": -1,
+        "secondCount": 3,
+        "missionMode": 2,
+        "trace": "-"
+      },
+      {
+        "firstCount": -1,
+        "secondCount": 3,
+        "missionMode": 4294967295,
+        "trace": "-"
+      },
+      {
+        "firstCount": -1,
+        "secondCount": 4,
+        "missionMode": 0,
+        "trace": "C:64;C:64;Q:5361637269666963654d656e752836342c342c3129:0"
+      },
+      {
+        "firstCount": -1,
+        "secondCount": 4,
+        "missionMode": 1,
+        "trace": "-"
+      },
+      {
+        "firstCount": -1,
+        "secondCount": 4,
+        "missionMode": 2,
+        "trace": "-"
+      },
+      {
+        "firstCount": -1,
+        "secondCount": 4,
+        "missionMode": 4294967295,
+        "trace": "-"
+      },
+      {
+        "firstCount": 0,
+        "secondCount": -1,
+        "missionMode": 0,
+        "trace": "C:64;C:64;Q:5361637269666963654d656e752836342c2d312c3129:0"
+      },
+      {
+        "firstCount": 0,
+        "secondCount": -1,
+        "missionMode": 1,
+        "trace": "-"
+      },
+      {
+        "firstCount": 0,
+        "secondCount": -1,
+        "missionMode": 2,
+        "trace": "-"
+      },
+      {
+        "firstCount": 0,
+        "secondCount": -1,
+        "missionMode": 4294967295,
+        "trace": "-"
+      },
+      {
+        "firstCount": 0,
+        "secondCount": 0,
+        "missionMode": 0,
+        "trace": "C:64;C:64;Q:5361637269666963654d656e752836342c302c3129:0"
+      },
+      {
+        "firstCount": 0,
+        "secondCount": 0,
+        "missionMode": 1,
+        "trace": "-"
+      },
+      {
+        "firstCount": 0,
+        "secondCount": 0,
+        "missionMode": 2,
+        "trace": "-"
+      },
+      {
+        "firstCount": 0,
+        "secondCount": 0,
+        "missionMode": 4294967295,
+        "trace": "-"
+      },
+      {
+        "firstCount": 0,
+        "secondCount": 1,
+        "missionMode": 0,
+        "trace": "C:64;C:64;Q:5361637269666963654d656e752836342c312c3129:0"
+      },
+      {
+        "firstCount": 0,
+        "secondCount": 1,
+        "missionMode": 1,
+        "trace": "-"
+      },
+      {
+        "firstCount": 0,
+        "secondCount": 1,
+        "missionMode": 2,
+        "trace": "-"
+      },
+      {
+        "firstCount": 0,
+        "secondCount": 1,
+        "missionMode": 4294967295,
+        "trace": "-"
+      },
+      {
+        "firstCount": 0,
+        "secondCount": 2,
+        "missionMode": 0,
+        "trace": "C:64;C:64;Q:5361637269666963654d656e752836342c322c3129:0"
+      },
+      {
+        "firstCount": 0,
+        "secondCount": 2,
+        "missionMode": 1,
+        "trace": "-"
+      },
+      {
+        "firstCount": 0,
+        "secondCount": 2,
+        "missionMode": 2,
+        "trace": "-"
+      },
+      {
+        "firstCount": 0,
+        "secondCount": 2,
+        "missionMode": 4294967295,
+        "trace": "-"
+      },
+      {
+        "firstCount": 0,
+        "secondCount": 3,
+        "missionMode": 0,
+        "trace": "C:64;C:64;Q:5361637269666963654d656e752836342c332c3129:0"
+      },
+      {
+        "firstCount": 0,
+        "secondCount": 3,
+        "missionMode": 1,
+        "trace": "-"
+      },
+      {
+        "firstCount": 0,
+        "secondCount": 3,
+        "missionMode": 2,
+        "trace": "-"
+      },
+      {
+        "firstCount": 0,
+        "secondCount": 3,
+        "missionMode": 4294967295,
+        "trace": "-"
+      },
+      {
+        "firstCount": 0,
+        "secondCount": 4,
+        "missionMode": 0,
+        "trace": "C:64;C:64;Q:5361637269666963654d656e752836342c342c3129:0"
+      },
+      {
+        "firstCount": 0,
+        "secondCount": 4,
+        "missionMode": 1,
+        "trace": "-"
+      },
+      {
+        "firstCount": 0,
+        "secondCount": 4,
+        "missionMode": 2,
+        "trace": "-"
+      },
+      {
+        "firstCount": 0,
+        "secondCount": 4,
+        "missionMode": 4294967295,
+        "trace": "-"
+      },
+      {
+        "firstCount": 1,
+        "secondCount": -1,
+        "missionMode": 0,
+        "trace": "C:64;C:64;Q:5361637269666963654d656e752836342c2d312c3129:0"
+      },
+      {
+        "firstCount": 1,
+        "secondCount": -1,
+        "missionMode": 1,
+        "trace": "-"
+      },
+      {
+        "firstCount": 1,
+        "secondCount": -1,
+        "missionMode": 2,
+        "trace": "-"
+      },
+      {
+        "firstCount": 1,
+        "secondCount": -1,
+        "missionMode": 4294967295,
+        "trace": "-"
+      },
+      {
+        "firstCount": 1,
+        "secondCount": 0,
+        "missionMode": 0,
+        "trace": "C:64;C:64;Q:5361637269666963654d656e752836342c302c3129:0"
+      },
+      {
+        "firstCount": 1,
+        "secondCount": 0,
+        "missionMode": 1,
+        "trace": "-"
+      },
+      {
+        "firstCount": 1,
+        "secondCount": 0,
+        "missionMode": 2,
+        "trace": "-"
+      },
+      {
+        "firstCount": 1,
+        "secondCount": 0,
+        "missionMode": 4294967295,
+        "trace": "-"
+      },
+      {
+        "firstCount": 1,
+        "secondCount": 1,
+        "missionMode": 0,
+        "trace": "C:64;C:64;Q:5361637269666963654d656e752836342c312c3129:0"
+      },
+      {
+        "firstCount": 1,
+        "secondCount": 1,
+        "missionMode": 1,
+        "trace": "-"
+      },
+      {
+        "firstCount": 1,
+        "secondCount": 1,
+        "missionMode": 2,
+        "trace": "-"
+      },
+      {
+        "firstCount": 1,
+        "secondCount": 1,
+        "missionMode": 4294967295,
+        "trace": "-"
+      },
+      {
+        "firstCount": 1,
+        "secondCount": 2,
+        "missionMode": 0,
+        "trace": "C:64;C:64;Q:5361637269666963654d656e752836342c322c3129:0"
+      },
+      {
+        "firstCount": 1,
+        "secondCount": 2,
+        "missionMode": 1,
+        "trace": "-"
+      },
+      {
+        "firstCount": 1,
+        "secondCount": 2,
+        "missionMode": 2,
+        "trace": "-"
+      },
+      {
+        "firstCount": 1,
+        "secondCount": 2,
+        "missionMode": 4294967295,
+        "trace": "-"
+      },
+      {
+        "firstCount": 1,
+        "secondCount": 3,
+        "missionMode": 0,
+        "trace": "C:64;C:64;Q:5361637269666963654d656e752836342c332c3129:0"
+      },
+      {
+        "firstCount": 1,
+        "secondCount": 3,
+        "missionMode": 1,
+        "trace": "-"
+      },
+      {
+        "firstCount": 1,
+        "secondCount": 3,
+        "missionMode": 2,
+        "trace": "-"
+      },
+      {
+        "firstCount": 1,
+        "secondCount": 3,
+        "missionMode": 4294967295,
+        "trace": "-"
+      },
+      {
+        "firstCount": 1,
+        "secondCount": 4,
+        "missionMode": 0,
+        "trace": "C:64;C:64;Q:5361637269666963654d656e752836342c342c3129:0"
+      },
+      {
+        "firstCount": 1,
+        "secondCount": 4,
+        "missionMode": 1,
+        "trace": "-"
+      },
+      {
+        "firstCount": 1,
+        "secondCount": 4,
+        "missionMode": 2,
+        "trace": "-"
+      },
+      {
+        "firstCount": 1,
+        "secondCount": 4,
+        "missionMode": 4294967295,
+        "trace": "-"
+      },
+      {
+        "firstCount": 2,
+        "secondCount": -1,
+        "missionMode": 0,
+        "trace": "C:64;C:64;Q:5361637269666963654d656e752836342c2d312c3129:0"
+      },
+      {
+        "firstCount": 2,
+        "secondCount": -1,
+        "missionMode": 1,
+        "trace": "-"
+      },
+      {
+        "firstCount": 2,
+        "secondCount": -1,
+        "missionMode": 2,
+        "trace": "-"
+      },
+      {
+        "firstCount": 2,
+        "secondCount": -1,
+        "missionMode": 4294967295,
+        "trace": "-"
+      },
+      {
+        "firstCount": 2,
+        "secondCount": 0,
+        "missionMode": 0,
+        "trace": "C:64;C:64;Q:5361637269666963654d656e752836342c302c3129:0"
+      },
+      {
+        "firstCount": 2,
+        "secondCount": 0,
+        "missionMode": 1,
+        "trace": "-"
+      },
+      {
+        "firstCount": 2,
+        "secondCount": 0,
+        "missionMode": 2,
+        "trace": "-"
+      },
+      {
+        "firstCount": 2,
+        "secondCount": 0,
+        "missionMode": 4294967295,
+        "trace": "-"
+      },
+      {
+        "firstCount": 2,
+        "secondCount": 1,
+        "missionMode": 0,
+        "trace": "C:64;C:64;Q:5361637269666963654d656e752836342c312c3129:0"
+      },
+      {
+        "firstCount": 2,
+        "secondCount": 1,
+        "missionMode": 1,
+        "trace": "-"
+      },
+      {
+        "firstCount": 2,
+        "secondCount": 1,
+        "missionMode": 2,
+        "trace": "-"
+      },
+      {
+        "firstCount": 2,
+        "secondCount": 1,
+        "missionMode": 4294967295,
+        "trace": "-"
+      },
+      {
+        "firstCount": 2,
+        "secondCount": 2,
+        "missionMode": 0,
+        "trace": "C:64;C:64;Q:5361637269666963654d656e752836342c322c3129:0"
+      },
+      {
+        "firstCount": 2,
+        "secondCount": 2,
+        "missionMode": 1,
+        "trace": "-"
+      },
+      {
+        "firstCount": 2,
+        "secondCount": 2,
+        "missionMode": 2,
+        "trace": "-"
+      },
+      {
+        "firstCount": 2,
+        "secondCount": 2,
+        "missionMode": 4294967295,
+        "trace": "-"
+      },
+      {
+        "firstCount": 2,
+        "secondCount": 3,
+        "missionMode": 0,
+        "trace": "C:64;C:64;Q:5361637269666963654d656e752836342c332c3129:0"
+      },
+      {
+        "firstCount": 2,
+        "secondCount": 3,
+        "missionMode": 1,
+        "trace": "-"
+      },
+      {
+        "firstCount": 2,
+        "secondCount": 3,
+        "missionMode": 2,
+        "trace": "-"
+      },
+      {
+        "firstCount": 2,
+        "secondCount": 3,
+        "missionMode": 4294967295,
+        "trace": "-"
+      },
+      {
+        "firstCount": 2,
+        "secondCount": 4,
+        "missionMode": 0,
+        "trace": "C:64;C:64;Q:5361637269666963654d656e752836342c342c3129:0"
+      },
+      {
+        "firstCount": 2,
+        "secondCount": 4,
+        "missionMode": 1,
+        "trace": "-"
+      },
+      {
+        "firstCount": 2,
+        "secondCount": 4,
+        "missionMode": 2,
+        "trace": "-"
+      },
+      {
+        "firstCount": 2,
+        "secondCount": 4,
+        "missionMode": 4294967295,
+        "trace": "-"
+      },
+      {
+        "firstCount": 3,
+        "secondCount": -1,
+        "missionMode": 0,
+        "trace": "C:64;C:64;Q:5361637269666963654d656e752836342c2d312c3029:0"
+      },
+      {
+        "firstCount": 3,
+        "secondCount": -1,
+        "missionMode": 1,
+        "trace": "-"
+      },
+      {
+        "firstCount": 3,
+        "secondCount": -1,
+        "missionMode": 2,
+        "trace": "-"
+      },
+      {
+        "firstCount": 3,
+        "secondCount": -1,
+        "missionMode": 4294967295,
+        "trace": "-"
+      },
+      {
+        "firstCount": 3,
+        "secondCount": 0,
+        "missionMode": 0,
+        "trace": "C:64;C:64;Q:5361637269666963654d656e752836342c302c3029:0"
+      },
+      {
+        "firstCount": 3,
+        "secondCount": 0,
+        "missionMode": 1,
+        "trace": "-"
+      },
+      {
+        "firstCount": 3,
+        "secondCount": 0,
+        "missionMode": 2,
+        "trace": "-"
+      },
+      {
+        "firstCount": 3,
+        "secondCount": 0,
+        "missionMode": 4294967295,
+        "trace": "-"
+      },
+      {
+        "firstCount": 3,
+        "secondCount": 1,
+        "missionMode": 0,
+        "trace": "C:64;C:64;Q:5361637269666963654d656e752836342c312c3029:0"
+      },
+      {
+        "firstCount": 3,
+        "secondCount": 1,
+        "missionMode": 1,
+        "trace": "-"
+      },
+      {
+        "firstCount": 3,
+        "secondCount": 1,
+        "missionMode": 2,
+        "trace": "-"
+      },
+      {
+        "firstCount": 3,
+        "secondCount": 1,
+        "missionMode": 4294967295,
+        "trace": "-"
+      },
+      {
+        "firstCount": 3,
+        "secondCount": 2,
+        "missionMode": 0,
+        "trace": "C:64;C:64;Q:5361637269666963654d656e752836342c322c3029:0"
+      },
+      {
+        "firstCount": 3,
+        "secondCount": 2,
+        "missionMode": 1,
+        "trace": "-"
+      },
+      {
+        "firstCount": 3,
+        "secondCount": 2,
+        "missionMode": 2,
+        "trace": "-"
+      },
+      {
+        "firstCount": 3,
+        "secondCount": 2,
+        "missionMode": 4294967295,
+        "trace": "-"
+      },
+      {
+        "firstCount": 3,
+        "secondCount": 3,
+        "missionMode": 0,
+        "trace": "C:64;C:64;Q:5361637269666963654d656e752836342c332c3029:0"
+      },
+      {
+        "firstCount": 3,
+        "secondCount": 3,
+        "missionMode": 1,
+        "trace": "-"
+      },
+      {
+        "firstCount": 3,
+        "secondCount": 3,
+        "missionMode": 2,
+        "trace": "-"
+      },
+      {
+        "firstCount": 3,
+        "secondCount": 3,
+        "missionMode": 4294967295,
+        "trace": "-"
+      },
+      {
+        "firstCount": 3,
+        "secondCount": 4,
+        "missionMode": 0,
+        "trace": "C:64;C:64;Q:5361637269666963654d656e752836342c342c3029:0"
+      },
+      {
+        "firstCount": 3,
+        "secondCount": 4,
+        "missionMode": 1,
+        "trace": "-"
+      },
+      {
+        "firstCount": 3,
+        "secondCount": 4,
+        "missionMode": 2,
+        "trace": "-"
+      },
+      {
+        "firstCount": 3,
+        "secondCount": 4,
+        "missionMode": 4294967295,
+        "trace": "-"
+      },
+      {
+        "firstCount": 4,
+        "secondCount": -1,
+        "missionMode": 0,
+        "trace": "C:64;C:64;Q:5361637269666963654d656e752836342c2d312c3029:0"
+      },
+      {
+        "firstCount": 4,
+        "secondCount": -1,
+        "missionMode": 1,
+        "trace": "-"
+      },
+      {
+        "firstCount": 4,
+        "secondCount": -1,
+        "missionMode": 2,
+        "trace": "-"
+      },
+      {
+        "firstCount": 4,
+        "secondCount": -1,
+        "missionMode": 4294967295,
+        "trace": "-"
+      },
+      {
+        "firstCount": 4,
+        "secondCount": 0,
+        "missionMode": 0,
+        "trace": "C:64;C:64;Q:5361637269666963654d656e752836342c302c3029:0"
+      },
+      {
+        "firstCount": 4,
+        "secondCount": 0,
+        "missionMode": 1,
+        "trace": "-"
+      },
+      {
+        "firstCount": 4,
+        "secondCount": 0,
+        "missionMode": 2,
+        "trace": "-"
+      },
+      {
+        "firstCount": 4,
+        "secondCount": 0,
+        "missionMode": 4294967295,
+        "trace": "-"
+      },
+      {
+        "firstCount": 4,
+        "secondCount": 1,
+        "missionMode": 0,
+        "trace": "C:64;C:64;Q:5361637269666963654d656e752836342c312c3029:0"
+      },
+      {
+        "firstCount": 4,
+        "secondCount": 1,
+        "missionMode": 1,
+        "trace": "-"
+      },
+      {
+        "firstCount": 4,
+        "secondCount": 1,
+        "missionMode": 2,
+        "trace": "-"
+      },
+      {
+        "firstCount": 4,
+        "secondCount": 1,
+        "missionMode": 4294967295,
+        "trace": "-"
+      },
+      {
+        "firstCount": 4,
+        "secondCount": 2,
+        "missionMode": 0,
+        "trace": "C:64;C:64;Q:5361637269666963654d656e752836342c322c3029:0"
+      },
+      {
+        "firstCount": 4,
+        "secondCount": 2,
+        "missionMode": 1,
+        "trace": "-"
+      },
+      {
+        "firstCount": 4,
+        "secondCount": 2,
+        "missionMode": 2,
+        "trace": "-"
+      },
+      {
+        "firstCount": 4,
+        "secondCount": 2,
+        "missionMode": 4294967295,
+        "trace": "-"
+      },
+      {
+        "firstCount": 4,
+        "secondCount": 3,
+        "missionMode": 0,
+        "trace": "C:64;C:64;Q:5361637269666963654d656e752836342c332c3029:0"
+      },
+      {
+        "firstCount": 4,
+        "secondCount": 3,
+        "missionMode": 1,
+        "trace": "-"
+      },
+      {
+        "firstCount": 4,
+        "secondCount": 3,
+        "missionMode": 2,
+        "trace": "-"
+      },
+      {
+        "firstCount": 4,
+        "secondCount": 3,
+        "missionMode": 4294967295,
+        "trace": "-"
+      },
+      {
+        "firstCount": 4,
+        "secondCount": 4,
+        "missionMode": 0,
+        "trace": "C:64;C:64;Q:5361637269666963654d656e752836342c342c3029:0"
+      },
+      {
+        "firstCount": 4,
+        "secondCount": 4,
+        "missionMode": 1,
+        "trace": "-"
+      },
+      {
+        "firstCount": 4,
+        "secondCount": 4,
+        "missionMode": 2,
+        "trace": "-"
+      },
+      {
+        "firstCount": 4,
+        "secondCount": 4,
+        "missionMode": 4294967295,
+        "trace": "-"
+      }
+    ],
+    "invalidSidSuppressed": [
+      {
+        "missionMode": 1,
+        "sid": 0
+      },
+      {
+        "missionMode": 1,
+        "sid": 4294967295
+      },
+      {
+        "missionMode": 2,
+        "sid": 0
+      },
+      {
+        "missionMode": 2,
+        "sid": 4294967295
+      },
+      {
+        "missionMode": 4294967295,
+        "sid": 0
+      },
+      {
+        "missionMode": 4294967295,
+        "sid": 4294967295
+      }
+    ],
+    "sha256": {
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+      "extracted/goal-sacrifice-menu-20261019-exploratory-oracle.py": "daadb4357e3ea64e790e01ea61bcd099bb97776a29561b1b70ee2440c678af43",
+      "extracted/goal-sacrifice-menu-20261019-open-oracle.py": "3c295f5d3df3803db23246489a6385087ee35a5a4341922aa3586bb9a7b6e2d0",
+      "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+      "tools/decomp_cursor_position.py": "e15bcdbc4c6be9c131c30f15416c945d650dba9f7dc6def404b47f63c635c212",
+      "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e"
+    },
+    "boundaries": "실제4cfc10 전체 명령/원본억제분기. 가상+80 두조회/문자열서식/Tell은 명시 입력/효과 경계. 보상창/보상선택/전체원본게임·CD10.72 관측이 아니다. 이후 제품 guard 수정과 독립하여 보호 PE만 실행했다."
+  },
+  "protected": {
+    "AGENTS.md": "7addbf9b31c42f29aab7c93faa865eb6de8590a600d17202a297cf7122bdf979",
+    "LEFT_JOBS.dotnetpj.md": "0c067e1d12879dbf2212cbd64c8f9f60e65b590df910418f025027ed84f80ec2",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "originals/d/GIFCLOUD.COL": "785a2cda6ac1d3e295d375815b6d9650720683099db7c249382d598b5da00532"
+  },
+  "currentSources": {
+    "cpppj/src/client/CampaignUserInputServices.cpp": "7b22008ca86929c1c7523bde5d0d6d265197dc032d2f2502d2e356f6e923f86c",
+    "cpppj/src/client/RawCampaignCarrierInput.inc": "5f7586171e8d3fc0b7a12e7bad502a33eeda171a41d859469c03367d930aad1b",
+    "cpppj/tests/CampaignSessionTests.cpp": "c93ddbf3c95ae7ebf3c7ee9cd025d471a3d41f60fa6cfb0171f6bcd13629458e"
+  },
+  "binaries": {
+    "cpppj/build/bin/Release/NetstormCpp.exe": "68d431b41b6e2f366cc0f33f2b4f1681a67bd70c6f1751ecc837a8ac36d726c5",
+    "cpppj/build/bin/Release/netstorm_tests.exe": "55e6cd1e9d41b3a45488bbc9e47cc618b8e790f57fc57f75d55e93075338f1ac"
+  },
+  "validation": {
+    "releaseBuild": "build2",
+    "releaseWarnings": 0,
+    "releaseErrors": 0,
+    "focusedTests": 1,
+    "focusedFailedChecks": 0,
+    "ctestTests": 1716,
+    "ctestFailedChecks": 0,
+    "ctestSeconds": 238.29,
+    "entryPasses": 11,
+    "entryOriginalsUnchanged": true,
+    "entryScope": "CLI --mission/실제 UI 버튼으로11개 플레이 진입. 사용자 메뉴 선택·자연 명령·승패·저장·완주/원본 전체 동일성은 미검증.",
+    "originalGameRuns": 0,
+    "newDecompiles": 0,
+    "newNativeFixtures": 0,
+    "oldFixturesPreserved": 414,
+    "pinReports": 52,
+    "pinItems": 58,
+    "auditTools": 131,
+    "auditPasses": 116,
+    "historicalAuditFailures": 15,
+    "newAuditFailures": 0
+  },
+  "remaining": [
+    "PrepareRitual의RunePostPopState.suppressDuration은현재globals.missionPost와미연결이다.다음에는원본10초/제단24/Finish/SP5000/참여갱신·후속미션을같은현재모드에연결한다.",
+    "의식획득/UI10경계중캠페인실제경로를우선연결하고MP보상선택은보류한다.보상선택이없는캠페인에임의mask4Form을넣지않는다.",
+    "자연적신전파괴/사제약화·포획·운반·희생완료/11단계완주·전체동일성은미완료다."
+  ],
+  "docSha256": {
+    "docs/exe/cpp-sacrifice-menu-suppression-20261019.md": "5cddaf62fcbf93e57ae9199593da07e3abc7492fe0e76ec3e5cdc4e12a20a151"
+  },
+  "logSha256": {
+    "extracted/goal-sacrifice-menu-20261019-LastTest.log": "98ce54e647c3aa83962dab40a16f235dd56deef7319d07a51886954c1ef54dd3",
+    "extracted/goal-sacrifice-menu-20261019-audit.log": "1e9f63cca1f8dfd340102eddc67b5ace562bfc5e8a4befd36abad49a753527ed",
+    "extracted/goal-sacrifice-menu-20261019-build.log": "924f3cf5ab7fa6c4710fc5c939611a25bb05919343e7e778de343e83c50c647a",
+    "extracted/goal-sacrifice-menu-20261019-build2.log": "68daf5268753a6f0253917d033a76282e07803e3b45f8c1951a34f7cbc6a3d34",
+    "extracted/goal-sacrifice-menu-20261019-ctest.log": "4fbdee82bac0270d65cacf56c95ff7c362b2c165c7ba8d49cba133f1e101345a",
+    "extracted/goal-sacrifice-menu-20261019-entry.log": "45c1eee9aa0a6dda3519fe8ac4fcf426bf94132bb199d97050b9cc54ac53e578",
+    "extracted/goal-sacrifice-menu-20261019-focused.log": "81759368ba518c25fa683b774535d714b25a7fe81f51acec2855f2206b8cd269",
+    "extracted/goal-sacrifice-menu-20261019-mode-proof.log": "49c6ae292392b5388b60cc471d5cb3fcc345f3e51ee0165a4824946c0f8413de",
+    "extracted/goal-sacrifice-menu-20261019-native-open.log": "dcd9ca71d995daa7a176dac66412b06eef6b93de8fd0eddea00f2626dde99a6c",
+    "extracted/goal-sacrifice-menu-20261019-native.log": "a728406b6cd723c07b581eac8f557c505cb03baaae1f964013b0366aa92ea74c"
+  },
+  "evidenceSha256": {
+    "extracted/goal-sacrifice-menu-20261019-audit.py": "b2a8f571d85e0667eae961efbf2d179452b25e4b2ce0da355a18b702b4adf417",
+    "extracted/goal-sacrifice-menu-20261019-baseline.json": "7dbcad94d7e6515223edabf9bcc64d29bb8c2b72e7bcd05f44a97e680df93ab8",
+    "extracted/goal-sacrifice-menu-20261019-entry/demostormrages/0/current.bmp": "30f75a74c3e9b0fb833d080dd12973005b69511f9115b5c7a4e5dae8ff438b42",
+    "extracted/goal-sacrifice-menu-20261019-entry/demostormrages/0/states.tsv": "4b7e25702baf234ec1c59ee314ca30f6b82950bf544b131428e504b9d7d8d9e8",
+    "extracted/goal-sacrifice-menu-20261019-entry/demostormrages/0/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sacrifice-menu-20261019-entry/demostormrages/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sacrifice-menu-20261019-entry/demostormrages/0/steps.tsv": "3b5b26e2bbb6a6fed0004d815a1c350eb4b5b75a8d476d29da81fb04356bce30",
+    "extracted/goal-sacrifice-menu-20261019-entry/dissolvedalliance/0/current.bmp": "0048c62aa5e57af862401874fa7a85f8b4809a9ab29c42bd6c6b583f99192383",
+    "extracted/goal-sacrifice-menu-20261019-entry/dissolvedalliance/0/states.tsv": "8179d0cf2e4af7411f331fafd0bf5d06e0135180613644b8ab6edd27d4499e03",
+    "extracted/goal-sacrifice-menu-20261019-entry/dissolvedalliance/0/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sacrifice-menu-20261019-entry/dissolvedalliance/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sacrifice-menu-20261019-entry/dissolvedalliance/0/steps.tsv": "67dc6a97a7db9aa1e8b9224d460e68eca064df0a97353f1eaef0988d08e99e48",
+    "extracted/goal-sacrifice-menu-20261019-entry/dissolvedalliance/1/current.bmp": "a0c4902b4531036ebfa84c091228f1f1169bdcf536adf46e7ddf3280b7163c57",
+    "extracted/goal-sacrifice-menu-20261019-entry/dissolvedalliance/1/states.tsv": "8b50b9f4d984b1c63c80d127f60171531f0d1e297e5ea6d0a11e71b40edcfc43",
+    "extracted/goal-sacrifice-menu-20261019-entry/dissolvedalliance/1/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sacrifice-menu-20261019-entry/dissolvedalliance/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sacrifice-menu-20261019-entry/dissolvedalliance/1/steps.tsv": "f41ee8cd1c0ab3e8e9394c53ac2faf4a274ab407a36e6923bbb0bda3d09d5573",
+    "extracted/goal-sacrifice-menu-20261019-entry/guardmyback/0/current.bmp": "55056f59db400aadd3473854044a3b78762ca4841d29881003a4174d9e1b4c33",
+    "extracted/goal-sacrifice-menu-20261019-entry/guardmyback/0/states.tsv": "660356bef3f91efcecf17ed01e34d1f05dcf75f9197d86d297735893b9279b31",
+    "extracted/goal-sacrifice-menu-20261019-entry/guardmyback/0/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sacrifice-menu-20261019-entry/guardmyback/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sacrifice-menu-20261019-entry/guardmyback/0/steps.tsv": "81ab50e8e188d865f770d9c3d7e85b929a5823b9c549f4378ddc5931a23c9ea5",
+    "extracted/goal-sacrifice-menu-20261019-entry/guardmyback/1/current.bmp": "d4f54f98bcbc58445ce065d0e272a3e2c4b744f2606f562bd839c3b90d48853d",
+    "extracted/goal-sacrifice-menu-20261019-entry/guardmyback/1/states.tsv": "1d3ae58121d136739a2eb7058625fbbfab79d887d975203ca560b8ff3491d429",
+    "extracted/goal-sacrifice-menu-20261019-entry/guardmyback/1/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sacrifice-menu-20261019-entry/guardmyback/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sacrifice-menu-20261019-entry/guardmyback/1/steps.tsv": "076ecd53b5b9aad8bf2d729344ccb4e242b9fb35f5a66e66c2e9d67d68263158",
+    "extracted/goal-sacrifice-menu-20261019-entry/masterofwhirligigs/0/current.bmp": "3506ed767d91970625008cfc81e38b70040e233420a19c22a59020ea3f6a6fe5",
+    "extracted/goal-sacrifice-menu-20261019-entry/masterofwhirligigs/0/states.tsv": "a1537840c694807647debc873153a9128ed3bb79985b91609a8fa6a8e1792809",
+    "extracted/goal-sacrifice-menu-20261019-entry/masterofwhirligigs/0/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sacrifice-menu-20261019-entry/masterofwhirligigs/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sacrifice-menu-20261019-entry/masterofwhirligigs/0/steps.tsv": "4faf7ee9c33d3b57330ad1e43de5de320ef6e624d7c05956e8006b4640e1f3e6",
+    "extracted/goal-sacrifice-menu-20261019-entry/masterofwhirligigs/1/current.bmp": "e20dd812cfbcf1c4b9c72c498724dba32f3b351bde5d296456cf393fd9f8b822",
+    "extracted/goal-sacrifice-menu-20261019-entry/masterofwhirligigs/1/states.tsv": "8191fc5711ee7d2f21e3ed18ee9c103c6cee3ed46fc55f9307189e815225b8be",
+    "extracted/goal-sacrifice-menu-20261019-entry/masterofwhirligigs/1/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sacrifice-menu-20261019-entry/masterofwhirligigs/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sacrifice-menu-20261019-entry/masterofwhirligigs/1/steps.tsv": "4b41dea4b78069125c8ed5bd8a99b2c0f03d646179d9315f7dbffb68b24aedfb",
+    "extracted/goal-sacrifice-menu-20261019-entry/results.json": "36f7079a53eed560dfe6427c6f0236c7a4c77e7d08f041232de41479a623faf0",
+    "extracted/goal-sacrifice-menu-20261019-entry/thewarbegins/0/current.bmp": "185a6cc670cf293150d7c55a19066c8b700ac2a5f30c0741fcd6454332bf9bd3",
+    "extracted/goal-sacrifice-menu-20261019-entry/thewarbegins/0/states.tsv": "b658a889a46ecbabc82dfe6e0d7c9047d1a58e0782594ac0c54b582ad9b71012",
+    "extracted/goal-sacrifice-menu-20261019-entry/thewarbegins/0/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sacrifice-menu-20261019-entry/thewarbegins/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sacrifice-menu-20261019-entry/thewarbegins/0/steps.tsv": "31fc434047c44631d7f399ddcb7216b57214836112a6b3d2f40bb3ad67fd68b6",
+    "extracted/goal-sacrifice-menu-20261019-entry/thewarbegins/1/current.bmp": "e58cf5a2a0944a2a5e129b62b2ab014e281a81a9468b55cad128c33665b0634d",
+    "extracted/goal-sacrifice-menu-20261019-entry/thewarbegins/1/states.tsv": "28f8ed4aa19fd9dfdc991a10670a0b33f32d7d3d629b18a35f84f0d072eb8102",
+    "extracted/goal-sacrifice-menu-20261019-entry/thewarbegins/1/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sacrifice-menu-20261019-entry/thewarbegins/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sacrifice-menu-20261019-entry/thewarbegins/1/steps.tsv": "eb2e483d5e891327af4bd6f1d3e7ff0fd5850889dfd3a6df3d4982b82c04a2c8",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial1/0/current.bmp": "34bdeae034096a538ceed2baa5d220393288de99dccd5e9e738bfa61ecbc2165",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial1/0/states.tsv": "01e7245e9df60395d2b9d62e99dbb9ffe56dc4ef76fab7fcf972bf84981065dd",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial1/0/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial1/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial1/0/steps.tsv": "1a4ea2078bbfcf328bf31bc1fed2d81eb18996f34472461b15e55a5e39a00d47",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial1/1/current.bmp": "59ad99754d9267a8e15901f6b992a0d7ec28053c75609172b33a723988c50012",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial1/1/states.tsv": "cce05a3a82797b9f1192fc06b45bf7f17fda9700a69bcbe176518468ed2068f8",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial1/1/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial1/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial1/1/steps.tsv": "afe86667395b9ab1b831f1da50fa654b379559049c712fca678fb49dff4551ed",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial1/2/current.bmp": "de30eb43eccb704b46a5b428904b8ea0f9ff4b72323a71caa083469f6e6120d2",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial1/2/states.tsv": "b5bfd3c0accd45f96be1e98a4c9453d4bd9072a7b595c75d232a2e1a8bd5ad14",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial1/2/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial1/2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial1/2/steps.tsv": "8c040661e96c566ebd68ed57b29a310696fb33629a171f76b80989b5732669ee",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial2/0/current.bmp": "1969e969cb3d385e35e28a907737b8448b9c7ba80964ef59e09dfb827c63063e",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial2/0/states.tsv": "b721f6fc1fa2c47c93c94a8a85bf87072dd316789fc04cb8ef29c7c92769f687",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial2/0/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial2/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial2/0/steps.tsv": "d464fd3706ff1ab1919ae75026a2932233488e2547eda96bd7ce967f512f95a2",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial2/1/current.bmp": "290cf9b8de2ab40f163dee5739d30fd12dc866fe3c9d13ed8577d88b80eeea4b",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial2/1/states.tsv": "997b3ba826dc3db799242ad934a21618e8489e2084d4042ca0db00612674839a",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial2/1/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial2/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial2/1/steps.tsv": "afe2dc92798bd35633e32c6fcab932cc38084ca847e568ff189c9d7544a69265",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial2/2/current.bmp": "e07b6781b803cfe9eacf3f0f89950ef993800c5eef3749e112d9003b5c9feaa7",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial2/2/states.tsv": "ee3d10f44be8e8748cc5800bf866790dd2bc146b31186b7d9e438b20509a6de8",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial2/2/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial2/2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial2/2/steps.tsv": "6385ec59f4c47076136022eb7b8204695db323987812e6d6c89e7ec0c192196e",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial2/3/current.bmp": "15f811fd16bed6635d69cfbb40d0d79d3bfe1ed10a7817df9488246b7ef00f59",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial2/3/states.tsv": "e7deaf60f54ce4de3151292ff157da7eb166f4987468a7e335c9ce6641f8b411",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial2/3/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial2/3/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial2/3/steps.tsv": "0cca02de1be64ae34ba44fe36cbef5aa935d916f466f4b6d76f0f77252dd7e83",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial3/0/current.bmp": "fe9e786072ef726f21dcf301e74a5b44dc70d2f01f72f908c6e5937f918c9dd2",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial3/0/states.tsv": "8214e79d499c60e11c75ff4eeeb97d08b1a9309b5233c19d2cde6700766bb1d0",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial3/0/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial3/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial3/0/steps.tsv": "d008e2118b7ea18649ec625381be0caf548fceaacf784e180a473245543c2158",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial3/1/current.bmp": "dc5ef6f49db10db5105faa838c2c47a415a950d7f502c35424bcc2e7564edd56",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial3/1/states.tsv": "5ae38ad304bcd1592889d27e672435ee11e42fa3efc6730f576f931c1ace2b1e",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial3/1/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial3/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial3/1/steps.tsv": "385c237c3bd6a3fa650af37eacba5ad0b5ac0f292542a398b0ea1e964cba086d",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial3/2/current.bmp": "2d93d1a08c1c7a5f56d4e02d74afd7ab343d90a530cca28e8dae1937f9507f88",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial3/2/states.tsv": "91867f4a52f65cd2fa0e91abc2dc0e7e05c4d2c788f0b1f5c33511ae81e8cdf6",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial3/2/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial3/2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial3/2/steps.tsv": "626e5e3b83af7376396b581b34345c9ef03eb81b0136b094a69889915a84d1ab",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial4/0/current.bmp": "030c997e223405cbc8772bb4534c6fd511f9b13c60e99569f4eeb9168dfeff3e",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial4/0/states.tsv": "163b3cd4242266242bc711a0e96ec7e96c500f6b29cb2a2351c4a22a67294647",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial4/0/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial4/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial4/0/steps.tsv": "1f3aca4b28d865b54144eb1d96a3460b0d64487388e51fbacb2be1cc54982e76",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial4/1/current.bmp": "58c9c352b1d389f87bf9d33b6db5dcd0a70c8b37ad1d59a9056175a5a02ac982",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial4/1/states.tsv": "e4fd0f0f618b39e9f0b8808c3471e060aa174bb3fcc22b63521bf3fda77a2126",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial4/1/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial4/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial4/1/steps.tsv": "ec2978ac61617bf1ebd97b34a289a258abb501ab0848a601c8c954390d59fa46",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial4/2/current.bmp": "02c76192ef1114ce7a2ae532f7afcc5526c338d47eedd4354015111433b961af",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial4/2/states.tsv": "4bc9d0e1f6d1181d7c84a5dc7145a115b8b5aecab21fcbdc86770feb454b459b",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial4/2/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial4/2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial4/2/steps.tsv": "3ee7ce2ca3cc977609ece818456af2c201029a2259fe64480d5791c59f480b07",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial5/0/current.bmp": "c13d26f185e617d0e049abbf5544806ff433e8c56f674ff5b440a06300285ae4",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial5/0/states.tsv": "d5b3ef6f48963c442d7f6eb9fff4b8647d935f0286a6c12ac3e285706be1f38e",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial5/0/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial5/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial5/0/steps.tsv": "2a9b8b7e4658789e7e9428e48eb82fb07c7b211e3cb69adbdf51b6655611e07b",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial5/1/current.bmp": "064eba662890073c0367e10a9440a8c380b824693de3d0168d9fd2ce0a7d54b3",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial5/1/states.tsv": "65f032f3f149a9600aa86cd1cb8c7117ee08ba741330eb25ce937c84a0c7b57a",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial5/1/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial5/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial5/1/steps.tsv": "496303c1093e73295825da22c6dce88fe353cd4309f4d4efbbad4fa67c8150c1",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial5/2/current.bmp": "9be021a1e0c910dae81fec7bdcc6d0fb54b51dd7a128f5d20e749f26bf93d1c2",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial5/2/states.tsv": "2e7cae23349f91f2a0c0e4397c90272ca5810acf7081f1dec95965bba28d32dd",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial5/2/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial5/2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial5/2/steps.tsv": "fe5cf404e9a94e2371945da2cf317f68ffa6293c0c8beacc8a7e52588ba478d0",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial6/0/current.bmp": "b93a57e7f880d395ffe79e4c0dc7041a44532d9201998e96eae69a62a4b13573",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial6/0/states.tsv": "ca13190a46799e3d5ef051886774544b751f750711fa9648377985791071617b",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial6/0/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial6/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial6/0/steps.tsv": "50b88caed81fe9cf24b5ff04b0bee60c566c66a7f8b734e4bd64b77bf3986071",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial6/1/current.bmp": "eae33ed67859053e356f4a2bc82389786536ecfd15e8cf13f61314458cc0bedf",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial6/1/states.tsv": "ebd016d293fd9de6c9b7a03da1bdb9fea52dd6f92d0be208592c78498a25443e",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial6/1/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial6/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial6/1/steps.tsv": "ad766fcffca14ab12b63f817b81ea57cc7d8ce0866676b535dc05b17e0ee3f71",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial6/2/current.bmp": "cfc6f123b6880bb59d7ee43cbb3a2f28e6ec4c46e367a7f60cb71a7ce9986ccd",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial6/2/states.tsv": "9e225b4f4a0fc3353a42585ecac2ab0bb8a47095c58fab0ebf6bbb68d3a21c4c",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial6/2/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial6/2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial6/2/steps.tsv": "5a842c8381de6beada05cd77f00d0cc2f3df1ff71993c95e86272ca7a48eca3e",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial6/3/current.bmp": "31619ea1253219da599f9896e122c5514043b34668ccf3f6f07a7858a1b13dc0",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial6/3/states.tsv": "b3a8113d261f5ef5082aa128d57229419f4a95bad264278c4e26aab577a65afc",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial6/3/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial6/3/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial6/3/steps.tsv": "ddd485fb7e8b5f89146b2b6ba091b6d45cb5568a25358b4360ca4d17d31eeacf",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial6/4/current.bmp": "d25409d7a1f954f839f2809f625c5138592c4ace1ad1c6bf27020667ef250b7c",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial6/4/states.tsv": "911853dbaa9ab3cc2e4ca4a4494bcf3bb36ff7f7b74a9cae80571ff706b047f6",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial6/4/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial6/4/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-sacrifice-menu-20261019-entry/tutorial6/4/steps.tsv": "72c8914443b1936f5187d4b4054f49bcde978b187d185f07f505658fc5fad96b",
+    "extracted/goal-sacrifice-menu-20261019-exploratory-failure.json": "93237e76701c5d6ca03518fa0e9cede63a250406e5f78b1a31ade6641c68e075",
+    "extracted/goal-sacrifice-menu-20261019-exploratory-oracle.py": "daadb4357e3ea64e790e01ea61bcd099bb97776a29561b1b70ee2440c678af43",
+    "extracted/goal-sacrifice-menu-20261019-guard.py": "43e7934340f991fefd6619e0fb872a2ab9bcd236c8079dfdc75dfcd5036ce3fb",
+    "extracted/goal-sacrifice-menu-20261019-live-state.json": "da11179ae405198a1817ff29f25f98480626f13c70ce60af777aadecadbef4d8",
+    "extracted/goal-sacrifice-menu-20261019-mode-proof.json": "8f2a85e6d66538b309073a64dbb8cf6c5a9b4d60953c8839eed344c2674cdb97",
+    "extracted/goal-sacrifice-menu-20261019-mode-proof.py": "aac59132736c70fe7db62ae1fa0ddce99298ee349b0f8891a069f98ef6657359",
+    "extracted/goal-sacrifice-menu-20261019-native-open.json": "78b7368080fc62f59574eb35a129e32b51044654f8bad0f33d436f31708fa1eb",
+    "extracted/goal-sacrifice-menu-20261019-open-oracle.py": "3c295f5d3df3803db23246489a6385087ee35a5a4341922aa3586bb9a7b6e2d0",
+    "extracted/goal-sacrifice-menu-20261019-pin-maintenance.py": "1013f0e8af8bfc27092c26cfce38880f2269afeddc90ac21f9a88e989bf6aec9",
+    "extracted/goal-sacrifice-menu-20261019-pin-updates.json": "aca0db2a20aa4dd4b3b841c54d2bdf44550e2e6858d5b20d9956f0446857dc97",
+    "extracted/goal-sacrifice-menu-20261019-protected.json": "cb36936833a0e5987157afc6979f1569d1cad7ba8a156256cba7b185c23d1f70",
+    "extracted/goal-sacrifice-menu-20261019-report-before-finalize.json": "b789bf1b43395c34f340a70880f440e9fd36633d56b48fbf0e1dd35122f0fb39",
+    "extracted/goal-sacrifice-menu-20261019-report.py": "16a6bb1f42e34f22fee713c7f9d84916e5ef40f458bf975279f441d8ae67a402",
+    "extracted/goal-sacrifice-menu-20261019-sources.json": "695ef24495da908f50d0b01865f59daa1ecf3700bceb0cd7187ab97dbd3cd8ea",
+    "extracted/goal-sacrifice-menu-20261019-test-before-fix.cpp": "9201974b1fb675e51d27035d0e2fbd094b74fd241012e37a3f1d68a8ad33c8e1",
+    "extracted/goal-sacrifice-menu-20261019-verify-final.json": "293b0e48585b8015b9a8c81b2cda295fbe125b75b7307096655d7cd7b54eb4c0"
+  }
+}

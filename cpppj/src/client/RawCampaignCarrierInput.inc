@@ -25,6 +25,8 @@ std::unique_ptr<RawCarrierInput> RawCampaignSession::MakeCarrierInput(CarrierInp
     hooks.altarAllowed=[s](Sid dais,Sid priest) { return s->sacrificeRequest->Allowed(dais,priest); }; // 실제 서버40h와 같은 현재 Dais 자격 판정이다.
     hooks.localOwner=[s] { return s->playerState.battleOwner; };hooks.checking=[s] { return s->gunState.checking; };
     hooks.earlySacrifice=[s] { if (s->globals.missionPost) return false;throw std::logic_error("일반전투 희생 제한시간 부모 미연결"); };
+    // 원본4cfc10은 같은00594fa4가 비영인 캠페인/튜토리얼에서 보상창을 열지 않는다. 의식 이동 요청은 앞선Commit에서 그대로 보낸다.
+    hooks.showSacrifice=[s,show=std::move(hooks.showSacrifice)](std::uint32_t dais) { if (s->globals.missionPost) return;if (!show) throw std::logic_error("일반전투 희생 메뉴 소비자 미연결");show(dais); };
     hooks.select=[s](std::uint32_t sid,std::uint32_t force,std::uint32_t activate) { auto link=s->activeSelection.lock();if (!link || !link->selection) throw std::logic_error("운반체 입력의 현재 선택 수명 미연결");static_cast<void>(link->selection->Select(sid,force,activate)); };
     hooks.request=[s](Sid sid,RawPathPoint p,std::uint32_t sacrifice) { s->carrierMove->Request(sid,p,sacrifice); };hooks.pickup=[s](Sid sid) { s->carrierPickup->Request(sid); };
     hooks.random=[s](std::int32_t low,std::int32_t high) { if (high<=low) throw std::invalid_argument("이동 음향 정수 난수 구간");return low+static_cast<std::int32_t>(s->random.Next(static_cast<std::uint32_t>(high-low))); };

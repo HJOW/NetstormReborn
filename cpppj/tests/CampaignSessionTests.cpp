@@ -2299,3 +2299,20 @@ TEST_CASE(CampaignDais_ActualPriestMenuCursorConstruction) {
     std::cout<<"명시 포획 운반 입력→실제 커서3/40h/이동/제단 전달"<<delivered.value<<"/제단O·owner2 갱신\n";
 
 }
+
+// 캠페인의 실제Commit은 멀티플레이 보상창을 호출하지 않고 같은40h/의식 경로를 계속 사용한다. 자연 포획을 증명하는 검사는 아니다.
+TEST_CASE(CampaignSacrifice_ClickSkipsMultiplayerMenuAndKeepsRitualRequest) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();netstorm::zacket::LocalMissionTransport* wire{};std::vector<std::string> music;std::size_t menus{}; // 실제 자산/전송을 사용하고 보상창 호출만 센다.
+    services.carrierRequest=[&](std::int32_t owner,std::span<const std::uint8_t> packet) { CHECK(wire);if (wire) wire->Send(owner,packet); };services.requestMusic=[&](std::string_view name) { music.emplace_back(name); };
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));session.Load();auto core=session.Core();SessionPickupWire link(session);wire=&link.transport;
+    const auto dais=session.World().Create(165);core.owner.Set(dais,1);session.World().Pop(dais,100,111,0);const auto captured=session.CreateContained(dais,158,0x82,32,0,0); // 메뉴 관문을 확인하는 명시 제단/포획 입력이며 건설·포획 완료값을 대신하지 않는다.
+    const Sid priest{static_cast<std::uint16_t>(session.FindPriestParticipation(1))};CHECK(priest.value);if (!priest.value) return;CarrierInputHooks hooks;hooks.showSacrifice=[&](std::uint32_t) { ++menus;throw std::logic_error("캠페인에서 호출되면 안 되는 멀티플레이 보상 메뉴"); };hooks.assertion=[](std::uint32_t line) { throw std::logic_error("실제 의식 클릭 진단 "+std::to_string(line)); };
+    auto input=session.MakeCarrierInput(std::move(hooks));RawPathPoint target{100,111};CHECK(input->Evaluate(priest,target)==0x11);const auto sp=session.Sp(1);input->Commit(priest.value,{100,111});CHECK(menus==0); // 실제 사용자Commit을 직접 실행하며 UI 오류를 숨기는 예외 처리를 하지 않는다.
+    link.transport.Flush();CHECK(link.transport.Poll()==1 && link.recorded.size()==1);CHECK(music==std::vector<std::string>{"sacrifice.mus"} && session.Sp(1)==sp);CHECK(FindAttachedProcess(core.pool,priest,54).value); // 보상 선택 생략과 의식 이동/음악 요청을 구별한다.
+    const auto began=core.processState.now;std::size_t born{},retired{};bool wasLive{}; // 같은Kernel의 실제 룬 생성/삭제 전이를 센다.
+    for (std::uint64_t step=1;step<=8000 && retired<5;++step) { // 기존 요청 뒤 실제 다섯 룬 진행이 유지되는지 확인한다.
+        const auto now=began+double(step)*.025;session.RunFrame({now,100+now,.025,step},false);const bool live=!ConstructionLive(core,166).empty();if (live && !wasLive) ++born;if (!live && wasLive) ++retired;wasLive=live;
+    }
+    CHECK(born==5 && retired==5 && menus==0 && Get(core.pool.Slot(dais),36)==47);CHECK((core.pool.Slot(captured)[11]&3U)==0 && !core.processes.FindEvent(priest,604)); // 캠페인 보상·희생 완료는 별도 원본 경로이며 여기서 주입하지 않는다.
+    std::cout<<"실제 캠페인 클릭: 멀티플레이 보상창0/40h1/의식 음악1/룬5 생성·소진, 희생 완료는 별도\n";
+}
