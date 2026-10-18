@@ -219,11 +219,11 @@
       "trackedFullscreenMarkerRestored": true
     },
     "sourceSha256": {
-      "cpppj/src/client/RawMenuControls.h": "92b7db6b2d4fa00641d814a9e0e6b76bf649b7789302cb1dc306abd87c99023d",
-      "cpppj/src/client/RawMenuControls.cpp": "e1d3a27c5330b52727e18447c97b02f6a7f82cb0ceeb9bf55aad874b744720f1",
+      "cpppj/src/client/RawMenuControls.h": "619d5baf428239a8b6cdad7326d7b2878a834d4d51a49614c658dbb42497cfc0",
+      "cpppj/src/client/RawMenuControls.cpp": "3dfd0d35515760d80e38a83917546fba2ca7b86ca711ce2d7aa985969ce5af20",
       "cpppj/src/client/RawButtonControls.h": "372d15ad4ab423ef9869fab470ad1f4b5c75cb0ebc12503edd2bb7a6f3f240d6",
       "cpppj/src/client/RawButtonControls.cpp": "5d9568d2a6c461e9dd474cc584db62389ca3eb576e780fdeb6e9a39f1ee55baf",
-      "cpppj/src/client/UberGump.cpp": "909f1c47c9514892307935807e9c75c99df97051fe4802c46565c74b0964bb7e",
+      "cpppj/src/client/UberGump.cpp": "3654c6a3ec3fdb25ed11d1ea3f86354020c4c1372cb25eb451d26c9d035a7919",
       "cpppj/src/client/TextGump.cpp": "8f501caa7ba39352386060e81c79835eb75e070e6231d22e879b3c17142c5804",
       "cpppj/src/client/ScrollingTextGumpWidgets.cpp": "6ef03644d61c31ca94c11f163b6774f2f5f608727209ff57adf6c9cc4c73c849",
       "cpppj/src/client/ScrollGumpWidgets.cpp": "378d5b65e02f8e5e1693fca50b2a3582e07e53b0f3e2df4ffe36c3fb618f435b",
@@ -362,6 +362,31 @@
           "path": "cpppj/src/client/UberGump.cpp",
           "previous": "6e2e48d717b5893b423d5d3c8de39c8342cc73b00d06646d6aa776d80469cb06",
           "current": "909f1c47c9514892307935807e9c75c99df97051fe4802c46565c74b0964bb7e"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 167,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/productValidation/sourceSha256",
+          "path": "cpppj/src/client/RawMenuControls.h",
+          "previous": "92b7db6b2d4fa00641d814a9e0e6b76bf649b7789302cb1dc306abd87c99023d",
+          "current": "619d5baf428239a8b6cdad7326d7b2878a834d4d51a49614c658dbb42497cfc0"
+        },
+        {
+          "group": "/productValidation/sourceSha256",
+          "path": "cpppj/src/client/RawMenuControls.cpp",
+          "previous": "e1d3a27c5330b52727e18447c97b02f6a7f82cb0ceeb9bf55aad874b744720f1",
+          "current": "3dfd0d35515760d80e38a83917546fba2ca7b86ca711ce2d7aa985969ce5af20"
+        },
+        {
+          "group": "/productValidation/sourceSha256",
+          "path": "cpppj/src/client/UberGump.cpp",
+          "previous": "909f1c47c9514892307935807e9c75c99df97051fe4802c46565c74b0964bb7e",
+          "current": "3654c6a3ec3fdb25ed11d1ea3f86354020c4c1372cb25eb451d26c9d035a7919"
         }
       ]
     }

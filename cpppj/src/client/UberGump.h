@@ -18,6 +18,7 @@ class GameWorld;
 class UserInput;
 class WarningMessages;
 class DialogBodyLayout;
+class CampaignObjectMenuClient; // 같은 실제 원본 객체 메뉴와 현재 명령 큐를 연결한다.
 // 메뉴·브리핑·미션 페이지와 해당 UI 동작을 관리하는 처리기이다.
 class UberGump {
 public:
@@ -77,7 +78,7 @@ private:
     // 원본 Options/Help의 목록과 하위 메뉴를 구성한다.
     void OpenMenu(std::string name);
     // 원본 우클릭 메뉴의 연결점. 건설/수확 명령은 다음 단계에서 활성화한다.
-    void OpenObjectMenu(o::SquidId id);
+    void OpenObjectMenu(o::SquidId id,const InputEvent& event);
     // 커널이 소유한 월드와 입력 참조를 안전한 순서로 제거한다.
     void ClearWorld();
     // client_: 원본 전역 변수로 흩어져 있던 클라이언트 상태를 객체 하나로 묶는다. 한 프로세스에 하나만 만든다 (Client).
@@ -109,6 +110,7 @@ private:
     std::vector<DialogAction> actions_;
     // mission_: 미션 이름에 맞는 스크립트를 읽고 섹션을 선택하는 처리기 (std::unique_ptr<MissionScript>).
     std::unique_ptr<MissionScript> mission_;
+    std::unique_ptr<CampaignObjectMenuClient> objectMenus_; // Client 수명이며 Session 해제 전 실제 팝업/Form을 먼저 닫는다.
     struct MissionRuntime; // 같은 미션의 Start/프레임 게이트 상태와 실제 연결을 고정 주소로 소유한다.
     std::unique_ptr<MissionRuntime> missionRuntime_; // 월드와 스크립트보다 먼저 해제한다.
     std::uint32_t commandGump_{}; // 원본00548740의 초기0이다. 현재 Client는 이 전용 Gump를 아직 생성하지 않는다.

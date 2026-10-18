@@ -10,19 +10,19 @@
   "scope": "PATCH10.78 실제 Client의 같은 선택/강조/마우스 저장소에서4277f0/4284a0/42a360/426290을 원본 선택·실제로그인전송·서버40h·현재Kernel에 연결했다. 전체Userinput/화면hit test/메뉴·건설·희생UI·완주 증거는 아니다.",
   "currentSources": {
     "cpppj/src/CMakeLists.txt": "aeb81f738c13d031ff454bbf5ae54eac3b00529b9201cc01b8265a1fdfb5fa30",
-    "cpppj/src/client/GameWorld.cpp": "9f988b9780dd80b292b8ec48e147eb56b5302a5abd5ac79d2edea803f1f5f80e",
-    "cpppj/src/client/GameWorld.h": "8957348f8c4f02f41f938846b0fa468557557916afc708a4d1a9bd70248e7b13",
-    "cpppj/src/client/RawCampaignSession.cpp": "841cbcbea52286c3193827e4aca8ecdc048f0517ebdcc2bcb86ec6ea6d8e0298",
-    "cpppj/src/client/RawCampaignSession.h": "6978c49e497e1ac37dba5be35df19c6bf3a6492f7f4a9a7e76c56d4455cbcd20",
-    "cpppj/src/client/UberGump.cpp": "909f1c47c9514892307935807e9c75c99df97051fe4802c46565c74b0964bb7e",
+    "cpppj/src/client/GameWorld.cpp": "97e41469fbe965647f736e3c506e1f0c83abe4f04b121078b39b5c328e2c7b1e",
+    "cpppj/src/client/GameWorld.h": "3dbe474db82b47dc6113724a36adcb59d7ad68ab2d514b3bad57f99fcf056c80",
+    "cpppj/src/client/RawCampaignSession.cpp": "bf62ab047f0add6fc0f6f4148f829367adccf6122de357b8647fe88e246c7fc2",
+    "cpppj/src/client/RawCampaignSession.h": "5979a1512864ee3f2f185a0bbb61114245908439e93545913cfdd003b665a1ac",
+    "cpppj/src/client/UberGump.cpp": "3654c6a3ec3fdb25ed11d1ea3f86354020c4c1372cb25eb451d26c9d035a7919",
     "cpppj/src/client/UserInput.cpp": "fd1bee42a48c4a33098114e813a7909d449791671fb0e313b76efc55216c20bd",
     "cpppj/tests/CMakeLists.txt": "a9d9e8fb94823089dd875a68aa672569e84ace4ab3c7af9b92c573abffd0e7ae",
-    "cpppj/tests/CampaignSessionTests.cpp": "9626f493b99885097409123e0aaf054c7138a413cdcf767ea4ceb1dc714bdf79",
+    "cpppj/tests/CampaignSessionTests.cpp": "9211b230a3819788c79003fee65b8de002aed2441b049a9b460e430ec9f2f508",
     "tools/cpp_campaign_entry_smoke.py": "59b39e067a2e51cc7f6358d8adc198e4cbd5682bc6109e9b1e0407fa7f3550aa",
     "cpppj/src/client/RawCarrierInput.h": "27db41be147df6a13b60aa9faa68751dc1d54a09fae5945ee0e9f762f5979be4",
     "cpppj/src/client/RawCarrierInput.cpp": "7f54b8a61c0d94e04e709d93aa138fe34d698cc90af2a9301259f232c93b0da6",
     "cpppj/src/client/RawCampaignCarrierInput.inc": "15f5bf33d19b7453144b281327a7268ff795d0b6ede20b5c84dbb7955b700a1a",
-    "cpppj/src/client/GameWorldInput.inc": "3e6b1f1aa9af0631bdf1602eadfe5048c873a5d979aca26e624b64bb78472d64",
+    "cpppj/src/client/GameWorldInput.inc": "f03ba61623c0d8a1ed2a1108eaebff769486cc925bc8872626061f045758efd7",
     "cpppj/src/client/CampaignUserInputServices.h": "b84ad888baff4008979738c8396405016a3da847f76ac8104219e1744395859f",
     "cpppj/src/client/CampaignUserInputServices.cpp": "249cde8633941771cb380ce79fccdeaefeeff37d11540662116252dba34c4cdd",
     "cpppj/tests/CarrierInputTests.cpp": "6ba4c9175b6aea6b9d58e8ee43e8257415f1f3104767bfbb6d3882fb8348ca5d",
@@ -2076,6 +2076,55 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "d63eb5f5b31dec45d99809dd990fb2da3d1b298f5dd632037d19f23814a094b7",
           "current": "9626f493b99885097409123e0aaf054c7138a413cdcf767ea4ceb1dc714bdf79"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 167,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/GameWorld.cpp",
+          "previous": "9f988b9780dd80b292b8ec48e147eb56b5302a5abd5ac79d2edea803f1f5f80e",
+          "current": "97e41469fbe965647f736e3c506e1f0c83abe4f04b121078b39b5c328e2c7b1e"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/GameWorld.h",
+          "previous": "8957348f8c4f02f41f938846b0fa468557557916afc708a4d1a9bd70248e7b13",
+          "current": "3dbe474db82b47dc6113724a36adcb59d7ad68ab2d514b3bad57f99fcf056c80"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "841cbcbea52286c3193827e4aca8ecdc048f0517ebdcc2bcb86ec6ea6d8e0298",
+          "current": "bf62ab047f0add6fc0f6f4148f829367adccf6122de357b8647fe88e246c7fc2"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "6978c49e497e1ac37dba5be35df19c6bf3a6492f7f4a9a7e76c56d4455cbcd20",
+          "current": "5979a1512864ee3f2f185a0bbb61114245908439e93545913cfdd003b665a1ac"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/UberGump.cpp",
+          "previous": "909f1c47c9514892307935807e9c75c99df97051fe4802c46565c74b0964bb7e",
+          "current": "3654c6a3ec3fdb25ed11d1ea3f86354020c4c1372cb25eb451d26c9d035a7919"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "9626f493b99885097409123e0aaf054c7138a413cdcf767ea4ceb1dc714bdf79",
+          "current": "9211b230a3819788c79003fee65b8de002aed2441b049a9b460e430ec9f2f508"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/GameWorldInput.inc",
+          "previous": "3e6b1f1aa9af0631bdf1602eadfe5048c873a5d979aca26e624b64bb78472d64",
+          "current": "f03ba61623c0d8a1ed2a1108eaebff769486cc925bc8872626061f045758efd7"
         }
       ]
     }

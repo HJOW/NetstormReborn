@@ -1,5 +1,17 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-18 단위167 완료: 실제 사제 메뉴와 건설 선택 연결 (HJOW-Athlon)
+
+- [x] 기준4963da2/깨끗한트리에서AGENTS/양LEFT재독. 직전166은Start/데모/동맹·전체1653·화면·커밋의진행턴이다. 현재/마지막정밀디컴파일PC **HJOW-Athlon / 2026-10-16** 일치. 새디컴파일·보호원본/AGENTS/DN/DirectDraw변경·원본게임창없음. [작업기록](docs/exe/cpp-object-menu-client-20261018.md).
+- [x] 원본83생성자VT의+a8/+ac를정적으로분리했다(새native실행/정상반환0). 현재사제/Carrier/Damageable/base작성과공통/Carrier/Archer열기를같은현재선택/InputEvent/Session/실제정보·메뉴체인/객체Form에연결했다. 다른파생은명시거부한다. 게임시계비정지/controlled스택·지연삭제/정적문자열수명/원본입력큐와0x02000060 packed인자/실제기술·SP·0x160커서취득을쓴다. 나머지메뉴항목명령은선택시명시거부한다.
+- [x] Renderer의같은dirty clip에현재메뉴를선택뒤/소프트웨어커서앞에그리며정지월드SceneImage에굳히지않는다. 실제StyleText·모든부모visible/dead/원본행명령을검사에노출했다. 현재87BYTE허용/Start회수금지/Identity를공유한다. Chat입력Gump/접두·원격·메타는후속이고현재초기빈보조상태/주소0이다.
+- [x] 실제Client커서의25BYTE송신효과를같은Login전송에연결했다. 실제loadWorld는이미3e수신을등록한다. 같은로그인/Start/커서의허용점109,107·Drop SP3000→2200/실제3e왕복을headless장치경계에서확인했다. GUI후보24개는실제거부였고값을덮어쓰지않았다.
+- [x] build1의Sid헤더누락/ConfigInterface.Get오용, 전체명령거부가돌버튼B0통지도막은menu-entry1을수정했다. 비용표시미연결probe6도보존한다. build5경고0/오류0, 집중Renderer1/메뉴7/커서전송1, **전체1655개실패0/234.68초**(CTest234.80초). 감사91도구80통과/기존11실패동일/새0이다.
+- [x] 실제1-1우클릭→Construct→Workshop→SunWorkshop800→TYPE85/0x160취득→ESC취소→재개방→ESC닫기PASS. 같은Gump5/시간진행/정지없음/SP3000·기술4유지/원본불변을확인했다. 목표11진입·시작값/기존5진입+실제1-1이동도PASS다. GUI배치성공/자연완주로확대하지않는다.
+- [x] 제품cpppj/campaign-object-menu-client.json/정적cpppj/object-menu-slots.json/로그접두extracted/goal-object-menu-client-20261018-다. 보호SHA·60보고서163핀/과거전체JSON·기존378fixture·CMake접두·UTF8·인덱스바이트를확인한뒤 **20261018-17 CP 원본 사제 메뉴와 실제 건설 선택 입력 연결**로로컬커밋한다. push없음/goal active다.
+- [ ] **다음최우선:**실제유효지점배치클릭은showSp경계에서중단한다. 원본비용표시0043dd20/생성자0043db70/idle0043dc50을같은실제Gump트리/StyleText/시계/출력에복원한다. 본문은extracted/goal-sp-gump-20261018-read.c다. 빈성공으로우회하지않고실제GUI3e왕복/사제이동·건설완료를검사한다. 이후다른+a8/+ac·가상count/Knowledge·생산/다른메뉴명령을연결한다.
+- [ ] **전체남은범위:**Chat편집Gump/접두·원격·메타/FrameGate·Guide·Outcome자동연결·전략AI/자연운반왕복·희생·내려놓기·진단·전체입력·상태7/저장·38/41/187·11단계자연완주/승패/저장/다음미션/기존전체동일성이다.
+
 ## 2026-10-18 단위166 완료: 실제 미션 Start와 데모·동맹 전송 연결 (HJOW-Athlon)
 
 - [x] 기준30cc125/깨끗한트리에서AGENTS/양LEFT재독. 현재/마지막정밀디컴파일PC **HJOW-Athlon / 2026-10-16** 일치. 새디컴파일·보호원본/AGENTS/DN/DirectDraw변경·원본게임창없음. [작업기록](docs/exe/cpp-mission-start-client-20261018.md).

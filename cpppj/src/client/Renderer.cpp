@@ -159,6 +159,12 @@ void Renderer::SetOverlay(std::shared_ptr<const IndexedImage> image) {
         throw std::invalid_argument("Invalid renderer overlay");
     overlay_=std::move(image); dirty_.InvalidateAll();
 }
+// 실제 메뉴는 자신의 현재 상태를 그리며 장치 변경/닫힘도 다음 실제 표면에 반영한다.
+void Renderer::SetOverlayProcedure(std::optional<RenderProcedure> procedure) {
+    if (procedure && !procedure->draw) throw std::invalid_argument("현재 UI 표면 출력 경계 누락");
+    if (!procedure && !overlayProcedure_) return;
+    overlayProcedure_=std::move(procedure);dirty_.InvalidateAll();
+}
 // 정지한 월드 위에 대화상자를 합성할 배경·스프라이트·선택 표시를 별도 버퍼에 그린다.
 IndexedImage Renderer::SceneImage() {
     IndexedImage result{static_cast<std::size_t>(width_), static_cast<std::size_t>(height_),
@@ -254,6 +260,10 @@ std::span<const ScreenRect> Renderer::Draw(std::span<std::uint8_t> pixels, int p
             DrawSprite(pixels,pitch,cut,sprite);
         }
         if (overlay_) DrawIndexedImage(pixels,pitch,height_,*overlay_,0,0,clip);
+        if (overlayProcedure_) {
+            const auto cut=ClipScreenRect(clip,overlayProcedure_->bounds); // 현재 dirty 범위 밖의 세계 픽셀을 건드리지 않는다.
+            if (Nonempty(cut)) overlayProcedure_->draw(pixels,pitch,height_,cut);
+        }
         // UI 글자는 지형 위에 낸다. Gump 깊이 통합은 메뉴 복원 단계에서 진행한다.
         for (const auto& text : text_) Text(pixels, pitch, clip, text);
         if (cursor_) DrawIndexedImage(pixels, pitch, height_, *cursor_, cursorPosition_.x, cursorPosition_.y, clip);

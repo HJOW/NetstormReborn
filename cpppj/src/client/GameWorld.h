@@ -60,6 +60,8 @@ public:
     // 실제 선택/강조/운반체 명령을 같은 현재 저장소와 Client 장치에 연결한다.
     void BindUserInput(UserSelectionHooks selection,UserHighlightHooks highlight,CarrierInputHooks carrier);
     void Highlight(std::uint32_t mode); // 건설 커서와 선택이 같은 원본 강조 몸체를 쓴다.
+    // 원본 파생+ac가 같은 선택 상태를 먼저 실행한 뒤 공통 메뉴에 동일 사건 참조를 넘긴다.
+    std::uint32_t OpenSelectionMenu(o::Sid sid,const InputEvent& event,bool archer,const std::function<std::uint32_t(o::Sid,const InputEvent&)>& common);
     void UpdateMovementCursor(); // 현재 폴링 점으로 이동 커서를 다시 평가한다.
     std::uint32_t InputMode() const { return highlightMode_; } // 선택과 다른 현재 원본 강조 모드를 읽는다.
 

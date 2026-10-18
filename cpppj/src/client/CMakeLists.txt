@@ -144,3 +144,6 @@ target_sources(netstorm PRIVATE RawObjectMenuOpen.h RawObjectMenuOpen.cpp)
 
 # 원본객체메뉴의4인자제목/현재상태정보를복원한다.
 target_sources(netstorm PRIVATE RawObjectMenuInfo.h RawObjectMenuInfo.cpp)
+
+# 실제 객체 메뉴의 원본 VT 슬롯과 Client/Session/입력 연결을 사용한다.
+target_sources(netstorm PRIVATE RawObjectMenuSlots.h RawObjectMenuSlots.cpp ObjectMenuSlots.inc CampaignObjectMenuClient.h CampaignObjectMenuClient.cpp)

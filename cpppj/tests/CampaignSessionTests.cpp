@@ -1653,3 +1653,18 @@ TEST_CASE(CampaignSession_LocalLoginMissionStartAiAlliances) {
         CHECK(session.Alliances()[2*9+2]==1 && session.Alliances()[3*9+3]==1 && session.Alliances()[4*9+4]==1 && session.Core().bookkeeping.depth==0);
     }
 }
+
+// 실제 로컬 로그인/Start 뒤 썬 워크샾 커서에 원본 에너지·공간·연관 지역을 모두 만족하는 지점이 있어야 한다.
+TEST_CASE(CampaignSession_LocalLoginWorkshopHasActualPlacement) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();
+    CampaignLoginServices login;login.configInt=[](std::string_view,std::int32_t fallback) { return fallback; };login.wallSeconds=[] { return 100.25; };login.clock=[] { return 100250U; };login.refresh=[] {};login.playerUiBusy=[] { return false; };login.playerNotice=[](std::uint32_t,std::uint32_t,std::uint32_t) {};login.log=[](std::string_view) {};
+    services.localLogin=std::move(login);services.ai.allocationBytes=[](std::span<std::uint8_t> bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0xa7}); };services.ai.defaultName=[] { return std::string("AI"); };services.ai.participation.clearChat=[](std::uint32_t) {};services.ai.participation.addChat=[](std::uint32_t,std::string_view,std::uint32_t) {};
+    ConfigInterface config([&](std::string_view path) { return assets.files.TryRead(path); });config.Configuration().Assign("DataDir=\"d\"\ncurrentLanguage=\"english\"\nmissionSpec=\"{DataDir}\\{local.1}.{currentLanguage}\"\nfortSpec=\"{DataDir}\\{local.1}.fort\"\n[END]\n");MissionScript script(config,"TheWarBegins");
+    auto fort=FortTemplate::Parse(assets.files.Read(script.FortPath()),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),script.FortName(),std::move(services));session.LoadLocalConnection();
+    MissionFrameGateState gate;MissionStartState state;CampaignMissionStartEffects effects;effects.settingsBytes=[](std::uint32_t,std::span<std::uint8_t> bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0xa7}); };effects.gameSeconds=[] { return 123.5; };effects.refreshSp=[] {};effects.refreshCommandGump=[] {};effects.resetCamera=[] {};effects.randomGeysers=[] { throw std::logic_error("보호1-1에없는세계랜덤간헐천"); };
+    RawCampaignMissionStartBindings start(session,script,gate,state,session.MissionStartSettings(),session.MissionAiSettings(),std::move(effects));start.Start();CHECK(session.Sp(1)==3000 && gate.started==1);
+    SessionCursorUi ui;auto cursorEffects=ui.Effects();cursorEffects.send=[&](std::uint32_t target,std::span<const std::uint8_t> packet) { CHECK(target==9 && packet.size()==25 && packet[1]==0x3e);session.SendLocalPacket(static_cast<std::int32_t>(target),packet); };session.Cursor().SetEffects(std::move(cursorEffects));session.Cursor().SnapToGrid()=1;SessionPriestMenuUi menuUi;auto menu=CursorMenu(session,menuUi);const Sid priest{static_cast<std::uint16_t>(session.FindPriestParticipation(1))};CHECK(menu->SelectBuild(85,priest));
+    const auto point=CursorPlacementPoint(session,ui);std::cout<<"실제1-1 썬 워크샾 배치 허용점 "<<point.x<<','<<point.y<<"\n";CHECK(session.CursorDropSettings().legal && session.Sp(1)==3000);
+    const auto before=session.LocalConnectionPackets().size();session.Cursor().Drop();CHECK(session.Sp(1)==2200 && ui.shown==1 && session.LocalConnectionPackets().size()==before);
+    session.PumpLocalConnection();CHECK(session.LocalConnectionPhase()==14 && session.LocalConnectionPackets().size()>before && std::find(session.LocalConnectionPackets().begin()+static_cast<std::ptrdiff_t>(before),session.LocalConnectionPackets().end(),std::uint8_t{0x3e})!=session.LocalConnectionPackets().end());session.Cursor().Cancel();
+}

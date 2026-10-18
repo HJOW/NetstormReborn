@@ -173,6 +173,8 @@ void RawCampaignObjectMenus::Describe(std::uint32_t type,std::uint32_t count,std
 bool RawCampaignObjectMenus::SelectBuild(std::uint32_t type,Sid priest) const { return impl_->priest->SelectBuild(type,priest); }
 // 정적 Player 버퍼는 메뉴 체인이 살아 있는 동안 같은 원본 토큰으로 조회한다.
 std::string_view RawCampaignObjectMenus::TextParameter(std::uint32_t token) const { return impl_->player->TextParameter(token); }
+// 현재 Player/Chat/로컬 전역에 연결된 동일 Identity를 직접 실행한다.
+bool RawCampaignObjectMenus::ResolveIdentity(PlayerIdentityRecord& record) const { return impl_->identity->Resolve(record); }
 // 실제 월드/상태와 모든 callback 대상을 같은 고정 주소에 소유한다.
 struct RawCampaignSession::Impl {
     struct SelectionLink { RawUserSelection* selection{}; }; // 살아 있는 실제 선택 객체의 주소이며 약한 토큰으로만 빌린다.
@@ -1834,6 +1836,10 @@ void RawCampaignSession::PumpLocalConnection() { if (impl_->login) impl_->login-
 std::uint32_t RawCampaignSession::LocalConnectionPhase() const { return impl_->login ? impl_->login->blocks[1][0] : 0U; }
 //현재실제수신기록의종류만빌린다.
 std::span<const std::uint8_t> RawCampaignSession::LocalConnectionPackets() const { return impl_->login ? std::span<const std::uint8_t>(impl_->login->wireTypes) : std::span<const std::uint8_t>{}; }
+// Session의 실제 Login과 같은 두 끝/송신 큐만 사용하고 수신/게임 확정을 앞당기지 않는다.
+void RawCampaignSession::SendLocalPacket(std::int32_t target,std::span<const std::uint8_t> packet) {
+    if (!impl_->login || !impl_->loaded) throw std::logic_error("실제 로컬 로그인 전 원본 패킷 송신");impl_->login->Send(target,packet);
+}
 // 현재 실제 자산/Template/서비스를 보관하고 모든 하위 모듈을 구성한다.
 RawCampaignSession::RawCampaignSession(const GameAssets& assets,const BaseFileSystem& files,FortTemplate fort,std::string mission,RawCampaignSessionServices services)
     :impl_(std::make_unique<Impl>(assets,files,std::move(fort),std::move(mission),std::move(services))) {}
@@ -1892,6 +1898,8 @@ std::span<std::uint32_t> RawCampaignSession::Alliances() { return impl_->allianc
 RawPlayerParticipation& RawCampaignSession::Participation() { return *impl_->participation; }
 // 채팅의 실제 현재 숨김표를 빌리며 표시 bool 사본을 만들지 않는다.
 std::span<std::uint8_t> RawCampaignSession::HiddenPlayers() { return impl_->hiddenPlayers; }
+// 원본 메뉴 허용3BYTE도 로그인/옵션 패킷이 공유하는 동일87BYTE에서 읽는다.
+std::uint8_t RawCampaignSession::BattleOption(std::size_t offset) const { return impl_->battleOptions.at(offset); }
 // Stage3 원본의1..8 방문 계약을 지키며 설치 전 요청을 명시 거부한다.
 std::uint32_t RawCampaignSession::CreateAi(std::uint32_t owner,std::span<const std::uint8_t> settings) {
     if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("실제 Session 설치 후 owner1..8 AI 생성만 허용");

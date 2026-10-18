@@ -100,6 +100,8 @@ public:
     void SetBackground(std::shared_ptr<const IndexedImage> image);
     // 선택 표시처럼 스프라이트 위에 오는 투명 UI 픽셀을 소유한다.
     void SetOverlay(std::shared_ptr<const IndexedImage> image);
+    // 현재 메뉴 Gump를 월드/선택 뒤, 소프트웨어 커서 앞의 같은 dirty clip에 직접 그린다.
+    void SetOverlayProcedure(std::optional<RenderProcedure> procedure);
     // 정지한 미션 위에 대화상자를 합성하는 배경을 만든다. 변경 표·출력 상태·커서는 건드리지 않는다.
     IndexedImage SceneImage();
     // 배경이나 WM_PAINT 등 화면 전체 변화.
@@ -143,6 +145,7 @@ private:
     std::shared_ptr<const IndexedImage> background_;
     // overlay_: 화면 위 계층의 출력·입력 대상.
     std::shared_ptr<const IndexedImage> overlay_;
+    std::optional<RenderProcedure> overlayProcedure_; // 현재 실제 UI 트리의 픽셀 소비자이며 별도 장면 사본을 만들지 않는다.
     // painted_: 출력된.
     std::vector<ScreenRect> painted_;
     // paintFlags_: 출력 플래그.

@@ -6,6 +6,7 @@
 #include "client/ClientAudio.h"
 #include "client/ClientMain.h"
 #include "client/CampaignClientServices.h"
+#include "client/CampaignObjectMenuClient.h"
 #include "client/RawCampaignMissionStartBindings.h"
 #include "client/GifImage.h"
 #include "client/GumpVisual.h"
@@ -148,15 +149,22 @@ UberGump::UberGump(Client& client) : client_(client) {
             world_->Session().GumpForms().Destroy(o::Sid{static_cast<std::uint16_t>(form)},flags);
         }});
     RawMenuHooks menuHooks;
-    menuHooks.command=[this](auto command,auto,auto parameter) {
-        if (command!=0x01ffffffU || !parameter || parameter>actions_.size()) throw std::logic_error("Client 팝업 DialogAction 연결 번호 오류");
-        state_.Post(actions_[parameter-1]); // 기존 DialogAction의 임시 호스트 번호이며 원본 게임 명령 토큰과 구별한다.
+    menuHooks.command=[this](auto command,auto id,auto parameter) {
+        if (command==0x01ffffffU) {
+            if (!parameter || parameter>actions_.size()) throw std::logic_error("Client 팝업 DialogAction 연결 번호 오류");
+            state_.Post(actions_[parameter-1]); // 기존 DialogAction의 임시 호스트 번호이며 원본 게임 명령 토큰과 구별한다.
+        } else {
+            // 실제 메뉴 항목이 선택한 미연결 명령은 여기서 거부한다. 돌 버튼의 별도 기본 클릭 통지와 구별한다.
+            if (command!=0x02000060U) throw std::logic_error("현재 Client 원본 메뉴 항목 명령 미연결: "+std::to_string(command));
+            client_.Input().PushCommand(command,std::bit_cast<std::int32_t>(id),std::bit_cast<std::int32_t>(parameter));
+        }
     };
     menuHooks.readInt=[this](std::string_view key,std::int32_t& value) { value=client_.Configuration().GetInt(key); };
     menuHooks.sound=[this](std::string_view name) { client_.WorldAudio().Sounds().PlayByName(name,0,0,0,0,0); };
     menuHooks.poll=[this](auto code) { return client_.Poll(code); };menuHooks.cursor=[this](auto number) { client_.GetCursor().Set(static_cast<int>(number)); };
     menuHooks.objectForms=[this]() -> o::GumpFormHost& { if (!world_) throw std::logic_error("현재Client 메뉴Form의월드미설치");return world_->Session().GumpForms(); };
     rawButtons_->EnableMenus(client_.Assets(),client_.Fonts(),std::move(menuHooks)).SetPalette(client_.GetScreen().Colors());
+    objectMenus_=std::make_unique<CampaignObjectMenuClient>(client_,*rawButtons_,[this](std::string_view key) { state_.Post({"Tell",std::string(key)}); });
     warnings_=std::make_unique<WarningMessages>(client_.Fonts(),client_.GetScreen().Colors(),[this] { return client_.WallSeconds(); },[this] {
         client_.WorldAudio().Sounds().PlayByName("newWarnMessage.wav",0,0,0,0,0);
     });
@@ -170,6 +178,8 @@ void UberGump::ClearWorld() {
     if (world_ && rawButtons_ && rawButtons_->Menus()) rawButtons_->Menus()->Close(); // 같은Form을반납한뒤에만Session/월드포인터를해제한다.
     client_.ClearThunderFlashes();
     if (world_) client_.GetRenderer().SetExtraCollection({}); // 월드 반납 전에 빌린 실제 커서 수집/Draw callback을 해제한다.
+    client_.GetRenderer().SetOverlayProcedure({}); // 실제 메뉴 픽셀 소비자가 반납한 월드를 다시 읽지 않도록 먼저 제거한다.
+    if (objectMenus_) objectMenus_->Clear();
     missionRuntime_.reset(); // 같은 Session/Script를 참조하는 Start를 대상보다 먼저 해제한다.
     userInput_.reset();
     const auto process=worldProcess_; // 해제 중의 현재 subscriber 조회가 파괴 중인 월드를 따라가지 않도록 번호만 보관한다.
@@ -316,6 +326,7 @@ void UberGump::BeginMission(std::string name,std::uint32_t demo) {
     world_->SetPalette(client_.GetScreen().Palette());
     // 같은 단일 커서에 현재 장치/트리를 공급한다. 선택/비용 안내/전송의 미복원 경계는 그대로 남긴다.
     auto cursorEffects=MakeCampaignCursorClientEffects(client_,*rawButtons_);
+    cursorEffects.send=[session=&world_->Session()](std::uint32_t target,std::span<const std::uint8_t> packet) { session->SendLocalPacket(std::bit_cast<std::int32_t>(target),packet); };
     BindCampaignUserInputServices(client_,*world_,cursorEffects.lifecycle.selectCursor);
     cursorEffects.lifecycle.highlight=[this](std::uint32_t mode) { world_->Highlight(mode); };
     world_->Session().Cursor().SetEffects(std::move(cursorEffects));
@@ -372,18 +383,14 @@ void UberGump::OpenMenu(std::string name) {
     if (world_) { client_.Pause(true); userInput_->Cancel(); }
     opened_ = client_.Time().wall; RebuildControls();
 }
-// 현재 건설과 수확은 미복원이므로 원본 메뉴의 해당 항목을 비활성화한다.
-void UberGump::OpenObjectMenu(o::SquidId id) {
-    if (!world_) return; const auto* object=world_->Object(id); if (!object) return;
-    const auto& type=client_.Assets().Types()[static_cast<std::size_t>(object->type-o::kFirstAssetTypeNumber)];
-    popup_="object"; page_={};
-    page_.items.push_back({std::string(type.definition.String("description").value_or(type.assetName)),{},true,false,false});
-    if (object->owner==1 && o::AsciiLower(type.assetName)=="priest") page_.items.push_back({"Construct >",{},true,false,false});
-    page_.items.push_back({"About",{},true,false,false});
-    userInput_->Cancel(); client_.Pause(true); RebuildControls();
+// 원본 파생 열기/선택/작성/위치/실제 Form 부착을 현재 사건으로 실행한다.
+void UberGump::OpenObjectMenu(o::SquidId id,const InputEvent& event) {
+    if (!world_ || !id || !world_->Object(id)) return;
+    objectMenus_->Open(*world_,o::Sid{static_cast<std::uint16_t>(id)},event);userInput_->Cancel();rebuild_=true;
 }
-// 현재 입력 단계에서는 객체를 파괴하지 않고 다음 프레임의 State로 넘긴다.
+// 같은 실제 큐의 원본 정수 명령과 물리 사건을 분배한다.
 void UberGump::Event(InputEvent event) {
+    if (objectMenus_ && objectMenus_->Command(event)) { rebuild_=true;return; }
     const auto commandCode=event.code&0x03ffffffU; // 원본명령분배와같이최상위입력플래그만제거한다.
     if (commandCode==kScriptConfig) {
         // 토큰 제한은 원본바이트에 적용하고 Config의 내부UTF-8 경계에서만 변환한다.
@@ -399,6 +406,7 @@ void UberGump::Event(InputEvent event) {
     // 원본 ESC 글자 사건. 초기 브리핑은 확인 버튼으로만 닫는다.
     if ((event.code & 0xffffu) == 0x1b && (event.code & InputCode::kRelease) == 0) {
         if (state_.phase == ClientPhase::Briefing || state_.phase == ClientPhase::LoadingMission) return;
+        if (objectMenus_ && objectMenus_->Active()) { rawButtons_->Menus()->RequestClosePopups();rebuild_=true;return; }
         if (world_ && userInput_ && state_.phase==ClientPhase::Mission && popup_.empty() && !world_->Session().CursorDropSettings().lockDepth) { userInput_->Event(event);return; }
         if (!popup_.empty()) state_.Post({"Menu", "close"});
         else if (mission_ && state_.phase == ClientPhase::Mission) state_.Post({"Menu", "game"});
@@ -409,9 +417,12 @@ void UberGump::Event(InputEvent event) {
         (event.code & InputCode::kRelease) == 0 && !rawButtons_->Menus()->Contains({event.x,event.y})) {
         state_.Post({"Menu", "close"}); return;
     }
+    if (objectMenus_ && objectMenus_->Active() && rawButtons_->Menus()->Contains({event.x,event.y})) {
+        static_cast<void>(rawButtons_->Event(event));rebuild_=true;return;
+    }
     if (world_ && userInput_ && state_.phase==ClientPhase::Mission && popup_.empty()) {
         const bool ui=std::any_of(input_.Controls().begin(),input_.Controls().end(),[&](const GumpControl& control) { return GumpControlInput::Contains(control.rect,{event.x,event.y}); });
-        if (!ui && !rawButtons_->HasCapture()) { if (const auto id=userInput_->Event(event)) { if (*id) state_.Post({"ObjectMenu",std::to_string(*id)}); else world_->Select(0); } return; }
+        if (!ui && !rawButtons_->HasCapture()) { if (const auto id=userInput_->Event(event)) { if (*id) OpenObjectMenu(*id,event); else world_->Select(0); } return; }
     }
     const auto old=rawButtons_->Pressed();auto activated=rawButtons_->Event(event);
     // 메뉴 행은 현재 어댑터에서 누름 즉시 실행한다. 돌 버튼 명령은 실제 부모 click 통지만 사용한다.
@@ -484,7 +495,6 @@ void UberGump::Execute(const DialogAction& action) {
         else OpenMenu(action.argument);
         return;
     }
-    if (command=="objectmenu") { OpenObjectMenu(static_cast<o::SquidId>(std::stoul(action.argument))); return; }
     if (command == "toggle") {
         auto& config = client_.Configuration(); config.SetInt(action.argument, config.GetInt(action.argument) == 0 ? 1 : 0);
         // 소리·음악·좌우 바꿈은 원본 Interpret Options처럼 장치와 현재 곡에 바로 반영한다.
@@ -523,7 +533,7 @@ void UberGump::Compose() {
     // TextGump의 실제 기준선/내부 클립을 UI 글자 목록 끝에 제출한다.
     const auto appendWarnings=[&] { auto messages=warnings_->Text();text.insert(text.end(),std::make_move_iterator(messages.begin()),std::make_move_iterator(messages.end())); };
     std::vector<RenderSprite> worldSprites,dialogSprites; // 월드와본문그림은같은실제자산을읽으며UI본문목록은해당패널에만제출한다.
-    client_.GetRenderer().SetOverlay(nullptr);
+    client_.GetRenderer().SetOverlay(nullptr);client_.GetRenderer().SetOverlayProcedure({});
     if (world_ && state_.phase!=ClientPhase::LoadingMission) {
         world_->Resize(width,height);worldSprites=world_->Sprites();
         auto& cursorDisplay=world_->Session().Cursor().Display();cursorDisplay.Settings().gridOption=client_.GetScreen().Flags();
@@ -580,6 +590,11 @@ void UberGump::Compose() {
         if (world_) text.push_back({&font,"Storm Power: "+std::to_string(static_cast<long long>(world_->Session().Sp(world_->Session().LocalOwner()))),width-200,6,255,0,{1,1},true,false});
         appendWarnings();client_.GetRenderer().SetBackground(canvas); client_.GetRenderer().SetScene(std::move(worldSprites), std::move(text));
         if (world_) client_.GetRenderer().SetOverlay(world_->SelectionImage());
+        if (objectMenus_ && objectMenus_->Active()) {
+            client_.GetRenderer().SetOverlayProcedure(RenderProcedure{all,[this](std::span<std::uint8_t> pixels,int pitch,int height,ScreenRect clip) {
+                rawButtons_->Menus()->Draw(pixels,pitch,height,client_.GetScreen().Colors(),client_.GetScreen().ShadeMaps(),clip);
+            }});
+        }
     } else {
         if (!popup_.empty()) {
             if (controls) {
@@ -666,6 +681,7 @@ void UberGump::Compose() {
 // 자동 검사는 라벨 좌표를 읽고 실제 버튼 입력을 보낸다. 명령을 직접 호출하지 않는다.
 std::optional<ScreenPoint> UberGump::ControlPoint(std::string_view label) const {
     if (world_ && (label.starts_with("world:") || label.starts_with("cell:"))) return world_->Point(label);
+    if (objectMenus_ && objectMenus_->Active()) if (const auto point=rawButtons_->Menus()->Point(FontBytes(label))) return point;
     // 동일 라벨의 첫 영역을 선택한다.
     for (const auto& control : input_.Controls()) if (labels_.at(static_cast<std::size_t>(control.id)) == label)
         return ScreenPoint{(control.rect.left + control.rect.right) / 2, (control.rect.top + control.rect.bottom) / 2};

@@ -26,5 +26,10 @@ void GameWorld::BindUserInput(UserSelectionHooks selection,UserHighlightHooks hi
 }
 //선택과 별개인 현재 강조를 같은 커서와 공유한다.
 void GameWorld::Highlight(std::uint32_t mode) { if (!input_) throw std::logic_error("실제 선택/강조 장치 미설치");input_->highlight->Highlight(mode); }
+// 단일 현재 선택/마나/범위/이동미리보기를 사용하는 원본 메뉴 부모다.
+std::uint32_t GameWorld::OpenSelectionMenu(o::Sid sid,const InputEvent& event,bool archer,const std::function<std::uint32_t(o::Sid,const InputEvent&)>& common) {
+    if (!input_) throw std::logic_error("실제 객체 메뉴 선택 장치 미설치");
+    return archer ? input_->selection->ArcherMenu(sid,event,common) : input_->selection->CarrierMenu(sid,event,common);
+}
 //취득한 건설 커서와 별개로 현재 이동 선택의 커서를 갱신한다.
 void GameWorld::UpdateMovementCursor() { if (input_ && (highlightMode_==2 || highlightMode_==5)) input_->carrier->Highlight(selected_,input_->Project(mousePoint_),0); }

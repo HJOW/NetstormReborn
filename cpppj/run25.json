@@ -896,7 +896,7 @@
     "cpppj/tests/RegionOwnershipTests.cpp": "c1f5a9e52cb835a6ebe685293b1b333bb1d2a785d930575ff85324a12f82fdc7",
     "cpppj/tests/RegionPaintTests.cpp": "3b45525f557739561adb2e3f0ad9ffa43dd5855bd08b5b153f317ac44771e206",
     "cpppj/tests/RenderCollectionTests.cpp": "d40ed2a9a3dc83846b21ee68002cbd8c8e3429c7fbfc774110c20bff50f8f069",
-    "cpppj/tests/RendererTests.cpp": "fb868b30dcd882c0c2add47d3a66434e4cb34bf514f4ce8a7102a0a3ed2995c8",
+    "cpppj/tests/RendererTests.cpp": "6aae8f544e9cb6a01738ee45a2c0eba57354106896ea59735db6842c318185cf",
     "cpppj/tests/ReturnPieceTests.cpp": "dcd99fb3c61c3aaf9ed602908c38271bfb425d16359a5b7913b2100d9e94c239",
     "cpppj/tests/RewardTests.cpp": "de36bfc66db0246495e81da5fb0a47f4b3c52179bb8c5e20d464d917844b112c",
     "cpppj/tests/RunePostPopTests.cpp": "9918c7375cb132f74579c6a3bfe94d0996e4e9f0f17c76abdf06887e933c2470",
@@ -2015,6 +2015,19 @@
           "path": "cpppj/src/client/UserInput.cpp",
           "previous": "9575d895408cb355415abb025d1eda5dab8267be63a450864ecd3e6a00d6c5bb",
           "current": "fd1bee42a48c4a33098114e813a7909d449791671fb0e313b76efc55216c20bd"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 167,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/tests/RendererTests.cpp",
+          "previous": "fb868b30dcd882c0c2add47d3a66434e4cb34bf514f4ce8a7102a0a3ed2995c8",
+          "current": "6aae8f544e9cb6a01738ee45a2c0eba57354106896ea59735db6842c318185cf"
         }
       ]
     }

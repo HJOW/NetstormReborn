@@ -69,7 +69,7 @@ public:
     // 실제 메뉴 생성 전에 현재 파일 팔레트의 색 전역을 공급한다.
     void SetPalette(const PaletteColorTable& palette);
     // 현재 Client 픽셀에 원본 수집/정렬/Draw를 실행한다. 배경/그림/글자 모두 실제8비트 클립을 공유한다.
-    void Draw(std::span<std::uint8_t> pixels,int pitch,int height,const PaletteColorTable& palette,const GumpShadeMaps& maps);
+    void Draw(std::span<std::uint8_t> pixels,int pitch,int height,const PaletteColorTable& palette,const GumpShadeMaps& maps,std::optional<ScreenRect> clip={});
     // 검사/자동 입력은 실제 저장 항목과 배치를 읽는다. label은 스타일 명령을 포함한 원문 바이트다.
     std::optional<ScreenPoint> Point(std::string_view label) const;
     std::vector<GumpControl> Controls() const;

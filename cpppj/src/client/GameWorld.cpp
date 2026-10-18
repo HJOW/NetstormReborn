@@ -549,7 +549,9 @@ std::string GameWorld::Report(bool mask) const {
         out<<"raw_input\t"<<selected_<<'\t'<<highlightMode_<<'\t'<<campaign_->LocalConnectionPhase()<<'\t'<<campaign_->LocalConnectionPackets().size()<<"\nraw_packets";
         // 실제 소비된 종류만 진단하며 별도 명령 성공 플래그를 만들지 않는다.
         for (const auto kind:campaign_->LocalConnectionPackets()) out<<'\t'<<std::uint32_t(kind);out<<'\n';
-        out<<"raw_session\t"<<campaign_->LocalOwner()<<'\t'<<campaign_->PlayerKnown()<<"\nraw_sp";
+        out<<"raw_session\t"<<campaign_->LocalOwner()<<'\t'<<campaign_->PlayerKnown();
+        const auto& drop=campaign_->CursorDropSettings();const auto& placement=campaign_->Cursor().Placement(); // 실제 배치/원본 입력과 같은 저장소다.
+        out<<"\nraw_cursor\t"<<drop.lockDepth<<'\t'<<drop.legal<<'\t'<<drop.type<<'\t'<<drop.preview.value<<'\t'<<drop.x<<'\t'<<drop.y<<'\t'<<drop.inputFlags<<'\t'<<drop.costFlags<<'\t'<<placement.placementAllowed<<'\t'<<placement.spaceAllowed<<'\t'<<placement.sourceAllowed<<"\nraw_sp";
         // 화면용 MissionPlayers 사본과 구별하여 실제 분산 SP의 모든 owner를 읽는다.
         for (std::uint32_t owner=0;owner<9;++owner) out<<'\t'<<campaign_->Sp(owner);
         out<<"\nraw_brains";

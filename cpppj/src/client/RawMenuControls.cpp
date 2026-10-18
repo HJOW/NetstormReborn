@@ -223,9 +223,10 @@ void RawMenuControls::SetPalette(const PaletteColorTable& palette) {
     auto& s=*impl_;s.palette=palette;s.widgetState.foreground=palette.basic[7];s.widgetState.shadow=dim->index;s.drawState.foreground=palette.basic[7];s.drawState.disabled=dim->index;SetGumpBackgroundColors(s.backgroundState,palette);
 }
 // 현재 노드를 원본 수집·정렬 순서로 같은8비트 표면에 출력한다.
-void RawMenuControls::Draw(std::span<std::uint8_t> pixels,int pitch,int height,const PaletteColorTable& palette,const GumpShadeMaps& maps) {
+void RawMenuControls::Draw(std::span<std::uint8_t> pixels,int pitch,int height,const PaletteColorTable& palette,const GumpShadeMaps& maps,std::optional<ScreenRect> clip) {
     auto& s=*impl_;if (s.activeText) throw std::logic_error("실제 메뉴 Draw 재진입 불가");SetPalette(palette);
-    SetGumpDrawClip(s.clip,{0,0,s.common.create.screenWidth,height});GumpPixelTarget target(pixels,pitch,height,s.clip);GumpTextDraw text(s.fonts,MakeGumpGlyphPixelHooks(target,s.colors),s.assets.Edition());GumpBackgroundPixelTarget bgPixels(target,s.backgroundAssets,maps,s.colors.vfxColors);MarkupPixelTarget picturePixels(target,s.markupAssets,s.colors.vfxColors,s.pictureColors);
+    const auto region=clip.value_or(ScreenRect{0,0,s.common.create.screenWidth,height}); // 실제 Renderer 변경 영역 또는 독립 전체 표면이다.
+    SetGumpDrawClip(s.clip,region);GumpPixelTarget target(pixels,pitch,height,s.clip);GumpTextDraw text(s.fonts,MakeGumpGlyphPixelHooks(target,s.colors),s.assets.Edition());GumpBackgroundPixelTarget bgPixels(target,s.backgroundAssets,maps,s.colors.vfxColors);MarkupPixelTarget picturePixels(target,s.markupAssets,s.colors.vfxColors,s.pictureColors);
     s.activeText=&text;s.activeBackground=bgPixels.Hooks(s.clip);s.activePicture=picturePixels.Hooks({});GumpDrawHooks draw;
     // 예외 반환에서도 현재 표면을 참조한 일시 훅을 파기해 다음 출력에 댕글링 참조를 남기지 않는다.
     struct ResetDraw {
@@ -246,13 +247,20 @@ void RawMenuControls::Draw(std::span<std::uint8_t> pixels,int pitch,int height,c
 std::optional<ScreenPoint> RawMenuControls::Point(std::string_view label) const {
     auto& s=*impl_;
     // 저장된 스타일 원문은 별도 라벨 사본으로 치환하지 않는다.
-    for (const auto& [token,node]:s.menus) for (std::uint32_t index=0;index<node->itemCount;++index) {
+    for (const auto& [token,node]:s.menus) {
+        bool visible=true;
+        // 실제 항목과 모든 부모의 현재 visible/dead를 함께 검사한다.
+        for (auto current=token;current;current=s.common.node(current)->parent) { const auto flags=s.common.node(current)->flags;if (!(flags&1) || (flags&0x10000)) { visible=false;break; } }
+        if (!visible) continue;
+        // 현재 보이는 메뉴의 원본 항목과 실제 StyleText를 조회한다.
+        for (std::uint32_t index=0;index<node->itemCount;++index) {
         const auto& item=node->items[index];std::string value;
         if (item.styled) {
             // 실제 소유 체인의 모든 일반 문자열 조각을 순서대로 읽는다.
             for (auto part=item.styled;part;part=s.fragments.fragments.at(part).next) { const auto& bytes=s.fragments.fragments.at(part).text;value.append(bytes.begin(),std::find(bytes.begin(),bytes.end(),'\0')); }
         } else value=std::string(item.label.data(),std::find(item.label.begin(),item.label.end(),'\0')-item.label.begin());
         if (value==label && (node->flags&1)) { const auto p=s.common.collection.Position(token);const auto offset=s.menu->ItemPosition(token,static_cast<std::int32_t>(index));return ScreenPoint{p.x+static_cast<int>(node->width/2),p.y+static_cast<int>(offset[1]+node->heights[index]/2)}; }
+    }
     }
     return {};
 }
@@ -282,6 +290,22 @@ std::string RawMenuControls::Report() const {
     out<<"raw_menu_input\t"<<s.lastInput[0]<<'\t'<<s.lastInput[1]<<'\t'<<s.lastInput[2]<<'\t'<<s.lastInput[3]<<'\n';
     // 실제 각 메뉴의 현재 배치/선택/확장/링크를 같은 저장소에서 보고한다.
     for (const auto& [token,node]:s.menus) { const auto rect=s.common.collection.Bounds(token);out<<"raw_menu\t"<<token<<'\t'<<node->id<<'\t'<<node->parent<<'\t'<<node->flags<<'\t'<<node->menuFlags<<'\t'<<node->selection<<'\t'<<node->expanding<<'\t'<<rect.left<<'\t'<<rect.top<<'\t'<<rect.right<<'\t'<<rect.bottom<<'\n'; }
+    // 사용자 검사도 실제 현재 StyleText/명령/배치와 모든 부모의 표시 상태만 읽는다.
+    for (const auto& [token,node]:s.menus) {
+        bool visible=true;
+        // 닫히거나 숨겨진 조상 아래 항목을 활성 입력으로 보고하지 않는다.
+        for (auto current=token;current;current=s.common.node(current)->parent) { const auto flags=s.common.node(current)->flags;if (!(flags&1) || (flags&0x10000)) { visible=false;break; } }
+        // 원본 항목의 실제 명령/인자와 글자 조각을 각각 기록한다.
+        for (std::uint32_t index=0;index<node->itemCount;++index) {
+            const auto& item=node->items[index];std::string label;
+            if (item.styled) {
+                // 그림/서식은 픽셀 출력에 남기고 실제 문자열 조각만 자동 검사 라벨로 읽는다.
+                for (auto part=item.styled;part;part=s.fragments.fragments.at(part).next) { const auto& bytes=s.fragments.fragments.at(part).text;label.append(bytes.begin(),std::find(bytes.begin(),bytes.end(),'\0')); }
+            } else label.assign(item.label.begin(),std::find(item.label.begin(),item.label.end(),'\0'));
+            std::replace(label.begin(),label.end(),'\t',' ');std::replace(label.begin(),label.end(),'\n',' ');
+            out<<"raw_menu_item\t"<<token<<'\t'<<index<<'\t'<<item.flags<<'\t'<<item.command<<'\t'<<item.parameter<<'\t'<<visible<<'\t'<<label<<'\n';
+        }
+    }
     return out.str();
 }
 }

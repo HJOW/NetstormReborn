@@ -148,3 +148,19 @@ TEST_CASE(Renderer_ExtraCollectionUsesDirtyOrderAndCachedSceneImage) {
     const auto image=renderer.SceneImage();CHECK(collections==3 && draws==std::vector<int>({1,2,3}) && image.indices[21]==3);
     renderer.SetExtraCollection({});CHECK(!renderer.HasExtraCollection());draws.clear();renderer.Draw(pixels,20);renderer.Present([](ScreenRect) {});CHECK(collections==3 && draws==std::vector<int>({1,3}));
 }
+
+// 실제 메뉴 출력은 선택 표시 뒤/커서 앞이며 변경 clip 밖의 이전 픽셀을 다시 쓰지 않는다.
+TEST_CASE(Renderer_ActualMenuOverlayCurrentClipAndCursorOrder) {
+    using namespace netstorm::client;Renderer renderer(8,8);std::vector<std::uint8_t> pixels(64);std::vector<ScreenRect> clips;std::uint8_t color=7; // 시간에 따라 바뀌는 현재 메뉴 출력 입력이다.
+    auto selection=std::make_shared<IndexedImage>(IndexedImage{8,8,std::vector<std::uint8_t>(64,5),std::vector<std::uint8_t>(64,255)});renderer.SetOverlay(selection);
+    IndexedImage cursor{1,1,{9},{255}};renderer.SetSoftwareCursor(&cursor,{3,3});
+    renderer.SetOverlayProcedure(RenderProcedure{{2,2,6,6},[&](std::span<std::uint8_t> target,int pitch,int,ScreenRect clip) {
+        clips.push_back(clip);
+        // 현재 실제 clip의 각 행만 그려 Renderer가 넘긴 경계를 직접 검증한다.
+        for (int y=clip.top;y<clip.bottom;++y) std::fill(target.begin()+y*pitch+clip.left,target.begin()+y*pitch+clip.right,color);
+    }});
+    renderer.Draw(pixels,8);renderer.Present([](ScreenRect) {});CHECK(clips.size()==1 && clips[0].left==2 && clips[0].right==6 && pixels[2*8+2]==7 && pixels[3*8+3]==9 && pixels[1*8+1]==5);
+    clips.clear();color=8;renderer.Invalidate({2,2,3,3});renderer.Draw(pixels,8);renderer.Present([](ScreenRect) {});CHECK(clips.size()==1 && clips[0].left==2 && clips[0].top==2 && clips[0].right==3 && clips[0].bottom==3 && pixels[2*8+2]==8 && pixels[5*8+5]==7 && pixels[3*8+3]==9);
+    const auto image=renderer.SceneImage();CHECK(image.indices[2*8+2]==5 && image.indices[3*8+3]==5); // 정지 월드의 별도 배경에는 메뉴/커서를 굳히지 않는다.
+    renderer.SetOverlayProcedure({});renderer.Draw(pixels,8);renderer.Present([](ScreenRect) {});CHECK(pixels[2*8+2]==5 && pixels[3*8+3]==9);
+}

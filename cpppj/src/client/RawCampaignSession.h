@@ -67,6 +67,7 @@ public:
     void Describe(std::uint32_t type,std::uint32_t count,std::uint32_t owner,std::uint32_t sid) const; // 원본4ad780의4인자를직접보존한다.
     bool SelectBuild(std::uint32_t type,o::Sid priest) const; // 같은 Open의 현재 기술/SP 관문과 실제 세션 커서 취득을 실행한다.
     std::string_view TextParameter(std::uint32_t token) const; // Player의 현재 정적 asksend 토큰만 해석한다.
+    bool ResolveIdentity(o::PlayerIdentityRecord& record) const; // Player 메뉴와 같은 현재 식별자 검색을 Chat 조회가 사용한다.
 private:
     friend class RawCampaignSession; // 같은 실제 세션 factory만 내부 참조를 구성할 수 있다.
     struct Impl; // 현재 입력/상태와 원본 메뉴 계층의 고정 주소 소유자다.
@@ -148,6 +149,8 @@ public:
     //현재연결상태/실제수신패킷은진단전용읽기다. 별도성공flag를만들지않는다.
     std::uint32_t LocalConnectionPhase() const;
     std::span<const std::uint8_t> LocalConnectionPackets() const;
+    // 커서가 작성한 원본 건설 요청도 같은 실제 로컬 로그인 전송에 보낸다.
+    void SendLocalPacket(std::int32_t target,std::span<const std::uint8_t> packet);
     // 실제443fe0을 같은 시각/Host/표시/음향으로 실행한다. duration0은 원본 기본10초다.
     void StartConstruction(o::Sid parent,float duration);
     // 현재 같은 풀/TYPE/실제 로컬 소유자·모드로 원본 초기 시야를 계산하여 화면에 적용한다.
@@ -188,6 +191,7 @@ public:
     o::RawPlayerParticipation& Participation();
     // 같은 현재 채팅 숨김 BYTE9 저장소다. 방향별 동맹표나 참여 flag와 합치지 않는다.
     std::span<std::uint8_t> HiddenPlayers();
+    std::uint8_t BattleOption(std::size_t offset) const; // 같은 실제87BYTE의 현재 메뉴 허용 값을 읽는다.
     // 설치 뒤 실제 생성자→현재 Player 부착→초기 갱신을 실행한다. 전략 프레임/자동 승패는 켜지 않는다.
     std::uint32_t CreateAi(std::uint32_t owner,std::span<const std::uint8_t> settings);
     // 같은 현재 Player의 실제 목록 소멸→본체 반납→포인터0을 수행한다. flags20은 원본대로 보존한다.
