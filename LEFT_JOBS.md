@@ -1,5 +1,11 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-19 cpppj 사전 정밀 디컴파일 완료 (VM-W11-Codex)
+
+- [x] `AGENTS.md`, `LEFT_JOBS.md`, `LEFT_JOBS.dotnetpj.md`를 읽고 마지막 정밀 디컴파일 호스트 **HJOW-Athlon / 2026-10-16**와 현재 **VM-W11-Codex**가 다른 것을 확인해, cpppj 작업 전에 패치판 10.78 및 CD판 10.72를 `tools/ghidra/refine_all.ps1`로 재생성했다. Ghidra 12.1.4, OpenJDK 21.0.12, Python 3.12.4를 사용했다.
+- [x] 패치판 **5,549/5,549 성공**, CD판 **5,822 성공·1 실패**(`FUN_0049f99f`, `Cannot properly adjust input varnodes`)다. 입력 exe 해시는 전후 동일하고, 실행 전 산출물은 `extracted/refined-backup-before-VM-W11-Codex-20261019/`에 보존했다. 상세 해시와 판본 대응 결과는 [디컴파일 기록](docs/exe/decompile-vmw11-20261019.md)에 있다. 실행 로그는 Git 제외 경로 `extracted/refine-vmw11-codex-20261019-run.log`에 있다.
+- [x] 원본/클론 게임 실행과 cpppj 소스 변경은 없다. 현재 PC의 디컴파일 선행 작업은 완료했으며, 이후 cpppj 작업은 최신 `extracted/refined/`를 사용한다. 다른 PC에서 작업을 이어갈 때는 호스트 일치 여부를 다시 확인한다.
+
 ## 2026-10-19 단위205 완료: Early2 실제 프레임·건설·생산·회수 및 자연 완주 (HJOW-Athlon)
 
 - [x] 기준a254fab5/시작 트리 깨끗함·AGENTS/양 LEFT 재독. 현재/마지막 정밀 디컴파일 **HJOW-Athlon / 2026-10-16** 일치·새 디컴파일 없음. 직전204는 실제 모달 패널/600SP·Early1 자연 완주·전체1722/11진입·로컬 커밋의 진척 턴이다.
