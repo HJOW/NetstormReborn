@@ -2167,10 +2167,13 @@ TEST_CASE(CampaignForwardBattle_ActualSavedStoneExplosionLifetime) {
 }
 
 // 실제 자산의 명시 Dais/제단/포획 Form 입력 뒤 UI 자격과18BYTE→서버40h→같은54 경로를 확인한다. 자연 포획/최초Pop/희생 완료 검사는 아니다.
-TEST_CASE(CampaignSacrifice_ActualUiAndLocalPacketToRitualPath) {
-    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();netstorm::zacket::LocalMissionTransport* wire{};std::vector<std::string> music;std::vector<std::uint32_t> income;std::size_t incomeSounds{}; // 실제 자산과 명시 장치/전송 관찰이다.
+namespace {
+// 같은 명시 상태의 초기 의식 회귀와 후속 Kernel 진행을 구분한다. false는 기존 입력/종료점을 그대로 사용한다.
+void ActualSacrificeSession(bool followup) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();netstorm::zacket::LocalMissionTransport* wire{};std::vector<std::string> music;std::vector<std::uint32_t> income;std::size_t incomeSounds{};double wall=100;std::vector<SoundHandle> globalSounds;std::unique_ptr<Renderer> visual;std::vector<std::uint8_t> visualPixels;std::size_t drawn{}; // 실제 자산과 명시 장치/전송 관찰이다.
     services.deletion.selected=[] { return Sid{}; };services.carrierRequest=[&](std::int32_t owner,std::span<const std::uint8_t> packet) { CHECK(wire);wire->Send(owner,packet); };services.requestMusic=[&](std::string_view name) { music.emplace_back(name); };
     services.contentLifetime.localNotice=[&](std::uint32_t command) { income.push_back(command); };services.contentLifetime.sound=[&](float x,float y) { CHECK(std::isfinite(x) && std::isfinite(y));++incomeSounds; }; // 실제 클라이언트의 입력 큐/장치에 해당하는 명시 관찰이다. 지갑/SP는 실제 Reward를 사용한다.
+    if (followup) { services.sound.wallSeconds=[&] { return wall; };const auto original=services.sound.play;services.sound.play=[&,original](SoundHandle sound,std::uint32_t loop,std::uint32_t volume,std::uint32_t pan,std::uint32_t priority,std::uint32_t limit) { globalSounds.push_back(sound);return original(sound,loop,volume,pan,priority,limit); }; } // 지연 음향의 실제 장치 요청/시계만 관찰한다.
     auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));session.Load();auto core=session.Core();SessionPickupWire link(session);wire=&link.transport;
     const Sid priest{static_cast<std::uint16_t>(session.FindPriestParticipation(1))};CHECK(priest.value);if (!priest.value) return;const auto priestRaw=core.pool.Slot(priest);const auto& daisHotspot=core.shapes[165].frames.at(3);const auto& runeHotspot=core.shapes[166].frames.at(0); // 실제0단계 좌표를 결정하는 두 SHP 헤더다.
     const auto graphAt=[&](float x,float y) { const auto sid=core.hash.Entries(0)[static_cast<std::size_t>(y)*256+static_cast<std::size_t>(x)];return sid ? std::uint32_t(core.pool.Slot(Sid{sid})[30]) : 254U; }; // 현재 원본 surface/Graph 입력만 읽는다.
@@ -2189,6 +2192,7 @@ TEST_CASE(CampaignSacrifice_ActualUiAndLocalPacketToRitualPath) {
     };
     std::cout<<"제단 실제 프레임: 개수"<<core.frames[164].Codes().size()<<" P"<<core.frames[164].Run('P').first<<" K"<<core.frames[164].Run('K').first<<" L"<<core.frames[164].Run('L').first<<"\n"; // 실제 자산의 입력 프레임 구성 진단이다.
     const auto dais=input(165,3),altar=input(164,0);const auto captured=core.factory.CreateContained(0);auto capturedRaw=core.pool.AllocatedBytes(captured);capturedRaw[11]=0x10;Put(capturedRaw,12,2,2);Put(capturedRaw,16,dais.value,2);Put(capturedRaw,18,158,2);Put(capturedRaw,20,32,2);Put(core.pool.AllocatedBytes(dais),6,captured.value,2); // 포획 내용물의 원래owner2/kind158/mask32 명시 입력이다.
+    if (followup) { Put(core.pool.AllocatedBytes(altar),12,2,2);Put(core.pool.AllocatedBytes(altar),36,static_cast<std::uint32_t>(core.frames[164].Run('O').first)); } // 후속 입력은 실제 포획 통지 뒤의 원래owner2/제단O 상태를 명시한다.
     auto ui=session.MakeCarrierInput({});auto target=point;CHECK(ui->Evaluate(priest,target)==0x11 && target.x==point.x && target.y==point.y);
     Put(capturedRaw,20,0,2);target=point;CHECK(ui->Evaluate(priest,target)!=0x11);Put(capturedRaw,20,32,2); // 포획 대상 없이는 의식 자격이 나지 않는다.
     const auto ready=Get(core.pool.Slot(altar),36);Put(core.pool.AllocatedBytes(altar),36,static_cast<std::uint32_t>(core.frames[164].Run('L').first));target=point;CHECK(ui->Evaluate(priest,target)!=0x11);Put(core.pool.AllocatedBytes(altar),36,ready); // 실제 존재하는L 구간의 제단도 거부한다. K 구간은 이 실제 자산에 없다.
@@ -2204,7 +2208,39 @@ TEST_CASE(CampaignSacrifice_ActualUiAndLocalPacketToRitualPath) {
         CHECK(!core.processes.FromForm(form));CHECK(core.processes.FindEvent(dais,0x307));CHECK(Get(core.pool.Slot(priest),36)==static_cast<std::uint32_t>(core.frames[158].Run('K').first));std::cout<<"명시 제단 입력 뒤 도착 관측: "<<steps<<"프레임/사제frame"<<Get(core.pool.Slot(priest),36)<<"/307:"<<(core.processes.FindEvent(dais,0x307)!=nullptr)<<"/DaisExtra"<<std::uint32_t(core.pool.Slot(dais)[40])<<"/DaisHash"<<std::uint32_t(core.pool.Slot(dais)[33])<<"/사제위치"<<std::bit_cast<float>(Get(core.pool.Slot(priest),14))<<","<<std::bit_cast<float>(Get(core.pool.Slot(priest),18))<<"\n";
     }
     CHECK(music==std::vector<std::string>{"sacrifice.mus"} && session.Sp(1)==sp+core.types[154].cost && income==std::vector<std::uint32_t>{0x020000b4} && incomeSounds==1);CHECK((core.pool.Slot(priest)[11]&3U)==0 && !link.transport.Server().depth);
+    if (followup) {
+        visual=std::make_unique<Renderer>(1024,768);visualPixels.resize(1024*768);session.SetParticleView({static_cast<int>(point.x*16)-512,static_cast<int>(point.y*11)-384,0,0,1024,768},{[&] { return visual->FullRedrawPending(); },[&](SquidDisplayRect rect,std::uint32_t flags) { visual->Invalidate({rect.left,rect.top,rect.right,rect.bottom},flags); }}); // Rune 건설/효과가 실제 캡처·렌더러까지 연결되는지 검사한다.
+        const auto began=core.processState.now;auto lastFrame=Get(core.pool.Slot(dais),36);std::size_t born{},retired{};bool live{};std::array<bool,5> bands{};double readyAt{};std::array<Sid,2> delayed{}; // 실제 Rune 수명/의식 코드/완료 지연음을 추적한다.
+        RawContainedLookup lookup(core.pool,[](Sid,std::uint32_t) { throw std::logic_error("소리 관찰에서 Form 삭제 요청"); });
+        for (std::uint64_t step=1;step<=8000;++step) { // 최대200초를 같은 Kernel에서 진행하며 HP/단계/음향 결과를 쓰지 않는다.
+            const auto now=began+double(step)*.025;wall=100+now;
+            try { session.RunFrame({now,wall,.025,5000+step},false); }
+            catch (...) { std::cout<<"의식 후속 오류: step"<<step<<"/game"<<now<<"/Daisframe"<<Get(core.pool.Slot(dais),36)<<"/사제frame"<<Get(core.pool.Slot(priest),36)<<"\n";throw; }
+            visual->SetScene(session.ParticleSprites({0,0,1024,768}));std::fill(visualPixels.begin(),visualPixels.end(),std::uint8_t{255});visual->Draw(visualPixels,1024,255);visual->Present([](ScreenRect) {});drawn+=static_cast<std::size_t>(std::count_if(visualPixels.begin(),visualPixels.end(),[](auto color) { return color!=255; })); // 전체 입자 표면 출력이며 Rune만의 원본 픽셀 일치 판정은 아니다.
+            const auto frame=Get(core.pool.Slot(dais),36);const auto runes=ConstructionLive(core,166);const bool current=!runes.empty();if (current && !live) ++born;if (!current && live) ++retired;live=current; // SID 재사용과 별개로 생성/삭제 전이를 센다.
+            const auto direction=RawPathAnimation::Direction(core.frames[158],static_cast<std::int32_t>(Get(core.pool.Slot(priest),36)));if (current && direction>=10 && direction<=14) bands[static_cast<std::size_t>(direction-10)]=true;
+            if (frame!=lastFrame || (step%20==0 && current)) std::cout<<"의식 후속 game"<<now<<"/Dais"<<frame<<"/Rune"<<runes.size()<<"/생성"<<born<<"/삭제"<<retired<<"/사제"<<Get(core.pool.Slot(priest),36)<<"\n";lastFrame=frame;
+            if (!readyAt && born==5 && retired==5) {
+                CHECK(frame==47 && std::all_of(bands.begin(),bands.end(),[](bool seen) { return seen; }) && !core.processes.FindEvent(priest,604));readyAt=now;
+                delayed={lookup.Find(dais,47,0),lookup.Find(dais,47,1)};CHECK(delayed[0].value && delayed[1].value && !lookup.Find(dais,47,2).value);std::vector<double> starts;
+                for (const auto soundForm:delayed) { // 실제 붙은47의 두 절대 시작 시각과 flags를 확인한다.
+                    auto* sound=dynamic_cast<SoundProcess*>(core.processes.FromForm(soundForm));CHECK(sound && sound->Parent()==dais && sound->Flags()==0xc && !sound->Current());if (sound) starts.push_back(sound->StartTime());
+                }
+                std::sort(starts.begin(),starts.end());CHECK(starts.size()==2);if (starts.size()==2) { CHECK_NEAR(starts[0],wall+2.799999952316284,1e-12);CHECK_NEAR(starts[1],wall+4.0,1e-12); }
+                std::cout<<"실제 Rune5 생성/완공·삭제/K..O/단계47·두 지연음 예약 game"<<now<<"\n";
+            }
+            if (readyAt && now>readyAt+4.5) { // 실제 벽시계 이후 한 번 재생과 Sound47 자연 삭제까지 관찰한다.
+                CHECK(!core.processes.FromForm(delayed[0]) && !core.processes.FromForm(delayed[1]));CHECK(std::count(globalSounds.begin(),globalSounds.end(),external.names.Lookup("priestSacrifice2.wav"))==1);CHECK(std::count(globalSounds.begin(),globalSounds.end(),external.names.Lookup("thunderCrack.wav"))==1);CHECK(Get(core.pool.Slot(dais),36)==47 && (core.pool.Slot(captured)[11]&3U)==0);CHECK(drawn>0);std::cout<<"의식 룬 단계 완료/두 지연음 재생·자연 소진/전체 입자 표면"<<drawn<<"픽셀, 보상 선택 이후/희생 완료는 미검증\n";session.SetParticleView({0,0,0,0,1024,768},{});return;
+            }
+        }
+        CHECK(readyAt>0);
+    }
 }
+}
+// 기존 초기 의식 회귀의 입력/종료점은 유지한다.
+TEST_CASE(CampaignSacrifice_ActualUiAndLocalPacketToRitualPath) { ActualSacrificeSession(false); }
+// 동일한 실제 명령/Kernel 뒤307 지연부터 Rune/단계 진행을 검사한다. 자연 포획/최초Pop 완료는 아니다.
+TEST_CASE(CampaignRitualProgress_Actual307RuneConstruction) { ActualSacrificeSession(true); }
 
 // 실제 보호 SHP의 표시 기준점과 다른 의식 목표점으로 독립 원본30입력/Anchor·Point120반환을 대조한다.
 TEST_CASE(CampaignSacrifice_Native30ActualShapeOffsets) {

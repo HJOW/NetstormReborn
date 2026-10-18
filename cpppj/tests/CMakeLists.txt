@@ -1615,3 +1615,8 @@ set_source_files_properties(PriestSacrificeRequestTests.cpp PROPERTIES COMPILE_D
 # 실제 보호 SHP의 의식 목표점 원문을 같은 Session 조회 검사에서만 읽는다.
 set_property(SOURCE CampaignSessionTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS
     "NETSTORM_RITUAL_SHAPE_OFFSETS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/ritual-shape-offsets-x86.tsv\"")
+
+# 사제604의 독립 원본1050입력을 이 검사에서만 읽는다.
+target_sources(netstorm_tests PRIVATE PriestRitualFrameTests.cpp)
+set_source_files_properties(PriestRitualFrameTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_PRIEST_RITUAL_FRAME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/priest-ritual-frame-x86.tsv\"")

@@ -83,6 +83,7 @@
 #include "o/RawRunePostPop.h"
 #include "o/RawDaisRegular.h"
 #include "o/RawPriestSacrificeRequest.h"
+#include "o/RawPriestRitualFrame.h"
 #include "o/RawVortexPreDestroy.h"
 #include "o/RawBuriedPostPop.h"
 #include "o/RawBuriedRegular.h"
@@ -257,12 +258,14 @@ struct RawCampaignSession::Impl {
     RunePostPopState runeState; // PATCH005412e8/ec/f0의 현재Altar164/Dais165/Rune166이며 후속 실제 의식도 같은 저장소를 사용한다.
     TempleRitualState ritualState; // 같은 현재 권한/사제/룬 타입의 의식 상태다.
     std::unique_ptr<RawContainedLookup> ritualLookup; // 의식과 내용물 제거가 같은 실제 종속 체인을 읽는다.
+    std::unique_ptr<RawPriestRitualFrame> priestRitualFrame; // 같은 현재 코드표/605/프레임/음향의604 반복 처리다.
     std::unique_ptr<RawPriestRitualActions> ritualActions; // 같은 사제 K..P 프레임/604 예약이다.
     std::unique_ptr<RawTempleRitual> templeRitual; // 같은 SHP/지면/생성/Host의 의식 단계 몸체다.
     std::unique_ptr<RawRunePostPop> runePostPop; // 같은 실제 룬 건설/304 후처리다.
     std::unique_ptr<DaisRegularState> daisState; // 현재 원본 상태 참조와 방향별 동맹이다.
     std::unique_ptr<RawDaisRegular> daisRegular; // 기존 원본 자격/의식 이동/단계 진행이다.
     std::unique_ptr<RawPriestSacrificeRequest> sacrificeRequest; // 사용자 입력과 서버40h가 공유하는 wrapper다.
+    std::unique_ptr<void,void(*)(void*)> pendingRitualSound{nullptr,[](void* storage) { ::operator delete(storage); }}; // Dais 지연 소리의 new40 확보 한 번을 같은 Sound47 생성까지 보관한다.
     std::unique_ptr<RegularProcess> pendingRitualRegular; // 실제 확보 한 번을 예약/생성/부착까지 유지한다.
     PlayerWorldState playerState; // 현재 battleOwner와 templateOwner는 별도 상태다.
     FortObjectLoadState objectState; // 저장객체의 실제 미션/로딩 상태다.
@@ -900,7 +903,7 @@ struct RawCampaignSession::Impl {
             // 실제 사제 +18은44b9e0이다. 고유 +14는 뒤의 사제 전처리 래퍼가 먼저 실행한다.
             if (PriestLifetime(event.sid) && event.effect==SquidDestroyEffect::PostDestroy) { PrepareDamageablePost();damageablePost->PostDestroy(event.sid,event.flags);return; }
             if (BombLifetime(event.sid) && bombPre->Handles(event.sid) && event.effect==SquidDestroyEffect::PreDestroy) { bombPre->PreDestroy(event.sid,event.flags);return; } // 실제고유전처리는공통절앞에서처리한다.
-            if (FenceCommon(event.sid) || VisualDummy(event.sid) || PriestForcefield(event.sid) || BuriedLifetime(event.sid) || BombLifetime(event.sid)) { // 실제 보호막도 +14/+18이 공통004b0950/004b0840이다.
+            if (RuneLifetime(event.sid) || FenceCommon(event.sid) || VisualDummy(event.sid) || PriestForcefield(event.sid) || BuriedLifetime(event.sid) || BombLifetime(event.sid)) { // 실제 보호막도 +14/+18이 공통004b0950/004b0840이다.
                 if (event.effect==SquidDestroyEffect::PreDestroy) { world.CommonDeletion().PreDestroy(event.sid,event.flags);return; }
                 if (event.effect==SquidDestroyEffect::PostDestroy) { world.CommonDeletion().PostDestroy(event.sid,event.flags);return; }
             }
@@ -917,7 +920,7 @@ struct RawCampaignSession::Impl {
         worldHooks.assets=priests->DestroyHooks(std::move(worldHooks.assets)); // 실제4919b0의 목록·보호막·Carrier 전처리를 같은 삭제 호출에 연결한다.
         auto previousDestroy=std::move(worldHooks.destroy); // 실제 신전 VT의 공통+10만 추가 분배한다.
         worldHooks.destroy=[this,previous=std::move(previousDestroy)](Sid sid,std::uint32_t flags,const SquidDestroyHooks& hooks) {
-            if (BridgeLifetime(sid) || BridgeConnector(sid) || geyserLifetime->Handles(sid) || Vortex(sid) || FenceCommon(sid) || Flyer(sid) || balloonBody->Handles(sid) || VisualDummy(sid) || PlainDamageable(sid) || SunFence(sid) || Nugget(sid) || PreviewDais(sid) || PriestForcefield(sid) || PlainCarrierLifetime(sid) || PriestLifetime(sid) || BuriedLifetime(sid) || BombLifetime(sid)) return core.virtualDestroy.Destroy(sid,flags,hooks);return previous(sid,flags,hooks);
+            if (BridgeLifetime(sid) || BridgeConnector(sid) || geyserLifetime->Handles(sid) || Vortex(sid) || FenceCommon(sid) || Flyer(sid) || balloonBody->Handles(sid) || VisualDummy(sid) || PlainDamageable(sid) || SunFence(sid) || Nugget(sid) || PreviewDais(sid) || PriestForcefield(sid) || PlainCarrierLifetime(sid) || PriestLifetime(sid) || BuriedLifetime(sid) || BombLifetime(sid) || RuneLifetime(sid)) return core.virtualDestroy.Destroy(sid,flags,hooks);return previous(sid,flags,hooks);
         };
         buriedRegular=std::make_unique<RawBuriedRegular>(core.pool,core.frames,core.frame,random);
         auto actualRegular=hits->Handler(combat->Handler(assetBindings->Handler(buriedRegular->Handler(priests->RegularHandler([this](Sid sid,std::uint32_t event,std::uint32_t count,float payload) {
@@ -930,6 +933,7 @@ struct RawCampaignSession::Impl {
             // 기존 ContentFormHost::Damage는 이 원본 몸체의 보존 API명이며 피해를 전달하는 경로가 아니다.
             if (raw[10]==6 && Read(raw,0)==0x512208U) return contentForms->Damage(sid,std::bit_cast<std::int32_t>(count),payload);
             const bool priest=raw[10]==kPriestType && Read(raw,0)==kPatchPriestVtable;
+            if (priest && event==604) { if (!priestRitualFrame) throw std::logic_error("사제604 몸체 설치 전 호출");return priestRitualFrame->Tick(sid); }
             // 사제의 다섯 고유 사건은 파생 처리기가 담당한다. 나머지만 원본 기본 Carrier로 넘긴다.
             if (carrierRegular->Handles(sid) || (priest && (event<0x259U || event>0x25dU))) return carrierRegular->Handle(sid,event,count,payload);
             // 원본 가상5c가44b900이고98이기존Base/Damageable인13개VT만 공통 예약 피해/재건설로 분배한다.
@@ -1065,6 +1069,8 @@ struct RawCampaignSession::Impl {
     bool BridgeLifetime(Sid sid) const { const auto raw=core.pool.Slot(sid);return raw[10]==core.bridgeState.bridgeType && Read(raw,0)==kPatchBridgeVtable; }
     // TYPE155 생성자422720의503360은+10/+14/+18이 각각 공통4af780/4b0950/4b0840이다.
     bool BridgeConnector(Sid sid) const { const auto raw=core.pool.Slot(sid);return raw[10]==core.bridgeState.connectorType && Read(raw,0)==0x503360U; }
+    // Rune166/VT5075d8의+14/+18은 공통4b0950/4b0840이다. Damageable 전처리/드롭으로 대체하지 않는다.
+    bool RuneLifetime(Sid sid) const { const auto raw=core.pool.Slot(sid);return raw[10]==runeState.runeType && Read(raw,0)==0x5075d8U; }
     // 실제507950/+10=4af780이며 extra8일 때44afd0의선행 일반 효과가 없다. 살아 있는 다이스 전체로 확장하지 않는다.
     bool PreviewDais(Sid sid) const { const auto raw=core.pool.Slot(sid);return raw[10]==runeState.daisType && Read(raw,0)==0x00507950 && (raw[40]&8)!=0; }
     // 449580/기존 RawDaisLifecycle.PostDestroy의 두 SID 쌍을 같은 실제9×b4 Player 저장소에 연결한다.

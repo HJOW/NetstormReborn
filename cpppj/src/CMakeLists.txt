@@ -145,3 +145,6 @@ target_sources(netstorm PRIVATE client/RawProductionMaintenance.cpp client/RawPr
 
 # 사제 제단 자격/희생 wrapper의 실제 요청 몸체다.
 target_sources(netstorm PRIVATE o/RawPriestSacrificeRequest.cpp o/RawPriestSacrificeRequest.h)
+
+# 사제604 의식 애니메이션의 실제 반복 몸체다.
+target_sources(netstorm PRIVATE o/RawPriestRitualFrame.cpp o/RawPriestRitualFrame.h)

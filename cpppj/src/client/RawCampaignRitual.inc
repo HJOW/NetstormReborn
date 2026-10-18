@@ -20,6 +20,11 @@ void AddRitualRegular(Sid sid,std::uint32_t event,float payload,std::uint32_t ty
 // 의식 자격/이동/초기 Rune 진행을 연결한다. 희생 완료의 장치/UI/파생 수명 미복원은 명시 오류로 남긴다.
 void ConnectRitual() {
     ritualLookup=std::make_unique<RawContainedLookup>(core.pool,[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); });
+    PriestRitualFrameHooks frame; // 실제 같은 Host/Frame/위치 소리로604를 처리한다.
+    frame.setFrame=[this](Sid sid,std::int32_t value,std::uint32_t flags) { core.frame.Set(sid,value,flags); };
+    frame.eventExists=[this](Sid sid,std::uint32_t event) { return core.processes.FindEvent(sid,event)!=nullptr; };
+    frame.playAt=[this](float x,float y,std::string_view name,std::uint32_t flags) { if (!services.sound.playOnceAt) throw std::logic_error("사제604 위치 음향 미연결");services.sound.playOnceAt(x,y,soundNames.Lookup(name),flags,0); };
+    priestRitualFrame=std::make_unique<RawPriestRitualFrame>(core.pool,core.frames,std::move(frame));
     PriestRitualActionHooks action; // 현재 사제 프레임과604 SharedRegular다.
     action.setFrame=[this](Sid sid,std::int32_t value,std::uint32_t flags) { core.frame.Set(sid,value,flags); };
     action.reserveShared=[this] { return ReserveRitualRegular(); };action.addShared=[this](Sid sid,std::uint32_t event,float payload) { AddRitualRegular(sid,event,payload,61); };
@@ -46,7 +51,16 @@ void ConnectRitual() {
     dais.processType=[this](std::uint32_t type) { return priests->MovementProcessType(type); };
     dais.pathMetadata=[this](Sid sid) { const auto& definition=assets.game.Types()[core.pool.Slot(sid)[10]-70].definition;return RawPathStartType{static_cast<float>(definition.Number("speed").value()),static_cast<float>(definition.Number("turningSpeed").value()),definition.specialFrames.defaultFrame}; };
     dais.damageable=[this](Sid sid,std::uint32_t event,std::uint32_t count,float payload) { return assetBindings->Regular().DamageableHandle(sid,event,count,payload); };
-    FillMissing(dais.reserveSound);FillMissing(dais.loadSound);FillMissing(dais.attachSound);FillMissing(dais.wallSeconds);FillMissing(dais.setSoundStart);FillMissing(dais.stopVoice);
+    dais.reserveSound=[this] { if (pendingRitualSound) throw std::logic_error("다이스 지연 소리 중첩 예약");pendingRitualSound.reset(::operator new(sizeof(SoundProcess),std::nothrow));return pendingRitualSound!=nullptr; };
+    dais.loadSound=[this](std::string_view name,std::uint32_t alternate,std::uint32_t flags) { if (alternate || flags!=0xc) throw std::logic_error("다이스 실제 지연 소리 인자 오류");return soundNames.Lookup(name); };
+    dais.attachSound=[this](Sid sid,std::uint32_t sound,std::uint32_t alternate,std::uint32_t flags)->std::uintptr_t {
+        if (!pendingRitualSound) throw std::logic_error("다이스 지연 소리 실제 예약 누락");auto* storage=pendingRitualSound.release();SoundProcess* process{}; // 같은 확보의 소유권을 실제 생성자로 넘긴다.
+        try { process=new(storage) SoundProcess(*sounds,sound,alternate,flags); }catch (...) { ::operator delete(storage);throw; }
+        auto* attached=core.processes.Attach(std::unique_ptr<SoundProcess>(process),soundState.processType,sid,0x10);return attached ? std::uintptr_t(attached->Form().value) : 0;
+    };
+    dais.wallSeconds=services.sound.wallSeconds;
+    dais.setSoundStart=[this](std::uintptr_t form,double time) { if (form>65535) throw std::out_of_range("다이스 소리 Form 번호 범위");auto* process=dynamic_cast<SoundProcess*>(core.processes.FromForm(Sid{static_cast<std::uint16_t>(form)}));if (!process) throw std::logic_error("다이스 현재 Sound47 누락");process->SetStartTime(time); }; // 같은 절대 시각을 쓰며 벽시계를 다시 읽지 않는다.
+    FillMissing(dais.stopVoice);
     FillMissing(dais.addLocalSp);FillMissing(dais.normalizeForeignSp);FillMissing(dais.grantForeignType);FillMissing(dais.localSpecial);FillMissing(dais.localType);FillMissing(dais.refreshOwner);FillMissing(dais.refreshLocal);FillMissing(dais.priestExists);FillMissing(dais.multiplayerStatus);FillMissing(dais.chat);
     daisRegular=std::make_unique<RawDaisRegular>(core.pool,core.hash,core.types,core.frames,*templeRitual,*runePostPop,priests->Carrier(),core.processes,*ritualLookup,motion->Paths().Starter(),*daisState,std::move(dais));
     PriestSacrificeRequestHooks request; // 두 wrapper는 실제 같은 Dais/내용물/음악을 호출한다.

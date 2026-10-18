@@ -1,0 +1,24 @@
+{
+  "edition": "10.78",
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "lastDecompileDate": "2026-10-16",
+  "uniqueInputs": 1050,
+  "normalReturns": 2100,
+  "bodyAndHelperInstructions": 119088,
+  "precisionDifferences": 0,
+  "actualPriestCodes": "AAAAAAAABBBBBBBBCCCCCCCCDDDDDDDDEEEEEEEEFFFFFFFFGGGGGGGGHHHHHHHHIJJJJJJJJJJJJKKKKKKKKKKKKKKKKKKLLLLLLLLLLLLLLLLLLMMMMMMMMMMMMMMMMMMNNNNNNNNNNNNNNNNNNOOOOOOOOOOOOOOOOOOP",
+  "scope": "실제494160과 실제 도달한 내부49417a/방향·TYPE getter.4acee0 setter/4afb40 Find605/4a9d70 소리는 인자·순서 관찰 경계. 합성 단일K/O의짧은Run은setter경계 뒤의 표시 유효성을 주장하지 않는다.604상위Handle/원본 전체게임/CD판은 미검증.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_priest_ritual_frame.py": "85430a70710fde4cd7429c03cd9f4c336fa57bb5ddd77bf0029e6df4979cb054",
+    "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+    "tools/decomp_cursor_position.py": "e15bcdbc4c6be9c131c30f15416c945d650dba9f7dc6def404b47f63c635c212",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "tools/shp.py": "4cb8bee6ed773e29e8658ddb315594ebf5ac005ea5b96c6b760a177029515bfd",
+    "cpppj/tests/fixtures/priest-ritual-frame-x86.tsv": "f9b7cb8cf07feb33ab4e045c832555192ca600b499812d95e2fd7fe808b9710f"
+  }
+}
