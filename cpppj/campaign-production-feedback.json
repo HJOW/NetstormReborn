@@ -100,8 +100,8 @@
     "cpppj/src/client/RawProductionControls.cpp": "eb296d77e6c04d6d8e80b0a4c151992d9857bd33b06a288d08a76d414a6a05b1",
     "cpppj/src/client/RawProductionControls.h": "67046f35d49cb863978ef917777820793aa9156daa678519fac525ed001df264",
     "cpppj/src/client/UberGump.cpp": "7a0d2ce97d70126f0964b30896eccdf872fc64e9113bb3a4caaf7fe2372cf949",
-    "cpppj/tests/CMakeLists.txt": "7343386d297567d15ddef05e61dcc742670adbfad48e0389cb545372e8180f4e",
-    "cpppj/tests/CampaignSessionTests.cpp": "e92bbf5d99392b05f92dcb2fda5de226f824631088aec127fb7219f36b344a5e",
+    "cpppj/tests/CMakeLists.txt": "8ad6c6520b634837f8e6e7e2a0de4ac32bef1230770e640bf92b08ddc1122ef6",
+    "cpppj/tests/CampaignSessionTests.cpp": "c5119bad89f71e0e282467e8f34b400d796d8e7b27e33bfdca5c12710b6b2cfd",
     "tools/cpp_production_panel_smoke.py": "724988401741b93176a8a8d85a043ba712335b8c2cce85930f11016eae1a1e50",
     "cpppj/src/client/ProductionHintGump.h": "2a20c54f2a6ac90c4097715db46b7379c39ea69f4fbdcf93d14a2ec158b3cf07",
     "cpppj/src/client/ProductionHintGump.cpp": "629a1c381ff25a51161d092bdf449d39b6d9f2ae5a1b56474901779f3a665056",
@@ -541,6 +541,25 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "d92c46b46c7e909a7b5c98a45676960024d0593a41f4e6d30b5ea6a65a44284b",
           "current": "7343386d297567d15ddef05e61dcc742670adbfad48e0389cb545372e8180f4e"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 189,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "7343386d297567d15ddef05e61dcc742670adbfad48e0389cb545372e8180f4e",
+          "current": "8ad6c6520b634837f8e6e7e2a0de4ac32bef1230770e640bf92b08ddc1122ef6"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "e92bbf5d99392b05f92dcb2fda5de226f824631088aec127fb7219f36b344a5e",
+          "current": "c5119bad89f71e0e282467e8f34b400d796d8e7b27e33bfdca5c12710b6b2cfd"
         }
       ]
     }

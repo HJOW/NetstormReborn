@@ -70,6 +70,7 @@
 #include "o/RawFenceRebuild.h"
 #include "o/RawGunAngle.h"
 #include "o/RawRainVortexDraw.h"
+#include "o/RawTempleDraw.h"
 #include "o/RawRegionOwner.h"
 #include "o/RawSpStoreNoticeBindings.h"
 #include "o/RawPlayerTechnology.h"
@@ -2164,6 +2165,12 @@ void RawCampaignSession::DrawRainTemple(Sid sid,const std::function<void(std::in
         if (!impl_->services.sound.play) throw std::logic_error("레인 신전 상승음 실제 재생 미연결");
         impl_->services.sound.play(impl_->soundNames.Lookup("templeAscend.wav"),0,0,0,0,0);
     }});
+}
+// 실제 같은 TYPE의 baseFrame/구간 표를 현재 raw 전용 가상표로 분배한다.
+void RawCampaignSession::DrawTemple(Sid sid,const std::function<void(std::int32_t)>& frame) const {
+    const auto raw=impl_->core.pool.Slot(sid);if (IsRainVortex(impl_->core.pool.Edition(),raw)) { DrawRainTemple(sid,frame);return; }
+    if (impl_->core.pool.Edition()!=OriginalEdition::Patch1078 || !IsPatchTemple(raw)) throw std::invalid_argument("다른 판본/가상표 템플 Draw 미복원");
+    DrawWindThunderTemple(raw,impl_->core.frames[raw[10]],impl_->assets.game.Types()[raw[10]-kFirstAssetTypeNumber].definition.specialFrames.baseFrame,frame);
 }
 // 실제 설치된 Session의 게임 계산을 연결하고 UI의 실제 번역/작성/커서 소비자는 보존한다.
 std::unique_ptr<RawPriestMenu> RawCampaignSession::MakePriestMenu(PriestMenuHooks hooks) {

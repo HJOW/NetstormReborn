@@ -6,6 +6,7 @@
 #include "client/PaletteColors.h"
 #include "client/OwnerColorMaps.h"
 #include "o/RawFactoryDraw.h"
+#include "o/RawTempleDraw.h"
 #include "o/RawBridgeConnect.h"
 #include <bit>
 #include <stdexcept>
@@ -20,16 +21,21 @@ struct RawCampaignFactoryDisplay::Impl {
     SpriteDrawState state; // 원본 표시 전역과 현재 카메라/로컬 소유자다.
     SpriteColorMaps colors; // 실제 파일 팔레트의 세 소스 치환 표다.
     OwnerColorMaps outpost; // 원본43be30의 아웃포스트 일반9색 표다.
+    TempleDraw templeDraw; // 같은 Session의 현재 전용Draw/상승음이며 그리기 시점에만 호출한다.
+    std::vector<std::int32_t> templeBaseFrames; // 같은TYPE+128의 고정 본체 번호이며 썬더의-1을 보존한다.
     bool ready{}; // 파일 팔레트가 설치되기 전에 출력하지 않는다.
 
     // 플레어의+78은 TYPE+128 baseFrame이며+a4는 빈41c100이다. -1의gumpFrame 대체는 일반 Draw가 처리한다.
     bool Flare(o::Sid sid) const {
         const auto raw=core.pool.Slot(sid);return raw[10]==106 && raw[0]==0xa0 && raw[1]==0x96 && raw[2]==0x50 && raw[3]==0;
     }
-    bool Handles(o::Sid sid) const { return factory.Handles(sid) || Flare(sid); } // 실제 세 VT만 같은 수집기에 포함한다.
+    bool Temple(o::Sid sid) const { return o::IsPatchTemple(core.pool.Slot(sid)); } // 같은10.78 세 전용VT의 실제+a4 대상이다.
+    bool Handles(o::Sid sid) const { return factory.Handles(sid) || Flare(sid) || Temple(sid); } // 실제 여섯VT만 같은 수집기에 포함한다.
     // 원본 PE 초기값만 설치하고 각 수집에서 현재 게임 값으로 갱신한다.
-    Impl(RawWorldCore world,const GameAssets& data):core(world),assets(data),factory(core.pool,core.frames),
-        collection(core.hash,core.pool,core.types,core.shapes),views(MakeSpriteAssetViews(data)),outpost(BuildStandardOwnerColorMaps(126,82)) {
+    Impl(RawWorldCore world,const GameAssets& data,TempleDraw supplied):core(world),assets(data),factory(core.pool,core.frames),
+        collection(core.hash,core.pool,core.types,core.shapes),views(MakeSpriteAssetViews(data)),outpost(BuildStandardOwnerColorMaps(126,82)),templeDraw(std::move(supplied)),templeBaseFrames(core.types.size(),-1) {
+        // 실제 파싱한TYPE의 기본 프레임만 번호를 맞춰 공급한다. 템플은 원본 소유자 색표 대상이 아니다.
+        for (const auto& type:assets.Types()) templeBaseFrames.at(type.block+o::kFirstAssetTypeNumber)=type.definition.specialFrames.baseFrame;
         state.filteredFlags=2421574144U;state.wideOwnerType=164;state.unfilteredType=84;state.shadowAliasType=158;
         state.shadowAliasPinned=true; // 실제5318ec의 초기DWORD6이다.0일 때만 alias를 바꾼다.
         state.markerEnabled=true;state.markerExcludeType=157;state.markerType=96;state.statusType=118;state.abstractStatusType=117;
@@ -50,7 +56,7 @@ struct RawCampaignFactoryDisplay::Impl {
         if ((raw[40]&4U) && (raw[40]&0x30U)) throw std::logic_error("Factory 선택 상태 프로세스 목록 표시 미연결");
         state.now=core.processState.now;state.ownerPalettes.assign(core.bridgeState.ownerColors.begin(),core.bridgeState.ownerColors.end());
         SpritePixelTarget target(pixels,pitch,height,clip,MakeSpriteAssetShapes(assets,state),[this](auto mode,auto type,auto owner) { return Color(mode,type,owner); });
-        SpriteDrawHooks rules;rules.virtualFrame=[this](o::Sid object) { return Flare(object) ? assets.Types()[core.pool.Slot(object)[10]-o::kFirstAssetTypeNumber].definition.specialFrames.baseFrame : factory.MainFrame(object); };rules.surface=MakeSpriteSurfaceLookup(core.hash);
+        SpriteDrawHooks rules;rules.virtualFrame=[this](o::Sid object) { if (Temple(object)) return o::PatchTempleMainFrame(core.pool.Slot(object),templeBaseFrames);return Flare(object) ? assets.Types()[core.pool.Slot(object)[10]-o::kFirstAssetTypeNumber].definition.specialFrames.baseFrame : factory.MainFrame(object); };rules.surface=MakeSpriteSurfaceLookup(core.hash);
         rules.resource=[this](o::Sid object)->std::optional<SpriteResourceStatus> {
             if (core.processes.FindEvent(object,0x493)) throw std::logic_error("Factory 자원 내용물 막대 표시 미연결");return std::nullopt;
         };
@@ -58,13 +64,21 @@ struct RawCampaignFactoryDisplay::Impl {
         // +a4의0044c180은 같은 기준점/단위 배율의 plain SHP다. 일반 owner 문맥으로 바꾸지 않는다.
         hooks.virtualDraw=[this,shape=hooks.shape](o::Sid object,ScreenPoint point) {
             if (Flare(object)) return; // 실제+a4의 빈 몸체41c100이다.
+            if (Temple(object)) {
+                if (!templeDraw) throw std::logic_error("실제 템플 전용Draw 미연결");const auto type=core.pool.Slot(object)[10]; // 원본Draw의 첫 TYPE/SHP snapshot이다.
+                templeDraw(object,[this,object,point,type,&shape](std::int32_t frame) {
+                    if (frame<0) throw std::out_of_range("템플 추가 그림 음수 프레임");const auto current=core.pool.Slot(object);
+                    if (!(current[40]&0x10U)) shape({type,static_cast<std::uint32_t>(frame),point,SpriteShapeMode::Plain});
+                    else if (current[34]==state.localPlayer) shape({type,static_cast<std::uint32_t>(frame),point,SpriteShapeMode::Abstract}); // 실제497280의 현재 추상/로컬 소유자 관문이다.
+                });return;
+            }
             factory.Additional(object,point.x,point.y,[&shape](auto x,auto y,auto type,auto frame) { if (frame<0) throw std::out_of_range("Factory 추가 그림 음수 프레임");shape({type,static_cast<std::uint32_t>(frame),{x,y},SpriteShapeMode::Plain}); });
         };
         SpriteDraw draw(core.pool,core.types,views,state,std::move(hooks),0);draw.Draw(entry);
     }
 };
 // 같은 Session의 수명이 끝나기 전에 표시기를 해제한다.
-RawCampaignFactoryDisplay::RawCampaignFactoryDisplay(RawWorldCore core,const GameAssets& assets):impl_(std::make_unique<Impl>(core,assets)) {}
+RawCampaignFactoryDisplay::RawCampaignFactoryDisplay(RawWorldCore core,const GameAssets& assets,TempleDraw templeDraw):impl_(std::make_unique<Impl>(core,assets,std::move(templeDraw))) {}
 RawCampaignFactoryDisplay::~RawCampaignFactoryDisplay()=default; // procedure가 더 이상 호출되지 않을 때 반납한다.
 bool RawCampaignFactoryDisplay::Handles(o::Sid sid) const { return impl_->Handles(sid); } // 별도 TYPE 이름 휴리스틱을 쓰지 않는다.
 // 장치 BGRX와 별개로 원본 R/G/B/예약 DWORD를 만들어 실제 파일 색 표를 계산한다.

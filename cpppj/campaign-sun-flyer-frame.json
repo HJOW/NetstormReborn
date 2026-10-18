@@ -77,14 +77,14 @@
     "originals/d/GIFCLOUD.COL": "785a2cda6ac1d3e295d375815b6d9650720683099db7c249382d598b5da00532"
   },
   "currentSources": {
-    "cpppj/src/o/CMakeLists.txt": "5d76cfdef4b2ae7fb051516cae4ea82beed54674171f2ab6f0604c741d25c442",
+    "cpppj/src/o/CMakeLists.txt": "baacf46a9d86a22fb8425488949b05c3feae33744e12c3f8e3eb3c933293d5ae",
     "cpppj/src/o/RawFlyerFrame.h": "0c3f5b5e3bbe52ac34e00fe37819f3a490011596919b715045a0c983899cb92a",
     "cpppj/src/o/RawFlyerFrame.cpp": "7752144c626f831c64bf0959ad8f9579d67bae1c87def2dcd0f1797b306f2049",
     "cpppj/src/o/RawFlyerProcess.h": "1107c2a73163e0c3024c822cf614c9d02f7aa36d75fc81cfd0a6df58e36b6345",
     "cpppj/src/o/RawFlyerProcess.cpp": "bc5d68f980251febe080e280db07727f7d5cc7bbbf9d84780d8d8d31a86f44f1",
     "cpppj/src/o/RawGunTarget.cpp": "7ac9b51af58949ce8c23f9854679a7685468ba798768db0a1158f25b0ff95f14",
-    "cpppj/src/client/RawCampaignSession.cpp": "eaa65bee94ad74c578ea0538afad5a62fa917f07a770e868224dd1365de5dd4a",
-    "cpppj/tests/CMakeLists.txt": "7343386d297567d15ddef05e61dcc742670adbfad48e0389cb545372e8180f4e",
+    "cpppj/src/client/RawCampaignSession.cpp": "8fefbbf9e3ddc9d6a59308acacd34e63fdfd4d676a3b2bd6505f7a229184cf2b",
+    "cpppj/tests/CMakeLists.txt": "8ad6c6520b634837f8e6e7e2a0de4ac32bef1230770e640bf92b08ddc1122ef6",
     "cpppj/tests/CampaignMissionStartTests.cpp": "03e1719afd07bc3915052bfe2d4eedf2a37080b3f3b5ac041133cef165e59df5",
     "tools/decomp_sun_flyer_frame.py": "afe8503d7b5de9afa80bf106d133d62b54ffe6eec66b22dfd9b3a91276dfb3fd",
     "cpppj/sun-flyer-frame.json": "8f433203431f08d2207b0aec3ec6b10dce563395ab57ccbf0b578d0805ba4cd1",
@@ -364,5 +364,32 @@
     "Burning14 생성/캡처/Frame/Draw/삭제를 기존 실제 라이브러리와 연결해65.7초 실패 창과 캠페인 캐논 전체 전투 재검사",
     "훨리기그 실제2/3 명령4e2e30·홈 통지45b4a0·폭탄163의Pop/그림/피격/삭제와 자연 공격/귀환 검증",
     "Quick Help 전용 본문/창/이력·운반·희생·승패·후속 미션·전략AI 및11단계 자연 완주/원본 전체 동일성"
+  ],
+  "integration_updates": [
+    {
+      "date": "2026-10-18",
+      "unit": 189,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/o/CMakeLists.txt",
+          "previous": "5d76cfdef4b2ae7fb051516cae4ea82beed54674171f2ab6f0604c741d25c442",
+          "current": "baacf46a9d86a22fb8425488949b05c3feae33744e12c3f8e3eb3c933293d5ae"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "eaa65bee94ad74c578ea0538afad5a62fa917f07a770e868224dd1365de5dd4a",
+          "current": "8fefbbf9e3ddc9d6a59308acacd34e63fdfd4d676a3b2bd6505f7a229184cf2b"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "7343386d297567d15ddef05e61dcc742670adbfad48e0389cb545372e8180f4e",
+          "current": "8ad6c6520b634837f8e6e7e2a0de4ac32bef1230770e640bf92b08ddc1122ef6"
+        }
+      ]
+    }
   ]
 }

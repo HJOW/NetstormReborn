@@ -92,8 +92,8 @@
   },
   "currentSources": {
     "cpppj/src/client/CMakeLists.txt": "201936b3366bc9a17cff0d46864fd0edfdabc721f115500a3e53b74dccfcd37f",
-    "cpppj/tests/CMakeLists.txt": "7343386d297567d15ddef05e61dcc742670adbfad48e0389cb545372e8180f4e",
-    "cpppj/src/client/RawCampaignFactoryDisplay.cpp": "eb1616bfbe72012a8cf1ab4ac73339e4b728677f1c1b6c0760f51847addb453f",
+    "cpppj/tests/CMakeLists.txt": "8ad6c6520b634837f8e6e7e2a0de4ac32bef1230770e640bf92b08ddc1122ef6",
+    "cpppj/src/client/RawCampaignFactoryDisplay.cpp": "c93640d0b659789ffb74d6b4a0d71b1f18522638480dd7b0508259747260ee06",
     "cpppj/src/client/InventoryItemGump.h": "cfc4fe37509f916d8e53caff49713ce946eaf10e03bd9fa1c53507c53900826d",
     "cpppj/src/client/InventoryItemGump.cpp": "8ee1e67ccf4231e88a8b49dcdb67a3d0a3b08e724fac372d58bd5f8a1a9f81d2",
     "cpppj/tests/InventoryItemGumpTests.cpp": "a62515c54a3c68d6b7ce082670cbb53d88422994864c359894e0c478c873bf69",
@@ -359,6 +359,25 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "d92c46b46c7e909a7b5c98a45676960024d0593a41f4e6d30b5ea6a65a44284b",
           "current": "7343386d297567d15ddef05e61dcc742670adbfad48e0389cb545372e8180f4e"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 189,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "7343386d297567d15ddef05e61dcc742670adbfad48e0389cb545372e8180f4e",
+          "current": "8ad6c6520b634837f8e6e7e2a0de4ac32bef1230770e640bf92b08ddc1122ef6"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignFactoryDisplay.cpp",
+          "previous": "eb1616bfbe72012a8cf1ab4ac73339e4b728677f1c1b6c0760f51847addb453f",
+          "current": "c93640d0b659789ffb74d6b4a0d71b1f18522638480dd7b0508259747260ee06"
         }
       ]
     }

@@ -255,6 +255,7 @@ public:
     bool MovePriest(o::Sid sid,o::RawPathPoint destination);
     // 같은 raw 신전의 가상 Draw를 실행하고 실제 SoundList/재생 경계로 상승음을 보낸다.
     void DrawRainTemple(o::Sid sid,const std::function<void(std::int32_t)>& frame) const;
+    void DrawTemple(o::Sid sid,const std::function<void(std::int32_t)>& frame) const; // 실제 세 템플의+a4만 분배한다. 기본 그림은 SpriteDraw의+78이다.
     // 같은 Pool/Host/기술/허용/SP/실제 ContentForm 생성에 연결한 메뉴다. UI·번역·Tell·커서 취득만 caller가 공급한다.
     // 반환 객체는 Session보다 먼저 해제한다. 설치 전에는 메뉴/내용물 생성을 허용하지 않는다.
     std::unique_ptr<RawPriestMenu> MakePriestMenu(PriestMenuHooks hooks);

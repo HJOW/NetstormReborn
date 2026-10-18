@@ -1577,3 +1577,8 @@ set_source_files_properties(SunFlyerPostPopTests.cpp PROPERTIES COMPILE_DEFINITI
 target_sources(netstorm_tests PRIVATE SunFlyerFrameTests.cpp)
 set_source_files_properties(SunFlyerFrameTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_SUN_FLYER_FRAME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/sun-flyer-frame-x86.tsv\"")
+
+# 템플 기본 프레임/전용Draw의 제품 전 실제264입력을 대조한다.
+target_sources(netstorm_tests PRIVATE TempleDrawTests.cpp)
+target_compile_definitions(netstorm_tests PRIVATE
+    "NETSTORM_TEMPLE_DRAW_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/temple-draw-x86.tsv\"")

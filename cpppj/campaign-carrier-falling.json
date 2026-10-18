@@ -10,8 +10,8 @@
   "currentSources": {
     ".gitattributes": "3e8d869648cde0415d1a91e9b22d5a7ed7e5c0585923a189bfd37aa33229f3a8",
     "cpppj/src/CMakeLists.txt": "945332cd1c5b131d7e35d0ae7fb15762597c41be26ffea267b18e8b3d048efd8",
-    "cpppj/tests/CMakeLists.txt": "7343386d297567d15ddef05e61dcc742670adbfad48e0389cb545372e8180f4e",
-    "cpppj/src/client/RawCampaignSession.cpp": "eaa65bee94ad74c578ea0538afad5a62fa917f07a770e868224dd1365de5dd4a",
+    "cpppj/tests/CMakeLists.txt": "8ad6c6520b634837f8e6e7e2a0de4ac32bef1230770e640bf92b08ddc1122ef6",
+    "cpppj/src/client/RawCampaignSession.cpp": "8fefbbf9e3ddc9d6a59308acacd34e63fdfd4d676a3b2bd6505f7a229184cf2b",
     "cpppj/tests/CampaignObjectMenuTests.cpp": "fea9198ea2150c42bb523f7ac9298c2f819acd1fc9b9887b53020c206ad62563",
     "cpppj/src/o/RawCarrierFalling.h": "053f770faf58d4afd2c11f20c2f1608ba72ffd8202b8d983ecb15bb6da3240e8",
     "cpppj/src/o/RawCarrierFalling.cpp": "792cf6ac33b52ba476fdedc8ea22e0649aa5201b75b214fba1cb3519cd80682f",
@@ -983,6 +983,25 @@
           "path": "cpppj/src/client/RawCampaignSession.cpp",
           "previous": "9afae15f62ccf809145be8c0f5addaf7207f22038738c3a25f1d1650f2e595d7",
           "current": "eaa65bee94ad74c578ea0538afad5a62fa917f07a770e868224dd1365de5dd4a"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 189,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "7343386d297567d15ddef05e61dcc742670adbfad48e0389cb545372e8180f4e",
+          "current": "8ad6c6520b634837f8e6e7e2a0de4ac32bef1230770e640bf92b08ddc1122ef6"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "eaa65bee94ad74c578ea0538afad5a62fa917f07a770e868224dd1365de5dd4a",
+          "current": "8fefbbf9e3ddc9d6a59308acacd34e63fdfd4d676a3b2bd6505f7a229184cf2b"
         }
       ]
     }

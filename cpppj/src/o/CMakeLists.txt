@@ -329,3 +329,6 @@ target_sources(netstorm PRIVATE RawSpecialDamage.cpp RawSpecialDamage.h)
 
 # 실제 훨리기그 전용 초기화/폭탄/통지/장식 프레임이다.
 target_sources(netstorm PRIVATE RawSunFlyerFrame.cpp RawSunFlyerFrame.h)
+
+# 세 템플의 현재 기본 프레임과 윈드/썬더 전용Draw를 같은 원본 자료로 처리한다.
+target_sources(netstorm PRIVATE RawTempleDraw.cpp RawTempleDraw.h)

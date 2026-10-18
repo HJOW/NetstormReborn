@@ -1,0 +1,54 @@
+{
+  "unit": 189,
+  "date": "2026-10-18",
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "lastDecompileDate": "2026-10-16",
+  "rows": 264,
+  "normalReturns": 528,
+  "instructions": 18183,
+  "editions": {
+    "10.78": {
+      "windVortex": {
+        "type": 123,
+        "table": "0x519860",
+        "draw": "0x4dcf10",
+        "baseFrame": 13,
+        "codes": "AAAAAAAAAAAAABCCCCCCP",
+        "rows": 84,
+        "returns": 168,
+        "instructions": 5937
+      },
+      "rainVortex": {
+        "type": 124,
+        "table": "0x5196f0",
+        "draw": "0x4dcd00",
+        "baseFrame": 0,
+        "codes": "ABBBBBBBBBBBBBBCCCCCCCCCCCCCP",
+        "rows": 116,
+        "returns": 232,
+        "instructions": 8542
+      },
+      "thunderVortex": {
+        "type": 125,
+        "table": "0x519918",
+        "draw": "0x4dd0f0",
+        "baseFrame": -1,
+        "codes": "ABBBBBBBCCCCCCCD",
+        "rows": 64,
+        "returns": 128,
+        "instructions": 3704
+      }
+    },
+    "10.72": "이번 전용 경로 미검증. 기존 레인232원문은 보존한다."
+  },
+  "boundaries": "실제 MainFrame/전용Draw/TYPE/방향 helper. 그림과 음향 제출만 관찰 경계이며 SpriteDraw 수집/픽셀/실제 음향·미션 완주 증거는 아니다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_rain_draw.py": "a7a8a40dbb5e1508e21745a94a4320fba207cd08a9ee38ae6a200614d4c2e249",
+    "tools/decomp_temple_draw.py": "b94a1b635e83af4af3808d3666d3dd56067a44e88c22ecfbd4fe9396000dab24",
+    "cpppj/tests/fixtures/temple-draw-x86.tsv": "18ee694cd715e13e64e97b30abd2b920ecaa36ba684febf1ac9d894077179f3d"
+  }
+}

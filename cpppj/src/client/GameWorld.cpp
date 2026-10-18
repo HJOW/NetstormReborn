@@ -8,6 +8,7 @@
 #include "o/RawPathAnimation.h"
 #include "o/OriginalText.h"
 #include "o/RawRainVortexDraw.h"
+#include "o/RawTempleDraw.h"
 #include <algorithm>
 #include <cmath>
 #include <limits>
@@ -80,7 +81,7 @@ GameWorld::GameWorld(const GameAssets& assets,const o::BaseFileSystem& files,o::
     const bool connect=services.localLogin.has_value(); //실제Client는로그인서버가Load를호출한다.
     campaign_=std::make_unique<RawCampaignSession>(assets,files,std::move(fort),std::move(mission),std::move(services));
     if (assets_.Edition()==o::OriginalEdition::Patch1078) {
-        factoryDisplay_=std::make_unique<RawCampaignFactoryDisplay>(campaign_->Core(),assets_);std::array<ScreenColor,256> palette{};
+        factoryDisplay_=std::make_unique<RawCampaignFactoryDisplay>(campaign_->Core(),assets_,[this](o::Sid sid,const auto& frame) { campaign_->DrawTemple(sid,frame); });std::array<ScreenColor,256> palette{};
         // Client가 파일 팔레트를 설치하기 전에도 실제 자산의 동일256색을 사용한다.
         for (std::size_t i=0;i<palette.size();++i) { const auto color=assets_.Palette().Color(static_cast<std::uint8_t>(i));palette[i]={color.blue,color.green,color.red,0}; }
         factoryDisplay_->SetPalette(palette);
@@ -353,8 +354,8 @@ std::size_t GameWorld::Frame(const o::Squid& object) const {
 }
 // 현재 그림의 불투명 프레임 사각형으로 몸통 클릭을 판정한다.
 ScreenRect GameWorld::Bounds(const o::Squid& object) const {
-    // 레인 신전의 현재 물결 압축 영역은 본체보다 작다. 원본 Squid 표시 헤더의 전체 영역을 사용한다.
-    if (campaign_ && o::IsRainVortex(assets_.Edition(),campaign_->Core().pool.Slot(o::Sid{static_cast<std::uint16_t>(object.id)}))) {
+    // 템플의 현재 애니메이션 압축 영역과 별개로 원본 Squid 표시 헤더의 전체 영역을 사용한다.
+    if (campaign_ && (o::IsRainVortex(assets_.Edition(),campaign_->Core().pool.Slot(o::Sid{static_cast<std::uint16_t>(object.id)})) || (assets_.Edition()==o::OriginalEdition::Patch1078 && o::IsPatchTemple(campaign_->Core().pool.Slot(o::Sid{static_cast<std::uint16_t>(object.id)}))))) {
         const auto rect=campaign_->Core().display.Bounds(static_cast<std::size_t>(object.type),static_cast<int>(object.frame),static_cast<float>(object.x),static_cast<float>(object.y));
         return {rect.left,rect.top,rect.right,rect.bottom};
     }

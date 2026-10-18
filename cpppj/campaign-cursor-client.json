@@ -11,14 +11,14 @@
     "cpppj/src/CMakeLists.txt": "945332cd1c5b131d7e35d0ae7fb15762597c41be26ffea267b18e8b3d048efd8",
     "cpppj/src/client/CampaignCursorClientEffects.cpp": "a3248a08922f8b4fdad05d2e2844db55f96196ccd58d55827b034dad17a55f72",
     "cpppj/src/client/CampaignCursorClientEffects.h": "4ae92870ccfc7e2431bad380e4b4858a020d59af221c001c7c47b5c4ff266328",
-    "cpppj/src/client/GameWorld.cpp": "7354694cf70e61d27ef1991390513a042c7a102f537f9d0cfb1f5438bb2a1f9e",
+    "cpppj/src/client/GameWorld.cpp": "f194e7dd8d9be0fc2c631a6bb9505d88a84bf3342c0a63077234a78c05fec90a",
     "cpppj/src/client/GameWorld.h": "63a8da986aab6ab35f1938c8de5c9197d12cca4e17859cb8daba5d5f52946e73",
     "cpppj/src/client/RawButtonControls.cpp": "1e31ef93cd819be30a75bcada1e9eba98adfae917a8db925a4845bfd37a2ef92",
     "cpppj/src/client/RawButtonControls.h": "d49ab77d71b4d10beea6c2a5e466a87289874092592c86bc879cd971fab64180",
     "cpppj/src/client/RawCampaignCursor.cpp": "d1c12ed9e16c11771470abfae09d0a2bfccda51dc49be5b90c4a4c78604f961c",
     "cpppj/src/client/RawCampaignCursor.h": "0c4aa17d5acf5cd03fd9d651c33de2fedd115c622e9f75f1c469edb462c775ce",
-    "cpppj/src/client/RawCampaignSession.cpp": "eaa65bee94ad74c578ea0538afad5a62fa917f07a770e868224dd1365de5dd4a",
-    "cpppj/src/client/RawCampaignSession.h": "9b8778ad3d884db1f91c1d03b8500485d73399a6b0c94c066a040c824c41e7e6",
+    "cpppj/src/client/RawCampaignSession.cpp": "8fefbbf9e3ddc9d6a59308acacd34e63fdfd4d676a3b2bd6505f7a229184cf2b",
+    "cpppj/src/client/RawCampaignSession.h": "511aa12a84e83386833cff1a9ffc7c42a7a683e808c9a8d61fc94262b7e4a232",
     "cpppj/src/client/RawCarrierMenu.cpp": "4a0fada9b8ac9d00eab37955189a8ac669d26f1d22559deae229a6ce3637dc1e",
     "cpppj/src/client/RawCarrierMenu.h": "e4ef0cccd8c956ccf6c167a7b08e0a9350f46206e08a9670dbaed6272d7749d8",
     "cpppj/src/client/RawCursorDrop.h": "61de4218af3ad691e3be7a2a56902e5e35c0f7cdc10ba52b858f626010f13e5b",
@@ -32,10 +32,10 @@
     "cpppj/src/client/UserInput.cpp": "fd1bee42a48c4a33098114e813a7909d449791671fb0e313b76efc55216c20bd",
     "cpppj/src/o/SquidFactory.h": "439126b14875597ae876ab82d1699d414fa15fdf76ec9ac83f6794d32595c549",
     "cpppj/src/o/SquidReward.h": "59cf154a0aa681fbce7bdf445728afc582409bd9af9b24e5b135e435e92aa362",
-    "cpppj/tests/CMakeLists.txt": "7343386d297567d15ddef05e61dcc742670adbfad48e0389cb545372e8180f4e",
+    "cpppj/tests/CMakeLists.txt": "8ad6c6520b634837f8e6e7e2a0de4ac32bef1230770e640bf92b08ddc1122ef6",
     "cpppj/tests/CampaignCursorClientEffectsTests.cpp": "f04679442eea66764f77ab814314c9edd1790dca1f61f39e95eb29804b78d92b",
     "cpppj/tests/CampaignObjectMenuTests.cpp": "fea9198ea2150c42bb523f7ac9298c2f819acd1fc9b9887b53020c206ad62563",
-    "cpppj/tests/CampaignSessionTests.cpp": "e92bbf5d99392b05f92dcb2fda5de226f824631088aec127fb7219f36b344a5e",
+    "cpppj/tests/CampaignSessionTests.cpp": "c5119bad89f71e0e282467e8f34b400d796d8e7b27e33bfdca5c12710b6b2cfd",
     "cpppj/tests/RawButtonCursorBoundaryTests.cpp": "1f24a7464493536890611554b51d41bdeb477fa23190a909933ebd0ef1873684",
     "cpppj/tests/UserHighlightTests.cpp": "a23f97791f61415d333d3d99b33ec56e6ec67423a021da43473934fadd3a57ab",
     "cpppj/tests/fixtures/user-highlight-x86.tsv": "e1d0bc9dbf434de9c897a6fcac4af50f2be637318ab3a52d3795273cf734ed78"
@@ -1750,6 +1750,43 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "d92c46b46c7e909a7b5c98a45676960024d0593a41f4e6d30b5ea6a65a44284b",
           "current": "7343386d297567d15ddef05e61dcc742670adbfad48e0389cb545372e8180f4e"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 189,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/GameWorld.cpp",
+          "previous": "7354694cf70e61d27ef1991390513a042c7a102f537f9d0cfb1f5438bb2a1f9e",
+          "current": "f194e7dd8d9be0fc2c631a6bb9505d88a84bf3342c0a63077234a78c05fec90a"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "eaa65bee94ad74c578ea0538afad5a62fa917f07a770e868224dd1365de5dd4a",
+          "current": "8fefbbf9e3ddc9d6a59308acacd34e63fdfd4d676a3b2bd6505f7a229184cf2b"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "9b8778ad3d884db1f91c1d03b8500485d73399a6b0c94c066a040c824c41e7e6",
+          "current": "511aa12a84e83386833cff1a9ffc7c42a7a683e808c9a8d61fc94262b7e4a232"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "7343386d297567d15ddef05e61dcc742670adbfad48e0389cb545372e8180f4e",
+          "current": "8ad6c6520b634837f8e6e7e2a0de4ac32bef1230770e640bf92b08ddc1122ef6"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "e92bbf5d99392b05f92dcb2fda5de226f824631088aec127fb7219f36b344a5e",
+          "current": "c5119bad89f71e0e282467e8f34b400d796d8e7b27e33bfdca5c12710b6b2cfd"
         }
       ]
     }

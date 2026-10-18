@@ -1,0 +1,1094 @@
+{
+  "unit": 189,
+  "date": "2026-10-18",
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "lastDecompileDate": "2026-10-16",
+  "baseline": "bebf11ce4a513f53b64365bb7d657c483a59d3de",
+  "goalComplete": false,
+  "fidelity": {
+    "complete": false,
+    "edition": "10.78",
+    "cd1072WindThunderVerified": false,
+    "windBase13Connected": true,
+    "rainOriginalTypeAnchorConnected": true,
+    "thunderDedicatedDrawConnected": true,
+    "originalCollectionSpriteDrawConnected": true,
+    "thunderLiveWindowVerified": false,
+    "allTempleStatesFullScreenMatched": false,
+    "wholeMissionComplete": false
+  },
+  "native": {
+    "unit": 189,
+    "date": "2026-10-18",
+    "host": "HJOW-Athlon",
+    "lastDecompileHost": "HJOW-Athlon",
+    "lastDecompileDate": "2026-10-16",
+    "rows": 264,
+    "normalReturns": 528,
+    "instructions": 18183,
+    "editions": {
+      "10.78": {
+        "windVortex": {
+          "type": 123,
+          "table": "0x519860",
+          "draw": "0x4dcf10",
+          "baseFrame": 13,
+          "codes": "AAAAAAAAAAAAABCCCCCCP",
+          "rows": 84,
+          "returns": 168,
+          "instructions": 5937
+        },
+        "rainVortex": {
+          "type": 124,
+          "table": "0x5196f0",
+          "draw": "0x4dcd00",
+          "baseFrame": 0,
+          "codes": "ABBBBBBBBBBBBBBCCCCCCCCCCCCCP",
+          "rows": 116,
+          "returns": 232,
+          "instructions": 8542
+        },
+        "thunderVortex": {
+          "type": 125,
+          "table": "0x519918",
+          "draw": "0x4dd0f0",
+          "baseFrame": -1,
+          "codes": "ABBBBBBBCCCCCCCD",
+          "rows": 64,
+          "returns": 128,
+          "instructions": 3704
+        }
+      },
+      "10.72": "이번 전용 경로 미검증. 기존 레인232원문은 보존한다."
+    },
+    "boundaries": "실제 MainFrame/전용Draw/TYPE/방향 helper. 그림과 음향 제출만 관찰 경계이며 SpriteDraw 수집/픽셀/실제 음향·미션 완주 증거는 아니다.",
+    "sha256": {
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+      "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+      "tools/decomp_rain_draw.py": "a7a8a40dbb5e1508e21745a94a4320fba207cd08a9ee38ae6a200614d4c2e249",
+      "tools/decomp_temple_draw.py": "b94a1b635e83af4af3808d3666d3dd56067a44e88c22ecfbd4fe9396000dab24",
+      "cpppj/tests/fixtures/temple-draw-x86.tsv": "18ee694cd715e13e64e97b30abd2b920ecaa36ba684febf1ac9d894077179f3d"
+    }
+  },
+  "nativeFreeze": {
+    "tools/decomp_temple_draw.py": "b94a1b635e83af4af3808d3666d3dd56067a44e88c22ecfbd4fe9396000dab24",
+    "cpppj/temple-draw.json": "08f2b87d34a3d29ee35f4c479ce4eca45be47aee0c6d774d3fee875220fb665e",
+    "cpppj/tests/fixtures/temple-draw-x86.tsv": "18ee694cd715e13e64e97b30abd2b920ecaa36ba684febf1ac9d894077179f3d"
+  },
+  "protected": {
+    "AGENTS.md": "7addbf9b31c42f29aab7c93faa865eb6de8590a600d17202a297cf7122bdf979",
+    "LEFT_JOBS.dotnetpj.md": "0c067e1d12879dbf2212cbd64c8f9f60e65b590df910418f025027ed84f80ec2",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "originals/d/GIFCLOUD.COL": "785a2cda6ac1d3e295d375815b6d9650720683099db7c249382d598b5da00532"
+  },
+  "currentSources": {
+    "cpppj/src/o/CMakeLists.txt": "baacf46a9d86a22fb8425488949b05c3feae33744e12c3f8e3eb3c933293d5ae",
+    "cpppj/src/client/RawCampaignSession.h": "511aa12a84e83386833cff1a9ffc7c42a7a683e808c9a8d61fc94262b7e4a232",
+    "cpppj/src/client/RawCampaignSession.cpp": "8fefbbf9e3ddc9d6a59308acacd34e63fdfd4d676a3b2bd6505f7a229184cf2b",
+    "cpppj/src/client/RawCampaignFactoryDisplay.h": "d2434f7d291754651b9810411235659ca35f393443423340818a261599640f2e",
+    "cpppj/src/client/RawCampaignFactoryDisplay.cpp": "c93640d0b659789ffb74d6b4a0d71b1f18522638480dd7b0508259747260ee06",
+    "cpppj/src/client/GameWorld.cpp": "f194e7dd8d9be0fc2c631a6bb9505d88a84bf3342c0a63077234a78c05fec90a",
+    "cpppj/tests/CMakeLists.txt": "8ad6c6520b634837f8e6e7e2a0de4ac32bef1230770e640bf92b08ddc1122ef6",
+    "cpppj/tests/CampaignSessionTests.cpp": "c5119bad89f71e0e282467e8f34b400d796d8e7b27e33bfdca5c12710b6b2cfd",
+    "tools/decomp_temple_draw.py": "b94a1b635e83af4af3808d3666d3dd56067a44e88c22ecfbd4fe9396000dab24",
+    "tools/check_temple_scene.py": "5ce0641612f94c92bea40703e75472125317167d063433f3469ff5b88400dd19",
+    "cpppj/temple-draw.json": "08f2b87d34a3d29ee35f4c479ce4eca45be47aee0c6d774d3fee875220fb665e",
+    "cpppj/tests/fixtures/temple-draw-x86.tsv": "18ee694cd715e13e64e97b30abd2b920ecaa36ba684febf1ac9d894077179f3d",
+    "cpppj/tests/TempleDrawTests.cpp": "27b21d1c1d37850ae56d8632e120ad9b1f604c7689e0b62ba133906cba71ac09",
+    "cpppj/src/o/RawTempleDraw.h": "e33b99e685ad035513d081e5fd069d1cd7418dae692065a0943e1ce7a4335c2e",
+    "cpppj/src/o/RawTempleDraw.cpp": "0f557a3aa374c263a29c26a1984b6a31dcf30c0b01772a21db14e05a57c70809"
+  },
+  "validation": {
+    "releaseBuildWarnings": 0,
+    "releaseBuildErrors": 0,
+    "focusedTests": 2,
+    "focusedFailures": 0,
+    "nativeRows": 264,
+    "syntheticBodyCases": 264,
+    "syntheticBodyPixels": 2544713,
+    "syntheticSelectedStates": 3,
+    "ctestTests": 1690,
+    "ctestFailedChecks": 0,
+    "ctestSeconds": 217.74,
+    "windBefore": {
+      "passed": false,
+      "originalsUnchanged": true,
+      "name": "windVortex",
+      "scope": "실제 창의 일반 살아있는 템플 본체 픽셀. 그림자/화면전체/상승음/실전 완주 검증은 별도다.",
+      "captures": [
+        {
+          "label": "temple12",
+          "sid": 15003,
+          "frame": 3,
+          "word": 0,
+          "layers": [
+            13,
+            3
+          ],
+          "comparedPixels": 10334,
+          "baseOnlyPixels": 7667,
+          "mismatches": 7589,
+          "firstMismatches": [
+            [
+              [
+                647,
+                302
+              ],
+              [
+                48,
+                35,
+                51
+              ],
+              [
+                74,
+                72,
+                21
+              ]
+            ],
+            [
+              [
+                648,
+                302
+              ],
+              [
+                54,
+                51,
+                53
+              ],
+              [
+                74,
+                72,
+                21
+              ]
+            ],
+            [
+              [
+                646,
+                303
+              ],
+              [
+                83,
+                80,
+                81
+              ],
+              [
+                80,
+                46,
+                22
+              ]
+            ],
+            [
+              [
+                647,
+                303
+              ],
+              [
+                55,
+                66,
+                34
+              ],
+              [
+                112,
+                71,
+                25
+              ]
+            ],
+            [
+              [
+                648,
+                303
+              ],
+              [
+                69,
+                61,
+                77
+              ],
+              [
+                82,
+                90,
+                22
+              ]
+            ],
+            [
+              [
+                649,
+                303
+              ],
+              [
+                83,
+                80,
+                81
+              ],
+              [
+                82,
+                90,
+                22
+              ]
+            ],
+            [
+              [
+                646,
+                304
+              ],
+              [
+                83,
+                80,
+                81
+              ],
+              [
+                82,
+                90,
+                22
+              ]
+            ],
+            [
+              [
+                647,
+                304
+              ],
+              [
+                77,
+                74,
+                42
+              ],
+              [
+                80,
+                46,
+                22
+              ]
+            ]
+          ]
+        },
+        {
+          "label": "temple22",
+          "sid": 15003,
+          "frame": 8,
+          "word": 0,
+          "layers": [
+            13,
+            8
+          ],
+          "comparedPixels": 10328,
+          "baseOnlyPixels": 7813,
+          "mismatches": 7735,
+          "firstMismatches": [
+            [
+              [
+                647,
+                302
+              ],
+              [
+                48,
+                35,
+                51
+              ],
+              [
+                74,
+                72,
+                21
+              ]
+            ],
+            [
+              [
+                648,
+                302
+              ],
+              [
+                54,
+                51,
+                53
+              ],
+              [
+                74,
+                72,
+                21
+              ]
+            ],
+            [
+              [
+                646,
+                303
+              ],
+              [
+                83,
+                80,
+                81
+              ],
+              [
+                80,
+                46,
+                22
+              ]
+            ],
+            [
+              [
+                647,
+                303
+              ],
+              [
+                55,
+                66,
+                34
+              ],
+              [
+                112,
+                71,
+                25
+              ]
+            ],
+            [
+              [
+                648,
+                303
+              ],
+              [
+                69,
+                61,
+                77
+              ],
+              [
+                82,
+                90,
+                22
+              ]
+            ],
+            [
+              [
+                649,
+                303
+              ],
+              [
+                83,
+                80,
+                81
+              ],
+              [
+                82,
+                90,
+                22
+              ]
+            ],
+            [
+              [
+                646,
+                304
+              ],
+              [
+                83,
+                80,
+                81
+              ],
+              [
+                82,
+                90,
+                22
+              ]
+            ],
+            [
+              [
+                647,
+                304
+              ],
+              [
+                77,
+                74,
+                42
+              ],
+              [
+                80,
+                46,
+                22
+              ]
+            ]
+          ]
+        },
+        {
+          "label": "temple32",
+          "sid": 15003,
+          "frame": 0,
+          "word": 0,
+          "layers": [
+            13,
+            0
+          ],
+          "comparedPixels": 10300,
+          "baseOnlyPixels": 7838,
+          "mismatches": 7760,
+          "firstMismatches": [
+            [
+              [
+                647,
+                302
+              ],
+              [
+                48,
+                35,
+                51
+              ],
+              [
+                74,
+                72,
+                21
+              ]
+            ],
+            [
+              [
+                648,
+                302
+              ],
+              [
+                54,
+                51,
+                53
+              ],
+              [
+                74,
+                72,
+                21
+              ]
+            ],
+            [
+              [
+                646,
+                303
+              ],
+              [
+                83,
+                80,
+                81
+              ],
+              [
+                80,
+                46,
+                22
+              ]
+            ],
+            [
+              [
+                647,
+                303
+              ],
+              [
+                55,
+                66,
+                34
+              ],
+              [
+                112,
+                71,
+                25
+              ]
+            ],
+            [
+              [
+                648,
+                303
+              ],
+              [
+                69,
+                61,
+                77
+              ],
+              [
+                82,
+                90,
+                22
+              ]
+            ],
+            [
+              [
+                649,
+                303
+              ],
+              [
+                83,
+                80,
+                81
+              ],
+              [
+                82,
+                90,
+                22
+              ]
+            ],
+            [
+              [
+                646,
+                304
+              ],
+              [
+                83,
+                80,
+                81
+              ],
+              [
+                82,
+                90,
+                22
+              ]
+            ],
+            [
+              [
+                647,
+                304
+              ],
+              [
+                77,
+                74,
+                42
+              ],
+              [
+                80,
+                46,
+                22
+              ]
+            ]
+          ]
+        },
+        {
+          "label": "temple42",
+          "sid": 15003,
+          "frame": 5,
+          "word": 0,
+          "layers": [
+            13,
+            5
+          ],
+          "comparedPixels": 10297,
+          "baseOnlyPixels": 7782,
+          "mismatches": 7704,
+          "firstMismatches": [
+            [
+              [
+                647,
+                302
+              ],
+              [
+                48,
+                35,
+                51
+              ],
+              [
+                74,
+                72,
+                21
+              ]
+            ],
+            [
+              [
+                648,
+                302
+              ],
+              [
+                54,
+                51,
+                53
+              ],
+              [
+                74,
+                72,
+                21
+              ]
+            ],
+            [
+              [
+                646,
+                303
+              ],
+              [
+                83,
+                80,
+                81
+              ],
+              [
+                80,
+                46,
+                22
+              ]
+            ],
+            [
+              [
+                647,
+                303
+              ],
+              [
+                55,
+                66,
+                34
+              ],
+              [
+                112,
+                71,
+                25
+              ]
+            ],
+            [
+              [
+                648,
+                303
+              ],
+              [
+                69,
+                61,
+                77
+              ],
+              [
+                82,
+                90,
+                22
+              ]
+            ],
+            [
+              [
+                649,
+                303
+              ],
+              [
+                83,
+                80,
+                81
+              ],
+              [
+                82,
+                90,
+                22
+              ]
+            ],
+            [
+              [
+                646,
+                304
+              ],
+              [
+                83,
+                80,
+                81
+              ],
+              [
+                82,
+                90,
+                22
+              ]
+            ],
+            [
+              [
+                647,
+                304
+              ],
+              [
+                77,
+                74,
+                42
+              ],
+              [
+                80,
+                46,
+                22
+              ]
+            ]
+          ]
+        }
+      ]
+    },
+    "windWindow": {
+      "passed": true,
+      "originalsUnchanged": true,
+      "name": "windVortex",
+      "scope": "실제 창의 일반 살아있는 템플 본체 픽셀. 그림자/화면전체/상승음/실전 완주 검증은 별도다.",
+      "captures": [
+        {
+          "label": "temple12",
+          "sid": 15003,
+          "frame": 3,
+          "word": 0,
+          "layers": [
+            13,
+            3
+          ],
+          "comparedPixels": 10334,
+          "baseOnlyPixels": 7667,
+          "mismatches": 0,
+          "firstMismatches": []
+        },
+        {
+          "label": "temple22",
+          "sid": 15003,
+          "frame": 8,
+          "word": 0,
+          "layers": [
+            13,
+            8
+          ],
+          "comparedPixels": 10328,
+          "baseOnlyPixels": 7813,
+          "mismatches": 0,
+          "firstMismatches": []
+        },
+        {
+          "label": "temple32",
+          "sid": 15003,
+          "frame": 0,
+          "word": 0,
+          "layers": [
+            13,
+            0
+          ],
+          "comparedPixels": 10300,
+          "baseOnlyPixels": 7838,
+          "mismatches": 0,
+          "firstMismatches": []
+        },
+        {
+          "label": "temple42",
+          "sid": 15003,
+          "frame": 5,
+          "word": 0,
+          "layers": [
+            13,
+            5
+          ],
+          "comparedPixels": 10297,
+          "baseOnlyPixels": 7782,
+          "mismatches": 0,
+          "firstMismatches": []
+        }
+      ]
+    },
+    "rainWindow": {
+      "passed": true,
+      "originalsUnchanged": true,
+      "name": "rainVortex",
+      "scope": "실제 창의 일반 살아있는 템플 본체 픽셀. 그림자/화면전체/상승음/실전 완주 검증은 별도다.",
+      "captures": [
+        {
+          "label": "temple12",
+          "sid": 15002,
+          "frame": 5,
+          "word": 0,
+          "layers": [
+            0,
+            0,
+            5
+          ],
+          "comparedPixels": 9809,
+          "baseOnlyPixels": 7858,
+          "mismatches": 0,
+          "firstMismatches": []
+        },
+        {
+          "label": "temple22",
+          "sid": 15002,
+          "frame": 10,
+          "word": 0,
+          "layers": [
+            0,
+            0,
+            10
+          ],
+          "comparedPixels": 9809,
+          "baseOnlyPixels": 7799,
+          "mismatches": 0,
+          "firstMismatches": []
+        },
+        {
+          "label": "temple32",
+          "sid": 15002,
+          "frame": 1,
+          "word": 0,
+          "layers": [
+            0,
+            0,
+            1
+          ],
+          "comparedPixels": 9809,
+          "baseOnlyPixels": 8163,
+          "mismatches": 0,
+          "firstMismatches": []
+        },
+        {
+          "label": "temple42",
+          "sid": 15002,
+          "frame": 6,
+          "word": 0,
+          "layers": [
+            0,
+            0,
+            6
+          ],
+          "comparedPixels": 9809,
+          "baseOnlyPixels": 7827,
+          "mismatches": 0,
+          "firstMismatches": []
+        }
+      ]
+    },
+    "rainNativeTypeAnchor": [
+      {
+        "control": "0x27f",
+        "hotFootRatioX": 0.5,
+        "hotFootRatioY": 0.8,
+        "actualTypeHotspot": [
+          8,
+          8
+        ]
+      },
+      {
+        "control": "0x37f",
+        "hotFootRatioX": 0.5,
+        "hotFootRatioY": 0.8,
+        "actualTypeHotspot": [
+          8,
+          8
+        ]
+      }
+    ],
+    "windSelection": {
+      "returnCode": 0,
+      "originalsUnchanged": true,
+      "selected": [
+        "15003"
+      ]
+    },
+    "entryPasses": 11,
+    "entryScope": "CLI --mission/실제 UI 버튼으로11개 플레이 진입. 사용자 메뉴 선택·자연 명령·승패·저장·완주/원본 전체 동일성은 미검증.",
+    "fullCombatPassed": false,
+    "windowPlayPassed": false,
+    "auditTools": 115,
+    "auditPasses": 104,
+    "knownAuditFailures": 11,
+    "newAuditFailures": 0,
+    "pinReports": 74,
+    "pinItems": 244,
+    "oldFixturesPreserved": 401
+  },
+  "failuresPreserved": [
+    "최초 원본 준비의 이전PC export 부재: 현재 정밀 표를 사용한 격리 준비로 해결, 결과 생성 전 실패",
+    "첫 레인 픽셀 검사는 TYPE 기준점(8,8)을 빠뜨렸다. 실제 로더 두정밀도 재관측 뒤 검사 좌표 보완, 제품/원본 기대 불변",
+    "첫 합성 픽셀 검사에서 레인27의 특수 레코드를 Decode해 실패. 제품 픽셀 소비자의 기존 생략과 같은 입력 판독으로 검사 보완"
+  ],
+  "logSha256": {
+    "extracted/goal-temple-draw-20261018-LastTest1.log": "503adfbe66471e4607fdc5263c5a5640cb3adfa2d7d7729f27e6eea4c379af33",
+    "extracted/goal-temple-draw-20261018-audit1.log": "65133c9a429a1cef7abafe6cdf93ef1821e61b7cdda1d750abcc741e7b0fb872",
+    "extracted/goal-temple-draw-20261018-audit2.log": "65133c9a429a1cef7abafe6cdf93ef1821e61b7cdda1d750abcc741e7b0fb872",
+    "extracted/goal-temple-draw-20261018-build1.log": "e928a1b29ff293b8bedb02a8be2b82151f9a8a7d2a1b5353f1024a2e195e08bf",
+    "extracted/goal-temple-draw-20261018-build2.log": "68daf5268753a6f0253917d033a76282e07803e3b45f8c1951a34f7cbc6a3d34",
+    "extracted/goal-temple-draw-20261018-build3.log": "68daf5268753a6f0253917d033a76282e07803e3b45f8c1951a34f7cbc6a3d34",
+    "extracted/goal-temple-draw-20261018-ctest1.log": "5f93179833dd4f22014630d794060481b323e4f769c486bd674e2b58d75a391b",
+    "extracted/goal-temple-draw-20261018-entry1.log": "45c1eee9aa0a6dda3519fe8ac4fcf426bf94132bb199d97050b9cc54ac53e578",
+    "extracted/goal-temple-draw-20261018-focused1.log": "9d592d496a6ee892743dc5e7f0342b4d930387e87c4fe746df67ec4a4cd8d714",
+    "extracted/goal-temple-draw-20261018-focused2.log": "5e63326d868bab2eca2f2663039fd03b46e2e6ca5ca5e35e51ccdc4a9bdd02f0",
+    "extracted/goal-temple-draw-20261018-native1.log": "5e6420fe1d62fec779011948f857e8828491df6e273d6fb0d73e7c595fc2cebd",
+    "extracted/goal-temple-draw-20261018-native2.log": "850769b86cdd6025edb5defc4dcc3b9f58e406e38ba50cacb43c3c2c7fe6402f",
+    "extracted/goal-temple-draw-20261018-rain-after.log": "027bbfe95d8b1591c0e3e31872d7697cacecccfb48aefa98b95b9423692f7d06",
+    "extracted/goal-temple-draw-20261018-rain-anchor-compare.log": "78c0bff9fdef3a02e1ff63c8d060c35eb3f38178f7f86b87e50ae65f615867d2",
+    "extracted/goal-temple-draw-20261018-selection1.log": "0fb02bf5263e08fcfbdd5483769665fa89ab502f0d60f76ca09e53c7062e42f3",
+    "extracted/goal-temple-draw-20261018-wind-after.log": "fe015d5bf2c51ba355f8c0e4b9531de2ddb2fb684bc6ba66c4298944f1c9edbf",
+    "extracted/goal-temple-draw-20261018-wind-before.log": "8cfcc89216624f144760361b03b8afd93d15237de44612473aa98d7a4b5305e0"
+  },
+  "evidenceSha256": {
+    "extracted/goal-temple-draw-20261018-CampaignSessionTests-before-anchor.cpp": "bd45ba536061d3b837c9ca565d91c957c0a4ffe429cd2d7767f06879464a63fb",
+    "extracted/goal-temple-draw-20261018-CampaignSessionTests-before-special.cpp": "2dafa0b449ba70e1d4c6a30609d5a620fa3697520c51d81eb4adb892cc47b728",
+    "extracted/goal-temple-draw-20261018-check-before-anchor.py": "2e3e186fa4914f5cce027dde9f59fa3c7593ee3cc378e6d6f0486decc19f726c",
+    "extracted/goal-temple-draw-20261018-entry1/demostormrages/0/current.bmp": "f51c8c455f35c752b2a5da6eb40bea78d20b92a98b3461c868873b69f2a903de",
+    "extracted/goal-temple-draw-20261018-entry1/demostormrages/0/states.tsv": "f96d1def850c658fa8c4a37a89878cfdb08cf7f2726c9dde3920b48f9f52d2de",
+    "extracted/goal-temple-draw-20261018-entry1/demostormrages/0/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-temple-draw-20261018-entry1/demostormrages/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-temple-draw-20261018-entry1/demostormrages/0/steps.tsv": "6b0352d6b9d45aef9e06128ef82ef66a06433720d8f0a3559a8af7daea1fad89",
+    "extracted/goal-temple-draw-20261018-entry1/dissolvedalliance/0/current.bmp": "65e192de3e116cfbd77810227b09d8933aec41adeb02d435891280e5174a490e",
+    "extracted/goal-temple-draw-20261018-entry1/dissolvedalliance/0/states.tsv": "df1a99539714aff4025ac03e0a26f96e9bf55695816202228a4c23b39b4ec1c8",
+    "extracted/goal-temple-draw-20261018-entry1/dissolvedalliance/0/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-temple-draw-20261018-entry1/dissolvedalliance/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-temple-draw-20261018-entry1/dissolvedalliance/0/steps.tsv": "ecec1e966b4e54c4fa7615948c9f6d9db6d18ca42741f206ba1cc917fe123134",
+    "extracted/goal-temple-draw-20261018-entry1/dissolvedalliance/1/current.bmp": "d90d117a61059c61a8059da49948c3ebfe60c9dcf2477346e4861534acd8cc49",
+    "extracted/goal-temple-draw-20261018-entry1/dissolvedalliance/1/states.tsv": "4a2c0edda9f321b455eeb2e7bbc68b47a4364df4b31389d3066c659de75ec64b",
+    "extracted/goal-temple-draw-20261018-entry1/dissolvedalliance/1/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-temple-draw-20261018-entry1/dissolvedalliance/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-temple-draw-20261018-entry1/dissolvedalliance/1/steps.tsv": "d64ed3946b15986f9b569cc5bf81cf6dff0088fd2b0a6f4eccaee77da7ad7ea9",
+    "extracted/goal-temple-draw-20261018-entry1/guardmyback/0/current.bmp": "6d02ba89f1bb864d4e45191d107deb919b620dd2e7bb1d18e30b0b25796a3bbb",
+    "extracted/goal-temple-draw-20261018-entry1/guardmyback/0/states.tsv": "36c01772bb4fb790eed9f3ebd64a45b79b62ff54cd23da4d87b39e439ae3163f",
+    "extracted/goal-temple-draw-20261018-entry1/guardmyback/0/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-temple-draw-20261018-entry1/guardmyback/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-temple-draw-20261018-entry1/guardmyback/0/steps.tsv": "04fbdafd4fbf5bbe20818a268a230b49f042649b60cb2a70dfa7228042cb4468",
+    "extracted/goal-temple-draw-20261018-entry1/guardmyback/1/current.bmp": "bd933fb8da1425cbb36091c8b3d01901b154b429ad7df733e4491082f8b86693",
+    "extracted/goal-temple-draw-20261018-entry1/guardmyback/1/states.tsv": "ab9e6aa15db0049566c4f5c98b0a212d609257502b2a238e99f70d74777f0752",
+    "extracted/goal-temple-draw-20261018-entry1/guardmyback/1/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-temple-draw-20261018-entry1/guardmyback/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-temple-draw-20261018-entry1/guardmyback/1/steps.tsv": "65f8bc1aa8b06554d226390a5ea9b185ce23200c1b9d5628db91935a23bcb52b",
+    "extracted/goal-temple-draw-20261018-entry1/masterofwhirligigs/0/current.bmp": "3233ada8cf8dee3f477270b5519e5e49b07ea28f779a62c893cdad8baaa8cde3",
+    "extracted/goal-temple-draw-20261018-entry1/masterofwhirligigs/0/states.tsv": "276ad4d5f18183bc9586c07b2397361a84287a8f0a61afe01dadfb37ce6c75d6",
+    "extracted/goal-temple-draw-20261018-entry1/masterofwhirligigs/0/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-temple-draw-20261018-entry1/masterofwhirligigs/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-temple-draw-20261018-entry1/masterofwhirligigs/0/steps.tsv": "9e984b6a94a3be6da50efa8ebaf14cec243826d5a06286e6432ccd35a02c39ae",
+    "extracted/goal-temple-draw-20261018-entry1/masterofwhirligigs/1/current.bmp": "268f636c5cb336670ead99dc9581b097a2962f17feeeee77ace721438b2b4cdf",
+    "extracted/goal-temple-draw-20261018-entry1/masterofwhirligigs/1/states.tsv": "98d91ebfe94ab34614ed0cd8ea854d9ed1f2044cd7f0791b00d0879b2de15c8d",
+    "extracted/goal-temple-draw-20261018-entry1/masterofwhirligigs/1/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-temple-draw-20261018-entry1/masterofwhirligigs/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-temple-draw-20261018-entry1/masterofwhirligigs/1/steps.tsv": "c5dca55ff5b38d30eccf5ad99e63173d47f5f7d7425f131ed80d6459668e7c7c",
+    "extracted/goal-temple-draw-20261018-entry1/results.json": "049c26c2ae8b71ba081dfe1dfb0e86b177a59c22d512fd6209aa7a900f2af53c",
+    "extracted/goal-temple-draw-20261018-entry1/thewarbegins/0/current.bmp": "a56aaab48b088165ce91435bd5169303332d367cb8a92ebb6ce63bba962219da",
+    "extracted/goal-temple-draw-20261018-entry1/thewarbegins/0/states.tsv": "8e78982f83e49d18215012495671a9505540973573aa1963bafe23dffca07e6f",
+    "extracted/goal-temple-draw-20261018-entry1/thewarbegins/0/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-temple-draw-20261018-entry1/thewarbegins/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-temple-draw-20261018-entry1/thewarbegins/0/steps.tsv": "f01b6ae4f4aa4c40d6fddf6fe0490b0dfc285288325288eb53859885bb09693f",
+    "extracted/goal-temple-draw-20261018-entry1/thewarbegins/1/current.bmp": "7adedf33ac0a622f91d38e58c6079cb72f0a193b7ab4e0c3edc394a2ba7b5cf6",
+    "extracted/goal-temple-draw-20261018-entry1/thewarbegins/1/states.tsv": "ed2d713c97e3779de7b4b93c76dfe2c873c6bd27523fe66851c80b538e0210a3",
+    "extracted/goal-temple-draw-20261018-entry1/thewarbegins/1/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-temple-draw-20261018-entry1/thewarbegins/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-temple-draw-20261018-entry1/thewarbegins/1/steps.tsv": "ec2500eb148b2b5cf6c79a9205414a86c34e8a1c0c420490a65bb1ea8f9f63f0",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial1/0/current.bmp": "40e47776d46bae95bd36a825ecc89eb1360f51d3b47087eddadbbec9c2677f01",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial1/0/states.tsv": "7f5ed627b23769996aa91782e5f63dc50a6c798995ccb4a6e0bf773c5abde42f",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial1/0/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial1/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial1/0/steps.tsv": "17e636cff5f380a14de3e72e9e8128198f835274eb5c15fe1ea0daec7ae46a11",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial1/1/current.bmp": "89694ab1a6b1b38aa52f563bc74939e2cd2dabb21b19e9b797ea3dec014116a6",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial1/1/states.tsv": "3788d0537360c3e240dada15c89d0a6072b49557ce98ab6841ce38f434dfeaa2",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial1/1/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial1/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial1/1/steps.tsv": "d9650e013a0a9fdc16e8ef9551b17cee3178cfc2dbc501c2502ab9b3454283ff",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial1/2/current.bmp": "db1a61e296e0eb53503acdc4a449ea687021574ad720a4901f138e92fbe642a5",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial1/2/states.tsv": "caa58cbd838c22cc642e45c01c164d9c5501062f5c2af80232ec42ed321245f5",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial1/2/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial1/2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial1/2/steps.tsv": "615516db2e1c5df6d9a4398de33bd804a10b14148d889e2679f7a479b5a56c90",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial2/0/current.bmp": "43ead0e90d51ce301dd32d7cd0fa5739c6d4e284465f7d8b291f4650865694ab",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial2/0/states.tsv": "018faf897f63df442602d5408e098c440bb6ae27e81e7a3ba202f1e1c86402f2",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial2/0/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial2/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial2/0/steps.tsv": "5e527cdcea60de2869e94578acb58632b6329f003dfc8f28fe5dc4fcbf82af83",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial2/1/current.bmp": "4d21645f4ec7171e117e0285f1519207d54ceaf4fd68552212bf36e7a90c55bb",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial2/1/states.tsv": "ccf7e3d05b8991b2b5b64b76571900d72385442aa7f9131145aa9d62cd307d80",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial2/1/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial2/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial2/1/steps.tsv": "9876173b48afdd842a054ac30c0de3fe76ccd1f51aa2a4d72530572f4fb66f6d",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial2/2/current.bmp": "d981d9cb3780428740973ebc2a2554dccf9cef6950905fd415fe978dab149d04",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial2/2/states.tsv": "6be1175a51ed909df68a9a0cca6eaa0e4cb10284cdbddbd47bac52e933285d8f",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial2/2/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial2/2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial2/2/steps.tsv": "e31c42a69719cd16bc144b9f0dc53f72606ce1b1ffbac209b46d182546b4b7e6",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial2/3/current.bmp": "1c98c539432f5ccd78cbdab2edc0e74329d683740a2858ff39c44e6d5f76b90f",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial2/3/states.tsv": "4a17be1dbe61c5b56b5794a6489a4dc2da7a1301a09beb33ac8445df424e5e53",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial2/3/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial2/3/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial2/3/steps.tsv": "850dd6efcf0f03ec2fa1c19be93a294e038b9ac15f9515b68f10a79a49b5c908",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial3/0/current.bmp": "aa9c9dcb93e12701a193cc2ca15c1bec47e516f5e298de311ec94b399174dc28",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial3/0/states.tsv": "3f66d10a4c6a4983d2e6efed69c71764f9219de7999d340b8bc0c526a8d5cc21",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial3/0/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial3/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial3/0/steps.tsv": "46628adddeb1e8a29aa935063a25409758d3a6e9db12b6bd79472d38e334c6aa",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial3/1/current.bmp": "e2fcbde5c88553a89e032d7b2e98b87ae6e664185151ea4f52884b5a793e5a8c",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial3/1/states.tsv": "8881980a2a94dc4ad53b29617f71cd51e55d87d1921789e74365f4dcd2cafd63",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial3/1/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial3/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial3/1/steps.tsv": "2a8a1fe1610277e5c2ff8e745fcbce74c9d2e0e837aa3f3908fdc36ed82ffd69",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial3/2/current.bmp": "bb053a68c8a44addd82e5571126db3797303f5edc40aa37e95d80aef7dfc08b9",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial3/2/states.tsv": "78f7033d2107ddb3de67a9ef3f15638469aab10d2e7c641ba4cd631e7a7d9c3e",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial3/2/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial3/2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial3/2/steps.tsv": "9cfd89a1cc8a62ede101a409c4f9178c59e2919a030ac6f6d4c5c0fa7cd07c5a",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial4/0/current.bmp": "89f458576e788d981a4bda9f7911aebdd204721dc957bb57ed357bce53f171f0",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial4/0/states.tsv": "fa3635fee4fa244efdf7d28161c37c351854a815cff9f47a13dd7e82afece288",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial4/0/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial4/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial4/0/steps.tsv": "1260b68acd753c3d58529dfdb16383692cf411bc4e92b88c848de0d99c3b7a61",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial4/1/current.bmp": "373e33216e35ed5897f2634d2ec5888a178e0ef4daeb509146c0bb55c8b43f31",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial4/1/states.tsv": "7889a5207a351717811453762f209a94169526d9ec951254b54a25bf95291f07",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial4/1/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial4/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial4/1/steps.tsv": "3a61d34f3a75244580f5767da2bdafb3045b8aacba28da3573d18b9755521b9e",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial4/2/current.bmp": "81fc27df520cac04bd8b4d6373352d5de191b33b58d6659a1eb822102f2cd62f",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial4/2/states.tsv": "fe1282c45f0cdbea3e25249fffe43eee741c920ba739ae32ee818b00ae6200b2",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial4/2/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial4/2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial4/2/steps.tsv": "ed69c729440ffabb24e9052d184b344587f7db6e168cf8686d73a898ba0b773c",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial5/0/current.bmp": "b87a3e552559f796d4db651a8c51dc9c178ac5c0672dd13f2082a6181346f706",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial5/0/states.tsv": "a4b75e946a183b2b424f8822091c353cd045a0191cebf72ff442be0bfbad248b",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial5/0/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial5/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial5/0/steps.tsv": "530ad1c73c4f1006609caa2cc8db7128f5369b08a87c97359a9a3f7f66648bd8",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial5/1/current.bmp": "c1c5e3a98c7dade7311465b103c1ac681b18f0710c079fc263339bfab965d3aa",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial5/1/states.tsv": "924f60337ee75c0ee897fc00c134c24cf01a1cbbdbe5ea6c76bcf5822889a480",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial5/1/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial5/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial5/1/steps.tsv": "d941a99cd5b7198e675d205876b2f5da2e7bbeab95679614de5d1c557717f4e0",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial5/2/current.bmp": "4ee76478b110e47466b024637a9269c4f3d386af1e25c7e317ce490e2b5f0b97",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial5/2/states.tsv": "72b0fc3e857cde114bfdcb01eb001c458256e6ebcc38e46dadfa384f46f4b3bb",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial5/2/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial5/2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial5/2/steps.tsv": "f362f2d6b3a979f759cd64f4922fd25fec1593e17318f44c162f1bd08f6c3b0c",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial6/0/current.bmp": "30a650a2efba0ed780c37cf75fee402937552d75ec348d1e6aa1230d8b7a37df",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial6/0/states.tsv": "e754b083c078e5771ed221d66de79883e9011b394e1accc9acc0766d9a450d2d",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial6/0/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial6/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial6/0/steps.tsv": "875ee7c9a271945dd1025981d1a88a233fc1b68b041e43211bb0bbc1bdd07b0c",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial6/1/current.bmp": "bcb929f33d011c1e2b9ede2ba244a1ee6517c31e03b4b028a591c423fd73f5b2",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial6/1/states.tsv": "64b5acacd20256eb424c115bbd67c5dbe731df6501602cae5362c0b9c4e5a28f",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial6/1/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial6/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial6/1/steps.tsv": "1fcfab2db63c513101f1b147d0fc2103630e94ed01eb09ccd6f1845001ff3108",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial6/2/current.bmp": "048dafa70ee12979dfb7b4087abd4908aeb6dda7370d4353769118458defbbde",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial6/2/states.tsv": "454d6de393e69d99abaf2237cb4e37b392d7002ed92609118d69782bf43112ed",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial6/2/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial6/2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial6/2/steps.tsv": "3ea5d7e4a0c97ec109eaf8d662ad11855b966fb7f8b0c7c648b12ab69a25a5f3",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial6/3/current.bmp": "b03592f5e92c7d733aeba459a645f35cf99079135329157cffed6aab75ece47d",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial6/3/states.tsv": "b1342e40a275c06124df6a2821207ffd975918740ffc0319e760a1b7503a2b4d",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial6/3/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial6/3/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial6/3/steps.tsv": "1a5b9328d80e693cbd0052bfdaf785d94e841d003c28e36e6f19a3729e671f76",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial6/4/current.bmp": "f3b148329c41265cc7c17256fa9271db11c9865ee8391e74a0fcf7dbdfb69ebc",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial6/4/states.tsv": "3ec6f57d82878a5e1310a3fcc0d5b06e9a61d9ee0707a000be56d75c3fff696e",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial6/4/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial6/4/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-temple-draw-20261018-entry1/tutorial6/4/steps.tsv": "94a1191b1766d8d8511c23a5d123f6061803fbcbc2194ae0ae4cc772ff2bae75",
+    "extracted/goal-temple-draw-20261018-native-freeze.json": "9a301e7296aa2aec65d8ce7ee2421a4c29dda32f174a4d51a2ea1925ff011d13",
+    "extracted/goal-temple-draw-20261018-pin-updates.json": "6122c121b5d8b7384383e00375c6856a3f3fdc66e25e97229fced2d96939f0e5",
+    "extracted/goal-temple-draw-20261018-protected.json": "cb36936833a0e5987157afc6979f1569d1cad7ba8a156256cba7b185c23d1f70",
+    "extracted/goal-temple-draw-20261018-rain-after/pixels-before-anchor-from-log.json": "7f200f84d8249a60567df0399c4bcf6492d9355be26f15bd8a461434aeb46448",
+    "extracted/goal-temple-draw-20261018-rain-after/pixels.json": "7d5c72f1db325b444ee5c80813b213c461162dd9581f7ff2b3ceb0dc849e15eb",
+    "extracted/goal-temple-draw-20261018-rain-after/states.tsv": "3c5e91470a6f139efa1f2f6d728c0e59587749f366ac3b141269a2eaefcd69c8",
+    "extracted/goal-temple-draw-20261018-rain-after/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-temple-draw-20261018-rain-after/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-temple-draw-20261018-rain-after/steps.tsv": "c61449671edbb76966d879c4e535b683fc8e35439cacff1864050ced1af79303",
+    "extracted/goal-temple-draw-20261018-rain-after/temple12.bmp": "f8cac7ec2515cc0a3c1733ce37fbeef3d179f75a75b3fac892e0d87ce60743fe",
+    "extracted/goal-temple-draw-20261018-rain-after/temple22.bmp": "ef28c5701fbf45677fadb42323f782406211d3fcb88af4b2f5d43b8efaaaebbc",
+    "extracted/goal-temple-draw-20261018-rain-after/temple32.bmp": "728bf86addb9ec06f5b5b5be0207f2ce630dd05f210b29b94b370fefce4eb2d0",
+    "extracted/goal-temple-draw-20261018-rain-after/temple42.bmp": "7c3bc8cd80cc8d92fd5030f1a947b6e81d47842e9eef88cfa60eade9ac74f2c6",
+    "extracted/goal-temple-draw-20261018-rain-anchor-native.json": "022b7df0fcf3c3dc91e1ffce497d4025a29bfaa86747dc9ab2dbadc3fbc92803",
+    "extracted/goal-temple-draw-20261018-selection.py": "cfd7e25240ef9a779bd416c0c791d6aa00b8570e03c90aab6d20d8b3507465f5",
+    "extracted/goal-temple-draw-20261018-selection1/results.json": "f8d0c11099f3b15873d14d6d7c003bee7d0d2d9fa5f31bbc1c5a355884fddd4d",
+    "extracted/goal-temple-draw-20261018-selection1/selected.bmp": "35ff7e6df1953c0acd3dc10f779ca5145489c504d3a844a7a9f3e8fef8d4537c",
+    "extracted/goal-temple-draw-20261018-selection1/states.tsv": "29872410eba4251a3d9e492c178eb3cdce8e5cd55d5da195bda9d3cb3c42d6cf",
+    "extracted/goal-temple-draw-20261018-selection1/stderr.log": "71451f571c7a3956e4583e528d9b0667c7a2fd9eea71817ebe6be14aa0b6b09b",
+    "extracted/goal-temple-draw-20261018-selection1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-temple-draw-20261018-selection1/steps.tsv": "3acace4821999afd0de6f423acd31f6a0704df9500e0fc182f1cab2aedede902",
+    "extracted/goal-temple-draw-20261018-sources.json": "7b3aaca21902ef4f19a33f758d27bfeeb9ec061d160e8cce23a3a2050937a214",
+    "extracted/goal-temple-draw-20261018-verify-final.json": "6d01ea56eb4941e14f8f661675c1fd547ad79a409857d953d5d427c77262a650",
+    "extracted/goal-temple-draw-20261018-verify1.json": "6d01ea56eb4941e14f8f661675c1fd547ad79a409857d953d5d427c77262a650",
+    "extracted/goal-temple-draw-20261018-wind-after/pixels.json": "fcc7dc9e76083ad43bf9227783e23d3d2144f6f9f7636289a08f5b6b65384c0e",
+    "extracted/goal-temple-draw-20261018-wind-after/states.tsv": "4fc1dd768fea3452531123a63ffcc25ad6833ad29883bdfca11695387ca25913",
+    "extracted/goal-temple-draw-20261018-wind-after/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-temple-draw-20261018-wind-after/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-temple-draw-20261018-wind-after/steps.tsv": "7bb63a657dab692e063e34b39a0b617b77bc4fe8352d02cc2df85b627b84fc4b",
+    "extracted/goal-temple-draw-20261018-wind-after/temple12.bmp": "0f50a75c319b366c69976441fa309ee42696204a9660ac8f5f8e920205d88908",
+    "extracted/goal-temple-draw-20261018-wind-after/temple22.bmp": "3fb03ab146faf7a336775b77cbe293e021fbe8acdf113f47a71155f25edbbbe8",
+    "extracted/goal-temple-draw-20261018-wind-after/temple32.bmp": "e8c7aede0cd17e338ff64df3b2ca4fd3afc93c37fca3c9755cb02b29dff30dce",
+    "extracted/goal-temple-draw-20261018-wind-after/temple42.bmp": "a79af7e4e50db7e9af543ad90d94f32c6dd6634c2846768b3c334ab074c7421a",
+    "extracted/goal-temple-draw-20261018-wind-before/pixels.json": "fb5b0edc7b0115fddc5357cd79b6853f8477f2962c5dbfa0d3798a461de7fcfc",
+    "extracted/goal-temple-draw-20261018-wind-before/states.tsv": "1392df05fa3cf8748cfcf3f13828340ce770981e14dbc2ab2c4c2a4354882de4",
+    "extracted/goal-temple-draw-20261018-wind-before/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-temple-draw-20261018-wind-before/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-temple-draw-20261018-wind-before/steps.tsv": "12a17dac980fba4de1d78d66abc4a90818bd07af95ac8a6d68f37a98906e00a8",
+    "extracted/goal-temple-draw-20261018-wind-before/temple12.bmp": "a885dc4d9a1e76a8f1e589c1a4329d4ecfd9073f898389d32b22302a2b4cf36b",
+    "extracted/goal-temple-draw-20261018-wind-before/temple22.bmp": "8edff5714b5af3c52d3e3f68398d5ea941b71bff238475716708f049ee370427",
+    "extracted/goal-temple-draw-20261018-wind-before/temple32.bmp": "a962a6a25a39bdca27179d80796c879c5206926b184443cd1b76d40b953863cf",
+    "extracted/goal-temple-draw-20261018-wind-before/temple42.bmp": "52d5f0470d928b245011d0cbbc3c856ffff30b0806570d6bc68e84e3cf9b0440"
+  },
+  "remaining": [
+    "썬더 저장 미션의 실제 창에서 표시/상승/파괴 상태 추가 관찰 및 전체화면 동일성",
+    "Burning14 생성/캡처/Frame/Draw/삭제와65.7초 실패 창·캠페인1-1 캐논 전체 전투",
+    "훨리기그 명령/홈 통지/폭탄/자연 공격·귀환, Quick Help 본문/창/이력, 운반·희생·승패·후속 미션·전략AI 및11단계 자연 완주"
+  ]
+}

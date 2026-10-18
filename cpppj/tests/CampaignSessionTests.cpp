@@ -517,12 +517,12 @@ void CheckSessionWorld(std::string_view mission) {
     const auto& type=core.types[core.pool.Slot(priest)[10]];const auto view=world.Object(priest.value); // 실제 초기 카메라는 내 사제의 전체 발자국 차감 지점을 중심으로 둔다.
     CHECK(world.ToScreen(view->x-type.footX,view->y-type.footY).x==512 && world.ToScreen(view->x-type.footX,view->y-type.footY).y==384);
     CHECK(!world.Sprites().empty());
-    // 실제 캠페인의 레인 신전은 현재 물결만 제출하지 않고 기본0과 같은 항목으로 그린다.
+    // 실제 캠페인의 레인 신전은 원본 수집/일반Draw procedure에서 본체·물결을 합성한다.
     if (mission=="thewarbegins") {
-        const auto& temple=assets.game.Find("rainVortex");bool found=false;
-        // 화면에 제출된 실제 신전의 원본 Draw 순서와 전체 몸체 클릭 범위를 확인한다.
-        for (const auto& sprite:world.Sprites()) if (sprite.block==temple.block) {
-            CHECK(sprite.frame==0 && sprite.followingFrames==std::vector<std::size_t>{1});found=true;
+        bool found=false;
+        // 실제 본체 procedure와 전체 몸체 클릭 범위를 확인한다. 픽셀 순서는 별도264원문 검사로 대조한다.
+        for (const auto& sprite:world.Sprites()) if (sprite.procedure && sprite.order.x==89 && sprite.order.y==116) {
+            found=true;
             const auto point=world.ToScreen(89,116);CHECK(world.Pick({point.x-112,point.y-80})==15002);
         }
         CHECK(found);
@@ -1691,7 +1691,7 @@ void NaturalWorkshopPlacement(bool combat) {
         if (!(raw[11]&3) && raw[10]==85 && raw[34]==1 && std::bit_cast<float>(Get(raw,14))==point.x && std::bit_cast<float>(Get(raw,18))==point.y) { CHECK(!target.value);target=sid; }
     }
     CHECK(target.value && (core.pool.Slot(target)[40]&1));if (!target.value) return;
-    RawCampaignFactoryDisplay display(core,assets.game);std::array<ScreenColor,256> palette{}; // 실제 Session의 같은 풀/SHP를 그리는 제품 표시기다.
+    RawCampaignFactoryDisplay display(core,assets.game,[&session](Sid sid,const auto& frame) { session.DrawTemple(sid,frame); });std::array<ScreenColor,256> palette{}; // 실제 Session의 같은 풀/SHP를 그리는 제품 표시기다.
     // 명시 파일 팔레트만 설치하며 HP/프레임/완공 필드는 쓰지 않는다.
     for (std::size_t i=0;i<palette.size();++i) { const auto color=assets.game.Palette().Color(static_cast<std::uint8_t>(i));palette[i]={color.blue,color.green,color.red,0}; }
     display.SetPalette(palette);CHECK(display.Handles(target) && !display.Handles(priest));
@@ -1942,3 +1942,36 @@ void NaturalWorkshopPlacement(bool combat) {
 TEST_CASE(CampaignSession_LocalLoginWorkshopHasActualPlacement) { NaturalWorkshopPlacement(false); }
 // 전방 배치는 실제 레인 제네레이터를 연구/완공한 뒤 실행한다.
 TEST_CASE(CampaignSession_LocalLoginGeneratorExtendsCannonFirstHit) { NaturalWorkshopPlacement(true); }
+
+// 실제 표시 소비자에 세 템플의 명시 상태 입력264개를 공급하고 원본 순서/SHP의 불투명 픽셀을 대조한다.
+// 썬더는 저장 미션/실전 관찰이 아니라 동일 지점의 합성 표시 입력이며 게임 프레임을 실행하지 않는다.
+TEST_CASE(CampaignTempleDraw_Native264BodyPixels) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());
+    RawCampaignSession session(assets.game,assets.files,std::move(fort),"TheWarBegins",external.Services());session.Load();const auto core=session.Core();const Sid temple{15002};CHECK(core.pool.Slot(temple)[10]==124);
+    RawCampaignFactoryDisplay display(core,assets.game,[&](Sid sid,const auto& frame) { session.DrawTemple(sid,frame); });std::array<ScreenColor,256> palette{}; // 같은 풀/실제 SpriteDraw/파일 팔레트다.
+    for (std::size_t index=0;index<palette.size();++index) { const auto color=assets.game.Palette().Color(static_cast<std::uint8_t>(index));palette[index]={color.blue,color.green,color.red,0}; } // 현재 같은 파일 색을 사용한다.
+    display.SetPalette(palette);std::size_t cases{},compared{}; // 실제 본체 픽셀만 세며 그림자 전체 일치로 세지 않는다.
+    // 새 객체/생산/완공을 주입한 실전 검사로 주장하지 않고 현재 표시 raw만 명시적으로 교체한다.
+    for (const auto& row:netstorm::test::rawscene::LoadFixture(NETSTORM_TEMPLE_DRAW_FIXTURE).rows) {
+        const auto& type=assets.game.Find(row[0]);auto raw=core.pool.AllocatedBytes(temple);const auto number=type.block+kFirstAssetTypeNumber;raw[10]=static_cast<std::uint8_t>(number);Put(raw,0,number==123 ? 0x519860 : number==124 ? 0x5196f0 : 0x519918);Put(raw,36,std::stoul(row[1]));Put(raw,12,std::stoul(row[2]),2);raw[40]=2;
+        Renderer renderer(512,400);renderer.SetScene(display.Sprites({0,0,512,400},1168,1036,1));std::vector<std::uint8_t> actual(512*400,7);renderer.Draw(actual,512,7);
+        std::map<std::size_t,std::uint8_t> expected;std::vector<std::uint32_t> layers;const auto base=std::stoul(row[3]);if (base!=0xffffffffU) layers.push_back(static_cast<std::uint32_t>(base)); // 실제 원본+78 반환이다.
+        // 원본 전용Draw가 제출한 F만 읽고 제품의 순서 계산을 재사용하지 않는다.
+        for (const auto& event:netstorm::test::rawscene::Split(row[4],',')) if (!event.empty() && event[0]=='F') layers.push_back(static_cast<std::uint32_t>(std::stoul(event.substr(1))));
+        // 기존 SHP 압축 해제에서 한 불투명 픽셀씩 직접 덮는다. 제품 Renderer 합성을 부르지 않는다.
+        for (const auto frame:layers) {
+            const auto& shape=assets.game.Shapes().Blocks()[type.block].frames[frame];if (shape.IsSpecial()) continue;const auto image=assets.game.Shapes().Decode(type.block,frame); // 레인27은 이미지가 아닌 특수 레코드이며 실제 픽셀 소비자도 건너뛴다.
+            for (std::size_t y=0;y<image.height;++y) for (std::size_t x=0;x<image.width;++x) { const auto source=y*image.width+x;const auto dx=256-core.types[number].hotspotX+shape.rect.left+static_cast<int>(x),dy=240-core.types[number].hotspotY+shape.rect.top+static_cast<int>(y);if (image.opacity[source] && dx>=0 && dx<512 && dy>=0 && dy<400) expected[static_cast<std::size_t>(dy)*512+dx]=image.indices[source]; } // 기준점/투명/화면 clipping을 독립 적용한다.
+        }
+        std::size_t mismatch{};for (const auto& [at,color]:expected) if (actual[at]!=color) ++mismatch; // 그림자/배경 영역을 본체 기대에 섞지 않는다.
+        if (mismatch) std::cerr<<"템플 픽셀 차이 "<<row[0]<<" frame"<<row[1]<<" word"<<row[2]<<" "<<mismatch<<'\n';CHECK(mismatch==0 && !expected.empty());compared+=expected.size();++cases;
+    }
+    // 세 템플의 선택 상태도 같은 일반Draw의 괄호/HP 경로를 실행하며 본체와 실제 그림자 항목을 수집한다.
+    for (const auto name:{"windVortex","rainVortex","thunderVortex"}) {
+        const auto& type=assets.game.Find(name);auto raw=core.pool.AllocatedBytes(temple);const auto number=type.block+kFirstAssetTypeNumber;raw[10]=static_cast<std::uint8_t>(number);Put(raw,0,number==123 ? 0x519860 : number==124 ? 0x5196f0 : 0x519918);Put(raw,36,type.definition.specialFrames.defaultFrame);Put(raw,12,0,2);raw[40]=6;
+        const auto sprites=display.Sprites({0,0,512,400},1168,1036,1);bool body{},shadow{}; // 원본 수집 결과의 같은 기준점/그림자 y보정이다.
+        for (const auto& sprite:sprites) if (sprite.order.x==89) { if (sprite.order.y==116) body=true;if (sprite.order.y==static_cast<float>(116.0-.1f)) shadow=true; } // 현재 같은 템플의 두 항목만 확인한다.
+        CHECK(body && shadow);Renderer selected(512,400);selected.SetScene(sprites);std::vector<std::uint8_t> pixels(512*400,7);selected.Draw(pixels,512,7);CHECK(std::any_of(pixels.begin(),pixels.end(),[](auto value) { return value!=7; }));
+    }
+    CHECK(cases==264 && compared>1000000);std::cerr<<"실제 템플 표시 소비자: 합성 입력"<<cases<<"개 본체"<<compared<<"픽셀 일치. 썬더 실전 창 검증 별도\n";
+}
