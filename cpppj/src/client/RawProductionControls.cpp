@@ -73,7 +73,7 @@ struct RawProductionControls::Impl {
         h.background=[this](auto rect,auto flags,auto type,auto frame) { if (!activeBackground) throw std::logic_error("생산 장식 실제 표면 없음");activeBackground->Texture(rect,flags,type,frame); };
         h.local=[this](auto token,auto,auto x,auto y) { return common.collection.ScreenToLocal(token,{std::bit_cast<std::int32_t>(x),std::bit_cast<std::int32_t>(y)}); };h.knowledgeOpen=[this] { return session.CursorDropSettings().lockDepth==0 ? 1U : 0U; };
         h.imageHit=[this](auto token,float x,float y) { return image->Hit(token,x,y); };h.denied=[this](auto first,auto flags) { return first==policyFirst && static_cast<std::uint8_t>(flags)==policyByte ? 1U : 0U; };h.tell=hooks.tell;
-        h.forward=[this](auto token,auto event,auto first,auto second) { return common.events.Bubble(token,event,first,second); };h.about=[](auto,auto,auto)->std::uint32_t { throw std::logic_error("생산 항목 About 메뉴 미연결"); };
+        h.forward=[this](auto token,auto event,auto first,auto second) { return common.events.Bubble(token,event,first,second); };h.about=[this](auto token,auto x,auto y)->std::uint32_t { if (!hooks.about) throw std::logic_error("생산 항목 About 메뉴 미연결");return hooks.about(*items.at(token),{std::bit_cast<std::int32_t>(x),std::bit_cast<std::int32_t>(y)},[this](o::Sid sid) { return item->Affordable(sid)!=0; }); };
         item=std::make_unique<InventoryItemGump>(session.Core().pool,InventoryItemState{owner,editor,stock,inputDisabled,lastType,bridgeType,pixelsX,pixelsY,backgroundType,backgroundFrame},std::move(h));
         maintenance=session.MakeProductionMaintenance(productionGlobals,productionPanel,hooks.now,[this](std::uint32_t mask) {
             // 원본은 텔레포트 격자를 먼저, 다리 격자를 뒤에 Push/가상부착한다.

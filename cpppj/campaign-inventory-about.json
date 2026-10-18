@@ -1,0 +1,279 @@
+{
+  "unit": 182,
+  "date": "2026-10-18",
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "lastDecompileDate": "2026-10-16",
+  "baseline": "5dc75236b8cdf237f5a7b666b11e2713ac40c86c",
+  "goalComplete": false,
+  "fidelity": {
+    "complete": false,
+    "edition": "10.78",
+    "scope": "43d330 정보 메뉴/기존Describe/정수 비용/현재4af010/클래스 회수 분기/Help 항목·같은Form·현재 루트 부착",
+    "aboutImplemented": true,
+    "quickHelpImplemented": false,
+    "nullHelpConsumerImplemented": false,
+    "cd1072": "미검증"
+  },
+  "nativeCapture": {
+    "host": "HJOW-Athlon",
+    "lastDecompileHost": "HJOW-Athlon",
+    "unit": 181,
+    "rows": 1296,
+    "normalReturns": 2592,
+    "instructions": 418968,
+    "precisionDifferences": 0,
+    "nativeCalls": {
+      "0043d330": 2592,
+      "004e49c0": 3456,
+      "004af010": 2592,
+      "0043cb30": 864
+    },
+    "sha256": {
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+      "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+      "tools/decomp_inventory_about.py": "90580a67ffeaf649e541d0455ba7343df6100d04c9d941892e7f6e6320546a52",
+      "cpppj/tests/fixtures/inventory-about-x86.tsv": "e4e426da56fe1958bce6ece767ef964b7ddd0ef017ad101dfa56a55b2130d9d7"
+    },
+    "limits": [
+      "실제43d330/4af010/49aa30/43cb30/_ftol의 비용·허용·환불과 조건/현재 필드 읽기를 실행한다. 메뉴/번역·정보 작성/순수 서식/현재 SP/위치·음향은 명시 경계다.",
+      "NULL/빈/Help와6종류·회수flags·편집/정수 큰 비용·NaN SP를 교차한다. 실제 메뉴/Session/GUI 연결은 별도 검사이며 CD/전체 게임 동일성의 증거는 아니다."
+    ]
+  },
+  "nativeExtra": {
+    "host": "HJOW-Athlon",
+    "lastDecompileHost": "HJOW-Athlon",
+    "unit": 182,
+    "rows": 2592,
+    "normalReturns": 5184,
+    "instructions": 772776,
+    "precisionDifferences": 0,
+    "nativeCalls": {
+      "0043d330": 5184,
+      "004e49c0": 6048,
+      "004af010": 5184,
+      "0043cb30": 864
+    },
+    "sha256": {
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+      "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+      "tools/decomp_inventory_about_class.py": "c66dd18e5649fcab1ade4315ed84afcf0e5debb6969074689aaff6612cdc89fa",
+      "cpppj/tests/fixtures/inventory-about-class-x86.tsv": "7e7752bd6aa2e9e260151cdb1251eb64bb0f97e156aaa8cc00ac035b9d7eef1c"
+    },
+    "limits": [
+      "실제43d330/4af010/49aa30/43cb30/_ftol의 비용·허용·환불과 조건/현재 필드 읽기를 실행한다. 메뉴/번역·정보 작성/순수 서식/현재 SP/위치·음향은 명시 경계다.",
+      "NULL/빈/Help와6종류·회수flags·편집/정수 큰 비용·NaN SP를 교차한다. 실제 메뉴/Session/GUI 연결은 별도 검사이며 CD/전체 게임 동일성의 증거는 아니다."
+    ]
+  },
+  "nativeFreeze": {
+    "tools/decomp_inventory_about.py": "90580a67ffeaf649e541d0455ba7343df6100d04c9d941892e7f6e6320546a52",
+    "cpppj/inventory-about.json": "bcfab715cde2496732236b09b6698ed84f299584331437d3818cb779c915243d",
+    "cpppj/tests/fixtures/inventory-about-x86.tsv": "e4e426da56fe1958bce6ece767ef964b7ddd0ef017ad101dfa56a55b2130d9d7",
+    "tools/decomp_inventory_about_class.py": "c66dd18e5649fcab1ade4315ed84afcf0e5debb6969074689aaff6612cdc89fa",
+    "cpppj/inventory-about-class.json": "599bd4fe9aaba7218481db14f99841939d00844ec8ca2d5ac2262aa5547a7695",
+    "cpppj/tests/fixtures/inventory-about-class-x86.tsv": "7e7752bd6aa2e9e260151cdb1251eb64bb0f97e156aaa8cc00ac035b9d7eef1c"
+  },
+  "protected": {
+    "AGENTS.md": "7addbf9b31c42f29aab7c93faa865eb6de8590a600d17202a297cf7122bdf979",
+    "LEFT_JOBS.dotnetpj.md": "0c067e1d12879dbf2212cbd64c8f9f60e65b590df910418f025027ed84f80ec2",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "originals/d/GIFCLOUD.COL": "785a2cda6ac1d3e295d375815b6d9650720683099db7c249382d598b5da00532"
+  },
+  "observedGuiBinary": {
+    "cpppj/build/bin/Release/NetstormCpp.exe": "bc5d0ba087b7ecf22225ff35217c3d6ab84441c92a54bf4d977afa49c8944f48"
+  },
+  "currentSources": {
+    "cpppj/src/client/CMakeLists.txt": "0b51a7c8632f0171cee77ffefd21814e48a1ac9c6b7b70fd72dd3e755bcafb65",
+    "cpppj/src/client/CampaignObjectMenuClient.cpp": "742c9b026c8c3a4019236d2fa3967df4731c145d577e4cbd753fa2a003d16117",
+    "cpppj/src/client/CampaignObjectMenuClient.h": "b5c3e294d6fcc836f904a64ad2537a14128ea2f72c2e9bf1a4f9bcaeecd58151",
+    "cpppj/src/client/MenuGumpWidgets.cpp": "33acda5b10a39d19cab04f867d42b2c6dde48530ad62ea651750eba6446d003f",
+    "cpppj/src/client/MenuGumpWidgets.h": "6c08ba088e1eef635fedd1d5610442fe8755629588226d3ec410fd39285a112e",
+    "cpppj/src/client/RawCampaignSession.cpp": "6a1533de4d7a9f0ed09c0c4a2b59077498e9d0aa0487119e8461381e2d9867ab",
+    "cpppj/src/client/RawCampaignSession.h": "9b8778ad3d884db1f91c1d03b8500485d73399a6b0c94c066a040c824c41e7e6",
+    "cpppj/src/client/RawMenuControls.cpp": "7cf3686cabed1d61e6f61b46a2c6d9f153b2a8ce4c5faee6cac3a01683555bb4",
+    "cpppj/src/client/RawProductionControls.cpp": "eb296d77e6c04d6d8e80b0a4c151992d9857bd33b06a288d08a76d414a6a05b1",
+    "cpppj/src/client/RawProductionControls.h": "67046f35d49cb863978ef917777820793aa9156daa678519fac525ed001df264",
+    "cpppj/src/client/UberGump.cpp": "7a0d2ce97d70126f0964b30896eccdf872fc64e9113bb3a4caaf7fe2372cf949",
+    "cpppj/tests/CMakeLists.txt": "62dc8c0f8e57681b649b7598f8e71f0d60bc504a3e77495f146f297eecdb8027",
+    "docs/exe/cpp-production-feedback-20261018.md": "5bf8f29e3a77eb8e5ad0a38b2de4ea9a823b0b34da76b5367053f8b779265b9e",
+    "cpppj/src/client/InventoryAboutMenu.h": "140e9ddfe334534354ae475e9ff7290848ab78cedd38ad6a45f1dd6891e83f9e",
+    "cpppj/src/client/InventoryAboutMenu.cpp": "4a2b55d72ccb4ea8b5d96ccd2f2d2c366df8073520e6b81e503178839986345b",
+    "cpppj/tests/InventoryAboutMenuTests.cpp": "85a6723209dce8e927728a93acf073b644c6eddfd4fa79d380e165b286061930",
+    "tools/decomp_inventory_about_class.py": "c66dd18e5649fcab1ade4315ed84afcf0e5debb6969074689aaff6612cdc89fa",
+    "cpppj/inventory-about-class.json": "599bd4fe9aaba7218481db14f99841939d00844ec8ca2d5ac2262aa5547a7695",
+    "cpppj/tests/fixtures/inventory-about-class-x86.tsv": "7e7752bd6aa2e9e260151cdb1251eb64bb0f97e156aaa8cc00ac035b9d7eef1c",
+    "tools/cpp_inventory_about_smoke.py": "d35cc5e765e99f7fca59d44abc020725ce08bb520b80ccd8156aa9f7c52df8ca"
+  },
+  "logSha256": {
+    "extracted/goal-inventory-about-20261018-audit1.log": "9a955ef7015b067e5c1c397c287e32d145a6ce3bcafc27dbb588a9f389268d48",
+    "extracted/goal-inventory-about-20261018-build1.log": "17c813e21e860ccfa65f4adb6879e2447cdb51650038551db4a2af0ea6a3c804",
+    "extracted/goal-inventory-about-20261018-build2.log": "076d1788aa1f0b1a9e5b4408080b18c4a7d4a77cd3109c14daebfd1ea447832e",
+    "extracted/goal-inventory-about-20261018-build3.log": "871df892951217434630a865a9544259bb5443f5319629ca6ba70e4b5b1dd7eb",
+    "extracted/goal-inventory-about-20261018-build4.log": "3c064d20d5bd60db74714bb5eb8610bec7ad3db5afc82a08eb831e41e66d5008",
+    "extracted/goal-inventory-about-20261018-build5.log": "42cd73a7257675a81e7e6696139ccdf3d4641f20cd1e089be25b9642a9a5549d",
+    "extracted/goal-inventory-about-20261018-class-native1.log": "0ff832cf4bcdc9ffef975b78df9ed0dbe1881b4672a6dee48bda6b78f5fd8883",
+    "extracted/goal-inventory-about-20261018-class-smoke1.log": "69fe8e67410d3d3dea1bc4a50b3438eba99277c207f18a5c7571e55b0e036cd9",
+    "extracted/goal-inventory-about-20261018-ctest1.log": "977d1fa45d2c252416f8f8e56230eb1a1bb4d71cd066cb03cd11f859025a9b75",
+    "extracted/goal-inventory-about-20261018-gui1.log": "bbfeaf9ea8025dfc0dcbca45be52d594200b00e85abe35985bac27d821461760",
+    "extracted/goal-inventory-about-20261018-gui2.log": "87e1e1c39cb41d30fc2d58da955e29c68004bd5c6fa140bbdcef934ff7785d1b",
+    "extracted/goal-inventory-about-20261018-LastTest1.log": "c3df6fa9fba7032e9bc68ea06c87ff3774153da888e0c0f0e4a72d42e1b20300",
+    "extracted/goal-inventory-about-20261018-native-cpp1.log": "62319c04be871423ca09cc26eb13122d9a96e0fd2809893677e5a175757d6a15",
+    "extracted/goal-inventory-about-20261018-native-cpp3.log": "d713743471a7f77ce9f64f12036763d774a83c8db162a26fe3e89b52df0a49b5",
+    "extracted/goal-inventory-about-20261018-native-cpp4.log": "835b7778932312e64740d41af8619323e75779c62a6dc924f80a3747f91174ab",
+    "extracted/goal-inventory-about-20261018-stages1.log": "45c1eee9aa0a6dda3519fe8ac4fcf426bf94132bb199d97050b9cc54ac53e578"
+  },
+  "evidenceSha256": {
+    "extracted/goal-inventory-about-20261018-sources.json": "7e6ea0d76431fcd1301922a7553cdedca87b3ac39a6294a8265a97008cd1f566",
+    "extracted/goal-inventory-about-20261018-pin-updates.json": "68f0d63077dafebe47d5e89f667937d19cf2e3d857bdd10d5ab1f54a29cacf0f",
+    "extracted/goal-inventory-about-20261018-verify-final.json": "4803e18d341839292a2c46299110647febfa0f73dbed8f63b35e894ae694d0cd",
+    "extracted/goal-inventory-about-20261018-native-freeze.json": "d57796c3b7d83bb292d1b7d63dbbf4e99d40625ab70d198bb8aa00d14b3d8973",
+    "extracted/goal-inventory-about-20261018-gui-binary.json": "453280002a56a5076e4af523eebbdc24da0ff26eda3e6d970fd43d133c05d30b",
+    "extracted/goal-inventory-about-20261018-gui2/summary.json": "b48da4452dad39faddca560c2fccf1c65405ca1a9e4fcc93ac88464349d47471",
+    "extracted/goal-inventory-about-20261018-gui2/states.tsv": "231f31358cfe8fd1a1a4c0052a3b6330198a537ab3a793d3728a3a1eed5d7b8b",
+    "extracted/goal-inventory-about-20261018-gui2/about-before.bmp": "910ce8e3b03b22c41047143f8618b9d7b1c7d8210e6275b7af359ffd8bb28cef",
+    "extracted/goal-inventory-about-20261018-gui2/about-after.bmp": "6bd2d47f3957819840ef6c95ddaf29e4fcd182ba99844586e58638a59d996e39",
+    "extracted/goal-inventory-about-20261018-stages1/results.json": "e470ca7ec92bd8d8284c4dcccbd839a6b9402ce7864c668d4f908dd61d1849fb"
+  },
+  "validation": {
+    "full": {
+      "tests": 1679,
+      "failed": 0,
+      "seconds": 224.67,
+      "ctestSeconds": 224.7
+    },
+    "nativeCpp": {
+      "tests": 2,
+      "rows": 3888,
+      "failed": 0
+    },
+    "gui": {
+      "passed": true,
+      "originalsUnchanged": true,
+      "forms": [
+        [
+          "147",
+          "101",
+          "136",
+          "140"
+        ],
+        [
+          "157",
+          "101",
+          "139",
+          "149"
+        ],
+        [
+          "184",
+          "160",
+          "171",
+          "175"
+        ]
+      ],
+      "cannons": {
+        "15184": [
+          "128",
+          "1",
+          "16",
+          "94",
+          "111"
+        ]
+      },
+      "menus": {
+        "aboutBefore": [
+          [
+            "147",
+            "0",
+            "66697",
+            "33554455",
+            "128",
+            "1",
+            "About"
+          ]
+        ],
+        "reopened": [
+          [
+            "157",
+            "0",
+            "66697",
+            "33554455",
+            "128",
+            "1",
+            "About"
+          ]
+        ],
+        "aboutAfter": [
+          [
+            "184",
+            "0",
+            "66697",
+            "33554455",
+            "128",
+            "1",
+            "About"
+          ]
+        ]
+      },
+      "sp": [
+        "2200",
+        "1800"
+      ],
+      "limits": [
+        "실제 기본 생산 내용물의 About/비용/Help 항목·Form/ESC/재열기와 후속 생산·완공 관측이다. Help 명령 실행·실제 회수·SP 부족 창·전체 미션 완주는 별도다."
+      ]
+    },
+    "stageEntries": {
+      "count": 11,
+      "missions": [
+        "tutorial1",
+        "tutorial2",
+        "tutorial3",
+        "tutorial4",
+        "tutorial5",
+        "tutorial6",
+        "thewarbegins",
+        "masterofwhirligigs",
+        "demostormrages",
+        "guardmyback",
+        "dissolvedalliance"
+      ],
+      "naturalCompletion": false
+    },
+    "audit": {
+      "tools": 109,
+      "passed": 98,
+      "knownFailures": [
+        "tools/analyze_campaign_target_path.py",
+        "tools/decomp_chat_channels.py",
+        "tools/decomp_constructionarrival_oracle.py",
+        "tools/decomp_factorypostpop_oracle.py",
+        "tools/decomp_guntarget_oracle.py",
+        "tools/decomp_menulayout_oracle.py",
+        "tools/decomp_metadisplaydirty_oracle.py",
+        "tools/decomp_pathdata_oracle.py",
+        "tools/decomp_pathprepare_oracle.py",
+        "tools/decomp_pathruntime_oracle.py",
+        "tools/decomp_unpop_oracle.py"
+      ],
+      "newFailures": 0
+    },
+    "pins": {
+      "reports": 80,
+      "items": 224
+    }
+  },
+  "corrections": [
+    "직전181의 회수 정밀도 추정을 폐기한다.43cb53 FILD 뒤43cb57 FSTP로 비용을 float32 저장한다. 비용33554431→회수 입력33554432→quarter8388608이며 전액154는33554432다. 비용 머리는 정수33554431 그대로다. 이전 동결 fixture는 불변이다."
+  ],
+  "remaining": [
+    "실제 Quick Help 창4c5970과 Help02000017 실행, 회수 명령0200005d 실행, NULL helpWord의 실제 CRT 문자열 소비는 미복원이다. 기본 실제 설정의 About 항목 생성까지만 연결했다.",
+    "다음 최우선은 실제 사용자 배치로 캐논의 사거리/표적 탐색·회전·발사·피해/파괴를 검증하고 미연결을 수정하는 것이다. 기존 RawCampaignArcherBindings에 TYPE128의 단계2/5/8과 CannonFire 분배가 이미 있으므로 재구현 전에 실제 경로를 관찰한다.",
+    "운반 왕복·희생·승패·후속 미션·전략AI와11단계 자연 완주/전체 동일성은 미완료다."
+  ],
+  "excluded": [
+    "원본 Win10/11 전체화면 DirectDraw 결함",
+    "AGENTS/보호 원본 수정·새 정밀 디컴파일·dotnetpj·원격 push"
+  ]
+}

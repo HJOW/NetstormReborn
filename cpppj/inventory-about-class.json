@@ -1,0 +1,26 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "unit": 182,
+  "rows": 2592,
+  "normalReturns": 5184,
+  "instructions": 772776,
+  "precisionDifferences": 0,
+  "nativeCalls": {
+    "0043d330": 5184,
+    "004e49c0": 6048,
+    "004af010": 5184,
+    "0043cb30": 864
+  },
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+    "tools/decomp_inventory_about_class.py": "c66dd18e5649fcab1ade4315ed84afcf0e5debb6969074689aaff6612cdc89fa",
+    "cpppj/tests/fixtures/inventory-about-class-x86.tsv": "7e7752bd6aa2e9e260151cdb1251eb64bb0f97e156aaa8cc00ac035b9d7eef1c"
+  },
+  "limits": [
+    "실제43d330/4af010/49aa30/43cb30/_ftol의 비용·허용·환불과 조건/현재 필드 읽기를 실행한다. 메뉴/번역·정보 작성/순수 서식/현재 SP/위치·음향은 명시 경계다.",
+    "NULL/빈/Help와6종류·회수flags·편집/정수 큰 비용·NaN SP를 교차한다. 실제 메뉴/Session/GUI 연결은 별도 검사이며 CD/전체 게임 동일성의 증거는 아니다."
+  ]
+}

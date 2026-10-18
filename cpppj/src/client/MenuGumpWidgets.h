@@ -64,6 +64,8 @@ public:
     void Attach(std::uint32_t token,float x,float y,std::uint32_t parent,std::uint32_t mode) const;
     // 00476dd0/CD 00453290: 기본 객체 연결 helper→현재 가상 Attach다. object 0은 기존 연결을 지우지 않는다.
     // 004644e0/CD 00492f80의 Form 경계 뒤 +40 flags/+24 object/+28 풀 인덱스를 같은 기본 노드에 쓴다.
+    void Reference(std::uint32_t token,std::uint32_t object) const; //4644e0의 같은 Form 연결만 먼저 실행한다.
+    void SetIdle(std::uint32_t token,bool enabled) const; // 같은 공통 idle 등록표를 사용한다.
     void AttachObject(std::uint32_t token,std::uint32_t object,float x,float y,std::uint32_t parent,std::uint32_t mode) const;
     // 00476ec0/00476f40/CD 00451650/004533a0: 파생 표/개수 감소→선택 통지→40개 조각 역순 Clear→기본 scalar다.
     // 자식 장식/제목 삭제는 기존 GumpLifetime::Destroy의 자식 우선 순서를 따른다.

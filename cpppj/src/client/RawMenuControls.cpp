@@ -335,6 +335,18 @@ std::string RawMenuControls::Report() const {
     for (const auto& [token,node]:s.costs) out<<"raw_sp_gump\t"<<token<<'\t'<<node->id<<'\t'<<node->parent<<'\t'<<node->flags<<'\t'<<node->x<<'\t'<<node->y<<'\t'<<node->velocity<<'\t'<<node->acceleration<<'\t'<<node->stamp<<'\t'<<node->head<<'\n';
     // 실제 각 메뉴의 현재 배치/선택/확장/링크를 같은 저장소에서 보고한다.
     for (const auto& [token,node]:s.menus) { const auto rect=s.common.collection.Bounds(token);out<<"raw_menu\t"<<token<<'\t'<<node->id<<'\t'<<node->parent<<'\t'<<node->flags<<'\t'<<node->menuFlags<<'\t'<<node->selection<<'\t'<<node->expanding<<'\t'<<rect.left<<'\t'<<rect.top<<'\t'<<rect.right<<'\t'<<rect.bottom<<'\n'; }
+    // 객체 정보 메뉴의 실제 Form/내용물과 등록 일련번호도 같은 노드에서 읽는다.
+    for (const auto& [token,node]:s.menus) out<<"raw_menu_object\t"<<token<<'\t'<<node->object<<'\t'<<node->form<<'\t'<<node->serial<<'\n';
+    // fancy 제목의 현재 원본 줄/조각을 읽으며 표시 기대 문구를 별도로 만들지 않는다.
+    for (const auto& [token,node]:s.menus) if (const auto* title=Find(s.titles,node->title)) {
+        const auto& buffer=*s.buffers->Binding(title->buffer).state;std::size_t line{};
+        // 미완료 끝 줄까지 실제 hardLines의 소유 체인을 읽는다.
+        for (auto head:buffer.hardLines) { std::string label;
+            // 그림/서식은 출력에 남기고 저장된 문자 조각만 진단에 넣는다.
+            for (auto part=head;part;part=s.fragments.fragments.at(part).next) { const auto& bytes=s.fragments.fragments.at(part).text;label.append(bytes.begin(),std::find(bytes.begin(),bytes.end(),'\0')); }
+            std::replace(label.begin(),label.end(),'\t',' ');std::replace(label.begin(),label.end(),'\n',' ');if (head) out<<"raw_menu_heading\t"<<token<<'\t'<<node->title<<'\t'<<line<<'\t'<<label<<'\n';++line;
+        }
+    }
     // 사용자 검사도 실제 현재 StyleText/명령/배치와 모든 부모의 표시 상태만 읽는다.
     for (const auto& [token,node]:s.menus) {
         bool visible=true;

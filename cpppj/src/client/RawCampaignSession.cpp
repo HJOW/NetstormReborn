@@ -1984,6 +1984,8 @@ void RawCampaignSession::CheckMissionOutcome() { impl_->outcome->Check(); }
 std::uint32_t RawCampaignSession::CurrentSubscriber() const { return impl_->globals.mySubscriber; }
 // 로그인/기술/AI가 공유하는 현재 원본 로컬 Player 번호다.
 std::uint32_t RawCampaignSession::LocalOwner() const { return impl_->playerState.battleOwner; }
+// 원본 정보 설명이 읽는 같은 PlayerWorld 템플릿 소유자다.
+std::uint32_t RawCampaignSession::TemplateOwner() const { return impl_->playerState.templateOwner; }
 // 원본48fc60의 현재 기술 부모를 값 복사 없이 같은 Player 저장소에서 읽는다.
 std::uint32_t RawCampaignSession::CurrentTechnologyParent() const { return impl_->player->CurrentTechnology(); }
 // 실제 생산 패널의 명시 갱신과 반복자는 같은 현재 장기 몸체를 사용한다.

@@ -212,8 +212,8 @@
     "cpppj/src/client/MenuGumpInput.h": "51c61c6681635b1b34c34eb11cb622af0d775b535751ff2710af9a612e2f1647",
     "cpppj/src/client/MenuGumpLayout.cpp": "91ba4522f21152e99d3c242a0de62636a0d6260958b259cd8dcd0d7bfced2c5e",
     "cpppj/src/client/MenuGumpLayout.h": "55ee0901514c0a179e8b6ccb8361c0ffbd9feb6cec950ae1ee0815adb3a988d1",
-    "cpppj/src/client/MenuGumpWidgets.cpp": "68c6a1f30c5b4af5530b0782ad6526c5fe775c8acf5c6fa311ead74af7641fee",
-    "cpppj/src/client/MenuGumpWidgets.h": "6d52136ffe9d70e98a237d86cc1b0594d4ec0cd2e256c1c4953a22c74654975b",
+    "cpppj/src/client/MenuGumpWidgets.cpp": "33acda5b10a39d19cab04f867d42b2c6dde48530ad62ea651750eba6446d003f",
+    "cpppj/src/client/MenuGumpWidgets.h": "6c08ba088e1eef635fedd1d5610442fe8755629588226d3ec410fd39285a112e",
     "cpppj/src/client/Mission.cpp": "479966a44dd40e69cfc3b920ecbac1c65aa54d8eed36ef8db47ddbc72058117c",
     "cpppj/src/client/Mission.h": "b03c5e1c91ba424baa994ec4797d8406b6defed82ea82bdd000116eb82a91f30",
     "cpppj/src/client/ObjectCollection.cpp": "21afc31f5fcba111c4b80ac7b8f48d86931139845965dcfb360e5c68eeb65468",
@@ -2165,6 +2165,25 @@
           "path": "cpppj/tests/RawSurfaceWorldTests.cpp",
           "previous": "a4518961fa2fdd74076b7527db76314c4c5de0cd0b671ce57535b9322c6b6a0a",
           "current": "a3e7276ffe7e05798158b4f43133da6a77e903456ead2c89f7477833d6c8f123"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 182,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/src/client/MenuGumpWidgets.cpp",
+          "previous": "68c6a1f30c5b4af5530b0782ad6526c5fe775c8acf5c6fa311ead74af7641fee",
+          "current": "33acda5b10a39d19cab04f867d42b2c6dde48530ad62ea651750eba6446d003f"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/client/MenuGumpWidgets.h",
+          "previous": "6d52136ffe9d70e98a237d86cc1b0594d4ec0cd2e256c1c4953a22c74654975b",
+          "current": "6c08ba088e1eef635fedd1d5610442fe8755629588226d3ec410fd39285a112e"
         }
       ]
     }

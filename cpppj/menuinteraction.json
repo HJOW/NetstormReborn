@@ -194,7 +194,7 @@
     "cpppj/src/client/MenuGumpDraw.h": "61b27efdeee7f0b3ebc6a42ead2b36a28eb891ca53b2a4c18edcb5afcc74a1e3",
     "cpppj/src/client/MenuGumpDraw.cpp": "dff9f338a7275a9817ed6ee492fa53ee4c54dc9faeb8290d14c8a5f9b1ecee31",
     "cpppj/src/client/MenuGumpWidgets.h": "0d693fd9ecefe98300757891175c43b7068a956b08d529df00faeb4cc76ecd02",
-    "cpppj/src/client/MenuGumpWidgets.cpp": "b1e3c556b460bfedd88bd78018f3a5e6903542f1fee39daedc672b1c8a52324a",
+    "cpppj/src/client/MenuGumpWidgets.cpp": "33acda5b10a39d19cab04f867d42b2c6dde48530ad62ea651750eba6446d003f",
     "cpppj/src/client/MenuGump.h": "e7b0cb669bddd5fa95fba4e076465dd325362d39fb9555de3f844d68c5a217bd",
     "cpppj/src/client/MenuGump.cpp": "22ef9a532439956a13eb703cb07b54d053f0badefaf015b6c447cc50c5bc1c8d",
     "cpppj/src/client/MenuGumpLayout.h": "095595eb5ed9285791bc20b6ac7c72d303241d89db91b018c58a0350d8dac0e0",
@@ -221,5 +221,20 @@
     "cpppj/src/client/StyleText.cpp": "c58a68b7a873769871552dc57431c7c0bd0ab2a02149cb21f909e5f0c5b66c64",
     "cpppj/src/client/CMakeLists.txt": "66846a3458b9196331503c24df64bad438ab5f1d2d8f41d1a54bcc9b208fb0fa",
     "extracted/menuinteraction-build.log": "48e4c2c3f8fc79565b595a00ccc68d5a0f767a04bef67d1dc18e80b46b14b68b"
-  }
+  },
+  "integration_updates": [
+    {
+      "date": "2026-10-18",
+      "unit": 182,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/src/client/MenuGumpWidgets.cpp",
+          "previous": "b1e3c556b460bfedd88bd78018f3a5e6903542f1fee39daedc672b1c8a52324a",
+          "current": "33acda5b10a39d19cab04f867d42b2c6dde48530ad62ea651750eba6446d003f"
+        }
+      ]
+    }
+  ]
 }

@@ -15,12 +15,12 @@
     "실제 World.Report에 현재 같은 슬롯의 state/extra/HP 저장 비트를 병렬 행으로 추가해 GUI 완공을 판정한다. 기존 raw_object 열은 보존한다. --completion은 같은 실제 입력만으로 건설 중/완공까지 검사한다."
   ],
   "currentSources": {
-    "cpppj/src/client/RawCampaignSession.cpp": "f5a4835133edc828d65390d1f4c9e25ab3cf68a6bfb0e3dc696e68d49013961c",
+    "cpppj/src/client/RawCampaignSession.cpp": "6a1533de4d7a9f0ed09c0c4a2b59077498e9d0aa0487119e8461381e2d9867ab",
     "cpppj/src/client/RawShapeToBuffer.cpp": "a6e46ce3d717dd312323268a0bb1ebcd020d992c583d9a3d6e069588fbb50eab",
     "cpppj/src/client/RawShapeToBuffer.h": "f3788fbcdacd21dd4dabac2c63c96fbd4d28e1c27c9a19cf8b6519f98852a119",
     "cpppj/src/client/RawSurfaceWorld.cpp": "d6ebba7d5175b98dd5ddabba6de4744a977434913b4eb8b9c2e39068e7b94832",
     "cpppj/src/o/CMakeLists.txt": "8c72f4fb78c7fafefa85dad32a08ed980fb9d0e37e9600359dcdc4b87cc0a3d0",
-    "cpppj/tests/CMakeLists.txt": "921f5464983352309a998ba124184bc838cfa4c098a1053ee2dd9131c4410d4c",
+    "cpppj/tests/CMakeLists.txt": "62dc8c0f8e57681b649b7598f8e71f0d60bc504a3e77495f146f297eecdb8027",
     "cpppj/tests/CampaignSessionTests.cpp": "2a7f2aad0d79a0071cffd3565b5f5cd8a3983f7e44c520ca3c9aacd22bb9e047",
     "cpppj/tests/ShapeToBufferTests.cpp": "0dc5ddc7f71ce2b7a12ff4dcaae45a47b4c7d6fefa676129fb19b5556e3312ab",
     "tools/cpp_priest_construction_smoke.py": "93524c9e1fb58e7e589fc25c7507e105e750b96cb66ad7ddbf9a58aae2756c2c",
@@ -5198,6 +5198,25 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "3bc6fd7121a4a72da06c99f61aa11178edb163182d02b74b1b652377f5559663",
           "current": "2a7f2aad0d79a0071cffd3565b5f5cd8a3983f7e44c520ca3c9aacd22bb9e047"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 182,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "f5a4835133edc828d65390d1f4c9e25ab3cf68a6bfb0e3dc696e68d49013961c",
+          "current": "6a1533de4d7a9f0ed09c0c4a2b59077498e9d0aa0487119e8461381e2d9867ab"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "921f5464983352309a998ba124184bc838cfa4c098a1053ee2dd9131c4410d4c",
+          "current": "62dc8c0f8e57681b649b7598f8e71f0d60bc504a3e77495f146f297eecdb8027"
         }
       ]
     }

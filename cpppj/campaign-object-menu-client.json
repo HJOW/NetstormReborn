@@ -16,22 +16,22 @@
     "커서의25BYTE를 Session.SendLocalPacket으로 같은 실제 Login 전송에 보낸다. 기존3e 수신 등록을 재사용한다. 실제로그인/Start/원본커서허용점109,107/Drop의SP3000→2200/실제3e 수신을 장치 경계의 headless 검사에서 확인했다."
   ],
   "currentSources": {
-    "cpppj/src/client/CMakeLists.txt": "00e205d4b299c382fa751ac2312ef9314a1baf894e00a40593280845b0f3a8c8",
+    "cpppj/src/client/CMakeLists.txt": "0b51a7c8632f0171cee77ffefd21814e48a1ac9c6b7b70fd72dd3e755bcafb65",
     "cpppj/src/client/GameWorld.cpp": "7354694cf70e61d27ef1991390513a042c7a102f537f9d0cfb1f5438bb2a1f9e",
     "cpppj/src/client/GameWorld.h": "63a8da986aab6ab35f1938c8de5c9197d12cca4e17859cb8daba5d5f52946e73",
     "cpppj/src/client/GameWorldInput.inc": "f03ba61623c0d8a1ed2a1108eaebff769486cc925bc8872626061f045758efd7",
-    "cpppj/src/client/RawCampaignSession.cpp": "f5a4835133edc828d65390d1f4c9e25ab3cf68a6bfb0e3dc696e68d49013961c",
-    "cpppj/src/client/RawCampaignSession.h": "708c73cd9f83b6a32496a782151ec35cbecb469a7f9c4f136819a5ae57b70288",
-    "cpppj/src/client/RawMenuControls.cpp": "521a34d2d7660a18a90435074c1f2893f4c24ca600d81d3a5cf18b745226459c",
+    "cpppj/src/client/RawCampaignSession.cpp": "6a1533de4d7a9f0ed09c0c4a2b59077498e9d0aa0487119e8461381e2d9867ab",
+    "cpppj/src/client/RawCampaignSession.h": "9b8778ad3d884db1f91c1d03b8500485d73399a6b0c94c066a040c824c41e7e6",
+    "cpppj/src/client/RawMenuControls.cpp": "7cf3686cabed1d61e6f61b46a2c6d9f153b2a8ce4c5faee6cac3a01683555bb4",
     "cpppj/src/client/RawMenuControls.h": "70cf632cf282ea15c98c45ca1b8fba8b720dafb07eebc2a022723dfc35e3b1fa",
     "cpppj/src/client/Renderer.cpp": "29729e6b728f19e7cddfc4c193e1a719733c8b4c5934e8b0a864697fa8a4b4a2",
     "cpppj/src/client/Renderer.h": "d72b42478b0bbe275a02494181722ee4f3f4ed4d474966e56c9df30958f31ac2",
-    "cpppj/src/client/UberGump.cpp": "6cea87e36ace1710f9de90652a87184d0e04803bd1be6c63b47b3258eda4f256",
+    "cpppj/src/client/UberGump.cpp": "7a0d2ce97d70126f0964b30896eccdf872fc64e9113bb3a4caaf7fe2372cf949",
     "cpppj/src/client/UberGump.h": "4f3ae5c624ea7db55d37a10cb7bedfb21129dc02f7414712baabd0eb6df59d2b",
     "cpppj/tests/CampaignSessionTests.cpp": "2a7f2aad0d79a0071cffd3565b5f5cd8a3983f7e44c520ca3c9aacd22bb9e047",
     "cpppj/tests/RendererTests.cpp": "6aae8f544e9cb6a01738ee45a2c0eba57354106896ea59735db6842c318185cf",
-    "cpppj/src/client/CampaignObjectMenuClient.h": "750c6c997baedf3e5015aaef18b4008ecb1c24c10a076f297973cf68b2caf471",
-    "cpppj/src/client/CampaignObjectMenuClient.cpp": "c1ca82efcf8f4f6fd8969b5724d102f1004a42915619b634168765a72c0ccd1c",
+    "cpppj/src/client/CampaignObjectMenuClient.h": "b5c3e294d6fcc836f904a64ad2537a14128ea2f72c2e9bf1a4f9bcaeecd58151",
+    "cpppj/src/client/CampaignObjectMenuClient.cpp": "742c9b026c8c3a4019236d2fa3967df4731c145d577e4cbd753fa2a003d16117",
     "cpppj/src/client/RawObjectMenuSlots.h": "a969d6d326d27c3ba2e2f49f2e61dca3633415e29380fa8c12bd931ddd0f2dde",
     "cpppj/src/client/RawObjectMenuSlots.cpp": "f63220ace481cb7f364a0a120042bab08d412f500ddf5bf69158b1982311d603",
     "cpppj/src/client/ObjectMenuSlots.inc": "8f1c7cd0a9bd9ce454574fa3e721a959b03d8ca0ebb53ed8e4f23ec105784259",
@@ -5727,6 +5727,55 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "3bc6fd7121a4a72da06c99f61aa11178edb163182d02b74b1b652377f5559663",
           "current": "2a7f2aad0d79a0071cffd3565b5f5cd8a3983f7e44c520ca3c9aacd22bb9e047"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 182,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/CMakeLists.txt",
+          "previous": "00e205d4b299c382fa751ac2312ef9314a1baf894e00a40593280845b0f3a8c8",
+          "current": "0b51a7c8632f0171cee77ffefd21814e48a1ac9c6b7b70fd72dd3e755bcafb65"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "f5a4835133edc828d65390d1f4c9e25ab3cf68a6bfb0e3dc696e68d49013961c",
+          "current": "6a1533de4d7a9f0ed09c0c4a2b59077498e9d0aa0487119e8461381e2d9867ab"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "708c73cd9f83b6a32496a782151ec35cbecb469a7f9c4f136819a5ae57b70288",
+          "current": "9b8778ad3d884db1f91c1d03b8500485d73399a6b0c94c066a040c824c41e7e6"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawMenuControls.cpp",
+          "previous": "521a34d2d7660a18a90435074c1f2893f4c24ca600d81d3a5cf18b745226459c",
+          "current": "7cf3686cabed1d61e6f61b46a2c6d9f153b2a8ce4c5faee6cac3a01683555bb4"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/UberGump.cpp",
+          "previous": "6cea87e36ace1710f9de90652a87184d0e04803bd1be6c63b47b3258eda4f256",
+          "current": "7a0d2ce97d70126f0964b30896eccdf872fc64e9113bb3a4caaf7fe2372cf949"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/CampaignObjectMenuClient.h",
+          "previous": "750c6c997baedf3e5015aaef18b4008ecb1c24c10a076f297973cf68b2caf471",
+          "current": "b5c3e294d6fcc836f904a64ad2537a14128ea2f72c2e9bf1a4f9bcaeecd58151"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/CampaignObjectMenuClient.cpp",
+          "previous": "c1ca82efcf8f4f6fd8969b5724d102f1004a42915619b634168765a72c0ccd1c",
+          "current": "742c9b026c8c3a4019236d2fa3967df4731c145d577e4cbd753fa2a003d16117"
         }
       ]
     }

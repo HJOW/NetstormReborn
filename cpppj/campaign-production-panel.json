@@ -325,21 +325,21 @@
     "cpppj/src/client/InventoryGump.cpp": "0a90a5a9cc763d2675cbf47fa10a1cde68fddabcdc86a2758629f1e77842bece",
     "cpppj/src/client/RawButtonControls.cpp": "1e31ef93cd819be30a75bcada1e9eba98adfae917a8db925a4845bfd37a2ef92",
     "cpppj/src/client/RawButtonControls.h": "d49ab77d71b4d10beea6c2a5e466a87289874092592c86bc879cd971fab64180",
-    "cpppj/src/client/RawCampaignSession.cpp": "f5a4835133edc828d65390d1f4c9e25ab3cf68a6bfb0e3dc696e68d49013961c",
-    "cpppj/src/client/RawCampaignSession.h": "708c73cd9f83b6a32496a782151ec35cbecb469a7f9c4f136819a5ae57b70288",
-    "cpppj/src/client/RawMenuControls.cpp": "521a34d2d7660a18a90435074c1f2893f4c24ca600d81d3a5cf18b745226459c",
+    "cpppj/src/client/RawCampaignSession.cpp": "6a1533de4d7a9f0ed09c0c4a2b59077498e9d0aa0487119e8461381e2d9867ab",
+    "cpppj/src/client/RawCampaignSession.h": "9b8778ad3d884db1f91c1d03b8500485d73399a6b0c94c066a040c824c41e7e6",
+    "cpppj/src/client/RawMenuControls.cpp": "7cf3686cabed1d61e6f61b46a2c6d9f153b2a8ce4c5faee6cac3a01683555bb4",
     "cpppj/src/client/RawMenuControls.h": "70cf632cf282ea15c98c45ca1b8fba8b720dafb07eebc2a022723dfc35e3b1fa",
-    "cpppj/src/client/UberGump.cpp": "6cea87e36ace1710f9de90652a87184d0e04803bd1be6c63b47b3258eda4f256",
+    "cpppj/src/client/UberGump.cpp": "7a0d2ce97d70126f0964b30896eccdf872fc64e9113bb3a4caaf7fe2372cf949",
     "cpppj/src/o/RawContainedFinder.cpp": "b3bfedcc598e04ab1a4755ee77adff8a331d1be941975fe379dc705612d9a3a2",
     "cpppj/src/o/RawGraph.cpp": "d392ffd6e52f10adfc25bffa44ae4ae51e81a91201864d6fc168ddcb66be5a22",
-    "cpppj/tests/CMakeLists.txt": "921f5464983352309a998ba124184bc838cfa4c098a1053ee2dd9131c4410d4c",
+    "cpppj/tests/CMakeLists.txt": "62dc8c0f8e57681b649b7598f8e71f0d60bc504a3e77495f146f297eecdb8027",
     "cpppj/tests/CampaignSessionTests.cpp": "2a7f2aad0d79a0071cffd3565b5f5cd8a3983f7e44c520ca3c9aacd22bb9e047",
     "cpppj/tests/CarrierPreDestroyTests.cpp": "706b7e55165c168bbc9056cdf23e3439f60d7cd628b1fc4b7c47651e80fcf6b2",
     "cpppj/production-colors.json": "735f209fd1f1a866be49b0c8fb8652708e29997efbb4c1ab08e9cd9fe42f2dc4",
     "cpppj/src/client/ProductionColorMaps.cpp": "0476a2df1a78cf2486bbbb07891554296445df80688583cdf81163c42e6857e3",
     "cpppj/src/client/ProductionColorMaps.h": "901355a51c733e8949da0fd6f92992ce892bcbf5e84e37d2c3f312afccd17313",
-    "cpppj/src/client/RawProductionControls.cpp": "872ef029bd281a538f87b5efb64e72b164f2ffd002055ffaaa8e3eb1f93a73a2",
-    "cpppj/src/client/RawProductionControls.h": "1b243dda75bdaff96dcc6ec84a6438cabce9f7082fce6fbc9405e2c90dc75422",
+    "cpppj/src/client/RawProductionControls.cpp": "eb296d77e6c04d6d8e80b0a4c151992d9857bd33b06a288d08a76d414a6a05b1",
+    "cpppj/src/client/RawProductionControls.h": "67046f35d49cb863978ef917777820793aa9156daa678519fac525ed001df264",
     "cpppj/tests/ProductionColorMapsTests.cpp": "54073089bd7eed2184924ed308d99aac81c47db21ebf7fe43b7bf9a9b20aa3b2",
     "cpppj/tests/fixtures/production-colors-x86.tsv": "2d249420eebd10b843ab063ef660d8f6d2e30dd0abbd3bf59d9fa98d21d197e7",
     "tools/cpp_production_panel_smoke.py": "724988401741b93176a8a8d85a043ba712335b8c2cce85930f11016eae1a1e50",
@@ -636,6 +636,55 @@
           "path": "tools/cpp_production_panel_smoke.py",
           "previous": "550b8c6af03d17b5c9591a5a21c11adc8cb75ddf3e27e8181b126c4b62d15054",
           "current": "724988401741b93176a8a8d85a043ba712335b8c2cce85930f11016eae1a1e50"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 182,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "f5a4835133edc828d65390d1f4c9e25ab3cf68a6bfb0e3dc696e68d49013961c",
+          "current": "6a1533de4d7a9f0ed09c0c4a2b59077498e9d0aa0487119e8461381e2d9867ab"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "708c73cd9f83b6a32496a782151ec35cbecb469a7f9c4f136819a5ae57b70288",
+          "current": "9b8778ad3d884db1f91c1d03b8500485d73399a6b0c94c066a040c824c41e7e6"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawMenuControls.cpp",
+          "previous": "521a34d2d7660a18a90435074c1f2893f4c24ca600d81d3a5cf18b745226459c",
+          "current": "7cf3686cabed1d61e6f61b46a2c6d9f153b2a8ce4c5faee6cac3a01683555bb4"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/UberGump.cpp",
+          "previous": "6cea87e36ace1710f9de90652a87184d0e04803bd1be6c63b47b3258eda4f256",
+          "current": "7a0d2ce97d70126f0964b30896eccdf872fc64e9113bb3a4caaf7fe2372cf949"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "921f5464983352309a998ba124184bc838cfa4c098a1053ee2dd9131c4410d4c",
+          "current": "62dc8c0f8e57681b649b7598f8e71f0d60bc504a3e77495f146f297eecdb8027"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawProductionControls.cpp",
+          "previous": "872ef029bd281a538f87b5efb64e72b164f2ffd002055ffaaa8e3eb1f93a73a2",
+          "current": "eb296d77e6c04d6d8e80b0a4c151992d9857bd33b06a288d08a76d414a6a05b1"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawProductionControls.h",
+          "previous": "1b243dda75bdaff96dcc6ec84a6438cabce9f7082fce6fbc9405e2c90dc75422",
+          "current": "67046f35d49cb863978ef917777820793aa9156daa678519fac525ed001df264"
         }
       ]
     }

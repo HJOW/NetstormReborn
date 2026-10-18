@@ -162,3 +162,6 @@ target_sources(netstorm PRIVATE InventoryItemGump.h InventoryItemGump.cpp)
 
 # 같은 생산 실패 안내 파생을 공통 Gump 트리에 연결한다.
 target_sources(netstorm PRIVATE ProductionHintGump.h ProductionHintGump.cpp)
+
+# 실제 생산 항목 우클릭 정보 작성기를 연결한다.
+target_sources(netstorm PRIVATE InventoryAboutMenu.h InventoryAboutMenu.cpp)

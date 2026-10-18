@@ -1,6 +1,8 @@
 // 메뉴의 게임 판단은 기존 원본 모듈에 맡기고 실제 Client의 화면/번역/입력 수명만 연결한다.
 #include "client/CampaignObjectMenuClient.h"
+#include "client/InventoryAboutMenu.h"
 #include "client/ClientMain.h"
+#include "client/ClientAudio.h"
 #include "client/GameWorld.h"
 #include "client/RawButtonControls.h"
 #include "client/RawMenuControls.h"
@@ -142,6 +144,22 @@ void CampaignObjectMenuClient::Open(GameWorld& world,o::Sid sid,const InputEvent
         hooks.attach=[&](o::Sid object,std::int32_t x,std::int32_t y) { s.root=raw.Current();raw.AttachObjectCurrent(object.value,x,y); };
         s.opener=world.Session().MakeObjectMenuOpen(std::move(hooks));const auto accepted=s.Dispatch(sid,event);return accepted ? s.root : 0U;
     });
+}
+// 같은 fancy/설명 작성기와 현재 Session을 사용하며 원본처럼 게임 시계를 멈추지 않는다.
+std::uint32_t CampaignObjectMenuClient::OpenProduction(GameWorld& world,const InventoryItemNode& item,ScreenPoint point,const std::function<bool(o::Sid)>& affordable) {
+    Clear();auto& s=*impl_;s.world=&world;std::uint32_t accepted{};
+    s.buttons.Menus()->OpenAttached([&](const MenuGumpWidgets& widgets,const MenuGumpControls& controls,const MenuGump& raw) {
+        s.chain=world.Session().MakeObjectMenus(s.Ui(widgets,controls,raw));InventoryAboutState state;InventoryAboutHooks h;
+        h.begin=[&] { s.root=widgets.BeginFancy();return s.root; };h.root=[&s] { return s.buttons.RegisteredGump(0); };h.templateOwner=[&] { return world.Session().TemplateOwner(); };h.editor=[&] { return world.Session().Editor()!=0; };
+        h.cost=[&](auto kind) { return world.Session().HitPoints().TypeCostUnits(kind); };h.affordable=affordable;
+        h.helpWord=[&s]()->std::optional<std::string> { std::string word;if (!s.client.Configuration().ReadString("helpWord",word)) return std::nullopt;const auto bytes=o::EncodeOriginalText(word);return std::string(bytes.begin(),bytes.end()); };
+        h.idle=[&](auto token,bool enabled) { widgets.SetIdle(token,enabled); };h.reference=[&](auto token,auto sid) { widgets.Reference(token,sid); };
+        h.describe=[&s](auto kind,auto count,auto owner,auto sid) { s.chain->Describe(kind,count,owner,sid); };h.translate=[&s](auto key) { return s.Translate(key); };
+        h.print=[](auto pattern,std::int32_t value) { const std::array<PriestMenuArgument,1> arguments{value};return PrintMenu(pattern,arguments); };h.header=[&](auto text) { controls.AddHeader(text); };
+        h.entry=[&](std::optional<std::string_view> text,auto command,auto parameter,bool include,bool enabled,bool force) { if (!text) throw std::logic_error("생산 정보 메뉴 helpWord NULL의 실제 CRT 문자열 소비 미복원");controls.AddText(*text,command,parameter,include,enabled,force); };
+        h.attach=[&](auto p,auto parent) { raw.AttachCurrent(p.x,p.y,parent); };h.sound=[&s](auto name) { s.client.WorldAudio().Sounds().PlayByName(name,0,0,0,0,0); };
+        InventoryAboutMenu menu(world.Session().Core().pool,state,std::move(h));accepted=menu.Open(item,point);return s.root;
+    });return accepted;
 }
 // 팝업의 실제 Form이 먼저 반납된 뒤 빌린 세션/서식 callback을 해제한다.
 void CampaignObjectMenuClient::Clear() {

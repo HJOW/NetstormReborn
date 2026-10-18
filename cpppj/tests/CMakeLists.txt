@@ -1552,3 +1552,8 @@ set_property(SOURCE BridgeCollapseTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS
 target_sources(netstorm_tests PRIVATE ProductionHintGumpTests.cpp)
 set_source_files_properties(ProductionHintGumpTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_PRODUCTION_HINT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/production-hint-x86.tsv\"")
+
+# 두 독립 원본의 생산 정보3888입력을 대조한다.
+target_sources(netstorm_tests PRIVATE InventoryAboutMenuTests.cpp)
+set_source_files_properties(InventoryAboutMenuTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_INVENTORY_ABOUT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/inventory-about-x86.tsv\";NETSTORM_INVENTORY_ABOUT_CLASS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/inventory-about-class-x86.tsv\"")

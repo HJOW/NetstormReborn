@@ -126,17 +126,17 @@
     }
   ],
   "currentSources": {
-    "cpppj/src/client/CampaignObjectMenuClient.cpp": "c1ca82efcf8f4f6fd8969b5724d102f1004a42915619b634168765a72c0ccd1c",
+    "cpppj/src/client/CampaignObjectMenuClient.cpp": "742c9b026c8c3a4019236d2fa3967df4731c145d577e4cbd753fa2a003d16117",
     "cpppj/src/client/RawCampaignFactoryDisplay.cpp": "eb1616bfbe72012a8cf1ab4ac73339e4b728677f1c1b6c0760f51847addb453f",
     "cpppj/src/client/RawCampaignFactoryDisplay.h": "1f437803e606c0fc9f9819e7a99499d1966bed4d751005b3b6ae00dd7c52fcd8",
     "cpppj/src/client/RawCampaignLifetimeBindings.cpp": "5ddc44fc6776aebbd50e6249221141dec90fca1abe827886f19b14c968bd4582",
-    "cpppj/src/client/RawCampaignSession.cpp": "f5a4835133edc828d65390d1f4c9e25ab3cf68a6bfb0e3dc696e68d49013961c",
-    "cpppj/src/client/RawCampaignSession.h": "708c73cd9f83b6a32496a782151ec35cbecb469a7f9c4f136819a5ae57b70288",
+    "cpppj/src/client/RawCampaignSession.cpp": "6a1533de4d7a9f0ed09c0c4a2b59077498e9d0aa0487119e8461381e2d9867ab",
+    "cpppj/src/client/RawCampaignSession.h": "9b8778ad3d884db1f91c1d03b8500485d73399a6b0c94c066a040c824c41e7e6",
     "cpppj/src/client/RawSurfaceWorld.cpp": "d6ebba7d5175b98dd5ddabba6de4744a977434913b4eb8b9c2e39068e7b94832",
-    "cpppj/src/client/UberGump.cpp": "6cea87e36ace1710f9de90652a87184d0e04803bd1be6c63b47b3258eda4f256",
+    "cpppj/src/client/UberGump.cpp": "7a0d2ce97d70126f0964b30896eccdf872fc64e9113bb3a4caaf7fe2372cf949",
     "cpppj/src/o/CMakeLists.txt": "8c72f4fb78c7fafefa85dad32a08ed980fb9d0e37e9600359dcdc4b87cc0a3d0",
     "cpppj/src/o/RawFactoryResearch.h": "5cd0dc8a306e50725710d3124e3af6def870ec2fe001f3dfcf6e2e183bfc2202",
-    "cpppj/tests/CMakeLists.txt": "921f5464983352309a998ba124184bc838cfa4c098a1053ee2dd9131c4410d4c",
+    "cpppj/tests/CMakeLists.txt": "62dc8c0f8e57681b649b7598f8e71f0d60bc504a3e77495f146f297eecdb8027",
     "cpppj/tests/CampaignSessionTests.cpp": "2a7f2aad0d79a0071cffd3565b5f5cd8a3983f7e44c520ca3c9aacd22bb9e047",
     "cpppj/tests/FactoryResearchTests.cpp": "73801f93e0273a9b49538735884d1afb7250257511a5a4cd619659ca2b90d881",
     "tools/cpp_priest_construction_smoke.py": "93524c9e1fb58e7e589fc25c7507e105e750b96cb66ad7ddbf9a58aae2756c2c",
@@ -6217,6 +6217,43 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "3bc6fd7121a4a72da06c99f61aa11178edb163182d02b74b1b652377f5559663",
           "current": "2a7f2aad0d79a0071cffd3565b5f5cd8a3983f7e44c520ca3c9aacd22bb9e047"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 182,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/CampaignObjectMenuClient.cpp",
+          "previous": "c1ca82efcf8f4f6fd8969b5724d102f1004a42915619b634168765a72c0ccd1c",
+          "current": "742c9b026c8c3a4019236d2fa3967df4731c145d577e4cbd753fa2a003d16117"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "f5a4835133edc828d65390d1f4c9e25ab3cf68a6bfb0e3dc696e68d49013961c",
+          "current": "6a1533de4d7a9f0ed09c0c4a2b59077498e9d0aa0487119e8461381e2d9867ab"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "708c73cd9f83b6a32496a782151ec35cbecb469a7f9c4f136819a5ae57b70288",
+          "current": "9b8778ad3d884db1f91c1d03b8500485d73399a6b0c94c066a040c824c41e7e6"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/UberGump.cpp",
+          "previous": "6cea87e36ace1710f9de90652a87184d0e04803bd1be6c63b47b3258eda4f256",
+          "current": "7a0d2ce97d70126f0964b30896eccdf872fc64e9113bb3a4caaf7fe2372cf949"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "921f5464983352309a998ba124184bc838cfa4c098a1053ee2dd9131c4410d4c",
+          "current": "62dc8c0f8e57681b649b7598f8e71f0d60bc504a3e77495f146f297eecdb8027"
         }
       ]
     }

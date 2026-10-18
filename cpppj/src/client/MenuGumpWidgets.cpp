@@ -159,8 +159,8 @@ std::uint32_t MenuGumpWidgets::DeleteScalar(std::uint32_t token,std::uint32_t fl
     for (std::size_t index=kMenuItemCapacity;index>0;--index) style_.Clear(Item(token,static_cast<std::uint32_t>(index-1)).styled);
     return lifetime_.DeleteScalar(token,flags);
 }
-// 객체 연결은 Form 생성/소유 등록/연결의 현재 경계를 거친 뒤 필드 쓰기와 실제 가상 Attach를 수행한다.
-void MenuGumpWidgets::AttachObject(std::uint32_t token,std::uint32_t object,float x,float y,std::uint32_t parent,std::uint32_t mode) const {
+//4644e0의 Form 생성/소유 등록/연결 뒤 같은 기본 노드의 연결 필드만 쓴다.
+void MenuGumpWidgets::Reference(std::uint32_t token,std::uint32_t object) const {
     if (object) {
         if (!hooks_.objectForm || !hooks_.formOwner || !hooks_.formObject) throw std::invalid_argument("메뉴 객체 부착 Form 경계 필요");
         const auto form=hooks_.objectForm(state_.objectFormType,kObjectFormMode);
@@ -170,8 +170,13 @@ void MenuGumpWidgets::AttachObject(std::uint32_t token,std::uint32_t object,floa
         else { Base(token).object=object;Base(token).flags|=kObjectBinding; }
         Base(token).form=form.index;
     }
-    if (!hooks_.attach) throw std::invalid_argument("메뉴 객체 가상 Attach 경계 필요");hooks_.attach(token,x,y,parent,mode);
 }
+// 실제 정보 메뉴는 화면 부착 전에 같은 내용물 Form을 먼저 연결한다.
+void MenuGumpWidgets::AttachObject(std::uint32_t token,std::uint32_t object,float x,float y,std::uint32_t parent,std::uint32_t mode) const {
+    Reference(token,object);if (!hooks_.attach) throw std::invalid_argument("메뉴 객체 가상 Attach 경계 필요");hooks_.attach(token,x,y,parent,mode);
+}
+// fancy 정보 메뉴의 원본 별도465330 호출을 같은 등록표로 분배한다.
+void MenuGumpWidgets::SetIdle(std::uint32_t token,bool enabled) const { lifetime_.SetIdle(token,enabled); }
 // 기존 제목 Reflow 경계를 원본 RequestScroll/FitContent 몸체에 직접 연결한다.
 void BindMenuTitleLayout(MenuGumpLayoutHooks& hooks,const ScrollingTextGump& text) {
     hooks.titleFit=[&text](std::uint32_t token,std::uint32_t position) { text.RequestScroll(token,std::bit_cast<std::int32_t>(position)); };

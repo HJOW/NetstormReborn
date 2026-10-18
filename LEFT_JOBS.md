@@ -1,5 +1,14 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-18 단위182 완료: 생산 항목 우클릭 정보 메뉴 (HJOW-Athlon)
+
+- [x] 기준5dc75236/AGENTS·양 LEFT 재독. 현재/마지막 정밀 디컴파일 **HJOW-Athlon / 2026-10-16** 일치. 새 디컴파일·보호 원본/AGENTS/DN/DirectDraw 수정 없음. [작업 기록](docs/exe/cpp-inventory-about-20261018.md).
+- [x] 실제43d330의 fancy/idle/내용물 Form→기존Describe(kind,0,templateOwner,-1)/Cost/현재4af010·부족 머리/회수 클래스 분기/Help 항목→현재 루트 부착/음향을 같은 Client/Gump/Session/수명에 연결했다. 등록 인덱스/일련번호·로컬/템플릿 소유자를 구별한다. 원본 회수 제외는 WORD18 종류가 아니라 BYTE10 클래스122다.
+- [x] 선행1296행과 새 클래스2592행을 C++ 전 동결했고 전체3888행이 일치한다. **정밀도 정정:**43cb53 FILD→43cb57 FSTP로 비용을 float32 먼저 저장한다. cost33554431의 회수 quarter8388608/전액33554432가 원본이고 비용 머리는33554431이다. 아래181의 “float로 먼저 좁히지 말 것” 추정은 폐기하며 기존 fixture는 수정하지 않았다. 기존 작업 문단에 정정 주석을 추가했다.
+- [x] 실제 창에서 같은 내용물101의 정보/Cost400/About02000017·TYPE128/Form/ESC/재열기, 후속 실제 생산·서버 캐논15184/HP600/SP2200→1800와 반환160의 정보/정리를 확인했다. 전체1679 실패0/11진입 PASS, 감사109종98통과/기존11동일/새0, 현재핀80보고서224개·이전395fixture/두 원문·보호·소스 바이트 불변이다.20261018-33 CP로 로컬 커밋하며 push하지 않는다.
+- [ ] **다음 최우선:** 실제 사용자 배치로 썬 캐논의 사거리/표적 탐색·자동 회전/발사·피해/파괴를 검증하고 미연결을 수정한다. 기존 RawCampaignArcherBindings에 TYPE128의 단계2/5/8·CannonFire 분배가 이미 있으므로 재구현 전에 자연 경로를 관찰한다. 이후 운반 왕복·희생/승패/후속 미션·전략AI와11단계 자연 완주/전체 동일성을 진행한다.
+- [ ] Help02000017의 Quick Help 창4c5970/회수0200005d 명령 실행·NULL helpWord 실제 CRT 소비는 미복원이다. 현재 실제 기본 설정의 About 항목 생성까지만 연결했다. 원본 도움말을 Tell로 대체하지 않는다. 원본 전체화면 DirectDraw 제외/전체 goal active다.
+
 ## 2026-10-18 단위181 완료: 생산 SP/재고 부족 안내와 우클릭 원본 관측 (HJOW-Athlon)
 
 - [x] 기준2a0963d3/AGENTS·두 LEFT 재독. 현재/마지막 정밀 디컴파일 **HJOW-Athlon / 2026-10-16** 일치. 새 디컴파일·보호 원본/AGENTS/DN/DirectDraw 변경 없음. [작업 기록](docs/exe/cpp-production-feedback-20261018.md).

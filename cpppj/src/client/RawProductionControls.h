@@ -4,11 +4,13 @@
 #include "client/RawCampaignSession.h"
 #include "client/RawProductionMaintenance.h"
 namespace netstorm::client {
+struct InventoryItemNode; // 우클릭 시 같은 실제 파생 저장소를 정보 메뉴에 빌린다.
 struct RawProductionHooks {
     std::function<double()> now; // 원본 벽 시계다.
     std::function<void(std::string_view)> sound,tell; // 실제 음향과 미션 알림이다.
     std::function<std::int32_t(std::string_view,std::int32_t)> configInt; // 같은 현재 Client 설정과 원본 누락 기본값이다.
     std::function<std::string(std::string_view)> translate; // 원본 실패 안내의 현재 번역 바이트다.
+    std::function<std::uint32_t(const InventoryItemNode&,ScreenPoint,const std::function<bool(o::Sid)>&)> about; // 같은 내용물과 현재4af010을 실제 정보 메뉴에 연결한다.
 };
 class RawProductionControls {
 public:

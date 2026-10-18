@@ -256,12 +256,27 @@
     "cpppj/src/client/GumpFormBinding.h": "db73e0cb75a3b35f7a20368673db6805ce8ba5fd47428e1d5bb6f37359d23ca5",
     "cpppj/src/client/GumpFormBinding.cpp": "11fae3bee065e8ea1c794a9300f936b8b6e9fdca637b93117a430384ffdcda77",
     "cpppj/src/client/MenuGumpWidgets.h": "0eba76d2da094c77cc724953e751f7460e2f4a95f69aa8ed5ab0ed3ec02cd67e",
-    "cpppj/src/client/MenuGumpWidgets.cpp": "68c6a1f30c5b4af5530b0782ad6526c5fe775c8acf5c6fa311ead74af7641fee",
+    "cpppj/src/client/MenuGumpWidgets.cpp": "33acda5b10a39d19cab04f867d42b2c6dde48530ad62ea651750eba6446d003f",
     "cpppj/src/client/GumpCreate.h": "253ea65d7c91385d5ebe66e44c627c4ccc3dc9fe7a9749e2d0697c45fb3efa14",
     "cpppj/src/client/GumpLifetime.h": "2f27d5772a112ef7d7e784e4b749ca45f91befff15a177f7111389ff0570920d",
     "cpppj/src/client/GumpLifetime.cpp": "62cb2a456d30864bbf940a9256ae988ee1ae317b0e420704543d26dcb9eb3c7c",
     "cpppj/src/o/CMakeLists.txt": "4ee202347d6a9907d888f93efeeeb875ee7842dcfa9ff103d4df36f3862ef66a",
     "cpppj/src/client/CMakeLists.txt": "273197be66e00538531aad806a1c2bff7cfd8316c49f5e41177a3ca38983eec0",
     "extracted/gumpform-build.log": "ec71cee34de580c51e94a578458069d12ba4a38860c4ec89857238c4c499730c"
-  }
+  },
+  "integration_updates": [
+    {
+      "date": "2026-10-18",
+      "unit": 182,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/src/client/MenuGumpWidgets.cpp",
+          "previous": "68c6a1f30c5b4af5530b0782ad6526c5fe775c8acf5c6fa311ead74af7641fee",
+          "current": "33acda5b10a39d19cab04f867d42b2c6dde48530ad62ea651750eba6446d003f"
+        }
+      ]
+    }
+  ]
 }

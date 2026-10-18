@@ -96,11 +96,11 @@
     "cpppj/build/bin/Release/NetstormCpp.exe": "1160e2d1e65510648989ca39ee9f9f8183595239edd6fd7d8cc889bf56453e7c"
   },
   "currentSources": {
-    "cpppj/src/client/CMakeLists.txt": "00e205d4b299c382fa751ac2312ef9314a1baf894e00a40593280845b0f3a8c8",
-    "cpppj/src/client/RawProductionControls.cpp": "872ef029bd281a538f87b5efb64e72b164f2ffd002055ffaaa8e3eb1f93a73a2",
-    "cpppj/src/client/RawProductionControls.h": "1b243dda75bdaff96dcc6ec84a6438cabce9f7082fce6fbc9405e2c90dc75422",
-    "cpppj/src/client/UberGump.cpp": "6cea87e36ace1710f9de90652a87184d0e04803bd1be6c63b47b3258eda4f256",
-    "cpppj/tests/CMakeLists.txt": "921f5464983352309a998ba124184bc838cfa4c098a1053ee2dd9131c4410d4c",
+    "cpppj/src/client/CMakeLists.txt": "0b51a7c8632f0171cee77ffefd21814e48a1ac9c6b7b70fd72dd3e755bcafb65",
+    "cpppj/src/client/RawProductionControls.cpp": "eb296d77e6c04d6d8e80b0a4c151992d9857bd33b06a288d08a76d414a6a05b1",
+    "cpppj/src/client/RawProductionControls.h": "67046f35d49cb863978ef917777820793aa9156daa678519fac525ed001df264",
+    "cpppj/src/client/UberGump.cpp": "7a0d2ce97d70126f0964b30896eccdf872fc64e9113bb3a4caaf7fe2372cf949",
+    "cpppj/tests/CMakeLists.txt": "62dc8c0f8e57681b649b7598f8e71f0d60bc504a3e77495f146f297eecdb8027",
     "cpppj/tests/CampaignSessionTests.cpp": "2a7f2aad0d79a0071cffd3565b5f5cd8a3983f7e44c520ca3c9aacd22bb9e047",
     "tools/cpp_production_panel_smoke.py": "724988401741b93176a8a8d85a043ba712335b8c2cce85930f11016eae1a1e50",
     "cpppj/src/client/ProductionHintGump.h": "2a20c54f2a6ac90c4097715db46b7379c39ea69f4fbdcf93d14a2ec158b3cf07",
@@ -434,5 +434,44 @@
   "excluded": [
     "원본 Win10/11 전체화면 DirectDraw 결함",
     "AGENTS/보호 원본 수정·새 정밀 디컴파일·dotnetpj·원격 push"
+  ],
+  "integration_updates": [
+    {
+      "date": "2026-10-18",
+      "unit": 182,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/CMakeLists.txt",
+          "previous": "00e205d4b299c382fa751ac2312ef9314a1baf894e00a40593280845b0f3a8c8",
+          "current": "0b51a7c8632f0171cee77ffefd21814e48a1ac9c6b7b70fd72dd3e755bcafb65"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawProductionControls.cpp",
+          "previous": "872ef029bd281a538f87b5efb64e72b164f2ffd002055ffaaa8e3eb1f93a73a2",
+          "current": "eb296d77e6c04d6d8e80b0a4c151992d9857bd33b06a288d08a76d414a6a05b1"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawProductionControls.h",
+          "previous": "1b243dda75bdaff96dcc6ec84a6438cabce9f7082fce6fbc9405e2c90dc75422",
+          "current": "67046f35d49cb863978ef917777820793aa9156daa678519fac525ed001df264"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/UberGump.cpp",
+          "previous": "6cea87e36ace1710f9de90652a87184d0e04803bd1be6c63b47b3258eda4f256",
+          "current": "7a0d2ce97d70126f0964b30896eccdf872fc64e9113bb3a4caaf7fe2372cf949"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "921f5464983352309a998ba124184bc838cfa4c098a1053ee2dd9131c4410d4c",
+          "current": "62dc8c0f8e57681b649b7598f8e71f0d60bc504a3e77495f146f297eecdb8027"
+        }
+      ]
+    }
   ]
 }

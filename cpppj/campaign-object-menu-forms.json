@@ -12,11 +12,11 @@
     "cpppj/src/client/CampaignClientServices.cpp": "4566373b792d67b289fe125779e0574a5f57008d69e4267bf63ac83b21527b5f",
     "cpppj/src/client/RawButtonControls.cpp": "1e31ef93cd819be30a75bcada1e9eba98adfae917a8db925a4845bfd37a2ef92",
     "cpppj/src/client/RawButtonControls.h": "d49ab77d71b4d10beea6c2a5e466a87289874092592c86bc879cd971fab64180",
-    "cpppj/src/client/RawCampaignSession.cpp": "f5a4835133edc828d65390d1f4c9e25ab3cf68a6bfb0e3dc696e68d49013961c",
-    "cpppj/src/client/RawCampaignSession.h": "708c73cd9f83b6a32496a782151ec35cbecb469a7f9c4f136819a5ae57b70288",
-    "cpppj/src/client/RawMenuControls.cpp": "521a34d2d7660a18a90435074c1f2893f4c24ca600d81d3a5cf18b745226459c",
+    "cpppj/src/client/RawCampaignSession.cpp": "6a1533de4d7a9f0ed09c0c4a2b59077498e9d0aa0487119e8461381e2d9867ab",
+    "cpppj/src/client/RawCampaignSession.h": "9b8778ad3d884db1f91c1d03b8500485d73399a6b0c94c066a040c824c41e7e6",
+    "cpppj/src/client/RawMenuControls.cpp": "7cf3686cabed1d61e6f61b46a2c6d9f153b2a8ce4c5faee6cac3a01683555bb4",
     "cpppj/src/client/RawMenuControls.h": "70cf632cf282ea15c98c45ca1b8fba8b720dafb07eebc2a022723dfc35e3b1fa",
-    "cpppj/src/client/UberGump.cpp": "6cea87e36ace1710f9de90652a87184d0e04803bd1be6c63b47b3258eda4f256",
+    "cpppj/src/client/UberGump.cpp": "7a0d2ce97d70126f0964b30896eccdf872fc64e9113bb3a4caaf7fe2372cf949",
     "cpppj/tests/CampaignObjectMenuTests.cpp": "fea9198ea2150c42bb523f7ac9298c2f819acd1fc9b9887b53020c206ad62563"
   },
   "unchangedExistingModules": {
@@ -26,7 +26,7 @@
     "cpppj/src/client/GumpFormBinding.cpp": "11fae3bee065e8ea1c794a9300f936b8b6e9fdca637b93117a430384ffdcda77",
     "cpppj/src/client/GumpFormBinding.h": "db73e0cb75a3b35f7a20368673db6805ce8ba5fd47428e1d5bb6f37359d23ca5",
     "cpppj/src/client/MenuGump.cpp": "9738a69d18151ca3b4d10d91e99622addcf0a89af12f66cc082ff5bb432631a4",
-    "cpppj/src/client/MenuGumpWidgets.cpp": "68c6a1f30c5b4af5530b0782ad6526c5fe775c8acf5c6fa311ead74af7641fee",
+    "cpppj/src/client/MenuGumpWidgets.cpp": "33acda5b10a39d19cab04f867d42b2c6dde48530ad62ea651750eba6446d003f",
     "cpppj/src/client/GumpLifetime.cpp": "c0b7bacd2f1ed87a2b5e9c0854d2f89200574f1408d7ac738cec891a185ca57a"
   },
   "protectedFileSha256": {
@@ -896,6 +896,43 @@
           "path": "cpppj/src/client/UberGump.cpp",
           "previous": "09ae6c715bbfb82f9517ea7f1d11a4d4801d8a01af34c6d48e1831791996c06b",
           "current": "6cea87e36ace1710f9de90652a87184d0e04803bd1be6c63b47b3258eda4f256"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 182,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "f5a4835133edc828d65390d1f4c9e25ab3cf68a6bfb0e3dc696e68d49013961c",
+          "current": "6a1533de4d7a9f0ed09c0c4a2b59077498e9d0aa0487119e8461381e2d9867ab"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "708c73cd9f83b6a32496a782151ec35cbecb469a7f9c4f136819a5ae57b70288",
+          "current": "9b8778ad3d884db1f91c1d03b8500485d73399a6b0c94c066a040c824c41e7e6"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawMenuControls.cpp",
+          "previous": "521a34d2d7660a18a90435074c1f2893f4c24ca600d81d3a5cf18b745226459c",
+          "current": "7cf3686cabed1d61e6f61b46a2c6d9f153b2a8ce4c5faee6cac3a01683555bb4"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/UberGump.cpp",
+          "previous": "6cea87e36ace1710f9de90652a87184d0e04803bd1be6c63b47b3258eda4f256",
+          "current": "7a0d2ce97d70126f0964b30896eccdf872fc64e9113bb3a4caaf7fe2372cf949"
+        },
+        {
+          "group": "/unchangedExistingModules",
+          "path": "cpppj/src/client/MenuGumpWidgets.cpp",
+          "previous": "68c6a1f30c5b4af5530b0782ad6526c5fe775c8acf5c6fa311ead74af7641fee",
+          "current": "33acda5b10a39d19cab04f867d42b2c6dde48530ad62ea651750eba6446d003f"
         }
       ]
     }
