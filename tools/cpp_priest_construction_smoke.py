@@ -131,7 +131,18 @@ def main():
         assert not any(row['visible'] and row['command']==0x03000080 and row['parameter']==((128<<16)|target) for row in menus['knowledgeAfter'])
         assert any(row['visible'] and row['command']==0x03000080 and row['parameter']==((76<<16)|target) and not row['flags']&0x200 for row in menus['knowledgeAfter'])
         assert all(observed[label]['raw_sp'][1]=='2200' and observed[label]['phase']==['4'] and observed[label]['popup']==[''] for label in ('researched','productionAfter','knowledgeAfter','flareEnded'))
-        research=dict(passed=True,sid=target,authoritative=learned[0],initialFlares=initial,production=menus['productionAfter'],knowledge=menus['knowledgeAfter'],content=content,scope='실제 GUI 지식 선택/58h 수신/server 내용물/생산 메뉴·지식 제거/플레어12개 및 자연 종료. 생산HUD 배치·전체 미션 완주는 후속.')
+        productionContents={}
+        # 실제 기술 부모의 생산용 내용물만 관측하며 버튼 상태를 주입하지 않는다.
+        for block in report.read_text('utf-8').split('frame\t')[1:]:
+            header,body=block.split('\n',1);_,label=header.split('\t',1);productionContents[label]=[]
+            # 각각의 현재 Form SID/kind/flags/quality/slot을 그대로 보존한다.
+            for line in body.splitlines():
+                fields=line.split('\t')
+                if fields[0]=='raw_production_content':productionContents[label].append(list(map(int,fields[1:])))
+        assert not any(row[1]==128 and row[2]&8 for row in productionContents['researchBefore'])
+        teleports=[row for row in productionContents['researched'] if row[1]==128 and row[2]&8];assert len(teleports)==1 and 5<=teleports[0][0]<15000 and teleports[0][3]==3,teleports
+        assert [row for row in productionContents['flareEnded'] if row[1]==128 and row[2]&8]==teleports
+        research=dict(passed=True,sid=target,authoritative=learned[0],initialFlares=initial,productionContents=productionContents,production=menus['productionAfter'],knowledge=menus['knowledgeAfter'],content=content,scope='실제 GUI 지식 선택/58h 수신/server 내용물/생산 메뉴·지식 제거/플레어12개 및 자연 종료. 생산HUD 배치·전체 미션 완주는 후속.')
     summary=dict(passed=True,scope='실제GUI 사제 메뉴/TYPE85 배치/실제3e왕복/SP 차감/원본 서식 비용 표시·이동·지연삭제/사제 경로 이동.'+(' 같은 워크샾의 HP 자연 증가·3000 완공·abstract 해제까지 확인했다. 미션 완주 검사는 아니다.' if args.completion else ' 자연 건설·완공은 --completion 모드로 검사한다.'),
                  command=command,originals_unchanged=unchanged,newPacketTypes=after_packets[len(before_packets):],workshops=workshops,priestBefore=priest,priestMoving=moved,
                  factoryResearch=research,factoryMenus=factory,selection=selected,completion=completion,observed={label:{key:record[key] for key in ('time','raw_input','raw_cursor','raw_sp','raw_menus','raw_sp_gump') if key in record} for label,record in observed.items()})

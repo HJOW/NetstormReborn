@@ -172,6 +172,8 @@ public:
     std::uint32_t CurrentSubscriber() const;
     // 같은 실제 PlayerWorld의00540c70을 읽는다. 자산/UI 어댑터의 로컬 번호 사본을 사용하지 않는다.
     std::uint32_t LocalOwner() const;
+    std::uint32_t CurrentTechnologyParent() const; // 현재48fc60의 실제 기술 부모다.
+    bool UpdateProductionContents(); // 실제현재모드/부모/dirty→Deck 재계산→43df80 단락이다.
     // 실제 PlayerWorld가 공유하는00595344 DWORD를 읽는다. subscriber/Ready와 합치지 않는다.
     std::uint32_t PlayerKnown() const;
     // 실제 캠페인 로더와 같은005c85a4 DWORD를 읽는다.

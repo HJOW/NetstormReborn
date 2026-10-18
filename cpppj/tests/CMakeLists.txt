@@ -1504,3 +1504,8 @@ set_source_files_properties(FactoryResearchTests.cpp PROPERTIES COMPILE_DEFINITI
 target_sources(netstorm_tests PRIVATE FlareTests.cpp)
 set_source_files_properties(FlareTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_FLARE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/flare-x86.tsv\"")
+
+# 독립 원본98행의 전체 생산 내용물 동기화 호출을 대조한다.
+target_sources(netstorm_tests PRIVATE ProductionSyncTests.cpp)
+set_source_files_properties(ProductionSyncTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_PRODUCTION_SYNC_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/production-sync-x86.tsv\"")

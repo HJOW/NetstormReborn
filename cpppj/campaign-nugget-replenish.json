@@ -10,13 +10,13 @@
   "status": "단독 미션의 반복 보상 획득을 실제 모드 관문에 연결. 전체11스테이지 완주 목표는 미완료.",
   "currentSources": {
     "cpppj/src/CMakeLists.txt": "8bcbbd1445cf96d31be4573fad443d8fe2248455bdda11abd9015f94821b7b26",
-    "cpppj/tests/CMakeLists.txt": "3990ad404b40b6f57424fc4fee7bb6c5d7b9f3a4f702c9fb596bd83a0bbf5413",
-    "cpppj/src/client/RawCampaignSession.cpp": "224dd61f5699668b8f162dc40567162fc4aee1fc7f524708dca7a5a2f8bf55dc",
+    "cpppj/tests/CMakeLists.txt": "85d612cf12e67be3693f5c34ebf79ea876302247be73ea8b243d743e17d9f6ff",
+    "cpppj/src/client/RawCampaignSession.cpp": "82f3a63d68046b2078ef66fd1d548b412d544a73c29e9b9e1b516e16feb4b8a8",
     "cpppj/src/o/RawPlayerGeyserBounds.cpp": "4983ae36fcebb76a06068c68500f2184dc2c14f816c6513b9cf1492353c69a96",
     "cpppj/src/o/RawPlayerGeyserBounds.h": "dbd25cda206a7e53e21b9c35d1d9f1ff53505196c5a32e00e187391545547a14",
     "cpppj/src/o/RawNuggetReplenish.cpp": "a89f08e3f9a17d3088506fc423e0e9680bc150094ea42de733b914ecd6dab464",
     "cpppj/src/o/RawNuggetReplenish.h": "d243249f6af02a1b51388ca5603ea70659e28ebdb38f789fd70dbb8c6b16f428",
-    "cpppj/tests/CampaignSessionTests.cpp": "ca5e6b9f88237c733a4fab7fd2f86943f272cbb1ef988ebda777e079beb4fe2b",
+    "cpppj/tests/CampaignSessionTests.cpp": "6b03a6bf14634792d4c68653ae44e542e5d03497355985cc2384de1863bd505c",
     "cpppj/tests/NuggetReplenishTests.cpp": "ab8045f3d99a0da3303c33f94fab68eca90de50f22920a061c337182aa2857fb",
     "tools/decomp_nugget_replenish.py": "343fcd950078734e0c2651f65c80b56c3ca2e69db9023e36350741c942b2d720"
   },
@@ -561,6 +561,31 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "fbe93163d865a6ebe8adb48db980a3170da2d5b3a5c7be921785ce39839082a8",
           "current": "ca5e6b9f88237c733a4fab7fd2f86943f272cbb1ef988ebda777e079beb4fe2b"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 174,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "3990ad404b40b6f57424fc4fee7bb6c5d7b9f3a4f702c9fb596bd83a0bbf5413",
+          "current": "85d612cf12e67be3693f5c34ebf79ea876302247be73ea8b243d743e17d9f6ff"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "224dd61f5699668b8f162dc40567162fc4aee1fc7f524708dca7a5a2f8bf55dc",
+          "current": "82f3a63d68046b2078ef66fd1d548b412d544a73c29e9b9e1b516e16feb4b8a8"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "ca5e6b9f88237c733a4fab7fd2f86943f272cbb1ef988ebda777e079beb4fe2b",
+          "current": "6b03a6bf14634792d4c68653ae44e542e5d03497355985cc2384de1863bd505c"
         }
       ]
     }

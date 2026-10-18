@@ -1,0 +1,42 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-18",
+  "unit": 174,
+  "rows": 98,
+  "normalReturns": 196,
+  "instructions": 131742,
+  "controls": [
+    639,
+    895
+  ],
+  "precisionDifferences": 0,
+  "nativeCalls": {
+    "0x43df80": 196,
+    "0x49a840": 1738,
+    "0x44f4d0": 1600
+  },
+  "boundaries": {
+    "0x44f760": 196,
+    "0x48fc60": 392,
+    "0x4b2270": 196,
+    "0x4b1b20": 1738,
+    "0x4acac0": 128,
+    "0x4afa70": 128,
+    "0x4af780": 90,
+    "0x446e70": 40,
+    "0x4e0620": 10
+  },
+  "sha256": {
+    "tools/decomp_production_sync.py": "706eb99ac70ea010d3e33dd65515004cafb27231f055c6f494ae4ffd3f8ab18a",
+    "tools/decomp_factory_menu.py": "bd889d1fe373053c80fe804517858cf83102fbf36cbe724d989e4aa0c3e605cc",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "cpppj/tests/fixtures/production-sync-x86.tsv": "5dd7df714a0e7b7c2c47974539504e6f4df179f32fd937b335172be0a780b164"
+  },
+  "limits": [
+    "43df80 전체/44f4d0 Deck 검색/TYPE getter의 실제 명령이다. 현재 Deck·기술부모/내용물 순회·신전/조회반환/생성·삭제/커서취소/진단은 명시 외부 입력이다.",
+    "게임/OS/원본 파일 변경·게임 창 실행은 없다. 전체 생산HUD 그림/다리 공급 주기/미션 완주의 증거는 아니다."
+  ]
+}

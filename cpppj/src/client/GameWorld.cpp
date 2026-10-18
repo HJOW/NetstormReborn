@@ -577,6 +577,18 @@ std::string GameWorld::Report(bool mask) const {
             if (campaign_->FindTechnology(static_cast<std::int32_t>(campaign_->LocalOwner()),type).value) out<<'\t'<<assets_.Types()[index].assetName;
         }
         out<<'\n';
+        const auto parent=campaign_->CurrentTechnologyParent();out<<"raw_production_parent\t"<<parent<<'\n';
+        if (parent) {
+            auto core=campaign_->Core();const auto owner=core.pool.Slot(o::Sid{static_cast<std::uint16_t>(parent)});std::size_t visited{};
+            const auto word=[](std::span<const std::uint8_t> bytes,std::size_t offset) { return static_cast<std::uint16_t>(bytes[offset]|(std::uint16_t(bytes[offset+1])<<8)); }; // 원본 비정렬WORD만 읽는다.
+            // 원래 체인의flags/quality/slot을 읽으며 내용물을 만들거나 정렬하지 않는다.
+            for (o::Sid form{word(owner,6)};form.value;) {
+                if (++visited>core.pool.Capacity()) throw std::logic_error("생산 진단의 내용물 체인 순환");const auto content=core.pool.Slot(form);
+                if (content[10]==6) out<<"raw_production_content\t"<<form.value<<'\t'<<word(content,18)<<'\t'<<word(content,20)<<'\t'<<std::uint32_t(content[30])<<'\t'<<std::uint32_t(content[23])<<'\n';
+                form={word(content,4)};
+            }
+        }
+
     }
     // 활성 플레이어와 머리 값/저장 상태를 서로 다른 열에 기록한다.
     for (const auto& p:players_.players) if (p.active) out<<"player\t"<<p.number<<'\t'<<p.stormPower<<'\t'<<p.color<<'\t'<<p.allies<<'\t'<<Field(p.name)<<'\t'<<Field(p.startingTech)<<'\t'<<p.storedTechnology.items.size()<<'\t'<<p.storedDeck.size()<<"\n";

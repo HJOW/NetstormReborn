@@ -85,6 +85,7 @@
 #include "o/RawFlyerTarget.h"
 #include "o/RawDamageableRelease.h"
 #include "o/RawFlyerPreDestroy.h"
+#include "o/RawProductionSync.h"
 #include "o/RawFlare.h"
 #include "o/RawFactoryResearch.h"
 #include "client/RawShapeToBuffer.h"
@@ -377,6 +378,7 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawProductionDeck> productionDeck; // 현재 Player+68의 실제 블록을 단독 소유한다.
     std::uint32_t fullDeck{},freeTechnologyType{153},templeProduct{133}; // PATCH0054db14/005412bc/0054126c의 현재 생산 전역이다.
     std::unique_ptr<RawCampaignProductionBindings> production; // 같은 현재 Factory/기술 내용물/허용 표를 조합한다.
+    std::unique_ptr<RawProductionSync> productionSync; // 현재Deck과 같은 기술 부모의 실제teleport 내용물을 동기화한다.
     std::uint32_t flareType{106},researchOutpost{126}; // PATCH00541200/00541250의 실제 효과/제외 타입이다.
     std::unique_ptr<RawFlare> flare; // 같은 난수/Kernel/공간/표시/삭제를 사용하는 실제 효과다.
     std::unique_ptr<void,void(*)(void*)> pendingFlareRegular{nullptr,[](void* storage) { ::operator delete(storage); }}; // 실제 new40 예약부터 Regular 생성까지의 단일 메모리다.
@@ -1538,6 +1540,16 @@ struct RawCampaignSession::Impl {
         },SessionMissing<void,ProductionDeckAssertion>());
         production=std::make_unique<RawCampaignProductionBindings>(core,*player,priests->Carrier(),*contained,*productionDeck,*totalMade,contentFinder,
             CampaignProductionState{objectState.mission,fullDeck,freeTechnologyType,templeProduct},services.production.effects);
+        ProductionSyncHooks sync;
+        sync.deck=[this] { return std::span<const std::uint8_t>(productionDeck->Bytes(productionDeck->Get(playerState.templateOwner))); };
+        sync.technology=[this] { return player->CurrentTechnology(); };
+        sync.temple=[this](std::uint32_t owner) { if (owner>=9) throw std::out_of_range("생산 동기화 현재 Player 범위");return Read(players,owner*0xb4U+0x7cU)!=0; }; // 실제 신전SID이며 AI(+b0)와 구분한다.
+        sync.cancelCursor=[this] { if (!cursor) throw std::logic_error("생산 동기화 실제 커서 미설치");cursor->Cancel(); };
+        sync.destroy=[this](Sid form,std::uint32_t flags) { world.Destroy(form,flags); };
+        sync.findKind=[this](Sid parent,std::uint32_t mask,std::uint32_t kind,std::uint32_t index) { const auto form=priests->Carrier().FindContained(parent,mask,kind,index);return form.value ? (Read(core.pool.Slot(form),18)&0xffffU) : 0U; };
+        sync.create=[this](Sid parent,std::uint32_t kind,std::uint32_t quantity,std::uint32_t flags,std::uint32_t attach,std::uint32_t quality) { return contained->Create(parent,kind,quantity,flags,attach,quality); };
+        sync.assertion=[](std::string_view text) { std::fprintf(stderr,"생산 동기화 원본 진단: %.*s\n",static_cast<int>(text.size()),text.data()); };
+        productionSync=std::make_unique<RawProductionSync>(core.pool,core.types,contentFinder,ProductionSyncState{playerState.battleOwner,fullDeck},std::move(sync));
         FactoryResearchHooks research;
         research.find=[this](Sid parent,std::uint32_t mask,std::uint32_t kind,std::uint32_t index) { return priests->Carrier().FindContained(parent,mask,kind,index); };
         research.slots=[this](Sid parent) { return production->AppendFactoryProducts(parent,0); };
@@ -1946,6 +1958,16 @@ void RawCampaignSession::CheckMissionOutcome() { impl_->outcome->Check(); }
 std::uint32_t RawCampaignSession::CurrentSubscriber() const { return impl_->globals.mySubscriber; }
 // 로그인/기술/AI가 공유하는 현재 원본 로컬 Player 번호다.
 std::uint32_t RawCampaignSession::LocalOwner() const { return impl_->playerState.battleOwner; }
+// 원본48fc60의 현재 기술 부모를 값 복사 없이 같은 Player 저장소에서 읽는다.
+std::uint32_t RawCampaignSession::CurrentTechnologyParent() const { return impl_->player->CurrentTechnology(); }
+// 원본43ef10의 생산 단락만 현재 Gump idle 위치에서 실행한다. 나머지HUD/공급 주기는 별도 몸체다.
+bool RawCampaignSession::UpdateProductionContents() {
+    auto& s=*impl_;if (!s.loaded || (!s.core.ownerMode.fort && !s.core.ownerMode.battle && !s.core.ownerMode.challenge)) return false;
+    if (s.core.ownerMode.challenge || !s.player->CurrentTechnology()) return false;
+    if (!s.core.bookkeeping.productionDirty) return false;
+    s.core.bookkeeping.productionDirty=0;static_cast<void>(s.production->Refresh(s.playerState.templateOwner));s.productionSync->Synchronize();return true;
+}
+
 // 실제 Player 생성/현재 기술/참여가 같은 DWORD를 읽는다.
 std::uint32_t RawCampaignSession::PlayerKnown() const { return impl_->playerState.playerKnown; }
 // 원본 로더의 현재 편집 조건과 같은 저장소를 직접 읽는다.

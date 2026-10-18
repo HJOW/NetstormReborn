@@ -449,6 +449,7 @@ bool UberGump::Input() {
     if (warnings_->Idle()) rebuild_=true;
 
     if (!client_.Paused()) rawButtons_->Menus()->CleanupFrame(); // 원본의 비정지 갱신은 삭제 정리 뒤 같은 idle 표를 실행한다.
+    if (world_ && state_.phase==ClientPhase::Mission && world_->Session().UpdateProductionContents()) rebuild_=true; // 같은 현재 Gump idle의 생산 내용물 동기화다.
     if (rawButtons_->Poll(mouse)) rebuild_=true;
     if (input_.Move({mouse.x, mouse.y}, (mouse.code & InputCode::kOutside) == 0)) rebuild_ = true;
     if (userInput_ && state_.phase==ClientPhase::Mission && popup_.empty()) userInput_->Tick();

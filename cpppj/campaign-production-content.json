@@ -1,0 +1,6541 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-18",
+  "unit": 174,
+  "baseline": "659184a",
+  "lastDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16",
+    "changed": false
+  },
+  "native": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-18",
+    "unit": 174,
+    "rows": 98,
+    "normalReturns": 196,
+    "instructions": 131742,
+    "controls": [
+      639,
+      895
+    ],
+    "precisionDifferences": 0,
+    "nativeCalls": {
+      "0x43df80": 196,
+      "0x49a840": 1738,
+      "0x44f4d0": 1600
+    },
+    "boundaries": {
+      "0x44f760": 196,
+      "0x48fc60": 392,
+      "0x4b2270": 196,
+      "0x4b1b20": 1738,
+      "0x4acac0": 128,
+      "0x4afa70": 128,
+      "0x4af780": 90,
+      "0x446e70": 40,
+      "0x4e0620": 10
+    },
+    "sha256": {
+      "tools/decomp_production_sync.py": "706eb99ac70ea010d3e33dd65515004cafb27231f055c6f494ae4ffd3f8ab18a",
+      "tools/decomp_factory_menu.py": "bd889d1fe373053c80fe804517858cf83102fbf36cbe724d989e4aa0c3e605cc",
+      "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+      "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+      "cpppj/tests/fixtures/production-sync-x86.tsv": "5dd7df714a0e7b7c2c47974539504e6f4df179f32fd937b335172be0a780b164"
+    },
+    "limits": [
+      "43df80 전체/44f4d0 Deck 검색/TYPE getter의 실제 명령이다. 현재 Deck·기술부모/내용물 순회·신전/조회반환/생성·삭제/커서취소/진단은 명시 외부 입력이다.",
+      "게임/OS/원본 파일 변경·게임 창 실행은 없다. 전체 생산HUD 그림/다리 공급 주기/미션 완주의 증거는 아니다."
+    ]
+  },
+  "nativeFreeze": {
+    "tools/decomp_production_sync.py": "706eb99ac70ea010d3e33dd65515004cafb27231f055c6f494ae4ffd3f8ab18a",
+    "cpppj/production-sync.json": "35ee635276b8ca2e9f68908eae003b2873ae61919c5688ba87f9216e22b6c46b",
+    "cpppj/tests/fixtures/production-sync-x86.tsv": "5dd7df714a0e7b7c2c47974539504e6f4df179f32fd937b335172be0a780b164"
+  },
+  "protected": {
+    "AGENTS.md": "7addbf9b31c42f29aab7c93faa865eb6de8590a600d17202a297cf7122bdf979",
+    "LEFT_JOBS.dotnetpj.md": "0c067e1d12879dbf2212cbd64c8f9f60e65b590df910418f025027ed84f80ec2",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "originals/d/GIFCLOUD.COL": "785a2cda6ac1d3e295d375815b6d9650720683099db7c249382d598b5da00532"
+  },
+  "fieldRoleCorrection": {
+    "field": "Player+0x7c",
+    "role": "신전 SID. AI 포인터는+0xb0이다.",
+    "beforeFixture": "dc9db5221e7d9852bdf8810cdf64859fef372e9d5e7da51dfcacc1a4a311a841",
+    "afterFixture": "5dd7df714a0e7b7c2c47974539504e6f4df179f32fd937b335172be0a780b164",
+    "rowsSha256": "87d1b4d2ad621704357b739f083f6d8a8dcc028ea734654f0ff9595ba285334e",
+    "rowsByteIdentical": true
+  },
+  "currentSources": {
+    "cpppj/src/client/GameWorld.cpp": "7354694cf70e61d27ef1991390513a042c7a102f537f9d0cfb1f5438bb2a1f9e",
+    "cpppj/src/client/RawCampaignSession.cpp": "82f3a63d68046b2078ef66fd1d548b412d544a73c29e9b9e1b516e16feb4b8a8",
+    "cpppj/src/client/RawCampaignSession.h": "021b8281143aee451881f14839bc433ca71b5e5626a12626449b32156459d59b",
+    "cpppj/src/client/UberGump.cpp": "3be959763ad50059ca75069af12cb2fc2bb695545324a80d5883ac0973d0f24c",
+    "cpppj/src/o/CMakeLists.txt": "8c72f4fb78c7fafefa85dad32a08ed980fb9d0e37e9600359dcdc4b87cc0a3d0",
+    "cpppj/tests/CMakeLists.txt": "85d612cf12e67be3693f5c34ebf79ea876302247be73ea8b243d743e17d9f6ff",
+    "cpppj/tests/CampaignSessionTests.cpp": "6b03a6bf14634792d4c68653ae44e542e5d03497355985cc2384de1863bd505c",
+    "docs/exe/cpp-flare-research-20261018.md": "30b71e65c4f91b0175c8ad098cde0451f76968a16e863617d8c345d1e95d0107",
+    "tools/cpp_priest_construction_smoke.py": "93524c9e1fb58e7e589fc25c7507e105e750b96cb66ad7ddbf9a58aae2756c2c",
+    "tools/decomp_production_sync.py": "706eb99ac70ea010d3e33dd65515004cafb27231f055c6f494ae4ffd3f8ab18a",
+    "cpppj/production-sync.json": "35ee635276b8ca2e9f68908eae003b2873ae61919c5688ba87f9216e22b6c46b",
+    "cpppj/tests/fixtures/production-sync-x86.tsv": "5dd7df714a0e7b7c2c47974539504e6f4df179f32fd937b335172be0a780b164",
+    "cpppj/src/o/RawProductionSync.h": "58445bdce0546bdd75cf23eee881ae84ba1ceee08e2d906d0df2e50b0bb3652d",
+    "cpppj/src/o/RawProductionSync.cpp": "7efa8d8997bb9014045dd2dd854f73cb2f73a654d80a3f12d651d5757a91a176",
+    "cpppj/tests/ProductionSyncTests.cpp": "b2b03b4d81669eefb92ac2ef84cec2f586438c29efc1615325dfa08587ff871a"
+  },
+  "logSha256": {
+    "extracted/goal-production-hud-20261018-audit1.log": "741e77ecfbb6d5c2470e4b5a64820180ba368d0c9e0ea9a2eedc8729fac748b0",
+    "extracted/goal-production-hud-20261018-build1.log": "04f351beadc7c39a730fbbea7cc2b797a903bc09929ea1ec14244b25dfbdd632",
+    "extracted/goal-production-hud-20261018-ctest1.log": "6b436a8e61de6ff89c384f893798cdfcb4f07550bc2c6bf75cca1d1d20b4cb35",
+    "extracted/goal-production-hud-20261018-entry1.log": "31c0b9025401c81fbfd80e43203d9e7030ab8588a019e22710f6bfc7c3a5cfae",
+    "extracted/goal-production-hud-20261018-focused1.log": "a84dc8cb1945469b763c61cf9708f69da44abce174f9f7be8d6d27cd1fe6eef5",
+    "extracted/goal-production-hud-20261018-goal-entry1.log": "45c1eee9aa0a6dda3519fe8ac4fcf426bf94132bb199d97050b9cc54ac53e578",
+    "extracted/goal-production-hud-20261018-gui1.log": "3608bcfd15a41e3dc1f4e8e3e70fd8a2afe0387f760689f7d7d90e6355dd84f8",
+    "extracted/goal-production-hud-20261018-LastTest.log": "91d562fb6d42d016d25e6f6f779ac7704a3939a2b7266736d10c3e0b72fac7cd",
+    "extracted/goal-production-hud-20261018-menu-entry1.log": "b8b12d5c86a243ed145405e3c5d1a16895f3371f5d6b401b52082bfc97a5805c",
+    "extracted/goal-production-hud-20261018-native1.log": "e0e57f07fa7573d7f1a29b0a08b70c5deb6b24349590b451d234e28a983c79e5",
+    "extracted/goal-production-hud-20261018-native2.log": "e0e57f07fa7573d7f1a29b0a08b70c5deb6b24349590b451d234e28a983c79e5",
+    "extracted/goal-production-hud-20261018-roundtrip1.log": "2616c9523b278225a70a7bec50d7099fdac512947dec20c7d92a56966d6bd714",
+    "extracted/goal-production-hud-20261018-types.log": "c9861047c3dbdef9f5443641c13e638f6c4cbf3a9218933249c6f75106e58004"
+  },
+  "observationSha256": {
+    "extracted/goal-production-hud-20261018-gui1/building.bmp": "b6479b0e65b0abcb32bd466160709af508b9d016a4fe78f794cb834e39aaa364",
+    "extracted/goal-production-hud-20261018-gui1/completed.bmp": "52892fb359628988d056de2d9a83a7c9b8383f607c3f6804f7ec68a5bf2a69e4",
+    "extracted/goal-production-hud-20261018-gui1/cost-deleted.bmp": "ba70b91b5775c0ad5ada78ff136191c00f936e89816c461723492fc7f1a14ba1",
+    "extracted/goal-production-hud-20261018-gui1/factory-knowledge.bmp": "bd321c634ecfa934ed2be731cb4a8320215942a1ce940a526d0601834a08ca52",
+    "extracted/goal-production-hud-20261018-gui1/factory-opened.bmp": "8f18e2e12bdeabaa50f6e84d22c618762267d124877308c7cddeff6424959831",
+    "extracted/goal-production-hud-20261018-gui1/factory-production.bmp": "6f0cb46e34e5f8077f2aadebd1c97be5575e2f2ce1ec0fdd53496231fb6fa2df",
+    "extracted/goal-production-hud-20261018-gui1/flare-ended.bmp": "03c293af62bbf89574c434d13d3f6653a88d71132d6fa13d006060dfe5d72154",
+    "extracted/goal-production-hud-20261018-gui1/knowledge-after.bmp": "e2cf0823e5d1185e6a08255e59859a4480079946b31c80a50222088a1cc2b87b",
+    "extracted/goal-production-hud-20261018-gui1/moving.bmp": "5f11f907235f251780db1993a95b3f58ce0360683ff4c26b4e4829c8b14cc0c8",
+    "extracted/goal-production-hud-20261018-gui1/placed.bmp": "02e403d18dde0d165066d4b3ef68147712ed7a71f8a04d0102d78a4b972b61c3",
+    "extracted/goal-production-hud-20261018-gui1/production-after.bmp": "2d99499b387c8086afe10b575f6d0b84726cfface9c95e38d77fc4b21a22403d",
+    "extracted/goal-production-hud-20261018-gui1/researched.bmp": "89d1228d19fc2167416e11e19d96cc736663a1b4be66a98216a0d48b3719e27a",
+    "extracted/goal-production-hud-20261018-gui1/results.json": "c6a55cab0f272fd04b0a479118a981db8aa008d1c2ae1604da646c6b28da8e7e",
+    "extracted/goal-production-hud-20261018-gui1/selected-workshop.bmp": "f59747cf71b68b943a0354ab78b0754d380b03e97f477d5fb6fdccd4d82988c8",
+    "extracted/goal-production-hud-20261018-gui1/states.tsv": "2d947fa79db9a7fd6af79f770a89fe7b93298415e68d34a06ce00d1d29f81bed",
+    "extracted/goal-production-hud-20261018-gui1/stderr.log": "4b939153f490c6d911a7222f74d369eb78edee15eac8c9942358db819458af31",
+    "extracted/goal-production-hud-20261018-gui1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-production-hud-20261018-gui1/steps.tsv": "0c46ad537e5a937424120e6c325ac976f281fb6f89b78a1fa7ec196e59136be8",
+    "extracted/goal-production-hud-20261018-goal-entry1/demostormrages/0/current.bmp": "71a1c9a606634cd8233c4fe17f2a52027051768469e576c95c7fd8fa5656f5f9",
+    "extracted/goal-production-hud-20261018-goal-entry1/demostormrages/0/states.tsv": "bf7afbf1b3e0658a85f7a6fbd6d82bf722051ab57c17e11864ca52d3ebfcaf2e",
+    "extracted/goal-production-hud-20261018-goal-entry1/demostormrages/0/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-production-hud-20261018-goal-entry1/demostormrages/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-production-hud-20261018-goal-entry1/demostormrages/0/steps.tsv": "5cea65fe021d488f6a7f86beec5aebed5c56b8d98c89584a391a2c3ed11fdcb3",
+    "extracted/goal-production-hud-20261018-goal-entry1/dissolvedalliance/0/current.bmp": "b898799732a1a3eeb957f3061f8bb855bdc74d4e9b3d724345f426325f26599c",
+    "extracted/goal-production-hud-20261018-goal-entry1/dissolvedalliance/0/states.tsv": "7d62960dd5efdaa9bffd7c8e23d17b1bdcfc654d7eccd61b99a3ad7868717068",
+    "extracted/goal-production-hud-20261018-goal-entry1/dissolvedalliance/0/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-production-hud-20261018-goal-entry1/dissolvedalliance/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-production-hud-20261018-goal-entry1/dissolvedalliance/0/steps.tsv": "aa92186e070cc3a25f3abd921b4cde37c08988eb33bb8c6dd830334f819f0f67",
+    "extracted/goal-production-hud-20261018-goal-entry1/dissolvedalliance/1/current.bmp": "2a1511bb476d1d84d6116466c64bbb89b81ca5dbb325aa442ef7adb8693105cb",
+    "extracted/goal-production-hud-20261018-goal-entry1/dissolvedalliance/1/states.tsv": "d144a50f1b4363a3555ad911478dd234a585cd5285f7b6ba3f1589d1f70d11fe",
+    "extracted/goal-production-hud-20261018-goal-entry1/dissolvedalliance/1/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-production-hud-20261018-goal-entry1/dissolvedalliance/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-production-hud-20261018-goal-entry1/dissolvedalliance/1/steps.tsv": "a76163eff4736b7e2d8105411030b6596a351a6c7083f8bf66ed9053974f2c3a",
+    "extracted/goal-production-hud-20261018-goal-entry1/guardmyback/0/current.bmp": "3608c9392867a8a16eee8b105b0fb4bf373210b41cc8eee57dbc993a3b48201d",
+    "extracted/goal-production-hud-20261018-goal-entry1/guardmyback/0/states.tsv": "dc3a4de55c8c6cb95c5f786ff02e6457870138125596b64f5776f02382486aa7",
+    "extracted/goal-production-hud-20261018-goal-entry1/guardmyback/0/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-production-hud-20261018-goal-entry1/guardmyback/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-production-hud-20261018-goal-entry1/guardmyback/0/steps.tsv": "802f1604e5e488fc3247a7286779a9860a2b22dd518925b03edbc50e04dbe2ad",
+    "extracted/goal-production-hud-20261018-goal-entry1/guardmyback/1/current.bmp": "b93827ec3946e3ccded76c45d2f0bd4f56d9e88e5a5c6696c346c86785e2a381",
+    "extracted/goal-production-hud-20261018-goal-entry1/guardmyback/1/states.tsv": "5f73667c56a8ef7d78ae4fe5f0cbacad6c84a78dd405998e868790186d67e1f7",
+    "extracted/goal-production-hud-20261018-goal-entry1/guardmyback/1/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-production-hud-20261018-goal-entry1/guardmyback/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-production-hud-20261018-goal-entry1/guardmyback/1/steps.tsv": "6471bd3f04b2d958db8c6db410e474f12d58908523b69553d0574dfa6d4e0236",
+    "extracted/goal-production-hud-20261018-goal-entry1/masterofwhirligigs/0/current.bmp": "dec0fd900916fd6a3bb66574ec95d5cf36c680f79373e2d48b1a115863c5ebd9",
+    "extracted/goal-production-hud-20261018-goal-entry1/masterofwhirligigs/0/states.tsv": "80fb5a332cfcdc3b01798fd20668f27aad22c6ebe7eaf85f71b53f187b31daee",
+    "extracted/goal-production-hud-20261018-goal-entry1/masterofwhirligigs/0/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-production-hud-20261018-goal-entry1/masterofwhirligigs/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-production-hud-20261018-goal-entry1/masterofwhirligigs/0/steps.tsv": "bdc85c8b5efcf67514428862e7f728f2555b35850537394eda571645507ccc54",
+    "extracted/goal-production-hud-20261018-goal-entry1/masterofwhirligigs/1/current.bmp": "f29c139e7da2c99bec79ba43c9b0ce47f96967ffe1744c60d47836a6beff0c17",
+    "extracted/goal-production-hud-20261018-goal-entry1/masterofwhirligigs/1/states.tsv": "914165a71aa821d18635ef37f9a7b39f1288aa42b4b62251cf1182af1889fd57",
+    "extracted/goal-production-hud-20261018-goal-entry1/masterofwhirligigs/1/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-production-hud-20261018-goal-entry1/masterofwhirligigs/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-production-hud-20261018-goal-entry1/masterofwhirligigs/1/steps.tsv": "35f2eb7d5a99a5c7c3223bf9fcf855f1fa88702448121711396c4df78645c627",
+    "extracted/goal-production-hud-20261018-goal-entry1/results.json": "4b517f6f1b343fe4579b2f9ed20e278a81eb4d00172803511566ae7150db77d3",
+    "extracted/goal-production-hud-20261018-goal-entry1/thewarbegins/0/current.bmp": "21b89ced49cda6e71c40d31c029fda4584fcabf5322dfcb2edaab1219a710a8e",
+    "extracted/goal-production-hud-20261018-goal-entry1/thewarbegins/0/states.tsv": "8aa12cc0142a3e591137bc613905b8b6fa95c35c71b46637b68b80510a702d8c",
+    "extracted/goal-production-hud-20261018-goal-entry1/thewarbegins/0/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-production-hud-20261018-goal-entry1/thewarbegins/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-production-hud-20261018-goal-entry1/thewarbegins/0/steps.tsv": "dcda2f41336d851e2fa6e344cb414e5b85ed495ddc0c7d8c4307208326167ab7",
+    "extracted/goal-production-hud-20261018-goal-entry1/thewarbegins/1/current.bmp": "53889198c7bcd1e36ebd975f5b02954257254ae981ece8e491b8437f7c68250c",
+    "extracted/goal-production-hud-20261018-goal-entry1/thewarbegins/1/states.tsv": "eac66a8c8b9f9d5d8630ededfba02e5d7326e0ed2dbaeb023ac86db40cbf025c",
+    "extracted/goal-production-hud-20261018-goal-entry1/thewarbegins/1/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-production-hud-20261018-goal-entry1/thewarbegins/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-production-hud-20261018-goal-entry1/thewarbegins/1/steps.tsv": "99de3a71f515404a7894b53d247fcd38433de1c9207f1ac51192812c36461251",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial1/0/current.bmp": "264b8fd6b3c792d02f92749b40d75ae42eedca711f591ec0c1e925501dd4a422",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial1/0/states.tsv": "dafa44a5d993667222e1253ab054742249a18ecf112b585f4306fc6e7c29a805",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial1/0/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial1/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial1/0/steps.tsv": "563b0ea9f7a4c2b25d1c4bbafc23d65c0f19d840f705bd34066e12a4ae064070",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial1/1/current.bmp": "e32bc30612f6a042cfcf8ab572b1b575a4d860f9f884ca0494abd3ed662ad033",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial1/1/states.tsv": "9008c37117c9068f18926000c6fb200b18d2f6eafbe6b69dfb3aa23793234ee5",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial1/1/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial1/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial1/1/steps.tsv": "8ef388fddb531c757792370399dc08b7ac45c4446c3204e5009190fcbdc8da7d",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial1/2/current.bmp": "202705070729346838418d3612cf461d302d9f1c1533ee73eaa968b00fed1905",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial1/2/states.tsv": "cf1280225f6702c1c97a5e938fa7d2e99ed84a37afa4591cb069b2cc23e41685",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial1/2/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial1/2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial1/2/steps.tsv": "5d6b4076ba9811154ac5f9edebc61001383f7492cc89e70569659dbf2dafad21",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial2/0/current.bmp": "1e71471fc9d001f57120c0594a713c2f0e55a4737247e9e5d83ccfedc0f5825d",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial2/0/states.tsv": "54b1b3be70ea09702eb4420da64d34fcc877903d27cd9af2492299ef78d7c784",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial2/0/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial2/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial2/0/steps.tsv": "7de686198a8fa295587129179878d3d584052818e47d5b4982fdca0b09e33d55",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial2/1/current.bmp": "2eabc6da698d3b32fa6dd2eab24f7df0a5d3daabf8ce15bb68045878b096f3be",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial2/1/states.tsv": "aca7db6e3eba82032c05d6867356fdc4d2a49499cc1de58391f7ec6b400e3888",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial2/1/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial2/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial2/1/steps.tsv": "c517ec1c7dfd411e7d4972a3afddd80e93bf9fdb158383e81f673d9e9a0ff4ef",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial2/2/current.bmp": "93ac4980e0dbb89fa4ef8963b10d6ffdc2b22527f9b20382b53d0dce40f9f00f",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial2/2/states.tsv": "fd2338da7bde0ef337aa3c69a5f0569d12546df0fd8482d7db9a89cc7cc2df19",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial2/2/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial2/2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial2/2/steps.tsv": "4020193461372adcf362414adbb50ae011c79daf1a349579a24bffe12ecb8ca3",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial2/3/current.bmp": "659b276bd1cfe6530929e86eee5dd05c22c733ddc308bac946d9c1b2e6b843ad",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial2/3/states.tsv": "945cbad3da524629383e5bb866d04fe697321a6bf2163ac2271b85e1e0670f1d",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial2/3/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial2/3/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial2/3/steps.tsv": "7c003c71fb891212c3953af74d808532f7efcc7baba113b02ca07c9abe651f0b",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial3/0/current.bmp": "e88f08c48ea65f5e35986815e2b9e7a3651efbb02960766a379d601aca54e23e",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial3/0/states.tsv": "00216c9680c92365f429241fddc4c69fe3b894662b0b47d92650dd9f623da7dd",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial3/0/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial3/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial3/0/steps.tsv": "def0acf8fa2bb5d9b6ca4a13ff12a740607458363f693637624fe7e5862156d1",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial3/1/current.bmp": "46e4311276b8aa45ce5430cf41d2805d88b6ff4f72b898e5e7fb6a643ead4abf",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial3/1/states.tsv": "5ec69008be546a60034ae7d81b8bad4020a52f6849c931261f3fd867762393d7",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial3/1/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial3/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial3/1/steps.tsv": "1e9c0d6802a21679e8e41552cf78c36863c641408deb08bb23c5910e03c4493f",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial3/2/current.bmp": "8129c80e2307cacd650036a0521ec4d8188710e41df2fb37e621384feaeb0aee",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial3/2/states.tsv": "dfb7f9f491b12ee3462e89c3b597f22c9972b3f86169017861dea9ffc423f9e2",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial3/2/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial3/2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial3/2/steps.tsv": "7f9ea4cd517da8e60748bbef3d8836e5af506ec3f201c47bfeb948fb48368f71",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial4/0/current.bmp": "7880e9c259eca989f82dc3c962deff175606fc99f2117493acf0fcaf79489f0c",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial4/0/states.tsv": "ccf8b4113965b8feedccd33ec215a49502ab626d89980feb946b22e2efe829ef",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial4/0/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial4/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial4/0/steps.tsv": "e59cae768c9e457cd97612472bbbc6fdee5f4fa9ad529475f47a1ad91ba0a1ce",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial4/1/current.bmp": "61aae485447bd66229169b4d4c87d120934d54236b8432c7546b6428406898dd",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial4/1/states.tsv": "60133aa49a8fdb7209c4ae35380d7f50a84963edbec01cc75def51f0d347ad2c",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial4/1/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial4/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial4/1/steps.tsv": "f65747f810cf1ca9ddb65054566606a9079e7f633a43ff04912a9e4d35dc3465",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial4/2/current.bmp": "f9ac533ad8d9d77c25d05bf39031aea970f3c1abd013372a08d8d88e31ef19ab",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial4/2/states.tsv": "2902e7724801d454eb65eced1f9a66b89e72ff2f1e9f4239e0572d02a9adeebc",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial4/2/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial4/2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial4/2/steps.tsv": "4e86be37e5bd10e32c54687dd1cb5cf2b3ad7276cf55d30bc83a0650918f79d8",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial5/0/current.bmp": "44609d0268c3b1f2c24f05e70465b73712295cf74fab3cf44749bbc5c7994aeb",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial5/0/states.tsv": "729a98094b7543f50d968e988ecc3ffde3586e2f5ea2ad6855882106e0fd51fb",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial5/0/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial5/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial5/0/steps.tsv": "37d7692a42145503629c1717cde9762ed006fdf5c452718f4ba410f000cd8648",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial5/1/current.bmp": "00ec9a6a8b672f109d9ab6da485ba003658a8f1d022dd61dcf7ca6bf2a0275ec",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial5/1/states.tsv": "ed8743b6ed73ce65c6f2ff601274b07289737cfc1b2489f9f88020b0aedec310",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial5/1/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial5/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial5/1/steps.tsv": "9f223270e0e071ec5176e9eb989c38c57da0bf29a2078cf47a7646c9ac83beb0",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial5/2/current.bmp": "fa12e1a23bcebb0c88946ae56fcf5836b4a1890c35c202ccbb92f3db1e3247bd",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial5/2/states.tsv": "7ae3519a5e15b49feed6ec78f5aa85e11875bf75d20252d6eb41dc64089d069e",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial5/2/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial5/2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial5/2/steps.tsv": "5a5099f35687fc45c9babb8b2fddb642c4935a91d82580ea031af151a54ae555",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial6/0/current.bmp": "f2f14847cca78aad689990aaa6a99836216b4183d125fec846058c7401d5bfe6",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial6/0/states.tsv": "8c3f08f26ceacb44238ce8cf747d67fb19e65584c33dbf1b7a05a45917ea4cdb",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial6/0/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial6/0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial6/0/steps.tsv": "e5c4bc5ebf3f1091a846504c6383ce877fd602155fda145da4a6f26c88bcaf50",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial6/1/current.bmp": "a7bfd9d7488c5a34a551917f72ac0b37e94708686f68a7d62d41c6aaa463f22e",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial6/1/states.tsv": "39c487d48357e6882100821d7b0063a9562695c571d58bda2f6e2b78b95ffba4",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial6/1/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial6/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial6/1/steps.tsv": "2024818dd1aeab802963d2dc158440da8def1ab379eac60709416a55e6263368",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial6/2/current.bmp": "27cb25e4297c258916b0227b01ece06abe7d43dc04312631ff56605da586ee37",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial6/2/states.tsv": "f053e5318feb9846b10c7a4895fe4b474b9cda92bb6a2553939749dd9084959f",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial6/2/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial6/2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial6/2/steps.tsv": "b8dd37ef089d444d8f04442eb56cce6890398677046a38bbae65052cdc158bc2",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial6/3/current.bmp": "84e9fa20607138164fcb55f5a7ce8e0226ff34e035f2d46f6e0e5ada0b54825b",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial6/3/states.tsv": "38974fbecce338a1977e05c513858f5d4a4413655653b153d6cf456b34dec315",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial6/3/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial6/3/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial6/3/steps.tsv": "101eac9cb2580a3186fe274afa721ab10936edcbb4b03837b45e5ab4a0e51724",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial6/4/current.bmp": "94babee38df666b27afec95542e121fc0a378aff6da1b10f0b38924317f3bd78",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial6/4/states.tsv": "f9d11bd887bc00ac79ae3596018ad868f9f3bdb4504b0bc09ec75d209c4d3c94",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial6/4/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial6/4/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-production-hud-20261018-goal-entry1/tutorial6/4/steps.tsv": "c671139f2863895cb48429ea332dd5147f20a9a1c57c40f2e34066c19b90d3aa",
+    "extracted/goal-production-hud-20261018-menu-entry1/closed.bmp": "18ccbeb4525deadac0b32bef0c4a30729de546130823fa41fa6c9f5dc5a673d0",
+    "extracted/goal-production-hud-20261018-menu-entry1/opened.bmp": "df6ec5c1ae4361fba999f8b96c2af8c79af2e99b069c4c0aaafa2312ff109953",
+    "extracted/goal-production-hud-20261018-menu-entry1/results.json": "e91da443590fcd61c520214f53104154026f5820956f29a419fef77a97efe694",
+    "extracted/goal-production-hud-20261018-menu-entry1/states.tsv": "791c85193c9ea8d44a5a024da9883b16dfc58f6bc05622f3ccbf0d824d9a45a5",
+    "extracted/goal-production-hud-20261018-menu-entry1/stderr.log": "6022452ccd2b1fb6d22e9e245111af2bd3ac20a51a2980a7f447fd323fcedae8",
+    "extracted/goal-production-hud-20261018-menu-entry1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-production-hud-20261018-menu-entry1/steps.tsv": "fd23ed342f5370d5ff3379a175e687c8c62e309212966342bfec793a101c079d",
+    "extracted/goal-production-hud-20261018-menu-entry1/taken.bmp": "35fd8258fd898c8d751f5c1f039dd81bc1a40706db1738ffbfa42ed07a6137ce",
+    "extracted/goal-production-hud-20261018-menu-entry1/workshop.bmp": "efc34c31d229d07eaa474fdf0e480f4cac488672ab73198a04b0f8cc049cc83b",
+    "extracted/goal-production-hud-20261018-entry1/masterofwhirligigs/briefing.bmp": "5e3f343120a62bce0fcb12847ad573975451a66a559f366ac41313b39d8a74c5",
+    "extracted/goal-production-hud-20261018-entry1/masterofwhirligigs/mission.bmp": "2b474dffb24925e9946556e428d37acc97db9de4f4fa1f5290e30c4fa7c514ed",
+    "extracted/goal-production-hud-20261018-entry1/masterofwhirligigs/result.json": "016699d29d9a0c4eb973aa9d07f734721e23e1191d87e5c8c75c234363a6d2b4",
+    "extracted/goal-production-hud-20261018-entry1/masterofwhirligigs/states.tsv": "54efc2ba6c7e79d7be18ec6df9f813da0ad4ae043609a15e441066a16862f3cd",
+    "extracted/goal-production-hud-20261018-entry1/masterofwhirligigs/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-production-hud-20261018-entry1/masterofwhirligigs/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-production-hud-20261018-entry1/masterofwhirligigs/steps.tsv": "28cdb0abac27a8129681d1b6f683fb7d1f6507d048c00b84d338caa59733ccc1",
+    "extracted/goal-production-hud-20261018-entry1/results.json": "ad24d6a50a95c2d053ad08b6aee57f007b6705b9f12d3ea5a00a61d73fa1fa29",
+    "extracted/goal-production-hud-20261018-entry1/thewarbegins/briefing.bmp": "879c73ed00d806166b6929a926e4fe8ad759abfb1d665e4a432433e425ecd86a",
+    "extracted/goal-production-hud-20261018-entry1/thewarbegins/mission.bmp": "dea9ddfb6ccc3aeb156fa43bc11326a116476b6709ac6c3e374bd0e41fbc9a5b",
+    "extracted/goal-production-hud-20261018-entry1/thewarbegins/result.json": "f2e9ccd9f2ee0fa4dd0b35bd64028a401c3a4d677ad736a96fb8fe0b13c60fc1",
+    "extracted/goal-production-hud-20261018-entry1/thewarbegins/states.tsv": "21b760ba44b849e668e777b0c033371363c114e724689a3224bec1638e39253a",
+    "extracted/goal-production-hud-20261018-entry1/thewarbegins/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-production-hud-20261018-entry1/thewarbegins/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-production-hud-20261018-entry1/thewarbegins/steps.tsv": "059a4ed5d0d2b6f42020238fbc9ebe48e6162ae29bc73b99906b0a39f8ec0417",
+    "extracted/goal-production-hud-20261018-entry1/thewarbegins-movement/after.bmp": "eef14675fea2e076e5432b001f81380e1a4efbae1ea79289e4ad262f0adbec6e",
+    "extracted/goal-production-hud-20261018-entry1/thewarbegins-movement/briefing.bmp": "cb23ceb0a7a281fb5fb25c1a9fbd4846317e6f3c80691ec33233d5ce319bc6ba",
+    "extracted/goal-production-hud-20261018-entry1/thewarbegins-movement/mission.bmp": "76786a83a3cf76f21581362b6ee9e781c76ef60def93d5b7bcc74d98e32ce14a",
+    "extracted/goal-production-hud-20261018-entry1/thewarbegins-movement/result.json": "6a5c6aa520ef696dec836c78f2b77a75614c243bb56f857af6e35c33fddf36b1",
+    "extracted/goal-production-hud-20261018-entry1/thewarbegins-movement/states.tsv": "f906a9204642bb33049659b68cd6ad743bfda339e8ee4c64eb35ad737854b9cb",
+    "extracted/goal-production-hud-20261018-entry1/thewarbegins-movement/stderr.log": "197c308ea9fa1056d6a787adce92efe2af608eb0e085ddb7de3c75ef3b89af2e",
+    "extracted/goal-production-hud-20261018-entry1/thewarbegins-movement/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-production-hud-20261018-entry1/thewarbegins-movement/steps.tsv": "43f08ee6a0803f57d17b431a8399458cfe5a7afc023fbb0dd299464c1796999c",
+    "extracted/goal-production-hud-20261018-entry1/tutorial1/briefing.bmp": "7e917ee7d4e122b949539e417ae33c9ae1f93e01cf2c4d0168a2faa4d4c26bf8",
+    "extracted/goal-production-hud-20261018-entry1/tutorial1/result.json": "03dff0d5e3b3d12b9a789821f99a948d0c6114658c48c298f10262207d64cbd7",
+    "extracted/goal-production-hud-20261018-entry1/tutorial1/states.tsv": "f7cdf34f3c9a6d31ecebbab746f3d2862eabfcf82b0b294d48217fed428abd0e",
+    "extracted/goal-production-hud-20261018-entry1/tutorial1/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-production-hud-20261018-entry1/tutorial1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-production-hud-20261018-entry1/tutorial1/steps.tsv": "193839cee5b31aced7e4caff814faefd4f3e5cfd610b723d105fa507c88b7706",
+    "extracted/goal-production-hud-20261018-entry1/tutorial2/briefing.bmp": "80e8d3a95f79cf7fc140e0ef353e9be007465c41f7a6ff2ea92c91d391b8b850",
+    "extracted/goal-production-hud-20261018-entry1/tutorial2/result.json": "db1129e458cc69a1ecfacba134d8610c331042312d4764012cdd6ccec31d6b68",
+    "extracted/goal-production-hud-20261018-entry1/tutorial2/states.tsv": "a4d054c4ef1320285324a49b4d8dcae9220b0be5ad2bb23c572f3228227e5148",
+    "extracted/goal-production-hud-20261018-entry1/tutorial2/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-production-hud-20261018-entry1/tutorial2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-production-hud-20261018-entry1/tutorial2/steps.tsv": "128746d9a8af518d3e6faf967568f86b67ca2597cc7028cf7f66558b1fa18ce0",
+    "extracted/goal-production-hud-20261018-entry1/tutorial3/briefing.bmp": "5922eb355940f0d11e6f1d5a92593bf1a4a55d2b6a6139dde6b582290e78a1a1",
+    "extracted/goal-production-hud-20261018-entry1/tutorial3/result.json": "c36680f7895d3c8ae06b51722630deb3b8320588fd3e9af0fbced563fe5f7e25",
+    "extracted/goal-production-hud-20261018-entry1/tutorial3/states.tsv": "bc3f6613bf08d651cf8755ccd8b11459825fc90784613333ac85aa356ecdc8b7",
+    "extracted/goal-production-hud-20261018-entry1/tutorial3/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-production-hud-20261018-entry1/tutorial3/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-production-hud-20261018-entry1/tutorial3/steps.tsv": "953f6639250008fa66ef4c5d5084f2325ffc99666225f9aeec901100de84b5d3"
+  },
+  "validation": {
+    "full": {
+      "tests": 1665,
+      "failedChecks": 0,
+      "seconds": 216.11,
+      "ctestSeconds": 216.15
+    },
+    "build": {
+      "warnings": 0,
+      "errors": 0
+    },
+    "audit": {
+      "tools": 98,
+      "passed": 87,
+      "existingFailed": 11,
+      "newFailed": 0
+    },
+    "focused": [
+      "ProductionSync_Native98",
+      "CampaignSession_LocalLoginWorkshopHasActualPlacement"
+    ]
+  },
+  "fidelity": {
+    "complete": false,
+    "scope": "실제 현재 생산dirty→같은Deck 재계산→기술 부모의flags8 내용물 동기화. HUD 버튼은 미완료.",
+    "limits": [
+      "이번은43df80 전체와43ef10 생산dirty 단락의 실제 내용물 연결이며, 생산HUD의Gump노드·칸/아이콘·클릭·배치는 아직 후속이다.",
+      "43ef10 전체의다리 공급·품질/텔레포트 수량 타이머·비용 색 갱신과43e640의실제 생산 패널/43e1e0 격자·43e120 항목/43ec00 클릭을 복원해야 한다.",
+      "도움말/회수/업그레이드·마나 아이콘/CD/운반왕복·희생·승패·다음 미션·전략AI/11단계 자연 완주·전체 원본 동일성은 미완료다."
+    ]
+  },
+  "integrationPins": {
+    "reports": 61,
+    "pins": 220
+  },
+  "goalComplete": false,
+  "productionGui": {
+    "passed": true,
+    "scope": "실제GUI 사제 메뉴/TYPE85 배치/실제3e왕복/SP 차감/원본 서식 비용 표시·이동·지연삭제/사제 경로 이동. 같은 워크샾의 HP 자연 증가·3000 완공·abstract 해제까지 확인했다. 미션 완주 검사는 아니다.",
+    "command": [
+      "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+      "--run",
+      "H:\\T5Workspace\\NetstormReborn\\originals",
+      "--mission",
+      "thewarbegins",
+      "--window",
+      "--no-audio",
+      "--frames",
+      "1403",
+      "--set",
+      "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8",
+      "--ui-script",
+      "H:\\T5Workspace\\NetstormReborn\\extracted\\goal-production-hud-20261018-gui1\\steps.tsv",
+      "--ui-report",
+      "H:\\T5Workspace\\NetstormReborn\\extracted\\goal-production-hud-20261018-gui1\\states.tsv"
+    ],
+    "originals_unchanged": true,
+    "newPacketTypes": [
+      62
+    ],
+    "workshops": {
+      "15181": [
+        "85",
+        "1",
+        "0",
+        "109",
+        "107"
+      ]
+    },
+    "priestBefore": [
+      "158",
+      "1",
+      "0",
+      "94",
+      "108"
+    ],
+    "priestMoving": [
+      "158",
+      "1",
+      "11",
+      "95.8493652344",
+      "106.150634766"
+    ],
+    "factoryResearch": {
+      "passed": true,
+      "sid": 15181,
+      "authoritative": [
+        15183,
+        128,
+        16
+      ],
+      "initialFlares": {
+        "87": [
+          "106",
+          "0",
+          "1",
+          "103.082550049",
+          "104.093292236"
+        ],
+        "89": [
+          "106",
+          "0",
+          "1",
+          "105.445610046",
+          "106.800117493"
+        ],
+        "91": [
+          "106",
+          "0",
+          "1",
+          "103.073547363",
+          "100.949378967"
+        ],
+        "93": [
+          "106",
+          "0",
+          "1",
+          "104.604675293",
+          "102.13508606"
+        ],
+        "95": [
+          "106",
+          "0",
+          "2",
+          "105.793037415",
+          "99.2998580933"
+        ],
+        "97": [
+          "106",
+          "0",
+          "1",
+          "108.315734863",
+          "97.5325241089"
+        ],
+        "100": [
+          "106",
+          "0",
+          "1",
+          "106.646461487",
+          "99.8079528809"
+        ],
+        "102": [
+          "106",
+          "0",
+          "1",
+          "106.103408813",
+          "101.710487366"
+        ],
+        "104": [
+          "106",
+          "0",
+          "1",
+          "107.372756958",
+          "100.10572052"
+        ],
+        "106": [
+          "106",
+          "0",
+          "1",
+          "106.952392578",
+          "98.2172546387"
+        ],
+        "108": [
+          "106",
+          "0",
+          "2",
+          "102.457244873",
+          "98.6753768921"
+        ],
+        "110": [
+          "106",
+          "0",
+          "1",
+          "103.725212097",
+          "101.015007019"
+        ]
+      },
+      "productionContents": {
+        "prepared": [
+          [
+            62,
+            133,
+            4,
+            0,
+            0
+          ],
+          [
+            63,
+            76,
+            4,
+            0,
+            1
+          ],
+          [
+            64,
+            72,
+            4,
+            0,
+            2
+          ],
+          [
+            65,
+            128,
+            4,
+            0,
+            3
+          ],
+          [
+            70,
+            133,
+            8,
+            3,
+            0
+          ]
+        ],
+        "placed": [
+          [
+            62,
+            133,
+            4,
+            0,
+            0
+          ],
+          [
+            63,
+            76,
+            4,
+            0,
+            1
+          ],
+          [
+            64,
+            72,
+            4,
+            0,
+            2
+          ],
+          [
+            65,
+            128,
+            4,
+            0,
+            3
+          ],
+          [
+            70,
+            133,
+            8,
+            3,
+            0
+          ]
+        ],
+        "moving": [
+          [
+            62,
+            133,
+            4,
+            0,
+            0
+          ],
+          [
+            63,
+            76,
+            4,
+            0,
+            1
+          ],
+          [
+            64,
+            72,
+            4,
+            0,
+            2
+          ],
+          [
+            65,
+            128,
+            4,
+            0,
+            3
+          ],
+          [
+            70,
+            133,
+            8,
+            3,
+            0
+          ]
+        ],
+        "costDeleted": [
+          [
+            62,
+            133,
+            4,
+            0,
+            0
+          ],
+          [
+            63,
+            76,
+            4,
+            0,
+            1
+          ],
+          [
+            64,
+            72,
+            4,
+            0,
+            2
+          ],
+          [
+            65,
+            128,
+            4,
+            0,
+            3
+          ],
+          [
+            70,
+            133,
+            8,
+            3,
+            0
+          ]
+        ],
+        "building": [
+          [
+            62,
+            133,
+            4,
+            0,
+            0
+          ],
+          [
+            63,
+            76,
+            4,
+            0,
+            1
+          ],
+          [
+            64,
+            72,
+            4,
+            0,
+            2
+          ],
+          [
+            65,
+            128,
+            4,
+            0,
+            3
+          ],
+          [
+            70,
+            133,
+            8,
+            3,
+            0
+          ]
+        ],
+        "completed": [
+          [
+            62,
+            133,
+            4,
+            0,
+            0
+          ],
+          [
+            63,
+            76,
+            4,
+            0,
+            1
+          ],
+          [
+            64,
+            72,
+            4,
+            0,
+            2
+          ],
+          [
+            65,
+            128,
+            4,
+            0,
+            3
+          ],
+          [
+            70,
+            133,
+            8,
+            3,
+            0
+          ]
+        ],
+        "selectedWorkshop": [
+          [
+            62,
+            133,
+            4,
+            0,
+            0
+          ],
+          [
+            63,
+            76,
+            4,
+            0,
+            1
+          ],
+          [
+            64,
+            72,
+            4,
+            0,
+            2
+          ],
+          [
+            65,
+            128,
+            4,
+            0,
+            3
+          ],
+          [
+            70,
+            133,
+            8,
+            3,
+            0
+          ]
+        ],
+        "factoryOpened": [
+          [
+            62,
+            133,
+            4,
+            0,
+            0
+          ],
+          [
+            63,
+            76,
+            4,
+            0,
+            1
+          ],
+          [
+            64,
+            72,
+            4,
+            0,
+            2
+          ],
+          [
+            65,
+            128,
+            4,
+            0,
+            3
+          ],
+          [
+            70,
+            133,
+            8,
+            3,
+            0
+          ]
+        ],
+        "factoryKnowledge": [
+          [
+            62,
+            133,
+            4,
+            0,
+            0
+          ],
+          [
+            63,
+            76,
+            4,
+            0,
+            1
+          ],
+          [
+            64,
+            72,
+            4,
+            0,
+            2
+          ],
+          [
+            65,
+            128,
+            4,
+            0,
+            3
+          ],
+          [
+            70,
+            133,
+            8,
+            3,
+            0
+          ]
+        ],
+        "factoryClosed": [
+          [
+            62,
+            133,
+            4,
+            0,
+            0
+          ],
+          [
+            63,
+            76,
+            4,
+            0,
+            1
+          ],
+          [
+            64,
+            72,
+            4,
+            0,
+            2
+          ],
+          [
+            65,
+            128,
+            4,
+            0,
+            3
+          ],
+          [
+            70,
+            133,
+            8,
+            3,
+            0
+          ]
+        ],
+        "factoryProduction": [
+          [
+            62,
+            133,
+            4,
+            0,
+            0
+          ],
+          [
+            63,
+            76,
+            4,
+            0,
+            1
+          ],
+          [
+            64,
+            72,
+            4,
+            0,
+            2
+          ],
+          [
+            65,
+            128,
+            4,
+            0,
+            3
+          ],
+          [
+            70,
+            133,
+            8,
+            3,
+            0
+          ]
+        ],
+        "researchBefore": [
+          [
+            62,
+            133,
+            4,
+            0,
+            0
+          ],
+          [
+            63,
+            76,
+            4,
+            0,
+            1
+          ],
+          [
+            64,
+            72,
+            4,
+            0,
+            2
+          ],
+          [
+            65,
+            128,
+            4,
+            0,
+            3
+          ],
+          [
+            70,
+            133,
+            8,
+            3,
+            0
+          ]
+        ],
+        "researched": [
+          [
+            62,
+            133,
+            4,
+            0,
+            0
+          ],
+          [
+            63,
+            76,
+            4,
+            0,
+            1
+          ],
+          [
+            64,
+            72,
+            4,
+            0,
+            2
+          ],
+          [
+            65,
+            128,
+            4,
+            0,
+            3
+          ],
+          [
+            70,
+            133,
+            8,
+            3,
+            0
+          ],
+          [
+            99,
+            128,
+            8,
+            3,
+            1
+          ]
+        ],
+        "productionAfter": [
+          [
+            62,
+            133,
+            4,
+            0,
+            0
+          ],
+          [
+            63,
+            76,
+            4,
+            0,
+            1
+          ],
+          [
+            64,
+            72,
+            4,
+            0,
+            2
+          ],
+          [
+            65,
+            128,
+            4,
+            0,
+            3
+          ],
+          [
+            70,
+            133,
+            8,
+            3,
+            0
+          ],
+          [
+            99,
+            128,
+            8,
+            3,
+            1
+          ]
+        ],
+        "knowledgeAfter": [
+          [
+            62,
+            133,
+            4,
+            0,
+            0
+          ],
+          [
+            63,
+            76,
+            4,
+            0,
+            1
+          ],
+          [
+            64,
+            72,
+            4,
+            0,
+            2
+          ],
+          [
+            65,
+            128,
+            4,
+            0,
+            3
+          ],
+          [
+            70,
+            133,
+            8,
+            3,
+            0
+          ],
+          [
+            99,
+            128,
+            8,
+            3,
+            1
+          ]
+        ],
+        "flareEnded": [
+          [
+            62,
+            133,
+            4,
+            0,
+            0
+          ],
+          [
+            63,
+            76,
+            4,
+            0,
+            1
+          ],
+          [
+            64,
+            72,
+            4,
+            0,
+            2
+          ],
+          [
+            65,
+            128,
+            4,
+            0,
+            3
+          ],
+          [
+            70,
+            133,
+            8,
+            3,
+            0
+          ],
+          [
+            99,
+            128,
+            8,
+            3,
+            1
+          ]
+        ]
+      },
+      "production": [
+        {
+          "token": 177,
+          "index": 0,
+          "flags": 66600,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "View Current Production"
+        },
+        {
+          "token": 177,
+          "index": 1,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Put Knowledge into Production"
+        },
+        {
+          "token": 177,
+          "index": 2,
+          "flags": 66689,
+          "command": 50331698,
+          "parameter": 15181,
+          "visible": true,
+          "label": "Upgrade costs 800"
+        },
+        {
+          "token": 177,
+          "index": 3,
+          "flags": 65552,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": ""
+        },
+        {
+          "token": 177,
+          "index": 4,
+          "flags": 66689,
+          "command": 33554581,
+          "parameter": 1610612738,
+          "visible": true,
+          "label": "Salvage gains 200"
+        },
+        {
+          "token": 177,
+          "index": 5,
+          "flags": 66689,
+          "command": 33554455,
+          "parameter": 85,
+          "visible": true,
+          "label": "About"
+        },
+        {
+          "token": 177,
+          "index": 6,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Player"
+        },
+        {
+          "token": 187,
+          "index": 0,
+          "flags": 66689,
+          "command": 33554455,
+          "parameter": 128,
+          "visible": true,
+          "label": "Sun Cannon"
+        },
+        {
+          "token": 187,
+          "index": 1,
+          "flags": 66689,
+          "command": 33554455,
+          "parameter": 1610612737,
+          "visible": true,
+          "label": "About"
+        },
+        {
+          "token": 197,
+          "index": 0,
+          "flags": 66689,
+          "command": 50331776,
+          "parameter": 4995917,
+          "visible": false,
+          "label": "Rain Generator"
+        },
+        {
+          "token": 197,
+          "index": 1,
+          "flags": 66689,
+          "command": 50331776,
+          "parameter": 4733773,
+          "visible": false,
+          "label": "Whirlibase"
+        },
+        {
+          "token": 207,
+          "index": 0,
+          "flags": 66689,
+          "command": 33554616,
+          "parameter": 1,
+          "visible": false,
+          "label": "Find Priest!"
+        }
+      ],
+      "knowledge": [
+        {
+          "token": 217,
+          "index": 0,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "View Current Production"
+        },
+        {
+          "token": 217,
+          "index": 1,
+          "flags": 66600,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Put Knowledge into Production"
+        },
+        {
+          "token": 217,
+          "index": 2,
+          "flags": 66689,
+          "command": 50331698,
+          "parameter": 15181,
+          "visible": true,
+          "label": "Upgrade costs 800"
+        },
+        {
+          "token": 217,
+          "index": 3,
+          "flags": 65552,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": ""
+        },
+        {
+          "token": 217,
+          "index": 4,
+          "flags": 66689,
+          "command": 33554581,
+          "parameter": 1610612738,
+          "visible": true,
+          "label": "Salvage gains 200"
+        },
+        {
+          "token": 217,
+          "index": 5,
+          "flags": 66689,
+          "command": 33554455,
+          "parameter": 85,
+          "visible": true,
+          "label": "About"
+        },
+        {
+          "token": 217,
+          "index": 6,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Player"
+        },
+        {
+          "token": 227,
+          "index": 0,
+          "flags": 66689,
+          "command": 33554455,
+          "parameter": 128,
+          "visible": false,
+          "label": "Sun Cannon"
+        },
+        {
+          "token": 227,
+          "index": 1,
+          "flags": 66689,
+          "command": 33554455,
+          "parameter": 1610612737,
+          "visible": false,
+          "label": "About"
+        },
+        {
+          "token": 237,
+          "index": 0,
+          "flags": 66689,
+          "command": 50331776,
+          "parameter": 4995917,
+          "visible": true,
+          "label": "Rain Generator"
+        },
+        {
+          "token": 237,
+          "index": 1,
+          "flags": 66689,
+          "command": 50331776,
+          "parameter": 4733773,
+          "visible": true,
+          "label": "Whirlibase"
+        },
+        {
+          "token": 247,
+          "index": 0,
+          "flags": 66689,
+          "command": 33554616,
+          "parameter": 1,
+          "visible": false,
+          "label": "Find Priest!"
+        }
+      ],
+      "content": {
+        "prepared": [],
+        "placed": [],
+        "moving": [],
+        "costDeleted": [],
+        "building": [],
+        "completed": [],
+        "selectedWorkshop": [],
+        "factoryOpened": [],
+        "factoryKnowledge": [],
+        "factoryClosed": [],
+        "factoryProduction": [],
+        "researchBefore": [],
+        "researched": [
+          [
+            15183,
+            128,
+            16
+          ]
+        ],
+        "productionAfter": [
+          [
+            15183,
+            128,
+            16
+          ]
+        ],
+        "knowledgeAfter": [
+          [
+            15183,
+            128,
+            16
+          ]
+        ],
+        "flareEnded": [
+          [
+            15183,
+            128,
+            16
+          ]
+        ]
+      },
+      "scope": "실제 GUI 지식 선택/58h 수신/server 내용물/생산 메뉴·지식 제거/플레어12개 및 자연 종료. 생산HUD 배치·전체 미션 완주는 후속."
+    },
+    "factoryMenus": {
+      "passed": true,
+      "sid": 15181,
+      "root": [
+        {
+          "token": 57,
+          "index": 0,
+          "flags": 66600,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "View Current Production"
+        },
+        {
+          "token": 57,
+          "index": 1,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Put Knowledge into Production"
+        },
+        {
+          "token": 57,
+          "index": 2,
+          "flags": 66689,
+          "command": 50331698,
+          "parameter": 15181,
+          "visible": true,
+          "label": "Upgrade costs 800"
+        },
+        {
+          "token": 57,
+          "index": 3,
+          "flags": 65552,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": ""
+        },
+        {
+          "token": 57,
+          "index": 4,
+          "flags": 66689,
+          "command": 33554581,
+          "parameter": 1610612738,
+          "visible": true,
+          "label": "Salvage gains 200"
+        },
+        {
+          "token": 57,
+          "index": 5,
+          "flags": 66689,
+          "command": 33554455,
+          "parameter": 85,
+          "visible": true,
+          "label": "About"
+        },
+        {
+          "token": 57,
+          "index": 6,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Player"
+        }
+      ],
+      "knowledge": [
+        {
+          "token": 57,
+          "index": 0,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "View Current Production"
+        },
+        {
+          "token": 57,
+          "index": 1,
+          "flags": 66600,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Put Knowledge into Production"
+        },
+        {
+          "token": 57,
+          "index": 2,
+          "flags": 66689,
+          "command": 50331698,
+          "parameter": 15181,
+          "visible": true,
+          "label": "Upgrade costs 800"
+        },
+        {
+          "token": 57,
+          "index": 3,
+          "flags": 65552,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": ""
+        },
+        {
+          "token": 57,
+          "index": 4,
+          "flags": 66689,
+          "command": 33554581,
+          "parameter": 1610612738,
+          "visible": true,
+          "label": "Salvage gains 200"
+        },
+        {
+          "token": 57,
+          "index": 5,
+          "flags": 66689,
+          "command": 33554455,
+          "parameter": 85,
+          "visible": true,
+          "label": "About"
+        },
+        {
+          "token": 57,
+          "index": 6,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Player"
+        },
+        {
+          "token": 77,
+          "index": 0,
+          "flags": 66689,
+          "command": 50331776,
+          "parameter": 4995917,
+          "visible": true,
+          "label": "Rain Generator"
+        },
+        {
+          "token": 77,
+          "index": 1,
+          "flags": 66689,
+          "command": 50331776,
+          "parameter": 8403789,
+          "visible": true,
+          "label": "Sun Cannon"
+        },
+        {
+          "token": 77,
+          "index": 2,
+          "flags": 66689,
+          "command": 50331776,
+          "parameter": 4733773,
+          "visible": true,
+          "label": "Whirlibase"
+        }
+      ],
+      "production": [
+        {
+          "token": 97,
+          "index": 0,
+          "flags": 66600,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "View Current Production"
+        },
+        {
+          "token": 97,
+          "index": 1,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Put Knowledge into Production"
+        },
+        {
+          "token": 97,
+          "index": 2,
+          "flags": 66689,
+          "command": 50331698,
+          "parameter": 15181,
+          "visible": true,
+          "label": "Upgrade costs 800"
+        },
+        {
+          "token": 97,
+          "index": 3,
+          "flags": 65552,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": ""
+        },
+        {
+          "token": 97,
+          "index": 4,
+          "flags": 66689,
+          "command": 33554581,
+          "parameter": 1610612738,
+          "visible": true,
+          "label": "Salvage gains 200"
+        },
+        {
+          "token": 97,
+          "index": 5,
+          "flags": 66689,
+          "command": 33554455,
+          "parameter": 85,
+          "visible": true,
+          "label": "About"
+        },
+        {
+          "token": 97,
+          "index": 6,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Player"
+        },
+        {
+          "token": 107,
+          "index": 0,
+          "flags": 66689,
+          "command": 33554455,
+          "parameter": 1610612737,
+          "visible": true,
+          "label": "About"
+        }
+      ],
+      "scope": "원본 메뉴 작성/우클릭 진입/하위 열기만 검증. 연구·업그레이드 명령 실행은 후속이다."
+    },
+    "selection": {
+      "passed": true,
+      "sid": 15181,
+      "raw": [
+        0,
+        134,
+        3000
+      ],
+      "input": [
+        "15181",
+        "0",
+        "14",
+        "13"
+      ]
+    },
+    "completion": {
+      "passed": true,
+      "sid": 15181,
+      "placed": [
+        0,
+        131,
+        0
+      ],
+      "building": [
+        0,
+        131,
+        1926
+      ],
+      "completed": [
+        0,
+        130,
+        3000
+      ],
+      "gameSeconds": [
+        "15.078",
+        "27.734"
+      ]
+    },
+    "observed": {
+      "prepared": {
+        "time": [
+          "3.078",
+          "3.234"
+        ],
+        "raw_input": [
+          "15000",
+          "0",
+          "14",
+          "12"
+        ],
+        "raw_cursor": [
+          "0",
+          "1",
+          "85",
+          "73",
+          "109",
+          "107",
+          "32",
+          "352",
+          "1",
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "0",
+          "3000",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_menus": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ]
+      },
+      "placed": {
+        "time": [
+          "3.687",
+          "3.843"
+        ],
+        "raw_input": [
+          "0",
+          "0",
+          "14",
+          "13"
+        ],
+        "raw_cursor": [
+          "2",
+          "1",
+          "85",
+          "0",
+          "109",
+          "107",
+          "32",
+          "352",
+          "1",
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "0",
+          "2200",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_menus": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "3"
+        ],
+        "raw_sp_gump": [
+          "56",
+          "3",
+          "1",
+          "4194433",
+          "691",
+          "375.206",
+          "-0.844",
+          "-2",
+          "3.687",
+          "129"
+        ]
+      },
+      "moving": {
+        "time": [
+          "6.072",
+          "6.228"
+        ],
+        "raw_input": [
+          "0",
+          "0",
+          "14",
+          "13"
+        ],
+        "raw_cursor": [
+          "2",
+          "1",
+          "85",
+          "0",
+          "109",
+          "107",
+          "32",
+          "352",
+          "1",
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "0",
+          "2200",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_menus": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "3"
+        ],
+        "raw_sp_gump": [
+          "56",
+          "3",
+          "1",
+          "4194433",
+          "691",
+          "105.62",
+          "-5.614",
+          "-2",
+          "6.072",
+          "129"
+        ]
+      },
+      "costDeleted": {
+        "time": [
+          "6.874",
+          "7.03"
+        ],
+        "raw_input": [
+          "0",
+          "0",
+          "14",
+          "13"
+        ],
+        "raw_cursor": [
+          "2",
+          "1",
+          "85",
+          "0",
+          "109",
+          "107",
+          "32",
+          "352",
+          "1",
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "0",
+          "2200",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_menus": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ]
+      },
+      "building": {
+        "time": [
+          "15.078",
+          "15.234"
+        ],
+        "raw_input": [
+          "0",
+          "0",
+          "14",
+          "13"
+        ],
+        "raw_cursor": [
+          "2",
+          "1",
+          "85",
+          "0",
+          "109",
+          "107",
+          "32",
+          "352",
+          "1",
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "0",
+          "2200",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_menus": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ]
+      },
+      "completed": {
+        "time": [
+          "27.734",
+          "27.89"
+        ],
+        "raw_input": [
+          "0",
+          "0",
+          "14",
+          "13"
+        ],
+        "raw_cursor": [
+          "2",
+          "1",
+          "85",
+          "0",
+          "109",
+          "107",
+          "32",
+          "352",
+          "1",
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "0",
+          "2200",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_menus": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ]
+      },
+      "selectedWorkshop": {
+        "time": [
+          "28.672",
+          "28.828"
+        ],
+        "raw_input": [
+          "15181",
+          "0",
+          "14",
+          "13"
+        ],
+        "raw_cursor": [
+          "2",
+          "1",
+          "85",
+          "0",
+          "109",
+          "107",
+          "32",
+          "352",
+          "1",
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "0",
+          "2200",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_menus": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ]
+      },
+      "factoryOpened": {
+        "time": [
+          "29.313",
+          "29.469"
+        ],
+        "raw_input": [
+          "15181",
+          "0",
+          "14",
+          "13"
+        ],
+        "raw_cursor": [
+          "2",
+          "1",
+          "85",
+          "0",
+          "109",
+          "107",
+          "32",
+          "352",
+          "1",
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "0",
+          "2200",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_menus": [
+          "4",
+          "0",
+          "4",
+          "4",
+          "63"
+        ]
+      },
+      "factoryKnowledge": {
+        "time": [
+          "29.906",
+          "30.062"
+        ],
+        "raw_input": [
+          "15181",
+          "0",
+          "14",
+          "13"
+        ],
+        "raw_cursor": [
+          "2",
+          "1",
+          "85",
+          "0",
+          "109",
+          "107",
+          "32",
+          "352",
+          "1",
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "0",
+          "2200",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_menus": [
+          "4",
+          "0",
+          "4",
+          "4",
+          "63"
+        ]
+      },
+      "factoryClosed": {
+        "time": [
+          "30.266",
+          "30.422"
+        ],
+        "raw_input": [
+          "15181",
+          "0",
+          "14",
+          "13"
+        ],
+        "raw_cursor": [
+          "2",
+          "1",
+          "85",
+          "0",
+          "109",
+          "107",
+          "32",
+          "352",
+          "1",
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "0",
+          "2200",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_menus": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ]
+      },
+      "factoryProduction": {
+        "time": [
+          "31.443",
+          "31.599"
+        ],
+        "raw_input": [
+          "15181",
+          "0",
+          "14",
+          "13"
+        ],
+        "raw_cursor": [
+          "2",
+          "1",
+          "85",
+          "0",
+          "109",
+          "107",
+          "32",
+          "352",
+          "1",
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "0",
+          "2200",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_menus": [
+          "4",
+          "0",
+          "4",
+          "4",
+          "63"
+        ]
+      },
+      "researchBefore": {
+        "time": [
+          "32.593",
+          "32.749"
+        ],
+        "raw_input": [
+          "15181",
+          "0",
+          "14",
+          "13"
+        ],
+        "raw_cursor": [
+          "2",
+          "1",
+          "85",
+          "0",
+          "109",
+          "107",
+          "32",
+          "352",
+          "1",
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "0",
+          "2200",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_menus": [
+          "4",
+          "0",
+          "4",
+          "4",
+          "63"
+        ]
+      },
+      "researched": {
+        "time": [
+          "32.875",
+          "33.031"
+        ],
+        "raw_input": [
+          "15181",
+          "0",
+          "14",
+          "14"
+        ],
+        "raw_cursor": [
+          "2",
+          "1",
+          "85",
+          "0",
+          "109",
+          "107",
+          "32",
+          "352",
+          "1",
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "0",
+          "2200",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_menus": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ]
+      },
+      "productionAfter": {
+        "time": [
+          "33.843",
+          "33.999"
+        ],
+        "raw_input": [
+          "15181",
+          "0",
+          "14",
+          "14"
+        ],
+        "raw_cursor": [
+          "2",
+          "1",
+          "85",
+          "0",
+          "109",
+          "107",
+          "32",
+          "352",
+          "1",
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "0",
+          "2200",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_menus": [
+          "4",
+          "0",
+          "4",
+          "4",
+          "60"
+        ]
+      },
+      "knowledgeAfter": {
+        "time": [
+          "34.766",
+          "34.922"
+        ],
+        "raw_input": [
+          "15181",
+          "0",
+          "14",
+          "14"
+        ],
+        "raw_cursor": [
+          "2",
+          "1",
+          "85",
+          "0",
+          "109",
+          "107",
+          "32",
+          "352",
+          "1",
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "0",
+          "2200",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_menus": [
+          "4",
+          "0",
+          "4",
+          "4",
+          "60"
+        ]
+      },
+      "flareEnded": {
+        "time": [
+          "40.922",
+          "41.078"
+        ],
+        "raw_input": [
+          "15181",
+          "0",
+          "14",
+          "14"
+        ],
+        "raw_cursor": [
+          "2",
+          "1",
+          "85",
+          "0",
+          "109",
+          "107",
+          "32",
+          "352",
+          "1",
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "0",
+          "2200",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_menus": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ]
+      }
+    }
+  },
+  "goalEntry": {
+    "scope": "CLI --mission/실제 UI 버튼으로11개 플레이 진입. 사용자 메뉴 선택·자연 명령·승패·저장·완주/원본 전체 동일성은 미검증.",
+    "runs": [
+      {
+        "mission": "tutorial1",
+        "passed": true,
+        "clicks": [
+          "MORE",
+          "OK"
+        ],
+        "observations": [
+          {
+            "frame": 4,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A."
+            ],
+            "controls": {
+              "MORE": [
+                "1",
+                "0",
+                "474",
+                "494",
+                "549",
+                "514",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial1",
+              "Tutorial",
+              "3"
+            ],
+            "raw_world": [
+              "0.218",
+              "4",
+              "6",
+              "0",
+              "0",
+              "5000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.183",
+              "0"
+            ],
+            "mission_rules": [
+              "1",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-production-hud-20261018-goal-entry1/tutorial1/0",
+            "exitCode": 0
+          },
+          {
+            "frame": 6,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A1."
+            ],
+            "controls": {
+              "BACK": [
+                "1",
+                "0",
+                "435",
+                "417",
+                "510",
+                "437",
+                "0"
+              ],
+              "OK": [
+                "1",
+                "0",
+                "514",
+                "417",
+                "589",
+                "437",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial1",
+              "Tutorial",
+              "3"
+            ],
+            "raw_world": [
+              "0.234",
+              "6",
+              "6",
+              "0",
+              "0",
+              "5000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.188",
+              "0"
+            ],
+            "mission_rules": [
+              "1",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-production-hud-20261018-goal-entry1/tutorial1/1",
+            "exitCode": 0
+          },
+          {
+            "frame": 8,
+            "phase": [
+              "4"
+            ],
+            "paused": [
+              "0"
+            ],
+            "page": [
+              "mission"
+            ],
+            "controls": {
+              "Game": [
+                "1",
+                "0",
+                "4",
+                "4",
+                "79",
+                "24",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial1",
+              "Tutorial",
+              "3"
+            ],
+            "raw_world": [
+              "0.224",
+              "8",
+              "6",
+              "0",
+              "0",
+              "5000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.175",
+              "0"
+            ],
+            "mission_rules": [
+              "1",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-production-hud-20261018-goal-entry1/tutorial1/2",
+            "exitCode": 0
+          }
+        ],
+        "expectedStart": {
+          "money": 0,
+          "technology": [],
+          "demo": 0
+        }
+      },
+      {
+        "mission": "tutorial2",
+        "passed": true,
+        "clicks": [
+          "MORE",
+          "MORE",
+          "OK"
+        ],
+        "observations": [
+          {
+            "frame": 4,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A."
+            ],
+            "controls": {
+              "MORE": [
+                "1",
+                "0",
+                "474",
+                "431",
+                "549",
+                "451",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial2",
+              "Tutorial",
+              "2"
+            ],
+            "raw_world": [
+              "0.208",
+              "4",
+              "5",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.163",
+              "0"
+            ],
+            "mission_rules": [
+              "1",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "10000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunArcher"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-production-hud-20261018-goal-entry1/tutorial2/0",
+            "exitCode": 0
+          },
+          {
+            "frame": 6,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A1."
+            ],
+            "controls": {
+              "BACK": [
+                "1",
+                "0",
+                "435",
+                "492",
+                "510",
+                "512",
+                "0"
+              ],
+              "MORE": [
+                "1",
+                "0",
+                "514",
+                "492",
+                "589",
+                "512",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial2",
+              "Tutorial",
+              "2"
+            ],
+            "raw_world": [
+              "0.218",
+              "6",
+              "5",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.187",
+              "0"
+            ],
+            "mission_rules": [
+              "1",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "10000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunArcher"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-production-hud-20261018-goal-entry1/tutorial2/1",
+            "exitCode": 0
+          },
+          {
+            "frame": 8,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A2."
+            ],
+            "controls": {
+              "BACK": [
+                "1",
+                "0",
+                "435",
+                "466",
+                "510",
+                "486",
+                "0"
+              ],
+              "OK": [
+                "1",
+                "0",
+                "514",
+                "466",
+                "589",
+                "486",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial2",
+              "Tutorial",
+              "2"
+            ],
+            "raw_world": [
+              "0.215",
+              "8",
+              "5",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.163",
+              "0"
+            ],
+            "mission_rules": [
+              "1",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "10000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunArcher"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-production-hud-20261018-goal-entry1/tutorial2/2",
+            "exitCode": 0
+          },
+          {
+            "frame": 10,
+            "phase": [
+              "4"
+            ],
+            "paused": [
+              "0"
+            ],
+            "page": [
+              "mission"
+            ],
+            "controls": {
+              "Game": [
+                "1",
+                "0",
+                "4",
+                "4",
+                "79",
+                "24",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial2",
+              "Tutorial",
+              "2"
+            ],
+            "raw_world": [
+              "0.234",
+              "10",
+              "5",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.181",
+              "0"
+            ],
+            "mission_rules": [
+              "1",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "10000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunArcher"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-production-hud-20261018-goal-entry1/tutorial2/3",
+            "exitCode": 0
+          }
+        ],
+        "expectedStart": {
+          "money": 10000,
+          "technology": [
+            "sunArcher"
+          ],
+          "demo": 0
+        }
+      },
+      {
+        "mission": "tutorial3",
+        "passed": true,
+        "clicks": [
+          "MORE",
+          "OK"
+        ],
+        "observations": [
+          {
+            "frame": 4,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A."
+            ],
+            "controls": {
+              "MORE": [
+                "1",
+                "0",
+                "474",
+                "473",
+                "549",
+                "493",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial3",
+              "Tutorial",
+              "37"
+            ],
+            "raw_world": [
+              "0.232",
+              "4",
+              "15",
+              "0",
+              "0",
+              "11800",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.168",
+              "0"
+            ],
+            "mission_rules": [
+              "1",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "2000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunArcher",
+              "sunWalker"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-production-hud-20261018-goal-entry1/tutorial3/0",
+            "exitCode": 0
+          },
+          {
+            "frame": 6,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A1."
+            ],
+            "controls": {
+              "BACK": [
+                "1",
+                "0",
+                "435",
+                "459",
+                "510",
+                "479",
+                "0"
+              ],
+              "OK": [
+                "1",
+                "0",
+                "514",
+                "459",
+                "589",
+                "479",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial3",
+              "Tutorial",
+              "37"
+            ],
+            "raw_world": [
+              "0.228",
+              "6",
+              "15",
+              "0",
+              "0",
+              "11800",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.17",
+              "0"
+            ],
+            "mission_rules": [
+              "1",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "2000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunArcher",
+              "sunWalker"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-production-hud-20261018-goal-entry1/tutorial3/1",
+            "exitCode": 0
+          },
+          {
+            "frame": 8,
+            "phase": [
+              "4"
+            ],
+            "paused": [
+              "0"
+            ],
+            "page": [
+              "mission"
+            ],
+            "controls": {
+              "Game": [
+                "1",
+                "0",
+                "4",
+                "4",
+                "79",
+                "24",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial3",
+              "Tutorial",
+              "37"
+            ],
+            "raw_world": [
+              "0.27",
+              "8",
+              "15",
+              "0",
+              "0",
+              "11800",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.204",
+              "0"
+            ],
+            "mission_rules": [
+              "1",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "2000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunArcher",
+              "sunWalker"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-production-hud-20261018-goal-entry1/tutorial3/2",
+            "exitCode": 0
+          }
+        ],
+        "expectedStart": {
+          "money": 2000,
+          "technology": [
+            "sunArcher",
+            "sunWalker"
+          ],
+          "demo": 0
+        }
+      },
+      {
+        "mission": "tutorial4",
+        "passed": true,
+        "clicks": [
+          "MORE",
+          "OK"
+        ],
+        "observations": [
+          {
+            "frame": 4,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A."
+            ],
+            "controls": {
+              "MORE": [
+                "1",
+                "0",
+                "474",
+                "492",
+                "549",
+                "512",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial4",
+              "Tutorial",
+              "65"
+            ],
+            "raw_world": [
+              "0.252",
+              "4",
+              "25",
+              "0",
+              "0",
+              "18400",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.171",
+              "0"
+            ],
+            "mission_rules": [
+              "0",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "2000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunArcher",
+              "windBattery",
+              "sunWalker"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-production-hud-20261018-goal-entry1/tutorial4/0",
+            "exitCode": 0
+          },
+          {
+            "frame": 6,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A1."
+            ],
+            "controls": {
+              "BACK": [
+                "1",
+                "0",
+                "435",
+                "424",
+                "510",
+                "444",
+                "0"
+              ],
+              "OK": [
+                "1",
+                "0",
+                "514",
+                "424",
+                "589",
+                "444",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial4",
+              "Tutorial",
+              "65"
+            ],
+            "raw_world": [
+              "0.25",
+              "6",
+              "25",
+              "0",
+              "0",
+              "18400",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.173",
+              "0"
+            ],
+            "mission_rules": [
+              "0",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "2000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunArcher",
+              "windBattery",
+              "sunWalker"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-production-hud-20261018-goal-entry1/tutorial4/1",
+            "exitCode": 0
+          },
+          {
+            "frame": 8,
+            "phase": [
+              "4"
+            ],
+            "paused": [
+              "0"
+            ],
+            "page": [
+              "mission"
+            ],
+            "controls": {
+              "Game": [
+                "1",
+                "0",
+                "4",
+                "4",
+                "79",
+                "24",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial4",
+              "Tutorial",
+              "65"
+            ],
+            "raw_world": [
+              "0.253",
+              "8",
+              "25",
+              "0",
+              "0",
+              "18400",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.175",
+              "0"
+            ],
+            "mission_rules": [
+              "0",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "2000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunArcher",
+              "windBattery",
+              "sunWalker"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-production-hud-20261018-goal-entry1/tutorial4/2",
+            "exitCode": 0
+          }
+        ],
+        "expectedStart": {
+          "money": 2000,
+          "technology": [
+            "sunArcher",
+            "sunWalker",
+            "windBattery"
+          ],
+          "demo": 0
+        }
+      },
+      {
+        "mission": "tutorial5",
+        "passed": true,
+        "clicks": [
+          "MORE",
+          "OK"
+        ],
+        "observations": [
+          {
+            "frame": 4,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A."
+            ],
+            "controls": {
+              "MORE": [
+                "1",
+                "0",
+                "474",
+                "489",
+                "549",
+                "509",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial5",
+              "Tutorial",
+              "55"
+            ],
+            "raw_world": [
+              "0.279",
+              "4",
+              "23",
+              "0",
+              "0",
+              "21600",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.155",
+              "0"
+            ],
+            "mission_rules": [
+              "0",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "4000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "536870912",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunArcher",
+              "windBattery",
+              "sunBlocker",
+              "sunCannon",
+              "sunWalker"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-production-hud-20261018-goal-entry1/tutorial5/0",
+            "exitCode": 0
+          },
+          {
+            "frame": 6,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A1."
+            ],
+            "controls": {
+              "BACK": [
+                "1",
+                "0",
+                "435",
+                "480",
+                "510",
+                "500",
+                "0"
+              ],
+              "OK": [
+                "1",
+                "0",
+                "514",
+                "480",
+                "589",
+                "500",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial5",
+              "Tutorial",
+              "55"
+            ],
+            "raw_world": [
+              "0.298",
+              "6",
+              "23",
+              "0",
+              "0",
+              "21600",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.195",
+              "0"
+            ],
+            "mission_rules": [
+              "0",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "4000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "536870912",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunArcher",
+              "windBattery",
+              "sunBlocker",
+              "sunCannon",
+              "sunWalker"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-production-hud-20261018-goal-entry1/tutorial5/1",
+            "exitCode": 0
+          },
+          {
+            "frame": 8,
+            "phase": [
+              "4"
+            ],
+            "paused": [
+              "0"
+            ],
+            "page": [
+              "mission"
+            ],
+            "controls": {
+              "Game": [
+                "1",
+                "0",
+                "4",
+                "4",
+                "79",
+                "24",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial5",
+              "Tutorial",
+              "55"
+            ],
+            "raw_world": [
+              "0.291",
+              "8",
+              "23",
+              "0",
+              "0",
+              "21600",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.167",
+              "0"
+            ],
+            "mission_rules": [
+              "0",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "4000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "536870912",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunArcher",
+              "windBattery",
+              "sunBlocker",
+              "sunCannon",
+              "sunWalker"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-production-hud-20261018-goal-entry1/tutorial5/2",
+            "exitCode": 0
+          }
+        ],
+        "expectedStart": {
+          "money": 4000,
+          "technology": [
+            "sunArcher",
+            "sunBlocker",
+            "sunCannon",
+            "sunWalker",
+            "windBattery"
+          ],
+          "demo": 0
+        }
+      },
+      {
+        "mission": "tutorial6",
+        "passed": true,
+        "clicks": [
+          "MORE",
+          "MORE",
+          "MORE",
+          "OK"
+        ],
+        "observations": [
+          {
+            "frame": 4,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A."
+            ],
+            "controls": {
+              "MORE": [
+                "1",
+                "0",
+                "474",
+                "459",
+                "549",
+                "479",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial6",
+              "Tutorial",
+              "60"
+            ],
+            "raw_world": [
+              "0.258",
+              "4",
+              "29",
+              "0",
+              "0",
+              "23100",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.167",
+              "0"
+            ],
+            "mission_rules": [
+              "0",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "7500",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "536870912",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "windBattery",
+              "windBalloon"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-production-hud-20261018-goal-entry1/tutorial6/0",
+            "exitCode": 0
+          },
+          {
+            "frame": 6,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A1."
+            ],
+            "controls": {
+              "BACK": [
+                "1",
+                "0",
+                "435",
+                "493",
+                "510",
+                "513",
+                "0"
+              ],
+              "MORE": [
+                "1",
+                "0",
+                "514",
+                "493",
+                "589",
+                "513",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial6",
+              "Tutorial",
+              "60"
+            ],
+            "raw_world": [
+              "0.249",
+              "6",
+              "29",
+              "0",
+              "0",
+              "23100",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.171",
+              "0"
+            ],
+            "mission_rules": [
+              "0",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "7500",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "536870912",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "windBattery",
+              "windBalloon"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-production-hud-20261018-goal-entry1/tutorial6/1",
+            "exitCode": 0
+          },
+          {
+            "frame": 8,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A2."
+            ],
+            "controls": {
+              "BACK": [
+                "1",
+                "0",
+                "435",
+                "509",
+                "510",
+                "529",
+                "0"
+              ],
+              "MORE": [
+                "1",
+                "0",
+                "514",
+                "509",
+                "589",
+                "529",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial6",
+              "Tutorial",
+              "60"
+            ],
+            "raw_world": [
+              "0.241",
+              "8",
+              "29",
+              "0",
+              "0",
+              "23100",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.165",
+              "0"
+            ],
+            "mission_rules": [
+              "0",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "7500",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "536870912",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "windBattery",
+              "windBalloon"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-production-hud-20261018-goal-entry1/tutorial6/2",
+            "exitCode": 0
+          },
+          {
+            "frame": 10,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A3."
+            ],
+            "controls": {
+              "BACK": [
+                "1",
+                "0",
+                "435",
+                "459",
+                "510",
+                "479",
+                "0"
+              ],
+              "OK": [
+                "1",
+                "0",
+                "514",
+                "459",
+                "589",
+                "479",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial6",
+              "Tutorial",
+              "60"
+            ],
+            "raw_world": [
+              "0.253",
+              "10",
+              "29",
+              "0",
+              "0",
+              "23100",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.162",
+              "0"
+            ],
+            "mission_rules": [
+              "0",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "7500",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "536870912",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "windBattery",
+              "windBalloon"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-production-hud-20261018-goal-entry1/tutorial6/3",
+            "exitCode": 0
+          },
+          {
+            "frame": 12,
+            "phase": [
+              "4"
+            ],
+            "paused": [
+              "0"
+            ],
+            "page": [
+              "mission"
+            ],
+            "controls": {
+              "Game": [
+                "1",
+                "0",
+                "4",
+                "4",
+                "79",
+                "24",
+                "0"
+              ]
+            },
+            "mission": [
+              "tutorial6",
+              "Tutorial",
+              "60"
+            ],
+            "raw_world": [
+              "0.265",
+              "12",
+              "26",
+              "0",
+              "0",
+              "23100",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.172",
+              "0"
+            ],
+            "mission_rules": [
+              "0",
+              "1",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "7500",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "536870912",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "windBattery",
+              "windBalloon"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-production-hud-20261018-goal-entry1/tutorial6/4",
+            "exitCode": 0
+          }
+        ],
+        "expectedStart": {
+          "money": 7500,
+          "technology": [
+            "windBalloon",
+            "windBattery"
+          ],
+          "demo": 0
+        }
+      },
+      {
+        "mission": "thewarbegins",
+        "passed": true,
+        "clicks": [
+          "Play Mission"
+        ],
+        "observations": [
+          {
+            "frame": 4,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A."
+            ],
+            "controls": {
+              "Review Knowledge": [
+                "0",
+                "0",
+                "406",
+                "459",
+                "528",
+                "479",
+                "0"
+              ],
+              "Play Mission": [
+                "1",
+                "0",
+                "532",
+                "459",
+                "618",
+                "479",
+                "0"
+              ]
+            },
+            "mission": [
+              "thewarbegins",
+              "Tutorial",
+              "172"
+            ],
+            "raw_world": [
+              "0.239",
+              "4",
+              "34",
+              "0",
+              "0",
+              "45100",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.162",
+              "0"
+            ],
+            "mission_rules": [
+              "0",
+              "0",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "3000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "536870912",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunAviary",
+              "rainBattery",
+              "sunCannon",
+              "sunWalker"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-production-hud-20261018-goal-entry1/thewarbegins/0",
+            "exitCode": 0
+          },
+          {
+            "frame": 6,
+            "phase": [
+              "4"
+            ],
+            "paused": [
+              "0"
+            ],
+            "page": [
+              "mission"
+            ],
+            "controls": {
+              "Game": [
+                "1",
+                "0",
+                "4",
+                "4",
+                "79",
+                "24",
+                "0"
+              ]
+            },
+            "mission": [
+              "thewarbegins",
+              "Tutorial",
+              "172"
+            ],
+            "raw_world": [
+              "0.262",
+              "6",
+              "34",
+              "0",
+              "0",
+              "45100",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.171",
+              "0"
+            ],
+            "mission_rules": [
+              "0",
+              "0",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "3000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "536870912",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunAviary",
+              "rainBattery",
+              "sunCannon",
+              "sunWalker"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-production-hud-20261018-goal-entry1/thewarbegins/1",
+            "exitCode": 0
+          }
+        ],
+        "expectedStart": {
+          "money": 3000,
+          "technology": [
+            "rainBattery",
+            "sunAviary",
+            "sunCannon",
+            "sunWalker"
+          ],
+          "demo": 0
+        }
+      },
+      {
+        "mission": "masterofwhirligigs",
+        "passed": true,
+        "clicks": [
+          "Play Mission"
+        ],
+        "observations": [
+          {
+            "frame": 4,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A."
+            ],
+            "controls": {
+              "Review Knowledge": [
+                "0",
+                "0",
+                "406",
+                "452",
+                "528",
+                "472",
+                "0"
+              ],
+              "Play Mission": [
+                "1",
+                "0",
+                "532",
+                "452",
+                "618",
+                "472",
+                "0"
+              ]
+            },
+            "mission": [
+              "masterofwhirligigs",
+              "Tutorial",
+              "115"
+            ],
+            "raw_world": [
+              "0.25",
+              "4",
+              "26",
+              "0",
+              "0",
+              "35600",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.169",
+              "0"
+            ],
+            "mission_rules": [
+              "0",
+              "0",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "2000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "536870912",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunArcher",
+              "windBattery",
+              "sunCannon",
+              "sunWalker"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-production-hud-20261018-goal-entry1/masterofwhirligigs/0",
+            "exitCode": 0
+          },
+          {
+            "frame": 6,
+            "phase": [
+              "4"
+            ],
+            "paused": [
+              "0"
+            ],
+            "page": [
+              "mission"
+            ],
+            "controls": {
+              "Game": [
+                "1",
+                "0",
+                "4",
+                "4",
+                "79",
+                "24",
+                "0"
+              ]
+            },
+            "mission": [
+              "masterofwhirligigs",
+              "Tutorial",
+              "115"
+            ],
+            "raw_world": [
+              "0.25",
+              "6",
+              "26",
+              "0",
+              "0",
+              "35600",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.172",
+              "0"
+            ],
+            "mission_rules": [
+              "0",
+              "0",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "2000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "536870912",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunArcher",
+              "windBattery",
+              "sunCannon",
+              "sunWalker"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-production-hud-20261018-goal-entry1/masterofwhirligigs/1",
+            "exitCode": 0
+          }
+        ],
+        "expectedStart": {
+          "money": 2000,
+          "technology": [
+            "sunArcher",
+            "sunCannon",
+            "sunWalker",
+            "windBattery"
+          ],
+          "demo": 0
+        }
+      },
+      {
+        "mission": "demostormrages",
+        "passed": true,
+        "clicks": [],
+        "observations": [
+          {
+            "frame": 4,
+            "phase": [
+              "4"
+            ],
+            "paused": [
+              "0"
+            ],
+            "page": [
+              "mission"
+            ],
+            "controls": {
+              "Game": [
+                "1",
+                "0",
+                "4",
+                "4",
+                "79",
+                "24",
+                "0"
+              ]
+            },
+            "mission": [
+              "demostormrages",
+              "Tutorial",
+              "72"
+            ],
+            "raw_world": [
+              "0.344",
+              "4",
+              "26",
+              "0",
+              "0",
+              "34800",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.167",
+              "360.167"
+            ],
+            "mission_rules": [
+              "0",
+              "0",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "2400",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "536870912",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-production-hud-20261018-goal-entry1/demostormrages/0",
+            "exitCode": 0
+          }
+        ],
+        "expectedStart": {
+          "money": 2400,
+          "technology": [],
+          "demo": 0
+        }
+      },
+      {
+        "mission": "guardmyback",
+        "passed": true,
+        "clicks": [
+          "Play Mission"
+        ],
+        "observations": [
+          {
+            "frame": 4,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A."
+            ],
+            "controls": {
+              "Review Knowledge": [
+                "0",
+                "0",
+                "406",
+                "480",
+                "528",
+                "500",
+                "0"
+              ],
+              "Play Mission": [
+                "1",
+                "0",
+                "532",
+                "480",
+                "618",
+                "500",
+                "0"
+              ]
+            },
+            "mission": [
+              "guardmyback",
+              "Tutorial",
+              "422"
+            ],
+            "raw_world": [
+              "0.302",
+              "4",
+              "74",
+              "0",
+              "0",
+              "90000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "2",
+              "1",
+              "3",
+              "4"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.17",
+              "360.17"
+            ],
+            "mission_rules": [
+              "0",
+              "0",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "1200",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "536870912",
+              "536892288",
+              "536913664",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunArcher",
+              "sunAviary",
+              "windBattery",
+              "sunBlocker",
+              "sunBalloon",
+              "sunCannon",
+              "sunWalker"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-production-hud-20261018-goal-entry1/guardmyback/0",
+            "exitCode": 0
+          },
+          {
+            "frame": 6,
+            "phase": [
+              "4"
+            ],
+            "paused": [
+              "0"
+            ],
+            "page": [
+              "mission"
+            ],
+            "controls": {
+              "Game": [
+                "1",
+                "0",
+                "4",
+                "4",
+                "79",
+                "24",
+                "0"
+              ]
+            },
+            "mission": [
+              "guardmyback",
+              "Tutorial",
+              "422"
+            ],
+            "raw_world": [
+              "0.307",
+              "6",
+              "72",
+              "0",
+              "0",
+              "90000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "2",
+              "1",
+              "3",
+              "4"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.166",
+              "360.166"
+            ],
+            "mission_rules": [
+              "0",
+              "0",
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "1200",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "536870912",
+              "536892288",
+              "536913664",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunArcher",
+              "sunAviary",
+              "windBattery",
+              "sunBlocker",
+              "sunBalloon",
+              "sunCannon",
+              "sunWalker"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-production-hud-20261018-goal-entry1/guardmyback/1",
+            "exitCode": 0
+          }
+        ],
+        "expectedStart": {
+          "money": 1200,
+          "technology": [
+            "sunArcher",
+            "sunAviary",
+            "sunBalloon",
+            "sunBlocker",
+            "sunCannon",
+            "sunWalker",
+            "windBattery"
+          ],
+          "demo": 0
+        }
+      },
+      {
+        "mission": "dissolvedalliance",
+        "passed": true,
+        "clicks": [
+          "Play Mission"
+        ],
+        "observations": [
+          {
+            "frame": 4,
+            "phase": [
+              "3"
+            ],
+            "paused": [
+              "1"
+            ],
+            "page": [
+              "A."
+            ],
+            "controls": {
+              "Review Knowledge": [
+                "0",
+                "0",
+                "406",
+                "445",
+                "528",
+                "465",
+                "0"
+              ],
+              "Play Mission": [
+                "1",
+                "0",
+                "532",
+                "445",
+                "618",
+                "465",
+                "0"
+              ]
+            },
+            "mission": [
+              "dissolvedalliance",
+              "Tutorial",
+              "432"
+            ],
+            "raw_world": [
+              "0.286",
+              "4",
+              "60",
+              "0",
+              "0",
+              "68800",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "3",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.162",
+              "360.162"
+            ],
+            "mission_rules": [
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "4000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "536870912",
+              "536892288",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunAviary",
+              "windBattery",
+              "sunBlocker",
+              "sunCannon",
+              "sunWalker",
+              "windWalker",
+              "windAviary",
+              "windArcher",
+              "windBalloon",
+              "windBlocker"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-production-hud-20261018-goal-entry1/dissolvedalliance/0",
+            "exitCode": 0
+          },
+          {
+            "frame": 6,
+            "phase": [
+              "4"
+            ],
+            "paused": [
+              "0"
+            ],
+            "page": [
+              "mission"
+            ],
+            "controls": {
+              "Game": [
+                "1",
+                "0",
+                "4",
+                "4",
+                "79",
+                "24",
+                "0"
+              ]
+            },
+            "mission": [
+              "dissolvedalliance",
+              "Tutorial",
+              "432"
+            ],
+            "raw_world": [
+              "0.31",
+              "6",
+              "60",
+              "0",
+              "0",
+              "68800",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "priestOwners": [
+              "1",
+              "3",
+              "2"
+            ],
+            "mission_start": [
+              "1",
+              "1",
+              "0",
+              "0.193",
+              "360.193"
+            ],
+            "mission_rules": [
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_sp": [
+              "0",
+              "4000",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_brains": [
+              "0",
+              "0",
+              "536870912",
+              "536892288",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "raw_technology": [
+              "sunAviary",
+              "windBattery",
+              "sunBlocker",
+              "sunCannon",
+              "sunWalker",
+              "windWalker",
+              "windAviary",
+              "windArcher",
+              "windBalloon",
+              "windBlocker"
+            ],
+            "directory": "H:/T5Workspace/NetstormReborn/extracted/goal-production-hud-20261018-goal-entry1/dissolvedalliance/1",
+            "exitCode": 0
+          }
+        ],
+        "expectedStart": {
+          "money": 4000,
+          "technology": [
+            "sunAviary",
+            "sunBlocker",
+            "sunCannon",
+            "sunWalker",
+            "windArcher",
+            "windAviary",
+            "windBalloon",
+            "windBattery",
+            "windBlocker",
+            "windWalker"
+          ],
+          "demo": 0
+        }
+      }
+    ],
+    "originals_unchanged": true
+  },
+  "menuEntry": {
+    "passed": true,
+    "scope": "실제 사제 메뉴/원본 정수명령/TYPE85 커서취득·취소·재개방. 실제배치 클릭은 원본 비용표시Gump 미연결로 별도 후속이며 이 검사의 성공에 합산하지 않는다.",
+    "command": [
+      "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+      "--run",
+      "H:\\T5Workspace\\NetstormReborn\\originals",
+      "--mission",
+      "thewarbegins",
+      "--window",
+      "--no-audio",
+      "--frames",
+      "151",
+      "--set",
+      "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8",
+      "--ui-script",
+      "H:\\T5Workspace\\NetstormReborn\\extracted\\goal-production-hud-20261018-menu-entry1\\steps.tsv",
+      "--ui-report",
+      "H:\\T5Workspace\\NetstormReborn\\extracted\\goal-production-hud-20261018-menu-entry1\\states.tsv"
+    ],
+    "originals_unchanged": true,
+    "build": {
+      "token": 45,
+      "index": 0,
+      "flags": 66697,
+      "command": 33554528,
+      "parameter": 5585560,
+      "visible": true,
+      "label": " Build Sun Workshop for 800"
+    },
+    "observed": {
+      "opened": {
+        "time": [
+          "0.971",
+          "1.143"
+        ],
+        "raw_menus": [
+          "5",
+          "0",
+          "5",
+          "3",
+          "78"
+        ],
+        "raw_cursor": [
+          "1",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_input": [
+          "15000",
+          "0",
+          "14",
+          "12"
+        ],
+        "raw_sp": [
+          "0",
+          "3000",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ]
+      },
+      "construct": {
+        "time": [
+          "1.905",
+          "2.077"
+        ],
+        "raw_menus": [
+          "5",
+          "0",
+          "5",
+          "3",
+          "78"
+        ],
+        "raw_cursor": [
+          "1",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_input": [
+          "15000",
+          "0",
+          "14",
+          "12"
+        ],
+        "raw_sp": [
+          "0",
+          "3000",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ]
+      },
+      "workshop": {
+        "time": [
+          "2.826",
+          "2.998"
+        ],
+        "raw_menus": [
+          "5",
+          "0",
+          "5",
+          "3",
+          "78"
+        ],
+        "raw_cursor": [
+          "1",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_input": [
+          "15000",
+          "0",
+          "14",
+          "12"
+        ],
+        "raw_sp": [
+          "0",
+          "3000",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ]
+      },
+      "taken": {
+        "time": [
+          "3.17",
+          "3.342"
+        ],
+        "raw_menus": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_cursor": [
+          "0",
+          "1",
+          "85",
+          "73",
+          "120",
+          "115",
+          "32",
+          "352",
+          "1",
+          "1",
+          "1"
+        ],
+        "raw_input": [
+          "15000",
+          "0",
+          "14",
+          "12"
+        ],
+        "raw_sp": [
+          "0",
+          "3000",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ]
+      },
+      "cancelled": {
+        "time": [
+          "3.53",
+          "3.702"
+        ],
+        "raw_menus": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_cursor": [
+          "1",
+          "1",
+          "85",
+          "0",
+          "120",
+          "115",
+          "32",
+          "352",
+          "1",
+          "1",
+          "1"
+        ],
+        "raw_input": [
+          "15000",
+          "0",
+          "14",
+          "12"
+        ],
+        "raw_sp": [
+          "0",
+          "3000",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ]
+      },
+      "reopened": {
+        "time": [
+          "4.404",
+          "4.576"
+        ],
+        "raw_menus": [
+          "5",
+          "0",
+          "5",
+          "3",
+          "78"
+        ],
+        "raw_cursor": [
+          "1",
+          "1",
+          "85",
+          "0",
+          "120",
+          "115",
+          "32",
+          "352",
+          "1",
+          "1",
+          "1"
+        ],
+        "raw_input": [
+          "15000",
+          "0",
+          "14",
+          "12"
+        ],
+        "raw_sp": [
+          "0",
+          "3000",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ]
+      },
+      "closed": {
+        "time": [
+          "4.657",
+          "4.829"
+        ],
+        "raw_menus": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_cursor": [
+          "1",
+          "1",
+          "85",
+          "0",
+          "120",
+          "115",
+          "32",
+          "352",
+          "1",
+          "1",
+          "1"
+        ],
+        "raw_input": [
+          "15000",
+          "0",
+          "14",
+          "12"
+        ],
+        "raw_sp": [
+          "0",
+          "3000",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ]
+      }
+    },
+    "items": {
+      "opened": [
+        {
+          "token": 24,
+          "index": 0,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Construct"
+        },
+        {
+          "token": 24,
+          "index": 1,
+          "flags": 66689,
+          "command": 33554592,
+          "parameter": 0,
+          "visible": true,
+          "label": "View Netstorm Knowledge"
+        },
+        {
+          "token": 24,
+          "index": 2,
+          "flags": 65552,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": ""
+        },
+        {
+          "token": 24,
+          "index": 3,
+          "flags": 66689,
+          "command": 33554455,
+          "parameter": 158,
+          "visible": true,
+          "label": "About"
+        },
+        {
+          "token": 24,
+          "index": 4,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Player"
+        },
+        {
+          "token": 34,
+          "index": 0,
+          "flags": 67104,
+          "command": 0,
+          "parameter": 0,
+          "visible": false,
+          "label": "Temple"
+        },
+        {
+          "token": 34,
+          "index": 1,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": false,
+          "label": "Workshop"
+        },
+        {
+          "token": 34,
+          "index": 2,
+          "flags": 66689,
+          "command": 33554528,
+          "parameter": 10828440,
+          "visible": false,
+          "label": "Build Level 1 Altar for 500"
+        },
+        {
+          "token": 44,
+          "index": 0,
+          "flags": 67201,
+          "command": 33554528,
+          "parameter": 8075928,
+          "visible": false,
+          "label": " Build Wind Temple for 5000"
+        },
+        {
+          "token": 44,
+          "index": 1,
+          "flags": 67201,
+          "command": 33554528,
+          "parameter": 8141464,
+          "visible": false,
+          "label": " Build Rain Temple for 5000"
+        },
+        {
+          "token": 44,
+          "index": 2,
+          "flags": 67201,
+          "command": 33554528,
+          "parameter": 8207000,
+          "visible": false,
+          "label": " Build Thunder Temple for 5000"
+        },
+        {
+          "token": 45,
+          "index": 0,
+          "flags": 66689,
+          "command": 33554528,
+          "parameter": 5585560,
+          "visible": false,
+          "label": " Build Sun Workshop for 800"
+        },
+        {
+          "token": 45,
+          "index": 1,
+          "flags": 67201,
+          "command": 33554528,
+          "parameter": 5651096,
+          "visible": false,
+          "label": " Build Wind Workshop for 1000"
+        },
+        {
+          "token": 45,
+          "index": 2,
+          "flags": 67201,
+          "command": 33554528,
+          "parameter": 5716632,
+          "visible": false,
+          "label": " Build Rain Workshop for 1000"
+        },
+        {
+          "token": 45,
+          "index": 3,
+          "flags": 67201,
+          "command": 33554528,
+          "parameter": 5782168,
+          "visible": false,
+          "label": " Build Thunder Workshop for 1000"
+        },
+        {
+          "token": 46,
+          "index": 0,
+          "flags": 66689,
+          "command": 33554616,
+          "parameter": 1,
+          "visible": false,
+          "label": "Find Priest!"
+        }
+      ],
+      "construct": [
+        {
+          "token": 24,
+          "index": 0,
+          "flags": 66600,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Construct"
+        },
+        {
+          "token": 24,
+          "index": 1,
+          "flags": 66689,
+          "command": 33554592,
+          "parameter": 0,
+          "visible": true,
+          "label": "View Netstorm Knowledge"
+        },
+        {
+          "token": 24,
+          "index": 2,
+          "flags": 65552,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": ""
+        },
+        {
+          "token": 24,
+          "index": 3,
+          "flags": 66689,
+          "command": 33554455,
+          "parameter": 158,
+          "visible": true,
+          "label": "About"
+        },
+        {
+          "token": 24,
+          "index": 4,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Player"
+        },
+        {
+          "token": 34,
+          "index": 0,
+          "flags": 67104,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Temple"
+        },
+        {
+          "token": 34,
+          "index": 1,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Workshop"
+        },
+        {
+          "token": 34,
+          "index": 2,
+          "flags": 66689,
+          "command": 33554528,
+          "parameter": 10828440,
+          "visible": true,
+          "label": "Build Level 1 Altar for 500"
+        },
+        {
+          "token": 44,
+          "index": 0,
+          "flags": 67201,
+          "command": 33554528,
+          "parameter": 8075928,
+          "visible": false,
+          "label": " Build Wind Temple for 5000"
+        },
+        {
+          "token": 44,
+          "index": 1,
+          "flags": 67201,
+          "command": 33554528,
+          "parameter": 8141464,
+          "visible": false,
+          "label": " Build Rain Temple for 5000"
+        },
+        {
+          "token": 44,
+          "index": 2,
+          "flags": 67201,
+          "command": 33554528,
+          "parameter": 8207000,
+          "visible": false,
+          "label": " Build Thunder Temple for 5000"
+        },
+        {
+          "token": 45,
+          "index": 0,
+          "flags": 66689,
+          "command": 33554528,
+          "parameter": 5585560,
+          "visible": false,
+          "label": " Build Sun Workshop for 800"
+        },
+        {
+          "token": 45,
+          "index": 1,
+          "flags": 67201,
+          "command": 33554528,
+          "parameter": 5651096,
+          "visible": false,
+          "label": " Build Wind Workshop for 1000"
+        },
+        {
+          "token": 45,
+          "index": 2,
+          "flags": 67201,
+          "command": 33554528,
+          "parameter": 5716632,
+          "visible": false,
+          "label": " Build Rain Workshop for 1000"
+        },
+        {
+          "token": 45,
+          "index": 3,
+          "flags": 67201,
+          "command": 33554528,
+          "parameter": 5782168,
+          "visible": false,
+          "label": " Build Thunder Workshop for 1000"
+        },
+        {
+          "token": 46,
+          "index": 0,
+          "flags": 66689,
+          "command": 33554616,
+          "parameter": 1,
+          "visible": false,
+          "label": "Find Priest!"
+        }
+      ],
+      "workshop": [
+        {
+          "token": 24,
+          "index": 0,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Construct"
+        },
+        {
+          "token": 24,
+          "index": 1,
+          "flags": 66689,
+          "command": 33554592,
+          "parameter": 0,
+          "visible": true,
+          "label": "View Netstorm Knowledge"
+        },
+        {
+          "token": 24,
+          "index": 2,
+          "flags": 65552,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": ""
+        },
+        {
+          "token": 24,
+          "index": 3,
+          "flags": 66689,
+          "command": 33554455,
+          "parameter": 158,
+          "visible": true,
+          "label": "About"
+        },
+        {
+          "token": 24,
+          "index": 4,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Player"
+        },
+        {
+          "token": 34,
+          "index": 0,
+          "flags": 67104,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Temple"
+        },
+        {
+          "token": 34,
+          "index": 1,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Workshop"
+        },
+        {
+          "token": 34,
+          "index": 2,
+          "flags": 66689,
+          "command": 33554528,
+          "parameter": 10828440,
+          "visible": true,
+          "label": "Build Level 1 Altar for 500"
+        },
+        {
+          "token": 44,
+          "index": 0,
+          "flags": 67201,
+          "command": 33554528,
+          "parameter": 8075928,
+          "visible": false,
+          "label": " Build Wind Temple for 5000"
+        },
+        {
+          "token": 44,
+          "index": 1,
+          "flags": 67201,
+          "command": 33554528,
+          "parameter": 8141464,
+          "visible": false,
+          "label": " Build Rain Temple for 5000"
+        },
+        {
+          "token": 44,
+          "index": 2,
+          "flags": 67201,
+          "command": 33554528,
+          "parameter": 8207000,
+          "visible": false,
+          "label": " Build Thunder Temple for 5000"
+        },
+        {
+          "token": 45,
+          "index": 0,
+          "flags": 66697,
+          "command": 33554528,
+          "parameter": 5585560,
+          "visible": true,
+          "label": " Build Sun Workshop for 800"
+        },
+        {
+          "token": 45,
+          "index": 1,
+          "flags": 67201,
+          "command": 33554528,
+          "parameter": 5651096,
+          "visible": true,
+          "label": " Build Wind Workshop for 1000"
+        },
+        {
+          "token": 45,
+          "index": 2,
+          "flags": 67201,
+          "command": 33554528,
+          "parameter": 5716632,
+          "visible": true,
+          "label": " Build Rain Workshop for 1000"
+        },
+        {
+          "token": 45,
+          "index": 3,
+          "flags": 67201,
+          "command": 33554528,
+          "parameter": 5782168,
+          "visible": true,
+          "label": " Build Thunder Workshop for 1000"
+        },
+        {
+          "token": 46,
+          "index": 0,
+          "flags": 66689,
+          "command": 33554616,
+          "parameter": 1,
+          "visible": false,
+          "label": "Find Priest!"
+        }
+      ],
+      "taken": [],
+      "cancelled": [],
+      "reopened": [
+        {
+          "token": 56,
+          "index": 0,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Construct"
+        },
+        {
+          "token": 56,
+          "index": 1,
+          "flags": 66689,
+          "command": 33554592,
+          "parameter": 0,
+          "visible": true,
+          "label": "View Netstorm Knowledge"
+        },
+        {
+          "token": 56,
+          "index": 2,
+          "flags": 65552,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": ""
+        },
+        {
+          "token": 56,
+          "index": 3,
+          "flags": 66689,
+          "command": 33554455,
+          "parameter": 158,
+          "visible": true,
+          "label": "About"
+        },
+        {
+          "token": 56,
+          "index": 4,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Player"
+        },
+        {
+          "token": 66,
+          "index": 0,
+          "flags": 67104,
+          "command": 0,
+          "parameter": 0,
+          "visible": false,
+          "label": "Temple"
+        },
+        {
+          "token": 66,
+          "index": 1,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": false,
+          "label": "Workshop"
+        },
+        {
+          "token": 66,
+          "index": 2,
+          "flags": 66689,
+          "command": 33554528,
+          "parameter": 10828440,
+          "visible": false,
+          "label": "Build Level 1 Altar for 500"
+        },
+        {
+          "token": 76,
+          "index": 0,
+          "flags": 67201,
+          "command": 33554528,
+          "parameter": 8075928,
+          "visible": false,
+          "label": " Build Wind Temple for 5000"
+        },
+        {
+          "token": 76,
+          "index": 1,
+          "flags": 67201,
+          "command": 33554528,
+          "parameter": 8141464,
+          "visible": false,
+          "label": " Build Rain Temple for 5000"
+        },
+        {
+          "token": 76,
+          "index": 2,
+          "flags": 67201,
+          "command": 33554528,
+          "parameter": 8207000,
+          "visible": false,
+          "label": " Build Thunder Temple for 5000"
+        },
+        {
+          "token": 77,
+          "index": 0,
+          "flags": 66689,
+          "command": 33554528,
+          "parameter": 5585560,
+          "visible": false,
+          "label": " Build Sun Workshop for 800"
+        },
+        {
+          "token": 77,
+          "index": 1,
+          "flags": 67201,
+          "command": 33554528,
+          "parameter": 5651096,
+          "visible": false,
+          "label": " Build Wind Workshop for 1000"
+        },
+        {
+          "token": 77,
+          "index": 2,
+          "flags": 67201,
+          "command": 33554528,
+          "parameter": 5716632,
+          "visible": false,
+          "label": " Build Rain Workshop for 1000"
+        },
+        {
+          "token": 77,
+          "index": 3,
+          "flags": 67201,
+          "command": 33554528,
+          "parameter": 5782168,
+          "visible": false,
+          "label": " Build Thunder Workshop for 1000"
+        },
+        {
+          "token": 78,
+          "index": 0,
+          "flags": 66689,
+          "command": 33554616,
+          "parameter": 1,
+          "visible": false,
+          "label": "Find Priest!"
+        }
+      ],
+      "closed": []
+    }
+  },
+  "entry": {
+    "runs": [
+      {
+        "mission": "thewarbegins",
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\originals",
+          "--mission",
+          "thewarbegins",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "10",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0",
+          "--ui-script",
+          "extracted\\goal-production-hud-20261018-entry1\\thewarbegins\\steps.tsv",
+          "--ui-report",
+          "extracted\\goal-production-hud-20261018-entry1\\thewarbegins\\states.tsv"
+        ],
+        "exit_code": 0,
+        "stderr": "로컬 미션 상태 8\r\n로컬 미션 상태 9\r\n로컬 미션 상태 10\r\nNo Central Island.\r\n로컬 Fort 전송\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\n로컬 미션 상태 13\r\nlogin status timer start\r\n로컬 미션 상태 14\r\nSeting Priest State\r\nDone\r\nMoveing Camera\r\nDone\r\n",
+        "raw_objects": 1876,
+        "camera": [
+          "976",
+          "793"
+        ],
+        "passed": true
+      },
+      {
+        "mission": "masterofwhirligigs",
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\originals",
+          "--mission",
+          "masterofwhirligigs",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "10",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0",
+          "--ui-script",
+          "extracted\\goal-production-hud-20261018-entry1\\masterofwhirligigs\\steps.tsv",
+          "--ui-report",
+          "extracted\\goal-production-hud-20261018-entry1\\masterofwhirligigs\\states.tsv"
+        ],
+        "exit_code": 0,
+        "stderr": "로컬 미션 상태 8\r\n로컬 미션 상태 9\r\n로컬 미션 상태 10\r\nNo Central Island.\r\n로컬 Fort 전송\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\n로컬 미션 상태 13\r\nlogin status timer start\r\n로컬 미션 상태 14\r\nSeting Priest State\r\nDone\r\nMoveing Camera\r\nDone\r\n",
+        "raw_objects": 1755,
+        "camera": [
+          "320",
+          "221"
+        ],
+        "passed": true
+      },
+      {
+        "mission": "tutorial1",
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\originals",
+          "--mission",
+          "tutorial1",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "10",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0",
+          "--ui-script",
+          "extracted\\goal-production-hud-20261018-entry1\\tutorial1\\steps.tsv",
+          "--ui-report",
+          "extracted\\goal-production-hud-20261018-entry1\\tutorial1\\states.tsv"
+        ],
+        "exit_code": 0,
+        "stderr": "로컬 미션 상태 8\r\n로컬 미션 상태 9\r\n로컬 미션 상태 10\r\nNo Central Island.\r\n로컬 Fort 전송\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\n로컬 미션 상태 13\r\nlogin status timer start\r\n로컬 미션 상태 14\r\nSeting Priest State\r\nDone\r\nMoveing Camera\r\nDone\r\n",
+        "passed": true
+      },
+      {
+        "mission": "tutorial2",
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\originals",
+          "--mission",
+          "tutorial2",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "10",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0",
+          "--ui-script",
+          "extracted\\goal-production-hud-20261018-entry1\\tutorial2\\steps.tsv",
+          "--ui-report",
+          "extracted\\goal-production-hud-20261018-entry1\\tutorial2\\states.tsv"
+        ],
+        "exit_code": 0,
+        "stderr": "로컬 미션 상태 8\r\n로컬 미션 상태 9\r\n로컬 미션 상태 10\r\nNo Central Island.\r\n로컬 Fort 전송\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\n로컬 미션 상태 13\r\nlogin status timer start\r\n로컬 미션 상태 14\r\nSeting Priest State\r\nDone\r\nMoveing Camera\r\nDone\r\n",
+        "passed": true
+      },
+      {
+        "mission": "tutorial3",
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\originals",
+          "--mission",
+          "tutorial3",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "10",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0",
+          "--ui-script",
+          "extracted\\goal-production-hud-20261018-entry1\\tutorial3\\steps.tsv",
+          "--ui-report",
+          "extracted\\goal-production-hud-20261018-entry1\\tutorial3\\states.tsv"
+        ],
+        "exit_code": 0,
+        "stderr": "로컬 미션 상태 8\r\n로컬 미션 상태 9\r\n로컬 미션 상태 10\r\nNo Central Island.\r\n로컬 Fort 전송\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\n로컬 미션 상태 13\r\nlogin status timer start\r\n로컬 미션 상태 14\r\nSeting Priest State\r\nDone\r\nMoveing Camera\r\nDone\r\n",
+        "passed": true
+      },
+      {
+        "mission": "thewarbegins",
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\originals",
+          "--mission",
+          "thewarbegins",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "2000",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0",
+          "--ui-script",
+          "extracted\\goal-production-hud-20261018-entry1\\thewarbegins-movement\\steps.tsv",
+          "--ui-report",
+          "extracted\\goal-production-hud-20261018-entry1\\thewarbegins-movement\\states.tsv"
+        ],
+        "exit_code": 0,
+        "stderr": "로컬 미션 상태 8\r\n로컬 미션 상태 9\r\n로컬 미션 상태 10\r\nNo Central Island.\r\n로컬 Fort 전송\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\nPlayer UI 5 1 0\r\nPlayer UI 3 1 1\r\n로컬 미션 상태 13\r\nlogin status timer start\r\n로컬 미션 상태 14\r\nSeting Priest State\r\nDone\r\nMoveing Camera\r\nDone\r\n선택 객체 SID 15000 TYPE 158\r\n[29] SORE LOSER TEST: [29] STARTING.\r\n",
+        "raw_objects": 1876,
+        "camera": [
+          "976",
+          "793"
+        ],
+        "movement": {
+          "sid": 15000,
+          "from": [
+            "94",
+            "108"
+          ],
+          "to": [
+            "90",
+            "108"
+          ],
+          "game_before": "0.374",
+          "game_after": "49.71",
+          "inputPipeline": {
+            "selectionMode": 5,
+            "loginPhase": 14,
+            "receivedBefore": 12,
+            "receivedAfter": 13,
+            "newTypes": [
+              64
+            ]
+          }
+        },
+        "passed": true
+      }
+    ],
+    "originals_unchanged": true
+  }
+}

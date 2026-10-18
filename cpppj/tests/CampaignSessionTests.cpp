@@ -1734,6 +1734,11 @@ TEST_CASE(CampaignSession_LocalLoginWorkshopHasActualPlacement) {
     session.PumpLocalConnection();const auto authoritative=session.Priests().Carrier().FindContained(target,16,128,0);CHECK(authoritative.value>=15000 && authoritative!=prediction && researchPackets.size()==1);
     if (!researchPackets.empty()) { const auto& packet=researchPackets.front();CHECK(packet.size()==16 && packet[0]==1 && packet[1]==0x58 && Get(packet,2,2)==16 && Get(packet,4,2)==target.value && packet[6]==128 && packet[7]==0); }
     CHECK((core.pool.Slot(prediction)[11]&1U)!=0 && session.Production().Contains(128) && session.Production().AppendFactoryProducts(target,0)==1 && liveFlares().size()==12);
+    const auto dirty=core.bookkeeping.productionDirty;CHECK(dirty!=0);core.ownerMode.challenge=true;CHECK(!session.UpdateProductionContents() && core.bookkeeping.productionDirty==dirty);core.ownerMode.challenge=false;
+    CHECK(session.UpdateProductionContents() && core.bookkeeping.productionDirty==0);const auto technologyParent=session.CurrentTechnologyParent();CHECK(technologyParent!=0);
+    const auto teleport=session.Priests().Carrier().FindContained(Sid{static_cast<std::uint16_t>(technologyParent)},8,128,0);CHECK(teleport.value>=5 && teleport.value<15000 && Get(core.pool.Slot(teleport),20,2)==8 && core.pool.Slot(teleport)[30]==3);
+    CHECK(!session.UpdateProductionContents() && session.Priests().Carrier().FindContained(Sid{static_cast<std::uint16_t>(technologyParent)},8,128,0)==teleport);
+    std::cout<<"실제 생산dirty "<<dirty<<"→0/현재 기술부모"<<technologyParent<<"/teleport"<<teleport.value<<" kind128 flags8 quality3 통과\n";
     const auto initialFlares=liveFlares();if (initialFlares.empty()) return;std::size_t drawn{};
     // 실제 같은 수집/가상Draw가 초기 플레어의 signed깊이/현재 프레임을 그리는지 확인한다.
     for (const auto sid:initialFlares) { const auto raw=core.pool.Slot(sid);CHECK(display.Handles(sid) && raw[34]==0 && (raw[40]&8U) && raw[35]==static_cast<std::uint8_t>(core.pool.Slot(target)[35]-1U)); }

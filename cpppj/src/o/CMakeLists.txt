@@ -320,3 +320,6 @@ target_sources(netstorm PRIVATE RawFactoryResearch.cpp RawFactoryResearch.h)
 
 # 연구 효과의 원본 생성/Regular/난수/수명을 연결한다.
 target_sources(netstorm PRIVATE RawFlare.cpp RawFlare.h)
+
+# 현재 생산Deck/기술 부모의 원본teleport 내용물 동기화다.
+target_sources(netstorm PRIVATE RawProductionSync.cpp RawProductionSync.h)
