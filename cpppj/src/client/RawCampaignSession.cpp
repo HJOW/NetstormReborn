@@ -1,6 +1,7 @@
 // 기존 원본 몸체의 단일 저장소 조립을 실제 클라이언트 세션이 소유한다.
 #include "client/RawCampaignSession.h"
 #include "o/RawMissionStart.h"
+#include "o/RawFactoryDraw.h"
 #include "o/RawMissionAiSettings.h"
 #include "client/RawCampaignCursor.h"
 #include "client/PriestPlacementAssets.h"
@@ -432,6 +433,7 @@ struct RawCampaignSession::Impl {
     OwnerColorMaps buildingOwnerColors; // 일반 소유자 색 띠이며 다리는 별도 기존 분기로 취급한다.
     ShapeToBufferState buildingCaptureState; // 건설 현재 SHP의 원본 fixed16/추가 TYPE 기준점이다.
     std::unique_ptr<RawShapeToBuffer> buildingCapture; // 같은 실제 자산에서 건설 버퍼를 캡처한다.
+    std::unique_ptr<RawFactoryDraw> factoryDraw; // 같은 실제 Factory의 기본·추가 그림 가상 몸체다.
     ConstructionBuilderState buildingMoverState; // 통지의 실제 운반 몸체가 유지하는 원본 상태이며 공급원은 같은 energySupply를 읽는다.
     std::unique_ptr<RawConstructionBuilder> buildingMover; // 같은 실제 기준점/23/39/현재 경로 시각의 통지용 Builder다.
     ConstructionArrivalState buildArrivalState; // 실제134의 예측 대기/서버 건설 시작 전역이다.
@@ -733,6 +735,10 @@ struct RawCampaignSession::Impl {
         combat=std::make_unique<RawCampaignArcherBindings>(world,*gunTarget,random,archerTypes,metadata.frames,missileTypes,archerState,missileState,std::move(combatEffects));
         auto assetEffects=services.assets;assetEffects.postPop.reserveRegular=[] { return true; };
         assetEffects.postPop.nuggetPostPop=[this](Sid sid,std::uint32_t flags) { if (!nuggetPostPop) throw std::logic_error("현재 너겟 PostPop 미설치");nuggetPostPop->PostPop(sid,flags); };
+        // Damageable의 실제6700 재시도는 같은30/17/47·시계·HP·수명을 사용하는 기존 건설 시작으로 전달한다.
+        assetEffects.regular.startConstruction=[this](Sid parent,float duration) {
+            if (!building) throw std::logic_error("실제 건설 시작의 세션 처리기 미설치");PrepareBuilding(core.processState.now);building->Start(parent,duration);
+        };
         // 거주 구역은 현재 일치 신전을 찾은 호출 위치에서 실제 theammode를 다시 읽는다.
         if (!assetEffects.regular.themeMode) assetEffects.regular.themeMode=services.ownership.themeMode;
         FillMissing(assetEffects.regular.themeMode);
@@ -1603,6 +1609,16 @@ struct RawCampaignSession::Impl {
         buildingCaptureState.ownerColors=[this](std::uint32_t type,std::uint32_t owner)->std::span<const std::uint8_t> {
             if (buildingMapTokens.at(type)!=1 || owner>=core.bridgeState.ownerColors.size()) throw std::logic_error("건설 전용 소유자 색표 미복원");
             const auto color=core.bridgeState.ownerColors[owner];if (color<0 || color>8) throw std::out_of_range("건설 현재 소유자 색 번호 오류");return buildingOwnerColors[static_cast<std::size_t>(color)];
+        };
+        factoryDraw=std::make_unique<RawFactoryDraw>(core.pool,core.frames);
+        buildingCaptureState.mainFrame=[this](Sid sid) { return factoryDraw->MainFrame(sid); };
+        buildingCaptureState.additional=[this](Sid sid,ConstructionVisualImage& image,std::int32_t x,std::int32_t y) {
+            factoryDraw->Additional(sid,x,y,[this,&image](std::int32_t px,std::int32_t py,std::uint32_t type,std::int32_t frame) {
+                const auto& shape=core.shapes[type];if (!shape.loaded) return;
+                if (frame<0 || frame>=shape.frameCount) throw std::logic_error("Factory 추가 그림의 현재 프레임 원본 진단");
+                if (buildingCaptureState.zoom!=65536) throw std::logic_error("Factory 추가 그림0044c180의 비단위 배율 미연결");
+                static_cast<void>(DrawShape(image.pixels,image.width,image.height,assets.game.Shapes(),type-70,static_cast<std::size_t>(frame),px,py,{0,0,image.width-1,image.height-1}));
+            });
         };
         buildingCapture=std::make_unique<RawShapeToBuffer>(core.pool,core.types,core.shapes,assets.game.Shapes(),buildingCaptureState);
         particles->ConnectConstruction([this](Sid sid) { return buildingCapture->Capture(sid); },[this](Sid sid) { return hp.MaxHitPoints(sid); });

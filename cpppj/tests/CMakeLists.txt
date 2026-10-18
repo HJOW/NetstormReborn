@@ -1480,3 +1480,7 @@ set_property(SOURCE PlayerParticipationTests.cpp APPEND PROPERTY COMPILE_DEFINIT
 target_sources(netstorm_tests PRIVATE FloatingSpGumpTests.cpp)
 set_source_files_properties(FloatingSpGumpTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_FLOATING_SP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/floating-sp-x86.tsv\"")
+
+# Factory의 실제 가상 그림/전체 RLE 원문은 해당 캡처 검사에만 공급한다.
+set_property(SOURCE ShapeToBufferTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS
+    "NETSTORM_FACTORY_CAPTURE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/factory-capture-x86.tsv\"")

@@ -41,7 +41,8 @@ o::ConstructionVisualImage RawShapeToBuffer::Capture(o::Sid sid) const {
     }
     const auto& record=types_[type];
     if (patch && (std::bit_cast<std::uint32_t>(record.maxHitPoints)==kFreedA || std::bit_cast<std::uint32_t>(record.maxHitPoints)==kFreedB)) throw std::logic_error("ShapeToBuffer frameCheck 원본 진단");
-    if (raw[patch ? 40U : 35U]&2) throw std::logic_error("ShapeToBuffer 추가 가상 그림 미연결");
+    const bool additional=(raw[patch ? 40U : 35U]&2)!=0;
+    if (additional && (!state_.mainFrame || !state_.additional)) throw std::logic_error("ShapeToBuffer 추가 가상 그림 미연결");
     const auto owner=raw[patch ? 34U : 32U];std::span<const std::uint8_t> colors; // mapped일 때만 현재 실제 소유자 색표를 선택한다.
     if (owner) {
         if (type>=state_.ownerTypeMaps.size()) throw std::logic_error("ShapeToBuffer 현재 소유자 색표 미연결");
@@ -55,9 +56,14 @@ o::ConstructionVisualImage RawShapeToBuffer::Capture(o::Sid sid) const {
     const auto size=static_cast<std::int64_t>(image.width)*image.height;
     if (image.width<0 || image.height<0 || size>std::numeric_limits<std::int32_t>::max()) throw std::out_of_range("ShapeToBuffer 버퍼 크기 오류");
     image.pixels.assign(static_cast<std::size_t>(size),255);
+    const auto main=additional ? state_.mainFrame(sid) : frame; // 현재 헤더 크기와 가상 기본 프레임을 구별한다.
     // 캡처는 새 픽셀 버퍼 전체를 pane으로 사용하며 그리기는 메타 배율로 RLE를 다시 늘리지 않는다.
-    if (colors.empty()) static_cast<void>(DrawShape(image.pixels,image.width,image.height,database_,type-o::kFirstAssetTypeNumber,static_cast<std::size_t>(frame),image.hotspotX,image.hotspotY,{0,0,image.width-1,image.height-1}));
-    else static_cast<void>(DrawMappedShape(image.pixels,image.width,image.height,database_,type-o::kFirstAssetTypeNumber,static_cast<std::size_t>(frame),image.hotspotX,image.hotspotY,{0,0,image.width-1,image.height-1},std::span<const std::uint8_t,256>(colors.data(),256)));
+    if (main!=-1) {
+        if (colors.empty()) static_cast<void>(DrawShape(image.pixels,image.width,image.height,database_,type-o::kFirstAssetTypeNumber,static_cast<std::size_t>(main),image.hotspotX,image.hotspotY,{0,0,image.width-1,image.height-1}));
+        // 원본 mapped 추가 분기는 가상 main 대신 현재 frame을 쓴다. 이 비대칭을 수정하지 않는다.
+        else static_cast<void>(DrawMappedShape(image.pixels,image.width,image.height,database_,type-o::kFirstAssetTypeNumber,static_cast<std::size_t>(frame),image.hotspotX,image.hotspotY,{0,0,image.width-1,image.height-1},std::span<const std::uint8_t,256>(colors.data(),256)));
+    }
+    if (additional) state_.additional(sid,image,image.hotspotX,image.hotspotY);
     if (state_.addTypeHotspot) {
         image.hotspotX=std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(image.hotspotX)+static_cast<std::uint32_t>(Scale(record.hotspotX)));
         image.hotspotY=std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(image.hotspotY)+static_cast<std::uint32_t>(Scale(record.hotspotY)));

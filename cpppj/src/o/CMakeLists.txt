@@ -311,3 +311,6 @@ target_sources(netstorm PRIVATE RawBoardApproach.cpp RawBoardApproach.h)
 
 # 실제25바이트 로컬 건설 요청과 서버 수신 처리기다.
 target_sources(netstorm PRIVATE RawConstructionCommand.cpp RawConstructionCommand.h)
+
+# Factory 기본 프레임과 별도 추가 그림을 실제 현재 슬롯에서 조회한다.
+target_sources(netstorm PRIVATE RawFactoryDraw.cpp RawFactoryDraw.h)

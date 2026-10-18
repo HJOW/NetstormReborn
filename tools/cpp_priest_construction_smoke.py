@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""실제1-1 사제 메뉴에서 워크샾 배치/3e왕복/비용 표시/이동까지 검사한다. 건설 완공 검사가 아니다."""
+"""실제1-1 메뉴/배치·이동을 검사하며 --completion은 같은 워크샾의 자연 건설·완공까지 확인한다."""
 import argparse
 import json
 import subprocess
@@ -11,9 +11,22 @@ from cpp_smoke_files import preserve_game_settings
 from cpp_world_smoke import states
 
 
+def asset_fields(path):
+    """현재 실제 슬롯의 반복 상태/extra/HP 저장 비트를 보고 지점과 SID별로 읽는다."""
+    result={}
+    #일반 파서가 마지막 반복 행을 덮어쓰는 것과 구별해 모든 현재 슬롯을 보존한다.
+    for block in path.read_text('utf-8').split('frame\t')[1:]:
+        header,body=block.split('\n',1);_,label=header.split('\t',1);result[label]={}
+        #새 성공 값을 만들지 않고 실제 World.Report의 같은 슬롯 필드만 해석한다.
+        for line in body.splitlines():
+            fields=line.split('\t')
+            if fields[0]=='raw_asset_fields':result[label][int(fields[1])]=list(map(int,fields[2:]))
+    return result
+
+
 def main():
     """같은 실제 시작 자금/기술로 GUI만 조작하며 원본 보호 자료와 관측 결과를 보존한다."""
-    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--output',type=Path,required=True);args=parser.parse_args()
+    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--output',type=Path,required=True);parser.add_argument('--completion',action='store_true');args=parser.parse_args()
     output=args.output.resolve()
     if output.exists() and any(output.iterdir()):raise RuntimeError('새 관측 경로가 필요합니다: '+str(output))
     output.mkdir(parents=True,exist_ok=True)
@@ -21,9 +34,11 @@ def main():
            (95,'click',' Build Sun Workshop for 800'),(102,'up','cell:107,103'),(105,'report','prepared'),
            (110,'click','cell:107,103'),(120,'report','placed'),(120,'snapshot',str(output/'placed.bmp')),
            (200,'report','moving'),(200,'snapshot',str(output/'moving.bmp')),(230,'report','costDeleted'),(230,'snapshot',str(output/'cost-deleted.bmp'))]
+    if args.completion:
+        steps.extend([(500,'report','building'),(500,'snapshot',str(output/'building.bmp')),(950,'report','completed'),(950,'snapshot',str(output/'completed.bmp'))])
     script=output/'steps.tsv';report=output/'states.tsv'
     script.write_text(''.join(f'{frame}\t{operation}\t{argument}\n' for frame,operation,argument in steps),encoding='utf-8',newline='\n')
-    command=[str(EXE),'--run',str(ROOT/'originals'),'--mission','thewarbegins','--window','--no-audio','--frames','233',
+    command=[str(EXE),'--run',str(ROOT/'originals'),'--mission','thewarbegins','--window','--no-audio','--frames','953' if args.completion else '233',
              '--set','SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8','--ui-script',str(script),'--ui-report',str(report)]
     before=snapshots(ROOT/'originals')
     with preserve_game_settings(ROOT/'originals','d'):
@@ -49,11 +64,20 @@ def main():
     assert floating[:3]==later[:3] and floating[7]==later[7]=='-2' and int(floating[9])!=0
     assert float(later[5])<float(floating[5]) and float(later[6])<float(floating[6])
     assert 'raw_sp_gump' not in deleted and all(current['raw_menus'][0]=='0' for current in (placed,moving,deleted))
-    summary=dict(passed=True,scope='실제GUI 사제 메뉴/TYPE85 배치/실제3e왕복/SP 차감/원본 서식 비용 표시·이동·지연삭제/사제 경로 이동. 도착 뒤 건설 프로세스 시작/완공·미션 완주는 별도 후속이다.',
+    completion={}
+    if args.completion:
+        fields=asset_fields(report);target=next(iter(workshops));building=observed['building'];completed=observed['completed']
+        before_fields=fields['placed'][target];during_fields=fields['building'][target];after_fields=fields['completed'][target]
+        assert before_fields[1]&1 and during_fields[1]&1 and not (after_fields[1]&1)
+        assert 0<during_fields[2]<after_fields[2]==3000 and not (after_fields[0]&7)
+        assert building['raw_sp'][1]==completed['raw_sp'][1]=='2200' and completed['raw_objects'][target][-2:]==['109','107']
+        assert completed['phase']==['4'] and completed['paused']==['0'] and completed['popup']==['']
+        completion=dict(passed=True,sid=target,placed=before_fields,building=during_fields,completed=after_fields,gameSeconds=[building['time'][0],completed['time'][0]])
+    summary=dict(passed=True,scope='실제GUI 사제 메뉴/TYPE85 배치/실제3e왕복/SP 차감/원본 서식 비용 표시·이동·지연삭제/사제 경로 이동.'+(' 같은 워크샾의 HP 자연 증가·3000 완공·abstract 해제까지 확인했다. 미션 완주 검사는 아니다.' if args.completion else ' 자연 건설·완공은 --completion 모드로 검사한다.'),
                  command=command,originals_unchanged=unchanged,newPacketTypes=after_packets[len(before_packets):],workshops=workshops,priestBefore=priest,priestMoving=moved,
-                 observed={label:{key:record[key] for key in ('time','raw_input','raw_cursor','raw_sp','raw_menus','raw_sp_gump') if key in record} for label,record in observed.items()})
+                 completion=completion,observed={label:{key:record[key] for key in ('time','raw_input','raw_cursor','raw_sp','raw_menus','raw_sp_gump') if key in record} for label,record in observed.items()})
     (output/'results.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
-    print(json.dumps(dict(passed=True,newPacketTypes=summary['newPacketTypes'],workshops=workshops,priestBefore=priest,priestMoving=moved,originals_unchanged=unchanged),ensure_ascii=False))
+    print(json.dumps(dict(passed=True,newPacketTypes=summary['newPacketTypes'],workshops=workshops,priestBefore=priest,priestMoving=moved,completion=completion,originals_unchanged=unchanged),ensure_ascii=False))
 
 
 if __name__=='__main__':main()

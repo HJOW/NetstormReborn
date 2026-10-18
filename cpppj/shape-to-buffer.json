@@ -27,7 +27,7 @@
     "cpppj/src/client/VFXDraw.cpp": "1de6889912f1f18cc83e0efc7cc33a43216e063730aaca7917aad8bf5a8c37b7",
     "cpppj/src/client/VFXDraw.h": "3ac09a428f585449877a89cb3fbd8a1f92755bb635c8c5778519f827ce3cf9bc",
     "cpppj/tests/fixtures/shape-to-buffer-x86.tsv": "d92bc1a292b8f44cb87ec59ffec881f7e97db4c4b6680af92ad554af2d7c89c1",
-    "cpppj/tests/ShapeToBufferTests.cpp": "67dd7ac14fb89b601d9be8d32331094b9d16cc4fa685f3385727c200475e9591",
+    "cpppj/tests/ShapeToBufferTests.cpp": "0dc5ddc7f71ce2b7a12ff4dcaae45a47b4c7d6fefa676129fb19b5556e3312ab",
     "extracted/burning-frame-helper/originalCD/creation.c": "79332ff09557a261e3148a25cf776e09fff3d59ef0bb435867f7bec8c80ea9ab",
     "extracted/burning-frame-helper/originalCD/functions.tsv": "fe7c50de077cff91478186174818f54286502c8420581b1da66ef9acc88ff685",
     "extracted/burning-frame-helper/originals/creation.c": "a61efc5fe47da67c8ef639024a9bed67b231e7886727e544d414c9a83062c5cf",
@@ -99,5 +99,20 @@
     "CD의free/가상표0·해제표식/frame255은8×8/4×4투명fallback으로정상반환한다.",
     "실제 VFX의 pushDS/popES에는4GB/32bit 평면GDT 입력을공급한다. nullselector의에뮬레이터16bit스택실패는완료관찰로세지않는다.",
     "mapped owner색표/추가가상그림·원본BurningFrame전체/Draw/첫팔레트/Host삭제·캠페인월드는후속이다."
+  ],
+  "integration_updates": [
+    {
+      "date": "2026-10-18",
+      "unit": 169,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/tests/ShapeToBufferTests.cpp",
+          "previous": "67dd7ac14fb89b601d9be8d32331094b9d16cc4fa685f3385727c200475e9591",
+          "current": "0dc5ddc7f71ce2b7a12ff4dcaae45a47b4c7d6fefa676129fb19b5556e3312ab"
+        }
+      ]
+    }
   ]
 }

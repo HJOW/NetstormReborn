@@ -1654,7 +1654,7 @@ TEST_CASE(CampaignSession_LocalLoginMissionStartAiAlliances) {
     }
 }
 
-// 실제 로컬 로그인/Start 뒤 썬 워크샾 커서에 원본 에너지·공간·연관 지역을 모두 만족하는 지점이 있어야 한다.
+// 실제 로그인/Start·허용점·3e 왕복 뒤 자연6700/건설30·HP 증가·완공·소리 반납까지 같은 세션에서 검사한다.
 TEST_CASE(CampaignSession_LocalLoginWorkshopHasActualPlacement) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();
     CampaignLoginServices login;login.configInt=[](std::string_view,std::int32_t fallback) { return fallback; };login.wallSeconds=[] { return 100.25; };login.clock=[] { return 100250U; };login.refresh=[] {};login.playerUiBusy=[] { return false; };login.playerNotice=[](std::uint32_t,std::uint32_t,std::uint32_t) {};login.log=[](std::string_view) {};
@@ -1667,4 +1667,32 @@ TEST_CASE(CampaignSession_LocalLoginWorkshopHasActualPlacement) {
     const auto point=CursorPlacementPoint(session,ui);std::cout<<"실제1-1 썬 워크샾 배치 허용점 "<<point.x<<','<<point.y<<"\n";CHECK(session.CursorDropSettings().legal && session.Sp(1)==3000);
     const auto before=session.LocalConnectionPackets().size();session.Cursor().Drop();CHECK(session.Sp(1)==2200 && ui.shown==1 && session.LocalConnectionPackets().size()==before);
     session.PumpLocalConnection();CHECK(session.LocalConnectionPhase()==14 && session.LocalConnectionPackets().size()>before && std::find(session.LocalConnectionPackets().begin()+static_cast<std::ptrdiff_t>(before),session.LocalConnectionPackets().end(),std::uint8_t{0x3e})!=session.LocalConnectionPackets().end());session.Cursor().Cancel();
+    auto core=session.Core();Sid target{}; // 실제3e 수신이 만든 같은 소유자/위치의 서버 워크샾을 조회한다.
+    // 풀의 실제 서버 영역을 읽으며 새 객체·완공 상태를 검사 코드에서 만들지 않는다.
+    for (std::uint32_t number=core.pool.Layout().serverFirst;number<core.pool.Capacity();++number) {
+        const Sid sid{static_cast<std::uint16_t>(number)};const auto raw=core.pool.Slot(sid);
+        if (!(raw[11]&3) && raw[10]==85 && raw[34]==1 && std::bit_cast<float>(Get(raw,14))==point.x && std::bit_cast<float>(Get(raw,18))==point.y) { CHECK(!target.value);target=sid; }
+    }
+    CHECK(target.value && (core.pool.Slot(target)[40]&1));if (!target.value) return;
+    bool started{},progress{},completed{};double began{},end{};Sid construction{}; // 실제 자연 과정에서 관찰한 필드다.
+    const auto origin=core.processState.now;const auto maximum=session.HitPoints().MaxHitPoints(target); // 현재 실제 TYPE/HP 처리기다.
+    // 시간만 전진시켜 같은 Kernel/Regular/경로/건설 몸체가 시작과 완료를 선택하도록 한다.
+    for (std::uint64_t frame=1;frame<=7200 && !completed;++frame) {
+        const auto now=origin+static_cast<double>(frame)/60;session.RunFrame({now,now,1.0/60,frame},false);
+        const auto form=FindAttachedProcess(core.pool,target,30);
+        if (form.value && !started) {
+            auto* process=dynamic_cast<ConstructionProcess*>(core.processes.FromForm(form));CHECK(process);if (!process) return;
+            started=true;construction=form;began=process->Fields().start;end=process->Fields().end;
+            CHECK(end==began+10 && FindAttachedProcess(core.pool,target,17).value && FindAttachedProcess(core.pool,target,47).value);
+        }
+        if (started) {
+            const auto hp=static_cast<std::int32_t>(Get(core.pool.Slot(target),26));if (hp>0 && hp<maximum) progress=true;
+            completed=!(core.pool.Slot(target)[40]&1);
+            if (completed) CHECK(now>=end && !form.value && !core.processes.FromForm(construction));
+        }
+    }
+    CHECK(started && progress && completed && end>began);CHECK(Get(core.pool.Slot(target),26)==static_cast<std::uint32_t>(maximum));
+    CHECK(!FindAttachedProcess(core.pool,target,30).value && !FindAttachedProcess(core.pool,target,47).value);
+    CHECK((core.pool.Slot(target)[11]&7)==0 && session.Sp(1)==2200 && !core.bookkeeping.depth);
+    std::cout<<"실제1-1 썬 워크샾 자연 건설 SID"<<target.value<<" 시작"<<began<<" 완료"<<end<<" HP"<<maximum<<"\n";
 }

@@ -12,8 +12,10 @@ struct ShapeToBufferState {
     bool addTypeHotspot{}; // 패치00542414/CD005207b0이 마지막 기준점 보정을 켠다.
     std::span<const std::uint32_t> ownerTypeMaps; // 현재 타입별 색표 토큰이다. 색표가 있으면 실제 mapped 경로가 필요하다.
     std::function<std::span<const std::uint8_t>(std::uint32_t,std::uint32_t)> ownerColors; // 현재 타입/owner로 실제 색 번호를 선택한256바이트 표다.
+    std::function<std::int32_t(o::Sid)> mainFrame; // extra&2일 때 현재 파생의 실제 가상+78이다. -1이면 기본 그림을 생략한다.
+    std::function<void(o::Sid,o::ConstructionVisualImage&,std::int32_t,std::int32_t)> additional; // 같은 캡처 버퍼에 그리는 가상+a4다. TYPE 기준점 보정 전에 호출한다.
 };
-// 004a7db0/CD0045b100의 현재 plain/mapped frame 캡처다. 추가 가상 그림은 후속 몸체다.
+// 004a7db0/CD0045b100의 현재 plain/mapped 및 파생 가상 그림 캡처다. 파생 분배는 현재 소비자가 공급한다.
 class RawShapeToBuffer {
 public:
     // 같은 판본/로딩 순서의 TYPE와 SHP를 읽기 전용으로 참조하며 창이나 장치를 만들지 않는다.

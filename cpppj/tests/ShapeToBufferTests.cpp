@@ -3,6 +3,7 @@
 #include "client/RawShapeToBuffer.h"
 #include "client/SquidRenderer.h"
 #include "client/Renderer.h"
+#include "o/RawFactoryDraw.h"
 #include <cstdio>
 #include <filesystem>
 
@@ -56,3 +57,31 @@ void ReplayBuffer(std::string_view edition) {
 TEST_CASE(ShapeToBuffer_PatchNativePlainPixels) { ReplayBuffer("originals"); }
 // CD10.72의 invalidsource8×8 투명 fallback과 같은 실제 plain RLE를 대조한다.
 TEST_CASE(ShapeToBuffer_CdNativePlainPixelsAndFallback) { ReplayBuffer("originalCD"); }
+// 원본 Factory 가상 몸체/전체 보호sunFactory RLE의200입력과 기본·추가 그림을 대조한다.
+TEST_CASE(ShapeToBuffer_FactoryNative200Pixels) {
+    const auto& assets=Assets(OriginalEdition::Patch1078);auto types=assets.types;types[85].hotspotX=-2;types[85].hotspotY=3;
+    std::vector<RiftTypeFrames> frames(188,RiftTypeFrames({}));std::array<std::uint32_t,188> maps{}; // 현재 보호 프레임과 원본 TYPE85의 null 색표 입력이다.
+    // 같은 실제 로딩 순서의 모든 TYPE 프레임 코드를 조회한다.
+    for (const auto& asset:assets.game.Types()) frames[70+asset.block]=asset.definition.FrameTable();
+    std::size_t count{},overlays{}; // 실제 C++ 캡처와 추가 RLE 실행 수다.
+    // 동결된 원문 입력으로만 준비하고 전체 기대 픽셀을 구현에 전달하지 않는다.
+    for (const auto& row:LoadFixture(NETSTORM_FACTORY_CAPTURE_FIXTURE).rows) {
+        if (row[0]=="vtable") continue;CHECK(row.size()==10);if (row.size()!=10) return;
+        SidPool pool(OriginalEdition::Patch1078,32768,true);
+        // 원본 격리 입력과 같은 현재 client50 슬롯을 확보한다.
+        for (std::uint16_t sid=5;sid<=50;++sid) CHECK(pool.Allocate(2)==Sid{sid});
+        auto raw=pool.AllocatedBytes(Sid{50});std::fill(raw.begin(),raw.end(),std::uint8_t{});Put(raw,0,Number(row[0]));raw[10]=85;raw[11]=static_cast<std::uint8_t>(Number(row[1])<<5);raw[34]=1;raw[40]=static_cast<std::uint8_t>(Number(row[2]));Put(raw,36,Number(row[3]));
+        RawFactoryDraw factory(pool,frames);netstorm::client::ShapeToBufferState state;state.zoom=static_cast<std::int32_t>(Number(row[5]));state.addTypeHotspot=Number(row[4])!=0;state.ownerTypeMaps=maps;
+        state.mainFrame=[&](Sid sid) { return factory.MainFrame(sid); };
+        state.additional=[&](Sid sid,ConstructionVisualImage& image,std::int32_t x,std::int32_t y) {
+            factory.Additional(sid,x,y,[&](std::int32_t px,std::int32_t py,std::uint32_t type,std::int32_t frame) {
+                CHECK(state.zoom==65536 && type==85);++overlays;
+                static_cast<void>(netstorm::client::DrawShape(image.pixels,image.width,image.height,assets.game.Shapes(),type-70,static_cast<std::size_t>(frame),px,py,{0,0,image.width-1,image.height-1}));
+            });
+        };
+        netstorm::client::RawShapeToBuffer capture(pool,types,assets.shapes,assets.game.Shapes(),state);const auto image=capture.Capture(Sid{50});
+        const std::vector<std::string> actual{std::to_string(image.width)+','+std::to_string(image.height)+','+std::to_string(image.hotspotX)+','+std::to_string(image.hotspotY),Hex(image.pixels),std::to_string(image.pixels.size()),"1"};
+        const auto same=actual==std::vector<std::string>(row.begin()+6,row.end());if (!same) std::printf("Factory 원문 픽셀 차이 %zu VT%s Level%s extra%s frame%s\n",count,row[0].c_str(),row[1].c_str(),row[2].c_str(),row[3].c_str());CHECK(same);++count;
+    }
+    CHECK(count==200 && overlays==60);
+}
