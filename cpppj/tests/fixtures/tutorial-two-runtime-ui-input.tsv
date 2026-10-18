@@ -1,0 +1,1099 @@
+# Early2의 실제 안내/신전1·워크샾1 건설/지식 선택/발사기4개/신전 선택/75SP 회수 입력이다. 조건은 실제 필드와 객체만 읽는다.
+4	report	initial
+20	report	A
+20	snapshot	A
+25	click	MORE
+30	click	MORE
+35	click	OK
+60	right	world:priest
+70	click	Construct
+75	click	Temple
+80	click	 Build Wind Temple for 5000
+90	report	preview
+95	click	placement-near:50,48
+100	report	templePlaced
+500	when	page\tB\.\n;;click-if;;MORE
+500	when	page\tB1\.\n;;click-if;;OK
+500	when	page\tC\.\n;;click-if;;OK
+500	when	page\tD\.\n;;click-if;;MORE
+500	when	page\tD1\.\n;;click-if;;OK
+500	when	page\tE\.\n;;click-if;;OK
+500	when	page\tF\.\n;;click-if;;MORE
+500	when	page\tF1\.\n;;click-if;;OK
+500	when	page\tG\.\n;;click-if;;OK
+500	when	page\tH\.\n;;click-if;;MORE
+500	when	page\tH1\.\n;;click-if;;OK
+505	when	mission_gate\t2\t(66|67|70|72)\t0\t0\t&&page\tmission\n&&raw_cursor\t0\t[0-9]+\t[0-9]+\t[1-9][0-9]*\t;;esc;;0
+510	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:priest
+510	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:sunFactory
+515	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Construct
+520	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Workshop
+520	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Put Knowledge into Production
+525	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;; Build Sun Workshop for 800
+530	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;up-if;;placement-near:59,50
+530	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Sun Disc Thrower
+535	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;click-if;;placement-near:59,50
+540	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;click-if;;production:71
+550	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;up-if;;placement-near:55,51
+555	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;click-if;;placement-near:55,51
+560	when	mission_gate\t2\t70\t0\t0\t&&page\tmission\n;;click;;world:windVortex
+570	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;right;;world:sunArcher
+575	report	menu0
+580	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;click-if;;Salvage gains 75
+590	report	cycle0
+590	snapshot	cycle0
+600	when	page\tB\.\n;;click-if;;MORE
+600	when	page\tB1\.\n;;click-if;;OK
+600	when	page\tC\.\n;;click-if;;OK
+600	when	page\tD\.\n;;click-if;;MORE
+600	when	page\tD1\.\n;;click-if;;OK
+600	when	page\tE\.\n;;click-if;;OK
+600	when	page\tF\.\n;;click-if;;MORE
+600	when	page\tF1\.\n;;click-if;;OK
+600	when	page\tG\.\n;;click-if;;OK
+600	when	page\tH\.\n;;click-if;;MORE
+600	when	page\tH1\.\n;;click-if;;OK
+605	when	mission_gate\t2\t(66|67|70|72)\t0\t0\t&&page\tmission\n&&raw_cursor\t0\t[0-9]+\t[0-9]+\t[1-9][0-9]*\t;;esc;;0
+610	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:priest
+610	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:sunFactory
+615	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Construct
+620	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Workshop
+620	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Put Knowledge into Production
+625	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;; Build Sun Workshop for 800
+630	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;up-if;;placement-near:59,50
+630	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Sun Disc Thrower
+635	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;click-if;;placement-near:59,50
+640	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;click-if;;production:71
+650	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;up-if;;placement-near:55,51
+655	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;click-if;;placement-near:55,51
+660	when	mission_gate\t2\t70\t0\t0\t&&page\tmission\n;;click;;world:windVortex
+670	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;right;;world:sunArcher
+675	report	menu1
+680	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;click-if;;Salvage gains 75
+690	report	cycle1
+690	snapshot	cycle1
+700	when	page\tB\.\n;;click-if;;MORE
+700	when	page\tB1\.\n;;click-if;;OK
+700	when	page\tC\.\n;;click-if;;OK
+700	when	page\tD\.\n;;click-if;;MORE
+700	when	page\tD1\.\n;;click-if;;OK
+700	when	page\tE\.\n;;click-if;;OK
+700	when	page\tF\.\n;;click-if;;MORE
+700	when	page\tF1\.\n;;click-if;;OK
+700	when	page\tG\.\n;;click-if;;OK
+700	when	page\tH\.\n;;click-if;;MORE
+700	when	page\tH1\.\n;;click-if;;OK
+705	when	mission_gate\t2\t(66|67|70|72)\t0\t0\t&&page\tmission\n&&raw_cursor\t0\t[0-9]+\t[0-9]+\t[1-9][0-9]*\t;;esc;;0
+710	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:priest
+710	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:sunFactory
+715	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Construct
+720	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Workshop
+720	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Put Knowledge into Production
+725	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;; Build Sun Workshop for 800
+730	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;up-if;;placement-near:59,50
+730	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Sun Disc Thrower
+735	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;click-if;;placement-near:59,50
+740	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;click-if;;production:71
+750	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;up-if;;placement-near:55,51
+755	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;click-if;;placement-near:55,51
+760	when	mission_gate\t2\t70\t0\t0\t&&page\tmission\n;;click;;world:windVortex
+770	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;right;;world:sunArcher
+775	report	menu2
+780	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;click-if;;Salvage gains 75
+790	report	cycle2
+790	snapshot	cycle2
+800	when	page\tB\.\n;;click-if;;MORE
+800	when	page\tB1\.\n;;click-if;;OK
+800	when	page\tC\.\n;;click-if;;OK
+800	when	page\tD\.\n;;click-if;;MORE
+800	when	page\tD1\.\n;;click-if;;OK
+800	when	page\tE\.\n;;click-if;;OK
+800	when	page\tF\.\n;;click-if;;MORE
+800	when	page\tF1\.\n;;click-if;;OK
+800	when	page\tG\.\n;;click-if;;OK
+800	when	page\tH\.\n;;click-if;;MORE
+800	when	page\tH1\.\n;;click-if;;OK
+805	when	mission_gate\t2\t(66|67|70|72)\t0\t0\t&&page\tmission\n&&raw_cursor\t0\t[0-9]+\t[0-9]+\t[1-9][0-9]*\t;;esc;;0
+810	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:priest
+810	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:sunFactory
+815	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Construct
+820	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Workshop
+820	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Put Knowledge into Production
+825	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;; Build Sun Workshop for 800
+830	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;up-if;;placement-near:59,50
+830	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Sun Disc Thrower
+835	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;click-if;;placement-near:59,50
+840	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;click-if;;production:71
+850	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;up-if;;placement-near:55,51
+855	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;click-if;;placement-near:55,51
+860	when	mission_gate\t2\t70\t0\t0\t&&page\tmission\n;;click;;world:windVortex
+870	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;right;;world:sunArcher
+875	report	menu3
+880	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;click-if;;Salvage gains 75
+890	report	cycle3
+890	snapshot	cycle3
+900	when	page\tB\.\n;;click-if;;MORE
+900	when	page\tB1\.\n;;click-if;;OK
+900	when	page\tC\.\n;;click-if;;OK
+900	when	page\tD\.\n;;click-if;;MORE
+900	when	page\tD1\.\n;;click-if;;OK
+900	when	page\tE\.\n;;click-if;;OK
+900	when	page\tF\.\n;;click-if;;MORE
+900	when	page\tF1\.\n;;click-if;;OK
+900	when	page\tG\.\n;;click-if;;OK
+900	when	page\tH\.\n;;click-if;;MORE
+900	when	page\tH1\.\n;;click-if;;OK
+905	when	mission_gate\t2\t(66|67|70|72)\t0\t0\t&&page\tmission\n&&raw_cursor\t0\t[0-9]+\t[0-9]+\t[1-9][0-9]*\t;;esc;;0
+910	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:priest
+910	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:sunFactory
+915	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Construct
+920	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Workshop
+920	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Put Knowledge into Production
+925	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;; Build Sun Workshop for 800
+930	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;up-if;;placement-near:59,50
+930	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Sun Disc Thrower
+935	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;click-if;;placement-near:59,50
+940	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;click-if;;production:71
+950	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;up-if;;placement-near:55,51
+955	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;click-if;;placement-near:55,51
+960	when	mission_gate\t2\t70\t0\t0\t&&page\tmission\n;;click;;world:windVortex
+970	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;right;;world:sunArcher
+975	report	menu4
+980	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;click-if;;Salvage gains 75
+990	report	cycle4
+990	snapshot	cycle4
+1000	when	page\tB\.\n;;click-if;;MORE
+1000	when	page\tB1\.\n;;click-if;;OK
+1000	when	page\tC\.\n;;click-if;;OK
+1000	when	page\tD\.\n;;click-if;;MORE
+1000	when	page\tD1\.\n;;click-if;;OK
+1000	when	page\tE\.\n;;click-if;;OK
+1000	when	page\tF\.\n;;click-if;;MORE
+1000	when	page\tF1\.\n;;click-if;;OK
+1000	when	page\tG\.\n;;click-if;;OK
+1000	when	page\tH\.\n;;click-if;;MORE
+1000	when	page\tH1\.\n;;click-if;;OK
+1005	when	mission_gate\t2\t(66|67|70|72)\t0\t0\t&&page\tmission\n&&raw_cursor\t0\t[0-9]+\t[0-9]+\t[1-9][0-9]*\t;;esc;;0
+1010	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:priest
+1010	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:sunFactory
+1015	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Construct
+1020	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Workshop
+1020	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Put Knowledge into Production
+1025	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;; Build Sun Workshop for 800
+1030	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;up-if;;placement-near:59,50
+1030	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Sun Disc Thrower
+1035	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;click-if;;placement-near:59,50
+1040	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;click-if;;production:71
+1050	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;up-if;;placement-near:55,51
+1055	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;click-if;;placement-near:55,51
+1060	when	mission_gate\t2\t70\t0\t0\t&&page\tmission\n;;click;;world:windVortex
+1070	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;right;;world:sunArcher
+1075	report	menu5
+1080	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;click-if;;Salvage gains 75
+1090	report	cycle5
+1090	snapshot	cycle5
+1100	when	page\tB\.\n;;click-if;;MORE
+1100	when	page\tB1\.\n;;click-if;;OK
+1100	when	page\tC\.\n;;click-if;;OK
+1100	when	page\tD\.\n;;click-if;;MORE
+1100	when	page\tD1\.\n;;click-if;;OK
+1100	when	page\tE\.\n;;click-if;;OK
+1100	when	page\tF\.\n;;click-if;;MORE
+1100	when	page\tF1\.\n;;click-if;;OK
+1100	when	page\tG\.\n;;click-if;;OK
+1100	when	page\tH\.\n;;click-if;;MORE
+1100	when	page\tH1\.\n;;click-if;;OK
+1105	when	mission_gate\t2\t(66|67|70|72)\t0\t0\t&&page\tmission\n&&raw_cursor\t0\t[0-9]+\t[0-9]+\t[1-9][0-9]*\t;;esc;;0
+1110	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:priest
+1110	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:sunFactory
+1115	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Construct
+1120	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Workshop
+1120	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Put Knowledge into Production
+1125	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;; Build Sun Workshop for 800
+1130	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;up-if;;placement-near:59,50
+1130	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Sun Disc Thrower
+1135	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;click-if;;placement-near:59,50
+1140	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;click-if;;production:71
+1150	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;up-if;;placement-near:55,51
+1155	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;click-if;;placement-near:55,51
+1160	when	mission_gate\t2\t70\t0\t0\t&&page\tmission\n;;click;;world:windVortex
+1170	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;right;;world:sunArcher
+1175	report	menu6
+1180	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;click-if;;Salvage gains 75
+1190	report	cycle6
+1190	snapshot	cycle6
+1200	when	page\tB\.\n;;click-if;;MORE
+1200	when	page\tB1\.\n;;click-if;;OK
+1200	when	page\tC\.\n;;click-if;;OK
+1200	when	page\tD\.\n;;click-if;;MORE
+1200	when	page\tD1\.\n;;click-if;;OK
+1200	when	page\tE\.\n;;click-if;;OK
+1200	when	page\tF\.\n;;click-if;;MORE
+1200	when	page\tF1\.\n;;click-if;;OK
+1200	when	page\tG\.\n;;click-if;;OK
+1200	when	page\tH\.\n;;click-if;;MORE
+1200	when	page\tH1\.\n;;click-if;;OK
+1205	when	mission_gate\t2\t(66|67|70|72)\t0\t0\t&&page\tmission\n&&raw_cursor\t0\t[0-9]+\t[0-9]+\t[1-9][0-9]*\t;;esc;;0
+1210	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:priest
+1210	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:sunFactory
+1215	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Construct
+1220	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Workshop
+1220	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Put Knowledge into Production
+1225	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;; Build Sun Workshop for 800
+1230	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;up-if;;placement-near:59,50
+1230	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Sun Disc Thrower
+1235	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;click-if;;placement-near:59,50
+1240	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;click-if;;production:71
+1250	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;up-if;;placement-near:55,51
+1255	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;click-if;;placement-near:55,51
+1260	when	mission_gate\t2\t70\t0\t0\t&&page\tmission\n;;click;;world:windVortex
+1270	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;right;;world:sunArcher
+1275	report	menu7
+1280	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;click-if;;Salvage gains 75
+1290	report	cycle7
+1290	snapshot	cycle7
+1300	when	page\tB\.\n;;click-if;;MORE
+1300	when	page\tB1\.\n;;click-if;;OK
+1300	when	page\tC\.\n;;click-if;;OK
+1300	when	page\tD\.\n;;click-if;;MORE
+1300	when	page\tD1\.\n;;click-if;;OK
+1300	when	page\tE\.\n;;click-if;;OK
+1300	when	page\tF\.\n;;click-if;;MORE
+1300	when	page\tF1\.\n;;click-if;;OK
+1300	when	page\tG\.\n;;click-if;;OK
+1300	when	page\tH\.\n;;click-if;;MORE
+1300	when	page\tH1\.\n;;click-if;;OK
+1305	when	mission_gate\t2\t(66|67|70|72)\t0\t0\t&&page\tmission\n&&raw_cursor\t0\t[0-9]+\t[0-9]+\t[1-9][0-9]*\t;;esc;;0
+1310	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:priest
+1310	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:sunFactory
+1315	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Construct
+1320	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Workshop
+1320	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Put Knowledge into Production
+1325	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;; Build Sun Workshop for 800
+1330	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;up-if;;placement-near:59,50
+1330	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Sun Disc Thrower
+1335	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;click-if;;placement-near:59,50
+1340	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;click-if;;production:71
+1350	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;up-if;;placement-near:55,51
+1355	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;click-if;;placement-near:55,51
+1360	when	mission_gate\t2\t70\t0\t0\t&&page\tmission\n;;click;;world:windVortex
+1370	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;right;;world:sunArcher
+1375	report	menu8
+1380	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;click-if;;Salvage gains 75
+1390	report	cycle8
+1390	snapshot	cycle8
+1400	when	page\tB\.\n;;click-if;;MORE
+1400	when	page\tB1\.\n;;click-if;;OK
+1400	when	page\tC\.\n;;click-if;;OK
+1400	when	page\tD\.\n;;click-if;;MORE
+1400	when	page\tD1\.\n;;click-if;;OK
+1400	when	page\tE\.\n;;click-if;;OK
+1400	when	page\tF\.\n;;click-if;;MORE
+1400	when	page\tF1\.\n;;click-if;;OK
+1400	when	page\tG\.\n;;click-if;;OK
+1400	when	page\tH\.\n;;click-if;;MORE
+1400	when	page\tH1\.\n;;click-if;;OK
+1405	when	mission_gate\t2\t(66|67|70|72)\t0\t0\t&&page\tmission\n&&raw_cursor\t0\t[0-9]+\t[0-9]+\t[1-9][0-9]*\t;;esc;;0
+1410	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:priest
+1410	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:sunFactory
+1415	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Construct
+1420	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Workshop
+1420	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Put Knowledge into Production
+1425	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;; Build Sun Workshop for 800
+1430	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;up-if;;placement-near:59,50
+1430	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Sun Disc Thrower
+1435	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;click-if;;placement-near:59,50
+1440	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;click-if;;production:71
+1450	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;up-if;;placement-near:55,51
+1455	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;click-if;;placement-near:55,51
+1460	when	mission_gate\t2\t70\t0\t0\t&&page\tmission\n;;click;;world:windVortex
+1470	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;right;;world:sunArcher
+1475	report	menu9
+1480	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;click-if;;Salvage gains 75
+1490	report	cycle9
+1490	snapshot	cycle9
+1500	when	page\tB\.\n;;click-if;;MORE
+1500	when	page\tB1\.\n;;click-if;;OK
+1500	when	page\tC\.\n;;click-if;;OK
+1500	when	page\tD\.\n;;click-if;;MORE
+1500	when	page\tD1\.\n;;click-if;;OK
+1500	when	page\tE\.\n;;click-if;;OK
+1500	when	page\tF\.\n;;click-if;;MORE
+1500	when	page\tF1\.\n;;click-if;;OK
+1500	when	page\tG\.\n;;click-if;;OK
+1500	when	page\tH\.\n;;click-if;;MORE
+1500	when	page\tH1\.\n;;click-if;;OK
+1505	when	mission_gate\t2\t(66|67|70|72)\t0\t0\t&&page\tmission\n&&raw_cursor\t0\t[0-9]+\t[0-9]+\t[1-9][0-9]*\t;;esc;;0
+1510	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:priest
+1510	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:sunFactory
+1515	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Construct
+1520	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Workshop
+1520	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Put Knowledge into Production
+1525	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;; Build Sun Workshop for 800
+1530	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;up-if;;placement-near:59,50
+1530	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Sun Disc Thrower
+1535	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;click-if;;placement-near:59,50
+1540	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;click-if;;production:71
+1550	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;up-if;;placement-near:55,51
+1555	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;click-if;;placement-near:55,51
+1560	when	mission_gate\t2\t70\t0\t0\t&&page\tmission\n;;click;;world:windVortex
+1570	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;right;;world:sunArcher
+1575	report	menu10
+1580	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;click-if;;Salvage gains 75
+1590	report	cycle10
+1590	snapshot	cycle10
+1600	when	page\tB\.\n;;click-if;;MORE
+1600	when	page\tB1\.\n;;click-if;;OK
+1600	when	page\tC\.\n;;click-if;;OK
+1600	when	page\tD\.\n;;click-if;;MORE
+1600	when	page\tD1\.\n;;click-if;;OK
+1600	when	page\tE\.\n;;click-if;;OK
+1600	when	page\tF\.\n;;click-if;;MORE
+1600	when	page\tF1\.\n;;click-if;;OK
+1600	when	page\tG\.\n;;click-if;;OK
+1600	when	page\tH\.\n;;click-if;;MORE
+1600	when	page\tH1\.\n;;click-if;;OK
+1605	when	mission_gate\t2\t(66|67|70|72)\t0\t0\t&&page\tmission\n&&raw_cursor\t0\t[0-9]+\t[0-9]+\t[1-9][0-9]*\t;;esc;;0
+1610	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:priest
+1610	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:sunFactory
+1615	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Construct
+1620	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Workshop
+1620	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Put Knowledge into Production
+1625	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;; Build Sun Workshop for 800
+1630	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;up-if;;placement-near:59,50
+1630	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Sun Disc Thrower
+1635	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;click-if;;placement-near:59,50
+1640	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;click-if;;production:71
+1650	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;up-if;;placement-near:55,51
+1655	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;click-if;;placement-near:55,51
+1660	when	mission_gate\t2\t70\t0\t0\t&&page\tmission\n;;click;;world:windVortex
+1670	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;right;;world:sunArcher
+1675	report	menu11
+1680	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;click-if;;Salvage gains 75
+1690	report	cycle11
+1690	snapshot	cycle11
+1700	when	page\tB\.\n;;click-if;;MORE
+1700	when	page\tB1\.\n;;click-if;;OK
+1700	when	page\tC\.\n;;click-if;;OK
+1700	when	page\tD\.\n;;click-if;;MORE
+1700	when	page\tD1\.\n;;click-if;;OK
+1700	when	page\tE\.\n;;click-if;;OK
+1700	when	page\tF\.\n;;click-if;;MORE
+1700	when	page\tF1\.\n;;click-if;;OK
+1700	when	page\tG\.\n;;click-if;;OK
+1700	when	page\tH\.\n;;click-if;;MORE
+1700	when	page\tH1\.\n;;click-if;;OK
+1705	when	mission_gate\t2\t(66|67|70|72)\t0\t0\t&&page\tmission\n&&raw_cursor\t0\t[0-9]+\t[0-9]+\t[1-9][0-9]*\t;;esc;;0
+1710	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:priest
+1710	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:sunFactory
+1715	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Construct
+1720	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Workshop
+1720	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Put Knowledge into Production
+1725	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;; Build Sun Workshop for 800
+1730	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;up-if;;placement-near:59,50
+1730	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Sun Disc Thrower
+1735	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;click-if;;placement-near:59,50
+1740	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;click-if;;production:71
+1750	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;up-if;;placement-near:55,51
+1755	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;click-if;;placement-near:55,51
+1760	when	mission_gate\t2\t70\t0\t0\t&&page\tmission\n;;click;;world:windVortex
+1770	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;right;;world:sunArcher
+1775	report	menu12
+1780	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;click-if;;Salvage gains 75
+1790	report	cycle12
+1790	snapshot	cycle12
+1800	when	page\tB\.\n;;click-if;;MORE
+1800	when	page\tB1\.\n;;click-if;;OK
+1800	when	page\tC\.\n;;click-if;;OK
+1800	when	page\tD\.\n;;click-if;;MORE
+1800	when	page\tD1\.\n;;click-if;;OK
+1800	when	page\tE\.\n;;click-if;;OK
+1800	when	page\tF\.\n;;click-if;;MORE
+1800	when	page\tF1\.\n;;click-if;;OK
+1800	when	page\tG\.\n;;click-if;;OK
+1800	when	page\tH\.\n;;click-if;;MORE
+1800	when	page\tH1\.\n;;click-if;;OK
+1805	when	mission_gate\t2\t(66|67|70|72)\t0\t0\t&&page\tmission\n&&raw_cursor\t0\t[0-9]+\t[0-9]+\t[1-9][0-9]*\t;;esc;;0
+1810	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:priest
+1810	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:sunFactory
+1815	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Construct
+1820	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Workshop
+1820	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Put Knowledge into Production
+1825	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;; Build Sun Workshop for 800
+1830	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;up-if;;placement-near:59,50
+1830	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Sun Disc Thrower
+1835	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;click-if;;placement-near:59,50
+1840	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;click-if;;production:71
+1850	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;up-if;;placement-near:55,51
+1855	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;click-if;;placement-near:55,51
+1860	when	mission_gate\t2\t70\t0\t0\t&&page\tmission\n;;click;;world:windVortex
+1870	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;right;;world:sunArcher
+1875	report	menu13
+1880	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;click-if;;Salvage gains 75
+1890	report	cycle13
+1890	snapshot	cycle13
+1900	when	page\tB\.\n;;click-if;;MORE
+1900	when	page\tB1\.\n;;click-if;;OK
+1900	when	page\tC\.\n;;click-if;;OK
+1900	when	page\tD\.\n;;click-if;;MORE
+1900	when	page\tD1\.\n;;click-if;;OK
+1900	when	page\tE\.\n;;click-if;;OK
+1900	when	page\tF\.\n;;click-if;;MORE
+1900	when	page\tF1\.\n;;click-if;;OK
+1900	when	page\tG\.\n;;click-if;;OK
+1900	when	page\tH\.\n;;click-if;;MORE
+1900	when	page\tH1\.\n;;click-if;;OK
+1905	when	mission_gate\t2\t(66|67|70|72)\t0\t0\t&&page\tmission\n&&raw_cursor\t0\t[0-9]+\t[0-9]+\t[1-9][0-9]*\t;;esc;;0
+1910	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:priest
+1910	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:sunFactory
+1915	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Construct
+1920	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Workshop
+1920	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Put Knowledge into Production
+1925	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;; Build Sun Workshop for 800
+1930	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;up-if;;placement-near:59,50
+1930	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Sun Disc Thrower
+1935	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;click-if;;placement-near:59,50
+1940	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;click-if;;production:71
+1950	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;up-if;;placement-near:55,51
+1955	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;click-if;;placement-near:55,51
+1960	when	mission_gate\t2\t70\t0\t0\t&&page\tmission\n;;click;;world:windVortex
+1970	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;right;;world:sunArcher
+1975	report	menu14
+1980	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;click-if;;Salvage gains 75
+1990	report	cycle14
+1990	snapshot	cycle14
+2000	when	page\tB\.\n;;click-if;;MORE
+2000	when	page\tB1\.\n;;click-if;;OK
+2000	when	page\tC\.\n;;click-if;;OK
+2000	when	page\tD\.\n;;click-if;;MORE
+2000	when	page\tD1\.\n;;click-if;;OK
+2000	when	page\tE\.\n;;click-if;;OK
+2000	when	page\tF\.\n;;click-if;;MORE
+2000	when	page\tF1\.\n;;click-if;;OK
+2000	when	page\tG\.\n;;click-if;;OK
+2000	when	page\tH\.\n;;click-if;;MORE
+2000	when	page\tH1\.\n;;click-if;;OK
+2005	when	mission_gate\t2\t(66|67|70|72)\t0\t0\t&&page\tmission\n&&raw_cursor\t0\t[0-9]+\t[0-9]+\t[1-9][0-9]*\t;;esc;;0
+2010	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:priest
+2010	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:sunFactory
+2015	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Construct
+2020	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Workshop
+2020	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Put Knowledge into Production
+2025	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;; Build Sun Workshop for 800
+2030	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;up-if;;placement-near:59,50
+2030	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Sun Disc Thrower
+2035	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;click-if;;placement-near:59,50
+2040	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;click-if;;production:71
+2050	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;up-if;;placement-near:55,51
+2055	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;click-if;;placement-near:55,51
+2060	when	mission_gate\t2\t70\t0\t0\t&&page\tmission\n;;click;;world:windVortex
+2070	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;right;;world:sunArcher
+2075	report	menu15
+2080	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;click-if;;Salvage gains 75
+2090	report	cycle15
+2090	snapshot	cycle15
+2100	when	page\tB\.\n;;click-if;;MORE
+2100	when	page\tB1\.\n;;click-if;;OK
+2100	when	page\tC\.\n;;click-if;;OK
+2100	when	page\tD\.\n;;click-if;;MORE
+2100	when	page\tD1\.\n;;click-if;;OK
+2100	when	page\tE\.\n;;click-if;;OK
+2100	when	page\tF\.\n;;click-if;;MORE
+2100	when	page\tF1\.\n;;click-if;;OK
+2100	when	page\tG\.\n;;click-if;;OK
+2100	when	page\tH\.\n;;click-if;;MORE
+2100	when	page\tH1\.\n;;click-if;;OK
+2105	when	mission_gate\t2\t(66|67|70|72)\t0\t0\t&&page\tmission\n&&raw_cursor\t0\t[0-9]+\t[0-9]+\t[1-9][0-9]*\t;;esc;;0
+2110	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:priest
+2110	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:sunFactory
+2115	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Construct
+2120	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Workshop
+2120	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Put Knowledge into Production
+2125	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;; Build Sun Workshop for 800
+2130	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;up-if;;placement-near:59,50
+2130	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Sun Disc Thrower
+2135	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;click-if;;placement-near:59,50
+2140	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;click-if;;production:71
+2150	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;up-if;;placement-near:55,51
+2155	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;click-if;;placement-near:55,51
+2160	when	mission_gate\t2\t70\t0\t0\t&&page\tmission\n;;click;;world:windVortex
+2170	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;right;;world:sunArcher
+2175	report	menu16
+2180	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;click-if;;Salvage gains 75
+2190	report	cycle16
+2190	snapshot	cycle16
+2200	when	page\tB\.\n;;click-if;;MORE
+2200	when	page\tB1\.\n;;click-if;;OK
+2200	when	page\tC\.\n;;click-if;;OK
+2200	when	page\tD\.\n;;click-if;;MORE
+2200	when	page\tD1\.\n;;click-if;;OK
+2200	when	page\tE\.\n;;click-if;;OK
+2200	when	page\tF\.\n;;click-if;;MORE
+2200	when	page\tF1\.\n;;click-if;;OK
+2200	when	page\tG\.\n;;click-if;;OK
+2200	when	page\tH\.\n;;click-if;;MORE
+2200	when	page\tH1\.\n;;click-if;;OK
+2205	when	mission_gate\t2\t(66|67|70|72)\t0\t0\t&&page\tmission\n&&raw_cursor\t0\t[0-9]+\t[0-9]+\t[1-9][0-9]*\t;;esc;;0
+2210	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:priest
+2210	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:sunFactory
+2215	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Construct
+2220	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Workshop
+2220	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Put Knowledge into Production
+2225	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;; Build Sun Workshop for 800
+2230	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;up-if;;placement-near:59,50
+2230	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Sun Disc Thrower
+2235	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;click-if;;placement-near:59,50
+2240	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;click-if;;production:71
+2250	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;up-if;;placement-near:55,51
+2255	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;click-if;;placement-near:55,51
+2260	when	mission_gate\t2\t70\t0\t0\t&&page\tmission\n;;click;;world:windVortex
+2270	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;right;;world:sunArcher
+2275	report	menu17
+2280	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;click-if;;Salvage gains 75
+2290	report	cycle17
+2290	snapshot	cycle17
+2300	when	page\tB\.\n;;click-if;;MORE
+2300	when	page\tB1\.\n;;click-if;;OK
+2300	when	page\tC\.\n;;click-if;;OK
+2300	when	page\tD\.\n;;click-if;;MORE
+2300	when	page\tD1\.\n;;click-if;;OK
+2300	when	page\tE\.\n;;click-if;;OK
+2300	when	page\tF\.\n;;click-if;;MORE
+2300	when	page\tF1\.\n;;click-if;;OK
+2300	when	page\tG\.\n;;click-if;;OK
+2300	when	page\tH\.\n;;click-if;;MORE
+2300	when	page\tH1\.\n;;click-if;;OK
+2305	when	mission_gate\t2\t(66|67|70|72)\t0\t0\t&&page\tmission\n&&raw_cursor\t0\t[0-9]+\t[0-9]+\t[1-9][0-9]*\t;;esc;;0
+2310	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:priest
+2310	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:sunFactory
+2315	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Construct
+2320	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Workshop
+2320	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Put Knowledge into Production
+2325	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;; Build Sun Workshop for 800
+2330	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;up-if;;placement-near:59,50
+2330	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Sun Disc Thrower
+2335	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;click-if;;placement-near:59,50
+2340	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;click-if;;production:71
+2350	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;up-if;;placement-near:55,51
+2355	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;click-if;;placement-near:55,51
+2360	when	mission_gate\t2\t70\t0\t0\t&&page\tmission\n;;click;;world:windVortex
+2370	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;right;;world:sunArcher
+2375	report	menu18
+2380	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;click-if;;Salvage gains 75
+2390	report	cycle18
+2390	snapshot	cycle18
+2400	when	page\tB\.\n;;click-if;;MORE
+2400	when	page\tB1\.\n;;click-if;;OK
+2400	when	page\tC\.\n;;click-if;;OK
+2400	when	page\tD\.\n;;click-if;;MORE
+2400	when	page\tD1\.\n;;click-if;;OK
+2400	when	page\tE\.\n;;click-if;;OK
+2400	when	page\tF\.\n;;click-if;;MORE
+2400	when	page\tF1\.\n;;click-if;;OK
+2400	when	page\tG\.\n;;click-if;;OK
+2400	when	page\tH\.\n;;click-if;;MORE
+2400	when	page\tH1\.\n;;click-if;;OK
+2405	when	mission_gate\t2\t(66|67|70|72)\t0\t0\t&&page\tmission\n&&raw_cursor\t0\t[0-9]+\t[0-9]+\t[1-9][0-9]*\t;;esc;;0
+2410	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:priest
+2410	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:sunFactory
+2415	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Construct
+2420	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Workshop
+2420	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Put Knowledge into Production
+2425	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;; Build Sun Workshop for 800
+2430	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;up-if;;placement-near:59,50
+2430	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Sun Disc Thrower
+2435	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;click-if;;placement-near:59,50
+2440	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;click-if;;production:71
+2450	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;up-if;;placement-near:55,51
+2455	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;click-if;;placement-near:55,51
+2460	when	mission_gate\t2\t70\t0\t0\t&&page\tmission\n;;click;;world:windVortex
+2470	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;right;;world:sunArcher
+2475	report	menu19
+2480	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;click-if;;Salvage gains 75
+2490	report	cycle19
+2490	snapshot	cycle19
+2500	when	page\tB\.\n;;click-if;;MORE
+2500	when	page\tB1\.\n;;click-if;;OK
+2500	when	page\tC\.\n;;click-if;;OK
+2500	when	page\tD\.\n;;click-if;;MORE
+2500	when	page\tD1\.\n;;click-if;;OK
+2500	when	page\tE\.\n;;click-if;;OK
+2500	when	page\tF\.\n;;click-if;;MORE
+2500	when	page\tF1\.\n;;click-if;;OK
+2500	when	page\tG\.\n;;click-if;;OK
+2500	when	page\tH\.\n;;click-if;;MORE
+2500	when	page\tH1\.\n;;click-if;;OK
+2505	when	mission_gate\t2\t(66|67|70|72)\t0\t0\t&&page\tmission\n&&raw_cursor\t0\t[0-9]+\t[0-9]+\t[1-9][0-9]*\t;;esc;;0
+2510	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:priest
+2510	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:sunFactory
+2515	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Construct
+2520	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Workshop
+2520	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Put Knowledge into Production
+2525	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;; Build Sun Workshop for 800
+2530	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;up-if;;placement-near:59,50
+2530	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Sun Disc Thrower
+2535	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;click-if;;placement-near:59,50
+2540	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;click-if;;production:71
+2550	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;up-if;;placement-near:55,51
+2555	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;click-if;;placement-near:55,51
+2560	when	mission_gate\t2\t70\t0\t0\t&&page\tmission\n;;click;;world:windVortex
+2570	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;right;;world:sunArcher
+2575	report	menu20
+2580	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;click-if;;Salvage gains 75
+2590	report	cycle20
+2590	snapshot	cycle20
+2600	when	page\tB\.\n;;click-if;;MORE
+2600	when	page\tB1\.\n;;click-if;;OK
+2600	when	page\tC\.\n;;click-if;;OK
+2600	when	page\tD\.\n;;click-if;;MORE
+2600	when	page\tD1\.\n;;click-if;;OK
+2600	when	page\tE\.\n;;click-if;;OK
+2600	when	page\tF\.\n;;click-if;;MORE
+2600	when	page\tF1\.\n;;click-if;;OK
+2600	when	page\tG\.\n;;click-if;;OK
+2600	when	page\tH\.\n;;click-if;;MORE
+2600	when	page\tH1\.\n;;click-if;;OK
+2605	when	mission_gate\t2\t(66|67|70|72)\t0\t0\t&&page\tmission\n&&raw_cursor\t0\t[0-9]+\t[0-9]+\t[1-9][0-9]*\t;;esc;;0
+2610	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:priest
+2610	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:sunFactory
+2615	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Construct
+2620	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Workshop
+2620	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Put Knowledge into Production
+2625	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;; Build Sun Workshop for 800
+2630	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;up-if;;placement-near:59,50
+2630	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Sun Disc Thrower
+2635	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;click-if;;placement-near:59,50
+2640	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;click-if;;production:71
+2650	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;up-if;;placement-near:55,51
+2655	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;click-if;;placement-near:55,51
+2660	when	mission_gate\t2\t70\t0\t0\t&&page\tmission\n;;click;;world:windVortex
+2670	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;right;;world:sunArcher
+2675	report	menu21
+2680	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;click-if;;Salvage gains 75
+2690	report	cycle21
+2690	snapshot	cycle21
+2700	when	page\tB\.\n;;click-if;;MORE
+2700	when	page\tB1\.\n;;click-if;;OK
+2700	when	page\tC\.\n;;click-if;;OK
+2700	when	page\tD\.\n;;click-if;;MORE
+2700	when	page\tD1\.\n;;click-if;;OK
+2700	when	page\tE\.\n;;click-if;;OK
+2700	when	page\tF\.\n;;click-if;;MORE
+2700	when	page\tF1\.\n;;click-if;;OK
+2700	when	page\tG\.\n;;click-if;;OK
+2700	when	page\tH\.\n;;click-if;;MORE
+2700	when	page\tH1\.\n;;click-if;;OK
+2705	when	mission_gate\t2\t(66|67|70|72)\t0\t0\t&&page\tmission\n&&raw_cursor\t0\t[0-9]+\t[0-9]+\t[1-9][0-9]*\t;;esc;;0
+2710	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:priest
+2710	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:sunFactory
+2715	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Construct
+2720	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Workshop
+2720	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Put Knowledge into Production
+2725	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;; Build Sun Workshop for 800
+2730	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;up-if;;placement-near:59,50
+2730	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Sun Disc Thrower
+2735	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;click-if;;placement-near:59,50
+2740	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;click-if;;production:71
+2750	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;up-if;;placement-near:55,51
+2755	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;click-if;;placement-near:55,51
+2760	when	mission_gate\t2\t70\t0\t0\t&&page\tmission\n;;click;;world:windVortex
+2770	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;right;;world:sunArcher
+2775	report	menu22
+2780	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;click-if;;Salvage gains 75
+2790	report	cycle22
+2790	snapshot	cycle22
+2800	when	page\tB\.\n;;click-if;;MORE
+2800	when	page\tB1\.\n;;click-if;;OK
+2800	when	page\tC\.\n;;click-if;;OK
+2800	when	page\tD\.\n;;click-if;;MORE
+2800	when	page\tD1\.\n;;click-if;;OK
+2800	when	page\tE\.\n;;click-if;;OK
+2800	when	page\tF\.\n;;click-if;;MORE
+2800	when	page\tF1\.\n;;click-if;;OK
+2800	when	page\tG\.\n;;click-if;;OK
+2800	when	page\tH\.\n;;click-if;;MORE
+2800	when	page\tH1\.\n;;click-if;;OK
+2805	when	mission_gate\t2\t(66|67|70|72)\t0\t0\t&&page\tmission\n&&raw_cursor\t0\t[0-9]+\t[0-9]+\t[1-9][0-9]*\t;;esc;;0
+2810	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:priest
+2810	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:sunFactory
+2815	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Construct
+2820	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Workshop
+2820	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Put Knowledge into Production
+2825	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;; Build Sun Workshop for 800
+2830	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;up-if;;placement-near:59,50
+2830	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Sun Disc Thrower
+2835	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;click-if;;placement-near:59,50
+2840	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;click-if;;production:71
+2850	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;up-if;;placement-near:55,51
+2855	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;click-if;;placement-near:55,51
+2860	when	mission_gate\t2\t70\t0\t0\t&&page\tmission\n;;click;;world:windVortex
+2870	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;right;;world:sunArcher
+2875	report	menu23
+2880	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;click-if;;Salvage gains 75
+2890	report	cycle23
+2890	snapshot	cycle23
+2900	when	page\tB\.\n;;click-if;;MORE
+2900	when	page\tB1\.\n;;click-if;;OK
+2900	when	page\tC\.\n;;click-if;;OK
+2900	when	page\tD\.\n;;click-if;;MORE
+2900	when	page\tD1\.\n;;click-if;;OK
+2900	when	page\tE\.\n;;click-if;;OK
+2900	when	page\tF\.\n;;click-if;;MORE
+2900	when	page\tF1\.\n;;click-if;;OK
+2900	when	page\tG\.\n;;click-if;;OK
+2900	when	page\tH\.\n;;click-if;;MORE
+2900	when	page\tH1\.\n;;click-if;;OK
+2905	when	mission_gate\t2\t(66|67|70|72)\t0\t0\t&&page\tmission\n&&raw_cursor\t0\t[0-9]+\t[0-9]+\t[1-9][0-9]*\t;;esc;;0
+2910	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:priest
+2910	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:sunFactory
+2915	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Construct
+2920	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Workshop
+2920	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Put Knowledge into Production
+2925	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;; Build Sun Workshop for 800
+2930	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;up-if;;placement-near:59,50
+2930	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Sun Disc Thrower
+2935	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;click-if;;placement-near:59,50
+2940	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;click-if;;production:71
+2950	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;up-if;;placement-near:55,51
+2955	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;click-if;;placement-near:55,51
+2960	when	mission_gate\t2\t70\t0\t0\t&&page\tmission\n;;click;;world:windVortex
+2970	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;right;;world:sunArcher
+2975	report	menu24
+2980	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;click-if;;Salvage gains 75
+2990	report	cycle24
+2990	snapshot	cycle24
+3000	when	page\tB\.\n;;click-if;;MORE
+3000	when	page\tB1\.\n;;click-if;;OK
+3000	when	page\tC\.\n;;click-if;;OK
+3000	when	page\tD\.\n;;click-if;;MORE
+3000	when	page\tD1\.\n;;click-if;;OK
+3000	when	page\tE\.\n;;click-if;;OK
+3000	when	page\tF\.\n;;click-if;;MORE
+3000	when	page\tF1\.\n;;click-if;;OK
+3000	when	page\tG\.\n;;click-if;;OK
+3000	when	page\tH\.\n;;click-if;;MORE
+3000	when	page\tH1\.\n;;click-if;;OK
+3005	when	mission_gate\t2\t(66|67|70|72)\t0\t0\t&&page\tmission\n&&raw_cursor\t0\t[0-9]+\t[0-9]+\t[1-9][0-9]*\t;;esc;;0
+3010	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:priest
+3010	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:sunFactory
+3015	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Construct
+3020	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Workshop
+3020	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Put Knowledge into Production
+3025	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;; Build Sun Workshop for 800
+3030	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;up-if;;placement-near:59,50
+3030	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Sun Disc Thrower
+3035	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;click-if;;placement-near:59,50
+3040	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;click-if;;production:71
+3050	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;up-if;;placement-near:55,51
+3055	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;click-if;;placement-near:55,51
+3060	when	mission_gate\t2\t70\t0\t0\t&&page\tmission\n;;click;;world:windVortex
+3070	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;right;;world:sunArcher
+3075	report	menu25
+3080	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;click-if;;Salvage gains 75
+3090	report	cycle25
+3090	snapshot	cycle25
+3100	when	page\tB\.\n;;click-if;;MORE
+3100	when	page\tB1\.\n;;click-if;;OK
+3100	when	page\tC\.\n;;click-if;;OK
+3100	when	page\tD\.\n;;click-if;;MORE
+3100	when	page\tD1\.\n;;click-if;;OK
+3100	when	page\tE\.\n;;click-if;;OK
+3100	when	page\tF\.\n;;click-if;;MORE
+3100	when	page\tF1\.\n;;click-if;;OK
+3100	when	page\tG\.\n;;click-if;;OK
+3100	when	page\tH\.\n;;click-if;;MORE
+3100	when	page\tH1\.\n;;click-if;;OK
+3105	when	mission_gate\t2\t(66|67|70|72)\t0\t0\t&&page\tmission\n&&raw_cursor\t0\t[0-9]+\t[0-9]+\t[1-9][0-9]*\t;;esc;;0
+3110	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:priest
+3110	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:sunFactory
+3115	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Construct
+3120	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Workshop
+3120	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Put Knowledge into Production
+3125	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;; Build Sun Workshop for 800
+3130	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;up-if;;placement-near:59,50
+3130	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Sun Disc Thrower
+3135	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;click-if;;placement-near:59,50
+3140	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;click-if;;production:71
+3150	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;up-if;;placement-near:55,51
+3155	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;click-if;;placement-near:55,51
+3160	when	mission_gate\t2\t70\t0\t0\t&&page\tmission\n;;click;;world:windVortex
+3170	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;right;;world:sunArcher
+3175	report	menu26
+3180	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;click-if;;Salvage gains 75
+3190	report	cycle26
+3190	snapshot	cycle26
+3200	when	page\tB\.\n;;click-if;;MORE
+3200	when	page\tB1\.\n;;click-if;;OK
+3200	when	page\tC\.\n;;click-if;;OK
+3200	when	page\tD\.\n;;click-if;;MORE
+3200	when	page\tD1\.\n;;click-if;;OK
+3200	when	page\tE\.\n;;click-if;;OK
+3200	when	page\tF\.\n;;click-if;;MORE
+3200	when	page\tF1\.\n;;click-if;;OK
+3200	when	page\tG\.\n;;click-if;;OK
+3200	when	page\tH\.\n;;click-if;;MORE
+3200	when	page\tH1\.\n;;click-if;;OK
+3205	when	mission_gate\t2\t(66|67|70|72)\t0\t0\t&&page\tmission\n&&raw_cursor\t0\t[0-9]+\t[0-9]+\t[1-9][0-9]*\t;;esc;;0
+3210	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:priest
+3210	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:sunFactory
+3215	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Construct
+3220	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Workshop
+3220	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Put Knowledge into Production
+3225	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;; Build Sun Workshop for 800
+3230	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;up-if;;placement-near:59,50
+3230	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Sun Disc Thrower
+3235	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;click-if;;placement-near:59,50
+3240	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;click-if;;production:71
+3250	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;up-if;;placement-near:55,51
+3255	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;click-if;;placement-near:55,51
+3260	when	mission_gate\t2\t70\t0\t0\t&&page\tmission\n;;click;;world:windVortex
+3270	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;right;;world:sunArcher
+3275	report	menu27
+3280	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;click-if;;Salvage gains 75
+3290	report	cycle27
+3290	snapshot	cycle27
+3300	when	page\tB\.\n;;click-if;;MORE
+3300	when	page\tB1\.\n;;click-if;;OK
+3300	when	page\tC\.\n;;click-if;;OK
+3300	when	page\tD\.\n;;click-if;;MORE
+3300	when	page\tD1\.\n;;click-if;;OK
+3300	when	page\tE\.\n;;click-if;;OK
+3300	when	page\tF\.\n;;click-if;;MORE
+3300	when	page\tF1\.\n;;click-if;;OK
+3300	when	page\tG\.\n;;click-if;;OK
+3300	when	page\tH\.\n;;click-if;;MORE
+3300	when	page\tH1\.\n;;click-if;;OK
+3305	when	mission_gate\t2\t(66|67|70|72)\t0\t0\t&&page\tmission\n&&raw_cursor\t0\t[0-9]+\t[0-9]+\t[1-9][0-9]*\t;;esc;;0
+3310	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:priest
+3310	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:sunFactory
+3315	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Construct
+3320	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Workshop
+3320	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Put Knowledge into Production
+3325	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;; Build Sun Workshop for 800
+3330	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;up-if;;placement-near:59,50
+3330	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Sun Disc Thrower
+3335	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;click-if;;placement-near:59,50
+3340	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;click-if;;production:71
+3350	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;up-if;;placement-near:55,51
+3355	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;click-if;;placement-near:55,51
+3360	when	mission_gate\t2\t70\t0\t0\t&&page\tmission\n;;click;;world:windVortex
+3370	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;right;;world:sunArcher
+3375	report	menu28
+3380	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;click-if;;Salvage gains 75
+3390	report	cycle28
+3390	snapshot	cycle28
+3400	when	page\tB\.\n;;click-if;;MORE
+3400	when	page\tB1\.\n;;click-if;;OK
+3400	when	page\tC\.\n;;click-if;;OK
+3400	when	page\tD\.\n;;click-if;;MORE
+3400	when	page\tD1\.\n;;click-if;;OK
+3400	when	page\tE\.\n;;click-if;;OK
+3400	when	page\tF\.\n;;click-if;;MORE
+3400	when	page\tF1\.\n;;click-if;;OK
+3400	when	page\tG\.\n;;click-if;;OK
+3400	when	page\tH\.\n;;click-if;;MORE
+3400	when	page\tH1\.\n;;click-if;;OK
+3405	when	mission_gate\t2\t(66|67|70|72)\t0\t0\t&&page\tmission\n&&raw_cursor\t0\t[0-9]+\t[0-9]+\t[1-9][0-9]*\t;;esc;;0
+3410	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:priest
+3410	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:sunFactory
+3415	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Construct
+3420	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Workshop
+3420	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Put Knowledge into Production
+3425	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;; Build Sun Workshop for 800
+3430	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;up-if;;placement-near:59,50
+3430	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Sun Disc Thrower
+3435	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;click-if;;placement-near:59,50
+3440	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;click-if;;production:71
+3450	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;up-if;;placement-near:55,51
+3455	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;click-if;;placement-near:55,51
+3460	when	mission_gate\t2\t70\t0\t0\t&&page\tmission\n;;click;;world:windVortex
+3470	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;right;;world:sunArcher
+3475	report	menu29
+3480	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;click-if;;Salvage gains 75
+3490	report	cycle29
+3490	snapshot	cycle29
+3500	when	page\tB\.\n;;click-if;;MORE
+3500	when	page\tB1\.\n;;click-if;;OK
+3500	when	page\tC\.\n;;click-if;;OK
+3500	when	page\tD\.\n;;click-if;;MORE
+3500	when	page\tD1\.\n;;click-if;;OK
+3500	when	page\tE\.\n;;click-if;;OK
+3500	when	page\tF\.\n;;click-if;;MORE
+3500	when	page\tF1\.\n;;click-if;;OK
+3500	when	page\tG\.\n;;click-if;;OK
+3500	when	page\tH\.\n;;click-if;;MORE
+3500	when	page\tH1\.\n;;click-if;;OK
+3505	when	mission_gate\t2\t(66|67|70|72)\t0\t0\t&&page\tmission\n&&raw_cursor\t0\t[0-9]+\t[0-9]+\t[1-9][0-9]*\t;;esc;;0
+3510	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:priest
+3510	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:sunFactory
+3515	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Construct
+3520	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Workshop
+3520	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Put Knowledge into Production
+3525	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;; Build Sun Workshop for 800
+3530	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;up-if;;placement-near:59,50
+3530	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Sun Disc Thrower
+3535	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;click-if;;placement-near:59,50
+3540	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;click-if;;production:71
+3550	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;up-if;;placement-near:55,51
+3555	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;click-if;;placement-near:55,51
+3560	when	mission_gate\t2\t70\t0\t0\t&&page\tmission\n;;click;;world:windVortex
+3570	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;right;;world:sunArcher
+3575	report	menu30
+3580	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;click-if;;Salvage gains 75
+3590	report	cycle30
+3590	snapshot	cycle30
+3600	when	page\tB\.\n;;click-if;;MORE
+3600	when	page\tB1\.\n;;click-if;;OK
+3600	when	page\tC\.\n;;click-if;;OK
+3600	when	page\tD\.\n;;click-if;;MORE
+3600	when	page\tD1\.\n;;click-if;;OK
+3600	when	page\tE\.\n;;click-if;;OK
+3600	when	page\tF\.\n;;click-if;;MORE
+3600	when	page\tF1\.\n;;click-if;;OK
+3600	when	page\tG\.\n;;click-if;;OK
+3600	when	page\tH\.\n;;click-if;;MORE
+3600	when	page\tH1\.\n;;click-if;;OK
+3605	when	mission_gate\t2\t(66|67|70|72)\t0\t0\t&&page\tmission\n&&raw_cursor\t0\t[0-9]+\t[0-9]+\t[1-9][0-9]*\t;;esc;;0
+3610	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:priest
+3610	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:sunFactory
+3615	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Construct
+3620	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Workshop
+3620	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Put Knowledge into Production
+3625	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;; Build Sun Workshop for 800
+3630	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;up-if;;placement-near:59,50
+3630	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Sun Disc Thrower
+3635	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;click-if;;placement-near:59,50
+3640	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;click-if;;production:71
+3650	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;up-if;;placement-near:55,51
+3655	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;click-if;;placement-near:55,51
+3660	when	mission_gate\t2\t70\t0\t0\t&&page\tmission\n;;click;;world:windVortex
+3670	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;right;;world:sunArcher
+3675	report	menu31
+3680	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;click-if;;Salvage gains 75
+3690	report	cycle31
+3690	snapshot	cycle31
+3700	when	page\tB\.\n;;click-if;;MORE
+3700	when	page\tB1\.\n;;click-if;;OK
+3700	when	page\tC\.\n;;click-if;;OK
+3700	when	page\tD\.\n;;click-if;;MORE
+3700	when	page\tD1\.\n;;click-if;;OK
+3700	when	page\tE\.\n;;click-if;;OK
+3700	when	page\tF\.\n;;click-if;;MORE
+3700	when	page\tF1\.\n;;click-if;;OK
+3700	when	page\tG\.\n;;click-if;;OK
+3700	when	page\tH\.\n;;click-if;;MORE
+3700	when	page\tH1\.\n;;click-if;;OK
+3705	when	mission_gate\t2\t(66|67|70|72)\t0\t0\t&&page\tmission\n&&raw_cursor\t0\t[0-9]+\t[0-9]+\t[1-9][0-9]*\t;;esc;;0
+3710	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:priest
+3710	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:sunFactory
+3715	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Construct
+3720	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Workshop
+3720	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Put Knowledge into Production
+3725	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;; Build Sun Workshop for 800
+3730	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;up-if;;placement-near:59,50
+3730	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Sun Disc Thrower
+3735	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;click-if;;placement-near:59,50
+3740	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;click-if;;production:71
+3750	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;up-if;;placement-near:55,51
+3755	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;click-if;;placement-near:55,51
+3760	when	mission_gate\t2\t70\t0\t0\t&&page\tmission\n;;click;;world:windVortex
+3770	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;right;;world:sunArcher
+3775	report	menu32
+3780	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;click-if;;Salvage gains 75
+3790	report	cycle32
+3790	snapshot	cycle32
+3800	when	page\tB\.\n;;click-if;;MORE
+3800	when	page\tB1\.\n;;click-if;;OK
+3800	when	page\tC\.\n;;click-if;;OK
+3800	when	page\tD\.\n;;click-if;;MORE
+3800	when	page\tD1\.\n;;click-if;;OK
+3800	when	page\tE\.\n;;click-if;;OK
+3800	when	page\tF\.\n;;click-if;;MORE
+3800	when	page\tF1\.\n;;click-if;;OK
+3800	when	page\tG\.\n;;click-if;;OK
+3800	when	page\tH\.\n;;click-if;;MORE
+3800	when	page\tH1\.\n;;click-if;;OK
+3805	when	mission_gate\t2\t(66|67|70|72)\t0\t0\t&&page\tmission\n&&raw_cursor\t0\t[0-9]+\t[0-9]+\t[1-9][0-9]*\t;;esc;;0
+3810	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:priest
+3810	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:sunFactory
+3815	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Construct
+3820	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Workshop
+3820	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Put Knowledge into Production
+3825	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;; Build Sun Workshop for 800
+3830	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;up-if;;placement-near:59,50
+3830	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Sun Disc Thrower
+3835	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;click-if;;placement-near:59,50
+3840	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;click-if;;production:71
+3850	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;up-if;;placement-near:55,51
+3855	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;click-if;;placement-near:55,51
+3860	when	mission_gate\t2\t70\t0\t0\t&&page\tmission\n;;click;;world:windVortex
+3870	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;right;;world:sunArcher
+3875	report	menu33
+3880	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;click-if;;Salvage gains 75
+3890	report	cycle33
+3890	snapshot	cycle33
+3900	when	page\tB\.\n;;click-if;;MORE
+3900	when	page\tB1\.\n;;click-if;;OK
+3900	when	page\tC\.\n;;click-if;;OK
+3900	when	page\tD\.\n;;click-if;;MORE
+3900	when	page\tD1\.\n;;click-if;;OK
+3900	when	page\tE\.\n;;click-if;;OK
+3900	when	page\tF\.\n;;click-if;;MORE
+3900	when	page\tF1\.\n;;click-if;;OK
+3900	when	page\tG\.\n;;click-if;;OK
+3900	when	page\tH\.\n;;click-if;;MORE
+3900	when	page\tH1\.\n;;click-if;;OK
+3905	when	mission_gate\t2\t(66|67|70|72)\t0\t0\t&&page\tmission\n&&raw_cursor\t0\t[0-9]+\t[0-9]+\t[1-9][0-9]*\t;;esc;;0
+3910	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:priest
+3910	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:sunFactory
+3915	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Construct
+3920	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Workshop
+3920	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Put Knowledge into Production
+3925	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;; Build Sun Workshop for 800
+3930	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;up-if;;placement-near:59,50
+3930	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Sun Disc Thrower
+3935	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;click-if;;placement-near:59,50
+3940	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;click-if;;production:71
+3950	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;up-if;;placement-near:55,51
+3955	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;click-if;;placement-near:55,51
+3960	when	mission_gate\t2\t70\t0\t0\t&&page\tmission\n;;click;;world:windVortex
+3970	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;right;;world:sunArcher
+3975	report	menu34
+3980	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;click-if;;Salvage gains 75
+3990	report	cycle34
+3990	snapshot	cycle34
+4000	when	page\tB\.\n;;click-if;;MORE
+4000	when	page\tB1\.\n;;click-if;;OK
+4000	when	page\tC\.\n;;click-if;;OK
+4000	when	page\tD\.\n;;click-if;;MORE
+4000	when	page\tD1\.\n;;click-if;;OK
+4000	when	page\tE\.\n;;click-if;;OK
+4000	when	page\tF\.\n;;click-if;;MORE
+4000	when	page\tF1\.\n;;click-if;;OK
+4000	when	page\tG\.\n;;click-if;;OK
+4000	when	page\tH\.\n;;click-if;;MORE
+4000	when	page\tH1\.\n;;click-if;;OK
+4005	when	mission_gate\t2\t(66|67|70|72)\t0\t0\t&&page\tmission\n&&raw_cursor\t0\t[0-9]+\t[0-9]+\t[1-9][0-9]*\t;;esc;;0
+4010	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:priest
+4010	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;right;;world:sunFactory
+4015	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Construct
+4020	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;;Workshop
+4020	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Put Knowledge into Production
+4025	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t;;click-if;; Build Sun Workshop for 800
+4030	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;up-if;;placement-near:59,50
+4030	when	mission_gate\t2\t67\t0\t0\t&&page\tmission\n;;click-if;;Sun Disc Thrower
+4035	when	mission_gate\t2\t66\t0\t0\t&&page\tmission\n&&!object\t[0-9]+\tsunFactory\t1\t&&raw_cursor\t0\t[0-9]+\t85\t[1-9][0-9]*\t;;click-if;;placement-near:59,50
+4040	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t[1-9][0-9]*\t[0-9]+\t[0-9]+\t0\t;;click-if;;production:71
+4050	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;up-if;;placement-near:55,51
+4055	when	mission_gate\t2\t(68|69|71)\t0\t0\t&&raw_cursor\t0\t[0-9]+\t71\t[1-9][0-9]*\t;;click-if;;placement-near:55,51
+4060	when	mission_gate\t2\t70\t0\t0\t&&page\tmission\n;;click;;world:windVortex
+4070	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;right;;world:sunArcher
+4075	report	menu35
+4080	when	mission_gate\t2\t72\t0\t0\t&&page\tmission\n;;click-if;;Salvage gains 75
+4090	report	cycle35
+4090	snapshot	cycle35
+4500	report	goal
+4500	snapshot	goal
+4501	click	Next Tutorial
+4520	report	nextBriefing
+4520	snapshot	nextBriefing

@@ -92,9 +92,9 @@
     "originals/d/GIFCLOUD.COL": "785a2cda6ac1d3e295d375815b6d9650720683099db7c249382d598b5da00532"
   },
   "currentSources": {
-    "cpppj/src/client/RawCampaignSession.cpp": "940749f6687b7d65418f3dc7b8b9a75c8cd07fc8ee78cb408480274008b18c88",
+    "cpppj/src/client/RawCampaignSession.cpp": "6cf6c4b418c499ea542479dbca179724179ee0bb66e9e9840ff59573eeceb24c",
     "cpppj/tests/CMakeLists.txt": "889efbf2ee9336dad4a80cae9bc811c380d9e955b2746743b049efcbae9d27ae",
-    "cpppj/tests/CampaignSessionTests.cpp": "995750555da9f30df739414ffd02da613be6e93ece9c313f390105b5a7e30ea6",
+    "cpppj/tests/CampaignSessionTests.cpp": "569c6f2ea791c0cfa6122d0caf569cf411f97e3934ac810b51ef0029818468d8",
     "tools/decomp_generator_capture.py": "d5b8b31e5c9c0ab00f24236460af8b63f86412e5115537d56f6f71feb6238b0f",
     "cpppj/generator-capture.json": "177c4bd3b90673160f0b4fe9b50c499ee6eda65838f09eed78b7c8f4ddf9506b",
     "cpppj/tests/fixtures/generator-capture-x86.tsv": "5db59d411828a19c8ef4f236058d14b3a7d1658fc2e8ab1a4571986ab3dcf1a1"
@@ -666,6 +666,25 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "c6e7d4e27e8f69ffbbc08aaeb86ff98eef32d65bcf906c49712fb1a4464a1603",
           "current": "995750555da9f30df739414ffd02da613be6e93ece9c313f390105b5a7e30ea6"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 205,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "940749f6687b7d65418f3dc7b8b9a75c8cd07fc8ee78cb408480274008b18c88",
+          "current": "6cf6c4b418c499ea542479dbca179724179ee0bb66e9e9840ff59573eeceb24c"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "995750555da9f30df739414ffd02da613be6e93ece9c313f390105b5a7e30ea6",
+          "current": "569c6f2ea791c0cfa6122d0caf569cf411f97e3934ac810b51ef0029818468d8"
         }
       ]
     }

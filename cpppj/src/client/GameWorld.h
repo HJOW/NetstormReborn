@@ -56,6 +56,9 @@ public:
     o::SquidId Pick(ScreenPoint point) const;
     // 선택 번호를 현재 월드에서 검증하고 표시를 갱신한다.
     void Select(o::SquidId id);
+    o::SquidId Selected() const { return selected_; } // 004d5430의 현재 단일SID 조회이며 선택을 바꾸거나 캐시하지 않는다.
+    void ResetSelection(); // 미션이 요구한 실제004d5c90(0,0,0)을 셋째1인 일반 Select와 구별한다.
+    void ClearSelection(); // 후속004d5c60의 별도 enabled/다중 선택/강조 정리다.
     // 강조는 같은 현재 선택을 읽기만 한다. 마우스 모드/TYPE/좌표를 별도 원본 전역으로 빌린다.
     UserHighlightState HighlightSettings();
     // 실제 선택/강조/운반체 명령을 같은 현재 저장소와 Client 장치에 연결한다.

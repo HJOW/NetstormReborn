@@ -1,0 +1,133 @@
+{
+  "unit": 205,
+  "date": "2026-10-19",
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "lastDecompileDate": "2026-10-16",
+  "newDecompile": false,
+  "originalGameExecutions": 0,
+  "baseline": "a254fab54fd2c7ab5ef643cc16b73c2da5e14216",
+  "sources": {
+    "cpppj/src/client/GameWorld.h": "d51dfe75377b1afd870bfeb40e26cef9f6233f65217d757135648ce064043a16",
+    "cpppj/src/client/GameWorldInput.inc": "f46f5b6c20d628a298f252afcdf5f1af44a5718a6d21cc7848dc88c3a151a530",
+    "cpppj/src/client/RawCampaignSession.cpp": "6cf6c4b418c499ea542479dbca179724179ee0bb66e9e9840ff59573eeceb24c",
+    "cpppj/src/client/RawCampaignSession.h": "2f59bf46bc2f1b0160581baca5f31a4fee3a206d9fa5d8ef942ed3248785750c",
+    "cpppj/src/client/RawCampaignTutorialOneBindings.cpp": "58ce82df435dcb5979ed0d66c8e73effa5610aeb7bd639d6e6d3020310d2fad9",
+    "cpppj/src/client/RawCampaignTutorialOneBindings.h": "a32d3d5161e21d962751aa5527a5362af073406ff63029693afaf43e7b431d05",
+    "cpppj/src/client/RawUserSelection.cpp": "89cbf7641299a7f84905193b4d90f3706f122665a15228f42bd39f9b98bc40e7",
+    "cpppj/src/client/RawUserSelection.h": "63e349845d969771819f0875159d0c1f400ae5aa7042a0a883a45b731b2a1a29",
+    "cpppj/src/client/UberGump.cpp": "b2df7ad487f255cacd713430bb0e89d9319aa81340a10241bdf1a056068292c4",
+    "cpppj/tests/CampaignSessionTests.cpp": "569c6f2ea791c0cfa6122d0caf569cf411f97e3934ac810b51ef0029818468d8",
+    "cpppj/tests/UserSelectionTests.cpp": "75016e697b3aee57d35f7c53716a041dea027235fd0743933156e56b8e6ad129",
+    "tools/cpp_goal_stage_entry_smoke.py": "d1761b737b8aae961f6fa10dd155f32994eeaddfa5d6e50e5375c237f1e311a0",
+    "tools/decomp_user_selection_clear.py": "50fe049616961d9733cc1a8c1b0da5c571f0f753cb5b92774c496f0dc56303f4",
+    "tools/cpp_tutorial_two_smoke.py": "f4eace78c7b7aef64aca6166af5dca393b58f83ef7806672af5c48bf1406b4ec",
+    "cpppj/tests/fixtures/tutorial-two-runtime-ui-input.tsv": "281ef438b5b5cc53572efb16f95e7956507b0a8325983efc48030a9876270e65",
+    "cpppj/tests/fixtures/user-selection-clear-x86.tsv": "2b5fab6fa86b8205809031175742d13d7a24749f977e274a9d0ceff1391e7775",
+    "cpppj/user-selection-clear.json": "b1afc51149cd8a58829bee3cf52547f5f427621cefef9121f730646d1ed6731f",
+    "cpppj/src/o/RawTutorialTwo.cpp": "8a87323774850dbd0d98f01fd54577f42b06c59764935c1b48808e1d82079fdb",
+    "cpppj/src/o/RawTutorialTwo.h": "cc2965d1d3427f5332189a5015e2e27bffb7a56d9ce967403b5f8455e8303d45",
+    "cpppj/src/o/RawMissionFrameGate.cpp": "c591ce1c294a8c645008da04a6d5366182d42247f4505716e85d0ae4d6c5f4dc",
+    "cpppj/src/o/RawTotalMade.cpp": "7e41ece886973893e6b4614b81d1b669da23b6c1a85799e5301905d68c7e0d25",
+    "cpppj/src/o/RawAssetPostPop.cpp": "cc3f8f7f0356152b8f60cd499992771f31dc554a7427e2d20fd432a4ce05b245",
+    "cpppj/src/o/RawContainedCreate.cpp": "54ac5f440300896af9fc25bfc98315ae5efe3e99b393fce348f006e09c3cbf97",
+    "cpppj/src/o/SquidReward.cpp": "a29c11afe56a477c470956b1ed0a0678d059340806537ce08b43bf6b6aa1375d",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6"
+  },
+  "evidence": {
+    "extracted/goal-early-two-runtime-20261019-sources.json": "0e50267ef5313132bc5916c6e6ed4c03bf14ffce9884d42dc98bf1c16b56b684",
+    "extracted/goal-early-two-runtime-20261019-build4.log": "fc96c8e9e9c3364e517c75fa0efc91f6c197f27c54bbafe3d8afc4bfd070142d",
+    "extracted/goal-early-two-runtime-20261019-focused-clear.log": "87b5c2a8983467043cc12bd33d2282733696a949fc34fd353cf582a0b2c1a36b",
+    "extracted/goal-early-two-runtime-20261019-focused-session.log": "69781b84ccfa968c64b938d1c5f1c555358fb8c177b942ee8ec4e58958f983e0",
+    "extracted/goal-early-two-runtime-20261019-tests-final.json": "1380e278954fc318012563e5d9769a4f00d5335784e38bb39522912c599eeb9a",
+    "extracted/goal-early-two-runtime-20261019-tests-final.stdout": "4a09ffe46174a5030f9271273fa42cc2818b46408a90d62426a25ed145718a8a",
+    "extracted/goal-early-two-runtime-20261019-tests-final.stderr": "79e2480bde0296407e865b4a37f3b49c9c027d653a2260e3a4215348db0f0663",
+    "extracted/goal-early-two-runtime-20261019-tests-before-slot.json": "fdc6270d84617b858704a7a1718a301ce0aec20e3d63792680965cac47ac7550",
+    "extracted/goal-early-two-runtime-20261019-clear-native.log": "17bbd285fe815d99714aee7b91f7ec625aafd89d5171a877ff5fffc3b0d27126",
+    "extracted/goal-early-two-runtime-20261019-pin-updates.json": "3f7b9b60634aa41b4f5bd597750d6a51e9fbf012b13b256a1e98e044f4b61186",
+    "extracted/goal-early-two-runtime-20261019-entry/results.json": "bff887f8ec7d29cde16ab1b1bf32a0da86b5bbe477fa0e0b11df18f79ce8515e",
+    "extracted/goal-early-two-runtime-20261019-validator-width-correction.json": "667ca910fc36b3eaf5ef3e9d1cb545dee9c2f671250455a70e32d37b594d8d17",
+    "extracted/goal-early-two-runtime-20261019-ui-tool-before-rom-width.py": "ea15e25b22c0765c24e9289ba97eb0e87dfcfea87d81ba167328010ecdc73b00",
+    "extracted/goal-early-two-runtime-20261019-gui9/execution.json": "ae737d8e60adf5f8a99db632a215f2f081a78d9ed0d8452316d51943648ad2c7",
+    "extracted/goal-early-two-runtime-20261019-gui9/states.tsv": "5e9c7b49848a3b849e31073964118f8de58812642a7cfb3edae164b9d832a676",
+    "extracted/goal-early-two-runtime-20261019-gui9/steps.tsv": "101a6c5ed1e08d7fde5c61514dcbe5a01860c14bd8d8c2970c80eec5eb87332f",
+    "extracted/goal-early-two-runtime-20261019-gui9/results.json": "5ff03e70e490fc8b977992ee485dda3f6e6b373e72c4de0ccef5004604ea9145",
+    "extracted/goal-early-two-runtime-20261019-gui9/goal.bmp": "fe3252e800fd595064db5d392f780ff37e64676057411008708ad3e0324cc480",
+    "extracted/goal-early-two-runtime-20261019-gui9/cycle11.bmp": "468f0ffb199a9bb7bdab3125ba2e7f53c143696d32bda4280a34c38e1ec32a6b",
+    "extracted/goal-early-two-runtime-20261019-gui9/nextBriefing.bmp": "de286b4cd084bfad916679f04c8844de14ae9a08d15a9a38b8cf2175507f69d1",
+    "extracted/goal-early-two-runtime-20261019-gui1/execution.json": "ae737d8e60adf5f8a99db632a215f2f081a78d9ed0d8452316d51943648ad2c7",
+    "extracted/goal-early-two-runtime-20261019-gui2/execution.json": "1a7506d0f0a80c7e1fe1ddb1a31ebad3a141040f2fee7a4a4e38b607ff3cc978",
+    "extracted/goal-early-two-runtime-20261019-gui3/execution.json": "1a7506d0f0a80c7e1fe1ddb1a31ebad3a141040f2fee7a4a4e38b607ff3cc978",
+    "extracted/goal-early-two-runtime-20261019-gui4/execution.json": "ae737d8e60adf5f8a99db632a215f2f081a78d9ed0d8452316d51943648ad2c7",
+    "extracted/goal-early-two-runtime-20261019-gui5/execution.json": "1a7506d0f0a80c7e1fe1ddb1a31ebad3a141040f2fee7a4a4e38b607ff3cc978",
+    "extracted/goal-early-two-runtime-20261019-gui6/execution.json": "8f86abec321f1ad1ec0c228fb63e164324a067a1d6cfe4ab471b502bdef8c7b5",
+    "extracted/goal-early-two-runtime-20261019-gui7/execution.json": "09d923ad107f1dceff717cb046c68c9b3079082d59a6d9ac4c4b6898d0242b17",
+    "extracted/goal-early-two-runtime-20261019-gui8/execution.json": "ae737d8e60adf5f8a99db632a215f2f081a78d9ed0d8452316d51943648ad2c7",
+    "extracted/goal-early-two-runtime-20261019-verify-final.json": "411c9d03d2ed29c9fc525fa5b56f14c56f56af4a251215304de6f78affcf8afd"
+  },
+  "observation": {
+    "returnCode": 0,
+    "originalsUnchanged": true,
+    "stages": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "I"
+    ],
+    "startSp": 10000,
+    "finalSp": 3075,
+    "templeCount": 1,
+    "workshopCount": 1,
+    "maxArchers": 4,
+    "finalArchers": 3,
+    "salvagePackets": 1,
+    "refund": 75,
+    "doneBefore": 0,
+    "doneAfter": 1,
+    "nextMission": "tutorial3",
+    "nextSp": 2000,
+    "lastGameTime": 81.647,
+    "naturalTutorialTwoComplete": true,
+    "goalComplete": false,
+    "scope": "실제 A~I/사제 신전·워크샾/지식·생산/발사기4개/신전 선택/정상 회수·완료0→1/다음 Tutorial3 진입이다. Early3 진행과 전체11단계 동일성은 별도다."
+  },
+  "native": {
+    "newUniqueInputs": 87,
+    "normalReturns": 174,
+    "entry": "004d5c60",
+    "controls": [
+      639,
+      895
+    ],
+    "scope": "새 원본 실행은 후속 선택 해제87입력이다. 기존Tutorial2 346행/gate/AssetPostPop/Contained/Reward 기대는 보존했다."
+  },
+  "validation": {
+    "fullTests": {
+      "count": 1725,
+      "failed": 0,
+      "seconds": 258.43
+    },
+    "entry": {
+      "passed": 11,
+      "originalsUnchanged": true
+    },
+    "audit": {
+      "tools": 140,
+      "passed": 125,
+      "historicalFailures": 15,
+      "newFailures": 0
+    }
+  },
+  "pins": {
+    "reports": 78,
+    "items": 223
+  },
+  "goalComplete": false,
+  "fullFidelityVerified": false
+}

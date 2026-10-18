@@ -24,6 +24,9 @@ struct GameWorld::Input {
 void GameWorld::BindUserInput(UserSelectionHooks selection,UserHighlightHooks highlight,CarrierInputHooks carrier) {
     if (!campaign_ || input_) throw std::logic_error("실제 월드 입력의 새 수명 계약");input_=std::make_unique<Input>(*this,std::move(selection),std::move(highlight),std::move(carrier));
 }
+// 미션의 두 선택 정리를 일반적인 셋째1 선택과 구별해 같은 현재 몸체로 전달한다.
+void GameWorld::ResetSelection() { if (!input_) throw std::logic_error("미션 선택 초기화 장치 미설치");static_cast<void>(input_->selection->Select(0,0,0));changed_=true; } // 실제 세 인자를 유지한다.
+void GameWorld::ClearSelection() { if (!input_) throw std::logic_error("미션 선택 해제 장치 미설치");input_->selection->Clear();changed_=true; } // 같은 실제 선택 저장소다.
 //선택과 별개인 현재 강조를 같은 커서와 공유한다.
 void GameWorld::Highlight(std::uint32_t mode) { if (!input_) throw std::logic_error("실제 선택/강조 장치 미설치");input_->highlight->Highlight(mode); }
 // 단일 현재 선택/마나/범위/이동미리보기를 사용하는 원본 메뉴 부모다.

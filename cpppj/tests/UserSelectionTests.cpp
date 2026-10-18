@@ -135,3 +135,26 @@ TEST_CASE(UserSelection_EditionAndTypeContract) {
     SelectionScene scene;bool rejected{};try { RawUserSelection invalid(scene.pool,std::span<const RiftTypeRecord>(scene.types).first(187),{scene.selected,scene.mouseType,scene.remembered,scene.multiple,scene.count},{}); }catch (const std::invalid_argument&) { rejected=true; }CHECK(rejected);
     SidPool cd(OriginalEdition::Cd1072,15000,true);rejected=false;try { RawUserSelection invalid(cd,scene.types,{scene.selected,scene.mouseType,scene.remembered,scene.multiple,scene.count},{}); }catch (const std::invalid_argument&) { rejected=true; }CHECK(rejected);
 }
+
+#include <filesystem>
+
+// 실제004d5c60의87개 입력과 현재 전역/가상 효과 순서를 기존 선택 몸체와 함께 대조한다.
+TEST_CASE(UserSelection_ClearNativeEnabledAndCurrentEffects) {
+    SelectionScene scene;std::size_t rows{}; // 기존 물리 풀과 TYPE·선택/강조 저장소를 사용한다.
+    const auto path=(std::filesystem::path(NETSTORM_USER_SELECTION_FIXTURE).parent_path()/"user-selection-clear-x86.tsv").string(); // 새 원본 관측만 읽는다.
+    // 반환이 없는 Clear는 EAX를 성공값으로 해석하지 않고 원본 최종 전역/가상 효과를 비교한다.
+    for (const auto& fields:LoadFixture(path.c_str()).rows) {
+        CHECK(fields.size()==4);if (fields.size()!=4) continue;scene.Prepare(SelectionNumbers(fields[0]));
+        RawUserHighlight highlight({scene.mode,scene.selected,scene.mouseType,scene.mouseX,scene.mouseY},scene.HighlightHooks());
+        RawUserSelection selection(scene.pool,scene.types,{scene.selected,scene.mouseType,scene.remembered,scene.multiple,scene.count},scene.Hooks(highlight));selection.Clear();
+        CHECK(Number(fields[1])==0);CHECK((scene.trace.empty() ? "-" : scene.trace)==fields[2]);CHECK(scene.Current()==SelectionNumbers(fields[3]));++rows;
+    }
+    CHECK(rows==87);
+}
+// enabled0은 후속 경계를 요구하지 않으며 강조 누락의 오류도 선행 실제 쓰기를 보존한다.
+TEST_CASE(UserSelection_ClearLazyBoundaryAndWrittenPrefix) {
+    SelectionScene scene;scene.selected=51;scene.count=2;UserSelectionHooks disabled;disabled.enabled=[] { return 0U; }; // 금지된 선택 해제의 명시 입력이다.
+    RawUserSelection denied(scene.pool,scene.types,{scene.selected,scene.mouseType,scene.remembered,scene.multiple,scene.count},std::move(disabled));denied.Clear();CHECK(scene.selected==51 && scene.count==2);
+    scene.count=0;UserSelectionHooks enabled;enabled.enabled=[] { return 1U; };RawUserSelection missing(scene.pool,scene.types,{scene.selected,scene.mouseType,scene.remembered,scene.multiple,scene.count},std::move(enabled));bool rejected{}; // 강조 경계를 의도적으로 비운다.
+    try { missing.Clear(); } catch (const std::logic_error&) { rejected=true; }CHECK(rejected && !scene.selected && !scene.count);
+}

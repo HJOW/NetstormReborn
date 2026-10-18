@@ -44,6 +44,7 @@ public:
     RawUserSelection(const RawUserSelection&)=delete; // 현재 UI 참조와 Session 수명 연결을 다른 객체 주소로 복제하지 않는다.
     RawUserSelection& operator=(const RawUserSelection&)=delete; // 현재 선택 몸체의 주소를 수명 동안 고정한다.
     std::uint32_t Select(std::uint32_t sid,std::uint32_t forceSelect,std::uint32_t activateMove) const; // 4d5c90: 거부0 또는 최종 대상 SID다.
+    void Clear() const; // 4d5c60: enabled일 때 다중 선택 정리→현재SID0→강조0이다. Select(0,0,0)과 별도로 호출한다.
     void ClearMultiple() const; // 4d5490: 범위와 state&3만 검사하고+7c(0)→+88 뒤 최종 개수를0으로 쓴다.
     void Remember(std::uint32_t x,std::uint32_t y,std::uint32_t type) const; // 4d5440: flags2&30000일 때만 좌표와 TYPE를 기억한다.
     std::uint32_t CarrierMenu(o::Sid sid,const InputEvent& event,const std::function<std::uint32_t(o::Sid,const InputEvent&)>& common) const; // 4268c0/492080: Select(sid,0,0) 뒤 실제 공통+ac다.

@@ -11,18 +11,18 @@
   "currentSources": {
     "cpppj/src/CMakeLists.txt": "dc93067f7759849e630647688fa09684944a0f5aec5bf7d774d429227e600599",
     "cpppj/src/client/GameWorld.cpp": "07aa1f5d4d4a144997fd8627184180914e3357e417016e1e59bb08bed8f4fc07",
-    "cpppj/src/client/GameWorld.h": "63a8da986aab6ab35f1938c8de5c9197d12cca4e17859cb8daba5d5f52946e73",
-    "cpppj/src/client/RawCampaignSession.cpp": "940749f6687b7d65418f3dc7b8b9a75c8cd07fc8ee78cb408480274008b18c88",
-    "cpppj/src/client/RawCampaignSession.h": "e3c869f14573f938c2e2fac22dcd0b3f18dc4517921fd8ebdcf04d3993d9193a",
-    "cpppj/src/client/UberGump.cpp": "3e54edae2da7f540cdb046f443a22c0a0141cd1a14cff69ad6e9346b3c8d39ff",
+    "cpppj/src/client/GameWorld.h": "d51dfe75377b1afd870bfeb40e26cef9f6233f65217d757135648ce064043a16",
+    "cpppj/src/client/RawCampaignSession.cpp": "6cf6c4b418c499ea542479dbca179724179ee0bb66e9e9840ff59573eeceb24c",
+    "cpppj/src/client/RawCampaignSession.h": "2f59bf46bc2f1b0160581baca5f31a4fee3a206d9fa5d8ef942ed3248785750c",
+    "cpppj/src/client/UberGump.cpp": "b2df7ad487f255cacd713430bb0e89d9319aa81340a10241bdf1a056068292c4",
     "cpppj/src/client/UserInput.cpp": "fd1bee42a48c4a33098114e813a7909d449791671fb0e313b76efc55216c20bd",
     "cpppj/tests/CMakeLists.txt": "889efbf2ee9336dad4a80cae9bc811c380d9e955b2746743b049efcbae9d27ae",
-    "cpppj/tests/CampaignSessionTests.cpp": "995750555da9f30df739414ffd02da613be6e93ece9c313f390105b5a7e30ea6",
+    "cpppj/tests/CampaignSessionTests.cpp": "569c6f2ea791c0cfa6122d0caf569cf411f97e3934ac810b51ef0029818468d8",
     "tools/cpp_campaign_entry_smoke.py": "59b39e067a2e51cc7f6358d8adc198e4cbd5682bc6109e9b1e0407fa7f3550aa",
     "cpppj/src/client/RawCarrierInput.h": "27db41be147df6a13b60aa9faa68751dc1d54a09fae5945ee0e9f762f5979be4",
     "cpppj/src/client/RawCarrierInput.cpp": "7f54b8a61c0d94e04e709d93aa138fe34d698cc90af2a9301259f232c93b0da6",
     "cpppj/src/client/RawCampaignCarrierInput.inc": "5f7586171e8d3fc0b7a12e7bad502a33eeda171a41d859469c03367d930aad1b",
-    "cpppj/src/client/GameWorldInput.inc": "f03ba61623c0d8a1ed2a1108eaebff769486cc925bc8872626061f045758efd7",
+    "cpppj/src/client/GameWorldInput.inc": "f46f5b6c20d628a298f252afcdf5f1af44a5718a6d21cc7848dc88c3a151a530",
     "cpppj/src/client/CampaignUserInputServices.h": "b84ad888baff4008979738c8396405016a3da847f76ac8104219e1744395859f",
     "cpppj/src/client/CampaignUserInputServices.cpp": "7b22008ca86929c1c7523bde5d0d6d265197dc032d2f2502d2e356f6e923f86c",
     "cpppj/tests/CarrierInputTests.cpp": "6ba4c9175b6aea6b9d58e8ee43e8257415f1f3104767bfbb6d3882fb8348ca5d",
@@ -3066,6 +3066,49 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "c6e7d4e27e8f69ffbbc08aaeb86ff98eef32d65bcf906c49712fb1a4464a1603",
           "current": "995750555da9f30df739414ffd02da613be6e93ece9c313f390105b5a7e30ea6"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 205,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/GameWorld.h",
+          "previous": "63a8da986aab6ab35f1938c8de5c9197d12cca4e17859cb8daba5d5f52946e73",
+          "current": "d51dfe75377b1afd870bfeb40e26cef9f6233f65217d757135648ce064043a16"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "940749f6687b7d65418f3dc7b8b9a75c8cd07fc8ee78cb408480274008b18c88",
+          "current": "6cf6c4b418c499ea542479dbca179724179ee0bb66e9e9840ff59573eeceb24c"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "e3c869f14573f938c2e2fac22dcd0b3f18dc4517921fd8ebdcf04d3993d9193a",
+          "current": "2f59bf46bc2f1b0160581baca5f31a4fee3a206d9fa5d8ef942ed3248785750c"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/UberGump.cpp",
+          "previous": "3e54edae2da7f540cdb046f443a22c0a0141cd1a14cff69ad6e9346b3c8d39ff",
+          "current": "b2df7ad487f255cacd713430bb0e89d9319aa81340a10241bdf1a056068292c4"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "995750555da9f30df739414ffd02da613be6e93ece9c313f390105b5a7e30ea6",
+          "current": "569c6f2ea791c0cfa6122d0caf569cf411f97e3934ac810b51ef0029818468d8"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/GameWorldInput.inc",
+          "previous": "f03ba61623c0d8a1ed2a1108eaebff769486cc925bc8872626061f045758efd7",
+          "current": "f46f5b6c20d628a298f252afcdf5f1af44a5718a6d21cc7848dc88c3a151a530"
         }
       ]
     }

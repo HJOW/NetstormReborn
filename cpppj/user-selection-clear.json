@@ -1,0 +1,36 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-19",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-16"
+  },
+  "entry": "004d5c60",
+  "controls": [
+    639,
+    895
+  ],
+  "uniqueInputs": 87,
+  "normalReturns": 174,
+  "instructions": 11154,
+  "nativeCalls": {
+    "004d5c60": 174,
+    "004d5490": 126,
+    "004d5bb0": 126,
+    "004d5480": 78
+  },
+  "precisionDifferentInputs": [],
+  "originalGameExecutions": 0,
+  "scope": "후속 해제/다중 정리/강조의 실제 몸체다. 가상 통지/커서/역투영/이동/장치만 명시 경계이며 실제 선택 생성이나 게임 완주를 주장하지 않는다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_user_selection.py": "79cc31f6c9cf391853126cfbb6885e7adeb0477ea27472c70def72ab501f897c",
+    "tools/decomp_user_selection_clear.py": "50fe049616961d9733cc1a8c1b0da5c571f0f753cb5b92774c496f0dc56303f4",
+    "cpppj/tests/fixtures/user-selection-clear-x86.tsv": "2b5fab6fa86b8205809031175742d13d7a24749f977e274a9d0ceff1391e7775",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658"
+  },
+  "sourcePrintCorrection": {
+    "previous": "edb47024473e98f70140efd0350c8908d58b21007da0c472b99e3beaf076654c",
+    "reason": "검사 통과 문구의 후속 한글 표기만 교정했다. 관측 입력/몸체/기대/횟수는 같다."
+  }
+}

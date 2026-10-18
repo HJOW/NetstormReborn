@@ -167,15 +167,15 @@
   "currentSources": {
     "cpppj/src/CMakeLists.txt": "dc93067f7759849e630647688fa09684944a0f5aec5bf7d774d429227e600599",
     "cpppj/src/client/RawButtonControls.cpp": "22ea0450231c3b81b1b74a6f56d52f6e5706f9c24543f8898f4e32131c0a6962",
-    "cpppj/src/client/RawCampaignSession.cpp": "940749f6687b7d65418f3dc7b8b9a75c8cd07fc8ee78cb408480274008b18c88",
-    "cpppj/src/client/RawCampaignSession.h": "e3c869f14573f938c2e2fac22dcd0b3f18dc4517921fd8ebdcf04d3993d9193a",
+    "cpppj/src/client/RawCampaignSession.cpp": "6cf6c4b418c499ea542479dbca179724179ee0bb66e9e9840ff59573eeceb24c",
+    "cpppj/src/client/RawCampaignSession.h": "2f59bf46bc2f1b0160581baca5f31a4fee3a206d9fa5d8ef942ed3248785750c",
     "cpppj/src/client/RawProductionControls.cpp": "a6edd49e5a486449f4b23f3092719f7f1342ee86f66d1325867c306f52056d31",
     "cpppj/src/client/RawProductionControls.h": "8826c67edd4bc027f1d060bcd1e0fe5aa4638c4683b05fd6d2c57e931c90b346",
-    "cpppj/src/client/UberGump.cpp": "3e54edae2da7f540cdb046f443a22c0a0141cd1a14cff69ad6e9346b3c8d39ff",
+    "cpppj/src/client/UberGump.cpp": "b2df7ad487f255cacd713430bb0e89d9319aa81340a10241bdf1a056068292c4",
     "cpppj/src/o/RawSquidNeighbors.cpp": "88ec2ee9dbaad0627d1ceb3629199361d860ba137f50d12fe0410a8cbbefa3f2",
     "cpppj/src/o/RawSquidNeighbors.h": "edb19d4782b671d6be80c9f7690b9455d200ef7dbe2df51059d5ca0c4a66175c",
     "cpppj/tests/CMakeLists.txt": "889efbf2ee9336dad4a80cae9bc811c380d9e955b2746743b049efcbae9d27ae",
-    "cpppj/tests/CampaignSessionTests.cpp": "995750555da9f30df739414ffd02da613be6e93ece9c313f390105b5a7e30ea6",
+    "cpppj/tests/CampaignSessionTests.cpp": "569c6f2ea791c0cfa6122d0caf569cf411f97e3934ac810b51ef0029818468d8",
     "tools/cpp_production_panel_smoke.py": "724988401741b93176a8a8d85a043ba712335b8c2cce85930f11016eae1a1e50",
     "cpppj/neighbor-boundary.json": "f867eca090662fcf3b5309055274552d0b826c6b2bc5929058ee604b595a2289",
     "cpppj/production-idle.json": "98765db8f237106b9b13db4fc3c09a8d02b0627a767dd76aa75d174b100c6f74",
@@ -1193,6 +1193,37 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "c6e7d4e27e8f69ffbbc08aaeb86ff98eef32d65bcf906c49712fb1a4464a1603",
           "current": "995750555da9f30df739414ffd02da613be6e93ece9c313f390105b5a7e30ea6"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 205,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "940749f6687b7d65418f3dc7b8b9a75c8cd07fc8ee78cb408480274008b18c88",
+          "current": "6cf6c4b418c499ea542479dbca179724179ee0bb66e9e9840ff59573eeceb24c"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "e3c869f14573f938c2e2fac22dcd0b3f18dc4517921fd8ebdcf04d3993d9193a",
+          "current": "2f59bf46bc2f1b0160581baca5f31a4fee3a206d9fa5d8ef942ed3248785750c"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/UberGump.cpp",
+          "previous": "3e54edae2da7f540cdb046f443a22c0a0141cd1a14cff69ad6e9346b3c8d39ff",
+          "current": "b2df7ad487f255cacd713430bb0e89d9319aa81340a10241bdf1a056068292c4"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "995750555da9f30df739414ffd02da613be6e93ece9c313f390105b5a7e30ea6",
+          "current": "569c6f2ea791c0cfa6122d0caf569cf411f97e3934ac810b51ef0029818468d8"
         }
       ]
     }

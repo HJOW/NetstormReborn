@@ -12,9 +12,9 @@
     "tools/cpp_campaign_forward_smoke.py": "a2d80da805838d22747deddf9d65e2daa947da6026764a64e60f41dc21bd00b8",
     "cpppj/tests/fixtures/campaign-forward-ui-input.tsv": "b4c8e831fe0669dc0d9b9626db80486414d78899e2ade3f7fe1aa7030d05857e",
     "cpppj/src/client/GameWorld.cpp": "07aa1f5d4d4a144997fd8627184180914e3357e417016e1e59bb08bed8f4fc07",
-    "cpppj/src/client/RawCampaignSession.cpp": "940749f6687b7d65418f3dc7b8b9a75c8cd07fc8ee78cb408480274008b18c88",
+    "cpppj/src/client/RawCampaignSession.cpp": "6cf6c4b418c499ea542479dbca179724179ee0bb66e9e9840ff59573eeceb24c",
     "cpppj/src/client/RawCampaignRitual.inc": "58bedee7b6bd9673e2ce45ac016f9421ef33ac4bd974e306dd54f83c631fe9f0",
-    "cpppj/tests/CampaignSessionTests.cpp": "995750555da9f30df739414ffd02da613be6e93ece9c313f390105b5a7e30ea6"
+    "cpppj/tests/CampaignSessionTests.cpp": "569c6f2ea791c0cfa6122d0caf569cf411f97e3934ac810b51ef0029818468d8"
   },
   "evidence": {
     "extracted/goal-natural-capture-20261019-baseline.json": "1809950c7c7ba932b847c197d52886159303c181736efe59d1794f49cf625f22",
@@ -458,6 +458,25 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "c6e7d4e27e8f69ffbbc08aaeb86ff98eef32d65bcf906c49712fb1a4464a1603",
           "current": "995750555da9f30df739414ffd02da613be6e93ece9c313f390105b5a7e30ea6"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 205,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/sources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "940749f6687b7d65418f3dc7b8b9a75c8cd07fc8ee78cb408480274008b18c88",
+          "current": "6cf6c4b418c499ea542479dbca179724179ee0bb66e9e9840ff59573eeceb24c"
+        },
+        {
+          "group": "/sources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "995750555da9f30df739414ffd02da613be6e93ece9c313f390105b5a7e30ea6",
+          "current": "569c6f2ea791c0cfa6122d0caf569cf411f97e3934ac810b51ef0029818468d8"
         }
       ]
     }

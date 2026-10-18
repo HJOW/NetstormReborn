@@ -120,7 +120,7 @@ struct UberGump::MissionRuntime {
     o::MissionFrameGateState gate; // demo/started/시각/안내 단계의 유일한 현재 미션 저장소다.
     o::MissionStartState state; // Start의 순번/현재 tellAt 항목/필드를 동일 수명으로 유지한다.
     RawCampaignMissionStartBindings start; // 같은 Script/Session/전역을 참조하며 생성만으로 시작하지 않는다.
-    std::unique_ptr<RawCampaignTutorialOneBindings> earlyOne; // 실제 연결을 마친 Early1만 공통 프레임/입력을 실행한다. 다른 전용 판정은 후속 연결 대상이다.
+    std::unique_ptr<RawCampaignTutorialOneBindings> tutorial; // 실제 연결을 마친 Early1/2만 공통 프레임/입력을 실행한다. 다른 전용 판정은 후속 연결 대상이다.
     // 원본00482bf0의 초기 demo0은 일반 MissionBegin,00463a00의 직접 쓰기는 StartDemo가 공급한다.
     MissionRuntime(RawCampaignSession& session,MissionScript& script,std::uint32_t demo,CampaignMissionStartEffects effects)
         :start(session,script,gate,state,session.MissionStartSettings(),session.MissionAiSettings(),std::move(effects)) {
@@ -233,9 +233,9 @@ void UberGump::ExpandMenus(DialogPage& page) {
 // 명시 사용자 명령에서 잘못된 섹션은 기존 진단을 유지한다. 선택적 미션 사건은 TryTell을 사용한다.
 void UberGump::Tell(std::string target, bool briefing) {
     if (!TryTell(target,briefing)) throw std::runtime_error("Missing dialog section: "+target);
-    if (missionRuntime_ && missionRuntime_->earlyOne &&
+    if (missionRuntime_ && missionRuntime_->tutorial &&
         (state_.phase==ClientPhase::Briefing || state_.phase==ClientPhase::Dialog))
-        missionRuntime_->earlyOne->Gate().PauseForDialog(); // 명시 Tell도 같은 자기 깊이만 보유한다.
+        missionRuntime_->tutorial->Gate().PauseForDialog(); // 명시 Tell도 같은 자기 깊이만 보유한다.
 }
 // 원본004cf730은 phase와 무관하게 현재 Mission의 설정에서 전체 target을 조회한다.
 bool UberGump::TryTell(std::string target,bool briefing) {
@@ -275,7 +275,7 @@ bool UberGump::TryTell(std::string target,bool briefing) {
     if (page_.items.empty()) page_.items.push_back({"OK", {"DoNothing", "0"}});
     state_.phase = briefing ? ClientPhase::Briefing : ClientPhase::Dialog;
     pageName_ = target; popup_.clear(); opened_ = client_.Time().wall; RebuildControls();
-    if (mission_ && !(missionRuntime_ && missionRuntime_->earlyOne)) client_.Pause(true);
+    if (mission_ && !(missionRuntime_ && missionRuntime_->tutorial)) client_.Pause(true);
     return true;
 }
 // 메인 메뉴로 돌아올 때 미션 설정 객체도 등록 목록에서 제거한다.
@@ -320,8 +320,8 @@ void UberGump::BeginMission(std::string name,std::uint32_t demo) {
     services.missionOutcome.section=[this](std::string_view section) { return mission_ && mission_->Section(section) && TryTell(std::string(section)); };
     services.missionOutcome.closeTransient=[this] { rawButtons_->RequestClosePopups(); };
     services.missionOutcome.onSection=[this] {
-        if (!missionRuntime_ || !missionRuntime_->earlyOne) throw std::logic_error("현재 미션의 프레임 정지 연결 누락");
-        missionRuntime_->earlyOne->Gate().PauseForDialog();
+        if (!missionRuntime_ || !missionRuntime_->tutorial) throw std::logic_error("현재 미션의 프레임 정지 연결 누락");
+        missionRuntime_->tutorial->Gate().PauseForDialog();
     };
     auto world=std::make_unique<GameWorld>(client_.Assets(),client_.Files(),std::move(fort),std::move(players),
         mission_->FortName(),std::move(services),ScreenPoint{client_.GetScreen().Width(),client_.GetScreen().Height()},true);
@@ -357,7 +357,7 @@ void UberGump::BeginMission(std::string name,std::uint32_t demo) {
     world_->Session().Cursor().SetEffects(std::move(cursorEffects));
     world_->Session().Cursor().Display().SetExternal([this](std::uint32_t token) { return rawButtons_->GumpDepth(token); },{});
     briefingSections_.clear(); briefingIndex_ = 0;
-    if (missionRuntime_->gate.tutorialNumber==1 && !missionRuntime_->gate.demo) {
+    if (missionRuntime_->gate.tutorialNumber>=1 && missionRuntime_->gate.tutorialNumber<=2 && !missionRuntime_->gate.demo) {
         CampaignTutorialOneEffects frameEffects; // 원본 화면 프레임/입력이 함께 사용하는 현재 UI/시계다.
         frameEffects.frame.gameSeconds=[this] { return client_.Time().game; };
         frameEffects.frame.paused=[this] { return client_.Paused(); };
@@ -367,10 +367,12 @@ void UberGump::BeginMission(std::string name,std::uint32_t demo) {
         frameEffects.frame.blockingGumpOpen=[this] { return rawButtons_->BlockingGumpOpen(); };
         frameEffects.frame.pause=[this] { client_.PushGamePause(); };
         frameEffects.frame.resume=[this] { client_.PopGamePause(); };
-        frameEffects.frame.endDemo=[] { throw std::logic_error("Early1 연결에서 데모 종료 도달"); };
+        frameEffects.frame.endDemo=[] { throw std::logic_error("Early1/2 연결에서 데모 종료 도달"); };
         frameEffects.tell=[this](std::string_view section) { return mission_->Section(section) && TryTell(std::string(section),true); };
         frameEffects.closeTransient=[this] { rawButtons_->RequestClosePopups(); };
-        missionRuntime_->earlyOne=std::make_unique<RawCampaignTutorialOneBindings>(world_->Session(),*mission_,missionRuntime_->start,
+        // 현재 월드의 선택 getter와 서로 다른 두 원본 선택 정리 몸체를 빌린다.
+        frameEffects.selected=[this] { return world_->Selected(); };frameEffects.resetSelection=[this] { world_->ResetSelection(); };frameEffects.clearSelection=[this] { world_->ClearSelection(); };
+        missionRuntime_->tutorial=std::make_unique<RawCampaignTutorialOneBindings>(world_->Session(),*mission_,missionRuntime_->start,
             missionRuntime_->gate,missionRuntime_->state,std::move(frameEffects));
     }
     // 원본 초기 브리핑은 A.이며 A1. 등은 본문 Tell 명령이 넘긴다.
@@ -378,7 +380,7 @@ void UberGump::BeginMission(std::string name,std::uint32_t demo) {
     else if (mission_->Section("A.")) briefingSections_.push_back("A.");
     state_.phase = ClientPhase::LoadingMission; pageName_ = "loading"; popup_.clear(); page_ = {}; RebuildControls();
     RefreshWindowTitle();
-    if (missionRuntime_->earlyOne) {
+    if (missionRuntime_->tutorial) {
         state_.phase=ClientPhase::Mission;pageName_="mission";briefingSections_.clear();client_.Pause(false); // A안내는 공통10호출 뒤 실제 TellStage가 연다.
     } else client_.Pause(true);
     // 원본 004b6dd0의 미션 시작 절차(전투 여부를 켜고 FUN_00469fc0): 난수로 고른 원소 곡으로 전투 음악을 시작한다.
@@ -434,10 +436,10 @@ void UberGump::OpenObjectMenu(o::SquidId id,const InputEvent& event) {
 }
 // 같은 실제 큐의 원본 정수 명령과 물리 사건을 분배한다.
 void UberGump::Event(InputEvent event) {
-    if (missionRuntime_ && missionRuntime_->earlyOne) {
+    if (missionRuntime_ && missionRuntime_->tutorial) {
         auto missionEvent=event; // 실제 카메라 F4 입력과 단계 판정이 같은 홈 명령을 보게 한다.
         if ((event.code&0x83ffffffU)==(0x73U<<InputCode::kVirtualKeyShift)) missionEvent.code=0x020000aeU;
-        if (missionRuntime_->earlyOne->Event(missionEvent)) return;
+        if (missionRuntime_->tutorial->Event(missionEvent)) return;
     }
     if (objectMenus_ && objectMenus_->Command(event)) { rebuild_=true;return; }
     const auto commandCode=event.code&0x03ffffffU; // 원본명령분배와같이최상위입력플래그만제거한다.
@@ -523,7 +525,7 @@ void UberGump::Tick() {
 }
 // 원본 루프8번에서 한 번 호출한다. Tutorial 전용 판정을 아직 연결하지 않은 미션은 기존 진입을 유지한다.
 void UberGump::MissionFrame() {
-    if (missionRuntime_ && missionRuntime_->earlyOne) missionRuntime_->earlyOne->Frame();
+    if (missionRuntime_ && missionRuntime_->tutorial) missionRuntime_->tutorial->Frame();
 }
 // 커널의 이동·날씨와 비동기 Tell을 같은 프레임에 반영한다. 페이지가 같으면 입력 영역/누름 상태를 유지한다.
 void UberGump::Frame() {
@@ -787,8 +789,9 @@ std::string UberGump::Report() const {
             const auto& gate=missionRuntime_->gate;const auto& state=missionRuntime_->state; // 실제 Start의 최종 표식과 중간 쓰기를 읽는다.
             out<<"mission_start\t"<<gate.started<<'\t'<<state.sequence<<'\t'<<gate.demo<<'\t'<<gate.startSeconds<<'\t'<<gate.demoEndSeconds<<'\n';
             out<<"mission_gate\t"<<gate.tutorialNumber<<'\t'<<gate.stage<<'\t'<<gate.lockFrames<<'\t'<<gate.scriptPaused<<'\t'<<gate.clearFrames<<'\t'
-                <<(missionRuntime_->earlyOne ? 1 : 0)<<'\t'<<gate.nextStageSeconds<<'\t'<<gate.tellAtSeconds<<'\n'; // 동일 현재 상태의 관측만 제공한다.
+                <<(missionRuntime_->tutorial ? 1 : 0)<<'\t'<<gate.nextStageSeconds<<'\t'<<gate.tellAtSeconds<<'\n'; // 동일 현재 상태의 관측만 제공한다.
             out<<"mission_bridges\t"<<world_->Session().TotalMade().BuiltForGenus(4)<<'\n'; // 단계 판정과 같은 누적 장부를 관찰하며 현재 살아 있는 다리 수와 구별한다.
+            out<<"mission_options\t"<<unsigned(world_->Session().BattleOption(2))<<'\t'<<unsigned(world_->Session().BattleOption(4))<<'\t'<<world_->Session().EnergySettings().radiusSquared<<'\n'; // 같은 현재 옵션/공급 범위를 읽기만 한다.
             const auto& settings=world_->Session().MissionStartSettings(); // 원본 게임 명령이 공유할 같은 제한 전역이다.
             out<<"mission_rules\t"<<settings.denySalvage<<'\t'<<settings.denyAscend<<'\t'<<settings.allowAnyCapture<<'\t'<<settings.ordinaryGeysers<<'\n';
         }

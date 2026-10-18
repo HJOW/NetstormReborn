@@ -90,6 +90,10 @@ std::uint32_t RawUserSelection::Select(std::uint32_t number,std::uint32_t forceS
         return number;
     }
 }
+// 4d5c60은 정지/콘솔 관문 없이 enabled만 읽으며 기존 단일 선택 가상 통지를 대신 호출하지 않는다.
+void RawUserSelection::Clear() const {
+    if (Need(hooks_.enabled)()) { ClearMultiple();state_.selected=0;Need(hooks_.highlight)(0); }
+}
 // 보호 PE의 Carrier+ac는 선택 결과와 무관하게 마지막 공통 Open의 전체DWORD를 반환한다.
 std::uint32_t RawUserSelection::CarrierMenu(o::Sid sid,const InputEvent& event,const std::function<std::uint32_t(o::Sid,const InputEvent&)>& common) const {
     if (!(Raw(sid.value)[40]&1)) static_cast<void>(Select(sid.value,0,0));return Need(common)(sid,event);

@@ -9,7 +9,7 @@
   "baseline": "c445683592e712662385e01036cabe2031e65a40",
   "sources": {
     "cpppj/src/client/GameWorld.cpp": "07aa1f5d4d4a144997fd8627184180914e3357e417016e1e59bb08bed8f4fc07",
-    "cpppj/src/client/UberGump.cpp": "3e54edae2da7f540cdb046f443a22c0a0141cd1a14cff69ad6e9346b3c8d39ff",
+    "cpppj/src/client/UberGump.cpp": "b2df7ad487f255cacd713430bb0e89d9319aa81340a10241bdf1a056068292c4",
     "cpppj/src/app/main.cpp": "9395c790b1a31c7e36f76b55cea3dd89ee7fdc769e694dc7d2fbdaa7e9eb7cd8",
     "tools/cpp_tutorial_harvest_smoke.py": "58606aae2a86d99360f650fc7e5f27785aabca54b53a0856c17ba7f3a9d0a22b",
     "cpppj/tests/fixtures/tutorial-one-harvest-ui-input.tsv": "9217cefd46f3e245704c0d10904e060327ca67a3417359fa7f450205630ef325",
@@ -17,8 +17,8 @@
     "cpppj/src/o/RawTutorialOne.h": "7c76133f137bcce59a8696ed3d8e2c8228c612d029299ee763d602b2dc126504",
     "cpppj/src/o/RawMissionFrameGate.cpp": "c591ce1c294a8c645008da04a6d5366182d42247f4505716e85d0ae4d6c5f4dc",
     "cpppj/src/o/RawMissionFrameGate.h": "93feacfb8b1fa1276737f8b1af6bc044c1ecda75bc4a82375728d650a43791be",
-    "cpppj/src/client/RawCampaignTutorialOneBindings.cpp": "8bdd3c4b37a38700f1241fceb2f7f3c3fda0bb2d55ae82cdcb8959be0866447a",
-    "cpppj/src/client/RawCampaignSession.cpp": "940749f6687b7d65418f3dc7b8b9a75c8cd07fc8ee78cb408480274008b18c88",
+    "cpppj/src/client/RawCampaignTutorialOneBindings.cpp": "58ce82df435dcb5979ed0d66c8e73effa5610aeb7bd639d6e6d3020310d2fad9",
+    "cpppj/src/client/RawCampaignSession.cpp": "6cf6c4b418c499ea542479dbca179724179ee0bb66e9e9840ff59573eeceb24c",
     "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
     "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6"
   },
@@ -120,6 +120,31 @@
           "path": "cpppj/src/client/UberGump.cpp",
           "previous": "9cec22d2a9b0e49d91844bcb4ecdcd1cc80571d417922a39cf2f6b813fc3ad38",
           "current": "3e54edae2da7f540cdb046f443a22c0a0141cd1a14cff69ad6e9346b3c8d39ff"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 205,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/sources",
+          "path": "cpppj/src/client/UberGump.cpp",
+          "previous": "3e54edae2da7f540cdb046f443a22c0a0141cd1a14cff69ad6e9346b3c8d39ff",
+          "current": "b2df7ad487f255cacd713430bb0e89d9319aa81340a10241bdf1a056068292c4"
+        },
+        {
+          "group": "/sources",
+          "path": "cpppj/src/client/RawCampaignTutorialOneBindings.cpp",
+          "previous": "8bdd3c4b37a38700f1241fceb2f7f3c3fda0bb2d55ae82cdcb8959be0866447a",
+          "current": "58ce82df435dcb5979ed0d66c8e73effa5610aeb7bd639d6e6d3020310d2fad9"
+        },
+        {
+          "group": "/sources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "940749f6687b7d65418f3dc7b8b9a75c8cd07fc8ee78cb408480274008b18c88",
+          "current": "6cf6c4b418c499ea542479dbca179724179ee0bb66e9e9840ff59573eeceb24c"
         }
       ]
     }

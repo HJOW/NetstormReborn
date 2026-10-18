@@ -1,4 +1,4 @@
-// 원본 공통 프레임/입력과 Early1 판정 사이에 계산 결과를 합성하지 않고 실제 소비자만 묶는다.
+// 원본 공통 프레임/입력과 Early1/2 판정 사이에 계산 결과를 합성하지 않고 실제 소비자만 묶는다.
 #include "client/RawCampaignTutorialOneBindings.h"
 #include "o/ConfigInterface.h"
 #include <bit>
@@ -15,9 +15,16 @@ RawCampaignTutorialOneBindings::RawCampaignTutorialOneBindings(RawCampaignSessio
     RawCampaignMissionStartBindings& start,o::MissionFrameGateState& gate,o::MissionStartState& state,
     CampaignTutorialOneEffects effects)
     :session_(session),script_(script),start_(start),state_(gate),startState_(state),effects_(std::move(effects)),gate_(gate,Hooks()) {
-    if (!effects_.tell || !effects_.closeTransient || state_.tutorialNumber!=1 || state_.demo)
-        throw std::invalid_argument("Early1 실제 미션/UI 연결 계약 오류");
-    tutorial_=session_.MakeTutorialOne(gate_);
+    if (!effects_.tell || !effects_.closeTransient || state_.tutorialNumber<1 || state_.tutorialNumber>2 || state_.demo)
+        throw std::invalid_argument("Early1/2 실제 미션/UI 연결 계약 오류");
+    if (state_.tutorialNumber==1) tutorial_=session_.MakeTutorialOne(gate_);
+    else {
+        o::TutorialTwoHooks hooks; // 게임 조회/옵션 갱신은 같은 Session이 연결하며 UI 경계만 빌린다.
+        hooks.gameSeconds=effects_.frame.gameSeconds;hooks.selected=effects_.selected;
+        hooks.resetSelection=effects_.resetSelection;hooks.clearSelection=effects_.clearSelection;
+        hooks.tell=effects_.tell;hooks.closeTransientGumps=effects_.closeTransient;
+        tutorialTwo_=session_.MakeTutorialTwo(gate_,std::move(hooks));
+    }
 }
 // 전체 게임 판정은 같은 Session에 맡기고, 기존 프레임 몸체의 실행 순서를 변경하지 않는다.
 o::MissionFrameGateHooks RawCampaignTutorialOneBindings::Hooks() {
@@ -25,8 +32,9 @@ o::MissionFrameGateHooks RawCampaignTutorialOneBindings::Hooks() {
     hooks.checkOutcome=[this] { session_.CheckMissionOutcome(); };
     hooks.tellStage=[this] { TellStage(); };hooks.tellAt=[this] { TellAt(); };
     hooks.tutorial=[this](std::uint32_t number,std::uint32_t event) {
-        if (number!=1 || !tutorial_) throw std::logic_error("Early1 이외 전용 판정 연결 누락");
-        return tutorial_->Handle(event);
+        if (number==1 && tutorial_) return tutorial_->Handle(event);
+        if (number==2 && tutorialTwo_) return tutorialTwo_->Handle(event);
+        throw std::logic_error("현재 Early1/2 전용 판정 연결 누락");
     };
     return hooks;
 }

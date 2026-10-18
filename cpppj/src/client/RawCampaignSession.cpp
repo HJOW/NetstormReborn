@@ -351,6 +351,7 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawCampaignParticles> particles; // 같은 Host/Kernel/Renderer의 실제11/19/16 표시다.
     std::uint32_t archerCommand{0x030000b0}; // 보호 PE의 실제 입력 토큰이다.
     std::uint32_t tutorialHomeCommand{0x020000aeU},tutorialReclaimCommand{0x02000008U}; // 보호PE5429ac/54271c의 같은 입력 토큰 저장소다.
+    std::uint32_t tutorialWorkshopType{85},tutorialArcherType{71},tutorialSalvageCommand{0x0200005dU}; // 보호PE5411ac/541174/54286c의 현재 TYPE와 회수 입력이다.
     std::unique_ptr<RawCampaignAssetBindings> assetBindings; // 실제 저장 건물 후처리와 Gun/Regular다.
     CanonPlacementPipelineState gameplayPlacement; // 생성용 지형 판정과 구별한 실제 요청/커서의 현재 모드·방향 동맹이다.
     std::array<CanonPlacementIslandRegion,100> gameplayRegions{}; // 같은 원본32바이트 섬 기록의 현재 제한/존재 view다.
@@ -846,6 +847,8 @@ struct RawCampaignSession::Impl {
         assetEffects.postPop.setGraph=[this](Sid sid,std::int32_t number) { core.pool.AllocatedBytes(sid)[30]=static_cast<std::uint8_t>(number); }; // 실제004ad3e0은 Graph BYTE만 쓴다.
         // PATCH0040d980은 현재float를절삭한 뒤16으로 나눈 청크의 실제 BYTE를 읽는다.
         assetEffects.postPop.regionNumber=[this](float x,float y) { return static_cast<std::int32_t>(chunks.At(static_cast<int>(x)/16,static_cast<int>(y)/16).island); };
+        assetEffects.postPop.hasContent=[this](Sid parent,std::uint32_t type) { return priests->Carrier().FindContained(parent,0x10,type,0).value!=0; }; // 실제004acac0의 같은 내용물/마스크/종류 조회다.
+        assetEffects.postPop.createSlot=[this](Sid parent,std::uint32_t type) { static_cast<void>(contained->Create(parent,type,0,0x10,0x10,0)); }; // 원본004afa70의 현재 생성/부착 인자를 유지한다.
         // 실제 TYPE 사운드 이름을 클라이언트의 단일 이름표에서 조회한다. TYPE번호를 토큰으로 대신하지 않는다.
         assetEffects.postPop.typeDword=[this](Sid sid,std::uint32_t offset) {
             if (offset!=0x74) throw std::logic_error("세션 TYPE 사운드 필드 미지원");
@@ -2266,6 +2269,15 @@ std::unique_ptr<RawTutorialOne> RawCampaignSession::MakeTutorialOne(RawMissionFr
     hooks.spawnGeysers=[this] { GenerateLocalGeysers(); };
     return std::make_unique<RawTutorialOne>(TutorialOneState{gate.State().stage,impl_->playerState.battleOwner,
         impl_->playerState.playerKnown,impl_->tutorialHomeCommand,impl_->tutorialReclaimCommand},impl_->players,impl_->recentGeysers,std::move(hooks));
+}
+// 로그인 때부터 공급 판정이 읽는 같은87BYTE/제곱 범위와 실제 제작/생산을 사용한다.
+std::unique_ptr<RawTutorialTwo> RawCampaignSession::MakeTutorialTwo(RawMissionFrameGate& gate,TutorialTwoHooks hooks) {
+    if (!impl_->loaded || !impl_->login || !impl_->login->options) throw std::logic_error("로그인 설치 전 Early2 실제 판정 연결");
+    hooks.refreshEnergyRange=[this] { impl_->login->options->UpdateRange(); };
+    hooks.productionContains=[this](std::uint32_t type) { return impl_->production->Contains(type); };
+    auto& denySalvage=reinterpret_cast<std::uint32_t&>(impl_->missionStart.denySalvage); // 같은4BYTE의 대응 unsigned 별칭이다. 부호형 전역의 사본을 만들지 않는다.
+    return std::make_unique<RawTutorialTwo>(impl_->core.pool,impl_->core.types,*impl_->totalMade,gate,
+        TutorialTwoState{impl_->battleOptions,denySalvage,impl_->tutorialWorkshopType,impl_->tutorialArcherType,impl_->tutorialSalvageCommand},std::move(hooks));
 }
 // 같은 PlayerWorld 생성자/Owner/직접frame0/Pop으로 실제 기술 부모 기록을 설치한다.
 Sid RawCampaignSession::CreatePlayer(std::int32_t owner) { if (!impl_->loaded) throw std::logic_error("미설치 Session의 Player 생성");return impl_->player->Create(owner); }

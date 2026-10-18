@@ -1,4 +1,4 @@
-// Early1의 공통 프레임과 단계 안내를 같은 실제 Session/Start/UI에 연결한다.
+// Early1/2의 공통 프레임과 단계 안내를 같은 실제 Session/Start/UI에 연결한다. 기존 공개 이름은 유지한다.
 #pragma once
 #include "client/RawCampaignMissionStartBindings.h"
 
@@ -8,8 +8,10 @@ struct CampaignTutorialOneEffects {
     o::MissionFrameGateHooks frame; // 실제 시계/정지/UI 조회다. 게임 판정과 Tell 분배는 이 연결부가 공급한다.
     std::function<bool(std::string_view)> tell; // 현재 미션에 존재하는 섹션만 실행한다.
     std::function<void()> closeTransient; // 원본66710의 실제 팝업 Kill 요청이다.
+    std::function<std::uint32_t()> selected; // Early2가 중복 조회하는 현재 실제 선택SID다.
+    std::function<void()> resetSelection,clearSelection; // Early2의004d5c90(0,0,0)→004d5c60을 별도 실제 몸체로 공급한다.
 };
-// Early2~6의 아직 연결하지 않은 소비자를 빈 성공으로 분배하지 않는다. 이 연결은 Early1 전용이다.
+// Early1/2만 현재 실제 소비자에 분배한다. Early3~6의 미연결 판정을 빈 성공으로 바꾸지 않는다.
 class RawCampaignTutorialOneBindings {
 public:
     // 같은 장기 Session/Script/Start/gate/state를 빌리며 생성만으로 프레임을 실행하지 않는다.
@@ -34,6 +36,7 @@ private:
     CampaignTutorialOneEffects effects_; // 실제 화면/시계/팝업의 외부 소비자다.
     o::RawMissionFrameGate gate_; // 독립 원본328입력으로 검증된 공통 몸체다.
     std::unique_ptr<o::RawTutorialOne> tutorial_; // 현재 장부와 최근 간헐천 목록을 참조하는 원본 판정기다.
+    std::unique_ptr<o::RawTutorialTwo> tutorialTwo_; // 같은 gate와 현재 옵션/장부/생산/선택을 쓰는 Early2 판정기다.
     mutable std::uint32_t stageShown_{}; // 원본+b4이며 TellStage가 성공 여부를 마지막에 기록한다.
 };
 }

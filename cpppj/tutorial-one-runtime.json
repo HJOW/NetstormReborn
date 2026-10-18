@@ -10,15 +10,15 @@
     "cpppj/src/client/ClientMain.cpp": "fe577cb844b74ff10be7353b9ba545563bd62af7272409211de823e511fb456e",
     "cpppj/src/client/RawButtonControls.cpp": "22ea0450231c3b81b1b74a6f56d52f6e5706f9c24543f8898f4e32131c0a6962",
     "cpppj/src/client/RawButtonControls.h": "548d27ebba1a23f585763222ff428fd257456e79e47ae83ac38849712528ece1",
-    "cpppj/src/client/RawCampaignSession.cpp": "940749f6687b7d65418f3dc7b8b9a75c8cd07fc8ee78cb408480274008b18c88",
-    "cpppj/src/client/RawCampaignSession.h": "e3c869f14573f938c2e2fac22dcd0b3f18dc4517921fd8ebdcf04d3993d9193a",
-    "cpppj/src/client/UberGump.cpp": "3e54edae2da7f540cdb046f443a22c0a0141cd1a14cff69ad6e9346b3c8d39ff",
+    "cpppj/src/client/RawCampaignSession.cpp": "6cf6c4b418c499ea542479dbca179724179ee0bb66e9e9840ff59573eeceb24c",
+    "cpppj/src/client/RawCampaignSession.h": "2f59bf46bc2f1b0160581baca5f31a4fee3a206d9fa5d8ef942ed3248785750c",
+    "cpppj/src/client/UberGump.cpp": "b2df7ad487f255cacd713430bb0e89d9319aa81340a10241bdf1a056068292c4",
     "cpppj/src/client/UberGump.h": "eb7f755056912e3b8b71c4a7ab05f2ea8379541fff4313a7f6b0f6b5b8d168e9",
-    "cpppj/tests/CampaignSessionTests.cpp": "995750555da9f30df739414ffd02da613be6e93ece9c313f390105b5a7e30ea6",
-    "tools/cpp_goal_stage_entry_smoke.py": "cc303556ea1af7c5c33be84e835e8a8545077603a04600996cb98d962994e690",
+    "cpppj/tests/CampaignSessionTests.cpp": "569c6f2ea791c0cfa6122d0caf569cf411f97e3934ac810b51ef0029818468d8",
+    "tools/cpp_goal_stage_entry_smoke.py": "d1761b737b8aae961f6fa10dd155f32994eeaddfa5d6e50e5375c237f1e311a0",
     "cpppj/src/app/main.cpp": "9395c790b1a31c7e36f76b55cea3dd89ee7fdc769e694dc7d2fbdaa7e9eb7cd8",
-    "cpppj/src/client/RawCampaignTutorialOneBindings.cpp": "8bdd3c4b37a38700f1241fceb2f7f3c3fda0bb2d55ae82cdcb8959be0866447a",
-    "cpppj/src/client/RawCampaignTutorialOneBindings.h": "919baed9f70a97b8347e798ad19dc1269c177329151555db4c952f6d7a76369e",
+    "cpppj/src/client/RawCampaignTutorialOneBindings.cpp": "58ce82df435dcb5979ed0d66c8e73effa5610aeb7bd639d6e6d3020310d2fad9",
+    "cpppj/src/client/RawCampaignTutorialOneBindings.h": "a32d3d5161e21d962751aa5527a5362af073406ff63029693afaf43e7b431d05",
     "tools/cpp_tutorial_one_smoke.py": "179ec4c4db51200be4960feb7b48ce33e2626277557191403b708d57b7aeb12a",
     "cpppj/tests/fixtures/tutorial-one-runtime-ui-input.tsv": "386f03e8db6e4078b172988f48694bb80626aee8feb97832815337bbc89147e7"
   },
@@ -164,6 +164,55 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "c6e7d4e27e8f69ffbbc08aaeb86ff98eef32d65bcf906c49712fb1a4464a1603",
           "current": "995750555da9f30df739414ffd02da613be6e93ece9c313f390105b5a7e30ea6"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 205,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/sources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "940749f6687b7d65418f3dc7b8b9a75c8cd07fc8ee78cb408480274008b18c88",
+          "current": "6cf6c4b418c499ea542479dbca179724179ee0bb66e9e9840ff59573eeceb24c"
+        },
+        {
+          "group": "/sources",
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "e3c869f14573f938c2e2fac22dcd0b3f18dc4517921fd8ebdcf04d3993d9193a",
+          "current": "2f59bf46bc2f1b0160581baca5f31a4fee3a206d9fa5d8ef942ed3248785750c"
+        },
+        {
+          "group": "/sources",
+          "path": "cpppj/src/client/UberGump.cpp",
+          "previous": "3e54edae2da7f540cdb046f443a22c0a0141cd1a14cff69ad6e9346b3c8d39ff",
+          "current": "b2df7ad487f255cacd713430bb0e89d9319aa81340a10241bdf1a056068292c4"
+        },
+        {
+          "group": "/sources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "995750555da9f30df739414ffd02da613be6e93ece9c313f390105b5a7e30ea6",
+          "current": "569c6f2ea791c0cfa6122d0caf569cf411f97e3934ac810b51ef0029818468d8"
+        },
+        {
+          "group": "/sources",
+          "path": "tools/cpp_goal_stage_entry_smoke.py",
+          "previous": "cc303556ea1af7c5c33be84e835e8a8545077603a04600996cb98d962994e690",
+          "current": "d1761b737b8aae961f6fa10dd155f32994eeaddfa5d6e50e5375c237f1e311a0"
+        },
+        {
+          "group": "/sources",
+          "path": "cpppj/src/client/RawCampaignTutorialOneBindings.cpp",
+          "previous": "8bdd3c4b37a38700f1241fceb2f7f3c3fda0bb2d55ae82cdcb8959be0866447a",
+          "current": "58ce82df435dcb5979ed0d66c8e73effa5610aeb7bd639d6e6d3020310d2fad9"
+        },
+        {
+          "group": "/sources",
+          "path": "cpppj/src/client/RawCampaignTutorialOneBindings.h",
+          "previous": "919baed9f70a97b8347e798ad19dc1269c177329151555db4c952f6d7a76369e",
+          "current": "a32d3d5161e21d962751aa5527a5362af073406ff63029693afaf43e7b431d05"
         }
       ]
     }
