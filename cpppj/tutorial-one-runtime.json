@@ -1,0 +1,119 @@
+{
+  "unit": 202,
+  "date": "2026-10-19",
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "lastDecompileDate": "2026-10-16",
+  "baseline": "82b754e441762d8b0708356da3884fbdca0dffe5",
+  "sources": {
+    "cpppj/src/client/CMakeLists.txt": "ea7b520652a0a21cdaeb2852aae3992c3e361b5d01426f285056dbb1508f6ccd",
+    "cpppj/src/client/ClientMain.cpp": "fe577cb844b74ff10be7353b9ba545563bd62af7272409211de823e511fb456e",
+    "cpppj/src/client/RawButtonControls.cpp": "586038ad7ea4946b0812575ac0c7399c9f79429b6cf034275bad58f2af5d5fdb",
+    "cpppj/src/client/RawButtonControls.h": "3ca9b33fcb45af1156a964c319966378a8bc7b0583587269bef1ff8905f27554",
+    "cpppj/src/client/RawCampaignSession.cpp": "940749f6687b7d65418f3dc7b8b9a75c8cd07fc8ee78cb408480274008b18c88",
+    "cpppj/src/client/RawCampaignSession.h": "e3c869f14573f938c2e2fac22dcd0b3f18dc4517921fd8ebdcf04d3993d9193a",
+    "cpppj/src/client/UberGump.cpp": "c2c34c54f6caa47344c9db18f6745cb80d4eee16ae94870ef302aac672de715e",
+    "cpppj/src/client/UberGump.h": "eb7f755056912e3b8b71c4a7ab05f2ea8379541fff4313a7f6b0f6b5b8d168e9",
+    "cpppj/tests/CampaignSessionTests.cpp": "c6e7d4e27e8f69ffbbc08aaeb86ff98eef32d65bcf906c49712fb1a4464a1603",
+    "tools/cpp_goal_stage_entry_smoke.py": "cc303556ea1af7c5c33be84e835e8a8545077603a04600996cb98d962994e690",
+    "cpppj/src/app/main.cpp": "e7fe28668abb156e109de1820ac593b30e3adc9ba328147d10c0f0db588c87a9",
+    "cpppj/src/client/RawCampaignTutorialOneBindings.cpp": "8bdd3c4b37a38700f1241fceb2f7f3c3fda0bb2d55ae82cdcb8959be0866447a",
+    "cpppj/src/client/RawCampaignTutorialOneBindings.h": "919baed9f70a97b8347e798ad19dc1269c177329151555db4c952f6d7a76369e",
+    "tools/cpp_tutorial_one_smoke.py": "179ec4c4db51200be4960feb7b48ce33e2626277557191403b708d57b7aeb12a",
+    "cpppj/tests/fixtures/tutorial-one-runtime-ui-input.tsv": "386f03e8db6e4078b172988f48694bb80626aee8feb97832815337bbc89147e7"
+  },
+  "evidence": {
+    "extracted/goal-early-runtime-20261019-sources.json": "d4e9983792c16a7f8b6ca886c8fe7130b0c8df32064e0a70e283ef2b72318151",
+    "extracted/goal-early-runtime-20261019-static-evidence.json": "f9d232e0fbf279cb48c56a4d3a2977811af9fd82454c41d7c0e2af0bcd12a19a",
+    "extracted/goal-early-runtime-20261019-build4.log": "9c3d478e643b40df3f8d9791b1a7811e9e5809f16a43988a2f4d067e420b22be",
+    "extracted/goal-early-runtime-20261019-focused2.log": "2c3df934efcce0af3ff9be6855e87962b584ca1bde3f9ebfe6f26a03f7136198",
+    "extracted/goal-early-runtime-20261019-ctest-final.log": "9b2606ca9cc9860a441b9ee5cac511df7bbb7026350495e3ee71fb65ba805b6d",
+    "extracted/goal-early-runtime-20261019-tests-final.log": "d91689a40fd54fb812616e8e4104b13a453267157040fafde67948b6b338031e",
+    "extracted/goal-early-runtime-20261019-entry/results.json": "df27713ba243feb54e643e970758f1b7db6be8a1837a957482ef84ac322e4411",
+    "extracted/goal-early-runtime-20261019-verify-final.json": "3f56b0cce4a462757c3b85523d6e8fb867e8eb93187c0fa3fafdabedc327f128",
+    "extracted/goal-early-runtime-20261019-pin-updates.json": "9288ec240bf0f5a72cb9e1012d7e6a63051107075c006485402cb843141470ad",
+    "extracted/goal-early-runtime-20261019-guard.py": "f778f97498f17e3b32a349384d5c8e7e0fae1c48a615ca867ae846be99db2bb9",
+    "extracted/goal-early-runtime-20261019-gui-final3/states.tsv": "6dda1f4a2df4b67b10168f40f2d207f03bb558b32cf12c1cca949a150b6df22f",
+    "extracted/goal-early-runtime-20261019-gui-final3/execution.json": "ae737d8e60adf5f8a99db632a215f2f081a78d9ed0d8452316d51943648ad2c7",
+    "extracted/goal-early-runtime-20261019-gui-final3/results.json": "427f423fa8c049eb3fa3a3f5207b4e7f4cec0a598b6d5364a0584dea6a80c315",
+    "extracted/goal-early-runtime-20261019-gui-final3/steps.tsv": "6bc34a540011e7bb7ea1590bad80f8c9719d16aec2dbd934d3e0679c048a8504",
+    "extracted/goal-early-runtime-20261019-gui-final3/A.bmp": "6da9306407fd78632d30798baf4df57fd823f90a5401bc07259ac28853e40b33",
+    "extracted/goal-early-runtime-20261019-gui-final3/B.bmp": "c0ed05f53a4ad4dbf97b2fbd2ca6b7cbea05c2bb0d273a546fd8a81fa38cb501",
+    "extracted/goal-early-runtime-20261019-gui-final3/C.bmp": "72c32d89c099495721921b997184f2ed7a49b44a36d51be6a23189507256d618",
+    "extracted/goal-early-runtime-20261019-gui-final3/D.bmp": "7f8ee9ff2f8b9d8a3383823a6b6532323b17a7d3753384749257b312bf042c84",
+    "docs/exe/cpp-tutorial-one-runtime-20261019.md": "b1f53212d5b95e907029f82a64db98ed53ebc75446eb85510fbc005ed9ba7c2d"
+  },
+  "observation": {
+    "returnCode": 0,
+    "originalsUnchanged": true,
+    "stages": [
+      {
+        "stage": "A",
+        "built": 0,
+        "bridgeCells": 0,
+        "geysers": 0
+      },
+      {
+        "stage": "B",
+        "built": 0,
+        "bridgeCells": 0,
+        "geysers": 0
+      },
+      {
+        "stage": "C",
+        "built": 11,
+        "bridgeCells": 11,
+        "geysers": 0
+      },
+      {
+        "stage": "D",
+        "built": 20,
+        "bridgeCells": 20,
+        "geysers": 3
+      }
+    ],
+    "lastGameTime": 19.611,
+    "initialDoneFlag": 1,
+    "goalComplete": false,
+    "naturalHarvestVerified": false,
+    "scope": "실제 Early1의 A~D 안내/자기 정지/홈·다리 건설/간헐천 생성이다. 연결·수확·E~G/완주는 별도다."
+  },
+  "validation": {
+    "build": "build4/Release warnings0/errors0",
+    "fullTests": {
+      "count": 1721,
+      "failed": 0,
+      "seconds": 289.91
+    },
+    "entry": {
+      "passed": 11,
+      "originalsUnchanged": true
+    },
+    "audit": {
+      "tools": 136,
+      "passed": 121,
+      "historicalFailures": 15,
+      "newFailures": 0
+    },
+    "pins": {
+      "reports": 84,
+      "items": 225
+    },
+    "fixtures": {
+      "existingUnchanged": 417,
+      "newManualInput": 1,
+      "newNative": 0
+    },
+    "protectedFiles": 2127
+  },
+  "goalComplete": false,
+  "naturalHarvestVerified": false,
+  "missionVictoryVerified": false,
+  "supportedRuntime": "tutorialNumber=1/demo=0 only",
+  "remaining": [
+    "Early1 D→E/F/G 자연 연결·수확·SP200/600·완주",
+    "F8 Guide/기타 입력의 실제 원본 분배",
+    "Early2~6 전용 처리기 및 캠페인·데모 공통 프레임 연결",
+    "캠페인 자연 포획/희생/승리와11단계 자연 완주"
+  ]
+}

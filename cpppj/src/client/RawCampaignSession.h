@@ -36,6 +36,8 @@
 #include "client/RawCursorRange.h"
 #include "o/RawEnergySupply.h"
 #include "o/RawConstructionBuilder.h"
+#include "o/RawTutorialOne.h"
+#include "o/RawMissionFrameGate.h"
 #include "client/RawCampaignParticles.h"
 namespace netstorm::o { class RawCarrierSteal; class RawCarrierPickup; class RawCarrierMove; class RawGemReward; struct MissionStartGlobals; struct MissionAiSettingsState; } // 포획 몸체와 미션 시작 전역의 고정 참조만 공개한다.
 namespace netstorm::client {
@@ -171,6 +173,10 @@ public:
     const RawCampaignParticles& Particles() const;
     // 원본 미션 게이트의 첫 checkOutcome 위치에서만 호출한다. 설치/활성화 전에 자동 실행하지 않는다.
     void CheckMissionOutcome();
+    // 같은 현재 Player/ownerState를 읽는 원본4922e0이며 TellAt의 사제 생존 관문이다.
+    bool MissionPriestDead(std::uint32_t owner) const;
+    // 최근 간헐천5칸/현재 Player/장부/Graph/SP를 공유하는 Early1 판정기를 만든다. gate는 더 오래 살아야 한다.
+    std::unique_ptr<o::RawTutorialOne> MakeTutorialOne(o::RawMissionFrameGate& gate);
     // 원본 로그인/월드 로더가 공유하는 현재 globals.mySubscriber를 읽기만 한다. 별도 캐시를 만들지 않는다.
     std::uint32_t CurrentSubscriber() const;
     // 같은 실제 PlayerWorld의00540c70을 읽는다. 자산/UI 어댑터의 로컬 번호 사본을 사용하지 않는다.

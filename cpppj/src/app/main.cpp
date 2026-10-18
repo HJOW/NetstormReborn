@@ -667,18 +667,21 @@ int RunClient(std::vector<std::string> arguments) {
                     const auto found=keys.find(step.argument); if (found==keys.end()) throw std::invalid_argument("Unknown UI key: "+step.argument);
                     c.Input().Push((found->second<<InputCode::kVirtualKeyShift)|(step.operation=="keyup" ? InputCode::kRelease : 0),0,0); continue;
                 }
+                const bool optional=step.operation=="click-if" || step.operation=="up-if"; // 검사 전용: 현재 화면에 조작부가 없으면 사용자 클릭을 보내지 않는다.
+                const std::string_view operation=step.operation=="click-if" ? "click" : step.operation=="up-if" ? "up" : std::string_view(step.operation); // 기존 입력 주입 순서는 그대로 보존한다.
                 ScreenPoint point{};
-                if (step.operation == "click" || step.operation == "down" || step.operation == "up" || step.operation == "right") {
+                if (operation == "click" || operation == "down" || operation == "up" || operation == "right") {
                     const auto found = c.Menu()->ControlPoint(step.argument);
+                    if (!found && optional) continue; // 결과나 게임 상태를 바꾸지 않고 없는 조작만 생략한다.
                     if (!found) throw std::runtime_error("UI control not found: " + step.argument);
                     point = *found;
-                } else if (step.operation == "outside") point = {0, 0};
+                } else if (operation == "outside") point = {0, 0};
                 else throw std::invalid_argument("Unknown UI operation: " + step.operation);
                 // down 이후 프레임에서도 같은 위치를 폴링해 누름 캡처가 실제 바탕 화면 커서 때문에 취소되지 않게 한다.
-                scriptPointer=InputEvent{InputCode::kLeftButton | (step.operation=="down" || step.operation=="outside" ? 0U : InputCode::kRelease),point.x,point.y};
-                if (step.operation == "click" || step.operation == "down" || step.operation == "outside") c.Input().Push(InputCode::kLeftButton, point.x, point.y);
-                if (step.operation == "click" || step.operation == "up") c.Input().Push(InputCode::kLeftButton | InputCode::kRelease, point.x, point.y);
-                if (step.operation == "right") { c.Input().Push(InputCode::kRightButton, point.x, point.y); c.Input().Push(InputCode::kRightButton | InputCode::kRelease, point.x, point.y); }
+                scriptPointer=InputEvent{InputCode::kLeftButton | (operation=="down" || operation=="outside" ? 0U : InputCode::kRelease),point.x,point.y};
+                if (operation == "click" || operation == "down" || operation == "outside") c.Input().Push(InputCode::kLeftButton, point.x, point.y);
+                if (operation == "click" || operation == "up") c.Input().Push(InputCode::kLeftButton | InputCode::kRelease, point.x, point.y);
+                if (operation == "right") { c.Input().Push(InputCode::kRightButton, point.x, point.y); c.Input().Push(InputCode::kRightButton | InputCode::kRelease, point.x, point.y); }
             }
         };
         client.afterFrame = [&](netstorm::client::Client& c) {

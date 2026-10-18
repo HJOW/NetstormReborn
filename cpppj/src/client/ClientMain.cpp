@@ -347,7 +347,8 @@ int Client::Run() {
             TranslateMessage(&message);
             DispatchMessageA(&message);
         }
-        // 8. [원본] 튜토리얼 안내(FUN_00463f70) — 옮기지 않았다.
+        // 8. 원본 튜토리얼 안내(FUN_00463f70)의 현재 프레임을 입력보다 먼저 실행한다.
+        if (menu_) menu_->MissionFrame();
         // 9. 입력·명령 처리(FUN_004d62b0). 0이 아니면 종료 절차다.
         if (beforeInput) beforeInput(*this);
         if ((input && input(*this)) || (!input && menu_ && menu_->Input())) {

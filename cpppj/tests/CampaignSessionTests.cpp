@@ -1,3 +1,4 @@
+#include "client/RawCampaignTutorialOneBindings.h"
 #include "client/RawProductionControls.h"
 #include "o/RawBridgeDraw.h"
 #include "client/RawMenuControls.h"
@@ -2347,4 +2348,45 @@ TEST_CASE(CampaignSacrifice_ClickSkipsMultiplayerMenuAndKeepsRitualRequest) {
     }
     CHECK(born==5 && retired==5 && menus==0 && Get(core.pool.Slot(dais),36)==static_cast<std::uint32_t>(core.frames[165].Run('N').first));CHECK((core.pool.Slot(captured)[11]&3U)==0 && !core.processes.FindEvent(priest,604)); // 캠페인 보상·희생 완료는 별도 원본 경로이며 여기서 주입하지 않는다.
     std::cout<<"실제 캠페인 클릭: 멀티플레이 보상창0/40h1/의식 음악1/룬5 생성·소진, 희생 완료는 별도\n";
+}
+
+
+// 실제 Early1 로그인/영어 Start와 같은 판정기가10호출 안내·7호출 재개·F4 단계 예약을 공유하는지 검사한다.
+TEST_CASE(CampaignTutorialOne_ActualSessionFrameAndInputPauseOwnership) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();
+    ConfigInterface config([&](std::string_view path) { return assets.files.TryRead(path); });
+    config.Configuration().Assign("DataDir=\"d\"\ncurrentLanguage=\"english\"\nmissionSpec=\"{DataDir}\\{local.1}.{currentLanguage}\"\nfortSpec=\"{DataDir}\\{local.1}.fort\"\n[END]\n");
+    MissionScript script(config,"Tutorial1");CHECK(script.Loaded());bool dialog{};std::uint32_t depth{};double now=10;std::vector<std::string> pages;RawCampaignTutorialOneBindings* active{}; // 실제 UI/시계의 명시 외부 입력만 공급한다.
+    services.missionOutcome.demo=[] { return 0U; };services.missionOutcome.tellBlocked=[&] { return dialog ? 1U : 0U; };
+    services.missionOutcome.section=[&](std::string_view name) { CHECK(!script.Section(name));return false; }; // 이 보호 Early1에는 승패 사건 섹션이 없다.
+    services.missionOutcome.closeTransient=[] { throw std::logic_error("보호 Early1에 없는 승패 창 정리"); };
+    services.missionOutcome.onSection=[] { throw std::logic_error("보호 Early1에 없는 승패 창 정지"); };
+    CampaignLoginServices login;login.configInt=[](std::string_view,std::int32_t fallback) { return fallback; };login.wallSeconds=[] { return 100.25; };login.clock=[] { return 100250U; };login.refresh=[] {};login.playerUiBusy=[] { return false; };login.playerNotice=[](std::uint32_t,std::uint32_t,std::uint32_t) {};login.log=[](std::string_view) {};
+    services.ai.participation.addChat=[&external](std::uint32_t,std::string_view,std::uint32_t) { ++external.notices; };services.ai.participation.clearChat=[&external](std::uint32_t) { ++external.notices; }; // 로그인 패킷이 요청하는 실제 채팅 UI 경계를 명시한다.
+    services.localLogin=std::move(login);auto fort=FortTemplate::Parse(assets.files.Read(script.FortPath()),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),script.FortName(),std::move(services));session.LoadLocalConnection();
+    CHECK(session.LocalConnectionPhase()==14 && session.LocalOwner()==1 && session.PlayerKnown()==1 && session.Sp(1)==0 && !session.MissionPriestDead(1));
+    MissionFrameGateState gate;gate.tutorialNumber=1;MissionStartState startState;CampaignMissionStartEffects startEffects; // 단계/자금/완료 결과를 검사에서 지정하지 않는다.
+    startEffects.settingsBytes=[](std::uint32_t,std::span<std::uint8_t>) { throw std::logic_error("AI off Early1의 AI 생성 도달"); };startEffects.gameSeconds=[&] { return now; };startEffects.refreshSp=[] {};startEffects.refreshCommandGump=[] {};startEffects.resetCamera=[] {};startEffects.randomGeysers=[] { throw std::logic_error("Early1 Start의 세계 랜덤 간헐천"); };
+    RawCampaignMissionStartBindings start(session,script,gate,startState,session.MissionStartSettings(),session.MissionAiSettings(),std::move(startEffects));
+    CampaignTutorialOneEffects effects;effects.frame.gameSeconds=[&] { return now; };effects.frame.paused=[&] { return depth!=0; };effects.frame.dialogsClear=[&] { return !dialog; };effects.frame.knowledgeOpen=[] { return false; };effects.frame.guideOpen=[] { return false; };effects.frame.blockingGumpOpen=[] { return false; };
+    effects.frame.pause=[&] { ++depth; };effects.frame.resume=[&] { CHECK(depth>0);--depth; };effects.frame.endDemo=[] { throw std::logic_error("Early1의 데모 종료 도달"); };
+    effects.tell=[&](std::string_view name) { if (!script.Section(name)) return false;dialog=true;pages.emplace_back(name);return true; };
+    effects.closeTransient=[&] { CHECK(dialog && active && !gate.scriptPaused); }; // Tell→팝업 정리→자기 정지의 순서까지 관찰한다.
+    RawCampaignTutorialOneBindings runtime(session,script,start,gate,startState,std::move(effects));active=&runtime;
+    runtime.Frame();CHECK(!gate.started && pages.empty() && gate.lockFrames==10);start.Start();CHECK(gate.started && session.Sp(1)==0 && session.TotalMade().BuiltForGenus(4)==0);
+    // 입력이 없는 실제 화면 호출9회에는 초기 안내가 없고10회에만 A를 표시한다.
+    for (int frame=0;frame<9;++frame) runtime.Frame();
+    CHECK(pages.empty() && gate.lockFrames==1 && !depth);runtime.Frame();CHECK(pages==std::vector<std::string>{"A."} && dialog && depth==1 && gate.scriptPaused==1 && !gate.lockFrames && runtime.StageShown()==1);
+    runtime.Frame();CHECK(depth==1 && gate.clearFrames==0 && gate.stage=='A');dialog=false; // 사용자가 대화상자를 닫는 실제 UI 경계다.
+    // 연속 빈 호출6회에는 자기 정지가 남고7번째에 한 깊이만 반납한다.
+    for (int frame=0;frame<6;++frame) runtime.Frame();
+    CHECK(depth==1 && gate.clearFrames==6 && gate.stage=='A');runtime.Frame();CHECK(!depth && !gate.scriptPaused && !gate.clearFrames);
+    CHECK(runtime.Event({0x02000008U,0,0})==1 && gate.stage=='A'); // A에서 다리 취득 명령은 소비하며 진행값을 만들지 않는다.
+    CHECK(runtime.Event({0x020000aeU,0,0})==0 && gate.stage=='B' && gate.lockFrames==10 && gate.nextStageSeconds==10.5); // 실제 홈 명령이 원본 판정의 Advance를 호출한다.
+    now=10.499;runtime.Frame();CHECK(gate.lockFrames==10 && pages.size()==1);now=10.5;
+    // 다음 안내도 같은10호출 카운터를 사용한다.
+    for (int frame=0;frame<9;++frame) runtime.Frame();
+    CHECK(gate.lockFrames==1 && pages.size()==1);runtime.Frame();CHECK(gate.stage=='B' && pages==std::vector<std::string>({"A.","B."}) && depth==1 && dialog);
+    CHECK(runtime.Event({0x020000d3U,0,0})==1 && gate.stage=='B' && depth==1); // 정지 중 수동 단계 명령도 같은 원본 관문에서 거부한다.
+    CHECK(session.Sp(1)==0 && session.TotalMade().BuiltForGenus(4)==0 && session.Core().bookkeeping.depth==0 && session.Core().destroy.PreDepth()==0 && session.Core().destroy.PostDepth()==0);
 }

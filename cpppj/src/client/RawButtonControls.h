@@ -83,6 +83,8 @@ public:
     std::uint32_t GumpDepth(std::uint32_t token) const;
     // 00466710의 루트 직계 팝업 Kill만 요청한다. 현재 callback이 끝나기 전에 Cleanup하지 않는다.
     void RequestClosePopups();
+    // 004641d0: 현재 루트 직계 자식의4000h 플래그만 검사한다. focus/overlay 여부와 합치지 않는다.
+    bool BlockingGumpOpen() const;
     // 현재 raw value/pressed 중 하나라도 비영인 첫 돌 버튼 번호다.
     std::optional<int> Pressed() const;
     // 커서가 월드로 이동해도 release를 같은 raw 캡처에 먼저 전달할지 판정한다.

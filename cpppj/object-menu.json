@@ -64,7 +64,7 @@
       "cpppj/src/client/RawObjectMenu.cpp": "f64429574e0fd57e325cd99b47e3c46197979b5047d879b1a9693fda7d58a1ef",
       "cpppj/tests/ObjectMenuTests.cpp": "7485055d8b76db99eb8e2fc117f9d89eb4892c2620112c1afbb1ed267710aa37",
       "cpppj/tests/RawMenuControlsTests.cpp": "5ce029d5ba102c1784696d8df58e3f3691b6bdf01671b013793a6e504fbfc4f4",
-      "cpppj/src/client/CMakeLists.txt": "201936b3366bc9a17cff0d46864fd0edfdabc721f115500a3e53b74dccfcd37f",
+      "cpppj/src/client/CMakeLists.txt": "ea7b520652a0a21cdaeb2852aae3992c3e361b5d01426f285056dbb1508f6ccd",
       "cpppj/tests/CMakeLists.txt": "889efbf2ee9336dad4a80cae9bc811c380d9e955b2746743b049efcbae9d27ae"
     }
   },
@@ -1159,6 +1159,19 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "34b1cd6daeb73134a9a2a148fb503f334dc8527e6a9ac141e61cb8b0018231b1",
           "current": "889efbf2ee9336dad4a80cae9bc811c380d9e955b2746743b049efcbae9d27ae"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 202,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/product_validation/sha256",
+          "path": "cpppj/src/client/CMakeLists.txt",
+          "previous": "201936b3366bc9a17cff0d46864fd0edfdabc721f115500a3e53b74dccfcd37f",
+          "current": "ea7b520652a0a21cdaeb2852aae3992c3e361b5d01426f285056dbb1508f6ccd"
         }
       ]
     }

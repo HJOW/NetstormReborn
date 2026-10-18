@@ -22,8 +22,9 @@ def probe(mission,clicks,index,output):
     """관측한 실제 클릭 접두만 새 클론에서 재생하고 마지막 입력 다음 프레임을 읽는다."""
     directory=output/mission/str(index)
     directory.mkdir(parents=True,exist_ok=True)
-    frame=4+2*len(clicks) #마지막 클릭은frame-1이다. UI 입력 소비 전의 이전 페이지를 읽지 않는다.
-    steps=[(5+i*2,'click',label) for i,label in enumerate(clicks)] #직전 관측에서 보였던 버튼만 순서대로 클릭한다.
+    base,gap=(20,20) if mission=='tutorial1' else (4,2) #Early1은 원본10호출 안내/7호출 재개가 끝난 뒤 관측한다.
+    frame=base+gap*len(clicks) #기존 미션의 관측/입력 시점은 보존한다.
+    steps=[(base+1+i*gap,'click',label) for i,label in enumerate(clicks)] #직전 관측에서 보였던 버튼만 순서대로 클릭한다.
     steps.extend(((frame,'report','current'),(frame,'snapshot',str(directory/'current.bmp'))))
     script=directory/'steps.tsv'
     script.write_text(''.join(f'{number}\t{operation}\t{argument}\n' for number,operation,argument in steps),encoding='utf-8',newline='\n')
@@ -43,7 +44,7 @@ def probe(mission,clicks,index,output):
     return dict(frame=frame,phase=current['phase'],paused=current['paused'],page=current['page'],
                 controls=current['controls'],mission=current['mission'],raw_world=current['raw_world'],
                 priestOwners=[v[1] for v in current['objects'].values() if v[0]=='priest'],
-                mission_start=current['mission_start'],mission_rules=current['mission_rules'],
+                mission_start=current['mission_start'],mission_rules=current['mission_rules'],mission_gate=current['mission_gate'],
                 raw_session=current['raw_session'],raw_sp=current['raw_sp'],raw_brains=current['raw_brains'],raw_technology=current['raw_technology'],
                 directory=directory.as_posix(),exitCode=result.returncode)
 
@@ -63,6 +64,8 @@ def check(mission,output):
             if current['phase']==['4'] and current['paused']==['0']:
                 assert '1' in current['priestOwners'] and current['raw_world'][6:9]==['0','0','0'],current
                 assert current['mission_start'][:3]==['1','1','0'],current
+                if mission=='tutorial1':
+                    assert current['mission_gate'][:6]==['1','65','0','0','0','1'],current #원본A 안내와 자기 정지의 해제를 확인하고 진입으로 센다.
                 assert current['raw_session']==['1','1'] and float(current['raw_sp'][1])==money,current
                 assert sorted(current['raw_technology'])==technology,current
                 assert current['raw_brains'][1]=='0',current #CLI MissionBegin은 이름이 데모여도 로컬 AI를 만들지 않는다.

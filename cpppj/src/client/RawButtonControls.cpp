@@ -254,6 +254,13 @@ void RawButtonControls::RequestClosePopups() {
     if (!impl_->menus) throw std::logic_error("실제 Gump 팝업 수명 처리기 미연결");
     impl_->menus->RequestClosePopups();
 }
+// 원본처럼 현재 직계 연결을 순회한다. dead/visible 필터를 추가하지 않는다.
+bool RawButtonControls::BlockingGumpOpen() const {
+    // 콜백 없이 읽기만 하므로 현재 자식의 다음 링크를 순서대로 읽는다.
+    for (auto token=impl_->Node(impl_->root)->child;token;token=impl_->Node(token)->next)
+        if ((impl_->Node(token)->flags&0x4000U)!=0) return true;
+    return false;
+}
 // 렌더링이 이전 어댑터의 캡처 사본을 조회하지 않게 현재 raw 상태만 읽는다.
 std::optional<int> RawButtonControls::Pressed() const {
     // 표시 명령 번호 순서는 부모 트리 방문 순서와 구별한다.

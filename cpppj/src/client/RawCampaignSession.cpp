@@ -350,6 +350,7 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawShapeToBuffer> shrapnelCapture; // 같은 raw/보호 SHP의 실제 캡처이며 표시보다 오래 산다.
     std::unique_ptr<RawCampaignParticles> particles; // 같은 Host/Kernel/Renderer의 실제11/19/16 표시다.
     std::uint32_t archerCommand{0x030000b0}; // 보호 PE의 실제 입력 토큰이다.
+    std::uint32_t tutorialHomeCommand{0x020000aeU},tutorialReclaimCommand{0x02000008U}; // 보호PE5429ac/54271c의 같은 입력 토큰 저장소다.
     std::unique_ptr<RawCampaignAssetBindings> assetBindings; // 실제 저장 건물 후처리와 Gun/Regular다.
     CanonPlacementPipelineState gameplayPlacement; // 생성용 지형 판정과 구별한 실제 요청/커서의 현재 모드·방향 동맹이다.
     std::array<CanonPlacementIslandRegion,100> gameplayRegions{}; // 같은 원본32바이트 섬 기록의 현재 제한/존재 view다.
@@ -2252,6 +2253,20 @@ const RawCampaignConstructionBindings& RawCampaignSession::Construction() const 
 const RawCampaignProductionBindings& RawCampaignSession::Production() const { return *impl_->production; }
 // 현재 세 카운터와 생산이 사용하는 같은 금지DWORD 표를 빌린다.
 RawTotalMade& RawCampaignSession::TotalMade() { return *impl_->totalMade; }
+// 같은 실제 outcome이 읽는 Player 활성/현재 ownerState 판정을 재사용한다.
+bool RawCampaignSession::MissionPriestDead(std::uint32_t owner) const { return impl_->outcome->PriestDead(owner); }
+// 초기 미션을 복제하지 않고 실제 현재 장부/Player/최근5목록/Graph/SP를 원본 판정기에 연결한다.
+std::unique_ptr<RawTutorialOne> RawCampaignSession::MakeTutorialOne(RawMissionFrameGate& gate) {
+    if (!impl_->loaded) throw std::logic_error("설치 전 Early1 실제 판정 연결");
+    TutorialOneHooks hooks; // 게임 결과는 현재 실제 모듈이 계산한다.
+    hooks.builtForGenus=[this](std::uint32_t genus) { return impl_->totalMade->BuiltForGenus(genus); };
+    hooks.graphFor=[this](std::uint32_t sid) { return impl_->anchor->GraphFor(sid); };
+    hooks.money=[this](std::uint32_t owner) { return Sp(owner); };
+    hooks.advance=[&gate] { static_cast<void>(gate.Advance()); };
+    hooks.spawnGeysers=[this] { GenerateLocalGeysers(); };
+    return std::make_unique<RawTutorialOne>(TutorialOneState{gate.State().stage,impl_->playerState.battleOwner,
+        impl_->playerState.playerKnown,impl_->tutorialHomeCommand,impl_->tutorialReclaimCommand},impl_->players,impl_->recentGeysers,std::move(hooks));
+}
 // 같은 PlayerWorld 생성자/Owner/직접frame0/Pop으로 실제 기술 부모 기록을 설치한다.
 Sid RawCampaignSession::CreatePlayer(std::int32_t owner) { if (!impl_->loaded) throw std::logic_error("미설치 Session의 Player 생성");return impl_->player->Create(owner); }
 // 원본 시작/AI 기술 처리가 사용하는 같은 현재 부모/실제 contained 생성 경로다.

@@ -55,7 +55,7 @@
     "originals/d/GIFCLOUD.COL": "785a2cda6ac1d3e295d375815b6d9650720683099db7c249382d598b5da00532"
   },
   "currentSources": {
-    "cpppj/src/client/CMakeLists.txt": "201936b3366bc9a17cff0d46864fd0edfdabc721f115500a3e53b74dccfcd37f",
+    "cpppj/src/client/CMakeLists.txt": "ea7b520652a0a21cdaeb2852aae3992c3e361b5d01426f285056dbb1508f6ccd",
     "cpppj/tests/CMakeLists.txt": "889efbf2ee9336dad4a80cae9bc811c380d9e955b2746743b049efcbae9d27ae",
     "cpppj/src/client/QuickHelpRequest.h": "f1047e2c382fdb077864b5ef86036954092182ad903a2c648cdf9bf4e23867e5",
     "cpppj/src/client/QuickHelpRequest.cpp": "4133146285adb82806679819621d44ee8e6f5f6fd411c543e85c230c1216316e",
@@ -276,6 +276,19 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "34b1cd6daeb73134a9a2a148fb503f334dc8527e6a9ac141e61cb8b0018231b1",
           "current": "889efbf2ee9336dad4a80cae9bc811c380d9e955b2746743b049efcbae9d27ae"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 202,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/CMakeLists.txt",
+          "previous": "201936b3366bc9a17cff0d46864fd0edfdabc721f115500a3e53b74dccfcd37f",
+          "current": "ea7b520652a0a21cdaeb2852aae3992c3e361b5d01426f285056dbb1508f6ccd"
         }
       ]
     }

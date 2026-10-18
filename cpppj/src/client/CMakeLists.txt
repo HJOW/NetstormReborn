@@ -19,6 +19,8 @@ target_sources(netstorm PRIVATE
     RawCampaignProductionBindings.cpp RawCampaignProductionBindings.h
     # 실제 미션 Start의 같은 Script/Player/SP/기술/AI 설정을 연결한다.
     RawCampaignMissionStartBindings.cpp RawCampaignMissionStartBindings.h
+    # Early1의 같은 실제 프레임/입력/장부와 안내 정지를 연결한다.
+    RawCampaignTutorialOneBindings.cpp RawCampaignTutorialOneBindings.h
     CampaignClientServices.cpp CampaignClientServices.h
     ClientAudio.h
     ClientMain.cpp

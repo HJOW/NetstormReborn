@@ -95,13 +95,13 @@
   },
   "currentSources": {
     "cpppj/src/client/RawCampaignRitual.inc": "58bedee7b6bd9673e2ce45ac016f9421ef33ac4bd974e306dd54f83c631fe9f0",
-    "cpppj/src/client/RawCampaignSession.cpp": "2efb1ffe0595bd6ec1318fb965d8c984653899839761f5cca6db9b71345e6308",
+    "cpppj/src/client/RawCampaignSession.cpp": "940749f6687b7d65418f3dc7b8b9a75c8cd07fc8ee78cb408480274008b18c88",
     "cpppj/src/client/RawCampaignSessionLogin.inc": "3a2b40c9dec5df78d6d77cd0b13b5e438b4b21b12e956ba799ede27f51fc8cdc",
     "cpppj/src/o/RawDaisLifecycle.cpp": "e5d735f9ecea927d815c8cffe32b6bf5e14849aa4c72c1ee2710031c289f2c00",
     "cpppj/src/o/RawDaisLifecycle.h": "f5eed7df17f021e3c80091c50603f66828e21b5d8397137ffe3223e7e5d65b10",
     "cpppj/src/o/RawDaisRegular.cpp": "5f48cd4e706a8a904a6a03b19b2f1e235fed581159291132b632df557c4fadb2",
     "cpppj/src/o/RawDaisRegular.h": "6d69e7b9c01b9dcc908fa0e8d2b4170f60536d9c571565e0fd1128db35fe7b73",
-    "cpppj/tests/CampaignSessionTests.cpp": "ff150edde0596349c7b6155caac9de7df3dbea9c42237eccc8fb535a3c736f16",
+    "cpppj/tests/CampaignSessionTests.cpp": "c6e7d4e27e8f69ffbbc08aaeb86ff98eef32d65bcf906c49712fb1a4464a1603",
     "cpppj/tests/DaisLifecycleTests.cpp": "30f2901c1e18d470e8b45ed3fb334ccd30774c0f6cefb1118ff9b886f46927b7"
   },
   "binaries": {
@@ -428,6 +428,25 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "530ae4a707f6f82b4eaeab6c3f7f30471da1de5314ea544abdca9075fa1cdb41",
           "current": "ff150edde0596349c7b6155caac9de7df3dbea9c42237eccc8fb535a3c736f16"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 202,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "2efb1ffe0595bd6ec1318fb965d8c984653899839761f5cca6db9b71345e6308",
+          "current": "940749f6687b7d65418f3dc7b8b9a75c8cd07fc8ee78cb408480274008b18c88"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "ff150edde0596349c7b6155caac9de7df3dbea9c42237eccc8fb535a3c736f16",
+          "current": "c6e7d4e27e8f69ffbbc08aaeb86ff98eef32d65bcf906c49712fb1a4464a1603"
         }
       ]
     }

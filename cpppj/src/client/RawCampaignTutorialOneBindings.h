@@ -1,0 +1,39 @@
+// Early1의 공통 프레임과 단계 안내를 같은 실제 Session/Start/UI에 연결한다.
+#pragma once
+#include "client/RawCampaignMissionStartBindings.h"
+
+namespace netstorm::client {
+// 화면 루프와 실제 입력이 함께 읽는 현재 UI/시계 소비자다.
+struct CampaignTutorialOneEffects {
+    o::MissionFrameGateHooks frame; // 실제 시계/정지/UI 조회다. 게임 판정과 Tell 분배는 이 연결부가 공급한다.
+    std::function<bool(std::string_view)> tell; // 현재 미션에 존재하는 섹션만 실행한다.
+    std::function<void()> closeTransient; // 원본66710의 실제 팝업 Kill 요청이다.
+};
+// Early2~6의 아직 연결하지 않은 소비자를 빈 성공으로 분배하지 않는다. 이 연결은 Early1 전용이다.
+class RawCampaignTutorialOneBindings {
+public:
+    // 같은 장기 Session/Script/Start/gate/state를 빌리며 생성만으로 프레임을 실행하지 않는다.
+    RawCampaignTutorialOneBindings(RawCampaignSession& session,MissionScript& script,
+        RawCampaignMissionStartBindings& start,o::MissionFrameGateState& gate,o::MissionStartState& state,
+        CampaignTutorialOneEffects effects);
+    RawCampaignTutorialOneBindings(const RawCampaignTutorialOneBindings&)=delete; // callback의 this와 실제 gate 주소를 고정한다. 이동도 허용하지 않는다.
+    RawCampaignTutorialOneBindings& operator=(const RawCampaignTutorialOneBindings&)=delete; // 같은 장기 상태의 참조를 다른 연결 주소로 복제하지 않는다.
+    void Frame() const; // 4c4770: 사건0으로 공통 프레임을 한 번 실행한다.
+    std::uint32_t Event(const InputEvent& event) const; // 4c33a0: 단계/시간 안내 명령을 먼저 소비한 뒤 현재 사건을 전달한다.
+    void TellStage() const; // 4c2a90: 현재 단계 문자열→Tell→팝업 Kill→자기 정지 순서다.
+    void TellAt() const; // 4c3470: 사제 생존→현재 목록 Tell→인덱스 증가→다음 예약이다.
+    o::RawMissionFrameGate& Gate(); // 후속 UI가 같은 자기 정지 표식을 사용한다.
+    std::uint32_t StageShown() const; // 원본+b4의 마지막 TellStage 반환값을 보고한다.
+private:
+    o::MissionFrameGateHooks Hooks(); // 실제 게임/안내 경계를 묶고 UI/시계 경계는 그대로 보존한다.
+    RawCampaignSession& session_; // 현재 객체/Player/장부/간헐천의 유일한 저장소다.
+    MissionScript& script_; // 현재 미션의 tellAtList/섹션을 직접 읽는다.
+    RawCampaignMissionStartBindings& start_; // 같은 Start의 RefreshTellAt을 사용한다.
+    o::MissionFrameGateState& state_; // 단계/잠금/정지/시각의 단일 저장소다.
+    o::MissionStartState& startState_; // 같은 현재 tellAtIndex를 읽고 쓴다.
+    CampaignTutorialOneEffects effects_; // 실제 화면/시계/팝업의 외부 소비자다.
+    o::RawMissionFrameGate gate_; // 독립 원본328입력으로 검증된 공통 몸체다.
+    std::unique_ptr<o::RawTutorialOne> tutorial_; // 현재 장부와 최근 간헐천 목록을 참조하는 원본 판정기다.
+    mutable std::uint32_t stageShown_{}; // 원본+b4이며 TellStage가 성공 여부를 마지막에 기록한다.
+};
+}
