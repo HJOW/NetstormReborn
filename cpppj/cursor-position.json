@@ -32,7 +32,7 @@
     "cpppj/tests/CursorPositionTests.cpp": "111ab2b59d662bacc5b51bb44d54fccec4260df86f15502e370a35d7d13a73f1",
     "cpppj/tests/CursorPreviewSupport.h": "fa4e6b6d54bbc564af308ffd154f2ced7482a131c542222c0342e6019d6c9084",
     "cpppj/src/client/CMakeLists.txt": "b430423cb42e61cd75fc9aeeff7f1c9fed72b935119c84f737bd85d87df31c34",
-    "cpppj/tests/CMakeLists.txt": "710ac27699ae0c3cf48e4b9175b648e4af571e83c8fd5f13cc817c753a20abdb"
+    "cpppj/tests/CMakeLists.txt": "1f85fc7d791b2c7d0b771faad4c37b4230616f3e958c49d1961122a9a77e1519"
   },
   "limitations": [
     "실제 정수 위치 갱신/역투영/CRT 절삭을 실행한다. 단독 입력의 Activate/Create/선택은 명시 효과다.",
@@ -717,6 +717,19 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "0a4bfb693118cca965cd932341ade3b29b42c484a8c0aad08f821891ae54d509",
           "current": "710ac27699ae0c3cf48e4b9175b648e4af571e83c8fd5f13cc817c753a20abdb"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 172,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/sha256",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "710ac27699ae0c3cf48e4b9175b648e4af571e83c8fd5f13cc817c753a20abdb",
+          "current": "1f85fc7d791b2c7d0b771faad4c37b4230616f3e958c49d1961122a9a77e1519"
         }
       ]
     }

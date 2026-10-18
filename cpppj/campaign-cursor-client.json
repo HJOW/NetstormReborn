@@ -32,7 +32,7 @@
     "cpppj/src/client/UserInput.cpp": "fd1bee42a48c4a33098114e813a7909d449791671fb0e313b76efc55216c20bd",
     "cpppj/src/o/SquidFactory.h": "439126b14875597ae876ab82d1699d414fa15fdf76ec9ac83f6794d32595c549",
     "cpppj/src/o/SquidReward.h": "59cf154a0aa681fbce7bdf445728afc582409bd9af9b24e5b135e435e92aa362",
-    "cpppj/tests/CMakeLists.txt": "710ac27699ae0c3cf48e4b9175b648e4af571e83c8fd5f13cc817c753a20abdb",
+    "cpppj/tests/CMakeLists.txt": "1f85fc7d791b2c7d0b771faad4c37b4230616f3e958c49d1961122a9a77e1519",
     "cpppj/tests/CampaignCursorClientEffectsTests.cpp": "f04679442eea66764f77ab814314c9edd1790dca1f61f39e95eb29804b78d92b",
     "cpppj/tests/CampaignObjectMenuTests.cpp": "fea9198ea2150c42bb523f7ac9298c2f819acd1fc9b9887b53020c206ad62563",
     "cpppj/tests/CampaignSessionTests.cpp": "fbe93163d865a6ebe8adb48db980a3170da2d5b3a5c7be921785ce39839082a8",
@@ -1332,6 +1332,19 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "0a4bfb693118cca965cd932341ade3b29b42c484a8c0aad08f821891ae54d509",
           "current": "710ac27699ae0c3cf48e4b9175b648e4af571e83c8fd5f13cc817c753a20abdb"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 172,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "710ac27699ae0c3cf48e4b9175b648e4af571e83c8fd5f13cc817c753a20abdb",
+          "current": "1f85fc7d791b2c7d0b771faad4c37b4230616f3e958c49d1961122a9a77e1519"
         }
       ]
     }

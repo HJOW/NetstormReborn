@@ -314,3 +314,6 @@ target_sources(netstorm PRIVATE RawConstructionCommand.cpp RawConstructionComman
 
 # Factory 기본 프레임과 별도 추가 그림을 실제 현재 슬롯에서 조회한다.
 target_sources(netstorm PRIVATE RawFactoryDraw.cpp RawFactoryDraw.h)
+
+# 실제 연구58h/예측 교체/Factory 내용물 통지의 독립 몸체다.
+target_sources(netstorm PRIVATE RawFactoryResearch.cpp RawFactoryResearch.h)

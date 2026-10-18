@@ -31,7 +31,7 @@
     "cpppj/tests/CarrierTransferTests.cpp": "ea98b1fdd347b04d35a2a8fed0c14c5db02d73e83de64cb0505427b259c9b449",
     "cpppj/tests/CampaignObjectMenuTests.cpp": "fea9198ea2150c42bb523f7ac9298c2f819acd1fc9b9887b53020c206ad62563",
     "cpppj/src/CMakeLists.txt": "8bcbbd1445cf96d31be4573fad443d8fe2248455bdda11abd9015f94821b7b26",
-    "cpppj/tests/CMakeLists.txt": "710ac27699ae0c3cf48e4b9175b648e4af571e83c8fd5f13cc817c753a20abdb"
+    "cpppj/tests/CMakeLists.txt": "1f85fc7d791b2c7d0b771faad4c37b4230616f3e958c49d1961122a9a77e1519"
   },
   "nativeReports": {
     "cpppj/carrier-transfer.json": "dec792141b89f10a971cde77430358711301b4ae84bfc399a32bbc2bb9a4baf4"
@@ -726,6 +726,19 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "0a4bfb693118cca965cd932341ade3b29b42c484a8c0aad08f821891ae54d509",
           "current": "710ac27699ae0c3cf48e4b9175b648e4af571e83c8fd5f13cc817c753a20abdb"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 172,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "710ac27699ae0c3cf48e4b9175b648e4af571e83c8fd5f13cc817c753a20abdb",
+          "current": "1f85fc7d791b2c7d0b771faad4c37b4230616f3e958c49d1961122a9a77e1519"
         }
       ]
     }

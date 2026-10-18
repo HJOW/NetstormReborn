@@ -1,0 +1,55 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-18",
+  "unit": 172,
+  "rows": 216,
+  "counts": {
+    "Learn": 32,
+    "Input": 72,
+    "Receive": 16,
+    "Notice": 96
+  },
+  "normalReturns": 432,
+  "controls": [
+    639,
+    895
+  ],
+  "precisionDifferences": 0,
+  "instructions": 24494,
+  "nativeCalls": {
+    "0x453cc0": 148,
+    "0x4547d0": 144,
+    "0x40aba0": 72,
+    "0x4df230": 72,
+    "0x453d70": 32,
+    "0x453b50": 192,
+    "0x475220": 192,
+    "0x41bce0": 8
+  },
+  "boundaries": {
+    "0x4ac9f0": 280,
+    "0x4752b0": 256,
+    "0x4c2630": 256,
+    "0x4afa70": 84,
+    "0x4af780": 60,
+    "0x4e0620": 26,
+    "0x4c63d0": 36,
+    "0x4e2dc0": 72,
+    "0x4ac200": 24,
+    "0x44f7c0": 16,
+    "0x45a6c0": 16
+  },
+  "sha256": {
+    "cpppj/tests/fixtures/factory-research-x86.tsv": "d9fb839cef70c799e863d90ddc86d50eaf081b9e8b21a886495ee5af12200c8d",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_factory_menu.py": "bd889d1fe373053c80fe804517858cf83102fbf36cbe724d989e4aa0c3e605cc",
+    "tools/decomp_factory_research.py": "f17c963ebc176d534fbf17539d97c80052c821f415bdb698cb663a3ee13e7f3e",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9"
+  },
+  "limits": [
+    "연구의 실제 분기·요청·통지를 관측하며 게임 생성/검색/삭제/송신/플레어 생성은 경계 입력이다.",
+    "연구 외 업그레이드 진행은 이번 입력 범위에서 제외했다. 원본 게임/OS/새 디컴파일은 실행하지 않는다."
+  ]
+}

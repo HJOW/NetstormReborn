@@ -27,7 +27,7 @@
     "cpppj/src/o/RawPlayerTemplateState.h": "94d77a52e0d7d3f218732b27acf4039d293dae1b4041a723db88669a51c4b77e",
     "cpppj/src/zacket/LocalMissionTransport.cpp": "f659b7bbcfcd3923147472a099fcf74c04014e0005eff3e46d273898c4a2d92a",
     "cpppj/src/zacket/LocalMissionTransport.h": "cb2a6db9ba11d2be26699fa0675ecc4a2714969b58c96a94275071fbd3464ee2",
-    "cpppj/tests/CMakeLists.txt": "710ac27699ae0c3cf48e4b9175b648e4af571e83c8fd5f13cc817c753a20abdb",
+    "cpppj/tests/CMakeLists.txt": "1f85fc7d791b2c7d0b771faad4c37b4230616f3e958c49d1961122a9a77e1519",
     "cpppj/tests/CampaignSessionTests.cpp": "fbe93163d865a6ebe8adb48db980a3170da2d5b3a5c7be921785ce39839082a8",
     "cpppj/tests/LocalMissionTransportTests.cpp": "4091601c094ddeb30f2795aaa7c991770196fcfdf2c1d1ed9da9f124ac8d1938",
     "tools/cpp_campaign_entry_smoke.py": "59b39e067a2e51cc7f6358d8adc198e4cbd5682bc6109e9b1e0407fa7f3550aa",
@@ -2290,6 +2290,19 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "0a4bfb693118cca965cd932341ade3b29b42c484a8c0aad08f821891ae54d509",
           "current": "710ac27699ae0c3cf48e4b9175b648e4af571e83c8fd5f13cc817c753a20abdb"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 172,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "710ac27699ae0c3cf48e4b9175b648e4af571e83c8fd5f13cc817c753a20abdb",
+          "current": "1f85fc7d791b2c7d0b771faad4c37b4230616f3e958c49d1961122a9a77e1519"
         }
       ]
     }

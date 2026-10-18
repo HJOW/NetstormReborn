@@ -1494,3 +1494,8 @@ set_source_files_properties(SpriteColorMapsTests.cpp PROPERTIES COMPILE_DEFINITI
 target_sources(netstorm_tests PRIVATE FactoryMenuTests.cpp)
 set_source_files_properties(FactoryMenuTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_FACTORY_MENU_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/factory-menu-x86.tsv\"")
+
+# 원본 연구216행을 새 몸체와 대조하며 기대값을 생성하지 않는다.
+target_sources(netstorm_tests PRIVATE FactoryResearchTests.cpp)
+set_source_files_properties(FactoryResearchTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_FACTORY_RESEARCH_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/factory-research-x86.tsv\"")

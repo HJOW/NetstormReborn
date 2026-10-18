@@ -19,8 +19,8 @@
     "cpppj/src/client/RawShapeToBuffer.cpp": "a6e46ce3d717dd312323268a0bb1ebcd020d992c583d9a3d6e069588fbb50eab",
     "cpppj/src/client/RawShapeToBuffer.h": "f3788fbcdacd21dd4dabac2c63c96fbd4d28e1c27c9a19cf8b6519f98852a119",
     "cpppj/src/client/RawSurfaceWorld.cpp": "f3b1199c44bda39e74c1b8fcb424576a9a91fffc6e2d841d3a79abc469cc5dc7",
-    "cpppj/src/o/CMakeLists.txt": "484d120616e312b75abe4a69a105cb6fc300a9d3965535cd9620ec5ab663a6e1",
-    "cpppj/tests/CMakeLists.txt": "710ac27699ae0c3cf48e4b9175b648e4af571e83c8fd5f13cc817c753a20abdb",
+    "cpppj/src/o/CMakeLists.txt": "89eb023f91d5ccf5a9e51a6b232283893e67f6d1694eea06d38eb972a9e67394",
+    "cpppj/tests/CMakeLists.txt": "1f85fc7d791b2c7d0b771faad4c37b4230616f3e958c49d1961122a9a77e1519",
     "cpppj/tests/CampaignSessionTests.cpp": "fbe93163d865a6ebe8adb48db980a3170da2d5b3a5c7be921785ce39839082a8",
     "cpppj/tests/ShapeToBufferTests.cpp": "0dc5ddc7f71ce2b7a12ff4dcaae45a47b4c7d6fefa676129fb19b5556e3312ab",
     "tools/cpp_priest_construction_smoke.py": "42e462bba5ddb36a8c4121b88b995258899648b55468147d340d0c71172c0bd0",
@@ -4960,6 +4960,25 @@
           "path": "tools/cpp_priest_construction_smoke.py",
           "previous": "738029d4170096d0d86503e89f148a0ecf262429998ee5a822dd0a3e0dcebc9b",
           "current": "42e462bba5ddb36a8c4121b88b995258899648b55468147d340d0c71172c0bd0"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 172,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/o/CMakeLists.txt",
+          "previous": "484d120616e312b75abe4a69a105cb6fc300a9d3965535cd9620ec5ab663a6e1",
+          "current": "89eb023f91d5ccf5a9e51a6b232283893e67f6d1694eea06d38eb972a9e67394"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "710ac27699ae0c3cf48e4b9175b648e4af571e83c8fd5f13cc817c753a20abdb",
+          "current": "1f85fc7d791b2c7d0b771faad4c37b4230616f3e958c49d1961122a9a77e1519"
         }
       ]
     }

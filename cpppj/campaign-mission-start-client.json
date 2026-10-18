@@ -48,7 +48,7 @@
     "cpppj/src/client/UberGump.h": "4f3ae5c624ea7db55d37a10cb7bedfb21129dc02f7414712baabd0eb6df59d2b",
     "cpppj/src/o/RawPlayerParticipation.cpp": "682b1cf72b1889d2bf44540446d5cba40c24679e9e99055b154155224185dec7",
     "cpppj/src/o/RawPlayerParticipation.h": "22d0031dd843733a9452f9ee497d79e7028a40915524bf11ca4ff59b549b1cb4",
-    "cpppj/tests/CMakeLists.txt": "710ac27699ae0c3cf48e4b9175b648e4af571e83c8fd5f13cc817c753a20abdb",
+    "cpppj/tests/CMakeLists.txt": "1f85fc7d791b2c7d0b771faad4c37b4230616f3e958c49d1961122a9a77e1519",
     "cpppj/tests/CampaignSessionTests.cpp": "fbe93163d865a6ebe8adb48db980a3170da2d5b3a5c7be921785ce39839082a8",
     "cpppj/tests/PlayerParticipationTests.cpp": "bc12a931238ba42474504a56c6217253173f37c43021fb31f203814f20f22e3b",
     "tools/cpp_goal_stage_entry_smoke.py": "26556480ac205c1ca4a8abb3b90910e7daa7f7307bfcb88b7c791496d7f04b9a",
@@ -3963,6 +3963,19 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "0a4bfb693118cca965cd932341ade3b29b42c484a8c0aad08f821891ae54d509",
           "current": "710ac27699ae0c3cf48e4b9175b648e4af571e83c8fd5f13cc817c753a20abdb"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 172,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "710ac27699ae0c3cf48e4b9175b648e4af571e83c8fd5f13cc817c753a20abdb",
+          "current": "1f85fc7d791b2c7d0b771faad4c37b4230616f3e958c49d1961122a9a77e1519"
         }
       ]
     }
