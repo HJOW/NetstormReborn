@@ -47,15 +47,15 @@
   ],
   "baseCommit": "aa054a6",
   "currentSources": {
-    "cpppj/src/client/RawCampaignSession.cpp": "3b11a577d8e307292f0bfe1280f3392dcb61bf7e7043bfb919aa55b2632f36a6",
-    "cpppj/src/client/RawCampaignSession.h": "ba2286905d1d7f95c55e1e4ce8b31aff65f234665c7665eb9864491f121e98a4",
+    "cpppj/src/client/RawCampaignSession.cpp": "224dd61f5699668b8f162dc40567162fc4aee1fc7f524708dca7a5a2f8bf55dc",
+    "cpppj/src/client/RawCampaignSession.h": "7b100e9e5a999701403eb225c5bc1ef1bed2b5ba01c809fe979eeda456e3b11d",
     "cpppj/src/client/RawCampaignConstructionBindings.cpp": "ee1d38d554fb25e502d0dc54cb19a55f501a45860e5612ca9666ca0f7ec2d2cf",
     "cpppj/src/client/RawCampaignConstructionBindings.h": "9d16b7a6b2ff2c5033dcf1b8a8ff1c73429715c8444f5553c84afe1a93c6ef65",
-    "cpppj/src/o/CMakeLists.txt": "89eb023f91d5ccf5a9e51a6b232283893e67f6d1694eea06d38eb972a9e67394",
+    "cpppj/src/o/CMakeLists.txt": "a41937fb02fbbde02b4357db1d0a02dd1e38aa1fcbeb71e7b83fa429f5540c36",
     "cpppj/src/o/RawConstructionCommand.cpp": "6bbc699ba2fdda0bf9de46d9386da677acb9d70bcd297a490f6fe210ceeab15a",
     "cpppj/src/o/RawConstructionCommand.h": "7db4c56243619ccd34bf4fa40bacf50ff42a57b1804f0a740183c39d824eea7a",
-    "cpppj/tests/CMakeLists.txt": "1f85fc7d791b2c7d0b771faad4c37b4230616f3e958c49d1961122a9a77e1519",
-    "cpppj/tests/CampaignSessionTests.cpp": "fbe93163d865a6ebe8adb48db980a3170da2d5b3a5c7be921785ce39839082a8",
+    "cpppj/tests/CMakeLists.txt": "3990ad404b40b6f57424fc4fee7bb6c5d7b9f3a4f702c9fb596bd83a0bbf5413",
+    "cpppj/tests/CampaignSessionTests.cpp": "ca5e6b9f88237c733a4fab7fd2f86943f272cbb1ef988ebda777e079beb4fe2b",
     "cpppj/tests/ConstructionCommandTests.cpp": "8ca02e9dbb4574f9f758ba2bb7408d1dd542eb9618e92ac1c0a9048a704eb154"
   },
   "protectedFileSha256": {
@@ -1023,6 +1023,43 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "710ac27699ae0c3cf48e4b9175b648e4af571e83c8fd5f13cc817c753a20abdb",
           "current": "1f85fc7d791b2c7d0b771faad4c37b4230616f3e958c49d1961122a9a77e1519"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 173,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "3b11a577d8e307292f0bfe1280f3392dcb61bf7e7043bfb919aa55b2632f36a6",
+          "current": "224dd61f5699668b8f162dc40567162fc4aee1fc7f524708dca7a5a2f8bf55dc"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "ba2286905d1d7f95c55e1e4ce8b31aff65f234665c7665eb9864491f121e98a4",
+          "current": "7b100e9e5a999701403eb225c5bc1ef1bed2b5ba01c809fe979eeda456e3b11d"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/o/CMakeLists.txt",
+          "previous": "89eb023f91d5ccf5a9e51a6b232283893e67f6d1694eea06d38eb972a9e67394",
+          "current": "a41937fb02fbbde02b4357db1d0a02dd1e38aa1fcbeb71e7b83fa429f5540c36"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "1f85fc7d791b2c7d0b771faad4c37b4230616f3e958c49d1961122a9a77e1519",
+          "current": "3990ad404b40b6f57424fc4fee7bb6c5d7b9f3a4f702c9fb596bd83a0bbf5413"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "fbe93163d865a6ebe8adb48db980a3170da2d5b3a5c7be921785ce39839082a8",
+          "current": "ca5e6b9f88237c733a4fab7fd2f86943f272cbb1ef988ebda777e079beb4fe2b"
         }
       ]
     }

@@ -317,3 +317,6 @@ target_sources(netstorm PRIVATE RawFactoryDraw.cpp RawFactoryDraw.h)
 
 # 실제 연구58h/예측 교체/Factory 내용물 통지의 독립 몸체다.
 target_sources(netstorm PRIVATE RawFactoryResearch.cpp RawFactoryResearch.h)
+
+# 연구 효과의 원본 생성/Regular/난수/수명을 연결한다.
+target_sources(netstorm PRIVATE RawFlare.cpp RawFlare.h)

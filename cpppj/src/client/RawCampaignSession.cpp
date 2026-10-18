@@ -85,6 +85,8 @@
 #include "o/RawFlyerTarget.h"
 #include "o/RawDamageableRelease.h"
 #include "o/RawFlyerPreDestroy.h"
+#include "o/RawFlare.h"
+#include "o/RawFactoryResearch.h"
 #include "client/RawShapeToBuffer.h"
 #include "client/OwnerColorMaps.h"
 #include <bit>
@@ -375,6 +377,10 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawProductionDeck> productionDeck; // 현재 Player+68의 실제 블록을 단독 소유한다.
     std::uint32_t fullDeck{},freeTechnologyType{153},templeProduct{133}; // PATCH0054db14/005412bc/0054126c의 현재 생산 전역이다.
     std::unique_ptr<RawCampaignProductionBindings> production; // 같은 현재 Factory/기술 내용물/허용 표를 조합한다.
+    std::uint32_t flareType{106},researchOutpost{126}; // PATCH00541200/00541250의 실제 효과/제외 타입이다.
+    std::unique_ptr<RawFlare> flare; // 같은 난수/Kernel/공간/표시/삭제를 사용하는 실제 효과다.
+    std::unique_ptr<void,void(*)(void*)> pendingFlareRegular{nullptr,[](void* storage) { ::operator delete(storage); }}; // 실제 new40 예약부터 Regular 생성까지의 단일 메모리다.
+    std::unique_ptr<RawFactoryResearch> factoryResearch; // 같은 내용물/생산 Deck/현재 권한과58h 송신을 연결한다.
     DamageablePreDestroyState damageablePreState; // 같은 사제 타입을 읽는 실제 공통 삭제 전역이다.
     DamageableReleaseState damageableReleaseState; // 해방 요청마다 같은 현재 전투 모드를 공급한다.
     DamageablePostDestroyState damageablePostState; // 삭제 후의 현재 전투/권한 전역이다.
@@ -786,6 +792,7 @@ struct RawCampaignSession::Impl {
             core.processes.NotifyDependency(watcher,watched,form);
         };
         InstallContents(worldHooks.assets);
+        ConnectFlare(); // 최초 내용물 부착 전에 실제 연구 효과의 수명/Kernel을 연결한다.
         ConnectConstruction(); // 실제공통삭제후설치뒤같은noIsland VT의표면가상분배를첫객체전등록한다.
         ConnectDamageable(); // 같은 공통 삭제와 신전/사제 해방의 파생 하위를 첫 객체 전에 연결한다.
         ConnectCarrierSteal(); // 최초 크랩 Pop의 실제492예약/공통 장부다.
@@ -855,6 +862,7 @@ struct RawCampaignSession::Impl {
             throw std::logic_error("캠페인 현재 Kernel의 다른 실제 Regular 부모 미연결: TYPE"+
                 std::to_string(core.pool.Slot(sid)[10])+" event"+std::to_string(event));
         })))));
+        actualRegular=flare->Handler(std::move(actualRegular)); // 실제5096a0만 플레어 주기/삭제 경로로 분배한다.
         actualRegular=fenceRegular->Handler(std::move(actualRegular)); //실제 가상 표가 맞는 펜스만 먼저 처리한다.
         // 실제 사건이 실패하면 당시 부모/사건/횟수를 남기고 같은 예외를 전파한다. 성공/상태 되돌림으로 대신하지 않는다.
         worldHooks.regular=[this,handler=std::move(actualRegular)](Sid sid,std::uint32_t event,std::uint32_t count,float payload) {
@@ -885,6 +893,32 @@ struct RawCampaignSession::Impl {
             MakeMissionOutcomeHooks(core.pool,hp,std::move(outcomeHooks)));
         outcome->BindCurrentInputs({players,alliances,[this] { return player->State().battleOwner; },ui.demo,ui.tellBlocked});
         ConnectAi();
+    }
+    // 실제 플레어의 생성·주기·후속 생성·표시·수명을 같은 현재 월드에 연결한다.
+    void ConnectFlare() {
+        FlareHooks hooks;
+        hooks.processCount=[this] { return static_cast<std::int32_t>(core.kernel.Size()); };
+        hooks.create=[this](std::uint32_t type,std::uint32_t flags) { return world.Create(type,flags); };
+        hooks.sourceHotspot=[this](Sid parent) {
+            const auto raw=core.pool.Slot(parent);const auto frame=std::bit_cast<std::int32_t>(Read(raw,36));
+            if (raw[10]>=core.shapes.size() || frame<0 || static_cast<std::size_t>(frame)>=core.shapes[raw[10]].frames.size()) throw std::out_of_range("플레어 원본 기준점 헤더 범위");
+            const auto& header=core.shapes[raw[10]].frames[static_cast<std::size_t>(frame)];return std::array<std::int16_t,2>{header.hotspotX,header.hotspotY};
+        };
+        hooks.owner=[this](Sid sid,std::uint32_t owner) { core.owner.Set(sid,owner); };
+        hooks.pop=[this](Sid sid,float x,float y,std::uint32_t flags) { world.Pop(sid,x,y,flags); };
+        hooks.reserveRegular=[this] {
+            if (pendingFlareRegular) throw std::logic_error("플레어 Regular 예약 중첩");pendingFlareRegular.reset(::operator new(sizeof(RegularProcess),std::nothrow));return pendingFlareRegular!=nullptr;
+        };
+        hooks.addRegular=[this](Sid sid,std::uint32_t event,float payload) {
+            if (!pendingFlareRegular) throw std::logic_error("플레어 Regular 실제 예약 누락");auto* storage=pendingFlareRegular.release();RegularProcess* process{};
+            try { process=new(storage) RegularProcess(event,payload); }catch (...) { ::operator delete(storage);throw; }
+            auto* attached=dynamic_cast<RegularProcess*>(core.processes.Attach(std::unique_ptr<RegularProcess>(process),46,sid,0x50));if (!attached) throw std::logic_error("플레어 Regular 실제 부착 실패");attached->SetNextTime(core.processState.now);
+        };
+        hooks.frame=[this](Sid sid,std::int32_t frame,std::uint32_t flags) { core.frame.Set(sid,frame,flags); };
+        hooks.update=[this](Sid sid) { core.display.Update(core.pool.Slot(sid)); };
+        hooks.destroy=[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); };
+        hooks.sound=[this](float x,float y,std::string_view name,std::uint32_t flags) { if (!services.sound.playOnceAt) throw std::logic_error("플레어 현재 위치 음향 미연결");services.sound.playOnceAt(x,y,soundNames.Lookup(name),flags,0); };
+        flare=std::make_unique<RawFlare>(core.pool,core.types,core.frames,random,FlareState{impactState.suppressedTime,objectState.loadingDepth,flareType},std::move(hooks));
     }
     // 전체 최초 펜스 몸체를 같은 현재 해시/TYPE/동맹/가상 삭제/공통 장부에 연결한다.
     void ConnectFence() {
@@ -1484,6 +1518,7 @@ struct RawCampaignSession::Impl {
             CarrierContentNoticeState{contentSavedGame,objectState.loadingDepth,contentBombBlocked,playerState.battleOwner,priestState.movement.priest,contentScreenOrigin[0],contentScreenOrigin[1],priestState.movement.rainWalker},std::move(carrierEffects));
         auto otherParentNotice=services.contentNotice;
         ContentFormNotice parentNotice=[this,other=std::move(otherParentNotice)](Sid parent,Sid form,std::uint32_t reason) {
+            if (factoryResearch && factoryResearch->HandlesNotice(parent)) { factoryResearch->Notice(parent,form,reason);return; }
             if (carrierContentNotice->Handles(parent)) { carrierContentNotice->Notice(parent,form,reason);return; }
             if (!other) throw std::logic_error("다른 캠페인 내용물 실제 부모 통지 미연결");other(parent,form,reason);
         };
@@ -1503,6 +1538,16 @@ struct RawCampaignSession::Impl {
         },SessionMissing<void,ProductionDeckAssertion>());
         production=std::make_unique<RawCampaignProductionBindings>(core,*player,priests->Carrier(),*contained,*productionDeck,*totalMade,contentFinder,
             CampaignProductionState{objectState.mission,fullDeck,freeTechnologyType,templeProduct},services.production.effects);
+        FactoryResearchHooks research;
+        research.find=[this](Sid parent,std::uint32_t mask,std::uint32_t kind,std::uint32_t index) { return priests->Carrier().FindContained(parent,mask,kind,index); };
+        research.slots=[this](Sid parent) { return production->AppendFactoryProducts(parent,0); };
+        research.destroy=[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); };
+        research.create=[this](Sid parent,std::uint32_t kind,std::uint32_t quantity,std::uint32_t flags,std::uint32_t attach,std::uint32_t quality) { return contained->Create(parent,kind,quantity,flags,attach,quality); };
+        research.send=[this](std::uint32_t target,std::span<const std::uint8_t> packet) { if (!services.carrierRequest) throw std::logic_error("실제 연구 송신의 현재 전송 미설치");services.carrierRequest(static_cast<std::int32_t>(target),packet); };
+        research.flare=[this](Sid parent,std::int32_t count,std::uint32_t event) { if (!flare) throw std::logic_error("실제 연구 플레어 미설치");flare->Spawn(parent,count,event); };
+        research.refresh=[this](std::uint32_t owner) { static_cast<void>(production->Refresh(owner)); };
+        research.assertion=[](std::string_view message) { std::fprintf(stderr,"Factory 연구 원본 진단: %.*s\n",static_cast<int>(message.size()),message.data()); };
+        factoryResearch=std::make_unique<RawFactoryResearch>(core.pool,core.types,FactoryResearchState{objectState.loadingDepth,core.bookkeeping.productionDirty,assetState.boss,core.processState.now,researchOutpost},std::move(research));
     }
     // 외부 config/UI는 현재 클라이언트 서비스를 사용하고 게임 계산은 동일 원본 모듈을 사용한다.
     std::unique_ptr<RawCampaignWorldRuntime> MakeRuntime(std::size_t templateCount=9) {
@@ -1847,7 +1892,13 @@ struct RawCampaignSession::Impl {
 //같은원본처리기가참여성공/Ready/월드설치를수행한다.강제owner/flags쓰기를추가하지않는다.
 void RawCampaignSession::LoadLocalConnection() {
     if (impl_->loaded || impl_->login || !impl_->services.localLogin) throw std::logic_error("실제로컬로그인 새수명/장치 계약 오류");
-    impl_->login=std::make_shared<Impl::Login>(*impl_,*impl_->services.localLogin,[this] { Load();RegisterCarrierCommands(impl_->login->transport->Dispatch());RegisterConstructionCommands(impl_->login->transport->Dispatch()); });impl_->login->Begin();
+    impl_->login=std::make_shared<Impl::Login>(*impl_,*impl_->services.localLogin,[this] { Load();RegisterCarrierCommands(impl_->login->transport->Dispatch());RegisterConstructionCommands(impl_->login->transport->Dispatch());RegisterFactoryResearchCommands(impl_->login->transport->Dispatch()); });impl_->login->Begin();
+}
+// 실제 로그인의 같은 분배기에58h 연구를 등록한다. 중간 직접 수신/가짜 확정은 없다.
+void RawCampaignSession::RegisterFactoryResearchCommands(RawPacketDispatch& dispatch) { o::RegisterFactoryResearchCommand(dispatch,*impl_->factoryResearch); }
+// 현재 메뉴 부모와 signedWORD 종류를 원문 입력 몸체에 전달한다.
+std::uint32_t RawCampaignSession::SelectFactoryKnowledge(Sid parent,std::uint32_t code,std::uint32_t parameter) {
+    if (!impl_->loaded || !impl_->factoryResearch->HandlesNotice(parent)) throw std::logic_error("실제 연구 입력의 미설치/Factory 가상 표 오류");return impl_->factoryResearch->Input(parent,code,parameter);
 }
 //현재프레임에서만같은실제두끝의큐를소비한다.
 void RawCampaignSession::PumpLocalConnection() { if (impl_->login) impl_->login->Pump(); }

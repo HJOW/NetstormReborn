@@ -9,11 +9,11 @@
   },
   "scope": "PATCH10.78 실제427340 이동 요청/428570 서버 수신과 같은 Session 선택/Graph/후보/경로/현재전송 연결. 현재 일반 Client 입력/로그인 전송 수명은 미연결이다.",
   "currentSources": {
-    "cpppj/src/client/RawCampaignSession.cpp": "3b11a577d8e307292f0bfe1280f3392dcb61bf7e7043bfb919aa55b2632f36a6",
-    "cpppj/src/client/RawCampaignSession.h": "ba2286905d1d7f95c55e1e4ce8b31aff65f234665c7665eb9864491f121e98a4",
+    "cpppj/src/client/RawCampaignSession.cpp": "224dd61f5699668b8f162dc40567162fc4aee1fc7f524708dca7a5a2f8bf55dc",
+    "cpppj/src/client/RawCampaignSession.h": "7b100e9e5a999701403eb225c5bc1ef1bed2b5ba01c809fe979eeda456e3b11d",
     "cpppj/src/CMakeLists.txt": "8bcbbd1445cf96d31be4573fad443d8fe2248455bdda11abd9015f94821b7b26",
-    "cpppj/tests/CMakeLists.txt": "1f85fc7d791b2c7d0b771faad4c37b4230616f3e958c49d1961122a9a77e1519",
-    "cpppj/tests/CampaignSessionTests.cpp": "fbe93163d865a6ebe8adb48db980a3170da2d5b3a5c7be921785ce39839082a8",
+    "cpppj/tests/CMakeLists.txt": "3990ad404b40b6f57424fc4fee7bb6c5d7b9f3a4f702c9fb596bd83a0bbf5413",
+    "cpppj/tests/CampaignSessionTests.cpp": "ca5e6b9f88237c733a4fab7fd2f86943f272cbb1ef988ebda777e079beb4fe2b",
     "cpppj/src/o/RawCarrierMove.cpp": "64a12a7d3ed14d9f41f06c24d8162fa2153889354727cb7cd1aca33de809fa72",
     "cpppj/src/o/RawCarrierMove.h": "bd8ea165d2cced74c477b443f8874c980712c0e53e52aa61f19c131d808321f0",
     "cpppj/tests/CarrierMoveTests.cpp": "915a9e68d57f03bb681345eb5aebe166085130292b04530108e6cb7851e6fa23",
@@ -2012,6 +2012,37 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "710ac27699ae0c3cf48e4b9175b648e4af571e83c8fd5f13cc817c753a20abdb",
           "current": "1f85fc7d791b2c7d0b771faad4c37b4230616f3e958c49d1961122a9a77e1519"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 173,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "3b11a577d8e307292f0bfe1280f3392dcb61bf7e7043bfb919aa55b2632f36a6",
+          "current": "224dd61f5699668b8f162dc40567162fc4aee1fc7f524708dca7a5a2f8bf55dc"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "ba2286905d1d7f95c55e1e4ce8b31aff65f234665c7665eb9864491f121e98a4",
+          "current": "7b100e9e5a999701403eb225c5bc1ef1bed2b5ba01c809fe979eeda456e3b11d"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "1f85fc7d791b2c7d0b771faad4c37b4230616f3e958c49d1961122a9a77e1519",
+          "current": "3990ad404b40b6f57424fc4fee7bb6c5d7b9f3a4f702c9fb596bd83a0bbf5413"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "fbe93163d865a6ebe8adb48db980a3170da2d5b3a5c7be921785ce39839082a8",
+          "current": "ca5e6b9f88237c733a4fab7fd2f86943f272cbb1ef988ebda777e079beb4fe2b"
         }
       ]
     }

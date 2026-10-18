@@ -7,6 +7,7 @@
 #include "client/OwnerColorMaps.h"
 #include "o/RawFactoryDraw.h"
 #include "o/RawBridgeConnect.h"
+#include <bit>
 #include <stdexcept>
 namespace netstorm::client {
 // 같은 월드만 참조하고 게임 진행 상태는 복제하지 않는 표시 전용 저장소다.
@@ -21,6 +22,11 @@ struct RawCampaignFactoryDisplay::Impl {
     OwnerColorMaps outpost; // 원본43be30의 아웃포스트 일반9색 표다.
     bool ready{}; // 파일 팔레트가 설치되기 전에 출력하지 않는다.
 
+    // 플레어의+78은 TYPE+128이며+a4는 빈41c100이다. 현재 프레임은 일반 Draw가 읽는다.
+    bool Flare(o::Sid sid) const {
+        const auto raw=core.pool.Slot(sid);return raw[10]==106 && raw[0]==0xa0 && raw[1]==0x96 && raw[2]==0x50 && raw[3]==0;
+    }
+    bool Handles(o::Sid sid) const { return factory.Handles(sid) || Flare(sid); } // 실제 세 VT만 같은 수집기에 포함한다.
     // 원본 PE 초기값만 설치하고 각 수집에서 현재 게임 값으로 갱신한다.
     Impl(RawWorldCore world,const GameAssets& data):core(world),assets(data),factory(core.pool,core.frames),
         collection(core.hash,core.pool,core.types,core.shapes),views(MakeSpriteAssetViews(data)),outpost(BuildStandardOwnerColorMaps(126,82)) {
@@ -39,18 +45,19 @@ struct RawCampaignFactoryDisplay::Impl {
     }
     // 원본 현재 슬롯과 실제 dirty clip을 읽고 일반 Draw의 모든 픽셀을 같은 표면에 쓴다.
     void Draw(o::RenderCollectionEntry entry,std::span<std::uint8_t> pixels,int pitch,int height,ScreenRect clip) {
-        const auto sid=collection.Object(entry.token);if (!factory.Handles(sid)) return;if (!ready) throw std::logic_error("Factory 파일 팔레트 미설치");
+        const auto sid=collection.Object(entry.token);if (!Handles(sid)) return;if (!ready) throw std::logic_error("Factory 파일 팔레트 미설치");
         const auto raw=core.pool.Slot(sid);
         if ((raw[40]&4U) && (raw[40]&0x30U)) throw std::logic_error("Factory 선택 상태 프로세스 목록 표시 미연결");
         state.now=core.processState.now;state.ownerPalettes.assign(core.bridgeState.ownerColors.begin(),core.bridgeState.ownerColors.end());
         SpritePixelTarget target(pixels,pitch,height,clip,MakeSpriteAssetShapes(assets,state),[this](auto mode,auto type,auto owner) { return Color(mode,type,owner); });
-        SpriteDrawHooks rules;rules.virtualFrame=[this](o::Sid object) { return factory.MainFrame(object); };rules.surface=MakeSpriteSurfaceLookup(core.hash);
+        SpriteDrawHooks rules;rules.virtualFrame=[this](o::Sid object) { return Flare(object) ? std::bit_cast<std::int32_t>(views.at(core.pool.Slot(object)[10]).gumpFrame) : factory.MainFrame(object); };rules.surface=MakeSpriteSurfaceLookup(core.hash);
         rules.resource=[this](o::Sid object)->std::optional<SpriteResourceStatus> {
             if (core.processes.FindEvent(object,0x493)) throw std::logic_error("Factory 자원 내용물 막대 표시 미연결");return std::nullopt;
         };
         auto hooks=target.Hooks(std::move(rules));
         // +a4의0044c180은 같은 기준점/단위 배율의 plain SHP다. 일반 owner 문맥으로 바꾸지 않는다.
         hooks.virtualDraw=[this,shape=hooks.shape](o::Sid object,ScreenPoint point) {
+            if (Flare(object)) return; // 실제+a4의 빈 몸체41c100이다.
             factory.Additional(object,point.x,point.y,[&shape](auto x,auto y,auto type,auto frame) { if (frame<0) throw std::out_of_range("Factory 추가 그림 음수 프레임");shape({type,static_cast<std::uint32_t>(frame),{x,y},SpriteShapeMode::Plain}); });
         };
         SpriteDraw draw(core.pool,core.types,views,state,std::move(hooks),0);draw.Draw(entry);
@@ -59,7 +66,7 @@ struct RawCampaignFactoryDisplay::Impl {
 // 같은 Session의 수명이 끝나기 전에 표시기를 해제한다.
 RawCampaignFactoryDisplay::RawCampaignFactoryDisplay(RawWorldCore core,const GameAssets& assets):impl_(std::make_unique<Impl>(core,assets)) {}
 RawCampaignFactoryDisplay::~RawCampaignFactoryDisplay()=default; // procedure가 더 이상 호출되지 않을 때 반납한다.
-bool RawCampaignFactoryDisplay::Handles(o::Sid sid) const { return impl_->factory.Handles(sid); } // 별도 TYPE 이름 휴리스틱을 쓰지 않는다.
+bool RawCampaignFactoryDisplay::Handles(o::Sid sid) const { return impl_->Handles(sid); } // 별도 TYPE 이름 휴리스틱을 쓰지 않는다.
 // 장치 BGRX와 별개로 원본 R/G/B/예약 DWORD를 만들어 실제 파일 색 표를 계산한다.
 void RawCampaignFactoryDisplay::SetPalette(std::span<const ScreenColor> palette) {
     if (palette.size()!=256) throw std::invalid_argument("Factory 파일 팔레트256색 계약");std::array<std::uint32_t,256> logical{};
@@ -76,7 +83,7 @@ std::vector<RenderSprite> RawCampaignFactoryDisplay::Sprites(ScreenRect clip,int
     std::array<o::RenderCollectionEntry,kDrawSubmissionCapacity> entries{};const auto count=self.collection.Collect(view,entries,kDrawSubmissionCapacity);std::vector<RenderSprite> result;
     // 같은 실제 공간 항목 중 두 가상 표만 제출하고 나머지는 기존 월드 출력에 남긴다.
     for (std::int32_t i=0;i<count;++i) {
-        const auto entry=entries[static_cast<std::size_t>(i)];if (!self.factory.Handles(self.collection.Object(entry.token))) continue;
+        const auto entry=entries[static_cast<std::size_t>(i)];if (!self.Handles(self.collection.Object(entry.token))) continue;
         RenderSprite sprite;sprite.clip=clip;sprite.order={entry.x,entry.y,entry.depth};
         sprite.procedure=RenderProcedure{clip,[this,entry](std::span<std::uint8_t> pixels,int pitch,int height,ScreenRect cut) { impl_->Draw(entry,pixels,pitch,height,cut); }};result.push_back(std::move(sprite));
     }

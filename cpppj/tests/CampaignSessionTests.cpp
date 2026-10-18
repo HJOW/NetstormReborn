@@ -1659,9 +1659,14 @@ TEST_CASE(CampaignSession_LocalLoginMissionStartAiAlliances) {
 TEST_CASE(CampaignSession_LocalLoginWorkshopHasActualPlacement) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();
     CampaignLoginServices login;login.configInt=[](std::string_view,std::int32_t fallback) { return fallback; };login.wallSeconds=[] { return 100.25; };login.clock=[] { return 100250U; };login.refresh=[] {};login.playerUiBusy=[] { return false; };login.playerNotice=[](std::uint32_t,std::uint32_t,std::uint32_t) {};login.log=[](std::string_view) {};
+    services.production.allocationBytes=[](std::span<std::uint8_t> bytes) { CHECK(bytes.size()==kProductionDeckBytes);std::fill(bytes.begin(),bytes.end(),std::uint8_t{0xa7}); }; // 생성자가 초기화하지 않는 실제 할당 바이트의 명시 입력이다.
+    services.production.effects.configInt=[](std::string_view key) { CHECK(key=="getTeleportTechFree");return 0; };services.production.effects.modeAssertion=[] { throw std::logic_error("실제 연구의 Fort/Battle 모드 진단"); };
+    RawCampaignSession* activeSession{};std::vector<std::vector<std::uint8_t>> researchPackets; // 실제 송신과58h 수신 원문의 관측이다.
+    services.carrierRequest=[&](std::int32_t target,std::span<const std::uint8_t> packet) { CHECK(activeSession && target==9 && packet.size()==16 && packet[1]==0x58);if (!activeSession) throw std::logic_error("연구 실제 전송 미설치");activeSession->SendLocalPacket(target,packet); };
+    login.observePacket=[&](std::uint32_t,bool,std::uint32_t,std::span<const std::uint8_t> packet) { if (packet[1]==0x58) researchPackets.emplace_back(packet.begin(),packet.end()); };
     services.localLogin=std::move(login);services.ai.allocationBytes=[](std::span<std::uint8_t> bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0xa7}); };services.ai.defaultName=[] { return std::string("AI"); };services.ai.participation.clearChat=[](std::uint32_t) {};services.ai.participation.addChat=[](std::uint32_t,std::string_view,std::uint32_t) {};
     ConfigInterface config([&](std::string_view path) { return assets.files.TryRead(path); });config.Configuration().Assign("DataDir=\"d\"\ncurrentLanguage=\"english\"\nmissionSpec=\"{DataDir}\\{local.1}.{currentLanguage}\"\nfortSpec=\"{DataDir}\\{local.1}.fort\"\n[END]\n");MissionScript script(config,"TheWarBegins");
-    auto fort=FortTemplate::Parse(assets.files.Read(script.FortPath()),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),script.FortName(),std::move(services));session.LoadLocalConnection();
+    auto fort=FortTemplate::Parse(assets.files.Read(script.FortPath()),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),script.FortName(),std::move(services));activeSession=&session;session.LoadLocalConnection();
     MissionFrameGateState gate;MissionStartState state;CampaignMissionStartEffects effects;effects.settingsBytes=[](std::uint32_t,std::span<std::uint8_t> bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0xa7}); };effects.gameSeconds=[] { return 123.5; };effects.refreshSp=[] {};effects.refreshCommandGump=[] {};effects.resetCamera=[] {};effects.randomGeysers=[] { throw std::logic_error("보호1-1에없는세계랜덤간헐천"); };
     RawCampaignMissionStartBindings start(session,script,gate,state,session.MissionStartSettings(),session.MissionAiSettings(),std::move(effects));start.Start();CHECK(session.Sp(1)==3000 && gate.started==1);
     SessionCursorUi ui;auto cursorEffects=ui.Effects();cursorEffects.send=[&](std::uint32_t target,std::span<const std::uint8_t> packet) { CHECK(target==9 && packet.size()==25 && packet[1]==0x3e);session.SendLocalPacket(static_cast<std::int32_t>(target),packet); };session.Cursor().SetEffects(std::move(cursorEffects));session.Cursor().SnapToGrid()=1;SessionPriestMenuUi menuUi;auto menu=CursorMenu(session,menuUi);const Sid priest{static_cast<std::uint16_t>(session.FindPriestParticipation(1))};CHECK(menu->SelectBuild(85,priest));
@@ -1718,5 +1723,38 @@ TEST_CASE(CampaignSession_LocalLoginWorkshopHasActualPlacement) {
     CHECK(started && progress && completed && end>began);CHECK(Get(core.pool.Slot(target),26)==static_cast<std::uint32_t>(maximum));
     CHECK(!FindAttachedProcess(core.pool,target,30).value && !FindAttachedProcess(core.pool,target,47).value);
     CHECK((core.pool.Slot(target)[11]&7)==0 && session.Sp(1)==2200 && !core.bookkeeping.depth);
+    CHECK(!session.Production().Contains(128));const auto packetCount=session.LocalConnectionPackets().size();
+    const auto liveFlares=[&] {
+        std::vector<Sid> result;
+        // 실제 client 풀에서 살아 있는106만 조회하며 생성 수/수명을 쓰지 않는다.
+        for (std::uint16_t number=5;number<15000;++number) { const Sid sid{number};const auto raw=core.pool.Slot(sid);if (!(raw[11]&3U) && raw[10]==106) result.push_back(sid); }return result;
+    };
+    CHECK(liveFlares().empty());CHECK(session.SelectFactoryKnowledge(target,0x03000080U,(128U<<16)|target.value)==1);
+    const auto prediction=session.Priests().Carrier().FindContained(target,16,128,0);CHECK(prediction.value>=5 && prediction.value<15000 && session.Production().Contains(128));CHECK(liveFlares().size()==6 && session.LocalConnectionPackets().size()==packetCount && researchPackets.empty());
+    session.PumpLocalConnection();const auto authoritative=session.Priests().Carrier().FindContained(target,16,128,0);CHECK(authoritative.value>=15000 && authoritative!=prediction && researchPackets.size()==1);
+    if (!researchPackets.empty()) { const auto& packet=researchPackets.front();CHECK(packet.size()==16 && packet[0]==1 && packet[1]==0x58 && Get(packet,2,2)==16 && Get(packet,4,2)==target.value && packet[6]==128 && packet[7]==0); }
+    CHECK((core.pool.Slot(prediction)[11]&1U)!=0 && session.Production().Contains(128) && session.Production().AppendFactoryProducts(target,0)==1 && liveFlares().size()==12);
+    const auto initialFlares=liveFlares();if (initialFlares.empty()) return;std::size_t drawn{};
+    // 실제 같은 수집/가상Draw가 초기 플레어의 signed깊이/현재 프레임을 그리는지 확인한다.
+    for (const auto sid:initialFlares) { const auto raw=core.pool.Slot(sid);CHECK(display.Handles(sid) && raw[34]==0 && (raw[40]&8U) && raw[35]==static_cast<std::uint8_t>(core.pool.Slot(target)[35]-1U)); }
+    const ScreenRect clip{0,28,1024,768};const auto sprites=display.Sprites(clip,static_cast<int>(point.x*16)-512,static_cast<int>(point.y*11)-384,1);
+    // 플레어 깊이의 실제 장면 항목을 출력하고 빈 가상 효과로 바뀌지 않았는지 검사한다.
+    for (const auto& sprite:sprites) if (sprite.order.depth==std::bit_cast<std::int8_t>(core.pool.Slot(initialFlares.front())[35]) && sprite.procedure) { std::vector<std::uint8_t> pixels(1024*768,0);sprite.procedure->draw(pixels,1024,768,clip);if (std::any_of(pixels.begin(),pixels.end(),[](auto pixel) { return pixel!=0; })) ++drawn; }
+    const auto& firstFrame=assets.game.Shapes().Blocks()[106-70].frames[0];CHECK(firstFrame.IsSpecial() && drawn==0); // 보호 원본A01은 그림 없는 메타 레코드이므로 최초 출력이 비어 있어야 한다.
+    const auto nextImage=assets.game.Shapes().Decode(106-70,1);CHECK(std::any_of(nextImage.opacity.begin(),nextImage.opacity.end(),[](auto value) { return value!=0; }));
+    const auto researchTime=core.processState.now;std::size_t peak=initialFlares.size(),animated{};
+    // 후속 생성·자기 삭제·Kernel 정리를 실제 주기만으로 진행한다.
+    for (std::uint64_t frame=1;frame<=360;++frame) {
+        const auto now=researchTime+static_cast<double>(frame)/60;session.RunFrame({now,now,1.0/60,10000+frame},false);peak=std::max(peak,liveFlares().size());
+        if (frame==12) {
+            const auto current=display.Sprites(clip,static_cast<int>(point.x*16)-512,static_cast<int>(point.y*11)-384,1);
+            // 실제0.2초 시점의 원본 이미지 프레임을 같은 가상Draw로 출력한다.
+            for (const auto& sprite:current) if (sprite.order.depth==std::bit_cast<std::int8_t>(core.pool.Slot(target)[35])-1 && sprite.procedure) { std::vector<std::uint8_t> pixels(1024*768,0);sprite.procedure->draw(pixels,1024,768,clip);if (std::any_of(pixels.begin(),pixels.end(),[](auto pixel) { return pixel!=0; })) ++animated; }
+        }
+    }
+    CHECK(animated>=12);std::cout<<"플레어 원본 첫 메타프레임 출력"<<drawn<<"→0.2초 실제 출력"<<animated<<" 통과\n";
+    CHECK(peak>12 && liveFlares().empty() && session.Sp(1)==2200 && session.Production().Contains(128));CHECK(session.Priests().Carrier().FindContained(target,16,128,0)==authoritative && !core.destroy.PreDepth() && !core.destroy.PostDepth() && !core.bookkeeping.depth);
+    CHECK(session.SelectFactoryKnowledge(target,0x03000080U,(128U<<16)|target.value)==1);session.PumpLocalConnection();CHECK(researchPackets.size()==2 && liveFlares().empty() && session.Priests().Carrier().FindContained(target,16,128,0)==authoritative);
+    std::cout<<"실제 연구58h/예측"<<prediction.value<<"→서버"<<authoritative.value<<"/현재Deck/플레어12→후속"<<peak<<"→0 통과\n";
     std::cout<<"실제1-1 썬 워크샾 자연 건설 SID"<<target.value<<" 시작"<<began<<" 완료"<<end<<" HP"<<maximum<<"\n";
 }

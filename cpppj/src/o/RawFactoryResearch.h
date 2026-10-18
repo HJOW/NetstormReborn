@@ -7,7 +7,7 @@ namespace netstorm::o {
 struct FactoryResearchState {
     const std::uint32_t& loadingDepth; // 005c89b8: 읽는 동안 생산 갱신을 억제하는 깊이다.
     std::uint32_t& productionDirty; // 0055a4a4: 다른 생산 경로와 공유하는 감김 카운터다.
-    const std::uint32_t& boss; // 00540bc4: 서버 연구를 수행할 권한이다.
+    const bool& boss; // 00540bc4: 서버 연구를 수행할 권한이다.
     const double& now; // 0055b4d0: 선택 때 패킷에 복사하는 현재 게임 시각이다.
     const std::uint32_t& outpostType; // 00541250: 서버 연구에서 제외하는 현재 아웃포스트 타입이다.
 };

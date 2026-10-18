@@ -59,13 +59,13 @@
     "cpppj/src/CMakeLists.txt": "8bcbbd1445cf96d31be4573fad443d8fe2248455bdda11abd9015f94821b7b26",
     "cpppj/src/client/GameWorld.cpp": "fbe5e9e2f95b9acd3db589f9110fbfe79ba35c5dbb3d7ef1d61992ca7cf6b3b1",
     "cpppj/src/client/GameWorld.h": "63a8da986aab6ab35f1938c8de5c9197d12cca4e17859cb8daba5d5f52946e73",
-    "cpppj/tests/CMakeLists.txt": "1f85fc7d791b2c7d0b771faad4c37b4230616f3e958c49d1961122a9a77e1519",
-    "cpppj/tests/CampaignSessionTests.cpp": "fbe93163d865a6ebe8adb48db980a3170da2d5b3a5c7be921785ce39839082a8",
-    "tools/cpp_priest_construction_smoke.py": "42e462bba5ddb36a8c4121b88b995258899648b55468147d340d0c71172c0bd0",
+    "cpppj/tests/CMakeLists.txt": "3990ad404b40b6f57424fc4fee7bb6c5d7b9f3a4f702c9fb596bd83a0bbf5413",
+    "cpppj/tests/CampaignSessionTests.cpp": "ca5e6b9f88237c733a4fab7fd2f86943f272cbb1ef988ebda777e079beb4fe2b",
+    "tools/cpp_priest_construction_smoke.py": "022904f38c4b9ca44bdf92b18d258a39d87890dba6174da4c9be4d9a4441aad4",
     "cpppj/src/client/SpriteColorMaps.h": "616d6afb5af4bb505f0f780b05cbc9dec4058026b43ba898be5719a5ab233e54",
     "cpppj/src/client/SpriteColorMaps.cpp": "9a2d39e42ba43fb32baf622923e4fa5a2629f0ae8c186dd3f2d1bb34a0dd9c61",
-    "cpppj/src/client/RawCampaignFactoryDisplay.h": "92135e0b6aabdbb83eb6821dd7cc802c6d8c7427348117ee2ca5b410168eab10",
-    "cpppj/src/client/RawCampaignFactoryDisplay.cpp": "a6120c9bcee61580be72baca34b785cbb528e074edb1829196e93f96e33784de",
+    "cpppj/src/client/RawCampaignFactoryDisplay.h": "1f437803e606c0fc9f9819e7a99499d1966bed4d751005b3b6ae00dd7c52fcd8",
+    "cpppj/src/client/RawCampaignFactoryDisplay.cpp": "d09c48c077f618b45ac5914c765a6144438dd22fd225c79b25cf5108ccd269fd",
     "cpppj/tests/SpriteColorMapsTests.cpp": "7f16e0b8bbdb0bafea973b2a920d1c3e205aeec777688fef339bcd95f69dc4d4",
     "tools/decomp_sprite_colors.py": "b8b7be9f61fa8fe8bbe3f3c36c667b970815f3a93022aae79c10ad663f612c69",
     "cpppj/tests/fixtures/sprite-colors-x86.tsv": "55c7e9e1d33f125b86f17fe3bf40a9efbf2cf8834669d5950eed216a9fbe2b6d",
@@ -4949,6 +4949,43 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "710ac27699ae0c3cf48e4b9175b648e4af571e83c8fd5f13cc817c753a20abdb",
           "current": "1f85fc7d791b2c7d0b771faad4c37b4230616f3e958c49d1961122a9a77e1519"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 173,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "1f85fc7d791b2c7d0b771faad4c37b4230616f3e958c49d1961122a9a77e1519",
+          "current": "3990ad404b40b6f57424fc4fee7bb6c5d7b9f3a4f702c9fb596bd83a0bbf5413"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "fbe93163d865a6ebe8adb48db980a3170da2d5b3a5c7be921785ce39839082a8",
+          "current": "ca5e6b9f88237c733a4fab7fd2f86943f272cbb1ef988ebda777e079beb4fe2b"
+        },
+        {
+          "group": "/currentSources",
+          "path": "tools/cpp_priest_construction_smoke.py",
+          "previous": "42e462bba5ddb36a8c4121b88b995258899648b55468147d340d0c71172c0bd0",
+          "current": "022904f38c4b9ca44bdf92b18d258a39d87890dba6174da4c9be4d9a4441aad4"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignFactoryDisplay.h",
+          "previous": "92135e0b6aabdbb83eb6821dd7cc802c6d8c7427348117ee2ca5b410168eab10",
+          "current": "1f437803e606c0fc9f9819e7a99499d1966bed4d751005b3b6ae00dd7c52fcd8"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignFactoryDisplay.cpp",
+          "previous": "a6120c9bcee61580be72baca34b785cbb528e074edb1829196e93f96e33784de",
+          "current": "d09c48c077f618b45ac5914c765a6144438dd22fd225c79b25cf5108ccd269fd"
         }
       ]
     }

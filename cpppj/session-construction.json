@@ -122,7 +122,7 @@
     "cpppj/src/client/RawCampaignSession.cpp": "36b23f4e6c6b557ceaf908de235f6451938f10bdde86cac3fa715eafe8d71ea1",
     "cpppj/src/client/CampaignClientServices.cpp": "86407af96a1a5ccaaa16ba158f205bbe66fa97c88f091629b1516eb6f2395ed3",
     "cpppj/src/client/RawCampaignLifetimeBindings.h": "6f4be73b52279abf308c8a3e6d8962271560e47c25996f7a03fca09f8cd063e8",
-    "cpppj/src/client/RawCampaignLifetimeBindings.cpp": "2eb0d3fc16e6967b54271c0365991e0ebd8f3d57ef6412aa92d4c4d21fbb01c3",
+    "cpppj/src/client/RawCampaignLifetimeBindings.cpp": "5ddc44fc6776aebbd50e6249221141dec90fca1abe827886f19b14c968bd4582",
     "cpppj/src/client/RawSurfaceWorld.h": "c5d3eb83397d1d3e09f021c419cd305585cd9b8496a4c0b56b02bae9104d4bb1",
     "cpppj/src/client/RawSurfaceWorld.cpp": "18705f46068add5b61eff6c6d176e7391ea637d4686a6d9fab95fd7db4f6721d",
     "cpppj/src/o/RawSquidDestroyDispatch.h": "1d040f3140f5a422d360bed59fe53fdf665dfdd8218a4d4e21132f2418364b43",
@@ -296,6 +296,19 @@
           "path": "cpppj/src/o/RawPlayerGeyserBounds.cpp",
           "previous": "144858939bb867934111baa38a96a179a5651731481f3b942effe5f0dffb5370",
           "current": "4983ae36fcebb76a06068c68500f2184dc2c14f816c6513b9cf1492353c69a96"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 173,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/client/RawCampaignLifetimeBindings.cpp",
+          "previous": "2eb0d3fc16e6967b54271c0365991e0ebd8f3d57ef6412aa92d4c4d21fbb01c3",
+          "current": "5ddc44fc6776aebbd50e6249221141dec90fca1abe827886f19b14c968bd4582"
         }
       ]
     }

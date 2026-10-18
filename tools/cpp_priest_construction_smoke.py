@@ -27,7 +27,8 @@ def asset_fields(path):
 
 def main():
     """같은 실제 시작 자금/기술로 GUI만 조작하며 원본 보호 자료와 관측 결과를 보존한다."""
-    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--output',type=Path,required=True);parser.add_argument('--completion',action='store_true');parser.add_argument('--select-workshop',action='store_true');parser.add_argument('--factory-menu',action='store_true');args=parser.parse_args()
+    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--output',type=Path,required=True);parser.add_argument('--completion',action='store_true');parser.add_argument('--select-workshop',action='store_true');parser.add_argument('--factory-menu',action='store_true');parser.add_argument('--factory-research',action='store_true');args=parser.parse_args()
+    if args.factory_research:args.factory_menu=True
     if args.factory_menu:args.select_workshop=True
     if args.select_workshop:args.completion=True
     output=args.output.resolve()
@@ -46,9 +47,15 @@ def main():
                       (1005,'click','Put Knowledge into Production'),(1020,'report','factoryKnowledge'),(1020,'snapshot',str(output/'factory-knowledge.bmp')),
                       (1025,'esc',''),(1030,'report','factoryClosed'),(1040,'right','world:sunFactory'),(1055,'click','View Current Production'),
                       (1070,'report','factoryProduction'),(1070,'snapshot',str(output/'factory-production.bmp'))])
+    if args.factory_research:
+        steps.extend([(1080,'esc',''),(1090,'right','world:sunFactory'),(1100,'click','Put Knowledge into Production'),(1110,'report','researchBefore'),
+                      (1115,'click','Sun Cannon'),(1120,'report','researched'),(1120,'snapshot',str(output/'researched.bmp')),
+                      (1130,'right','world:sunFactory'),(1140,'click','View Current Production'),(1150,'report','productionAfter'),(1150,'snapshot',str(output/'production-after.bmp')),
+                      (1155,'esc',''),(1160,'right','world:sunFactory'),(1170,'click','Put Knowledge into Production'),(1180,'report','knowledgeAfter'),(1180,'snapshot',str(output/'knowledge-after.bmp')),
+                      (1185,'esc',''),(1400,'report','flareEnded'),(1400,'snapshot',str(output/'flare-ended.bmp'))])
     script=output/'steps.tsv';report=output/'states.tsv'
     script.write_text(''.join(f'{frame}\t{operation}\t{argument}\n' for frame,operation,argument in steps),encoding='utf-8',newline='\n')
-    command=[str(EXE),'--run',str(ROOT/'originals'),'--mission','thewarbegins','--window','--no-audio','--frames','1073' if args.factory_menu else '983' if args.select_workshop else '953' if args.completion else '233',
+    command=[str(EXE),'--run',str(ROOT/'originals'),'--mission','thewarbegins','--window','--no-audio','--frames','1403' if args.factory_research else '1073' if args.factory_menu else '983' if args.select_workshop else '953' if args.completion else '233',
              '--set','SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8','--ui-script',str(script),'--ui-report',str(report)]
     before=snapshots(ROOT/'originals')
     with preserve_game_settings(ROOT/'originals','d'):
@@ -104,11 +111,32 @@ def main():
         # 실제 TYPE128이 썬 캐논이다. 머리글은 항목 보고에 없으므로 빈 생산 창의 실제 도움말 자식 항목을 확인한다.
         assert any(row['command']==0x02000017 and row['parameter']!=85 for row in production),production
         factory=dict(passed=True,sid=target,root=root,knowledge=knowledge,production=production,scope='원본 메뉴 작성/우클릭 진입/하위 열기만 검증. 연구·업그레이드 명령 실행은 후속이다.')
+    research=None
+    if args.factory_research:
+        target=completion['sid'];before=observed['researchBefore'];after=observed['researched'];ended=observed['flareEnded'];menus=menu_items(report)
+        assert list(map(int,after['raw_packets'])).count(0x58)==list(map(int,before['raw_packets'])).count(0x58)+1
+        content={}
+        # 새 결과를 쓰지 않고 실제 부모/Form SID/kind/flags 관측을 그대로 읽는다.
+        for block in report.read_text('utf-8').split('frame\t')[1:]:
+            header,body=block.split('\n',1);_,label=header.split('\t',1);content[label]=[]
+            # 각 실제 Factory 내용물 행을 별개로 보존한다.
+            for line in body.splitlines():
+                fields=line.split('\t')
+                if fields[0]=='raw_factory_content' and int(fields[1])==target:content[label].append(list(map(int,fields[2:])))
+        assert not any(row[1]==128 and row[2]&16 for row in content['researchBefore'])
+        learned=[row for row in content['researched'] if row[1]==128 and row[2]&16];assert len(learned)==1 and learned[0][0]>=15000,learned
+        initial={sid:row for sid,row in after['raw_objects'].items() if row[0]=='106'};assert len(initial)==12,initial
+        assert not any(row[0]=='106' for row in ended['raw_objects'].values())
+        assert any(row['visible'] and row['command']==0x02000017 and row['parameter']==128 for row in menus['productionAfter'])
+        assert not any(row['visible'] and row['command']==0x03000080 and row['parameter']==((128<<16)|target) for row in menus['knowledgeAfter'])
+        assert any(row['visible'] and row['command']==0x03000080 and row['parameter']==((76<<16)|target) and not row['flags']&0x200 for row in menus['knowledgeAfter'])
+        assert all(observed[label]['raw_sp'][1]=='2200' and observed[label]['phase']==['4'] and observed[label]['popup']==[''] for label in ('researched','productionAfter','knowledgeAfter','flareEnded'))
+        research=dict(passed=True,sid=target,authoritative=learned[0],initialFlares=initial,production=menus['productionAfter'],knowledge=menus['knowledgeAfter'],content=content,scope='실제 GUI 지식 선택/58h 수신/server 내용물/생산 메뉴·지식 제거/플레어12개 및 자연 종료. 생산HUD 배치·전체 미션 완주는 후속.')
     summary=dict(passed=True,scope='실제GUI 사제 메뉴/TYPE85 배치/실제3e왕복/SP 차감/원본 서식 비용 표시·이동·지연삭제/사제 경로 이동.'+(' 같은 워크샾의 HP 자연 증가·3000 완공·abstract 해제까지 확인했다. 미션 완주 검사는 아니다.' if args.completion else ' 자연 건설·완공은 --completion 모드로 검사한다.'),
                  command=command,originals_unchanged=unchanged,newPacketTypes=after_packets[len(before_packets):],workshops=workshops,priestBefore=priest,priestMoving=moved,
-                 factoryMenus=factory,selection=selected,completion=completion,observed={label:{key:record[key] for key in ('time','raw_input','raw_cursor','raw_sp','raw_menus','raw_sp_gump') if key in record} for label,record in observed.items()})
+                 factoryResearch=research,factoryMenus=factory,selection=selected,completion=completion,observed={label:{key:record[key] for key in ('time','raw_input','raw_cursor','raw_sp','raw_menus','raw_sp_gump') if key in record} for label,record in observed.items()})
     (output/'results.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
-    print(json.dumps(dict(passed=True,newPacketTypes=summary['newPacketTypes'],workshops=workshops,priestBefore=priest,priestMoving=moved,completion=completion,selection=selected,factoryMenus=factory,originals_unchanged=unchanged),ensure_ascii=False))
+    print(json.dumps(dict(passed=True,newPacketTypes=summary['newPacketTypes'],workshops=workshops,priestBefore=priest,priestMoving=moved,completion=completion,selection=selected,factoryMenus=factory,factoryResearch=research,originals_unchanged=unchanged),ensure_ascii=False))
 
 
 if __name__=='__main__':main()

@@ -1499,3 +1499,8 @@ set_source_files_properties(FactoryMenuTests.cpp PROPERTIES COMPILE_DEFINITIONS
 target_sources(netstorm_tests PRIVATE FactoryResearchTests.cpp)
 set_source_files_properties(FactoryResearchTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_FACTORY_RESEARCH_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/factory-research-x86.tsv\"")
+
+# 독립 플레어139행의 전체 슬롯·난수·효과·반환을 대조한다.
+target_sources(netstorm_tests PRIVATE FlareTests.cpp)
+set_source_files_properties(FlareTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_FLARE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/flare-x86.tsv\"")

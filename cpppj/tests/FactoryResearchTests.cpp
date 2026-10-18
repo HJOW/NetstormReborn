@@ -9,7 +9,7 @@ std::string Bytes(std::string_view text) { return Hex({reinterpret_cast<const st
 struct ResearchScene {
     SidPool pool{OriginalEdition::Patch1078,24000,true}; // 원본과 같은 물리 SID 범위다.
     std::vector<RiftTypeRecord> types=std::vector<RiftTypeRecord>(188); // 실제 genus 입력이다.
-    std::uint32_t loading{},dirty{3},boss{1},outpost{126};double now{12.5}; // 현재 원본 전역 입력이다.
+    std::uint32_t loading{},dirty{3},outpost{126};bool boss{true};double now{12.5}; // 현재 원본 전역 입력이다.
     Sid found{};std::int32_t slots{2};std::string trace; // 검색/슬롯의 명시 경계와 관측한 순서다.
     FactoryResearchHooks hooks; // 계산을 대신하지 않는 하위 관측 경계다.
     // 호출 경계의 효과만 기록하며 기대 결과는 만들지 않는다.
@@ -43,7 +43,7 @@ TEST_CASE(FactoryResearch_Native216) {
         } else if (row[0]=="Input") {
             scene.found={static_cast<std::uint16_t>(Number(row[2]))};scene.slots=std::stoi(row[3]);RawFactoryResearch research(scene.pool,scene.types,scene.State(),scene.hooks);result=research.Input(Sid{50},0x03000080U|Number(row[4]),(Number(row[1])<<16)|50U);++counts[1];
         } else if (row[0]=="Receive") {
-            auto parent=InputRaw(scene.pool,Sid{50});parent[11]=static_cast<std::uint8_t>(Number(row[2]));parent[10]=static_cast<std::uint8_t>(Number(row[4]));scene.types[parent[10]].flags2=Number(row[3]);scene.boss=Number(row[5]);std::array<std::uint8_t,16> packet{};WriteFactoryResearchCommand(Sid{50},Number(row[6]),scene.now,packet);packet[7]=static_cast<std::uint8_t>(Number(row[7]));RawFactoryResearch research(scene.pool,scene.types,scene.State(),scene.hooks);research.Receive(Number(row[1]),packet);++counts[2];
+            auto parent=InputRaw(scene.pool,Sid{50});parent[11]=static_cast<std::uint8_t>(Number(row[2]));parent[10]=static_cast<std::uint8_t>(Number(row[4]));scene.types[parent[10]].flags2=Number(row[3]);scene.boss=Number(row[5])!=0;std::array<std::uint8_t,16> packet{};WriteFactoryResearchCommand(Sid{50},Number(row[6]),scene.now,packet);packet[7]=static_cast<std::uint8_t>(Number(row[7]));RawFactoryResearch research(scene.pool,scene.types,scene.State(),scene.hooks);research.Receive(Number(row[1]),packet);++counts[2];
         } else {
             CHECK(row[0]=="Notice");const Sid form{static_cast<std::uint16_t>(Number(row[1]))};Put(InputRaw(scene.pool,form),20,Number(row[3]),2);scene.loading=Number(row[4]);scene.found={static_cast<std::uint16_t>(Number(row[5]))};RawFactoryResearch research(scene.pool,scene.types,scene.State(),scene.hooks);research.Notice(Sid{50},form,Number(row[2]));++counts[3];
         }

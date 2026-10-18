@@ -76,11 +76,11 @@
     "originals/d/GIFCLOUD.COL": "785a2cda6ac1d3e295d375815b6d9650720683099db7c249382d598b5da00532"
   },
   "currentSources": {
-    "cpppj/src/o/CMakeLists.txt": "89eb023f91d5ccf5a9e51a6b232283893e67f6d1694eea06d38eb972a9e67394",
-    "cpppj/tests/CMakeLists.txt": "1f85fc7d791b2c7d0b771faad4c37b4230616f3e958c49d1961122a9a77e1519",
-    "cpppj/src/o/RawFactoryResearch.h": "5edd4ead52e26ba81986b4b55a8298b43b8076c1c53bc51d0acd8f1868ef2a47",
+    "cpppj/src/o/CMakeLists.txt": "a41937fb02fbbde02b4357db1d0a02dd1e38aa1fcbeb71e7b83fa429f5540c36",
+    "cpppj/tests/CMakeLists.txt": "3990ad404b40b6f57424fc4fee7bb6c5d7b9f3a4f702c9fb596bd83a0bbf5413",
+    "cpppj/src/o/RawFactoryResearch.h": "5cd0dc8a306e50725710d3124e3af6def870ec2fe001f3dfcf6e2e183bfc2202",
     "cpppj/src/o/RawFactoryResearch.cpp": "2e65abb62b30e7d306217aec739e6ddc8aa2986f8917cb59a762b76f03629913",
-    "cpppj/tests/FactoryResearchTests.cpp": "082fd96214b55130774efff62024f5f21406723a72bcdbc2c4fb7999765d65e2",
+    "cpppj/tests/FactoryResearchTests.cpp": "73801f93e0273a9b49538735884d1afb7250257511a5a4cd619659ca2b90d881",
     "tools/decomp_factory_research.py": "f17c963ebc176d534fbf17539d97c80052c821f415bdb698cb663a3ee13e7f3e",
     "cpppj/tests/fixtures/factory-research-x86.tsv": "d9fb839cef70c799e863d90ddc86d50eaf081b9e8b21a886495ee5af12200c8d",
     "cpppj/factory-research.json": "623565e5dd17e01c247bece6d64be0577513ebc2c5b0969c20a819d63845dbc7"
@@ -131,5 +131,38 @@
     "reports": 53,
     "pins": 67
   },
-  "goalComplete": false
+  "goalComplete": false,
+  "integration_updates": [
+    {
+      "date": "2026-10-18",
+      "unit": 173,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/o/CMakeLists.txt",
+          "previous": "89eb023f91d5ccf5a9e51a6b232283893e67f6d1694eea06d38eb972a9e67394",
+          "current": "a41937fb02fbbde02b4357db1d0a02dd1e38aa1fcbeb71e7b83fa429f5540c36"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "1f85fc7d791b2c7d0b771faad4c37b4230616f3e958c49d1961122a9a77e1519",
+          "current": "3990ad404b40b6f57424fc4fee7bb6c5d7b9f3a4f702c9fb596bd83a0bbf5413"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/o/RawFactoryResearch.h",
+          "previous": "5edd4ead52e26ba81986b4b55a8298b43b8076c1c53bc51d0acd8f1868ef2a47",
+          "current": "5cd0dc8a306e50725710d3124e3af6def870ec2fe001f3dfcf6e2e183bfc2202"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/FactoryResearchTests.cpp",
+          "previous": "082fd96214b55130774efff62024f5f21406723a72bcdbc2c4fb7999765d65e2",
+          "current": "73801f93e0273a9b49538735884d1afb7250257511a5a4cd619659ca2b90d881"
+        }
+      ]
+    }
+  ]
 }

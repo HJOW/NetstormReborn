@@ -1,0 +1,55 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-18",
+  "unit": 173,
+  "rows": 139,
+  "counts": {
+    "Spawn": 30,
+    "Regular": 109
+  },
+  "normalReturns": 278,
+  "instructions": 93884,
+  "controls": [
+    639,
+    895
+  ],
+  "precisionDifferences": 0,
+  "nativeCalls": {
+    "0x45a6c0": 60,
+    "0x45a480": 60,
+    "0x4ac550": 956,
+    "0x49a840": 1682,
+    "0x4ac200": 260,
+    "0x455930": 888,
+    "0x41d0d0": 260,
+    "0x45a250": 218,
+    "0x4ad710": 466,
+    "0x496e70": 156,
+    "0x4e49c0": 96
+  },
+  "boundaries": {
+    "0x471ab0": 104,
+    "0x4af530": 308,
+    "0x419850": 260,
+    "0x4ac220": 260,
+    "0x4b02d0": 308,
+    "0x4e4391": 308,
+    "0x496e80": 288,
+    "0x4acee0": 156,
+    "0x4ad500": 60,
+    "0x4af780": 60,
+    "0x4a9d70": 10
+  },
+  "sha256": {
+    "tools/decomp_flare.py": "1d2560364693e266f7da65fdf4c6631e920c398687398056b66340daa0c20825",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "cpppj/tests/fixtures/flare-x86.tsv": "f856dde9fe711dae3ead2c6a1f5baab7a8956b4b99493b1abcb374e3f01d6610"
+  },
+  "limits": [
+    "실제 생성/Regular/난수/좌표 클램프/프레임 방향·정수 변환을 실행한다. 생성·프레임 지정/Pop·소유자/수명/소리/Kernel 개수·예약은 명시 경계다.",
+    "게임/OS/원본 파일 변경·게임 창 실행은 없다. CD10.72와 전체 게임 화면 동일성의 증거는 아니다."
+  ]
+}

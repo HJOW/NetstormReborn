@@ -20,15 +20,15 @@
     "cpppj/src/client/RawMenuControls.h": "6089fe0bf7610010269dc0e38f3788e2c59daac4fe6b3d8b17dd711841fef5ca",
     "cpppj/src/client/RawMenuControls.cpp": "e0114aa8f670e3f5dbaa49252572ee5479def7006db6e84fdec57aa182c1904c",
     "cpppj/src/client/CampaignCursorClientEffects.cpp": "a3248a08922f8b4fdad05d2e2844db55f96196ccd58d55827b034dad17a55f72",
-    "cpppj/src/client/UberGump.cpp": "2c4a64a28e45bc6613a1dc40bb3ef9a8375bf4278444b1585eaf9f7db84ced34",
-    "cpppj/tests/CMakeLists.txt": "1f85fc7d791b2c7d0b771faad4c37b4230616f3e958c49d1961122a9a77e1519",
+    "cpppj/src/client/UberGump.cpp": "7f0e52e4ba5b226ee874481d587d71790ef289be2df52b1bdeacdfb7da6ae9d4",
+    "cpppj/tests/CMakeLists.txt": "3990ad404b40b6f57424fc4fee7bb6c5d7b9f3a4f702c9fb596bd83a0bbf5413",
     "cpppj/tests/RawMenuControlsTests.cpp": "5ce029d5ba102c1784696d8df58e3f3691b6bdf01671b013793a6e504fbfc4f4",
     "cpppj/tests/CampaignCursorClientEffectsTests.cpp": "f04679442eea66764f77ab814314c9edd1790dca1f61f39e95eb29804b78d92b",
     "cpppj/src/client/FloatingSpGump.h": "36df57018c209f1e007727899f85c78f62840e450b740f9de34e7d0ee789d841",
     "cpppj/src/client/FloatingSpGump.cpp": "5b4a690cf8769a47b330c89d99a054ce8e6f983fef1a45172be67530b598e683",
     "cpppj/tests/FloatingSpGumpTests.cpp": "f296d65c98502f81d24d34d05a9f7a950675506003c0ccb134adb25fe6f4ad36",
     "tools/decomp_floating_sp.py": "fb929f22789726a90c5dd98e74aa70bb319ff03153349cd8db76b3ce8b0d204c",
-    "tools/cpp_priest_construction_smoke.py": "42e462bba5ddb36a8c4121b88b995258899648b55468147d340d0c71172c0bd0",
+    "tools/cpp_priest_construction_smoke.py": "022904f38c4b9ca44bdf92b18d258a39d87890dba6174da4c9be4d9a4441aad4",
     "cpppj/tests/fixtures/floating-sp-x86.tsv": "89c61652ca97026e9b3d9a9c8e294292d6d6d2e7e87c3fbc7d67b864463a4aeb",
     "cpppj/floating-sp.json": "8a00e9285a32146747c579b791a275fdf5c9941610afc8316af41415044836a0"
   },
@@ -4854,6 +4854,31 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "710ac27699ae0c3cf48e4b9175b648e4af571e83c8fd5f13cc817c753a20abdb",
           "current": "1f85fc7d791b2c7d0b771faad4c37b4230616f3e958c49d1961122a9a77e1519"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "unit": 173,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/UberGump.cpp",
+          "previous": "2c4a64a28e45bc6613a1dc40bb3ef9a8375bf4278444b1585eaf9f7db84ced34",
+          "current": "7f0e52e4ba5b226ee874481d587d71790ef289be2df52b1bdeacdfb7da6ae9d4"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "1f85fc7d791b2c7d0b771faad4c37b4230616f3e958c49d1961122a9a77e1519",
+          "current": "3990ad404b40b6f57424fc4fee7bb6c5d7b9f3a4f702c9fb596bd83a0bbf5413"
+        },
+        {
+          "group": "/currentSources",
+          "path": "tools/cpp_priest_construction_smoke.py",
+          "previous": "42e462bba5ddb36a8c4121b88b995258899648b55468147d340d0c71172c0bd0",
+          "current": "022904f38c4b9ca44bdf92b18d258a39d87890dba6174da4c9be4d9a4441aad4"
         }
       ]
     }

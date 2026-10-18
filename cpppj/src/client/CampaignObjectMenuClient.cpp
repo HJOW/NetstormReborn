@@ -154,8 +154,10 @@ bool CampaignObjectMenuClient::Active() const {
 }
 // 메뉴가 이미 닫히도록 예약했어도 같은 체인의 현재 기술/SP/커서 취득을 실행한다.
 bool CampaignObjectMenuClient::Command(const InputEvent& event) {
-    if ((event.code&0x03ffffffU)!=0x02000060U) return false;
+    const auto command=event.code&0x03ffffffU;if (command!=0x02000060U && command!=0x03000080U) return false;
     auto& s=*impl_;if (!s.world || !s.chain) throw std::logic_error("실제 사제 건설 메뉴의 현재 월드 수명 없음");
-    const auto parameter=std::bit_cast<std::uint32_t>(event.y);static_cast<void>(s.chain->SelectBuild(parameter>>16,o::Sid{static_cast<std::uint16_t>(parameter)}));return true;
+    const auto parameter=std::bit_cast<std::uint32_t>(event.y);
+    if (command==0x03000080U) { static_cast<void>(s.world->Session().SelectFactoryKnowledge(o::Sid{static_cast<std::uint16_t>(parameter)},event.code,parameter));return true; }
+    static_cast<void>(s.chain->SelectBuild(parameter>>16,o::Sid{static_cast<std::uint16_t>(parameter)}));return true;
 }
 }
