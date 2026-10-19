@@ -128,7 +128,7 @@
     "cpppj/hist/run26-draft/RawBattleBroadcast.cpp": "0c88515bdfc87fc05310087ad360ea94ee9a95666329aaec09ea896a04744f13",
     "cpppj/hist/run26-draft/battle-bcast-x86.tsv": "d7da6351dca0e671136a4a81926662815762b2c3466e0d6413d1587b1415d732",
     "cpppj/hist/run26-draft/decomp_battle_bcast.py": "95a96ec4e3ffe37e5e906f8cd30546c5594e74fe0ddda045683339ecd7e2e3f7",
-    "cpppj/src/CMakeLists.txt": "14c485cf02a59e50d4b8a66cf4c03d9f20ce28139a549677c8c15b6cfbae5d1c",
+    "cpppj/src/CMakeLists.txt": "9c331c9fbd2e2f96e7604cf5c2a9462238ea3f55ef689542ab5789d2b1ee17cf",
     "cpppj/src/app/CanonMayPlaceInspect.cpp": "27eda46bca500c898abeb9a3a7c4e8588b38e061b579c84cbf6c032c6d46dda9",
     "cpppj/src/app/FrameBindingInspect.cpp": "042602919b0531fb1cbaf3941dc6597bee73944bbf0d571dacfd638bb45dd07c",
     "cpppj/src/app/FrameBindingInspect.h": "4e187ca41f8c34ed52c022b58a57327a554a723e3e26ee88a1ae152c99de3fce",
@@ -2553,6 +2553,19 @@
           "path": "cpppj/src/CMakeLists.txt",
           "previous": "54cf17faec66eb58f7a9e38c35fa331499fbddb28b30ab2408b70d867f02380b",
           "current": "14c485cf02a59e50d4b8a66cf4c03d9f20ce28139a549677c8c15b6cfbae5d1c"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 233,
+      "reason": "?? ??? ???? Bomb ?? ??? ?? ?? ?? ??? ?? ?? ?? ?? ? ??. ?? ???? ?? ??/??? ????.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "14c485cf02a59e50d4b8a66cf4c03d9f20ce28139a549677c8c15b6cfbae5d1c",
+          "current": "9c331c9fbd2e2f96e7604cf5c2a9462238ea3f55ef689542ab5789d2b1ee17cf"
         }
       ]
     }

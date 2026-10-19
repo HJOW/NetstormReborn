@@ -9,8 +9,8 @@
   },
   "currentSources": {
     ".gitattributes": "3e8d869648cde0415d1a91e9b22d5a7ed7e5c0585923a189bfd37aa33229f3a8",
-    "cpppj/src/CMakeLists.txt": "14c485cf02a59e50d4b8a66cf4c03d9f20ce28139a549677c8c15b6cfbae5d1c",
-    "cpppj/tests/CMakeLists.txt": "f1493f0e7fe889cce9a7aa70ec18941821120699ca402469a8781a891f7a4a8d",
+    "cpppj/src/CMakeLists.txt": "9c331c9fbd2e2f96e7604cf5c2a9462238ea3f55ef689542ab5789d2b1ee17cf",
+    "cpppj/tests/CMakeLists.txt": "d171568eba935a3c57358c67bcd34bc47c249051356a6bae5d6b6c72c09f1c6d",
     "cpppj/src/client/RawCampaignSession.cpp": "4b0470acb1ea5cb275959eb4a70df1d795c4f87d6a51a2a78f6e35ebe573f36b",
     "cpppj/tests/CampaignObjectMenuTests.cpp": "fea9198ea2150c42bb523f7ac9298c2f819acd1fc9b9887b53020c206ad62563",
     "cpppj/src/o/RawNuggetRegular.cpp": "5b62ca9f75cdda9b83252a1601c88cc78c235df4190bd8d48b2dbfa93b497cab",
@@ -1400,6 +1400,25 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "695824783c587ef02635c705f6976c5422f0441ffe16831149d568a6d91fb51b",
           "current": "f1493f0e7fe889cce9a7aa70ec18941821120699ca402469a8781a891f7a4a8d"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 233,
+      "reason": "?? ??? ???? Bomb ?? ??? ?? ?? ?? ??? ?? ?? ?? ?? ? ??. ?? ???? ?? ??/??? ????.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "14c485cf02a59e50d4b8a66cf4c03d9f20ce28139a549677c8c15b6cfbae5d1c",
+          "current": "9c331c9fbd2e2f96e7604cf5c2a9462238ea3f55ef689542ab5789d2b1ee17cf"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "f1493f0e7fe889cce9a7aa70ec18941821120699ca402469a8781a891f7a4a8d",
+          "current": "d171568eba935a3c57358c67bcd34bc47c249051356a6bae5d6b6c72c09f1c6d"
         }
       ]
     }

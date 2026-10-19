@@ -1,0 +1,42 @@
+{
+  "unit": 233,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-19",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-19"
+  },
+  "uniqueInputs": 300,
+  "normalReturns": 600,
+  "instructions": 6258876,
+  "nativeCalls": {
+    "0041e4b0": 600,
+    "0041d7a0": 1200,
+    "004e49c0": 16428,
+    "0041d0d0": 600,
+    "0041e3c0": 600,
+    "004ac550": 3790,
+    "0049a840": 11738,
+    "0041def0": 600,
+    "0041d770": 600,
+    "004b16d0": 600,
+    "00434380": 4800,
+    "004b2b00": 111734,
+    "004b1810": 4546,
+    "0049a900": 7948,
+    "0044daa0": 3946,
+    "004adea0": 3034,
+    "0041cfc0": 3034
+  },
+  "boundaries": "41e4b0/41e3c0/스냅/제한/거리/중심/TYPE/ftol/float사각형생성/4단계실제Begin·Next/버킷/기본true필터 전체. 파생가상bc 자격과 복귀 진단만 명시 경계다. 네 배열/체인은 직접 등록한 입력이며 실제Pop/미션 경로 성공 증거가 아니다. GP/retN/canary/SEH보존/x87/실행·읽기·쓰기범위 확인. 실제 피해/게임/UI는 별도다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_bomb_targets.py": "13f5d8ff862b4e9d0fa370592e48d074d209f1b8550cc3a622f4ffefb75440f6",
+    "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+    "tools/decomp_cursor_position.py": "e15bcdbc4c6be9c131c30f15416c945d650dba9f7dc6def404b47f63c635c212",
+    "tools/decomp_carrier_falling.py": "f8702db0708a543b73213c8df9154503afe977767a11bd7c150b639ee1b587a6",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "cpppj/tests/fixtures/bomb-targets-x86.tsv": "43f5b4b207fd60089a42cf2f94119adecefaf1d742f17fa08c693cb2307b05af"
+  }
+}

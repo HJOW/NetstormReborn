@@ -1,0 +1,58 @@
+{
+  "unit": 233,
+  "baseline": "027e605b",
+  "host": "HJOW-Athlon",
+  "date": "2026-10-19",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-19"
+  },
+  "scope": "41e4b0? ?? ? ??/??/?? ??/?? signed ?? ???41e3c0 ?? ??? ????. ????bc???? ????.",
+  "validation": {
+    "focused": "extracted/goal-bomb-targets-20261019-focused1.json",
+    "full": "extracted/goal-bomb-targets-20261019-full1.json",
+    "currentPins": "extracted/goal-bomb-targets-20261019-current-pins.json",
+    "tests": 1763,
+    "failed": 0,
+    "seconds": 264.77013520000037
+  },
+  "binaries": {
+    "app": "f03f920744cfe52f09ab32d82e972b3a7b34fea7118a1b8f97dcf26eb8425e70",
+    "tests": "0bcaa0dfc82bb36ab148efc343334f72569fac0fd13121a97040789abd92eb67"
+  },
+  "sources": {
+    "cpppj/src/CMakeLists.txt": "9c331c9fbd2e2f96e7604cf5c2a9462238ea3f55ef689542ab5789d2b1ee17cf",
+    "cpppj/tests/CMakeLists.txt": "d171568eba935a3c57358c67bcd34bc47c249051356a6bae5d6b6c72c09f1c6d",
+    "cpppj/src/o/RawBombTargets.cpp": "ecbf612a0db102b6ceb1b90ff7f57043f2ae10762cb8abe80c69f03886fda3e0",
+    "cpppj/src/o/RawBombTargets.h": "6ab9f3c83450c3093325888e0c3c0aee6fb6feb2a55de3828563adad40e37c01",
+    "cpppj/tests/BombTargetsTests.cpp": "c23ce90953e40c4a9c0527108693f8ee6e9bc31c6308ac26d879d9d9203cae57",
+    "cpppj/src/o/RawSquidFinder.cpp": "f7947c488c45aa7632d0a705a863c0fe5262c3ea1c29c17ea23c56ed4249e4e2",
+    "cpppj/src/o/RawSquidFinder.h": "e84bf53e772117ecfbc913eabbf460e86f1e687d79cb3f48f2f9c7db8893ed63",
+    "cpppj/src/o/SquidHash.cpp": "e275a8239016e45237a57a85c43c22a9767351bfdaeedc728423c3bb42a3e5e4",
+    "cpppj/src/o/SquidHash.h": "ee3c9fbc61c659e8a62b0d9675f028ca3ca1b29cc364abc49680bdb1a5e50ac7",
+    "cpppj/src/o/SidPool.h": "a830f7fca8c42e5a2713a7d5d886314c81dc3bffb8271de85c1b0d1fc46de651",
+    "cpppj/src/o/RiftType.h": "4d4a5a2bb251cf27fe253a5e42da91776d6d12d094d640dac25da5bad9b1b552",
+    "tools/decomp_bomb_targets.py": "13f5d8ff862b4e9d0fa370592e48d074d209f1b8550cc3a622f4ffefb75440f6",
+    "tools/cpp_bomb_targets_audit.py": "34f9c6022dadbf7678fc560f5d18ec32663a9603bed8a820ed03f3c91e06b0c6",
+    "docs/exe/cpp-bomb-targets-20261019.md": "f129aa3864df7f1c1fe0a2ab9a14ecc2ed37817e563ff8304cbca9e89686b71d"
+  },
+  "evidence": {
+    "cpppj/bomb-targets-native.json": "b5054749710845ddcd4c80357052f4f421f502e33062467b1438251a3a04ce35",
+    "cpppj/tests/fixtures/bomb-targets-x86.tsv": "43f5b4b207fd60089a42cf2f94119adecefaf1d742f17fa08c693cb2307b05af",
+    "extracted/goal-bomb-targets-20261019-current-pins.json": "f5249d341ea0a6aaf29bc5493aec0ff94c069310287e739919dc0c56fce85663",
+    "extracted/goal-bomb-targets-20261019-tool-before-range.py": "43d6c65df015bc89f6015f434d5ca6974b47dd388f2075a4e433f97fc4897a43",
+    "extracted/goal-bomb-targets-20261019-focused1.json": "2c41a88c5b473dd7b293bf43c14bbc056fa6fca5c694db587a7a592fb052bf87",
+    "extracted/goal-bomb-targets-20261019-focused1.stdout": "3da5d066c15c0e700b80654b3c83410e9a668c639e84d2541631627df223f06a",
+    "extracted/goal-bomb-targets-20261019-focused1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-bomb-targets-20261019-full1.json": "20b85eb0371db9beb9d7453148afc8f770f05d6b4d34b64768e25cc4014c2119",
+    "extracted/goal-bomb-targets-20261019-full1.stdout": "b348c1fa6c6d1d96ae563ad165c7e9ff15fe5c7f44469c417beeb9a84d1ae790",
+    "extracted/goal-bomb-targets-20261019-full1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "cppImplemented": true,
+  "actualHashSearch": true,
+  "virtualEligibilityIntegrated": false,
+  "sessionIntegrated": false,
+  "gameRun": false,
+  "goalComplete": false,
+  "resumeAt": "Devastation???bc41e9c0/??c041ea30????????/??,??????/????/????????????Session0x50/0x5c/0x5f????????UI Cast/Drop/427070???????. Early5 ??F ????/??/??/?????????/Guide????."
+}

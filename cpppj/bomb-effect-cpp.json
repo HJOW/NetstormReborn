@@ -25,8 +25,8 @@
     "tests": "998d351b68b21386fbf60b01eaf25b1567814b59f7830e1f7bb885f0ba4fb737"
   },
   "sources": {
-    "cpppj/src/CMakeLists.txt": "14c485cf02a59e50d4b8a66cf4c03d9f20ce28139a549677c8c15b6cfbae5d1c",
-    "cpppj/tests/CMakeLists.txt": "f1493f0e7fe889cce9a7aa70ec18941821120699ca402469a8781a891f7a4a8d",
+    "cpppj/src/CMakeLists.txt": "9c331c9fbd2e2f96e7604cf5c2a9462238ea3f55ef689542ab5789d2b1ee17cf",
+    "cpppj/tests/CMakeLists.txt": "d171568eba935a3c57358c67bcd34bc47c249051356a6bae5d6b6c72c09f1c6d",
     "cpppj/src/o/RawBombEffect.cpp": "120e00fe19199c4e008bd4d09e3f665f10f235973abd8167f6d7afda0d1ef01a",
     "cpppj/src/o/RawBombEffect.h": "4df18d0a1d809dcb5063ffa974839c2b5eab069cbf49413862b97939017c8e62",
     "cpppj/tests/BombEffectTests.cpp": "8cfaf59f4ddee64949e13474b30a18371c492d5846cca1c77ff0ae1e5cedc265",
@@ -60,5 +60,26 @@
   "sessionIntegrated": false,
   "gameRun": false,
   "goalComplete": false,
-  "resumeAt": "??41e4b0 ?? ??/??bc???c0??/?? ????/?? ??? ?? ??? ??? ?????? ? Session0x50/0x5c/0x5f??? ?? ???UI Cast/Drop/427070? ?? ????. Early5 ??F ?? ??/??/??/?? ? ?? ?? ??/Guide? ???."
+  "resumeAt": "??41e4b0 ?? ??/??bc???c0??/?? ????/?? ??? ?? ??? ??? ?????? ? Session0x50/0x5c/0x5f??? ?? ???UI Cast/Drop/427070? ?? ????. Early5 ??F ?? ??/??/??/?? ? ?? ?? ??/Guide? ???.",
+  "integration_updates": [
+    {
+      "date": "2026-10-19",
+      "unit": 233,
+      "reason": "?? ??? ???? Bomb ?? ??? ?? ?? ?? ??? ?? ?? ?? ?? ? ??. ?? ???? ?? ??/??? ????.",
+      "pins": [
+        {
+          "group": "/sources",
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "14c485cf02a59e50d4b8a66cf4c03d9f20ce28139a549677c8c15b6cfbae5d1c",
+          "current": "9c331c9fbd2e2f96e7604cf5c2a9462238ea3f55ef689542ab5789d2b1ee17cf"
+        },
+        {
+          "group": "/sources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "f1493f0e7fe889cce9a7aa70ec18941821120699ca402469a8781a891f7a4a8d",
+          "current": "d171568eba935a3c57358c67bcd34bc47c249051356a6bae5d6b6c72c09f1c6d"
+        }
+      ]
+    }
+  ]
 }

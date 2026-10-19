@@ -21,8 +21,8 @@
     "tests": "349e8797d3ba045564e6144838b0280641174d75e1c576f0716a8882a4154cda"
   },
   "sources": {
-    "cpppj/src/CMakeLists.txt": "14c485cf02a59e50d4b8a66cf4c03d9f20ce28139a549677c8c15b6cfbae5d1c",
-    "cpppj/tests/CMakeLists.txt": "f1493f0e7fe889cce9a7aa70ec18941821120699ca402469a8781a891f7a4a8d",
+    "cpppj/src/CMakeLists.txt": "9c331c9fbd2e2f96e7604cf5c2a9462238ea3f55ef689542ab5789d2b1ee17cf",
+    "cpppj/tests/CMakeLists.txt": "d171568eba935a3c57358c67bcd34bc47c249051356a6bae5d6b6c72c09f1c6d",
     "cpppj/src/o/RawBombRegular.cpp": "0015e3b8830a9d94f1646d74cfecde0509095973788787a24ff47c03bdd0a154",
     "cpppj/src/o/RawBombRegular.h": "b83e048ad7aba172f90adc70e92e971d9553e869fcad0944799b1492998d9ab0",
     "cpppj/tests/BombRegularTests.cpp": "fecb128daa7e3e866d9f6ceee66fc0b501903a9b1e7a153299a397d8b74414ca",
@@ -68,6 +68,25 @@
           "path": "tools/cpp_bomb_regular_audit.py",
           "previous": "e385e48aff50dc63e86cb330e80a166a87d6ee3b624aa775198c4a158b78a2ea",
           "current": "1df34d021ce28c5ee6305d8317dae9730299ff5fe7207931497f3289b4e485ab"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 233,
+      "reason": "?? ??? ???? Bomb ?? ??? ?? ?? ?? ??? ?? ?? ?? ?? ? ??. ?? ???? ?? ??/??? ????.",
+      "pins": [
+        {
+          "group": "/sources",
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "14c485cf02a59e50d4b8a66cf4c03d9f20ce28139a549677c8c15b6cfbae5d1c",
+          "current": "9c331c9fbd2e2f96e7604cf5c2a9462238ea3f55ef689542ab5789d2b1ee17cf"
+        },
+        {
+          "group": "/sources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "f1493f0e7fe889cce9a7aa70ec18941821120699ca402469a8781a891f7a4a8d",
+          "current": "d171568eba935a3c57358c67bcd34bc47c249051356a6bae5d6b6c72c09f1c6d"
         }
       ]
     }
