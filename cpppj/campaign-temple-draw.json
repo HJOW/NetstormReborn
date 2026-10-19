@@ -90,7 +90,7 @@
     "cpppj/src/client/RawCampaignSession.cpp": "8da5a9e0dd26dc7f06e29eabac9b787b0d75207420f4a734cbd71c7fe28cb13c",
     "cpppj/src/client/RawCampaignFactoryDisplay.h": "d2434f7d291754651b9810411235659ca35f393443423340818a261599640f2e",
     "cpppj/src/client/RawCampaignFactoryDisplay.cpp": "c93640d0b659789ffb74d6b4a0d71b1f18522638480dd7b0508259747260ee06",
-    "cpppj/src/client/GameWorld.cpp": "07aa1f5d4d4a144997fd8627184180914e3357e417016e1e59bb08bed8f4fc07",
+    "cpppj/src/client/GameWorld.cpp": "9ffd853ff68dfc7ed28b73acab0e79dd3d0c96fe9e05d0822cac7a30b6d8ab5c",
     "cpppj/tests/CMakeLists.txt": "6814b98421a14e37959652743dab5e6a24771de6c3ef50cf4aae8cce63fa191e",
     "cpppj/tests/CampaignSessionTests.cpp": "ea45c674da8aa8f8e51d6afa2975e1a6a5b6f1f15b9f31368bdcbd7b09027801",
     "tools/decomp_temple_draw.py": "b94a1b635e83af4af3808d3666d3dd56067a44e88c22ecfbd4fe9396000dab24",
@@ -1527,6 +1527,19 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "a28386f7cba8ec9f181edf644f86e384d5bdfbfa77dcbcddfd01028a5526f534",
           "current": "6814b98421a14e37959652743dab5e6a24771de6c3ef50cf4aae8cce63fa191e"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 210,
+      "reason": "Factory 본체 프레임의 실제 클릭 영역 연결에 대한 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/GameWorld.cpp",
+          "previous": "07aa1f5d4d4a144997fd8627184180914e3357e417016e1e59bb08bed8f4fc07",
+          "current": "9ffd853ff68dfc7ed28b73acab0e79dd3d0c96fe9e05d0822cac7a30b6d8ab5c"
         }
       ]
     }

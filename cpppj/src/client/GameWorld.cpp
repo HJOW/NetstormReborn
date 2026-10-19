@@ -9,6 +9,7 @@
 #include "o/OriginalText.h"
 #include "o/RawRainVortexDraw.h"
 #include "o/RawTempleDraw.h"
+#include "o/RawFactoryDraw.h"
 #include "o/CanonDecoder.h"
 #include <algorithm>
 #include <cmath>
@@ -355,6 +356,15 @@ std::size_t GameWorld::Frame(const o::Squid& object) const {
 }
 // 현재 그림의 불투명 프레임 사각형으로 몸통 클릭을 판정한다.
 ScreenRect GameWorld::Bounds(const o::Squid& object) const {
+    // Factory의 현재 프레임은 작은 추가 그림일 수 있다. 실제 +78(454cd0)의 본체 프레임으로 몸통 클릭 영역을 구한다.
+    if (campaign_ && assets_.Edition()==o::OriginalEdition::Patch1078) {
+        const auto core=campaign_->Core();const o::Sid sid{static_cast<std::uint16_t>(object.id)}; // 렌더링과 같은 현재 풀/실제 SID다.
+        const o::RawFactoryDraw factory(core.pool,core.frames); // 원본 두 가상 표의 단계별 본체 프레임 선택을 재사용한다.
+        if (factory.Handles(sid)) {
+            const auto rect=core.display.Bounds(static_cast<std::size_t>(object.type),factory.MainFrame(sid),static_cast<float>(object.x),static_cast<float>(object.y)); // 같은 SHP 헤더/카메라/배율의 전체 본체 영역이다.
+            return {rect.left,rect.top,rect.right,rect.bottom};
+        }
+    }
     // 템플의 현재 애니메이션 압축 영역과 별개로 원본 Squid 표시 헤더의 전체 영역을 사용한다.
     if (campaign_ && (o::IsRainVortex(assets_.Edition(),campaign_->Core().pool.Slot(o::Sid{static_cast<std::uint16_t>(object.id)})) || (assets_.Edition()==o::OriginalEdition::Patch1078 && o::IsPatchTemple(campaign_->Core().pool.Slot(o::Sid{static_cast<std::uint16_t>(object.id)}))))) {
         const auto rect=campaign_->Core().display.Bounds(static_cast<std::size_t>(object.type),static_cast<int>(object.frame),static_cast<float>(object.x),static_cast<float>(object.y));
