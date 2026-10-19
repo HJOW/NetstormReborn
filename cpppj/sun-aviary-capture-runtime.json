@@ -1,0 +1,414 @@
+{
+  "unit": 218,
+  "baseline": "16ca2d8b",
+  "host": "VM-W11-Codex",
+  "date": "2026-10-19",
+  "lastDecompile": "VM-W11-Codex / 2026-10-19",
+  "scope": "10.78 훨리베이스72 파편 캡처의 독립384입력 전체 픽셀과 실제 적 두 건물 파괴 및 자연E 진행을 검증한다. 골렘 후속 조작과 표시 가림 및 사제 끊김은 미완료다.",
+  "validation": {
+    "fullTests": "extracted/goal-aviary-capture-20261019-full-tests1.json",
+    "focusedTests": "extracted/goal-aviary-capture-20261019-focused1.json",
+    "fullSeconds": 150.839,
+    "oldCurrentPinReports": 92,
+    "oldCurrentPins": 118
+  },
+  "observations": {
+    "extracted/goal-thunder-capture-20261019-ui3": {
+      "returnCode": 1,
+      "binarySha256": "f732dfecec61474e7e608eb7c6da74f090976ba9cf26b55a4eff319f908599b3",
+      "originalsUnchanged": true,
+      "lastLabel": "twinCannon7",
+      "gameTime": 161.053,
+      "lastGate": [
+        "5",
+        "68",
+        "0",
+        "0",
+        "0",
+        "1",
+        "57.426",
+        "0"
+      ],
+      "forwardGeneratorsAfterWait": {
+        "15072": {
+          "xy": [
+            "133",
+            "93"
+          ],
+          "hp": 700
+        },
+        "15100": {
+          "xy": [
+            "138",
+            "99"
+          ],
+          "hp": 700
+        }
+      },
+      "cannons": {
+        "15110": {
+          "firstLabel": "firstCannon1",
+          "xy": [
+            "136",
+            "109"
+          ],
+          "firstHp": 0,
+          "maxHp": 600,
+          "lastLabel": "twinCannon7",
+          "lastHp": 213
+        }
+      },
+      "sunFlyerSidsObserved": [
+        15063
+      ],
+      "enemyMinimumHp": {
+        "15006": 28,
+        "15013": 200
+      },
+      "naturalEObserved": false,
+      "combat2Observed": false,
+      "nextFailure": "다른 실제 파편 source의 전용 색표/추가 그림 미복원 TYPE72",
+      "towers": {
+        "15060": {
+          "xy": [
+            "135",
+            "93"
+          ],
+          "firstLabel": "placed",
+          "maxHp": 1880,
+          "lastHp": 125,
+          "lastLabel": "selectionEarly"
+        }
+      },
+      "templeDestroyedObserved": false,
+      "maximumOwnCannonCount": 1,
+      "lastPage": [
+        "mission"
+      ],
+      "enemyThunderPresentAtLastReport": true,
+      "enemyAviaryPresentAtLastReport": true,
+      "naturalFObserved": false,
+      "maximumOwnGolemCount": 0,
+      "golems": {}
+    },
+    "extracted/goal-aviary-capture-20261019-ui1": {
+      "returnCode": 1,
+      "binarySha256": "48140d1980cc647f8a406e7c16f0fca12575eeb06b52bb7e46cf74ff8c84784c",
+      "originalsUnchanged": true,
+      "lastLabel": "obeliskWalk10",
+      "gameTime": 166.534,
+      "lastGate": [
+        "5",
+        "69",
+        "0",
+        "1",
+        "0",
+        "1",
+        "166.098",
+        "0"
+      ],
+      "forwardGeneratorsAfterWait": {
+        "15072": {
+          "xy": [
+            "133",
+            "93"
+          ],
+          "hp": 700
+        },
+        "15098": {
+          "xy": [
+            "138",
+            "99"
+          ],
+          "hp": 700
+        }
+      },
+      "cannons": {
+        "15108": {
+          "firstLabel": "firstCannon1",
+          "xy": [
+            "136",
+            "108"
+          ],
+          "firstHp": 0,
+          "maxHp": 600,
+          "lastLabel": "obeliskWalk10",
+          "lastHp": 217
+        }
+      },
+      "sunFlyerSidsObserved": [
+        15063
+      ],
+      "enemyMinimumHp": {
+        "15006": 26,
+        "15013": 200
+      },
+      "naturalEObserved": true,
+      "combat2Observed": false,
+      "nextFailure": "UI script ended before all steps ran",
+      "towers": {
+        "15060": {
+          "xy": [
+            "135",
+            "93"
+          ],
+          "firstLabel": "placed",
+          "maxHp": 1880,
+          "lastHp": 130,
+          "lastLabel": "selectionEarly"
+        }
+      },
+      "templeDestroyedObserved": false,
+      "maximumOwnCannonCount": 1,
+      "lastPage": [
+        "E."
+      ],
+      "enemyThunderPresentAtLastReport": false,
+      "enemyAviaryPresentAtLastReport": false,
+      "naturalFObserved": false,
+      "maximumOwnGolemCount": 0,
+      "golems": {}
+    },
+    "extracted/goal-aviary-capture-20261019-ui2": {
+      "returnCode": 0,
+      "binarySha256": "48140d1980cc647f8a406e7c16f0fca12575eeb06b52bb7e46cf74ff8c84784c",
+      "originalsUnchanged": true,
+      "lastLabel": "spellLate2",
+      "gameTime": 337.925,
+      "lastGate": [
+        "5",
+        "69",
+        "0",
+        "0",
+        "0",
+        "1",
+        "160.093",
+        "0"
+      ],
+      "forwardGeneratorsAfterWait": {
+        "15070": {
+          "xy": [
+            "138",
+            "92"
+          ],
+          "hp": 700
+        },
+        "15088": {
+          "xy": [
+            "134",
+            "94"
+          ],
+          "hp": 700
+        }
+      },
+      "cannons": {
+        "15098": {
+          "firstLabel": "firstCannon1",
+          "xy": [
+            "136",
+            "107"
+          ],
+          "firstHp": 0,
+          "maxHp": 600,
+          "lastLabel": "spellStage4",
+          "lastHp": 10
+        }
+      },
+      "sunFlyerSidsObserved": [
+        15063
+      ],
+      "enemyMinimumHp": {
+        "15006": 30,
+        "15013": 200
+      },
+      "naturalEObserved": true,
+      "combat2Observed": false,
+      "nextFailure": null,
+      "towers": {
+        "15060": {
+          "xy": [
+            "135",
+            "93"
+          ],
+          "firstLabel": "placed",
+          "maxHp": 1885,
+          "lastHp": 140,
+          "lastLabel": "archerPreview"
+        }
+      },
+      "templeDestroyedObserved": false,
+      "maximumOwnCannonCount": 1,
+      "lastPage": [
+        "mission"
+      ],
+      "enemyThunderPresentAtLastReport": false,
+      "enemyAviaryPresentAtLastReport": false,
+      "naturalFObserved": false,
+      "maximumOwnGolemCount": 0,
+      "golems": {}
+    }
+  },
+  "sources": {
+    "cpppj/src/client/RawCampaignSession.cpp": "4b0470acb1ea5cb275959eb4a70df1d795c4f87d6a51a2a78f6e35ebe573f36b",
+    "cpppj/src/o/CMakeLists.txt": "e98fa5aecc683b69021e6efacd62092a48772ae5ed3f7cb3da0eeeff7c33d7ec",
+    "cpppj/src/o/RawSunAviaryCapture.cpp": "d042ce0de408bc7768395f951a3b34791064c0835a934740d1d22fe3aab2455a",
+    "cpppj/src/o/RawSunAviaryCapture.h": "65df20e4611cc2cabc8ce7ec3445f96653965581b64d1d7c7ed22d361fcbe887",
+    "cpppj/tests/ShapeToBufferTests.cpp": "91d7010f9d6698f7237d8a2040e00658502a57dedea9da310173af4e96dd26e5",
+    "tools/cpp_campaign_entry_smoke.py": "5fa9adadf6bcd571d6fba39b38e46fed41fe2e927911ff80dc38047c52c56b49",
+    "tools/cpp_fort_smoke.py": "96c7fcd524deb38d93274ded77620639bdc7012ec0f2aaeed0a488d938e9da83",
+    "tools/cpp_island_drop_runtime.py": "7a84366e3505e7fc98d883ca16364c648b9cad8110762744f7a6b8e7e5157ab3",
+    "tools/cpp_menu_smoke.py": "41732efb30e6337267168e3cd836ab6c04d6f34d36b16152b762c39dd2a76afe",
+    "tools/cpp_renderer_smoke.py": "fc648fea126c9cad3a124b38f757460f1139bb0e7f26c1032482ae4d85766ebe",
+    "tools/cpp_smoke_files.py": "66745bfd0ebac8d672eeb8f515144a47377fa4a28dad0603b5f8969a008ec679",
+    "tools/cpp_sun_aviary_capture_runtime.py": "4cc2495a288f7fea6775dd395a9a3036e01863902bb238ceec13701f4d44ce1b",
+    "tools/cpp_sun_aviary_notice_runtime.py": "8ab54e12605e9861c531bf9b82f4616b540aac1879f831bf88d69d0e35703952",
+    "tools/cpp_thunder_capture_runtime.py": "8c4a9d8d65420c5f0f37cfb003500d55d81bf0aa437484f20c9c06bfcdd673e3",
+    "tools/cpp_world_smoke.py": "6e50f87caf0b1b817c9116ef972ec6e75b44d33455edc88fe128a8d0f791fe72",
+    "tools/decomp_creation_oracle.py": "646adc1ca6c9eaeac08a9c700324ae05ba1727416bc62070e0a066afc07dc053",
+    "tools/decomp_display_oracle.py": "bd9a42431cdef96d3fb13accf78d5a0d6a3155243b1bbc0362d58e79f662f7a4",
+    "tools/decomp_dudespawn_oracle.py": "294095ff1336d290d8d7e0e465df95d5514ceb4ff87d4bac8c282cdcec2eb786",
+    "tools/decomp_factory_capture.py": "e5dd681fa0d5aa74779c7873c10814eff9ad15e193f7cb7322661c6ca02e27f1",
+    "tools/decomp_oracle.py": "227b9a8b703cfd81d05ac4a7c72a42eaecf9c804fc028680466a19a591f2335d",
+    "tools/decomp_owner_oracle.py": "5a837ad7fd233d9d75c7241d52fbf2e5a508e24dc158d091f243a13ab698e7fb",
+    "tools/decomp_pop_oracle.py": "2a50f34e6b229d5ea4611f7073877ca1e165e0bf841f32c83f17d300b6113bb6",
+    "tools/decomp_postpop_oracle.py": "43dd9adffc6e2b3a1bd4a1fb06563f848518d8082014f2346613243183535129",
+    "tools/decomp_rain_draw.py": "a7a8a40dbb5e1508e21745a94a4320fba207cd08a9ee38ae6a200614d4c2e249",
+    "tools/decomp_shape_to_buffer_oracle.py": "3499edbde033d4fb5102bfb855a988adc30c8b17aae219d917d81346eea71eec",
+    "tools/decomp_sid_oracle.py": "7bfd7b95b26724b1793d407a4ad6654972b2aaa3bf04e4c206cc357670b68dff",
+    "tools/decomp_sun_aviary_capture.py": "4ad95a7fd8d160bab8aa147fb4b388fcba63398d05db5c2e0dc8e7738c8cc1a0",
+    "tools/decomp_temple_capture.py": "d39f2d4150b2b96eb885e17b1bbcd8f1727e21b9b71a16113b3b04a0e2ece045",
+    "tools/decomp_temple_draw.py": "b94a1b635e83af4af3808d3666d3dd56067a44e88c22ecfbd4fe9396000dab24",
+    "tools/fort.py": "ee8ff8f00eea02771ac5c7a519dcd582e14cc07a2d97337c946c191022554e13",
+    "tools/shp.py": "4cb8bee6ed773e29e8658ddb315594ebf5ac005ea5b96c6b760a177029515bfd",
+    "tools/taff.py": "461860cdfc9451b85a8694dd30fd2c56c1cfdf5c6bb7ab8f63a4089971889795",
+    "tools/terrain_mask.py": "00f9789dbde0c124a132a4005924549571b06add5214ea14e3b76e88e73cb37a",
+    "tools/typefile.py": "a564a4b1bbc4f06d05ecb8b1f3fae4c32f6231cf95ea7bfadff2499931804d90"
+  },
+  "evidence": {
+    "cpppj/sun-aviary-capture-native.json": "19d139bcfcee84cae120c94686f3f8b357351b429737f3e51e63a25710b2efdc",
+    "cpppj/tests/fixtures/sun-aviary-capture-x86.tsv": "3777792bda24138c1be404474a78ec531a01a9963d0a6f3fd7a2b40999d0f268",
+    "extracted/burning-frame-helper/originals/functions.tsv": "42431fbbcf4d5fd7c4261b4eb181d3808b5a72e5436d6b972509c32a0b053bc0",
+    "extracted/burning-frame-paint-helper/originals/functions.tsv": "db423ff44bde1f444dd35357b7d2d2e77b39b33955997eceea7fe14def91f560",
+    "extracted/burning-frame-raster-helper/originals/functions.tsv": "4a6e82217aca93711bc3d92921931ac433c9f2f25e4bdb3a7fa1cdf6f34b6a6f",
+    "extracted/creation/originals/functions.tsv": "42b14fee0b262fd92c833ec51db3cf772e92fd56b6ccbdc1c589955eb347ccb7",
+    "extracted/display/originals/functions.tsv": "408c4530becac3e2ce5112b436e23b32437a729b36ec6b0ebae5b2da81eb51b4",
+    "extracted/dude-spawn/originals/functions.tsv": "bb78175f3eb554190ab1862a9d901a2385e03e3cdfda66fc8164d5e925819975",
+    "extracted/goal-aviary-capture-20261019-audit-pins.py": "f30be1616b9e7c511296bafb5e8d1703f0676e6d0acb21ddd6514485a8146f50",
+    "extracted/goal-aviary-capture-20261019-build-report.py": "c5c0b15b6f3019e44395cc4db5044f0fc1cd78057478102f4b242cf98d960c09",
+    "extracted/goal-aviary-capture-20261019-build1.log": "05d50385d0aff3d97ce0019e25fd7f4ab9ab4492f9a94f2ddc4ee21e57871afb",
+    "extracted/goal-aviary-capture-20261019-focused1.json": "8d088bedb5e48e3311902e2dcdad6f4fd6c8a9e6abcbe406fd6c2d8034a5c81e",
+    "extracted/goal-aviary-capture-20261019-focused1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-aviary-capture-20261019-focused1.stdout": "934bff5b32891c242f815c6ae2d6a74947c693d5bb3dd1a0bf064cdbed51cb2f",
+    "extracted/goal-aviary-capture-20261019-full-tests1.json": "b2e574764f78e53abdf9d4ff43b9479b3b22eb6be90a89c64c780e03a8899d10",
+    "extracted/goal-aviary-capture-20261019-full-tests1.stderr": "79e2480bde0296407e865b4a37f3b49c9c027d653a2260e3a4215348db0f0663",
+    "extracted/goal-aviary-capture-20261019-full-tests1.stdout": "6bd8cd5826c350935cc0a087053e89676d30d2d0e6417025e9a0732e0b32560b",
+    "extracted/goal-aviary-capture-20261019-native1.log": "1373850418ab78498455bd56d9a7a53518bad7a259c7af0266dd3f36d9c0e083",
+    "extracted/goal-aviary-capture-20261019-pin-updates.json": "72a568acca9ac14d135031d90f33a8ffb44889b02b3ac86289f261ea270765ca",
+    "extracted/goal-aviary-capture-20261019-plan-v1.py": "34fe957b0a0ed81163728d73f2aac4afc3b3c28f91fc706fbe68c786ffc00938",
+    "extracted/goal-aviary-capture-20261019-plan.py": "5693faa9fdcac7c3985b75f5a69074b8f4a19599b7239e80acb2281bf5620178",
+    "extracted/goal-aviary-capture-20261019-plan1.tsv": "aabe7ad9891f64fec1681ab365fcba21be61ce90482957c002653a6629642675",
+    "extracted/goal-aviary-capture-20261019-plan2.tsv": "cbc94ef04bae810d29010bca090ff73d3186629e3cb4dc48b5aacde6bb0c088c",
+    "extracted/goal-aviary-capture-20261019-refresh-pins.py": "4f20935ac1db807828f5610a450804f96583e6d55bc0cbcdcd1b7055caa00919",
+    "extracted/goal-aviary-capture-20261019-stage.py": "456c50cef63abcfdc72a7fb805339e4b19085bfbb6824253b743c102541ff412",
+    "extracted/goal-aviary-capture-20261019-ui1/combatAfterCapture.bmp": "de063f150d40032a24c3cd9dfab36519b322efe2bad98bd221e36d7ac6ff06bf",
+    "extracted/goal-aviary-capture-20261019-ui1/completedWorkshop.bmp": "2e2ce75c036456d44d6199a05eb236dea5d97af9b65071a290d5997f168cf84c",
+    "extracted/goal-aviary-capture-20261019-ui1/enemyView.bmp": "963a3374e94943a8d329ee67918918de0446a0eee22b166b32e7bd36f229373d",
+    "extracted/goal-aviary-capture-20261019-ui1/obeliskWalk1.bmp": "de063f150d40032a24c3cd9dfab36519b322efe2bad98bd221e36d7ac6ff06bf",
+    "extracted/goal-aviary-capture-20261019-ui1/obeliskWalk10.bmp": "de063f150d40032a24c3cd9dfab36519b322efe2bad98bd221e36d7ac6ff06bf",
+    "extracted/goal-aviary-capture-20261019-ui1/obeliskWalk2.bmp": "de063f150d40032a24c3cd9dfab36519b322efe2bad98bd221e36d7ac6ff06bf",
+    "extracted/goal-aviary-capture-20261019-ui1/obeliskWalk3.bmp": "de063f150d40032a24c3cd9dfab36519b322efe2bad98bd221e36d7ac6ff06bf",
+    "extracted/goal-aviary-capture-20261019-ui1/obeliskWalk4.bmp": "de063f150d40032a24c3cd9dfab36519b322efe2bad98bd221e36d7ac6ff06bf",
+    "extracted/goal-aviary-capture-20261019-ui1/obeliskWalk5.bmp": "de063f150d40032a24c3cd9dfab36519b322efe2bad98bd221e36d7ac6ff06bf",
+    "extracted/goal-aviary-capture-20261019-ui1/obeliskWalk6.bmp": "de063f150d40032a24c3cd9dfab36519b322efe2bad98bd221e36d7ac6ff06bf",
+    "extracted/goal-aviary-capture-20261019-ui1/obeliskWalk7.bmp": "de063f150d40032a24c3cd9dfab36519b322efe2bad98bd221e36d7ac6ff06bf",
+    "extracted/goal-aviary-capture-20261019-ui1/obeliskWalk8.bmp": "de063f150d40032a24c3cd9dfab36519b322efe2bad98bd221e36d7ac6ff06bf",
+    "extracted/goal-aviary-capture-20261019-ui1/obeliskWalk9.bmp": "de063f150d40032a24c3cd9dfab36519b322efe2bad98bd221e36d7ac6ff06bf",
+    "extracted/goal-aviary-capture-20261019-ui1/originals-before.json": "f98d8731a8a729b528fd9744b52f3b26143eff54e767f0b8e1537040c5807c15",
+    "extracted/goal-aviary-capture-20261019-ui1/run.json": "30e6954d70415b58293e9ffe5afb9a02784355dc54919c8e75f30421eced7c29",
+    "extracted/goal-aviary-capture-20261019-ui1/stageC.bmp": "1ad80fbcb61ea4fbc68ac30350f7d18c5af5d5f75b0c54f3acb09f4f0d8ecd97",
+    "extracted/goal-aviary-capture-20261019-ui1/stageD.bmp": "861ec19a6f8d042465e2ba43961275fdff273ef94d9574a486dce7be5e5bced4",
+    "extracted/goal-aviary-capture-20261019-ui1/states.tsv": "2332ddd6f9f1b3a2ed26011cd23c521d45aa92274f8525c77161bc01115c4469",
+    "extracted/goal-aviary-capture-20261019-ui1/stderr.log": "d00ecaa6e47e97ff4094bf41982315d0feaf49e3723d59ac6b982cee21576c18",
+    "extracted/goal-aviary-capture-20261019-ui1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-aviary-capture-20261019-ui1/steps.tsv": "ffc19b5b013269d6d801811a905d3e4d3cd0bbef578510848840b75342737c39",
+    "extracted/goal-aviary-capture-20261019-ui1/twinCannon1.bmp": "8987c57f243961c23b4c93caeaab68a16ede29ceef39ef1d50928d8b94171362",
+    "extracted/goal-aviary-capture-20261019-ui1/twinCannon2.bmp": "e392ea2abca2246c415ed7d4618368517018148f93dfbb023c28ae1b54a33c2d",
+    "extracted/goal-aviary-capture-20261019-ui1/twinCannon3.bmp": "d653768a37060bd571afade0a2781ba47525a8aaf1d8aab8751bcd0ac8d408b3",
+    "extracted/goal-aviary-capture-20261019-ui1/twinCannon4.bmp": "4cf36ab9935ae2a4ee16dee82c36a9d31829986e31d9050575c0b9f4b2ab0c14",
+    "extracted/goal-aviary-capture-20261019-ui1/twinCannon5.bmp": "c518560bb0dbbeb4e4bbd57fb59fb9c54e906ec449aba7eb90aaa6989dde27be",
+    "extracted/goal-aviary-capture-20261019-ui1/twinCannon6.bmp": "4e219d7e6b073829b96f8de773e496a119232ea00d1b003be82b6afd4974c713",
+    "extracted/goal-aviary-capture-20261019-ui1/twinCannon7.bmp": "9294fb548e22e75ca2a2159f32a95a73ba5290639832b68b4e089d810c59d881",
+    "extracted/goal-aviary-capture-20261019-ui1/twinCannon8.bmp": "de063f150d40032a24c3cd9dfab36519b322efe2bad98bd221e36d7ac6ff06bf",
+    "extracted/goal-aviary-capture-20261019-ui1-close.json": "0ce01b691264341f7788122d7d0e67b63117d669b011d518d5c17ee3bb61d631",
+    "extracted/goal-aviary-capture-20261019-ui1.log": "12212eec7f2cb018a592b64851c3658eb03e6ca383b87df25e95d9047a9b9ac5",
+    "extracted/goal-aviary-capture-20261019-ui2/combatAfterCapture.bmp": "5214fe1026bdc75eccb095141b1112876842c93c2145946d45c50f6e5c5ea3e0",
+    "extracted/goal-aviary-capture-20261019-ui2/completedWorkshop.bmp": "c98e535d4e38c34b328e6d0d19c076f1364dd5df02116d67944c569f6d09a550",
+    "extracted/goal-aviary-capture-20261019-ui2/enemyView.bmp": "31ac1e16866c30d869d5a553a8940744f128715deafd12ac9fd6f979d1bda08d",
+    "extracted/goal-aviary-capture-20261019-ui2/obeliskWalk1.bmp": "19873d73eb22007afbb06b39483eed7075731cebcd1334cd806137b09245050d",
+    "extracted/goal-aviary-capture-20261019-ui2/obeliskWalk10.bmp": "51c3876930acb6e5087963752226cb8c3e4d8b155d92c5e7f4d9548b0802b5f9",
+    "extracted/goal-aviary-capture-20261019-ui2/obeliskWalk2.bmp": "369bc2d579e22848a6b77a5eeded1dde3e5d76c45ae028dd2c38e14286b4fc50",
+    "extracted/goal-aviary-capture-20261019-ui2/obeliskWalk3.bmp": "0d191fc05c70703b0bc265552cbf31292a8b5a03c0bc91067c2aaf5b2a2a5d35",
+    "extracted/goal-aviary-capture-20261019-ui2/obeliskWalk4.bmp": "b0056f4af9a5bdfb3a1222ad7149b5c1a5720b24adbf8be03fd440e9586cd14a",
+    "extracted/goal-aviary-capture-20261019-ui2/obeliskWalk5.bmp": "07215eb141c0ae0e08a8a12e6d7b564918df5bbb4cbc0b6d3be00e341d0688e9",
+    "extracted/goal-aviary-capture-20261019-ui2/obeliskWalk6.bmp": "45e97b8c461d1961017b4700537d0cb8ac947644eefe65363dbb866e73e0f1e7",
+    "extracted/goal-aviary-capture-20261019-ui2/obeliskWalk7.bmp": "e0c4c360e833953b3cf8c7f2a8881b8efec4a2224890cb1b809c3dcb27fe8093",
+    "extracted/goal-aviary-capture-20261019-ui2/obeliskWalk8.bmp": "46fa9ce35b375a2babf9c7aa6ba96858da2ec6e1f8f824836b88c0fd1618da10",
+    "extracted/goal-aviary-capture-20261019-ui2/obeliskWalk9.bmp": "16cf5015fcaceb2ccca1e5ab10acb9fcb81a9d94e9e3cec2f6a87a6d97a1a1d8",
+    "extracted/goal-aviary-capture-20261019-ui2/originals-before.json": "f98d8731a8a729b528fd9744b52f3b26143eff54e767f0b8e1537040c5807c15",
+    "extracted/goal-aviary-capture-20261019-ui2/run.json": "a4ae8c8f8f39de616a859c067b92bef675ad4dcd963f4d31527964b45516db10",
+    "extracted/goal-aviary-capture-20261019-ui2/spellLate1.bmp": "68b803a9c183fa01d9c0f01807bd30071deb1516dfed6fe42458b9d8041bc86d",
+    "extracted/goal-aviary-capture-20261019-ui2/spellLate2.bmp": "c38f18ec0bf82392e3c8242bd31106023748001b101a629e850bee191100f68b",
+    "extracted/goal-aviary-capture-20261019-ui2/stageC.bmp": "e9fb6b6eae5e83b3bda1a67780e1e313a52cf87743364432767e499e90608f3b",
+    "extracted/goal-aviary-capture-20261019-ui2/stageD.bmp": "c4aeb96a160416ad63378bf4d9d2de784ddff344c479a70f02632e2e2029ca86",
+    "extracted/goal-aviary-capture-20261019-ui2/states.tsv": "9161843128c3b54d0650886f5288786938b51b7529ca61c2e0f0959703b160cb",
+    "extracted/goal-aviary-capture-20261019-ui2/stderr.log": "c38db327a76fd75d8939ca07eadc52908be1ed8e5abb680685721a11ed5a920c",
+    "extracted/goal-aviary-capture-20261019-ui2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-aviary-capture-20261019-ui2/steps.tsv": "7b1681819739adae502aa6999ae35d0469ae168a3d0f9095cf373162f72ba8c6",
+    "extracted/goal-aviary-capture-20261019-ui2/twinCannon1.bmp": "9cd1d416ade13feb3c63f66b17c3c151ad7288b0de7461837ae9195ab6e8e35f",
+    "extracted/goal-aviary-capture-20261019-ui2/twinCannon2.bmp": "e6326ab79b8c5c30f7b1605e71f76827add644f681cad18790352677f3597f12",
+    "extracted/goal-aviary-capture-20261019-ui2/twinCannon3.bmp": "fc7c2bb9c805ce0acd83a5750805b8dea15655971560181d166add3cf43c746e",
+    "extracted/goal-aviary-capture-20261019-ui2/twinCannon4.bmp": "2bc433abc323324f12d21a1a809fb40b3007428a882d6bbb2803c19f8876ece0",
+    "extracted/goal-aviary-capture-20261019-ui2/twinCannon5.bmp": "87a1486c8908a9db4183f8e9f292ae47262a49208dac304d65ac5f6aa50d126a",
+    "extracted/goal-aviary-capture-20261019-ui2/twinCannon6.bmp": "8d7bd532808f00f1f2368812dde7d16a8f1b73d990a531987df5582930a50fc7",
+    "extracted/goal-aviary-capture-20261019-ui2/twinCannon7.bmp": "21f4c99bc62d4529a860d767a261b5bcad5f18ea5deac91ceacf37a644d582d3",
+    "extracted/goal-aviary-capture-20261019-ui2/twinCannon8.bmp": "5214fe1026bdc75eccb095141b1112876842c93c2145946d45c50f6e5c5ea3e0",
+    "extracted/goal-aviary-capture-20261019-ui2.log": "3e260c8bdc0ae2a4b781cf4915fd70bf24718751faff79d5c687efdc871c5471",
+    "extracted/goal-early5-island-20261019-probe.py": "2933ead8b5cc87b76425031fea3da8690c3b2649dc8f3fa8d4babd276176ef1a",
+    "extracted/goal-early5-island-20261019-profile-origin.json": "0dd752dcebe4edfac911382824775b784f5bfa9be79b9b9241fb57a8c1671289",
+    "extracted/goal-early5-island-20261019-raster-profile-origin.json": "46be103093b865cd0095044cc94ede13c55379e89ef98a6cd187820afcc27c05",
+    "extracted/goal-thunder-capture-20261019-plan3.tsv": "8c0b982433ed2e4f38767b9ee78906629b930f36522c0ce4c5af2dfdad3629b4",
+    "extracted/goal-thunder-capture-20261019-ui3/completedWorkshop.bmp": "fcd366044dcdcb10fa32ff5db583ea6053f68c53f95ac67ca9687af15470f510",
+    "extracted/goal-thunder-capture-20261019-ui3/enemyView.bmp": "d4e6213effa0abc3fa349ffd04a3f3596d087751e8ec66d9585966f38e9dbfa6",
+    "extracted/goal-thunder-capture-20261019-ui3/originals-before.json": "f98d8731a8a729b528fd9744b52f3b26143eff54e767f0b8e1537040c5807c15",
+    "extracted/goal-thunder-capture-20261019-ui3/run.json": "083041bb6e24b0498ca7328b5aed4242bf84b4b992ea52b34c045177f9be6619",
+    "extracted/goal-thunder-capture-20261019-ui3/stageC.bmp": "440cd4534f5d750d9d488e91c51a48a59d603f39073304e216b2e4f4d3022c90",
+    "extracted/goal-thunder-capture-20261019-ui3/stageD.bmp": "b494d876362a2912757fa98ef6f849250e426ec37817752cee3cef4fea175d71",
+    "extracted/goal-thunder-capture-20261019-ui3/states.tsv": "2e65c7525f7f5920c51d7f539a846a8f059e8797c9f93f8bd5511e2fb8dda06b",
+    "extracted/goal-thunder-capture-20261019-ui3/stderr.log": "14871f30702dc639f5041eb0fd1ce7a191971e2497683979a99bc59cbbadd5e9",
+    "extracted/goal-thunder-capture-20261019-ui3/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-thunder-capture-20261019-ui3/steps.tsv": "0d18da35c85705482755244ba2407458b67e41ddc119687616b79dc41b46a18d",
+    "extracted/goal-thunder-capture-20261019-ui3/twinCannon1.bmp": "4fa0dd020aa309486f284f55c1faad790ffe361da56dbafc0043b9617171716c",
+    "extracted/goal-thunder-capture-20261019-ui3/twinCannon2.bmp": "4c7b2c8bfc8046b0dd461170b5b72a1eab1a39d432c55d5525e0120b690370be",
+    "extracted/goal-thunder-capture-20261019-ui3/twinCannon3.bmp": "aa43f44ccca57c7bf3c4810303c8cabd4a9ab1e63f49e126b1e2317cd208e593",
+    "extracted/goal-thunder-capture-20261019-ui3/twinCannon4.bmp": "c740ca78a09d6fd2e398286309dccb0153685823e743800f97d9cf86cb81cdd8",
+    "extracted/goal-thunder-capture-20261019-ui3/twinCannon5.bmp": "9d5ef0e3eca2865d51df59a34e4b5759ae8495c2793f12842137c80ef02e40ad",
+    "extracted/goal-thunder-capture-20261019-ui3/twinCannon6.bmp": "0b81bb97af9bd90fc79a49c4abaf3f5978c61df14f147fb5dd6a64bbfe9e8930",
+    "extracted/goal-thunder-capture-20261019-ui3/twinCannon7.bmp": "d257282899bc89c8123cd348b5d327916c8f13554eadbdcf387006a81b947b9d",
+    "extracted/owner/originals/functions.tsv": "3ea66dace80a85999a8b2c2dbadb4d5f1bd18b0dcdb0768f9c41075206c7c72d",
+    "extracted/pop/helpers-originals/functions.tsv": "fc21935402ba4781899da2002c5f844061e53150d0bddeeaa597f29b81d58cb8",
+    "extracted/pop/originals/functions.tsv": "5b3241e336bcc1dea4c188121e3c458d3aef3414c5b6e9c4590db8c126414568",
+    "extracted/postpop/originals/functions.tsv": "99dcfa55557ba03e55321146ccb750816cdebd8242c18b4d95e2e1a353a32021",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/setframe/originals/functions.tsv": "31422114edd78937f1d285df1480190ad4ceb87b5436e6e1d407e335f621425e",
+    "extracted/sid/originals/functions.tsv": "3034dd0d393ebdfd77f2e9fafe8a5b252d5437f1e71ab94541cc229e8ef8694b",
+    "originals/d/_shapes.shp": "c878353c8054208deef832e34c514b30fe670e175505b129333a5728ba70f68e",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "tools/ghidra/burning-frame-helper-functions.json": "77f3a9c4dc66d53f3ef5975dfaf93b373f75df5291d392af4b4b2da31ca10a4b",
+    "tools/ghidra/burning-frame-paint-helper-functions.json": "2e2730577c423a5478ed38839707f950c68d543b1d0fe7998240ad9f07e75405",
+    "tools/ghidra/burning-frame-raster-helper-functions.json": "863cd5dcdc91779ecfa0f62ef531f5c39defff3d540528ece5c06c89a71b0b4e",
+    "tools/ghidra/dude-spawn-functions.json": "6fd3a099b040d1c505e148f4fd06579f8ee05ab94650d4c9bf54f519210a3dd0"
+  },
+  "goalComplete": false,
+  "fullFidelityVerified": false
+}

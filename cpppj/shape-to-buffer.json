@@ -27,7 +27,7 @@
     "cpppj/src/client/VFXDraw.cpp": "1de6889912f1f18cc83e0efc7cc33a43216e063730aaca7917aad8bf5a8c37b7",
     "cpppj/src/client/VFXDraw.h": "3ac09a428f585449877a89cb3fbd8a1f92755bb635c8c5778519f827ce3cf9bc",
     "cpppj/tests/fixtures/shape-to-buffer-x86.tsv": "d92bc1a292b8f44cb87ec59ffec881f7e97db4c4b6680af92ad554af2d7c89c1",
-    "cpppj/tests/ShapeToBufferTests.cpp": "ad9bd358902fa8ad3ab113cdc917c1bf751c502dc9ab0ed89ddb4ea0f7c102c8",
+    "cpppj/tests/ShapeToBufferTests.cpp": "91d7010f9d6698f7237d8a2040e00658502a57dedea9da310173af4e96dd26e5",
     "extracted/burning-frame-helper/originalCD/creation.c": "79332ff09557a261e3148a25cf776e09fff3d59ef0bb435867f7bec8c80ea9ab",
     "extracted/burning-frame-helper/originalCD/functions.tsv": "fe7c50de077cff91478186174818f54286502c8420581b1da66ef9acc88ff685",
     "extracted/burning-frame-helper/originals/creation.c": "a61efc5fe47da67c8ef639024a9bed67b231e7886727e544d414c9a83062c5cf",
@@ -150,6 +150,19 @@
           "path": "cpppj/tests/ShapeToBufferTests.cpp",
           "previous": "d18ebe7ce7877f6d5bc612fde3d55d75a316dc04fe81615cc8b4cb29c3dc5db8",
           "current": "ad9bd358902fa8ad3ab113cdc917c1bf751c502dc9ab0ed89ddb4ea0f7c102c8"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 218,
+      "reason": "훨리베이스72의 생산 상태별 기본/추가 캡처와 독립384원문 대조의 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/tests/ShapeToBufferTests.cpp",
+          "previous": "ad9bd358902fa8ad3ab113cdc917c1bf751c502dc9ab0ed89ddb4ea0f7c102c8",
+          "current": "91d7010f9d6698f7237d8a2040e00658502a57dedea9da310173af4e96dd26e5"
         }
       ]
     }

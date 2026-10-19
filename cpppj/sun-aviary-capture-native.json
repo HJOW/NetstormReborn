@@ -1,0 +1,38 @@
+{
+  "host": "VM-W11-Codex",
+  "date": "2026-10-19",
+  "lastDecompile": "VM-W11-Codex / 2026-10-19",
+  "inputs": 384,
+  "normalReturns": 768,
+  "pixels": 3449976,
+  "virtualCalls": {
+    "0x45b530": 576,
+    "0x45b560": 576
+  },
+  "scope": "실제4a7db0/+78=45b530/+a4=45b560/497280/보호RLE 전체. heap만선언경계. CD·다른배율·추상색·자연전투완주증거는아님.",
+  "sha256": {
+    "cpppj/tests/fixtures/sun-aviary-capture-x86.tsv": "3777792bda24138c1be404474a78ec531a01a9963d0a6f3fd7a2b40999d0f268",
+    "extracted/burning-frame-helper/originals/functions.tsv": "42431fbbcf4d5fd7c4261b4eb181d3808b5a72e5436d6b972509c32a0b053bc0",
+    "extracted/burning-frame-paint-helper/originals/functions.tsv": "db423ff44bde1f444dd35357b7d2d2e77b39b33955997eceea7fe14def91f560",
+    "extracted/burning-frame-raster-helper/originals/functions.tsv": "4a6e82217aca93711bc3d92921931ac433c9f2f25e4bdb3a7fa1cdf6f34b6a6f",
+    "extracted/creation/originals/functions.tsv": "42b14fee0b262fd92c833ec51db3cf772e92fd56b6ccbdc1c589955eb347ccb7",
+    "extracted/display/originals/functions.tsv": "408c4530becac3e2ce5112b436e23b32437a729b36ec6b0ebae5b2da81eb51b4",
+    "extracted/dude-spawn/originals/functions.tsv": "bb78175f3eb554190ab1862a9d901a2385e03e3cdfda66fc8164d5e925819975",
+    "extracted/owner/originals/functions.tsv": "3ea66dace80a85999a8b2c2dbadb4d5f1bd18b0dcdb0768f9c41075206c7c72d",
+    "extracted/pop/helpers-originals/functions.tsv": "fc21935402ba4781899da2002c5f844061e53150d0bddeeaa597f29b81d58cb8",
+    "extracted/pop/originals/functions.tsv": "5b3241e336bcc1dea4c188121e3c458d3aef3414c5b6e9c4590db8c126414568",
+    "extracted/postpop/originals/functions.tsv": "99dcfa55557ba03e55321146ccb750816cdebd8242c18b4d95e2e1a353a32021",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/setframe/originals/functions.tsv": "31422114edd78937f1d285df1480190ad4ceb87b5436e6e1d407e335f621425e",
+    "extracted/sid/originals/functions.tsv": "3034dd0d393ebdfd77f2e9fafe8a5b252d5437f1e71ab94541cc229e8ef8694b",
+    "originals/d/_shapes.shp": "c878353c8054208deef832e34c514b30fe670e175505b129333a5728ba70f68e",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "tools/decomp_dudespawn_oracle.py": "294095ff1336d290d8d7e0e465df95d5514ceb4ff87d4bac8c282cdcec2eb786",
+    "tools/decomp_factory_capture.py": "e5dd681fa0d5aa74779c7873c10814eff9ad15e193f7cb7322661c6ca02e27f1",
+    "tools/decomp_shape_to_buffer_oracle.py": "3499edbde033d4fb5102bfb855a988adc30c8b17aae219d917d81346eea71eec",
+    "tools/decomp_sun_aviary_capture.py": "4ad95a7fd8d160bab8aa147fb4b388fcba63398d05db5c2e0dc8e7738c8cc1a0",
+    "tools/decomp_temple_capture.py": "d39f2d4150b2b96eb885e17b1bbcd8f1727e21b9b71a16113b3b04a0e2ece045",
+    "tools/shp.py": "4cb8bee6ed773e29e8658ddb315594ebf5ac005ea5b96c6b760a177029515bfd"
+  }
+}

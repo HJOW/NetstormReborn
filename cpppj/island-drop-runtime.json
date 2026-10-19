@@ -177,7 +177,7 @@
   "sources": {
     "cpppj/src/client/RawCampaignConstructionBindings.cpp": "26d4753bbe2c086485b320bcfae991ae9957c4aed69880677f2b94f439d13684",
     "cpppj/src/client/RawCampaignConstructionBindings.h": "1fe62283698ff9a69f03b74a043bb359d0aeb4df335798bc6e6e91b5c9c16431",
-    "cpppj/src/client/RawCampaignSession.cpp": "cd16fb2bad2fa4bf0985fa1dfd7d89cbd504e02f531d1bd319b863e686279b9b",
+    "cpppj/src/client/RawCampaignSession.cpp": "4b0470acb1ea5cb275959eb4a70df1d795c4f87d6a51a2a78f6e35ebe573f36b",
     "cpppj/src/o/RawBattleBroadcast.cpp": "d59f41110db782f83b522aeb16348225dc04728d38cd766bd706fc57585c9e4c",
     "cpppj/src/o/RawBattleBroadcast.h": "b434175a1b937a8c34d64ba016f72c73ab4635490d5b7e73f43986610b7240da",
     "cpppj/src/o/RawGraph.cpp": "5427d22b06ec1f9eb54ab9ede9c3e4008baeac3e3439cba3d8132236b9464fb1",
@@ -185,7 +185,7 @@
     "cpppj/tests/BattleBroadcastTests.cpp": "7bfa23c46a8f8810fc2b8522f14cff40060f23cbfb9a8752d8294cea4f407a43",
     "cpppj/tests/CampaignSessionTests.cpp": "b0f41abb1e4471fa109de00d131a9abba79867fb6422116e90f941b7fe201913",
     "cpppj/tests/DestroyGraphTests.cpp": "a3618522256bcd8f3a5313b62d31e18640e7823d481cf08f21e874ec7933c471",
-    "cpppj/tests/ShapeToBufferTests.cpp": "ad9bd358902fa8ad3ab113cdc917c1bf751c502dc9ab0ed89ddb4ea0f7c102c8",
+    "cpppj/tests/ShapeToBufferTests.cpp": "91d7010f9d6698f7237d8a2040e00658502a57dedea9da310173af4e96dd26e5",
     "tools/cpp_assets_smoke.py": "d71fbbe55dde7452c980509a68f228c40ce74ddaf9f3b7a7518092d76c0319e9",
     "tools/cpp_campaign_entry_smoke.py": "5fa9adadf6bcd571d6fba39b38e46fed41fe2e927911ff80dc38047c52c56b49",
     "tools/cpp_fort_smoke.py": "96c7fcd524deb38d93274ded77620639bdc7012ec0f2aaeed0a488d938e9da83",
@@ -366,6 +366,25 @@
           "path": "cpppj/tests/ShapeToBufferTests.cpp",
           "previous": "d18ebe7ce7877f6d5bc612fde3d55d75a316dc04fe81615cc8b4cb29c3dc5db8",
           "current": "ad9bd358902fa8ad3ab113cdc917c1bf751c502dc9ab0ed89ddb4ea0f7c102c8"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 218,
+      "reason": "훨리베이스72의 생산 상태별 기본/추가 캡처와 독립384원문 대조의 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/sources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "cd16fb2bad2fa4bf0985fa1dfd7d89cbd504e02f531d1bd319b863e686279b9b",
+          "current": "4b0470acb1ea5cb275959eb4a70df1d795c4f87d6a51a2a78f6e35ebe573f36b"
+        },
+        {
+          "group": "/sources",
+          "path": "cpppj/tests/ShapeToBufferTests.cpp",
+          "previous": "ad9bd358902fa8ad3ab113cdc917c1bf751c502dc9ab0ed89ddb4ea0f7c102c8",
+          "current": "91d7010f9d6698f7237d8a2040e00658502a57dedea9da310173af4e96dd26e5"
         }
       ]
     }

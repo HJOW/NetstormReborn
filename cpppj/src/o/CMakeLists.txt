@@ -340,3 +340,6 @@ target_sources(netstorm PRIVATE RawBurningLifetimeDraw.cpp RawBurningLifetimeDra
 
 # 실제131의 방향별 기본/추가 Draw를 Factory와 구별하여 캡처에 연결한다.
 target_sources(netstorm PRIVATE RawThunderCannonCapture.cpp RawThunderCannonCapture.h)
+
+# 실제72의 생산 기본/추가 가상 그림을 파편·건설·화염 캡처에 제공한다.
+target_sources(netstorm PRIVATE RawSunAviaryCapture.cpp RawSunAviaryCapture.h)

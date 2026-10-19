@@ -5,6 +5,7 @@
 #include "client/Renderer.h"
 #include "o/RawFactoryDraw.h"
 #include "o/RawThunderCannonCapture.h"
+#include "o/RawSunAviaryCapture.h"
 #include <cstdio>
 #include <filesystem>
 
@@ -139,4 +140,37 @@ TEST_CASE(ThunderCannonCapture_RejectsOtherVtableAndInvalidFrame) {
     try { static_cast<void>(ThunderCannonCaptureMainFrame(raw,frames)); }catch (const std::invalid_argument&) { rejected=true; }CHECK(rejected);
     Put(raw,0,0x50bad0U);Put(raw,36,37);rejected=false;
     try { static_cast<void>(ThunderCannonCaptureMainFrame(raw,frames)); }catch (const std::out_of_range&) { rejected=true; }CHECK(rejected);
+}
+
+// 실제32프레임의 생산/추가/매몰/그림자 경계를 독립384행의 모든 픽셀과 비교한다.
+TEST_CASE(ShapeToBuffer_SunAviaryNative384Pixels) {
+    const auto& assets=Assets(OriginalEdition::Patch1078);auto types=assets.types;std::array<std::uint32_t,188> maps{};
+    types[72].hotspotX=-2;types[72].hotspotY=3; // 원문에서 선언한 TYPE 기준점 입력이다.
+    const auto path=(std::filesystem::path(__FILE__).parent_path()/"fixtures/sun-aviary-capture-x86.tsv").string();std::size_t count{};
+    // 기대값은 제품 실행으로 만들지 않고 먼저 동결한 원본 결과만 읽는다.
+    for (const auto& row:LoadFixture(path.c_str()).rows) {
+        SidPool pool(OriginalEdition::Patch1078,32768,true);
+        // 같은 원본 격리 입력의 client50 슬롯까지 실제 풀에서 확보한다.
+        for (std::uint16_t sid=5;sid<=50;++sid) CHECK(pool.Allocate(2)==Sid{sid});
+        auto raw=pool.AllocatedBytes(Sid{50});std::fill(raw.begin(),raw.end(),std::uint8_t{});Put(raw,0,0x509930U);raw[10]=72;Put(raw,12,0xa5efU,2);raw[34]=static_cast<std::uint8_t>(Number(row[2]));raw[40]=static_cast<std::uint8_t>(Number(row[1]));Put(raw,36,Number(row[0]));
+        netstorm::client::ShapeToBufferState state;state.addTypeHotspot=true;state.ownerTypeMaps=maps;
+        state.mainFrame=[&](Sid sid) { return SunAviaryCaptureMainFrame(pool.Slot(sid)); };
+        state.additional=[&](Sid sid,ConstructionVisualImage& image,std::int32_t x,std::int32_t y) {
+            DrawSunAviaryCapture(pool.Slot(sid),[&](auto type,auto frame,auto px,auto py) { static_cast<void>(netstorm::client::DrawShape(image.pixels,image.width,image.height,assets.game.Shapes(),type-70,frame,px,py,{0,0,image.width-1,image.height-1})); },x,y);
+        };
+        netstorm::client::RawShapeToBuffer capture(pool,types,assets.shapes,assets.game.Shapes(),state);const auto image=capture.Capture(Sid{50});
+        const auto metadata=std::to_string(image.width)+','+std::to_string(image.height)+','+std::to_string(image.hotspotX)+','+std::to_string(image.hotspotY);
+        CHECK(row[3]==row[5] && row[4]==row[6] && metadata==row[3] && Hex(image.pixels)==row[4]);++count;
+    }
+    CHECK(count==384);
+}
+
+// 지원하지 않는가상표는거부하고 원본의 생략경로는 그림 소비자를 요구하지 않는다.
+TEST_CASE(SunAviaryCapture_ExactVtableAndSuppressedDraw) {
+    std::array<std::uint8_t,50> raw{};Put(raw,0,0x509930U);raw[10]=72;Put(raw,36,27);CHECK(IsSunAviaryCapture(raw));CHECK(SunAviaryCaptureMainFrame(raw)==-1);
+    std::size_t draws{};DrawSunAviaryCapture(raw,[&](auto type,auto frame,auto x,auto y) { CHECK(type==72 && frame==27 && x==11 && y==13);++draws; },11,13);CHECK(draws==1);
+    raw[40]=3;CHECK(SunAviaryCaptureMainFrame(raw)==27);DrawSunAviaryCapture(raw,{},11,13);
+    raw[40]=10;CHECK(SunAviaryCaptureMainFrame(raw)==27);DrawSunAviaryCapture(raw,{},11,13);
+    Put(raw,0,0x5099e8U);CHECK(!IsSunAviaryCapture(raw));bool rejected{};
+    try { static_cast<void>(SunAviaryCaptureMainFrame(raw)); }catch (const std::invalid_argument&) { rejected=true; }CHECK(rejected);
 }

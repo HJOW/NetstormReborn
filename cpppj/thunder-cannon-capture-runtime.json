@@ -263,12 +263,12 @@
     }
   },
   "sources": {
-    "cpppj/src/client/RawCampaignSession.cpp": "cd16fb2bad2fa4bf0985fa1dfd7d89cbd504e02f531d1bd319b863e686279b9b",
-    "cpppj/src/o/CMakeLists.txt": "5aeb5926aa34d3b266047d137be0753a58b3f476627ca77ed3624e39800e94b7",
+    "cpppj/src/client/RawCampaignSession.cpp": "4b0470acb1ea5cb275959eb4a70df1d795c4f87d6a51a2a78f6e35ebe573f36b",
+    "cpppj/src/o/CMakeLists.txt": "e98fa5aecc683b69021e6efacd62092a48772ae5ed3f7cb3da0eeeff7c33d7ec",
     "cpppj/src/o/RawFactoryDraw.cpp": "b0d5e95ae773f55eccb29a03a7824c7446c87c48b473d4b4f0f7d876f92bea1b",
     "cpppj/src/o/RawThunderCannonCapture.cpp": "9cb609f3dd3fe9239cc85d81ce5427e7b5b41cf81431b0a462df643f7216c6ad",
     "cpppj/src/o/RawThunderCannonCapture.h": "d98c7aeab460724a40daedf472654b0892294ee6afd1cd57ffb00ae6f7117a79",
-    "cpppj/tests/ShapeToBufferTests.cpp": "ad9bd358902fa8ad3ab113cdc917c1bf751c502dc9ab0ed89ddb4ea0f7c102c8",
+    "cpppj/tests/ShapeToBufferTests.cpp": "91d7010f9d6698f7237d8a2040e00658502a57dedea9da310173af4e96dd26e5",
     "tools/cpp_campaign_entry_smoke.py": "5fa9adadf6bcd571d6fba39b38e46fed41fe2e927911ff80dc38047c52c56b49",
     "tools/cpp_fort_smoke.py": "96c7fcd524deb38d93274ded77620639bdc7012ec0f2aaeed0a488d938e9da83",
     "tools/cpp_island_drop_runtime.py": "7a84366e3505e7fc98d883ca16364c648b9cad8110762744f7a6b8e7e5157ab3",
@@ -409,5 +409,32 @@
     "tools/ghidra/dude-spawn-functions.json": "6fd3a099b040d1c505e148f4fd06579f8ee05ab94650d4c9bf54f519210a3dd0"
   },
   "goalComplete": false,
-  "fullFidelityVerified": false
+  "fullFidelityVerified": false,
+  "integration_updates": [
+    {
+      "date": "2026-10-19",
+      "unit": 218,
+      "reason": "훨리베이스72의 생산 상태별 기본/추가 캡처와 독립384원문 대조의 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/sources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "cd16fb2bad2fa4bf0985fa1dfd7d89cbd504e02f531d1bd319b863e686279b9b",
+          "current": "4b0470acb1ea5cb275959eb4a70df1d795c4f87d6a51a2a78f6e35ebe573f36b"
+        },
+        {
+          "group": "/sources",
+          "path": "cpppj/src/o/CMakeLists.txt",
+          "previous": "5aeb5926aa34d3b266047d137be0753a58b3f476627ca77ed3624e39800e94b7",
+          "current": "e98fa5aecc683b69021e6efacd62092a48772ae5ed3f7cb3da0eeeff7c33d7ec"
+        },
+        {
+          "group": "/sources",
+          "path": "cpppj/tests/ShapeToBufferTests.cpp",
+          "previous": "ad9bd358902fa8ad3ab113cdc917c1bf751c502dc9ab0ed89ddb4ea0f7c102c8",
+          "current": "91d7010f9d6698f7237d8a2040e00658502a57dedea9da310173af4e96dd26e5"
+        }
+      ]
+    }
+  ]
 }

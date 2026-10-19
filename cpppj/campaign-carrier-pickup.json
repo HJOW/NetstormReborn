@@ -13,7 +13,7 @@
     "cpppj/src/o/RawCarrierPickup.cpp": "627a2e9b2b49ce2516e038676090ad2606646289d4634db0a72476ec6a611e7c",
     "cpppj/src/o/RawContentParentNotice.cpp": "030dbe976907e7a0ed4acc0cf8592af06debb6dab3f33f5a4ea282393a91756d",
     "cpppj/src/o/SidPool.h": "21d77e1995b8697dba3f4e6cc9ae16501c573f417fd7019cf4a459b0e6fe521a",
-    "cpppj/src/client/RawCampaignSession.cpp": "cd16fb2bad2fa4bf0985fa1dfd7d89cbd504e02f531d1bd319b863e686279b9b",
+    "cpppj/src/client/RawCampaignSession.cpp": "4b0470acb1ea5cb275959eb4a70df1d795c4f87d6a51a2a78f6e35ebe573f36b",
     "cpppj/src/client/RawCampaignSession.h": "f905619a10b1ecc976bdfc082f8196e3f82190b5f7770828aaf84d00b813c573",
     "cpppj/src/CMakeLists.txt": "dc93067f7759849e630647688fa09684944a0f5aec5bf7d774d429227e600599",
     "cpppj/tests/CMakeLists.txt": "83eed7cedab8650ce570f444a5c06efe29b2ce414e3049777221cf672f6e248f",
@@ -1458,6 +1458,19 @@
           "path": "cpppj/src/client/RawCampaignSession.cpp",
           "previous": "45eb420275ffee8c4e35ad9d1966b792e2e0ddbfdfb1744be59c31db8c3985f4",
           "current": "cd16fb2bad2fa4bf0985fa1dfd7d89cbd504e02f531d1bd319b863e686279b9b"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 218,
+      "reason": "훨리베이스72의 생산 상태별 기본/추가 캡처와 독립384원문 대조의 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "cd16fb2bad2fa4bf0985fa1dfd7d89cbd504e02f531d1bd319b863e686279b9b",
+          "current": "4b0470acb1ea5cb275959eb4a70df1d795c4f87d6a51a2a78f6e35ebe573f36b"
         }
       ]
     }

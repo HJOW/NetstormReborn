@@ -11,7 +11,7 @@
   "sources": {
     "cpppj/src/o/RawBattleBroadcast.h": "b434175a1b937a8c34d64ba016f72c73ab4635490d5b7e73f43986610b7240da",
     "cpppj/src/o/RawBattleBroadcast.cpp": "d59f41110db782f83b522aeb16348225dc04728d38cd766bd706fc57585c9e4c",
-    "cpppj/src/client/RawCampaignSession.cpp": "cd16fb2bad2fa4bf0985fa1dfd7d89cbd504e02f531d1bd319b863e686279b9b",
+    "cpppj/src/client/RawCampaignSession.cpp": "4b0470acb1ea5cb275959eb4a70df1d795c4f87d6a51a2a78f6e35ebe573f36b",
     "cpppj/src/o/RawFlyerTarget.cpp": "b325cb60c22f98b6e30faa2d330866d1a38f3a403a04388a394baefd188eb772",
     "cpppj/src/o/RawFlyerFrame.cpp": "7752144c626f831c64bf0959ad8f9579d67bae1c87def2dcd0f1797b306f2049",
     "cpppj/tests/BattleBroadcastTests.cpp": "7bfa23c46a8f8810fc2b8522f14cff40060f23cbfb9a8752d8294cea4f407a43",
@@ -227,6 +227,19 @@
           "path": "cpppj/src/client/RawCampaignSession.cpp",
           "previous": "45eb420275ffee8c4e35ad9d1966b792e2e0ddbfdfb1744be59c31db8c3985f4",
           "current": "cd16fb2bad2fa4bf0985fa1dfd7d89cbd504e02f531d1bd319b863e686279b9b"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 218,
+      "reason": "훨리베이스72의 생산 상태별 기본/추가 캡처와 독립384원문 대조의 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/sources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "cd16fb2bad2fa4bf0985fa1dfd7d89cbd504e02f531d1bd319b863e686279b9b",
+          "current": "4b0470acb1ea5cb275959eb4a70df1d795c4f87d6a51a2a78f6e35ebe573f36b"
         }
       ]
     }

@@ -77,13 +77,13 @@
     "originals/d/GIFCLOUD.COL": "785a2cda6ac1d3e295d375815b6d9650720683099db7c249382d598b5da00532"
   },
   "currentSources": {
-    "cpppj/src/o/CMakeLists.txt": "5aeb5926aa34d3b266047d137be0753a58b3f476627ca77ed3624e39800e94b7",
+    "cpppj/src/o/CMakeLists.txt": "e98fa5aecc683b69021e6efacd62092a48772ae5ed3f7cb3da0eeeff7c33d7ec",
     "cpppj/src/o/RawFlyerFrame.h": "0c3f5b5e3bbe52ac34e00fe37819f3a490011596919b715045a0c983899cb92a",
     "cpppj/src/o/RawFlyerFrame.cpp": "7752144c626f831c64bf0959ad8f9579d67bae1c87def2dcd0f1797b306f2049",
     "cpppj/src/o/RawFlyerProcess.h": "1107c2a73163e0c3024c822cf614c9d02f7aa36d75fc81cfd0a6df58e36b6345",
     "cpppj/src/o/RawFlyerProcess.cpp": "bc5d68f980251febe080e280db07727f7d5cc7bbbf9d84780d8d8d31a86f44f1",
     "cpppj/src/o/RawGunTarget.cpp": "7ac9b51af58949ce8c23f9854679a7685468ba798768db0a1158f25b0ff95f14",
-    "cpppj/src/client/RawCampaignSession.cpp": "cd16fb2bad2fa4bf0985fa1dfd7d89cbd504e02f531d1bd319b863e686279b9b",
+    "cpppj/src/client/RawCampaignSession.cpp": "4b0470acb1ea5cb275959eb4a70df1d795c4f87d6a51a2a78f6e35ebe573f36b",
     "cpppj/tests/CMakeLists.txt": "83eed7cedab8650ce570f444a5c06efe29b2ce414e3049777221cf672f6e248f",
     "cpppj/tests/CampaignMissionStartTests.cpp": "5f71b9e383e12f7230e8338db410238aae96757b2f3f7ecff1cd70b1e090789c",
     "tools/decomp_sun_flyer_frame.py": "afe8503d7b5de9afa80bf106d133d62b54ffe6eec66b22dfd9b3a91276dfb3fd",
@@ -738,6 +738,25 @@
           "path": "cpppj/src/client/RawCampaignSession.cpp",
           "previous": "45eb420275ffee8c4e35ad9d1966b792e2e0ddbfdfb1744be59c31db8c3985f4",
           "current": "cd16fb2bad2fa4bf0985fa1dfd7d89cbd504e02f531d1bd319b863e686279b9b"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 218,
+      "reason": "훨리베이스72의 생산 상태별 기본/추가 캡처와 독립384원문 대조의 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/o/CMakeLists.txt",
+          "previous": "5aeb5926aa34d3b266047d137be0753a58b3f476627ca77ed3624e39800e94b7",
+          "current": "e98fa5aecc683b69021e6efacd62092a48772ae5ed3f7cb3da0eeeff7c33d7ec"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "cd16fb2bad2fa4bf0985fa1dfd7d89cbd504e02f531d1bd319b863e686279b9b",
+          "current": "4b0470acb1ea5cb275959eb4a70df1d795c4f87d6a51a2a78f6e35ebe573f36b"
         }
       ]
     }

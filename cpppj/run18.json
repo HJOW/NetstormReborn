@@ -822,7 +822,7 @@
     "cpppj/tests/RunePostPopTests.cpp": "9918c7375cb132f74579c6a3bfe94d0996e4e9f0f17c76abdf06887e933c2470",
     "cpppj/tests/ScreenTests.cpp": "a27a581b1dc7f1ecd059e1bc67bfa0312bf5276b019b5db343e56b30a9f088cc",
     "cpppj/tests/SetFrameTests.cpp": "726e1abc6552843c5d29176debdfc9d21fe2ccb1e95a698bc62e71e68b6ff26b",
-    "cpppj/tests/ShapeToBufferTests.cpp": "ad9bd358902fa8ad3ab113cdc917c1bf751c502dc9ab0ed89ddb4ea0f7c102c8",
+    "cpppj/tests/ShapeToBufferTests.cpp": "91d7010f9d6698f7237d8a2040e00658502a57dedea9da310173af4e96dd26e5",
     "cpppj/tests/SidTests.cpp": "d2f407764113adc143531d21fcd26981bac719e092d1e7697d75446d954db726",
     "cpppj/tests/SoundControlTests.cpp": "2b4966b5bc438cdae5ffecf3b63406e3da510aa1ab5078f9a1f6c80a2fd7803d",
     "cpppj/tests/SoundDeviceTests.cpp": "65b40f8baf9375e303b4ae1bd14ba52ff8affa62ce943358818e1645541f88d1",
@@ -2196,6 +2196,19 @@
           "path": "cpppj/tests/ShapeToBufferTests.cpp",
           "previous": "d18ebe7ce7877f6d5bc612fde3d55d75a316dc04fe81615cc8b4cb29c3dc5db8",
           "current": "ad9bd358902fa8ad3ab113cdc917c1bf751c502dc9ab0ed89ddb4ea0f7c102c8"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 218,
+      "reason": "훨리베이스72의 생산 상태별 기본/추가 캡처와 독립384원문 대조의 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/tests/ShapeToBufferTests.cpp",
+          "previous": "ad9bd358902fa8ad3ab113cdc917c1bf751c502dc9ab0ed89ddb4ea0f7c102c8",
+          "current": "91d7010f9d6698f7237d8a2040e00658502a57dedea9da310173af4e96dd26e5"
         }
       ]
     }

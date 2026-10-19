@@ -111,7 +111,7 @@
   "fullFidelityVerified": false,
   "naturalTutorialFiveComplete": false,
   "sources": {
-    "cpppj/src/client/RawCampaignSession.cpp": "cd16fb2bad2fa4bf0985fa1dfd7d89cbd504e02f531d1bd319b863e686279b9b",
+    "cpppj/src/client/RawCampaignSession.cpp": "4b0470acb1ea5cb275959eb4a70df1d795c4f87d6a51a2a78f6e35ebe573f36b",
     "cpppj/src/client/GameWorld.cpp": "9dd9c938d1a68d0054091a87cdfc5e08aedddec6792e55bfee6f439743ef3402",
     "cpppj/tests/CampaignSessionTests.cpp": "b0f41abb1e4471fa109de00d131a9abba79867fb6422116e90f941b7fe201913",
     "cpppj/src/o/RawSunFlyerFrame.cpp": "b130537725f138521f7bd56b1c06b4656f101e83bb757a9404462e28bc648fce",
@@ -253,6 +253,19 @@
           "path": "cpppj/src/client/RawCampaignSession.cpp",
           "previous": "45eb420275ffee8c4e35ad9d1966b792e2e0ddbfdfb1744be59c31db8c3985f4",
           "current": "cd16fb2bad2fa4bf0985fa1dfd7d89cbd504e02f531d1bd319b863e686279b9b"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 218,
+      "reason": "훨리베이스72의 생산 상태별 기본/추가 캡처와 독립384원문 대조의 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/sources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "cd16fb2bad2fa4bf0985fa1dfd7d89cbd504e02f531d1bd319b863e686279b9b",
+          "current": "4b0470acb1ea5cb275959eb4a70df1d795c4f87d6a51a2a78f6e35ebe573f36b"
         }
       ]
     }
