@@ -2269,6 +2269,19 @@
           "current": "027f06978d48c3af6001d1d8e3418635ef4e13b6b76d584ea08db72762924fc2"
         }
       ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 225,
+      "reason": "작은 섬 윗면94의 원본 전용 소유자 색표와 현재 색 전역을 연결하고 간헐천 받침의 실제 다리 점유를 검증한 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "027f06978d48c3af6001d1d8e3418635ef4e13b6b76d584ea08db72762924fc2",
+          "current": "ad59d62f007d8b7e970c22c0e3dff80bacd970f2aab75a6a3bababd9d993e558"
+        }
+      ]
     }
   ],
   "currentSources": {
@@ -2292,7 +2305,7 @@
     "cpppj/src/o/SquidPop.cpp": "61f8db73c663d5d7c8880d73bc310cf7884e361bb76402e0946241e02b7dcd17",
     "cpppj/src/o/SquidUnpop.cpp": "f9a932b6ee543cc2ee051d6f67afb0c56fca1f325cc51d29ca3d0dc3adf26fef",
     "cpppj/tests/CMakeLists.txt": "83eed7cedab8650ce570f444a5c06efe29b2ce414e3049777221cf672f6e248f",
-    "cpppj/tests/CampaignSessionTests.cpp": "027f06978d48c3af6001d1d8e3418635ef4e13b6b76d584ea08db72762924fc2",
+    "cpppj/tests/CampaignSessionTests.cpp": "ad59d62f007d8b7e970c22c0e3dff80bacd970f2aab75a6a3bababd9d993e558",
     "cpppj/tests/ConstructionArrivalTests.cpp": "3282c1768168e0301078a78de6d7e692d84d917bef5866bf1da22bd0c1b4b6f4",
     "cpppj/tests/CursorManaTests.cpp": "3f9aa47024782b0afe4f165a2145fa4f27706d8b5b7c1434f8e94c65a5318daa",
     "cpppj/tests/PopTests.cpp": "250b9a9fd863142026c29ef68c75ea7c8bea6871ed0a42df9bafee4e2b072d48",

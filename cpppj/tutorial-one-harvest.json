@@ -8,7 +8,7 @@
   "originalGameExecutions": 0,
   "baseline": "c445683592e712662385e01036cabe2031e65a40",
   "sources": {
-    "cpppj/src/client/GameWorld.cpp": "adced72bb6185beea7b12c82dee1b5d3b7dd5da727b904a451f01078470b7399",
+    "cpppj/src/client/GameWorld.cpp": "aacc54866c2893001591af389ffbb3c6885af176352b9e6d0e52111f493a05b6",
     "cpppj/src/client/UberGump.cpp": "c160136246b091eed0d2dbdd6d091d068e7c0460191d935c77582ce1c137d932",
     "cpppj/src/app/main.cpp": "9395c790b1a31c7e36f76b55cea3dd89ee7fdc769e694dc7d2fbdaa7e9eb7cd8",
     "tools/cpp_tutorial_harvest_smoke.py": "58606aae2a86d99360f650fc7e5f27785aabca54b53a0856c17ba7f3a9d0a22b",
@@ -345,6 +345,19 @@
           "path": "cpppj/src/client/GameWorld.cpp",
           "previous": "c69d29972961250ac04814f8e3bd81c5134fed0a1ad250f261900c3cc1984fdb",
           "current": "adced72bb6185beea7b12c82dee1b5d3b7dd5da727b904a451f01078470b7399"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 225,
+      "reason": "작은 섬 윗면94의 원본 전용 소유자 색표와 현재 색 전역을 연결하고 간헐천 받침의 실제 다리 점유를 검증한 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/sources",
+          "path": "cpppj/src/client/GameWorld.cpp",
+          "previous": "adced72bb6185beea7b12c82dee1b5d3b7dd5da727b904a451f01078470b7399",
+          "current": "aacc54866c2893001591af389ffbb3c6885af176352b9e6d0e52111f493a05b6"
         }
       ]
     }

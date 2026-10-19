@@ -80,7 +80,7 @@
     "cpppj/src/o/RawGunTarget.cpp": "7ac9b51af58949ce8c23f9854679a7685468ba798768db0a1158f25b0ff95f14",
     "cpppj/src/o/RawGunTarget.h": "cfc9f229f1b1ed225188ef5600ea7f575304f7c5cd537b6e6d803caa7d8486a0",
     "cpppj/tests/CMakeLists.txt": "83eed7cedab8650ce570f444a5c06efe29b2ce414e3049777221cf672f6e248f",
-    "cpppj/tests/CampaignSessionTests.cpp": "027f06978d48c3af6001d1d8e3418635ef4e13b6b76d584ea08db72762924fc2",
+    "cpppj/tests/CampaignSessionTests.cpp": "ad59d62f007d8b7e970c22c0e3dff80bacd970f2aab75a6a3bababd9d993e558",
     "cpppj/src/client/RawCursorRange.cpp": "965b5bce38bdceb3d31cc63cbae3fc8db5da57ccb3bf8c71be81f23ec548ec2e",
     "cpppj/src/client/RawCursorRange.h": "5aa384b5432bd6fbee04ae0fc9bf65acf685d45b66553f8b91866261fcd79758",
     "cpppj/src/o/RawFenceLifetime.cpp": "f24971d75e0ad7ee97739ee00964b2ec71be8a127c0ecd1bbc6b29797bb45ddf",
@@ -2413,6 +2413,19 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "793df135e84491ebbac4ba182829e3b6bf5c427900799c7e688de51cdd4a44e9",
           "current": "027f06978d48c3af6001d1d8e3418635ef4e13b6b76d584ea08db72762924fc2"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 225,
+      "reason": "작은 섬 윗면94의 원본 전용 소유자 색표와 현재 색 전역을 연결하고 간헐천 받침의 실제 다리 점유를 검증한 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/sha256",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "027f06978d48c3af6001d1d8e3418635ef4e13b6b76d584ea08db72762924fc2",
+          "current": "ad59d62f007d8b7e970c22c0e3dff80bacd970f2aab75a6a3bababd9d993e558"
         }
       ]
     }

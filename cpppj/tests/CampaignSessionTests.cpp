@@ -726,6 +726,63 @@ TEST_CASE(CampaignSession_GeyserBodyNative51Frames) {
     CHECK(cases==102 && pixels>100000);std::cout<<"간헐천51프레임/두 카메라 원본 대조 픽셀="<<pixels<<'\n';
 }
 
+// 실제 받침 윗면/하단의198개 원문을 두 카메라에서 대조해 소유자 색 누락과 하단 오염을 잡는다.
+TEST_CASE(CampaignSession_SupportNative198FramesAndColors) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());auto services=external.Services();services.install.resetCamera={};
+    GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services),{1024,768});world.Resize(1024,768);
+    const auto core=world.Session().Core();const auto origin=EmptySessionSupport(core);const float x=static_cast<float>(origin.x+2),y=static_cast<float>(origin.y+2);
+    const auto top=world.Session().World().Create(94,2);world.Session().World().Pop(top,x,y,0);const auto bottom=world.Session().World().Find(x,y,95); // 실제 윗면 최초 Pop이 생성한 하단을 사용해 같은 하단을 중복 생성하지 않는다.
+    CHECK(bottom.value);if (!bottom.value) return;world.Scroll(-4096,-4096);std::size_t cases{},pixels{};
+    const auto path=(std::filesystem::path(__FILE__).parent_path()/"fixtures/support-color-capture-x86.tsv").string();
+    // 새 독립 원문의 모든 입력을 재생하며 기대 픽셀을 제품의 색 계산으로 만들지 않는다.
+    for (const auto& row:netstorm::test::rawscene::LoadFixture(path.c_str()).rows) {
+        const auto type=static_cast<std::uint32_t>(std::stoul(row[0])),frame=static_cast<std::uint32_t>(std::stoul(row[1]));
+        const auto owner=static_cast<std::uint8_t>(std::stoul(row[2]));auto raw=core.pool.AllocatedBytes(type==94 ? top : bottom);raw[34]=owner;raw[40]=128;Put(raw,36,frame);core.bridgeState.ownerColors[owner]=std::stoi(row[3]); // 소유자 번호와 현재 색 전역이 다른 경우도 원문대로 입력한다.
+        const auto metadata=netstorm::test::rawscene::Split(row[4],',');
+        const int width=std::stoi(metadata[0]),height=std::stoi(metadata[1]),hotX=std::stoi(metadata[2])+core.types[type].hotspotX+2,hotY=std::stoi(metadata[3])+core.types[type].hotspotY-3; // 명시 원문TYPE(-2,3)에서 실제TYPE 기준점만 환산한다.
+        // 정수 카메라 이동 전후 같은 전체 픽셀을 비교한다.
+        for (const auto camera:std::array<ScreenPoint,2>{{{0,0},{7,9}}}) {
+            world.Scroll(camera.x,camera.y);const auto point=world.ToScreen(x,y);std::vector<RenderSprite> body;
+            // 대상 받침 부품만 분리하며 본섬이나 반대 부품의 가림을 섞지 않는다.
+            for (const auto& sprite:world.Sprites()) if (sprite.block==type-70 && sprite.order.x==x && sprite.order.y==y) body.push_back(sprite);
+            CHECK(body.size()==1);if (body.size()!=1) { const auto& shape=assets.game.Shapes().Blocks()[type-70].frames[frame];std::cout<<"받침 대상 누락 TYPE="<<type<<" 실제TYPE="<<unsigned(raw[10])<<" frame="<<frame<<" owner="<<unsigned(owner)<<" 좌표="<<std::bit_cast<float>(Get(raw,14))<<','<<std::bit_cast<float>(Get(raw,18))<<" SID="<<(type==94 ? top.value : bottom.value)<<" flags="<<unsigned(raw[11])<<" special="<<shape.IsSpecial()<<" rect="<<shape.rect.left<<','<<shape.rect.top<<','<<shape.rect.right<<','<<shape.rect.bottom<<'\n';
+                // 실패 시 실제 제출된 같은 받침 위치의 블록만 남긴다.
+                for (const auto& sprite:world.Sprites()) if (sprite.order.x==x && sprite.order.y==y) std::cout<<"받침 위치 제출 block="<<sprite.block<<" frame="<<sprite.frame<<" procedure="<<sprite.procedure.has_value()<<'\n';return; }
+            Renderer renderer(1024,768);renderer.SetScene(body);std::vector<std::uint8_t> actual(1024*768,199);renderer.Draw(actual,1024,199);
+            const auto compared=CompareDisplayNative(actual,{point.x-hotX,point.y-hotY},width,height,row[5]);CHECK(compared.first==0 && compared.second>0);pixels+=compared.second;++cases;world.Scroll(-camera.x,-camera.y);
+        }
+    }
+    CHECK(cases==396 && pixels>100000);std::cout<<"받침198원문/두 카메라 원본 대조 픽셀="<<pixels<<'\n';
+}
+
+// 중립 간헐천 받침에 실제 소유 다리를 접합하면 윗면/하단/아홉 논리 칸의 소유권과 그림이 갱신돼야 한다.
+TEST_CASE(CampaignSession_GeyserSupportBridgeOwnershipAndColors) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());auto services=external.Services();services.install.resetCamera={};
+    GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services),{1024,768});world.Resize(1024,768);auto& session=world.Session();const auto core=session.Core();
+    Sid geyser{},top{},bottom{}; // 저장된 중립 간헐천과 같은 좌표의 두 실제 받침을 찾는다.
+    // 본섬 간헐천과 외부 받침의 간헐천을 구분한다.
+    for (const auto& object:session.World().Objects()) if (object.object.type==122 && object.object.owner==0) {
+        const auto candidate=session.World().Find(object.object.x,object.object.y,94);if (!candidate.value) continue;geyser=object.sid;top=candidate;bottom=session.World().Find(object.object.x,object.object.y,95);break;
+    }
+    CHECK(geyser.value && top.value && bottom.value);if (!geyser.value || !top.value || !bottom.value) return;
+    const auto start=core.pool.Slot(top);const float x=std::bit_cast<float>(Get(start,14)),y=std::bit_cast<float>(Get(start,18));CHECK(start[34]==0 && Get(start,36)==8);
+    core.bridgeState.ownerColors[1]=7; // 현재 소유자1의 실제 색 번호를 초기 MissionPlayers 사본과 다르게 둔다.
+    const auto bridge=session.World().Create(82,2);core.owner.Set(bridge,1);session.World().Pop(bridge,x-3,y-1,0);session.World().BridgeConnections().Connect(bridge);
+    CHECK(core.pool.Slot(top)[34]==1 && Get(core.pool.Slot(top),36)==6 && Get(core.pool.Slot(bottom),36)==6);
+    // 실제 저장 받침의 논리 아홉 칸도 원본 전파로 같은 소유자가 돼야 한다.
+    for (int dy=-2;dy<=0;++dy) {
+        // 같은 행의 세 표면을 실제 해시에서 조회한다.
+        for (int dx=-2;dx<=0;++dx) { const auto surface=core.hash.Cell(0,static_cast<int>(x)+dx,static_cast<int>(y)+dy);CHECK(surface && core.pool.Slot(Sid{surface})[34]==1); }
+    }
+    bool mapped=false; // 실제 다음 장면의 윗면 제출에 색표가 전달됐는지 확인한다.
+    world.Scroll(-4096,-4096);world.Scroll(static_cast<int>(x*16)-512,static_cast<int>(y*11)-384); // 실제 검사 대상 받침을 화면 안에 둔 뒤 제출을 확인한다.
+    // 이전 그림 캐시가 아니라 현재 raw 소유자의 장면을 조회한다.
+    for (const auto& sprite:world.Sprites()) if (sprite.block==94-70 && sprite.order.x==x && sprite.order.y==y) mapped=sprite.colors.has_value();
+    CHECK(mapped);
+}
+
 // 실제 다리60프레임/중립·아홉 색600원문의 좌표와 색을 두 카메라의 화면에서 대조한다.
 TEST_CASE(CampaignSession_BridgeNative600FramesAndColors) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;

@@ -40,7 +40,7 @@
     "cpppj/src/client/RawCampaignSession.cpp": "4b0470acb1ea5cb275959eb4a70df1d795c4f87d6a51a2a78f6e35ebe573f36b",
     "cpppj/src/o/RawCarrierArrival.cpp": "05d47b6beb2267351faf0efff7ca6967010088b37ead976881a0c6dde6881610",
     "cpppj/src/o/RawCarrierArrival.h": "56355d323b96e074d549319884f492928ccec8a5c3530db745588cbeb2bcded3",
-    "cpppj/tests/CampaignSessionTests.cpp": "027f06978d48c3af6001d1d8e3418635ef4e13b6b76d584ea08db72762924fc2"
+    "cpppj/tests/CampaignSessionTests.cpp": "ad59d62f007d8b7e970c22c0e3dff80bacd970f2aab75a6a3bababd9d993e558"
   },
   "binaries": {
     "cpppj/build/bin/Release/NetstormCpp.exe": "f4c51d0b421f3cba1574153de47d9ca5a3b38503829a2d088204b0f58f8563c5",
@@ -706,6 +706,19 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "793df135e84491ebbac4ba182829e3b6bf5c427900799c7e688de51cdd4a44e9",
           "current": "027f06978d48c3af6001d1d8e3418635ef4e13b6b76d584ea08db72762924fc2"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 225,
+      "reason": "작은 섬 윗면94의 원본 전용 소유자 색표와 현재 색 전역을 연결하고 간헐천 받침의 실제 다리 점유를 검증한 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "027f06978d48c3af6001d1d8e3418635ef4e13b6b76d584ea08db72762924fc2",
+          "current": "ad59d62f007d8b7e970c22c0e3dff80bacd970f2aab75a6a3bababd9d993e558"
         }
       ]
     }

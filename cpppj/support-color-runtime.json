@@ -1,0 +1,661 @@
+{
+  "unit": 225,
+  "baseline": "89254e6a",
+  "host": "VM-W11-Codex",
+  "date": "2026-10-19",
+  "lastDecompile": "VM-W11-Codex / 2026-10-19",
+  "scope": "작은 섬 윗면94에 원본 전용 색표와 현재 소유자 색을 연결했다. 하단95는 원본 프레임 선택을 유지하며 같은 색표를 적용하지 않는다.",
+  "validation": {
+    "beforePixels": "extracted/goal-support-color-20261019-before4.json",
+    "beforeOwnership": "extracted/goal-support-color-20261019-ownership-before2.json",
+    "focusedTests": [
+      "extracted/goal-support-color-20261019-after3.json",
+      "extracted/goal-support-color-20261019-ownership-after3.json"
+    ],
+    "fullTests": "extracted/goal-support-color-20261019-full-tests1.json",
+    "currentPinReports": 71,
+    "currentPins": 93
+  },
+  "observations": {
+    "extracted/goal-support-color-20261019-ui2": {
+      "returnCode": 0,
+      "binarySha256": "505f2c612552cb75c93e57e39319d089dfcf8cf62413bb280d92e8b695720164",
+      "originalsUnchanged": true,
+      "lastLabel": "final",
+      "gameTime": 77.878,
+      "lastGate": [
+        "5",
+        "65",
+        "0",
+        "0",
+        "0",
+        "1",
+        "0",
+        "0"
+      ],
+      "forwardGeneratorsAfterWait": {},
+      "cannons": {},
+      "sunFlyerSidsObserved": [
+        15074
+      ],
+      "enemyMinimumHp": {
+        "15006": 1000,
+        "15013": 200
+      },
+      "naturalEObserved": false,
+      "combat2Observed": false,
+      "nextFailure": null,
+      "towers": {},
+      "templeDestroyedObserved": false,
+      "maximumOwnCannonCount": 0,
+      "lastPage": [
+        "mission"
+      ],
+      "enemyThunderPresentAtLastReport": true,
+      "enemyAviaryPresentAtLastReport": true,
+      "naturalFObserved": false,
+      "maximumOwnGolemCount": 0,
+      "golems": {},
+      "supports": {
+        "25": {
+          "kind": "island",
+          "xy": [
+            "128",
+            "54"
+          ],
+          "initial": true,
+          "geyserSupport": true,
+          "owners": [
+            0
+          ],
+          "frames": [
+            8
+          ],
+          "firstLabel": "initial",
+          "lastLabel": "final",
+          "firstOwnedLabel": null
+        },
+        "26": {
+          "kind": "islandStalag",
+          "xy": [
+            "128",
+            "54"
+          ],
+          "initial": true,
+          "geyserSupport": true,
+          "owners": [
+            0
+          ],
+          "frames": [
+            8
+          ],
+          "firstLabel": "initial",
+          "lastLabel": "final",
+          "firstOwnedLabel": null
+        },
+        "27": {
+          "kind": "island",
+          "xy": [
+            "117",
+            "61"
+          ],
+          "initial": true,
+          "geyserSupport": true,
+          "owners": [
+            0,
+            1
+          ],
+          "frames": [
+            8,
+            0
+          ],
+          "firstLabel": "initial",
+          "lastLabel": "final",
+          "firstOwnedLabel": "geyserBridge5"
+        },
+        "28": {
+          "kind": "islandStalag",
+          "xy": [
+            "117",
+            "61"
+          ],
+          "initial": true,
+          "geyserSupport": true,
+          "owners": [
+            0
+          ],
+          "frames": [
+            8,
+            0
+          ],
+          "firstLabel": "initial",
+          "lastLabel": "final",
+          "firstOwnedLabel": null
+        },
+        "30": {
+          "kind": "island",
+          "xy": [
+            "139",
+            "55"
+          ],
+          "initial": true,
+          "geyserSupport": true,
+          "owners": [
+            0
+          ],
+          "frames": [
+            8
+          ],
+          "firstLabel": "initial",
+          "lastLabel": "final",
+          "firstOwnedLabel": null
+        },
+        "31": {
+          "kind": "islandStalag",
+          "xy": [
+            "139",
+            "55"
+          ],
+          "initial": true,
+          "geyserSupport": true,
+          "owners": [
+            0
+          ],
+          "frames": [
+            8
+          ],
+          "firstLabel": "initial",
+          "lastLabel": "final",
+          "firstOwnedLabel": null
+        },
+        "34": {
+          "kind": "island",
+          "xy": [
+            "148",
+            "57"
+          ],
+          "initial": true,
+          "geyserSupport": true,
+          "owners": [
+            0
+          ],
+          "frames": [
+            8
+          ],
+          "firstLabel": "initial",
+          "lastLabel": "final",
+          "firstOwnedLabel": null
+        },
+        "35": {
+          "kind": "islandStalag",
+          "xy": [
+            "148",
+            "57"
+          ],
+          "initial": true,
+          "geyserSupport": true,
+          "owners": [
+            0
+          ],
+          "frames": [
+            8
+          ],
+          "firstLabel": "initial",
+          "lastLabel": "final",
+          "firstOwnedLabel": null
+        }
+      },
+      "claimedGeyserSupports": [
+        "27"
+      ],
+      "newOwnedSupports": [],
+      "supportSurfaceOwners": {
+        "25": {
+          "0": 9
+        },
+        "27": {
+          "1": 9
+        },
+        "30": {
+          "0": 9
+        },
+        "34": {
+          "0": 9
+        }
+      }
+    }
+  },
+  "earlierObservations": {
+    "extracted/goal-support-color-20261019-ui1": {
+      "returnCode": 1,
+      "binarySha256": "505f2c612552cb75c93e57e39319d089dfcf8cf62413bb280d92e8b695720164",
+      "originalsUnchanged": true,
+      "lastLabel": "constructionFinal",
+      "gameTime": 97.382,
+      "lastGate": [
+        "5",
+        "68",
+        "0",
+        "0",
+        "0",
+        "1",
+        "58.774",
+        "0"
+      ],
+      "forwardGeneratorsAfterWait": {
+        "15072": {
+          "xy": [
+            "133",
+            "93"
+          ],
+          "hp": 700
+        },
+        "15099": {
+          "xy": [
+            "131",
+            "103"
+          ],
+          "hp": 700
+        }
+      },
+      "cannons": {},
+      "sunFlyerSidsObserved": [
+        15063
+      ],
+      "enemyMinimumHp": {
+        "15006": 1000,
+        "15013": 200
+      },
+      "naturalEObserved": false,
+      "combat2Observed": false,
+      "nextFailure": "Unknown UI operation: keydown",
+      "towers": {
+        "15060": {
+          "xy": [
+            "135",
+            "93"
+          ],
+          "firstLabel": "placed",
+          "maxHp": 2000,
+          "lastHp": 140,
+          "lastLabel": "enemySelected"
+        }
+      },
+      "templeDestroyedObserved": false,
+      "maximumOwnCannonCount": 0,
+      "lastPage": [
+        "mission"
+      ],
+      "enemyThunderPresentAtLastReport": true,
+      "enemyAviaryPresentAtLastReport": true,
+      "naturalFObserved": false,
+      "maximumOwnGolemCount": 0,
+      "golems": {},
+      "supports": {
+        "25": {
+          "kind": "island",
+          "xy": [
+            "128",
+            "54"
+          ],
+          "initial": true,
+          "geyserSupport": true,
+          "owners": [
+            0
+          ],
+          "frames": [
+            8
+          ],
+          "firstLabel": "initial",
+          "lastLabel": "constructionFinal",
+          "firstOwnedLabel": null
+        },
+        "26": {
+          "kind": "islandStalag",
+          "xy": [
+            "128",
+            "54"
+          ],
+          "initial": true,
+          "geyserSupport": true,
+          "owners": [
+            0
+          ],
+          "frames": [
+            8
+          ],
+          "firstLabel": "initial",
+          "lastLabel": "constructionFinal",
+          "firstOwnedLabel": null
+        },
+        "27": {
+          "kind": "island",
+          "xy": [
+            "117",
+            "61"
+          ],
+          "initial": true,
+          "geyserSupport": true,
+          "owners": [
+            0
+          ],
+          "frames": [
+            8
+          ],
+          "firstLabel": "initial",
+          "lastLabel": "constructionFinal",
+          "firstOwnedLabel": null
+        },
+        "28": {
+          "kind": "islandStalag",
+          "xy": [
+            "117",
+            "61"
+          ],
+          "initial": true,
+          "geyserSupport": true,
+          "owners": [
+            0
+          ],
+          "frames": [
+            8
+          ],
+          "firstLabel": "initial",
+          "lastLabel": "constructionFinal",
+          "firstOwnedLabel": null
+        },
+        "30": {
+          "kind": "island",
+          "xy": [
+            "139",
+            "55"
+          ],
+          "initial": true,
+          "geyserSupport": true,
+          "owners": [
+            0
+          ],
+          "frames": [
+            8
+          ],
+          "firstLabel": "initial",
+          "lastLabel": "constructionFinal",
+          "firstOwnedLabel": null
+        },
+        "31": {
+          "kind": "islandStalag",
+          "xy": [
+            "139",
+            "55"
+          ],
+          "initial": true,
+          "geyserSupport": true,
+          "owners": [
+            0
+          ],
+          "frames": [
+            8
+          ],
+          "firstLabel": "initial",
+          "lastLabel": "constructionFinal",
+          "firstOwnedLabel": null
+        },
+        "34": {
+          "kind": "island",
+          "xy": [
+            "148",
+            "57"
+          ],
+          "initial": true,
+          "geyserSupport": true,
+          "owners": [
+            0
+          ],
+          "frames": [
+            8
+          ],
+          "firstLabel": "initial",
+          "lastLabel": "constructionFinal",
+          "firstOwnedLabel": null
+        },
+        "35": {
+          "kind": "islandStalag",
+          "xy": [
+            "148",
+            "57"
+          ],
+          "initial": true,
+          "geyserSupport": true,
+          "owners": [
+            0
+          ],
+          "frames": [
+            8
+          ],
+          "firstLabel": "initial",
+          "lastLabel": "constructionFinal",
+          "firstOwnedLabel": null
+        },
+        "7201": {
+          "kind": "island",
+          "xy": [
+            "131",
+            "103"
+          ],
+          "initial": false,
+          "geyserSupport": false,
+          "owners": [
+            1
+          ],
+          "frames": [
+            0
+          ],
+          "firstLabel": "forwardGeneratorPlaced",
+          "lastLabel": "constructionFinal",
+          "firstOwnedLabel": "forwardGeneratorPlaced"
+        },
+        "7202": {
+          "kind": "islandStalag",
+          "xy": [
+            "131",
+            "103"
+          ],
+          "initial": false,
+          "geyserSupport": false,
+          "owners": [
+            1
+          ],
+          "frames": [
+            0
+          ],
+          "firstLabel": "forwardGeneratorPlaced",
+          "lastLabel": "constructionFinal",
+          "firstOwnedLabel": "forwardGeneratorPlaced"
+        }
+      },
+      "claimedGeyserSupports": [],
+      "newOwnedSupports": [
+        "7201"
+      ],
+      "supportSurfaceOwners": {
+        "25": {
+          "0": 9
+        },
+        "27": {
+          "0": 9
+        },
+        "30": {
+          "0": 9
+        },
+        "34": {
+          "0": 9
+        },
+        "7201": {
+          "1": 9
+        }
+      }
+    }
+  },
+  "sources": {
+    "cpppj/src/client/GameWorld.cpp": "aacc54866c2893001591af389ffbb3c6885af176352b9e6d0e52111f493a05b6",
+    "cpppj/src/client/OwnerColorMaps.cpp": "1dc23bab259f2bdbb6e88d7e12c4427a50f76304c8aa11cc6309800d0da7e620",
+    "cpppj/src/client/OwnerColorMaps.h": "aed5d31073e2015b4d0773eef376a302d122c024a04f90533d0882fd28121abf",
+    "cpppj/src/o/RawBridgeConnect.cpp": "d61934e4375b6e1630f735ee685ddd2aa788316ee1b8cb9cf5c668fba1a1b0f5",
+    "cpppj/src/o/RawIslandPostPop.cpp": "ac751292dcf11d11419799d5a63d736380ee350771559e3abfe58b1494931f49",
+    "cpppj/tests/CampaignSessionTests.cpp": "ad59d62f007d8b7e970c22c0e3dff80bacd970f2aab75a6a3bababd9d993e558",
+    "tools/cpp_campaign_entry_smoke.py": "5fa9adadf6bcd571d6fba39b38e46fed41fe2e927911ff80dc38047c52c56b49",
+    "tools/cpp_early5_spells_runtime.py": "b46e2145d2ddcfcf21e410a5604cf5364c0605576e04c1518eb8dde469063cf0",
+    "tools/cpp_fort_smoke.py": "96c7fcd524deb38d93274ded77620639bdc7012ec0f2aaeed0a488d938e9da83",
+    "tools/cpp_island_drop_runtime.py": "7a84366e3505e7fc98d883ca16364c648b9cad8110762744f7a6b8e7e5157ab3",
+    "tools/cpp_menu_smoke.py": "41732efb30e6337267168e3cd836ab6c04d6f34d36b16152b762c39dd2a76afe",
+    "tools/cpp_renderer_smoke.py": "fc648fea126c9cad3a124b38f757460f1139bb0e7f26c1032482ae4d85766ebe",
+    "tools/cpp_smoke_files.py": "66745bfd0ebac8d672eeb8f515144a47377fa4a28dad0603b5f8969a008ec679",
+    "tools/cpp_sun_aviary_capture_runtime.py": "4cc2495a288f7fea6775dd395a9a3036e01863902bb238ceec13701f4d44ce1b",
+    "tools/cpp_sun_aviary_notice_runtime.py": "8ab54e12605e9861c531bf9b82f4616b540aac1879f831bf88d69d0e35703952",
+    "tools/cpp_support_color_runtime.py": "309bdf855a27fe294fe300bb3c1f3800b99457f56f98ac6794f747941a38a607",
+    "tools/cpp_thunder_capture_runtime.py": "8c4a9d8d65420c5f0f37cfb003500d55d81bf0aa437484f20c9c06bfcdd673e3",
+    "tools/cpp_world_smoke.py": "6e50f87caf0b1b817c9116ef972ec6e75b44d33455edc88fe128a8d0f791fe72",
+    "tools/decomp_creation_oracle.py": "646adc1ca6c9eaeac08a9c700324ae05ba1727416bc62070e0a066afc07dc053",
+    "tools/decomp_display_oracle.py": "bd9a42431cdef96d3fb13accf78d5a0d6a3155243b1bbc0362d58e79f662f7a4",
+    "tools/decomp_dudespawn_oracle.py": "294095ff1336d290d8d7e0e465df95d5514ceb4ff87d4bac8c282cdcec2eb786",
+    "tools/decomp_factory_capture.py": "e5dd681fa0d5aa74779c7873c10814eff9ad15e193f7cb7322661c6ca02e27f1",
+    "tools/decomp_gumpbackground_oracle.py": "21905551a392adc1be9e2f992de2d2c1b19a9f8b37c2beeb240f284e9a372228",
+    "tools/decomp_gumpvisual_oracle.py": "b7c70b2e10036bb9c938c34ad8d4a7ca9a30b5d2082f218d0b5914a6941b1658",
+    "tools/decomp_oracle.py": "227b9a8b703cfd81d05ac4a7c72a42eaecf9c804fc028680466a19a591f2335d",
+    "tools/decomp_owner_oracle.py": "5a837ad7fd233d9d75c7241d52fbf2e5a508e24dc158d091f243a13ab698e7fb",
+    "tools/decomp_pop_oracle.py": "2a50f34e6b229d5ea4611f7073877ca1e165e0bf841f32c83f17d300b6113bb6",
+    "tools/decomp_postpop_oracle.py": "43dd9adffc6e2b3a1bd4a1fb06563f848518d8082014f2346613243183535129",
+    "tools/decomp_rain_draw.py": "a7a8a40dbb5e1508e21745a94a4320fba207cd08a9ee38ae6a200614d4c2e249",
+    "tools/decomp_shape_to_buffer_oracle.py": "3499edbde033d4fb5102bfb855a988adc30c8b17aae219d917d81346eea71eec",
+    "tools/decomp_sid_oracle.py": "7bfd7b95b26724b1793d407a4ad6654972b2aaa3bf04e4c206cc357670b68dff",
+    "tools/decomp_support_color_capture.py": "db0620dea879d1f766fc55ddf894bf5efd94b26f04cc9476dd95bb086e38311c",
+    "tools/decomp_temple_capture.py": "d39f2d4150b2b96eb885e17b1bbcd8f1727e21b9b71a16113b3b04a0e2ece045",
+    "tools/decomp_temple_draw.py": "b94a1b635e83af4af3808d3666d3dd56067a44e88c22ecfbd4fe9396000dab24",
+    "tools/fort.py": "ee8ff8f00eea02771ac5c7a519dcd582e14cc07a2d97337c946c191022554e13",
+    "tools/shp.py": "4cb8bee6ed773e29e8658ddb315594ebf5ac005ea5b96c6b760a177029515bfd",
+    "tools/taff.py": "461860cdfc9451b85a8694dd30fd2c56c1cfdf5c6bb7ab8f63a4089971889795",
+    "tools/terrain_mask.py": "00f9789dbde0c124a132a4005924549571b06add5214ea14e3b76e88e73cb37a",
+    "tools/typefile.py": "a564a4b1bbc4f06d05ecb8b1f3fae4c32f6231cf95ea7bfadff2499931804d90"
+  },
+  "evidence": {
+    "cpppj/owner-hsl-colors.json": "fcd546ff68487ef7bea6022ac7c711bcadd45a365c6f9f7031afe396a5192d24",
+    "cpppj/support-color-capture-native.json": "920be7c85f0266b8c82d40d8a6d891c67c90aa94a00c277eb60a26b22f093ad9",
+    "cpppj/tests/fixtures/owner-hsl-colors-x86.tsv": "9a59ed66b04a0eb972ee68b708a28e016d77bdc1f96db5935c40eec38efe0902",
+    "cpppj/tests/fixtures/support-color-capture-x86.tsv": "c1c9ff9d6a017a22cc3c97713969d809648fd99b29b892e2629123a8a0d8c81a",
+    "extracted/goal-early5-island-20261019-probe.py": "2933ead8b5cc87b76425031fea3da8690c3b2649dc8f3fa8d4babd276176ef1a",
+    "extracted/goal-geyser-bridge-display-20261019-plan3.tsv": "5b030060fc5e447e23ae848b82e8a341afba106da9813a0256d1108aa03719da",
+    "extracted/goal-support-color-20261019-after1.json": "9f67f12bf1b766693632505c10855fc3ba3ff4594d8bb5fbc30ebf6978bc11dc",
+    "extracted/goal-support-color-20261019-after1.stderr": "c038c03193ec70c09e2b57f4a9382c09a6f36a9d94be7fcc9873a1d3faa83426",
+    "extracted/goal-support-color-20261019-after1.stdout": "83c34dca2a718bd57f98eb11b4efb14a9b3216d24f6bcfc35aa656943f83f159",
+    "extracted/goal-support-color-20261019-after2.json": "47475ac8049c10d84de77c70a71f985639e9a02b329c43aa47f08e347721f641",
+    "extracted/goal-support-color-20261019-after2.stderr": "aa786329d8b0a61992c9228baee57f4fdf19544b926cce38da552cab5ed05ef2",
+    "extracted/goal-support-color-20261019-after2.stdout": "59e1b104375eea6bb3af8d2bff56b18fc3401e6a735bbeb89fdf01bc0ec3b2b8",
+    "extracted/goal-support-color-20261019-after3.json": "5e2036aa78028e50148cc0e1453b76469f5b08fd65bd385350e6bb6f98b30090",
+    "extracted/goal-support-color-20261019-after3.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-support-color-20261019-after3.stdout": "f19515f9b2b81df1e44f50347c983ff3440538afb8836f0012072f4703c7a40e",
+    "extracted/goal-support-color-20261019-audit-pins.py": "d19971e1f6c2b9c56306ce562d05aafa51ec212b5ec84ae872ec924f0a1cfff5",
+    "extracted/goal-support-color-20261019-before1.json": "a32ec4c2203d26bff21b01860a12cf144c5580eb3914376acdc8df779ac82563",
+    "extracted/goal-support-color-20261019-before1.stderr": "99a330e42f3d01c79ee5ae5518c61cd344aa78277d2a599770ec6c56ba3e54a6",
+    "extracted/goal-support-color-20261019-before1.stdout": "2601925f2a54224c9a4d36dba0dff30a7c561ffe9c63a65ea3c1a6b566960f96",
+    "extracted/goal-support-color-20261019-before2.json": "9e6bcd577cbf2fcace4d3efe6776203b1e72e1ba976526f9908817d5c36a0ddd",
+    "extracted/goal-support-color-20261019-before2.stderr": "99a330e42f3d01c79ee5ae5518c61cd344aa78277d2a599770ec6c56ba3e54a6",
+    "extracted/goal-support-color-20261019-before2.stdout": "b1376ded6bcd880a573644a56eb57bec814c3d76e2096dfd80d892875cae45f3",
+    "extracted/goal-support-color-20261019-before3.json": "ce0d0e319e0d32ec4b6d5a362dd7610d2bdfa9fde571f92e4e618d74a4ba7da0",
+    "extracted/goal-support-color-20261019-before3.stderr": "99a330e42f3d01c79ee5ae5518c61cd344aa78277d2a599770ec6c56ba3e54a6",
+    "extracted/goal-support-color-20261019-before3.stdout": "f9e539d75dd4ed013e25a75bedcc38ddd67b844b42fc44baaac58e7fa0a2098d",
+    "extracted/goal-support-color-20261019-before4.json": "7b73093d2ac1569c7d346d4a6886f109a0f726427f071625885cb66288859844",
+    "extracted/goal-support-color-20261019-before4.stderr": "aa786329d8b0a61992c9228baee57f4fdf19544b926cce38da552cab5ed05ef2",
+    "extracted/goal-support-color-20261019-before4.stdout": "59e1b104375eea6bb3af8d2bff56b18fc3401e6a735bbeb89fdf01bc0ec3b2b8",
+    "extracted/goal-support-color-20261019-build-report.py": "6e8c64739f181f8b70aa238e009b61a9a0e377adb26d28d0d92d007cac6966f9",
+    "extracted/goal-support-color-20261019-build1.log": "49446800edb950e2b093ca8d32229b1f16fdc801b7dfb23a5738654330c1f994",
+    "extracted/goal-support-color-20261019-build2.log": "49446800edb950e2b093ca8d32229b1f16fdc801b7dfb23a5738654330c1f994",
+    "extracted/goal-support-color-20261019-build3.log": "49446800edb950e2b093ca8d32229b1f16fdc801b7dfb23a5738654330c1f994",
+    "extracted/goal-support-color-20261019-build4.log": "7da7d1f9e028a5ee9bc718027914dae396f59a4f53216623b02a014e7dcbf982",
+    "extracted/goal-support-color-20261019-build5-before.log": "7da7d1f9e028a5ee9bc718027914dae396f59a4f53216623b02a014e7dcbf982",
+    "extracted/goal-support-color-20261019-build6.log": "8335a4ea89de97e3c04b50ad32c498c87a86b2565753df6d9d0639bac116bb6b",
+    "extracted/goal-support-color-20261019-build7.log": "728beb8aa7e9f69cb8e94c4862805bc731d8770cc01c9dceba14a356566fcb01",
+    "extracted/goal-support-color-20261019-full-tests1.json": "4fff93ab05405463e785fdb661de6523e2c5b187ea88c21de8b3e0765bcae369",
+    "extracted/goal-support-color-20261019-full-tests1.stderr": "79e2480bde0296407e865b4a37f3b49c9c027d653a2260e3a4215348db0f0663",
+    "extracted/goal-support-color-20261019-full-tests1.stdout": "9d834b0aa17e50392613a64ee59e8408406f6ea0cd63ca5747bce457de729b87",
+    "extracted/goal-support-color-20261019-inspect2.json": "aa8d96ea1bdcbae6ce72aef93f9b99386ddc8295527775eed4d22704ed6970de",
+    "extracted/goal-support-color-20261019-native-empty-v1.json": "46bd8ddcc4a58634fb8d3126b91d28b4f6cac0793d98f3671ad2c72ad737ffd2",
+    "extracted/goal-support-color-20261019-native-empty-v1.tsv": "d1ddb9a1c1254455f7bdd6a95e3e59bab2a3cc0b84245d18c18df36797099303",
+    "extracted/goal-support-color-20261019-native-good-v3.json": "55945fff8577d93a8716b771f03673f1a9a0f5021878e587d64ffe04dea0ea73",
+    "extracted/goal-support-color-20261019-native-good-v3.tsv": "c1c9ff9d6a017a22cc3c97713969d809648fd99b29b892e2629123a8a0d8c81a",
+    "extracted/goal-support-color-20261019-native-v1.py": "184e4f443bdb29e8e8cb9b1404b136d7277b0683bf806c63375f9e70385ff9eb",
+    "extracted/goal-support-color-20261019-native-v2.py": "e3e721bbfded66f0b222e69764689c511330bf2c243473b7980552ab71ef8bea",
+    "extracted/goal-support-color-20261019-native-v3.py": "c8a912b1ede400b25792a61866a946cde962a87df723db980bcc83e14145494d",
+    "extracted/goal-support-color-20261019-native1.log": "7769e43fa1f89158615d67ad128823654ec49ace010366a1081cce232082b06c",
+    "extracted/goal-support-color-20261019-native2.log": "0cd44a43c99c8c26068c00bda4b2b4d4bf4643409df91051ec21dc8e147c3123",
+    "extracted/goal-support-color-20261019-native3.log": "70945bbe28df6bea0f88edcd7a286f14d00e286a08e14c89d67e2bab57f63731",
+    "extracted/goal-support-color-20261019-native4.log": "70945bbe28df6bea0f88edcd7a286f14d00e286a08e14c89d67e2bab57f63731",
+    "extracted/goal-support-color-20261019-ownership-after1.json": "235b76ef98cf8d380b5e56d4bebacc6c7226a0f9b55c1c2a4fb23247e33706e0",
+    "extracted/goal-support-color-20261019-ownership-after1.stderr": "75983c86913f8bdc973bd9dd0c715310d45d521bb920e10d9622b3ff2b617a7d",
+    "extracted/goal-support-color-20261019-ownership-after1.stdout": "baaa35e9074244ed136e15f06507412ec94d88d6f9107353a42d1ab647d404b7",
+    "extracted/goal-support-color-20261019-ownership-after3.json": "c9b5e9e2e8e2c48d37de3a7ad4f1971d2e1c438e42d1df43d9d23a712b81b11e",
+    "extracted/goal-support-color-20261019-ownership-after3.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-support-color-20261019-ownership-after3.stdout": "efff061eccb87158442b19e6c7f05d0b4529858f4e3b9a1bdb49a7c475b472bf",
+    "extracted/goal-support-color-20261019-ownership-before1.json": "87019dfc67b2c04ee5f7f64bd50e01fb1763bce682a4cf306ff8108258556d97",
+    "extracted/goal-support-color-20261019-ownership-before1.stderr": "0ab366d4b59203cdcd8e4846b102258d7baed32ff077ebfdad7d4368cca1a38b",
+    "extracted/goal-support-color-20261019-ownership-before1.stdout": "baaa35e9074244ed136e15f06507412ec94d88d6f9107353a42d1ab647d404b7",
+    "extracted/goal-support-color-20261019-ownership-before2.json": "fbc440cb6cfa734141b01ffef64891665e39902ea69c2af0ca874597ff472505",
+    "extracted/goal-support-color-20261019-ownership-before2.stderr": "386f0450e809f7912bd204ef97dd5327f6bbe708d2edc1cf614463734ad3cdd4",
+    "extracted/goal-support-color-20261019-ownership-before2.stdout": "baaa35e9074244ed136e15f06507412ec94d88d6f9107353a42d1ab647d404b7",
+    "extracted/goal-support-color-20261019-pin-updates.json": "29dd076e00997e9b584de7dd7df4f26f6e7cac96195b24ef23c5a7c3de87de89",
+    "extracted/goal-support-color-20261019-plan.py": "a88430628821935d38c04062b8df41d1b9d137b5e2137958f0820e502ea1c1c9",
+    "extracted/goal-support-color-20261019-plan1.tsv": "c749774a2b6c8ee23274ec8b0321830267557b97a676ea6a7d723c16bfaf3289",
+    "extracted/goal-support-color-20261019-plan2.py": "3c8986b06118083af1426b79e30f9cbb3ce87700e0978b22e505e78f738518a3",
+    "extracted/goal-support-color-20261019-plan2.tsv": "e66120eb275efec993fcc8671618dcb9f3560068a922c772efaee90ed14393ee",
+    "extracted/goal-support-color-20261019-refresh-pins.py": "2bca98e0fffcb0f6f60add30ef0b4a6598684b43fdb3552429d5a5b17baefea4",
+    "extracted/goal-support-color-20261019-tests-v1.cpp": "88ffda9c5a6561640b28096568f473a61f18be5d12b17bcf1a59d32ad35a21b9",
+    "extracted/goal-support-color-20261019-tests-v2.cpp": "c673c3464cb285774d379ac9d839bf3a46198288018e1026d59f107b1b308b33",
+    "extracted/goal-support-color-20261019-tests-v3.cpp": "6956625ba9659a650aae0750edb6c939faa8556e9c5b9d861a222d7a78ab3bc7",
+    "extracted/goal-support-color-20261019-tests-v4.cpp": "b347d313ccf70dd8eb36c00d1ef9e50cceed269bacbf8f0f4fbd698ad2b0882b",
+    "extracted/goal-support-color-20261019-ui1/bridgeEdge2421.bmp": "728de3c2a73f3b91e42d6c1650715e41ed35bdf7a73c3e58226f9787062fa69c",
+    "extracted/goal-support-color-20261019-ui1/bridgeEdge2521.bmp": "d01e6f19a3cf29d702f58e89e46941355411634996e0e31713b3c02cea38bf6c",
+    "extracted/goal-support-color-20261019-ui1/bridgeEdge2861.bmp": "c517f9b838ccf6b7babfcf118baa6e0bd1e562c805a9df2ba629b097fdd26138",
+    "extracted/goal-support-color-20261019-ui1/bridgeEdge3085.bmp": "ba988394e180f8d5c1b78aa41689f6da085aacec96522c4f7ee9f46e2c7867a0",
+    "extracted/goal-support-color-20261019-ui1/completedGenerators.bmp": "6438dfc8966f75e619d36de9948cac0b7f3a0ce9c1e044ef0e55b9034fe98f9e",
+    "extracted/goal-support-color-20261019-ui1/completedWorkshop.bmp": "b85cd3d17d436b116e2edeb05d4a2eabf9f5fb42747ea6765a42bc728d2e48fe",
+    "extracted/goal-support-color-20261019-ui1/constructionFinal.bmp": "dbcb255c224e916f875df55d77a7fff7fb4cdd97516a57ab61618dd0e7f2f8ce",
+    "extracted/goal-support-color-20261019-ui1/enemyView.bmp": "d2d3b15f565c08555bae9fe921188346d714196ba6bee72c380f34eecf684ae6",
+    "extracted/goal-support-color-20261019-ui1/geyser1005.bmp": "dfe1fb1098f5f9f922b1d9afbda110f48883778a72ba62149bc7fbcc83b6d106",
+    "extracted/goal-support-color-20261019-ui1/geyser180.bmp": "2779d74eb9a199e66a825b510aa69916560963459d11c55fb311580e79251d91",
+    "extracted/goal-support-color-20261019-ui1/geyser320.bmp": "9f00d6869af4f41467c08b2e878cc24825ef95cab967f888ccee81d429d21481",
+    "extracted/goal-support-color-20261019-ui1/geyser760.bmp": "9e197b957207359c9104086687544d8831aaf31c61f19e3dd1fce0e5349da40b",
+    "extracted/goal-support-color-20261019-ui1/originals-before.json": "f98d8731a8a729b528fd9744b52f3b26143eff54e767f0b8e1537040c5807c15",
+    "extracted/goal-support-color-20261019-ui1/run.json": "fb6e6d9b1a9c5071cfcef08d715734a3b36a9100b2015ed124cb97286c82c838",
+    "extracted/goal-support-color-20261019-ui1/selectedGenerator.bmp": "233472dea98ab2e1f67c34cd9fdf4dd46372155af1848f1524be341b61322f50",
+    "extracted/goal-support-color-20261019-ui1/selectedGeyser.bmp": "7e27b36c0cec4359fc6b772556efbdb91d9be9fee6ac5e063ab831688448e5db",
+    "extracted/goal-support-color-20261019-ui1/stageC.bmp": "6d82116f5f0e3b95768feaa4b8504387a63ba3dadbdf21d639160541309cd7b1",
+    "extracted/goal-support-color-20261019-ui1/stageD.bmp": "4b6ef7f1ff4b5d7b131dfb8b5b4224b8154d15c751cc0f06123a8dfcb6a67b05",
+    "extracted/goal-support-color-20261019-ui1/states.tsv": "f5d99c4714f390c78a507fe81d2606a31f9e2543a3a07e6d1bfc3e526c19bc4b",
+    "extracted/goal-support-color-20261019-ui1/stderr.log": "78079d8eb1b7d767eeec4740b443884a80e1ef60c074d9c9481a9fc35910fac2",
+    "extracted/goal-support-color-20261019-ui1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-support-color-20261019-ui1/steps.tsv": "87a30ed2cbf560220301b2f6072fb053e0df7b1e4667213871a2c1fb48ae4839",
+    "extracted/goal-support-color-20261019-ui1.log": "d531d3ef45274c5852848a45b7f6dae91512d6916858a0d16f6341651f6b0756",
+    "extracted/goal-support-color-20261019-ui2/final.bmp": "34824b1347cafb7a6f29c439ffa88f1917bb5f7946156892117da51ddbd6ff53",
+    "extracted/goal-support-color-20261019-ui2/geyserBridge12.bmp": "30daeeecc1160159e5838ad5ce3b15e99f421cbbe0868bcf01fe000248a51ad8",
+    "extracted/goal-support-color-20261019-ui2/geyserBridge16.bmp": "3f4b2b7977ad1b804b95fa8b095c612250b1d2ce5172481e34b23553b2000c05",
+    "extracted/goal-support-color-20261019-ui2/geyserBridge20.bmp": "5d835b6785eb0d16a2b5ca3476c69f4dd7b9b7ab06db4610f389d9b1582d4c3f",
+    "extracted/goal-support-color-20261019-ui2/geyserBridge24.bmp": "4f270f96319f7d8116365dc134f86c9810afa378ea88052082c20dd19a5b17c8",
+    "extracted/goal-support-color-20261019-ui2/geyserBridge4.bmp": "caaf64ad9634163081a85fae48ef16e348d3c450267ee551fc3144bacc1eea74",
+    "extracted/goal-support-color-20261019-ui2/geyserBridge8.bmp": "665d827b209c0aa9410b9b7a87f8d4031f86639211078701e69079126b56c213",
+    "extracted/goal-support-color-20261019-ui2/originals-before.json": "f98d8731a8a729b528fd9744b52f3b26143eff54e767f0b8e1537040c5807c15",
+    "extracted/goal-support-color-20261019-ui2/run.json": "b008f2d9fc13fe66f28426aaca49d0ec73c75fec39e785989142b86b879ab3cc",
+    "extracted/goal-support-color-20261019-ui2/states.tsv": "b691815c86f7e7b4f4d87f2eb18d49f4a7d64094b2c87a0eb972ccd5bd41eb03",
+    "extracted/goal-support-color-20261019-ui2/stderr.log": "a4f8d401477aa5da1fb7728e68bebda2720234b1357719f069b890be12b2e727",
+    "extracted/goal-support-color-20261019-ui2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-support-color-20261019-ui2/steps.tsv": "a54e6ce125ff234e03ee541c224f13ea15ea84407d231f59f3fae981b4cb29ce",
+    "extracted/goal-support-color-20261019-ui2.log": "559b81cbf508a7dce6e2ec0520807fed8087efca60f744e23f583998565fcc4e",
+    "extracted/goal-support-color-20261019-world-fixed.cpp": "aacc54866c2893001591af389ffbb3c6885af176352b9e6d0e52111f493a05b6",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "originals/d/_shapes.shp": "c878353c8054208deef832e34c514b30fe670e175505b129333a5728ba70f68e",
+    "originals/d/GIFCLOUD.COL": "785a2cda6ac1d3e295d375815b6d9650720683099db7c249382d598b5da00532",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6"
+  },
+  "goalComplete": false,
+  "fullFidelityVerified": false
+}

@@ -4,6 +4,7 @@
 #include "client/RawCursorPosition.h"
 #include <bit>
 #include "client/SquidRenderer.h"
+#include "client/OwnerColorMaps.h"
 #include "client/PriestPlacementAssets.h"
 #include "o/RawPathAnimation.h"
 #include "o/OriginalText.h"
@@ -525,9 +526,17 @@ std::shared_ptr<IndexedImage> GameWorld::SelectionImage() const {
 // 타입별 색 띠 중 실제 월드에서 필요한 지면·사제·다리·일부 유닛을 연결한다.
 std::optional<ColorMap> GameWorld::Remap(const TypeAsset& type,int owner) const {
     if (owner<=0 || owner>o::kPlayerCount) return {}; const auto name=o::AsciiLower(type.assetName);
-    const int color=campaign_ && name=="bridge" ? campaign_->Core().bridgeState.ownerColors[static_cast<std::size_t>(owner)] : players_.players[static_cast<std::size_t>(owner)].color; // 실제 캠페인 다리는 초기 입력 사본 대신 현재 원본 소유자 색을 읽는다.
+    const bool support=assets_.Edition()==o::OriginalEdition::Patch1078 && type.block+o::kFirstAssetTypeNumber==94; // 원본43bc40의 작은 섬 윗면이며 하단95는 전용 색표 대상이 아니다.
+    const int color=campaign_ && (name=="bridge" || support) ? campaign_->Core().bridgeState.ownerColors[static_cast<std::size_t>(owner)] : players_.players[static_cast<std::size_t>(owner)].color; // 실제 다리와 받침은 초기 입력 사본 대신 현재 원본 소유자 색을 읽는다.
     if (color<=0 || color>8) return {};
     const auto key=std::pair{type.block,color}; if (const auto found=remaps_.find(key);found!=remaps_.end()) return found->second;
+    if (support) {
+        std::array<std::uint32_t,256> logical{}; // 원본 ColorSort와 같은 R/G/B 순서의 파일 팔레트다.
+        // 현재 팔레트의 각 색 번호를 유지하며 장치 BGR로 바꾸지 않는다.
+        for (std::size_t index=0;index<logical.size();++index) { const auto& value=palette_[index];logical[index]=std::uint32_t(value.red)|(std::uint32_t(value.green)<<8)|(std::uint32_t(value.blue)<<16); }
+        const auto result=BuildSpecialOwnerColorMaps(logical,94)[static_cast<std::size_t>(color)]; // 지면 소스33색에 보정0을 쓰는 기존 독립 검증 몸체다.
+        remaps_.emplace(key,result);return result;
+    }
     const bool isle=name=="isle" || name=="edgefarm";
     const bool band=name=="priest" || name=="bridge" || name=="sunwalker" || name=="rainwalker" || name=="altar" || name=="bulf" || name=="outpost";
     if (!isle && !band) return {}; ColorMap result{};

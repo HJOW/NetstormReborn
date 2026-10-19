@@ -11,7 +11,7 @@
     "cpppj/src/CMakeLists.txt": "dc93067f7759849e630647688fa09684944a0f5aec5bf7d774d429227e600599",
     "cpppj/src/client/CampaignCursorClientEffects.cpp": "a3248a08922f8b4fdad05d2e2844db55f96196ccd58d55827b034dad17a55f72",
     "cpppj/src/client/CampaignCursorClientEffects.h": "4ae92870ccfc7e2431bad380e4b4858a020d59af221c001c7c47b5c4ff266328",
-    "cpppj/src/client/GameWorld.cpp": "adced72bb6185beea7b12c82dee1b5d3b7dd5da727b904a451f01078470b7399",
+    "cpppj/src/client/GameWorld.cpp": "aacc54866c2893001591af389ffbb3c6885af176352b9e6d0e52111f493a05b6",
     "cpppj/src/client/GameWorld.h": "d51dfe75377b1afd870bfeb40e26cef9f6233f65217d757135648ce064043a16",
     "cpppj/src/client/RawButtonControls.cpp": "22ea0450231c3b81b1b74a6f56d52f6e5706f9c24543f8898f4e32131c0a6962",
     "cpppj/src/client/RawButtonControls.h": "548d27ebba1a23f585763222ff428fd257456e79e47ae83ac38849712528ece1",
@@ -35,7 +35,7 @@
     "cpppj/tests/CMakeLists.txt": "83eed7cedab8650ce570f444a5c06efe29b2ce414e3049777221cf672f6e248f",
     "cpppj/tests/CampaignCursorClientEffectsTests.cpp": "f04679442eea66764f77ab814314c9edd1790dca1f61f39e95eb29804b78d92b",
     "cpppj/tests/CampaignObjectMenuTests.cpp": "fea9198ea2150c42bb523f7ac9298c2f819acd1fc9b9887b53020c206ad62563",
-    "cpppj/tests/CampaignSessionTests.cpp": "027f06978d48c3af6001d1d8e3418635ef4e13b6b76d584ea08db72762924fc2",
+    "cpppj/tests/CampaignSessionTests.cpp": "ad59d62f007d8b7e970c22c0e3dff80bacd970f2aab75a6a3bababd9d993e558",
     "cpppj/tests/RawButtonCursorBoundaryTests.cpp": "1f24a7464493536890611554b51d41bdeb477fa23190a909933ebd0ef1873684",
     "cpppj/tests/UserHighlightTests.cpp": "a23f97791f61415d333d3d99b33ec56e6ec67423a021da43473934fadd3a57ab",
     "cpppj/tests/fixtures/user-highlight-x86.tsv": "e1d0bc9dbf434de9c897a6fcac4af50f2be637318ab3a52d3795273cf734ed78"
@@ -2500,6 +2500,25 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "793df135e84491ebbac4ba182829e3b6bf5c427900799c7e688de51cdd4a44e9",
           "current": "027f06978d48c3af6001d1d8e3418635ef4e13b6b76d584ea08db72762924fc2"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 225,
+      "reason": "작은 섬 윗면94의 원본 전용 소유자 색표와 현재 색 전역을 연결하고 간헐천 받침의 실제 다리 점유를 검증한 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/GameWorld.cpp",
+          "previous": "adced72bb6185beea7b12c82dee1b5d3b7dd5da727b904a451f01078470b7399",
+          "current": "aacc54866c2893001591af389ffbb3c6885af176352b9e6d0e52111f493a05b6"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "027f06978d48c3af6001d1d8e3418635ef4e13b6b76d584ea08db72762924fc2",
+          "current": "ad59d62f007d8b7e970c22c0e3dff80bacd970f2aab75a6a3bababd9d993e558"
         }
       ]
     }

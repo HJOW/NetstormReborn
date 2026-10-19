@@ -11,7 +11,7 @@
   "implementation": "Factory 두 실제 VT의 원본+78 본체 프레임을 같은 SquidDisplay 클릭 영역에 연결했다.",
   "nativeScope": "기존 RawFactoryDraw/ShapeToBuffer 원본 픽셀 대조를 재사용했다. 새 독립 PE 표본 생성이나 원본 게임 실행은 없다.",
   "sources": {
-    "cpppj/src/client/GameWorld.cpp": "adced72bb6185beea7b12c82dee1b5d3b7dd5da727b904a451f01078470b7399",
+    "cpppj/src/client/GameWorld.cpp": "aacc54866c2893001591af389ffbb3c6885af176352b9e6d0e52111f493a05b6",
     "cpppj/src/client/RawCampaignFactoryDisplay.cpp": "ab6ff75e011abd8b5c8330d650acb5a9af31ea20e2ba2b55ebe59503c7ba8621",
     "cpppj/src/o/RawFactoryDraw.cpp": "b0d5e95ae773f55eccb29a03a7824c7446c87c48b473d4b4f0f7d876f92bea1b",
     "cpppj/src/o/RawFactoryDraw.h": "deb03d6428d34ac87172e9bfa46d7862ddef450014bb9040d08508212b90b096",
@@ -349,6 +349,19 @@
           "path": "cpppj/src/client/RawCampaignFactoryDisplay.cpp",
           "previous": "08c207e92a0175f9eedc666b65a8fea35a999963ed69d36fc110ca7d9fcdea7d",
           "current": "ab6ff75e011abd8b5c8330d650acb5a9af31ea20e2ba2b55ebe59503c7ba8621"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 225,
+      "reason": "작은 섬 윗면94의 원본 전용 소유자 색표와 현재 색 전역을 연결하고 간헐천 받침의 실제 다리 점유를 검증한 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/sources",
+          "path": "cpppj/src/client/GameWorld.cpp",
+          "previous": "adced72bb6185beea7b12c82dee1b5d3b7dd5da727b904a451f01078470b7399",
+          "current": "aacc54866c2893001591af389ffbb3c6885af176352b9e6d0e52111f493a05b6"
         }
       ]
     }

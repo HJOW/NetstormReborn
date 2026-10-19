@@ -90,9 +90,9 @@
     "cpppj/src/client/RawCampaignSession.cpp": "4b0470acb1ea5cb275959eb4a70df1d795c4f87d6a51a2a78f6e35ebe573f36b",
     "cpppj/src/client/RawCampaignFactoryDisplay.h": "d2434f7d291754651b9810411235659ca35f393443423340818a261599640f2e",
     "cpppj/src/client/RawCampaignFactoryDisplay.cpp": "ab6ff75e011abd8b5c8330d650acb5a9af31ea20e2ba2b55ebe59503c7ba8621",
-    "cpppj/src/client/GameWorld.cpp": "adced72bb6185beea7b12c82dee1b5d3b7dd5da727b904a451f01078470b7399",
+    "cpppj/src/client/GameWorld.cpp": "aacc54866c2893001591af389ffbb3c6885af176352b9e6d0e52111f493a05b6",
     "cpppj/tests/CMakeLists.txt": "83eed7cedab8650ce570f444a5c06efe29b2ce414e3049777221cf672f6e248f",
-    "cpppj/tests/CampaignSessionTests.cpp": "027f06978d48c3af6001d1d8e3418635ef4e13b6b76d584ea08db72762924fc2",
+    "cpppj/tests/CampaignSessionTests.cpp": "ad59d62f007d8b7e970c22c0e3dff80bacd970f2aab75a6a3bababd9d993e558",
     "tools/decomp_temple_draw.py": "b94a1b635e83af4af3808d3666d3dd56067a44e88c22ecfbd4fe9396000dab24",
     "tools/check_temple_scene.py": "5ce0641612f94c92bea40703e75472125317167d063433f3469ff5b88400dd19",
     "cpppj/temple-draw.json": "08f2b87d34a3d29ee35f4c479ce4eca45be47aee0c6d774d3fee875220fb665e",
@@ -1748,6 +1748,25 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "793df135e84491ebbac4ba182829e3b6bf5c427900799c7e688de51cdd4a44e9",
           "current": "027f06978d48c3af6001d1d8e3418635ef4e13b6b76d584ea08db72762924fc2"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 225,
+      "reason": "작은 섬 윗면94의 원본 전용 소유자 색표와 현재 색 전역을 연결하고 간헐천 받침의 실제 다리 점유를 검증한 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/GameWorld.cpp",
+          "previous": "adced72bb6185beea7b12c82dee1b5d3b7dd5da727b904a451f01078470b7399",
+          "current": "aacc54866c2893001591af389ffbb3c6885af176352b9e6d0e52111f493a05b6"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "027f06978d48c3af6001d1d8e3418635ef4e13b6b76d584ea08db72762924fc2",
+          "current": "ad59d62f007d8b7e970c22c0e3dff80bacd970f2aab75a6a3bababd9d993e558"
         }
       ]
     }
