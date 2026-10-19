@@ -1,0 +1,101 @@
+{
+  "host": "VM-W11-Codex",
+  "date": "2026-10-19",
+  "unit": 211,
+  "baseline": "dd93980a3b340f29781e8094c4f5b01d9a458dd5",
+  "lastDecompile": {
+    "host": "VM-W11-Codex",
+    "date": "2026-10-19",
+    "changed": false
+  },
+  "sources": {
+    "cpppj/src/client/GameWorld.cpp": "9ffd853ff68dfc7ed28b73acab0e79dd3d0c96fe9e05d0822cac7a30b6d8ab5c",
+    "cpppj/src/client/RawUserSelection.cpp": "89cbf7641299a7f84905193b4d90f3706f122665a15228f42bd39f9b98bc40e7",
+    "cpppj/src/client/UserInput.cpp": "fd1bee42a48c4a33098114e813a7909d449791671fb0e313b76efc55216c20bd",
+    "cpppj/src/o/RawTutorialLater.cpp": "1f40efc3aefb38e02ff8a9b5d2553ca4c30f773c2c8b4f6dbb82cd3e5b9bc082",
+    "cpppj/src/o/RawMissionFrameGate.cpp": "8c344648b351bb8102b547038b6f1cb29dfbe6540b71937a052e6a8b28bed1b0",
+    "cpppj/tests/fixtures/tutorial-five-enemy-base-ui-input.tsv": "10ca5d0759ff65a91adec873dd8ec57ac36baeb824d2257a7d60d2a84cc320bb",
+    "tools/cpp_tutorial_five_enemy_base_smoke.py": "737f0f503e625a9048f9bc46fc86fb7b94eb2ebbfb8d64542e70c6ab139c258c",
+    "docs/exe/cpp-early5-enemy-base-20261019.md": "ffb92a0801457c38dac7b826f0d38482f369b38507b25161cecd5fd07ad6cafc"
+  },
+  "evidence": {
+    "extracted/goal-early5-enemy-base-20261019-plan1.tsv": "a9696b229325f5dbf0ff1ee2c66de989a9cf0f6e5adcb65485f6a18a5afeba4a",
+    "extracted/goal-early5-enemy-base-20261019-ui1.log": "f33de6cb89f99d845771d788d7bcdf235a7d55c844c5356d9aee9f60960ad16b",
+    "extracted/goal-early5-enemy-base-20261019-ui1/steps.tsv": "d62a8c3dc5519a6ffa8ebc295095ea21e1774519cbc27b843da57ac7cd950b67",
+    "extracted/goal-early5-enemy-base-20261019-ui1/originals-before.json": "f98d8731a8a729b528fd9744b52f3b26143eff54e767f0b8e1537040c5807c15",
+    "extracted/goal-early5-enemy-base-20261019-ui1/completedWorkshop.bmp": "1593fcdfabb7e7bcabb8f3e90bb1e19ff14dcd79b46e664ab16dc15597b3df3a",
+    "extracted/goal-early5-enemy-base-20261019-ui1/stageC.bmp": "000726e87478601d64535d75b5d090233ad38da3e9762f228876285806797190",
+    "extracted/goal-early5-enemy-base-20261019-ui1/enemyView.bmp": "76e0e159b079b1e87fcc6b519c5cd1a70d84c5121c13e4b94c40a7b2e84922ca",
+    "extracted/goal-early5-enemy-base-20261019-ui1/stageD.bmp": "0b43c2bbf4927f646bec944edfe346300bc9a1db071463d1738605d2bb45c473",
+    "extracted/goal-early5-enemy-base-20261019-ui1/states.tsv": "f347bd3ab95d420089f4541ddfb17dcfb6893f11171e176fe4735867c88ee2ed",
+    "extracted/goal-early5-enemy-base-20261019-ui1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-early5-enemy-base-20261019-ui1/stderr.log": "924ec1b1c2b61554c43470e4132298f490142161003c036d4dee02574a90c03a",
+    "extracted/goal-early5-enemy-base-20261019-ui1/run.json": "b1aecdd815fe907c02e17a60667e356af946262bf1c1baa1aeff7f7a6f17e938",
+    "extracted/goal-early5-enemy-base-20261019-plan2.tsv": "cc812988450fd8d198824c415c7eecc1674041d0e30b95ac12f43c6c1560ae6c",
+    "extracted/goal-early5-enemy-base-20261019-ui2.log": "e600e4ae245bb20f792bf4fee9cc050d3882ac0be49b2274f94bb71d1705e0fe",
+    "extracted/goal-early5-enemy-base-20261019-ui2/steps.tsv": "b5585cb7d6b29d8a7f7586e7e8727d710b3302220db5d509ddf57fba5b586081",
+    "extracted/goal-early5-enemy-base-20261019-ui2/originals-before.json": "f98d8731a8a729b528fd9744b52f3b26143eff54e767f0b8e1537040c5807c15",
+    "extracted/goal-early5-enemy-base-20261019-ui2/completedWorkshop.bmp": "72361ab182118c5aaa30e31eaa25e345e558678b1f5bfea62946eaf041e24fa0",
+    "extracted/goal-early5-enemy-base-20261019-ui2/stageC.bmp": "ff3d580b42d6664e523e5f940f6570a3334f68c699fb1018bb8d078b60581b53",
+    "extracted/goal-early5-enemy-base-20261019-ui2/enemyView.bmp": "d70378a8c0aea3f1408b13d3d11cdfa5a3155a7a056948f55dd019ebb7df2908",
+    "extracted/goal-early5-enemy-base-20261019-ui2/stageD.bmp": "23297c227b6edc80006754bda5469a45a66f580594896cb2194298773a1e3ea2",
+    "extracted/goal-early5-enemy-base-20261019-ui2/states.tsv": "36d0c185dd7e29b60455adf4e31ea67dedcd241183ee85d78f101743abcd9b50",
+    "extracted/goal-early5-enemy-base-20261019-ui2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-early5-enemy-base-20261019-ui2/stderr.log": "15486ac25b2860ffac9a8d8330b6c4cf0908dba6a1ec9f0c8e36f85414ecca48",
+    "extracted/goal-early5-enemy-base-20261019-ui2/run.json": "77b0c05bedcf4c37cabd786bab947dfcbb112ce76196dcb1627762f455b8670b",
+    "extracted/goal-early5-enemy-base-20261019-ui3.log": "efc0100f1eddb2807d27cf6448215d73743709d1117d4070e654e02c321e9238",
+    "extracted/goal-early5-enemy-base-20261019-ui3/steps.tsv": "0cda0e1af69924ce6c7b3ffb5d649fd560fa1f7731703bac0bc0f3c596ee0f2f",
+    "extracted/goal-early5-enemy-base-20261019-ui3/completedWorkshop.bmp": "9b40ba3c4e6c36ab10db5ee8a992225364925b6d461833f71c27a7f82b16d741",
+    "extracted/goal-early5-enemy-base-20261019-ui3/stageC.bmp": "5c1e6a35f6ef633c030321599dcca04d10c02f30435ddc598a78593bc45bd1a9",
+    "extracted/goal-early5-enemy-base-20261019-ui3/enemyView.bmp": "57472548348fd0656454fc3b03d39d1eaf57763b0cfa25a0a75e60d11b4768ab",
+    "extracted/goal-early5-enemy-base-20261019-ui3/stageD.bmp": "5821f7c46cb1ecede2acc405d70d3d2c11f1ec1c84387f2ef3313d8e70cfc13b",
+    "extracted/goal-early5-enemy-base-20261019-ui3/states.tsv": "19a2ca72ca89d97b900c4b292a97023919d822ec8d4fc1a7955c1ab74bbeb3b1",
+    "extracted/goal-early5-enemy-base-20261019-ui3/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-early5-enemy-base-20261019-ui3/stderr.log": "15486ac25b2860ffac9a8d8330b6c4cf0908dba6a1ec9f0c8e36f85414ecca48",
+    "extracted/goal-early5-enemy-base-20261019-ui3/run.json": "51fc31a6ec0e2bf0ae0a51ac7f54e787af553720535d13bb4a834f551187eca4",
+    "extracted/goal-early5-enemy-base-20261019-ui3/results.json": "24ca67fe7a17693a3f4f87b3075597b243e380a3a624d174a2029c9c89995139",
+    "extracted/goal-early5-production-20261019-tests-final.json": "b9f9d419810ec74ee338e58debedbc70e8d11e3e3caeac023b69e31bbbfe7346"
+  },
+  "binarySha256": "e53900c92e8c710c09c45ec441d01aa65d6c2632d98219fe58149bc5ce1b447c",
+  "validation": {
+    "naturalRun": "extracted/goal-early5-enemy-base-20261019-ui3",
+    "previousSuccess": "extracted/goal-early5-enemy-base-20261019-ui2",
+    "negativeRun": "extracted/goal-early5-enemy-base-20261019-ui1",
+    "reusedFullTests": "extracted/goal-early5-production-20261019-tests-final.json",
+    "newBuild": false,
+    "newFullTestRun": false,
+    "productChanged": false
+  },
+  "observation": {
+    "naturalStageD": true,
+    "stages": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "selectedBase": 15013,
+    "type": 72,
+    "owner": 2,
+    "baseHp": 200,
+    "cannonHp": 1000,
+    "earlyWait": 1.1310000000000002,
+    "observedWait": 5.465000000000003,
+    "sp": 2800,
+    "cameraBefore": [
+      "1504",
+      "518"
+    ],
+    "cameraAfter": [
+      "1504",
+      "818"
+    ],
+    "gameTime": 33.816,
+    "originalsUnchanged": true,
+    "naturalTutorialFiveComplete": false,
+    "goalComplete": false
+  },
+  "goalComplete": false,
+  "fullFidelityVerified": false,
+  "naturalTutorialFiveComplete": false
+}

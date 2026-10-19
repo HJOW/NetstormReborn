@@ -1,0 +1,57 @@
+# 자연 A→B 뒤 사제의 워크샾 건설 메뉴를 관측한다.
+20	report	initial
+21	click	MORE
+41	click	OK
+60	right	world:sunFactory
+70	click	Put Knowledge into Production
+90	click	Stone Tower
+110	click	production:78
+130	click	placement-near:136,94
+140	report	placed
+500	report	stageB
+510	click	OK
+540	right	world:priest
+550	report	priestMenu
+560	click	Construct
+570	report	constructMenu
+580	click	Workshop
+590	report	workshopMenu
+600	click	 Build Sun Workshop for 800
+610	report	previewWorkshop
+620	click	placement-near:130,90
+630	report	placedWorkshop
+800	report	buildingWorkshop
+1000	report	completedWorkshop
+1000	snapshot	completedWorkshop
+1010	right	world:sunFactory
+1015	report	oldFactoryMenu
+1020	click	Put Knowledge into Production
+1030	report	oldKnowledge
+1040	click	Sun Disc Thrower
+1050	report	twoKnowledge
+1300	report	workshopReady
+1310	right	cell:127,86
+1315	report	newFactoryMenu
+1320	click	Put Knowledge into Production
+1330	report	newKnowledge
+1340	click	Sun Cannon
+1350	report	threeKnowledge
+1360	right	cell:127,86
+1370	click	Put Knowledge into Production
+1380	click	Wind Generator
+1400	report	fourKnowledge
+1450	report	stageC
+1450	snapshot	stageC
+1460	click	MORE
+1470	report	stageC1
+1480	click	OK
+1490	key	down
+1510	keyup	down
+1520	report	enemyView
+1520	snapshot	enemyView
+1530	click	cell:138,127
+1540	report	enemySelected
+1600	report	selectionEarly
+1800	report	selectionWait
+1950	report	stageD
+1950	snapshot	stageD
