@@ -57,6 +57,17 @@ void RawSunAviaryProcess::PostPop(Sid parent,std::uint32_t flags) const {
     }
     Need(hooks_.damageable)(parent,flags);
 }
+// 서버 관문은 한 번만 읽고 조회해 둔 프로세스 포인터를 공간 효과 뒤에도 유지한다.
+void RawSunAviaryProcess::FlyerDied(Sid home) const {
+    if (!globals_.server) return;
+    const auto form=Need(hooks_.findProcess)(home,globals_.processType); // 원본4b1a90의 현재 타입/첫 일치다.
+    auto* fields=form.value ? Need(hooks_.processFields)(form) : nullptr; // 원본은 NULL도 공간 효과 뒤에야 역참조한다.
+    Need(hooks_.unpop)(home,0);
+    Put(pool_.AllocatedBytes(home),36,27); // SetFrame의 다른 검사/효과를 추가하지 않고 원본 DWORD만 쓴다.
+    Need(hooks_.repop)(home,0);
+    if (!fields) throw std::logic_error("훨리베이스 홈 통지의 현재 프로세스 NULL 원본 경계");
+    fields->bytes[kDirty]|=4;Put(fields->bytes,kStage,8);Need(hooks_.refreshForm)(*fields);
+}
 // stage2/4의 frame은 진입 시 읽으며 호출 뒤 단계/횟수/시각만 원본 위치에서 다시 읽는다.
 void RawSunAviaryProcess::Frame(SunAviaryProcessFields& fields) const {
     const auto parent=fields.Parent();const auto raw=pool_.Slot(parent);if ((raw[40]&0x20U) || globals_.editor) return;

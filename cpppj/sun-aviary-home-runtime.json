@@ -1,0 +1,223 @@
+{
+  "unit": 214,
+  "baseline": "018b0afd",
+  "host": "VM-W11-Codex",
+  "date": "2026-10-19",
+  "lastDecompile": "VM-W11-Codex / 2026-10-19",
+  "scope": "10.78 홈VT509930/+34=45b4a0의 기존 World/Host 연결, 독립128입력과 실제 자연생성→명시삭제→재출격 검사. 첫Frame전 명시삭제의 폭탄SID오류와 옵션저장 조기실패는 해결 완료로 세지 않는다. 실제 캐논/전투/단계는 저장 관측과 구별한다.",
+  "validation": {
+    "fullTests": "extracted/goal-early5-cannon-20261019-full-tests1.json",
+    "relaunchTests": "extracted/goal-early5-cannon-20261019-relaunch-focused2.json",
+    "fullSeconds": 331.729,
+    "nativeInputs": 128,
+    "nativeNormalReturns": 256,
+    "oldCurrentPinReports": 77,
+    "oldCurrentPins": 84
+  },
+  "observations": {
+    "extracted/goal-early5-cannon-20261019-ui1": {
+      "returnCode": 1,
+      "binarySha256": "75d3eef765a7a81837e6b2c6155855c9ff36d9c91ebf3b2c3501dc5204a20841",
+      "originalsUnchanged": true,
+      "lastLabel": "cannonPreview2",
+      "gameTime": 113.291,
+      "lastGate": [
+        "5",
+        "68",
+        "0",
+        "0",
+        "0",
+        "1",
+        "60.659",
+        "0"
+      ],
+      "forwardGeneratorsAfterWait": {
+        "15072": {
+          "xy": [
+            "133",
+            "93"
+          ],
+          "hp": 700
+        },
+        "15101": {
+          "xy": [
+            "136",
+            "103"
+          ],
+          "hp": 700
+        }
+      },
+      "cannons": {},
+      "sunFlyerSidsObserved": [
+        15063
+      ],
+      "enemyMinimumHp": {
+        "15006": 1000,
+        "15013": 200
+      },
+      "naturalEObserved": false,
+      "combat2Observed": false,
+      "nextFailure": "다른 실제 플라이어 홈 가상 통지 미복원"
+    },
+    "extracted/goal-early5-cannon-20261019-ui2": {
+      "returnCode": 1,
+      "binarySha256": "61511c6284269b0ce257c9ba60b18b3bd56912dfa965e308e3fcf029ab52636b",
+      "originalsUnchanged": true,
+      "lastLabel": "completedWorkshop",
+      "gameTime": 32.67,
+      "lastGate": [
+        "5",
+        "66",
+        "0",
+        "0",
+        "0",
+        "1",
+        "9.951",
+        "0"
+      ],
+      "forwardGeneratorsAfterWait": {},
+      "cannons": {},
+      "sunFlyerSidsObserved": [
+        15063
+      ],
+      "enemyMinimumHp": {
+        "15006": 1000,
+        "15013": 200
+      },
+      "naturalEObserved": false,
+      "combat2Observed": false,
+      "nextFailure": "Unable to open d/options.cfg"
+    },
+    "extracted/goal-early5-cannon-20261019-ui3": {
+      "returnCode": 1,
+      "binarySha256": "61511c6284269b0ce257c9ba60b18b3bd56912dfa965e308e3fcf029ab52636b",
+      "originalsUnchanged": true,
+      "lastLabel": "cannonPreview4",
+      "gameTime": 128.553,
+      "lastGate": [
+        "5",
+        "68",
+        "0",
+        "0",
+        "0",
+        "1",
+        "57.903",
+        "0"
+      ],
+      "forwardGeneratorsAfterWait": {
+        "15072": {
+          "xy": [
+            "133",
+            "93"
+          ],
+          "hp": 700
+        },
+        "15098": {
+          "xy": [
+            "131",
+            "103"
+          ],
+          "hp": 700
+        }
+      },
+      "cannons": {
+        "15110": {
+          "firstLabel": "cannonAttempt1",
+          "xy": [
+            "135",
+            "108"
+          ],
+          "firstHp": 0,
+          "maxHp": 600,
+          "lastLabel": "cannonPreview4",
+          "lastHp": 30
+        }
+      },
+      "sunFlyerSidsObserved": [
+        15063,
+        15130
+      ],
+      "enemyMinimumHp": {
+        "15006": 612,
+        "15013": 200
+      },
+      "naturalEObserved": false,
+      "combat2Observed": false,
+      "nextFailure": "실제 세션 하위 소비자 미연결: H:\\Workspace\\git\\NetstormReborn\\cpppj\\src\\client\\RawCampaignSession.cpp:1905: void __cdecl netstorm::client::`anonymous-namespace'::SessionMissing::<lambda_1>::operator ()(unsigned int,unsigned int,unsigned int,unsigned int) const"
+    }
+  },
+  "goalComplete": false,
+  "fullFidelityVerified": false,
+  "naturalTutorialFiveComplete": false,
+  "sources": {
+    "cpppj/src/client/RawCampaignSession.cpp": "1c10f5c122d5ce55cda1e458d389c0d29ae0caaa3b06c6787eda80ec55d5c8d7",
+    "cpppj/src/client/ClientMain.cpp": "fe577cb844b74ff10be7353b9ba545563bd62af7272409211de823e511fb456e",
+    "cpppj/src/o/RawSunAviaryProcess.cpp": "9da6f8ae3136c558f6efb3911660c7b30fbfb8953db5d0d47b5b11440bace7da",
+    "cpppj/src/o/RawSunAviaryProcess.h": "2a14e9256502d59e3d3af4376762adb37ab3172e13303c596e3a41add2b9f8e9",
+    "cpppj/src/o/RawFlyerFrame.cpp": "7752144c626f831c64bf0959ad8f9579d67bae1c87def2dcd0f1797b306f2049",
+    "cpppj/src/o/RawFlyerFrame.h": "0c3f5b5e3bbe52ac34e00fe37819f3a490011596919b715045a0c983899cb92a",
+    "cpppj/src/o/RawSunFlyerFrame.cpp": "b130537725f138521f7bd56b1c06b4656f101e83bb757a9404462e28bc648fce",
+    "cpppj/tests/SunAviaryProcessTests.cpp": "be6a0d003a3ee6d5f4fcfe3d5accff9721708f66ef14919e78ed1660bcd25f89",
+    "cpppj/tests/CampaignMissionStartTests.cpp": "5f71b9e383e12f7230e8338db410238aae96757b2f3f7ecff1cd70b1e090789c",
+    "tools/decomp_sun_aviary_notice.py": "8c1b31b4e9e663424ec5b70164b4ab3d3ee97267852b4f754ffd3419c6bd0c6b",
+    "tools/cpp_sun_aviary_notice_runtime.py": "8ab54e12605e9861c531bf9b82f4616b540aac1879f831bf88d69d0e35703952"
+  },
+  "evidence": {
+    "cpppj/sun-aviary-notice-native.json": "805c0f6e451c532c33e7dc6e7b0e8ae01ee4110c4d62f6174c03dd84df372098",
+    "cpppj/tests/fixtures/constructors-x86.tsv": "c92412152abb65808a2037c30b2e5df4dfc783b891d52e995a4313cda527218e",
+    "cpppj/tests/fixtures/flyer-frame-x86.tsv": "627270d186495d6929cac8a1d4e74c29e92c69294558e020b7d774854b0dfc85",
+    "cpppj/tests/fixtures/sun-aviary-notice-x86.tsv": "a29498cf3a5305910f1c41f516facaa0b6febb8c91739bfab6711fd1a43bd21d",
+    "cpppj/tests/fixtures/sun-aviary-x86.tsv": "e64841e232f3ea3b79eba3fba4d21656277a9b4dd05766f1ff1e77414cb6d0db",
+    "cpppj/tests/fixtures/sun-flyer-frame-x86.tsv": "aa3a4fd3f4e69b528f63dd070bdcd20e009ac77404a6f28d66c7d9bd8820c5f4",
+    "extracted/goal-early5-cannon-20261019-aviary-focused1.json": "ba763095b30775528c2a63fa64a6584c084835a7f274ead563632cec499c985d",
+    "extracted/goal-early5-cannon-20261019-aviary-focused1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-early5-cannon-20261019-aviary-focused1.stdout": "1d72692572dc1b215766fe704972546b60c5a725b14480584f203851150b0619",
+    "extracted/goal-early5-cannon-20261019-build1.log": "001fb10cda333f9343c9c6f3b19dc5e2747d2b0ddf3c6d494d53b940b4a98b15",
+    "extracted/goal-early5-cannon-20261019-build2.log": "8029bdab9ce3f0e4e99b352fb15a5a7d2029191a3b36310849b5bc4f9b43be1e",
+    "extracted/goal-early5-cannon-20261019-full-tests1.json": "95dd97c53d890aebb8e3c011311a529edb611e9fd7e83d42e5f9c8ca46f51acf",
+    "extracted/goal-early5-cannon-20261019-full-tests1.stderr": "79e2480bde0296407e865b4a37f3b49c9c027d653a2260e3a4215348db0f0663",
+    "extracted/goal-early5-cannon-20261019-full-tests1.stdout": "08b222950f2a124648650ff835eaa27d3dd33d79f2c1f43dbbc2f0bf3854c1f2",
+    "extracted/goal-early5-cannon-20261019-home-vtable.json": "ddfbcb9f560c8eb4f1285dff964909e00ce1eba6502b4a433118a0aa280b8a60",
+    "extracted/goal-early5-cannon-20261019-home-vtable.py": "cca0700a77ef7d955875a412acab2092373fcc47b4911df44683dc3370c6c62f",
+    "extracted/goal-early5-cannon-20261019-pin-audit.log": "22f7b46ffdd37b48879c675dcea0bdc11548a407b3f19c3cf8d05cd32d9f072e",
+    "extracted/goal-early5-cannon-20261019-pin-updates.json": "96098194bfe5b6c0f73e0a1c74957bf6a9f26937225669be7b994bdfa898dac0",
+    "extracted/goal-early5-cannon-20261019-plan.py": "1e9d6db575c621c6a319454a7094ae64e6da036cca06c6b70303317256fa46f4",
+    "extracted/goal-early5-cannon-20261019-plan1.tsv": "b543477521c75ee300c002e267beb54a79252ca2e9e6e84c6af5abcf95e8d753",
+    "extracted/goal-early5-cannon-20261019-plan2.tsv": "b592ccf91c0a1518f25537701cb7d1495778e87137d74af29583938a97e8e25d",
+    "extracted/goal-early5-cannon-20261019-probe.py": "2933ead8b5cc87b76425031fea3da8690c3b2649dc8f3fa8d4babd276176ef1a",
+    "extracted/goal-early5-cannon-20261019-relaunch-before-first-frame.cpp": "81bfe67d962e8ae263eafefd9abf762cfd013fe725ccedbd1b65cc27d1ad35a5",
+    "extracted/goal-early5-cannon-20261019-relaunch-focused1.json": "1dd4f97f49d02c2f82e81313c390b74355e830c86c05dfe817731e95dea822b2",
+    "extracted/goal-early5-cannon-20261019-relaunch-focused1.stderr": "34807db2febc869c831fb2d4cc0400df03ddbbc82511bfbc6e8b1005475c48ca",
+    "extracted/goal-early5-cannon-20261019-relaunch-focused1.stdout": "b419d6bbe8007c7fc52f00c019464024d5830aea136a899cc04b699618af73de",
+    "extracted/goal-early5-cannon-20261019-relaunch-focused2.json": "da0fc43b23dc8bb1c74ac96b9adef4f7e752f65eb966ca0c3f6ff7e7e3f3926f",
+    "extracted/goal-early5-cannon-20261019-relaunch-focused2.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-early5-cannon-20261019-relaunch-focused2.stdout": "1a83a887e63fe5716d9b3c6e6bcbc4714e49f3860ac9782c7bfe05729ae32141",
+    "extracted/goal-early5-cannon-20261019-ui1/completedWorkshop.bmp": "1f87998d5c5a6d8b7191212d2dcb82b60c74d558ffdaba6b8cbfa8d8e5e0c75e",
+    "extracted/goal-early5-cannon-20261019-ui1/enemyView.bmp": "c8645a0713db4203bd711f6957896134be1992df08055b481dd3a76540073ccf",
+    "extracted/goal-early5-cannon-20261019-ui1/originals-before.json": "f98d8731a8a729b528fd9744b52f3b26143eff54e767f0b8e1537040c5807c15",
+    "extracted/goal-early5-cannon-20261019-ui1/run.json": "a90ed3659a0b45eb31e3505a2bb25a929692091ec1bc5775d9c058e20c45f033",
+    "extracted/goal-early5-cannon-20261019-ui1/stageC.bmp": "96b3e34eb7525c9e2c990bf37657248feb3fc10d47d515e5f25220f87b1c347a",
+    "extracted/goal-early5-cannon-20261019-ui1/stageD.bmp": "61357b9cdb5b359d47618da60c09e00b4a08cca1375744ed3ee9fcb570ba3301",
+    "extracted/goal-early5-cannon-20261019-ui1/states.tsv": "705b642bf1647f85b9f1c1dc6f0d213f99b83a86c9f989e3eb843d497d7cc241",
+    "extracted/goal-early5-cannon-20261019-ui1/stderr.log": "4039d34a66b07d1c83ceacf6fa9760c705cc28cc464a67c0f3c54315d32b4b02",
+    "extracted/goal-early5-cannon-20261019-ui1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-early5-cannon-20261019-ui1/steps.tsv": "365ddb4e72a756d1b69fab30c9ad380a23f3205cc1032b8790b3e45e20d2c2ce",
+    "extracted/goal-early5-cannon-20261019-ui2/completedWorkshop.bmp": "b778afb5402d308f995bf483c402041aa169fdbd0c972fafb5a61100defed57d",
+    "extracted/goal-early5-cannon-20261019-ui2/originals-before.json": "f98d8731a8a729b528fd9744b52f3b26143eff54e767f0b8e1537040c5807c15",
+    "extracted/goal-early5-cannon-20261019-ui2/run.json": "aa5b7cefc4ff8d41cb9dafcc3ea587c7360fc38acc6bd26814a6996eb05b2c73",
+    "extracted/goal-early5-cannon-20261019-ui2/states.tsv": "3438e2fb6d3a2c3bac01369a1cc54fe60127b1d4a10a21ffa3460352bd9f591a",
+    "extracted/goal-early5-cannon-20261019-ui2/stderr.log": "bca6d0f1cc20f75a99def5cc36d6fc939b07b9b324b182794470136fae87c5c7",
+    "extracted/goal-early5-cannon-20261019-ui2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-early5-cannon-20261019-ui2/steps.tsv": "23f09f38afaf78aecb24d7b287343b64fc71934750fcecc675cdbd779242ec56",
+    "extracted/goal-early5-cannon-20261019-ui3/completedWorkshop.bmp": "4721456f0cac520204b6aff3ec6fd79601431068600656345ec1d9f57a7b30aa",
+    "extracted/goal-early5-cannon-20261019-ui3/enemyView.bmp": "0ac9785ef445d869d45548b1bac0febeca0509afa03c1c475a4e4d23f23b166e",
+    "extracted/goal-early5-cannon-20261019-ui3/originals-before.json": "f98d8731a8a729b528fd9744b52f3b26143eff54e767f0b8e1537040c5807c15",
+    "extracted/goal-early5-cannon-20261019-ui3/run.json": "048debf34a17fe0c28cb9e0e14308e2119d6dd72abba4fcaedc8a7286bdc5192",
+    "extracted/goal-early5-cannon-20261019-ui3/stageC.bmp": "0f3f497faa0cf9c056e6ba01be9df332db8e44240ed3706207ca008b7b371e39",
+    "extracted/goal-early5-cannon-20261019-ui3/stageD.bmp": "276924544169c219211fc7e41e37de1d3cb040a336751930ce72bb46e58f9046",
+    "extracted/goal-early5-cannon-20261019-ui3/states.tsv": "14411b67b495089c1e7afd6f6c42345cdfe2e20d89f66422a7bae4ce68889674",
+    "extracted/goal-early5-cannon-20261019-ui3/stderr.log": "4122e5b4255d52f9a279d290ba0a6efae64b3a9262c5d7b26f1a1398651eac26",
+    "extracted/goal-early5-cannon-20261019-ui3/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-early5-cannon-20261019-ui3/steps.tsv": "c48039c7dd973fc7b9fa32f4048515c111669956d15fd140dd39856389ab4335"
+  }
+}

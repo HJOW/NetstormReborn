@@ -2,6 +2,7 @@
 #include "RawSceneSupport.h"
 #include "o/RawSunAviaryProcess.h"
 #include <cstdio>
+#include <filesystem>
 using namespace netstorm::o;
 using namespace netstorm::test::rawscene;
 namespace {
@@ -82,4 +83,35 @@ TEST_CASE(SunAviary_RequiredBoundaries) {
     scene.server=false;scene.trace.clear();missing.PostPop(Sid{50},1);CHECK(scene.trace=="Base,1");
     AviaryScene frame('F',Split("1,0,0,2,11,0,1,0",','));frame.checking=true;hooks=frame.Hooks();hooks.checkFrame={};RawSunAviaryProcess diagnostic(frame.pool,frame.Globals(),hooks);const auto before=frame.fields.bytes;CHECK(Throws([&] { diagnostic.Frame(frame.fields); }));CHECK(frame.fields.bytes==before && frame.trace.empty());
     std::array<std::uint8_t,8> shortPacket{};CHECK(Throws([&] { RawSunAviaryProcess::WriteProcess(frame.fields,shortPacket,true); }));CHECK(frame.fields.bytes==before);
+}
+
+// 새 독립128입력의 전체 raw/프로세스/효과 순서를 비교하며 기존1734행 원문은 유지한다.
+TEST_CASE(SunAviary_NativeHomeNotice128) {
+    const auto path=(std::filesystem::path(__FILE__).parent_path()/"fixtures/sun-aviary-notice-x86.tsv").string();std::size_t compared{}; // 별도 동결한 실제45b4a0 기대값이다.
+    // 서버 관문과 효과 뒤 현재 값 재조회를 각 입력에서 독립 구성한다.
+    for (const auto& row:LoadFixture(path.c_str()).rows) {
+        const auto input=Split(row[0],',');AviaryScene scene('N',input);scene.server=Number(input[0])!=0;scene.mutation=Number(input[3]);
+        auto raw=scene.pool.AllocatedBytes(Sid{50});std::fill(raw.begin(),raw.end(),std::uint8_t{0xa5});Put(raw,0,0x12200000);raw[10]=72;raw[11]=0;Put(raw,36,7);
+        scene.fields.bytes.fill(0xa5);scene.fields.bytes[8]=static_cast<std::uint8_t>(Number(input[1]));scene.Time(100.25);Put(scene.fields.bytes,24,Number(input[2]));Put(scene.fields.bytes,32,0x509db8);Put(scene.fields.bytes,36,70);Put(scene.fields.bytes,40,50);
+        SunAviaryProcessHooks hooks; // 큰 효과는 원문 관측과 같은 명시 입력이며 최종 상태를 계산하지 않는다.
+        hooks.findProcess=[&](Sid sid,std::uint32_t type) { CHECK(sid.value==50 && type==32);scene.Event("Find:50:32");if (scene.mutation==3) { scene.server=false;scene.processType=99; }return Sid{70}; };
+        hooks.processFields=[&](Sid sid) { CHECK(sid.value==70);scene.Event("Resolve:70");return &scene.fields; };
+        hooks.unpop=[&](Sid sid,std::uint32_t flags) { CHECK(sid.value==50 && flags==0);scene.Event("Unpop:50:0");raw[11]=4;if (scene.mutation==1) { Put(raw,36,99);scene.fields.bytes[8]=0x10;Put(scene.fields.bytes,24,5);Put(scene.fields.bytes,40,51); } };
+        hooks.repop=[&](Sid sid,std::uint32_t flags) { CHECK(sid.value==50 && flags==0);scene.Event("Repop:50:0:"+std::to_string(Get(raw,36)));raw[11]=0;if (scene.mutation==2) { Put(raw,36,77);scene.fields.bytes[8]=0x40;Put(scene.fields.bytes,24,9); } };
+        hooks.refreshForm=[&](SunAviaryProcessFields& fields) { CHECK(&fields==&scene.fields);scene.Event("Refresh"); };
+        RawSunAviaryProcess body(scene.pool,scene.Globals(),std::move(hooks));body.FlyerDied(Sid{50});
+        CHECK(row.size()==9 && row[1]==row[5] && row[2]==row[6] && row[3]==row[7] && row[4]==row[8]);
+        CHECK((scene.trace.empty() ? "-" : scene.trace)==row[1]);CHECK(Hex(raw)==row[2]);CHECK(Hex(scene.fields.bytes)==row[3]);CHECK(std::to_string(scene.server ? 1 : 0)+','+std::to_string(scene.processType)==row[4]);++compared;
+    }
+    CHECK(compared==128);
+}
+
+// 원본 NULL 역참조를 성공으로 숨기지 않으며 그 앞의 공간/프레임 효과 순서를 유지한다.
+TEST_CASE(SunAviary_HomeNoticeNullAfterSpatialEffects) {
+    AviaryScene scene('N',{});std::uint32_t effects{};SunAviaryProcessHooks hooks; // NULL Host 조회만 명시 실패 입력으로 공급한다.
+    hooks.findProcess=[](Sid,std::uint32_t) { return Sid{}; };
+    hooks.unpop=[&](Sid,std::uint32_t) { ++effects; };
+    hooks.repop=[&](Sid sid,std::uint32_t) { CHECK(Get(scene.pool.Slot(sid),36)==27);++effects; };
+    RawSunAviaryProcess body(scene.pool,scene.Globals(),hooks);CHECK(Throws([&] { body.FlyerDied(Sid{50}); }));CHECK(effects==2 && Get(scene.pool.Slot(Sid{50}),36)==27);
+    scene.server=false;effects=0;RawSunAviaryProcess client(scene.pool,scene.Globals(),{});client.FlyerDied(Sid{50});CHECK(effects==0);
 }

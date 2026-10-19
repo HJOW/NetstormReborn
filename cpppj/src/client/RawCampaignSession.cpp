@@ -1196,6 +1196,11 @@ struct RawCampaignSession::Impl {
         hooks.refreshForm=[this](SunAviaryProcessFields& fields) {
             auto* current=dynamic_cast<SunAviaryProcess*>(core.processes.FromForm(fields.Form()));if (!current || &current->Fields()!=&fields) throw std::logic_error("훨리베이스 현재 Host/raw 이미지 불일치");core.processes.RefreshForm(*current);
         };
+        hooks.processFields=[this](Sid form)->SunAviaryProcessFields* {
+            auto* current=dynamic_cast<SunAviaryProcess*>(core.processes.FromForm(form)); // 같은 실제 Host가 소유한48BYTE만 사용한다.
+            return current ? &current->Fields() : nullptr;
+        };
+        hooks.unpop=[this](Sid sid,std::uint32_t flags) { world.Unpop(sid,flags); };hooks.repop=[this](Sid sid,std::uint32_t flags) { world.Repop(sid,flags); }; // 홈 통지의 직접 프레임 쓰기 앞뒤 공간 효과다.
         sunAviary=std::make_unique<RawSunAviaryProcess>(core.pool,SunAviaryProcessGlobals{core.processState.server,globals.editor,gunState.checking,core.processState.now,sunAviaryType,sunFlyerType},std::move(hooks));
     }
     // 같은 현재 원문/Host의 생성·프레임·QA·패킷을 연결한다. 미복원 BaseFlyer 하위는 선택 시 거부한다.
@@ -1308,7 +1313,9 @@ struct RawCampaignSession::Impl {
         hooks.sunProcess=[this](Sid sid,std::uint32_t type)->SunAviaryProcessFields& { const auto form=FindAttachedProcess(core.pool,sid,type);auto* process=form.value ? dynamic_cast<SunAviaryProcess*>(core.processes.FromForm(form)) : nullptr;if (!process) throw std::logic_error("착륙 대상의 실제 훨리베이스 프로세스 미연결");return process->Fields(); };
         hooks.refreshSun=[this](SunAviaryProcessFields& fields) { auto* process=dynamic_cast<SunAviaryProcess*>(core.processes.FromForm(fields.Form()));if (!process || &process->Fields()!=&fields) throw std::logic_error("착륙 훨리베이스 Host/raw 이미지 불일치");core.processes.RefreshForm(*process); };
         hooks.homeNotice=[this](Sid home,std::uint32_t,std::uint32_t) {
-            if (!core.processState.server) return;if (Read(core.pool.Slot(home),0)!=0x5099e8) throw std::logic_error("다른 실제 플라이어 홈 가상 통지 미복원");
+            if (!core.processState.server) return;const auto table=Read(core.pool.Slot(home),0); // 두 원본 홈의 실제 가상34로만 분배한다.
+            if (table==0x509930U) { sunAviary->FlyerDied(home);return; } // 실제45b4a0은 Rain의 재출격 난수 지연을 사용하지 않는다.
+            if (table!=0x5099e8) throw std::logic_error("다른 실제 플라이어 홈 가상 통지 미복원");
             const auto form=FindAttachedProcess(core.pool,home,rainAviaryType);auto* process=form.value ? dynamic_cast<RainAviaryProcess*>(core.processes.FromForm(form)) : nullptr;
             if (!process) throw std::logic_error("맨 오 워 홈 통지의 현재 프로세스 NULL 원본 경계");
             rainAviary->FlyerDied(process->Fields(),random,[this](RainAviaryProcessFields& fields) {

@@ -83,9 +83,9 @@
     "cpppj/src/o/RawFlyerProcess.h": "1107c2a73163e0c3024c822cf614c9d02f7aa36d75fc81cfd0a6df58e36b6345",
     "cpppj/src/o/RawFlyerProcess.cpp": "bc5d68f980251febe080e280db07727f7d5cc7bbbf9d84780d8d8d31a86f44f1",
     "cpppj/src/o/RawGunTarget.cpp": "7ac9b51af58949ce8c23f9854679a7685468ba798768db0a1158f25b0ff95f14",
-    "cpppj/src/client/RawCampaignSession.cpp": "933019e945c3cc6616cfe7bdfd7f1657b7d2e7f14cd9154dc21c428ca2fcfbaa",
+    "cpppj/src/client/RawCampaignSession.cpp": "1c10f5c122d5ce55cda1e458d389c0d29ae0caaa3b06c6787eda80ec55d5c8d7",
     "cpppj/tests/CMakeLists.txt": "83eed7cedab8650ce570f444a5c06efe29b2ce414e3049777221cf672f6e248f",
-    "cpppj/tests/CampaignMissionStartTests.cpp": "03e1719afd07bc3915052bfe2d4eedf2a37080b3f3b5ac041133cef165e59df5",
+    "cpppj/tests/CampaignMissionStartTests.cpp": "5f71b9e383e12f7230e8338db410238aae96757b2f3f7ecff1cd70b1e090789c",
     "tools/decomp_sun_flyer_frame.py": "afe8503d7b5de9afa80bf106d133d62b54ffe6eec66b22dfd9b3a91276dfb3fd",
     "cpppj/sun-flyer-frame.json": "8f433203431f08d2207b0aec3ec6b10dce563395ab57ccbf0b578d0805ba4cd1",
     "cpppj/tests/fixtures/sun-flyer-frame-x86.tsv": "aa3a4fd3f4e69b528f63dd070bdcd20e009ac77404a6f28d66c7d9bd8820c5f4",
@@ -687,6 +687,25 @@
           "path": "cpppj/src/client/RawCampaignSession.cpp",
           "previous": "6178f7e7eb219c88fd4ad7c397b3efe0c0c6e406021fb3e0a8c0579e0e132175",
           "current": "933019e945c3cc6616cfe7bdfd7f1657b7d2e7f14cd9154dc21c428ca2fcfbaa"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 214,
+      "reason": "훨리베이스 홈 통지45b4a0의 실제 공간/프로세스 연결과 독립 원문/재출격 검사의 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "933019e945c3cc6616cfe7bdfd7f1657b7d2e7f14cd9154dc21c428ca2fcfbaa",
+          "current": "1c10f5c122d5ce55cda1e458d389c0d29ae0caaa3b06c6787eda80ec55d5c8d7"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignMissionStartTests.cpp",
+          "previous": "03e1719afd07bc3915052bfe2d4eedf2a37080b3f3b5ac041133cef165e59df5",
+          "current": "5f71b9e383e12f7230e8338db410238aae96757b2f3f7ecff1cd70b1e090789c"
         }
       ]
     }

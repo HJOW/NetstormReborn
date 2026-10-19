@@ -40,6 +40,9 @@ struct SunAviaryProcessHooks {
     std::function<void(Sid,float,float,std::uint32_t)> pop; // 새 플라이어의 가상+90이다.
     std::function<void(Sid,Sid)> bindFlyer; // 0045c1b0의 현재 BaseFlyerProcess 연결이다.
     std::function<void(SunAviaryProcessFields&)> refreshForm; // 같은 실제 Host의0041c010 재부착/패킷이다.
+    std::function<SunAviaryProcessFields*(Sid)> processFields; // 현재 Form의4ae2d0 inner를 같은 실제48BYTE로 해석한다. NULL도 구별한다.
+    std::function<void(Sid,std::uint32_t)> unpop; // 홈 가상34의 직접 프레임 쓰기 앞에서 실제 가상48을 호출한다.
+    std::function<void(Sid,std::uint32_t)> repop; // 홈 프레임27의 직접 쓰기 뒤 실제 가상4c를 호출한다.
 };
 // 원본004b1a90의 skip/delete가0인 첫 일치만 복원한다. free/void 필터를 추가하지 않는다.
 Sid FindAttachedProcess(const SidPool& pool,Sid parent,std::uint32_t type);
@@ -50,6 +53,7 @@ public:
     void Initialize(SunAviaryProcessFields& fields) const; // 0045d690의 실제 생성자 쓰기만 수행한다.
     void PostPop(Sid parent,std::uint32_t flags) const; // 0045ec50의 중복/할당/생성/부착/Damageable 순서다.
     void Frame(SunAviaryProcessFields& fields) const; // inner0045d8c0의 실제 상태1~10을 실행한다.
+    void FlyerDied(Sid home) const; // 홈 가상34=0045b4a0의 조회→Unpop→frame27→Repop→AP8/dirty4→Refresh다.
     static std::uint16_t WriteProcess(SunAviaryProcessFields& fields,std::span<std::uint8_t> packet,bool includeParent,bool force=false,std::uint8_t protocol=1,std::uint8_t message=0x38); // 0045d6e0→0045b070의 변경 비트와 길이를 기록한다.
     const SidPool& Pool() const; // Host와 동일 풀인지 확인한다.
 private:

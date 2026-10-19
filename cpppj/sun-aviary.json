@@ -38,13 +38,40 @@
     "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
     "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
     "tools/decomp_sun_aviary.py": "4a918866a27d15f36c344ffeaa6321a5ce110706241441cf1993469ebc1e95c0",
-    "cpppj/src/o/RawSunAviaryProcess.h": "ddb2bc2a0b7f29304f8d40c00cdb29d80d99ba558c381a5e6e457a1d59b7043c",
-    "cpppj/src/o/RawSunAviaryProcess.cpp": "eea427a3274871ca93ba8744d75e404d863e717cd6b2f495bb27f1ff3d1ee7bd",
-    "cpppj/tests/SunAviaryProcessTests.cpp": "00d97e56b7d27adfcc45f50c88a56c5f98df0852b93ce79df94107b675ae7cc6",
+    "cpppj/src/o/RawSunAviaryProcess.h": "2a14e9256502d59e3d3af4376762adb37ab3172e13303c596e3a41add2b9f8e9",
+    "cpppj/src/o/RawSunAviaryProcess.cpp": "9da6f8ae3136c558f6efb3911660c7b30fbfb8953db5d0d47b5b11440bace7da",
+    "cpppj/tests/SunAviaryProcessTests.cpp": "be6a0d003a3ee6d5f4fcfe3d5accff9721708f66ef14919e78ed1660bcd25f89",
     "cpppj/tests/fixtures/sun-aviary-x86.tsv": "e64841e232f3ea3b79eba3fba4d21656277a9b4dd05766f1ff1e77414cb6d0db"
   },
   "precision_replays": [
     639,
     895
+  ],
+  "integration_updates": [
+    {
+      "date": "2026-10-19",
+      "unit": 214,
+      "reason": "훨리베이스 홈 통지45b4a0의 실제 공간/프로세스 연결과 독립 원문/재출격 검사의 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/o/RawSunAviaryProcess.h",
+          "previous": "ddb2bc2a0b7f29304f8d40c00cdb29d80d99ba558c381a5e6e457a1d59b7043c",
+          "current": "2a14e9256502d59e3d3af4376762adb37ab3172e13303c596e3a41add2b9f8e9"
+        },
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/o/RawSunAviaryProcess.cpp",
+          "previous": "eea427a3274871ca93ba8744d75e404d863e717cd6b2f495bb27f1ff3d1ee7bd",
+          "current": "9da6f8ae3136c558f6efb3911660c7b30fbfb8953db5d0d47b5b11440bace7da"
+        },
+        {
+          "group": "/sha256",
+          "path": "cpppj/tests/SunAviaryProcessTests.cpp",
+          "previous": "00d97e56b7d27adfcc45f50c88a56c5f98df0852b93ce79df94107b675ae7cc6",
+          "current": "be6a0d003a3ee6d5f4fcfe3d5accff9721708f66ef14919e78ed1660bcd25f89"
+        }
+      ]
+    }
   ]
 }

@@ -103,7 +103,7 @@
     "cpppj/tests/BoardApproachTests.cpp": "5e7f3f764bd2bc50dda32b8e3ad1bc9fb80011b8cefce3f0a117cfbf420e844a",
     "cpppj/src/o/RawPathProcess.cpp": "75557b1b9c481c089b466b9e4dd9c27aadae28905e43379b5c7ac7cc8bcd7683",
     "cpppj/src/o/RawSquidNeighbors.cpp": "88ec2ee9dbaad0627d1ceb3629199361d860ba137f50d12fe0410a8cbbefa3f2",
-    "cpppj/src/client/RawCampaignSession.cpp": "933019e945c3cc6616cfe7bdfd7f1657b7d2e7f14cd9154dc21c428ca2fcfbaa",
+    "cpppj/src/client/RawCampaignSession.cpp": "1c10f5c122d5ce55cda1e458d389c0d29ae0caaa3b06c6787eda80ec55d5c8d7",
     "cpppj/src/o/RawConstructionBuilder.h": "134e353fb2fae37b9e8726197f3d80ab1b3b9819e6a19bf6a876481b55ef33d4",
     "cpppj/src/o/RawPathRuntime.cpp": "4f051a4e5c50de3a99cb856c80dcccf7988ee1000fec9f66942f6e4e8999e639",
     "cpppj/src/o/RawConstructionBuilder.cpp": "6a17b819e976b76891f443cfca012d42e31d2f94e818261ce236f05cd19895f5",
@@ -114,7 +114,7 @@
     "cpppj/src/o/CMakeLists.txt": "9ea03fca9ed297b42ee2fa19a6b6d03d3ae6f02191be0a9c0a4eb809f013ec4f"
   },
   "currentSources": {
-    "cpppj/src/client/RawCampaignSession.cpp": "933019e945c3cc6616cfe7bdfd7f1657b7d2e7f14cd9154dc21c428ca2fcfbaa",
+    "cpppj/src/client/RawCampaignSession.cpp": "1c10f5c122d5ce55cda1e458d389c0d29ae0caaa3b06c6787eda80ec55d5c8d7",
     "cpppj/src/o/CMakeLists.txt": "9ea03fca9ed297b42ee2fa19a6b6d03d3ae6f02191be0a9c0a4eb809f013ec4f",
     "cpppj/src/o/RawBoardApproach.cpp": "92e42114b5b83aa72adf34e8ac81a03bf9b152b3687ed382c1943adcfbfb7d52",
     "cpppj/src/o/RawBoardApproach.h": "795fd5b39e2612b27cf13efcbf56121aa36be5d984101dc28fd904e75188da4c",
@@ -2818,6 +2818,25 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "ea45c674da8aa8f8e51d6afa2975e1a6a5b6f1f15b9f31368bdcbd7b09027801",
           "current": "75d29153881bb72c714f125de0633b01311b1ea6b6841b9d44a78c3f544ca5e9"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 214,
+      "reason": "훨리베이스 홈 통지45b4a0의 실제 공간/프로세스 연결과 독립 원문/재출격 검사의 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "933019e945c3cc6616cfe7bdfd7f1657b7d2e7f14cd9154dc21c428ca2fcfbaa",
+          "current": "1c10f5c122d5ce55cda1e458d389c0d29ae0caaa3b06c6787eda80ec55d5c8d7"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "933019e945c3cc6616cfe7bdfd7f1657b7d2e7f14cd9154dc21c428ca2fcfbaa",
+          "current": "1c10f5c122d5ce55cda1e458d389c0d29ae0caaa3b06c6787eda80ec55d5c8d7"
         }
       ]
     }

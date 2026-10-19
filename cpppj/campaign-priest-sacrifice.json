@@ -302,7 +302,7 @@
     "cpppj/src/client/RawCampaignCarrierInput.inc": "5f7586171e8d3fc0b7a12e7bad502a33eeda171a41d859469c03367d930aad1b",
     "cpppj/src/client/RawCampaignPathBindings.cpp": "2fc59e6cd111db8c953e388d1856c8e6103a8b6852461c2d3df89ec84a4f4314",
     "cpppj/src/client/RawCampaignPathBindings.h": "82d9565ece60f24300977681dffdaad57a660fdccca38b4db305d5a1d262b8b0",
-    "cpppj/src/client/RawCampaignSession.cpp": "933019e945c3cc6616cfe7bdfd7f1657b7d2e7f14cd9154dc21c428ca2fcfbaa",
+    "cpppj/src/client/RawCampaignSession.cpp": "1c10f5c122d5ce55cda1e458d389c0d29ae0caaa3b06c6787eda80ec55d5c8d7",
     "cpppj/src/client/RawCampaignSession.h": "f905619a10b1ecc976bdfc082f8196e3f82190b5f7770828aaf84d00b813c573",
     "cpppj/src/o/RawTempleRitual.cpp": "4da7a7c1516a35016897471780d92be973f3d238dfd4bf5c36548a9fe9b803bb",
     "cpppj/src/o/RawTempleRitual.h": "e5b853c7bfd9ca70c18c97d7b3f3a6e14b6e6d0ca89a6e5269e5117838937741",
@@ -1102,6 +1102,19 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "ea45c674da8aa8f8e51d6afa2975e1a6a5b6f1f15b9f31368bdcbd7b09027801",
           "current": "75d29153881bb72c714f125de0633b01311b1ea6b6841b9d44a78c3f544ca5e9"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 214,
+      "reason": "훨리베이스 홈 통지45b4a0의 실제 공간/프로세스 연결과 독립 원문/재출격 검사의 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "933019e945c3cc6616cfe7bdfd7f1657b7d2e7f14cd9154dc21c428ca2fcfbaa",
+          "current": "1c10f5c122d5ce55cda1e458d389c0d29ae0caaa3b06c6787eda80ec55d5c8d7"
         }
       ]
     }

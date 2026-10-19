@@ -13,7 +13,7 @@
     "cpppj/src/client/CampaignClientServices.cpp": "6760b4bf315f6f7af71d8163e6258b72a186c2921fb536986399c4b10409ac25",
     "cpppj/src/client/GameWorld.cpp": "9dd9c938d1a68d0054091a87cdfc5e08aedddec6792e55bfee6f439743ef3402",
     "cpppj/src/client/GameWorld.h": "d51dfe75377b1afd870bfeb40e26cef9f6233f65217d757135648ce064043a16",
-    "cpppj/src/client/RawCampaignSession.cpp": "933019e945c3cc6616cfe7bdfd7f1657b7d2e7f14cd9154dc21c428ca2fcfbaa",
+    "cpppj/src/client/RawCampaignSession.cpp": "1c10f5c122d5ce55cda1e458d389c0d29ae0caaa3b06c6787eda80ec55d5c8d7",
     "cpppj/src/client/RawCampaignSession.h": "f905619a10b1ecc976bdfc082f8196e3f82190b5f7770828aaf84d00b813c573",
     "cpppj/src/client/RawSurfaceWorld.cpp": "d6ebba7d5175b98dd5ddabba6de4744a977434913b4eb8b9c2e39068e7b94832",
     "cpppj/src/client/RawSurfaceWorld.h": "278604c3b2b58bb13dfb1d8574efd48cd8d353e71e0c342498286f19f233cd03",
@@ -3306,6 +3306,19 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "ea45c674da8aa8f8e51d6afa2975e1a6a5b6f1f15b9f31368bdcbd7b09027801",
           "current": "75d29153881bb72c714f125de0633b01311b1ea6b6841b9d44a78c3f544ca5e9"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 214,
+      "reason": "훨리베이스 홈 통지45b4a0의 실제 공간/프로세스 연결과 독립 원문/재출격 검사의 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "933019e945c3cc6616cfe7bdfd7f1657b7d2e7f14cd9154dc21c428ca2fcfbaa",
+          "current": "1c10f5c122d5ce55cda1e458d389c0d29ae0caaa3b06c6787eda80ec55d5c8d7"
         }
       ]
     }

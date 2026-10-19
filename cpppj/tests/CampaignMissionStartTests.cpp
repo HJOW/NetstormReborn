@@ -524,3 +524,37 @@ TEST_CASE(CampaignSunFlyer_Tutorial5NaturalDedicatedFrames60Seconds) {
     CHECK(born==409 && observations==1991 && animation.size()>1 && gate.started==1); // 실제60초 중 생성 뒤1991Frame을 실행한다.
     std::fprintf(stderr,"실제 Tutorial5 전용 훨리기그: game60초 body%u birth%u 이후%uFrame 장식%zu종/그림자 일치, 공격·귀환 별도\n",body.value,born,observations,animation.size());
 }
+
+// 자연 생성된 훨리기그의 명시 삭제가 실제 홈 통지·공간·AP8·재출격까지 이어지는지 검사한다.
+TEST_CASE(CampaignSunFlyer_ActualHomeNoticeAndNaturalRelaunch) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);ConfigInterface config([&](std::string_view path) { return assets.files.TryRead(path); });ConfigureStart(config);MissionScript script(config,"Tutorial5");
+    StartExternal external;auto fort=FortTemplate::Parse(assets.files.Read(script.FortPath()),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),script.FortName(),external.Services());session.Load();auto core=session.Core();
+    GameClock clock;MissionFrameGateState gate;MissionStartState state;MissionStartGlobals globals;MissionAiSettingsState ai;ai.stuffRefreshRate=4;auto effects=external.Effects();effects.gameSeconds=[&] { return clock.GameSeconds(0); };RawCampaignMissionStartBindings start(session,script,gate,state,globals,ai,std::move(effects));start.Start();
+    Sid body{},home{},form{};std::uint32_t frame=1; // 같은 Kernel에서 자연 생성된 실제 객체만 선택한다.
+    // 원본 시계/초기 배치를 유지해 첫 전용 비행 프로세스가 생성될 때까지 진행한다.
+    for (;frame<=1200 && !body.value;++frame) {
+        session.RunFrame(clock.Capture(frame*25),false);
+        // 등록된 실제 프로세스의 홈과 부모를 보존한다.
+        for (ProcessId id=1;id<=core.kernel.Capacity();++id) {
+            const auto* flyer=dynamic_cast<const FlyerProcess*>(core.kernel.Get(id));if (!flyer || Get(flyer->Fields().bytes,0)!=0x509f24U) continue;
+            body=flyer->Parent();home=flyer->Fields().Home();form=flyer->Form();break;
+        }
+    }
+    CHECK(body.value && home.value && form.value);if (!body.value || !home.value) return;
+    session.RunFrame(clock.Capture(frame*25),false);++frame; // 생성 직후의 전용 첫Frame에서 원래 폭탄 필드가 초기화된 뒤 삭제한다.
+    const auto homeForm=FindAttachedProcess(core.pool,home,32);auto* process=dynamic_cast<SunAviaryProcess*>(core.processes.FromForm(homeForm));CHECK(process);if (!process) return;
+    const auto time=process->Fields().Time();const auto sp=session.Sp(1);const auto hp=Get(core.pool.Slot(home),26); // 통지가 바꾸면 안 되는 현재 시각/자원/HP다.
+    CHECK(session.World().Destroy(body,0));CHECK(!core.processes.FromForm(form) && (core.pool.Slot(body)[11]&3U)==3U);CHECK(!(core.pool.Slot(home)[11]&7U));
+    CHECK(Get(core.pool.Slot(home),36)==27 && process->Fields().Stage()==8 && process->Fields().Time()==time);CHECK(Get(core.pool.Slot(home),26)==hp && session.Sp(1)==sp);
+    CHECK(!core.destroy.PreDepth() && !core.destroy.PostDepth() && !core.bookkeeping.depth);
+    bool launched{};const auto limit=frame+1200; // 최대30초의 실제 프레임에서 재출격을 기다린다.
+    // AP8의 원래 흔들림/건설·생성을 기다리며 단계나 비행체를 직접 만들지 않는다.
+    for (;frame<limit && !launched;++frame) {
+        session.RunFrame(clock.Capture(frame*25),false);
+        // 같은 살아 있는 홈에 결합된 실제 새 비행 프로세스만 인정한다.
+        for (ProcessId id=1;id<=core.kernel.Capacity();++id) {
+            const auto* flyer=dynamic_cast<const FlyerProcess*>(core.kernel.Get(id));if (flyer && Get(flyer->Fields().bytes,0)==0x509f24U && flyer->Fields().Home()==home) { launched=true;break; }
+        }
+    }
+    CHECK(launched && !core.destroy.PreDepth() && !core.destroy.PostDepth() && !core.bookkeeping.depth);
+}
