@@ -18,7 +18,7 @@
     "cpppj/src/o/RawMissionFrameGate.cpp": "c591ce1c294a8c645008da04a6d5366182d42247f4505716e85d0ae4d6c5f4dc",
     "cpppj/src/o/RawMissionFrameGate.h": "93feacfb8b1fa1276737f8b1af6bc044c1ecda75bc4a82375728d650a43791be",
     "cpppj/src/client/RawCampaignTutorialOneBindings.cpp": "c214b1a4ecba704d4b4a7cbad4599dd87a32bf900f2664c53578a481fcd968fa",
-    "cpppj/src/client/RawCampaignSession.cpp": "4b0470acb1ea5cb275959eb4a70df1d795c4f87d6a51a2a78f6e35ebe573f36b",
+    "cpppj/src/client/RawCampaignSession.cpp": "8fd4dff08f9c36f7597ea2985eb4c0ba9e1f4686a41b0446eda990eb353c6dc1",
     "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
     "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6"
   },
@@ -371,6 +371,19 @@
           "path": "cpppj/src/client/GameWorld.cpp",
           "previous": "aacc54866c2893001591af389ffbb3c6885af176352b9e6d0e52111f493a05b6",
           "current": "af6d3aeb3bd53d83e2619c2bd20ba5df42c17fe718cb81786841606419f10c6c"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-20",
+      "unit": 236,
+      "reason": "Devastation의 실제 Session 활성화/주기/효과/삭제와 전용 추가 그림을 연결하여 현재 소스 핀을 갱신한다. 원본 기대값과 과거 실행/바이너리/기존 이력은 보존한다.",
+      "pins": [
+        {
+          "group": "/sources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "4b0470acb1ea5cb275959eb4a70df1d795c4f87d6a51a2a78f6e35ebe573f36b",
+          "current": "8fd4dff08f9c36f7597ea2985eb4c0ba9e1f4686a41b0446eda990eb353c6dc1"
         }
       ]
     }

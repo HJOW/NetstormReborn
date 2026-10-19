@@ -254,7 +254,7 @@
     "cpppj/src/client/CampaignUserInputServices.cpp": "5af003ba5e0e9f98d3f7f134213681ad1f886570d6c964d0965d1bee6adb8d40",
     "cpppj/src/client/GameWorld.cpp": "af6d3aeb3bd53d83e2619c2bd20ba5df42c17fe718cb81786841606419f10c6c",
     "cpppj/src/client/RawCampaignCarrierInput.inc": "ff521d60c6520e8834d91f6b6cd719fa8f0d76450a396366b3bb4969508982a3",
-    "cpppj/src/client/RawCampaignSession.cpp": "4b0470acb1ea5cb275959eb4a70df1d795c4f87d6a51a2a78f6e35ebe573f36b",
+    "cpppj/src/client/RawCampaignSession.cpp": "8fd4dff08f9c36f7597ea2985eb4c0ba9e1f4686a41b0446eda990eb353c6dc1",
     "cpppj/src/client/RawCarrierInput.cpp": "ebebcf63a03fb24dbdca9bbd7086ebec634400c87a9d1a3711ac2b6a41218322",
     "cpppj/src/client/RawCarrierMenu.cpp": "4a0fada9b8ac9d00eab37955189a8ac669d26f1d22559deae229a6ce3637dc1e",
     "cpppj/src/client/UserInput.cpp": "fd1bee42a48c4a33098114e813a7909d449791671fb0e313b76efc55216c20bd",
@@ -368,6 +368,19 @@
           "path": "cpppj/support-color-runtime.json",
           "previous": "cc893c1fbab3ae048859637fd6d64804947393dc9a0c30fd850665cab73b0489",
           "current": "8d514794f7225cd9289bbd094153a007ca5abc2505755ffe04c42dbe284bffe5"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-20",
+      "unit": 236,
+      "reason": "Devastation의 실제 Session 활성화/주기/효과/삭제와 전용 추가 그림을 연결하여 현재 소스 핀을 갱신한다. 원본 기대값과 과거 실행/바이너리/기존 이력은 보존한다.",
+      "pins": [
+        {
+          "group": "/sources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "4b0470acb1ea5cb275959eb4a70df1d795c4f87d6a51a2a78f6e35ebe573f36b",
+          "current": "8fd4dff08f9c36f7597ea2985eb4c0ba9e1f4686a41b0446eda990eb353c6dc1"
         }
       ]
     }

@@ -177,13 +177,13 @@
   "sources": {
     "cpppj/src/client/RawCampaignConstructionBindings.cpp": "26d4753bbe2c086485b320bcfae991ae9957c4aed69880677f2b94f439d13684",
     "cpppj/src/client/RawCampaignConstructionBindings.h": "1fe62283698ff9a69f03b74a043bb359d0aeb4df335798bc6e6e91b5c9c16431",
-    "cpppj/src/client/RawCampaignSession.cpp": "4b0470acb1ea5cb275959eb4a70df1d795c4f87d6a51a2a78f6e35ebe573f36b",
+    "cpppj/src/client/RawCampaignSession.cpp": "8fd4dff08f9c36f7597ea2985eb4c0ba9e1f4686a41b0446eda990eb353c6dc1",
     "cpppj/src/o/RawBattleBroadcast.cpp": "d59f41110db782f83b522aeb16348225dc04728d38cd766bd706fc57585c9e4c",
     "cpppj/src/o/RawBattleBroadcast.h": "b434175a1b937a8c34d64ba016f72c73ab4635490d5b7e73f43986610b7240da",
     "cpppj/src/o/RawGraph.cpp": "5427d22b06ec1f9eb54ab9ede9c3e4008baeac3e3439cba3d8132236b9464fb1",
     "cpppj/src/o/RawGraph.h": "588b8a3a1ae30cff14b738a5491ed4d290b093e50cd2ff782460f7af983c208b",
     "cpppj/tests/BattleBroadcastTests.cpp": "7bfa23c46a8f8810fc2b8522f14cff40060f23cbfb9a8752d8294cea4f407a43",
-    "cpppj/tests/CampaignSessionTests.cpp": "995d2f4848c9f2b261d0930cbc7dde5f2209b5931cdab4102da10dca4d23f117",
+    "cpppj/tests/CampaignSessionTests.cpp": "0072c9605dd595fd018d29fd4fdfb4334a53a1b52d482dc132bd5a85210a2b7e",
     "cpppj/tests/DestroyGraphTests.cpp": "a3618522256bcd8f3a5313b62d31e18640e7823d481cf08f21e874ec7933c471",
     "cpppj/tests/ShapeToBufferTests.cpp": "91d7010f9d6698f7237d8a2040e00658502a57dedea9da310173af4e96dd26e5",
     "tools/cpp_assets_smoke.py": "d71fbbe55dde7452c980509a68f228c40ce74ddaf9f3b7a7518092d76c0319e9",
@@ -463,6 +463,25 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "ad59d62f007d8b7e970c22c0e3dff80bacd970f2aab75a6a3bababd9d993e558",
           "current": "995d2f4848c9f2b261d0930cbc7dde5f2209b5931cdab4102da10dca4d23f117"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-20",
+      "unit": 236,
+      "reason": "Devastation의 실제 Session 활성화/주기/효과/삭제와 전용 추가 그림을 연결하여 현재 소스 핀을 갱신한다. 원본 기대값과 과거 실행/바이너리/기존 이력은 보존한다.",
+      "pins": [
+        {
+          "group": "/sources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "4b0470acb1ea5cb275959eb4a70df1d795c4f87d6a51a2a78f6e35ebe573f36b",
+          "current": "8fd4dff08f9c36f7597ea2985eb4c0ba9e1f4686a41b0446eda990eb353c6dc1"
+        },
+        {
+          "group": "/sources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "995d2f4848c9f2b261d0930cbc7dde5f2209b5931cdab4102da10dca4d23f117",
+          "current": "0072c9605dd595fd018d29fd4fdfb4334a53a1b52d482dc132bd5a85210a2b7e"
         }
       ]
     }

@@ -1,0 +1,23 @@
+{
+  "unit": 236,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-20",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-19"
+  },
+  "uniqueInputs": 909,
+  "normalReturns": 1818,
+  "instructions": 21210,
+  "boundaries": "40aca0 실제 길이 확정 전체다. 유효0..100 대상수/송신 인자/기존 길이와210BYTE 전체를 두 정밀도로 관측한다. GP/ret4/canary/SEH/x87/실행/쓰기범위 확인. 실제 전송/게임 성공을 증명하지 않는다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_bomb_packet.py": "53ce554c8c480e7d570210bfda5159575dbe2c31dfbcc6756918175352c3889b",
+    "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+    "tools/decomp_cursor_position.py": "e15bcdbc4c6be9c131c30f15416c945d650dba9f7dc6def404b47f63c635c212",
+    "tools/decomp_carrier_falling.py": "f8702db0708a543b73213c8df9154503afe977767a11bd7c150b639ee1b587a6",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "cpppj/tests/fixtures/bomb-packet-x86.tsv": "2c19a341eead53f03387472e340b3d1394c24bd14284ed3fa49e37e876d97008"
+  }
+}

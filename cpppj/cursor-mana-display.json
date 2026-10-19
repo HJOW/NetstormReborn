@@ -44,13 +44,13 @@
     "cpppj/src/CMakeLists.txt": "c7528c1471cb14af92ed763612a66dc669eb143783ab3dc630650763b74ff968",
     "cpppj/src/client/RawCampaignLifetimeBindings.cpp": "5ddc44fc6776aebbd50e6249221141dec90fca1abe827886f19b14c968bd4582",
     "cpppj/src/client/RawCampaignLifetimeBindings.h": "6f4be73b52279abf308c8a3e6d8962271560e47c25996f7a03fca09f8cd063e8",
-    "cpppj/src/client/RawCampaignSession.cpp": "4b0470acb1ea5cb275959eb4a70df1d795c4f87d6a51a2a78f6e35ebe573f36b",
+    "cpppj/src/client/RawCampaignSession.cpp": "8fd4dff08f9c36f7597ea2985eb4c0ba9e1f4686a41b0446eda990eb353c6dc1",
     "cpppj/src/client/RawCampaignSession.h": "f905619a10b1ecc976bdfc082f8196e3f82190b5f7770828aaf84d00b813c573",
     "cpppj/src/o/SquidDisplay.cpp": "adff73d1c710cf295aed17e2a06cb90294e1399e5e455d423659f37c336f3dc6",
     "cpppj/src/o/SquidPop.cpp": "61f8db73c663d5d7c8880d73bc310cf7884e361bb76402e0946241e02b7dcd17",
     "cpppj/src/o/SquidUnpop.cpp": "f9a932b6ee543cc2ee051d6f67afb0c56fca1f325cc51d29ca3d0dc3adf26fef",
     "cpppj/tests/CMakeLists.txt": "8ca2db5cb109de55c2eadec3063e474691de144316efaa1a2e9046faf0febd43",
-    "cpppj/tests/CampaignSessionTests.cpp": "995d2f4848c9f2b261d0930cbc7dde5f2209b5931cdab4102da10dca4d23f117",
+    "cpppj/tests/CampaignSessionTests.cpp": "0072c9605dd595fd018d29fd4fdfb4334a53a1b52d482dc132bd5a85210a2b7e",
     "cpppj/tests/PopTests.cpp": "250b9a9fd863142026c29ef68c75ea7c8bea6871ed0a42df9bafee4e2b072d48",
     "cpppj/tests/UnpopTests.cpp": "af6cd4c73db3f50d707d1b7cc896f991a7c5222177b7bd4252054bbe826af9cc",
     "cpppj/src/client/RawCursorMana.cpp": "b8ab58679249a18387757eb2eb93c7405e566a4a9fc02ed018b2046a7d751f7b",
@@ -2587,6 +2587,25 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "08457e3ef27a4288b676a00c32a171a7775d93f7a491faa643452af8236ae8e0",
           "current": "8ca2db5cb109de55c2eadec3063e474691de144316efaa1a2e9046faf0febd43"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-20",
+      "unit": 236,
+      "reason": "Devastation의 실제 Session 활성화/주기/효과/삭제와 전용 추가 그림을 연결하여 현재 소스 핀을 갱신한다. 원본 기대값과 과거 실행/바이너리/기존 이력은 보존한다.",
+      "pins": [
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "4b0470acb1ea5cb275959eb4a70df1d795c4f87d6a51a2a78f6e35ebe573f36b",
+          "current": "8fd4dff08f9c36f7597ea2985eb4c0ba9e1f4686a41b0446eda990eb353c6dc1"
+        },
+        {
+          "group": "/sha256",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "995d2f4848c9f2b261d0930cbc7dde5f2209b5931cdab4102da10dca4d23f117",
+          "current": "0072c9605dd595fd018d29fd4fdfb4334a53a1b52d482dc132bd5a85210a2b7e"
         }
       ]
     }

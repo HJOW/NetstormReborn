@@ -9,11 +9,11 @@
   "edition": "PATCH10.78",
   "baseCommit": "3330211",
   "currentSources": {
-    "cpppj/src/client/RawCampaignSession.cpp": "4b0470acb1ea5cb275959eb4a70df1d795c4f87d6a51a2a78f6e35ebe573f36b",
+    "cpppj/src/client/RawCampaignSession.cpp": "8fd4dff08f9c36f7597ea2985eb4c0ba9e1f4686a41b0446eda990eb353c6dc1",
     "cpppj/src/client/RawCampaignSession.h": "f905619a10b1ecc976bdfc082f8196e3f82190b5f7770828aaf84d00b813c573",
     "cpppj/src/client/RawCampaignParticles.cpp": "08317368d2c12e6d5c78224c3a568048b577b32eae89e401d47550f59e0ee0d3",
     "cpppj/src/client/RawCampaignParticles.h": "936d96d04a8737266462b5045e6d433a0abbd76dd5e1e76de9f087911f3eda32",
-    "cpppj/tests/CampaignSessionTests.cpp": "995d2f4848c9f2b261d0930cbc7dde5f2209b5931cdab4102da10dca4d23f117"
+    "cpppj/tests/CampaignSessionTests.cpp": "0072c9605dd595fd018d29fd4fdfb4334a53a1b52d482dc132bd5a85210a2b7e"
   },
   "protectedFileSha256": {
     "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
@@ -1536,6 +1536,25 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "ad59d62f007d8b7e970c22c0e3dff80bacd970f2aab75a6a3bababd9d993e558",
           "current": "995d2f4848c9f2b261d0930cbc7dde5f2209b5931cdab4102da10dca4d23f117"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-20",
+      "unit": 236,
+      "reason": "Devastation의 실제 Session 활성화/주기/효과/삭제와 전용 추가 그림을 연결하여 현재 소스 핀을 갱신한다. 원본 기대값과 과거 실행/바이너리/기존 이력은 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "4b0470acb1ea5cb275959eb4a70df1d795c4f87d6a51a2a78f6e35ebe573f36b",
+          "current": "8fd4dff08f9c36f7597ea2985eb4c0ba9e1f4686a41b0446eda990eb353c6dc1"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "995d2f4848c9f2b261d0930cbc7dde5f2209b5931cdab4102da10dca4d23f117",
+          "current": "0072c9605dd595fd018d29fd4fdfb4334a53a1b52d482dc132bd5a85210a2b7e"
         }
       ]
     }

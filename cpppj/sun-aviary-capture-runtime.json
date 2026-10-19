@@ -249,7 +249,7 @@
     }
   },
   "sources": {
-    "cpppj/src/client/RawCampaignSession.cpp": "4b0470acb1ea5cb275959eb4a70df1d795c4f87d6a51a2a78f6e35ebe573f36b",
+    "cpppj/src/client/RawCampaignSession.cpp": "8fd4dff08f9c36f7597ea2985eb4c0ba9e1f4686a41b0446eda990eb353c6dc1",
     "cpppj/src/o/CMakeLists.txt": "e98fa5aecc683b69021e6efacd62092a48772ae5ed3f7cb3da0eeeff7c33d7ec",
     "cpppj/src/o/RawSunAviaryCapture.cpp": "d042ce0de408bc7768395f951a3b34791064c0835a934740d1d22fe3aab2455a",
     "cpppj/src/o/RawSunAviaryCapture.h": "65df20e4611cc2cabc8ce7ec3445f96653965581b64d1d7c7ed22d361fcbe887",
@@ -410,5 +410,20 @@
     "tools/ghidra/dude-spawn-functions.json": "6fd3a099b040d1c505e148f4fd06579f8ee05ab94650d4c9bf54f519210a3dd0"
   },
   "goalComplete": false,
-  "fullFidelityVerified": false
+  "fullFidelityVerified": false,
+  "integration_updates": [
+    {
+      "date": "2026-10-20",
+      "unit": 236,
+      "reason": "Devastation의 실제 Session 활성화/주기/효과/삭제와 전용 추가 그림을 연결하여 현재 소스 핀을 갱신한다. 원본 기대값과 과거 실행/바이너리/기존 이력은 보존한다.",
+      "pins": [
+        {
+          "group": "/sources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "4b0470acb1ea5cb275959eb4a70df1d795c4f87d6a51a2a78f6e35ebe573f36b",
+          "current": "8fd4dff08f9c36f7597ea2985eb4c0ba9e1f4686a41b0446eda990eb353c6dc1"
+        }
+      ]
+    }
+  ]
 }

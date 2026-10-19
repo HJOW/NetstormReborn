@@ -1,0 +1,23 @@
+{
+  "unit": 236,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-20",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-19"
+  },
+  "uniqueInputs": 32,
+  "normalReturns": 64,
+  "instructions": 1472,
+  "boundaries": "실제41e3d0/TYPE는 전체 실행하고4daa70 RLE만 경계다. 보호VT+a0=빈41c0f0/+a4=41e3d0 확인. GP/ret8/canary/SEH/x87/실행/쓰기범위 확인. 캡처 전체 픽셀의 원본 대조나 게임 성공을 증명하지 않는다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_devastation_draw.py": "01070e4fde7bc3d6f6c736adf695146ed1875fa2575d3c038bb6c39dabb2015d",
+    "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+    "tools/decomp_cursor_position.py": "e15bcdbc4c6be9c131c30f15416c945d650dba9f7dc6def404b47f63c635c212",
+    "tools/decomp_carrier_falling.py": "f8702db0708a543b73213c8df9154503afe977767a11bd7c150b639ee1b587a6",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "cpppj/tests/fixtures/devastation-draw-x86.tsv": "db3d3d73bce0f29c91e6b97976cfafb66efb74a8e3de2af9a91ff6155b26d8f1"
+  }
+}

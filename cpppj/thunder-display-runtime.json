@@ -519,7 +519,7 @@
     "cpppj/src/client/RawCampaignFactoryDisplay.cpp": "ab6ff75e011abd8b5c8330d650acb5a9af31ea20e2ba2b55ebe59503c7ba8621",
     "cpppj/src/o/RawThunderCannonCapture.cpp": "9cb609f3dd3fe9239cc85d81ce5427e7b5b41cf81431b0a462df643f7216c6ad",
     "cpppj/src/o/RawThunderCannonCapture.h": "d98c7aeab460724a40daedf472654b0892294ee6afd1cd57ffb00ae6f7117a79",
-    "cpppj/tests/CampaignSessionTests.cpp": "995d2f4848c9f2b261d0930cbc7dde5f2209b5931cdab4102da10dca4d23f117",
+    "cpppj/tests/CampaignSessionTests.cpp": "0072c9605dd595fd018d29fd4fdfb4334a53a1b52d482dc132bd5a85210a2b7e",
     "tools/cpp_campaign_entry_smoke.py": "5fa9adadf6bcd571d6fba39b38e46fed41fe2e927911ff80dc38047c52c56b49",
     "tools/cpp_early5_spells_runtime.py": "b46e2145d2ddcfcf21e410a5604cf5364c0605576e04c1518eb8dde469063cf0",
     "tools/cpp_fort_smoke.py": "96c7fcd524deb38d93274ded77620639bdc7012ec0f2aaeed0a488d938e9da83",
@@ -683,6 +683,19 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "ad59d62f007d8b7e970c22c0e3dff80bacd970f2aab75a6a3bababd9d993e558",
           "current": "995d2f4848c9f2b261d0930cbc7dde5f2209b5931cdab4102da10dca4d23f117"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-20",
+      "unit": 236,
+      "reason": "Devastation의 실제 Session 활성화/주기/효과/삭제와 전용 추가 그림을 연결하여 현재 소스 핀을 갱신한다. 원본 기대값과 과거 실행/바이너리/기존 이력은 보존한다.",
+      "pins": [
+        {
+          "group": "/sources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "995d2f4848c9f2b261d0930cbc7dde5f2209b5931cdab4102da10dca4d23f117",
+          "current": "0072c9605dd595fd018d29fd4fdfb4334a53a1b52d482dc132bd5a85210a2b7e"
         }
       ]
     }

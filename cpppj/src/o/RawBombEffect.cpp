@@ -29,6 +29,13 @@ std::uint32_t CostLow(float value) {
     return static_cast<std::uint32_t>(static_cast<std::uint64_t>(static_cast<std::int64_t>(wide)));
 }
 }
+// 원본 쓰기 관문을 먼저 지키고 실제 버퍼 범위 안에서 길이WORD만 변경한다.
+void FinalizeBombEffectPacket(std::span<std::uint8_t> packet,bool writing) {
+    if (!writing) return;
+    const auto count=Bytes(packet,6,4);
+    if (count>(packet.size()-10)/2 || count>100) throw std::invalid_argument("주문 효과 송신 대상 범위");
+    const auto length=10U+2U*count;packet[2]=static_cast<std::uint8_t>(length);packet[3]=static_cast<std::uint8_t>(length>>8);
+}
 // 다른 판본과 현재TYPE/저장소를 섞지 않는다.
 RawBombEffect::RawBombEffect(const SidPool& pool,std::span<const BombEffectType> types,BombEffectState& state,BombEffectHooks hooks)
     :pool_(pool),types_(types),state_(state),hooks_(std::move(hooks)) {

@@ -31,8 +31,8 @@
     "cpppj/src/o/RawBombBlast.h": "df801c6fce496e120f22dc2d9de78ecc0156f46f2086bee0e2cb34002c07bfe4",
     "cpppj/src/o/RawBombTargets.cpp": "f2aa11b08479c114823fca68e87b0aadf27da965e5b63a2129d350f3c583700c",
     "cpppj/src/o/RawBombTargets.h": "4a12c271c210e925afadf17e085ca677459f40045385befa84960d9a63642e2c",
-    "cpppj/src/client/RawBombBlastBindings.cpp": "1b134fdb8231c7e95538ef52cba993a6a523b83b092f2585f63a38ed814524f7",
-    "cpppj/src/client/RawBombBlastBindings.h": "774b85b84bb4e74d7c69e980436183a1ccdcd1c4e928b845d057a4361eefc4fd",
+    "cpppj/src/client/RawBombBlastBindings.cpp": "34e95e06b4459afc5ece108a9474893f5a4db4bf598086977ad80722acc76b72",
+    "cpppj/src/client/RawBombBlastBindings.h": "dca720eca862979c28da54bcb3daeae25593ca249b28d7de05d02bf5f3fa0443",
     "cpppj/tests/BombBlastTests.cpp": "7d7e379d23ccc2993aba73561684b386aea4d78538ad70303f98abba22cbb526",
     "tools/decomp_bomb_blast.py": "a780c5598d7adbffb5acd8c65b5356effb041b3c58fdb10f76bef361022b2e5c",
     "tools/decomp_bomb_blast_dais.py": "2cb69f570450dd789c87f16bd35dfb75771f56d7fdb2676f8c6cdd66633816c4",
@@ -84,6 +84,25 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "08457e3ef27a4288b676a00c32a171a7775d93f7a491faa643452af8236ae8e0",
           "current": "8ca2db5cb109de55c2eadec3063e474691de144316efaa1a2e9046faf0febd43"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-20",
+      "unit": 236,
+      "reason": "Devastation의 실제 Session 활성화/주기/효과/삭제와 전용 추가 그림을 연결하여 현재 소스 핀을 갱신한다. 원본 기대값과 과거 실행/바이너리/기존 이력은 보존한다.",
+      "pins": [
+        {
+          "group": "/sources",
+          "path": "cpppj/src/client/RawBombBlastBindings.cpp",
+          "previous": "1b134fdb8231c7e95538ef52cba993a6a523b83b092f2585f63a38ed814524f7",
+          "current": "34e95e06b4459afc5ece108a9474893f5a4db4bf598086977ad80722acc76b72"
+        },
+        {
+          "group": "/sources",
+          "path": "cpppj/src/client/RawBombBlastBindings.h",
+          "previous": "774b85b84bb4e74d7c69e980436183a1ccdcd1c4e928b845d057a4361eefc4fd",
+          "current": "dca720eca862979c28da54bcb3daeae25593ca249b28d7de05d02bf5f3fa0443"
         }
       ]
     }

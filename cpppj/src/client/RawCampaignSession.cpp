@@ -35,6 +35,10 @@
 #include "o/RawNuggetReplenish.h"
 #include "o/RawBalloonBody.h"
 #include "o/RawBombPreDestroy.h"
+#include "o/RawBombActivation.h"
+#include "o/RawBombRegular.h"
+#include "o/RawBombEffect.h"
+#include "client/RawBombBlastBindings.h"
 #include "o/RawPacketDispatch.h"
 #include "client/AiTypeRequiredEnergy.h"
 #include "o/RawGameRandomSeed.h"
@@ -446,6 +450,13 @@ struct RawCampaignSession::Impl {
     DamageablePostDestroyState damageablePostState; // 삭제 후의 현재 전투/권한 전역이다.
     std::unique_ptr<RawDamageableRelease> damageableRelease; // 같은 풀/내용물/사제 실제 생성으로 해방한다.
     std::unique_ptr<RawBombPreDestroy> bombPre; // 실제502370의고유41e960 전처리다.다른Bomb 파생은공통전처리다.
+    BombTargetState devastationTargetState;BombBlastState devastationBlastState; // 같은 현재 권한/동맹을 각 실제 자격/효과 위치에 공급한다.
+    BombRegularState devastationRegularState;BombEffectState devastationEffectState; // 주기/수신 상태와 실제 비용 누적을 같은 Session에서 소유한다.
+    std::vector<BombRegularType> devastationRegularTypes;std::vector<BombEffectType> devastationEffectTypes; // 기존188TYPE의A프레임/casttime/cost/fireSound만 보충한다.
+    std::unique_ptr<RawBombTargets> devastationTargets;std::unique_ptr<RawBombBlast> devastationBlast; // 같은 네 공간 해시/현재 피해/지면/다리 효과 몸체다.
+    std::unique_ptr<RawBombActivation> devastationActivation;std::unique_ptr<RawBombRegular> devastationRegular;std::unique_ptr<RawBombEffect> devastationEffect; // 0x5c/주기/0x5f의 실제 공용 몸체를 연결한다.
+    std::unique_ptr<RegularProcess> pendingDevastationRegular; // 실제 활성화 확보부터 SharedRegular 부착까지 한 객체를 보관한다.
+    std::unique_ptr<std::uint8_t[]> devastationSearchMemory,devastationEffectMemory; // 각각 원본new400/대상배열의 실제 확보와 해제 수명을 보존한다.
     std::unique_ptr<RawDamageablePreDestroy> damageablePre; // 공통 삭제와 같은 깊이/Graph/장부를 사용한다.
     std::unique_ptr<RawFlyerPreDestroy> flyerPre; //144의 현재+8 WORD 대상 삭제 뒤 실제 Damageable Pre다.
     std::unique_ptr<RawDamageablePostDestroy> damageablePost; // 같은 실제 예약/다리/공통 후처리다.
@@ -792,8 +803,13 @@ struct RawCampaignSession::Impl {
             const auto color=core.bridgeState.ownerColors[owner];if (color<0 || color>8) throw std::out_of_range("파편 캡처 현재 소유자 색 번호 오류");return shrapnelOwnerColors.at(type)[static_cast<std::size_t>(color)];
         };
         bridgeDraw=std::make_unique<RawBridgeDraw>(core.pool,bridgeDrawState);
-        shrapnelCaptureState.mainFrame=[this](Sid sid) { return bridgeDraw->MainFrame(sid); };
-        shrapnelCaptureState.additional=[this](Sid sid,ConstructionVisualImage&,std::int32_t x,std::int32_t y) { bridgeDraw->Additional(sid,x,y); }; // 실제 기본0 분기를 같은 캡처에서 실행한다.
+        shrapnelCaptureState.mainFrame=[this](Sid sid) { if (Read(core.pool.Slot(sid),0)==0x502370U) return -1;return bridgeDraw->MainFrame(sid); }; // Devastation의+a0=41c0f0은 빈 그림이며+a4만 현재 프레임을 그린다.
+        shrapnelCaptureState.additional=[this](Sid sid,ConstructionVisualImage& image,std::int32_t x,std::int32_t y) {
+            if (Read(core.pool.Slot(sid),0)==0x502370U) {
+                DrawDevastationAdditional(core.pool,sid,x,y,[this,&image](std::uint32_t type,std::int32_t frame,std::int32_t px,std::int32_t py) { if (type<70 || frame<0) throw std::out_of_range("Devastation 캡처 TYPE/프레임 범위");static_cast<void>(DrawShape(image.pixels,image.width,image.height,assets.game.Shapes(),type-70,static_cast<std::size_t>(frame),px,py,{0,0,image.width-1,image.height-1})); });return;
+            }
+            bridgeDraw->Additional(sid,x,y);
+        }; // 기존 다리의 실제 기본0 분기는 그대로 사용한다.
         shrapnelCapture=std::make_unique<RawShapeToBuffer>(core.pool,core.types,core.shapes,assets.game.Shapes(),shrapnelCaptureState);
         CampaignShrapnelHooks shrapnel;shrapnel.crt=&particleCrt;shrapnel.lifetime.create=[this](std::uint32_t type,std::uint32_t flags) { return world.Create(type,flags); };
         shrapnel.lifetime.pop=[this](Sid sid,float x,float y,std::uint32_t flags) { world.Pop(sid,x,y,flags); };
@@ -802,7 +818,7 @@ struct RawCampaignSession::Impl {
             const auto raw=core.pool.Slot(sid);
             // 독립 전체 캡처/가상Draw/RLE를 대조한 정확한 가상 표만 같은 실제 일반색 캡처에 연결한다.
             if (IsPatchTemple(raw) || IsBurningArcherCapture(raw) || IsPlainBuildingCapture(raw) || IsThunderCannonCapture(raw) || IsSunAviaryCapture(raw)) { if (!buildingCapture) throw std::logic_error("실제 건물 파편 캡처 설치 전 호출");return buildingCapture->Capture(sid); }
-            if (!Flyer(sid) && !BridgeLifetime(sid)) throw std::logic_error("다른 실제 파편 source의 전용 색표/추가 그림 미복원 TYPE"+std::to_string(raw[10]));return shrapnelCapture->Capture(sid);
+            if (!Flyer(sid) && !BridgeLifetime(sid) && Read(raw,0)!=0x502370U) throw std::logic_error("다른 실제 파편 source의 전용 색표/추가 그림 미복원 TYPE"+std::to_string(raw[10]));return shrapnelCapture->Capture(sid);
         };
         shrapnel.destroyUnpaired=[this](Sid sid) { world.Destroy(sid,0); };
         particles=std::make_unique<RawCampaignParticles>(core,random,assets.game.Palette(),[this](float x,float y,std::string_view name) {
@@ -1002,7 +1018,10 @@ struct RawCampaignSession::Impl {
         actualRegular=MakeBridgeRegularHandler(core.pool,core.bridgeEvents,std::move(actualRegular)); // 실제5034c8의2691 삭제/2692 끝 칸 변환도 같은 Kernel에서 실행한다.
         // 실제 사건이 실패하면 당시 부모/사건/횟수를 남기고 같은 예외를 전파한다. 성공/상태 되돌림으로 대신하지 않는다.
         worldHooks.regular=[this,handler=std::move(actualRegular)](Sid sid,std::uint32_t event,std::uint32_t count,float payload) {
-            try { return handler(sid,event,count,payload); }
+            try {
+                if (devastationRegular && Read(core.pool.Slot(sid),0)==0x502370U) { PrepareDevastation();return devastationRegular->Handle(sid,event,count,payload); }
+                return handler(sid,event,count,payload);
+            }
             catch (...) { std::fprintf(stderr,"실제 Regular 실패 SID%u TYPE%u event%u count%u payload%08x\n",sid.value,sid.value<core.pool.Capacity() ? core.pool.Slot(sid)[10] : 0xffffU,event,count,std::bit_cast<std::uint32_t>(payload));throw; }
         };
         worldHooks.transmit=AviaryTransmission(assetBindings->Transmission());worldHooks.walkerFall=[this](Sid sid) { return priests->FallWalker(sid); };
@@ -1941,6 +1960,7 @@ struct RawCampaignSession::Impl {
         geyserMined->HandlePacket(packet);
     }
     // 설치를 마친 동일 Graph/Host에 실제 사제 경로 모듈을 한 번 연결한다.
+    #include "client/RawCampaignDevastation.inc"
     void ConnectMotion() {
         if (motion) throw std::logic_error("실제 세션 경로 중복 연결");
         ConstructionArrivalHooks buildHooks;
@@ -2175,7 +2195,7 @@ RawCampaignSession::RawCampaignSession(const GameAssets& assets,const BaseFileSy
 // Impl이 Kernel을 비운 뒤 실제 모듈을 해제한다.
 RawCampaignSession::~RawCampaignSession()=default;
 // 동일 원본 부모를 실행한다.
-void RawCampaignSession::Load() { impl_->runtime->Load();impl_->ConnectBuilding();impl_->ConnectMotion();impl_->buildingMover=impl_->MakeBuilder(impl_->buildingMoverState,{});impl_->ConnectGameplayPlacement();impl_->ConnectCursor();impl_->loaded=true; }
+void RawCampaignSession::Load() { impl_->runtime->Load();impl_->ConnectBuilding();impl_->ConnectMotion();impl_->ConnectDevastation();impl_->buildingMover=impl_->MakeBuilder(impl_->buildingMoverState,{});impl_->ConnectGameplayPlacement();impl_->ConnectCursor();impl_->loaded=true; }
 // UI의 현재 크기/변경 전역을 빌리며 게임 소유자·모드는 실제 세션에서 다시 읽는다.
 void RawCampaignSession::ResetCamera(CameraHomeState& state,std::function<void(std::int32_t,std::int32_t)> apply) const {
     state.localPlayer=impl_->playerState.battleOwner;state.fort=impl_->core.ownerMode.fort;
@@ -2300,6 +2320,10 @@ void RawCampaignSession::RegisterCarrierCommands(RawPacketDispatch& dispatch) {
     dispatch.Register(0x4f,[this](std::uint32_t owner,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->carrierPickup->Receive(owner,0,packet); });
     dispatch.Observe(0x60,{});dispatch.Version(0x60,1,0);dispatch.RequireLength(0x60,10);
     dispatch.Register(0x60,[this](std::uint32_t owner,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->carrierSteal->Receive(owner,0,packet); });
+    dispatch.Observe(0x5c,{});dispatch.Version(0x5c,1,0);dispatch.RequireLength(0x5c,6);
+    dispatch.Register(0x5c,[this](std::uint32_t,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->ReceiveDevastationActivation(packet); });
+    dispatch.Observe(0x5f,{});dispatch.Version(0x5f,1,0);dispatch.RequireLength(0x5f,0xffff);
+    dispatch.Register(0x5f,[this](std::uint32_t,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->ReceiveDevastationEffect(packet); });
 }
 // 요청은 실제 선택/중복 검사와 전송만 수행하고 직접 Start를 부르지 않는다.
 void RawCampaignSession::RequestCarrierMove(Sid parent,RawPathPoint destination,std::uint32_t sacrifice) { CarrierMove().Request(parent,destination,sacrifice); }

@@ -27,8 +27,8 @@
   "sources": {
     "cpppj/src/CMakeLists.txt": "c7528c1471cb14af92ed763612a66dc669eb143783ab3dc630650763b74ff968",
     "cpppj/tests/CMakeLists.txt": "8ca2db5cb109de55c2eadec3063e474691de144316efaa1a2e9046faf0febd43",
-    "cpppj/src/o/RawBombEffect.cpp": "120e00fe19199c4e008bd4d09e3f665f10f235973abd8167f6d7afda0d1ef01a",
-    "cpppj/src/o/RawBombEffect.h": "4df18d0a1d809dcb5063ffa974839c2b5eab069cbf49413862b97939017c8e62",
+    "cpppj/src/o/RawBombEffect.cpp": "d37f764b18b534480c566b40899eaacf600b4c1f1bc02e66e6e278587427e543",
+    "cpppj/src/o/RawBombEffect.h": "78de4e8419940cdc10b434735bfd3d8a4e0a4832e9ed525bb4e81554c1bbc450",
     "cpppj/tests/BombEffectTests.cpp": "8cfaf59f4ddee64949e13474b30a18371c492d5846cca1c77ff0ae1e5cedc265",
     "tools/decomp_bomb_effect.py": "22c20eb50c5f4e2193fc2c4d676c9a2d93cabd0a193b34aebcac92d3c88bb9c3",
     "tools/cpp_bomb_effect_cpp_audit.py": "cebb40765cf2b542ccea19b52698227565f6a06003340433eaad8e3a0d632153",
@@ -116,6 +116,25 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "08457e3ef27a4288b676a00c32a171a7775d93f7a491faa643452af8236ae8e0",
           "current": "8ca2db5cb109de55c2eadec3063e474691de144316efaa1a2e9046faf0febd43"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-20",
+      "unit": 236,
+      "reason": "Devastation의 실제 Session 활성화/주기/효과/삭제와 전용 추가 그림을 연결하여 현재 소스 핀을 갱신한다. 원본 기대값과 과거 실행/바이너리/기존 이력은 보존한다.",
+      "pins": [
+        {
+          "group": "/sources",
+          "path": "cpppj/src/o/RawBombEffect.cpp",
+          "previous": "120e00fe19199c4e008bd4d09e3f665f10f235973abd8167f6d7afda0d1ef01a",
+          "current": "d37f764b18b534480c566b40899eaacf600b4c1f1bc02e66e6e278587427e543"
+        },
+        {
+          "group": "/sources",
+          "path": "cpppj/src/o/RawBombEffect.h",
+          "previous": "4df18d0a1d809dcb5063ffa974839c2b5eab069cbf49413862b97939017c8e62",
+          "current": "78de4e8419940cdc10b434735bfd3d8a4e0a4832e9ed525bb4e81554c1bbc450"
         }
       ]
     }

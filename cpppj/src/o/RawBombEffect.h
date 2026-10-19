@@ -5,6 +5,8 @@
 #include <functional>
 
 namespace netstorm::o {
+// 40aca0의 송신 observer다. writing이 비영일 때 현재 대상수로 길이WORD를 확정하고 나머지 바이트는 보존한다.
+void FinalizeBombEffectPacket(std::span<std::uint8_t> packet,bool writing);
 // 기존 TYPE 표에서 이 수신부가 읽는 비용·소리·지연 시간이다.
 struct BombEffectType {
     float cost{}; // TYPE+c4의 현재 비용이며 signed64 절삭값의 하위DWORD를 누적한다.

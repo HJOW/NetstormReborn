@@ -25,6 +25,8 @@
 #include "o/RawCarrierMove.h"
 #include "o/RawTempleRitual.h"
 #include "o/RawGemReward.h"
+#include "o/RawBombEffect.h"
+#include "client/RawBombBlastBindings.h"
 #include "zacket/LocalMissionTransport.h"
 #include "client/RawShapeToBuffer.h"
 #include "client/OwnerColorMaps.h"
@@ -2868,4 +2870,58 @@ TEST_CASE(CampaignTutorialLater_ActualSessionsAndThreeDwordEvents) {
         }
         CHECK(session.Sp(1)==money[number-3] && !session.Core().bookkeeping.depth && !session.Core().destroy.PreDepth() && !session.Core().destroy.PostDepth());
     }
+}
+
+// 실제40aca0의 독립909입력과 송신하지 않는 관문의 바이트 보존을 확인한다.
+TEST_CASE(CampaignDevastation_PacketLengthNative909) {
+    const auto path=(std::filesystem::path(__FILE__).parent_path()/"fixtures/bomb-packet-x86.tsv").string();std::size_t rows{};
+    // 기대값을 제품 수식으로 만들지 않고 보호PE 실행의 전체210바이트와 비교한다.
+    for (const auto& row:LoadFixture(path.c_str()).rows) {
+        CHECK(row.size()==3);if (row.size()!=3) continue;const auto input=Split(row[0],',');CHECK(input.size()==3);if (input.size()!=3) continue;
+        std::array<std::uint8_t,210> packet;packet.fill(0xa7);Put(packet,0,1,1);Put(packet,1,0x5f,1);Put(packet,2,Number(input[2]),2);Put(packet,4,15000,2);Put(packet,6,Number(input[0]));
+        FinalizeBombEffectPacket(packet,Number(input[1])!=0);CHECK(Hex(packet)==row[1]);CHECK(row[1]==row[2]);++rows;
+    }
+    CHECK(rows==909);FinalizeBombEffectPacket({},false);CHECK(Throws([] { FinalizeBombEffectPacket({},true); }));
+    std::array<std::uint8_t,10> shortPacket{};Put(shortPacket,6,1);CHECK(Throws([&] { FinalizeBombEffectPacket(shortPacket,true); }));
+}
+
+// 실제41e3d0의 독립32입력으로 현재 TYPE/프레임/좌표의 평문 그림 요청을 비교한다.
+TEST_CASE(CampaignDevastation_AdditionalDrawNative32) {
+    const auto path=(std::filesystem::path(__FILE__).parent_path()/"fixtures/devastation-draw-x86.tsv").string();SidPool pool(OriginalEdition::Patch1078,24000,true);const auto slot=pool.Slot(Sid{50});std::span<std::uint8_t> raw(const_cast<std::uint8_t*>(slot.data()),slot.size());std::size_t rows{};
+    // SHEET 토큰은 같은TYPE가 가리키는 실제 그림 묶음의 독립 입력이며 제품은 현재TYPE를 전달한다.
+    for (const auto& row:LoadFixture(path.c_str()).rows) {
+        const auto input=Split(row[0],',');CHECK(input.size()==4 && row.size()==3);if (input.size()!=4 || row.size()!=3) continue;
+        Put(raw,0,0x502370);raw[10]=168;Put(raw,36,Number(input[0]));std::string trace;
+        DrawDevastationAdditional(pool,Sid{50},std::bit_cast<std::int32_t>(Number(input[1])),std::bit_cast<std::int32_t>(Number(input[2])),[&](std::uint32_t type,std::int32_t frame,std::int32_t x,std::int32_t y) { CHECK(type==168);trace="draw:"+input[3]+':'+std::to_string(std::bit_cast<std::uint32_t>(frame))+':'+std::to_string(std::bit_cast<std::uint32_t>(x))+':'+std::to_string(std::bit_cast<std::uint32_t>(y)); });
+        CHECK(trace==row[1] && row[1]==row[2]);++rows;
+    }
+    CHECK(rows==32);
+}
+
+// 실제 Session의0x5c→SharedRegular/0x5f→493종료·효과음·공간/프로세스 삭제를 확인한다.
+TEST_CASE(CampaignDevastation_ActualActivationEffectLifetime) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
+    ConfigInterface config([&](std::string_view path) { return assets.files.TryRead(path); });config.Configuration().Assign("DataDir=\"d\"\ncurrentLanguage=\"english\"\nmissionSpec=\"{DataDir}\\{local.1}.{currentLanguage}\"\nfortSpec=\"{DataDir}\\{local.1}.fort\"\n[END]\n");MissionScript script(config,"Tutorial5");CHECK(script.Loaded());
+    auto fort=FortTemplate::Parse(assets.files.Read(script.FortPath()),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),script.FortName(),external.Services());session.Load();auto core=session.Core();
+    Sid caster{};
+    // 실제 로드한 로컬 사제를 찾으며 검사 전용 부모나 진행 상태를 만들지 않는다.
+    for (std::uint32_t index=1;index<core.pool.Capacity();++index) { const auto raw=core.pool.Slot(Sid{static_cast<std::uint16_t>(index)});if (!(raw[11]&3U) && raw[10]==158 && raw[34]==1) { caster=Sid{static_cast<std::uint16_t>(index)};break; } }
+    CHECK(caster.value);if (!caster.value) return;
+    const auto first=core.processes.AddSharedRegular(caster,0x493,0.1F)->Form(),second=core.processes.AddSharedRegular(caster,0x493,0.1F)->Form();const auto other=core.processes.AddRegular(caster,0x492,0.1F)->Form();
+    const auto bomb=session.World().Create(168,2);CHECK(Get(core.pool.Slot(bomb),0)==0x502370U);core.owner.Set(bomb,1);Put(core.pool.AllocatedBytes(bomb),12,caster.value,2);session.World().Pop(bomb,200,200,0);
+    std::vector<std::vector<std::uint8_t>> received;RawPacketDispatch dispatch(OriginalEdition::Patch1078,CommandDevice(received));session.RegisterCarrierCommands(dispatch);PacketConnection connection;connection.sender=1;
+    CHECK(dispatch.Registration(0x5c).length==6 && dispatch.Registration(0x5c).version==1 && dispatch.Registration(0x5f).length==0xffff && dispatch.Registration(0x5f).version==1);
+    std::array<std::uint8_t,6> activation{1,0x5c,6,0,0,0};Put(activation,4,bomb.value,2);const auto before=session.Sp(1);CHECK(dispatch.Dispatch(connection,activation));
+    auto* process=core.processes.FindEvent(bomb,0);CHECK(process && process->Count()==0 && process->Payload()==0.1F);if (!process) return;const auto form=process->Form();CHECK(core.pool.Slot(form)[10]==61 && form.value<core.pool.Layout().serverFirst);
+    std::array<std::uint8_t,10> effect{1,0x5f,10,0,0,0,0,0,0,0};Put(effect,4,bomb.value,2);const auto notices=external.notices;CHECK(dispatch.Dispatch(connection,effect));
+    CHECK(!core.processes.FindEvent(caster,0x493) && !core.processes.FromForm(first) && !core.processes.FromForm(second));CHECK(core.processes.FromForm(other)!=nullptr && !core.processes.FromForm(form));CHECK((core.pool.Slot(bomb)[11]&3U)==3U && session.Sp(1)==before && external.notices>notices);
+    const auto after=external.notices;CHECK(dispatch.Dispatch(connection,effect));CHECK(external.notices==after); // 이미 죽은 주문의 재수신은 원본 조기 반환이다.
+    // 두 번째 주문은 효과 패킷을 주입하지 않고 실제 SharedRegular의 시계·프레임·검색·로컬 수신으로 종료시킨다.
+    const auto timed=session.World().Create(168,2);core.owner.Set(timed,1);Put(core.pool.AllocatedBytes(timed),12,caster.value,2);session.World().Pop(timed,200,200,0);Put(activation,4,timed.value,2);CHECK(dispatch.Dispatch(connection,activation));const auto timedForm=core.processes.FindEvent(timed,0)->Form();std::size_t frames{};
+    // 현재 예약 시각으로만 시계를 전진시키며 casttime/count/HP/대상 목록은 검사에서 쓰지 않는다.
+    while (!(core.pool.Slot(timed)[11]&3U) && frames<4096) {
+        auto* current=dynamic_cast<RegularProcess*>(core.processes.FromForm(timedForm));CHECK(current);if (!current) break;core.processState.now=current->Time();current->RunFrame();++frames;
+    }
+    CHECK(frames>1 && frames<4096 && (core.pool.Slot(timed)[11]&3U)==3U && !core.processes.FromForm(timedForm));CHECK(session.Sp(1)==before);
+    CHECK(!core.bookkeeping.depth && !core.destroy.PreDepth() && !core.destroy.PostDepth());
 }
