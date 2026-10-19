@@ -21,8 +21,8 @@
     "tests": "0bcaa0dfc82bb36ab148efc343334f72569fac0fd13121a97040789abd92eb67"
   },
   "sources": {
-    "cpppj/src/CMakeLists.txt": "023cf7ef3b8b5dc1322ae651a5c61059fef56251e7e4323bd93d5c2c6a415c4c",
-    "cpppj/tests/CMakeLists.txt": "08457e3ef27a4288b676a00c32a171a7775d93f7a491faa643452af8236ae8e0",
+    "cpppj/src/CMakeLists.txt": "c7528c1471cb14af92ed763612a66dc669eb143783ab3dc630650763b74ff968",
+    "cpppj/tests/CMakeLists.txt": "8ca2db5cb109de55c2eadec3063e474691de144316efaa1a2e9046faf0febd43",
     "cpppj/src/o/RawBombTargets.cpp": "f2aa11b08479c114823fca68e87b0aadf27da965e5b63a2129d350f3c583700c",
     "cpppj/src/o/RawBombTargets.h": "4a12c271c210e925afadf17e085ca677459f40045385befa84960d9a63642e2c",
     "cpppj/tests/BombTargetsTests.cpp": "c23ce90953e40c4a9c0527108693f8ee6e9bc31c6308ac26d879d9d9203cae57",
@@ -84,6 +84,25 @@
           "path": "cpppj/src/o/RawBombTargets.h",
           "previous": "6ab9f3c83450c3093325888e0c3c0aee6fb6feb2a55de3828563adad40e37c01",
           "current": "4a12c271c210e925afadf17e085ca677459f40045385befa84960d9a63642e2c"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 235,
+      "reason": "네 직접 피해 주문의 새 모듈과 검사 추가로 바뀐 현재 빌드 목록 핀을 갱신한다. 원본 기대값과 과거 실행/바이너리/기존 이력은 보존한다.",
+      "pins": [
+        {
+          "group": "/sources",
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "023cf7ef3b8b5dc1322ae651a5c61059fef56251e7e4323bd93d5c2c6a415c4c",
+          "current": "c7528c1471cb14af92ed763612a66dc669eb143783ab3dc630650763b74ff968"
+        },
+        {
+          "group": "/sources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "08457e3ef27a4288b676a00c32a171a7775d93f7a491faa643452af8236ae8e0",
+          "current": "8ca2db5cb109de55c2eadec3063e474691de144316efaa1a2e9046faf0febd43"
         }
       ]
     }

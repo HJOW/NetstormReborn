@@ -1,0 +1,66 @@
+{
+  "unit": 235,
+  "baseline": "0f0b70e2",
+  "host": "HJOW-Athlon",
+  "date": "2026-10-19",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-19"
+  },
+  "scope": "가상 표502908/5029d0/502aa8/502b70의 직접 피해 자격/효과와 실제 공유 게임 난수 순서를 복원했다. Factory/Pop/피해/삭제/음향/빔/투영/기둥은 선언 경계이며 Session 설치/실제 게임 시전은 남아 있다. 사용자 지시로 이번 단위 이후 Devastation 외 주문의 남은 작업은3차 멀티플레이 구현 단계로 이월한다.",
+  "validation": {
+    "focused": [
+      "extracted/goal-bomb-strike-20261019-focused2.json",
+      "extracted/goal-bomb-strike-20261019-blast-focused1.json"
+    ],
+    "priorFocused": "extracted/goal-bomb-strike-20261019-focused1.json",
+    "full": "extracted/goal-bomb-strike-20261019-full1.json",
+    "currentPins": "extracted/goal-bomb-strike-20261019-current-pins.json",
+    "tests": 1767,
+    "failed": 0,
+    "seconds": 264.3375412999885
+  },
+  "binaries": {
+    "app": "6f155a4e243668d8bc153e4ffec7bdabba1a22ca8cf1c471656947c3d6a2f417",
+    "tests": "e455f5a402b586b135a85c21f1229bfe088e090b698d78ffdcab10dfb24846fb"
+  },
+  "sources": {
+    "cpppj/src/CMakeLists.txt": "c7528c1471cb14af92ed763612a66dc669eb143783ab3dc630650763b74ff968",
+    "cpppj/tests/CMakeLists.txt": "8ca2db5cb109de55c2eadec3063e474691de144316efaa1a2e9046faf0febd43",
+    "cpppj/src/o/RawBombStrike.cpp": "39acebc8ce11cb07070a8a66cc4dfebc8648395ac779753b15e1a9a099d85be3",
+    "cpppj/src/o/RawBombStrike.h": "94a546fca7428da85ef43a5aeb16857f9361e90942284a7900a910b42b357d3a",
+    "cpppj/tests/BombStrikeTests.cpp": "26213c195953f53d168c686ede8ff9b9e495c7db3c406876d5e1579a853ee412",
+    "tools/decomp_bomb_strike.py": "8c7986697b9ae17fb5cd075ad8e970e2b57b90b5dbf0a00daef5c1aa90ffda1b",
+    "tools/cpp_bomb_strike_audit.py": "15592b31f2be3310654dde3dfbfb4ffda42a5bd8bef1dd18490e13e11e425a35",
+    "docs/exe/cpp-bomb-strike-20261019.md": "b228f952c20fbc085e207cf430fa3d822210bd32e243779ce9e169c8a4ab9eea",
+    "cpppj/src/o/SpStore.cpp": "2319a90807d423b72b0e47e51101bc9ea1618f234c65e26b704c017313f4268a",
+    "cpppj/src/o/SpStore.h": "88a9d2f2913cefc4429ab312a841c01b4405fd5e3799a2d630c1262f66588030",
+    "cpppj/src/o/SidPool.h": "a830f7fca8c42e5a2713a7d5d886314c81dc3bffb8271de85c1b0d1fc46de651",
+    "cpppj/src/o/RiftType.h": "4d4a5a2bb251cf27fe253a5e42da91776d6d12d094d640dac25da5bad9b1b552"
+  },
+  "evidence": {
+    "cpppj/bomb-strike-native.json": "c0885c5a9bc0f0c6a16f62ee576a8b8f13ea41a430f15765bfc3bd6fac19786c",
+    "cpppj/tests/fixtures/bomb-strike-x86.tsv": "93014a92c7cdcf803be84d2e9a1fd16123de3bab56362d2b6630b9dcff2a6a03",
+    "extracted/goal-bomb-strike-20261019-current-pins.json": "10018a65ed226c3b18e678a6782209834b1351a764f8836e17091f6bcc655c09",
+    "extracted/goal-bomb-strike-20261019-focused1.json": "7c86ed1bfb97d0ac14429b875c9421a17a078a7f8258685a699919a6b1149b52",
+    "extracted/goal-bomb-strike-20261019-focused1.stdout": "f1f0ba65656be4c9ada1fcdd927dda1046da514025f6d5e53f864df22b2ce4f4",
+    "extracted/goal-bomb-strike-20261019-focused1.stderr": "42f0fb9a9770558f624e153e870e61eb5a9202fa648621cc040ac705fa121a36",
+    "extracted/goal-bomb-strike-20261019-focused2.json": "3c113d74dc895d9bd0e4f9e670049591c0343c3ca46591ec6835168343873caa",
+    "extracted/goal-bomb-strike-20261019-focused2.stdout": "dcb54d338798d6f260f1a37cbee2e0c778cc78b90480b1f8d0c77f015eeeba88",
+    "extracted/goal-bomb-strike-20261019-focused2.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-bomb-strike-20261019-blast-focused1.json": "bf597549b1d0f83af81056d810632a8161219024c0b40e43d7da64266b48d663",
+    "extracted/goal-bomb-strike-20261019-blast-focused1.stdout": "38007a7e3646db61c56b13a864412f43292179fa0d71ff482ab1a13c9eb3ff42",
+    "extracted/goal-bomb-strike-20261019-blast-focused1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-bomb-strike-20261019-full1.json": "99b379c40885cab71dae917d43c4de35a31fe105ef4200ac7b69d7e17eb2bd56",
+    "extracted/goal-bomb-strike-20261019-full1.stdout": "d8b350b4ed26e3fd9b5e6b34f38c5b0ad41905eac9470b5280313106a4b42652",
+    "extracted/goal-bomb-strike-20261019-full1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "cppImplemented": true,
+  "sharedGameRandom": true,
+  "sessionIntegrated": false,
+  "gameRun": false,
+  "goalComplete": false,
+  "campaignSpellScope": "Devastation",
+  "deferredToMultiplayer": "2026-10-19 사용자 우선순위 변경: 이번235 단위는 마무리하고, **Devastation 외 주문의 남은 복원/연결은3차 멀티플레이 구현 단계로 이월**한다. 사용자는 캠페인에 등장하는 주문은Devastation뿐이라고 설명했다. 다른 주문의 파생 자격/효과/생성/예약/지연 처리·월드/표시/Session 연결을 현재 지정 미션 진행의 선행 조건으로 두지 않는다. 현재는 Devastation의 실제 시전/내용물 소비/Session/UI 연결과 지정 미션 진행을 계속한다.",
+  "resumeAt": "사용자 지시: Devastation 외 주문의 남은 복원/연결은3차 멀티플레이 구현 단계로 이월한다. 현재는 Devastation에 필요한425f50 시전 종료와 실제 삭제/내용물 소비, 같은 Session의0x50/0x5c/0x5f·가변 송신 길이·UI Cast/Drop/427070을 연결한다. Early5 자연F 이후 실제 Devastation 시전/포획/제단/희생과 다른 지정 미션/Guide를 검증한다."
+}

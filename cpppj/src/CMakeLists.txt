@@ -113,6 +113,7 @@ target_sources(netstorm PRIVATE o/RawBombRegular.cpp o/RawBombRegular.h)
 target_sources(netstorm PRIVATE o/RawBombEffect.cpp o/RawBombEffect.h)
 target_sources(netstorm PRIVATE o/RawBombTargets.cpp o/RawBombTargets.h)
 target_sources(netstorm PRIVATE o/RawBombBlast.cpp o/RawBombBlast.h)
+target_sources(netstorm PRIVATE o/RawBombStrike.cpp o/RawBombStrike.h)
 
 # 오벨리스크의 실제 임시Deck 추첨과 보상 변환이다.
 target_sources(netstorm PRIVATE o/RawDeckDraw.cpp o/RawDeckDraw.h o/RawGemReward.cpp o/RawGemReward.h)

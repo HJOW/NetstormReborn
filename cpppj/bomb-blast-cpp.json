@@ -24,9 +24,9 @@
     "tests": "946d5194557d711ecc476c0654b3d4f5774215df18bd083f5e036723c39a698c"
   },
   "sources": {
-    "cpppj/src/CMakeLists.txt": "023cf7ef3b8b5dc1322ae651a5c61059fef56251e7e4323bd93d5c2c6a415c4c",
+    "cpppj/src/CMakeLists.txt": "c7528c1471cb14af92ed763612a66dc669eb143783ab3dc630650763b74ff968",
     "cpppj/src/client/CMakeLists.txt": "0ea1587f2d9dcd22fb2afbdeeefcb151242775b7083018dd39eb181a84fc0b06",
-    "cpppj/tests/CMakeLists.txt": "08457e3ef27a4288b676a00c32a171a7775d93f7a491faa643452af8236ae8e0",
+    "cpppj/tests/CMakeLists.txt": "8ca2db5cb109de55c2eadec3063e474691de144316efaa1a2e9046faf0febd43",
     "cpppj/src/o/RawBombBlast.cpp": "fa1f6941f7ace6e16557820eb78c73ea10134c0fd26b297950d3df3b5c07bbec",
     "cpppj/src/o/RawBombBlast.h": "df801c6fce496e120f22dc2d9de78ecc0156f46f2086bee0e2cb34002c07bfe4",
     "cpppj/src/o/RawBombTargets.cpp": "f2aa11b08479c114823fca68e87b0aadf27da965e5b63a2129d350f3c583700c",
@@ -66,5 +66,26 @@
   "sessionIntegrated": false,
   "gameRun": false,
   "goalComplete": false,
-  "resumeAt": "다른 파생bc/c0 자격/효과(일부bc의 부수효과 포함), 지연420a40/프로세스,425f50 시전 종료와 실제 삭제/내용물 소비를 복원한다. Session0x50/0x5c/0x5f·가변 송신 길이·UI Cast/Drop/427070을 함께 설치하고 Early5 자연F 이후 시전/포획/제단/희생과 다른 지정 미션/Guide를 검증한다."
+  "resumeAt": "다른 파생bc/c0 자격/효과(일부bc의 부수효과 포함), 지연420a40/프로세스,425f50 시전 종료와 실제 삭제/내용물 소비를 복원한다. Session0x50/0x5c/0x5f·가변 송신 길이·UI Cast/Drop/427070을 함께 설치하고 Early5 자연F 이후 시전/포획/제단/희생과 다른 지정 미션/Guide를 검증한다.",
+  "integration_updates": [
+    {
+      "date": "2026-10-19",
+      "unit": 235,
+      "reason": "네 직접 피해 주문의 새 모듈과 검사 추가로 바뀐 현재 빌드 목록 핀을 갱신한다. 원본 기대값과 과거 실행/바이너리/기존 이력은 보존한다.",
+      "pins": [
+        {
+          "group": "/sources",
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "023cf7ef3b8b5dc1322ae651a5c61059fef56251e7e4323bd93d5c2c6a415c4c",
+          "current": "c7528c1471cb14af92ed763612a66dc669eb143783ab3dc630650763b74ff968"
+        },
+        {
+          "group": "/sources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "08457e3ef27a4288b676a00c32a171a7775d93f7a491faa643452af8236ae8e0",
+          "current": "8ca2db5cb109de55c2eadec3063e474691de144316efaa1a2e9046faf0febd43"
+        }
+      ]
+    }
+  ]
 }

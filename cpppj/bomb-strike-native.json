@@ -1,0 +1,44 @@
+{
+  "unit": 235,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-19",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-19"
+  },
+  "uniqueInputs": 1420,
+  "normalReturns": 2840,
+  "instructions": 428590,
+  "nativeCalls": {
+    "0041f2f0": 368,
+    "004ac200": 488,
+    "0049a840": 3524,
+    "0041f3d0": 240,
+    "004adc60": 240,
+    "0041f310": 558,
+    "004adea0": 2604,
+    "0049a900": 2604,
+    "0041f410": 558,
+    "0041f4e0": 558,
+    "004558f0": 4986,
+    "0041f650": 558
+  },
+  "tables": [
+    5253384,
+    5253584,
+    5253800,
+    5254000
+  ],
+  "boundaries": "41f2f0/41f3d0/41f310/41f410/41f4e0/41f650과HP보유/TYPE/중심/4558f0게임난수는 실제 몸체다. Factory생성/현재가상90Pop/98피해/10삭제·음향·472700빔·497220투영·472770기둥효과는 명시 경계다. 경계의HP감소/재진입은 입력이며 실제월드피해·표시·게임/UI성공을 증명하지 않는다. GP/retN/canary/SEH/x87/실행·읽기·쓰기범위 확인.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_bomb_strike.py": "8c7986697b9ae17fb5cd075ad8e970e2b57b90b5dbf0a00daef5c1aa90ffda1b",
+    "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+    "tools/decomp_cursor_position.py": "e15bcdbc4c6be9c131c30f15416c945d650dba9f7dc6def404b47f63c635c212",
+    "tools/decomp_carrier_falling.py": "f8702db0708a543b73213c8df9154503afe977767a11bd7c150b639ee1b587a6",
+    "tools/decomp_bomb_targets.py": "13f5d8ff862b4e9d0fa370592e48d074d209f1b8550cc3a622f4ffefb75440f6",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "cpppj/tests/fixtures/bomb-strike-x86.tsv": "93014a92c7cdcf803be84d2e9a1fd16123de3bab56362d2b6630b9dcff2a6a03"
+  }
+}
