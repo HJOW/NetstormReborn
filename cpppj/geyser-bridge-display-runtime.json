@@ -1,0 +1,562 @@
+{
+  "unit": 223,
+  "baseline": "f20c6cad",
+  "host": "VM-W11-Codex",
+  "date": "2026-10-19",
+  "lastDecompile": "VM-W11-Codex / 2026-10-19",
+  "scope": "간헐천 외형/현재 그림과 다리 TYPE 기준점/현재 소유자 색을 원본에 대조해 복원했다. 전체 미션 동일성과 완주는 미완료다.",
+  "validation": {
+    "geyserBefore": "extracted/goal-geyser-bridge-display-20261019-geyser-before1.json",
+    "bridgeBefore": "extracted/goal-geyser-bridge-display-20261019-bridge-before1.json",
+    "focusedTests": [
+      "extracted/goal-geyser-bridge-display-20261019-geyser-after2.json",
+      "extracted/goal-geyser-bridge-display-20261019-bridge-after3.json",
+      "extracted/goal-geyser-bridge-display-20261019-temple-after1.json"
+    ],
+    "fullTests": "extracted/goal-geyser-bridge-display-20261019-full-tests2.json",
+    "oldCurrentPinReports": 70,
+    "oldCurrentPins": 96
+  },
+  "observations": {
+    "extracted/goal-geyser-bridge-display-20261019-ui2": {
+      "returnCode": 0,
+      "binarySha256": "20f2fa7557caa0da2f0d314a1eba7dea8cb678df2186ebd9f41a8eebc99fadbc",
+      "originalsUnchanged": true,
+      "lastLabel": "final",
+      "gameTime": 90.161,
+      "lastGate": [
+        "5",
+        "68",
+        "0",
+        "0",
+        "0",
+        "1",
+        "51.677",
+        "0"
+      ],
+      "forwardGeneratorsAfterWait": {
+        "15070": {
+          "xy": [
+            "138",
+            "92"
+          ],
+          "hp": 700
+        },
+        "15099": {
+          "xy": [
+            "131",
+            "101"
+          ],
+          "hp": 700
+        }
+      },
+      "cannons": {},
+      "sunFlyerSidsObserved": [
+        15063
+      ],
+      "enemyMinimumHp": {
+        "15006": 1000,
+        "15013": 200
+      },
+      "naturalEObserved": false,
+      "combat2Observed": false,
+      "nextFailure": null,
+      "towers": {
+        "15060": {
+          "xy": [
+            "135",
+            "93"
+          ],
+          "firstLabel": "placed",
+          "maxHp": 2000,
+          "lastHp": 155,
+          "lastLabel": "defenseArcher"
+        }
+      },
+      "templeDestroyedObserved": false,
+      "maximumOwnCannonCount": 0,
+      "lastPage": [
+        "mission"
+      ],
+      "enemyThunderPresentAtLastReport": true,
+      "enemyAviaryPresentAtLastReport": true,
+      "naturalFObserved": false,
+      "maximumOwnGolemCount": 0,
+      "golems": {},
+      "selectedGeyserObserved": true,
+      "bridgeEdgeLabels": [
+        "bridgeEdge2421",
+        "bridgeEdge2521",
+        "bridgeEdge2861",
+        "bridgeEdge3085"
+      ],
+      "geysers": {
+        "15032": {
+          "frames": [
+            5,
+            46,
+            35,
+            33,
+            48,
+            41,
+            40,
+            42,
+            44,
+            38,
+            45,
+            39,
+            47,
+            34,
+            36
+          ],
+          "positions": [
+            [
+              "117",
+              "61"
+            ]
+          ]
+        },
+        "15045": {
+          "frames": [
+            5,
+            46,
+            35,
+            33,
+            48,
+            41,
+            40,
+            42,
+            44,
+            38,
+            45,
+            39,
+            47,
+            34,
+            36
+          ],
+          "positions": [
+            [
+              "139",
+              "55"
+            ]
+          ]
+        },
+        "15046": {
+          "frames": [
+            5,
+            46,
+            35,
+            33,
+            48,
+            41,
+            40,
+            42,
+            44,
+            38,
+            45,
+            39,
+            47,
+            34,
+            36
+          ],
+          "positions": [
+            [
+              "128",
+              "54"
+            ]
+          ]
+        },
+        "15056": {
+          "frames": [
+            5,
+            46,
+            35,
+            33,
+            48,
+            41,
+            40,
+            42,
+            44,
+            38,
+            45,
+            39,
+            47,
+            34,
+            36
+          ],
+          "positions": [
+            [
+              "148",
+              "57"
+            ]
+          ]
+        }
+      },
+      "finalBridgeCount": 15,
+      "duplicateBridgeGroups": []
+    }
+  },
+  "earlierObservations": {
+    "extracted/goal-geyser-bridge-display-20261019-ui1": {
+      "returnCode": 1,
+      "binarySha256": "20f2fa7557caa0da2f0d314a1eba7dea8cb678df2186ebd9f41a8eebc99fadbc",
+      "originalsUnchanged": true,
+      "lastLabel": "initial",
+      "gameTime": 0.554,
+      "lastGate": [
+        "5",
+        "65",
+        "0",
+        "1",
+        "0",
+        "1",
+        "0",
+        "0"
+      ],
+      "forwardGeneratorsAfterWait": {},
+      "cannons": {},
+      "sunFlyerSidsObserved": [],
+      "enemyMinimumHp": {
+        "15006": 1000,
+        "15013": 200
+      },
+      "naturalEObserved": false,
+      "combat2Observed": false,
+      "nextFailure": "UI control not found: world:geyser",
+      "towers": {},
+      "templeDestroyedObserved": false,
+      "maximumOwnCannonCount": 0,
+      "lastPage": [
+        "A."
+      ],
+      "enemyThunderPresentAtLastReport": true,
+      "enemyAviaryPresentAtLastReport": true,
+      "naturalFObserved": false,
+      "maximumOwnGolemCount": 0,
+      "golems": {},
+      "selectedGeyserObserved": false,
+      "bridgeEdgeLabels": [],
+      "geysers": {
+        "15032": {
+          "frames": [
+            4
+          ],
+          "positions": [
+            [
+              "117",
+              "61"
+            ]
+          ]
+        },
+        "15045": {
+          "frames": [
+            4
+          ],
+          "positions": [
+            [
+              "139",
+              "55"
+            ]
+          ]
+        },
+        "15046": {
+          "frames": [
+            4
+          ],
+          "positions": [
+            [
+              "128",
+              "54"
+            ]
+          ]
+        },
+        "15056": {
+          "frames": [
+            4
+          ],
+          "positions": [
+            [
+              "148",
+              "57"
+            ]
+          ]
+        }
+      },
+      "finalBridgeCount": 0,
+      "duplicateBridgeGroups": []
+    },
+    "extracted/goal-geyser-bridge-display-20261019-ui-select2": {
+      "returnCode": 0,
+      "binarySha256": "20f2fa7557caa0da2f0d314a1eba7dea8cb678df2186ebd9f41a8eebc99fadbc",
+      "originalsUnchanged": true,
+      "lastLabel": "final",
+      "gameTime": 5.777,
+      "lastGate": [
+        "5",
+        "65",
+        "0",
+        "0",
+        "0",
+        "1",
+        "0",
+        "0"
+      ],
+      "forwardGeneratorsAfterWait": {},
+      "cannons": {},
+      "sunFlyerSidsObserved": [],
+      "enemyMinimumHp": {
+        "15006": 1000,
+        "15013": 200
+      },
+      "naturalEObserved": false,
+      "combat2Observed": false,
+      "nextFailure": null,
+      "towers": {
+        "15060": {
+          "xy": [
+            "135",
+            "93"
+          ],
+          "firstLabel": "placed",
+          "maxHp": 659,
+          "lastHp": 659,
+          "lastLabel": "final"
+        }
+      },
+      "templeDestroyedObserved": false,
+      "maximumOwnCannonCount": 0,
+      "lastPage": [
+        "mission"
+      ],
+      "enemyThunderPresentAtLastReport": true,
+      "enemyAviaryPresentAtLastReport": true,
+      "naturalFObserved": false,
+      "maximumOwnGolemCount": 0,
+      "golems": {},
+      "selectedGeyserObserved": true,
+      "bridgeEdgeLabels": [],
+      "geysers": {
+        "15032": {
+          "frames": [
+            4,
+            46,
+            35,
+            40
+          ],
+          "positions": [
+            [
+              "117",
+              "61"
+            ]
+          ]
+        },
+        "15045": {
+          "frames": [
+            4,
+            46,
+            35,
+            40
+          ],
+          "positions": [
+            [
+              "139",
+              "55"
+            ]
+          ]
+        },
+        "15046": {
+          "frames": [
+            4,
+            46,
+            35,
+            40
+          ],
+          "positions": [
+            [
+              "128",
+              "54"
+            ]
+          ]
+        },
+        "15056": {
+          "frames": [
+            4,
+            46,
+            35,
+            40
+          ],
+          "positions": [
+            [
+              "148",
+              "57"
+            ]
+          ]
+        }
+      },
+      "finalBridgeCount": 0,
+      "duplicateBridgeGroups": []
+    }
+  },
+  "sources": {
+    "cpppj/src/client/GameWorld.cpp": "adced72bb6185beea7b12c82dee1b5d3b7dd5da727b904a451f01078470b7399",
+    "cpppj/src/client/RawCampaignFactoryDisplay.cpp": "ab6ff75e011abd8b5c8330d650acb5a9af31ea20e2ba2b55ebe59503c7ba8621",
+    "cpppj/tests/CampaignSessionTests.cpp": "027f06978d48c3af6001d1d8e3418635ef4e13b6b76d584ea08db72762924fc2",
+    "tools/cpp_campaign_entry_smoke.py": "5fa9adadf6bcd571d6fba39b38e46fed41fe2e927911ff80dc38047c52c56b49",
+    "tools/cpp_early5_spells_runtime.py": "b46e2145d2ddcfcf21e410a5604cf5364c0605576e04c1518eb8dde469063cf0",
+    "tools/cpp_fort_smoke.py": "96c7fcd524deb38d93274ded77620639bdc7012ec0f2aaeed0a488d938e9da83",
+    "tools/cpp_geyser_bridge_display_runtime.py": "86099ec06be91aaf9743341e42c55f8ca5e36f5f34a81157948375ac3e3aa54c",
+    "tools/cpp_island_drop_runtime.py": "7a84366e3505e7fc98d883ca16364c648b9cad8110762744f7a6b8e7e5157ab3",
+    "tools/cpp_menu_smoke.py": "41732efb30e6337267168e3cd836ab6c04d6f34d36b16152b762c39dd2a76afe",
+    "tools/cpp_renderer_smoke.py": "fc648fea126c9cad3a124b38f757460f1139bb0e7f26c1032482ae4d85766ebe",
+    "tools/cpp_smoke_files.py": "66745bfd0ebac8d672eeb8f515144a47377fa4a28dad0603b5f8969a008ec679",
+    "tools/cpp_sun_aviary_capture_runtime.py": "4cc2495a288f7fea6775dd395a9a3036e01863902bb238ceec13701f4d44ce1b",
+    "tools/cpp_sun_aviary_notice_runtime.py": "8ab54e12605e9861c531bf9b82f4616b540aac1879f831bf88d69d0e35703952",
+    "tools/cpp_thunder_capture_runtime.py": "8c4a9d8d65420c5f0f37cfb003500d55d81bf0aa437484f20c9c06bfcdd673e3",
+    "tools/cpp_world_smoke.py": "6e50f87caf0b1b817c9116ef972ec6e75b44d33455edc88fe128a8d0f791fe72",
+    "tools/decomp_bridge_collapse.py": "fed91be41ef652906d1bfaeb3b4ec1d18ba64270ae7a0967a612d7b284bccc2e",
+    "tools/decomp_bridge_extra_capture.py": "8549c5c2637cd5f5ce5308cdae189a51618d23a580ef1f6b55136fbfcd7700fa",
+    "tools/decomp_creation_oracle.py": "646adc1ca6c9eaeac08a9c700324ae05ba1727416bc62070e0a066afc07dc053",
+    "tools/decomp_display_oracle.py": "bd9a42431cdef96d3fb13accf78d5a0d6a3155243b1bbc0362d58e79f662f7a4",
+    "tools/decomp_dudespawn_oracle.py": "294095ff1336d290d8d7e0e465df95d5514ceb4ff87d4bac8c282cdcec2eb786",
+    "tools/decomp_factory_capture.py": "e5dd681fa0d5aa74779c7873c10814eff9ad15e193f7cb7322661c6ca02e27f1",
+    "tools/decomp_geyser_capture.py": "7b7c5a84224c7e072e423f7041deb18882eb1b21764c6be71b7a2f2edb1f2dfa",
+    "tools/decomp_oracle.py": "227b9a8b703cfd81d05ac4a7c72a42eaecf9c804fc028680466a19a591f2335d",
+    "tools/decomp_owner_capture.py": "349f568e919ed4566543e4c89e0551d134ac9b11374b6d12b57498c2ab749a7c",
+    "tools/decomp_owner_oracle.py": "5a837ad7fd233d9d75c7241d52fbf2e5a508e24dc158d091f243a13ab698e7fb",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "tools/decomp_pop_oracle.py": "2a50f34e6b229d5ea4611f7073877ca1e165e0bf841f32c83f17d300b6113bb6",
+    "tools/decomp_postpop_oracle.py": "43dd9adffc6e2b3a1bd4a1fb06563f848518d8082014f2346613243183535129",
+    "tools/decomp_rain_draw.py": "a7a8a40dbb5e1508e21745a94a4320fba207cd08a9ee38ae6a200614d4c2e249",
+    "tools/decomp_shape_to_buffer_oracle.py": "3499edbde033d4fb5102bfb855a988adc30c8b17aae219d917d81346eea71eec",
+    "tools/decomp_sid_oracle.py": "7bfd7b95b26724b1793d407a4ad6654972b2aaa3bf04e4c206cc357670b68dff",
+    "tools/decomp_temple_capture.py": "d39f2d4150b2b96eb885e17b1bbcd8f1727e21b9b71a16113b3b04a0e2ece045",
+    "tools/decomp_temple_draw.py": "b94a1b635e83af4af3808d3666d3dd56067a44e88c22ecfbd4fe9396000dab24",
+    "tools/fort.py": "ee8ff8f00eea02771ac5c7a519dcd582e14cc07a2d97337c946c191022554e13",
+    "tools/shp.py": "4cb8bee6ed773e29e8658ddb315594ebf5ac005ea5b96c6b760a177029515bfd",
+    "tools/taff.py": "461860cdfc9451b85a8694dd30fd2c56c1cfdf5c6bb7ab8f63a4089971889795",
+    "tools/terrain_mask.py": "00f9789dbde0c124a132a4005924549571b06add5214ea14e3b76e88e73cb37a",
+    "tools/typefile.py": "a564a4b1bbc4f06d05ecb8b1f3fae4c32f6231cf95ea7bfadff2499931804d90"
+  },
+  "evidence": {
+    "cpppj/bridge-extra-capture.json": "77aef4f56b7934367abc1de13c566a40474af83cd35d3e00e66bca4287372ad5",
+    "cpppj/geyser-capture-native.json": "86aff8d1a658b6c09ed254dbb0f3483f797351745d9b94cac462104d8343f6bb",
+    "cpppj/tests/fixtures/bridge-extra-capture-x86.tsv": "927198ff3a7979b50e1c57e63349f1740aa99aae11eb8714f1dfd2dff6dfd5c1",
+    "cpppj/tests/fixtures/geyser-capture-x86.tsv": "ddc9e3afe1aee3a566896de584f5320863902382e1eb8a8e50726e1972959d86",
+    "extracted/goal-early5-island-20261019-probe.py": "2933ead8b5cc87b76425031fea3da8690c3b2649dc8f3fa8d4babd276176ef1a",
+    "extracted/goal-generator-display-20261019-plan1.tsv": "e194485c07592fda86fd83c622eab9f935cdc54752cce40b212d4466ea5d522b",
+    "extracted/goal-generator-display-20261019-ui1/run.json": "cc3cbfe6c853a34bf9b5e7abacdb10589c786a0f96007d9e997c0bece3c54c44",
+    "extracted/goal-generator-display-20261019-ui1/states.tsv": "7ac424299fd1e4c7df33ad18b56798d9232436f319c6ed7ea8c85d31ff283852",
+    "extracted/goal-geyser-bridge-display-20261019-audit-pins.log": "81c5484bb4d778721931705a9950400644ae2e773e36c5e2fe19065c657d7bad",
+    "extracted/goal-geyser-bridge-display-20261019-audit-pins.py": "9ea8156e1f47ac89643df5e7313dab184f40b6e533dd8ad918c0f6f817f9b62b",
+    "extracted/goal-geyser-bridge-display-20261019-audit-pins2.log": "81c5484bb4d778721931705a9950400644ae2e773e36c5e2fe19065c657d7bad",
+    "extracted/goal-geyser-bridge-display-20261019-bridge-after1.json": "71758e2e5164fd6549bcbcd6b371f269e711ea5dd67efc2b218364bd78ffe766",
+    "extracted/goal-geyser-bridge-display-20261019-bridge-after1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-geyser-bridge-display-20261019-bridge-after1.stdout": "b5997dc8ca5bfb1ec957731b69d31cccd4928e0b7898ccfb656be46909257e1f",
+    "extracted/goal-geyser-bridge-display-20261019-bridge-after2.json": "8d41932a09185d73c139eacfe881fcd13848d36fc2dee6ec48c70439d58e938d",
+    "extracted/goal-geyser-bridge-display-20261019-bridge-after2.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-geyser-bridge-display-20261019-bridge-after2.stdout": "b5997dc8ca5bfb1ec957731b69d31cccd4928e0b7898ccfb656be46909257e1f",
+    "extracted/goal-geyser-bridge-display-20261019-bridge-after3.json": "0e2e689a3da8fd4acf6b2c220946da89581f82ce62e03fa20b81a81cf20f6d84",
+    "extracted/goal-geyser-bridge-display-20261019-bridge-after3.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-geyser-bridge-display-20261019-bridge-after3.stdout": "b5997dc8ca5bfb1ec957731b69d31cccd4928e0b7898ccfb656be46909257e1f",
+    "extracted/goal-geyser-bridge-display-20261019-bridge-before1.json": "57885fdd1d2b8a275f34c92be628acfaef4b0d84c39714b992f6dd69ebba7fa8",
+    "extracted/goal-geyser-bridge-display-20261019-bridge-before1.stderr": "aaf2310508167c61421f0a30e1972cd59dcda101acbcc75212663ae5333bc2e4",
+    "extracted/goal-geyser-bridge-display-20261019-bridge-before1.stdout": "c5554a5940361b685ceaf3308871bfeeee57e4758ef5b12e73b6015239336a05",
+    "extracted/goal-geyser-bridge-display-20261019-bridge-native-verify.log": "33122dec143158638bd45064966ba03c3e72e0fdeb0edd1cd1831a35b9c202ce",
+    "extracted/goal-geyser-bridge-display-20261019-build-report.py": "3a59b0c705bfb7b71dc0997610eb6bf0f82c7471abf91aedde4b5e357771b354",
+    "extracted/goal-geyser-bridge-display-20261019-build1.log": "49446800edb950e2b093ca8d32229b1f16fdc801b7dfb23a5738654330c1f994",
+    "extracted/goal-geyser-bridge-display-20261019-build2.log": "728beb8aa7e9f69cb8e94c4862805bc731d8770cc01c9dceba14a356566fcb01",
+    "extracted/goal-geyser-bridge-display-20261019-build3.log": "dd07a3c523adc698c195b1bcaf104bb88f35813d82f02a676a68192d641eb932",
+    "extracted/goal-geyser-bridge-display-20261019-build4.log": "dcb3f1f334f7fc9f40cda85022d7c281126c648d68b936ca5ad49debf089a48e",
+    "extracted/goal-geyser-bridge-display-20261019-build5.log": "49446800edb950e2b093ca8d32229b1f16fdc801b7dfb23a5738654330c1f994",
+    "extracted/goal-geyser-bridge-display-20261019-diff-check-final.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-geyser-bridge-display-20261019-diff-check.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-geyser-bridge-display-20261019-full-tests1-run.log": "96f078765e80ede1339c9a074c07c9a845d40861a6c046096340acf9cee13346",
+    "extracted/goal-geyser-bridge-display-20261019-full-tests1.json": "d5fdc3ea73a4a7439cb2c4c3e0403678de0ec80e9efc84d80eb6dc974f745ae1",
+    "extracted/goal-geyser-bridge-display-20261019-full-tests1.stderr": "359034e18f527d13133f3ff84ef2787a9ee6fe4a07b96ae1a1c5211b6cad011a",
+    "extracted/goal-geyser-bridge-display-20261019-full-tests1.stdout": "0735421648886acbf03a4286604fe39792e5f8d9306be52e22560330eb36eb61",
+    "extracted/goal-geyser-bridge-display-20261019-full-tests2-run.log": "f954d083c0be9304b4d6c09691891bcdcff592ab6b7df7437a7641feb58008aa",
+    "extracted/goal-geyser-bridge-display-20261019-full-tests2.json": "826575fb099e1705d4db59fa82fc69619b8c91ece62bb6ee780c02b240534232",
+    "extracted/goal-geyser-bridge-display-20261019-full-tests2.stderr": "79e2480bde0296407e865b4a37f3b49c9c027d653a2260e3a4215348db0f0663",
+    "extracted/goal-geyser-bridge-display-20261019-full-tests2.stdout": "b3dee84ab5984f60baf6847c5d789ed82198cbbf3947b73ebec71753c0d66ea3",
+    "extracted/goal-geyser-bridge-display-20261019-geyser-after1.json": "ee73789e77e857baf94412085db807db6c0681b61b5852887438d0df06ce69b0",
+    "extracted/goal-geyser-bridge-display-20261019-geyser-after1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-geyser-bridge-display-20261019-geyser-after1.stdout": "5e78e6c3bebb276455b59ba06b41c8225ffe3d97a8abed63171ab7e3f54e8804",
+    "extracted/goal-geyser-bridge-display-20261019-geyser-after2.json": "0cb56d8ac10e10c9ca0aad3fa3d379ac9ba3502a8834bb4818a0934847aadcc7",
+    "extracted/goal-geyser-bridge-display-20261019-geyser-after2.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-geyser-bridge-display-20261019-geyser-after2.stdout": "5e78e6c3bebb276455b59ba06b41c8225ffe3d97a8abed63171ab7e3f54e8804",
+    "extracted/goal-geyser-bridge-display-20261019-geyser-before1.json": "317191986c9eb504cd6d2ccd3dc178c21205042ac0a35021058ad40b802e1cd3",
+    "extracted/goal-geyser-bridge-display-20261019-geyser-before1.stderr": "579d663cf9df4362d508874227aaa02dc89bf78135da21ea0533d004edb5d2c6",
+    "extracted/goal-geyser-bridge-display-20261019-geyser-before1.stdout": "4eaf47267f185ae88894aebd522380c603a5c35bab734f05a19d7b45020297d1",
+    "extracted/goal-geyser-bridge-display-20261019-native1.log": "91113bb0151ac49124458ec320dd97002a4cf22e9bbb06fe37562fd173b8058a",
+    "extracted/goal-geyser-bridge-display-20261019-pin-updates-v1.json": "e37d849515cdabc5cd0b135ae30469267439ccc633ee13430c9482ec72ad006e",
+    "extracted/goal-geyser-bridge-display-20261019-pin-updates.json": "a2636273af10ae7b2b5796dc0ec1bf143d4d6a8ed934c9ebd96547de614017de",
+    "extracted/goal-geyser-bridge-display-20261019-plan1.tsv": "4bd6ff180168cbf25703241559b3b5f93495d708f02db827166651aa97a402ed",
+    "extracted/goal-geyser-bridge-display-20261019-plan2.tsv": "babfc6b52fd9b1f33097eb753de7068697f61139f48a24f665e53be9b96e88a5",
+    "extracted/goal-geyser-bridge-display-20261019-plan3.tsv": "5b030060fc5e447e23ae848b82e8a341afba106da9813a0256d1108aa03719da",
+    "extracted/goal-geyser-bridge-display-20261019-rebase-pins.py": "19209ce4260328e328dc18fbd0eb199dcec0822070164616a79b4e820affee40",
+    "extracted/goal-geyser-bridge-display-20261019-refresh-pins.log": "368342c1909462730b80917c10858f8bb7edd43f281c00d5c51519fd192f8b9e",
+    "extracted/goal-geyser-bridge-display-20261019-refresh-pins.py": "422aceb36bcda0f3a1802dc2b177428ec5de2f95245c61c06635e80cd5c410d7",
+    "extracted/goal-geyser-bridge-display-20261019-refresh-pins2.log": "368342c1909462730b80917c10858f8bb7edd43f281c00d5c51519fd192f8b9e",
+    "extracted/goal-geyser-bridge-display-20261019-select-plan.tsv": "90ca3f1a153e1fcf5fb16a8c8e597e78e0d3a418cdba493359d5f2587b05d419",
+    "extracted/goal-geyser-bridge-display-20261019-select-plan2.tsv": "e59e7aea4a8174ab53c60bb9b7a380a5be09402b0068f8bd1aeb4c8e33c2afed",
+    "extracted/goal-geyser-bridge-display-20261019-stage.py": "801270b485f5dc860773e8168daacaa0a3731b7c979b1e679449928c512d8982",
+    "extracted/goal-geyser-bridge-display-20261019-temple-after1.json": "591e7f57dfc3928d00752c1bffc0a121f35aa7eeed84cf2a4a22ac79748d62e2",
+    "extracted/goal-geyser-bridge-display-20261019-temple-after1.stderr": "8b2a349673073bf084632fb6b51a8e7c752c14e5b633f498b73177dc1d1f6dc3",
+    "extracted/goal-geyser-bridge-display-20261019-temple-after1.stdout": "33fa987b1976936bf6b9f7a0cf70fd9923ac029dcab7422da9b47ca741bc7a4a",
+    "extracted/goal-geyser-bridge-display-20261019-tests-v1.cpp": "fc42da0497dd9fed6e4adbfa5eaa4a962f2ec8470494c28d6b0416a8d516ce2e",
+    "extracted/goal-geyser-bridge-display-20261019-ui-select/final.bmp": "454537b7a5a5fc8e9e921440c1b44e18678c441a84844fc36d8e3b9698b5036a",
+    "extracted/goal-geyser-bridge-display-20261019-ui-select/originals-before.json": "f98d8731a8a729b528fd9744b52f3b26143eff54e767f0b8e1537040c5807c15",
+    "extracted/goal-geyser-bridge-display-20261019-ui-select/run.json": "c176bfcfea4f8660ce81472142c79ad11c37aa518f7e683cea7f0959bb20ed08",
+    "extracted/goal-geyser-bridge-display-20261019-ui-select/selectedGeyser.bmp": "7a16f936a4d8f2dca6d91b9424f5858e39e066207b342740dc6a0797c820698f",
+    "extracted/goal-geyser-bridge-display-20261019-ui-select/states.tsv": "129d07f6e764f497f2cd2d89689a3f6b7db564aee25eb41392346c382357ab7d",
+    "extracted/goal-geyser-bridge-display-20261019-ui-select/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/goal-geyser-bridge-display-20261019-ui-select/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-geyser-bridge-display-20261019-ui-select/steps.tsv": "3b9c953a59e03e20043376f458af4901f094b61cc888aa785733ae363503420f",
+    "extracted/goal-geyser-bridge-display-20261019-ui-select.log": "9d2eea457df7160bf15c9f3cd4ef095005a63164247a6767302fc1c8eb7a49e2",
+    "extracted/goal-geyser-bridge-display-20261019-ui-select2/final.bmp": "edf1421bde045d0c750c0b26eadddd74bc0cf0e5244ca694904030ab0b45e063",
+    "extracted/goal-geyser-bridge-display-20261019-ui-select2/originals-before.json": "f98d8731a8a729b528fd9744b52f3b26143eff54e767f0b8e1537040c5807c15",
+    "extracted/goal-geyser-bridge-display-20261019-ui-select2/run.json": "18dfe559e0fe2fec98a560076c1f0718e62a907ecddd059e9ab73c7f103352f8",
+    "extracted/goal-geyser-bridge-display-20261019-ui-select2/selectedGeyser.bmp": "0c592ceb463a219e9ac2aef6be42e4076132f56b571661e3901f7ec1e6fe9ad5",
+    "extracted/goal-geyser-bridge-display-20261019-ui-select2/states.tsv": "d5409f12b2a61c3bc0a8d90040a900e7c293cf9d473cf962c47d7e0e94ba66de",
+    "extracted/goal-geyser-bridge-display-20261019-ui-select2/stderr.log": "4554b79c67bd5e0781a428fc3a18ffd5168346e489ef605ba346a00b00d8decf",
+    "extracted/goal-geyser-bridge-display-20261019-ui-select2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-geyser-bridge-display-20261019-ui-select2/steps.tsv": "ec35449e5d4567d67e3a18dd60fdce937d423558d0ff61cb5d8e3fbf78ce820c",
+    "extracted/goal-geyser-bridge-display-20261019-ui-select2.log": "49aeaa309ab922d1e411bdb4293300fb3c5f2ac61debe66583a7a16b7f62cb06",
+    "extracted/goal-geyser-bridge-display-20261019-ui1/originals-before.json": "f98d8731a8a729b528fd9744b52f3b26143eff54e767f0b8e1537040c5807c15",
+    "extracted/goal-geyser-bridge-display-20261019-ui1/run.json": "fb387b26b8751fb2999e713b1e1d3bfe39847dcc62c37e8035fc4a097c787a79",
+    "extracted/goal-geyser-bridge-display-20261019-ui1/states.tsv": "fcac1bd51163649dcc85583379f2d484e69475fb33bd5a1c0ac08e23ca31588f",
+    "extracted/goal-geyser-bridge-display-20261019-ui1/stderr.log": "712c65c40309a84def24fb113df9d8dcfc62eaf4b0cf479770b0b73d85f3bb4c",
+    "extracted/goal-geyser-bridge-display-20261019-ui1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-geyser-bridge-display-20261019-ui1/steps.tsv": "ed6bd980c62cfeaf15572923faa036cabb9f1f369e229373fa278e7be015acb0",
+    "extracted/goal-geyser-bridge-display-20261019-ui1.log": "10426e708e1c50e3a98525792d092a7bc9e50ea138f9f271ce00836b3f01cb3f",
+    "extracted/goal-geyser-bridge-display-20261019-ui2/bridgeEdge2421.bmp": "ca70582acc8e83598c92de773bb24b0f60d2b4a2acdca659e168ff33aec1e613",
+    "extracted/goal-geyser-bridge-display-20261019-ui2/bridgeEdge2521.bmp": "01bb3727fdc806cc9a1dfd852a144d416afafc6df1ae76e9fa672cc8b6d48194",
+    "extracted/goal-geyser-bridge-display-20261019-ui2/bridgeEdge2861.bmp": "b45388dc6da9d2588fb6bf368ec17b97aa9883248b55e165a2074a446f074cdc",
+    "extracted/goal-geyser-bridge-display-20261019-ui2/bridgeEdge3085.bmp": "a0009da6033193ca711fdb3e97cdcd5ade769bb04dd31df44a928dcd5dc2c530",
+    "extracted/goal-geyser-bridge-display-20261019-ui2/completedGenerators.bmp": "a5443a151b4f12d92f3a194dde1ee59d62c1af448fc66aa22d60c7cf92ade1a7",
+    "extracted/goal-geyser-bridge-display-20261019-ui2/completedWorkshop.bmp": "87c4b806eded6640aee2f9f316494e1b868942c2cbbcca228cc5d4d9b40768e1",
+    "extracted/goal-geyser-bridge-display-20261019-ui2/enemyView.bmp": "f7934a6707cee783e6992d4a6bfd956948b2b821902e79f8bc7e103c18db9781",
+    "extracted/goal-geyser-bridge-display-20261019-ui2/final.bmp": "4551d0286021f2b0a095bc7aaebda71d254f7dfef344bfd3982efe36f21fe276",
+    "extracted/goal-geyser-bridge-display-20261019-ui2/geyser1005.bmp": "9bb7da5ca93316863c3f3aec27238dca336095059f235b53b66cf2d3559036f3",
+    "extracted/goal-geyser-bridge-display-20261019-ui2/geyser180.bmp": "9ed2e953d48cb1c039feb5438d1fab79c126dc149a839437729677841fe20504",
+    "extracted/goal-geyser-bridge-display-20261019-ui2/geyser320.bmp": "e4a9fe6b0461e305bb28378671e12d1d3f0b2480093517668b4b06848bf61eb4",
+    "extracted/goal-geyser-bridge-display-20261019-ui2/geyser760.bmp": "1994dd77237148bb401a77e8252e7f1190915f86b887e1e30a15a61885d54c43",
+    "extracted/goal-geyser-bridge-display-20261019-ui2/originals-before.json": "f98d8731a8a729b528fd9744b52f3b26143eff54e767f0b8e1537040c5807c15",
+    "extracted/goal-geyser-bridge-display-20261019-ui2/run.json": "b600acbe9f32a33c0e90d174e28bc09a94e593ce4fbe1e18528e5e4916d8223f",
+    "extracted/goal-geyser-bridge-display-20261019-ui2/selectedGenerator.bmp": "0160b5fbd8bd576ff0245e47050a19bafa637431c3cf9c7ff98ae7c01db7d838",
+    "extracted/goal-geyser-bridge-display-20261019-ui2/selectedGeyser.bmp": "8ef2dc214093809693f50df5783103ecb0fe1f758602c0117a9cef73486f70a5",
+    "extracted/goal-geyser-bridge-display-20261019-ui2/stageC.bmp": "4769746d162a3554464e5f2a2b80e3466f399678b72794bc22fa6b7c98d76eab",
+    "extracted/goal-geyser-bridge-display-20261019-ui2/stageD.bmp": "98df2726a27e63fd8f78643d8504c032b9a18bf77ee72f7d337f8c352fdd0dab",
+    "extracted/goal-geyser-bridge-display-20261019-ui2/states.tsv": "1c91000fea018d3e85235ae344b9d12ee387988c33eb0f758d67d6d7a0aee823",
+    "extracted/goal-geyser-bridge-display-20261019-ui2/stderr.log": "80ed1fad3fcb04f1de0a2b9b6a2030a1b2cce071344ce731be04082f3c264fa7",
+    "extracted/goal-geyser-bridge-display-20261019-ui2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-geyser-bridge-display-20261019-ui2/steps.tsv": "1323ffb8e910b8d397a427c4d1d57b67673e27ddadc0012c588e7bfc0e948c5a",
+    "extracted/goal-geyser-bridge-display-20261019-ui2.log": "62fe21ce423d0a41823f9e1801f2d7588a9dedbeb2e929add49ac2eea27f3434",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "originals/d/_shapes.shp": "c878353c8054208deef832e34c514b30fe670e175505b129333a5728ba70f68e",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6"
+  },
+  "goalComplete": false,
+  "fullFidelityVerified": false
+}

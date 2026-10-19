@@ -9,7 +9,7 @@
     "changed": false
   },
   "sources": {
-    "cpppj/src/client/GameWorld.cpp": "c69d29972961250ac04814f8e3bd81c5134fed0a1ad250f261900c3cc1984fdb",
+    "cpppj/src/client/GameWorld.cpp": "adced72bb6185beea7b12c82dee1b5d3b7dd5da727b904a451f01078470b7399",
     "cpppj/src/client/RawUserSelection.cpp": "89cbf7641299a7f84905193b4d90f3706f122665a15228f42bd39f9b98bc40e7",
     "cpppj/src/client/UserInput.cpp": "fd1bee42a48c4a33098114e813a7909d449791671fb0e313b76efc55216c20bd",
     "cpppj/src/o/RawTutorialLater.cpp": "1f40efc3aefb38e02ff8a9b5d2553ca4c30f773c2c8b4f6dbb82cd3e5b9bc082",
@@ -161,6 +161,19 @@
           "path": "cpppj/src/client/GameWorld.cpp",
           "previous": "841563a3b989990707112d74a032a5b7afa11147412924f7ecc975980d4cda15",
           "current": "c69d29972961250ac04814f8e3bd81c5134fed0a1ad250f261900c3cc1984fdb"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 223,
+      "reason": "간헐천 고정 외형/현재 그림과 다리의 TYPE 기준점/현재 소유자 색을 원본 픽셀에 대조하여 복원한 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/sources",
+          "path": "cpppj/src/client/GameWorld.cpp",
+          "previous": "c69d29972961250ac04814f8e3bd81c5134fed0a1ad250f261900c3cc1984fdb",
+          "current": "adced72bb6185beea7b12c82dee1b5d3b7dd5da727b904a451f01078470b7399"
         }
       ]
     }

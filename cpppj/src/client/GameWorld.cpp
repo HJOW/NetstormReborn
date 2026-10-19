@@ -360,9 +360,11 @@ ScreenRect GameWorld::Bounds(const o::Squid& object) const {
     // Factory의 현재 프레임은 작은 추가 그림일 수 있다. 실제 +78(454cd0)의 본체 프레임으로 몸통 클릭 영역을 구한다.
     if (campaign_ && assets_.Edition()==o::OriginalEdition::Patch1078) {
         const auto core=campaign_->Core();const o::Sid sid{static_cast<std::uint16_t>(object.id)}; // 렌더링과 같은 현재 풀/실제 SID다.
-        if (o::IsThunderCannonCapture(core.pool.Slot(sid))) {
-            const auto frame=o::ThunderCannonCaptureMainFrame(core.pool.Slot(sid),core.frames[static_cast<std::size_t>(object.type)]); // 준비 애니메이션의 작은 추가 영역 대신 원본 방향별 고정 본체를 클릭한다.
-            const auto& type=assets_.Types()[static_cast<std::size_t>(object.type-o::kFirstAssetTypeNumber)];const auto& rect=assets_.Shapes().Blocks()[type.block].frames[static_cast<std::size_t>(frame)].rect;
+        const auto current=core.pool.Slot(sid);const bool geyser=current[10]==122 && current[0]==0x88 && current[1]==0xda && current[2]==0x50 && current[3]==0; // 간헐천도 내부 효과 대신 실제 고정 외형을 클릭한다.
+        if (o::IsThunderCannonCapture(current) || geyser) {
+            const auto& type=assets_.Types()[static_cast<std::size_t>(object.type-o::kFirstAssetTypeNumber)];
+            const auto frame=geyser ? type.definition.specialFrames.baseFrame : o::ThunderCannonCaptureMainFrame(current,core.frames[static_cast<std::size_t>(object.type)]); // 실제 가상 getter의 고정 외형/방향별 본체 번호다.
+            const auto& rect=assets_.Shapes().Blocks()[type.block].frames[static_cast<std::size_t>(frame)].rect;
             const auto& record=core.types[static_cast<std::size_t>(object.type)];const auto point=ToScreen(object.x,object.y);
             return {point.x-record.hotspotX+rect.left,point.y-record.hotspotY+rect.top,point.x-record.hotspotX+rect.right+1,point.y-record.hotspotY+rect.bottom+1};
         }
@@ -435,9 +437,9 @@ const o::Squid* GameWorld::Object(o::SquidId id) const {
 std::vector<RenderSprite> GameWorld::Sprites() const {
     std::vector<RenderSprite> result; const ScreenRect clip{0,kMenuHeight,width_,height_};
     // 현재 프레임을 화면 범위와 소유자 색에 맞춰 장면에 추가한다.
-    const auto add=[&](const TypeAsset& type,std::size_t frame,double x,double y,int owner,std::int16_t depth,bool shadow,std::vector<std::size_t> following=std::vector<std::size_t>{}) {
+    const auto add=[&](const TypeAsset& type,std::size_t frame,double x,double y,int owner,std::int16_t depth,bool shadow,std::vector<std::size_t> following=std::vector<std::size_t>{},ScreenPoint hotspot=ScreenPoint{}) {
         const auto& frames=assets_.Shapes().Blocks()[type.block].frames; if (frame>=frames.size() || frames[frame].IsSpecial()) return;
-        const auto p=ToScreen(x,y); auto r=frames[frame].rect;
+        const auto projected=ToScreen(x,y);const ScreenPoint p{projected.x-hotspot.x,projected.y-hotspot.y};auto r=frames[frame].rect; // 화면 위치만 보정하고 원본 정렬용 월드 좌표는 유지한다.
         // 같은 객체 내부의 후속 그림까지 포함해 화면 밖 판정을 한다.
         for (const auto number:following) {
             if (number>=frames.size()) throw std::out_of_range("후속 그림의 물리 프레임 범위 오류");
@@ -472,7 +474,11 @@ std::vector<RenderSprite> GameWorld::Sprites() const {
                 add(type,first,object.x,object.y,static_cast<int>(object.owner),depth,false,std::move(layers));continue;
             }
         }
-        add(type,static_cast<std::size_t>(object.frame),object.x,object.y,static_cast<int>(object.owner),depth,false);
+        ScreenPoint hotspot{}; // 별도0단계 표면인 실제 다리는 같은 원본 TYPE 기준점으로 표시한다.
+        if (assets_.Edition()==o::OriginalEdition::Patch1078 && raw[10]==82 && raw[0]==0xc8 && raw[1]==0x34 && raw[2]==0x50 && raw[3]==0) {
+            const auto& record=assets_.TypeTable().Types()[82];hotspot={record.hotspotX,record.hotspotY};
+        }
+        add(type,static_cast<std::size_t>(object.frame),object.x,object.y,static_cast<int>(object.owner),depth,false,{},hotspot);
     }
     // 살아 있는 객체의 현재 좌표와 현재 프레임을 제출한다.
     for (const auto& object:objects_) if (!campaign_ && object.visible && !Has(assets_.Types()[static_cast<std::size_t>(object.type-o::kFirstAssetTypeNumber)],"bridge")) {
@@ -519,7 +525,8 @@ std::shared_ptr<IndexedImage> GameWorld::SelectionImage() const {
 // 타입별 색 띠 중 실제 월드에서 필요한 지면·사제·다리·일부 유닛을 연결한다.
 std::optional<ColorMap> GameWorld::Remap(const TypeAsset& type,int owner) const {
     if (owner<=0 || owner>o::kPlayerCount) return {}; const auto name=o::AsciiLower(type.assetName);
-    const int color=players_.players[static_cast<std::size_t>(owner)].color; if (color<=0 || color>8) return {};
+    const int color=campaign_ && name=="bridge" ? campaign_->Core().bridgeState.ownerColors[static_cast<std::size_t>(owner)] : players_.players[static_cast<std::size_t>(owner)].color; // 실제 캠페인 다리는 초기 입력 사본 대신 현재 원본 소유자 색을 읽는다.
+    if (color<=0 || color>8) return {};
     const auto key=std::pair{type.block,color}; if (const auto found=remaps_.find(key);found!=remaps_.end()) return found->second;
     const bool isle=name=="isle" || name=="edgefarm";
     const bool band=name=="priest" || name=="bridge" || name=="sunwalker" || name=="rainwalker" || name=="altar" || name=="bulf" || name=="outpost";

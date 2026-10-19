@@ -11,8 +11,8 @@
   "implementation": "Factory 두 실제 VT의 원본+78 본체 프레임을 같은 SquidDisplay 클릭 영역에 연결했다.",
   "nativeScope": "기존 RawFactoryDraw/ShapeToBuffer 원본 픽셀 대조를 재사용했다. 새 독립 PE 표본 생성이나 원본 게임 실행은 없다.",
   "sources": {
-    "cpppj/src/client/GameWorld.cpp": "c69d29972961250ac04814f8e3bd81c5134fed0a1ad250f261900c3cc1984fdb",
-    "cpppj/src/client/RawCampaignFactoryDisplay.cpp": "08c207e92a0175f9eedc666b65a8fea35a999963ed69d36fc110ca7d9fcdea7d",
+    "cpppj/src/client/GameWorld.cpp": "adced72bb6185beea7b12c82dee1b5d3b7dd5da727b904a451f01078470b7399",
+    "cpppj/src/client/RawCampaignFactoryDisplay.cpp": "ab6ff75e011abd8b5c8330d650acb5a9af31ea20e2ba2b55ebe59503c7ba8621",
     "cpppj/src/o/RawFactoryDraw.cpp": "b0d5e95ae773f55eccb29a03a7824c7446c87c48b473d4b4f0f7d876f92bea1b",
     "cpppj/src/o/RawFactoryDraw.h": "deb03d6428d34ac87172e9bfa46d7862ddef450014bb9040d08508212b90b096",
     "cpppj/src/o/SquidDisplay.cpp": "adff73d1c710cf295aed17e2a06cb90294e1399e5e455d423659f37c336f3dc6",
@@ -330,6 +330,25 @@
           "path": "cpppj/src/client/RawCampaignFactoryDisplay.cpp",
           "previous": "c95ed76a46e437d73f16c1038eef1383a2570b60e2de6b502c9445191c331193",
           "current": "08c207e92a0175f9eedc666b65a8fea35a999963ed69d36fc110ca7d9fcdea7d"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 223,
+      "reason": "간헐천 고정 외형/현재 그림과 다리의 TYPE 기준점/현재 소유자 색을 원본 픽셀에 대조하여 복원한 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/sources",
+          "path": "cpppj/src/client/GameWorld.cpp",
+          "previous": "c69d29972961250ac04814f8e3bd81c5134fed0a1ad250f261900c3cc1984fdb",
+          "current": "adced72bb6185beea7b12c82dee1b5d3b7dd5da727b904a451f01078470b7399"
+        },
+        {
+          "group": "/sources",
+          "path": "cpppj/src/client/RawCampaignFactoryDisplay.cpp",
+          "previous": "08c207e92a0175f9eedc666b65a8fea35a999963ed69d36fc110ca7d9fcdea7d",
+          "current": "ab6ff75e011abd8b5c8330d650acb5a9af31ea20e2ba2b55ebe59503c7ba8621"
         }
       ]
     }

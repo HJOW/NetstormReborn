@@ -686,6 +686,74 @@ TEST_CASE(CampaignSession_ThunderCannonBodyNative37Frames) {
     CHECK(cases==74 && pixels>400000);std::cout<<"썬더 캐논37프레임/두 카메라 원본 화면 대조 픽셀="<<pixels<<'\n';
 }
 
+namespace {
+// 동결된 원본 전체 픽셀의 한 바이트를 읽으며 제품의 그림/프레임 계산은 재사용하지 않는다.
+std::uint8_t DisplayNativeByte(std::string_view hex,std::size_t index) { return static_cast<std::uint8_t>(std::stoul(std::string(hex.substr(index*2,2)),nullptr,16)); }
+// 원본 캡처를 실제 화면 위치에 옮겨 투명/불투명 전체 영역의 차이와 대조 픽셀 수를 반환한다.
+std::pair<std::size_t,std::size_t> CompareDisplayNative(std::span<const std::uint8_t> actual,ScreenPoint origin,int width,int height,std::string_view hex) {
+    std::size_t mismatch{},pixels{};
+    // 화면과 메뉴 경계 안의 각 원본 픽셀만 대조한다.
+    for (int index=0;index<width*height;++index) {
+        const int x=origin.x+index%width,y=origin.y+index/width;if (x<0 || x>=1024 || y<28 || y>=768) continue;
+        const auto expected=DisplayNativeByte(hex,static_cast<std::size_t>(index));if (actual[y*1024+x]!=(expected==255 ? 199 : expected)) ++mismatch;++pixels;
+    }
+    return {mismatch,pixels};
+}
+}
+
+// 실제 원본 간헐천51프레임의 고정 외형/현재 그림을 두 카메라의 GameWorld 전체 픽셀과 대조한다.
+TEST_CASE(CampaignSession_GeyserBodyNative51Frames) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());auto services=external.Services();services.install.resetCamera={};
+    GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services),{1024,768});world.Resize(1024,768);
+    const auto core=world.Session().Core();auto raw=core.pool.AllocatedBytes(Sid{15002});CHECK(raw[10]==124);raw[10]=122;Put(raw,0,0x50da88U);raw[34]=1;raw[40]=2; // 기존 표시 슬롯에 주는 명시 입력이며 자연 채집/건설 관측이 아니다.
+    const float x=std::bit_cast<float>(Get(raw,14)),y=std::bit_cast<float>(Get(raw,18));std::size_t cases{},pixels{};
+    const auto path=(std::filesystem::path(__FILE__).parent_path()/"fixtures/geyser-capture-x86.tsv").string();
+    // 원본 alive 추가 그림/owner1의51행을 선택하고 기대값은 새로 계산하지 않는다.
+    for (const auto& row:netstorm::test::rawscene::LoadFixture(path.c_str()).rows) if (row[1]=="2" && row[2]=="1") {
+        Put(raw,36,static_cast<std::uint32_t>(std::stoul(row[0])));const auto metadata=netstorm::test::rawscene::Split(row[3],',');
+        const int width=std::stoi(metadata[0]),height=std::stoi(metadata[1]),hotX=std::stoi(metadata[2])+core.types[122].hotspotX+2,hotY=std::stoi(metadata[3])+core.types[122].hotspotY-3; // 원문TYPE(-2,3)에서 현재TYPE(3,2)로 기준점만 환산한다.
+        // 정수 카메라 이동에도 같은 본체/애니메이션 합성이 유지돼야 한다.
+        for (const auto camera:std::array<ScreenPoint,2>{{{0,0},{7,9}}}) {
+            world.Scroll(camera.x,camera.y);const auto point=world.ToScreen(x,y);std::vector<RenderSprite> body;
+            // 그림자와 같은 좌표의 지면을 본체 비교에서 제외한다.
+            for (const auto& sprite:world.Sprites()) if (sprite.order.x==x && sprite.order.y==y && (sprite.procedure || sprite.block==122-70)) body.push_back(sprite);
+            CHECK(body.size()==1);if (body.size()!=1) return;
+            Renderer renderer(1024,768);renderer.SetScene(body);std::vector<std::uint8_t> actual(1024*768,199);renderer.Draw(actual,1024,199);
+            const auto compared=CompareDisplayNative(actual,{point.x-hotX,point.y-hotY},width,height,row[4]);CHECK(compared.first==0 && compared.second>0);pixels+=compared.second;++cases;world.Scroll(-camera.x,-camera.y);
+        }
+    }
+    CHECK(cases==102 && pixels>100000);std::cout<<"간헐천51프레임/두 카메라 원본 대조 픽셀="<<pixels<<'\n';
+}
+
+// 실제 다리60프레임/중립·아홉 색600원문의 좌표와 색을 두 카메라의 화면에서 대조한다.
+TEST_CASE(CampaignSession_BridgeNative600FramesAndColors) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());auto services=external.Services();services.install.resetCamera={};
+    GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services),{1024,768});world.Resize(1024,768);
+    const auto core=world.Session().Core();const auto origin=EmptySessionSupport(core);const float x=static_cast<float>(origin.x),y=static_cast<float>(origin.y);
+    const auto sid=world.Session().World().Create(82,2);core.owner.Set(sid,1);world.Session().World().Pop(sid,x,y,0);world.Scroll(-4096,-4096);auto raw=core.pool.AllocatedBytes(sid);std::size_t cases{},pixels{};
+    const auto path=(std::filesystem::path(__FILE__).parent_path()/"fixtures/bridge-extra-capture-x86.tsv").string();CHECK(core.types[82].hotspotX==0 && core.types[82].hotspotY==2);
+    // 같은 실제 원문은 재생성하지 않고 현재 소유자 색 전역만 명시 입력으로 바꾼다.
+    for (const auto& row:netstorm::test::rawscene::LoadFixture(path.c_str()).rows) {
+        const auto owner=static_cast<std::uint8_t>(std::stoul(row[1]));raw[34]=owner;core.bridgeState.ownerColors[owner]=std::stoi(row[2]);Put(raw,36,static_cast<std::uint32_t>(std::stoul(row[0])));
+        std::array<std::uint8_t,16> metadata{};
+        // 원문의 네 little endian DWORD를 그대로 읽는다.
+        for (std::size_t index=0;index<metadata.size();++index) metadata[index]=DisplayNativeByte(row[3],index);
+        const int width=static_cast<int>(Get(metadata,0)),height=static_cast<int>(Get(metadata,4)),hotX=std::bit_cast<std::int32_t>(Get(metadata,8)),hotY=std::bit_cast<std::int32_t>(Get(metadata,12))+2; // 원문TYPE(0,0)에 실제 다리의0,2만 더한다.
+        // 각 원문을 두 정수 카메라에서 다시 표시한다.
+        for (const auto camera:std::array<ScreenPoint,2>{{{0,0},{7,9}}}) {
+            world.Scroll(camera.x,camera.y);const auto point=world.ToScreen(x,y);std::vector<RenderSprite> body;
+            // 원본0단계의 실제 다리 한 개를 선택하며 연결 조각/다른 지면을 중복하지 않는다.
+            for (const auto& sprite:world.Sprites()) if (sprite.block==82-70 && sprite.order.x==x && sprite.order.y==y) body.push_back(sprite);
+            CHECK(body.size()==1);if (body.size()!=1) return;
+            Renderer renderer(1024,768);renderer.SetScene(body);std::vector<std::uint8_t> actual(1024*768,199);renderer.Draw(actual,1024,199);
+            const auto compared=CompareDisplayNative(actual,{point.x-hotX,point.y-hotY},width,height,row[4]);CHECK(compared.first==0 && compared.second>0);pixels+=compared.second;++cases;world.Scroll(-camera.x,-camera.y);
+        }
+    }
+    CHECK(cases==1200 && pixels>100000);std::cout<<"다리600원문/두 카메라 원본 대조 픽셀="<<pixels<<'\n';
+}
+
 // 실제 raw 발사체/장식물의 원본 깊이와 겹친 픽셀이 GameWorld와 Renderer까지 보존돼야 한다.
 TEST_CASE(CampaignSession_MissileFringeDepthAndOverlap) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
@@ -2207,7 +2275,9 @@ TEST_CASE(CampaignTempleDraw_Native264BodyPixels) {
     // 새 객체/생산/완공을 주입한 실전 검사로 주장하지 않고 현재 표시 raw만 명시적으로 교체한다.
     for (const auto& row:netstorm::test::rawscene::LoadFixture(NETSTORM_TEMPLE_DRAW_FIXTURE).rows) {
         const auto& type=assets.game.Find(row[0]);auto raw=core.pool.AllocatedBytes(temple);const auto number=type.block+kFirstAssetTypeNumber;raw[10]=static_cast<std::uint8_t>(number);Put(raw,0,number==123 ? 0x519860 : number==124 ? 0x5196f0 : 0x519918);Put(raw,36,std::stoul(row[1]));Put(raw,12,std::stoul(row[2]),2);raw[40]=2;
-        Renderer renderer(512,400);renderer.SetScene(display.Sprites({0,0,512,400},1168,1036,1));std::vector<std::uint8_t> actual(512*400,7);renderer.Draw(actual,512,7);
+        auto sprites=display.Sprites({0,0,512,400},1168,1036,1);const float worldX=std::bit_cast<float>(Get(raw,14)),worldY=std::bit_cast<float>(Get(raw,18)); // 이 원문은 현재 템플 본체만의 기대이며 주변 간헐천의 가림을 비교하지 않는다.
+        std::erase_if(sprites,[worldX,worldY](const auto& sprite) { return sprite.order.x!=worldX || sprite.order.y!=worldY; });
+        Renderer renderer(512,400);renderer.SetScene(sprites);std::vector<std::uint8_t> actual(512*400,7);renderer.Draw(actual,512,7);
         std::map<std::size_t,std::uint8_t> expected;std::vector<std::uint32_t> layers;const auto base=std::stoul(row[3]);if (base!=0xffffffffU) layers.push_back(static_cast<std::uint32_t>(base)); // 실제 원본+78 반환이다.
         // 원본 전용Draw가 제출한 F만 읽고 제품의 순서 계산을 재사용하지 않는다.
         for (const auto& event:netstorm::test::rawscene::Split(row[4],',')) if (!event.empty() && event[0]=='F') layers.push_back(static_cast<std::uint32_t>(std::stoul(event.substr(1))));
