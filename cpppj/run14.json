@@ -183,7 +183,7 @@
     ".gitattributes": "c2b3aa652dfa422b8bbd0dd82a7760cd2dd28ae5cf66bfc5b7d65887d32d8cce",
     "cpppj/burningsources.json": "abdc33fb3a44bc312589d02ef3b3544f5576bdc28a925884da9bee8077686444",
     "cpppj/tests/fixtures/burningsources-x86.tsv": "84abec71ace3f1cc634fbca2f3e4eec843f5d2ceb4595f7601f1db93f0b4eedd",
-    "cpppj/shape-to-buffer.json": "abe4aa4949eed6f9127bbc5d114844348b6dcfd08ab8911a95f1045198c8a68a",
+    "cpppj/shape-to-buffer.json": "b68b8dd4ee57f591cc562e6d1729c06e1718be183ad67f7a7e5f1b8352c2d279",
     "cpppj/tests/fixtures/shape-to-buffer-x86.tsv": "d92bc1a292b8f44cb87ec59ffec881f7e97db4c4b6680af92ad554af2d7c89c1",
     "cpppj/dude-space.json": "667f920700404b4118145effa95b2034231e0398be6ee3878ac9531da36a6068",
     "cpppj/tests/fixtures/dude-space-x86.tsv": "1c931c029fe455c96325aecc37245d83dc78d94ba285b686783cfd9dd154600e",
@@ -266,7 +266,7 @@
     "cpppj/src/client/RawShapeToBuffer.h": "0d957cb5d99e2042ff04dbea766bb05e79560b390ffe82976388692ae5b259bb",
     "cpppj/src/client/RawShapeToBuffer.cpp": "a25daa6a79c7edbfee525ed6a64156cb71d2b1ceee996c7d0a4a002af0ced3d4",
     "cpppj/tests/BurningSourcesTests.cpp": "8261475bb703c659dcdf58d4fb11cced571cd716c9ed4202c7c813d6b8b4b4c2",
-    "cpppj/tests/ShapeToBufferTests.cpp": "d18ebe7ce7877f6d5bc612fde3d55d75a316dc04fe81615cc8b4cb29c3dc5db8",
+    "cpppj/tests/ShapeToBufferTests.cpp": "ad9bd358902fa8ad3ab113cdc917c1bf751c502dc9ab0ed89ddb4ea0f7c102c8",
     "cpppj/tests/DudeSpaceTests.cpp": "d4ad98bc757b744b18836ec5bb19d2c0c0973005fd4f6ec1d0edda52f564b624",
     "cpppj/tests/GeyserAiRegistrationTests.cpp": "974e135f4025fb42d81da1668c99a12c4c8c7f1265353fb5b82c3a0cea7e8843",
     "cpppj/tests/PriestHaltTests.cpp": "e129c0966cd074a88e3ce40b3e197c8ef8ec90b64b335bd4b04430e9ce556a64",
@@ -427,6 +427,25 @@
           "path": "cpppj/tests/ShapeToBufferTests.cpp",
           "previous": "0dc5ddc7f71ce2b7a12ff4dcaae45a47b4c7d6fefa676129fb19b5556e3312ab",
           "current": "d18ebe7ce7877f6d5bc612fde3d55d75a316dc04fe81615cc8b4cb29c3dc5db8"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 217,
+      "reason": "확인된 적 썬더 캐논131의 방향별 기본/추가 캡처와 독립333원문 대조의 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/shape-to-buffer.json",
+          "previous": "abe4aa4949eed6f9127bbc5d114844348b6dcfd08ab8911a95f1045198c8a68a",
+          "current": "b68b8dd4ee57f591cc562e6d1729c06e1718be183ad67f7a7e5f1b8352c2d279"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/tests/ShapeToBufferTests.cpp",
+          "previous": "d18ebe7ce7877f6d5bc612fde3d55d75a316dc04fe81615cc8b4cb29c3dc5db8",
+          "current": "ad9bd358902fa8ad3ab113cdc917c1bf751c502dc9ab0ed89ddb4ea0f7c102c8"
         }
       ]
     }

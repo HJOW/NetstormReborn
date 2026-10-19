@@ -20,7 +20,7 @@ RawFactoryDraw::RawFactoryDraw(const SidPool& pool,std::span<const RiftTypeFrame
 bool RawFactoryDraw::Handles(Sid sid) const { const auto table=Word(pool_.Slot(sid),0);return table==0x509148U || table==0x509210U; }
 // 해제 여부를 새로 거부하지 않는다. 원본 추가 그림은 자신의 dead 조건을 별도로 검사한다.
 std::span<const std::uint8_t> RawFactoryDraw::Raw(Sid sid) const {
-    const auto raw=pool_.Slot(sid);if (!Handles(sid) || raw[10]>=frames_.size()) throw std::logic_error("Factory 그림의 실제 가상 표/TYPE 미복원");return raw;
+    const auto raw=pool_.Slot(sid);if (!Handles(sid) || raw[10]>=frames_.size()) throw std::logic_error("Factory 그림의 실제 가상 표/TYPE 미복원 SID="+std::to_string(sid.value)+" TYPE="+std::to_string(raw[10])+" VT="+std::to_string(Word(raw,0)));return raw; // 실패 시 실제 대상을 남기며 가상 분배 조건은 보존한다.
 }
 // 두 VT의+80은004ad0f0다. 기존 hasLevel의 OR 조건 때문에 정상 TYPE에서는 항상 상위3비트를 읽는다.
 std::int32_t RawFactoryDraw::MainFrame(Sid sid) const { const auto raw=Raw(sid);return frames_[raw[10]].Run(static_cast<std::uint8_t>('A'+(raw[11]>>5))).first; }

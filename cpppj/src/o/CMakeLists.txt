@@ -337,3 +337,6 @@ target_sources(netstorm PRIVATE RawTempleDraw.cpp RawTempleDraw.h)
 
 # 실제 Burning14의 출력/해제와 공통 프레임gate를 같은 원본 자료에 연결한다.
 target_sources(netstorm PRIVATE RawBurningLifetimeDraw.cpp RawBurningLifetimeDraw.h BurningVisualSystem.cpp BurningVisualSystem.h)
+
+# 실제131의 방향별 기본/추가 Draw를 Factory와 구별하여 캡처에 연결한다.
+target_sources(netstorm PRIVATE RawThunderCannonCapture.cpp RawThunderCannonCapture.h)

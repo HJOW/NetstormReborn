@@ -4,6 +4,7 @@
 #include "client/SquidRenderer.h"
 #include "client/Renderer.h"
 #include "o/RawFactoryDraw.h"
+#include "o/RawThunderCannonCapture.h"
 #include <cstdio>
 #include <filesystem>
 
@@ -106,4 +107,36 @@ TEST_CASE(ShapeToBuffer_SupportNative162Pixels) {
         CHECK(row[4]==row[6] && row[5]==row[7] && metadata==row[4] && Hex(image.pixels)==row[5]);++count;
     }
     CHECK(count==162);
+}
+
+// 실제37프레임과 추가 그림의 전체 픽셀을 독립333입력과 비교한다.
+TEST_CASE(ShapeToBuffer_ThunderCannonNative333Pixels) {
+    const auto& assets=Assets(OriginalEdition::Patch1078);auto types=assets.types;std::array<std::uint32_t,188> maps{};
+    types[131].hotspotX=-2;types[131].hotspotY=3; // 원문에 선언한 TYPE 기준점 입력이며 제품 값은 바꾸지 않는다.
+    const auto path=(std::filesystem::path(__FILE__).parent_path()/"fixtures/thunder-cannon-capture-x86.tsv").string();std::size_t count{};
+    // 37물리프레임·extra0/2/3·owner0/1/8의 원본 결과만 기대값으로 읽는다.
+    for (const auto& row:LoadFixture(path.c_str()).rows) {
+        SidPool pool(OriginalEdition::Patch1078,32768,true);
+        // 원문 격리 입력과 같은 client50까지 실제 풀에서 확보한다.
+        for (std::uint16_t sid=5;sid<=50;++sid) CHECK(pool.Allocate(2)==Sid{sid});
+        auto raw=pool.AllocatedBytes(Sid{50});std::fill(raw.begin(),raw.end(),std::uint8_t{});Put(raw,0,0x50bad0U);raw[10]=131;Put(raw,12,0xa5efU,2);raw[34]=static_cast<std::uint8_t>(Number(row[2]));raw[40]=static_cast<std::uint8_t>(Number(row[1]));Put(raw,36,Number(row[0]));
+        netstorm::client::ShapeToBufferState state;state.addTypeHotspot=true;state.ownerTypeMaps=maps;
+        state.mainFrame=[&](Sid sid) { return ThunderCannonCaptureMainFrame(pool.Slot(sid),assets.game.Types()[131-70].definition.FrameTable()); };
+        state.additional=[&](Sid sid,ConstructionVisualImage& image,std::int32_t x,std::int32_t y) {
+            DrawThunderCannonCapture(pool.Slot(sid),[&](auto type,auto frame,auto px,auto py) { static_cast<void>(netstorm::client::DrawShape(image.pixels,image.width,image.height,assets.game.Shapes(),type-70,frame,px,py,{0,0,image.width-1,image.height-1})); },x,y);
+        };
+        netstorm::client::RawShapeToBuffer capture(pool,types,assets.shapes,assets.game.Shapes(),state);const auto image=capture.Capture(Sid{50});
+        const auto metadata=std::to_string(image.width)+','+std::to_string(image.height)+','+std::to_string(image.hotspotX)+','+std::to_string(image.hotspotY);
+        CHECK(row[3]==row[5] && row[4]==row[6] && metadata==row[3] && Hex(image.pixels)==row[4]);++count;
+    }
+    CHECK(count==333);
+}
+
+// 다른 타입/가상 표와 범위 밖 프레임을 그리기 전에 거부한다.
+TEST_CASE(ThunderCannonCapture_RejectsOtherVtableAndInvalidFrame) {
+    const auto& assets=Assets(OriginalEdition::Patch1078);const auto frames=assets.game.Types()[131-70].definition.FrameTable();std::array<std::uint8_t,50> raw{};
+    Put(raw,0,0x50bad0U);raw[10]=131;CHECK(IsThunderCannonCapture(raw));Put(raw,0,0x50b9b8U);CHECK(!IsThunderCannonCapture(raw));bool rejected{};
+    try { static_cast<void>(ThunderCannonCaptureMainFrame(raw,frames)); }catch (const std::invalid_argument&) { rejected=true; }CHECK(rejected);
+    Put(raw,0,0x50bad0U);Put(raw,36,37);rejected=false;
+    try { static_cast<void>(ThunderCannonCaptureMainFrame(raw,frames)); }catch (const std::out_of_range&) { rejected=true; }CHECK(rejected);
 }

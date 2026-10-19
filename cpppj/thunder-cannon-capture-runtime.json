@@ -1,0 +1,413 @@
+{
+  "unit": 217,
+  "baseline": "e4112f98",
+  "host": "VM-W11-Codex",
+  "date": "2026-10-19",
+  "lastDecompile": "VM-W11-Codex / 2026-10-19",
+  "scope": "10.78 적썬더캐논131의 실제방향별기본/추가캡처·독립333전체픽셀·실제실패대상진단과후속전투. 표시가림/사제끊김은미해결이다.",
+  "validation": {
+    "fullTests": "extracted/goal-thunder-capture-20261019-full-tests1.json",
+    "focusedTests": "extracted/goal-thunder-capture-20261019-focused1.json",
+    "fullSeconds": 159.489,
+    "oldCurrentPinReports": 91,
+    "oldCurrentPins": 117
+  },
+  "observations": {
+    "extracted/goal-thunder-capture-20261019-ui1": {
+      "returnCode": 1,
+      "binarySha256": "c4a2743f0e2bc43b094dc02fe44ccd642df55b198aecc02090f18147ab0bf93a",
+      "originalsUnchanged": true,
+      "lastLabel": "defenseBridgeA3",
+      "gameTime": 128.725,
+      "lastGate": [
+        "5",
+        "68",
+        "0",
+        "0",
+        "0",
+        "1",
+        "55.542",
+        "0"
+      ],
+      "forwardGeneratorsAfterWait": {
+        "15072": {
+          "xy": [
+            "133",
+            "93"
+          ],
+          "hp": 700
+        },
+        "15097": {
+          "xy": [
+            "138",
+            "101"
+          ],
+          "hp": 700
+        }
+      },
+      "cannons": {
+        "15109": {
+          "firstLabel": "cannonAttempt1",
+          "xy": [
+            "136",
+            "108"
+          ],
+          "firstHp": 0,
+          "maxHp": 600,
+          "lastLabel": "defenseBridgeA3",
+          "lastHp": 600
+        }
+      },
+      "sunFlyerSidsObserved": [
+        15063,
+        15133
+      ],
+      "enemyMinimumHp": {
+        "15006": 536,
+        "15013": 200
+      },
+      "naturalEObserved": false,
+      "combat2Observed": false,
+      "nextFailure": "Factory 그림의 실제 가상 표/TYPE 미복원 SID=15006 TYPE=131 VT=5290704",
+      "towers": {
+        "15060": {
+          "xy": [
+            "135",
+            "93"
+          ],
+          "firstLabel": "placed",
+          "maxHp": 1880,
+          "lastHp": 135,
+          "lastLabel": "stageD1"
+        },
+        "15128": {
+          "xy": [
+            "135",
+            "113"
+          ],
+          "firstLabel": "frontTower1",
+          "maxHp": 1805,
+          "lastHp": 1007,
+          "lastLabel": "defenseBridgeA3"
+        }
+      },
+      "templeDestroyedObserved": false,
+      "maximumOwnCannonCount": 1,
+      "lastPage": [
+        "mission"
+      ],
+      "enemyThunderPresentAtLastReport": true,
+      "enemyAviaryPresentAtLastReport": true
+    },
+    "extracted/goal-thunder-capture-20261019-ui2": {
+      "returnCode": 0,
+      "binarySha256": "f732dfecec61474e7e608eb7c6da74f090976ba9cf26b55a4eff319f908599b3",
+      "originalsUnchanged": true,
+      "lastLabel": "combat2",
+      "gameTime": 208.616,
+      "lastGate": [
+        "5",
+        "68",
+        "0",
+        "1",
+        "0",
+        "1",
+        "54.951",
+        "0"
+      ],
+      "forwardGeneratorsAfterWait": {
+        "15072": {
+          "xy": [
+            "133",
+            "93"
+          ],
+          "hp": 700
+        },
+        "15098": {
+          "xy": [
+            "139",
+            "101"
+          ],
+          "hp": 700
+        }
+      },
+      "cannons": {
+        "15110": {
+          "firstLabel": "cannonAttempt1",
+          "xy": [
+            "136",
+            "107"
+          ],
+          "firstHp": 0,
+          "maxHp": 600,
+          "lastLabel": "frontTower2",
+          "lastHp": 185
+        }
+      },
+      "sunFlyerSidsObserved": [
+        15063,
+        15140,
+        15155
+      ],
+      "enemyMinimumHp": {
+        "15006": 536,
+        "15013": 200
+      },
+      "naturalEObserved": false,
+      "combat2Observed": true,
+      "nextFailure": null,
+      "towers": {
+        "15060": {
+          "xy": [
+            "135",
+            "93"
+          ],
+          "firstLabel": "placed",
+          "maxHp": 1880,
+          "lastHp": 145,
+          "lastLabel": "generatorPreview"
+        },
+        "15135": {
+          "xy": [
+            "134",
+            "111"
+          ],
+          "firstLabel": "frontTower1",
+          "maxHp": 2000,
+          "lastHp": 1578,
+          "lastLabel": "combat2"
+        }
+      },
+      "templeDestroyedObserved": true,
+      "maximumOwnCannonCount": 1,
+      "lastPage": [
+        "VortexDestroyed"
+      ],
+      "enemyThunderPresentAtLastReport": true,
+      "enemyAviaryPresentAtLastReport": true
+    },
+    "extracted/goal-thunder-capture-20261019-ui3": {
+      "returnCode": 1,
+      "binarySha256": "f732dfecec61474e7e608eb7c6da74f090976ba9cf26b55a4eff319f908599b3",
+      "originalsUnchanged": true,
+      "lastLabel": "twinCannon7",
+      "gameTime": 161.053,
+      "lastGate": [
+        "5",
+        "68",
+        "0",
+        "0",
+        "0",
+        "1",
+        "57.426",
+        "0"
+      ],
+      "forwardGeneratorsAfterWait": {
+        "15072": {
+          "xy": [
+            "133",
+            "93"
+          ],
+          "hp": 700
+        },
+        "15100": {
+          "xy": [
+            "138",
+            "99"
+          ],
+          "hp": 700
+        }
+      },
+      "cannons": {
+        "15110": {
+          "firstLabel": "firstCannon1",
+          "xy": [
+            "136",
+            "109"
+          ],
+          "firstHp": 0,
+          "maxHp": 600,
+          "lastLabel": "twinCannon7",
+          "lastHp": 213
+        }
+      },
+      "sunFlyerSidsObserved": [
+        15063
+      ],
+      "enemyMinimumHp": {
+        "15006": 28,
+        "15013": 200
+      },
+      "naturalEObserved": false,
+      "combat2Observed": false,
+      "nextFailure": "다른 실제 파편 source의 전용 색표/추가 그림 미복원 TYPE72",
+      "towers": {
+        "15060": {
+          "xy": [
+            "135",
+            "93"
+          ],
+          "firstLabel": "placed",
+          "maxHp": 1880,
+          "lastHp": 125,
+          "lastLabel": "selectionEarly"
+        }
+      },
+      "templeDestroyedObserved": false,
+      "maximumOwnCannonCount": 1,
+      "lastPage": [
+        "mission"
+      ],
+      "enemyThunderPresentAtLastReport": true,
+      "enemyAviaryPresentAtLastReport": true
+    }
+  },
+  "sources": {
+    "cpppj/src/client/RawCampaignSession.cpp": "cd16fb2bad2fa4bf0985fa1dfd7d89cbd504e02f531d1bd319b863e686279b9b",
+    "cpppj/src/o/CMakeLists.txt": "5aeb5926aa34d3b266047d137be0753a58b3f476627ca77ed3624e39800e94b7",
+    "cpppj/src/o/RawFactoryDraw.cpp": "b0d5e95ae773f55eccb29a03a7824c7446c87c48b473d4b4f0f7d876f92bea1b",
+    "cpppj/src/o/RawThunderCannonCapture.cpp": "9cb609f3dd3fe9239cc85d81ce5427e7b5b41cf81431b0a462df643f7216c6ad",
+    "cpppj/src/o/RawThunderCannonCapture.h": "d98c7aeab460724a40daedf472654b0892294ee6afd1cd57ffb00ae6f7117a79",
+    "cpppj/tests/ShapeToBufferTests.cpp": "ad9bd358902fa8ad3ab113cdc917c1bf751c502dc9ab0ed89ddb4ea0f7c102c8",
+    "tools/cpp_campaign_entry_smoke.py": "5fa9adadf6bcd571d6fba39b38e46fed41fe2e927911ff80dc38047c52c56b49",
+    "tools/cpp_fort_smoke.py": "96c7fcd524deb38d93274ded77620639bdc7012ec0f2aaeed0a488d938e9da83",
+    "tools/cpp_island_drop_runtime.py": "7a84366e3505e7fc98d883ca16364c648b9cad8110762744f7a6b8e7e5157ab3",
+    "tools/cpp_menu_smoke.py": "41732efb30e6337267168e3cd836ab6c04d6f34d36b16152b762c39dd2a76afe",
+    "tools/cpp_renderer_smoke.py": "fc648fea126c9cad3a124b38f757460f1139bb0e7f26c1032482ae4d85766ebe",
+    "tools/cpp_smoke_files.py": "66745bfd0ebac8d672eeb8f515144a47377fa4a28dad0603b5f8969a008ec679",
+    "tools/cpp_sun_aviary_notice_runtime.py": "8ab54e12605e9861c531bf9b82f4616b540aac1879f831bf88d69d0e35703952",
+    "tools/cpp_thunder_capture_runtime.py": "8c4a9d8d65420c5f0f37cfb003500d55d81bf0aa437484f20c9c06bfcdd673e3",
+    "tools/cpp_world_smoke.py": "6e50f87caf0b1b817c9116ef972ec6e75b44d33455edc88fe128a8d0f791fe72",
+    "tools/decomp_creation_oracle.py": "646adc1ca6c9eaeac08a9c700324ae05ba1727416bc62070e0a066afc07dc053",
+    "tools/decomp_display_oracle.py": "bd9a42431cdef96d3fb13accf78d5a0d6a3155243b1bbc0362d58e79f662f7a4",
+    "tools/decomp_dudespawn_oracle.py": "294095ff1336d290d8d7e0e465df95d5514ceb4ff87d4bac8c282cdcec2eb786",
+    "tools/decomp_factory_capture.py": "e5dd681fa0d5aa74779c7873c10814eff9ad15e193f7cb7322661c6ca02e27f1",
+    "tools/decomp_oracle.py": "227b9a8b703cfd81d05ac4a7c72a42eaecf9c804fc028680466a19a591f2335d",
+    "tools/decomp_owner_oracle.py": "5a837ad7fd233d9d75c7241d52fbf2e5a508e24dc158d091f243a13ab698e7fb",
+    "tools/decomp_pop_oracle.py": "2a50f34e6b229d5ea4611f7073877ca1e165e0bf841f32c83f17d300b6113bb6",
+    "tools/decomp_postpop_oracle.py": "43dd9adffc6e2b3a1bd4a1fb06563f848518d8082014f2346613243183535129",
+    "tools/decomp_rain_draw.py": "a7a8a40dbb5e1508e21745a94a4320fba207cd08a9ee38ae6a200614d4c2e249",
+    "tools/decomp_shape_to_buffer_oracle.py": "3499edbde033d4fb5102bfb855a988adc30c8b17aae219d917d81346eea71eec",
+    "tools/decomp_sid_oracle.py": "7bfd7b95b26724b1793d407a4ad6654972b2aaa3bf04e4c206cc357670b68dff",
+    "tools/decomp_temple_capture.py": "d39f2d4150b2b96eb885e17b1bbcd8f1727e21b9b71a16113b3b04a0e2ece045",
+    "tools/decomp_temple_draw.py": "b94a1b635e83af4af3808d3666d3dd56067a44e88c22ecfbd4fe9396000dab24",
+    "tools/decomp_thunder_cannon_capture.py": "cf8f855ed7462fabf0e598f189dd81150897729d73f1ff273abb752a309b5339",
+    "tools/fort.py": "ee8ff8f00eea02771ac5c7a519dcd582e14cc07a2d97337c946c191022554e13",
+    "tools/shp.py": "4cb8bee6ed773e29e8658ddb315594ebf5ac005ea5b96c6b760a177029515bfd",
+    "tools/taff.py": "461860cdfc9451b85a8694dd30fd2c56c1cfdf5c6bb7ab8f63a4089971889795",
+    "tools/terrain_mask.py": "00f9789dbde0c124a132a4005924549571b06add5214ea14e3b76e88e73cb37a",
+    "tools/typefile.py": "a564a4b1bbc4f06d05ecb8b1f3fae4c32f6231cf95ea7bfadff2499931804d90"
+  },
+  "evidence": {
+    "cpppj/tests/fixtures/thunder-cannon-capture-x86.tsv": "a3b6b3be0465e1fff09e898b1ced54ebed9a65fb189026aa9474b70f033f28e7",
+    "cpppj/thunder-cannon-capture-native.json": "fddef14e90266becf822231186827d5d180d002cca88015d13d1b76eee8abf2a",
+    "extracted/burning-frame-helper/originals/functions.tsv": "42431fbbcf4d5fd7c4261b4eb181d3808b5a72e5436d6b972509c32a0b053bc0",
+    "extracted/burning-frame-paint-helper/originals/functions.tsv": "db423ff44bde1f444dd35357b7d2d2e77b39b33955997eceea7fe14def91f560",
+    "extracted/burning-frame-raster-helper/originals/functions.tsv": "4a6e82217aca93711bc3d92921931ac433c9f2f25e4bdb3a7fa1cdf6f34b6a6f",
+    "extracted/creation/originals/functions.tsv": "42b14fee0b262fd92c833ec51db3cf772e92fd56b6ccbdc1c589955eb347ccb7",
+    "extracted/display/originals/functions.tsv": "408c4530becac3e2ce5112b436e23b32437a729b36ec6b0ebae5b2da81eb51b4",
+    "extracted/dude-spawn/originals/functions.tsv": "bb78175f3eb554190ab1862a9d901a2385e03e3cdfda66fc8164d5e925819975",
+    "extracted/goal-early5-island-20261019-plan1.tsv": "e5ba9f1eb6f00a522cafd1669a0246f006a01be479a6bba05ab2bd5fa8c82f48",
+    "extracted/goal-early5-island-20261019-probe.py": "2933ead8b5cc87b76425031fea3da8690c3b2649dc8f3fa8d4babd276176ef1a",
+    "extracted/goal-early5-island-20261019-profile-origin.json": "0dd752dcebe4edfac911382824775b784f5bfa9be79b9b9241fb57a8c1671289",
+    "extracted/goal-early5-island-20261019-raster-profile-origin.json": "46be103093b865cd0095044cc94ede13c55379e89ef98a6cd187820afcc27c05",
+    "extracted/goal-thunder-capture-20261019-audit-pins.py": "32b8ab53e1e299864b602b6be92bdb692fb8c3a57f03d2661263711c88767ace",
+    "extracted/goal-thunder-capture-20261019-build-report.py": "8c11697bf1eb20219baa079b1429336b42551858f3d997adfc3e814e95ab984f",
+    "extracted/goal-thunder-capture-20261019-build1.log": "cd9ddff8e939b29ea3d6ac2fccfd6e9c23e9271e32138f42fa72a3c5a51dc4d8",
+    "extracted/goal-thunder-capture-20261019-build2.log": "603e3cc976affcf904a9fc3e3d87fc2b1023d7123c1cd42035d4477e27d8a3ea",
+    "extracted/goal-thunder-capture-20261019-commit-message.txt": "c042ebfdf55056c293e81578f1fab0c3fb20ab1df0c9a31deb6efa2a20e042ce",
+    "extracted/goal-thunder-capture-20261019-focused1.json": "fb05d71d4c4820dd682f5420dde16cbb5c29ca57206e5239db12f95f699bdc20",
+    "extracted/goal-thunder-capture-20261019-focused1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-thunder-capture-20261019-focused1.stdout": "a3d6c3de424dd8c57586642bef7db6933a5fe47991e943bf98e55de2afdb46c6",
+    "extracted/goal-thunder-capture-20261019-full-tests1.json": "c8d5e5ff6c8ff336d9a296ccc403090fb99d2faf9605466ab57a5f8f078f9003",
+    "extracted/goal-thunder-capture-20261019-full-tests1.stderr": "79e2480bde0296407e865b4a37f3b49c9c027d653a2260e3a4215348db0f0663",
+    "extracted/goal-thunder-capture-20261019-full-tests1.stdout": "2cb8cef1cb6cdb1ec4a012c1c9fed2a10d04fbea903192486fd9bf945dea2926",
+    "extracted/goal-thunder-capture-20261019-native1.log": "374ec3393cbd6fbdd1af4dd80042fc1730c9aa2882a4caa22346ca80aeeb546d",
+    "extracted/goal-thunder-capture-20261019-native2.log": "d3ab0f51a00fae21cc510ac6cd55b6d4406bb5e9f8392e424b3b4f3e013d72b3",
+    "extracted/goal-thunder-capture-20261019-native3.log": "43c76db7b035923a7ce94b5dd09b3765f882ac1374212ed1a7389c6392e66d3b",
+    "extracted/goal-thunder-capture-20261019-next-aviary-static.json": "5c3de33461900b673d4e0939e98bf7ac8814a3060f5c1851b70c9f805f5ce9cf",
+    "extracted/goal-thunder-capture-20261019-oracle-v1.py": "135d6501b551fe8c5bffd9ee15fa20194e4f7e9078c2f60491e869414f1ab159",
+    "extracted/goal-thunder-capture-20261019-oracle-v2.py": "73b2196bae81e0430cb06eedc6ec95c24bc6cc252e80826b575e3b35f1b1c57b",
+    "extracted/goal-thunder-capture-20261019-pin-updates.json": "6668c6825435903e66e7bdf2dc041047fe9e47f5510cb000d6cb16aea4c61122",
+    "extracted/goal-thunder-capture-20261019-plan-twins.py": "6e5c17229165a83215a96158baa0df3f6992f806ff20ef9f086fc9f089bf162e",
+    "extracted/goal-thunder-capture-20261019-plan3.tsv": "8c0b982433ed2e4f38767b9ee78906629b930f36522c0ce4c5af2dfdad3629b4",
+    "extracted/goal-thunder-capture-20261019-refresh-pins.py": "3dff76418e45d3bbe649dc8eb26537c7743f6a0ee259a2d63c1cc258843057b6",
+    "extracted/goal-thunder-capture-20261019-runtime-report-v1.json": "9658dc7f249a1845d23cb1df673c981be255ea2a5e5364f3db37553b21d189fd",
+    "extracted/goal-thunder-capture-20261019-stage.py": "1c1b9ef930c6f829654fffe4a73d8766276be2526784067077951e2fe9111839",
+    "extracted/goal-thunder-capture-20261019-ui1/cannonAttempt1.bmp": "ce94b281a5cb5fb2dae0e8804934a38d52380b14eeba342581034c960399e5d5",
+    "extracted/goal-thunder-capture-20261019-ui1/cannonAttempt2.bmp": "5f976b8b6b7ed324edd6f3301d33ec97d4802079a814023d13dd3919c32c0d5c",
+    "extracted/goal-thunder-capture-20261019-ui1/cannonAttempt3.bmp": "8e1320c322adc19c7be4f29cd87a6c57cef1a35329a8aceae26498e21003fc71",
+    "extracted/goal-thunder-capture-20261019-ui1/completedWorkshop.bmp": "08139680bcf4274db27ddd64ffca60a9d44aa230b17051f3505f8294fd064360",
+    "extracted/goal-thunder-capture-20261019-ui1/enemyView.bmp": "a06d1ef87e34c647b1d84a0ccb5a472d60c06034ac264b74bd87f73416c42b4d",
+    "extracted/goal-thunder-capture-20261019-ui1/frontTower1.bmp": "07372ad62906b1ee106d853006c5d3ab9b624e5f59bfabe265a4086feaa8856e",
+    "extracted/goal-thunder-capture-20261019-ui1/frontTower2.bmp": "9308a4e1a397e46251e4c3f4df8ebf97ac367c886c13aac34591fefd7824964d",
+    "extracted/goal-thunder-capture-20261019-ui1/originals-before.json": "f98d8731a8a729b528fd9744b52f3b26143eff54e767f0b8e1537040c5807c15",
+    "extracted/goal-thunder-capture-20261019-ui1/run.json": "c1c5b74f97a07aa9d9e6c6e175f94ac318a6b8eddafde1a6b3fb8b5d4bc736ed",
+    "extracted/goal-thunder-capture-20261019-ui1/stageC.bmp": "89512fec050a2f232a6ce73523649ed4e223f2e446f9d48399e46c313c4c390b",
+    "extracted/goal-thunder-capture-20261019-ui1/stageD.bmp": "d3df238f7082187b3ea24ca33360e5629b12b6cc6b56dd112b5d333213719d28",
+    "extracted/goal-thunder-capture-20261019-ui1/states.tsv": "f2618130534e7fba2f52e7eb922a53fd031223f0d955a68a46e284d73c806441",
+    "extracted/goal-thunder-capture-20261019-ui1/stderr.log": "97d5c38f21aceaff3a4d3b8a69f675a9e70b72bc7e679d3f5cde7ecd6113d377",
+    "extracted/goal-thunder-capture-20261019-ui1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-thunder-capture-20261019-ui1/steps.tsv": "c9d1e1c850797145abd4c6a36c12675aff6fd7a43b83070beef39549fa994671",
+    "extracted/goal-thunder-capture-20261019-ui1.log": "5f837317483722a24ea4e1882c719900682f5090f377c822dea0f69f3b5f219d",
+    "extracted/goal-thunder-capture-20261019-ui2/cannonAttempt1.bmp": "92113107436b409bbb8a3fe245cb1c69badcbef6e670f22f64191d62b592ac59",
+    "extracted/goal-thunder-capture-20261019-ui2/cannonAttempt2.bmp": "e8eba2abf36d2d8f93023f4a501aba3319adc3ffe8085af907441f4b2a94733f",
+    "extracted/goal-thunder-capture-20261019-ui2/cannonAttempt3.bmp": "066c54ad51e493531152b6ebcfc07e6223b0fc1621482b00be960596a7cbf281",
+    "extracted/goal-thunder-capture-20261019-ui2/cannonAttempt4.bmp": "c6eeab79dbf13877ceef672a4389966a2bcd269b3188e5c3689afc4ac9258d21",
+    "extracted/goal-thunder-capture-20261019-ui2/cannonAttempt5.bmp": "c2148d9662a5d6395c144203a39a76f14db52590b25dce768cb1928d9e27d162",
+    "extracted/goal-thunder-capture-20261019-ui2/cannonAttempt6.bmp": "77058b822ffbd1bde3b5e54252debc241f05c714234031e07b3678aeba308fc4",
+    "extracted/goal-thunder-capture-20261019-ui2/combat1.bmp": "e5a3a7e96f8c7c855ebbeea7d1e89312a95c1b1c860c625b09a702d3ce3101cb",
+    "extracted/goal-thunder-capture-20261019-ui2/combat2.bmp": "e5a3a7e96f8c7c855ebbeea7d1e89312a95c1b1c860c625b09a702d3ce3101cb",
+    "extracted/goal-thunder-capture-20261019-ui2/completedWorkshop.bmp": "c69ac071289a051fe86496492be8be74f97536929bf554446c4b4a40b0229c5b",
+    "extracted/goal-thunder-capture-20261019-ui2/enemyView.bmp": "ec548e11535370670b0c14ed787b3f43c71ede5942e2024cf2d0a050b3dcfb40",
+    "extracted/goal-thunder-capture-20261019-ui2/frontTower1.bmp": "cb8a6f21c5947cabeacb1db05b8decbb4686299e34f9a5e91a77056930d77e78",
+    "extracted/goal-thunder-capture-20261019-ui2/frontTower2.bmp": "2fa2bd9b0bf80272130ddec7dd6eb2cb05347cc3672011fa9d2844ca93908e39",
+    "extracted/goal-thunder-capture-20261019-ui2/frontTower3.bmp": "f0f7f85c3ac7195f9c95bbe81577014a487d272aba5c53cec10adf82a9176645",
+    "extracted/goal-thunder-capture-20261019-ui2/frontTower4.bmp": "408f9178dd12d49b37f2f7095e04b91fc25a93b90a090e7fb1b4b6fd8d5c52ea",
+    "extracted/goal-thunder-capture-20261019-ui2/frontTower5.bmp": "9d5f1d0d41daff449215a7254c9588aee6232fc3222182aa4ddc750d66071c2d",
+    "extracted/goal-thunder-capture-20261019-ui2/frontTower6.bmp": "e26d48720a72b879af6fec5dcf05e1588921a8aebdaf8f30249ac2f885301749",
+    "extracted/goal-thunder-capture-20261019-ui2/originals-before.json": "f98d8731a8a729b528fd9744b52f3b26143eff54e767f0b8e1537040c5807c15",
+    "extracted/goal-thunder-capture-20261019-ui2/run.json": "39f29f9338c7dce19454f200412d2bf6ac58d0f7c4e22e3a67b36755bba17042",
+    "extracted/goal-thunder-capture-20261019-ui2/stageC.bmp": "a9b121e7c88569af75cef85625eff4adc488270beeee9b1f480639d15c249a1a",
+    "extracted/goal-thunder-capture-20261019-ui2/stageD.bmp": "b9ab69a4f54cad7490ac096c8098941f88826a8d32b79cd01773f624b14bf8f6",
+    "extracted/goal-thunder-capture-20261019-ui2/states.tsv": "3cdd3bfe648d24b997829f0b2a194cb5a5c20d1df05bf3b4893d9fec9f1094df",
+    "extracted/goal-thunder-capture-20261019-ui2/stderr.log": "599e7f5c211c6dab6d374e2763f0346bcca5456cad4385e566bbef4308d7c9d3",
+    "extracted/goal-thunder-capture-20261019-ui2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-thunder-capture-20261019-ui2/steps.tsv": "e397f105db18b882f16c0f9e0dfd6725f85d4075c50e21547ca38cfd317c1ed8",
+    "extracted/goal-thunder-capture-20261019-ui2.log": "1642ffc9bf4f3aae7fad4fabfbccb4b8327847a593ff44328303a460855fa126",
+    "extracted/goal-thunder-capture-20261019-ui3/completedWorkshop.bmp": "fcd366044dcdcb10fa32ff5db583ea6053f68c53f95ac67ca9687af15470f510",
+    "extracted/goal-thunder-capture-20261019-ui3/enemyView.bmp": "d4e6213effa0abc3fa349ffd04a3f3596d087751e8ec66d9585966f38e9dbfa6",
+    "extracted/goal-thunder-capture-20261019-ui3/originals-before.json": "f98d8731a8a729b528fd9744b52f3b26143eff54e767f0b8e1537040c5807c15",
+    "extracted/goal-thunder-capture-20261019-ui3/run.json": "083041bb6e24b0498ca7328b5aed4242bf84b4b992ea52b34c045177f9be6619",
+    "extracted/goal-thunder-capture-20261019-ui3/stageC.bmp": "440cd4534f5d750d9d488e91c51a48a59d603f39073304e216b2e4f4d3022c90",
+    "extracted/goal-thunder-capture-20261019-ui3/stageD.bmp": "b494d876362a2912757fa98ef6f849250e426ec37817752cee3cef4fea175d71",
+    "extracted/goal-thunder-capture-20261019-ui3/states.tsv": "2e65c7525f7f5920c51d7f539a846a8f059e8797c9f93f8bd5511e2fb8dda06b",
+    "extracted/goal-thunder-capture-20261019-ui3/stderr.log": "14871f30702dc639f5041eb0fd1ce7a191971e2497683979a99bc59cbbadd5e9",
+    "extracted/goal-thunder-capture-20261019-ui3/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-thunder-capture-20261019-ui3/steps.tsv": "0d18da35c85705482755244ba2407458b67e41ddc119687616b79dc41b46a18d",
+    "extracted/goal-thunder-capture-20261019-ui3/twinCannon1.bmp": "4fa0dd020aa309486f284f55c1faad790ffe361da56dbafc0043b9617171716c",
+    "extracted/goal-thunder-capture-20261019-ui3/twinCannon2.bmp": "4c7b2c8bfc8046b0dd461170b5b72a1eab1a39d432c55d5525e0120b690370be",
+    "extracted/goal-thunder-capture-20261019-ui3/twinCannon3.bmp": "aa43f44ccca57c7bf3c4810303c8cabd4a9ab1e63f49e126b1e2317cd208e593",
+    "extracted/goal-thunder-capture-20261019-ui3/twinCannon4.bmp": "c740ca78a09d6fd2e398286309dccb0153685823e743800f97d9cf86cb81cdd8",
+    "extracted/goal-thunder-capture-20261019-ui3/twinCannon5.bmp": "9d5ef0e3eca2865d51df59a34e4b5759ae8495c2793f12842137c80ef02e40ad",
+    "extracted/goal-thunder-capture-20261019-ui3/twinCannon6.bmp": "0b81bb97af9bd90fc79a49c4abaf3f5978c61df14f147fb5dd6a64bbfe9e8930",
+    "extracted/goal-thunder-capture-20261019-ui3/twinCannon7.bmp": "d257282899bc89c8123cd348b5d327916c8f13554eadbdcf387006a81b947b9d",
+    "extracted/goal-thunder-capture-20261019-ui3.log": "5ad9e01a0434be7596533e74d34682f1386edd0c1148b3ce2a8023bc50beda6b",
+    "extracted/owner/originals/functions.tsv": "3ea66dace80a85999a8b2c2dbadb4d5f1bd18b0dcdb0768f9c41075206c7c72d",
+    "extracted/pop/helpers-originals/functions.tsv": "fc21935402ba4781899da2002c5f844061e53150d0bddeeaa597f29b81d58cb8",
+    "extracted/pop/originals/functions.tsv": "5b3241e336bcc1dea4c188121e3c458d3aef3414c5b6e9c4590db8c126414568",
+    "extracted/postpop/originals/functions.tsv": "99dcfa55557ba03e55321146ccb750816cdebd8242c18b4d95e2e1a353a32021",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/setframe/originals/functions.tsv": "31422114edd78937f1d285df1480190ad4ceb87b5436e6e1d407e335f621425e",
+    "extracted/sid/originals/functions.tsv": "3034dd0d393ebdfd77f2e9fafe8a5b252d5437f1e71ab94541cc229e8ef8694b",
+    "originals/d/_shapes.shp": "c878353c8054208deef832e34c514b30fe670e175505b129333a5728ba70f68e",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "tools/ghidra/burning-frame-helper-functions.json": "77f3a9c4dc66d53f3ef5975dfaf93b373f75df5291d392af4b4b2da31ca10a4b",
+    "tools/ghidra/burning-frame-paint-helper-functions.json": "2e2730577c423a5478ed38839707f950c68d543b1d0fe7998240ad9f07e75405",
+    "tools/ghidra/burning-frame-raster-helper-functions.json": "863cd5dcdc91779ecfa0f62ef531f5c39defff3d540528ece5c06c89a71b0b4e",
+    "tools/ghidra/dude-spawn-functions.json": "6fd3a099b040d1c505e148f4fd06579f8ee05ab94650d4c9bf54f519210a3dd0"
+  },
+  "goalComplete": false,
+  "fullFidelityVerified": false
+}
