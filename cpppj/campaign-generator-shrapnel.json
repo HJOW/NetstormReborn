@@ -93,7 +93,7 @@
   },
   "currentSources": {
     "cpppj/src/client/RawCampaignSession.cpp": "4b0470acb1ea5cb275959eb4a70df1d795c4f87d6a51a2a78f6e35ebe573f36b",
-    "cpppj/tests/CMakeLists.txt": "d8240a514b0fb34b353c2ede35edfb65663df83397022c421ff0fb475656cac7",
+    "cpppj/tests/CMakeLists.txt": "695824783c587ef02635c705f6976c5422f0441ffe16831149d568a6d91fb51b",
     "cpppj/tests/CampaignSessionTests.cpp": "995d2f4848c9f2b261d0930cbc7dde5f2209b5931cdab4102da10dca4d23f117",
     "tools/decomp_generator_capture.py": "d5b8b31e5c9c0ab00f24236460af8b63f86412e5115537d56f6f71feb6238b0f",
     "cpppj/generator-capture.json": "177c4bd3b90673160f0b4fe9b50c499ee6eda65838f09eed78b7c8f4ddf9506b",
@@ -929,6 +929,19 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "83eed7cedab8650ce570f444a5c06efe29b2ce414e3049777221cf672f6e248f",
           "current": "d8240a514b0fb34b353c2ede35edfb65663df83397022c421ff0fb475656cac7"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 230,
+      "reason": "Bomb Regular ?? ??? ?? ?? ?? ??? ?? ?? ?? ?? ? ??. ?? ??????/???????? ????.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "d8240a514b0fb34b353c2ede35edfb65663df83397022c421ff0fb475656cac7",
+          "current": "695824783c587ef02635c705f6976c5422f0441ffe16831149d568a6d91fb51b"
         }
       ]
     }

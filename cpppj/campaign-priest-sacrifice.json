@@ -297,7 +297,7 @@
     "originals/d/GIFCLOUD.COL": "785a2cda6ac1d3e295d375815b6d9650720683099db7c249382d598b5da00532"
   },
   "currentSources": {
-    "cpppj/src/CMakeLists.txt": "468058bcf107805b88985aca99a955aeadf8e4b7b12ca06b20f3217f9405a2d0",
+    "cpppj/src/CMakeLists.txt": "54cf17faec66eb58f7a9e38c35fa331499fbddb28b30ab2408b70d867f02380b",
     "cpppj/src/client/CampaignClientServices.cpp": "6760b4bf315f6f7af71d8163e6258b72a186c2921fb536986399c4b10409ac25",
     "cpppj/src/client/RawCampaignCarrierInput.inc": "5f7586171e8d3fc0b7a12e7bad502a33eeda171a41d859469c03367d930aad1b",
     "cpppj/src/client/RawCampaignPathBindings.cpp": "2fc59e6cd111db8c953e388d1856c8e6103a8b6852461c2d3df89ec84a4f4314",
@@ -307,7 +307,7 @@
     "cpppj/src/o/RawTempleRitual.cpp": "4da7a7c1516a35016897471780d92be973f3d238dfd4bf5c36548a9fe9b803bb",
     "cpppj/src/o/RawTempleRitual.h": "e5b853c7bfd9ca70c18c97d7b3f3a6e14b6e6d0ca89a6e5269e5117838937741",
     "cpppj/tests/AltarSacrificeTests.cpp": "3bcf850f018f097b44142038da311c135ae72c3b5c1e075856269f41b2adc0a1",
-    "cpppj/tests/CMakeLists.txt": "d8240a514b0fb34b353c2ede35edfb65663df83397022c421ff0fb475656cac7",
+    "cpppj/tests/CMakeLists.txt": "695824783c587ef02635c705f6976c5422f0441ffe16831149d568a6d91fb51b",
     "cpppj/tests/CampaignSessionTests.cpp": "995d2f4848c9f2b261d0930cbc7dde5f2209b5931cdab4102da10dca4d23f117",
     "cpppj/tests/DaisBridgeTests.cpp": "3ddf0775e4388acad8f0a9b28d9340e8f40c24a5f66dcc980c05f7c51f3622a7",
     "cpppj/tests/DaisLifecycleTests.cpp": "30f2901c1e18d470e8b45ed3fb334ccd30774c0f6cefb1118ff9b886f46927b7",
@@ -1257,6 +1257,25 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "83eed7cedab8650ce570f444a5c06efe29b2ce414e3049777221cf672f6e248f",
           "current": "d8240a514b0fb34b353c2ede35edfb65663df83397022c421ff0fb475656cac7"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 230,
+      "reason": "Bomb Regular ?? ??? ?? ?? ?? ??? ?? ?? ?? ?? ? ??. ?? ??????/???????? ????.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "468058bcf107805b88985aca99a955aeadf8e4b7b12ca06b20f3217f9405a2d0",
+          "current": "54cf17faec66eb58f7a9e38c35fa331499fbddb28b30ab2408b70d867f02380b"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "d8240a514b0fb34b353c2ede35edfb65663df83397022c421ff0fb475656cac7",
+          "current": "695824783c587ef02635c705f6976c5422f0441ffe16831149d568a6d91fb51b"
         }
       ]
     }

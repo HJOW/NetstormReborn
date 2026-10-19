@@ -56,7 +56,7 @@
   },
   "currentSources": {
     "cpppj/src/client/CMakeLists.txt": "ea7b520652a0a21cdaeb2852aae3992c3e361b5d01426f285056dbb1508f6ccd",
-    "cpppj/tests/CMakeLists.txt": "d8240a514b0fb34b353c2ede35edfb65663df83397022c421ff0fb475656cac7",
+    "cpppj/tests/CMakeLists.txt": "695824783c587ef02635c705f6976c5422f0441ffe16831149d568a6d91fb51b",
     "cpppj/src/client/QuickHelpRequest.h": "f1047e2c382fdb077864b5ef86036954092182ad903a2c648cdf9bf4e23867e5",
     "cpppj/src/client/QuickHelpRequest.cpp": "4133146285adb82806679819621d44ee8e6f5f6fd411c543e85c230c1216316e",
     "cpppj/tests/QuickHelpRequestTests.cpp": "a5cc030e80732b5f6e696e93d6284c8e870aff9f92573f94f0dd16886c08ce94",
@@ -341,6 +341,19 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "83eed7cedab8650ce570f444a5c06efe29b2ce414e3049777221cf672f6e248f",
           "current": "d8240a514b0fb34b353c2ede35edfb65663df83397022c421ff0fb475656cac7"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 230,
+      "reason": "Bomb Regular ?? ??? ?? ?? ?? ??? ?? ?? ?? ?? ? ??. ?? ??????/???????? ????.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "d8240a514b0fb34b353c2ede35edfb65663df83397022c421ff0fb475656cac7",
+          "current": "695824783c587ef02635c705f6976c5422f0441ffe16831149d568a6d91fb51b"
         }
       ]
     }

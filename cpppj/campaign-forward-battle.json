@@ -119,7 +119,7 @@
     "cpppj/src/client/UberGump.cpp": "c160136246b091eed0d2dbdd6d091d068e7c0460191d935c77582ce1c137d932",
     "cpppj/src/client/RawCampaignSession.cpp": "4b0470acb1ea5cb275959eb4a70df1d795c4f87d6a51a2a78f6e35ebe573f36b",
     "cpppj/src/client/RawCampaignSession.h": "f905619a10b1ecc976bdfc082f8196e3f82190b5f7770828aaf84d00b813c573",
-    "cpppj/tests/CMakeLists.txt": "d8240a514b0fb34b353c2ede35edfb65663df83397022c421ff0fb475656cac7",
+    "cpppj/tests/CMakeLists.txt": "695824783c587ef02635c705f6976c5422f0441ffe16831149d568a6d91fb51b",
     "cpppj/tests/CampaignSessionTests.cpp": "995d2f4848c9f2b261d0930cbc7dde5f2209b5931cdab4102da10dca4d23f117",
     "tools/decomp_blocker_capture.py": "2089d9b92a7c91d9d22570316923f4035148ab61dc37bf519f8f957edd7d461d",
     "cpppj/blocker-capture.json": "0e64987b6c95c7c4aac9906a96c4a711676a8f51074f133976c2c6a80bbde5cd",
@@ -2328,6 +2328,19 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "83eed7cedab8650ce570f444a5c06efe29b2ce414e3049777221cf672f6e248f",
           "current": "d8240a514b0fb34b353c2ede35edfb65663df83397022c421ff0fb475656cac7"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 230,
+      "reason": "Bomb Regular ?? ??? ?? ?? ?? ??? ?? ?? ?? ?? ? ??. ?? ??????/???????? ????.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "d8240a514b0fb34b353c2ede35edfb65663df83397022c421ff0fb475656cac7",
+          "current": "695824783c587ef02635c705f6976c5422f0441ffe16831149d568a6d91fb51b"
         }
       ]
     }

@@ -48,7 +48,7 @@
     "cpppj/src/client/UberGump.h": "eb7f755056912e3b8b71c4a7ab05f2ea8379541fff4313a7f6b0f6b5b8d168e9",
     "cpppj/src/o/RawPlayerParticipation.cpp": "682b1cf72b1889d2bf44540446d5cba40c24679e9e99055b154155224185dec7",
     "cpppj/src/o/RawPlayerParticipation.h": "22d0031dd843733a9452f9ee497d79e7028a40915524bf11ca4ff59b549b1cb4",
-    "cpppj/tests/CMakeLists.txt": "d8240a514b0fb34b353c2ede35edfb65663df83397022c421ff0fb475656cac7",
+    "cpppj/tests/CMakeLists.txt": "695824783c587ef02635c705f6976c5422f0441ffe16831149d568a6d91fb51b",
     "cpppj/tests/CampaignSessionTests.cpp": "995d2f4848c9f2b261d0930cbc7dde5f2209b5931cdab4102da10dca4d23f117",
     "cpppj/tests/PlayerParticipationTests.cpp": "bc12a931238ba42474504a56c6217253173f37c43021fb31f203814f20f22e3b",
     "tools/cpp_goal_stage_entry_smoke.py": "52dae0cac39a586c32a45b60d57425ab794581ebd1fcd67ce49e037d67a78452",
@@ -5134,6 +5134,19 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "83eed7cedab8650ce570f444a5c06efe29b2ce414e3049777221cf672f6e248f",
           "current": "d8240a514b0fb34b353c2ede35edfb65663df83397022c421ff0fb475656cac7"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 230,
+      "reason": "Bomb Regular ?? ??? ?? ?? ?? ??? ?? ?? ?? ?? ? ??. ?? ??????/???????? ????.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "d8240a514b0fb34b353c2ede35edfb65663df83397022c421ff0fb475656cac7",
+          "current": "695824783c587ef02635c705f6976c5422f0441ffe16831149d568a6d91fb51b"
         }
       ]
     }

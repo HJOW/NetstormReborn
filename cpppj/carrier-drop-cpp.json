@@ -21,7 +21,7 @@
     "tests": "744bcfb4b4c60937e4a7368a7fe85f1e363e489df25c7c313ddd244e474087a4"
   },
   "sources": {
-    "cpppj/src/CMakeLists.txt": "468058bcf107805b88985aca99a955aeadf8e4b7b12ca06b20f3217f9405a2d0",
+    "cpppj/src/CMakeLists.txt": "54cf17faec66eb58f7a9e38c35fa331499fbddb28b30ab2408b70d867f02380b",
     "cpppj/src/o/RawBombActivation.cpp": "91b8f55898bbb61322d2ccaa79ac43185e01a5b35ce245c2209cec8448030bcd",
     "cpppj/src/o/RawBombActivation.h": "7391c4dc9cbf62b215e45ffa7864485e69763ccd0810d020c3313198235fdd50",
     "cpppj/src/o/RawCarrierDrop.cpp": "87cea7b7a5b4bbba7dce9342bf58c7336efecc64e6edfd633345ee7823d39341",
@@ -31,7 +31,7 @@
     "cpppj/src/o/SidPool.h": "a830f7fca8c42e5a2713a7d5d886314c81dc3bffb8271de85c1b0d1fc46de651",
     "cpppj/tests/BombActivationTests.cpp": "a92a2cd55ce7be609c7fa6e82a7cf03b7717cdb539c2817b441d17be871fe459",
     "cpppj/tests/CarrierDropTests.cpp": "d3153457d1d836ae1efc15665c85d582c1fd3f21bba25683b0cf7185bd5fc141",
-    "cpppj/tests/CMakeLists.txt": "d8240a514b0fb34b353c2ede35edfb65663df83397022c421ff0fb475656cac7",
+    "cpppj/tests/CMakeLists.txt": "695824783c587ef02635c705f6976c5422f0441ffe16831149d568a6d91fb51b",
     "tools/cpp_carrier_drop_cpp_audit.py": "ee10e4ac00fa349d78ee482d720e7746fb7b67c6335e555a66b42f88a3d0ce1c",
     "tools/decomp_bomb_activation.py": "f01aafc8c2fb9713fa57ba7531dd4a7b9ebaf1035a24c650b778161b0202bbf5",
     "tools/decomp_carrier_falling.py": "f8702db0708a543b73213c8df9154503afe977767a11bd7c150b639ee1b587a6",
@@ -73,5 +73,26 @@
   "goalComplete": false,
   "fullFidelityVerified": false,
   "pauseAfterCommitRequested": true,
-  "resumeAt": "사용자가 재개하면 먼저 전체 회귀 검사를 실행한다. 이어 실제 Bomb Regular41e6a0/내용물 소비/피해와5f/420bf0을 복원하고, Session/UI의50/5c/Cast/Drop을 연결한 후 Early5 자연F 이후 실제 시전/포획/제단/희생을 관측한다."
+  "resumeAt": "사용자가 재개하면 먼저 전체 회귀 검사를 실행한다. 이어 실제 Bomb Regular41e6a0/내용물 소비/피해와5f/420bf0을 복원하고, Session/UI의50/5c/Cast/Drop을 연결한 후 Early5 자연F 이후 실제 시전/포획/제단/희생을 관측한다.",
+  "integration_updates": [
+    {
+      "date": "2026-10-19",
+      "unit": 230,
+      "reason": "Bomb Regular ?? ??? ?? ?? ?? ??? ?? ?? ?? ?? ? ??. ?? ??????/???????? ????.",
+      "pins": [
+        {
+          "group": "/sources",
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "468058bcf107805b88985aca99a955aeadf8e4b7b12ca06b20f3217f9405a2d0",
+          "current": "54cf17faec66eb58f7a9e38c35fa331499fbddb28b30ab2408b70d867f02380b"
+        },
+        {
+          "group": "/sources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "d8240a514b0fb34b353c2ede35edfb65663df83397022c421ff0fb475656cac7",
+          "current": "695824783c587ef02635c705f6976c5422f0441ffe16831149d568a6d91fb51b"
+        }
+      ]
+    }
+  ]
 }

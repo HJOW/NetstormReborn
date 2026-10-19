@@ -1449,6 +1449,7 @@ set_source_files_properties(CarrierStealTests.cpp PROPERTIES COMPILE_DEFINITIONS
 target_sources(netstorm_tests PRIVATE CarrierPickupTests.cpp)
 target_sources(netstorm_tests PRIVATE CarrierDropTests.cpp)
 target_sources(netstorm_tests PRIVATE BombActivationTests.cpp)
+target_sources(netstorm_tests PRIVATE BombRegularTests.cpp)
 set_source_files_properties(CarrierPickupTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_CARRIER_PICKUP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/carrier-pickup-x86.tsv\"")
 

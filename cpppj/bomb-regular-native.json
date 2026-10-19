@@ -1,0 +1,32 @@
+{
+  "unit": 230,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-19",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-19"
+  },
+  "uniqueInputs": 741,
+  "normalReturns": 1482,
+  "instructions": 416632,
+  "nativeCalls": {
+    "0041e6a0": 1482,
+    "004ac550": 1284,
+    "0049a840": 1284,
+    "00496e70": 736,
+    "004e4a40": 746,
+    "004df590": 746,
+    "0040ace0": 16958
+  },
+  "boundaries": "41e6a0/TYPE/기본496e70/가변패킷writer 전체. 45a6c0 통지·프레임/애니메이션·new400/free·대상검색41e4b0·배포4e2e30·실제효과420bf0는 명시 경계다. GP/retN/canary/SEH/x87/실행·읽기·쓰기범위를 검사했다. 피해/내용물 소비/실제 시전/UI 완료의 증거가 아니다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_bomb_regular.py": "f07874570530da4e20a607d66ca1b0e55c21f5b91bfcd50750d9dd431b97ef72",
+    "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+    "tools/decomp_cursor_position.py": "e15bcdbc4c6be9c131c30f15416c945d650dba9f7dc6def404b47f63c635c212",
+    "tools/decomp_carrier_falling.py": "f8702db0708a543b73213c8df9154503afe977767a11bd7c150b639ee1b587a6",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "cpppj/tests/fixtures/bomb-regular-x86.tsv": "29af05b0f7761c8c9b66ae98966a7549bb1e35f38adef062276e17e104849c0c"
+  }
+}
