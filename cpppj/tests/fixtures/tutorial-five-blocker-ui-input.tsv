@@ -1,0 +1,18 @@
+# Early5 원본 안내·워크샾 지식·Stone Tower 실제 생산/배치 뒤 자연 썬더 피격과 B안내를 관측한다.
+20	report	initial
+21	click	MORE
+41	click	OK
+60	right	world:sunFactory
+70	click	Put Knowledge into Production
+80	report	knowledge
+90	click	Stone Tower
+100	report	production
+110	click	production:78
+120	report	preview
+130	click	placement-near:136,94
+140	report	placed
+200	report	building
+300	report	completed
+400	report	hit
+500	report	goal
+500	snapshot	goal

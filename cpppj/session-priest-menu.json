@@ -22,7 +22,7 @@
     "cpppj/src/client/GameWorld.h": "d51dfe75377b1afd870bfeb40e26cef9f6233f65217d757135648ce064043a16",
     "cpppj/src/client/GameWorld.cpp": "07aa1f5d4d4a144997fd8627184180914e3357e417016e1e59bb08bed8f4fc07",
     "cpppj/src/client/RawCampaignSession.h": "f905619a10b1ecc976bdfc082f8196e3f82190b5f7770828aaf84d00b813c573",
-    "cpppj/src/client/RawCampaignSession.cpp": "44367934a0892884617ae9bfe1bdc0f96206dfad3ac4da4af8d0d19a46a6d1ba",
+    "cpppj/src/client/RawCampaignSession.cpp": "8da5a9e0dd26dc7f06e29eabac9b787b0d75207420f4a734cbd71c7fe28cb13c",
     "cpppj/src/client/RawPriestMenu.h": "5364d92d3af5b9b81a0477df5c005fcfc4a1ef7f6817894bd337250ce4d0e43d",
     "cpppj/src/client/RawPriestMenu.cpp": "f30be4e91f2141d1000f4a75d9f41619024d20f6cb024f68b8ffb483b1eddcf7",
     "cpppj/src/client/RawCampaignLifetimeBindings.h": "6f4be73b52279abf308c8a3e6d8962271560e47c25996f7a03fca09f8cd063e8",
@@ -44,8 +44,8 @@
     "cpppj/tests/fixtures/carrier-content-notice-x86.tsv": "c8a21b68d3b0b6e271d04950022366eab9abd3069ff5a9ce3b53746f1fb4d4bf",
     "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
     "tools/decomp_carrier_content_notice.py": "dbb32841a7019edbcb411f75094046c8bf0e20b4ed503e109a14b79a79d8a94c",
-    "cpppj/src/o/CMakeLists.txt": "531d0fd71823841eb97eebb5046f878c52fa44d82142af3fdff9c0fb68c2497a",
-    "cpppj/tests/CMakeLists.txt": "a28386f7cba8ec9f181edf644f86e384d5bdfbfa77dcbcddfd01028a5526f534"
+    "cpppj/src/o/CMakeLists.txt": "9ea03fca9ed297b42ee2fa19a6b6d03d3ae6f02191be0a9c0a4eb809f013ec4f",
+    "cpppj/tests/CMakeLists.txt": "6814b98421a14e37959652743dab5e6a24771de6c3ef50cf4aae8cce63fa191e"
   },
   "validation": {
     "configuration": "Release",
@@ -2241,6 +2241,31 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "889efbf2ee9336dad4a80cae9bc811c380d9e955b2746743b049efcbae9d27ae",
           "current": "a28386f7cba8ec9f181edf644f86e384d5bdfbfa77dcbcddfd01028a5526f534"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 208,
+      "reason": "Early5 실제 프레임/세 DWORD 입력 연결의 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "44367934a0892884617ae9bfe1bdc0f96206dfad3ac4da4af8d0d19a46a6d1ba",
+          "current": "8da5a9e0dd26dc7f06e29eabac9b787b0d75207420f4a734cbd71c7fe28cb13c"
+        },
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/o/CMakeLists.txt",
+          "previous": "531d0fd71823841eb97eebb5046f878c52fa44d82142af3fdff9c0fb68c2497a",
+          "current": "9ea03fca9ed297b42ee2fa19a6b6d03d3ae6f02191be0a9c0a4eb809f013ec4f"
+        },
+        {
+          "group": "/sha256",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "a28386f7cba8ec9f181edf644f86e384d5bdfbfa77dcbcddfd01028a5526f534",
+          "current": "6814b98421a14e37959652743dab5e6a24771de6c3ef50cf4aae8cce63fa191e"
         }
       ]
     }

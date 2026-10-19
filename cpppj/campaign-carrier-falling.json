@@ -10,8 +10,8 @@
   "currentSources": {
     ".gitattributes": "3e8d869648cde0415d1a91e9b22d5a7ed7e5c0585923a189bfd37aa33229f3a8",
     "cpppj/src/CMakeLists.txt": "dc93067f7759849e630647688fa09684944a0f5aec5bf7d774d429227e600599",
-    "cpppj/tests/CMakeLists.txt": "a28386f7cba8ec9f181edf644f86e384d5bdfbfa77dcbcddfd01028a5526f534",
-    "cpppj/src/client/RawCampaignSession.cpp": "44367934a0892884617ae9bfe1bdc0f96206dfad3ac4da4af8d0d19a46a6d1ba",
+    "cpppj/tests/CMakeLists.txt": "6814b98421a14e37959652743dab5e6a24771de6c3ef50cf4aae8cce63fa191e",
+    "cpppj/src/client/RawCampaignSession.cpp": "8da5a9e0dd26dc7f06e29eabac9b787b0d75207420f4a734cbd71c7fe28cb13c",
     "cpppj/tests/CampaignObjectMenuTests.cpp": "fea9198ea2150c42bb523f7ac9298c2f819acd1fc9b9887b53020c206ad62563",
     "cpppj/src/o/RawCarrierFalling.h": "053f770faf58d4afd2c11f20c2f1608ba72ffd8202b8d983ecb15bb6da3240e8",
     "cpppj/src/o/RawCarrierFalling.cpp": "792cf6ac33b52ba476fdedc8ea22e0649aa5201b75b214fba1cb3519cd80682f",
@@ -1256,6 +1256,25 @@
           "path": "cpppj/src/client/RawCampaignSession.cpp",
           "previous": "15b33d8277165a48df66bce321193f4470dd4203dc893baab2c7579b7f488dd8",
           "current": "44367934a0892884617ae9bfe1bdc0f96206dfad3ac4da4af8d0d19a46a6d1ba"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 208,
+      "reason": "Early5 실제 프레임/세 DWORD 입력 연결의 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "a28386f7cba8ec9f181edf644f86e384d5bdfbfa77dcbcddfd01028a5526f534",
+          "current": "6814b98421a14e37959652743dab5e6a24771de6c3ef50cf4aae8cce63fa191e"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "44367934a0892884617ae9bfe1bdc0f96206dfad3ac4da4af8d0d19a46a6d1ba",
+          "current": "8da5a9e0dd26dc7f06e29eabac9b787b0d75207420f4a734cbd71c7fe28cb13c"
         }
       ]
     }

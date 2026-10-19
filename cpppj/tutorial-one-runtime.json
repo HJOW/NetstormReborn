@@ -10,7 +10,7 @@
     "cpppj/src/client/ClientMain.cpp": "fe577cb844b74ff10be7353b9ba545563bd62af7272409211de823e511fb456e",
     "cpppj/src/client/RawButtonControls.cpp": "22ea0450231c3b81b1b74a6f56d52f6e5706f9c24543f8898f4e32131c0a6962",
     "cpppj/src/client/RawButtonControls.h": "548d27ebba1a23f585763222ff428fd257456e79e47ae83ac38849712528ece1",
-    "cpppj/src/client/RawCampaignSession.cpp": "44367934a0892884617ae9bfe1bdc0f96206dfad3ac4da4af8d0d19a46a6d1ba",
+    "cpppj/src/client/RawCampaignSession.cpp": "8da5a9e0dd26dc7f06e29eabac9b787b0d75207420f4a734cbd71c7fe28cb13c",
     "cpppj/src/client/RawCampaignSession.h": "f905619a10b1ecc976bdfc082f8196e3f82190b5f7770828aaf84d00b813c573",
     "cpppj/src/client/UberGump.cpp": "c160136246b091eed0d2dbdd6d091d068e7c0460191d935c77582ce1c137d932",
     "cpppj/src/client/UberGump.h": "eb7f755056912e3b8b71c4a7ab05f2ea8379541fff4313a7f6b0f6b5b8d168e9",
@@ -275,6 +275,19 @@
           "path": "cpppj/src/client/RawCampaignSession.cpp",
           "previous": "15b33d8277165a48df66bce321193f4470dd4203dc893baab2c7579b7f488dd8",
           "current": "44367934a0892884617ae9bfe1bdc0f96206dfad3ac4da4af8d0d19a46a6d1ba"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 208,
+      "reason": "Early5 실제 프레임/세 DWORD 입력 연결의 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/sources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "44367934a0892884617ae9bfe1bdc0f96206dfad3ac4da4af8d0d19a46a6d1ba",
+          "current": "8da5a9e0dd26dc7f06e29eabac9b787b0d75207420f4a734cbd71c7fe28cb13c"
         }
       ]
     }

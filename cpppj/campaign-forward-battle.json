@@ -117,9 +117,9 @@
   "currentSources": {
     "cpppj/src/client/GameWorld.cpp": "07aa1f5d4d4a144997fd8627184180914e3357e417016e1e59bb08bed8f4fc07",
     "cpppj/src/client/UberGump.cpp": "c160136246b091eed0d2dbdd6d091d068e7c0460191d935c77582ce1c137d932",
-    "cpppj/src/client/RawCampaignSession.cpp": "44367934a0892884617ae9bfe1bdc0f96206dfad3ac4da4af8d0d19a46a6d1ba",
+    "cpppj/src/client/RawCampaignSession.cpp": "8da5a9e0dd26dc7f06e29eabac9b787b0d75207420f4a734cbd71c7fe28cb13c",
     "cpppj/src/client/RawCampaignSession.h": "f905619a10b1ecc976bdfc082f8196e3f82190b5f7770828aaf84d00b813c573",
-    "cpppj/tests/CMakeLists.txt": "a28386f7cba8ec9f181edf644f86e384d5bdfbfa77dcbcddfd01028a5526f534",
+    "cpppj/tests/CMakeLists.txt": "6814b98421a14e37959652743dab5e6a24771de6c3ef50cf4aae8cce63fa191e",
     "cpppj/tests/CampaignSessionTests.cpp": "ea45c674da8aa8f8e51d6afa2975e1a6a5b6f1f15b9f31368bdcbd7b09027801",
     "tools/decomp_blocker_capture.py": "2089d9b92a7c91d9d22570316923f4035148ab61dc37bf519f8f957edd7d461d",
     "cpppj/blocker-capture.json": "0e64987b6c95c7c4aac9906a96c4a711676a8f51074f133976c2c6a80bbde5cd",
@@ -2067,6 +2067,25 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "889efbf2ee9336dad4a80cae9bc811c380d9e955b2746743b049efcbae9d27ae",
           "current": "a28386f7cba8ec9f181edf644f86e384d5bdfbfa77dcbcddfd01028a5526f534"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 208,
+      "reason": "Early5 실제 프레임/세 DWORD 입력 연결의 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "44367934a0892884617ae9bfe1bdc0f96206dfad3ac4da4af8d0d19a46a6d1ba",
+          "current": "8da5a9e0dd26dc7f06e29eabac9b787b0d75207420f4a734cbd71c7fe28cb13c"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "a28386f7cba8ec9f181edf644f86e384d5bdfbfa77dcbcddfd01028a5526f534",
+          "current": "6814b98421a14e37959652743dab5e6a24771de6c3ef50cf4aae8cce63fa191e"
         }
       ]
     }

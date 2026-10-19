@@ -74,6 +74,8 @@ target_sources(netstorm PRIVATE
     RawFactoryPostPop.cpp RawFactoryPostPop.h
     RawMetadisplayDirty.cpp RawMetadisplayDirty.h
     RawGunTarget.cpp RawGunTarget.h
+    # 스톤 타워 배치가 기존 Gun의 표적을 바꾸는 실제 주변 수집/통지다.
+    RawGunBlocker.cpp RawGunBlocker.h
     RawPathData.cpp RawPathData.h
     RawPathStart.cpp RawPathStart.h
     RawGunAnimation.cpp RawGunAnimation.h

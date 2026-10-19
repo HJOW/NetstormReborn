@@ -11,6 +11,7 @@
 #include "client/RawCampaignCursor.h"
 #include "client/PriestPlacementAssets.h"
 #include "client/RawCampaignGunQueries.h"
+#include "o/RawGunBlocker.h"
 #include "o/RawPathRetarget.h"
 #include "o/RawCarrierMining.h"
 #include "o/RawGeyserMined.h"
@@ -314,6 +315,8 @@ struct RawCampaignSession::Impl {
     std::vector<float> firingIntervals; // 실제 타입별 발사 간격이다.
     std::unique_ptr<RawGunMode> gunMode; // 현재 raw 공격 방향을 매 검색마다 읽는다.
     std::unique_ptr<RawGunTarget> gunTarget; // 실제 finder/ray/필터의 같은 Core 인스턴스다.
+    GunBlockerState gunBlockerState; // TYPE 전체의 원본 최대 사거리와 스톤 타워 번호다.
+    std::unique_ptr<RawGunBlocker> gunBlocker; // 새 장애물을 기존 Gun에 알리는 실제 수집/통지다.
     std::unique_ptr<RawGunHit> gunHit; // 실제 Q16 시간 압축과 현재 피해 getter다.
     PriestDamageState priestDamageState; // 실제 미션 레벨보정 차단/HP1 감시 권한이다.
     DamageableHitState generalDamageState{priestDamageState}; // 같은 레벨·현재 서버/로컬 소유자·주 섬의 일반 피해 전역이다.
@@ -756,6 +759,28 @@ struct RawCampaignSession::Impl {
             },[this](Sid sid) { core.building.NotifySurface(sid); }}));
         projectileGeometry=std::make_unique<RawProjectileGeometry>(core.pool,core.types,projectileTypes,16.0F,11.0F,gunMode.get());
         fenceTarget=std::make_unique<RawFenceTarget>(core.pool,core.hash,core.types,projectileTypes,*gunTarget,gunTargetState,gunState);
+        constexpr float kCannonSearchMargin=10.0F,kArcherSearchMargin=3.0F; // 원본00500fc8/00501908의 TYPE 최대 사거리 여유다.
+        // 원본49fa 계열 초기화처럼 전체 TYPE 번호순으로 group별 최대 범위를 계산한다.
+        for (std::size_t type=0;type<core.types.size();++type) {
+            if (core.types[type].group==1) gunBlockerState.cannonRange=std::max(gunBlockerState.cannonRange,gunTypes[type].range+kCannonSearchMargin);
+            else if (core.types[type].group==0) gunBlockerState.archerRange=std::max(gunBlockerState.archerRange,gunTypes[type].range+kArcherSearchMargin);
+        }
+        GunBlockerHooks blockerHooks; // 같은 기존 Form/Kernel·SHP·방향을 읽으며 새 Gun을 만들지 않는다.
+        blockerHooks.currentTarget=[this](Sid sid)->std::optional<Sid> {
+            RawContainedLookup lookup(core.pool,[this](Sid form,std::uint32_t flags) { world.Destroy(form,flags); });
+            const auto form=lookup.Find(sid,gunState.processType);if (!form.value) return std::nullopt;
+            auto* current=core.processes.FromForm(form);if (!current) return std::nullopt;
+            auto* gun=dynamic_cast<GunProcess*>(current);if (!gun) throw std::logic_error("장애물 통지의 현재 Gun 타입 불일치");return gun->Fields().Target();
+        };
+        blockerHooks.mode=[this](Sid sid) { return gunMode->Get(sid); };
+        blockerHooks.muzzle=[this](Sid sid) { return fenceTarget->Muzzle(sid); };
+        blockerHooks.setTarget=[this](Sid sid,Sid target) {
+            RawContainedLookup lookup(core.pool,[this](Sid form,std::uint32_t flags) { world.Destroy(form,flags); });
+            const auto form=lookup.Find(sid,gunState.processType);if (!form.value) return;
+            auto* gun=dynamic_cast<GunProcess*>(core.processes.FromForm(form));if (!gun) throw std::logic_error("장애물 통지의 기존 Gun 수명 불일치");
+            if (!assetBindings) throw std::logic_error("장애물 통지의 실제 Gun 처리기 미설치");assetBindings->Gun().SetTarget(gun->Fields(),target);
+        };
+        gunBlocker=std::make_unique<RawGunBlocker>(core.pool,core.hash,core.types,gunTypes,*gunTarget,gunState,gunBlockerState,std::move(blockerHooks));
         // 실제43be30은59ab28=0에서 다리·훨리기그·맨 오 워에 각각 일반 색표를 설치한다.
         for (const auto type:{core.bridgeState.bridgeType,73U,144U}) { shrapnelMapTokens.at(type)=1;shrapnelOwnerColors.emplace(type,BuildStandardOwnerColorMaps(type,core.bridgeState.bridgeType)); }
         shrapnelCaptureState.ownerTypeMaps=shrapnelMapTokens;
@@ -823,6 +848,7 @@ struct RawCampaignSession::Impl {
         combatEffects.missile=hits->MissileHooks(*gunHit,missileState,std::move(combatEffects.missile));
         combat=std::make_unique<RawCampaignArcherBindings>(world,*gunTarget,random,archerTypes,metadata.frames,missileTypes,archerState,missileState,std::move(combatEffects));
         auto assetEffects=services.assets;assetEffects.postPop.reserveRegular=[] { return true; };
+        assetEffects.postPop.startBlocker=[this](Sid sid) { gunBlocker->Notify(sid); }; // 기존 이름을 유지하며 실제0046ae80의 장애물 통지를 연결한다.
         assetEffects.postPop.nuggetPostPop=[this](Sid sid,std::uint32_t flags) { if (!nuggetPostPop) throw std::logic_error("현재 너겟 PostPop 미설치");nuggetPostPop->PostPop(sid,flags); };
         if (!assetEffects.regular.damageGround) assetEffects.regular=MakeAssetGunImpactHooks(hits->Impact(),std::move(assetEffects.regular));
         if (!assetEffects.regular.hitPoints) assetEffects.regular.hitPoints=[this](Sid victim,std::uint32_t amount,std::int32_t owner,std::uint32_t attacker) -> std::int32_t {

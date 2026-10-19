@@ -1,0 +1,44 @@
+{
+  "host": "VM-W11-Codex",
+  "lastDecompileHost": "VM-W11-Codex",
+  "lastDecompileDate": "2026-10-19",
+  "uniqueInputs": 6,
+  "normalReturns": 12,
+  "precisionDifferences": 0,
+  "outputs": [
+    [
+      "15054",
+      "-"
+    ],
+    [
+      "15054",
+      "-"
+    ],
+    [
+      "-",
+      "-"
+    ],
+    [
+      "-",
+      "N:15054:15070"
+    ],
+    [
+      "-",
+      "N:15054:15070"
+    ],
+    [
+      "-",
+      "-"
+    ]
+  ],
+  "sources": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_gun_blocker.py": "46da4203bb28dbbe25f514d8ccfdda88308e0d88103951a9c3f99b3f47e880ee",
+    "tools/decomp_gun_blocker_boundary.py": "b2be91b5356107df23718323d6348f49331bf4b33ce0f29ed5795fd82d0c816e",
+    "cpppj/tests/fixtures/gun-blocker-boundary-x86.tsv": "cfa8f3ef18b6a7cee79f2f79519e50e8e3951beb6d895709c5fa53d8be381623"
+  },
+  "limitations": [
+    "독립 좌표 입력이며 실제 게임/OS 실행이 아니다. 기존 Form/Kernel 경계는 본 수집기 관측과 같다."
+  ]
+}
