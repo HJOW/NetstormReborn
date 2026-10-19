@@ -2872,6 +2872,35 @@ TEST_CASE(CampaignTutorialLater_ActualSessionsAndThreeDwordEvents) {
     }
 }
 
+// 실제 메뉴→427070→로컬전송→444bc0→0x5c가 같은 경제/내용물/공간/프로세스를 사용하는지 확인한다.
+TEST_CASE(CampaignCarrierDrop_ActualCastRequestAndTransport) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();netstorm::zacket::LocalMissionTransport* wire{};std::vector<std::array<std::uint32_t,3>> queued;std::vector<std::array<std::int32_t,4>> popups;
+    services.carrierRequest=[&](std::int32_t target,std::span<const std::uint8_t> packet) { CHECK(wire && target==9);if (wire) wire->Send(target,packet); };
+    services.carrierDropPopup=[&](std::int32_t cost,std::int32_t x,std::int32_t y,std::uint32_t reference) { popups.push_back({cost,x,y,static_cast<std::int32_t>(reference)}); };
+    services.assets.queueCommand=[&](std::uint32_t command,std::int32_t x,std::int32_t y) { queued.push_back({command,std::bit_cast<std::uint32_t>(x),std::bit_cast<std::uint32_t>(y)}); };
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));CHECK(Throws([&] { session.RequestCarrierDrop(Sid{50}); }));session.Load();auto core=session.Core();SessionPickupWire link(session);wire=&link.transport;
+    const Sid priest{static_cast<std::uint16_t>(session.FindPriestParticipation(1))};CHECK(priest.value);if (!priest.value) return;const auto raw=core.pool.Slot(priest);const RawPathPoint point{std::bit_cast<float>(Get(raw,14)),std::bit_cast<float>(Get(raw,18))};
+    const auto caster=session.World().Create(133,2);session.World().Pop(caster,point.x,point.y,0);core.owner.Set(caster,1);const auto prayer=session.CreateContained(caster,168,0,1,0,0);CHECK(SquidForms(core.pool).Parent(prayer)==caster);session.SetSp(1,10000);const auto before=session.Sp(1);const auto cost=core.types[168].cost;
+    std::uint32_t selected{},mouseType{},mode{};std::int32_t mouseX{},mouseY{};std::array<std::uint32_t,2> remembered{};std::array<std::uint32_t,1> multiple{};std::int32_t count{};RawUserHighlight highlight({mode,selected,mouseType,mouseX,mouseY},{});UserSelectionHooks select;select.paused=[] { return 0U; };select.enabled=[] { return 1U; };select.blocked=[] { return 0U; };select.dump=[](Sid) {};select.highlight=[&](std::uint32_t value) { highlight.Highlight(value); };select.assertion=select.previewAssertion=[] { throw std::logic_error("시전 선택 예상 밖 진단"); };
+    auto selection=session.MakeUserSelection({selected,mouseType,remembered,multiple,count},std::move(select));CHECK(selection->Select(caster.value,0,0)==caster.value);const auto initialPosition=std::array<std::uint32_t,2>{Get(core.pool.Slot(caster),14),Get(core.pool.Slot(caster),18)};
+    const auto& registration=link.transport.Dispatch().Registration(0x50);CHECK(registration.length==9 && registration.version==1 && !registration.mismatch && !registration.observer);
+    CHECK(session.CommandCarrierDrop(caster,0x0300011a,caster)==1);CHECK(session.Sp(1)==before-cost && selected==0 && popups.size()==1);if (!popups.empty()) CHECK(popups.front()[0]==static_cast<std::int32_t>(cost) && popups.front()[3]==0);
+    const auto* first=core.processes.FindEvent(caster,0x493);CHECK(first && core.pool.Slot(first->Form())[10]==61);const auto firstForm=first ? first->Form() : Sid{};
+    CHECK(link.recorded.empty() && !link.transport.QueuedFrames() && ConstructionLive(core,168).empty());link.transport.Flush();CHECK(link.transport.QueuedFrames()==1);CHECK(link.transport.Poll()==1 && link.recorded.size()==1);
+    if (!link.recorded.empty()) { const auto& packet=link.recorded.front();CHECK(packet.size()==9 && packet[0]==1 && packet[1]==0x50 && Get(packet,4,2)==caster.value && Get(packet,6,2)==prayer.value); }
+    const auto spells=ConstructionLive(core,168);CHECK(spells.size()==1);if (spells.size()==1) { const auto bomb=spells.front();CHECK(Get(core.pool.Slot(bomb),0)==0x502370U && Get(core.pool.Slot(bomb),12,2)==caster.value && core.pool.Slot(bomb)[34]==1);CHECK(core.processes.FindEvent(bomb,0)!=nullptr); }
+    const auto* second=core.processes.FindEvent(caster,0x493);CHECK(second && second->Form()!=firstForm && core.processes.FromForm(firstForm));CHECK(Get(core.pool.Slot(caster),14)==initialPosition[0] && Get(core.pool.Slot(caster),18)==initialPosition[1] && !(core.pool.Slot(caster)[11]&7U));CHECK(SquidForms(core.pool).Parent(prayer)==caster && !(core.pool.Slot(prayer)[11]&3U) && session.Sp(1)==before-cost);
+    CHECK(std::find(queued.begin(),queued.end(),std::array<std::uint32_t,3>{0x030000b2,168,0})!=queued.end());CHECK(!core.bookkeeping.depth && !core.destroy.PreDepth() && !core.destroy.PostDepth());wire=nullptr;
+}
+
+// SP가 부족하면 실제 요청 단계에서 팝업/493/송신을 만들지 않으며 내용물을 유지한다.
+TEST_CASE(CampaignCarrierDrop_ActualInsufficientFunds) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();std::size_t sent{},popups{};
+    services.carrierRequest=[&](std::int32_t,std::span<const std::uint8_t>) { ++sent; };services.carrierDropPopup=[&](std::int32_t,std::int32_t,std::int32_t,std::uint32_t) { ++popups; };
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));session.Load();auto core=session.Core();const Sid priest{static_cast<std::uint16_t>(session.FindPriestParticipation(1))};CHECK(priest.value);if (!priest.value) return;
+    const auto raw=core.pool.Slot(priest);const auto caster=session.World().Create(133,2);session.World().Pop(caster,std::bit_cast<float>(Get(raw,14)),std::bit_cast<float>(Get(raw,18)),0);core.owner.Set(caster,1);const auto prayer=session.CreateContained(caster,168,0,1,0,0);session.SetSp(1,0);session.RequestCarrierDrop(caster,prayer);CHECK(!sent && !popups && session.Sp(1)==0 && !core.processes.FindEvent(caster,0x493));CHECK(SquidForms(core.pool).Parent(prayer)==caster && !(core.pool.Slot(prayer)[11]&3U));
+}
+
 // 실제40aca0의 독립909입력과 송신하지 않는 관문의 바이트 보존을 확인한다.
 TEST_CASE(CampaignDevastation_PacketLengthNative909) {
     const auto path=(std::filesystem::path(__FILE__).parent_path()/"fixtures/bomb-packet-x86.tsv").string();std::size_t rows{};

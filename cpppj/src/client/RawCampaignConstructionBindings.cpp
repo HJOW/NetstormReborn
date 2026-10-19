@@ -162,6 +162,10 @@ o::ConstructionLocalHooks RawCampaignConstructionBindings::BindLocal(o::Construc
 bool RawCampaignConstructionBindings::Request(const o::ConstructionConfirmRequest& value) const { impl_->ValidateState();return impl_->requestBody->Request(value); }
 // 원본 수신은 요청 실패 때 같은 실제 Place에서 환불/취소를 요청한다.
 void RawCampaignConstructionBindings::Receive(std::uint32_t sender,std::span<const std::uint8_t> packet) const { impl_->ValidateState();impl_->command->Receive(sender,packet); }
+// Cast/Drop의 잘못된 소유자도 기존 원본 환불 몸체를 사용한다.
+void RawCampaignConstructionBindings::Refund(std::uint32_t type,std::uint32_t owner) const { impl_->ValidateState();impl_->place->Refund(type,owner); }
+// 비용 부족 뒤 계속하는 서버 분기는 같은 원본 취소 통지를 요청한다.
+void RawCampaignConstructionBindings::Reject(std::uint32_t type,std::uint32_t owner,float x,float y,std::uint32_t argument,std::uint32_t direction) const { impl_->ValidateState();impl_->place->Reject(type,owner,x,y,argument,direction); }
 // 분배기/전송 계층의 실제 수신 지점에 현재 고정 주소 몸체를 연결한다.
 void RawCampaignConstructionBindings::Register(o::RawPacketDispatch& dispatch,std::function<void()> prepare) { o::RegisterConstructionCommand(dispatch,*impl_->command,std::move(prepare)); }
 // 로컬 간헐천 전용 입구는 기존 인자 제한을 보존한다.

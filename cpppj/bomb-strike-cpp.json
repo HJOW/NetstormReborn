@@ -25,7 +25,7 @@
     "tests": "e455f5a402b586b135a85c21f1229bfe088e090b698d78ffdcab10dfb24846fb"
   },
   "sources": {
-    "cpppj/src/CMakeLists.txt": "c7528c1471cb14af92ed763612a66dc669eb143783ab3dc630650763b74ff968",
+    "cpppj/src/CMakeLists.txt": "6607046c6ce2b71f7cae40487563418cf582f73458504dc8c22fd109e3aefc10",
     "cpppj/tests/CMakeLists.txt": "8ca2db5cb109de55c2eadec3063e474691de144316efaa1a2e9046faf0febd43",
     "cpppj/src/o/RawBombStrike.cpp": "39acebc8ce11cb07070a8a66cc4dfebc8648395ac779753b15e1a9a099d85be3",
     "cpppj/src/o/RawBombStrike.h": "94a546fca7428da85ef43a5aeb16857f9361e90942284a7900a910b42b357d3a",
@@ -62,5 +62,20 @@
   "goalComplete": false,
   "campaignSpellScope": "Devastation",
   "deferredToMultiplayer": "2026-10-19 사용자 우선순위 변경: 이번235 단위는 마무리하고, **Devastation 외 주문의 남은 복원/연결은3차 멀티플레이 구현 단계로 이월**한다. 사용자는 캠페인에 등장하는 주문은Devastation뿐이라고 설명했다. 다른 주문의 파생 자격/효과/생성/예약/지연 처리·월드/표시/Session 연결을 현재 지정 미션 진행의 선행 조건으로 두지 않는다. 현재는 Devastation의 실제 시전/내용물 소비/Session/UI 연결과 지정 미션 진행을 계속한다.",
-  "resumeAt": "사용자 지시: Devastation 외 주문의 남은 복원/연결은3차 멀티플레이 구현 단계로 이월한다. 현재는 Devastation에 필요한425f50 시전 종료와 실제 삭제/내용물 소비, 같은 Session의0x50/0x5c/0x5f·가변 송신 길이·UI Cast/Drop/427070을 연결한다. Early5 자연F 이후 실제 Devastation 시전/포획/제단/희생과 다른 지정 미션/Guide를 검증한다."
+  "resumeAt": "사용자 지시: Devastation 외 주문의 남은 복원/연결은3차 멀티플레이 구현 단계로 이월한다. 현재는 Devastation에 필요한425f50 시전 종료와 실제 삭제/내용물 소비, 같은 Session의0x50/0x5c/0x5f·가변 송신 길이·UI Cast/Drop/427070을 연결한다. Early5 자연F 이후 실제 Devastation 시전/포획/제단/희생과 다른 지정 미션/Guide를 검증한다.",
+  "integration_updates": [
+    {
+      "date": "2026-10-20",
+      "unit": 237,
+      "reason": "단위237에서 실제 Cast/Drop 요청·전송·서버 수신과 메뉴/입력을 Session에 연결하고 해당 번역 단위에 MSVC /bigobj를 적용했다. HEAD 원문의 LF/CRLF 형식과 일치하는 현재 소스 핀만 갱신하며 기존 원문·과거 실행·바이너리 기록은 유지한다.",
+      "pins": [
+        {
+          "group": "/sources",
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "c7528c1471cb14af92ed763612a66dc669eb143783ab3dc630650763b74ff968",
+          "current": "6607046c6ce2b71f7cae40487563418cf582f73458504dc8c22fd109e3aefc10"
+        }
+      ]
+    }
+  ]
 }

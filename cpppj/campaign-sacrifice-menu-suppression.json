@@ -945,9 +945,9 @@
     "originals/d/GIFCLOUD.COL": "785a2cda6ac1d3e295d375815b6d9650720683099db7c249382d598b5da00532"
   },
   "currentSources": {
-    "cpppj/src/client/CampaignUserInputServices.cpp": "7b22008ca86929c1c7523bde5d0d6d265197dc032d2f2502d2e356f6e923f86c",
-    "cpppj/src/client/RawCampaignCarrierInput.inc": "5f7586171e8d3fc0b7a12e7bad502a33eeda171a41d859469c03367d930aad1b",
-    "cpppj/tests/CampaignSessionTests.cpp": "0072c9605dd595fd018d29fd4fdfb4334a53a1b52d482dc132bd5a85210a2b7e"
+    "cpppj/src/client/CampaignUserInputServices.cpp": "f2bef8c428670f4ab871fd4e2d35730b7417ed53ef3388cd3b245087b96dc017",
+    "cpppj/src/client/RawCampaignCarrierInput.inc": "17c639af1e42ed83c94462d61bd2dcfe2f8b85db647611a100a979bde3b48ee6",
+    "cpppj/tests/CampaignSessionTests.cpp": "bc71438efcccbd4585d22c7b2c9311a6cf50ab171a03d8d7baf2294e65e18a45"
   },
   "binaries": {
     "cpppj/build/bin/Release/NetstormCpp.exe": "68d431b41b6e2f366cc0f33f2b4f1681a67bd70c6f1751ecc837a8ac36d726c5",
@@ -1360,6 +1360,31 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "995d2f4848c9f2b261d0930cbc7dde5f2209b5931cdab4102da10dca4d23f117",
           "current": "0072c9605dd595fd018d29fd4fdfb4334a53a1b52d482dc132bd5a85210a2b7e"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-20",
+      "unit": 237,
+      "reason": "단위237에서 실제 Cast/Drop 요청·전송·서버 수신과 메뉴/입력을 Session에 연결하고 해당 번역 단위에 MSVC /bigobj를 적용했다. HEAD 원문의 LF/CRLF 형식과 일치하는 현재 소스 핀만 갱신하며 기존 원문·과거 실행·바이너리 기록은 유지한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/CampaignUserInputServices.cpp",
+          "previous": "7b22008ca86929c1c7523bde5d0d6d265197dc032d2f2502d2e356f6e923f86c",
+          "current": "f2bef8c428670f4ab871fd4e2d35730b7417ed53ef3388cd3b245087b96dc017"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignCarrierInput.inc",
+          "previous": "5f7586171e8d3fc0b7a12e7bad502a33eeda171a41d859469c03367d930aad1b",
+          "current": "17c639af1e42ed83c94462d61bd2dcfe2f8b85db647611a100a979bde3b48ee6"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "0072c9605dd595fd018d29fd4fdfb4334a53a1b52d482dc132bd5a85210a2b7e",
+          "current": "bc71438efcccbd4585d22c7b2c9311a6cf50ab171a03d8d7baf2294e65e18a45"
         }
       ]
     }

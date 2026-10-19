@@ -138,6 +138,7 @@ struct RawCampaignSessionServices {
     std::function<void(std::span<const std::uint8_t>)> pathPacket; // 실제 Path 직렬화 버퍼의 송신 소비자다.
     std::function<void(std::span<const std::uint8_t>)> formPacket; // 실제 감시/내용물/삭제 직렬화 후의 송신 경계다. 없으면 동일 BattleBroadcast를 사용한다.
     std::function<void(std::int32_t,std::span<const std::uint8_t>)> carrierRequest; //4e2dc0의실제로컬전송/연결장치다.직접서버처리로대체하지않는다.
+    std::function<void(std::int32_t,std::int32_t,std::int32_t,std::uint32_t)> carrierDropPopup; // 실제43dd20 비용 Gump의금액/화면x/y/참조SID다.
     o::BattlePacketPeers battlePeers; // 실제0..8 연결 객체 표다. 단독 캠페인은 NULL 연결이며 별도 송신 관찰 함수가 필요하지 않다.
 };
 // 초기 객체 생성부터 Kernel 해제까지 동일 주소에서 실제 모듈과 상태를 소유한다.
@@ -242,6 +243,8 @@ public:
     void RegisterCarrierCommands(o::RawPacketDispatch& dispatch);
     // 실제427340은 선택 해제/연결·중복 검사 뒤40h만 송신한다. 경로 생성은 등록 수신에서 수행한다.
     void RequestCarrierMove(o::Sid parent,o::RawPathPoint destination,std::uint32_t sacrifice=0);
+    void RequestCarrierDrop(o::Sid parent,o::Sid content={}); // 실제427070의비용/선택/9바이트송신만 실행하며 서버 수신을 직접 부르지 않는다.
+    std::uint32_t CommandCarrierDrop(o::Sid parent,std::uint32_t command,o::Sid listParent); // 실제42aa50 Cast/Drop 메뉴와 최초 내용물 선택 순서를 실행한다.
     // 같은 실제40h 요청/수신 처리기를 읽기 전용으로 빌린다.
     const o::RawCarrierMove& CarrierMove() const;
     // 원본 MayPlace를 통과한 일반 서버 요청의 기준점/송신/직접 통지/실제 배치를 실행한다.

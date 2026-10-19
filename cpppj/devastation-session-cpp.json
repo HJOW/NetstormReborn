@@ -21,13 +21,13 @@
     "tests": "793012edc519096890c53a6b02943da31c48aa189f9abf9bbe8b45d0ef20b2b0"
   },
   "sources": {
-    "cpppj/src/client/RawCampaignSession.cpp": "8fd4dff08f9c36f7597ea2985eb4c0ba9e1f4686a41b0446eda990eb353c6dc1",
+    "cpppj/src/client/RawCampaignSession.cpp": "4f1154f95c97a7bc223ef3d36b3af9d8896de3d9eb4ccdec95887cd83131832c",
     "cpppj/src/client/RawCampaignDevastation.inc": "7a21a39d0ab2c351a0317ff51cef28e57574670539e8e2da6758a738e5721400",
     "cpppj/src/o/RawBombEffect.cpp": "d37f764b18b534480c566b40899eaacf600b4c1f1bc02e66e6e278587427e543",
     "cpppj/src/o/RawBombEffect.h": "78de4e8419940cdc10b434735bfd3d8a4e0a4832e9ed525bb4e81554c1bbc450",
     "cpppj/src/client/RawBombBlastBindings.cpp": "34e95e06b4459afc5ece108a9474893f5a4db4bf598086977ad80722acc76b72",
     "cpppj/src/client/RawBombBlastBindings.h": "dca720eca862979c28da54bcb3daeae25593ca249b28d7de05d02bf5f3fa0443",
-    "cpppj/tests/CampaignSessionTests.cpp": "0072c9605dd595fd018d29fd4fdfb4334a53a1b52d482dc132bd5a85210a2b7e",
+    "cpppj/tests/CampaignSessionTests.cpp": "bc71438efcccbd4585d22c7b2c9311a6cf50ab171a03d8d7baf2294e65e18a45",
     "tools/decomp_bomb_packet.py": "53ce554c8c480e7d570210bfda5159575dbe2c31dfbcc6756918175352c3889b",
     "tools/decomp_devastation_draw.py": "01070e4fde7bc3d6f6c736adf695146ed1875fa2575d3c038bb6c39dabb2015d",
     "tools/cpp_devastation_session_audit.py": "aa3f45b0ae837beb03d23550130321b7335990b7a8e79f0d5e00ab87278e34d6",
@@ -76,5 +76,26 @@
   "goalComplete": false,
   "campaignSpellScope": "Devastation",
   "otherSpellsDeferredToMultiplayer": true,
-  "resumeAt": "실제0x50 Cast/Drop 요청·서버 수신·로컬 비용 차감·원본 내용물 수명, 메뉴0x0300011a/0x03000076·입력427070을 연결한다. 부모+48=4afe50 Unpop/+4c=41c0d0 원좌표+90 Repop을 보존한다. 실제 적/지형에 대한 Devastation, Early5 자연F 이후 시전/포획/제단/희생과 다른 지정 미션/Guide를 검증한다. Devastation 외 주문의 남은 사항은3차 멀티플레이로 이월한다."
+  "resumeAt": "실제0x50 Cast/Drop 요청·서버 수신·로컬 비용 차감·원본 내용물 수명, 메뉴0x0300011a/0x03000076·입력427070을 연결한다. 부모+48=4afe50 Unpop/+4c=41c0d0 원좌표+90 Repop을 보존한다. 실제 적/지형에 대한 Devastation, Early5 자연F 이후 시전/포획/제단/희생과 다른 지정 미션/Guide를 검증한다. Devastation 외 주문의 남은 사항은3차 멀티플레이로 이월한다.",
+  "integration_updates": [
+    {
+      "date": "2026-10-20",
+      "unit": 237,
+      "reason": "단위237에서 실제 Cast/Drop 요청·전송·서버 수신과 메뉴/입력을 Session에 연결하고 해당 번역 단위에 MSVC /bigobj를 적용했다. HEAD 원문의 LF/CRLF 형식과 일치하는 현재 소스 핀만 갱신하며 기존 원문·과거 실행·바이너리 기록은 유지한다.",
+      "pins": [
+        {
+          "group": "/sources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "8fd4dff08f9c36f7597ea2985eb4c0ba9e1f4686a41b0446eda990eb353c6dc1",
+          "current": "4f1154f95c97a7bc223ef3d36b3af9d8896de3d9eb4ccdec95887cd83131832c"
+        },
+        {
+          "group": "/sources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "0072c9605dd595fd018d29fd4fdfb4334a53a1b52d482dc132bd5a85210a2b7e",
+          "current": "bc71438efcccbd4585d22c7b2c9311a6cf50ab171a03d8d7baf2294e65e18a45"
+        }
+      ]
+    }
+  ]
 }

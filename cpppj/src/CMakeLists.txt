@@ -158,3 +158,8 @@ target_sources(netstorm PRIVATE o/RawPriestRitualFrame.cpp o/RawPriestRitualFram
 
 # 실제 회수 관문과54h 일반 삭제 요청/서버 수신을 같은 세계에 연결한다.
 target_sources(netstorm PRIVATE o/RawSalvageCommand.cpp o/RawSalvageCommand.h)
+
+# 같은 Session에 원본 처리기를 조립하는 MSVC 번역 단위의 COFF 섹션 한도를 확장한다.
+if(MSVC)
+    set_property(SOURCE client/RawCampaignSession.cpp APPEND PROPERTY COMPILE_OPTIONS /bigobj)
+endif()

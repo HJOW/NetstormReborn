@@ -24,7 +24,7 @@
     "tests": "946d5194557d711ecc476c0654b3d4f5774215df18bd083f5e036723c39a698c"
   },
   "sources": {
-    "cpppj/src/CMakeLists.txt": "c7528c1471cb14af92ed763612a66dc669eb143783ab3dc630650763b74ff968",
+    "cpppj/src/CMakeLists.txt": "6607046c6ce2b71f7cae40487563418cf582f73458504dc8c22fd109e3aefc10",
     "cpppj/src/client/CMakeLists.txt": "0ea1587f2d9dcd22fb2afbdeeefcb151242775b7083018dd39eb181a84fc0b06",
     "cpppj/tests/CMakeLists.txt": "8ca2db5cb109de55c2eadec3063e474691de144316efaa1a2e9046faf0febd43",
     "cpppj/src/o/RawBombBlast.cpp": "fa1f6941f7ace6e16557820eb78c73ea10134c0fd26b297950d3df3b5c07bbec",
@@ -103,6 +103,19 @@
           "path": "cpppj/src/client/RawBombBlastBindings.h",
           "previous": "774b85b84bb4e74d7c69e980436183a1ccdcd1c4e928b845d057a4361eefc4fd",
           "current": "dca720eca862979c28da54bcb3daeae25593ca249b28d7de05d02bf5f3fa0443"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-20",
+      "unit": 237,
+      "reason": "단위237에서 실제 Cast/Drop 요청·전송·서버 수신과 메뉴/입력을 Session에 연결하고 해당 번역 단위에 MSVC /bigobj를 적용했다. HEAD 원문의 LF/CRLF 형식과 일치하는 현재 소스 핀만 갱신하며 기존 원문·과거 실행·바이너리 기록은 유지한다.",
+      "pins": [
+        {
+          "group": "/sources",
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "c7528c1471cb14af92ed763612a66dc669eb143783ab3dc630650763b74ff968",
+          "current": "6607046c6ce2b71f7cae40487563418cf582f73458504dc8c22fd109e3aefc10"
         }
       ]
     }

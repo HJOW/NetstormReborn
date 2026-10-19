@@ -21,11 +21,11 @@
     "tests": "744bcfb4b4c60937e4a7368a7fe85f1e363e489df25c7c313ddd244e474087a4"
   },
   "sources": {
-    "cpppj/src/CMakeLists.txt": "c7528c1471cb14af92ed763612a66dc669eb143783ab3dc630650763b74ff968",
+    "cpppj/src/CMakeLists.txt": "6607046c6ce2b71f7cae40487563418cf582f73458504dc8c22fd109e3aefc10",
     "cpppj/src/o/RawBombActivation.cpp": "91b8f55898bbb61322d2ccaa79ac43185e01a5b35ce245c2209cec8448030bcd",
     "cpppj/src/o/RawBombActivation.h": "7391c4dc9cbf62b215e45ffa7864485e69763ccd0810d020c3313198235fdd50",
     "cpppj/src/o/RawCarrierDrop.cpp": "87cea7b7a5b4bbba7dce9342bf58c7336efecc64e6edfd633345ee7823d39341",
-    "cpppj/src/o/RawCarrierDrop.h": "6aa6190d9fe0d70d965376604b4f08142f9f3acd7a860947b0762de662175bc4",
+    "cpppj/src/o/RawCarrierDrop.h": "0c9109ffd076eee38db08725823ab7561322f3dde8cc9c43e7dcd684c2b8f3ea",
     "cpppj/src/o/RawContainedFinder.cpp": "52fc6dd13a8884c2ec3d8d72cbcd9c5cb25a2c88f29958f2cf7d748e18eb2046",
     "cpppj/src/o/RawContainedFinder.h": "96fdb6149566a7cea1b39dab8be95eb953cfd05feba96a41077ed374169a77b3",
     "cpppj/src/o/SidPool.h": "a830f7fca8c42e5a2713a7d5d886314c81dc3bffb8271de85c1b0d1fc46de651",
@@ -167,6 +167,25 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "08457e3ef27a4288b676a00c32a171a7775d93f7a491faa643452af8236ae8e0",
           "current": "8ca2db5cb109de55c2eadec3063e474691de144316efaa1a2e9046faf0febd43"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-20",
+      "unit": 237,
+      "reason": "단위237에서 실제 Cast/Drop 요청·전송·서버 수신과 메뉴/입력을 Session에 연결하고 해당 번역 단위에 MSVC /bigobj를 적용했다. HEAD 원문의 LF/CRLF 형식과 일치하는 현재 소스 핀만 갱신하며 기존 원문·과거 실행·바이너리 기록은 유지한다.",
+      "pins": [
+        {
+          "group": "/sources",
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "c7528c1471cb14af92ed763612a66dc669eb143783ab3dc630650763b74ff968",
+          "current": "6607046c6ce2b71f7cae40487563418cf582f73458504dc8c22fd109e3aefc10"
+        },
+        {
+          "group": "/sources",
+          "path": "cpppj/src/o/RawCarrierDrop.h",
+          "previous": "6aa6190d9fe0d70d965376604b4f08142f9f3acd7a860947b0762de662175bc4",
+          "current": "0c9109ffd076eee38db08725823ab7561322f3dde8cc9c43e7dcd684c2b8f3ea"
         }
       ]
     }

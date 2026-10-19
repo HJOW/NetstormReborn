@@ -36,7 +36,7 @@ struct CarrierDropHooks {
     std::function<void(std::uint32_t,std::uint32_t,std::array<float,2>,std::uint32_t,std::uint32_t)> refund; //442b50의 실패 비용 통지이며 뒤쪽 생성 처리를 중단하지 않는다.
     std::function<std::uint32_t(std::uint32_t)> movement; //488fe0의 현재 부모 타입 경로 종류다.
     std::function<void(Sid,std::uint32_t,std::uint32_t,std::uint32_t)> removeMovement; //4b1a90(parent,종류,0,1)이다.
-    std::function<void(Sid,std::uint32_t)> detach,unpop,destroy; //각각 부모+48/+4c와 내용물+10의 flags0 호출이다.
+    std::function<void(Sid,std::uint32_t)> detach,unpop,destroy; // 기존 API명detach는 부모+48 Unpop, unpop은 부모+4c 원좌표Repop, destroy는 내용물+10의flags0이다.
     std::function<Sid(std::uint32_t,std::uint32_t)> create; //4af530(kind,0)의 실제 주문 생성이다.
     std::function<void(Sid,std::uint32_t)> owner,argument; //현재 가상+74와4ac220의 QA WORD 쓰기다.
     std::function<void(Sid,std::array<float,2>,std::uint32_t)> pop; //새 주문의 가상+90(x,y,0)이다.

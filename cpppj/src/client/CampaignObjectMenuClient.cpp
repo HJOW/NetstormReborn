@@ -172,9 +172,11 @@ bool CampaignObjectMenuClient::Active() const {
 }
 // 메뉴가 이미 닫히도록 예약했어도 같은 세계의 현재 연구/건설/회수 요청을 실행한다.
 bool CampaignObjectMenuClient::Command(const InputEvent& event) {
-    const auto command=event.code&0x03ffffffU;if (command!=0x02000060U && command!=0x03000080U && command!=0x0200005dU) return false;
+    const auto command=event.code&0x03ffffffU;if (command!=0x02000060U && command!=0x03000080U && command!=0x0200005dU && command!=0x0300011aU && command!=0x03000076U) return false;
     auto& s=*impl_;if (!s.world || !s.chain) throw std::logic_error("실제 사제 건설 메뉴의 현재 월드 수명 없음");
     const auto parameter=std::bit_cast<std::uint32_t>(event.y);
+    // 원본42aa50은 이벤트의y를 내용물검색부모로 읽는다. 현재 메뉴의 부모도 같은 SID다.
+    if (command==0x0300011aU || command==0x03000076U) { const o::Sid parent{static_cast<std::uint16_t>(parameter)};static_cast<void>(s.world->Session().CommandCarrierDrop(parent,event.code,parent));return true; }
     if (command==0x0200005dU) { s.world->Session().RequestSalvage(parameter);return true; }
     if (command==0x03000080U) { static_cast<void>(s.world->Session().SelectFactoryKnowledge(o::Sid{static_cast<std::uint16_t>(parameter)},event.code,parameter));return true; }
     static_cast<void>(s.chain->SelectBuild(parameter>>16,o::Sid{static_cast<std::uint16_t>(parameter)}));return true;

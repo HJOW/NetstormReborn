@@ -58,6 +58,8 @@ public:
     bool Request(const o::ConstructionConfirmRequest& request) const;
     // 같은 실제0x3e 수신의 비용 선검사와 실패 환불을 실행한다.
     void Receive(std::uint32_t sender,std::span<const std::uint8_t> packet) const;
+    void Refund(std::uint32_t type,std::uint32_t owner) const; // 다른 실제 서버 요청도 같은442a40 비용 환불/통지를 사용한다.
+    void Reject(std::uint32_t type,std::uint32_t owner,float x,float y,std::uint32_t argument,std::uint32_t direction) const; // 같은442b50의 현재 비용/취소 패킷 수명을 공유한다.
     // 실제 전송 분배기에 같은 수신 몸체를 등록하며 prepare는 현재 Session 전역을 갱신한다.
     void Register(o::RawPacketDispatch& dispatch,std::function<void()> prepare);
     // LocalGeyser 전용 입구는 기존 noIsland/player0/나머지0 계약을 유지한다.

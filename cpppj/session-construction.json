@@ -116,8 +116,8 @@
     "initialFailureLogPreserved": true
   },
   "sha256": {
-    "cpppj/src/client/RawCampaignConstructionBindings.h": "1fe62283698ff9a69f03b74a043bb359d0aeb4df335798bc6e6e91b5c9c16431",
-    "cpppj/src/client/RawCampaignConstructionBindings.cpp": "26d4753bbe2c086485b320bcfae991ae9957c4aed69880677f2b94f439d13684",
+    "cpppj/src/client/RawCampaignConstructionBindings.h": "3ab2b8f17192b32b3056a34ed77a50e025d3dd894902429d26f06917c29bb265",
+    "cpppj/src/client/RawCampaignConstructionBindings.cpp": "4aac9caefa5f4cfed1c656f1971837c6189cf2425e1b5fc990bdc02adfbb28e8",
     "cpppj/src/client/RawCampaignSession.h": "22f17f2a2dfbd71c5995e498b870e9d0ab27cfb3d2b532f6ce2fcdc032479244",
     "cpppj/src/client/RawCampaignSession.cpp": "36b23f4e6c6b557ceaf908de235f6451938f10bdde86cac3fa715eafe8d71ea1",
     "cpppj/src/client/CampaignClientServices.cpp": "86407af96a1a5ccaaa16ba158f205bbe66fa97c88f091629b1516eb6f2395ed3",
@@ -328,6 +328,25 @@
           "path": "cpppj/src/client/RawCampaignConstructionBindings.cpp",
           "previous": "ee1d38d554fb25e502d0dc54cb19a55f501a45860e5612ca9666ca0f7ec2d2cf",
           "current": "26d4753bbe2c086485b320bcfae991ae9957c4aed69880677f2b94f439d13684"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-20",
+      "unit": 237,
+      "reason": "단위237에서 실제 Cast/Drop 요청·전송·서버 수신과 메뉴/입력을 Session에 연결하고 해당 번역 단위에 MSVC /bigobj를 적용했다. HEAD 원문의 LF/CRLF 형식과 일치하는 현재 소스 핀만 갱신하며 기존 원문·과거 실행·바이너리 기록은 유지한다.",
+      "pins": [
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/client/RawCampaignConstructionBindings.h",
+          "previous": "1fe62283698ff9a69f03b74a043bb359d0aeb4df335798bc6e6e91b5c9c16431",
+          "current": "3ab2b8f17192b32b3056a34ed77a50e025d3dd894902429d26f06917c29bb265"
+        },
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/client/RawCampaignConstructionBindings.cpp",
+          "previous": "26d4753bbe2c086485b320bcfae991ae9957c4aed69880677f2b94f439d13684",
+          "current": "4aac9caefa5f4cfed1c656f1971837c6189cf2425e1b5fc990bdc02adfbb28e8"
         }
       ]
     }

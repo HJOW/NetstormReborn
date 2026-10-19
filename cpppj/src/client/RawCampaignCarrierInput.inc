@@ -29,6 +29,8 @@ std::unique_ptr<RawCarrierInput> RawCampaignSession::MakeCarrierInput(CarrierInp
     hooks.showSacrifice=[s,show=std::move(hooks.showSacrifice)](std::uint32_t dais) { if (s->globals.missionPost) return;if (!show) throw std::logic_error("일반전투 희생 메뉴 소비자 미연결");show(dais); };
     hooks.select=[s](std::uint32_t sid,std::uint32_t force,std::uint32_t activate) { auto link=s->activeSelection.lock();if (!link || !link->selection) throw std::logic_error("운반체 입력의 현재 선택 수명 미연결");static_cast<void>(link->selection->Select(sid,force,activate)); };
     hooks.request=[s](Sid sid,RawPathPoint p,std::uint32_t sacrifice) { s->carrierMove->Request(sid,p,sacrifice); };hooks.pickup=[s](Sid sid) { s->carrierPickup->Request(sid); };
+    // 원본427070은 같은 실제 내용물/헤더/비용을 사용하고 수신을 직접 실행하지 않는다.
+    hooks.dropCargo=[s](Sid parent,std::uint32_t content) { if (content>65535U) throw std::out_of_range("Cast/Drop 내용물WORD범위");s->PrepareCarrierDrop();s->carrierDrop->Request(parent,Sid{static_cast<std::uint16_t>(content)}); };
     hooks.random=[s](std::int32_t low,std::int32_t high) { if (high<=low) throw std::invalid_argument("이동 음향 정수 난수 구간");return low+static_cast<std::int32_t>(s->random.Next(static_cast<std::uint32_t>(high-low))); };
     hooks.namedSound=[s](bool priest,std::uint32_t index) {
         const std::array<std::string_view,2> priests{"priestMove1.wav","priestMove3.wav"};const std::array<std::string_view,4> golems{"golemMove1.wav","golemMove2.wav","golemMove4.wav","golemMove5.wav"}; //실제531690/53169c 표이며 파일 번호를 연속이라고 가정하지 않는다.

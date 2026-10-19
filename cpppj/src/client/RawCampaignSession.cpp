@@ -38,6 +38,7 @@
 #include "o/RawBombActivation.h"
 #include "o/RawBombRegular.h"
 #include "o/RawBombEffect.h"
+#include "o/RawCarrierDrop.h"
 #include "client/RawBombBlastBindings.h"
 #include "o/RawPacketDispatch.h"
 #include "client/AiTypeRequiredEnergy.h"
@@ -398,6 +399,8 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawGemReward> gemReward; //같은게임난수/TYPE제외목록/시각/월드의보상선택·변환이다.
     CarrierMoveState carrierMoveState; //같은40h 요청의 현재 BYTE/BYTE/WORD다.
     std::unique_ptr<RawCarrierMove> carrierMove; //실제 요청/서버관문과 같은 경로/후보/현재 전송을 공유한다.
+    CarrierDropState carrierDropState;CarrierDropPointState carrierDropPointState; // 실제0x50/0x5c 헤더와현재위치판정 전역이다.
+    std::unique_ptr<RawCarrierDropPoint> carrierDropPoint;std::unique_ptr<RawCarrierDrop> carrierDrop; // 같은Session의실제Cast/Drop 요청/수신과위치몸체다.
     std::unique_ptr<SalvageCommandState> salvageState; // 실제 미션/로컬/제단 전역과 현재54h 헤더를 빌린다.
     std::unique_ptr<RawSalvageCommand> salvageCommand; // 회수 관문·실제 환불·가상 삭제를 같은 전송에 연결한다.
     CarrierPickupState carrierPickupState; //같은현재4f 헤더/입력명령/특정내용물타입이다.
@@ -1961,6 +1964,7 @@ struct RawCampaignSession::Impl {
     }
     // 설치를 마친 동일 Graph/Host에 실제 사제 경로 모듈을 한 번 연결한다.
     #include "client/RawCampaignDevastation.inc"
+    #include "client/RawCampaignCarrierDrop.inc"
     void ConnectMotion() {
         if (motion) throw std::logic_error("실제 세션 경로 중복 연결");
         ConstructionArrivalHooks buildHooks;
@@ -2195,7 +2199,7 @@ RawCampaignSession::RawCampaignSession(const GameAssets& assets,const BaseFileSy
 // Impl이 Kernel을 비운 뒤 실제 모듈을 해제한다.
 RawCampaignSession::~RawCampaignSession()=default;
 // 동일 원본 부모를 실행한다.
-void RawCampaignSession::Load() { impl_->runtime->Load();impl_->ConnectBuilding();impl_->ConnectMotion();impl_->ConnectDevastation();impl_->buildingMover=impl_->MakeBuilder(impl_->buildingMoverState,{});impl_->ConnectGameplayPlacement();impl_->ConnectCursor();impl_->loaded=true; }
+void RawCampaignSession::Load() { impl_->runtime->Load();impl_->ConnectBuilding();impl_->ConnectMotion();impl_->ConnectDevastation();impl_->ConnectCarrierDrop();impl_->buildingMover=impl_->MakeBuilder(impl_->buildingMoverState,{});impl_->ConnectGameplayPlacement();impl_->ConnectCursor();impl_->loaded=true; }
 // UI의 현재 크기/변경 전역을 빌리며 게임 소유자·모드는 실제 세션에서 다시 읽는다.
 void RawCampaignSession::ResetCamera(CameraHomeState& state,std::function<void(std::int32_t,std::int32_t)> apply) const {
     state.localPlayer=impl_->playerState.battleOwner;state.fort=impl_->core.ownerMode.fort;
@@ -2318,6 +2322,8 @@ void RawCampaignSession::RegisterCarrierCommands(RawPacketDispatch& dispatch) {
     dispatch.Register(0x40,[this](std::uint32_t owner,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->carrierMove->Receive(owner,packet); });
     dispatch.Observe(0x4f,{});dispatch.Version(0x4f,1,0);dispatch.RequireLength(0x4f,9);
     dispatch.Register(0x4f,[this](std::uint32_t owner,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->carrierPickup->Receive(owner,0,packet); });
+    dispatch.Observe(0x50,{});dispatch.Version(0x50,1,0);dispatch.RequireLength(0x50,9);
+    dispatch.Register(0x50,[this](std::uint32_t owner,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->PrepareCarrierDrop();impl_->carrierDrop->Receive(owner,packet); });
     dispatch.Observe(0x60,{});dispatch.Version(0x60,1,0);dispatch.RequireLength(0x60,10);
     dispatch.Register(0x60,[this](std::uint32_t owner,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->carrierSteal->Receive(owner,0,packet); });
     dispatch.Observe(0x5c,{});dispatch.Version(0x5c,1,0);dispatch.RequireLength(0x5c,6);
@@ -2327,6 +2333,10 @@ void RawCampaignSession::RegisterCarrierCommands(RawPacketDispatch& dispatch) {
 }
 // 요청은 실제 선택/중복 검사와 전송만 수행하고 직접 Start를 부르지 않는다.
 void RawCampaignSession::RequestCarrierMove(Sid parent,RawPathPoint destination,std::uint32_t sacrifice) { CarrierMove().Request(parent,destination,sacrifice); }
+// 설치 뒤 같은 실제 전송과현재경제/선택을사용한다.
+void RawCampaignSession::RequestCarrierDrop(Sid parent,Sid content) { if (!impl_->loaded) throw std::logic_error("설치 전 Cast/Drop 요청");impl_->PrepareCarrierDrop();impl_->carrierDrop->Request(parent,content); }
+// 메뉴의검색부모와실제요청부모를원본처럼별개인자로유지한다.
+std::uint32_t RawCampaignSession::CommandCarrierDrop(Sid parent,std::uint32_t command,Sid listParent) { if (!impl_->loaded) throw std::logic_error("설치 전 Cast/Drop 메뉴");impl_->PrepareCarrierDrop();return impl_->carrierDrop->Command(parent,command,listParent); }
 // 사용자 회수 명령은 같은 서버 요청을 보내며 결과/환불/삭제를 직접 만들지 않는다.
 void RawCampaignSession::RequestSalvage(std::uint32_t sid) { if (!impl_->loaded || !impl_->salvageCommand) throw std::logic_error("미설치Session의 실제 회수 요청");impl_->salvageCommand->Request(sid); }
 // 설치 뒤 같은 실제 요청/수신 모듈만 빌린다.

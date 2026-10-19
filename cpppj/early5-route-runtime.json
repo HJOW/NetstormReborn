@@ -2035,10 +2035,10 @@
     }
   },
   "sources": {
-    "cpppj/src/client/CampaignObjectMenuClient.cpp": "0421e30b350715a402e90e2ccfcc47584b00392587456a64b49746460d687be2",
-    "cpppj/src/client/CampaignUserInputServices.cpp": "5af003ba5e0e9f98d3f7f134213681ad1f886570d6c964d0965d1bee6adb8d40",
+    "cpppj/src/client/CampaignObjectMenuClient.cpp": "01d8978e8e239dedac370520296e84410f2917dbc3aed3597f629986ccbe11b1",
+    "cpppj/src/client/CampaignUserInputServices.cpp": "f2bef8c428670f4ab871fd4e2d35730b7417ed53ef3388cd3b245087b96dc017",
     "cpppj/src/client/GameWorld.cpp": "af6d3aeb3bd53d83e2619c2bd20ba5df42c17fe718cb81786841606419f10c6c",
-    "cpppj/src/client/RawCampaignCarrierInput.inc": "ff521d60c6520e8834d91f6b6cd719fa8f0d76450a396366b3bb4969508982a3",
+    "cpppj/src/client/RawCampaignCarrierInput.inc": "17c639af1e42ed83c94462d61bd2dcfe2f8b85db647611a100a979bde3b48ee6",
     "cpppj/src/client/RawCarrierInput.cpp": "ebebcf63a03fb24dbdca9bbd7086ebec634400c87a9d1a3711ac2b6a41218322",
     "cpppj/src/o/Bridge.cpp": "f23f37afadbf944c5c83539d9e8c16cbda2baf26985770a90e3f174699929c50",
     "cpppj/src/o/RawCanonPlacementSurrounding.cpp": "a3e096950df771b9a40c0b583d8fa94721b9d0f27955a62c90dea03435d20a67",
@@ -2164,6 +2164,31 @@
           "path": "cpppj/geyser-bridge-display-runtime.json",
           "previous": "a5dfd58826f827b667156fb93006cd5451f19fb3a6a84580698bdde23063a5e5",
           "current": "50fe896d2a69abd775eb8cdeb25024c141ec786aff3374cab5c00cb7cec8e7b3"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-20",
+      "unit": 237,
+      "reason": "단위237에서 실제 Cast/Drop 요청·전송·서버 수신과 메뉴/입력을 Session에 연결하고 해당 번역 단위에 MSVC /bigobj를 적용했다. HEAD 원문의 LF/CRLF 형식과 일치하는 현재 소스 핀만 갱신하며 기존 원문·과거 실행·바이너리 기록은 유지한다.",
+      "pins": [
+        {
+          "group": "/sources",
+          "path": "cpppj/src/client/CampaignObjectMenuClient.cpp",
+          "previous": "0421e30b350715a402e90e2ccfcc47584b00392587456a64b49746460d687be2",
+          "current": "01d8978e8e239dedac370520296e84410f2917dbc3aed3597f629986ccbe11b1"
+        },
+        {
+          "group": "/sources",
+          "path": "cpppj/src/client/CampaignUserInputServices.cpp",
+          "previous": "5af003ba5e0e9f98d3f7f134213681ad1f886570d6c964d0965d1bee6adb8d40",
+          "current": "f2bef8c428670f4ab871fd4e2d35730b7417ed53ef3388cd3b245087b96dc017"
+        },
+        {
+          "group": "/sources",
+          "path": "cpppj/src/client/RawCampaignCarrierInput.inc",
+          "previous": "ff521d60c6520e8834d91f6b6cd719fa8f0d76450a396366b3bb4969508982a3",
+          "current": "17c639af1e42ed83c94462d61bd2dcfe2f8b85db647611a100a979bde3b48ee6"
         }
       ]
     }
