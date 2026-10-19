@@ -1,0 +1,504 @@
+{
+  "unit": 219,
+  "baseline": "078e4c84",
+  "host": "VM-W11-Codex",
+  "date": "2026-10-19",
+  "lastDecompile": "VM-W11-Codex / 2026-10-19",
+  "scope": "실제 raw signed 깊이와 보행 전용 SHP 필드의 연결 복원 및 원문/세션/픽셀/연속 화면 검증. 전체 미션 동일성과 완주는 미완료다.",
+  "validation": {
+    "fullTests": "extracted/goal-display-motion-20261019-full-tests1.json",
+    "focusedTests": [
+      "extracted/goal-display-motion-20261019-path-tests2.json",
+      "extracted/goal-display-motion-20261019-session-tests2.json",
+      "extracted/goal-display-motion-20261019-display-tests2.json"
+    ],
+    "fullSeconds": 166.978,
+    "oldCurrentPinReports": 97,
+    "oldCurrentPins": 186
+  },
+  "observations": {
+    "extracted/goal-display-motion-20261019-ui1": {
+      "returnCode": 0,
+      "binarySha256": "8bf0c5629e95dc5a56b40ba621f63e0224a9721c9c208ce5709dfc07e6137994",
+      "originalsUnchanged": true,
+      "samples": [
+        {
+          "label": "initial",
+          "sid": 15002,
+          "x": 127.0,
+          "y": 83.0,
+          "frame": 0
+        },
+        {
+          "label": "placed",
+          "sid": 15002,
+          "x": 127.0,
+          "y": 83.0,
+          "frame": 0
+        },
+        {
+          "label": "stageB",
+          "sid": 15002,
+          "x": 127.0,
+          "y": 83.0,
+          "frame": 0
+        },
+        {
+          "label": "walk532",
+          "sid": 15002,
+          "x": 127.106918335,
+          "y": 83.106918335,
+          "frame": 19
+        },
+        {
+          "label": "walk536",
+          "sid": 15002,
+          "x": 127.286376953,
+          "y": 83.2863769531,
+          "frame": 20
+        },
+        {
+          "label": "walk540",
+          "sid": 15002,
+          "x": 127.544754028,
+          "y": 83.5447540283,
+          "frame": 22
+        },
+        {
+          "label": "walk544",
+          "sid": 15002,
+          "x": 127.665672302,
+          "y": 83.6656723022,
+          "frame": 23
+        },
+        {
+          "label": "walk548",
+          "sid": 15002,
+          "x": 127.986412048,
+          "y": 83.9864120483,
+          "frame": 25
+        },
+        {
+          "label": "walk552",
+          "sid": 15002,
+          "x": 128.149337769,
+          "y": 84.1493301392,
+          "frame": 27
+        },
+        {
+          "label": "walk556",
+          "sid": 15002,
+          "x": 128.40007019,
+          "y": 84.4000701904,
+          "frame": 29
+        },
+        {
+          "label": "walk560",
+          "sid": 15002,
+          "x": 128.601165771,
+          "y": 84.6011734009,
+          "frame": 31
+        },
+        {
+          "label": "walk564",
+          "sid": 15002,
+          "x": 128.835372925,
+          "y": 84.8353652954,
+          "frame": 25
+        },
+        {
+          "label": "walk568",
+          "sid": 15002,
+          "x": 128.997009277,
+          "y": 84.9970092773,
+          "frame": 27
+        },
+        {
+          "label": "walk572",
+          "sid": 15002,
+          "x": 129.226089478,
+          "y": 85.0,
+          "frame": 20
+        },
+        {
+          "label": "walk576",
+          "sid": 15002,
+          "x": 129.625686646,
+          "y": 85.0,
+          "frame": 22
+        },
+        {
+          "label": "walk580",
+          "sid": 15002,
+          "x": 129.800292969,
+          "y": 85.0,
+          "frame": 23
+        },
+        {
+          "label": "walk584",
+          "sid": 15002,
+          "x": 130.205291748,
+          "y": 85.0,
+          "frame": 17
+        },
+        {
+          "label": "walk588",
+          "sid": 15002,
+          "x": 130.511291504,
+          "y": 85.0,
+          "frame": 19
+        },
+        {
+          "label": "walk592",
+          "sid": 15002,
+          "x": 130.795684814,
+          "y": 85.0,
+          "frame": 20
+        },
+        {
+          "label": "walk596",
+          "sid": 15002,
+          "x": 131.0,
+          "y": 85.0,
+          "frame": 18
+        },
+        {
+          "label": "walk600",
+          "sid": 15002,
+          "x": 130.605804443,
+          "y": 85.0,
+          "frame": 44
+        },
+        {
+          "label": "walk604",
+          "sid": 15002,
+          "x": 130.274597168,
+          "y": 85.0,
+          "frame": 46
+        },
+        {
+          "label": "walk608",
+          "sid": 15002,
+          "x": 130.0,
+          "y": 85.0,
+          "frame": 41
+        },
+        {
+          "label": "walk612",
+          "sid": 15002,
+          "x": 130.0,
+          "y": 85.0,
+          "frame": 41
+        },
+        {
+          "label": "walk616",
+          "sid": 15002,
+          "x": 130.0,
+          "y": 85.0,
+          "frame": 41
+        },
+        {
+          "label": "walk620",
+          "sid": 15002,
+          "x": 130.0,
+          "y": 85.0,
+          "frame": 41
+        },
+        {
+          "label": "walk624",
+          "sid": 15002,
+          "x": 130.0,
+          "y": 85.0,
+          "frame": 41
+        },
+        {
+          "label": "walk628",
+          "sid": 15002,
+          "x": 130.0,
+          "y": 85.0,
+          "frame": 41
+        },
+        {
+          "label": "walk632",
+          "sid": 15002,
+          "x": 130.0,
+          "y": 85.0,
+          "frame": 41
+        },
+        {
+          "label": "walk636",
+          "sid": 15002,
+          "x": 130.0,
+          "y": 85.0,
+          "frame": 41
+        },
+        {
+          "label": "walk640",
+          "sid": 15002,
+          "x": 130.0,
+          "y": 85.0,
+          "frame": 41
+        },
+        {
+          "label": "walk644",
+          "sid": 15002,
+          "x": 130.0,
+          "y": 85.0,
+          "frame": 41
+        },
+        {
+          "label": "walk648",
+          "sid": 15002,
+          "x": 130.0,
+          "y": 85.0,
+          "frame": 41
+        },
+        {
+          "label": "walk652",
+          "sid": 15002,
+          "x": 130.0,
+          "y": 85.0,
+          "frame": 41
+        },
+        {
+          "label": "walk656",
+          "sid": 15002,
+          "x": 130.0,
+          "y": 85.0,
+          "frame": 41
+        },
+        {
+          "label": "walk660",
+          "sid": 15002,
+          "x": 130.0,
+          "y": 85.0,
+          "frame": 41
+        },
+        {
+          "label": "walk664",
+          "sid": 15002,
+          "x": 130.0,
+          "y": 85.0,
+          "frame": 41
+        },
+        {
+          "label": "walk668",
+          "sid": 15002,
+          "x": 130.0,
+          "y": 85.0,
+          "frame": 41
+        },
+        {
+          "label": "walk672",
+          "sid": 15002,
+          "x": 130.0,
+          "y": 85.0,
+          "frame": 41
+        },
+        {
+          "label": "walk676",
+          "sid": 15002,
+          "x": 130.0,
+          "y": 85.0,
+          "frame": 41
+        },
+        {
+          "label": "walk680",
+          "sid": 15002,
+          "x": 130.0,
+          "y": 85.0,
+          "frame": 41
+        },
+        {
+          "label": "walk684",
+          "sid": 15002,
+          "x": 130.0,
+          "y": 85.0,
+          "frame": 41
+        },
+        {
+          "label": "walk688",
+          "sid": 15002,
+          "x": 130.0,
+          "y": 85.0,
+          "frame": 41
+        },
+        {
+          "label": "walk692",
+          "sid": 15002,
+          "x": 130.0,
+          "y": 85.0,
+          "frame": 41
+        },
+        {
+          "label": "walk696",
+          "sid": 15002,
+          "x": 130.0,
+          "y": 85.0,
+          "frame": 41
+        },
+        {
+          "label": "walk700",
+          "sid": 15002,
+          "x": 130.0,
+          "y": 85.0,
+          "frame": 41
+        },
+        {
+          "label": "final",
+          "sid": 15002,
+          "x": 130.0,
+          "y": 85.0,
+          "frame": 41
+        }
+      ],
+      "uniqueWalkPositions": 20,
+      "uniqueWalkFrames": 13,
+      "largestReportedStep": 0.453594498856015,
+      "lastGate": [
+        "5",
+        "66",
+        "0",
+        "0",
+        "0",
+        "1",
+        "9.773",
+        "0"
+      ]
+    }
+  },
+  "sources": {
+    "cpppj/src/client/GameWorld.cpp": "38fff98272c4c5b872fd03d14832790d44dbe051570c3d9785661aa6efd6c481",
+    "cpppj/src/client/SquidRenderer.cpp": "eb75c4667e83397ff64454c8422ce9271d5cad3016b35fa2b1013275fd4fbd46",
+    "cpppj/src/client/VFXDraw.cpp": "2de7032c46cc0e78eba6d87be0428a772d585f7cc0dc41f7314a7e9733453a5c",
+    "cpppj/src/client/VFXDraw.h": "919d2519af8dacb2ce940c85119b4884d7027769d1e89cac41387fe55833a47d",
+    "cpppj/src/o/RawPathProcess.cpp": "4e514df8c58cda778f66adaf485443ccd8aeedc7a2469a0ba9b37f91ea9b6940",
+    "cpppj/src/o/SquidDisplay.h": "c0fa956fb5da3d19e08b5f3eaaa8253ea233b60cad3db83f21ab750c7f95087d",
+    "cpppj/tests/CampaignSessionTests.cpp": "23674336919f1a4d334db02413d226fc5761d9cd66ec3e273377cf72430b5901",
+    "cpppj/tests/DisplayTests.cpp": "490dcc018943bb94f0938c66a7634ad7e660d623941e7f753fa2019c2d10dc53",
+    "cpppj/tests/RawPathRuntimeTests.cpp": "7fbca62f94959899bf73d2b82726cbf3f4478c1a0fc8df5624a073d17274ce1f",
+    "tools/cpp_campaign_entry_smoke.py": "5fa9adadf6bcd571d6fba39b38e46fed41fe2e927911ff80dc38047c52c56b49",
+    "tools/cpp_display_motion_runtime.py": "2bdd3e67ef55125678d7c6aa74dd09516e7dfa312ef9a352609aeb876909be51",
+    "tools/cpp_fort_smoke.py": "96c7fcd524deb38d93274ded77620639bdc7012ec0f2aaeed0a488d938e9da83",
+    "tools/cpp_menu_smoke.py": "41732efb30e6337267168e3cd836ab6c04d6f34d36b16152b762c39dd2a76afe",
+    "tools/cpp_renderer_smoke.py": "fc648fea126c9cad3a124b38f757460f1139bb0e7f26c1032482ae4d85766ebe",
+    "tools/cpp_smoke_files.py": "66745bfd0ebac8d672eeb8f515144a47377fa4a28dad0603b5f8969a008ec679",
+    "tools/cpp_world_smoke.py": "6e50f87caf0b1b817c9116ef972ec6e75b44d33455edc88fe128a8d0f791fe72",
+    "tools/decomp_pathruntime_oracle.py": "d9764f3b0dc5005d8c0b229e367df88c42dcf74d171d5f29927c2855673d9fcc",
+    "tools/decomp_reward_oracle.py": "ca25b2b1befd0f4626759c17dde1af5eb080e86e4137f7a2b384d97f25a7a143",
+    "tools/decomp_walk_shape_oracle.py": "dbf49df732e4cfcc047ef57765232a4990c59bf09a72aded396fbd26ec4bb379",
+    "tools/fort.py": "ee8ff8f00eea02771ac5c7a519dcd582e14cc07a2d97337c946c191022554e13",
+    "tools/shp.py": "4cb8bee6ed773e29e8658ddb315594ebf5ac005ea5b96c6b760a177029515bfd",
+    "tools/taff.py": "461860cdfc9451b85a8694dd30fd2c56c1cfdf5c6bb7ab8f63a4089971889795",
+    "tools/terrain_mask.py": "00f9789dbde0c124a132a4005924549571b06add5214ea14e3b76e88e73cb37a",
+    "tools/typefile.py": "a564a4b1bbc4f06d05ecb8b1f3fae4c32f6231cf95ea7bfadff2499931804d90"
+  },
+  "evidence": {
+    "cpppj/tests/fixtures/walk-shape-x86.tsv": "2a83fd988cde2f1c5577767cadd0d4fadf0ed3c02aafb8c16e8d261d883ed5d0",
+    "cpppj/walk-shape-native.json": "82dd7cc55e6dc72b0132c4ed9b4b8a435184b9b54f5cd13283804501786340f3",
+    "extracted/goal-display-motion-20261019-audit-pins.py": "1448793dad469abd2d50abdfbe2a8c1e83bc574b6b9815406e306d19eb2c4058",
+    "extracted/goal-display-motion-20261019-build-report.py": "6658db0f9f5bff5504a48ace5e81dcb5ec5dd9ef47ce5b11ef32fb1fa584327f",
+    "extracted/goal-display-motion-20261019-build1.log": "1d5a699898b24ef549b585af8f51cb5920e687fe31c6b979eb02a0e8803d7f13",
+    "extracted/goal-display-motion-20261019-build2.log": "40b8a9fb997abed061d286286217943588cb92fee99c1b0ac7b14a6d24c10436",
+    "extracted/goal-display-motion-20261019-build3.log": "6851f078e60c8b9f67840a4058a4aa057dab45102457f9ce6c872deb77108e70",
+    "extracted/goal-display-motion-20261019-commit-message.txt": "a0db86738b5e68ce2e98e2e4047d751e699efabaa4ecb9da96125664973d666b",
+    "extracted/goal-display-motion-20261019-display-tests1.json": "1817dce10f37938d698154c2c5a452a31d5a2c3a7dba96a61672c26dcb0dbc83",
+    "extracted/goal-display-motion-20261019-display-tests1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-display-motion-20261019-display-tests1.stdout": "5211e0885cea788639acfdd798b573d3f1badc211b4f439048c6b5f0fb24692c",
+    "extracted/goal-display-motion-20261019-display-tests2.json": "2baeb5846d85d99d122461937e6264a26c0160bb18897806c0c1a40fb91a7ea0",
+    "extracted/goal-display-motion-20261019-display-tests2.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-display-motion-20261019-display-tests2.stdout": "5211e0885cea788639acfdd798b573d3f1badc211b4f439048c6b5f0fb24692c",
+    "extracted/goal-display-motion-20261019-full-tests1.json": "ff684424107a92d317aaecdf90f2dd88f7cd17cc707065d792937ac128c808ca",
+    "extracted/goal-display-motion-20261019-full-tests1.stderr": "79e2480bde0296407e865b4a37f3b49c9c027d653a2260e3a4215348db0f0663",
+    "extracted/goal-display-motion-20261019-full-tests1.stdout": "eaf0624d624306582820622e6d612b22df11447fc2ba3cd04b469f7396475057",
+    "extracted/goal-display-motion-20261019-native-tool-v1.py": "043c3e7d08dfd2ca16d347e10b4664c56c7a1d7621c0962b663ae4f29ecf17b1",
+    "extracted/goal-display-motion-20261019-native-v1.json": "2cad7a240db8f3f72c4fc3cf6cf81ffde48f3b64fb3723a0d8baeaf345a51afd",
+    "extracted/goal-display-motion-20261019-native-v1.tsv": "ffed6a8f91471d5852bc6c62d8144c34112d87714d84bea0e9f73939eb3219fa",
+    "extracted/goal-display-motion-20261019-native1.log": "891ec5306f737b673a6b7e9f99dd3be70892ca974a737d37452b2a9bbbf1b596",
+    "extracted/goal-display-motion-20261019-native2.log": "891ec5306f737b673a6b7e9f99dd3be70892ca974a737d37452b2a9bbbf1b596",
+    "extracted/goal-display-motion-20261019-path-tests1.json": "1879873ebc14f5e1af3f4b16e9a08a1414272986b9995942e74a6e5ea9cf18e7",
+    "extracted/goal-display-motion-20261019-path-tests1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-display-motion-20261019-path-tests1.stdout": "65eb91f77e07d1b3f928480fc93be088f9b7afc5bf15d11bcde30e13b6f8a47b",
+    "extracted/goal-display-motion-20261019-path-tests2.json": "8fecf21e39516e3ab4988c12899cf104a918d03ab246874fadcfd36c15f97b16",
+    "extracted/goal-display-motion-20261019-path-tests2.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-display-motion-20261019-path-tests2.stdout": "65eb91f77e07d1b3f928480fc93be088f9b7afc5bf15d11bcde30e13b6f8a47b",
+    "extracted/goal-display-motion-20261019-pin-updates-v1.json": "09b23d0fa9b243c3d0b5dee30c4dbc0227a41eeb1f7b92d17b2d32c4ffb28146",
+    "extracted/goal-display-motion-20261019-pin-updates.json": "f45fb8772bc1363cd3572359b5cd4f80df0c600aea3cbc197daab6ebc48d3552",
+    "extracted/goal-display-motion-20261019-plan1.tsv": "42c464c60376e234cd7c1f9be69a997c7beff78a59e3ac578fca33fa644c9d0d",
+    "extracted/goal-display-motion-20261019-probe.py": "67d1fa8b357307ed1faa45480769c3b9460eb03e1d06399e0b7071ef60949d5d",
+    "extracted/goal-display-motion-20261019-refresh-pins.py": "8fe4802f325e964efaee3cc27d977f1e05d30de0c3e5944858bc2cede9f977c4",
+    "extracted/goal-display-motion-20261019-session-test-v1.cpp": "a7dfcd17e59bac4a6638dc4b82ab3865e476dbb0255f71e1db00af4fd4104b37",
+    "extracted/goal-display-motion-20261019-session-tests1.json": "b178a9ac4bf7b4fbecbc44cfa2c6f48dc3415ffb1cc84a3bebde9f9b424c454c",
+    "extracted/goal-display-motion-20261019-session-tests1.stderr": "07ec82191e4e13b8cb6cf22e91afb0451f01a883f1c34c8795bead3cd9e45e2f",
+    "extracted/goal-display-motion-20261019-session-tests1.stdout": "64da97aa898e6a32d3a3e31a30a44618c8906fb8aca9f864f99152dcb756225f",
+    "extracted/goal-display-motion-20261019-session-tests2.json": "ab430bab12d50544e3297311eb686e11672a3806f9d884d13b6c3be643f21892",
+    "extracted/goal-display-motion-20261019-session-tests2.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-display-motion-20261019-session-tests2.stdout": "40288a3abefe3d3eab1238fcefa38557f3817a5cabe7014b3890e8eee7f34c27",
+    "extracted/goal-display-motion-20261019-stage.py": "274bba9ed61ab2646236e13aceadb0fee3da7e802bf8a35863387df4f60769d1",
+    "extracted/goal-display-motion-20261019-ui1/final.bmp": "d7ad00bb4a084c78ad581527a57d7b90ef04675d143507c2de51d347e8684fb4",
+    "extracted/goal-display-motion-20261019-ui1/originals-before.json": "f98d8731a8a729b528fd9744b52f3b26143eff54e767f0b8e1537040c5807c15",
+    "extracted/goal-display-motion-20261019-ui1/run.json": "5344ec48241c2f86005e6b30d51f430cbe4ce60c9a1bd26cd9bdb0b7073b2187",
+    "extracted/goal-display-motion-20261019-ui1/states.tsv": "65bdf11cc23794a633dd25d52c37b01ae322498a02b8022570afe373774070cc",
+    "extracted/goal-display-motion-20261019-ui1/stderr.log": "30c9dd6b2cf9cec8e28209214dca015dbc71f343a199ed1058c5006e08a5858b",
+    "extracted/goal-display-motion-20261019-ui1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-display-motion-20261019-ui1/steps.tsv": "fe3e299388f344f9f667085f5d0cf9a7a252eec61496d3e08f7d2b0c46f8c51b",
+    "extracted/goal-display-motion-20261019-ui1/walk532.bmp": "7e03208d0a21512de3934ce0757dedd7da4f00004043497f0ad0cef785cfe633",
+    "extracted/goal-display-motion-20261019-ui1/walk536.bmp": "257866e82bf0bb118eb3db5b209bb76b30f4a9ecdb5d792edae5339beba2c12c",
+    "extracted/goal-display-motion-20261019-ui1/walk540.bmp": "1c6ba51377d9415236c32acecae3981f3731fce538a8845adb822d34b26d7c98",
+    "extracted/goal-display-motion-20261019-ui1/walk544.bmp": "f72ac708ca6778717ddfcb731481bcff2bbfcb31809f3ce0527a232208c27f7b",
+    "extracted/goal-display-motion-20261019-ui1/walk548.bmp": "eb6f5e8fd3a62b211ef54bba28e0b326fb070665f55998b58debc3f3ca52f2fc",
+    "extracted/goal-display-motion-20261019-ui1/walk552.bmp": "2618af0adb8403bdffb3ec6f6883dd534555bf406a8d567f6e1d42a83e00e8d3",
+    "extracted/goal-display-motion-20261019-ui1/walk556.bmp": "c96a37c03bc2ef9d62c7f30c6edd6a01750c1214f9a8038368ee44150603ca5b",
+    "extracted/goal-display-motion-20261019-ui1/walk560.bmp": "9376f6d946dc3fc52fe73c02a882b41eb1b2e75a396511b271e687aa23dfcb62",
+    "extracted/goal-display-motion-20261019-ui1/walk564.bmp": "bbc15dd5eec5ebcc5ea178b33121960f6dc0ff00d317c2172f984abce5fd96f0",
+    "extracted/goal-display-motion-20261019-ui1/walk568.bmp": "4f2fd163fe52e5f0bc122323f176187a70dc1233ee4c75b65880d8e576245e5a",
+    "extracted/goal-display-motion-20261019-ui1/walk572.bmp": "36a633f1930b23d956ba24ee1dc0d19bf9957947a41eeeadc41f3be5fade0dd6",
+    "extracted/goal-display-motion-20261019-ui1/walk576.bmp": "3f40c7dd1c349898737d9d6ac60721fde8d4c6e9ce05a01ee98825c3a5513132",
+    "extracted/goal-display-motion-20261019-ui1/walk580.bmp": "6c019e51bf47fa7484300dbad1578bfef843fc78a8e7b3750042ef982b20690e",
+    "extracted/goal-display-motion-20261019-ui1/walk584.bmp": "1dfe7f4fc5764d75ffe005746487b48aa9ddb265b1296c23bc02ff86446278ee",
+    "extracted/goal-display-motion-20261019-ui1/walk588.bmp": "e07d7c9984cb52ae0defdbb0b7fa0a5fbc1d5bc8c0996ed7555cf16503e314e8",
+    "extracted/goal-display-motion-20261019-ui1/walk592.bmp": "9be0a78c07d08e6ed5cbdd8fbc4dd0164b0861b970db91ecec5bb7ea5f62ab55",
+    "extracted/goal-display-motion-20261019-ui1/walk596.bmp": "5cfda425f75477e9a613f35c41b2979fb36e691bdc624f4fbe2df3b6e6924ba2",
+    "extracted/goal-display-motion-20261019-ui1/walk600.bmp": "52803b0b4ce509ece795c03e43168e22d6698ff44b5bba0460b7fa959780c26b",
+    "extracted/goal-display-motion-20261019-ui1/walk604.bmp": "2cd9f036455771d4452be9f3562dbee52e026eb41e87b2339a2dacf6ed9dce0d",
+    "extracted/goal-display-motion-20261019-ui1/walk608.bmp": "eddd0acdb5025a958d2a70e771adfd07843cdbf77d60ffd49d903f177b8793f5",
+    "extracted/goal-display-motion-20261019-ui1/walk612.bmp": "1014c3f26fb75ec63f55b9a8b50845e98728c1d8e68f83428717b6e36317af40",
+    "extracted/goal-display-motion-20261019-ui1/walk616.bmp": "a63add477e34cc627219427b9ba1519eec126bb0f64bc93a394d8bbc0415c17a",
+    "extracted/goal-display-motion-20261019-ui1/walk620.bmp": "3e39ab505c65ef27a9390205d1cad19b0e99d2a7106ad55190c45ea9995a5016",
+    "extracted/goal-display-motion-20261019-ui1/walk624.bmp": "3d6fadaa619942fe7dd47b9c89b927a174e5bb1a87f18a1adfab2ba2ecc43e94",
+    "extracted/goal-display-motion-20261019-ui1/walk628.bmp": "a03e06ed72bad9a05fcdd37ea09cb8c33fbf12d4b447d64abdd04995a9384261",
+    "extracted/goal-display-motion-20261019-ui1/walk632.bmp": "00d339839543904420b51d1bbd224cae051fd9b685369ab0da45a000114b9104",
+    "extracted/goal-display-motion-20261019-ui1/walk636.bmp": "aad861d5c21a83b6794bfcb12648b5e48ed34770d8280a647df054b393a62778",
+    "extracted/goal-display-motion-20261019-ui1/walk640.bmp": "4f2bc6fce9a4077208105a72b3a76a76877d35c92530d93962c662ec25a82b11",
+    "extracted/goal-display-motion-20261019-ui1/walk644.bmp": "447347a2c3ee86db93e6a344933ceb59af4f06cdaf2595b5a74b2ba423b7a79b",
+    "extracted/goal-display-motion-20261019-ui1/walk648.bmp": "0d7e39cdcd809c91ec20d98e2dfbf8bf262bf8a982304679c528eab68437e7c9",
+    "extracted/goal-display-motion-20261019-ui1/walk652.bmp": "6e4ab6ddca7161360c6ac67d8d2c7af54395291b709844b94aecc4a1d7eea4c5",
+    "extracted/goal-display-motion-20261019-ui1/walk656.bmp": "51a0b036b62d6788bac4c2c279835a069c86f822e87d9a10926746ce45f4e3ca",
+    "extracted/goal-display-motion-20261019-ui1/walk660.bmp": "88db3895095fbfac3d72f55be39bd72f8d2f0c95fe2b07e285e10517cd6af386",
+    "extracted/goal-display-motion-20261019-ui1/walk664.bmp": "f09e6bc144c4a68bfecafb2e4e7dad135567b257158f2952bddaaa3b1e17599f",
+    "extracted/goal-display-motion-20261019-ui1/walk668.bmp": "6bde75d5331ee4b21979c1a99d1cf1e6c60f33541d453049c5bfca290a2b953a",
+    "extracted/goal-display-motion-20261019-ui1/walk672.bmp": "8187a3e96ba8b38ebd4b10c0265e3635202c2071f331f1905c9d080c898a5191",
+    "extracted/goal-display-motion-20261019-ui1/walk676.bmp": "56be1d4844b8aeeb6b67139e8220a13c24eaeab1a20585ee5db8a89fcd9b3132",
+    "extracted/goal-display-motion-20261019-ui1/walk680.bmp": "bf56546bd0a6edc2a47691afc0c0ba3fff53bc61168a6980b9e7d50109c28483",
+    "extracted/goal-display-motion-20261019-ui1/walk684.bmp": "f3d8bd706ca6666679144edd7df0b2a448ee23b1028924a090eeee5761b868d2",
+    "extracted/goal-display-motion-20261019-ui1/walk688.bmp": "794fdc4c347febe1bccd0c9e9cfd1c15414fab6da577adf3556288d55e615568",
+    "extracted/goal-display-motion-20261019-ui1/walk692.bmp": "e0b8dbfcc7a6c1b18f447381e399cc9e5d7eed058e86134cf03e661346a3fd08",
+    "extracted/goal-display-motion-20261019-ui1/walk696.bmp": "1d5fe0c1e1559e96183b092a8c8a2ff5dbe0b08f8540d390c5d5557ceeb3ca10",
+    "extracted/goal-display-motion-20261019-ui1/walk700.bmp": "680a6538171af2d684dc33e727018f000691f1c1ede7bfd3028fb4bf3a650fce",
+    "extracted/goal-display-motion-20261019-ui1.log": "d05a8eaf5fe9e4174ed9f07fb766e021d9f1b28cee40a4a94bf92f8dad733528",
+    "extracted/goal-display-motion-20261019-walk-contact.png": "5182fc982365aa9480397a1cc0dbaafb12a8c5ccf75780baf862dd91282ff691",
+    "extracted/goal-early5-island-20261019-probe.py": "2933ead8b5cc87b76425031fea3da8690c3b2649dc8f3fa8d4babd276176ef1a",
+    "extracted/goal-early5-island-20261019-ui1/run.json": "a0dc3043652b97200495a9a2e909f81d8c1e272d6a326483942c7d32c561280d",
+    "extracted/goal-early5-island-20261019-ui1/states.tsv": "22aaab45bd6d43502de86501ede791417a90ad4e659c00685ddb88334935009a",
+    "extracted/goal-thunder-capture-20261019-plan3.tsv": "8c0b982433ed2e4f38767b9ee78906629b930f36522c0ce4c5af2dfdad3629b4",
+    "extracted/pathmath/originals/functions.tsv": "10ed5fad6da555f758365810d9326202d2536710f5a58c0ba965d8b1da6f3586",
+    "extracted/pathruntime/originals/functions.tsv": "0a90142ded4a8cc18b414810ab64dff5aeb6203ac586332e0fa9fc76d299c1ec",
+    "extracted/pathruntimehelpers/originals/functions.tsv": "2442c6bfd56eb6d0deffe63d1d5e3267f102781ccdbe6889216e8670b406c1b6",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "originals/d/_shapes.shp": "c878353c8054208deef832e34c514b30fe670e175505b129333a5728ba70f68e",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6"
+  },
+  "goalComplete": false,
+  "fullFidelityVerified": false
+}

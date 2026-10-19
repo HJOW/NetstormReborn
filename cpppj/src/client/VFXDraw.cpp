@@ -105,7 +105,8 @@ SquidFrameMetrics ShapeDatabase::SquidMetrics(std::size_t block,std::size_t fram
     return {std::bit_cast<float>(U32(bytes_,offset-prefix)),std::bit_cast<float>(U32(bytes_,offset-prefix+4)),
         std::bit_cast<std::int16_t>(U16(bytes_,offset-12)),std::bit_cast<std::int16_t>(U16(bytes_,offset-10)),
         std::bit_cast<std::int16_t>(U16(bytes_,offset-8)),std::bit_cast<std::int16_t>(U16(bytes_,offset-6)),
-        std::bit_cast<float>(U32(bytes_,offset-prefix+8)),std::bit_cast<float>(U32(bytes_,offset-prefix+12))};
+        std::bit_cast<float>(U32(bytes_,offset-prefix+8)),std::bit_cast<float>(U32(bytes_,offset-prefix+12)),
+        std::bit_cast<float>(U32(bytes_,offset-prefix+16)),std::bit_cast<float>(U32(bytes_,offset-prefix+20))};
 }
 
 // 해석하지 않은 메타 필드도 그림 조각의 원본 헤더 조회에 공급한다.

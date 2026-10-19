@@ -28,7 +28,7 @@ std::vector<o::SquidDisplayShape> SquidRenderer::Shapes(const GameAssets& assets
             const auto m=assets.Shapes().SquidMetrics(asset.block,frame);
             const auto header=assets.Shapes().SquidHeader(asset.block,frame); // 같은 실제36바이트의 마지막 두 WORD가 포구이며 표시 기준점과 다르다.
             const auto muzzleX=std::bit_cast<std::int16_t>(static_cast<std::uint16_t>(header[32]|(std::uint16_t(header[33])<<8))),muzzleY=std::bit_cast<std::int16_t>(static_cast<std::uint16_t>(header[34]|(std::uint16_t(header[35])<<8))); // 비정렬 little endian 포구 WORD다.
-            shape.frames.push_back({m.width,m.height,m.hotspotX,m.hotspotY,m.cellWidth,m.cellHeight,m.cellHotspotX,m.cellHotspotY,muzzleX,muzzleY});
+            shape.frames.push_back({m.width,m.height,m.hotspotX,m.hotspotY,m.cellWidth,m.cellHeight,m.cellHotspotX,m.cellHotspotY,muzzleX,muzzleY,m.walkStepX,m.walkStepY});
         }
     }
     return shapes;

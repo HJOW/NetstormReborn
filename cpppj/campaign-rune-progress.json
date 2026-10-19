@@ -63,7 +63,7 @@
     "cpppj/src/client/RawCampaignRitual.inc": "58bedee7b6bd9673e2ce45ac016f9421ef33ac4bd974e306dd54f83c631fe9f0",
     "cpppj/src/client/RawCampaignSession.cpp": "4b0470acb1ea5cb275959eb4a70df1d795c4f87d6a51a2a78f6e35ebe573f36b",
     "cpppj/tests/CMakeLists.txt": "83eed7cedab8650ce570f444a5c06efe29b2ce414e3049777221cf672f6e248f",
-    "cpppj/tests/CampaignSessionTests.cpp": "b0f41abb1e4471fa109de00d131a9abba79867fb6422116e90f941b7fe201913",
+    "cpppj/tests/CampaignSessionTests.cpp": "23674336919f1a4d334db02413d226fc5761d9cd66ec3e273377cf72430b5901",
     "tools/decomp_priest_ritual_frame.py": "85430a70710fde4cd7429c03cd9f4c336fa57bb5ddd77bf0029e6df4979cb054",
     "cpppj/priest-ritual-frame.json": "f915a33b38c9708c3bf080fe8a2e7bc01ad78f3897a56b9bfe609f8d12817fe8",
     "cpppj/tests/fixtures/priest-ritual-frame-x86.tsv": "f9b7cb8cf07feb33ab4e045c832555192ca600b499812d95e2fd7fe808b9710f",
@@ -694,6 +694,19 @@
           "path": "cpppj/src/client/RawCampaignSession.cpp",
           "previous": "cd16fb2bad2fa4bf0985fa1dfd7d89cbd504e02f531d1bd319b863e686279b9b",
           "current": "4b0470acb1ea5cb275959eb4a70df1d795c4f87d6a51a2a78f6e35ebe573f36b"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 219,
+      "reason": "실제 raw 깊이 보존과 보행 전용 SHP 필드 연결 및 독립1170원문 대조의 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "b0f41abb1e4471fa109de00d131a9abba79867fb6422116e90f941b7fe201913",
+          "current": "23674336919f1a4d334db02413d226fc5761d9cd66ec3e273377cf72430b5901"
         }
       ]
     }

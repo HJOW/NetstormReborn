@@ -17,7 +17,7 @@
     "cpppj/src/client/RawCampaignSession.h": "f905619a10b1ecc976bdfc082f8196e3f82190b5f7770828aaf84d00b813c573",
     "cpppj/src/CMakeLists.txt": "dc93067f7759849e630647688fa09684944a0f5aec5bf7d774d429227e600599",
     "cpppj/tests/CMakeLists.txt": "83eed7cedab8650ce570f444a5c06efe29b2ce414e3049777221cf672f6e248f",
-    "cpppj/tests/CampaignSessionTests.cpp": "b0f41abb1e4471fa109de00d131a9abba79867fb6422116e90f941b7fe201913",
+    "cpppj/tests/CampaignSessionTests.cpp": "23674336919f1a4d334db02413d226fc5761d9cd66ec3e273377cf72430b5901",
     "cpppj/tests/CarrierMiningTests.cpp": "d5ad45133e2cd7b5eb4086d75ea758a08015f520bdede0412e3f1fadbda756c7",
     "cpppj/tests/GeyserLifetimeTests.cpp": "2db2753066f8ef1eff850d11fe7e5a43354d5fa79c3c16bc17167f1a7d35b2e1",
     "tools/decomp_carrier_mining.py": "78cae56c40bdc066a033af750a00b8349d2504696b383db9a65239821ce27c13",
@@ -32,7 +32,7 @@
     "cpppj/src/o/RawConstructionEffects.cpp": "97b8adc3cfc9f35e84579d29af9ef4f982f24c06fee77c1dac9d40774cf5c739",
     "cpppj/src/o/RawCarrierArrival.h": "56355d323b96e074d549319884f492928ccec8a5c3530db745588cbeb2bcded3",
     "cpppj/src/o/RawCarrierArrival.cpp": "05d47b6beb2267351faf0efff7ca6967010088b37ead976881a0c6dde6881610",
-    "cpppj/src/o/RawPathProcess.cpp": "75557b1b9c481c089b466b9e4dd9c27aadae28905e43379b5c7ac7cc8bcd7683",
+    "cpppj/src/o/RawPathProcess.cpp": "4e514df8c58cda778f66adaf485443ccd8aeedc7a2469a0ba9b37f91ea9b6940",
     "cpppj/src/o/RawBattleBroadcast.cpp": "d59f41110db782f83b522aeb16348225dc04728d38cd766bd706fc57585c9e4c",
     "cpppj/src/o/RawPacketDispatch.cpp": "3f9628dad2707355aa7e10419ebbab17e25578e595d2335e03d48d1a1303928a"
   },
@@ -1606,6 +1606,25 @@
           "path": "cpppj/src/client/RawCampaignSession.cpp",
           "previous": "cd16fb2bad2fa4bf0985fa1dfd7d89cbd504e02f531d1bd319b863e686279b9b",
           "current": "4b0470acb1ea5cb275959eb4a70df1d795c4f87d6a51a2a78f6e35ebe573f36b"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 219,
+      "reason": "실제 raw 깊이 보존과 보행 전용 SHP 필드 연결 및 독립1170원문 대조의 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "b0f41abb1e4471fa109de00d131a9abba79867fb6422116e90f941b7fe201913",
+          "current": "23674336919f1a4d334db02413d226fc5761d9cd66ec3e273377cf72430b5901"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/o/RawPathProcess.cpp",
+          "previous": "75557b1b9c481c089b466b9e4dd9c27aadae28905e43379b5c7ac7cc8bcd7683",
+          "current": "4e514df8c58cda778f66adaf485443ccd8aeedc7a2469a0ba9b37f91ea9b6940"
         }
       ]
     }

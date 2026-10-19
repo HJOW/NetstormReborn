@@ -21,7 +21,7 @@
     "cpppj/src/o/RawPathProcess.h": "a933cd9224641371e731019f8eb69e87e99229c1ad784697335caccfc6af6a63",
     "cpppj/src/o/RawPathProcess.cpp": "c5bd7c6b5cd14810d73e030f769d1c614a3ba8a599bf78f30c06e077009b3724",
     "cpppj/tests/RawPathSearchTests.cpp": "4b04a25e1c6f1478db5480f279ccf1ff22381aa63955734d37b76c1c707bc997",
-    "cpppj/tests/RawPathRuntimeTests.cpp": "8643229e7929baf27c889e6acfdbd7221d0b37db8f2daca7ce02bb3fb9a20d75",
+    "cpppj/tests/RawPathRuntimeTests.cpp": "7fbca62f94959899bf73d2b82726cbf3f4478c1a0fc8df5624a073d17274ce1f",
     "cpppj/src/o/CMakeLists.txt": "cc09ef991fe8026ff1687d10e327e05f763cb875b5d6695fd52b156efc49da3e",
     "cpppj/tests/CMakeLists.txt": "b724fc467ab5be76893369ed0169bfb0dd840505552d00cb1e18a589642bc574",
     "tools/decomp_pathinit_oracle.py": "cee473cce2fc40d31a656f1000b11e7ee998af818e9d814f9c04e7448ed3bad6",
@@ -94,6 +94,19 @@
           "path": "cpppj/tests/RawPathRuntimeTests.cpp",
           "previous": "26e887d39c0919749b9b057172ca7e17f27dceba246ced35aa8a4a443eaa4931",
           "current": "8643229e7929baf27c889e6acfdbd7221d0b37db8f2daca7ce02bb3fb9a20d75"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 219,
+      "reason": "실제 raw 깊이 보존과 보행 전용 SHP 필드 연결 및 독립1170원문 대조의 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/sha256",
+          "path": "cpppj/tests/RawPathRuntimeTests.cpp",
+          "previous": "8643229e7929baf27c889e6acfdbd7221d0b37db8f2daca7ce02bb3fb9a20d75",
+          "current": "7fbca62f94959899bf73d2b82726cbf3f4478c1a0fc8df5624a073d17274ce1f"
         }
       ]
     }

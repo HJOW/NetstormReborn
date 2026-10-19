@@ -15,6 +15,7 @@ struct SquidDisplayFrame {
     float cellWidth{},cellHeight{}; // 같은 프레임 앞 36바이트의 float. 픽셀 크기와 별도로 해시 단계에 쓴다.
     float cellHotspotX{},cellHotspotY{}; // 월드 수집에서 폭/높이와 같은 float 추가 헤더의 기준점을 사용한다.
     std::int16_t muzzleX{},muzzleY{}; // SHP +0x20/+0x22의 signed short 포구다. 앞쪽 그림 기준점과 구별해 사정선에 쓴다.
+    float walkStepX{},walkStepY{}; // SHP 추가 헤더+0x10/+0x14의 보행 간격이다. 표시 수집용 기준점과 구별해48bb40에 공급한다.
 };
 // Squid 표시용 셰이프와 프레임 치수 목록이다.
 struct SquidDisplayShape {

@@ -159,10 +159,13 @@ TEST_CASE(SquidDisplay_RendererAdapter_PaintsOldAndNewRawPositions) {
 TEST_CASE(SquidDisplay_ShpMetrics_ReadSeparatePrefixAndRejectPlainVfx) {
     std::vector<std::uint8_t> bytes(79); Put(bytes,0,0x30312e31); Put(bytes,4,1); Put(bytes,8,52);
     Put(bytes,16,std::bit_cast<std::uint32_t>(0.6875f)); Put(bytes,20,std::bit_cast<std::uint32_t>(1.5454545f));
+    Put(bytes,24,std::bit_cast<std::uint32_t>(2.0f));Put(bytes,28,std::bit_cast<std::uint32_t>(3.0f));
+    Put(bytes,32,std::bit_cast<std::uint32_t>(0.125f));Put(bytes,36,std::bit_cast<std::uint32_t>(-0.09090909f));
     Put(bytes,40,11,2); Put(bytes,42,17,2); Put(bytes,44,static_cast<std::uint32_t>(-12),2); Put(bytes,46,16,2);
     bytes[76]=2; bytes[77]=9; bytes[78]=0;
     client::ShapeDatabase db(bytes); const auto m=db.SquidMetrics(0,0);
     CHECK(m.cellWidth==0.6875f); CHECK(m.cellHeight==1.5454545f); CHECK(m.width==11); CHECK(m.height==17); CHECK(m.hotspotX==-12); CHECK(m.hotspotY==16);
+    CHECK(m.cellHotspotX==2 && m.cellHotspotY==3);CHECK(m.walkStepX==0.125f && m.walkStepY==-0.09090909f);
     std::vector<std::uint8_t> plain(43); Put(plain,0,0x30312e31); Put(plain,4,1); Put(plain,8,16); plain[40]=2; plain[41]=9;
     client::ShapeDatabase vfx(plain); CHECK(Throws([&]{ vfx.SquidMetrics(0,0); }));
 }

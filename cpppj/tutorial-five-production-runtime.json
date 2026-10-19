@@ -11,7 +11,7 @@
   "implementation": "Factory 두 실제 VT의 원본+78 본체 프레임을 같은 SquidDisplay 클릭 영역에 연결했다.",
   "nativeScope": "기존 RawFactoryDraw/ShapeToBuffer 원본 픽셀 대조를 재사용했다. 새 독립 PE 표본 생성이나 원본 게임 실행은 없다.",
   "sources": {
-    "cpppj/src/client/GameWorld.cpp": "9dd9c938d1a68d0054091a87cdfc5e08aedddec6792e55bfee6f439743ef3402",
+    "cpppj/src/client/GameWorld.cpp": "38fff98272c4c5b872fd03d14832790d44dbe051570c3d9785661aa6efd6c481",
     "cpppj/src/client/RawCampaignFactoryDisplay.cpp": "6d62937a5e5f8a44dad3ca68199dc67b233f4b56794c704d722214de82375b4c",
     "cpppj/src/o/RawFactoryDraw.cpp": "b0d5e95ae773f55eccb29a03a7824c7446c87c48b473d4b4f0f7d876f92bea1b",
     "cpppj/src/o/RawFactoryDraw.h": "deb03d6428d34ac87172e9bfa46d7862ddef450014bb9040d08508212b90b096",
@@ -279,6 +279,19 @@
           "path": "cpppj/tests/ShapeToBufferTests.cpp",
           "previous": "ad9bd358902fa8ad3ab113cdc917c1bf751c502dc9ab0ed89ddb4ea0f7c102c8",
           "current": "91d7010f9d6698f7237d8a2040e00658502a57dedea9da310173af4e96dd26e5"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 219,
+      "reason": "실제 raw 깊이 보존과 보행 전용 SHP 필드 연결 및 독립1170원문 대조의 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/sources",
+          "path": "cpppj/src/client/GameWorld.cpp",
+          "previous": "9dd9c938d1a68d0054091a87cdfc5e08aedddec6792e55bfee6f439743ef3402",
+          "current": "38fff98272c4c5b872fd03d14832790d44dbe051570c3d9785661aa6efd6c481"
         }
       ]
     }

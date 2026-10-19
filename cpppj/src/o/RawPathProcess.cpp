@@ -151,7 +151,7 @@ void RawPathProcess::RunFrame() {
     const auto current=Position(parent);const auto originalFrame=Frame(parent);auto nextFrame=originalFrame;
     if (originalFrame<0 || static_cast<std::size_t>(originalFrame)>=shapes_[type].frames.size()) throw std::out_of_range("경로 SHP 프레임");
     const auto& shape=shapes_[type].frames[originalFrame];
-    const float footX=static_cast<float>(static_cast<double>(current.x)+shape.cellHotspotX),footY=static_cast<float>(static_cast<double>(current.y)+shape.cellHotspotY);
+    const float footX=static_cast<float>(static_cast<double>(current.x)+shape.walkStepX),footY=static_cast<float>(static_cast<double>(current.y)+shape.walkStepY);
     const auto direction=runtime_.Direction(runtime_.Current());
     if (std::fmod(static_cast<double>(sample.angle),kStepAngle)==0) {
         const double dx=static_cast<double>(sample.position.x)-current.x,dy=static_cast<double>(sample.position.y)-current.y;

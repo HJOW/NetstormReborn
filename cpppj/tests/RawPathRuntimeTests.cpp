@@ -5,6 +5,7 @@
 #include "o/SquidPop.h"
 #include "o/SquidPostPop.h"
 #include "o/RawProcessRemoval.h"
+#include "DudeSpawnSupport.h"
 
 using namespace netstorm::o;
 using namespace netstorm::test::rawscene;
@@ -97,8 +98,8 @@ struct PathScene {
             codes.push_back({static_cast<std::uint8_t>('A'+direction),'P',1,0});codes.push_back({static_cast<std::uint8_t>('A'+direction),'P',2,0});
         }
         const std::uint32_t type=priest ? 158 : 134;frames[type]=RiftTypeFrames(std::move(codes));shapes[type].loaded=true;shapes[type].frameCount=16;shapes[type].frames.resize(16);
-        // 원본 shape helper가 읽는 칸 hotspot을 물리 프레임마다 제공한다.
-        for (auto& shape:shapes[type].frames) { shape.cellWidth=shape.cellHeight=1;shape.cellHotspotX=0.3F;shape.cellHotspotY=0.2F; }
+        // 원본 보행용+10/+14와 수집용+8/+c를 다른 값으로 제공해 필드 혼동을 검출한다.
+        for (auto& shape:shapes[type].frames) { shape.cellWidth=shape.cellHeight=1;shape.walkStepX=0.3F;shape.walkStepY=0.2F;shape.cellHotspotX=2;shape.cellHotspotY=3; }
         parent=factory.Create(type,2);CHECK(pop.Pop(parent,types[type],1,1,10,20,0)==RawPopResult::Registered);
         // 원본 입력의 Form7을 맞춘다. 중간 번호6은 할당된 void 입력이며 경로/부모에 부착하지 않는다.
         CHECK(parent==Sid{5});CHECK(pool.Allocate(2)==Sid{6});
@@ -166,6 +167,23 @@ TEST_CASE(rawPathRuntime_native_constructor) {
         CHECK(Fnv(path.Bytes())==Number(row[4]));++count;
     }
     CHECK(count==8);
+}
+// 실제 보호 사제/골렘의 모든 논리 프레임을 원본48bb40의 독립 반환/요청과 비교한다.
+TEST_CASE(rawPathRuntime_ActualWalkShapes1170) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);
+    const auto fixture=LoadFixture((std::filesystem::path(NETSTORM_PATHRUNTIME_FIXTURE).parent_path()/"walk-shape-x86.tsv").string().c_str());
+    std::size_t count=0; // 독립 원문과 비교한 실제 입력 수다.
+    // 각 행은 별도 원본 초기 상태이며 이전 프레임 결과를 입력으로 대체하지 않는다.
+    for (const auto& row:fixture.rows) {
+        PathScene scene(OriginalEdition::Patch1078,true);
+        const auto kind=static_cast<std::uint32_t>(Number(row[0]));
+        scene.pool.AllocatedBytes(scene.parent)[10]=static_cast<std::uint8_t>(kind);
+        scene.types[kind]=scene.types[158];scene.frames[kind]=assets.frames[kind];scene.shapes[kind]=assets.shapes[kind];
+        Put(scene.pool.AllocatedBytes(scene.parent),36,Number(row[1]));scene.clock.now=Double(row[2]);
+        scene.AdvanceInput(1,0); // 원본과 같은 구간 안의 보행 입력이며 최초 꼭짓점 선택만 검사하지 않는다.
+        scene.process->RunFrame();CHECK(scene.Fields()==row[3]);CHECK(scene.Events()==row[4]);++count;
+    }
+    CHECK(count==1170);
 }
 // 각 꼭짓점의 double 시각을 오차 허용 없이 비교한다.
 TEST_CASE(rawPathRuntime_native_prepare) {

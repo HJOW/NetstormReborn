@@ -445,9 +445,9 @@ std::vector<RenderSprite> GameWorld::Sprites() const {
         const auto& type=assets_.Types()[object.type-o::kFirstAssetTypeNumber];
         if (factoryDisplay_ && factoryDisplay_->Handles(snapshot.sid)) continue; // 원본 수집/가상 Draw가 제출한 같은 본체를 중복 출력하지 않는다.
         const auto name=o::AsciiLower(type.assetName);if (name=="noisland") continue;
-        const auto depth=name=="islandstalag" ? kCliffDepth : (name=="isle" || name=="island" ? kLandDepth : kObjectDepth);
+        const auto raw=(campaign_ ? campaign_->Core() : surfaces_->Core()).pool.Slot(snapshot.sid); // 같은 실제 슬롯의 signed 깊이를 수집기와 동일하게 보존한다.
+        const std::int16_t depth=std::bit_cast<std::int8_t>(raw[assets_.Edition()==o::OriginalEdition::Patch1078 ? 35 : 33]);
         if (campaign_) {
-            const auto raw=campaign_->Core().pool.Slot(snapshot.sid);
             // alive·일반 색의 실제 가상 Draw만 연결한다. abstract/dead 색 분기는 기존 SpriteDraw 통합의 후속이다.
             if (o::IsRainVortex(assets_.Edition(),raw) && (raw[40]&0x13U)==2U) {
                 const auto visible=campaign_->Core().display.Bounds(object.type,object.frame,object.x,object.y);

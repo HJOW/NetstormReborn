@@ -7,9 +7,9 @@
     "tools/decomp_pathruntime_oracle.py": "d9764f3b0dc5005d8c0b229e367df88c42dcf74d171d5f29927c2855673d9fcc",
     "cpppj/src/o/RawPathRuntime.cpp": "4f051a4e5c50de3a99cb856c80dcccf7988ee1000fec9f66942f6e4e8999e639",
     "cpppj/src/o/RawPathRuntime.h": "92cb4cce037b704ecb6f2b2910c97fdf5634a519ba181931f357c6383529532c",
-    "cpppj/src/o/RawPathProcess.cpp": "75557b1b9c481c089b466b9e4dd9c27aadae28905e43379b5c7ac7cc8bcd7683",
+    "cpppj/src/o/RawPathProcess.cpp": "4e514df8c58cda778f66adaf485443ccd8aeedc7a2469a0ba9b37f91ea9b6940",
     "cpppj/src/o/RawPathProcess.h": "2aebb2b4d2bbc3aaf2b582660264fd0af088a363b32161b6157d05f05dcce924",
-    "cpppj/tests/RawPathRuntimeTests.cpp": "8643229e7929baf27c889e6acfdbd7221d0b37db8f2daca7ce02bb3fb9a20d75",
+    "cpppj/tests/RawPathRuntimeTests.cpp": "7fbca62f94959899bf73d2b82726cbf3f4478c1a0fc8df5624a073d17274ce1f",
     "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
     "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
     "cpppj/tests/fixtures/flypath-x86.tsv": "94f29b69b4b2be2868ce3099de063d404d54aabe1ef2646633457b8b89abcc65",
@@ -2193,6 +2193,43 @@
           "current": "e98fa5aecc683b69021e6efacd62092a48772ae5ed3f7cb3da0eeeff7c33d7ec"
         }
       ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 219,
+      "reason": "실제 raw 깊이 보존과 보행 전용 SHP 필드 연결 및 독립1170원문 대조의 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/source_sha256",
+          "path": "cpppj/src/o/RawPathProcess.cpp",
+          "previous": "75557b1b9c481c089b466b9e4dd9c27aadae28905e43379b5c7ac7cc8bcd7683",
+          "current": "4e514df8c58cda778f66adaf485443ccd8aeedc7a2469a0ba9b37f91ea9b6940"
+        },
+        {
+          "group": "/source_sha256",
+          "path": "cpppj/tests/RawPathRuntimeTests.cpp",
+          "previous": "8643229e7929baf27c889e6acfdbd7221d0b37db8f2daca7ce02bb3fb9a20d75",
+          "current": "7fbca62f94959899bf73d2b82726cbf3f4478c1a0fc8df5624a073d17274ce1f"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/o/RawPathProcess.cpp",
+          "previous": "75557b1b9c481c089b466b9e4dd9c27aadae28905e43379b5c7ac7cc8bcd7683",
+          "current": "4e514df8c58cda778f66adaf485443ccd8aeedc7a2469a0ba9b37f91ea9b6940"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "b0f41abb1e4471fa109de00d131a9abba79867fb6422116e90f941b7fe201913",
+          "current": "23674336919f1a4d334db02413d226fc5761d9cd66ec3e273377cf72430b5901"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/RawPathRuntimeTests.cpp",
+          "previous": "8643229e7929baf27c889e6acfdbd7221d0b37db8f2daca7ce02bb3fb9a20d75",
+          "current": "7fbca62f94959899bf73d2b82726cbf3f4478c1a0fc8df5624a073d17274ce1f"
+        }
+      ]
     }
   ],
   "currentSources": {
@@ -2204,7 +2241,7 @@
     "cpppj/src/o/CMakeLists.txt": "e98fa5aecc683b69021e6efacd62092a48772ae5ed3f7cb3da0eeeff7c33d7ec",
     "cpppj/src/o/RawManaBoltArrival.cpp": "0a747951767966b2fdfb80928397e2d73ae33cb28ff76b4b3b73e3499e4c96b6",
     "cpppj/src/o/RawManaBoltArrival.h": "9866ffe90c4a298a24afd11e685b50c1bc16c8df52f32aefcc5d4f9d108f0639",
-    "cpppj/src/o/RawPathProcess.cpp": "75557b1b9c481c089b466b9e4dd9c27aadae28905e43379b5c7ac7cc8bcd7683",
+    "cpppj/src/o/RawPathProcess.cpp": "4e514df8c58cda778f66adaf485443ccd8aeedc7a2469a0ba9b37f91ea9b6940",
     "cpppj/src/o/RawPathProcess.h": "2aebb2b4d2bbc3aaf2b582660264fd0af088a363b32161b6157d05f05dcce924",
     "cpppj/src/o/RawPathRuntime.cpp": "4f051a4e5c50de3a99cb856c80dcccf7988ee1000fec9f66942f6e4e8999e639",
     "cpppj/src/o/RawPathRuntime.h": "92cb4cce037b704ecb6f2b2910c97fdf5634a519ba181931f357c6383529532c",
@@ -2216,11 +2253,11 @@
     "cpppj/src/o/SquidPop.cpp": "61f8db73c663d5d7c8880d73bc310cf7884e361bb76402e0946241e02b7dcd17",
     "cpppj/src/o/SquidUnpop.cpp": "f9a932b6ee543cc2ee051d6f67afb0c56fca1f325cc51d29ca3d0dc3adf26fef",
     "cpppj/tests/CMakeLists.txt": "83eed7cedab8650ce570f444a5c06efe29b2ce414e3049777221cf672f6e248f",
-    "cpppj/tests/CampaignSessionTests.cpp": "b0f41abb1e4471fa109de00d131a9abba79867fb6422116e90f941b7fe201913",
+    "cpppj/tests/CampaignSessionTests.cpp": "23674336919f1a4d334db02413d226fc5761d9cd66ec3e273377cf72430b5901",
     "cpppj/tests/ConstructionArrivalTests.cpp": "3282c1768168e0301078a78de6d7e692d84d917bef5866bf1da22bd0c1b4b6f4",
     "cpppj/tests/CursorManaTests.cpp": "3f9aa47024782b0afe4f165a2145fa4f27706d8b5b7c1434f8e94c65a5318daa",
     "cpppj/tests/PopTests.cpp": "250b9a9fd863142026c29ef68c75ea7c8bea6871ed0a42df9bafee4e2b072d48",
-    "cpppj/tests/RawPathRuntimeTests.cpp": "8643229e7929baf27c889e6acfdbd7221d0b37db8f2daca7ce02bb3fb9a20d75",
+    "cpppj/tests/RawPathRuntimeTests.cpp": "7fbca62f94959899bf73d2b82726cbf3f4478c1a0fc8df5624a073d17274ce1f",
     "cpppj/tests/UnpopTests.cpp": "af6cd4c73db3f50d707d1b7cc896f991a7c5222177b7bd4252054bbe826af9cc"
   },
   "protectedFileSha256": {

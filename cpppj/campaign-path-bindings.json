@@ -23,7 +23,7 @@
     "cpppj/src/o/RawPathCleanup.h": "b67f788769de29eb333def2085c10e3eee17890eafe1d77bf5f5479367c2f56d",
     "cpppj/src/o/RawPathData.cpp": "ad7b25e89d79c84faa576aa50fb1efb1e9c71e6d96abc439527b798870a2d345",
     "cpppj/src/o/RawPathData.h": "13e0bf03c18aa2936c623c0b57d03e3fdb641375dc669daa77bfaae9b5f6e370",
-    "cpppj/src/o/RawPathProcess.cpp": "75557b1b9c481c089b466b9e4dd9c27aadae28905e43379b5c7ac7cc8bcd7683",
+    "cpppj/src/o/RawPathProcess.cpp": "4e514df8c58cda778f66adaf485443ccd8aeedc7a2469a0ba9b37f91ea9b6940",
     "cpppj/src/o/RawPathProcess.h": "2aebb2b4d2bbc3aaf2b582660264fd0af088a363b32161b6157d05f05dcce924",
     "cpppj/src/o/RawPathRuntime.cpp": "4f051a4e5c50de3a99cb856c80dcccf7988ee1000fec9f66942f6e4e8999e639",
     "cpppj/src/o/RawPathRuntime.h": "92cb4cce037b704ecb6f2b2910c97fdf5634a519ba181931f357c6383529532c",
@@ -273,6 +273,19 @@
           "path": "cpppj/src/client/RawCampaignPathBindings.h",
           "previous": "6ac357c4b2724907eb183be465f5f031f7164c2fdbc474de308d12acf4edc329",
           "current": "82d9565ece60f24300977681dffdaad57a660fdccca38b4db305d5a1d262b8b0"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 219,
+      "reason": "실제 raw 깊이 보존과 보행 전용 SHP 필드 연결 및 독립1170원문 대조의 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawPathProcess.cpp",
+          "previous": "75557b1b9c481c089b466b9e4dd9c27aadae28905e43379b5c7ac7cc8bcd7683",
+          "current": "4e514df8c58cda778f66adaf485443ccd8aeedc7a2469a0ba9b37f91ea9b6940"
         }
       ]
     }

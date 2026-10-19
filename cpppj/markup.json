@@ -151,8 +151,23 @@
     "cpppj/src/client/Markup.h": "48067dca05027a88ceadd1f36970a37b63f48a9c5b3ec19d4446862f4b1703af",
     "cpppj/src/client/StyleText.cpp": "bb6b78c480b689c8a60824c39c41cd1894f6179ed92b4fb862804954e0c9e822",
     "cpppj/src/client/StyleText.h": "f079a420d37cdd6f10c7d1eb566acbcc1998352e0cd0f0f5c3e9e899ee21582c",
-    "cpppj/src/client/VFXDraw.cpp": "1de6889912f1f18cc83e0efc7cc33a43216e063730aaca7917aad8bf5a8c37b7",
+    "cpppj/src/client/VFXDraw.cpp": "2de7032c46cc0e78eba6d87be0428a772d585f7cc0dc41f7314a7e9733453a5c",
     "cpppj/src/client/VFXDraw.h": "3692cc45ce931aedcd4e7aaf0f80f1d6966aea70a3e8d648fe6e7810a477eebb",
     "cpppj/src/client/CMakeLists.txt": "fe8f196d4fe789ac62ac90522639bd180cd25f9aea1ba5f43c1a56c853994eff"
-  }
+  },
+  "integration_updates": [
+    {
+      "date": "2026-10-19",
+      "unit": 219,
+      "reason": "실제 raw 깊이 보존과 보행 전용 SHP 필드 연결 및 독립1170원문 대조의 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/src/client/VFXDraw.cpp",
+          "previous": "1de6889912f1f18cc83e0efc7cc33a43216e063730aaca7917aad8bf5a8c37b7",
+          "current": "2de7032c46cc0e78eba6d87be0428a772d585f7cc0dc41f7314a7e9733453a5c"
+        }
+      ]
+    }
+  ]
 }

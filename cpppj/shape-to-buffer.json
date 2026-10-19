@@ -23,9 +23,9 @@
   "files": {
     "cpppj/src/client/RawShapeToBuffer.cpp": "a25daa6a79c7edbfee525ed6a64156cb71d2b1ceee996c7d0a4a002af0ced3d4",
     "cpppj/src/client/RawShapeToBuffer.h": "0d957cb5d99e2042ff04dbea766bb05e79560b390ffe82976388692ae5b259bb",
-    "cpppj/src/client/SquidRenderer.cpp": "ff98d57e03dd1087ee34ac3012fe76c359877055dbdbe70a16ff465fa6c85a6f",
-    "cpppj/src/client/VFXDraw.cpp": "1de6889912f1f18cc83e0efc7cc33a43216e063730aaca7917aad8bf5a8c37b7",
-    "cpppj/src/client/VFXDraw.h": "3ac09a428f585449877a89cb3fbd8a1f92755bb635c8c5778519f827ce3cf9bc",
+    "cpppj/src/client/SquidRenderer.cpp": "eb75c4667e83397ff64454c8422ce9271d5cad3016b35fa2b1013275fd4fbd46",
+    "cpppj/src/client/VFXDraw.cpp": "2de7032c46cc0e78eba6d87be0428a772d585f7cc0dc41f7314a7e9733453a5c",
+    "cpppj/src/client/VFXDraw.h": "919d2519af8dacb2ce940c85119b4884d7027769d1e89cac41387fe55833a47d",
     "cpppj/tests/fixtures/shape-to-buffer-x86.tsv": "d92bc1a292b8f44cb87ec59ffec881f7e97db4c4b6680af92ad554af2d7c89c1",
     "cpppj/tests/ShapeToBufferTests.cpp": "91d7010f9d6698f7237d8a2040e00658502a57dedea9da310173af4e96dd26e5",
     "extracted/burning-frame-helper/originalCD/creation.c": "79332ff09557a261e3148a25cf776e09fff3d59ef0bb435867f7bec8c80ea9ab",
@@ -163,6 +163,31 @@
           "path": "cpppj/tests/ShapeToBufferTests.cpp",
           "previous": "ad9bd358902fa8ad3ab113cdc917c1bf751c502dc9ab0ed89ddb4ea0f7c102c8",
           "current": "91d7010f9d6698f7237d8a2040e00658502a57dedea9da310173af4e96dd26e5"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 219,
+      "reason": "실제 raw 깊이 보존과 보행 전용 SHP 필드 연결 및 독립1170원문 대조의 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/src/client/SquidRenderer.cpp",
+          "previous": "ff98d57e03dd1087ee34ac3012fe76c359877055dbdbe70a16ff465fa6c85a6f",
+          "current": "eb75c4667e83397ff64454c8422ce9271d5cad3016b35fa2b1013275fd4fbd46"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/client/VFXDraw.cpp",
+          "previous": "1de6889912f1f18cc83e0efc7cc33a43216e063730aaca7917aad8bf5a8c37b7",
+          "current": "2de7032c46cc0e78eba6d87be0428a772d585f7cc0dc41f7314a7e9733453a5c"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/client/VFXDraw.h",
+          "previous": "3ac09a428f585449877a89cb3fbd8a1f92755bb635c8c5778519f827ce3cf9bc",
+          "current": "919d2519af8dacb2ce940c85119b4884d7027769d1e89cac41387fe55833a47d"
         }
       ]
     }

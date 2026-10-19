@@ -102,7 +102,7 @@
     "cpppj/src/o/RawPathRuntime.cpp": "e5d68375402de55ed55a0460316a06159638e5d40213a51a45d178627695d4a6",
     "cpppj/src/o/RawPathProcess.h": "a933cd9224641371e731019f8eb69e87e99229c1ad784697335caccfc6af6a63",
     "cpppj/src/o/RawPathProcess.cpp": "c5bd7c6b5cd14810d73e030f769d1c614a3ba8a599bf78f30c06e077009b3724",
-    "cpppj/tests/RawPathRuntimeTests.cpp": "8643229e7929baf27c889e6acfdbd7221d0b37db8f2daca7ce02bb3fb9a20d75",
+    "cpppj/tests/RawPathRuntimeTests.cpp": "7fbca62f94959899bf73d2b82726cbf3f4478c1a0fc8df5624a073d17274ce1f",
     "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
     "extracted/pathruntime/originals/creation.c": "96db0d462b7b23fc8217f07973354b963e1ba80370e02a5c2b7b78d524786161",
     "extracted/pathruntime/originals/functions.tsv": "0a90142ded4a8cc18b414810ab64dff5aeb6203ac586332e0fa9fc76d299c1ec",
@@ -144,6 +144,19 @@
           "path": "cpppj/tests/RawPathRuntimeTests.cpp",
           "previous": "26e887d39c0919749b9b057172ca7e17f27dceba246ced35aa8a4a443eaa4931",
           "current": "8643229e7929baf27c889e6acfdbd7221d0b37db8f2daca7ce02bb3fb9a20d75"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 219,
+      "reason": "실제 raw 깊이 보존과 보행 전용 SHP 필드 연결 및 독립1170원문 대조의 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/tests/RawPathRuntimeTests.cpp",
+          "previous": "8643229e7929baf27c889e6acfdbd7221d0b37db8f2daca7ce02bb3fb9a20d75",
+          "current": "7fbca62f94959899bf73d2b82726cbf3f4478c1a0fc8df5624a073d17274ce1f"
         }
       ]
     }

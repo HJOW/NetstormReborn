@@ -8,6 +8,7 @@
 // 생산 세션과 GameWorld의 표시/선택/명령이 같은 실제 raw 월드를 사용하는지 검사한다.
 #include "DudeSpawnSupport.h"
 #include "client/GameWorld.h"
+#include <cmath>
 #include "client/RawCampaignFactoryDisplay.h"
 #include "client/AiTypeRequiredEnergy.h"
 #include "client/RawCursorPlacement.h"
@@ -205,9 +206,9 @@ TEST_CASE(CampaignSession_PathRetargetRunsRealCarrierFrames) {
     const auto previous=path->Runtime().Current();path->RunFrame();CHECK(core.processes.FromForm(form)==path);if (core.processes.FromForm(form)!=path) return;
     CHECK(path->Runtime().Current()==previous+1);path->RunFrame();CHECK(core.processes.FromForm(form)==path);if (core.processes.FromForm(form)!=path) return;
     const auto& shape=core.shapes[133].frames.at(Get(core.pool.Slot(golem),36)); // 실제 보호 SHP의 한 걸음 임계값이다.
-    CHECK(path->Runtime().Count()==2 && shape.cellHotspotX*shape.cellHotspotX+shape.cellHotspotY*shape.cellHotspotY>=1);
-    CHECK(Get(core.pool.Slot(golem),14)==before && Get(core.pool.Slot(golem),18)==beforeY);CHECK(!path->Runtime().Finished() && path->Runtime().TargetA()==geyser.value && external.packets.size()==packets);
-    std::cout<<"실제 골렘 경로 count="<<path->Runtime().Count()<<" current="<<path->Runtime().Current()<<" now="<<core.processState.now<<" end="<<path->Runtime().Time(1)<<" hotspot="<<shape.cellHotspotX<<','<<shape.cellHotspotY<<'\n';
+    CHECK(path->Runtime().Count()==2 && shape.walkStepX*shape.walkStepX+shape.walkStepY*shape.walkStepY<1);
+    CHECK(Get(core.pool.Slot(golem),14)!=before || Get(core.pool.Slot(golem),18)!=beforeY);CHECK(!path->Runtime().Finished() && path->Runtime().TargetA()==geyser.value && external.packets.size()==packets);
+    std::cout<<"실제 골렘 경로 count="<<path->Runtime().Count()<<" current="<<path->Runtime().Current()<<" now="<<core.processState.now<<" end="<<path->Runtime().Time(1)<<" 보행 간격="<<shape.walkStepX<<','<<shape.walkStepY<<'\n';
     const auto oldState=core.pool.AllocatedBytes(geyser)[11];core.pool.AllocatedBytes(geyser)[11]|=2; // 사망 상태만 명시 입력한다. 삭제 트랜잭션을 대신한 것으로 계산하지 않는다.
     const auto replacement=session.CarrierChoice().ChooseGeyser(golem);CHECK(replacement!=geyser);path->RunFrame();core.pool.AllocatedBytes(geyser)[11]=oldState;
     RawContainedLookup lookup(core.pool,[](Sid,std::uint32_t) { throw std::logic_error("경로 재선택 검사 조회에서 삭제 금지"); });const auto currentForm=lookup.Find(golem,40);
@@ -608,6 +609,47 @@ TEST_CASE(CampaignSession_ActualWarBeginsGameWorld) { CheckSessionWorld("thewarb
 // 보호 둘째 캠페인도 같은 production 소유자를 사용한다.
 TEST_CASE(CampaignSession_ActualMasterGameWorld) { CheckSessionWorld("masterofwhirligigs"); }
 
+// 실제 raw 발사체/장식물의 원본 깊이와 겹친 픽셀이 GameWorld와 Renderer까지 보존돼야 한다.
+TEST_CASE(CampaignSession_MissileFringeDepthAndOverlap) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());
+    auto services=external.Services();services.install.resetCamera={};
+    GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services),{1024,768});world.Resize(1024,768);
+    auto& session=world.Session();auto core=session.Core();const Sid priest{static_cast<std::uint16_t>(session.FindPriestParticipation(1))};
+    const float x=std::floor(std::bit_cast<float>(Get(core.pool.Slot(priest),14)))+0.5625f,y=std::floor(std::bit_cast<float>(Get(core.pool.Slot(priest),18)))+0.7490844727f; // 저장 실전 장면의 상대 픽셀 배치를 현재 시야로 평행 이동한 입력이다.
+    const auto missile=session.World().Create(132,2),fringe=session.World().Create(102,2);
+    Put(core.pool.AllocatedBytes(fringe),36,67); // 새 void 슬롯의 초기 프레임 입력이다. 일반 Set의 공간 재등록을 먼저 실행하지 않는다.
+    session.World().Pop(missile,x,y,0);session.World().Pop(fringe,x+0.4375f,y+2.2509155273f,0);
+    CHECK(std::bit_cast<std::int8_t>(core.pool.Slot(missile)[35])==-25 && core.pool.Slot(fringe)[35]==20);
+    std::vector<RenderSprite> pair; // 다른 실제 그림의 가림을 제외하고 이 두 제출 항목의 순서를 확인한다.
+    // 동일 블록과 현재 좌표로 실제 제출된 두 그림을 찾는다.
+    for (const auto& sprite:world.Sprites()) {
+        if ((sprite.block==132-70 && sprite.order.x==x && sprite.order.y==y) ||
+            (sprite.block==102-70 && sprite.frame==67 && sprite.order.x==x+0.4375f && sprite.order.y==y+2.2509155273f)) pair.push_back(sprite);
+    }
+    CHECK(pair.size()==2);if (pair.size()!=2) return;
+    const auto shot=std::find_if(pair.begin(),pair.end(),[](const auto& sprite) { return sprite.block==132-70; });
+    const auto decoration=std::find_if(pair.begin(),pair.end(),[](const auto& sprite) { return sprite.block==102-70; });
+    CHECK(shot->order.depth==-25 && decoration->order.depth==20 && CompareDrawOrder(decoration->order,shot->order)<0);
+    Renderer renderer(1024,768);renderer.SetScene({*shot});const auto expected=renderer.SceneImage();renderer.SetScene(pair);const auto actual=renderer.SceneImage();
+    const auto shotPixels=assets.game.Shapes().Decode(shot->block,shot->frame),decorPixels=assets.game.Shapes().Decode(decoration->block,decoration->frame);
+    const auto shotRect=assets.game.Shapes().Blocks()[shot->block].frames[shot->frame].rect,decorRect=assets.game.Shapes().Blocks()[decoration->block].frames[decoration->frame].rect;
+    std::size_t overlapping=0; // 양쪽 RLE에서 모두 불투명한 실제 화면 픽셀 수다.
+    // 발사체의 불투명 픽셀을 실제 화면 좌표로 옮겨 장식물과 겹치는 부분을 검사한다.
+    for (std::size_t row=0;row<shotPixels.height;++row) {
+        // 행 안의 각 픽셀을 확인하며 투명 번호와 불투명 마스크를 구분한다.
+        for (std::size_t column=0;column<shotPixels.width;++column) {
+            if (!shotPixels.opacity[row*shotPixels.width+column]) continue;
+            const int px=shot->x+shotRect.left+static_cast<int>(column),py=shot->y+shotRect.top+static_cast<int>(row);
+            const int dx=px-decoration->x-decorRect.left,dy=py-decoration->y-decorRect.top;
+            if (px<0 || px>=1024 || py<28 || py>=768 || dx<0 || dy<0 || dx>=static_cast<int>(decorPixels.width) || dy>=static_cast<int>(decorPixels.height)) continue;
+            if (!decorPixels.opacity[dy*decorPixels.width+dx]) continue;
+            ++overlapping;CHECK(actual.indices[py*1024+px]==expected.indices[py*1024+px]);
+        }
+    }
+    CHECK(overlapping>0);std::cout<<"발사체/장식물 원본 깊이 -25/20, 겹침 픽셀="<<overlapping<<'\n';
+}
+
 // 같은 production GameWorld의 선택/좌클릭은 원본 BFS/Host54를 만들고 현재 슬롯을 이동한다.
 // 실제 로그인 소비자를 선택하며 성공 플래그/Ready를 입력하지 않는다.
 void UseWorldTestLogin(RawCampaignSessionServices& services) {
@@ -644,6 +686,8 @@ void CheckSessionMovement(bool actualBroadcast) {
     }
     CHECK(found);world.SetMousePoint(world.ToScreen(x,y));world.Select(priest.value);CHECK(world.InputMode()==5 && !cursors->empty());CHECK(world.MoveSelected(*world.Point("cell:"+std::to_string(goal.x)+','+std::to_string(goal.y))));
     bool path=false,moved=false;
+    auto previousX=std::bit_cast<float>(initial[0]),previousY=std::bit_cast<float>(initial[1]); // 직전 실제 raw 좌표다.
+    std::size_t movementUpdates=0;float largestStep=0; // 도착 때 한 번 이동하는 오류를 검출할 연속 관측이다.
     // 실제 현재 Kernel을 실행하고 화면 뷰도 같은 슬롯의 현재 위치를 따라가는지 확인한다.
     for (std::uint32_t frame=0;frame<480;++frame) {
         world.Step(1.0/60.0);
@@ -651,9 +695,15 @@ void CheckSessionMovement(bool actualBroadcast) {
         for (auto form=static_cast<std::uint16_t>(Get(core.pool.Slot(priest),6,2));form;form=static_cast<std::uint16_t>(Get(core.pool.Slot(Sid{form}),4,2)))
             if (core.pool.Slot(Sid{form})[10]==54) path=true;
         const auto raw=core.pool.Slot(priest);if (Get(raw,14)!=initial[0] || Get(raw,18)!=initial[1]) moved=true;
+        const auto currentX=std::bit_cast<float>(Get(raw,14)),currentY=std::bit_cast<float>(Get(raw,18)); // 같은 보고 시점의 위치다.
+        if (currentX!=previousX || currentY!=previousY) {
+            ++movementUpdates;largestStep=std::max(largestStep,std::hypot(currentX-previousX,currentY-previousY));previousX=currentX;previousY=currentY;
+        }
         CHECK(world.Object(priest.value)->x==std::bit_cast<float>(Get(raw,14)) && world.Object(priest.value)->y==std::bit_cast<float>(Get(raw,18)));
     }
     CHECK(path && moved && core.bookkeeping.depth==0);
+    CHECK(movementUpdates>10 && largestStep<0.75f);
+    std::cout<<"실제 사제 이동 갱신="<<movementUpdates<<" 최대 한 걸음="<<largestStep<<'\n';
 }
 
 // 실제 GameWorld 선택/이동은 원본 경로를 사용한다.

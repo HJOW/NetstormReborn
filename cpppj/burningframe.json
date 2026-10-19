@@ -50,7 +50,7 @@
     "cpppj/src/client/RawShapeToBuffer.cpp": "a25daa6a79c7edbfee525ed6a64156cb71d2b1ceee996c7d0a4a002af0ced3d4",
     "cpppj/src/client/RawShapeToBuffer.h": "0d957cb5d99e2042ff04dbea766bb05e79560b390ffe82976388692ae5b259bb",
     "cpppj/src/client/Renderer.cpp": "7b0c0e21236ec3f40847276d64a4b6f392afa8498774751b1c2cacc5eeffefa9",
-    "cpppj/src/client/VFXDraw.cpp": "d4c95ba9875659715bdb234b56baf7084d2abc6f5f4f879d1247cb309f0f5ad4",
+    "cpppj/src/client/VFXDraw.cpp": "2de7032c46cc0e78eba6d87be0428a772d585f7cc0dc41f7314a7e9733453a5c",
     "cpppj/src/o/RawBurningFrame.cpp": "955cf341a2cd4e14a8249939455f799b997f796d17e724d72719925c52322b8e",
     "cpppj/src/o/RawBurningFrame.h": "a8eb3aefeb0a1fb6afbe4aadc31cdbf0fdab5345355a661ed1e01699d23c56c7",
     "cpppj/src/o/RawBurningSources.cpp": "66a175d6f74156a8c7e92cf705add0601767595b845890568843f85d1450afc6",
@@ -154,6 +154,19 @@
           "path": "cpppj/src/o/RawBurningVisual.cpp",
           "previous": "9521fe84204f87283fb4c9f2b5b3ebbccf8bca749b76a9bebf4691f563ade522",
           "current": "6d4b4654483abe7f87632a166a9af3bbedbd1b20e253ebd95ce6a1ebc35ffc92"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 219,
+      "reason": "실제 raw 깊이 보존과 보행 전용 SHP 필드 연결 및 독립1170원문 대조의 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/src/client/VFXDraw.cpp",
+          "previous": "d4c95ba9875659715bdb234b56baf7084d2abc6f5f4f879d1247cb309f0f5ad4",
+          "current": "2de7032c46cc0e78eba6d87be0428a772d585f7cc0dc41f7314a7e9733453a5c"
         }
       ]
     }

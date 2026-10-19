@@ -31,6 +31,7 @@ struct SquidFrameMetrics {
     float cellWidth{},cellHeight{}; // SHP의 VFX 앞 36바이트: Pop의 hash level 입력.
     std::int16_t width{},height{},hotspotX{},hotspotY{}; // VFX 앞 12바이트: Renderer 경계 입력.
     float cellHotspotX{},cellHotspotY{}; // VFX 앞 28/24바이트: 월드 표시 수집의 float 기준점.
+    float walkStepX{},walkStepY{}; // 추가 헤더+0x10/+0x14의 보행 간격이며 수집용 기준점과 별도다.
 };
 // 팔레트 인덱스 픽셀로 구성한 그림이다.
 struct IndexedImage {

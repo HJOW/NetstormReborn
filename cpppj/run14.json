@@ -183,7 +183,7 @@
     ".gitattributes": "c2b3aa652dfa422b8bbd0dd82a7760cd2dd28ae5cf66bfc5b7d65887d32d8cce",
     "cpppj/burningsources.json": "abdc33fb3a44bc312589d02ef3b3544f5576bdc28a925884da9bee8077686444",
     "cpppj/tests/fixtures/burningsources-x86.tsv": "84abec71ace3f1cc634fbca2f3e4eec843f5d2ceb4595f7601f1db93f0b4eedd",
-    "cpppj/shape-to-buffer.json": "b2a04c0ac55c4ece061285024f4e33eacf3d8114b47634928bae0f6821f11e79",
+    "cpppj/shape-to-buffer.json": "fdcb374621f318be5551cb52a2cc928dc10907c4c9e8f4a79a9d9db2641e95e0",
     "cpppj/tests/fixtures/shape-to-buffer-x86.tsv": "d92bc1a292b8f44cb87ec59ffec881f7e97db4c4b6680af92ad554af2d7c89c1",
     "cpppj/dude-space.json": "667f920700404b4118145effa95b2034231e0398be6ee3878ac9531da36a6068",
     "cpppj/tests/fixtures/dude-space-x86.tsv": "1c931c029fe455c96325aecc37245d83dc78d94ba285b686783cfd9dd154600e",
@@ -465,6 +465,19 @@
           "path": "cpppj/tests/ShapeToBufferTests.cpp",
           "previous": "ad9bd358902fa8ad3ab113cdc917c1bf751c502dc9ab0ed89ddb4ea0f7c102c8",
           "current": "91d7010f9d6698f7237d8a2040e00658502a57dedea9da310173af4e96dd26e5"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 219,
+      "reason": "실제 raw 깊이 보존과 보행 전용 SHP 필드 연결 및 독립1170원문 대조의 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/shape-to-buffer.json",
+          "previous": "b2a04c0ac55c4ece061285024f4e33eacf3d8114b47634928bae0f6821f11e79",
+          "current": "fdcb374621f318be5551cb52a2cc928dc10907c4c9e8f4a79a9d9db2641e95e0"
         }
       ]
     }

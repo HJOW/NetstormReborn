@@ -101,9 +101,9 @@
       ],
       "meaning": "36바이트 Squid 추가 헤더의 signed hotspotX/hotspotY. width/height는+18/+1a다.",
       "sources": {
-        "cpppj/src/client/VFXDraw.cpp": "d4c95ba9875659715bdb234b56baf7084d2abc6f5f4f879d1247cb309f0f5ad4",
-        "cpppj/src/client/VFXDraw.h": "953079a93732127a0e2861f4d091328c37209c25dab7330d2a978afb52896894",
-        "cpppj/src/client/SquidRenderer.cpp": "ff98d57e03dd1087ee34ac3012fe76c359877055dbdbe70a16ff465fa6c85a6f"
+        "cpppj/src/client/VFXDraw.cpp": "2de7032c46cc0e78eba6d87be0428a772d585f7cc0dc41f7314a7e9733453a5c",
+        "cpppj/src/client/VFXDraw.h": "919d2519af8dacb2ce940c85119b4884d7027769d1e89cac41387fe55833a47d",
+        "cpppj/src/client/SquidRenderer.cpp": "eb75c4667e83397ff64454c8422ce9271d5cad3016b35fa2b1013275fd4fbd46"
       }
     }
   },
@@ -137,7 +137,7 @@
     "cpppj/src/o/CMakeLists.txt": "e98fa5aecc683b69021e6efacd62092a48772ae5ed3f7cb3da0eeeff7c33d7ec",
     "cpppj/src/o/RawFactoryResearch.h": "5cd0dc8a306e50725710d3124e3af6def870ec2fe001f3dfcf6e2e183bfc2202",
     "cpppj/tests/CMakeLists.txt": "83eed7cedab8650ce570f444a5c06efe29b2ce414e3049777221cf672f6e248f",
-    "cpppj/tests/CampaignSessionTests.cpp": "b0f41abb1e4471fa109de00d131a9abba79867fb6422116e90f941b7fe201913",
+    "cpppj/tests/CampaignSessionTests.cpp": "23674336919f1a4d334db02413d226fc5761d9cd66ec3e273377cf72430b5901",
     "cpppj/tests/FactoryResearchTests.cpp": "73801f93e0273a9b49538735884d1afb7250257511a5a4cd619659ca2b90d881",
     "tools/cpp_priest_construction_smoke.py": "93524c9e1fb58e7e589fc25c7507e105e750b96cb66ad7ddbf9a58aae2756c2c",
     "tools/decomp_flare.py": "1d2560364693e266f7da65fdf4c6631e920c398687398056b66340daa0c20825",
@@ -6986,6 +6986,37 @@
           "path": "cpppj/src/o/CMakeLists.txt",
           "previous": "5aeb5926aa34d3b266047d137be0753a58b3f476627ca77ed3624e39800e94b7",
           "current": "e98fa5aecc683b69021e6efacd62092a48772ae5ed3f7cb3da0eeeff7c33d7ec"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 219,
+      "reason": "실제 raw 깊이 보존과 보행 전용 SHP 필드 연결 및 독립1170원문 대조의 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/staticVtable/sourceHeader/sources",
+          "path": "cpppj/src/client/VFXDraw.cpp",
+          "previous": "d4c95ba9875659715bdb234b56baf7084d2abc6f5f4f879d1247cb309f0f5ad4",
+          "current": "2de7032c46cc0e78eba6d87be0428a772d585f7cc0dc41f7314a7e9733453a5c"
+        },
+        {
+          "group": "/staticVtable/sourceHeader/sources",
+          "path": "cpppj/src/client/VFXDraw.h",
+          "previous": "953079a93732127a0e2861f4d091328c37209c25dab7330d2a978afb52896894",
+          "current": "919d2519af8dacb2ce940c85119b4884d7027769d1e89cac41387fe55833a47d"
+        },
+        {
+          "group": "/staticVtable/sourceHeader/sources",
+          "path": "cpppj/src/client/SquidRenderer.cpp",
+          "previous": "ff98d57e03dd1087ee34ac3012fe76c359877055dbdbe70a16ff465fa6c85a6f",
+          "current": "eb75c4667e83397ff64454c8422ce9271d5cad3016b35fa2b1013275fd4fbd46"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "b0f41abb1e4471fa109de00d131a9abba79867fb6422116e90f941b7fe201913",
+          "current": "23674336919f1a4d334db02413d226fc5761d9cd66ec3e273377cf72430b5901"
         }
       ]
     }

@@ -73,11 +73,11 @@
   },
   "currentSources": {
     "cpppj/src/app/main.cpp": "9395c790b1a31c7e36f76b55cea3dd89ee7fdc769e694dc7d2fbdaa7e9eb7cd8",
-    "cpppj/src/client/SquidRenderer.cpp": "ff98d57e03dd1087ee34ac3012fe76c359877055dbdbe70a16ff465fa6c85a6f",
+    "cpppj/src/client/SquidRenderer.cpp": "eb75c4667e83397ff64454c8422ce9271d5cad3016b35fa2b1013275fd4fbd46",
     "cpppj/src/o/RawGunTarget.cpp": "7ac9b51af58949ce8c23f9854679a7685468ba798768db0a1158f25b0ff95f14",
     "cpppj/src/o/RawGunTarget.h": "cfc9f229f1b1ed225188ef5600ea7f575304f7c5cd537b6e6d803caa7d8486a0",
-    "cpppj/src/o/SquidDisplay.h": "aa8bf6fe22cfafb729053710e1fec6ef77a2c9bee40c51b05cb363ba57f413d7",
-    "cpppj/tests/CampaignSessionTests.cpp": "b0f41abb1e4471fa109de00d131a9abba79867fb6422116e90f941b7fe201913",
+    "cpppj/src/o/SquidDisplay.h": "c0fa956fb5da3d19e08b5f3eaaa8253ea233b60cad3db83f21ab750c7f95087d",
+    "cpppj/tests/CampaignSessionTests.cpp": "23674336919f1a4d334db02413d226fc5761d9cd66ec3e273377cf72430b5901",
     "cpppj/tests/GunTargetTests.cpp": "e3c5506385af4678241bebf53e3c7681a58b53d8e25b94b754dc448a51054587",
     "tools/cpp_cannon_combat_smoke.py": "130fe8ca64033d36e4559adbbd04661e60489a02b2309a3e312aee77e4eda98e",
     "tools/decomp_cannon_asset_ray.py": "5e08db9e72fe4327df8aef49f139d00ca49bc716879a41e9c8a6be30996ba659",
@@ -643,6 +643,31 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "75d29153881bb72c714f125de0633b01311b1ea6b6841b9d44a78c3f544ca5e9",
           "current": "b0f41abb1e4471fa109de00d131a9abba79867fb6422116e90f941b7fe201913"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 219,
+      "reason": "실제 raw 깊이 보존과 보행 전용 SHP 필드 연결 및 독립1170원문 대조의 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/SquidRenderer.cpp",
+          "previous": "ff98d57e03dd1087ee34ac3012fe76c359877055dbdbe70a16ff465fa6c85a6f",
+          "current": "eb75c4667e83397ff64454c8422ce9271d5cad3016b35fa2b1013275fd4fbd46"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/o/SquidDisplay.h",
+          "previous": "aa8bf6fe22cfafb729053710e1fec6ef77a2c9bee40c51b05cb363ba57f413d7",
+          "current": "c0fa956fb5da3d19e08b5f3eaaa8253ea233b60cad3db83f21ab750c7f95087d"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "b0f41abb1e4471fa109de00d131a9abba79867fb6422116e90f941b7fe201913",
+          "current": "23674336919f1a4d334db02413d226fc5761d9cd66ec3e273377cf72430b5901"
         }
       ]
     }

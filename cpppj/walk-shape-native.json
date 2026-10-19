@@ -1,0 +1,21 @@
+{
+  "host": "VM-W11-Codex",
+  "date": "2026-10-19",
+  "lastDecompile": "VM-W11-Codex / 2026-10-19",
+  "inputs": 1170,
+  "normalReturns": 1170,
+  "scope": "실제48bb40/Step/프레임과 보호SHP 전체36바이트. 경로/시각은 명시 입력이며 공간 가상 효과/음향/할당은 기존 관측 경계다. CD와 실제 게임 화면은 별도다.",
+  "sha256": {
+    "cpppj/tests/fixtures/walk-shape-x86.tsv": "2a83fd988cde2f1c5577767cadd0d4fadf0ed3c02aafb8c16e8d261d883ed5d0",
+    "extracted/pathmath/originals/functions.tsv": "10ed5fad6da555f758365810d9326202d2536710f5a58c0ba965d8b1da6f3586",
+    "extracted/pathruntime/originals/functions.tsv": "0a90142ded4a8cc18b414810ab64dff5aeb6203ac586332e0fa9fc76d299c1ec",
+    "extracted/pathruntimehelpers/originals/functions.tsv": "2442c6bfd56eb6d0deffe63d1d5e3267f102781ccdbe6889216e8670b406c1b6",
+    "originals/d/_shapes.shp": "c878353c8054208deef832e34c514b30fe670e175505b129333a5728ba70f68e",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "tools/decomp_pathruntime_oracle.py": "d9764f3b0dc5005d8c0b229e367df88c42dcf74d171d5f29927c2855673d9fcc",
+    "tools/decomp_reward_oracle.py": "ca25b2b1befd0f4626759c17dde1af5eb080e86e4137f7a2b384d97f25a7a143",
+    "tools/decomp_walk_shape_oracle.py": "dbf49df732e4cfcc047ef57765232a4990c59bf09a72aded396fbd26ec4bb379",
+    "tools/shp.py": "4cb8bee6ed773e29e8658ddb315594ebf5ac005ea5b96c6b760a177029515bfd"
+  }
+}

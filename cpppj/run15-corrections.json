@@ -171,7 +171,7 @@
     "cpppj/tests/PlayerRegularTests.cpp": "c5dc6f89b8ee7e6ed21c7720d1e11a8c019022f079eb7f62024833ed47e56afe",
     "cpppj/tests/fixtures/burningframe-x86.tsv": "8b09c3d54803039df92c36374537ff316fbd8062ffbaa02913e89dc0d4fdbcc6",
     "cpppj/tests/fixtures/player-regular-x86.tsv": "e3ef582f5da9c62f3235eb16f30bd76b97f9db1a5bff0728070f7ac83ccea932",
-    "cpppj/burningframe.json": "651c730f12a5b081ef5407341b3906b66dc814e48d7fd4012050eff399a5811a",
+    "cpppj/burningframe.json": "641619a0d675cd96c064789d381aaf61166b49cf3a02409095f964912b425c0b",
     "cpppj/player-regular.json": "27a574e8d4feac68c6599680fd6e9817f34a1f08c7ebc576f46901b353882d93",
     "extracted/run15-new-first-tests.log": "05f436f63bb1ff63f313c443bf7f66910fa296e0570f417d0d07ff508415f160",
     "extracted/run15-all-first-tests.log": "7e10e35fb576e7fcbc14fce22a66e533ed677b3ca67333ff1a2107a55d6d9c3d"
@@ -208,6 +208,19 @@
           "path": "cpppj/burningframe.json",
           "previous": "28c6315a3fa1c03acfb36989606ea9fd2c2fce52d81e04151008a24851475308",
           "current": "651c730f12a5b081ef5407341b3906b66dc814e48d7fd4012050eff399a5811a"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 219,
+      "reason": "실제 raw 깊이 보존과 보행 전용 SHP 필드 연결 및 독립1170원문 대조의 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/burningframe.json",
+          "previous": "651c730f12a5b081ef5407341b3906b66dc814e48d7fd4012050eff399a5811a",
+          "current": "641619a0d675cd96c064789d381aaf61166b49cf3a02409095f964912b425c0b"
         }
       ]
     }

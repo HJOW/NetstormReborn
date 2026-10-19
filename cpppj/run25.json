@@ -279,7 +279,7 @@
     "cpppj/src/client/SoundSceneMusic.h": "d817a8eb1ab9e83ed991d03c9422fd47530796e832eaec477a4c18c3cb8ef043",
     "cpppj/src/client/SpriteDraw.cpp": "7ebec59557d9e856f178aaddb52662676216b06dd490c25696b10d913926c5ee",
     "cpppj/src/client/SpriteDraw.h": "579f2983f68ad91efd1ec2d7484d7c126996cc49e2faa125e9827c70e05ab519",
-    "cpppj/src/client/SquidRenderer.cpp": "ff98d57e03dd1087ee34ac3012fe76c359877055dbdbe70a16ff465fa6c85a6f",
+    "cpppj/src/client/SquidRenderer.cpp": "eb75c4667e83397ff64454c8422ce9271d5cad3016b35fa2b1013275fd4fbd46",
     "cpppj/src/client/SquidRenderer.h": "68ecc34f6646bd49e548274d6aa7b4f5b8cea4ea7919b59c5d0120f7df7715e2",
     "cpppj/src/client/State.cpp": "09124fe5e91393f7426b6f6358339f864f61cc338b227c60d32f402d430c2a02",
     "cpppj/src/client/State.h": "8176b65becc5a095599c2f75018e268735fd2c4fa19b71eccff1d287722ddeb9",
@@ -299,8 +299,8 @@
     "cpppj/src/client/UberGump.h": "66672f1eb96fadae4ff729b95ef3021818e090def0951a51654a7c2d24b455c8",
     "cpppj/src/client/UserInput.cpp": "fd1bee42a48c4a33098114e813a7909d449791671fb0e313b76efc55216c20bd",
     "cpppj/src/client/UserInput.h": "8c27579e2993518d84cd37e6fea4313a34d8a66dd291ba0ece00b26e91ac395d",
-    "cpppj/src/client/VFXDraw.cpp": "d4c95ba9875659715bdb234b56baf7084d2abc6f5f4f879d1247cb309f0f5ad4",
-    "cpppj/src/client/VFXDraw.h": "953079a93732127a0e2861f4d091328c37209c25dab7330d2a978afb52896894",
+    "cpppj/src/client/VFXDraw.cpp": "2de7032c46cc0e78eba6d87be0428a772d585f7cc0dc41f7314a7e9733453a5c",
+    "cpppj/src/client/VFXDraw.h": "919d2519af8dacb2ce940c85119b4884d7027769d1e89cac41387fe55833a47d",
     "cpppj/src/client/VFXLine.cpp": "6f0a0d1f59532f0a4cb3ae3045efc46908c77a2f0d62ccc8f41741274330cc45",
     "cpppj/src/client/VFXLine.h": "63d8c7230d2fd0ed2447f5725cd195dc0b5436abe471128e2944bbb74214e5fd",
     "cpppj/src/client/VFXTransform.cpp": "e75902e9b390d9022019bdcd4801e6e4f0c28c4c52392f7b2299031e56d8b7ee",
@@ -533,7 +533,7 @@
     "cpppj/src/o/RawPathCleanup.h": "ae5012944517d2ca56cd1c19629d50c64ff65d9ee3d43f0d87b1bbe5ba0fa8d0",
     "cpppj/src/o/RawPathData.cpp": "ad7b25e89d79c84faa576aa50fb1efb1e9c71e6d96abc439527b798870a2d345",
     "cpppj/src/o/RawPathData.h": "13e0bf03c18aa2936c623c0b57d03e3fdb641375dc669daa77bfaae9b5f6e370",
-    "cpppj/src/o/RawPathProcess.cpp": "75557b1b9c481c089b466b9e4dd9c27aadae28905e43379b5c7ac7cc8bcd7683",
+    "cpppj/src/o/RawPathProcess.cpp": "4e514df8c58cda778f66adaf485443ccd8aeedc7a2469a0ba9b37f91ea9b6940",
     "cpppj/src/o/RawPathProcess.h": "2aebb2b4d2bbc3aaf2b582660264fd0af088a363b32161b6157d05f05dcce924",
     "cpppj/src/o/RawPathRuntime.cpp": "4f051a4e5c50de3a99cb856c80dcccf7988ee1000fec9f66942f6e4e8999e639",
     "cpppj/src/o/RawPathRuntime.h": "92cb4cce037b704ecb6f2b2910c97fdf5634a519ba181931f357c6383529532c",
@@ -643,7 +643,7 @@
     "cpppj/src/o/SquidDestroyLifecycle.cpp": "75a6d698b2e800acc38ef008f3f32da2efc665286a7995a2e20d499bd40215fd",
     "cpppj/src/o/SquidDestroyLifecycle.h": "f1352b9e3a55bf413538fa53995db646ce29f288f23477baf81b5cefa0b7cea4",
     "cpppj/src/o/SquidDisplay.cpp": "adff73d1c710cf295aed17e2a06cb90294e1399e5e455d423659f37c336f3dc6",
-    "cpppj/src/o/SquidDisplay.h": "aa8bf6fe22cfafb729053710e1fec6ef77a2c9bee40c51b05cb363ba57f413d7",
+    "cpppj/src/o/SquidDisplay.h": "c0fa956fb5da3d19e08b5f3eaaa8253ea233b60cad3db83f21ab750c7f95087d",
     "cpppj/src/o/SquidFactory.cpp": "6221de3262944b7105ae57dacc67ee8cee3e237b62240d5d3a2fd777a5706aed",
     "cpppj/src/o/SquidFactory.h": "439126b14875597ae876ab82d1699d414fa15fdf76ec9ac83f6794d32595c549",
     "cpppj/src/o/SquidFinder.cpp": "f3d08c7c52643341a6059297bbc8e6bada08c3c1d0e15cedf3419ea8ccf5331e",
@@ -777,7 +777,7 @@
     "cpppj/tests/DestroyGraphTests.cpp": "a3618522256bcd8f3a5313b62d31e18640e7823d481cf08f21e874ec7933c471",
     "cpppj/tests/DestroyLifecycleTests.cpp": "c4249c26d4ccf62b706c85bfe5ffc357d1e306983f845ac7759e804ee12f9050",
     "cpppj/tests/DiscRegularTests.cpp": "c9fa5350657c5478b21d98785fbdca2e7ee3a51d3de461ca3ce95a6cd458a433",
-    "cpppj/tests/DisplayTests.cpp": "8b7cb3ad85e3a031550e13a7b607689b7b00b8b8609158060ad7fab5cc1350b2",
+    "cpppj/tests/DisplayTests.cpp": "490dcc018943bb94f0938c66a7634ad7e660d623941e7f753fa2019c2d10dc53",
     "cpppj/tests/DrawSortTests.cpp": "b302bb7ed465ed9b768f3dc58a256b42f727faa4835ad97b97221bda7fb8d0f3",
     "cpppj/tests/DrawSubmissionTests.cpp": "c696705ab2df47fc18646a1074a7f807efff1731c056945d0701aba294938bf2",
     "cpppj/tests/DudeDropTests.cpp": "0b2a01d11cf59c566a7fe0e18fe5d48187a2fc3eaa3670976ed1e47a880acca7",
@@ -886,7 +886,7 @@
     "cpppj/tests/RawFinderTests.cpp": "4cc695a6242aa71ee934a0afad8733c10e3a471bd6a66b93523f3e02f946f7af",
     "cpppj/tests/RawGraphTests.cpp": "8914857113123d5ab6ae23ddb2abadae80774a82f2914f4a24c274039ca63a04",
     "cpppj/tests/RawPathDataTests.cpp": "531f1d4b1066cbdd6eea1ea8165a8fa1ca6db9cb11a0547411e51061d7a7d4f3",
-    "cpppj/tests/RawPathRuntimeTests.cpp": "8643229e7929baf27c889e6acfdbd7221d0b37db8f2daca7ce02bb3fb9a20d75",
+    "cpppj/tests/RawPathRuntimeTests.cpp": "7fbca62f94959899bf73d2b82726cbf3f4478c1a0fc8df5624a073d17274ce1f",
     "cpppj/tests/RawPathSearchTests.cpp": "4b04a25e1c6f1478db5480f279ccf1ff22381aa63955734d37b76c1c707bc997",
     "cpppj/tests/RawPathStartTests.cpp": "b5dcda9c5e3a3634fe70bc3a5a35be3ef96eb520779ec6dcca3dad84cab34a0b",
     "cpppj/tests/RawPriestWorldBindingsTests.cpp": "fe77e5893c96e392db4218b6087de3286ed60e0382c5770740c76ea0b69826f4",
@@ -2387,6 +2387,55 @@
           "path": "cpppj/tests/ShapeToBufferTests.cpp",
           "previous": "ad9bd358902fa8ad3ab113cdc917c1bf751c502dc9ab0ed89ddb4ea0f7c102c8",
           "current": "91d7010f9d6698f7237d8a2040e00658502a57dedea9da310173af4e96dd26e5"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 219,
+      "reason": "실제 raw 깊이 보존과 보행 전용 SHP 필드 연결 및 독립1170원문 대조의 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/src/client/SquidRenderer.cpp",
+          "previous": "ff98d57e03dd1087ee34ac3012fe76c359877055dbdbe70a16ff465fa6c85a6f",
+          "current": "eb75c4667e83397ff64454c8422ce9271d5cad3016b35fa2b1013275fd4fbd46"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/client/VFXDraw.cpp",
+          "previous": "d4c95ba9875659715bdb234b56baf7084d2abc6f5f4f879d1247cb309f0f5ad4",
+          "current": "2de7032c46cc0e78eba6d87be0428a772d585f7cc0dc41f7314a7e9733453a5c"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/client/VFXDraw.h",
+          "previous": "953079a93732127a0e2861f4d091328c37209c25dab7330d2a978afb52896894",
+          "current": "919d2519af8dacb2ce940c85119b4884d7027769d1e89cac41387fe55833a47d"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawPathProcess.cpp",
+          "previous": "75557b1b9c481c089b466b9e4dd9c27aadae28905e43379b5c7ac7cc8bcd7683",
+          "current": "4e514df8c58cda778f66adaf485443ccd8aeedc7a2469a0ba9b37f91ea9b6940"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/SquidDisplay.h",
+          "previous": "aa8bf6fe22cfafb729053710e1fec6ef77a2c9bee40c51b05cb363ba57f413d7",
+          "current": "c0fa956fb5da3d19e08b5f3eaaa8253ea233b60cad3db83f21ab750c7f95087d"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/tests/DisplayTests.cpp",
+          "previous": "8b7cb3ad85e3a031550e13a7b607689b7b00b8b8609158060ad7fab5cc1350b2",
+          "current": "490dcc018943bb94f0938c66a7634ad7e660d623941e7f753fa2019c2d10dc53"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/tests/RawPathRuntimeTests.cpp",
+          "previous": "8643229e7929baf27c889e6acfdbd7221d0b37db8f2daca7ce02bb3fb9a20d75",
+          "current": "7fbca62f94959899bf73d2b82726cbf3f4478c1a0fc8df5624a073d17274ce1f"
         }
       ]
     }
