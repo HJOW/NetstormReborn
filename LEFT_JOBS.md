@@ -1,5 +1,12 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-20 cpppj 사전 준비 완료: VM-W11-Codex 정밀 디컴파일·Release 컴파일
+
+- [x] 사용자가 `AGENTS.md`와 `LEFT_JOBS.md`를 다시 읽고 사전 디컴파일 및 cpppj 컴파일을 요청했다. `LEFT_JOBS.dotnetpj.md`도 확인했다. 현재 PC **VM-W11-Codex / 10.0.0.17**와 최신 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-19**가 달라 `tools/ghidra/refine_all.ps1`로 두 판본을 준비했다. 재생성 전의 41개 파일(138,001,964바이트)은 `extracted/refined-backup-before-VM-W11-Codex-20261020/`에 보존했다.
+- [x] 첫 실행은 Ghidra가 두 판본을 내보낸 뒤 Python이 CP949로 em dash를 출력하지 못해 판본 대응 단계에서 종료 코드 1로 끝났다. Ghidra 분석을 반복하지 않고 `PYTHONUTF8=1`과 `-SkipStage1`로 재개해 전체 절차 종료 코드 0을 확인했다. 최종 10.78은 5,549/5,549 성공, CD 10.72는 5,823개 중 5,822 성공·`FUN_0049f99f` 1개 실패다. 상세 해시·대응 결과·로그 경로는 [사전 준비 기록](docs/exe/cpp-preflight-20261020.md).
+- [x] Release 컴파일 `cmake --build cpppj/build --config Release --parallel`이 종료 코드 0으로 끝나 `netstorm.lib`, `NetstormCpp.exe`, `netstorm_tests.exe`를 생성했다. 사용자의 테스트 이월 지시에 따라 CTest와 게임은 실행하지 않았다. 원본 EXE 전후 SHA-256은 동일하며 AGENTS·원본 게임·cpppj 소스 변경은 없다.
+- [x] 이 사전 준비는 일시 중지된 구현 목표를 재개하지 않는다. 다음 cpppj 구현과 통합 플레이 검증은 사용자 재개 지시 후 진행한다.
+
 ## 2026-10-20 사용자 지시: cpppj 실제 실행·플레이 검증은 통합 시점으로 이월
 
 - 사용자가 이번 작업 도중 **“실제 cpppj 실행 테스트는 다 뒤로 … 작업별로 테스트하는 게 아닌 나중에 실제 플레이 테스트를 통해 한꺼번에 … 이번 테스트는 미뤄줘”**라고 지시했다. **후속 작업마다 cpppj 창 실행/플레이 스모크를 하지 않는다.** 구현을 모은 뒤 별도 통합 실제 플레이 검증에서 한꺼번에 확인한다. 아래 과거 항목의 “다음은 실제 실행/재생”을 즉시 실행 지시로 해석하지 않는다.
