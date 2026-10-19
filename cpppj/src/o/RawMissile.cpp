@@ -150,6 +150,12 @@ void RawMissile::Frame(MissileFields& fields) const {
             // CD10.72는 사거리 종료와 충돌이 겹쳐도 nonzero 표적 충돌 사운드를 요청한다.
             else { if (!hooks_.hitEffect) throw std::logic_error("Missile 실제 표적 충돌 효과 경계 누락");hooks_.hitEffect(last[0],last[1]);if (missileTypes_[asset[10]].impactSound && (!patch || !exhausted)) { if (!hooks_.impactSound) throw std::logic_error("Missile 실제 표적 충돌 사운드 경계 누락");hooks_.impactSound(last[0],last[1],missileTypes_[asset[10]].impactSound); } }
         }
+        // 원본10.78은 표적의 free 비트나 코너와 별개로 충돌 확인 뒤 이 타입 조합의 사건을 보낸다.
+        // 이전 좌표 기록·직접 피해·삭제보다 먼저 같은 클라이언트 입력 큐에 세 DWORD를 전달한다.
+        if (patch && asset[10]==state_.thunderMissileType && target[10]==state_.stoneTowerType) {
+            if (!hooks_.queueCommand) throw std::logic_error("Missile 실제 충돌 입력 큐 미연결");
+            hooks_.queueCommand(state_.hitCommand,state_.thunderMissileType,state_.stoneTowerType);
+        }
     }
     PutPoint(fields.bytes,layout.previous,last);if (!hit && !exhausted) return;
     if (!(firing[11]&1)) { if (hit && !corner) { if (!hooks_.hit) throw std::logic_error("Missile 실제 직접 총 피해 경계 누락");hooks_.hit(fields.Firing(),fields.Target()); }else { if (!hooks_.refresh) throw std::logic_error("Missile 실제 총 사거리 갱신 경계 누락");hooks_.refresh(fields.Firing()); } }

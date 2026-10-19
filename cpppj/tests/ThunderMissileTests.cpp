@@ -136,3 +136,52 @@ TEST_CASE(ThunderMissile_NativeVirtualMuzzle) { Replay(2); }
 
 // 모든 네 방향·signed 문자 fallback·불일치 사거리/클램프를 실제 종점과 비교한다.
 TEST_CASE(ThunderMissile_NativeRayEnd) { Replay(3); }
+
+namespace {
+// 기존 네 종류 원본 회귀를 유지하며 새 독립 피격 입력만 같은 장면에 공급한다.
+struct ThunderHitEventScene : ThunderMissileScene {
+    // 새 세 입력 열을 적용하고 실제 Frame의 전체 필드/슬롯/외부 효과를 반환한다.
+    std::vector<std::string> RunEvent(const std::vector<std::string>& row,bool connectQueue=true) {
+        CHECK(row.size()==Output+7);
+        std::vector<std::string> base(row.begin(),row.begin()+Output); // 기존23개 입력 형식을 유지한다.
+        base.insert(base.end(),row.begin()+Output+3,row.end());Prepare(base);
+        const auto target=Number(row[Output]),display=Number(row[Output+1]); // 원본 명령은 SID가 아니라 이 두 타입을 보낸다.
+        Slot(Sid{60})[10]=static_cast<std::uint8_t>(target);Slot(Sid{90})[10]=static_cast<std::uint8_t>(display);Slot(Sid{50})[11]=static_cast<std::uint8_t>(Number(row[Output+2]));
+        types[target].footX=2;types[target].footY=3;missileTypes[display].impactSound=Number(row[ImpactSound]);
+        RawProjectileGeometry geometry(pool,types,geometryTypes,16.0F,11.0F,&gunMode);
+        auto hooks=Hooks(geometry); // 숫자·충돌 몸체는 제품 구현이며 효과만 외부 관측 경계다.
+        if (connectQueue) hooks.queueCommand=[this](std::uint32_t command,std::uint32_t first,std::uint32_t second) {
+            events.push_back("E:"+std::to_string(command)+':'+std::to_string(first)+':'+std::to_string(second));
+        };
+        RawMissile logic(pool,types,missileTypes,state,std::move(hooks));logic.Frame(fields);
+        std::string actions,slots; // 원본이 반환한 전체 순서·128BYTE·150BYTE·포구 출력과 대조한다.
+        // 실제 호출 순서를 바꾸거나 사건만 분리하지 않는다.
+        for (const auto& event:events) { if (!actions.empty()) actions+=';';actions+=event; }
+        // 같은 세 raw 슬롯 전체를 직렬화해 부수 변경도 검사한다.
+        for (const auto sid:{Sid{50},Sid{60},Sid{90}}) slots+=Hex(pool.Slot(sid));
+        return {actions,Hex(fields.bytes),slots,"0000000000000000"};
+    }
+};
+}
+
+// 충돌 인자와 효과/소리/명령/피해/삭제의 순서를 원본688개 전체 이미지와 비교한다.
+TEST_CASE(ThunderMissile_NativeHitEventAndStrictQueue) {
+    const auto rows=LoadFixture(NETSTORM_THUNDER_HIT_EVENT_FIXTURE).rows; // 제품 변경 전에 고정한 독립 원본 기대값이다.
+    ThunderHitEventScene scene;std::size_t count=0,eventCount=0; // 실제 비교 행과 명령을 보낸 행 수다.
+    // 음성·코너·free/dead·실패 타입·통과/충돌 억제·사거리 종료도 모두 검사한다.
+    for (const auto& row:rows) {
+        const auto actual=scene.RunEvent(row);const std::vector<std::string> expected(row.begin()+Output+3,row.end());
+        CHECK(actual==expected);
+        if (actual!=expected) {
+            std::printf("  ThunderHitEvent 행%zu 기대%s / 실제%s\n",count,expected.front().c_str(),actual.front().c_str());
+            break;
+        }
+        ++count;eventCount+=expected.front().find("E:")!=std::string::npos;
+    }
+    CHECK(count==688 && eventCount==24);
+    const auto event=std::find_if(rows.begin(),rows.end(),[](const auto& row) { return row[Output+3].find("E:")!=std::string::npos; });
+    CHECK(event!=rows.end());
+    bool rejected=false; // 빈 성공으로 명령을 버리지 않는지 별도로 검사한다.
+    if (event!=rows.end()) try { static_cast<void>(scene.RunEvent(*event,false)); } catch (const std::logic_error&) { rejected=true; }
+    CHECK(rejected);
+}

@@ -35,6 +35,10 @@ struct MissileState {
     std::uint32_t thunderCannonType{131};
     // thunderMissileType: 사거리 종료 여유를 별도로 읽는10.78 썬더 표시 타입이다.
     std::uint32_t thunderMissileType{132};
+    // stoneTowerType: 썬더 충돌 시 튜토리얼 알림이 필요한 원본00541190의 현재 타입이다.
+    std::uint32_t stoneTowerType{78};
+    // hitCommand: 원본005429c8의 충돌 명령 토큰이며 두 인자는 표시/표적 타입이다.
+    std::uint32_t hitCommand{0x020000b5U};
     // rangeMargin/thunderRangeMargin: 원본00540bb4/00540bb8의 일반4·썬더10 정수 여유다.
     std::int32_t rangeMargin{4},thunderRangeMargin{10};
     // processType: 실제 missileProcessType이며 원본 두 판본 모두28이다.
@@ -75,6 +79,8 @@ struct MissileHooks {
     std::function<void(Sid,Sid)> hit;
     // hitEffect: 정상 표적 충돌의00470ac0/CD00455b40 실제 시각 효과다.
     std::function<void(float,float)> hitEffect;
+    // queueCommand: 원본00452fe0에 충돌 토큰과 표시/표적 타입을 순서대로 넣는다.
+    std::function<void(std::uint32_t,std::uint32_t,std::uint32_t)> queueCommand;
     // refresh: 현재 총의004d5000/CD004433e0 사거리 갱신이다.
     std::function<void(Sid)> refresh;
     // impact: incomingCorner 충돌 시 실제 효과0045a750/CD0047c8a0을 좌표에 생성한다.

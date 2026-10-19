@@ -814,6 +814,12 @@ struct RawCampaignSession::Impl {
         };
         if (!combatEffects.missile.firingSound) combatEffects.missile.firingSound=missileSound;
         if (!combatEffects.missile.impactSound) combatEffects.missile.impactSound=missileSound;
+        // 원본5429c8 토큰과 실제452fe0의 타입 인자를 같은 튜토리얼 소비자의 입력 큐로 전달한다.
+        missileState.hitCommand=tutorialTechnologyCommand;
+        combatEffects.missile.queueCommand=[this](std::uint32_t command,std::uint32_t display,std::uint32_t target) {
+            if (!services.assets.queueCommand) throw std::logic_error("투사체 실제 충돌 입력 큐 미연결");
+            services.assets.queueCommand(command,std::bit_cast<std::int32_t>(display),std::bit_cast<std::int32_t>(target));
+        };
         combatEffects.missile=hits->MissileHooks(*gunHit,missileState,std::move(combatEffects.missile));
         combat=std::make_unique<RawCampaignArcherBindings>(world,*gunTarget,random,archerTypes,metadata.frames,missileTypes,archerState,missileState,std::move(combatEffects));
         auto assetEffects=services.assets;assetEffects.postPop.reserveRegular=[] { return true; };

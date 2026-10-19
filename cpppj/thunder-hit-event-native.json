@@ -1,0 +1,59 @@
+{
+  "host": "VM-W11-Codex",
+  "lastDecompileHost": "VM-W11-Codex",
+  "lastDecompileDate": "2026-10-19",
+  "uniqueInputs": 688,
+  "returnsPerPrecision": [
+    688,
+    688
+  ],
+  "precisionDifferences": [],
+  "eventRows": 24,
+  "nativeCalls": {
+    "00482340": 688,
+    "0049a840": 2528,
+    "0040e800": 1760,
+    "004adea0": 1032,
+    "0049a900": 1032,
+    "0041cfc0": 1032,
+    "004ac550": 344,
+    "00431f90": 104,
+    "0040e880": 536,
+    "0041d0d0": 1072,
+    "0040e8f0": 536,
+    "004ac950": 904,
+    "00468cc0": 400
+  },
+  "boundaries": {
+    "20000130": 688,
+    "20000120": 688,
+    "00436d00": 104,
+    "0049af10": 104,
+    "00470ac0": 48,
+    "004a9c30": 72,
+    "004d4f00": 48,
+    "20000140": 280,
+    "00452fe0": 24,
+    "0045a750": 48,
+    "004d5000": 232
+  },
+  "sources": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_thunder_hit_event.py": "8edc400c8020462187d401af42fde9d9d05a7a3ec1f1c9f3310fe16ccd6eada0",
+    "tools/decomp_thunder_missile.py": "b556de87937ff814794abccb6a4d392af7224a8556d6b827b0fe518e80b71122",
+    "tools/decomp_crossbow_missile.py": "e54abc592c7c07a866814a591f25e37ac9d654c39cb67ff4bf8a10e10196468f",
+    "tools/decomp_gunmissile_oracle.py": "4671a0a69ee91d6e0280a6c4af73d38e6ca6b096ee04161aeaef8d2d3e5c0fd1",
+    "tools/decomp_owner_oracle.py": "5a837ad7fd233d9d75c7241d52fbf2e5a508e24dc158d091f243a13ab698e7fb",
+    "cpppj/tests/fixtures/thunder-hit-event-x86.tsv": "64edac17dc6f25824bfed45afc6537cf120fe9f051fb47c84bceb4bfdbf85f58"
+  },
+  "originalGlobals": {
+    "005429c8": "020000b5",
+    "00541268": 132,
+    "00541190": 78
+  },
+  "limitations": [
+    "독립 입력의 제한 x86 실행이며 실제 게임/OS 실행이나 자연 완주가 아니다.",
+    "SHP/공간 효과/피해/사운드/입력 큐는 명시 외부 경계다. 큐 본문이 아닌 실제 호출 인자와 순서를 고정한다."
+  ]
+}
