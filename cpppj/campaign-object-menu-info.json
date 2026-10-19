@@ -10,7 +10,7 @@
   "currentSources": {
     ".gitattributes": "3e8d869648cde0415d1a91e9b22d5a7ed7e5c0585923a189bfd37aa33229f3a8",
     "cpppj/src/client/CMakeLists.txt": "ea7b520652a0a21cdaeb2852aae3992c3e361b5d01426f285056dbb1508f6ccd",
-    "cpppj/src/client/RawCampaignSession.cpp": "6178f7e7eb219c88fd4ad7c397b3efe0c0c6e406021fb3e0a8c0579e0e132175",
+    "cpppj/src/client/RawCampaignSession.cpp": "933019e945c3cc6616cfe7bdfd7f1657b7d2e7f14cd9154dc21c428ca2fcfbaa",
     "cpppj/src/client/RawCampaignSession.h": "f905619a10b1ecc976bdfc082f8196e3f82190b5f7770828aaf84d00b813c573",
     "cpppj/src/o/RawPlayerIdentity.cpp": "96c5c91ae865f10f9deba31b59ed9bac40df16c1d38d38d37329100732cfd49c",
     "cpppj/src/o/RawPlayerIdentity.h": "fe72fe29c2286a6ee6850affe138d9447516bdab1be3e5ab581f58438cc9b0ff",
@@ -1553,6 +1553,19 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "6814b98421a14e37959652743dab5e6a24771de6c3ef50cf4aae8cce63fa191e",
           "current": "83eed7cedab8650ce570f444a5c06efe29b2ce414e3049777221cf672f6e248f"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 213,
+      "reason": "Early5 실제 캐논 공격 관측과 훨리기그 전용 폭탄의 공통 삭제 연결 및 실패 진단의 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "6178f7e7eb219c88fd4ad7c397b3efe0c0c6e406021fb3e0a8c0579e0e132175",
+          "current": "933019e945c3cc6616cfe7bdfd7f1657b7d2e7f14cd9154dc21c428ca2fcfbaa"
         }
       ]
     }

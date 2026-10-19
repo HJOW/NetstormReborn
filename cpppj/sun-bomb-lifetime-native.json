@@ -1,0 +1,45 @@
+{
+  "host": "VM-W11-Codex",
+  "lastDecompile": "VM-W11-Codex / 2026-10-19",
+  "observations": 2,
+  "normalReturns": 0,
+  "scope": "PE 정적 읽기. 10.78 TYPE163의45d2a0→509b98과 가상10/14/18/48. CD10.72는 별도 주소 기록만 하며 실행 연결 완료로 세지 않는다.",
+  "disassembly": {
+    "originals": [
+      "0045d2a0 mov eax, dword ptr [esp + 4]",
+      "0045d2a4 mov ecx, dword ptr [0x5c8464]",
+      "0045d2aa imul eax, eax, 0x32",
+      "0045d2ad add eax, ecx",
+      "0045d2af je 0x45d2b8",
+      "0045d2b1 mov dword ptr [eax], 0x509b98",
+      "0045d2b7 ret ",
+      "0045d2b8 xor eax, eax",
+      "0045d2ba ret ",
+      "0045d2bb int3 ",
+      "0045d2bc int3 ",
+      "0045d2bd int3 ",
+      "0045d2be int3 ",
+      "0045d2bf int3 "
+    ],
+    "originalCD": [
+      "004990f0 mov eax, dword ptr [esp + 4]",
+      "004990f4 shl eax, 2",
+      "004990f7 lea ecx, [eax + eax*8]",
+      "004990fa mov eax, dword ptr [0x5395dc]",
+      "004990ff add eax, ecx",
+      "00499101 je 0x49910a",
+      "00499103 mov dword ptr [eax], 0x5050f0",
+      "00499109 ret ",
+      "0049910a xor eax, eax",
+      "0049910c ret ",
+      "0049910d lea ecx, [ecx]"
+    ]
+  },
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/Netstorm.exe": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "cpppj/tests/fixtures/constructors-x86.tsv": "c92412152abb65808a2037c30b2e5df4dfc783b891d52e995a4313cda527218e",
+    "tools/decomp_sun_bomb_lifetime.py": "522e6968c751ac4e6b40d2db4acca430e31db314fead1bb437c31b33a3278375",
+    "cpppj/tests/fixtures/sun-bomb-lifetime-vtables.tsv": "44cebf6d165790314a5a2270c372f2da211841b3381362df54483df27c93dcae"
+  }
+}

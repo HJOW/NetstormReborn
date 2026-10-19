@@ -31,6 +31,7 @@
 #include <iostream>
 #include <set>
 #include "o/RawGunProcess.h"
+#include "o/RawSunFlyerFrame.h"
 #include <type_traits>
 using namespace netstorm::client;
 //BYTE변환의임시DWORD를원본공유owner로빌리는오류를거부한다.
@@ -74,6 +75,36 @@ struct SessionServicesFixture {
         return s; // 실제 부모 VT 통지와 Player AI 조회 래퍼를 세션이 공급한다.
     }
 };
+// 실제 훨리기그 전용 ClearBomb가 같은 Session의 생성·공간·공통 삭제를 끝내는지 검사한다.
+TEST_CASE(CampaignSession_SunFlyerBombClearsActualSessionLifetime) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
+    ConfigInterface config([&](std::string_view path) { return assets.files.TryRead(path); });config.Configuration().Assign("DataDir=\"d\"\ncurrentLanguage=\"english\"\nmissionSpec=\"{DataDir}\\{local.1}.{currentLanguage}\"\nfortSpec=\"{DataDir}\\{local.1}.fort\"\n[END]\n");MissionScript script(config,"Tutorial5");CHECK(script.Loaded()); // 스크립트가 지정한 실제 fort 이름을 사용한다.
+    auto fort=FortTemplate::Parse(assets.files.Read(script.FortPath()),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),script.FortName(),external.Services());session.Load();auto core=session.Core();
+    const auto evidence=(std::filesystem::path(__FILE__).parent_path()/"fixtures/sun-bomb-lifetime-vtables.tsv").string(); // 보호 PE 정적 관측을 생성자/VT와 별개로 대조한다.
+    const auto native=LoadFixture(evidence.c_str());CHECK(native.rows.size()==2 && native.rows[0][0]=="originals");CHECK(core.types[163].constructorAddress==std::stoul(native.rows[0][2],nullptr,16));
+    const bool boss=true,paused=false;const double now=0;const std::uint32_t bombType=163; // 전용 ClearBomb는 이 시간/권한 값을 변경하지 않는다.
+    std::vector<SunFlyerFrameType> types(core.types.size()); // ClearBomb에서 선택하지 않는 프레임 자료의 보관 영역이다.
+    std::uint32_t deletes=0;SunFlyerFrameHooks hooks; // 삭제 몸체는 실제 Session에 맡기고 호출 인수만 관찰한다.
+    hooks.robust=[&](Sid sid,bool diagnose) { CHECK(diagnose);return sid.value && !(core.pool.Slot(sid)[11]&3U); };
+    hooks.destroy=[&](Sid sid,std::uint32_t flags) { CHECK(flags==0x10);++deletes;CHECK(session.World().Destroy(sid,flags)); };
+    RawSunFlyerFrame frame(core.pool,core.shapes,types,{boss,paused,now,bombType},std::move(hooks));
+    // 떨어지는 폭탄과 이미 Unpop된 폭탄, 부모 소멸 시의 정리를 같은 실제 수명으로 실행한다.
+    for (const bool popped:{false,true}) {
+        std::array<std::vector<std::uint16_t>,4> heads; // 생성 이전 공간 해시 전체를 비교할 기준이다.
+        // 네 공간 단계의 원본 연결 목록을 각각 보존한다.
+        for (int level=0;level<4;++level) heads[level].assign(core.hash.Entries(level).begin(),core.hash.Entries(level).end());
+        const auto sp=session.Sp(1);const auto kernel=core.kernel.Size();const std::vector<std::uint8_t> spots(core.spots.begin(),core.spots.end());
+        const auto bomb=session.World().Create(163,2);CHECK(Get(core.pool.Slot(bomb),0)==std::stoul(native.rows[0][3],nullptr,16));CHECK(core.pool.Slot(bomb)[10]==163);core.pool.AllocatedBytes(bomb)[40]|=8U;
+        if (popped) session.World().Pop(bomb,136.0F,110.0F,0);
+        FlyerProcessFields fields;fields.bytes.fill(0);fields.sunTail.fill(0);Put(fields.bytes,96,bomb.value); // 실제 전용+96의 현재 폭탄 SID 입력이다.
+        frame.ClearBomb(fields);CHECK(Get(fields.bytes,96)==0 && (core.pool.Slot(bomb)[11]&3U)==3U);CHECK(session.Sp(1)==sp && core.kernel.Size()==kernel);
+        CHECK(std::equal(spots.begin(),spots.end(),core.spots.begin()));
+        // 삭제 후에는 어느 해시 단계에도 폭탄이나 끊어진 체인이 남지 않아야 한다.
+        for (int level=0;level<4;++level) CHECK(std::equal(heads[level].begin(),heads[level].end(),core.hash.Entries(level).begin()));
+        frame.ClearBomb(fields);CHECK(core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0 && core.bookkeeping.depth==0);
+    }
+    CHECK(deletes==2);
+}
 // 실제 원본 기본값 몸체로600바이트를 준비하고 명시 프로필만 덮어쓴다. 전략 프레임을 실행하는 입력은 아니다.
 std::array<std::uint8_t,RawMissionAiSettings::kSize> SessionAiSettings(std::string_view name,std::string_view technology,std::uint32_t allies=0) {
     std::array<std::uint8_t,RawMissionAiSettings::kSize> profile;profile.fill(0xa7); // 생성자가 보존해야 할 미초기화 입력 바이트다.

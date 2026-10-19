@@ -9,7 +9,7 @@
     "changed": false
   },
   "sources": {
-    "cpppj/src/client/GameWorld.cpp": "9ffd853ff68dfc7ed28b73acab0e79dd3d0c96fe9e05d0822cac7a30b6d8ab5c",
+    "cpppj/src/client/GameWorld.cpp": "9dd9c938d1a68d0054091a87cdfc5e08aedddec6792e55bfee6f439743ef3402",
     "cpppj/src/client/RawUserSelection.cpp": "89cbf7641299a7f84905193b4d90f3706f122665a15228f42bd39f9b98bc40e7",
     "cpppj/src/client/UserInput.cpp": "fd1bee42a48c4a33098114e813a7909d449791671fb0e313b76efc55216c20bd",
     "cpppj/src/o/RawTutorialLater.cpp": "1f40efc3aefb38e02ff8a9b5d2553ca4c30f773c2c8b4f6dbb82cd3e5b9bc082",
@@ -109,6 +109,19 @@
           "path": "tools/cpp_tutorial_five_enemy_base_smoke.py",
           "previous": "737f0f503e625a9048f9bc46fc86fb7b94eb2ebbfb8d64542e70c6ab139c258c",
           "current": "076da85c40cd436464fa134286594f5c009ac55c691ed1a9c2194fc2f3bfd930"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 213,
+      "reason": "Early5 실제 캐논 공격 관측과 훨리기그 전용 폭탄의 공통 삭제 연결 및 실패 진단의 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/sources",
+          "path": "cpppj/src/client/GameWorld.cpp",
+          "previous": "9ffd853ff68dfc7ed28b73acab0e79dd3d0c96fe9e05d0822cac7a30b6d8ab5c",
+          "current": "9dd9c938d1a68d0054091a87cdfc5e08aedddec6792e55bfee6f439743ef3402"
         }
       ]
     }

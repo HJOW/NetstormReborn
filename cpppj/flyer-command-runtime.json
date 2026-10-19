@@ -11,7 +11,7 @@
   "sources": {
     "cpppj/src/o/RawBattleBroadcast.h": "44e111bf4555900923a54d0f304d6a4327827ebb1af34250e2c54801f501f8f7",
     "cpppj/src/o/RawBattleBroadcast.cpp": "0996ea53b855835ead97f022fb3d4024e9511e0d3a4564879d7de24696632864",
-    "cpppj/src/client/RawCampaignSession.cpp": "6178f7e7eb219c88fd4ad7c397b3efe0c0c6e406021fb3e0a8c0579e0e132175",
+    "cpppj/src/client/RawCampaignSession.cpp": "933019e945c3cc6616cfe7bdfd7f1657b7d2e7f14cd9154dc21c428ca2fcfbaa",
     "cpppj/src/o/RawFlyerTarget.cpp": "b325cb60c22f98b6e30faa2d330866d1a38f3a403a04388a394baefd188eb772",
     "cpppj/src/o/RawFlyerFrame.cpp": "7752144c626f831c64bf0959ad8f9579d67bae1c87def2dcd0f1797b306f2049",
     "cpppj/tests/BattleBroadcastTests.cpp": "4fd4e008286d5a28fdfcc56a0d2e5c8f3d4d9e60658905877eb9808e7c66aac4",
@@ -158,5 +158,20 @@
     "실제 캐논 공격과 두 적 건물 파괴",
     "플라이어 귀환/폭탄과 자연 후속 진행",
     "주문/사제 포획·희생·다른 지정 미션 및 전체 동일성"
+  ],
+  "integration_updates": [
+    {
+      "date": "2026-10-19",
+      "unit": 213,
+      "reason": "Early5 실제 캐논 공격 관측과 훨리기그 전용 폭탄의 공통 삭제 연결 및 실패 진단의 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/sources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "6178f7e7eb219c88fd4ad7c397b3efe0c0c6e406021fb3e0a8c0579e0e132175",
+          "current": "933019e945c3cc6616cfe7bdfd7f1657b7d2e7f14cd9154dc21c428ca2fcfbaa"
+        }
+      ]
+    }
   ]
 }

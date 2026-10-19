@@ -1138,7 +1138,11 @@ struct RawCampaignSession::Impl {
     bool BuriedLifetime(Sid sid) const { const auto raw=core.pool.Slot(sid);return std::uint32_t(raw[10])==gemRewardState.buriedType && Read(raw,0)==0x50a748U; }
     // 원본여섯Bomb 생성자표의+10/+18은공통이며502370의+14만41e960이다.정확한VT만추가한다.
     bool BombLifetime(Sid sid) const {
-        const auto raw=core.pool.Slot(sid);if (raw[10]>=core.types.size() || !(core.types[raw[10]].flags2&0x100U)) return false;
+        const auto raw=core.pool.Slot(sid);
+        // 훨리기그 폭탄163의45d2a0 생성자는509b98을 쓰며 +10/+14/+18은4af780/4b0950/4b0840이다.
+        // 이 전용 그림 자산은 일반 Bomb 속성 비트와 구별해 검증된 TYPE/VT 쌍으로만 허용한다.
+        if (raw[10]==163 && Read(raw,0)==0x509b98U) return true;
+        if (raw[10]>=core.types.size() || !(core.types[raw[10]].flags2&0x100U)) return false;
         // 현재PE에서공통수명또는고유41e960을확인한가상표들이다.
         for (const auto table:{0x502370U,0x502448U,0x502510U,0x502ff8U,0x5030c0U,0x503188U,0x501dd0U}) if (Read(raw,0)==table) return true;return false;
     }

@@ -585,6 +585,7 @@ std::optional<ScreenPoint> GameWorld::Point(std::string_view label) const {
         const auto& placement=campaign_->Cursor().Placement();if (placement.imageWidth<=0 || placement.imageHeight<=0) return {};
         constexpr int radius=24; // 목표 주변24칸에서만 찾으며 다른 지역으로 임의 이동하지 않는다.
         std::optional<ScreenPoint> nearest;double distanceLimit=1e9;std::size_t legalCount{},firingCount{};std::array<float,7> requested{}; // 허용/사격 후보와 실패 시 요청 칸의 실제 진단이다.
+        std::vector<std::array<float,2>> legalPoints; // 자동 입력 실패 때만 조회할 실제 허용 위치이며 게임 결과로 사용하지 않는다.
         for (int x=std::max(1,targetX-radius);x<=std::min(255,targetX+radius);++x) { // 현재 보드 안의 후보만 질의한다.
             for (int y=std::max(1,targetY-radius);y<=std::min(255,targetY+radius);++y) { // 미리보기 전체가 실제 허용되는지 검사한다.
                 const double distance=(x-targetX)*(x-targetX)+(y-targetY)*(y-targetY);if (distance>=distanceLimit) continue;
@@ -593,6 +594,7 @@ std::optional<ScreenPoint> GameWorld::Point(std::string_view label) const {
                 campaign_->Cursor().Update(mouse.x,mouse.y);const auto& drop=campaign_->CursorDropSettings();
                 if (firing && x==targetX && y==targetY) requested={drop.x,drop.y,static_cast<float>(drop.legal),static_cast<float>(placement.descriptionAllowed),static_cast<float>(placement.placementAllowed),static_cast<float>(placement.sourceAllowed),static_cast<float>(drop.localPlayer)};
                 if (!drop.legal) continue;++legalCount;
+                if (firing) legalPoints.push_back({drop.x,drop.y}); // 기존 탐색 순서와 선택 판정을 유지하고 관측만 보관한다.
                 if (firing) { // 실제 원본 MayTarget/포구 ray가 지정 적을 칠 수 있는 합법 캐논 자리만 선택한다.
                     const auto& type=core.types[128];const o::GunTargetQuery query{drop.x,drop.y,static_cast<float>(drop.x-type.footX*.5),static_cast<float>(drop.y-type.footY*.5),128,0,drop.localPlayer,0};if ((core.pool.Slot(target)[11]&3U) || !campaign_->GunTargeting().MayTarget(query,target)) continue;
                 }
@@ -601,7 +603,24 @@ std::optional<ScreenPoint> GameWorld::Point(std::string_view label) const {
             }
         }
         if (nearest) campaign_->Cursor().Update(nearest->x,nearest->y);
-        else if (firing) std::fprintf(stderr,"자동 사격 자리 없음: legal%zu fire%zu 요청(%g,%g) legal%g desc%g place%g source%g owner%g snap%u camera%d,%d\n",legalCount,firingCount,requested[0],requested[1],requested[2],requested[3],requested[4],requested[5],requested[6],campaign_->Cursor().SnapToGrid(),scrollX_,scrollY_); // 자동 입력 실패의 실제 판정을 기록하며 성공으로 대체하지 않는다.
+        else if (firing) {
+            std::fprintf(stderr,"자동 사격 자리 없음: legal%zu fire%zu 요청(%g,%g) legal%g desc%g place%g source%g owner%g snap%u camera%d,%d\n",legalCount,firingCount,requested[0],requested[1],requested[2],requested[3],requested[4],requested[5],requested[6],campaign_->Cursor().SnapToGrid(),scrollX_,scrollY_); // 자동 입력 실패의 실제 판정을 기록하며 성공으로 대체하지 않는다.
+            const auto raw=core.pool.Slot(target);const auto footprint=campaign_->GunTargeting().Footprint(target); // 같은 실제 표적 상태와 확장 전 발자국이다.
+            std::fprintf(stderr,"자동 사격 표적: sid%u type%u state%u owner%u extra%u foot(%g,%g,%g,%g)\n",target.value,raw[10],raw[11],raw[34],raw[40],footprint.left,footprint.top,footprint.right,footprint.bottom);
+            constexpr std::size_t kDiagnosticLimit=64; // 실패 로그만 제한하며 탐색 후보/성공 조건은 제한하지 않는다.
+            // 허용된 실제 후보의 공간 조건과 발사 판정을 구별한다.
+            for (std::size_t index=0;index<std::min(legalPoints.size(),kDiagnosticLimit);++index) {
+                const auto point=legalPoints[index];const auto& type=core.types[128]; // 같은 실제 후보/캐논 발자국으로 기존 문맥을 재구성한다.
+                const o::GunTargetQuery query{point[0],point[1],static_cast<float>(point[0]-type.footX*.5),static_cast<float>(point[1]-type.footY*.5),128,0,campaign_->CursorDropSettings().localPlayer,0}; // 기존 자동 입력 판정과 동일한 조회 인수다.
+                std::fprintf(stderr,"자동 사격 허용 후보: (%g,%g) shoot%d target%d\n",point[0],point[1],campaign_->GunTargeting().MayShoot(query,target),campaign_->GunTargeting().MayTarget(query,target));
+            }
+            const auto& type=core.types[128];const o::GunTargetQuery query{static_cast<float>(targetX),static_cast<float>(targetY),static_cast<float>(targetX-type.footX*.5),static_cast<float>(targetY-type.footY*.5),128,0,campaign_->CursorDropSettings().localPlayer,0}; // 요청 위치의 방향별 사정선을 읽기만 한다.
+            // 네 사정선을 기록해 단순 사거리/정렬과 표적 필터를 분리한다.
+            for (int direction=0;direction<8;direction+=2) {
+                const auto ray=campaign_->GunTargeting().CannonRay(query,direction); // 실제 TYPE/SHP 포구와 현재 배율이다.
+                std::fprintf(stderr,"자동 사격 요청 ray%d: (%g,%g,%g,%g)\n",direction,ray.left,ray.top,ray.right,ray.bottom);
+            }
+        }
         return nearest;
     }
     // 자동 입력의 건설 목표는 현재 미리보기 치수/기준점으로 마우스 위치만 역산한다. 배치 판정/생성은 실제 클릭 경로를 사용한다.
