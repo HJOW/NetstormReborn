@@ -14,7 +14,7 @@
     "cpppj/src/client/RawCampaignSession.cpp": "4b0470acb1ea5cb275959eb4a70df1d795c4f87d6a51a2a78f6e35ebe573f36b",
     "cpppj/src/CMakeLists.txt": "dc93067f7759849e630647688fa09684944a0f5aec5bf7d774d429227e600599",
     "cpppj/tests/CMakeLists.txt": "83eed7cedab8650ce570f444a5c06efe29b2ce414e3049777221cf672f6e248f",
-    "cpppj/tests/CampaignSessionTests.cpp": "23674336919f1a4d334db02413d226fc5761d9cd66ec3e273377cf72430b5901",
+    "cpppj/tests/CampaignSessionTests.cpp": "1f46f900237734895c7e9f3d36337c0c62953ba81aeb70db751cbc53214fb9b7",
     "cpppj/tests/PathRetargetTests.cpp": "07b2e79eda167bea7a9934db91863c2730d908a48cdfe8f4c905ac6588de9be0",
     "tools/decomp_path_retarget.py": "abd243287cf0b8c440e4bf9ba83dd40a2ab980374613201fd3c00f1273aa670a",
     "docs/exe/cpp-path-retarget-20261018.md": "57daa01e0ea691b9821188baa94bb629e17460e1deee6cba9ec8163f6690157a",
@@ -1482,6 +1482,19 @@
           "path": "cpppj/src/o/RawPathProcess.cpp",
           "previous": "75557b1b9c481c089b466b9e4dd9c27aadae28905e43379b5c7ac7cc8bcd7683",
           "current": "4e514df8c58cda778f66adaf485443ccd8aeedc7a2469a0ba9b37f91ea9b6940"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 221,
+      "reason": "세 제네레이터를 실제 원본 수집/일반 Draw에 연결하여 TYPE 기준점과 그림자를 복원한 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "23674336919f1a4d334db02413d226fc5761d9cd66ec3e273377cf72430b5901",
+          "current": "1f46f900237734895c7e9f3d36337c0c62953ba81aeb70db751cbc53214fb9b7"
         }
       ]
     }

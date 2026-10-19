@@ -22,7 +22,7 @@
     "cpppj/src/client/RawCampaignSession.cpp": "4b0470acb1ea5cb275959eb4a70df1d795c4f87d6a51a2a78f6e35ebe573f36b",
     "cpppj/src/CMakeLists.txt": "dc93067f7759849e630647688fa09684944a0f5aec5bf7d774d429227e600599",
     "cpppj/tests/CMakeLists.txt": "83eed7cedab8650ce570f444a5c06efe29b2ce414e3049777221cf672f6e248f",
-    "cpppj/tests/CampaignSessionTests.cpp": "23674336919f1a4d334db02413d226fc5761d9cd66ec3e273377cf72430b5901",
+    "cpppj/tests/CampaignSessionTests.cpp": "1f46f900237734895c7e9f3d36337c0c62953ba81aeb70db751cbc53214fb9b7",
     "cpppj/src/o/RawBombPreDestroy.h": "0cf2422a487e7d85ec7c8f69001594f4fc68394f6b57d48a3065eae4cd39f07e",
     "cpppj/src/o/RawBombPreDestroy.cpp": "0300ca6d21f298fb2752ddfc6fb4126c4f066e19f72a26354d2dcbb59a8ba830",
     "cpppj/tests/LightningScreenTests.cpp": "60293a6937fc70e9c8538b607a548f1616e7e2b86eae15a6b6f5245c0eeebd42",
@@ -1393,6 +1393,19 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "b0f41abb1e4471fa109de00d131a9abba79867fb6422116e90f941b7fe201913",
           "current": "23674336919f1a4d334db02413d226fc5761d9cd66ec3e273377cf72430b5901"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 221,
+      "reason": "세 제네레이터를 실제 원본 수집/일반 Draw에 연결하여 TYPE 기준점과 그림자를 복원한 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "23674336919f1a4d334db02413d226fc5761d9cd66ec3e273377cf72430b5901",
+          "current": "1f46f900237734895c7e9f3d36337c0c62953ba81aeb70db751cbc53214fb9b7"
         }
       ]
     }

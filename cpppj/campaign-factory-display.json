@@ -57,15 +57,15 @@
   },
   "currentSources": {
     "cpppj/src/CMakeLists.txt": "dc93067f7759849e630647688fa09684944a0f5aec5bf7d774d429227e600599",
-    "cpppj/src/client/GameWorld.cpp": "38fff98272c4c5b872fd03d14832790d44dbe051570c3d9785661aa6efd6c481",
+    "cpppj/src/client/GameWorld.cpp": "841563a3b989990707112d74a032a5b7afa11147412924f7ecc975980d4cda15",
     "cpppj/src/client/GameWorld.h": "d51dfe75377b1afd870bfeb40e26cef9f6233f65217d757135648ce064043a16",
     "cpppj/tests/CMakeLists.txt": "83eed7cedab8650ce570f444a5c06efe29b2ce414e3049777221cf672f6e248f",
-    "cpppj/tests/CampaignSessionTests.cpp": "23674336919f1a4d334db02413d226fc5761d9cd66ec3e273377cf72430b5901",
+    "cpppj/tests/CampaignSessionTests.cpp": "1f46f900237734895c7e9f3d36337c0c62953ba81aeb70db751cbc53214fb9b7",
     "tools/cpp_priest_construction_smoke.py": "93524c9e1fb58e7e589fc25c7507e105e750b96cb66ad7ddbf9a58aae2756c2c",
     "cpppj/src/client/SpriteColorMaps.h": "616d6afb5af4bb505f0f780b05cbc9dec4058026b43ba898be5719a5ab233e54",
     "cpppj/src/client/SpriteColorMaps.cpp": "9a2d39e42ba43fb32baf622923e4fa5a2629f0ae8c186dd3f2d1bb34a0dd9c61",
     "cpppj/src/client/RawCampaignFactoryDisplay.h": "d2434f7d291754651b9810411235659ca35f393443423340818a261599640f2e",
-    "cpppj/src/client/RawCampaignFactoryDisplay.cpp": "c93640d0b659789ffb74d6b4a0d71b1f18522638480dd7b0508259747260ee06",
+    "cpppj/src/client/RawCampaignFactoryDisplay.cpp": "c95ed76a46e437d73f16c1038eef1383a2570b60e2de6b502c9445191c331193",
     "cpppj/tests/SpriteColorMapsTests.cpp": "7f16e0b8bbdb0bafea973b2a920d1c3e205aeec777688fef339bcd95f69dc4d4",
     "tools/decomp_sprite_colors.py": "b8b7be9f61fa8fe8bbe3f3c36c667b970815f3a93022aae79c10ad663f612c69",
     "cpppj/tests/fixtures/sprite-colors-x86.tsv": "55c7e9e1d33f125b86f17fe3bf40a9efbf2cf8834669d5950eed216a9fbe2b6d",
@@ -5660,6 +5660,31 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "b0f41abb1e4471fa109de00d131a9abba79867fb6422116e90f941b7fe201913",
           "current": "23674336919f1a4d334db02413d226fc5761d9cd66ec3e273377cf72430b5901"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 221,
+      "reason": "세 제네레이터를 실제 원본 수집/일반 Draw에 연결하여 TYPE 기준점과 그림자를 복원한 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/GameWorld.cpp",
+          "previous": "38fff98272c4c5b872fd03d14832790d44dbe051570c3d9785661aa6efd6c481",
+          "current": "841563a3b989990707112d74a032a5b7afa11147412924f7ecc975980d4cda15"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "23674336919f1a4d334db02413d226fc5761d9cd66ec3e273377cf72430b5901",
+          "current": "1f46f900237734895c7e9f3d36337c0c62953ba81aeb70db751cbc53214fb9b7"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignFactoryDisplay.cpp",
+          "previous": "c93640d0b659789ffb74d6b4a0d71b1f18522638480dd7b0508259747260ee06",
+          "current": "c95ed76a46e437d73f16c1038eef1383a2570b60e2de6b502c9445191c331193"
         }
       ]
     }

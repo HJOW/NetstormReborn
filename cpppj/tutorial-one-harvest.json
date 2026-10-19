@@ -8,7 +8,7 @@
   "originalGameExecutions": 0,
   "baseline": "c445683592e712662385e01036cabe2031e65a40",
   "sources": {
-    "cpppj/src/client/GameWorld.cpp": "38fff98272c4c5b872fd03d14832790d44dbe051570c3d9785661aa6efd6c481",
+    "cpppj/src/client/GameWorld.cpp": "841563a3b989990707112d74a032a5b7afa11147412924f7ecc975980d4cda15",
     "cpppj/src/client/UberGump.cpp": "c160136246b091eed0d2dbdd6d091d068e7c0460191d935c77582ce1c137d932",
     "cpppj/src/app/main.cpp": "9395c790b1a31c7e36f76b55cea3dd89ee7fdc769e694dc7d2fbdaa7e9eb7cd8",
     "tools/cpp_tutorial_harvest_smoke.py": "58606aae2a86d99360f650fc7e5f27785aabca54b53a0856c17ba7f3a9d0a22b",
@@ -306,6 +306,19 @@
           "path": "cpppj/src/client/GameWorld.cpp",
           "previous": "9dd9c938d1a68d0054091a87cdfc5e08aedddec6792e55bfee6f439743ef3402",
           "current": "38fff98272c4c5b872fd03d14832790d44dbe051570c3d9785661aa6efd6c481"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 221,
+      "reason": "세 제네레이터를 실제 원본 수집/일반 Draw에 연결하여 TYPE 기준점과 그림자를 복원한 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/sources",
+          "path": "cpppj/src/client/GameWorld.cpp",
+          "previous": "38fff98272c4c5b872fd03d14832790d44dbe051570c3d9785661aa6efd6c481",
+          "current": "841563a3b989990707112d74a032a5b7afa11147412924f7ecc975980d4cda15"
         }
       ]
     }

@@ -11,8 +11,8 @@
   "implementation": "Factory 두 실제 VT의 원본+78 본체 프레임을 같은 SquidDisplay 클릭 영역에 연결했다.",
   "nativeScope": "기존 RawFactoryDraw/ShapeToBuffer 원본 픽셀 대조를 재사용했다. 새 독립 PE 표본 생성이나 원본 게임 실행은 없다.",
   "sources": {
-    "cpppj/src/client/GameWorld.cpp": "38fff98272c4c5b872fd03d14832790d44dbe051570c3d9785661aa6efd6c481",
-    "cpppj/src/client/RawCampaignFactoryDisplay.cpp": "6d62937a5e5f8a44dad3ca68199dc67b233f4b56794c704d722214de82375b4c",
+    "cpppj/src/client/GameWorld.cpp": "841563a3b989990707112d74a032a5b7afa11147412924f7ecc975980d4cda15",
+    "cpppj/src/client/RawCampaignFactoryDisplay.cpp": "c95ed76a46e437d73f16c1038eef1383a2570b60e2de6b502c9445191c331193",
     "cpppj/src/o/RawFactoryDraw.cpp": "b0d5e95ae773f55eccb29a03a7824c7446c87c48b473d4b4f0f7d876f92bea1b",
     "cpppj/src/o/RawFactoryDraw.h": "deb03d6428d34ac87172e9bfa46d7862ddef450014bb9040d08508212b90b096",
     "cpppj/src/o/SquidDisplay.cpp": "adff73d1c710cf295aed17e2a06cb90294e1399e5e455d423659f37c336f3dc6",
@@ -292,6 +292,25 @@
           "path": "cpppj/src/client/GameWorld.cpp",
           "previous": "9dd9c938d1a68d0054091a87cdfc5e08aedddec6792e55bfee6f439743ef3402",
           "current": "38fff98272c4c5b872fd03d14832790d44dbe051570c3d9785661aa6efd6c481"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 221,
+      "reason": "세 제네레이터를 실제 원본 수집/일반 Draw에 연결하여 TYPE 기준점과 그림자를 복원한 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/sources",
+          "path": "cpppj/src/client/GameWorld.cpp",
+          "previous": "38fff98272c4c5b872fd03d14832790d44dbe051570c3d9785661aa6efd6c481",
+          "current": "841563a3b989990707112d74a032a5b7afa11147412924f7ecc975980d4cda15"
+        },
+        {
+          "group": "/sources",
+          "path": "cpppj/src/client/RawCampaignFactoryDisplay.cpp",
+          "previous": "6d62937a5e5f8a44dad3ca68199dc67b233f4b56794c704d722214de82375b4c",
+          "current": "c95ed76a46e437d73f16c1038eef1383a2570b60e2de6b502c9445191c331193"
         }
       ]
     }

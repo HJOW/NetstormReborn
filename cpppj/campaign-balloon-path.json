@@ -21,7 +21,7 @@
     "cpppj/src/o/SquidPostPop.cpp": "0e6f552bafeab1be94ba07919b928535e774ce54e121d775df514c9b6645d4e6",
     "cpppj/src/o/SquidPostPop.h": "b4bfb4886068b9dd98bed52b9f56f17e1c25e50b123b4fdd6b165f2054bcdf1d",
     "cpppj/tests/CMakeLists.txt": "83eed7cedab8650ce570f444a5c06efe29b2ce414e3049777221cf672f6e248f",
-    "cpppj/tests/CampaignSessionTests.cpp": "23674336919f1a4d334db02413d226fc5761d9cd66ec3e273377cf72430b5901",
+    "cpppj/tests/CampaignSessionTests.cpp": "1f46f900237734895c7e9f3d36337c0c62953ba81aeb70db751cbc53214fb9b7",
     "cpppj/src/o/RawBalloonFrame.cpp": "71390bf0c48ed94bd6381b15c812b5a6702cd94e02528692f7ac5d1b6f18ab05",
     "cpppj/src/o/RawBalloonFrame.h": "3c50521f9a4a132e33b627fcf609e6028ff2cfbbc6b757434f06b4b3d7b90c8d",
     "cpppj/src/o/RawBalloonBody.cpp": "ae406292ac8d2be18bbdd2aaf46dc0a845e3b06c989d51af4219d722a5881f61",
@@ -3276,6 +3276,19 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "b0f41abb1e4471fa109de00d131a9abba79867fb6422116e90f941b7fe201913",
           "current": "23674336919f1a4d334db02413d226fc5761d9cd66ec3e273377cf72430b5901"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 221,
+      "reason": "세 제네레이터를 실제 원본 수집/일반 Draw에 연결하여 TYPE 기준점과 그림자를 복원한 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "23674336919f1a4d334db02413d226fc5761d9cd66ec3e273377cf72430b5901",
+          "current": "1f46f900237734895c7e9f3d36337c0c62953ba81aeb70db751cbc53214fb9b7"
         }
       ]
     }

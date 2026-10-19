@@ -18,7 +18,7 @@
     "cpppj/src/client/UserInput.cpp": "fd1bee42a48c4a33098114e813a7909d449791671fb0e313b76efc55216c20bd",
     "cpppj/src/client/UserInput.h": "8c27579e2993518d84cd37e6fea4313a34d8a66dd291ba0ece00b26e91ac395d",
     "cpppj/tests/CMakeLists.txt": "83eed7cedab8650ce570f444a5c06efe29b2ce414e3049777221cf672f6e248f",
-    "cpppj/tests/CampaignSessionTests.cpp": "23674336919f1a4d334db02413d226fc5761d9cd66ec3e273377cf72430b5901",
+    "cpppj/tests/CampaignSessionTests.cpp": "1f46f900237734895c7e9f3d36337c0c62953ba81aeb70db751cbc53214fb9b7",
     "cpppj/tests/CursorActionsTests.cpp": "adcbfb672de4ac2cdb4ba2358d1e554bf41bc0136aaccb1a1fca579a8aefacf8"
   },
   "protectedFileSha256": {
@@ -1918,6 +1918,19 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "b0f41abb1e4471fa109de00d131a9abba79867fb6422116e90f941b7fe201913",
           "current": "23674336919f1a4d334db02413d226fc5761d9cd66ec3e273377cf72430b5901"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 221,
+      "reason": "세 제네레이터를 실제 원본 수집/일반 Draw에 연결하여 TYPE 기준점과 그림자를 복원한 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "23674336919f1a4d334db02413d226fc5761d9cd66ec3e273377cf72430b5901",
+          "current": "1f46f900237734895c7e9f3d36337c0c62953ba81aeb70db751cbc53214fb9b7"
         }
       ]
     }

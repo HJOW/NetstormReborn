@@ -29,8 +29,12 @@ struct RawCampaignFactoryDisplay::Impl {
     bool Flare(o::Sid sid) const {
         const auto raw=core.pool.Slot(sid);return raw[10]==106 && raw[0]==0xa0 && raw[1]==0x96 && raw[2]==0x50 && raw[3]==0;
     }
+    // 세 제네레이터의41c300 생성자가 설치하는 실제 VT다. +78은 TYPE baseFrame, +a4는 빈41c100이다.
+    bool Generator(o::Sid sid) const {
+        const auto raw=core.pool.Slot(sid);return raw[0]==0xa0 && raw[1]==0x1e && raw[2]==0x50 && raw[3]==0;
+    }
     bool Temple(o::Sid sid) const { return o::IsPatchTemple(core.pool.Slot(sid)); } // 같은10.78 세 전용VT의 실제+a4 대상이다.
-    bool Handles(o::Sid sid) const { return factory.Handles(sid) || Flare(sid) || Temple(sid); } // 실제 여섯VT만 같은 수집기에 포함한다.
+    bool Handles(o::Sid sid) const { return factory.Handles(sid) || Flare(sid) || Generator(sid) || Temple(sid); } // 확인된 실제 일곱VT를 같은 수집기에 포함한다.
     // 원본 PE 초기값만 설치하고 각 수집에서 현재 게임 값으로 갱신한다.
     Impl(RawWorldCore world,const GameAssets& data,TempleDraw supplied):core(world),assets(data),factory(core.pool,core.frames),
         collection(core.hash,core.pool,core.types,core.shapes),views(MakeSpriteAssetViews(data)),outpost(BuildStandardOwnerColorMaps(126,82)),templeDraw(std::move(supplied)),templeBaseFrames(core.types.size(),-1) {
@@ -56,14 +60,14 @@ struct RawCampaignFactoryDisplay::Impl {
         if ((raw[40]&4U) && (raw[40]&0x30U)) throw std::logic_error("Factory 선택 상태 프로세스 목록 표시 미연결");
         state.now=core.processState.now;state.ownerPalettes.assign(core.bridgeState.ownerColors.begin(),core.bridgeState.ownerColors.end());
         SpritePixelTarget target(pixels,pitch,height,clip,MakeSpriteAssetShapes(assets,state),[this](auto mode,auto type,auto owner) { return Color(mode,type,owner); });
-        SpriteDrawHooks rules;rules.virtualFrame=[this](o::Sid object) { if (Temple(object)) return o::PatchTempleMainFrame(core.pool.Slot(object),templeBaseFrames);return Flare(object) ? assets.Types()[core.pool.Slot(object)[10]-o::kFirstAssetTypeNumber].definition.specialFrames.baseFrame : factory.MainFrame(object); };rules.surface=MakeSpriteSurfaceLookup(core.hash);
+        SpriteDrawHooks rules;rules.virtualFrame=[this](o::Sid object) { if (Temple(object)) return o::PatchTempleMainFrame(core.pool.Slot(object),templeBaseFrames);return Flare(object) || Generator(object) ? assets.Types()[core.pool.Slot(object)[10]-o::kFirstAssetTypeNumber].definition.specialFrames.baseFrame : factory.MainFrame(object); };rules.surface=MakeSpriteSurfaceLookup(core.hash);
         rules.resource=[this](o::Sid object)->std::optional<SpriteResourceStatus> {
             if (core.processes.FindEvent(object,0x493)) throw std::logic_error("Factory 자원 내용물 막대 표시 미연결");return std::nullopt;
         };
         auto hooks=target.Hooks(std::move(rules));
         // +a4의0044c180은 같은 기준점/단위 배율의 plain SHP다. 일반 owner 문맥으로 바꾸지 않는다.
         hooks.virtualDraw=[this,shape=hooks.shape](o::Sid object,ScreenPoint point) {
-            if (Flare(object)) return; // 실제+a4의 빈 몸체41c100이다.
+            if (Flare(object) || Generator(object)) return; // 실제+a4의 빈 몸체41c100이다.
             if (Temple(object)) {
                 if (!templeDraw) throw std::logic_error("실제 템플 전용Draw 미연결");const auto type=core.pool.Slot(object)[10]; // 원본Draw의 첫 TYPE/SHP snapshot이다.
                 templeDraw(object,[this,object,point,type,&shape](std::int32_t frame) {
@@ -95,7 +99,7 @@ std::vector<RenderSprite> RawCampaignFactoryDisplay::Sprites(ScreenRect clip,int
     const o::RenderWorldRect view{static_cast<float>((static_cast<double>(clip.left)+cameraX)/16),static_cast<float>((static_cast<double>(clip.top)+cameraY)/11),
         static_cast<float>((static_cast<double>(clip.right)+cameraX)/16),static_cast<float>((static_cast<double>(clip.bottom)+cameraY)/11)};
     std::array<o::RenderCollectionEntry,kDrawSubmissionCapacity> entries{};const auto count=self.collection.Collect(view,entries,kDrawSubmissionCapacity);std::vector<RenderSprite> result;
-    // 같은 실제 공간 항목 중 두 가상 표만 제출하고 나머지는 기존 월드 출력에 남긴다.
+    // 지원이 확인된 실제 가상 표만 제출하고 나머지는 기존 월드 출력에 남긴다.
     for (std::int32_t i=0;i<count;++i) {
         const auto entry=entries[static_cast<std::size_t>(i)];if (!self.Handles(self.collection.Object(entry.token))) continue;
         RenderSprite sprite;sprite.clip=clip;sprite.order={entry.x,entry.y,entry.depth};

@@ -20,7 +20,7 @@
     "cpppj/tests/CMakeLists.txt": "83eed7cedab8650ce570f444a5c06efe29b2ce414e3049777221cf672f6e248f",
     "cpppj/tests/CarrierArrivalSupport.h": "ab3b51fa485834acf41cc3934b0917b919edff0ea1351547a5ad247690bede56",
     "cpppj/tests/CarrierArrivalTests.cpp": "accd2553072d85c4f1df068a2dea74bc2328e56313151df913571e60036f9a2c",
-    "cpppj/tests/CampaignSessionTests.cpp": "23674336919f1a4d334db02413d226fc5761d9cd66ec3e273377cf72430b5901",
+    "cpppj/tests/CampaignSessionTests.cpp": "1f46f900237734895c7e9f3d36337c0c62953ba81aeb70db751cbc53214fb9b7",
     "cpppj/src/o/RawCarrierChoice.h": "2fedbc83180495e739ab33a68949ce1a0a38ce0eafdaee726e3cccc94b985658",
     "cpppj/src/o/RawCarrierChoice.cpp": "60104693cef32dbf1607961dab1628ef52113829ef58eaeece9094932027fad1",
     "cpppj/tests/CarrierChoiceTests.cpp": "5c3d6c6c66dd1769c4eb83c523115d54c17a8904b37ecd7b6115125af067c25f",
@@ -1696,6 +1696,19 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "b0f41abb1e4471fa109de00d131a9abba79867fb6422116e90f941b7fe201913",
           "current": "23674336919f1a4d334db02413d226fc5761d9cd66ec3e273377cf72430b5901"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 221,
+      "reason": "세 제네레이터를 실제 원본 수집/일반 Draw에 연결하여 TYPE 기준점과 그림자를 복원한 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "23674336919f1a4d334db02413d226fc5761d9cd66ec3e273377cf72430b5901",
+          "current": "1f46f900237734895c7e9f3d36337c0c62953ba81aeb70db751cbc53214fb9b7"
         }
       ]
     }

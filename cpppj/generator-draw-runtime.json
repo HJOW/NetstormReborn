@@ -1,0 +1,191 @@
+{
+  "unit": 221,
+  "baseline": "8c8f8042",
+  "host": "VM-W11-Codex",
+  "date": "2026-10-19",
+  "lastDecompile": "VM-W11-Codex / 2026-10-19",
+  "scope": "세 제네레이터의 TYPE 기준점/그림자/클릭 표시를 원본 경로에 연결하고 실제 UI 건설을 확인한다. 전체 미션 동일성과 완주는 미완료다.",
+  "validation": {
+    "beforeTests": "extracted/goal-generator-display-20261019-before-tests2.json",
+    "focusedTests": "extracted/goal-generator-display-20261019-final-focused1.json",
+    "fullTests": "extracted/goal-generator-display-20261019-full-tests2.json",
+    "oldCurrentPinReports": 68,
+    "oldCurrentPins": 90
+  },
+  "observations": {
+    "extracted/goal-generator-display-20261019-ui1": {
+      "returnCode": 0,
+      "binarySha256": "e1b859980f7273ae8cb9c07e9c8fba8320c9e76ce8b012210d7c8d39974d2d46",
+      "originalsUnchanged": true,
+      "lastLabel": "final",
+      "gameTime": 95.445,
+      "lastGate": [
+        "5",
+        "68",
+        "0",
+        "0",
+        "0",
+        "1",
+        "56.482",
+        "0"
+      ],
+      "forwardGeneratorsAfterWait": {
+        "15072": {
+          "xy": [
+            "133",
+            "93"
+          ],
+          "hp": 700
+        },
+        "15098": {
+          "xy": [
+            "138",
+            "101"
+          ],
+          "hp": 700
+        }
+      },
+      "cannons": {},
+      "sunFlyerSidsObserved": [
+        15063
+      ],
+      "enemyMinimumHp": {
+        "15006": 1000,
+        "15013": 200
+      },
+      "naturalEObserved": false,
+      "combat2Observed": false,
+      "nextFailure": null,
+      "towers": {
+        "15060": {
+          "xy": [
+            "135",
+            "93"
+          ],
+          "firstLabel": "placed",
+          "maxHp": 1880,
+          "lastHp": 135,
+          "lastLabel": "selectionEarly"
+        }
+      },
+      "templeDestroyedObserved": false,
+      "maximumOwnCannonCount": 0,
+      "lastPage": [
+        "mission"
+      ],
+      "enemyThunderPresentAtLastReport": true,
+      "enemyAviaryPresentAtLastReport": true,
+      "naturalFObserved": false,
+      "maximumOwnGolemCount": 0,
+      "golems": {}
+    }
+  },
+  "sources": {
+    "cpppj/src/client/GameWorld.cpp": "841563a3b989990707112d74a032a5b7afa11147412924f7ecc975980d4cda15",
+    "cpppj/src/client/RawCampaignFactoryDisplay.cpp": "c95ed76a46e437d73f16c1038eef1383a2570b60e2de6b502c9445191c331193",
+    "cpppj/tests/CampaignSessionTests.cpp": "1f46f900237734895c7e9f3d36337c0c62953ba81aeb70db751cbc53214fb9b7",
+    "tools/cpp_campaign_entry_smoke.py": "5fa9adadf6bcd571d6fba39b38e46fed41fe2e927911ff80dc38047c52c56b49",
+    "tools/cpp_early5_spells_runtime.py": "b46e2145d2ddcfcf21e410a5604cf5364c0605576e04c1518eb8dde469063cf0",
+    "tools/cpp_fort_smoke.py": "96c7fcd524deb38d93274ded77620639bdc7012ec0f2aaeed0a488d938e9da83",
+    "tools/cpp_generator_draw_runtime.py": "4a9c59a268b3211da1cfe89c7ee67d91a504ded9463a89d455a3c50e3ab6b231",
+    "tools/cpp_island_drop_runtime.py": "7a84366e3505e7fc98d883ca16364c648b9cad8110762744f7a6b8e7e5157ab3",
+    "tools/cpp_menu_smoke.py": "41732efb30e6337267168e3cd836ab6c04d6f34d36b16152b762c39dd2a76afe",
+    "tools/cpp_renderer_smoke.py": "fc648fea126c9cad3a124b38f757460f1139bb0e7f26c1032482ae4d85766ebe",
+    "tools/cpp_smoke_files.py": "66745bfd0ebac8d672eeb8f515144a47377fa4a28dad0603b5f8969a008ec679",
+    "tools/cpp_sun_aviary_capture_runtime.py": "4cc2495a288f7fea6775dd395a9a3036e01863902bb238ceec13701f4d44ce1b",
+    "tools/cpp_sun_aviary_notice_runtime.py": "8ab54e12605e9861c531bf9b82f4616b540aac1879f831bf88d69d0e35703952",
+    "tools/cpp_thunder_capture_runtime.py": "8c4a9d8d65420c5f0f37cfb003500d55d81bf0aa437484f20c9c06bfcdd673e3",
+    "tools/cpp_world_smoke.py": "6e50f87caf0b1b817c9116ef972ec6e75b44d33455edc88fe128a8d0f791fe72",
+    "tools/decomp_drawsort_oracle.py": "f570a38034934d7202359f8727f3bb648d53e39979635d22f38fc9717c683ac4",
+    "tools/decomp_generator_draw_probe.py": "8bea8c72ff02ede0f890ab9fae876ee0791cb8a8ab3bb70e863f07f3489d339e",
+    "tools/decomp_process_oracle.py": "40f209d140cc02af68136873d64f78414fd6515ee8156cf13803070e27737e3f",
+    "tools/decomp_spritedraw_oracle.py": "fe595ba1bfb4c79dc8c5c6e3788ad0e92e5835fa3b4b9e24646be492c5bf84c0",
+    "tools/fort.py": "ee8ff8f00eea02771ac5c7a519dcd582e14cc07a2d97337c946c191022554e13",
+    "tools/shp.py": "4cb8bee6ed773e29e8658ddb315594ebf5ac005ea5b96c6b760a177029515bfd",
+    "tools/taff.py": "461860cdfc9451b85a8694dd30fd2c56c1cfdf5c6bb7ab8f63a4089971889795",
+    "tools/terrain_mask.py": "00f9789dbde0c124a132a4005924549571b06add5214ea14e3b76e88e73cb37a",
+    "tools/typefile.py": "a564a4b1bbc4f06d05ecb8b1f3fae4c32f6231cf95ea7bfadff2499931804d90"
+  },
+  "evidence": {
+    "cpppj/generator-draw-native.json": "dda01c683f25d548cfd375dfacac3e3a7a01002aacbf45517ad00cd86bc45292",
+    "cpppj/tests/fixtures/constructors-x86.tsv": "c92412152abb65808a2037c30b2e5df4dfc783b891d52e995a4313cda527218e",
+    "cpppj/tests/fixtures/spritedraw-x86.tsv": "9c5703b5c4d58ab4b7fa23a04784165dbd88a7de131b758d6bd30f9dc793d7ac",
+    "extracted/goal-early5-island-20261019-probe.py": "2933ead8b5cc87b76425031fea3da8690c3b2649dc8f3fa8d4babd276176ef1a",
+    "extracted/goal-early5-spells-20261019-plan3.tsv": "ceda490ac21f15186083c5485671aa0d1ad017640d4293c12d6fee24e258640f",
+    "extracted/goal-early5-spells-20261019-ui3/run.json": "d8f403ed8c307a56ee88cf4aa3d638941f7f59d560a5fc4eb49a58711b082f23",
+    "extracted/goal-early5-spells-20261019-ui3/states.tsv": "26024f5b1bcc6f559f36627941aa4fbc0f9bba740d15ccf180c71dcbacab1fec",
+    "extracted/goal-early5-spells-20261019-ui3/twinCannon3.bmp": "3ee1b30b6d1c236a932c480b4765decfca46b9b9f5276f7cd56fd9be32ce6632",
+    "extracted/goal-generator-display-20261019-after-tests1.json": "2546fe3e338eb5eed6ea2f3e41695dd56c3812402cf5f870034ba8328ad3ba95",
+    "extracted/goal-generator-display-20261019-after-tests1.stderr": "07ec82191e4e13b8cb6cf22e91afb0451f01a883f1c34c8795bead3cd9e45e2f",
+    "extracted/goal-generator-display-20261019-after-tests1.stdout": "92db81c6de1cd3ce2e39a448cdd2297081eec830d96371eb9a6720ef1fbb8fac",
+    "extracted/goal-generator-display-20261019-after-tests2.json": "317b0237b3d67614e40935db177595b7b96a6e68f32132c269f4dddf344844eb",
+    "extracted/goal-generator-display-20261019-after-tests2.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-generator-display-20261019-after-tests2.stdout": "a5f5850e50800889ddb9e116a855aea587f8c259d79407f375918f504f1d36e9",
+    "extracted/goal-generator-display-20261019-after-tests3.json": "27b867aa00ce589c207ed81d29e05f005957266f71b1cdd347eb6f29a432cd64",
+    "extracted/goal-generator-display-20261019-after-tests3.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-generator-display-20261019-after-tests3.stdout": "a5f5850e50800889ddb9e116a855aea587f8c259d79407f375918f504f1d36e9",
+    "extracted/goal-generator-display-20261019-after-tests4.json": "bf70c4695eb525de5dd99a0b63e3642e7a83245de157bc432b6332d44cfd7a65",
+    "extracted/goal-generator-display-20261019-after-tests4.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-generator-display-20261019-after-tests4.stdout": "a5f5850e50800889ddb9e116a855aea587f8c259d79407f375918f504f1d36e9",
+    "extracted/goal-generator-display-20261019-audit-pins.log": "15e5ec4781f49526e684591a41fb618d670d65d8daf8b279d7bd0a59c0c89363",
+    "extracted/goal-generator-display-20261019-audit-pins.py": "d72bb2191d2d6f418d8a0bcc13e48799187a7488afbc299b9445096b176312e9",
+    "extracted/goal-generator-display-20261019-before-tests1.json": "007ec9bfe43eb1fbf4b5b5245ba45c148c895d9fc1d05503920d0a7f88bab6a9",
+    "extracted/goal-generator-display-20261019-before-tests1.stderr": "07ec82191e4e13b8cb6cf22e91afb0451f01a883f1c34c8795bead3cd9e45e2f",
+    "extracted/goal-generator-display-20261019-before-tests1.stdout": "92db81c6de1cd3ce2e39a448cdd2297081eec830d96371eb9a6720ef1fbb8fac",
+    "extracted/goal-generator-display-20261019-before-tests2.json": "0bdc49da25aa0e8c3ced01b39ade97e886454d974e3182eab596a87053f24865",
+    "extracted/goal-generator-display-20261019-before-tests2.stderr": "6a668715359bd0aef41047a4b0d34b352fb1b9f2d078fcfff0a470a5a81a5be8",
+    "extracted/goal-generator-display-20261019-before-tests2.stdout": "3d850c8ef7922fec9811321b0b6692ed0ef57225a38806550c7a561d72e10c2a",
+    "extracted/goal-generator-display-20261019-build-report.py": "ac889c657fd3ad2ac0b2b9239efe195d1bfd79d453bce6a890cd0797c557699a",
+    "extracted/goal-generator-display-20261019-build1.log": "49446800edb950e2b093ca8d32229b1f16fdc801b7dfb23a5738654330c1f994",
+    "extracted/goal-generator-display-20261019-build2.log": "9430375643841ced34ee33439f02a6254080aac10cf544cfe84703c3f74dd49a",
+    "extracted/goal-generator-display-20261019-build3.log": "49446800edb950e2b093ca8d32229b1f16fdc801b7dfb23a5738654330c1f994",
+    "extracted/goal-generator-display-20261019-build4-before.log": "dd07a3c523adc698c195b1bcaf104bb88f35813d82f02a676a68192d641eb932",
+    "extracted/goal-generator-display-20261019-build5.log": "8335a4ea89de97e3c04b50ad32c498c87a86b2565753df6d9d0639bac116bb6b",
+    "extracted/goal-generator-display-20261019-build6.log": "dd07a3c523adc698c195b1bcaf104bb88f35813d82f02a676a68192d641eb932",
+    "extracted/goal-generator-display-20261019-build7.log": "49446800edb950e2b093ca8d32229b1f16fdc801b7dfb23a5738654330c1f994",
+    "extracted/goal-generator-display-20261019-build8.log": "06e70961060499d29720aabbea8702cf948f58f7f2b8d444ffcf4549040dd3fe",
+    "extracted/goal-generator-display-20261019-final-focused1.json": "ff9c01d8a4f8607b9c9a921b20d65358820262634b4bb6543f6b5d72a3f371e5",
+    "extracted/goal-generator-display-20261019-final-focused1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-generator-display-20261019-final-focused1.stdout": "a5f5850e50800889ddb9e116a855aea587f8c259d79407f375918f504f1d36e9",
+    "extracted/goal-generator-display-20261019-fixed-GameWorld.cpp": "873ead21039a9277f14af706ef6c0e802d5160c33704a807b3b42f8068a1b2ec",
+    "extracted/goal-generator-display-20261019-fixed-RawCampaignFactoryDisplay.cpp": "c95ed76a46e437d73f16c1038eef1383a2570b60e2de6b502c9445191c331193",
+    "extracted/goal-generator-display-20261019-full-tests1-run.log": "e02e578fc25d35ee6c8309a794341d56ecb414117a52c067bd60b6c19f78dd7d",
+    "extracted/goal-generator-display-20261019-full-tests1.json": "0aef9db6e81b21c0e38d657fe0da6f4e8dc5ba1150e295fe9558555b9478b032",
+    "extracted/goal-generator-display-20261019-full-tests1.stderr": "79e2480bde0296407e865b4a37f3b49c9c027d653a2260e3a4215348db0f0663",
+    "extracted/goal-generator-display-20261019-full-tests1.stdout": "606e13084b0d26007745a418698d898e4695bf98c170d0ac268205718016c1c6",
+    "extracted/goal-generator-display-20261019-full-tests2-run.log": "c3e72e6625c384f2a7ad05affd10fce987598e05bb95dfe83eab5cd3052cf638",
+    "extracted/goal-generator-display-20261019-full-tests2.json": "033438d54a0ed5dbfd3066fb78e4cbd820d47de74ae96497867157366110e13d",
+    "extracted/goal-generator-display-20261019-full-tests2.stderr": "79e2480bde0296407e865b4a37f3b49c9c027d653a2260e3a4215348db0f0663",
+    "extracted/goal-generator-display-20261019-full-tests2.stdout": "606e13084b0d26007745a418698d898e4695bf98c170d0ac268205718016c1c6",
+    "extracted/goal-generator-display-20261019-native-probe2.log": "b51d609faa05b37ba3bf275dfbd22507aa20b689cf007728b4d21921d67e07e4",
+    "extracted/goal-generator-display-20261019-native-probe3.log": "0f0d94e8f325e5bc8b67b7502c08a2c91e6fc92ba6c15696bfb97849aa4aeb6e",
+    "extracted/goal-generator-display-20261019-native-probe4.log": "43240f9f04a405c20817c14d4dfd93489d5648e2937be497f88014138df940f3",
+    "extracted/goal-generator-display-20261019-native-probe5.log": "43240f9f04a405c20817c14d4dfd93489d5648e2937be497f88014138df940f3",
+    "extracted/goal-generator-display-20261019-native-v1.json": "bc2f6105b793d73ce74331ba581818c1d747336ac9348fbab29a00ad7e3e9693",
+    "extracted/goal-generator-display-20261019-pin-updates.json": "cb0623dacb30c45a6492210b6a31739237d8149576732c77f3e3d6b13c39bcb4",
+    "extracted/goal-generator-display-20261019-plan1.tsv": "e194485c07592fda86fd83c622eab9f935cdc54752cce40b212d4466ea5d522b",
+    "extracted/goal-generator-display-20261019-refresh-pins.log": "37fe96cb28306ce2a8050b7aff77c65cbc8cd3c0203356588933937f32465377",
+    "extracted/goal-generator-display-20261019-refresh-pins.py": "e16c700197b372f613e66e4c663dc02d3306216c2d9d98954ab65d46df9be264",
+    "extracted/goal-generator-display-20261019-stage.py": "1f66d9a1c700f708013368b6a268a0338c2d929c9083f213051ba43a7a89f58e",
+    "extracted/goal-generator-display-20261019-test-v1.cpp": "5d3495005953e8bc8f07d7423923e0efb844ef00f8af38c8eeb852436bc41606",
+    "extracted/goal-generator-display-20261019-ui1/completedGenerators.bmp": "7b9df7dab37a6e57437bd24143c3cbbfca08257a138304d297beddf85d66655e",
+    "extracted/goal-generator-display-20261019-ui1/completedWorkshop.bmp": "00bf1d4acab3df9f80cd46385d84be5778391d14c793e41b9e72169df5df83ca",
+    "extracted/goal-generator-display-20261019-ui1/enemyView.bmp": "1b4fc4b013b602d3ba9e8def94b3bcabdb6d54707a344305113c8f78731be0e5",
+    "extracted/goal-generator-display-20261019-ui1/final.bmp": "04ae7dd9bb132cb68ae6bfd6be0cbc9e70d3369687d6f81f786fb372ecace5b2",
+    "extracted/goal-generator-display-20261019-ui1/originals-before.json": "f98d8731a8a729b528fd9744b52f3b26143eff54e767f0b8e1537040c5807c15",
+    "extracted/goal-generator-display-20261019-ui1/run.json": "cc3cbfe6c853a34bf9b5e7abacdb10589c786a0f96007d9e997c0bece3c54c44",
+    "extracted/goal-generator-display-20261019-ui1/selectedGenerator.bmp": "c954b7f0658305dab28201c13fafe63ef6c1163ff47331cbabf1db00d1642434",
+    "extracted/goal-generator-display-20261019-ui1/stageC.bmp": "bcb66932fe011ec0d96a71d532c99bbc4198a46e587eed311931dd0e25bbc9ce",
+    "extracted/goal-generator-display-20261019-ui1/stageD.bmp": "47946544ee34e2442fd177f07642a0cc8279ee92ba879b804996978a42683b03",
+    "extracted/goal-generator-display-20261019-ui1/states.tsv": "7ac424299fd1e4c7df33ad18b56798d9232436f319c6ed7ea8c85d31ff283852",
+    "extracted/goal-generator-display-20261019-ui1/stderr.log": "387267fbe01cdd71ebe8673b42a83a7139c723656e80af870c51bc24c995c8cc",
+    "extracted/goal-generator-display-20261019-ui1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-generator-display-20261019-ui1/steps.tsv": "bb7fdaf94a813127ed4b9988f04766cf51f7fd38c6f63e155767ded08d4e5928",
+    "extracted/goal-generator-display-20261019-ui1.log": "17995c2c0818ef5038aa4a67ba69d7d381c389f51103b37035909bd87fa5d7c8",
+    "originals/d/_shapes.shp": "c878353c8054208deef832e34c514b30fe670e175505b129333a5728ba70f68e",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6"
+  },
+  "goalComplete": false,
+  "fullFidelityVerified": false
+}

@@ -273,7 +273,7 @@
     "tools/typefile.py": "a564a4b1bbc4f06d05ecb8b1f3fae4c32f6231cf95ea7bfadff2499931804d90"
   },
   "evidence": {
-    "cpppj/display-motion-runtime.json": "da971882da1b473333d9c8d188cd641b0b6eb0c1b0d5a733ade9d1f9b56a4d6a",
+    "cpppj/display-motion-runtime.json": "78ec568034df902de0ddcb7b12277250b8c0a94693bd89c7e3a64a37640100bf",
     "extracted/goal-display-motion-20261019-full-tests1.json": "ff684424107a92d317aaecdf90f2dd88f7cd17cc707065d792937ac128c808ca",
     "extracted/goal-early5-island-20261019-probe.py": "2933ead8b5cc87b76425031fea3da8690c3b2649dc8f3fa8d4babd276176ef1a",
     "extracted/goal-early5-spells-20261019-build-report.py": "fb691b2a01d162ca7a0890d6cfddaf3d850486b90941b913705fabc35400d8b8",
@@ -388,5 +388,20 @@
     "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6"
   },
   "goalComplete": false,
-  "fullFidelityVerified": false
+  "fullFidelityVerified": false,
+  "integration_updates": [
+    {
+      "date": "2026-10-19",
+      "unit": 221,
+      "reason": "세 제네레이터를 실제 원본 수집/일반 Draw에 연결하여 TYPE 기준점과 그림자를 복원한 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/evidence",
+          "path": "cpppj/display-motion-runtime.json",
+          "previous": "da971882da1b473333d9c8d188cd641b0b6eb0c1b0d5a733ade9d1f9b56a4d6a",
+          "current": "78ec568034df902de0ddcb7b12277250b8c0a94693bd89c7e3a64a37640100bf"
+        }
+      ]
+    }
+  ]
 }

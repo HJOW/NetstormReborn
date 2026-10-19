@@ -28,6 +28,7 @@
 #include "zacket/LocalMissionTransport.h"
 #include "client/RawShapeToBuffer.h"
 #include "client/OwnerColorMaps.h"
+#include "client/SpriteColorMaps.h"
 #include <unordered_set>
 #include <iostream>
 #include <set>
@@ -608,6 +609,47 @@ void CheckSessionWorld(std::string_view mission) {
 TEST_CASE(CampaignSession_ActualWarBeginsGameWorld) { CheckSessionWorld("thewarbegins"); }
 // 보호 둘째 캠페인도 같은 production 소유자를 사용한다.
 TEST_CASE(CampaignSession_ActualMasterGameWorld) { CheckSessionWorld("masterofwhirligigs"); }
+
+// 세 제네레이터의 원본 기준점과 본체/그림자 및 클릭 영역을 실제 GameWorld에서 확인한다.
+TEST_CASE(CampaignSession_GeneratorBodyShadowAndPicking) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);
+    std::array<std::uint32_t,256> logical{}; // 실제 파일 팔레트로 원본 그림자 색표를 준비한다.
+    // 출력 장치의 BGR 순서와 구분한 논리 RGB 값이다.
+    for (std::size_t index=0;index<logical.size();++index) { const auto color=assets.game.Palette().Color(static_cast<std::uint8_t>(index));logical[index]=color.red|(std::uint32_t(color.green)<<8)|(std::uint32_t(color.blue)<<16); }
+    const auto maps=BuildSpriteColorMaps(logical);
+    // 이름이 다른 세 자산 모두 원본의 같은 생성자/가상 표와 기준점을 가진다.
+    for (const auto number:{75U,76U,77U}) {
+        SessionServicesFixture external;auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());auto services=external.Services();services.install.resetCamera={};
+        GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services),{1024,768});world.Resize(1024,768);
+        auto& session=world.Session();const auto core=session.Core();const auto origin=EmptySessionSupport(core);
+        const float x=static_cast<float>(origin.x+2),y=static_cast<float>(origin.y+2); // 실제 spot으로 확인한 빈3×3 영역의 오른쪽 아래 기준점이다.
+        const auto sid=session.World().Create(number,2);core.owner.Set(sid,1);session.World().Pop(sid,x,y,0);world.Scroll(-4096,-4096);
+        CHECK(Get(core.pool.Slot(sid),0)==0x501ea0 && core.types[number].hotspotX==8 && core.types[number].hotspotY==4);
+        world.frameTime=[] { return FrameTime{0,1,0,1}; };world.paused=[] { return true; };world.RunFrame(); // 같은 raw 슬롯을 실제 클릭 뷰에도 반영한다.
+        // 정수 카메라 이동 뒤에도 보정이 중복되거나 사라지지 않아야 한다.
+        for (const auto camera:std::array<ScreenPoint,2>{{{0,0},{7,9}}}) {
+            world.Scroll(camera.x,camera.y);const auto point=world.ToScreen(x,y);std::vector<RenderSprite> pair;
+            // 같은 건물의 원본 본체와 y-.1 그림자만 추린다. 다른 장면 객체는 검사 표면에 섞지 않는다.
+            for (const auto& sprite:world.Sprites()) if (sprite.order.x==x && (sprite.order.y==y || sprite.order.y==static_cast<float>(y-.1))) pair.push_back(sprite);
+            CHECK(pair.size()==2);if (pair.size()!=2) continue;
+            // 원본 수집 순서의 각 레이어를 실제 RLE/색표로 독립 출력한 전체 표면과 비교한다.
+            for (const auto& sprite:pair) {
+                CHECK(sprite.procedure.has_value());if (!sprite.procedure) continue;
+                const auto frame=sprite.order.y==y ? 0U : 2U;const auto& shape=assets.game.Shapes().Blocks()[number-70].frames[frame];const auto image=assets.game.Shapes().Decode(number-70,frame);
+                std::vector<std::uint8_t> actual(1024*768,199),expected=actual;const ScreenRect clip{0,28,1024,768};
+                sprite.procedure->draw(actual,1024,768,clip);
+                DrawIndexedImage(expected,1024,768,image,point.x-8+shape.rect.left,point.y-4+shape.rect.top,clip,frame==2 ? &maps.shadow : nullptr);
+                CHECK(actual==expected);CHECK(std::any_of(actual.begin(),actual.end(),[](auto value) { return value!=199; }));
+            }
+            const auto& shape=assets.game.Shapes().Blocks()[number-70].frames[0];
+            CHECK(world.Pick({point.x-8+shape.rect.left+1,std::max(28,point.y-4+(shape.rect.top+shape.rect.bottom)/2)})==sid.value);
+            auto raw=core.pool.AllocatedBytes(sid);raw[40]|=4; // 선택 괄호와 HP/자원 조회가 추가된 실제 일반 Draw 경로도 실행한다.
+            Renderer selected(1024,768);selected.SetScene(pair);std::vector<std::uint8_t> selectedPixels(1024*768,199);selected.Draw(selectedPixels,1024,199);
+            CHECK(std::any_of(selectedPixels.begin(),selectedPixels.end(),[](auto value) { return value!=199; }));raw[40]&=static_cast<std::uint8_t>(~4U);
+        }
+        CHECK(std::bit_cast<float>(Get(core.pool.Slot(sid),14))==x && std::bit_cast<float>(Get(core.pool.Slot(sid),18))==y);
+    }
+}
 
 // 실제 raw 발사체/장식물의 원본 깊이와 겹친 픽셀이 GameWorld와 Renderer까지 보존돼야 한다.
 TEST_CASE(CampaignSession_MissileFringeDepthAndOverlap) {

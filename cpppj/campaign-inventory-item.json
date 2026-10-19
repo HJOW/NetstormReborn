@@ -93,7 +93,7 @@
   "currentSources": {
     "cpppj/src/client/CMakeLists.txt": "ea7b520652a0a21cdaeb2852aae3992c3e361b5d01426f285056dbb1508f6ccd",
     "cpppj/tests/CMakeLists.txt": "83eed7cedab8650ce570f444a5c06efe29b2ce414e3049777221cf672f6e248f",
-    "cpppj/src/client/RawCampaignFactoryDisplay.cpp": "c93640d0b659789ffb74d6b4a0d71b1f18522638480dd7b0508259747260ee06",
+    "cpppj/src/client/RawCampaignFactoryDisplay.cpp": "c95ed76a46e437d73f16c1038eef1383a2570b60e2de6b502c9445191c331193",
     "cpppj/src/client/InventoryItemGump.h": "cfc4fe37509f916d8e53caff49713ce946eaf10e03bd9fa1c53507c53900826d",
     "cpppj/src/client/InventoryItemGump.cpp": "8ee1e67ccf4231e88a8b49dcdb67a3d0a3b08e724fac372d58bd5f8a1a9f81d2",
     "cpppj/tests/InventoryItemGumpTests.cpp": "a62515c54a3c68d6b7ce082670cbb53d88422994864c359894e0c478c873bf69",
@@ -534,6 +534,19 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "6814b98421a14e37959652743dab5e6a24771de6c3ef50cf4aae8cce63fa191e",
           "current": "83eed7cedab8650ce570f444a5c06efe29b2ce414e3049777221cf672f6e248f"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 221,
+      "reason": "세 제네레이터를 실제 원본 수집/일반 Draw에 연결하여 TYPE 기준점과 그림자를 복원한 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignFactoryDisplay.cpp",
+          "previous": "c93640d0b659789ffb74d6b4a0d71b1f18522638480dd7b0508259747260ee06",
+          "current": "c95ed76a46e437d73f16c1038eef1383a2570b60e2de6b502c9445191c331193"
         }
       ]
     }

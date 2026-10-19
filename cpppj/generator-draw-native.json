@@ -1,0 +1,488 @@
+{
+  "host": "VM-W11-Codex",
+  "lastDecompile": "VM-W11-Codex / 2026-10-19",
+  "inputs": 24,
+  "normalReturns": 48,
+  "virtuals": {
+    "0x78": "0x4acfe0",
+    "0xa4": "0x41c100"
+  },
+  "virtualHits": {
+    "0x4acfe0": 24,
+    "0x41c100": 24
+  },
+  "observations": [
+    {
+      "asset": "windbattery",
+      "world": [
+        131,
+        99
+      ],
+      "camera": [
+        0,
+        0
+      ],
+      "hotspot": [
+        8,
+        4
+      ],
+      "tail": 0,
+      "events": [
+        "S,70,0,2088,1085,0"
+      ]
+    },
+    {
+      "asset": "windbattery",
+      "world": [
+        131,
+        99
+      ],
+      "camera": [
+        0,
+        0
+      ],
+      "hotspot": [
+        8,
+        4
+      ],
+      "tail": 4,
+      "events": [
+        "S,70,2,2088,1085,4"
+      ]
+    },
+    {
+      "asset": "windbattery",
+      "world": [
+        131,
+        99
+      ],
+      "camera": [
+        1534,
+        845
+      ],
+      "hotspot": [
+        8,
+        4
+      ],
+      "tail": 0,
+      "events": [
+        "S,70,0,554,240,0"
+      ]
+    },
+    {
+      "asset": "windbattery",
+      "world": [
+        131,
+        99
+      ],
+      "camera": [
+        1534,
+        845
+      ],
+      "hotspot": [
+        8,
+        4
+      ],
+      "tail": 4,
+      "events": [
+        "S,70,2,554,240,4"
+      ]
+    },
+    {
+      "asset": "windbattery",
+      "world": [
+        137,
+        100
+      ],
+      "camera": [
+        0,
+        0
+      ],
+      "hotspot": [
+        8,
+        4
+      ],
+      "tail": 0,
+      "events": [
+        "S,70,0,2184,1096,0"
+      ]
+    },
+    {
+      "asset": "windbattery",
+      "world": [
+        137,
+        100
+      ],
+      "camera": [
+        0,
+        0
+      ],
+      "hotspot": [
+        8,
+        4
+      ],
+      "tail": 4,
+      "events": [
+        "S,70,2,2184,1096,4"
+      ]
+    },
+    {
+      "asset": "windbattery",
+      "world": [
+        137,
+        100
+      ],
+      "camera": [
+        1534,
+        845
+      ],
+      "hotspot": [
+        8,
+        4
+      ],
+      "tail": 0,
+      "events": [
+        "S,70,0,650,251,0"
+      ]
+    },
+    {
+      "asset": "windbattery",
+      "world": [
+        137,
+        100
+      ],
+      "camera": [
+        1534,
+        845
+      ],
+      "hotspot": [
+        8,
+        4
+      ],
+      "tail": 4,
+      "events": [
+        "S,70,2,650,251,4"
+      ]
+    },
+    {
+      "asset": "rainbattery",
+      "world": [
+        131,
+        99
+      ],
+      "camera": [
+        0,
+        0
+      ],
+      "hotspot": [
+        8,
+        4
+      ],
+      "tail": 0,
+      "events": [
+        "S,70,0,2088,1085,0"
+      ]
+    },
+    {
+      "asset": "rainbattery",
+      "world": [
+        131,
+        99
+      ],
+      "camera": [
+        0,
+        0
+      ],
+      "hotspot": [
+        8,
+        4
+      ],
+      "tail": 4,
+      "events": [
+        "S,70,2,2088,1085,4"
+      ]
+    },
+    {
+      "asset": "rainbattery",
+      "world": [
+        131,
+        99
+      ],
+      "camera": [
+        1534,
+        845
+      ],
+      "hotspot": [
+        8,
+        4
+      ],
+      "tail": 0,
+      "events": [
+        "S,70,0,554,240,0"
+      ]
+    },
+    {
+      "asset": "rainbattery",
+      "world": [
+        131,
+        99
+      ],
+      "camera": [
+        1534,
+        845
+      ],
+      "hotspot": [
+        8,
+        4
+      ],
+      "tail": 4,
+      "events": [
+        "S,70,2,554,240,4"
+      ]
+    },
+    {
+      "asset": "rainbattery",
+      "world": [
+        137,
+        100
+      ],
+      "camera": [
+        0,
+        0
+      ],
+      "hotspot": [
+        8,
+        4
+      ],
+      "tail": 0,
+      "events": [
+        "S,70,0,2184,1096,0"
+      ]
+    },
+    {
+      "asset": "rainbattery",
+      "world": [
+        137,
+        100
+      ],
+      "camera": [
+        0,
+        0
+      ],
+      "hotspot": [
+        8,
+        4
+      ],
+      "tail": 4,
+      "events": [
+        "S,70,2,2184,1096,4"
+      ]
+    },
+    {
+      "asset": "rainbattery",
+      "world": [
+        137,
+        100
+      ],
+      "camera": [
+        1534,
+        845
+      ],
+      "hotspot": [
+        8,
+        4
+      ],
+      "tail": 0,
+      "events": [
+        "S,70,0,650,251,0"
+      ]
+    },
+    {
+      "asset": "rainbattery",
+      "world": [
+        137,
+        100
+      ],
+      "camera": [
+        1534,
+        845
+      ],
+      "hotspot": [
+        8,
+        4
+      ],
+      "tail": 4,
+      "events": [
+        "S,70,2,650,251,4"
+      ]
+    },
+    {
+      "asset": "thunderbattery",
+      "world": [
+        131,
+        99
+      ],
+      "camera": [
+        0,
+        0
+      ],
+      "hotspot": [
+        8,
+        4
+      ],
+      "tail": 0,
+      "events": [
+        "S,70,0,2088,1085,0"
+      ]
+    },
+    {
+      "asset": "thunderbattery",
+      "world": [
+        131,
+        99
+      ],
+      "camera": [
+        0,
+        0
+      ],
+      "hotspot": [
+        8,
+        4
+      ],
+      "tail": 4,
+      "events": [
+        "S,70,2,2088,1085,4"
+      ]
+    },
+    {
+      "asset": "thunderbattery",
+      "world": [
+        131,
+        99
+      ],
+      "camera": [
+        1534,
+        845
+      ],
+      "hotspot": [
+        8,
+        4
+      ],
+      "tail": 0,
+      "events": [
+        "S,70,0,554,240,0"
+      ]
+    },
+    {
+      "asset": "thunderbattery",
+      "world": [
+        131,
+        99
+      ],
+      "camera": [
+        1534,
+        845
+      ],
+      "hotspot": [
+        8,
+        4
+      ],
+      "tail": 4,
+      "events": [
+        "S,70,2,554,240,4"
+      ]
+    },
+    {
+      "asset": "thunderbattery",
+      "world": [
+        137,
+        100
+      ],
+      "camera": [
+        0,
+        0
+      ],
+      "hotspot": [
+        8,
+        4
+      ],
+      "tail": 0,
+      "events": [
+        "S,70,0,2184,1096,0"
+      ]
+    },
+    {
+      "asset": "thunderbattery",
+      "world": [
+        137,
+        100
+      ],
+      "camera": [
+        0,
+        0
+      ],
+      "hotspot": [
+        8,
+        4
+      ],
+      "tail": 4,
+      "events": [
+        "S,70,2,2184,1096,4"
+      ]
+    },
+    {
+      "asset": "thunderbattery",
+      "world": [
+        137,
+        100
+      ],
+      "camera": [
+        1534,
+        845
+      ],
+      "hotspot": [
+        8,
+        4
+      ],
+      "tail": 0,
+      "events": [
+        "S,70,0,650,251,0"
+      ]
+    },
+    {
+      "asset": "thunderbattery",
+      "world": [
+        137,
+        100
+      ],
+      "camera": [
+        1534,
+        845
+      ],
+      "hotspot": [
+        8,
+        4
+      ],
+      "tail": 4,
+      "events": [
+        "S,70,2,650,251,4"
+      ]
+    }
+  ],
+  "limits": "타입70의 격리 슬롯에 실제 세 TYPE 기준점과 baseFrame을 공급한다. 일반 Draw와 실제 가상 함수까지 실행하며 VFX 출력만 관측한다. 건설/GUI 완주 관측이 아니다.",
+  "files": {
+    "extracted/process/originals/creation.c": "93a6d7ba1061a0bdd7d586a089108ead00a838ce06fc274c12f7649f3b583104",
+    "extracted/process/originals/functions.tsv": "407f9321dfe05d98ff81c4368f097f5133067f2bcc0753b3b145064d6a9eb6d3",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "tools/decomp_drawsort_oracle.py": "f570a38034934d7202359f8727f3bb648d53e39979635d22f38fc9717c683ac4",
+    "tools/decomp_generator_draw_probe.py": "8bea8c72ff02ede0f890ab9fae876ee0791cb8a8ab3bb70e863f07f3489d339e",
+    "tools/decomp_process_oracle.py": "40f209d140cc02af68136873d64f78414fd6515ee8156cf13803070e27737e3f",
+    "tools/decomp_spritedraw_oracle.py": "fe595ba1bfb4c79dc8c5c6e3788ad0e92e5835fa3b4b9e24646be492c5bf84c0",
+    "tools/ghidra/spritedraw-functions.json": "98e894c90c6d945cb08d6b7692ad983f08eb16a823d9daf62c4258a00a0b89cd",
+    "tools/shp.py": "4cb8bee6ed773e29e8658ddb315594ebf5ac005ea5b96c6b760a177029515bfd",
+    "tools/taff.py": "461860cdfc9451b85a8694dd30fd2c56c1cfdf5c6bb7ab8f63a4089971889795"
+  }
+}

@@ -77,7 +77,7 @@
     "cpppj/src/o/RawGunTarget.cpp": "7ac9b51af58949ce8c23f9854679a7685468ba798768db0a1158f25b0ff95f14",
     "cpppj/src/o/RawGunTarget.h": "cfc9f229f1b1ed225188ef5600ea7f575304f7c5cd537b6e6d803caa7d8486a0",
     "cpppj/src/o/SquidDisplay.h": "c0fa956fb5da3d19e08b5f3eaaa8253ea233b60cad3db83f21ab750c7f95087d",
-    "cpppj/tests/CampaignSessionTests.cpp": "23674336919f1a4d334db02413d226fc5761d9cd66ec3e273377cf72430b5901",
+    "cpppj/tests/CampaignSessionTests.cpp": "1f46f900237734895c7e9f3d36337c0c62953ba81aeb70db751cbc53214fb9b7",
     "cpppj/tests/GunTargetTests.cpp": "e3c5506385af4678241bebf53e3c7681a58b53d8e25b94b754dc448a51054587",
     "tools/cpp_cannon_combat_smoke.py": "130fe8ca64033d36e4559adbbd04661e60489a02b2309a3e312aee77e4eda98e",
     "tools/decomp_cannon_asset_ray.py": "5e08db9e72fe4327df8aef49f139d00ca49bc716879a41e9c8a6be30996ba659",
@@ -668,6 +668,19 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "b0f41abb1e4471fa109de00d131a9abba79867fb6422116e90f941b7fe201913",
           "current": "23674336919f1a4d334db02413d226fc5761d9cd66ec3e273377cf72430b5901"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 221,
+      "reason": "세 제네레이터를 실제 원본 수집/일반 Draw에 연결하여 TYPE 기준점과 그림자를 복원한 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "23674336919f1a4d334db02413d226fc5761d9cd66ec3e273377cf72430b5901",
+          "current": "1f46f900237734895c7e9f3d36337c0c62953ba81aeb70db751cbc53214fb9b7"
         }
       ]
     }

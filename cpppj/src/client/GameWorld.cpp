@@ -371,7 +371,10 @@ ScreenRect GameWorld::Bounds(const o::Squid& object) const {
         return {rect.left,rect.top,rect.right,rect.bottom};
     }
     const auto& type=assets_.Types()[static_cast<std::size_t>(object.type-o::kFirstAssetTypeNumber)]; const auto& frame=assets_.Shapes().Blocks()[type.block].frames[object.frame];
-    const auto p=ToScreen(object.x,object.y); return {p.x+frame.rect.left,p.y+frame.rect.top,p.x+frame.rect.right+1,p.y+frame.rect.bottom+1};
+    const auto& record=assets_.TypeTable().Types()[static_cast<std::size_t>(object.type)];
+    const bool native=factoryDisplay_ && factoryDisplay_->Handles(o::Sid{static_cast<std::uint16_t>(object.id)}); // 실제 원본 Draw에 연결된 객체만 같은 TYPE 기준점을 클릭 영역에도 차감한다.
+    const ScreenPoint offset=native ? ScreenPoint{record.hotspotX,record.hotspotY} : ScreenPoint{}; // 일반 출력에 남은 타입의 기존 그림/클릭 정합성을 유지한다.
+    const auto p=ToScreen(object.x,object.y); return {p.x-offset.x+frame.rect.left,p.y-offset.y+frame.rect.top,p.x-offset.x+frame.rect.right+1,p.y-offset.y+frame.rect.bottom+1};
 }
 // 가장 앞에 가까운 실제 그림을 선택한다. 모바일 그림에는 녹화 기반 4픽셀 여유가 있다.
 o::SquidId GameWorld::Pick(ScreenPoint point) const {
