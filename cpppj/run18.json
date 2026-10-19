@@ -68,7 +68,7 @@
     "cpppj/hist/run18-run3/test.cpp": "8aec8423d2e67a772336e3984fdff90e65f645dffcfbf24e817cc0aa5af94df2",
     "cpppj/hist/run18-run4/focused.log": "2cf49d4b7f1371e78fe40a7794b66b86b75df79f6ea4e641460fca8634ccdb9c",
     "cpppj/hist/run18-run4/test.cpp": "bc3b9bd2204d65a2be2fe0c862f32b207ade6aaec1ed4c1fcca0443a0c6b5d29",
-    "cpppj/src/CMakeLists.txt": "9c331c9fbd2e2f96e7604cf5c2a9462238ea3f55ef689542ab5789d2b1ee17cf",
+    "cpppj/src/CMakeLists.txt": "023cf7ef3b8b5dc1322ae651a5c61059fef56251e7e4323bd93d5c2c6a415c4c",
     "cpppj/src/app/CanonMayPlaceInspect.cpp": "27eda46bca500c898abeb9a3a7c4e8588b38e061b579c84cbf6c032c6d46dda9",
     "cpppj/src/app/FrameBindingInspect.cpp": "042602919b0531fb1cbaf3941dc6597bee73944bbf0d571dacfd638bb45dd07c",
     "cpppj/src/app/FrameBindingInspect.h": "4e187ca41f8c34ed52c022b58a57327a554a723e3e26ee88a1ae152c99de3fce",
@@ -2316,6 +2316,19 @@
           "path": "cpppj/src/CMakeLists.txt",
           "previous": "14c485cf02a59e50d4b8a66cf4c03d9f20ce28139a549677c8c15b6cfbae5d1c",
           "current": "9c331c9fbd2e2f96e7604cf5c2a9462238ea3f55ef689542ab5789d2b1ee17cf"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 234,
+      "reason": "폭발 주문 자격/효과와 공통 좌표 어댑터 추가로 바뀐 현재 소스 핀을 갱신한다. 원본 기대값과 과거 실행/바이너리/기존 이력은 보존한다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "9c331c9fbd2e2f96e7604cf5c2a9462238ea3f55ef689542ab5789d2b1ee17cf",
+          "current": "023cf7ef3b8b5dc1322ae651a5c61059fef56251e7e4323bd93d5c2c6a415c4c"
         }
       ]
     }

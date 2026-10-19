@@ -9,14 +9,14 @@
   },
   "scope": "PATCH10.78 실제 Client의 같은 선택/강조/마우스 저장소에서4277f0/4284a0/42a360/426290을 원본 선택·실제로그인전송·서버40h·현재Kernel에 연결했다. 전체Userinput/화면hit test/메뉴·건설·희생UI·완주 증거는 아니다.",
   "currentSources": {
-    "cpppj/src/CMakeLists.txt": "9c331c9fbd2e2f96e7604cf5c2a9462238ea3f55ef689542ab5789d2b1ee17cf",
+    "cpppj/src/CMakeLists.txt": "023cf7ef3b8b5dc1322ae651a5c61059fef56251e7e4323bd93d5c2c6a415c4c",
     "cpppj/src/client/GameWorld.cpp": "af6d3aeb3bd53d83e2619c2bd20ba5df42c17fe718cb81786841606419f10c6c",
     "cpppj/src/client/GameWorld.h": "d51dfe75377b1afd870bfeb40e26cef9f6233f65217d757135648ce064043a16",
     "cpppj/src/client/RawCampaignSession.cpp": "4b0470acb1ea5cb275959eb4a70df1d795c4f87d6a51a2a78f6e35ebe573f36b",
     "cpppj/src/client/RawCampaignSession.h": "f905619a10b1ecc976bdfc082f8196e3f82190b5f7770828aaf84d00b813c573",
     "cpppj/src/client/UberGump.cpp": "c160136246b091eed0d2dbdd6d091d068e7c0460191d935c77582ce1c137d932",
     "cpppj/src/client/UserInput.cpp": "fd1bee42a48c4a33098114e813a7909d449791671fb0e313b76efc55216c20bd",
-    "cpppj/tests/CMakeLists.txt": "d171568eba935a3c57358c67bcd34bc47c249051356a6bae5d6b6c72c09f1c6d",
+    "cpppj/tests/CMakeLists.txt": "08457e3ef27a4288b676a00c32a171a7775d93f7a491faa643452af8236ae8e0",
     "cpppj/tests/CampaignSessionTests.cpp": "995d2f4848c9f2b261d0930cbc7dde5f2209b5931cdab4102da10dca4d23f117",
     "tools/cpp_campaign_entry_smoke.py": "59b39e067a2e51cc7f6358d8adc198e4cbd5682bc6109e9b1e0407fa7f3550aa",
     "cpppj/src/client/RawCarrierInput.h": "27db41be147df6a13b60aa9faa68751dc1d54a09fae5945ee0e9f762f5979be4",
@@ -3483,6 +3483,25 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "f1493f0e7fe889cce9a7aa70ec18941821120699ca402469a8781a891f7a4a8d",
           "current": "d171568eba935a3c57358c67bcd34bc47c249051356a6bae5d6b6c72c09f1c6d"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 234,
+      "reason": "폭발 주문 자격/효과와 공통 좌표 어댑터 추가로 바뀐 현재 소스 핀을 갱신한다. 원본 기대값과 과거 실행/바이너리/기존 이력은 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "9c331c9fbd2e2f96e7604cf5c2a9462238ea3f55ef689542ab5789d2b1ee17cf",
+          "current": "023cf7ef3b8b5dc1322ae651a5c61059fef56251e7e4323bd93d5c2c6a415c4c"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "d171568eba935a3c57358c67bcd34bc47c249051356a6bae5d6b6c72c09f1c6d",
+          "current": "08457e3ef27a4288b676a00c32a171a7775d93f7a491faa643452af8236ae8e0"
         }
       ]
     }

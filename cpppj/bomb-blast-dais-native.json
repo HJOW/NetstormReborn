@@ -1,0 +1,27 @@
+{
+  "unit": 234,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-19",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-19"
+  },
+  "uniqueInputs": 64,
+  "normalReturns": 128,
+  "instructions": 9416,
+  "nativeCalls": {
+    "0041e9c0": 128,
+    "004ac200": 144,
+    "0049a840": 288,
+    "004adc60": 128,
+    "0041ea30": 16,
+    "004adea0": 16,
+    "0049a900": 16
+  },
+  "scope": "dais+허용genus에서abstract/TYPE_HAS_HP 우선순위와자격→효과를원본으로구별했다. 큰효과경계는기존2082입력과동일하며원문/기존도구는변경하지않았다.",
+  "sha256": {
+    "cpppj/bomb-blast-native.json": "fad1ffc326f7f35b3b8ab94a5435649e2665b7d1eb047e443341c670d9d1745c",
+    "tools/decomp_bomb_blast_dais.py": "2cb69f570450dd789c87f16bd35dfb75771f56d7fdb2676f8c6cdd66633816c4",
+    "cpppj/tests/fixtures/bomb-blast-dais-x86.tsv": "e0a91a336da61b341e16ea8408b172e8eeec649b880e7be4cf941f856f642656"
+  }
+}

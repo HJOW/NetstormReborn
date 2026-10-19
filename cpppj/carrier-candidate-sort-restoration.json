@@ -12,8 +12,8 @@
     "cpppj/src/o/RawCarrierCandidateSort.h": "d6772fee26dab5961e379781030a469a52fb940462f44c67b16d9cc33b97a61f",
     "cpppj/src/o/RawCarrierCandidateSort.cpp": "a7749297ad70712a059aea52088cfd41c0880801a4f72c68d2b1548495a5bc69",
     "cpppj/tests/CarrierCandidateSortTests.cpp": "0899bcd133f09fd587e42105e6e790b68eb622021242d63c87748d36b1820a4e",
-    "cpppj/src/CMakeLists.txt": "9c331c9fbd2e2f96e7604cf5c2a9462238ea3f55ef689542ab5789d2b1ee17cf",
-    "cpppj/tests/CMakeLists.txt": "d171568eba935a3c57358c67bcd34bc47c249051356a6bae5d6b6c72c09f1c6d",
+    "cpppj/src/CMakeLists.txt": "023cf7ef3b8b5dc1322ae651a5c61059fef56251e7e4323bd93d5c2c6a415c4c",
+    "cpppj/tests/CMakeLists.txt": "08457e3ef27a4288b676a00c32a171a7775d93f7a491faa643452af8236ae8e0",
     "tools/decomp_carrier_candidate_sort.py": "b33e27d24a1d4f2bf4cabbb6958164f8d1e6cbf672c1f0aa1c2635b0b96d20d1",
     "docs/exe/cpp-carrier-candidate-sort-20261018.md": "9e79257a499cde7bab8038aa3aee3928376e2233d88c88c62199c0f48d48d950"
   },
@@ -867,6 +867,25 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "f1493f0e7fe889cce9a7aa70ec18941821120699ca402469a8781a891f7a4a8d",
           "current": "d171568eba935a3c57358c67bcd34bc47c249051356a6bae5d6b6c72c09f1c6d"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 234,
+      "reason": "폭발 주문 자격/효과와 공통 좌표 어댑터 추가로 바뀐 현재 소스 핀을 갱신한다. 원본 기대값과 과거 실행/바이너리/기존 이력은 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "9c331c9fbd2e2f96e7604cf5c2a9462238ea3f55ef689542ab5789d2b1ee17cf",
+          "current": "023cf7ef3b8b5dc1322ae651a5c61059fef56251e7e4323bd93d5c2c6a415c4c"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "d171568eba935a3c57358c67bcd34bc47c249051356a6bae5d6b6c72c09f1c6d",
+          "current": "08457e3ef27a4288b676a00c32a171a7775d93f7a491faa643452af8236ae8e0"
         }
       ]
     }

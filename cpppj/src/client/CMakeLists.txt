@@ -140,6 +140,8 @@ target_sources(netstorm PRIVATE RawMenuControls.h RawMenuControls.cpp)
 
 # 실제 운반물 위치와 발자국 탐색을 같은 메뉴/배치 파이프라인에 연결한다.
 target_sources(netstorm PRIVATE RawCarrierDropPoint.h RawCarrierDropPoint.cpp)
+# 실제 폭발 효과를 같은 월드의 기존 피해/지면/다리 처리기에 연결한다.
+target_sources(netstorm PRIVATE RawBombBlastBindings.h RawBombBlastBindings.cpp)
 
 # 공통 객체 메뉴 Open과 원본의 객체 중심 위치 계산을 연결한다.
 target_sources(netstorm PRIVATE RawObjectMenuOpen.h RawObjectMenuOpen.cpp)

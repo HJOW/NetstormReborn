@@ -20,8 +20,8 @@
     "cpppj/src/client/RawCursorPlacement.h": "1e00874a18228650f79cc1b0fb4130818b5fc124727abbc482feb0983e85446e",
     "cpppj/src/client/RawCursorPlacement.cpp": "64c57e1581716ad63ebf952aa9c4b7ce4c432ec20f3ca23dcfeede6fcf8a1a46",
     "cpppj/tests/CursorPlacementTests.cpp": "a03f225bbf82cce49a770d111b2d4d24f5c496cde97560f3f55c6bce50dad997",
-    "cpppj/src/client/CMakeLists.txt": "ea7b520652a0a21cdaeb2852aae3992c3e361b5d01426f285056dbb1508f6ccd",
-    "cpppj/tests/CMakeLists.txt": "d171568eba935a3c57358c67bcd34bc47c249051356a6bae5d6b6c72c09f1c6d"
+    "cpppj/src/client/CMakeLists.txt": "0ea1587f2d9dcd22fb2afbdeeefcb151242775b7083018dd39eb181a84fc0b06",
+    "cpppj/tests/CMakeLists.txt": "08457e3ef27a4288b676a00c32a171a7775d93f7a491faa643452af8236ae8e0"
   },
   "limitations": [
     "세 커서 몸체와 실제 CRT 절삭/floor만 실행한다. decoder/SHP/설명/GUI/지역/투영/화면 갱신은 명시 경계다.",
@@ -1159,6 +1159,25 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "f1493f0e7fe889cce9a7aa70ec18941821120699ca402469a8781a891f7a4a8d",
           "current": "d171568eba935a3c57358c67bcd34bc47c249051356a6bae5d6b6c72c09f1c6d"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 234,
+      "reason": "폭발 주문 자격/효과와 공통 좌표 어댑터 추가로 바뀐 현재 소스 핀을 갱신한다. 원본 기대값과 과거 실행/바이너리/기존 이력은 보존한다.",
+      "pins": [
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/client/CMakeLists.txt",
+          "previous": "ea7b520652a0a21cdaeb2852aae3992c3e361b5d01426f285056dbb1508f6ccd",
+          "current": "0ea1587f2d9dcd22fb2afbdeeefcb151242775b7083018dd39eb181a84fc0b06"
+        },
+        {
+          "group": "/sha256",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "d171568eba935a3c57358c67bcd34bc47c249051356a6bae5d6b6c72c09f1c6d",
+          "current": "08457e3ef27a4288b676a00c32a171a7775d93f7a491faa643452af8236ae8e0"
         }
       ]
     }

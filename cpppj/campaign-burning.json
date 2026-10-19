@@ -105,7 +105,7 @@
     "cpppj/src/client/RawCampaignParticles.h": "936d96d04a8737266462b5045e6d433a0abbd76dd5e1e76de9f087911f3eda32",
     "cpppj/src/client/RawCampaignParticles.cpp": "08317368d2c12e6d5c78224c3a568048b577b32eae89e401d47550f59e0ee0d3",
     "cpppj/src/client/RawCampaignSession.cpp": "4b0470acb1ea5cb275959eb4a70df1d795c4f87d6a51a2a78f6e35ebe573f36b",
-    "cpppj/tests/CMakeLists.txt": "d171568eba935a3c57358c67bcd34bc47c249051356a6bae5d6b6c72c09f1c6d",
+    "cpppj/tests/CMakeLists.txt": "08457e3ef27a4288b676a00c32a171a7775d93f7a491faa643452af8236ae8e0",
     "cpppj/tests/CampaignSessionTests.cpp": "995d2f4848c9f2b261d0930cbc7dde5f2209b5931cdab4102da10dca4d23f117",
     "tools/decomp_burning_lifetime_draw.py": "f5a4e7971e0319845f2863b1ebb68cfa2c04db528456a39d29671bec6d4932b0",
     "tools/decomp_render_frame_gate.py": "01f27d259269042a06c5ee589ee1b352a4327abe6775fe82bef84b56c26983dd",
@@ -11705,6 +11705,19 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "f1493f0e7fe889cce9a7aa70ec18941821120699ca402469a8781a891f7a4a8d",
           "current": "d171568eba935a3c57358c67bcd34bc47c249051356a6bae5d6b6c72c09f1c6d"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 234,
+      "reason": "폭발 주문 자격/효과와 공통 좌표 어댑터 추가로 바뀐 현재 소스 핀을 갱신한다. 원본 기대값과 과거 실행/바이너리/기존 이력은 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "d171568eba935a3c57358c67bcd34bc47c249051356a6bae5d6b6c72c09f1c6d",
+          "current": "08457e3ef27a4288b676a00c32a171a7775d93f7a491faa643452af8236ae8e0"
         }
       ]
     }

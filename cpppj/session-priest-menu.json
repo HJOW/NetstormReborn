@@ -45,7 +45,7 @@
     "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
     "tools/decomp_carrier_content_notice.py": "dbb32841a7019edbcb411f75094046c8bf0e20b4ed503e109a14b79a79d8a94c",
     "cpppj/src/o/CMakeLists.txt": "e98fa5aecc683b69021e6efacd62092a48772ae5ed3f7cb3da0eeeff7c33d7ec",
-    "cpppj/tests/CMakeLists.txt": "d171568eba935a3c57358c67bcd34bc47c249051356a6bae5d6b6c72c09f1c6d"
+    "cpppj/tests/CMakeLists.txt": "08457e3ef27a4288b676a00c32a171a7775d93f7a491faa643452af8236ae8e0"
   },
   "validation": {
     "configuration": "Release",
@@ -2559,6 +2559,19 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "f1493f0e7fe889cce9a7aa70ec18941821120699ca402469a8781a891f7a4a8d",
           "current": "d171568eba935a3c57358c67bcd34bc47c249051356a6bae5d6b6c72c09f1c6d"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 234,
+      "reason": "폭발 주문 자격/효과와 공통 좌표 어댑터 추가로 바뀐 현재 소스 핀을 갱신한다. 원본 기대값과 과거 실행/바이너리/기존 이력은 보존한다.",
+      "pins": [
+        {
+          "group": "/sha256",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "d171568eba935a3c57358c67bcd34bc47c249051356a6bae5d6b6c72c09f1c6d",
+          "current": "08457e3ef27a4288b676a00c32a171a7775d93f7a491faa643452af8236ae8e0"
         }
       ]
     }

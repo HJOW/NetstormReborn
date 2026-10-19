@@ -30,6 +30,7 @@ class RawBombTargets {
 public:
     RawBombTargets(const SidPool& pool,const SquidHash& hash,std::span<const RiftTypeRecord> types,std::span<const float> ranges,BombTargetState& state,BombTargetHooks hooks); // 현재10.78/188TYPE와 네 해시를 빌린다.
     std::int32_t DefaultRadius(Sid parent) const; // 실제41e3c0의 현재TYPE+44→_ftol 하위DWORD 몸체다. 가상b4 분배는 호출자가 확인한다.
+    std::array<float,2> Center(Sid parent) const; // 실제41e460과 검색이 공유하는 스냅/0.5차감/보드 제한 중심이다.
     BombTargetGeometry Find(Sid parent,BombTargetList& output) const; // 현재 자격/목록을 읽으며 실제 RawSquidFinder로 순회한다.
     const SidPool& Pool() const; // 다른 세션의 연결을 섞지 않도록 확인한다.
 private:

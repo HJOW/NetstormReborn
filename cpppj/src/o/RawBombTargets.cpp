@@ -25,7 +25,7 @@ float Snap(float value,bool upper) {
     return static_cast<float>(Truncate(static_cast<double>(value)+(upper ? static_cast<double>(kSnapBias) : 0.0)));
 }
 // 부모 좌표는 스냅 뒤에0.5를 빼고 원본41d0d0의1..255로 제한한다.
-float Center(float value) { return std::clamp(Snap(value,true)-0.5F,1.0F,255.0F); }
+float SnapCenter(float value) { return std::clamp(Snap(value,true)-0.5F,1.0F,255.0F); }
 }
 // 실제10.78의 동일 현재 풀/TYPE/해시만 받는다.
 RawBombTargets::RawBombTargets(const SidPool& pool,const SquidHash& hash,std::span<const RiftTypeRecord> types,std::span<const float> ranges,BombTargetState& state,BombTargetHooks hooks)
@@ -51,11 +51,15 @@ std::int32_t RawBombTargets::DefaultRadius(Sid parent) const {
     if (kind>=ranges_.size()) throw std::out_of_range("Bomb 반경 현재TYPE 범위");
     return Truncate(ranges_[kind]);
 }
+// 대상 검색과 폭발이 같은 원본 중심 계산을 재사용한다.
+std::array<float,2> RawBombTargets::Center(Sid parent) const {
+    return {SnapCenter(std::bit_cast<float>(Read(parent,14))),SnapCenter(std::bit_cast<float>(Read(parent,18)))};
+}
 // 중심/반경은 순회 전에 캡처하고 후보와 출력 헤더는 원본 위치에서 현재 값을 읽는다.
 BombTargetGeometry RawBombTargets::Find(Sid parent,BombTargetList& output) const {
     if (!state_.boss) Need(hooks_.assertion)(0x130);
     BombTargetGeometry geometry;
-    geometry.center={Center(std::bit_cast<float>(Read(parent,14))),Center(std::bit_cast<float>(Read(parent,18)))};
+    geometry.center=Center(parent);
     geometry.radius=Need(hooks_.radius)(parent,Read(parent,0));
     const float radius=static_cast<float>(geometry.radius); // 원본은 첫 upperX 계산 뒤부터 저장된float 반경을 읽는다.
     geometry.area={static_cast<float>(static_cast<double>(geometry.center[0])-radius),static_cast<float>(static_cast<double>(geometry.center[1])-radius),

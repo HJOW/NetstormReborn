@@ -1,0 +1,44 @@
+{
+  "unit": 234,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-19",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-19"
+  },
+  "uniqueInputs": 2082,
+  "normalReturns": 4164,
+  "instructions": 483712,
+  "nativeCalls": {
+    "0041e9c0": 2972,
+    "004ac200": 5024,
+    "0049a840": 11652,
+    "004adc60": 1652,
+    "00422560": 504,
+    "004ac550": 1968,
+    "0041ea30": 1552,
+    "004adea0": 1548,
+    "0049a900": 1548,
+    "0041e460": 768,
+    "0041d7a0": 768,
+    "004e49c0": 2232,
+    "0041d0d0": 768,
+    "0041e3c0": 696,
+    "0041cfc0": 768,
+    "00421f70": 268
+  },
+  "specialType": 150,
+  "priestType": 158,
+  "boundaries": "41e9c0/41ea30/422560/HP보유/TYPE/프레임보호/기하/기본radius/421f70 전체. 실제가상98피해/10삭제/470ac0지면효과/4215d0끝칸변경은 경계다. 일부입력의파생b4 override도명시경계이며원본기하를대체하지않는다. GP/retN/canary/SEH보존/x87/실행·읽기·쓰기범위확인. 실제HP전환·그래프·미션/게임/UI성공의증거가아니다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_bomb_blast.py": "a780c5598d7adbffb5acd8c65b5356effb041b3c58fdb10f76bef361022b2e5c",
+    "tools/decomp_bomb_targets.py": "13f5d8ff862b4e9d0fa370592e48d074d209f1b8550cc3a622f4ffefb75440f6",
+    "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+    "tools/decomp_cursor_position.py": "e15bcdbc4c6be9c131c30f15416c945d650dba9f7dc6def404b47f63c635c212",
+    "tools/decomp_carrier_falling.py": "f8702db0708a543b73213c8df9154503afe977767a11bd7c150b639ee1b587a6",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "cpppj/tests/fixtures/bomb-blast-x86.tsv": "697e3ced9b5ff78c62b731cecaa9c86fa68b0ecc528d5bd1fab20a154a097461"
+  }
+}

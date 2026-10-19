@@ -1,0 +1,70 @@
+{
+  "unit": 234,
+  "baseline": "fa516f5a",
+  "host": "HJOW-Athlon",
+  "date": "2026-10-19",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-19"
+  },
+  "scope": "가상 표502370의 Devastation/폭발 자격41e9c0과 효과41ea30을 복원했다. 기존 월드 피해·지면·다리·삭제 어댑터를 준비했으며 Session 설치/실제 게임 시전은 남아 있다.",
+  "validation": {
+    "focused": [
+      "extracted/goal-bomb-blast-20261019-focused1.json",
+      "extracted/goal-bomb-blast-20261019-targets-focused1.json"
+    ],
+    "full": "extracted/goal-bomb-blast-20261019-full1.json",
+    "currentPins": "extracted/goal-bomb-blast-20261019-current-pins.json",
+    "tests": 1765,
+    "failed": 0,
+    "seconds": 245.75443850000738
+  },
+  "binaries": {
+    "app": "22fc89c9d9f777f0a208d0e46c052b4cd4839b42bc5e4d4958ca37ddaa930399",
+    "tests": "946d5194557d711ecc476c0654b3d4f5774215df18bd083f5e036723c39a698c"
+  },
+  "sources": {
+    "cpppj/src/CMakeLists.txt": "023cf7ef3b8b5dc1322ae651a5c61059fef56251e7e4323bd93d5c2c6a415c4c",
+    "cpppj/src/client/CMakeLists.txt": "0ea1587f2d9dcd22fb2afbdeeefcb151242775b7083018dd39eb181a84fc0b06",
+    "cpppj/tests/CMakeLists.txt": "08457e3ef27a4288b676a00c32a171a7775d93f7a491faa643452af8236ae8e0",
+    "cpppj/src/o/RawBombBlast.cpp": "fa1f6941f7ace6e16557820eb78c73ea10134c0fd26b297950d3df3b5c07bbec",
+    "cpppj/src/o/RawBombBlast.h": "df801c6fce496e120f22dc2d9de78ecc0156f46f2086bee0e2cb34002c07bfe4",
+    "cpppj/src/o/RawBombTargets.cpp": "f2aa11b08479c114823fca68e87b0aadf27da965e5b63a2129d350f3c583700c",
+    "cpppj/src/o/RawBombTargets.h": "4a12c271c210e925afadf17e085ca677459f40045385befa84960d9a63642e2c",
+    "cpppj/src/client/RawBombBlastBindings.cpp": "1b134fdb8231c7e95538ef52cba993a6a523b83b092f2585f63a38ed814524f7",
+    "cpppj/src/client/RawBombBlastBindings.h": "774b85b84bb4e74d7c69e980436183a1ccdcd1c4e928b845d057a4361eefc4fd",
+    "cpppj/tests/BombBlastTests.cpp": "7d7e379d23ccc2993aba73561684b386aea4d78538ad70303f98abba22cbb526",
+    "tools/decomp_bomb_blast.py": "a780c5598d7adbffb5acd8c65b5356effb041b3c58fdb10f76bef361022b2e5c",
+    "tools/decomp_bomb_blast_dais.py": "2cb69f570450dd789c87f16bd35dfb75771f56d7fdb2676f8c6cdd66633816c4",
+    "tools/cpp_bomb_blast_audit.py": "b13ec3c02b83a534382076700a98c57d3b24291ab9862e4c1ac17c5c5be4322d",
+    "docs/exe/cpp-bomb-blast-20261019.md": "bfe56e9747e8aeabe6a60f280a61464d3ebc005ce825c1bbc71c7408e8a6d6e7",
+    "cpppj/src/o/RawBridgeEvents.cpp": "b96043a54eb2df42a4c7dba3e295d40d3c2fa91985ab4e48a914bc0ecbc0fce8",
+    "cpppj/src/o/RawBridgeEvents.h": "f0cd3ffbf27087a84e9752cc49aadf1ff4eb25da3234cf0b15dc75acc8177526",
+    "cpppj/src/client/RawCampaignHitBindings.cpp": "fe6c9e3d7ed0e3106cc9773ef1e852985eb0805c38eab283c63c8d82c0f89b83",
+    "cpppj/src/client/RawCampaignHitBindings.h": "143b27b14df75669a0a79805c801e51f0aa7d7de90082d881094bb3fdbf1349d",
+    "cpppj/src/o/RawGunImpact.cpp": "aa8b42256635af5bae196112b8690658d35de297f4fa4737d67b89d2d96abffc",
+    "cpppj/src/o/RawGunImpact.h": "a6b9673434e9a5a8cf38649305f780e3c080b8bed7427e5493f4be098c0a2ea2"
+  },
+  "evidence": {
+    "cpppj/bomb-blast-native.json": "fad1ffc326f7f35b3b8ab94a5435649e2665b7d1eb047e443341c670d9d1745c",
+    "cpppj/bomb-blast-dais-native.json": "25e62b67575bad1bd7c0652b874572267b7e43ddc30123e9ba3ff02966baa98e",
+    "cpppj/tests/fixtures/bomb-blast-x86.tsv": "697e3ced9b5ff78c62b731cecaa9c86fa68b0ecc528d5bd1fab20a154a097461",
+    "cpppj/tests/fixtures/bomb-blast-dais-x86.tsv": "e0a91a336da61b341e16ea8408b172e8eeec649b880e7be4cf941f856f642656",
+    "extracted/goal-bomb-blast-20261019-current-pins.json": "6b09206723ef1ebb98b7dade99251e26b7ea1960195b5ed5e6e9541a3542a789",
+    "extracted/goal-bomb-blast-20261019-focused1.json": "b82561a0df156079a4c6802116ef955056173b2e351ce149e698082b9daacfa5",
+    "extracted/goal-bomb-blast-20261019-focused1.stdout": "38007a7e3646db61c56b13a864412f43292179fa0d71ff482ab1a13c9eb3ff42",
+    "extracted/goal-bomb-blast-20261019-focused1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-bomb-blast-20261019-targets-focused1.json": "8a16beca793e13bc496971dbaaac3efd1b85b2d9799f8a8d1899d5a1762fbf93",
+    "extracted/goal-bomb-blast-20261019-targets-focused1.stdout": "3da5d066c15c0e700b80654b3c83410e9a668c639e84d2541631627df223f06a",
+    "extracted/goal-bomb-blast-20261019-targets-focused1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-bomb-blast-20261019-full1.json": "54c213f1100b897314929b85a18ad07649b813b221372640ee3f622a90b65b49",
+    "extracted/goal-bomb-blast-20261019-full1.stdout": "8a5fa5e0d967276fcc2def06f43f37c82c0e3b6731493058e8b5c5455c3dc1e8",
+    "extracted/goal-bomb-blast-20261019-full1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "cppImplemented": true,
+  "runtimeHooksPrepared": true,
+  "sessionIntegrated": false,
+  "gameRun": false,
+  "goalComplete": false,
+  "resumeAt": "다른 파생bc/c0 자격/효과(일부bc의 부수효과 포함), 지연420a40/프로세스,425f50 시전 종료와 실제 삭제/내용물 소비를 복원한다. Session0x50/0x5c/0x5f·가변 송신 길이·UI Cast/Drop/427070을 함께 설치하고 Early5 자연F 이후 시전/포획/제단/희생과 다른 지정 미션/Guide를 검증한다."
+}
