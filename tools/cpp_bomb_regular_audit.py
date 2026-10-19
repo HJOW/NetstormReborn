@@ -48,11 +48,17 @@ def main():
     assert pins['semanticReversalToHead']
     # 빌드 목록의현재핀만갱신했으며각새값은실제현재소스와같아야한다.
     for pin in pins['changes']:
-        value = json.loads((ROOT/pin['report']).read_text('utf-8'))
+        report = json.loads((ROOT/pin['report']).read_text('utf-8'))
+        value = report
         # 원문에보존한JSON경로로정확한한필드만조회한다.
         for key in pin['pointer']:
             value = value[key]
-        assert value == pin['new'] == sha(ROOT/pin['source'])
+        assert value == sha(ROOT/pin['source'])
+        group = '/'+'/'.join(map(str, pin['pointer'][:-1]))
+        # 당시 새 핀은 해당 단위의 보존 이력과 대조한다. 후속 구현의 현재 해시와 혼동하지 않는다.
+        assert any(update.get('unit') == record['unit'] and any(item['path'] == pin['source'] and item['group'] == group
+            and item['previous'] == pin['old'] and item['current'] == pin['new'] for item in update['pins'])
+            for update in report.get('integration_updates', []))
     assert not record['sessionIntegrated'] and not record['gameRun'] and not record['goalComplete']
     print('Bomb Regular 원문741/1482반환·집중2/0·전체1759/0 및 현재핀 감사 통과')
 

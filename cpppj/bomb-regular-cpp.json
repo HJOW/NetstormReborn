@@ -21,13 +21,13 @@
     "tests": "349e8797d3ba045564e6144838b0280641174d75e1c576f0716a8882a4154cda"
   },
   "sources": {
-    "cpppj/src/CMakeLists.txt": "54cf17faec66eb58f7a9e38c35fa331499fbddb28b30ab2408b70d867f02380b",
-    "cpppj/tests/CMakeLists.txt": "695824783c587ef02635c705f6976c5422f0441ffe16831149d568a6d91fb51b",
+    "cpppj/src/CMakeLists.txt": "14c485cf02a59e50d4b8a66cf4c03d9f20ce28139a549677c8c15b6cfbae5d1c",
+    "cpppj/tests/CMakeLists.txt": "f1493f0e7fe889cce9a7aa70ec18941821120699ca402469a8781a891f7a4a8d",
     "cpppj/src/o/RawBombRegular.cpp": "0015e3b8830a9d94f1646d74cfecde0509095973788787a24ff47c03bdd0a154",
     "cpppj/src/o/RawBombRegular.h": "b83e048ad7aba172f90adc70e92e971d9553e869fcad0944799b1492998d9ab0",
     "cpppj/tests/BombRegularTests.cpp": "fecb128daa7e3e866d9f6ceee66fc0b501903a9b1e7a153299a397d8b74414ca",
     "tools/decomp_bomb_regular.py": "f07874570530da4e20a607d66ca1b0e55c21f5b91bfcd50750d9dd431b97ef72",
-    "tools/cpp_bomb_regular_audit.py": "e385e48aff50dc63e86cb330e80a166a87d6ee3b624aa775198c4a158b78a2ea",
+    "tools/cpp_bomb_regular_audit.py": "1df34d021ce28c5ee6305d8317dae9730299ff5fe7207931497f3289b4e485ab",
     "docs/exe/cpp-bomb-regular-20261019.md": "b5c27cbfc4111c910430c6ebe9cf0b4718af80078fcb85f7006ee72971859ac9"
   },
   "evidence": {
@@ -44,5 +44,32 @@
   "sessionIntegrated": false,
   "gameRun": false,
   "goalComplete": false,
-  "resumeAt": "41e4b0 ?? ?? ???420bf0/0x5f ??? ??/??/?? ??? ?? ????? ? ?? ??/Session/UI? ?? ????. Early5 ??F ?? ?? ??/??/??/?? ? ?? ?? ??/Guide? ???."
+  "resumeAt": "41e4b0 ?? ?? ???420bf0/0x5f ??? ??/??/?? ??? ?? ????? ? ?? ??/Session/UI? ?? ????. Early5 ??F ?? ?? ??/??/??/?? ? ?? ?? ??/Guide? ???.",
+  "integration_updates": [
+    {
+      "date": "2026-10-19",
+      "unit": 232,
+      "reason": "Bomb 0x5f ?? ?? ??? ?? ?? ?? ??? ?? ?? ?? ?? ? ??. ?? ???? ?? ??/??? ????.",
+      "pins": [
+        {
+          "group": "/sources",
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "54cf17faec66eb58f7a9e38c35fa331499fbddb28b30ab2408b70d867f02380b",
+          "current": "14c485cf02a59e50d4b8a66cf4c03d9f20ce28139a549677c8c15b6cfbae5d1c"
+        },
+        {
+          "group": "/sources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "695824783c587ef02635c705f6976c5422f0441ffe16831149d568a6d91fb51b",
+          "current": "f1493f0e7fe889cce9a7aa70ec18941821120699ca402469a8781a891f7a4a8d"
+        },
+        {
+          "group": "/sources",
+          "path": "tools/cpp_bomb_regular_audit.py",
+          "previous": "e385e48aff50dc63e86cb330e80a166a87d6ee3b624aa775198c4a158b78a2ea",
+          "current": "1df34d021ce28c5ee6305d8317dae9730299ff5fe7207931497f3289b4e485ab"
+        }
+      ]
+    }
+  ]
 }

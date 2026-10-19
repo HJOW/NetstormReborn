@@ -1,0 +1,64 @@
+{
+  "unit": 232,
+  "baseline": "12eff4b3",
+  "host": "HJOW-Athlon",
+  "date": "2026-10-19",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-19"
+  },
+  "scope": "0x5f/420bf0? ?? ??/???/TYPE/?? ????? ??/??capacity???/??/?? ??? ?? C++ ??? ????.",
+  "validation": {
+    "focused": "extracted/goal-bomb-effect-cpp-20261019-focused1.json",
+    "full": "extracted/goal-bomb-effect-cpp-20261019-full1.json",
+    "currentPins": "extracted/goal-bomb-effect-cpp-20261019-current-pins.json",
+    "historicalPinAudit": {
+      "before": "extracted/goal-bomb-effect-cpp-20261019-regular-audit-before1.json",
+      "after": "extracted/goal-bomb-effect-cpp-20261019-regular-audit-after2.json"
+    },
+    "tests": 1761,
+    "failed": 0,
+    "seconds": 243.6993273999833
+  },
+  "binaries": {
+    "app": "416636b9dd42880335347f211a8d61a1403217a80417878f473d159846514062",
+    "tests": "998d351b68b21386fbf60b01eaf25b1567814b59f7830e1f7bb885f0ba4fb737"
+  },
+  "sources": {
+    "cpppj/src/CMakeLists.txt": "14c485cf02a59e50d4b8a66cf4c03d9f20ce28139a549677c8c15b6cfbae5d1c",
+    "cpppj/tests/CMakeLists.txt": "f1493f0e7fe889cce9a7aa70ec18941821120699ca402469a8781a891f7a4a8d",
+    "cpppj/src/o/RawBombEffect.cpp": "120e00fe19199c4e008bd4d09e3f665f10f235973abd8167f6d7afda0d1ef01a",
+    "cpppj/src/o/RawBombEffect.h": "4df18d0a1d809dcb5063ffa974839c2b5eab069cbf49413862b97939017c8e62",
+    "cpppj/tests/BombEffectTests.cpp": "8cfaf59f4ddee64949e13474b30a18371c492d5846cca1c77ff0ae1e5cedc265",
+    "tools/decomp_bomb_effect.py": "22c20eb50c5f4e2193fc2c4d676c9a2d93cabd0a193b34aebcac92d3c88bb9c3",
+    "tools/cpp_bomb_effect_cpp_audit.py": "cebb40765cf2b542ccea19b52698227565f6a06003340433eaad8e3a0d632153",
+    "tools/cpp_bomb_regular_audit.py": "1df34d021ce28c5ee6305d8317dae9730299ff5fe7207931497f3289b4e485ab",
+    "docs/exe/cpp-bomb-effect-cpp-20261019.md": "98f6895887da4040c4ed66299b03706591dedb9d6527e01420bd627a1516f83d"
+  },
+  "evidence": {
+    "cpppj/bomb-effect-native.json": "893fa28f8c016afda9fde3ae2f189fbaa8ca5f36b42579c1c7467edac52d824b",
+    "cpppj/bomb-effect-analysis.json": "de335d5dad23596f78295f5ab32146cee2b46fdb147f39302001adf5f952cb80",
+    "cpppj/tests/fixtures/bomb-effect-x86.tsv": "44f9032ce5e96488e4bfb5e5c425a129308debed96e2995b46930c8fcb9fd3a1",
+    "extracted/goal-bomb-effect-cpp-20261019-current-pins.json": "311f0968b5a66dd4fdef94fdaf78fb3ef8b04d5847342a05fac70f36b62a8e64",
+    "extracted/goal-bomb-effect-cpp-20261019-focused1.json": "936a667f1321f3ecbef07083b0f55a3465e78f9d334a80995cfba09f1cd87d93",
+    "extracted/goal-bomb-effect-cpp-20261019-focused1.stdout": "da898a796c0944be7bbd70360386ed5ebd379d2aa03a41f810fee28ad1b21f35",
+    "extracted/goal-bomb-effect-cpp-20261019-focused1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-bomb-effect-cpp-20261019-full1.json": "4bcce22f664bf5e22c4ed78235e749530c08f468f3f6ffd0163002312ab415fe",
+    "extracted/goal-bomb-effect-cpp-20261019-full1.stdout": "9bacee14d0cbba6a8cb9480f2ebf763a43f6b71368a62809ca6e4816d111abbd",
+    "extracted/goal-bomb-effect-cpp-20261019-full1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-bomb-effect-cpp-20261019-regular-audit-before1.json": "8f0846bb521a8f1a14ff59386cff6f0c3cfb6b653941d544553933773d454a78",
+    "extracted/goal-bomb-effect-cpp-20261019-regular-audit-before1.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-bomb-effect-cpp-20261019-regular-audit-before1.stderr": "1ed1fecc7fc40483b94e51ae33c7df66b86012fd669edf215aa77d495fe81455",
+    "extracted/goal-bomb-effect-cpp-20261019-regular-audit-after1.json": "2edf763f18522cf62529271874df9c62d4d3f0868bb2ea521536bbeb006126df",
+    "extracted/goal-bomb-effect-cpp-20261019-regular-audit-after1.stdout": "8f12124c2955fe665950220f63af8abdbe3756e6156b0c57146b920df86fc371",
+    "extracted/goal-bomb-effect-cpp-20261019-regular-audit-after1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-bomb-effect-cpp-20261019-regular-audit-after2.json": "49303d3d71b0f8095b3e2fb29e8f14ed3dc51fb076f8bb146cf68b27b405c944",
+    "extracted/goal-bomb-effect-cpp-20261019-regular-audit-after2.stdout": "028f50f416b3d51d2757239b463bb18a1abe91915cffb9c5ccea8c2685bb033a",
+    "extracted/goal-bomb-effect-cpp-20261019-regular-audit-after2.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "cppImplemented": true,
+  "sessionIntegrated": false,
+  "gameRun": false,
+  "goalComplete": false,
+  "resumeAt": "??41e4b0 ?? ??/??bc???c0??/?? ????/?? ??? ?? ??? ??? ?????? ? Session0x50/0x5c/0x5f??? ?? ???UI Cast/Drop/427070? ?? ????. Early5 ??F ?? ??/??/??/?? ? ?? ?? ??/Guide? ???."
+}
