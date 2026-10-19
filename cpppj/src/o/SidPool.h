@@ -68,6 +68,8 @@ private:
     friend class RawCarrierChoice;
     // 포획수신은생성효과뒤free가바뀌어도현재물리BYTE의dead만고친다.
     friend class RawCarrierPickup;
+    // Cast/Drop은 내용물의 free 상태에 새 관문을 추가하지 않고 물리 상태 BYTE+22를 쓴다.
+    friend class RawCarrierDrop;
     // 원본 short next 필드를 little endian으로 읽거나 쓴다. serverHead는 0번 슬롯+14의 겹친 객체다.
     std::uint16_t ReadNext(std::size_t offset) const;
     void WriteNext(std::size_t offset,std::uint16_t next);

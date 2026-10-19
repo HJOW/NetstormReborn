@@ -97,7 +97,7 @@
     "cpppj/src/client/RawProductionControls.cpp": "a6edd49e5a486449f4b23f3092719f7f1342ee86f66d1325867c306f52056d31",
     "cpppj/src/client/RawProductionControls.h": "8826c67edd4bc027f1d060bcd1e0fe5aa4638c4683b05fd6d2c57e931c90b346",
     "cpppj/src/client/UberGump.cpp": "c160136246b091eed0d2dbdd6d091d068e7c0460191d935c77582ce1c137d932",
-    "cpppj/tests/CMakeLists.txt": "83eed7cedab8650ce570f444a5c06efe29b2ce414e3049777221cf672f6e248f",
+    "cpppj/tests/CMakeLists.txt": "d8240a514b0fb34b353c2ede35edfb65663df83397022c421ff0fb475656cac7",
     "docs/exe/cpp-production-feedback-20261018.md": "5bf8f29e3a77eb8e5ad0a38b2de4ea9a823b0b34da76b5367053f8b779265b9e",
     "cpppj/src/client/InventoryAboutMenu.h": "140e9ddfe334534354ae475e9ff7290848ab78cedd38ad6a45f1dd6891e83f9e",
     "cpppj/src/client/InventoryAboutMenu.cpp": "4a2b55d72ccb4ea8b5d96ccd2f2d2c366df8073520e6b81e503178839986345b",
@@ -848,6 +848,19 @@
           "path": "cpppj/src/client/RawCampaignSession.cpp",
           "previous": "cd16fb2bad2fa4bf0985fa1dfd7d89cbd504e02f531d1bd319b863e686279b9b",
           "current": "4b0470acb1ea5cb275959eb4a70df1d795c4f87d6a51a2a78f6e35ebe573f36b"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 229,
+      "reason": "원본 Cast/Drop 요청·수신과 주문 활성화 C++ 몸체/검사 추가 및 내용물 BYTE 접근 권한에 따른 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "83eed7cedab8650ce570f444a5c06efe29b2ce414e3049777221cf672f6e248f",
+          "current": "d8240a514b0fb34b353c2ede35edfb65663df83397022c421ff0fb475656cac7"
         }
       ]
     }

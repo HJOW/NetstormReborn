@@ -9,8 +9,8 @@
   },
   "currentSources": {
     ".gitattributes": "3e8d869648cde0415d1a91e9b22d5a7ed7e5c0585923a189bfd37aa33229f3a8",
-    "cpppj/src/CMakeLists.txt": "dc93067f7759849e630647688fa09684944a0f5aec5bf7d774d429227e600599",
-    "cpppj/tests/CMakeLists.txt": "83eed7cedab8650ce570f444a5c06efe29b2ce414e3049777221cf672f6e248f",
+    "cpppj/src/CMakeLists.txt": "468058bcf107805b88985aca99a955aeadf8e4b7b12ca06b20f3217f9405a2d0",
+    "cpppj/tests/CMakeLists.txt": "d8240a514b0fb34b353c2ede35edfb65663df83397022c421ff0fb475656cac7",
     "cpppj/src/o/RawContentPreviewProcess.cpp": "6be7f8997e59d046856a9c7d44d6882360d4b4cd510caba12b515b92554bc6c1",
     "cpppj/src/o/RawContentPreviewProcess.h": "e7690b3b77969d7057b2373baf42ce33367ace295f75a0aa8ee48f56aa150699",
     "cpppj/tests/ContentPreviewProcessTests.cpp": "99eb74565511fd1740a57a87414edc6e601cf8a61603a2f36dfde90bf294172c",
@@ -979,6 +979,25 @@
           "path": "cpppj/tests/CMakeLists.txt",
           "previous": "6814b98421a14e37959652743dab5e6a24771de6c3ef50cf4aae8cce63fa191e",
           "current": "83eed7cedab8650ce570f444a5c06efe29b2ce414e3049777221cf672f6e248f"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 229,
+      "reason": "원본 Cast/Drop 요청·수신과 주문 활성화 C++ 몸체/검사 추가 및 내용물 BYTE 접근 권한에 따른 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "dc93067f7759849e630647688fa09684944a0f5aec5bf7d774d429227e600599",
+          "current": "468058bcf107805b88985aca99a955aeadf8e4b7b12ca06b20f3217f9405a2d0"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "83eed7cedab8650ce570f444a5c06efe29b2ce414e3049777221cf672f6e248f",
+          "current": "d8240a514b0fb34b353c2ede35edfb65663df83397022c421ff0fb475656cac7"
         }
       ]
     }

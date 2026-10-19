@@ -61,7 +61,7 @@
     "extracted/finder/originalCD/functions.tsv": "60cf1f9e4a7832ebe882a869af2bd2cd69e549e761fb03d7d4d64bb5fb3c5935",
     "extracted/guntarget-helper/originalCD/functions.tsv": "f77d7e5217b3ce4b55969bb6c044ff145238f29fc4aeed7e4394ab0657ad86fe",
     "extracted/guntarget-distance-angle/originalCD/functions.tsv": "349d60dae29ca9af0c2dd5426eaf142218c800914d3b2acd973765bc8417564e",
-    "cpppj/src/o/SidPool.h": "21d77e1995b8697dba3f4e6cc9ae16501c573f417fd7019cf4a459b0e6fe521a",
+    "cpppj/src/o/SidPool.h": "a830f7fca8c42e5a2713a7d5d886314c81dc3bffb8271de85c1b0d1fc46de651",
     "extracted/finder/originals/functions.tsv": "7ee781ffc6200c8f6b231381c4dae7ce88e5c0158f4b8effb222090bf8345704",
     "extracted/guntarget-helper/originals/creation.c": "b218a5a45005ad198139f653e173d46277148a862465b2a54ca23965b40fdc25",
     "extracted/guntarget-helper/originals/functions.tsv": "4de1eb8040ba73dc5cb780b85cca82780ccd2697ea77407beab92f26a3e2af6a",
@@ -316,6 +316,19 @@
           "path": "cpppj/src/o/RawPathProcess.cpp",
           "previous": "75557b1b9c481c089b466b9e4dd9c27aadae28905e43379b5c7ac7cc8bcd7683",
           "current": "4e514df8c58cda778f66adaf485443ccd8aeedc7a2469a0ba9b37f91ea9b6940"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 229,
+      "reason": "원본 Cast/Drop 요청·수신과 주문 활성화 C++ 몸체/검사 추가 및 내용물 BYTE 접근 권한에 따른 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/o/SidPool.h",
+          "previous": "21d77e1995b8697dba3f4e6cc9ae16501c573f417fd7019cf4a459b0e6fe521a",
+          "current": "a830f7fca8c42e5a2713a7d5d886314c81dc3bffb8271de85c1b0d1fc46de651"
         }
       ]
     }

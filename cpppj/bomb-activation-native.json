@@ -1,0 +1,29 @@
+{
+  "unit": 229,
+  "host": "VM-W11-Codex",
+  "date": "2026-10-19",
+  "lastPreciseDecompile": {
+    "host": "VM-W11-Codex",
+    "date": "2026-10-19"
+  },
+  "uniqueInputs": 434,
+  "normalReturns": 868,
+  "instructions": 50940,
+  "nativeCalls": {
+    "0041e860": 868,
+    "004ac200": 436,
+    "0049a840": 436,
+    "004e49c0": 292
+  },
+  "boundaries": "41e860/TYPE/getter/ftol 전체. 경제41df80·복귀 진단·new40·Regular496f00 생성은 명시 효과 경계다. 원격 비용/현재TYPE 재조회/정상반환과GP/retN/SEH/스택canary/x87/실행·읽기·쓰기범위를 대조한다. 실제 Regular41e6a0의 내용물 소비/피해·게임 시전 성공과 별도다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_bomb_activation.py": "f01aafc8c2fb9713fa57ba7531dd4a7b9ebaf1035a24c650b778161b0202bbf5",
+    "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+    "tools/decomp_cursor_position.py": "e15bcdbc4c6be9c131c30f15416c945d650dba9f7dc6def404b47f63c635c212",
+    "tools/decomp_carrier_falling.py": "f8702db0708a543b73213c8df9154503afe977767a11bd7c150b639ee1b587a6",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "cpppj/tests/fixtures/bomb-activation-x86.tsv": "0b38f77761eaf3c33d98e46903192d45724502b482066698ca3a4f0a419af67f"
+  }
+}

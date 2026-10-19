@@ -9,13 +9,13 @@
   },
   "currentSources": {
     ".gitattributes": "3e8d869648cde0415d1a91e9b22d5a7ed7e5c0585923a189bfd37aa33229f3a8",
-    "cpppj/src/CMakeLists.txt": "dc93067f7759849e630647688fa09684944a0f5aec5bf7d774d429227e600599",
-    "cpppj/tests/CMakeLists.txt": "83eed7cedab8650ce570f444a5c06efe29b2ce414e3049777221cf672f6e248f",
+    "cpppj/src/CMakeLists.txt": "468058bcf107805b88985aca99a955aeadf8e4b7b12ca06b20f3217f9405a2d0",
+    "cpppj/tests/CMakeLists.txt": "d8240a514b0fb34b353c2ede35edfb65663df83397022c421ff0fb475656cac7",
     "cpppj/src/client/RawCampaignSession.cpp": "4b0470acb1ea5cb275959eb4a70df1d795c4f87d6a51a2a78f6e35ebe573f36b",
     "cpppj/src/client/RawCampaignSession.h": "f905619a10b1ecc976bdfc082f8196e3f82190b5f7770828aaf84d00b813c573",
     "cpppj/src/client/RawUserSelection.cpp": "89cbf7641299a7f84905193b4d90f3706f122665a15228f42bd39f9b98bc40e7",
     "cpppj/src/client/RawUserSelection.h": "63e349845d969771819f0875159d0c1f400ae5aa7042a0a883a45b731b2a1a29",
-    "cpppj/src/o/SidPool.h": "21d77e1995b8697dba3f4e6cc9ae16501c573f417fd7019cf4a459b0e6fe521a",
+    "cpppj/src/o/SidPool.h": "a830f7fca8c42e5a2713a7d5d886314c81dc3bffb8271de85c1b0d1fc46de651",
     "cpppj/tests/CampaignObjectMenuTests.cpp": "fea9198ea2150c42bb523f7ac9298c2f819acd1fc9b9887b53020c206ad62563",
     "cpppj/tests/UserSelectionTests.cpp": "75016e697b3aee57d35f7c53716a041dea027235fd0743933156e56b8e6ad129",
     "cpppj/src/o/RawSquidSelection.cpp": "1c652caa97931cdb416db831ac1ad7974e6468a474176b82919af14c8a967b13",
@@ -2131,6 +2131,31 @@
           "path": "cpppj/src/client/RawCampaignSession.cpp",
           "previous": "cd16fb2bad2fa4bf0985fa1dfd7d89cbd504e02f531d1bd319b863e686279b9b",
           "current": "4b0470acb1ea5cb275959eb4a70df1d795c4f87d6a51a2a78f6e35ebe573f36b"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 229,
+      "reason": "원본 Cast/Drop 요청·수신과 주문 활성화 C++ 몸체/검사 추가 및 내용물 BYTE 접근 권한에 따른 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/CMakeLists.txt",
+          "previous": "dc93067f7759849e630647688fa09684944a0f5aec5bf7d774d429227e600599",
+          "current": "468058bcf107805b88985aca99a955aeadf8e4b7b12ca06b20f3217f9405a2d0"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "83eed7cedab8650ce570f444a5c06efe29b2ce414e3049777221cf672f6e248f",
+          "current": "d8240a514b0fb34b353c2ede35edfb65663df83397022c421ff0fb475656cac7"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/o/SidPool.h",
+          "previous": "21d77e1995b8697dba3f4e6cc9ae16501c573f417fd7019cf4a459b0e6fe521a",
+          "current": "a830f7fca8c42e5a2713a7d5d886314c81dc3bffb8271de85c1b0d1fc46de651"
         }
       ]
     }

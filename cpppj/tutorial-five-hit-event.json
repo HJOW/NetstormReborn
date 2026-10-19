@@ -10,7 +10,7 @@
     "cpppj/src/o/RawMissile.h": "19e31c6abf9e0a8ce2f292e47650ec8f924205ce2dff03eb4f9a1c3fbdccae6c",
     "cpppj/src/client/RawCampaignSession.cpp": "4b0470acb1ea5cb275959eb4a70df1d795c4f87d6a51a2a78f6e35ebe573f36b",
     "cpppj/tests/ThunderMissileTests.cpp": "aaa6c74136f2f4c0beaa369b9adca8b906b28ccddea5f75197c1cff2cddf1b51",
-    "cpppj/tests/CMakeLists.txt": "83eed7cedab8650ce570f444a5c06efe29b2ce414e3049777221cf672f6e248f",
+    "cpppj/tests/CMakeLists.txt": "d8240a514b0fb34b353c2ede35edfb65663df83397022c421ff0fb475656cac7",
     "cpppj/tests/fixtures/thunder-hit-event-x86.tsv": "64edac17dc6f25824bfed45afc6537cf120fe9f051fb47c84bceb4bfdbf85f58",
     "tools/decomp_thunder_hit_event.py": "8edc400c8020462187d401af42fde9d9d05a7a3ec1f1c9f3310fe16ccd6eada0",
     "cpppj/thunder-hit-event-native.json": "5a7f044d6c27aa66ecc077ff44761899bc47c954ded04da147c1463930059290",
@@ -283,6 +283,19 @@
           "path": "cpppj/src/client/RawCampaignSession.cpp",
           "previous": "cd16fb2bad2fa4bf0985fa1dfd7d89cbd504e02f531d1bd319b863e686279b9b",
           "current": "4b0470acb1ea5cb275959eb4a70df1d795c4f87d6a51a2a78f6e35ebe573f36b"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 229,
+      "reason": "원본 Cast/Drop 요청·수신과 주문 활성화 C++ 몸체/검사 추가 및 내용물 BYTE 접근 권한에 따른 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/sources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "83eed7cedab8650ce570f444a5c06efe29b2ce414e3049777221cf672f6e248f",
+          "current": "d8240a514b0fb34b353c2ede35edfb65663df83397022c421ff0fb475656cac7"
         }
       ]
     }

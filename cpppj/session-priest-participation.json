@@ -27,7 +27,7 @@
     "cpppj/src/o/RawSquidFinder.h": "e84bf53e772117ecfbc913eabbf460e86f1e687d79cb3f48f2f9c7db8893ed63",
     "cpppj/src/o/RawSquidFinder.cpp": "f7947c488c45aa7632d0a705a863c0fe5262c3ea1c29c17ea23c56ed4249e4e2",
     "cpppj/src/o/RawRunePostPop.h": "057c813ed8dcb33eab75554f9368645e77d4b85b61df76a22e64f52dcc82d5ee",
-    "cpppj/src/o/SidPool.h": "21d77e1995b8697dba3f4e6cc9ae16501c573f417fd7019cf4a459b0e6fe521a",
+    "cpppj/src/o/SidPool.h": "a830f7fca8c42e5a2713a7d5d886314c81dc3bffb8271de85c1b0d1fc46de651",
     "cpppj/src/o/SidPool.cpp": "7bc612330f3b631cf8141be5e7a9ae51cefe8caee3ea3eb68be38252d68a6887",
     "cpppj/src/o/SquidHash.h": "ee3c9fbc61c659e8a62b0d9675f028ca3ca1b29cc364abc49680bdb1a5e50ac7",
     "cpppj/src/o/SquidHash.cpp": "e275a8239016e45237a57a85c43c22a9767351bfdaeedc728423c3bb42a3e5e4",
@@ -174,6 +174,19 @@
           "path": "cpppj/src/o/RawContainedFinder.cpp",
           "previous": "3a7c0ca4530d019de4ba9fcb714991ac3d53703612d8bd5c865346e69fe9b8df",
           "current": "b3bfedcc598e04ab1a4755ee77adff8a331d1be941975fe379dc705612d9a3a2"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 229,
+      "reason": "원본 Cast/Drop 요청·수신과 주문 활성화 C++ 몸체/검사 추가 및 내용물 BYTE 접근 권한에 따른 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/current_sources",
+          "path": "cpppj/src/o/SidPool.h",
+          "previous": "21d77e1995b8697dba3f4e6cc9ae16501c573f417fd7019cf4a459b0e6fe521a",
+          "current": "a830f7fca8c42e5a2713a7d5d886314c81dc3bffb8271de85c1b0d1fc46de651"
         }
       ]
     }

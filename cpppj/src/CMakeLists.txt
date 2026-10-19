@@ -107,6 +107,8 @@ target_sources(netstorm PRIVATE o/RawCarrierSteal.cpp o/RawCarrierSteal.h)
 
 # 일반운반체의실제4f 요청/서버객체내용물변환이다.
 target_sources(netstorm PRIVATE o/RawCarrierPickup.cpp o/RawCarrierPickup.h)
+target_sources(netstorm PRIVATE o/RawCarrierDrop.cpp o/RawCarrierDrop.h)
+target_sources(netstorm PRIVATE o/RawBombActivation.cpp o/RawBombActivation.h)
 
 # 오벨리스크의 실제 임시Deck 추첨과 보상 변환이다.
 target_sources(netstorm PRIVATE o/RawDeckDraw.cpp o/RawDeckDraw.h o/RawGemReward.cpp o/RawGemReward.h)
