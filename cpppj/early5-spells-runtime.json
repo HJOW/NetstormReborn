@@ -1,0 +1,392 @@
+{
+  "unit": 220,
+  "baseline": "aa506ebb",
+  "host": "VM-W11-Codex",
+  "date": "2026-10-19",
+  "lastDecompile": "VM-W11-Codex / 2026-10-19",
+  "scope": "제품 변경 없이 골렘 실제 배치와 자연E 후속 입력을 관측했다. 오벨리스크 획득과 자연F는 미완료다.",
+  "validation": {
+    "previousFullTests": "extracted/goal-display-motion-20261019-full-tests1.json",
+    "productUnchanged": true
+  },
+  "observations": {
+    "extracted/goal-early5-spells-20261019-ui1": {
+      "returnCode": 0,
+      "binarySha256": "8bf0c5629e95dc5a56b40ba621f63e0224a9721c9c208ce5709dfc07e6137994",
+      "originalsUnchanged": true,
+      "lastLabel": "final",
+      "gameTime": 14.972,
+      "lastGate": [
+        "5",
+        "65",
+        "0",
+        "0",
+        "0",
+        "1",
+        "0",
+        "0"
+      ],
+      "forwardGeneratorsAfterWait": {},
+      "cannons": {},
+      "sunFlyerSidsObserved": [
+        15060
+      ],
+      "enemyMinimumHp": {
+        "15006": 1000,
+        "15013": 200
+      },
+      "naturalEObserved": false,
+      "combat2Observed": false,
+      "nextFailure": null,
+      "towers": {},
+      "templeDestroyedObserved": false,
+      "maximumOwnCannonCount": 0,
+      "lastPage": [
+        "mission"
+      ],
+      "enemyThunderPresentAtLastReport": true,
+      "enemyAviaryPresentAtLastReport": true,
+      "naturalFObserved": false,
+      "maximumOwnGolemCount": 1,
+      "golems": {
+        "15059": {
+          "firstLabel": "golemPlaced",
+          "lastLabel": "final",
+          "positions": [
+            [
+              "130",
+              "83"
+            ]
+          ],
+          "lastHp": 50
+        }
+      }
+    },
+    "extracted/goal-early5-spells-20261019-ui2": {
+      "returnCode": 0,
+      "binarySha256": "8bf0c5629e95dc5a56b40ba621f63e0224a9721c9c208ce5709dfc07e6137994",
+      "originalsUnchanged": true,
+      "lastLabel": "final",
+      "gameTime": 289.186,
+      "lastGate": [
+        "5",
+        "69",
+        "0",
+        "0",
+        "0",
+        "1",
+        "166.249",
+        "0"
+      ],
+      "forwardGeneratorsAfterWait": {
+        "15072": {
+          "xy": [
+            "133",
+            "93"
+          ],
+          "hp": 700
+        },
+        "15099": {
+          "xy": [
+            "131",
+            "99"
+          ],
+          "hp": 700
+        }
+      },
+      "cannons": {
+        "15109": {
+          "firstLabel": "firstCannon1",
+          "xy": [
+            "135",
+            "108"
+          ],
+          "firstHp": 0,
+          "maxHp": 600,
+          "lastLabel": "final",
+          "lastHp": 217
+        },
+        "15143": {
+          "firstLabel": "twinCannon3",
+          "xy": [
+            "140",
+            "108"
+          ],
+          "firstHp": 0,
+          "maxHp": 600,
+          "lastLabel": "final",
+          "lastHp": 600
+        }
+      },
+      "sunFlyerSidsObserved": [
+        15063
+      ],
+      "enemyMinimumHp": {
+        "15006": 26,
+        "15013": 70
+      },
+      "naturalEObserved": true,
+      "combat2Observed": false,
+      "nextFailure": null,
+      "towers": {
+        "15060": {
+          "xy": [
+            "135",
+            "93"
+          ],
+          "firstLabel": "placed",
+          "maxHp": 1875,
+          "lastHp": 125,
+          "lastLabel": "selectionEarly"
+        }
+      },
+      "templeDestroyedObserved": false,
+      "maximumOwnCannonCount": 2,
+      "lastPage": [
+        "mission"
+      ],
+      "enemyThunderPresentAtLastReport": false,
+      "enemyAviaryPresentAtLastReport": false,
+      "naturalFObserved": false,
+      "maximumOwnGolemCount": 1,
+      "golems": {
+        "15147": {
+          "firstLabel": "golemAttempt1",
+          "lastLabel": "final",
+          "positions": [
+            [
+              "130",
+              "82"
+            ]
+          ],
+          "lastHp": 50
+        }
+      }
+    },
+    "extracted/goal-early5-spells-20261019-ui3": {
+      "returnCode": 0,
+      "binarySha256": "8bf0c5629e95dc5a56b40ba621f63e0224a9721c9c208ce5709dfc07e6137994",
+      "originalsUnchanged": true,
+      "lastLabel": "final",
+      "gameTime": 303.029,
+      "lastGate": [
+        "5",
+        "69",
+        "0",
+        "0",
+        "0",
+        "1",
+        "176.454",
+        "0"
+      ],
+      "forwardGeneratorsAfterWait": {
+        "15072": {
+          "xy": [
+            "133",
+            "93"
+          ],
+          "hp": 700
+        },
+        "15099": {
+          "xy": [
+            "137",
+            "100"
+          ],
+          "hp": 700
+        }
+      },
+      "cannons": {
+        "15114": {
+          "firstLabel": "firstCannon2",
+          "xy": [
+            "136",
+            "107"
+          ],
+          "firstHp": 0,
+          "maxHp": 600,
+          "lastLabel": "golemAttempt4",
+          "lastHp": 6
+        }
+      },
+      "sunFlyerSidsObserved": [
+        15063
+      ],
+      "enemyMinimumHp": {
+        "15006": 22,
+        "15013": 200
+      },
+      "naturalEObserved": true,
+      "combat2Observed": false,
+      "nextFailure": null,
+      "towers": {
+        "15060": {
+          "xy": [
+            "135",
+            "93"
+          ],
+          "firstLabel": "placed",
+          "maxHp": 1880,
+          "lastHp": 135,
+          "lastLabel": "selectionEarly"
+        }
+      },
+      "templeDestroyedObserved": false,
+      "maximumOwnCannonCount": 1,
+      "lastPage": [
+        "mission"
+      ],
+      "enemyThunderPresentAtLastReport": false,
+      "enemyAviaryPresentAtLastReport": false,
+      "naturalFObserved": false,
+      "maximumOwnGolemCount": 1,
+      "golems": {
+        "15176": {
+          "firstLabel": "golemAttempt2",
+          "lastLabel": "final",
+          "positions": [
+            [
+              "130",
+              "82"
+            ]
+          ],
+          "lastHp": 50
+        }
+      }
+    }
+  },
+  "sources": {
+    "tools/cpp_campaign_entry_smoke.py": "5fa9adadf6bcd571d6fba39b38e46fed41fe2e927911ff80dc38047c52c56b49",
+    "tools/cpp_early5_spells_runtime.py": "b46e2145d2ddcfcf21e410a5604cf5364c0605576e04c1518eb8dde469063cf0",
+    "tools/cpp_fort_smoke.py": "96c7fcd524deb38d93274ded77620639bdc7012ec0f2aaeed0a488d938e9da83",
+    "tools/cpp_island_drop_runtime.py": "7a84366e3505e7fc98d883ca16364c648b9cad8110762744f7a6b8e7e5157ab3",
+    "tools/cpp_menu_smoke.py": "41732efb30e6337267168e3cd836ab6c04d6f34d36b16152b762c39dd2a76afe",
+    "tools/cpp_renderer_smoke.py": "fc648fea126c9cad3a124b38f757460f1139bb0e7f26c1032482ae4d85766ebe",
+    "tools/cpp_smoke_files.py": "66745bfd0ebac8d672eeb8f515144a47377fa4a28dad0603b5f8969a008ec679",
+    "tools/cpp_sun_aviary_capture_runtime.py": "4cc2495a288f7fea6775dd395a9a3036e01863902bb238ceec13701f4d44ce1b",
+    "tools/cpp_sun_aviary_notice_runtime.py": "8ab54e12605e9861c531bf9b82f4616b540aac1879f831bf88d69d0e35703952",
+    "tools/cpp_thunder_capture_runtime.py": "8c4a9d8d65420c5f0f37cfb003500d55d81bf0aa437484f20c9c06bfcdd673e3",
+    "tools/cpp_world_smoke.py": "6e50f87caf0b1b817c9116ef972ec6e75b44d33455edc88fe128a8d0f791fe72",
+    "tools/fort.py": "ee8ff8f00eea02771ac5c7a519dcd582e14cc07a2d97337c946c191022554e13",
+    "tools/shp.py": "4cb8bee6ed773e29e8658ddb315594ebf5ac005ea5b96c6b760a177029515bfd",
+    "tools/taff.py": "461860cdfc9451b85a8694dd30fd2c56c1cfdf5c6bb7ab8f63a4089971889795",
+    "tools/terrain_mask.py": "00f9789dbde0c124a132a4005924549571b06add5214ea14e3b76e88e73cb37a",
+    "tools/typefile.py": "a564a4b1bbc4f06d05ecb8b1f3fae4c32f6231cf95ea7bfadff2499931804d90"
+  },
+  "evidence": {
+    "cpppj/display-motion-runtime.json": "da971882da1b473333d9c8d188cd641b0b6eb0c1b0d5a733ade9d1f9b56a4d6a",
+    "extracted/goal-display-motion-20261019-full-tests1.json": "ff684424107a92d317aaecdf90f2dd88f7cd17cc707065d792937ac128c808ca",
+    "extracted/goal-early5-island-20261019-probe.py": "2933ead8b5cc87b76425031fea3da8690c3b2649dc8f3fa8d4babd276176ef1a",
+    "extracted/goal-early5-spells-20261019-build-report.py": "fb691b2a01d162ca7a0890d6cfddaf3d850486b90941b913705fabc35400d8b8",
+    "extracted/goal-early5-spells-20261019-plan-v2.py": "83693d58599abf9da64bd86d2aa1d166c23ce97dc0fbca188403c7efd8d37acb",
+    "extracted/goal-early5-spells-20261019-plan.py": "ca4f0cf78a47126f284a38f92759b3512c0d46faee18093549205b533bcf262a",
+    "extracted/goal-early5-spells-20261019-plan1.tsv": "ad3602e33784436c9f92a0ab7998cf8d2b4dffa19ad2c788b04a26c7c5b1fd04",
+    "extracted/goal-early5-spells-20261019-plan2.tsv": "605f18486c0ae86285940ddbf120df881386f5204dfd3e272d009822fc3ac97c",
+    "extracted/goal-early5-spells-20261019-plan3.tsv": "ceda490ac21f15186083c5485671aa0d1ad017640d4293c12d6fee24e258640f",
+    "extracted/goal-early5-spells-20261019-ui1/final.bmp": "d885d18e0c6ccee6ebbec11ccc1fbc441bc81f9d55c7c40113f99a43d5fd10fb",
+    "extracted/goal-early5-spells-20261019-ui1/golemLater.bmp": "2e6a2b3171288ec0de0527757470e2525876298a2cc7f99c8e617eefa92686c1",
+    "extracted/goal-early5-spells-20261019-ui1/golemPlaced.bmp": "d0141e240c2ca6a97ed4ec51130964f12e89406ad919f9d8ad0f7cfa42f30703",
+    "extracted/goal-early5-spells-20261019-ui1/originals-before.json": "f98d8731a8a729b528fd9744b52f3b26143eff54e767f0b8e1537040c5807c15",
+    "extracted/goal-early5-spells-20261019-ui1/run.json": "747160cec7e8ba13b58325d959b27030093a5fceca35245cfd95ef5270c9ebdd",
+    "extracted/goal-early5-spells-20261019-ui1/states.tsv": "d4a1dfbfee875a5a76a63fabcba025c531440a7d54c85a7d6925483e41afb084",
+    "extracted/goal-early5-spells-20261019-ui1/stderr.log": "a4f8d401477aa5da1fb7728e68bebda2720234b1357719f069b890be12b2e727",
+    "extracted/goal-early5-spells-20261019-ui1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-early5-spells-20261019-ui1/steps.tsv": "51f9cec5a8ab534956e92908cb4fab34942b7f38fa224d7074a37dca631279d0",
+    "extracted/goal-early5-spells-20261019-ui1.log": "fe2abc3d312adfdda256d329a71537510c22c9530dbf00f50193e5c209eccd09",
+    "extracted/goal-early5-spells-20261019-ui2/combatAfterCapture.bmp": "713778f5667734a4c6c997b0301a423486b9b0f088c1f68a8a73790833212820",
+    "extracted/goal-early5-spells-20261019-ui2/completedWorkshop.bmp": "84ee454cf79870888fc922ac63b2cc54fbf78587b6f6126598f80f21e95d714f",
+    "extracted/goal-early5-spells-20261019-ui2/enemyView.bmp": "3797fe1aa5eed59e8c85a5e3adaec48139cbae5e6761441e726e89ba712b3004",
+    "extracted/goal-early5-spells-20261019-ui2/final.bmp": "70f87020fe6eb5964aa2bc99e1729ef8c2092fa92c9e9774ad9e0f7bdef23f1d",
+    "extracted/goal-early5-spells-20261019-ui2/obeliskWalk1.bmp": "283d0b5dbcb01924477c73a872b4ced7f4b2c948555ee6a00ee8a1ad196093c4",
+    "extracted/goal-early5-spells-20261019-ui2/obeliskWalk10.bmp": "b66b128a12ecea205a5276d2a240416053c1e3bbb987761aee9cfb0d917f1c9a",
+    "extracted/goal-early5-spells-20261019-ui2/obeliskWalk11.bmp": "e29dc3581b40dc3597aab9aeec134653d4806e79f97a5a020e54138869bf374a",
+    "extracted/goal-early5-spells-20261019-ui2/obeliskWalk12.bmp": "665f8e14958463af740d361cffc9c71fb3d619ac7fa1ae54cba349caa06a2d34",
+    "extracted/goal-early5-spells-20261019-ui2/obeliskWalk2.bmp": "634fc752a01e97fd4c65f745a88c8b4605ba5e509bf28e9916a8c93e0cc46004",
+    "extracted/goal-early5-spells-20261019-ui2/obeliskWalk3.bmp": "9f149ede9c497fe7ca5ee89a17613ae9cccde7356d5ef2d843fb54e4c83cc8ad",
+    "extracted/goal-early5-spells-20261019-ui2/obeliskWalk4.bmp": "d7e899e06e0a9180f633ec4c14046023afe2fba4a631a33272a76967f48928ea",
+    "extracted/goal-early5-spells-20261019-ui2/obeliskWalk5.bmp": "d0967fc801c1faf93e0c3f10483d96a020e1e838c4dddbe6d0f948230e449fd5",
+    "extracted/goal-early5-spells-20261019-ui2/obeliskWalk6.bmp": "52687f02cd3307eca523948d8fe16d601231f88eb30ab1e7cbcd4f5d1178d8ee",
+    "extracted/goal-early5-spells-20261019-ui2/obeliskWalk7.bmp": "4744861432407877bd66769f965871c7dacc1a443cb798003286601bcd9002b3",
+    "extracted/goal-early5-spells-20261019-ui2/obeliskWalk8.bmp": "82a1d30206eff99d7d31805698b8886b6aa2530da524d27a24c40456a301d7a8",
+    "extracted/goal-early5-spells-20261019-ui2/obeliskWalk9.bmp": "e5f221d441dbf11acfeb93ed99e3e7da9a7fe4abe455b7ebcb09e6e7ecde6493",
+    "extracted/goal-early5-spells-20261019-ui2/originals-before.json": "f98d8731a8a729b528fd9744b52f3b26143eff54e767f0b8e1537040c5807c15",
+    "extracted/goal-early5-spells-20261019-ui2/run.json": "1e935f615975f98f73c3b38deaf7b57c257a6c0a89b16953d6f23a1be31d1f88",
+    "extracted/goal-early5-spells-20261019-ui2/spellMenu1.bmp": "151d52a78a3fb08d2ef2d479fd48a610a43479b9293621c985ae682e183b389e",
+    "extracted/goal-early5-spells-20261019-ui2/spellMenu10.bmp": "e89b5eeabffb8122ddeee16679c25cee48d0a6c87299e91aacd0f9e7febee730",
+    "extracted/goal-early5-spells-20261019-ui2/spellMenu11.bmp": "2e4582eea0b3fab8da62413b9c02231377ae10c6dfd16db9cb81ca9edc2f9c5e",
+    "extracted/goal-early5-spells-20261019-ui2/spellMenu12.bmp": "2786f4025ae001f99bd6a3c672141a9326710874d0df6647b8dc439a47eeff33",
+    "extracted/goal-early5-spells-20261019-ui2/spellMenu2.bmp": "58be6d49ca26e7607dbd0dcb50cdaa245a3b116ce38408dbd227f1aec9cb3d40",
+    "extracted/goal-early5-spells-20261019-ui2/spellMenu3.bmp": "c94600afdfdb1911f4683c7389bc0b7c8e0375002d9b0f817c849ea6ba142ffd",
+    "extracted/goal-early5-spells-20261019-ui2/spellMenu4.bmp": "3bb6f5530480cc3a0505190796e4fa6d387b7a643095694a24c1e1dc6cde01fb",
+    "extracted/goal-early5-spells-20261019-ui2/spellMenu5.bmp": "80968dc500cdc98279be1832632fa5c9bf165dddf339fa7fe65a86051d55df49",
+    "extracted/goal-early5-spells-20261019-ui2/spellMenu6.bmp": "8e69bfeb696776571d5a0231933d1c1744d4fbeb428c6fee2bf2996344c82ab4",
+    "extracted/goal-early5-spells-20261019-ui2/spellMenu7.bmp": "298607a44256e7b4c546fbd18f9ddc746cd059425d770d8c5aea62461a9cfea6",
+    "extracted/goal-early5-spells-20261019-ui2/spellMenu8.bmp": "d5db2fb5886b82437fb82902af53660dc2bd952e121c2416ee717e27a3db855f",
+    "extracted/goal-early5-spells-20261019-ui2/spellMenu9.bmp": "d49bee1cec1b9164a889a7154d18831ccb6e5a8a1979df051220afbbf24f9a53",
+    "extracted/goal-early5-spells-20261019-ui2/stageC.bmp": "38ac2ca789db849e3b29dc17c4f8d6eb35693fe78089c44254d8dc4137b4362b",
+    "extracted/goal-early5-spells-20261019-ui2/stageD.bmp": "aaa4fb96fa35379a4a2523f615b84230ca6e3af6a2a766e0ccd06630c3e3143c",
+    "extracted/goal-early5-spells-20261019-ui2/states.tsv": "8cb9fa9eb27fded660f1cc2f47d7b953a9f37db008a1be90d068daa160c39c67",
+    "extracted/goal-early5-spells-20261019-ui2/stderr.log": "2fce437ad2da4b9523e0cfc2e6d9730381e4e772142f1219b8bfa77dc17195b8",
+    "extracted/goal-early5-spells-20261019-ui2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-early5-spells-20261019-ui2/steps.tsv": "9e0fcd9a3b85e0b9a6566b2bd124444ce9979b916185ead44e3532cf7ebe5b59",
+    "extracted/goal-early5-spells-20261019-ui2/twinCannon1.bmp": "7f4cdec1587fce7dae32ca64c548f1f7cb808f291360eb0fe0c764b9a4bb1c56",
+    "extracted/goal-early5-spells-20261019-ui2/twinCannon2.bmp": "47b31df39f1039159b81df6a47ec146d231a7023a136bd2b589ae3d2e57b8752",
+    "extracted/goal-early5-spells-20261019-ui2/twinCannon3.bmp": "9f5de12087dbe38add87961a3e5f62a0b653032175206d5a5f625e10839f8f34",
+    "extracted/goal-early5-spells-20261019-ui2/twinCannon4.bmp": "47b88496b4c0305a3762676bf7106fa4789cd0ea54b1ef0c3eaaebf7005c9109",
+    "extracted/goal-early5-spells-20261019-ui2/twinCannon5.bmp": "1d3d4fab5aefd3996a6c3f7a5ee464df8588e3f24116156e21435f47de5d8756",
+    "extracted/goal-early5-spells-20261019-ui2/twinCannon6.bmp": "15a14a1a985c20d740f7f73ca58fd88b1e2ba5128b965510fd1e19f819a979ab",
+    "extracted/goal-early5-spells-20261019-ui2/twinCannon7.bmp": "88f78052cf909b8c81632759dbbbeba2cb147e66fc4350d51605cfbb4e629070",
+    "extracted/goal-early5-spells-20261019-ui2/twinCannon8.bmp": "713778f5667734a4c6c997b0301a423486b9b0f088c1f68a8a73790833212820",
+    "extracted/goal-early5-spells-20261019-ui2.log": "91ddd8de657f1daf5e830670b0ec02060ab30cf15003c8d61607968c1ddb3b02",
+    "extracted/goal-early5-spells-20261019-ui3/combatAfterCapture.bmp": "42c78e9fb9cc51efaa2217efdd5db1317605ae65a61b36cd19eedf06cf03bd2e",
+    "extracted/goal-early5-spells-20261019-ui3/completedWorkshop.bmp": "a260b490eb0e9fe90a78591a2e2b8f0a93edde2ff8b8c72970b0a7236dacceea",
+    "extracted/goal-early5-spells-20261019-ui3/enemyView.bmp": "4bb6369186df4f4dcc63824108de95c75eb397cf3231a5c64336ad5fa441a30f",
+    "extracted/goal-early5-spells-20261019-ui3/final.bmp": "1cdaa11cf57f9e042e006914429986457c1f6b40170c950be84b3e3a66bdec84",
+    "extracted/goal-early5-spells-20261019-ui3/obeliskWalk1.bmp": "6eb89a47753cb332fa8eb4f99a6f6cbc3fd462ca2adbf982dde5ee7e1ab71a10",
+    "extracted/goal-early5-spells-20261019-ui3/obeliskWalk10.bmp": "81c19d491212fbb922373a3fbf30706eccfedc07112eb3cfccd556334cd90fac",
+    "extracted/goal-early5-spells-20261019-ui3/obeliskWalk11.bmp": "46811c3df7c7ed5bf700682dc51eb61ef6f54d0717646875df209d740cb0ee00",
+    "extracted/goal-early5-spells-20261019-ui3/obeliskWalk12.bmp": "0d9690747df4d5931c0f7d7925e3c62484ad7a466b2a7d9fed054b98d9a865c8",
+    "extracted/goal-early5-spells-20261019-ui3/obeliskWalk2.bmp": "cc9f802129d6010f85249f408bf37957d2656074c6e186273e21e872c0f6a325",
+    "extracted/goal-early5-spells-20261019-ui3/obeliskWalk3.bmp": "ec4207c5678cf93985448dbdc61bd56e3978ca377f2da52072ef0ec3034f2e9b",
+    "extracted/goal-early5-spells-20261019-ui3/obeliskWalk4.bmp": "a29660dec94f6b6d98137b17de82dd89ec492afa5d966713ecb763ff03759b21",
+    "extracted/goal-early5-spells-20261019-ui3/obeliskWalk5.bmp": "15c15ba899815a70d665ce05d496d46cc8d9855c96818c5fcb45c31f14be470d",
+    "extracted/goal-early5-spells-20261019-ui3/obeliskWalk6.bmp": "abd4c864259d4fc7e885e734667f8afb8c2296298b0d5b486ec05862f5b1398b",
+    "extracted/goal-early5-spells-20261019-ui3/obeliskWalk7.bmp": "57bc816dfdc2db0c5f03072c1f781f99372ab0f67f947f514e59a39c70f7a2a2",
+    "extracted/goal-early5-spells-20261019-ui3/obeliskWalk8.bmp": "8338a4dcae6f86eedbcceaeeaf1b2e1af013d770d3b322913540cf9fcc47a857",
+    "extracted/goal-early5-spells-20261019-ui3/obeliskWalk9.bmp": "8955ce5f5d18f40ed653144deea2835976d872d1b96d47579dbc54d2442b06d0",
+    "extracted/goal-early5-spells-20261019-ui3/originals-before.json": "f98d8731a8a729b528fd9744b52f3b26143eff54e767f0b8e1537040c5807c15",
+    "extracted/goal-early5-spells-20261019-ui3/run.json": "d8f403ed8c307a56ee88cf4aa3d638941f7f59d560a5fc4eb49a58711b082f23",
+    "extracted/goal-early5-spells-20261019-ui3/spellMenu1.bmp": "c16e82977d35dcc3b4e953a3eab6421ac6c2459356f712eb5fc21028a581bb52",
+    "extracted/goal-early5-spells-20261019-ui3/spellMenu10.bmp": "d9afbf37efaf9cd77e951344a86d713a68b1c41a73836df424b48d3c145514a5",
+    "extracted/goal-early5-spells-20261019-ui3/spellMenu11.bmp": "efdd5d0a59230727b694c746c6e94d72fdbd8559a36227923650de897bdfcf51",
+    "extracted/goal-early5-spells-20261019-ui3/spellMenu12.bmp": "94033d42e7966497cdedf19e87d3f3ccf278fd7f9c7317a75d996fe8de23464b",
+    "extracted/goal-early5-spells-20261019-ui3/spellMenu2.bmp": "289f14716cfbb40cae19709825f5f50d6ae0c07ca0f2387d4b72797969199e45",
+    "extracted/goal-early5-spells-20261019-ui3/spellMenu3.bmp": "09dcf9df3e0aba76c53354d86d03b0ef6550dbed554ed2c5dd9a332863d6075a",
+    "extracted/goal-early5-spells-20261019-ui3/spellMenu4.bmp": "e2344cf5417c32a4b958da573edfce134b86e44c5915e965fe38085cb70f2e25",
+    "extracted/goal-early5-spells-20261019-ui3/spellMenu5.bmp": "6b3a9dadfa07fa342c247564e47edf8c7e5c85146c3380dcd512bde867c7f81f",
+    "extracted/goal-early5-spells-20261019-ui3/spellMenu6.bmp": "743cff6fc65c178d0a36f36dad1bf563de57c0c3249eeadc8ac15171f249df0c",
+    "extracted/goal-early5-spells-20261019-ui3/spellMenu7.bmp": "a471458b1d0f6e5fdec2baebe2ee22989905a04c531444cabe88750a38e12475",
+    "extracted/goal-early5-spells-20261019-ui3/spellMenu8.bmp": "52cf78afa50987d28312cb67cf2e03f95865094bf89143ee23c5f85a069a97b8",
+    "extracted/goal-early5-spells-20261019-ui3/spellMenu9.bmp": "e5668b38db41c8e2e02e4fbc4f4967218f2d7c5fa6ed2333fdc7a4a1ae6e670f",
+    "extracted/goal-early5-spells-20261019-ui3/stageC.bmp": "ca7ec5c29262255a4aebe8f3a3061b7bb28bbf2c8ccd97ce5f8c24f143815b36",
+    "extracted/goal-early5-spells-20261019-ui3/stageD.bmp": "7f04daafffc07ca536af322b189a0c8631d5927954fd8091682d46d5b30c796b",
+    "extracted/goal-early5-spells-20261019-ui3/states.tsv": "26024f5b1bcc6f559f36627941aa4fbc0f9bba740d15ccf180c71dcbacab1fec",
+    "extracted/goal-early5-spells-20261019-ui3/stderr.log": "01161fc56d49896d8ea2ccb19c1223586df945292f93f491c2ba3dd5fa6d9ffa",
+    "extracted/goal-early5-spells-20261019-ui3/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-early5-spells-20261019-ui3/steps.tsv": "8568caaa44925f186257d0cabab38aa34d58ea9aad3e580a0f7da01352643ade",
+    "extracted/goal-early5-spells-20261019-ui3/twinCannon1.bmp": "1f8b676faa3a62fb1b5ad8e29fb4f6f66c163a38255cb5246302448d7e2a1db5",
+    "extracted/goal-early5-spells-20261019-ui3/twinCannon2.bmp": "3a205f0cffaa0d6b13ba656529061f42fbfad7f36dac5af545c301359d7f7832",
+    "extracted/goal-early5-spells-20261019-ui3/twinCannon3.bmp": "3ee1b30b6d1c236a932c480b4765decfca46b9b9f5276f7cd56fd9be32ce6632",
+    "extracted/goal-early5-spells-20261019-ui3/twinCannon4.bmp": "289d32ef31e1c0d301fd82ec2e22787ce44ef82ea1703198e37e015d95c53ced",
+    "extracted/goal-early5-spells-20261019-ui3/twinCannon5.bmp": "e78a7ccaffe4d74dc691fc5941c9808f59a4c600225adccf0bac3773eedff82f",
+    "extracted/goal-early5-spells-20261019-ui3/twinCannon6.bmp": "4121786f2218371a735107b4eefa1d419a86908f1eb121a068b22c01245388dd",
+    "extracted/goal-early5-spells-20261019-ui3/twinCannon7.bmp": "9bbad905152ca7c783e00e094893d9aa4f0d301940c75b4c2cf971408c9943ec",
+    "extracted/goal-early5-spells-20261019-ui3/twinCannon8.bmp": "b5a114d04a6910e68e4df85978425cdb94e7209e4838e80fe62e1386e1827efb",
+    "extracted/goal-early5-spells-20261019-ui3.log": "1ca37a77c694085239b9c31f43ab50f08ff47b801e1d81c5767ec61d18d6170a",
+    "extracted/goal-thunder-capture-20261019-plan3.tsv": "8c0b982433ed2e4f38767b9ee78906629b930f36522c0ce4c5af2dfdad3629b4",
+    "originals/d/_shapes.shp": "c878353c8054208deef832e34c514b30fe670e175505b129333a5728ba70f68e",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6"
+  },
+  "goalComplete": false,
+  "fullFidelityVerified": false
+}
