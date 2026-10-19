@@ -1,0 +1,31 @@
+{
+  "unit": 231,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-19",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-19"
+  },
+  "uniqueInputs": 1676,
+  "normalReturns": 3352,
+  "instructions": 550616,
+  "nativeCalls": {
+    "00420bf0": 3352,
+    "004ac550": 2960,
+    "0049a840": 5252,
+    "004e49c0": 1048,
+    "00485f70": 1048,
+    "0040ace0": 4824
+  },
+  "boundaries": "420bf0/TYPE/ftol/40ace0/485f70 전체. 425f50 시전 프로세스 종료·힙·현재 가상c0효과·지연420a40 생성/스케줄·소리·현재가상10삭제/free는 명시 경계다. 실제 내용물 소비/파생 피해/지연효과/게임/UI 성공으로 세지 않는다. GP/retN/canary/SEH/x87/실행·읽기·쓰기범위를 검사했다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_bomb_effect.py": "22c20eb50c5f4e2193fc2c4d676c9a2d93cabd0a193b34aebcac92d3c88bb9c3",
+    "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+    "tools/decomp_cursor_position.py": "e15bcdbc4c6be9c131c30f15416c945d650dba9f7dc6def404b47f63c635c212",
+    "tools/decomp_carrier_falling.py": "f8702db0708a543b73213c8df9154503afe977767a11bd7c150b639ee1b587a6",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "cpppj/tests/fixtures/bomb-effect-x86.tsv": "44f9032ce5e96488e4bfb5e5c425a129308debed96e2995b46930c8fcb9fd3a1"
+  }
+}

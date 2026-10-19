@@ -1,0 +1,231 @@
+{
+  "unit": 231,
+  "baseline": "570a969c",
+  "host": "HJOW-Athlon",
+  "date": "2026-10-19",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-19"
+  },
+  "uniqueInputs": 1676,
+  "normalReturns": 3352,
+  "examples": {
+    "duplicateAndZeroTargetsPreserved": {
+      "input": [
+        0,
+        0,
+        51,
+        117,
+        1,
+        3,
+        3,
+        0,
+        1148874752,
+        4294967280,
+        1
+      ],
+      "effects": "stop-cast:51;allocate:12;apply:50:60;apply:50:60;apply:50:0;allocate:40;construct:9:1:3:3:60:60:0;schedule-argument:0:0;attach:1:57:777:0:0;sound:1117:0:0:0:1:0;destroy:50:1048648;release:1",
+      "packet": "015f16003200030000003c003c0000003f0040004100",
+      "counter": "985",
+      "boss": "1",
+      "secondType": "118"
+    },
+    "voidCarrierSkipsStopAndCounter": {
+      "input": [
+        0,
+        4,
+        51,
+        117,
+        1,
+        3,
+        0,
+        0,
+        1148874752,
+        4294967280,
+        1
+      ],
+      "effects": "allocate:12;apply:50:60;apply:50:61;apply:50:62;allocate:40;construct:9:1:3:3:60:61:62;schedule-argument:0:0;attach:1:57:777:0:0;sound:1117:0:0:0:1:0;destroy:50:1048648;release:1",
+      "packet": "015f16003200030000003c003d003e003f0040004100",
+      "counter": "4294967280",
+      "boss": "1",
+      "secondType": "118"
+    },
+    "deadParentReturnsBeforeEffects": {
+      "input": [
+        1,
+        0,
+        51,
+        117,
+        1,
+        0,
+        0,
+        0,
+        1148874752,
+        4294967280,
+        1
+      ],
+      "effects": "-",
+      "packet": "015f16003200000000003c003d003e003f0040004100",
+      "counter": "4294967280",
+      "boss": "1",
+      "secondType": "118"
+    },
+    "packetGrowthKeepsInitialCapacity": {
+      "input": [
+        0,
+        0,
+        51,
+        117,
+        1,
+        2,
+        0,
+        5,
+        1102970880,
+        19,
+        1
+      ],
+      "effects": "stop-cast:51;allocate:8;apply:50:60;apply:50:61;apply:50:62;apply:50:63;apply:50:64;allocate:40;construct:9:1:2:2:60:61;schedule-argument:0:0;attach:1:57:777:0:0;sound:1117:0:0:0:1:0;destroy:50:1048648;release:1",
+      "packet": "015f16003200050000003c003d003e003f0040004100",
+      "counter": "42",
+      "boss": "1",
+      "secondType": "118"
+    },
+    "soundMutationChangesDestroyVirtual": {
+      "input": [
+        0,
+        0,
+        51,
+        117,
+        1,
+        2,
+        0,
+        9,
+        1102970880,
+        19,
+        1
+      ],
+      "effects": "stop-cast:51;allocate:8;apply:50:60;apply:50:61;allocate:40;construct:9:1:2:2:60:61;schedule-argument:0:0;attach:1:57:777:0:0;sound:1117:0:0:0:1:0;destroy-alt:50:1048648;release:1",
+      "packet": "015f16003200020000003c003d003e003f0040004100",
+      "counter": "42",
+      "boss": "1",
+      "secondType": "118"
+    },
+    "currentVirtualTablePerTarget": {
+      "input": [
+        0,
+        0,
+        51,
+        117,
+        1,
+        6,
+        0,
+        2,
+        1102970880,
+        19,
+        1
+      ],
+      "effects": "stop-cast:51;allocate:24;apply:50:60;apply-alt:50:61;apply-alt:50:62;apply-alt:50:63;apply-alt:50:64;apply-alt:50:65;allocate:40;construct:9:1:6:6:60:61:62:63:64:65;schedule-argument:0:0;attach:1:57:777:0:0;sound:1117:0:0:0:1:0;destroy-alt:50:1048648;release:1",
+      "packet": "015f16003200060000003c003d003e003f0040004100",
+      "counter": "42",
+      "boss": "1",
+      "secondType": "118"
+    },
+    "postEffectDeadTargetStillRecorded": {
+      "input": [
+        0,
+        0,
+        51,
+        117,
+        1,
+        6,
+        0,
+        3,
+        1102970880,
+        19,
+        1
+      ],
+      "effects": "stop-cast:51;allocate:24;apply:50:60;apply:50:61;apply:50:63;apply:50:64;apply:50:65;allocate:40;construct:9:1:6:5:60:61:63:64:65;schedule-argument:0:0;attach:1:57:777:0:0;sound:1117:0:0:0:1:0;destroy:50:1048648;release:1",
+      "packet": "015f16003200060000003c003d003e003f0040004100",
+      "counter": "42",
+      "boss": "1",
+      "secondType": "118"
+    },
+    "packetShrinkChangesLoop": {
+      "input": [
+        0,
+        0,
+        51,
+        117,
+        1,
+        6,
+        0,
+        4,
+        1102970880,
+        19,
+        1
+      ],
+      "effects": "stop-cast:51;allocate:24;apply:50:60;allocate:40;construct:9:1:6:1:60;schedule-argument:0:0;attach:1:57:777:0:0;sound:1117:0:0:0:1:0;destroy:50:1048648;release:1",
+      "packet": "015f16003200010000003c003d003e003f0040004100",
+      "counter": "42",
+      "boss": "1",
+      "secondType": "118"
+    },
+    "currentTypeSelectsDelayedEffect": {
+      "input": [
+        0,
+        0,
+        51,
+        168,
+        1,
+        2,
+        0,
+        7,
+        1102970880,
+        19,
+        1
+      ],
+      "effects": "stop-cast:51;allocate:8;apply:50:60;apply:50:61;allocate:40;construct:11:2:2:2:60:61;schedule-argument:0:0;attach:1:57:777:0:0;sound:1118:0:0:0:1:0;destroy:50:1048648;release:1",
+      "packet": "015f16003200020000003c003d003e003f0040004100",
+      "counter": "42",
+      "boss": "1",
+      "secondType": "118"
+    },
+    "failedDelayedAllocationStillAttachesNullBoundary": {
+      "input": [
+        0,
+        0,
+        0,
+        117,
+        1,
+        3,
+        3,
+        0,
+        3250454528,
+        2147483647,
+        0
+      ],
+      "effects": "stop-cast:0;allocate:12;apply:50:60;apply:50:60;apply:50:0;allocate:40;schedule-argument:0:0;attach:0:57:777:0:0;sound:1117:0:0:0:1:0;destroy:50:1048648;release:1",
+      "packet": "015f16003200030000003c003c0000003f0040004100",
+      "counter": "2147483624",
+      "boss": "1",
+      "secondType": "118"
+    }
+  },
+  "sources": {
+    "cpppj/bomb-effect-native.json": "893fa28f8c016afda9fde3ae2f189fbaa8ca5f36b42579c1c7467edac52d824b",
+    "tools/decomp_bomb_effect.py": "22c20eb50c5f4e2193fc2c4d676c9a2d93cabd0a193b34aebcac92d3c88bb9c3",
+    "cpppj/tests/fixtures/bomb-effect-x86.tsv": "44f9032ce5e96488e4bfb5e5c425a129308debed96e2995b46930c8fcb9fd3a1"
+  },
+  "cppImplemented": false,
+  "sessionIntegrated": false,
+  "gameRun": false,
+  "goalComplete": false,
+  "previousFullRegression": {
+    "unit": 230,
+    "tests": 1759,
+    "failed": 0,
+    "seconds": 267.32,
+    "binarySha256": "349e8797d3ba045564e6144838b0280641174d75e1c576f0716a8882a4154cda"
+  },
+  "resumeAt": "??1676???????RawBombEffect ??????, ??41e4b0 ???????c0??/??????/????????????Session/UI???????."
+}
