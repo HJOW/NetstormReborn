@@ -947,7 +947,7 @@
   "currentSources": {
     "cpppj/src/client/CampaignUserInputServices.cpp": "7b22008ca86929c1c7523bde5d0d6d265197dc032d2f2502d2e356f6e923f86c",
     "cpppj/src/client/RawCampaignCarrierInput.inc": "5f7586171e8d3fc0b7a12e7bad502a33eeda171a41d859469c03367d930aad1b",
-    "cpppj/tests/CampaignSessionTests.cpp": "ad59d62f007d8b7e970c22c0e3dff80bacd970f2aab75a6a3bababd9d993e558"
+    "cpppj/tests/CampaignSessionTests.cpp": "995d2f4848c9f2b261d0930cbc7dde5f2209b5931cdab4102da10dca4d23f117"
   },
   "binaries": {
     "cpppj/build/bin/Release/NetstormCpp.exe": "68d431b41b6e2f366cc0f33f2b4f1681a67bd70c6f1751ecc837a8ac36d726c5",
@@ -1334,6 +1334,19 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "027f06978d48c3af6001d1d8e3418635ef4e13b6b76d584ea08db72762924fc2",
           "current": "ad59d62f007d8b7e970c22c0e3dff80bacd970f2aab75a6a3bababd9d993e558"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 227,
+      "reason": "골렘133/VT50e568의 원본TYPE 발 기준점을 표시와 클릭 영역에 연결한 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "ad59d62f007d8b7e970c22c0e3dff80bacd970f2aab75a6a3bababd9d993e558",
+          "current": "995d2f4848c9f2b261d0930cbc7dde5f2209b5931cdab4102da10dca4d23f117"
         }
       ]
     }

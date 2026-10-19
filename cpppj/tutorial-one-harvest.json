@@ -8,7 +8,7 @@
   "originalGameExecutions": 0,
   "baseline": "c445683592e712662385e01036cabe2031e65a40",
   "sources": {
-    "cpppj/src/client/GameWorld.cpp": "aacc54866c2893001591af389ffbb3c6885af176352b9e6d0e52111f493a05b6",
+    "cpppj/src/client/GameWorld.cpp": "af6d3aeb3bd53d83e2619c2bd20ba5df42c17fe718cb81786841606419f10c6c",
     "cpppj/src/client/UberGump.cpp": "c160136246b091eed0d2dbdd6d091d068e7c0460191d935c77582ce1c137d932",
     "cpppj/src/app/main.cpp": "9395c790b1a31c7e36f76b55cea3dd89ee7fdc769e694dc7d2fbdaa7e9eb7cd8",
     "tools/cpp_tutorial_harvest_smoke.py": "58606aae2a86d99360f650fc7e5f27785aabca54b53a0856c17ba7f3a9d0a22b",
@@ -358,6 +358,19 @@
           "path": "cpppj/src/client/GameWorld.cpp",
           "previous": "adced72bb6185beea7b12c82dee1b5d3b7dd5da727b904a451f01078470b7399",
           "current": "aacc54866c2893001591af389ffbb3c6885af176352b9e6d0e52111f493a05b6"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 227,
+      "reason": "골렘133/VT50e568의 원본TYPE 발 기준점을 표시와 클릭 영역에 연결한 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/sources",
+          "path": "cpppj/src/client/GameWorld.cpp",
+          "previous": "aacc54866c2893001591af389ffbb3c6885af176352b9e6d0e52111f493a05b6",
+          "current": "af6d3aeb3bd53d83e2619c2bd20ba5df42c17fe718cb81786841606419f10c6c"
         }
       ]
     }

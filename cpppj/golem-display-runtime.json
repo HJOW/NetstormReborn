@@ -1,0 +1,463 @@
+{
+  "unit": 227,
+  "baseline": "ad57e7b8",
+  "host": "VM-W11-Codex",
+  "date": "2026-10-19",
+  "lastDecompile": "VM-W11-Codex / 2026-10-19",
+  "scope": "골렘133/VT50e568의 원본TYPE 발 기준점8,2를 본체 표시와 클릭 영역에 적용했다. 원본66프레임을 동결하고64보행프레임/두 카메라를 대조한다.",
+  "validation": {
+    "before": "extracted/goal-golem-display-20261019-before2.json",
+    "focused": "extracted/goal-golem-display-20261019-final-focused1.json",
+    "full": "extracted/goal-golem-display-20261019-full-tests1.json",
+    "currentPinReports": 73,
+    "currentPins": 97
+  },
+  "observations": {
+    "extracted/goal-golem-display-20261019-ui1": {
+      "returnCode": 0,
+      "originalsUnchanged": true,
+      "binarySha256": "0414e80c94744ade95b79ea824244d5b6a272b4cb868efd9ffc6bb419199d34a",
+      "golems": {
+        "15091": {
+          "positions": [
+            [
+              "130",
+              "83"
+            ],
+            [
+              "128.700332642",
+              "81.700340271"
+            ],
+            [
+              "127.352592468",
+              "80.3525924683"
+            ],
+            [
+              "126.09677124",
+              "79.0967712402"
+            ],
+            [
+              "124.676902771",
+              "77.676902771"
+            ],
+            [
+              "123.199043274",
+              "76.1990432739"
+            ],
+            [
+              "121.436393738",
+              "76"
+            ],
+            [
+              "119.917625427",
+              "74.9176254272"
+            ],
+            [
+              "118.664634705",
+              "73.6646347046"
+            ],
+            [
+              "117.157081604",
+              "72.157081604"
+            ],
+            [
+              "117",
+              "70.3670501709"
+            ],
+            [
+              "117",
+              "68.6470489502"
+            ],
+            [
+              "117",
+              "66.7470474243"
+            ],
+            [
+              "117",
+              "64.683052063"
+            ],
+            [
+              "117",
+              "62.7370491028"
+            ],
+            [
+              "117",
+              "62"
+            ],
+            [
+              "117",
+              "63.5359992981"
+            ],
+            [
+              "117",
+              "65.4960021973"
+            ],
+            [
+              "117",
+              "67.2620010376"
+            ],
+            [
+              "117",
+              "69.2539978027"
+            ],
+            [
+              "117.669700623",
+              "70.6697006226"
+            ],
+            [
+              "118.997650146",
+              "71.9976501465"
+            ],
+            [
+              "120.657562256",
+              "73"
+            ],
+            [
+              "122.52355957",
+              "73"
+            ],
+            [
+              "124.252197266",
+              "73.2521972656"
+            ],
+            [
+              "125",
+              "74.7515487671"
+            ],
+            [
+              "125",
+              "76.7155456543"
+            ],
+            [
+              "125.4402771",
+              "78.4402770996"
+            ],
+            [
+              "126.640945435",
+              "79.6409454346"
+            ],
+            [
+              "127.725646973",
+              "80.7256469727"
+            ],
+            [
+              "128.948944092",
+              "81.9489440918"
+            ]
+          ],
+          "north": [
+            [
+              "128.700332642",
+              "81.700340271"
+            ],
+            [
+              "127.352592468",
+              "80.3525924683"
+            ],
+            [
+              "126.09677124",
+              "79.0967712402"
+            ],
+            [
+              "124.676902771",
+              "77.676902771"
+            ],
+            [
+              "123.199043274",
+              "76.1990432739"
+            ],
+            [
+              "121.436393738",
+              "76"
+            ],
+            [
+              "119.917625427",
+              "74.9176254272"
+            ],
+            [
+              "118.664634705",
+              "73.6646347046"
+            ],
+            [
+              "117.157081604",
+              "72.157081604"
+            ],
+            [
+              "117",
+              "70.3670501709"
+            ],
+            [
+              "117",
+              "68.6470489502"
+            ],
+            [
+              "117",
+              "66.7470474243"
+            ],
+            [
+              "117",
+              "64.683052063"
+            ],
+            [
+              "117",
+              "62.7370491028"
+            ],
+            [
+              "117",
+              "62"
+            ]
+          ],
+          "south": [
+            [
+              "117",
+              "63.5359992981"
+            ],
+            [
+              "117",
+              "65.4960021973"
+            ],
+            [
+              "117",
+              "67.2620010376"
+            ],
+            [
+              "117",
+              "69.2539978027"
+            ],
+            [
+              "117.669700623",
+              "70.6697006226"
+            ],
+            [
+              "118.997650146",
+              "71.9976501465"
+            ],
+            [
+              "120.657562256",
+              "73"
+            ],
+            [
+              "122.52355957",
+              "73"
+            ],
+            [
+              "124.252197266",
+              "73.2521972656"
+            ],
+            [
+              "125",
+              "74.7515487671"
+            ],
+            [
+              "125",
+              "76.7155456543"
+            ],
+            [
+              "125.4402771",
+              "78.4402770996"
+            ],
+            [
+              "126.640945435",
+              "79.6409454346"
+            ],
+            [
+              "127.725646973",
+              "80.7256469727"
+            ],
+            [
+              "128.948944092",
+              "81.9489440918"
+            ],
+            [
+              "130",
+              "83"
+            ]
+          ],
+          "lastHp": 50.0
+        }
+      },
+      "finalGate": [
+        "5",
+        "65",
+        "0",
+        "0",
+        "0",
+        "1",
+        "0",
+        "0"
+      ],
+      "finalPage": [
+        "mission"
+      ]
+    }
+  },
+  "sources": {
+    "cpppj/src/client/GameWorld.cpp": "af6d3aeb3bd53d83e2619c2bd20ba5df42c17fe718cb81786841606419f10c6c",
+    "cpppj/src/client/SpriteDraw.cpp": "8946ce7549a2b399a0f337382e6de316d3d7a7abdfa43194cd8bce3b863297a8",
+    "cpppj/src/o/RiftTypeTable.cpp": "e482f1e9183264f4800e7c6fe95e12c811c5b0868f7e8843f77f37b4694795d0",
+    "cpppj/tests/CampaignSessionTests.cpp": "995d2f4848c9f2b261d0930cbc7dde5f2209b5931cdab4102da10dca4d23f117",
+    "tools/cpp_campaign_entry_smoke.py": "5fa9adadf6bcd571d6fba39b38e46fed41fe2e927911ff80dc38047c52c56b49",
+    "tools/cpp_fort_smoke.py": "96c7fcd524deb38d93274ded77620639bdc7012ec0f2aaeed0a488d938e9da83",
+    "tools/cpp_golem_display_runtime.py": "fb1bfdcf82755f1aee1477a79dd9d90d976c28c06219b4289b2fa2a47bdd7094",
+    "tools/cpp_menu_smoke.py": "41732efb30e6337267168e3cd836ab6c04d6f34d36b16152b762c39dd2a76afe",
+    "tools/cpp_renderer_smoke.py": "fc648fea126c9cad3a124b38f757460f1139bb0e7f26c1032482ae4d85766ebe",
+    "tools/cpp_smoke_files.py": "66745bfd0ebac8d672eeb8f515144a47377fa4a28dad0603b5f8969a008ec679",
+    "tools/cpp_world_smoke.py": "6e50f87caf0b1b817c9116ef972ec6e75b44d33455edc88fe128a8d0f791fe72",
+    "tools/decomp_creation_oracle.py": "646adc1ca6c9eaeac08a9c700324ae05ba1727416bc62070e0a066afc07dc053",
+    "tools/decomp_display_oracle.py": "bd9a42431cdef96d3fb13accf78d5a0d6a3155243b1bbc0362d58e79f662f7a4",
+    "tools/decomp_dudespawn_oracle.py": "294095ff1336d290d8d7e0e465df95d5514ceb4ff87d4bac8c282cdcec2eb786",
+    "tools/decomp_factory_capture.py": "e5dd681fa0d5aa74779c7873c10814eff9ad15e193f7cb7322661c6ca02e27f1",
+    "tools/decomp_generator_capture.py": "d5b8b31e5c9c0ab00f24236460af8b63f86412e5115537d56f6f71feb6238b0f",
+    "tools/decomp_golem_capture.py": "311c5bb770608b38a45f0789ae47d670e287dd5e7da82cedb97c426f96c7969e",
+    "tools/decomp_oracle.py": "227b9a8b703cfd81d05ac4a7c72a42eaecf9c804fc028680466a19a591f2335d",
+    "tools/decomp_owner_oracle.py": "5a837ad7fd233d9d75c7241d52fbf2e5a508e24dc158d091f243a13ab698e7fb",
+    "tools/decomp_pop_oracle.py": "2a50f34e6b229d5ea4611f7073877ca1e165e0bf841f32c83f17d300b6113bb6",
+    "tools/decomp_postpop_oracle.py": "43dd9adffc6e2b3a1bd4a1fb06563f848518d8082014f2346613243183535129",
+    "tools/decomp_rain_draw.py": "a7a8a40dbb5e1508e21745a94a4320fba207cd08a9ee38ae6a200614d4c2e249",
+    "tools/decomp_shape_to_buffer_oracle.py": "3499edbde033d4fb5102bfb855a988adc30c8b17aae219d917d81346eea71eec",
+    "tools/decomp_sid_oracle.py": "7bfd7b95b26724b1793d407a4ad6654972b2aaa3bf04e4c206cc357670b68dff",
+    "tools/decomp_temple_capture.py": "d39f2d4150b2b96eb885e17b1bbcd8f1727e21b9b71a16113b3b04a0e2ece045",
+    "tools/decomp_temple_draw.py": "b94a1b635e83af4af3808d3666d3dd56067a44e88c22ecfbd4fe9396000dab24",
+    "tools/fort.py": "ee8ff8f00eea02771ac5c7a519dcd582e14cc07a2d97337c946c191022554e13",
+    "tools/shp.py": "4cb8bee6ed773e29e8658ddb315594ebf5ac005ea5b96c6b760a177029515bfd",
+    "tools/taff.py": "461860cdfc9451b85a8694dd30fd2c56c1cfdf5c6bb7ab8f63a4089971889795",
+    "tools/terrain_mask.py": "00f9789dbde0c124a132a4005924549571b06add5214ea14e3b76e88e73cb37a",
+    "tools/typefile.py": "a564a4b1bbc4f06d05ecb8b1f3fae4c32f6231cf95ea7bfadff2499931804d90"
+  },
+  "evidence": {
+    "cpppj/golem-capture-native.json": "f63d70ddcd688afd85e85767a8c01fd47356cb87a961be0adfa59a4e8cb50c6c",
+    "cpppj/tests/fixtures/golem-capture-x86.tsv": "012d96d1c1d6064ee1074dc7b6dec7757be3ca8b49a86b6ed76baa1784cd8550",
+    "extracted/goal-early5-island-20261019-probe.py": "2933ead8b5cc87b76425031fea3da8690c3b2649dc8f3fa8d4babd276176ef1a",
+    "extracted/goal-golem-display-20261019-after1.json": "8ddead24534e9f99241196ad8ae3c0d2e1a4ea99db88151d258394f8760a3015",
+    "extracted/goal-golem-display-20261019-after1.stderr": "8bfc8a40aad3f7f96cb702ab294f003e45c6dc81fd0889dd3b54c025ecce92fb",
+    "extracted/goal-golem-display-20261019-after1.stdout": "11af5fc0d6427b702a42b1cce3f73206e4ba023fe253a63bc59ebc0f9e10feef",
+    "extracted/goal-golem-display-20261019-after2.json": "e00ae7730abd93c12c78cc35849d9319d415fc9a65d4af3d732c458bbab949ac",
+    "extracted/goal-golem-display-20261019-after2.stderr": "c1afa93469fdb77aba6a3d06b5b27d9de274eeb2bf42bac9fb9bfe3167ee477f",
+    "extracted/goal-golem-display-20261019-after2.stdout": "03dfd95b9b3ec0d15be585ebb6be2a33e4fe1fc0c8c06bec1b41beb55e7e3560",
+    "extracted/goal-golem-display-20261019-after3.json": "c30f7a425a81b76b0d8596712931d0d2e729d4ba60f0d532b9c5c342f9c20b55",
+    "extracted/goal-golem-display-20261019-after3.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-golem-display-20261019-after3.stdout": "53bdc5650625bb7d3951fc4bf7534e706117de155cc996ab9522c3d3ea4203ea",
+    "extracted/goal-golem-display-20261019-audit-pins.py": "78d4e5998728f0ee9ff578eed8565375e9492105e3df2dd57fea83ec45650c5c",
+    "extracted/goal-golem-display-20261019-before-GameWorld.cpp": "aacc54866c2893001591af389ffbb3c6885af176352b9e6d0e52111f493a05b6",
+    "extracted/goal-golem-display-20261019-before1.json": "67cdc2c17583a004b90beac33f957f6ea889ced00d0fbb4dfcfd740f7df4c67c",
+    "extracted/goal-golem-display-20261019-before1.stderr": "1fc71ad5ec6444ab17235684bd4fdfc9e89ded12597245ae91564cf1b5e99aef",
+    "extracted/goal-golem-display-20261019-before1.stdout": "396da75d494360821e6d873be278e792c2c1a3d810f89761ada1a7bd0fe19590",
+    "extracted/goal-golem-display-20261019-before2.json": "a9f7f3e8f2eb9f255a9b6fe88d4f66a6c1478a3356e6b46212c50dfd54bffb7d",
+    "extracted/goal-golem-display-20261019-before2.stderr": "6f0995dcaf0181eca72dc6bf2d23f657afab4e50648b1ea3f08a83e0b260b1e9",
+    "extracted/goal-golem-display-20261019-before2.stdout": "bce098d40a7dc13b7cd3dade3ba98f40618d1a0e5a374337543edcd9ea670967",
+    "extracted/goal-golem-display-20261019-build-report.py": "41af73d4d4b5d10a11eb18d6329a62eb825a593e8d9e683484280922202023b9",
+    "extracted/goal-golem-display-20261019-build1.log": "49446800edb950e2b093ca8d32229b1f16fdc801b7dfb23a5738654330c1f994",
+    "extracted/goal-golem-display-20261019-build2.log": "f7922280240a88f1b6a8cc1028af998cac6302748886327f2e05180702f6ff29",
+    "extracted/goal-golem-display-20261019-build3.log": "6851f078e60c8b9f67840a4058a4aa057dab45102457f9ce6c872deb77108e70",
+    "extracted/goal-golem-display-20261019-build4.log": "6851f078e60c8b9f67840a4058a4aa057dab45102457f9ce6c872deb77108e70",
+    "extracted/goal-golem-display-20261019-build5-before.log": "728beb8aa7e9f69cb8e94c4862805bc731d8770cc01c9dceba14a356566fcb01",
+    "extracted/goal-golem-display-20261019-build6-final.log": "06e70961060499d29720aabbea8702cf948f58f7f2b8d444ffcf4549040dd3fe",
+    "extracted/goal-golem-display-20261019-final-focused1.json": "6673164ccc0e5d103c5663ee6b210fdb43434a5f2a536403b64532fd0cebdf74",
+    "extracted/goal-golem-display-20261019-final-focused1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-golem-display-20261019-final-focused1.stdout": "53bdc5650625bb7d3951fc4bf7534e706117de155cc996ab9522c3d3ea4203ea",
+    "extracted/goal-golem-display-20261019-fixed-GameWorld.cpp": "af6d3aeb3bd53d83e2619c2bd20ba5df42c17fe718cb81786841606419f10c6c",
+    "extracted/goal-golem-display-20261019-full-tests1.json": "c09ffd6863a20945b533a576caef6bb1b3e361fa4528b24a28eee966566af839",
+    "extracted/goal-golem-display-20261019-full-tests1.stderr": "79e2480bde0296407e865b4a37f3b49c9c027d653a2260e3a4215348db0f0663",
+    "extracted/goal-golem-display-20261019-full-tests1.stdout": "04c5ff1e153c38b0b750deeb12cdd63d95baa19831ee989cc891a1e60d5c28a3",
+    "extracted/goal-golem-display-20261019-inspect1.json": "b4f38d86b5aca9af0a490ec18bc515e790b8deab294cfca1a40c86ba4c2cb337",
+    "extracted/goal-golem-display-20261019-native-lineage.json": "0bf2d1ae7c35bd71fa423dac4533b0440c319bcf139771e9f8f99351689a1fbe",
+    "extracted/goal-golem-display-20261019-native-v1.tsv": "012d96d1c1d6064ee1074dc7b6dec7757be3ca8b49a86b6ed76baa1784cd8550",
+    "extracted/goal-golem-display-20261019-native-v2.py": "311c5bb770608b38a45f0789ae47d670e287dd5e7da82cedb97c426f96c7969e",
+    "extracted/goal-golem-display-20261019-north1180-detail.png": "f242125a8d1203c4853120b30d337a079ca522e5e9e218cf80c9466c5c80ff03",
+    "extracted/goal-golem-display-20261019-pin-updates.json": "adc72e1aa69c7cca5b7bca919a92bbd3c4dcb94fb31a60d656ed69015cd6709a",
+    "extracted/goal-golem-display-20261019-plan1.tsv": "87f10021cd87df39eba1d580e0fdce9129ff7ae2371306c1d6fdbd87e7279ce5",
+    "extracted/goal-golem-display-20261019-refresh-pins.py": "f8a5caf79c7e1915e1477e4f6f7b8fe54da760b50364d0cee7ebd6cc4138c2c8",
+    "extracted/goal-golem-display-20261019-south1700-detail.png": "4de8e6c98373a57f5cdbbe1af56d286917b8b7f8b1e8c9d61db539469b91e795",
+    "extracted/goal-golem-display-20261019-stage.py": "182db9fae191182ae89efbd952353585c25a2b704f43f823910a5ee7a1212392",
+    "extracted/goal-golem-display-20261019-tests-v2.cpp": "30c08ab875cc07cb1958594f40d4e80587be0591df143433f0ab2eacd3e531e7",
+    "extracted/goal-golem-display-20261019-ui1/final.bmp": "77f457d08531e2b38f9573a8ebec5dc7bc4792d3495c9a450c9ba8f80a444088",
+    "extracted/goal-golem-display-20261019-ui1/geyserBridge4.bmp": "2ad158e17a225f4f2283269ec76f8411c6e9c717b3f139713702536c0c7f1410",
+    "extracted/goal-golem-display-20261019-ui1/geyserBridge8.bmp": "0e04215a2176719ae4d27745c2a5d3b2b8c47df639e83be73a36d870b93e0125",
+    "extracted/goal-golem-display-20261019-ui1/golemPlaced.bmp": "dd8f959befa7a31bc5898e440e19a6ad30171c1dd9e368c247b427ffc2fc14c4",
+    "extracted/goal-golem-display-20261019-ui1/north1000.bmp": "b9b05895231f1d155f6a9029889a8cccf42acaddbe800d38b62d78645811ad6e",
+    "extracted/goal-golem-display-20261019-ui1/north1020.bmp": "67be43869779e5af101ac5df6d32026774bb3f869aeb9b9451acc2ffba506a91",
+    "extracted/goal-golem-display-20261019-ui1/north1040.bmp": "e545c380687e884c45fab651c4c79296fa8daa24db7b431a35b81ba3f172f8d2",
+    "extracted/goal-golem-display-20261019-ui1/north1060.bmp": "a6058cdec912d9a89d6fe1ed5705413727bc47183e8375d07f15f065277e2fe6",
+    "extracted/goal-golem-display-20261019-ui1/north1080.bmp": "001462b51e327aab3ba92f3df8f3d166fa7fe54c5941c98390a5e2f805228a0f",
+    "extracted/goal-golem-display-20261019-ui1/north1100.bmp": "01efbd754402465dbdbfa6a909b83bda238bce734dc696a39b9d262359440bbf",
+    "extracted/goal-golem-display-20261019-ui1/north1120.bmp": "08ba9c5f5608bd3b5c24ba6328efa46a04196f6a01adf388f08cd3686fdceb6b",
+    "extracted/goal-golem-display-20261019-ui1/north1140.bmp": "7eea8f905b7659ac6481b99ebffa3f83997e933fe748cf233a4fb56698c64c4d",
+    "extracted/goal-golem-display-20261019-ui1/north1160.bmp": "ca4e8757b43b0b97ab7639e767c8bf202fd03dc8af1206534e89082a38f18570",
+    "extracted/goal-golem-display-20261019-ui1/north1180.bmp": "fa5d642c3f939c7c195ea42248bede00e9e636065a959fc263d012bc54ff42d8",
+    "extracted/goal-golem-display-20261019-ui1/north1200.bmp": "738e7af4f7dd9b797a80c8b7ba9790cb4178046dd0adfec03a6565dedb208930",
+    "extracted/goal-golem-display-20261019-ui1/north1220.bmp": "ba571a2bf7682d54a703f691599825866f094b8920f060b08497822d582315e5",
+    "extracted/goal-golem-display-20261019-ui1/north1240.bmp": "90192b71412f65bbf8f0b42c07fd2cc81c3e40f37f96200b58c557817c379767",
+    "extracted/goal-golem-display-20261019-ui1/north1260.bmp": "d962d8182e43dc7feac68b843564a8eaa378cf53ac8e73579ab0289c3556366c",
+    "extracted/goal-golem-display-20261019-ui1/north1280.bmp": "19a287828d284963beb4edc91e2a5f3159ed9c297b30733e10ea0b62428bd626",
+    "extracted/goal-golem-display-20261019-ui1/north1300.bmp": "a0df3ca401ccfc58d6e93a3f974f9951a516fb1b319365ba12b67a25e2c7c875",
+    "extracted/goal-golem-display-20261019-ui1/north1320.bmp": "87d2e764a593097a5b4c750a97ef73f21ef7067f4d9ed9563465b80ac758923d",
+    "extracted/goal-golem-display-20261019-ui1/north1340.bmp": "1ad9893635ea0bbc529f6239f70065306fc5b75dcd4298cc37c4013506df0226",
+    "extracted/goal-golem-display-20261019-ui1/north1360.bmp": "9267744f0b89167dd37f2eefa802489d60eb57dabc799e5adc3b95188f4a3ec2",
+    "extracted/goal-golem-display-20261019-ui1/north1380.bmp": "b833aca0396a04a8e8bc651023f17bf648644dd95e7507ec6ef9898801cc96fb",
+    "extracted/goal-golem-display-20261019-ui1/north1400.bmp": "f7eeffc6c07ba4b63c75ec85517bc79223df92867269c9703e08988fb542dc98",
+    "extracted/goal-golem-display-20261019-ui1/north1420.bmp": "f5a27c7414dfb28e4276d41a7d21dba6e02f3d013f6ecda16d9d56534d94d5ae",
+    "extracted/goal-golem-display-20261019-ui1/north1440.bmp": "f561ba0395f494df983ced94c3cb0e5afca6f54168b9831438841c5c5aa21718",
+    "extracted/goal-golem-display-20261019-ui1/north1460.bmp": "fb5e86aef2d21010ab6660c19974b39e162cb608f15ad33e4362ef4eb6f039c6",
+    "extracted/goal-golem-display-20261019-ui1/north1480.bmp": "d07dbd7259f7e9be805e71706e0a91c4d055ea8f323217bbfe9fe9fefae18901",
+    "extracted/goal-golem-display-20261019-ui1/north1500.bmp": "215b3cd89ae2730c726cf8c2b990cf06649d2f3faffba585c9392552b7c6f844",
+    "extracted/goal-golem-display-20261019-ui1/north1520.bmp": "ffb01e5488ce95538db592fbf7def7cc3514656eaa0c85004ad6bab7d6ebd016",
+    "extracted/goal-golem-display-20261019-ui1/north1540.bmp": "dd0e6311d4d94891a1c22b6a6512434d2f0f02c750742655f407d58ddd533c51",
+    "extracted/goal-golem-display-20261019-ui1/north1560.bmp": "01b49012c0c08967dc3fe35f2a92ed5fdd34097640c9d0c32e0de9d96a1a6110",
+    "extracted/goal-golem-display-20261019-ui1/north1580.bmp": "91399b1072a7d75e7dd6619bc994a7eab81393fca6dd12121514c490a22f02ce",
+    "extracted/goal-golem-display-20261019-ui1/north1600.bmp": "993ea6d6c3c2e889cfb95cf244f46c9032e70a307d0ad8cc44e7b155d8a2ce9c",
+    "extracted/goal-golem-display-20261019-ui1/north1620.bmp": "f0b149b8bb38f5848123efd86223f5ca12ca0a0710f74854a6d703ec1eeffca7",
+    "extracted/goal-golem-display-20261019-ui1/north940.bmp": "8a81ce995a0c77d64bd5dcbb00f666e75693478f5c1b965644e55aceacf9ef41",
+    "extracted/goal-golem-display-20261019-ui1/north960.bmp": "6b7a9622101f4be3e46e001a9e906e1076f8fbd10ee86cdaa975f49ca0a64fd4",
+    "extracted/goal-golem-display-20261019-ui1/north980.bmp": "c1400c0ace559b33a9a485672a48b5899aef12ee66ff8560a627a5810f113509",
+    "extracted/goal-golem-display-20261019-ui1/originals-before.json": "f98d8731a8a729b528fd9744b52f3b26143eff54e767f0b8e1537040c5807c15",
+    "extracted/goal-golem-display-20261019-ui1/run.json": "67fb7d42642ed0786c1046d354f6af07f8435c1c6a6901549e66bb56e70a7f21",
+    "extracted/goal-golem-display-20261019-ui1/south1680.bmp": "42ff538209ea6e683e92f014c1615ed3d810cc4127d77e0b9d6b8a9adea65633",
+    "extracted/goal-golem-display-20261019-ui1/south1700.bmp": "255b1254776c05bd97cfea3d536f41ebd7ae4861e7b2211ade515d15e2dacbdf",
+    "extracted/goal-golem-display-20261019-ui1/south1720.bmp": "b0018cb102a3a18678da2fc64d54e71d34f78e514cb6ff0ac2235f9e32635c5d",
+    "extracted/goal-golem-display-20261019-ui1/south1740.bmp": "f133b1058e2ac296a22750026dd7dbedf50f1c830ca9c6922d68677c0fbefa2e",
+    "extracted/goal-golem-display-20261019-ui1/south1760.bmp": "112939cb98aeb588e6dcbc7521790ffae50ae63f2a557f86ceaf488297934d2a",
+    "extracted/goal-golem-display-20261019-ui1/south1780.bmp": "7e7751b77c4394256705384d312922f6645ed444cd68c8d45d579d044ebb8b6b",
+    "extracted/goal-golem-display-20261019-ui1/south1800.bmp": "ef11cc23e0d29a9a38827d14fa726dc0ebf611d11a9969bf41d852bbb44a9d41",
+    "extracted/goal-golem-display-20261019-ui1/south1820.bmp": "be7068dda7a90b29bc93f587439f69ab64f3b5a845339ada4547e423c9191509",
+    "extracted/goal-golem-display-20261019-ui1/south1840.bmp": "d74180bb46c37111a99ce1b52f12678a4a79889b754d36c7e4b8286e1fedbd47",
+    "extracted/goal-golem-display-20261019-ui1/south1860.bmp": "8c6bc874ef50661424beae72ac0746cecec488d55d7ac190521ddeac86d8de47",
+    "extracted/goal-golem-display-20261019-ui1/south1880.bmp": "330c0274b15354393f56d1ef9496c4c2bc819be721d6dc629625c564eff0c3b3",
+    "extracted/goal-golem-display-20261019-ui1/south1900.bmp": "4bfa6dd42a6102c808ee788519db0502ed904276d693fd3705348377903bb4a5",
+    "extracted/goal-golem-display-20261019-ui1/south1920.bmp": "bf2c8522513284053c4eae0a7a091e6738dddfed09d6a2be7c27fb3d5c7c314d",
+    "extracted/goal-golem-display-20261019-ui1/south1940.bmp": "b13ea0d40984f5420b2a6180d956fd3d1e8bfa2ad116097115c5e2b9f0aea3b6",
+    "extracted/goal-golem-display-20261019-ui1/south1960.bmp": "963a3f1df6fad4937ef1aaeda40ccf3e758d100c6577f6937aec044c1fe6d948",
+    "extracted/goal-golem-display-20261019-ui1/south1980.bmp": "3a3cd4bdfca6a0d34b2d57074cc24420114bc465fa2f5dd920588096ec9c6b7d",
+    "extracted/goal-golem-display-20261019-ui1/south2000.bmp": "905c9e7b903346efde21279a7ce2b67bca5ec85d5227609630fd37ea7ff12878",
+    "extracted/goal-golem-display-20261019-ui1/south2020.bmp": "1e1e9057dbb94f13809ad855a4d389641d8894727bcceb01ede23df51a254f1e",
+    "extracted/goal-golem-display-20261019-ui1/south2040.bmp": "05d116992ba67b9d69ab64bd47b8eaded406b937362f17bf4ea3776a89142806",
+    "extracted/goal-golem-display-20261019-ui1/south2060.bmp": "5714a8a451f4b7dcbd56c38a76f8df677389ee6f156213ce79059a602b7227e1",
+    "extracted/goal-golem-display-20261019-ui1/south2080.bmp": "333863231f099569a7da4509259bb304702dc2f3250a08e3e9358594594a6494",
+    "extracted/goal-golem-display-20261019-ui1/south2100.bmp": "f8cb5031c47fa36bc0fb92dbcaded4641d669a7f4bb2a62353fe29a6251c53ed",
+    "extracted/goal-golem-display-20261019-ui1/south2120.bmp": "a522c1b46f0d12390eea9e7be466fa4441fcdca00d5b577cc5effd9e8d17efd0",
+    "extracted/goal-golem-display-20261019-ui1/south2140.bmp": "b08ba279a704925d8b558b09e4840e513ac3a65f688271b53762efc0f2ae6158",
+    "extracted/goal-golem-display-20261019-ui1/south2160.bmp": "e76e90cdd693b7a722c948b53b80372c25da8507065d4ef0bed31fd6e9aec2b2",
+    "extracted/goal-golem-display-20261019-ui1/south2180.bmp": "3ee5efa78cdfaca79f855b2e1282963590d93e1ff302a85eb03deb15d4ca5e26",
+    "extracted/goal-golem-display-20261019-ui1/south2200.bmp": "0d41faadafe4fca7208357f6e052bc93b00d46de7e997a6c989ead19fd5be7e6",
+    "extracted/goal-golem-display-20261019-ui1/south2220.bmp": "5c27804ac7fea54f6b87b8b1e00edc4fe4cdafa9d1224e083b326986024cf5f0",
+    "extracted/goal-golem-display-20261019-ui1/south2240.bmp": "55201ec349dc94b3b99197dca1c05c8bcd01c1571363c1b81e956f36e073b715",
+    "extracted/goal-golem-display-20261019-ui1/south2260.bmp": "bd1abee85980bdee578d7b3d80fa38bbf54d8c5842ffd450da305ea1b5c293d6",
+    "extracted/goal-golem-display-20261019-ui1/south2280.bmp": "ba68bc50c166e79a7d5327b33fff370b69fe4dc83458a6cec1f38dfe5763a09e",
+    "extracted/goal-golem-display-20261019-ui1/south2300.bmp": "51358f01d484411c3cb003433b9e43c27c2ad5f88faf9efbb580aa73e1b083cf",
+    "extracted/goal-golem-display-20261019-ui1/south2320.bmp": "260f880e44ac280e2bb5fbb65b6d9484b41fd281171e37b84c708376effc1912",
+    "extracted/goal-golem-display-20261019-ui1/south2340.bmp": "1b3c1f9703e64bcc7bc24cdc4031b5dc90d57081fddf9eea1e9e853704e29ecf",
+    "extracted/goal-golem-display-20261019-ui1/south2360.bmp": "7b86a551e8a64a324c8a5a9d6660613cd42016654611bcb9929f2ce10d15f9d9",
+    "extracted/goal-golem-display-20261019-ui1/south2380.bmp": "82962e5fe57255fa97737313d9b753c86c3b6176adb25be968a04e772b18051c",
+    "extracted/goal-golem-display-20261019-ui1/states.tsv": "26e16f5f1f67bc24d9d1d23ecff5ea899a704c4af17a8a279d1aa266dcc0a006",
+    "extracted/goal-golem-display-20261019-ui1/stderr.log": "406c7210ad3db8136768bc6bdc152b1077d1eb8a38e9e2a4cc1d8a2c9915ef03",
+    "extracted/goal-golem-display-20261019-ui1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-golem-display-20261019-ui1/steps.tsv": "cf2b9c4e3c0ad7ce40cde36c4c2b6f03812e361414f215a15936a7d6a9737173",
+    "extracted/goal-golem-display-20261019-ui1.log": "7bf49f38d401cb306249eaccf838640b5499a2b8c793f90250d525ba5b42b590",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "originals/d/_shapes.shp": "c878353c8054208deef832e34c514b30fe670e175505b129333a5728ba70f68e",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6"
+  },
+  "goalComplete": false,
+  "fullFidelityVerified": false
+}

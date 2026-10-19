@@ -2037,7 +2037,7 @@
   "sources": {
     "cpppj/src/client/CampaignObjectMenuClient.cpp": "0421e30b350715a402e90e2ccfcc47584b00392587456a64b49746460d687be2",
     "cpppj/src/client/CampaignUserInputServices.cpp": "5af003ba5e0e9f98d3f7f134213681ad1f886570d6c964d0965d1bee6adb8d40",
-    "cpppj/src/client/GameWorld.cpp": "aacc54866c2893001591af389ffbb3c6885af176352b9e6d0e52111f493a05b6",
+    "cpppj/src/client/GameWorld.cpp": "af6d3aeb3bd53d83e2619c2bd20ba5df42c17fe718cb81786841606419f10c6c",
     "cpppj/src/client/RawCampaignCarrierInput.inc": "ff521d60c6520e8834d91f6b6cd719fa8f0d76450a396366b3bb4969508982a3",
     "cpppj/src/client/RawCarrierInput.cpp": "ebebcf63a03fb24dbdca9bbd7086ebec634400c87a9d1a3711ac2b6a41218322",
     "cpppj/src/o/Bridge.cpp": "f23f37afadbf944c5c83539d9e8c16cbda2baf26985770a90e3f174699929c50",
@@ -2064,7 +2064,7 @@
     "tools/typefile.py": "a564a4b1bbc4f06d05ecb8b1f3fae4c32f6231cf95ea7bfadff2499931804d90"
   },
   "evidence": {
-    "cpppj/geyser-bridge-display-runtime.json": "a5dfd58826f827b667156fb93006cd5451f19fb3a6a84580698bdde23063a5e5",
+    "cpppj/geyser-bridge-display-runtime.json": "50fe896d2a69abd775eb8cdeb25024c141ec786aff3374cab5c00cb7cec8e7b3",
     "extracted/goal-early5-island-20261019-probe.py": "2933ead8b5cc87b76425031fea3da8690c3b2649dc8f3fa8d4babd276176ef1a",
     "extracted/goal-early5-route-20261019-build-report-failed.log": "c8a365d60e19ca37bf4189ec894c846bebb678b16f8c89ad68c29958259baa81",
     "extracted/goal-early5-route-20261019-build-report-v1.py": "f44b350716b3f8d4da9e019e5b70befafa8c62e55cec0e82b7b2c5ced7b6a7b3",
@@ -2145,6 +2145,25 @@
           "path": "cpppj/geyser-bridge-display-runtime.json",
           "previous": "524f22c5c9b80d5510e824bcae8dda4b9c2e204e28001db3fc683f4c9e1336dd",
           "current": "a5dfd58826f827b667156fb93006cd5451f19fb3a6a84580698bdde23063a5e5"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 227,
+      "reason": "골렘133/VT50e568의 원본TYPE 발 기준점을 표시와 클릭 영역에 연결한 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/sources",
+          "path": "cpppj/src/client/GameWorld.cpp",
+          "previous": "aacc54866c2893001591af389ffbb3c6885af176352b9e6d0e52111f493a05b6",
+          "current": "af6d3aeb3bd53d83e2619c2bd20ba5df42c17fe718cb81786841606419f10c6c"
+        },
+        {
+          "group": "/evidence",
+          "path": "cpppj/geyser-bridge-display-runtime.json",
+          "previous": "a5dfd58826f827b667156fb93006cd5451f19fb3a6a84580698bdde23063a5e5",
+          "current": "50fe896d2a69abd775eb8cdeb25024c141ec786aff3374cab5c00cb7cec8e7b3"
         }
       ]
     }

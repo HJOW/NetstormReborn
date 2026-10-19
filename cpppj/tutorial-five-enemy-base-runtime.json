@@ -9,7 +9,7 @@
     "changed": false
   },
   "sources": {
-    "cpppj/src/client/GameWorld.cpp": "aacc54866c2893001591af389ffbb3c6885af176352b9e6d0e52111f493a05b6",
+    "cpppj/src/client/GameWorld.cpp": "af6d3aeb3bd53d83e2619c2bd20ba5df42c17fe718cb81786841606419f10c6c",
     "cpppj/src/client/RawUserSelection.cpp": "89cbf7641299a7f84905193b4d90f3706f122665a15228f42bd39f9b98bc40e7",
     "cpppj/src/client/UserInput.cpp": "fd1bee42a48c4a33098114e813a7909d449791671fb0e313b76efc55216c20bd",
     "cpppj/src/o/RawTutorialLater.cpp": "1f40efc3aefb38e02ff8a9b5d2553ca4c30f773c2c8b4f6dbb82cd3e5b9bc082",
@@ -187,6 +187,19 @@
           "path": "cpppj/src/client/GameWorld.cpp",
           "previous": "adced72bb6185beea7b12c82dee1b5d3b7dd5da727b904a451f01078470b7399",
           "current": "aacc54866c2893001591af389ffbb3c6885af176352b9e6d0e52111f493a05b6"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 227,
+      "reason": "골렘133/VT50e568의 원본TYPE 발 기준점을 표시와 클릭 영역에 연결한 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/sources",
+          "path": "cpppj/src/client/GameWorld.cpp",
+          "previous": "aacc54866c2893001591af389ffbb3c6885af176352b9e6d0e52111f493a05b6",
+          "current": "af6d3aeb3bd53d83e2619c2bd20ba5df42c17fe718cb81786841606419f10c6c"
         }
       ]
     }

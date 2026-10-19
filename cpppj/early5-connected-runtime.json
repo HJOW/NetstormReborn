@@ -252,7 +252,7 @@
   "sources": {
     "cpppj/src/client/CampaignObjectMenuClient.cpp": "0421e30b350715a402e90e2ccfcc47584b00392587456a64b49746460d687be2",
     "cpppj/src/client/CampaignUserInputServices.cpp": "5af003ba5e0e9f98d3f7f134213681ad1f886570d6c964d0965d1bee6adb8d40",
-    "cpppj/src/client/GameWorld.cpp": "aacc54866c2893001591af389ffbb3c6885af176352b9e6d0e52111f493a05b6",
+    "cpppj/src/client/GameWorld.cpp": "af6d3aeb3bd53d83e2619c2bd20ba5df42c17fe718cb81786841606419f10c6c",
     "cpppj/src/client/RawCampaignCarrierInput.inc": "ff521d60c6520e8834d91f6b6cd719fa8f0d76450a396366b3bb4969508982a3",
     "cpppj/src/client/RawCampaignSession.cpp": "4b0470acb1ea5cb275959eb4a70df1d795c4f87d6a51a2a78f6e35ebe573f36b",
     "cpppj/src/client/RawCarrierInput.cpp": "ebebcf63a03fb24dbdca9bbd7086ebec634400c87a9d1a3711ac2b6a41218322",
@@ -282,7 +282,7 @@
     "tools/typefile.py": "a564a4b1bbc4f06d05ecb8b1f3fae4c32f6231cf95ea7bfadff2499931804d90"
   },
   "evidence": {
-    "cpppj/support-color-runtime.json": "cc893c1fbab3ae048859637fd6d64804947393dc9a0c30fd850665cab73b0489",
+    "cpppj/support-color-runtime.json": "8d514794f7225cd9289bbd094153a007ca5abc2505755ffe04c42dbe284bffe5",
     "extracted/goal-early5-connected-20261019-build-report.py": "4745885fc35388bb28b15f247616ec333c7739a8e2691cada0b5d5e8dc93c616",
     "extracted/goal-early5-connected-20261019-cast-header-static.json": "7bc5163ec2fe34c41a1ad7e28c6f02a9a6075c844caf2b9515505e63031942c4",
     "extracted/goal-early5-connected-20261019-direction.json": "63b3df1e475c1fe429740f97979d10956e90a87b3e03377d3429b87c1c7d0b24",
@@ -350,5 +350,26 @@
     "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6"
   },
   "goalComplete": false,
-  "fullFidelityVerified": false
+  "fullFidelityVerified": false,
+  "integration_updates": [
+    {
+      "date": "2026-10-19",
+      "unit": 227,
+      "reason": "골렘133/VT50e568의 원본TYPE 발 기준점을 표시와 클릭 영역에 연결한 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/sources",
+          "path": "cpppj/src/client/GameWorld.cpp",
+          "previous": "aacc54866c2893001591af389ffbb3c6885af176352b9e6d0e52111f493a05b6",
+          "current": "af6d3aeb3bd53d83e2619c2bd20ba5df42c17fe718cb81786841606419f10c6c"
+        },
+        {
+          "group": "/evidence",
+          "path": "cpppj/support-color-runtime.json",
+          "previous": "cc893c1fbab3ae048859637fd6d64804947393dc9a0c30fd850665cab73b0489",
+          "current": "8d514794f7225cd9289bbd094153a007ca5abc2505755ffe04c42dbe284bffe5"
+        }
+      ]
+    }
+  ]
 }

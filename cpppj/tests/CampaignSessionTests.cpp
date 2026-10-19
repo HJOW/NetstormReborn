@@ -701,6 +701,39 @@ std::pair<std::size_t,std::size_t> CompareDisplayNative(std::span<const std::uin
 }
 }
 
+// 골렘의 북/남을 포함한64보행 프레임은 원본 발 기준점8,2와 전체 픽셀이 두 카메라에서 일치해야 한다.
+TEST_CASE(CampaignSession_GolemNative64WalkingFrames) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());auto services=external.Services();services.install.resetCamera={};
+    GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services),{1024,768});world.Resize(1024,768);
+    const auto core=world.Session().Core();const auto origin=EmptySessionSupport(core);
+    const float x=static_cast<float>(origin.x)+2.25f,y=static_cast<float>(origin.y)+3.625f; // 다른 선택 가능한 지형의 간섭을 피한 소수 월드 좌표의 표시 전용 입력이다.
+    const auto sid=world.Session().World().Create(133,2);world.Session().World().Pop(sid,x,y,0);auto raw=core.pool.AllocatedBytes(sid);raw[34]=0;raw[40]=128; // 원문과 같은 중립/현재프레임 표시이며 실제 플레이의 소유권 조작이 아니다.
+    world.Scroll(-4096,-4096); // 첫 빈 영역이 화면 안에 들어오도록 실제 카메라를 원점으로 옮긴다.
+    CHECK(core.types[133].hotspotX==8 && core.types[133].hotspotY==2);std::size_t cases{},pixels{},mismatches{};
+    const auto path=(std::filesystem::path(__FILE__).parent_path()/"fixtures/golem-capture-x86.tsv").string();
+    // 원본의8방향 각8프레임을 재생하며 빈/도움말 프레임은 사용자 보행 범위에서 제외한다.
+    for (const auto& row:netstorm::test::rawscene::LoadFixture(path.c_str()).rows) {
+        const auto frame=static_cast<std::uint32_t>(std::stoul(row[0]));if (frame>=64) continue;Put(raw,36,frame);
+        const auto metadata=netstorm::test::rawscene::Split(row[1],',');const int width=std::stoi(metadata[0]),height=std::stoi(metadata[1]),hotX=std::stoi(metadata[2]),hotY=std::stoi(metadata[3]);
+        // 같은 소수 월드 좌표를 유지하고 카메라 이동 전후의 표시만 비교한다.
+        for (const auto camera:std::array<ScreenPoint,2>{{{0,0},{7,9}}}) {
+            world.Scroll(camera.x,camera.y);const auto point=world.ToScreen(x,y);std::vector<RenderSprite> body;
+            // 실제 골렘 본체만 분리해 지면/주변 유닛의 가림을 섞지 않는다.
+            for (const auto& sprite:world.Sprites()) if (sprite.block==133-70 && sprite.order.x==x && sprite.order.y==y) body.push_back(sprite);
+            CHECK(body.size()==1);if (body.size()!=1) return;
+            Renderer renderer(1024,768);renderer.SetScene(body);std::vector<std::uint8_t> actual(1024*768,199);renderer.Draw(actual,1024,199);
+            const auto compared=CompareDisplayNative(actual,{point.x-hotX,point.y-hotY},width,height,row[2]);mismatches+=compared.first;pixels+=compared.second;CHECK(compared.second>0);++cases;world.Scroll(-camera.x,-camera.y);
+        }
+    }
+    CHECK(cases==128 && pixels>50000 && mismatches==0);std::cout<<"골렘64보행프레임/두 카메라 원본 대조 픽셀="<<pixels<<" 차이="<<mismatches<<'\n';
+    Put(raw,36,5);world.frameTime=[] { return FrameTime{0,1,0,1}; };world.paused=[] { return true; };world.RunFrame();const auto* object=world.Object(sid.value);CHECK(object);if (!object) return;
+    const auto point=world.ToScreen(object->x,object->y);const auto& rect=assets.game.Shapes().Blocks()[133-70].frames[object->frame].rect;
+    const ScreenPoint leftEdge{point.x-8+rect.left,point.y-2+(rect.top+rect.bottom)/2}; // 수정 전8픽셀 오른쪽 클릭 영역의 여유4픽셀 밖에 있는 실제 본체 왼쪽 끝이다.
+    const auto picked=world.Pick(leftEdge);if (picked!=sid.value) std::cout<<"골렘 클릭 대상="<<sid.value<<" 실제="<<picked<<" 화면="<<point.x<<','<<point.y<<" 왼쪽="<<leftEdge.x<<','<<leftEdge.y<<" frame="<<object->frame<<" selectable="<<object->selectable<<" TYPE="<<object->type<<" VT="<<Get(raw,0)<<'\n';
+    CHECK(picked==sid.value);
+}
+
 // 실제 원본 간헐천51프레임의 고정 외형/현재 그림을 두 카메라의 GameWorld 전체 픽셀과 대조한다.
 TEST_CASE(CampaignSession_GeyserBodyNative51Frames) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;

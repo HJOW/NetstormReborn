@@ -41,6 +41,8 @@ bool Has(const TypeAsset& type,std::string_view flag) {
 int Theme(std::string_view theme) { return theme=="thunder" ? 1 : theme=="wind" ? 2 : theme=="rain" ? 3 : 0; }
 // TSV의 한 필드 안에 줄바꿈/탭을 넣지 않는다.
 std::string Field(std::string value) { std::replace(value.begin(),value.end(),'\t',' '); std::replace(value.begin(),value.end(),'\n',' '); std::replace(value.begin(),value.end(),'\r',' '); return value; }
+// 원본10.78 골렘 생성자가 설치하는 실제133/VT50e568 쌍에만 발 기준점을 적용한다.
+bool IsGolem(std::span<const std::uint8_t> raw) { return raw[10]==133 && raw[0]==0x68 && raw[1]==0xe5 && raw[2]==0x50 && raw[3]==0; }
 }
 #include "client/GameWorldInput.inc"
 // 저장 위치와 파일 필드를 유지하여 표시와 이동이 공유하는 월드를 만든다.
@@ -382,7 +384,7 @@ ScreenRect GameWorld::Bounds(const o::Squid& object) const {
     }
     const auto& type=assets_.Types()[static_cast<std::size_t>(object.type-o::kFirstAssetTypeNumber)]; const auto& frame=assets_.Shapes().Blocks()[type.block].frames[object.frame];
     const auto& record=assets_.TypeTable().Types()[static_cast<std::size_t>(object.type)];
-    const bool native=factoryDisplay_ && factoryDisplay_->Handles(o::Sid{static_cast<std::uint16_t>(object.id)}); // 실제 원본 Draw에 연결된 객체만 같은 TYPE 기준점을 클릭 영역에도 차감한다.
+    const bool native=factoryDisplay_ && (factoryDisplay_->Handles(o::Sid{static_cast<std::uint16_t>(object.id)}) || IsGolem(campaign_->Core().pool.Slot(o::Sid{static_cast<std::uint16_t>(object.id)}))); // 실제 원본 Draw와 골렘의 같은 TYPE 기준점을 클릭 영역에도 차감한다.
     const ScreenPoint offset=native ? ScreenPoint{record.hotspotX,record.hotspotY} : ScreenPoint{}; // 일반 출력에 남은 타입의 기존 그림/클릭 정합성을 유지한다.
     const auto p=ToScreen(object.x,object.y); return {p.x-offset.x+frame.rect.left,p.y-offset.y+frame.rect.top,p.x-offset.x+frame.rect.right+1,p.y-offset.y+frame.rect.bottom+1};
 }
@@ -475,9 +477,9 @@ std::vector<RenderSprite> GameWorld::Sprites() const {
                 add(type,first,object.x,object.y,static_cast<int>(object.owner),depth,false,std::move(layers));continue;
             }
         }
-        ScreenPoint hotspot{}; // 별도0단계 표면인 실제 다리는 같은 원본 TYPE 기준점으로 표시한다.
-        if (assets_.Edition()==o::OriginalEdition::Patch1078 && raw[10]==82 && raw[0]==0xc8 && raw[1]==0x34 && raw[2]==0x50 && raw[3]==0) {
-            const auto& record=assets_.TypeTable().Types()[82];hotspot={record.hotspotX,record.hotspotY};
+        ScreenPoint hotspot{}; // 실제 다리와 골렘은 원본 Draw와 같은 TYPE 발 기준점으로 표시한다.
+        if (assets_.Edition()==o::OriginalEdition::Patch1078 && (IsGolem(raw) || (raw[10]==82 && raw[0]==0xc8 && raw[1]==0x34 && raw[2]==0x50 && raw[3]==0))) {
+            const auto& record=assets_.TypeTable().Types()[raw[10]];hotspot={record.hotspotX,record.hotspotY};
         }
         add(type,static_cast<std::size_t>(object.frame),object.x,object.y,static_cast<int>(object.owner),depth,false,{},hotspot);
     }
