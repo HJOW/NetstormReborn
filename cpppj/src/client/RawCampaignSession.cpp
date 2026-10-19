@@ -352,6 +352,9 @@ struct RawCampaignSession::Impl {
     std::uint32_t archerCommand{0x030000b0}; // 보호 PE의 실제 입력 토큰이다.
     std::uint32_t tutorialHomeCommand{0x020000aeU},tutorialReclaimCommand{0x02000008U}; // 보호PE5429ac/54271c의 같은 입력 토큰 저장소다.
     std::uint32_t tutorialWorkshopType{85},tutorialArcherType{71},tutorialSalvageCommand{0x0200005dU}; // 보호PE5411ac/541174/54286c의 현재 TYPE와 회수 입력이다.
+    std::map<std::uint32_t,std::uint32_t> tutorialTypes{{0x541178,72},{0x541184,75},{0x541188,76},{0x54118c,77},{0x541190,78},
+        {0x541244,123},{0x541258,128},{0x541264,131},{0x541268,132},{0x54126c,133},{0x541288,140},{0x54128c,141},{0x5412ec,165}}; // 보호PE의 현재 TYPE 전역이다. Early2와 공유하는71/85는 기존 저장소에서 읽는다.
+    std::uint32_t tutorialContainedCommand{0x030000b1U},tutorialTechnologyCommand{0x020000b5U},tutorialCaptureCommand{0x020000d7U},tutorialAscendCommand{0x020000dfU}; // 보호PE5429b8/5429c8/542a50/542a70의 실제 큐 사건이다.
     std::unique_ptr<RawCampaignAssetBindings> assetBindings; // 실제 저장 건물 후처리와 Gun/Regular다.
     CanonPlacementPipelineState gameplayPlacement; // 생성용 지형 판정과 구별한 실제 요청/커서의 현재 모드·방향 동맹이다.
     std::array<CanonPlacementIslandRegion,100> gameplayRegions{}; // 같은 원본32바이트 섬 기록의 현재 제한/존재 view다.
@@ -2278,6 +2281,28 @@ std::unique_ptr<RawTutorialTwo> RawCampaignSession::MakeTutorialTwo(RawMissionFr
     auto& denySalvage=reinterpret_cast<std::uint32_t&>(impl_->missionStart.denySalvage); // 같은4BYTE의 대응 unsigned 별칭이다. 부호형 전역의 사본을 만들지 않는다.
     return std::make_unique<RawTutorialTwo>(impl_->core.pool,impl_->core.types,*impl_->totalMade,gate,
         TutorialTwoState{impl_->battleOptions,denySalvage,impl_->tutorialWorkshopType,impl_->tutorialArcherType,impl_->tutorialSalvageCommand},std::move(hooks));
+}
+// 기존 원본 판정기의 하위 조회만 같은 현재 Session에 연결하며 단계/완료 값을 만들지 않는다.
+std::unique_ptr<RawTutorialLater> RawCampaignSession::MakeTutorialLater(RawMissionFrameGate& gate,MissionStartState& state,TutorialLaterHooks hooks) {
+    if (!impl_->loaded || !impl_->login || !impl_->login->options) throw std::logic_error("로그인 설치 전 Early3~6 실제 판정 연결");
+    hooks.findPriest=[this](std::uint32_t owner) { return RawPriestLookup(impl_->core.pool,impl_->priestState.priests).Find(owner); };
+    hooks.graphFor=[this](std::uint32_t sid) { return impl_->anchor->GraphFor(sid); };
+    hooks.productionContains=[this](std::uint32_t type) { return impl_->production->Contains(type); };
+    hooks.indicateTechnology=[this](std::uint32_t type) { impl_->production->IndicateTechnology(type); };
+    hooks.regionFor=[this](float x,float y) { return impl_->ownership->IslandNumber(x,y); };
+    hooks.nearby=[this](float x,float y,std::uint32_t genus) { return std::uint32_t(impl_->damageablePost->GenusAt(x,y,genus).value); };
+    hooks.priestCaptured=[this](std::uint32_t number) {
+        if (number>65535 || number>=impl_->core.pool.Capacity()) throw std::out_of_range("Early3 현재 사제 HP 조회 SID 범위");
+        const Sid sid{static_cast<std::uint16_t>(number)};const auto raw=impl_->core.pool.Slot(sid); // 원본493c00은 포획 완료가 아니라 최대 HP 절반 미만을 판정한다.
+        if (!(impl_->core.types[raw[10]].flags2&0x200000U)) throw std::logic_error("원본 Priest.cpp:1939의 사제 부류 진단");
+        return std::bit_cast<std::int32_t>(Read(raw,26))<impl_->hp.MaxHitPoints(sid)/2;
+    };
+    TutorialLaterState inputs{impl_->battleOptions,impl_->playerState.battleOwner,[this](std::uint32_t address) {
+        if (address==0x541174) return impl_->tutorialArcherType;
+        if (address==0x5411ac) return impl_->tutorialWorkshopType;
+        return impl_->tutorialTypes.at(address);
+    },impl_->contentLifetimeState.notice,impl_->archerCommand,impl_->tutorialContainedCommand,impl_->tutorialTechnologyCommand,impl_->tutorialCaptureCommand,impl_->tutorialAscendCommand}; // 수입과 배치 사건은 기존 실제 생산자와 동일한 전역을 빌린다.
+    return std::make_unique<RawTutorialLater>(impl_->core.pool,impl_->core.types,impl_->players,*impl_->totalMade,gate,state,std::move(inputs),std::move(hooks));
 }
 // 같은 PlayerWorld 생성자/Owner/직접frame0/Pop으로 실제 기술 부모 기록을 설치한다.
 Sid RawCampaignSession::CreatePlayer(std::int32_t owner) { if (!impl_->loaded) throw std::logic_error("미설치 Session의 Player 생성");return impl_->player->Create(owner); }

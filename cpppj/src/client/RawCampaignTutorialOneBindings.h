@@ -1,6 +1,7 @@
-// Early1/2의 공통 프레임과 단계 안내를 같은 실제 Session/Start/UI에 연결한다. 기존 공개 이름은 유지한다.
+// Early1~6의 공통 프레임과 단계 안내를 같은 실제 Session/Start/UI에 연결한다. 기존 공개 이름은 유지한다.
 #pragma once
 #include "client/RawCampaignMissionStartBindings.h"
+#include <array>
 
 namespace netstorm::client {
 // 화면 루프와 실제 입력이 함께 읽는 현재 UI/시계 소비자다.
@@ -8,10 +9,10 @@ struct CampaignTutorialOneEffects {
     o::MissionFrameGateHooks frame; // 실제 시계/정지/UI 조회다. 게임 판정과 Tell 분배는 이 연결부가 공급한다.
     std::function<bool(std::string_view)> tell; // 현재 미션에 존재하는 섹션만 실행한다.
     std::function<void()> closeTransient; // 원본66710의 실제 팝업 Kill 요청이다.
-    std::function<std::uint32_t()> selected; // Early2가 중복 조회하는 현재 실제 선택SID다.
-    std::function<void()> resetSelection,clearSelection; // Early2의004d5c90(0,0,0)→004d5c60을 별도 실제 몸체로 공급한다.
+    std::function<std::uint32_t()> selected; // Early2/5가 중복 조회하는 현재 실제 선택SID다.
+    std::function<void()> resetSelection,clearSelection; // Early2/5의004d5c90(0,0,0)→004d5c60을 별도 실제 몸체로 공급한다.
 };
-// Early1/2만 현재 실제 소비자에 분배한다. Early3~6의 미연결 판정을 빈 성공으로 바꾸지 않는다.
+// Early1~6을 같은 현재 실제 소비자에 분배하며 각 판정기의 고유 입력을 유지한다.
 class RawCampaignTutorialOneBindings {
 public:
     // 같은 장기 Session/Script/Start/gate/state를 빌리며 생성만으로 프레임을 실행하지 않는다.
@@ -28,6 +29,7 @@ public:
     std::uint32_t StageShown() const; // 원본+b4의 마지막 TellStage 반환값을 보고한다.
 private:
     o::MissionFrameGateHooks Hooks(); // 실제 게임/안내 경계를 묶고 UI/시계 경계는 그대로 보존한다.
+    std::uint32_t Run(const InputEvent& event) const; // 프레임은0/0/0, 입력은 실제 세 DWORD를 전달하며 재진입 뒤 바깥 사건을 복원한다.
     RawCampaignSession& session_; // 현재 객체/Player/장부/간헐천의 유일한 저장소다.
     MissionScript& script_; // 현재 미션의 tellAtList/섹션을 직접 읽는다.
     RawCampaignMissionStartBindings& start_; // 같은 Start의 RefreshTellAt을 사용한다.
@@ -37,6 +39,8 @@ private:
     o::RawMissionFrameGate gate_; // 독립 원본328입력으로 검증된 공통 몸체다.
     std::unique_ptr<o::RawTutorialOne> tutorial_; // 현재 장부와 최근 간헐천 목록을 참조하는 원본 판정기다.
     std::unique_ptr<o::RawTutorialTwo> tutorialTwo_; // 같은 gate와 현재 옵션/장부/생산/선택을 쓰는 Early2 판정기다.
+    std::unique_ptr<o::RawTutorialLater> tutorialLater_; // 같은 현재 Start/Player/장부를 사용하는 Early3~6 원본 판정기다.
+    mutable std::array<std::uint32_t,3> event_{}; // 공통 gate 호출 동안만 빌리는 현재 사건이다. x/y의 SID·TYPE 비트를 보존한다.
     mutable std::uint32_t stageShown_{}; // 원본+b4이며 TellStage가 성공 여부를 마지막에 기록한다.
 };
 }

@@ -59,7 +59,7 @@
   "currentSources": {
     "cpppj/src/client/RawCampaignHitBindings.cpp": "fe6c9e3d7ed0e3106cc9773ef1e852985eb0805c38eab283c63c8d82c0f89b83",
     "cpppj/src/client/RawCampaignHitBindings.h": "143b27b14df75669a0a79805c801e51f0aa7d7de90082d881094bb3fdbf1349d",
-    "cpppj/src/client/RawCampaignSession.cpp": "6cf6c4b418c499ea542479dbca179724179ee0bb66e9e9840ff59573eeceb24c",
+    "cpppj/src/client/RawCampaignSession.cpp": "15b33d8277165a48df66bce321193f4470dd4203dc893baab2c7579b7f488dd8",
     "cpppj/src/o/CMakeLists.txt": "531d0fd71823841eb97eebb5046f878c52fa44d82142af3fdff9c0fb68c2497a",
     "cpppj/tests/CMakeLists.txt": "889efbf2ee9336dad4a80cae9bc811c380d9e955b2746743b049efcbae9d27ae",
     "tools/decomp_special_damage.py": "1c92b56b1c000238486f67c6b8ea31eed677e8ce598305d528a24a65cd6c0628",
@@ -583,6 +583,19 @@
           "path": "cpppj/src/client/RawCampaignSession.cpp",
           "previous": "940749f6687b7d65418f3dc7b8b9a75c8cd07fc8ee78cb408480274008b18c88",
           "current": "6cf6c4b418c499ea542479dbca179724179ee0bb66e9e9840ff59573eeceb24c"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 206,
+      "reason": "Early3~6 실제 프레임/세 DWORD 입력 연결의 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "6cf6c4b418c499ea542479dbca179724179ee0bb66e9e9840ff59573eeceb24c",
+          "current": "15b33d8277165a48df66bce321193f4470dd4203dc893baab2c7579b7f488dd8"
         }
       ]
     }

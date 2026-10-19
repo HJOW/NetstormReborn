@@ -21,8 +21,8 @@
     "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
     "cpppj/src/client/GameWorld.h": "d51dfe75377b1afd870bfeb40e26cef9f6233f65217d757135648ce064043a16",
     "cpppj/src/client/GameWorld.cpp": "07aa1f5d4d4a144997fd8627184180914e3357e417016e1e59bb08bed8f4fc07",
-    "cpppj/src/client/RawCampaignSession.h": "2f59bf46bc2f1b0160581baca5f31a4fee3a206d9fa5d8ef942ed3248785750c",
-    "cpppj/src/client/RawCampaignSession.cpp": "6cf6c4b418c499ea542479dbca179724179ee0bb66e9e9840ff59573eeceb24c",
+    "cpppj/src/client/RawCampaignSession.h": "f905619a10b1ecc976bdfc082f8196e3f82190b5f7770828aaf84d00b813c573",
+    "cpppj/src/client/RawCampaignSession.cpp": "15b33d8277165a48df66bce321193f4470dd4203dc893baab2c7579b7f488dd8",
     "cpppj/src/client/RawPriestMenu.h": "5364d92d3af5b9b81a0477df5c005fcfc4a1ef7f6817894bd337250ce4d0e43d",
     "cpppj/src/client/RawPriestMenu.cpp": "f30be4e91f2141d1000f4a75d9f41619024d20f6cb024f68b8ffb483b1eddcf7",
     "cpppj/src/client/RawCampaignLifetimeBindings.h": "6f4be73b52279abf308c8a3e6d8962271560e47c25996f7a03fca09f8cd063e8",
@@ -38,7 +38,7 @@
     "cpppj/src/o/SpStore.cpp": "2319a90807d423b72b0e47e51101bc9ea1618f234c65e26b704c017313f4268a",
     "cpppj/src/o/SquidReward.cpp": "a29c11afe56a477c470956b1ed0a0678d059340806537ce08b43bf6b6aa1375d",
     "cpppj/tests/PriestMenuTests.cpp": "a7b76f4b807941334f1dc6c089b156a59c72347e93b7898ff0bda018c73ca1c4",
-    "cpppj/tests/CampaignSessionTests.cpp": "569c6f2ea791c0cfa6122d0caf569cf411f97e3934ac810b51ef0029818468d8",
+    "cpppj/tests/CampaignSessionTests.cpp": "ea45c674da8aa8f8e51d6afa2975e1a6a5b6f1f15b9f31368bdcbd7b09027801",
     "cpppj/tests/CarrierContentNoticeTests.cpp": "82ed556e50d599e2d08f594e309129a7d92a7d5e994a6a81f794342f518ed76c",
     "cpppj/tests/fixtures/priestmenu-x86.tsv": "2dda11277f2b67f1a69447ea7cb1694e989a08ed513dbf9819e14bfbf3ce6208",
     "cpppj/tests/fixtures/carrier-content-notice-x86.tsv": "c8a21b68d3b0b6e271d04950022366eab9abd3069ff5a9ce3b53746f1fb4d4bf",
@@ -2197,6 +2197,31 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "995750555da9f30df739414ffd02da613be6e93ece9c313f390105b5a7e30ea6",
           "current": "569c6f2ea791c0cfa6122d0caf569cf411f97e3934ac810b51ef0029818468d8"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 206,
+      "reason": "Early3~6 실제 프레임/세 DWORD 입력 연결의 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "2f59bf46bc2f1b0160581baca5f31a4fee3a206d9fa5d8ef942ed3248785750c",
+          "current": "f905619a10b1ecc976bdfc082f8196e3f82190b5f7770828aaf84d00b813c573"
+        },
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "6cf6c4b418c499ea542479dbca179724179ee0bb66e9e9840ff59573eeceb24c",
+          "current": "15b33d8277165a48df66bce321193f4470dd4203dc893baab2c7579b7f488dd8"
+        },
+        {
+          "group": "/sha256",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "569c6f2ea791c0cfa6122d0caf569cf411f97e3934ac810b51ef0029818468d8",
+          "current": "ea45c674da8aa8f8e51d6afa2975e1a6a5b6f1f15b9f31368bdcbd7b09027801"
         }
       ]
     }

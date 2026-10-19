@@ -13,11 +13,11 @@
     "cpppj/src/client/CampaignClientServices.cpp": "6760b4bf315f6f7af71d8163e6258b72a186c2921fb536986399c4b10409ac25",
     "cpppj/src/client/GameWorld.cpp": "07aa1f5d4d4a144997fd8627184180914e3357e417016e1e59bb08bed8f4fc07",
     "cpppj/src/client/GameWorld.h": "d51dfe75377b1afd870bfeb40e26cef9f6233f65217d757135648ce064043a16",
-    "cpppj/src/client/RawCampaignSession.cpp": "6cf6c4b418c499ea542479dbca179724179ee0bb66e9e9840ff59573eeceb24c",
-    "cpppj/src/client/RawCampaignSession.h": "2f59bf46bc2f1b0160581baca5f31a4fee3a206d9fa5d8ef942ed3248785750c",
+    "cpppj/src/client/RawCampaignSession.cpp": "15b33d8277165a48df66bce321193f4470dd4203dc893baab2c7579b7f488dd8",
+    "cpppj/src/client/RawCampaignSession.h": "f905619a10b1ecc976bdfc082f8196e3f82190b5f7770828aaf84d00b813c573",
     "cpppj/src/client/RawSurfaceWorld.cpp": "d6ebba7d5175b98dd5ddabba6de4744a977434913b4eb8b9c2e39068e7b94832",
     "cpppj/src/client/RawSurfaceWorld.h": "278604c3b2b58bb13dfb1d8574efd48cd8d353e71e0c342498286f19f233cd03",
-    "cpppj/src/client/UberGump.cpp": "b2df7ad487f255cacd713430bb0e89d9319aa81340a10241bdf1a056068292c4",
+    "cpppj/src/client/UberGump.cpp": "c160136246b091eed0d2dbdd6d091d068e7c0460191d935c77582ce1c137d932",
     "cpppj/src/o/RawBattleBroadcast.h": "ca7c51f493ccb8662ed6e075d731052519181d116db005d1e126afc5191dc654",
     "cpppj/src/o/RawCarrierSteal.h": "0b1d9a043731c29e1d585d206ef45f26294929baac86bc7268b51ff412ad492d",
     "cpppj/src/o/RawCarrierTransfer.h": "286dbe876336f50cfbba2c87e2ac80eb973eef3c0059cabc78fd898d106ce157",
@@ -28,7 +28,7 @@
     "cpppj/src/zacket/LocalMissionTransport.cpp": "f659b7bbcfcd3923147472a099fcf74c04014e0005eff3e46d273898c4a2d92a",
     "cpppj/src/zacket/LocalMissionTransport.h": "cb2a6db9ba11d2be26699fa0675ecc4a2714969b58c96a94275071fbd3464ee2",
     "cpppj/tests/CMakeLists.txt": "889efbf2ee9336dad4a80cae9bc811c380d9e955b2746743b049efcbae9d27ae",
-    "cpppj/tests/CampaignSessionTests.cpp": "569c6f2ea791c0cfa6122d0caf569cf411f97e3934ac810b51ef0029818468d8",
+    "cpppj/tests/CampaignSessionTests.cpp": "ea45c674da8aa8f8e51d6afa2975e1a6a5b6f1f15b9f31368bdcbd7b09027801",
     "cpppj/tests/LocalMissionTransportTests.cpp": "4091601c094ddeb30f2795aaa7c991770196fcfdf2c1d1ed9da9f124ac8d1938",
     "tools/cpp_campaign_entry_smoke.py": "59b39e067a2e51cc7f6358d8adc198e4cbd5682bc6109e9b1e0407fa7f3550aa",
     "cpppj/tests/PlayerRegularTests.cpp": "c5dc6f89b8ee7e6ed21c7720d1e11a8c019022f079eb7f62024833ed47e56afe",
@@ -3174,6 +3174,37 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "995750555da9f30df739414ffd02da613be6e93ece9c313f390105b5a7e30ea6",
           "current": "569c6f2ea791c0cfa6122d0caf569cf411f97e3934ac810b51ef0029818468d8"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 206,
+      "reason": "Early3~6 실제 프레임/세 DWORD 입력 연결의 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "6cf6c4b418c499ea542479dbca179724179ee0bb66e9e9840ff59573eeceb24c",
+          "current": "15b33d8277165a48df66bce321193f4470dd4203dc893baab2c7579b7f488dd8"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "2f59bf46bc2f1b0160581baca5f31a4fee3a206d9fa5d8ef942ed3248785750c",
+          "current": "f905619a10b1ecc976bdfc082f8196e3f82190b5f7770828aaf84d00b813c573"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/UberGump.cpp",
+          "previous": "b2df7ad487f255cacd713430bb0e89d9319aa81340a10241bdf1a056068292c4",
+          "current": "c160136246b091eed0d2dbdd6d091d068e7c0460191d935c77582ce1c137d932"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "569c6f2ea791c0cfa6122d0caf569cf411f97e3934ac810b51ef0029818468d8",
+          "current": "ea45c674da8aa8f8e51d6afa2975e1a6a5b6f1f15b9f31368bdcbd7b09027801"
         }
       ]
     }

@@ -22,7 +22,7 @@ def probe(mission,clicks,index,output):
     """관측한 실제 클릭 접두만 새 클론에서 재생하고 마지막 입력 다음 프레임을 읽는다."""
     directory=output/mission/str(index)
     directory.mkdir(parents=True,exist_ok=True)
-    base,gap=(20,20) if mission in ('tutorial1','tutorial2') else (4,2) #Early1/2는 원본10호출 안내/7호출 재개가 끝난 뒤 관측한다.
+    base,gap=(20,20) if mission.startswith('tutorial') else (4,2) #Early1~6은 원본10호출 안내/7호출 재개가 끝난 뒤 관측한다.
     frame=base+gap*len(clicks) #기존 미션의 관측/입력 시점은 보존한다.
     steps=[(base+1+i*gap,'click',label) for i,label in enumerate(clicks)] #직전 관측에서 보였던 버튼만 순서대로 클릭한다.
     steps.extend(((frame,'report','current'),(frame,'snapshot',str(directory/'current.bmp'))))
@@ -64,8 +64,8 @@ def check(mission,output):
             if current['phase']==['4'] and current['paused']==['0']:
                 assert '1' in current['priestOwners'] and current['raw_world'][6:9]==['0','0','0'],current
                 assert current['mission_start'][:3]==['1','1','0'],current
-                if mission in ('tutorial1','tutorial2'):
-                    assert current['mission_gate'][:6]==[str(1 if mission=='tutorial1' else 2),'65','0','0','0','1'],current #원본A 안내와 자기 정지의 해제를 확인하고 진입으로 센다.
+                if mission.startswith('tutorial'):
+                    assert current['mission_gate'][:6]==[mission.removeprefix('tutorial'),'65','0','0','0','1'],current #원본A 안내와 자기 정지의 해제를 확인하고 진입으로 센다.
                 assert current['raw_session']==['1','1'] and float(current['raw_sp'][1])==money,current
                 assert sorted(current['raw_technology'])==technology,current
                 assert current['raw_brains'][1]=='0',current #CLI MissionBegin은 이름이 데모여도 로컬 AI를 만들지 않는다.

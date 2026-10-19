@@ -10,7 +10,7 @@
   "status": "벌룬42와 그림자 수명 연결. 전체11스테이지 자연 플레이 목표는 미완료.",
   "currentSources": {
     "cpppj/src/CMakeLists.txt": "dc93067f7759849e630647688fa09684944a0f5aec5bf7d774d429227e600599",
-    "cpppj/src/client/RawCampaignSession.cpp": "6cf6c4b418c499ea542479dbca179724179ee0bb66e9e9840ff59573eeceb24c",
+    "cpppj/src/client/RawCampaignSession.cpp": "15b33d8277165a48df66bce321193f4470dd4203dc893baab2c7579b7f488dd8",
     "cpppj/src/client/RawCampaignPathBindings.cpp": "2fc59e6cd111db8c953e388d1856c8e6103a8b6852461c2d3df89ec84a4f4314",
     "cpppj/src/client/RawCampaignPathBindings.h": "82d9565ece60f24300977681dffdaad57a660fdccca38b4db305d5a1d262b8b0",
     "cpppj/src/o/RawPathRuntime.cpp": "4f051a4e5c50de3a99cb856c80dcccf7988ee1000fec9f66942f6e4e8999e639",
@@ -21,7 +21,7 @@
     "cpppj/src/o/SquidPostPop.cpp": "0e6f552bafeab1be94ba07919b928535e774ce54e121d775df514c9b6645d4e6",
     "cpppj/src/o/SquidPostPop.h": "b4bfb4886068b9dd98bed52b9f56f17e1c25e50b123b4fdd6b165f2054bcdf1d",
     "cpppj/tests/CMakeLists.txt": "889efbf2ee9336dad4a80cae9bc811c380d9e955b2746743b049efcbae9d27ae",
-    "cpppj/tests/CampaignSessionTests.cpp": "569c6f2ea791c0cfa6122d0caf569cf411f97e3934ac810b51ef0029818468d8",
+    "cpppj/tests/CampaignSessionTests.cpp": "ea45c674da8aa8f8e51d6afa2975e1a6a5b6f1f15b9f31368bdcbd7b09027801",
     "cpppj/src/o/RawBalloonFrame.cpp": "71390bf0c48ed94bd6381b15c812b5a6702cd94e02528692f7ac5d1b6f18ab05",
     "cpppj/src/o/RawBalloonFrame.h": "3c50521f9a4a132e33b627fcf609e6028ff2cfbbc6b757434f06b4b3d7b90c8d",
     "cpppj/src/o/RawBalloonBody.cpp": "ae406292ac8d2be18bbdd2aaf46dc0a845e3b06c989d51af4219d722a5881f61",
@@ -30,7 +30,7 @@
     "tools/decomp_balloon_path.py": "804d7ec6d49b050d5139262fd7ca794c08db1deeb0348e9f8f489db21c6984e4",
     "tools/decomp_balloon_body.py": "d4384ab0eb23267a955aa6458a15517444ffe28941961012f2d688b2ff8293f9",
     "tools/decomp_balloon_body_height.py": "79cc5c1919957d33087a4be06726d699a5a130c0f2d8a094dca2ebcea49c5fc3",
-    "tools/cpp_goal_stage_entry_smoke.py": "d1761b737b8aae961f6fa10dd155f32994eeaddfa5d6e50e5375c237f1e311a0"
+    "tools/cpp_goal_stage_entry_smoke.py": "52dae0cac39a586c32a45b60d57425ab794581ebd1fcd67ce49e037d67a78452"
   },
   "nativeReports": {
     "cpppj/balloon-path.json": "673e8391dae024e4f6f3a806651bb91ddf499f715a51478490e3b56d4b695d7d",
@@ -3098,6 +3098,31 @@
           "path": "tools/cpp_goal_stage_entry_smoke.py",
           "previous": "cc303556ea1af7c5c33be84e835e8a8545077603a04600996cb98d962994e690",
           "current": "d1761b737b8aae961f6fa10dd155f32994eeaddfa5d6e50e5375c237f1e311a0"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 206,
+      "reason": "Early3~6 실제 프레임/세 DWORD 입력 연결의 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "6cf6c4b418c499ea542479dbca179724179ee0bb66e9e9840ff59573eeceb24c",
+          "current": "15b33d8277165a48df66bce321193f4470dd4203dc893baab2c7579b7f488dd8"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "569c6f2ea791c0cfa6122d0caf569cf411f97e3934ac810b51ef0029818468d8",
+          "current": "ea45c674da8aa8f8e51d6afa2975e1a6a5b6f1f15b9f31368bdcbd7b09027801"
+        },
+        {
+          "group": "/currentSources",
+          "path": "tools/cpp_goal_stage_entry_smoke.py",
+          "previous": "d1761b737b8aae961f6fa10dd155f32994eeaddfa5d6e50e5375c237f1e311a0",
+          "current": "52dae0cac39a586c32a45b60d57425ab794581ebd1fcd67ce49e037d67a78452"
         }
       ]
     }

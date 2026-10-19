@@ -357,7 +357,7 @@ void UberGump::BeginMission(std::string name,std::uint32_t demo) {
     world_->Session().Cursor().SetEffects(std::move(cursorEffects));
     world_->Session().Cursor().Display().SetExternal([this](std::uint32_t token) { return rawButtons_->GumpDepth(token); },{});
     briefingSections_.clear(); briefingIndex_ = 0;
-    if (missionRuntime_->gate.tutorialNumber>=1 && missionRuntime_->gate.tutorialNumber<=2 && !missionRuntime_->gate.demo) {
+    if (missionRuntime_->gate.tutorialNumber>=1 && missionRuntime_->gate.tutorialNumber<=6 && !missionRuntime_->gate.demo) {
         CampaignTutorialOneEffects frameEffects; // 원본 화면 프레임/입력이 함께 사용하는 현재 UI/시계다.
         frameEffects.frame.gameSeconds=[this] { return client_.Time().game; };
         frameEffects.frame.paused=[this] { return client_.Paused(); };
@@ -367,7 +367,7 @@ void UberGump::BeginMission(std::string name,std::uint32_t demo) {
         frameEffects.frame.blockingGumpOpen=[this] { return rawButtons_->BlockingGumpOpen(); };
         frameEffects.frame.pause=[this] { client_.PushGamePause(); };
         frameEffects.frame.resume=[this] { client_.PopGamePause(); };
-        frameEffects.frame.endDemo=[] { throw std::logic_error("Early1/2 연결에서 데모 종료 도달"); };
+        frameEffects.frame.endDemo=[] { throw std::logic_error("Early1~6 연결에서 데모 종료 도달"); };
         frameEffects.tell=[this](std::string_view section) { return mission_->Section(section) && TryTell(std::string(section),true); };
         frameEffects.closeTransient=[this] { rawButtons_->RequestClosePopups(); };
         // 현재 월드의 선택 getter와 서로 다른 두 원본 선택 정리 몸체를 빌린다.

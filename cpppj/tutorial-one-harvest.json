@@ -9,7 +9,7 @@
   "baseline": "c445683592e712662385e01036cabe2031e65a40",
   "sources": {
     "cpppj/src/client/GameWorld.cpp": "07aa1f5d4d4a144997fd8627184180914e3357e417016e1e59bb08bed8f4fc07",
-    "cpppj/src/client/UberGump.cpp": "b2df7ad487f255cacd713430bb0e89d9319aa81340a10241bdf1a056068292c4",
+    "cpppj/src/client/UberGump.cpp": "c160136246b091eed0d2dbdd6d091d068e7c0460191d935c77582ce1c137d932",
     "cpppj/src/app/main.cpp": "9395c790b1a31c7e36f76b55cea3dd89ee7fdc769e694dc7d2fbdaa7e9eb7cd8",
     "tools/cpp_tutorial_harvest_smoke.py": "58606aae2a86d99360f650fc7e5f27785aabca54b53a0856c17ba7f3a9d0a22b",
     "cpppj/tests/fixtures/tutorial-one-harvest-ui-input.tsv": "9217cefd46f3e245704c0d10904e060327ca67a3417359fa7f450205630ef325",
@@ -17,8 +17,8 @@
     "cpppj/src/o/RawTutorialOne.h": "7c76133f137bcce59a8696ed3d8e2c8228c612d029299ee763d602b2dc126504",
     "cpppj/src/o/RawMissionFrameGate.cpp": "c591ce1c294a8c645008da04a6d5366182d42247f4505716e85d0ae4d6c5f4dc",
     "cpppj/src/o/RawMissionFrameGate.h": "93feacfb8b1fa1276737f8b1af6bc044c1ecda75bc4a82375728d650a43791be",
-    "cpppj/src/client/RawCampaignTutorialOneBindings.cpp": "58ce82df435dcb5979ed0d66c8e73effa5610aeb7bd639d6e6d3020310d2fad9",
-    "cpppj/src/client/RawCampaignSession.cpp": "6cf6c4b418c499ea542479dbca179724179ee0bb66e9e9840ff59573eeceb24c",
+    "cpppj/src/client/RawCampaignTutorialOneBindings.cpp": "c214b1a4ecba704d4b4a7cbad4599dd87a32bf900f2664c53578a481fcd968fa",
+    "cpppj/src/client/RawCampaignSession.cpp": "15b33d8277165a48df66bce321193f4470dd4203dc893baab2c7579b7f488dd8",
     "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
     "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6"
   },
@@ -145,6 +145,31 @@
           "path": "cpppj/src/client/RawCampaignSession.cpp",
           "previous": "940749f6687b7d65418f3dc7b8b9a75c8cd07fc8ee78cb408480274008b18c88",
           "current": "6cf6c4b418c499ea542479dbca179724179ee0bb66e9e9840ff59573eeceb24c"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 206,
+      "reason": "Early3~6 실제 프레임/세 DWORD 입력 연결의 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/sources",
+          "path": "cpppj/src/client/UberGump.cpp",
+          "previous": "b2df7ad487f255cacd713430bb0e89d9319aa81340a10241bdf1a056068292c4",
+          "current": "c160136246b091eed0d2dbdd6d091d068e7c0460191d935c77582ce1c137d932"
+        },
+        {
+          "group": "/sources",
+          "path": "cpppj/src/client/RawCampaignTutorialOneBindings.cpp",
+          "previous": "58ce82df435dcb5979ed0d66c8e73effa5610aeb7bd639d6e6d3020310d2fad9",
+          "current": "c214b1a4ecba704d4b4a7cbad4599dd87a32bf900f2664c53578a481fcd968fa"
+        },
+        {
+          "group": "/sources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "6cf6c4b418c499ea542479dbca179724179ee0bb66e9e9840ff59573eeceb24c",
+          "current": "15b33d8277165a48df66bce321193f4470dd4203dc893baab2c7579b7f488dd8"
         }
       ]
     }

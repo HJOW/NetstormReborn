@@ -38,6 +38,7 @@
 #include "o/RawConstructionBuilder.h"
 #include "o/RawTutorialOne.h"
 #include "o/RawTutorialTwo.h"
+#include "o/RawTutorialLater.h"
 #include "o/RawMissionFrameGate.h"
 #include "client/RawCampaignParticles.h"
 namespace netstorm::o { class RawCarrierSteal; class RawCarrierPickup; class RawCarrierMove; class RawGemReward; struct MissionStartGlobals; struct MissionAiSettingsState; } // 포획 몸체와 미션 시작 전역의 고정 참조만 공개한다.
@@ -179,6 +180,8 @@ public:
     // 최근 간헐천5칸/현재 Player/장부/Graph/SP를 공유하는 Early1 판정기를 만든다. gate는 더 오래 살아야 한다.
     std::unique_ptr<o::RawTutorialOne> MakeTutorialOne(o::RawMissionFrameGate& gate);
     std::unique_ptr<o::RawTutorialTwo> MakeTutorialTwo(o::RawMissionFrameGate& gate,o::TutorialTwoHooks hooks); // 같은 로그인 옵션/범위/장부/금지를 빌리고 선택·Tell·시계만 실제 UI에서 받는다.
+    // Early3~6의 실제 옵션/사제/Graph/생산/HP/지역을 연결한다. UI와 같은 Start 상태는 호출자가 빌려준다.
+    std::unique_ptr<o::RawTutorialLater> MakeTutorialLater(o::RawMissionFrameGate& gate,o::MissionStartState& state,o::TutorialLaterHooks hooks);
     // 원본 로그인/월드 로더가 공유하는 현재 globals.mySubscriber를 읽기만 한다. 별도 캐시를 만들지 않는다.
     std::uint32_t CurrentSubscriber() const;
     // 같은 실제 PlayerWorld의00540c70을 읽는다. 자산/UI 어댑터의 로컬 번호 사본을 사용하지 않는다.

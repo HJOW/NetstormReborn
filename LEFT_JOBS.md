@@ -1,5 +1,16 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-19 단위206 완료: Early3~6 실제 프레임·세 DWORD 입력 연결 (VM-W11-Codex)
+
+- [x] 사용자 `/goal`로 재개했다. AGENTS/양 LEFT를 재독했으며 현재 **VM-W11-Codex / 10.0.0.17**, 마지막 정밀 디컴파일 **VM-W11-Codex / 2026-10-19**로 일치한다. 기준 커밋은 `5afa207a`다. 원본·CD·AGENTS·dotnetpj는 수정하지 않는다.
+- [x] 기존 `RawTutorialLater`의 Early3~6 판정기를 같은 실제 Session/Start/gate에 연결했다. 실제 사제/Graph/생산/기술 알림/지역/finder/최대HP를 사용한다. 원본 `00493c00`은 포획 완료가 아니라 현재 사제 HP가 최대 HP의 절반 미만인지를 비교한다. 원본 입력은 세 DWORD를 유지하며 중첩 호출·예외 뒤 이전 입력을 복원한다. 기존 Early1/2 몸체와 독립 fixture는 유지한다.
+- [x] Release 빌드 및 집중 3검사 실패 0이다. 새 회귀의 `aiOff` 설정 할당·생산 Deck 할당 경계 누락을 기존 실제 Start/생산 검사의 입력 방식으로 고쳤고 중간 실패 두 건을 보존했다. 실제 11개 진입 및 Early2 **A~I/3075SP/회수 75SP/완료 0→1/Tutorial3 2000SP·첫 안내**도 통과했다. 원본 스냅샷 동일이다.
+- [x] 최종 Release build3, 집중3검사 및 **전체1726검사 실패0/172.022초**다. 최종 직렬11진입은 모두 통과했다. 저장 실제 프레임을 원문 SP/기술/사제/정지/Early A단계와 새 읽기 전용 도구 `cpp_tutorial_later_runtime.py`로 재검사했다. 로그 접두는 `extracted/goal-early-later-runtime-20261019-`다. 상세는 [작업 기록](docs/exe/cpp-tutorial-later-runtime-20261019.md)을 참고한다.
+- [x] H:는 **exFAT**다. 병행한 `entry-final`은 Tutorial2/GuardMyBack의 `d/options.cfg` 열기 실패로9/11이며 원본 스냅샷은 동일하다. 다음 `entry-serial`의11진입은 통과했지만 마지막 자동 설정 복구의 **OSError22**로 요약 작성 전에 종료했다. 자동 정리 성공으로 세지 않는다. 실패/기준 옵션 바이트를 보존하고 작업 전 Git의 `-text` 바이트로 수동 복구해 SHA256 **7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4** 일치 및 원본/CD Git 변경 없음을 확인했다. 원래 빈 fullscreenStateFile도 같다. 원인·NTFS 비교·재시도 필요성은 미확정이며 게임 파일 쓰기는 변경하지 않았다.
+- [x] 사용자는 작업 중 Codex의 `Selected model is at capacity. Please try a different model.` 메시지를 보았고 작업 중단 가능성을 알렸다. 이 서비스 오류와 파일 열기/복구 오류의 인과관계는 미확인이다. 프로젝트·PC·파일 시스템의 결함으로 단정하지 않으며 기존 실패 로그도 그대로 보존한다.
+- [x] 현재 핀77보고서213항목은 기준과 일치한 항목만 갱신하고 이전 값/이력을 보존했다. 기존421fixture·원본 판정 몸체는 그대로다. 다른 PC의 과거 산출물이 없어 이전140종 전체 감사 재실행 성공을 주장하지 않는다. 인수인계 뒤 **20261019-14 CP**로 로컬 커밋하며 원격 push는 하지 않는다. 전체 goal은 active/미완료다.
+- [ ] 다음은 Early3 자연 수확/연결/생산/사제 약화·포획/운반·완주, Early4~6 자연 완주(특히 Early5 피격 사건 생산자), F8 Guide/키 분배, 캠페인1-1/1-2·데모3 공통 프레임/전략AI·승리/후속 미션·전체 동일성이다. H: 설정 파일 열기/복구 오류도 후속 확인한다. Early3 초기 실제 좌표는 신전125,92·워크샾129,102·사제129,103·간헐천135,73/109,86/106,103·적 사제138,153이며 첫 수확 목표135,73은 현재 카메라에 보인다. 멀티플레이 희생 보상창의 캠페인/튜토리얼 생략을 유지한다. Early1/2 완주와11단계 진입을 전체 목표 완료로 세지 않는다.
+
 ## 2026-10-19 cpppj 사전 정밀 디컴파일 완료 (VM-W11-Codex)
 
 - [x] `AGENTS.md`, `LEFT_JOBS.md`, `LEFT_JOBS.dotnetpj.md`를 읽고 마지막 정밀 디컴파일 호스트 **HJOW-Athlon / 2026-10-16**와 현재 **VM-W11-Codex**가 다른 것을 확인해, cpppj 작업 전에 패치판 10.78 및 CD판 10.72를 `tools/ghidra/refine_all.ps1`로 재생성했다. Ghidra 12.1.4, OpenJDK 21.0.12, Python 3.12.4를 사용했다.

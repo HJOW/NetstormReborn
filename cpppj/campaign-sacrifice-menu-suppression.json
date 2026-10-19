@@ -947,7 +947,7 @@
   "currentSources": {
     "cpppj/src/client/CampaignUserInputServices.cpp": "7b22008ca86929c1c7523bde5d0d6d265197dc032d2f2502d2e356f6e923f86c",
     "cpppj/src/client/RawCampaignCarrierInput.inc": "5f7586171e8d3fc0b7a12e7bad502a33eeda171a41d859469c03367d930aad1b",
-    "cpppj/tests/CampaignSessionTests.cpp": "569c6f2ea791c0cfa6122d0caf569cf411f97e3934ac810b51ef0029818468d8"
+    "cpppj/tests/CampaignSessionTests.cpp": "ea45c674da8aa8f8e51d6afa2975e1a6a5b6f1f15b9f31368bdcbd7b09027801"
   },
   "binaries": {
     "cpppj/build/bin/Release/NetstormCpp.exe": "68d431b41b6e2f366cc0f33f2b4f1681a67bd70c6f1751ecc837a8ac36d726c5",
@@ -1230,6 +1230,19 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "995750555da9f30df739414ffd02da613be6e93ece9c313f390105b5a7e30ea6",
           "current": "569c6f2ea791c0cfa6122d0caf569cf411f97e3934ac810b51ef0029818468d8"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 206,
+      "reason": "Early3~6 실제 프레임/세 DWORD 입력 연결의 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "569c6f2ea791c0cfa6122d0caf569cf411f97e3934ac810b51ef0029818468d8",
+          "current": "ea45c674da8aa8f8e51d6afa2975e1a6a5b6f1f15b9f31368bdcbd7b09027801"
         }
       ]
     }

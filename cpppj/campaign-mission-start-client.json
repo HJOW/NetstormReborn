@@ -41,17 +41,17 @@
     "cpppj/src/client/CampaignClientServices.h": "69fbabe821be65505d6cef62b3063b3cf49dae3f1a420b3293a9ffcbdcc7238c",
     "cpppj/src/client/GameWorld.cpp": "07aa1f5d4d4a144997fd8627184180914e3357e417016e1e59bb08bed8f4fc07",
     "cpppj/src/client/GameWorld.h": "d51dfe75377b1afd870bfeb40e26cef9f6233f65217d757135648ce064043a16",
-    "cpppj/src/client/RawCampaignSession.cpp": "6cf6c4b418c499ea542479dbca179724179ee0bb66e9e9840ff59573eeceb24c",
-    "cpppj/src/client/RawCampaignSession.h": "2f59bf46bc2f1b0160581baca5f31a4fee3a206d9fa5d8ef942ed3248785750c",
+    "cpppj/src/client/RawCampaignSession.cpp": "15b33d8277165a48df66bce321193f4470dd4203dc893baab2c7579b7f488dd8",
+    "cpppj/src/client/RawCampaignSession.h": "f905619a10b1ecc976bdfc082f8196e3f82190b5f7770828aaf84d00b813c573",
     "cpppj/src/client/RawCampaignSessionLogin.inc": "3a2b40c9dec5df78d6d77cd0b13b5e438b4b21b12e956ba799ede27f51fc8cdc",
-    "cpppj/src/client/UberGump.cpp": "b2df7ad487f255cacd713430bb0e89d9319aa81340a10241bdf1a056068292c4",
+    "cpppj/src/client/UberGump.cpp": "c160136246b091eed0d2dbdd6d091d068e7c0460191d935c77582ce1c137d932",
     "cpppj/src/client/UberGump.h": "eb7f755056912e3b8b71c4a7ab05f2ea8379541fff4313a7f6b0f6b5b8d168e9",
     "cpppj/src/o/RawPlayerParticipation.cpp": "682b1cf72b1889d2bf44540446d5cba40c24679e9e99055b154155224185dec7",
     "cpppj/src/o/RawPlayerParticipation.h": "22d0031dd843733a9452f9ee497d79e7028a40915524bf11ca4ff59b549b1cb4",
     "cpppj/tests/CMakeLists.txt": "889efbf2ee9336dad4a80cae9bc811c380d9e955b2746743b049efcbae9d27ae",
-    "cpppj/tests/CampaignSessionTests.cpp": "569c6f2ea791c0cfa6122d0caf569cf411f97e3934ac810b51ef0029818468d8",
+    "cpppj/tests/CampaignSessionTests.cpp": "ea45c674da8aa8f8e51d6afa2975e1a6a5b6f1f15b9f31368bdcbd7b09027801",
     "cpppj/tests/PlayerParticipationTests.cpp": "bc12a931238ba42474504a56c6217253173f37c43021fb31f203814f20f22e3b",
-    "tools/cpp_goal_stage_entry_smoke.py": "d1761b737b8aae961f6fa10dd155f32994eeaddfa5d6e50e5375c237f1e311a0",
+    "tools/cpp_goal_stage_entry_smoke.py": "52dae0cac39a586c32a45b60d57425ab794581ebd1fcd67ce49e037d67a78452",
     "tools/decomp_player_alliance_packet.py": "217a61ba4193f031ac6c8148ecee828ccd805c20e7c6358afb68d2e998c23285",
     "tools/cpp_demo_start_smoke.py": "fe6456f215631287e5918f0a2fcfb5c27815c1918a75965d353f818c126fd94d"
   },
@@ -4817,6 +4817,43 @@
           "path": "tools/cpp_goal_stage_entry_smoke.py",
           "previous": "cc303556ea1af7c5c33be84e835e8a8545077603a04600996cb98d962994e690",
           "current": "d1761b737b8aae961f6fa10dd155f32994eeaddfa5d6e50e5375c237f1e311a0"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 206,
+      "reason": "Early3~6 실제 프레임/세 DWORD 입력 연결의 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "6cf6c4b418c499ea542479dbca179724179ee0bb66e9e9840ff59573eeceb24c",
+          "current": "15b33d8277165a48df66bce321193f4470dd4203dc893baab2c7579b7f488dd8"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "previous": "2f59bf46bc2f1b0160581baca5f31a4fee3a206d9fa5d8ef942ed3248785750c",
+          "current": "f905619a10b1ecc976bdfc082f8196e3f82190b5f7770828aaf84d00b813c573"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/UberGump.cpp",
+          "previous": "b2df7ad487f255cacd713430bb0e89d9319aa81340a10241bdf1a056068292c4",
+          "current": "c160136246b091eed0d2dbdd6d091d068e7c0460191d935c77582ce1c137d932"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "569c6f2ea791c0cfa6122d0caf569cf411f97e3934ac810b51ef0029818468d8",
+          "current": "ea45c674da8aa8f8e51d6afa2975e1a6a5b6f1f15b9f31368bdcbd7b09027801"
+        },
+        {
+          "group": "/currentSources",
+          "path": "tools/cpp_goal_stage_entry_smoke.py",
+          "previous": "d1761b737b8aae961f6fa10dd155f32994eeaddfa5d6e50e5375c237f1e311a0",
+          "current": "52dae0cac39a586c32a45b60d57425ab794581ebd1fcd67ce49e037d67a78452"
         }
       ]
     }

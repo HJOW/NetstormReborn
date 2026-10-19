@@ -2457,3 +2457,61 @@ TEST_CASE(CampaignTutorialTwo_ActualSessionOptionsAndInitialFrame) {
     CHECK(session.Sp(1)==10000 && session.TotalMade().BuiltForGenus(0x200)==0 && session.MissionStartSettings().denySalvage==1);
     CHECK(!session.Core().bookkeeping.depth && !session.Core().destroy.PreDepth() && !session.Core().destroy.PostDepth());
 }
+
+// 실제 네 미션 로그인/Start와 원문 A안내를 실행하며 Early5의 썬더 투사체→스톤 타워 피격 사건 두 인자가 손실되지 않는지 확인한다.
+TEST_CASE(CampaignTutorialLater_ActualSessionsAndThreeDwordEvents) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);
+    const std::array<float,4> money{2000,2000,4000,7500}; // 보호 영어 Header에서 읽어 별도로 고정한 초기 SP다.
+    // 미션마다 실제 월드/로그인/Start/정지 저장소를 새로 만들며 앞 미션의 상태를 재사용하지 않는다.
+    for (std::uint32_t number=3;number<=6;++number) {
+        SessionServicesFixture external;auto services=external.Services();bool dialog{},nestedTrigger{},nestedObserved{};std::uint32_t depth{};double now=10;std::vector<std::string> pages;RawCampaignTutorialOneBindings* active{}; // 장치/대화상자/시계와 명시 재진입만 검사 외부 경계다.
+        ConfigInterface config([&](std::string_view path) { return assets.files.TryRead(path); });
+        config.Configuration().Assign("DataDir=\"d\"\ncurrentLanguage=\"english\"\nmissionSpec=\"{DataDir}\\{local.1}.{currentLanguage}\"\nfortSpec=\"{DataDir}\\{local.1}.fort\"\n[END]\n");
+        MissionScript script(config,"Tutorial"+std::to_string(number));CHECK(script.Loaded());
+        const auto show=[&](std::string_view name) { if (!script.Section(name)) return false;dialog=true;pages.emplace_back(name);return true; }; // 실제 현재 원문에 있는 섹션만 창으로 반환한다.
+        services.missionOutcome.demo=[] { return 0U; };services.missionOutcome.tellBlocked=[&] { return dialog ? 1U : 0U; };
+        services.missionOutcome.section=show;services.missionOutcome.closeTransient=[] {};services.missionOutcome.onSection=[&] { CHECK(active);active->Gate().PauseForDialog(); };
+        services.ai.participation.addChat=[&](std::uint32_t,std::string_view,std::uint32_t) { ++external.notices; };services.ai.participation.clearChat=[&](std::uint32_t) { ++external.notices; };
+        services.ai.allocationBytes=[](std::span<std::uint8_t> bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0xb3}); }; // aiOff도 현재 사제의 실제 AI 생성/설정 사슬을 방문한다.
+        services.ai.defaultName=[] { return std::string("Default AI"); };services.ai.localTransport=[] { return false; };
+        services.ai.participation.sendAlliance=[&](std::uint32_t,std::uint32_t,std::uint32_t) { ++external.notices; };
+        services.ai.participation.assertion=[](PlayerParticipationAssertion) { throw std::logic_error("Early3~6 실제 시작의 예상하지 않은 참여 진단"); };
+        services.production.allocationBytes=[](std::span<std::uint8_t> bytes) { CHECK(bytes.size()==kProductionDeckBytes);std::fill(bytes.begin(),bytes.end(),std::uint8_t{0xa7}); }; // 실제 Deck 생성자가 보존할 할당 입력만 공급한다.
+        services.production.effects.configInt=[](std::string_view key) { CHECK(key=="getTeleportTechFree");return 0; };
+        services.production.effects.modeAssertion=[] { throw std::logic_error("Early3~6 실제 생산의 Fort/Battle 모드 진단"); };
+        CampaignLoginServices login;login.configInt=[](std::string_view,std::int32_t fallback) { return fallback; };login.wallSeconds=[] { return 100.25; };login.clock=[] { return 100250U; };login.refresh=[] {};login.playerUiBusy=[] { return false; };login.playerNotice=[](std::uint32_t,std::uint32_t,std::uint32_t) {};login.log=[](std::string_view) {};
+        services.localLogin=std::move(login);auto fort=FortTemplate::Parse(assets.files.Read(script.FortPath()),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),script.FortName(),std::move(services));session.LoadLocalConnection();
+        CHECK(session.LocalConnectionPhase()==14 && session.LocalOwner()==1 && !session.MissionPriestDead(1));
+        MissionFrameGateState gate;gate.tutorialNumber=number;MissionStartState startState;CampaignMissionStartEffects startEffects; // 진행 단계와 SP는 검사에서 쓰지 않는다.
+        startEffects.settingsBytes=[](std::uint32_t,std::span<std::uint8_t> bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0xa7}); }; // 실제600BYTE 기본값 생성 전에 미초기화 입력만 공급한다. aiOff 판정은 원본 Start/AI 몸체가 수행한다.
+        startEffects.gameSeconds=[&] { return now; };startEffects.refreshSp=[] {};startEffects.refreshCommandGump=[] {};startEffects.resetCamera=[] {};startEffects.randomGeysers=[] { throw std::logic_error("Early3~6 Start의 세계 랜덤 간헐천 도달"); };
+        RawCampaignMissionStartBindings start(session,script,gate,startState,session.MissionStartSettings(),session.MissionAiSettings(),std::move(startEffects));
+        CampaignTutorialOneEffects effects;effects.frame.gameSeconds=[&] {
+            if (nestedTrigger) { nestedTrigger=false;nestedObserved=true;CHECK(active->Event({0x020000b5U,131,78})==0 && gate.stage=='A'); } // 중첩 사건이 바깥 사건의 TYPE 두 칸을 덮어쓰지 않아야 한다.
+            return now;
+        };effects.frame.paused=[&] { return depth!=0; };effects.frame.dialogsClear=[&] { return !dialog; };effects.frame.knowledgeOpen=[] { return false; };effects.frame.guideOpen=[] { return false; };effects.frame.blockingGumpOpen=[] { return false; };
+        effects.frame.pause=[&] { ++depth; };effects.frame.resume=[&] { CHECK(depth>0);--depth; };effects.frame.endDemo=[] { throw std::logic_error("Early3~6의 데모 종료 도달"); };
+        effects.tell=show;effects.closeTransient=[] {};effects.selected=[] { return 0U; };effects.resetSelection=[] {};effects.clearSelection=[] {};
+        RawCampaignTutorialOneBindings runtime(session,script,start,gate,startState,std::move(effects));active=&runtime;start.Start();CHECK(session.Sp(1)==money[number-3]);
+        // 입력 없는 열 번째 화면 호출에서만 실제 A안내를 표시하고 자기 정지 한 깊이를 보유한다.
+        for (int frame=0;frame<9;++frame) runtime.Frame();
+        CHECK(pages.empty() && gate.lockFrames==1);runtime.Frame();CHECK(pages==std::vector<std::string>{"A."} && depth==1 && dialog && runtime.StageShown()==1);
+        dialog=false;
+        // 현재 초기 자료로는 A판정의 조건이 충족되지 않으며 일곱 번째 빈 화면에서만 재개한다.
+        for (int frame=0;frame<7;++frame) runtime.Frame();
+        CHECK(!depth && !gate.scriptPaused && gate.stage=='A' && session.BattleOption(2)==2);
+        if (number==3) {
+            CHECK(runtime.Event({0x220000b4U,123,456})==0 && gate.stage=='B'); // 실제 수입 사건과 modifier를 함께 전달한다.
+            now=10.5;
+            // 같은 현재 Graph가 다르면 안내 뒤에도 B를 유지한다. 검사에서 다리/진행을 주입하지 않는다.
+            for (int frame=0;frame<10;++frame) runtime.Frame();
+            CHECK(pages.back()=="B." && dialog && depth==1);
+        } else if (number==5) {
+            CHECK(runtime.Event({0x020000b5U,132,77})==0 && gate.stage=='A'); // 잘못된 두 번째 TYPE은 거부한다.
+            CHECK(runtime.Event({0x020000b5U,131,78})==0 && gate.stage=='A'); // 잘못된 첫 번째 TYPE도 거부한다.
+            nestedTrigger=true;
+            CHECK(runtime.Event({0x220000b5U,132,78})==0 && nestedObserved && gate.stage=='B' && gate.lockFrames==10); // 중첩 입력 뒤에도 실제 두 TYPE/명령 modifier를 그대로 써야만 예약한다.
+        }
+        CHECK(session.Sp(1)==money[number-3] && !session.Core().bookkeeping.depth && !session.Core().destroy.PreDepth() && !session.Core().destroy.PostDepth());
+    }
+}
