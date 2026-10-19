@@ -1,0 +1,21 @@
+{
+  "host": "VM-W11-Codex",
+  "date": "2026-10-19",
+  "lastDecompile": "VM-W11-Codex / 2026-10-19",
+  "inputs": 162,
+  "normalReturns": 324,
+  "pixels": 328050,
+  "scope": "10.78 실제4a7db0/+78=4acfe0/+a4=41c100/보호RLE 전체. 픽셀 heap만 선언 경계다. TYPEhotspot(-2,3)·색표0·단위배율 입력이며 CD/자연 낙하 전체의 증거로 확대하지 않는다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "originals/d/_shapes.shp": "c878353c8054208deef832e34c514b30fe670e175505b129333a5728ba70f68e",
+    "tools/decomp_support_capture.py": "00622fa00cf38221722ceb5c731754d31215ca7a9718f472c1c544ad1ccd7965",
+    "tools/decomp_temple_capture.py": "d39f2d4150b2b96eb885e17b1bbcd8f1727e21b9b71a16113b3b04a0e2ece045",
+    "tools/decomp_factory_capture.py": "e5dd681fa0d5aa74779c7873c10814eff9ad15e193f7cb7322661c6ca02e27f1",
+    "tools/decomp_shape_to_buffer_oracle.py": "3499edbde033d4fb5102bfb855a988adc30c8b17aae219d917d81346eea71eec",
+    "tools/shp.py": "4cb8bee6ed773e29e8658ddb315594ebf5ac005ea5b96c6b760a177029515bfd",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "cpppj/tests/fixtures/support-capture-x86.tsv": "507e26dcc4eca8d731180b9713a14c91b7eb12285ad092095cd2bf6c62d6dfc2"
+  }
+}

@@ -136,13 +136,14 @@ struct RawCampaignConstructionBindings::Impl {
     void Destroy(o::Sid sid,std::uint32_t flags) const {
         if (!world.Destroy(sid,flags)) throw std::logic_error("캠페인 받침/간헐천의 실제 가상 삭제 거부");
     }
-    // 실제 Factory의 noIsland와 커서 임시 받침 VT를 구별하며 타입 번호만으로 표면 삭제를 허용하지 않는다.
+    // 실제 표면/받침/종유석의 확인된 가상 표만 표면 수명으로 분배한다. 살아 있는 받침도DropIsland가 정리한다.
     bool Support(o::Sid sid) const {
         const auto raw=core.pool.Slot(sid);const auto table=ConstructionVtable(raw);
         if (raw[10]==state.place.noIslandType && table==o::kPatchNoIslandVtable) return true;
-        // 커서가 만든 void/buried 받침 둘도 실제 표면/공통 수명을 실행한다. 살아 있는 일반 섬으로 범위를 넓히지 않는다.
-        return (raw[11]&4) && (raw[40]&8) && ((raw[10]==core.bridgeState.islandType && table==o::kPatchIslandVtable) ||
-            (raw[10]==core.bridgeState.stalagType && table==o::kPatchStalagVtable));
+        //94의 고유pre=442240·157의 고유post=442640은 기존SurfaceLifecycle이 구별한다.
+        return (raw[10]==core.bridgeState.islandType && table==o::kPatchIslandVtable) ||
+            (raw[10]==core.bridgeState.stalagType && table==o::kPatchStalagVtable) ||
+            (raw[10]==96 && table==0x501dd0U); // 원본96 그루터기의 생성자0은 공통Squid 표/수명이다.
     }
 };
 // 실제세션의장기자료를복사하지않고같은주소의하위모듈을구성한다.
@@ -173,7 +174,7 @@ const o::RawLocalGeyser& RawCampaignConstructionBindings::LocalGeysers() const {
 const o::RawPlayerGeyserBounds& RawCampaignConstructionBindings::PlayerBounds() const { return *impl_->bounds; }
 // 최종화이후실제송신에넘긴동일버퍼만노출한다.
 std::span<const std::uint8_t> RawCampaignConstructionBindings::LastPacket() const { return std::span<const std::uint8_t>(impl_->packet).first(impl_->packetLength); }
-// 실제 noIsland와 임시 받침의 pre/post는 같은 표면/공통 수명을 실행한다. 다른 효과는 기존 분배를 보존한다.
+// 실제 표면/받침/종유석의 pre/post는 같은 표면/공통 수명을 실행한다. 다른 효과는 기존 분배를 보존한다.
 o::SquidDestroyHooks RawCampaignConstructionBindings::DestroyHooks(o::SquidDestroyHooks fallback) const {
     auto hooks=fallback;hooks.emit=[this,surfaces=impl_->core.surfaces.Hooks(),fallback=std::move(fallback)](const o::SquidDestroyEvent& event) {
         if (impl_->Support(event.sid) && (event.effect==o::SquidDestroyEffect::PreDestroy || event.effect==o::SquidDestroyEffect::PostDestroy)) {
@@ -182,7 +183,7 @@ o::SquidDestroyHooks RawCampaignConstructionBindings::DestroyHooks(o::SquidDestr
         if (!fallback.emit) throw std::logic_error("다른 캠페인 건설 자산 삭제 효과 미연결");fallback.emit(event);
     };return hooks;
 }
-// Form 분배의 현재 hooks로 noIsland/임시 받침의 dead/종속/Unpop/깊이/반납을 모두 실행한다.
+// Form 분배의 현재 hooks로 받침들의 dead/종속/Unpop/깊이/반납을 모두 실행한다.
 o::SquidAssetDestroy RawCampaignConstructionBindings::Destroy(o::SquidAssetDestroy fallback) const {
     return [this,fallback=std::move(fallback)](o::Sid sid,std::uint32_t flags,const o::SquidDestroyHooks& hooks) {
         if (impl_->Support(sid)) return impl_->core.virtualDestroy.Destroy(sid,flags,hooks);

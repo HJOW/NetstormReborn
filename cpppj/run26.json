@@ -375,8 +375,8 @@
     "cpppj/src/o/RawAssetPostPop.h": "9052dd2063fd04f1a9674f44ea8b4b100b067a3e551923564588f99fead19fc1",
     "cpppj/src/o/RawAssetRegular.cpp": "e28f9992286e640fd75d87ae958bdc426979f322699fddd032c3ab6e7521136d",
     "cpppj/src/o/RawAssetRegular.h": "86ab6d8d9615facf136080e21e71d7f95a125b4b031169912dbf9599e55448cd",
-    "cpppj/src/o/RawBattleBroadcast.cpp": "0996ea53b855835ead97f022fb3d4024e9511e0d3a4564879d7de24696632864",
-    "cpppj/src/o/RawBattleBroadcast.h": "44e111bf4555900923a54d0f304d6a4327827ebb1af34250e2c54801f501f8f7",
+    "cpppj/src/o/RawBattleBroadcast.cpp": "d59f41110db782f83b522aeb16348225dc04728d38cd766bd706fc57585c9e4c",
+    "cpppj/src/o/RawBattleBroadcast.h": "b434175a1b937a8c34d64ba016f72c73ab4635490d5b7e73f43986610b7240da",
     "cpppj/src/o/RawBridgeConnect.cpp": "6a62e826f3cf57d5a22607ca78909c0626d269f25f0783a800a020ab51518e85",
     "cpppj/src/o/RawBridgeConnect.h": "a008bd46b8049745c28f336ef78b44b7854ada385f83aa85be74356789f8e034",
     "cpppj/src/o/RawBridgeEvents.cpp": "b96043a54eb2df42a4c7dba3e295d40d3c2fa91985ab4e48a914bc0ecbc0fce8",
@@ -716,7 +716,7 @@
     "cpppj/tests/AssetPostPopTests.cpp": "a8651007aad5baef16c7ff19b388844920830f4ab85d0379b29539a569987252",
     "cpppj/tests/AssetRegularTests.cpp": "d3964b2b0b5c9d0a3b00f90dffff0610c16a24d644a9ec2b163ce428c3832bd6",
     "cpppj/tests/AssetTests.cpp": "109d52a1d349f4cd514a20f75479e672d1f54738bc4ff49319106b8412f89c7e",
-    "cpppj/tests/BattleBroadcastTests.cpp": "4fd4e008286d5a28fdfcc56a0d2e5c8f3d4d9e60658905877eb9808e7c66aac4",
+    "cpppj/tests/BattleBroadcastTests.cpp": "7bfa23c46a8f8810fc2b8522f14cff40060f23cbfb9a8752d8294cea4f407a43",
     "cpppj/tests/BridgeConnectTests.cpp": "95dbb840099953c40fd0d28787e46d5f3d48834f82a4a52830273f22cdfb81a9",
     "cpppj/tests/BridgeDecayTests.cpp": "c5c277e10e8bc302c0358592eecec7de5eee6ff8135650f9f2c0c8452e272abe",
     "cpppj/tests/BridgeEventTests.cpp": "8a47c8d947f91b823c215c89b7e3cd8cbdabe952980d0da6d153cf440d5d583c",
@@ -794,7 +794,7 @@
     "cpppj/tests/DamageablePreDestroyTests.cpp": "fb460f14a0ba55da116d52465ecc957e79b69bd331c017491a7ec6604579e445",
     "cpppj/tests/DamageableReleaseTests.cpp": "1b888bf163603aad977e2b11be1bed4f6e2d3f4fa9838db63c77a65a95d909c1",
     "cpppj/tests/DestroyDispatchTests.cpp": "5d20cdbece8fcca3926bf26062ef17fcd2879aa6d02472d63a847fe5993c07fe",
-    "cpppj/tests/DestroyGraphTests.cpp": "74f1c2eec9d3bc5b5953477a78fa333a9ed57f0d74d45fc132bdb2faddb37c73",
+    "cpppj/tests/DestroyGraphTests.cpp": "a3618522256bcd8f3a5313b62d31e18640e7823d481cf08f21e874ec7933c471",
     "cpppj/tests/DestroyLifecycleTests.cpp": "c4249c26d4ccf62b706c85bfe5ffc357d1e306983f845ac7759e804ee12f9050",
     "cpppj/tests/DiscRegularTests.cpp": "c9fa5350657c5478b21d98785fbdca2e7ee3a51d3de461ca3ce95a6cd458a433",
     "cpppj/tests/DisplayTests.cpp": "8b7cb3ad85e3a031550e13a7b607689b7b00b8b8609158060ad7fab5cc1350b2",
@@ -922,7 +922,7 @@
     "cpppj/tests/RunePostPopTests.cpp": "9918c7375cb132f74579c6a3bfe94d0996e4e9f0f17c76abdf06887e933c2470",
     "cpppj/tests/ScreenTests.cpp": "a27a581b1dc7f1ecd059e1bc67bfa0312bf5276b019b5db343e56b30a9f088cc",
     "cpppj/tests/SetFrameTests.cpp": "726e1abc6552843c5d29176debdfc9d21fe2ccb1e95a698bc62e71e68b6ff26b",
-    "cpppj/tests/ShapeToBufferTests.cpp": "0dc5ddc7f71ce2b7a12ff4dcaae45a47b4c7d6fefa676129fb19b5556e3312ab",
+    "cpppj/tests/ShapeToBufferTests.cpp": "d18ebe7ce7877f6d5bc612fde3d55d75a316dc04fe81615cc8b4cb29c3dc5db8",
     "cpppj/tests/SidTests.cpp": "d2f407764113adc143531d21fcd26981bac719e092d1e7697d75446d954db726",
     "cpppj/tests/SoundControlTests.cpp": "2b4966b5bc438cdae5ffecf3b63406e3da510aa1ab5078f9a1f6c80a2fd7803d",
     "cpppj/tests/SoundDeviceTests.cpp": "65b40f8baf9375e303b4ae1bd14ba52ff8affa62ce943358818e1645541f88d1",
@@ -2396,6 +2396,43 @@
           "path": "cpppj/tests/BattleBroadcastTests.cpp",
           "previous": "7074ccd3d1ed4f038fa4c6bc83118f6c714ae85f29af1ce32de3cbe8ea9965a8",
           "current": "4fd4e008286d5a28fdfcc56a0d2e5c8f3d4d9e60658905877eb9808e7c66aac4"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 215,
+      "reason": "실제 섬 정리 방송·파편·표면 수명과 H=8 임시타입 그래프 연결의 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawBattleBroadcast.cpp",
+          "previous": "0996ea53b855835ead97f022fb3d4024e9511e0d3a4564879d7de24696632864",
+          "current": "d59f41110db782f83b522aeb16348225dc04728d38cd766bd706fc57585c9e4c"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/src/o/RawBattleBroadcast.h",
+          "previous": "44e111bf4555900923a54d0f304d6a4327827ebb1af34250e2c54801f501f8f7",
+          "current": "b434175a1b937a8c34d64ba016f72c73ab4635490d5b7e73f43986610b7240da"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/tests/BattleBroadcastTests.cpp",
+          "previous": "4fd4e008286d5a28fdfcc56a0d2e5c8f3d4d9e60658905877eb9808e7c66aac4",
+          "current": "7bfa23c46a8f8810fc2b8522f14cff40060f23cbfb9a8752d8294cea4f407a43"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/tests/DestroyGraphTests.cpp",
+          "previous": "74f1c2eec9d3bc5b5953477a78fa333a9ed57f0d74d45fc132bdb2faddb37c73",
+          "current": "a3618522256bcd8f3a5313b62d31e18640e7823d481cf08f21e874ec7933c471"
+        },
+        {
+          "group": "/files",
+          "path": "cpppj/tests/ShapeToBufferTests.cpp",
+          "previous": "0dc5ddc7f71ce2b7a12ff4dcaae45a47b4c7d6fefa676129fb19b5556e3312ab",
+          "current": "d18ebe7ce7877f6d5bc612fde3d55d75a316dc04fe81615cc8b4cb29c3dc5db8"
         }
       ]
     }

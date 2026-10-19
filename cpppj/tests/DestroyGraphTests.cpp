@@ -6,6 +6,7 @@
 #include <array>
 #include <bit>
 #include <fstream>
+#include <filesystem>
 #include <memory>
 #include <limits>
 #include <stdexcept>
@@ -149,7 +150,7 @@ struct Scene {
     std::uint32_t flags{};
     // config/객체/spot/표는 생성기의 명시적인 입력이며 기대값을 계산하지 않는다.
     Scene(OriginalEdition edition,const std::vector<std::string>& input,const std::vector<std::vector<int>>& nodes,
-        const std::vector<std::vector<int>>& initialSpots,std::string_view records)
+        const std::vector<std::vector<int>>& initialSpots,std::string_view records,bool islandFrame=false)
         :pool(edition,kCapacity,true),types(edition==OriginalEdition::Patch1078 ? 188 : 171),frames(types.size()),unpop(pool,hash,spots),destroy(pool,unpop,types) {
         CHECK(input.size()==25 && nodes.size()==7);const bool patch=edition==OriginalEdition::Patch1078;
         // 실제 Reset/Create와 같은 첫 일곱 client 슬롯만 할당한다.
@@ -191,6 +192,8 @@ struct Scene {
         std::array<std::uint32_t,Graph::kFloodSize> stack{};const auto graphSeed=static_cast<std::uint32_t>(std::stoul(input[22]));
         // 전체 스택의 오래된 DWORD를 native 입력과 맞춘다.
         for (std::size_t i=0;i<stack.size();++i) stack[i]=graphSeed+static_cast<std::uint32_t>(i);
+        // 실제157의 물리 프레임H=8과162의 단일 프레임을 기존 합성 입력과 구별하여 재현한다.
+        if (islandFrame) { frames[157].assign(9,FrameCode{'A','P',1,0});frames[157][8]={'H','P',9,0};frames[162]={{'A','P',1,0}}; }
         graph=std::make_unique<RawGraph>(pool,hash,spots,types,frames,Records(records),stack);
         lifecycle=std::make_unique<SquidDestroyLifecycle>(pool,types,bookkeeping,state,destroy,SquidDeletionHooks{
             [this](const SquidDeletionEvent& event) { Emit(event); },
@@ -264,9 +267,9 @@ struct Scene {
 // 보호 예외는 원본 assert를 실행하지 않고 C++ 입력 경계만 확인한다.
 template<class F> bool Throws(F action) { try { action();return false; } catch (const std::exception&) { return true; } }
 // fixture 전체 상태를 한 장면으로 재생한다.
-std::unique_ptr<Scene> Make(const std::vector<std::string>& row) {
+std::unique_ptr<Scene> Make(const std::vector<std::string>& row,bool islandFrame=false) {
     CHECK(row.size()==14);return std::make_unique<Scene>(row[1]=="originals" ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072,
-        Split(row[3],','),Nodes(row[9]),Nodes(row[10]),row[11]);
+        Split(row[3],','),Nodes(row[9]),Nodes(row[10]),row[11],islandFrame);
 }
 // 첫 patch/x87 묶음에서 지정된 사례만 꺼내 보호 검사를 구성한다.
 const std::vector<std::string>& Case(std::string_view kind,int index) {
@@ -299,6 +302,18 @@ TEST_CASE(DestroyGraph_ActualPreDetachFreeAndSpecialFrame) { Replay("Pre"); }
 TEST_CASE(DestroyGraph_ActualPostFootprintFinderAndSequentialAdd) { Replay("Post"); }
 // actual destroy→pre Graph/장부→Unpop→post Graph/비용→Release 전체를 비교한다.
 TEST_CASE(DestroyGraph_ActualDestroyUnpopGraphAndRelease) { Replay("Destroy"); }
+
+// 실제9→1프레임 치환에서 원본 pre/Destroy의 풀·장부·그래프 전체를 비교한다.
+TEST_CASE(DestroyGraph_ActualIslandH8AndSingleFrameReplacement) {
+    std::ifstream input(std::filesystem::path(NETSTORM_DESTROYGRAPH_FIXTURE).parent_path()/"island-graph-frame-x86.tsv");
+    CHECK(input.good());std::string line;std::size_t count{};
+    // 두 정밀도의24개 독립 원본 결과만 읽고 기존 fixture는 수정하지 않는다.
+    while (std::getline(input,line)) {
+        if (!line.empty() && line.back()=='\r') line.pop_back();if (line.empty() || line.front()=='#') continue;
+        const auto row=Split(line,'\t');auto scene=Make(row,true);scene->Run(row[0]);scene->Check(row);++count;
+    }
+    CHECK(count==24);
+}
 
 // Free는 raw root 번호만 해제하며 noGraph보다 먼저 실행하고 나머지 메모리를 보존한다.
 TEST_CASE(DestroyGraph_FreeGuardsAndUntouchedPayload) {

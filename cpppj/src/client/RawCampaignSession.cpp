@@ -160,7 +160,7 @@ std::uint32_t Read(std::span<const std::uint8_t> raw,std::size_t offset) {
         (static_cast<std::uint32_t>(raw[offset+2])<<16)|(static_cast<std::uint32_t>(raw[offset+3])<<24);
 }
 // 원본 전체 캡처를 대조한 제네레이터·스톤/아이스 타워의 TYPE 기본/빈 추가 그림을 선택한다.
-bool IsPlainBuildingCapture(std::span<const std::uint8_t> raw) { return (raw[10]>=75 && raw[10]<=77 && Read(raw,0)==0x501ea0U) || ((raw[10]==78 || raw[10]==147) && Read(raw,0)==0x50e940U) || (raw[10]==164 && Read(raw,0)==kPatchAltarVtable); } // 제단도+78=TYPE기본/+a4=빈ret8이며 기존 일반 소유자 색표를 그대로 사용한다.
+bool IsPlainBuildingCapture(std::span<const std::uint8_t> raw) { return (raw[10]>=75 && raw[10]<=77 && Read(raw,0)==0x501ea0U) || ((raw[10]==78 || raw[10]==147) && Read(raw,0)==0x50e940U) || (raw[10]==164 && Read(raw,0)==kPatchAltarVtable) || (raw[10]==95 && Read(raw,0)==kPatchStalagVtable) || (raw[10]==157 && Read(raw,0)==kPatchNoIslandVtable); } // 제단/종유석/표면칸도+78=TYPE기본/+a4=빈ret8이며 현재 타입별 색표 유무는 그대로 사용한다.
 }
 // 메뉴의 현재 원문/참조와 자식 우선 소멸 순서를 한 고정 주소에 보관한다.
 struct RawCampaignObjectMenus::Impl {
@@ -1902,7 +1902,13 @@ struct RawCampaignSession::Impl {
         effects.pathType=[this](std::uint32_t type) { return SelectMovementProcessType(core.pool.Edition(),core.types,priestState.movement,type); };
         effects.clearPath=[this](Sid sid,std::uint32_t type) { RawContainedLookup lookup(core.pool,[this](Sid target,std::uint32_t flags) { world.Destroy(target,flags); });static_cast<void>(lookup.Find(sid,type,0,true)); };
         effects.unpop=[this](Sid sid,std::uint32_t flags) { world.Unpop(sid,flags); };effects.pop=[this](Sid sid,float x,float y,std::uint32_t flags) { world.Pop(sid,x,y,flags); };
-        effects.fall=SessionMissing<void,Sid>();effects.sound=SessionMissing<void,float,float>();effects.destroy=SessionMissing<void,Sid,std::uint32_t>();effects.notify=SessionMissing<void,Sid>();effects.broadcast=SessionMissing<void,std::uint32_t,std::uint32_t,std::uint32_t,std::uint32_t>();
+        effects.fall=[this](Sid sid) { static_cast<void>(particles->AddShrapnel(sid,ShrapnelKind::Variant2)); }; // 실제460600의 동일 source/kind2 wrapper다.
+        effects.sound=[this](float x,float y) { if (!services.sound.playOnceAt) throw std::logic_error("섬 낙하 실제 위치 음향 미연결");services.sound.playOnceAt(x,y,soundNames.Lookup("islandFall.wav"),0,0); };
+        effects.destroy=[this](Sid sid,std::uint32_t flags) { static_cast<void>(world.Destroy(sid,flags)); }; // 원래 파생수명/공간/종속해제를 수행한다.
+        effects.notify=[this](Sid sid) { static_cast<void>(priests->FallWalker(sid)); }; // 같은 실제 사제/Carrier 가상c8 낙하 분배다.
+        effects.broadcast=[this](std::uint32_t x,std::uint32_t y,std::uint32_t flags,std::uint32_t owner) {
+            std::array<std::uint8_t,20> packet{};WriteDropIslandPacket(packet,x,y,flags,owner);broadcast->Send(packet); // 원본4e2e30처럼 원격에만 송신하며 현재 로컬 정리는 호출자가 계속한다.
+        };
         buildingEffects=std::make_unique<RawConstructionEffects>(core.pool,core.hash,core.types,core.spots,buildingEffectsState,std::move(effects));
         ConstructionProcessHooks hooks; // 실제 Host/vector가 확보를 수행하며 실패를 예외로 보고한다.
         hooks.reserve=[] { return true; };hooks.reserveSound=[] { return true; };

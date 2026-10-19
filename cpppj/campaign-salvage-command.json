@@ -11,12 +11,12 @@
   "sources": {
     "cpppj/src/CMakeLists.txt": "dc93067f7759849e630647688fa09684944a0f5aec5bf7d774d429227e600599",
     "cpppj/tests/CMakeLists.txt": "83eed7cedab8650ce570f444a5c06efe29b2ce414e3049777221cf672f6e248f",
-    "cpppj/src/client/RawCampaignSession.cpp": "1c10f5c122d5ce55cda1e458d389c0d29ae0caaa3b06c6787eda80ec55d5c8d7",
+    "cpppj/src/client/RawCampaignSession.cpp": "45eb420275ffee8c4e35ad9d1966b792e2e0ddbfdfb1744be59c31db8c3985f4",
     "cpppj/src/client/RawCampaignSession.h": "f905619a10b1ecc976bdfc082f8196e3f82190b5f7770828aaf84d00b813c573",
     "cpppj/src/client/CampaignObjectMenuClient.cpp": "c32a7af93abce548c3aa335015eb160cd1ea40164790aea31ffad2f866745862",
     "cpppj/src/client/CampaignObjectMenuClient.h": "2d88a574f2b2feb27d4d2bf46761f58664521cb24b73af2b301741905b9deb73",
     "cpppj/src/client/UberGump.cpp": "c160136246b091eed0d2dbdd6d091d068e7c0460191d935c77582ce1c137d932",
-    "cpppj/tests/CampaignSessionTests.cpp": "75d29153881bb72c714f125de0633b01311b1ea6b6841b9d44a78c3f544ca5e9",
+    "cpppj/tests/CampaignSessionTests.cpp": "b0f41abb1e4471fa109de00d131a9abba79867fb6422116e90f941b7fe201913",
     "cpppj/src/o/RawSalvageCommand.h": "94784346b6f1887d765a7819ba82536b33d7c210412324e15ed4c60534cae58f",
     "cpppj/src/o/RawSalvageCommand.cpp": "4927b7d72027a059c2c7b016a8dab658cb87c75735a66f6d9e534f246b14aad8",
     "cpppj/tests/SalvageCommandTests.cpp": "17be179074806dbb09d78d6edcffde6d42c38b82943b1a0fbcac57e1232fdba1",
@@ -346,6 +346,25 @@
           "path": "cpppj/src/client/RawCampaignSession.cpp",
           "previous": "933019e945c3cc6616cfe7bdfd7f1657b7d2e7f14cd9154dc21c428ca2fcfbaa",
           "current": "1c10f5c122d5ce55cda1e458d389c0d29ae0caaa3b06c6787eda80ec55d5c8d7"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 215,
+      "reason": "실제 섬 정리 방송·파편·표면 수명과 H=8 임시타입 그래프 연결의 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/sources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "1c10f5c122d5ce55cda1e458d389c0d29ae0caaa3b06c6787eda80ec55d5c8d7",
+          "current": "45eb420275ffee8c4e35ad9d1966b792e2e0ddbfdfb1744be59c31db8c3985f4"
+        },
+        {
+          "group": "/sources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "75d29153881bb72c714f125de0633b01311b1ea6b6841b9d44a78c3f544ca5e9",
+          "current": "b0f41abb1e4471fa109de00d131a9abba79867fb6422116e90f941b7fe201913"
         }
       ]
     }

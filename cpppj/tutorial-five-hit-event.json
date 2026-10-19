@@ -8,7 +8,7 @@
   "sources": {
     "cpppj/src/o/RawMissile.cpp": "66c0881de9826b3027fd43f4e7b53ba717a163aefd76a7c543fc66fabcbb9ac6",
     "cpppj/src/o/RawMissile.h": "19e31c6abf9e0a8ce2f292e47650ec8f924205ce2dff03eb4f9a1c3fbdccae6c",
-    "cpppj/src/client/RawCampaignSession.cpp": "1c10f5c122d5ce55cda1e458d389c0d29ae0caaa3b06c6787eda80ec55d5c8d7",
+    "cpppj/src/client/RawCampaignSession.cpp": "45eb420275ffee8c4e35ad9d1966b792e2e0ddbfdfb1744be59c31db8c3985f4",
     "cpppj/tests/ThunderMissileTests.cpp": "aaa6c74136f2f4c0beaa369b9adca8b906b28ccddea5f75197c1cff2cddf1b51",
     "cpppj/tests/CMakeLists.txt": "83eed7cedab8650ce570f444a5c06efe29b2ce414e3049777221cf672f6e248f",
     "cpppj/tests/fixtures/thunder-hit-event-x86.tsv": "64edac17dc6f25824bfed45afc6537cf120fe9f051fb47c84bceb4bfdbf85f58",
@@ -244,6 +244,19 @@
           "path": "cpppj/src/client/RawCampaignSession.cpp",
           "previous": "933019e945c3cc6616cfe7bdfd7f1657b7d2e7f14cd9154dc21c428ca2fcfbaa",
           "current": "1c10f5c122d5ce55cda1e458d389c0d29ae0caaa3b06c6787eda80ec55d5c8d7"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 215,
+      "reason": "실제 섬 정리 방송·파편·표면 수명과 H=8 임시타입 그래프 연결의 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/sources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "1c10f5c122d5ce55cda1e458d389c0d29ae0caaa3b06c6787eda80ec55d5c8d7",
+          "current": "45eb420275ffee8c4e35ad9d1966b792e2e0ddbfdfb1744be59c31db8c3985f4"
         }
       ]
     }

@@ -78,7 +78,8 @@ private:
     // 원본 일반 탐색기의 단계/행/열/next 순서와 한 칸 넓은 끝 버킷을 유지한다.
     void Region(Sid sid,const RawGraphPop* pop,std::span<const std::uint8_t> spots,Plan& plan) const;
     // 삭제의 일반 finder는 네 단계/체인 순서와 가로·세로 경계 접촉 교차 XOR를 사용한다.
-    std::vector<std::uint16_t> DetachConnections(const SurfaceObject& source,const SurfaceFinder& finder) const;
+    // sourceFrameValid가 false이면 원본 마스크가 방향 코드를 덮어쓰는 연결만 해석한다.
+    std::vector<std::uint16_t> DetachConnections(const SurfaceObject& source,const SurfaceFinder& finder,bool sourceFrameValid) const;
     // 검사한 슬롯의 graph 필드 외에는 쓰지 않는다.
     void Commit(const Plan& plan);
     // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.

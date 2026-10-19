@@ -69,9 +69,9 @@ public:
     const o::RawPlayerGeyserBounds& PlayerBounds() const;
     // 원본 임시512바이트 가운데 마지막 송신 길이만 빌린다. 다음 확정 때 같은 버퍼가 덮어써진다.
     std::span<const std::uint8_t> LastPacket() const;
-    // 실제 noIsland VT의 Pre/Post만 기존 표면 수명으로 분배하고 종속/전송/선택은 현재 분배를 보존한다.
+    // 실제 표면/받침/종유석의 Pre/Post를 기존 표면 수명으로 분배하고 다른 파생 효과는 보존한다.
     o::SquidDestroyHooks DestroyHooks(o::SquidDestroyHooks fallback) const;
-    // 예측 Clear가 요청한 실제 noIsland VT의 공통 가상 삭제를 같은 Pool/Graph/종속 수명에 연결한다.
+    // 예측 Clear와 실제DropIsland가 요청한 검증된 받침들의 삭제를 같은Pool/Graph/종속 수명에 연결한다.
     o::SquidAssetDestroy Destroy(o::SquidAssetDestroy fallback) const;
     // 같은 월드의 생성/삭제/공간을 공유하는지 상위 연결에서 확인한다.
     const o::SidPool& Pool() const;

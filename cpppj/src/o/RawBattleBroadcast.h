@@ -12,6 +12,8 @@ using BattlePacketSend=std::function<void(std::span<const std::uint8_t>)>;
 using BattlePacketPeers=std::array<BattlePacketSend,9>;
 // 실제40a890/45c94d/45cc4e의 헤더·SID·명령 DWORD만 쓴다. caller가 쓰지 않는+8/+16은 입력 바이트를 유지한다.
 void WriteFlyerCommandPacket(std::span<std::uint8_t> packet,Sid parent,std::uint32_t command);
+// 실제46e6e7/40a740의20BYTE packet35를 쓴다. 좌표는 기존DropIsland가 만든16.16 DWORD 비트다.
+void WriteDropIslandPacket(std::span<std::uint8_t> packet,std::uint32_t x,std::uint32_t y,std::uint32_t flags,std::uint32_t owner);
 // 같은 Player 기록/연결 객체를 매 순회 다시 읽는다. 단독 캠페인은 실제 NULL 연결 표를 사용한다.
 class RawBattleBroadcast {
 public:

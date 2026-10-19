@@ -17,8 +17,8 @@
     "cpppj/src/o/RawFactoryDraw.h": "deb03d6428d34ac87172e9bfa46d7862ddef450014bb9040d08508212b90b096",
     "cpppj/src/o/SquidDisplay.cpp": "adff73d1c710cf295aed17e2a06cb90294e1399e5e455d423659f37c336f3dc6",
     "cpppj/src/client/SpriteDraw.cpp": "8946ce7549a2b399a0f337382e6de316d3d7a7abdfa43194cd8bce3b863297a8",
-    "cpppj/src/client/RawCampaignSession.cpp": "1c10f5c122d5ce55cda1e458d389c0d29ae0caaa3b06c6787eda80ec55d5c8d7",
-    "cpppj/tests/ShapeToBufferTests.cpp": "0dc5ddc7f71ce2b7a12ff4dcaae45a47b4c7d6fefa676129fb19b5556e3312ab",
+    "cpppj/src/client/RawCampaignSession.cpp": "45eb420275ffee8c4e35ad9d1966b792e2e0ddbfdfb1744be59c31db8c3985f4",
+    "cpppj/tests/ShapeToBufferTests.cpp": "d18ebe7ce7877f6d5bc612fde3d55d75a316dc04fe81615cc8b4cb29c3dc5db8",
     "cpppj/tests/fixtures/tutorial-five-production-ui-input.tsv": "42495ce52f6a501380a0c1f32347fc057c1a0d6e99ab821a1b5f107f637f8042",
     "tools/cpp_tutorial_five_production_smoke.py": "9af81e71f79df2f180544b11666f2753d7711c642c9826f798227d69e222eff4",
     "docs/exe/cpp-early5-production-20261019.md": "91077f74fd4271fb5b58d068c5662fb402321f825c8dcdba894d42c191f42f7a"
@@ -216,6 +216,25 @@
           "path": "cpppj/src/client/RawCampaignSession.cpp",
           "previous": "933019e945c3cc6616cfe7bdfd7f1657b7d2e7f14cd9154dc21c428ca2fcfbaa",
           "current": "1c10f5c122d5ce55cda1e458d389c0d29ae0caaa3b06c6787eda80ec55d5c8d7"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 215,
+      "reason": "실제 섬 정리 방송·파편·표면 수명과 H=8 임시타입 그래프 연결의 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/sources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "1c10f5c122d5ce55cda1e458d389c0d29ae0caaa3b06c6787eda80ec55d5c8d7",
+          "current": "45eb420275ffee8c4e35ad9d1966b792e2e0ddbfdfb1744be59c31db8c3985f4"
+        },
+        {
+          "group": "/sources",
+          "path": "cpppj/tests/ShapeToBufferTests.cpp",
+          "previous": "0dc5ddc7f71ce2b7a12ff4dcaae45a47b4c7d6fefa676129fb19b5556e3312ab",
+          "current": "d18ebe7ce7877f6d5bc612fde3d55d75a316dc04fe81615cc8b4cb29c3dc5db8"
         }
       ]
     }

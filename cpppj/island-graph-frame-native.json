@@ -1,0 +1,76 @@
+{
+  "host": "VM-W11-Codex",
+  "cases": 24,
+  "normalReturns": 24,
+  "assertions": 0,
+  "native": {
+    "Destroy": 12,
+    "Unpop": 12,
+    "Release": 12
+  },
+  "lifecycle": {
+    "Pre": 24,
+    "ai": 12,
+    "Post": 12
+  },
+  "graph": {
+    "Detach": 20,
+    "Begin": 30,
+    "Next": 70,
+    "Footprint": 158,
+    "Allocate": 28,
+    "Flood": 28
+  },
+  "substitutions": {
+    "selected": 36,
+    "clear": 12,
+    "log": 40
+  },
+  "sha256": {
+    "cpppj/tests/fixtures/island-graph-frame-x86.tsv": "f35b9ff0a1fe7390012f28ad8c7a8008864c8277f83cee850a54457cf6a5efd1",
+    "extracted/bridgeeffects/originals/functions.tsv": "485cd05093884690ffc94c433c4e040282cd6ca26eb7da469732f74e1c983cec",
+    "extracted/creation/originals/functions.tsv": "42b14fee0b262fd92c833ec51db3cf772e92fd56b6ccbdc1c589955eb347ccb7",
+    "extracted/destroy/originals/functions.tsv": "9d33d7cbb6f48eda2ca71f17775579a6b4c2f5d711fc0713274d4182f07b7e09",
+    "extracted/destroygraph/originals/functions.tsv": "2f949920e06cf24cf3a83bf050050e124e2ab61159431b8d7208c6830d378ae1",
+    "extracted/destroylifecycle/originals/functions.tsv": "35cb83cfc94dba63a72ea449e08a3473f64fcc5a6e283758a8856790e15561d3",
+    "extracted/finder/originals/functions.tsv": "7ee781ffc6200c8f6b231381c4dae7ce88e5c0158f4b8effb222090bf8345704",
+    "extracted/graphremove/originals/functions.tsv": "804ff5b28df9aeec65f968d26e660e266ed4a160a64a5d44c223f222219cc3b4",
+    "extracted/graphremove/originals/geometry/functions.tsv": "ced17335d5e0a8b25e97ae7d05019f43bdaef60955b0a024ca21d2096713587e",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/sid/originals/functions.tsv": "3034dd0d393ebdfd77f2e9fafe8a5b252d5437f1e71ab94541cc229e8ef8694b",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_bridge_oracle.py": "cee394dff509d66027b90ae940c0f57c65d7f35847820f3a3737dafd9f265c87",
+    "tools/decomp_creation_oracle.py": "646adc1ca6c9eaeac08a9c700324ae05ba1727416bc62070e0a066afc07dc053",
+    "tools/decomp_destroy_oracle.py": "ce95700c70b5d40d98145b2e2a8d183e2ac69bf4116c5158cf2e85685caf0cd7",
+    "tools/decomp_destroygraph_oracle.py": "8572c39caeaaf98e573057e2401bbf5b409c46d55ec6661c5f1f18ca749f0fe1",
+    "tools/decomp_destroylifecycle_oracle.py": "fabd346ad623b4e43e2773a03a4d778ad75a29ed514a180b2cd9b5158195213b",
+    "tools/decomp_display_oracle.py": "bd9a42431cdef96d3fb13accf78d5a0d6a3155243b1bbc0362d58e79f662f7a4",
+    "tools/decomp_graph_oracle.py": "fe646925d04131f2924dac87dfe4b1bd8da717b8061f209c0085f170cbbceb51",
+    "tools/decomp_graphremove_oracle.py": "d2c68d51d1516f28e648abdb519c63db40b91baae7fa05f00acbc48145bbb06a",
+    "tools/decomp_island_graph_frame.py": "2ac19800f3ded880520a6dcd7a362df95e39b2db40c5bb131553aeb38fd1329d",
+    "tools/decomp_oracle.py": "227b9a8b703cfd81d05ac4a7c72a42eaecf9c804fc028680466a19a591f2335d",
+    "tools/decomp_pop_oracle.py": "2a50f34e6b229d5ea4611f7073877ca1e165e0bf841f32c83f17d300b6113bb6",
+    "tools/decomp_postpop_oracle.py": "43dd9adffc6e2b3a1bd4a1fb06563f848518d8082014f2346613243183535129",
+    "tools/decomp_rawgraph_oracle.py": "5f512692a511993077de48375510b2488008b57d382509d88860c5689d99eb30",
+    "tools/decomp_sid_oracle.py": "7bfd7b95b26724b1793d407a4ad6654972b2aaa3bf04e4c206cc357670b68dff",
+    "tools/decomp_surface_oracle.py": "5a01b681c51fe9c59e25573a66bea0c31f3a20fa16e6d46f7e399124312067d5"
+  },
+  "limits": [
+    "실제 공통 pre/Destroy와 Graph/finder/타입 getter; 합성 풀/이웃/장부, 실제 프레임 수9/1 및 H번호8",
+    "가상 UI/소리/환급/로그는 기존 실행기의 외부 사건 경계; 게임/OS/창 실행 없음",
+    "기존 destroygraph fixture는 변경하지 않음; frame8에서 임시 타입의 프레임 표를 무조건 해석해서는 안 됨"
+  ],
+  "integration_updates": [
+    {
+      "unit": 215,
+      "kind": "Korean loop comments only; frozen input/output and counts unchanged",
+      "pins": [
+        {
+          "path": "tools/decomp_island_graph_frame.py",
+          "previous": "ad427d1db94d5380b70747b11d18e8b63f7b57036eea8de68c960e523d86bbd9",
+          "current": "2ac19800f3ded880520a6dcd7a362df95e39b2db40c5bb131553aeb38fd1329d"
+        }
+      ]
+    }
+  ]
+}

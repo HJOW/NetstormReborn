@@ -27,7 +27,7 @@
     "cpppj/src/client/VFXDraw.cpp": "1de6889912f1f18cc83e0efc7cc33a43216e063730aaca7917aad8bf5a8c37b7",
     "cpppj/src/client/VFXDraw.h": "3ac09a428f585449877a89cb3fbd8a1f92755bb635c8c5778519f827ce3cf9bc",
     "cpppj/tests/fixtures/shape-to-buffer-x86.tsv": "d92bc1a292b8f44cb87ec59ffec881f7e97db4c4b6680af92ad554af2d7c89c1",
-    "cpppj/tests/ShapeToBufferTests.cpp": "0dc5ddc7f71ce2b7a12ff4dcaae45a47b4c7d6fefa676129fb19b5556e3312ab",
+    "cpppj/tests/ShapeToBufferTests.cpp": "d18ebe7ce7877f6d5bc612fde3d55d75a316dc04fe81615cc8b4cb29c3dc5db8",
     "extracted/burning-frame-helper/originalCD/creation.c": "79332ff09557a261e3148a25cf776e09fff3d59ef0bb435867f7bec8c80ea9ab",
     "extracted/burning-frame-helper/originalCD/functions.tsv": "fe7c50de077cff91478186174818f54286502c8420581b1da66ef9acc88ff685",
     "extracted/burning-frame-helper/originals/creation.c": "a61efc5fe47da67c8ef639024a9bed67b231e7886727e544d414c9a83062c5cf",
@@ -124,6 +124,19 @@
           "path": "cpppj/src/client/SquidRenderer.cpp",
           "previous": "2f022fb49565f71bf9aa7a146b023912487f2e2ecffe42b4ac3445bf905bbf7f",
           "current": "ff98d57e03dd1087ee34ac3012fe76c359877055dbdbe70a16ff465fa6c85a6f"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 215,
+      "reason": "실제 섬 정리 방송·파편·표면 수명과 H=8 임시타입 그래프 연결의 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/files",
+          "path": "cpppj/tests/ShapeToBufferTests.cpp",
+          "previous": "0dc5ddc7f71ce2b7a12ff4dcaae45a47b4c7d6fefa676129fb19b5556e3312ab",
+          "current": "d18ebe7ce7877f6d5bc612fde3d55d75a316dc04fe81615cc8b4cb29c3dc5db8"
         }
       ]
     }

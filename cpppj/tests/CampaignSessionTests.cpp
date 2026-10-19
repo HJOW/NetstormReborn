@@ -105,6 +105,42 @@ TEST_CASE(CampaignSession_SunFlyerBombClearsActualSessionLifetime) {
     }
     CHECK(deletes==2);
 }
+
+CellPoint EmptySessionSupport(const RawWorldCore& core); // 아래 공용 탐색기의 같은 실제 빈3×3 영역을 사용한다.
+// 실제 확정된3×3 받침 위 일반 건물 삭제가9칸/받침/종유석·낙하 파편을 함께 정리하는지 검사한다.
+TEST_CASE(CampaignSession_ActualDropIslandSupportAndParticles) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
+    std::vector<Sid> lost;auto services=external.Services();services.unitLost=[&](Sid sid) { lost.push_back(sid); }; // 실제 삭제가 요청하는 외부UI 통지를 관찰한다.
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));session.Load();auto core=session.Core();
+    const auto point=EmptySessionSupport(core); // 같은 실제 지도에서 빈3×3 영역을 명시 입력으로 선택한다.
+    CHECK(session.ConfirmSupport(static_cast<float>(point.x),static_cast<float>(point.y)));
+    const auto packet=session.Construction().LastPacket();CHECK(packet.size()==45 && packet[26]==9);if (packet.size()!=45) return;
+    float right=-10000,bottom=-10000; // 실제 확정된9칸에서 소유자 전파/섬 정리의 오른쪽 아래 기준점을 읽는다.
+    // 요청 좌표와 표면 묶음 기준점이 같다고 가정하지 않는다.
+    for (std::size_t index=0;index<9;++index) {
+        const Sid sid{static_cast<std::uint16_t>(Get(packet,27+index*2,2))};const auto raw=core.pool.Slot(sid);right=std::max(right,std::bit_cast<float>(Get(raw,14)));bottom=std::max(bottom,std::bit_cast<float>(Get(raw,18)));
+    }
+    std::printf("받침 회귀 요청%d,%d / 실제 오른쪽아래%g,%g\n",point.x,point.y,right,bottom);
+    session.World().SetSupportOwner(right,bottom,1);
+    std::vector<Sid> family;std::size_t surfaces{},islands{},stalags{}; // 방금 확정한 현재 소유자의 실제 부품이다.
+    // 생성/소유자 전파가 만든 실제 부품만 모으며 별도 합성 표면을 만들지 않는다.
+    for (const auto& object:session.World().Objects()) {
+        if (object.object.owner!=1 || object.object.x<right-2 || object.object.x>right || object.object.y<bottom-2 || object.object.y>bottom) continue;
+        if (object.object.type==157) ++surfaces;else if (object.object.type==94) ++islands;else if (object.object.type==95) ++stalags;else continue;family.push_back(object.sid);
+    }
+    CHECK(surfaces==9 && islands==1 && stalags==1);if (family.size()!=11) return;
+    const auto source=session.World().Create(75,0);CHECK(source.value>=core.pool.Layout().serverFirst && core.processState.server);core.owner.Set(source,1);session.World().Pop(source,right,bottom,0); // 실제 서버 삭제로 방송 관문까지 실행한다. extra80은 원본DropIsland 관문이 아니다.
+    const auto sp=session.Sp(1);const auto notices=external.notices;CHECK(session.World().Destroy(source,0));CHECK((core.pool.Slot(source)[11]&3U)==3U);
+    // 모든 부품의 실제 반납과 공통 삭제 깊이를 확인한다.
+    for (const auto sid:family) CHECK((core.pool.Slot(sid)[11]&3U)==3U);
+    std::size_t particles{}; // 같은 실제 표시 등록표에 존재하는 종류16을 센다.
+    // 파편은 별도 관찰 배열이 아니라 현재Host에서 조회한다.
+    for (const auto token:session.Particles().Rendering().Slots()) {
+        const auto* fields=session.Particles().Rendering().Lookup(token);if (!fields) continue;
+        if (dynamic_cast<ShrapnelVisualProcess*>(core.processes.FromForm(Sid{static_cast<std::uint16_t>(fields->form)}))) ++particles;
+    }
+    CHECK(particles==10 && session.Sp(1)==sp && external.notices>notices && std::find(lost.begin(),lost.end(),source)!=lost.end());CHECK(!core.destroy.PreDepth() && !core.destroy.PostDepth() && !core.bookkeeping.depth);
+}
 // 실제 원본 기본값 몸체로600바이트를 준비하고 명시 프로필만 덮어쓴다. 전략 프레임을 실행하는 입력은 아니다.
 std::array<std::uint8_t,RawMissionAiSettings::kSize> SessionAiSettings(std::string_view name,std::string_view technology,std::uint32_t allies=0) {
     std::array<std::uint8_t,RawMissionAiSettings::kSize> profile;profile.fill(0xa7); // 생성자가 보존해야 할 미초기화 입력 바이트다.

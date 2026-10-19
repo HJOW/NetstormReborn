@@ -2,6 +2,7 @@
 #include "RawSceneSupport.h"
 #include "o/RawBattleBroadcast.h"
 #include <sstream>
+#include <filesystem>
 using namespace netstorm::test::rawscene;
 namespace {
 // 원본 가상 송신은 명시 관찰 경계이며 같은 packet 인자와 후보 순서를 기록한다.
@@ -76,4 +77,32 @@ TEST_CASE(BattleBroadcast_FlyerCommandPeersAndCapacity) {
     peers[1]=[&](auto) { ++localCalls; };peers[2]=[&](auto bytes) { CHECK(bytes.size()==20 && bytes[1]==0x86 && bytes[4]==50 && bytes[12]==3);++remoteCalls; };
     WriteFlyerCommandPacket(packet,Sid{50},3);RawBattleBroadcast broadcast(OriginalEdition::Patch1078,players,peers,local,server);broadcast.Send(packet);
     CHECK(localCalls==0 && remoteCalls==1);
+}
+
+// 원본 caller의336입력·두 정밀도20BYTE 전체와 뒤쪽 canary를 대조한다.
+TEST_CASE(BattleBroadcast_DropIslandNativePacket336) {
+    const auto path=(std::filesystem::path(__FILE__).parent_path()/"fixtures/drop-island-packet-x86.tsv").string();std::size_t count{}; // 별도 동결한 원문 경로와 고유 입력 수다.
+    // 좌표 변환은 원문이 관측한DWORD로 공급하고 작성기의 전 필드를 비교한다.
+    for (const auto& row:LoadFixture(path.c_str()).rows) {
+        const auto input=Split(row[0],',');std::array<std::uint8_t,24> packet;packet.fill(static_cast<std::uint8_t>(Number(input[4])));
+        WriteDropIslandPacket(packet,Number(row[1]),Number(row[2]),Number(input[2]),Number(input[3]));
+        CHECK(row[3]==row[4] && Hex(std::span<const std::uint8_t>(packet).first(20))==row[3]);
+        // 원본20BYTE 밖은 caller의 기존값 그대로 남겨야 한다.
+        for (std::size_t index=20;index<packet.size();++index) CHECK(packet[index]==Number(input[4]));
+        ++count;
+    }
+    CHECK(count==336);
+}
+
+// 용량 거부는 쓰기 전이며 기존 원격 전용 방송 분배를 사용한다.
+TEST_CASE(BattleBroadcast_DropIslandPeersAndCapacity) {
+    std::array<std::uint8_t,19> shortPacket;shortPacket.fill(0xa5);bool rejected{}; // 부분 헤더 손상을 확인할 입력이다.
+    try { WriteDropIslandPacket(shortPacket,0,0,0,0); }catch (const std::out_of_range&) { rejected=true; }
+    CHECK(rejected);
+    // 실패한 저장소의 모든 바이트를 검사한다.
+    for (const auto byte:shortPacket) CHECK(byte==0xa5);
+    std::vector<std::uint8_t> players(9*0xb4);BattlePacketPeers peers;std::uint32_t local=1;bool server=true;std::size_t own{},remote{};
+    players[0xb4+0x50]=players[2*0xb4+0x50]=1;peers[1]=[&](auto) { ++own; };
+    peers[2]=[&](auto packet) { CHECK(packet.size()==20 && packet[1]==0x35 && Get(packet,4)==0x87654321U && Get(packet,8)==0xffff0000U && Get(packet,12)==0x1050 && Get(packet,16)==8);++remote; };
+    std::array<std::uint8_t,20> packet{};WriteDropIslandPacket(packet,0x87654321U,0xffff0000U,0x1050,8);RawBattleBroadcast body(OriginalEdition::Patch1078,players,peers,local,server);body.Send(packet);CHECK(own==0 && remote==1);
 }

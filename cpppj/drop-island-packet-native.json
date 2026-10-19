@@ -1,0 +1,19 @@
+{
+  "host": "VM-W11-Codex",
+  "date": "2026-10-19",
+  "lastDecompile": "VM-W11-Codex / 2026-10-19",
+  "inputs": 336,
+  "segmentCompletions": 672,
+  "normalReturns": 0,
+  "instructions": 57504,
+  "scope": "46e6e7..46e732 실제 caller/40a740/4df230/4e49c0, 전송4e2e30은 인수 경계다. server/flags 관문은 구간 앞이므로 기존constructioneffects 전체 fixture에 맡긴다. CD·전체46e6c0 반환·자연 전투 완료로 확대하지 않는다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_drop_island_packet.py": "30ff350c565224f95f3d2132302db5ae2bafe5d7336228cbd64a2a0d1197fe52",
+    "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+    "tools/decomp_cursor_position.py": "e15bcdbc4c6be9c131c30f15416c945d650dba9f7dc6def404b47f63c635c212",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "cpppj/tests/fixtures/drop-island-packet-x86.tsv": "f53e6551d16c48da70b0bf4878ef951cb293bf9888fcc009fc985d3032094972"
+  }
+}

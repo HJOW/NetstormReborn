@@ -13,7 +13,7 @@
     "cpppj/src/o/RawCarrierTransfer.h": "286dbe876336f50cfbba2c87e2ac80eb973eef3c0059cabc78fd898d106ce157",
     "cpppj/src/o/RawCarrierTransfer.cpp": "4e434098a1b784416e2a39a54baaa83cb4363c888e5036418b1db52df0d8d4e4",
     "cpppj/src/client/RawCampaignSession.h": "f905619a10b1ecc976bdfc082f8196e3f82190b5f7770828aaf84d00b813c573",
-    "cpppj/src/client/RawCampaignSession.cpp": "1c10f5c122d5ce55cda1e458d389c0d29ae0caaa3b06c6787eda80ec55d5c8d7",
+    "cpppj/src/client/RawCampaignSession.cpp": "45eb420275ffee8c4e35ad9d1966b792e2e0ddbfdfb1744be59c31db8c3985f4",
     "cpppj/src/client/RawCampaignMotionBindings.h": "6b196fba2833df49bb4882300dbeded4ff68bb2e340b8881338c19c17ef7060d",
     "cpppj/src/client/RawCampaignMotionBindings.cpp": "532ab06cd71c6eb3eba5aa042a6204e59c282014b13b68400241c2079a2556bb",
     "cpppj/src/client/RawCampaignPathBindings.h": "82d9565ece60f24300977681dffdaad57a660fdccca38b4db305d5a1d262b8b0",
@@ -24,7 +24,7 @@
     "cpppj/src/o/ContentFormHost.cpp": "cb21effe599b73f6ca85d826c6f85f0e3f6f41e956fbc80cf344a06674d20cb4",
     "cpppj/src/o/RawSquidSelection.cpp": "1c652caa97931cdb416db831ac1ad7974e6468a474176b82919af14c8a967b13",
     "cpppj/src/o/RawCarrierPreDestroy.cpp": "18a4daeff34834590cfbc4d1b73f64475a009b4815a88ac98aa76f5b1e618c95",
-    "cpppj/src/o/RawBattleBroadcast.cpp": "0996ea53b855835ead97f022fb3d4024e9511e0d3a4564879d7de24696632864",
+    "cpppj/src/o/RawBattleBroadcast.cpp": "d59f41110db782f83b522aeb16348225dc04728d38cd766bd706fc57585c9e4c",
     "cpppj/src/client/GameAssets.cpp": "fd39cf7dd7072af2022d7c142f6376303cf4a150af510d47f4abca54b9d59963",
     "cpppj/src/o/RiftTypeTable.cpp": "e482f1e9183264f4800e7c6fe95e12c811c5b0868f7e8843f77f37b4694795d0",
     "cpppj/src/o/TypeConstructors.inc": "bfac943af8c22cf91a0c267200f3e94133b021f2fe0e02507544978a7e08bd27",
@@ -1420,6 +1420,25 @@
           "path": "cpppj/src/client/RawCampaignSession.cpp",
           "previous": "933019e945c3cc6616cfe7bdfd7f1657b7d2e7f14cd9154dc21c428ca2fcfbaa",
           "current": "1c10f5c122d5ce55cda1e458d389c0d29ae0caaa3b06c6787eda80ec55d5c8d7"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 215,
+      "reason": "실제 섬 정리 방송·파편·표면 수명과 H=8 임시타입 그래프 연결의 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "1c10f5c122d5ce55cda1e458d389c0d29ae0caaa3b06c6787eda80ec55d5c8d7",
+          "current": "45eb420275ffee8c4e35ad9d1966b792e2e0ddbfdfb1744be59c31db8c3985f4"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/o/RawBattleBroadcast.cpp",
+          "previous": "0996ea53b855835ead97f022fb3d4024e9511e0d3a4564879d7de24696632864",
+          "current": "d59f41110db782f83b522aeb16348225dc04728d38cd766bd706fc57585c9e4c"
         }
       ]
     }

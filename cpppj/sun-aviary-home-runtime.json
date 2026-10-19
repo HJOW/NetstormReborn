@@ -150,7 +150,7 @@
   "fullFidelityVerified": false,
   "naturalTutorialFiveComplete": false,
   "sources": {
-    "cpppj/src/client/RawCampaignSession.cpp": "1c10f5c122d5ce55cda1e458d389c0d29ae0caaa3b06c6787eda80ec55d5c8d7",
+    "cpppj/src/client/RawCampaignSession.cpp": "45eb420275ffee8c4e35ad9d1966b792e2e0ddbfdfb1744be59c31db8c3985f4",
     "cpppj/src/client/ClientMain.cpp": "fe577cb844b74ff10be7353b9ba545563bd62af7272409211de823e511fb456e",
     "cpppj/src/o/RawSunAviaryProcess.cpp": "9da6f8ae3136c558f6efb3911660c7b30fbfb8953db5d0d47b5b11440bace7da",
     "cpppj/src/o/RawSunAviaryProcess.h": "2a14e9256502d59e3d3af4376762adb37ab3172e13303c596e3a41add2b9f8e9",
@@ -219,5 +219,20 @@
     "extracted/goal-early5-cannon-20261019-ui3/stderr.log": "4122e5b4255d52f9a279d290ba0a6efae64b3a9262c5d7b26f1a1398651eac26",
     "extracted/goal-early5-cannon-20261019-ui3/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "extracted/goal-early5-cannon-20261019-ui3/steps.tsv": "c48039c7dd973fc7b9fa32f4048515c111669956d15fd140dd39856389ab4335"
-  }
+  },
+  "integration_updates": [
+    {
+      "date": "2026-10-19",
+      "unit": 215,
+      "reason": "실제 섬 정리 방송·파편·표면 수명과 H=8 임시타입 그래프 연결의 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/sources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "1c10f5c122d5ce55cda1e458d389c0d29ae0caaa3b06c6787eda80ec55d5c8d7",
+          "current": "45eb420275ffee8c4e35ad9d1966b792e2e0ddbfdfb1744be59c31db8c3985f4"
+        }
+      ]
+    }
+  ]
 }

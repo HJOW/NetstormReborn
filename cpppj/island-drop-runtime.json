@@ -1,0 +1,352 @@
+{
+  "unit": 215,
+  "baseline": "7197d565",
+  "host": "VM-W11-Codex",
+  "date": "2026-10-19",
+  "lastDecompile": "VM-W11-Codex / 2026-10-19",
+  "scope": "10.78 실제 섬 정리 방송/파편/표면 수명·H=8 임시타입 그래프 연결. 명시 월드 회귀와 사용자 입력 전투 관측은 구분한다.",
+  "validation": {
+    "fullTests": "extracted/goal-early5-island-20261019-full-tests1.json",
+    "focusedTests": [
+      "extracted/goal-early5-island-20261019-world-focused4.json",
+      "extracted/goal-early5-island-20261019-graph-focused1.json"
+    ],
+    "fullSeconds": 152.61,
+    "oldCurrentPinReports": 95,
+    "oldCurrentPins": 187
+  },
+  "observations": {
+    "extracted/goal-early5-cannon-20261019-ui3": {
+      "returnCode": 1,
+      "binarySha256": "61511c6284269b0ce257c9ba60b18b3bd56912dfa965e308e3fcf029ab52636b",
+      "originalsUnchanged": true,
+      "lastLabel": "cannonPreview4",
+      "gameTime": 128.553,
+      "lastGate": [
+        "5",
+        "68",
+        "0",
+        "0",
+        "0",
+        "1",
+        "57.903",
+        "0"
+      ],
+      "forwardGeneratorsAfterWait": {
+        "15072": {
+          "xy": [
+            "133",
+            "93"
+          ],
+          "hp": 700
+        },
+        "15098": {
+          "xy": [
+            "131",
+            "103"
+          ],
+          "hp": 700
+        }
+      },
+      "cannons": {
+        "15110": {
+          "firstLabel": "cannonAttempt1",
+          "xy": [
+            "135",
+            "108"
+          ],
+          "firstHp": 0,
+          "maxHp": 600,
+          "lastLabel": "cannonPreview4",
+          "lastHp": 30
+        }
+      },
+      "sunFlyerSidsObserved": [
+        15063,
+        15130
+      ],
+      "enemyMinimumHp": {
+        "15006": 612,
+        "15013": 200
+      },
+      "naturalEObserved": false,
+      "combat2Observed": false,
+      "nextFailure": "실제 세션 하위 소비자 미연결: H:\\Workspace\\git\\NetstormReborn\\cpppj\\src\\client\\RawCampaignSession.cpp:1905: void __cdecl netstorm::client::`anonymous-namespace'::SessionMissing::<lambda_1>::operator ()(unsigned int,unsigned int,unsigned int,unsigned int) const",
+      "towers": {
+        "15060": {
+          "xy": [
+            "135",
+            "93"
+          ],
+          "firstLabel": "placed",
+          "maxHp": 1880,
+          "lastHp": 130,
+          "lastLabel": "selectionEarly"
+        },
+        "15123": {
+          "xy": [
+            "138",
+            "102"
+          ],
+          "firstLabel": "towerAttempt1",
+          "maxHp": 2000,
+          "lastHp": 2000,
+          "lastLabel": "cannonPreview4"
+        }
+      }
+    },
+    "extracted/goal-early5-island-20261019-ui1": {
+      "returnCode": 1,
+      "binarySha256": "897810bd1b9949533546dc763fdd06faa982e251ed6c1bc32d897084b2e6e6b0",
+      "originalsUnchanged": true,
+      "lastLabel": "bridgeAttempt4",
+      "gameTime": 140.428,
+      "lastGate": [
+        "5",
+        "68",
+        "0",
+        "0",
+        "0",
+        "1",
+        "50.421",
+        "0"
+      ],
+      "forwardGeneratorsAfterWait": {
+        "15070": {
+          "xy": [
+            "138",
+            "92"
+          ],
+          "hp": 700
+        },
+        "15098": {
+          "xy": [
+            "132",
+            "101"
+          ],
+          "hp": 700
+        }
+      },
+      "cannons": {
+        "15112": {
+          "firstLabel": "cannonAttempt2",
+          "xy": [
+            "136",
+            "105"
+          ],
+          "firstHp": 0,
+          "maxHp": 600,
+          "lastLabel": "bridgeAttempt4",
+          "lastHp": 470
+        }
+      },
+      "sunFlyerSidsObserved": [
+        15063
+      ],
+      "enemyMinimumHp": {
+        "15006": 534,
+        "15013": 200
+      },
+      "naturalEObserved": false,
+      "combat2Observed": false,
+      "nextFailure": "Factory 그림의 실제 가상 표/TYPE 미복원",
+      "towers": {
+        "15060": {
+          "xy": [
+            "135",
+            "93"
+          ],
+          "firstLabel": "placed",
+          "maxHp": 1880,
+          "lastHp": 145,
+          "lastLabel": "defenseArcher"
+        },
+        "15135": {
+          "xy": [
+            "140",
+            "111"
+          ],
+          "firstLabel": "frontTower2",
+          "maxHp": 2000,
+          "lastHp": 2000,
+          "lastLabel": "bridgeAttempt4"
+        }
+      }
+    }
+  },
+  "sources": {
+    "cpppj/src/client/RawCampaignConstructionBindings.cpp": "26d4753bbe2c086485b320bcfae991ae9957c4aed69880677f2b94f439d13684",
+    "cpppj/src/client/RawCampaignConstructionBindings.h": "1fe62283698ff9a69f03b74a043bb359d0aeb4df335798bc6e6e91b5c9c16431",
+    "cpppj/src/client/RawCampaignSession.cpp": "45eb420275ffee8c4e35ad9d1966b792e2e0ddbfdfb1744be59c31db8c3985f4",
+    "cpppj/src/o/RawBattleBroadcast.cpp": "d59f41110db782f83b522aeb16348225dc04728d38cd766bd706fc57585c9e4c",
+    "cpppj/src/o/RawBattleBroadcast.h": "b434175a1b937a8c34d64ba016f72c73ab4635490d5b7e73f43986610b7240da",
+    "cpppj/src/o/RawGraph.cpp": "5427d22b06ec1f9eb54ab9ede9c3e4008baeac3e3439cba3d8132236b9464fb1",
+    "cpppj/src/o/RawGraph.h": "588b8a3a1ae30cff14b738a5491ed4d290b093e50cd2ff782460f7af983c208b",
+    "cpppj/tests/BattleBroadcastTests.cpp": "7bfa23c46a8f8810fc2b8522f14cff40060f23cbfb9a8752d8294cea4f407a43",
+    "cpppj/tests/CampaignSessionTests.cpp": "b0f41abb1e4471fa109de00d131a9abba79867fb6422116e90f941b7fe201913",
+    "cpppj/tests/DestroyGraphTests.cpp": "a3618522256bcd8f3a5313b62d31e18640e7823d481cf08f21e874ec7933c471",
+    "cpppj/tests/ShapeToBufferTests.cpp": "d18ebe7ce7877f6d5bc612fde3d55d75a316dc04fe81615cc8b4cb29c3dc5db8",
+    "tools/cpp_assets_smoke.py": "d71fbbe55dde7452c980509a68f228c40ce74ddaf9f3b7a7518092d76c0319e9",
+    "tools/cpp_campaign_entry_smoke.py": "5fa9adadf6bcd571d6fba39b38e46fed41fe2e927911ff80dc38047c52c56b49",
+    "tools/cpp_fort_smoke.py": "96c7fcd524deb38d93274ded77620639bdc7012ec0f2aaeed0a488d938e9da83",
+    "tools/cpp_island_drop_runtime.py": "7a84366e3505e7fc98d883ca16364c648b9cad8110762744f7a6b8e7e5157ab3",
+    "tools/cpp_menu_smoke.py": "41732efb30e6337267168e3cd836ab6c04d6f34d36b16152b762c39dd2a76afe",
+    "tools/cpp_renderer_smoke.py": "fc648fea126c9cad3a124b38f757460f1139bb0e7f26c1032482ae4d85766ebe",
+    "tools/cpp_smoke_files.py": "66745bfd0ebac8d672eeb8f515144a47377fa4a28dad0603b5f8969a008ec679",
+    "tools/cpp_sun_aviary_notice_runtime.py": "8ab54e12605e9861c531bf9b82f4616b540aac1879f831bf88d69d0e35703952",
+    "tools/cpp_world_smoke.py": "6e50f87caf0b1b817c9116ef972ec6e75b44d33455edc88fe128a8d0f791fe72",
+    "tools/decomp_bridge_oracle.py": "cee394dff509d66027b90ae940c0f57c65d7f35847820f3a3737dafd9f265c87",
+    "tools/decomp_creation_oracle.py": "646adc1ca6c9eaeac08a9c700324ae05ba1727416bc62070e0a066afc07dc053",
+    "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+    "tools/decomp_cursor_position.py": "e15bcdbc4c6be9c131c30f15416c945d650dba9f7dc6def404b47f63c635c212",
+    "tools/decomp_cursor_previews.py": "33ed19d9b6409ad49e6db93081e951b8d105f170ce7a530363689aa9fda6c7c0",
+    "tools/decomp_destroy_oracle.py": "ce95700c70b5d40d98145b2e2a8d183e2ac69bf4116c5158cf2e85685caf0cd7",
+    "tools/decomp_destroygraph_oracle.py": "8572c39caeaaf98e573057e2401bbf5b409c46d55ec6661c5f1f18ca749f0fe1",
+    "tools/decomp_destroylifecycle_oracle.py": "fabd346ad623b4e43e2773a03a4d778ad75a29ed514a180b2cd9b5158195213b",
+    "tools/decomp_display_oracle.py": "bd9a42431cdef96d3fb13accf78d5a0d6a3155243b1bbc0362d58e79f662f7a4",
+    "tools/decomp_drop_island_packet.py": "30ff350c565224f95f3d2132302db5ae2bafe5d7336228cbd64a2a0d1197fe52",
+    "tools/decomp_dudespawn_oracle.py": "294095ff1336d290d8d7e0e465df95d5514ceb4ff87d4bac8c282cdcec2eb786",
+    "tools/decomp_factory_capture.py": "e5dd681fa0d5aa74779c7873c10814eff9ad15e193f7cb7322661c6ca02e27f1",
+    "tools/decomp_graph_oracle.py": "fe646925d04131f2924dac87dfe4b1bd8da717b8061f209c0085f170cbbceb51",
+    "tools/decomp_graphremove_oracle.py": "d2c68d51d1516f28e648abdb519c63db40b91baae7fa05f00acbc48145bbb06a",
+    "tools/decomp_island_graph_frame.py": "2ac19800f3ded880520a6dcd7a362df95e39b2db40c5bb131553aeb38fd1329d",
+    "tools/decomp_oracle.py": "227b9a8b703cfd81d05ac4a7c72a42eaecf9c804fc028680466a19a591f2335d",
+    "tools/decomp_owner_oracle.py": "5a837ad7fd233d9d75c7241d52fbf2e5a508e24dc158d091f243a13ab698e7fb",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "tools/decomp_pop_oracle.py": "2a50f34e6b229d5ea4611f7073877ca1e165e0bf841f32c83f17d300b6113bb6",
+    "tools/decomp_postpop_oracle.py": "43dd9adffc6e2b3a1bd4a1fb06563f848518d8082014f2346613243183535129",
+    "tools/decomp_rain_draw.py": "a7a8a40dbb5e1508e21745a94a4320fba207cd08a9ee38ae6a200614d4c2e249",
+    "tools/decomp_rawgraph_oracle.py": "5f512692a511993077de48375510b2488008b57d382509d88860c5689d99eb30",
+    "tools/decomp_shape_to_buffer_oracle.py": "3499edbde033d4fb5102bfb855a988adc30c8b17aae219d917d81346eea71eec",
+    "tools/decomp_sid_oracle.py": "7bfd7b95b26724b1793d407a4ad6654972b2aaa3bf04e4c206cc357670b68dff",
+    "tools/decomp_support_capture.py": "00622fa00cf38221722ceb5c731754d31215ca7a9718f472c1c544ad1ccd7965",
+    "tools/decomp_surface_oracle.py": "5a01b681c51fe9c59e25573a66bea0c31f3a20fa16e6d46f7e399124312067d5",
+    "tools/decomp_temple_capture.py": "d39f2d4150b2b96eb885e17b1bbcd8f1727e21b9b71a16113b3b04a0e2ece045",
+    "tools/decomp_temple_draw.py": "b94a1b635e83af4af3808d3666d3dd56067a44e88c22ecfbd4fe9396000dab24",
+    "tools/fort.py": "ee8ff8f00eea02771ac5c7a519dcd582e14cc07a2d97337c946c191022554e13",
+    "tools/shp.py": "4cb8bee6ed773e29e8658ddb315594ebf5ac005ea5b96c6b760a177029515bfd",
+    "tools/taff.py": "461860cdfc9451b85a8694dd30fd2c56c1cfdf5c6bb7ab8f63a4089971889795",
+    "tools/terrain_mask.py": "00f9789dbde0c124a132a4005924549571b06add5214ea14e3b76e88e73cb37a",
+    "tools/typefile.py": "a564a4b1bbc4f06d05ecb8b1f3fae4c32f6231cf95ea7bfadff2499931804d90"
+  },
+  "evidence": {
+    "cpppj/drop-island-packet-native.json": "13c98404153c87e3001fc62767d415cc722cb93350790131cf6a07ce85d3e090",
+    "cpppj/island-graph-frame-native.json": "4e787c5f2bdd2f35a38b802087bf6f460a03ecb242ae41af6219fe657417e97e",
+    "cpppj/support-capture-native.json": "22283c3a54e88b18c944b57e88e1d9af52acdb57b5b617e18b78975c8e116b50",
+    "cpppj/tests/fixtures/destroygraph-x86.tsv": "db0ba2bb8c75258cc85319647d4b839abd4d33edaebde67d83cb37fe0219b9a4",
+    "cpppj/tests/fixtures/drop-island-packet-x86.tsv": "f53e6551d16c48da70b0bf4878ef951cb293bf9888fcc009fc985d3032094972",
+    "cpppj/tests/fixtures/island-graph-frame-x86.tsv": "f35b9ff0a1fe7390012f28ad8c7a8008864c8277f83cee850a54457cf6a5efd1",
+    "cpppj/tests/fixtures/support-capture-x86.tsv": "507e26dcc4eca8d731180b9713a14c91b7eb12285ad092095cd2bf6c62d6dfc2",
+    "extracted/bridgeeffects/originals/functions.tsv": "485cd05093884690ffc94c433c4e040282cd6ca26eb7da469732f74e1c983cec",
+    "extracted/burning-frame-helper/originals/functions.tsv": "42431fbbcf4d5fd7c4261b4eb181d3808b5a72e5436d6b972509c32a0b053bc0",
+    "extracted/burning-frame-paint-helper/originals/functions.tsv": "db423ff44bde1f444dd35357b7d2d2e77b39b33955997eceea7fe14def91f560",
+    "extracted/burning-frame-raster-helper/originals/functions.tsv": "4a6e82217aca93711bc3d92921931ac433c9f2f25e4bdb3a7fa1cdf6f34b6a6f",
+    "extracted/creation/originals/functions.tsv": "42b14fee0b262fd92c833ec51db3cf772e92fd56b6ccbdc1c589955eb347ccb7",
+    "extracted/destroy/originals/functions.tsv": "9d33d7cbb6f48eda2ca71f17775579a6b4c2f5d711fc0713274d4182f07b7e09",
+    "extracted/destroygraph/originals/functions.tsv": "2f949920e06cf24cf3a83bf050050e124e2ab61159431b8d7208c6830d378ae1",
+    "extracted/destroylifecycle/originals/functions.tsv": "35cb83cfc94dba63a72ea449e08a3473f64fcc5a6e283758a8856790e15561d3",
+    "extracted/display/originals/functions.tsv": "408c4530becac3e2ce5112b436e23b32437a729b36ec6b0ebae5b2da81eb51b4",
+    "extracted/dude-spawn/originals/functions.tsv": "bb78175f3eb554190ab1862a9d901a2385e03e3cdfda66fc8164d5e925819975",
+    "extracted/finder/originals/functions.tsv": "7ee781ffc6200c8f6b231381c4dae7ce88e5c0158f4b8effb222090bf8345704",
+    "extracted/goal-early5-cannon-20261019-ui3/completedWorkshop.bmp": "4721456f0cac520204b6aff3ec6fd79601431068600656345ec1d9f57a7b30aa",
+    "extracted/goal-early5-cannon-20261019-ui3/enemyView.bmp": "0ac9785ef445d869d45548b1bac0febeca0509afa03c1c475a4e4d23f23b166e",
+    "extracted/goal-early5-cannon-20261019-ui3/originals-before.json": "f98d8731a8a729b528fd9744b52f3b26143eff54e767f0b8e1537040c5807c15",
+    "extracted/goal-early5-cannon-20261019-ui3/run.json": "048debf34a17fe0c28cb9e0e14308e2119d6dd72abba4fcaedc8a7286bdc5192",
+    "extracted/goal-early5-cannon-20261019-ui3/stageC.bmp": "0f3f497faa0cf9c056e6ba01be9df332db8e44240ed3706207ca008b7b371e39",
+    "extracted/goal-early5-cannon-20261019-ui3/stageD.bmp": "276924544169c219211fc7e41e37de1d3cb040a336751930ce72bb46e58f9046",
+    "extracted/goal-early5-cannon-20261019-ui3/states.tsv": "14411b67b495089c1e7afd6f6c42345cdfe2e20d89f66422a7bae4ce68889674",
+    "extracted/goal-early5-cannon-20261019-ui3/stderr.log": "4122e5b4255d52f9a279d290ba0a6efae64b3a9262c5d7b26f1a1398651eac26",
+    "extracted/goal-early5-cannon-20261019-ui3/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-early5-cannon-20261019-ui3/steps.tsv": "c48039c7dd973fc7b9fa32f4048515c111669956d15fd140dd39856389ab4335",
+    "extracted/goal-early5-island-20261019-audit-pins.py": "83d918765e51ac115b92387ef31363d32cc69efa0ff37f3df70886c3947f7e7f",
+    "extracted/goal-early5-island-20261019-build-report.py": "fdfcc40de371235122270b0eb993f2efaff47a5f2aafdad62260241c895a46f3",
+    "extracted/goal-early5-island-20261019-build1.log": "fcbfc51957879cecb7d754788ce3001f0d79ccf88fe058298589fe4a0fc345ba",
+    "extracted/goal-early5-island-20261019-build2.log": "d2269b835c43f4bcc390ca84e963e5d08ae1cbea69cadce656bfea4d136e3235",
+    "extracted/goal-early5-island-20261019-build3.log": "6851f078e60c8b9f67840a4058a4aa057dab45102457f9ce6c872deb77108e70",
+    "extracted/goal-early5-island-20261019-build4.log": "6851f078e60c8b9f67840a4058a4aa057dab45102457f9ce6c872deb77108e70",
+    "extracted/goal-early5-island-20261019-build5.log": "7ea506253dbdc42c06d977c2d1d897a7df0d16cdabc2c16cba5dea1b805eb364",
+    "extracted/goal-early5-island-20261019-capture-focused1.json": "524154d7e2cbedcb8dd091ed13dbbcbcf681aef85f97a260244807cd19b65d26",
+    "extracted/goal-early5-island-20261019-capture-focused1.log": "ee269d678a1fe5906d7d98fb8f609c2f479e982970fd37a635afb59840826b44",
+    "extracted/goal-early5-island-20261019-capture-focused1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-early5-island-20261019-capture-focused1.stdout": "012e319adae4a021a0be85b7d3553eda7281b59fea8112604d2d32c87e6c1cb4",
+    "extracted/goal-early5-island-20261019-commit-message.txt": "dbe57c792e4bcc3db95221a85e03cdaa8341c8c2469543e033780a82c9586623",
+    "extracted/goal-early5-island-20261019-full-tests1.json": "21b0737355448af67ef290443f941203ddb852ed800a077b8ff53af43a1cc8f4",
+    "extracted/goal-early5-island-20261019-full-tests1.stderr": "79e2480bde0296407e865b4a37f3b49c9c027d653a2260e3a4215348db0f0663",
+    "extracted/goal-early5-island-20261019-full-tests1.stdout": "3a9f47cbe7b55de0e19ba01b1802b7435629f9d2150ebf39e13f434a612c26fb",
+    "extracted/goal-early5-island-20261019-graph-focused1.json": "b7ec5251dcf77952bc5f2c9b6caecf5869dea116ae2a55be8ff1c1b43bd75ba3",
+    "extracted/goal-early5-island-20261019-graph-focused1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-early5-island-20261019-graph-focused1.stdout": "6d0da5664a2bed31f58e3b5765de8f716e68a065e485c9fd6057a7a8ae113cea",
+    "extracted/goal-early5-island-20261019-graph-native1.log": "548faa8dab6ddf113f88b654ea79835cc72dde825889d6edff21c0517ba32bff",
+    "extracted/goal-early5-island-20261019-graph-native2.log": "f45b2901f321b72a1be942c7805ab0fab835d2762497c8ce3684afc3bea54214",
+    "extracted/goal-early5-island-20261019-next-capture-static.json": "eff75d1e2c6bd4d56cd3851319fe3c35ecf865cf2fd812b1b876dd37264ddecf",
+    "extracted/goal-early5-island-20261019-packet-focused1.json": "5aa19f38397e4d2c0b7fa3dae943c4cf72eb6057a2f6106c9174a59298e5778e",
+    "extracted/goal-early5-island-20261019-packet-focused1.log": "78944dea061eed89c3f949ff9baa704f9bb7476e0642cc8ab86f349b8393e3f8",
+    "extracted/goal-early5-island-20261019-packet-focused1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-early5-island-20261019-packet-focused1.stdout": "09e00b71fe2e2a5b177c57577cf7cce8abe98bfd021e8dafa5fcc955b7639bb9",
+    "extracted/goal-early5-island-20261019-pin-updates.json": "fc640c356e69aed253cfd0c2df9c231101a6531c0b78589cc78dba135b59a5dc",
+    "extracted/goal-early5-island-20261019-plan.py": "d2cfa9f78cd12cb989af08da543b4a198ce8ec8068fd6155e6e7e7ee3d158040",
+    "extracted/goal-early5-island-20261019-plan1.tsv": "e5ba9f1eb6f00a522cafd1669a0246f006a01be479a6bba05ab2bd5fa8c82f48",
+    "extracted/goal-early5-island-20261019-probe.py": "2933ead8b5cc87b76425031fea3da8690c3b2649dc8f3fa8d4babd276176ef1a",
+    "extracted/goal-early5-island-20261019-profile-origin.json": "0dd752dcebe4edfac911382824775b784f5bfa9be79b9b9241fb57a8c1671289",
+    "extracted/goal-early5-island-20261019-raster-profile-origin.json": "46be103093b865cd0095044cc94ede13c55379e89ef98a6cd187820afcc27c05",
+    "extracted/goal-early5-island-20261019-refresh-pins.py": "464ffd2d3fe52230a7971c9391a2c8e7b4b4f2a025950a30a14dc5d7b1d6608f",
+    "extracted/goal-early5-island-20261019-report-build.log": "b2666dabe013bbfbbafcffbaa5dea12af8de59446cb7bb9de6059386f7d6ad50",
+    "extracted/goal-early5-island-20261019-stage.py": "9162dabceda3a4fae4cece4d4ba6dd1e79bfde53055932a634ee8740f138e367",
+    "extracted/goal-early5-island-20261019-support-capture-v1.py": "00622fa00cf38221722ceb5c731754d31215ca7a9718f472c1c544ad1ccd7965",
+    "extracted/goal-early5-island-20261019-support-native1.log": "380fa36a49dc6f3e021c2c001e8804ea840d5903a26ac86de811c88b61c4794e",
+    "extracted/goal-early5-island-20261019-support-native2.log": "ce2a7d45b71f52a200a115c112650db298abe125419716866402312870254b08",
+    "extracted/goal-early5-island-20261019-ui1/cannonAttempt1.bmp": "093fbff39c2de4ac3d128e18ba32579ad66c07626f655fdd34004ca82fb6a4ab",
+    "extracted/goal-early5-island-20261019-ui1/cannonAttempt2.bmp": "619a2919ff58d033cbe0e4813b936ffac1e9a85e6584ae3a78e8027f6e5bc734",
+    "extracted/goal-early5-island-20261019-ui1/cannonAttempt3.bmp": "be9d78fd192d847a198a717436acec9e3cd41cba119bf280fd3816a84fc017bf",
+    "extracted/goal-early5-island-20261019-ui1/cannonAttempt4.bmp": "fe088920da5a3a261a3befeef450c751f3127ecfc28b456bfe0788b78e059241",
+    "extracted/goal-early5-island-20261019-ui1/completedWorkshop.bmp": "b4759c216caf454ccea66885efddceb155416a4b00cda9ebdbb2b7131b6b7695",
+    "extracted/goal-early5-island-20261019-ui1/enemyView.bmp": "4efc09c108093ee04f26bc57a7a42b054448c0113684878d68e51f5c62b2d960",
+    "extracted/goal-early5-island-20261019-ui1/frontTower1.bmp": "e509867fa97344b08231d79f3ad588e767615f55936e9e4330c0698fba8d2558",
+    "extracted/goal-early5-island-20261019-ui1/frontTower2.bmp": "ed7e846553a8a63f13e08b6dad2caa9d16c4764d65098484b8f816899ae9f620",
+    "extracted/goal-early5-island-20261019-ui1/frontTower3.bmp": "13452f9e6b20374b425feed85371d4c6f1b5b9bd20ce94e5a15c501e979fa075",
+    "extracted/goal-early5-island-20261019-ui1/originals-before.json": "f98d8731a8a729b528fd9744b52f3b26143eff54e767f0b8e1537040c5807c15",
+    "extracted/goal-early5-island-20261019-ui1/run.json": "a0dc3043652b97200495a9a2e909f81d8c1e272d6a326483942c7d32c561280d",
+    "extracted/goal-early5-island-20261019-ui1/stageC.bmp": "a0e1a0396ee3b7ef394dcc17511b7cb6e101b49cf7ae107a84facba0952a59f8",
+    "extracted/goal-early5-island-20261019-ui1/stageD.bmp": "23abfc35212eb39987e59e8ad6dc759114956406d01019f26d860c8c4b7c6683",
+    "extracted/goal-early5-island-20261019-ui1/states.tsv": "22aaab45bd6d43502de86501ede791417a90ad4e659c00685ddb88334935009a",
+    "extracted/goal-early5-island-20261019-ui1/stderr.log": "9c95695a40f204f9e2fc6804991149ef533deadedd685e5dc7793ecd23f2cf56",
+    "extracted/goal-early5-island-20261019-ui1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-early5-island-20261019-ui1/steps.tsv": "f107795420065fdb66aaf23201b5be9cebb9f3b2d87ce105a9503156502784c6",
+    "extracted/goal-early5-island-20261019-ui1.log": "107c610f6e114daa0e21a5cb6ca03d445d4db2c16e3058058e6025ac0ab23ea2",
+    "extracted/goal-early5-island-20261019-world-focused1.json": "76118a6a9b9c4426bf534bdc5b2925de3b1156d8cb7604994ef6149b60a9ca67",
+    "extracted/goal-early5-island-20261019-world-focused1.log": "3527147e2c72c2f5df7269f467aa10f9a1b0041d85f8027f0dfce3989e4553ad",
+    "extracted/goal-early5-island-20261019-world-focused1.stderr": "c6e793e81539d43a5153cdbea52bb08a95585c7716175dcc987bcc6117128f7b",
+    "extracted/goal-early5-island-20261019-world-focused1.stdout": "3c2fbc0a1e968281555aab8a6f06570a73aa41909549e9f8391bf3ed80f7b763",
+    "extracted/goal-early5-island-20261019-world-focused2.json": "d878185f2071946e07fd894185dfa8ecf8d02347f484f92375c8af4174cdcdad",
+    "extracted/goal-early5-island-20261019-world-focused2.log": "14e9c4a2a664691e985e5993e828b470d533b2b5ad1e03682b073a39b9a117cb",
+    "extracted/goal-early5-island-20261019-world-focused2.stderr": "41ed4592fed661428bcb080c5f74bdf2347daf60276025ae19c65859b10beb93",
+    "extracted/goal-early5-island-20261019-world-focused2.stdout": "9517a857a9c7d8f0da2d2a9d71d5bb1d233daf6b5b26525ddd92f6f9057594d3",
+    "extracted/goal-early5-island-20261019-world-focused3.json": "6bdc0ad1e018d494aff306a8cc8b974fb3e337eb775aec5269ca05137bcb7e4f",
+    "extracted/goal-early5-island-20261019-world-focused3.log": "3a1cf701d0ae108e4b48ae56c68376d5093364cf5abfeeb3ecf175a67a7b225e",
+    "extracted/goal-early5-island-20261019-world-focused3.stderr": "e6c55b6fd4a218e720fd5a0ff6df4dda37f4bf0ea522a889280e052ab4c01dd9",
+    "extracted/goal-early5-island-20261019-world-focused3.stdout": "40d4118d7b398a8c24e2d335d08ef6334e0d6e7c090f4ac5577c0972bb56b354",
+    "extracted/goal-early5-island-20261019-world-focused4.json": "05414ce403bcb2193c9b82f5daca58c5907b141494299a38d035f30880e8c17b",
+    "extracted/goal-early5-island-20261019-world-focused4.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-early5-island-20261019-world-focused4.stdout": "f4a7bf62bc43327cffb4b4e2e1f7ca8aaa5a7ad41e18963dc16bccd63acac969",
+    "extracted/goal-early5-island-20261019-world-origin-v1.cpp": "8cfb663d3bac1fd120bb79b66215069d66d09c753cef20cb306532f14935a161",
+    "extracted/goal-early5-island-20261019-world-origin-v2.cpp": "8481b3b26ee7cac4469f73660cc0d0367c88171e60290a308936200ef5f2ae6d",
+    "extracted/graphremove/originals/functions.tsv": "804ff5b28df9aeec65f968d26e660e266ed4a160a64a5d44c223f222219cc3b4",
+    "extracted/graphremove/originals/geometry/functions.tsv": "ced17335d5e0a8b25e97ae7d05019f43bdaef60955b0a024ca21d2096713587e",
+    "extracted/owner/originals/functions.tsv": "3ea66dace80a85999a8b2c2dbadb4d5f1bd18b0dcdb0768f9c41075206c7c72d",
+    "extracted/pop/helpers-originals/functions.tsv": "fc21935402ba4781899da2002c5f844061e53150d0bddeeaa597f29b81d58cb8",
+    "extracted/pop/originals/functions.tsv": "5b3241e336bcc1dea4c188121e3c458d3aef3414c5b6e9c4590db8c126414568",
+    "extracted/postpop/originals/functions.tsv": "99dcfa55557ba03e55321146ccb750816cdebd8242c18b4d95e2e1a353a32021",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/setframe/originals/functions.tsv": "31422114edd78937f1d285df1480190ad4ceb87b5436e6e1d407e335f621425e",
+    "extracted/sid/originals/functions.tsv": "3034dd0d393ebdfd77f2e9fafe8a5b252d5437f1e71ab94541cc229e8ef8694b",
+    "originals/d/_shapes.shp": "c878353c8054208deef832e34c514b30fe670e175505b129333a5728ba70f68e",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "tools/ghidra/burning-frame-helper-functions.json": "77f3a9c4dc66d53f3ef5975dfaf93b373f75df5291d392af4b4b2da31ca10a4b",
+    "tools/ghidra/burning-frame-paint-helper-functions.json": "2e2730577c423a5478ed38839707f950c68d543b1d0fe7998240ad9f07e75405",
+    "tools/ghidra/burning-frame-raster-helper-functions.json": "863cd5dcdc91779ecfa0f62ef531f5c39defff3d540528ece5c06c89a71b0b4e",
+    "tools/ghidra/dude-spawn-functions.json": "6fd3a099b040d1c505e148f4fd06579f8ee05ab94650d4c9bf54f519210a3dd0"
+  },
+  "goalComplete": false,
+  "fullFidelityVerified": false
+}

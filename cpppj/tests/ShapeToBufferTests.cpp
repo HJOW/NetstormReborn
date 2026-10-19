@@ -85,3 +85,25 @@ TEST_CASE(ShapeToBuffer_FactoryNative200Pixels) {
     }
     CHECK(count==200 && overlays==60);
 }
+
+// 두 섬 조각의162개 원문과 모든 보호 RLE 픽셀·기준점을 대조한다.
+TEST_CASE(ShapeToBuffer_SupportNative162Pixels) {
+    const auto& assets=Assets(OriginalEdition::Patch1078);auto types=assets.types;std::array<std::uint32_t,188> maps{};
+    types[95].hotspotX=types[157].hotspotX=-2;types[95].hotspotY=types[157].hotspotY=3; // 원문이 선언한TYPE 기준점 입력이다.
+    const auto path=(std::filesystem::path(__FILE__).parent_path()/"fixtures/support-capture-x86.tsv").string();std::size_t count{};
+    // 실제 기본/추가 Draw가 공통인 두 정확한 가상 표만 구성한다.
+    for (const auto& row:LoadFixture(path.c_str()).rows) {
+        const std::uint32_t type=row[0]=="islandStalag" ? 95U : 157U;const std::uint32_t table=type==95 ? 0x506e50U : 0x506f08U;
+        SidPool pool(OriginalEdition::Patch1078,32768,true);
+        // 원본 격리 장면과 같은 client50 슬롯까지 확보한다.
+        for (std::uint16_t sid=5;sid<=50;++sid) CHECK(pool.Allocate(2)==Sid{sid});
+        auto raw=pool.AllocatedBytes(Sid{50});std::fill(raw.begin(),raw.end(),std::uint8_t{});Put(raw,0,table);raw[10]=static_cast<std::uint8_t>(type);raw[34]=static_cast<std::uint8_t>(Number(row[3]));raw[40]=static_cast<std::uint8_t>(Number(row[2]));Put(raw,36,Number(row[1]));
+        netstorm::client::ShapeToBufferState state;state.addTypeHotspot=true;state.ownerTypeMaps=maps;
+        state.mainFrame=[&](Sid) { return assets.game.Types()[type-70].definition.specialFrames.baseFrame; }; // 실제4acfe0의 TYPE 기본 프레임이다.
+        state.additional=[](Sid,ConstructionVisualImage&,std::int32_t,std::int32_t) {}; // 실제41c100은 인자를 읽지 않는ret8이다.
+        netstorm::client::RawShapeToBuffer capture(pool,types,assets.shapes,assets.game.Shapes(),state);const auto image=capture.Capture(Sid{50});
+        const auto metadata=std::to_string(image.width)+','+std::to_string(image.height)+','+std::to_string(image.hotspotX)+','+std::to_string(image.hotspotY);
+        CHECK(row[4]==row[6] && row[5]==row[7] && metadata==row[4] && Hex(image.pixels)==row[5]);++count;
+    }
+    CHECK(count==162);
+}

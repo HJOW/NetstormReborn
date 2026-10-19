@@ -9,12 +9,12 @@
     "changed": false
   },
   "sources": {
-    "cpppj/src/o/RawBattleBroadcast.h": "44e111bf4555900923a54d0f304d6a4327827ebb1af34250e2c54801f501f8f7",
-    "cpppj/src/o/RawBattleBroadcast.cpp": "0996ea53b855835ead97f022fb3d4024e9511e0d3a4564879d7de24696632864",
-    "cpppj/src/client/RawCampaignSession.cpp": "1c10f5c122d5ce55cda1e458d389c0d29ae0caaa3b06c6787eda80ec55d5c8d7",
+    "cpppj/src/o/RawBattleBroadcast.h": "b434175a1b937a8c34d64ba016f72c73ab4635490d5b7e73f43986610b7240da",
+    "cpppj/src/o/RawBattleBroadcast.cpp": "d59f41110db782f83b522aeb16348225dc04728d38cd766bd706fc57585c9e4c",
+    "cpppj/src/client/RawCampaignSession.cpp": "45eb420275ffee8c4e35ad9d1966b792e2e0ddbfdfb1744be59c31db8c3985f4",
     "cpppj/src/o/RawFlyerTarget.cpp": "b325cb60c22f98b6e30faa2d330866d1a38f3a403a04388a394baefd188eb772",
     "cpppj/src/o/RawFlyerFrame.cpp": "7752144c626f831c64bf0959ad8f9579d67bae1c87def2dcd0f1797b306f2049",
-    "cpppj/tests/BattleBroadcastTests.cpp": "4fd4e008286d5a28fdfcc56a0d2e5c8f3d4d9e60658905877eb9808e7c66aac4",
+    "cpppj/tests/BattleBroadcastTests.cpp": "7bfa23c46a8f8810fc2b8522f14cff40060f23cbfb9a8752d8294cea4f407a43",
     "cpppj/tests/CMakeLists.txt": "83eed7cedab8650ce570f444a5c06efe29b2ce414e3049777221cf672f6e248f",
     "cpppj/tests/fixtures/flyer-command-x86.tsv": "3eba7e893da3360048848fb3d402d94a66fa4067cddeeb34638131d1b15377b2",
     "cpppj/flyer-command-native.json": "e607b01cebea3009cdcd17cc9b54a38850b56bc32c7e72876b5bc03cc7b5085f",
@@ -183,6 +183,37 @@
           "path": "cpppj/src/client/RawCampaignSession.cpp",
           "previous": "933019e945c3cc6616cfe7bdfd7f1657b7d2e7f14cd9154dc21c428ca2fcfbaa",
           "current": "1c10f5c122d5ce55cda1e458d389c0d29ae0caaa3b06c6787eda80ec55d5c8d7"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 215,
+      "reason": "실제 섬 정리 방송·파편·표면 수명과 H=8 임시타입 그래프 연결의 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/sources",
+          "path": "cpppj/src/o/RawBattleBroadcast.h",
+          "previous": "44e111bf4555900923a54d0f304d6a4327827ebb1af34250e2c54801f501f8f7",
+          "current": "b434175a1b937a8c34d64ba016f72c73ab4635490d5b7e73f43986610b7240da"
+        },
+        {
+          "group": "/sources",
+          "path": "cpppj/src/o/RawBattleBroadcast.cpp",
+          "previous": "0996ea53b855835ead97f022fb3d4024e9511e0d3a4564879d7de24696632864",
+          "current": "d59f41110db782f83b522aeb16348225dc04728d38cd766bd706fc57585c9e4c"
+        },
+        {
+          "group": "/sources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "1c10f5c122d5ce55cda1e458d389c0d29ae0caaa3b06c6787eda80ec55d5c8d7",
+          "current": "45eb420275ffee8c4e35ad9d1966b792e2e0ddbfdfb1744be59c31db8c3985f4"
+        },
+        {
+          "group": "/sources",
+          "path": "cpppj/tests/BattleBroadcastTests.cpp",
+          "previous": "4fd4e008286d5a28fdfcc56a0d2e5c8f3d4d9e60658905877eb9808e7c66aac4",
+          "current": "7bfa23c46a8f8810fc2b8522f14cff40060f23cbfb9a8752d8294cea4f407a43"
         }
       ]
     }

@@ -118,7 +118,7 @@ void RawGraph::Region(Sid sid,const RawGraphPop* pop,std::span<const std::uint8_
     }
 }
 // 삭제 연결의 일반 탐색은 flag 8 표면 탐색의 순서/교차 필터로 대체하지 않는다.
-std::vector<std::uint16_t> RawGraph::DetachConnections(const SurfaceObject& source,const SurfaceFinder& finder) const {
+std::vector<std::uint16_t> RawGraph::DetachConnections(const SurfaceObject& source,const SurfaceFinder& finder,bool sourceFrameValid) const {
     std::vector<std::uint16_t> result;
     // 발자국 helper는 두 번째 점을 1..255로 보정한다. 초기 점이 무효면 양 끝을 그 점으로 재설정한다.
     const auto bounds=[](const SurfaceObject& object) {
@@ -168,8 +168,13 @@ std::vector<std::uint16_t> RawGraph::DetachConnections(const SurfaceObject& sour
                     if ((bytes[11]&kDead) || (bytes[patch ? 40 : 35]&kBuried) || !(types_[bytes[10]].flags1&TypeFlag1::kSurface)) continue;
                     const auto& object=finder.Object(candidate); const auto a=bounds(object);
                     if ((spots_[static_cast<std::size_t>(object.y*kWorldCells+object.x)]&8) ||
-                        intersects(a[0]-1,a[1],a[2]+1,a[3])==intersects(a[0],a[1]-1,a[2],a[3]+1) ||
-                        !SurfaceFinder::Connects(object,source)) continue;
+                        intersects(a[0]-1,a[1],a[2]+1,a[3])==intersects(a[0],a[1]-1,a[2],a[3]+1)) continue;
+                    // 00441e40은 다리/폭탄→육지 연결의 두 번째 코드를 A로 덮어쓴다.
+                    // 실제157 H=8을162의 한 프레임 표로 바꿀 때 그 무효 코드 바이트를 해석하지 않는다.
+                    if (!sourceFrameValid && !((object.flags2&0x104U) && (source.flags2&0x1044202U)) &&
+                        !(source.flags2&TypeFlag2::kEmplacement))
+                        throw std::out_of_range("raw 그래프 삭제 치환 방향 코드가 필요합니다");
+                    if (!SurfaceFinder::Connects(object,source)) continue;
                     if (std::find(result.begin(),result.end(),candidate)!=result.end()) throw std::logic_error("그래프 삭제 중복 해시 후보");
                     result.push_back(candidate);
                 }
@@ -295,19 +300,19 @@ RawGraph::Plan RawGraph::Calculate(Sid sid,Operation operation,std::uint8_t targ
     else if (operation==Operation::Allocate) plan.changed=graph.AllocateWithRecovery();
     else if (add) graph.Add(sid.value,recovery_);
     else if (operation==Operation::Detach) {
-        auto source=finder.Object(sid.value);
+        auto source=finder.Object(sid.value);bool sourceFrameValid=true; // 치환 정보에서 실제 방향 코드가 필요한지 후보마다 판정한다.
         if (sourceType) {
             if (*sourceType>=types_.size()) throw std::out_of_range("raw 그래프 삭제 치환 타입 오류");
             const auto& replacement=types_[*sourceType];const auto frame=Read(root,frameOffset,patch ? 4U : 1U);
-            if (!(replacement.flags1&TypeFlag1::kSurface) || frame>=frames_[*sourceType].size())
-                throw std::out_of_range("raw 그래프 삭제 치환 프레임/표면 오류");
+            if (!(replacement.flags1&TypeFlag1::kSurface)) throw std::out_of_range("raw 그래프 삭제 치환 표면 오류");
             if (replacement.footX<1 || replacement.footY<1 || replacement.footX>kWorldCells || replacement.footY>kWorldCells)
                 throw std::out_of_range("raw 그래프 삭제 치환 발자국 오류");
             source.width=replacement.footX;source.height=replacement.footY;source.flags1=replacement.flags1;
-            source.flags2=replacement.flags2;source.frame=frames_[*sourceType][frame];
+            source.flags2=replacement.flags2;sourceFrameValid=frame<frames_[*sourceType].size();
+            source.frame=sourceFrameValid ? frames_[*sourceType][frame] : FrameCode{};
         }
         // 연결 판단은 삭제 정보의 타입을 쓰되 전체 풀 재구성은 원본 raw 타입을 읽는다.
-        graph.DetachAt(sid.value,detachGraph,DetachConnections(source,finder),(target&1)!=0,(target&2)!=0 ? 9 : 1,recovery_,source.flags2);
+        graph.DetachAt(sid.value,detachGraph,DetachConnections(source,finder,sourceFrameValid),(target&1)!=0,(target&2)!=0 ? 9 : 1,recovery_,source.flags2);
     }
     else plan.changed=graph.Flood(sid.value,target);
     std::copy(graph.Records().begin(),graph.Records().end(),plan.records.begin());

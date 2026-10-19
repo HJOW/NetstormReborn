@@ -13,6 +13,18 @@ void WriteFlyerCommandPacket(std::span<std::uint8_t> packet,Sid parent,std::uint
         packet[12+index]=static_cast<std::uint8_t>(command>>(index*8));
     }
 }
+// 원본이 정의한 네DWORD 전체를 쓰고20BYTE 바깥의 기존 저장소는 유지한다.
+void WriteDropIslandPacket(std::span<std::uint8_t> packet,std::uint32_t x,std::uint32_t y,std::uint32_t flags,std::uint32_t owner) {
+    constexpr std::size_t kLength=20; // 보호PE0052ede0의 WORD 길이다.
+    if (packet.size()<kLength) throw std::out_of_range("섬 정리 방송 패킷20BYTE 필요");
+    packet[0]=1;packet[1]=0x35;packet[2]=static_cast<std::uint8_t>(kLength);packet[3]=0; // 보호메타데이터 version1/message35/length20이다.
+    const std::array<std::uint32_t,4> payload{x,y,flags,owner}; // 원본 caller의+4/+8/+12/+16 순서다.
+    // 각 원문DWORD의 낮은 바이트부터 쓰며 좌표를 다시 실수로 변환하지 않는다.
+    for (std::size_t field=0;field<payload.size();++field) {
+        // 정확히 해당DWORD의 네 바이트만 변경한다.
+        for (std::size_t index=0;index<4;++index) packet[4+field*4+index]=static_cast<std::uint8_t>(payload[field]>>(index*8));
+    }
+}
 // 두 원본 판본의 Player9 물리 폭을 확인한다.
 RawBattleBroadcast::RawBattleBroadcast(OriginalEdition edition,std::span<const std::uint8_t> players,
     BattlePacketPeers& peers,const std::uint32_t& localOwner,const bool& server)
