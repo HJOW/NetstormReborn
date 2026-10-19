@@ -60,7 +60,7 @@
     "cpppj/src/client/GameWorld.cpp": "af6d3aeb3bd53d83e2619c2bd20ba5df42c17fe718cb81786841606419f10c6c",
     "cpppj/src/client/GameWorld.h": "d51dfe75377b1afd870bfeb40e26cef9f6233f65217d757135648ce064043a16",
     "cpppj/tests/CMakeLists.txt": "8ca2db5cb109de55c2eadec3063e474691de144316efaa1a2e9046faf0febd43",
-    "cpppj/tests/CampaignSessionTests.cpp": "bc71438efcccbd4585d22c7b2c9311a6cf50ab171a03d8d7baf2294e65e18a45",
+    "cpppj/tests/CampaignSessionTests.cpp": "a9a4e62edf5a796eeacd26bd1166806dc0078420a68d0957a66e41539876bc14",
     "tools/cpp_priest_construction_smoke.py": "93524c9e1fb58e7e589fc25c7507e105e750b96cb66ad7ddbf9a58aae2756c2c",
     "cpppj/src/client/SpriteColorMaps.h": "616d6afb5af4bb505f0f780b05cbc9dec4058026b43ba898be5719a5ab233e54",
     "cpppj/src/client/SpriteColorMaps.cpp": "9a2d39e42ba43fb32baf622923e4fa5a2629f0ae8c186dd3f2d1bb34a0dd9c61",
@@ -5919,6 +5919,19 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "0072c9605dd595fd018d29fd4fdfb4334a53a1b52d482dc132bd5a85210a2b7e",
           "current": "bc71438efcccbd4585d22c7b2c9311a6cf50ab171a03d8d7baf2294e65e18a45"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-20",
+      "unit": 238,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "bc71438efcccbd4585d22c7b2c9311a6cf50ab171a03d8d7baf2294e65e18a45",
+          "current": "a9a4e62edf5a796eeacd26bd1166806dc0078420a68d0957a66e41539876bc14"
         }
       ]
     }

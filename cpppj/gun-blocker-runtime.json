@@ -11,7 +11,7 @@
     "cpppj/src/o/RawGunBlocker.cpp": "8ab5aaed86d34b9db20da2b8cceb4eb2b578154f5e8eab9e6c2ca57be20e75ab",
     "cpppj/src/o/RawGunBlocker.h": "adbafba75dbdd760a30a518e99634e6c493f549efce9aabcb12155010fc2acee",
     "cpppj/src/o/CMakeLists.txt": "e98fa5aecc683b69021e6efacd62092a48772ae5ed3f7cb3da0eeeff7c33d7ec",
-    "cpppj/src/client/RawCampaignSession.cpp": "4f1154f95c97a7bc223ef3d36b3af9d8896de3d9eb4ccdec95887cd83131832c",
+    "cpppj/src/client/RawCampaignSession.cpp": "bb179f114f49f08e55b37da0fab350ea0370005c31b09b9224afcc48d342bd1c",
     "cpppj/tests/GunBlockerTests.cpp": "f6eac38c6f829b88e2de0395982035ec98203fd0b50c7c4a0fff0a9647e6b93a",
     "cpppj/tests/CMakeLists.txt": "8ca2db5cb109de55c2eadec3063e474691de144316efaa1a2e9046faf0febd43",
     "cpppj/tests/fixtures/gun-blocker-x86.tsv": "326003cc70d664a46313cf2090586a0da3e73390b1a242342db2ff4929b89898",
@@ -20,8 +20,8 @@
     "tools/decomp_gun_blocker.py": "46da4203bb28dbbe25f514d8ccfdda88308e0d88103951a9c3f99b3f47e880ee",
     "tools/decomp_gun_blocker_boundary.py": "b2be91b5356107df23718323d6348f49331bf4b33ce0f29ed5795fd82d0c816e",
     "tools/cpp_gun_blocker_smoke.py": "0ab9136d61bd5f60bfa2aa54d50de170c6f4cf07fb4c54881d0b0a4f05786c21",
-    "cpppj/gun-blocker-native.json": "16db6ed7061b0483f585f5e9d96d9d03da1944f43511bef8e326a36e0e2c6ed6",
-    "cpppj/gun-blocker-boundary-native.json": "dc69565ab9419c368c37ef7807f0ea16c4aa24ed58a87538a3f0a1d6a853aca9",
+    "cpppj/gun-blocker-native.json": "f9881a51b1fc04bf4724f49e82b83debc4110040d8acfc238c8385d3bcb81fb5",
+    "cpppj/gun-blocker-boundary-native.json": "f94753110919543c2202c960a371bedd120c6158241551edeec934e7adf81676",
     "cpppj/src/o/RawGunProcess.cpp": "0e9df43f4ed70baa6484c74ecb28b49a99c064adc149eef2b1b88b21a39b925c",
     "cpppj/src/o/RawGunTarget.cpp": "7ac9b51af58949ce8c23f9854679a7685468ba798768db0a1158f25b0ff95f14",
     "cpppj/src/o/RawFenceTarget.cpp": "0e338dbf5fe3ee18d7215b4c986ec37cdc0f241726c9acafc52bb2aa880d6d75",
@@ -343,6 +343,31 @@
           "path": "cpppj/src/client/RawCampaignSession.cpp",
           "previous": "8fd4dff08f9c36f7597ea2985eb4c0ba9e1f4686a41b0446eda990eb353c6dc1",
           "current": "4f1154f95c97a7bc223ef3d36b3af9d8896de3d9eb4ccdec95887cd83131832c"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-20",
+      "unit": 238,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/sources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "4f1154f95c97a7bc223ef3d36b3af9d8896de3d9eb4ccdec95887cd83131832c",
+          "current": "bb179f114f49f08e55b37da0fab350ea0370005c31b09b9224afcc48d342bd1c"
+        },
+        {
+          "group": "/sources",
+          "path": "cpppj/gun-blocker-native.json",
+          "previous": "16db6ed7061b0483f585f5e9d96d9d03da1944f43511bef8e326a36e0e2c6ed6",
+          "current": "f9881a51b1fc04bf4724f49e82b83debc4110040d8acfc238c8385d3bcb81fb5"
+        },
+        {
+          "group": "/sources",
+          "path": "cpppj/gun-blocker-boundary-native.json",
+          "previous": "dc69565ab9419c368c37ef7807f0ea16c4aa24ed58a87538a3f0a1d6a853aca9",
+          "current": "f94753110919543c2202c960a371bedd120c6158241551edeec934e7adf81676"
         }
       ]
     }

@@ -42,8 +42,8 @@
     "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e"
   },
   "evidence": {
-    "cpppj/bomb-activation-native.json": "95e78eb8bf2d0ff1524f8e8a87faed3b37506491f7e6f5c57c6399df3490638b",
-    "cpppj/carrier-drop-native.json": "8c5ba84e9b1251806c08a3631100abce74d343a932154b7cf06876f19816d216",
+    "cpppj/bomb-activation-native.json": "5268a284a0e6fcf9b3844264a3f79d1962d4d140c191f153c7a4f9b17ee52813",
+    "cpppj/carrier-drop-native.json": "cd2333c4ead6c0f8260ca19303dc84bda19224b2af6da97c0ea833bcfd2af4ee",
     "cpppj/tests/fixtures/bomb-activation-x86.tsv": "0b38f77761eaf3c33d98e46903192d45724502b482066698ca3a4f0a419af67f",
     "cpppj/tests/fixtures/carrier-drop-x86.tsv": "d2da9dfcac50dfa04c11c3d19d9665d7381c3947d3c7987259850eb6daa924b0",
     "extracted/goal-carrier-drop-cpp-20261019-activation-focused1.json": "9af86ad66a01c0e471913b0aad6648dfa027462e7da37cbb9ebba94e739c284e",
@@ -186,6 +186,25 @@
           "path": "cpppj/src/o/RawCarrierDrop.h",
           "previous": "6aa6190d9fe0d70d965376604b4f08142f9f3acd7a860947b0762de662175bc4",
           "current": "0c9109ffd076eee38db08725823ab7561322f3dde8cc9c43e7dcd684c2b8f3ea"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-20",
+      "unit": 238,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/evidence",
+          "path": "cpppj/bomb-activation-native.json",
+          "previous": "95e78eb8bf2d0ff1524f8e8a87faed3b37506491f7e6f5c57c6399df3490638b",
+          "current": "5268a284a0e6fcf9b3844264a3f79d1962d4d140c191f153c7a4f9b17ee52813"
+        },
+        {
+          "group": "/evidence",
+          "path": "cpppj/carrier-drop-native.json",
+          "previous": "8c5ba84e9b1251806c08a3631100abce74d343a932154b7cf06876f19816d216",
+          "current": "cd2333c4ead6c0f8260ca19303dc84bda19224b2af6da97c0ea833bcfd2af4ee"
         }
       ]
     }

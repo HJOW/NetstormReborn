@@ -11,7 +11,7 @@
     ".gitattributes": "3e8d869648cde0415d1a91e9b22d5a7ed7e5c0585923a189bfd37aa33229f3a8",
     "cpppj/src/CMakeLists.txt": "6607046c6ce2b71f7cae40487563418cf582f73458504dc8c22fd109e3aefc10",
     "cpppj/tests/CMakeLists.txt": "8ca2db5cb109de55c2eadec3063e474691de144316efaa1a2e9046faf0febd43",
-    "cpppj/src/client/RawCampaignSession.cpp": "4f1154f95c97a7bc223ef3d36b3af9d8896de3d9eb4ccdec95887cd83131832c",
+    "cpppj/src/client/RawCampaignSession.cpp": "bb179f114f49f08e55b37da0fab350ea0370005c31b09b9224afcc48d342bd1c",
     "cpppj/tests/CampaignObjectMenuTests.cpp": "fea9198ea2150c42bb523f7ac9298c2f819acd1fc9b9887b53020c206ad62563",
     "cpppj/src/o/RawNuggetRegular.cpp": "5b62ca9f75cdda9b83252a1601c88cc78c235df4190bd8d48b2dbfa93b497cab",
     "cpppj/src/o/RawNuggetRegular.h": "b1c882b0fdc15254543f5f7bea70a7ad81a83765e0e4ddae57ecb12e9b702fd1",
@@ -1489,6 +1489,19 @@
           "path": "cpppj/src/client/RawCampaignSession.cpp",
           "previous": "8fd4dff08f9c36f7597ea2985eb4c0ba9e1f4686a41b0446eda990eb353c6dc1",
           "current": "4f1154f95c97a7bc223ef3d36b3af9d8896de3d9eb4ccdec95887cd83131832c"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-20",
+      "unit": 238,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "4f1154f95c97a7bc223ef3d36b3af9d8896de3d9eb4ccdec95887cd83131832c",
+          "current": "bb179f114f49f08e55b37da0fab350ea0370005c31b09b9224afcc48d342bd1c"
         }
       ]
     }

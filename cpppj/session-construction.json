@@ -116,8 +116,8 @@
     "initialFailureLogPreserved": true
   },
   "sha256": {
-    "cpppj/src/client/RawCampaignConstructionBindings.h": "3ab2b8f17192b32b3056a34ed77a50e025d3dd894902429d26f06917c29bb265",
-    "cpppj/src/client/RawCampaignConstructionBindings.cpp": "4aac9caefa5f4cfed1c656f1971837c6189cf2425e1b5fc990bdc02adfbb28e8",
+    "cpppj/src/client/RawCampaignConstructionBindings.h": "512570010be383ea7cc726b275acffa61280f1448c9fcd4c872d7ba62a9d8d93",
+    "cpppj/src/client/RawCampaignConstructionBindings.cpp": "bd8ccc0a27709ce909164d6266002bcf7f22bd619169560175cca835924d2f9a",
     "cpppj/src/client/RawCampaignSession.h": "22f17f2a2dfbd71c5995e498b870e9d0ab27cfb3d2b532f6ce2fcdc032479244",
     "cpppj/src/client/RawCampaignSession.cpp": "36b23f4e6c6b557ceaf908de235f6451938f10bdde86cac3fa715eafe8d71ea1",
     "cpppj/src/client/CampaignClientServices.cpp": "86407af96a1a5ccaaa16ba158f205bbe66fa97c88f091629b1516eb6f2395ed3",
@@ -347,6 +347,25 @@
           "path": "cpppj/src/client/RawCampaignConstructionBindings.cpp",
           "previous": "26d4753bbe2c086485b320bcfae991ae9957c4aed69880677f2b94f439d13684",
           "current": "4aac9caefa5f4cfed1c656f1971837c6189cf2425e1b5fc990bdc02adfbb28e8"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-20",
+      "unit": 238,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/client/RawCampaignConstructionBindings.h",
+          "previous": "3ab2b8f17192b32b3056a34ed77a50e025d3dd894902429d26f06917c29bb265",
+          "current": "512570010be383ea7cc726b275acffa61280f1448c9fcd4c872d7ba62a9d8d93"
+        },
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/client/RawCampaignConstructionBindings.cpp",
+          "previous": "4aac9caefa5f4cfed1c656f1971837c6189cf2425e1b5fc990bdc02adfbb28e8",
+          "current": "bd8ccc0a27709ce909164d6266002bcf7f22bd619169560175cca835924d2f9a"
         }
       ]
     }

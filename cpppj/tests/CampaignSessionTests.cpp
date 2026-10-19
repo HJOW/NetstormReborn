@@ -2901,6 +2901,50 @@ TEST_CASE(CampaignCarrierDrop_ActualInsufficientFunds) {
     const auto raw=core.pool.Slot(priest);const auto caster=session.World().Create(133,2);session.World().Pop(caster,std::bit_cast<float>(Get(raw,14)),std::bit_cast<float>(Get(raw,18)),0);core.owner.Set(caster,1);const auto prayer=session.CreateContained(caster,168,0,1,0,0);session.SetSp(1,0);session.RequestCarrierDrop(caster,prayer);CHECK(!sent && !popups && session.Sp(1)==0 && !core.processes.FindEvent(caster,0x493));CHECK(SquidForms(core.pool).Parent(prayer)==caster && !(core.pool.Slot(prayer)[11]&3U));
 }
 
+// 원본 Early5의 적 사제를 실제 검색/피해/포획/내려놓기로 처리한다. 시전자/내용물/잔액만 명시 검사 입력이다.
+TEST_CASE(CampaignDevastation_ActualEnemyCaptureAndDropFromCast) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();netstorm::zacket::LocalMissionTransport* wire{};
+    services.carrierRequest=[&](std::int32_t target,std::span<const std::uint8_t> packet) { CHECK(wire && target==9);if (wire) wire->Send(target,packet); };
+    services.carrierDropPopup=[&](std::int32_t,std::int32_t,std::int32_t,std::uint32_t) { ++external.notices; };services.unitLost=[&](Sid) { ++external.notices; };
+    ConfigInterface config([&](std::string_view path) { return assets.files.TryRead(path); });config.Configuration().Assign("DataDir=\"d\"\ncurrentLanguage=\"english\"\nmissionSpec=\"{DataDir}\\{local.1}.{currentLanguage}\"\nfortSpec=\"{DataDir}\\{local.1}.fort\"\n[END]\n");MissionScript script(config,"Tutorial5");CHECK(script.Loaded());
+    auto fort=FortTemplate::Parse(assets.files.Read(script.FortPath()),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),script.FortName(),std::move(services));session.Load();auto core=session.Core();SessionPickupWire link(session);wire=&link.transport;
+    Sid enemy{},temple{}; // 원본에서 로드한 적 사제와 신전만 보관한다.
+    // 저장 미션의 실제 소유자와 TYPE로 대상을 고르고 HP/좌표는 바꾸지 않는다.
+    for (const auto& object:session.World().Objects()) {
+        if (object.object.type==158 && object.object.owner==2) enemy=object.sid;
+        if (object.object.type==125 && object.object.owner==2) temple=object.sid;
+    }
+    CHECK(enemy.value && temple.value);if (!enemy.value || !temple.value) return;
+    const auto victim=core.pool.Slot(enemy);const auto x=std::bit_cast<float>(Get(victim,14)),y=std::bit_cast<float>(Get(victim,18));const auto initialHealth=Get(victim,26,2),templeHealth=Get(core.pool.Slot(temple),26,2);
+    const auto caster=session.World().Create(133,2);core.owner.Set(caster,1);session.World().Pop(caster,x-1,y-1,0);const auto prayer=session.CreateContained(caster,168,0,1,0,0);session.SetSp(1,10000);
+    std::uint32_t selected{},mouseType{},mode{};std::int32_t mouseX{},mouseY{};std::array<std::uint32_t,2> remembered{};std::array<std::uint32_t,1> multiple{};std::int32_t count{};RawUserHighlight highlight({mode,selected,mouseType,mouseX,mouseY},{});
+    UserSelectionHooks select;select.paused=[] { return 0U; };select.enabled=[] { return 1U; };select.blocked=[] { return 0U; };select.dump=[](Sid) {};select.highlight=[&](std::uint32_t value) { highlight.Highlight(value); };select.assertion=select.previewAssertion=[] { throw std::logic_error("적/지형 시전 선택의 예상 밖 진단"); };
+    auto selection=session.MakeUserSelection({selected,mouseType,remembered,multiple,count},std::move(select));CHECK(selection->Select(caster.value,0,0)==caster.value);
+    const auto money=session.Sp(1);session.RequestCarrierDrop(caster,prayer);CHECK(session.Sp(1)==money-core.types[168].cost && Get(core.pool.Slot(enemy),26,2)==initialHealth);link.transport.Flush();CHECK(link.transport.Poll()==1);
+    const auto spells=ConstructionLive(core,168);CHECK(spells.size()==1);if (spells.size()!=1) return;const auto bomb=spells.front();const auto* initial=core.processes.FindEvent(bomb,0);CHECK(initial);if (!initial) return;const auto form=initial->Form();std::size_t frames{};
+    // 실제 시전 예약만 진행한다. 검색 목록·대상 HP·지형·시전 시간은 검사에서 쓰지 않는다.
+    while (!(core.pool.Slot(bomb)[11]&3U) && frames<4096) {
+        auto* current=dynamic_cast<RegularProcess*>(core.processes.FromForm(form));CHECK(current);if (!current) break;core.processState.now=current->Time();current->RunFrame();++frames;
+    }
+    CHECK(frames>1 && frames<4096 && (core.pool.Slot(bomb)[11]&3U)==3U && !core.processes.FromForm(form));CHECK(Get(core.pool.Slot(enemy),26,2)==1 && initialHealth==100);CHECK(core.pool.Slot(enemy)[34]==2 && !(core.pool.Slot(enemy)[11]&3U));
+    CHECK(Get(core.pool.Slot(temple),26,2)==templeHealth);CHECK(Get(core.pool.Slot(caster),26,2)==50 && !core.processes.FindEvent(caster,0x493));CHECK(SquidForms(core.pool).Parent(prayer)==caster && !(core.pool.Slot(prayer)[11]&3U));CHECK(session.Sp(1)==money-core.types[168].cost);
+    // 피해로 행동 불가가 된 실제 적 사제에게 경로로 도착하여 원래 포획 요청을 발생시킨다.
+    const auto argument=Get(core.pool.Slot(enemy),12,2);auto* movement=session.StartCarrierMovement({caster,{x,y},1,0,0,0,0});CHECK(movement);if (!movement) return;const auto movementForm=movement->Form();const auto arrivalTime=movement->Runtime().Time(movement->Runtime().Count()-1)+0.01;
+    // 경로는 한 호출에 한 꼭짓점만 소비하므로 마지막 시각에서도 실제 프레임을 반복한다.
+    for (std::size_t step=0;step<1024;++step) {
+        auto* current=dynamic_cast<RawPathProcess*>(core.processes.FromForm(movementForm));if (!current) break;core.processState.now=arrivalTime;current->RunFrame();
+    }
+    CHECK(std::bit_cast<float>(Get(core.pool.Slot(caster),14))==x && std::bit_cast<float>(Get(core.pool.Slot(caster),18))==y && !core.processes.FromForm(movementForm));
+    link.transport.Flush();CHECK(link.transport.Poll()==1);
+    const auto captured=session.Priests().Carrier().FindContained(caster,0x20,158,0);CHECK(captured.value);if (!captured.value) return;
+    CHECK((core.pool.Slot(enemy)[11]&1U)!=0 && SquidForms(core.pool).Parent(captured)==caster && Get(core.pool.Slot(captured),12,2)==argument);CHECK(session.FindPriestParticipation(2)==caster.value);
+    // 명시적으로 선택한 일반 포로 내용물을 실제0x50과 건설 확정 경로로 내려놓는다.
+    const auto beforeDrop=session.Sp(1);session.RequestCarrierDrop(caster,captured);CHECK(!(core.pool.Slot(captured)[11]&3U));link.transport.Flush();CHECK(link.transport.Poll()==1);
+    const Sid restored{static_cast<std::uint16_t>(session.FindPriestParticipation(2))};CHECK(restored.value && restored!=caster);if (restored.value && restored!=caster) CHECK(core.pool.Slot(restored)[10]==158 && (Get(core.pool.Slot(restored),12,2)&0x7fU)==2 && !(core.pool.Slot(restored)[11]&3U));
+    CHECK((core.pool.Slot(captured)[11]&3U)==3U && !session.Priests().Carrier().FindContained(caster,0x20,158,0).value);CHECK(session.Sp(1)==beforeDrop && SquidForms(core.pool).Parent(prayer)==caster && !(core.pool.Slot(prayer)[11]&3U));
+    CHECK(link.recorded.size()==3 && link.recorded[0][1]==0x50 && link.recorded[1][1]==0x4f && link.recorded[2][1]==0x50);CHECK(!core.bookkeeping.depth && !core.destroy.PreDepth() && !core.destroy.PostDepth());wire=nullptr;
+}
+
 // 실제40aca0의 독립909입력과 송신하지 않는 관문의 바이트 보존을 확인한다.
 TEST_CASE(CampaignDevastation_PacketLengthNative909) {
     const auto path=(std::filesystem::path(__FILE__).parent_path()/"fixtures/bomb-packet-x86.tsv").string();std::size_t rows{};

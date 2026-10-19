@@ -1601,6 +1601,7 @@ struct RawCampaignSession::Impl {
         FillMissing(effects.configInt);FillMissing(effects.wallSeconds);FillMissing(effects.refresh);
         FillMissing(effects.negativeQuantity);FillMissing(effects.boundsAssertion);
         RawCampaignConstructionGameplay gameplay; // 첫 객체 설치 뒤 선택될 현재 원본 하위만 지연 연결한다.
+        gameplay.setOwner=[this](Sid sid,std::uint32_t owner) { priests->SetOwner(sid,owner); }; // 같은 Pool의 사제 가상+74와 나머지 공통 소유자를 분배한다.
         gameplay.request.mayPlace=[this](const CanonPlacementQuery& query) { return MayPlaceGameplay(query); };
         gameplay.request.displace=[this](float x,float y,std::uint32_t type,std::uint32_t owner) { if (!buildingEffects) throw std::logic_error("요청의 실제 건설 효과 미설치");PrepareBuilding(core.processState.now);return buildingEffects->Displace(x,y,type,owner); };
         gameplay.request.cancel=[this](float x,float y,std::uint32_t flags,std::uint32_t owner) { if (!buildingEffects) throw std::logic_error("요청 실패의 실제 섬 정리 미설치");PrepareBuilding(core.processState.now);buildingEffects->DropIsland(x,y,flags,owner); };

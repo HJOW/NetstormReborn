@@ -295,7 +295,7 @@
     "cpppj/src/client/GameWorld.cpp": "af6d3aeb3bd53d83e2619c2bd20ba5df42c17fe718cb81786841606419f10c6c",
     "cpppj/src/client/SpriteDraw.cpp": "8946ce7549a2b399a0f337382e6de316d3d7a7abdfa43194cd8bce3b863297a8",
     "cpppj/src/o/RiftTypeTable.cpp": "e482f1e9183264f4800e7c6fe95e12c811c5b0868f7e8843f77f37b4694795d0",
-    "cpppj/tests/CampaignSessionTests.cpp": "bc71438efcccbd4585d22c7b2c9311a6cf50ab171a03d8d7baf2294e65e18a45",
+    "cpppj/tests/CampaignSessionTests.cpp": "a9a4e62edf5a796eeacd26bd1166806dc0078420a68d0957a66e41539876bc14",
     "tools/cpp_campaign_entry_smoke.py": "5fa9adadf6bcd571d6fba39b38e46fed41fe2e927911ff80dc38047c52c56b49",
     "tools/cpp_fort_smoke.py": "96c7fcd524deb38d93274ded77620639bdc7012ec0f2aaeed0a488d938e9da83",
     "tools/cpp_golem_display_runtime.py": "fb1bfdcf82755f1aee1477a79dd9d90d976c28c06219b4289b2fa2a47bdd7094",
@@ -325,7 +325,7 @@
     "tools/typefile.py": "a564a4b1bbc4f06d05ecb8b1f3fae4c32f6231cf95ea7bfadff2499931804d90"
   },
   "evidence": {
-    "cpppj/golem-capture-native.json": "f63d70ddcd688afd85e85767a8c01fd47356cb87a961be0adfa59a4e8cb50c6c",
+    "cpppj/golem-capture-native.json": "d4b8a13fcb1feb8f548fd40dd4d2e63b1f42d54a6fe7dd699bdce7b688446d16",
     "cpppj/tests/fixtures/golem-capture-x86.tsv": "012d96d1c1d6064ee1074dc7b6dec7757be3ca8b49a86b6ed76baa1784cd8550",
     "extracted/goal-early5-island-20261019-probe.py": "2933ead8b5cc87b76425031fea3da8690c3b2649dc8f3fa8d4babd276176ef1a",
     "extracted/goal-golem-display-20261019-after1.json": "8ddead24534e9f99241196ad8ae3c0d2e1a4ea99db88151d258394f8760a3015",
@@ -484,6 +484,25 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "0072c9605dd595fd018d29fd4fdfb4334a53a1b52d482dc132bd5a85210a2b7e",
           "current": "bc71438efcccbd4585d22c7b2c9311a6cf50ab171a03d8d7baf2294e65e18a45"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-20",
+      "unit": 238,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/sources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "bc71438efcccbd4585d22c7b2c9311a6cf50ab171a03d8d7baf2294e65e18a45",
+          "current": "a9a4e62edf5a796eeacd26bd1166806dc0078420a68d0957a66e41539876bc14"
+        },
+        {
+          "group": "/evidence",
+          "path": "cpppj/golem-capture-native.json",
+          "previous": "f63d70ddcd688afd85e85767a8c01fd47356cb87a961be0adfa59a4e8cb50c6c",
+          "current": "d4b8a13fcb1feb8f548fd40dd4d2e63b1f42d54a6fe7dd699bdce7b688446d16"
         }
       ]
     }

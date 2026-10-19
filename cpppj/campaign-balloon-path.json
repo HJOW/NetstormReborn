@@ -10,7 +10,7 @@
   "status": "벌룬42와 그림자 수명 연결. 전체11스테이지 자연 플레이 목표는 미완료.",
   "currentSources": {
     "cpppj/src/CMakeLists.txt": "6607046c6ce2b71f7cae40487563418cf582f73458504dc8c22fd109e3aefc10",
-    "cpppj/src/client/RawCampaignSession.cpp": "4f1154f95c97a7bc223ef3d36b3af9d8896de3d9eb4ccdec95887cd83131832c",
+    "cpppj/src/client/RawCampaignSession.cpp": "bb179f114f49f08e55b37da0fab350ea0370005c31b09b9224afcc48d342bd1c",
     "cpppj/src/client/RawCampaignPathBindings.cpp": "2fc59e6cd111db8c953e388d1856c8e6103a8b6852461c2d3df89ec84a4f4314",
     "cpppj/src/client/RawCampaignPathBindings.h": "82d9565ece60f24300977681dffdaad57a660fdccca38b4db305d5a1d262b8b0",
     "cpppj/src/o/RawPathRuntime.cpp": "4f051a4e5c50de3a99cb856c80dcccf7988ee1000fec9f66942f6e4e8999e639",
@@ -21,7 +21,7 @@
     "cpppj/src/o/SquidPostPop.cpp": "0e6f552bafeab1be94ba07919b928535e774ce54e121d775df514c9b6645d4e6",
     "cpppj/src/o/SquidPostPop.h": "b4bfb4886068b9dd98bed52b9f56f17e1c25e50b123b4fdd6b165f2054bcdf1d",
     "cpppj/tests/CMakeLists.txt": "8ca2db5cb109de55c2eadec3063e474691de144316efaa1a2e9046faf0febd43",
-    "cpppj/tests/CampaignSessionTests.cpp": "bc71438efcccbd4585d22c7b2c9311a6cf50ab171a03d8d7baf2294e65e18a45",
+    "cpppj/tests/CampaignSessionTests.cpp": "a9a4e62edf5a796eeacd26bd1166806dc0078420a68d0957a66e41539876bc14",
     "cpppj/src/o/RawBalloonFrame.cpp": "71390bf0c48ed94bd6381b15c812b5a6702cd94e02528692f7ac5d1b6f18ab05",
     "cpppj/src/o/RawBalloonFrame.h": "3c50521f9a4a132e33b627fcf609e6028ff2cfbbc6b757434f06b4b3d7b90c8d",
     "cpppj/src/o/RawBalloonBody.cpp": "ae406292ac8d2be18bbdd2aaf46dc0a845e3b06c989d51af4219d722a5881f61",
@@ -3499,6 +3499,25 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "0072c9605dd595fd018d29fd4fdfb4334a53a1b52d482dc132bd5a85210a2b7e",
           "current": "bc71438efcccbd4585d22c7b2c9311a6cf50ab171a03d8d7baf2294e65e18a45"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-20",
+      "unit": 238,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "4f1154f95c97a7bc223ef3d36b3af9d8896de3d9eb4ccdec95887cd83131832c",
+          "current": "bb179f114f49f08e55b37da0fab350ea0370005c31b09b9224afcc48d342bd1c"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "bc71438efcccbd4585d22c7b2c9311a6cf50ab171a03d8d7baf2294e65e18a45",
+          "current": "a9a4e62edf5a796eeacd26bd1166806dc0078420a68d0957a66e41539876bc14"
         }
       ]
     }

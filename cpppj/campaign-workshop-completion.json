@@ -15,13 +15,13 @@
     "실제 World.Report에 현재 같은 슬롯의 state/extra/HP 저장 비트를 병렬 행으로 추가해 GUI 완공을 판정한다. 기존 raw_object 열은 보존한다. --completion은 같은 실제 입력만으로 건설 중/완공까지 검사한다."
   ],
   "currentSources": {
-    "cpppj/src/client/RawCampaignSession.cpp": "4f1154f95c97a7bc223ef3d36b3af9d8896de3d9eb4ccdec95887cd83131832c",
+    "cpppj/src/client/RawCampaignSession.cpp": "bb179f114f49f08e55b37da0fab350ea0370005c31b09b9224afcc48d342bd1c",
     "cpppj/src/client/RawShapeToBuffer.cpp": "a6e46ce3d717dd312323268a0bb1ebcd020d992c583d9a3d6e069588fbb50eab",
     "cpppj/src/client/RawShapeToBuffer.h": "f3788fbcdacd21dd4dabac2c63c96fbd4d28e1c27c9a19cf8b6519f98852a119",
     "cpppj/src/client/RawSurfaceWorld.cpp": "d6ebba7d5175b98dd5ddabba6de4744a977434913b4eb8b9c2e39068e7b94832",
     "cpppj/src/o/CMakeLists.txt": "e98fa5aecc683b69021e6efacd62092a48772ae5ed3f7cb3da0eeeff7c33d7ec",
     "cpppj/tests/CMakeLists.txt": "8ca2db5cb109de55c2eadec3063e474691de144316efaa1a2e9046faf0febd43",
-    "cpppj/tests/CampaignSessionTests.cpp": "bc71438efcccbd4585d22c7b2c9311a6cf50ab171a03d8d7baf2294e65e18a45",
+    "cpppj/tests/CampaignSessionTests.cpp": "a9a4e62edf5a796eeacd26bd1166806dc0078420a68d0957a66e41539876bc14",
     "cpppj/tests/ShapeToBufferTests.cpp": "91d7010f9d6698f7237d8a2040e00658502a57dedea9da310173af4e96dd26e5",
     "tools/cpp_priest_construction_smoke.py": "93524c9e1fb58e7e589fc25c7507e105e750b96cb66ad7ddbf9a58aae2756c2c",
     "cpppj/src/o/RawFactoryDraw.h": "1a6ced2b13c6a50083dea365028524f6d46f2b80821106b61b6573fda44d41ac",
@@ -6040,6 +6040,25 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "0072c9605dd595fd018d29fd4fdfb4334a53a1b52d482dc132bd5a85210a2b7e",
           "current": "bc71438efcccbd4585d22c7b2c9311a6cf50ab171a03d8d7baf2294e65e18a45"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-20",
+      "unit": 238,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "4f1154f95c97a7bc223ef3d36b3af9d8896de3d9eb4ccdec95887cd83131832c",
+          "current": "bb179f114f49f08e55b37da0fab350ea0370005c31b09b9224afcc48d342bd1c"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "bc71438efcccbd4585d22c7b2c9311a6cf50ab171a03d8d7baf2294e65e18a45",
+          "current": "a9a4e62edf5a796eeacd26bd1166806dc0078420a68d0957a66e41539876bc14"
         }
       ]
     }

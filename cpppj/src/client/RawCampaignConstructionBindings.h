@@ -33,6 +33,7 @@ struct RawCampaignConstructionEffects {
 };
 // 같은 Session의 기준점/실제 Builder/사제 경로/건설 시작을 연결하는 현재 게임 몸체다.
 struct RawCampaignConstructionGameplay {
+    std::function<void(o::Sid,std::uint32_t)> setOwner; // 원본 가상+74의 파생 소유자 몸체다. 없으면 공통 소유자를 사용한다.
     o::ConstructionRequestHooks request; // 실제 MayPlace/Displace/DropIsland이며 Confirm은 내부가 연결한다.
     o::ConstructionConfirmHooks confirm; // 기준점과 선택적 실제 기록기다. 생성/송신/직접 통지는 내부가 연결한다.
     o::ConstructionNoticeHooks notice; // 운반/사제 조회·접근·이동/시작이다. 정리/배치/환불/삭제/갱신은 내부가 연결한다.

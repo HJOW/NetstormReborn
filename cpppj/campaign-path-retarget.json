@@ -11,10 +11,10 @@
   "currentSources": {
     "cpppj/src/o/RawPathRetarget.h": "bc69deb9620ee94bf7a35eb1f8262a635bfd54d78aac668d76084bf3cba67722",
     "cpppj/src/o/RawPathRetarget.cpp": "76f960440f8908f16acd525be61dbb76d2905b84c50e03cbd13a2e319753eb24",
-    "cpppj/src/client/RawCampaignSession.cpp": "4f1154f95c97a7bc223ef3d36b3af9d8896de3d9eb4ccdec95887cd83131832c",
+    "cpppj/src/client/RawCampaignSession.cpp": "bb179f114f49f08e55b37da0fab350ea0370005c31b09b9224afcc48d342bd1c",
     "cpppj/src/CMakeLists.txt": "6607046c6ce2b71f7cae40487563418cf582f73458504dc8c22fd109e3aefc10",
     "cpppj/tests/CMakeLists.txt": "8ca2db5cb109de55c2eadec3063e474691de144316efaa1a2e9046faf0febd43",
-    "cpppj/tests/CampaignSessionTests.cpp": "bc71438efcccbd4585d22c7b2c9311a6cf50ab171a03d8d7baf2294e65e18a45",
+    "cpppj/tests/CampaignSessionTests.cpp": "a9a4e62edf5a796eeacd26bd1166806dc0078420a68d0957a66e41539876bc14",
     "cpppj/tests/PathRetargetTests.cpp": "07b2e79eda167bea7a9934db91863c2730d908a48cdfe8f4c905ac6588de9be0",
     "tools/decomp_path_retarget.py": "abd243287cf0b8c440e4bf9ba83dd40a2ab980374613201fd3c00f1273aa670a",
     "docs/exe/cpp-path-retarget-20261018.md": "57daa01e0ea691b9821188baa94bb629e17460e1deee6cba9ec8163f6690157a",
@@ -1705,6 +1705,25 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "0072c9605dd595fd018d29fd4fdfb4334a53a1b52d482dc132bd5a85210a2b7e",
           "current": "bc71438efcccbd4585d22c7b2c9311a6cf50ab171a03d8d7baf2294e65e18a45"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-20",
+      "unit": 238,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "4f1154f95c97a7bc223ef3d36b3af9d8896de3d9eb4ccdec95887cd83131832c",
+          "current": "bb179f114f49f08e55b37da0fab350ea0370005c31b09b9224afcc48d342bd1c"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "bc71438efcccbd4585d22c7b2c9311a6cf50ab171a03d8d7baf2294e65e18a45",
+          "current": "a9a4e62edf5a796eeacd26bd1166806dc0078420a68d0957a66e41539876bc14"
         }
       ]
     }

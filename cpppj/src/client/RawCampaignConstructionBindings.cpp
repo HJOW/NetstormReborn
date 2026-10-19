@@ -57,8 +57,9 @@ struct RawCampaignConstructionBindings::Impl {
         if (!placeHooks.tellPlayer) placeHooks.tellPlayer=ConstructionMissing<void,std::uint32_t,std::string_view>("Player 비용 안내");
         if (!placeHooks.tell) placeHooks.tell=ConstructionMissing<void,std::string_view>("로컬 비용 안내");
         if (!placeHooks.sendReject) placeHooks.sendReject=ConstructionMissing<void,std::uint32_t,const o::ConstructionRejectNotice&>("배치 취소 통지");
-        place=std::make_unique<o::RawConstructionPlace>(core.pool,core.types,frames,state.place,hp,
-            o::MakeConstructionPlaceHooks(core.pool,core.factory,core.owner,hp,&sp,state.place,std::move(placeHooks)));
+        placeHooks=o::MakeConstructionPlaceHooks(core.pool,core.factory,core.owner,hp,&sp,state.place,std::move(placeHooks));
+        if (gameplay.setOwner) placeHooks.setOwner=std::move(gameplay.setOwner); // 내려놓은 사제의 원래 소유자와 전투 표식을 가상 몸체가 복원한다.
+        place=std::make_unique<o::RawConstructionPlace>(core.pool,core.types,frames,state.place,hp,std::move(placeHooks));
         place->BindPlayerRecords(players);
         o::ConstructionClearHooks clearHooks; // 삭제는 관찰/목록 제거가 아닌 같은 가상 수명 전체를 실행한다.
         clearHooks.destroy=[this](o::Sid sid,std::uint32_t flags) { Destroy(sid,flags); };

@@ -257,7 +257,7 @@
     "cpppj/src/client/CampaignObjectMenuClient.cpp": "01d8978e8e239dedac370520296e84410f2917dbc3aed3597f629986ccbe11b1",
     "cpppj/src/client/CampaignUserInputServices.cpp": "f2bef8c428670f4ab871fd4e2d35730b7417ed53ef3388cd3b245087b96dc017",
     "cpppj/src/client/RawCampaignCarrierInput.inc": "17c639af1e42ed83c94462d61bd2dcfe2f8b85db647611a100a979bde3b48ee6",
-    "cpppj/src/client/RawCampaignSession.cpp": "4f1154f95c97a7bc223ef3d36b3af9d8896de3d9eb4ccdec95887cd83131832c",
+    "cpppj/src/client/RawCampaignSession.cpp": "bb179f114f49f08e55b37da0fab350ea0370005c31b09b9224afcc48d342bd1c",
     "cpppj/src/client/RawCarrierDropPoint.cpp": "a0c2130de14992eb2f3debda71840b9e0c9889398d17cfd92c2c8cb050b2acd5",
     "cpppj/src/o/RawBombPreDestroy.cpp": "4015008cba143c5a47fdf509786a6f87af47ba15d7f69196ec6e7fd15c62dfc3",
     "cpppj/src/o/RawContainedFinder.cpp": "52fc6dd13a8884c2ec3d8d72cbcd9c5cb25a2c88f29958f2cf7d748e18eb2046",
@@ -274,7 +274,7 @@
     "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e"
   },
   "evidence": {
-    "cpppj/carrier-drop-native.json": "8c5ba84e9b1251806c08a3631100abce74d343a932154b7cf06876f19816d216",
+    "cpppj/carrier-drop-native.json": "cd2333c4ead6c0f8260ca19303dc84bda19224b2af6da97c0ea833bcfd2af4ee",
     "cpppj/tests/fixtures/carrier-drop-x86.tsv": "d2da9dfcac50dfa04c11c3d19d9665d7381c3947d3c7987259850eb6daa924b0",
     "extracted/goal-carrier-drop-20261019-build-report.py": "52157c13d6eb4a11a0bb73b0578cb7ebe3ef770217730b3796cf9cbb9c67815d",
     "extracted/goal-carrier-drop-20261019-inspect1-console.log": "542bb26f1c532ec6b8690fc4c4be4c07084ad491607200473b15ea719903eefe",
@@ -333,6 +333,25 @@
           "path": "cpppj/src/client/RawCampaignSession.cpp",
           "previous": "8fd4dff08f9c36f7597ea2985eb4c0ba9e1f4686a41b0446eda990eb353c6dc1",
           "current": "4f1154f95c97a7bc223ef3d36b3af9d8896de3d9eb4ccdec95887cd83131832c"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-20",
+      "unit": 238,
+      "reason": "현재 제품/검사 등록의 핀 갱신. 과거 값과 이력을 보존한다.",
+      "pins": [
+        {
+          "group": "/sources",
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "previous": "4f1154f95c97a7bc223ef3d36b3af9d8896de3d9eb4ccdec95887cd83131832c",
+          "current": "bb179f114f49f08e55b37da0fab350ea0370005c31b09b9224afcc48d342bd1c"
+        },
+        {
+          "group": "/evidence",
+          "path": "cpppj/carrier-drop-native.json",
+          "previous": "8c5ba84e9b1251806c08a3631100abce74d343a932154b7cf06876f19816d216",
+          "current": "cd2333c4ead6c0f8260ca19303dc84bda19224b2af6da97c0ea833bcfd2af4ee"
         }
       ]
     }
