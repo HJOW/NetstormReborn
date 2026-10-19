@@ -1,0 +1,354 @@
+{
+  "unit": 226,
+  "baseline": "8f8b4b03",
+  "host": "VM-W11-Codex",
+  "date": "2026-10-19",
+  "lastDecompile": "VM-W11-Codex / 2026-10-19",
+  "scope": "실제 회전 다리 배치로 적 섬을 연결하고 골렘 보행/오벨리스크 획득/자연F를 확인했다. Cast·사제 포획/희생·완주는 아직 미완료다.",
+  "validation": {
+    "previousFullTests": "extracted/goal-support-color-20261019-full-tests1.json",
+    "productUnchanged": true
+  },
+  "observations": {
+    "extracted/goal-early5-connected-20261019-ui1": {
+      "returnCode": 0,
+      "binarySha256": "505f2c612552cb75c93e57e39319d089dfcf8cf62413bb280d92e8b695720164",
+      "originalsUnchanged": true,
+      "lastLabel": "final",
+      "gameTime": 290.189,
+      "lastGate": [
+        "5",
+        "70",
+        "0",
+        "1",
+        "0",
+        "1",
+        "289.75",
+        "0"
+      ],
+      "forwardGeneratorsAfterWait": {
+        "15072": {
+          "xy": [
+            "133",
+            "93"
+          ],
+          "hp": 700
+        },
+        "15100": {
+          "xy": [
+            "138",
+            "99"
+          ],
+          "hp": 700
+        }
+      },
+      "cannons": {
+        "15110": {
+          "firstLabel": "firstCannon1",
+          "xy": [
+            "136",
+            "108"
+          ],
+          "firstHp": 0,
+          "maxHp": 600,
+          "lastLabel": "obeliskWalk3",
+          "lastHp": 17
+        }
+      },
+      "sunFlyerSidsObserved": [
+        15063
+      ],
+      "enemyMinimumHp": {
+        "15006": 26,
+        "15013": 200
+      },
+      "naturalEObserved": true,
+      "combat2Observed": false,
+      "nextFailure": null,
+      "towers": {
+        "15060": {
+          "xy": [
+            "135",
+            "93"
+          ],
+          "firstLabel": "placed",
+          "maxHp": 1880,
+          "lastHp": 120,
+          "lastLabel": "enemySelected"
+        }
+      },
+      "templeDestroyedObserved": false,
+      "maximumOwnCannonCount": 1,
+      "lastPage": [
+        "F."
+      ],
+      "enemyThunderPresentAtLastReport": false,
+      "enemyAviaryPresentAtLastReport": false,
+      "naturalFObserved": true,
+      "maximumOwnGolemCount": 1,
+      "golems": {
+        "15182": {
+          "firstLabel": "golemAttempt2",
+          "lastLabel": "final",
+          "positions": [
+            [
+              "130",
+              "82"
+            ],
+            [
+              "130",
+              "82.2220001221"
+            ],
+            [
+              "131",
+              "84.3179855347"
+            ],
+            [
+              "132.559234619",
+              "89.5592346191"
+            ],
+            [
+              "134",
+              "92.9259567261"
+            ],
+            [
+              "134",
+              "95.4979629517"
+            ],
+            [
+              "134.908157349",
+              "97"
+            ],
+            [
+              "135.622161865",
+              "97"
+            ],
+            [
+              "135.852157593",
+              "97"
+            ],
+            [
+              "136.782165527",
+              "97"
+            ],
+            [
+              "138",
+              "98.5763626099"
+            ],
+            [
+              "142.838562012",
+              "99"
+            ],
+            [
+              "143.311035156",
+              "102"
+            ],
+            [
+              "141.03704834",
+              "102"
+            ],
+            [
+              "141",
+              "104.157157898"
+            ],
+            [
+              "141",
+              "104.64515686"
+            ],
+            [
+              "141",
+              "105.023162842"
+            ],
+            [
+              "141",
+              "106.065162659"
+            ],
+            [
+              "141.705352783",
+              "108"
+            ],
+            [
+              "145",
+              "110.295562744"
+            ],
+            [
+              "148",
+              "111.669960022"
+            ],
+            [
+              "148",
+              "113.787956238"
+            ],
+            [
+              "146.237136841",
+              "115.76285553"
+            ],
+            [
+              "145.849639893",
+              "116.150352478"
+            ],
+            [
+              "145.712463379",
+              "116.287528992"
+            ],
+            [
+              "145",
+              "117"
+            ],
+            [
+              "144.515899658",
+              "119.484100342"
+            ],
+            [
+              "143",
+              "124.005493164"
+            ],
+            [
+              "143",
+              "132"
+            ]
+          ],
+          "lastHp": 50
+        }
+      },
+      "firstMovement": {
+        "sid": 15182,
+        "label": "afterMove9",
+        "frame": 6591,
+        "source": [
+          "130",
+          "82"
+        ],
+        "position": [
+          "130",
+          "82.2220001221"
+        ],
+        "game": "252.081"
+      },
+      "firstF": {
+        "label": "final",
+        "frame": 7600,
+        "gate": [
+          "5",
+          "70",
+          "0",
+          "1",
+          "0",
+          "1",
+          "289.75",
+          "0"
+        ],
+        "page": [
+          "F."
+        ]
+      },
+      "originalObeliskPresentInitially": true,
+      "originalObeliskRemoved": true,
+      "secondObeliskRemains": true
+    }
+  },
+  "pendingCastStaticHeader": "extracted/goal-early5-connected-20261019-cast-header-static.json",
+  "castAttemptObserved": false,
+  "sources": {
+    "cpppj/src/client/CampaignObjectMenuClient.cpp": "0421e30b350715a402e90e2ccfcc47584b00392587456a64b49746460d687be2",
+    "cpppj/src/client/CampaignUserInputServices.cpp": "5af003ba5e0e9f98d3f7f134213681ad1f886570d6c964d0965d1bee6adb8d40",
+    "cpppj/src/client/GameWorld.cpp": "aacc54866c2893001591af389ffbb3c6885af176352b9e6d0e52111f493a05b6",
+    "cpppj/src/client/RawCampaignCarrierInput.inc": "ff521d60c6520e8834d91f6b6cd719fa8f0d76450a396366b3bb4969508982a3",
+    "cpppj/src/client/RawCampaignSession.cpp": "4b0470acb1ea5cb275959eb4a70df1d795c4f87d6a51a2a78f6e35ebe573f36b",
+    "cpppj/src/client/RawCarrierInput.cpp": "ebebcf63a03fb24dbdca9bbd7086ebec634400c87a9d1a3711ac2b6a41218322",
+    "cpppj/src/client/RawCarrierMenu.cpp": "4a0fada9b8ac9d00eab37955189a8ac669d26f1d22559deae229a6ce3637dc1e",
+    "cpppj/src/client/UserInput.cpp": "fd1bee42a48c4a33098114e813a7909d449791671fb0e313b76efc55216c20bd",
+    "cpppj/src/o/Bridge.cpp": "f23f37afadbf944c5c83539d9e8c16cbda2baf26985770a90e3f174699929c50",
+    "cpppj/src/o/RawCarrierMove.cpp": "f37e7bf73308b44e5d7ec8eeb0813aae087c91eddce6c79b126aa4de5c00f8e8",
+    "cpppj/src/o/RawCarrierPickup.cpp": "634c2b487978a6bf63192b3b1d8e45de2b5d1b7acea9a2117a7649be30bf5d15",
+    "cpppj/src/o/RawPathSearch.cpp": "a7597d758972707a48ab25260af4ba877798c9c91ed01e0471d84819005d2858",
+    "cpppj/src/o/TerrainBuilder.cpp": "20c2732303039c44ce69b47b7e4d01ef4d0480e350f11b7f28da50004cd455a5",
+    "tools/cpp_campaign_entry_smoke.py": "5fa9adadf6bcd571d6fba39b38e46fed41fe2e927911ff80dc38047c52c56b49",
+    "tools/cpp_early5_connected_runtime.py": "f54ccbdc4a2a3c96606d46f3f4b7be3f5b0f86ad6c3499beb58ca3a09b44e1ee",
+    "tools/cpp_early5_spells_runtime.py": "b46e2145d2ddcfcf21e410a5604cf5364c0605576e04c1518eb8dde469063cf0",
+    "tools/cpp_fort_smoke.py": "96c7fcd524deb38d93274ded77620639bdc7012ec0f2aaeed0a488d938e9da83",
+    "tools/cpp_island_drop_runtime.py": "7a84366e3505e7fc98d883ca16364c648b9cad8110762744f7a6b8e7e5157ab3",
+    "tools/cpp_menu_smoke.py": "41732efb30e6337267168e3cd836ab6c04d6f34d36b16152b762c39dd2a76afe",
+    "tools/cpp_renderer_smoke.py": "fc648fea126c9cad3a124b38f757460f1139bb0e7f26c1032482ae4d85766ebe",
+    "tools/cpp_smoke_files.py": "66745bfd0ebac8d672eeb8f515144a47377fa4a28dad0603b5f8969a008ec679",
+    "tools/cpp_sun_aviary_capture_runtime.py": "4cc2495a288f7fea6775dd395a9a3036e01863902bb238ceec13701f4d44ce1b",
+    "tools/cpp_sun_aviary_notice_runtime.py": "8ab54e12605e9861c531bf9b82f4616b540aac1879f831bf88d69d0e35703952",
+    "tools/cpp_thunder_capture_runtime.py": "8c4a9d8d65420c5f0f37cfb003500d55d81bf0aa437484f20c9c06bfcdd673e3",
+    "tools/cpp_world_smoke.py": "6e50f87caf0b1b817c9116ef972ec6e75b44d33455edc88fe128a8d0f791fe72",
+    "tools/fort.py": "ee8ff8f00eea02771ac5c7a519dcd582e14cc07a2d97337c946c191022554e13",
+    "tools/shp.py": "4cb8bee6ed773e29e8658ddb315594ebf5ac005ea5b96c6b760a177029515bfd",
+    "tools/taff.py": "461860cdfc9451b85a8694dd30fd2c56c1cfdf5c6bb7ab8f63a4089971889795",
+    "tools/terrain_mask.py": "00f9789dbde0c124a132a4005924549571b06add5214ea14e3b76e88e73cb37a",
+    "tools/typefile.py": "a564a4b1bbc4f06d05ecb8b1f3fae4c32f6231cf95ea7bfadff2499931804d90"
+  },
+  "evidence": {
+    "cpppj/support-color-runtime.json": "cc893c1fbab3ae048859637fd6d64804947393dc9a0c30fd850665cab73b0489",
+    "extracted/goal-early5-connected-20261019-build-report.py": "4745885fc35388bb28b15f247616ec333c7739a8e2691cada0b5d5e8dc93c616",
+    "extracted/goal-early5-connected-20261019-cast-header-static.json": "7bc5163ec2fe34c41a1ad7e28c6f02a9a6075c844caf2b9515505e63031942c4",
+    "extracted/goal-early5-connected-20261019-direction.json": "63b3df1e475c1fe429740f97979d10956e90a87b3e03377d3429b87c1c7d0b24",
+    "extracted/goal-early5-connected-20261019-direction.py": "c74c976dcaeaeced70dd334708d5fcb0dd03379f6ead35348e9bb279b2b1def4",
+    "extracted/goal-early5-connected-20261019-inspect1.json": "076641f00abb48508671662c67380b044cb7c3014a87f6f487cd28dc66021453",
+    "extracted/goal-early5-connected-20261019-inspect2.json": "36482693c7aaf7c665db679cdbb3858c3b204c895b6073506d8405655e5cc76d",
+    "extracted/goal-early5-connected-20261019-inspect3.json": "4889bbbf15b7f4d8a7fa65b14c258a068042b984fd3a47952db0a2cc91167261",
+    "extracted/goal-early5-connected-20261019-plan.py": "63a07a7bd9b481c4cccbe79c9e2e18776416198f23f49c7ce2004b4c7a33c232",
+    "extracted/goal-early5-connected-20261019-plan1.tsv": "5de654ca5cbf62337d3c5ebab2616f41a3b43f26599d0a3976abaa8988156bef",
+    "extracted/goal-early5-connected-20261019-runtime-v1.py": "b42ee0267d623cec94337aef3f8cd984643650dc2b9bf81e25945da07a3a7c78",
+    "extracted/goal-early5-connected-20261019-script.english": "7c5637da0cc5759cfeb7785b9ab7ffb1e4ebab4f92d90f1c9fb94ef7684e810e",
+    "extracted/goal-early5-connected-20261019-ui1/combatAfterCapture.bmp": "e3e282f1eeb168265a1ec7e5dc0f1bf9f550d6797c0cce7c7df10157d32b7266",
+    "extracted/goal-early5-connected-20261019-ui1/completedWorkshop.bmp": "adf3ce14f8093830191b3f6e720e3dfe74828d7bf77108b931292d66e2fe0634",
+    "extracted/goal-early5-connected-20261019-ui1/enemyView.bmp": "a9d01d805c19ab6817410cddcd9bb8be27baf38430522cf5e8a5848925f22759",
+    "extracted/goal-early5-connected-20261019-ui1/final.bmp": "5f7de7a4fb67a546d42de4f81153dee908b21817b86775097e85dbac553140ce",
+    "extracted/goal-early5-connected-20261019-ui1/obeliskWalk1.bmp": "884a7d3f90b1b83e14c5c657a8d590b28e53491f1f37f537af9b2232a7ac18a4",
+    "extracted/goal-early5-connected-20261019-ui1/obeliskWalk10.bmp": "074e15e4a5d99052dd04ed353f430b86ad0160a319a29b83b319e03e06ebc879",
+    "extracted/goal-early5-connected-20261019-ui1/obeliskWalk11.bmp": "63f1d20924b01a24e5b2de100a0414edaeabbc64513284f54f5634b4820cd106",
+    "extracted/goal-early5-connected-20261019-ui1/obeliskWalk12.bmp": "7551e468ee88c302d1a9d052a6159f2d55eabaed52f27ae9fc6928e3a5ad7d39",
+    "extracted/goal-early5-connected-20261019-ui1/obeliskWalk2.bmp": "05ae5f7e06e16189e0d43fdd0abdd3ec10ffcef225e16e68cd1d55854dc40bbd",
+    "extracted/goal-early5-connected-20261019-ui1/obeliskWalk3.bmp": "3fcc14fa40e2d369bc6070aec9b2987f5bd0f3295a0627bb209e9cf8fac39116",
+    "extracted/goal-early5-connected-20261019-ui1/obeliskWalk4.bmp": "94b6b280332ae71af2f461b2bc92bbbc5fa94ad0dbf44e1fb27ea3d118c62b25",
+    "extracted/goal-early5-connected-20261019-ui1/obeliskWalk5.bmp": "c2d62850c180cab8e40b733a6d6e8072c1be078f50f828a93030e5fb7d8efdee",
+    "extracted/goal-early5-connected-20261019-ui1/obeliskWalk6.bmp": "1e586d625894446a9258f6411002689e25eac4ca24f2891694559d0d35803dc6",
+    "extracted/goal-early5-connected-20261019-ui1/obeliskWalk7.bmp": "3f1099b02f6502f8f831b21a0aff7ff6580c1212b023e40c76889659f7567f08",
+    "extracted/goal-early5-connected-20261019-ui1/obeliskWalk8.bmp": "fe5589a974c171b2247430c9a32f72ea7aa45126af07d6909476afeea94fbeac",
+    "extracted/goal-early5-connected-20261019-ui1/obeliskWalk9.bmp": "87a370c3351196aaa361d394d659beb241fb3fa14453dbc720eeaaed9728f10f",
+    "extracted/goal-early5-connected-20261019-ui1/originals-before.json": "f98d8731a8a729b528fd9744b52f3b26143eff54e767f0b8e1537040c5807c15",
+    "extracted/goal-early5-connected-20261019-ui1/run.json": "2454883abb84f3efae80b980d62b8c910b57f31252373742ff450d57d3c54edb",
+    "extracted/goal-early5-connected-20261019-ui1/spellMenu1.bmp": "b87fe20e4a73b8495c0ab5469050456388f0390fe4742c4769bd55988b9b011d",
+    "extracted/goal-early5-connected-20261019-ui1/spellMenu10.bmp": "d9f99838d24de0565daf7ac36cae01b269bdb7bbc59ffd6dd7a6550ec6c78941",
+    "extracted/goal-early5-connected-20261019-ui1/spellMenu11.bmp": "9ace813438e2f8d65e2ca47e4007057d15f781810e1c17d00e081fa1f0b04afb",
+    "extracted/goal-early5-connected-20261019-ui1/spellMenu12.bmp": "7440163c7c406305a8eb0a9ad0d4fc1f7a6aac88566e67fbf6e83c6b3fa1a901",
+    "extracted/goal-early5-connected-20261019-ui1/spellMenu2.bmp": "98fa4ca865269897f3c561520cc45a9dfcfe39214985ca48afac123d4447a4f1",
+    "extracted/goal-early5-connected-20261019-ui1/spellMenu3.bmp": "5011ef15901b3cd0aa6748e53f90fd32f1b0c513c3e381e80be1fbdf91cc36cb",
+    "extracted/goal-early5-connected-20261019-ui1/spellMenu4.bmp": "be57e1303e76e2bfba3a2e83b0ecfd4900a64c49de84f53c47aaf2223abb8232",
+    "extracted/goal-early5-connected-20261019-ui1/spellMenu5.bmp": "1bd2721f6eeeb78579a6a19cee49da684d14c9ad53ae639607ddf9a83400bff5",
+    "extracted/goal-early5-connected-20261019-ui1/spellMenu6.bmp": "d4fc76163f44c2b6e91b9c2737c27b1be6de088e6efd20b40d4ba942ce6aa366",
+    "extracted/goal-early5-connected-20261019-ui1/spellMenu7.bmp": "1199b1f9f9dd42083608cde5c76b27dbd3880dd816edc8a9b3e11b6903019f91",
+    "extracted/goal-early5-connected-20261019-ui1/spellMenu8.bmp": "c04b9c96f7b61cce49d0d78ff71c0ddc57b50bc5105479d512177659033abd7f",
+    "extracted/goal-early5-connected-20261019-ui1/spellMenu9.bmp": "ac6841fe08e15cf15c33161a4365ed29c8ae7ae75dca55af4eb27c10910a2b68",
+    "extracted/goal-early5-connected-20261019-ui1/stageC.bmp": "5aa786cacebcf9d679d7fd9d3b0de8c1a4cc7673b0839ef375af57740dbca06b",
+    "extracted/goal-early5-connected-20261019-ui1/stageD.bmp": "27f443546a8193f2825848c32a33a91e93a4660a525fc4d93fccbecfbfece57f",
+    "extracted/goal-early5-connected-20261019-ui1/states.tsv": "278d816941b24891e97a9ecf5663defc66264a13e4dc928a82484a979e9fc409",
+    "extracted/goal-early5-connected-20261019-ui1/stderr.log": "172861ad61a81c1ba627072f5db6967ddc1d83fad26b3db3764bbbf227138118",
+    "extracted/goal-early5-connected-20261019-ui1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-early5-connected-20261019-ui1/steps.tsv": "1a20fb7722a1d933c1450b2d9c85bfa131ae3faf8d0e4f683eb4da6b5d8fda0a",
+    "extracted/goal-early5-connected-20261019-ui1/twinCannon1.bmp": "778411f59ac9a8545d4d10f6429a848c087571cce5f6f2b2e131c1789bd8dec5",
+    "extracted/goal-early5-connected-20261019-ui1/twinCannon2.bmp": "7c4547db1b3adff344de4922e58cadd2617a50c4a8cd87d811579d1abb0f41f3",
+    "extracted/goal-early5-connected-20261019-ui1/twinCannon3.bmp": "c0b48514ff9529c1882cf1659133bbc035e92a10b50640c7c25d1b47d7023e4a",
+    "extracted/goal-early5-connected-20261019-ui1/twinCannon4.bmp": "0ffeb13299ea560e17a66b94923df8a16be2a9ff34d6405c22b1fe2c52fe77ad",
+    "extracted/goal-early5-connected-20261019-ui1/twinCannon5.bmp": "e16a5fa2b3e2e27352256f4f495ad24274779c084d648e42bc3817c083c8f320",
+    "extracted/goal-early5-connected-20261019-ui1/twinCannon6.bmp": "a3dca773245696dd814593469a0cb2c8eac1bcc84fb29e4d0501a9965d12944b",
+    "extracted/goal-early5-connected-20261019-ui1/twinCannon7.bmp": "f86e63b36d3a36fe0ecc9d40133cbf17c92da871ca9c5e32dc0be3685aba6288",
+    "extracted/goal-early5-connected-20261019-ui1/twinCannon8.bmp": "e3e282f1eeb168265a1ec7e5dc0f1bf9f550d6797c0cce7c7df10157d32b7266",
+    "extracted/goal-early5-connected-20261019-ui1.log": "0133de11e63119c72e34dc50b3c61acbe674e2c219e3ee0552174f8e4b675a18",
+    "extracted/goal-early5-island-20261019-probe.py": "2933ead8b5cc87b76425031fea3da8690c3b2649dc8f3fa8d4babd276176ef1a",
+    "extracted/goal-early5-route-20261019-plan1.tsv": "d536ea413e4cc1d95a06f45546d6c3b64867e1115e216a6dd4bc764722dc9100",
+    "extracted/goal-early5-route-20261019-ui1/states.tsv": "0aec43fd202eec8834086368ebc2b743ba6d0c6e2a92aeba34b80aba43912ef3",
+    "extracted/goal-support-color-20261019-full-tests1.json": "4fff93ab05405463e785fdb661de6523e2c5b187ea88c21de8b3e0765bcae369",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "originals/d/_shapes.shp": "c878353c8054208deef832e34c514b30fe670e175505b129333a5728ba70f68e",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6"
+  },
+  "goalComplete": false,
+  "fullFidelityVerified": false
+}
