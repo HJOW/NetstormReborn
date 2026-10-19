@@ -1,6 +1,7 @@
 // 원본 Ztrans의 현재 Player/연결 표를 읽는 두 송신 분배 몸체다.
 #pragma once
 #include "o/RiftType.h"
+#include "o/SidPool.h"
 #include <array>
 #include <functional>
 #include <span>
@@ -9,6 +10,8 @@ namespace netstorm::o {
 using BattlePacketSend=std::function<void(std::span<const std::uint8_t>)>;
 // 현재0..8 연결 객체 표다. 0번은 원본 두 분배 함수에서 순회하지 않는다.
 using BattlePacketPeers=std::array<BattlePacketSend,9>;
+// 실제40a890/45c94d/45cc4e의 헤더·SID·명령 DWORD만 쓴다. caller가 쓰지 않는+8/+16은 입력 바이트를 유지한다.
+void WriteFlyerCommandPacket(std::span<std::uint8_t> packet,Sid parent,std::uint32_t command);
 // 같은 Player 기록/연결 객체를 매 순회 다시 읽는다. 단독 캠페인은 실제 NULL 연결 표를 사용한다.
 class RawBattleBroadcast {
 public:

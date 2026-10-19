@@ -1004,7 +1004,7 @@ set_source_files_properties(CampaignSeedTests.cpp PROPERTIES COMPILE_DEFINITIONS
 
 # 실제 Player9 송신 분배의 독립 원본 입력이다.
 set_source_files_properties(BattleBroadcastTests.cpp PROPERTIES COMPILE_DEFINITIONS
-    "NETSTORM_BATTLE_BCAST_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/battle-bcast-x86.tsv\"")
+    "NETSTORM_BATTLE_BCAST_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/battle-bcast-x86.tsv\";NETSTORM_FLYER_COMMAND_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/flyer-command-x86.tsv\"")
 
 # 현재 호스트에서 관찰한 두 판본의 창 제목 선택/설정 인자 자료다.
 set_source_files_properties(WindowTitleTests.cpp PROPERTIES COMPILE_DEFINITIONS

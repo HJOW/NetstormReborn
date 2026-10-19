@@ -50,3 +50,30 @@ TEST_CASE(BattleBroadcast_EmptyPeersAndServerGuard) {
     try { logic.SendExcept(2,packet); } catch (const std::logic_error&) { rejected=true; }
     CHECK(rejected);
 }
+// 실제 명령2/3 caller의 독립30입력과 전체20BYTE·미정 필드 보존을 대조한다.
+TEST_CASE(BattleBroadcast_FlyerCommandNativePacket) {
+    std::size_t count{}; // 원본 구간의 고유 입력 수이며 두 정밀도를 중복 합산하지 않는다.
+    // 실제 원문 패킷은 제품 구현으로 만들거나 수정하지 않는다.
+    for (const auto& row:LoadFixture(NETSTORM_FLYER_COMMAND_FIXTURE).rows) {
+        const auto input=Split(row[0],','); // SID/명령/기존 미정 바이트다.
+        std::array<std::uint8_t,24> packet;packet.fill(static_cast<std::uint8_t>(Number(input[2]))); // caller의 기존 바이트와 뒤쪽 canary를 보존한다.
+        WriteFlyerCommandPacket(packet,Sid{static_cast<std::uint16_t>(Number(input[0]))},Number(input[1]));
+        CHECK(row[1]==row[2] && Hex(std::span<const std::uint8_t>(packet).first(20))==row[1]);
+        // 원래20BYTE 밖도 쓰지 않는다.
+        for (std::size_t i=20;i<packet.size();++i) CHECK(packet[i]==Number(input[2]));
+        ++count;
+    }
+    CHECK(count==30);
+}
+// 너무 짧은 출력은 쓰기 전에 거부하고 실제 방송은 원격 연결에만 전달한다.
+TEST_CASE(BattleBroadcast_FlyerCommandPeersAndCapacity) {
+    std::array<std::uint8_t,19> shortPacket;shortPacket.fill(0xa5);bool rejected=false; // 손상 입력의 변경 전 계약이다.
+    try { WriteFlyerCommandPacket(shortPacket,Sid{50},2); } catch (const std::out_of_range&) { rejected=true; }
+    CHECK(rejected);for (const auto byte:shortPacket) CHECK(byte==0xa5); // 거부 전에 일부 헤더를 쓰지 않는다.
+    std::vector<std::uint8_t> players(9*0xb4);BattlePacketPeers peers;std::uint32_t local=1;bool server=true; // 실제 Player9·원격 표다.
+    players[0xb4+0x50]=players[2*0xb4+0x50]=1;
+    std::array<std::uint8_t,20> packet{};std::size_t localCalls{},remoteCalls{}; // 단독/연결 방송의 실제 효과 수다.
+    peers[1]=[&](auto) { ++localCalls; };peers[2]=[&](auto bytes) { CHECK(bytes.size()==20 && bytes[1]==0x86 && bytes[4]==50 && bytes[12]==3);++remoteCalls; };
+    WriteFlyerCommandPacket(packet,Sid{50},3);RawBattleBroadcast broadcast(OriginalEdition::Patch1078,players,peers,local,server);broadcast.Send(packet);
+    CHECK(localCalls==0 && remoteCalls==1);
+}

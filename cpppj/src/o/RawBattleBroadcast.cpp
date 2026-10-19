@@ -2,6 +2,17 @@
 #include "o/RawBattleBroadcast.h"
 #include <stdexcept>
 namespace netstorm::o {
+// 원본 packet86의 실제20BYTE 계약이며 미정 payload를 새 의미로 해석하지 않는다.
+void WriteFlyerCommandPacket(std::span<std::uint8_t> packet,Sid parent,std::uint32_t command) {
+    constexpr std::size_t kLength=20; // 보호 PE0052edf4의 WORD 길이다.
+    if (packet.size()<kLength) throw std::out_of_range("훨리기그 방송 패킷20BYTE 필요");
+    packet[0]=1;packet[1]=0x86;packet[2]=static_cast<std::uint8_t>(kLength);packet[3]=0; // 보호 PE의 version1/message86/length20이다.
+    // 원본이 정의한 두 DWORD만 little endian으로 기록한다.
+    for (std::size_t index=0;index<4;++index) {
+        packet[4+index]=static_cast<std::uint8_t>(static_cast<std::uint32_t>(parent.value)>>(index*8));
+        packet[12+index]=static_cast<std::uint8_t>(command>>(index*8));
+    }
+}
 // 두 원본 판본의 Player9 물리 폭을 확인한다.
 RawBattleBroadcast::RawBattleBroadcast(OriginalEdition edition,std::span<const std::uint8_t> players,
     BattlePacketPeers& peers,const std::uint32_t& localOwner,const bool& server)

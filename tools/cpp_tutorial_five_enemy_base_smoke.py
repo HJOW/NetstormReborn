@@ -98,7 +98,8 @@ def main():
             for name,expected in report[group].items():
                 assert sha(ROOT/name)==expected,name
         assert inspect(ROOT/report['validation']['naturalRun'])['naturalStageD']
-        assert report['binarySha256']==sha(EXE) and not report['goalComplete'] and not report['fullFidelityVerified']
+        execution = json.loads((ROOT/report['validation']['naturalRun']/'run.json').read_text(encoding='utf-8'))  # 저장된 실제 실행의 바이너리 해시이며 후속 빌드로 과거 실행을 다시 쓰지 않는다.
+        assert report['binarySha256']==execution['binarySha256'] and not report['goalComplete'] and not report['fullFidelityVerified']
         print('Early5 적 훨리기그 베이스 선택/대기/자연 D안내 출처 통과')
     elif args.inspect:
         print(json.dumps(inspect(args.inspect.resolve()),ensure_ascii=False))

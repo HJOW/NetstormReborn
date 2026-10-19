@@ -1,0 +1,20 @@
+{
+  "host": "VM-W11-Codex",
+  "date": "2026-10-19",
+  "lastDecompile": "VM-W11-Codex / 2026-10-19",
+  "inputs": 30,
+  "segmentCompletions": 60,
+  "instructions": 2670,
+  "scope": "명령2의45c946..45c987와 명령3의45cc29..45cc62 실제 caller 구간. 코드 바이트 변경 없음. 초기 즉시값 변경 모형의 명령3 입력은2를 기록하여 폐기하고 실제 caller로 대체했다. 초기 도구/원문은 command-inputpatched-v1.*에 보존한다. 전체 함수 정상 반환/실제 게임 실행 증거가 아니다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_flyer_command.py": "014435bdcbe5715eb674df26b1f80621aaa10711a4a9bf622132e9fffdf14f84",
+    "cpppj/tests/fixtures/flyer-command-x86.tsv": "3eba7e893da3360048848fb3d402d94a66fa4067cddeeb34638131d1b15377b2",
+    "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+    "tools/decomp_cursor_position.py": "e15bcdbc4c6be9c131c30f15416c945d650dba9f7dc6def404b47f63c635c212",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658"
+  },
+  "replay": "extracted/goal-early5-combat-20261019-command-native3.log",
+  "trailingCanaryChecked": true
+}

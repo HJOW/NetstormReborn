@@ -1300,7 +1300,7 @@ struct RawCampaignSession::Impl {
         hooks.addDepend=[this](Sid target,Sid form) { static_cast<void>(core.dependencies.Create(target,form)); };hooks.removeDepend=[this](Sid form,Sid target) { core.dependencies.Remove(form,target,0); };
         hooks.refreshForm=[this](FlyerProcessFields& fields) { auto* process=dynamic_cast<FlyerProcess*>(core.processes.FromForm(fields.Form()));if (!process || &process->Fields()!=&fields) throw std::logic_error("비행 Frame 현재 Host/raw 이미지 불일치");core.processes.RefreshForm(*process); };
         hooks.returnDelay=[](FlyerProcessFields& fields) { return Read(fields.bytes,0)==0x509f24U ? RawSunFlyerFrame::ReturnDelay() : 10000000.0; }; // Sun45e170은60초, Rain45c2e0은10000000초다.
-        hooks.command=SessionMissing<void,Sid,std::uint32_t>();
+        hooks.command=[this](Sid parent,std::uint32_t command) { BroadcastFlyerCommand(parent,command); };
         hooks.sunProcess=[this](Sid sid,std::uint32_t type)->SunAviaryProcessFields& { const auto form=FindAttachedProcess(core.pool,sid,type);auto* process=form.value ? dynamic_cast<SunAviaryProcess*>(core.processes.FromForm(form)) : nullptr;if (!process) throw std::logic_error("착륙 대상의 실제 훨리베이스 프로세스 미연결");return process->Fields(); };
         hooks.refreshSun=[this](SunAviaryProcessFields& fields) { auto* process=dynamic_cast<SunAviaryProcess*>(core.processes.FromForm(fields.Form()));if (!process || &process->Fields()!=&fields) throw std::logic_error("착륙 훨리베이스 Host/raw 이미지 불일치");core.processes.RefreshForm(*process); };
         hooks.homeNotice=[this](Sid home,std::uint32_t,std::uint32_t) {
@@ -1340,10 +1340,15 @@ struct RawCampaignSession::Impl {
         hooks.watcher=[this](Sid form) { return core.dependencies.Watcher(form); };
         hooks.processParent=[this](Sid form) { const auto* process=core.processes.FromForm(form);if (!process) throw std::logic_error("비행 경쟁의 현재 Host 프로세스 조회 실패");return process->Parent(); };
         hooks.returnDelay=[](FlyerProcessFields& fields) { return Read(fields.bytes,0)==0x509f24U ? RawSunFlyerFrame::ReturnDelay() : 10000000.0; }; // 같은 현재 전용표의 반환 지연이다.
-        hooks.command=SessionMissing<void,Sid,std::uint32_t>();
+        hooks.command=[this](Sid parent,std::uint32_t command) { BroadcastFlyerCommand(parent,command); };
         std::vector<float> ranges(core.types.size()); // 파싱한 같은188TYPE의 실제 사거리다.
         for (std::size_t type=0;type<ranges.size();++type) ranges[type]=gunTypes[type].range; // 별도 추정 사거리를 만들지 않는다.
         flyerTarget=std::make_unique<RawFlyerTarget>(core.pool,core.types,ranges,FlyerTargetGlobals{core.processState.server,gunState.checking,core.processState.now,sunFlyerType,flyerProcessEnd,flyerDependType},std::move(hooks));
+    }
+    // 로컬 표적/복귀 상태는 호출자가 이미 썼다. 원본4e2e30처럼 현재 원격 연결에만 packet86을 방송한다.
+    void BroadcastFlyerCommand(Sid parent,std::uint32_t command) const {
+        std::array<std::uint8_t,20> packet{}; // 원본 caller의 미정+8/+16은 호스트에서0으로 초기화하며 정의된 필드와 구별한다.
+        WriteFlyerCommandPacket(packet,parent,command);broadcast->Send(packet);
     }
     // 타입31/32/60의 서로 다른 writer와 같은 실제 송신기를 연결한다.
     ProcessFormTransmission AviaryTransmission(ProcessFormTransmission fallback) {

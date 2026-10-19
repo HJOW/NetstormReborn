@@ -15,7 +15,7 @@
     "cpppj/src/o/RawTutorialLater.cpp": "1f40efc3aefb38e02ff8a9b5d2553ca4c30f773c2c8b4f6dbb82cd3e5b9bc082",
     "cpppj/src/o/RawMissionFrameGate.cpp": "8c344648b351bb8102b547038b6f1cb29dfbe6540b71937a052e6a8b28bed1b0",
     "cpppj/tests/fixtures/tutorial-five-enemy-base-ui-input.tsv": "10ca5d0759ff65a91adec873dd8ec57ac36baeb824d2257a7d60d2a84cc320bb",
-    "tools/cpp_tutorial_five_enemy_base_smoke.py": "737f0f503e625a9048f9bc46fc86fb7b94eb2ebbfb8d64542e70c6ab139c258c",
+    "tools/cpp_tutorial_five_enemy_base_smoke.py": "076da85c40cd436464fa134286594f5c009ac55c691ed1a9c2194fc2f3bfd930",
     "docs/exe/cpp-early5-enemy-base-20261019.md": "ffb92a0801457c38dac7b826f0d38482f369b38507b25161cecd5fd07ad6cafc"
   },
   "evidence": {
@@ -97,5 +97,20 @@
   },
   "goalComplete": false,
   "fullFidelityVerified": false,
-  "naturalTutorialFiveComplete": false
+  "naturalTutorialFiveComplete": false,
+  "integration_updates": [
+    {
+      "date": "2026-10-19",
+      "unit": 212,
+      "reason": "훨리기그 표적/귀환의 실제 원격 방송 연결과 저장 실행 출처 확인의 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/sources",
+          "path": "tools/cpp_tutorial_five_enemy_base_smoke.py",
+          "previous": "737f0f503e625a9048f9bc46fc86fb7b94eb2ebbfb8d64542e70c6ab139c258c",
+          "current": "076da85c40cd436464fa134286594f5c009ac55c691ed1a9c2194fc2f3bfd930"
+        }
+      ]
+    }
+  ]
 }
