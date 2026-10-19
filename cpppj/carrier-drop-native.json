@@ -1,0 +1,41 @@
+{
+  "unit": 228,
+  "host": "VM-W11-Codex",
+  "date": "2026-10-19",
+  "lastPreciseDecompile": {
+    "host": "VM-W11-Codex",
+    "date": "2026-10-19"
+  },
+  "uniqueInputs": 413,
+  "normalReturns": 826,
+  "instructions": 107290,
+  "nativeCalls": {
+    "00427070": 302,
+    "0049a840": 768,
+    "0040a9e0": 246,
+    "004df230": 300,
+    "004e49c0": 574,
+    "004b2270": 56,
+    "004b1b20": 80,
+    "0044daa0": 52,
+    "0042aa50": 32,
+    "00444bc0": 524,
+    "0040e800": 280,
+    "0041df60": 54,
+    "004ac220": 54,
+    "0040ac60": 54,
+    "004ac200": 32
+  },
+  "precisionDifferentInputs": [],
+  "boundaries": "원본427070/42aa50/444bc0 및 헤더/contained finder/TYPE/getCost/ftol/point 관문을 직접 실행한다. 지면불가/비용승인·돈차감·투영·팝업·Regular·부착프로세스조회/통지·선택·송신·큐·하위경제·이동삭제·공간분리·생성/가상Owner/Pop·배포·일반건설/삭제·회피는 명시 큰 하위 경계다. GP/retN/스택canary/SEH/x87/실행·읽기·쓰기 범위와 전체7슬롯을 검사한다. 실제 주문 폭발·사제 포획·미션 완주의 증거가 아니다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_carrier_drop.py": "cee9bf29112fd5fe9911b1738ad80fd9cd47a795fa742a2fa1e8b62d62b1d3ce",
+    "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+    "tools/decomp_cursor_position.py": "e15bcdbc4c6be9c131c30f15416c945d650dba9f7dc6def404b47f63c635c212",
+    "tools/decomp_carrier_falling.py": "f8702db0708a543b73213c8df9154503afe977767a11bd7c150b639ee1b587a6",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "cpppj/tests/fixtures/carrier-drop-x86.tsv": "d2da9dfcac50dfa04c11c3d19d9665d7381c3947d3c7987259850eb6daa924b0"
+  }
+}
