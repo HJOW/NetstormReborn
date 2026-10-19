@@ -1,0 +1,625 @@
+{
+  "unit": 222,
+  "baseline": "3df70e4f",
+  "host": "VM-W11-Codex",
+  "date": "2026-10-19",
+  "lastDecompile": "VM-W11-Codex / 2026-10-19",
+  "scope": "원본 방향별 고정 본체/현재 그림을 실제 화면에 연결했다. 전체 미션 동일성과 완주는 미완료다.",
+  "validation": {
+    "beforeTests": "extracted/goal-thunder-display-20261019-before-tests2.json",
+    "focusedTests": "extracted/goal-thunder-display-20261019-after-tests1.json",
+    "fullTests": "extracted/goal-thunder-display-20261019-full-tests1.json",
+    "oldCurrentPinReports": 69,
+    "oldCurrentPins": 93
+  },
+  "observations": {
+    "extracted/goal-thunder-display-20261019-ui1": {
+      "returnCode": 0,
+      "binarySha256": "4c6c96988a6c8ca75eca9a6f6028fcfd50bd2f4e55a874625c9dcb67bbc5b249",
+      "originalsUnchanged": true,
+      "lastLabel": "final",
+      "gameTime": 58.568,
+      "lastGate": [
+        "5",
+        "68",
+        "0",
+        "1",
+        "0",
+        "1",
+        "58.102",
+        "0"
+      ],
+      "forwardGeneratorsAfterWait": {},
+      "cannons": {},
+      "sunFlyerSidsObserved": [
+        15063
+      ],
+      "enemyMinimumHp": {
+        "15006": 1000,
+        "15013": 200
+      },
+      "naturalEObserved": false,
+      "combat2Observed": false,
+      "nextFailure": null,
+      "towers": {
+        "15060": {
+          "xy": [
+            "135",
+            "93"
+          ],
+          "firstLabel": "placed",
+          "maxHp": 1855,
+          "lastHp": 95,
+          "lastLabel": "thunder14"
+        }
+      },
+      "templeDestroyedObserved": false,
+      "maximumOwnCannonCount": 0,
+      "lastPage": [
+        "D."
+      ],
+      "enemyThunderPresentAtLastReport": true,
+      "enemyAviaryPresentAtLastReport": true,
+      "naturalFObserved": false,
+      "maximumOwnGolemCount": 0,
+      "golems": {},
+      "thunderAnimation": {
+        "15006": {
+          "frames": [
+            1,
+            4,
+            6,
+            0,
+            2,
+            3,
+            5,
+            7,
+            8
+          ],
+          "samples": [
+            {
+              "label": "initial",
+              "frame": 1,
+              "position": [
+                "136",
+                "126"
+              ],
+              "hp": 1000
+            },
+            {
+              "label": "placed",
+              "frame": 1,
+              "position": [
+                "136",
+                "126"
+              ],
+              "hp": 1000
+            },
+            {
+              "label": "stageB",
+              "frame": 4,
+              "position": [
+                "136",
+                "126"
+              ],
+              "hp": 1000
+            },
+            {
+              "label": "priestMenu",
+              "frame": 6,
+              "position": [
+                "136",
+                "126"
+              ],
+              "hp": 1000
+            },
+            {
+              "label": "constructMenu",
+              "frame": 0,
+              "position": [
+                "136",
+                "126"
+              ],
+              "hp": 1000
+            },
+            {
+              "label": "workshopMenu",
+              "frame": 2,
+              "position": [
+                "136",
+                "126"
+              ],
+              "hp": 1000
+            },
+            {
+              "label": "previewWorkshop",
+              "frame": 3,
+              "position": [
+                "136",
+                "126"
+              ],
+              "hp": 1000
+            },
+            {
+              "label": "placedWorkshop",
+              "frame": 5,
+              "position": [
+                "136",
+                "126"
+              ],
+              "hp": 1000
+            },
+            {
+              "label": "buildingWorkshop",
+              "frame": 5,
+              "position": [
+                "136",
+                "126"
+              ],
+              "hp": 1000
+            },
+            {
+              "label": "completedWorkshop",
+              "frame": 7,
+              "position": [
+                "136",
+                "126"
+              ],
+              "hp": 1000
+            },
+            {
+              "label": "oldFactoryMenu",
+              "frame": 0,
+              "position": [
+                "136",
+                "126"
+              ],
+              "hp": 1000
+            },
+            {
+              "label": "oldKnowledge",
+              "frame": 2,
+              "position": [
+                "136",
+                "126"
+              ],
+              "hp": 1000
+            },
+            {
+              "label": "twoKnowledge",
+              "frame": 3,
+              "position": [
+                "136",
+                "126"
+              ],
+              "hp": 1000
+            },
+            {
+              "label": "workshopReady",
+              "frame": 2,
+              "position": [
+                "136",
+                "126"
+              ],
+              "hp": 1000
+            },
+            {
+              "label": "newFactoryMenu",
+              "frame": 3,
+              "position": [
+                "136",
+                "126"
+              ],
+              "hp": 1000
+            },
+            {
+              "label": "newKnowledge",
+              "frame": 5,
+              "position": [
+                "136",
+                "126"
+              ],
+              "hp": 1000
+            },
+            {
+              "label": "threeKnowledge",
+              "frame": 6,
+              "position": [
+                "136",
+                "126"
+              ],
+              "hp": 1000
+            },
+            {
+              "label": "windAttempt1",
+              "frame": 4,
+              "position": [
+                "136",
+                "126"
+              ],
+              "hp": 1000
+            },
+            {
+              "label": "windAttempt2",
+              "frame": 5,
+              "position": [
+                "136",
+                "126"
+              ],
+              "hp": 1000
+            },
+            {
+              "label": "windAttempt3",
+              "frame": 5,
+              "position": [
+                "136",
+                "126"
+              ],
+              "hp": 1000
+            },
+            {
+              "label": "windAttempt4",
+              "frame": 5,
+              "position": [
+                "136",
+                "126"
+              ],
+              "hp": 1000
+            },
+            {
+              "label": "windAttempt5",
+              "frame": 5,
+              "position": [
+                "136",
+                "126"
+              ],
+              "hp": 1000
+            },
+            {
+              "label": "stageC",
+              "frame": 5,
+              "position": [
+                "136",
+                "126"
+              ],
+              "hp": 1000
+            },
+            {
+              "label": "stageC1",
+              "frame": 5,
+              "position": [
+                "136",
+                "126"
+              ],
+              "hp": 1000
+            },
+            {
+              "label": "enemyView",
+              "frame": 8,
+              "position": [
+                "136",
+                "126"
+              ],
+              "hp": 1000
+            },
+            {
+              "label": "enemySelected",
+              "frame": 2,
+              "position": [
+                "136",
+                "126"
+              ],
+              "hp": 1000
+            },
+            {
+              "label": "thunder0",
+              "frame": 3,
+              "position": [
+                "136",
+                "126"
+              ],
+              "hp": 1000
+            },
+            {
+              "label": "thunder1",
+              "frame": 3,
+              "position": [
+                "136",
+                "126"
+              ],
+              "hp": 1000
+            },
+            {
+              "label": "thunder2",
+              "frame": 4,
+              "position": [
+                "136",
+                "126"
+              ],
+              "hp": 1000
+            },
+            {
+              "label": "thunder3",
+              "frame": 4,
+              "position": [
+                "136",
+                "126"
+              ],
+              "hp": 1000
+            },
+            {
+              "label": "thunder4",
+              "frame": 5,
+              "position": [
+                "136",
+                "126"
+              ],
+              "hp": 1000
+            },
+            {
+              "label": "thunder5",
+              "frame": 5,
+              "position": [
+                "136",
+                "126"
+              ],
+              "hp": 1000
+            },
+            {
+              "label": "thunder6",
+              "frame": 6,
+              "position": [
+                "136",
+                "126"
+              ],
+              "hp": 1000
+            },
+            {
+              "label": "thunder7",
+              "frame": 6,
+              "position": [
+                "136",
+                "126"
+              ],
+              "hp": 1000
+            },
+            {
+              "label": "thunder8",
+              "frame": 7,
+              "position": [
+                "136",
+                "126"
+              ],
+              "hp": 1000
+            },
+            {
+              "label": "thunder9",
+              "frame": 7,
+              "position": [
+                "136",
+                "126"
+              ],
+              "hp": 1000
+            },
+            {
+              "label": "thunder10",
+              "frame": 0,
+              "position": [
+                "136",
+                "126"
+              ],
+              "hp": 1000
+            },
+            {
+              "label": "thunder11",
+              "frame": 1,
+              "position": [
+                "136",
+                "126"
+              ],
+              "hp": 1000
+            },
+            {
+              "label": "thunder12",
+              "frame": 1,
+              "position": [
+                "136",
+                "126"
+              ],
+              "hp": 1000
+            },
+            {
+              "label": "thunder13",
+              "frame": 2,
+              "position": [
+                "136",
+                "126"
+              ],
+              "hp": 1000
+            },
+            {
+              "label": "thunder14",
+              "frame": 2,
+              "position": [
+                "136",
+                "126"
+              ],
+              "hp": 1000
+            },
+            {
+              "label": "thunder15",
+              "frame": 2,
+              "position": [
+                "136",
+                "126"
+              ],
+              "hp": 1000
+            },
+            {
+              "label": "thunder16",
+              "frame": 3,
+              "position": [
+                "136",
+                "126"
+              ],
+              "hp": 1000
+            },
+            {
+              "label": "thunder17",
+              "frame": 3,
+              "position": [
+                "136",
+                "126"
+              ],
+              "hp": 1000
+            },
+            {
+              "label": "thunder18",
+              "frame": 4,
+              "position": [
+                "136",
+                "126"
+              ],
+              "hp": 1000
+            },
+            {
+              "label": "thunder19",
+              "frame": 4,
+              "position": [
+                "136",
+                "126"
+              ],
+              "hp": 1000
+            },
+            {
+              "label": "thunder20",
+              "frame": 4,
+              "position": [
+                "136",
+                "126"
+              ],
+              "hp": 1000
+            },
+            {
+              "label": "final",
+              "frame": 4,
+              "position": [
+                "136",
+                "126"
+              ],
+              "hp": 1000
+            }
+          ]
+        }
+      }
+    }
+  },
+  "sources": {
+    "cpppj/src/client/GameWorld.cpp": "c69d29972961250ac04814f8e3bd81c5134fed0a1ad250f261900c3cc1984fdb",
+    "cpppj/src/client/RawCampaignFactoryDisplay.cpp": "08c207e92a0175f9eedc666b65a8fea35a999963ed69d36fc110ca7d9fcdea7d",
+    "cpppj/src/o/RawThunderCannonCapture.cpp": "9cb609f3dd3fe9239cc85d81ce5427e7b5b41cf81431b0a462df643f7216c6ad",
+    "cpppj/src/o/RawThunderCannonCapture.h": "d98c7aeab460724a40daedf472654b0892294ee6afd1cd57ffb00ae6f7117a79",
+    "cpppj/tests/CampaignSessionTests.cpp": "793df135e84491ebbac4ba182829e3b6bf5c427900799c7e688de51cdd4a44e9",
+    "tools/cpp_campaign_entry_smoke.py": "5fa9adadf6bcd571d6fba39b38e46fed41fe2e927911ff80dc38047c52c56b49",
+    "tools/cpp_early5_spells_runtime.py": "b46e2145d2ddcfcf21e410a5604cf5364c0605576e04c1518eb8dde469063cf0",
+    "tools/cpp_fort_smoke.py": "96c7fcd524deb38d93274ded77620639bdc7012ec0f2aaeed0a488d938e9da83",
+    "tools/cpp_island_drop_runtime.py": "7a84366e3505e7fc98d883ca16364c648b9cad8110762744f7a6b8e7e5157ab3",
+    "tools/cpp_menu_smoke.py": "41732efb30e6337267168e3cd836ab6c04d6f34d36b16152b762c39dd2a76afe",
+    "tools/cpp_renderer_smoke.py": "fc648fea126c9cad3a124b38f757460f1139bb0e7f26c1032482ae4d85766ebe",
+    "tools/cpp_smoke_files.py": "66745bfd0ebac8d672eeb8f515144a47377fa4a28dad0603b5f8969a008ec679",
+    "tools/cpp_sun_aviary_capture_runtime.py": "4cc2495a288f7fea6775dd395a9a3036e01863902bb238ceec13701f4d44ce1b",
+    "tools/cpp_sun_aviary_notice_runtime.py": "8ab54e12605e9861c531bf9b82f4616b540aac1879f831bf88d69d0e35703952",
+    "tools/cpp_thunder_capture_runtime.py": "8c4a9d8d65420c5f0f37cfb003500d55d81bf0aa437484f20c9c06bfcdd673e3",
+    "tools/cpp_thunder_display_runtime.py": "d5906c5a1f0bcc107b03e22628979aca7f94d42a8b6970fa473faa8caf21e5ca",
+    "tools/cpp_world_smoke.py": "6e50f87caf0b1b817c9116ef972ec6e75b44d33455edc88fe128a8d0f791fe72",
+    "tools/decomp_creation_oracle.py": "646adc1ca6c9eaeac08a9c700324ae05ba1727416bc62070e0a066afc07dc053",
+    "tools/decomp_display_oracle.py": "bd9a42431cdef96d3fb13accf78d5a0d6a3155243b1bbc0362d58e79f662f7a4",
+    "tools/decomp_dudespawn_oracle.py": "294095ff1336d290d8d7e0e465df95d5514ceb4ff87d4bac8c282cdcec2eb786",
+    "tools/decomp_factory_capture.py": "e5dd681fa0d5aa74779c7873c10814eff9ad15e193f7cb7322661c6ca02e27f1",
+    "tools/decomp_oracle.py": "227b9a8b703cfd81d05ac4a7c72a42eaecf9c804fc028680466a19a591f2335d",
+    "tools/decomp_owner_oracle.py": "5a837ad7fd233d9d75c7241d52fbf2e5a508e24dc158d091f243a13ab698e7fb",
+    "tools/decomp_pop_oracle.py": "2a50f34e6b229d5ea4611f7073877ca1e165e0bf841f32c83f17d300b6113bb6",
+    "tools/decomp_postpop_oracle.py": "43dd9adffc6e2b3a1bd4a1fb06563f848518d8082014f2346613243183535129",
+    "tools/decomp_rain_draw.py": "a7a8a40dbb5e1508e21745a94a4320fba207cd08a9ee38ae6a200614d4c2e249",
+    "tools/decomp_shape_to_buffer_oracle.py": "3499edbde033d4fb5102bfb855a988adc30c8b17aae219d917d81346eea71eec",
+    "tools/decomp_sid_oracle.py": "7bfd7b95b26724b1793d407a4ad6654972b2aaa3bf04e4c206cc357670b68dff",
+    "tools/decomp_temple_capture.py": "d39f2d4150b2b96eb885e17b1bbcd8f1727e21b9b71a16113b3b04a0e2ece045",
+    "tools/decomp_temple_draw.py": "b94a1b635e83af4af3808d3666d3dd56067a44e88c22ecfbd4fe9396000dab24",
+    "tools/decomp_thunder_cannon_capture.py": "cf8f855ed7462fabf0e598f189dd81150897729d73f1ff273abb752a309b5339",
+    "tools/fort.py": "ee8ff8f00eea02771ac5c7a519dcd582e14cc07a2d97337c946c191022554e13",
+    "tools/shp.py": "4cb8bee6ed773e29e8658ddb315594ebf5ac005ea5b96c6b760a177029515bfd",
+    "tools/taff.py": "461860cdfc9451b85a8694dd30fd2c56c1cfdf5c6bb7ab8f63a4089971889795",
+    "tools/terrain_mask.py": "00f9789dbde0c124a132a4005924549571b06add5214ea14e3b76e88e73cb37a",
+    "tools/typefile.py": "a564a4b1bbc4f06d05ecb8b1f3fae4c32f6231cf95ea7bfadff2499931804d90"
+  },
+  "evidence": {
+    "cpppj/tests/fixtures/thunder-cannon-capture-x86.tsv": "a3b6b3be0465e1fff09e898b1ced54ebed9a65fb189026aa9474b70f033f28e7",
+    "cpppj/thunder-cannon-capture-native.json": "fddef14e90266becf822231186827d5d180d002cca88015d13d1b76eee8abf2a",
+    "extracted/goal-early5-island-20261019-probe.py": "2933ead8b5cc87b76425031fea3da8690c3b2649dc8f3fa8d4babd276176ef1a",
+    "extracted/goal-early5-spells-20261019-plan3.tsv": "ceda490ac21f15186083c5485671aa0d1ad017640d4293c12d6fee24e258640f",
+    "extracted/goal-thunder-display-20261019-after-tests1.json": "2dfeba7cdfcb15b1eaeef5e32f8ca9ed041052790cb510dc2354419aa318bf41",
+    "extracted/goal-thunder-display-20261019-after-tests1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-thunder-display-20261019-after-tests1.stdout": "6a2406d4c5eee96f10cf4b80407cdeb2df0bd45839fc84f1c872c38b0c8327ec",
+    "extracted/goal-thunder-display-20261019-audit-pins.log": "dd0bbd95ebf052b72586b00134193dca39e408f8fdfc25aa5f3751d2343a7f77",
+    "extracted/goal-thunder-display-20261019-audit-pins.py": "550aeb983b6889e36a89595ecbf27f264d00899d87ffbd9d97e553522f0a0a9b",
+    "extracted/goal-thunder-display-20261019-before-tests1.json": "ebad7562e466aaf041f52c7294549889a6279ae83f7932571faaa6051e0c720a",
+    "extracted/goal-thunder-display-20261019-before-tests1.stderr": "ae91808cfeec3012ce8d68682de1dd1963cdbafb78e88c4d8573bfb82a608039",
+    "extracted/goal-thunder-display-20261019-before-tests1.stdout": "41a9b1466f7c8cc1aca5500000479546ea633567a1bf64389454be82b46526da",
+    "extracted/goal-thunder-display-20261019-before-tests2.json": "e5f5694b5341f2bf644fcc0f843e0b45426e1bd19be6c31a39202fc9dd2ed12a",
+    "extracted/goal-thunder-display-20261019-before-tests2.stderr": "cfd9415d3497175fc4b5ab5261ac06f7f90ed5ca9e79e862e00bed9e6c22dfa4",
+    "extracted/goal-thunder-display-20261019-before-tests2.stdout": "43ac40665cb5d1aa3e228ea7c9b5f2b1120699974e8ada9d30b5a58bfa6df775",
+    "extracted/goal-thunder-display-20261019-build-report.py": "35eea393b3f719b5a1cc4e483ebf7b8e8d7b01f42d93559bba553b3ba55787cb",
+    "extracted/goal-thunder-display-20261019-build1.log": "6851f078e60c8b9f67840a4058a4aa057dab45102457f9ce6c872deb77108e70",
+    "extracted/goal-thunder-display-20261019-build2.log": "49446800edb950e2b093ca8d32229b1f16fdc801b7dfb23a5738654330c1f994",
+    "extracted/goal-thunder-display-20261019-build3.log": "9430375643841ced34ee33439f02a6254080aac10cf544cfe84703c3f74dd49a",
+    "extracted/goal-thunder-display-20261019-diff-check.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-thunder-display-20261019-full-tests1-run.log": "18d99f6c2f57e5b3773dd4b26f4813adf18f0a50b0955f0a744feb8e1cbe8308",
+    "extracted/goal-thunder-display-20261019-full-tests1.json": "1e891e5d761c86afcc97606a501c25d5a67610063359d06b45f111a0c339a7fa",
+    "extracted/goal-thunder-display-20261019-full-tests1.stderr": "79e2480bde0296407e865b4a37f3b49c9c027d653a2260e3a4215348db0f0663",
+    "extracted/goal-thunder-display-20261019-full-tests1.stdout": "132141a58f2653b31ee49bf3c3cba2dafae393d8243b71a0623f2068a4064974",
+    "extracted/goal-thunder-display-20261019-pin-updates.json": "e189179ce4ab178a9ae808ac948d48e618f82a35fae5def988a27a771ee429e4",
+    "extracted/goal-thunder-display-20261019-plan1.tsv": "77948bd4e5ec0afdecf0e0c8329fe7c9a43a7fd727acf7b4c262c1cc3ab131fb",
+    "extracted/goal-thunder-display-20261019-refresh-pins.log": "ddeda3d0b673ecc201643fa676812de17d3c9ff39e72c131998bf0a0e9768f62",
+    "extracted/goal-thunder-display-20261019-refresh-pins.py": "9cc2e5765ee5ab019de40965cb8fcf62ddd7531cd88aa9d1d419cff0741c772b",
+    "extracted/goal-thunder-display-20261019-stage.py": "751dff1eed51fb661c909a9473c8b154dbb9771356791af03d83cbb142a8a429",
+    "extracted/goal-thunder-display-20261019-test-v1.cpp": "46fb6def57746ff92cdce31d02212953d059fb6337c5048bd430338e7b80cd49",
+    "extracted/goal-thunder-display-20261019-ui1/completedWorkshop.bmp": "f9bd438463fd91968b316ca285105e9ea5ff301fbdd5b11d52c6d2779e378a85",
+    "extracted/goal-thunder-display-20261019-ui1/enemyView.bmp": "20d5cb72df99697c47bdfd2cfa2316f62362cc8337d111a6adf5fd828a797290",
+    "extracted/goal-thunder-display-20261019-ui1/final.bmp": "86c26a2183198ce9b1bbeec2f4c8b5dda82fe5c585884c15646b03b762b8dfe2",
+    "extracted/goal-thunder-display-20261019-ui1/originals-before.json": "f98d8731a8a729b528fd9744b52f3b26143eff54e767f0b8e1537040c5807c15",
+    "extracted/goal-thunder-display-20261019-ui1/run.json": "1992ea53033cd9b1ad45d28c69a5137372b2e3fb2297b951d0cf2c80da119728",
+    "extracted/goal-thunder-display-20261019-ui1/stageC.bmp": "b0509cce3b0ca137346d024e9f97666d642d2bb65bf8bae51124628d51f11efb",
+    "extracted/goal-thunder-display-20261019-ui1/states.tsv": "92d7ad431784223eca9cbf11d8d8a08fe6486a98fb6c1eb9c1134701e06b525d",
+    "extracted/goal-thunder-display-20261019-ui1/stderr.log": "15486ac25b2860ffac9a8d8330b6c4cf0908dba6a1ec9f0c8e36f85414ecca48",
+    "extracted/goal-thunder-display-20261019-ui1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/goal-thunder-display-20261019-ui1/steps.tsv": "eb085c34d477e58cd8d96d4ba128145a4f7c27d3baf0cccbeb7786836b0c4b3c",
+    "extracted/goal-thunder-display-20261019-ui1/thunder0.bmp": "7e4fc1fa9b7da2601f6836661babf8f8ff8cf0c6c48eefc0d8b7039a57bb19b7",
+    "extracted/goal-thunder-display-20261019-ui1/thunder1.bmp": "1436b202aebf66c7450f16686abd071202d2be8a21a9cfdc69bcc84b84131b6f",
+    "extracted/goal-thunder-display-20261019-ui1/thunder10.bmp": "79715da58ae2fc6051b9ba55108cb4173ff196dc1e74f1a2934f571bb06b2d55",
+    "extracted/goal-thunder-display-20261019-ui1/thunder11.bmp": "c1739f72f2e5c5028fc9be7c9911847dc62a26a327a98613ff42b29245bb827e",
+    "extracted/goal-thunder-display-20261019-ui1/thunder12.bmp": "006a94161814935b979833ad5012978e3032ce341ad7ed19823eb69fb7d41305",
+    "extracted/goal-thunder-display-20261019-ui1/thunder13.bmp": "32664aee9a7eaea734c238404fc6eab8a678cf2bba24296b975ff2dfc67949da",
+    "extracted/goal-thunder-display-20261019-ui1/thunder14.bmp": "703d025d190ac02c31331c264e3661b8d1a8aee43a9e8d1f9c95ad9fbffbe747",
+    "extracted/goal-thunder-display-20261019-ui1/thunder15.bmp": "f0fa0e5a5997c22b6384afdd31547873a7a01d0f0bfdbd475b727884ae253064",
+    "extracted/goal-thunder-display-20261019-ui1/thunder16.bmp": "3becec2a4cfad85a1d1b0959fd04077110881f33330cfc4f85094ca9f81065cd",
+    "extracted/goal-thunder-display-20261019-ui1/thunder17.bmp": "930bd1fa5ddc9b1fe5315a85a4df69f568cc8342e16a4c040ac82eda97d0845f",
+    "extracted/goal-thunder-display-20261019-ui1/thunder18.bmp": "c0bf9433714d1960162537d8de4d35cb23cbe3edb667b11c76749346462f5fc9",
+    "extracted/goal-thunder-display-20261019-ui1/thunder19.bmp": "86c26a2183198ce9b1bbeec2f4c8b5dda82fe5c585884c15646b03b762b8dfe2",
+    "extracted/goal-thunder-display-20261019-ui1/thunder2.bmp": "8ba593acaf9e2f9cfa8974047508254747afa4df70f563af5bb4544d2ff99629",
+    "extracted/goal-thunder-display-20261019-ui1/thunder20.bmp": "86c26a2183198ce9b1bbeec2f4c8b5dda82fe5c585884c15646b03b762b8dfe2",
+    "extracted/goal-thunder-display-20261019-ui1/thunder3.bmp": "6e1c6cf962474bba865540f1567abea146e8914262b313a63284a08087a6761c",
+    "extracted/goal-thunder-display-20261019-ui1/thunder4.bmp": "d0073a7a08aabc6269fe18cd40e3cf16ca0682cdde14392181d7232f4c1d84b3",
+    "extracted/goal-thunder-display-20261019-ui1/thunder5.bmp": "099424e6e344d0787ab911b2448b934c84d031ecda683228a226b5ad99b7fa68",
+    "extracted/goal-thunder-display-20261019-ui1/thunder6.bmp": "ef623ffa1000ceeb209acf85a1f3c694488235bbc52d3c542a6312696a4b3aa8",
+    "extracted/goal-thunder-display-20261019-ui1/thunder7.bmp": "4add0ee1c4b70073564595a849f645e7848d8aa075c07389268406e8fa659bce",
+    "extracted/goal-thunder-display-20261019-ui1/thunder8.bmp": "c2c538e2b6e5c1ee63397f212505c1ba5a05600850baa862421696b5c06ab74b",
+    "extracted/goal-thunder-display-20261019-ui1/thunder9.bmp": "6523bacf30dd56a161c6c6c7ef891cfb3698ed6ae6fcc806d5568bb0fa8fb13c",
+    "extracted/goal-thunder-display-20261019-ui1.log": "be4342a573031ab980e30349d244dc26cc5e634e9df1204a0f0cc17a3f5b8c21",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "originals/d/_shapes.shp": "c878353c8054208deef832e34c514b30fe670e175505b129333a5728ba70f68e",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6"
+  },
+  "goalComplete": false,
+  "fullFidelityVerified": false
+}

@@ -112,8 +112,8 @@
   "naturalTutorialFiveComplete": false,
   "sources": {
     "cpppj/src/client/RawCampaignSession.cpp": "4b0470acb1ea5cb275959eb4a70df1d795c4f87d6a51a2a78f6e35ebe573f36b",
-    "cpppj/src/client/GameWorld.cpp": "841563a3b989990707112d74a032a5b7afa11147412924f7ecc975980d4cda15",
-    "cpppj/tests/CampaignSessionTests.cpp": "1f46f900237734895c7e9f3d36337c0c62953ba81aeb70db751cbc53214fb9b7",
+    "cpppj/src/client/GameWorld.cpp": "c69d29972961250ac04814f8e3bd81c5134fed0a1ad250f261900c3cc1984fdb",
+    "cpppj/tests/CampaignSessionTests.cpp": "793df135e84491ebbac4ba182829e3b6bf5c427900799c7e688de51cdd4a44e9",
     "cpppj/src/o/RawSunFlyerFrame.cpp": "b130537725f138521f7bd56b1c06b4656f101e83bb757a9404462e28bc648fce",
     "cpppj/src/o/RawSunFlyerFrame.h": "f582295f47fdf9e7a6c4d3eb8db3d5d20636a4c55151ef1a6b6d9edb95776c1a",
     "cpppj/src/o/RawSquidDestroy.cpp": "7be89b9d016cdacc80e0695f660bfca051dee6a18039978eb40117539ef89958",
@@ -304,6 +304,25 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "23674336919f1a4d334db02413d226fc5761d9cd66ec3e273377cf72430b5901",
           "current": "1f46f900237734895c7e9f3d36337c0c62953ba81aeb70db751cbc53214fb9b7"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 222,
+      "reason": "썬더 캐논의 실제 방향별 고정 본체와 현재 애니메이션 그림을 같은 원본 Draw에 연결한 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/sources",
+          "path": "cpppj/src/client/GameWorld.cpp",
+          "previous": "841563a3b989990707112d74a032a5b7afa11147412924f7ecc975980d4cda15",
+          "current": "c69d29972961250ac04814f8e3bd81c5134fed0a1ad250f261900c3cc1984fdb"
+        },
+        {
+          "group": "/sources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "1f46f900237734895c7e9f3d36337c0c62953ba81aeb70db751cbc53214fb9b7",
+          "current": "793df135e84491ebbac4ba182829e3b6bf5c427900799c7e688de51cdd4a44e9"
         }
       ]
     }

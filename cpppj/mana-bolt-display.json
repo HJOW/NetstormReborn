@@ -16,7 +16,7 @@
     "cpppj/src/o/SquidPop.cpp": "61f8db73c663d5d7c8880d73bc310cf7884e361bb76402e0946241e02b7dcd17",
     "cpppj/src/o/SquidUnpop.cpp": "f9a932b6ee543cc2ee051d6f67afb0c56fca1f325cc51d29ca3d0dc3adf26fef",
     "cpppj/tests/CMakeLists.txt": "83eed7cedab8650ce570f444a5c06efe29b2ce414e3049777221cf672f6e248f",
-    "cpppj/tests/CampaignSessionTests.cpp": "1f46f900237734895c7e9f3d36337c0c62953ba81aeb70db751cbc53214fb9b7",
+    "cpppj/tests/CampaignSessionTests.cpp": "793df135e84491ebbac4ba182829e3b6bf5c427900799c7e688de51cdd4a44e9",
     "cpppj/tests/CursorManaTests.cpp": "3f9aa47024782b0afe4f165a2145fa4f27706d8b5b7c1434f8e94c65a5318daa",
     "cpppj/tests/PopTests.cpp": "250b9a9fd863142026c29ef68c75ea7c8bea6871ed0a42df9bafee4e2b072d48",
     "cpppj/tests/UnpopTests.cpp": "af6cd4c73db3f50d707d1b7cc896f991a7c5222177b7bd4252054bbe826af9cc",
@@ -2256,6 +2256,19 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "23674336919f1a4d334db02413d226fc5761d9cd66ec3e273377cf72430b5901",
           "current": "1f46f900237734895c7e9f3d36337c0c62953ba81aeb70db751cbc53214fb9b7"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 222,
+      "reason": "썬더 캐논의 실제 방향별 고정 본체와 현재 애니메이션 그림을 같은 원본 Draw에 연결한 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/sha256",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "1f46f900237734895c7e9f3d36337c0c62953ba81aeb70db751cbc53214fb9b7",
+          "current": "793df135e84491ebbac4ba182829e3b6bf5c427900799c7e688de51cdd4a44e9"
         }
       ]
     }

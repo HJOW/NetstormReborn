@@ -15,7 +15,7 @@
     "cpppj/src/client/RawCampaignConstructionBindings.h": "1fe62283698ff9a69f03b74a043bb359d0aeb4df335798bc6e6e91b5c9c16431",
     "cpppj/src/o/RawConstructionPlace.cpp": "c90e759306d3452eb9c400f6bb252a68f8f89cff6f1ff9fe7b051a8e390618ff",
     "cpppj/src/o/RawConstructionPlace.h": "d12819f99d45323e56428c0a28919bdf06026b23e26f1e0d1c681b025a5bbf0e",
-    "cpppj/tests/CampaignSessionTests.cpp": "1f46f900237734895c7e9f3d36337c0c62953ba81aeb70db751cbc53214fb9b7"
+    "cpppj/tests/CampaignSessionTests.cpp": "793df135e84491ebbac4ba182829e3b6bf5c427900799c7e688de51cdd4a44e9"
   },
   "protectedFileSha256": {
     "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
@@ -1481,6 +1481,19 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "23674336919f1a4d334db02413d226fc5761d9cd66ec3e273377cf72430b5901",
           "current": "1f46f900237734895c7e9f3d36337c0c62953ba81aeb70db751cbc53214fb9b7"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 222,
+      "reason": "썬더 캐논의 실제 방향별 고정 본체와 현재 애니메이션 그림을 같은 원본 Draw에 연결한 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "1f46f900237734895c7e9f3d36337c0c62953ba81aeb70db751cbc53214fb9b7",
+          "current": "793df135e84491ebbac4ba182829e3b6bf5c427900799c7e688de51cdd4a44e9"
         }
       ]
     }

@@ -68,7 +68,7 @@
     "cpppj/src/client/RawCursorPosition.h": "acef07ed2737b798d36034457c63e75e1bfde25c9068b4bd3a2c224bd8dab723",
     "cpppj/src/o/CMakeLists.txt": "e98fa5aecc683b69021e6efacd62092a48772ae5ed3f7cb3da0eeeff7c33d7ec",
     "cpppj/tests/CMakeLists.txt": "83eed7cedab8650ce570f444a5c06efe29b2ce414e3049777221cf672f6e248f",
-    "cpppj/tests/CampaignSessionTests.cpp": "1f46f900237734895c7e9f3d36337c0c62953ba81aeb70db751cbc53214fb9b7",
+    "cpppj/tests/CampaignSessionTests.cpp": "793df135e84491ebbac4ba182829e3b6bf5c427900799c7e688de51cdd4a44e9",
     "cpppj/tests/ManaBoltRegularTests.cpp": "3531f9ec3de58ad435557223606e16994d0f235b193780fab7700a06e96e8d5d",
     "cpppj/src/client/Sound.cpp": "30f85f35c1e5c75d1214ec5df2f3d86c7552fa060a1068905f77cb164cfd8ee3",
     "cpppj/src/client/Sound.h": "d8820c78a72db8c30241bed470c85b5b07a36cc1b0737b96e81563836285623f",
@@ -88,7 +88,7 @@
     "cpppj/src/o/RawManaBoltRegular.cpp": "4ea2499c6cf66978607e42ad0c84486d11ca5cf32e6deb58281e35fbd9aefdde",
     "cpppj/src/o/RawManaBoltRegular.h": "c0f4822f6a25c63644f507d31b3946e1f8a7ba6b1185e5c09a97e625d56e8011",
     "cpppj/tests/CMakeLists.txt": "83eed7cedab8650ce570f444a5c06efe29b2ce414e3049777221cf672f6e248f",
-    "cpppj/tests/CampaignSessionTests.cpp": "1f46f900237734895c7e9f3d36337c0c62953ba81aeb70db751cbc53214fb9b7",
+    "cpppj/tests/CampaignSessionTests.cpp": "793df135e84491ebbac4ba182829e3b6bf5c427900799c7e688de51cdd4a44e9",
     "cpppj/tests/ManaBoltRegularTests.cpp": "3531f9ec3de58ad435557223606e16994d0f235b193780fab7700a06e96e8d5d"
   },
   "protectedFileSha256": {
@@ -2970,6 +2970,25 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "23674336919f1a4d334db02413d226fc5761d9cd66ec3e273377cf72430b5901",
           "current": "1f46f900237734895c7e9f3d36337c0c62953ba81aeb70db751cbc53214fb9b7"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 222,
+      "reason": "썬더 캐논의 실제 방향별 고정 본체와 현재 애니메이션 그림을 같은 원본 Draw에 연결한 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/sha256",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "1f46f900237734895c7e9f3d36337c0c62953ba81aeb70db751cbc53214fb9b7",
+          "current": "793df135e84491ebbac4ba182829e3b6bf5c427900799c7e688de51cdd4a44e9"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "1f46f900237734895c7e9f3d36337c0c62953ba81aeb70db751cbc53214fb9b7",
+          "current": "793df135e84491ebbac4ba182829e3b6bf5c427900799c7e688de51cdd4a44e9"
         }
       ]
     }

@@ -10,6 +10,7 @@
 #include "o/RawRainVortexDraw.h"
 #include "o/RawTempleDraw.h"
 #include "o/RawFactoryDraw.h"
+#include "o/RawThunderCannonCapture.h"
 #include "o/CanonDecoder.h"
 #include <algorithm>
 #include <cmath>
@@ -359,6 +360,12 @@ ScreenRect GameWorld::Bounds(const o::Squid& object) const {
     // Factory의 현재 프레임은 작은 추가 그림일 수 있다. 실제 +78(454cd0)의 본체 프레임으로 몸통 클릭 영역을 구한다.
     if (campaign_ && assets_.Edition()==o::OriginalEdition::Patch1078) {
         const auto core=campaign_->Core();const o::Sid sid{static_cast<std::uint16_t>(object.id)}; // 렌더링과 같은 현재 풀/실제 SID다.
+        if (o::IsThunderCannonCapture(core.pool.Slot(sid))) {
+            const auto frame=o::ThunderCannonCaptureMainFrame(core.pool.Slot(sid),core.frames[static_cast<std::size_t>(object.type)]); // 준비 애니메이션의 작은 추가 영역 대신 원본 방향별 고정 본체를 클릭한다.
+            const auto& type=assets_.Types()[static_cast<std::size_t>(object.type-o::kFirstAssetTypeNumber)];const auto& rect=assets_.Shapes().Blocks()[type.block].frames[static_cast<std::size_t>(frame)].rect;
+            const auto& record=core.types[static_cast<std::size_t>(object.type)];const auto point=ToScreen(object.x,object.y);
+            return {point.x-record.hotspotX+rect.left,point.y-record.hotspotY+rect.top,point.x-record.hotspotX+rect.right+1,point.y-record.hotspotY+rect.bottom+1};
+        }
         const o::RawFactoryDraw factory(core.pool,core.frames); // 원본 두 가상 표의 단계별 본체 프레임 선택을 재사용한다.
         if (factory.Handles(sid)) {
             const auto rect=core.display.Bounds(static_cast<std::size_t>(object.type),factory.MainFrame(sid),static_cast<float>(object.x),static_cast<float>(object.y)); // 같은 SHP 헤더/카메라/배율의 전체 본체 영역이다.

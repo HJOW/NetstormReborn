@@ -7,6 +7,7 @@
 #include "client/OwnerColorMaps.h"
 #include "o/RawFactoryDraw.h"
 #include "o/RawTempleDraw.h"
+#include "o/RawThunderCannonCapture.h"
 #include "o/RawBridgeConnect.h"
 #include <bit>
 #include <stdexcept>
@@ -34,7 +35,8 @@ struct RawCampaignFactoryDisplay::Impl {
         const auto raw=core.pool.Slot(sid);return raw[0]==0xa0 && raw[1]==0x1e && raw[2]==0x50 && raw[3]==0;
     }
     bool Temple(o::Sid sid) const { return o::IsPatchTemple(core.pool.Slot(sid)); } // 같은10.78 세 전용VT의 실제+a4 대상이다.
-    bool Handles(o::Sid sid) const { return factory.Handles(sid) || Flare(sid) || Generator(sid) || Temple(sid); } // 확인된 실제 일곱VT를 같은 수집기에 포함한다.
+    bool ThunderCannon(o::Sid sid) const { return o::IsThunderCannonCapture(core.pool.Slot(sid)); } // 독립333캡처로 확인한 실제131/VT50bad0 쌍이다.
+    bool Handles(o::Sid sid) const { return factory.Handles(sid) || Flare(sid) || Generator(sid) || Temple(sid) || ThunderCannon(sid); } // 확인된 실제 여덟VT를 같은 수집기에 포함한다.
     // 원본 PE 초기값만 설치하고 각 수집에서 현재 게임 값으로 갱신한다.
     Impl(RawWorldCore world,const GameAssets& data,TempleDraw supplied):core(world),assets(data),factory(core.pool,core.frames),
         collection(core.hash,core.pool,core.types,core.shapes),views(MakeSpriteAssetViews(data)),outpost(BuildStandardOwnerColorMaps(126,82)),templeDraw(std::move(supplied)),templeBaseFrames(core.types.size(),-1) {
@@ -60,7 +62,11 @@ struct RawCampaignFactoryDisplay::Impl {
         if ((raw[40]&4U) && (raw[40]&0x30U)) throw std::logic_error("Factory 선택 상태 프로세스 목록 표시 미연결");
         state.now=core.processState.now;state.ownerPalettes.assign(core.bridgeState.ownerColors.begin(),core.bridgeState.ownerColors.end());
         SpritePixelTarget target(pixels,pitch,height,clip,MakeSpriteAssetShapes(assets,state),[this](auto mode,auto type,auto owner) { return Color(mode,type,owner); });
-        SpriteDrawHooks rules;rules.virtualFrame=[this](o::Sid object) { if (Temple(object)) return o::PatchTempleMainFrame(core.pool.Slot(object),templeBaseFrames);return Flare(object) || Generator(object) ? assets.Types()[core.pool.Slot(object)[10]-o::kFirstAssetTypeNumber].definition.specialFrames.baseFrame : factory.MainFrame(object); };rules.surface=MakeSpriteSurfaceLookup(core.hash);
+        SpriteDrawHooks rules;rules.virtualFrame=[this](o::Sid object) {
+            if (Temple(object)) return o::PatchTempleMainFrame(core.pool.Slot(object),templeBaseFrames);
+            if (ThunderCannon(object)) return o::ThunderCannonCaptureMainFrame(core.pool.Slot(object),core.frames[core.pool.Slot(object)[10]]);
+            return Flare(object) || Generator(object) ? assets.Types()[core.pool.Slot(object)[10]-o::kFirstAssetTypeNumber].definition.specialFrames.baseFrame : factory.MainFrame(object);
+        };rules.surface=MakeSpriteSurfaceLookup(core.hash);
         rules.resource=[this](o::Sid object)->std::optional<SpriteResourceStatus> {
             if (core.processes.FindEvent(object,0x493)) throw std::logic_error("Factory 자원 내용물 막대 표시 미연결");return std::nullopt;
         };
@@ -68,6 +74,14 @@ struct RawCampaignFactoryDisplay::Impl {
         // +a4의0044c180은 같은 기준점/단위 배율의 plain SHP다. 일반 owner 문맥으로 바꾸지 않는다.
         hooks.virtualDraw=[this,shape=hooks.shape](o::Sid object,ScreenPoint point) {
             if (Flare(object) || Generator(object)) return; // 실제+a4의 빈 몸체41c100이다.
+            if (ThunderCannon(object)) {
+                // 원본46ae30→497280은 고정 본체 뒤 현재 그림을 같은 기준점에 겹친다.
+                o::DrawThunderCannonCapture(core.pool.Slot(object),[this,object,&shape](auto type,auto frame,auto x,auto y) {
+                    const auto current=core.pool.Slot(object);
+                    if (!(current[40]&0x10U)) shape({type,frame,{x,y},SpriteShapeMode::Plain});
+                    else if (current[34]==state.localPlayer) shape({type,frame,{x,y},SpriteShapeMode::Abstract});
+                },point.x,point.y);return;
+            }
             if (Temple(object)) {
                 if (!templeDraw) throw std::logic_error("실제 템플 전용Draw 미연결");const auto type=core.pool.Slot(object)[10]; // 원본Draw의 첫 TYPE/SHP snapshot이다.
                 templeDraw(object,[this,object,point,type,&shape](std::int32_t frame) {

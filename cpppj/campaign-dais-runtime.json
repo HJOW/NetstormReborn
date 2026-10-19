@@ -101,7 +101,7 @@
     "cpppj/src/o/RawDaisLifecycle.h": "f5eed7df17f021e3c80091c50603f66828e21b5d8397137ffe3223e7e5d65b10",
     "cpppj/src/o/RawDaisRegular.cpp": "5f48cd4e706a8a904a6a03b19b2f1e235fed581159291132b632df557c4fadb2",
     "cpppj/src/o/RawDaisRegular.h": "6d69e7b9c01b9dcc908fa0e8d2b4170f60536d9c571565e0fd1128db35fe7b73",
-    "cpppj/tests/CampaignSessionTests.cpp": "1f46f900237734895c7e9f3d36337c0c62953ba81aeb70db751cbc53214fb9b7",
+    "cpppj/tests/CampaignSessionTests.cpp": "793df135e84491ebbac4ba182829e3b6bf5c427900799c7e688de51cdd4a44e9",
     "cpppj/tests/DaisLifecycleTests.cpp": "30f2901c1e18d470e8b45ed3fb334ccd30774c0f6cefb1118ff9b886f46927b7"
   },
   "binaries": {
@@ -640,6 +640,19 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "23674336919f1a4d334db02413d226fc5761d9cd66ec3e273377cf72430b5901",
           "current": "1f46f900237734895c7e9f3d36337c0c62953ba81aeb70db751cbc53214fb9b7"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 222,
+      "reason": "썬더 캐논의 실제 방향별 고정 본체와 현재 애니메이션 그림을 같은 원본 Draw에 연결한 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "1f46f900237734895c7e9f3d36337c0c62953ba81aeb70db751cbc53214fb9b7",
+          "current": "793df135e84491ebbac4ba182829e3b6bf5c427900799c7e688de51cdd4a44e9"
         }
       ]
     }

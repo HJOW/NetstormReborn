@@ -273,7 +273,7 @@
     "tools/typefile.py": "a564a4b1bbc4f06d05ecb8b1f3fae4c32f6231cf95ea7bfadff2499931804d90"
   },
   "evidence": {
-    "cpppj/display-motion-runtime.json": "78ec568034df902de0ddcb7b12277250b8c0a94693bd89c7e3a64a37640100bf",
+    "cpppj/display-motion-runtime.json": "50eabbed0536d549b58a9a738272f33c8a5aca3b8416b907b105d628ac3aaa1e",
     "extracted/goal-display-motion-20261019-full-tests1.json": "ff684424107a92d317aaecdf90f2dd88f7cd17cc707065d792937ac128c808ca",
     "extracted/goal-early5-island-20261019-probe.py": "2933ead8b5cc87b76425031fea3da8690c3b2649dc8f3fa8d4babd276176ef1a",
     "extracted/goal-early5-spells-20261019-build-report.py": "fb691b2a01d162ca7a0890d6cfddaf3d850486b90941b913705fabc35400d8b8",
@@ -400,6 +400,19 @@
           "path": "cpppj/display-motion-runtime.json",
           "previous": "da971882da1b473333d9c8d188cd641b0b6eb0c1b0d5a733ade9d1f9b56a4d6a",
           "current": "78ec568034df902de0ddcb7b12277250b8c0a94693bd89c7e3a64a37640100bf"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 222,
+      "reason": "썬더 캐논의 실제 방향별 고정 본체와 현재 애니메이션 그림을 같은 원본 Draw에 연결한 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/evidence",
+          "path": "cpppj/display-motion-runtime.json",
+          "previous": "78ec568034df902de0ddcb7b12277250b8c0a94693bd89c7e3a64a37640100bf",
+          "current": "50eabbed0536d549b58a9a738272f33c8a5aca3b8416b907b105d628ac3aaa1e"
         }
       ]
     }

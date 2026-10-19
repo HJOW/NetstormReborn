@@ -32,6 +32,7 @@
 #include <unordered_set>
 #include <iostream>
 #include <set>
+#include <filesystem>
 #include "o/RawGunProcess.h"
 #include "o/RawSunFlyerFrame.h"
 #include <type_traits>
@@ -649,6 +650,40 @@ TEST_CASE(CampaignSession_GeneratorBodyShadowAndPicking) {
         }
         CHECK(std::bit_cast<float>(Get(core.pool.Slot(sid),14))==x && std::bit_cast<float>(Get(core.pool.Slot(sid),18))==y);
     }
+}
+
+// 원본 캡처의37개 실제 그림 전체와 같은 화면을 두 카메라에서 비교해 준비 중 본체 소실을 잡는다.
+TEST_CASE(CampaignSession_ThunderCannonBodyNative37Frames) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());auto services=external.Services();services.install.resetCamera={};
+    GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services),{1024,768});world.Resize(1024,768);
+    const auto core=world.Session().Core();const Sid target{15002};auto raw=core.pool.AllocatedBytes(target);CHECK(raw[10]==124);
+    raw[10]=131;Put(raw,0,0x50bad0U);raw[34]=1;raw[40]=2; // 같은 표시 슬롯에 명시한 원본 썬더 캐논 상태이며 자연 건설/전투 입력으로 세지 않는다.
+    const float x=std::bit_cast<float>(Get(raw,14)),y=std::bit_cast<float>(Get(raw,18));
+    world.frameTime=[] { return FrameTime{0,1,0,1}; };world.paused=[] { return true; };
+    const auto path=(std::filesystem::path(__FILE__).parent_path()/"fixtures/thunder-cannon-capture-x86.tsv").string();std::size_t cases{},pixels{}; // 기존 독립 원본 픽셀은 재생성하지 않는다.
+    // 일반 alive 추가 그림/owner1에 해당하는37행을 원본에서 고른다.
+    for (const auto& row:netstorm::test::rawscene::LoadFixture(path.c_str()).rows) if (row[1]=="2" && row[2]=="1") {
+        Put(raw,36,static_cast<std::uint32_t>(std::stoul(row[0])));world.RunFrame();const auto metadata=netstorm::test::rawscene::Split(row[3],',');
+        const int width=std::stoi(metadata[0]),height=std::stoi(metadata[1]);const int hotX=std::stoi(metadata[2])+core.types[131].hotspotX+2,hotY=std::stoi(metadata[3])+core.types[131].hotspotY-3; // 원문TYPE(-2,3)에서 실제TYPE(2,4)로 메타 기준점만 환산한다.
+        // 동일 raw 좌표를 유지하며 카메라의 정수 이동도 독립 확인한다.
+        for (const auto camera:std::array<ScreenPoint,2>{{{0,0},{7,9}}}) {
+            world.Scroll(camera.x,camera.y);const auto point=world.ToScreen(x,y);std::vector<RenderSprite> body;
+            // 같은 객체의 실제 장면 항목만 렌더링하며 주변 지형의 가림은 섞지 않는다.
+            for (const auto& sprite:world.Sprites()) if (sprite.order.x==x && sprite.order.y==y && (sprite.procedure || sprite.block==131-70)) body.push_back(sprite);
+            CHECK(body.size()==1);if (body.size()!=1) return;
+            Renderer renderer(1024,768);renderer.SetScene(body);std::vector<std::uint8_t> actual(1024*768,199);renderer.Draw(actual,1024,199);std::size_t mismatch{},painted{};
+            // 원본 캡처의 불투명/투명 전체 영역을 화면 좌표로 옮겨 픽셀 단위로 대조한다.
+            for (int index=0;index<width*height;++index) {
+                const int dx=point.x-hotX+index%width,dy=point.y-hotY+index/width;if (dx<0 || dx>=1024 || dy<28 || dy>=768) continue;
+                const auto expected=static_cast<std::uint8_t>(std::stoul(row[4].substr(static_cast<std::size_t>(index)*2,2),nullptr,16));
+                if (actual[dy*1024+dx]!=(expected==255 ? 199 : expected)) ++mismatch;if (expected!=255) ++painted;++pixels;
+            }
+            if (mismatch) std::cout<<"썬더 캐논 현재 그림"<<row[0]<<" 원본 화면 픽셀 차이="<<mismatch<<'\n';
+            CHECK(mismatch==0 && painted>0);world.Scroll(-camera.x,-camera.y);++cases;
+        }
+    }
+    CHECK(cases==74 && pixels>400000);std::cout<<"썬더 캐논37프레임/두 카메라 원본 화면 대조 픽셀="<<pixels<<'\n';
 }
 
 // 실제 raw 발사체/장식물의 원본 깊이와 겹친 픽셀이 GameWorld와 Renderer까지 보존돼야 한다.

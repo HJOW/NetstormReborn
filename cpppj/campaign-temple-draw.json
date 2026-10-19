@@ -89,10 +89,10 @@
     "cpppj/src/client/RawCampaignSession.h": "f905619a10b1ecc976bdfc082f8196e3f82190b5f7770828aaf84d00b813c573",
     "cpppj/src/client/RawCampaignSession.cpp": "4b0470acb1ea5cb275959eb4a70df1d795c4f87d6a51a2a78f6e35ebe573f36b",
     "cpppj/src/client/RawCampaignFactoryDisplay.h": "d2434f7d291754651b9810411235659ca35f393443423340818a261599640f2e",
-    "cpppj/src/client/RawCampaignFactoryDisplay.cpp": "c95ed76a46e437d73f16c1038eef1383a2570b60e2de6b502c9445191c331193",
-    "cpppj/src/client/GameWorld.cpp": "841563a3b989990707112d74a032a5b7afa11147412924f7ecc975980d4cda15",
+    "cpppj/src/client/RawCampaignFactoryDisplay.cpp": "08c207e92a0175f9eedc666b65a8fea35a999963ed69d36fc110ca7d9fcdea7d",
+    "cpppj/src/client/GameWorld.cpp": "c69d29972961250ac04814f8e3bd81c5134fed0a1ad250f261900c3cc1984fdb",
     "cpppj/tests/CMakeLists.txt": "83eed7cedab8650ce570f444a5c06efe29b2ce414e3049777221cf672f6e248f",
-    "cpppj/tests/CampaignSessionTests.cpp": "1f46f900237734895c7e9f3d36337c0c62953ba81aeb70db751cbc53214fb9b7",
+    "cpppj/tests/CampaignSessionTests.cpp": "793df135e84491ebbac4ba182829e3b6bf5c427900799c7e688de51cdd4a44e9",
     "tools/decomp_temple_draw.py": "b94a1b635e83af4af3808d3666d3dd56067a44e88c22ecfbd4fe9396000dab24",
     "tools/check_temple_scene.py": "5ce0641612f94c92bea40703e75472125317167d063433f3469ff5b88400dd19",
     "cpppj/temple-draw.json": "08f2b87d34a3d29ee35f4c479ce4eca45be47aee0c6d774d3fee875220fb665e",
@@ -1698,6 +1698,31 @@
           "path": "cpppj/tests/CampaignSessionTests.cpp",
           "previous": "23674336919f1a4d334db02413d226fc5761d9cd66ec3e273377cf72430b5901",
           "current": "1f46f900237734895c7e9f3d36337c0c62953ba81aeb70db751cbc53214fb9b7"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "unit": 222,
+      "reason": "썬더 캐논의 실제 방향별 고정 본체와 현재 애니메이션 그림을 같은 원본 Draw에 연결한 현재 핀이다. 이전 값/관측/기대는 보존하며 과거 실행을 새 실행으로 세지 않는다.",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/RawCampaignFactoryDisplay.cpp",
+          "previous": "c95ed76a46e437d73f16c1038eef1383a2570b60e2de6b502c9445191c331193",
+          "current": "08c207e92a0175f9eedc666b65a8fea35a999963ed69d36fc110ca7d9fcdea7d"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/client/GameWorld.cpp",
+          "previous": "841563a3b989990707112d74a032a5b7afa11147412924f7ecc975980d4cda15",
+          "current": "c69d29972961250ac04814f8e3bd81c5134fed0a1ad250f261900c3cc1984fdb"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "previous": "1f46f900237734895c7e9f3d36337c0c62953ba81aeb70db751cbc53214fb9b7",
+          "current": "793df135e84491ebbac4ba182829e3b6bf5c427900799c7e688de51cdd4a44e9"
         }
       ]
     }
