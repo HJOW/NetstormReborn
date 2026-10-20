@@ -62,6 +62,8 @@
     <!-- 원본 월드 코어 W02 전체 재구성 조각: 전역 무효 수집·초기화 재구성과 소진 할당 582행, 내부 Form 생략 64행의 원본 PE 독립 관찰 (10.78 행만 쓴다). -->
     <None Include="../../../cpppj/tests/fixtures/graphrebuild-x86.tsv" Link="X86/graphrebuild-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/graphforms-x86.tsv" Link="X86/graphforms-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <!-- 원본 월드 코어 W02 소진 복구 조각: 네 상위 호출 안의 실제 재구성·소진 할당·지도·통계 390행의 원본 PE 독립 관찰 (10.78 행만 쓴다). -->
+    <None Include="../../../cpppj/tests/fixtures/graphrecovery-x86.tsv" Link="X86/graphrecovery-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <!-- 원본 월드 코어 W02 PostPop 조각: 공통 후처리·Pop·Unpop 2,140행과 다리 접두 240행의 원본 PE 독립 관찰 (10.78 행만 쓴다). -->
     <None Include="../../../cpppj/tests/fixtures/postpop-x86.tsv" Link="X86/postpop-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/bridgepostpop-x86.tsv" Link="X86/bridgepostpop-x86.tsv" CopyToOutputDirectory="PreserveNewest" />

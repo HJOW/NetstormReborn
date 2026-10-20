@@ -1,3 +1,14 @@
+## 2026-10-21 완료: W02 열일곱째 조각 — 그래프 소진 복구 재생(FullPool)
+
+- [x] 사용자 요청("AGENTS.md 와 LEFT_JOBS.dotnetpj.md 문서를 읽고, dotnetpj 다음 단계를 진행해 줘" / "dotnetpj 다음 단계도 진행해 줘")으로 직전 절이 정한 다음 시작점, 곧 `graphrecovery` 의 `FullPool` 경로 재생을 수행했다. `cpppj/`·공통 `LEFT_JOBS.md`는 수정하지 않았다. 현재 PC **HJOW-Athlon**은 공통 기록의 마지막 정밀 디컴파일 PC(**HJOW-Athlon, 2026-10-20**)와 같으나 **디컴파일 산출물을 읽지 않았고**, 새 디컴파일·원본 관찰·원본/클론 게임·창 실행은 없다. cpppj 커밋 소스와 `RawGraphTests.cpp` 의 `ReplayRawGraph`·원본 fixture 에만 근거했다. 마지막 디컴파일 PC 기록은 그대로다. 상세·근거 표·경계는 [원본 월드 코어 W02 소진 복구 조각](docs/dotnet-original-core-graphrecovery-20261021.md).
+- [x] **동기화 먼저:** 시작할 때 반영 커밋은 `f285cfec`, HEAD는 `297bed02`(직전 `20261021-03 DN`)였다. 사이 cpppj 커밋이 없고, 쓸 fixture를 `--update --add graphrecovery:Core`로 등록했다(연결 fixture 40→**41**개). 마지막에 `--update --reflect HEAD`로 반영 커밋을 `f285cfec`→**`297bed02`** 로 올렸다([계획 7절 7번](docs/dotnet-cpp-port-plan-20261016.md#7-cpppj-진행을-따라가는-절차-다른-ai가-cpppj를-계속-진행-중)). 작업 트리의 미커밋·미연결 `dude-footprint*`·`decomp_dude_footprint.py`(다른 세션 작업물)는 쓰지 않았다.
+- [x] **구현(검사 연결, 소스 변경 없음):** `X86RawGraphReplayTests.Scene` 에 `GraphRecovery` 보관, `Begin`·`Setup` 에서 같은 값으로 `RawGraph` 생성. `Replay` 에 `globalFixture`·`recovery` 인자 추가. `RecoveryInsideAddDetachPopAndPostPopMatchOriginalX86` 1건(`Add` 16·`PostPop` 16·`Pop` 16·`Detach` 16, 전역 풀 재생성·17열 표 전체 바이트 검사). `RawGraphTests` 에 소진 표 `Add` 정책 분기 합성 검사 1건(`Reject` 거부·`FullPool` 복구). `Netstorm.Core.Tests.csproj` 에 fixture 링크 1건. `RawGraph`·`SurfaceGraph` 소스는 고치지 않았다(`Add`·`Detach`·`Allocate` 의 `FullPool` 분기는 이전 조각에서 이미 이식됨).
+- [x] **검증:** 전체 Release 경고 0·오류 0(`--no-incremental` 강제 전체 빌드), 단위 **1,221개 통과**(Assets 363 + Core 858; 이번 +2). `graphrecovery-x86.tsv` 10.78 몫 **64회**가 호출마다 7개 슬롯 50바이트·표/스택/해시/점유/풀 체크섬·TotalCost·깊이·세 Totalmade 표·표 전체 바이트까지 전부 일치했다. 표시 dirty 열은 비교하지 않는다(끈 경로).
+- [x] **변이 확인:** 소스 2곳을 하나씩 망가뜨려 모두 실패로 잡혔다(`Add` 의 복구 정책 무시 — 재생·합성 검사가 소진 예외로 실패, `DetachAt` 의 복구 정책 무시 — 재생의 `Detach` 16행이 소진 예외로 실패). 소스는 모두 원복해 재통과를 확인했다.
+- [ ] **하지 않은 것(경계):** `PostDestroy`·`Frame`(`destroygraph`), CD 10.72·10.37 몫, 표시 모듈 재생, 파생 분배 허브·실제 세션 연결은 그대로 미연결이다. 기준 판본은 10.78 뿐이다. 이 조각은 L1 모듈 단계이며 L2 이상으로 합산하지 않는다.
+- [ ] **다음 조각:** `PostDestroy`·`Frame`(`destroygraph`, `PostDestroy` 계산·`Frame` 번호) → 파생 분배 허브·실제 세션 연결. 시작할 때 `python dotnetpj/tools/cpp_sync.py`를 먼저 실행하고 쓸 fixture를 `--update --add`로 등록한다.
+- [x] 인수인계 뒤 **`20261021-04 DN 원본 월드 코어의 그래프 소진 복구를 원본 10.78 행 64회로 검증`** 으로 로컬 커밋한다. 원격 push는 하지 않는다.
+
 ## 2026-10-21 완료: W02 열여섯째 조각 — 그래프 전체 재구성(Rebuild)
 
 - [x] 사용자 요청("AGENTS.md 와 LEFT_JOBS.dotnetpj.md 문서를 읽고, dotnetpj 다음 단계를 진행해 줘")으로 직전 절이 정한 다음 시작점, 곧 `RawGraph` 의 전체 재구성(`Rebuild`)을 수행했다. `cpppj/`·공통 `LEFT_JOBS.md`는 수정하지 않았다. 현재 PC **HJOW-Athlon**은 공통 기록의 마지막 정밀 디컴파일 PC(**HJOW-Athlon, 2026-10-20**)와 같으나 **디컴파일 산출물을 읽지 않았고**, 새 디컴파일·원본 관찰·원본/클론 게임·창 실행은 없다. cpppj 커밋 소스·원본 fixture 에만 근거했다. 마지막 디컴파일 PC 기록은 그대로다. 상세·근거 표·경계는 [원본 월드 코어 W02 전체 재구성 조각](docs/dotnet-original-core-graphrebuild-20261021.md).

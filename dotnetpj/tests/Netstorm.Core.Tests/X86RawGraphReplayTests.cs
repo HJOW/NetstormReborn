@@ -13,7 +13,8 @@ namespace Netstorm.Core.Tests;
 /// 표/스택/해시/점유/풀 체크섬·TotalCost·깊이·세 Totalmade 표를 비교한다.
 /// 표시(SquidDisplay) 효과는 슬롯·공간을 바꾸지 않으므로 이 재생에서는 끈 경로(null)를 쓴다.
 /// 전역 재구성 행(17열)은 표 255개 전체 바이트도 직접 비교한다.
-/// 기준 판본은 10.78 이며 원본1037·CD 행은 읽지 않는다 (W02 열여섯째 조각, 2026-10-21).
+/// 기준 판본은 10.78 이며 원본1037·CD 행은 읽지 않는다 (W02 열일곱째 조각, 2026-10-21).
+/// 소진 복구 장면은 <see cref="GraphRecovery.FullPool"/> 로 잇는다.
 /// </summary>
 public sealed class X86RawGraphReplayTests
 {
@@ -202,10 +203,15 @@ public sealed class X86RawGraphReplayTests
         /// <summary>공통 Unpop(표시를 끈 경로, 삭제 재생에서 쓴다).</summary>
         public RawUnpop Unpop { get; private set; }
 
+        /// <summary>번호 소진 때 전체 재구성을 허용할지(원본 GraphRecovery).</summary>
+        private readonly GraphRecovery _recovery;
+
         /// <summary>Begin 행으로 풀과 타입·프레임을 준비하고 슬롯 7개를 확보한다.</summary>
         /// <param name="expectedIds">원본이 기대하는 슬롯 번호 순서.</param>
-        public Scene(int[] expectedIds)
+        /// <param name="recovery">번호 소진 때의 처리(전체 풀 입력에서만 FullPool).</param>
+        public Scene(int[] expectedIds, GraphRecovery recovery = GraphRecovery.Reject)
         {
+            _recovery = recovery;
             Types = new OriginalTypeRecord[OriginalConstructors.TypeCount];
             // 장면의 base 초기값을 채운다
             for (int i = 0; i < Types.Length; i++)
@@ -223,7 +229,7 @@ public sealed class X86RawGraphReplayTests
                     throw new InvalidOperationException($"Begin 슬롯 {i}: 실제 {Ids[i]}, 기대 {expectedIds[i]}");
                 }
             }
-            Graph = new RawGraph(Pool, Hash, Spots, Types);
+            Graph = new RawGraph(Pool, Hash, Spots, Types, null, null, null, _recovery);
             Post = new RawPostPop(Pool, Types, State);
             Pop = new RawPop(Pool, Hash, Spots);
             Unpop = new RawUnpop(Pool, Hash, Spots);
@@ -302,7 +308,7 @@ public sealed class X86RawGraphReplayTests
                 State.GlobalCounts[i] = unchecked(value + 34);
             }
             uint[] stack = regionFixture ? SeededStack(X86Fixture.UInt(row[4])) : Stack(row[4]);
-            Graph = new RawGraph(Pool, Hash, Spots, Types, Records(row[3]), stack, Frames);
+            Graph = new RawGraph(Pool, Hash, Spots, Types, Records(row[3]), stack, Frames, _recovery);
             Post = new RawPostPop(Pool, Types, State, Graph);
             Pop = new RawPop(Pool, Hash, Spots, null, Post);
             Unpop = new RawUnpop(Pool, Hash, Spots);
@@ -341,7 +347,8 @@ public sealed class X86RawGraphReplayTests
     /// <param name="expectedBegins">전체 Begin 행 수(모든 판본).</param>
     /// <param name="expectedCalls">10.78 호출 수.</param>
     /// <param name="globalFixture">전체 풀 순회 장면인지(Setup 마다 풀 재생성).</param>
-    private static void Replay(string fixture, bool regionFixture, int expectedBegins, Dictionary<string, int> expectedCalls, bool globalFixture = false)
+    /// <param name="recovery">번호 소진 때의 처리(전체 풀 입력에서만 FullPool).</param>
+    private static void Replay(string fixture, bool regionFixture, int expectedBegins, Dictionary<string, int> expectedCalls, bool globalFixture = false, GraphRecovery recovery = GraphRecovery.Reject)
     {
         string[][] rows = X86Fixture.ReadFile($"{fixture}-x86.tsv");
         Scene? scene = null;
@@ -355,7 +362,7 @@ public sealed class X86RawGraphReplayTests
                 Assert.Equal(4, row.Length);
                 patch = row[1] == PatchEdition;
                 begins++;
-                scene = patch ? new Scene(Rows(row[3])[0]) : null;
+                scene = patch ? new Scene(Rows(row[3])[0], recovery) : null;
                 return true;
             }
             if (!patch || scene is null)
@@ -505,5 +512,18 @@ public sealed class X86RawGraphReplayTests
             ["Allocate"] = 32,
             ["Rebuild"] = 64,
         }, true);
+    }
+
+    /// <summary>네 상위 호출 안의 실제 재구성·소진 할당·지도·통계를 10.78 몫 64회 재생한다.</summary>
+    [Fact]
+    public void RecoveryInsideAddDetachPopAndPostPopMatchOriginalX86()
+    {
+        Replay("graphrecovery", true, 6, new Dictionary<string, int>
+        {
+            ["Add"] = 16,
+            ["Detach"] = 16,
+            ["Pop"] = 16,
+            ["PostPop"] = 16,
+        }, true, GraphRecovery.FullPool);
     }
 }

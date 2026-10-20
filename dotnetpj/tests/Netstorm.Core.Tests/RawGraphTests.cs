@@ -470,4 +470,45 @@ public sealed class RawGraphTests
         _ = types;
         _ = spots;
     }
+
+    /// <summary>
+    /// 표가 소진됐을 때 Add 는 정책에 따라 갈린다: Reject 면 쓰기 전에 거부하고, FullPool 이면 전체를 재구성한 뒤 등록한다.
+    /// </summary>
+    [Fact]
+    public void AddExhaustedTableRejectsOrRecoversByPolicy()
+    {
+        // 0~250번을 모두 사용 중으로 채워 소진 상태를 만든다
+        GraphRecord[] Exhausted()
+        {
+            var records = new GraphRecord[RawGraph.TableSize];
+            // 모든 정상 번호를 사용 중으로 채운다
+            for (int i = 0; i < RawGraph.Count; i++)
+            {
+                records[i] = new GraphRecord { Surfaces = 1, InUse = 1 };
+            }
+            records[RawGraph.Invalid] = new GraphRecord { Surfaces = 0x7DFD, InUse = 0x7DFD };
+            return records;
+        }
+        (RawSidPool pool, RawSquidHash hash, byte[] spots) = Space();
+        OriginalTypeRecord[] types = Types();
+        types[74].Flags1 = OriginalTypeRecord.Surface;
+        types[74].FootX = types[74].FootY = 1;
+        List<IReadOnlyList<FrameCode>> frames = Enumerable.Range(0, types.Length)
+            .Select(_ => (IReadOnlyList<FrameCode>)new List<FrameCode> { new FrameCode('A', 'P', 1, FrameCodeFlags.None) }).ToList();
+        int sid = Surface(pool, 10, 10, 5, 0);
+        byte[] beforePool = pool.Bytes.ToArray();
+        var reject = new RawGraph(pool, hash, spots, types, Exhausted(), null, frames, GraphRecovery.Reject);
+        Assert.Throws<InvalidOperationException>(() => reject.ValidateAdd(sid));
+        Assert.Throws<InvalidOperationException>(() => reject.Add(sid));
+        Assert.Equal(beforePool, pool.Bytes.ToArray());
+        var full = new RawGraph(pool, hash, spots, types, Exhausted(), null, frames, GraphRecovery.FullPool);
+        full.ValidateAdd(sid);
+        full.Add(sid);
+        // 재구성 뒤 등록됐으므로 슬롯 번호가 살아 있는 번호로 바뀐다
+        byte number = pool.Slot(sid)[30];
+        Assert.NotEqual(RawGraph.Invalid, number);
+        Assert.Equal(1, full.Records[number].InUse);
+        _ = spots;
+        _ = hash;
+    }
 }
