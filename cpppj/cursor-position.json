@@ -32,7 +32,7 @@
     "cpppj/tests/CursorPositionTests.cpp": "111ab2b59d662bacc5b51bb44d54fccec4260df86f15502e370a35d7d13a73f1",
     "cpppj/tests/CursorPreviewSupport.h": "fa4e6b6d54bbc564af308ffd154f2ced7482a131c542222c0342e6019d6c9084",
     "cpppj/src/client/CMakeLists.txt": "0ea1587f2d9dcd22fb2afbdeeefcb151242775b7083018dd39eb181a84fc0b06",
-    "cpppj/tests/CMakeLists.txt": "76ed98dec106caaea3e49c98b08df99daa7938d28a07763dba3e0995aa188fba"
+    "cpppj/tests/CMakeLists.txt": "2b3e4c0e8515b9911d7e6cb918f9f585e1a425c195c3d03b94e623044c34eea7"
   },
   "limitations": [
     "실제 정수 위치 갱신/역투영/CRT 절삭을 실행한다. 단독 입력의 Activate/Create/선택은 명시 효과다.",
@@ -1341,6 +1341,20 @@
           "group": "/sha256",
           "previous": "c26ffcb3ed45e56f64fc832a79a0b182ea24e5cc3b9358dcaa9e9c3dc82fd68d",
           "current": "76ed98dec106caaea3e49c98b08df99daa7938d28a07763dba3e0995aa188fba"
+        }
+      ]
+    },
+    {
+      "unit": "251",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "실제 Begin/Fork/Restart/End의 다른 종료·해제·복사·재진입 순서를 같은 Client 수명에 연결하고 후속 미션을 원본 큐로 예약한다. 불투명 문자열 토큰은 signed Begin 관문을 지키는 양수101부터 사용하며80수명을 유지한다. 현재 핀만 갱신하고 과거 files/evidence/실행/원문/기대값은 보존한다. 제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sha256",
+          "previous": "76ed98dec106caaea3e49c98b08df99daa7938d28a07763dba3e0995aa188fba",
+          "current": "2b3e4c0e8515b9911d7e6cb918f9f585e1a425c195c3d03b94e623044c34eea7"
         }
       ]
     }

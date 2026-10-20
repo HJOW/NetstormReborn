@@ -8,7 +8,7 @@ namespace netstorm::client {
 // NUL 뒤 원문은 원본 strlen/strcpy에서 보이지 않는다.
 std::uint32_t ScriptStringRing::Store(std::string_view text) {
     index_=(index_+1)%slots_.size();auto& slot=slots_[index_];slot={};
-    if (serial_==0xffffffffU) throw std::overflow_error("스크립트 문자열 수명 토큰 소진");
+    if (serial_==0x7fffffffU) throw std::overflow_error("스크립트 문자열의 양수 주소 토큰 수명 소진"); // Begin의 signed param2>100 관문을 유효 수명 전체에서 보존한다.
     slot.text=text.substr(0,text.find('\0'));slot.token=++serial_;return slot.token;
 }
 // 고리가 덮어쓴 이전 수명을 새 문자열로 잘못 읽지 않는다.

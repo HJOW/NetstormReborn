@@ -39,9 +39,11 @@ def main():
     table=tutorial_vtable();assert table==record['tutorialVtable'] and table[4]==0x4c2b20 and table[10]==0x4c2a40
     assert sha(ROOT/'cpppj/tests/fixtures/mission-lifecycle-x86.tsv')==record['firstCapture']['fixtureSha256']
     client=(ROOT/'cpppj/src/client/UberGump.cpp').read_text('utf-8')
-    begin=client.split('void UberGump::BeginMission(',1)[1].split('void UberGump::LoadMissionWorld()',1)[0]
+    begin=client.split('void UberGump::BeginMission(',1)[1].split('void UberGump::CreateMission(',1)[0]
+    create=client.split('void UberGump::CreateMission(',1)[1].split('GuideMissionTransitionHooks UberGump::MissionTransitionEffects()',1)[0]
     load=client.split('void UberGump::LoadMissionWorld()',1)[1].split('void UberGump::StartMissionWorld()',1)[0]
-    assert 'make_unique<MissionRuntime>(*mission_,demo,mode)' in begin and 'FortTemplate::Parse' not in begin
+    assert 'BeginGuideMission(name,effects)' in begin and 'CreateMission(std::string(target),demo,mode)' in begin
+    assert 'make_unique<MissionRuntime>(*mission_,demo,mode)' in create and 'FortTemplate::Parse' not in create
     assert 'PauseMissionWorldEntry' in load and 'missionRuntime_->start->Start()' not in load
     assert 'missionRuntime_->state.flags|=1U' in load and '*missionRuntime_->start' in load
     assert 'if (guide_) guide_->Run()' in client and 'hooks.initialize=[this] { LoadMissionWorld(); };hooks.start=[this] { StartMissionWorld(); }' in client

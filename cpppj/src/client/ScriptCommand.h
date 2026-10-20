@@ -25,7 +25,7 @@ public:
 private:
     std::array<ScriptStringSlot,80> slots_; // 원본80칸의 현재 수명이다.
     std::size_t index_{}; // BSS의 최초0에서 첫 Store 때1이 된다.
-    std::uint32_t serial_{}; // 주소 대신 현재 수명을 식별하는 호스트 토큰이다.
+    std::uint32_t serial_{100}; // 호스트 토큰은 원본 Begin의 signed 주소 관문을 만족하는101..INT_MAX다. 실제 주소 값은 복제하지 않는다.
 };
 // 외부 명령 표/진단만 공급하고 토큰 해석·수명·큐 순서는 실제 모듈이 처리한다.
 struct ScriptCommandHooks {

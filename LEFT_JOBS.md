@@ -1,5 +1,17 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-21 단위251 연결 완료: Guide Begin/Fork/Restart/End와 다음 미션 큐
+
+- [x] 같은 goal을 이어 진행했다. 시작 HEAD `655794e9`, 현재/마지막 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-20**로 일치한다. AGENTS와 양 인수인계를 다시 읽었고 새 디컴파일·원본/CD·AGENTS 변경은 없다. 다른 세션의 DN/README 변경·커밋은 포함하지 않는다.
+- [x] 원본 이름 표의 Begin/Fork/End를 기존 Restart/Abort/LeaveBattle과 같은 parser·80칸 고리·40칸 입력 큐에 연결했다. 성공 화면 `Next Mission`도 이제 같은 문자열 Begin 사건으로 교체한다. 원본 표에 없는 MissionFinish 이름은 만들지 않는다. 사건은 상위 플래그 제거 후 x가 아닌 세 번째 DWORD/y를 사용한다.
+- [x] `GuideMissionTransitions`는 원본처럼 Begin의 한 번 종료/해제→이름 복사, Fork의 signed fork%d→첫 해제 전 소유 복사→종료/해제→재진입 현재 확인, Restart의 이름/필드 캡처→**첫 종료 없이 해제**→재진입 현재 종료/해제→공장→모드/데모 복원, End의 한 번 종료/해제를 각각 보존한다. Tutorial 가상+1c는 실제 빈4437f0이다. 해제/공장/End의 최종 메뉴는 여전히 현재 Client 어댑터이며 전체 원본 가상 소멸/공장을 복원한 것은 아니다.
+- [x] `CreateMission`으로 빈 Runtime/Script 생성을 분리하고 단계1 월드 설치·단계3 Start를 유지한다. 교체 도중 MainMenu/메뉴 음악은 넣지 않는다. 원본 Begin의 signed param2>100 관문에 맞춰 불투명 고리 토큰을101..INT_MAX로 제한하며80칸 수명과 오래된 토큰 거부를 유지한다. 원본 OS 주소 복원이 아니며 Client는 교체 전에 이름을 소유 복사한다. 실제 잘못된 토큰의 진단은 예외다.
+- [x] 제품 변경 전에 실제 교체/분배·빈 종료와 이름/토큰/고리/큐/CRT를 **256+30=286정상 반환·393149명령**으로 독립 관측했다. 해제/공장/설정/서식/진단·TLS/할당은 명시 경계,서식100회다. 해제 중 설정 버퍼 무효화/현재 재진입을 교차했다. 잘못된 Begin 주소는 격리 매핑/반환 진단으로만 관측했다. 게임/OS/창은 없다. 최초 도구/fixture/JSON은 `extracted/guide-transitions-20261021-first-capture/`에 제품 변경 전에 동결했다.
+- [x] 새 C++검사2개는 독립286행 및 보호 TheWarBegins 성공 HTML→완료 Config→Next Mission/문자열 큐→Script 해제→MasterOfWhirligigs 생성과80칸 수명이다. 월드 승리를 주입하지 않는다. **C++검사는 컴파일만 했고 실행하지 않았다.** 최종 전체 Release **경고0·오류0·종료0**, 로그 `extracted/cpp-guide-transitions-20261021-build2.log`다. 실제 게임/C++검사/CTest/전체 회귀는 사용자 지시대로 후속 통합 실제 플레이에 이월한다.
+- [x] 상세는 [작업 기록](docs/exe/cpp-guide-transitions-20261021.md), `cpppj/guide-transitions-native.json`·`guide-transitions-session.json`, `tools/decomp_guide_transitions.py --verify`·`tools/cpp_guide_transitions_audit.py --verify`다. 기존 공통/Abort/수명 감사는 새 실제 교체/공장 경로를 확인한다. 과거 실행/원본/기대값/files/evidence는 보존한다. CMake의 시작 커밋은 혼합 줄바꿈이므로 원본 바이트/LF/CRLF가 같은 시작 코드일 때만 현재 핀을 갱신한다.
+- [x] 현재 핀은 **104보고서·144항목**이며 전체 JSON 역변환이 시작 커밋과 같다. 최초 원본/교체 감사,기존 공통 미션/Abort/수명 감사가 종료0이다. CMake 혼합 줄바꿈 핀도 코드가 같은 시작 바이트를 확인해 갱신했으며 과거 결과는 바꾸지 않았다. 인수인계 뒤 날짜/CP 규칙으로 로컬 커밋하며 원격 push하지 않는다.
+- [ ] **다음:** 전체 Init의 이름 정규화/+b0/전역·비동기 State/원본 공장·가상 소멸,Review Knowledge/ShowTechnology·중첩 창/다른 키다. 전체11미션 자연 완주·다음 미션/F8/재시작/중단·전략AI·지형/포획/희생/Dude 자연 대피와 외관/음향 동일성,새 검사 실행을 통합 실제 플레이에서 확인한다. 전체 goal은 **active/미완료**다.
+
 ## 2026-10-21 단위250 연결 완료: 실제 Guide 단계 반복·진입 Pause·단계3 Start
 
 - [x] 같은 goal을 이어 진행했다. 시작 HEAD `3485834e`, 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-20**가 일치한다. AGENTS와 양 인수인계를 다시 읽었고 새 디컴파일·원본/CD·AGENTS 변경은 없다. 직전 턴은 단위249 재시작/중단·기록·커밋을 마친 진행 턴이다. 다른 세션의 DN/README 변경·커밋은 포함하지 않는다.
@@ -10,7 +22,7 @@
 - [x] 새 검사3개는 독립831행,현재 State.Pending/빈 진입,실제 보호 캠페인 Session 설치→진입 Pause→단계3 Start→공통 Frame/10호출 안내·창 관문·7호출 재개다. 장치/UI/시각은 명시 입력이며 전체 Kernel/Client 창/자연 플레이가 아니다. **C++검사는 작성·컴파일만 했고 실행하지 않았다.** 전체 Release는 **경고0·오류0·종료0**, 로그 `extracted/cpp-mission-lifecycle-20261021-build.log`다. 실제 게임/C++검사/CTest/전체 회귀는 사용자 지시대로 통합 검증에 이월한다.
 - [x] 상세는 [작업 기록](docs/exe/cpp-mission-lifecycle-20261021.md), `cpppj/mission-lifecycle-native.json`·`mission-lifecycle-session.json`, `tools/decomp_mission_lifecycle.py --verify`·`tools/cpp_mission_lifecycle_audit.py --verify`다. 현재 핀만 후속 이력으로 갱신하고 전체 JSON을 시작 커밋으로 역변환해 원본/fixture/files/실행·바이너리/이력을 보존한다. 직전 공통 정적 감사는 Header 조회의 실제 단계1 이동을 확인하도록 바꾸며 과거 실행은 보존한다. 기존 CRLF/LF 역사 핀 차이도 새 통과로 기록하지 않는다.
 - [x] 최종 현재 핀은 **102보고서·130항목**이며 전체 JSON 역변환이 시작 커밋과 같다. 이번 원본/연결 감사와 갱신한 공통 미션 감사,변경 검사가 모두 종료0이다. 인수인계 뒤 날짜/CP 규칙으로 로컬 커밋하며 push하지 않는다.
-- [ ] **다음:** Guide Begin/Fork/Finish/후속 제어 명령,전체 Init/가상 소멸·State/네트워크 세부,Review Knowledge/ShowTechnology·중첩 창과 다른 키다. 초기 순번/정지 시각이 달라진11미션의 자연 완주·F8/재시작/중단·전략AI·지형/포획/희생/Dude 자연 대피와 외관/음향 동일성,새 검사 실행을 통합 실제 플레이에서 확인한다. 전체 goal은 **active/미완료**다.
+- [x] **단위251에서 후속 명령 연결 완료:** 실제 Begin/Fork/Restart/End의 순서와 다음 미션 큐다. 전체 Init/가상 소멸·State/네트워크 세부,Review Knowledge/ShowTechnology·중첩 창/다른 키와11미션 통합 실제 플레이 검증은 남는다.
 
 ## 2026-10-21 단위249 연결 완료: 실패/중단 화면의 재시작·확인·종료 큐
 

@@ -9,9 +9,12 @@ inline constexpr std::uint32_t kMissionFirstCommand=0x02000091U; // 원본005429
 inline constexpr std::uint32_t kMissionReloadCommand=0x0200008dU; // 원본00542928의 현재 미션 재생성 명령이며 데모 타이머가 일반 큐에 넣는다.
 inline constexpr std::uint32_t kMissionAbortCommand=0x0200008cU; // 원본00542924의 확인 창/종료 예약 명령이다. 분기는 사건의 세 번째 DWORD를 읽는다.
 inline constexpr std::uint32_t kLeaveBattleCommand=0x020000c5U; // 원본00542a08의 실제 전투 떠나기 명령이다. Abort 비제로에서 인자2/2를 예약한다.
-// 복원한 세 원본 제어 이름을 대소문자와 무관하게 조회한다. 그 외에는 원본 미등록값ffffffff다.
+inline constexpr std::uint32_t kMissionBeginCommand=0x0200008bU; // 원본00542920의 문자열 인자 미션 시작 명령이다.
+inline constexpr std::uint32_t kMissionForkCommand=0x0200008eU; // 원본0054292c의 fork%d 분기 시작 명령이다.
+inline constexpr std::uint32_t kMissionEndCommand=0x0200008fU; // 원본00542930의 현재 미션 가상 종료/해제 명령이다.
+// 복원한 여섯 원본 제어 이름을 대소문자와 무관하게 조회한다. 그 외에는 원본 미등록값ffffffff다.
 std::uint32_t MissionControlScriptCode(std::string_view name);
-// 페이지 버튼/명령의 세 제어 이름만 같은 원본 토큰/80칸 문자열/40칸 입력 큐에 예약한다.
+// 페이지 버튼/명령의 여섯 제어 이름만 같은 원본 토큰/80칸 문자열/40칸 입력 큐에 예약한다.
 // 지원하지 않는 이름은 상태와 고리를 바꾸지 않고 false이며 인자는 기존 QueueScriptCommand 규칙을 따른다.
 bool QueueMissionControlAction(std::string_view name,std::string_view argument,InputQueue& queue,ScriptStringRing& strings);
 // 00463e40의 Abort 분기다. 확인0은 실제 ABORT Tell, 그 외는 LeaveBattle/2/2 예약이며 항상 소비한다.

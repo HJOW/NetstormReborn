@@ -10,6 +10,7 @@
 #include "o/Kernel.h"
 #include "o/Squid.h"
 #include "o/RawMissionGuide.h"
+#include "client/GuideMissionTransitions.h"
 #include <map>
 #include <memory>
 
@@ -70,8 +71,12 @@ private:
     void RebuildControls();
     // 대기 중인 명령을 실행한다. 지원하지 않는 명령은 실제 동작으로 가장하지 않는다.
     void Execute(const DialogAction& action);
-    // 미션 Script/빈 상태를 만들고 Tutorial의 순번0부터 실제 Guide가 설치/시작하도록 준비한다.
+    // 기존 미션을 원본 Begin 순서로 종료/해제하고 새 빈 미션을 준비한다.
     void BeginMission(std::string name,std::uint32_t demo=0,std::uint32_t mode=0);
+    // 이전 현재가 없는 Guide 공장 위치에서만 Script/빈 Runtime을 만든다.
+    void CreateMission(std::string name,std::uint32_t demo=0,std::uint32_t mode=0);
+    // 교체마다 같은 실제 현재/빈 종료/해제/공장/설정/필드 소비자를 묶는다.
+    GuideMissionTransitionHooks MissionTransitionEffects();
     // 실제 Guide 단계1의 Header/월드/로그인/커서를 설치하고 다음 단계만 요청한다.
     void LoadMissionWorld();
     // 실제 Guide 단계3에서 같은 설치된 Session의 Start를 실행한다.

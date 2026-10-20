@@ -12,7 +12,7 @@
     "cpppj/src/client/RawButtonControls.h": "548d27ebba1a23f585763222ff428fd257456e79e47ae83ac38849712528ece1",
     "cpppj/src/client/RawProductionControls.cpp": "a6edd49e5a486449f4b23f3092719f7f1342ee86f66d1325867c306f52056d31",
     "cpppj/src/client/RawProductionControls.h": "8826c67edd4bc027f1d060bcd1e0fe5aa4638c4683b05fd6d2c57e931c90b346",
-    "cpppj/src/client/UberGump.cpp": "a7356cb88b11ab81583ccdff93bc32d2eeae06b537e8bdce4a8734af3df8204f",
+    "cpppj/src/client/UberGump.cpp": "2191e3b433d83f977e80a53764bbcbab23f43a6409d3e854b7d8731395d78795",
     "cpppj/tests/CampaignSessionTests.cpp": "6a6d54fd15eb24c0609492756880c774120f855138441820a536ea5bd73ee4f0",
     "tools/cpp_modal_production_smoke.py": "9827512ec6c31f9f8e9ccb668ebb85a51e91448a80a1891389655a1b0f069f75",
     "cpppj/tests/fixtures/modal-production-ui-input.tsv": "504058b9d75bda8f8eef260dd236bd62236e68f4e2fbd1fc6cab691cd42d9ff8",
@@ -462,6 +462,20 @@
           "group": "/sources",
           "previous": "765f04f02c3b037fb003ee0b5a8ee429e209f9b134d01ab8915fcd1ae82f7ff8",
           "current": "a7356cb88b11ab81583ccdff93bc32d2eeae06b537e8bdce4a8734af3df8204f"
+        }
+      ]
+    },
+    {
+      "unit": "251",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "실제 Begin/Fork/Restart/End의 다른 종료·해제·복사·재진입 순서를 같은 Client 수명에 연결하고 후속 미션을 원본 큐로 예약한다. 불투명 문자열 토큰은 signed Begin 관문을 지키는 양수101부터 사용하며80수명을 유지한다. 현재 핀만 갱신하고 과거 files/evidence/실행/원문/기대값은 보존한다. 제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "group": "/sources",
+          "previous": "a7356cb88b11ab81583ccdff93bc32d2eeae06b537e8bdce4a8734af3df8204f",
+          "current": "2191e3b433d83f977e80a53764bbcbab23f43a6409d3e854b7d8731395d78795"
         }
       ]
     }

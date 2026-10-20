@@ -1,0 +1,20 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-20",
+  "transitionInputs": 256,
+  "scriptInputs": 30,
+  "normalReturns": 286,
+  "instructions": 393149,
+  "formatBoundaryCalls": 100,
+  "scope": "실제463e40/463b70/463cf0/463da0/4639d0와 빈4437f0·실제 이름/토큰/큐/CRT. 해제/공장/설정/서식/진단·TLS/할당은 명시 경계다. 낮은/음수 Begin 주소는 진단 뒤 계속 관측용 격리 문자열이며 실제 OS 주소가 아니다.",
+  "gameExecuted": false,
+  "osExecuted": false,
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_guide_transitions.py": "dd9c48af7ba351765898683d4f5635f046e19baabfe9add491634e3d35964daa",
+    "cpppj/tests/fixtures/guide-transitions-x86.tsv": "f3f300ddfecc6b6c8b1eb769d2706a79186bade22e29206354ad66333ba20c36"
+  }
+}

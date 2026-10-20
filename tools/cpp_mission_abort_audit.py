@@ -31,7 +31,7 @@ def main():
     client=(ROOT/'cpppj/src/client/UberGump.cpp').read_text('utf-8')
     assert 'return MissionControlScriptCode(name)!=0xffffffffU' in client and 'QueueMissionControlAction(action.command,action.argument,client_.Input(),scriptStrings_)' in client
     assert 'DispatchMissionAbort(event,client_.Input()' in client and 'if (command == "missionabort" || command == "leavebattle")' not in client
-    assert 'BeginMission(request.name,request.demo,request.mode)' in client and 'if ((event.code&0x03ffffffU)==kLeaveBattleCommand)' in client
+    assert 'RestartGuideMission(request,MissionTransitionEffects())' in client and 'if ((event.code&0x03ffffffU)==kLeaveBattleCommand)' in client
     assert record['build']['returnCode']==0 and record['build']['warnings']==record['build']['errors']==0
     assert sha(ROOT/record['build']['log'])==record['build']['logSha256']
     assert record['newTestsCompiled'] and record['runtimeTestsDeferred'] and not record['testsExecuted'] and not record['gameExecuted'] and not record['goalComplete']

@@ -12,8 +12,8 @@
     "cpppj/src/client/RawButtonControls.h": "548d27ebba1a23f585763222ff428fd257456e79e47ae83ac38849712528ece1",
     "cpppj/src/client/RawCampaignSession.cpp": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
     "cpppj/src/client/RawCampaignSession.h": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
-    "cpppj/src/client/UberGump.cpp": "a7356cb88b11ab81583ccdff93bc32d2eeae06b537e8bdce4a8734af3df8204f",
-    "cpppj/src/client/UberGump.h": "13e6a755f9bd6fe21022472c23bed228617b86a3c21586db3a1664eff0e3a674",
+    "cpppj/src/client/UberGump.cpp": "2191e3b433d83f977e80a53764bbcbab23f43a6409d3e854b7d8731395d78795",
+    "cpppj/src/client/UberGump.h": "70b2e2e7479669d3ddb47c054d95c87440f266441fea44a2753c39278c12eb65",
     "cpppj/tests/CampaignSessionTests.cpp": "6a6d54fd15eb24c0609492756880c774120f855138441820a536ea5bd73ee4f0",
     "tools/cpp_goal_stage_entry_smoke.py": "52dae0cac39a586c32a45b60d57425ab794581ebd1fcd67ce49e037d67a78452",
     "cpppj/src/app/main.cpp": "9395c790b1a31c7e36f76b55cea3dd89ee7fdc769e694dc7d2fbdaa7e9eb7cd8",
@@ -782,6 +782,26 @@
           "group": "/sources",
           "previous": "56eb5f28c909847c1a1c1204638532e5f38e23cc01eed828256d37b7dd641da7",
           "current": "13e6a755f9bd6fe21022472c23bed228617b86a3c21586db3a1664eff0e3a674"
+        }
+      ]
+    },
+    {
+      "unit": "251",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "실제 Begin/Fork/Restart/End의 다른 종료·해제·복사·재진입 순서를 같은 Client 수명에 연결하고 후속 미션을 원본 큐로 예약한다. 불투명 문자열 토큰은 signed Begin 관문을 지키는 양수101부터 사용하며80수명을 유지한다. 현재 핀만 갱신하고 과거 files/evidence/실행/원문/기대값은 보존한다. 제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "group": "/sources",
+          "previous": "a7356cb88b11ab81583ccdff93bc32d2eeae06b537e8bdce4a8734af3df8204f",
+          "current": "2191e3b433d83f977e80a53764bbcbab23f43a6409d3e854b7d8731395d78795"
+        },
+        {
+          "path": "cpppj/src/client/UberGump.h",
+          "group": "/sources",
+          "previous": "13e6a755f9bd6fe21022472c23bed228617b86a3c21586db3a1664eff0e3a674",
+          "current": "70b2e2e7479669d3ddb47c054d95c87440f266441fea44a2753c39278c12eb65"
         }
       ]
     }

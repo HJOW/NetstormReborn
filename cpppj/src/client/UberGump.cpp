@@ -12,6 +12,7 @@
 #include "client/RawCampaignTutorialOneBindings.h"
 #include "client/MissionGuideInput.h"
 #include "client/MissionLifecycle.h"
+#include "client/GuideMissionTransitions.h"
 #include "o/RawMissionGuide.h"
 #include "client/GifImage.h"
 #include "client/GumpVisual.h"
@@ -326,17 +327,36 @@ void UberGump::RefreshWindowTitle() {
         [this] { return mission_ ? mission_->Get("title").value_or(std::string()) : std::string(); },
         [this](std::string_view title) { client_.Title(title); }});
 }
-// 미션 종류를 확인하고 원본 스크립트·요새에서 실제 월드 초기 상태를 만든다.
+// 원본 Begin의 현재 finish/release 뒤 새 빈 미션을 만든다. StartDemo의 직접 지정값도 설치 전에 공급한다.
 void UberGump::BeginMission(std::string name,std::uint32_t demo,std::uint32_t mode) {
-    ClearWorld(); mission_.reset();
+    auto effects=MissionTransitionEffects();effects.create=[this,demo,mode](std::string_view target) { CreateMission(std::string(target),demo,mode); };
+    BeginGuideMission(name,effects);
+}
+// Guide 공장의 현재 Client 소비자다. 이전 미션 해제는 호출자가 원본 순서로 마친 상태여야 한다.
+void UberGump::CreateMission(std::string name,std::uint32_t demo,std::uint32_t mode) {
+    if (mission_ || missionRuntime_ || world_) throw std::logic_error("Guide 새 미션 공장 전에 기존 현재가 남아 있음");
     mission_ = std::make_unique<MissionScript>(client_.Configuration(), name);
     if (!mission_->Loaded()) throw std::runtime_error("Missing mission: " + name);
     const auto type = o::AsciiLower(mission_->MissionType());
     if (type != "tutorial" && type != "battle") throw std::runtime_error("Mission type pending: " + mission_->MissionType());
     missionRuntime_=std::make_unique<MissionRuntime>(*mission_,demo,mode);
     missionRuntime_->guided=missionRuntime_->guided && client_.Assets().Edition()==o::OriginalEdition::Patch1078; // 복원하지 않은 판본의 순번을 새 Guide에 분배하지 않는다.
-    briefingSections_.clear();briefingIndex_=0;state_.phase=ClientPhase::LoadingMission;pageName_="loading";popup_.clear();page_={};client_.Pause(false);RebuildControls();RefreshWindowTitle();
+    briefingSections_.clear();briefingIndex_=0;state_.phase=ClientPhase::LoadingMission;pageName_="loading";popup_.clear();page_={};client_.Pause(false);RebuildControls(); // 제목은 실제 단계1의 Header 적용/설치에서 갱신한다.
     if (!missionRuntime_->guided) { LoadMissionWorld();StartMissionWorld(); } // 지정11개 이외의 기존 Battle 진입 동작은 유지한다.
+}
+// Guide의 각 교체 함수가 같은 Runtime/Script/월드와 소유 정지 깊이를 직접 사용하게 한다.
+GuideMissionTransitionHooks UberGump::MissionTransitionEffects() {
+    GuideMissionTransitionHooks hooks;hooks.current=[this] { return missionRuntime_!=nullptr; };
+    hooks.finish=[this] {
+        if (!missionRuntime_) throw std::logic_error("현재 미션 없는 Guide 가상 종료");
+        if (missionRuntime_->guided) RunTutorialMissionStage(missionRuntime_->state,6,{}); // 실제 Tutorial+1c의 빈 종료다. 다른 형식은 기존 teardown 어댑터를 유지한다.
+    };
+    hooks.release=[this] { ClearWorld();mission_.reset(); }; // 교체 도중 MainMenu/메뉴 음악을 끼워 넣지 않는다.
+    hooks.create=[this](std::string_view name) { CreateMission(std::string(name)); };
+    hooks.get=[this](std::string_view key) { if (!mission_) throw std::logic_error("현재 설정 없는 Guide Fork");return mission_->Get(key).value_or(""); };
+    hooks.mode=[this](std::uint32_t value) { if (!missionRuntime_) throw std::logic_error("재시작 공장 뒤 모드 수신 누락");missionRuntime_->mode64=value; };
+    hooks.demo=[this](std::uint32_t value) { if (!missionRuntime_) throw std::logic_error("재시작 공장 뒤 데모 수신 누락");missionRuntime_->gate.demo=value; };
+    return hooks;
 }
 // Guide 단계1에서만 실제 Header/월드/로그인/커서/공통 프레임을 설치한다. Start는 단계3으로 남긴다.
 void UberGump::LoadMissionWorld() {
@@ -485,12 +505,20 @@ void UberGump::OpenObjectMenu(o::SquidId id,const InputEvent& event) {
 }
 // 같은 실제 큐의 원본 정수 명령과 물리 사건을 분배한다.
 void UberGump::Event(InputEvent event) {
-    if (DispatchMissionAbort(event,client_.Input(),[this](std::string_view section) { Tell(std::string(section)); })) return;
-    if ((event.code&0x03ffffffU)==kMissionReloadCommand) {
-        if (!mission_ || !missionRuntime_) throw std::logic_error("현재 미션 없는 Reload의 원본 선행 조건 위반");
-        const auto request=CaptureMissionReload(mission_->Name(),missionRuntime_->mode64,missionRuntime_->gate.demo); // 기존 Script/월드가 살아 있을 때 이름/필드를 소유 복사한다.
-        BeginMission(request.name,request.demo,request.mode);return; // ClearWorld의 기존 정지 반납→새 Script/월드/로그인/Start를 같은 수명 경로로 실행한다.
+    const auto transitionCode=event.code&0x03ffffffU; // 원본 Guide 제어 사건은 일반 입력/프레임보다 먼저 소비한다.
+    if (transitionCode==kMissionBeginCommand || transitionCode==kMissionReloadCommand || transitionCode==kMissionForkCommand || transitionCode==kMissionEndCommand) {
+        GuideMissionCommandHooks hooks;
+        hooks.begin=[this](std::uint32_t token) { const std::string name(scriptStrings_.Resolve(token));BeginMission(name); }; // 고리가 해제되기 전에 실제 수명을 확인하고 이름을 소유 복사한다.
+        hooks.restart=[this] {
+            if (!mission_ || !missionRuntime_) throw std::logic_error("현재 미션 없는 Restart의 원본 선행 조건 위반");
+            const auto request=CaptureMissionReload(mission_->Name(),missionRuntime_->mode64,missionRuntime_->gate.demo);RestartGuideMission(request,MissionTransitionEffects());
+        };
+        hooks.fork=[this](std::uint32_t parameter) { ForkGuideMission(parameter,MissionTransitionEffects()); };
+        hooks.end=[this] { EndGuideMission(MissionTransitionEffects());if (!missionRuntime_) { MainMenu();if (client_.Audio()) client_.Audio()->StartScene(false); } };
+        hooks.invalidBegin=[](std::uint32_t) { throw std::logic_error("원본 Guide Begin의 signed param2>100 문자열 주소/토큰 관문 위반"); };
+        if (DispatchGuideMissionCommand(event,hooks)) return;
     }
+    if (DispatchMissionAbort(event,client_.Input(),[this](std::string_view section) { Tell(std::string(section)); })) return;
     if (missionRuntime_ && missionRuntime_->tutorial) {
         auto missionEvent=event; // 실제 카메라 F4 입력과 단계 판정이 같은 홈 명령을 보게 한다.
         if ((event.code&0x83ffffffU)==(0x73U<<InputCode::kVirtualKeyShift)) missionEvent.code=0x020000aeU;
@@ -607,7 +635,6 @@ void UberGump::Execute(const DialogAction& action) {
     const auto command = o::AsciiLower(action.command);
     if (command == "quit") { quit_ = true; return; }
     if (command == "tell") { Tell(action.argument, state_.phase == ClientPhase::Briefing); return; }
-    if (command == "missionbegin") { BeginMission(action.argument); return; }
     if (command == "startdemo") { BeginMission(action.argument,1);return; }
     if (command == "donothing" || command == "resume") {
         if (state_.phase == ClientPhase::Briefing) AdvanceBriefing(); else Tell("Blank"); return;

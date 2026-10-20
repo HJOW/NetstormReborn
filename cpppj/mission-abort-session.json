@@ -7,12 +7,12 @@
   "lastDecompileDate": "2026-10-20",
   "newDecompile": false,
   "sources": {
-    "cpppj/src/client/MissionGuideInput.cpp": "78c3496b3932fec901f9d3d12fbe7bacc2b162822ff5dd46a35e34a117393bb2",
-    "cpppj/src/client/MissionGuideInput.h": "376ef44c7e8a634743fd4879de4593b526f59b6c8339a1d8a11c225f4df4aceb",
-    "cpppj/src/client/UberGump.cpp": "a7356cb88b11ab81583ccdff93bc32d2eeae06b537e8bdce4a8734af3df8204f",
-    "cpppj/tests/CMakeLists.txt": "76ed98dec106caaea3e49c98b08df99daa7938d28a07763dba3e0995aa188fba",
+    "cpppj/src/client/MissionGuideInput.cpp": "9181acf22bb07785cb9c6eb89708ff8532af05de62f1236cb616fbff4d1c3e8e",
+    "cpppj/src/client/MissionGuideInput.h": "6577a5aba688700ad8779001e97b4096716ed84a1af0f760be89b950156b50c8",
+    "cpppj/src/client/UberGump.cpp": "2191e3b433d83f977e80a53764bbcbab23f43a6409d3e854b7d8731395d78795",
+    "cpppj/tests/CMakeLists.txt": "2b3e4c0e8515b9911d7e6cb918f9f585e1a425c195c3d03b94e623044c34eea7",
     "tools/decomp_mission_abort.py": "c86a490f3be7eded578d0df9589bf9bc91a7a2fa656067745966df269dd3f22e",
-    "tools/cpp_mission_abort_audit.py": "28205613795fcc52b4712797aecdcca53fd956eb06dd893e10da926700a12b63",
+    "tools/cpp_mission_abort_audit.py": "a978241832853509334e5f865ec069996595b7cf6d552bc354090e4ab7fc4d3a",
     "cpppj/tests/MissionControlTests.cpp": "44af9c71e9ba66f3a9aa3a38e05cabe1fa0302a0109191364fdac57f7c9ab30c"
   },
   "evidence": {
@@ -1335,6 +1335,44 @@
           "group": "/sources",
           "previous": "c26ffcb3ed45e56f64fc832a79a0b182ea24e5cc3b9358dcaa9e9c3dc82fd68d",
           "current": "76ed98dec106caaea3e49c98b08df99daa7938d28a07763dba3e0995aa188fba"
+        }
+      ]
+    },
+    {
+      "unit": "251",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "실제 Begin/Fork/Restart/End의 다른 종료·해제·복사·재진입 순서를 같은 Client 수명에 연결하고 후속 미션을 원본 큐로 예약한다. 불투명 문자열 토큰은 signed Begin 관문을 지키는 양수101부터 사용하며80수명을 유지한다. 현재 핀만 갱신하고 과거 files/evidence/실행/원문/기대값은 보존한다. 제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "group": "/sources",
+          "previous": "a7356cb88b11ab81583ccdff93bc32d2eeae06b537e8bdce4a8734af3df8204f",
+          "current": "2191e3b433d83f977e80a53764bbcbab23f43a6409d3e854b7d8731395d78795"
+        },
+        {
+          "path": "cpppj/src/client/MissionGuideInput.cpp",
+          "group": "/sources",
+          "previous": "78c3496b3932fec901f9d3d12fbe7bacc2b162822ff5dd46a35e34a117393bb2",
+          "current": "9181acf22bb07785cb9c6eb89708ff8532af05de62f1236cb616fbff4d1c3e8e"
+        },
+        {
+          "path": "cpppj/src/client/MissionGuideInput.h",
+          "group": "/sources",
+          "previous": "376ef44c7e8a634743fd4879de4593b526f59b6c8339a1d8a11c225f4df4aceb",
+          "current": "6577a5aba688700ad8779001e97b4096716ed84a1af0f760be89b950156b50c8"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "76ed98dec106caaea3e49c98b08df99daa7938d28a07763dba3e0995aa188fba",
+          "current": "2b3e4c0e8515b9911d7e6cb918f9f585e1a425c195c3d03b94e623044c34eea7"
+        },
+        {
+          "path": "tools/cpp_mission_abort_audit.py",
+          "group": "/sources",
+          "previous": "28205613795fcc52b4712797aecdcca53fd956eb06dd893e10da926700a12b63",
+          "current": "a978241832853509334e5f865ec069996595b7cf6d552bc354090e4ab7fc4d3a"
         }
       ]
     }

@@ -55,7 +55,7 @@
     "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
     "cpppj/src/client/ClientMain.h": "d02989475e69772f9c3035a152e05ebccb6383798f6c58596ebdd54f94863aac",
     "cpppj/src/client/ClientMain.cpp": "fe577cb844b74ff10be7353b9ba545563bd62af7272409211de823e511fb456e",
-    "cpppj/src/client/UberGump.h": "13e6a755f9bd6fe21022472c23bed228617b86a3c21586db3a1664eff0e3a674",
+    "cpppj/src/client/UberGump.h": "70b2e2e7479669d3ddb47c054d95c87440f266441fea44a2753c39278c12eb65",
     "cpppj/src/client/UberGump.cpp": "9e9483f858f612b200ff41e26c7eeacbca7f49dddee1f07b881f3b8e2ca30796",
     "cpppj/src/client/GameWorld.h": "d51dfe75377b1afd870bfeb40e26cef9f6233f65217d757135648ce064043a16",
     "cpppj/src/client/GameWorld.cpp": "e28f09f0bdf193ead41bfaa6ed683ddd4e2b9225f93aad16246644a6aba3ba89",
@@ -259,6 +259,20 @@
           "group": "/sha256",
           "previous": "56eb5f28c909847c1a1c1204638532e5f38e23cc01eed828256d37b7dd641da7",
           "current": "13e6a755f9bd6fe21022472c23bed228617b86a3c21586db3a1664eff0e3a674"
+        }
+      ]
+    },
+    {
+      "unit": "251",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "실제 Begin/Fork/Restart/End의 다른 종료·해제·복사·재진입 순서를 같은 Client 수명에 연결하고 후속 미션을 원본 큐로 예약한다. 불투명 문자열 토큰은 signed Begin 관문을 지키는 양수101부터 사용하며80수명을 유지한다. 현재 핀만 갱신하고 과거 files/evidence/실행/원문/기대값은 보존한다. 제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/UberGump.h",
+          "group": "/sha256",
+          "previous": "13e6a755f9bd6fe21022472c23bed228617b86a3c21586db3a1664eff0e3a674",
+          "current": "70b2e2e7479669d3ddb47c054d95c87440f266441fea44a2753c39278c12eb65"
         }
       ]
     }

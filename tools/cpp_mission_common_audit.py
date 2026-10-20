@@ -44,7 +44,7 @@ def main():
     client=(ROOT/'cpppj/src/client/UberGump.cpp').read_text('utf-8')
     binding=(ROOT/'cpppj/src/client/RawCampaignTutorialOneBindings.cpp').read_text('utf-8')
     assert 'if (type=="tutorial") {' in client and 'if (missionRuntime_->gate.tutorialNumber>=1' not in client
-    assert 'client_.Input().Push(kMissionReloadCommand,0,0)' in client and 'BeginMission(request.name,request.demo,request.mode)' in client
+    assert 'client_.Input().Push(kMissionReloadCommand,0,0)' in client and 'RestartGuideMission(request,MissionTransitionEffects())' in client
     assert 'ApplyMissionDemo(mission_->Get("demo").value_or(""),missionRuntime_->gate.demo)' in client  # 현재 Header 조회는 실제 Guide 단계1로 이동했다.
     assert 'if (state_.demo || state_.tutorialNumber<1 || state_.tutorialNumber>6) return;' in binding
     assert record['build']['returnCode']==0 and record['build']['warnings']==record['build']['errors']==0

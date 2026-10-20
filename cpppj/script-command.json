@@ -17,9 +17,31 @@
     "extracted/script-command/originals/functions.tsv": "84ebc743f42f0494041045581decae00fcdfcf85d24470e8410cffa612290055",
     "cpppj/src/o/RawTextToken.h": "5d50953aa12ae4309cc4ff5bf404fc9952b3a12014a38dd26a944733a11d6057",
     "cpppj/src/o/RawTextToken.cpp": "fac3f0ad807212318fd09502c6f3cfcdcac9eec1f439083f37d35a701ff1c086",
-    "cpppj/src/client/ScriptCommand.h": "9947e5e4357692c5351bc60d7b523bcc066d4d73729e883ed8c719491aa64a05",
-    "cpppj/src/client/ScriptCommand.cpp": "685912691a4932ffc85242ee08a28a0d70402eb691f50620ebc5319a9e4a60b5",
+    "cpppj/src/client/ScriptCommand.h": "45a44be3ebefaf70f6cc8cdcdfee35806fbb611e4d84d504ea9d215825c039d0",
+    "cpppj/src/client/ScriptCommand.cpp": "87908a7252875cfcd2b7a96313c29bd8ea7ae91ef95e53f793c29e8bf0ad880b",
     "cpppj/tests/ScriptCommandTests.cpp": "86b018f21d9644d27bb8d53fc9e4d384b815e6b591b3db5ff0c81384c25ff523",
     "cpppj/tests/fixtures/script-command-x86.tsv": "34ddbcb593f7f38ffd206aae777438697c7c194f5b1215a2a488f0ff7f878d4d"
-  }
+  },
+  "integration_updates": [
+    {
+      "unit": "251",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "실제 Begin/Fork/Restart/End의 다른 종료·해제·복사·재진입 순서를 같은 Client 수명에 연결하고 후속 미션을 원본 큐로 예약한다. 불투명 문자열 토큰은 signed Begin 관문을 지키는 양수101부터 사용하며80수명을 유지한다. 현재 핀만 갱신하고 과거 files/evidence/실행/원문/기대값은 보존한다. 제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/ScriptCommand.cpp",
+          "group": "/sha256",
+          "previous": "685912691a4932ffc85242ee08a28a0d70402eb691f50620ebc5319a9e4a60b5",
+          "current": "87908a7252875cfcd2b7a96313c29bd8ea7ae91ef95e53f793c29e8bf0ad880b"
+        },
+        {
+          "path": "cpppj/src/client/ScriptCommand.h",
+          "group": "/sha256",
+          "previous": "9947e5e4357692c5351bc60d7b523bcc066d4d73729e883ed8c719491aa64a05",
+          "current": "45a44be3ebefaf70f6cc8cdcdfee35806fbb611e4d84d504ea9d215825c039d0"
+        }
+      ]
+    }
+  ]
 }

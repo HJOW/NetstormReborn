@@ -12,6 +12,9 @@ std::uint32_t MissionControlScriptCode(std::string_view name) {
     if (lower=="missionrestart") return kMissionReloadCommand;
     if (lower=="missionabort") return kMissionAbortCommand;
     if (lower=="leavebattle") return kLeaveBattleCommand;
+    if (lower=="missionbegin") return kMissionBeginCommand;
+    if (lower=="missionfork") return kMissionForkCommand;
+    if (lower=="missionend") return kMissionEndCommand;
     return 0xffffffffU;
 }
 // 이미 복원한 원본 parser를 공유하므로 부호/빈 문자열을 새로운 숫자 규칙으로 해석하지 않는다.

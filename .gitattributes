@@ -1428,3 +1428,14 @@ cpppj/mission-lifecycle-native.json text eol=lf
 cpppj/mission-lifecycle-session.json text eol=lf
 tools/decomp_mission_lifecycle.py text eol=lf
 tools/cpp_mission_lifecycle_audit.py text eol=lf
+# Guide 교체 제어와 양수 문자열 토큰 도메인·최초 근거를 보존한다.
+cpppj/src/client/GuideMissionTransitions.h text eol=lf
+cpppj/src/client/GuideMissionTransitions.cpp text eol=lf
+cpppj/src/client/ScriptCommand.h text eol=lf
+cpppj/src/client/ScriptCommand.cpp text eol=lf
+cpppj/tests/GuideTransitionTests.cpp text eol=lf
+cpppj/tests/fixtures/guide-transitions-x86.tsv text eol=lf
+cpppj/guide-transitions-native.json text eol=lf
+cpppj/guide-transitions-session.json text eol=lf
+tools/decomp_guide_transitions.py text eol=lf
+tools/cpp_guide_transitions_audit.py text eol=lf

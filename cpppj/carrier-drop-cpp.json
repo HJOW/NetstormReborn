@@ -31,7 +31,7 @@
     "cpppj/src/o/SidPool.h": "a830f7fca8c42e5a2713a7d5d886314c81dc3bffb8271de85c1b0d1fc46de651",
     "cpppj/tests/BombActivationTests.cpp": "a92a2cd55ce7be609c7fa6e82a7cf03b7717cdb539c2817b441d17be871fe459",
     "cpppj/tests/CarrierDropTests.cpp": "d3153457d1d836ae1efc15665c85d582c1fd3f21bba25683b0cf7185bd5fc141",
-    "cpppj/tests/CMakeLists.txt": "76ed98dec106caaea3e49c98b08df99daa7938d28a07763dba3e0995aa188fba",
+    "cpppj/tests/CMakeLists.txt": "2b3e4c0e8515b9911d7e6cb918f9f585e1a425c195c3d03b94e623044c34eea7",
     "tools/cpp_carrier_drop_cpp_audit.py": "ee10e4ac00fa349d78ee482d720e7746fb7b67c6335e555a66b42f88a3d0ce1c",
     "tools/decomp_bomb_activation.py": "f01aafc8c2fb9713fa57ba7531dd4a7b9ebaf1035a24c650b778161b0202bbf5",
     "tools/decomp_carrier_falling.py": "f8702db0708a543b73213c8df9154503afe977767a11bd7c150b639ee1b587a6",
@@ -351,6 +351,20 @@
           "group": "/sources",
           "previous": "c26ffcb3ed45e56f64fc832a79a0b182ea24e5cc3b9358dcaa9e9c3dc82fd68d",
           "current": "76ed98dec106caaea3e49c98b08df99daa7938d28a07763dba3e0995aa188fba"
+        }
+      ]
+    },
+    {
+      "unit": "251",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "실제 Begin/Fork/Restart/End의 다른 종료·해제·복사·재진입 순서를 같은 Client 수명에 연결하고 후속 미션을 원본 큐로 예약한다. 불투명 문자열 토큰은 signed Begin 관문을 지키는 양수101부터 사용하며80수명을 유지한다. 현재 핀만 갱신하고 과거 files/evidence/실행/원문/기대값은 보존한다. 제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "76ed98dec106caaea3e49c98b08df99daa7938d28a07763dba3e0995aa188fba",
+          "current": "2b3e4c0e8515b9911d7e6cb918f9f585e1a425c195c3d03b94e623044c34eea7"
         }
       ]
     }

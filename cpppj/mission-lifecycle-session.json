@@ -7,16 +7,16 @@
   "lastDecompileDate": "2026-10-20",
   "newDecompile": false,
   "sources": {
-    "cpppj/src/client/UberGump.cpp": "a7356cb88b11ab81583ccdff93bc32d2eeae06b537e8bdce4a8734af3df8204f",
-    "cpppj/src/client/UberGump.h": "13e6a755f9bd6fe21022472c23bed228617b86a3c21586db3a1664eff0e3a674",
+    "cpppj/src/client/UberGump.cpp": "2191e3b433d83f977e80a53764bbcbab23f43a6409d3e854b7d8731395d78795",
+    "cpppj/src/client/UberGump.h": "70b2e2e7479669d3ddb47c054d95c87440f266441fea44a2753c39278c12eb65",
     "cpppj/src/client/State.cpp": "07d6383c35edf6a79d0691afd8685d94dcbf8d3a5e89f5b4088f11e62ef3b281",
     "cpppj/src/client/State.h": "fbcb7c817dea1410d235a42a6b25f22815f759cbc5a74cfdc90f9e0006f95c83",
-    "cpppj/src/client/CMakeLists.txt": "5778176c5450abbdcd062dd5558ae8c6b187e2887a0a0fbc1e53836dbe42d0d1",
-    "cpppj/tests/CMakeLists.txt": "76ed98dec106caaea3e49c98b08df99daa7938d28a07763dba3e0995aa188fba",
+    "cpppj/src/client/CMakeLists.txt": "75f088dfdc998bdaaaa093011bc4e1ee0b975540f127e295f51541c2e6ab74f8",
+    "cpppj/tests/CMakeLists.txt": "2b3e4c0e8515b9911d7e6cb918f9f585e1a425c195c3d03b94e623044c34eea7",
     "cpppj/tests/CampaignMissionStartTests.cpp": "a65ecd22b6f0da614fdf1b1be65e366447c303e899d674b851b3b9bf77151db2",
-    "tools/cpp_mission_common_audit.py": "3acc272c426fcdc96af7fc24b4ddd6fed054ed7d300cba3fde81aa8bbda8bc93",
+    "tools/cpp_mission_common_audit.py": "69bbcb39e8e8178e4b04b32b2c4ed68b6618ad36070c94d1f268e0bf088e24c4",
     "tools/decomp_mission_lifecycle.py": "28eeab439c109bff32bf9f9c00c1a73165f86e74792360f835f5382778a6c654",
-    "tools/cpp_mission_lifecycle_audit.py": "39c0f41ca3604af39c81b27851f03688d7e54738a784cafd46e3d595e73707f3",
+    "tools/cpp_mission_lifecycle_audit.py": "e8d2f3b9764c396916984596702689cd6a4cdc973b72a279fdc576a6efbedb71",
     "cpppj/src/client/MissionLifecycle.h": "7dd494c234d3f01004da0d2003695a712adafc3592b579430c80f36a04a0affd",
     "cpppj/src/client/MissionLifecycle.cpp": "16e042ffde1294c2084925c14a4cacab49cb6c616c208d34a21232a23e160d4c",
     "cpppj/tests/MissionLifecycleTests.cpp": "212ddfe06b58290ba6ac125e4803b850b91d348dc8911dfb082ca4f7afab056a"
@@ -1388,5 +1388,51 @@
     "단계1은 기존 실제 설치 소비자다. 전체 Init의 이름 정규화/+b0/전역·비동기 State/원본 공장/가상 소멸은 모두 복원된 것이 아니다.",
     "Guide Begin/Fork/Finish/후속 명령·ShowTechnology·중첩 창/다른 키·전략AI·지형/포획/희생/Dude 자연 대피·전체 동일성의 통합 검증은 남는다.",
     "초기 순번/시각이 기존 수동 진입과 달라졌으므로 과거 저장 플레이 관측을 이번 새 실행 결과로 쓰지 않는다."
+  ],
+  "integration_updates": [
+    {
+      "unit": "251",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "실제 Begin/Fork/Restart/End의 다른 종료·해제·복사·재진입 순서를 같은 Client 수명에 연결하고 후속 미션을 원본 큐로 예약한다. 불투명 문자열 토큰은 signed Begin 관문을 지키는 양수101부터 사용하며80수명을 유지한다. 현재 핀만 갱신하고 과거 files/evidence/실행/원문/기대값은 보존한다. 제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "group": "/sources",
+          "previous": "a7356cb88b11ab81583ccdff93bc32d2eeae06b537e8bdce4a8734af3df8204f",
+          "current": "2191e3b433d83f977e80a53764bbcbab23f43a6409d3e854b7d8731395d78795"
+        },
+        {
+          "path": "cpppj/src/client/UberGump.h",
+          "group": "/sources",
+          "previous": "13e6a755f9bd6fe21022472c23bed228617b86a3c21586db3a1664eff0e3a674",
+          "current": "70b2e2e7479669d3ddb47c054d95c87440f266441fea44a2753c39278c12eb65"
+        },
+        {
+          "path": "cpppj/src/client/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "5778176c5450abbdcd062dd5558ae8c6b187e2887a0a0fbc1e53836dbe42d0d1",
+          "current": "75f088dfdc998bdaaaa093011bc4e1ee0b975540f127e295f51541c2e6ab74f8"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "76ed98dec106caaea3e49c98b08df99daa7938d28a07763dba3e0995aa188fba",
+          "current": "2b3e4c0e8515b9911d7e6cb918f9f585e1a425c195c3d03b94e623044c34eea7"
+        },
+        {
+          "path": "tools/cpp_mission_common_audit.py",
+          "group": "/sources",
+          "previous": "3acc272c426fcdc96af7fc24b4ddd6fed054ed7d300cba3fde81aa8bbda8bc93",
+          "current": "69bbcb39e8e8178e4b04b32b2c4ed68b6618ad36070c94d1f268e0bf088e24c4"
+        },
+        {
+          "path": "tools/cpp_mission_lifecycle_audit.py",
+          "group": "/sources",
+          "previous": "39c0f41ca3604af39c81b27851f03688d7e54738a784cafd46e3d595e73707f3",
+          "current": "e8d2f3b9764c396916984596702689cd6a4cdc973b72a279fdc576a6efbedb71"
+        }
+      ]
+    }
   ]
 }
