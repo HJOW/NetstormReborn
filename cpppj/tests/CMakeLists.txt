@@ -48,6 +48,7 @@ add_executable(netstorm_tests
     GuideTransitionTests.cpp
     MissionLifecycleTests.cpp
     TutorialInitTests.cpp
+    MissionFortRequestTests.cpp
     MissionControlTests.cpp
     MissionGuideInputTests.cpp
     ObjectCommandTests.cpp
@@ -1693,6 +1694,9 @@ set_source_files_properties(MissionLifecycleTests.cpp PROPERTIES COMPILE_DEFINIT
 # 실제 Tutorial Init 전체 제어/정규화/옵션과 큰 효과 순서의 최초 원문이다.
 set_source_files_properties(TutorialInitTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_TUTORIAL_INIT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/tutorial-init-x86.tsv\"")
+# 실제004b51e0의 전체144BYTE/Zone512·복제86BYTE 원문을 새 요청 검사에만 공급한다.
+set_source_files_properties(MissionFortRequestTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_MISSION_FORT_REQUEST_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/mission-fort-request-x86.tsv\"")
 # 실제 Guide 교체와 새 제어 이름의 독립 원문을 이 검사에만 공급한다.
 set_source_files_properties(GuideTransitionTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_GUIDE_TRANSITIONS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/guide-transitions-x86.tsv\"")

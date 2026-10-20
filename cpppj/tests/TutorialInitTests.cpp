@@ -1,6 +1,7 @@
 // Init 최초 전체 제어/실제 보호11개 Script·Header와 다음 루프 요청을 검사한다. 실행은 후속 통합 단계로 이월한다.
 #include "DudeSpawnSupport.h"
 #include "client/TutorialInit.h"
+#include "client/MissionFortRequest.h"
 #include "client/Mission.h"
 #include "client/MissionTechnology.h"
 #include "client/State.h"
@@ -67,7 +68,8 @@ TEST_CASE(TutorialInit_ProtectedElevenBeforeQueuedLoad) {
     for (std::size_t index=0;index<names.size();++index) {
         SetTotalMadeAllowAll(allowed,1);MissionScript script(config,names[index]);CHECK(script.Loaded());TutorialInitState state;state.name=names[index];State pending;std::array<std::uint8_t,87> options{};std::uint32_t flags{},demo=index>=8 ? 1U : 0U,tutorial{},mission{},seen{},subscriber{},source{1};bool loaded{}; // 현재 Script/전역/다음 루프 요청이다.
         TutorialInitHooks h;h.clearTemplates=[] {};h.get=[&](auto key,std::optional<std::string_view> fallback) { const auto value=script.Get(key).value_or("");return value.empty() && fallback ? std::string(*fallback) : value; };h.set=[&](auto key,auto value) { script.Set(key,value); };h.resetOptions=[&] { ResetMissionBattleOptions(OriginalEdition::Patch1078,options); };
-        h.requestFort=[&](auto value) { CHECK(!loaded);pending.Post({"LoadMissionFort",std::string(value)}); };h.header=[&] { CHECK(pending.Pending() && !loaded);ApplyMissionTechnology(script,assets.game.TypeTable(),std::span(allowed)); };
+        MissionFortLoadRequest fortRequest;std::array<std::uint8_t,9> address{'z','l','o','c','a','l',',','*',0};std::uint32_t port=6799; // Init과 Header 사이에 만드는 같은 요청/Zone이다.
+        h.requestFort=[&](auto value) { CHECK(!loaded);MissionFortRequestHooks effects;effects.selectFort=[&](auto name) { fortRequest.fort=name; };effects.duplicate=[&](auto& packet) { return CaptureMissionFortZone(fortRequest,packet); };WriteMissionFortRequest(value,{fortRequest.next,fortRequest.sequence,address,port},effects);pending.Post({"LoadMissionFort",fortRequest.fort}); };h.header=[&] { CHECK(pending.Pending() && !loaded && fortRequest.next[0]==7 && fortRequest.zone.size()==86 && fortRequest.sequence==1);ApplyMissionTechnology(script,assets.game.TypeTable(),std::span(allowed)); };
         InitializeTutorialMission(state,flags,demo,{tutorial,mission,seen,subscriber,source},h);CHECK(flags==1 && !loaded && pending.Pending() && subscriber==1 && allowed.back()==0x7391);CHECK(script.Get("fileName")==normalized[index]);CHECK(options[1]==2 && options[2]==2 && options[4]==3);
         if (index==0) CHECK(allowed[assets.game.TypeTable().Find("sunArcher")]==1);if (index==1) CHECK(allowed[assets.game.TypeTable().Find("sunArcher")]==0);
         const auto request=pending.Take();CHECK(request && request->command=="LoadMissionFort" && !request->argument.empty() && !pending.Pending());loaded=true;CHECK(loaded); // 실제 로드 소비는 다음 상태 자리의 책임이다.

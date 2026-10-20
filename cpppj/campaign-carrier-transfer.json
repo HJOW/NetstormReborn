@@ -12,7 +12,7 @@
   "currentSources": {
     "cpppj/src/o/RawCarrierTransfer.h": "286dbe876336f50cfbba2c87e2ac80eb973eef3c0059cabc78fd898d106ce157",
     "cpppj/src/o/RawCarrierTransfer.cpp": "4e434098a1b784416e2a39a54baaa83cb4363c888e5036418b1db52df0d8d4e4",
-    "cpppj/src/client/RawCampaignSession.h": "a2658773f7c24e24ace79ee27088ec9bc869d4d09fc890fbda9d3aba8aec7d01",
+    "cpppj/src/client/RawCampaignSession.h": "792643b10d24fa01452430c639beb3d986b1f5012b0c28b746eb5b5e04ef4668",
     "cpppj/src/client/RawCampaignSession.cpp": "6aaef81339fe4682278a624c49650e5d0e0542ff1c0a45b4c211d47ebf0576dc",
     "cpppj/src/client/RawCampaignMotionBindings.h": "6b196fba2833df49bb4882300dbeded4ff68bb2e340b8881338c19c17ef7060d",
     "cpppj/src/client/RawCampaignMotionBindings.cpp": "532ab06cd71c6eb3eba5aa042a6204e59c282014b13b68400241c2079a2556bb",
@@ -31,7 +31,7 @@
     "cpppj/tests/CarrierTransferTests.cpp": "ea98b1fdd347b04d35a2a8fed0c14c5db02d73e83de64cb0505427b259c9b449",
     "cpppj/tests/CampaignObjectMenuTests.cpp": "8c7951a5447f9e70871f5e082bd68d722d17866a1bbc0f5d43d9be50c62b113c",
     "cpppj/src/CMakeLists.txt": "8834917133d33fda6dcd145dd64a93ee38ee014d25fede2eff5575b996df5847",
-    "cpppj/tests/CMakeLists.txt": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30"
+    "cpppj/tests/CMakeLists.txt": "f76cfe04ff401b849f8db7dd5f97f1476ed5420f8a6fbb64af39bd07f1f5105d"
   },
   "nativeReports": {
     "cpppj/carrier-transfer.json": "dec792141b89f10a971cde77430358711301b4ae84bfc399a32bbc2bb9a4baf4"
@@ -2022,6 +2022,26 @@
           "group": "/currentSources",
           "previous": "ee217558417e170b51187377eae1fa45478dc6d1c899541a64aa5a73de3847a2",
           "current": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30"
+        }
+      ]
+    },
+    {
+      "unit": 260,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "원본 Fort 요청9BYTE/144BYTE와Init의Zone86 소유·실제 로그인 소비를 연결했다. 현재 소스 핀만 갱신하며 과거 원문/기대값/실행·바이너리를 보존한다. 전체State7/제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "group": "/currentSources",
+          "previous": "a2658773f7c24e24ace79ee27088ec9bc869d4d09fc890fbda9d3aba8aec7d01",
+          "current": "792643b10d24fa01452430c639beb3d986b1f5012b0c28b746eb5b5e04ef4668"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/currentSources",
+          "previous": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30",
+          "current": "f76cfe04ff401b849f8db7dd5f97f1476ed5420f8a6fbb64af39bd07f1f5105d"
         }
       ]
     }

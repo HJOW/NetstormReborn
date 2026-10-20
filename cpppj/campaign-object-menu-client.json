@@ -21,14 +21,14 @@
     "cpppj/src/client/GameWorld.h": "d51dfe75377b1afd870bfeb40e26cef9f6233f65217d757135648ce064043a16",
     "cpppj/src/client/GameWorldInput.inc": "f46f5b6c20d628a298f252afcdf5f1af44a5718a6d21cc7848dc88c3a151a530",
     "cpppj/src/client/RawCampaignSession.cpp": "6aaef81339fe4682278a624c49650e5d0e0542ff1c0a45b4c211d47ebf0576dc",
-    "cpppj/src/client/RawCampaignSession.h": "a2658773f7c24e24ace79ee27088ec9bc869d4d09fc890fbda9d3aba8aec7d01",
+    "cpppj/src/client/RawCampaignSession.h": "792643b10d24fa01452430c639beb3d986b1f5012b0c28b746eb5b5e04ef4668",
     "cpppj/src/client/RawMenuControls.cpp": "fd8c19e4b7fde7a65adfa87251d859130106a6e388ced7527c933c73c6045029",
     "cpppj/src/client/RawMenuControls.h": "edcb095b283233a2c3ac893dace31700ac282a23cdce165594d32d076e5fe465",
     "cpppj/src/client/Renderer.cpp": "29729e6b728f19e7cddfc4c193e1a719733c8b4c5934e8b0a864697fa8a4b4a2",
     "cpppj/src/client/Renderer.h": "d72b42478b0bbe275a02494181722ee4f3f4ed4d474966e56c9df30958f31ac2",
-    "cpppj/src/client/UberGump.cpp": "51194a324e887e53ecfa85cad9de5f81bf31dc161976b4808f4864a3ad6b80a8",
-    "cpppj/src/client/UberGump.h": "a5a670a9b3cbd4bfc14bbccd4a048c772890a652ebd3586c955682736bbbd975",
-    "cpppj/tests/CampaignSessionTests.cpp": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b",
+    "cpppj/src/client/UberGump.cpp": "43849641465d1a9d96640aef0563e08bcf84c0dfe232b133784136fffc0f0666",
+    "cpppj/src/client/UberGump.h": "51d6e8de3147a01e9f9c7c44e94e6c62d3fbd27e5c438b1451beaa199861c445",
+    "cpppj/tests/CampaignSessionTests.cpp": "578c171e7688b75c145dda0fcd3e56925bdee1d59882c2b5955c94f3e5e1ea97",
     "cpppj/tests/RendererTests.cpp": "6aae8f544e9cb6a01738ee45a2c0eba57354106896ea59735db6842c318185cf",
     "cpppj/src/client/CampaignObjectMenuClient.h": "2d88a574f2b2feb27d4d2bf46761f58664521cb24b73af2b301741905b9deb73",
     "cpppj/src/client/CampaignObjectMenuClient.cpp": "2e1d9e0aea14df5eb579b320744b8cbe3a88a567361b687ef9064e84fe395001",
@@ -7049,6 +7049,38 @@
           "group": "/currentSources",
           "previous": "1ca3f4a443191f14d9a28b3d3e436f3cf22d11ba164319d466e36d18ffd98352",
           "current": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b"
+        }
+      ]
+    },
+    {
+      "unit": 260,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "원본 Fort 요청9BYTE/144BYTE와Init의Zone86 소유·실제 로그인 소비를 연결했다. 현재 소스 핀만 갱신하며 과거 원문/기대값/실행·바이너리를 보존한다. 전체State7/제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "group": "/currentSources",
+          "previous": "a2658773f7c24e24ace79ee27088ec9bc869d4d09fc890fbda9d3aba8aec7d01",
+          "current": "792643b10d24fa01452430c639beb3d986b1f5012b0c28b746eb5b5e04ef4668"
+        },
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "group": "/currentSources",
+          "previous": "51194a324e887e53ecfa85cad9de5f81bf31dc161976b4808f4864a3ad6b80a8",
+          "current": "43849641465d1a9d96640aef0563e08bcf84c0dfe232b133784136fffc0f0666"
+        },
+        {
+          "path": "cpppj/src/client/UberGump.h",
+          "group": "/currentSources",
+          "previous": "a5a670a9b3cbd4bfc14bbccd4a048c772890a652ebd3586c955682736bbbd975",
+          "current": "51d6e8de3147a01e9f9c7c44e94e6c62d3fbd27e5c438b1451beaa199861c445"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "group": "/currentSources",
+          "previous": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b",
+          "current": "578c171e7688b75c145dda0fcd3e56925bdee1d59882c2b5955c94f3e5e1ea97"
         }
       ]
     }

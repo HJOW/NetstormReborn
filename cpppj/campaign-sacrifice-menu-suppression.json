@@ -947,7 +947,7 @@
   "currentSources": {
     "cpppj/src/client/CampaignUserInputServices.cpp": "f2bef8c428670f4ab871fd4e2d35730b7417ed53ef3388cd3b245087b96dc017",
     "cpppj/src/client/RawCampaignCarrierInput.inc": "17c639af1e42ed83c94462d61bd2dcfe2f8b85db647611a100a979bde3b48ee6",
-    "cpppj/tests/CampaignSessionTests.cpp": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b"
+    "cpppj/tests/CampaignSessionTests.cpp": "578c171e7688b75c145dda0fcd3e56925bdee1d59882c2b5955c94f3e5e1ea97"
   },
   "binaries": {
     "cpppj/build/bin/Release/NetstormCpp.exe": "68d431b41b6e2f366cc0f33f2b4f1681a67bd70c6f1751ecc837a8ac36d726c5",
@@ -1538,6 +1538,20 @@
           "group": "/currentSources",
           "previous": "1ca3f4a443191f14d9a28b3d3e436f3cf22d11ba164319d466e36d18ffd98352",
           "current": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b"
+        }
+      ]
+    },
+    {
+      "unit": 260,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "원본 Fort 요청9BYTE/144BYTE와Init의Zone86 소유·실제 로그인 소비를 연결했다. 현재 소스 핀만 갱신하며 과거 원문/기대값/실행·바이너리를 보존한다. 전체State7/제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "group": "/currentSources",
+          "previous": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b",
+          "current": "578c171e7688b75c145dda0fcd3e56925bdee1d59882c2b5955c94f3e5e1ea97"
         }
       ]
     }

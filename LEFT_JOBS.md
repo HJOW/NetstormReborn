@@ -1,5 +1,15 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-21 단위260 연결 완료: Init의 원본 요청144BYTE와 같은 Zone의 실제 로그인 소비
+
+- [x] 같은 goal을 이어 진행했다. 직전 단위259는 Init 전체 제어/공유 전역/다음 루프 로드를 구현·검증·커밋한 진행 턴이다. 시작 HEAD `8ba4af11`,현재/마지막 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-20**으로 같다. AGENTS와 양 인수인계를 다시 읽었다. 새 디컴파일·원본/CD·AGENTS·DN/README 변경은 없다.
+- [x] 제품 수정 전에 실제004b51e0 요청 부모/패킷 작성/관찰기/복제를 **144고유 입력·144정상 반환·83232명령** 관측했다. 주소는DWORD2개+BYTE1개의**9BYTE**이며 요청의 뒤3BYTE/다른 필드를 보존한다. 전체144BYTE/양쪽8BYTE·예약512BYTE·복제86BYTE·현재 포트/순번 감김/효과 뒤 재조회를 보존했다. Fort 선택00460980과 힙만 외부 경계이며 게임/OS/창 실행이 아니다. 첫 도구/fixture/JSON을 `extracted/mission-fort-request-20261021-first-capture/`에 동결했다.
+- [x] `WriteMissionFortRequest`와 실제 Client Init을 연결했다. Header 전에 요청과 Zone을 작성·복제하고 같은 소유 객체를 Session에 넘긴다. 로그인은 준비한86BYTE를 사용하고 설치 뒤 실제 할당도 반납한다. 미션 교체는 UI 요청 취소 뒤 같은 소유권을 해제한다. 요청의 next는Init시점144BYTE 캡처이며 실행중인 전역State5블록 전체가 아니다. 실제 로그인은 아직 상태8부터 시작하므로 **전체 State7/4b2df0 복원이 아니다**. 현재 Fort 선택 어댑터는 템플릿을 비운 뒤 소유 이름을 쓴다. 전체 파일 교체/저장/삭제00460980은 남는다.
+- [x] 새 검사3건은 최초144행·이미지 소유/중복 캡처·현재 Zone subscriber7의 실제 로그인 소비/할당 반납을 검사하도록 작성했다. 기존 보호11개 Init 검사도 같은 요청/Zone이 Header 전에 준비되는지 확장했다. 실행은 하지 않는다.
+- [x] 최종 전체 Release **종료0·경고0·오류0**,로그 `extracted/cpp-mission-fort-request-20261021-build2.log`다. 첫 빌드 종료 뒤 최종 설치 할당 반납/검사 입력을 확실히 반영하도록 같은 원문 소스2개의mtime만 갱신해 다시 빌드했다. 새 요청 감사/첫 원문 보존과 기존 Init·미션 수명·기술 허용·공통 프레임·기본 옵션·실제 Client Help·로컬 전송66행 원문/SHA 감사가 종료0이다. **C++검사/게임은 실행하지 않았다.** 현재 핀 **133보고서·300항목**의 전체 JSON 역변환이 시작 커밋과 같고 세 최종 바이너리 해시도 보고서와 같다. 과거 원문/기대값/실행·바이너리와 역사 핀 문제를 보존했다.
+- [x] 상세 [작업 기록](docs/exe/cpp-mission-fort-request-20261021.md),`cpppj/mission-fort-request-native.json`·`mission-fort-request-session.json`,`tools/decomp_mission_fort_request.py --verify`·`tools/cpp_mission_fort_request_audit.py --verify`다. 인수인계 뒤 **20261021-21 CP**로 로컬 커밋하며 push하지 않는다.
+- [ ] 다음은 전체 비동기 State7/전투 정리4b2df0·전역 Template manager9개 헤더/빌린 버퍼·Fort 선택/Guide 공장/가상 소멸이다. 전체11미션 자연 완주·전략AI·지형/포획/희생/대피·외관/음향/동작 동일성은 미완료다. 게임/C++검사/CTest/전체 회귀는 이전 사용자 지시대로 후속 실제 통합 플레이로 이월하며 전체 goal은 **active/미완료**다.
+
 ## 2026-10-21 단위259 연결 완료: Tutorial Init 실제 제어·공유 전역·다음 루프 요새 로드
 
 - [x] 같은 goal을 이어 진행했다. 직전 턴은 기본 옵션87BYTE/네 번째 범위표 연결을 구현·기록·커밋한 진행 턴이다. 시작 HEAD `32ea6611`,현재/마지막 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-20**으로 같다. AGENTS와 양 인수인계를 다시 읽었다. 새 디컴파일·원본/CD·AGENTS 변경과 다른 DN/README 작업은 없다.
@@ -8,7 +18,7 @@
 - [x] 제품 수정 전에 **152고유 입력·152정상 반환·167373실제 명령**,CRT atol398/lower2128/upper152회를 관측했다. 실제 Init/이름 정규화/옵션/C locale CRT이며 템플릿 정리·Config·로드 요청·Header는 명시 큰 경계다. 첫 도구/fixture/JSON을 `extracted/tutorial-init-20261021-first-capture/`에 동결했다. 제품/OS/창 관측이 아니며 기대값을 후속 구현 결과로 쓰지 않았다.
 - [x] 새 C++검사4건은152행 전체·보호11개 설치 전 Header/큐·요청 소유자 해제·설치 전후 Session 옵션/허용 표의 양방향 동일 참조를 검사하도록 **작성·컴파일만 했다**. 최종 전체 Release **종료0·경고0·오류0**,로그 `extracted/cpp-tutorial-init-20261021-build4.log`다. 새 Init 감사/첫 원문 보존 및 기존 미션 수명·기술·공통 프레임·기본 옵션·Client Help 정적 감사가 종료0이다. 세 바이너리 해시가 기록과 같으며 **138보고서·400현재 핀**의 전체 JSON 역변환이 시작 커밋과 같다. LF 정규화 뒤 다시 빌드했고 과거 원문/기대값/검사 실행/바이너리·역사 핀 문제는 보존했다.
 - [x] 상세 [작업 기록](docs/exe/cpp-tutorial-init-20261021.md),`cpppj/tutorial-init-native.json`·`tutorial-init-session.json`,`tools/decomp_tutorial_init.py --verify`·`tools/cpp_tutorial_init_audit.py --verify`다. 인수인계 뒤 **20261021-20 CP**로 로컬 커밋하며 push하지 않는다.
-- [ ] **다음 최우선:** 실제004b51e0의512BYTE 요청/전체 비동기 State7과 Guide 공장·가상 소멸/전역 Template manager9개 헤더·빌린 버퍼 수명을 이어 복원한다. 이번 정리는 Begin/ClearWorld가 이전 Session/템플릿을 이미 반납한 현재 경계를 검사한다. 전체 공장/State7/전역 관리자 복원이 끝났다는 뜻은 아니다. 단위257의 외부 URL/기술 학습/기록 스트림·전체 모달/Script 상태도 남으며 멀티플레이 보상 UI는 후순위다.
+- [x] **후속 단위260:** 실제004b51e0 요청 작성144BYTE/예약512BYTE·복제86BYTE를 Init에서 만들고 같은 이미지를 실제 로그인으로 연결했다. 전체 비동기 State7/전투 정리·Guide 공장/가상 소멸/전역 Template manager9개 헤더·빌린 버퍼는 위 단위260의 미완료 항목으로 이어간다. 단위257의 외부 URL/기술 학습/기록 스트림·전체 모달/Script 상태도 남으며 멀티플레이 보상 UI는 후순위다.
 - [ ] 전체11미션 자연 완주·전략AI·지형/자연 포획·희생·대피·외관/음향/동작 동일성은 미완료다. 게임/C++검사/CTest/전체 회귀는 이전 사용자 지시대로 후속 실제 통합 플레이에 이월한다. 전체 goal은 **active/미완료**다.
 
 ## 2026-10-21 단위258 연결 완료: 미션 기본 옵션87BYTE와 네 번째 범위값

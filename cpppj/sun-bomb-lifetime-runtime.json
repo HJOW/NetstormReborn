@@ -113,7 +113,7 @@
   "sources": {
     "cpppj/src/client/RawCampaignSession.cpp": "6aaef81339fe4682278a624c49650e5d0e0542ff1c0a45b4c211d47ebf0576dc",
     "cpppj/src/client/GameWorld.cpp": "af6d3aeb3bd53d83e2619c2bd20ba5df42c17fe718cb81786841606419f10c6c",
-    "cpppj/tests/CampaignSessionTests.cpp": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b",
+    "cpppj/tests/CampaignSessionTests.cpp": "578c171e7688b75c145dda0fcd3e56925bdee1d59882c2b5955c94f3e5e1ea97",
     "cpppj/src/o/RawSunFlyerFrame.cpp": "b130537725f138521f7bd56b1c06b4656f101e83bb757a9404462e28bc648fce",
     "cpppj/src/o/RawSunFlyerFrame.h": "f582295f47fdf9e7a6c4d3eb8db3d5d20636a4c55151ef1a6b6d9edb95776c1a",
     "cpppj/src/o/RawSquidDestroy.cpp": "7be89b9d016cdacc80e0695f660bfca051dee6a18039978eb40117539ef89958",
@@ -647,6 +647,20 @@
           "group": "/sources",
           "previous": "1ca3f4a443191f14d9a28b3d3e436f3cf22d11ba164319d466e36d18ffd98352",
           "current": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b"
+        }
+      ]
+    },
+    {
+      "unit": 260,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "원본 Fort 요청9BYTE/144BYTE와Init의Zone86 소유·실제 로그인 소비를 연결했다. 현재 소스 핀만 갱신하며 과거 원문/기대값/실행·바이너리를 보존한다. 전체State7/제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "group": "/sources",
+          "previous": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b",
+          "current": "578c171e7688b75c145dda0fcd3e56925bdee1d59882c2b5955c94f3e5e1ea97"
         }
       ]
     }

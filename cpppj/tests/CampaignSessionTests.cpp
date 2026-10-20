@@ -1971,6 +1971,16 @@ TEST_CASE(CampaignSession_InitSharedTablesBeforeInstall) {
     session.Load();CHECK(session.BattleOption(2)==1 && session.BattleOption(23)==0x79);session.TotalMade().AllowAll(0);CHECK((*restrictions)[75]==1 && restrictions->back()==0x7391);(*restrictions)[75]=0;CHECK(session.TotalMade().Allowed(75));
 }
 
+// Init에서 소유한 Zone의 subscriber7을 실제 로그인에 사용하고 설치 뒤 같은 이미지의 수명을 반납한다.
+TEST_CASE(CampaignSession_InitRequestUsedByActualLogin) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();UseWorldTestLogin(services);
+    auto request=std::make_shared<MissionFortLoadRequest>();std::array<std::uint8_t,9> address{'z','l','o','c','a','l',',','*',0};std::uint32_t port=6799;MissionFortRequestHooks effects; // 실제 Client와 같은 단일 요청 소유권이다.
+    effects.selectFort=[request](auto name) { request->fort=name; };effects.duplicate=[request](auto& packet) { return CaptureMissionFortZone(*request,packet); };WriteMissionFortRequest("thewarbegins",{request->next,request->sequence,address,port},effects);
+    Put(request->zone,16,7);services.missionFortRequest=request;services.missionSubscriber=7; // 명시 입력 Zone의 현재 subscriber를 바꿔 새 Zone을 만들면 실제 접속이 실패하게 한다.
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),request->fort,std::move(services));CHECK(!request->consumed && request->zone.size()==86);session.LoadLocalConnection();
+    CHECK(session.CurrentSubscriber()==7 && session.LocalOwner()==1 && session.LocalConnectionPhase()==14 && Get(session.PlayerRecords(),0xb4+0x2c)==7);CHECK(request->consumed && request->zone.empty() && request->zone.capacity()==0 && request->next[0]==7 && request->sequence==1);
+}
+
 //성공flag를입력하지않고실제Zone→접속→Login→월드설치/응답→상태14/타이머를검사한다.
 TEST_CASE(CampaignSession_LocalLoginActualHandshakeAndWorldLoad) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();std::vector<std::string> trace;std::vector<std::array<std::uint32_t,3>> notices;std::map<std::string,std::int32_t> config;std::size_t refresh{},chat{}; //실제장치/설정의명시입력과관측이다.

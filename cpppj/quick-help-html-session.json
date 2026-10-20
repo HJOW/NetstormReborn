@@ -8,9 +8,9 @@
   "newDecompile": false,
   "sources": {
     "cpppj/src/client/RawCampaignSession.cpp": "6aaef81339fe4682278a624c49650e5d0e0542ff1c0a45b4c211d47ebf0576dc",
-    "cpppj/src/client/RawCampaignSession.h": "a2658773f7c24e24ace79ee27088ec9bc869d4d09fc890fbda9d3aba8aec7d01",
-    "cpppj/src/client/CMakeLists.txt": "c814b3ce4fcefee13c8766a400cf836a91a0e1db5ac8aeb8eccf529b1b165419",
-    "cpppj/tests/CMakeLists.txt": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30",
+    "cpppj/src/client/RawCampaignSession.h": "792643b10d24fa01452430c639beb3d986b1f5012b0c28b746eb5b5e04ef4668",
+    "cpppj/src/client/CMakeLists.txt": "a65c6c70bf559ed8be2ade2b501a5443b5bf6466794b65a711253e740e141094",
+    "cpppj/tests/CMakeLists.txt": "f76cfe04ff401b849f8db7dd5f97f1476ed5420f8a6fbb64af39bd07f1f5105d",
     "cpppj/tests/CampaignObjectMenuTests.cpp": "8c7951a5447f9e70871f5e082bd68d722d17866a1bbc0f5d43d9be50c62b113c",
     "cpppj/src/client/QuickHelpHtml.cpp": "02929e083b487034ee404c4567b000344d9116a0b32c3777150b895cbeb3bd87",
     "cpppj/src/client/QuickHelpHtml.h": "bc4c27dd9b4f88affee280cbc50ef93a33aae58f6870cf49e098d104705cb0eb",
@@ -2863,6 +2863,32 @@
           "group": "/sources",
           "previous": "ee217558417e170b51187377eae1fa45478dc6d1c899541a64aa5a73de3847a2",
           "current": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30"
+        }
+      ]
+    },
+    {
+      "unit": 260,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "원본 Fort 요청9BYTE/144BYTE와Init의Zone86 소유·실제 로그인 소비를 연결했다. 현재 소스 핀만 갱신하며 과거 원문/기대값/실행·바이너리를 보존한다. 전체State7/제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "c814b3ce4fcefee13c8766a400cf836a91a0e1db5ac8aeb8eccf529b1b165419",
+          "current": "a65c6c70bf559ed8be2ade2b501a5443b5bf6466794b65a711253e740e141094"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "group": "/sources",
+          "previous": "a2658773f7c24e24ace79ee27088ec9bc869d4d09fc890fbda9d3aba8aec7d01",
+          "current": "792643b10d24fa01452430c639beb3d986b1f5012b0c28b746eb5b5e04ef4668"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30",
+          "current": "f76cfe04ff401b849f8db7dd5f97f1476ed5420f8a6fbb64af39bd07f1f5105d"
         }
       ]
     }

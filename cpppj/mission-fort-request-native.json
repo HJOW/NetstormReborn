@@ -1,0 +1,26 @@
+{
+  "date": "2026-10-21",
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "lastDecompileDate": "2026-10-20",
+  "uniqueInputs": 144,
+  "normalFunctionReturns": 144,
+  "instructions": 83232,
+  "gameExecuted": false,
+  "osExecuted": false,
+  "boundaries": [
+    "실제004b51e0/4df590/40a220/4dece0/40a1e0/4e4a40만 격리 실행",
+    "큰00460980 Fort 선택과힙만 명시 효과이며 전체 State7/게임 실행이 아니다",
+    "주소는DWORD2개와BYTE1개만 복사하며 뒤3BYTE/나머지144BYTE 필드는 보존한다",
+    "복제 관찰기의86BYTE와전체512BYTE/양쪽8BYTE/호출 순서·현재 순번 감김/스택·레지스터·x87 보존"
+  ],
+  "sha256": {
+    "AGENTS.md": "0e112c50745cfa0a76f5996af47f98dddd36e8ccc07efe489868f62793913892",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_local_mission_transport.py": "db71da65079aa9a985a3a833edd224f089ba9a20137d92042551cb346937eb78",
+    "tools/decomp_mission_fort_request.py": "9290c90ce9bf418ef26bf86b0657e910d594815f6addcf268df64c5299529fea",
+    "cpppj/tests/fixtures/mission-fort-request-x86.tsv": "1ce96cb3b740b26b68033e67b87493a88d0578357b080755419ba2a3d4041f19"
+  }
+}

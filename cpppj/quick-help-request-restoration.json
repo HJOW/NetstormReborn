@@ -56,7 +56,7 @@
   },
   "currentSources": {
     "cpppj/src/client/CMakeLists.txt": "0ea1587f2d9dcd22fb2afbdeeefcb151242775b7083018dd39eb181a84fc0b06",
-    "cpppj/tests/CMakeLists.txt": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30",
+    "cpppj/tests/CMakeLists.txt": "f76cfe04ff401b849f8db7dd5f97f1476ed5420f8a6fbb64af39bd07f1f5105d",
     "cpppj/src/client/QuickHelpRequest.h": "f1047e2c382fdb077864b5ef86036954092182ad903a2c648cdf9bf4e23867e5",
     "cpppj/src/client/QuickHelpRequest.cpp": "e90646137dc70790ca092a0bf32f0f65a84e1ed046120c3074b3fd980ac3a7ea",
     "cpppj/tests/QuickHelpRequestTests.cpp": "a5cc030e80732b5f6e696e93d6284c8e870aff9f92573f94f0dd16886c08ce94",
@@ -670,6 +670,20 @@
           "group": "/currentSources",
           "previous": "ee217558417e170b51187377eae1fa45478dc6d1c899541a64aa5a73de3847a2",
           "current": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30"
+        }
+      ]
+    },
+    {
+      "unit": 260,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "원본 Fort 요청9BYTE/144BYTE와Init의Zone86 소유·실제 로그인 소비를 연결했다. 현재 소스 핀만 갱신하며 과거 원문/기대값/실행·바이너리를 보존한다. 전체State7/제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/currentSources",
+          "previous": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30",
+          "current": "f76cfe04ff401b849f8db7dd5f97f1476ed5420f8a6fbb64af39bd07f1f5105d"
         }
       ]
     }

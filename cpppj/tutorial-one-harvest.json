@@ -9,7 +9,7 @@
   "baseline": "c445683592e712662385e01036cabe2031e65a40",
   "sources": {
     "cpppj/src/client/GameWorld.cpp": "af6d3aeb3bd53d83e2619c2bd20ba5df42c17fe718cb81786841606419f10c6c",
-    "cpppj/src/client/UberGump.cpp": "51194a324e887e53ecfa85cad9de5f81bf31dc161976b4808f4864a3ad6b80a8",
+    "cpppj/src/client/UberGump.cpp": "43849641465d1a9d96640aef0563e08bcf84c0dfe232b133784136fffc0f0666",
     "cpppj/src/app/main.cpp": "9395c790b1a31c7e36f76b55cea3dd89ee7fdc769e694dc7d2fbdaa7e9eb7cd8",
     "tools/cpp_tutorial_harvest_smoke.py": "58606aae2a86d99360f650fc7e5f27785aabca54b53a0856c17ba7f3a9d0a22b",
     "cpppj/tests/fixtures/tutorial-one-harvest-ui-input.tsv": "9217cefd46f3e245704c0d10904e060327ca67a3417359fa7f450205630ef325",
@@ -658,6 +658,20 @@
           "group": "/sources",
           "previous": "6d59bf8f7c9db19c0ca2a1b66594d36979280c82ffac06af529bab7d9698e920",
           "current": "6aaef81339fe4682278a624c49650e5d0e0542ff1c0a45b4c211d47ebf0576dc"
+        }
+      ]
+    },
+    {
+      "unit": 260,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "원본 Fort 요청9BYTE/144BYTE와Init의Zone86 소유·실제 로그인 소비를 연결했다. 현재 소스 핀만 갱신하며 과거 원문/기대값/실행·바이너리를 보존한다. 전체State7/제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "group": "/sources",
+          "previous": "51194a324e887e53ecfa85cad9de5f81bf31dc161976b4808f4864a3ad6b80a8",
+          "current": "43849641465d1a9d96640aef0563e08bcf84c0dfe232b133784136fffc0f0666"
         }
       ]
     }

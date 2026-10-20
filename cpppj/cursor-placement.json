@@ -21,7 +21,7 @@
     "cpppj/src/client/RawCursorPlacement.cpp": "64c57e1581716ad63ebf952aa9c4b7ce4c432ec20f3ca23dcfeede6fcf8a1a46",
     "cpppj/tests/CursorPlacementTests.cpp": "a03f225bbf82cce49a770d111b2d4d24f5c496cde97560f3f55c6bce50dad997",
     "cpppj/src/client/CMakeLists.txt": "0ea1587f2d9dcd22fb2afbdeeefcb151242775b7083018dd39eb181a84fc0b06",
-    "cpppj/tests/CMakeLists.txt": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30"
+    "cpppj/tests/CMakeLists.txt": "f76cfe04ff401b849f8db7dd5f97f1476ed5420f8a6fbb64af39bd07f1f5105d"
   },
   "limitations": [
     "세 커서 몸체와 실제 CRT 절삭/floor만 실행한다. decoder/SHP/설명/GUI/지역/투영/화면 갱신은 명시 경계다.",
@@ -1443,6 +1443,20 @@
           "group": "/sha256",
           "previous": "ee217558417e170b51187377eae1fa45478dc6d1c899541a64aa5a73de3847a2",
           "current": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30"
+        }
+      ]
+    },
+    {
+      "unit": 260,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "원본 Fort 요청9BYTE/144BYTE와Init의Zone86 소유·실제 로그인 소비를 연결했다. 현재 소스 핀만 갱신하며 과거 원문/기대값/실행·바이너리를 보존한다. 전체State7/제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sha256",
+          "previous": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30",
+          "current": "f76cfe04ff401b849f8db7dd5f97f1476ed5420f8a6fbb64af39bd07f1f5105d"
         }
       ]
     }

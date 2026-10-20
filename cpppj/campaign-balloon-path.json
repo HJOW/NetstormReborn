@@ -20,8 +20,8 @@
     "cpppj/src/o/RawPathStart.cpp": "a852f0c16cefc10b11e371510999e4d3836c83681adcbe2817feac570dec6d98",
     "cpppj/src/o/SquidPostPop.cpp": "0e6f552bafeab1be94ba07919b928535e774ce54e121d775df514c9b6645d4e6",
     "cpppj/src/o/SquidPostPop.h": "b4bfb4886068b9dd98bed52b9f56f17e1c25e50b123b4fdd6b165f2054bcdf1d",
-    "cpppj/tests/CMakeLists.txt": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30",
-    "cpppj/tests/CampaignSessionTests.cpp": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b",
+    "cpppj/tests/CMakeLists.txt": "f76cfe04ff401b849f8db7dd5f97f1476ed5420f8a6fbb64af39bd07f1f5105d",
+    "cpppj/tests/CampaignSessionTests.cpp": "578c171e7688b75c145dda0fcd3e56925bdee1d59882c2b5955c94f3e5e1ea97",
     "cpppj/src/o/RawBalloonFrame.cpp": "71390bf0c48ed94bd6381b15c812b5a6702cd94e02528692f7ac5d1b6f18ab05",
     "cpppj/src/o/RawBalloonFrame.h": "3c50521f9a4a132e33b627fcf609e6028ff2cfbbc6b757434f06b4b3d7b90c8d",
     "cpppj/src/o/RawBalloonBody.cpp": "ae406292ac8d2be18bbdd2aaf46dc0a845e3b06c989d51af4219d722a5881f61",
@@ -3954,6 +3954,26 @@
           "group": "/currentSources",
           "previous": "1ca3f4a443191f14d9a28b3d3e436f3cf22d11ba164319d466e36d18ffd98352",
           "current": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b"
+        }
+      ]
+    },
+    {
+      "unit": 260,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "원본 Fort 요청9BYTE/144BYTE와Init의Zone86 소유·실제 로그인 소비를 연결했다. 현재 소스 핀만 갱신하며 과거 원문/기대값/실행·바이너리를 보존한다. 전체State7/제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/currentSources",
+          "previous": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30",
+          "current": "f76cfe04ff401b849f8db7dd5f97f1476ed5420f8a6fbb64af39bd07f1f5105d"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "group": "/currentSources",
+          "previous": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b",
+          "current": "578c171e7688b75c145dda0fcd3e56925bdee1d59882c2b5955c94f3e5e1ea97"
         }
       ]
     }

@@ -7,9 +7,9 @@
   "lastDecompileDate": "2026-10-20",
   "newDecompile": false,
   "sources": {
-    "cpppj/src/client/UberGump.cpp": "51194a324e887e53ecfa85cad9de5f81bf31dc161976b4808f4864a3ad6b80a8",
-    "cpppj/src/client/CMakeLists.txt": "c814b3ce4fcefee13c8766a400cf836a91a0e1db5ac8aeb8eccf529b1b165419",
-    "cpppj/tests/CMakeLists.txt": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30",
+    "cpppj/src/client/UberGump.cpp": "43849641465d1a9d96640aef0563e08bcf84c0dfe232b133784136fffc0f0666",
+    "cpppj/src/client/CMakeLists.txt": "a65c6c70bf559ed8be2ade2b501a5443b5bf6466794b65a711253e740e141094",
+    "cpppj/tests/CMakeLists.txt": "f76cfe04ff401b849f8db7dd5f97f1476ed5420f8a6fbb64af39bd07f1f5105d",
     "cpppj/tests/CampaignMissionStartTests.cpp": "83e64926952399dda15209b6548cf9bd378a334e4a82723ddec0723c94348ed7",
     "tools/decomp_mission_technology.py": "177ea82462ca7b2fca504845f88914f23f869ceeb6c1651fc720eb7a0b41312b",
     "tools/cpp_mission_technology_audit.py": "c39040499ff2b148ad171ea36d62cccbd7ee118330e7c5ce18a0c44be5ca1c1a",
@@ -1620,6 +1620,32 @@
           "group": "/sources",
           "previous": "f2c8abe0d980b2b2102db5764cfb45d812a3653eaf59bdd94386fbf94e2357b2",
           "current": "c39040499ff2b148ad171ea36d62cccbd7ee118330e7c5ce18a0c44be5ca1c1a"
+        }
+      ]
+    },
+    {
+      "unit": 260,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "원본 Fort 요청9BYTE/144BYTE와Init의Zone86 소유·실제 로그인 소비를 연결했다. 현재 소스 핀만 갱신하며 과거 원문/기대값/실행·바이너리를 보존한다. 전체State7/제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "c814b3ce4fcefee13c8766a400cf836a91a0e1db5ac8aeb8eccf529b1b165419",
+          "current": "a65c6c70bf559ed8be2ade2b501a5443b5bf6466794b65a711253e740e141094"
+        },
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "group": "/sources",
+          "previous": "51194a324e887e53ecfa85cad9de5f81bf31dc161976b4808f4864a3ad6b80a8",
+          "current": "43849641465d1a9d96640aef0563e08bcf84c0dfe232b133784136fffc0f0666"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30",
+          "current": "f76cfe04ff401b849f8db7dd5f97f1476ed5420f8a6fbb64af39bd07f1f5105d"
         }
       ]
     }

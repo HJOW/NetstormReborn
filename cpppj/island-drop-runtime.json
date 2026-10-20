@@ -183,7 +183,7 @@
     "cpppj/src/o/RawGraph.cpp": "5427d22b06ec1f9eb54ab9ede9c3e4008baeac3e3439cba3d8132236b9464fb1",
     "cpppj/src/o/RawGraph.h": "588b8a3a1ae30cff14b738a5491ed4d290b093e50cd2ff782460f7af983c208b",
     "cpppj/tests/BattleBroadcastTests.cpp": "7bfa23c46a8f8810fc2b8522f14cff40060f23cbfb9a8752d8294cea4f407a43",
-    "cpppj/tests/CampaignSessionTests.cpp": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b",
+    "cpppj/tests/CampaignSessionTests.cpp": "578c171e7688b75c145dda0fcd3e56925bdee1d59882c2b5955c94f3e5e1ea97",
     "cpppj/tests/DestroyGraphTests.cpp": "a3618522256bcd8f3a5313b62d31e18640e7823d481cf08f21e874ec7933c471",
     "cpppj/tests/ShapeToBufferTests.cpp": "91d7010f9d6698f7237d8a2040e00658502a57dedea9da310173af4e96dd26e5",
     "tools/cpp_assets_smoke.py": "d71fbbe55dde7452c980509a68f228c40ce74ddaf9f3b7a7518092d76c0319e9",
@@ -754,6 +754,20 @@
           "group": "/sources",
           "previous": "1ca3f4a443191f14d9a28b3d3e436f3cf22d11ba164319d466e36d18ffd98352",
           "current": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b"
+        }
+      ]
+    },
+    {
+      "unit": 260,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "원본 Fort 요청9BYTE/144BYTE와Init의Zone86 소유·실제 로그인 소비를 연결했다. 현재 소스 핀만 갱신하며 과거 원문/기대값/실행·바이너리를 보존한다. 전체State7/제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "group": "/sources",
+          "previous": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b",
+          "current": "578c171e7688b75c145dda0fcd3e56925bdee1d59882c2b5955c94f3e5e1ea97"
         }
       ]
     }

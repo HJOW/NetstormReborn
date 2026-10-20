@@ -21,7 +21,7 @@
     "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
     "cpppj/src/client/GameWorld.h": "d51dfe75377b1afd870bfeb40e26cef9f6233f65217d757135648ce064043a16",
     "cpppj/src/client/GameWorld.cpp": "af6d3aeb3bd53d83e2619c2bd20ba5df42c17fe718cb81786841606419f10c6c",
-    "cpppj/src/client/RawCampaignSession.h": "a2658773f7c24e24ace79ee27088ec9bc869d4d09fc890fbda9d3aba8aec7d01",
+    "cpppj/src/client/RawCampaignSession.h": "792643b10d24fa01452430c639beb3d986b1f5012b0c28b746eb5b5e04ef4668",
     "cpppj/src/client/RawCampaignSession.cpp": "6aaef81339fe4682278a624c49650e5d0e0542ff1c0a45b4c211d47ebf0576dc",
     "cpppj/src/client/RawPriestMenu.h": "5364d92d3af5b9b81a0477df5c005fcfc4a1ef7f6817894bd337250ce4d0e43d",
     "cpppj/src/client/RawPriestMenu.cpp": "f30be4e91f2141d1000f4a75d9f41619024d20f6cb024f68b8ffb483b1eddcf7",
@@ -38,14 +38,14 @@
     "cpppj/src/o/SpStore.cpp": "2319a90807d423b72b0e47e51101bc9ea1618f234c65e26b704c017313f4268a",
     "cpppj/src/o/SquidReward.cpp": "a29c11afe56a477c470956b1ed0a0678d059340806537ce08b43bf6b6aa1375d",
     "cpppj/tests/PriestMenuTests.cpp": "a7b76f4b807941334f1dc6c089b156a59c72347e93b7898ff0bda018c73ca1c4",
-    "cpppj/tests/CampaignSessionTests.cpp": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b",
+    "cpppj/tests/CampaignSessionTests.cpp": "578c171e7688b75c145dda0fcd3e56925bdee1d59882c2b5955c94f3e5e1ea97",
     "cpppj/tests/CarrierContentNoticeTests.cpp": "82ed556e50d599e2d08f594e309129a7d92a7d5e994a6a81f794342f518ed76c",
     "cpppj/tests/fixtures/priestmenu-x86.tsv": "2dda11277f2b67f1a69447ea7cb1694e989a08ed513dbf9819e14bfbf3ce6208",
     "cpppj/tests/fixtures/carrier-content-notice-x86.tsv": "c8a21b68d3b0b6e271d04950022366eab9abd3069ff5a9ce3b53746f1fb4d4bf",
     "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
     "tools/decomp_carrier_content_notice.py": "dbb32841a7019edbcb411f75094046c8bf0e20b4ed503e109a14b79a79d8a94c",
     "cpppj/src/o/CMakeLists.txt": "8fd2012644816c088a0283bde3e14ed3d9c3cff364d38c4c1bd5f4e6eaa81bd4",
-    "cpppj/tests/CMakeLists.txt": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30"
+    "cpppj/tests/CMakeLists.txt": "f76cfe04ff401b849f8db7dd5f97f1476ed5420f8a6fbb64af39bd07f1f5105d"
   },
   "validation": {
     "configuration": "Release",
@@ -3090,6 +3090,32 @@
           "group": "/sha256",
           "previous": "1ca3f4a443191f14d9a28b3d3e436f3cf22d11ba164319d466e36d18ffd98352",
           "current": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b"
+        }
+      ]
+    },
+    {
+      "unit": 260,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "원본 Fort 요청9BYTE/144BYTE와Init의Zone86 소유·실제 로그인 소비를 연결했다. 현재 소스 핀만 갱신하며 과거 원문/기대값/실행·바이너리를 보존한다. 전체State7/제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "group": "/sha256",
+          "previous": "a2658773f7c24e24ace79ee27088ec9bc869d4d09fc890fbda9d3aba8aec7d01",
+          "current": "792643b10d24fa01452430c639beb3d986b1f5012b0c28b746eb5b5e04ef4668"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sha256",
+          "previous": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30",
+          "current": "f76cfe04ff401b849f8db7dd5f97f1476ed5420f8a6fbb64af39bd07f1f5105d"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "group": "/sha256",
+          "previous": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b",
+          "current": "578c171e7688b75c145dda0fcd3e56925bdee1d59882c2b5955c94f3e5e1ea97"
         }
       ]
     }

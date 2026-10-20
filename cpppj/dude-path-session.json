@@ -8,7 +8,7 @@
   "newDecompile": false,
   "sources": {
     "cpppj/src/client/RawCampaignSession.cpp": "6aaef81339fe4682278a624c49650e5d0e0542ff1c0a45b4c211d47ebf0576dc",
-    "cpppj/src/client/RawCampaignSession.h": "a2658773f7c24e24ace79ee27088ec9bc869d4d09fc890fbda9d3aba8aec7d01",
+    "cpppj/src/client/RawCampaignSession.h": "792643b10d24fa01452430c639beb3d986b1f5012b0c28b746eb5b5e04ef4668",
     "cpppj/src/client/RawCampaignPathBindings.cpp": "be46833bcfd8099fb58af729eb2d92f83a045aecc50d8fec4ba3d4c6c56a6679",
     "cpppj/src/client/RawCampaignPathBindings.h": "64bda57407ea52b561ea7a1fad2c6d3fa11be086115327ff78d47206cd68320f",
     "cpppj/src/o/RawPathProcess.cpp": "9f91446bc0e9414f261da6c0c271e80d2e15130566054d68533c73883196a3a3",
@@ -16,8 +16,8 @@
     "cpppj/src/o/RawPathRuntime.cpp": "2ecd4a9b2fdc3105fb6a4ed0a9c339a37e9c5fb8cbf1f53af41687d94cdaf5aa",
     "cpppj/src/o/RawPathRuntime.h": "234b6690b85006a74d5df74ceaeea027e47166006764e4e7f141de817c3e398d",
     "cpppj/src/o/RawPathStart.cpp": "a852f0c16cefc10b11e371510999e4d3836c83681adcbe2817feac570dec6d98",
-    "cpppj/tests/CMakeLists.txt": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30",
-    "cpppj/tests/CampaignSessionTests.cpp": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b",
+    "cpppj/tests/CMakeLists.txt": "f76cfe04ff401b849f8db7dd5f97f1476ed5420f8a6fbb64af39bd07f1f5105d",
+    "cpppj/tests/CampaignSessionTests.cpp": "578c171e7688b75c145dda0fcd3e56925bdee1d59882c2b5955c94f3e5e1ea97",
     "tools/cpp_dude_path_audit.py": "7037a22bae407e1724b69a1178534b18bfdc11cd71d42747e2a2debfd431ddfc",
     "tools/decomp_dude_path.py": "0ec52a476b4a33bec8587b3f36399e66ffe21e5b32d1ddce00ab3538e28876cf",
     "cpppj/tests/DudePathTests.cpp": "75494fb33a974ff6718731b344cd2b17a14c78e2819f8b386cc851ea22ff4ce0"
@@ -3946,6 +3946,32 @@
           "group": "/sources",
           "previous": "1ca3f4a443191f14d9a28b3d3e436f3cf22d11ba164319d466e36d18ffd98352",
           "current": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b"
+        }
+      ]
+    },
+    {
+      "unit": 260,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "원본 Fort 요청9BYTE/144BYTE와Init의Zone86 소유·실제 로그인 소비를 연결했다. 현재 소스 핀만 갱신하며 과거 원문/기대값/실행·바이너리를 보존한다. 전체State7/제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "group": "/sources",
+          "previous": "a2658773f7c24e24ace79ee27088ec9bc869d4d09fc890fbda9d3aba8aec7d01",
+          "current": "792643b10d24fa01452430c639beb3d986b1f5012b0c28b746eb5b5e04ef4668"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30",
+          "current": "f76cfe04ff401b849f8db7dd5f97f1476ed5420f8a6fbb64af39bd07f1f5105d"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "group": "/sources",
+          "previous": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b",
+          "current": "578c171e7688b75c145dda0fcd3e56925bdee1d59882c2b5955c94f3e5e1ea97"
         }
       ]
     }

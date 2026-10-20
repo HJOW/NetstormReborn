@@ -7,6 +7,7 @@ target_sources(netstorm PRIVATE
     # 실제 Guide 순번과 월드 진입 Pause/얇은 가상 단계를 현재 Client 수명에 연결한다.
     MissionLifecycle.cpp MissionLifecycle.h
     TutorialInit.cpp TutorialInit.h
+    MissionFortRequest.cpp MissionFortRequest.h
     # 실제 Guide의 시작/분기/재시작/종료 교체와 원본 제어 사건을 연결한다.
     GuideMissionTransitions.cpp GuideMissionTransitions.h
     # 실제 초기화의 기술 허용 목록을 건설/생산의 동일 금지 표에 적용한다.

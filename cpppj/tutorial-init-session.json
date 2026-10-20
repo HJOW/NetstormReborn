@@ -7,26 +7,26 @@
   "lastDecompileDate": "2026-10-20",
   "newDecompile": false,
   "sources": {
-    "cpppj/src/client/UberGump.cpp": "51194a324e887e53ecfa85cad9de5f81bf31dc161976b4808f4864a3ad6b80a8",
-    "cpppj/src/client/UberGump.h": "a5a670a9b3cbd4bfc14bbccd4a048c772890a652ebd3586c955682736bbbd975",
+    "cpppj/src/client/UberGump.cpp": "43849641465d1a9d96640aef0563e08bcf84c0dfe232b133784136fffc0f0666",
+    "cpppj/src/client/UberGump.h": "51d6e8de3147a01e9f9c7c44e94e6c62d3fbd27e5c438b1451beaa199861c445",
     "cpppj/src/client/RawCampaignSession.cpp": "6aaef81339fe4682278a624c49650e5d0e0542ff1c0a45b4c211d47ebf0576dc",
-    "cpppj/src/client/RawCampaignSession.h": "a2658773f7c24e24ace79ee27088ec9bc869d4d09fc890fbda9d3aba8aec7d01",
-    "cpppj/src/client/RawCampaignSessionLogin.inc": "4ebe7746564298e9b40a5335b0d0f282867f3c36a01e64949011f42ac87c0f3b",
+    "cpppj/src/client/RawCampaignSession.h": "792643b10d24fa01452430c639beb3d986b1f5012b0c28b746eb5b5e04ef4668",
+    "cpppj/src/client/RawCampaignSessionLogin.inc": "9619b303ddb904f190a186f1c0adb3077e08a3e062c2ca96994a62afe1e69114",
     "cpppj/src/client/MissionTechnology.cpp": "5ba1a1bedfa2787092002a4b04177b88dd0d03fff245261e5344057525a91e61",
     "cpppj/src/client/MissionTechnology.h": "6dcc98a97d902154b82d7254d7274db823240dfb0edcabdeb3391c767df998bf",
     "cpppj/src/client/State.cpp": "1b2179923bc02592bf927393175d884b1ff79eab78c76afa5e2e1049356d614d",
     "cpppj/src/client/State.h": "0cfac26890477c90f165b8d69928226b92874644c837817a17ee170b919c830c",
     "cpppj/src/o/RawTotalMade.cpp": "461c0424485988241cbc2b6007ea97d2a4f2d4e90ff9193f10a0fe92da5b8cb7",
     "cpppj/src/o/RawTotalMade.h": "ad913f9113bea30dc3083b87c978a6e9c2e0c8165474d2ad6d389c62b154ea2a",
-    "cpppj/src/client/CMakeLists.txt": "c814b3ce4fcefee13c8766a400cf836a91a0e1db5ac8aeb8eccf529b1b165419",
-    "cpppj/tests/CMakeLists.txt": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30",
-    "cpppj/tests/CampaignSessionTests.cpp": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b",
+    "cpppj/src/client/CMakeLists.txt": "a65c6c70bf559ed8be2ade2b501a5443b5bf6466794b65a711253e740e141094",
+    "cpppj/tests/CMakeLists.txt": "f76cfe04ff401b849f8db7dd5f97f1476ed5420f8a6fbb64af39bd07f1f5105d",
+    "cpppj/tests/CampaignSessionTests.cpp": "578c171e7688b75c145dda0fcd3e56925bdee1d59882c2b5955c94f3e5e1ea97",
     "tools/cpp_mission_lifecycle_audit.py": "a67676f6e1b3931c4a620ccdc8a45b07618e25945d4bd356af4fd462739c1710",
     "tools/cpp_mission_technology_audit.py": "c39040499ff2b148ad171ea36d62cccbd7ee118330e7c5ce18a0c44be5ca1c1a",
-    ".gitattributes": "5210721b18ff4968942b665b0faad05b4a2b2bf06c713b77150f0946d6cb2841",
+    ".gitattributes": "b2dbce9da3575df0fdb318695866812d49c5b456bc2a5c4b5c9a640d39436cae",
     "cpppj/src/client/TutorialInit.cpp": "afad6b5e513817f85722d1123004c1c1d6cbf17e6b85b03037f799995bbebfb3",
     "cpppj/src/client/TutorialInit.h": "075188fb43b31e54a6a3e9e8e03e93e432745661bfab1d86f6e4eb9d7063d297",
-    "cpppj/tests/TutorialInitTests.cpp": "498d8091530e29415f083601fb807cd5af7bfb2bd5cc087008cd859d67eb93a1",
+    "cpppj/tests/TutorialInitTests.cpp": "c551005ca7bf616cde451eac940f747dcd1ab6fe8f842063f524791b3677c3db",
     "tools/decomp_tutorial_init.py": "52ef4ac24aa359cee5c46effbb48f45981ad997dc3e28c3a9cf7eb06d4dcb4bd",
     "tools/cpp_tutorial_init_audit.py": "4556e381f5560164280c8f859b01e1c1c52a0421be014dc7df93e7c31335c819"
   },
@@ -4113,5 +4113,69 @@
     "cpp_mission_option_reset_audit": 0,
     "cpp_quick_help_client_audit": 0,
     "cpp_tutorial_init_audit": 0
-  }
+  },
+  "integration_updates": [
+    {
+      "unit": 260,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "원본 Fort 요청9BYTE/144BYTE와Init의Zone86 소유·실제 로그인 소비를 연결했다. 현재 소스 핀만 갱신하며 과거 원문/기대값/실행·바이너리를 보존한다. 전체State7/제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": ".gitattributes",
+          "group": "/sources",
+          "previous": "5210721b18ff4968942b665b0faad05b4a2b2bf06c713b77150f0946d6cb2841",
+          "current": "b2dbce9da3575df0fdb318695866812d49c5b456bc2a5c4b5c9a640d39436cae"
+        },
+        {
+          "path": "cpppj/src/client/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "c814b3ce4fcefee13c8766a400cf836a91a0e1db5ac8aeb8eccf529b1b165419",
+          "current": "a65c6c70bf559ed8be2ade2b501a5443b5bf6466794b65a711253e740e141094"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "group": "/sources",
+          "previous": "a2658773f7c24e24ace79ee27088ec9bc869d4d09fc890fbda9d3aba8aec7d01",
+          "current": "792643b10d24fa01452430c639beb3d986b1f5012b0c28b746eb5b5e04ef4668"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSessionLogin.inc",
+          "group": "/sources",
+          "previous": "4ebe7746564298e9b40a5335b0d0f282867f3c36a01e64949011f42ac87c0f3b",
+          "current": "9619b303ddb904f190a186f1c0adb3077e08a3e062c2ca96994a62afe1e69114"
+        },
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "group": "/sources",
+          "previous": "51194a324e887e53ecfa85cad9de5f81bf31dc161976b4808f4864a3ad6b80a8",
+          "current": "43849641465d1a9d96640aef0563e08bcf84c0dfe232b133784136fffc0f0666"
+        },
+        {
+          "path": "cpppj/src/client/UberGump.h",
+          "group": "/sources",
+          "previous": "a5a670a9b3cbd4bfc14bbccd4a048c772890a652ebd3586c955682736bbbd975",
+          "current": "51d6e8de3147a01e9f9c7c44e94e6c62d3fbd27e5c438b1451beaa199861c445"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30",
+          "current": "f76cfe04ff401b849f8db7dd5f97f1476ed5420f8a6fbb64af39bd07f1f5105d"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "group": "/sources",
+          "previous": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b",
+          "current": "578c171e7688b75c145dda0fcd3e56925bdee1d59882c2b5955c94f3e5e1ea97"
+        },
+        {
+          "path": "cpppj/tests/TutorialInitTests.cpp",
+          "group": "/sources",
+          "previous": "498d8091530e29415f083601fb807cd5af7bfb2bd5cc087008cd859d67eb93a1",
+          "current": "c551005ca7bf616cde451eac940f747dcd1ab6fe8f842063f524791b3677c3db"
+        }
+      ]
+    }
+  ]
 }

@@ -8,7 +8,7 @@
   "newDecompile": false,
   "sources": {
     "cpppj/src/client/RawCampaignRitual.inc": "c6ee6b6b111cf0f6fa0ff2b18da7253a65a75b9aa5e8edbbf03b05cf820df9bf",
-    "cpppj/tests/CampaignSessionTests.cpp": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b",
+    "cpppj/tests/CampaignSessionTests.cpp": "578c171e7688b75c145dda0fcd3e56925bdee1d59882c2b5955c94f3e5e1ea97",
     "tools/cpp_dais_load_audit.py": "cd8f42c5bbea3bb8722e36e84563902b48545326bde5df806d696a97893152b4",
     "tools/cpp_altar_release_audit.py": "4b4df644ef5b9f20d4d944c7841f1a2083dd6d90cc603ba6b1f271d13f133de4"
   },
@@ -963,6 +963,20 @@
           "group": "/sources",
           "previous": "1ca3f4a443191f14d9a28b3d3e436f3cf22d11ba164319d466e36d18ffd98352",
           "current": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b"
+        }
+      ]
+    },
+    {
+      "unit": 260,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "원본 Fort 요청9BYTE/144BYTE와Init의Zone86 소유·실제 로그인 소비를 연결했다. 현재 소스 핀만 갱신하며 과거 원문/기대값/실행·바이너리를 보존한다. 전체State7/제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "group": "/sources",
+          "previous": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b",
+          "current": "578c171e7688b75c145dda0fcd3e56925bdee1d59882c2b5955c94f3e5e1ea97"
         }
       ]
     }

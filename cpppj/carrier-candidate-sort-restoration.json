@@ -13,7 +13,7 @@
     "cpppj/src/o/RawCarrierCandidateSort.cpp": "a7749297ad70712a059aea52088cfd41c0880801a4f72c68d2b1548495a5bc69",
     "cpppj/tests/CarrierCandidateSortTests.cpp": "0899bcd133f09fd587e42105e6e790b68eb622021242d63c87748d36b1820a4e",
     "cpppj/src/CMakeLists.txt": "8834917133d33fda6dcd145dd64a93ee38ee014d25fede2eff5575b996df5847",
-    "cpppj/tests/CMakeLists.txt": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30",
+    "cpppj/tests/CMakeLists.txt": "f76cfe04ff401b849f8db7dd5f97f1476ed5420f8a6fbb64af39bd07f1f5105d",
     "tools/decomp_carrier_candidate_sort.py": "b33e27d24a1d4f2bf4cabbb6958164f8d1e6cbf672c1f0aa1c2635b0b96d20d1",
     "docs/exe/cpp-carrier-candidate-sort-20261018.md": "9e79257a499cde7bab8038aa3aee3928376e2233d88c88c62199c0f48d48d950"
   },
@@ -1176,6 +1176,20 @@
           "group": "/currentSources",
           "previous": "ee217558417e170b51187377eae1fa45478dc6d1c899541a64aa5a73de3847a2",
           "current": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30"
+        }
+      ]
+    },
+    {
+      "unit": 260,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "원본 Fort 요청9BYTE/144BYTE와Init의Zone86 소유·실제 로그인 소비를 연결했다. 현재 소스 핀만 갱신하며 과거 원문/기대값/실행·바이너리를 보존한다. 전체State7/제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/currentSources",
+          "previous": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30",
+          "current": "f76cfe04ff401b849f8db7dd5f97f1476ed5420f8a6fbb64af39bd07f1f5105d"
         }
       ]
     }

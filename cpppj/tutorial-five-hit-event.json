@@ -10,7 +10,7 @@
     "cpppj/src/o/RawMissile.h": "19e31c6abf9e0a8ce2f292e47650ec8f924205ce2dff03eb4f9a1c3fbdccae6c",
     "cpppj/src/client/RawCampaignSession.cpp": "6aaef81339fe4682278a624c49650e5d0e0542ff1c0a45b4c211d47ebf0576dc",
     "cpppj/tests/ThunderMissileTests.cpp": "aaa6c74136f2f4c0beaa369b9adca8b906b28ccddea5f75197c1cff2cddf1b51",
-    "cpppj/tests/CMakeLists.txt": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30",
+    "cpppj/tests/CMakeLists.txt": "f76cfe04ff401b849f8db7dd5f97f1476ed5420f8a6fbb64af39bd07f1f5105d",
     "cpppj/tests/fixtures/thunder-hit-event-x86.tsv": "64edac17dc6f25824bfed45afc6537cf120fe9f051fb47c84bceb4bfdbf85f58",
     "tools/decomp_thunder_hit_event.py": "8edc400c8020462187d401af42fde9d9d05a7a3ec1f1c9f3310fe16ccd6eada0",
     "cpppj/thunder-hit-event-native.json": "0fab34448a29358363ba67d2528c0e2d1809ae8cc9a2e6d19e68fd9c38b580c8",
@@ -732,6 +732,20 @@
           "group": "/sources",
           "previous": "ee217558417e170b51187377eae1fa45478dc6d1c899541a64aa5a73de3847a2",
           "current": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30"
+        }
+      ]
+    },
+    {
+      "unit": 260,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "원본 Fort 요청9BYTE/144BYTE와Init의Zone86 소유·실제 로그인 소비를 연결했다. 현재 소스 핀만 갱신하며 과거 원문/기대값/실행·바이너리를 보존한다. 전체State7/제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30",
+          "current": "f76cfe04ff401b849f8db7dd5f97f1476ed5420f8a6fbb64af39bd07f1f5105d"
         }
       ]
     }

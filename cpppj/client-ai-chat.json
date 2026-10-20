@@ -55,7 +55,7 @@
     "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
     "cpppj/src/client/ClientMain.h": "6146814839326c189d793d988960cab3be2b01b2ebd22119b763dfd00ec6c6a0",
     "cpppj/src/client/ClientMain.cpp": "fe577cb844b74ff10be7353b9ba545563bd62af7272409211de823e511fb456e",
-    "cpppj/src/client/UberGump.h": "a5a670a9b3cbd4bfc14bbccd4a048c772890a652ebd3586c955682736bbbd975",
+    "cpppj/src/client/UberGump.h": "51d6e8de3147a01e9f9c7c44e94e6c62d3fbd27e5c438b1451beaa199861c445",
     "cpppj/src/client/UberGump.cpp": "9e9483f858f612b200ff41e26c7eeacbca7f49dddee1f07b881f3b8e2ca30796",
     "cpppj/src/client/GameWorld.h": "d51dfe75377b1afd870bfeb40e26cef9f6233f65217d757135648ce064043a16",
     "cpppj/src/client/GameWorld.cpp": "e28f09f0bdf193ead41bfaa6ed683ddd4e2b9225f93aad16246644a6aba3ba89",
@@ -301,6 +301,20 @@
           "group": "/sha256",
           "previous": "70b2e2e7479669d3ddb47c054d95c87440f266441fea44a2753c39278c12eb65",
           "current": "a5a670a9b3cbd4bfc14bbccd4a048c772890a652ebd3586c955682736bbbd975"
+        }
+      ]
+    },
+    {
+      "unit": 260,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "원본 Fort 요청9BYTE/144BYTE와Init의Zone86 소유·실제 로그인 소비를 연결했다. 현재 소스 핀만 갱신하며 과거 원문/기대값/실행·바이너리를 보존한다. 전체State7/제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/UberGump.h",
+          "group": "/sha256",
+          "previous": "a5a670a9b3cbd4bfc14bbccd4a048c772890a652ebd3586c955682736bbbd975",
+          "current": "51d6e8de3147a01e9f9c7c44e94e6c62d3fbd27e5c438b1451beaa199861c445"
         }
       ]
     }

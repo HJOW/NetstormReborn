@@ -9,11 +9,11 @@
   "sources": {
     "cpppj/src/o/RawMissionBattleOptions.cpp": "1c980ccb15f1895cc13efc8012eac01b734b07b9206289b7cb821dacd503c53d",
     "cpppj/src/o/RawMissionBattleOptions.h": "9dd14d4ffdf16003c3b3e0bc694704142ec22a7b7606fb5227fe63646647c433",
-    "cpppj/src/client/RawCampaignSessionLogin.inc": "4ebe7746564298e9b40a5335b0d0f282867f3c36a01e64949011f42ac87c0f3b",
+    "cpppj/src/client/RawCampaignSessionLogin.inc": "9619b303ddb904f190a186f1c0adb3077e08a3e062c2ca96994a62afe1e69114",
     "cpppj/tests/MissionBattleOptionsTests.cpp": "e832fc0d0768115ce509bdf2877955abafc01bb915e467ee4a6d5ded10e2fe5c",
-    "cpppj/tests/CampaignSessionTests.cpp": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b",
-    "cpppj/tests/CMakeLists.txt": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30",
-    ".gitattributes": "5210721b18ff4968942b665b0faad05b4a2b2bf06c713b77150f0946d6cb2841",
+    "cpppj/tests/CampaignSessionTests.cpp": "578c171e7688b75c145dda0fcd3e56925bdee1d59882c2b5955c94f3e5e1ea97",
+    "cpppj/tests/CMakeLists.txt": "f76cfe04ff401b849f8db7dd5f97f1476ed5420f8a6fbb64af39bd07f1f5105d",
+    ".gitattributes": "b2dbce9da3575df0fdb318695866812d49c5b456bc2a5c4b5c9a640d39436cae",
     "tools/decomp_mission_option_reset.py": "d43635d38daee9eb413f44780311a284c77a07f4b44bc18194e6b29ea2c0df77",
     "tools/cpp_mission_option_reset_audit.py": "f6d552cbe62ac40213ca5e379f6a403685739ce4d9bbc5d84267f48de0a81535",
     "cpppj/src/o/RawMissionClientPackets.cpp": "e5593347ec53057635a218fc8783389fc68fac58224f1ac7333d8eaf9bde32f4",
@@ -2039,6 +2039,38 @@
           "group": "/sources",
           "previous": "b3f04603eb49c5f3b3818aa5e02f4828542d71afb07c13957ff987bfbfd9b4c9",
           "current": "5210721b18ff4968942b665b0faad05b4a2b2bf06c713b77150f0946d6cb2841"
+        }
+      ]
+    },
+    {
+      "unit": 260,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "원본 Fort 요청9BYTE/144BYTE와Init의Zone86 소유·실제 로그인 소비를 연결했다. 현재 소스 핀만 갱신하며 과거 원문/기대값/실행·바이너리를 보존한다. 전체State7/제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": ".gitattributes",
+          "group": "/sources",
+          "previous": "5210721b18ff4968942b665b0faad05b4a2b2bf06c713b77150f0946d6cb2841",
+          "current": "b2dbce9da3575df0fdb318695866812d49c5b456bc2a5c4b5c9a640d39436cae"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSessionLogin.inc",
+          "group": "/sources",
+          "previous": "4ebe7746564298e9b40a5335b0d0f282867f3c36a01e64949011f42ac87c0f3b",
+          "current": "9619b303ddb904f190a186f1c0adb3077e08a3e062c2ca96994a62afe1e69114"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30",
+          "current": "f76cfe04ff401b849f8db7dd5f97f1476ed5420f8a6fbb64af39bd07f1f5105d"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "group": "/sources",
+          "previous": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b",
+          "current": "578c171e7688b75c145dda0fcd3e56925bdee1d59882c2b5955c94f3e5e1ea97"
         }
       ]
     }

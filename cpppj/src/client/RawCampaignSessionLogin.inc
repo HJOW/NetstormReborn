@@ -115,10 +115,14 @@ struct RawCampaignSession::Impl::Login {
             packet[4]=static_cast<std::uint8_t>(owner);Put(packet,5,mask);Send(static_cast<std::int32_t>(target),packet);
         };
         s.services.ai.localTransport=[this] { return transport->IsOpen(); };s.services.carrierRequest=[this](std::int32_t target,std::span<const std::uint8_t> bytes) { Send(target,bytes); };
-        const auto zone=netstorm::zacket::MakeLocalMissionZone();netstorm::zacket::LocalMissionZoneHooks hooks;hooks.loginTimeout=[this] { return Need(effects.configInt)("loginTimeout",30); };hooks.seconds=effects.wallSeconds;
+        auto request=s.services.missionFortRequest;std::optional<netstorm::zacket::LocalMissionPacket> fallback; // Init에서 작성한 같은86BYTE를 사용하며 독립 Session만 기존 작성기를 호출한다.
+        if (request) { if (request->consumed || request->next[0]!=7 || request->next[0x80/4]!=1 || request->zone.size()!=86) throw std::logic_error("현재 Init Fort 요청/이미지 계약 위반");blocks[3]=request->next; }
+        else fallback=netstorm::zacket::MakeLocalMissionZone();
+        const auto zone=request ? std::span<const std::uint8_t>(request->zone) : fallback->Bytes();netstorm::zacket::LocalMissionZoneHooks hooks;hooks.loginTimeout=[this] { return Need(effects.configInt)("loginTimeout",30); };hooks.seconds=effects.wallSeconds;
         hooks.storeName=[](std::uint32_t subscriber,std::string_view name) { SanitizeMissionPlayerName(subscriber,{reinterpret_cast<std::uint8_t*>(const_cast<char*>(name.data())),name.size()+1}); };
         hooks.serve=[this](std::uint32_t port) { transport->Open(port,false); };
-        netstorm::zacket::InstallLocalMissionZone(zone.Bytes(),s.players,s.playerState,{s.core.processState.server,s.assetState.boss,s.globals.mySubscriber,pendingStamp,activeStamp,zoneWord,zoneWords[0],captureEnd,adjust,s.objectState.mission,overrideFlags,s.core.ownerMode.challenge,currentCore,cachedCore},std::move(hooks),static_cast<std::uint32_t>(Need(effects.configInt)("gameServerPort",6799)));
+        netstorm::zacket::InstallLocalMissionZone(zone,s.players,s.playerState,{s.core.processState.server,s.assetState.boss,s.globals.mySubscriber,pendingStamp,activeStamp,zoneWord,zoneWords[0],captureEnd,adjust,s.objectState.mission,overrideFlags,s.core.ownerMode.challenge,currentCore,cachedCore},std::move(hooks),static_cast<std::uint32_t>(Need(effects.configInt)("gameServerPort",6799)));
+        if (request) { std::vector<std::uint8_t>{}.swap(request->zone);request->consumed=true;blocks[3][0x80/4]=0; } // 설치 뒤 실제 할당도 반납한다. 전체 State7 정리 본문을 실행했다고 합산하지 않는다.
         s.playerState.playerKnown=0;blocks[3][0]=8;state->Run();state->Poll();Pump();
         if (!s.loaded || blocks[1][0]!=14 || !(s.players[s.playerState.battleOwner*0xb4+0x50]&1)) throw std::logic_error("실제 로컬 미션 로그인 미완료");
     }

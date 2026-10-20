@@ -2,6 +2,7 @@
 #pragma once
 #include "client/GameAssets.h"
 #include "client/CampaignLoginServices.h"
+#include "client/MissionFortRequest.h"
 #include <optional>
 #include <memory>
 #include "client/RawCampaignWorldRuntime.h"
@@ -108,6 +109,7 @@ struct CampaignProductionServices {
 };
 // 게임 계산을 대신하지 않고 실제 클라이언트 UI/음향/전송의 선택 경계를 공급한다.
 struct RawCampaignSessionServices {
+    std::shared_ptr<MissionFortLoadRequest> missionFortRequest; // Init에서 만든 같은 요청/Zone을 소비하며 설치 때 새 Zone을 만들지 않는다.
     std::shared_ptr<std::array<std::uint8_t,87>> missionOptions; // Client Init와 실제 로그인/세계/메뉴가 같은 전역87BYTE를 소유한다. 독립 검사는 자체 배열을 쓴다.
     std::shared_ptr<std::array<std::uint32_t,256>> missionRestrictions; // 설치 전 Header와 설치 후 TotalMade가 같은 현재 표를 빌린다.
     std::optional<std::uint32_t> missionSubscriber; // Init이 현재54265c에서 복사한540c74다. 독립 로그인은 기존1을 사용한다.

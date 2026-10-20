@@ -14,10 +14,10 @@
     "cpppj/src/client/GameWorld.cpp": "af6d3aeb3bd53d83e2619c2bd20ba5df42c17fe718cb81786841606419f10c6c",
     "cpppj/src/client/GameWorld.h": "d51dfe75377b1afd870bfeb40e26cef9f6233f65217d757135648ce064043a16",
     "cpppj/src/client/RawCampaignSession.cpp": "6aaef81339fe4682278a624c49650e5d0e0542ff1c0a45b4c211d47ebf0576dc",
-    "cpppj/src/client/RawCampaignSession.h": "a2658773f7c24e24ace79ee27088ec9bc869d4d09fc890fbda9d3aba8aec7d01",
+    "cpppj/src/client/RawCampaignSession.h": "792643b10d24fa01452430c639beb3d986b1f5012b0c28b746eb5b5e04ef4668",
     "cpppj/src/client/RawSurfaceWorld.cpp": "d6ebba7d5175b98dd5ddabba6de4744a977434913b4eb8b9c2e39068e7b94832",
     "cpppj/src/client/RawSurfaceWorld.h": "278604c3b2b58bb13dfb1d8574efd48cd8d353e71e0c342498286f19f233cd03",
-    "cpppj/src/client/UberGump.cpp": "51194a324e887e53ecfa85cad9de5f81bf31dc161976b4808f4864a3ad6b80a8",
+    "cpppj/src/client/UberGump.cpp": "43849641465d1a9d96640aef0563e08bcf84c0dfe232b133784136fffc0f0666",
     "cpppj/src/o/RawBattleBroadcast.h": "b434175a1b937a8c34d64ba016f72c73ab4635490d5b7e73f43986610b7240da",
     "cpppj/src/o/RawCarrierSteal.h": "0b1d9a043731c29e1d585d206ef45f26294929baac86bc7268b51ff412ad492d",
     "cpppj/src/o/RawCarrierTransfer.h": "286dbe876336f50cfbba2c87e2ac80eb973eef3c0059cabc78fd898d106ce157",
@@ -27,13 +27,13 @@
     "cpppj/src/o/RawPlayerTemplateState.h": "94d77a52e0d7d3f218732b27acf4039d293dae1b4041a723db88669a51c4b77e",
     "cpppj/src/zacket/LocalMissionTransport.cpp": "f659b7bbcfcd3923147472a099fcf74c04014e0005eff3e46d273898c4a2d92a",
     "cpppj/src/zacket/LocalMissionTransport.h": "cb2a6db9ba11d2be26699fa0675ecc4a2714969b58c96a94275071fbd3464ee2",
-    "cpppj/tests/CMakeLists.txt": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30",
-    "cpppj/tests/CampaignSessionTests.cpp": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b",
+    "cpppj/tests/CMakeLists.txt": "f76cfe04ff401b849f8db7dd5f97f1476ed5420f8a6fbb64af39bd07f1f5105d",
+    "cpppj/tests/CampaignSessionTests.cpp": "578c171e7688b75c145dda0fcd3e56925bdee1d59882c2b5955c94f3e5e1ea97",
     "cpppj/tests/LocalMissionTransportTests.cpp": "4091601c094ddeb30f2795aaa7c991770196fcfdf2c1d1ed9da9f124ac8d1938",
     "tools/cpp_campaign_entry_smoke.py": "59b39e067a2e51cc7f6358d8adc198e4cbd5682bc6109e9b1e0407fa7f3550aa",
     "cpppj/tests/PlayerRegularTests.cpp": "c5dc6f89b8ee7e6ed21c7720d1e11a8c019022f079eb7f62024833ed47e56afe",
     "cpppj/src/client/CampaignLoginServices.h": "f1f3cc9bc350a181d07efa8ef769a1a131f038b708cbc9eef85d088aae7fe1c0",
-    "cpppj/src/client/RawCampaignSessionLogin.inc": "4ebe7746564298e9b40a5335b0d0f282867f3c36a01e64949011f42ac87c0f3b",
+    "cpppj/src/client/RawCampaignSessionLogin.inc": "9619b303ddb904f190a186f1c0adb3077e08a3e062c2ca96994a62afe1e69114",
     "cpppj/tests/PlayerStateExpandTests.cpp": "14e30d37b3ed9dae0ac1273944d6ab3370e23c025e5e1f7035f212d378d344e2",
     "tools/decomp_player_state_expand.py": "b2d10589260cf6b48d88b20d155bfc6bb35edd237724715c98483b8bcb4434ff"
   },
@@ -4171,6 +4171,44 @@
           "group": "/currentSources",
           "previous": "1ca3f4a443191f14d9a28b3d3e436f3cf22d11ba164319d466e36d18ffd98352",
           "current": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b"
+        }
+      ]
+    },
+    {
+      "unit": 260,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "원본 Fort 요청9BYTE/144BYTE와Init의Zone86 소유·실제 로그인 소비를 연결했다. 현재 소스 핀만 갱신하며 과거 원문/기대값/실행·바이너리를 보존한다. 전체State7/제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "group": "/currentSources",
+          "previous": "a2658773f7c24e24ace79ee27088ec9bc869d4d09fc890fbda9d3aba8aec7d01",
+          "current": "792643b10d24fa01452430c639beb3d986b1f5012b0c28b746eb5b5e04ef4668"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSessionLogin.inc",
+          "group": "/currentSources",
+          "previous": "4ebe7746564298e9b40a5335b0d0f282867f3c36a01e64949011f42ac87c0f3b",
+          "current": "9619b303ddb904f190a186f1c0adb3077e08a3e062c2ca96994a62afe1e69114"
+        },
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "group": "/currentSources",
+          "previous": "51194a324e887e53ecfa85cad9de5f81bf31dc161976b4808f4864a3ad6b80a8",
+          "current": "43849641465d1a9d96640aef0563e08bcf84c0dfe232b133784136fffc0f0666"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/currentSources",
+          "previous": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30",
+          "current": "f76cfe04ff401b849f8db7dd5f97f1476ed5420f8a6fbb64af39bd07f1f5105d"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "group": "/currentSources",
+          "previous": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b",
+          "current": "578c171e7688b75c145dda0fcd3e56925bdee1d59882c2b5955c94f3e5e1ea97"
         }
       ]
     }

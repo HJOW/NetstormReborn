@@ -60,7 +60,7 @@
     "cpppj/src/o/RawFlyerProcess.h": "1107c2a73163e0c3024c822cf614c9d02f7aa36d75fc81cfd0a6df58e36b6345",
     "cpppj/src/o/RawFlyerProcess.cpp": "bc5d68f980251febe080e280db07727f7d5cc7bbbf9d84780d8d8d31a86f44f1",
     "cpppj/src/client/RawCampaignSession.cpp": "6aaef81339fe4682278a624c49650e5d0e0542ff1c0a45b4c211d47ebf0576dc",
-    "cpppj/tests/CMakeLists.txt": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30",
+    "cpppj/tests/CMakeLists.txt": "f76cfe04ff401b849f8db7dd5f97f1476ed5420f8a6fbb64af39bd07f1f5105d",
     "cpppj/tests/CampaignMissionStartTests.cpp": "5f71b9e383e12f7230e8338db410238aae96757b2f3f7ecff1cd70b1e090789c",
     "tools/decomp_sun_flyer_postpop.py": "d9e457589d70c582e364c1146e7d54a57647e7d56a194e22e8772de89a85ee78",
     "cpppj/sun-flyer-postpop.json": "1fd1b1fdedcf110d59d368f8fe3b08e15760e153c722cb0d1874873ea1f5f26e",
@@ -1146,6 +1146,20 @@
           "group": "/currentSources",
           "previous": "ee217558417e170b51187377eae1fa45478dc6d1c899541a64aa5a73de3847a2",
           "current": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30"
+        }
+      ]
+    },
+    {
+      "unit": 260,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "원본 Fort 요청9BYTE/144BYTE와Init의Zone86 소유·실제 로그인 소비를 연결했다. 현재 소스 핀만 갱신하며 과거 원문/기대값/실행·바이너리를 보존한다. 전체State7/제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/currentSources",
+          "previous": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30",
+          "current": "f76cfe04ff401b849f8db7dd5f97f1476ed5420f8a6fbb64af39bd07f1f5105d"
         }
       ]
     }

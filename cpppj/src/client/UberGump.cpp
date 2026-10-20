@@ -15,6 +15,7 @@
 #include "client/GuideMissionTransitions.h"
 #include "client/MissionTechnology.h"
 #include "o/RawMissionBattleOptions.h"
+#include "client/MissionFortRequest.h"
 #include "client/RawKnowledgeMenu.h"
 #include "o/RawMissionGuide.h"
 #include "client/GifImage.h"
@@ -237,6 +238,7 @@ UberGump::~UberGump() { ClearWorld(); }
 // 입력 참조를 먼저 없애고 커널의 실제 소유권을 해제한다. 위치 효과음은 카메라 0의 전체 메뉴 영역으로 되돌린다.
 void UberGump::ClearWorld() {
     state_.Cancel("LoadMissionFort"); // 현재 미션이 설치 전에 교체돼도 그 소유자의 이전 요청을 새 미션에서 소비하지 않는다.
+    missionFortRequest_.reset(); // Session이 살아 있으면 공유 소유권으로 실제 설치/해제 완료까지 이미지를 보존한다.
     if (rawButtons_ && rawButtons_->Menus()) rawButtons_->Menus()->CloseHelp(); // 동적 정보/그림의 현재 Session보다 먼저 실제 창을 반납한다.
     if (world_ && rawButtons_ && rawButtons_->Menus()) rawButtons_->Menus()->Close(); // 같은Form을반납한뒤에만Session/월드포인터를해제한다.
     if (rawButtons_) rawButtons_->DisableProduction(); // 실제 Session보다 먼저 UI Form을 반납한다.
@@ -392,7 +394,14 @@ void UberGump::InitializeMission() {
     hooks.resetOptions=[this] { o::ResetMissionBattleOptions(o::OriginalEdition::Patch1078,*missionOptions_); };
     hooks.get=[this](std::string_view key,std::optional<std::string_view> fallback) { auto value=FontBytes(mission_->Get(key).value_or(""));if (const auto end=value.find('\0');end!=std::string::npos) value.resize(end);if (value.empty() && fallback) value=*fallback;return value; };
     hooks.set=[this](auto key,auto value) { const auto text=o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(value.data()),value.size()});static_cast<void>(mission_->Set(key,text)); };
-    hooks.requestFort=[this](auto name) { if (state_.Pending()) throw std::logic_error("Init 요새 로드 요청 전 다른 전환이 남아 있음");state_.Post({"LoadMissionFort",o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(name.data()),name.size()})}); };
+    hooks.requestFort=[this](auto name) {
+        if (state_.Pending() || missionFortRequest_) throw std::logic_error("Init 요새 로드 요청 전 다른 전환/이미지가 남아 있음");
+        auto request=std::make_shared<MissionFortLoadRequest>();MissionFortRequestHooks effects; // 원본 부모가 쓴 요청과 실제 복제 이미지를 같은 수명으로 소유한다.
+        effects.selectFort=[request](auto value) { request->fort=o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(value.data()),value.size()}); };
+        effects.duplicate=[request](auto& packet) { return CaptureMissionFortZone(*request,packet); };
+        const std::array<std::uint8_t,9> address{'z','l','o','c','a','l',',','*',0};std::int32_t configuredPort=6799;client_.Configuration().ReadInt("gameServerPort",configuredPort);const auto port=static_cast<std::uint32_t>(configuredPort); // 원본00513870의9BYTE와 현재005318e8의 Client 설정 경계다.
+        WriteMissionFortRequest(name,{request->next,request->sequence,address,port},effects);missionFortRequest_=std::move(request);state_.Post({"LoadMissionFort",missionFortRequest_->fort});
+    };
     hooks.header=[this] { ApplyMissionTechnology(*mission_,client_.Assets().TypeTable(),std::span(*missionRestrictions_)); };
     InitializeTutorialMission(missionRuntime_->init,missionRuntime_->state.flags,missionRuntime_->gate.demo,{missionRuntime_->gate.tutorialNumber,missionNumber_,tutorialSeen_,initLoginSubscriber_,initialSubscriber_},hooks);
     rebuild_=true;
@@ -416,7 +425,7 @@ void UberGump::LoadMissionWorld(std::optional<std::string> requestedFort) {
         [this] { RefreshWindowTitle(); },[this](std::string_view key) { Tell(std::string(key)); },
         [this](std::int32_t kind,std::int32_t player,std::int32_t parameter) { warnings_->Remove(kind,player,parameter);rebuild_=true; }}); // 현재 클라이언트의 설정·음향·입력·UI다.
     services.missionOutcome.demo=[this] { return missionRuntime_ ? missionRuntime_->gate.demo : 0U; };
-    services.missionOptions=missionOptions_;services.missionRestrictions=missionRestrictions_;services.missionSubscriber=initLoginSubscriber_; // 같은 Init 전역의 소유권/참조를 설치 뒤에도 유지한다.
+    services.missionOptions=missionOptions_;services.missionRestrictions=missionRestrictions_;services.missionSubscriber=initLoginSubscriber_;services.missionFortRequest=missionFortRequest_; // 같은 Init 전역/요청의 소유권과 실제 Zone을 설치 뒤에도 유지한다.
     services.missionOutcome.tellBlocked=[this] { return state_.phase==ClientPhase::Dialog || state_.phase==ClientPhase::Briefing ? 1U : 0U; };
     services.missionOutcome.section=[this](std::string_view section) { return mission_ && mission_->Section(section) && TryTell(std::string(section)); };
     services.missionOutcome.closeTransient=[this] { rawButtons_->RequestClosePopups(); };
@@ -935,6 +944,7 @@ std::string UberGump::Report() const {
         if (missionRuntime_) {
             const auto& gate=missionRuntime_->gate;const auto& state=missionRuntime_->state; // 실제 Start의 최종 표식과 중간 쓰기를 읽는다.
             out<<"mission_init\t"<<missionRuntime_->init.namePrefix<<'\t'<<gate.tutorialNumber<<'\t'<<missionNumber_<<'\t'<<tutorialSeen_<<'\t'<<initLoginSubscriber_<<'\t'<<state_.Pending()<<'\n'; // 로드 전/후의 실제 전역과 요청을 읽는다.
+            if (missionFortRequest_) out<<"mission_fort_request\t"<<missionFortRequest_->next[0]<<'\t'<<missionFortRequest_->sequence<<'\t'<<missionFortRequest_->next[31]<<'\t'<<missionFortRequest_->zone.size()<<'\t'<<missionFortRequest_->consumed<<'\n'; // 작성한 요청 캡처와 실제 복제 이미지의 소비를 구별한다.
             out<<"mission_start\t"<<gate.started<<'\t'<<state.sequence<<'\t'<<gate.demo<<'\t'<<gate.startSeconds<<'\t'<<gate.demoEndSeconds<<'\n';
             out<<"mission_gate\t"<<gate.tutorialNumber<<'\t'<<gate.stage<<'\t'<<gate.lockFrames<<'\t'<<gate.scriptPaused<<'\t'<<gate.clearFrames<<'\t'
                 <<(missionRuntime_->tutorial ? 1 : 0)<<'\t'<<gate.nextStageSeconds<<'\t'<<gate.tellAtSeconds<<'\n'; // 동일 현재 상태의 관측만 제공한다.

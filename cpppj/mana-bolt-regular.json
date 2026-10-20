@@ -67,8 +67,8 @@
     "cpppj/src/client/RawCursorPosition.cpp": "db3b59d8211cee4f22583db354962f2da543512bd78ad86ed91c8725f0dda7a4",
     "cpppj/src/client/RawCursorPosition.h": "acef07ed2737b798d36034457c63e75e1bfde25c9068b4bd3a2c224bd8dab723",
     "cpppj/src/o/CMakeLists.txt": "8fd2012644816c088a0283bde3e14ed3d9c3cff364d38c4c1bd5f4e6eaa81bd4",
-    "cpppj/tests/CMakeLists.txt": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30",
-    "cpppj/tests/CampaignSessionTests.cpp": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b",
+    "cpppj/tests/CMakeLists.txt": "f76cfe04ff401b849f8db7dd5f97f1476ed5420f8a6fbb64af39bd07f1f5105d",
+    "cpppj/tests/CampaignSessionTests.cpp": "578c171e7688b75c145dda0fcd3e56925bdee1d59882c2b5955c94f3e5e1ea97",
     "cpppj/tests/ManaBoltRegularTests.cpp": "3531f9ec3de58ad435557223606e16994d0f235b193780fab7700a06e96e8d5d",
     "cpppj/src/client/Sound.cpp": "30f85f35c1e5c75d1214ec5df2f3d86c7552fa060a1068905f77cb164cfd8ee3",
     "cpppj/src/client/Sound.h": "d8820c78a72db8c30241bed470c85b5b07a36cc1b0737b96e81563836285623f",
@@ -87,8 +87,8 @@
     "cpppj/src/o/CMakeLists.txt": "8fd2012644816c088a0283bde3e14ed3d9c3cff364d38c4c1bd5f4e6eaa81bd4",
     "cpppj/src/o/RawManaBoltRegular.cpp": "4ea2499c6cf66978607e42ad0c84486d11ca5cf32e6deb58281e35fbd9aefdde",
     "cpppj/src/o/RawManaBoltRegular.h": "c0f4822f6a25c63644f507d31b3946e1f8a7ba6b1185e5c09a97e625d56e8011",
-    "cpppj/tests/CMakeLists.txt": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30",
-    "cpppj/tests/CampaignSessionTests.cpp": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b",
+    "cpppj/tests/CMakeLists.txt": "f76cfe04ff401b849f8db7dd5f97f1476ed5420f8a6fbb64af39bd07f1f5105d",
+    "cpppj/tests/CampaignSessionTests.cpp": "578c171e7688b75c145dda0fcd3e56925bdee1d59882c2b5955c94f3e5e1ea97",
     "cpppj/tests/ManaBoltRegularTests.cpp": "3531f9ec3de58ad435557223606e16994d0f235b193780fab7700a06e96e8d5d"
   },
   "protectedFileSha256": {
@@ -3893,6 +3893,38 @@
           "group": "/sha256",
           "previous": "1ca3f4a443191f14d9a28b3d3e436f3cf22d11ba164319d466e36d18ffd98352",
           "current": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b"
+        }
+      ]
+    },
+    {
+      "unit": 260,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "원본 Fort 요청9BYTE/144BYTE와Init의Zone86 소유·실제 로그인 소비를 연결했다. 현재 소스 핀만 갱신하며 과거 원문/기대값/실행·바이너리를 보존한다. 전체State7/제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/currentSources",
+          "previous": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30",
+          "current": "f76cfe04ff401b849f8db7dd5f97f1476ed5420f8a6fbb64af39bd07f1f5105d"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "group": "/currentSources",
+          "previous": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b",
+          "current": "578c171e7688b75c145dda0fcd3e56925bdee1d59882c2b5955c94f3e5e1ea97"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sha256",
+          "previous": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30",
+          "current": "f76cfe04ff401b849f8db7dd5f97f1476ed5420f8a6fbb64af39bd07f1f5105d"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "group": "/sha256",
+          "previous": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b",
+          "current": "578c171e7688b75c145dda0fcd3e56925bdee1d59882c2b5955c94f3e5e1ea97"
         }
       ]
     }

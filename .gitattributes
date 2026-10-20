@@ -1513,3 +1513,10 @@ cpppj/tutorial-init-native.json text eol=lf
 cpppj/tutorial-init-session.json text eol=lf
 tools/decomp_tutorial_init.py text eol=lf
 tools/cpp_tutorial_init_audit.py text eol=lf
+# 원본 Fort 요청의9BYTE/144BYTE·독립 원문을 같은 LF 바이트로 보존한다.
+cpppj/src/client/MissionFortRequest.* text eol=lf
+cpppj/tests/MissionFortRequestTests.cpp text eol=lf
+cpppj/tests/fixtures/mission-fort-request-x86.tsv text eol=lf
+cpppj/mission-fort-request-*.json text eol=lf
+tools/decomp_mission_fort_request.py text eol=lf
+tools/cpp_mission_fort_request_audit.py text eol=lf
