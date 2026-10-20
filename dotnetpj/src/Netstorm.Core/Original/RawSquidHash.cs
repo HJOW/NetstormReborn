@@ -108,4 +108,21 @@ public sealed class RawSquidHash
         Side(level);
         return _heads[level];
     }
+
+    /// <summary>
+    /// 버킷 번호가 가리키는 머리. 탐색기가 쓰는 4단계 해시·적 raw 체인의 연결 고리다.
+    /// 참조로 돌려주므로 대입하면 머리가 바뀐다. 원본 SquidHash::Cell 과 같다 (W02 탐색 조각, 2026-10-20).
+    /// </summary>
+    /// <param name="level">단계 0~3.</param>
+    /// <param name="x">버킷 x 번호.</param>
+    /// <param name="y">버킷 y 번호.</param>
+    public ref ushort Cell(int level, int x, int y)
+    {
+        int side = Side(level);
+        if (x < 0 || y < 0 || x >= side || y >= side)
+        {
+            throw new ArgumentOutOfRangeException(nameof(x), "공간 해시 버킷 번호가 범위를 벗어났습니다");
+        }
+        return ref _heads[level][y * side + x];
+    }
 }
