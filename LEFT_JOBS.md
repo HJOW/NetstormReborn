@@ -1,5 +1,18 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-21 단위244 연결 완료: DudePath24의 공유 보행·현재 속도·Session
+
+- [x] 같은 goal의 다음 단위를 진행한다. 시작 HEAD `c6931d8e`, 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-20**가 일치한다. 새 디컴파일·원본/CD·AGENTS·dotnetpj 변경은 없다. 다른 세션의 dotnetpj 작업/커밋은 유지한다. 이전 턴은 단위243의 구현·기록·커밋을 만든 **진행** 턴이다.
+- [x] 제품 작성 전에 실제 ctor48bf30/공통48b2c0/Attach48bab0을 **30입력·두 정밀도60정상 반환·61614명령**으로 독립 관측했다. 생성자100080바이트 전체·부착 전체 인자/진단과 보호PE 가상표3행을 최초 동결했다. new/Host 부착/복귀 진단은 명시 경계이며 게임/OS/창은 없다. 공유 보행 전체의 재관측이나 지정Form65535의 제품 부착 실행을 주장하지 않는다.
+- [x] `RawPathRuntime/Process`에24/VT50e3d8·부모70 검사를 추가하고 기존54/40의 실제 Init48bb10/Run48bb40/Arrive48bd90/cleanup을 공유했다. `RawPathStart`가24를 생성/부착하고 부모+40/+44의 빈 통지에서 반환한다. `RawCampaignPathBindings::StartDude/CurrentPath`는 같은 BFS/Host/Form과 단위243의 실제 부모 Halt/Arrival을 연결한다.
+- [x] Session `hitEffects.dudes.pathEndpoint/startPath`를 현재 Runtime.Point(Count−1)·같은 StartDude로 연결했다. **Dude만 metadata.speed를 현재 `dudeSpeeds[kind].speed`에서 읽어** Notice.Move의 임시2배 속도와 정수 백업 복원을 유지한다. `Dudes/StartDudeMovement`는 같은 몸체를 공개한다. 새 검사2개는 생성자 원문/가상표·실제 원래 지도에서 명시 Dude의 현재 경로/끝점·2배속도·부모 도착 수명이며 전체 Kernel/자연 통지 대피 검사는 아니다. 최초Pop은Regular를 만들지 않으므로 최종 도착 task/Regular5107만 검사 입력으로 명시한다.
+- [x] **전체 Release 경고0·오류0·종료0**, 로그 `extracted/cpp-dude-path-20261021-build.log`. 새 검사2개를 작성·컴파일했으나 제품/C++검사/CTest/전체 회귀는 실행하지 않았다. 현재 핀 **124보고서·362항목**만 갱신했고 전체 JSON의 역변환은 시작 커밋과 같다. 원본·fixture·과거 실행/바이너리·기존 이력은 보존했다. 현재 핀/역변환·빌드 해시는 `cpppj/dude-path-session.json`, 읽기 전용 감사는 `tools/decomp_dude_path.py --verify`·`tools/cpp_dude_path_audit.py --verify`다. [상세 기록](docs/exe/cpp-dude-path-20261021.md). 인수인계 완료 뒤10-21 날짜 규칙의 로컬 커밋을 만들며 push하지 않는다.
+- [ ] **다음 첫 경계: foot0의 탐색 실패.** 빌드 말미 읽기에서 `RawPathStart::Footprint`의 기존134/158용 foot≥1 검사가 Dude70/foot0의 Count0 경로를 거부함을 확인했다. 이번 구현은 성공 경로 연결이며 이 실패 경계는 아직 남아 있다. 원본4ade70→49ae80은 `(x,y)`에서 시작한 사각형에 `x−(footX−1),y−(footY−1)`를40e880/40e8f0로 min/max 확장하므로 foot0은x..x+1/y..y+1 사각형이다. 다음 단위는 새 독립 관측 후 이 실패/겹침 처리부터 수정해야 한다. 기존 `decomp_pathstart_oracle.py`는 부모134/158·foot1만 관측했으므로 기존 fixture를 덮어쓰지 않는다.
+- [ ] **다음 경계:** Dude Regular450fa0(task5101~5107)·451190/451210/451270/451340 하위와 자연 생성/최대 population 초기화 정책이다. Regular는 poll 사건 우선 반환, free/마스크 진단과 공통496e70, CheckSpace→fall, 현재24 lookup, count!=0/5107예외 대기, task WORD 재쓰기, 각 helper/최대 count 삭제 순서다. 451190은59 2f 목록의 순환 전역과 난수를 쓴다. **빌드 대기 중 새 정적 근거:** population의 객체 시작은55a4f0이 아니라 **55a4ec**다. 실제 static initializer **4fc9b0이push1e(30)→ECX55a4ec→44fb20**, 이 생성자는 new(capacity×4)·ptr+4/cap+8/count+0xc·VT508c04·472880 registry 등록을 수행한다. 따라서 다음 단위는 이 초기화/등록을 독립 관측하고 현재 capacity0을 원래30으로 연결해야 한다. 이번 단위에서는 아직 변경하지 않았다. 현재Regular 미분배로 경로 연결만으로 자연 대피/완주 완료를 주장하지 않는다.
+- [ ] **통합 검증:** 이번 검사2개와 앞 단위239~243의 이월 검사, Early5 자연F 이후 실제 UI 시전·적/지형 효과·포획/Drop·제단/희생·다른 지정 미션·F8 Guide/키·전략AI·원본 동일성이다. 실행/플레이 통합 이월 및 Devastation 외 주문3차 이월을 유지한다. 전체 goal은 **active/미완료**다.
+
+- [x] 이번 원본 감사·현재 연결/핀 감사와 직전 Dude 부모 감사가 모두 종료0이다. 다른 세션의 dotnetpj 미커밋 변경은 포함하지 않는다.
+
 ## 2026-10-21 단위243 구현 완료: Dude 부모 정지·지면 판정·도착·population 삭제
 
 - [x] 같은 목표의 다음 단위를 진행했다. 시작 HEAD `e2dfe0d0`, 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-20**가 일치한다. 작업은10-20에 시작하고10-21에 마무리한다. 새 디컴파일·원본/CD·AGENTS 변경은 없다. 다른 세션의 dotnetpj 작업과 커밋은 유지하며 이번 변경에 넣지 않는다. 이전 목표 턴은 단위240~242의 구현·기록·커밋을 만든 **진행** 턴이다.

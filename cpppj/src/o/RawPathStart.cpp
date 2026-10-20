@@ -68,8 +68,9 @@ RawPathProcess* RawPathStart::Start(RawPathStartRequest request) {
     constexpr std::uint32_t kFlyProcess=39; // 원본0054110c의 실제 비행 경로 생성자다.
     constexpr std::uint32_t kWormProcess=40; // 원본00541110의 실제 썬 워커/empty 경로다.
     constexpr std::uint32_t kBalloonProcess=42; //00541118의 실제 이륙/착륙 경로다.
-    if (processType!=kTeleportProcess && processType!=kPriestProcess && processType!=kFlyProcess && processType!=kWormProcess && processType!=kBalloonProcess) throw std::logic_error("다른 파생 이동 생성/Init 미복원 경계");
-    if ((processType==kFlyProcess || processType==kWormProcess || processType==kBalloonProcess) && !hooks_.createType) throw std::logic_error("파생 이동의 실제 생성자 미연결");
+    constexpr std::uint32_t kDudeProcess=24; //005410d0의 실제 로컬 Dude 보행 경로다.
+    if (processType!=kTeleportProcess && processType!=kPriestProcess && processType!=kFlyProcess && processType!=kWormProcess && processType!=kBalloonProcess && processType!=kDudeProcess) throw std::logic_error("다른 파생 이동 생성/Init 미복원 경계");
+    if ((processType==kFlyProcess || processType==kWormProcess || processType==kBalloonProcess || processType==kDudeProcess) && !hooks_.createType) throw std::logic_error("파생 이동의 실제 생성자 미연결");
     auto owned=hooks_.createType ? hooks_.createType(processType) : hooks_.create(processType==kPriestProcess);
     if (!owned) throw std::bad_alloc();
     if (&owned->Pool()!=&pool_) throw std::invalid_argument("Path 시작 생성 풀 불일치");
@@ -110,7 +111,7 @@ RawPathProcess* RawPathStart::Start(RawPathStartRequest request) {
 // 지원된 원본 부모의 두 가상 몸체를 실제 같은 공간/Host/Frame로 실행한다.
 void RawPathStart::NotifyStarted(Sid parent,RawPathPoint destination,RawPathProcess& process) {
     const auto type=pool_.Slot(parent)[10];
-    if (type==state_.teleportType || type==state_.manaBoltType) return; // 두 실제 부모의+44/+40은480260/4437f0 빈 몸체다.
+    if (type==state_.teleportType || type==state_.manaBoltType || type==state_.dudeType) return; // 세 실제 부모의+44/+40은480260/4437f0 빈 몸체다.
     if (type!=state_.priestType && process.MovementType()!=40 && process.MovementType()!=42) throw std::logic_error("다른 부모 이동 통지 미복원 경계");
     const int x=static_cast<int>(destination.x),y=static_cast<int>(destination.y);RawSquidFinder finder(pool_,hash_,types_);auto candidate=finder.Begin({x,y,x,y},1);
     // 원본은 첫 일치에서 멈추지 않고 마지막 간헐천을targetA에 기록한다.

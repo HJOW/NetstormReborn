@@ -771,7 +771,15 @@ struct RawCampaignSession::Impl {
         if (!hitEffects.vortex.resetEnd) hitEffects.vortex.resetEnd=[this](Sid form,std::uint32_t amount) { PrepareConstruction();building->ResetEndFromForm(form,amount); };
         if (!hitEffects.vortex.refresh) hitEffects.vortex.refresh=[this](Sid victim) { core.display.Update(core.pool.Slot(victim),0); };
         if (!hitEffects.dudes.createBurning) hitEffects.dudes.createBurning=[this](Sid victim) { static_cast<void>(particles->AddBurning(victim,0)); };
-        FillMissing(hitEffects.dudes.pathEndpoint);FillMissing(hitEffects.dudes.startPath);
+        // Notice는 복사 경로가 아니라 현재 종속24의 실제 마지막 꼭짓점을 읽는다.
+        if (!hitEffects.dudes.pathEndpoint) hitEffects.dudes.pathEndpoint=[this](Sid sid)->std::optional<std::array<float,2>> {
+            if (!motion) throw std::logic_error("Dude 현재 경로 조회 전 이동 연결 누락");const auto* path=motion->Paths().CurrentPath(sid);if (!path) return std::nullopt;
+            const auto& runtime=path->Runtime();const auto point=runtime.Point(runtime.Count()-1);return std::array<float,2>{point.x,point.y};
+        };
+        // Notice.Move가 임시로 바꾼 현재 속도는 뒤의 metadata에서 같은 배열로 읽는다.
+        if (!hitEffects.dudes.startPath) hitEffects.dudes.startPath=[this](Sid sid,float x,float y) {
+            if (!motion) throw std::logic_error("Dude 대피 시작 전 이동 연결 누락");return motion->Paths().StartDude({sid,{x,y}})!=nullptr;
+        };
         hits=std::make_unique<RawCampaignHitBindings>(world,*priests,hp,random,dudeSpeeds,assetState.residences,
             priestDamageState,generalDamageState,burningState,impactState,std::move(hitEffects));
         // 미복원 가상 피해는 실제 공격자/표적 TYPE를 기록해 다음 원본 복원 지점을 식별한다.
@@ -2129,9 +2137,12 @@ struct RawCampaignSession::Impl {
         effects.halt.nuggetTransfer=[this](Sid sid) { return carrierTransfer->Transfer(sid); };
         FillMissing(effects.priest.neutralReturn);
         effects.path.metadata=[this](Sid sid) {
-            const auto& definition=assets.game.Types()[core.pool.Slot(sid)[10]-70].definition;
-            return RawPathStartType{static_cast<float>(definition.Number("speed").value()),static_cast<float>(definition.Number("turningSpeed").value()),definition.specialFrames.defaultFrame};
+            const auto kind=core.pool.Slot(sid)[10];const auto& definition=assets.game.Types()[kind-70].definition;
+            const auto speed=kind==70 ? dudeSpeeds[kind].speed : static_cast<float>(definition.Number("speed").value());
+            return RawPathStartType{speed,static_cast<float>(definition.Number("turningSpeed").value()),definition.specialFrames.defaultFrame};
         };
+        effects.path.dudeHalt=[this](Sid sid) { return dudeBehavior->Halt(sid); };
+        effects.path.dudeArrival=[this](Sid sid) { return dudeBehavior->Arrival(sid); };
         effects.path.soundId=[this](Sid sid) {
             const auto sound=assets.game.Types()[core.pool.Slot(sid)[10]-70].definition.String("stepSound");
             return sound && !sound->empty() ? soundNames.Lookup(*sound) : 0U;
@@ -2615,6 +2626,8 @@ void RawCampaignSession::BindCursorRange(CursorLifecycleHooks& hooks) {
 const RawEnergySupply& RawCampaignSession::EnergySupply() const { return *impl_->energySupply; }
 // 경로와 후속 통합 검사는 같은 현재 부모/공통 삭제 몸체를 빌린다.
 const RawDudeBehavior& RawCampaignSession::DudeBehavior() const { if (!impl_->loaded || !impl_->dudeBehavior) throw std::logic_error("미설치 Session의 Dude 부모 조회");return *impl_->dudeBehavior; }
+// 피격 처리와 같은 인스턴스를 빌려 기존 경로/현재 속도 저장소를 공유한다.
+const RawDudeNotice& RawCampaignSession::Dudes() const { if (!impl_->loaded || !impl_->hits) throw std::logic_error("미설치 Session의 Dude 통지 조회");return impl_->hits->Dudes(); }
 // 호출자가 바꾼 원본 공급 설정을 다음 실제 조회에서 읽는다.
 EnergySupplyState& RawCampaignSession::EnergySettings() { return impl_->energyState; }
 // 커서 조회 뒤 생산/Builder도 실제 같은 선택 목록을 소비하게 한다.
@@ -2634,6 +2647,8 @@ RawPathProcess* RawCampaignSession::StartConstructionMovement(RawPathStartReques
 }
 // 같은 원본489080과 현재40 클래스의 생성/부모 통지를 사용한다.
 RawPathProcess* RawCampaignSession::StartCarrierMovement(RawPathStartRequest request) { if (!impl_->loaded || !impl_->motion) throw std::logic_error("미설치 Session의 Carrier 이동");return impl_->motion->Paths().StartCarrier(request); }
+// 현재70 부모의 로컬24 경로를 기존 BFS/Start/Kernel에 등록한다.
+RawPathProcess* RawCampaignSession::StartDudeMovement(RawPathStartRequest request) { if (!impl_->loaded || !impl_->motion) throw std::logic_error("미설치 Session의 Dude 이동");return impl_->motion->Paths().StartDude(request); }
 // 원본 네트워크/내부 명령 소비자는 같은 실제 처리기를 사용한다.
 const RawCarrierTransfer& RawCampaignSession::CarrierTransfer() const { if (!impl_->loaded || !impl_->carrierTransfer) throw std::logic_error("미설치 Session의 캐리어 전달");return *impl_->carrierTransfer; }
 // 외부 명령과 같은 운반 도착 몸체가 실제 하나의 대상 이동 처리기를 사용한다.

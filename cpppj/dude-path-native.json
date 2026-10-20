@@ -1,0 +1,31 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-21",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-20"
+  },
+  "uniqueInputs": 30,
+  "normalReturns": 60,
+  "instructions": 61614,
+  "nativeCalls": {
+    "0048bf30": 12,
+    "0048b2c0": 6,
+    "0048bab0": 48
+  },
+  "controls": [
+    639,
+    895
+  ],
+  "boundaries": "48bf30/48b2c0 생성자 전체와48bab0 부착 전체. new/41bd20 Host 부착/복귀 진단은 명시 경계. 생성자100080바이트 전체와 부착 전체 인자·진단 순서. GP/retN/canary/x87/코드·읽기·쓰기 검사. OS/게임/창 실행 없음. 공유 Init/Run/Arrive의 재관측을 주장하지 않는다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "tools/decomp_dude_path.py": "0ec52a476b4a33bec8587b3f36399e66ffe21e5b32d1ddce00ab3538e28876cf",
+    "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+    "tools/decomp_carrier_falling.py": "f8702db0708a543b73213c8df9154503afe977767a11bd7c150b639ee1b587a6",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "cpppj/tests/fixtures/dude-path-x86.tsv": "bccc1dcad1336974b6b708154e1c081961f19f995bdf48f37aa2580b03e6d08f",
+    "cpppj/tests/fixtures/dude-path-vtables.tsv": "3ec0c9987fa7457c5606d1e4d557e171bb4a14941f3fb03e11212525a743b248"
+  }
+}

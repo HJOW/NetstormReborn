@@ -2704,6 +2704,41 @@ TEST_CASE(CampaignDude_ActualArrivalUsesPopulationLifetime) {
     CHECK(!core.bookkeeping.depth && !core.destroy.PreDepth() && !core.destroy.PostDepth());
 }
 
+// 명시 Dude에서 실제 BFS/현재24 조회/임시2배 속도/부모 도착 수명을 확인한다. 전체 Kernel 검사는 아니다.
+TEST_CASE(CampaignDude_ActualPathNoticeSpeedAndArrival) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",external.Services());session.Load();auto core=session.Core();RawPathPoint source{};bool found{};
+    // 원래 지도에서 점유되지 않은 연속 표면5칸만 고르며 spot/hash를 검사에서 만들지 않는다.
+    for (int y=32;y<220 && !found;++y) {
+        // 같은 줄의 실제 표면과 점유를 원본 지도에서 읽는다.
+        for (int x=32;x<215 && !found;++x) {
+            bool clear=true;
+            // 시작·목적지 사이 모든 셀이 같은 surface 위의 통행 가능한 칸이어야 한다.
+            for (int dx=0;dx<5;++dx) if (!(core.spots[y*256+x+dx]&6U) || (core.spots[y*256+x+dx]&8U) || !core.hash.Cell(0,x+dx,y)) clear=false;
+            if (clear) { source={static_cast<float>(x),static_cast<float>(y)};found=true; }
+        }
+    }
+    CHECK(found);if (!found) return;const auto dude=session.World().Create(70);core.owner.Set(dude,1);session.World().Pop(dude,source.x,source.y,0);const std::array<float,2> target{source.x+3,source.y};const auto packets=external.packets.size();
+    CHECK(session.Dudes().Move(dude,target,false));const auto form=FindAttachedProcess(core.pool,dude,24);auto* slow=dynamic_cast<RawPathProcess*>(core.processes.FromForm(form));CHECK(slow && form.value<core.pool.Layout().serverFirst);if (!slow) return;
+    CHECK(slow->MovementType()==24 && Get(slow->Runtime().Bytes(),0)==0x50e3d8U && Get(core.pool.Slot(dude),12,2)==0x5101U);const auto before=std::vector<std::uint8_t>(slow->Runtime().Bytes().begin(),slow->Runtime().Bytes().end());
+    CHECK(session.Dudes().Move(dude,target,true) && core.processes.FromForm(form)==slow && std::equal(before.begin(),before.end(),slow->Runtime().Bytes().begin())); // 같은 끝점은 기존 경로/시간표를 그대로 유지한다.
+    std::vector<double> times;std::vector<RawPathPoint> points;std::vector<std::int32_t> directions;
+    // 실제 BFS가 고른 시간표만 보존하여 새로 만든 기대 경로로 대체하지 않는다.
+    for (std::int32_t index=0;index<slow->Runtime().Count();++index) { times.push_back(slow->Runtime().Time(index));points.push_back(slow->Runtime().Point(index));directions.push_back(slow->Runtime().Direction(index)); }
+    core.processes.Kill(*slow,0);CHECK(session.Dudes().Move(dude,target,true));const auto fastForm=FindAttachedProcess(core.pool,dude,24);auto* fast=dynamic_cast<RawPathProcess*>(core.processes.FromForm(fastForm));CHECK(fast);if (!fast) return;CHECK(fast->Runtime().Count()==static_cast<std::int32_t>(times.size()));std::size_t movingSegments{};
+    // 같은 위치·방향의 직선 구간은 임시 현재 속도2배에 의해 걸리는 시간이 정확히 절반이어야 한다.
+    for (std::int32_t index=1;index<fast->Runtime().Count() && index<static_cast<std::int32_t>(times.size());++index) {
+        const auto point=fast->Runtime().Point(index);CHECK(point.x==points[index].x && point.y==points[index].y && fast->Runtime().Direction(index)==directions[index]);
+        if ((point.x!=points[index-1].x || point.y!=points[index-1].y) && directions[index]==directions[index-1]) { CHECK_NEAR(fast->Runtime().Time(index)-fast->Runtime().Time(index-1),(times[index]-times[index-1])*0.5,1e-10);++movingSegments; }
+    }
+    CHECK(movingSegments && external.packets.size()==packets);CHECK(!core.processes.FromForm(form) || fastForm==form);CHECK(Throws([&] { static_cast<void>(session.StartDudeMovement({Sid{static_cast<std::uint16_t>(session.FindPriestParticipation(1))},source})); }));
+    Put(core.pool.AllocatedBytes(dude),12,0x5107,2);CHECK(core.processes.AddRegular(dude,0x5107,5.0F,0x50)); // 최초Pop은Regular를 만들지 않는다. 최종 삭제 task/Regular만 명시 입력이며 본문은 후속 단위다.
+    const auto began=core.processState.now;std::size_t steps{};
+    // 전체 Kernel 대신 현재 Path만 진행하며 Arrive가 부모와 자신을 지운 뒤 포인터를 다시 읽지 않는다.
+    while (core.processes.FromForm(fastForm) && steps<2000) { core.processState.now=began+static_cast<double>(++steps)*0.025;auto* current=core.processes.FromForm(fastForm);current->RunFrame(); }
+    CHECK(steps>0 && steps<2000 && !core.processes.FromForm(fastForm) && (core.pool.Slot(dude)[11]&3U)==3U);CHECK(!core.bookkeeping.depth && !core.destroy.PreDepth() && !core.destroy.PostDepth());
+}
+
 // 실제 Factory/전체Pop의 제단 생성·Player 등록과 부착 통지/제단 저항을 확인한다. 자연 포획 입력은 아니다.
 TEST_CASE(CampaignDais_ActualFactoryPopAndCapturedNotice) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();InputQueue commands;netstorm::zacket::LocalMissionTransport* wire{};std::vector<std::string> music;services.carrierRequest=[&](std::int32_t owner,std::span<const std::uint8_t> packet) { CHECK(wire);if (wire) wire->Send(owner,packet); };services.requestMusic=[&](std::string_view name) { music.emplace_back(name); };services.assets.queueCommand=[&](std::uint32_t command,std::int32_t x,std::int32_t y) { commands.PushCommand(command,x,y); }; // 실제 입력 큐와 자산을 쓴다.

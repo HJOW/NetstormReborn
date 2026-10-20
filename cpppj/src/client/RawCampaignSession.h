@@ -310,6 +310,7 @@ public:
     // 현재 공급원/비대칭 동맹/TYPE mana/마지막 선택 목록으로 계산하는 실제 몸체다.
     const o::RawEnergySupply& EnergySupply() const;
     const o::RawDudeBehavior& DudeBehavior() const; // 현재 동일 지도/목록/task를 쓰는 실제 Dude 부모 몸체다.
+    const o::RawDudeNotice& Dudes() const; //피격과 같은 현재24 조회·대피 경로·가변 속도를 쓰는 실제 통지 몸체다.
     // 사정거리 표시/자동 입력이 실제 GunProcess와 같은 현재 원본 표적 판정을 읽는다. 목표나 게임 상태를 바꾸지 않는다.
     const o::RawGunTarget& GunTargeting() const;
     o::EnergySupplyState& EnergySettings(); // 실제 공급 제곱 반경·userCheat/ignore/동맹 전역이다.
@@ -321,6 +322,7 @@ public:
     std::unique_ptr<o::RawConstructionBuilder> MakeConstructionBuilder(o::ConstructionBuilderState& state,o::ConstructionBuilderHooks hooks);
     o::RawPathProcess* StartConstructionMovement(o::RawPathStartRequest request); // 같은 월드의 실제134/105를 각각23/39 경로로 움직인다.
     o::RawPathProcess* StartCarrierMovement(o::RawPathStartRequest request); // 같은 실제 썬 워커133의40 경로를 시작한다.다른Halt는 별도 경계다.
+    o::RawPathProcess* StartDudeMovement(o::RawPathStartRequest request); //같은 실제 Dude70의24 경로와 현재 속도·부모 효과를 연결한다.
     void RequestCarrierPickup(o::Sid parent); //같은실제후보/헤더/서버9 전송을요청하며설치후에만허용한다.
     const o::RawGemReward& GemReward() const; //같은실제오벨리스크보상추첨과변환몸체를빌린다.
     const o::RawCarrierPickup& CarrierPickup() const; //실제4f 요청/수신/기존내용물삭제몸체를빌린다.

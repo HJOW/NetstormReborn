@@ -1366,3 +1366,11 @@ cpppj/src/o/RawDudeBehavior.cpp text eol=lf
 cpppj/tests/DudeBehaviorTests.cpp text eol=lf
 tools/decomp_dude_behavior.py text eol=lf
 tools/cpp_dude_behavior_audit.py text eol=lf
+# Dude24 경로의 독립 원문과 현재 연결 해시를 보존한다.
+cpppj/dude-path-native.json text eol=lf
+cpppj/dude-path-session.json text eol=lf
+cpppj/tests/DudePathTests.cpp text eol=lf
+cpppj/tests/fixtures/dude-path-x86.tsv text eol=lf
+cpppj/tests/fixtures/dude-path-vtables.tsv text eol=lf
+tools/decomp_dude_path.py text eol=lf
+tools/cpp_dude_path_audit.py text eol=lf

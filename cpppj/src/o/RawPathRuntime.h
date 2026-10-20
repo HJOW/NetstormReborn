@@ -34,7 +34,7 @@ struct RawPathObservation { /* flags: 동작을 선택하는 플래그 비트. *
 class RawPathRuntime {
 public:
     // 실제 생성자처럼 시간 배열과 지정 필드만 초기화한다. heapFill은 독립 생성자 대조의 미초기화 입력이다.
-    explicit RawPathRuntime(OriginalEdition edition,bool priest=false,std::uint8_t heapFill=0,bool flying=false,bool worm=false,bool balloon=false); // PATCH 파생 종류는 같은48b2c0 뒤 각각의 정확한 표를 지정한다.
+    explicit RawPathRuntime(OriginalEdition edition,bool priest=false,std::uint8_t heapFill=0,bool flying=false,bool worm=false,bool balloon=false,bool dude=false); // PATCH 파생 종류는 같은48b2c0 뒤 각각의 정확한 표를 지정한다. dude는24/50e3d8이다.
     // PATCH48af00/488d00: 표면/BFS를 조회하지 않고 현재 부모와 목적지를 실제 방향/시각0으로 append한다.
     void InitializeFlight(RawPathPoint parent,RawPathPoint destination,std::int32_t cruiseHeight=0,std::uint8_t currentHeight=0); //42는44 고도로 이륙/수평/착륙 꼭짓점을 추가한다.
     double PhysicalTime(std::int32_t index) const; //48ad60은 Step 완료 뒤 count 슬롯과 최초 단계의-1 인접8BYTE도 읽는다. 물리 범위 안의 원문을 보존한다.

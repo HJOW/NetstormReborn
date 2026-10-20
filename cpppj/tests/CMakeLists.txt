@@ -1650,3 +1650,8 @@ set_source_files_properties(DaisDrawTests.cpp PROPERTIES COMPILE_DEFINITIONS
 target_sources(netstorm_tests PRIVATE DudeBehaviorTests.cpp)
 set_source_files_properties(DudeBehaviorTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_DUDE_BEHAVIOR_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/dude-behavior-x86.tsv\"")
+
+# Dude24 생성자의 독립 원문과 실제 공유 가상 슬롯을 읽는다.
+target_sources(netstorm_tests PRIVATE DudePathTests.cpp)
+set_source_files_properties(DudePathTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_DUDE_PATH_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/dude-path-x86.tsv\";NETSTORM_DUDE_PATH_VTABLES=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/dude-path-vtables.tsv\"")

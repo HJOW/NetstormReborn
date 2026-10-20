@@ -41,7 +41,7 @@
     "cpppj/src/o/RawPathData.cpp": "38a2665489e998835caa07cbedb81516fae6f5e33270529a6d40f5d76d3a6a45",
     "cpppj/tests/RawPathDataTests.cpp": "531f1d4b1066cbdd6eea1ea8165a8fa1ca6db9cb11a0547411e51061d7a7d4f3",
     "tools/decomp_pathprepare_oracle.py": "3251981fd3cffa9ee7d92bf41b2a29b12cb93b5402df8fac70b855f66aca341d",
-    "cpppj/src/o/RawPathProcess.cpp": "4e514df8c58cda778f66adaf485443ccd8aeedc7a2469a0ba9b37f91ea9b6940"
+    "cpppj/src/o/RawPathProcess.cpp": "9f91446bc0e9414f261da6c0c271e80d2e15130566054d68533c73883196a3a3"
   },
   "exports": {
     "extracted/pathdata/originals/creation.c": "8b4da9e4aaf23275733ccd62f3fca3cba304df32355a54709a6dc2be90404978",
@@ -441,6 +441,20 @@
           "path": "cpppj/src/o/RawPathProcess.cpp",
           "previous": "75557b1b9c481c089b466b9e4dd9c27aadae28905e43379b5c7ac7cc8bcd7683",
           "current": "4e514df8c58cda778f66adaf485443ccd8aeedc7a2469a0ba9b37f91ea9b6940"
+        }
+      ]
+    },
+    {
+      "unit": "244",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "Dude24의 실제 공유 BFS/보행/부모 정지·도착과 현재 가변 속도를 연결한다. 현재 소스 핀만 갱신하고 과거 실행 결과·원본·기대값은 보존한다. 제품 실행 검증은 통합 시점으로 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/o/RawPathProcess.cpp",
+          "group": "/sources",
+          "previous": "4e514df8c58cda778f66adaf485443ccd8aeedc7a2469a0ba9b37f91ea9b6940",
+          "current": "9f91446bc0e9414f261da6c0c271e80d2e15130566054d68533c73883196a3a3"
         }
       ]
     }

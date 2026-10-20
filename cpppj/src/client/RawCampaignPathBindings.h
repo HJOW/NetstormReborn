@@ -22,6 +22,8 @@ struct RawCampaignPathEffects {
     std::function<std::uint32_t(o::Sid,std::uint32_t,std::uint32_t)> constructionArrival; // 검증한134/105의 실제 부모 도착 분배다. 필요한 시작에서만 요구한다.
     std::function<std::uint32_t(o::Sid,std::uint32_t,std::uint32_t)> carrierArrival; // 썬 워커/empty의 실제429800을 같은 Carrier 모듈로 호출한다.
     std::function<void(float,float)> balloonFlame; //현재 위치의 실제 balloonFlame.wav/loop0 장치다.
+    std::function<std::uint32_t(o::Sid)> dudeHalt; //70/508cc8 부모+38의 현재 지면·Fall 판정이다.
+    std::function<std::uint32_t(o::Sid)> dudeArrival; //같은 부모+3c의 task별 실제 삭제·반환이다. 자신과 Path를 지울 수 있다.
 };
 // 경로 계산과 프레임 실행을 새 이동 모형으로 대체하지 않는 같은 월드 연결부다.
 // 참조하는 월드/사제/도착/cleanup/상태/effects는 이 객체 및 부착한 Path보다 오래 살아야 한다.
@@ -39,6 +41,7 @@ public:
     // 실제158/사제VT 명령만 기존 Start→Init→BFS→Prepare→Host54→부모 통지로 실행한다.
     // 원본 실패 후 재귀가 성공해도 바깥 반환은nullptr일 수 있으므로 현재 경로는 다시 조회한다.
     o::RawPathProcess* StartPriest(o::RawPathStartRequest request);
+    o::RawPathProcess* StartDude(o::RawPathStartRequest request); //실제70/508cc8→24/50e3d8의 BFS·현재 속도·flags10 부착을 실행한다.
     // 원본134/VT5070c0의23과105/VT509810의39만 실제 분배로 시작한다.
     o::RawPathProcess* StartConstruction(o::RawPathStartRequest request);
     o::RawPathProcess* StartCarrier(o::RawPathStartRequest request); // 검증한133의 실제40 생성/시작/가상 통지를 실행한다.187의42ac60은 별도 경계다.
@@ -60,6 +63,7 @@ public:
 private:
     // 실제 현재 parent의 raw 타입/가상 표와 살아 있는 자산 상태를 검사한다.
     void ValidatePriest(o::Sid parent) const;
+    void ValidateDude(o::Sid parent) const; //현재70/VT508cc8·살아 있는 슬롯·실제 이동24를 확인한다.
     // Process hook은 공간/부모/cleanup 실제 모듈을 호출하고 탐색만 기존 BFS에 연결한다.
     std::unique_ptr<o::RawPathProcess> Create(bool priest);
     std::unique_ptr<o::RawPathProcess> CreateType(std::uint32_t type); // 실제23/39/54 생성자를 구분한다.

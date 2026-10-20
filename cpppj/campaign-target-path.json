@@ -24,8 +24,8 @@
     "cpppj/src/o/RawMetadisplayDirty.cpp": "078f2fd93f92fbaf8ca11d08ff7b4677db29b812cbeefa4d60e5473ec968f897",
     "cpppj/src/o/RawPathData.h": "21faf1f4095819996b79996b5036c731a06aac44edb3e5b358d1f3ebb1047430",
     "cpppj/src/o/RawPathData.cpp": "38a2665489e998835caa07cbedb81516fae6f5e33270529a6d40f5d76d3a6a45",
-    "cpppj/src/o/RawPathProcess.h": "2aebb2b4d2bbc3aaf2b582660264fd0af088a363b32161b6157d05f05dcce924",
-    "cpppj/src/o/RawPathProcess.cpp": "4e514df8c58cda778f66adaf485443ccd8aeedc7a2469a0ba9b37f91ea9b6940",
+    "cpppj/src/o/RawPathProcess.h": "0acd62c0f0f4e1c77951f9340251a963599a430ba2d822cee6e64a15dea71270",
+    "cpppj/src/o/RawPathProcess.cpp": "9f91446bc0e9414f261da6c0c271e80d2e15130566054d68533c73883196a3a3",
     "cpppj/src/o/RawFactoryPostPop.h": "1a58f8d6ba6140a812a419ab86e14793911c5a542d6ae94ed430f6f3fbbbdeb7",
     "cpppj/src/o/RawFactoryPostPop.cpp": "a1eda413fc18691e1acbccebfeec0b80b0caa7d816b0d0f23da50006f3cff262",
     "cpppj/src/o/RawAssetPostPop.h": "5fa157f1f186e6816d8e5515bad7a70e4a661c16b21b3f363ac71174127798d1",
@@ -329,6 +329,26 @@
           "path": "cpppj/src/o/SidPool.h",
           "previous": "21d77e1995b8697dba3f4e6cc9ae16501c573f417fd7019cf4a459b0e6fe521a",
           "current": "a830f7fca8c42e5a2713a7d5d886314c81dc3bffb8271de85c1b0d1fc46de651"
+        }
+      ]
+    },
+    {
+      "unit": "244",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "Dude24의 실제 공유 BFS/보행/부모 정지·도착과 현재 가변 속도를 연결한다. 현재 소스 핀만 갱신하고 과거 실행 결과·원본·기대값은 보존한다. 제품 실행 검증은 통합 시점으로 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/o/RawPathProcess.cpp",
+          "group": "/sha256",
+          "previous": "4e514df8c58cda778f66adaf485443ccd8aeedc7a2469a0ba9b37f91ea9b6940",
+          "current": "9f91446bc0e9414f261da6c0c271e80d2e15130566054d68533c73883196a3a3"
+        },
+        {
+          "path": "cpppj/src/o/RawPathProcess.h",
+          "group": "/sha256",
+          "previous": "2aebb2b4d2bbc3aaf2b582660264fd0af088a363b32161b6157d05f05dcce924",
+          "current": "0acd62c0f0f4e1c77951f9340251a963599a430ba2d822cee6e64a15dea71270"
         }
       ]
     }
