@@ -5,6 +5,11 @@
 #include "client/FloatingSpGump.h"
 #include "client/RawKnowledgeMenu.h"
 #include "client/RawCampaignSession.h"
+#include "client/QuickHelpWindow.h"
+#include "client/QuickHelpRequest.h"
+#include "client/GumpHelp.h"
+#include "client/ImageGump.h"
+#include "o/OriginalText.h"
 #include <algorithm>
 #include <bit>
 #include <sstream>
@@ -45,6 +50,17 @@ struct RawMenuControls::Impl {
     std::uint32_t popup{}; // 마지막 루트 메뉴 토큰이며 원본 등록표의 생존 여부로 검사한다.
     std::vector<std::uint32_t> knowledge; // 같은 공통 트리에 실제 부착된 지식 카드 토큰이며 수명/열림은 노드에서 읽는다.
     QuickHelpPopupState popupState; // 005ca938/940의 마지막 팝업을 Help Back과 같은 저장소로 공유한다.
+    RawHelpHooks helpHooks; // 실제 Client/현재 Session 경계이며 노드 수명과 별개다.
+    QuickHelpWindowState helpState;HtmlBodyGumpState bodyState;QuickHelpHistory helpHistory; // 같은 캐시/전역/전역 이력이다.
+    std::map<std::uint32_t,std::unique_ptr<QuickHelpContentNode>> helpWindows; // 실제0xd0 창이다.
+    std::map<std::uint32_t,std::unique_ptr<HtmlBodyGumpNode>> helpBodies; // 실제 두8192바이트 부모다.
+    std::map<std::uint32_t,std::unique_ptr<StoneButtonGumpNode>> helpButtons; // 공통 ButtonGump가 입력/배경을 처리한다.
+    std::map<std::uint32_t,std::unique_ptr<ImageGumpNode>> helpImages; // 실제 ImageGump 자식이다.
+    std::map<std::uint32_t,HtmlLinkTextState> helpLinks; // 각 HTML 부모와 같은 수명의 링크 영역이다.
+    std::uint32_t nextLinkBase{0x62000000U},imageOwner{}; // 실제 주소 대신 별도 영역 토큰/Help의 비소유 그림 모드다.
+    std::vector<std::uint32_t> imageOwners;ScreenPoint imageShadow{5,5}; // 모드8/배율1의 비소유자 표와 안정된 그림자 전역이다.
+    std::unique_ptr<QuickHelpWindow> helpWindow;std::unique_ptr<HtmlBodyGump> helpBody;std::unique_ptr<ImageGump> helpImage; // 기존 전체 몸체다.
+    ImageGumpHooks activeImage; // Draw 동안 같은 실제 표면에 연결한다.
     mutable std::array<std::uint32_t,4> lastInput{}; // 실제 파생 가상 입력의 마지막 토큰/사건/좌표를 진단 보고에만 보관한다.
     std::map<std::uint32_t,std::unique_ptr<MenuGumpNode>> menus; // 같은 기본 배경을 가진 실제 메뉴 노드다.
     std::map<std::uint32_t,std::unique_ptr<GumpDecorationNode>> decorations; // 실제 모서리 장식 노드다.
@@ -166,6 +182,7 @@ struct RawMenuControls::Impl {
     }
     // 모든 공통 처리는 같은 실제 파생 기본 주소를 받는다.
     GumpCreateNode* Node(std::uint32_t token) const {
+        if (auto* n=Find(helpWindows,token)) return n;if (auto* n=Find(helpBodies,token)) return n;if (auto* n=Find(helpButtons,token)) return n;if (auto* n=Find(helpImages,token)) return n;
         if (auto* n=Find(menus,token)) return n;if (auto* n=Find(decorations,token)) return n;if (auto* n=Find(titles,token)) return n;if (auto* n=Find(sliders,token)) return n;
         if (auto* n=Find(arrows,token)) return n;if (auto* n=Find(thumbs,token)) return n;if (auto* n=Find(costs,token)) return n;return Find(backgrounds,token);
     }
@@ -181,7 +198,8 @@ struct RawMenuControls::Impl {
     }
     // 각 실제 가상 Attach를 현재 분류로 호출한다.
     void Attach(std::uint32_t token,float x,float y,std::uint32_t parent,std::uint32_t mode) const {
-        if (menus.contains(token)) widgets->Attach(token,x,y,parent,mode);else if (titles.contains(token)) titleWidgets->Attach(token,x,y,parent,mode);
+        if (helpWindows.contains(token)) helpWindow->Attach(token,x,y,parent,mode);else if (helpBodies.contains(token)) helpBody->Attach(token,x,y,parent,mode);else if (helpButtons.contains(token)) common.stones.Attach(token,x,y,parent,mode);
+        else if (helpImages.contains(token)) helpImage->Attach(token,x,y,parent,mode);else if (menus.contains(token)) widgets->Attach(token,x,y,parent,mode);else if (titles.contains(token)) titleWidgets->Attach(token,x,y,parent,mode);
         else if (sliders.contains(token)) slider->Attach(token,x,y,parent,mode);else if (arrows.contains(token)) common.stones.Attach(token,x,y,parent,mode);else common.tree.Attach(token,x,y,parent,mode);
     }
     // 기존 표시 통지와 원본의 실제 메뉴 재그리기 요청을 유지한다.
@@ -189,12 +207,102 @@ struct RawMenuControls::Impl {
     // 부모가 전달한 원본 사건을 대상 자신에게 분배한다.
     std::uint32_t Handle(std::uint32_t token,std::uint32_t event,std::uint32_t first,std::uint32_t second) const {
         lastInput={token,event,first,second};
+        if (helpWindows.contains(token)) return HelpEvent(token,{event,std::bit_cast<std::int32_t>(first),std::bit_cast<std::int32_t>(second)});
         if (menus.contains(token)) return input->Handle(token,event,first,second);if (titles.contains(token)) return titleWidgets->Handle(token,event,first,second);
-        if (sliders.contains(token)) return slider->Handle(token,event,first,second);if (thumbs.contains(token)) return slider->ThumbHandle(token,event,first,second);return 0;
+        if (sliders.contains(token)) return slider->Handle(token,event,first,second);if (thumbs.contains(token)) return slider->ThumbHandle(token,event,first,second);return BaseHelp(token,event,first,second);
     }
     // 공통 Frame의 현재 마우스 좌표와 실제 파생 통지를 사용한다.
     void Broadcast(std::uint32_t token,std::uint32_t event,std::uint32_t first,std::uint32_t second) const {
         if (menus.contains(token)) input->Broadcast(token,event,first,second);else if (titles.contains(token)) titleWidgets->Broadcast(token,event,first,second);else if (thumbs.contains(token)) slider->ThumbBroadcast(token,event,first,second);
+    }
+    // 전용 창의 serial은 등록 인덱스와 다르다. 죽은 노드는 원본464020처럼 제외한다.
+    std::uint32_t Reference(std::uint32_t serial) const {
+        if (!serial) return 0;
+        // 루트 칸0을 제외한 현재 전체 등록표를 조회한다.
+        for (std::size_t index=1;index<common.create.entries.size();++index) if (const auto token=common.create.entries[index]) { const auto* node=common.node(token);if (node && node->serial==serial && !(node->flags&0x10000)) return token; }return 0;
+    }
+    // 빈 요청/정적 themeHelp/현재 HTML 링크/입력 문자열 고리의 실제 수명을 구별한다.
+    std::string HelpText(std::uint32_t token) const {
+        if (!token) return {};if (token==0x61000001U) return "themeHelp";if (token==0x61000002U) return helpHooks.translate("Help");if (token==0x61000003U) return "F1Help";
+        // 링크 토큰은 소유 HTML 부모가 아직 살아 있는 경우에만 해석한다.
+        for (const auto& [body,links]:helpLinks) if (!(common.node(body)->flags&0x10000) && token>=links.base && token-links.base<links.bytes.size()) return std::string(ResolveHtmlLink(links,token));
+        return helpHooks.text(token);
+    }
+    // 실제 기본 GumpHelp의 우클릭 경로도 같은 controlled 메뉴/문자열/사운드를 사용한다.
+    std::uint32_t BaseHelp(std::uint32_t token,std::uint32_t event,std::uint32_t first,std::uint32_t second) const {
+        if (!helpWindow) return 0;GumpHelpState state{0x61000002U,0x02000017U,{}};GumpHelpHooks h;h.node=common.node;h.text=[this](auto value) { return HelpText(value); };
+        h.beginMenu=[this](auto flags) { widgets->BeginVertical(flags); };h.title=[this](auto value) { controls->AddTitle(HelpText(value)); };
+        h.entry=[this](auto body,auto command,const auto& topic,auto,auto,auto) { controls->AddText(HelpText(body),command,helpHooks.storeText(topic),true,true,false); };
+        h.attachMenu=[this](auto x,auto y,auto parent) { menu->AttachCurrent(x,y,parent); };h.sound=hooks.sound;
+        return GumpHelp(common.create,state,std::move(h)).Handle(token,event,first,second);
+    }
+    // 생성 크기를 실제 종류로 할당한다. 돌 버튼의 배경은 공통 생성기가 별도로 소유한다.
+    std::uint32_t AllocateHelp(std::size_t bytes) {
+        const auto token=common.token();if (bytes==0xd0) helpWindows.emplace(token,std::make_unique<QuickHelpContentNode>());
+        else if (bytes==0x40a4) { helpBodies.emplace(token,std::make_unique<HtmlBodyGumpNode>());auto& links=helpLinks[token];links.base=nextLinkBase;links.capacity=kHtmlBodyCapacity;if (nextLinkBase>0x6fffc000U) throw std::overflow_error("Help 링크 토큰 소진");nextLinkBase+=static_cast<std::uint32_t>(kHtmlBodyCapacity); }
+        else if (bytes==0x170) helpButtons.emplace(token,std::make_unique<StoneButtonGumpNode>());else if (bytes==0xb4) helpImages.emplace(token,std::make_unique<ImageGumpNode>());
+        else if (bytes==0xb8) backgrounds.emplace(token,std::make_unique<GumpBackgroundNode>());else if (bytes==0xc4) decorations.emplace(token,std::make_unique<GumpDecorationNode>());
+        else if (bytes==0xd8) titles.emplace(token,std::make_unique<ScrollingTextGumpNode>());else throw std::logic_error("전용 Help 파생 크기 오류");return token;
+    }
+    // TYPE 정보와 본문이 같은 기본 HTML/링크·현재 정보 pane을 직접 사용한다.
+    void RenderHelp(std::uint32_t body,std::uint32_t type,std::string_view topic,std::uint32_t pane,std::uint32_t stream) {
+        if (stream) throw std::logic_error("Help 파일 기록 스트림 미연결");auto& node=*Find(helpBodies,body);auto& links=helpLinks.at(body);links.cursor=0;if (!links.bytes.empty()) links.bytes[0]=0;
+        HtmlTextParserState state;auto base=helpHooks.html;BindHtmlLinkText(base,links);QuickHelpTypeInfo current;
+        QuickHelpHtmlHooks h;h.type=[&]() -> const QuickHelpTypeInfo& { current=helpHooks.type(type);return current; };h.description=[&] { return helpHooks.description(type); };h.hitPoints=[&] { return helpHooks.hitPoints(type); };
+        h.translate=helpHooks.translate;h.config=helpHooks.config;h.substitute=helpHooks.substitute;
+        h.print=[](std::string_view pattern,std::span<const PriestMenuArgument> arguments) { // 원본 정보 서식의 %s/%d만 순서대로 쓴다.
+            std::string result;std::size_t argument{};
+            // 다른 서식은 이 경계의 실제 계약 위반이다.
+            for (std::size_t index=0;index<pattern.size();++index) { if (pattern[index]!='%') { result+=pattern[index];continue; }if (++index==pattern.size()) throw std::logic_error("Help 서식 끝 오류");if (pattern[index]=='%') { result+='%';continue; }if (argument>=arguments.size()) throw std::logic_error("Help 서식 인자 부족");const auto& value=arguments[argument++];if (pattern[index]=='s') result+=std::get<std::string>(value);else if (pattern[index]=='d') result+=std::to_string(std::get<std::int32_t>(value));else throw std::logic_error("Help 미지원 서식"); }if (argument!=arguments.size()) throw std::logic_error("Help 서식 남은 인자");return result;
+        };
+        h.pane=[this,pane] { return common.node(pane); };h.paneText=[this,pane](auto text) { titleMarkup->Parse(pane,text); };h.paneScroll=[this,pane](auto y) { title->RequestScroll(pane,y); };
+        h.panePush=[this,pane] { common.tree.Push(pane); };h.paneAttach=[this,pane] { const auto& n=*common.node(pane);common.attach(pane,n.x,n.y,0,0); };
+        ManaPictureState mana;mana.type=static_cast<std::uint32_t>(assets.Find("mana").block+o::kFirstAssetTypeNumber);
+        QuickHelpHtml parser(state,*helpHooks.globals,helpState.infoMode,type,topic,false,mana,std::move(h),std::move(base),&links);
+        helpBody->Parse(body,{[] { return false; },[](auto,auto) {},[&] { const auto result=parser.Parse(helpState.helpData.value_or(std::string{}));std::copy(result.begin(),result.end(),node.body.begin());node.body[result.size()]=0; }});
+        if (links.bytes.size()>node.links.size()) throw std::length_error("Help 링크8192바이트 초과");std::copy(links.bytes.begin(),links.bytes.end(),node.links.begin());
+    }
+    // 실제 전용 요청/이력/배치에 현재 입력을 전달한다. 화면 밖 클릭도 같은 원본 처리기가 판단한다.
+    std::uint32_t HelpEvent(std::uint32_t token,InputEvent event) const {
+        auto& window=*Find(helpWindows,token);QuickHelpEventHooks h;h.local=[this,token](auto e) { return common.collection.ScreenToLocal(token,{e.x,e.y}); };h.node=common.node;h.typeName=helpHooks.typeName;h.translate=helpHooks.translate;h.text=[this](auto value) { return HelpText(value); };
+        h.request=[this,token,&window](auto type,auto topic) {
+            QuickHelpRequestHooks request;request.lookup=helpHooks.lookup;request.print=[](auto pattern,auto value) { auto result=std::string(pattern);result.replace(result.find("%s"),2,value);return result; };
+            request.history=[this](auto value) { const_cast<Impl*>(this)->helpHistory.Push(value); };request.show=[this,token](auto number,auto value) { helpWindow->Show(token,number,value); };request.push=[this,token] { common.tree.Push(token); };request.attach=[this,token](auto x,auto y,auto parent,auto mode) { common.attach(token,x,y,parent,mode); };QuickHelpRequest(window,std::move(request)).Open(type,topic);
+        };
+        const auto text=[this,&window] { return Find(helpBodies,window.body)->text; }; // 매 효과에서 현재 표시 자식을 읽는다.
+        h.pageHeight=[this,text] { return common.node(text())->baseHeight; };h.scroll=[this,text](auto delta) { title->RequestRelativeScroll(text(),delta); };
+        h.link=[this](auto value) { const_cast<Impl*>(this)->HelpLink(value); };h.kill=[this,token] { common.lifetime.Kill(token);common.changed(); };h.learn=helpHooks.learn;h.queue=helpHooks.queue;
+        h.base=[this,token](auto e) { return BaseHelp(token,e.code,std::bit_cast<std::uint32_t>(e.x),std::bit_cast<std::uint32_t>(e.y)); };
+        return DispatchQuickHelpWindow(window,event,const_cast<Impl*>(this)->helpHistory,const_cast<Impl*>(this)->popupState,h);
+    }
+    // 원본4a00c0의 내부 주제/cmd 분기다. 외부 OS 프로토콜은 현재 Client 경계로 명시 전달한다.
+    void HelpLink(std::string_view value) {
+        value=value.substr(0,value.find('\0'));const auto colon=value.find(':');const auto prefix=colon==std::string_view::npos ? std::string_view{} : value.substr(0,colon+1);const auto rest=colon==std::string_view::npos ? value : value.substr(colon+1);
+        if (prefix.size()>=80 || rest.size()>=256) throw std::length_error("Help 원본 링크 버퍼 초과");
+        if (o::AsciiLower(prefix)=="cmd:") helpHooks.script(rest);else if (prefix.empty() || (!rest.empty() && rest.front()=='#')) OpenHelp(helpHooks.storeText(rest),1,0);else helpHooks.external(value);
+    }
+    // 466600의 실제 dialog 등록/이전 창 깊이와 같은 목록을 사용한다.
+    std::uint32_t OpenHelp(std::uint32_t topic,std::int32_t mode,std::uint32_t learnType) {
+        if (!helpWindow) throw std::logic_error("전용 Help Client 경계 미설치");bodyState.screenWidth=common.create.screenWidth;bodyState.screenHeight=common.create.screenHeight;helpState.battle=helpHooks.battle();helpState.challenge=helpHooks.challenge();helpState.scriptName=helpHooks.scriptName();
+        QuickHelpOpenHooks h;h.closePopups=[this] { input->ClosePopups(); };h.lookup=[this](auto serial) { return Reference(serial); };h.noModal=[this] { return common.life.currentDialog==0; };h.currentModal=[this] { return common.life.currentDialog; };h.construct=[this](auto type) { return helpWindow->Construct(AllocateHelp(0xd0),type); };h.node=common.node;h.attach=common.attach;h.addDepth=[this](auto token,auto delta) { common.tree.AddDepth(token,delta); };
+        h.modal=[this](auto token,auto enabled) { if (!enabled) common.lifetime.RemoveDialog(token);else if (common.input.AddDialog(token) && common.life.dialogCount>1) { const auto prior=common.life.dialogs[common.life.dialogCount-2];common.tree.AddDepth(token,common.node(prior)->depth-common.node(token)->depth-3U); }common.changed(); };
+        h.handle=[this](auto token,auto code,auto x,auto y) { return Handle(token,code,x,y); };
+        return OpenQuickHelpWindow({helpState.id,0,common.create.collection.root,0,common.create.screenWidth},h,topic,mode,learnType);
+    }
+    // 같은 기존 클래스에 생성/색/파일·HTML/돌 버튼/그림 효과를 설치한다.
+    void EnableHelp(RawHelpHooks supplied) {
+        if (helpWindow || !supplied.globals || !supplied.translate || !supplied.config || !supplied.substitute || !supplied.load || !supplied.text || !supplied.storeText || !supplied.typeName || !supplied.type || !supplied.description || !supplied.hitPoints || !supplied.helpFrame || !supplied.lookup || !supplied.nearestColor || !supplied.queue || !supplied.script || !supplied.external || !supplied.learn || !supplied.scripted || !supplied.battle || !supplied.challenge || !supplied.scriptName) throw std::invalid_argument("전용 Help Client 연결 계약 오류");helpHooks=std::move(supplied);
+        const auto construct=[this](auto token,auto type,float x,float y,auto flags) { common.factory.Construct(token,type,x,y,flags); }; // 같은 기본 등록 생성자다.
+        HtmlBodyGumpHooks body;body.node=[this](auto token) { return Find(helpBodies,token); };body.base=common.node;body.constructBase=construct;body.allocate=[this](auto bytes) { return AllocateHelp(bytes); };body.constructText=[this](auto token,auto width,auto height,auto font,auto color) { titleWidgets->Construct(token,width,height,font,color); };
+        body.kill=[this](auto token) { common.lifetime.Kill(token); };body.push=[this](auto token) { common.tree.Push(token); };body.attach=common.attach;body.baseAttach=[this](auto token,float x,float y,auto parent,auto mode) { common.tree.Attach(token,x,y,parent,mode); };body.styled=[this](auto token,auto text) { titleMarkup->Parse(token,text); };body.scroll=[this](auto token,auto y) { title->RequestScroll(token,y); };body.slider=[this](auto token,auto value) { titleWidgets->SetSlider(token,value); };body.scrollable=[this](auto token,auto value) { titleWidgets->SetScrollable(token,value); };helpBody=std::make_unique<HtmlBodyGump>(bodyState,std::move(body));
+        ImageGumpHooks image;image.node=[this](auto token) { return Find(helpImages,token); };BindImageGumpAssets(image,assets);image.position=[this](auto token) { return common.collection.Position(token); };image.attach=[this](auto token,float x,float y,auto parent,auto mode) { common.tree.Attach(token,x,y,parent,mode); };image.draw=[this](auto request) { activeImage.draw(request); };image.color=[this](auto token) { activeImage.color(token); };imageOwners.resize(assets.TypeTable().Types().size());helpImage=std::make_unique<ImageGump>(common.create,common.factory,ImageGumpState{imageOwner,imageOwners,imageShadow},std::move(image));
+        QuickHelpWindowHooks window;window.node=[this](auto token) { return Find(helpWindows,token); };window.base=common.node;window.html=[this](auto token) { return Find(helpBodies,token); };window.constructBase=construct;window.allocate=[this](auto bytes) { return AllocateHelp(bytes); };
+        window.constructDecoration=[this](auto token,float width,float height) { decoration->Construct(token,width,height); };window.constructBackground=[this](auto token,float width,float height,auto flags,auto kind,auto type,auto frame) { backgroundCreate->Construct(token,width,height,flags,kind,type,frame); };window.constructHtml=[this](auto token) { helpBody->Construct(token); };window.fitButton=[this](auto token) { common.stones.FitToText(token); };
+        window.constructButton=[this](auto token,auto width,auto height,std::string_view label,auto unused,auto context) { if (context) throw std::logic_error("Help 돌 버튼의 비영 문맥 토큰");const std::string text(label);common.stones.Construct(token,width,height,text.c_str(),unused); };window.constructInformation=[this](auto token,auto width,auto height,auto font,auto color) { titleWidgets->Construct(token,width,height,font,color); };window.constructPicture=[this](auto token,auto type,auto frame,auto mode) { helpImage->Construct(token,type,frame,mode); };
+        window.translate=helpHooks.translate;window.config=helpHooks.config;window.substitute=helpHooks.substitute;window.load=helpHooks.load;window.loadError=[](auto name) { throw std::runtime_error("Quick Help 파일 로드 실패: "+std::string(name)); };window.nearestColor=helpHooks.nearestColor;window.scripted=helpHooks.scripted;window.kill=[this](auto token) { common.lifetime.Kill(token); };window.push=[this](auto token) { common.tree.Push(token); };window.clearBody=[this](auto token) { helpBody->Clear(token); };window.attach=common.attach;window.baseAttach=[this](auto token,float x,float y,auto parent,auto mode) { common.tree.Attach(token,x,y,parent,mode); };
+        window.lines=[this](auto token) { return buffers->Binding(Find(titles,token)->buffer).state->lineCount; };window.render=[this](auto bodyToken,auto type,auto topic,auto pane,auto stream) { RenderHelp(bodyToken,type,topic,pane,stream); };window.helpFrame=[this](auto type) -> std::optional<std::int32_t> { return helpHooks.helpFrame(type); };window.bodyText=[this](auto token,auto text) { helpBody->SetText(token,text); };
+        helpState.noPictureA=109;helpState.noPictureB=161; // 실제 PE0054120c/5412dc의 TYPE 초기값이다.
+        helpWindow=std::make_unique<QuickHelpWindow>(helpState,popupState,std::move(window));
     }
 };
 // 처리기가 참조하는 구현 주소를 고정한다.
@@ -205,12 +313,17 @@ RawMenuControls::~RawMenuControls()=default;
 void RawMenuControls::SetExternalGumps(RawMenuExternalGumps hooks) { impl_->external=std::move(hooks); }
 const TextGump& RawMenuControls::TextBackend() const { return *impl_->costText; } // 같은 한 줄 처리기다.
 const StyleText& RawMenuControls::StyleBackend() const { return *impl_->style; } // 같은 조각 소유자다.
+void RawMenuControls::MeasureText(std::span<const char> bytes,const std::array<std::uint32_t,8>& context,std::int32_t& width,std::int32_t& height,std::uint32_t limit) const { impl_->metrics.Measure(bytes,DecodeGumpTextContext(context),width,height,std::bit_cast<std::int32_t>(limit)); } // 같은 원본 문맥과 signed 길이다.
 const GumpBackgroundCreate& RawMenuControls::BackgroundBackend() const { return *impl_->backgroundCreate; } // 같은 실제 자산이다.
 QuickHelpPopupState& RawMenuControls::PopupState() const { return impl_->popupState; } // 현재 팝업 표식 사본을 만들지 않는다.
+void RawMenuControls::EnableHelp(RawHelpHooks hooks) { impl_->EnableHelp(std::move(hooks)); } // 같은 실제 처리기를 설치한다.
+std::uint32_t RawMenuControls::OpenHelp(std::uint32_t topic,std::int32_t mode,std::uint32_t learnType) { return impl_->OpenHelp(topic,mode,learnType); } // 원본 전용 재사용 경로다.
+bool RawMenuControls::HelpOpen() const { const auto token=impl_->Reference(impl_->helpState.id);return token && (impl_->common.node(token)->flags&1) && impl_->common.node(token)->parent; } // 현재 등록/표시를 직접 읽는다.
+void RawMenuControls::CloseHelp() { if (const auto token=impl_->Reference(impl_->helpState.id)) impl_->common.lifetime.Kill(token);impl_->common.lifetime.Cleanup();impl_->common.changed(); } // Session보다 먼저 삭제한다.
 // 공통 생성과 분배는 별도 기본 노드 복사본을 만들지 않는다.
 GumpCreateNode* RawMenuControls::Node(std::uint32_t token) const { return impl_->Node(token); }
 // 스크롤 화살표도 같은 ButtonGump 상태를 사용한다.
-StoneButtonGumpNode* RawMenuControls::Button(std::uint32_t token) const { return Find(impl_->arrows,token); }
+StoneButtonGumpNode* RawMenuControls::Button(std::uint32_t token) const { if (auto* node=Find(impl_->helpButtons,token)) return node;return Find(impl_->arrows,token); }
 // 메뉴·장식·손잡이의 실제 배경을 반환한다.
 GumpBackgroundNode* RawMenuControls::Background(std::uint32_t token) const { return impl_->Background(token); }
 // 현재 실제 파생 Attach를 선택한다.
@@ -225,11 +338,12 @@ void RawMenuControls::Idle(std::uint32_t token) const { if (impl_->menus.contain
 void RawMenuControls::Redraw(std::uint32_t token,bool erase) const { impl_->Redraw(token,erase); }
 // 원본 파서·제목·메뉴가 소유한 자원을 각 소멸자로 반납한다.
 void RawMenuControls::DeleteScalar(std::uint32_t token,std::uint32_t flags) const {
-    auto& s=*impl_;if (s.menus.contains(token)) s.widgets->DeleteScalar(token,flags);else if (s.titles.contains(token)) s.titleWidgets->DeleteScalar(token,flags);
+    auto& s=*impl_;if (s.helpWindows.contains(token)) { s.helpHistory=QuickHelpHistory{};s.popupState.command=0;s.common.lifetime.DeleteScalar(token,flags); } // 실제4c6d40은 이력/명령만 지우고80바이트 인자는 보존한다.
+    else if (s.helpButtons.contains(token)) s.common.stones.DeleteScalar(token,flags);else if (s.menus.contains(token)) s.widgets->DeleteScalar(token,flags);else if (s.titles.contains(token)) s.titleWidgets->DeleteScalar(token,flags);
     else if (s.decorations.contains(token)) s.decoration->DeleteScalar(token,flags);else if (s.costs.contains(token)) s.costGump->DeleteScalar(token,flags);else if (s.sliders.contains(token) || s.thumbs.contains(token) || s.arrows.contains(token)) s.sliderWidgets->DeleteScalar(token,flags);else s.common.lifetime.DeleteScalar(token,flags);
 }
 // 공통 scalar의 release만 실제 저장소를 지운다.
-void RawMenuControls::Release(std::uint32_t token) { auto& s=*impl_;s.menus.erase(token);s.decorations.erase(token);s.titles.erase(token);s.sliders.erase(token);s.arrows.erase(token);s.thumbs.erase(token);s.backgrounds.erase(token);s.costs.erase(token); }
+void RawMenuControls::Release(std::uint32_t token) { auto& s=*impl_;s.helpWindows.erase(token);s.helpBodies.erase(token);s.helpButtons.erase(token);s.helpImages.erase(token);s.helpLinks.erase(token);s.menus.erase(token);s.decorations.erase(token);s.titles.erase(token);s.sliders.erase(token);s.arrows.erase(token);s.thumbs.erase(token);s.backgrounds.erase(token);s.costs.erase(token); }
 // controlled 스택의 실제 루트 메뉴를 공통 루트에 부착한다.
 void RawMenuControls::Open(ScreenPoint point,const std::function<void(const MenuGumpWidgets&,const MenuGumpControls&,const MenuGump&)>& builder) {
     Close();auto& s=*impl_;if (!builder || s.menuState.index) throw std::invalid_argument("실제 메뉴 builder/controlled 스택 계약 오류");
@@ -276,21 +390,23 @@ void RawMenuControls::RequestClosePopups() { auto& s=*impl_;s.input->ClosePopups
 void RawMenuControls::SetPalette(const PaletteColorTable& palette) {
     const auto dim=std::find_if(palette.named.begin(),palette.named.end(),[](const NamedPaletteColor& color) { return color.red==47 && color.green==24 && color.blue==17; }); // 원본005c78d0/CD0055bad4의 실제 목표 RGB다.
     if (dim==palette.named.end()) throw std::invalid_argument("메뉴 원본 비활성/그림자 색 전역 없음");
-    auto& s=*impl_;s.palette=palette;s.widgetState.foreground=palette.basic[7];s.widgetState.shadow=dim->index;s.drawState.foreground=palette.basic[7];s.drawState.disabled=dim->index;SetGumpBackgroundColors(s.backgroundState,palette);
+    auto& s=*impl_;s.palette=palette;s.helpState.color=s.bodyState.color=palette.basic[7];s.widgetState.foreground=palette.basic[7];s.widgetState.shadow=dim->index;s.drawState.foreground=palette.basic[7];s.drawState.disabled=dim->index;SetGumpBackgroundColors(s.backgroundState,palette);
 }
 // 현재 노드를 원본 수집·정렬 순서로 같은8비트 표면에 출력한다.
 void RawMenuControls::Draw(std::span<std::uint8_t> pixels,int pitch,int height,const PaletteColorTable& palette,const GumpShadeMaps& maps,std::optional<ScreenRect> clip) {
     auto& s=*impl_;if (s.activeText) throw std::logic_error("실제 메뉴 Draw 재진입 불가");SetPalette(palette);
     const auto region=clip.value_or(ScreenRect{0,0,s.common.create.screenWidth,height}); // 실제 Renderer 변경 영역 또는 독립 전체 표면이다.
     SetGumpDrawClip(s.clip,region);GumpPixelTarget target(pixels,pitch,height,s.clip);GumpTextDraw text(s.fonts,MakeGumpGlyphPixelHooks(target,s.colors),s.assets.Edition());GumpBackgroundPixelTarget bgPixels(target,s.backgroundAssets,maps,s.colors.vfxColors);MarkupPixelTarget picturePixels(target,s.markupAssets,s.colors.vfxColors,s.pictureColors);
+    std::unique_ptr<ImageGumpPixelTarget> helpPictures; // 10.78 전용 Help를 설치한 판본에서만 해당 픽셀 처리기를 생성한다.
+    if (s.helpImage) { helpPictures=std::make_unique<ImageGumpPixelTarget>(target,s.assets,s.pictureColors,[](auto) -> ColorMap { throw std::logic_error("Help 모드8 이외 소유자 색표 미연결"); });s.activeImage=helpPictures->Hooks({}); }
     s.activeText=&text;s.activeBackground=bgPixels.Hooks(s.clip);s.activePicture=picturePixels.Hooks({});GumpDrawHooks draw;
     // 예외 반환에서도 현재 표면을 참조한 일시 훅을 파기해 다음 출력에 댕글링 참조를 남기지 않는다.
     struct ResetDraw {
         Impl& state; // 현재 출력 동안만 연결된 실제 픽셀 문맥이다.
-        ~ResetDraw() { state.activeText=nullptr;state.activeBackground={};state.activePicture={}; } // 정상/예외 반환의 같은 정리다.
+        ~ResetDraw() { state.activeText=nullptr;state.activeBackground={};state.activePicture={};state.activeImage={}; } // 정상/예외 반환의 같은 정리다.
     } reset{s};
     draw.draw=[&](auto token) {
-        if (s.external.owns && s.external.owns(token)) s.external.draw(token,target,s.colors,*s.backgroundDraw);else if (s.costs.contains(token)) s.costText->Draw(token);else if (s.decorations.contains(token)) s.decoration->Draw(token);else if (s.titles.contains(token)) s.title->Draw(token);else if (s.arrows.contains(token)) s.sliderWidgets->DrawArrow(token,s.common.collection,text,target);
+        if (s.helpButtons.contains(token)) s.common.stones.Draw(token,s.common.collection,text,target);else if (s.helpImages.contains(token)) s.helpImage->Draw(token);else if (s.external.owns && s.external.owns(token)) s.external.draw(token,target,s.colors,*s.backgroundDraw);else if (s.costs.contains(token)) s.costText->Draw(token);else if (s.decorations.contains(token)) s.decoration->Draw(token);else if (s.titles.contains(token)) s.title->Draw(token);else if (s.arrows.contains(token)) s.sliderWidgets->DrawArrow(token,s.common.collection,text,target);
         else if (s.thumbs.contains(token)) s.sliderWidgets->DrawThumb(token,s.common.collection,*s.backgroundDraw);else if (s.Background(token)) s.backgroundDraw->Draw(token);
     };
     MenuGumpDrawHooks mh;mh.node=[&](auto token) { return Find(s.menus,token); };mh.base=s.common.node;GumpDecorationPixelTarget decorationPixels(target,s.assets);BindMenuGumpDrawAssets(mh,s.assets,decorationPixels);
@@ -361,6 +477,12 @@ bool RawMenuControls::Contains(ScreenPoint point) const {
 // 같은 실제 저장소의 개수/controlled 깊이를 진단 보고에 기록한다.
 std::string RawMenuControls::Report() const {
     auto& s=*impl_;std::ostringstream out;out<<"raw_menus\t"<<s.menuState.instances<<'\t'<<s.menuState.index<<'\t'<<s.menus.size()<<'\t'<<s.titles.size()<<'\t'<<s.fragments.fragments.size()<<'\n';
+    // 같은 전용 노드/자식/이력과 실제 링크 토큰을 후속 통합 플레이에서 읽는다.
+    for (const auto& [token,node]:s.helpWindows) out<<"raw_help\t"<<token<<'\t'<<node->serial<<'\t'<<node->flags<<'\t'<<node->body<<'\t'<<node->information<<'\t'<<node->picture<<'\t'<<node->backButton<<'\t'<<node->learnButton<<'\t'<<s.helpHistory.Topics().size()<<'\n';
+    // 출력 원문은 변경하지 않고 진단 행에서만 줄바꿈/탭을 공백으로 표시한다.
+    for (const auto& [token,node]:s.helpBodies) { auto body=std::string(node->body.data());std::replace(body.begin(),body.end(),'\n',' ');std::replace(body.begin(),body.end(),'\t',' ');out<<"raw_help_body\t"<<token<<'\t'<<node->text<<'\t'<<body<<'\n'; }
+    // 현재 유효 링크는 NUL 경계 순서로 읽는다. 이전 주제의 뒤쪽 보존 바이트는 새 링크로 보고하지 않는다.
+    for (const auto& [body,links]:s.helpLinks) for (std::size_t offset=0;offset<links.cursor;) { const auto text=ResolveHtmlLink(links,links.base+static_cast<std::uint32_t>(offset));out<<"raw_help_link\t"<<body<<'\t'<<links.base+offset<<'\t'<<text<<'\n';offset+=text.size()+1; }
     out<<"raw_menu_input\t"<<s.lastInput[0]<<'\t'<<s.lastInput[1]<<'\t'<<s.lastInput[2]<<'\t'<<s.lastInput[3]<<'\n';
     // 비용 표시도 같은 등록 토큰·원본 현재 필드와 소유 문자열 체인을 보고한다.
     for (const auto& [token,node]:s.costs) out<<"raw_sp_gump\t"<<token<<'\t'<<node->id<<'\t'<<node->parent<<'\t'<<node->flags<<'\t'<<node->x<<'\t'<<node->y<<'\t'<<node->velocity<<'\t'<<node->acceleration<<'\t'<<node->stamp<<'\t'<<node->head<<'\n';

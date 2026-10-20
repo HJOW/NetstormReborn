@@ -12,8 +12,8 @@
     "cpppj/src/client/CMakeLists.txt": "4ae70d9d48c3a42bfec960e370ac8c3fa3ade55bd9250039fc63493a8260b85e",
     "cpppj/tests/CMakeLists.txt": "a627575830fe9176dc72e24279dd80129787527faa645c2c1266799148bb7c70",
     "cpppj/tests/CampaignObjectMenuTests.cpp": "8c7951a5447f9e70871f5e082bd68d722d17866a1bbc0f5d43d9be50c62b113c",
-    "cpppj/src/client/QuickHelpHtml.cpp": "a4affce5a4abbabe33953abf0d6a3af75a8701ac1cebfc42dec9d969561404d9",
-    "cpppj/src/client/QuickHelpHtml.h": "063a36c2c578b9fb6d31f470d952994fab7fc1a9aa3d5a5985d05725e91cd23d",
+    "cpppj/src/client/QuickHelpHtml.cpp": "02929e083b487034ee404c4567b000344d9116a0b32c3777150b895cbeb3bd87",
+    "cpppj/src/client/QuickHelpHtml.h": "bc4c27dd9b4f88affee280cbc50ef93a33aae58f6870cf49e098d104705cb0eb",
     "cpppj/src/client/HtmlLinkText.cpp": "0ec34db4b450ba9f33078d5358e87226993cf9100239684942e9cf0fa01306a7",
     "cpppj/src/client/HtmlLinkText.h": "848344cbab7d9e5d3ec0808e2a6cdc7a73914c6e9f3e7d4b5a6213287c8ac07f",
     "cpppj/tests/QuickHelpHtmlTests.cpp": "8db42eeaf6536048a409609bd9c38851f8bddaa0d39e507ecf881fbc94907646",
@@ -2797,6 +2797,26 @@
           "group": "/sources",
           "previous": "2018bf47c030a419ccba5f701308668d2c74d646d4d678584cf6f04e893bd4b0",
           "current": "a627575830fe9176dc72e24279dd80129787527faa645c2c1266799148bb7c70"
+        }
+      ]
+    },
+    {
+      "unit": 257,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "전용 Help를 실제 Client 공통 등록표/입력/글꼴·스크롤/픽셀/소멸에 연결했다. 현재 소스 핀만 갱신하며 과거 근거/원문/기대값/실행·바이너리는 보존한다. 실제 게임과 C++검사는 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/QuickHelpHtml.cpp",
+          "group": "/sources",
+          "previous": "a4affce5a4abbabe33953abf0d6a3af75a8701ac1cebfc42dec9d969561404d9",
+          "current": "02929e083b487034ee404c4567b000344d9116a0b32c3777150b895cbeb3bd87"
+        },
+        {
+          "path": "cpppj/src/client/QuickHelpHtml.h",
+          "group": "/sources",
+          "previous": "063a36c2c578b9fb6d31f470d952994fab7fc1a9aa3d5a5985d05725e91cd23d",
+          "current": "bc4c27dd9b4f88affee280cbc50ef93a33aae58f6870cf49e098d104705cb0eb"
         }
       ]
     }

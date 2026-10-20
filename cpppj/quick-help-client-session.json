@@ -1,0 +1,692 @@
+{
+  "unit": 257,
+  "baseline": "fa97b47f",
+  "date": "2026-10-21",
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "lastDecompileDate": "2026-10-20",
+  "newDecompile": false,
+  "sources": {
+    "cpppj/src/client/RawMenuControls.cpp": "fd8c19e4b7fde7a65adfa87251d859130106a6e388ced7527c933c73c6045029",
+    "cpppj/src/client/RawMenuControls.h": "edcb095b283233a2c3ac893dace31700ac282a23cdce165594d32d076e5fe465",
+    "cpppj/src/client/RawButtonControls.cpp": "ca4f6842a5c2951e744060c2bc1c66b4d52f246d095dd6b36ea87a1c5393e472",
+    "cpppj/src/client/UberGump.cpp": "d042ad33b81d43de646ef9a82ff4265788a86f18ccf74f3861a3d94a7c95d28d",
+    "cpppj/src/client/QuickHelpHtml.cpp": "02929e083b487034ee404c4567b000344d9116a0b32c3777150b895cbeb3bd87",
+    "cpppj/src/client/QuickHelpHtml.h": "bc4c27dd9b4f88affee280cbc50ef93a33aae58f6870cf49e098d104705cb0eb",
+    "cpppj/tests/RawMenuControlsTests.cpp": "309e49dd6c5328a5bd6c3c5915202cd329d8c5f55ded5b7c329363e76c404289",
+    "tools/cpp_quick_help_client_audit.py": "3e856378d16f375786b42343dfac3e17ca4a1225843b120d014465f9f5bcb69d",
+    "cpppj/src/client/QuickHelpWindow.cpp": "5001ccb90775c123d39a0697ebb937c8f64d66b22d05abd6908d4b1abb4ac46c",
+    "cpppj/src/client/HtmlBodyGump.cpp": "f54a1fc594ccb43c590bcccf6eeb81e49844aa0e69b8b2376439ecdec494def2",
+    "cpppj/src/client/QuickHelpControl.cpp": "36802ceacff8722942703305c273bf386a8cfe599da012777104afb658b97dd4",
+    "cpppj/src/client/QuickHelpRequest.cpp": "e90646137dc70790ca092a0bf32f0f65a84e1ed046120c3074b3fd980ac3a7ea",
+    "cpppj/src/client/HtmlLinkText.cpp": "0ec34db4b450ba9f33078d5358e87226993cf9100239684942e9cf0fa01306a7"
+  },
+  "evidence": {
+    "AGENTS.md": "0e112c50745cfa0a76f5996af47f98dddd36e8ccc07efe489868f62793913892",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "cpppj/quick-help-window-native.json": "4a56652c5fa2497c30fc378bfc5d7d3a574023868588b16aad2787a2a311be64",
+    "cpppj/quick-help-window-paths-native.json": "6d0884954125980da33c99c66b64f8e01c0d6f18fcd5c2f74720a67275586cf1",
+    "cpppj/quick-help-html-native.json": "7387f83e718f10f1e0e79cf8f62e6c70324b39bedacec17252b6653346865176",
+    "cpppj/tests/fixtures/quick-help-window-x86.tsv": "b7bf52caf2efcb58b27470bd89a9b1e67506a42961e45bb22928ed16985d2fe2",
+    "cpppj/tests/fixtures/quick-help-window-paths-x86.tsv": "97c519ae05783122fc023b1aec17f5059241b57751e50e8963af545a2855586d",
+    "cpppj/tests/fixtures/quick-help-html-x86.tsv": "348a5d91dce8d8cc27348f64169e8baea5e0cb4942b22b3dc717814e9f629763",
+    "cpppj/tests/fixtures/quick-help-request-x86.tsv": "8126552d1d05397d769167e86b922ea1a79cff9c5056c2927897d90364116233",
+    "cpppj/tests/fixtures/quick-help-control-x86.tsv": "461a479171cf17f1e15fbe55c52d2c3f7f6dd004baf152ddd2e556486491f026"
+  },
+  "build": {
+    "returnCode": 0,
+    "log": "extracted/cpp-quick-help-client-20261021-build5.log",
+    "logSha256": "a9af3e12014cbf2201a819bd596bf443369b63c24b0f3d65e78d59957ca307d9",
+    "warnings": 0,
+    "errors": 0
+  },
+  "binaries": {
+    "cpppj/build/lib/Release/netstorm.lib": "70a0ab585f72a67db004d27856211a2dbf18ca2675951e7798126291c3c19d0b",
+    "cpppj/build/bin/Release/NetstormCpp.exe": "506e6f4b9a04a3ccab7d7c879494f4ad8b76045dc4065319060327ef191df52a",
+    "cpppj/build/bin/Release/netstorm_tests.exe": "441ef6f9872fc5bb7367854ce4cd58bc8796aabe08cde1f1baabcb6f01cdcd1f"
+  },
+  "newTests": [
+    "RawMenuControls_HelpActualTreePixelsAndOutsideInput",
+    "RawMenuControls_HelpActualHistoryButtonsAndReopen",
+    "RawMenuControls_HelpActualTypeInfoAndImage"
+  ],
+  "newTestsCompiled": true,
+  "testsExecuted": false,
+  "gameExecuted": false,
+  "runtimeTestsDeferred": true,
+  "goalComplete": false,
+  "newNativeInputs": 0,
+  "clientVirtualDispatchConnected": true,
+  "clientHelpCommandConnected": true,
+  "externalProtocolConnected": false,
+  "learnConnected": false,
+  "integratedModalEquivalenceVerified": false,
+  "staticPeChecks": {
+    "vtables": {
+      "0x514ec4": [
+        5008864,
+        4613952,
+        4606544,
+        4606640,
+        4607248,
+        4607328,
+        4605280,
+        4300272,
+        5004640,
+        4470768,
+        5008896,
+        4613536,
+        4470768,
+        4607440,
+        4608656
+      ],
+      "0x50bd38": [
+        5065792,
+        4613952,
+        4606544,
+        4606640,
+        4607248,
+        4607328,
+        4605280,
+        4300272,
+        4639792,
+        4470768,
+        4606352,
+        4613536,
+        4470768,
+        4607440,
+        4608656,
+        4639296
+      ],
+      "0x501bb0": [
+        5065792,
+        4613952,
+        4606544,
+        4606640,
+        4607248,
+        4607328,
+        4605280,
+        4300272,
+        4299952,
+        4299152,
+        4606352,
+        4613536,
+        4470768,
+        4607440,
+        4608656
+      ]
+    },
+    "f1Bytes": "a15427540068105c51006a0050e887a3f7ff83c40c8b5c24"
+  },
+  "sourcePinReportCount": 32,
+  "sourcePinChanges": [
+    {
+      "report": "cpppj/campaign-carrier-input.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "source": "cpppj/src/client/UberGump.cpp",
+      "old": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9",
+      "new": "d042ad33b81d43de646ef9a82ff4265788a86f18ccf74f3861a3d94a7c95d28d"
+    },
+    {
+      "report": "cpppj/campaign-cursor-actions.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "source": "cpppj/src/client/UberGump.cpp",
+      "old": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9",
+      "new": "d042ad33b81d43de646ef9a82ff4265788a86f18ccf74f3861a3d94a7c95d28d"
+    },
+    {
+      "report": "cpppj/campaign-cursor-client.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawMenuControls.cpp"
+      ],
+      "source": "cpppj/src/client/RawMenuControls.cpp",
+      "old": "379bb83823100d91566e7c71740dc008d543e3e6c60552eec61cd0564b806034",
+      "new": "fd8c19e4b7fde7a65adfa87251d859130106a6e388ced7527c933c73c6045029"
+    },
+    {
+      "report": "cpppj/campaign-cursor-client.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawMenuControls.h"
+      ],
+      "source": "cpppj/src/client/RawMenuControls.h",
+      "old": "ce840dfe96790e5c9bdec7e5b4f172b8c3765e2ae53d99f5e7f4da76b60bf1d5",
+      "new": "edcb095b283233a2c3ac893dace31700ac282a23cdce165594d32d076e5fe465"
+    },
+    {
+      "report": "cpppj/campaign-cursor-client.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawButtonControls.cpp"
+      ],
+      "source": "cpppj/src/client/RawButtonControls.cpp",
+      "old": "22ea0450231c3b81b1b74a6f56d52f6e5706f9c24543f8898f4e32131c0a6962",
+      "new": "ca4f6842a5c2951e744060c2bc1c66b4d52f246d095dd6b36ea87a1c5393e472"
+    },
+    {
+      "report": "cpppj/campaign-cursor-client.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "source": "cpppj/src/client/UberGump.cpp",
+      "old": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9",
+      "new": "d042ad33b81d43de646ef9a82ff4265788a86f18ccf74f3861a3d94a7c95d28d"
+    },
+    {
+      "report": "cpppj/campaign-cursor-display.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "source": "cpppj/src/client/UberGump.cpp",
+      "old": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9",
+      "new": "d042ad33b81d43de646ef9a82ff4265788a86f18ccf74f3861a3d94a7c95d28d"
+    },
+    {
+      "report": "cpppj/campaign-flare-research.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "source": "cpppj/src/client/UberGump.cpp",
+      "old": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9",
+      "new": "d042ad33b81d43de646ef9a82ff4265788a86f18ccf74f3861a3d94a7c95d28d"
+    },
+    {
+      "report": "cpppj/campaign-floating-sp-client.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawMenuControls.cpp"
+      ],
+      "source": "cpppj/src/client/RawMenuControls.cpp",
+      "old": "379bb83823100d91566e7c71740dc008d543e3e6c60552eec61cd0564b806034",
+      "new": "fd8c19e4b7fde7a65adfa87251d859130106a6e388ced7527c933c73c6045029"
+    },
+    {
+      "report": "cpppj/campaign-floating-sp-client.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawMenuControls.h"
+      ],
+      "source": "cpppj/src/client/RawMenuControls.h",
+      "old": "ce840dfe96790e5c9bdec7e5b4f172b8c3765e2ae53d99f5e7f4da76b60bf1d5",
+      "new": "edcb095b283233a2c3ac893dace31700ac282a23cdce165594d32d076e5fe465"
+    },
+    {
+      "report": "cpppj/campaign-floating-sp-client.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "source": "cpppj/src/client/UberGump.cpp",
+      "old": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9",
+      "new": "d042ad33b81d43de646ef9a82ff4265788a86f18ccf74f3861a3d94a7c95d28d"
+    },
+    {
+      "report": "cpppj/campaign-floating-sp-client.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/RawMenuControlsTests.cpp"
+      ],
+      "source": "cpppj/tests/RawMenuControlsTests.cpp",
+      "old": "5ce029d5ba102c1784696d8df58e3f3691b6bdf01671b013793a6e504fbfc4f4",
+      "new": "309e49dd6c5328a5bd6c3c5915202cd329d8c5f55ded5b7c329363e76c404289"
+    },
+    {
+      "report": "cpppj/campaign-forward-battle.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "source": "cpppj/src/client/UberGump.cpp",
+      "old": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9",
+      "new": "d042ad33b81d43de646ef9a82ff4265788a86f18ccf74f3861a3d94a7c95d28d"
+    },
+    {
+      "report": "cpppj/campaign-inventory-about.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawMenuControls.cpp"
+      ],
+      "source": "cpppj/src/client/RawMenuControls.cpp",
+      "old": "379bb83823100d91566e7c71740dc008d543e3e6c60552eec61cd0564b806034",
+      "new": "fd8c19e4b7fde7a65adfa87251d859130106a6e388ced7527c933c73c6045029"
+    },
+    {
+      "report": "cpppj/campaign-inventory-about.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "source": "cpppj/src/client/UberGump.cpp",
+      "old": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9",
+      "new": "d042ad33b81d43de646ef9a82ff4265788a86f18ccf74f3861a3d94a7c95d28d"
+    },
+    {
+      "report": "cpppj/campaign-local-login.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "source": "cpppj/src/client/UberGump.cpp",
+      "old": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9",
+      "new": "d042ad33b81d43de646ef9a82ff4265788a86f18ccf74f3861a3d94a7c95d28d"
+    },
+    {
+      "report": "cpppj/campaign-mission-start-client.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "source": "cpppj/src/client/UberGump.cpp",
+      "old": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9",
+      "new": "d042ad33b81d43de646ef9a82ff4265788a86f18ccf74f3861a3d94a7c95d28d"
+    },
+    {
+      "report": "cpppj/campaign-object-menu-client.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawMenuControls.cpp"
+      ],
+      "source": "cpppj/src/client/RawMenuControls.cpp",
+      "old": "379bb83823100d91566e7c71740dc008d543e3e6c60552eec61cd0564b806034",
+      "new": "fd8c19e4b7fde7a65adfa87251d859130106a6e388ced7527c933c73c6045029"
+    },
+    {
+      "report": "cpppj/campaign-object-menu-client.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawMenuControls.h"
+      ],
+      "source": "cpppj/src/client/RawMenuControls.h",
+      "old": "ce840dfe96790e5c9bdec7e5b4f172b8c3765e2ae53d99f5e7f4da76b60bf1d5",
+      "new": "edcb095b283233a2c3ac893dace31700ac282a23cdce165594d32d076e5fe465"
+    },
+    {
+      "report": "cpppj/campaign-object-menu-client.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "source": "cpppj/src/client/UberGump.cpp",
+      "old": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9",
+      "new": "d042ad33b81d43de646ef9a82ff4265788a86f18ccf74f3861a3d94a7c95d28d"
+    },
+    {
+      "report": "cpppj/campaign-object-menu-forms.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawMenuControls.cpp"
+      ],
+      "source": "cpppj/src/client/RawMenuControls.cpp",
+      "old": "379bb83823100d91566e7c71740dc008d543e3e6c60552eec61cd0564b806034",
+      "new": "fd8c19e4b7fde7a65adfa87251d859130106a6e388ced7527c933c73c6045029"
+    },
+    {
+      "report": "cpppj/campaign-object-menu-forms.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawMenuControls.h"
+      ],
+      "source": "cpppj/src/client/RawMenuControls.h",
+      "old": "ce840dfe96790e5c9bdec7e5b4f172b8c3765e2ae53d99f5e7f4da76b60bf1d5",
+      "new": "edcb095b283233a2c3ac893dace31700ac282a23cdce165594d32d076e5fe465"
+    },
+    {
+      "report": "cpppj/campaign-object-menu-forms.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawButtonControls.cpp"
+      ],
+      "source": "cpppj/src/client/RawButtonControls.cpp",
+      "old": "22ea0450231c3b81b1b74a6f56d52f6e5706f9c24543f8898f4e32131c0a6962",
+      "new": "ca4f6842a5c2951e744060c2bc1c66b4d52f246d095dd6b36ea87a1c5393e472"
+    },
+    {
+      "report": "cpppj/campaign-object-menu-forms.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "source": "cpppj/src/client/UberGump.cpp",
+      "old": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9",
+      "new": "d042ad33b81d43de646ef9a82ff4265788a86f18ccf74f3861a3d94a7c95d28d"
+    },
+    {
+      "report": "cpppj/campaign-production-content.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "source": "cpppj/src/client/UberGump.cpp",
+      "old": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9",
+      "new": "d042ad33b81d43de646ef9a82ff4265788a86f18ccf74f3861a3d94a7c95d28d"
+    },
+    {
+      "report": "cpppj/campaign-production-feedback.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "source": "cpppj/src/client/UberGump.cpp",
+      "old": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9",
+      "new": "d042ad33b81d43de646ef9a82ff4265788a86f18ccf74f3861a3d94a7c95d28d"
+    },
+    {
+      "report": "cpppj/campaign-production-maintenance.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawButtonControls.cpp"
+      ],
+      "source": "cpppj/src/client/RawButtonControls.cpp",
+      "old": "22ea0450231c3b81b1b74a6f56d52f6e5706f9c24543f8898f4e32131c0a6962",
+      "new": "ca4f6842a5c2951e744060c2bc1c66b4d52f246d095dd6b36ea87a1c5393e472"
+    },
+    {
+      "report": "cpppj/campaign-production-maintenance.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "source": "cpppj/src/client/UberGump.cpp",
+      "old": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9",
+      "new": "d042ad33b81d43de646ef9a82ff4265788a86f18ccf74f3861a3d94a7c95d28d"
+    },
+    {
+      "report": "cpppj/campaign-production-panel.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawMenuControls.cpp"
+      ],
+      "source": "cpppj/src/client/RawMenuControls.cpp",
+      "old": "379bb83823100d91566e7c71740dc008d543e3e6c60552eec61cd0564b806034",
+      "new": "fd8c19e4b7fde7a65adfa87251d859130106a6e388ced7527c933c73c6045029"
+    },
+    {
+      "report": "cpppj/campaign-production-panel.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawMenuControls.h"
+      ],
+      "source": "cpppj/src/client/RawMenuControls.h",
+      "old": "ce840dfe96790e5c9bdec7e5b4f172b8c3765e2ae53d99f5e7f4da76b60bf1d5",
+      "new": "edcb095b283233a2c3ac893dace31700ac282a23cdce165594d32d076e5fe465"
+    },
+    {
+      "report": "cpppj/campaign-production-panel.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawButtonControls.cpp"
+      ],
+      "source": "cpppj/src/client/RawButtonControls.cpp",
+      "old": "22ea0450231c3b81b1b74a6f56d52f6e5706f9c24543f8898f4e32131c0a6962",
+      "new": "ca4f6842a5c2951e744060c2bc1c66b4d52f246d095dd6b36ea87a1c5393e472"
+    },
+    {
+      "report": "cpppj/campaign-production-panel.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "source": "cpppj/src/client/UberGump.cpp",
+      "old": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9",
+      "new": "d042ad33b81d43de646ef9a82ff4265788a86f18ccf74f3861a3d94a7c95d28d"
+    },
+    {
+      "report": "cpppj/campaign-salvage-command.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "source": "cpppj/src/client/UberGump.cpp",
+      "old": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9",
+      "new": "d042ad33b81d43de646ef9a82ff4265788a86f18ccf74f3861a3d94a7c95d28d"
+    },
+    {
+      "report": "cpppj/campaign-temple-shrapnel.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "source": "cpppj/src/client/UberGump.cpp",
+      "old": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9",
+      "new": "d042ad33b81d43de646ef9a82ff4265788a86f18ccf74f3861a3d94a7c95d28d"
+    },
+    {
+      "report": "cpppj/guide-transitions-session.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "source": "cpppj/src/client/UberGump.cpp",
+      "old": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9",
+      "new": "d042ad33b81d43de646ef9a82ff4265788a86f18ccf74f3861a3d94a7c95d28d"
+    },
+    {
+      "report": "cpppj/knowledge-menu-session.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/RawMenuControls.cpp"
+      ],
+      "source": "cpppj/src/client/RawMenuControls.cpp",
+      "old": "379bb83823100d91566e7c71740dc008d543e3e6c60552eec61cd0564b806034",
+      "new": "fd8c19e4b7fde7a65adfa87251d859130106a6e388ced7527c933c73c6045029"
+    },
+    {
+      "report": "cpppj/knowledge-menu-session.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/RawMenuControls.h"
+      ],
+      "source": "cpppj/src/client/RawMenuControls.h",
+      "old": "ce840dfe96790e5c9bdec7e5b4f172b8c3765e2ae53d99f5e7f4da76b60bf1d5",
+      "new": "edcb095b283233a2c3ac893dace31700ac282a23cdce165594d32d076e5fe465"
+    },
+    {
+      "report": "cpppj/knowledge-menu-session.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "source": "cpppj/src/client/UberGump.cpp",
+      "old": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9",
+      "new": "d042ad33b81d43de646ef9a82ff4265788a86f18ccf74f3861a3d94a7c95d28d"
+    },
+    {
+      "report": "cpppj/mission-abort-session.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "source": "cpppj/src/client/UberGump.cpp",
+      "old": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9",
+      "new": "d042ad33b81d43de646ef9a82ff4265788a86f18ccf74f3861a3d94a7c95d28d"
+    },
+    {
+      "report": "cpppj/mission-common-session.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "source": "cpppj/src/client/UberGump.cpp",
+      "old": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9",
+      "new": "d042ad33b81d43de646ef9a82ff4265788a86f18ccf74f3861a3d94a7c95d28d"
+    },
+    {
+      "report": "cpppj/mission-first-session.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "source": "cpppj/src/client/UberGump.cpp",
+      "old": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9",
+      "new": "d042ad33b81d43de646ef9a82ff4265788a86f18ccf74f3861a3d94a7c95d28d"
+    },
+    {
+      "report": "cpppj/mission-lifecycle-session.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "source": "cpppj/src/client/UberGump.cpp",
+      "old": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9",
+      "new": "d042ad33b81d43de646ef9a82ff4265788a86f18ccf74f3861a3d94a7c95d28d"
+    },
+    {
+      "report": "cpppj/mission-technology-session.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "source": "cpppj/src/client/UberGump.cpp",
+      "old": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9",
+      "new": "d042ad33b81d43de646ef9a82ff4265788a86f18ccf74f3861a3d94a7c95d28d"
+    },
+    {
+      "report": "cpppj/modal-production.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/RawButtonControls.cpp"
+      ],
+      "source": "cpppj/src/client/RawButtonControls.cpp",
+      "old": "22ea0450231c3b81b1b74a6f56d52f6e5706f9c24543f8898f4e32131c0a6962",
+      "new": "ca4f6842a5c2951e744060c2bc1c66b4d52f246d095dd6b36ea87a1c5393e472"
+    },
+    {
+      "report": "cpppj/modal-production.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "source": "cpppj/src/client/UberGump.cpp",
+      "old": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9",
+      "new": "d042ad33b81d43de646ef9a82ff4265788a86f18ccf74f3861a3d94a7c95d28d"
+    },
+    {
+      "report": "cpppj/quick-help-control-session.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/RawMenuControls.cpp"
+      ],
+      "source": "cpppj/src/client/RawMenuControls.cpp",
+      "old": "379bb83823100d91566e7c71740dc008d543e3e6c60552eec61cd0564b806034",
+      "new": "fd8c19e4b7fde7a65adfa87251d859130106a6e388ced7527c933c73c6045029"
+    },
+    {
+      "report": "cpppj/quick-help-control-session.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/RawMenuControls.h"
+      ],
+      "source": "cpppj/src/client/RawMenuControls.h",
+      "old": "ce840dfe96790e5c9bdec7e5b4f172b8c3765e2ae53d99f5e7f4da76b60bf1d5",
+      "new": "edcb095b283233a2c3ac893dace31700ac282a23cdce165594d32d076e5fe465"
+    },
+    {
+      "report": "cpppj/quick-help-html-session.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/QuickHelpHtml.cpp"
+      ],
+      "source": "cpppj/src/client/QuickHelpHtml.cpp",
+      "old": "a4affce5a4abbabe33953abf0d6a3af75a8701ac1cebfc42dec9d969561404d9",
+      "new": "02929e083b487034ee404c4567b000344d9116a0b32c3777150b895cbeb3bd87"
+    },
+    {
+      "report": "cpppj/quick-help-html-session.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/QuickHelpHtml.h"
+      ],
+      "source": "cpppj/src/client/QuickHelpHtml.h",
+      "old": "063a36c2c578b9fb6d31f470d952994fab7fc1a9aa3d5a5985d05725e91cd23d",
+      "new": "bc4c27dd9b4f88affee280cbc50ef93a33aae58f6870cf49e098d104705cb0eb"
+    },
+    {
+      "report": "cpppj/tutorial-later-runtime.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "source": "cpppj/src/client/UberGump.cpp",
+      "old": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9",
+      "new": "d042ad33b81d43de646ef9a82ff4265788a86f18ccf74f3861a3d94a7c95d28d"
+    },
+    {
+      "report": "cpppj/tutorial-one-harvest.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "source": "cpppj/src/client/UberGump.cpp",
+      "old": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9",
+      "new": "d042ad33b81d43de646ef9a82ff4265788a86f18ccf74f3861a3d94a7c95d28d"
+    },
+    {
+      "report": "cpppj/tutorial-one-runtime.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/RawButtonControls.cpp"
+      ],
+      "source": "cpppj/src/client/RawButtonControls.cpp",
+      "old": "22ea0450231c3b81b1b74a6f56d52f6e5706f9c24543f8898f4e32131c0a6962",
+      "new": "ca4f6842a5c2951e744060c2bc1c66b4d52f246d095dd6b36ea87a1c5393e472"
+    },
+    {
+      "report": "cpppj/tutorial-one-runtime.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "source": "cpppj/src/client/UberGump.cpp",
+      "old": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9",
+      "new": "d042ad33b81d43de646ef9a82ff4265788a86f18ccf74f3861a3d94a7c95d28d"
+    },
+    {
+      "report": "cpppj/tutorial-two-runtime.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "source": "cpppj/src/client/UberGump.cpp",
+      "old": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9",
+      "new": "d042ad33b81d43de646ef9a82ff4265788a86f18ccf74f3861a3d94a7c95d28d"
+    }
+  ],
+  "semanticReversalToBaseline": true,
+  "knownExistingHashIssues": [
+    "기존 RawTutorialLater CRLF/LF 역사 핀 차이는 바꾸거나 새 통과로 세지 않는다.",
+    "기존 TYPE 요구 에너지 client/CMake 역사 핀 차이는 보존한다."
+  ],
+  "limitations": [
+    "실제 화면/게임/C++검사/CTest/전체 회귀와11미션 자연 완주는 실행하지 않았다.",
+    "이번에는 새 PE 함수 실행 관측이 없다. 가상 표/F1Help/제외 TYPE는 보호 파일 바이트의 정적 확인이다. 기존 독립 원문과 기대값은 보존한다.",
+    "외부 URL autoOpen/등록 프로토콜·OS 실행,기술 학습492a30,Help 기록 스트림은 아직 미연결이며 도달 시 명시 오류다.",
+    "링크 토큰 분해/현재 Script 상태·대체 창/중첩 모달 초기화 전역은 추가 원본 대조가 필요하다. Tell/브리핑 자체는 이전 Client 어댑터이므로 전체 원본 모달과 동일하다고 판정하지 않는다.",
+    "infoMode565ec4는 같은 쓰기 상태로 유지한다. 실제 참조는 네 쓰기이며 별도 다중 줄 제한 필드+d4로 임의 복사하지 않는다.",
+    "전체 Init/State/공장·가상 소멸/전략AI·지형/자연 포획·희생·대피·외관/음향 동일성과 전체 goal은 미완료다."
+  ],
+  "verification": {
+    "cpp_quick_help_client_audit": 0,
+    "cpp_quick_help_html_audit": 0,
+    "cpp_quick_help_window_audit": 0,
+    "cpp_quick_help_control_audit": 0,
+    "cpp_knowledge_menu_audit": 0,
+    "cpp_mission_lifecycle_audit": 0,
+    "decomp_quick_help_window_preservation": 0,
+    "decomp_quick_help_window_paths_preservation": 0,
+    "decomp_quick_help_control_preservation": 0,
+    "currentBinariesMatch": true
+  }
+}

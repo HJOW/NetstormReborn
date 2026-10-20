@@ -22,6 +22,8 @@ struct QuickHelpTypeInfo {
     float range{},damage{},cost{}; // +44/+48/+c4이며 damage는 hpPerSec 원본 값이다.
     std::string classification,mana; // +aa 클래스와 후처리한+a0 요구 에너지다.
 };
+class GameAssets; // 월드 설치 전에도 전역 TYPE/AST 자산은 Client 수명으로 존재한다.
+QuickHelpTypeInfo ReadAssetQuickHelpType(const GameAssets& assets,std::uint32_t type); // 메인 메뉴의 Help도 실제 TYPE/AST/요구 에너지 후처리로 정보를 읽는다.
 // TYPE/번역/Config와 같은 실제 정보 pane·파일 스트림을 연결한다. 도달한 효과만 필수다.
 struct QuickHelpHtmlHooks {
     std::function<const QuickHelpTypeInfo&()> type; // 매 선택 지점에서 같은 현재 TYPE 필드를 다시 읽는다.

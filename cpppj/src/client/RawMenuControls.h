@@ -7,6 +7,7 @@
 #include "client/MenuGumpDraw.h"
 #include "client/StoneButtonGump.h"
 #include "client/QuickHelpControl.h"
+#include "client/QuickHelpHtml.h"
 #include "o/GumpFormHost.h"
 #include <memory>
 
@@ -45,6 +46,24 @@ struct RawMenuHooks {
     std::function<o::GumpFormHost&()> objectForms; // 매Form효과에서현재Session의같은호스트를조회한다. 메뉴보다먼저Session을반납하지않는다.
     std::function<double()> gameSeconds; // 비용 표시의0055b4d0 현재 게임 시각이다. 벽시계와 구별한다.
 };
+// 전용 Help가 읽는 현재 Client 경계다. 창/파서/다중 줄/그림은 같은 실제 Gump 처리기를 사용한다.
+struct RawHelpHooks {
+    HtmlTextParserGlobals* globals{}; // Tell과 같은 원본 단락 억제 전역이다.
+    HtmlTextParserHooks html; // 같은 Config 조건/명령/그림 효과이며 링크만 창의 소유 영역에 연결한다.
+    std::function<std::string(std::string_view)> translate,config,substitute; // 현재 언어/파일 설정과 원본 바이트 치환이다.
+    std::function<std::optional<std::string>(std::string_view)> load; // 현재 VFS 파일의 바이트와 실패를 구별한다.
+    std::function<std::string(std::uint32_t)> text,typeName,description; // 실제 호스트 문자열/현재 TYPE 이름·설명이다.
+    std::function<std::uint32_t(std::string_view)> storeText; // 입력 큐와 같은80칸 문자열 고리다.
+    std::function<QuickHelpTypeInfo(std::uint32_t)> type; // 실제 Session/TYPE/AST 후처리의 현재 값이다.
+    std::function<std::int32_t(std::uint32_t)> hitPoints,helpFrame; // 실제 최대HP/TYPE+120이다.
+    std::function<std::int32_t(std::string_view)> lookup; // 실제 타입 이름 조회의 signed 결과다.
+    std::function<std::uint32_t(std::int32_t,std::int32_t,std::int32_t)> nearestColor; // 현재 화면 논리 팔레트의 실제 RGB 검색이다.
+    std::function<void(std::uint32_t,std::string_view,std::string_view)> queue; // Back의 현재 문자열 두 인자를 예약한다.
+    std::function<void(std::string_view)> script,external; // 원본 링크의 cmd/외부 프로토콜 효과다. 미복원 외부 경계는 명시 거부한다.
+    std::function<void(std::uint32_t)> learn; // 실제 기술 학습 효과다. 미연결을 성공으로 숨기지 않는다.
+    std::function<bool()> scripted,battle,challenge; // 현재 스크립트 깊이/기본 주제 선택 모드다.
+    std::function<std::string()> scriptName; // 현재 스크립트 복귀 이름이다.
+};
 // 가상 분배만 조립한다. 개별 생성/배치/입력/출력의 계산은 기존 원본 몸체를 그대로 사용한다.
 class RawMenuControls {
 public:
@@ -57,8 +76,13 @@ public:
     void SetExternalGumps(RawMenuExternalGumps hooks); // 생산 패널의 현재 저장소를 같은 출력 계층에 연결/해제한다.
     const TextGump& TextBackend() const; // 수량/예산도 기존 원본 한 줄 글자 처리기를 공유한다.
     const StyleText& StyleBackend() const; // 생산 글자도 같은 실제 조각·글꼴·그림 파서를 공유한다.
+    void MeasureText(std::span<const char> bytes,const std::array<std::uint32_t,8>& context,std::int32_t& width,std::int32_t& height,std::uint32_t limit) const; // 공통 돌 버튼 Fit도 같은 원본 글꼴 측정기를 사용한다.
     const GumpBackgroundCreate& BackgroundBackend() const; // 실제 TYPE/SHP를 읽는 같은 배경 생성기다.
     QuickHelpPopupState& PopupState() const; // 지식 카드 표식과 전용 Help Back이 공유할 같은 실제 저장소다.
+    void EnableHelp(RawHelpHooks hooks); // 현재 Client 경계를 같은 공통 트리에 한 번 연결한다.
+    std::uint32_t OpenHelp(std::uint32_t topic=0,std::int32_t mode=1,std::uint32_t learnType=0); // 실제 전용 창 재사용/모달/요청이다.
+    bool HelpOpen() const; // 현재 serial/등록/visible/dead를 조회한다.
+    void CloseHelp(); // Session 해제 전에 같은 창과 지연 삭제 큐를 정리한다.
     // 공통 기본 생성/가상 분배에서 현재 파생 노드를 직접 조회한다. 없는 토큰은 nullptr다.
     GumpCreateNode* Node(std::uint32_t token) const;
     StoneButtonGumpNode* Button(std::uint32_t token) const;

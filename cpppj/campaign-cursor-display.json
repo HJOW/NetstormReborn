@@ -23,7 +23,7 @@
     "cpppj/src/client/RawCampaignSession.cpp": "6d59bf8f7c9db19c0ca2a1b66594d36979280c82ffac06af529bab7d9698e920",
     "cpppj/src/client/Renderer.cpp": "29729e6b728f19e7cddfc4c193e1a719733c8b4c5934e8b0a864697fa8a4b4a2",
     "cpppj/src/client/Renderer.h": "d72b42478b0bbe275a02494181722ee4f3f4ed4d474966e56c9df30958f31ac2",
-    "cpppj/src/client/UberGump.cpp": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9",
+    "cpppj/src/client/UberGump.cpp": "d042ad33b81d43de646ef9a82ff4265788a86f18ccf74f3861a3d94a7c95d28d",
     "cpppj/tests/CMakeLists.txt": "a627575830fe9176dc72e24279dd80129787527faa645c2c1266799148bb7c70",
     "cpppj/tests/CampaignSessionTests.cpp": "6a6d54fd15eb24c0609492756880c774120f855138441820a536ea5bd73ee4f0",
     "cpppj/tests/PreviewColorMapsTests.cpp": "5019672dc1589cace9bb92690be4bf9786ab8257770794cb51fdff87cf937311",
@@ -2724,6 +2724,20 @@
           "group": "/currentSources",
           "previous": "2018bf47c030a419ccba5f701308668d2c74d646d4d678584cf6f04e893bd4b0",
           "current": "a627575830fe9176dc72e24279dd80129787527faa645c2c1266799148bb7c70"
+        }
+      ]
+    },
+    {
+      "unit": 257,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "전용 Help를 실제 Client 공통 등록표/입력/글꼴·스크롤/픽셀/소멸에 연결했다. 현재 소스 핀만 갱신하며 과거 근거/원문/기대값/실행·바이너리는 보존한다. 실제 게임과 C++검사는 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "group": "/currentSources",
+          "previous": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9",
+          "current": "d042ad33b81d43de646ef9a82ff4265788a86f18ccf74f3861a3d94a7c95d28d"
         }
       ]
     }

@@ -5,6 +5,10 @@
 #include "client/RawObjectMenu.h"
 #include "client/RawCarrierMenu.h"
 #include "client/RawPlayerMenu.h"
+#include "client/QuickHelpWindow.h"
+#include "client/ScriptCommand.h"
+#include "client/HtmlConditionEffect.h"
+#include "client/ImageGump.h"
 #include <filesystem>
 #include <sstream>
 
@@ -24,6 +28,7 @@ struct MenuClient {
     std::vector<std::string> sounds; // 실제 원본 입력 경로의 이름별 음향 요청이다.
     std::uint32_t cursor{}; // 제목 입력이 선택한 실제 커서 번호다.
     double gameSeconds{}; // 비용 표시는 벽시계 대신 이 현재 게임 시각을 읽는다.
+    HtmlTextParserGlobals helpGlobals;ScriptStringRing helpStrings;std::unique_ptr<ConfigInterface> helpConfig; // 창 조립에 쓰는 실제 HTML 전역/80칸 고리/조건 설정이다.
     // 게임/창을 열지 않고 실제 보호 자산과 모든 복원 모듈을 조립한다.
     explicit MenuClient(OriginalEdition edition=OriginalEdition::Patch1078):root(std::filesystem::path(__FILE__).parent_path().parent_path().parent_path()/"originals"),files(root),assets(Register(),edition),fonts(files,"Arial"),
         buttons(edition,{[] { return 0.0; },[this](auto) { return poll; },[] {}}) {
@@ -50,7 +55,60 @@ struct MenuClient {
     }
     // 실제 현재 트리의 hover와 누름을 통과시킨다. 명령 callback을 직접 호출하지 않는다.
     void Click(ScreenPoint point) { poll={InputCode::kLeftButton,point.x,point.y};buttons.Poll(poll);buttons.Event(poll); }
+    // 실제 보호 Help/TYPE/자산과 기존 공통 트리를 연결한다. 메인 메뉴와 같은 월드 설치 전 경계다.
+    void EnableHelp() {
+        RawHelpHooks h;h.globals=&helpGlobals;BindHtmlPictureText(h.html);helpConfig=std::make_unique<ConfigInterface>([this](auto path) { return files.TryRead(path); });helpConfig->SetInt("global.inMission",0);BindHtmlConditionConfig(h.html,*helpConfig,assets.Edition());h.translate=[](auto text) { return std::string(text); };h.config=[](auto key) { return key=="Quick Help Spec" ? std::string("d/help.english") : std::string(key); };h.substitute=[](auto text) { return std::string(text); };
+        h.load=[this](auto path) -> std::optional<std::string> { const auto bytes=files.TryRead(path);if (!bytes) return std::nullopt;return std::string(bytes->begin(),bytes->end()); };
+        h.text=[this](auto token) { return std::string(helpStrings.Resolve(token&0x0fffffffU)); };h.storeText=[this](auto text) { return Topic(text); };
+        h.lookup=[this](auto name) { return assets.TypeTable().Find(name); };h.typeName=[this](auto type) { return assets.TypeTable().Types()[type].name; };
+        h.type=[this](auto type) { return ReadAssetQuickHelpType(assets,type); };h.description=[this](auto type) { return assets.TypeTable().Types()[type].description; };h.hitPoints=[this](auto type) { return assets.TypeTable().Types()[type].maxHitPoints; };h.helpFrame=[this](auto type) { return type<70 || type-70>=assets.Types().size() ? -1 : assets.Types()[type-70].definition.specialFrames.helpFrame; };
+        h.nearestColor=[this](auto r,auto g,auto b) { std::array<std::uint32_t,256> logical{}; // 현재 보호 팔레트의 실제 RGB 검색을 공급한다.
+            // 원본 논리 DWORD의 채널 순서를 유지한다.
+            for (std::size_t i=0;i<logical.size();++i) { const auto c=assets.Palette().Color(static_cast<std::uint8_t>(i));logical[i]=c.red|(std::uint32_t(c.green)<<8)|(std::uint32_t(c.blue)<<16); }return FindPaletteColor(logical,r,g,b);
+        };
+        h.queue=[this](auto command,auto,auto) { commands.push_back({command,0,0}); };h.script=[](auto) { throw std::logic_error("이 조립 검사의 cmd 링크 미사용"); };h.external=[](auto) { throw std::logic_error("이 조립 검사의 외부 링크 미사용"); };h.learn=[](auto) { throw std::logic_error("일반 Help OK는 학습을 호출하지 않는다"); };
+        h.scripted=h.battle=h.challenge=[] { return false; };h.scriptName=[] { return std::string{}; };menus->EnableHelp(std::move(h));
+    }
+    // 실제80칸 고리의 같은 수명에 TYPE 관문 밖 별칭을 준다.
+    std::uint32_t Topic(std::string_view text) { return 0x70000000U|helpStrings.Store(text); }
 };
+}
+// 실제 전용 부모/자식/공통 등록/스크롤 요청/픽셀과 다음 프레임 지연 삭제를 검사한다. 실행은 후속 통합 단계로 이월한다.
+TEST_CASE(RawMenuControls_HelpActualTreePixelsAndOutsideInput) {
+    MenuClient client;client.EnableHelp();const auto root=client.buttons.RegisteredGump(0);const auto token=client.menus->OpenHelp(0x61000001U);
+    CHECK(client.menus->HelpOpen() && client.buttons.RegisteredGump(0)==root);auto* window=static_cast<QuickHelpContentNode*>(client.menus->Node(token));CHECK(window && window->vtable==0x514ec4 && window->parent==root);if (!window) return;
+    auto* body=static_cast<HtmlBodyGumpNode*>(client.menus->Node(window->body));CHECK(body && body->vtable==0x50bd38 && body->text);if (!body) return;CHECK(body->body[0] && client.menus->Node(body->text)->parent==window->body);
+    auto* text=static_cast<ScrollingTextGumpNode*>(client.menus->Node(body->text));CHECK(text->buffer && text->slider);CHECK((text->textFlags&6)==6 && text->scrollRequest==0);
+    client.buttons.Event({0x00280000U,0,0});CHECK(text->scrollRequest==10); // 원본 Down의 상대 스크롤 요청을 같은 표시 자식에서 읽는다.
+    const auto reused=client.menus->OpenHelp(client.Topic("unitHelp"));CHECK(reused==token && window->body);CHECK(client.menus->Report().find("raw_help_body\t")!=std::string::npos);
+    constexpr int pitch=647,height=480; // 행 padding도 실제 Help 클립 밖으로 보존한다.
+    std::vector<std::uint8_t> pixels(pitch*height,0x5a);std::array<std::uint32_t,256> logical{};
+    // 같은 실제 보호 팔레트로 음영 표를 만든다.
+    for (std::size_t i=0;i<logical.size();++i) { const auto c=client.assets.Palette().Color(static_cast<std::uint8_t>(i));logical[i]=c.red|(std::uint32_t(c.green)<<8)|(std::uint32_t(c.blue)<<16); }
+    client.menus->Draw(pixels,pitch,height,client.Palette(),BuildGumpShadeMaps(logical));CHECK(std::any_of(pixels.begin(),pixels.end(),[](auto value) { return value!=0x5a; }));
+    // 실제 출력의 행 padding에는 전용 창을 그리지 않는다.
+    for (int y=0;y<height;++y) for (int x=640;x<pitch;++x) CHECK(pixels[static_cast<std::size_t>(y)*pitch+x]==0x5a);
+    CHECK(!client.buttons.Event({InputCode::kLeftButton,20,20}));CHECK(!client.menus->HelpOpen() && client.menus->Node(token) && (window->flags&0x10000));
+    const auto child=body->text;client.menus->CleanupFrame();CHECK(!client.menus->Node(token) && !client.menus->Node(child)); // 아래 돌 버튼으로 클릭을 재전달하지 않는다.
+}
+// Back/OK는 실제 돌 버튼 serial과 같은 파생 Handle을 통과하고 소멸 뒤 이력/표식을 정리한다.
+TEST_CASE(RawMenuControls_HelpActualHistoryButtonsAndReopen) {
+    MenuClient client;client.EnableHelp();const auto token=client.menus->OpenHelp(0x61000001U);auto* window=static_cast<QuickHelpContentNode*>(client.menus->Node(token));CHECK(window);if (!window) return;
+    client.menus->OpenHelp(client.Topic("unitHelp"));const auto back=client.menus->Node(window->backButton)->serial;
+    CHECK(client.buttons.HandleGump(token,0x0200002cU,back,0)==1);const auto* body=static_cast<HtmlBodyGumpNode*>(client.menus->Node(window->body));CHECK(body && std::string(body->body.data()).find("~5~w")!=std::string::npos);
+    const auto* ok=client.menus->Node(window->learnButton);const ScreenPoint point{static_cast<int>(window->x+ok->x+ok->width/2),static_cast<int>(window->y+ok->y+ok->height/2)}; // 실제 부착 좌표로 누름/뗌을 보낸다.
+    client.Click(point);CHECK(client.buttons.HasCapture());client.poll={InputCode::kLeftButton|InputCode::kRelease,point.x,point.y};client.buttons.Event(client.poll);CHECK(!client.menus->HelpOpen());client.menus->CleanupFrame();CHECK(!client.menus->Node(token) && !client.menus->PopupState().command);
+    const auto reopened=client.menus->OpenHelp(0x61000001U);CHECK(reopened && reopened!=token && client.menus->HelpOpen());client.menus->CloseHelp();CHECK(!client.menus->HelpOpen() && !client.menus->Node(reopened));
+}
+// 실제 Sun Cannon 정보/도움말 전용 프레임이 메인 메뉴에서도 같은 트리/픽셀 처리기를 사용한다.
+TEST_CASE(RawMenuControls_HelpActualTypeInfoAndImage) {
+    MenuClient client;client.EnableHelp();const auto type=static_cast<std::uint32_t>(client.assets.TypeTable().Find("SunCannon"));const auto info=ReadAssetQuickHelpType(client.assets,type);CHECK(info.range==20 && info.damage==16 && info.cost==400 && info.mana=="s");
+    const auto token=client.menus->OpenHelp(type);const auto* window=static_cast<QuickHelpContentNode*>(client.menus->Node(token));CHECK(window && window->picture && window->information);if (!window) return;
+    const auto* image=static_cast<ImageGumpNode*>(client.menus->Node(window->picture));CHECK(image && image->type==type && image->mode==8);const auto* pane=static_cast<ScrollingTextGumpNode*>(client.menus->Node(window->information));CHECK(pane && pane->buffer && (pane->flags&1));
+    std::array<std::uint32_t,256> logical{};
+    // 그림/본문도 같은 실제 보호 팔레트로 출력한다.
+    for (std::size_t i=0;i<logical.size();++i) { const auto c=client.assets.Palette().Color(static_cast<std::uint8_t>(i));logical[i]=c.red|(std::uint32_t(c.green)<<8)|(std::uint32_t(c.blue)<<16); }
+    std::vector<std::uint8_t> pixels(640*480,0x5a);client.menus->Draw(pixels,640,480,client.Palette(),BuildGumpShadeMaps(logical));CHECK(std::any_of(pixels.begin(),pixels.end(),[](auto value) { return value!=0x5a; }));client.menus->CloseHelp();
 }
 // 같은 실제 트리/원본 StyleText/아이콘/클립/idle와 다음 프레임 지연 해제를 검사한다.
 TEST_CASE(RawMenuControls_FloatingSpActualPixelsAndLifetime) {

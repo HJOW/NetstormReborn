@@ -93,7 +93,7 @@ struct RawButtonControls::Impl {
         buttonHooks.poll=[this](auto code) { return hooks.poll ? hooks.poll(code) : currentPoll; };
         buttonHooks.redraw=[this](auto,bool) { changed=true; };
         buttonHooks.sound=[this] { if (hooks.sound) hooks.sound(); };
-        buttonHooks.baseEvent=[](auto,auto,auto,auto) { return 0U; }; // 전체 도움말 창은 후속 Client UI 연결에서 공급한다.
+        buttonHooks.baseEvent=[this](auto token,auto event,auto first,auto second) { return menus ? menus->Handle(token,event,first,second) : 0U; }; // 같은 기본 GumpHelp로 위임하며 Button Handle을 다시 호출하지 않는다.
         buttons=std::make_unique<ButtonGump>(create,buttonState,*factory,*collection,*events,*input,*lifetime,std::move(buttonHooks));
         GumpBackgroundCreateHooks backgroundHooks;
         backgroundHooks.node=[this](auto token) { const auto found=backgrounds.find(token);return found==backgrounds.end() ? nullptr : found->second.get(); };
@@ -101,6 +101,7 @@ struct RawButtonControls::Impl {
         backgroundHooks.frame=[this](auto,auto,auto number)->const GumpBackgroundFrame* { return number==assets.frame ? &backgroundFrame : nullptr; };
         backgroundCreate=std::make_unique<GumpBackgroundCreate>(create,*factory,backgroundColor,std::move(backgroundHooks));
         StoneButtonGumpHooks stoneHooks;
+        stoneHooks.measure=[this](auto,auto bytes,const auto& context,auto& width,auto& height,auto limit) { if (!menus) throw std::logic_error("공통 돌 버튼의 실제 글꼴 계층 미설치");menus->MeasureText(bytes,context,width,height,limit); }; // Help/화살표 Fit도 같은 원본 측정기다.
         stoneHooks.node=[this](auto token) { const auto found=stones.find(token);return found==stones.end() ? (menus ? menus->Button(token) : nullptr) : found->second.get(); };
         stoneHooks.allocate=[this](auto bytes) { return Allocate(bytes); };stoneHooks.push=[this](auto token) { tree->Push(token); };
         stoneHooks.attach=[this](auto token,float x,float y,auto parent,auto mode) { Attach(token,x,y,parent,mode); };

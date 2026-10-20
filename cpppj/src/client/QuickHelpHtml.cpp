@@ -1,10 +1,21 @@
 // 태그/이름의 원문 case와 주제 prefix·현재 TYPE 재조회·정보 pane의 실제 호출 순서를 유지한다.
 #include "client/QuickHelpHtml.h"
+#include "client/AiTypeRequiredEnergy.h"
 #include "o/OriginalText.h"
 #include <bit>
 #include <cmath>
 #include <stdexcept>
 namespace netstorm::client {
+// 설치된 월드는 Session의 현재 표를 사용한다. 월드가 없을 때만 같은 전역 TYPE/AST의 초기 값을 읽는다.
+QuickHelpTypeInfo ReadAssetQuickHelpType(const GameAssets& assets,std::uint32_t type) {
+    const auto types=assets.TypeTable().Types();if (type>=types.size()) throw std::out_of_range("월드 설치 전 Help TYPE 범위");const auto& record=types[type];QuickHelpTypeInfo result;
+    result.theme=record.theme;result.flags1=record.flags1;result.flags2=record.flags2;result.cost=record.cost;result.mana=BindAiTypeRequiredEnergy(assets,types)(type);
+    if (type>=o::kFirstAssetTypeNumber && type-o::kFirstAssetTypeNumber<assets.Types().size()) {
+        const auto& definition=assets.Types()[type-o::kFirstAssetTypeNumber].definition;result.range=static_cast<float>(definition.Number("range").value_or(0));result.damage=static_cast<float>(definition.Number("hpPerSec").value_or(0));
+        if (const auto classification=definition.String("class")) result.classification=classification->substr(0,classification->find('\0'));if (result.classification.size()>23) throw std::length_error("월드 설치 전 Help class23바이트 초과");
+    }
+    return result;
+}
 namespace {
 // 선택한 실제 효과가 없으면 빈 화면으로 성공시키지 않는다.
 template<class F> const F& Need(const F& hook) { if (!hook) throw std::logic_error("전용 Help HTML 실제 효과 누락");return hook; }

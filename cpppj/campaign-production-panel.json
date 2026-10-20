@@ -323,13 +323,13 @@
     "cpppj/src/app/main.cpp": "9395c790b1a31c7e36f76b55cea3dd89ee7fdc769e694dc7d2fbdaa7e9eb7cd8",
     "cpppj/src/client/GumpBackgroundDraw.h": "b0a22d73cb6cabef1079313235abdedc344e31203c5ad5c0c618457b7673a7b3",
     "cpppj/src/client/InventoryGump.cpp": "0a90a5a9cc763d2675cbf47fa10a1cde68fddabcdc86a2758629f1e77842bece",
-    "cpppj/src/client/RawButtonControls.cpp": "22ea0450231c3b81b1b74a6f56d52f6e5706f9c24543f8898f4e32131c0a6962",
+    "cpppj/src/client/RawButtonControls.cpp": "ca4f6842a5c2951e744060c2bc1c66b4d52f246d095dd6b36ea87a1c5393e472",
     "cpppj/src/client/RawButtonControls.h": "548d27ebba1a23f585763222ff428fd257456e79e47ae83ac38849712528ece1",
     "cpppj/src/client/RawCampaignSession.cpp": "6d59bf8f7c9db19c0ca2a1b66594d36979280c82ffac06af529bab7d9698e920",
     "cpppj/src/client/RawCampaignSession.h": "2d53de38afc2c6a4ef2162e91ed7d2b6fb58b4103f847030a21f686e6fae68e4",
-    "cpppj/src/client/RawMenuControls.cpp": "379bb83823100d91566e7c71740dc008d543e3e6c60552eec61cd0564b806034",
-    "cpppj/src/client/RawMenuControls.h": "ce840dfe96790e5c9bdec7e5b4f172b8c3765e2ae53d99f5e7f4da76b60bf1d5",
-    "cpppj/src/client/UberGump.cpp": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9",
+    "cpppj/src/client/RawMenuControls.cpp": "fd8c19e4b7fde7a65adfa87251d859130106a6e388ced7527c933c73c6045029",
+    "cpppj/src/client/RawMenuControls.h": "edcb095b283233a2c3ac893dace31700ac282a23cdce165594d32d076e5fe465",
+    "cpppj/src/client/UberGump.cpp": "d042ad33b81d43de646ef9a82ff4265788a86f18ccf74f3861a3d94a7c95d28d",
     "cpppj/src/o/RawContainedFinder.cpp": "b3bfedcc598e04ab1a4755ee77adff8a331d1be941975fe379dc705612d9a3a2",
     "cpppj/src/o/RawGraph.cpp": "5427d22b06ec1f9eb54ab9ede9c3e4008baeac3e3439cba3d8132236b9464fb1",
     "cpppj/tests/CMakeLists.txt": "a627575830fe9176dc72e24279dd80129787527faa645c2c1266799148bb7c70",
@@ -2128,6 +2128,38 @@
           "group": "/currentSources",
           "previous": "2018bf47c030a419ccba5f701308668d2c74d646d4d678584cf6f04e893bd4b0",
           "current": "a627575830fe9176dc72e24279dd80129787527faa645c2c1266799148bb7c70"
+        }
+      ]
+    },
+    {
+      "unit": 257,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "전용 Help를 실제 Client 공통 등록표/입력/글꼴·스크롤/픽셀/소멸에 연결했다. 현재 소스 핀만 갱신하며 과거 근거/원문/기대값/실행·바이너리는 보존한다. 실제 게임과 C++검사는 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawMenuControls.cpp",
+          "group": "/currentSources",
+          "previous": "379bb83823100d91566e7c71740dc008d543e3e6c60552eec61cd0564b806034",
+          "current": "fd8c19e4b7fde7a65adfa87251d859130106a6e388ced7527c933c73c6045029"
+        },
+        {
+          "path": "cpppj/src/client/RawMenuControls.h",
+          "group": "/currentSources",
+          "previous": "ce840dfe96790e5c9bdec7e5b4f172b8c3765e2ae53d99f5e7f4da76b60bf1d5",
+          "current": "edcb095b283233a2c3ac893dace31700ac282a23cdce165594d32d076e5fe465"
+        },
+        {
+          "path": "cpppj/src/client/RawButtonControls.cpp",
+          "group": "/currentSources",
+          "previous": "22ea0450231c3b81b1b74a6f56d52f6e5706f9c24543f8898f4e32131c0a6962",
+          "current": "ca4f6842a5c2951e744060c2bc1c66b4d52f246d095dd6b36ea87a1c5393e472"
+        },
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "group": "/currentSources",
+          "previous": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9",
+          "current": "d042ad33b81d43de646ef9a82ff4265788a86f18ccf74f3861a3d94a7c95d28d"
         }
       ]
     }
