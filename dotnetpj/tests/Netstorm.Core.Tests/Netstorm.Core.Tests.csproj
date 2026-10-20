@@ -49,6 +49,8 @@
     <!-- 원본 월드 코어 W02 Pop 조각: 공간 등록·해제·생성·반납 6,241행과 파생 지원 주소 152행의 원본 PE 독립 관찰 (10.78 행만 쓴다). -->
     <None Include="../../../cpppj/tests/fixtures/pop-x86.tsv" Link="X86/pop-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/pop-vtables.tsv" Link="X86/pop-vtables.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <!-- 원본 월드 코어 W02 미니맵 큐 조각: 큐 등록·Refresh·view 비교·전체/부분 그리기 1,041행의 원본 PE 독립 관찰 (10.78 행만 쓴다). -->
+    <None Include="../../../cpppj/tests/fixtures/metadisplaydirty-x86.tsv" Link="X86/metadisplaydirty-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <!-- 원본 월드 코어 W02 PostPop 조각: 공통 후처리·Pop·Unpop 2,140행과 다리 접두 240행의 원본 PE 독립 관찰 (10.78 행만 쓴다). -->
     <None Include="../../../cpppj/tests/fixtures/postpop-x86.tsv" Link="X86/postpop-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/bridgepostpop-x86.tsv" Link="X86/bridgepostpop-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
