@@ -28,11 +28,11 @@
     "cpppj/src/client/RawObjectMenu.h": "47fa941dc9fe3becb679f297ea29c8f7cc662aa44d1e6f91c5643739aa905e9a",
     "cpppj/src/client/RawUserHighlight.cpp": "3ac1867b7da1f553b0fb46103207df3886f31a332e1332456b2590b089438767",
     "cpppj/src/client/RawUserHighlight.h": "a19046a0a3061565a82b7463307e4886c3b9f6db0151d02ada619d5a32c3f90a",
-    "cpppj/src/client/UberGump.cpp": "2191e3b433d83f977e80a53764bbcbab23f43a6409d3e854b7d8731395d78795",
+    "cpppj/src/client/UberGump.cpp": "b8a5fedc6c83ca04e5f8687f6a73a84e769686691ca180789123788360b5a915",
     "cpppj/src/client/UserInput.cpp": "fd1bee42a48c4a33098114e813a7909d449791671fb0e313b76efc55216c20bd",
     "cpppj/src/o/SquidFactory.h": "439126b14875597ae876ab82d1699d414fa15fdf76ec9ac83f6794d32595c549",
     "cpppj/src/o/SquidReward.h": "59cf154a0aa681fbce7bdf445728afc582409bd9af9b24e5b135e435e92aa362",
-    "cpppj/tests/CMakeLists.txt": "2b3e4c0e8515b9911d7e6cb918f9f585e1a425c195c3d03b94e623044c34eea7",
+    "cpppj/tests/CMakeLists.txt": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
     "cpppj/tests/CampaignCursorClientEffectsTests.cpp": "f04679442eea66764f77ab814314c9edd1790dca1f61f39e95eb29804b78d92b",
     "cpppj/tests/CampaignObjectMenuTests.cpp": "fea9198ea2150c42bb523f7ac9298c2f819acd1fc9b9887b53020c206ad62563",
     "cpppj/tests/CampaignSessionTests.cpp": "6a6d54fd15eb24c0609492756880c774120f855138441820a536ea5bd73ee4f0",
@@ -3029,6 +3029,26 @@
           "group": "/currentSources",
           "previous": "76ed98dec106caaea3e49c98b08df99daa7938d28a07763dba3e0995aa188fba",
           "current": "2b3e4c0e8515b9911d7e6cb918f9f585e1a425c195c3d03b94e623044c34eea7"
+        }
+      ]
+    },
+    {
+      "unit": "252",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "실제 Mission techAllowed의 매회 항목 조회·모드·255칸 쓰기를 현재 Tutorial 단계1의 같은 Session/TotalMade에 적용한다. 사제 건설/생산이 같은 제한을 읽는다. 현재 핀만 갱신하고 과거 files/evidence/실행/원문/기대값은 보존한다. 제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "group": "/currentSources",
+          "previous": "2191e3b433d83f977e80a53764bbcbab23f43a6409d3e854b7d8731395d78795",
+          "current": "b8a5fedc6c83ca04e5f8687f6a73a84e769686691ca180789123788360b5a915"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/currentSources",
+          "previous": "2b3e4c0e8515b9911d7e6cb918f9f585e1a425c195c3d03b94e623044c34eea7",
+          "current": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09"
         }
       ]
     }

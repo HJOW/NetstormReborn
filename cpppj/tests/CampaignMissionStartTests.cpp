@@ -4,6 +4,7 @@
 #include "client/RawCampaignTutorialOneBindings.h"
 #include "client/MissionGuideInput.h"
 #include "client/MissionLifecycle.h"
+#include "client/MissionTechnology.h"
 #include "o/RawMissionGuide.h"
 #include "o/RawSunAviaryProcess.h"
 #include "o/RawRainAviaryProcess.h"
@@ -646,4 +647,20 @@ TEST_CASE(CampaignSunFlyer_ActualHomeNoticeAndNaturalRelaunch) {
         }
     }
     CHECK(launched && !core.destroy.PreDepth() && !core.destroy.PostDepth() && !core.bookkeeping.depth);
+}
+
+// 같은 실제 Session의 건설/생산 허용 표에 보호 Early 제한을 쓰고 다음 캠페인 세션의 초기 허용도 확인한다.
+TEST_CASE(CampaignMissionTechnology_ActualSessionRestrictions) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);
+    const std::array<std::string_view,3> names{"Tutorial1","Tutorial5","TheWarBegins"}; // 단일 허용·여러 허용/제단·다이스와 제한 없는 실제 캠페인의 독립 입력이다.
+    // 이전 세션은 실제 프로세스/월드/허용 표를 반납하고 다음 Session이 새 표를 소유한다.
+    for (std::size_t index=0;index<names.size();++index) {
+        ConfigInterface config([&](std::string_view path) { return assets.files.TryRead(path); });ConfigureStart(config);MissionScript script(config,names[index]);
+        StartExternal external;auto fort=FortTemplate::Parse(assets.files.Read(script.FortPath()),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),script.FortName(),external.Services());session.Load();
+        const auto before=session.Core().bookkeeping;ApplyMissionTechnology(script,assets.game.TypeTable(),session.TotalMade());const auto& types=assets.game.TypeTable();
+        CHECK(session.TotalMade().Allowed(types.Find("windVortex")));
+        CHECK(session.TotalMade().Allowed(types.Find("dais"))==(index!=0));CHECK(session.TotalMade().Allowed(types.Find("rainCannon"))==(index==2));
+        CHECK(session.TotalMade().Allowed(types.Find("sunArcher"))==(index!=0));
+        const auto& after=session.Core().bookkeeping;CHECK(after.localCounts==before.localCounts && after.localSecondaryCounts==before.localSecondaryCounts && after.globalCounts==before.globalCounts);
+    }
 }

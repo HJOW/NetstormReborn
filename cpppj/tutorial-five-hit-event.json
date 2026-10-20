@@ -10,7 +10,7 @@
     "cpppj/src/o/RawMissile.h": "19e31c6abf9e0a8ce2f292e47650ec8f924205ce2dff03eb4f9a1c3fbdccae6c",
     "cpppj/src/client/RawCampaignSession.cpp": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
     "cpppj/tests/ThunderMissileTests.cpp": "aaa6c74136f2f4c0beaa369b9adca8b906b28ccddea5f75197c1cff2cddf1b51",
-    "cpppj/tests/CMakeLists.txt": "2b3e4c0e8515b9911d7e6cb918f9f585e1a425c195c3d03b94e623044c34eea7",
+    "cpppj/tests/CMakeLists.txt": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
     "cpppj/tests/fixtures/thunder-hit-event-x86.tsv": "64edac17dc6f25824bfed45afc6537cf120fe9f051fb47c84bceb4bfdbf85f58",
     "tools/decomp_thunder_hit_event.py": "8edc400c8020462187d401af42fde9d9d05a7a3ec1f1c9f3310fe16ccd6eada0",
     "cpppj/thunder-hit-event-native.json": "0fab34448a29358363ba67d2528c0e2d1809ae8cc9a2e6d19e68fd9c38b580c8",
@@ -616,6 +616,20 @@
           "group": "/sources",
           "previous": "76ed98dec106caaea3e49c98b08df99daa7938d28a07763dba3e0995aa188fba",
           "current": "2b3e4c0e8515b9911d7e6cb918f9f585e1a425c195c3d03b94e623044c34eea7"
+        }
+      ]
+    },
+    {
+      "unit": "252",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "실제 Mission techAllowed의 매회 항목 조회·모드·255칸 쓰기를 현재 Tutorial 단계1의 같은 Session/TotalMade에 적용한다. 사제 건설/생산이 같은 제한을 읽는다. 현재 핀만 갱신하고 과거 files/evidence/실행/원문/기대값은 보존한다. 제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "2b3e4c0e8515b9911d7e6cb918f9f585e1a425c195c3d03b94e623044c34eea7",
+          "current": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09"
         }
       ]
     }

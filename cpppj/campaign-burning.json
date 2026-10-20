@@ -105,7 +105,7 @@
     "cpppj/src/client/RawCampaignParticles.h": "936d96d04a8737266462b5045e6d433a0abbd76dd5e1e76de9f087911f3eda32",
     "cpppj/src/client/RawCampaignParticles.cpp": "08317368d2c12e6d5c78224c3a568048b577b32eae89e401d47550f59e0ee0d3",
     "cpppj/src/client/RawCampaignSession.cpp": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
-    "cpppj/tests/CMakeLists.txt": "2b3e4c0e8515b9911d7e6cb918f9f585e1a425c195c3d03b94e623044c34eea7",
+    "cpppj/tests/CMakeLists.txt": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
     "cpppj/tests/CampaignSessionTests.cpp": "6a6d54fd15eb24c0609492756880c774120f855138441820a536ea5bd73ee4f0",
     "tools/decomp_burning_lifetime_draw.py": "f5a4e7971e0319845f2863b1ebb68cfa2c04db528456a39d29671bec6d4932b0",
     "tools/decomp_render_frame_gate.py": "01f27d259269042a06c5ee589ee1b352a4327abe6775fe82bef84b56c26983dd",
@@ -12060,6 +12060,20 @@
           "group": "/currentSources",
           "previous": "76ed98dec106caaea3e49c98b08df99daa7938d28a07763dba3e0995aa188fba",
           "current": "2b3e4c0e8515b9911d7e6cb918f9f585e1a425c195c3d03b94e623044c34eea7"
+        }
+      ]
+    },
+    {
+      "unit": "252",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "실제 Mission techAllowed의 매회 항목 조회·모드·255칸 쓰기를 현재 Tutorial 단계1의 같은 Session/TotalMade에 적용한다. 사제 건설/생산이 같은 제한을 읽는다. 현재 핀만 갱신하고 과거 files/evidence/실행/원문/기대값은 보존한다. 제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/currentSources",
+          "previous": "2b3e4c0e8515b9911d7e6cb918f9f585e1a425c195c3d03b94e623044c34eea7",
+          "current": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09"
         }
       ]
     }

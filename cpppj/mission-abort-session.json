@@ -9,8 +9,8 @@
   "sources": {
     "cpppj/src/client/MissionGuideInput.cpp": "9181acf22bb07785cb9c6eb89708ff8532af05de62f1236cb616fbff4d1c3e8e",
     "cpppj/src/client/MissionGuideInput.h": "6577a5aba688700ad8779001e97b4096716ed84a1af0f760be89b950156b50c8",
-    "cpppj/src/client/UberGump.cpp": "2191e3b433d83f977e80a53764bbcbab23f43a6409d3e854b7d8731395d78795",
-    "cpppj/tests/CMakeLists.txt": "2b3e4c0e8515b9911d7e6cb918f9f585e1a425c195c3d03b94e623044c34eea7",
+    "cpppj/src/client/UberGump.cpp": "b8a5fedc6c83ca04e5f8687f6a73a84e769686691ca180789123788360b5a915",
+    "cpppj/tests/CMakeLists.txt": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
     "tools/decomp_mission_abort.py": "c86a490f3be7eded578d0df9589bf9bc91a7a2fa656067745966df269dd3f22e",
     "tools/cpp_mission_abort_audit.py": "a978241832853509334e5f865ec069996595b7cf6d552bc354090e4ab7fc4d3a",
     "cpppj/tests/MissionControlTests.cpp": "44af9c71e9ba66f3a9aa3a38e05cabe1fa0302a0109191364fdac57f7c9ab30c"
@@ -1373,6 +1373,26 @@
           "group": "/sources",
           "previous": "28205613795fcc52b4712797aecdcca53fd956eb06dd893e10da926700a12b63",
           "current": "a978241832853509334e5f865ec069996595b7cf6d552bc354090e4ab7fc4d3a"
+        }
+      ]
+    },
+    {
+      "unit": "252",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "실제 Mission techAllowed의 매회 항목 조회·모드·255칸 쓰기를 현재 Tutorial 단계1의 같은 Session/TotalMade에 적용한다. 사제 건설/생산이 같은 제한을 읽는다. 현재 핀만 갱신하고 과거 files/evidence/실행/원문/기대값은 보존한다. 제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "group": "/sources",
+          "previous": "2191e3b433d83f977e80a53764bbcbab23f43a6409d3e854b7d8731395d78795",
+          "current": "b8a5fedc6c83ca04e5f8687f6a73a84e769686691ca180789123788360b5a915"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "2b3e4c0e8515b9911d7e6cb918f9f585e1a425c195c3d03b94e623044c34eea7",
+          "current": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09"
         }
       ]
     }

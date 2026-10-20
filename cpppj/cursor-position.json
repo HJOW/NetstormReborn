@@ -32,7 +32,7 @@
     "cpppj/tests/CursorPositionTests.cpp": "111ab2b59d662bacc5b51bb44d54fccec4260df86f15502e370a35d7d13a73f1",
     "cpppj/tests/CursorPreviewSupport.h": "fa4e6b6d54bbc564af308ffd154f2ced7482a131c542222c0342e6019d6c9084",
     "cpppj/src/client/CMakeLists.txt": "0ea1587f2d9dcd22fb2afbdeeefcb151242775b7083018dd39eb181a84fc0b06",
-    "cpppj/tests/CMakeLists.txt": "2b3e4c0e8515b9911d7e6cb918f9f585e1a425c195c3d03b94e623044c34eea7"
+    "cpppj/tests/CMakeLists.txt": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09"
   },
   "limitations": [
     "실제 정수 위치 갱신/역투영/CRT 절삭을 실행한다. 단독 입력의 Activate/Create/선택은 명시 효과다.",
@@ -1355,6 +1355,20 @@
           "group": "/sha256",
           "previous": "76ed98dec106caaea3e49c98b08df99daa7938d28a07763dba3e0995aa188fba",
           "current": "2b3e4c0e8515b9911d7e6cb918f9f585e1a425c195c3d03b94e623044c34eea7"
+        }
+      ]
+    },
+    {
+      "unit": "252",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "실제 Mission techAllowed의 매회 항목 조회·모드·255칸 쓰기를 현재 Tutorial 단계1의 같은 Session/TotalMade에 적용한다. 사제 건설/생산이 같은 제한을 읽는다. 현재 핀만 갱신하고 과거 files/evidence/실행/원문/기대값은 보존한다. 제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sha256",
+          "previous": "2b3e4c0e8515b9911d7e6cb918f9f585e1a425c195c3d03b94e623044c34eea7",
+          "current": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09"
         }
       ]
     }

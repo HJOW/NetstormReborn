@@ -1439,3 +1439,12 @@ cpppj/guide-transitions-native.json text eol=lf
 cpppj/guide-transitions-session.json text eol=lf
 tools/decomp_guide_transitions.py text eol=lf
 tools/cpp_guide_transitions_audit.py text eol=lf
+# 실제 미션 기술 허용 목록과 현재 세션의 동일 표 연결을 보존한다.
+cpppj/src/client/MissionTechnology.h text eol=lf
+cpppj/src/client/MissionTechnology.cpp text eol=lf
+cpppj/tests/MissionTechnologyTests.cpp text eol=lf
+cpppj/tests/fixtures/mission-technology-x86.tsv text eol=lf
+cpppj/mission-technology-native.json text eol=lf
+cpppj/mission-technology-session.json text eol=lf
+tools/decomp_mission_technology.py text eol=lf
+tools/cpp_mission_technology_audit.py text eol=lf

@@ -1,5 +1,17 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-21 단위252 연결 완료: Early 기술 허용 목록과 공용 건설/생산 표
+
+- [x] 같은 goal을 이어 진행했다. 직전 턴은 실제 Guide 교체/다음 미션 큐를 구현·기록·커밋한 진행 턴이다. 시작 HEAD `2054e074`, 현재/마지막 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-20**로 일치한다. AGENTS와 양 인수인계를 다시 읽었고 새 디컴파일·원본/CD·AGENTS 변경은 없다. 다른 세션의 DN/README 작업은 포함하지 않는다.
+- [x] 보호 Early1~6 모두 `techAllowed=deny;all;allow;...`인데 실제 단계1에 적용 호출이 없어 세션 표가 전부 허용으로 남았다. `MissionTechnology`로 원본482eb0의 매회 현재 목록 조회·allow1 시작·deny/allow 모드·all의 첫255DWORD/이름 한 칸 쓰기·대소문자 비교·첫 빈 항목 종료를 복원했다. 공백은 다듬지 않고 원본 C 문자열의 첫NUL을 따르며,512BYTE 초과/실제 미등록-1 쓰기는 안전한 기존 저장소에서 예외로 드러낸다. 잘못된 항목을 건너뛰어 성공시키지 않는다.
+- [x] Tutorial 단계1의 현재 월드/로그인 뒤,사용자 입력·단계3 Start 전에 `world_->Session().TotalMade()`에 적용한다. 기존 사제 건설/생산이 동일한 표를 직접 읽는다. 새 메뉴 전용 사본은 없다. 원본은 loadFort 비동기 요청 뒤 적용하므로 현재 동기 설치 어댑터의 전체 State7 복원 근거로 세지 않는다. Tutorial 소멸의 AllowAll1은 현재 Session 반납/새0표 생성과 구별해 기록했다.
+- [x] 제품 변경 전에 실제482eb0/482d50/49a860/4c23c0/4c23e0·CRT를 **55고유 입력·55정상 반환·665852명령**으로 관측했다. Config/512임시버퍼/키 서식/TLS만 명시 경계다. 보호11목록·대소문자·빈 항목·NUL·미등록·조회 중 변경을 교차하고 전체257DWORD/호출 순서를 보존했다. 원본의 미등록-1은 표 앞 한 칸 쓰기이며 격리 관측과 제품 안전 거부를 구별한다. 게임/OS/창은 없다. 최초 도구/fixture/JSON을 `extracted/mission-technology-20261021-first-capture/`에 제품 변경 전에 동결했다.
+- [x] 새 검사3개는 독립55행의 전체 표/순서와 실제 TotalMade,보호11개 Script/타입/표/잘못된 쓰기 거부,실제 Tutorial1→Tutorial5→TheWarBegins의 공용 세션 표/세 장부 불변이다. **C++검사는 컴파일만 했고 실행하지 않았다.** 첫/최종 전체 Release 모두 **경고0·오류0·종료0**, 최종 로그 `extracted/cpp-mission-technology-20261021-build2.log`다. 실제 게임/C++검사/CTest/전체 회귀는 사용자 지시대로 후속 통합 실제 플레이에 이월한다.
+- [x] 상세는 [작업 기록](docs/exe/cpp-mission-technology-20261021.md), `cpppj/mission-technology-native.json`·`mission-technology-session.json`, `tools/decomp_mission_technology.py --verify`·`tools/cpp_mission_technology_audit.py --verify`다. 보호11개 목록/전체 SHA와 현재 공용 표 소비자도 별도 근거로 기록한다. 과거 files/evidence/원문/기대값/실행·바이너리 기록은 보존한다.
+- [x] 현재 핀 **103보고서·131항목**의 전체 JSON 역변환이 시작 커밋과 같다. 최초 원문/기술 허용 감사와 기존 Guide/미션 수명/공통 프레임 정적 감사가 종료0이다. 인수인계 뒤 날짜/CP 규칙으로 로컬 커밋하며 원격 push하지 않는다. 기존 RawTutorialLater의 CRLF/LF 역사 핀 차이는 바꾸거나 새 통과로 기록하지 않았다.
+- [x] **후속 분석 주의:** 원본 Init이 tutorialNumber 비제로에서005ca8f0을1로 쓰더라도 후속 State7의004b2df0이0으로 다시 초기화한다. 앞 쓰기만 보고 실제 세션 사제 HP를1/4로 고치면 안 된다. 이번 체력 코드 변경은 없다. Review Knowledge/사제 메뉴는 실제 `ShowTechnology020000a0→00492b60`이며 전체 기술 카드/원소별 배치·정렬·입력 연결은 아직 없다.
+- [ ] **다음:** Review Knowledge/ShowTechnology의 실제 기술 카드/배치/현재 팝업 상태,전체 Init의 이름 정규화/+b0/전역·비동기 State/원본 공장·가상 소멸,중첩 창/다른 키다. 전체11미션 자연 완주·제한된 실제 메뉴/다음 미션/F8/재시작/중단·전략AI·지형/포획/희생/Dude 자연 대피와 외관/음향 동일성,새 검사 실행을 통합 실제 플레이에서 확인한다. 전체 goal은 **active/미완료**다.
+
 ## 2026-10-21 단위251 연결 완료: Guide Begin/Fork/Restart/End와 다음 미션 큐
 
 - [x] 같은 goal을 이어 진행했다. 시작 HEAD `655794e9`, 현재/마지막 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-20**로 일치한다. AGENTS와 양 인수인계를 다시 읽었고 새 디컴파일·원본/CD·AGENTS 변경은 없다. 다른 세션의 DN/README 변경·커밋은 포함하지 않는다.

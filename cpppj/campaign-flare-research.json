@@ -133,10 +133,10 @@
     "cpppj/src/client/RawCampaignSession.cpp": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
     "cpppj/src/client/RawCampaignSession.h": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
     "cpppj/src/client/RawSurfaceWorld.cpp": "d6ebba7d5175b98dd5ddabba6de4744a977434913b4eb8b9c2e39068e7b94832",
-    "cpppj/src/client/UberGump.cpp": "2191e3b433d83f977e80a53764bbcbab23f43a6409d3e854b7d8731395d78795",
+    "cpppj/src/client/UberGump.cpp": "b8a5fedc6c83ca04e5f8687f6a73a84e769686691ca180789123788360b5a915",
     "cpppj/src/o/CMakeLists.txt": "8fd2012644816c088a0283bde3e14ed3d9c3cff364d38c4c1bd5f4e6eaa81bd4",
     "cpppj/src/o/RawFactoryResearch.h": "5cd0dc8a306e50725710d3124e3af6def870ec2fe001f3dfcf6e2e183bfc2202",
-    "cpppj/tests/CMakeLists.txt": "2b3e4c0e8515b9911d7e6cb918f9f585e1a425c195c3d03b94e623044c34eea7",
+    "cpppj/tests/CMakeLists.txt": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
     "cpppj/tests/CampaignSessionTests.cpp": "6a6d54fd15eb24c0609492756880c774120f855138441820a536ea5bd73ee4f0",
     "cpppj/tests/FactoryResearchTests.cpp": "73801f93e0273a9b49538735884d1afb7250257511a5a4cd619659ca2b90d881",
     "tools/cpp_priest_construction_smoke.py": "93524c9e1fb58e7e589fc25c7507e105e750b96cb66ad7ddbf9a58aae2756c2c",
@@ -7579,6 +7579,26 @@
           "group": "/currentSources",
           "previous": "76ed98dec106caaea3e49c98b08df99daa7938d28a07763dba3e0995aa188fba",
           "current": "2b3e4c0e8515b9911d7e6cb918f9f585e1a425c195c3d03b94e623044c34eea7"
+        }
+      ]
+    },
+    {
+      "unit": "252",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "실제 Mission techAllowed의 매회 항목 조회·모드·255칸 쓰기를 현재 Tutorial 단계1의 같은 Session/TotalMade에 적용한다. 사제 건설/생산이 같은 제한을 읽는다. 현재 핀만 갱신하고 과거 files/evidence/실행/원문/기대값은 보존한다. 제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "group": "/currentSources",
+          "previous": "2191e3b433d83f977e80a53764bbcbab23f43a6409d3e854b7d8731395d78795",
+          "current": "b8a5fedc6c83ca04e5f8687f6a73a84e769686691ca180789123788360b5a915"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/currentSources",
+          "previous": "2b3e4c0e8515b9911d7e6cb918f9f585e1a425c195c3d03b94e623044c34eea7",
+          "current": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09"
         }
       ]
     }

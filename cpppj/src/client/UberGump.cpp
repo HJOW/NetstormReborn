@@ -13,6 +13,7 @@
 #include "client/MissionGuideInput.h"
 #include "client/MissionLifecycle.h"
 #include "client/GuideMissionTransitions.h"
+#include "client/MissionTechnology.h"
 #include "o/RawMissionGuide.h"
 #include "client/GifImage.h"
 #include "client/GumpVisual.h"
@@ -401,6 +402,7 @@ void UberGump::LoadMissionWorld() {
             if (commandGump_!=0) throw std::logic_error("미션 Start의 전용 명령 Gump0042e440 수신 미연결");
         }));
     world_->BeginLocalConnection(); //전역subscriber 조회가같은월드를보는상태에서Zone/로그인/월드로드를실행한다.
+    if (type=="tutorial") ApplyMissionTechnology(*mission_,client_.Assets().TypeTable(),world_->Session().TotalMade()); // 실제 Init의 loadFort 요청 뒤 techAllowed이며 사용자 입력/단계3 Start 전에 같은 허용 표를 채운다.
     userInput_=std::make_unique<UserInput>(client_,*world_);
     // 브리핑으로 게임 시계가 멈추기 전에도 첫 카메라/표시 영역이 음악·효과음에 전달되게 한다.
     world_->Resize(client_.GetScreen().Width(),client_.GetScreen().Height());

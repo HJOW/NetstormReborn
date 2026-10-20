@@ -7,14 +7,14 @@
   "lastDecompileDate": "2026-10-20",
   "newDecompile": false,
   "sources": {
-    "cpppj/src/client/UberGump.cpp": "2191e3b433d83f977e80a53764bbcbab23f43a6409d3e854b7d8731395d78795",
+    "cpppj/src/client/UberGump.cpp": "b8a5fedc6c83ca04e5f8687f6a73a84e769686691ca180789123788360b5a915",
     "cpppj/src/client/UberGump.h": "70b2e2e7479669d3ddb47c054d95c87440f266441fea44a2753c39278c12eb65",
     "cpppj/src/client/MissionGuideInput.cpp": "9181acf22bb07785cb9c6eb89708ff8532af05de62f1236cb616fbff4d1c3e8e",
     "cpppj/src/client/MissionGuideInput.h": "6577a5aba688700ad8779001e97b4096716ed84a1af0f760be89b950156b50c8",
     "cpppj/src/client/ScriptCommand.cpp": "87908a7252875cfcd2b7a96313c29bd8ea7ae91ef95e53f793c29e8bf0ad880b",
     "cpppj/src/client/ScriptCommand.h": "45a44be3ebefaf70f6cc8cdcdfee35806fbb611e4d84d504ea9d215825c039d0",
-    "cpppj/src/client/CMakeLists.txt": "75f088dfdc998bdaaaa093011bc4e1ee0b975540f127e295f51541c2e6ab74f8",
-    "cpppj/tests/CMakeLists.txt": "2b3e4c0e8515b9911d7e6cb918f9f585e1a425c195c3d03b94e623044c34eea7",
+    "cpppj/src/client/CMakeLists.txt": "585ae86b762ee3ecf96c39dfcf38202cfe100b455fe8bfb39bd3007f10d21260",
+    "cpppj/tests/CMakeLists.txt": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
     "tools/cpp_mission_common_audit.py": "69bbcb39e8e8178e4b04b32b2c4ed68b6618ad36070c94d1f268e0bf088e24c4",
     "tools/cpp_mission_abort_audit.py": "a978241832853509334e5f865ec069996595b7cf6d552bc354090e4ab7fc4d3a",
     "tools/cpp_mission_lifecycle_audit.py": "e8d2f3b9764c396916984596702689cd6a4cdc973b72a279fdc576a6efbedb71",
@@ -1515,5 +1515,33 @@
     "클론 문자열 토큰101..INT_MAX는 signed Begin 관문을 보존하는 불투명 수명 번호이며 원본 OS 메모리 주소가 아니다.",
     "Tutorial의 빈 가상 종료만 연결했고 전체 Init/이름 정규화/+b0/전역·비동기 State/원본 공장/가상 소멸은 모두 복원한 것이 아니다.",
     "End의 최종 메뉴와 다른 형식 종료는 기존 단일 플레이 어댑터다. ShowTechnology/Review Knowledge·중첩 창/다른 키·전략AI·자연 포획/희생/대피·전체 동일성의 통합 검증은 남는다."
+  ],
+  "integration_updates": [
+    {
+      "unit": "252",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "실제 Mission techAllowed의 매회 항목 조회·모드·255칸 쓰기를 현재 Tutorial 단계1의 같은 Session/TotalMade에 적용한다. 사제 건설/생산이 같은 제한을 읽는다. 현재 핀만 갱신하고 과거 files/evidence/실행/원문/기대값은 보존한다. 제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "group": "/sources",
+          "previous": "2191e3b433d83f977e80a53764bbcbab23f43a6409d3e854b7d8731395d78795",
+          "current": "b8a5fedc6c83ca04e5f8687f6a73a84e769686691ca180789123788360b5a915"
+        },
+        {
+          "path": "cpppj/src/client/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "75f088dfdc998bdaaaa093011bc4e1ee0b975540f127e295f51541c2e6ab74f8",
+          "current": "585ae86b762ee3ecf96c39dfcf38202cfe100b455fe8bfb39bd3007f10d21260"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "2b3e4c0e8515b9911d7e6cb918f9f585e1a425c195c3d03b94e623044c34eea7",
+          "current": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09"
+        }
+      ]
+    }
   ]
 }

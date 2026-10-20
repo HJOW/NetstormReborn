@@ -15,7 +15,7 @@
     "cpppj/src/o/SquidDisplay.cpp": "adff73d1c710cf295aed17e2a06cb90294e1399e5e455d423659f37c336f3dc6",
     "cpppj/src/o/SquidPop.cpp": "61f8db73c663d5d7c8880d73bc310cf7884e361bb76402e0946241e02b7dcd17",
     "cpppj/src/o/SquidUnpop.cpp": "f9a932b6ee543cc2ee051d6f67afb0c56fca1f325cc51d29ca3d0dc3adf26fef",
-    "cpppj/tests/CMakeLists.txt": "2b3e4c0e8515b9911d7e6cb918f9f585e1a425c195c3d03b94e623044c34eea7",
+    "cpppj/tests/CMakeLists.txt": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
     "cpppj/tests/CampaignSessionTests.cpp": "6a6d54fd15eb24c0609492756880c774120f855138441820a536ea5bd73ee4f0",
     "cpppj/tests/CursorManaTests.cpp": "3f9aa47024782b0afe4f165a2145fa4f27706d8b5b7c1434f8e94c65a5318daa",
     "cpppj/tests/PopTests.cpp": "250b9a9fd863142026c29ef68c75ea7c8bea6871ed0a42df9bafee4e2b072d48",
@@ -2769,6 +2769,20 @@
           "group": "/sha256",
           "previous": "76ed98dec106caaea3e49c98b08df99daa7938d28a07763dba3e0995aa188fba",
           "current": "2b3e4c0e8515b9911d7e6cb918f9f585e1a425c195c3d03b94e623044c34eea7"
+        }
+      ]
+    },
+    {
+      "unit": "252",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "실제 Mission techAllowed의 매회 항목 조회·모드·255칸 쓰기를 현재 Tutorial 단계1의 같은 Session/TotalMade에 적용한다. 사제 건설/생산이 같은 제한을 읽는다. 현재 핀만 갱신하고 과거 files/evidence/실행/원문/기대값은 보존한다. 제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sha256",
+          "previous": "2b3e4c0e8515b9911d7e6cb918f9f585e1a425c195c3d03b94e623044c34eea7",
+          "current": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09"
         }
       ]
     }

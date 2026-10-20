@@ -14,7 +14,7 @@
     "cpppj/src/client/RawCampaignSession.h": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
     "cpppj/src/client/RawCampaignTutorialOneBindings.cpp": "945cb24940af3cfc103ee17ddaac723a6d22b197d658f063886da57366dc99f4",
     "cpppj/src/client/RawCampaignTutorialOneBindings.h": "747a7f9249c088c968da165f4b917bed9712eac46d1b935ba1f736d9ab304b30",
-    "cpppj/src/client/UberGump.cpp": "2191e3b433d83f977e80a53764bbcbab23f43a6409d3e854b7d8731395d78795",
+    "cpppj/src/client/UberGump.cpp": "b8a5fedc6c83ca04e5f8687f6a73a84e769686691ca180789123788360b5a915",
     "cpppj/tests/CampaignSessionTests.cpp": "6a6d54fd15eb24c0609492756880c774120f855138441820a536ea5bd73ee4f0",
     "cpppj/src/o/RawTutorialLater.cpp": "1f40efc3aefb38e02ff8a9b5d2553ca4c30f773c2c8b4f6dbb82cd3e5b9bc082",
     "cpppj/src/o/RawTutorialLater.h": "e531ab0c0fd025608fde58be59bd5ae83e94414220624f243f7ad891bd3e831f",
@@ -1129,6 +1129,20 @@
           "group": "/sources",
           "previous": "a7356cb88b11ab81583ccdff93bc32d2eeae06b537e8bdce4a8734af3df8204f",
           "current": "2191e3b433d83f977e80a53764bbcbab23f43a6409d3e854b7d8731395d78795"
+        }
+      ]
+    },
+    {
+      "unit": "252",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "실제 Mission techAllowed의 매회 항목 조회·모드·255칸 쓰기를 현재 Tutorial 단계1의 같은 Session/TotalMade에 적용한다. 사제 건설/생산이 같은 제한을 읽는다. 현재 핀만 갱신하고 과거 files/evidence/실행/원문/기대값은 보존한다. 제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "group": "/sources",
+          "previous": "2191e3b433d83f977e80a53764bbcbab23f43a6409d3e854b7d8731395d78795",
+          "current": "b8a5fedc6c83ca04e5f8687f6a73a84e769686691ca180789123788360b5a915"
         }
       ]
     }

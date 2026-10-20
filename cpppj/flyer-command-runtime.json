@@ -15,7 +15,7 @@
     "cpppj/src/o/RawFlyerTarget.cpp": "b325cb60c22f98b6e30faa2d330866d1a38f3a403a04388a394baefd188eb772",
     "cpppj/src/o/RawFlyerFrame.cpp": "7752144c626f831c64bf0959ad8f9579d67bae1c87def2dcd0f1797b306f2049",
     "cpppj/tests/BattleBroadcastTests.cpp": "7bfa23c46a8f8810fc2b8522f14cff40060f23cbfb9a8752d8294cea4f407a43",
-    "cpppj/tests/CMakeLists.txt": "2b3e4c0e8515b9911d7e6cb918f9f585e1a425c195c3d03b94e623044c34eea7",
+    "cpppj/tests/CMakeLists.txt": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
     "cpppj/tests/fixtures/flyer-command-x86.tsv": "3eba7e893da3360048848fb3d402d94a66fa4067cddeeb34638131d1b15377b2",
     "cpppj/flyer-command-native.json": "e607b01cebea3009cdcd17cc9b54a38850b56bc32c7e72876b5bc03cc7b5085f",
     "tools/decomp_flyer_command.py": "014435bdcbe5715eb674df26b1f80621aaa10711a4a9bf622132e9fffdf14f84",
@@ -555,6 +555,20 @@
           "group": "/sources",
           "previous": "76ed98dec106caaea3e49c98b08df99daa7938d28a07763dba3e0995aa188fba",
           "current": "2b3e4c0e8515b9911d7e6cb918f9f585e1a425c195c3d03b94e623044c34eea7"
+        }
+      ]
+    },
+    {
+      "unit": "252",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "실제 Mission techAllowed의 매회 항목 조회·모드·255칸 쓰기를 현재 Tutorial 단계1의 같은 Session/TotalMade에 적용한다. 사제 건설/생산이 같은 제한을 읽는다. 현재 핀만 갱신하고 과거 files/evidence/실행/원문/기대값은 보존한다. 제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "2b3e4c0e8515b9911d7e6cb918f9f585e1a425c195c3d03b94e623044c34eea7",
+          "current": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09"
         }
       ]
     }

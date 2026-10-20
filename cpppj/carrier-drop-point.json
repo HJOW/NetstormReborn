@@ -186,7 +186,7 @@
     "cpppj/src/client/RawCarrierDropPoint.cpp": "a0c2130de14992eb2f3debda71840b9e0c9889398d17cfd92c2c8cb050b2acd5",
     "cpppj/tests/CarrierDropPointTests.cpp": "65a1f6834bad63ad10548fb4b0b96c26fc7e869a1f2447e07254190237f51b7c",
     "cpppj/src/client/CMakeLists.txt": "0ea1587f2d9dcd22fb2afbdeeefcb151242775b7083018dd39eb181a84fc0b06",
-    "cpppj/tests/CMakeLists.txt": "2b3e4c0e8515b9911d7e6cb918f9f585e1a425c195c3d03b94e623044c34eea7",
+    "cpppj/tests/CMakeLists.txt": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
     "cpppj/src/client/RawCarrierMenu.h": "e4ef0cccd8c956ccf6c167a7b08e0a9350f46206e08a9670dbaed6272d7749d8",
     "cpppj/src/client/RawCarrierMenu.cpp": "4a0fada9b8ac9d00eab37955189a8ac669d26f1d22559deae229a6ce3637dc1e",
     "cpppj/src/o/RawCanonPlacementPipeline.h": "4c52d14dea023e6c5251c528b1afd6955e10d8d25a31e9766b4d79faa286e8fc",
@@ -1478,6 +1478,20 @@
           "group": "/sha256",
           "previous": "76ed98dec106caaea3e49c98b08df99daa7938d28a07763dba3e0995aa188fba",
           "current": "2b3e4c0e8515b9911d7e6cb918f9f585e1a425c195c3d03b94e623044c34eea7"
+        }
+      ]
+    },
+    {
+      "unit": "252",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "실제 Mission techAllowed의 매회 항목 조회·모드·255칸 쓰기를 현재 Tutorial 단계1의 같은 Session/TotalMade에 적용한다. 사제 건설/생산이 같은 제한을 읽는다. 현재 핀만 갱신하고 과거 files/evidence/실행/원문/기대값은 보존한다. 제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sha256",
+          "previous": "2b3e4c0e8515b9911d7e6cb918f9f585e1a425c195c3d03b94e623044c34eea7",
+          "current": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09"
         }
       ]
     }

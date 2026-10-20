@@ -1,0 +1,20 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-20",
+  "inputs": 55,
+  "normalReturns": 55,
+  "instructions": 665852,
+  "scope": "실제482eb0/482d50/49a860/4c23c0/4c23e0와CRT. Config 조회/512임시버퍼/키서식/TLS는 명시 경계다. 잘못된 이름은 실제 표 앞 한 칸 쓰기를 관측하며 제품 메모리 안전 동작과 구별한다.",
+  "gameExecuted": false,
+  "osExecuted": false,
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_mission_technology.py": "177ea82462ca7b2fca504845f88914f23f869ceeb6c1651fc720eb7a0b41312b",
+    "tools/shp.py": "4cb8bee6ed773e29e8658ddb315594ebf5ac005ea5b96c6b760a177029515bfd",
+    "cpppj/tests/fixtures/mission-technology-x86.tsv": "19c5c321acdac977b365eb61d928ba7616387f51f92c3ac4b8add7b18298ee00"
+  }
+}
