@@ -8,7 +8,7 @@
   "sources": {
     "cpppj/src/o/RawMissile.cpp": "66c0881de9826b3027fd43f4e7b53ba717a163aefd76a7c543fc66fabcbb9ac6",
     "cpppj/src/o/RawMissile.h": "19e31c6abf9e0a8ce2f292e47650ec8f924205ce2dff03eb4f9a1c3fbdccae6c",
-    "cpppj/src/client/RawCampaignSession.cpp": "e922269cc73ab9299f59d9ae26a4c2b1346adcf023b1d8eff5416699d125eea6",
+    "cpppj/src/client/RawCampaignSession.cpp": "aa78d6d841c3cb61f212fe645e9a0ffef7cf84f1bbcf2978a37fcad2c6d780e0",
     "cpppj/tests/ThunderMissileTests.cpp": "aaa6c74136f2f4c0beaa369b9adca8b906b28ccddea5f75197c1cff2cddf1b51",
     "cpppj/tests/CMakeLists.txt": "49797f3b65f9f2b5bbb3c15a4521ecb361936cbf0c13f443f2f20f86bfe8f1cf",
     "cpppj/tests/fixtures/thunder-hit-event-x86.tsv": "64edac17dc6f25824bfed45afc6537cf120fe9f051fb47c84bceb4bfdbf85f58",
@@ -426,6 +426,20 @@
           "group": "/sources",
           "previous": "8ca2db5cb109de55c2eadec3063e474691de144316efaa1a2e9046faf0febd43",
           "current": "49797f3b65f9f2b5bbb3c15a4521ecb361936cbf0c13f443f2f20f86bfe8f1cf"
+        }
+      ]
+    },
+    {
+      "unit": "240",
+      "date": "2026-10-20",
+      "host": "HJOW-Athlon",
+      "note": "저장 객체 최초 Pop 전 건설/의식 등록. 현재 소스 핀만 갱신하며 과거 실행 결과는 보존한다. 실행 검증은 통합 시점으로 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "group": "/sources",
+          "previous": "e922269cc73ab9299f59d9ae26a4c2b1346adcf023b1d8eff5416699d125eea6",
+          "current": "aa78d6d841c3cb61f212fe645e9a0ffef7cf84f1bbcf2978a37fcad2c6d780e0"
         }
       ]
     }

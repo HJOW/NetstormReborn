@@ -13,7 +13,7 @@
     "cpppj/src/o/RawCarrierTransfer.h": "286dbe876336f50cfbba2c87e2ac80eb973eef3c0059cabc78fd898d106ce157",
     "cpppj/src/o/RawCarrierTransfer.cpp": "4e434098a1b784416e2a39a54baaa83cb4363c888e5036418b1db52df0d8d4e4",
     "cpppj/src/client/RawCampaignSession.h": "13b74f9ed71a7379a5041ad849861e6215842efe7772dbaaf2e44f7833fbfbca",
-    "cpppj/src/client/RawCampaignSession.cpp": "e922269cc73ab9299f59d9ae26a4c2b1346adcf023b1d8eff5416699d125eea6",
+    "cpppj/src/client/RawCampaignSession.cpp": "aa78d6d841c3cb61f212fe645e9a0ffef7cf84f1bbcf2978a37fcad2c6d780e0",
     "cpppj/src/client/RawCampaignMotionBindings.h": "6b196fba2833df49bb4882300dbeded4ff68bb2e340b8881338c19c17ef7060d",
     "cpppj/src/client/RawCampaignMotionBindings.cpp": "532ab06cd71c6eb3eba5aa042a6204e59c282014b13b68400241c2079a2556bb",
     "cpppj/src/client/RawCampaignPathBindings.h": "82d9565ece60f24300977681dffdaad57a660fdccca38b4db305d5a1d262b8b0",
@@ -1662,6 +1662,20 @@
           "group": "/currentSources",
           "previous": "8ca2db5cb109de55c2eadec3063e474691de144316efaa1a2e9046faf0febd43",
           "current": "49797f3b65f9f2b5bbb3c15a4521ecb361936cbf0c13f443f2f20f86bfe8f1cf"
+        }
+      ]
+    },
+    {
+      "unit": "240",
+      "date": "2026-10-20",
+      "host": "HJOW-Athlon",
+      "note": "저장 객체 최초 Pop 전 건설/의식 등록. 현재 소스 핀만 갱신하며 과거 실행 결과는 보존한다. 실행 검증은 통합 시점으로 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "group": "/currentSources",
+          "previous": "e922269cc73ab9299f59d9ae26a4c2b1346adcf023b1d8eff5416699d125eea6",
+          "current": "aa78d6d841c3cb61f212fe645e9a0ffef7cf84f1bbcf2978a37fcad2c6d780e0"
         }
       ]
     }

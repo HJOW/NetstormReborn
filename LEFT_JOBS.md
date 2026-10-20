@@ -1,5 +1,13 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-20 단위240 구현 완료: 저장 다이스·룬 최초 Pop의 의식 등록 순서
+
+- [x] 사용자의 이번 `/goal`로 Early Missions6개·캠페인1-1/1-2·데모3개 원본 동일 플레이 목표를 재개했다. 과거 단위237의 일시중지/239의 무커밋 지시는 당시 작업 이력이며, 이번에는 사용자 지시대로 단위별 인수인계·로컬 커밋을 수행한다. **2026-10-20의 실제 실행·플레이 검증 통합 이월 지시는 유지한다.** AGENTS와 양 인수인계를 다시 읽었고 시작 HEAD는 `0fee4104`, 현재/마지막 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-20**이다.
+- [x] `RawCampaignSession::Load`의 저장 월드 읽기가 `ConnectMotion`의 의식/다이스/룬 후처리 등록보다 앞서 있었다. 건설·이동·의식 처리기 구성을 첫 저장 객체 Pop 앞으로 옮겼다. 로더의 Player→지형→저장 객체→Graph 순서는 유지한다. 로딩 깊이 변경 때 현재 미션/Player 값을 의식 상태에 공급하고 종료 때 `SetDaisPostPop(nullptr)`로 파생 참조를 해제한다. 수정 전 실행 실패를 관측했다고 주장하지 않는다.
+- [x] `CampaignDais_SavedRecordFirstPopRegistersAltar`를 작성·컴파일했다. 실제 `thewarbegins.fort`를 읽은 메모리 사본에서 Terr00의 로컬 거주 구역89 하나를 다이스165로 바꾸고, 일반 저장 로더의 최초 Pop→제단 생성/현재 Player 등록/로컬21 예약을 확인하도록 작성했다. 원본 파일·과거 기대값은 바꾸지 않는다. 초기 워크샾 입력 가정과 C4244 경고는 정적 자산 확인/명시 타입으로 수정했다.
+- [x] 최종 전체 Release 빌드는 **경고0·오류0·종료0**이다. **게임·단위 검사·CTest·전체 회귀를 실행하지 않았으며 새 검사 통과/실제 미션 성공을 주장하지 않는다.** 상세 근거·현재 소스/핀 역변환/빌드 범위는 [작업 기록](docs/exe/cpp-dais-load-20261020.md), `cpppj/dais-load-session.json`, `tools/cpp_dais_load_audit.py --verify`를 따른다. 새 디컴파일·원본/CD·AGENTS·dotnetpj 변경과 원격 push는 없다. 인수인계 후 `20261020-23 CP 저장 다이스와 룬의 최초 Pop 전 의식 처리기 등록`으로 로컬 커밋한다.
+- [ ] **다음:** 제단 해방의 실제 사제 가상 소유자 연결·홈섬 밖 경고 및 미완료 기능을 이어 구현한다. Devastation의 표면 삭제/다리 끝 변환은 기존 실제 Session에 연결되어 있음을 정적으로 확인했을 뿐 실제 효과 통과는 아니다. 저장 다이스 새 검사, 공통 메뉴3검사, Early5 자연F 이후 실제 UI 시전·적/지형 효과·포획/Drop·제단/희생, 나머지 지정 미션/F8 Guide와 전체 동일성은 **후속 통합 검증**에 남긴다. Devastation 외 주문의3차 이월을 유지하며 전체 목표는 active/미완료다.
+
 ## 2026-10-20 cpppj 사전 준비 완료: HJOW-Athlon 정밀 디컴파일·Release 컴파일
 
 - [x] 사용자가 `AGENTS.md`와 `LEFT_JOBS.md`를 확인하고 cpppj 사전 디컴파일·컴파일을 요청했다. `LEFT_JOBS.dotnetpj.md`도 확인했다. 당시 최신 정밀 디컴파일 PC 기록은 **VM-W11-Codex / 2026-10-20**였고 현재 PC **HJOW-Athlon**과 달라 `tools/ghidra/refine_all.ps1` 전체 절차를 다시 수행했다. 재생성 전 결과 41개 파일·138,067,470바이트를 `extracted/refined-backup-before-HJOW-Athlon-20261020/`에 보존했다.

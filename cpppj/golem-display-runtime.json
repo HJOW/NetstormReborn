@@ -295,7 +295,7 @@
     "cpppj/src/client/GameWorld.cpp": "af6d3aeb3bd53d83e2619c2bd20ba5df42c17fe718cb81786841606419f10c6c",
     "cpppj/src/client/SpriteDraw.cpp": "8946ce7549a2b399a0f337382e6de316d3d7a7abdfa43194cd8bce3b863297a8",
     "cpppj/src/o/RiftTypeTable.cpp": "e482f1e9183264f4800e7c6fe95e12c811c5b0868f7e8843f77f37b4694795d0",
-    "cpppj/tests/CampaignSessionTests.cpp": "769b7c7b64412ec348b1b9311cf8ee1a2928063d597402e45eacb16ec2a03aea",
+    "cpppj/tests/CampaignSessionTests.cpp": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
     "tools/cpp_campaign_entry_smoke.py": "5fa9adadf6bcd571d6fba39b38e46fed41fe2e927911ff80dc38047c52c56b49",
     "tools/cpp_fort_smoke.py": "96c7fcd524deb38d93274ded77620639bdc7012ec0f2aaeed0a488d938e9da83",
     "tools/cpp_golem_display_runtime.py": "fb1bfdcf82755f1aee1477a79dd9d90d976c28c06219b4289b2fa2a47bdd7094",
@@ -517,6 +517,20 @@
           "group": "/sources",
           "previous": "a9a4e62edf5a796eeacd26bd1166806dc0078420a68d0957a66e41539876bc14",
           "current": "769b7c7b64412ec348b1b9311cf8ee1a2928063d597402e45eacb16ec2a03aea"
+        }
+      ]
+    },
+    {
+      "unit": "240",
+      "date": "2026-10-20",
+      "host": "HJOW-Athlon",
+      "note": "저장 객체 최초 Pop 전 건설/의식 등록. 현재 소스 핀만 갱신하며 과거 실행 결과는 보존한다. 실행 검증은 통합 시점으로 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "group": "/sources",
+          "previous": "769b7c7b64412ec348b1b9311cf8ee1a2928063d597402e45eacb16ec2a03aea",
+          "current": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd"
         }
       ]
     }

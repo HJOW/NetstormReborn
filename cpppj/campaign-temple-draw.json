@@ -87,12 +87,12 @@
   "currentSources": {
     "cpppj/src/o/CMakeLists.txt": "e98fa5aecc683b69021e6efacd62092a48772ae5ed3f7cb3da0eeeff7c33d7ec",
     "cpppj/src/client/RawCampaignSession.h": "13b74f9ed71a7379a5041ad849861e6215842efe7772dbaaf2e44f7833fbfbca",
-    "cpppj/src/client/RawCampaignSession.cpp": "e922269cc73ab9299f59d9ae26a4c2b1346adcf023b1d8eff5416699d125eea6",
+    "cpppj/src/client/RawCampaignSession.cpp": "aa78d6d841c3cb61f212fe645e9a0ffef7cf84f1bbcf2978a37fcad2c6d780e0",
     "cpppj/src/client/RawCampaignFactoryDisplay.h": "d2434f7d291754651b9810411235659ca35f393443423340818a261599640f2e",
     "cpppj/src/client/RawCampaignFactoryDisplay.cpp": "ab6ff75e011abd8b5c8330d650acb5a9af31ea20e2ba2b55ebe59503c7ba8621",
     "cpppj/src/client/GameWorld.cpp": "af6d3aeb3bd53d83e2619c2bd20ba5df42c17fe718cb81786841606419f10c6c",
     "cpppj/tests/CMakeLists.txt": "49797f3b65f9f2b5bbb3c15a4521ecb361936cbf0c13f443f2f20f86bfe8f1cf",
-    "cpppj/tests/CampaignSessionTests.cpp": "769b7c7b64412ec348b1b9311cf8ee1a2928063d597402e45eacb16ec2a03aea",
+    "cpppj/tests/CampaignSessionTests.cpp": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
     "tools/decomp_temple_draw.py": "b94a1b635e83af4af3808d3666d3dd56067a44e88c22ecfbd4fe9396000dab24",
     "tools/check_temple_scene.py": "5ce0641612f94c92bea40703e75472125317167d063433f3469ff5b88400dd19",
     "cpppj/temple-draw.json": "08f2b87d34a3d29ee35f4c479ce4eca45be47aee0c6d774d3fee875220fb665e",
@@ -1959,6 +1959,26 @@
           "group": "/currentSources",
           "previous": "a9a4e62edf5a796eeacd26bd1166806dc0078420a68d0957a66e41539876bc14",
           "current": "769b7c7b64412ec348b1b9311cf8ee1a2928063d597402e45eacb16ec2a03aea"
+        }
+      ]
+    },
+    {
+      "unit": "240",
+      "date": "2026-10-20",
+      "host": "HJOW-Athlon",
+      "note": "저장 객체 최초 Pop 전 건설/의식 등록. 현재 소스 핀만 갱신하며 과거 실행 결과는 보존한다. 실행 검증은 통합 시점으로 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "group": "/currentSources",
+          "previous": "e922269cc73ab9299f59d9ae26a4c2b1346adcf023b1d8eff5416699d125eea6",
+          "current": "aa78d6d841c3cb61f212fe645e9a0ffef7cf84f1bbcf2978a37fcad2c6d780e0"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "group": "/currentSources",
+          "previous": "769b7c7b64412ec348b1b9311cf8ee1a2928063d597402e45eacb16ec2a03aea",
+          "current": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd"
         }
       ]
     }

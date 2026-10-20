@@ -12,9 +12,9 @@
     "tools/cpp_campaign_forward_smoke.py": "a2d80da805838d22747deddf9d65e2daa947da6026764a64e60f41dc21bd00b8",
     "cpppj/tests/fixtures/campaign-forward-ui-input.tsv": "b4c8e831fe0669dc0d9b9626db80486414d78899e2ade3f7fe1aa7030d05857e",
     "cpppj/src/client/GameWorld.cpp": "af6d3aeb3bd53d83e2619c2bd20ba5df42c17fe718cb81786841606419f10c6c",
-    "cpppj/src/client/RawCampaignSession.cpp": "e922269cc73ab9299f59d9ae26a4c2b1346adcf023b1d8eff5416699d125eea6",
+    "cpppj/src/client/RawCampaignSession.cpp": "aa78d6d841c3cb61f212fe645e9a0ffef7cf84f1bbcf2978a37fcad2c6d780e0",
     "cpppj/src/client/RawCampaignRitual.inc": "58bedee7b6bd9673e2ce45ac016f9421ef33ac4bd974e306dd54f83c631fe9f0",
-    "cpppj/tests/CampaignSessionTests.cpp": "769b7c7b64412ec348b1b9311cf8ee1a2928063d597402e45eacb16ec2a03aea"
+    "cpppj/tests/CampaignSessionTests.cpp": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd"
   },
   "evidence": {
     "extracted/goal-natural-capture-20261019-baseline.json": "1809950c7c7ba932b847c197d52886159303c181736efe59d1794f49cf625f22",
@@ -822,6 +822,26 @@
           "group": "/sources",
           "previous": "a9a4e62edf5a796eeacd26bd1166806dc0078420a68d0957a66e41539876bc14",
           "current": "769b7c7b64412ec348b1b9311cf8ee1a2928063d597402e45eacb16ec2a03aea"
+        }
+      ]
+    },
+    {
+      "unit": "240",
+      "date": "2026-10-20",
+      "host": "HJOW-Athlon",
+      "note": "저장 객체 최초 Pop 전 건설/의식 등록. 현재 소스 핀만 갱신하며 과거 실행 결과는 보존한다. 실행 검증은 통합 시점으로 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "group": "/sources",
+          "previous": "e922269cc73ab9299f59d9ae26a4c2b1346adcf023b1d8eff5416699d125eea6",
+          "current": "aa78d6d841c3cb61f212fe645e9a0ffef7cf84f1bbcf2978a37fcad2c6d780e0"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "group": "/sources",
+          "previous": "769b7c7b64412ec348b1b9311cf8ee1a2928063d597402e45eacb16ec2a03aea",
+          "current": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd"
         }
       ]
     }

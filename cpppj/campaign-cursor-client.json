@@ -17,7 +17,7 @@
     "cpppj/src/client/RawButtonControls.h": "548d27ebba1a23f585763222ff428fd257456e79e47ae83ac38849712528ece1",
     "cpppj/src/client/RawCampaignCursor.cpp": "d1c12ed9e16c11771470abfae09d0a2bfccda51dc49be5b90c4a4c78604f961c",
     "cpppj/src/client/RawCampaignCursor.h": "0c4aa17d5acf5cd03fd9d651c33de2fedd115c622e9f75f1c469edb462c775ce",
-    "cpppj/src/client/RawCampaignSession.cpp": "e922269cc73ab9299f59d9ae26a4c2b1346adcf023b1d8eff5416699d125eea6",
+    "cpppj/src/client/RawCampaignSession.cpp": "aa78d6d841c3cb61f212fe645e9a0ffef7cf84f1bbcf2978a37fcad2c6d780e0",
     "cpppj/src/client/RawCampaignSession.h": "13b74f9ed71a7379a5041ad849861e6215842efe7772dbaaf2e44f7833fbfbca",
     "cpppj/src/client/RawCarrierMenu.cpp": "4a0fada9b8ac9d00eab37955189a8ac669d26f1d22559deae229a6ce3637dc1e",
     "cpppj/src/client/RawCarrierMenu.h": "e4ef0cccd8c956ccf6c167a7b08e0a9350f46206e08a9670dbaed6272d7749d8",
@@ -35,7 +35,7 @@
     "cpppj/tests/CMakeLists.txt": "49797f3b65f9f2b5bbb3c15a4521ecb361936cbf0c13f443f2f20f86bfe8f1cf",
     "cpppj/tests/CampaignCursorClientEffectsTests.cpp": "f04679442eea66764f77ab814314c9edd1790dca1f61f39e95eb29804b78d92b",
     "cpppj/tests/CampaignObjectMenuTests.cpp": "fea9198ea2150c42bb523f7ac9298c2f819acd1fc9b9887b53020c206ad62563",
-    "cpppj/tests/CampaignSessionTests.cpp": "769b7c7b64412ec348b1b9311cf8ee1a2928063d597402e45eacb16ec2a03aea",
+    "cpppj/tests/CampaignSessionTests.cpp": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
     "cpppj/tests/RawButtonCursorBoundaryTests.cpp": "1f24a7464493536890611554b51d41bdeb477fa23190a909933ebd0ef1873684",
     "cpppj/tests/UserHighlightTests.cpp": "a23f97791f61415d333d3d99b33ec56e6ec67423a021da43473934fadd3a57ab",
     "cpppj/tests/fixtures/user-highlight-x86.tsv": "e1d0bc9dbf434de9c897a6fcac4af50f2be637318ab3a52d3795273cf734ed78"
@@ -2759,6 +2759,26 @@
           "group": "/currentSources",
           "previous": "a9a4e62edf5a796eeacd26bd1166806dc0078420a68d0957a66e41539876bc14",
           "current": "769b7c7b64412ec348b1b9311cf8ee1a2928063d597402e45eacb16ec2a03aea"
+        }
+      ]
+    },
+    {
+      "unit": "240",
+      "date": "2026-10-20",
+      "host": "HJOW-Athlon",
+      "note": "저장 객체 최초 Pop 전 건설/의식 등록. 현재 소스 핀만 갱신하며 과거 실행 결과는 보존한다. 실행 검증은 통합 시점으로 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "group": "/currentSources",
+          "previous": "e922269cc73ab9299f59d9ae26a4c2b1346adcf023b1d8eff5416699d125eea6",
+          "current": "aa78d6d841c3cb61f212fe645e9a0ffef7cf84f1bbcf2978a37fcad2c6d780e0"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "group": "/currentSources",
+          "previous": "769b7c7b64412ec348b1b9311cf8ee1a2928063d597402e45eacb16ec2a03aea",
+          "current": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd"
         }
       ]
     }

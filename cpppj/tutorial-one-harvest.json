@@ -18,7 +18,7 @@
     "cpppj/src/o/RawMissionFrameGate.cpp": "c591ce1c294a8c645008da04a6d5366182d42247f4505716e85d0ae4d6c5f4dc",
     "cpppj/src/o/RawMissionFrameGate.h": "93feacfb8b1fa1276737f8b1af6bc044c1ecda75bc4a82375728d650a43791be",
     "cpppj/src/client/RawCampaignTutorialOneBindings.cpp": "c214b1a4ecba704d4b4a7cbad4599dd87a32bf900f2664c53578a481fcd968fa",
-    "cpppj/src/client/RawCampaignSession.cpp": "e922269cc73ab9299f59d9ae26a4c2b1346adcf023b1d8eff5416699d125eea6",
+    "cpppj/src/client/RawCampaignSession.cpp": "aa78d6d841c3cb61f212fe645e9a0ffef7cf84f1bbcf2978a37fcad2c6d780e0",
     "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
     "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6"
   },
@@ -424,6 +424,20 @@
           "group": "/sources",
           "previous": "bb179f114f49f08e55b37da0fab350ea0370005c31b09b9224afcc48d342bd1c",
           "current": "e922269cc73ab9299f59d9ae26a4c2b1346adcf023b1d8eff5416699d125eea6"
+        }
+      ]
+    },
+    {
+      "unit": "240",
+      "date": "2026-10-20",
+      "host": "HJOW-Athlon",
+      "note": "저장 객체 최초 Pop 전 건설/의식 등록. 현재 소스 핀만 갱신하며 과거 실행 결과는 보존한다. 실행 검증은 통합 시점으로 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "group": "/sources",
+          "previous": "e922269cc73ab9299f59d9ae26a4c2b1346adcf023b1d8eff5416699d125eea6",
+          "current": "aa78d6d841c3cb61f212fe645e9a0ffef7cf84f1bbcf2978a37fcad2c6d780e0"
         }
       ]
     }

@@ -2626,6 +2626,32 @@ TEST_CASE(CampaignSacrifice_Native30ActualShapeOffsets) {
     CHECK(count==30);CHECK(core.shapes[165].frames[3].hotspotX==107 && core.shapes[165].frames[3].muzzleX==-89);std::cout<<"실제 의식 헤더30입력/Anchor·Point 전수 일치: 표시107,96과 목표-89,-46 구별\n";
 }
 
+// 저장 다이스를 첫 로드에서 실제 파생 Pop으로 등록한다. 원본 파일 대신 메모리상의 거주 구역 레코드 하나만 바꾼다.
+TEST_CASE(CampaignDais_SavedRecordFirstPopRegistersAltar) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());bool replaced{}; // 검사 입력으로 바꾼 저장 레코드의 존재 여부다.
+    // 원래 선택 청크/좌표/순서를 보존하여 일반 저장 로더로만 다이스를 생성한다.
+    for (auto& section:fort.territories) {
+        // 청크 순서와 다른 저장 객체를 그대로 유지한다.
+        for (auto& chunk:section.chunks) {
+            // 실제 Terr00의 로컬 거주 구역89 한 개를 저장 다이스로 치환하며 나머지는 원본 로드 입력이다.
+            for (auto& object:chunk.objects) if (!replaced && object.type==89 && object.owner.value_or(1)==1) {
+                object.type=165;object.storedType=165;object.frame=std::uint8_t{0};object.quantityByte=std::uint8_t{0};object.quantityWord=std::int16_t{0};
+                object.owner=std::uint8_t{1};object.contents=FortContentList{};replaced=true;
+            }
+        }
+    }
+    CHECK(replaced);if (!replaced) return;
+    RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",external.Services());session.Load();auto core=session.Core();
+    const auto daises=ConstructionLive(core,165),altars=ConstructionLive(core,164);CHECK(daises.size()==1 && altars.size()==1);
+    if (daises.size()!=1 || altars.size()!=1) return;const auto dais=daises.front(),altar=altars.front(); // 실제 로더/파생 Pop이 만든 두 객체다.
+    CHECK(core.postPop.HandlesDais(dais) && core.postPop.HandlesDais(altar));
+    CHECK(Get(session.PlayerRecords(),0xb4+0x8c)==dais.value && Get(session.PlayerRecords(),0xb4+0x90)==dais.value);
+    CHECK(core.pool.Slot(altar)[34]==1 && core.processes.FindEvent(altar,21));
+    CHECK(Get(core.pool.Slot(dais),14)==Get(core.pool.Slot(altar),14) && Get(core.pool.Slot(dais),18)==Get(core.pool.Slot(altar),18));
+    CHECK(!core.bookkeeping.depth && !core.destroy.PreDepth() && !core.destroy.PostDepth());
+}
+
 // 실제 Factory/전체Pop의 제단 생성·Player 등록과 부착 통지/제단 저항을 확인한다. 자연 포획 입력은 아니다.
 TEST_CASE(CampaignDais_ActualFactoryPopAndCapturedNotice) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();InputQueue commands;netstorm::zacket::LocalMissionTransport* wire{};std::vector<std::string> music;services.carrierRequest=[&](std::int32_t owner,std::span<const std::uint8_t> packet) { CHECK(wire);if (wire) wire->Send(owner,packet); };services.requestMusic=[&](std::string_view name) { music.emplace_back(name); };services.assets.queueCommand=[&](std::uint32_t command,std::int32_t x,std::int32_t y) { commands.PushCommand(command,x,y); }; // 실제 입력 큐와 자산을 쓴다.

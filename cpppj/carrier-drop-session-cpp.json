@@ -34,14 +34,14 @@
     "cpppj/src/client/RawCampaignConstructionBindings.cpp": "bd8ccc0a27709ce909164d6266002bcf7f22bd619169560175cca835924d2f9a",
     "cpppj/src/client/RawCampaignConstructionBindings.h": "512570010be383ea7cc726b275acffa61280f1448c9fcd4c872d7ba62a9d8d93",
     "cpppj/src/client/RawCampaignDevastation.inc": "7a21a39d0ab2c351a0317ff51cef28e57574670539e8e2da6758a738e5721400",
-    "cpppj/src/client/RawCampaignSession.cpp": "e922269cc73ab9299f59d9ae26a4c2b1346adcf023b1d8eff5416699d125eea6",
+    "cpppj/src/client/RawCampaignSession.cpp": "aa78d6d841c3cb61f212fe645e9a0ffef7cf84f1bbcf2978a37fcad2c6d780e0",
     "cpppj/src/client/RawCampaignSession.h": "13b74f9ed71a7379a5041ad849861e6215842efe7772dbaaf2e44f7833fbfbca",
     "cpppj/src/client/RawCarrierDropPoint.cpp": "a0c2130de14992eb2f3debda71840b9e0c9889398d17cfd92c2c8cb050b2acd5",
     "cpppj/src/client/RawCarrierDropPoint.h": "e57a82a5afd40fbfd482bb494a1d1c60d754dc70174bd1b801ee45fac7d645ac",
     "cpppj/src/o/RawBombActivation.cpp": "d706f591a9f8c363bd6d2e42439ba09897291ddfda9ba095553949ea3991f7ce",
     "cpppj/src/o/RawCarrierDrop.cpp": "50111765448edf5068d98b20595f75151a60869fe12a11bb5ded73cda6764f95",
     "cpppj/src/o/RawCarrierDrop.h": "0c9109ffd076eee38db08725823ab7561322f3dde8cc9c43e7dcd684c2b8f3ea",
-    "cpppj/tests/CampaignSessionTests.cpp": "769b7c7b64412ec348b1b9311cf8ee1a2928063d597402e45eacb16ec2a03aea",
+    "cpppj/tests/CampaignSessionTests.cpp": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
     "docs/exe/cpp-carrier-drop-session-20261020.md": "3d4c1c0e64aa5e24d85d6bce8fe73e4affa96bb489972887ebe627e95b424e9a",
     "tools/cpp_carrier_drop_session_audit.py": "1376b73f74dc13dffe273ddab685712b8ba32d3ae1d823db4e3c5b384a1d3ce0"
   },
@@ -148,6 +148,26 @@
           "group": "/sources",
           "previous": "a9a4e62edf5a796eeacd26bd1166806dc0078420a68d0957a66e41539876bc14",
           "current": "769b7c7b64412ec348b1b9311cf8ee1a2928063d597402e45eacb16ec2a03aea"
+        }
+      ]
+    },
+    {
+      "unit": "240",
+      "date": "2026-10-20",
+      "host": "HJOW-Athlon",
+      "note": "저장 객체 최초 Pop 전 건설/의식 등록. 현재 소스 핀만 갱신하며 과거 실행 결과는 보존한다. 실행 검증은 통합 시점으로 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "group": "/sources",
+          "previous": "e922269cc73ab9299f59d9ae26a4c2b1346adcf023b1d8eff5416699d125eea6",
+          "current": "aa78d6d841c3cb61f212fe645e9a0ffef7cf84f1bbcf2978a37fcad2c6d780e0"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "group": "/sources",
+          "previous": "769b7c7b64412ec348b1b9311cf8ee1a2928063d597402e45eacb16ec2a03aea",
+          "current": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd"
         }
       ]
     }

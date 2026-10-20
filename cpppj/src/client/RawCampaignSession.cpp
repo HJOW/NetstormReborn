@@ -1036,7 +1036,10 @@ struct RawCampaignSession::Impl {
             if (event.effect==BridgeLifecycleEffect::FallSound) { if (!services.sound.playOnceAt) throw std::logic_error("실제 다리 낙하 위치 소리 미연결");services.sound.playOnceAt(event.x,event.y,soundNames.Lookup("bridgeFall.wav"),0,0);return; }
             throw std::logic_error("다리 파편/소리 경계의 다른 수명 효과");
         };
-        worldHooks.loadingDepth=[this](std::uint32_t depth) { objectState.loadingDepth=depth;carrierState.loadingDepth=depth;priests->SetLoadingDepth(depth);assetBindings->SetLoadingDepth(depth); };
+        worldHooks.loadingDepth=[this](std::uint32_t depth) {
+            objectState.loadingDepth=depth;carrierState.loadingDepth=depth;priests->SetLoadingDepth(depth);assetBindings->SetLoadingDepth(depth);
+            if (daisState) PrepareRitual(); // 저장 다이스/룬의 첫 Pop도 현재 미션·Player 값을 읽도록 로더의 깊이 변경 때 갱신한다.
+        };
         world.BindRuntime(std::move(worldHooks));
         placement.geometry=metadata.geometry;placement.placement.localPlayer=1;placement.permission.alliances.fill(1);
         pipeline=std::make_unique<RawCanonPlacementPipeline>(core.pool,core.hash,CanonPlacementPipelineData{core.types,metadata.frames,core.shapes,metadata.hotspots,core.spots,core.hash.Entries(0),{}},core.bookkeeping,additional,contentFinder,placement);
@@ -1966,7 +1969,7 @@ struct RawCampaignSession::Impl {
         geyserMinedState.boss=assetState.boss;geyserMinedState.checking=gunState.checking;geyserMinedState.nuggetType=motionState.carrier.nuggetType;
         geyserMined->HandlePacket(packet);
     }
-    // 설치를 마친 동일 Graph/Host에 실제 사제 경로 모듈을 한 번 연결한다.
+    // 같은 Graph/Host에 실제 경로와 의식 모듈을 연결한다. 저장 객체의 첫 Pop 전에 등록해야 한다.
     #include "client/RawCampaignDevastation.inc"
     #include "client/RawCampaignCarrierDrop.inc"
     void ConnectMotion() {
@@ -2169,6 +2172,7 @@ struct RawCampaignSession::Impl {
         core.postPop.SetBuriedPostPop(nullptr); // 장기 모듈 해제 뒤 파생 포인터를 남기지 않는다.
         core.postPop.SetFlyerPostPop(nullptr); // 비행 장기 몸체 해제 뒤 공통 분배에 포인터를 남기지 않는다.
         core.postPop.SetRunePostPop(nullptr); // 같은 Rune 몸체를 해제하기 전에 공통 분배의 참조를 정리한다.
+        core.postPop.SetDaisPostPop(nullptr); // 같은 다이스/제단 몸체를 해제하기 전에 공통 분배의 참조를 정리한다.
         core.postPop.SetBalloonPostPop(nullptr); //벌룬 그림자 몸체 해제 뒤 공통 분배에 포인터를 남기지 않는다.
     }
 
@@ -2202,8 +2206,13 @@ RawCampaignSession::RawCampaignSession(const GameAssets& assets,const BaseFileSy
     :impl_(std::make_unique<Impl>(assets,files,std::move(fort),std::move(mission),std::move(services))) {}
 // Impl이 Kernel을 비운 뒤 실제 모듈을 해제한다.
 RawCampaignSession::~RawCampaignSession()=default;
-// 동일 원본 부모를 실행한다.
-void RawCampaignSession::Load() { impl_->runtime->Load();impl_->ConnectBuilding();impl_->ConnectMotion();impl_->ConnectDevastation();impl_->ConnectCarrierDrop();impl_->buildingMover=impl_->MakeBuilder(impl_->buildingMoverState,{});impl_->ConnectGameplayPlacement();impl_->ConnectCursor();impl_->loaded=true; }
+// 저장 다이스/룬의 전체 후처리를 먼저 등록한 뒤 동일 원본 부모로 월드를 로드한다.
+void RawCampaignSession::Load() {
+    impl_->ConnectBuilding();impl_->ConnectMotion();
+    impl_->runtime->Load();
+    impl_->ConnectDevastation();impl_->ConnectCarrierDrop();impl_->buildingMover=impl_->MakeBuilder(impl_->buildingMoverState,{});
+    impl_->ConnectGameplayPlacement();impl_->ConnectCursor();impl_->loaded=true;
+}
 // UI의 현재 크기/변경 전역을 빌리며 게임 소유자·모드는 실제 세션에서 다시 읽는다.
 void RawCampaignSession::ResetCamera(CameraHomeState& state,std::function<void(std::int32_t,std::int32_t)> apply) const {
     state.localPlayer=impl_->playerState.battleOwner;state.fort=impl_->core.ownerMode.fort;

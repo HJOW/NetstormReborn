@@ -33,13 +33,13 @@
   "sources": {
     "cpppj/src/o/RawObjectCommand.h": "a5f7551eb5fb286a80f3f9ef266080332ef406ce0c5a08966c241cf5fa0cbe92",
     "cpppj/src/o/RawObjectCommand.cpp": "7115cde44fcb4406b010fafb6fc6599e6e155d8ead9975e6287e1ed658c9e10a",
-    "cpppj/src/client/RawCampaignSession.cpp": "e922269cc73ab9299f59d9ae26a4c2b1346adcf023b1d8eff5416699d125eea6",
+    "cpppj/src/client/RawCampaignSession.cpp": "aa78d6d841c3cb61f212fe645e9a0ffef7cf84f1bbcf2978a37fcad2c6d780e0",
     "cpppj/src/client/RawCampaignSession.h": "13b74f9ed71a7379a5041ad849861e6215842efe7772dbaaf2e44f7833fbfbca",
     "cpppj/src/client/RawCampaignCarrierDrop.inc": "67575c22bae7e40a198022461212d82c5a966d9ab174346f0c1863c5303b5a62",
     "cpppj/src/client/CampaignObjectMenuClient.cpp": "2e1d9e0aea14df5eb579b320744b8cbe3a88a567361b687ef9064e84fe395001",
     "cpppj/src/CMakeLists.txt": "8834917133d33fda6dcd145dd64a93ee38ee014d25fede2eff5575b996df5847",
     "cpppj/tests/ObjectCommandTests.cpp": "0efdf255c004532a5c03c6be6894d603cff06b36b0a1170425697933d13da0c7",
-    "cpppj/tests/CampaignSessionTests.cpp": "769b7c7b64412ec348b1b9311cf8ee1a2928063d597402e45eacb16ec2a03aea",
+    "cpppj/tests/CampaignSessionTests.cpp": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
     "cpppj/tests/CMakeLists.txt": "49797f3b65f9f2b5bbb3c15a4521ecb361936cbf0c13f443f2f20f86bfe8f1cf",
     "tools/cpp_object_command_audit.py": "fb3a90757380f3dd1755282e332982a5a8e5f3a3a3d4e2f64f922fc48cc0102d"
   },
@@ -56,5 +56,27 @@
     "Form diagnostic output 004b0fb0 remains an explicit boundary.",
     "New C++ tests were compiled but were not executed. Native emulation is not gameplay validation.",
     "REA function analysis failed at H: root attributes with Win32 87; existing local decompilation and isolated x86 observations were used."
+  ],
+  "integration_updates": [
+    {
+      "unit": "240",
+      "date": "2026-10-20",
+      "host": "HJOW-Athlon",
+      "note": "저장 객체 최초 Pop 전 건설/의식 등록. 현재 소스 핀만 갱신하며 과거 실행 결과는 보존한다. 실행 검증은 통합 시점으로 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "group": "/sources",
+          "previous": "e922269cc73ab9299f59d9ae26a4c2b1346adcf023b1d8eff5416699d125eea6",
+          "current": "aa78d6d841c3cb61f212fe645e9a0ffef7cf84f1bbcf2978a37fcad2c6d780e0"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "group": "/sources",
+          "previous": "769b7c7b64412ec348b1b9311cf8ee1a2928063d597402e45eacb16ec2a03aea",
+          "current": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd"
+        }
+      ]
+    }
   ]
 }
