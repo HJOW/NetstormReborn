@@ -1,3 +1,14 @@
+## 2026-10-20 완료: W02 일곱째 조각 — 프레임 지정
+
+- [x] 사용자 요청("AGENTS.md 와 LEFT_JOBS.dotnetpj.md 를 다시 읽고, dotnetpj 서브프로젝트 다음 작업을 진행해 줘.")으로 직전 절이 정한 다음 시작점, 곧 프레임(`setframe`)을 수행했다. `cpppj/`·공통 `LEFT_JOBS.md`는 수정하지 않았다. 현재 PC **VM-W11-Codex**는 공통 기록의 마지막 정밀 디컴파일 PC(**VM-W11-Codex / 2026-10-20**)와 같으나 **디컴파일 산출물을 읽지 않았고**, 새 디컴파일·원본 관찰·원본/클론 게임·창 실행은 없다. cpppj 커밋 소스·원본 fixture에만 근거했다. 마지막 디컴파일 PC 기록은 그대로다. 상세·근거 표·경계는 [원본 월드 코어 W02 Frame 조각](docs/dotnet-original-core-frame-20261020.md).
+- [x] **동기화 먼저:** 시작할 때 반영 커밋은 `2856544d`, HEAD는 `d5dc54ac`(당일 `20261020-09`)였다. 사이는 이 조각의 전제인 dotnetpj 커밋 1건뿐이라 cpppj 변경 검토가 없고, 쓸 fixture를 `--update --add setframe:Core`로 등록했다(연결 fixture 28→**29**개). 마지막에 `--update --reflect HEAD`로 반영 커밋을 `2856544d`→**`d5dc54ac`** 로 올렸다([계획 7절 7번](docs/dotnet-cpp-port-plan-20261016.md#7-cpppj-진행을-따라가는-절차-다른-ai가-cpppj를-계속-진행-중)).
+- [x] **구현(`dotnetpj/src/Netstorm.Core/Original/`):** `SquidFrame`(프레임 지정 10.78 경로 — 플래그 검사→레벨 저장·비교→갱신 2회·Unpop·Pop or 0x50), `SquidFrameHooks`(크기·갱신·Unpop·Pop), `RawSquidHash.ObjectLevel`(섬·다리 0, 크기 2·4 경계 1·2·3) 추가. 기준 판본은 10.78 뿐이다.
+- [x] **검증:** 전체 Release 경고 0·오류 0(`--no-incremental` 강제 전체 빌드), 단위 **1,158개 통과**(Assets 363 + Core 795; 이번 +6). `setframe-x86.tsv` 10.78 몫 **1,920회**(효과 순서·슬롯 50바이트)와 Thunk 4건이 전부 일치했다.
+- [x] **변이 확인:** 구현 19곳을 하나씩 망가뜨려 처음에 16곳이 실패로 잡혔다. 잡히지 않은 3곳은 검사를 3건 보강한 뒤(큰 프레임 4바이트 쓰기·최소 단계 직접 계약·타입 범위 예외 종류) 17곳이 잡혔다. 남은 2곳(레벨 바이트 부호 읽기·타입 범위 검사 생략)은 관측 동작이 같아 방어용 중복으로 유지한다.
+- [ ] **하지 않은 것(경계):** 실제 Unpop·Pop 연결 검사(Pop API 정합이 필요해서 L2로 미룸), 건물 공간·이웃·탐색, Graph 계열, CD 10.72·10.37. 파생 분배 허브는 여전히 미연결이다. 이 조각은 L1 모듈 단계이며 L2 이상으로 합산하지 않는다.
+- [ ] **다음 조각:** 건물 공간(`buildingspace`)·이웃·탐색 → Graph 계열. 시작할 때 `python dotnetpj/tools/cpp_sync.py`를 먼저 실행하고 쓸 fixture를 `--update --add`로 등록한다.
+- [x] 인수인계 뒤 **`20261020-10 DN 원본 월드 코어의 프레임 지정을 원본 10.78 행 1,920회로 검증`** 으로 로컬 커밋한다. 원격 push는 하지 않는다.
+
 ## 2026-10-20 완료: W02 여섯째 조각 — 소유자 지정과 가변 소유자 재생
 
 - [x] 사용자 요청("AGENTS.md 와 LEFT_JOBS.dotnetpj.md 를 다시 읽고, dotnetpj 서브프로젝트 다음 작업을 진행해 줘.")으로 직전 절이 정한 다음 시작점, 곧 소유자(`owner`)와 가변 소유자 재생을 수행했다. 프레임(`setframe`)은 다음 조각으로 미뤘다. `cpppj/`·공통 `LEFT_JOBS.md`는 수정하지 않았다. 현재 PC **VM-W11-Codex**는 공통 기록의 마지막 정밀 디컴파일 PC(**VM-W11-Codex / 2026-10-20**)와 같으나 **디컴파일 산출물을 읽지 않았고**, 새 디컴파일·원본 관찰·원본/클론 게임·창 실행은 없다. cpppj 커밋 소스·원본 fixture에만 근거했다. 마지막 디컴파일 PC 기록은 그대로다. 상세·근거 표·경계는 [원본 월드 코어 W02 Owner 조각](docs/dotnet-original-core-owner-20261020.md).

@@ -52,6 +52,29 @@ public sealed class RawSquidHash
         ? WorldCells / Scales[level]
         : throw new ArgumentOutOfRangeException(nameof(level), level, "공간 해시 단계는 0~3 입니다");
 
+    /// <summary>
+    /// 표시·일반 조회가 쓰는 최소 단계. 섬·다리 부류(플래그2 0x2·0x4)는 0이며,
+    /// 그 밖은 현재 프레임의 가로·세로 크기 가운데 큰 값으로 1·2·3을 정한다(원본 SquidHash::ObjectLevel).
+    /// 크기가 유한하지 않거나 음수이면 예외다. W02 Frame 조각(2026-10-20)에서 더했다.
+    /// </summary>
+    /// <param name="flags2">타입 플래그2.</param>
+    /// <param name="frameWidth">현재 프레임의 가로 크기.</param>
+    /// <param name="frameHeight">현재 프레임의 세로 크기.</param>
+    public static int ObjectLevel(uint flags2, float frameWidth, float frameHeight)
+    {
+        // 섬·다리 부류는 표시 단계를 세지 않는다
+        if ((flags2 & 0x6) != 0)
+        {
+            return 0;
+        }
+        if (!float.IsFinite(frameWidth) || !float.IsFinite(frameHeight) || frameWidth < 0 || frameHeight < 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(frameWidth), "해시 프레임 크기가 범위를 벗어났습니다");
+        }
+        float size = Math.Max(frameWidth, frameHeight);
+        return size <= 2 ? 1 : size <= 4 ? 2 : 3;
+    }
+
     /// <summary>월드 좌표가 가리키는 버킷의 배열 인덱스. 좌표는 0 방향으로 절삭한 뒤 단계 크기로 나눈다.</summary>
     /// <param name="level">단계 0~3.</param>
     /// <param name="x">월드 x 좌표.</param>
