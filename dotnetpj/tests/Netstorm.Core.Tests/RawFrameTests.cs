@@ -144,13 +144,22 @@ public sealed class RawFrameTests
             Fill(pool, 0, 7);
             Assert.ThrowsAny<Exception>(() => frames.StoreLevel(Target));
         }
-        // 타입 번호가 표를 벗어나면 거부한다
+        // 타입 표의 첫 범위 밖 번호와 바이트 최댓값은 슬롯·효과를 바꾸지 않고 명시 진단으로 거부한다
+        foreach (byte invalidType in new byte[] { (byte)OriginalConstructors.TypeCount, byte.MaxValue })
         {
             var pool = Pool();
-            var frames = new SquidFrame(pool, Types(), Hooks([], [1f, 1f], new int[1]));
+            var events = new List<string>();
+            int[] calls = new int[1];
+            var frames = new SquidFrame(pool, Types(), Hooks(events, [1f, 1f], calls));
             Fill(pool, 0, 7);
-            pool.AllocatedBytes(Target)[RawSidPool.TypeOffset] = 255;
-            Assert.Throws<ArgumentOutOfRangeException>(() => frames.StoreLevel(Target));
+            pool.AllocatedBytes(Target)[RawSidPool.TypeOffset] = invalidType;
+            byte[] before = pool.Slot(Target).ToArray();
+            var error = Assert.Throws<ArgumentOutOfRangeException>(() => frames.StoreLevel(Target));
+            Assert.Equal("sid", error.ParamName);
+            Assert.Equal((uint)invalidType, Assert.IsType<uint>(error.ActualValue));
+            Assert.Equal(before, pool.Slot(Target).ToArray());
+            Assert.Empty(events);
+            Assert.Equal(0, calls[0]);
         }
     }
 

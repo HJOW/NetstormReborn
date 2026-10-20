@@ -134,7 +134,8 @@ public sealed class SquidFrame
     public int StoreLevel(int sid)
     {
         uint number = _pool.Slot(sid)[TypeOffset];
-        if (false)
+        // 잘못된 타입은 인덱서에 넘기기 전에 번호를 진단하고 슬롯 쓰기·외부 효과를 막는다
+        if (number >= (uint)_types.Count)
         {
             throw new ArgumentOutOfRangeException(nameof(sid), number, "프레임 지정 타입 번호 범위 오류");
         }

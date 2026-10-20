@@ -1,7 +1,7 @@
 """cpppj 원본 기계어 기대값(fixture)과 dotnetpj 검사의 동기화 상태를 확인하고 SHA-256 목록을 갱신한다.
 
 사용법 (저장소 루트에서 실행):
-  python dotnetpj/tools/cpp_sync.py                         상태 보고. 읽기 전용이며 연결 fixture 가 어긋났으면 종료 코드 1
+  python dotnetpj/tools/cpp_sync.py                         상태 보고. 읽기 전용이며 연결 fixture·생성 자료가 어긋났으면 종료 코드 1
   python dotnetpj/tools/cpp_sync.py --update                연결 fixture 의 SHA-256·행 수를 현재 파일 기준으로 갱신
   python dotnetpj/tools/cpp_sync.py --update --reflect HEAD 갱신하면서 '반영한 cpppj 커밋'도 함께 기록
   python dotnetpj/tools/cpp_sync.py --update --add sid:Core 새 fixture(sid-x86.tsv)를 목록에 등록 (사용 프로젝트 Core 또는 Assets)
@@ -37,7 +37,11 @@ ORIGINS = ("cpppj", "dotnetpj")
 # 보고서에 펼쳐 보여 주는 커밋·파일 목록의 최대 길이.
 LIST_LIMIT = 40
 # cpppj 의 원본 목록(.inc 등)에서 C# 자료를 만드는 생성 도구들. 각 도구의 --check 가 현재 C# 자료와 cpppj 원본의 일치를 확인한다.
-GENERATORS = ("gen_original_constructors.py", "gen_original_unpop_vtables.py")
+GENERATORS = (
+    "gen_original_constructors.py",
+    "gen_original_unpop_vtables.py",
+    "gen_original_pop_vtables.py",
+)
 
 
 @dataclass
@@ -123,7 +127,7 @@ def status_of(entry: Entry) -> str:
 
 
 def report() -> int:
-    """동기화 상태를 출력한다. 연결 fixture 가 어긋났으면 1, 아니면 0 을 돌려준다."""
+    """동기화 상태를 출력한다. 연결 fixture·생성 자료가 어긋났으면 1, 아니면 0 을 돌려준다."""
     reflected, entries = load_manifest()
     head = (git("rev-parse", "HEAD") or "").strip()
     print("== cpppj 동기화 상태 ==")

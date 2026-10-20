@@ -6,7 +6,7 @@
 
 | 파일 | 내용 | 원본 근거 / cpppj 근거 |
 | --- | --- | --- |
-| `RawFrame.cs` | 프레임 지정(원본 `004acee0`의 10.78 경로). `SquidFrameHooks`(크기·갱신·Unpop·Pop)·`SquidFrame`(플래그 검사→레벨 저장·비교→일치면 갱신 2회·현재면 레벨만·아니면 Unpop·쓰기·Pop or 0x50). `Frame()`·`StoreLevel()` 공개 | `SquidFrame.cpp` |
+| `RawFrame.cs` | 프레임 지정(원본 `004acee0`의 10.78 경로). `SquidFrameHooks`(크기·갱신·Unpop·Pop)·`SquidFrame`(플래그 검사→레벨 저장·비교→일치면 갱신 2회·현재면 레벨만·아니면 Unpop·쓰기·Pop or 0x50). `StoreLevel()` 공개·`Frame()` 비공개 보조 함수 | `SquidFrame.cpp` |
 | `RawSquidHash.cs` | `ObjectLevel()` 추가(섬·다리 0, 큰 쪽 크기 2·4 경계로 1·2·3, 비유한·음수 거부) | `SquidHash.cpp` |
 | `X86RawFrameTests.cs` | `setframe-x86.tsv` 10.78 몫 **1,920회** 재생(효과 순서·슬롯 50바이트) + Thunk 4건·보호 2종(빠진 효과·표 밖 프레임) | `SetFrameTests.cpp` |
 | `RawFrameTests.cs` | 보호·분기 계약 4개(생성자·레벨 판정·갱신 2회·Unpop·Pop·4바이트 쓰기·최소 단계) | `SetFrameTests.cpp` 의 보호·합성 검사 |
@@ -22,6 +22,8 @@
 전체 Release 경고 0·오류 0(`--no-incremental` 강제 전체 빌드), 단위 **1,158개 통과**(Assets 363 + Core 795; 이번 +6).
 
 **변이 확인:** 구현 19곳을 하나씩 망가뜨려 처음에 16곳이 실패로 잡혔다. 잡히지 않은 3곳은 검사를 3건 보강한 뒤(큰 프레임 4바이트 쓰기·최소 단계 직접 계약·타입 범위 예외 종류) 17곳이 잡혔다. 남은 2곳은 관측 동작이 같다 — 레벨 바이트 부호 읽기(계산 레벨 0~3은 255와 −1 어느 쪽과도 같아질 수 없음), 타입 범위 검사 생략(인터페이스 인덱서가 쓰기 전에 같은 `ArgumentOutOfRangeException`을 던짐). 모두 방어용 중복으로 유지한다.
+
+**2026-10-20 후속 정정:** 위의 "유지" 기록과 달리 `d1d5643c`의 타입 범위 조건은 `if (false)`였다. 후속 보완에서 `number >= (uint)_types.Count`를 복구했다. 기존 범위 검사를 타입 188·255의 명시 예외(`ParamName == "sid"`·`ActualValue == 타입 번호`) 및 슬롯·외부 효과 보존으로 보강해, 기존 코드에서 `index` 진단으로 실패하고 복구 뒤 프레임 관련 6개가 통과함을 확인했다. 과거 19곳 전체 변이 검사를 재실행한 결과는 아니다. 같은 보완에서 Pop 생성기를 정기 동기화 검사에 등록해 생성 자료 3개를 검사하도록 했다. 현재 검증 결과와 남은 통합 범위는 [최신 인수인계](../LEFT_JOBS.dotnetpj.md) 맨 위 절을 따른다.
 
 ## 3. 이번에 하지 않은 것 (경계)
 

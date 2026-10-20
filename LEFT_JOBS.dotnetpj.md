@@ -1,12 +1,23 @@
+## 2026-10-20 완료: 점검 보완 — 프레임 범위 검사 복구·Pop 생성 자료 자동 검사 (`VM-W11-Codex`)
+
+- [x] 사용자 요청("dotnetpj 보완 작업 및 테스트, 필요 시 수정 진행해 줘")으로 직전 점검의 보완 2건을 처리했다. 시작 HEAD는 **`5e408764`**, 작업 PC는 **VM-W11-Codex**다. AGENTS와 양쪽 인수인계의 최신 지시를 다시 확인했다. 마지막 정밀 디컴파일 PC 기록은 **VM-W11-Codex / 2026-10-20**로 같으며, 디컴파일 산출물 열람·재생성 및 원본/클론 게임·창 실행은 없다. `cpppj/`·공통 `LEFT_JOBS.md`·AGENTS·원본 자료는 변경하지 않았다.
+- [x] **범위 검사 복구:** `SquidFrame.StoreLevel`의 `if (false)`를 **`number >= (uint)_types.Count`**로 복구했다. `RawFrameTests`의 기존 검사를 보강해 첫 범위 밖 타입 **188**과 바이트 최댓값 **255**에 대해 예외의 `ParamName == "sid"`·`ActualValue == 타입 번호`, 전체 슬롯 보존, 크기 조회·외부 효과 미실행을 확인한다. 보강 검사만 먼저 실행해 기존 코드에서 **`sid` 대신 `index`로 실패·종료 1**함을 확인했고, 복구 뒤 프레임 관련 **6개/실패 0·종료 0**을 확인했다. 과거 19곳 전체 변이 검사는 반복하지 않았다.
+- [x] **Pop 생성 자료 자동 검사:** `cpp_sync.py`의 `GENERATORS`에 `gen_original_pop_vtables.py`를 추가했다. 현재 **fixture 29개·생성 자료 3개**가 모두 일치하며 정기 동기화 종료 0이다. 별도 임시 디렉터리에 세 생성기·입력 목록·C# 생성 자료를 복사하고 Pop 생성 자료의 복사본만 바꿔 부모 동기화 명령의 **정상 0 → 불일치 1 → 복원 0**을 확인했다. 실제 작업 트리의 생성 자료나 원본 fixture는 변경하지 않았다.
+- [x] **전체 Release 빌드:** `dotnetpj/`에서 `dotnet build Netstorm.sln -c Release --no-incremental --nologo` **경고 0·오류 0·종료 0**이다.
+- [x] **전체 단위 검사:** 같은 빌드의 `dotnet test Netstorm.sln -c Release --no-build --no-restore --nologo` **1,158개 통과**(Assets **363** + Core **795**, 실패·건너뜀 0·종료 0)다. 기존 Fact를 보강했으므로 검사 개수는 늘지 않았다. 원본 10.78 프레임 재생 **1,920회**와 Thunk **4건**도 포함한다.
+- [x] **문서 정정:** 아래 직전 점검의 두 보완을 완료로 바꾸고 현행 W02 목록에서 제거했다. 프레임 작업 기록의 공개 API 설명과 과거 범위 검사 원복 주장을 정정했다. 이번 변경은 오류 방어·검사 보완이며 W02의 L2 이상 완료로 합산하지 않는다.
+- [ ] **다음 시작점:** 건물 공간(`buildingspace`)·이웃·탐색 → Graph 계열. 파생 분배 허브·실제 세션 연결·실제 프레임 재등록 통합 검사는 여전히 미완료다. cpppj 변경이 없어서 반영 커밋은 **`d5dc54ac`**를 유지한다. 다음 작업 시작 때 `python dotnetpj/tools/cpp_sync.py`로 재확인한다.
+- [x] 인수인계 뒤 **`20261020-12 DN 프레임 범위 검사 복구와 Pop 생성 자료 동기화 보완`**으로 로컬 커밋한다. 원격 push는 하지 않는다.
+
 ## 2026-10-20 완료: dotnetpj 최근 작업 점검 (`VM-W11-Codex`)
 
 - [x] 사용자 요청("AGENTS.md 와 LEFT_JOBS.dotnetpj.md 를 읽고 dotnetpj 최근 작업 사항 점검해 줘")에 따라 AGENTS와 양쪽 인수인계의 최신 지시, W02 최근 커밋(`0fee047a`~`d1d5643c`)의 소스·검사·작업 기록을 대조했다. 현재 PC와 마지막 정밀 디컴파일 PC는 **VM-W11-Codex / 2026-10-20**로 같다. 디컴파일 산출물을 읽거나 다시 생성하지 않았고, 원본/클론 게임·창 실행도 없다. `cpppj/`·공통 `LEFT_JOBS.md`·AGENTS·원본 파일은 변경하지 않았다. 이번 변경은 이 인수인계 문서뿐이다.
 - [x] **이번 재검증:** `python dotnetpj/tools/cpp_sync.py` 종료 0 — 연결 fixture **29개**의 SHA-256·행 수 일치, 등록된 생성 자료 **2개** 일치, 반영 이후 cpppj 관련 커밋·fixture 변경 없음. 반영 커밋은 **`d5dc54ac`**, 점검 대상 HEAD는 **`d1d5643c`**이며 사이 커밋은 dotnetpj 프레임 이식이다. 빠진 Pop 생성기는 `python dotnetpj/tools/gen_original_pop_vtables.py --check`로 따로 실행해 **일치·종료 0**을 확인했다.
 - [x] **이번 빌드·검사:** `dotnetpj/`에서 `dotnet build Netstorm.sln -c Release --no-incremental --nologo` 경고 **0**·오류 **0**·종료 0. 이어 `dotnet test Netstorm.sln -c Release --no-build --no-restore --nologo`의 **1,158개 통과**(Assets **363** + Core **795**, 실패·건너뜀 0)를 확인했다. 이번에는 변이 검사를 다시 실행하지 않았으며, 과거 변이 원복 주장을 현재 테스트 통과만으로 확정하지 않는다.
-- [ ] **보완 1 — 프레임 범위 검사와 검사의 구별력:** `RawFrame.cs`의 `SquidFrame.StoreLevel`에 타입 번호 범위 검사 대신 **`if (false)`**가 커밋되어 있다. cpppj `SquidFrame.cpp`의 `number >= types_.size()` 및 직전 인계의 "방어용 중복으로 유지" 기록과 다르다. 현재 `IReadOnlyList` 인덱서가 같은 `ArgumentOutOfRangeException`을 던져 `RawFrameTests.StoreLevelFollowsGenusAndSizeThresholds`가 통과하므로, 이번에 실행 실패로 재현한 기능 회귀는 아니다. 후속 수정에서 명시 조건을 복구하고 검사에는 예외의 `ParamName`·`ActualValue` 등 명시 거부 경로를 구별하는 계약을 보강한다. 이번 점검에서는 기능 코드를 수정하지 않았다.
-- [ ] **보완 2 — Pop 생성 자료의 자동 검사 누락:** `cpp_sync.py`의 `GENERATORS`에는 `gen_original_constructors.py`·`gen_original_unpop_vtables.py`만 있고, W02 Pop에서 추가한 **`gen_original_pop_vtables.py`가 없다.** 따라서 현재 정기 동기화 명령만으로는 `OriginalPopDisplay.Data.cs`와 cpppj 입력 목록의 일치를 직접 검사하지 않는다. 현재 자료는 위 별도 검사로 일치했으나, 후속 수정에서 생성기를 자동 검사 목록에 추가한다. fixture 일치 검사와 생성 자료 일치 검사는 범위가 다르다.
+- [x] **보완 1 — 프레임 범위 검사와 검사의 구별력(후속 완료):** 점검 당시 `SquidFrame.StoreLevel`의 타입 범위 검사가 `if (false)`였고 인덱서가 같은 종류의 예외를 던져 기존 검사가 통과했다. 위 후속 보완에서 명시 범위 조건을 복구하고 예외의 `ParamName`·`ActualValue`와 상태·효과 보존 검사를 보강했다. 보강 검사로 수정 전 실패와 수정 후 통과를 확인했다.
+- [x] **보완 2 — Pop 생성 자료의 자동 검사 누락(후속 완료):** 점검 당시 `cpp_sync.py`의 `GENERATORS`에 없던 `gen_original_pop_vtables.py`를 위 후속 보완에서 추가했다. 생성 자료 3개가 모두 일치하고, 복사본을 바꾼 격리 검사에서 자동 동기화 명령의 불일치 종료 1도 확인했다.
 - [x] **진행 판정·문서 정리:** W02는 슬롯 풀·생성 → 공간 해시·Unpop → Pop → 공통 PostPop·다리 접두 → Carrier/Asset 후처리 → 소유자 → 프레임까지 **L1 모듈 이식**을 진행했다. `HandlesDerived`는 여전히 거짓이고 새 월드 코어는 실제 `BattleSession`에 연결되지 않았다. 실제 Unpop·Pop을 통한 프레임 재등록, 건물 공간·이웃·탐색, Graph와 L2 이상은 미완료다. 아래 현행 계획의 낡은 "다음은 Pop"·반영 커밋 설명을 최신 기록과 맞췄다. 기존 1-1·1-2 공개 범위와 데모 비활성 상태는 소스로 확인했으며 실제 플레이는 이번에 재검증하지 않았다.
-- [ ] **다음 시작점:** 위 두 보완을 처리한 뒤 기존 순서인 건물 공간(`buildingspace`)·이웃·탐색 → Graph 계열을 진행한다. W02 완료나 L2 이상 달성으로 표시하지 않는다. 매 작업 시작 시 `python dotnetpj/tools/cpp_sync.py`로 다시 동기화 상태를 확인한다.
+- [ ] **다음 시작점:** 위 두 보완은 후속 작업에서 완료했다. 기존 순서인 건물 공간(`buildingspace`)·이웃·탐색 → Graph 계열을 진행한다. W02 완료나 L2 이상 달성으로 표시하지 않는다. 매 작업 시작 시 `python dotnetpj/tools/cpp_sync.py`로 다시 동기화 상태를 확인한다.
 - [x] 인수인계 뒤 **`20261020-11 DN 최근 월드 코어 이식 점검과 검증 공백 인수인계`**로 로컬 커밋한다. 원격 push는 하지 않는다.
 
 ## 2026-10-20 완료: W02 일곱째 조각 — 프레임 지정
@@ -138,7 +149,7 @@
 - [x] **판정 단계:** L1 모듈(fixture 10.78 행 전부) → L2 세션 시작 상태 → L3 고정 입력 진행 → L4 화면·소리 → L5 자연 완주 순서다. L1 통과를 L2 이후 완료로 합산하지 않는다. 1차 범위는 cpppj 목표와 같은 11개 미션(Tutorial1~6·캠페인 1-1·1-2·데모 3개)이다.
 - [ ] **P0 기반**(순서대로, 각 단위의 fixture·교체 대상·완료 기준은 계획 5절)
   - [x] W01 기준선·동기화 장치: 연결 fixture SHA 목록 검사, `X86Fixture` 확장, 반영 커밋 기록 (**완료 2026-10-16**, 위 절)
-  - [ ] W02 원본 월드 코어 ① 생성·등록: 객체 표·생성자·Pop/Unpop/PostPop·해시/spot·소유자/프레임·Graph 연결(D14) — **2026-10-20 점검 시: 슬롯 풀·생성, 공간 해시·Unpop, Pop, 공통 PostPop·다리 접두, Carrier/Asset 후처리, 소유자, 프레임까지 L1 모듈 이식 진행**. 위 점검의 보완 2건과 건물 공간·이웃·탐색 → Graph, 파생 분배 허브·실제 세션 연결은 미완료다(각 조각 상세는 위 절).
+  - [ ] W02 원본 월드 코어 ① 생성·등록: 객체 표·생성자·Pop/Unpop/PostPop·해시/spot·소유자/프레임·Graph 연결(D14) — **2026-10-20 점검 시: 슬롯 풀·생성, 공간 해시·Unpop, Pop, 공통 PostPop·다리 접두, Carrier/Asset 후처리, 소유자, 프레임까지 L1 모듈 이식 진행**. 점검의 보완 2건은 완료했고 건물 공간·이웃·탐색 → Graph, 파생 분배 허브·실제 세션 연결은 미완료다(각 조각 상세는 위 절).
   - [ ] W03 원본 월드 코어 ② 삭제·수명: 공통 삭제·Damageable·종속/내용물/Form·신전 삭제(D14)
   - [ ] W04 시간·Kernel·Process: Regular·ProcessForm·공통 프레임 진행, 24Hz/8틱 소비자를 하나씩 이행(D01)
   - [ ] W05 SP·보상·난수: float32 SP 저장소·쓰기마다 난수 160회·보상/환불/AI 지갑/샘 풀(D12)
