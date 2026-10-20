@@ -53,6 +53,9 @@
     <None Include="../../../cpppj/tests/fixtures/metadisplaydirty-x86.tsv" Link="X86/metadisplaydirty-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <!-- 원본 월드 코어 W02 그래프 표 조각: 표 초기화 17행(헤더 포함)의 원본 PE 독립 관찰. -->
     <None Include="../../../cpppj/tests/fixtures/graph-reset-x86.tsv" Link="X86/graph-reset-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <!-- 원본 월드 코어 W02 그래프 연산 조각: 표면 스냅샷·영역·추가/flood·등록 후처리 1,796행의 원본 PE 독립 관찰 (10.78 행만 쓴다). -->
+    <None Include="../../../cpppj/tests/fixtures/rawgraph-x86.tsv" Link="X86/rawgraph-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/regiongraph-x86.tsv" Link="X86/regiongraph-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <!-- 원본 월드 코어 W02 PostPop 조각: 공통 후처리·Pop·Unpop 2,140행과 다리 접두 240행의 원본 PE 독립 관찰 (10.78 행만 쓴다). -->
     <None Include="../../../cpppj/tests/fixtures/postpop-x86.tsv" Link="X86/postpop-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/bridgepostpop-x86.tsv" Link="X86/bridgepostpop-x86.tsv" CopyToOutputDirectory="PreserveNewest" />

@@ -1,13 +1,16 @@
+using Netstorm.Assets;
 using Netstorm.Core.Bridges;
 using Netstorm.Core.Original;
+using Netstorm.Core.Simulation;
 
 namespace Netstorm.Core.Tests;
 
 /// <summary>
-/// 원본 월드 코어의 그래프 표 저장소(<see cref="RawGraph"/>)의 경계를 확인한다.
-/// 원본 기대값 재생(X86RawGraphTests)이 초기화 결과를 대조하고, 이 검사들은 cpppj RawGraph 의 크기 검사·Free 번호 범위·
-/// 초기화가 건드리지 않는 범위(251~253·예약 WORD·스택·풀)·공간/타입 일치 계약을 10.78 로 옮긴다.
-/// 근거: cpppj/src/o/RawGraph.cpp (W02 열셋째 조각, 2026-10-20).
+/// 원본 월드 코어의 그래프 저장소·연산(<see cref="RawGraph"/>)의 경계를 확인한다.
+/// 원본 기대값 재생(X86RawGraphTests·X86RawGraphReplayTests)이 초기화·영역·추가/flood 결과를 대조하고,
+/// 이 검사들은 크기 검사·Free 번호 범위·초기화 보존 범위·공간/타입 일치·비활성 입력·비표면 거부·빈 번호 할당·
+/// flood 의 그래프 byte 외 불변을 10.78 로 옮긴다.
+/// 근거: cpppj/src/o/RawGraph.cpp (W02 열셋째·열넷째 조각, 2026-10-20).
 /// </summary>
 public sealed class RawGraphTests
 {
@@ -22,6 +25,56 @@ public sealed class RawGraphTests
         var pool = new RawSidPool(24000, false);
         var hash = new RawSquidHash();
         return (pool, hash, new byte[RawSquidHash.WorldCells * RawSquidHash.WorldCells]);
+    }
+
+    /// <summary>표면 타입 74(플래그1=표면, 발자국 1×1)와 프레임 하나를 가진 장면을 만든다.</summary>
+    private static (RawSidPool Pool, byte[] Spots, OriginalTypeRecord[] Types, RawGraph Graph) SurfaceScene(
+        IReadOnlyList<GraphRecord>? records = null)
+    {
+        (RawSidPool pool, RawSquidHash hash, byte[] spots) = Space();
+        OriginalTypeRecord[] types = Types();
+        types[74].Flags1 = OriginalTypeRecord.Surface;
+        types[74].FootX = types[74].FootY = 1;
+        List<IReadOnlyList<FrameCode>> frames = Enumerable.Range(0, types.Length)
+            .Select(_ => (IReadOnlyList<FrameCode>)new List<FrameCode> { new FrameCode('A', 'P', 1, FrameCodeFlags.None) }).ToList();
+        var graph = new RawGraph(pool, hash, spots, types, records, null, frames);
+        return (pool, spots, types, graph);
+    }
+
+    /// <summary>값을 리틀 엔디언으로 슬롯에 쓴다.</summary>
+    /// <param name="bytes">대상 슬롯 바이트.</param>
+    /// <param name="offset">쓰기 시작 위치.</param>
+    /// <param name="value">쓸 값.</param>
+    /// <param name="width">쓰는 바이트 수.</param>
+    private static void Put(Span<byte> bytes, int offset, uint value, int width = 4)
+    {
+        // 낮은 바이트부터 폭만큼 쓴다
+        for (int i = 0; i < width; i++)
+        {
+            bytes[offset + i] = (byte)(value >> (i * 8));
+        }
+    }
+
+    /// <summary>클라이언트 슬롯을 확보해 표면 필드(가상 표·좌표·타입·상태·그래프·프레임)를 채운다.</summary>
+    /// <param name="pool">대상 풀.</param>
+    /// <param name="x">월드 x.</param>
+    /// <param name="y">월드 y.</param>
+    /// <param name="graph">그래프 번호.</param>
+    /// <param name="state">상태 바이트(기본 void=4).</param>
+    private static int Surface(RawSidPool pool, float x, float y, byte graph, byte state = 4)
+    {
+        int sid = pool.Allocate(SidAllocation.Client);
+        Span<byte> bytes = pool.AllocatedBytes(sid);
+        bytes.Clear();
+        Put(bytes, 0, OriginalConstructors.BaseVtable);
+        Put(bytes, 14, BitConverter.SingleToUInt32Bits(x));
+        Put(bytes, 18, BitConverter.SingleToUInt32Bits(y));
+        bytes[10] = 74;
+        bytes[11] = state;
+        bytes[30] = graph;
+        bytes[34] = 1;
+        Put(bytes, 36, 0);
+        return sid;
     }
 
     /// <summary>표·스택·타입·지도 크기가 다르면 만들기 전에 거부한다.</summary>
@@ -122,5 +175,71 @@ public sealed class RawGraphTests
         changed = Types();
         changed[74].FootX = 3;
         Assert.Throws<ArgumentException>(() => graph.ValidateTypes(changed));
+    }
+
+    /// <summary>비활성(void/dead) 원천의 Add 는 표·스택·슬롯을 바꾸지 않고 돌아간다.</summary>
+    [Fact]
+    public void AddSkipsInactiveSourceWithoutChanges()
+    {
+        (RawSidPool pool, byte[] spots, OriginalTypeRecord[] types, RawGraph graph) = SurfaceScene();
+        int sid = Surface(pool, 10, 10, 3);
+        byte[] before = pool.Bytes.ToArray();
+        graph.Add(sid);
+        // 표는 sentinel 만 남고, 슬롯 그래프 byte 도 그대로다
+        Assert.Equal(0, graph.Records[0].InUse);
+        Assert.Equal(3, pool.Slot(sid)[30]);
+        Assert.Equal(before, pool.Bytes.ToArray());
+        Assert.All(spots, spot => Assert.Equal(0, spot));
+        _ = types;
+    }
+
+    /// <summary>표면 타입이 아닌 슬롯의 Add 는 표를 바꾸기 전에 거부한다.</summary>
+    [Fact]
+    public void AddRejectsNonSurfaceType()
+    {
+        (RawSidPool pool, byte[] spots, OriginalTypeRecord[] types, RawGraph graph) = SurfaceScene();
+        types[74].Flags1 = 0;
+        int sid = Surface(pool, 10, 10, 3);
+        byte[] before = pool.Bytes.ToArray();
+        Assert.Throws<InvalidOperationException>(() => graph.Add(sid));
+        Assert.Equal(before, pool.Bytes.ToArray());
+        Assert.All(spots, spot => Assert.Equal(0, spot));
+    }
+
+    /// <summary>빈 번호 할당은 가장 낮은 미사용 번호를 쓰고 예약 WORD 를 보존한다.</summary>
+    [Fact]
+    public void AllocateUsesLowestFreeAndPreservesReserved()
+    {
+        (RawSidPool pool, byte[] spots, OriginalTypeRecord[] types, RawGraph graph) = SurfaceScene();
+        Assert.Equal(0, graph.Allocate());
+        Assert.Equal(1, graph.Records[0].InUse);
+        Assert.Equal(0, graph.Records[0].Surfaces);
+        Assert.Equal(1, graph.Allocate());
+        _ = pool;
+        _ = spots;
+        _ = types;
+    }
+
+    /// <summary>Flood 는 그래프 byte 만 쓰고 좌표·소유자·상태·payload 는 보존한다.</summary>
+    [Fact]
+    public void FloodWritesOnlyGraphByte()
+    {
+        var records = new GraphRecord[RawGraph.TableSize];
+        records[3] = new GraphRecord { Surfaces = 1, InUse = 1 };
+        (RawSidPool pool, byte[] spots, OriginalTypeRecord[] types, RawGraph graph) = SurfaceScene(records);
+        int sid = Surface(pool, 10, 10, 3);
+        byte[] before = pool.Slot(sid).ToArray();
+        Assert.Equal(1U, graph.Flood(sid, 4));
+        ReadOnlySpan<byte> after = pool.Slot(sid);
+        // 그래프 byte 하나만 바뀐다
+        for (int i = 0; i < before.Length; i++)
+        {
+            byte expected = i == 30 ? (byte)4 : before[i];
+            Assert.Equal(expected, after[i]);
+        }
+        Assert.Equal(0, graph.Records[3].Surfaces);
+        Assert.Equal(1, graph.Records[4].Surfaces);
+        _ = spots;
+        _ = types;
     }
 }
