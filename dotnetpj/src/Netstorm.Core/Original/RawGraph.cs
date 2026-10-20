@@ -11,10 +11,9 @@ namespace Netstorm.Core.Original;
 /// 이 조각은 표 저장소·초기화(<see cref="ResetTable"/>)·반납(<see cref="Free"/>)·공간/타입 일치와 함께
 /// 원본 슬롯·해시·점유 지도에서 표면 스냅샷을 만들어 영역 무효화(<see cref="InvalidateRegion"/>)·
 /// 추가(<see cref="Add"/>)·flood(<see cref="Flood"/>)·등록 후처리(<see cref="PostPop"/>)·빈 번호 할당(<see cref="Allocate"/>)·
-/// 삭제 준비(<see cref="Detach"/>)·전체 재구성(<see cref="Rebuild"/>)을 수행한다.
+/// 삭제 준비(<see cref="Detach"/>)·전체 재구성(<see cref="Rebuild"/>)·삭제 후처리(<see cref="PostDestroy"/>)·방향 코드 조회(<see cref="Frame(int)"/>)를 수행한다.
 /// 계산은 항상 사본에서 하고(<see cref="Calculate"/>) 성공한 계획만 commit 하므로, 거부된 호출은 표·스택·슬롯을 바꾸지 않는다.
-/// PostDestroy·Frame 은 다음 조각으로 남겼다.
-/// 근거: cpppj/src/o/RawGraph.cpp (W02 열여섯째 조각, 2026-10-21).
+/// 근거: cpppj/src/o/RawGraph.cpp (W02 열여덟째 조각, 2026-10-21).
 /// </summary>
 public sealed class RawGraph : IRawPostPopGraph
 {
@@ -415,6 +414,36 @@ public sealed class RawGraph : IRawPostPopGraph
         _ = Calculate(0, Operation.Rebuild, (byte)(resetAll ? 1 : 0), null);
     }
 
+    /// <summary>
+    /// 특수 삭제 분기의 원본 프레임 방향 문자를 조회한다. raw 타입·프레임 표를 캐시하지 않는다.
+    /// </summary>
+    /// <param name="sid">대상 슬롯 번호.</param>
+    public FrameCode Frame(int sid)
+    {
+        ReadOnlySpan<byte> raw = _pool.Slot(sid);
+        byte number = raw[RawSidPool.TypeOffset];
+        uint index = Read(raw, FrameOffset, 4);
+        // 타입 번호와 프레임 번호가 표를 벗어나면 쓰기 전에 거부한다
+        if (number < OriginalConstructors.FirstAssetType || number >= _types.Count || index >= (uint)_frames[number].Count)
+        {
+            throw new ArgumentOutOfRangeException(nameof(sid), index, "raw 그래프 프레임 조회 오류");
+        }
+        return _frames[number][(int)index];
+    }
+
+    /// <summary>
+    /// 공통 postDestroy 의 발자국→일반 탐색→표면별 Add 를 같은 사본에서 연속 계산한다.
+    /// 발자국 영역 안의 표면을 탐색 순서대로 등록하고, 그래프 byte 변경분만 한 번에 반영한다.
+    /// </summary>
+    /// <param name="sid">대상 슬롯 번호.</param>
+    public void PostDestroy(int sid) => Commit(CalculatePostDestroy(sid));
+
+    /// <summary>
+    /// 공통 postDestroy 가 공간·표·스택을 바꾸기 전에 같은 검사를 수행한다. 쓰기는 없다.
+    /// </summary>
+    /// <param name="sid">대상 슬롯 번호.</param>
+    public void ValidatePostDestroy(int sid) => _ = CalculatePostDestroy(sid);
+
     /// <summary>공통 PostPop 이 요구하는 후처리 연결(영역·표면 등록)을 수행한다.</summary>
     /// <param name="sid">대상 슬롯 번호.</param>
     /// <param name="region">영역 등록인지.</param>
@@ -431,7 +460,7 @@ public sealed class RawGraph : IRawPostPopGraph
 
     /// <summary>
     /// 원본 계획 계산. 표·스택 사본에서 모든 검사와 계산을 끝내고 성공한 계획을 돌려준다.
-    /// 거부 경로는 아무것도 바꾸지 않는다. PostDestroy·Frame 은 이 조각에서 지원하지 않는다.
+    /// 거부 경로는 아무것도 바꾸지 않는다.
     /// </summary>
     /// <param name="sid">대상 슬롯 번호(Allocate·Rebuild 는 0).</param>
     /// <param name="operation">연산 종류.</param>
@@ -1041,6 +1070,72 @@ public sealed class RawGraph : IRawPostPopGraph
         }
         Array.Copy(plan.Records, _records, TableSize);
         Array.Copy(plan.Stack, _stack, FloodSize);
+    }
+
+    /// <summary>
+    /// 공통 postDestroy 의 일반 탐색 순서에 따라 이전 Add 의 번호·표·스택을 다음 Add 가 읽는다.
+    /// 원본처럼 풀 사본 위에서 순차 Add 를 수행하고, 실제 raw 필드 중 graph byte 의 변경분만 계획에 넣는다.
+    /// 앞선 Add 성공 뒤 뒤 후보가 실패해도 실제 풀·표·스택은 보존한다.
+    /// </summary>
+    /// <param name="sid">대상 슬롯 번호.</param>
+    private Plan CalculatePostDestroy(int sid)
+    {
+        ReadOnlySpan<byte> root = _pool.Slot(sid);
+        // 빈 슬롯·들어 있는 내용물·비자산 타입은 쓰기 전에 거부한다
+        if (sid < RawSidPool.FirstOrdinary || (root[RawSidPool.StateOffset] & (FreeBit | ContainedBit)) != 0
+            || root[RawSidPool.TypeOffset] < OriginalConstructors.FirstAssetType || root[RawSidPool.TypeOffset] >= _types.Count)
+        {
+            throw new InvalidOperationException("raw 그래프 postDestroy 자산 오류");
+        }
+        OriginalTypeRecord type = _types[root[RawSidPool.TypeOffset]];
+        int x = Coordinate(BitConverter.UInt32BitsToSingle(Read(root, XOffset)));
+        int y = Coordinate(BitConverter.UInt32BitsToSingle(Read(root, YOffset)));
+        // 발자국이 비어 있거나 지도를 벗어나면 쓰기 전에 거부한다
+        if (type.FootX < 1 || type.FootY < 1 || type.FootX > RawSquidHash.WorldCells || type.FootY > RawSquidHash.WorldCells)
+        {
+            throw new ArgumentOutOfRangeException(nameof(sid), "raw 그래프 postDestroy 발자국 오류");
+        }
+        int left = Math.Clamp(x - type.FootX + 1, 1, RawSquidHash.WorldCells - 1);
+        int top = Math.Clamp(y - type.FootY + 1, 1, RawSquidHash.WorldCells - 1);
+        var area = new SquidSearchArea(left, top, x > 0 && y > 0 ? x : left, x > 0 && y > 0 ? y : top);
+        // 원본처럼 풀 사본 위에서 순차 Add 를 수행한다
+        var trial = new RawSidPool(_pool.Capacity, _pool.IsServer);
+        // 사본 풀의 슬롯 바이트를 현재 풀과 같게 채운다
+        for (int i = 0; i < _pool.Capacity; i++)
+        {
+            _pool.Slot(i).CopyTo(trial.RawSlot(i));
+        }
+        var next = new RawGraph(trial, _hash, _spots, _types, _records, _stack, _frames, _recovery);
+        var finder = new RawSquidFinder(trial, _hash, _types);
+        // Begin 은 첫 Next 까지 수행한다. 반환 직전 next 저장과 단계/y/x 순서를 그대로 사용한다
+        for (int candidate = finder.Begin(area); candidate != 0; candidate = finder.Next())
+        {
+            ReadOnlySpan<byte> raw = trial.Slot(candidate);
+            // 후보 타입 번호가 표를 벗어나면 쓰기 전에 거부한다
+            if (raw[RawSidPool.TypeOffset] >= _types.Count)
+            {
+                throw new ArgumentOutOfRangeException(nameof(sid), raw[RawSidPool.TypeOffset], "raw 그래프 postDestroy 후보 타입 오류");
+            }
+            if ((_types[raw[RawSidPool.TypeOffset]].Flags1 & OriginalTypeRecord.Surface) != 0)
+            {
+                next.Add(candidate);
+            }
+        }
+        var plan = new Plan
+        {
+            Records = next.Records.ToArray(),
+            Stack = next.FloodStack.ToArray(),
+        };
+        // 실제 raw 필드 중 graph byte 의 변경분만 원본 풀에 반영할 계획에 넣는다
+        for (int id = RawSidPool.FirstOrdinary; id < _pool.Capacity; id++)
+        {
+            byte number = trial.Slot(id)[GraphOffset];
+            if (number != _pool.Slot(id)[GraphOffset])
+            {
+                plan.Numbers.Add((id, number));
+            }
+        }
+        return plan;
     }
 
     /// <summary>

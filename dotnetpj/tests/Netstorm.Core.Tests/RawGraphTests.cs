@@ -9,8 +9,8 @@ namespace Netstorm.Core.Tests;
 /// 원본 월드 코어의 그래프 저장소·연산(<see cref="RawGraph"/>)의 경계를 확인한다.
 /// 원본 기대값 재생(X86RawGraphTests·X86RawGraphReplayTests·X86RawGraphFormsTests)이 초기화·영역·추가/flood·삭제·재구성 결과를 대조하고,
 /// 이 검사들은 크기 검사·Free 번호 범위·초기화 보존 범위·공간/타입 일치·비활성 입력·비표면 거부·빈 번호 할당·
-/// flood 의 그래프 byte 외 불변·재구성의 초기화/수집 구분과 손상 입력을 10.78 로 옮긴다.
-/// 근거: cpppj/src/o/RawGraph.cpp (W02 열셋째·열넷째·열여섯째 조각, 2026-10-20·2026-10-21).
+/// flood 의 그래프 byte 외 불변·재구성의 초기화/수집 구분·삭제 후처리·방향 코드 조회와 손상 입력을 10.78 로 옮긴다.
+/// 근거: cpppj/src/o/RawGraph.cpp (W02 열셋째·열넷째·열여섯째·열여덟째 조각, 2026-10-20·2026-10-21).
 /// </summary>
 public sealed class RawGraphTests
 {
@@ -469,6 +469,154 @@ public sealed class RawGraphTests
         Assert.Equal(0, graph.Records[0].InUse);
         _ = types;
         _ = spots;
+    }
+
+    /// <summary>
+    /// 발자국 영역 안의 표면을 탐색 순서대로 등록한다. 먼저 등록된 무리를 다음 Add 가 읽어 같은 무리에 묶는다.
+    /// </summary>
+    [Fact]
+    public void PostDestroyAddsFootprintAreaSequentially()
+    {
+        (RawSidPool pool, RawSquidHash hash, byte[] spots) = Space();
+        OriginalTypeRecord[] types = Types();
+        types[74].Flags1 = OriginalTypeRecord.Surface;
+        types[74].FootX = types[74].FootY = 1;
+        types[75].Flags1 = OriginalTypeRecord.Surface;
+        types[75].FootX = 3;
+        types[75].FootY = 1;
+        List<IReadOnlyList<FrameCode>> frames = Enumerable.Range(0, types.Length)
+            .Select(_ => (IReadOnlyList<FrameCode>)new List<FrameCode> { new FrameCode('A', 'P', 1, FrameCodeFlags.None) }).ToList();
+        var graph = new RawGraph(pool, hash, spots, types, null, null, frames);
+        int first = Surface(pool, 20, 20, RawGraph.Invalid, 0);
+        int second = Surface(pool, 21, 20, RawGraph.Invalid, 0);
+        int root = pool.Allocate(SidAllocation.Client);
+        Span<byte> rootBytes = pool.AllocatedBytes(root);
+        rootBytes.Clear();
+        Put(rootBytes, 0, OriginalConstructors.BaseVtable);
+        Put(rootBytes, 14, BitConverter.SingleToUInt32Bits(22));
+        Put(rootBytes, 18, BitConverter.SingleToUInt32Bits(20));
+        rootBytes[10] = 75;
+        rootBytes[11] = 0;
+        rootBytes[30] = RawGraph.Invalid;
+        rootBytes[34] = 1;
+        Put(rootBytes, 36, 0);
+        // 발자국 영역의 세 버킷에 각 슬롯을 건다
+        hash.Bucket(0, 20, 20) = (ushort)first;
+        hash.Bucket(0, 21, 20) = (ushort)second;
+        hash.Bucket(0, 22, 20) = (ushort)root;
+        byte[] beforeFirst = pool.Slot(first).ToArray();
+        byte[] beforeSecond = pool.Slot(second).ToArray();
+        byte[] beforeRoot = pool.Slot(root).ToArray();
+        graph.ValidatePostDestroy(root);
+        graph.PostDestroy(root);
+        byte group = pool.Slot(first)[30];
+        // 먼저 등록된 두 표면은 같은 무리에 묶인다
+        Assert.NotEqual(RawGraph.Invalid, group);
+        Assert.Equal(group, pool.Slot(second)[30]);
+        // 첫 Add 의 flood 가 이웃까지 묶고(Surfaces 2), 두 번째 Add 가 같은 표면을 또 셈한다(Surfaces 3).
+        // 원본 CalculatePostDestroy 도 이미 묶인 후보를 건너뛰지 않고 Add 하므로 그대로 따른다
+        Assert.Equal(3, graph.Records[group].Surfaces);
+        byte lone = pool.Slot(root)[30];
+        // 발자국이 겹쳐 이웃에서 제외된 원천은 새 무리를 이룬다
+        Assert.NotEqual(group, lone);
+        Assert.Equal(1, graph.Records[lone].Surfaces);
+        // 그래프 byte 외 슬롯 필드는 그대로다
+        for (int i = 0; i < beforeFirst.Length; i++)
+        {
+            byte expected = i == 30 ? group : beforeFirst[i];
+            Assert.Equal(expected, pool.Slot(first)[i]);
+        }
+        // 그래프 byte 외 두 번째 슬롯 필드도 그대로다
+        for (int i = 0; i < beforeSecond.Length; i++)
+        {
+            byte expected = i == 30 ? group : beforeSecond[i];
+            Assert.Equal(expected, pool.Slot(second)[i]);
+        }
+        // 그래프 byte 외 원천 슬롯 필드도 그대로다
+        for (int i = 0; i < beforeRoot.Length; i++)
+        {
+            byte expected = i == 30 ? lone : beforeRoot[i];
+            Assert.Equal(expected, pool.Slot(root)[i]);
+        }
+        _ = types;
+        _ = spots;
+        _ = hash;
+    }
+
+    /// <summary>
+    /// 빈 슬롯·비자산 타입·빈 발자국은 표·스택·풀을 바꾸기 전에 거부한다.
+    /// </summary>
+    [Fact]
+    public void PostDestroyRejectsBeforeMutation()
+    {
+        (RawSidPool pool, RawSquidHash hash, byte[] spots) = Space();
+        OriginalTypeRecord[] types = Types();
+        types[74].Flags1 = OriginalTypeRecord.Surface;
+        types[74].FootX = types[74].FootY = 1;
+        List<IReadOnlyList<FrameCode>> frames = Enumerable.Range(0, types.Length)
+            .Select(_ => (IReadOnlyList<FrameCode>)new List<FrameCode> { new FrameCode('A', 'P', 1, FrameCodeFlags.None) }).ToList();
+        var graph = new RawGraph(pool, hash, spots, types, null, null, frames);
+        int sid = Surface(pool, 20, 20, RawGraph.Invalid, 0);
+        byte[] beforePool = pool.Bytes.ToArray();
+        // 할당되지 않은 번호는 거부한다
+        Assert.Throws<InvalidOperationException>(() => graph.ValidatePostDestroy(99));
+        Assert.Throws<InvalidOperationException>(() => graph.PostDestroy(99));
+        // 비표면 타입의 원천은 등록할 표면이 없어 그대로 돌아간다
+        types[74].Flags1 = 0;
+        graph.ValidatePostDestroy(sid);
+        graph.PostDestroy(sid);
+        Assert.Equal(beforePool, pool.Bytes.ToArray());
+        types[74].Flags1 = OriginalTypeRecord.Surface;
+        // 빈 발자국은 거부한다
+        types[74].FootX = 0;
+        Assert.Throws<ArgumentOutOfRangeException>(() => graph.ValidatePostDestroy(sid));
+        Assert.Throws<ArgumentOutOfRangeException>(() => graph.PostDestroy(sid));
+        // 풀·표·스택은 그대로다
+        Assert.Equal(beforePool, pool.Bytes.ToArray());
+        Assert.Equal(0, graph.Records[0].InUse);
+        Assert.All(graph.FloodStack, value => Assert.Equal(0U, value));
+        _ = types;
+        _ = spots;
+        _ = hash;
+    }
+
+    /// <summary>
+    /// 특수 삭제 분기의 방향 코드를 읽는다. 판본 폭(10.78 4바이트) 밖의 번호·범위 밖 타입은 거부한다.
+    /// </summary>
+    [Fact]
+    public void FrameReturnsDirectionCodeAndRejects()
+    {
+        (RawSidPool pool, RawSquidHash hash, byte[] spots) = Space();
+        OriginalTypeRecord[] types = Types();
+        types[74].Flags1 = OriginalTypeRecord.Surface;
+        types[74].FootX = types[74].FootY = 1;
+        List<IReadOnlyList<FrameCode>> frames = Enumerable.Range(0, types.Length)
+            .Select(_ => (IReadOnlyList<FrameCode>)new List<FrameCode>
+            {
+                new FrameCode('A', 'P', 1, FrameCodeFlags.None),
+                new FrameCode('A', 'P', 2, FrameCodeFlags.None),
+            }).ToList();
+        var graph = new RawGraph(pool, hash, spots, types, null, null, frames);
+        int sid = Surface(pool, 20, 20, 0, 0);
+        // 0번 프레임의 방향 코드를 읽는다
+        Assert.Equal(new FrameCode('A', 'P', 1, FrameCodeFlags.None), graph.Frame(sid));
+        Put(pool.AllocatedBytes(sid), 36, 1);
+        // 1번 프레임의 방향 코드를 읽는다
+        Assert.Equal(new FrameCode('A', 'P', 2, FrameCodeFlags.None), graph.Frame(sid));
+        byte[] cleanPool = pool.Bytes.ToArray();
+        // 범위 밖 프레임 번호는 거부하고 풀을 바꾸지 않는다
+        Put(pool.AllocatedBytes(sid), 36, 99);
+        Assert.Throws<ArgumentOutOfRangeException>(() => graph.Frame(sid));
+        Put(pool.AllocatedBytes(sid), 36, 1);
+        // 비자산 타입 번호는 거부하고 풀을 바꾸지 않는다
+        pool.AllocatedBytes(sid)[10] = 0;
+        Assert.Throws<ArgumentOutOfRangeException>(() => graph.Frame(sid));
+        pool.AllocatedBytes(sid)[10] = 74;
+        Assert.Equal(cleanPool, pool.Bytes.ToArray());
+        Assert.Equal(new FrameCode('A', 'P', 2, FrameCodeFlags.None), graph.Frame(sid));
+        _ = types;
+        _ = spots;
+        _ = hash;
     }
 
     /// <summary>

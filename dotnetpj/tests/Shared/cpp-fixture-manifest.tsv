@@ -2,7 +2,7 @@
 # dotnetpj 테스트(CppFixtureManifestTests)가 이 목록과 실제 파일을 비교한다. 다르면 cpppj 가 fixture 를 다시 만든 것이므로
 # 해당 C# 검사를 재대조한 뒤 `python dotnetpj/tools/cpp_sync.py --update` 로 갱신한다. 기대값을 C# 결과로 덮어쓰지 않는다.
 # SHA-256 은 CRLF 를 LF 로 바꾼 바이트로 계산하고, rows 는 주석·빈 줄을 뺀 행 수다.
-# reflected-commit: 297bed027e58cc2efee72e3159741dd2577e5a30
+# reflected-commit: b54d553270ce80f2ba740df7b16af18d3f80e945
 # 열: file	sha256	rows	origin	consumer
 asset-player-x86.tsv	9562745a755606ed0492e8a457d1c5f97822f073896882db282e04bbb992c3a4	576	cpppj	Core
 assetpostpop-x86.tsv	706afb7e0bd78de2527e97a1ec1bbe1f35a202aafbd2c81a0dc8d77d99198741	1636	cpppj	Core
