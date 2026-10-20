@@ -1,3 +1,14 @@
+## 2026-10-20 완료: W02 열째 조각 — 이웃
+
+- [x] 사용자 요청("AGENTS.md 와 LEFT_JOBS.dotnetpj.md 를 다시 읽고, dotnetpj 서브프로젝트 다음 작업을 진행해 줘.")으로 직전 절이 정한 다음 시작점, 곧 이웃(`neighbor`) 가운데 첫 이웃 탐색을 수행했다. 다리 사건 경유 재생은 `RawBridgeEvents` 연결이 필요해서 미뤘다. `cpppj/`·공통 `LEFT_JOBS.md`는 수정하지 않았다. 현재 PC **VM-W11-Codex**는 공통 기록의 마지막 정밀 디컴파일 PC(**VM-W11-Codex / 2026-10-20**)와 같으나 **디컴파일 산출물을 읽지 않았고**, 새 디컴파일·원본 관찰·원본/클론 게임·창 실행은 없다. cpppj 커밋 소스·원본 fixture에만 근거했다. 마지막 디컴파일 PC 기록은 그대로다. 상세·근거 표·경계는 [원본 월드 코어 W02 이웃 조각](docs/dotnet-original-core-neighbor-20261020.md).
+- [x] **동기화 먼저:** 시작할 때 반영 커밋은 `e5c9005d`, HEAD는 `ae6649e9`(당일 `20261020-14`)였다. 사이는 이 조각의 전제인 dotnetpj 커밋 1건뿐이라 cpppj 변경 검토가 없고, 쓸 fixture를 `--update --add neighbor:Core`로 등록했다(연결 fixture 31→**32**개). 마지막에 `--update --reflect HEAD`로 반영 커밋을 `e5c9005d`→**`ae6649e9`** 로 올렸다([계획 7절 7번](docs/dotnet-cpp-port-plan-20261016.md#7-cpppj-진행을-따라가는-절차-다른-ai가-cpppj를-계속-진행-중)).
+- [x] **구현(`dotnetpj/src/Netstorm.Core/Original/`):** `RawSquidNeighbors`(이웃 탐색 10.78 경로 — 발자국 읽기·안쪽 판정→사각형 확장 탐색→교차·결합·죽음·abstract·spot 판정), `NeighborFlags`·`SquidFootprint`·`RawSquidNeighborWalk`(회귀). 결합 판정은 기존 `BridgeSurfaceRules.Connects`를 재사용한다. 기준 판본은 10.78 뿐이다.
+- [x] **검증:** 전체 Release 경고 0·오류 0(`--no-incremental` 강제 전체 빌드), 단위 **1,182개 통과**(Assets 363 + Core 819; 이번 +12). 원본 fixture `neighbor-x86.tsv` 10.78 몫 **288회**(첫 이웃 번호)가 전부 일치했다.
+- [x] **변이 확인:** 구현 30곳을 하나씩 망가뜨려 모두 실패로 잡혔다. 처음에 6곳이 잡히지 않아 검사를 6건 보강했다(abstract·죽음·spot 편향·범위 종류·타입 범위·보드 밖 좌표). 소스는 모두 원복했다. 체인 순환 제거는 무한 순환을 일으키므로 역조건으로 바꿔 검출을 확인했고, 빈 번호 검사는 같은 예외를 던지므로 방어용 중복으로 유지한다. 변이 반복 뒤 강제 전체 빌드를 다시 하고 전체 검사를 통과했다.
+- [ ] **하지 않은 것(경계):** 다리 사건 경유 재생(`neighbor` Event 288회 — `RawBridgeEvents` 연결이 필요), Graph 계열, CD 10.72·10.37. 실제 세션 연결과 파생 분배 허브는 여전히 미연결이다. 이 조각은 L1 모듈 단계이며 L2 이상으로 합산하지 않는다.
+- [ ] **다음 조각:** 다리 사건(`RawBridgeEvents`, Event 288회 재생) → Graph 계열. 시작할 때 `python dotnetpj/tools/cpp_sync.py`를 먼저 실행하고 쓸 fixture를 `--update --add`로 등록한다.
+- [x] 인수인계 뒤 **`20261020-15 DN 원본 월드 코어의 이웃 탐색을 원본 10.78 행 288회로 검증`** 으로 로컬 커밋한다. 원격 push는 하지 않는다.
+
 ## 2026-10-20 완료: W02 아홉째 조각 — 탐색(원시 찾기)
 
 - [x] 사용자 요청("AGENTS.md 와 LEFT_JOBS.dotnetpj.md 를 다시 읽고, dotnetpj 서브프로젝트 다음 작업을 진행해 줘.")으로 직전 절이 정한 다음 시작점, 곧 이웃·탐색 가운데 탐색부터 수행했다. `cpppj/`·공통 `LEFT_JOBS.md`는 수정하지 않았다. 현재 PC **VM-W11-Codex**는 공통 기록의 마지막 정밀 디컴파일 PC(**VM-W11-Codex / 2026-10-20**)와 같으나 **디컴파일 산출물을 읽지 않았고**, 새 디컴파일·원본 관찰·원본/클론 게임·창 실행은 없다. cpppj 커밋 소스·원본 fixture에만 근거했다. 마지막 디컴파일 PC 기록은 그대로다. 상세·근거 표·경계는 [원본 월드 코어 W02 탐색 조각](docs/dotnet-original-core-finder-20261020.md).
