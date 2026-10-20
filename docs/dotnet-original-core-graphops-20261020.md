@@ -7,7 +7,7 @@
 | 파일 | 내용 | 원본 근거 / cpppj 근거 |
 | --- | --- | --- |
 | `RawGraph.cs` (확장) | 원본 `Calculate`/`Commit` 계획 계산 — 슬롯·해시·점유 지도에서 표면 스냅샷(`SurfaceObject`/`GraphMembership`)을 만들고 `SurfaceFinder`+`SurfaceGraph` 로 `Region`(`00462d40`)·`Add`(`004633c0`)·`Flood`(`00462f10`)·`Allocate` 를 수행. `PostPop`/`ValidateAdd`/`ValidatePostPop` 와 `IRawPostPopGraph` 구현. 모든 검사는 사본에서 하고 성공한 계획만 반영한다 | `RawGraph.cpp` 의 `Calculate`·`Region`·`Commit`·공개 연산 |
-| `X86RawGraphReplayTests.cs` | `rawgraph-x86.tsv` 10.78 몫 **448회**(Pop 64·PostPop 320·Add 256·Flood 128)와 `regiongraph-x86.tsv` 10.78 몫 **512회**(Pop 96·PostPop 160·Add 96·Region 160) 재생 | `RawGraphTests.cpp` 의 `ReplayRawGraph` |
+| `X86RawGraphReplayTests.cs` | `rawgraph-x86.tsv` 10.78 몫 **768회**(Pop 64·PostPop 320·Add 256·Flood 128)와 `regiongraph-x86.tsv` 10.78 몫 **512회**(Pop 96·PostPop 160·Add 96·Region 160, 두 fixture 합계 1,280회) 재생 | `RawGraphTests.cpp` 의 `ReplayRawGraph` |
 
 장면은 cpppj 재생과 같다: 실제 슬롯 풀(32,768)·해시·점유 지도 위에서 클라이언트 슬롯 7개를 확보하고, Setup 의 노드 13필드·프레임 코드·해시 체인·내부 점유·표 1,530바이트·스택 4,096(영역 fixture 는 시드+증가)·Totalmade stale 값(31337+i·2654435761)을 그대로 넣는다. 표시(`SquidDisplay`)는 슬롯·공간을 바꾸지 않으므로 끈 경로(null)를 썼고, 공통 Pop·PostPop 은 기존 `RawPop`·`RawPostPop` 을 연결했다.
 
@@ -15,7 +15,7 @@
 
 | 검사 | fixture | 맞춘 값 |
 | --- | --- | --- |
-| 사후처리·예측 Pop·추가/flood | `rawgraph-x86.tsv` **448회** | 호출마다 7개 슬롯 50바이트, 표/스택/4단계 해시/점유 지도/풀 체크섬, TotalCost·깊이·세 Totalmade 표 |
+| 사후처리·예측 Pop·추가/flood | `rawgraph-x86.tsv` **768회** | 호출마다 7개 슬롯 50바이트, 표/스택/4단계 해시/점유 지도/풀 체크섬, TotalCost·깊이·세 Totalmade 표 |
 | 영역 무효화·추가 | `regiongraph-x86.tsv` **512회** | 같은 열 전체 |
 
 전체 Release 경고 0·오류 0(`--no-incremental` 강제 전체 빌드), 단위 **1,210개 통과**(Assets 363 + Core 847; 이번 +6).
@@ -31,4 +31,4 @@
 
 ## 4. 다음 조각
 
-`Detach`(위치 조회·연결 목록·분할 정책) → `Rebuild`/`Allocate` 소진 복구(`graphrebuild`) → `PostDestroy`/`Frame` → `graphremove`·`graphlookup`·`graphrecovery` 재생. 시작할 때 `python dotnetpj/tools/cpp_sync.py` 를 먼저 실행하고 쓸 fixture 를 `--update --add` 로 등록한다.
+`Detach`(위치 조회·연결 목록·분할 정책) → `Allocate` 소진 복구 검증·`Rebuild` 구현(`graphrebuild`) → `PostDestroy`/`Frame` → `graphremove`·`graphlookup`·`graphrecovery`·`graphforms` 재생 → 파생 분배 허브·실제 세션 연결. 시작할 때 `python dotnetpj/tools/cpp_sync.py` 를 먼저 실행하고 쓸 fixture 를 `--update --add` 로 등록한다.

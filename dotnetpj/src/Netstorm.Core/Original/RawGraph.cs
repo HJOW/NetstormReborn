@@ -12,7 +12,7 @@ namespace Netstorm.Core.Original;
 /// 원본 슬롯·해시·점유 지도에서 표면 스냅샷을 만들어 영역 무효화(<see cref="InvalidateRegion"/>)·
 /// 추가(<see cref="Add"/>)·flood(<see cref="Flood"/>)·등록 후처리(<see cref="PostPop"/>)·빈 번호 할당(<see cref="Allocate"/>)을 수행한다.
 /// 계산은 항상 사본에서 하고(<see cref="Calculate"/>) 성공한 계획만 commit 하므로, 거부된 호출은 표·스택·슬롯을 바꾸지 않는다.
-/// 삭제 준비(<see cref="RawGraph"/> 의 Detach)·전체 재구성(Rebuild)·PostDestroy 는 다음 조각으로 남겼다.
+/// 삭제 준비(Detach)·전체 재구성(Rebuild)·PostDestroy 는 다음 조각으로 남겼다.
 /// 근거: cpppj/src/o/RawGraph.cpp (W02 열넷째 조각, 2026-10-20).
 /// </summary>
 public sealed class RawGraph : IRawPostPopGraph
@@ -52,9 +52,6 @@ public sealed class RawGraph : IRawPostPopGraph
 
     /// <summary>슬롯 안 그래프 번호 바이트의 위치(10.78).</summary>
     private const int GraphOffset = 30;
-
-    /// <summary>슬롯 안 저장 단계 바이트의 위치(10.78).</summary>
-    private const int LevelOffset = 33;
 
     /// <summary>슬롯 안 추가 비트 바이트의 위치(10.78).</summary>
     private const int ExtraOffset = 40;
@@ -341,7 +338,7 @@ public sealed class RawGraph : IRawPostPopGraph
     }
 
     /// <summary>
-    /// 사용하지 않는 가장 낮은 그래프 번호를 확보한다(원본 00463330 의 소진 복구 포함). 사용 중이면 표면 수를 0 으로 쓴다.
+    /// 사용하지 않는 가장 낮은 그래프 번호를 확보한다(원본 00463330 의 소진 복구 포함). 빈 번호를 확보하면 표면 수를 0, 사용 표시를 1로 쓴다.
     /// 풀·프레임·지도는 읽지 않는다.
     /// </summary>
     public byte Allocate()
@@ -567,10 +564,12 @@ public sealed class RawGraph : IRawPostPopGraph
         {
             plan.Changed = graph.Flood(sid, target);
         }
+        // 그래프 연산이 만든 표 255개를 계획에 옮긴다
         for (int i = 0; i < TableSize; i++)
         {
             plan.Records[i] = graph.Records[i];
         }
+        // 그래프 연산이 만든 flood 스택 4,096개를 계획에 옮긴다
         for (int i = 0; i < FloodSize; i++)
         {
             plan.Stack[i] = graph.FloodStack[i];

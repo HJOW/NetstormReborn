@@ -141,6 +141,7 @@ public sealed class RawGraphTests
     {
         (RawSidPool pool, RawSquidHash hash, byte[] spots) = Space();
         var graph = new RawGraph(pool, hash, spots, Types());
+        // 251~253(틈)은 Free 가 거부해야 한다
         for (byte gap = 251; gap <= 253; gap++)
         {
             Assert.Throws<ArgumentOutOfRangeException>(() => graph.Free(gap));
@@ -217,6 +218,76 @@ public sealed class RawGraphTests
         Assert.Equal(1, graph.Allocate());
         _ = pool;
         _ = spots;
+        _ = types;
+    }
+
+    /// <summary>
+    /// 0~250번이 모두 사용 중이면 원본 00463330 의 소진 경로로 전체를 재구성한 뒤 번호를 확보한다.
+    /// 빈 번호가 없을 때 `AllocateForOperation(FullPool)` 은 표 앞 251개를 지우고(0번 사용 표시·예약 하위 바이트·254 sentinel 복원)
+    /// 살아 있는 표면들을 임시 번호에 모았다가 무리마다 새 번호로 flood 한 뒤 임시 번호를 비우고 첫 빈 번호를 돌려준다
+    /// (cpppj `Graph::AllocateForOperation`·`RebuildImpl`, `RawGraph::Calculate` 의 Allocate 경로, 2026-10-20).
+    /// 그래프 5번에 있던 표면 하나는 새 무리 번호 2번에 다시 묶이고, 확보 번호로 빈 1번을 돌려준다.
+    /// </summary>
+    [Fact]
+    public void AllocateRecoversExhaustedTableViaRebuild()
+    {
+        var records = new GraphRecord[RawGraph.TableSize];
+        // 0~250번을 모두 사용 중으로 채워 소진 상태를 만든다
+        for (int i = 0; i < RawGraph.Count; i++)
+        {
+            records[i] = new GraphRecord { Surfaces = 5, InUse = 1 };
+        }
+        // 251~253(틈)은 재구성이 건드리지 않아야 한다
+        for (int i = 251; i <= 253; i++)
+        {
+            records[i] = new GraphRecord { Surfaces = 7, InUse = 9, Reserved = unchecked((short)0xA5A5) };
+        }
+        records[RawGraph.Invalid] = new GraphRecord { Surfaces = 0x7DFD, InUse = 0x7DFD };
+        (RawSidPool pool, byte[] spots, OriginalTypeRecord[] types, RawGraph graph) = SurfaceScene(records);
+        int sid = Surface(pool, 10, 10, 5, 0);
+        byte[] before = pool.Bytes.ToArray();
+        byte number = graph.Allocate();
+        // 재구성 뒤 첫 빈 번호 1번을 돌려준다
+        Assert.Equal(1, number);
+        IReadOnlyList<GraphRecord> result = graph.Records;
+        Assert.Equal(0, result[0].Surfaces);
+        Assert.Equal(1, result[0].InUse);
+        Assert.Equal(1, result[0].Reserved & 0xFF);
+        Assert.Equal(0, result[1].Surfaces);
+        Assert.Equal(1, result[1].InUse);
+        // 살아 있던 표면 하나가 새 무리 번호 2번에 다시 묶인다
+        Assert.Equal(1, result[2].Surfaces);
+        Assert.Equal(1, result[2].InUse);
+        // 나머지 번호는 비어 있다
+        for (int i = 3; i < RawGraph.Count; i++)
+        {
+            Assert.Equal(0, result[i].Surfaces);
+            Assert.Equal(0, result[i].InUse);
+        }
+        // 251~253(틈)과 254 sentinel 은 원본 값을 유지한다
+        for (int i = 251; i <= 253; i++)
+        {
+            Assert.Equal(7, result[i].Surfaces);
+            Assert.Equal(9, result[i].InUse);
+            Assert.Equal(unchecked((short)0xA5A5), result[i].Reserved);
+        }
+        Assert.Equal(0x7DFD, result[RawGraph.Invalid].Surfaces);
+        Assert.Equal(0x7DFD, result[RawGraph.Invalid].InUse);
+        // flood 스택에는 표면 번호만 남고 나머지는 그대로다
+        Assert.Equal((uint)sid, graph.FloodStack[0]);
+        // 나머지 스택 칸은 그대로 0이다
+        for (int i = 1; i < RawGraph.FloodSize; i++)
+        {
+            Assert.Equal(0U, graph.FloodStack[i]);
+        }
+        // 슬롯은 그래프 byte 하나만 5번에서 2번으로 바뀐다
+        for (int i = 0; i < before.Length; i++)
+        {
+            byte expected = i == sid * RawSidPool.Stride + 30 ? (byte)2 : before[i];
+            Assert.Equal(expected, pool.Bytes[i]);
+        }
+        // 점유 지도는 건드리지 않는다
+        Assert.All(spots, spot => Assert.Equal(0, spot));
         _ = types;
     }
 

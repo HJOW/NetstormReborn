@@ -400,7 +400,7 @@ public sealed class X86RawGraphReplayTests
         Assert.Equal(expectedCalls.OrderBy(pair => pair.Key).ToArray(), calls.OrderBy(pair => pair.Key).ToArray());
     }
 
-    /// <summary>할당 슬롯 사후처리·예측 Pop·추가/flood 장면을 10.78 몫 448회 재생한다.</summary>
+    /// <summary>할당 슬롯 사후처리·예측 Pop·추가/flood 장면을 10.78 몫 768회 재생한다.</summary>
     [Fact]
     public void AllocatedSidPostPopAndFloodMatchOriginalX86()
     {
