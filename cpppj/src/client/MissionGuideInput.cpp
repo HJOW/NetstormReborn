@@ -1,9 +1,18 @@
 // 현재 안내의 원본 문자열 바이트·최종 DWORD 쓰기와 First의 즉시/예약 경계를 보존한다.
 #include "client/MissionGuideInput.h"
+#include "o/ConfigInterface.h"
 #include <bit>
 #include <stdexcept>
 
 namespace netstorm::client {
+// 재시작 필드는 원본의 test/set 분기와 같이 비제로 전체를1로 만든다.
+MissionReloadRequest CaptureMissionReload(std::string_view name,std::uint32_t mode,std::uint32_t demo) {
+    return {std::string(name),mode ? 1U : 0U,demo ? 1U : 0U};
+}
+// 원본처럼 비어 있는 demo만 이전 직접 쓰기를 보존한다. 공백/잘못된 숫자 문자열은0을 쓴다.
+void ApplyMissionDemo(std::string_view text,std::uint32_t& demo) {
+    if (!text.empty()) demo=std::bit_cast<std::uint32_t>(o::ConfigParseLong(text));
+}
 // demo 안내는 단계 글자와 무관하다. char0은 원본 NUL 때문에 빈 섹션이 된다.
 void TellMissionStage(const o::MissionFrameGateState& gate,std::uint32_t& stageShown,const MissionStageEffects& effects) {
     if (!effects.tell) throw std::logic_error("현재 미션 안내의 실제 Tell 연결 누락");

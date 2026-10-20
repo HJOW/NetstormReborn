@@ -70,7 +70,7 @@ private:
     // 대기 중인 명령을 실행한다. 지원하지 않는 명령은 실제 동작으로 가장하지 않는다.
     void Execute(const DialogAction& action);
     // 미션 스크립트·요새를 먼저 검증하고 Loading→Briefing으로 넘긴다.
-    void BeginMission(std::string name,std::uint32_t demo=0);
+    void BeginMission(std::string name,std::uint32_t demo=0,std::uint32_t mode=0);
     // 이미 읽힌 원본 브리핑 섹션 이름을 순서대로 연다.
     void AdvanceBriefing();
     // 현재 미션 자원을 해제하고 기본 메뉴로 돌아간다.

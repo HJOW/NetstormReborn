@@ -1,0 +1,20 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-20",
+  "uniqueInputs": 108,
+  "normalFunctionReturns": 0,
+  "sliceObservations": 108,
+  "instructions": 9844,
+  "actualAtolCalls": 40,
+  "scope": "Init004c32f6..004c3307 demo 덮어쓰기와 Reload00463cf0..00463d3b의 필드/이름 캡처만. 실제 C locale atol004e66de/004e6656을 실행하며 TLS 포인터만 공급한다. 전체 Init/Reload·해제/공장/실제 UI 실행 근거가 아니다.",
+  "gameExecuted": false,
+  "osExecuted": false,
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_mission_common.py": "b75c997f873b1b733a4265ebfecaa219483371cdbc38b21c43f395e5ffa9e814",
+    "cpppj/tests/fixtures/mission-common-x86.tsv": "555047cf993ed58d3c2e147f8db2dbe4ed0084c77db27c3f9b2d5d5d6ef2b6e0"
+  }
+}

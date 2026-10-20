@@ -1,4 +1,4 @@
-// Early1~6의 공통 프레임과 단계 안내를 같은 실제 Session/Start/UI에 연결한다. 기존 공개 이름은 유지한다.
+// Tutorial 형식의 캠페인/데모와 Early1~6 공통 프레임·안내를 같은 Session/Start/UI에 연결한다. 기존 공개 이름은 유지한다.
 #pragma once
 #include "client/RawCampaignMissionStartBindings.h"
 #include <array>
@@ -12,7 +12,7 @@ struct CampaignTutorialOneEffects {
     std::function<std::uint32_t()> selected; // Early2/5가 중복 조회하는 현재 실제 선택SID다.
     std::function<void()> resetSelection,clearSelection; // Early2/5의004d5c90(0,0,0)→004d5c60을 별도 실제 몸체로 공급한다.
 };
-// Early1~6을 같은 현재 실제 소비자에 분배하며 각 판정기의 고유 입력을 유지한다.
+// 공통 프레임은 모든 Tutorial 형식에 적용하고 비데모1~6에서만 전용 Early 판정을 생성한다.
 class RawCampaignTutorialOneBindings {
 public:
     // 같은 장기 Session/Script/Start/gate/state를 빌리며 생성만으로 프레임을 실행하지 않는다.

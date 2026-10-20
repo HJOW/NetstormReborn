@@ -1401,3 +1401,12 @@ cpppj/mission-first-native.json text eol=lf
 cpppj/mission-first-session.json text eol=lf
 tools/decomp_mission_first.py text eol=lf
 tools/cpp_mission_first_audit.py text eol=lf
+# 캠페인/데모 공통 프레임의 최초 분기 관측과 현재 연결 근거다.
+cpppj/tests/fixtures/mission-common-x86.tsv text eol=lf
+cpppj/mission-common-native.json text eol=lf
+cpppj/mission-common-session.json text eol=lf
+tools/decomp_mission_common.py text eol=lf
+tools/cpp_mission_common_audit.py text eol=lf
+# 이번에 수정한 기존 CRLF 파일도 현재 소스 핀과 줄 끝을 고정한다.
+cpppj/src/client/UberGump.h text eol=lf
+cpppj/tests/CampaignMissionStartTests.cpp text eol=lf

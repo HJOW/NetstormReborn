@@ -9,7 +9,7 @@
   "baseline": "c445683592e712662385e01036cabe2031e65a40",
   "sources": {
     "cpppj/src/client/GameWorld.cpp": "af6d3aeb3bd53d83e2619c2bd20ba5df42c17fe718cb81786841606419f10c6c",
-    "cpppj/src/client/UberGump.cpp": "1107ea63fa96cfee0d29cb37bd7eb8b3c0afb79a43347a0949bf154dd8fcbb12",
+    "cpppj/src/client/UberGump.cpp": "ccccbe05b20d3bc131f8513a96c2197ecd7632383ff8fabf40bf2bb9ddf3672f",
     "cpppj/src/app/main.cpp": "9395c790b1a31c7e36f76b55cea3dd89ee7fdc769e694dc7d2fbdaa7e9eb7cd8",
     "tools/cpp_tutorial_harvest_smoke.py": "58606aae2a86d99360f650fc7e5f27785aabca54b53a0856c17ba7f3a9d0a22b",
     "cpppj/tests/fixtures/tutorial-one-harvest-ui-input.tsv": "9217cefd46f3e245704c0d10904e060327ca67a3417359fa7f450205630ef325",
@@ -17,7 +17,7 @@
     "cpppj/src/o/RawTutorialOne.h": "7c76133f137bcce59a8696ed3d8e2c8228c612d029299ee763d602b2dc126504",
     "cpppj/src/o/RawMissionFrameGate.cpp": "c591ce1c294a8c645008da04a6d5366182d42247f4505716e85d0ae4d6c5f4dc",
     "cpppj/src/o/RawMissionFrameGate.h": "93feacfb8b1fa1276737f8b1af6bc044c1ecda75bc4a82375728d650a43791be",
-    "cpppj/src/client/RawCampaignTutorialOneBindings.cpp": "61ec4c904402f73308629028d2de096062af3de7e00599df562975025837c582",
+    "cpppj/src/client/RawCampaignTutorialOneBindings.cpp": "945cb24940af3cfc103ee17ddaac723a6d22b197d658f063886da57366dc99f4",
     "cpppj/src/client/RawCampaignSession.cpp": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
     "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
     "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6"
@@ -514,6 +514,26 @@
           "group": "/sources",
           "previous": "c160136246b091eed0d2dbdd6d091d068e7c0460191d935c77582ce1c137d932",
           "current": "1107ea63fa96cfee0d29cb37bd7eb8b3c0afb79a43347a0949bf154dd8fcbb12"
+        }
+      ]
+    },
+    {
+      "unit": "248",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "지정11개를 포함한 모든 Tutorial 형식의 같은 공통 프레임·안내·F8·데모 예약과 현재 Script/월드 재생성을 연결한다. 같은 시작 코드의 LF/CRLF 현재 핀만 갱신하고 과거 files/실행/원본/기대값은 보존한다. 제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignTutorialOneBindings.cpp",
+          "group": "/sources",
+          "previous": "61ec4c904402f73308629028d2de096062af3de7e00599df562975025837c582",
+          "current": "945cb24940af3cfc103ee17ddaac723a6d22b197d658f063886da57366dc99f4"
+        },
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "group": "/sources",
+          "previous": "1107ea63fa96cfee0d29cb37bd7eb8b3c0afb79a43347a0949bf154dd8fcbb12",
+          "current": "ccccbe05b20d3bc131f8513a96c2197ecd7632383ff8fabf40bf2bb9ddf3672f"
         }
       ]
     }

@@ -1,4 +1,4 @@
-// 원본 공통 프레임/입력과 Early1~6 판정 사이에 계산 결과를 합성하지 않고 실제 소비자만 묶는다.
+// 모든 Tutorial 형식 미션의 공통 프레임/입력과 선택된 Early1~6 판정에 실제 소비자만 묶는다.
 #include "client/RawCampaignTutorialOneBindings.h"
 #include "client/MissionGuideInput.h"
 #include "o/ConfigInterface.h"
@@ -16,8 +16,9 @@ RawCampaignTutorialOneBindings::RawCampaignTutorialOneBindings(RawCampaignSessio
     RawCampaignMissionStartBindings& start,o::MissionFrameGateState& gate,o::MissionStartState& state,
     CampaignTutorialOneEffects effects)
     :session_(session),script_(script),start_(start),state_(gate),startState_(state),effects_(std::move(effects)),gate_(gate,Hooks()) {
-    if (!effects_.tell || !effects_.closeTransient || state_.tutorialNumber<1 || state_.tutorialNumber>6 || state_.demo)
-        throw std::invalid_argument("Early1~6 실제 미션/UI 연결 계약 오류");
+    if (!effects_.tell || !effects_.closeTransient)
+        throw std::invalid_argument("공통 Tutorial 형식 미션의 실제 안내/UI 연결 계약 오류");
+    if (state_.demo || state_.tutorialNumber<1 || state_.tutorialNumber>6) return; // 원본 공통 프레임은 이 경우 전용 Early 판정기를 호출하지 않는다.
     if (state_.tutorialNumber==1) tutorial_=session_.MakeTutorialOne(gate_);
     else if (state_.tutorialNumber==2) {
         o::TutorialTwoHooks hooks; // 게임 조회/옵션 갱신은 같은 Session이 연결하며 UI 경계만 빌린다.

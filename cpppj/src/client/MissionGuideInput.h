@@ -5,6 +5,16 @@
 
 namespace netstorm::client {
 inline constexpr std::uint32_t kMissionFirstCommand=0x02000091U; // 원본00542938의 현재 미션 첫 단계/안내 재표시 명령이다.
+inline constexpr std::uint32_t kMissionReloadCommand=0x0200008dU; // 원본00542928의 현재 미션 재생성 명령이며 데모 타이머가 일반 큐에 넣는다.
+// 원본 Reload가 해제 전에 캡처하는 미션 이름과 bool로 정규화한 두 필드다.
+struct MissionReloadRequest {
+    std::string name; // 현재 Guide 이름의 소유 복사본이며 기존 Script/월드 해제 뒤에도 유효하다.
+    std::uint32_t mode{},demo{}; // 원본+64/+68의 비제로 판정을 각각0/1 DWORD로 보존한다.
+};
+// 00463cf0의 해제 전 캡처다. 전체 Guide 해제/공장 단계는 실제 Client 수명 경계가 수행한다.
+MissionReloadRequest CaptureMissionReload(std::string_view name,std::uint32_t mode,std::uint32_t demo);
+// 004c3290의 demo 문자열 분기다. 빈 문자열은 기존 직접 지정값을 유지하고 그 외에는 실제 atol DWORD로 덮어쓴다.
+void ApplyMissionDemo(std::string_view text,std::uint32_t& demo);
 // 현재 안내 몸체의 실제 Tell·팝업·가상 정지 경계다. 현재 상태는 별도로 복제하지 않는다.
 struct MissionStageEffects {
     std::function<std::uint32_t(std::string_view)> tell; // 00482de0의 실제 반환 DWORD이며 비제로일 때만 후속 효과를 실행한다.

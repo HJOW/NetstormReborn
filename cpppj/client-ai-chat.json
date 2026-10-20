@@ -55,7 +55,7 @@
     "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
     "cpppj/src/client/ClientMain.h": "d02989475e69772f9c3035a152e05ebccb6383798f6c58596ebdd54f94863aac",
     "cpppj/src/client/ClientMain.cpp": "fe577cb844b74ff10be7353b9ba545563bd62af7272409211de823e511fb456e",
-    "cpppj/src/client/UberGump.h": "eb7f755056912e3b8b71c4a7ab05f2ea8379541fff4313a7f6b0f6b5b8d168e9",
+    "cpppj/src/client/UberGump.h": "56eb5f28c909847c1a1c1204638532e5f38e23cc01eed828256d37b7dd641da7",
     "cpppj/src/client/UberGump.cpp": "9e9483f858f612b200ff41e26c7eeacbca7f49dddee1f07b881f3b8e2ca30796",
     "cpppj/src/client/GameWorld.h": "d51dfe75377b1afd870bfeb40e26cef9f6233f65217d757135648ce064043a16",
     "cpppj/src/client/GameWorld.cpp": "e28f09f0bdf193ead41bfaa6ed683ddd4e2b9225f93aad16246644a6aba3ba89",
@@ -231,6 +231,20 @@
           "path": "cpppj/src/client/GameWorld.h",
           "previous": "63a8da986aab6ab35f1938c8de5c9197d12cca4e17859cb8daba5d5f52946e73",
           "current": "d51dfe75377b1afd870bfeb40e26cef9f6233f65217d757135648ce064043a16"
+        }
+      ]
+    },
+    {
+      "unit": "248",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "지정11개를 포함한 모든 Tutorial 형식의 같은 공통 프레임·안내·F8·데모 예약과 현재 Script/월드 재생성을 연결한다. 같은 시작 코드의 LF/CRLF 현재 핀만 갱신하고 과거 files/실행/원본/기대값은 보존한다. 제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/UberGump.h",
+          "group": "/sha256",
+          "previous": "eb7f755056912e3b8b71c4a7ab05f2ea8379541fff4313a7f6b0f6b5b8d168e9",
+          "current": "56eb5f28c909847c1a1c1204638532e5f38e23cc01eed828256d37b7dd641da7"
         }
       ]
     }

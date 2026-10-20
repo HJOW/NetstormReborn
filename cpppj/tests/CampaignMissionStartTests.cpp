@@ -1,6 +1,8 @@
 // 보호8미션의같은Script/Session/SP/기술/사제/AI생성으로실제공통Start를검사한다.
 #include "DudeSpawnSupport.h"
 #include "client/RawCampaignMissionStartBindings.h"
+#include "client/RawCampaignTutorialOneBindings.h"
+#include "client/MissionGuideInput.h"
 #include "o/RawSunAviaryProcess.h"
 #include "o/RawRainAviaryProcess.h"
 #include "o/RawFlyerProcess.h"
@@ -105,6 +107,53 @@ TEST_CASE(CampaignMissionStart_ProtectedEightMissions) {
         CHECK(external.settings==requested && session.Core().bookkeeping.depth==0);
         // 감사한 두 캠페인의 명시 적 사제 owner2는 실제 AI 생성/초기 갱신까지 도달해야 한다.
         if (input.name=="TheWarBegins" || input.name=="MasterOfWhirligigs") CHECK(live[2] && session.Participation().Brain(2)!=0);
+    }
+}
+// 두 캠페인/세 데모의 실제 Script/월드/Start와 같은 공통 프레임·안내·F8·타이머를 연결한다.
+TEST_CASE(CampaignMissionCommon_ActualFiveSessionsFrameReplayAndDemoQueue) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);
+    struct CommonInput { std::string_view name,section;std::uint32_t requestedDemo,expectedDemo; }; // 보호 Header/메뉴가 정한 직접 지정과 초기 안내의 독립 기대 입력이다.
+    const std::array<CommonInput,5> inputs{{{"TheWarBegins","A.",0,0},{"MasterOfWhirligigs","A.",0,0},
+        {"DemoStormRages","Demo",0,1},{"GuardMyBack","Demo",1,1},{"DissolvedAlliance","",1,1}}}; // 마지막 데모는 원문에 Demo 섹션이 없다.
+    // 미션마다 새로운 실제 Session과 같은 장기 상태를 만들며 앞 미션 결과를 재사용하지 않는다.
+    for (const auto& input:inputs) {
+        ConfigInterface config([&](std::string_view path) { return assets.files.TryRead(path); });ConfigureStart(config);MissionScript script(config,input.name);CHECK(script.Loaded() && script.MissionType()=="Tutorial");
+        MissionFrameGateState gate;gate.demo=input.requestedDemo;ApplyMissionDemo(script.Get("demo").value_or(""),gate.demo);CHECK(gate.demo==input.expectedDemo);
+        gate.tutorialNumber=std::bit_cast<std::uint32_t>(ConfigParseLong(script.Get("tutorialNumber").value_or("")));CHECK(gate.tutorialNumber==0);
+        MissionStartState state;StartExternal external;double now=123.5;std::uint32_t depth{};bool dialog{};InputQueue queue;std::vector<std::string> pages;RawCampaignTutorialOneBindings* active{}; // 시계/장치/UI만 명시 외부 입력이다.
+        const auto show=[&](std::string_view name) { if (!script.Section(name)) return false;pages.emplace_back(name);dialog=true;return true; }; // 실제 원문 섹션의 존재 여부만 판단한다.
+        auto services=external.Services();services.missionOutcome.demo=[&] { return gate.demo; };services.missionOutcome.tellBlocked=[&] { return dialog ? 1U : 0U; };
+        services.missionOutcome.section=show;services.missionOutcome.closeTransient=[] {};services.missionOutcome.onSection=[&] { CHECK(active);active->Gate().PauseForDialog(); };
+        auto fort=FortTemplate::Parse(assets.files.Read(script.FortPath()),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),script.FortName(),std::move(services));session.Load();
+        auto startEffects=external.Effects();startEffects.gameSeconds=[&] { return now; };
+        RawCampaignMissionStartBindings start(session,script,gate,state,session.MissionStartSettings(),session.MissionAiSettings(),std::move(startEffects));
+        CampaignTutorialOneEffects effects;effects.frame.gameSeconds=[&] { return now; };effects.frame.paused=[&] { return depth!=0; };effects.frame.dialogsClear=[&] { return !dialog; };
+        effects.frame.knowledgeOpen=[] { return false; };effects.frame.guideOpen=[&] { return dialog; };effects.frame.blockingGumpOpen=[] { return false; };
+        effects.frame.pause=[&] { ++depth; };effects.frame.resume=[&] { CHECK(depth>0);--depth; };effects.frame.endDemo=[&] { queue.Push(kMissionReloadCommand,0,0); };
+        effects.tell=show;effects.closeTransient=[] {};effects.selected=[]()->std::uint32_t { throw std::logic_error("비 Early 공통 프레임의 전용 선택 조회"); };
+        RawCampaignTutorialOneBindings runtime(session,script,start,gate,state,std::move(effects));active=&runtime;start.Start();CHECK(gate.started && gate.startSeconds==now);
+        // 최초 안내는 시작 직후가 아닌 실제 열 번째 공통 화면 호출에서만 시도한다.
+        for (int frame=0;frame<9;++frame) runtime.Frame();
+        CHECK(pages.empty() && gate.lockFrames==1);runtime.Frame();
+        if (input.section.empty()) CHECK(pages.empty() && !depth && !runtime.StageShown());
+        else CHECK(pages==std::vector<std::string>{std::string(input.section)} && depth==1 && runtime.StageShown()==1);
+        dialog=false;
+        // 실제 빈 화면 일곱 호출로 자기 정지를 반납한다. 게임 시각/단계는 강제로 진행하지 않는다.
+        for (int frame=0;frame<7;++frame) runtime.Frame();
+        CHECK(!depth && !gate.scriptPaused && gate.stage=='A' && queue.Empty());
+        const auto sequence=state.sequence;CHECK(QueueMissionFirstKey({0x770000U,0,0},queue,true));CHECK(runtime.Event(queue.Pop(false))==1 && state.sequence==sequence);
+        if (!input.section.empty()) CHECK(pages.size()==2 && pages.back()==input.section && depth==1);
+        dialog=false;
+        // 반복 안내 뒤에도 같은 자기 정지 한 깊이만 반납한다.
+        for (int frame=0;frame<7;++frame) runtime.Frame();
+        CHECK(!depth && !gate.scriptPaused);
+        if (gate.demo) {
+            CHECK(gate.demoEndSeconds==483.5);now=gate.demoEndSeconds;runtime.Frame();CHECK(gate.demoEndSeconds==0 && !queue.Empty());
+            const auto reload=queue.Pop(false);CHECK(reload.code==kMissionReloadCommand && reload.x==0 && reload.y==0 && queue.Empty());
+            CHECK(gate.started && session.Core().pool.Capacity()>0); // 타이머 콜백은 같은 월드를 즉시 해제하지 않는다.
+            runtime.Frame();CHECK(queue.Empty()); // 기존 기한0쓰기로 중복 재시작을 예약하지 않는다.
+        } else CHECK(gate.demoEndSeconds==0);
+        CHECK(!session.Core().bookkeeping.depth && !session.Core().destroy.PreDepth() && !session.Core().destroy.PostDepth());
     }
 }
 // 같은 현재 미션의 owner별 이름은 원본 좁은문자열로 쓰며 미등록 능력도 진단 뒤 계속 적용한다.

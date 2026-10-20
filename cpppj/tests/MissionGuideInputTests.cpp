@@ -76,3 +76,21 @@ TEST_CASE(MissionGuideInput_QueueOrderCapacityAndRelease) {
     CHECK(queue.Empty());MissionStartState state;MissionFirst(state,{});CHECK(state.flags==1 && !state.sequence);
     state.sequence=1;CHECK(Throws([&] { MissionFirst(state,{}); }));
 }
+
+// 원본 Init demo/Reload 캡처 내부 분기108입력의 선택 필드를 직접 대조한다.
+TEST_CASE(MissionGuideInput_CommonNative108) {
+    const auto rows=LoadFixture(NETSTORM_MISSION_COMMON_FIXTURE).rows;CHECK(rows.size()==108);
+    // 빈 문자열·signed/감김·bool 정규화와 소유 이름 복사를 원문 출력으로 대조한다.
+    for (const auto& row:rows) {
+        CHECK(row.size()==5);std::string text; // fixture의 문자열은 NUL/탭 혼동을 피하도록 hex로 보존한다.
+        // 원본 ASCII 입력 바이트를 그대로 복원한다.
+        for (std::size_t index=0;index<row[3].size();index+=2) text+=static_cast<char>(std::stoul(row[3].substr(index,2),nullptr,16));
+        if (row[0]=="I") { auto demo=Number(row[1]);ApplyMissionDemo(text,demo);CHECK(std::to_string(demo)==row[4]); }
+        else {
+            const auto request=CaptureMissionReload(text,Number(row[1]),Number(row[2]));
+            text.assign("해제된 이전 이름"); // 원래 입력 수명이 끝나도 요청이 원본 이름을 소유해야 한다.
+            const auto result=std::to_string(request.mode)+','+std::to_string(request.demo)+','+Hex({reinterpret_cast<const std::uint8_t*>(request.name.data()),request.name.size()});
+            CHECK(result==row[4]);
+        }
+    }
+}

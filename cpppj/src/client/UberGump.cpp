@@ -121,11 +121,13 @@ struct UberGump::MissionRuntime {
     o::MissionFrameGateState gate; // demo/started/시각/안내 단계의 유일한 현재 미션 저장소다.
     o::MissionStartState state; // Start의 순번/현재 tellAt 항목/필드를 동일 수명으로 유지한다.
     RawCampaignMissionStartBindings start; // 같은 Script/Session/전역을 참조하며 생성만으로 시작하지 않는다.
-    std::unique_ptr<RawCampaignTutorialOneBindings> tutorial; // 실제 연결을 마친 Early1/2만 공통 프레임/입력을 실행한다. 다른 전용 판정은 후속 연결 대상이다.
+    std::uint32_t mode64{}; // 원본 Mission+64의 현재 값이다. 일반 진입은0이며 Reload는 해제 전에 bool로 캡처한다.
+    std::unique_ptr<RawCampaignTutorialOneBindings> tutorial; // 지정11개를 포함한 Tutorial 형식 전체의 공통 프레임/입력과 선택된 Early 판정이다.
     // 원본00482bf0의 초기 demo0은 일반 MissionBegin,00463a00의 직접 쓰기는 StartDemo가 공급한다.
-    MissionRuntime(RawCampaignSession& session,MissionScript& script,std::uint32_t demo,CampaignMissionStartEffects effects)
-        :start(session,script,gate,state,session.MissionStartSettings(),session.MissionAiSettings(),std::move(effects)) {
+    MissionRuntime(RawCampaignSession& session,MissionScript& script,std::uint32_t demo,std::uint32_t mode,CampaignMissionStartEffects effects)
+        :start(session,script,gate,state,session.MissionStartSettings(),session.MissionAiSettings(),std::move(effects)),mode64(mode) {
         gate.demo=demo;gate.tutorialNumber=std::bit_cast<std::uint32_t>(o::ConfigParseLong(script.Get("tutorialNumber").value_or("")));
+        ApplyMissionDemo(script.Get("demo").value_or(""),gate.demo); // 원본 Init은 명시 demo 문자열이 있으면 StartDemo/Reload의 기존 지정값을 덮어쓴다.
     }
 };
 
@@ -298,7 +300,7 @@ void UberGump::RefreshWindowTitle() {
         [this](std::string_view title) { client_.Title(title); }});
 }
 // 미션 종류를 확인하고 원본 스크립트·요새에서 실제 월드 초기 상태를 만든다.
-void UberGump::BeginMission(std::string name,std::uint32_t demo) {
+void UberGump::BeginMission(std::string name,std::uint32_t demo,std::uint32_t mode) {
     ClearWorld(); mission_.reset();
     mission_ = std::make_unique<MissionScript>(client_.Configuration(), name);
     if (!mission_->Loaded()) throw std::runtime_error("Missing mission: " + name);
@@ -335,7 +337,7 @@ void UberGump::BeginMission(std::string name,std::uint32_t demo) {
         [this]() { return client_.GetRenderer().FullRedrawPending(); },
         [this](o::SquidDisplayRect rect,std::uint32_t flags) { client_.GetRenderer().Invalidate({rect.left,rect.top,rect.right,rect.bottom},flags); }};
     world_=world.get(); worldProcess_=client_.GetKernel().Add(std::move(world));
-    missionRuntime_=std::make_unique<MissionRuntime>(world_->Session(),*mission_,demo,
+    missionRuntime_=std::make_unique<MissionRuntime>(world_->Session(),*mission_,demo,mode,
         MakeCampaignMissionStartEffects(client_,*world_,[this] {
             // 원본0042e440은 현재00548740이0이면 아무 메시지도 보내지 않는다.
             if (commandGump_!=0) throw std::logic_error("미션 Start의 전용 명령 Gump0042e440 수신 미연결");
@@ -358,7 +360,7 @@ void UberGump::BeginMission(std::string name,std::uint32_t demo) {
     world_->Session().Cursor().SetEffects(std::move(cursorEffects));
     world_->Session().Cursor().Display().SetExternal([this](std::uint32_t token) { return rawButtons_->GumpDepth(token); },{});
     briefingSections_.clear(); briefingIndex_ = 0;
-    if (missionRuntime_->gate.tutorialNumber>=1 && missionRuntime_->gate.tutorialNumber<=6 && !missionRuntime_->gate.demo) {
+    if (type=="tutorial") {
         CampaignTutorialOneEffects frameEffects; // 원본 화면 프레임/입력이 함께 사용하는 현재 UI/시계다.
         frameEffects.frame.gameSeconds=[this] { return client_.Time().game; };
         frameEffects.frame.paused=[this] { return client_.Paused(); };
@@ -368,7 +370,7 @@ void UberGump::BeginMission(std::string name,std::uint32_t demo) {
         frameEffects.frame.blockingGumpOpen=[this] { return rawButtons_->BlockingGumpOpen(); };
         frameEffects.frame.pause=[this] { client_.PushGamePause(); };
         frameEffects.frame.resume=[this] { client_.PopGamePause(); };
-        frameEffects.frame.endDemo=[] { throw std::logic_error("Early1~6 연결에서 데모 종료 도달"); };
+        frameEffects.frame.endDemo=[this] { client_.Input().Push(kMissionReloadCommand,0,0); }; // 원본452f90의 일반 큐 예약이다. 실행 중인 프레임 콜백 안에서 월드를 해제하지 않는다.
         frameEffects.tell=[this](std::string_view section) { return mission_->Section(section) && TryTell(std::string(section),true); };
         frameEffects.closeTransient=[this] { rawButtons_->RequestClosePopups(); };
         // 현재 월드의 선택 getter와 서로 다른 두 원본 선택 정리 몸체를 빌린다.
@@ -382,7 +384,7 @@ void UberGump::BeginMission(std::string name,std::uint32_t demo) {
     state_.phase = ClientPhase::LoadingMission; pageName_ = "loading"; popup_.clear(); page_ = {}; RebuildControls();
     RefreshWindowTitle();
     if (missionRuntime_->tutorial) {
-        state_.phase=ClientPhase::Mission;pageName_="mission";briefingSections_.clear();client_.Pause(false); // A안내는 공통10호출 뒤 실제 TellStage가 연다.
+        state_.phase=ClientPhase::Mission;pageName_="mission";briefingSections_.clear();client_.Pause(false); // A/Demo 안내는 공통10호출 뒤 실제 TellStage가 연다.
     } else client_.Pause(true);
     // 원본 004b6dd0의 미션 시작 절차(전투 여부를 켜고 FUN_00469fc0): 난수로 고른 원소 곡으로 전투 음악을 시작한다.
     if (client_.Audio()) client_.Audio()->StartScene(true);
@@ -437,11 +439,16 @@ void UberGump::OpenObjectMenu(o::SquidId id,const InputEvent& event) {
 }
 // 같은 실제 큐의 원본 정수 명령과 물리 사건을 분배한다.
 void UberGump::Event(InputEvent event) {
+    if ((event.code&0x03ffffffU)==kMissionReloadCommand) {
+        if (!mission_ || !missionRuntime_) throw std::logic_error("현재 미션 없는 Reload의 원본 선행 조건 위반");
+        const auto request=CaptureMissionReload(mission_->Name(),missionRuntime_->mode64,missionRuntime_->gate.demo); // 기존 Script/월드가 살아 있을 때 이름/필드를 소유 복사한다.
+        BeginMission(request.name,request.demo,request.mode);return; // ClearWorld의 기존 정지 반납→새 Script/월드/로그인/Start를 같은 수명 경로로 실행한다.
+    }
     if (missionRuntime_ && missionRuntime_->tutorial) {
         auto missionEvent=event; // 실제 카메라 F4 입력과 단계 판정이 같은 홈 명령을 보게 한다.
         if ((event.code&0x83ffffffU)==(0x73U<<InputCode::kVirtualKeyShift)) missionEvent.code=0x020000aeU;
         if (missionRuntime_->tutorial->Event(missionEvent)) return;
-        if (QueueMissionFirstKey(event,client_.Input(),true)) return; // 현재 Early1~6은 같은 큐 끝의 First 사건이 현재 안내/자기 정지를 다시 사용한다.
+        if (QueueMissionFirstKey(event,client_.Input(),true)) return; // 모든 연결된 Tutorial 형식은 큐 끝의 First가 현재 안내/자기 정지를 다시 사용한다.
     }
     if (objectMenus_ && objectMenus_->Command(event)) { rebuild_=true;return; }
     const auto commandCode=event.code&0x03ffffffU; // 원본명령분배와같이최상위입력플래그만제거한다.

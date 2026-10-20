@@ -7,17 +7,17 @@
   "lastDecompileDate": "2026-10-20",
   "newDecompile": false,
   "sources": {
-    "cpppj/src/client/RawCampaignTutorialOneBindings.cpp": "61ec4c904402f73308629028d2de096062af3de7e00599df562975025837c582",
-    "cpppj/src/client/RawCampaignTutorialOneBindings.h": "3d6a6ad3d1df3389ae3195876d7be41222f8a8d5df6d0368a372ef46867af8b3",
-    "cpppj/src/client/UberGump.cpp": "1107ea63fa96cfee0d29cb37bd7eb8b3c0afb79a43347a0949bf154dd8fcbb12",
+    "cpppj/src/client/RawCampaignTutorialOneBindings.cpp": "945cb24940af3cfc103ee17ddaac723a6d22b197d658f063886da57366dc99f4",
+    "cpppj/src/client/RawCampaignTutorialOneBindings.h": "747a7f9249c088c968da165f4b917bed9712eac46d1b935ba1f736d9ab304b30",
+    "cpppj/src/client/UberGump.cpp": "ccccbe05b20d3bc131f8513a96c2197ecd7632383ff8fabf40bf2bb9ddf3672f",
     "cpppj/src/client/CMakeLists.txt": "1bb01b9f14a98173bb8dc38ecf9db973bfd7d75d1ec3b10bc0ad658444a9006a",
-    "cpppj/tests/CMakeLists.txt": "bf3f56f65438224c795ef443e0a3df5c7fdd1b7a5c9c2284e95300e464716c52",
+    "cpppj/tests/CMakeLists.txt": "f026e630d4049d27ad5eb86171a7c500e136d92207d539a9f8f91b8d5cb5722c",
     "cpppj/tests/CampaignSessionTests.cpp": "6a6d54fd15eb24c0609492756880c774120f855138441820a536ea5bd73ee4f0",
     "tools/cpp_mission_first_audit.py": "c4c798de1d81a52f03537833b48b2b94318f491f9a5bb5948bb46f941092c7c0",
     "tools/decomp_mission_first.py": "b08aad7f753ea0549a8d68f39a3c74e0c06f3d3d0c85c5def3885c1f98e7cb95",
-    "cpppj/tests/MissionGuideInputTests.cpp": "3e1b27765fdfcf42e2fb63ccb4f2902c493bc2963707d906773482f4be5e41ef",
-    "cpppj/src/client/MissionGuideInput.h": "caf20da4fc119cbde78e583f5b3260ae75aa4e84f3b2402b1e4701486f06ebbe",
-    "cpppj/src/client/MissionGuideInput.cpp": "0ed4313712dbd98d8647157f71b1341285393cde639da1fa776346e3cede4566"
+    "cpppj/tests/MissionGuideInputTests.cpp": "052ed17cfc2b00441121a431e0b3fd36cd91e966cc87f10d54f58f4bf5e98c13",
+    "cpppj/src/client/MissionGuideInput.h": "4ddc24bfb741c771bbb51c38a5de49351447ef35514611c47daf60d393b44f9d",
+    "cpppj/src/client/MissionGuideInput.cpp": "fe35a724e57b0a7558b148b85a1a5886e59f6bddc8fb353c1a24a8c14254c57c"
   },
   "evidence": {
     "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
@@ -2142,5 +2142,57 @@
     "baselineSourceIdenticalAfterLineEndingNormalization": true,
     "preExistingCrLfPinMismatch": true,
     "notReportedAsPassed": true
-  }
+  },
+  "integration_updates": [
+    {
+      "unit": "248",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "지정11개를 포함한 모든 Tutorial 형식의 같은 공통 프레임·안내·F8·데모 예약과 현재 Script/월드 재생성을 연결한다. 같은 시작 코드의 LF/CRLF 현재 핀만 갱신하고 과거 files/실행/원본/기대값은 보존한다. 제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/MissionGuideInput.cpp",
+          "group": "/sources",
+          "previous": "0ed4313712dbd98d8647157f71b1341285393cde639da1fa776346e3cede4566",
+          "current": "fe35a724e57b0a7558b148b85a1a5886e59f6bddc8fb353c1a24a8c14254c57c"
+        },
+        {
+          "path": "cpppj/src/client/MissionGuideInput.h",
+          "group": "/sources",
+          "previous": "caf20da4fc119cbde78e583f5b3260ae75aa4e84f3b2402b1e4701486f06ebbe",
+          "current": "4ddc24bfb741c771bbb51c38a5de49351447ef35514611c47daf60d393b44f9d"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignTutorialOneBindings.cpp",
+          "group": "/sources",
+          "previous": "61ec4c904402f73308629028d2de096062af3de7e00599df562975025837c582",
+          "current": "945cb24940af3cfc103ee17ddaac723a6d22b197d658f063886da57366dc99f4"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignTutorialOneBindings.h",
+          "group": "/sources",
+          "previous": "3d6a6ad3d1df3389ae3195876d7be41222f8a8d5df6d0368a372ef46867af8b3",
+          "current": "747a7f9249c088c968da165f4b917bed9712eac46d1b935ba1f736d9ab304b30"
+        },
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "group": "/sources",
+          "previous": "1107ea63fa96cfee0d29cb37bd7eb8b3c0afb79a43347a0949bf154dd8fcbb12",
+          "current": "ccccbe05b20d3bc131f8513a96c2197ecd7632383ff8fabf40bf2bb9ddf3672f"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "bf3f56f65438224c795ef443e0a3df5c7fdd1b7a5c9c2284e95300e464716c52",
+          "current": "f026e630d4049d27ad5eb86171a7c500e136d92207d539a9f8f91b8d5cb5722c"
+        },
+        {
+          "path": "cpppj/tests/MissionGuideInputTests.cpp",
+          "group": "/sources",
+          "previous": "3e1b27765fdfcf42e2fb63ccb4f2902c493bc2963707d906773482f4be5e41ef",
+          "current": "052ed17cfc2b00441121a431e0b3fd36cd91e966cc87f10d54f58f4bf5e98c13"
+        }
+      ]
+    }
+  ]
 }

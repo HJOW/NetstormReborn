@@ -1668,4 +1668,4 @@ set_source_files_properties(DudeRegularTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_DUDE_REGULAR_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/dude-regular-x86.tsv\"")
 # First/현재 안내 함수와 제한된 F8 내부 분기의 최초 원문만 새 검사에 공급한다.
 set_source_files_properties(MissionGuideInputTests.cpp PROPERTIES COMPILE_DEFINITIONS
-    "NETSTORM_MISSION_FIRST_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/mission-first-x86.tsv\"")
+    "NETSTORM_MISSION_FIRST_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/mission-first-x86.tsv\";NETSTORM_MISSION_COMMON_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/mission-common-x86.tsv\"")
