@@ -26,7 +26,7 @@
   "sources": {
     "cpppj/src/CMakeLists.txt": "8834917133d33fda6dcd145dd64a93ee38ee014d25fede2eff5575b996df5847",
     "cpppj/src/client/CMakeLists.txt": "0ea1587f2d9dcd22fb2afbdeeefcb151242775b7083018dd39eb181a84fc0b06",
-    "cpppj/tests/CMakeLists.txt": "2018bf47c030a419ccba5f701308668d2c74d646d4d678584cf6f04e893bd4b0",
+    "cpppj/tests/CMakeLists.txt": "a627575830fe9176dc72e24279dd80129787527faa645c2c1266799148bb7c70",
     "cpppj/src/o/RawBombBlast.cpp": "fa1f6941f7ace6e16557820eb78c73ea10134c0fd26b297950d3df3b5c07bbec",
     "cpppj/src/o/RawBombBlast.h": "df801c6fce496e120f22dc2d9de78ecc0156f46f2086bee0e2cb34002c07bfe4",
     "cpppj/src/o/RawBombTargets.cpp": "f2aa11b08479c114823fca68e87b0aadf27da965e5b63a2129d350f3c583700c",
@@ -332,6 +332,20 @@
           "group": "/sources",
           "previous": "563b036b7566297db4635bfecbc363c789e7b340e061acd2343d3ff7b9d463b8",
           "current": "2018bf47c030a419ccba5f701308668d2c74d646d4d678584cf6f04e893bd4b0"
+        }
+      ]
+    },
+    {
+      "unit": "256",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "전용 Help 전체 생성/배치/본문·그림 갱신과 실제 HTML 부모/다중 줄 수명·빈 기본 요청을 복원한다. 기존 파생 HTML/링크/표식을 공유하며 Client 가상 분배·실제 화면 연결은 후속이다. 현재 핀만 갱신하고 과거 files/evidence/원문/기대값/실행은 보존한다. 제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "2018bf47c030a419ccba5f701308668d2c74d646d4d678584cf6f04e893bd4b0",
+          "current": "a627575830fe9176dc72e24279dd80129787527faa645c2c1266799148bb7c70"
         }
       ]
     }

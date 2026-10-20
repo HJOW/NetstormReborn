@@ -82,7 +82,7 @@
     "cpppj/src/client/CampaignClientServices.cpp": "703d097ca066a0ffd831c2cb5e05240e18a1e361d0fd60e51e1bce8e675d70c8",
     "cpppj/tests/CampaignSessionTests.cpp": "6a6d54fd15eb24c0609492756880c774120f855138441820a536ea5bd73ee4f0",
     "cpppj/tests/OwnerCaptureTests.cpp": "acf9153a6657b3b7f392bcb75b19e11424bd00943b4306e72c45165a9422ebae",
-    "cpppj/tests/CMakeLists.txt": "2018bf47c030a419ccba5f701308668d2c74d646d4d678584cf6f04e893bd4b0",
+    "cpppj/tests/CMakeLists.txt": "a627575830fe9176dc72e24279dd80129787527faa645c2c1266799148bb7c70",
     "tools/decomp_altar_capture.py": "48b30a273963d1ef8c4ad9ca09f66dbef8c17957c0accec0300036d593531a56"
   },
   "binaries": {
@@ -1160,6 +1160,20 @@
           "group": "/currentSources",
           "previous": "563b036b7566297db4635bfecbc363c789e7b340e061acd2343d3ff7b9d463b8",
           "current": "2018bf47c030a419ccba5f701308668d2c74d646d4d678584cf6f04e893bd4b0"
+        }
+      ]
+    },
+    {
+      "unit": "256",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "전용 Help 전체 생성/배치/본문·그림 갱신과 실제 HTML 부모/다중 줄 수명·빈 기본 요청을 복원한다. 기존 파생 HTML/링크/표식을 공유하며 Client 가상 분배·실제 화면 연결은 후속이다. 현재 핀만 갱신하고 과거 files/evidence/원문/기대값/실행은 보존한다. 제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/currentSources",
+          "previous": "2018bf47c030a419ccba5f701308668d2c74d646d4d678584cf6f04e893bd4b0",
+          "current": "a627575830fe9176dc72e24279dd80129787527faa645c2c1266799148bb7c70"
         }
       ]
     }

@@ -97,7 +97,7 @@
     "cpppj/src/client/RawProductionControls.cpp": "a6edd49e5a486449f4b23f3092719f7f1342ee86f66d1325867c306f52056d31",
     "cpppj/src/client/RawProductionControls.h": "8826c67edd4bc027f1d060bcd1e0fe5aa4638c4683b05fd6d2c57e931c90b346",
     "cpppj/src/client/UberGump.cpp": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9",
-    "cpppj/tests/CMakeLists.txt": "2018bf47c030a419ccba5f701308668d2c74d646d4d678584cf6f04e893bd4b0",
+    "cpppj/tests/CMakeLists.txt": "a627575830fe9176dc72e24279dd80129787527faa645c2c1266799148bb7c70",
     "docs/exe/cpp-production-feedback-20261018.md": "5bf8f29e3a77eb8e5ad0a38b2de4ea9a823b0b34da76b5367053f8b779265b9e",
     "cpppj/src/client/InventoryAboutMenu.h": "140e9ddfe334534354ae475e9ff7290848ab78cedd38ad6a45f1dd6891e83f9e",
     "cpppj/src/client/InventoryAboutMenu.cpp": "4a2b55d72ccb4ea8b5d96ccd2f2d2c366df8073520e6b81e503178839986345b",
@@ -1339,6 +1339,20 @@
           "group": "/currentSources",
           "previous": "563b036b7566297db4635bfecbc363c789e7b340e061acd2343d3ff7b9d463b8",
           "current": "2018bf47c030a419ccba5f701308668d2c74d646d4d678584cf6f04e893bd4b0"
+        }
+      ]
+    },
+    {
+      "unit": "256",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "전용 Help 전체 생성/배치/본문·그림 갱신과 실제 HTML 부모/다중 줄 수명·빈 기본 요청을 복원한다. 기존 파생 HTML/링크/표식을 공유하며 Client 가상 분배·실제 화면 연결은 후속이다. 현재 핀만 갱신하고 과거 files/evidence/원문/기대값/실행은 보존한다. 제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/currentSources",
+          "previous": "2018bf47c030a419ccba5f701308668d2c74d646d4d678584cf6f04e893bd4b0",
+          "current": "a627575830fe9176dc72e24279dd80129787527faa645c2c1266799148bb7c70"
         }
       ]
     }

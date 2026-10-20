@@ -186,3 +186,5 @@ target_sources(netstorm PRIVATE QuickHelpRequest.h QuickHelpRequest.cpp)
 target_sources(netstorm PRIVATE QuickHelpControl.h QuickHelpControl.cpp)
 # 실제 전용 Help의 주제/TYPE 정보·링크 저장소와 마나 그림 문자를 기존 HTML에 연결한다.
 target_sources(netstorm PRIVATE QuickHelpHtml.h QuickHelpHtml.cpp HtmlLinkText.h HtmlLinkText.cpp)
+# 실제 전용 Help의 전체 생성/배치/본문·그림 갱신과 HTML 부모를 같은 기존 Gump에 연결한다.
+target_sources(netstorm PRIVATE QuickHelpWindow.h QuickHelpWindow.cpp HtmlBodyGump.h HtmlBodyGump.cpp)

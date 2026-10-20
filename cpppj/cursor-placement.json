@@ -21,7 +21,7 @@
     "cpppj/src/client/RawCursorPlacement.cpp": "64c57e1581716ad63ebf952aa9c4b7ce4c432ec20f3ca23dcfeede6fcf8a1a46",
     "cpppj/tests/CursorPlacementTests.cpp": "a03f225bbf82cce49a770d111b2d4d24f5c496cde97560f3f55c6bce50dad997",
     "cpppj/src/client/CMakeLists.txt": "0ea1587f2d9dcd22fb2afbdeeefcb151242775b7083018dd39eb181a84fc0b06",
-    "cpppj/tests/CMakeLists.txt": "2018bf47c030a419ccba5f701308668d2c74d646d4d678584cf6f04e893bd4b0"
+    "cpppj/tests/CMakeLists.txt": "a627575830fe9176dc72e24279dd80129787527faa645c2c1266799148bb7c70"
   },
   "limitations": [
     "세 커서 몸체와 실제 CRT 절삭/floor만 실행한다. decoder/SHP/설명/GUI/지역/투영/화면 갱신은 명시 경계다.",
@@ -1401,6 +1401,20 @@
           "group": "/sha256",
           "previous": "563b036b7566297db4635bfecbc363c789e7b340e061acd2343d3ff7b9d463b8",
           "current": "2018bf47c030a419ccba5f701308668d2c74d646d4d678584cf6f04e893bd4b0"
+        }
+      ]
+    },
+    {
+      "unit": "256",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "전용 Help 전체 생성/배치/본문·그림 갱신과 실제 HTML 부모/다중 줄 수명·빈 기본 요청을 복원한다. 기존 파생 HTML/링크/표식을 공유하며 Client 가상 분배·실제 화면 연결은 후속이다. 현재 핀만 갱신하고 과거 files/evidence/원문/기대값/실행은 보존한다. 제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sha256",
+          "previous": "2018bf47c030a419ccba5f701308668d2c74d646d4d678584cf6f04e893bd4b0",
+          "current": "a627575830fe9176dc72e24279dd80129787527faa645c2c1266799148bb7c70"
         }
       ]
     }

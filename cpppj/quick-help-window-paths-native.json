@@ -1,0 +1,14 @@
+{
+  "inputs": 14,
+  "normalReturns": 14,
+  "instructions": 90207,
+  "gameExecuted": false,
+  "osExecuted": false,
+  "scope": "파일 실패/기본 주제 우선순위/치환 후 빈 본문/그림 제외와 실제4c5c00 빈 요청→기존 전체 창. lookup의0은 명시 TYPE0 반환이며 실제 일반 레지스터/스택에서 접미 비교/요청 몸체를 실행한다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_quick_help_window.py": "fa76ed7bddec56031e82f8ce33d19f99ddbf2d8c78a84de07d063ba8b85a4e99",
+    "tools/decomp_quick_help_window_paths.py": "951cb10cf4fa513e2c28efbd046189bd19319691943b5dfad32ed621d01fef34",
+    "cpppj/tests/fixtures/quick-help-window-paths-x86.tsv": "97c519ae05783122fc023b1aec17f5059241b57751e50e8963af545a2855586d"
+  }
+}

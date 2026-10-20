@@ -1587,6 +1587,9 @@ set_source_files_properties(InventoryAboutMenuTests.cpp PROPERTIES COMPILE_DEFIN
 target_sources(netstorm_tests PRIVATE QuickHelpRequestTests.cpp)
 target_sources(netstorm_tests PRIVATE QuickHelpControlTests.cpp)
 target_sources(netstorm_tests PRIVATE QuickHelpHtmlTests.cpp)
+target_sources(netstorm_tests PRIVATE QuickHelpWindowTests.cpp)
+set_source_files_properties(QuickHelpWindowTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_QUICK_HELP_WINDOW_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/quick-help-window-x86.tsv\";NETSTORM_QUICK_HELP_WINDOW_PATHS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/quick-help-window-paths-x86.tsv\"")
 set_source_files_properties(QuickHelpHtmlTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_QUICK_HELP_HTML_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/quick-help-html-x86.tsv\";NETSTORM_QUICK_HELP_HTML_NESTED_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/quick-help-html-nested-x86.tsv\"")
 set_source_files_properties(QuickHelpControlTests.cpp PROPERTIES COMPILE_DEFINITIONS

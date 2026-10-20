@@ -1,0 +1,18 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-20",
+  "inputs": 84,
+  "normalReturns": 84,
+  "instructions": 162878,
+  "gameExecuted": false,
+  "osExecuted": false,
+  "scope": "실제4c5380/58a0/5970/5d60·46c9c0/ca50/ca70/cac0/cbc0/cc30와 실제 파생/기본 HTML/링크·ftol/CRT. 기본/자식 GUI 생성·부착/Push/텍스트/스크롤/그림·번역/Config/파일/색 조회는 명시 경계다. 원본 게임/OS/장치 관측이 아니다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_quick_help_window.py": "fa76ed7bddec56031e82f8ce33d19f99ddbf2d8c78a84de07d063ba8b85a4e99",
+    "cpppj/tests/fixtures/quick-help-window-x86.tsv": "b7bf52caf2efcb58b27470bd89a9b1e67506a42961e45bb22928ed16985d2fe2"
+  }
+}

@@ -21,7 +21,7 @@ void QuickHelpRequest::Open(std::uint32_t type,std::string_view topic) const {
     topic=topic.substr(0,topic.find('\0'));
     if (!type) {
         if (topic.size()>=kTopicBytes) throw std::length_error("Quick Help 원본 주제80바이트 범위 초과");
-        std::string stem(topic);RemoveSuffix(stem,"type");RemoveSuffix(stem,"help");
+        std::string stem(topic);if (!stem.empty()) { RemoveSuffix(stem,"type");RemoveSuffix(stem,"help"); } // 빈 기본 요청은 정상 TYPE0 조회→본문의 기본 주제 선택을 허용한다.
         const auto query=[&](std::string_view pattern) { return Need(hooks_.lookup)(Need(hooks_.print)(pattern,stem)); }; // 같은 원문 접두 서식과 signed 조회를 순서대로 호출한다.
         auto found=query("%s");if (found<0) found=query("sun%s");if (found<0) found=query("wind%s");type=found<0 ? 0U : static_cast<std::uint32_t>(found);
     }

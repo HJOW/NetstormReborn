@@ -9,8 +9,8 @@
   "sources": {
     "cpppj/src/client/RawMenuControls.cpp": "379bb83823100d91566e7c71740dc008d543e3e6c60552eec61cd0564b806034",
     "cpppj/src/client/RawMenuControls.h": "ce840dfe96790e5c9bdec7e5b4f172b8c3765e2ae53d99f5e7f4da76b60bf1d5",
-    "cpppj/src/client/CMakeLists.txt": "46cb7eaa1afb51e62b6551d851ab5929655b512c2e6ceb624a396d312cbbe16e",
-    "cpppj/tests/CMakeLists.txt": "2018bf47c030a419ccba5f701308668d2c74d646d4d678584cf6f04e893bd4b0",
+    "cpppj/src/client/CMakeLists.txt": "4ae70d9d48c3a42bfec960e370ac8c3fa3ade55bd9250039fc63493a8260b85e",
+    "cpppj/tests/CMakeLists.txt": "a627575830fe9176dc72e24279dd80129787527faa645c2c1266799148bb7c70",
     "cpppj/tests/CampaignObjectMenuTests.cpp": "8c7951a5447f9e70871f5e082bd68d722d17866a1bbc0f5d43d9be50c62b113c",
     "tools/decomp_quick_help_control.py": "dc06387fb90a7d41a384e7d1b7815ed39d218ccf7f85c6446c6f4b15a5966b17",
     "tools/cpp_quick_help_control_audit.py": "0e417895d515137ebcec1cf4429c3225fd2eb2e3a9e553efb6b23985ddc805d7",
@@ -1398,6 +1398,26 @@
           "group": "/sources",
           "previous": "002d2f020d4fc3b456147b0090c50467026d60034c2b23b35285481b79c176d3",
           "current": "8c7951a5447f9e70871f5e082bd68d722d17866a1bbc0f5d43d9be50c62b113c"
+        }
+      ]
+    },
+    {
+      "unit": "256",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "전용 Help 전체 생성/배치/본문·그림 갱신과 실제 HTML 부모/다중 줄 수명·빈 기본 요청을 복원한다. 기존 파생 HTML/링크/표식을 공유하며 Client 가상 분배·실제 화면 연결은 후속이다. 현재 핀만 갱신하고 과거 files/evidence/원문/기대값/실행은 보존한다. 제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "46cb7eaa1afb51e62b6551d851ab5929655b512c2e6ceb624a396d312cbbe16e",
+          "current": "4ae70d9d48c3a42bfec960e370ac8c3fa3ade55bd9250039fc63493a8260b85e"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "2018bf47c030a419ccba5f701308668d2c74d646d4d678584cf6f04e893bd4b0",
+          "current": "a627575830fe9176dc72e24279dd80129787527faa645c2c1266799148bb7c70"
         }
       ]
     }

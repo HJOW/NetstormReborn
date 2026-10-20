@@ -9,8 +9,8 @@
   "sources": {
     "cpppj/src/client/RawCampaignSession.cpp": "6d59bf8f7c9db19c0ca2a1b66594d36979280c82ffac06af529bab7d9698e920",
     "cpppj/src/client/RawCampaignSession.h": "2d53de38afc2c6a4ef2162e91ed7d2b6fb58b4103f847030a21f686e6fae68e4",
-    "cpppj/src/client/CMakeLists.txt": "46cb7eaa1afb51e62b6551d851ab5929655b512c2e6ceb624a396d312cbbe16e",
-    "cpppj/tests/CMakeLists.txt": "2018bf47c030a419ccba5f701308668d2c74d646d4d678584cf6f04e893bd4b0",
+    "cpppj/src/client/CMakeLists.txt": "4ae70d9d48c3a42bfec960e370ac8c3fa3ade55bd9250039fc63493a8260b85e",
+    "cpppj/tests/CMakeLists.txt": "a627575830fe9176dc72e24279dd80129787527faa645c2c1266799148bb7c70",
     "cpppj/tests/CampaignObjectMenuTests.cpp": "8c7951a5447f9e70871f5e082bd68d722d17866a1bbc0f5d43d9be50c62b113c",
     "cpppj/src/client/QuickHelpHtml.cpp": "a4affce5a4abbabe33953abf0d6a3af75a8701ac1cebfc42dec9d969561404d9",
     "cpppj/src/client/QuickHelpHtml.h": "063a36c2c578b9fb6d31f470d952994fab7fc1a9aa3d5a5985d05725e91cd23d",
@@ -2778,5 +2778,27 @@
     "본문 계층·같은 실제 Session TYPE/무기/후처리·지식/공장의 공용 에너지는 연결했다. 전용 창/부착/그림/Client Help 소비자·실제 링크 라우터/학습 소비자는 후속이다. 사용자에게 전용 화면이 아직 열리지 않는다.",
     "기존 요청80바이트 제한은336지역 프레임 안의80주제+256서식으로 확인해 유지했다. 기존985행/기대값은 바꾸지 않았다.",
     "전체 Init/State/공장·가상 소멸/전략AI·지형 효과·자연 포획/희생/대피와11미션 자연 완주·외관/음향 동일성은 후속 실제 통합 플레이에서 확인한다."
+  ],
+  "integration_updates": [
+    {
+      "unit": "256",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "전용 Help 전체 생성/배치/본문·그림 갱신과 실제 HTML 부모/다중 줄 수명·빈 기본 요청을 복원한다. 기존 파생 HTML/링크/표식을 공유하며 Client 가상 분배·실제 화면 연결은 후속이다. 현재 핀만 갱신하고 과거 files/evidence/원문/기대값/실행은 보존한다. 제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "46cb7eaa1afb51e62b6551d851ab5929655b512c2e6ceb624a396d312cbbe16e",
+          "current": "4ae70d9d48c3a42bfec960e370ac8c3fa3ade55bd9250039fc63493a8260b85e"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "2018bf47c030a419ccba5f701308668d2c74d646d4d678584cf6f04e893bd4b0",
+          "current": "a627575830fe9176dc72e24279dd80129787527faa645c2c1266799148bb7c70"
+        }
+      ]
+    }
   ]
 }

@@ -1483,3 +1483,15 @@ tools/cpp_quick_help_html_audit.py text eol=lf
 cpppj/tests/fixtures/quick-help-html-nested-x86.tsv text eol=lf
 cpppj/quick-help-html-nested-native.json text eol=lf
 tools/decomp_quick_help_html_nested.py text eol=lf
+# 전용 Help 전체 창/HTML 부모와 독립 PE 관측을 LF로 보존한다.
+cpppj/src/client/QuickHelpWindow.* text eol=lf
+cpppj/src/client/HtmlBodyGump.* text eol=lf
+cpppj/tests/QuickHelpWindowTests.cpp text eol=lf
+cpppj/tests/fixtures/quick-help-window-x86.tsv text eol=lf
+cpppj/tests/fixtures/quick-help-window-paths-x86.tsv text eol=lf
+cpppj/quick-help-window-native.json text eol=lf
+cpppj/quick-help-window-paths-native.json text eol=lf
+cpppj/quick-help-window-session.json text eol=lf
+tools/decomp_quick_help_window.py text eol=lf
+tools/decomp_quick_help_window_paths.py text eol=lf
+tools/cpp_quick_help_window_audit.py text eol=lf
