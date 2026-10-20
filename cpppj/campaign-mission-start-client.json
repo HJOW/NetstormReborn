@@ -41,15 +41,15 @@
     "cpppj/src/client/CampaignClientServices.h": "69fbabe821be65505d6cef62b3063b3cf49dae3f1a420b3293a9ffcbdcc7238c",
     "cpppj/src/client/GameWorld.cpp": "af6d3aeb3bd53d83e2619c2bd20ba5df42c17fe718cb81786841606419f10c6c",
     "cpppj/src/client/GameWorld.h": "d51dfe75377b1afd870bfeb40e26cef9f6233f65217d757135648ce064043a16",
-    "cpppj/src/client/RawCampaignSession.cpp": "6c3e8ec7e650c92d182b36f3325d4b5d60c65d4bf56dd46fbb38febdd90d0c84",
-    "cpppj/src/client/RawCampaignSession.h": "13b74f9ed71a7379a5041ad849861e6215842efe7772dbaaf2e44f7833fbfbca",
+    "cpppj/src/client/RawCampaignSession.cpp": "5d3bdff0c9b42ab51cc7a88b8024e7d3d57e1649e6dba7acafb20bbc026b6daa",
+    "cpppj/src/client/RawCampaignSession.h": "915294b2ce93a5839a5a8b1ed9bcf08333da3c5bfb25580f79a6ee0b3044f101",
     "cpppj/src/client/RawCampaignSessionLogin.inc": "3a2b40c9dec5df78d6d77cd0b13b5e438b4b21b12e956ba799ede27f51fc8cdc",
     "cpppj/src/client/UberGump.cpp": "c160136246b091eed0d2dbdd6d091d068e7c0460191d935c77582ce1c137d932",
     "cpppj/src/client/UberGump.h": "eb7f755056912e3b8b71c4a7ab05f2ea8379541fff4313a7f6b0f6b5b8d168e9",
     "cpppj/src/o/RawPlayerParticipation.cpp": "682b1cf72b1889d2bf44540446d5cba40c24679e9e99055b154155224185dec7",
     "cpppj/src/o/RawPlayerParticipation.h": "22d0031dd843733a9452f9ee497d79e7028a40915524bf11ca4ff59b549b1cb4",
-    "cpppj/tests/CMakeLists.txt": "4a8ed763e74b919326f0116b4d9030ff07f728caa6d7eafdf09cbbef5aa17bdb",
-    "cpppj/tests/CampaignSessionTests.cpp": "bec94fbecf9c48940d59d8a1b0613a81ddec1da3b01aa1bbc63cbdc6b6d1698a",
+    "cpppj/tests/CMakeLists.txt": "b14fcfe941873b723423234d0e849ac0f6f8633f12ce200e513d943ec953fcb0",
+    "cpppj/tests/CampaignSessionTests.cpp": "16a55fcd6488320a9bfc8217e54b1b3ae2c2d046a805105d534f83a9dfd4bc4e",
     "cpppj/tests/PlayerParticipationTests.cpp": "bc12a931238ba42474504a56c6217253173f37c43021fb31f203814f20f22e3b",
     "tools/cpp_goal_stage_entry_smoke.py": "52dae0cac39a586c32a45b60d57425ab794581ebd1fcd67ce49e037d67a78452",
     "tools/decomp_player_alliance_packet.py": "217a61ba4193f031ac6c8148ecee828ccd805c20e7c6358afb68d2e998c23285",
@@ -5360,6 +5360,38 @@
           "group": "/currentSources",
           "previous": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f",
           "current": "bec94fbecf9c48940d59d8a1b0613a81ddec1da3b01aa1bbc63cbdc6b6d1698a"
+        }
+      ]
+    },
+    {
+      "unit": "243",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "Dude 부모 정지/도착/지면 판정과 population 삭제 후처리 연결. 현재 소스 핀만 갱신하며 과거 실행 결과는 보존한다. 실행 검증은 통합 시점으로 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "group": "/currentSources",
+          "previous": "6c3e8ec7e650c92d182b36f3325d4b5d60c65d4bf56dd46fbb38febdd90d0c84",
+          "current": "5d3bdff0c9b42ab51cc7a88b8024e7d3d57e1649e6dba7acafb20bbc026b6daa"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "group": "/currentSources",
+          "previous": "13b74f9ed71a7379a5041ad849861e6215842efe7772dbaaf2e44f7833fbfbca",
+          "current": "915294b2ce93a5839a5a8b1ed9bcf08333da3c5bfb25580f79a6ee0b3044f101"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/currentSources",
+          "previous": "4a8ed763e74b919326f0116b4d9030ff07f728caa6d7eafdf09cbbef5aa17bdb",
+          "current": "b14fcfe941873b723423234d0e849ac0f6f8633f12ce200e513d943ec953fcb0"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "group": "/currentSources",
+          "previous": "bec94fbecf9c48940d59d8a1b0613a81ddec1da3b01aa1bbc63cbdc6b6d1698a",
+          "current": "16a55fcd6488320a9bfc8217e54b1b3ae2c2d046a805105d534f83a9dfd4bc4e"
         }
       ]
     }

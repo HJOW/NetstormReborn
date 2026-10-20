@@ -13,7 +13,7 @@
     "cpppj/src/client/RawProductionControls.cpp": "a6edd49e5a486449f4b23f3092719f7f1342ee86f66d1325867c306f52056d31",
     "cpppj/src/client/RawProductionControls.h": "8826c67edd4bc027f1d060bcd1e0fe5aa4638c4683b05fd6d2c57e931c90b346",
     "cpppj/src/client/UberGump.cpp": "c160136246b091eed0d2dbdd6d091d068e7c0460191d935c77582ce1c137d932",
-    "cpppj/tests/CampaignSessionTests.cpp": "bec94fbecf9c48940d59d8a1b0613a81ddec1da3b01aa1bbc63cbdc6b6d1698a",
+    "cpppj/tests/CampaignSessionTests.cpp": "16a55fcd6488320a9bfc8217e54b1b3ae2c2d046a805105d534f83a9dfd4bc4e",
     "tools/cpp_modal_production_smoke.py": "9827512ec6c31f9f8e9ccb668ebb85a51e91448a80a1891389655a1b0f069f75",
     "cpppj/tests/fixtures/modal-production-ui-input.tsv": "504058b9d75bda8f8eef260dd236bd62236e68f4e2fbd1fc6cab691cd42d9ff8",
     "tools/cpp_tutorial_harvest_smoke.py": "58606aae2a86d99360f650fc7e5f27785aabca54b53a0856c17ba7f3a9d0a22b",
@@ -358,6 +358,20 @@
           "group": "/sources",
           "previous": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f",
           "current": "bec94fbecf9c48940d59d8a1b0613a81ddec1da3b01aa1bbc63cbdc6b6d1698a"
+        }
+      ]
+    },
+    {
+      "unit": "243",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "Dude 부모 정지/도착/지면 판정과 population 삭제 후처리 연결. 현재 소스 핀만 갱신하며 과거 실행 결과는 보존한다. 실행 검증은 통합 시점으로 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "group": "/sources",
+          "previous": "bec94fbecf9c48940d59d8a1b0613a81ddec1da3b01aa1bbc63cbdc6b6d1698a",
+          "current": "16a55fcd6488320a9bfc8217e54b1b3ae2c2d046a805105d534f83a9dfd4bc4e"
         }
       ]
     }

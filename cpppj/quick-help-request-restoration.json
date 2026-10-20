@@ -56,7 +56,7 @@
   },
   "currentSources": {
     "cpppj/src/client/CMakeLists.txt": "0ea1587f2d9dcd22fb2afbdeeefcb151242775b7083018dd39eb181a84fc0b06",
-    "cpppj/tests/CMakeLists.txt": "4a8ed763e74b919326f0116b4d9030ff07f728caa6d7eafdf09cbbef5aa17bdb",
+    "cpppj/tests/CMakeLists.txt": "b14fcfe941873b723423234d0e849ac0f6f8633f12ce200e513d943ec953fcb0",
     "cpppj/src/client/QuickHelpRequest.h": "f1047e2c382fdb077864b5ef86036954092182ad903a2c648cdf9bf4e23867e5",
     "cpppj/src/client/QuickHelpRequest.cpp": "4133146285adb82806679819621d44ee8e6f5f6fd411c543e85c230c1216316e",
     "cpppj/tests/QuickHelpRequestTests.cpp": "a5cc030e80732b5f6e696e93d6284c8e870aff9f92573f94f0dd16886c08ce94",
@@ -440,6 +440,20 @@
           "group": "/currentSources",
           "previous": "49797f3b65f9f2b5bbb3c15a4521ecb361936cbf0c13f443f2f20f86bfe8f1cf",
           "current": "4a8ed763e74b919326f0116b4d9030ff07f728caa6d7eafdf09cbbef5aa17bdb"
+        }
+      ]
+    },
+    {
+      "unit": "243",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "Dude 부모 정지/도착/지면 판정과 population 삭제 후처리 연결. 현재 소스 핀만 갱신하며 과거 실행 결과는 보존한다. 실행 검증은 통합 시점으로 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/currentSources",
+          "previous": "4a8ed763e74b919326f0116b4d9030ff07f728caa6d7eafdf09cbbef5aa17bdb",
+          "current": "b14fcfe941873b723423234d0e849ac0f6f8633f12ce200e513d943ec953fcb0"
         }
       ]
     }

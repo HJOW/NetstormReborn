@@ -47,15 +47,15 @@
   ],
   "baseCommit": "aa054a6",
   "currentSources": {
-    "cpppj/src/client/RawCampaignSession.cpp": "6c3e8ec7e650c92d182b36f3325d4b5d60c65d4bf56dd46fbb38febdd90d0c84",
-    "cpppj/src/client/RawCampaignSession.h": "13b74f9ed71a7379a5041ad849861e6215842efe7772dbaaf2e44f7833fbfbca",
+    "cpppj/src/client/RawCampaignSession.cpp": "5d3bdff0c9b42ab51cc7a88b8024e7d3d57e1649e6dba7acafb20bbc026b6daa",
+    "cpppj/src/client/RawCampaignSession.h": "915294b2ce93a5839a5a8b1ed9bcf08333da3c5bfb25580f79a6ee0b3044f101",
     "cpppj/src/client/RawCampaignConstructionBindings.cpp": "bd8ccc0a27709ce909164d6266002bcf7f22bd619169560175cca835924d2f9a",
     "cpppj/src/client/RawCampaignConstructionBindings.h": "512570010be383ea7cc726b275acffa61280f1448c9fcd4c872d7ba62a9d8d93",
-    "cpppj/src/o/CMakeLists.txt": "3f977fbd559c93e14f59fab1176fcb3a34dd764ffe2f32402d74319cf78daaa6",
+    "cpppj/src/o/CMakeLists.txt": "26e24376762008bedbc411cf34a40e51817711202656985541e404fb39f36009",
     "cpppj/src/o/RawConstructionCommand.cpp": "6bbc699ba2fdda0bf9de46d9386da677acb9d70bcd297a490f6fe210ceeab15a",
     "cpppj/src/o/RawConstructionCommand.h": "7db4c56243619ccd34bf4fa40bacf50ff42a57b1804f0a740183c39d824eea7a",
-    "cpppj/tests/CMakeLists.txt": "4a8ed763e74b919326f0116b4d9030ff07f728caa6d7eafdf09cbbef5aa17bdb",
-    "cpppj/tests/CampaignSessionTests.cpp": "bec94fbecf9c48940d59d8a1b0613a81ddec1da3b01aa1bbc63cbdc6b6d1698a",
+    "cpppj/tests/CMakeLists.txt": "b14fcfe941873b723423234d0e849ac0f6f8633f12ce200e513d943ec953fcb0",
+    "cpppj/tests/CampaignSessionTests.cpp": "16a55fcd6488320a9bfc8217e54b1b3ae2c2d046a805105d534f83a9dfd4bc4e",
     "cpppj/tests/ConstructionCommandTests.cpp": "8ca02e9dbb4574f9f758ba2bb7408d1dd542eb9618e92ac1c0a9048a704eb154"
   },
   "protectedFileSha256": {
@@ -2273,6 +2273,44 @@
           "group": "/currentSources",
           "previous": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f",
           "current": "bec94fbecf9c48940d59d8a1b0613a81ddec1da3b01aa1bbc63cbdc6b6d1698a"
+        }
+      ]
+    },
+    {
+      "unit": "243",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "Dude 부모 정지/도착/지면 판정과 population 삭제 후처리 연결. 현재 소스 핀만 갱신하며 과거 실행 결과는 보존한다. 실행 검증은 통합 시점으로 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "group": "/currentSources",
+          "previous": "6c3e8ec7e650c92d182b36f3325d4b5d60c65d4bf56dd46fbb38febdd90d0c84",
+          "current": "5d3bdff0c9b42ab51cc7a88b8024e7d3d57e1649e6dba7acafb20bbc026b6daa"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "group": "/currentSources",
+          "previous": "13b74f9ed71a7379a5041ad849861e6215842efe7772dbaaf2e44f7833fbfbca",
+          "current": "915294b2ce93a5839a5a8b1ed9bcf08333da3c5bfb25580f79a6ee0b3044f101"
+        },
+        {
+          "path": "cpppj/src/o/CMakeLists.txt",
+          "group": "/currentSources",
+          "previous": "3f977fbd559c93e14f59fab1176fcb3a34dd764ffe2f32402d74319cf78daaa6",
+          "current": "26e24376762008bedbc411cf34a40e51817711202656985541e404fb39f36009"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/currentSources",
+          "previous": "4a8ed763e74b919326f0116b4d9030ff07f728caa6d7eafdf09cbbef5aa17bdb",
+          "current": "b14fcfe941873b723423234d0e849ac0f6f8633f12ce200e513d943ec953fcb0"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "group": "/currentSources",
+          "previous": "bec94fbecf9c48940d59d8a1b0613a81ddec1da3b01aa1bbc63cbdc6b6d1698a",
+          "current": "16a55fcd6488320a9bfc8217e54b1b3ae2c2d046a805105d534f83a9dfd4bc4e"
         }
       ]
     }

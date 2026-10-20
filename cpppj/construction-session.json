@@ -9,11 +9,11 @@
   "edition": "PATCH10.78",
   "baseCommit": "3330211",
   "currentSources": {
-    "cpppj/src/client/RawCampaignSession.cpp": "6c3e8ec7e650c92d182b36f3325d4b5d60c65d4bf56dd46fbb38febdd90d0c84",
-    "cpppj/src/client/RawCampaignSession.h": "13b74f9ed71a7379a5041ad849861e6215842efe7772dbaaf2e44f7833fbfbca",
+    "cpppj/src/client/RawCampaignSession.cpp": "5d3bdff0c9b42ab51cc7a88b8024e7d3d57e1649e6dba7acafb20bbc026b6daa",
+    "cpppj/src/client/RawCampaignSession.h": "915294b2ce93a5839a5a8b1ed9bcf08333da3c5bfb25580f79a6ee0b3044f101",
     "cpppj/src/client/RawCampaignParticles.cpp": "08317368d2c12e6d5c78224c3a568048b577b32eae89e401d47550f59e0ee0d3",
     "cpppj/src/client/RawCampaignParticles.h": "936d96d04a8737266462b5045e6d433a0abbd76dd5e1e76de9f087911f3eda32",
-    "cpppj/tests/CampaignSessionTests.cpp": "bec94fbecf9c48940d59d8a1b0613a81ddec1da3b01aa1bbc63cbdc6b6d1698a"
+    "cpppj/tests/CampaignSessionTests.cpp": "16a55fcd6488320a9bfc8217e54b1b3ae2c2d046a805105d534f83a9dfd4bc4e"
   },
   "protectedFileSha256": {
     "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
@@ -1679,6 +1679,32 @@
           "group": "/currentSources",
           "previous": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f",
           "current": "bec94fbecf9c48940d59d8a1b0613a81ddec1da3b01aa1bbc63cbdc6b6d1698a"
+        }
+      ]
+    },
+    {
+      "unit": "243",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "Dude 부모 정지/도착/지면 판정과 population 삭제 후처리 연결. 현재 소스 핀만 갱신하며 과거 실행 결과는 보존한다. 실행 검증은 통합 시점으로 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "group": "/currentSources",
+          "previous": "6c3e8ec7e650c92d182b36f3325d4b5d60c65d4bf56dd46fbb38febdd90d0c84",
+          "current": "5d3bdff0c9b42ab51cc7a88b8024e7d3d57e1649e6dba7acafb20bbc026b6daa"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "group": "/currentSources",
+          "previous": "13b74f9ed71a7379a5041ad849861e6215842efe7772dbaaf2e44f7833fbfbca",
+          "current": "915294b2ce93a5839a5a8b1ed9bcf08333da3c5bfb25580f79a6ee0b3044f101"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "group": "/currentSources",
+          "previous": "bec94fbecf9c48940d59d8a1b0613a81ddec1da3b01aa1bbc63cbdc6b6d1698a",
+          "current": "16a55fcd6488320a9bfc8217e54b1b3ae2c2d046a805105d534f83a9dfd4bc4e"
         }
       ]
     }

@@ -9,6 +9,7 @@
 #include "o/RawThunderCannonCapture.h"
 #include "o/RawSunAviaryCapture.h"
 #include "o/RawDudeDrop.h"
+#include "o/RawDudeBehavior.h"
 #include "o/RawMissionAiSettings.h"
 #include "client/RawCampaignCursor.h"
 #include "client/PriestPlacementAssets.h"
@@ -340,6 +341,7 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawDudeSpawn> dudeSpawn; // 실제 factory/owner/가상Pop 생성 몸체다.
     std::unique_ptr<RawDudePostPop> dudePostPop; // 같은 population/idle/I 프레임과 공통 후처리다.
     std::unique_ptr<RawDudeTask> dudeTask; // 같은 Host의 masked Regular 조회/생성과 float 지연이다.
+    std::unique_ptr<RawDudeBehavior> dudeBehavior; // 같은 지도/task/이동 삭제와 population의 부모 동작/후처리다.
     std::unique_ptr<RawDudeDrop> dudeDrop; // 실제 무작위/진입점 드롭과 두 난수 소비를 연결한다.
     SoundList& soundNames; // 실제 보호막 파일명의 원본 이름표/opaque handle 조회다.
     std::unique_ptr<void,void(*)(void*)> pendingPickupSound{nullptr,[](void* storage) { ::operator delete(storage); }}; // 원본new40 성공부터실제Sound47 생성까지의단일예약메모리다.
@@ -959,6 +961,10 @@ struct RawCampaignSession::Impl {
         worldHooks.destroy=construction->Destroy(lifetime->Destroy(hits->Destroy(services.destroy)));
         auto previousEffects=std::move(worldHooks.assets.emit); // 다른 기존 파생/전송/선택 처리기를 유지한다.
         worldHooks.assets.emit=[this,previous=std::move(previousEffects)](const SquidDestroyEvent& event) {
+            if (dudeBehavior && dudeBehavior->Handles(event.sid)) {
+                if (event.effect==SquidDestroyEffect::PreDestroy) { world.CommonDeletion().PreDestroy(event.sid,event.flags);return; }
+                if (event.effect==SquidDestroyEffect::PostDestroy) { dudeBehavior->PostDestroy(event.sid,event.flags);return; }
+            } // 실제70의+14는공통4b0950,+18은population을정리하는450920이다.
             // 실제 다리 VT의 일반/예측/미리보기 모두 같은 Pre/Post를 쓰며 extra9의 효과 생략은 원본 몸체가 판단한다.
             if ((BridgeLifetime(event.sid) || BridgeConnector(event.sid)) && (event.effect==SquidDestroyEffect::PreDestroy || event.effect==SquidDestroyEffect::PostDestroy)) { core.surfaces.Hooks().emit(event);return; }
             if (geyserLifetime->Handles(event.sid)) {
@@ -998,7 +1004,7 @@ struct RawCampaignSession::Impl {
         worldHooks.assets=priests->DestroyHooks(std::move(worldHooks.assets)); // 실제4919b0의 목록·보호막·Carrier 전처리를 같은 삭제 호출에 연결한다.
         auto previousDestroy=std::move(worldHooks.destroy); // 실제 신전 VT의 공통+10만 추가 분배한다.
         worldHooks.destroy=[this,previous=std::move(previousDestroy)](Sid sid,std::uint32_t flags,const SquidDestroyHooks& hooks) {
-            if (BridgeLifetime(sid) || BridgeConnector(sid) || geyserLifetime->Handles(sid) || Vortex(sid) || FenceCommon(sid) || Flyer(sid) || balloonBody->Handles(sid) || VisualDummy(sid) || PlainDamageable(sid) || SunFence(sid) || Nugget(sid) || (daisLifecycle && daisLifecycle->Handles(sid)) || PriestForcefield(sid) || PlainCarrierLifetime(sid) || PriestLifetime(sid) || BuriedLifetime(sid) || BombLifetime(sid) || RuneLifetime(sid)) return core.virtualDestroy.Destroy(sid,flags,hooks);return previous(sid,flags,hooks);
+            if (BridgeLifetime(sid) || BridgeConnector(sid) || geyserLifetime->Handles(sid) || Vortex(sid) || FenceCommon(sid) || Flyer(sid) || balloonBody->Handles(sid) || VisualDummy(sid) || PlainDamageable(sid) || SunFence(sid) || Nugget(sid) || (daisLifecycle && daisLifecycle->Handles(sid)) || (dudeBehavior && dudeBehavior->Handles(sid)) || PriestForcefield(sid) || PlainCarrierLifetime(sid) || PriestLifetime(sid) || BuriedLifetime(sid) || BombLifetime(sid) || RuneLifetime(sid)) return core.virtualDestroy.Destroy(sid,flags,hooks);return previous(sid,flags,hooks);
         };
         buriedRegular=std::make_unique<RawBuriedRegular>(core.pool,core.frames,core.frame,random);
         auto actualRegular=hits->Handler(combat->Handler(assetBindings->Handler(buriedRegular->Handler(priests->RegularHandler([this](Sid sid,std::uint32_t event,std::uint32_t count,float payload) {
@@ -1529,6 +1535,14 @@ struct RawCampaignSession::Impl {
         dudeSpawn=std::make_unique<RawDudeSpawn>(core.pool,core.factory,core.owner,dudeSpawnState,DudeSpawnHooks{[this](Sid sid,float x,float y,std::uint32_t flags) { world.Pop(sid,x,y,flags); }});
         dudePostPop=std::make_unique<RawDudePostPop>(core.pool,core.frames,dudeSpawnState,MakeDudePostPopHooks(core.pool,core.frame,core.postPop));core.postPop.SetDudePostPop(dudePostPop.get());
         DudeTaskHooks task;task.notifySurface=[this](Sid sid) { core.building.NotifySurface(sid); };dudeTask=std::make_unique<RawDudeTask>(core.pool,DudeTaskState{core.processState,core.bridgeState.bridgeType},MakeDudeTaskHostHooks(core.pool,core.processes,std::move(task)));
+        DudeBehaviorHooks behavior; // 450e80/450960/450920의 효과는 모두 기존 같은 Session 몸체다.
+        behavior.task=[this](Sid sid,std::uint32_t event,float delay) { dudeTask->Set(sid,event,delay); };
+        behavior.movementType=[this](std::uint32_t type) { return priests->MovementProcessType(type); };
+        behavior.find=[this](Sid parent,std::uint32_t type,std::uint32_t index,bool remove) { RawContainedLookup lookup(core.pool,[this](Sid sid,std::uint32_t flags) { static_cast<void>(world.Destroy(sid,flags)); });return lookup.Find(parent,type,index,remove); };
+        behavior.destroy=[this](Sid sid,std::uint32_t flags) { static_cast<void>(world.Destroy(sid,flags)); };
+        behavior.basePostDestroy=[this](Sid sid,std::uint32_t flags) { world.CommonDeletion().PostDestroy(sid,flags); };
+        behavior.assertion=[](std::uint32_t line) { throw std::logic_error("원본 Dude.cpp 부모 진단 "+std::to_string(line)); };
+        dudeBehavior=std::make_unique<RawDudeBehavior>(core.pool,core.spots,DudeBehaviorState{gunState.checking,dudePopulation},std::move(behavior));
         dudeDrop=std::make_unique<RawDudeDrop>(core.pool,core.types,*dudeSpawn,*dudeTask,hits->Dudes(),random);
         DamageableReleaseHooks release;release.create=[this](std::uint32_t type,std::uint32_t flags) { return world.Create(type,flags); };
         release.setOwner=[this](Sid sid,std::uint32_t owner) { ownership->SetOwner(sid,owner); };
@@ -2599,6 +2613,8 @@ void RawCampaignSession::BindCursorRange(CursorLifecycleHooks& hooks) {
 }
 // 실제 동일 장부의 공급원과 현재 TYPE/동맹을 조회한다.
 const RawEnergySupply& RawCampaignSession::EnergySupply() const { return *impl_->energySupply; }
+// 경로와 후속 통합 검사는 같은 현재 부모/공통 삭제 몸체를 빌린다.
+const RawDudeBehavior& RawCampaignSession::DudeBehavior() const { if (!impl_->loaded || !impl_->dudeBehavior) throw std::logic_error("미설치 Session의 Dude 부모 조회");return *impl_->dudeBehavior; }
 // 호출자가 바꾼 원본 공급 설정을 다음 실제 조회에서 읽는다.
 EnergySupplyState& RawCampaignSession::EnergySettings() { return impl_->energyState; }
 // 커서 조회 뒤 생산/Builder도 실제 같은 선택 목록을 소비하게 한다.

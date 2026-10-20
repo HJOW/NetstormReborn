@@ -1,0 +1,21 @@
+{
+  "unit": "243",
+  "date": "2026-10-20",
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "lastDecompileDate": "2026-10-20",
+  "uniqueInputs": 410,
+  "normalReturns": 820,
+  "instructions": 32960,
+  "boundaries": "실제 Halt/지면/Fall/Arrival/PostDestroy/list압축/ftol 실행. task 예약·이동 종류 선택·lookup/삭제·공통 post·진단은 인자 경계다. 게임/OS/창 실행 없음.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_dude_behavior.py": "5a7b8e728f56dd35b4aa7d990798667947a16a9beaf6b6d733345961e90c4e43",
+    "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+    "tools/decomp_cursor_position.py": "e15bcdbc4c6be9c131c30f15416c945d650dba9f7dc6def404b47f63c635c212",
+    "tools/decomp_carrier_falling.py": "f8702db0708a543b73213c8df9154503afe977767a11bd7c150b639ee1b587a6",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "cpppj/tests/fixtures/dude-behavior-x86.tsv": "575864387a77b4e29d1644d40b1adf5296c2fbcfd1605d16a7c9fec2bb0ca2f5"
+  }
+}

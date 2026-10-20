@@ -28,9 +28,9 @@
     "cpppj/src/client/AiTypeRequiredEnergy.cpp": "a77ecbbece0a23b295c26e35ba5f788ea1c61a660b95880a83abc6988ef559c0",
     "cpppj/tests/fixtures/type-required-energy-x86.tsv": "8bcb3e215c958f5df0a395365059f5481801b1660569f2f04c0720f394f14f4c",
     "cpppj/tests/TypeRequiredEnergyTests.cpp": "0802ab400413ec5da3f2d03a4ac6b6f88e2d088915646609a2ca0bb39a02b05c",
-    "cpppj/src/o/CMakeLists.txt": "3f977fbd559c93e14f59fab1176fcb3a34dd764ffe2f32402d74319cf78daaa6",
+    "cpppj/src/o/CMakeLists.txt": "26e24376762008bedbc411cf34a40e51817711202656985541e404fb39f36009",
     "cpppj/src/client/CMakeLists.txt": "0ea1587f2d9dcd22fb2afbdeeefcb151242775b7083018dd39eb181a84fc0b06",
-    "cpppj/tests/CMakeLists.txt": "4a8ed763e74b919326f0116b4d9030ff07f728caa6d7eafdf09cbbef5aa17bdb"
+    "cpppj/tests/CMakeLists.txt": "b14fcfe941873b723423234d0e849ac0f6f8633f12ce200e513d943ec953fcb0"
   },
   "product_validation": {
     "configuration": "Release",
@@ -2472,6 +2472,26 @@
           "group": "/sha256",
           "previous": "49797f3b65f9f2b5bbb3c15a4521ecb361936cbf0c13f443f2f20f86bfe8f1cf",
           "current": "4a8ed763e74b919326f0116b4d9030ff07f728caa6d7eafdf09cbbef5aa17bdb"
+        }
+      ]
+    },
+    {
+      "unit": "243",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "Dude 부모 정지/도착/지면 판정과 population 삭제 후처리 연결. 현재 소스 핀만 갱신하며 과거 실행 결과는 보존한다. 실행 검증은 통합 시점으로 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/o/CMakeLists.txt",
+          "group": "/sha256",
+          "previous": "3f977fbd559c93e14f59fab1176fcb3a34dd764ffe2f32402d74319cf78daaa6",
+          "current": "26e24376762008bedbc411cf34a40e51817711202656985541e404fb39f36009"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sha256",
+          "previous": "4a8ed763e74b919326f0116b4d9030ff07f728caa6d7eafdf09cbbef5aa17bdb",
+          "current": "b14fcfe941873b723423234d0e849ac0f6f8633f12ce200e513d943ec953fcb0"
         }
       ]
     }

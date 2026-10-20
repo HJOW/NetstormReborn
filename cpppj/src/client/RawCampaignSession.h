@@ -41,7 +41,7 @@
 #include "o/RawTutorialLater.h"
 #include "o/RawMissionFrameGate.h"
 #include "client/RawCampaignParticles.h"
-namespace netstorm::o { class RawCarrierSteal; class RawCarrierPickup; class RawCarrierMove; class RawGemReward; struct MissionStartGlobals; struct MissionAiSettingsState; } // 포획 몸체와 미션 시작 전역의 고정 참조만 공개한다.
+namespace netstorm::o { class RawCarrierSteal; class RawCarrierPickup; class RawCarrierMove; class RawGemReward; class RawDudeBehavior; struct MissionStartGlobals; struct MissionAiSettingsState; } // 포획/Dude 몸체와 미션 시작 전역의 고정 참조만 공개한다.
 namespace netstorm::client {
 class RawCampaignCursor; // 세션과 같은 실제 커서/로컬 예측의 고정 주소 소유자다.
 class RawProductionMaintenance;struct ProductionMaintenanceGlobals;struct ProductionMaintenancePanel; // 생산 전역/패널의 단일 상태를 빌리는 실제 유지 처리기다.
@@ -309,6 +309,7 @@ public:
     void BindCursorRange(CursorLifecycleHooks& hooks);
     // 현재 공급원/비대칭 동맹/TYPE mana/마지막 선택 목록으로 계산하는 실제 몸체다.
     const o::RawEnergySupply& EnergySupply() const;
+    const o::RawDudeBehavior& DudeBehavior() const; // 현재 동일 지도/목록/task를 쓰는 실제 Dude 부모 몸체다.
     // 사정거리 표시/자동 입력이 실제 GunProcess와 같은 현재 원본 표적 판정을 읽는다. 목표나 게임 상태를 바꾸지 않는다.
     const o::RawGunTarget& GunTargeting() const;
     o::EnergySupplyState& EnergySettings(); // 실제 공급 제곱 반경·userCheat/ignore/동맹 전역이다.

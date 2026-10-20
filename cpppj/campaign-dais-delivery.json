@@ -37,10 +37,10 @@
     "originals/d/GIFCLOUD.COL": "785a2cda6ac1d3e295d375815b6d9650720683099db7c249382d598b5da00532"
   },
   "currentSources": {
-    "cpppj/src/client/RawCampaignSession.cpp": "6c3e8ec7e650c92d182b36f3325d4b5d60c65d4bf56dd46fbb38febdd90d0c84",
+    "cpppj/src/client/RawCampaignSession.cpp": "5d3bdff0c9b42ab51cc7a88b8024e7d3d57e1649e6dba7acafb20bbc026b6daa",
     "cpppj/src/o/RawCarrierArrival.cpp": "05d47b6beb2267351faf0efff7ca6967010088b37ead976881a0c6dde6881610",
     "cpppj/src/o/RawCarrierArrival.h": "56355d323b96e074d549319884f492928ccec8a5c3530db745588cbeb2bcded3",
-    "cpppj/tests/CampaignSessionTests.cpp": "bec94fbecf9c48940d59d8a1b0613a81ddec1da3b01aa1bbc63cbdc6b6d1698a"
+    "cpppj/tests/CampaignSessionTests.cpp": "16a55fcd6488320a9bfc8217e54b1b3ae2c2d046a805105d534f83a9dfd4bc4e"
   },
   "binaries": {
     "cpppj/build/bin/Release/NetstormCpp.exe": "f4c51d0b421f3cba1574153de47d9ca5a3b38503829a2d088204b0f58f8563c5",
@@ -863,6 +863,26 @@
           "group": "/currentSources",
           "previous": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f",
           "current": "bec94fbecf9c48940d59d8a1b0613a81ddec1da3b01aa1bbc63cbdc6b6d1698a"
+        }
+      ]
+    },
+    {
+      "unit": "243",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "Dude 부모 정지/도착/지면 판정과 population 삭제 후처리 연결. 현재 소스 핀만 갱신하며 과거 실행 결과는 보존한다. 실행 검증은 통합 시점으로 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "group": "/currentSources",
+          "previous": "6c3e8ec7e650c92d182b36f3325d4b5d60c65d4bf56dd46fbb38febdd90d0c84",
+          "current": "5d3bdff0c9b42ab51cc7a88b8024e7d3d57e1649e6dba7acafb20bbc026b6daa"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "group": "/currentSources",
+          "previous": "bec94fbecf9c48940d59d8a1b0613a81ddec1da3b01aa1bbc63cbdc6b6d1698a",
+          "current": "16a55fcd6488320a9bfc8217e54b1b3ae2c2d046a805105d534f83a9dfd4bc4e"
         }
       ]
     }

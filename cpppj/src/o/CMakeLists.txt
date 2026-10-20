@@ -346,3 +346,6 @@ target_sources(netstorm PRIVATE RawSunAviaryCapture.cpp RawSunAviaryCapture.h)
 
 # 다이스의 별도 TYPE169 추가 그림을 실제 표시와 캡처에 공유한다.
 target_sources(netstorm PRIVATE RawDaisDraw.cpp RawDaisDraw.h)
+
+# Dude 부모의 정지/도착·표면 전환과 population 후처리다.
+target_sources(netstorm PRIVATE RawDudeBehavior.cpp RawDudeBehavior.h)

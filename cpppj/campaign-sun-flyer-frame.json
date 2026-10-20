@@ -77,14 +77,14 @@
     "originals/d/GIFCLOUD.COL": "785a2cda6ac1d3e295d375815b6d9650720683099db7c249382d598b5da00532"
   },
   "currentSources": {
-    "cpppj/src/o/CMakeLists.txt": "3f977fbd559c93e14f59fab1176fcb3a34dd764ffe2f32402d74319cf78daaa6",
+    "cpppj/src/o/CMakeLists.txt": "26e24376762008bedbc411cf34a40e51817711202656985541e404fb39f36009",
     "cpppj/src/o/RawFlyerFrame.h": "0c3f5b5e3bbe52ac34e00fe37819f3a490011596919b715045a0c983899cb92a",
     "cpppj/src/o/RawFlyerFrame.cpp": "7752144c626f831c64bf0959ad8f9579d67bae1c87def2dcd0f1797b306f2049",
     "cpppj/src/o/RawFlyerProcess.h": "1107c2a73163e0c3024c822cf614c9d02f7aa36d75fc81cfd0a6df58e36b6345",
     "cpppj/src/o/RawFlyerProcess.cpp": "bc5d68f980251febe080e280db07727f7d5cc7bbbf9d84780d8d8d31a86f44f1",
     "cpppj/src/o/RawGunTarget.cpp": "7ac9b51af58949ce8c23f9854679a7685468ba798768db0a1158f25b0ff95f14",
-    "cpppj/src/client/RawCampaignSession.cpp": "6c3e8ec7e650c92d182b36f3325d4b5d60c65d4bf56dd46fbb38febdd90d0c84",
-    "cpppj/tests/CMakeLists.txt": "4a8ed763e74b919326f0116b4d9030ff07f728caa6d7eafdf09cbbef5aa17bdb",
+    "cpppj/src/client/RawCampaignSession.cpp": "5d3bdff0c9b42ab51cc7a88b8024e7d3d57e1649e6dba7acafb20bbc026b6daa",
+    "cpppj/tests/CMakeLists.txt": "b14fcfe941873b723423234d0e849ac0f6f8633f12ce200e513d943ec953fcb0",
     "cpppj/tests/CampaignMissionStartTests.cpp": "5f71b9e383e12f7230e8338db410238aae96757b2f3f7ecff1cd70b1e090789c",
     "tools/decomp_sun_flyer_frame.py": "afe8503d7b5de9afa80bf106d133d62b54ffe6eec66b22dfd9b3a91276dfb3fd",
     "cpppj/sun-flyer-frame.json": "8f433203431f08d2207b0aec3ec6b10dce563395ab57ccbf0b578d0805ba4cd1",
@@ -934,6 +934,32 @@
           "group": "/currentSources",
           "previous": "49797f3b65f9f2b5bbb3c15a4521ecb361936cbf0c13f443f2f20f86bfe8f1cf",
           "current": "4a8ed763e74b919326f0116b4d9030ff07f728caa6d7eafdf09cbbef5aa17bdb"
+        }
+      ]
+    },
+    {
+      "unit": "243",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "Dude 부모 정지/도착/지면 판정과 population 삭제 후처리 연결. 현재 소스 핀만 갱신하며 과거 실행 결과는 보존한다. 실행 검증은 통합 시점으로 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "group": "/currentSources",
+          "previous": "6c3e8ec7e650c92d182b36f3325d4b5d60c65d4bf56dd46fbb38febdd90d0c84",
+          "current": "5d3bdff0c9b42ab51cc7a88b8024e7d3d57e1649e6dba7acafb20bbc026b6daa"
+        },
+        {
+          "path": "cpppj/src/o/CMakeLists.txt",
+          "group": "/currentSources",
+          "previous": "3f977fbd559c93e14f59fab1176fcb3a34dd764ffe2f32402d74319cf78daaa6",
+          "current": "26e24376762008bedbc411cf34a40e51817711202656985541e404fb39f36009"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/currentSources",
+          "previous": "4a8ed763e74b919326f0116b4d9030ff07f728caa6d7eafdf09cbbef5aa17bdb",
+          "current": "b14fcfe941873b723423234d0e849ac0f6f8633f12ce200e513d943ec953fcb0"
         }
       ]
     }

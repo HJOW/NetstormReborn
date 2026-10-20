@@ -263,8 +263,8 @@
     }
   },
   "sources": {
-    "cpppj/src/client/RawCampaignSession.cpp": "6c3e8ec7e650c92d182b36f3325d4b5d60c65d4bf56dd46fbb38febdd90d0c84",
-    "cpppj/src/o/CMakeLists.txt": "3f977fbd559c93e14f59fab1176fcb3a34dd764ffe2f32402d74319cf78daaa6",
+    "cpppj/src/client/RawCampaignSession.cpp": "5d3bdff0c9b42ab51cc7a88b8024e7d3d57e1649e6dba7acafb20bbc026b6daa",
+    "cpppj/src/o/CMakeLists.txt": "26e24376762008bedbc411cf34a40e51817711202656985541e404fb39f36009",
     "cpppj/src/o/RawFactoryDraw.cpp": "b0d5e95ae773f55eccb29a03a7824c7446c87c48b473d4b4f0f7d876f92bea1b",
     "cpppj/src/o/RawThunderCannonCapture.cpp": "9cb609f3dd3fe9239cc85d81ce5427e7b5b41cf81431b0a462df643f7216c6ad",
     "cpppj/src/o/RawThunderCannonCapture.h": "d98c7aeab460724a40daedf472654b0892294ee6afd1cd57ffb00ae6f7117a79",
@@ -520,6 +520,26 @@
           "group": "/sources",
           "previous": "e98fa5aecc683b69021e6efacd62092a48772ae5ed3f7cb3da0eeeff7c33d7ec",
           "current": "3f977fbd559c93e14f59fab1176fcb3a34dd764ffe2f32402d74319cf78daaa6"
+        }
+      ]
+    },
+    {
+      "unit": "243",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "Dude 부모 정지/도착/지면 판정과 population 삭제 후처리 연결. 현재 소스 핀만 갱신하며 과거 실행 결과는 보존한다. 실행 검증은 통합 시점으로 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "group": "/sources",
+          "previous": "6c3e8ec7e650c92d182b36f3325d4b5d60c65d4bf56dd46fbb38febdd90d0c84",
+          "current": "5d3bdff0c9b42ab51cc7a88b8024e7d3d57e1649e6dba7acafb20bbc026b6daa"
+        },
+        {
+          "path": "cpppj/src/o/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "3f977fbd559c93e14f59fab1176fcb3a34dd764ffe2f32402d74319cf78daaa6",
+          "current": "26e24376762008bedbc411cf34a40e51817711202656985541e404fb39f36009"
         }
       ]
     }

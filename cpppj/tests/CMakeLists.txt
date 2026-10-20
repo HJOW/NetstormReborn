@@ -1645,3 +1645,8 @@ set_source_files_properties(SalvageCommandTests.cpp PROPERTIES COMPILE_DEFINITIO
 target_sources(netstorm_tests PRIVATE DaisDrawTests.cpp)
 set_source_files_properties(DaisDrawTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_DAIS_DRAW_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/dais-draw-x86.tsv\"")
+
+# Dude 정지/도착/지면/삭제 후처리의 독립 원본410입력이다.
+target_sources(netstorm_tests PRIVATE DudeBehaviorTests.cpp)
+set_source_files_properties(DudeBehaviorTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_DUDE_BEHAVIOR_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/dude-behavior-x86.tsv\"")

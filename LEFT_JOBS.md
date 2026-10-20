@@ -1,5 +1,17 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-21 단위243 구현 완료: Dude 부모 정지·지면 판정·도착·population 삭제
+
+- [x] 같은 목표의 다음 단위를 진행했다. 시작 HEAD `e2dfe0d0`, 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-20**가 일치한다. 작업은10-20에 시작하고10-21에 마무리한다. 새 디컴파일·원본/CD·AGENTS 변경은 없다. 다른 세션의 dotnetpj 작업과 커밋은 유지하며 이번 변경에 넣지 않는다. 이전 목표 턴은 단위240~242의 구현·기록·커밋을 만든 **진행** 턴이다.
+- [x] 원본70/VT508cc8의 부모 +38=450e60/+3c=450960/+18=450920을 확인했다. 450e60은 정밀 C에서 별도 함수가 아니므로 보호PE 짧은 실제 명령을 직접 읽고 실행 범위를 확인했다. 지면 판정450e80은 float좌표+500edc(0.9999F)의 거의 올림 칸을 읽는다. dead/FALL/공간 전환 반환, task별 도착 삭제·진단 fallthrough, 일반 population의 모든 중복SID 안정 압축과 stale 꼬리 보존을 `RawDudeBehavior`로 복원했다.
+- [x] 제품 작성 전 **410입력·두 정밀도820정상 반환·32960명령**을 독립 관측했다. 실제 Halt/공간/Fall/Arrival/PostDestroy/list압축/ftol만 실행했고 task/종류선택/lookup·삭제/공통post/진단은 명시 인자 경계다. 게임/OS/창은 없다. 주석 정리 전 최초 자료를 `extracted/dude-behavior-20261020-first-capture/`에 보존했으며 재관측 fixture는 전체 바이트가 최초와 같다. 새 원문은 `dude-behavior-native.json`·`dude-behavior-x86.tsv`다.
+- [x] 실제 Session에 같은 `RawDudeTask`·이동 종류 선택·`RawContainedLookup`과 공통/고유 삭제를 연결했다. 새 검사 **2개**를 작성·컴파일했으나 실행하지 않았다. 원본410행 대조와 명시 실제 Dude Pop→Arrival→삭제 연결이며 자연 생성/대피 관측이 아니다. 목록 카운터 C4267은 원본 count와 같은 DWORD로 수정했다. **최종 전체 Release 경고0·오류0·종료0**, 실제 게임/C++검사/CTest/전체 회귀는 사용자 지시대로 통합 검증으로 이월한다.
+- [x] 상세·현재 소스/핀 역변환·빌드는 [작업 기록](docs/exe/cpp-dude-behavior-20261020.md), `cpppj/dude-behavior-session.json`, `tools/cpp_dude_behavior_audit.py --verify`를 따른다. 현재 핀 **121보고서·330항목**만 갱신했고 역변환은 시작 커밋과 같다. 독립 원본 감사·이번 감사와 직전 다이스 추가 그림 감사도 종료0이다. 기존 원본/fixture/과거 실행·바이너리/이력은 보존한다. 인수인계 뒤 **10-21 날짜의 규칙에 맞는 로컬 커밋**을 만들며 원격 push는 하지 않는다.
+- [ ] **다음 DudePath24 연결에 확인한 근거:** ctor48bf30→공통48b2c0→VT50e3d8이다. +20 Init48bb10/+18 Run48bb40/+24 Arrive48bd90/+28 Halt489ff0/+30 Prepare48a200/+c cleanup48aa00은 기존 사제54/웜40과 같다. +2c Attach만48bab0이며 현재 부모70을 검사하고 실제24/flags10 Form에 부착한다. 부모70의 +40=빈4437f0/+44=빈480260이므로 사제/Carrier NotifyStarted를 호출하지 않는다. CD 부모 +38/+3c/+18은4e9360/4e95c0/4e92a0이며 이번 제품은10.78만 구현했다.
+- [ ] **권장 다음 구현 순서:** RawPathRuntime/Process에 정확한Dude VT·24/70·보행 분배/Attach를 추가하고 RawPathStart 허용24/NotifyStarted의 빈 부모를 연결한다. RawCampaignPathBindings의 StartDude·현재24 조회와 새 부모 Halt/Arrival을 연결한다. Session `hitEffects.dudes.pathEndpoint`는 현재 Runtime.Point(Count−1), `startPath`는 같은 BFS/StartDude를 사용한다. **Dude만 metadata.speed를 현재 `dudeSpeeds[kind].speed`에서 읽어야** 기존 Notice.Move의2배속도와 정수 백업 복원이 유지된다. 불변 자산 speed로 대체하지 않는다.
+- [ ] **이어 남는 Dude 경계:** Regular450fa0(task5101~5107), 자연 생성/최대 population 초기화 정책이다. 현재 population capacity0에 임의 상한을 넣지 않는다. 최초 Notice의 현재Regular도 아직 실제 Kernel에 분배되지 않으므로 경로 연결만으로 완주/대피 완료를 주장하지 않는다. 전체 목표의 F8 Guide/키·전략AI·다른 지정 미션 미완료 기능과 원본 동일성도 계속 남는다.
+- [ ] **후속 통합 검증:** 앞 단위239~242의 새 검사8개와 이번2개, Early5 자연F 이후 실제 UI 시전·적/지형 효과·포획/Drop·제단/희생, 나머지 지정 미션/F8 Guide·자연 완주·전체 동일성이다. Devastation 외 주문의3차 이월과 실행/플레이 검증 통합 이월을 유지하며 전체 goal은 **active/미완료**다.
+
 ## 2026-10-20 단위242 구현 완료: 다이스 TYPE169 추가 그림·표시/파편 캡처
 
 - [x] 단위241 뒤 같은 목표를 계속했다. 시작 커밋 `249c3a3d`, 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-20**가 일치한다. 기존 정밀 자료와 보호 PE를 읽었고 새 디컴파일은 없다. 다이스165/VT507950의 +78=4acfe0(TYPE baseFrame), +a0=빈41c0f0, +a4=4484b0을 확인했다. 별도 TYPE169(`daisExtraFrames`)의 현재 프레임 수로 현재 signed DWORD 프레임을 나눈 나머지를 그린다. CD482e70은 BYTE프레임/+22와 별도 전역51cbe8을 사용한다.

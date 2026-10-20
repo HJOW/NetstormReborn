@@ -1358,3 +1358,11 @@ cpppj/src/o/RawDaisDraw.cpp text eol=lf
 cpppj/tests/DaisDrawTests.cpp text eol=lf
 tools/decomp_dais_draw.py text eol=lf
 tools/cpp_dais_draw_audit.py text eol=lf
+# Dude 부모 동작의 원본 근거와 현재 구현 해시를 보존한다.
+cpppj/dude-behavior-native.json text eol=lf
+cpppj/dude-behavior-session.json text eol=lf
+cpppj/src/o/RawDudeBehavior.h text eol=lf
+cpppj/src/o/RawDudeBehavior.cpp text eol=lf
+cpppj/tests/DudeBehaviorTests.cpp text eol=lf
+tools/decomp_dude_behavior.py text eol=lf
+tools/cpp_dude_behavior_audit.py text eol=lf

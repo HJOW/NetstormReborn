@@ -11,6 +11,7 @@
 #include <cmath>
 #include "client/RawCampaignFactoryDisplay.h"
 #include "o/RawDaisDraw.h"
+#include "o/RawDudeBehavior.h"
 #include "client/AiTypeRequiredEnergy.h"
 #include "client/RawCursorPlacement.h"
 #include "client/RawCampaignCursor.h"
@@ -2692,6 +2693,15 @@ TEST_CASE(CampaignDais_AdditionalDisplayAndShrapnelCapture) {
         if (process && std::any_of(process->Fields().image.pixels.begin(),process->Fields().image.pixels.end(),[](auto color) { return color!=255; })) captured=true;
     }
     CHECK(captured);CHECK(!core.bookkeeping.depth && !core.destroy.PreDepth() && !core.destroy.PostDepth());
+}
+
+// 실제 Dude 최초Pop→부모 도착→공통/고유 삭제가 같은 월드를 정리해야 한다. 자연 생성/대피 검사는 아니다.
+TEST_CASE(CampaignDude_ActualArrivalUsesPopulationLifetime) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",external.Services());session.Load();auto core=session.Core();
+    const auto dude=session.World().Create(70);core.owner.Set(dude,1);session.World().Pop(dude,100,111,0);CHECK(session.DudeBehavior().Handles(dude));CHECK(Get(core.pool.Slot(dude),12,2)==0x5101);
+    CHECK(session.DudeBehavior().Arrival(dude)==1001 && (core.pool.Slot(dude)[11]&3U)==3U);
+    CHECK(!core.bookkeeping.depth && !core.destroy.PreDepth() && !core.destroy.PostDepth());
 }
 
 // 실제 Factory/전체Pop의 제단 생성·Player 등록과 부착 통지/제단 저항을 확인한다. 자연 포획 입력은 아니다.
