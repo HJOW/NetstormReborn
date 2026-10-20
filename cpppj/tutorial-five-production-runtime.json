@@ -17,7 +17,7 @@
     "cpppj/src/o/RawFactoryDraw.h": "deb03d6428d34ac87172e9bfa46d7862ddef450014bb9040d08508212b90b096",
     "cpppj/src/o/SquidDisplay.cpp": "adff73d1c710cf295aed17e2a06cb90294e1399e5e455d423659f37c336f3dc6",
     "cpppj/src/client/SpriteDraw.cpp": "8946ce7549a2b399a0f337382e6de316d3d7a7abdfa43194cd8bce3b863297a8",
-    "cpppj/src/client/RawCampaignSession.cpp": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+    "cpppj/src/client/RawCampaignSession.cpp": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e",
     "cpppj/tests/ShapeToBufferTests.cpp": "91d7010f9d6698f7237d8a2040e00658502a57dedea9da310173af4e96dd26e5",
     "cpppj/tests/fixtures/tutorial-five-production-ui-input.tsv": "42495ce52f6a501380a0c1f32347fc057c1a0d6e99ab821a1b5f107f637f8042",
     "tools/cpp_tutorial_five_production_smoke.py": "9af81e71f79df2f180544b11666f2753d7711c642c9826f798227d69e222eff4",
@@ -498,6 +498,20 @@
           "group": "/sources",
           "previous": "8aaf19543d81ff3e040ce450a13f6ea72e6afae0a93d9521bcb4ae53881821f1",
           "current": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249"
+        }
+      ]
+    },
+    {
+      "unit": "253",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "실제 ShowTechnology의 전체 카드/원본 공용 CRT 정렬·네 줄 배치를 현재 Session 기술/제외/생산과 같은 Gump·StyleText·SHP에 연결한다. Review 버튼/사제/F6은 같은 명령 큐다. 현재 핀만 갱신하고 과거 files/evidence/원문/기대값/실행은 보존한다. 제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "group": "/sources",
+          "previous": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+          "current": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
         }
       ]
     }

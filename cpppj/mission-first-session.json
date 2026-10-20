@@ -9,9 +9,9 @@
   "sources": {
     "cpppj/src/client/RawCampaignTutorialOneBindings.cpp": "945cb24940af3cfc103ee17ddaac723a6d22b197d658f063886da57366dc99f4",
     "cpppj/src/client/RawCampaignTutorialOneBindings.h": "747a7f9249c088c968da165f4b917bed9712eac46d1b935ba1f736d9ab304b30",
-    "cpppj/src/client/UberGump.cpp": "b8a5fedc6c83ca04e5f8687f6a73a84e769686691ca180789123788360b5a915",
+    "cpppj/src/client/UberGump.cpp": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9",
     "cpppj/src/client/CMakeLists.txt": "1bb01b9f14a98173bb8dc38ecf9db973bfd7d75d1ec3b10bc0ad658444a9006a",
-    "cpppj/tests/CMakeLists.txt": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+    "cpppj/tests/CMakeLists.txt": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c",
     "cpppj/tests/CampaignSessionTests.cpp": "6a6d54fd15eb24c0609492756880c774120f855138441820a536ea5bd73ee4f0",
     "tools/cpp_mission_first_audit.py": "c4c798de1d81a52f03537833b48b2b94318f491f9a5bb5948bb46f941092c7c0",
     "tools/decomp_mission_first.py": "b08aad7f753ea0549a8d68f39a3c74e0c06f3d3d0c85c5def3885c1f98e7cb95",
@@ -2295,6 +2295,26 @@
           "group": "/sources",
           "previous": "2b3e4c0e8515b9911d7e6cb918f9f585e1a425c195c3d03b94e623044c34eea7",
           "current": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09"
+        }
+      ]
+    },
+    {
+      "unit": "253",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "실제 ShowTechnology의 전체 카드/원본 공용 CRT 정렬·네 줄 배치를 현재 Session 기술/제외/생산과 같은 Gump·StyleText·SHP에 연결한다. Review 버튼/사제/F6은 같은 명령 큐다. 현재 핀만 갱신하고 과거 files/evidence/원문/기대값/실행은 보존한다. 제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "group": "/sources",
+          "previous": "b8a5fedc6c83ca04e5f8687f6a73a84e769686691ca180789123788360b5a915",
+          "current": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+          "current": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
         }
       ]
     }

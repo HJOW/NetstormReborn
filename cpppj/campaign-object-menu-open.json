@@ -10,12 +10,12 @@
   "currentSources": {
     ".gitattributes": "3e8d869648cde0415d1a91e9b22d5a7ed7e5c0585923a189bfd37aa33229f3a8",
     "cpppj/src/client/CMakeLists.txt": "0ea1587f2d9dcd22fb2afbdeeefcb151242775b7083018dd39eb181a84fc0b06",
-    "cpppj/src/client/RawCampaignSession.cpp": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
-    "cpppj/src/client/RawCampaignSession.h": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
+    "cpppj/src/client/RawCampaignSession.cpp": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e",
+    "cpppj/src/client/RawCampaignSession.h": "7cfca63bcb353cb161328764221f3ec62c3b4dec2ce6833e784601cfe2825a1c",
     "cpppj/src/client/RawObjectMenuOpen.cpp": "a077dad61ac2c980fb578b642fd7b22b75f5e81fa936bb92ae9402eae61fca86",
     "cpppj/src/client/RawObjectMenuOpen.h": "cb8124fe182ee1586128587ec4fa8a6fe152a1312550742aa21007c67b40b587",
-    "cpppj/tests/CMakeLists.txt": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
-    "cpppj/tests/CampaignObjectMenuTests.cpp": "fea9198ea2150c42bb523f7ac9298c2f819acd1fc9b9887b53020c206ad62563",
+    "cpppj/tests/CMakeLists.txt": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c",
+    "cpppj/tests/CampaignObjectMenuTests.cpp": "c9f734313aefd637928b66cc20cdb5bfffb0bb1d6144bd814b27cd3452e699b6",
     "cpppj/tests/ObjectMenuOpenTests.cpp": "17f364d169dc40b9d4276ed192fb4042c07ca212b3740bbb3abc2cb54fc54b77",
     "tools/decomp_object_menu_open.py": "88e0ed764e3ab5e54e1feb5177bd9313bf7edfcb3b9f79d8d4cd60581f03df17",
     "cpppj/tests/fixtures/object-menu-open-x86.tsv": "5ab274b7e92b4676b84bdd061954a1dfd92efbf6ff428671c884573cdf920e6f"
@@ -2005,6 +2005,38 @@
           "group": "/currentSources",
           "previous": "2b3e4c0e8515b9911d7e6cb918f9f585e1a425c195c3d03b94e623044c34eea7",
           "current": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09"
+        }
+      ]
+    },
+    {
+      "unit": "253",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "실제 ShowTechnology의 전체 카드/원본 공용 CRT 정렬·네 줄 배치를 현재 Session 기술/제외/생산과 같은 Gump·StyleText·SHP에 연결한다. Review 버튼/사제/F6은 같은 명령 큐다. 현재 핀만 갱신하고 과거 files/evidence/원문/기대값/실행은 보존한다. 제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "group": "/currentSources",
+          "previous": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+          "current": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "group": "/currentSources",
+          "previous": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
+          "current": "7cfca63bcb353cb161328764221f3ec62c3b4dec2ce6833e784601cfe2825a1c"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/currentSources",
+          "previous": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+          "current": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+        },
+        {
+          "path": "cpppj/tests/CampaignObjectMenuTests.cpp",
+          "group": "/currentSources",
+          "previous": "fea9198ea2150c42bb523f7ac9298c2f819acd1fc9b9887b53020c206ad62563",
+          "current": "c9f734313aefd637928b66cc20cdb5bfffb0bb1d6144bd814b27cd3452e699b6"
         }
       ]
     }

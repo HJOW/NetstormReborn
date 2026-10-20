@@ -14,6 +14,7 @@
 #include "client/MissionLifecycle.h"
 #include "client/GuideMissionTransitions.h"
 #include "client/MissionTechnology.h"
+#include "client/RawKnowledgeMenu.h"
 #include "o/RawMissionGuide.h"
 #include "client/GifImage.h"
 #include "client/GumpVisual.h"
@@ -113,7 +114,7 @@ std::string FontBytes(std::string_view text) {
 // 현재 단계에서 실제 처리 경로가 있는 메뉴 명령만 활성화한다.
 bool Supported(std::string_view command) {
     const auto name = o::AsciiLower(command);
-    return MissionControlScriptCode(name)!=0xffffffffU || name == "tell" || name == "missionbegin" || name == "startdemo" || name == "donothing" ||
+    return MissionControlScriptCode(name)!=0xffffffffU || KnowledgeScriptCode(name)!=0xffffffffU || name == "tell" || name == "missionbegin" || name == "startdemo" || name == "donothing" ||
         name == "quit" || name == "menu" || name == "toggle" || name == "resolution" || name == "volume" || name == "resume";
 }
 // 자동 검사 보고에는 개행/탭을 제거하여 한 항목 한 줄을 유지한다.
@@ -289,7 +290,7 @@ bool UberGump::TryTell(std::string target,bool briefing) {
     if (!body) return false;
     const auto protectedBody = Replace(*body, "{cur.file}", "__CURRENT_FILE__");
     ScriptCommandHooks commands; // 현재복원된실제명령을원본ID로조회하고미등록은원본처럼진단뒤거부한다.
-    commands.lookup=[](std::string_view name) { const auto lower=o::AsciiLower(name);return lower=="config" ? kScriptConfig : lower=="warning" ? kScriptWarning : MissionControlScriptCode(name); };
+    commands.lookup=[](std::string_view name) { const auto lower=o::AsciiLower(name);const auto mission=MissionControlScriptCode(name);return lower=="config" ? kScriptConfig : lower=="warning" ? kScriptWarning : mission!=0xffffffffU ? mission : KnowledgeScriptCode(name); };
     commands.unknown=[](std::string_view name) { std::clog<<"스크립트 명령 미연결: "<<name<<'\n'; };
     HtmlTextParserState htmlState;HtmlTextParserHooks htmlHooks;std::string background; // 원본처럼새페이지는shown=1로시작하고두번의HTML순회에서같은상태를공유한다.
     htmlHooks.background=[&](HtmlTextParserState&,std::string_view name) { background=name; }; // 두HTML순회가선택한실제배경이름을현재페이지표시경로에보관한다.
@@ -527,6 +528,17 @@ void UberGump::Event(InputEvent event) {
         if (missionRuntime_->tutorial->Event(missionEvent)) return;
         if (QueueMissionFirstKey(event,client_.Input(),true)) return; // 모든 연결된 Tutorial 형식은 큐 끝의 First가 현재 안내/자기 정지를 다시 사용한다.
     }
+    if (transitionCode==kShowTechnologyCommand) {
+        if (!(event.code&InputCode::kRelease) && world_) rawButtons_->Menus()->OpenKnowledge(world_->Session(),[this](std::string_view key) { return FontBytes(client_.Translate(key)); },static_cast<std::uint32_t>(client_.LanguageNumber()));
+        rebuild_=true;return; // 원본 일반 입력의 뗌 거부와 PlayerKnown/메타맵 관문은 실제 메뉴 연결에서 유지한다.
+    }
+    if (world_ && state_.phase==ClientPhase::Mission && !(event.code&(InputCode::kRelease|InputCode::kControl|InputCode::kShift)) && transitionCode==(0x75U<<InputCode::kVirtualKeyShift)) {
+        client_.Input().PushCommand(kShowTechnologyCommand,0,0);return; // 사제 메뉴/Review 버튼과 같은 명령 큐로 F6을 예약한다.
+    }
+    if (rawButtons_->Menus()->KnowledgeOpen()) {
+        if ((event.code&0xffffU)==0x1b && !(event.code&InputCode::kRelease)) { rawButtons_->Menus()->RequestClosePopups();rebuild_=true;return; }
+        if (transitionCode==InputCode::kLeftButton || transitionCode==InputCode::kRightButton || transitionCode==InputCode::kMiddleButton) { static_cast<void>(rawButtons_->Event(event));rebuild_=true;return; }
+    }
     if ((event.code&0x03ffffffU)==kLeaveBattleCommand) {
         if (event.code&InputCode::kRelease) return; // Guide가 소비한 Abort와 달리 실제 Leave는 원본 일반 입력의 key-up 거부 뒤에 실행한다.
         MainMenu();if (client_.Audio()) client_.Audio()->StartScene(false);return; // 기존 단일 플레이 종료·메뉴 음악 경로를 원본 큐 수신에 연결한다.
@@ -634,6 +646,7 @@ void UberGump::PaletteChanged() {
 // 선택한 원본 명령의 작은 부분집합. 지원하지 않는 항목은 활성화하지 않는다.
 void UberGump::Execute(const DialogAction& action) {
     if (QueueMissionControlAction(action.command,action.argument,client_.Input(),scriptStrings_)) return;
+    if (KnowledgeScriptCode(action.command)!=0xffffffffU) { QueueScriptCommand(action.command+','+action.argument,client_.Input(),scriptStrings_,{KnowledgeScriptCode,{}});return; }
     const auto command = o::AsciiLower(action.command);
     if (command == "quit") { quit_ = true; return; }
     if (command == "tell") { Tell(action.argument, state_.phase == ClientPhase::Briefing); return; }
@@ -840,6 +853,9 @@ void UberGump::Compose() {
         // 새 페이지는 같은 raw 노드로 한 번 다시 합성하며 중간 어댑터 그림은 화면에 제출하지 않는다.
         controlsChanged_=false;Compose();return;
     }
+    if (rawButtons_->Menus()->KnowledgeOpen()) client_.GetRenderer().SetOverlayProcedure(RenderProcedure{{0,0,width,height},[this](std::span<std::uint8_t> pixels,int pitch,int height,ScreenRect clip) {
+        rawButtons_->Menus()->Draw(pixels,pitch,height,client_.GetScreen().Colors(),client_.GetScreen().ShadeMaps(),clip);
+    }}); // 원래 브리핑을 유지한 상태에서도 같은 실제 지식 카드를 가장 위에 그린다.
     if (world_) world_->TakeChanged();
     rebuild_ = false;
 }

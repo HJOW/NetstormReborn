@@ -37,7 +37,7 @@
     "originals/d/GIFCLOUD.COL": "785a2cda6ac1d3e295d375815b6d9650720683099db7c249382d598b5da00532"
   },
   "currentSources": {
-    "cpppj/src/client/RawCampaignSession.cpp": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+    "cpppj/src/client/RawCampaignSession.cpp": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e",
     "cpppj/src/o/RawCarrierArrival.cpp": "05d47b6beb2267351faf0efff7ca6967010088b37ead976881a0c6dde6881610",
     "cpppj/src/o/RawCarrierArrival.h": "56355d323b96e074d549319884f492928ccec8a5c3530db745588cbeb2bcded3",
     "cpppj/tests/CampaignSessionTests.cpp": "6a6d54fd15eb24c0609492756880c774120f855138441820a536ea5bd73ee4f0"
@@ -937,6 +937,20 @@
           "group": "/currentSources",
           "previous": "5dd5da22bc49c783d865582a49a46892cfc4a9658c20dd009e9d332495082676",
           "current": "6a6d54fd15eb24c0609492756880c774120f855138441820a536ea5bd73ee4f0"
+        }
+      ]
+    },
+    {
+      "unit": "253",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "실제 ShowTechnology의 전체 카드/원본 공용 CRT 정렬·네 줄 배치를 현재 Session 기술/제외/생산과 같은 Gump·StyleText·SHP에 연결한다. Review 버튼/사제/F6은 같은 명령 큐다. 현재 핀만 갱신하고 과거 files/evidence/원문/기대값/실행은 보존한다. 제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "group": "/currentSources",
+          "previous": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+          "current": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
         }
       ]
     }

@@ -10,7 +10,7 @@
   "status": "벌룬42와 그림자 수명 연결. 전체11스테이지 자연 플레이 목표는 미완료.",
   "currentSources": {
     "cpppj/src/CMakeLists.txt": "8834917133d33fda6dcd145dd64a93ee38ee014d25fede2eff5575b996df5847",
-    "cpppj/src/client/RawCampaignSession.cpp": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+    "cpppj/src/client/RawCampaignSession.cpp": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e",
     "cpppj/src/client/RawCampaignPathBindings.cpp": "be46833bcfd8099fb58af729eb2d92f83a045aecc50d8fec4ba3d4c6c56a6679",
     "cpppj/src/client/RawCampaignPathBindings.h": "64bda57407ea52b561ea7a1fad2c6d3fa11be086115327ff78d47206cd68320f",
     "cpppj/src/o/RawPathRuntime.cpp": "2ecd4a9b2fdc3105fb6a4ed0a9c339a37e9c5fb8cbf1f53af41687d94cdaf5aa",
@@ -20,7 +20,7 @@
     "cpppj/src/o/RawPathStart.cpp": "a852f0c16cefc10b11e371510999e4d3836c83681adcbe2817feac570dec6d98",
     "cpppj/src/o/SquidPostPop.cpp": "0e6f552bafeab1be94ba07919b928535e774ce54e121d775df514c9b6645d4e6",
     "cpppj/src/o/SquidPostPop.h": "b4bfb4886068b9dd98bed52b9f56f17e1c25e50b123b4fdd6b165f2054bcdf1d",
-    "cpppj/tests/CMakeLists.txt": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+    "cpppj/tests/CMakeLists.txt": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c",
     "cpppj/tests/CampaignSessionTests.cpp": "6a6d54fd15eb24c0609492756880c774120f855138441820a536ea5bd73ee4f0",
     "cpppj/src/o/RawBalloonFrame.cpp": "71390bf0c48ed94bd6381b15c812b5a6702cd94e02528692f7ac5d1b6f18ab05",
     "cpppj/src/o/RawBalloonFrame.h": "3c50521f9a4a132e33b627fcf609e6028ff2cfbbc6b757434f06b4b3d7b90c8d",
@@ -3840,6 +3840,26 @@
           "group": "/currentSources",
           "previous": "2b3e4c0e8515b9911d7e6cb918f9f585e1a425c195c3d03b94e623044c34eea7",
           "current": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09"
+        }
+      ]
+    },
+    {
+      "unit": "253",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "실제 ShowTechnology의 전체 카드/원본 공용 CRT 정렬·네 줄 배치를 현재 Session 기술/제외/생산과 같은 Gump·StyleText·SHP에 연결한다. Review 버튼/사제/F6은 같은 명령 큐다. 현재 핀만 갱신하고 과거 files/evidence/원문/기대값/실행은 보존한다. 제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "group": "/currentSources",
+          "previous": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+          "current": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/currentSources",
+          "previous": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+          "current": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
         }
       ]
     }

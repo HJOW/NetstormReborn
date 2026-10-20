@@ -9,8 +9,8 @@
   "sources": {
     "cpppj/src/client/MissionGuideInput.cpp": "9181acf22bb07785cb9c6eb89708ff8532af05de62f1236cb616fbff4d1c3e8e",
     "cpppj/src/client/MissionGuideInput.h": "6577a5aba688700ad8779001e97b4096716ed84a1af0f760be89b950156b50c8",
-    "cpppj/src/client/UberGump.cpp": "b8a5fedc6c83ca04e5f8687f6a73a84e769686691ca180789123788360b5a915",
-    "cpppj/tests/CMakeLists.txt": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+    "cpppj/src/client/UberGump.cpp": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9",
+    "cpppj/tests/CMakeLists.txt": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c",
     "tools/decomp_mission_abort.py": "c86a490f3be7eded578d0df9589bf9bc91a7a2fa656067745966df269dd3f22e",
     "tools/cpp_mission_abort_audit.py": "a978241832853509334e5f865ec069996595b7cf6d552bc354090e4ab7fc4d3a",
     "cpppj/tests/MissionControlTests.cpp": "44af9c71e9ba66f3a9aa3a38e05cabe1fa0302a0109191364fdac57f7c9ab30c"
@@ -1393,6 +1393,26 @@
           "group": "/sources",
           "previous": "2b3e4c0e8515b9911d7e6cb918f9f585e1a425c195c3d03b94e623044c34eea7",
           "current": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09"
+        }
+      ]
+    },
+    {
+      "unit": "253",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "실제 ShowTechnology의 전체 카드/원본 공용 CRT 정렬·네 줄 배치를 현재 Session 기술/제외/생산과 같은 Gump·StyleText·SHP에 연결한다. Review 버튼/사제/F6은 같은 명령 큐다. 현재 핀만 갱신하고 과거 files/evidence/원문/기대값/실행은 보존한다. 제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "group": "/sources",
+          "previous": "b8a5fedc6c83ca04e5f8687f6a73a84e769686691ca180789123788360b5a915",
+          "current": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+          "current": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
         }
       ]
     }

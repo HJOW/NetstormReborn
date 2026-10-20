@@ -4,6 +4,7 @@
 #include "client/RawCampaignCursor.h"
 #include "client/RawButtonControls.h"
 #include "client/RawMenuControls.h"
+#include "client/RawKnowledgeMenu.h"
 #include "client/RawUserHighlight.h"
 #include "o/OriginalText.h"
 #include "o/RawContentPreviewProcess.h"
@@ -115,6 +116,19 @@ struct ActualMenuUi {
 };
 }
 // 실제 생성된 건설 행의 현재 금액 관문과 같은 커서 취득, 기본 객체/Player 메뉴 및 실제 정수 명령 입력을 확인한다.
+// 실제 Session 기술·커서 취소와 같은 Gump 생성/부착/원본 StyleText 그림·지연 수명을 함께 연결한다.
+TEST_CASE(CampaignKnowledge_ActualSessionAndMenuTree) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);MenuServices external;auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",external.Make());session.Load();ActualMenuUi ui(assets);ui.currentSession=&session;session.Cursor().SetEffects(ui.CursorEffects());
+    session.AddTechnology(1,"sunArcher;windBattery");CHECK(ui.menus->OpenKnowledge(session,[](std::string_view key) { const auto bytes=EncodeOriginalText(key);return std::string(bytes.begin(),bytes.end()); },1));
+    CHECK(ui.menus->KnowledgeOpen() && ui.buttons.BlockingGumpOpen() && ui.menus->HasMenus());CHECK(ui.menus->Point("WIND").has_value() && ui.menus->Point("RAIN").has_value() && ui.menus->Point("THUN.").has_value() && ui.menus->Point("SUN").has_value());
+    std::array<std::uint32_t,256> logical{};
+    // 실제 보호 RGB를 기존 메뉴 명암 표 생성기에 전달한다.
+    for (std::size_t index=0;index<logical.size();++index) { const auto color=assets.game.Palette().Color(static_cast<std::uint8_t>(index));logical[index]=color.red|(std::uint32_t(color.green)<<8)|(std::uint32_t(color.blue)<<16); }
+    std::vector<std::uint8_t> pixels(640*480,0);ui.menus->Draw(pixels,640,480,ui.Palette(),BuildGumpShadeMaps(logical)); // 실제 보호 그림/글꼴/팔레트를 같은 픽셀 소비자에 보낸다.
+    CHECK(std::any_of(pixels.begin(),pixels.end(),[](std::uint8_t value) { return value!=0; }));
+    ui.menus->RequestClosePopups();CHECK(!ui.menus->KnowledgeOpen());ui.menus->CleanupFrame();CHECK(!ui.menus->HasMenus());ui.currentSession=nullptr;
+}
+// 실제 사제/Carrier/Player 계층과 건설 선택을 기존 공통 트리에서 확인한다.
 TEST_CASE(CampaignObjectMenus_ActualChainAndBuildSelection) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);MenuServices external;ActualMenuUi ui(assets);
     auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",external.Make());session.Load();

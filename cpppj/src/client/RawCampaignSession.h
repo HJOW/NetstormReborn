@@ -45,6 +45,7 @@ namespace netstorm::o { class RawCarrierSteal; class RawCarrierPickup; class Raw
 namespace netstorm::client {
 class RawCampaignCursor; // 세션과 같은 실제 커서/로컬 예측의 고정 주소 소유자다.
 class RawProductionMaintenance;struct ProductionMaintenanceGlobals;struct ProductionMaintenancePanel; // 생산 전역/패널의 단일 상태를 빌리는 실제 유지 처리기다.
+struct KnowledgeMenuState;struct KnowledgeMenuHooks; // 지식 창의 게임 조회는 같은 실제 세션에서 공급한다.
 struct CursorPlacementHooks; // 실제 커서 배치의 설명/에너지 경계만 연결할 때 사용한다.
 // 실제 Client의 메뉴 작성·번역·Chat·정적 문자열 수명을 공급한다. 게임 계산 훅은 factory가 같은 세션으로 교체한다.
 struct CampaignObjectMenuUi {
@@ -278,6 +279,8 @@ public:
     // 같은 Pool/Host/기술/허용/SP/실제 ContentForm 생성에 연결한 메뉴다. UI·번역·Tell·커서 취득만 caller가 공급한다.
     // 반환 객체는 Session보다 먼저 해제한다. 설치 전에는 메뉴/내용물 생성을 허용하지 않는다.
     std::unique_ptr<RawPriestMenu> MakePriestMenu(PriestMenuHooks hooks);
+    // 현재 Player 기술/실제 내용물·제외·Deck으로 전체 지식 창을 작성한다. GUI는 같은 Client의 실제 처리기를 받는다.
+    std::vector<std::uint32_t> ShowKnowledge(KnowledgeMenuState& state,KnowledgeMenuHooks hooks);
     // caller는 기존 Bind*MenuControls로 같은 Gump 작성기를 공급한다. 미공급 Chat/번역/통신 분기는 선택 시 오류다.
     // 반환 체인은 메뉴가 열린 동안 유지하고 월드 교체/Session 해제 전에 반납한다.
     std::unique_ptr<RawCampaignObjectMenus> MakeObjectMenus(CampaignObjectMenuUi ui);

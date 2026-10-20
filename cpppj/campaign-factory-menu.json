@@ -101,15 +101,15 @@
   },
   "currentSources": {
     "cpppj/src/CMakeLists.txt": "8834917133d33fda6dcd145dd64a93ee38ee014d25fede2eff5575b996df5847",
-    "cpppj/tests/CMakeLists.txt": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+    "cpppj/tests/CMakeLists.txt": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c",
     "cpppj/src/client/RawObjectMenuOpen.h": "cb8124fe182ee1586128587ec4fa8a6fe152a1312550742aa21007c67b40b587",
     "cpppj/src/client/RawObjectMenuOpen.cpp": "a077dad61ac2c980fb578b642fd7b22b75f5e81fa936bb92ae9402eae61fca86",
-    "cpppj/src/client/RawCampaignSession.h": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
-    "cpppj/src/client/RawCampaignSession.cpp": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+    "cpppj/src/client/RawCampaignSession.h": "7cfca63bcb353cb161328764221f3ec62c3b4dec2ce6833e784601cfe2825a1c",
+    "cpppj/src/client/RawCampaignSession.cpp": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e",
     "cpppj/src/client/CampaignObjectMenuClient.cpp": "2e1d9e0aea14df5eb579b320744b8cbe3a88a567361b687ef9064e84fe395001",
     "tools/cpp_priest_construction_smoke.py": "93524c9e1fb58e7e589fc25c7507e105e750b96cb66ad7ddbf9a58aae2756c2c",
-    "cpppj/src/client/RawFactoryMenu.h": "09430420ae7ef1f8f37ee51863f66df6115aff138450b95442202ca50632b689",
-    "cpppj/src/client/RawFactoryMenu.cpp": "b00d3d21c4144ca9d8f25bcf167f8dc24052bf75c474cc83b9578c6f41b99347",
+    "cpppj/src/client/RawFactoryMenu.h": "3a859f0a2a2e78880162822a0b8c578f619b68fdb4fca7492fb0c568d938a2d4",
+    "cpppj/src/client/RawFactoryMenu.cpp": "3df51a0fe406a33c01507442bf1c2033982655a04fac73b96d0cadaad64f9d06",
     "cpppj/tests/FactoryMenuTests.cpp": "f0659f3708da587f52d774561895165925b65645fb91ad8ea3680151f5fc377d",
     "tools/decomp_factory_menu.py": "bd889d1fe373053c80fe804517858cf83102fbf36cbe724d989e4aa0c3e605cc",
     "cpppj/factory-menu.json": "3cec67a80cbf4d81fb325d1e4dd24dbd498aa3fe2cdf751accc8995d112c8525",
@@ -6546,6 +6546,44 @@
           "group": "/currentSources",
           "previous": "2b3e4c0e8515b9911d7e6cb918f9f585e1a425c195c3d03b94e623044c34eea7",
           "current": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09"
+        }
+      ]
+    },
+    {
+      "unit": "253",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "실제 ShowTechnology의 전체 카드/원본 공용 CRT 정렬·네 줄 배치를 현재 Session 기술/제외/생산과 같은 Gump·StyleText·SHP에 연결한다. Review 버튼/사제/F6은 같은 명령 큐다. 현재 핀만 갱신하고 과거 files/evidence/원문/기대값/실행은 보존한다. 제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "group": "/currentSources",
+          "previous": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+          "current": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "group": "/currentSources",
+          "previous": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
+          "current": "7cfca63bcb353cb161328764221f3ec62c3b4dec2ce6833e784601cfe2825a1c"
+        },
+        {
+          "path": "cpppj/src/client/RawFactoryMenu.cpp",
+          "group": "/currentSources",
+          "previous": "b00d3d21c4144ca9d8f25bcf167f8dc24052bf75c474cc83b9578c6f41b99347",
+          "current": "3df51a0fe406a33c01507442bf1c2033982655a04fac73b96d0cadaad64f9d06"
+        },
+        {
+          "path": "cpppj/src/client/RawFactoryMenu.h",
+          "group": "/currentSources",
+          "previous": "09430420ae7ef1f8f37ee51863f66df6115aff138450b95442202ca50632b689",
+          "current": "3a859f0a2a2e78880162822a0b8c578f619b68fdb4fca7492fb0c568d938a2d4"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/currentSources",
+          "previous": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+          "current": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
         }
       ]
     }

@@ -1,0 +1,18 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-20",
+  "inputs": 25,
+  "normalReturns": 25,
+  "instructions": 241740,
+  "scope": "실제492b60/492960/453f70/CRT정렬/ftol/475f20/475fb0/4c5340. TYPE/내용물/제외/번역/서식/GUI생성·부착/가상Push·Pop/위치·스레드는 명시 경계다. 원본 게임/OS/실제 장치 관측은 아니다.",
+  "gameExecuted": false,
+  "osExecuted": false,
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_knowledge_menu.py": "faee4c792a4a26b4de4be0e19ffaa230495ae19b7fa9215f2eabdf43c3044063",
+    "cpppj/tests/fixtures/knowledge-menu-x86.tsv": "2d277ffff7cd57dc967e562f6b3027d9604c0554e840ee255fb94d38fe71cb17"
+  }
+}

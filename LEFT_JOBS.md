@@ -1,5 +1,15 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-21 단위253 연결 완료: Review Knowledge의 실제 카드/공용 정렬/메뉴 트리
+
+- [x] 같은 goal을 이어 진행했다. 직전 턴은 Early 기술 허용 목록을 구현·기록·커밋한 진행 턴이다. 시작 HEAD `bf68f0d4`, 현재/마지막 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-20**로 일치한다. AGENTS와 양 인수인계를 다시 읽었고 새 디컴파일·원본/CD·AGENTS 변경은 없다. 다른 세션 DN/README 작업은 포함하지 않는다.
+- [x] 실제 `ShowTechnology020000a0→00492b60`의 전체 카드 필터·내용물 보유/마나0 예외·생산 포함 조회·네 머리/원소별 배치·마지막 공백/하이픈 줄 나눔·언어3/Excluded·popup 표식을 `RawKnowledgeMenu`로 옮겼다. Factory의 원본 flags/ASCII 비교와 CRT 피벗/동률 교환은 `KnowledgeSort`에 같은 본문으로 옮겨 공유한다. 시작 커밋의 기존 본문과 역대조했으며 기존 Factory 기대값은 바꾸지 않는다.
+- [x] 실제 Session의 현재 Player/flags4 내용물/Deck/건설 제외를 사용하고 같은 controlled 메뉴/Gump/StyleText/SHP/부착·폭/높이·Push/Pop에 연결했다. 화면은 현재 크기,아이콘 치수는 원본 PE의65×60이다. Review Knowledge 버튼·inline·사제 메뉴와 일반 미션 F6이 같은 명령 큐를 사용한다. PlayerKnown/메타맵/뗌 관문을 유지한다. 브리핑은 유지하고 카드를 위에 출력하며 마우스는 실제 Gump 입력으로 전달하고 ESC는 같은 지연 popup 삭제다. 열림 여부는 실제 카드 노드에서 읽는다.
+- [x] 제품 변경 전에 전체 지식 창/행/CRT정렬/폭·높이/표식을 **25고유 입력·25정상 반환·241740명령**으로 독립 관측했다. TYPE/내용물/제외·번역/서식·GUI 생성/부착/가상 Push·Pop/위치·스레드는 명시 경계다. 원본 게임/OS/실제 장치 관측은 아니다. 노드 필드·글자/명령·부착 순서·표식과 스택/보존 레지스터/x87를 보존했다. 최초 도구/fixture/JSON은 `extracted/knowledge-menu-20261021-first-capture/`에 제품 변경 전에 동결했다.
+- [x] 새 C++검사3개는 전체25행·공용 정렬/순서,실제 명령 parser/큐,실제 보호 Session→기술·커서 취소→공통 Gump/StyleText/SHP 픽셀·지연 삭제다. **컴파일만 했고 실행하지 않았다.** 최종 전체 Release **경고0·오류0·종료0**, 로그 `extracted/cpp-knowledge-menu-20261021-build4.log`다. 실제 게임/C++검사/CTest/전체 회귀는 사용자 지시대로 후속 통합 실제 플레이에 이월한다.
+- [x] 상세는 [작업 기록](docs/exe/cpp-knowledge-menu-20261021.md), `cpppj/knowledge-menu-native.json`·`knowledge-menu-session.json`, `tools/decomp_knowledge_menu.py --verify`·`tools/cpp_knowledge_menu_audit.py --verify`다. 최초 지식/기존 Factory 원문 감사와 새 연결/기존 기술 허용·Guide·미션 수명 정적 감사가 종료0이다. 현재 핀 **123보고서·303항목**의 전체 JSON 역변환은 시작 커밋과 같다. 과거 files/evidence/원문/기대값/실행·바이너리 기록을 보존하고 기존 RawTutorialLater의 CRLF/LF 역사 핀 차이는 새 통과로 세지 않는다. 인수인계 뒤 날짜/CP 규칙으로 로컬 커밋하며 push하지 않는다.
+- [ ] **다음:** 카드 `Help02000017` 상세 화면·정적 themeHelp 인자 소비자와 다른 팝업의 공용 마지막 표식·전체 키/중첩 모달 동작이다. 기존 Help를 임의 간략 화면으로 대체하지 않았다. 전체 Init의 이름 정규화/+b0/전역·비동기 State/원본 공장·가상 소멸,전략AI·지형/자연 포획/희생/대피도 남는다. 전체11미션 자연 완주·지식/도움말/F6/제한된 메뉴·재시작/중단·외관/음향 동일성과 이월 C++검사는 통합 실제 플레이에서 확인한다. 전체 goal은 **active/미완료**다.
+
 ## 2026-10-21 단위252 연결 완료: Early 기술 허용 목록과 공용 건설/생산 표
 
 - [x] 같은 goal을 이어 진행했다. 직전 턴은 실제 Guide 교체/다음 미션 큐를 구현·기록·커밋한 진행 턴이다. 시작 HEAD `2054e074`, 현재/마지막 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-20**로 일치한다. AGENTS와 양 인수인계를 다시 읽었고 새 디컴파일·원본/CD·AGENTS 변경은 없다. 다른 세션의 DN/README 작업은 포함하지 않는다.
@@ -10,7 +20,7 @@
 - [x] 상세는 [작업 기록](docs/exe/cpp-mission-technology-20261021.md), `cpppj/mission-technology-native.json`·`mission-technology-session.json`, `tools/decomp_mission_technology.py --verify`·`tools/cpp_mission_technology_audit.py --verify`다. 보호11개 목록/전체 SHA와 현재 공용 표 소비자도 별도 근거로 기록한다. 과거 files/evidence/원문/기대값/실행·바이너리 기록은 보존한다.
 - [x] 현재 핀 **103보고서·131항목**의 전체 JSON 역변환이 시작 커밋과 같다. 최초 원문/기술 허용 감사와 기존 Guide/미션 수명/공통 프레임 정적 감사가 종료0이다. 인수인계 뒤 날짜/CP 규칙으로 로컬 커밋하며 원격 push하지 않는다. 기존 RawTutorialLater의 CRLF/LF 역사 핀 차이는 바꾸거나 새 통과로 기록하지 않았다.
 - [x] **후속 분석 주의:** 원본 Init이 tutorialNumber 비제로에서005ca8f0을1로 쓰더라도 후속 State7의004b2df0이0으로 다시 초기화한다. 앞 쓰기만 보고 실제 세션 사제 HP를1/4로 고치면 안 된다. 이번 체력 코드 변경은 없다. Review Knowledge/사제 메뉴는 실제 `ShowTechnology020000a0→00492b60`이며 전체 기술 카드/원소별 배치·정렬·입력 연결은 아직 없다.
-- [ ] **다음:** Review Knowledge/ShowTechnology의 실제 기술 카드/배치/현재 팝업 상태,전체 Init의 이름 정규화/+b0/전역·비동기 State/원본 공장·가상 소멸,중첩 창/다른 키다. 전체11미션 자연 완주·제한된 실제 메뉴/다음 미션/F8/재시작/중단·전략AI·지형/포획/희생/Dude 자연 대피와 외관/음향 동일성,새 검사 실행을 통합 실제 플레이에서 확인한다. 전체 goal은 **active/미완료**다.
+- [x] **단위253에서 카드/배치/실제 연결 완료:** Review Knowledge/ShowTechnology의 공용 원본 정렬·실제 Session/메뉴 트리·명령 큐다. 상세 Help/themeHelp·전체 Init/State/소멸·중첩 창/다른 키와 전체11미션 통합 실제 플레이 검증은 남는다.
 
 ## 2026-10-21 단위251 연결 완료: Guide Begin/Fork/Restart/End와 다음 미션 큐
 

@@ -11,11 +11,11 @@
   "sources": {
     "cpppj/src/o/RawBattleBroadcast.h": "b434175a1b937a8c34d64ba016f72c73ab4635490d5b7e73f43986610b7240da",
     "cpppj/src/o/RawBattleBroadcast.cpp": "d59f41110db782f83b522aeb16348225dc04728d38cd766bd706fc57585c9e4c",
-    "cpppj/src/client/RawCampaignSession.cpp": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+    "cpppj/src/client/RawCampaignSession.cpp": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e",
     "cpppj/src/o/RawFlyerTarget.cpp": "b325cb60c22f98b6e30faa2d330866d1a38f3a403a04388a394baefd188eb772",
     "cpppj/src/o/RawFlyerFrame.cpp": "7752144c626f831c64bf0959ad8f9579d67bae1c87def2dcd0f1797b306f2049",
     "cpppj/tests/BattleBroadcastTests.cpp": "7bfa23c46a8f8810fc2b8522f14cff40060f23cbfb9a8752d8294cea4f407a43",
-    "cpppj/tests/CMakeLists.txt": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+    "cpppj/tests/CMakeLists.txt": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c",
     "cpppj/tests/fixtures/flyer-command-x86.tsv": "3eba7e893da3360048848fb3d402d94a66fa4067cddeeb34638131d1b15377b2",
     "cpppj/flyer-command-native.json": "e607b01cebea3009cdcd17cc9b54a38850b56bc32c7e72876b5bc03cc7b5085f",
     "tools/decomp_flyer_command.py": "014435bdcbe5715eb674df26b1f80621aaa10711a4a9bf622132e9fffdf14f84",
@@ -569,6 +569,26 @@
           "group": "/sources",
           "previous": "2b3e4c0e8515b9911d7e6cb918f9f585e1a425c195c3d03b94e623044c34eea7",
           "current": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09"
+        }
+      ]
+    },
+    {
+      "unit": "253",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "실제 ShowTechnology의 전체 카드/원본 공용 CRT 정렬·네 줄 배치를 현재 Session 기술/제외/생산과 같은 Gump·StyleText·SHP에 연결한다. Review 버튼/사제/F6은 같은 명령 큐다. 현재 핀만 갱신하고 과거 files/evidence/원문/기대값/실행은 보존한다. 제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "group": "/sources",
+          "previous": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+          "current": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+          "current": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
         }
       ]
     }

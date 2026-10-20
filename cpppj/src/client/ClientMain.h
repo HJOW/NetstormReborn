@@ -97,6 +97,8 @@ public:
     RawChatChannels& ChatChannels();
     // 같은 실제 100기록을 읽기 전용으로 빌린다. UI/검사는 별도 채널 사본을 만들지 않는다.
     std::span<const std::uint8_t> ChatRecords() const;
+    // 번역 표와 동일한 현재 원본 언어 번호를 지식 창의 언어3 설명 생략 분기에 제공한다.
+    int LanguageNumber() const { return languageNumber_; }
     // 검사 전용으로 이미 그려진 화면을 지정 파일에 저장한다.
     void Capture(const std::filesystem::path& path);
 

@@ -10,6 +10,8 @@ target_sources(netstorm PRIVATE
     GuideMissionTransitions.cpp GuideMissionTransitions.h
     # 실제 초기화의 기술 허용 목록을 건설/생산의 동일 금지 표에 적용한다.
     MissionTechnology.cpp MissionTechnology.h
+    # 전체 지식 창과 Factory가 같은 원본 행/CRT 정렬을 사용하고 실제 메뉴 카드를 작성한다.
+    KnowledgeSort.cpp KnowledgeSort.h RawKnowledgeMenu.cpp RawKnowledgeMenu.h
     # 실제 Client 수명의 원본 100기록 채팅 채널을 공유한다.
     RawChatChannels.cpp RawChatChannels.h
     DialogBodyLayout.cpp DialogBodyLayout.h

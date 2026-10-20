@@ -3,6 +3,8 @@
 #include "client/DrawSort.h"
 #include "client/GumpFormBinding.h"
 #include "client/FloatingSpGump.h"
+#include "client/RawKnowledgeMenu.h"
+#include "client/RawCampaignSession.h"
 #include <algorithm>
 #include <bit>
 #include <sstream>
@@ -41,6 +43,8 @@ struct RawMenuControls::Impl {
     ScrollingTextGumpWidgetState titleState; // 실제 제목 생성/입력 사건 전역이다.
     std::int8_t backgroundColor{35}; // 원본 기본 배경 식별 BYTE다.
     std::uint32_t popup{}; // 마지막 루트 메뉴 토큰이며 원본 등록표의 생존 여부로 검사한다.
+    std::vector<std::uint32_t> knowledge; // 같은 공통 트리에 실제 부착된 지식 카드 토큰이며 수명/열림은 노드에서 읽는다.
+    std::uint32_t popupCommand{};std::array<char,80> popupArgument{}; // 005ca938/940의 마지막 팝업 명령과 첫NUL 문자열이다.
     mutable std::array<std::uint32_t,4> lastInput{}; // 실제 파생 가상 입력의 마지막 토큰/사건/좌표를 진단 보고에만 보관한다.
     std::map<std::uint32_t,std::unique_ptr<MenuGumpNode>> menus; // 같은 기본 배경을 가진 실제 메뉴 노드다.
     std::map<std::uint32_t,std::unique_ptr<GumpDecorationNode>> decorations; // 실제 모서리 장식 노드다.
@@ -239,6 +243,32 @@ void RawMenuControls::OpenAttached(const std::function<std::uint32_t(const MenuG
 }
 // 원본의 sticky 팝업 삭제를 같은 수명 경로로 실행한다.
 void RawMenuControls::Close() { auto& s=*impl_;s.input->ClosePopups();s.common.lifetime.Cleanup();s.common.changed(); }
+// 실제 지식 조회 뒤 첫 controlled 생성 직전에만 기존 팝업을 정리한다. 카드별 생성은 같은 원본 처리기다.
+bool RawMenuControls::OpenKnowledge(RawCampaignSession& session,std::function<std::string(std::string_view)> translate,std::uint32_t language) {
+    if (!translate) throw std::invalid_argument("지식 창 실제 번역 경계 누락");auto& s=*impl_;if (!session.PlayerKnown() || session.Core().ownerMode.challenge) return false;
+    KnowledgeMenuState state;state.width=s.common.create.screenWidth;state.height=s.common.create.screenHeight;state.language=language;std::size_t created{};
+    KnowledgeMenuHooks hooks;hooks.translate=translate;hooks.description=[&](std::uint32_t type) { return translate(session.Core().types[type].description); };
+    hooks.begin=[&] { if (!created++) Close();return s.widgets->BeginVertical(0); };hooks.node=[&](std::uint32_t token)->MenuGumpNode& { const auto node=Find(s.menus,token);if (!node) throw std::logic_error("지식 카드 현재 노드 없음");return *node; };
+    hooks.title=[&](std::string_view text) { s.controls->AddTitle(text); };hooks.separator=[&] { s.controls->AddSeparator(); };
+    hooks.item=[&](std::string_view text,std::uint32_t command,KnowledgeParameter parameter,bool enabled) {
+        std::uint32_t value{};
+        if (std::holds_alternative<std::uint32_t>(parameter)) value=std::get<std::uint32_t>(parameter);
+        else { if (std::get<std::string>(parameter)!="themeHelp") throw std::logic_error("지식 창 정적 도움말 문자열 계약");value=0x61000001U; } // 클론 호스트의 정적 themeHelp 수명 토큰이다. 원본 주소를 역참조하지 않는다.
+        s.controls->AddText(text,command,value,true,enabled,false);
+    };
+    hooks.attach=[&](std::int32_t x,std::int32_t y) { s.menu->AttachCurrent(x,y,s.common.create.collection.root); };
+    hooks.push=[&](std::uint32_t token) { s.common.tree.Push(token); };hooks.pop=[&](std::uint32_t token) { const auto node=s.common.node(token);s.common.attach(token,node->x,node->y,0,0); };
+    hooks.width=[&](std::uint32_t token,float value) { s.menu->SetWidth(token,value); };hooks.height=[&](std::uint32_t token,float value) { s.menu->SetHeight(token,value); };
+    hooks.position=[&](std::uint32_t token) { return s.common.collection.Position(token); };hooks.mark=[&](std::uint32_t command) { s.popupCommand=command;s.popupArgument.fill(0); };
+    auto tokens=session.ShowKnowledge(state,std::move(hooks));if (s.menuState.index) throw std::logic_error("지식 창 작성 뒤 controlled 스택 잔존");
+    s.knowledge=std::move(tokens);s.popup=s.knowledge.empty() ? 0 : s.knowledge.front();s.common.changed();return !s.knowledge.empty();
+}
+// 지식 카드는 모두 같은 실제 루트의 팝업이며 다른 팝업이 닫은 뒤 stale 토큰은 열림으로 세지 않는다.
+bool RawMenuControls::KnowledgeOpen() const {
+    const auto& s=*impl_;
+    // 살아 있는 실제 카드 하나라도 표시/부착되어 있으면 같은 창이 열려 있다.
+    for (const auto token:s.knowledge) { const auto node=Find(s.menus,token);if (node && (node->flags&1) && !(node->flags&0x10000) && node->parent==s.common.create.collection.root) return true; }return false;
+}
 // 커서 Take 등의 실행 중 스택이 현재 메뉴를 참조할 수 있으므로 원본의 지연 삭제 시점을 보존한다.
 void RawMenuControls::RequestClosePopups() { auto& s=*impl_;s.input->ClosePopups();s.common.changed(); }
 // 파일 팔레트의 실제 기본색을 생성 전역과 Draw 전역에 함께 공급한다.

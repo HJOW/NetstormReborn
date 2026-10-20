@@ -1,6 +1,7 @@
 // 원본 Factory의 생산/지식 하위 메뉴와 기본 Damageable 메뉴를 같은 controlled 트리에 작성한다.
 #pragma once
 #include "client/RawObjectMenu.h"
+#include "client/KnowledgeSort.h"
 namespace netstorm::client {
 // 실제 명령·제외 TYPE 전역이다. 다른 종류의 생산 금지 목록과 합치지 않는다.
 struct FactoryMenuState {
@@ -38,7 +39,7 @@ public:
     int CurrentProduction(o::Sid factory) const; // 실제 생산 하위 메뉴를 작성하고 distinct 종류 기준 남은 슬롯을 반환한다.
     std::string Slots(std::int32_t count) const; // 454040의0번역/음수빈값/양수?아이콘을 반환한다.
 private:
-    struct Knowledge { std::uint32_t type{};bool available{},inProduction{};std::string mana,description; }; // 원본70바이트 행에서 실제 사용한 필드들이다.
+    using Knowledge=KnowledgeRecord; // 전체 지식 창과 같은 원본 행/정렬을 사용한다.
     void Available(o::Sid factory) const; // 현재 기술/테마로 후보를 만들고 같은 CRT 순서로 정렬한다.
     void Sort(std::span<Knowledge> records) const; // 원본4e6010/shortsort의 동률 교환 순서다.
     int Compare(const Knowledge& first,const Knowledge& second) const; // 453f70의 flags 우선순위와 ASCII stricmp다.

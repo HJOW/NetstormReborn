@@ -17,24 +17,24 @@
     "cpppj/src/client/RawButtonControls.h": "548d27ebba1a23f585763222ff428fd257456e79e47ae83ac38849712528ece1",
     "cpppj/src/client/RawCampaignCursor.cpp": "d1c12ed9e16c11771470abfae09d0a2bfccda51dc49be5b90c4a4c78604f961c",
     "cpppj/src/client/RawCampaignCursor.h": "0c4aa17d5acf5cd03fd9d651c33de2fedd115c622e9f75f1c469edb462c775ce",
-    "cpppj/src/client/RawCampaignSession.cpp": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
-    "cpppj/src/client/RawCampaignSession.h": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
+    "cpppj/src/client/RawCampaignSession.cpp": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e",
+    "cpppj/src/client/RawCampaignSession.h": "7cfca63bcb353cb161328764221f3ec62c3b4dec2ce6833e784601cfe2825a1c",
     "cpppj/src/client/RawCarrierMenu.cpp": "4a0fada9b8ac9d00eab37955189a8ac669d26f1d22559deae229a6ce3637dc1e",
     "cpppj/src/client/RawCarrierMenu.h": "e4ef0cccd8c956ccf6c167a7b08e0a9350f46206e08a9670dbaed6272d7749d8",
     "cpppj/src/client/RawCursorDrop.h": "61de4218af3ad691e3be7a2a56902e5e35c0f7cdc10ba52b858f626010f13e5b",
-    "cpppj/src/client/RawMenuControls.cpp": "7cf3686cabed1d61e6f61b46a2c6d9f153b2a8ce4c5faee6cac3a01683555bb4",
-    "cpppj/src/client/RawMenuControls.h": "70cf632cf282ea15c98c45ca1b8fba8b720dafb07eebc2a022723dfc35e3b1fa",
+    "cpppj/src/client/RawMenuControls.cpp": "51990bde376f68670b1c549b0bb1135fbc966c340e7131ee9e5c1e08a4da1c93",
+    "cpppj/src/client/RawMenuControls.h": "84c7e0dc59650ac986b3a4e9c9a60083443c6da500081d1567e2e8986692412e",
     "cpppj/src/client/RawObjectMenu.cpp": "f64429574e0fd57e325cd99b47e3c46197979b5047d879b1a9693fda7d58a1ef",
     "cpppj/src/client/RawObjectMenu.h": "47fa941dc9fe3becb679f297ea29c8f7cc662aa44d1e6f91c5643739aa905e9a",
     "cpppj/src/client/RawUserHighlight.cpp": "3ac1867b7da1f553b0fb46103207df3886f31a332e1332456b2590b089438767",
     "cpppj/src/client/RawUserHighlight.h": "a19046a0a3061565a82b7463307e4886c3b9f6db0151d02ada619d5a32c3f90a",
-    "cpppj/src/client/UberGump.cpp": "b8a5fedc6c83ca04e5f8687f6a73a84e769686691ca180789123788360b5a915",
+    "cpppj/src/client/UberGump.cpp": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9",
     "cpppj/src/client/UserInput.cpp": "fd1bee42a48c4a33098114e813a7909d449791671fb0e313b76efc55216c20bd",
     "cpppj/src/o/SquidFactory.h": "439126b14875597ae876ab82d1699d414fa15fdf76ec9ac83f6794d32595c549",
     "cpppj/src/o/SquidReward.h": "59cf154a0aa681fbce7bdf445728afc582409bd9af9b24e5b135e435e92aa362",
-    "cpppj/tests/CMakeLists.txt": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+    "cpppj/tests/CMakeLists.txt": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c",
     "cpppj/tests/CampaignCursorClientEffectsTests.cpp": "f04679442eea66764f77ab814314c9edd1790dca1f61f39e95eb29804b78d92b",
-    "cpppj/tests/CampaignObjectMenuTests.cpp": "fea9198ea2150c42bb523f7ac9298c2f819acd1fc9b9887b53020c206ad62563",
+    "cpppj/tests/CampaignObjectMenuTests.cpp": "c9f734313aefd637928b66cc20cdb5bfffb0bb1d6144bd814b27cd3452e699b6",
     "cpppj/tests/CampaignSessionTests.cpp": "6a6d54fd15eb24c0609492756880c774120f855138441820a536ea5bd73ee4f0",
     "cpppj/tests/RawButtonCursorBoundaryTests.cpp": "1f24a7464493536890611554b51d41bdeb477fa23190a909933ebd0ef1873684",
     "cpppj/tests/UserHighlightTests.cpp": "a23f97791f61415d333d3d99b33ec56e6ec67423a021da43473934fadd3a57ab",
@@ -3049,6 +3049,56 @@
           "group": "/currentSources",
           "previous": "2b3e4c0e8515b9911d7e6cb918f9f585e1a425c195c3d03b94e623044c34eea7",
           "current": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09"
+        }
+      ]
+    },
+    {
+      "unit": "253",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "실제 ShowTechnology의 전체 카드/원본 공용 CRT 정렬·네 줄 배치를 현재 Session 기술/제외/생산과 같은 Gump·StyleText·SHP에 연결한다. Review 버튼/사제/F6은 같은 명령 큐다. 현재 핀만 갱신하고 과거 files/evidence/원문/기대값/실행은 보존한다. 제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "group": "/currentSources",
+          "previous": "b8a5fedc6c83ca04e5f8687f6a73a84e769686691ca180789123788360b5a915",
+          "current": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "group": "/currentSources",
+          "previous": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+          "current": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "group": "/currentSources",
+          "previous": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
+          "current": "7cfca63bcb353cb161328764221f3ec62c3b4dec2ce6833e784601cfe2825a1c"
+        },
+        {
+          "path": "cpppj/src/client/RawMenuControls.cpp",
+          "group": "/currentSources",
+          "previous": "7cf3686cabed1d61e6f61b46a2c6d9f153b2a8ce4c5faee6cac3a01683555bb4",
+          "current": "51990bde376f68670b1c549b0bb1135fbc966c340e7131ee9e5c1e08a4da1c93"
+        },
+        {
+          "path": "cpppj/src/client/RawMenuControls.h",
+          "group": "/currentSources",
+          "previous": "70cf632cf282ea15c98c45ca1b8fba8b720dafb07eebc2a022723dfc35e3b1fa",
+          "current": "84c7e0dc59650ac986b3a4e9c9a60083443c6da500081d1567e2e8986692412e"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/currentSources",
+          "previous": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+          "current": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+        },
+        {
+          "path": "cpppj/tests/CampaignObjectMenuTests.cpp",
+          "group": "/currentSources",
+          "previous": "fea9198ea2150c42bb523f7ac9298c2f819acd1fc9b9887b53020c206ad62563",
+          "current": "c9f734313aefd637928b66cc20cdb5bfffb0bb1d6144bd814b27cd3452e699b6"
         }
       ]
     }

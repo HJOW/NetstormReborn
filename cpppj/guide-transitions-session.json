@@ -7,14 +7,14 @@
   "lastDecompileDate": "2026-10-20",
   "newDecompile": false,
   "sources": {
-    "cpppj/src/client/UberGump.cpp": "b8a5fedc6c83ca04e5f8687f6a73a84e769686691ca180789123788360b5a915",
+    "cpppj/src/client/UberGump.cpp": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9",
     "cpppj/src/client/UberGump.h": "70b2e2e7479669d3ddb47c054d95c87440f266441fea44a2753c39278c12eb65",
     "cpppj/src/client/MissionGuideInput.cpp": "9181acf22bb07785cb9c6eb89708ff8532af05de62f1236cb616fbff4d1c3e8e",
     "cpppj/src/client/MissionGuideInput.h": "6577a5aba688700ad8779001e97b4096716ed84a1af0f760be89b950156b50c8",
     "cpppj/src/client/ScriptCommand.cpp": "87908a7252875cfcd2b7a96313c29bd8ea7ae91ef95e53f793c29e8bf0ad880b",
     "cpppj/src/client/ScriptCommand.h": "45a44be3ebefaf70f6cc8cdcdfee35806fbb611e4d84d504ea9d215825c039d0",
-    "cpppj/src/client/CMakeLists.txt": "585ae86b762ee3ecf96c39dfcf38202cfe100b455fe8bfb39bd3007f10d21260",
-    "cpppj/tests/CMakeLists.txt": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+    "cpppj/src/client/CMakeLists.txt": "f4331fcea75cb14f5703124aa71a1c2db5f1d196b134fe909efd823df08225b0",
+    "cpppj/tests/CMakeLists.txt": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c",
     "tools/cpp_mission_common_audit.py": "69bbcb39e8e8178e4b04b32b2c4ed68b6618ad36070c94d1f268e0bf088e24c4",
     "tools/cpp_mission_abort_audit.py": "a978241832853509334e5f865ec069996595b7cf6d552bc354090e4ab7fc4d3a",
     "tools/cpp_mission_lifecycle_audit.py": "e8d2f3b9764c396916984596702689cd6a4cdc973b72a279fdc576a6efbedb71",
@@ -1540,6 +1540,32 @@
           "group": "/sources",
           "previous": "2b3e4c0e8515b9911d7e6cb918f9f585e1a425c195c3d03b94e623044c34eea7",
           "current": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09"
+        }
+      ]
+    },
+    {
+      "unit": "253",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "실제 ShowTechnology의 전체 카드/원본 공용 CRT 정렬·네 줄 배치를 현재 Session 기술/제외/생산과 같은 Gump·StyleText·SHP에 연결한다. Review 버튼/사제/F6은 같은 명령 큐다. 현재 핀만 갱신하고 과거 files/evidence/원문/기대값/실행은 보존한다. 제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "group": "/sources",
+          "previous": "b8a5fedc6c83ca04e5f8687f6a73a84e769686691ca180789123788360b5a915",
+          "current": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9"
+        },
+        {
+          "path": "cpppj/src/client/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "585ae86b762ee3ecf96c39dfcf38202cfe100b455fe8bfb39bd3007f10d21260",
+          "current": "f4331fcea75cb14f5703124aa71a1c2db5f1d196b134fe909efd823df08225b0"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+          "current": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
         }
       ]
     }

@@ -1,0 +1,3112 @@
+{
+  "unit": "253",
+  "baseline": "bf68f0d4",
+  "date": "2026-10-21",
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "lastDecompileDate": "2026-10-20",
+  "newDecompile": false,
+  "sources": {
+    "cpppj/src/client/UberGump.cpp": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9",
+    "cpppj/src/client/ClientMain.h": "6146814839326c189d793d988960cab3be2b01b2ebd22119b763dfd00ec6c6a0",
+    "cpppj/src/client/RawCampaignSession.cpp": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e",
+    "cpppj/src/client/RawCampaignSession.h": "7cfca63bcb353cb161328764221f3ec62c3b4dec2ce6833e784601cfe2825a1c",
+    "cpppj/src/client/RawMenuControls.cpp": "51990bde376f68670b1c549b0bb1135fbc966c340e7131ee9e5c1e08a4da1c93",
+    "cpppj/src/client/RawMenuControls.h": "84c7e0dc59650ac986b3a4e9c9a60083443c6da500081d1567e2e8986692412e",
+    "cpppj/src/client/RawFactoryMenu.cpp": "3df51a0fe406a33c01507442bf1c2033982655a04fac73b96d0cadaad64f9d06",
+    "cpppj/src/client/RawFactoryMenu.h": "3a859f0a2a2e78880162822a0b8c578f619b68fdb4fca7492fb0c568d938a2d4",
+    "cpppj/src/client/CMakeLists.txt": "f4331fcea75cb14f5703124aa71a1c2db5f1d196b134fe909efd823df08225b0",
+    "cpppj/tests/CMakeLists.txt": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c",
+    "cpppj/tests/CampaignObjectMenuTests.cpp": "c9f734313aefd637928b66cc20cdb5bfffb0bb1d6144bd814b27cd3452e699b6",
+    "tools/decomp_knowledge_menu.py": "faee4c792a4a26b4de4be0e19ffaa230495ae19b7fa9215f2eabdf43c3044063",
+    "tools/cpp_knowledge_menu_audit.py": "28becd56dfda3c28d56b6317038eacd1c14e7d6fb8bba50f7c68e1fdfba5ac45",
+    "cpppj/src/client/KnowledgeSort.cpp": "011f0792c508e32826e7f458f8e50a8bbf3cf1420fbcbc9371ce3f9094a36c89",
+    "cpppj/src/client/KnowledgeSort.h": "aa69b7eda51906445419974e7062af743df145f4f3012a10d9ae5171171c272a",
+    "cpppj/src/client/RawKnowledgeMenu.cpp": "de0c9d04f4337d7acddee1cf04ef2cc742f824476d5532a79b9b6a46d1b6c3bd",
+    "cpppj/src/client/RawKnowledgeMenu.h": "9d8f41c623751db6fc791c10eb2bed1f50f5f05bd8e86c47a3d76fa4c79aaf47",
+    "cpppj/tests/KnowledgeMenuTests.cpp": "86475bf2fdc4eb0d23cfbc1c753a01dd47595bd73bea03ad23a5cbf8a1260f6a"
+  },
+  "evidence": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "cpppj/knowledge-menu-native.json": "71cc628d80d6f1d32a7cd826370252200a238355ab14e8b6332376b7e41c2480",
+    "cpppj/tests/fixtures/knowledge-menu-x86.tsv": "2d277ffff7cd57dc967e562f6b3027d9604c0554e840ee255fb94d38fe71cb17",
+    "cpppj/tests/fixtures/factory-menu-x86.tsv": "e69d2c8bc2ed31511f45591a2ae428db4265efb0c195b59b017341b397310899",
+    "cpppj/tests/fixtures/script-command-x86.tsv": "34ddbcb593f7f38ffd206aae777438697c7c194f5b1215a2a488f0ff7f878d4d",
+    "cpppj/tests/fixtures/mission-technology-x86.tsv": "19c5c321acdac977b365eb61d928ba7616387f51f92c3ac4b8add7b18298ee00"
+  },
+  "sharedSortRelocation": true,
+  "build": {
+    "returnCode": 0,
+    "log": "extracted/cpp-knowledge-menu-20261021-build4.log",
+    "logSha256": "be8fd99b6697e0e1fd3ffa2a221a2e22e0fdb618d4b60cef4613cc3635251461",
+    "warnings": 0,
+    "errors": 0
+  },
+  "binaries": {
+    "cpppj/build/lib/Release/netstorm.lib": "814834687cf49c2af09cc1263ea58896f006fd39bc5a8f5fe5f76f601e974428",
+    "cpppj/build/bin/Release/NetstormCpp.exe": "55d1e884093b61563b8ee6c15555ba1d4bb6dc22d574bf33a12e616ff61c03c8",
+    "cpppj/build/bin/Release/netstorm_tests.exe": "8e6e0c88e159bde5525f313b074edfb6daad2e8e90131c12970771adb71473f5"
+  },
+  "newTests": [
+    "KnowledgeMenu_Native25",
+    "KnowledgeMenu_ActualScriptCommandQueue",
+    "CampaignKnowledge_ActualSessionAndMenuTree"
+  ],
+  "newTestsCompiled": true,
+  "runtimeTestsDeferred": true,
+  "testsExecuted": false,
+  "gameExecuted": false,
+  "goalComplete": false,
+  "sourcePinReportCount": 123,
+  "sourcePinChanges": [
+    {
+      "report": "cpppj/board-approach.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/board-approach.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/board-approach.json",
+      "pointer": [
+        "sha256",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/board-approach.json",
+      "pointer": [
+        "sha256",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/bomb-blast-cpp.json",
+      "pointer": [
+        "sources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/bomb-effect-cpp.json",
+      "pointer": [
+        "sources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/bomb-regular-cpp.json",
+      "pointer": [
+        "sources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/bomb-strike-cpp.json",
+      "pointer": [
+        "sources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/bomb-targets-cpp.json",
+      "pointer": [
+        "sources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/campaign-balloon-path.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/campaign-balloon-path.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/campaign-bridge-collapse.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/campaign-bridge-collapse.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/campaign-burning.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/campaign-burning.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/campaign-carrier-choice.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/campaign-carrier-choice.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.h"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.h",
+      "old": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
+      "new": "7cfca63bcb353cb161328764221f3ec62c3b4dec2ce6833e784601cfe2825a1c"
+    },
+    {
+      "report": "cpppj/campaign-carrier-choice.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/campaign-carrier-escape.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/campaign-carrier-escape.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.h"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.h",
+      "old": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
+      "new": "7cfca63bcb353cb161328764221f3ec62c3b4dec2ce6833e784601cfe2825a1c"
+    },
+    {
+      "report": "cpppj/campaign-carrier-escape.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/campaign-carrier-fall-start.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/campaign-carrier-fall-start.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.h"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.h",
+      "old": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
+      "new": "7cfca63bcb353cb161328764221f3ec62c3b4dec2ce6833e784601cfe2825a1c"
+    },
+    {
+      "report": "cpppj/campaign-carrier-fall-start.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/campaign-carrier-fall-start.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CampaignObjectMenuTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp",
+      "old": "fea9198ea2150c42bb523f7ac9298c2f819acd1fc9b9887b53020c206ad62563",
+      "new": "c9f734313aefd637928b66cc20cdb5bfffb0bb1d6144bd814b27cd3452e699b6"
+    },
+    {
+      "report": "cpppj/campaign-carrier-falling.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/campaign-carrier-falling.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/campaign-carrier-falling.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CampaignObjectMenuTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp",
+      "old": "fea9198ea2150c42bb523f7ac9298c2f819acd1fc9b9887b53020c206ad62563",
+      "new": "c9f734313aefd637928b66cc20cdb5bfffb0bb1d6144bd814b27cd3452e699b6"
+    },
+    {
+      "report": "cpppj/campaign-carrier-input.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "source": "cpppj/src/client/UberGump.cpp",
+      "old": "b8a5fedc6c83ca04e5f8687f6a73a84e769686691ca180789123788360b5a915",
+      "new": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9"
+    },
+    {
+      "report": "cpppj/campaign-carrier-input.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/campaign-carrier-input.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.h"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.h",
+      "old": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
+      "new": "7cfca63bcb353cb161328764221f3ec62c3b4dec2ce6833e784601cfe2825a1c"
+    },
+    {
+      "report": "cpppj/campaign-carrier-input.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/campaign-carrier-mining.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/campaign-carrier-mining.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.h"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.h",
+      "old": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
+      "new": "7cfca63bcb353cb161328764221f3ec62c3b4dec2ce6833e784601cfe2825a1c"
+    },
+    {
+      "report": "cpppj/campaign-carrier-mining.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/campaign-carrier-move.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/campaign-carrier-move.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.h"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.h",
+      "old": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
+      "new": "7cfca63bcb353cb161328764221f3ec62c3b4dec2ce6833e784601cfe2825a1c"
+    },
+    {
+      "report": "cpppj/campaign-carrier-move.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/campaign-carrier-pickup.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/campaign-carrier-pickup.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.h"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.h",
+      "old": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
+      "new": "7cfca63bcb353cb161328764221f3ec62c3b4dec2ce6833e784601cfe2825a1c"
+    },
+    {
+      "report": "cpppj/campaign-carrier-pickup.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/campaign-carrier-preview-session.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/campaign-carrier-preview-session.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.h"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.h",
+      "old": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
+      "new": "7cfca63bcb353cb161328764221f3ec62c3b4dec2ce6833e784601cfe2825a1c"
+    },
+    {
+      "report": "cpppj/campaign-carrier-preview-session.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/campaign-carrier-preview-session.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CampaignObjectMenuTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp",
+      "old": "fea9198ea2150c42bb523f7ac9298c2f819acd1fc9b9887b53020c206ad62563",
+      "new": "c9f734313aefd637928b66cc20cdb5bfffb0bb1d6144bd814b27cd3452e699b6"
+    },
+    {
+      "report": "cpppj/campaign-carrier-regular.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/campaign-carrier-steal.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/campaign-carrier-steal.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.h"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.h",
+      "old": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
+      "new": "7cfca63bcb353cb161328764221f3ec62c3b4dec2ce6833e784601cfe2825a1c"
+    },
+    {
+      "report": "cpppj/campaign-carrier-steal.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/campaign-carrier-target.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/campaign-carrier-target.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.h"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.h",
+      "old": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
+      "new": "7cfca63bcb353cb161328764221f3ec62c3b4dec2ce6833e784601cfe2825a1c"
+    },
+    {
+      "report": "cpppj/campaign-carrier-target.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/campaign-carrier-target.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CampaignObjectMenuTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp",
+      "old": "fea9198ea2150c42bb523f7ac9298c2f819acd1fc9b9887b53020c206ad62563",
+      "new": "c9f734313aefd637928b66cc20cdb5bfffb0bb1d6144bd814b27cd3452e699b6"
+    },
+    {
+      "report": "cpppj/campaign-carrier-transfer.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/campaign-carrier-transfer.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.h"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.h",
+      "old": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
+      "new": "7cfca63bcb353cb161328764221f3ec62c3b4dec2ce6833e784601cfe2825a1c"
+    },
+    {
+      "report": "cpppj/campaign-carrier-transfer.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/campaign-carrier-transfer.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CampaignObjectMenuTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp",
+      "old": "fea9198ea2150c42bb523f7ac9298c2f819acd1fc9b9887b53020c206ad62563",
+      "new": "c9f734313aefd637928b66cc20cdb5bfffb0bb1d6144bd814b27cd3452e699b6"
+    },
+    {
+      "report": "cpppj/campaign-content-preview-process.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/campaign-cursor-actions.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "source": "cpppj/src/client/UberGump.cpp",
+      "old": "b8a5fedc6c83ca04e5f8687f6a73a84e769686691ca180789123788360b5a915",
+      "new": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9"
+    },
+    {
+      "report": "cpppj/campaign-cursor-actions.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/campaign-cursor-actions.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/campaign-cursor-client.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "source": "cpppj/src/client/UberGump.cpp",
+      "old": "b8a5fedc6c83ca04e5f8687f6a73a84e769686691ca180789123788360b5a915",
+      "new": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9"
+    },
+    {
+      "report": "cpppj/campaign-cursor-client.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/campaign-cursor-client.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.h"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.h",
+      "old": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
+      "new": "7cfca63bcb353cb161328764221f3ec62c3b4dec2ce6833e784601cfe2825a1c"
+    },
+    {
+      "report": "cpppj/campaign-cursor-client.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawMenuControls.cpp"
+      ],
+      "source": "cpppj/src/client/RawMenuControls.cpp",
+      "old": "7cf3686cabed1d61e6f61b46a2c6d9f153b2a8ce4c5faee6cac3a01683555bb4",
+      "new": "51990bde376f68670b1c549b0bb1135fbc966c340e7131ee9e5c1e08a4da1c93"
+    },
+    {
+      "report": "cpppj/campaign-cursor-client.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawMenuControls.h"
+      ],
+      "source": "cpppj/src/client/RawMenuControls.h",
+      "old": "70cf632cf282ea15c98c45ca1b8fba8b720dafb07eebc2a022723dfc35e3b1fa",
+      "new": "84c7e0dc59650ac986b3a4e9c9a60083443c6da500081d1567e2e8986692412e"
+    },
+    {
+      "report": "cpppj/campaign-cursor-client.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/campaign-cursor-client.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CampaignObjectMenuTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp",
+      "old": "fea9198ea2150c42bb523f7ac9298c2f819acd1fc9b9887b53020c206ad62563",
+      "new": "c9f734313aefd637928b66cc20cdb5bfffb0bb1d6144bd814b27cd3452e699b6"
+    },
+    {
+      "report": "cpppj/campaign-cursor-display.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "source": "cpppj/src/client/UberGump.cpp",
+      "old": "b8a5fedc6c83ca04e5f8687f6a73a84e769686691ca180789123788360b5a915",
+      "new": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9"
+    },
+    {
+      "report": "cpppj/campaign-cursor-display.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/campaign-cursor-display.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/campaign-cursor-session.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/campaign-cursor-session.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.h"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.h",
+      "old": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
+      "new": "7cfca63bcb353cb161328764221f3ec62c3b4dec2ce6833e784601cfe2825a1c"
+    },
+    {
+      "report": "cpppj/campaign-dais-delivery.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/campaign-dais-runtime.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/campaign-factory-display.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/campaign-factory-menu.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/campaign-factory-menu.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.h"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.h",
+      "old": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
+      "new": "7cfca63bcb353cb161328764221f3ec62c3b4dec2ce6833e784601cfe2825a1c"
+    },
+    {
+      "report": "cpppj/campaign-factory-menu.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawFactoryMenu.cpp"
+      ],
+      "source": "cpppj/src/client/RawFactoryMenu.cpp",
+      "old": "b00d3d21c4144ca9d8f25bcf167f8dc24052bf75c474cc83b9578c6f41b99347",
+      "new": "3df51a0fe406a33c01507442bf1c2033982655a04fac73b96d0cadaad64f9d06"
+    },
+    {
+      "report": "cpppj/campaign-factory-menu.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawFactoryMenu.h"
+      ],
+      "source": "cpppj/src/client/RawFactoryMenu.h",
+      "old": "09430420ae7ef1f8f37ee51863f66df6115aff138450b95442202ca50632b689",
+      "new": "3a859f0a2a2e78880162822a0b8c578f619b68fdb4fca7492fb0c568d938a2d4"
+    },
+    {
+      "report": "cpppj/campaign-factory-menu.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/campaign-factory-research.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/campaign-flare-research.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "source": "cpppj/src/client/UberGump.cpp",
+      "old": "b8a5fedc6c83ca04e5f8687f6a73a84e769686691ca180789123788360b5a915",
+      "new": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9"
+    },
+    {
+      "report": "cpppj/campaign-flare-research.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/campaign-flare-research.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.h"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.h",
+      "old": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
+      "new": "7cfca63bcb353cb161328764221f3ec62c3b4dec2ce6833e784601cfe2825a1c"
+    },
+    {
+      "report": "cpppj/campaign-flare-research.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/campaign-floating-sp-client.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "source": "cpppj/src/client/UberGump.cpp",
+      "old": "b8a5fedc6c83ca04e5f8687f6a73a84e769686691ca180789123788360b5a915",
+      "new": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9"
+    },
+    {
+      "report": "cpppj/campaign-floating-sp-client.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawMenuControls.cpp"
+      ],
+      "source": "cpppj/src/client/RawMenuControls.cpp",
+      "old": "7cf3686cabed1d61e6f61b46a2c6d9f153b2a8ce4c5faee6cac3a01683555bb4",
+      "new": "51990bde376f68670b1c549b0bb1135fbc966c340e7131ee9e5c1e08a4da1c93"
+    },
+    {
+      "report": "cpppj/campaign-floating-sp-client.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawMenuControls.h"
+      ],
+      "source": "cpppj/src/client/RawMenuControls.h",
+      "old": "70cf632cf282ea15c98c45ca1b8fba8b720dafb07eebc2a022723dfc35e3b1fa",
+      "new": "84c7e0dc59650ac986b3a4e9c9a60083443c6da500081d1567e2e8986692412e"
+    },
+    {
+      "report": "cpppj/campaign-floating-sp-client.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/campaign-forward-battle.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "source": "cpppj/src/client/UberGump.cpp",
+      "old": "b8a5fedc6c83ca04e5f8687f6a73a84e769686691ca180789123788360b5a915",
+      "new": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9"
+    },
+    {
+      "report": "cpppj/campaign-forward-battle.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/campaign-forward-battle.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.h"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.h",
+      "old": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
+      "new": "7cfca63bcb353cb161328764221f3ec62c3b4dec2ce6833e784601cfe2825a1c"
+    },
+    {
+      "report": "cpppj/campaign-forward-battle.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/campaign-forward-window.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/campaign-gem-reward.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/campaign-gem-reward.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.h"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.h",
+      "old": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
+      "new": "7cfca63bcb353cb161328764221f3ec62c3b4dec2ce6833e784601cfe2825a1c"
+    },
+    {
+      "report": "cpppj/campaign-gem-reward.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/campaign-generator-shrapnel.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/campaign-generator-shrapnel.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/campaign-inventory-about.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "source": "cpppj/src/client/UberGump.cpp",
+      "old": "b8a5fedc6c83ca04e5f8687f6a73a84e769686691ca180789123788360b5a915",
+      "new": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9"
+    },
+    {
+      "report": "cpppj/campaign-inventory-about.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/campaign-inventory-about.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.h"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.h",
+      "old": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
+      "new": "7cfca63bcb353cb161328764221f3ec62c3b4dec2ce6833e784601cfe2825a1c"
+    },
+    {
+      "report": "cpppj/campaign-inventory-about.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawMenuControls.cpp"
+      ],
+      "source": "cpppj/src/client/RawMenuControls.cpp",
+      "old": "7cf3686cabed1d61e6f61b46a2c6d9f153b2a8ce4c5faee6cac3a01683555bb4",
+      "new": "51990bde376f68670b1c549b0bb1135fbc966c340e7131ee9e5c1e08a4da1c93"
+    },
+    {
+      "report": "cpppj/campaign-inventory-about.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/campaign-inventory-grid.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/campaign-inventory-image.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/campaign-inventory-item.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/campaign-lightning-screen.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/campaign-lightning-screen.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/campaign-local-login.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "source": "cpppj/src/client/UberGump.cpp",
+      "old": "b8a5fedc6c83ca04e5f8687f6a73a84e769686691ca180789123788360b5a915",
+      "new": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9"
+    },
+    {
+      "report": "cpppj/campaign-local-login.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/campaign-local-login.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.h"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.h",
+      "old": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
+      "new": "7cfca63bcb353cb161328764221f3ec62c3b4dec2ce6833e784601cfe2825a1c"
+    },
+    {
+      "report": "cpppj/campaign-local-login.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/campaign-mission-start-client.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "source": "cpppj/src/client/UberGump.cpp",
+      "old": "b8a5fedc6c83ca04e5f8687f6a73a84e769686691ca180789123788360b5a915",
+      "new": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9"
+    },
+    {
+      "report": "cpppj/campaign-mission-start-client.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/campaign-mission-start-client.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.h"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.h",
+      "old": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
+      "new": "7cfca63bcb353cb161328764221f3ec62c3b4dec2ce6833e784601cfe2825a1c"
+    },
+    {
+      "report": "cpppj/campaign-mission-start-client.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/campaign-nugget-regular.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/campaign-nugget-regular.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/campaign-nugget-regular.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CampaignObjectMenuTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp",
+      "old": "fea9198ea2150c42bb523f7ac9298c2f819acd1fc9b9887b53020c206ad62563",
+      "new": "c9f734313aefd637928b66cc20cdb5bfffb0bb1d6144bd814b27cd3452e699b6"
+    },
+    {
+      "report": "cpppj/campaign-nugget-replenish.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/campaign-nugget-replenish.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/campaign-object-menu-client.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "source": "cpppj/src/client/UberGump.cpp",
+      "old": "b8a5fedc6c83ca04e5f8687f6a73a84e769686691ca180789123788360b5a915",
+      "new": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9"
+    },
+    {
+      "report": "cpppj/campaign-object-menu-client.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/campaign-object-menu-client.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.h"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.h",
+      "old": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
+      "new": "7cfca63bcb353cb161328764221f3ec62c3b4dec2ce6833e784601cfe2825a1c"
+    },
+    {
+      "report": "cpppj/campaign-object-menu-client.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawMenuControls.cpp"
+      ],
+      "source": "cpppj/src/client/RawMenuControls.cpp",
+      "old": "7cf3686cabed1d61e6f61b46a2c6d9f153b2a8ce4c5faee6cac3a01683555bb4",
+      "new": "51990bde376f68670b1c549b0bb1135fbc966c340e7131ee9e5c1e08a4da1c93"
+    },
+    {
+      "report": "cpppj/campaign-object-menu-client.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawMenuControls.h"
+      ],
+      "source": "cpppj/src/client/RawMenuControls.h",
+      "old": "70cf632cf282ea15c98c45ca1b8fba8b720dafb07eebc2a022723dfc35e3b1fa",
+      "new": "84c7e0dc59650ac986b3a4e9c9a60083443c6da500081d1567e2e8986692412e"
+    },
+    {
+      "report": "cpppj/campaign-object-menu-forms.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "source": "cpppj/src/client/UberGump.cpp",
+      "old": "b8a5fedc6c83ca04e5f8687f6a73a84e769686691ca180789123788360b5a915",
+      "new": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9"
+    },
+    {
+      "report": "cpppj/campaign-object-menu-forms.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/campaign-object-menu-forms.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.h"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.h",
+      "old": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
+      "new": "7cfca63bcb353cb161328764221f3ec62c3b4dec2ce6833e784601cfe2825a1c"
+    },
+    {
+      "report": "cpppj/campaign-object-menu-forms.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawMenuControls.cpp"
+      ],
+      "source": "cpppj/src/client/RawMenuControls.cpp",
+      "old": "7cf3686cabed1d61e6f61b46a2c6d9f153b2a8ce4c5faee6cac3a01683555bb4",
+      "new": "51990bde376f68670b1c549b0bb1135fbc966c340e7131ee9e5c1e08a4da1c93"
+    },
+    {
+      "report": "cpppj/campaign-object-menu-forms.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawMenuControls.h"
+      ],
+      "source": "cpppj/src/client/RawMenuControls.h",
+      "old": "70cf632cf282ea15c98c45ca1b8fba8b720dafb07eebc2a022723dfc35e3b1fa",
+      "new": "84c7e0dc59650ac986b3a4e9c9a60083443c6da500081d1567e2e8986692412e"
+    },
+    {
+      "report": "cpppj/campaign-object-menu-forms.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CampaignObjectMenuTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp",
+      "old": "fea9198ea2150c42bb523f7ac9298c2f819acd1fc9b9887b53020c206ad62563",
+      "new": "c9f734313aefd637928b66cc20cdb5bfffb0bb1d6144bd814b27cd3452e699b6"
+    },
+    {
+      "report": "cpppj/campaign-object-menu-info.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/campaign-object-menu-info.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.h"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.h",
+      "old": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
+      "new": "7cfca63bcb353cb161328764221f3ec62c3b4dec2ce6833e784601cfe2825a1c"
+    },
+    {
+      "report": "cpppj/campaign-object-menu-info.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/campaign-object-menu-info.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CampaignObjectMenuTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp",
+      "old": "fea9198ea2150c42bb523f7ac9298c2f819acd1fc9b9887b53020c206ad62563",
+      "new": "c9f734313aefd637928b66cc20cdb5bfffb0bb1d6144bd814b27cd3452e699b6"
+    },
+    {
+      "report": "cpppj/campaign-object-menu-open.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/campaign-object-menu-open.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.h"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.h",
+      "old": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
+      "new": "7cfca63bcb353cb161328764221f3ec62c3b4dec2ce6833e784601cfe2825a1c"
+    },
+    {
+      "report": "cpppj/campaign-object-menu-open.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/campaign-object-menu-open.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CampaignObjectMenuTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp",
+      "old": "fea9198ea2150c42bb523f7ac9298c2f819acd1fc9b9887b53020c206ad62563",
+      "new": "c9f734313aefd637928b66cc20cdb5bfffb0bb1d6144bd814b27cd3452e699b6"
+    },
+    {
+      "report": "cpppj/campaign-path-retarget.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/campaign-path-retarget.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/campaign-priest-sacrifice.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/campaign-priest-sacrifice.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.h"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.h",
+      "old": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
+      "new": "7cfca63bcb353cb161328764221f3ec62c3b4dec2ce6833e784601cfe2825a1c"
+    },
+    {
+      "report": "cpppj/campaign-priest-sacrifice.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/campaign-production-content.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "source": "cpppj/src/client/UberGump.cpp",
+      "old": "b8a5fedc6c83ca04e5f8687f6a73a84e769686691ca180789123788360b5a915",
+      "new": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9"
+    },
+    {
+      "report": "cpppj/campaign-production-content.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/campaign-production-content.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.h"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.h",
+      "old": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
+      "new": "7cfca63bcb353cb161328764221f3ec62c3b4dec2ce6833e784601cfe2825a1c"
+    },
+    {
+      "report": "cpppj/campaign-production-content.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/campaign-production-feedback.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "source": "cpppj/src/client/UberGump.cpp",
+      "old": "b8a5fedc6c83ca04e5f8687f6a73a84e769686691ca180789123788360b5a915",
+      "new": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9"
+    },
+    {
+      "report": "cpppj/campaign-production-feedback.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/campaign-production-maintenance.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "source": "cpppj/src/client/UberGump.cpp",
+      "old": "b8a5fedc6c83ca04e5f8687f6a73a84e769686691ca180789123788360b5a915",
+      "new": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9"
+    },
+    {
+      "report": "cpppj/campaign-production-maintenance.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/campaign-production-maintenance.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.h"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.h",
+      "old": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
+      "new": "7cfca63bcb353cb161328764221f3ec62c3b4dec2ce6833e784601cfe2825a1c"
+    },
+    {
+      "report": "cpppj/campaign-production-maintenance.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/campaign-production-panel.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "source": "cpppj/src/client/UberGump.cpp",
+      "old": "b8a5fedc6c83ca04e5f8687f6a73a84e769686691ca180789123788360b5a915",
+      "new": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9"
+    },
+    {
+      "report": "cpppj/campaign-production-panel.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/campaign-production-panel.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.h"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.h",
+      "old": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
+      "new": "7cfca63bcb353cb161328764221f3ec62c3b4dec2ce6833e784601cfe2825a1c"
+    },
+    {
+      "report": "cpppj/campaign-production-panel.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawMenuControls.cpp"
+      ],
+      "source": "cpppj/src/client/RawMenuControls.cpp",
+      "old": "7cf3686cabed1d61e6f61b46a2c6d9f153b2a8ce4c5faee6cac3a01683555bb4",
+      "new": "51990bde376f68670b1c549b0bb1135fbc966c340e7131ee9e5c1e08a4da1c93"
+    },
+    {
+      "report": "cpppj/campaign-production-panel.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawMenuControls.h"
+      ],
+      "source": "cpppj/src/client/RawMenuControls.h",
+      "old": "70cf632cf282ea15c98c45ca1b8fba8b720dafb07eebc2a022723dfc35e3b1fa",
+      "new": "84c7e0dc59650ac986b3a4e9c9a60083443c6da500081d1567e2e8986692412e"
+    },
+    {
+      "report": "cpppj/campaign-production-panel.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/campaign-rune-progress.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/campaign-rune-progress.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/campaign-sacrifice-finish.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/campaign-sacrifice-finish.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.h"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.h",
+      "old": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
+      "new": "7cfca63bcb353cb161328764221f3ec62c3b4dec2ce6833e784601cfe2825a1c"
+    },
+    {
+      "report": "cpppj/campaign-sacrifice-finish.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/campaign-salvage-command.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "source": "cpppj/src/client/UberGump.cpp",
+      "old": "b8a5fedc6c83ca04e5f8687f6a73a84e769686691ca180789123788360b5a915",
+      "new": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9"
+    },
+    {
+      "report": "cpppj/campaign-salvage-command.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/campaign-salvage-command.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/RawCampaignSession.h"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.h",
+      "old": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
+      "new": "7cfca63bcb353cb161328764221f3ec62c3b4dec2ce6833e784601cfe2825a1c"
+    },
+    {
+      "report": "cpppj/campaign-salvage-command.json",
+      "pointer": [
+        "sources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/campaign-selection-effects.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/campaign-selection-effects.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.h"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.h",
+      "old": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
+      "new": "7cfca63bcb353cb161328764221f3ec62c3b4dec2ce6833e784601cfe2825a1c"
+    },
+    {
+      "report": "cpppj/campaign-selection-effects.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/campaign-selection-effects.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CampaignObjectMenuTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp",
+      "old": "fea9198ea2150c42bb523f7ac9298c2f819acd1fc9b9887b53020c206ad62563",
+      "new": "c9f734313aefd637928b66cc20cdb5bfffb0bb1d6144bd814b27cd3452e699b6"
+    },
+    {
+      "report": "cpppj/campaign-special-damage.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/campaign-special-damage.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/campaign-sun-flyer-frame.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/campaign-sun-flyer-frame.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/campaign-sun-flyer-postpop.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/campaign-sun-flyer-postpop.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/campaign-temple-draw.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/campaign-temple-draw.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.h"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.h",
+      "old": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
+      "new": "7cfca63bcb353cb161328764221f3ec62c3b4dec2ce6833e784601cfe2825a1c"
+    },
+    {
+      "report": "cpppj/campaign-temple-draw.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/campaign-temple-shrapnel.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "source": "cpppj/src/client/UberGump.cpp",
+      "old": "b8a5fedc6c83ca04e5f8687f6a73a84e769686691ca180789123788360b5a915",
+      "new": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9"
+    },
+    {
+      "report": "cpppj/campaign-temple-shrapnel.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/campaign-temple-shrapnel.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/campaign-user-selection.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/campaign-workshop-completion.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/campaign-workshop-completion.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/carrier-candidate-sort-restoration.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/carrier-drop-analysis.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/carrier-drop-cpp.json",
+      "pointer": [
+        "sources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/carrier-drop-point.json",
+      "pointer": [
+        "sha256",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/carrier-drop-session-cpp.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/carrier-drop-session-cpp.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/RawCampaignSession.h"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.h",
+      "old": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
+      "new": "7cfca63bcb353cb161328764221f3ec62c3b4dec2ce6833e784601cfe2825a1c"
+    },
+    {
+      "report": "cpppj/client-ai-chat.json",
+      "pointer": [
+        "sha256",
+        "cpppj/src/client/ClientMain.h"
+      ],
+      "source": "cpppj/src/client/ClientMain.h",
+      "old": "d02989475e69772f9c3035a152e05ebccb6383798f6c58596ebdd54f94863aac",
+      "new": "6146814839326c189d793d988960cab3be2b01b2ebd22119b763dfd00ec6c6a0"
+    },
+    {
+      "report": "cpppj/construction-command.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/construction-command.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.h"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.h",
+      "old": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
+      "new": "7cfca63bcb353cb161328764221f3ec62c3b4dec2ce6833e784601cfe2825a1c"
+    },
+    {
+      "report": "cpppj/construction-command.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/construction-session.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/construction-session.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.h"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.h",
+      "old": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
+      "new": "7cfca63bcb353cb161328764221f3ec62c3b4dec2ce6833e784601cfe2825a1c"
+    },
+    {
+      "report": "cpppj/cursor-mana-display.json",
+      "pointer": [
+        "sha256",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/cursor-mana-display.json",
+      "pointer": [
+        "sha256",
+        "cpppj/src/client/RawCampaignSession.h"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.h",
+      "old": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
+      "new": "7cfca63bcb353cb161328764221f3ec62c3b4dec2ce6833e784601cfe2825a1c"
+    },
+    {
+      "report": "cpppj/cursor-mana-display.json",
+      "pointer": [
+        "sha256",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/cursor-mana.json",
+      "pointer": [
+        "sha256",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/cursor-mana.json",
+      "pointer": [
+        "sha256",
+        "cpppj/src/client/RawCampaignSession.h"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.h",
+      "old": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
+      "new": "7cfca63bcb353cb161328764221f3ec62c3b4dec2ce6833e784601cfe2825a1c"
+    },
+    {
+      "report": "cpppj/cursor-mana.json",
+      "pointer": [
+        "sha256",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/cursor-placement.json",
+      "pointer": [
+        "sha256",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/cursor-position.json",
+      "pointer": [
+        "sha256",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/cursor-previews.json",
+      "pointer": [
+        "sha256",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/cursor-range.json",
+      "pointer": [
+        "sha256",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/cursor-range.json",
+      "pointer": [
+        "sha256",
+        "cpppj/src/client/RawCampaignSession.h"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.h",
+      "old": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
+      "new": "7cfca63bcb353cb161328764221f3ec62c3b4dec2ce6833e784601cfe2825a1c"
+    },
+    {
+      "report": "cpppj/cursor-range.json",
+      "pointer": [
+        "sha256",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/dais-draw-session.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/dais-draw-session.json",
+      "pointer": [
+        "sources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/dais-load-session.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/devastation-session-cpp.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/dude-behavior-session.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/dude-behavior-session.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/RawCampaignSession.h"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.h",
+      "old": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
+      "new": "7cfca63bcb353cb161328764221f3ec62c3b4dec2ce6833e784601cfe2825a1c"
+    },
+    {
+      "report": "cpppj/dude-behavior-session.json",
+      "pointer": [
+        "sources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/dude-footprint-session.json",
+      "pointer": [
+        "sources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/dude-path-session.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/dude-path-session.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/RawCampaignSession.h"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.h",
+      "old": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
+      "new": "7cfca63bcb353cb161328764221f3ec62c3b4dec2ce6833e784601cfe2825a1c"
+    },
+    {
+      "report": "cpppj/dude-path-session.json",
+      "pointer": [
+        "sources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/dude-regular-session.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/dude-regular-session.json",
+      "pointer": [
+        "sources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/early5-connected-runtime.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/early5-devastation-runtime.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/energy-sort.json",
+      "pointer": [
+        "sha256",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/energy-sort.json",
+      "pointer": [
+        "sha256",
+        "cpppj/src/client/RawCampaignSession.h"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.h",
+      "old": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
+      "new": "7cfca63bcb353cb161328764221f3ec62c3b4dec2ce6833e784601cfe2825a1c"
+    },
+    {
+      "report": "cpppj/energy-sort.json",
+      "pointer": [
+        "sha256",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/energy-supply.json",
+      "pointer": [
+        "sha256",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/energy-supply.json",
+      "pointer": [
+        "sha256",
+        "cpppj/src/client/RawCampaignSession.h"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.h",
+      "old": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
+      "new": "7cfca63bcb353cb161328764221f3ec62c3b4dec2ce6833e784601cfe2825a1c"
+    },
+    {
+      "report": "cpppj/energy-supply.json",
+      "pointer": [
+        "sha256",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/fence-lifetime.json",
+      "pointer": [
+        "sha256",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/fence-lifetime.json",
+      "pointer": [
+        "sha256",
+        "cpppj/src/client/RawCampaignSession.h"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.h",
+      "old": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
+      "new": "7cfca63bcb353cb161328764221f3ec62c3b4dec2ce6833e784601cfe2825a1c"
+    },
+    {
+      "report": "cpppj/fence-lifetime.json",
+      "pointer": [
+        "sha256",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/flyer-command-runtime.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/flyer-command-runtime.json",
+      "pointer": [
+        "sources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/flypath.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/flypath.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.h"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.h",
+      "old": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
+      "new": "7cfca63bcb353cb161328764221f3ec62c3b4dec2ce6833e784601cfe2825a1c"
+    },
+    {
+      "report": "cpppj/flypath.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/general-construction-session.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/general-construction-session.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.h"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.h",
+      "old": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
+      "new": "7cfca63bcb353cb161328764221f3ec62c3b4dec2ce6833e784601cfe2825a1c"
+    },
+    {
+      "report": "cpppj/guide-transitions-session.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "source": "cpppj/src/client/UberGump.cpp",
+      "old": "b8a5fedc6c83ca04e5f8687f6a73a84e769686691ca180789123788360b5a915",
+      "new": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9"
+    },
+    {
+      "report": "cpppj/guide-transitions-session.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/CMakeLists.txt"
+      ],
+      "source": "cpppj/src/client/CMakeLists.txt",
+      "old": "585ae86b762ee3ecf96c39dfcf38202cfe100b455fe8bfb39bd3007f10d21260",
+      "new": "f4331fcea75cb14f5703124aa71a1c2db5f1d196b134fe909efd823df08225b0"
+    },
+    {
+      "report": "cpppj/guide-transitions-session.json",
+      "pointer": [
+        "sources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/gun-blocker-runtime.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/gun-blocker-runtime.json",
+      "pointer": [
+        "sources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/island-drop-runtime.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/mana-bolt-display.json",
+      "pointer": [
+        "sha256",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/mana-bolt-display.json",
+      "pointer": [
+        "sha256",
+        "cpppj/src/client/RawCampaignSession.h"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.h",
+      "old": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
+      "new": "7cfca63bcb353cb161328764221f3ec62c3b4dec2ce6833e784601cfe2825a1c"
+    },
+    {
+      "report": "cpppj/mana-bolt-display.json",
+      "pointer": [
+        "sha256",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/mana-bolt-regular.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/mana-bolt-regular.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/mana-bolt-regular.json",
+      "pointer": [
+        "sha256",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/mana-bolt-regular.json",
+      "pointer": [
+        "sha256",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/mission-abort-session.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "source": "cpppj/src/client/UberGump.cpp",
+      "old": "b8a5fedc6c83ca04e5f8687f6a73a84e769686691ca180789123788360b5a915",
+      "new": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9"
+    },
+    {
+      "report": "cpppj/mission-abort-session.json",
+      "pointer": [
+        "sources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/mission-common-session.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "source": "cpppj/src/client/UberGump.cpp",
+      "old": "b8a5fedc6c83ca04e5f8687f6a73a84e769686691ca180789123788360b5a915",
+      "new": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9"
+    },
+    {
+      "report": "cpppj/mission-common-session.json",
+      "pointer": [
+        "sources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/mission-first-session.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "source": "cpppj/src/client/UberGump.cpp",
+      "old": "b8a5fedc6c83ca04e5f8687f6a73a84e769686691ca180789123788360b5a915",
+      "new": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9"
+    },
+    {
+      "report": "cpppj/mission-first-session.json",
+      "pointer": [
+        "sources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/mission-lifecycle-session.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "source": "cpppj/src/client/UberGump.cpp",
+      "old": "b8a5fedc6c83ca04e5f8687f6a73a84e769686691ca180789123788360b5a915",
+      "new": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9"
+    },
+    {
+      "report": "cpppj/mission-lifecycle-session.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/CMakeLists.txt"
+      ],
+      "source": "cpppj/src/client/CMakeLists.txt",
+      "old": "585ae86b762ee3ecf96c39dfcf38202cfe100b455fe8bfb39bd3007f10d21260",
+      "new": "f4331fcea75cb14f5703124aa71a1c2db5f1d196b134fe909efd823df08225b0"
+    },
+    {
+      "report": "cpppj/mission-lifecycle-session.json",
+      "pointer": [
+        "sources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/mission-technology-session.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "source": "cpppj/src/client/UberGump.cpp",
+      "old": "b8a5fedc6c83ca04e5f8687f6a73a84e769686691ca180789123788360b5a915",
+      "new": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9"
+    },
+    {
+      "report": "cpppj/mission-technology-session.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/mission-technology-session.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/CMakeLists.txt"
+      ],
+      "source": "cpppj/src/client/CMakeLists.txt",
+      "old": "585ae86b762ee3ecf96c39dfcf38202cfe100b455fe8bfb39bd3007f10d21260",
+      "new": "f4331fcea75cb14f5703124aa71a1c2db5f1d196b134fe909efd823df08225b0"
+    },
+    {
+      "report": "cpppj/mission-technology-session.json",
+      "pointer": [
+        "sources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/modal-production.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "source": "cpppj/src/client/UberGump.cpp",
+      "old": "b8a5fedc6c83ca04e5f8687f6a73a84e769686691ca180789123788360b5a915",
+      "new": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9"
+    },
+    {
+      "report": "cpppj/object-command-session.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/object-command-session.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/RawCampaignSession.h"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.h",
+      "old": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
+      "new": "7cfca63bcb353cb161328764221f3ec62c3b4dec2ce6833e784601cfe2825a1c"
+    },
+    {
+      "report": "cpppj/object-command-session.json",
+      "pointer": [
+        "sources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/player-factory-init.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/player-factory-init.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/player-factory-init.json",
+      "pointer": [
+        "sha256",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/player-factory-init.json",
+      "pointer": [
+        "sha256",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/quick-help-request-restoration.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/session-priest-menu.json",
+      "pointer": [
+        "sha256",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/session-priest-menu.json",
+      "pointer": [
+        "sha256",
+        "cpppj/src/client/RawCampaignSession.h"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.h",
+      "old": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
+      "new": "7cfca63bcb353cb161328764221f3ec62c3b4dec2ce6833e784601cfe2825a1c"
+    },
+    {
+      "report": "cpppj/session-priest-menu.json",
+      "pointer": [
+        "sha256",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/sun-aviary-capture-runtime.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/sun-aviary-home-runtime.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/sun-bomb-lifetime-runtime.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/thunder-cannon-capture-runtime.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/tutorial-five-hit-event.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/tutorial-five-hit-event.json",
+      "pointer": [
+        "sources",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    },
+    {
+      "report": "cpppj/tutorial-five-production-runtime.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/tutorial-later-runtime.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "source": "cpppj/src/client/UberGump.cpp",
+      "old": "b8a5fedc6c83ca04e5f8687f6a73a84e769686691ca180789123788360b5a915",
+      "new": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9"
+    },
+    {
+      "report": "cpppj/tutorial-later-runtime.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/tutorial-later-runtime.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/RawCampaignSession.h"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.h",
+      "old": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
+      "new": "7cfca63bcb353cb161328764221f3ec62c3b4dec2ce6833e784601cfe2825a1c"
+    },
+    {
+      "report": "cpppj/tutorial-one-harvest.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "source": "cpppj/src/client/UberGump.cpp",
+      "old": "b8a5fedc6c83ca04e5f8687f6a73a84e769686691ca180789123788360b5a915",
+      "new": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9"
+    },
+    {
+      "report": "cpppj/tutorial-one-harvest.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/tutorial-one-runtime.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "source": "cpppj/src/client/UberGump.cpp",
+      "old": "b8a5fedc6c83ca04e5f8687f6a73a84e769686691ca180789123788360b5a915",
+      "new": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9"
+    },
+    {
+      "report": "cpppj/tutorial-one-runtime.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/tutorial-one-runtime.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/RawCampaignSession.h"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.h",
+      "old": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
+      "new": "7cfca63bcb353cb161328764221f3ec62c3b4dec2ce6833e784601cfe2825a1c"
+    },
+    {
+      "report": "cpppj/tutorial-two-runtime.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "source": "cpppj/src/client/UberGump.cpp",
+      "old": "b8a5fedc6c83ca04e5f8687f6a73a84e769686691ca180789123788360b5a915",
+      "new": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9"
+    },
+    {
+      "report": "cpppj/tutorial-two-runtime.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.cpp",
+      "old": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+      "new": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+    },
+    {
+      "report": "cpppj/tutorial-two-runtime.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/RawCampaignSession.h"
+      ],
+      "source": "cpppj/src/client/RawCampaignSession.h",
+      "old": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
+      "new": "7cfca63bcb353cb161328764221f3ec62c3b4dec2ce6833e784601cfe2825a1c"
+    },
+    {
+      "report": "cpppj/type-required-energy.json",
+      "pointer": [
+        "sha256",
+        "cpppj/tests/CMakeLists.txt"
+      ],
+      "source": "cpppj/tests/CMakeLists.txt",
+      "old": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+      "new": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+    }
+  ],
+  "semanticReversalToBaseline": true,
+  "firstCapture": {
+    "fixtureSha256": "2d277ffff7cd57dc967e562f6b3027d9604c0554e840ee255fb94d38fe71cb17",
+    "byteIdentical": true
+  },
+  "knownExistingHashIssue": {
+    "unit": "247",
+    "path": "cpppj/src/o/RawTutorialLater.cpp",
+    "kind": "시작 커밋부터 같은 코드의 CRLF 핀/LF 파일 차이이며 이번에 해당 코드/역사 핀을 바꾸거나 기존 감사를 새 통과로 기록하지 않는다."
+  },
+  "limitations": [
+    "게임/C++검사/CTest/전체 회귀와 자연 완주는 실행하지 않았다.",
+    "추가25개는 전체 지식 몸체/행/CRT정렬/폭·높이/표식이며 TYPE/내용물/제외/번역/서식·GUI 생성/부착/Push·Pop/위치·스레드는 명시 경계다. 실제 원본 창/게임/OS를 관측하지 않았다.",
+    "카드 Help02000017 상세 화면·정적 themeHelp 인자 소비자와 다른 팝업의 공용 마지막 표식·전체 키/중첩 모달 동작은 후속이다. 임의 간략 화면으로 대체하지 않았다.",
+    "실제 지식 창은 현재 화면과 원본 PE의 아이콘65×60을 사용한다. 전체 다른 판본/자산 교체/원본 Init·State/공장·가상 소멸의 복원 근거가 아니다.",
+    "모든11미션 자연 완주·지식/도움말/F6/재시작·중단·전략AI·지형/자연 포획/희생/대피·외관/음향 동일성의 통합 실제 플레이 검증은 남는다."
+  ]
+}

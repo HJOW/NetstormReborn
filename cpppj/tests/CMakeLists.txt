@@ -43,6 +43,7 @@ set_source_files_properties(FlyerPreDestroyTests.cpp PROPERTIES COMPILE_DEFINITI
 set_source_files_properties(BurningLifetimeDrawTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_BURNING_LIFETIME_DRAW_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/burning-lifetime-draw-x86.tsv\";NETSTORM_RENDER_FRAME_GATE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/render-frame-gate-x86.tsv\";NETSTORM_BURNING_ARCHER_CAPTURE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/burning-archer-capture-x86.tsv\"")
 add_executable(netstorm_tests
+    KnowledgeMenuTests.cpp
     MissionTechnologyTests.cpp
     GuideTransitionTests.cpp
     MissionLifecycleTests.cpp
@@ -1685,3 +1686,6 @@ set_source_files_properties(GuideTransitionTests.cpp PROPERTIES COMPILE_DEFINITI
 # 실제 미션 기술 허용 목록/표 쓰기의 최초 원문을 이 검사에만 공급한다.
 set_source_files_properties(MissionTechnologyTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_MISSION_TECHNOLOGY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/mission-technology-x86.tsv\"")
+# 원본 전체 지식 창25입력의 최초 결과를 이 검사에만 공급한다.
+set_source_files_properties(KnowledgeMenuTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_KNOWLEDGE_MENU_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/knowledge-menu-x86.tsv\"")

@@ -1,6 +1,7 @@
 // 기존 원본 몸체의 단일 저장소 조립을 실제 클라이언트 세션이 소유한다.
 #include "client/RawCampaignSession.h"
 #include "client/RawProductionMaintenance.h"
+#include "client/RawKnowledgeMenu.h"
 #include "o/CanonDecoder.h"
 #include "o/RawBridgeEvents.h"
 #include "o/RawBridgeDraw.h"
@@ -2513,6 +2514,17 @@ std::unique_ptr<RawPriestMenu> RawCampaignSession::MakePriestMenu(PriestMenuHook
     hooks.money=[current](std::uint32_t owner) { return std::bit_cast<float>(current->sp.Get(owner)); };
     return std::make_unique<RawPriestMenu>(current->core.pool,current->core.types,current->core.frames,current->players,
         current->constructionExcludedTypes,current->contentFinder,state,std::move(hooks));
+}
+// 원본의 게임 조회를 같은 현재 저장소에 연결하며 번역/GUI를 관찰 콜백으로 대신하지 않는다.
+std::vector<std::uint32_t> RawCampaignSession::ShowKnowledge(KnowledgeMenuState& state,KnowledgeMenuHooks hooks) {
+    if (!impl_->loaded) throw std::logic_error("설치 전 실제 지식 창 요청");auto* current=impl_.get();state.templeProduct=current->templeProduct;
+    hooks.blocked=[current] { return current->core.ownerMode.challenge; };hooks.cancel=[current] { current->cursor->Cancel(); };
+    hooks.currentTechnology=[current] { return current->player->CurrentTechnology(); };
+    hooks.owns=[current](std::uint32_t parent,std::uint32_t type) { if (parent>65535) throw std::out_of_range("지식 창 기술 부모 SID 범위");return current->priests->Carrier().FindContained(o::Sid{static_cast<std::uint16_t>(parent)},4,type,0).value!=0; };
+    hooks.mana=[current](std::uint32_t type) { if (type<70) return std::string{};const auto assets=current->assets.game.Types();if (type-70>=assets.size()) throw std::out_of_range("지식 창 마나 자산 번호 범위");const auto value=assets[type-70].definition.String("mana");return value ? std::string(*value) : std::string{}; };
+    hooks.inProduction=[current](std::uint32_t type) { return current->production->Contains(type); };
+    hooks.excluded=[current](std::uint32_t type) { const auto items=current->constructionExcludedTypes.Items();return std::find(items.begin(),items.end(),type)!=items.end(); };
+    return ShowKnowledgeMenu(current->core.types,state,hooks);
 }
 // 원본 사제/Carrier/회수/공통 객체/Player 몸체를 같은 현재 월드와 실제 Client 경계로 조립한다.
 std::unique_ptr<RawCampaignObjectMenus> RawCampaignSession::MakeObjectMenus(CampaignObjectMenuUi ui) {

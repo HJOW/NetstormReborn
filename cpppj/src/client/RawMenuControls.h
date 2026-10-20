@@ -10,6 +10,7 @@
 #include <memory>
 
 namespace netstorm::client {
+class RawCampaignSession; // 현재 지식 창도 같은 세션의 실제 기술/제외/생산 상태를 빌린다.
 // 같은 수집/정렬/클립 안에서 생산 패널의 원본 파생 Draw를 호출한다.
 struct RawMenuExternalGumps {
     std::function<TextGumpNode*(std::uint32_t)> text; // 같은 TextGump/StyleText가 읽는 외부 텍스트 노드다.
@@ -85,6 +86,10 @@ public:
     std::optional<ScreenPoint> Point(std::string_view label) const;
     std::vector<GumpControl> Controls() const;
     bool HasMenus() const;
+    // 같은 controlled/Gump/StyleText에 실제 전체 지식 카드를 작성하고 원본 네 줄에 부착한다.
+    bool OpenKnowledge(RawCampaignSession& session,std::function<std::string(std::string_view)> translate,std::uint32_t language);
+    // 저장한 카드 토큰의 현재 등록/visible/dead를 직접 읽는다. 별도 열림 bool을 두지 않는다.
+    bool KnowledgeOpen() const;
     // 실제 비용 표시를 같은 루트/StyleText/idle/수명에 생성한다. 원본 커서의 reference는0이다.
     std::uint32_t ShowSp(std::int32_t cost,std::int32_t x,std::int32_t y,std::uint32_t reference=0);
     // 메뉴 또는 비용 표시 중 현재 실제 표시 노드가 있는지 원본 visible/dead로 읽는다.

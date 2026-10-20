@@ -122,7 +122,7 @@
   "sources": {
     "cpppj/src/client/RawCampaignConstructionBindings.cpp": "bd8ccc0a27709ce909164d6266002bcf7f22bd619169560175cca835924d2f9a",
     "cpppj/src/client/RawCampaignConstructionBindings.h": "512570010be383ea7cc726b275acffa61280f1448c9fcd4c872d7ba62a9d8d93",
-    "cpppj/src/client/RawCampaignSession.cpp": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+    "cpppj/src/client/RawCampaignSession.cpp": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e",
     "cpppj/tests/CampaignSessionTests.cpp": "6a6d54fd15eb24c0609492756880c774120f855138441820a536ea5bd73ee4f0",
     "cpppj/tests/fixtures/tutorial-five-devastation-ui-input.tsv": "e1f8fc108f1f148eb0175d5bdd10f41109fcd396d1272b90b142dc7cde117ec1",
     "tools/cpp_early5_devastation_runtime.py": "d6a1dc4c14fda7d197955a5dc71f310fd9fdd2374cc4e46576871fc3d34edf1e"
@@ -398,6 +398,20 @@
           "group": "/sources",
           "previous": "5dd5da22bc49c783d865582a49a46892cfc4a9658c20dd009e9d332495082676",
           "current": "6a6d54fd15eb24c0609492756880c774120f855138441820a536ea5bd73ee4f0"
+        }
+      ]
+    },
+    {
+      "unit": "253",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "실제 ShowTechnology의 전체 카드/원본 공용 CRT 정렬·네 줄 배치를 현재 Session 기술/제외/생산과 같은 Gump·StyleText·SHP에 연결한다. Review 버튼/사제/F6은 같은 명령 큐다. 현재 핀만 갱신하고 과거 files/evidence/원문/기대값/실행은 보존한다. 제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "group": "/sources",
+          "previous": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+          "current": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
         }
       ]
     }

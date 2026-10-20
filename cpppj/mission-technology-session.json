@@ -7,16 +7,16 @@
   "lastDecompileDate": "2026-10-20",
   "newDecompile": false,
   "sources": {
-    "cpppj/src/client/UberGump.cpp": "b8a5fedc6c83ca04e5f8687f6a73a84e769686691ca180789123788360b5a915",
-    "cpppj/src/client/CMakeLists.txt": "585ae86b762ee3ecf96c39dfcf38202cfe100b455fe8bfb39bd3007f10d21260",
-    "cpppj/tests/CMakeLists.txt": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+    "cpppj/src/client/UberGump.cpp": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9",
+    "cpppj/src/client/CMakeLists.txt": "f4331fcea75cb14f5703124aa71a1c2db5f1d196b134fe909efd823df08225b0",
+    "cpppj/tests/CMakeLists.txt": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c",
     "cpppj/tests/CampaignMissionStartTests.cpp": "83e64926952399dda15209b6548cf9bd378a334e4a82723ddec0723c94348ed7",
     "tools/decomp_mission_technology.py": "177ea82462ca7b2fca504845f88914f23f869ceeb6c1651fc720eb7a0b41312b",
     "tools/cpp_mission_technology_audit.py": "f2c8abe0d980b2b2102db5764cfb45d812a3653eaf59bdd94386fbf94e2357b2",
     "cpppj/src/client/MissionTechnology.h": "85ddb3f756715d76f8baf3306e38be3d137f16687e235567fba4d334727c1770",
     "cpppj/src/client/MissionTechnology.cpp": "edb5e87e3369c630f9a280a18dbd9bb76bc255afe66f18d2ef262b5076ab5706",
     "cpppj/tests/MissionTechnologyTests.cpp": "fcfddc3f4e499a8a18f23c05d69e7d419170ae0e01e7f889e444c0ed27bef578",
-    "cpppj/src/client/RawCampaignSession.cpp": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+    "cpppj/src/client/RawCampaignSession.cpp": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e",
     "cpppj/src/o/RawTotalMade.cpp": "7e41ece886973893e6b4614b81d1b669da23b6c1a85799e5301905d68c7e0d25"
   },
   "evidence": {
@@ -1439,5 +1439,39 @@
     "미등록 이름은 원본 표 앞 한 칸 쓰기를 보존했고 제품 RawTotalMade는 실제 물리 범위 거부를 유지한다.512BYTE 초과 입력도 예외다.",
     "현재 동기 월드 설치 뒤 사용자 입력/Start 전에 같은 제한을 적용한다. 원본의 비동기 State7 요청과 전체 Init/이름 정규화/+b0/전역·공장/가상 소멸까지 복원한 것은 아니다.",
     "Review Knowledge/ShowTechnology 전체 카드/배치·중첩 창/다른 키·전략AI·자연 포획/희생/대피·전체11미션 완주와 동일성의 실제 통합 검증은 남는다."
+  ],
+  "integration_updates": [
+    {
+      "unit": "253",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "실제 ShowTechnology의 전체 카드/원본 공용 CRT 정렬·네 줄 배치를 현재 Session 기술/제외/생산과 같은 Gump·StyleText·SHP에 연결한다. Review 버튼/사제/F6은 같은 명령 큐다. 현재 핀만 갱신하고 과거 files/evidence/원문/기대값/실행은 보존한다. 제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "group": "/sources",
+          "previous": "b8a5fedc6c83ca04e5f8687f6a73a84e769686691ca180789123788360b5a915",
+          "current": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "group": "/sources",
+          "previous": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
+          "current": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e"
+        },
+        {
+          "path": "cpppj/src/client/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "585ae86b762ee3ecf96c39dfcf38202cfe100b455fe8bfb39bd3007f10d21260",
+          "current": "f4331fcea75cb14f5703124aa71a1c2db5f1d196b134fe909efd823df08225b0"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
+          "current": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+        }
+      ]
+    }
   ]
 }

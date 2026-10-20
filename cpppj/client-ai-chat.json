@@ -53,7 +53,7 @@
   "sha256": {
     "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
     "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
-    "cpppj/src/client/ClientMain.h": "d02989475e69772f9c3035a152e05ebccb6383798f6c58596ebdd54f94863aac",
+    "cpppj/src/client/ClientMain.h": "6146814839326c189d793d988960cab3be2b01b2ebd22119b763dfd00ec6c6a0",
     "cpppj/src/client/ClientMain.cpp": "fe577cb844b74ff10be7353b9ba545563bd62af7272409211de823e511fb456e",
     "cpppj/src/client/UberGump.h": "70b2e2e7479669d3ddb47c054d95c87440f266441fea44a2753c39278c12eb65",
     "cpppj/src/client/UberGump.cpp": "9e9483f858f612b200ff41e26c7eeacbca7f49dddee1f07b881f3b8e2ca30796",
@@ -273,6 +273,20 @@
           "group": "/sha256",
           "previous": "13e6a755f9bd6fe21022472c23bed228617b86a3c21586db3a1664eff0e3a674",
           "current": "70b2e2e7479669d3ddb47c054d95c87440f266441fea44a2753c39278c12eb65"
+        }
+      ]
+    },
+    {
+      "unit": "253",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "실제 ShowTechnology의 전체 카드/원본 공용 CRT 정렬·네 줄 배치를 현재 Session 기술/제외/생산과 같은 Gump·StyleText·SHP에 연결한다. Review 버튼/사제/F6은 같은 명령 큐다. 현재 핀만 갱신하고 과거 files/evidence/원문/기대값/실행은 보존한다. 제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/ClientMain.h",
+          "group": "/sha256",
+          "previous": "d02989475e69772f9c3035a152e05ebccb6383798f6c58596ebdd54f94863aac",
+          "current": "6146814839326c189d793d988960cab3be2b01b2ebd22119b763dfd00ec6c6a0"
         }
       ]
     }
