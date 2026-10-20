@@ -374,6 +374,87 @@ public sealed class X86RawAssetPostPopTests
     }
 
     /// <summary>
+    /// 효과 중에 바뀌는 battleOwner DWORD 로 Player 신전을 다시 읽는다.
+    /// 기대값은 asset-player-x86.tsv(판본별 288회) 중 10.78 몫이다.
+    /// 열 구성은 cpppj/tests/AssetPostPopTests.cpp 의 ReplayMutablePlayers 와 같다.
+    /// </summary>
+    [Fact]
+    public void AssetBodiesMatchOriginalX86WithMutablePlayers()
+    {
+        const int Stride = 0xb4;
+        const int Temple = 0x7c;
+        string[][] fixture = X86Fixture.Read("asset-player");
+        string[][] rows = X86Fixture.Read("assetpostpop");
+        string[] template = rows.First(row => row[0] == PatchEdition);
+        int count = 0;
+        X86Fixture.CheckRows(fixture, row =>
+        {
+            if (row[0] != PatchEdition)
+            {
+                return true;
+            }
+            Assert.Equal(17, row.Length);
+            var scene = new Scene();
+            scene.Prepare(template);
+            scene.State.InBattle = true;
+            scene.State.LoadingDepth = 1;
+            scene.State.FortMode = true;
+            scene.State.Selected = 62;
+            scene.ReserveMask = 0;
+            Span<byte> raw = scene.Pool.AllocatedBytes(Source);
+            Put(raw, 0, AssetTables[X86Fixture.UInt(row[1])]);
+            raw[34] = (byte)X86Fixture.UInt(row[4]);
+            raw[40] = (byte)X86Fixture.UInt(row[3]);
+            // 사용하지 않는 필드 구별을 위해 stale 바이트로 채우고 신전 16바이트만 입력으로 둔다
+            var records = new byte[9 * Stride];
+            Array.Fill(records, (byte)0xa5);
+            for (int owner = 0; owner < 9; owner++)
+            {
+                Put(records, owner * Stride + Temple, X86Fixture.UInt(row[8]));
+                Put(records, owner * Stride + Temple + 4, 0x11112222);
+                Put(records, owner * Stride + Temple + 8, 0x33334444);
+                Put(records, owner * Stride + Temple + 12, 0x55556666);
+            }
+            uint local = X86Fixture.UInt(row[6]);
+            var @base = new RawPostPop(scene.Pool, scene.Types, scene.Book);
+            CarrierPostPopHooks carrierHooks = scene.CarrierHooks(@base);
+            Action<int, uint> common = carrierHooks.Base!;
+            // 실제 Damageable 몸체는 공통 몸체 전에 현재 소유자를 쓴다
+            carrierHooks.Base = (sid, flags) =>
+            {
+                scene.Pool.AllocatedBytes(sid)[34] = (byte)X86Fixture.UInt(row[5]);
+                common(sid, flags);
+            };
+            var damageable = new RawCarrierPostPop(scene.Pool, scene.Types, scene.CarrierState, carrierHooks);
+            AssetPostPopHooks hooks = scene.Hooks();
+            Action<uint> sound = hooks.PlayImpactSound!;
+            // 실제 외부 효과는 충격음 뒤에 battleOwner 를 바꾸고 기록을 고친다
+            hooks.PlayImpactSound = token =>
+            {
+                local = X86Fixture.UInt(row[7]);
+                int value = X86Fixture.Int(row[9]);
+                if (value >= 0)
+                {
+                    Put(records, (int)X86Fixture.UInt(row[5]) * Stride + Temple, (uint)value);
+                }
+                sound(token);
+            };
+            var assets = new RawAssetPostPop(scene.Pool, scene.Types, @base, damageable, scene.State, hooks);
+            assets.BindPlayerRecords(records, () => local);
+            scene.Book.Depth++;
+            assets.PostPop(Source, X86Fixture.UInt(row[2]));
+            Assert.Equal(0u, scene.Book.Depth);
+            string[] output = scene.Output();
+            output[3] = Convert.ToHexStringLower(records);
+            Assert.Equal(row[10..16], output);
+            Assert.Equal(X86Fixture.UInt(row[16]), local);
+            count++;
+            return true;
+        });
+        Assert.Equal(288, count);
+    }
+
+    /// <summary>
     /// 잘못된 9기록 묶음은 거부하고 묶은 바이트를 바꾸지 않는다.
     /// 크기가 맞을 때만 묶는다.
     /// </summary>
