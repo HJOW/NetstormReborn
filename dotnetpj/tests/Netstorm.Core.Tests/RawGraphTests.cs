@@ -7,10 +7,10 @@ namespace Netstorm.Core.Tests;
 
 /// <summary>
 /// 원본 월드 코어의 그래프 저장소·연산(<see cref="RawGraph"/>)의 경계를 확인한다.
-/// 원본 기대값 재생(X86RawGraphTests·X86RawGraphReplayTests)이 초기화·영역·추가/flood 결과를 대조하고,
+/// 원본 기대값 재생(X86RawGraphTests·X86RawGraphReplayTests·X86RawGraphFormsTests)이 초기화·영역·추가/flood·삭제·재구성 결과를 대조하고,
 /// 이 검사들은 크기 검사·Free 번호 범위·초기화 보존 범위·공간/타입 일치·비활성 입력·비표면 거부·빈 번호 할당·
-/// flood 의 그래프 byte 외 불변을 10.78 로 옮긴다.
-/// 근거: cpppj/src/o/RawGraph.cpp (W02 열셋째·열넷째 조각, 2026-10-20).
+/// flood 의 그래프 byte 외 불변·재구성의 초기화/수집 구분과 손상 입력을 10.78 로 옮긴다.
+/// 근거: cpppj/src/o/RawGraph.cpp (W02 열셋째·열넷째·열여섯째 조각, 2026-10-20·2026-10-21).
 /// </summary>
 public sealed class RawGraphTests
 {
@@ -393,5 +393,81 @@ public sealed class RawGraphTests
         Assert.Equal(beforePool, pool.Bytes.ToArray());
         Assert.Equal(beforeSpots, spots);
         _ = types;
+    }
+
+    /// <summary>
+    /// 전체 초기화 재구성은 표를 지우고 모든 표면을 다시 나누며, 무효 수집은 무효 번호 표면만 모은다.
+    /// 두 표면이 멀리 떨어져 있으면 서로 다른 새 번호를 받고, 슬롯 그래프 byte 외 필드는 그대로다.
+    /// </summary>
+    [Fact]
+    public void RebuildResetAllAndCollectInvalidBehaveDifferently()
+    {
+        (RawSidPool pool, RawSquidHash hash, byte[] spots) = Space();
+        OriginalTypeRecord[] types = Types();
+        types[74].Flags1 = OriginalTypeRecord.Surface;
+        types[74].FootX = types[74].FootY = 1;
+        List<IReadOnlyList<FrameCode>> frames = Enumerable.Range(0, types.Length)
+            .Select(_ => (IReadOnlyList<FrameCode>)new List<FrameCode> { new FrameCode('A', 'P', 1, FrameCodeFlags.None) }).ToList();
+        var records = new GraphRecord[RawGraph.TableSize];
+        records[0] = new GraphRecord { Surfaces = 2, InUse = 1 };
+        var graph = new RawGraph(pool, hash, spots, types, records, null, frames);
+        int first = Surface(pool, 10, 10, 0, 0);
+        int second = Surface(pool, 30, 30, 0, 0);
+        byte[] beforeFirst = pool.Slot(first).ToArray();
+        byte[] beforeSecond = pool.Slot(second).ToArray();
+        graph.Rebuild(true);
+        byte regroupedFirst = pool.Slot(first)[30];
+        byte regroupedSecond = pool.Slot(second)[30];
+        // 멀리 떨어진 두 표면은 서로 다른 무리에 다시 묶인다
+        Assert.NotEqual(regroupedFirst, regroupedSecond);
+        Assert.Equal(1, graph.Records[regroupedFirst].Surfaces);
+        Assert.Equal(1, graph.Records[regroupedSecond].Surfaces);
+        // 그래프 byte 외 슬롯 필드는 그대로다
+        for (int i = 0; i < beforeFirst.Length; i++)
+        {
+            byte expected = i == 30 ? regroupedFirst : beforeFirst[i];
+            Assert.Equal(expected, pool.Slot(first)[i]);
+        }
+        // 무효 수집은 같은 장면에서 이미 나뉜 번호를 바꾸지 않는다
+        byte[] beforePool = pool.Bytes.ToArray();
+        graph.ValidateRebuild(false);
+        graph.Rebuild(false);
+        Assert.Equal(beforePool, pool.Bytes.ToArray());
+        _ = beforeSecond;
+        _ = types;
+        _ = spots;
+    }
+
+    /// <summary>
+    /// 공간 머리에 내부 Form(비자산 타입)이 있으면 쓰기 전에 거부하고 풀·표·스택을 보존한다.
+    /// </summary>
+    [Fact]
+    public void RebuildRejectsHashFormBeforeMutation()
+    {
+        (RawSidPool pool, RawSquidHash hash, byte[] spots) = Space();
+        OriginalTypeRecord[] types = Types();
+        types[74].Flags1 = OriginalTypeRecord.Surface;
+        types[74].FootX = types[74].FootY = 1;
+        List<IReadOnlyList<FrameCode>> frames = Enumerable.Range(0, types.Length)
+            .Select(_ => (IReadOnlyList<FrameCode>)new List<FrameCode> { new FrameCode('A', 'P', 1, FrameCodeFlags.None) }).ToList();
+        var graph = new RawGraph(pool, hash, spots, types, null, null, frames);
+        int sid = pool.Allocate(SidAllocation.Client);
+        Span<byte> bytes = pool.AllocatedBytes(sid);
+        bytes.Clear();
+        Put(bytes, 0, OriginalConstructors.BaseVtable);
+        bytes[10] = 46;
+        bytes[11] = 4;
+        Put(bytes, 14, BitConverter.SingleToUInt32Bits(20));
+        Put(bytes, 18, BitConverter.SingleToUInt32Bits(20));
+        hash.Bucket(0, 20, 20) = (ushort)sid;
+        byte[] beforePool = pool.Bytes.ToArray();
+        uint beforeStack = graph.FloodStack[0];
+        Assert.Throws<InvalidOperationException>(() => graph.ValidateRebuild(false));
+        Assert.Throws<InvalidOperationException>(() => graph.Rebuild(false));
+        Assert.Equal(beforePool, pool.Bytes.ToArray());
+        Assert.Equal(beforeStack, graph.FloodStack[0]);
+        Assert.Equal(0, graph.Records[0].InUse);
+        _ = types;
+        _ = spots;
     }
 }

@@ -11,10 +11,10 @@ namespace Netstorm.Core.Original;
 /// 이 조각은 표 저장소·초기화(<see cref="ResetTable"/>)·반납(<see cref="Free"/>)·공간/타입 일치와 함께
 /// 원본 슬롯·해시·점유 지도에서 표면 스냅샷을 만들어 영역 무효화(<see cref="InvalidateRegion"/>)·
 /// 추가(<see cref="Add"/>)·flood(<see cref="Flood"/>)·등록 후처리(<see cref="PostPop"/>)·빈 번호 할당(<see cref="Allocate"/>)·
-/// 삭제 준비(<see cref="Detach"/>)를 수행한다.
+/// 삭제 준비(<see cref="Detach"/>)·전체 재구성(<see cref="Rebuild"/>)을 수행한다.
 /// 계산은 항상 사본에서 하고(<see cref="Calculate"/>) 성공한 계획만 commit 하므로, 거부된 호출은 표·스택·슬롯을 바꾸지 않는다.
-/// 전체 재구성(Rebuild)·PostDestroy 는 다음 조각으로 남겼다.
-/// 근거: cpppj/src/o/RawGraph.cpp (W02 열넷째 조각, 2026-10-20).
+/// PostDestroy·Frame 은 다음 조각으로 남겼다.
+/// 근거: cpppj/src/o/RawGraph.cpp (W02 열여섯째 조각, 2026-10-21).
 /// </summary>
 public sealed class RawGraph : IRawPostPopGraph
 {
@@ -207,10 +207,10 @@ public sealed class RawGraph : IRawPostPopGraph
         /// <summary>영역 무효화 뒤 표면 추가.</summary>
         RegionAdd,
 
-        /// <summary>삭제 준비(다음 조각).</summary>
+        /// <summary>삭제 준비(위치 조회·연결 목록·분할 정책).</summary>
         Detach,
 
-        /// <summary>전체 재구성(다음 조각).</summary>
+        /// <summary>전체 재구성(무효 수집 또는 표 초기화 뒤 다시 나누기).</summary>
         Rebuild,
 
         /// <summary>빈 그래프 번호 할당.</summary>
@@ -396,6 +396,25 @@ public sealed class RawGraph : IRawPostPopGraph
         return (byte)plan.Changed;
     }
 
+    /// <summary>
+    /// 전체 풀을 다시 나누어 그래프 번호를 고친다(원본 00463110). 참이면 표를 지우고 모든 표면을 다시 나누고,
+    /// 거짓이면 무효 번호인 표면만 모은다. 슬롯 그래프 byte·표·스택만 바꾸고 좌표·상태·해시·점유 지도는 건드리지 않는다.
+    /// </summary>
+    /// <param name="resetAll">참이면 전체 초기화 재구성, 거짓이면 무효 번호 수집.</param>
+    public void Rebuild(bool resetAll)
+    {
+        Commit(Calculate(0, Operation.Rebuild, (byte)(resetAll ? 1 : 0), null));
+    }
+
+    /// <summary>
+    /// 전체 재구성이 공간·표·스택을 바꾸기 전에 같은 검사를 수행한다. 쓰기는 없다.
+    /// </summary>
+    /// <param name="resetAll">참이면 전체 초기화 재구성, 거짓이면 무효 번호 수집.</param>
+    public void ValidateRebuild(bool resetAll)
+    {
+        _ = Calculate(0, Operation.Rebuild, (byte)(resetAll ? 1 : 0), null);
+    }
+
     /// <summary>공통 PostPop 이 요구하는 후처리 연결(영역·표면 등록)을 수행한다.</summary>
     /// <param name="sid">대상 슬롯 번호.</param>
     /// <param name="region">영역 등록인지.</param>
@@ -412,11 +431,11 @@ public sealed class RawGraph : IRawPostPopGraph
 
     /// <summary>
     /// 원본 계획 계산. 표·스택 사본에서 모든 검사와 계산을 끝내고 성공한 계획을 돌려준다.
-    /// 거부 경로는 아무것도 바꾸지 않는다. 전체 재구성은 이 조각에서 지원하지 않는다.
+    /// 거부 경로는 아무것도 바꾸지 않는다. PostDestroy·Frame 은 이 조각에서 지원하지 않는다.
     /// </summary>
-    /// <param name="sid">대상 슬롯 번호(Allocate 는 0).</param>
+    /// <param name="sid">대상 슬롯 번호(Allocate·Rebuild 는 0).</param>
     /// <param name="operation">연산 종류.</param>
-    /// <param name="target">Flood 목적 번호 또는 삭제 정책(하위 2비트: 재구성·특수 감소).</param>
+    /// <param name="target">Flood 목적 번호·삭제 정책(하위 2비트)·재구성 여부(0 또는 1).</param>
     /// <param name="pop">Pop 예측값. 없으면 슬롯의 현재 좌표·단계를 읽는다.</param>
     /// <param name="sourceType">삭제 위치 정보만 치환할 타입 번호(없으면 원천 타입 유지).</param>
     private Plan Calculate(int sid, Operation operation, byte target, PopProjection? pop, byte? sourceType = null)
@@ -440,10 +459,6 @@ public sealed class RawGraph : IRawPostPopGraph
                     return plan;
                 }
             }
-        }
-        if (operation is Operation.Rebuild)
-        {
-            throw new NotSupportedException("raw 그래프 전체 재구성은 아직 옮기지 않았습니다");
         }
         bool region = operation is Operation.Region or Operation.RegionAdd;
         bool add = operation is Operation.Add or Operation.RegionAdd;
@@ -653,7 +668,12 @@ public sealed class RawGraph : IRawPostPopGraph
         }
         var finder = new SurfaceFinder(objects, map, spots);
         var graph = new SurfaceGraph(finder, members, plan.Records, plan.Stack);
-        if (operation == Operation.Allocate)
+        if (operation == Operation.Rebuild)
+        {
+            // 전체 풀 스냅샷 위에서 무효 수집 또는 표 초기화 재구성을 수행한다
+            graph.Rebuild(target != 0);
+        }
+        else if (operation == Operation.Allocate)
         {
             plan.Changed = graph.AllocateWithRecovery();
         }

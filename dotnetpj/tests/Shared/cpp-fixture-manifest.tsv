@@ -2,7 +2,7 @@
 # dotnetpj 테스트(CppFixtureManifestTests)가 이 목록과 실제 파일을 비교한다. 다르면 cpppj 가 fixture 를 다시 만든 것이므로
 # 해당 C# 검사를 재대조한 뒤 `python dotnetpj/tools/cpp_sync.py --update` 로 갱신한다. 기대값을 C# 결과로 덮어쓰지 않는다.
 # SHA-256 은 CRLF 를 LF 로 바꾼 바이트로 계산하고, rows 는 주석·빈 줄을 뺀 행 수다.
-# reflected-commit: e2dfe0d00054186f2fa5cd82209e65f4a92160d8
+# reflected-commit: f285cfece980f0049cdafc19232f9f54201e84fc
 # 열: file	sha256	rows	origin	consumer
 asset-player-x86.tsv	9562745a755606ed0492e8a457d1c5f97822f073896882db282e04bbb992c3a4	576	cpppj	Core
 assetpostpop-x86.tsv	706afb7e0bd78de2527e97a1ec1bbe1f35a202aafbd2c81a0dc8d77d99198741	1636	cpppj	Core
@@ -19,7 +19,9 @@ derived-x86.tsv	abb2c721cf93f3aca230a4bf6772e952d3e37434090f8784297ce47f608159ab
 display-x86.tsv	1db3d440108a74ff20e49ed21d473ca32b99d10230d1ca3c2ca49409c709b7a0	2944	cpppj	Core
 graph-reset-x86.tsv	48fc211e1d99eab562ceabb1112f5e9031343c0e7e46ce5a0bdfa020a946fa79	17	cpppj	Core
 graph-x86.tsv	93e21a38e9d761de5234122e5bf7962dba262ea3849b51637f92e15eadb46c18	3076	cpppj	Core
+graphforms-x86.tsv	58e1c638f532f84efd3a36b052eea5ea5bfff5e94cc2ea1c2f78b0eda056e24d	64	cpppj	Core
 graphlookup-x86.tsv	16c014101ac2870e2b0c36df61210c163f2b5567a7159ce08f9b6171317e996b	774	cpppj	Core
+graphrebuild-x86.tsv	5912b9df3a895875b42a473c7961bef0bf730d03a0d61ed0dc62362af90653ba	582	cpppj	Core
 graphremove-x86.tsv	82a2f1291b867d958ccdae64231185b27877a069abec53b7dd3c747b26a782b7	1548	cpppj	Core
 hash-x86.tsv	2447ed16982a91260cab70914f44b839ae6aa21083700cc5928fd33152b987a3	4632	cpppj	Core
 metadisplaydirty-x86.tsv	7d35f10062f11a39a1609f1b7ea0b605eb3233f5570deda1e7ef99675b2408a0	1040	cpppj	Core

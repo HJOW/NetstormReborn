@@ -7,12 +7,13 @@ using Netstorm.Tests;
 namespace Netstorm.Core.Tests;
 
 /// <summary>
-/// 원본 월드 코어의 그래프 표·영역·추가/flood(<see cref="RawGraph"/>)를 원본 x86 기대값에 대조한다.
+/// 원본 월드 코어의 그래프 표·영역·추가/flood·삭제·재구성(<see cref="RawGraph"/>)을 원본 x86 기대값에 대조한다.
 /// 장면은 cpppj/tests/RawGraphTests.cpp 의 ReplayRawGraph 와 같다: 실제 슬롯 풀·해시·점유 지도 위에서
-/// 공통 Pop·공통 PostPop·그래프 Region/Add/Flood 를 순서대로 실행하고, 호출마다 7개 슬롯 50바이트·
+/// 공통 Pop·공통 PostPop·그래프 Region/Add/Flood/Detach/Rebuild/Allocate 를 순서대로 실행하고, 호출마다 7개 슬롯 50바이트·
 /// 표/스택/해시/점유/풀 체크섬·TotalCost·깊이·세 Totalmade 표를 비교한다.
 /// 표시(SquidDisplay) 효과는 슬롯·공간을 바꾸지 않으므로 이 재생에서는 끈 경로(null)를 쓴다.
-/// 기준 판본은 10.78 이며 원본1037·CD 행은 읽지 않는다 (W02 열넷째 조각, 2026-10-20).
+/// 전역 재구성 행(17열)은 표 255개 전체 바이트도 직접 비교한다.
+/// 기준 판본은 10.78 이며 원본1037·CD 행은 읽지 않는다 (W02 열여섯째 조각, 2026-10-21).
 /// </summary>
 public sealed class X86RawGraphReplayTests
 {
@@ -168,8 +169,8 @@ public sealed class X86RawGraphReplayTests
     /// <summary>한 Setup 장면의 풀·타입·해시·점유 지도·표·스택·공통 Pop/PostPop/그래프를 소유한다.</summary>
     private sealed class Scene
     {
-        /// <summary>슬롯 풀(서버 아님, 32,768칸).</summary>
-        public readonly RawSidPool Pool = new(32768, false);
+        /// <summary>슬롯 풀(서버 아님, 32,768칸). 전역 fixture 는 Setup 마다 새로 만든다.</summary>
+        public RawSidPool Pool { get; private set; } = new(32768, false);
 
         /// <summary>공간 해시.</summary>
         public readonly RawSquidHash Hash = new();
@@ -231,11 +232,28 @@ public sealed class X86RawGraphReplayTests
         /// <summary>
         /// Setup 행의 노드·점유·표·스택을 장면에 반영하고 그래프/후처리/Pop 을 다시 만든다.
         /// 영역 fixture 는 해시 단계·체인·스택 시드가 달라 그 입력을 그대로 쓴다.
+        /// 전역 fixture 는 빈 슬롯 입력까지 다시 준비하므로 풀을 새로 확보해 같은 번호를 확인한다.
         /// </summary>
         /// <param name="row">Setup 행.</param>
         /// <param name="regionFixture">영역/삭제 계열 fixture 인지(단계·체인·시드 스택).</param>
-        public void Setup(string[] row, bool regionFixture)
+        /// <param name="globalFixture">전체 풀 순회 fixture 인지(풀 재생성).</param>
+        public void Setup(string[] row, bool regionFixture, bool globalFixture = false)
         {
+            if (globalFixture)
+            {
+                // 원본처럼 같은 풀·같은 번호를 다시 준비한다
+                Pool = new RawSidPool(32768, false);
+                var factory = new RawSquidFactory(Pool, Types);
+                // 같은 번호가 같은 순서로 나오는지 확인한다
+                for (int i = 0; i < Ids.Length; i++)
+                {
+                    int remade = factory.Create(FirstType, SidAllocation.Client);
+                    if (remade != Ids[i])
+                    {
+                        throw new InvalidOperationException($"Setup 재생성 슬롯 {i}: 실제 {remade}, 기대 {Ids[i]}");
+                    }
+                }
+            }
             Hash.Reset();
             Array.Clear(Spots);
             int[][] nodes = Rows(row[1]);
@@ -322,7 +340,8 @@ public sealed class X86RawGraphReplayTests
     /// <param name="regionFixture">영역/삭제 계열 장면인지.</param>
     /// <param name="expectedBegins">전체 Begin 행 수(모든 판본).</param>
     /// <param name="expectedCalls">10.78 호출 수.</param>
-    private static void Replay(string fixture, bool regionFixture, int expectedBegins, Dictionary<string, int> expectedCalls)
+    /// <param name="globalFixture">전체 풀 순회 장면인지(Setup 마다 풀 재생성).</param>
+    private static void Replay(string fixture, bool regionFixture, int expectedBegins, Dictionary<string, int> expectedCalls, bool globalFixture = false)
     {
         string[][] rows = X86Fixture.ReadFile($"{fixture}-x86.tsv");
         Scene? scene = null;
@@ -345,7 +364,7 @@ public sealed class X86RawGraphReplayTests
             }
             if (row[0] == "Setup")
             {
-                scene.Setup(row, regionFixture);
+                scene.Setup(row, regionFixture, globalFixture);
                 return true;
             }
             int[][] args = Rows(row[1]);
@@ -378,6 +397,12 @@ public sealed class X86RawGraphReplayTests
                 case "Detach":
                     scene.Graph.Detach(target, args[0][0] != 0, (byte)args[0][1]);
                     break;
+                case "Rebuild":
+                    scene.Graph.Rebuild(args[0][0] != 0);
+                    break;
+                case "Allocate":
+                    Expect("Allocate 반환", scene.Graph.Allocate(), X86Fixture.UInt(row[2]));
+                    break;
                 case "Unpop":
                     scene.Unpop.Unpop(target, scene.Types[FirstType], (uint)args[0][0]);
                     break;
@@ -408,6 +433,15 @@ public sealed class X86RawGraphReplayTests
             Expect("지역 장부", X86Fixture.Adler32(TableBytes(scene.State.LocalCounts)), X86Fixture.UInt(row[11]));
             Expect("보조 장부", X86Fixture.Adler32(TableBytes(scene.State.LocalSecondaryCounts)), X86Fixture.UInt(row[12]));
             Expect("전체 장부", X86Fixture.Adler32(TableBytes(scene.State.GlobalCounts)), X86Fixture.UInt(row[13]));
+            // 전역 재구성 행(17열)은 255개 레코드 전체 바이트도 직접 비교한다
+            if (row.Length == 17)
+            {
+                string actualTable = Convert.ToHexStringLower(RecordBytes(scene.Graph.Records));
+                if (actualTable != row[16])
+                {
+                    throw new InvalidOperationException("표 전체 바이트 불일치");
+                }
+            }
             return true;
         });
         Assert.Equal(expectedBegins, begins);
@@ -460,5 +494,16 @@ public sealed class X86RawGraphReplayTests
         {
             ["Detach"] = 128,
         });
+    }
+
+    /// <summary>전체 풀 순회의 무효 수집·전체 초기화 재구성과 소진 할당을 10.78 몫 96회 재생한다.</summary>
+    [Fact]
+    public void GlobalRebuildAndExhaustedAllocationMatchOriginalX86()
+    {
+        Replay("graphrebuild", true, 6, new Dictionary<string, int>
+        {
+            ["Allocate"] = 32,
+            ["Rebuild"] = 64,
+        }, true);
     }
 }
