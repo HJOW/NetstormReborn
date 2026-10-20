@@ -10,7 +10,7 @@
     "cpppj/src/client/RawMenuControls.cpp": "fd8c19e4b7fde7a65adfa87251d859130106a6e388ced7527c933c73c6045029",
     "cpppj/src/client/RawMenuControls.h": "edcb095b283233a2c3ac893dace31700ac282a23cdce165594d32d076e5fe465",
     "cpppj/src/client/CMakeLists.txt": "4ae70d9d48c3a42bfec960e370ac8c3fa3ade55bd9250039fc63493a8260b85e",
-    "cpppj/tests/CMakeLists.txt": "a627575830fe9176dc72e24279dd80129787527faa645c2c1266799148bb7c70",
+    "cpppj/tests/CMakeLists.txt": "ee217558417e170b51187377eae1fa45478dc6d1c899541a64aa5a73de3847a2",
     "cpppj/tests/CampaignObjectMenuTests.cpp": "8c7951a5447f9e70871f5e082bd68d722d17866a1bbc0f5d43d9be50c62b113c",
     "tools/decomp_quick_help_control.py": "dc06387fb90a7d41a384e7d1b7815ed39d218ccf7f85c6446c6f4b15a5966b17",
     "tools/cpp_quick_help_control_audit.py": "0e417895d515137ebcec1cf4429c3225fd2eb2e3a9e553efb6b23985ddc805d7",
@@ -1438,6 +1438,20 @@
           "group": "/sources",
           "previous": "ce840dfe96790e5c9bdec7e5b4f172b8c3765e2ae53d99f5e7f4da76b60bf1d5",
           "current": "edcb095b283233a2c3ac893dace31700ac282a23cdce165594d32d076e5fe465"
+        }
+      ]
+    },
+    {
+      "unit": 258,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "미션 기본87BYTE 초기화와 실제 네 번째 범위값을 같은 로그인/옵션에 연결했다. 현재 소스 핀만 갱신하며 과거3305행/근거/기대값/실행·바이너리는 보존한다. 실제 게임과 C++검사는 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "a627575830fe9176dc72e24279dd80129787527faa645c2c1266799148bb7c70",
+          "current": "ee217558417e170b51187377eae1fa45478dc6d1c899541a64aa5a73de3847a2"
         }
       ]
     }

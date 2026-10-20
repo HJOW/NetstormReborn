@@ -1495,3 +1495,12 @@ cpppj/quick-help-window-session.json text eol=lf
 tools/decomp_quick_help_window.py text eol=lf
 tools/decomp_quick_help_window_paths.py text eol=lf
 tools/cpp_quick_help_window_audit.py text eol=lf
+# 미션 기본 옵션/네 번째 범위와 최초 독립 관측의 UTF-8/LF 바이트를 보존한다.
+cpppj/src/o/RawMissionBattleOptions.* text eol=lf
+cpppj/src/client/RawCampaignSessionLogin.inc text eol=lf
+cpppj/tests/MissionBattleOptionsTests.cpp text eol=lf
+cpppj/tests/fixtures/mission-option-reset-x86.tsv text eol=lf
+cpppj/mission-option-reset-native.json text eol=lf
+cpppj/mission-option-reset-session.json text eol=lf
+tools/decomp_mission_option_reset.py text eol=lf
+tools/cpp_mission_option_reset_audit.py text eol=lf

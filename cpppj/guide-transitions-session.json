@@ -14,7 +14,7 @@
     "cpppj/src/client/ScriptCommand.cpp": "87908a7252875cfcd2b7a96313c29bd8ea7ae91ef95e53f793c29e8bf0ad880b",
     "cpppj/src/client/ScriptCommand.h": "45a44be3ebefaf70f6cc8cdcdfee35806fbb611e4d84d504ea9d215825c039d0",
     "cpppj/src/client/CMakeLists.txt": "4ae70d9d48c3a42bfec960e370ac8c3fa3ade55bd9250039fc63493a8260b85e",
-    "cpppj/tests/CMakeLists.txt": "a627575830fe9176dc72e24279dd80129787527faa645c2c1266799148bb7c70",
+    "cpppj/tests/CMakeLists.txt": "ee217558417e170b51187377eae1fa45478dc6d1c899541a64aa5a73de3847a2",
     "tools/cpp_mission_common_audit.py": "69bbcb39e8e8178e4b04b32b2c4ed68b6618ad36070c94d1f268e0bf088e24c4",
     "tools/cpp_mission_abort_audit.py": "a978241832853509334e5f865ec069996595b7cf6d552bc354090e4ab7fc4d3a",
     "tools/cpp_mission_lifecycle_audit.py": "e8d2f3b9764c396916984596702689cd6a4cdc973b72a279fdc576a6efbedb71",
@@ -1640,6 +1640,20 @@
           "group": "/sources",
           "previous": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9",
           "current": "d042ad33b81d43de646ef9a82ff4265788a86f18ccf74f3861a3d94a7c95d28d"
+        }
+      ]
+    },
+    {
+      "unit": 258,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "미션 기본87BYTE 초기화와 실제 네 번째 범위값을 같은 로그인/옵션에 연결했다. 현재 소스 핀만 갱신하며 과거3305행/근거/기대값/실행·바이너리는 보존한다. 실제 게임과 C++검사는 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "a627575830fe9176dc72e24279dd80129787527faa645c2c1266799148bb7c70",
+          "current": "ee217558417e170b51187377eae1fa45478dc6d1c899541a64aa5a73de3847a2"
         }
       ]
     }

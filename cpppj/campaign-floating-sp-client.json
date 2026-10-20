@@ -21,7 +21,7 @@
     "cpppj/src/client/RawMenuControls.cpp": "fd8c19e4b7fde7a65adfa87251d859130106a6e388ced7527c933c73c6045029",
     "cpppj/src/client/CampaignCursorClientEffects.cpp": "a3248a08922f8b4fdad05d2e2844db55f96196ccd58d55827b034dad17a55f72",
     "cpppj/src/client/UberGump.cpp": "d042ad33b81d43de646ef9a82ff4265788a86f18ccf74f3861a3d94a7c95d28d",
-    "cpppj/tests/CMakeLists.txt": "a627575830fe9176dc72e24279dd80129787527faa645c2c1266799148bb7c70",
+    "cpppj/tests/CMakeLists.txt": "ee217558417e170b51187377eae1fa45478dc6d1c899541a64aa5a73de3847a2",
     "cpppj/tests/RawMenuControlsTests.cpp": "309e49dd6c5328a5bd6c3c5915202cd329d8c5f55ded5b7c329363e76c404289",
     "cpppj/tests/CampaignCursorClientEffectsTests.cpp": "f04679442eea66764f77ab814314c9edd1790dca1f61f39e95eb29804b78d92b",
     "cpppj/src/client/FloatingSpGump.h": "36df57018c209f1e007727899f85c78f62840e450b740f9de34e7d0ee789d841",
@@ -5789,6 +5789,20 @@
           "group": "/currentSources",
           "previous": "5ce029d5ba102c1784696d8df58e3f3691b6bdf01671b013793a6e504fbfc4f4",
           "current": "309e49dd6c5328a5bd6c3c5915202cd329d8c5f55ded5b7c329363e76c404289"
+        }
+      ]
+    },
+    {
+      "unit": 258,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "미션 기본87BYTE 초기화와 실제 네 번째 범위값을 같은 로그인/옵션에 연결했다. 현재 소스 핀만 갱신하며 과거3305행/근거/기대값/실행·바이너리는 보존한다. 실제 게임과 C++검사는 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/currentSources",
+          "previous": "a627575830fe9176dc72e24279dd80129787527faa645c2c1266799148bb7c70",
+          "current": "ee217558417e170b51187377eae1fa45478dc6d1c899541a64aa5a73de3847a2"
         }
       ]
     }

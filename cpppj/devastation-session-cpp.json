@@ -27,7 +27,7 @@
     "cpppj/src/o/RawBombEffect.h": "78de4e8419940cdc10b434735bfd3d8a4e0a4832e9ed525bb4e81554c1bbc450",
     "cpppj/src/client/RawBombBlastBindings.cpp": "34e95e06b4459afc5ece108a9474893f5a4db4bf598086977ad80722acc76b72",
     "cpppj/src/client/RawBombBlastBindings.h": "dca720eca862979c28da54bcb3daeae25593ca249b28d7de05d02bf5f3fa0443",
-    "cpppj/tests/CampaignSessionTests.cpp": "6a6d54fd15eb24c0609492756880c774120f855138441820a536ea5bd73ee4f0",
+    "cpppj/tests/CampaignSessionTests.cpp": "1ca3f4a443191f14d9a28b3d3e436f3cf22d11ba164319d466e36d18ffd98352",
     "tools/decomp_bomb_packet.py": "53ce554c8c480e7d570210bfda5159575dbe2c31dfbcc6756918175352c3889b",
     "tools/decomp_devastation_draw.py": "01070e4fde7bc3d6f6c736adf695146ed1875fa2575d3c038bb6c39dabb2015d",
     "tools/cpp_devastation_session_audit.py": "aa3f45b0ae837beb03d23550130321b7335990b7a8e79f0d5e00ab87278e34d6",
@@ -289,6 +289,20 @@
           "group": "/sources",
           "previous": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e",
           "current": "6d59bf8f7c9db19c0ca2a1b66594d36979280c82ffac06af529bab7d9698e920"
+        }
+      ]
+    },
+    {
+      "unit": 258,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "미션 기본87BYTE 초기화와 실제 네 번째 범위값을 같은 로그인/옵션에 연결했다. 현재 소스 핀만 갱신하며 과거3305행/근거/기대값/실행·바이너리는 보존한다. 실제 게임과 C++검사는 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "group": "/sources",
+          "previous": "6a6d54fd15eb24c0609492756880c774120f855138441820a536ea5bd73ee4f0",
+          "current": "1ca3f4a443191f14d9a28b3d3e436f3cf22d11ba164319d466e36d18ffd98352"
         }
       ]
     }

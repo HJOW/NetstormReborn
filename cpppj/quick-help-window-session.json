@@ -9,7 +9,7 @@
   "sources": {
     "cpppj/src/client/QuickHelpRequest.cpp": "e90646137dc70790ca092a0bf32f0f65a84e1ed046120c3074b3fd980ac3a7ea",
     "cpppj/src/client/CMakeLists.txt": "4ae70d9d48c3a42bfec960e370ac8c3fa3ade55bd9250039fc63493a8260b85e",
-    "cpppj/tests/CMakeLists.txt": "a627575830fe9176dc72e24279dd80129787527faa645c2c1266799148bb7c70",
+    "cpppj/tests/CMakeLists.txt": "ee217558417e170b51187377eae1fa45478dc6d1c899541a64aa5a73de3847a2",
     "cpppj/src/client/QuickHelpWindow.cpp": "5001ccb90775c123d39a0697ebb937c8f64d66b22d05abd6908d4b1abb4ac46c",
     "cpppj/src/client/QuickHelpWindow.h": "21ddbc2118dc4666275cd77f4cda5e64c9630f8966183c419f43dd36e65614b0",
     "cpppj/src/client/HtmlBodyGump.cpp": "f54a1fc594ccb43c590bcccf6eeb81e49844aa0e69b8b2376439ecdec494def2",
@@ -1175,5 +1175,21 @@
     "빈 요청의 원본 버퍼 앞 접미 읽기는 재현하지 않고 정상 레지스터/스택의 lookup0/이력/기본 주제/전체 창 관측 효과를 보존한다. 비빈 짧은 주제/80바이트 거부와 기존985행은 유지한다.",
     "원본 포인터 크기 진단은 유효 호스트 토큰 조회로 표현한다. 본문 C문자열/NUL은 유지하며8192바이트 치환 지역의 미사용 스택 쓰레기 꼬리를 합성하지 않는다.",
     "전체 Init/State/공장·가상 소멸/전략AI·지형 효과·자연 포획/희생/대피와11미션 자연 완주·외관/음향 동일성은 후속 실제 통합 플레이에서 확인한다."
+  ],
+  "integration_updates": [
+    {
+      "unit": 258,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "미션 기본87BYTE 초기화와 실제 네 번째 범위값을 같은 로그인/옵션에 연결했다. 현재 소스 핀만 갱신하며 과거3305행/근거/기대값/실행·바이너리는 보존한다. 실제 게임과 C++검사는 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "a627575830fe9176dc72e24279dd80129787527faa645c2c1266799148bb7c70",
+          "current": "ee217558417e170b51187377eae1fa45478dc6d1c899541a64aa5a73de3847a2"
+        }
+      ]
+    }
   ]
 }

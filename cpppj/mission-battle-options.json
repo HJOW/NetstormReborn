@@ -52,9 +52,9 @@
     "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
     "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
     "tools/decomp_mission_battle_options.py": "83a4b51550fb9b460e48c7c0072737ca0fd029da22fed6a35e458dbb466a298b",
-    "cpppj/src/o/RawMissionBattleOptions.h": "e3a08504765d474b09ccfd2607f4f2b763e29eb5447f9f4183e58b306204b244",
-    "cpppj/src/o/RawMissionBattleOptions.cpp": "d7179f0113d06d86c8b9254bcb84246281b1960194108353720e4a9a6fb495a4",
-    "cpppj/tests/MissionBattleOptionsTests.cpp": "e455c77b1e9dfdac56b625ebf6e6c27592a6d1f876b5aa06e11557b29bc0354e",
+    "cpppj/src/o/RawMissionBattleOptions.h": "9dd14d4ffdf16003c3b3e0bc694704142ec22a7b7606fb5227fe63646647c433",
+    "cpppj/src/o/RawMissionBattleOptions.cpp": "1c980ccb15f1895cc13efc8012eac01b734b07b9206289b7cb821dacd503c53d",
+    "cpppj/tests/MissionBattleOptionsTests.cpp": "e832fc0d0768115ce509bdf2877955abafc01bb915e467ee4a6d5ded10e2fe5c",
     "cpppj/tests/fixtures/mission-battle-options-x86.tsv": "cc55ca5d315e9e379185ff33082754dd5928e623ae91d8beb8b6a76aadcb2a5e"
   },
   "product_validation": {
@@ -78,5 +78,33 @@
       "extracted/goal-pause-final-ctest.log": "302c70b495ea8e9ac3ee18817606773f7dfb5aec9e5679aad42c939f4e45a52d",
       "extracted/goal-pause-final-tests.log": "91364ac6c5274ab548e3c4f14b64140a5935e4419760df5fa6c138f4a60a173b"
     }
-  }
+  },
+  "integration_updates": [
+    {
+      "unit": 258,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "미션 기본87BYTE 초기화와 실제 네 번째 범위값을 같은 로그인/옵션에 연결했다. 현재 소스 핀만 갱신하며 과거3305행/근거/기대값/실행·바이너리는 보존한다. 실제 게임과 C++검사는 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/o/RawMissionBattleOptions.cpp",
+          "group": "/sha256",
+          "previous": "d7179f0113d06d86c8b9254bcb84246281b1960194108353720e4a9a6fb495a4",
+          "current": "1c980ccb15f1895cc13efc8012eac01b734b07b9206289b7cb821dacd503c53d"
+        },
+        {
+          "path": "cpppj/src/o/RawMissionBattleOptions.h",
+          "group": "/sha256",
+          "previous": "e3a08504765d474b09ccfd2607f4f2b763e29eb5447f9f4183e58b306204b244",
+          "current": "9dd14d4ffdf16003c3b3e0bc694704142ec22a7b7606fb5227fe63646647c433"
+        },
+        {
+          "path": "cpppj/tests/MissionBattleOptionsTests.cpp",
+          "group": "/sha256",
+          "previous": "e455c77b1e9dfdac56b625ebf6e6c27592a6d1f876b5aa06e11557b29bc0354e",
+          "current": "e832fc0d0768115ce509bdf2877955abafc01bb915e467ee4a6d5ded10e2fe5c"
+        }
+      ]
+    }
+  ]
 }

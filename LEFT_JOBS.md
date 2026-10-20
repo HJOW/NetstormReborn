@@ -1,5 +1,16 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-21 단위258 연결 완료: 미션 기본 옵션87BYTE와 네 번째 범위값
+
+- [x] 같은 goal을 이어 진행했다. 직전 턴은 전용 Help의 실제 Client 조립을 구현·기록·커밋한 진행 턴이다. 시작 HEAD `acc2813f`,현재/마지막 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-20**으로 같다. AGENTS와 양 인수인계를 다시 읽었다. 새 디컴파일·원본/CD·AGENTS 변경은 없으며 다른 DN/README 작업은 포함하지 않는다.
+- [x] 큰 Init004c3290을 확인하다 실제41cc10→41cb90 옵션 초기화 누락을 찾았다. 기존 로그인은 색 BYTE72..78만 쓰고 기본 선택을0으로 남겼다. `ResetMissionBattleOptions`에 실제87BYTE 초기화를 복원하고 첫 실제 로그인 전에 같은 현재 배열에 연결했다. BYTE0..22/63..86을 초기화하고 **예약23..62의40바이트를 보존**,색71..78에0..7과 실제22개 기본 선택을 쓴다. 기본 Bridge Slots/Unit Rate/간헐천 비용 등이 기존0 입력과 달라진다.
+- [x] 실제5425f4의 범위표는 **14/22/30/38의4float**이고 기본 선택은3이다. 실제 로그인 표를4개로 연결했다. 원본 최대 비교는2번30이므로 기본 결과는30/제곱900이며 이 특성을38로 바꾸지 않는다. 기본 TYPE 비용3000/보상50을 실제 순수 함수에서 관측했다. 기존3305행의 명시0..2/3float 입력은 계속 지원하고 그 span의3번 읽기는 기존 거부를 유지한다.
+- [x] 제품 변경 전에 **296고유 입력·320정상 반환·47276명령**을 관측했다. 직접 초기화256/전역 래퍼16/기본 파생8/네 번째float16이다. 실제41cb90/41cc10/4b4860/41c8b0/41ca70만 실행하고 외부 효과 대체는 없다. 전체87BYTE·양쪽8BYTE/예약 영역·네 번째값의 quiet NaN/무한대/음수/경계·범위/비용/보상을 저장했다. 최초 도구/fixture/JSON은 제품 변경 전에 `extracted/mission-option-reset-20261021-first-capture/`에 동결했다. 게임/OS/창 관측은 아니다.
+- [x] 새 `MissionBattleOptions_ResetNative296`과 쓰기 전 거부 검사를 작성하고 기존 실제 Session 로그인 검사에 기본22BYTE/에너지 반경900/간헐천 비용3000 확인을 추가했다. **C++검사는 컴파일만 했으며 실행하지 않았다.** 첫 빌드의 BYTE fill 변환 경고/검사16진 helper 누락은 고쳤다. 최종 전체 Release **경고0·오류0·종료0**,로그 `extracted/cpp-mission-option-reset-20261021-build2.log`다.
+- [x] 상세 [작업 기록](docs/exe/cpp-mission-option-reset-20261021.md),`cpppj/mission-option-reset-native.json`·`mission-option-reset-session.json`, `tools/decomp_mission_option_reset.py --verify`·`tools/cpp_mission_option_reset_audit.py --verify`다. 새 최초 원문/정적 감사·기존3305행 원본/SHA·Help Client·미션 수명·기술 허용 감사가 종료0이다. 현재 핀 **128보고서·192항목**의 전체 JSON 역변환은 시작 커밋과 같다. 과거 원문/기대값/검사 실행/바이너리와 역사 핀 문제를 보존했고 이번 세 바이너리 해시도 보고서와 같다. 인수인계 뒤 **20261021-19 CP**로 로컬 커밋하며 push하지 않는다.
+- [ ] **다음 최우선:** 전체 Tutorial Init004c3290의 이름 정규화(소문자화 후 첫 글자만 대문자)/+b0 첫DWORD·tutorialNumber/missionNumber/seen 전역/현재 템플릿 정리,비동기 State7/Guide 공장·가상 소멸을 이어 복원한다. 이번 초기화는 실제 로그인 전 소비자에 연결했으나 전체 Init에서의 전역 옵션 수명/비동기 순서까지 모두 복원한 것은 아니다. 현재 `MissionScript`가 초기 fileName에 원래 이름을 쓰는 차이와 `LoadMissionWorld`의 동기 어댑터가 남는다. 단위257의 외부 URL/기술 학습/기록 스트림·전체 모달/Script 상태도 남으며 멀티플레이 보상 UI는 사용자 지시대로 후순위다.
+- [ ] 전체11미션 자연 완주·전략AI·지형/자연 포획·희생·대피와 외관/음향/동작 동일성은 아직 미완료다. 게임/C++검사/CTest/전체 회귀는 이전 사용자 지시대로 후속 실제 통합 플레이에 이월한다. 전체 goal은 **active/미완료**다.
+
 ## 2026-10-21 단위257 실제 Client 조립: 전용 Help 등록·입력·픽셀·소멸 연결
 
 - [x] 같은 goal을 이어 진행했다. 직전 턴은 전체 창/HTML 부모·빈 요청을 구현·기록·커밋한 진행 턴이다. 시작 HEAD `fa97b47f`,현재/마지막 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-20**으로 같다. AGENTS와 양 인수인계를 다시 읽었으며 새 디컴파일·원본/CD·AGENTS 변경은 없다. 다른 DN/README 작업은 포함하지 않는다.

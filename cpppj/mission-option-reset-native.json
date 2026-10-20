@@ -1,0 +1,43 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-20",
+  "uniqueInputs": 296,
+  "normalFunctionReturns": 320,
+  "instructions": 47276,
+  "gameExecuted": false,
+  "osExecuted": false,
+  "defaults": [
+    0,
+    2,
+    2,
+    0,
+    3,
+    0,
+    2,
+    1,
+    1,
+    0,
+    0,
+    1,
+    0,
+    1,
+    1,
+    2,
+    2,
+    1,
+    2,
+    2,
+    0,
+    0
+  ],
+  "rangeTableHex": "000060410000b0410000f04100001842",
+  "scope": "실제0041cb90/41cc10의87바이트 초기화와004b4860/41c8b0/41ca70의 기본 파생 및 네 번째float. 외부 효과 대체가 없고 전체 Init/로그인·실제 게임/화면 관측은 아니다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_mission_option_reset.py": "d43635d38daee9eb413f44780311a284c77a07f4b44bc18194e6b29ea2c0df77",
+    "cpppj/tests/fixtures/mission-option-reset-x86.tsv": "0d52009c05d9026c46656abcb27e76033cb4aedf29d6f053ceca4f4cdd8cd757"
+  }
+}

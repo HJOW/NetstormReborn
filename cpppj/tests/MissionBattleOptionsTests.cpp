@@ -5,6 +5,36 @@
 using namespace netstorm::o;
 using namespace netstorm::test::rawscene;
 namespace {
+// 독립 관측의16진 입력을 같은 순서의 바이트로 읽는다. 기대 출력은 이 함수로 계산하지 않는다.
+std::vector<std::uint8_t> MissionOptionBytes(std::string_view text) {
+    if (text.size()%2) throw std::invalid_argument("옵션 관측 입력의16진 길이 오류");std::vector<std::uint8_t> result;
+    // 정확히 두 글자씩만 한 BYTE로 해석한다.
+    for (std::size_t index=0;index<text.size();index+=2) result.push_back(static_cast<std::uint8_t>(std::stoul(std::string(text.substr(index,2)),nullptr,16)));return result;
+}
+}
+// 전체296개 최초 원문의 이웃/예약/현재 옵션·네 번째float와 실제 파생값을 비교한다. 제품 검사 실행은 후속 통합 단계로 이월한다.
+TEST_CASE(MissionBattleOptions_ResetNative296) {
+    const auto rows=LoadFixture(NETSTORM_MISSION_OPTION_RESET_FIXTURE).rows;CHECK(rows.size()==296);
+    // 입력 저장소는 원본 전 관측 바이트이며 결과를 계산해 기대값으로 쓰지 않는다.
+    for (const auto& row:rows) {
+        CHECK(row.size()==9);if (row.size()!=9) return;auto bytes=MissionOptionBytes(row[4]);CHECK(bytes.size()==103);auto raw=std::span<std::uint8_t>(bytes).subspan(8,87);
+        std::vector<RiftTypeRecord> types(188);std::array<std::uint8_t,256> use{};std::array<float,4> table{14,22,30,std::bit_cast<float>(Number(row[3]))}; // 실제4float 입력과 같은 현재 타입/사용표다.
+        std::uint32_t selected{},value{};float range{},squared{}; // 원본 두float/현재 비용 대상/보상값이다.
+        RawMissionBattleOptions options(OriginalEdition::Patch1078,{raw,types,use,table,selected,range,squared,value});
+        if (row[0]=="F") raw[4]=static_cast<std::uint8_t>(Number(row[2]));else ResetMissionBattleOptions(OriginalEdition::Patch1078,raw);
+        if (row[0]=="P" || row[0]=="F") { options.UpdateRange();std::array<std::uint8_t,8> floats{};Put(floats,0,std::bit_cast<std::uint32_t>(range));Put(floats,4,std::bit_cast<std::uint32_t>(squared));CHECK(Hex(floats)==row[6]); }
+        if (row[0]=="P") { CHECK(std::to_string(options.TypeCost())==row[7]);CHECK(std::to_string(options.CurrentValue())==row[8]); }
+        CHECK(Hex(bytes)==row[5]);
+    }
+}
+// 잘못된 판본/물리 크기는 쓰기 전에 거부하고4float의 범위 밖 선택도 명시 오류로 유지한다.
+TEST_CASE(MissionBattleOptions_ResetRejectsBeforeWrite) {
+    std::array<std::uint8_t,87> bytes;bytes.fill(0x5a);const auto original=bytes; // 거부 경로의 실제 쓰기 보존을 확인하는 입력이다.
+    CHECK(Throws([&] { ResetMissionBattleOptions(OriginalEdition::Cd1072,bytes); }));CHECK(bytes==original);
+    CHECK(Throws([&] { ResetMissionBattleOptions(OriginalEdition::Patch1078,std::span(bytes).first(86)); }));CHECK(bytes==original);
+    CHECK(Throws([&] { ResetMissionBattleOptions(OriginalEdition::Patch1078,std::span<std::uint8_t>{}); }));CHECK(bytes==original);
+}
+namespace {
 // 원본 관찰과 같은 입력 저장소를 만들되 결과 계산은 제품에 맡긴다.
 struct BattleOptionFixture {
     std::array<std::uint8_t,87> options{}; // 동일한 현재 옵션87BYTE다.

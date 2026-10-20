@@ -1129,7 +1129,7 @@ set_source_files_properties(MissionServerPacketsTests.cpp PROPERTIES COMPILE_DEF
 
 # 실제 옵션과 현재 생산 Deck/Factory 재계산의 독립 원본 기대값이다.
 set_source_files_properties(MissionBattleOptionsTests.cpp PROPERTIES COMPILE_DEFINITIONS
-    "NETSTORM_MISSION_BATTLE_OPTIONS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/mission-battle-options-x86.tsv\"")
+    "NETSTORM_MISSION_BATTLE_OPTIONS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/mission-battle-options-x86.tsv\";NETSTORM_MISSION_OPTION_RESET_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/mission-option-reset-x86.tsv\"")
 set_source_files_properties(ProductionDeckTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_PRODUCTION_DECK_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/production-deck-x86.tsv\";NETSTORM_PRODUCTION_REFRESH_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/production-refresh-x86.tsv\"")
 set_source_files_properties(FortImagePacketsTests.cpp PROPERTIES COMPILE_DEFINITIONS

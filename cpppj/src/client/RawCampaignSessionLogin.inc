@@ -17,7 +17,7 @@ struct RawCampaignSession::Impl::Login {
     std::array<std::uint32_t,2> zoneWords{}; //원본6BYTE Zone 주소의 실제DWORD와인접WORD를 공유한다.
     std::array<std::uint8_t,10> cachedCore{};std::span<std::uint8_t> currentCore; //실제cached10BYTE와현재선택 포인터다.
     std::array<std::uint8_t,256> typeUse{}; //원본256BYTE 타입사용표다.
-    std::array<float,3> ranges{14,22,30}; //원본 범위옵션의 실제표다.
+    std::array<float,4> ranges{14,22,30,38}; //원본5425f4의 실제4float다. 기본3번도 읽고 최대 비교는 원래2번30을 사용한다.
     float range{22}; //원본52f488이며제곱은Session의같은EnergySupplyState에 쓴다.
     bool simul{},saved{},adjust{};std::uint8_t overrideFlags{},title{},battleByte{}; //현재단독미션의설정/저장/제목과BYTE 상태다.
     std::uint32_t pendingStamp{},activeStamp{},zoneWord{},begin{},fortCount{},lastPlayer{},predictable{},beginSeed{},battleSeed{},burst{},clockStamp{},baseClock{},central{},archipelago{},optionValue{},outpost{},coreActive{}; //원본로그인전역의 실제현재저장소다.
@@ -75,8 +75,8 @@ struct RawCampaignSession::Impl::Login {
     }
     //현재 원본 로그인/패킷/상태/타이머 모듈을 같은 저장소로 조립한다.
     Login(Impl& owner,CampaignLoginServices device,std::function<void()> load):s(owner),effects(std::move(device)),install(std::move(load)) {
-        //원본52f7e0의초기색상BYTE72..78을다른옵션과구별해설정한다.
-        for (std::size_t i=0;i<7;++i) s.battleOptions[72+i]=static_cast<std::uint8_t>(i+1);
+        // 첫 실제 접속/설치 전에 Init의22개 기본 옵션/색과 예약 영역 보존을 같은87BYTE에 적용한다.
+        ResetMissionBattleOptions(OriginalEdition::Patch1078,s.battleOptions);
         transport=std::make_unique<netstorm::zacket::LocalMissionTransport>(s.players,s.core.processState.server,Device());
         auto send=[this](std::int32_t target,std::span<const std::uint8_t> bytes) { Send(target,bytes); }; //모든 부모가 공유하는 같은 실제 연결이다.
         options=std::make_unique<RawMissionBattleOptions>(OriginalEdition::Patch1078,MissionBattleOptionState{s.battleOptions,s.world.MutableTypes(),typeUse,ranges,s.geyserType,range,s.energyState.radiusSquared,optionValue});

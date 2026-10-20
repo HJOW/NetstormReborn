@@ -3,12 +3,14 @@
 #include "o/RiftType.h"
 
 namespace netstorm::o {
+// 0041cb90/0041cc10의 실제 PATCH 초기화다. BYTE23..62는 기존 값을 보존하고22개 기본 옵션/색0..7을 설치한다.
+void ResetMissionBattleOptions(OriginalEdition edition,std::span<std::uint8_t> options);
 // 옵션 수신/로그인/TYPE 소비자가 빌리는 같은 현재 저장소다.
 struct MissionBattleOptionState {
     std::span<const std::uint8_t> options; // 0052f7e0의 실제87바이트이며 숨김9도 이 안에 있다.
     std::span<RiftTypeRecord> types; // 현재188TYPE의 실제cost(+c4)를 수정한다.
     std::span<std::uint8_t> typeUse; // 005451f8의 실제256바이트 사용표다.
-    std::span<const float> rangeTable; // 005425f4의현재3float이며 기본값은14/22/30이다.
+    std::span<const float> rangeTable; // 005425f4의현재4float14/22/30/38이다. 기존0..2 독립 입력은3float도 허용한다.
     const std::uint32_t& selectedType; // 00541240의 현재 비용수정 대상이다.
     float& range; // 0052f488의 현재 범위다.
     float& rangeSquared; // 0052f48c의 현재 범위 제곱이다.
@@ -17,7 +19,7 @@ struct MissionBattleOptionState {
 // 원본의 작은 순수 몸체를 실제 현재 배열/필드에 연결한다.
 class RawMissionBattleOptions {
 public:
-    // PATCH87옵션/188TYPE/256사용표/3float를 정확히 빌린다. 모든 대상은 더 오래 살아야 한다.
+    // PATCH87옵션/188TYPE/256사용표/3~4float를 정확히 빌린다. 실제 로그인은 기본 인덱스3을 위해4개를 공급한다.
     RawMissionBattleOptions(OriginalEdition edition,MissionBattleOptionState state);
     //004b4860의선택→ordered최대/최소비교→float제곱쓰기다. NaN의원본분기도보존한다.
     void UpdateRange() const;
