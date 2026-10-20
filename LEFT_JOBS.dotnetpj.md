@@ -1,3 +1,14 @@
+## 2026-10-20 완료: W02 여덟째 조각 — 건물 공간
+
+- [x] 사용자 요청("AGENTS.md 와 LEFT_JOBS.dotnetpj.md 를 다시 읽고, dotnetpj 서브프로젝트 다음 작업을 진행해 줘.")으로 직전 절이 정한 다음 시작점, 곧 건물 공간(`buildingspace`)·이웃·탐색 가운데 건물 공간부터 수행했다. `cpppj/`·공통 `LEFT_JOBS.md`는 수정하지 않았다. 현재 PC **VM-W11-Codex**는 공통 기록의 마지막 정밀 디컴파일 PC(**VM-W11-Codex / 2026-10-20**)와 같으나 **디컴파일 산출물을 읽지 않았고**, 새 디컴파일·원본 관찰·원본/클론 게임·창 실행은 없다. cpppj 커밋 소스·원본 fixture에만 근거했다. 마지막 디컴파일 PC 기록은 그대로다. 상세·근거 표·경계는 [원본 월드 코어 W02 건물 공간 조각](docs/dotnet-original-core-buildingspace-20261020.md).
+- [x] **동기화 먼저:** 시작할 때 반영 커밋은 `d1d5643c`, HEAD는 `748bcbd1`(당일 `20261020-12`)였다. 사이는 dotnetpj 점검·보완 2건뿐이라 cpppj 변경 검토가 없고, 쓸 fixture를 `--update --add buildingspace:Core`로 등록했다(연결 fixture 29→**30**개). 마지막에 `--update --reflect HEAD`로 반영 커밋을 `d1d5643c`→**`748bcbd1`** 로 올렸다([계획 7절 7번](docs/dotnet-cpp-port-plan-20261016.md#7-cpppj-진행을-따라가는-절차-다른-ai가-cpppj를-계속-진행-중)).
+- [x] **구현(`dotnetpj/src/Netstorm.Core/Original/`):** `RawBuildingSpace`(건물 옆면 공간 10.78 경로 — 표면 조회·섬 판정·Pop/Unpop 옆면·수명 진단·공간 일치 검사), `BuildingSpaceState`(섬·다리 타입·진단). `IRawPopBuildingSide`·`IRawBuildingSide`를 구현해 실제 Pop·Unpop 에 연결한다(재생 검사에서만 연결, 기존 세션 규칙은 그대로). `AssemblyInfo.cs`에 테스트용 internal 공개 1줄을 더했다. 기준 판본은 10.78 뿐이다.
+- [x] **검증:** 전체 Release 경고 0·오류 0(`--no-incremental` 강제 전체 빌드), 단위 **1,163개 통과**(Assets 363 + Core 800; 이번 +5). `buildingspace-x86.tsv` 10.78 몫 **64 Begin·123 Step**(Pop 결과·풀 전체·해시 머리·점유 지도 체크섬·앞 192슬롯 바이트)이 전부 일치했다.
+- [x] **변이 확인:** 구현 18곳을 하나씩 망가뜨려 처음에 14곳이 실패로 잡혔다. 잡히지 않은 4곳은 검사를 2건 보강한 뒤(풀 범위 표면 번호·매립/비다리 진단 제외) 16곳이 잡혔다. 남은 2곳(빈 번호 검사 생략·표면 타입 범위 검사 생략)은 관측 동작이 같아 방어용 중복으로 유지한다.
+- [ ] **하지 않은 것(경계):** 이웃·탐색(`neighbor`·`rawfinder`), Graph 계열, CD 10.72. 실제 세션 연결과 파생 분배 허브는 여전히 미연결이다. 이 조각은 L1 모듈 단계이며 L2 이상으로 합산하지 않는다.
+- [ ] **다음 조각:** 이웃·탐색(`neighbor`·`rawfinder`) → Graph 계열. 시작할 때 `python dotnetpj/tools/cpp_sync.py`를 먼저 실행하고 쓸 fixture를 `--update --add`로 등록한다.
+- [x] 인수인계 뒤 **`20261020-13 DN 원본 월드 코어의 건물 공간을 실제 Pop·Unpop 과 이어 원본 10.78 행 123단계로 검증`** 으로 로컬 커밋한다. 원격 push는 하지 않는다.
+
 ## 2026-10-20 완료: 점검 보완 — 프레임 범위 검사 복구·Pop 생성 자료 자동 검사 (`VM-W11-Codex`)
 
 - [x] 사용자 요청("dotnetpj 보완 작업 및 테스트, 필요 시 수정 진행해 줘")으로 직전 점검의 보완 2건을 처리했다. 시작 HEAD는 **`5e408764`**, 작업 PC는 **VM-W11-Codex**다. AGENTS와 양쪽 인수인계의 최신 지시를 다시 확인했다. 마지막 정밀 디컴파일 PC 기록은 **VM-W11-Codex / 2026-10-20**로 같으며, 디컴파일 산출물 열람·재생성 및 원본/클론 게임·창 실행은 없다. `cpppj/`·공통 `LEFT_JOBS.md`·AGENTS·원본 자료는 변경하지 않았다.
