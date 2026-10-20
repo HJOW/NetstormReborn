@@ -6,6 +6,14 @@ void PrepareCarrierDrop() {
 // 게임 계산은기존몸체에연결하고실제팝업/전송/선택은현재소비자만사용한다.
 void ConnectCarrierDrop() {
     if (carrierDrop) throw std::logic_error("Cast/Drop Session 중복설치");
+    objectCommandState.localOwner=[this] { return playerState.battleOwner; };
+    objectCommandState.editor=[this] { return globals.editor!=0; };objectCommandState.mission=[this] { return globals.missionPost!=0; };
+    ObjectCommandHooks common; // 같은 가상+74/+98/+10을 기존 월드 몸체에 위임한다.
+    common.owner=[this](Sid parent,std::uint32_t owner) { ownership->SetOwner(parent,owner); };
+    common.hit=[damage=hits->DamageHooks({}).damage](Sid parent,std::int32_t amount,std::uint32_t owner,Sid attacker) { if (!damage) throw std::logic_error("공통 객체 명령의 실제 피해 미연결");damage(parent,amount,static_cast<std::uint8_t>(owner),attacker); };
+    common.destroy=[this](Sid parent,std::uint32_t flags) { static_cast<void>(world.Destroy(parent,flags)); };
+    common.describe=SessionMissing<void,Sid>(); // 개발용4b0fb0 진단 출력은 별도 복원 대상이다.
+    objectCommand=std::make_unique<RawObjectCommand>(core.pool,objectCommandState,std::move(common));
     CarrierDropPointHooks point;point.mayPlace=[this](const CanonPlacementQuery& query) { PrepareConstruction();return MayPlaceGameplay(query); };point.center=[this](Sid sid) { return gunTarget->Center(sid); };
     carrierDropPoint=std::make_unique<RawCarrierDropPoint>(core.pool,core.types,carrierDropPointState,std::move(point));
     CarrierDropHooks hooks;
@@ -25,7 +33,8 @@ void ConnectCarrierDrop() {
     hooks.notify=[this](Sid form,std::uint32_t event,std::uint32_t info,std::uint32_t value) { auto* process=core.processes.FromForm(form);if (!process) throw std::logic_error("Cast/Drop 현재프로세스누락");process->Notify(event,info,value); };
     hooks.select=[this](std::uint32_t sid,std::uint32_t force,std::uint32_t activate) { auto current=activeSelection.lock();if (!current || !current->selection) throw std::logic_error("Cast/Drop 실제선택수명미연결");static_cast<void>(current->selection->Select(sid,force,activate)); };
     hooks.send=[this](std::int32_t target,std::span<const std::uint8_t> packet) { if (!services.carrierRequest) throw std::logic_error("Cast/Drop 실제전송미설치");services.carrierRequest(target,packet); };
-    hooks.pickup=[this](Sid parent) { carrierPickup->Request(parent); };hooks.baseMenu=SessionMissing<std::uint32_t,Sid,std::uint32_t,Sid>();
+    hooks.pickup=[this](Sid parent) { carrierPickup->Request(parent); };
+    hooks.baseMenu=[this](Sid parent,std::uint32_t command,Sid) { return objectCommand->Command(parent,command); }; // 원본4ae010은 이벤트의명령DWORD만소비한다.
     hooks.assertion=[](std::uint32_t line) { throw std::logic_error("원본 Cast/Drop 진단 "+std::to_string(line)); };hooks.dropPoint=[this](Sid parent,std::uint32_t type) { return carrierDropPoint->Find(parent,type); };
     hooks.queue=[this](std::uint32_t command,std::uint32_t type,std::uint32_t flags) { if (!services.assets.queueCommand) throw std::logic_error("Cast/Drop 실제입력큐미연결");services.assets.queueCommand(command,std::bit_cast<std::int32_t>(type),std::bit_cast<std::int32_t>(flags)); };
     hooks.badOwner=[this](std::uint32_t type,std::uint32_t owner) { PrepareConstruction();construction->Refund(type,owner); };hooks.money=[this](std::uint32_t owner) { return std::bit_cast<float>(sp.Get(owner)); };

@@ -39,6 +39,7 @@
 #include "o/RawBombRegular.h"
 #include "o/RawBombEffect.h"
 #include "o/RawCarrierDrop.h"
+#include "o/RawObjectCommand.h"
 #include "client/RawBombBlastBindings.h"
 #include "o/RawPacketDispatch.h"
 #include "client/AiTypeRequiredEnergy.h"
@@ -403,6 +404,8 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawCarrierDropPoint> carrierDropPoint;std::unique_ptr<RawCarrierDrop> carrierDrop; // 같은Session의실제Cast/Drop 요청/수신과위치몸체다.
     std::unique_ptr<SalvageCommandState> salvageState; // 실제 미션/로컬/제단 전역과 현재54h 헤더를 빌린다.
     std::unique_ptr<RawSalvageCommand> salvageCommand; // 회수 관문·실제 환불·가상 삭제를 같은 전송에 연결한다.
+    ObjectCommandState objectCommandState; // 공통 객체 명령이 현재 로컬 번호/편집/미션 전역을 직접 읽는다.
+    std::unique_ptr<RawObjectCommand> objectCommand; // Cast/Drop의 부모 위임과 같은 월드의 공통 메뉴 입력이다.
     CarrierPickupState carrierPickupState; //같은현재4f 헤더/입력명령/특정내용물타입이다.
     std::unique_ptr<RawCarrierPickup> carrierPickup; //같은풀/현재후보/내용물/종속/입력/서버전송을연결한다.
     std::uint32_t stealHaltCounter{}; // 모든 크랩이 공유하는00545428이다.
@@ -2338,6 +2341,8 @@ void RawCampaignSession::RequestCarrierMove(Sid parent,RawPathPoint destination,
 void RawCampaignSession::RequestCarrierDrop(Sid parent,Sid content) { if (!impl_->loaded) throw std::logic_error("설치 전 Cast/Drop 요청");impl_->PrepareCarrierDrop();impl_->carrierDrop->Request(parent,content); }
 // 메뉴의검색부모와실제요청부모를원본처럼별개인자로유지한다.
 std::uint32_t RawCampaignSession::CommandCarrierDrop(Sid parent,std::uint32_t command,Sid listParent) { if (!impl_->loaded) throw std::logic_error("설치 전 Cast/Drop 메뉴");impl_->PrepareCarrierDrop();return impl_->carrierDrop->Command(parent,command,listParent); }
+// 비캐리어 메뉴도 동일한 공통 객체/현재 가상 효과로 명령을 처리한다.
+std::uint32_t RawCampaignSession::CommandObject(Sid parent,std::uint32_t command) { if (!impl_->loaded || !impl_->objectCommand) throw std::logic_error("설치 전 공통 객체 명령");return impl_->objectCommand->Command(parent,command); }
 // 사용자 회수 명령은 같은 서버 요청을 보내며 결과/환불/삭제를 직접 만들지 않는다.
 void RawCampaignSession::RequestSalvage(std::uint32_t sid) { if (!impl_->loaded || !impl_->salvageCommand) throw std::logic_error("미설치Session의 실제 회수 요청");impl_->salvageCommand->Request(sid); }
 // 설치 뒤 같은 실제 요청/수신 모듈만 빌린다.

@@ -21,8 +21,8 @@
     "tests": "0bcaa0dfc82bb36ab148efc343334f72569fac0fd13121a97040789abd92eb67"
   },
   "sources": {
-    "cpppj/src/CMakeLists.txt": "6607046c6ce2b71f7cae40487563418cf582f73458504dc8c22fd109e3aefc10",
-    "cpppj/tests/CMakeLists.txt": "8ca2db5cb109de55c2eadec3063e474691de144316efaa1a2e9046faf0febd43",
+    "cpppj/src/CMakeLists.txt": "8834917133d33fda6dcd145dd64a93ee38ee014d25fede2eff5575b996df5847",
+    "cpppj/tests/CMakeLists.txt": "49797f3b65f9f2b5bbb3c15a4521ecb361936cbf0c13f443f2f20f86bfe8f1cf",
     "cpppj/src/o/RawBombTargets.cpp": "f2aa11b08479c114823fca68e87b0aadf27da965e5b63a2129d350f3c583700c",
     "cpppj/src/o/RawBombTargets.h": "4a12c271c210e925afadf17e085ca677459f40045385befa84960d9a63642e2c",
     "cpppj/tests/BombTargetsTests.cpp": "c23ce90953e40c4a9c0527108693f8ee6e9bc31c6308ac26d879d9d9203cae57",
@@ -116,6 +116,26 @@
           "path": "cpppj/src/CMakeLists.txt",
           "previous": "c7528c1471cb14af92ed763612a66dc669eb143783ab3dc630650763b74ff968",
           "current": "6607046c6ce2b71f7cae40487563418cf582f73458504dc8c22fd109e3aefc10"
+        }
+      ]
+    },
+    {
+      "unit": 239,
+      "date": "2026-10-20",
+      "host": "VM-W11-Codex",
+      "reason": "공통 객체 명령과Cast/Drop 부모 위임 연결. 과거 실행·원본 기대값은 보존하고 현재 소스 핀만 갱신한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "6607046c6ce2b71f7cae40487563418cf582f73458504dc8c22fd109e3aefc10",
+          "current": "8834917133d33fda6dcd145dd64a93ee38ee014d25fede2eff5575b996df5847"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "8ca2db5cb109de55c2eadec3063e474691de144316efaa1a2e9046faf0febd43",
+          "current": "49797f3b65f9f2b5bbb3c15a4521ecb361936cbf0c13f443f2f20f86bfe8f1cf"
         }
       ]
     }

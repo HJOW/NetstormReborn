@@ -10,6 +10,8 @@
 # 게임 본체. 실행 파일과 테스트가 함께 쓰도록 정적 라이브러리로 묶는다.
 # 소스 목록은 각 폴더의 CMakeLists.txt 가 target_sources 로 더한다.
 add_library(netstorm STATIC)
+# 공통 객체 명령의 현재 모드/가상 소유자·피해·삭제 분기다.
+target_sources(netstorm PRIVATE o/RawObjectCommand.cpp o/RawObjectCommand.h)
 netstorm_apply_compiler_options(netstorm)
 # 포함 경로의 기준은 src/ 다. 예: #include "client/ClientMain.h"
 target_include_directories(netstorm PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")

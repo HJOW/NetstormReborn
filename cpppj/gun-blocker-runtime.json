@@ -11,9 +11,9 @@
     "cpppj/src/o/RawGunBlocker.cpp": "8ab5aaed86d34b9db20da2b8cceb4eb2b578154f5e8eab9e6c2ca57be20e75ab",
     "cpppj/src/o/RawGunBlocker.h": "adbafba75dbdd760a30a518e99634e6c493f549efce9aabcb12155010fc2acee",
     "cpppj/src/o/CMakeLists.txt": "e98fa5aecc683b69021e6efacd62092a48772ae5ed3f7cb3da0eeeff7c33d7ec",
-    "cpppj/src/client/RawCampaignSession.cpp": "bb179f114f49f08e55b37da0fab350ea0370005c31b09b9224afcc48d342bd1c",
+    "cpppj/src/client/RawCampaignSession.cpp": "e922269cc73ab9299f59d9ae26a4c2b1346adcf023b1d8eff5416699d125eea6",
     "cpppj/tests/GunBlockerTests.cpp": "f6eac38c6f829b88e2de0395982035ec98203fd0b50c7c4a0fff0a9647e6b93a",
-    "cpppj/tests/CMakeLists.txt": "8ca2db5cb109de55c2eadec3063e474691de144316efaa1a2e9046faf0febd43",
+    "cpppj/tests/CMakeLists.txt": "49797f3b65f9f2b5bbb3c15a4521ecb361936cbf0c13f443f2f20f86bfe8f1cf",
     "cpppj/tests/fixtures/gun-blocker-x86.tsv": "326003cc70d664a46313cf2090586a0da3e73390b1a242342db2ff4929b89898",
     "cpppj/tests/fixtures/gun-blocker-boundary-x86.tsv": "cfa8f3ef18b6a7cee79f2f79519e50e8e3951beb6d895709c5fa53d8be381623",
     "cpppj/tests/fixtures/tutorial-five-blocker-ui-input.tsv": "a2b30d1b5672a46047addb5ae67ddd64343f780bf0c3356f0b29bc53efb696e4",
@@ -368,6 +368,26 @@
           "path": "cpppj/gun-blocker-boundary-native.json",
           "previous": "dc69565ab9419c368c37ef7807f0ea16c4aa24ed58a87538a3f0a1d6a853aca9",
           "current": "f94753110919543c2202c960a371bedd120c6158241551edeec934e7adf81676"
+        }
+      ]
+    },
+    {
+      "unit": 239,
+      "date": "2026-10-20",
+      "host": "VM-W11-Codex",
+      "reason": "공통 객체 명령과Cast/Drop 부모 위임 연결. 과거 실행·원본 기대값은 보존하고 현재 소스 핀만 갱신한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "group": "/sources",
+          "previous": "bb179f114f49f08e55b37da0fab350ea0370005c31b09b9224afcc48d342bd1c",
+          "current": "e922269cc73ab9299f59d9ae26a4c2b1346adcf023b1d8eff5416699d125eea6"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "8ca2db5cb109de55c2eadec3063e474691de144316efaa1a2e9046faf0febd43",
+          "current": "49797f3b65f9f2b5bbb3c15a4521ecb361936cbf0c13f443f2f20f86bfe8f1cf"
         }
       ]
     }

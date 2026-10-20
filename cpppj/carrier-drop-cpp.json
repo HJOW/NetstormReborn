@@ -21,7 +21,7 @@
     "tests": "744bcfb4b4c60937e4a7368a7fe85f1e363e489df25c7c313ddd244e474087a4"
   },
   "sources": {
-    "cpppj/src/CMakeLists.txt": "6607046c6ce2b71f7cae40487563418cf582f73458504dc8c22fd109e3aefc10",
+    "cpppj/src/CMakeLists.txt": "8834917133d33fda6dcd145dd64a93ee38ee014d25fede2eff5575b996df5847",
     "cpppj/src/o/RawBombActivation.cpp": "91b8f55898bbb61322d2ccaa79ac43185e01a5b35ce245c2209cec8448030bcd",
     "cpppj/src/o/RawBombActivation.h": "7391c4dc9cbf62b215e45ffa7864485e69763ccd0810d020c3313198235fdd50",
     "cpppj/src/o/RawCarrierDrop.cpp": "87cea7b7a5b4bbba7dce9342bf58c7336efecc64e6edfd633345ee7823d39341",
@@ -31,7 +31,7 @@
     "cpppj/src/o/SidPool.h": "a830f7fca8c42e5a2713a7d5d886314c81dc3bffb8271de85c1b0d1fc46de651",
     "cpppj/tests/BombActivationTests.cpp": "a92a2cd55ce7be609c7fa6e82a7cf03b7717cdb539c2817b441d17be871fe459",
     "cpppj/tests/CarrierDropTests.cpp": "d3153457d1d836ae1efc15665c85d582c1fd3f21bba25683b0cf7185bd5fc141",
-    "cpppj/tests/CMakeLists.txt": "8ca2db5cb109de55c2eadec3063e474691de144316efaa1a2e9046faf0febd43",
+    "cpppj/tests/CMakeLists.txt": "49797f3b65f9f2b5bbb3c15a4521ecb361936cbf0c13f443f2f20f86bfe8f1cf",
     "tools/cpp_carrier_drop_cpp_audit.py": "ee10e4ac00fa349d78ee482d720e7746fb7b67c6335e555a66b42f88a3d0ce1c",
     "tools/decomp_bomb_activation.py": "f01aafc8c2fb9713fa57ba7531dd4a7b9ebaf1035a24c650b778161b0202bbf5",
     "tools/decomp_carrier_falling.py": "f8702db0708a543b73213c8df9154503afe977767a11bd7c150b639ee1b587a6",
@@ -205,6 +205,26 @@
           "path": "cpppj/carrier-drop-native.json",
           "previous": "8c5ba84e9b1251806c08a3631100abce74d343a932154b7cf06876f19816d216",
           "current": "cd2333c4ead6c0f8260ca19303dc84bda19224b2af6da97c0ea833bcfd2af4ee"
+        }
+      ]
+    },
+    {
+      "unit": 239,
+      "date": "2026-10-20",
+      "host": "VM-W11-Codex",
+      "reason": "공통 객체 명령과Cast/Drop 부모 위임 연결. 과거 실행·원본 기대값은 보존하고 현재 소스 핀만 갱신한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "6607046c6ce2b71f7cae40487563418cf582f73458504dc8c22fd109e3aefc10",
+          "current": "8834917133d33fda6dcd145dd64a93ee38ee014d25fede2eff5575b996df5847"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "8ca2db5cb109de55c2eadec3063e474691de144316efaa1a2e9046faf0febd43",
+          "current": "49797f3b65f9f2b5bbb3c15a4521ecb361936cbf0c13f443f2f20f86bfe8f1cf"
         }
       ]
     }

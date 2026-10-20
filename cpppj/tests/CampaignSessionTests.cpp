@@ -2901,6 +2901,26 @@ TEST_CASE(CampaignCarrierDrop_ActualInsufficientFunds) {
     const auto raw=core.pool.Slot(priest);const auto caster=session.World().Create(133,2);session.World().Pop(caster,std::bit_cast<float>(Get(raw,14)),std::bit_cast<float>(Get(raw,18)),0);core.owner.Set(caster,1);const auto prayer=session.CreateContained(caster,168,0,1,0,0);session.SetSp(1,0);session.RequestCarrierDrop(caster,prayer);CHECK(!sent && !popups && session.Sp(1)==0 && !core.processes.FindEvent(caster,0x493));CHECK(SquidForms(core.pool).Parent(prayer)==caster && !(core.pool.Slot(prayer)[11]&3U));
 }
 
+// 공통 명령 위임이 미처리0과 현재 사제 가상 소유자 변경을 같은 Session에서 수행하는지 확인한다.
+TEST_CASE(CampaignObjectCommand_ActualCarrierParentAndPriestOwner) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
+    ConfigInterface config([&](std::string_view path) { return assets.files.TryRead(path); });
+    config.Configuration().Assign("DataDir=\"d\"\ncurrentLanguage=\"english\"\nmissionSpec=\"{DataDir}\\{local.1}.{currentLanguage}\"\nfortSpec=\"{DataDir}\\{local.1}.fort\"\n[END]\n");
+    MissionScript script(config,"Tutorial5");CHECK(script.Loaded());
+    auto fort=FortTemplate::Parse(assets.files.Read(script.FortPath()),assets.game.TypeTable());
+    RawCampaignSession session(assets.game,assets.files,std::move(fort),script.FortName(),external.Services());session.Load();
+    Sid enemy{}; // 실제 저장 미션에 존재하는 적 사제만 사용한다.
+    // 소유자/HP를 검사에서 덮어쓰지 않고 원본 로드 결과로 대상을 고른다.
+    for (const auto& object:session.World().Objects()) if (object.object.type==158 && object.object.owner==2) { enemy=object.sid;break; }
+    CHECK(enemy.value);if (!enemy.value) return;
+    const auto before=session.Sp(1);const auto packets=external.packets.size();const auto hp=Get(session.Core().pool.Slot(enemy),26);
+    CHECK(session.CommandObject(Sid{},0xffffffffU)==0);
+    CHECK(session.CommandCarrierDrop(enemy,0x030003feU,enemy)==0);
+    CHECK(session.CommandCarrierDrop(enemy,0xff0000afU,enemy)==1);
+    CHECK(session.Core().pool.Slot(enemy)[34]==session.LocalOwner());
+    CHECK(Get(session.Core().pool.Slot(enemy),26)==hp && session.Sp(1)==before && external.packets.size()==packets);
+}
+
 // 원본 Early5의 적 사제를 실제 검색/피해/포획/내려놓기로 처리한다. 시전자/내용물/잔액만 명시 검사 입력이다.
 TEST_CASE(CampaignDevastation_ActualEnemyCaptureAndDropFromCast) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();netstorm::zacket::LocalMissionTransport* wire{};

@@ -245,6 +245,7 @@ public:
     void RequestCarrierMove(o::Sid parent,o::RawPathPoint destination,std::uint32_t sacrifice=0);
     void RequestCarrierDrop(o::Sid parent,o::Sid content={}); // 실제427070의비용/선택/9바이트송신만 실행하며 서버 수신을 직접 부르지 않는다.
     std::uint32_t CommandCarrierDrop(o::Sid parent,std::uint32_t command,o::Sid listParent); // 실제42aa50 Cast/Drop 메뉴와 최초 내용물 선택 순서를 실행한다.
+    std::uint32_t CommandObject(o::Sid parent,std::uint32_t command); // 실제4ae010/4ac9b0의 공통 객체 명령과 미처리0 반환이다.
     // 같은 실제40h 요청/수신 처리기를 읽기 전용으로 빌린다.
     const o::RawCarrierMove& CarrierMove() const;
     // 원본 MayPlace를 통과한 일반 서버 요청의 기준점/송신/직접 통지/실제 배치를 실행한다.

@@ -31,6 +31,9 @@ public sealed class OriginalTypeRecord
     /// <summary>최대 HP 속성(원본 타입 구조체 +0). 서버가 오브젝트를 만들 때 초기 HP 로 쓴다.</summary>
     public int MaxHitPoints { get; set; }
 
+    /// <summary>비용(원본 타입 구조체 +0xc4, float). 공통 PostPop 이 전역 비용 집계에 더하는 값이다. 추가: W02 PostPop 조각(2026-10-20).</summary>
+    public float Cost { get; set; }
+
     /// <summary>그리기 깊이 zOrder(원본 타입 구조체 +0x104). 기본 Squid 에는 하위 8비트만 복사한다.</summary>
     public int ZOrder { get; set; }
 

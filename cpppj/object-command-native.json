@@ -1,0 +1,39 @@
+{
+  "date": "2026-10-20",
+  "host": "VM-W11-Codex",
+  "lastDecompileHost": "VM-W11-Codex",
+  "lastDecompileDate": "2026-10-20",
+  "normalReturns": 320,
+  "editions": {
+    "originals": {
+      "normalReturns": 160,
+      "instructions": 3352,
+      "commands": [
+        50331823,
+        50331874,
+        50331669,
+        50331758
+      ]
+    },
+    "originalCD": {
+      "normalReturns": 160,
+      "instructions": 3424,
+      "commands": [
+        50331823,
+        50331874,
+        50331669,
+        50331758
+      ]
+    }
+  },
+  "gameExecutions": 0,
+  "limits": [
+    "공통 객체 명령과 Form 부모의 제어 흐름만 실행했다. 가상 소유자/피해/삭제/진단과 CD 소유자 getter는 명시 경계다. 실제 플레이와 가상 효과 전체의 증거가 아니다."
+  ],
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "tools/decomp_object_command.py": "04885a854a97a19199c58e010ff3712932e790f3521f807b851c6be1ce403a4c",
+    "cpppj/tests/fixtures/object-command-x86.tsv": "227d5a5011135ebeb41c16ef075dbe3ae32d9833fb2ec54356770a668d9b52a4"
+  }
+}

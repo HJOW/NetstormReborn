@@ -1,0 +1,60 @@
+{
+  "unit": 239,
+  "baseline": "65674f52",
+  "date": "2026-10-20",
+  "host": "VM-W11-Codex",
+  "lastDecompileHost": "VM-W11-Codex",
+  "lastDecompileDate": "2026-10-20",
+  "newDecompile": false,
+  "carrierParentIntegrated": true,
+  "commonMenuInputIntegrated": true,
+  "diagnosticOutputIntegrated": false,
+  "runtimeTestsDeferred": true,
+  "fullRegressionCompleted": false,
+  "uiClickVerified": false,
+  "goalComplete": false,
+  "originalGameExecutions": 0,
+  "cloneGameExecutions": 0,
+  "commitCreated": false,
+  "dotnetFilesModifiedByThisWork": false,
+  "validation": {
+    "build": "extracted/object-command-20261020-build-final.json",
+    "currentPins": "extracted/object-command-20261020-current-pins.json",
+    "pendingTests": [
+      "ObjectCommand_Native160Inputs",
+      "ObjectCommand_CurrentModeAndLazyBoundaries",
+      "CampaignObjectCommand_ActualCarrierParentAndPriestOwner"
+    ]
+  },
+  "binaries": {
+    "cpppj/build/bin/Release/NetstormCpp.exe": "d679627059f38e84a6dcfd9c5cfec4a61184121ce2a2ca3c8495212b1102ec63",
+    "cpppj/build/bin/Release/netstorm_tests.exe": "4a076d9bb4f5ff3f65bc31d32830547c0fc088dade6349ecbfc657be27e2e8a2"
+  },
+  "sources": {
+    "cpppj/src/o/RawObjectCommand.h": "a5f7551eb5fb286a80f3f9ef266080332ef406ce0c5a08966c241cf5fa0cbe92",
+    "cpppj/src/o/RawObjectCommand.cpp": "7115cde44fcb4406b010fafb6fc6599e6e155d8ead9975e6287e1ed658c9e10a",
+    "cpppj/src/client/RawCampaignSession.cpp": "e922269cc73ab9299f59d9ae26a4c2b1346adcf023b1d8eff5416699d125eea6",
+    "cpppj/src/client/RawCampaignSession.h": "13b74f9ed71a7379a5041ad849861e6215842efe7772dbaaf2e44f7833fbfbca",
+    "cpppj/src/client/RawCampaignCarrierDrop.inc": "67575c22bae7e40a198022461212d82c5a966d9ab174346f0c1863c5303b5a62",
+    "cpppj/src/client/CampaignObjectMenuClient.cpp": "2e1d9e0aea14df5eb579b320744b8cbe3a88a567361b687ef9064e84fe395001",
+    "cpppj/src/CMakeLists.txt": "8834917133d33fda6dcd145dd64a93ee38ee014d25fede2eff5575b996df5847",
+    "cpppj/tests/ObjectCommandTests.cpp": "0efdf255c004532a5c03c6be6894d603cff06b36b0a1170425697933d13da0c7",
+    "cpppj/tests/CampaignSessionTests.cpp": "769b7c7b64412ec348b1b9311cf8ee1a2928063d597402e45eacb16ec2a03aea",
+    "cpppj/tests/CMakeLists.txt": "49797f3b65f9f2b5bbb3c15a4521ecb361936cbf0c13f443f2f20f86bfe8f1cf",
+    "tools/cpp_object_command_audit.py": "fb3a90757380f3dd1755282e332982a5a8e5f3a3a3d4e2f64f922fc48cc0102d"
+  },
+  "evidence": {
+    "cpppj/object-command-native.json": "aebc1f3bbf95f6ed4701ead6c09faf50696578ab5d6b9390c8fc07ecf68cb198",
+    "cpppj/tests/fixtures/object-command-x86.tsv": "227d5a5011135ebeb41c16ef075dbe3ae32d9833fb2ec54356770a668d9b52a4",
+    "tools/decomp_object_command.py": "04885a854a97a19199c58e010ff3712932e790f3521f807b851c6be1ce403a4c",
+    "extracted/object-command-20261020-build-final.json": "70fbfe06c5473e720d58fe2472db68dc1270b1ed6f8f897d9da937c89c175c2d",
+    "extracted/object-command-20261020-build-final.log": "b42752e4330dda2d8894240753d9389353a6f9cb734dc856b0dbae97d1a43e0d",
+    "extracted/object-command-20261020-build.log": "02bae82b7b95df2bc679dc1fd7dfb8a14f3da9d2deb2fb585474820a15d0e825",
+    "extracted/object-command-20261020-current-pins.json": "c525497ab0316f8b8818d57a2c69669cf578df10f01c4d14e7a53a033f15971a"
+  },
+  "limitations": [
+    "Form diagnostic output 004b0fb0 remains an explicit boundary.",
+    "New C++ tests were compiled but were not executed. Native emulation is not gameplay validation.",
+    "REA function analysis failed at H: root attributes with Win32 87; existing local decompilation and isolated x86 observations were used."
+  ]
+}

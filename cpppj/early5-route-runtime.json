@@ -2035,7 +2035,7 @@
     }
   },
   "sources": {
-    "cpppj/src/client/CampaignObjectMenuClient.cpp": "01d8978e8e239dedac370520296e84410f2917dbc3aed3597f629986ccbe11b1",
+    "cpppj/src/client/CampaignObjectMenuClient.cpp": "2e1d9e0aea14df5eb579b320744b8cbe3a88a567361b687ef9064e84fe395001",
     "cpppj/src/client/CampaignUserInputServices.cpp": "f2bef8c428670f4ab871fd4e2d35730b7417ed53ef3388cd3b245087b96dc017",
     "cpppj/src/client/GameWorld.cpp": "af6d3aeb3bd53d83e2619c2bd20ba5df42c17fe718cb81786841606419f10c6c",
     "cpppj/src/client/RawCampaignCarrierInput.inc": "17c639af1e42ed83c94462d61bd2dcfe2f8b85db647611a100a979bde3b48ee6",
@@ -2189,6 +2189,20 @@
           "path": "cpppj/src/client/RawCampaignCarrierInput.inc",
           "previous": "ff521d60c6520e8834d91f6b6cd719fa8f0d76450a396366b3bb4969508982a3",
           "current": "17c639af1e42ed83c94462d61bd2dcfe2f8b85db647611a100a979bde3b48ee6"
+        }
+      ]
+    },
+    {
+      "unit": 239,
+      "date": "2026-10-20",
+      "host": "VM-W11-Codex",
+      "reason": "공통 객체 명령과Cast/Drop 부모 위임 연결. 과거 실행·원본 기대값은 보존하고 현재 소스 핀만 갱신한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/CampaignObjectMenuClient.cpp",
+          "group": "/sources",
+          "previous": "01d8978e8e239dedac370520296e84410f2917dbc3aed3597f629986ccbe11b1",
+          "current": "2e1d9e0aea14df5eb579b320744b8cbe3a88a567361b687ef9064e84fe395001"
         }
       ]
     }
