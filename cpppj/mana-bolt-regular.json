@@ -67,7 +67,7 @@
     "cpppj/src/client/RawCursorPosition.cpp": "db3b59d8211cee4f22583db354962f2da543512bd78ad86ed91c8725f0dda7a4",
     "cpppj/src/client/RawCursorPosition.h": "acef07ed2737b798d36034457c63e75e1bfde25c9068b4bd3a2c224bd8dab723",
     "cpppj/src/o/CMakeLists.txt": "26e24376762008bedbc411cf34a40e51817711202656985541e404fb39f36009",
-    "cpppj/tests/CMakeLists.txt": "574f7b775d2918c8beb27496c9709196cdb43eafe9b22c123437b86cbd92764f",
+    "cpppj/tests/CMakeLists.txt": "1dc1bfd464ba2c14a4a88a43e2d385ceca3c3489a63275bd3d7ad64fba8d905d",
     "cpppj/tests/CampaignSessionTests.cpp": "b724f120fe690b89e8fecbc6dcdd9259edfdd69ea436a23f5a78204e8ec2e684",
     "cpppj/tests/ManaBoltRegularTests.cpp": "3531f9ec3de58ad435557223606e16994d0f235b193780fab7700a06e96e8d5d",
     "cpppj/src/client/Sound.cpp": "30f85f35c1e5c75d1214ec5df2f3d86c7552fa060a1068905f77cb164cfd8ee3",
@@ -87,7 +87,7 @@
     "cpppj/src/o/CMakeLists.txt": "26e24376762008bedbc411cf34a40e51817711202656985541e404fb39f36009",
     "cpppj/src/o/RawManaBoltRegular.cpp": "4ea2499c6cf66978607e42ad0c84486d11ca5cf32e6deb58281e35fbd9aefdde",
     "cpppj/src/o/RawManaBoltRegular.h": "c0f4822f6a25c63644f507d31b3946e1f8a7ba6b1185e5c09a97e625d56e8011",
-    "cpppj/tests/CMakeLists.txt": "574f7b775d2918c8beb27496c9709196cdb43eafe9b22c123437b86cbd92764f",
+    "cpppj/tests/CMakeLists.txt": "1dc1bfd464ba2c14a4a88a43e2d385ceca3c3489a63275bd3d7ad64fba8d905d",
     "cpppj/tests/CampaignSessionTests.cpp": "b724f120fe690b89e8fecbc6dcdd9259edfdd69ea436a23f5a78204e8ec2e684",
     "cpppj/tests/ManaBoltRegularTests.cpp": "3531f9ec3de58ad435557223606e16994d0f235b193780fab7700a06e96e8d5d"
   },
@@ -3505,6 +3505,26 @@
           "group": "/sha256",
           "previous": "16a55fcd6488320a9bfc8217e54b1b3ae2c2d046a805105d534f83a9dfd4bc4e",
           "current": "b724f120fe690b89e8fecbc6dcdd9259edfdd69ea436a23f5a78204e8ec2e684"
+        }
+      ]
+    },
+    {
+      "unit": "245",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "Dude 발자국0의 후보와 실패 사각형 min/max·좌표0 판정을 복원한다. 같은 시작 코드의 LF/CRLF 현재 핀만 갱신하고 과거 files/실행/원본/기대값은 보존한다. 제품 실행 검증은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/currentSources",
+          "previous": "574f7b775d2918c8beb27496c9709196cdb43eafe9b22c123437b86cbd92764f",
+          "current": "1dc1bfd464ba2c14a4a88a43e2d385ceca3c3489a63275bd3d7ad64fba8d905d"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sha256",
+          "previous": "574f7b775d2918c8beb27496c9709196cdb43eafe9b22c123437b86cbd92764f",
+          "current": "1dc1bfd464ba2c14a4a88a43e2d385ceca3c3489a63275bd3d7ad64fba8d905d"
         }
       ]
     }

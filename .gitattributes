@@ -1374,3 +1374,12 @@ cpppj/tests/fixtures/dude-path-x86.tsv text eol=lf
 cpppj/tests/fixtures/dude-path-vtables.tsv text eol=lf
 tools/decomp_dude_path.py text eol=lf
 tools/cpp_dude_path_audit.py text eol=lf
+# Dude 발자국0의 원본/현재 연결 자료를 LF로 보존한다.
+cpppj/src/o/RawSquidFinder.cpp text eol=lf
+cpppj/dude-footprint-native.json text eol=lf
+cpppj/dude-footprint-session.json text eol=lf
+cpppj/tests/DudeFootprintTests.cpp text eol=lf
+cpppj/tests/fixtures/dude-footprint-find-x86.tsv text eol=lf
+cpppj/tests/fixtures/dude-footprint-fail-x86.tsv text eol=lf
+tools/decomp_dude_footprint.py text eol=lf
+tools/cpp_dude_footprint_audit.py text eol=lf

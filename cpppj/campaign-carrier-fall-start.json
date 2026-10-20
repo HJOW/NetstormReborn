@@ -10,7 +10,7 @@
   "currentSources": {
     ".gitattributes": "3e8d869648cde0415d1a91e9b22d5a7ed7e5c0585923a189bfd37aa33229f3a8",
     "cpppj/src/CMakeLists.txt": "8834917133d33fda6dcd145dd64a93ee38ee014d25fede2eff5575b996df5847",
-    "cpppj/tests/CMakeLists.txt": "574f7b775d2918c8beb27496c9709196cdb43eafe9b22c123437b86cbd92764f",
+    "cpppj/tests/CMakeLists.txt": "1dc1bfd464ba2c14a4a88a43e2d385ceca3c3489a63275bd3d7ad64fba8d905d",
     "cpppj/src/client/RawCampaignSession.cpp": "8aaf19543d81ff3e040ce450a13f6ea72e6afae0a93d9521bcb4ae53881821f1",
     "cpppj/src/client/RawCampaignSession.h": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
     "cpppj/src/client/RawUserSelection.h": "63e349845d969771819f0875159d0c1f400ae5aa7042a0a883a45b731b2a1a29",
@@ -21,7 +21,7 @@
     "cpppj/src/o/RawPathRuntime.cpp": "2ecd4a9b2fdc3105fb6a4ed0a9c339a37e9c5fb8cbf1f53af41687d94cdaf5aa",
     "cpppj/src/o/RawPathProcess.h": "0acd62c0f0f4e1c77951f9340251a963599a430ba2d822cee6e64a15dea71270",
     "cpppj/src/o/RawPathProcess.cpp": "9f91446bc0e9414f261da6c0c271e80d2e15130566054d68533c73883196a3a3",
-    "cpppj/src/o/RawPathStart.cpp": "119162733bc4188614d1507222baaf0005196cabe7d0c3a65b8d409811935392",
+    "cpppj/src/o/RawPathStart.cpp": "a852f0c16cefc10b11e371510999e4d3836c83681adcbe2817feac570dec6d98",
     "cpppj/src/client/RawCampaignPathBindings.h": "64bda57407ea52b561ea7a1fad2c6d3fa11be086115327ff78d47206cd68320f",
     "cpppj/src/client/RawCampaignPathBindings.cpp": "be46833bcfd8099fb58af729eb2d92f83a045aecc50d8fec4ba3d4c6c56a6679",
     "cpppj/src/client/RawCampaignMotionBindings.cpp": "532ab06cd71c6eb3eba5aa042a6204e59c282014b13b68400241c2079a2556bb",
@@ -1941,6 +1941,26 @@
           "group": "/currentSources",
           "previous": "b14fcfe941873b723423234d0e849ac0f6f8633f12ce200e513d943ec953fcb0",
           "current": "574f7b775d2918c8beb27496c9709196cdb43eafe9b22c123437b86cbd92764f"
+        }
+      ]
+    },
+    {
+      "unit": "245",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "Dude 발자국0의 후보와 실패 사각형 min/max·좌표0 판정을 복원한다. 같은 시작 코드의 LF/CRLF 현재 핀만 갱신하고 과거 files/실행/원본/기대값은 보존한다. 제품 실행 검증은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/o/RawPathStart.cpp",
+          "group": "/currentSources",
+          "previous": "119162733bc4188614d1507222baaf0005196cabe7d0c3a65b8d409811935392",
+          "current": "a852f0c16cefc10b11e371510999e4d3836c83681adcbe2817feac570dec6d98"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/currentSources",
+          "previous": "574f7b775d2918c8beb27496c9709196cdb43eafe9b22c123437b86cbd92764f",
+          "current": "1dc1bfd464ba2c14a4a88a43e2d385ceca3c3489a63275bd3d7ad64fba8d905d"
         }
       ]
     }

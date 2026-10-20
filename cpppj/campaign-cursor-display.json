@@ -24,7 +24,7 @@
     "cpppj/src/client/Renderer.cpp": "29729e6b728f19e7cddfc4c193e1a719733c8b4c5934e8b0a864697fa8a4b4a2",
     "cpppj/src/client/Renderer.h": "d72b42478b0bbe275a02494181722ee4f3f4ed4d474966e56c9df30958f31ac2",
     "cpppj/src/client/UberGump.cpp": "c160136246b091eed0d2dbdd6d091d068e7c0460191d935c77582ce1c137d932",
-    "cpppj/tests/CMakeLists.txt": "574f7b775d2918c8beb27496c9709196cdb43eafe9b22c123437b86cbd92764f",
+    "cpppj/tests/CMakeLists.txt": "1dc1bfd464ba2c14a4a88a43e2d385ceca3c3489a63275bd3d7ad64fba8d905d",
     "cpppj/tests/CampaignSessionTests.cpp": "b724f120fe690b89e8fecbc6dcdd9259edfdd69ea436a23f5a78204e8ec2e684",
     "cpppj/tests/PreviewColorMapsTests.cpp": "5019672dc1589cace9bb92690be4bf9786ab8257770794cb51fdff87cf937311",
     "cpppj/tests/RendererTests.cpp": "6aae8f544e9cb6a01738ee45a2c0eba57354106896ea59735db6842c318185cf"
@@ -2484,6 +2484,20 @@
           "group": "/currentSources",
           "previous": "16a55fcd6488320a9bfc8217e54b1b3ae2c2d046a805105d534f83a9dfd4bc4e",
           "current": "b724f120fe690b89e8fecbc6dcdd9259edfdd69ea436a23f5a78204e8ec2e684"
+        }
+      ]
+    },
+    {
+      "unit": "245",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "Dude 발자국0의 후보와 실패 사각형 min/max·좌표0 판정을 복원한다. 같은 시작 코드의 LF/CRLF 현재 핀만 갱신하고 과거 files/실행/원본/기대값은 보존한다. 제품 실행 검증은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/currentSources",
+          "previous": "574f7b775d2918c8beb27496c9709196cdb43eafe9b22c123437b86cbd92764f",
+          "current": "1dc1bfd464ba2c14a4a88a43e2d385ceca3c3489a63275bd3d7ad64fba8d905d"
         }
       ]
     }

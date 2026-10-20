@@ -17,10 +17,10 @@
     "cpppj/src/o/RawPathRuntime.h": "234b6690b85006a74d5df74ceaeea027e47166006764e4e7f141de817c3e398d",
     "cpppj/src/o/RawPathProcess.cpp": "9f91446bc0e9414f261da6c0c271e80d2e15130566054d68533c73883196a3a3",
     "cpppj/src/o/RawPathProcess.h": "0acd62c0f0f4e1c77951f9340251a963599a430ba2d822cee6e64a15dea71270",
-    "cpppj/src/o/RawPathStart.cpp": "119162733bc4188614d1507222baaf0005196cabe7d0c3a65b8d409811935392",
+    "cpppj/src/o/RawPathStart.cpp": "a852f0c16cefc10b11e371510999e4d3836c83681adcbe2817feac570dec6d98",
     "cpppj/src/o/SquidPostPop.cpp": "0e6f552bafeab1be94ba07919b928535e774ce54e121d775df514c9b6645d4e6",
     "cpppj/src/o/SquidPostPop.h": "b4bfb4886068b9dd98bed52b9f56f17e1c25e50b123b4fdd6b165f2054bcdf1d",
-    "cpppj/tests/CMakeLists.txt": "574f7b775d2918c8beb27496c9709196cdb43eafe9b22c123437b86cbd92764f",
+    "cpppj/tests/CMakeLists.txt": "1dc1bfd464ba2c14a4a88a43e2d385ceca3c3489a63275bd3d7ad64fba8d905d",
     "cpppj/tests/CampaignSessionTests.cpp": "b724f120fe690b89e8fecbc6dcdd9259edfdd69ea436a23f5a78204e8ec2e684",
     "cpppj/src/o/RawBalloonFrame.cpp": "71390bf0c48ed94bd6381b15c812b5a6702cd94e02528692f7ac5d1b6f18ab05",
     "cpppj/src/o/RawBalloonFrame.h": "3c50521f9a4a132e33b627fcf609e6028ff2cfbbc6b757434f06b4b3d7b90c8d",
@@ -3704,6 +3704,26 @@
           "group": "/currentSources",
           "previous": "16a55fcd6488320a9bfc8217e54b1b3ae2c2d046a805105d534f83a9dfd4bc4e",
           "current": "b724f120fe690b89e8fecbc6dcdd9259edfdd69ea436a23f5a78204e8ec2e684"
+        }
+      ]
+    },
+    {
+      "unit": "245",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "Dude 발자국0의 후보와 실패 사각형 min/max·좌표0 판정을 복원한다. 같은 시작 코드의 LF/CRLF 현재 핀만 갱신하고 과거 files/실행/원본/기대값은 보존한다. 제품 실행 검증은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/o/RawPathStart.cpp",
+          "group": "/currentSources",
+          "previous": "119162733bc4188614d1507222baaf0005196cabe7d0c3a65b8d409811935392",
+          "current": "a852f0c16cefc10b11e371510999e4d3836c83681adcbe2817feac570dec6d98"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/currentSources",
+          "previous": "574f7b775d2918c8beb27496c9709196cdb43eafe9b22c123437b86cbd92764f",
+          "current": "1dc1bfd464ba2c14a4a88a43e2d385ceca3c3489a63275bd3d7ad64fba8d905d"
         }
       ]
     }

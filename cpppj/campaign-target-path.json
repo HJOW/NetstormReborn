@@ -67,7 +67,7 @@
     "extracted/guntarget-helper/originals/functions.tsv": "4de1eb8040ba73dc5cb780b85cca82780ccd2697ea77407beab92f26a3e2af6a",
     "extracted/guntarget-distance-angle/originalCD/creation.c": "b8c51cb452a0d8f9542b0fda5519396218ed38f786d74bf1aba672f8b22f4d75",
     "extracted/finder/originals/creation.c": "2f6baf5e3cf77598e067963196c8fcd5c7d15ee09db54f3f68e8071191ea9070",
-    "cpppj/src/o/RawSquidFinder.cpp": "74f8141e46a2a1fa8e5b64fc91eb8a15a8b806b718b555414fbc1bd1614c8694",
+    "cpppj/src/o/RawSquidFinder.cpp": "e799426b89f14230730824c52713580012bb881fd4a38856f1b38bfb495976d9",
     "tools/ghidra/guntarget-geometry-functions.json": "7b9b3e910430dc7facbafc5ac5eb03952bc813de1f4c0ed8764a502f863fe40d",
     "extracted/guntarget-distance-angle/originals/creation.c": "ac1c585eabf63e597dfc88abdcbb0e1f511aecce741f655ab3b41bd0620d4ddb",
     "extracted/guntarget-distance-angle/originals/functions.tsv": "e254988eb95bbd8880f5d5046211cc3e332b4bf4adbc63d422116f5a7ee14a43",
@@ -349,6 +349,20 @@
           "group": "/sha256",
           "previous": "2aebb2b4d2bbc3aaf2b582660264fd0af088a363b32161b6157d05f05dcce924",
           "current": "0acd62c0f0f4e1c77951f9340251a963599a430ba2d822cee6e64a15dea71270"
+        }
+      ]
+    },
+    {
+      "unit": "245",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "Dude 발자국0의 후보와 실패 사각형 min/max·좌표0 판정을 복원한다. 같은 시작 코드의 LF/CRLF 현재 핀만 갱신하고 과거 files/실행/원본/기대값은 보존한다. 제품 실행 검증은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/o/RawSquidFinder.cpp",
+          "group": "/sha256",
+          "previous": "74f8141e46a2a1fa8e5b64fc91eb8a15a8b806b718b555414fbc1bd1614c8694",
+          "current": "e799426b89f14230730824c52713580012bb881fd4a38856f1b38bfb495976d9"
         }
       ]
     }

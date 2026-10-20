@@ -70,7 +70,8 @@ bool RawSquidFinder::Intersects(Sid sid) const {
     if (number>=types_.size()) throw std::out_of_range("Raw finder type");
     const auto& type=types_[number];
     const auto height=static_cast<std::int64_t>(type.footY)+(state_.extendedHeight ? heightExtensions_[number] : 0);
-    if (type.footX<1 || height<1 || height>std::numeric_limits<int>::max()) throw std::out_of_range("Raw finder footprint");
+    // Dude70의0×0도 원본 OR 교차식에서 유효하다. 음수/확장 오버플로 보호는 유지한다.
+    if (type.footX<0 || height<0 || height>std::numeric_limits<int>::max()) throw std::out_of_range("Raw finder footprint");
     const int right=static_cast<int>(x),bottom=static_cast<int>(y);
     const auto left=static_cast<std::int64_t>(right)-type.footX+1,top=static_cast<std::int64_t>(bottom)-height+1;
     return (state_.area.left<=right || state_.area.left<=left) && (right<=state_.area.right || left<=state_.area.right) &&

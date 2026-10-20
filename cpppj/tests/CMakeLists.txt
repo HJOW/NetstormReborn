@@ -1655,3 +1655,8 @@ set_source_files_properties(DudeBehaviorTests.cpp PROPERTIES COMPILE_DEFINITIONS
 target_sources(netstorm_tests PRIVATE DudePathTests.cpp)
 set_source_files_properties(DudePathTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_DUDE_PATH_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/dude-path-x86.tsv\";NETSTORM_DUDE_PATH_VTABLES=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/dude-path-vtables.tsv\"")
+
+# 발자국0의 독립 일반 탐색480입력과 실제 경로 실패640입력을 공급한다.
+target_sources(netstorm_tests PRIVATE DudeFootprintTests.cpp)
+set_source_files_properties(DudeFootprintTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_DUDE_FOOTPRINT_FIND=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/dude-footprint-find-x86.tsv\";NETSTORM_DUDE_FOOTPRINT_FAIL=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/dude-footprint-fail-x86.tsv\"")

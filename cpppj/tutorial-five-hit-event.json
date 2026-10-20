@@ -10,7 +10,7 @@
     "cpppj/src/o/RawMissile.h": "19e31c6abf9e0a8ce2f292e47650ec8f924205ce2dff03eb4f9a1c3fbdccae6c",
     "cpppj/src/client/RawCampaignSession.cpp": "8aaf19543d81ff3e040ce450a13f6ea72e6afae0a93d9521bcb4ae53881821f1",
     "cpppj/tests/ThunderMissileTests.cpp": "aaa6c74136f2f4c0beaa369b9adca8b906b28ccddea5f75197c1cff2cddf1b51",
-    "cpppj/tests/CMakeLists.txt": "574f7b775d2918c8beb27496c9709196cdb43eafe9b22c123437b86cbd92764f",
+    "cpppj/tests/CMakeLists.txt": "1dc1bfd464ba2c14a4a88a43e2d385ceca3c3489a63275bd3d7ad64fba8d905d",
     "cpppj/tests/fixtures/thunder-hit-event-x86.tsv": "64edac17dc6f25824bfed45afc6537cf120fe9f051fb47c84bceb4bfdbf85f58",
     "tools/decomp_thunder_hit_event.py": "8edc400c8020462187d401af42fde9d9d05a7a3ec1f1c9f3310fe16ccd6eada0",
     "cpppj/thunder-hit-event-native.json": "0fab34448a29358363ba67d2528c0e2d1809ae8cc9a2e6d19e68fd9c38b580c8",
@@ -500,6 +500,20 @@
           "group": "/sources",
           "previous": "b14fcfe941873b723423234d0e849ac0f6f8633f12ce200e513d943ec953fcb0",
           "current": "574f7b775d2918c8beb27496c9709196cdb43eafe9b22c123437b86cbd92764f"
+        }
+      ]
+    },
+    {
+      "unit": "245",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "Dude 발자국0의 후보와 실패 사각형 min/max·좌표0 판정을 복원한다. 같은 시작 코드의 LF/CRLF 현재 핀만 갱신하고 과거 files/실행/원본/기대값은 보존한다. 제품 실행 검증은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "574f7b775d2918c8beb27496c9709196cdb43eafe9b22c123437b86cbd92764f",
+          "current": "1dc1bfd464ba2c14a4a88a43e2d385ceca3c3489a63275bd3d7ad64fba8d905d"
         }
       ]
     }

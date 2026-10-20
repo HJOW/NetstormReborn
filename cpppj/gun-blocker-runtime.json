@@ -13,7 +13,7 @@
     "cpppj/src/o/CMakeLists.txt": "26e24376762008bedbc411cf34a40e51817711202656985541e404fb39f36009",
     "cpppj/src/client/RawCampaignSession.cpp": "8aaf19543d81ff3e040ce450a13f6ea72e6afae0a93d9521bcb4ae53881821f1",
     "cpppj/tests/GunBlockerTests.cpp": "f6eac38c6f829b88e2de0395982035ec98203fd0b50c7c4a0fff0a9647e6b93a",
-    "cpppj/tests/CMakeLists.txt": "574f7b775d2918c8beb27496c9709196cdb43eafe9b22c123437b86cbd92764f",
+    "cpppj/tests/CMakeLists.txt": "1dc1bfd464ba2c14a4a88a43e2d385ceca3c3489a63275bd3d7ad64fba8d905d",
     "cpppj/tests/fixtures/gun-blocker-x86.tsv": "326003cc70d664a46313cf2090586a0da3e73390b1a242342db2ff4929b89898",
     "cpppj/tests/fixtures/gun-blocker-boundary-x86.tsv": "cfa8f3ef18b6a7cee79f2f79519e50e8e3951beb6d895709c5fa53d8be381623",
     "cpppj/tests/fixtures/tutorial-five-blocker-ui-input.tsv": "a2b30d1b5672a46047addb5ae67ddd64343f780bf0c3356f0b29bc53efb696e4",
@@ -25,7 +25,7 @@
     "cpppj/src/o/RawGunProcess.cpp": "0e9df43f4ed70baa6484c74ecb28b49a99c064adc149eef2b1b88b21a39b925c",
     "cpppj/src/o/RawGunTarget.cpp": "7ac9b51af58949ce8c23f9854679a7685468ba798768db0a1158f25b0ff95f14",
     "cpppj/src/o/RawFenceTarget.cpp": "0e338dbf5fe3ee18d7215b4c986ec37cdc0f241726c9acafc52bb2aa880d6d75",
-    "cpppj/src/o/RawSquidFinder.cpp": "74f8141e46a2a1fa8e5b64fc91eb8a15a8b806b718b555414fbc1bd1614c8694",
+    "cpppj/src/o/RawSquidFinder.cpp": "e799426b89f14230730824c52713580012bb881fd4a38856f1b38bfb495976d9",
     "cpppj/src/o/RawContainedLookup.cpp": "3347f0f9d8595b116435c553097291204367d62e5bee522c42eefb1b35c60c66",
     "cpppj/src/o/SquidProcess.cpp": "993e34a3c7b3b87f290a33f548a126415c3a77794a7a191801d68f405baf1780",
     "cpppj/src/o/RawMissile.cpp": "66c0881de9826b3027fd43f4e7b53ba717a163aefd76a7c543fc66fabcbb9ac6",
@@ -474,6 +474,26 @@
           "group": "/sources",
           "previous": "b14fcfe941873b723423234d0e849ac0f6f8633f12ce200e513d943ec953fcb0",
           "current": "574f7b775d2918c8beb27496c9709196cdb43eafe9b22c123437b86cbd92764f"
+        }
+      ]
+    },
+    {
+      "unit": "245",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "Dude 발자국0의 후보와 실패 사각형 min/max·좌표0 판정을 복원한다. 같은 시작 코드의 LF/CRLF 현재 핀만 갱신하고 과거 files/실행/원본/기대값은 보존한다. 제품 실행 검증은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/o/RawSquidFinder.cpp",
+          "group": "/sources",
+          "previous": "74f8141e46a2a1fa8e5b64fc91eb8a15a8b806b718b555414fbc1bd1614c8694",
+          "current": "e799426b89f14230730824c52713580012bb881fd4a38856f1b38bfb495976d9"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "574f7b775d2918c8beb27496c9709196cdb43eafe9b22c123437b86cbd92764f",
+          "current": "1dc1bfd464ba2c14a4a88a43e2d385ceca3c3489a63275bd3d7ad64fba8d905d"
         }
       ]
     }

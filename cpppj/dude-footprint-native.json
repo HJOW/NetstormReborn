@@ -1,0 +1,91 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-21",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-20"
+  },
+  "finderInputs": 480,
+  "finder": {
+    "originals": {
+      "normalReturns": 1040,
+      "instructions": 829680,
+      "calls": {
+        "Begin": 480,
+        "Next": 1040
+      }
+    },
+    "originalCD": {
+      "normalReturns": 1040,
+      "instructions": 612360,
+      "calls": {
+        "Begin": 480,
+        "Next": 1040
+      }
+    }
+  },
+  "failedStartInputs": 640,
+  "failedStartReturns": 1280,
+  "failedStartInstructions": 20267032,
+  "failedStartCalls": {
+    "00489080": 1660,
+    "Start": 1660,
+    "004ac200": 3514,
+    "0049a840": 10740,
+    "00488fe0": 1660,
+    "0048bf30": 1660,
+    "0048b2c0": 1660,
+    "0048bb10": 1660,
+    "0048a660": 1660,
+    "0040eaf0": 1660,
+    "004e49c0": 21092,
+    "004ade70": 1660,
+    "0049ae80": 1660,
+    "0040e880": 1660,
+    "0041d0d0": 3320,
+    "0040e800": 3320,
+    "0040e8f0": 1660,
+    "0041def0": 1660,
+    "0041d770": 1660,
+    "0041d7a0": 1660,
+    "Begin": 1660,
+    "Next": 3514
+  },
+  "controls": [
+    639,
+    895
+  ],
+  "osCalls": 0,
+  "boundaries": "일반 finder Begin/Next·현재0크기 TYPE·전체cursor·부류 시작·확장 높이는 두 판본 실제 명령. 실패는10.78 Start/24ctor/Init/49ae80 minmax/41def0/실제 finder/재귀 전체. 시작 표면 부재로Init가자연 반환하며BFS는 도달하지 않는다. new·구 경로 lookup·Dispose·겹침 효과는 명시 경계. GP/retN/canary/x87/허용 코드·쓰기 범위 검사. 게임/OS/창/C++제품 실행 없음.",
+  "sha256": {
+    "cpppj/tests/fixtures/dude-footprint-fail-x86.tsv": "c21fdd37282fd12debdeb924501ce74b5162201ce1fcf611ed27c927c2208584",
+    "cpppj/tests/fixtures/dude-footprint-find-x86.tsv": "613def6f5cc2249e96b5005ef8e46d0d63d6c3364ed7516cbdeb4d357c540b6e",
+    "extracted/bridgeeffects/originalCD/creation.c": "76acd15962cfadb844dd6689014a8a67ee0fc744d16c5a32528d4cafdb7fb911",
+    "extracted/bridgeeffects/originalCD/functions.tsv": "b99e5f65a90d402a49be3353263e66080fbf1d3825b19685d7a49edd2e4c4abd",
+    "extracted/bridgeeffects/originals/creation.c": "ac1856212fbd285650dc4ec999fa996a306ba536a3e42d605fba4ab26178fdbc",
+    "extracted/bridgeeffects/originals/functions.tsv": "485cd05093884690ffc94c433c4e040282cd6ca26eb7da469732f74e1c983cec",
+    "extracted/finder/originalCD/creation.c": "822eece37b0a0edde482232eacb0710ae8cf11c759417bc3108fa5ecc0585972",
+    "extracted/finder/originalCD/functions.tsv": "60cf1f9e4a7832ebe882a869af2bd2cd69e549e761fb03d7d4d64bb5fb3c5935",
+    "extracted/finder/originals/creation.c": "2f6baf5e3cf77598e067963196c8fcd5c7d15ee09db54f3f68e8071191ea9070",
+    "extracted/finder/originals/functions.tsv": "7ee781ffc6200c8f6b231381c4dae7ce88e5c0158f4b8effb222090bf8345704",
+    "extracted/pathstart/originals/creation.c": "b50770e810a81f98f0a8e494e69c9d90180fb068cca14a25265fe50b3da586c2",
+    "extracted/pathstart/originals/functions.tsv": "b723edb5ec502247e34673d07a58f15a3f233813d89f7d8a21c241cd8f07727d",
+    "extracted/pathstarthelpers/originals/creation.c": "740e7236200ba8aa0b09e47f505547c48956e88e1b2842bef184a2c63cdea767",
+    "extracted/pathstarthelpers/originals/functions.tsv": "8c0bfa8d9af29c86854b9535bd1f0604d42092a4f3fedef6f7a4890cdee8b01f",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/refined/originals/raw.c": "0b5d53b15fdb2ef7afbccf61af666709726a96fb3b972b6818f4a42efcd31972",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_bridgedecay_oracle.py": "887979f3b82cd56a93a4620d473b8048a579807e72022dfa8dddcf873c81641f",
+    "tools/decomp_bridgeeffects_oracle.py": "ed8e76931f972ffec24be024a17e65ddf3224eb487f215764f60b8abfbbaf462",
+    "tools/decomp_dude_footprint.py": "e4fac898066da429f842a6805bd013c9506c7e91968b148eb6247f79edc012cc",
+    "tools/decomp_pathstart_oracle.py": "b53feb1cacba2674347ec8bd41d475ed36a00a2e64550e1ab205054a100b3c0f",
+    "tools/decomp_rawfinder_oracle.py": "08914eaa23cce0b3e1540799003c71c64062bad64f37383bdd647ede5ab2e2a7",
+    "tools/ghidra/pathmath-functions.json": "a0c7a00b68bc1ef316a34b23a54137d15d00a27c5fffff6a86e60466eb3ada06",
+    "tools/ghidra/pathruntime-functions.json": "cd2864b4e6eb9b4f6b6e03be4664f84fab2acd934df3f3a53d0af1a81ed9dc21",
+    "tools/ghidra/pathruntimehelpers-functions.json": "235f32e99e22e952d0ab1b1263d8c071afbbbce7f839bc70b7ab7d2ff212299c",
+    "tools/ghidra/pathsearch-functions.json": "54a1e92fd2c110e10e41eda7c844f658d0dac8380ca7a0d8ec96ba6ef5caf21d",
+    "tools/ghidra/pathstart-functions.json": "7e871c0053d3c8c019446bcf15435373a9d85829410c79bb2a1d922ba4ddaab1",
+    "tools/ghidra/pathstarthelpers-functions.json": "8e2abb63d298d8ff1974d9e968f702d580f0876a77b99a245a102e6bb957d946"
+  }
+}

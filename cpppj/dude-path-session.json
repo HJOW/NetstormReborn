@@ -15,8 +15,8 @@
     "cpppj/src/o/RawPathProcess.h": "0acd62c0f0f4e1c77951f9340251a963599a430ba2d822cee6e64a15dea71270",
     "cpppj/src/o/RawPathRuntime.cpp": "2ecd4a9b2fdc3105fb6a4ed0a9c339a37e9c5fb8cbf1f53af41687d94cdaf5aa",
     "cpppj/src/o/RawPathRuntime.h": "234b6690b85006a74d5df74ceaeea027e47166006764e4e7f141de817c3e398d",
-    "cpppj/src/o/RawPathStart.cpp": "119162733bc4188614d1507222baaf0005196cabe7d0c3a65b8d409811935392",
-    "cpppj/tests/CMakeLists.txt": "574f7b775d2918c8beb27496c9709196cdb43eafe9b22c123437b86cbd92764f",
+    "cpppj/src/o/RawPathStart.cpp": "a852f0c16cefc10b11e371510999e4d3836c83681adcbe2817feac570dec6d98",
+    "cpppj/tests/CMakeLists.txt": "1dc1bfd464ba2c14a4a88a43e2d385ceca3c3489a63275bd3d7ad64fba8d905d",
     "cpppj/tests/CampaignSessionTests.cpp": "b724f120fe690b89e8fecbc6dcdd9259edfdd69ea436a23f5a78204e8ec2e684",
     "tools/cpp_dude_path_audit.py": "7037a22bae407e1724b69a1178534b18bfdc11cd71d42747e2a2debfd431ddfc",
     "tools/decomp_dude_path.py": "0ec52a476b4a33bec8587b3f36399e66ffe21e5b32d1ddce00ab3538e28876cf",
@@ -3679,5 +3679,27 @@
     "제품 검사 실행·Dude Regular450fa0/자연 생성·최대 population 정책·자연 대피는 미완료다.",
     "새 부착24행은 원본 효과 경계 관측이며 제품 Host 대조 실행이 아니다.",
     "지형 Devastation·포획/Drop·희생·전체 지정 미션·F8 Guide 통합 검증은 남아 있다."
+  ],
+  "integration_updates": [
+    {
+      "unit": "245",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "Dude 발자국0의 후보와 실패 사각형 min/max·좌표0 판정을 복원한다. 같은 시작 코드의 LF/CRLF 현재 핀만 갱신하고 과거 files/실행/원본/기대값은 보존한다. 제품 실행 검증은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/o/RawPathStart.cpp",
+          "group": "/sources",
+          "previous": "119162733bc4188614d1507222baaf0005196cabe7d0c3a65b8d409811935392",
+          "current": "a852f0c16cefc10b11e371510999e4d3836c83681adcbe2817feac570dec6d98"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "574f7b775d2918c8beb27496c9709196cdb43eafe9b22c123437b86cbd92764f",
+          "current": "1dc1bfd464ba2c14a4a88a43e2d385ceca3c3489a63275bd3d7ad64fba8d905d"
+        }
+      ]
+    }
   ]
 }

@@ -34,13 +34,15 @@ RawPathPoint RawPathStart::CeilPoint(RawPathPoint point) {
     if (!std::isfinite(point.x) || !std::isfinite(point.y)) throw std::out_of_range("Path 시작 비정상 좌표");
     return {static_cast<float>(std::trunc(static_cast<double>(point.x)+kCellBias)),static_cast<float>(std::trunc(static_cast<double>(point.y)+kCellBias))};
 }
-// 원본004ade70→finder 생성자는 발자국 왼쪽/위는 절삭하고 오른쪽/아래는 거의 올림한다.
+// 원본004ade70/49ae80의 min/max 확장 후 finder는 왼쪽/위 절삭·오른쪽/아래 거의 올림을 적용한다.
 SquidSearchArea RawPathStart::Footprint(Sid sid) const {
     const auto point=Position(sid);const auto type=pool_.Slot(sid)[10];const auto& record=types_[type];
-    if (!std::isfinite(point.x) || !std::isfinite(point.y) || record.footX<1 || record.footY<1) throw std::out_of_range("Path 시작 부모 발자국");
-    const float left=std::clamp(point.x-static_cast<float>(record.footX-1),1.0F,255.0F),top=std::clamp(point.y-static_cast<float>(record.footY-1),1.0F,255.0F);
-    const auto end=CeilPoint(point);
-    return {static_cast<int>(left),static_cast<int>(top),static_cast<int>(end.x),static_cast<int>(end.y)};
+    if (!std::isfinite(point.x) || !std::isfinite(point.y) || record.footX<0 || record.footY<0) throw std::out_of_range("Path 시작 부모 발자국");
+    const RawPathPoint other{std::clamp(point.x-static_cast<float>(record.footX-1),1.0F,255.0F),std::clamp(point.y-static_cast<float>(record.footY-1),1.0F,255.0F)}; //40e880/40e8f0은 확장 입력만 먼저1..255로 자른다.
+    const bool valid=point.x>0 && point.y>0 && point.x<256 && point.y<256; //40e800은 한 축이0이어도 원래 점 전체를 무효로 판정한다.
+    const RawPathPoint low=valid ? RawPathPoint{std::min(point.x,other.x),std::min(point.y,other.y)} : other; //0크기는 기준점보다 큰 반대쪽 끝도 허용한다.
+    const auto high=valid ? RawPathPoint{std::max(point.x,other.x),std::max(point.y,other.y)} : other;const auto end=CeilPoint(high);
+    return {static_cast<int>(low.x),static_cast<int>(low.y),static_cast<int>(end.x),static_cast<int>(end.y)};
 }
 // 목적지 clamp→기존 경로/시작 보정→생성/Init→명령 필드→유효 검사→Prepare/Attach→부모통지다.
 RawPathProcess* RawPathStart::Start(RawPathStartRequest request) {
