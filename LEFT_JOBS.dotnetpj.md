@@ -1,3 +1,14 @@
+## 2026-10-20 완료: dotnetpj 최근 작업 점검 (`VM-W11-Codex`)
+
+- [x] 사용자 요청("AGENTS.md 와 LEFT_JOBS.dotnetpj.md 를 읽고 dotnetpj 최근 작업 사항 점검해 줘")에 따라 AGENTS와 양쪽 인수인계의 최신 지시, W02 최근 커밋(`0fee047a`~`d1d5643c`)의 소스·검사·작업 기록을 대조했다. 현재 PC와 마지막 정밀 디컴파일 PC는 **VM-W11-Codex / 2026-10-20**로 같다. 디컴파일 산출물을 읽거나 다시 생성하지 않았고, 원본/클론 게임·창 실행도 없다. `cpppj/`·공통 `LEFT_JOBS.md`·AGENTS·원본 파일은 변경하지 않았다. 이번 변경은 이 인수인계 문서뿐이다.
+- [x] **이번 재검증:** `python dotnetpj/tools/cpp_sync.py` 종료 0 — 연결 fixture **29개**의 SHA-256·행 수 일치, 등록된 생성 자료 **2개** 일치, 반영 이후 cpppj 관련 커밋·fixture 변경 없음. 반영 커밋은 **`d5dc54ac`**, 점검 대상 HEAD는 **`d1d5643c`**이며 사이 커밋은 dotnetpj 프레임 이식이다. 빠진 Pop 생성기는 `python dotnetpj/tools/gen_original_pop_vtables.py --check`로 따로 실행해 **일치·종료 0**을 확인했다.
+- [x] **이번 빌드·검사:** `dotnetpj/`에서 `dotnet build Netstorm.sln -c Release --no-incremental --nologo` 경고 **0**·오류 **0**·종료 0. 이어 `dotnet test Netstorm.sln -c Release --no-build --no-restore --nologo`의 **1,158개 통과**(Assets **363** + Core **795**, 실패·건너뜀 0)를 확인했다. 이번에는 변이 검사를 다시 실행하지 않았으며, 과거 변이 원복 주장을 현재 테스트 통과만으로 확정하지 않는다.
+- [ ] **보완 1 — 프레임 범위 검사와 검사의 구별력:** `RawFrame.cs`의 `SquidFrame.StoreLevel`에 타입 번호 범위 검사 대신 **`if (false)`**가 커밋되어 있다. cpppj `SquidFrame.cpp`의 `number >= types_.size()` 및 직전 인계의 "방어용 중복으로 유지" 기록과 다르다. 현재 `IReadOnlyList` 인덱서가 같은 `ArgumentOutOfRangeException`을 던져 `RawFrameTests.StoreLevelFollowsGenusAndSizeThresholds`가 통과하므로, 이번에 실행 실패로 재현한 기능 회귀는 아니다. 후속 수정에서 명시 조건을 복구하고 검사에는 예외의 `ParamName`·`ActualValue` 등 명시 거부 경로를 구별하는 계약을 보강한다. 이번 점검에서는 기능 코드를 수정하지 않았다.
+- [ ] **보완 2 — Pop 생성 자료의 자동 검사 누락:** `cpp_sync.py`의 `GENERATORS`에는 `gen_original_constructors.py`·`gen_original_unpop_vtables.py`만 있고, W02 Pop에서 추가한 **`gen_original_pop_vtables.py`가 없다.** 따라서 현재 정기 동기화 명령만으로는 `OriginalPopDisplay.Data.cs`와 cpppj 입력 목록의 일치를 직접 검사하지 않는다. 현재 자료는 위 별도 검사로 일치했으나, 후속 수정에서 생성기를 자동 검사 목록에 추가한다. fixture 일치 검사와 생성 자료 일치 검사는 범위가 다르다.
+- [x] **진행 판정·문서 정리:** W02는 슬롯 풀·생성 → 공간 해시·Unpop → Pop → 공통 PostPop·다리 접두 → Carrier/Asset 후처리 → 소유자 → 프레임까지 **L1 모듈 이식**을 진행했다. `HandlesDerived`는 여전히 거짓이고 새 월드 코어는 실제 `BattleSession`에 연결되지 않았다. 실제 Unpop·Pop을 통한 프레임 재등록, 건물 공간·이웃·탐색, Graph와 L2 이상은 미완료다. 아래 현행 계획의 낡은 "다음은 Pop"·반영 커밋 설명을 최신 기록과 맞췄다. 기존 1-1·1-2 공개 범위와 데모 비활성 상태는 소스로 확인했으며 실제 플레이는 이번에 재검증하지 않았다.
+- [ ] **다음 시작점:** 위 두 보완을 처리한 뒤 기존 순서인 건물 공간(`buildingspace`)·이웃·탐색 → Graph 계열을 진행한다. W02 완료나 L2 이상 달성으로 표시하지 않는다. 매 작업 시작 시 `python dotnetpj/tools/cpp_sync.py`로 다시 동기화 상태를 확인한다.
+- [x] 인수인계 뒤 **`20261020-11 DN 최근 월드 코어 이식 점검과 검증 공백 인수인계`**로 로컬 커밋한다. 원격 push는 하지 않는다.
+
 ## 2026-10-20 완료: W02 일곱째 조각 — 프레임 지정
 
 - [x] 사용자 요청("AGENTS.md 와 LEFT_JOBS.dotnetpj.md 를 다시 읽고, dotnetpj 서브프로젝트 다음 작업을 진행해 줘.")으로 직전 절이 정한 다음 시작점, 곧 프레임(`setframe`)을 수행했다. `cpppj/`·공통 `LEFT_JOBS.md`는 수정하지 않았다. 현재 PC **VM-W11-Codex**는 공통 기록의 마지막 정밀 디컴파일 PC(**VM-W11-Codex / 2026-10-20**)와 같으나 **디컴파일 산출물을 읽지 않았고**, 새 디컴파일·원본 관찰·원본/클론 게임·창 실행은 없다. cpppj 커밋 소스·원본 fixture에만 근거했다. 마지막 디컴파일 PC 기록은 그대로다. 상세·근거 표·경계는 [원본 월드 코어 W02 Frame 조각](docs/dotnet-original-core-frame-20261020.md).
@@ -127,7 +138,7 @@
 - [x] **판정 단계:** L1 모듈(fixture 10.78 행 전부) → L2 세션 시작 상태 → L3 고정 입력 진행 → L4 화면·소리 → L5 자연 완주 순서다. L1 통과를 L2 이후 완료로 합산하지 않는다. 1차 범위는 cpppj 목표와 같은 11개 미션(Tutorial1~6·캠페인 1-1·1-2·데모 3개)이다.
 - [ ] **P0 기반**(순서대로, 각 단위의 fixture·교체 대상·완료 기준은 계획 5절)
   - [x] W01 기준선·동기화 장치: 연결 fixture SHA 목록 검사, `X86Fixture` 확장, 반영 커밋 기록 (**완료 2026-10-16**, 위 절)
-  - [ ] W02 원본 월드 코어 ① 생성·등록: 객체 표·생성자·Pop/Unpop/PostPop·해시/spot·소유자/프레임·Graph 연결(D14) — **첫 조각 완료(2026-10-16): 슬롯 풀·생성자 표·Create/Take**, **둘째 조각 완료(2026-10-16): 공간 해시·Unpop**, 다음은 Pop (위 절)
+  - [ ] W02 원본 월드 코어 ① 생성·등록: 객체 표·생성자·Pop/Unpop/PostPop·해시/spot·소유자/프레임·Graph 연결(D14) — **2026-10-20 점검 시: 슬롯 풀·생성, 공간 해시·Unpop, Pop, 공통 PostPop·다리 접두, Carrier/Asset 후처리, 소유자, 프레임까지 L1 모듈 이식 진행**. 위 점검의 보완 2건과 건물 공간·이웃·탐색 → Graph, 파생 분배 허브·실제 세션 연결은 미완료다(각 조각 상세는 위 절).
   - [ ] W03 원본 월드 코어 ② 삭제·수명: 공통 삭제·Damageable·종속/내용물/Form·신전 삭제(D14)
   - [ ] W04 시간·Kernel·Process: Regular·ProcessForm·공통 프레임 진행, 24Hz/8틱 소비자를 하나씩 이행(D01)
   - [ ] W05 SP·보상·난수: float32 SP 저장소·쓰기마다 난수 160회·보상/환불/AI 지갑/샘 풀(D12)
@@ -136,7 +147,7 @@
 - [ ] **P1 플레이 규칙:** W08 사제(D09) → W09 경로·운반·수확(D11·D05 간헐천) → W10 배치·건설·생산(D13, **M2: 1-1에서 원본 건설 파이프라인**) → W11 전투·파생 건물(D10·D20) → W12 희생·신전·제단 → W13 진행·안내·승패(D04·D06·D07·D08·D18, **M3: 1-1·1-2 원본 규칙 자연 완주, AI 전략 제외**)
 - [ ] **P2 표시·UI·소리(P1과 병행 가능):** W14 표시(D15·D21), W15 Gump UI(D23), W16 소리·음악(D24)
 - [ ] **P3:** W17 데모 3개·캠페인 1-6/2-4(D22) → W18 Early Missions 공개와 11개 미션 자연 완주(**M4**) → W19 cpppj 대기 항목(AI 전략·데빌 메이커 TYPE59·플라이어 BaseFlyer·썬 바리케이드 공격·생산 재시작 상위 호출자) → W20 요구사항(화면비·60/120프레임·Linux)
-- [ ] **cpppj 동기화(매 단위 시작 시):** 저장소 루트에서 `python dotnetpj/tools/cpp_sync.py`를 실행한다(반영 이후 cpppj 커밋·fixture 변경, 연결 fixture 어긋남 보고). 반영 커밋은 [`cpp-fixture-manifest.tsv`](dotnetpj/tests/Shared/cpp-fixture-manifest.tsv)의 `reflected-commit` 행이 소유하며 **현재 `b62774f2`**이다(W01에서 `53113b66`→`ba8c3d83`, W02 Unpop 조각에서 `ba8c3d83`→`b62774f2`로 올렸다). 영향이 없거나 이식을 마친 변경을 검토한 뒤 `--update --reflect HEAD`로 올린다. HEAD만 근거로 쓰며 다른 AI의 미커밋 변경은 쓰지 않는다.
+- [ ] **cpppj 동기화(매 단위 시작 시):** 저장소 루트에서 `python dotnetpj/tools/cpp_sync.py`를 실행한다(반영 이후 cpppj 커밋·fixture 변경, 연결 fixture 어긋남 보고). 반영 커밋은 [`cpp-fixture-manifest.tsv`](dotnetpj/tests/Shared/cpp-fixture-manifest.tsv)의 `reflected-commit` 행이 소유한다(**2026-10-20 점검값 `d5dc54ac`**, 연결 fixture 29개; 이후 현재값은 목록 파일을 확인). 영향이 없거나 이식을 마친 변경을 검토한 뒤 `--update --reflect HEAD`로 올린다. HEAD만 근거로 쓰며 다른 AI의 미커밋 변경은 쓰지 않는다.
 - [ ] **cpppj에 전달할 요청(사용자 전달용, cpppj 미수정):** ① 실제 Session의 Load/Start·N프레임 상태 덤프 ② 고정 입력 재생 도구 ③ fixture 열 이름 ④ 모듈별 연결 상태표 ⑤ `cpppj/tests/GraphTests.cpp:105`의 `v[11]` 범위 밖 읽기(2026-10-09 전달, 아직 남음). 상세는 계획 8절.
 - [x] **문서 정리:** 아래 0·1·8절의 순서·대기 표는 당시 기록으로 두고, 머리말과 각 절에서 현행 계획을 가리키게 했다. 10절에 이번 기본값 2건, 12절에 동기화 명령, 13절에 참고 문서를 추가했다. [반영 점검 D01~D16](docs/dotnet-cpp-audit-20261015.md) 머리에 후속 계획 링크를 달았다. 루트 README 두 개의 dotnetpj 상태·다음 작업을 이번 기준선과 계획으로 갱신했다.
 - [x] ~~다음 시작점은 W01이다.~~ W01은 완료했다(위 절). **다음 시작점은 W02다.** `DESKTOP-HJOW`에서는 헤드리스 빌드·검사만 하고, 창 검사는 AGENTS.md 면제 PC나 사용자 승인 뒤에 한다.
