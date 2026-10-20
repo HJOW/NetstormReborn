@@ -1,0 +1,20 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-20",
+  "inputs": 83,
+  "normalReturns": 83,
+  "instructions": 5939980,
+  "gameExecuted": false,
+  "osExecuted": false,
+  "helpSha256": "faf16cdb210def79619ab5245688463c6fbd700b746069a59a44d7c7c9a31746",
+  "scope": "실제 전용 name/info/stream·기본 HTML/링크·마나 초기화/문자열·최대HP/ftol·CRT. TYPE getter/설명·ASCII case/번역/Config/서식·pane/파일 stream은 명시 경계다. 합성 TYPE와 보호 help.english이며 원본 창/게임/OS 관측이 아니다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_quick_help_html.py": "9ca7de230810d8b96e0bd8057ecb0101cb450d0172d6926b36b4f866721e9e0e",
+    "cpppj/tests/fixtures/quick-help-html-x86.tsv": "348a5d91dce8d8cc27348f64169e8baea5e0cb4942b22b3dc717814e9f629763"
+  }
+}

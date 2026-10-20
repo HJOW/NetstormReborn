@@ -184,3 +184,5 @@ target_sources(netstorm PRIVATE InventoryAboutMenu.h InventoryAboutMenu.cpp)
 target_sources(netstorm PRIVATE QuickHelpRequest.h QuickHelpRequest.cpp)
 # 실제 전용 도움말 창의 재사용·이력/팝업 상태·전체 입력 분배를 복원한다.
 target_sources(netstorm PRIVATE QuickHelpControl.h QuickHelpControl.cpp)
+# 실제 전용 Help의 주제/TYPE 정보·링크 저장소와 마나 그림 문자를 기존 HTML에 연결한다.
+target_sources(netstorm PRIVATE QuickHelpHtml.h QuickHelpHtml.cpp HtmlLinkText.h HtmlLinkText.cpp)

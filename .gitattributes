@@ -1471,3 +1471,15 @@ cpppj/quick-help-control-native.json text eol=lf
 cpppj/quick-help-control-session.json text eol=lf
 tools/decomp_quick_help_control.py text eol=lf
 tools/cpp_quick_help_control_audit.py text eol=lf
+# 전용 Help 파생 HTML/링크와 최초 PE 관측을 LF로 보존한다.
+cpppj/src/client/QuickHelpHtml.* text eol=lf
+cpppj/src/client/HtmlLinkText.* text eol=lf
+cpppj/tests/QuickHelpHtmlTests.cpp text eol=lf
+cpppj/tests/fixtures/quick-help-html-x86.tsv text eol=lf whitespace=-blank-at-eol
+cpppj/quick-help-html-native.json text eol=lf
+cpppj/quick-help-html-session.json text eol=lf
+tools/decomp_quick_help_html.py text eol=lf
+tools/cpp_quick_help_html_audit.py text eol=lf
+cpppj/tests/fixtures/quick-help-html-nested-x86.tsv text eol=lf
+cpppj/quick-help-html-nested-native.json text eol=lf
+tools/decomp_quick_help_html_nested.py text eol=lf

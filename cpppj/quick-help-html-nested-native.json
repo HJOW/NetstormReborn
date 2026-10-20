@@ -1,0 +1,13 @@
+{
+  "inputs": 3,
+  "normalReturns": 3,
+  "instructions": 43371,
+  "gameExecuted": false,
+  "osExecuted": false,
+  "sha256": {
+    "tools/decomp_quick_help_html.py": "9ca7de230810d8b96e0bd8057ecb0101cb450d0172d6926b36b4f866721e9e0e",
+    "tools/decomp_quick_help_html_nested.py": "eb0b804459e9929a41c42a6fe05b93cd2a4d3dae8fed2270f5c28409e806e252",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "cpppj/tests/fixtures/quick-help-html-nested-x86.tsv": "0e100af50604b2de483dd5bc8dda7844e469f359a11c820945a225397bc884a5"
+  }
+}

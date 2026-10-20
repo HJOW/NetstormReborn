@@ -7,11 +7,11 @@
   "lastDecompileDate": "2026-10-20",
   "newDecompile": false,
   "sources": {
-    "cpppj/src/client/RawCampaignSession.cpp": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e",
+    "cpppj/src/client/RawCampaignSession.cpp": "6d59bf8f7c9db19c0ca2a1b66594d36979280c82ffac06af529bab7d9698e920",
     "cpppj/src/o/RawDudeBehavior.h": "6e1564365dcb2601b79fdc26162cfc166c61afd58387dd20ef2b5720edc7696d",
     "cpppj/src/o/RawDudeBehavior.cpp": "15b983663d314a781aa05a2be089dc4f2d466f27c17dbf3c762d88200571f1c9",
     "cpppj/src/o/CMakeLists.txt": "8fd2012644816c088a0283bde3e14ed3d9c3cff364d38c4c1bd5f4e6eaa81bd4",
-    "cpppj/tests/CMakeLists.txt": "563b036b7566297db4635bfecbc363c789e7b340e061acd2343d3ff7b9d463b8",
+    "cpppj/tests/CMakeLists.txt": "2018bf47c030a419ccba5f701308668d2c74d646d4d678584cf6f04e893bd4b0",
     "cpppj/tests/CampaignSessionTests.cpp": "6a6d54fd15eb24c0609492756880c774120f855138441820a536ea5bd73ee4f0",
     "tools/cpp_dude_regular_audit.py": "60f8bd98b06c4c4eb7f44ffe9a2bc509ef60878251f620eb689f2fcf415c248d",
     "tools/decomp_dude_regular.py": "255aa65c9f7e35188b0eb620199a9e5bdc7274d680ea7ff019061baccf3db37b",
@@ -3093,6 +3093,26 @@
           "group": "/sources",
           "previous": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c",
           "current": "563b036b7566297db4635bfecbc363c789e7b340e061acd2343d3ff7b9d463b8"
+        }
+      ]
+    },
+    {
+      "unit": "255",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "전용 Help의 name/info/stream·같은 기본 HTML/링크·마나 그림을 복원하고 실제 Session TYPE/무기 표를 공급한다. 지식/공장도 같은 요구 에너지 후처리 기본값을 읽는다. 전용 창/Client Help 소비자는 후속이다. 현재 핀만 갱신하고 과거 files/evidence/원문/기대값/실행은 보존한다. 제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "group": "/sources",
+          "previous": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e",
+          "current": "6d59bf8f7c9db19c0ca2a1b66594d36979280c82ffac06af529bab7d9698e920"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "563b036b7566297db4635bfecbc363c789e7b340e061acd2343d3ff7b9d463b8",
+          "current": "2018bf47c030a419ccba5f701308668d2c74d646d4d678584cf6f04e893bd4b0"
         }
       ]
     }

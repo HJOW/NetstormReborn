@@ -13,7 +13,7 @@
     "cpppj/src/client/RawCampaignTutorialOneBindings.h": "747a7f9249c088c968da165f4b917bed9712eac46d1b935ba1f736d9ab304b30",
     "cpppj/src/client/UberGump.cpp": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9",
     "cpppj/src/client/UberGump.h": "70b2e2e7479669d3ddb47c054d95c87440f266441fea44a2753c39278c12eb65",
-    "cpppj/tests/CMakeLists.txt": "563b036b7566297db4635bfecbc363c789e7b340e061acd2343d3ff7b9d463b8",
+    "cpppj/tests/CMakeLists.txt": "2018bf47c030a419ccba5f701308668d2c74d646d4d678584cf6f04e893bd4b0",
     "cpppj/tests/CampaignMissionStartTests.cpp": "83e64926952399dda15209b6548cf9bd378a334e4a82723ddec0723c94348ed7",
     "cpppj/tests/MissionGuideInputTests.cpp": "052ed17cfc2b00441121a431e0b3fd36cd91e966cc87f10d54f58f4bf5e98c13",
     "tools/decomp_mission_common.py": "b75c997f873b1b733a4265ebfecaa219483371cdbc38b21c43f395e5ffa9e814",
@@ -1876,6 +1876,20 @@
           "group": "/sources",
           "previous": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c",
           "current": "563b036b7566297db4635bfecbc363c789e7b340e061acd2343d3ff7b9d463b8"
+        }
+      ]
+    },
+    {
+      "unit": "255",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "전용 Help의 name/info/stream·같은 기본 HTML/링크·마나 그림을 복원하고 실제 Session TYPE/무기 표를 공급한다. 지식/공장도 같은 요구 에너지 후처리 기본값을 읽는다. 전용 창/Client Help 소비자는 후속이다. 현재 핀만 갱신하고 과거 files/evidence/원문/기대값/실행은 보존한다. 제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "563b036b7566297db4635bfecbc363c789e7b340e061acd2343d3ff7b9d463b8",
+          "current": "2018bf47c030a419ccba5f701308668d2c74d646d4d678584cf6f04e893bd4b0"
         }
       ]
     }

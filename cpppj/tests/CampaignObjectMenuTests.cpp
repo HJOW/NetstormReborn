@@ -5,6 +5,7 @@
 #include "client/RawButtonControls.h"
 #include "client/RawMenuControls.h"
 #include "client/RawKnowledgeMenu.h"
+#include "client/QuickHelpHtml.h"
 #include "client/RawUserHighlight.h"
 #include "o/OriginalText.h"
 #include "o/RawContentPreviewProcess.h"
@@ -129,6 +130,15 @@ TEST_CASE(CampaignKnowledge_ActualSessionAndMenuTree) {
     std::vector<std::uint8_t> pixels(640*480,0);ui.menus->Draw(pixels,640,480,ui.Palette(),BuildGumpShadeMaps(logical)); // 실제 보호 그림/글꼴/팔레트를 같은 픽셀 소비자에 보낸다.
     CHECK(std::any_of(pixels.begin(),pixels.end(),[](std::uint8_t value) { return value!=0; }));
     ui.menus->RequestClosePopups();CHECK(!ui.menus->KnowledgeOpen());ui.menus->CleanupFrame();CHECK(!ui.menus->HasMenus());ui.currentSession=nullptr;
+}
+// 실제 사제/Carrier/Player 계층과 건설 선택을 기존 공통 트리에서 확인한다.
+// 보호 TYPE의 현재 도움말 값은 실제 무기 보충 표와 같은 요구 에너지 후처리를 읽는다.
+TEST_CASE(CampaignHelp_ActualCurrentTypeInfo) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);MenuServices external;auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",external.Make());
+    const auto cannon=static_cast<std::uint32_t>(assets.game.TypeTable().Find("sunCannon"));bool rejected{};try { static_cast<void>(session.HelpTypeInfo(cannon)); }catch (const std::out_of_range&) { rejected=true; }CHECK(rejected);session.Load();
+    const auto info=session.HelpTypeInfo(cannon);CHECK(info.theme==3 && (info.flags1&0x10U) && info.range==20 && info.damage==16 && info.cost==400 && info.classification=="Shooter");CHECK(session.HitPoints().TypeHitPoints(cannon)==600);CHECK(info.mana=="s");
+    const auto& definition=assets.game.Find("sunCannon").definition;CHECK(!definition.String("mana").has_value()); // 명시 mana가 없어도 후처리의 실제+a0은 빈 문자열이 아니다.
+    rejected=false;try { static_cast<void>(session.HelpTypeInfo(188)); }catch (const std::out_of_range&) { rejected=true; }CHECK(rejected);
 }
 // 실제 사제/Carrier/Player 계층과 건설 선택을 기존 공통 트리에서 확인한다.
 TEST_CASE(CampaignObjectMenus_ActualChainAndBuildSelection) {

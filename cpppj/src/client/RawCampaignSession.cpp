@@ -46,6 +46,7 @@
 #include "client/RawBombBlastBindings.h"
 #include "o/RawPacketDispatch.h"
 #include "client/AiTypeRequiredEnergy.h"
+#include "client/QuickHelpHtml.h"
 #include "o/RawGameRandomSeed.h"
 #include "o/RawSquidFinder.h"
 #include "o/RawConstructionArrival.h"
@@ -2521,10 +2522,21 @@ std::vector<std::uint32_t> RawCampaignSession::ShowKnowledge(KnowledgeMenuState&
     hooks.blocked=[current] { return current->core.ownerMode.challenge; };hooks.cancel=[current] { current->cursor->Cancel(); };
     hooks.currentTechnology=[current] { return current->player->CurrentTechnology(); };
     hooks.owns=[current](std::uint32_t parent,std::uint32_t type) { if (parent>65535) throw std::out_of_range("지식 창 기술 부모 SID 범위");return current->priests->Carrier().FindContained(o::Sid{static_cast<std::uint16_t>(parent)},4,type,0).value!=0; };
-    hooks.mana=[current](std::uint32_t type) { if (type<70) return std::string{};const auto assets=current->assets.game.Types();if (type-70>=assets.size()) throw std::out_of_range("지식 창 마나 자산 번호 범위");const auto value=assets[type-70].definition.String("mana");return value ? std::string(*value) : std::string{}; };
+    hooks.mana=BindAiTypeRequiredEnergy(current->assets.game,current->core.types); // 실제 TYPE+a0 후처리 기본값도 같은 표에서 읽는다.
     hooks.inProduction=[current](std::uint32_t type) { return current->production->Contains(type); };
     hooks.excluded=[current](std::uint32_t type) { const auto items=current->constructionExcludedTypes.Items();return std::find(items.begin(),items.end(),type)!=items.end(); };
     return ShowKnowledgeMenu(current->core.types,state,hooks);
+}
+// 정보 화면도 기존 현재 TYPE/사정거리/초당 피해 표와 AI·건설의 같은 요구 에너지 후처리를 사용한다.
+QuickHelpTypeInfo RawCampaignSession::HelpTypeInfo(std::uint32_t type) const {
+    if (!impl_->loaded || type>=impl_->core.types.size()) throw std::out_of_range("전용 도움말의 설치/현재 TYPE 범위");const auto& value=impl_->core.types[type];
+    QuickHelpTypeInfo result;result.theme=value.theme;result.flags1=value.flags1;result.flags2=value.flags2;result.cost=value.cost;result.range=impl_->gunTypes[type].range;result.damage=impl_->hitTypes[type].damagePerSecond;
+    result.mana=BindAiTypeRequiredEnergy(impl_->assets.game,impl_->core.types)(type);
+    if (type>=70 && type-70<impl_->assets.game.Types().size()) {
+        const auto classification=impl_->assets.game.Types()[type-70].definition.String("class");if (classification) result.classification=classification->substr(0,classification->find('\0'));
+        if (result.classification.size()>23) throw std::length_error("전용 도움말 TYPE class23바이트 초과");
+    }
+    return result;
 }
 // 원본 사제/Carrier/회수/공통 객체/Player 몸체를 같은 현재 월드와 실제 Client 경계로 조립한다.
 std::unique_ptr<RawCampaignObjectMenus> RawCampaignSession::MakeObjectMenus(CampaignObjectMenuUi ui) {
@@ -2590,7 +2602,7 @@ std::unique_ptr<RawCampaignObjectMenus> RawCampaignSession::MakeObjectMenus(Camp
     factory.technologyType=[current](Sid parent,std::uint32_t index) { const auto sid=current->priests->Carrier().FindContained(parent,4,0,index);return sid.value ? (Read(current->core.pool.Slot(sid),18)&0xffffU) : 0U; };
     factory.allowed=[current](std::uint32_t type) { return current->production->Allowed(static_cast<std::int32_t>(type)); };factory.inProduction=[current](std::uint32_t type) { return current->production->Contains(type); };
     factory.cost=[current](std::uint32_t type) { return current->hp.TypeCostUnits(type); };factory.money=[current](std::uint32_t owner) { return std::bit_cast<float>(current->sp.Get(owner)); };
-    factory.mana=[current](std::uint32_t type) { if (type<70) return std::string{};const auto value=current->assets.game.Types()[type-70].definition.String("mana");return value ? std::string(*value) : std::string{}; };
+    factory.mana=BindAiTypeRequiredEnergy(current->assets.game,current->core.types); // 공장도 원본 TYPE 후처리 뒤 실제 요구 에너지를 사용한다.
     factory.baseMenu=[chain](Sid sid) { chain->object->OpenDamageable(sid); };
     chain->factoryMenu=std::make_unique<RawFactoryMenu>(current->core.pool,current->core.types,current->contentFinder,current->constructionExcludedTypes,chain->factoryState,std::move(factory));
     return std::unique_ptr<RawCampaignObjectMenus>(new RawCampaignObjectMenus(std::move(menus)));
