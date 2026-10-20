@@ -3,6 +3,7 @@
 #include "client/DialogScript.h"
 #include <deque>
 #include <optional>
+#include <string_view>
 
 namespace netstorm::client {
 enum class ClientPhase { MainMenu, Dialog, LoadingMission, Briefing, Mission };
@@ -15,6 +16,7 @@ public:
     std::optional<DialogAction> Take();
     // 원본 Guide의 pending 관문에 현재 다음 루프 전환 유무를 공급한다. 별도 완료 표식을 만들지 않는다.
     bool Pending() const;
+    bool Cancel(std::string_view command); // 해당 소유자의 정확한 내부 명령만 취소한다. 다른 대기 요청은 보존한다.
     // 현재 UI/미션 단계. 실제 미션 프로세스는 다음 월드 단계에서 연결한다.
     ClientPhase phase{ClientPhase::MainMenu};
 private:

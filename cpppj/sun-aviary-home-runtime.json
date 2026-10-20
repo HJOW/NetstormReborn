@@ -150,7 +150,7 @@
   "fullFidelityVerified": false,
   "naturalTutorialFiveComplete": false,
   "sources": {
-    "cpppj/src/client/RawCampaignSession.cpp": "6d59bf8f7c9db19c0ca2a1b66594d36979280c82ffac06af529bab7d9698e920",
+    "cpppj/src/client/RawCampaignSession.cpp": "6aaef81339fe4682278a624c49650e5d0e0542ff1c0a45b4c211d47ebf0576dc",
     "cpppj/src/client/ClientMain.cpp": "fe577cb844b74ff10be7353b9ba545563bd62af7272409211de823e511fb456e",
     "cpppj/src/o/RawSunAviaryProcess.cpp": "9da6f8ae3136c558f6efb3911660c7b30fbfb8953db5d0d47b5b11440bace7da",
     "cpppj/src/o/RawSunAviaryProcess.h": "2a14e9256502d59e3d3af4376762adb37ab3172e13303c596e3a41add2b9f8e9",
@@ -408,6 +408,20 @@
           "group": "/sources",
           "previous": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e",
           "current": "6d59bf8f7c9db19c0ca2a1b66594d36979280c82ffac06af529bab7d9698e920"
+        }
+      ]
+    },
+    {
+      "unit": 259,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "Tutorial Init 전체 제어/이름·현재 전역과 같은 옵션/허용 표를 연결하고 요새 요청을 다음 루프로 옮겼다. 현재 소스 핀만 갱신하며 과거 근거/원문/기대값/실행·바이너리는 보존한다. 실제 제품 검사는 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "group": "/sources",
+          "previous": "6d59bf8f7c9db19c0ca2a1b66594d36979280c82ffac06af529bab7d9698e920",
+          "current": "6aaef81339fe4682278a624c49650e5d0e0542ff1c0a45b4c211d47ebf0576dc"
         }
       ]
     }

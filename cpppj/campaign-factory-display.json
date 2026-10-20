@@ -59,8 +59,8 @@
     "cpppj/src/CMakeLists.txt": "8834917133d33fda6dcd145dd64a93ee38ee014d25fede2eff5575b996df5847",
     "cpppj/src/client/GameWorld.cpp": "af6d3aeb3bd53d83e2619c2bd20ba5df42c17fe718cb81786841606419f10c6c",
     "cpppj/src/client/GameWorld.h": "d51dfe75377b1afd870bfeb40e26cef9f6233f65217d757135648ce064043a16",
-    "cpppj/tests/CMakeLists.txt": "ee217558417e170b51187377eae1fa45478dc6d1c899541a64aa5a73de3847a2",
-    "cpppj/tests/CampaignSessionTests.cpp": "1ca3f4a443191f14d9a28b3d3e436f3cf22d11ba164319d466e36d18ffd98352",
+    "cpppj/tests/CMakeLists.txt": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30",
+    "cpppj/tests/CampaignSessionTests.cpp": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b",
     "tools/cpp_priest_construction_smoke.py": "93524c9e1fb58e7e589fc25c7507e105e750b96cb66ad7ddbf9a58aae2756c2c",
     "cpppj/src/client/SpriteColorMaps.h": "616d6afb5af4bb505f0f780b05cbc9dec4058026b43ba898be5719a5ab233e54",
     "cpppj/src/client/SpriteColorMaps.cpp": "9a2d39e42ba43fb32baf622923e4fa5a2629f0ae8c186dd3f2d1bb34a0dd9c61",
@@ -6252,6 +6252,26 @@
           "group": "/currentSources",
           "previous": "a627575830fe9176dc72e24279dd80129787527faa645c2c1266799148bb7c70",
           "current": "ee217558417e170b51187377eae1fa45478dc6d1c899541a64aa5a73de3847a2"
+        }
+      ]
+    },
+    {
+      "unit": 259,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "Tutorial Init 전체 제어/이름·현재 전역과 같은 옵션/허용 표를 연결하고 요새 요청을 다음 루프로 옮겼다. 현재 소스 핀만 갱신하며 과거 근거/원문/기대값/실행·바이너리는 보존한다. 실제 제품 검사는 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/currentSources",
+          "previous": "ee217558417e170b51187377eae1fa45478dc6d1c899541a64aa5a73de3847a2",
+          "current": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "group": "/currentSources",
+          "previous": "1ca3f4a443191f14d9a28b3d3e436f3cf22d11ba164319d466e36d18ffd98352",
+          "current": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b"
         }
       ]
     }

@@ -26,7 +26,7 @@ void ApplyMissionTechnology(const MissionTechnologyHooks& hooks) {
     }
 }
 // UTF-8 저장소 경계에서만 원본 좁은 문자로 변환하고 기존 ConfigListItem/TotalMade 몸체를 재사용한다.
-void ApplyMissionTechnology(MissionScript& script,const o::RiftTypeTable& types,const o::RawTotalMade& totalMade) {
+static MissionTechnologyHooks ScriptTechnology(MissionScript& script,const o::RiftTypeTable& types) {
     MissionTechnologyHooks hooks;
     hooks.item=[&script](std::int32_t index) {
         const auto bytes=o::EncodeOriginalText(script.Get("techAllowed").value_or(""));
@@ -35,8 +35,16 @@ void ApplyMissionTechnology(MissionScript& script,const o::RiftTypeTable& types,
         return o::ConfigListItem(visible,index);
     };
     hooks.findType=[&types](std::string_view name) { return types.Find(name); };
-    hooks.allowAll=[&totalMade](std::int32_t value) { totalMade.AllowAll(value); };
+    return hooks;
+}
+// 설치한 월드의 실제 TotalMade도 같은 Config 목록 효과를 사용한다.
+void ApplyMissionTechnology(MissionScript& script,const o::RiftTypeTable& types,const o::RawTotalMade& totalMade) {
+    auto hooks=ScriptTechnology(script,types);hooks.allowAll=[&totalMade](std::int32_t value) { totalMade.AllowAll(value); };
     hooks.allow=[&totalMade](std::int32_t type,std::int32_t value) { totalMade.Allow(type,value); };
     ApplyMissionTechnology(hooks);
+}
+// Init Header는 설치 전 전역을 쓰고 이후 Session은 이 같은 배열을 빌린다.
+void ApplyMissionTechnology(MissionScript& script,const o::RiftTypeTable& types,std::span<std::uint32_t> restrictions) {
+    auto hooks=ScriptTechnology(script,types);hooks.allowAll=[restrictions](auto value) { o::SetTotalMadeAllowAll(restrictions,value); };hooks.allow=[restrictions](auto type,auto value) { o::SetTotalMadeAllow(restrictions,type,value); };ApplyMissionTechnology(hooks);
 }
 }

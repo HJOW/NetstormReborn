@@ -7,17 +7,17 @@
   "lastDecompileDate": "2026-10-20",
   "newDecompile": false,
   "sources": {
-    "cpppj/src/client/UberGump.cpp": "d042ad33b81d43de646ef9a82ff4265788a86f18ccf74f3861a3d94a7c95d28d",
-    "cpppj/src/client/CMakeLists.txt": "4ae70d9d48c3a42bfec960e370ac8c3fa3ade55bd9250039fc63493a8260b85e",
-    "cpppj/tests/CMakeLists.txt": "ee217558417e170b51187377eae1fa45478dc6d1c899541a64aa5a73de3847a2",
+    "cpppj/src/client/UberGump.cpp": "51194a324e887e53ecfa85cad9de5f81bf31dc161976b4808f4864a3ad6b80a8",
+    "cpppj/src/client/CMakeLists.txt": "c814b3ce4fcefee13c8766a400cf836a91a0e1db5ac8aeb8eccf529b1b165419",
+    "cpppj/tests/CMakeLists.txt": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30",
     "cpppj/tests/CampaignMissionStartTests.cpp": "83e64926952399dda15209b6548cf9bd378a334e4a82723ddec0723c94348ed7",
     "tools/decomp_mission_technology.py": "177ea82462ca7b2fca504845f88914f23f869ceeb6c1651fc720eb7a0b41312b",
-    "tools/cpp_mission_technology_audit.py": "f2c8abe0d980b2b2102db5764cfb45d812a3653eaf59bdd94386fbf94e2357b2",
-    "cpppj/src/client/MissionTechnology.h": "85ddb3f756715d76f8baf3306e38be3d137f16687e235567fba4d334727c1770",
-    "cpppj/src/client/MissionTechnology.cpp": "edb5e87e3369c630f9a280a18dbd9bb76bc255afe66f18d2ef262b5076ab5706",
+    "tools/cpp_mission_technology_audit.py": "c39040499ff2b148ad171ea36d62cccbd7ee118330e7c5ce18a0c44be5ca1c1a",
+    "cpppj/src/client/MissionTechnology.h": "6dcc98a97d902154b82d7254d7274db823240dfb0edcabdeb3391c767df998bf",
+    "cpppj/src/client/MissionTechnology.cpp": "5ba1a1bedfa2787092002a4b04177b88dd0d03fff245261e5344057525a91e61",
     "cpppj/tests/MissionTechnologyTests.cpp": "fcfddc3f4e499a8a18f23c05d69e7d419170ae0e01e7f889e444c0ed27bef578",
-    "cpppj/src/client/RawCampaignSession.cpp": "6d59bf8f7c9db19c0ca2a1b66594d36979280c82ffac06af529bab7d9698e920",
-    "cpppj/src/o/RawTotalMade.cpp": "7e41ece886973893e6b4614b81d1b669da23b6c1a85799e5301905d68c7e0d25"
+    "cpppj/src/client/RawCampaignSession.cpp": "6aaef81339fe4682278a624c49650e5d0e0542ff1c0a45b4c211d47ebf0576dc",
+    "cpppj/src/o/RawTotalMade.cpp": "461c0424485988241cbc2b6007ea97d2a4f2d4e90ff9193f10a0fe92da5b8cb7"
   },
   "evidence": {
     "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
@@ -1564,6 +1564,62 @@
           "group": "/sources",
           "previous": "a627575830fe9176dc72e24279dd80129787527faa645c2c1266799148bb7c70",
           "current": "ee217558417e170b51187377eae1fa45478dc6d1c899541a64aa5a73de3847a2"
+        }
+      ]
+    },
+    {
+      "unit": 259,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "Tutorial Init 전체 제어/이름·현재 전역과 같은 옵션/허용 표를 연결하고 요새 요청을 다음 루프로 옮겼다. 현재 소스 핀만 갱신하며 과거 근거/원문/기대값/실행·바이너리는 보존한다. 실제 제품 검사는 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "group": "/sources",
+          "previous": "d042ad33b81d43de646ef9a82ff4265788a86f18ccf74f3861a3d94a7c95d28d",
+          "current": "51194a324e887e53ecfa85cad9de5f81bf31dc161976b4808f4864a3ad6b80a8"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "group": "/sources",
+          "previous": "6d59bf8f7c9db19c0ca2a1b66594d36979280c82ffac06af529bab7d9698e920",
+          "current": "6aaef81339fe4682278a624c49650e5d0e0542ff1c0a45b4c211d47ebf0576dc"
+        },
+        {
+          "path": "cpppj/src/client/MissionTechnology.cpp",
+          "group": "/sources",
+          "previous": "edb5e87e3369c630f9a280a18dbd9bb76bc255afe66f18d2ef262b5076ab5706",
+          "current": "5ba1a1bedfa2787092002a4b04177b88dd0d03fff245261e5344057525a91e61"
+        },
+        {
+          "path": "cpppj/src/client/MissionTechnology.h",
+          "group": "/sources",
+          "previous": "85ddb3f756715d76f8baf3306e38be3d137f16687e235567fba4d334727c1770",
+          "current": "6dcc98a97d902154b82d7254d7274db823240dfb0edcabdeb3391c767df998bf"
+        },
+        {
+          "path": "cpppj/src/o/RawTotalMade.cpp",
+          "group": "/sources",
+          "previous": "7e41ece886973893e6b4614b81d1b669da23b6c1a85799e5301905d68c7e0d25",
+          "current": "461c0424485988241cbc2b6007ea97d2a4f2d4e90ff9193f10a0fe92da5b8cb7"
+        },
+        {
+          "path": "cpppj/src/client/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "4ae70d9d48c3a42bfec960e370ac8c3fa3ade55bd9250039fc63493a8260b85e",
+          "current": "c814b3ce4fcefee13c8766a400cf836a91a0e1db5ac8aeb8eccf529b1b165419"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "ee217558417e170b51187377eae1fa45478dc6d1c899541a64aa5a73de3847a2",
+          "current": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30"
+        },
+        {
+          "path": "tools/cpp_mission_technology_audit.py",
+          "group": "/sources",
+          "previous": "f2c8abe0d980b2b2102db5764cfb45d812a3653eaf59bdd94386fbf94e2357b2",
+          "current": "c39040499ff2b148ad171ea36d62cccbd7ee118330e7c5ce18a0c44be5ca1c1a"
         }
       ]
     }

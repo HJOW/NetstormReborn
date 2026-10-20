@@ -20,8 +20,8 @@
     "cpppj/src/client/RawMenuControls.h": "edcb095b283233a2c3ac893dace31700ac282a23cdce165594d32d076e5fe465",
     "cpppj/src/client/RawMenuControls.cpp": "fd8c19e4b7fde7a65adfa87251d859130106a6e388ced7527c933c73c6045029",
     "cpppj/src/client/CampaignCursorClientEffects.cpp": "a3248a08922f8b4fdad05d2e2844db55f96196ccd58d55827b034dad17a55f72",
-    "cpppj/src/client/UberGump.cpp": "d042ad33b81d43de646ef9a82ff4265788a86f18ccf74f3861a3d94a7c95d28d",
-    "cpppj/tests/CMakeLists.txt": "ee217558417e170b51187377eae1fa45478dc6d1c899541a64aa5a73de3847a2",
+    "cpppj/src/client/UberGump.cpp": "51194a324e887e53ecfa85cad9de5f81bf31dc161976b4808f4864a3ad6b80a8",
+    "cpppj/tests/CMakeLists.txt": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30",
     "cpppj/tests/RawMenuControlsTests.cpp": "309e49dd6c5328a5bd6c3c5915202cd329d8c5f55ded5b7c329363e76c404289",
     "cpppj/tests/CampaignCursorClientEffectsTests.cpp": "f04679442eea66764f77ab814314c9edd1790dca1f61f39e95eb29804b78d92b",
     "cpppj/src/client/FloatingSpGump.h": "36df57018c209f1e007727899f85c78f62840e450b740f9de34e7d0ee789d841",
@@ -5803,6 +5803,26 @@
           "group": "/currentSources",
           "previous": "a627575830fe9176dc72e24279dd80129787527faa645c2c1266799148bb7c70",
           "current": "ee217558417e170b51187377eae1fa45478dc6d1c899541a64aa5a73de3847a2"
+        }
+      ]
+    },
+    {
+      "unit": 259,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "Tutorial Init 전체 제어/이름·현재 전역과 같은 옵션/허용 표를 연결하고 요새 요청을 다음 루프로 옮겼다. 현재 소스 핀만 갱신하며 과거 근거/원문/기대값/실행·바이너리는 보존한다. 실제 제품 검사는 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "group": "/currentSources",
+          "previous": "d042ad33b81d43de646ef9a82ff4265788a86f18ccf74f3861a3d94a7c95d28d",
+          "current": "51194a324e887e53ecfa85cad9de5f81bf31dc161976b4808f4864a3ad6b80a8"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/currentSources",
+          "previous": "ee217558417e170b51187377eae1fa45478dc6d1c899541a64aa5a73de3847a2",
+          "current": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30"
         }
       ]
     }

@@ -14,8 +14,8 @@
     "cpppj/src/o/RawBoardTarget.cpp": "0a113af217f40762da9a69f9d02dece3fa904e0da54ddf5aed746718b3bddf51",
     "cpppj/src/o/RawCarrierTarget.h": "49e6340d4b120f87894cd07126c94fbf212a5e4d477bd44bdff22190e86f793d",
     "cpppj/src/o/RawCarrierTarget.cpp": "82c9b3862969d5e664ed6acff2f63f97340898463c22347a667f278d9d519f08",
-    "cpppj/src/client/RawCampaignSession.h": "2d53de38afc2c6a4ef2162e91ed7d2b6fb58b4103f847030a21f686e6fae68e4",
-    "cpppj/src/client/RawCampaignSession.cpp": "6d59bf8f7c9db19c0ca2a1b66594d36979280c82ffac06af529bab7d9698e920",
+    "cpppj/src/client/RawCampaignSession.h": "a2658773f7c24e24ace79ee27088ec9bc869d4d09fc890fbda9d3aba8aec7d01",
+    "cpppj/src/client/RawCampaignSession.cpp": "6aaef81339fe4682278a624c49650e5d0e0542ff1c0a45b4c211d47ebf0576dc",
     "cpppj/src/client/RawCampaignPathBindings.h": "64bda57407ea52b561ea7a1fad2c6d3fa11be086115327ff78d47206cd68320f",
     "cpppj/src/client/RawCampaignPathBindings.cpp": "be46833bcfd8099fb58af729eb2d92f83a045aecc50d8fec4ba3d4c6c56a6679",
     "cpppj/src/o/RawPathStart.h": "576188b61294a25b8abb6caa7bc129c56e21804a2fb79cf5de74cd25421a568f",
@@ -26,7 +26,7 @@
     "cpppj/tests/CarrierTargetTests.cpp": "7ca2aa993bae751e63e973190da5eefb9259d1cfb544899bb108e89d26912400",
     "cpppj/tests/CampaignObjectMenuTests.cpp": "8c7951a5447f9e70871f5e082bd68d722d17866a1bbc0f5d43d9be50c62b113c",
     "cpppj/src/CMakeLists.txt": "8834917133d33fda6dcd145dd64a93ee38ee014d25fede2eff5575b996df5847",
-    "cpppj/tests/CMakeLists.txt": "ee217558417e170b51187377eae1fa45478dc6d1c899541a64aa5a73de3847a2",
+    "cpppj/tests/CMakeLists.txt": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30",
     "tools/native_carrier_geometry.cpp": "c471a0ce9889c730bb1a3b6a4659fe0eb0fea2d854b7007524fb93cd56fa34e8",
     "tools/carrier-geometry-hardware/CMakeLists.txt": "918768180d59716d3c0d46ac8955edd89ce2963237dae7eff3435fbd0e0287a3",
     "tools/decomp_carrier_target.py": "5869d80a3bde70e576f055d8fa6336364fb217343ec5cf7984eb763d99fc718f",
@@ -2284,6 +2284,32 @@
           "group": "/currentSources",
           "previous": "a627575830fe9176dc72e24279dd80129787527faa645c2c1266799148bb7c70",
           "current": "ee217558417e170b51187377eae1fa45478dc6d1c899541a64aa5a73de3847a2"
+        }
+      ]
+    },
+    {
+      "unit": 259,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "Tutorial Init 전체 제어/이름·현재 전역과 같은 옵션/허용 표를 연결하고 요새 요청을 다음 루프로 옮겼다. 현재 소스 핀만 갱신하며 과거 근거/원문/기대값/실행·바이너리는 보존한다. 실제 제품 검사는 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "group": "/currentSources",
+          "previous": "6d59bf8f7c9db19c0ca2a1b66594d36979280c82ffac06af529bab7d9698e920",
+          "current": "6aaef81339fe4682278a624c49650e5d0e0542ff1c0a45b4c211d47ebf0576dc"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "group": "/currentSources",
+          "previous": "2d53de38afc2c6a4ef2162e91ed7d2b6fb58b4103f847030a21f686e6fae68e4",
+          "current": "a2658773f7c24e24ace79ee27088ec9bc869d4d09fc890fbda9d3aba8aec7d01"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/currentSources",
+          "previous": "ee217558417e170b51187377eae1fa45478dc6d1c899541a64aa5a73de3847a2",
+          "current": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30"
         }
       ]
     }

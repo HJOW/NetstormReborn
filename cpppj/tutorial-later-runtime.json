@@ -10,19 +10,19 @@
   "baseline": "5afa207ab953bbef6e16407ecf9f43660fa879be",
   "status": "실제 Early3~6 연결/전체 회귀/저장11진입 검증. 직렬 검사 자동 설정 복구 실패 뒤 원래 바이트 수동 복구.",
   "sources": {
-    "cpppj/src/client/RawCampaignSession.cpp": "6d59bf8f7c9db19c0ca2a1b66594d36979280c82ffac06af529bab7d9698e920",
-    "cpppj/src/client/RawCampaignSession.h": "2d53de38afc2c6a4ef2162e91ed7d2b6fb58b4103f847030a21f686e6fae68e4",
+    "cpppj/src/client/RawCampaignSession.cpp": "6aaef81339fe4682278a624c49650e5d0e0542ff1c0a45b4c211d47ebf0576dc",
+    "cpppj/src/client/RawCampaignSession.h": "a2658773f7c24e24ace79ee27088ec9bc869d4d09fc890fbda9d3aba8aec7d01",
     "cpppj/src/client/RawCampaignTutorialOneBindings.cpp": "945cb24940af3cfc103ee17ddaac723a6d22b197d658f063886da57366dc99f4",
     "cpppj/src/client/RawCampaignTutorialOneBindings.h": "747a7f9249c088c968da165f4b917bed9712eac46d1b935ba1f736d9ab304b30",
-    "cpppj/src/client/UberGump.cpp": "d042ad33b81d43de646ef9a82ff4265788a86f18ccf74f3861a3d94a7c95d28d",
-    "cpppj/tests/CampaignSessionTests.cpp": "1ca3f4a443191f14d9a28b3d3e436f3cf22d11ba164319d466e36d18ffd98352",
+    "cpppj/src/client/UberGump.cpp": "51194a324e887e53ecfa85cad9de5f81bf31dc161976b4808f4864a3ad6b80a8",
+    "cpppj/tests/CampaignSessionTests.cpp": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b",
     "cpppj/src/o/RawTutorialLater.cpp": "1f40efc3aefb38e02ff8a9b5d2553ca4c30f773c2c8b4f6dbb82cd3e5b9bc082",
     "cpppj/src/o/RawTutorialLater.h": "e531ab0c0fd025608fde58be59bd5ae83e94414220624f243f7ad891bd3e831f",
     "cpppj/src/o/RawTutorialOne.cpp": "4717a1c26fe6ffa6eebdfa420bd9d194902d5b810849ea6d8c8ab06e0a056f7c",
     "cpppj/src/o/RawTutorialTwo.cpp": "0709d0d5a92cf89834229ece1199d04e2887e4dcd9d335d9f7b58606ac38c7be",
     "cpppj/src/o/RawMissionFrameGate.cpp": "8c344648b351bb8102b547038b6f1cb29dfbe6540b71937a052e6a8b28bed1b0",
     "cpppj/src/o/RawMissionStart.cpp": "520e7490ae6047d1bfb968e26b29bb4eba67cba8e8bc8a01fa711656ec75716d",
-    "cpppj/src/o/RawTotalMade.cpp": "3c37a62c97707b65b0cff57316e3d8f693a4ed5ae2ac92f339e5366aa3bb3d73",
+    "cpppj/src/o/RawTotalMade.cpp": "461c0424485988241cbc2b6007ea97d2a4f2d4e90ff9193f10a0fe92da5b8cb7",
     "cpppj/src/o/RawPriestLookup.cpp": "3381f6e12f48a08e896effca2fd6532161b9ff7c8e97dd7fee92ba842405bf34",
     "cpppj/src/client/RawCampaignOwnership.cpp": "960af85c2b29897a853f2f08e8a78283e87b5c04a7595ca9e62924e2c455c6c5",
     "cpppj/src/o/RawDamageablePostDestroy.cpp": "c70069e2dc850b8f1496aee07008c03ffb1655ff5943365334a4938ead99fb18",
@@ -1217,6 +1217,44 @@
           "group": "/sources",
           "previous": "6a6d54fd15eb24c0609492756880c774120f855138441820a536ea5bd73ee4f0",
           "current": "1ca3f4a443191f14d9a28b3d3e436f3cf22d11ba164319d466e36d18ffd98352"
+        }
+      ]
+    },
+    {
+      "unit": 259,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "Tutorial Init 전체 제어/이름·현재 전역과 같은 옵션/허용 표를 연결하고 요새 요청을 다음 루프로 옮겼다. 현재 소스 핀만 갱신하며 과거 근거/원문/기대값/실행·바이너리는 보존한다. 실제 제품 검사는 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "group": "/sources",
+          "previous": "d042ad33b81d43de646ef9a82ff4265788a86f18ccf74f3861a3d94a7c95d28d",
+          "current": "51194a324e887e53ecfa85cad9de5f81bf31dc161976b4808f4864a3ad6b80a8"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "group": "/sources",
+          "previous": "6d59bf8f7c9db19c0ca2a1b66594d36979280c82ffac06af529bab7d9698e920",
+          "current": "6aaef81339fe4682278a624c49650e5d0e0542ff1c0a45b4c211d47ebf0576dc"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "group": "/sources",
+          "previous": "2d53de38afc2c6a4ef2162e91ed7d2b6fb58b4103f847030a21f686e6fae68e4",
+          "current": "a2658773f7c24e24ace79ee27088ec9bc869d4d09fc890fbda9d3aba8aec7d01"
+        },
+        {
+          "path": "cpppj/src/o/RawTotalMade.cpp",
+          "group": "/sources",
+          "previous": "3c37a62c97707b65b0cff57316e3d8f693a4ed5ae2ac92f339e5366aa3bb3d73",
+          "current": "461c0424485988241cbc2b6007ea97d2a4f2d4e90ff9193f10a0fe92da5b8cb7"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "group": "/sources",
+          "previous": "1ca3f4a443191f14d9a28b3d3e436f3cf22d11ba164319d466e36d18ffd98352",
+          "current": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b"
         }
       ]
     }

@@ -257,7 +257,7 @@
     "cpppj/src/client/CampaignObjectMenuClient.cpp": "2e1d9e0aea14df5eb579b320744b8cbe3a88a567361b687ef9064e84fe395001",
     "cpppj/src/client/CampaignUserInputServices.cpp": "f2bef8c428670f4ab871fd4e2d35730b7417ed53ef3388cd3b245087b96dc017",
     "cpppj/src/client/RawCampaignCarrierInput.inc": "17c639af1e42ed83c94462d61bd2dcfe2f8b85db647611a100a979bde3b48ee6",
-    "cpppj/src/client/RawCampaignSession.cpp": "6d59bf8f7c9db19c0ca2a1b66594d36979280c82ffac06af529bab7d9698e920",
+    "cpppj/src/client/RawCampaignSession.cpp": "6aaef81339fe4682278a624c49650e5d0e0542ff1c0a45b4c211d47ebf0576dc",
     "cpppj/src/client/RawCarrierDropPoint.cpp": "a0c2130de14992eb2f3debda71840b9e0c9889398d17cfd92c2c8cb050b2acd5",
     "cpppj/src/o/RawBombPreDestroy.cpp": "4015008cba143c5a47fdf509786a6f87af47ba15d7f69196ec6e7fd15c62dfc3",
     "cpppj/src/o/RawContainedFinder.cpp": "52fc6dd13a8884c2ec3d8d72cbcd9c5cb25a2c88f29958f2cf7d748e18eb2046",
@@ -470,6 +470,20 @@
           "group": "/sources",
           "previous": "65d9a17800a1a67238e5c9c24ee48c380a023121470a858c84242483f0248c1e",
           "current": "6d59bf8f7c9db19c0ca2a1b66594d36979280c82ffac06af529bab7d9698e920"
+        }
+      ]
+    },
+    {
+      "unit": 259,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "Tutorial Init 전체 제어/이름·현재 전역과 같은 옵션/허용 표를 연결하고 요새 요청을 다음 루프로 옮겼다. 현재 소스 핀만 갱신하며 과거 근거/원문/기대값/실행·바이너리는 보존한다. 실제 제품 검사는 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "group": "/sources",
+          "previous": "6d59bf8f7c9db19c0ca2a1b66594d36979280c82ffac06af529bab7d9698e920",
+          "current": "6aaef81339fe4682278a624c49650e5d0e0542ff1c0a45b4c211d47ebf0576dc"
         }
       ]
     }

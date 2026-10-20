@@ -10,14 +10,14 @@
   "sources": {
     "cpppj/src/client/GameWorld.h": "d51dfe75377b1afd870bfeb40e26cef9f6233f65217d757135648ce064043a16",
     "cpppj/src/client/GameWorldInput.inc": "f46f5b6c20d628a298f252afcdf5f1af44a5718a6d21cc7848dc88c3a151a530",
-    "cpppj/src/client/RawCampaignSession.cpp": "6d59bf8f7c9db19c0ca2a1b66594d36979280c82ffac06af529bab7d9698e920",
-    "cpppj/src/client/RawCampaignSession.h": "2d53de38afc2c6a4ef2162e91ed7d2b6fb58b4103f847030a21f686e6fae68e4",
+    "cpppj/src/client/RawCampaignSession.cpp": "6aaef81339fe4682278a624c49650e5d0e0542ff1c0a45b4c211d47ebf0576dc",
+    "cpppj/src/client/RawCampaignSession.h": "a2658773f7c24e24ace79ee27088ec9bc869d4d09fc890fbda9d3aba8aec7d01",
     "cpppj/src/client/RawCampaignTutorialOneBindings.cpp": "945cb24940af3cfc103ee17ddaac723a6d22b197d658f063886da57366dc99f4",
     "cpppj/src/client/RawCampaignTutorialOneBindings.h": "747a7f9249c088c968da165f4b917bed9712eac46d1b935ba1f736d9ab304b30",
     "cpppj/src/client/RawUserSelection.cpp": "89cbf7641299a7f84905193b4d90f3706f122665a15228f42bd39f9b98bc40e7",
     "cpppj/src/client/RawUserSelection.h": "63e349845d969771819f0875159d0c1f400ae5aa7042a0a883a45b731b2a1a29",
-    "cpppj/src/client/UberGump.cpp": "d042ad33b81d43de646ef9a82ff4265788a86f18ccf74f3861a3d94a7c95d28d",
-    "cpppj/tests/CampaignSessionTests.cpp": "1ca3f4a443191f14d9a28b3d3e436f3cf22d11ba164319d466e36d18ffd98352",
+    "cpppj/src/client/UberGump.cpp": "51194a324e887e53ecfa85cad9de5f81bf31dc161976b4808f4864a3ad6b80a8",
+    "cpppj/tests/CampaignSessionTests.cpp": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b",
     "cpppj/tests/UserSelectionTests.cpp": "75016e697b3aee57d35f7c53716a041dea027235fd0743933156e56b8e6ad129",
     "tools/cpp_goal_stage_entry_smoke.py": "52dae0cac39a586c32a45b60d57425ab794581ebd1fcd67ce49e037d67a78452",
     "tools/decomp_user_selection_clear.py": "50fe049616961d9733cc1a8c1b0da5c571f0f753cb5b92774c496f0dc56303f4",
@@ -28,7 +28,7 @@
     "cpppj/src/o/RawTutorialTwo.cpp": "8a87323774850dbd0d98f01fd54577f42b06c59764935c1b48808e1d82079fdb",
     "cpppj/src/o/RawTutorialTwo.h": "cc2965d1d3427f5332189a5015e2e27bffb7a56d9ce967403b5f8455e8303d45",
     "cpppj/src/o/RawMissionFrameGate.cpp": "c591ce1c294a8c645008da04a6d5366182d42247f4505716e85d0ae4d6c5f4dc",
-    "cpppj/src/o/RawTotalMade.cpp": "7e41ece886973893e6b4614b81d1b669da23b6c1a85799e5301905d68c7e0d25",
+    "cpppj/src/o/RawTotalMade.cpp": "461c0424485988241cbc2b6007ea97d2a4f2d4e90ff9193f10a0fe92da5b8cb7",
     "cpppj/src/o/RawAssetPostPop.cpp": "cc3f8f7f0356152b8f60cd499992771f31dc554a7427e2d20fd432a4ce05b245",
     "cpppj/src/o/RawContainedCreate.cpp": "54ac5f440300896af9fc25bfc98315ae5efe3e99b393fce348f006e09c3cbf97",
     "cpppj/src/o/SquidReward.cpp": "a29c11afe56a477c470956b1ed0a0678d059340806537ce08b43bf6b6aa1375d",
@@ -774,6 +774,44 @@
           "group": "/sources",
           "previous": "6a6d54fd15eb24c0609492756880c774120f855138441820a536ea5bd73ee4f0",
           "current": "1ca3f4a443191f14d9a28b3d3e436f3cf22d11ba164319d466e36d18ffd98352"
+        }
+      ]
+    },
+    {
+      "unit": 259,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "Tutorial Init 전체 제어/이름·현재 전역과 같은 옵션/허용 표를 연결하고 요새 요청을 다음 루프로 옮겼다. 현재 소스 핀만 갱신하며 과거 근거/원문/기대값/실행·바이너리는 보존한다. 실제 제품 검사는 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "group": "/sources",
+          "previous": "d042ad33b81d43de646ef9a82ff4265788a86f18ccf74f3861a3d94a7c95d28d",
+          "current": "51194a324e887e53ecfa85cad9de5f81bf31dc161976b4808f4864a3ad6b80a8"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "group": "/sources",
+          "previous": "6d59bf8f7c9db19c0ca2a1b66594d36979280c82ffac06af529bab7d9698e920",
+          "current": "6aaef81339fe4682278a624c49650e5d0e0542ff1c0a45b4c211d47ebf0576dc"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "group": "/sources",
+          "previous": "2d53de38afc2c6a4ef2162e91ed7d2b6fb58b4103f847030a21f686e6fae68e4",
+          "current": "a2658773f7c24e24ace79ee27088ec9bc869d4d09fc890fbda9d3aba8aec7d01"
+        },
+        {
+          "path": "cpppj/src/o/RawTotalMade.cpp",
+          "group": "/sources",
+          "previous": "7e41ece886973893e6b4614b81d1b669da23b6c1a85799e5301905d68c7e0d25",
+          "current": "461c0424485988241cbc2b6007ea97d2a4f2d4e90ff9193f10a0fe92da5b8cb7"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "group": "/sources",
+          "previous": "1ca3f4a443191f14d9a28b3d3e436f3cf22d11ba164319d466e36d18ffd98352",
+          "current": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b"
         }
       ]
     }

@@ -122,8 +122,8 @@
   "sources": {
     "cpppj/src/client/RawCampaignConstructionBindings.cpp": "bd8ccc0a27709ce909164d6266002bcf7f22bd619169560175cca835924d2f9a",
     "cpppj/src/client/RawCampaignConstructionBindings.h": "512570010be383ea7cc726b275acffa61280f1448c9fcd4c872d7ba62a9d8d93",
-    "cpppj/src/client/RawCampaignSession.cpp": "6d59bf8f7c9db19c0ca2a1b66594d36979280c82ffac06af529bab7d9698e920",
-    "cpppj/tests/CampaignSessionTests.cpp": "1ca3f4a443191f14d9a28b3d3e436f3cf22d11ba164319d466e36d18ffd98352",
+    "cpppj/src/client/RawCampaignSession.cpp": "6aaef81339fe4682278a624c49650e5d0e0542ff1c0a45b4c211d47ebf0576dc",
+    "cpppj/tests/CampaignSessionTests.cpp": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b",
     "cpppj/tests/fixtures/tutorial-five-devastation-ui-input.tsv": "e1f8fc108f1f148eb0175d5bdd10f41109fcd396d1272b90b142dc7cde117ec1",
     "tools/cpp_early5_devastation_runtime.py": "d6a1dc4c14fda7d197955a5dc71f310fd9fdd2374cc4e46576871fc3d34edf1e"
   },
@@ -440,6 +440,26 @@
           "group": "/sources",
           "previous": "6a6d54fd15eb24c0609492756880c774120f855138441820a536ea5bd73ee4f0",
           "current": "1ca3f4a443191f14d9a28b3d3e436f3cf22d11ba164319d466e36d18ffd98352"
+        }
+      ]
+    },
+    {
+      "unit": 259,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "Tutorial Init 전체 제어/이름·현재 전역과 같은 옵션/허용 표를 연결하고 요새 요청을 다음 루프로 옮겼다. 현재 소스 핀만 갱신하며 과거 근거/원문/기대값/실행·바이너리는 보존한다. 실제 제품 검사는 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "group": "/sources",
+          "previous": "6d59bf8f7c9db19c0ca2a1b66594d36979280c82ffac06af529bab7d9698e920",
+          "current": "6aaef81339fe4682278a624c49650e5d0e0542ff1c0a45b4c211d47ebf0576dc"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "group": "/sources",
+          "previous": "1ca3f4a443191f14d9a28b3d3e436f3cf22d11ba164319d466e36d18ffd98352",
+          "current": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b"
         }
       ]
     }

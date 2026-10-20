@@ -11,6 +11,7 @@
 #include "o/Squid.h"
 #include "o/RawMissionGuide.h"
 #include "client/GuideMissionTransitions.h"
+#include "client/TutorialInit.h"
 #include <map>
 #include <memory>
 
@@ -78,7 +79,8 @@ private:
     // 교체마다 같은 실제 현재/빈 종료/해제/공장/설정/필드 소비자를 묶는다.
     GuideMissionTransitionHooks MissionTransitionEffects();
     // 실제 Guide 단계1의 Header/월드/로그인/커서를 설치하고 다음 단계만 요청한다.
-    void LoadMissionWorld();
+    void InitializeMission(); // 실제 Tutorial Init은 번호/설정/전역을 쓰고 다음 루프의 로드 요청과 Header를 수행한다.
+    void LoadMissionWorld(std::optional<std::string> requestedFort={}); // Init이 캡처한 요새 이름을 사용한다. 기존 Battle은 현재 설정을 읽는다.
     // 실제 Guide 단계3에서 같은 설치된 Session의 Start를 실행한다.
     void StartMissionWorld();
     // 이미 읽힌 원본 브리핑 섹션 이름을 순서대로 연다.
@@ -97,6 +99,9 @@ private:
     Client& client_;
     // state_: 처리 중 조회·갱신하는 상태 (State).
     State state_;
+    std::shared_ptr<std::array<std::uint8_t,87>> missionOptions_{std::make_shared<std::array<std::uint8_t,87>>()}; // 월드보다 오래 사는 실제 Init/로그인 옵션이다.
+    std::shared_ptr<std::array<std::uint32_t,256>> missionRestrictions_{std::make_shared<std::array<std::uint32_t,256>>()}; // 설치 전/후가 공유하는 기술 허용 표다.
+    std::uint32_t missionNumber_{},tutorialSeen_{},initLoginSubscriber_{},initialSubscriber_{1}; // 실제5ca8e0/f0·540c74/54265c의 현재 전역이다.
     // input_: 처리할 입력 또는 입력 분배기.
     GumpControlInput input_;
     std::unique_ptr<RawButtonControls> rawButtons_; // 돌 버튼은 실제 공유 트리/수명/캡처를 사용한다. input_은 메뉴 행/판정 보고용이다.

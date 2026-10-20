@@ -14,6 +14,7 @@
 #include "client/MissionLifecycle.h"
 #include "client/GuideMissionTransitions.h"
 #include "client/MissionTechnology.h"
+#include "o/RawMissionBattleOptions.h"
 #include "client/RawKnowledgeMenu.h"
 #include "o/RawMissionGuide.h"
 #include "client/GifImage.h"
@@ -123,6 +124,7 @@ std::string Field(std::string text) { std::replace(text.begin(), text.end(), '\t
 
 // 원본 Mission의 같은+68/+70/+88 상태를 실제 Start와 후속 프레임 소비자에 보존한다.
 struct UberGump::MissionRuntime {
+    TutorialInitState init; // 원본+4/+b0와 Init 지역 문자열의 현재 입력이다.
     o::MissionFrameGateState gate; // demo/started/시각/안내 단계의 유일한 현재 미션 저장소다.
     o::MissionStartState state; // Start의 순번/현재 tellAt 항목/필드를 동일 수명으로 유지한다.
     std::unique_ptr<RawCampaignMissionStartBindings> start; // 단계1의 실제 Session 설치 뒤 생성하고 단계3에서만 실행한다.
@@ -132,7 +134,7 @@ struct UberGump::MissionRuntime {
     // 원본00482bf0의 초기 demo0은 일반 MissionBegin,00463a00의 직접 쓰기는 StartDemo가 공급한다.
     MissionRuntime(MissionScript& script,std::uint32_t demo,std::uint32_t mode)
         :mode64(mode),guided(o::AsciiLower(script.MissionType())=="tutorial") {
-        gate.demo=demo; // Header의 tutorialNumber/demo 조회는 실제 단계1까지 앞당기지 않는다.
+        gate.demo=demo;init.name=FontBytes(script.Name()); // 번호/demo/이름 정규화는 실제 단계1까지 앞당기지 않는다.
     }
 };
 
@@ -209,7 +211,7 @@ UberGump::UberGump(Client& client) : client_(client) {
     guideHooks.dialogsClear=[this] { return state_.phase!=ClientPhase::Dialog && state_.phase!=ClientPhase::Briefing; };
     guideHooks.stage=[this](o::MissionStartState& state,std::uint32_t sequence) {
         TutorialMissionStageHooks hooks; // 현재 단계가 실제로 도달한 소비자만 호출한다.
-        hooks.initialize=[this] { LoadMissionWorld(); };hooks.start=[this] { StartMissionWorld(); };
+        hooks.initialize=[this] { InitializeMission(); };hooks.start=[this] { StartMissionWorld(); };
         hooks.tellGlobal=[this](std::string_view name,std::uint32_t mode) {
             if (mode!=1) throw std::logic_error("Guide init Tell의 원본 인자 위반");static_cast<void>(TryTell(std::string(name)));
         };
@@ -234,6 +236,7 @@ UberGump::UberGump(Client& client) : client_(client) {
 UberGump::~UberGump() { ClearWorld(); }
 // 입력 참조를 먼저 없애고 커널의 실제 소유권을 해제한다. 위치 효과음은 카메라 0의 전체 메뉴 영역으로 되돌린다.
 void UberGump::ClearWorld() {
+    state_.Cancel("LoadMissionFort"); // 현재 미션이 설치 전에 교체돼도 그 소유자의 이전 요청을 새 미션에서 소비하지 않는다.
     if (rawButtons_ && rawButtons_->Menus()) rawButtons_->Menus()->CloseHelp(); // 동적 정보/그림의 현재 Session보다 먼저 실제 창을 반납한다.
     if (world_ && rawButtons_ && rawButtons_->Menus()) rawButtons_->Menus()->Close(); // 같은Form을반납한뒤에만Session/월드포인터를해제한다.
     if (rawButtons_) rawButtons_->DisableProduction(); // 실제 Session보다 먼저 UI Form을 반납한다.
@@ -244,6 +247,7 @@ void UberGump::ClearWorld() {
     if (missionRuntime_ && missionRuntime_->gate.scriptPaused) {
         client_.PopGamePause();missionRuntime_->gate.scriptPaused=0; // 미션이 보유한 자기 깊이를 반납한 뒤 참조를 해제한다.
     }
+    if (missionRuntime_ && missionRuntime_->guided) { o::SetTotalMadeAllowAll(*missionRestrictions_,1);missionNumber_=0;missionRuntime_->gate.tutorialNumber=0;missionRuntime_->gate.stage=0;missionRuntime_->gate.stageDirty=0; } // 실제 Tutorial 소멸의 허용/번호/단계 해제를 전역 수명에도 유지한다.
     missionRuntime_.reset(); // 같은 Session/Script를 참조하는 Start를 대상보다 먼저 해제한다.
     userInput_.reset();
     const auto process=worldProcess_; // 해제 중의 현재 subscriber 조회가 파괴 중인 월드를 따라가지 않도록 번호만 보관한다.
@@ -381,13 +385,25 @@ GuideMissionTransitionHooks UberGump::MissionTransitionEffects() {
     hooks.demo=[this](std::uint32_t value) { if (!missionRuntime_) throw std::logic_error("재시작 공장 뒤 데모 수신 누락");missionRuntime_->gate.demo=value; };
     return hooks;
 }
-// Guide 단계1에서만 실제 Header/월드/로그인/커서/공통 프레임을 설치한다. Start는 단계3으로 남긴다.
-void UberGump::LoadMissionWorld() {
+// 원본 Init은 현재 전역/Config를 쓰고 로드 요청 뒤 Header/flags를 수행한다. 실제 월드는 다음 루프에 설치한다.
+void UberGump::InitializeMission() {
+    if (!mission_ || !missionRuntime_ || !missionRuntime_->guided || world_ || worldProcess_) throw std::logic_error("Tutorial Init의 현재/빈 월드 계약 위반");
+    TutorialInitHooks hooks;hooks.clearTemplates=[this] { if (world_ || worldProcess_ || rawButtons_->Production()) throw std::logic_error("이전 미션 템플릿/생산 UI가 아직 살아 있음"); }; // 현 어댑터는 Begin의 동기 ClearWorld에서 이전 Session/템플릿을 이미 반납한다.
+    hooks.resetOptions=[this] { o::ResetMissionBattleOptions(o::OriginalEdition::Patch1078,*missionOptions_); };
+    hooks.get=[this](std::string_view key,std::optional<std::string_view> fallback) { auto value=FontBytes(mission_->Get(key).value_or(""));if (const auto end=value.find('\0');end!=std::string::npos) value.resize(end);if (value.empty() && fallback) value=*fallback;return value; };
+    hooks.set=[this](auto key,auto value) { const auto text=o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(value.data()),value.size()});static_cast<void>(mission_->Set(key,text)); };
+    hooks.requestFort=[this](auto name) { if (state_.Pending()) throw std::logic_error("Init 요새 로드 요청 전 다른 전환이 남아 있음");state_.Post({"LoadMissionFort",o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(name.data()),name.size()})}); };
+    hooks.header=[this] { ApplyMissionTechnology(*mission_,client_.Assets().TypeTable(),std::span(*missionRestrictions_)); };
+    InitializeTutorialMission(missionRuntime_->init,missionRuntime_->state.flags,missionRuntime_->gate.demo,{missionRuntime_->gate.tutorialNumber,missionNumber_,tutorialSeen_,initLoginSubscriber_,initialSubscriber_},hooks);
+    rebuild_=true;
+}
+// 캡처한 요새 요청을 다음 State 자리에서 실제 설치한다. Start는 원래 Guide 단계3에 남긴다.
+void UberGump::LoadMissionWorld(std::optional<std::string> requestedFort) {
     if (!mission_ || !missionRuntime_ || world_) throw std::logic_error("Guide 초기화의 현재 Script/Runtime/빈 월드 계약 위반");
     const auto type=o::AsciiLower(mission_->MissionType()); // 현재 미션의 실제 가상 형식에 맞는 기존 설치 경로다.
-    missionRuntime_->gate.tutorialNumber=std::bit_cast<std::uint32_t>(o::ConfigParseLong(mission_->Get("tutorialNumber").value_or("")));
-    ApplyMissionDemo(mission_->Get("demo").value_or(""),missionRuntime_->gate.demo);
-    auto fort = o::FortTemplate::Parse(client_.Files().Read(mission_->FortPath()), client_.Assets().TypeTable());
+    if (!missionRuntime_->guided) { missionRuntime_->gate.tutorialNumber=std::bit_cast<std::uint32_t>(o::ConfigParseLong(mission_->Get("tutorialNumber").value_or("")));ApplyMissionDemo(mission_->Get("demo").value_or(""),missionRuntime_->gate.demo);o::ResetMissionBattleOptions(o::OriginalEdition::Patch1078,*missionOptions_);o::SetTotalMadeAllowAll(*missionRestrictions_,1);initLoginSubscriber_=1; }
+    const auto selectedFort=requestedFort ? *requestedFort : mission_->FortName(); // Init의 지역256BYTE에서 캡처한 값을 이후 설정 재조회로 바꾸지 않는다.
+    const auto fortPath=client_.Configuration().PathSpec("fortSpec",selectedFort);auto fort = o::FortTemplate::Parse(client_.Files().Read(fortPath), client_.Assets().TypeTable());
     // 전체 요새 레코드를 세어 자동 검사에서 미션 선택과 파일 로드를 함께 확인한다.
     const auto count = [this](const o::FortChunkSection& section) { for (const auto& chunk : section.chunks) fortObjects_ += chunk.objects.size(); };
     fortObjects_ = 0; count(fort.chaff);
@@ -400,6 +416,7 @@ void UberGump::LoadMissionWorld() {
         [this] { RefreshWindowTitle(); },[this](std::string_view key) { Tell(std::string(key)); },
         [this](std::int32_t kind,std::int32_t player,std::int32_t parameter) { warnings_->Remove(kind,player,parameter);rebuild_=true; }}); // 현재 클라이언트의 설정·음향·입력·UI다.
     services.missionOutcome.demo=[this] { return missionRuntime_ ? missionRuntime_->gate.demo : 0U; };
+    services.missionOptions=missionOptions_;services.missionRestrictions=missionRestrictions_;services.missionSubscriber=initLoginSubscriber_; // 같은 Init 전역의 소유권/참조를 설치 뒤에도 유지한다.
     services.missionOutcome.tellBlocked=[this] { return state_.phase==ClientPhase::Dialog || state_.phase==ClientPhase::Briefing ? 1U : 0U; };
     services.missionOutcome.section=[this](std::string_view section) { return mission_ && mission_->Section(section) && TryTell(std::string(section)); };
     services.missionOutcome.closeTransient=[this] { rawButtons_->RequestClosePopups(); };
@@ -407,8 +424,9 @@ void UberGump::LoadMissionWorld() {
         if (!missionRuntime_ || !missionRuntime_->tutorial) throw std::logic_error("현재 미션의 프레임 정지 연결 누락");
         missionRuntime_->tutorial->Gate().PauseForDialog();
     };
+    tutorialSeen_=0; // 원본 State7의 세계 재설정4b2df0도 Init의5ca8f0을0으로 되돌린다. 사제 체력을 앞선1쓰기만으로 바꾸지 않는다.
     auto world=std::make_unique<GameWorld>(client_.Assets(),client_.Files(),std::move(fort),std::move(players),
-        mission_->FortName(),std::move(services),ScreenPoint{client_.GetScreen().Width(),client_.GetScreen().Height()},true);
+        selectedFort,std::move(services),ScreenPoint{client_.GetScreen().Width(),client_.GetScreen().Height()},true);
     world->elapsed=[this]() { return client_.Time().delta; }; world->paused=[this]() { return client_.Paused(); };
     world->frameTime=[this]() { return client_.Time(); };
     // 카메라/해상도 변경 직후 위치 효과음의 기준을 갱신한다. 월드와 소리 묶음의 수신은 모두 주 스레드에서 실행한다.
@@ -424,7 +442,7 @@ void UberGump::LoadMissionWorld() {
             if (commandGump_!=0) throw std::logic_error("미션 Start의 전용 명령 Gump0042e440 수신 미연결");
         }));
     world_->BeginLocalConnection(); //전역subscriber 조회가같은월드를보는상태에서Zone/로그인/월드로드를실행한다.
-    if (type=="tutorial") ApplyMissionTechnology(*mission_,client_.Assets().TypeTable(),world_->Session().TotalMade()); // 실제 Init의 loadFort 요청 뒤 techAllowed이며 사용자 입력/단계3 Start 전에 같은 허용 표를 채운다.
+    if (type=="tutorial" && !missionRuntime_->guided) ApplyMissionTechnology(*mission_,client_.Assets().TypeTable(),world_->Session().TotalMade()); // guided Header는 이미 설치 전 같은 전역 표를 썼다.
     userInput_=std::make_unique<UserInput>(client_,*world_);
     // 브리핑으로 게임 시계가 멈추기 전에도 첫 카메라/표시 영역이 음악·효과음에 전달되게 한다.
     world_->Resize(client_.GetScreen().Width(),client_.GetScreen().Height());
@@ -473,7 +491,7 @@ void UberGump::LoadMissionWorld() {
     // 원본004b6dd0의 음악 시작 뒤00463a40→가상+28은 Start가 아닌 자기 정지다.
     if (missionRuntime_->guided) {
         PauseMissionWorldEntry([this] { return missionRuntime_!=nullptr; },[this] { missionRuntime_->tutorial->Gate().PauseForDialog(); });
-        missionRuntime_->state.flags|=1U; // 원본004c3290은 실제 설치/허용 처리 뒤 다음 단계를 요청한다.
+        // 다음 단계 flags는 원래 Init의 로드 요청/Header 뒤 이미 썼으며 여기서 다시 쓰지 않는다.
     }
 }
 // 현재 설치된 같은 Session/Script와 장기 순번으로 원본 단계3 Start를 한 번 실행한다.
@@ -673,6 +691,7 @@ void UberGump::PaletteChanged() {
 }
 // 선택한 원본 명령의 작은 부분집합. 지원하지 않는 항목은 활성화하지 않는다.
 void UberGump::Execute(const DialogAction& action) {
+    if (o::AsciiLower(action.command)=="loadmissionfort") { if (!missionRuntime_ || !missionRuntime_->guided) throw std::logic_error("현재 Tutorial 없는 지연 요새 로드");LoadMissionWorld(action.argument);return; } // 같은 전환 큐의 다음 루프에서만 설치한다.
     if (QueueMissionControlAction(action.command,action.argument,client_.Input(),scriptStrings_)) return;
     if (KnowledgeScriptCode(action.command)!=0xffffffffU) { QueueScriptCommand(action.command+','+action.argument,client_.Input(),scriptStrings_,{KnowledgeScriptCode,{}});return; }
     const auto command = o::AsciiLower(action.command);
@@ -915,6 +934,7 @@ std::string UberGump::Report() const {
         out<<"mission_progress\t"<<client_.Configuration().GetInt("Done"+mission_->Name())<<'\n'; // 실제안내Config명령과같은저장값을검사보고에서읽는다.
         if (missionRuntime_) {
             const auto& gate=missionRuntime_->gate;const auto& state=missionRuntime_->state; // 실제 Start의 최종 표식과 중간 쓰기를 읽는다.
+            out<<"mission_init\t"<<missionRuntime_->init.namePrefix<<'\t'<<gate.tutorialNumber<<'\t'<<missionNumber_<<'\t'<<tutorialSeen_<<'\t'<<initLoginSubscriber_<<'\t'<<state_.Pending()<<'\n'; // 로드 전/후의 실제 전역과 요청을 읽는다.
             out<<"mission_start\t"<<gate.started<<'\t'<<state.sequence<<'\t'<<gate.demo<<'\t'<<gate.startSeconds<<'\t'<<gate.demoEndSeconds<<'\n';
             out<<"mission_gate\t"<<gate.tutorialNumber<<'\t'<<gate.stage<<'\t'<<gate.lockFrames<<'\t'<<gate.scriptPaused<<'\t'<<gate.clearFrames<<'\t'
                 <<(missionRuntime_->tutorial ? 1 : 0)<<'\t'<<gate.nextStageSeconds<<'\t'<<gate.tellAtSeconds<<'\n'; // 동일 현재 상태의 관측만 제공한다.

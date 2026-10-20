@@ -1,5 +1,16 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-21 단위259 연결 완료: Tutorial Init 실제 제어·공유 전역·다음 루프 요새 로드
+
+- [x] 같은 goal을 이어 진행했다. 직전 턴은 기본 옵션87BYTE/네 번째 범위표 연결을 구현·기록·커밋한 진행 턴이다. 시작 HEAD `32ea6611`,현재/마지막 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-20**으로 같다. AGENTS와 양 인수인계를 다시 읽었다. 새 디컴파일·원본/CD·AGENTS 변경과 다른 DN/README 작업은 없다.
+- [x] `InitializeTutorialMission`에 실제004c3290 전체 제어를 복원했다. 템플릿 정리→tutorialNumber/비제로 seen1→missionNumber→비빈 demo만 덮기→실제 옵션 초기화→지역80BYTE 이름 소문자/첫 글자 대문자/+b0 첫DWORD→Config.fileName→현재 구독자 복사→256BYTE 요새 이름 캡처/요청→기술 Header→현재flags OR1 순서다. 효과 뒤 이름/구독자/flags를 실제 읽는 위치에서 다시 읽는다. 짧은 이름의 NUL 뒤 꼬리는 caller 입력을 보존하며 원본 미초기화 스택과 항상 같다고 판정하지 않는다. 보호11개 이름의 첫DWORD는 모두 이름 바이트로 초기화된다.
+- [x] 실제 Guide 단계1을 Init에 연결하고 같은 State 큐의 **다음 루프**에서 캡처한 요새를 로드한다. Header/flags가 설치 전 끝나며 기존 Pending 관문·진입 Pause·단계3 Start를 유지한다. 설치 전 미션 교체는 이전 `LoadMissionFort`만 취소해 오래된 지도를 새 미션에 설치하지 않으며 다른 대기 UI는 보존한다. Client가87BYTE 옵션/256DWORD 허용 표를 소유하고 Session은 **같은 배열을 참조**한다. Header는 기존 Config 분할/공통 TotalMade255칸 쓰기를 재사용하고 로그인은 공유 옵션을 다시 지우지 않는다. Tutorial 정리의 AllowAll1도 공유 표에 반영한다. 세계 재설정의 seen0을 유지하며 앞선1쓰기로 사제 체력을 바꾸지 않는다.
+- [x] 제품 수정 전에 **152고유 입력·152정상 반환·167373실제 명령**,CRT atol398/lower2128/upper152회를 관측했다. 실제 Init/이름 정규화/옵션/C locale CRT이며 템플릿 정리·Config·로드 요청·Header는 명시 큰 경계다. 첫 도구/fixture/JSON을 `extracted/tutorial-init-20261021-first-capture/`에 동결했다. 제품/OS/창 관측이 아니며 기대값을 후속 구현 결과로 쓰지 않았다.
+- [x] 새 C++검사4건은152행 전체·보호11개 설치 전 Header/큐·요청 소유자 해제·설치 전후 Session 옵션/허용 표의 양방향 동일 참조를 검사하도록 **작성·컴파일만 했다**. 최종 전체 Release **종료0·경고0·오류0**,로그 `extracted/cpp-tutorial-init-20261021-build4.log`다. 새 Init 감사/첫 원문 보존 및 기존 미션 수명·기술·공통 프레임·기본 옵션·Client Help 정적 감사가 종료0이다. 세 바이너리 해시가 기록과 같으며 **138보고서·400현재 핀**의 전체 JSON 역변환이 시작 커밋과 같다. LF 정규화 뒤 다시 빌드했고 과거 원문/기대값/검사 실행/바이너리·역사 핀 문제는 보존했다.
+- [x] 상세 [작업 기록](docs/exe/cpp-tutorial-init-20261021.md),`cpppj/tutorial-init-native.json`·`tutorial-init-session.json`,`tools/decomp_tutorial_init.py --verify`·`tools/cpp_tutorial_init_audit.py --verify`다. 인수인계 뒤 **20261021-20 CP**로 로컬 커밋하며 push하지 않는다.
+- [ ] **다음 최우선:** 실제004b51e0의512BYTE 요청/전체 비동기 State7과 Guide 공장·가상 소멸/전역 Template manager9개 헤더·빌린 버퍼 수명을 이어 복원한다. 이번 정리는 Begin/ClearWorld가 이전 Session/템플릿을 이미 반납한 현재 경계를 검사한다. 전체 공장/State7/전역 관리자 복원이 끝났다는 뜻은 아니다. 단위257의 외부 URL/기술 학습/기록 스트림·전체 모달/Script 상태도 남으며 멀티플레이 보상 UI는 후순위다.
+- [ ] 전체11미션 자연 완주·전략AI·지형/자연 포획·희생·대피·외관/음향/동작 동일성은 미완료다. 게임/C++검사/CTest/전체 회귀는 이전 사용자 지시대로 후속 실제 통합 플레이에 이월한다. 전체 goal은 **active/미완료**다.
+
 ## 2026-10-21 단위258 연결 완료: 미션 기본 옵션87BYTE와 네 번째 범위값
 
 - [x] 같은 goal을 이어 진행했다. 직전 턴은 전용 Help의 실제 Client 조립을 구현·기록·커밋한 진행 턴이다. 시작 HEAD `acc2813f`,현재/마지막 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-20**으로 같다. AGENTS와 양 인수인계를 다시 읽었다. 새 디컴파일·원본/CD·AGENTS 변경은 없으며 다른 DN/README 작업은 포함하지 않는다.
@@ -8,7 +19,7 @@
 - [x] 제품 변경 전에 **296고유 입력·320정상 반환·47276명령**을 관측했다. 직접 초기화256/전역 래퍼16/기본 파생8/네 번째float16이다. 실제41cb90/41cc10/4b4860/41c8b0/41ca70만 실행하고 외부 효과 대체는 없다. 전체87BYTE·양쪽8BYTE/예약 영역·네 번째값의 quiet NaN/무한대/음수/경계·범위/비용/보상을 저장했다. 최초 도구/fixture/JSON은 제품 변경 전에 `extracted/mission-option-reset-20261021-first-capture/`에 동결했다. 게임/OS/창 관측은 아니다.
 - [x] 새 `MissionBattleOptions_ResetNative296`과 쓰기 전 거부 검사를 작성하고 기존 실제 Session 로그인 검사에 기본22BYTE/에너지 반경900/간헐천 비용3000 확인을 추가했다. **C++검사는 컴파일만 했으며 실행하지 않았다.** 첫 빌드의 BYTE fill 변환 경고/검사16진 helper 누락은 고쳤다. 최종 전체 Release **경고0·오류0·종료0**,로그 `extracted/cpp-mission-option-reset-20261021-build2.log`다.
 - [x] 상세 [작업 기록](docs/exe/cpp-mission-option-reset-20261021.md),`cpppj/mission-option-reset-native.json`·`mission-option-reset-session.json`, `tools/decomp_mission_option_reset.py --verify`·`tools/cpp_mission_option_reset_audit.py --verify`다. 새 최초 원문/정적 감사·기존3305행 원본/SHA·Help Client·미션 수명·기술 허용 감사가 종료0이다. 현재 핀 **128보고서·192항목**의 전체 JSON 역변환은 시작 커밋과 같다. 과거 원문/기대값/검사 실행/바이너리와 역사 핀 문제를 보존했고 이번 세 바이너리 해시도 보고서와 같다. 인수인계 뒤 **20261021-19 CP**로 로컬 커밋하며 push하지 않는다.
-- [ ] **다음 최우선:** 전체 Tutorial Init004c3290의 이름 정규화(소문자화 후 첫 글자만 대문자)/+b0 첫DWORD·tutorialNumber/missionNumber/seen 전역/현재 템플릿 정리,비동기 State7/Guide 공장·가상 소멸을 이어 복원한다. 이번 초기화는 실제 로그인 전 소비자에 연결했으나 전체 Init에서의 전역 옵션 수명/비동기 순서까지 모두 복원한 것은 아니다. 현재 `MissionScript`가 초기 fileName에 원래 이름을 쓰는 차이와 `LoadMissionWorld`의 동기 어댑터가 남는다. 단위257의 외부 URL/기술 학습/기록 스트림·전체 모달/Script 상태도 남으며 멀티플레이 보상 UI는 사용자 지시대로 후순위다.
+- [x] **후속 단위259:** Init004c3290 전체 제어/이름 정규화/+b0·번호/seen/구독자·공유 옵션/허용 표와 실제 다음 루프 로드를 연결했다. 초기 fileName은 실제 단계1에서 정규화 값으로 덮는다. 전체512BYTE State7/Guide 공장·전역 Template manager/가상 소멸은 위 단위259의 미완료 항목으로 이어간다.
 - [ ] 전체11미션 자연 완주·전략AI·지형/자연 포획·희생·대피와 외관/음향/동작 동일성은 아직 미완료다. 게임/C++검사/CTest/전체 회귀는 이전 사용자 지시대로 후속 실제 통합 플레이에 이월한다. 전체 goal은 **active/미완료**다.
 
 ## 2026-10-21 단위257 실제 Client 조립: 전용 Help 등록·입력·픽셀·소멸 연결

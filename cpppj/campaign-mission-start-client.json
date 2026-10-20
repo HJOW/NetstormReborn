@@ -41,15 +41,15 @@
     "cpppj/src/client/CampaignClientServices.h": "69fbabe821be65505d6cef62b3063b3cf49dae3f1a420b3293a9ffcbdcc7238c",
     "cpppj/src/client/GameWorld.cpp": "af6d3aeb3bd53d83e2619c2bd20ba5df42c17fe718cb81786841606419f10c6c",
     "cpppj/src/client/GameWorld.h": "d51dfe75377b1afd870bfeb40e26cef9f6233f65217d757135648ce064043a16",
-    "cpppj/src/client/RawCampaignSession.cpp": "6d59bf8f7c9db19c0ca2a1b66594d36979280c82ffac06af529bab7d9698e920",
-    "cpppj/src/client/RawCampaignSession.h": "2d53de38afc2c6a4ef2162e91ed7d2b6fb58b4103f847030a21f686e6fae68e4",
-    "cpppj/src/client/RawCampaignSessionLogin.inc": "61d782e9e60a02d1681baf9383209bab7ecafbf24b79292e1c3d40b5b4981e4a",
-    "cpppj/src/client/UberGump.cpp": "d042ad33b81d43de646ef9a82ff4265788a86f18ccf74f3861a3d94a7c95d28d",
-    "cpppj/src/client/UberGump.h": "70b2e2e7479669d3ddb47c054d95c87440f266441fea44a2753c39278c12eb65",
+    "cpppj/src/client/RawCampaignSession.cpp": "6aaef81339fe4682278a624c49650e5d0e0542ff1c0a45b4c211d47ebf0576dc",
+    "cpppj/src/client/RawCampaignSession.h": "a2658773f7c24e24ace79ee27088ec9bc869d4d09fc890fbda9d3aba8aec7d01",
+    "cpppj/src/client/RawCampaignSessionLogin.inc": "4ebe7746564298e9b40a5335b0d0f282867f3c36a01e64949011f42ac87c0f3b",
+    "cpppj/src/client/UberGump.cpp": "51194a324e887e53ecfa85cad9de5f81bf31dc161976b4808f4864a3ad6b80a8",
+    "cpppj/src/client/UberGump.h": "a5a670a9b3cbd4bfc14bbccd4a048c772890a652ebd3586c955682736bbbd975",
     "cpppj/src/o/RawPlayerParticipation.cpp": "682b1cf72b1889d2bf44540446d5cba40c24679e9e99055b154155224185dec7",
     "cpppj/src/o/RawPlayerParticipation.h": "22d0031dd843733a9452f9ee497d79e7028a40915524bf11ca4ff59b549b1cb4",
-    "cpppj/tests/CMakeLists.txt": "ee217558417e170b51187377eae1fa45478dc6d1c899541a64aa5a73de3847a2",
-    "cpppj/tests/CampaignSessionTests.cpp": "1ca3f4a443191f14d9a28b3d3e436f3cf22d11ba164319d466e36d18ffd98352",
+    "cpppj/tests/CMakeLists.txt": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30",
+    "cpppj/tests/CampaignSessionTests.cpp": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b",
     "cpppj/tests/PlayerParticipationTests.cpp": "bc12a931238ba42474504a56c6217253173f37c43021fb31f203814f20f22e3b",
     "tools/cpp_goal_stage_entry_smoke.py": "52dae0cac39a586c32a45b60d57425ab794581ebd1fcd67ce49e037d67a78452",
     "tools/decomp_player_alliance_packet.py": "217a61ba4193f031ac6c8148ecee828ccd805c20e7c6358afb68d2e998c23285",
@@ -5734,6 +5734,56 @@
           "group": "/currentSources",
           "previous": "a627575830fe9176dc72e24279dd80129787527faa645c2c1266799148bb7c70",
           "current": "ee217558417e170b51187377eae1fa45478dc6d1c899541a64aa5a73de3847a2"
+        }
+      ]
+    },
+    {
+      "unit": 259,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "Tutorial Init 전체 제어/이름·현재 전역과 같은 옵션/허용 표를 연결하고 요새 요청을 다음 루프로 옮겼다. 현재 소스 핀만 갱신하며 과거 근거/원문/기대값/실행·바이너리는 보존한다. 실제 제품 검사는 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "group": "/currentSources",
+          "previous": "d042ad33b81d43de646ef9a82ff4265788a86f18ccf74f3861a3d94a7c95d28d",
+          "current": "51194a324e887e53ecfa85cad9de5f81bf31dc161976b4808f4864a3ad6b80a8"
+        },
+        {
+          "path": "cpppj/src/client/UberGump.h",
+          "group": "/currentSources",
+          "previous": "70b2e2e7479669d3ddb47c054d95c87440f266441fea44a2753c39278c12eb65",
+          "current": "a5a670a9b3cbd4bfc14bbccd4a048c772890a652ebd3586c955682736bbbd975"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "group": "/currentSources",
+          "previous": "6d59bf8f7c9db19c0ca2a1b66594d36979280c82ffac06af529bab7d9698e920",
+          "current": "6aaef81339fe4682278a624c49650e5d0e0542ff1c0a45b4c211d47ebf0576dc"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "group": "/currentSources",
+          "previous": "2d53de38afc2c6a4ef2162e91ed7d2b6fb58b4103f847030a21f686e6fae68e4",
+          "current": "a2658773f7c24e24ace79ee27088ec9bc869d4d09fc890fbda9d3aba8aec7d01"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSessionLogin.inc",
+          "group": "/currentSources",
+          "previous": "61d782e9e60a02d1681baf9383209bab7ecafbf24b79292e1c3d40b5b4981e4a",
+          "current": "4ebe7746564298e9b40a5335b0d0f282867f3c36a01e64949011f42ac87c0f3b"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/currentSources",
+          "previous": "ee217558417e170b51187377eae1fa45478dc6d1c899541a64aa5a73de3847a2",
+          "current": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "group": "/currentSources",
+          "previous": "1ca3f4a443191f14d9a28b3d3e436f3cf22d11ba164319d466e36d18ffd98352",
+          "current": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b"
         }
       ]
     }

@@ -1,0 +1,23 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-20",
+  "uniqueInputs": 152,
+  "normalFunctionReturns": 152,
+  "instructions": 167373,
+  "crtCalls": {
+    "atol": 398,
+    "lower": 2128,
+    "upper": 152
+  },
+  "gameExecuted": false,
+  "osExecuted": false,
+  "scope": "실제4c3290 전체 제어/425d80·425db0·C locale lower/upper/atol/41cc10·41cb90. TLS 포인터만 공급하고 템플릿 정리/Config/로드 요청·기술 Header는 명시 효과다. 전체 월드/State7/실제 화면 관측이 아니다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_tutorial_init.py": "52ef4ac24aa359cee5c46effbb48f45981ad997dc3e28c3a9cf7eb06d4dcb4bd",
+    "cpppj/tests/fixtures/tutorial-init-x86.tsv": "6a4d7045225c78c2636003b213cd45aa3a3bc5db0c3f3d644e9ae2507a0d5d71"
+  }
+}

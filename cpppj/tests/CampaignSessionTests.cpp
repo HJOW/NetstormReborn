@@ -22,6 +22,7 @@
 #include "client/RawButtonControls.h"
 #include "client/GumpVisual.h"
 #include "o/RawMissionAiSettings.h"
+#include "o/RawMissionBattleOptions.h"
 #include "o/RawGeyserAiRegistration.h"
 #include "o/RawSunAviaryProcess.h"
 #include "o/RawCarrierSteal.h"
@@ -1959,6 +1960,16 @@ TEST_CASE(CampaignSession_CarrierMoveRequestThroughActualLocalTransportAndKernel
     }
 }
 
+
+// 설치 전 Init 표와 설치 후 Session 소비자가 같은 배열을 읽고 쓴다. 복사한 표를 기대값으로 주입하지 않는다.
+TEST_CASE(CampaignSession_InitSharedTablesBeforeInstall) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();
+    auto options=std::make_shared<std::array<std::uint8_t,87>>();auto restrictions=std::make_shared<std::array<std::uint32_t,256>>(); // 현재 Client 전역과 같은 별도 소유 수명이다.
+    ResetMissionBattleOptions(OriginalEdition::Patch1078,*options);(*options)[23]=0x79;(*restrictions)[75]=1;restrictions->back()=0x7391;services.missionOptions=options;services.missionRestrictions=restrictions;
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));CHECK(session.BattleOption(2)==2 && session.BattleOption(23)==0x79 && !session.TotalMade().Allowed(75));
+    (*options)[2]=1;CHECK(session.BattleOption(2)==1);session.TotalMade().Allow(75,1);CHECK((*restrictions)[75]==0); // 양방향의 현재 참조를 확인한다.
+    session.Load();CHECK(session.BattleOption(2)==1 && session.BattleOption(23)==0x79);session.TotalMade().AllowAll(0);CHECK((*restrictions)[75]==1 && restrictions->back()==0x7391);(*restrictions)[75]=0;CHECK(session.TotalMade().Allowed(75));
+}
 
 //성공flag를입력하지않고실제Zone→접속→Login→월드설치/응답→상태14/타이머를검사한다.
 TEST_CASE(CampaignSession_LocalLoginActualHandshakeAndWorldLoad) {

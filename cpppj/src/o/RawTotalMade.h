@@ -3,6 +3,9 @@
 #include "o/SquidPostPop.h"
 
 namespace netstorm::o {
+// 월드 설치 전의 같은 전역 허용 표도 기존 두 쓰기 몸체를 직접 사용한다. 256번째 칸은 전체 초기화에서 보존한다.
+void SetTotalMadeAllowAll(std::span<std::uint32_t> restrictions,std::int32_t allowed);
+void SetTotalMadeAllow(std::span<std::uint32_t> restrictions,std::int32_t type,std::int32_t allowed); // 물리 범위 밖만 쓰기 전에 거부한다.
 // 패치의 debug assert를 관찰하거나 실제 진단으로 전달하는 종류다.
 enum class TotalMadeAssertion {
     InvalidType, // 현재 getter의 타입이1이상numTypes미만이 아닌 경우의 진단이다.

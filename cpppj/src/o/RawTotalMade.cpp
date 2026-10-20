@@ -18,12 +18,16 @@ RawTotalMade::RawTotalMade(OriginalEdition edition,std::span<const RiftTypeRecor
         throw std::invalid_argument("Totalmade 판본/물리 표 크기 오류");
 }
 // 원본은 허용값을 bool로 저장하지 않고 금지DWORD의0/1로 뒤집어 쓴다.
-void RawTotalMade::AllowAll(std::int32_t allowed) const { std::fill_n(restrictions_.begin(),kInitializedEntries,allowed==0 ? 1U : 0U); }
+void SetTotalMadeAllowAll(std::span<std::uint32_t> restrictions,std::int32_t allowed) { if (restrictions.size()<kInitializedEntries) throw std::invalid_argument("Totalmade 허용 표 초기화 크기");std::fill_n(restrictions.begin(),kInitializedEntries,allowed==0 ? 1U : 0U); }
+// 월드의 같은 전역 참조를 공통 원본 쓰기 몸체에 전달한다.
+void RawTotalMade::AllowAll(std::int32_t allowed) const { SetTotalMadeAllowAll(restrictions_,allowed); }
 // 사용 가능한 호스트 저장소 밖 쓰기는 원본의 무검사 메모리 접근 대신 명시적으로 거부한다.
-void RawTotalMade::Allow(std::int32_t type,std::int32_t allowed) const {
-    if (type<0 || static_cast<std::size_t>(type)>=restrictions_.size()) throw std::out_of_range("Totalmade 허용 표 물리 범위");
-    restrictions_[static_cast<std::size_t>(type)]=allowed==0 ? 1U : 0U;
+void SetTotalMadeAllow(std::span<std::uint32_t> restrictions,std::int32_t type,std::int32_t allowed) {
+    if (type<0 || static_cast<std::size_t>(type)>=restrictions.size()) throw std::out_of_range("Totalmade 허용 표 물리 범위");
+    restrictions[static_cast<std::size_t>(type)]=allowed==0 ? 1U : 0U;
 }
+// 설치 후 메뉴/튜토리얼도 같은 공통 몸체를 사용한다.
+void RawTotalMade::Allow(std::int32_t type,std::int32_t allowed) const { SetTotalMadeAllow(restrictions_,type,allowed); }
 // 패치 debug 진단을 실행한 뒤에도 원본처럼 getter의 범위 판정을 유지한다.
 bool RawTotalMade::Valid(std::int32_t type) const {
     if (type>0 && static_cast<std::size_t>(type)<types_.size()) return true;

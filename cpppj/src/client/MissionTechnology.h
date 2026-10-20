@@ -16,4 +16,5 @@ struct MissionTechnologyHooks {
 void ApplyMissionTechnology(const MissionTechnologyHooks& hooks);
 // 현재 Script/보호 타입 표/건설·생산이 공유하는 실제 TotalMade를 연결한다. 별도 허용 사본을 만들지 않는다.
 void ApplyMissionTechnology(MissionScript& script,const o::RiftTypeTable& types,const o::RawTotalMade& totalMade);
+void ApplyMissionTechnology(MissionScript& script,const o::RiftTypeTable& types,std::span<std::uint32_t> restrictions); // 월드 설치 전에도 같은 Config와 공통255칸 쓰기를 사용한다.
 }

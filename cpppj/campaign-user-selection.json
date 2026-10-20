@@ -10,7 +10,7 @@
   "currentSources": {
     ".gitattributes": "3e8d869648cde0415d1a91e9b22d5a7ed7e5c0585923a189bfd37aa33229f3a8",
     "cpppj/src/CMakeLists.txt": "8834917133d33fda6dcd145dd64a93ee38ee014d25fede2eff5575b996df5847",
-    "cpppj/tests/CMakeLists.txt": "ee217558417e170b51187377eae1fa45478dc6d1c899541a64aa5a73de3847a2",
+    "cpppj/tests/CMakeLists.txt": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30",
     "cpppj/src/client/RawUserSelection.h": "63e349845d969771819f0875159d0c1f400ae5aa7042a0a883a45b731b2a1a29",
     "cpppj/src/client/RawUserSelection.cpp": "89cbf7641299a7f84905193b4d90f3706f122665a15228f42bd39f9b98bc40e7",
     "cpppj/tests/UserSelectionTests.cpp": "75016e697b3aee57d35f7c53716a041dea027235fd0743933156e56b8e6ad129",
@@ -2352,6 +2352,20 @@
           "group": "/currentSources",
           "previous": "a627575830fe9176dc72e24279dd80129787527faa645c2c1266799148bb7c70",
           "current": "ee217558417e170b51187377eae1fa45478dc6d1c899541a64aa5a73de3847a2"
+        }
+      ]
+    },
+    {
+      "unit": 259,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "Tutorial Init 전체 제어/이름·현재 전역과 같은 옵션/허용 표를 연결하고 요새 요청을 다음 루프로 옮겼다. 현재 소스 핀만 갱신하며 과거 근거/원문/기대값/실행·바이너리는 보존한다. 실제 제품 검사는 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/currentSources",
+          "previous": "ee217558417e170b51187377eae1fa45478dc6d1c899541a64aa5a73de3847a2",
+          "current": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30"
         }
       ]
     }

@@ -31,7 +31,7 @@
     "cpppj/src/o/SidPool.h": "a830f7fca8c42e5a2713a7d5d886314c81dc3bffb8271de85c1b0d1fc46de651",
     "cpppj/tests/BombActivationTests.cpp": "a92a2cd55ce7be609c7fa6e82a7cf03b7717cdb539c2817b441d17be871fe459",
     "cpppj/tests/CarrierDropTests.cpp": "d3153457d1d836ae1efc15665c85d582c1fd3f21bba25683b0cf7185bd5fc141",
-    "cpppj/tests/CMakeLists.txt": "ee217558417e170b51187377eae1fa45478dc6d1c899541a64aa5a73de3847a2",
+    "cpppj/tests/CMakeLists.txt": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30",
     "tools/cpp_carrier_drop_cpp_audit.py": "ee10e4ac00fa349d78ee482d720e7746fb7b67c6335e555a66b42f88a3d0ce1c",
     "tools/decomp_bomb_activation.py": "f01aafc8c2fb9713fa57ba7531dd4a7b9ebaf1035a24c650b778161b0202bbf5",
     "tools/decomp_carrier_falling.py": "f8702db0708a543b73213c8df9154503afe977767a11bd7c150b639ee1b587a6",
@@ -449,6 +449,20 @@
           "group": "/sources",
           "previous": "a627575830fe9176dc72e24279dd80129787527faa645c2c1266799148bb7c70",
           "current": "ee217558417e170b51187377eae1fa45478dc6d1c899541a64aa5a73de3847a2"
+        }
+      ]
+    },
+    {
+      "unit": 259,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "Tutorial Init 전체 제어/이름·현재 전역과 같은 옵션/허용 표를 연결하고 요새 요청을 다음 루프로 옮겼다. 현재 소스 핀만 갱신하며 과거 근거/원문/기대값/실행·바이너리는 보존한다. 실제 제품 검사는 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "ee217558417e170b51187377eae1fa45478dc6d1c899541a64aa5a73de3847a2",
+          "current": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30"
         }
       ]
     }

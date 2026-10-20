@@ -9,7 +9,7 @@
   "sources": {
     "cpppj/src/o/RawPathStart.cpp": "a852f0c16cefc10b11e371510999e4d3836c83681adcbe2817feac570dec6d98",
     "cpppj/src/o/RawSquidFinder.cpp": "e799426b89f14230730824c52713580012bb881fd4a38856f1b38bfb495976d9",
-    "cpppj/tests/CMakeLists.txt": "ee217558417e170b51187377eae1fa45478dc6d1c899541a64aa5a73de3847a2",
+    "cpppj/tests/CMakeLists.txt": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30",
     "tools/cpp_dude_footprint_audit.py": "3776375f3872d73e06cc382a342c7216a00a41db334e7e719e91921688e645db",
     "tools/decomp_dude_footprint.py": "e4fac898066da429f842a6805bd013c9506c7e91968b148eb6247f79edc012cc",
     "cpppj/tests/DudeFootprintTests.cpp": "59af723f34440934c02b4c4cdeae7bf3a546cb357fb91ed8d7bc58220893ae69"
@@ -1243,6 +1243,20 @@
           "group": "/sources",
           "previous": "a627575830fe9176dc72e24279dd80129787527faa645c2c1266799148bb7c70",
           "current": "ee217558417e170b51187377eae1fa45478dc6d1c899541a64aa5a73de3847a2"
+        }
+      ]
+    },
+    {
+      "unit": 259,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "Tutorial Init 전체 제어/이름·현재 전역과 같은 옵션/허용 표를 연결하고 요새 요청을 다음 루프로 옮겼다. 현재 소스 핀만 갱신하며 과거 근거/원문/기대값/실행·바이너리는 보존한다. 실제 제품 검사는 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "ee217558417e170b51187377eae1fa45478dc6d1c899541a64aa5a73de3847a2",
+          "current": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30"
         }
       ]
     }

@@ -10,13 +10,13 @@
   "status": "단독 미션의 반복 보상 획득을 실제 모드 관문에 연결. 전체11스테이지 완주 목표는 미완료.",
   "currentSources": {
     "cpppj/src/CMakeLists.txt": "8834917133d33fda6dcd145dd64a93ee38ee014d25fede2eff5575b996df5847",
-    "cpppj/tests/CMakeLists.txt": "ee217558417e170b51187377eae1fa45478dc6d1c899541a64aa5a73de3847a2",
-    "cpppj/src/client/RawCampaignSession.cpp": "6d59bf8f7c9db19c0ca2a1b66594d36979280c82ffac06af529bab7d9698e920",
+    "cpppj/tests/CMakeLists.txt": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30",
+    "cpppj/src/client/RawCampaignSession.cpp": "6aaef81339fe4682278a624c49650e5d0e0542ff1c0a45b4c211d47ebf0576dc",
     "cpppj/src/o/RawPlayerGeyserBounds.cpp": "4983ae36fcebb76a06068c68500f2184dc2c14f816c6513b9cf1492353c69a96",
     "cpppj/src/o/RawPlayerGeyserBounds.h": "dbd25cda206a7e53e21b9c35d1d9f1ff53505196c5a32e00e187391545547a14",
     "cpppj/src/o/RawNuggetReplenish.cpp": "a89f08e3f9a17d3088506fc423e0e9680bc150094ea42de733b914ecd6dab464",
     "cpppj/src/o/RawNuggetReplenish.h": "d243249f6af02a1b51388ca5603ea70659e28ebdb38f789fd70dbb8c6b16f428",
-    "cpppj/tests/CampaignSessionTests.cpp": "1ca3f4a443191f14d9a28b3d3e436f3cf22d11ba164319d466e36d18ffd98352",
+    "cpppj/tests/CampaignSessionTests.cpp": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b",
     "cpppj/tests/NuggetReplenishTests.cpp": "ab8045f3d99a0da3303c33f94fab68eca90de50f22920a061c337182aa2857fb",
     "tools/decomp_nugget_replenish.py": "343fcd950078734e0c2651f65c80b56c3ca2e69db9023e36350741c942b2d720"
   },
@@ -1948,6 +1948,32 @@
           "group": "/currentSources",
           "previous": "a627575830fe9176dc72e24279dd80129787527faa645c2c1266799148bb7c70",
           "current": "ee217558417e170b51187377eae1fa45478dc6d1c899541a64aa5a73de3847a2"
+        }
+      ]
+    },
+    {
+      "unit": 259,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "Tutorial Init 전체 제어/이름·현재 전역과 같은 옵션/허용 표를 연결하고 요새 요청을 다음 루프로 옮겼다. 현재 소스 핀만 갱신하며 과거 근거/원문/기대값/실행·바이너리는 보존한다. 실제 제품 검사는 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "group": "/currentSources",
+          "previous": "6d59bf8f7c9db19c0ca2a1b66594d36979280c82ffac06af529bab7d9698e920",
+          "current": "6aaef81339fe4682278a624c49650e5d0e0542ff1c0a45b4c211d47ebf0576dc"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/currentSources",
+          "previous": "ee217558417e170b51187377eae1fa45478dc6d1c899541a64aa5a73de3847a2",
+          "current": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "group": "/currentSources",
+          "previous": "1ca3f4a443191f14d9a28b3d3e436f3cf22d11ba164319d466e36d18ffd98352",
+          "current": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b"
         }
       ]
     }

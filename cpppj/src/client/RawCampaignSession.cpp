@@ -253,7 +253,8 @@ struct RawCampaignSession::Impl {
     std::array<std::uint8_t,RawIslandRuntime::kBytes> islandBytes{}; // 실제3204BYTE 섬 목록이다.
     std::vector<std::uint8_t> players=std::vector<std::uint8_t>(9*0xb4); // 부모/Owner/신전이 공유하는 실제9 기록이다.
     std::array<std::uint32_t,81> alliances{}; // 원본 방향별9×9 DWORD 표다. 실제 초기화 모듈이 현재 칸을 직접 쓴다.
-    std::array<std::uint8_t,87> battleOptions{}; //원본87BYTE와Chat숨김9의단일물리저장소다.
+    std::array<std::uint8_t,87> localBattleOptions{}; // 독립 Session 검사/직접 설치의 자체 저장소다.
+    std::array<std::uint8_t,87>& battleOptions; // 실제 Client는 Init이 이미 쓴 같은 전역 배열을 참조한다.
     std::span<std::uint8_t> hiddenPlayers{battleOptions.data()+0x3e,9}; // 같은 현재 Chat 숨김 BYTE9이며 동맹이나 active의 사본이 아니다.
     PlayerParticipationState participationState; // 독립 모듈의 값형 호환 상태이며 실제 세션은 현재 getter로만 읽는다.
     std::unique_ptr<RawPlayerParticipation> participation; // 같은 Player9/동맹/실제 brain 해제 몸체다.
@@ -449,7 +450,8 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawPlayerContentNotice> playerContent; // 현재 SP 저장소/같은 Player 체인/실제 UI를 조회한다.
     std::unique_ptr<RawCampaignLifetimeBindings> lifetime; // 공통 삭제와 ContentForm의 같은 풀 수명을 등록한다.
     std::unique_ptr<RawPlayerTechnology> technology; // 실제 시작/AI 갱신이 공유할 같은 Player 기술 체인이다.
-    std::array<std::uint32_t,256> restrictions{}; // 실제 미션과 생산이 공유하는 금지DWORD 표이며 256번째 칸을 별도로 보존한다.
+    std::array<std::uint32_t,256> localRestrictions{}; // 독립 Session의 자체 금지DWORD 표다.
+    std::array<std::uint32_t,256>& restrictions; // 실제 Client Init/Header와 생산·메뉴가 같은256DWORD를 빌린다.
     std::unique_ptr<RawTotalMade> totalMade; // 같은 PostPop의 세 카운터와 위 금지 표를 읽는다.
     std::unique_ptr<RawProductionDeck> productionDeck; // 현재 Player+68의 실제 블록을 단독 소유한다.
     std::uint32_t fullDeck{},freeTechnologyType{153},templeProduct{133}; // PATCH0054db14/005412bc/0054126c의 현재 생산 전역이다.
@@ -558,12 +560,14 @@ struct RawCampaignSession::Impl {
         services(std::move(input)),assets(game,files),metadata(assets.game),
         world(OriginalEdition::Patch1078,assets.types,assets.frames,metadata.shapes,CampaignLinks(),terrainType),core(world.Core()),
         sp(random,[this] { return seed.Reseed(); }),hp(core.pool,core.types,core.bookkeeping,rewardState,&sp,SquidRewardHooks{{},services.refreshSp}),
+        battleOptions(services.missionOptions ? *services.missionOptions : localBattleOptions),
         aiMemory(0x20000000,[this](std::span<std::uint8_t> bytes) {
             if (!services.ai.allocationBytes) throw std::logic_error("실제 Session AI 할당 입력 바이트 미연결");services.ai.allocationBytes(bytes);
         }),
         seed(random,crt,randomMode,services.unixSeconds),themes(core.types.size()),elements(core.types.size()),
         gunTypes(core.types.size()),hitTypes(core.types.size()),firingIntervals(core.types.size()),dudeSpeeds(core.types.size()),
         soundNames(RequireSounds(services)),archerTypes(core.types.size()),missileTypes(core.types.size()),projectileTypes(core.types.size()),
+        restrictions(services.missionRestrictions ? *services.missionRestrictions : localRestrictions),
         start{core.processState,priestState.movement.dude,priestState.movement.teleport,priestState.movement.manaBolt,priestState.movement.priest,geyserType,snap,retrying},process{core.processState} {
         sp.BindTrackingOffset(priestState.regen.patch.sequence);sp.Initialize();
         level=std::make_unique<RawSquidLevel>(core.pool,core.types,SessionMissing<void,SquidLevelAssertion>());

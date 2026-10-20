@@ -95,13 +95,13 @@
   },
   "currentSources": {
     "cpppj/src/client/RawCampaignRitual.inc": "c6ee6b6b111cf0f6fa0ff2b18da7253a65a75b9aa5e8edbbf03b05cf820df9bf",
-    "cpppj/src/client/RawCampaignSession.cpp": "6d59bf8f7c9db19c0ca2a1b66594d36979280c82ffac06af529bab7d9698e920",
-    "cpppj/src/client/RawCampaignSessionLogin.inc": "61d782e9e60a02d1681baf9383209bab7ecafbf24b79292e1c3d40b5b4981e4a",
+    "cpppj/src/client/RawCampaignSession.cpp": "6aaef81339fe4682278a624c49650e5d0e0542ff1c0a45b4c211d47ebf0576dc",
+    "cpppj/src/client/RawCampaignSessionLogin.inc": "4ebe7746564298e9b40a5335b0d0f282867f3c36a01e64949011f42ac87c0f3b",
     "cpppj/src/o/RawDaisLifecycle.cpp": "e5d735f9ecea927d815c8cffe32b6bf5e14849aa4c72c1ee2710031c289f2c00",
     "cpppj/src/o/RawDaisLifecycle.h": "f5eed7df17f021e3c80091c50603f66828e21b5d8397137ffe3223e7e5d65b10",
     "cpppj/src/o/RawDaisRegular.cpp": "5f48cd4e706a8a904a6a03b19b2f1e235fed581159291132b632df557c4fadb2",
     "cpppj/src/o/RawDaisRegular.h": "6d69e7b9c01b9dcc908fa0e8d2b4170f60536d9c571565e0fd1128db35fe7b73",
-    "cpppj/tests/CampaignSessionTests.cpp": "1ca3f4a443191f14d9a28b3d3e436f3cf22d11ba164319d466e36d18ffd98352",
+    "cpppj/tests/CampaignSessionTests.cpp": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b",
     "cpppj/tests/DaisLifecycleTests.cpp": "30f2901c1e18d470e8b45ed3fb334ccd30774c0f6cefb1118ff9b886f46927b7"
   },
   "binaries": {
@@ -951,6 +951,32 @@
           "group": "/currentSources",
           "previous": "6a6d54fd15eb24c0609492756880c774120f855138441820a536ea5bd73ee4f0",
           "current": "1ca3f4a443191f14d9a28b3d3e436f3cf22d11ba164319d466e36d18ffd98352"
+        }
+      ]
+    },
+    {
+      "unit": 259,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "Tutorial Init 전체 제어/이름·현재 전역과 같은 옵션/허용 표를 연결하고 요새 요청을 다음 루프로 옮겼다. 현재 소스 핀만 갱신하며 과거 근거/원문/기대값/실행·바이너리는 보존한다. 실제 제품 검사는 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "group": "/currentSources",
+          "previous": "6d59bf8f7c9db19c0ca2a1b66594d36979280c82ffac06af529bab7d9698e920",
+          "current": "6aaef81339fe4682278a624c49650e5d0e0542ff1c0a45b4c211d47ebf0576dc"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSessionLogin.inc",
+          "group": "/currentSources",
+          "previous": "61d782e9e60a02d1681baf9383209bab7ecafbf24b79292e1c3d40b5b4981e4a",
+          "current": "4ebe7746564298e9b40a5335b0d0f282867f3c36a01e64949011f42ac87c0f3b"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "group": "/currentSources",
+          "previous": "1ca3f4a443191f14d9a28b3d3e436f3cf22d11ba164319d466e36d18ffd98352",
+          "current": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b"
         }
       ]
     }

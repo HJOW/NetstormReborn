@@ -11,9 +11,9 @@
     "cpppj/src/client/MissionGuideInput.h": "6577a5aba688700ad8779001e97b4096716ed84a1af0f760be89b950156b50c8",
     "cpppj/src/client/RawCampaignTutorialOneBindings.cpp": "945cb24940af3cfc103ee17ddaac723a6d22b197d658f063886da57366dc99f4",
     "cpppj/src/client/RawCampaignTutorialOneBindings.h": "747a7f9249c088c968da165f4b917bed9712eac46d1b935ba1f736d9ab304b30",
-    "cpppj/src/client/UberGump.cpp": "d042ad33b81d43de646ef9a82ff4265788a86f18ccf74f3861a3d94a7c95d28d",
-    "cpppj/src/client/UberGump.h": "70b2e2e7479669d3ddb47c054d95c87440f266441fea44a2753c39278c12eb65",
-    "cpppj/tests/CMakeLists.txt": "ee217558417e170b51187377eae1fa45478dc6d1c899541a64aa5a73de3847a2",
+    "cpppj/src/client/UberGump.cpp": "51194a324e887e53ecfa85cad9de5f81bf31dc161976b4808f4864a3ad6b80a8",
+    "cpppj/src/client/UberGump.h": "a5a670a9b3cbd4bfc14bbccd4a048c772890a652ebd3586c955682736bbbd975",
+    "cpppj/tests/CMakeLists.txt": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30",
     "cpppj/tests/CampaignMissionStartTests.cpp": "83e64926952399dda15209b6548cf9bd378a334e4a82723ddec0723c94348ed7",
     "cpppj/tests/MissionGuideInputTests.cpp": "052ed17cfc2b00441121a431e0b3fd36cd91e966cc87f10d54f58f4bf5e98c13",
     "tools/decomp_mission_common.py": "b75c997f873b1b733a4265ebfecaa219483371cdbc38b21c43f395e5ffa9e814",
@@ -1932,6 +1932,32 @@
           "group": "/sources",
           "previous": "a627575830fe9176dc72e24279dd80129787527faa645c2c1266799148bb7c70",
           "current": "ee217558417e170b51187377eae1fa45478dc6d1c899541a64aa5a73de3847a2"
+        }
+      ]
+    },
+    {
+      "unit": 259,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "Tutorial Init 전체 제어/이름·현재 전역과 같은 옵션/허용 표를 연결하고 요새 요청을 다음 루프로 옮겼다. 현재 소스 핀만 갱신하며 과거 근거/원문/기대값/실행·바이너리는 보존한다. 실제 제품 검사는 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "group": "/sources",
+          "previous": "d042ad33b81d43de646ef9a82ff4265788a86f18ccf74f3861a3d94a7c95d28d",
+          "current": "51194a324e887e53ecfa85cad9de5f81bf31dc161976b4808f4864a3ad6b80a8"
+        },
+        {
+          "path": "cpppj/src/client/UberGump.h",
+          "group": "/sources",
+          "previous": "70b2e2e7479669d3ddb47c054d95c87440f266441fea44a2753c39278c12eb65",
+          "current": "a5a670a9b3cbd4bfc14bbccd4a048c772890a652ebd3586c955682736bbbd975"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "ee217558417e170b51187377eae1fa45478dc6d1c899541a64aa5a73de3847a2",
+          "current": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30"
         }
       ]
     }

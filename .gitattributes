@@ -1504,3 +1504,12 @@ cpppj/mission-option-reset-native.json text eol=lf
 cpppj/mission-option-reset-session.json text eol=lf
 tools/decomp_mission_option_reset.py text eol=lf
 tools/cpp_mission_option_reset_audit.py text eol=lf
+# Tutorial Init의 전체 제어/이름과 독립 원문을 UTF-8/LF로 보존한다.
+cpppj/src/client/TutorialInit.* text eol=lf
+cpppj/src/o/RawTotalMade.* text eol=lf
+cpppj/tests/TutorialInitTests.cpp text eol=lf
+cpppj/tests/fixtures/tutorial-init-x86.tsv text eol=lf
+cpppj/tutorial-init-native.json text eol=lf
+cpppj/tutorial-init-session.json text eol=lf
+tools/decomp_tutorial_init.py text eol=lf
+tools/cpp_tutorial_init_audit.py text eol=lf

@@ -7,16 +7,16 @@
   "lastDecompileDate": "2026-10-20",
   "newDecompile": false,
   "sources": {
-    "cpppj/src/client/UberGump.cpp": "d042ad33b81d43de646ef9a82ff4265788a86f18ccf74f3861a3d94a7c95d28d",
+    "cpppj/src/client/UberGump.cpp": "51194a324e887e53ecfa85cad9de5f81bf31dc161976b4808f4864a3ad6b80a8",
     "cpppj/src/client/ClientMain.h": "6146814839326c189d793d988960cab3be2b01b2ebd22119b763dfd00ec6c6a0",
-    "cpppj/src/client/RawCampaignSession.cpp": "6d59bf8f7c9db19c0ca2a1b66594d36979280c82ffac06af529bab7d9698e920",
-    "cpppj/src/client/RawCampaignSession.h": "2d53de38afc2c6a4ef2162e91ed7d2b6fb58b4103f847030a21f686e6fae68e4",
+    "cpppj/src/client/RawCampaignSession.cpp": "6aaef81339fe4682278a624c49650e5d0e0542ff1c0a45b4c211d47ebf0576dc",
+    "cpppj/src/client/RawCampaignSession.h": "a2658773f7c24e24ace79ee27088ec9bc869d4d09fc890fbda9d3aba8aec7d01",
     "cpppj/src/client/RawMenuControls.cpp": "fd8c19e4b7fde7a65adfa87251d859130106a6e388ced7527c933c73c6045029",
     "cpppj/src/client/RawMenuControls.h": "edcb095b283233a2c3ac893dace31700ac282a23cdce165594d32d076e5fe465",
     "cpppj/src/client/RawFactoryMenu.cpp": "3df51a0fe406a33c01507442bf1c2033982655a04fac73b96d0cadaad64f9d06",
     "cpppj/src/client/RawFactoryMenu.h": "3a859f0a2a2e78880162822a0b8c578f619b68fdb4fca7492fb0c568d938a2d4",
-    "cpppj/src/client/CMakeLists.txt": "4ae70d9d48c3a42bfec960e370ac8c3fa3ade55bd9250039fc63493a8260b85e",
-    "cpppj/tests/CMakeLists.txt": "ee217558417e170b51187377eae1fa45478dc6d1c899541a64aa5a73de3847a2",
+    "cpppj/src/client/CMakeLists.txt": "c814b3ce4fcefee13c8766a400cf836a91a0e1db5ac8aeb8eccf529b1b165419",
+    "cpppj/tests/CMakeLists.txt": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30",
     "cpppj/tests/CampaignObjectMenuTests.cpp": "8c7951a5447f9e70871f5e082bd68d722d17866a1bbc0f5d43d9be50c62b113c",
     "tools/decomp_knowledge_menu.py": "faee4c792a4a26b4de4be0e19ffaa230495ae19b7fa9215f2eabdf43c3044063",
     "tools/cpp_knowledge_menu_audit.py": "28becd56dfda3c28d56b6317038eacd1c14e7d6fb8bba50f7c68e1fdfba5ac45",
@@ -3243,6 +3243,44 @@
           "group": "/sources",
           "previous": "a627575830fe9176dc72e24279dd80129787527faa645c2c1266799148bb7c70",
           "current": "ee217558417e170b51187377eae1fa45478dc6d1c899541a64aa5a73de3847a2"
+        }
+      ]
+    },
+    {
+      "unit": 259,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "Tutorial Init 전체 제어/이름·현재 전역과 같은 옵션/허용 표를 연결하고 요새 요청을 다음 루프로 옮겼다. 현재 소스 핀만 갱신하며 과거 근거/원문/기대값/실행·바이너리는 보존한다. 실제 제품 검사는 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "group": "/sources",
+          "previous": "d042ad33b81d43de646ef9a82ff4265788a86f18ccf74f3861a3d94a7c95d28d",
+          "current": "51194a324e887e53ecfa85cad9de5f81bf31dc161976b4808f4864a3ad6b80a8"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "group": "/sources",
+          "previous": "6d59bf8f7c9db19c0ca2a1b66594d36979280c82ffac06af529bab7d9698e920",
+          "current": "6aaef81339fe4682278a624c49650e5d0e0542ff1c0a45b4c211d47ebf0576dc"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "group": "/sources",
+          "previous": "2d53de38afc2c6a4ef2162e91ed7d2b6fb58b4103f847030a21f686e6fae68e4",
+          "current": "a2658773f7c24e24ace79ee27088ec9bc869d4d09fc890fbda9d3aba8aec7d01"
+        },
+        {
+          "path": "cpppj/src/client/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "4ae70d9d48c3a42bfec960e370ac8c3fa3ade55bd9250039fc63493a8260b85e",
+          "current": "c814b3ce4fcefee13c8766a400cf836a91a0e1db5ac8aeb8eccf529b1b165419"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "ee217558417e170b51187377eae1fa45478dc6d1c899541a64aa5a73de3847a2",
+          "current": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30"
         }
       ]
     }

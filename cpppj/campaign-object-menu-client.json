@@ -20,15 +20,15 @@
     "cpppj/src/client/GameWorld.cpp": "af6d3aeb3bd53d83e2619c2bd20ba5df42c17fe718cb81786841606419f10c6c",
     "cpppj/src/client/GameWorld.h": "d51dfe75377b1afd870bfeb40e26cef9f6233f65217d757135648ce064043a16",
     "cpppj/src/client/GameWorldInput.inc": "f46f5b6c20d628a298f252afcdf5f1af44a5718a6d21cc7848dc88c3a151a530",
-    "cpppj/src/client/RawCampaignSession.cpp": "6d59bf8f7c9db19c0ca2a1b66594d36979280c82ffac06af529bab7d9698e920",
-    "cpppj/src/client/RawCampaignSession.h": "2d53de38afc2c6a4ef2162e91ed7d2b6fb58b4103f847030a21f686e6fae68e4",
+    "cpppj/src/client/RawCampaignSession.cpp": "6aaef81339fe4682278a624c49650e5d0e0542ff1c0a45b4c211d47ebf0576dc",
+    "cpppj/src/client/RawCampaignSession.h": "a2658773f7c24e24ace79ee27088ec9bc869d4d09fc890fbda9d3aba8aec7d01",
     "cpppj/src/client/RawMenuControls.cpp": "fd8c19e4b7fde7a65adfa87251d859130106a6e388ced7527c933c73c6045029",
     "cpppj/src/client/RawMenuControls.h": "edcb095b283233a2c3ac893dace31700ac282a23cdce165594d32d076e5fe465",
     "cpppj/src/client/Renderer.cpp": "29729e6b728f19e7cddfc4c193e1a719733c8b4c5934e8b0a864697fa8a4b4a2",
     "cpppj/src/client/Renderer.h": "d72b42478b0bbe275a02494181722ee4f3f4ed4d474966e56c9df30958f31ac2",
-    "cpppj/src/client/UberGump.cpp": "d042ad33b81d43de646ef9a82ff4265788a86f18ccf74f3861a3d94a7c95d28d",
-    "cpppj/src/client/UberGump.h": "70b2e2e7479669d3ddb47c054d95c87440f266441fea44a2753c39278c12eb65",
-    "cpppj/tests/CampaignSessionTests.cpp": "1ca3f4a443191f14d9a28b3d3e436f3cf22d11ba164319d466e36d18ffd98352",
+    "cpppj/src/client/UberGump.cpp": "51194a324e887e53ecfa85cad9de5f81bf31dc161976b4808f4864a3ad6b80a8",
+    "cpppj/src/client/UberGump.h": "a5a670a9b3cbd4bfc14bbccd4a048c772890a652ebd3586c955682736bbbd975",
+    "cpppj/tests/CampaignSessionTests.cpp": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b",
     "cpppj/tests/RendererTests.cpp": "6aae8f544e9cb6a01738ee45a2c0eba57354106896ea59735db6842c318185cf",
     "cpppj/src/client/CampaignObjectMenuClient.h": "2d88a574f2b2feb27d4d2bf46761f58664521cb24b73af2b301741905b9deb73",
     "cpppj/src/client/CampaignObjectMenuClient.cpp": "2e1d9e0aea14df5eb579b320744b8cbe3a88a567361b687ef9064e84fe395001",
@@ -7011,6 +7011,44 @@
           "group": "/currentSources",
           "previous": "6a6d54fd15eb24c0609492756880c774120f855138441820a536ea5bd73ee4f0",
           "current": "1ca3f4a443191f14d9a28b3d3e436f3cf22d11ba164319d466e36d18ffd98352"
+        }
+      ]
+    },
+    {
+      "unit": 259,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "Tutorial Init 전체 제어/이름·현재 전역과 같은 옵션/허용 표를 연결하고 요새 요청을 다음 루프로 옮겼다. 현재 소스 핀만 갱신하며 과거 근거/원문/기대값/실행·바이너리는 보존한다. 실제 제품 검사는 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "group": "/currentSources",
+          "previous": "d042ad33b81d43de646ef9a82ff4265788a86f18ccf74f3861a3d94a7c95d28d",
+          "current": "51194a324e887e53ecfa85cad9de5f81bf31dc161976b4808f4864a3ad6b80a8"
+        },
+        {
+          "path": "cpppj/src/client/UberGump.h",
+          "group": "/currentSources",
+          "previous": "70b2e2e7479669d3ddb47c054d95c87440f266441fea44a2753c39278c12eb65",
+          "current": "a5a670a9b3cbd4bfc14bbccd4a048c772890a652ebd3586c955682736bbbd975"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "group": "/currentSources",
+          "previous": "6d59bf8f7c9db19c0ca2a1b66594d36979280c82ffac06af529bab7d9698e920",
+          "current": "6aaef81339fe4682278a624c49650e5d0e0542ff1c0a45b4c211d47ebf0576dc"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "group": "/currentSources",
+          "previous": "2d53de38afc2c6a4ef2162e91ed7d2b6fb58b4103f847030a21f686e6fae68e4",
+          "current": "a2658773f7c24e24ace79ee27088ec9bc869d4d09fc890fbda9d3aba8aec7d01"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "group": "/currentSources",
+          "previous": "1ca3f4a443191f14d9a28b3d3e436f3cf22d11ba164319d466e36d18ffd98352",
+          "current": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b"
         }
       ]
     }

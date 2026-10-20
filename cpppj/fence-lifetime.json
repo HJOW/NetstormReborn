@@ -32,16 +32,16 @@
     "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
     "tools/decomp_cursor_mana.py": "00cfea4f089b06b1b8f1b0cc61f0cf4f93bd33aa16aaa0715a95c66187a9f888",
     "tools/decomp_fence_lifetime.py": "d470de69c26be1c0c50ededee28a45e9f452f40b48837efd809044b394a535a7",
-    "cpppj/src/client/RawCampaignSession.cpp": "6d59bf8f7c9db19c0ca2a1b66594d36979280c82ffac06af529bab7d9698e920",
+    "cpppj/src/client/RawCampaignSession.cpp": "6aaef81339fe4682278a624c49650e5d0e0542ff1c0a45b4c211d47ebf0576dc",
     "cpppj/tests/fixtures/fence-lifetime-x86.tsv": "f3e5be8c131684bc679dba1fb7d27f431ace773495800e92ced8fd7ac856155b",
     "cpppj/src/CMakeLists.txt": "8834917133d33fda6dcd145dd64a93ee38ee014d25fede2eff5575b996df5847",
     "cpppj/src/client/RawCampaignLifetimeBindings.cpp": "5ddc44fc6776aebbd50e6249221141dec90fca1abe827886f19b14c968bd4582",
     "cpppj/src/client/RawCampaignLifetimeBindings.h": "6f4be73b52279abf308c8a3e6d8962271560e47c25996f7a03fca09f8cd063e8",
-    "cpppj/src/client/RawCampaignSession.h": "2d53de38afc2c6a4ef2162e91ed7d2b6fb58b4103f847030a21f686e6fae68e4",
+    "cpppj/src/client/RawCampaignSession.h": "a2658773f7c24e24ace79ee27088ec9bc869d4d09fc890fbda9d3aba8aec7d01",
     "cpppj/src/o/RawGunTarget.cpp": "7ac9b51af58949ce8c23f9854679a7685468ba798768db0a1158f25b0ff95f14",
     "cpppj/src/o/RawGunTarget.h": "cfc9f229f1b1ed225188ef5600ea7f575304f7c5cd537b6e6d803caa7d8486a0",
-    "cpppj/tests/CMakeLists.txt": "ee217558417e170b51187377eae1fa45478dc6d1c899541a64aa5a73de3847a2",
-    "cpppj/tests/CampaignSessionTests.cpp": "1ca3f4a443191f14d9a28b3d3e436f3cf22d11ba164319d466e36d18ffd98352",
+    "cpppj/tests/CMakeLists.txt": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30",
+    "cpppj/tests/CampaignSessionTests.cpp": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b",
     "cpppj/src/client/RawCursorRange.cpp": "965b5bce38bdceb3d31cc63cbae3fc8db5da57ccb3bf8c71be81f23ec548ec2e",
     "cpppj/src/client/RawCursorRange.h": "5aa384b5432bd6fbee04ae0fc9bf65acf685d45b66553f8b91866261fcd79758",
     "cpppj/src/o/RawFenceLifetime.cpp": "f24971d75e0ad7ee97739ee00964b2ec71be8a127c0ecd1bbc6b29797bb45ddf",
@@ -2974,6 +2974,38 @@
           "group": "/sha256",
           "previous": "a627575830fe9176dc72e24279dd80129787527faa645c2c1266799148bb7c70",
           "current": "ee217558417e170b51187377eae1fa45478dc6d1c899541a64aa5a73de3847a2"
+        }
+      ]
+    },
+    {
+      "unit": 259,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "Tutorial Init 전체 제어/이름·현재 전역과 같은 옵션/허용 표를 연결하고 요새 요청을 다음 루프로 옮겼다. 현재 소스 핀만 갱신하며 과거 근거/원문/기대값/실행·바이너리는 보존한다. 실제 제품 검사는 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "group": "/sha256",
+          "previous": "6d59bf8f7c9db19c0ca2a1b66594d36979280c82ffac06af529bab7d9698e920",
+          "current": "6aaef81339fe4682278a624c49650e5d0e0542ff1c0a45b4c211d47ebf0576dc"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "group": "/sha256",
+          "previous": "2d53de38afc2c6a4ef2162e91ed7d2b6fb58b4103f847030a21f686e6fae68e4",
+          "current": "a2658773f7c24e24ace79ee27088ec9bc869d4d09fc890fbda9d3aba8aec7d01"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sha256",
+          "previous": "ee217558417e170b51187377eae1fa45478dc6d1c899541a64aa5a73de3847a2",
+          "current": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "group": "/sha256",
+          "previous": "1ca3f4a443191f14d9a28b3d3e436f3cf22d11ba164319d466e36d18ffd98352",
+          "current": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b"
         }
       ]
     }

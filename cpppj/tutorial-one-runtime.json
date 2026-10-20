@@ -10,11 +10,11 @@
     "cpppj/src/client/ClientMain.cpp": "fe577cb844b74ff10be7353b9ba545563bd62af7272409211de823e511fb456e",
     "cpppj/src/client/RawButtonControls.cpp": "ca4f6842a5c2951e744060c2bc1c66b4d52f246d095dd6b36ea87a1c5393e472",
     "cpppj/src/client/RawButtonControls.h": "548d27ebba1a23f585763222ff428fd257456e79e47ae83ac38849712528ece1",
-    "cpppj/src/client/RawCampaignSession.cpp": "6d59bf8f7c9db19c0ca2a1b66594d36979280c82ffac06af529bab7d9698e920",
-    "cpppj/src/client/RawCampaignSession.h": "2d53de38afc2c6a4ef2162e91ed7d2b6fb58b4103f847030a21f686e6fae68e4",
-    "cpppj/src/client/UberGump.cpp": "d042ad33b81d43de646ef9a82ff4265788a86f18ccf74f3861a3d94a7c95d28d",
-    "cpppj/src/client/UberGump.h": "70b2e2e7479669d3ddb47c054d95c87440f266441fea44a2753c39278c12eb65",
-    "cpppj/tests/CampaignSessionTests.cpp": "1ca3f4a443191f14d9a28b3d3e436f3cf22d11ba164319d466e36d18ffd98352",
+    "cpppj/src/client/RawCampaignSession.cpp": "6aaef81339fe4682278a624c49650e5d0e0542ff1c0a45b4c211d47ebf0576dc",
+    "cpppj/src/client/RawCampaignSession.h": "a2658773f7c24e24ace79ee27088ec9bc869d4d09fc890fbda9d3aba8aec7d01",
+    "cpppj/src/client/UberGump.cpp": "51194a324e887e53ecfa85cad9de5f81bf31dc161976b4808f4864a3ad6b80a8",
+    "cpppj/src/client/UberGump.h": "a5a670a9b3cbd4bfc14bbccd4a048c772890a652ebd3586c955682736bbbd975",
+    "cpppj/tests/CampaignSessionTests.cpp": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b",
     "tools/cpp_goal_stage_entry_smoke.py": "52dae0cac39a586c32a45b60d57425ab794581ebd1fcd67ce49e037d67a78452",
     "cpppj/src/app/main.cpp": "9395c790b1a31c7e36f76b55cea3dd89ee7fdc769e694dc7d2fbdaa7e9eb7cd8",
     "cpppj/src/client/RawCampaignTutorialOneBindings.cpp": "945cb24940af3cfc103ee17ddaac723a6d22b197d658f063886da57366dc99f4",
@@ -896,6 +896,44 @@
           "group": "/sources",
           "previous": "6a6d54fd15eb24c0609492756880c774120f855138441820a536ea5bd73ee4f0",
           "current": "1ca3f4a443191f14d9a28b3d3e436f3cf22d11ba164319d466e36d18ffd98352"
+        }
+      ]
+    },
+    {
+      "unit": 259,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "Tutorial Init 전체 제어/이름·현재 전역과 같은 옵션/허용 표를 연결하고 요새 요청을 다음 루프로 옮겼다. 현재 소스 핀만 갱신하며 과거 근거/원문/기대값/실행·바이너리는 보존한다. 실제 제품 검사는 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "group": "/sources",
+          "previous": "d042ad33b81d43de646ef9a82ff4265788a86f18ccf74f3861a3d94a7c95d28d",
+          "current": "51194a324e887e53ecfa85cad9de5f81bf31dc161976b4808f4864a3ad6b80a8"
+        },
+        {
+          "path": "cpppj/src/client/UberGump.h",
+          "group": "/sources",
+          "previous": "70b2e2e7479669d3ddb47c054d95c87440f266441fea44a2753c39278c12eb65",
+          "current": "a5a670a9b3cbd4bfc14bbccd4a048c772890a652ebd3586c955682736bbbd975"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "group": "/sources",
+          "previous": "6d59bf8f7c9db19c0ca2a1b66594d36979280c82ffac06af529bab7d9698e920",
+          "current": "6aaef81339fe4682278a624c49650e5d0e0542ff1c0a45b4c211d47ebf0576dc"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "group": "/sources",
+          "previous": "2d53de38afc2c6a4ef2162e91ed7d2b6fb58b4103f847030a21f686e6fae68e4",
+          "current": "a2658773f7c24e24ace79ee27088ec9bc869d4d09fc890fbda9d3aba8aec7d01"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "group": "/sources",
+          "previous": "1ca3f4a443191f14d9a28b3d3e436f3cf22d11ba164319d466e36d18ffd98352",
+          "current": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b"
         }
       ]
     }

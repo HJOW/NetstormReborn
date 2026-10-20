@@ -40,9 +40,13 @@ def main():
     assert all(row['techAllowed'].startswith('deny;all;allow;') for row in record['scriptEvidence'][:6])
     assert all(row['techAllowed'] is None for row in record['scriptEvidence'][6:])
     client=(ROOT/'cpppj/src/client/UberGump.cpp').read_text('utf-8')
-    load=client.split('void UberGump::LoadMissionWorld()',1)[1].split('void UberGump::StartMissionWorld()',1)[0]
+    load=client.split('void UberGump::LoadMissionWorld(',1)[1].split('void UberGump::StartMissionWorld()',1)[0]
     apply='ApplyMissionTechnology(*mission_,client_.Assets().TypeTable(),world_->Session().TotalMade())'
-    assert load.count(apply)==1 and load.index('world_->BeginLocalConnection()')<load.index(apply)<load.index('missionRuntime_->state.flags|=1U')
+    # 단위259의 guided Header는 같은 전역을 설치 전에 쓰며 기존 비guided 어댑터만 설치 뒤 적용한다.
+    assert load.count(apply)==1 and load.index('world_->BeginLocalConnection()')<load.index(apply)
+    assert 'if (type=="tutorial" && !missionRuntime_->guided)' in load
+    assert 'ApplyMissionTechnology(*mission_,client_.Assets().TypeTable(),std::span(*missionRestrictions_))' in client
+    assert 'services.missionRestrictions=missionRestrictions_' in load
     binding=(ROOT/'cpppj/src/client/RawCampaignSession.cpp').read_text('utf-8')
     assert 'hooks.allowed=[current](std::uint32_t type) { return current->totalMade->Allowed' in binding
     assert '*productionDeck,*totalMade,contentFinder' in binding

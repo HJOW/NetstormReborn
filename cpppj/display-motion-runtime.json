@@ -374,7 +374,7 @@
     "cpppj/src/client/VFXDraw.h": "919d2519af8dacb2ce940c85119b4884d7027769d1e89cac41387fe55833a47d",
     "cpppj/src/o/RawPathProcess.cpp": "9f91446bc0e9414f261da6c0c271e80d2e15130566054d68533c73883196a3a3",
     "cpppj/src/o/SquidDisplay.h": "c0fa956fb5da3d19e08b5f3eaaa8253ea233b60cad3db83f21ab750c7f95087d",
-    "cpppj/tests/CampaignSessionTests.cpp": "1ca3f4a443191f14d9a28b3d3e436f3cf22d11ba164319d466e36d18ffd98352",
+    "cpppj/tests/CampaignSessionTests.cpp": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b",
     "cpppj/tests/DisplayTests.cpp": "490dcc018943bb94f0938c66a7634ad7e660d623941e7f753fa2019c2d10dc53",
     "cpppj/tests/RawPathRuntimeTests.cpp": "7fbca62f94959899bf73d2b82726cbf3f4478c1a0fc8df5624a073d17274ce1f",
     "tools/cpp_campaign_entry_smoke.py": "5fa9adadf6bcd571d6fba39b38e46fed41fe2e927911ff80dc38047c52c56b49",
@@ -765,6 +765,20 @@
           "group": "/sources",
           "previous": "6a6d54fd15eb24c0609492756880c774120f855138441820a536ea5bd73ee4f0",
           "current": "1ca3f4a443191f14d9a28b3d3e436f3cf22d11ba164319d466e36d18ffd98352"
+        }
+      ]
+    },
+    {
+      "unit": 259,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "Tutorial Init 전체 제어/이름·현재 전역과 같은 옵션/허용 표를 연결하고 요새 요청을 다음 루프로 옮겼다. 현재 소스 핀만 갱신하며 과거 근거/원문/기대값/실행·바이너리는 보존한다. 실제 제품 검사는 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "group": "/sources",
+          "previous": "1ca3f4a443191f14d9a28b3d3e436f3cf22d11ba164319d466e36d18ffd98352",
+          "current": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b"
         }
       ]
     }

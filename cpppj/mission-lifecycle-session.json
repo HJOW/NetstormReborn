@@ -7,16 +7,16 @@
   "lastDecompileDate": "2026-10-20",
   "newDecompile": false,
   "sources": {
-    "cpppj/src/client/UberGump.cpp": "d042ad33b81d43de646ef9a82ff4265788a86f18ccf74f3861a3d94a7c95d28d",
-    "cpppj/src/client/UberGump.h": "70b2e2e7479669d3ddb47c054d95c87440f266441fea44a2753c39278c12eb65",
-    "cpppj/src/client/State.cpp": "07d6383c35edf6a79d0691afd8685d94dcbf8d3a5e89f5b4088f11e62ef3b281",
-    "cpppj/src/client/State.h": "fbcb7c817dea1410d235a42a6b25f22815f759cbc5a74cfdc90f9e0006f95c83",
-    "cpppj/src/client/CMakeLists.txt": "4ae70d9d48c3a42bfec960e370ac8c3fa3ade55bd9250039fc63493a8260b85e",
-    "cpppj/tests/CMakeLists.txt": "ee217558417e170b51187377eae1fa45478dc6d1c899541a64aa5a73de3847a2",
+    "cpppj/src/client/UberGump.cpp": "51194a324e887e53ecfa85cad9de5f81bf31dc161976b4808f4864a3ad6b80a8",
+    "cpppj/src/client/UberGump.h": "a5a670a9b3cbd4bfc14bbccd4a048c772890a652ebd3586c955682736bbbd975",
+    "cpppj/src/client/State.cpp": "1b2179923bc02592bf927393175d884b1ff79eab78c76afa5e2e1049356d614d",
+    "cpppj/src/client/State.h": "0cfac26890477c90f165b8d69928226b92874644c837817a17ee170b919c830c",
+    "cpppj/src/client/CMakeLists.txt": "c814b3ce4fcefee13c8766a400cf836a91a0e1db5ac8aeb8eccf529b1b165419",
+    "cpppj/tests/CMakeLists.txt": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30",
     "cpppj/tests/CampaignMissionStartTests.cpp": "83e64926952399dda15209b6548cf9bd378a334e4a82723ddec0723c94348ed7",
     "tools/cpp_mission_common_audit.py": "69bbcb39e8e8178e4b04b32b2c4ed68b6618ad36070c94d1f268e0bf088e24c4",
     "tools/decomp_mission_lifecycle.py": "28eeab439c109bff32bf9f9c00c1a73165f86e74792360f835f5382778a6c654",
-    "tools/cpp_mission_lifecycle_audit.py": "e8d2f3b9764c396916984596702689cd6a4cdc973b72a279fdc576a6efbedb71",
+    "tools/cpp_mission_lifecycle_audit.py": "a67676f6e1b3931c4a620ccdc8a45b07618e25945d4bd356af4fd462739c1710",
     "cpppj/src/client/MissionLifecycle.h": "7dd494c234d3f01004da0d2003695a712adafc3592b579430c80f36a04a0affd",
     "cpppj/src/client/MissionLifecycle.cpp": "16e042ffde1294c2084925c14a4cacab49cb6c616c208d34a21232a23e160d4c",
     "cpppj/tests/MissionLifecycleTests.cpp": "212ddfe06b58290ba6ac125e4803b850b91d348dc8911dfb082ca4f7afab056a"
@@ -1577,6 +1577,56 @@
           "group": "/sources",
           "previous": "a627575830fe9176dc72e24279dd80129787527faa645c2c1266799148bb7c70",
           "current": "ee217558417e170b51187377eae1fa45478dc6d1c899541a64aa5a73de3847a2"
+        }
+      ]
+    },
+    {
+      "unit": 259,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "Tutorial Init 전체 제어/이름·현재 전역과 같은 옵션/허용 표를 연결하고 요새 요청을 다음 루프로 옮겼다. 현재 소스 핀만 갱신하며 과거 근거/원문/기대값/실행·바이너리는 보존한다. 실제 제품 검사는 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "group": "/sources",
+          "previous": "d042ad33b81d43de646ef9a82ff4265788a86f18ccf74f3861a3d94a7c95d28d",
+          "current": "51194a324e887e53ecfa85cad9de5f81bf31dc161976b4808f4864a3ad6b80a8"
+        },
+        {
+          "path": "cpppj/src/client/UberGump.h",
+          "group": "/sources",
+          "previous": "70b2e2e7479669d3ddb47c054d95c87440f266441fea44a2753c39278c12eb65",
+          "current": "a5a670a9b3cbd4bfc14bbccd4a048c772890a652ebd3586c955682736bbbd975"
+        },
+        {
+          "path": "cpppj/src/client/State.cpp",
+          "group": "/sources",
+          "previous": "07d6383c35edf6a79d0691afd8685d94dcbf8d3a5e89f5b4088f11e62ef3b281",
+          "current": "1b2179923bc02592bf927393175d884b1ff79eab78c76afa5e2e1049356d614d"
+        },
+        {
+          "path": "cpppj/src/client/State.h",
+          "group": "/sources",
+          "previous": "fbcb7c817dea1410d235a42a6b25f22815f759cbc5a74cfdc90f9e0006f95c83",
+          "current": "0cfac26890477c90f165b8d69928226b92874644c837817a17ee170b919c830c"
+        },
+        {
+          "path": "cpppj/src/client/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "4ae70d9d48c3a42bfec960e370ac8c3fa3ade55bd9250039fc63493a8260b85e",
+          "current": "c814b3ce4fcefee13c8766a400cf836a91a0e1db5ac8aeb8eccf529b1b165419"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "ee217558417e170b51187377eae1fa45478dc6d1c899541a64aa5a73de3847a2",
+          "current": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30"
+        },
+        {
+          "path": "tools/cpp_mission_lifecycle_audit.py",
+          "group": "/sources",
+          "previous": "e8d2f3b9764c396916984596702689cd6a4cdc973b72a279fdc576a6efbedb71",
+          "current": "a67676f6e1b3931c4a620ccdc8a45b07618e25945d4bd356af4fd462739c1710"
         }
       ]
     }

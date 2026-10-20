@@ -41,12 +41,15 @@ def main():
     client=(ROOT/'cpppj/src/client/UberGump.cpp').read_text('utf-8')
     begin=client.split('void UberGump::BeginMission(',1)[1].split('void UberGump::CreateMission(',1)[0]
     create=client.split('void UberGump::CreateMission(',1)[1].split('GuideMissionTransitionHooks UberGump::MissionTransitionEffects()',1)[0]
-    load=client.split('void UberGump::LoadMissionWorld()',1)[1].split('void UberGump::StartMissionWorld()',1)[0]
+    load=client.split('void UberGump::LoadMissionWorld(',1)[1].split('void UberGump::StartMissionWorld()',1)[0]
+    initialize=client.split('void UberGump::InitializeMission()',1)[1].split('void UberGump::LoadMissionWorld(',1)[0]
     assert 'BeginGuideMission(name,effects)' in begin and 'CreateMission(std::string(target),demo,mode)' in begin
     assert 'make_unique<MissionRuntime>(*mission_,demo,mode)' in create and 'FortTemplate::Parse' not in create
     assert 'PauseMissionWorldEntry' in load and 'missionRuntime_->start->Start()' not in load
-    assert 'missionRuntime_->state.flags|=1U' in load and '*missionRuntime_->start' in load
-    assert 'if (guide_) guide_->Run()' in client and 'hooks.initialize=[this] { LoadMissionWorld(); };hooks.start=[this] { StartMissionWorld(); }' in client
+    # 단위259의 실제 Init은 Header/flags를 먼저 쓰고 설치는 같은 큐의 다음 루프에 수행한다.
+    assert 'InitializeTutorialMission(' in initialize and 'state_.Post({"LoadMissionFort"' in initialize
+    assert 'missionRuntime_->state.flags|=1U' not in load and '*missionRuntime_->start' in load
+    assert 'if (guide_) guide_->Run()' in client and 'hooks.initialize=[this] { InitializeMission(); };hooks.start=[this] { StartMissionWorld(); }' in client
     assert 'guideHooks.pending=[this] { return state_.Pending() ? 1U : 0U; }' in client
     assert record['build']['returnCode']==0 and record['build']['warnings']==record['build']['errors']==0
     assert sha(ROOT/record['build']['log'])==record['build']['logSha256']
