@@ -1660,3 +1660,8 @@ set_source_files_properties(DudePathTests.cpp PROPERTIES COMPILE_DEFINITIONS
 target_sources(netstorm_tests PRIVATE DudeFootprintTests.cpp)
 set_source_files_properties(DudeFootprintTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_DUDE_FOOTPRINT_FIND=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/dude-footprint-find-x86.tsv\";NETSTORM_DUDE_FOOTPRINT_FAIL=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/dude-footprint-fail-x86.tsv\"")
+
+# Dude 정기/하위 처리1597개와 정적 초기화3개의 독립 원문이다.
+target_sources(netstorm_tests PRIVATE DudeRegularTests.cpp)
+set_source_files_properties(DudeRegularTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_DUDE_REGULAR_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/dude-regular-x86.tsv\"")

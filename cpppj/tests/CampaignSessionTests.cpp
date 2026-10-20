@@ -12,6 +12,7 @@
 #include "client/RawCampaignFactoryDisplay.h"
 #include "o/RawDaisDraw.h"
 #include "o/RawDudeBehavior.h"
+#include "o/RawDudeTask.h"
 #include "client/AiTypeRequiredEnergy.h"
 #include "client/RawCursorPlacement.h"
 #include "client/RawCampaignCursor.h"
@@ -2702,6 +2703,19 @@ TEST_CASE(CampaignDude_ActualArrivalUsesPopulationLifetime) {
     const auto dude=session.World().Create(70);core.owner.Set(dude,1);session.World().Pop(dude,100,111,0);CHECK(session.DudeBehavior().Handles(dude));CHECK(Get(core.pool.Slot(dude),12,2)==0x5101);
     CHECK(session.DudeBehavior().Arrival(dude)==1001 && (core.pool.Slot(dude)[11]&3U)==3U);
     CHECK(!core.bookkeeping.depth && !core.destroy.PreDepth() && !core.destroy.PostDepth());
+}
+
+// 실제30칸 등록과 Kernel 분배의poll/FALL→프레임·공간·102회 삭제를 확인한다. task 입력은 명시한다.
+TEST_CASE(CampaignDude_ActualRegularFallAndPopulation30) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",external.Services());session.Load();auto core=session.Core();const auto& population=session.DudeBehavior().Population();const auto before=population.count;
+    CHECK(population.entries.size()==30 && before<30);const auto dude=session.World().Create(70);core.owner.Set(dude,1);session.World().Pop(dude,100,111,0);CHECK(population.count==before+1 && Get(core.pool.Slot(dude),12,2)==0x5101);
+    auto* poll=core.processes.AddRegular(dude,0x1a2b,5.0F,0x50);CHECK(poll);if (!poll) return;const auto pollForm=poll->Form();poll->RunFrame();CHECK(!core.processes.FromForm(pollForm) && !(core.pool.Slot(dude)[11]&3U) && population.count==before+1);
+    DudeTaskHooks hooks;hooks.notifySurface=[&](Sid sid) { core.building.NotifySurface(sid); };RawDudeTask task(core.pool,{core.processState,core.bridgeState.bridgeType},MakeDudeTaskHostHooks(core.pool,core.processes,std::move(hooks)));task.Set(dude,0x5105,0);
+    auto* fall=core.processes.FindEvent(dude,0x5105);CHECK(fall);if (!fall) return;const auto form=fall->Form();std::size_t calls{};
+    // 예약 시각만 전진하고 실제 Regular/부모/프레임/공통 삭제를 실행한다. 전체 미션 Kernel 검사는 아니다.
+    while (calls<103) { auto* current=dynamic_cast<RegularProcess*>(core.processes.FromForm(form));if (!current) break;core.processState.now=current->Time();current->RunFrame();++calls; }
+    CHECK(calls==102 && !core.processes.FromForm(form) && (core.pool.Slot(dude)[11]&3U)==3U && population.count==before);CHECK(!core.bookkeeping.depth && !core.destroy.PreDepth() && !core.destroy.PostDepth());
 }
 
 // 명시 Dude에서 실제 BFS/현재24 조회/임시2배 속도/부모 도착 수명을 확인한다. 전체 Kernel 검사는 아니다.

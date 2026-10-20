@@ -1,5 +1,18 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-21 단위246 구현 완료: Dude 정기·네 하위 처리·초기30칸
+
+- [x] 같은 goal의 다음 단위를 진행했다. 시작 HEAD `f58fec2e`, 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-20**가 일치한다. AGENTS와 양 인수인계를 다시 읽었고 새 디컴파일·원본/CD·AGENTS 변경은 없다. 다른 세션의 dotnetpj/README 변경·커밋은 보존하고 포함하지 않는다. 직전 턴은 단위245의 발자국0 수정·기록·커밋을 완료한 **진행** 턴이다.
+- [x] 제품 작성 전에 실제450fa0/451190/451210/451270/451340/4508b0과 RNG/TYPE/FrameSide/WORD/공통496e70·static4fc9b0/44fb20을 **1600입력·두 정밀도3200정상 반환·181584명령**으로 독립 관측했다. 정기/하위1597개와 초기화3개다. CheckSpace/lookup/task·최근 거주 구역/진입점/실제 Move·가상 효과·new/registry/atexit는 명시 경계이며 게임/OS/창은 없다. 최초 자료를 `extracted/dude-regular-20261021-first-capture/`에 보존했고, 메타데이터 한국어 표기만 고친 뒤에도 fixture 전체 바이트는 최초와 같다. 도구 표기 역변환 SHA도 감사한다.
+- [x] `RawDudeRegular`가 poll/free/사건 마스크·지면 우선·현재24 경로/count 대기·task WORD·보행/복귀/드롭/낙하와 실제 RNG/공급자 순환을 처리한다.4508b0은 실제 기존 진입점/Move와 연결한다. 낙하의 디컴파일 미정의 y 대신 실제 `(count×0.5+1)×0.0625+현재y` float 저장과254 상한·10회 BYTE35·Unpop 후 현재 단계/RNG 재조회를 보존한다.
+- [x] Session의 같은 Kernel/`RawDudeBehavior`/`RawDudeTask`/contained lookup/거주 구역·공급자 목록/RNG/프레임·공간/24 경로에 연결했다. 최초 객체 전에 **원래30칸/count0**을 준비해 기존 피해 후 Dude 생성의 capacity0 억제를 제거했다. 원본 registry/atexit 주소나 미사용 heap의 호스트 바이트 복제를 주장하지 않는다. `Population()`은 같은 목록의 읽기 전용 참조다.
+- [x] 새 검사2개는1597행 전체 반환/효과/raw/RNG/순환+3행 초기화 대응과 실제 세션의 명시 Dude/실제task→poll 종료→낙하 프레임/공간→102회 부모/Form 삭제·목록 복귀다. **작성·컴파일만 했고 실행하지 않았다.** 첫/최종 전체 Release 모두 **경고0·오류0·종료0**, 최종 로그 `extracted/cpp-dude-regular-20261021-build2.log`다. 실제 게임/C++검사/CTest/전체 회귀는 사용자 지시대로 통합 검증에 이월한다.
+- [x] 상세는 [작업 기록](docs/exe/cpp-dude-regular-20261021.md), `cpppj/dude-regular-native.json`·`dude-regular-session.json`, `tools/decomp_dude_regular.py --verify`·`tools/cpp_dude_regular_audit.py --verify`다. 현재 소스 핀만 후속 이력으로 갱신하고 전체 JSON을 시작 커밋으로 역변환해 과거 files/원본/fixture/실행·바이너리/이력 보존을 확인한다. 인수인계 뒤 날짜/CP 규칙으로 로컬 커밋하며 push하지 않는다.
+- [ ] **남는 Dude 경계:** 거주 구역 event2의450a90/`RawCampaignAssetBindings::RegularHooks.residenceEvent2`와 추가 예약 조건이다. **00594fb8은 요새 모드**이므로 지정 미션의 전투 모드와 구별해 원본 관측 후 연결한다. `AssetPostPopState.residenceAnimation`의 실제 모드/예약 연결도 확인해야 한다. 이번 정기/초기화 연결만으로 자연 생성·피격 대피/실제 피해 후 경로·전체 미션 진행을 검증한 것은 아니다.
+- [ ] **전체 목표/통합 검증:** 이번2개와 앞 단위239~245의 새 C++검사·실제 UI/게임/전체 Kernel·자연 생성/대피·Early5 UI 시전/적·지형 효과/포획·Drop/제단·희생·다른 지정11미션·F8 Guide/키·전략AI·원본 동일성이다. Devastation 외 주문3차 이월과 실행/플레이 통합 이월을 유지한다. 전체 goal은 **active/미완료**다.
+
+- [x] 현재 핀 **124보고서·291항목**만 갱신했고 전체 JSON 역변환이 시작 커밋과 일치한다. 이번 원본/현재 연결·최초 보존 감사와 직전 발자국0·Dude 부모 감사가 모두 종료0이다. 이전 원본·기대값·실행 결과를 새 성공 결과로 바꾸지 않았다.
+
 ## 2026-10-21 단위245 구현 완료: 발자국0 후보·Dude 경로 실패 사각형
 
 - [x] 같은 goal의 다음 단위를 진행했다. 시작 HEAD `f285cfec`, 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-20**가 일치한다. AGENTS와 양 인수인계를 다시 읽었으며 새 디컴파일·원본/CD·AGENTS 변경은 없다. 다른 세션의 dotnetpj 변경/커밋은 보존하고 포함하지 않는다. 직전 턴은 단위244의 연결·기록·커밋을 완료한 **진행** 턴이다.
@@ -7,7 +20,7 @@
 - [x] 최초 일반 탐색480·실패160 자료를 `extracted/dude-footprint-20261021-first-capture/`에 보존한 뒤, 제품 작성 전에 좌표0/255.25를 추가했다. 일반 탐색 전체 바이트와 기존160입력의 출력은 그대로다. 새640행에서 최초160행 전체 바이트를 재구성한 SHA도 감사한다. 기존 RawFinder1752/PathStart512 및 다른 기대값은 덮어쓰지 않는다.
 - [x] `Footprint`는49ae80→40e880/40e8f0/40e800의0크기·확장 입력 clamp·점 전체 유효성·min/max를 적용한다. 한 축이0이면 다른 축도 함께 대체되는 원본을 보존한다. 공통 finder는0크기를 기존 OR 교차식에 통과시킨다. 새 검사2개는 전체 cursor480행과 실제 타입 선택/24생성/빈 Init·겹침/재시도640행이며 **작성·컴파일만 했고 실행하지 않았다.** 최종 전체 Release는 **경고0·오류0·종료0**, 로그 `extracted/cpp-dude-footprint-20261021-build2.log`다. 첫 빌드도 종료0이었다.
 - [x] 상세는 [작업 기록](docs/exe/cpp-dude-footprint-20261021.md), `cpppj/dude-footprint-native.json`·`dude-footprint-session.json`, `tools/decomp_dude_footprint.py --verify`·`tools/cpp_dude_footprint_audit.py --verify`다. 같은 시작 코드의 LF/CRLF **현재 핀만** 갱신하고 RawSquidFinder의 LF 속성을 지정한다. 기존 files·원본·fixture·과거 실행/바이너리·이력은 보존하고 전체 JSON 역변환을 시작 커밋과 대조한다. 인수인계 뒤 날짜/CP 규칙에 맞게 로컬 커밋하며 push하지 않는다.
-- [ ] **다음 구현:** Dude Regular450fa0(task5101~5107)와451190/451210/451270/451340 하위다. poll 우선 반환·free/사건 마스크·CheckSpace→fall·현재24 lookup·count/5107 예외 대기·task별 helper/최대 count 삭제 순서를 원본/독립 관측 후 실제 Kernel에 연결한다. 자연 생성 목록은 객체55a4ec의static initializer4fc9b0→44fb20(capacity30)·registry472880이다. 아직 현재 capacity0이므로 이 초기화도 독립 관측 후 복원해야 한다. 임의 상한을 넣지 않는다.
+- [x] **단위246에서 구현 완료:** Dude 정기/네 하위 몸체·목표 이동 wrapper와 static initializer의30칸/count0을 독립 관측하고 같은 Kernel/목록/난수/24 경로에 연결했다. 새 검사는 컴파일만 했으며 자연 플레이는 통합 검증에 남긴다.
 - [ ] **통합 검증:** 이번2개와 앞 단위239~244의 새 C++검사/CTest/전체 회귀·실제 UI/게임/플레이는 사용자 지시대로 이월한다. Dude 자연 생성/대피, Early5 UI 시전·적/지형 효과·포획/Drop·제단/희생·다른 지정 미션·F8 Guide/키·전략AI·원본 동일성은 남는다. Devastation 외 주문3차 이월도 유지한다. 전체 goal은 **active/미완료**다.
 
 - [x] 현재 소스 핀 **90보고서·102항목**만 갱신했고 전체 JSON 역변환은 시작 커밋과 같다. 이번 원본 감사·현재 연결/최초160 보존 감사·직전 Dude24 감사가 모두 종료0이다. 과거 원본/기대값/실행 결과를 새 성공 결과로 바꾸지 않았다.

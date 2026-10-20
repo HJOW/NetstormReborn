@@ -34,14 +34,14 @@
     "cpppj/src/client/RawCampaignConstructionBindings.cpp": "bd8ccc0a27709ce909164d6266002bcf7f22bd619169560175cca835924d2f9a",
     "cpppj/src/client/RawCampaignConstructionBindings.h": "512570010be383ea7cc726b275acffa61280f1448c9fcd4c872d7ba62a9d8d93",
     "cpppj/src/client/RawCampaignDevastation.inc": "7a21a39d0ab2c351a0317ff51cef28e57574670539e8e2da6758a738e5721400",
-    "cpppj/src/client/RawCampaignSession.cpp": "8aaf19543d81ff3e040ce450a13f6ea72e6afae0a93d9521bcb4ae53881821f1",
+    "cpppj/src/client/RawCampaignSession.cpp": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
     "cpppj/src/client/RawCampaignSession.h": "b4c53cd61d92a5535d9ed517ae790c01fb3f5c21d00e1274dfe2f580a498fdf9",
     "cpppj/src/client/RawCarrierDropPoint.cpp": "a0c2130de14992eb2f3debda71840b9e0c9889398d17cfd92c2c8cb050b2acd5",
     "cpppj/src/client/RawCarrierDropPoint.h": "e57a82a5afd40fbfd482bb494a1d1c60d754dc70174bd1b801ee45fac7d645ac",
     "cpppj/src/o/RawBombActivation.cpp": "d706f591a9f8c363bd6d2e42439ba09897291ddfda9ba095553949ea3991f7ce",
     "cpppj/src/o/RawCarrierDrop.cpp": "50111765448edf5068d98b20595f75151a60869fe12a11bb5ded73cda6764f95",
     "cpppj/src/o/RawCarrierDrop.h": "0c9109ffd076eee38db08725823ab7561322f3dde8cc9c43e7dcd684c2b8f3ea",
-    "cpppj/tests/CampaignSessionTests.cpp": "b724f120fe690b89e8fecbc6dcdd9259edfdd69ea436a23f5a78204e8ec2e684",
+    "cpppj/tests/CampaignSessionTests.cpp": "5dd5da22bc49c783d865582a49a46892cfc4a9658c20dd009e9d332495082676",
     "docs/exe/cpp-carrier-drop-session-20261020.md": "3d4c1c0e64aa5e24d85d6bce8fe73e4affa96bb489972887ebe627e95b424e9a",
     "tools/cpp_carrier_drop_session_audit.py": "1376b73f74dc13dffe273ddab685712b8ba32d3ae1d823db4e3c5b384a1d3ce0"
   },
@@ -254,6 +254,26 @@
           "group": "/sources",
           "previous": "16a55fcd6488320a9bfc8217e54b1b3ae2c2d046a805105d534f83a9dfd4bc4e",
           "current": "b724f120fe690b89e8fecbc6dcdd9259edfdd69ea436a23f5a78204e8ec2e684"
+        }
+      ]
+    },
+    {
+      "unit": "246",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "Dude 실제 정기·보행/복귀/드롭/낙하·30칸 초기화와 같은 Kernel/목록/난수를 연결한다. 같은 시작 코드의 LF/CRLF 현재 핀만 갱신하고 과거 files/실행/원본/기대값은 보존한다. 제품 실행 검증은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "group": "/sources",
+          "previous": "8aaf19543d81ff3e040ce450a13f6ea72e6afae0a93d9521bcb4ae53881821f1",
+          "current": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "group": "/sources",
+          "previous": "b724f120fe690b89e8fecbc6dcdd9259edfdd69ea436a23f5a78204e8ec2e684",
+          "current": "5dd5da22bc49c783d865582a49a46892cfc4a9658c20dd009e9d332495082676"
         }
       ]
     }

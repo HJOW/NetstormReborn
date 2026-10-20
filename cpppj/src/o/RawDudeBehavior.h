@@ -29,6 +29,7 @@ public:
     std::uint32_t Arrival(Sid sid) const; // task별 가상 삭제와1000/1001 원본 반환을 보존한다.
     void PostDestroy(Sid sid,std::uint32_t flags) const; // 일반 객체의 중복 population 항목을 모두 압축한 뒤 공통 후처리한다.
     const SidPool& Pool() const; // 실제 Session/경로 어댑터의 풀 혼용을 검사한다.
+    const SquidPostPopList& Population() const; //현재 생성/최초 Pop/삭제와 같은30칸 목록을 읽기 전용으로 제공한다.
 private:
     std::span<const std::uint8_t> Raw(Sid sid) const; // free/dead 필터 없이 타입/가상 표만 확인한다.
     void StopMovement(Sid sid) const; // task 효과 뒤 현재 타입을 다시 읽어 같은 lookup/remove를 실행한다.

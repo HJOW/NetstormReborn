@@ -72,4 +72,6 @@ void RawDudeBehavior::PostDestroy(Sid sid,std::uint32_t flags) const {
 }
 // 기존 월드/경로/후처리의 같은 저장소 검증에 사용한다.
 const SidPool& RawDudeBehavior::Pool() const { return pool_; }
+// 별도 population 사본 없이 실제 등록/삭제 수명을 관측한다.
+const SquidPostPopList& RawDudeBehavior::Population() const { return state_.population; }
 }

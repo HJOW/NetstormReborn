@@ -1,0 +1,45 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-21",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-20"
+  },
+  "uniqueInputs": 1600,
+  "normalReturns": 3200,
+  "instructions": 181584,
+  "nativeCalls": {
+    "00450fa0": 810,
+    "004ac220": 450,
+    "00451190": 426,
+    "004558f0": 306,
+    "004508b0": 902,
+    "004558c0": 730,
+    "00451210": 676,
+    "00451270": 676,
+    "00451340": 942,
+    "004ad710": 924,
+    "0049a840": 1494,
+    "004ac550": 570,
+    "00496e70": 180,
+    "004fc9b0": 6,
+    "0044fb20": 6
+  },
+  "controls": [
+    639,
+    895
+  ],
+  "boundaries": "450fa0/451190/451210/451270/451340/4508b0 및 실제 RNG/TYPE/FrameSide/WORD/공통496e70, initializer4fc9b0/44fb20 실행. CheckSpace/lookup/task/nearest/진입점/실제 Move·가상 공간/삭제/프레임·new/registry/atexit는 명시 인자 경계. caller float32/GP/retN/canary/SEH/x87/코드·읽기·쓰기 범위 검사. 배열의 미사용 heap은 보존하지만 제품의 미초기화 heap 복제를 요구하는 근거는 아니다. 게임/OS/창 실행 없음.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_dude_regular.py": "255aa65c9f7e35188b0eb620199a9e5bdc7274d680ea7ff019061baccf3db37b",
+    "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+    "tools/decomp_cursor_position.py": "e15bcdbc4c6be9c131c30f15416c945d650dba9f7dc6def404b47f63c635c212",
+    "tools/decomp_nugget_regular.py": "5a55630da35c054c5230336b3c8750504c73fdfe03b6c7a5033cacb1d98d729e",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "cpppj/tests/fixtures/dude-regular-x86.tsv": "6a8c466ab671e13f68b67d8c7f6862bff35a5e2d0bc571db10c1cb25ea1fffc6"
+  },
+  "observationToolSha256": "b89e0f670d11c040f3fcdc3cf73b3b340b06d01c66ab10e0853a0438e2fd149d"
+}

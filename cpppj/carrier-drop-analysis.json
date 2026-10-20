@@ -257,7 +257,7 @@
     "cpppj/src/client/CampaignObjectMenuClient.cpp": "2e1d9e0aea14df5eb579b320744b8cbe3a88a567361b687ef9064e84fe395001",
     "cpppj/src/client/CampaignUserInputServices.cpp": "f2bef8c428670f4ab871fd4e2d35730b7417ed53ef3388cd3b245087b96dc017",
     "cpppj/src/client/RawCampaignCarrierInput.inc": "17c639af1e42ed83c94462d61bd2dcfe2f8b85db647611a100a979bde3b48ee6",
-    "cpppj/src/client/RawCampaignSession.cpp": "8aaf19543d81ff3e040ce450a13f6ea72e6afae0a93d9521bcb4ae53881821f1",
+    "cpppj/src/client/RawCampaignSession.cpp": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
     "cpppj/src/client/RawCarrierDropPoint.cpp": "a0c2130de14992eb2f3debda71840b9e0c9889398d17cfd92c2c8cb050b2acd5",
     "cpppj/src/o/RawBombPreDestroy.cpp": "4015008cba143c5a47fdf509786a6f87af47ba15d7f69196ec6e7fd15c62dfc3",
     "cpppj/src/o/RawContainedFinder.cpp": "52fc6dd13a8884c2ec3d8d72cbcd9c5cb25a2c88f29958f2cf7d748e18eb2046",
@@ -428,6 +428,20 @@
           "group": "/sources",
           "previous": "5d3bdff0c9b42ab51cc7a88b8024e7d3d57e1649e6dba7acafb20bbc026b6daa",
           "current": "8aaf19543d81ff3e040ce450a13f6ea72e6afae0a93d9521bcb4ae53881821f1"
+        }
+      ]
+    },
+    {
+      "unit": "246",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "Dude 실제 정기·보행/복귀/드롭/낙하·30칸 초기화와 같은 Kernel/목록/난수를 연결한다. 같은 시작 코드의 LF/CRLF 현재 핀만 갱신하고 과거 files/실행/원본/기대값은 보존한다. 제품 실행 검증은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "group": "/sources",
+          "previous": "8aaf19543d81ff3e040ce450a13f6ea72e6afae0a93d9521bcb4ae53881821f1",
+          "current": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249"
         }
       ]
     }

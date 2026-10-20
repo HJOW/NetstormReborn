@@ -349,3 +349,6 @@ target_sources(netstorm PRIVATE RawDaisDraw.cpp RawDaisDraw.h)
 
 # Dude 부모의 정지/도착·표면 전환과 population 후처리다.
 target_sources(netstorm PRIVATE RawDudeBehavior.cpp RawDudeBehavior.h)
+
+# Dude의 실제 정기/네 하위 처리와30칸 초기 목록을 같은 게임 상태에 연결한다.
+target_sources(netstorm PRIVATE RawDudeRegular.cpp RawDudeRegular.h)

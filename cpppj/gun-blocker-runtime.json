@@ -10,10 +10,10 @@
   "sources": {
     "cpppj/src/o/RawGunBlocker.cpp": "8ab5aaed86d34b9db20da2b8cceb4eb2b578154f5e8eab9e6c2ca57be20e75ab",
     "cpppj/src/o/RawGunBlocker.h": "adbafba75dbdd760a30a518e99634e6c493f549efce9aabcb12155010fc2acee",
-    "cpppj/src/o/CMakeLists.txt": "26e24376762008bedbc411cf34a40e51817711202656985541e404fb39f36009",
-    "cpppj/src/client/RawCampaignSession.cpp": "8aaf19543d81ff3e040ce450a13f6ea72e6afae0a93d9521bcb4ae53881821f1",
+    "cpppj/src/o/CMakeLists.txt": "8fd2012644816c088a0283bde3e14ed3d9c3cff364d38c4c1bd5f4e6eaa81bd4",
+    "cpppj/src/client/RawCampaignSession.cpp": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
     "cpppj/tests/GunBlockerTests.cpp": "f6eac38c6f829b88e2de0395982035ec98203fd0b50c7c4a0fff0a9647e6b93a",
-    "cpppj/tests/CMakeLists.txt": "1dc1bfd464ba2c14a4a88a43e2d385ceca3c3489a63275bd3d7ad64fba8d905d",
+    "cpppj/tests/CMakeLists.txt": "1aeb2f3c22c7de88a03f6432aa9ec69844d315cf27b13e1609caa44d0f638353",
     "cpppj/tests/fixtures/gun-blocker-x86.tsv": "326003cc70d664a46313cf2090586a0da3e73390b1a242342db2ff4929b89898",
     "cpppj/tests/fixtures/gun-blocker-boundary-x86.tsv": "cfa8f3ef18b6a7cee79f2f79519e50e8e3951beb6d895709c5fa53d8be381623",
     "cpppj/tests/fixtures/tutorial-five-blocker-ui-input.tsv": "a2b30d1b5672a46047addb5ae67ddd64343f780bf0c3356f0b29bc53efb696e4",
@@ -494,6 +494,32 @@
           "group": "/sources",
           "previous": "574f7b775d2918c8beb27496c9709196cdb43eafe9b22c123437b86cbd92764f",
           "current": "1dc1bfd464ba2c14a4a88a43e2d385ceca3c3489a63275bd3d7ad64fba8d905d"
+        }
+      ]
+    },
+    {
+      "unit": "246",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "Dude 실제 정기·보행/복귀/드롭/낙하·30칸 초기화와 같은 Kernel/목록/난수를 연결한다. 같은 시작 코드의 LF/CRLF 현재 핀만 갱신하고 과거 files/실행/원본/기대값은 보존한다. 제품 실행 검증은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "group": "/sources",
+          "previous": "8aaf19543d81ff3e040ce450a13f6ea72e6afae0a93d9521bcb4ae53881821f1",
+          "current": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249"
+        },
+        {
+          "path": "cpppj/src/o/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "26e24376762008bedbc411cf34a40e51817711202656985541e404fb39f36009",
+          "current": "8fd2012644816c088a0283bde3e14ed3d9c3cff364d38c4c1bd5f4e6eaa81bd4"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "1dc1bfd464ba2c14a4a88a43e2d385ceca3c3489a63275bd3d7ad64fba8d905d",
+          "current": "1aeb2f3c22c7de88a03f6432aa9ec69844d315cf27b13e1609caa44d0f638353"
         }
       ]
     }

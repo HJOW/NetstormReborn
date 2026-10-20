@@ -1383,3 +1383,12 @@ cpppj/tests/fixtures/dude-footprint-find-x86.tsv text eol=lf
 cpppj/tests/fixtures/dude-footprint-fail-x86.tsv text eol=lf
 tools/decomp_dude_footprint.py text eol=lf
 tools/cpp_dude_footprint_audit.py text eol=lf
+# Dude 정기/초기화의 현재 소스와 최초 원본 해시를 보존한다.
+cpppj/src/o/RawDudeRegular.h text eol=lf
+cpppj/src/o/RawDudeRegular.cpp text eol=lf
+cpppj/tests/DudeRegularTests.cpp text eol=lf
+cpppj/tests/fixtures/dude-regular-x86.tsv text eol=lf
+cpppj/dude-regular-native.json text eol=lf
+cpppj/dude-regular-session.json text eol=lf
+tools/decomp_dude_regular.py text eol=lf
+tools/cpp_dude_regular_audit.py text eol=lf
