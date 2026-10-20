@@ -1,5 +1,12 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-20 cpppj 사전 준비 완료: HJOW-Athlon 정밀 디컴파일·Release 컴파일
+
+- [x] 사용자가 `AGENTS.md`와 `LEFT_JOBS.md`를 확인하고 cpppj 사전 디컴파일·컴파일을 요청했다. `LEFT_JOBS.dotnetpj.md`도 확인했다. 당시 최신 정밀 디컴파일 PC 기록은 **VM-W11-Codex / 2026-10-20**였고 현재 PC **HJOW-Athlon**과 달라 `tools/ghidra/refine_all.ps1` 전체 절차를 다시 수행했다. 재생성 전 결과 41개 파일·138,067,470바이트를 `extracted/refined-backup-before-HJOW-Athlon-20261020/`에 보존했다.
+- [x] 패치 10.78은 **5,549/5,549 성공**, CD 10.72는 **5,823개 중 5,822 성공·`FUN_0049f99f` 1개 실패**다. 판본 대응 2,496쌍을 만들고 호출 규약 힌트(패치판 8개, CD판 9개)를 적용했다. 세부 해시와 원본 해시는 [HJOW-Athlon 사전 준비 기록](docs/exe/cpp-preflight-hjow-athlon-20261020.md)에 남겼다.
+- [x] `cmake --build cpppj/build --config Release --parallel` 최종 확인이 **종료 코드 0**으로 끝나 Release 라이브러리, 게임 EXE, 테스트 EXE를 빌드했다. CTest·단위 테스트 및 게임은 실행하지 않았고 cpppj 소스와 원본 게임 파일은 수정하지 않았다.
+- [x] 이번 작업은 사전 준비만 완료했으며 cpppj 구현과 통합 실제 플레이 검증을 재개하지 않았다. 현재 최신 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-20**이다. 인수인계 뒤 `20261020-21 CP HJOW-Athlon cpppj 정밀 디컴파일 및 Release 컴파일`로 로컬 커밋하며 원격 push는 하지 않는다.
+
 ## 2026-10-20 단위239 완료: 공통 객체 명령과 Cast/Drop 부모 위임
 
 - [x] 사용자 요청으로 cpppj 다음 구현 단위를 진행했다. 시작 HEAD `65674f52`, 현재/마지막 정밀 디컴파일 PC **VM-W11-Codex / 2026-10-20**가 일치한다. 오늘의 사전 준비 산출물을 사용했으며 새 디컴파일/디컴파일 자료 변경은 없다. **이번에는 사용자 지시대로 git 커밋을 하지 않으며 dotnetpj 관련 파일도 수정하지 않는다.** 다른 세션의 dotnetpj 변경은 그대로 둔다.
