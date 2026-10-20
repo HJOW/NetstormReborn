@@ -1,3 +1,14 @@
+## 2026-10-20 완료: W02 다섯째 조각 후반 — 자산 전용 후처리 본체
+
+- [x] 사용자 요청("AGENTS.md 와 LEFT_JOBS.dotnetpj.md 를 다시 읽고, dotnetpj 서브프로젝트 다음 작업을 진행해 줘.")으로 직전 절이 정한 다음 시작점, 곧 `assetpostpop` 본체를 수행했다. 전반부(운반체 Damageable 몸체)는 직전 절에서 마쳤다. `cpppj/`·공통 `LEFT_JOBS.md`는 수정하지 않았다. 현재 PC **VM-W11-Codex**는 공통 기록의 마지막 정밀 디컴파일 PC(**VM-W11-Codex / 2026-10-20**)와 같으나 **디컴파일 산출물을 읽지 않았고**, 새 디컴파일·원본 관찰·원본/클론 게임·창 실행은 없다. cpppj 커밋 소스·원본 fixture에만 근거했다. 마지막 디컴파일 PC 기록은 그대로다. 상세·근거 표·경계는 [원본 월드 코어 W02 Asset 조각](docs/dotnet-original-core-assetpostpop-20261020.md).
+- [x] **동기화 먼저:** 시작할 때 반영 커밋은 `2cdcf81e`, HEAD는 `6559604e`(당일 `20261020-07`)였다. 사이는 이 조각의 전제인 dotnetpj 커밋 1건뿐이라 cpppj 변경 검토가 없고, 쓸 fixture를 `--update --add assetpostpop:Core`로 등록했다(연결 fixture 25→**26**개). 마지막에 `--update --reflect HEAD`로 반영 커밋을 `2cdcf81e`→**`6559604e`** 로 올렸다([계획 7절 7번](docs/dotnet-cpp-port-plan-20261016.md#7-cpppj-진행을-따라가는-절차-다른-ai가-cpppj를-계속-진행-중)).
+- [x] **구현(`dotnetpj/src/Netstorm.Core/Original/`):** `RawAssetPostPop`(자산 전용 후처리 10.78 경로 — Gun 4종·장식·거주 구역·바리케이드·간헐천·신전 3종·전용 4종 분배, 공통·Damageable 장부를 각각 한 번 호출), `AssetPostPopState`(전역·세 목록·소유자별 신전 기록)·19개 `AssetPostPopHooks`·`BindPlayerRecords`(실제 9기록 묶음, 미묶음이면 state 사본). 기준 판본은 10.78 뿐이다.
+- [x] **검증:** 전체 Release 경고 0·오류 0(`--no-incremental` 강제 전체 빌드), 단위 **1,148개 통과**(Assets 363 + Core 785; 이번 +10). 원본 fixture `assetpostpop-x86.tsv` 10.78 몫 **818회**(효과 순서·슬롯 50바이트·세 목록·Player 신전·주변 받침·공통 깊이 0)와 묶은 기록 818회(전체 1,620바이트·state 사본 불변)가 전부 일치했다.
+- [x] **변이 확인:** 구현 20곳을 하나씩 망가뜨려 처음에 18곳이 실패로 잡혔다. 잡히지 않은 2곳(종류 검사 생략·영역 상수 참)은 검사를 2건 보강한 뒤(비최초 미지원 표의 사전 거부, 영역이 다를 때 삭제 금지) 잡혔다. 소스는 모두 원복했고 강제 전체 빌드로 잔재 없음을 확정했다. 도달 가능 입력으로 잡히지 않는 곳은 없다.
+- [ ] **하지 않은 것(경계):** 소유자(`owner`)·프레임(`setframe`), 건물 공간·이웃·탐색, Graph 계열, CD 10.72. 가변 소유자 DWORD 재생(`asset-player-x86.tsv`)과 파생 분배 허브(`SetAssetPostPop`·`HandlesAsset` 등, `HandlesDerived`는 여전히 거짓)는 다음 조각에서 한다. 이 조각은 L1 모듈 단계이며 L2 이상으로 합산하지 않는다.
+- [ ] **다음 조각:** 소유자(`owner`)·프레임(`setframe`, `asset-player-x86.tsv`의 가변 소유자 재생 포함) → 건물 공간(`buildingspace`)·이웃·탐색 → Graph 계열. 시작할 때 `python dotnetpj/tools/cpp_sync.py`를 먼저 실행하고 쓸 fixture를 `--update --add`로 등록한다.
+- [x] 인수인계 뒤 **`20261020-08 DN 원본 월드 코어의 자산 전용 후처리를 원본 10.78 행 818회로 검증`** 으로 로컬 커밋한다. 원격 push는 하지 않는다.
+
 ## 2026-10-20 완료: W02 다섯째 조각 전반 — 운반체 Damageable 몸체 (자산 후처리 전제)
 
 - [x] 사용자 요청("AGENTS.md 와 LEFT_JOBS.dotnetpj.md 를 먼저 읽어 줘. 그리고 dotnetpj 서브프로젝트 다음 작업을 진행해 줘.")으로 직전 절이 정한 다음 시작점, 곧 W02의 다음 조각 `assetpostpop`(운반체 Damageable 몸체와 함께) 가운데 전제인 운반체 몸체부터 수행했다. `cpppj/`·공통 `LEFT_JOBS.md`는 수정하지 않았다. 현재 PC **VM-W11-Codex**는 공통 기록의 마지막 정밀 디컴파일 PC(**VM-W11-Codex / 2026-10-20**)와 같으나 **디컴파일 산출물을 읽지 않았고**, 새 디컴파일·원본 관찰·원본/클론 게임·창 실행은 없다. cpppj 커밋 소스·원본 fixture에만 근거했다. 마지막 디컴파일 PC 기록은 그대로다. 상세·근거 표·경계는 [원본 월드 코어 W02 Carrier 조각](docs/dotnet-original-core-carrierpostpop-20261020.md).
