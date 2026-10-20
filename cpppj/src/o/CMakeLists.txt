@@ -343,3 +343,6 @@ target_sources(netstorm PRIVATE RawThunderCannonCapture.cpp RawThunderCannonCapt
 
 # 실제72의 생산 기본/추가 가상 그림을 파편·건설·화염 캡처에 제공한다.
 target_sources(netstorm PRIVATE RawSunAviaryCapture.cpp RawSunAviaryCapture.h)
+
+# 다이스의 별도 TYPE169 추가 그림을 실제 표시와 캡처에 공유한다.
+target_sources(netstorm PRIVATE RawDaisDraw.cpp RawDaisDraw.h)

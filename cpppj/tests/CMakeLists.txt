@@ -1640,3 +1640,8 @@ set_source_files_properties(PriestRitualFrameTests.cpp PROPERTIES COMPILE_DEFINI
 target_sources(netstorm_tests PRIVATE SalvageCommandTests.cpp)
 set_source_files_properties(SalvageCommandTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_SALVAGE_COMMAND_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/salvage-command-x86.tsv\"")
+
+# 다이스 별도 TYPE의 독립 원본768입력과 미연결 문맥을 검사한다.
+target_sources(netstorm_tests PRIVATE DaisDrawTests.cpp)
+set_source_files_properties(DaisDrawTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_DAIS_DRAW_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/dais-draw-x86.tsv\"")

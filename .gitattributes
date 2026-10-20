@@ -1350,3 +1350,11 @@ cpppj/dais-load-session.json text eol=lf
 tools/cpp_dais_load_audit.py text eol=lf
 cpppj/altar-release-session.json text eol=lf
 tools/cpp_altar_release_audit.py text eol=lf
+# 다이스 추가 그림의 원본 관측·새 소스 해시를 판본/체크아웃 사이에 보존한다.
+cpppj/dais-draw-native.json text eol=lf
+cpppj/dais-draw-session.json text eol=lf
+cpppj/src/o/RawDaisDraw.h text eol=lf
+cpppj/src/o/RawDaisDraw.cpp text eol=lf
+cpppj/tests/DaisDrawTests.cpp text eol=lf
+tools/decomp_dais_draw.py text eol=lf
+tools/cpp_dais_draw_audit.py text eol=lf

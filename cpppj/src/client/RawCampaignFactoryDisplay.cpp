@@ -6,6 +6,7 @@
 #include "client/PaletteColors.h"
 #include "client/OwnerColorMaps.h"
 #include "o/RawFactoryDraw.h"
+#include "o/RawDaisDraw.h"
 #include "o/RawTempleDraw.h"
 #include "o/RawThunderCannonCapture.h"
 #include "o/RawBridgeConnect.h"
@@ -40,7 +41,7 @@ struct RawCampaignFactoryDisplay::Impl {
     bool Geyser(o::Sid sid) const {
         const auto raw=core.pool.Slot(sid);return raw[10]==122 && raw[0]==0x88 && raw[1]==0xda && raw[2]==0x50 && raw[3]==0;
     }
-    bool Handles(o::Sid sid) const { return factory.Handles(sid) || Flare(sid) || Generator(sid) || Temple(sid) || ThunderCannon(sid) || Geyser(sid); } // 확인된 실제 아홉VT를 같은 수집기에 포함한다.
+    bool Handles(o::Sid sid) const { return factory.Handles(sid) || Flare(sid) || Generator(sid) || Temple(sid) || o::IsPatchDais(core.pool.Slot(sid)) || ThunderCannon(sid) || Geyser(sid); } // 확인한 실제 VT만 같은 수집기에 포함한다.
     // 원본 PE 초기값만 설치하고 각 수집에서 현재 게임 값으로 갱신한다.
     Impl(RawWorldCore world,const GameAssets& data,TempleDraw supplied):core(world),assets(data),factory(core.pool,core.frames),
         collection(core.hash,core.pool,core.types,core.shapes),views(MakeSpriteAssetViews(data)),outpost(BuildStandardOwnerColorMaps(126,82)),templeDraw(std::move(supplied)),templeBaseFrames(core.types.size(),-1) {
@@ -69,7 +70,7 @@ struct RawCampaignFactoryDisplay::Impl {
         SpriteDrawHooks rules;rules.virtualFrame=[this](o::Sid object) {
             if (Temple(object)) return o::PatchTempleMainFrame(core.pool.Slot(object),templeBaseFrames);
             if (ThunderCannon(object)) return o::ThunderCannonCaptureMainFrame(core.pool.Slot(object),core.frames[core.pool.Slot(object)[10]]);
-            return Flare(object) || Generator(object) || Geyser(object) ? assets.Types()[core.pool.Slot(object)[10]-o::kFirstAssetTypeNumber].definition.specialFrames.baseFrame : factory.MainFrame(object);
+            return Flare(object) || Generator(object) || Geyser(object) || o::IsPatchDais(core.pool.Slot(object)) ? assets.Types()[core.pool.Slot(object)[10]-o::kFirstAssetTypeNumber].definition.specialFrames.baseFrame : factory.MainFrame(object);
         };rules.surface=MakeSpriteSurfaceLookup(core.hash);
         rules.resource=[this](o::Sid object)->std::optional<SpriteResourceStatus> {
             if (core.processes.FindEvent(object,0x493)) throw std::logic_error("Factory 자원 내용물 막대 표시 미연결");return std::nullopt;
@@ -77,6 +78,13 @@ struct RawCampaignFactoryDisplay::Impl {
         auto hooks=target.Hooks(std::move(rules));
         // +a4의0044c180은 같은 기준점/단위 배율의 plain SHP다. 일반 owner 문맥으로 바꾸지 않는다.
         hooks.virtualDraw=[this,shape=hooks.shape](o::Sid object,ScreenPoint point) {
+            if (o::IsPatchDais(core.pool.Slot(object))) {
+                o::DrawDaisAdditional(core.pool.Slot(object),core.shapes[o::kPatchDaisExtraType].frameCount,[this,object,point,&shape](std::uint32_t type,std::int32_t frame) {
+                    if (frame<0) throw std::out_of_range("다이스 추가 그림 음수 프레임");const auto current=core.pool.Slot(object); // 실제497280의 현재 추상/로컬 관문이다.
+                    if (!(current[40]&0x10U)) shape({type,static_cast<std::uint32_t>(frame),point,SpriteShapeMode::Plain});
+                    else if (current[34]==state.localPlayer) shape({type,static_cast<std::uint32_t>(frame),point,SpriteShapeMode::Abstract});
+                });return;
+            }
             if (Flare(object) || Generator(object)) return; // 실제+a4의 빈 몸체41c100이다.
             if (Geyser(object)) {
                 const auto current=core.pool.Slot(object);const auto frame=std::uint32_t(current[36])|(std::uint32_t(current[37])<<8)|(std::uint32_t(current[38])<<16)|(std::uint32_t(current[39])<<24); // 실제485480은 고정 외형 뒤 현재 SHP/프레임을 한 번 그린다.

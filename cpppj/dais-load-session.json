@@ -7,8 +7,8 @@
   "lastDecompileDate": "2026-10-20",
   "newDecompile": false,
   "sources": {
-    "cpppj/src/client/RawCampaignSession.cpp": "aa78d6d841c3cb61f212fe645e9a0ffef7cf84f1bbcf2978a37fcad2c6d780e0",
-    "cpppj/tests/CampaignSessionTests.cpp": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f",
+    "cpppj/src/client/RawCampaignSession.cpp": "6c3e8ec7e650c92d182b36f3325d4b5d60c65d4bf56dd46fbb38febdd90d0c84",
+    "cpppj/tests/CampaignSessionTests.cpp": "bec94fbecf9c48940d59d8a1b0613a81ddec1da3b01aa1bbc63cbdc6b6d1698a",
     "tools/cpp_dais_load_audit.py": "cd8f42c5bbea3bb8722e36e84563902b48545326bde5df806d696a97893152b4"
   },
   "evidence": {
@@ -1705,6 +1705,26 @@
           "group": "/sources",
           "previous": "859b395421750b29f0152c8bef746b0adc8ce69a0a7ac1dcca9a7f89f72c8085",
           "current": "cd8f42c5bbea3bb8722e36e84563902b48545326bde5df806d696a97893152b4"
+        }
+      ]
+    },
+    {
+      "unit": "242",
+      "date": "2026-10-20",
+      "host": "HJOW-Athlon",
+      "note": "다이스 TYPE169 추가 그림을 실제 표시/캡처에 연결. 현재 소스 핀만 갱신하며 과거 실행 결과는 보존한다. 실행 검증은 통합 시점으로 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "group": "/sources",
+          "previous": "aa78d6d841c3cb61f212fe645e9a0ffef7cf84f1bbcf2978a37fcad2c6d780e0",
+          "current": "6c3e8ec7e650c92d182b36f3325d4b5d60c65d4bf56dd46fbb38febdd90d0c84"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "group": "/sources",
+          "previous": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f",
+          "current": "bec94fbecf9c48940d59d8a1b0613a81ddec1da3b01aa1bbc63cbdc6b6d1698a"
         }
       ]
     }

@@ -10,6 +10,7 @@
 #include "client/GameWorld.h"
 #include <cmath>
 #include "client/RawCampaignFactoryDisplay.h"
+#include "o/RawDaisDraw.h"
 #include "client/AiTypeRequiredEnergy.h"
 #include "client/RawCursorPlacement.h"
 #include "client/RawCampaignCursor.h"
@@ -2670,6 +2671,27 @@ TEST_CASE(CampaignAltar_AlliedReleaseUsesVirtualPriestOwner) {
     CHECK((core.pool.Slot(captured)[11]&3U)==3U && !session.Priests().Carrier().FindContained(dais,0,158,0).value);
     CHECK(!core.processes.FindEvent(altar,21) && Get(core.pool.Slot(altar),36)==static_cast<std::uint32_t>(core.frames[164].Run('P').first));
     CHECK(!core.bookkeeping.depth && !core.destroy.PreDepth() && !core.destroy.PostDepth());
+}
+
+// 실제 다이스 별도 그림과 파괴 캡처를 동일 Session/Renderer/프로세스에 연결한다. 원본 전체 픽셀 관측 검사는 아니다.
+TEST_CASE(CampaignDais_AdditionalDisplayAndShrapnelCapture) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",external.Services());session.Load();auto core=session.Core();
+    const auto dais=session.World().Create(165);core.owner.Set(dais,1);session.World().Pop(dais,100,111,0);core.frame.Set(dais,47,0);core.pool.AllocatedBytes(dais)[40]|=2U; // 실제 의식의 추가 그림 상태만 명시 표시 입력으로 준다.
+    RawCampaignFactoryDisplay display(core,assets.game);CHECK(display.Handles(dais));std::array<ScreenColor,256> palette{}; // 실제 파일 팔레트를 표시기의 색표에 설치한다.
+    // 원본 팔레트 인덱스와 BGRX 성분을 같은 순서로 유지한다.
+    for (std::size_t index=0;index<palette.size();++index) { const auto color=assets.game.Palette().Color(static_cast<std::uint8_t>(index));palette[index]={color.blue,color.green,color.red,0}; }
+    display.SetPalette(palette);const auto depth=std::bit_cast<std::int8_t>(core.pool.Slot(dais)[35]);const ScreenRect clip{0,0,1024,768};
+    auto sprites=display.Sprites(clip,1400,1000,1);std::erase_if(sprites,[&](const auto& sprite) { return sprite.order.depth!=depth || sprite.order.x!=100 || sprite.order.y!=111; });CHECK(!sprites.empty());
+    Renderer renderer(1024,768);renderer.SetScene(sprites);const auto shown=renderer.SceneImage();CHECK(std::any_of(shown.indices.begin(),shown.indices.end(),[](auto color) { return color!=0; }));
+    CHECK(session.World().Destroy(dais,0));CHECK((core.pool.Slot(dais)[11]&3U)==3U);bool captured{};
+    // 파괴가 만든 실제 파편 프로세스에서 다이스의 등록 깊이와 비어 있지 않은 이미지가 보존돼야 한다.
+    for (const auto token:session.Particles().Rendering().Slots()) {
+        const auto* fields=session.Particles().Rendering().Lookup(token);if (!fields || fields->zOrder!=depth) continue;
+        const auto* process=dynamic_cast<ShrapnelVisualProcess*>(core.processes.FromForm(Sid{static_cast<std::uint16_t>(fields->form)}));
+        if (process && std::any_of(process->Fields().image.pixels.begin(),process->Fields().image.pixels.end(),[](auto color) { return color!=255; })) captured=true;
+    }
+    CHECK(captured);CHECK(!core.bookkeeping.depth && !core.destroy.PreDepth() && !core.destroy.PostDepth());
 }
 
 // 실제 Factory/전체Pop의 제단 생성·Player 등록과 부착 통지/제단 저항을 확인한다. 자연 포획 입력은 아니다.
