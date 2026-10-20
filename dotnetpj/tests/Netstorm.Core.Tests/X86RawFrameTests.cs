@@ -88,6 +88,7 @@ public sealed class X86RawFrameTests
                 Assert.Equal(id, Pool.Allocate(SidAllocation.Client));
             }
             Types = new OriginalTypeRecord[OriginalConstructors.TypeCount];
+            // 모든 타입 번호에 빈 타입 레코드를 채운다
             for (int i = 0; i < Types.Length; i++)
             {
                 Types[i] = new OriginalTypeRecord();
@@ -165,6 +166,7 @@ public sealed class X86RawFrameTests
         {
             if (row[0] == "Sizes")
             {
+                // 세미콜론으로 나뉜 크기 항목을 하나씩 읽는다
                 foreach (string entry in row[1].Split(';'))
                 {
                     string[] pair = entry.Split(',');

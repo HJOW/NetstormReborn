@@ -257,6 +257,7 @@ public sealed class RawSquidNeighbors
         // 원본처럼 y·x 순서로 발자국을 훑는다
         for (int y = top; y <= bottom; y++)
         {
+            // 같은 행의 발자국 칸 spot 값을 AND 로 모은다(모든 칸에 내부 비트가 있어야 마지막까지 남는다)
             for (int x = left; x <= right; x++)
             {
                 bits &= _spots[y * RawSquidHash.WorldCells + x];

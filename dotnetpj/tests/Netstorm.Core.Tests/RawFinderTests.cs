@@ -38,6 +38,7 @@ public sealed class RawFinderTests
         }
         var hash = new RawSquidHash();
         var types = new OriginalTypeRecord[256];
+        // 256개 타입 번호 각각에 빈 타입 레코드를 채운다
         for (int i = 0; i < types.Length; i++)
         {
             types[i] = new OriginalTypeRecord();
@@ -126,6 +127,7 @@ public sealed class RawFinderTests
     {
         var (pool, hash, _, _) = Scene();
         var types = new OriginalTypeRecord[100];
+        // 100개 타입 번호 각각에 빈 타입 레코드를 채운다
         for (int i = 0; i < types.Length; i++)
         {
             types[i] = new OriginalTypeRecord();
@@ -154,6 +156,7 @@ public sealed class RawFinderTests
         Write(pool.AllocatedBytes(50), 14, BitConverter.SingleToUInt32Bits(1000.5f), 4);
         var visited = new List<int>();
         var finder = new RawSquidFinder(pool, hash, types);
+        // 탐색기가 0(끝)을 돌려줄 때까지 현재 번호를 옮기며 방문 순서를 모은다
         for (int current = finder.Begin(new SquidSearchArea(20, 21, 20, 21), 0, sid => { visited.Add(sid); return true; });
             current != 0;
             current = finder.Next())
@@ -233,6 +236,7 @@ public sealed class RawFinderTests
             heads.Add(hash.Entries(level).ToArray());
         }
         var finder = new RawSquidFinder(pool, hash, types);
+        // 0(끝)이 나올 때까지 방문만 하고 본문은 비워 둔다
         for (int current = finder.Begin(new SquidSearchArea(20, 21, 20, 21)); current != 0; current = finder.Next())
         {
         }

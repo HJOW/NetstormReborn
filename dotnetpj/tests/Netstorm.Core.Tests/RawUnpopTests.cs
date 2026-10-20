@@ -202,23 +202,23 @@ public sealed class RawUnpopTests
         /// <summary>호출 순서와 그 시점의 관찰값.</summary>
         public List<string> Events { get; } = [];
 
-        /// <inheritdoc/>
+        /// <summary>테스트가 쓰는 슬롯 풀을 돌려준다.</summary>
         public RawSidPool Pool => PoolValue;
 
-        /// <inheritdoc/>
+        /// <summary>테스트가 쓰는 공간 해시를 돌려준다.</summary>
         public RawSquidHash Hash => HashValue;
 
-        /// <inheritdoc/>
+        /// <summary>검증 호출을 기록한다(슬롯 void 여부와 플래그).</summary>
         public void Validate(ReadOnlySpan<byte> slot, uint flags) => Events.Add($"validate void={(slot[RawSidPool.StateOffset] & RawSidPool.VoidBit) != 0} flags={flags}");
 
-        /// <inheritdoc/>
+        /// <summary>갱신 호출을 기록한다(void 여부·머리·중앙 spot).</summary>
         public void Update(ReadOnlySpan<byte> slot, uint flags) =>
             Events.Add($"update void={(slot[RawSidPool.StateOffset] & RawSidPool.VoidBit) != 0} head={HashValue.Bucket(1, 20, 20)} center={Spots[19 * 256 + 19]:X2}");
 
-        /// <inheritdoc/>
+        /// <summary>옆면 해제 호출을 칸 좌표와 spot 값과 함께 기록한다.</summary>
         public void UnpopSide(int cellX, int cellY) => Events.Add($"side {cellX},{cellY} cell={Spots[cellY * 256 + cellX]:X2}");
 
-        /// <inheritdoc/>
+        /// <summary>미니맵 큐 등록 호출을 기록한다.</summary>
         public void Enqueue(int sid) =>
             Events.Add($"minimap void={(PoolValue.Slot(sid)[RawSidPool.StateOffset] & RawSidPool.VoidBit) != 0} head={HashValue.Bucket(1, 20, 20)} center={Spots[19 * 256 + 19]:X2}");
     }

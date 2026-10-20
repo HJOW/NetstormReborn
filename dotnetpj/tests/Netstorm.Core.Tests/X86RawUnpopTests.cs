@@ -60,6 +60,7 @@ public sealed class X86RawUnpopTests
                 // 각 값의 네 바이트를 직접 기록한다
                 foreach (uint value in new[] { record.Sid, record.Type })
                 {
+                    // 하위 바이트부터 네 바이트를 꺼내 bytes 에 기록한다
                     for (int shift = 0; shift < 32; shift += 8)
                     {
                         bytes.Add((byte)(value >> shift));

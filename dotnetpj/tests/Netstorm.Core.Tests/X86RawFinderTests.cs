@@ -79,6 +79,7 @@ public sealed class X86RawFinderTests
                 }
                 var hash = new RawSquidHash();
                 var types = new OriginalTypeRecord[256];
+                // 256개 타입 번호 각각에 빈 타입 레코드를 채운다
                 for (int i = 0; i < types.Length; i++)
                 {
                     types[i] = new OriginalTypeRecord();

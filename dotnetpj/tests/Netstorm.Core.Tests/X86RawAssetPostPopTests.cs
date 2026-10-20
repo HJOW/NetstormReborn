@@ -109,6 +109,7 @@ public sealed class X86RawAssetPostPopTests
                 Assert.Equal(id, Pool.Allocate(SidAllocation.Client));
             }
             Types = new OriginalTypeRecord[OriginalConstructors.TypeCount];
+            // 모든 타입 번호에 빈 타입 레코드를 채운다
             for (int i = 0; i < Types.Length; i++)
             {
                 Types[i] = new OriginalTypeRecord();
@@ -313,6 +314,7 @@ public sealed class X86RawAssetPostPopTests
             // 사용하지 않는 필드 구별을 위해 stale 바이트로 채우고 신전 16바이트만 지운다
             var records = new byte[9 * Stride];
             Array.Fill(records, (byte)0xa5);
+            // 9개 소유자 각각의 신전 레코드 16바이트를 지운다
             for (int owner = 0; owner < 9; owner++)
             {
                 Array.Clear(records, owner * Stride + Temple, 16);
@@ -408,6 +410,7 @@ public sealed class X86RawAssetPostPopTests
             // 사용하지 않는 필드 구별을 위해 stale 바이트로 채우고 신전 16바이트만 입력으로 둔다
             var records = new byte[9 * Stride];
             Array.Fill(records, (byte)0xa5);
+            // 9개 소유자 각각의 신전 레코드에 입력 값을 채운다
             for (int owner = 0; owner < 9; owner++)
             {
                 Put(records, owner * Stride + Temple, X86Fixture.UInt(row[8]));

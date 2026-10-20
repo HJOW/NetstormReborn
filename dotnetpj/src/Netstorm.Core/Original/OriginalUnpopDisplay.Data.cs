@@ -3,6 +3,7 @@
 // 10.78 부분만 옮겼다. 결과는 원본 기계어 기대값 unpop-vtables.tsv 로 검사한다 (W02 Unpop 조각, 2026-10-16).
 namespace Netstorm.Core.Original;
 
+/// <summary>Unpop 의 공통 표시 경로를 쓰는 가상 표 주소와 지원 비트(10.78)를 담는 데이터 전용 클래스다. RawUnpop 이 Supports 조회에 쓴다. 값은 이 도구가 만들며 직접 고치지 않는다. (W02 Unpop 조각 2026-10-16 생성, 2026-10-20 summary 추가)</summary>
 public static partial class OriginalUnpopDisplay
 {
     /// <summary>공통 표시 경로(update88/update8c)를 쓰는 가상 표 83개(10.78)와 지원 비트(1 일반, 2 소용돌이 경로). 호스트 포인터가 아니라 클래스 식별 값이다.</summary>

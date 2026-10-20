@@ -764,6 +764,7 @@ public sealed class RawAssetPostPop
                 {
                     int other = (int)current;
                     uint next = current + 1;
+                    // 다음 번호부터 해제 슬롯을 건너뛰어 살아 있는 다음 번호를 찾는다(없으면 풀 끝)
                     while (next < (uint)_pool.Capacity && (_pool.Slot((int)next)[RawSidPool.StateOffset] & 1) != 0)
                     {
                         next++;

@@ -55,6 +55,7 @@ public sealed class X86RawOwnerTests
         string[] lists = row[10].Split('|');
         Assert.Equal(OwnerCount, lists.Length);
         var stale = new List<uint>[OwnerCount];
+        // 소유자마다 기대 목록 문자열을 나눠 stale 배열을 만든다
         for (int owner = 0; owner < OwnerCount; owner++)
         {
             string[] parts = lists[owner].Split(':');
@@ -64,6 +65,7 @@ public sealed class X86RawOwnerTests
             RawPostPopList list = book.OwnerFactories[owner];
             list.Entries = new uint[capacity];
             stale[owner] = [];
+            // 목록 슬롯마다 기대 값을 읽어 용량 안에서만 채운다
             for (int i = 0; i < ListSlots; i++)
             {
                 uint value = X86Fixture.UInt(entries[i]);
@@ -83,6 +85,7 @@ public sealed class X86RawOwnerTests
         if (!typeSets.TryGetValue(genus, out OriginalTypeRecord[]? cached))
         {
             var types = new OriginalTypeRecord[OriginalConstructors.TypeCount];
+            // 타입 번호 전체에 빈 타입 레코드를 채운다
             for (int i = 0; i < types.Length; i++)
             {
                 types[i] = new OriginalTypeRecord();
@@ -96,6 +99,7 @@ public sealed class X86RawOwnerTests
         holder.Set(Target, X86Fixture.UInt(row[9]));
         // 결과: 소유자 바이트·소유자마다 "개수:값 나열(배열 전체+stale)"·슬롯 Adler-32
         var actual = new List<string>();
+        // 소유자마다 최종 목록 전체(배열 + stale)를 모아 기대 문자열과 비교할 준비를 한다
         for (int owner = 0; owner < OwnerCount; owner++)
         {
             RawPostPopList list = book.OwnerFactories[owner];

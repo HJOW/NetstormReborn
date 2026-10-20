@@ -81,11 +81,13 @@ public sealed class X86RawNeighborTests
             var hash = new RawSquidHash();
             var spots = new byte[RawSquidHash.WorldCells * RawSquidHash.WorldCells];
             var types = new OriginalTypeRecord[OriginalConstructors.TypeCount];
+            // 모든 타입 번호에 빈 타입 레코드를 채운다
             for (int i = 0; i < types.Length; i++)
             {
                 types[i] = new OriginalTypeRecord();
             }
             var frames = new List<IReadOnlyList<FrameCode>>();
+            // 모든 타입 번호마다 빈 프레임 목록을 넣는다
             for (int i = 0; i < types.Length; i++)
             {
                 frames.Add([]);

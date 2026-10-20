@@ -56,16 +56,19 @@ public sealed class RawNeighborTests
         var hash = new RawSquidHash();
         var spots = new byte[RawSquidHash.WorldCells * RawSquidHash.WorldCells];
         var types = new OriginalTypeRecord[OriginalConstructors.TypeCount];
+        // 모든 타입 번호에 빈 타입 레코드를 채운다
         for (int i = 0; i < types.Length; i++)
         {
             types[i] = new OriginalTypeRecord();
         }
         var frames = new List<IReadOnlyList<FrameCode>>();
+        // 모든 타입 번호마다 프레임 목록을 하나씩 넣는다
         for (int i = 0; i < types.Length; i++)
         {
             frames.Add(Frames());
         }
         hash.Reset();
+        // 기준 번호(Source)와 60번 슬롯을 차례로 비운다
         foreach (int sid in new[] { Source, 60 })
         {
             pool.RawSlot(sid).Clear();

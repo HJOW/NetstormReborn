@@ -214,6 +214,7 @@ public sealed class RawAssetPostPopTests
             (0x00509470, hooks => hooks.SunFencePostPop = null, hooks => hooks.SunFencePostPop is null),
             (0x0050dc30, hooks => hooks.NuggetPostPop = null, hooks => hooks.NuggetPostPop is null),
         ];
+        // 자산 후처리 가상 표 경우를 하나씩 꺼내, 경우마다 새 풀과 타입 표를 만든다
         foreach ((uint vtable, Action<AssetPostPopHooks> clear, Func<AssetPostPopHooks, bool> missing) in cases)
         {
             var pool = Pool();
@@ -251,6 +252,7 @@ public sealed class RawAssetPostPopTests
     [Fact]
     public void VortexBossDestroysOnlySameRegion()
     {
+        // 검사할 섬 번호(99 는 다른 섬, 3 은 같은 섬)를 차례로 돌며 같은 시나리오를 되풀이한다
         foreach (int region in new[] { 99, 3 })
         {
             var pool = Pool();

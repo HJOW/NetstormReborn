@@ -51,6 +51,7 @@ def render() -> str:
         "// 10.78 부분만 옮겼다. 결과는 원본 기계어 기대값 pop-vtables.tsv 로 검사한다 (W02 Pop 조각, 2026-10-20).",
         "namespace Netstorm.Core.Original;",
         "",
+        "/// <summary>Pop 의 표시·파생 효과를 지원하는 가상 표 주소(10.78)를 담는 데이터 전용 클래스다. RawPop·RawPostPop 이 Supports 조회에 쓴다. 값은 이 도구가 만들며 직접 고치지 않는다. (W02 Pop 조각 2026-10-20 생성·summary 추가)</summary>",
         "public static partial class OriginalPopDisplay",
         "{",
         f"    /// <summary>Pop 의 파생 firstPop/postPop 효과를 지원하는 가상 표 {PATCH_ENTRY_COUNT}개(10.78). 호스트 포인터가 아니라 클래스 식별 값이다.</summary>",

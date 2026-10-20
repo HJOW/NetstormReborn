@@ -31,6 +31,7 @@ public sealed class RawBuildingSpaceTests
         }
         var hash = new RawSquidHash();
         var types = new OriginalTypeRecord[OriginalConstructors.TypeCount];
+        // 모든 타입 번호에 빈 타입 레코드를 채운다
         for (int i = 0; i < types.Length; i++)
         {
             types[i] = new OriginalTypeRecord();

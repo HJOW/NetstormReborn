@@ -410,6 +410,7 @@ public sealed class X86RawPostPopTests
                     // 일반 목록의 첫 항목은 현재 SID, 나머지는 합성 stale 값이다
                     foreach (RawPostPopList list in new[] { state.Providers, state.Factories })
                     {
+                        // 목록 항목을 순서대로 돌며 첫 항목에는 현재 SID, 나머지에는 합성 stale 값을 넣는다
                         for (int i = 0; i < list.Entries.Length; i++)
                         {
                             list.Entries[i] = i == 0 ? (uint)sid : 0x60000000U + (uint)i;
@@ -421,6 +422,7 @@ public sealed class X86RawPostPopTests
                         RawPostPopList list = state.OwnerFactories[owner];
                         list.Entries = new uint[oc];
                         list.Count = Math.Min(initial, oc);
+                        // 목록 항목 전부에 소유자와 번호로 정한 합성 값을 넣는다
                         for (int i = 0; i < list.Entries.Length; i++)
                         {
                             list.Entries[i] = 0x70000000U + (uint)(owner * 100 + i);

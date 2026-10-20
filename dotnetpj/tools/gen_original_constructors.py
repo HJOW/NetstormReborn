@@ -95,6 +95,7 @@ def render() -> str:
         "// 10.78 부분만 옮겼다. 결과는 원본 기계어 기대값 constructors-x86.tsv·derived-x86.tsv 로 검사한다 (W02 첫 조각, 2026-10-16).",
         "namespace Netstorm.Core.Original;",
         "",
+        "/// <summary>타입 번호별 생성자 원본 주소와 생성 절차(10.78)를 담는 데이터 전용 클래스다. RawSquidFactory 가 Recipe·BaseVtable 로 읽는다. 값은 이 도구가 만들며 직접 고치지 않는다. (W02 첫 조각 2026-10-16 생성, 2026-10-20 summary 추가)</summary>",
         "public static partial class OriginalConstructors",
         "{",
         f"    /// <summary>타입 번호 0~{PATCH_TYPE_COUNT - 1} 의 생성자 원본 주소(10.78). 0 은 기본 Squid 생성이다. 호스트 함수 주소로 쓰지 않는 식별 값이다.</summary>",
