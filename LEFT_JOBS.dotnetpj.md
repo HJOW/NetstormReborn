@@ -1,3 +1,14 @@
+## 2026-10-20 완료: W02 열한째 조각 — 다리 사건과 칸 변환
+
+- [x] 사용자 요청("AGENTS.md 와 LEFT_JOBS.dotnetpj.md 를 다시 읽고, dotnetpj 서브프로젝트 다음 작업을 진행해 줘.")으로 직전 절이 정한 다음 시작점, 곧 다리 사건 경유 재생(`RawBridgeEvents`)을 수행했다. `cpppj/`·공통 `LEFT_JOBS.md`는 수정하지 않았다. 현재 PC **VM-W11-Codex**는 공통 기록의 마지막 정밀 디컴파일 PC(**VM-W11-Codex / 2026-10-20**)와 같으나 **디컴파일 산출물을 읽지 않았고**, 새 디컴파일·원본 관찰·원본/클론 게임·창 실행은 없다. cpppj 커밋 소스·원본 fixture에만 근거했다. 마지막 디컴파일 PC 기록은 그대로다. 상세·근거 표·경계는 [원본 월드 코어 W02 다리 사건 조각](docs/dotnet-original-core-bridgeevent-20261020.md).
+- [x] **동기화 먼저:** 시작할 때 반영 커밋은 `ae6649e9`, HEAD는 `0abdf33d`(당일 `20261020-17`)였다. 사이 dotnetpj 커밋 2건(문서 점검·주석 보정과 그 인수인계)은 cpppj 변경이 없고, 이 조각은 이미 등록된 `neighbor-x86.tsv`를 다시 써서 새 fixture 등록이 없다(연결 fixture **32**개 유지). 마지막에 `--update --reflect HEAD`로 반영 커밋을 `ae6649e9`→**`0abdf33d`** 로 올렸다([계획 7절 7번](docs/dotnet-cpp-port-plan-20261016.md#7-cpppj-진행을-따라가는-절차-다른-ai가-cpppj를-계속-진행-중)).
+- [x] **구현(`dotnetpj/src/Netstorm.Core/Original/`):** `RawBridgeEvents`(사건 처리 10.78 — 0x2691 자기 삭제·0x2692 칸 변환·그 밖은 payload, 칸 변환의 임시 프레임 이웃 탐색·복구·수명·알림·하드 중단·새 객체 복사·Pop), `BridgeEventState`·`BridgeEventHooks`(7개). 기준 판본은 10.78 뿐이다.
+- [x] **검증:** 전체 Release 경고 0·오류 0(`--no-incremental` 강제 전체 빌드), 단위 **1,195개 통과**(Assets 363 + Core 832; 이번 +13). `neighbor-x86.tsv` Event 10.78 몫 **288회**(반환 비트·효과 순서·다리와 새 객체 슬롯 50바이트)가 전부 일치했다.
+- [x] **변이 확인:** 구현 20곳을 하나씩 망가뜨려 19곳이 실패로 잡혔다. 처음 잡히지 않은 2곳(형식 타입·프레임 범위)은 예외 종류·`ParamName`을 명시하도록 검사를 강화해 잡았다. 남은 1곳(ftol 하위 절삭)은 C# `(uint)` 변환이 이미 64비트 절삭 뒤 하위 DWORD와 같아 관측 동작이 같다. 소스는 모두 원복했고 강제 전체 빌드로 잔재 없음을 확인했다.
+- [ ] **하지 않은 것(경계):** `MakeBridgeRegularHandler`(부모 가상 표 분배 — C# Regular 처리기 타입이 아직 없다), Graph 계열, CD 10.72·10.37, 실제 세션 연결, 파생 분배 허브. 이 조각은 L1 모듈 단계이며 L2 이상으로 합산하지 않는다.
+- [ ] **다음 조각:** Graph 계열(`graph`·`rawgraph`·`regiongraph` 등) → 실제 세션 연결 준비. 시작할 때 `python dotnetpj/tools/cpp_sync.py`를 먼저 실행하고 쓸 fixture를 `--update --add`로 등록한다.
+- [x] 인수인계 뒤 **`20261020-18 DN 원본 월드 코어의 다리 사건과 칸 변환을 원본 10.78 행 288회로 검증`** 으로 로컬 커밋한다. 원격 push는 하지 않는다.
+
 ## 2026-10-20 완료: dotnetpj 문서 규칙 점검·주석 보정 (`VM-W11-Codex`)
 
 - [x] 사용자 요청("AGENTS.md 와 LEFT_JOBS.dotnetpj.md 를 읽고 dotnetpj 작업이 문서대로 진행됐는지 점검하고, 필요하면 수정해 줘")에 따라 두 문서의 규칙과 W01 이후 dotnetpj 커밋(`8ff7a962~1`~`8a260d96`)을 대조했다. 현재 PC **VM-W11-Codex**(허용 시스템 2)는 마지막 정밀 디컴파일 PC(**VM-W11-Codex / 2026-10-20**)와 같다. 게임·창 실행, 원본·CD·AGENTS 수정은 없고 `cpppj/`는 건드리지 않았다.
