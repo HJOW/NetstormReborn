@@ -13,7 +13,7 @@
     "cpppj/src/o/CMakeLists.txt": "8fd2012644816c088a0283bde3e14ed3d9c3cff364d38c4c1bd5f4e6eaa81bd4",
     "cpppj/src/client/RawCampaignSession.cpp": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
     "cpppj/tests/GunBlockerTests.cpp": "f6eac38c6f829b88e2de0395982035ec98203fd0b50c7c4a0fff0a9647e6b93a",
-    "cpppj/tests/CMakeLists.txt": "f026e630d4049d27ad5eb86171a7c500e136d92207d539a9f8f91b8d5cb5722c",
+    "cpppj/tests/CMakeLists.txt": "c26ffcb3ed45e56f64fc832a79a0b182ea24e5cc3b9358dcaa9e9c3dc82fd68d",
     "cpppj/tests/fixtures/gun-blocker-x86.tsv": "326003cc70d664a46313cf2090586a0da3e73390b1a242342db2ff4929b89898",
     "cpppj/tests/fixtures/gun-blocker-boundary-x86.tsv": "cfa8f3ef18b6a7cee79f2f79519e50e8e3951beb6d895709c5fa53d8be381623",
     "cpppj/tests/fixtures/tutorial-five-blocker-ui-input.tsv": "a2b30d1b5672a46047addb5ae67ddd64343f780bf0c3356f0b29bc53efb696e4",
@@ -560,6 +560,20 @@
           "group": "/sources",
           "previous": "bf3f56f65438224c795ef443e0a3df5c7fdd1b7a5c9c2284e95300e464716c52",
           "current": "f026e630d4049d27ad5eb86171a7c500e136d92207d539a9f8f91b8d5cb5722c"
+        }
+      ]
+    },
+    {
+      "unit": "249",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "원문 실패/중단 화면의 재시작과 Abort 확인/Leave2 예약을 같은 원본 parser·문자열 고리·입력 큐·기존 재시작/종료 수신에 연결한다. 같은 시작 코드의 LF/CRLF 현재 핀만 갱신하고 과거 files/실행/원본/기대값을 보존한다. 제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "f026e630d4049d27ad5eb86171a7c500e136d92207d539a9f8f91b8d5cb5722c",
+          "current": "c26ffcb3ed45e56f64fc832a79a0b182ea24e5cc3b9358dcaa9e9c3dc82fd68d"
         }
       ]
     }

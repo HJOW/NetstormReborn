@@ -10,7 +10,7 @@
   "currentSources": {
     ".gitattributes": "3e8d869648cde0415d1a91e9b22d5a7ed7e5c0585923a189bfd37aa33229f3a8",
     "cpppj/src/CMakeLists.txt": "8834917133d33fda6dcd145dd64a93ee38ee014d25fede2eff5575b996df5847",
-    "cpppj/tests/CMakeLists.txt": "f026e630d4049d27ad5eb86171a7c500e136d92207d539a9f8f91b8d5cb5722c",
+    "cpppj/tests/CMakeLists.txt": "c26ffcb3ed45e56f64fc832a79a0b182ea24e5cc3b9358dcaa9e9c3dc82fd68d",
     "cpppj/src/o/RawContentPreviewProcess.cpp": "6be7f8997e59d046856a9c7d44d6882360d4b4cd510caba12b515b92554bc6c1",
     "cpppj/src/o/RawContentPreviewProcess.h": "e7690b3b77969d7057b2373baf42ce33367ace295f75a0aa8ee48f56aa150699",
     "cpppj/tests/ContentPreviewProcessTests.cpp": "99eb74565511fd1740a57a87414edc6e601cf8a61603a2f36dfde90bf294172c",
@@ -1224,6 +1224,20 @@
           "group": "/currentSources",
           "previous": "bf3f56f65438224c795ef443e0a3df5c7fdd1b7a5c9c2284e95300e464716c52",
           "current": "f026e630d4049d27ad5eb86171a7c500e136d92207d539a9f8f91b8d5cb5722c"
+        }
+      ]
+    },
+    {
+      "unit": "249",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "원문 실패/중단 화면의 재시작과 Abort 확인/Leave2 예약을 같은 원본 parser·문자열 고리·입력 큐·기존 재시작/종료 수신에 연결한다. 같은 시작 코드의 LF/CRLF 현재 핀만 갱신하고 과거 files/실행/원본/기대값을 보존한다. 제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/currentSources",
+          "previous": "f026e630d4049d27ad5eb86171a7c500e136d92207d539a9f8f91b8d5cb5722c",
+          "current": "c26ffcb3ed45e56f64fc832a79a0b182ea24e5cc3b9358dcaa9e9c3dc82fd68d"
         }
       ]
     }

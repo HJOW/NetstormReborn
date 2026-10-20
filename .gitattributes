@@ -1410,3 +1410,10 @@ tools/cpp_mission_common_audit.py text eol=lf
 # 이번에 수정한 기존 CRLF 파일도 현재 소스 핀과 줄 끝을 고정한다.
 cpppj/src/client/UberGump.h text eol=lf
 cpppj/tests/CampaignMissionStartTests.cpp text eol=lf
+# 실패/중단 화면의 원본 제어 명령과 최초 관측 근거를 보존한다.
+cpppj/tests/MissionControlTests.cpp text eol=lf
+cpppj/tests/fixtures/mission-abort-x86.tsv text eol=lf
+cpppj/mission-abort-native.json text eol=lf
+cpppj/mission-abort-session.json text eol=lf
+tools/decomp_mission_abort.py text eol=lf
+tools/cpp_mission_abort_audit.py text eol=lf

@@ -109,7 +109,7 @@ std::string FontBytes(std::string_view text) {
 // 현재 단계에서 실제 처리 경로가 있는 메뉴 명령만 활성화한다.
 bool Supported(std::string_view command) {
     const auto name = o::AsciiLower(command);
-    return name == "tell" || name == "missionbegin" || name == "startdemo" || name == "donothing" || name == "missionabort" || name == "leavebattle" ||
+    return MissionControlScriptCode(name)!=0xffffffffU || name == "tell" || name == "missionbegin" || name == "startdemo" || name == "donothing" ||
         name == "quit" || name == "menu" || name == "toggle" || name == "resolution" || name == "volume" || name == "resume";
 }
 // 자동 검사 보고에는 개행/탭을 제거하여 한 항목 한 줄을 유지한다.
@@ -260,7 +260,7 @@ bool UberGump::TryTell(std::string target,bool briefing) {
     if (!body) return false;
     const auto protectedBody = Replace(*body, "{cur.file}", "__CURRENT_FILE__");
     ScriptCommandHooks commands; // 현재복원된실제명령을원본ID로조회하고미등록은원본처럼진단뒤거부한다.
-    commands.lookup=[](std::string_view name) { const auto lower=o::AsciiLower(name);return lower=="config" ? kScriptConfig : lower=="warning" ? kScriptWarning : 0xffffffffU; };
+    commands.lookup=[](std::string_view name) { const auto lower=o::AsciiLower(name);return lower=="config" ? kScriptConfig : lower=="warning" ? kScriptWarning : MissionControlScriptCode(name); };
     commands.unknown=[](std::string_view name) { std::clog<<"스크립트 명령 미연결: "<<name<<'\n'; };
     HtmlTextParserState htmlState;HtmlTextParserHooks htmlHooks;std::string background; // 원본처럼새페이지는shown=1로시작하고두번의HTML순회에서같은상태를공유한다.
     htmlHooks.background=[&](HtmlTextParserState&,std::string_view name) { background=name; }; // 두HTML순회가선택한실제배경이름을현재페이지표시경로에보관한다.
@@ -439,6 +439,7 @@ void UberGump::OpenObjectMenu(o::SquidId id,const InputEvent& event) {
 }
 // 같은 실제 큐의 원본 정수 명령과 물리 사건을 분배한다.
 void UberGump::Event(InputEvent event) {
+    if (DispatchMissionAbort(event,client_.Input(),[this](std::string_view section) { Tell(std::string(section)); })) return;
     if ((event.code&0x03ffffffU)==kMissionReloadCommand) {
         if (!mission_ || !missionRuntime_) throw std::logic_error("현재 미션 없는 Reload의 원본 선행 조건 위반");
         const auto request=CaptureMissionReload(mission_->Name(),missionRuntime_->mode64,missionRuntime_->gate.demo); // 기존 Script/월드가 살아 있을 때 이름/필드를 소유 복사한다.
@@ -449,6 +450,10 @@ void UberGump::Event(InputEvent event) {
         if ((event.code&0x83ffffffU)==(0x73U<<InputCode::kVirtualKeyShift)) missionEvent.code=0x020000aeU;
         if (missionRuntime_->tutorial->Event(missionEvent)) return;
         if (QueueMissionFirstKey(event,client_.Input(),true)) return; // 모든 연결된 Tutorial 형식은 큐 끝의 First가 현재 안내/자기 정지를 다시 사용한다.
+    }
+    if ((event.code&0x03ffffffU)==kLeaveBattleCommand) {
+        if (event.code&InputCode::kRelease) return; // Guide가 소비한 Abort와 달리 실제 Leave는 원본 일반 입력의 key-up 거부 뒤에 실행한다.
+        MainMenu();if (client_.Audio()) client_.Audio()->StartScene(false);return; // 기존 단일 플레이 종료·메뉴 음악 경로를 원본 큐 수신에 연결한다.
     }
     if (objectMenus_ && objectMenus_->Command(event)) { rebuild_=true;return; }
     const auto commandCode=event.code&0x03ffffffU; // 원본명령분배와같이최상위입력플래그만제거한다.
@@ -552,17 +557,12 @@ void UberGump::PaletteChanged() {
 }
 // 선택한 원본 명령의 작은 부분집합. 지원하지 않는 항목은 활성화하지 않는다.
 void UberGump::Execute(const DialogAction& action) {
+    if (QueueMissionControlAction(action.command,action.argument,client_.Input(),scriptStrings_)) return;
     const auto command = o::AsciiLower(action.command);
     if (command == "quit") { quit_ = true; return; }
     if (command == "tell") { Tell(action.argument, state_.phase == ClientPhase::Briefing); return; }
     if (command == "missionbegin") { BeginMission(action.argument); return; }
     if (command == "startdemo") { BeginMission(action.argument,1);return; }
-    if (command == "missionabort" || command == "leavebattle") {
-        MainMenu();
-        // 전투를 떠나면 메뉴 곡으로 돌아간다. 원본은 004b2df0(전투 값이 남은 채 Start)과 결과 화면 종료 004b7453(ser22.mus 요청)으로 나누어 하며, 클론은 하나로 합쳤다.
-        if (client_.Audio()) client_.Audio()->StartScene(false);
-        return;
-    }
     if (command == "donothing" || command == "resume") {
         if (state_.phase == ClientPhase::Briefing) AdvanceBriefing(); else Tell("Blank"); return;
     }

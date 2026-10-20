@@ -1,5 +1,17 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-21 단위249 연결 완료: 실패/중단 화면의 재시작·확인·종료 큐
+
+- [x] 같은 goal을 이어 진행했다. 시작 HEAD `29d4682f`, 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-20**가 일치한다. AGENTS와 양 인수인계를 다시 읽었고 새 디컴파일·원본/CD·AGENTS 변경은 없다. 직전 턴은 단위248 공통 프레임/데모·기록·커밋을 마친 진행 턴이다. 다른 세션의 DN/README 변경·커밋은 포함하지 않는다.
+- [x] 보호 `TryAgain`/`ABORT`의 **Replay Mission→MissionRestart/0** 버튼이 지원 목록/분배에 없어 비활성이었다. 세 제어 이름의 원본 코드 조회를 공유해 버튼과 inline 명령/Execute를 기존 parser·80칸 문자열 고리·40칸 큐에 연결했다. 실제 큐 수신은 기존 재시작/종료 경로를 사용한다. 음수/빈 인자를 별도 숫자 parser로 바꾸지 않는다.
+- [x] `MissionAbort`의 즉시 MainMenu 우회를 제거했다. 원본 Guide처럼 상위 플래그 제거 후 **세 번째 DWORD/y0**이면 실제 `ABORT` Tell, 비제로면 **LeaveBattle020000c5/2/2**를 예약하고 소비한다. 첫 x는 확인 분기에 쓰지 않는다. 실제 Leave는 일반 입력의 release 거부 뒤에 기존 단일 플레이 종료/메뉴 음악을 실행한다. 큐 포화 시 새 명령 폐기도 유지한다.
+- [x] 제품 작성 전에 실제 Guide Abort/미처리 **960입력**과 실제 제어 이름 조회/토큰/고리/큐/CRT **42입력**, **총1002정상 반환·580682명령·명령 큐426회**를 독립 관측했다. Tell/하위 가상 입력·TLS/할당/로그는 명시 경계다. 게임/OS/실제 UI/월드 수명 실행은 없다. 과거 부분 export 부재의 준비 실패 후 현재 PC 전체 정밀 표의 같은 함수 범위를 사용했으며 디컴파일 자료는 바꾸지 않았다.
+- [x] 최초 원문/도구/보고서를 `extracted/mission-abort-20261021-first-capture/`에 제품 작성 전에 보존했다. 기존 스크립트262/First278/공통108·328 기대값도 유지한다. 새 검사2개는 전체1002행의 반환/활성 큐/외부 효과·문자열 수명과 보호 TryAgain/ABORT 본문의 현재 HTML 메타 parser→실제 명령 큐다. 전체 Gump 클릭/글자 표시/실제 재시작·종료 검사는 아니다.
+- [x] **C++검사는 작성·컴파일만 했고 실행하지 않았다.** 전체 Release는 **경고0·오류0·종료0**, 로그 `extracted/cpp-mission-abort-20261021-build.log`다. 실제 게임/C++검사/CTest/전체 회귀는 사용자 지시대로 후속 통합 실제 플레이에 이월한다.
+- [x] 상세는 [작업 기록](docs/exe/cpp-mission-abort-20261021.md), `cpppj/mission-abort-native.json`·`mission-abort-session.json`, `tools/decomp_mission_abort.py --verify`·`tools/cpp_mission_abort_audit.py --verify`다. 현재 소스 핀만 후속 이력으로 갱신하고 전체 JSON을 시작 커밋으로 역변환해 과거 files/원본/fixture/실행·바이너리/기존 이력을 보존한다. 보호 tell 본문의 SHA도 구별한다. 기존 RawTutorialLater의 CRLF/LF 역사 핀 차이는 새 통과로 기록하지 않는다.
+- [x] 최종 현재 핀은 **100보고서·125항목**이며 전체 JSON 역변환이 시작 커밋과 같다. 이번 원본/연결 감사와 직전 공통 미션 감사,변경 검사가 모두 종료0이다. 인수인계 후 날짜/CP 규칙으로 로컬 커밋하며 원격 push하지 않는다.
+- [ ] **다음:** Guide 전체0..6 수명/전환·Begin/Fork/Finish와 다른 키, Review Knowledge/ShowTechnology·중첩 Gump,전투 종료 State/네트워크 세부다. 기존 State/단일 플레이 teardown 어댑터는 남아 있다. 실제 실패→재시작/계속/중단과11미션 자연 완주·전략AI·지형 효과·포획/Drop·제단/희생·Dude 자연 대피/생성·외관/음향 동일성,새 검사 실행을 통합 검증에서 확인한다. 전체 goal은 **active/미완료**다.
+
 ## 2026-10-21 단위248 연결 완료: 캠페인·데모 공통 프레임·F8·재시작 예약
 
 - [x] 같은 goal을 이어 진행했다. 시작 HEAD `62213f9f`, 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-20**가 일치한다. AGENTS와 양 인수인계를 다시 읽었고 새 디컴파일·원본/CD·AGENTS 변경은 없다. 직전 턴은 단위247의 F8/First·기록·커밋을 마친 진행 턴이다. 다른 세션의 DN/README 변경·커밋은 포함하지 않는다.
@@ -10,7 +22,8 @@
 - [x] 새 검사2개는 독립108입력 선택 필드/이름과 실제 두 캠페인·세 데모의 Script/월드/Start/공통 판정·10호출 안내/F8/7호출 재개·데모 큐/중복 방지다. 장치/UI/시각은 명시 외부 입력이며 전체 Kernel/전략AI/실제 Client 재시작·완주 검사가 아니다. **C++검사는 작성·컴파일만 했고 실행하지 않았다.** 최초/최종 전체 Release는 모두 **경고0·오류0·종료0**이다. 커밋 전 검사의 CRLF 차이는 기존 UberGump.h/Start 검사 파일의 줄 내용 동일성을 확인한 뒤 LF 속성으로 고정했다. 최종 로그 `extracted/cpp-mission-common-20261021-build2.log`를 보존한다. 실제 게임/C++검사/CTest/전체 회귀는 사용자 지시대로 통합 검증에 이월한다.
 - [x] 상세는 [작업 기록](docs/exe/cpp-mission-common-20261021.md), `cpppj/mission-common-native.json`·`mission-common-session.json`, `tools/decomp_mission_common.py --verify`·`tools/cpp_mission_common_audit.py --verify`다. 현재 핀만 후속 이력으로 바꾸고 전체 JSON을 시작 커밋으로 역변환해 과거 files/원본/fixture/실행·바이너리/기존 이력을 보존한다. 보호11개 Header/섹션/SHA도 새 기록에 남긴다. 직전 기존 튜토리얼 감사의 CRLF/LF 핀 차이는 그대로 구별하며 새 통과로 기록하지 않는다.
 - [x] 최종 현재 핀은 **100보고서·137항목**이며 전체 JSON 역변환이 시작 커밋과 일치한다. LF 정리 전 이번 이력만 검증해 되돌린 뒤 최종 소스/빌드로 기록을 다시 생성했다. 이번 원본/공통 연결 감사와 직전 First 연결 감사, diff 검사가 모두 종료0이다. 기존 과거 자료와 새 제품 실행 결과를 섞지 않는다. 인수인계 후 날짜/CP 규칙으로 로컬 커밋하며 push하지 않는다.
-- [ ] **다음:** Guide 전체0..6 수명/전환·Begin/Abort/Fork/Finish 및 승패 후속 명령/다른 키·중첩 창이다. 실제11미션 자연 진행/완주·F8/데모 재시작·전략AI·지형 Devastation·포획/Drop·제단/희생·Dude 자연 대피/생성·외관/음향 동일성과 이전 새 검사 실행이 남는다. 현재 수동 진입 순번을 임의4로 고치지 않았다. 전체 goal은 **active/미완료**다.
+- [x] **단위249에서 연결 완료:** 원문 실패/중단의 MissionRestart 버튼과 Abort 확인0/Leave2 큐,실제 기존 재시작/종료 수신이다. 새 검사는 컴파일만 했으며 전체 State/teardown 복원과 실제 플레이 확인은 남는다.
+- [ ] **남는 경계:** Guide 전체0..6 수명/전환·Begin/Fork/Finish 및 승패 후속 명령/다른 키·중첩 창이다. 실제11미션 자연 진행/완주·F8/데모 재시작·전략AI·지형 Devastation·포획/Drop·제단/희생·Dude 자연 대피/생성·외관/음향 동일성과 이전 새 검사 실행이 남는다. 현재 수동 진입 순번을 임의4로 고치지 않았다. 전체 goal은 **active/미완료**다.
 
 ## 2026-10-21 단위247 구현 완료: Early1~6 F8·First 현재 안내 재표시
 

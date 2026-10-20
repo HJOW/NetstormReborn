@@ -16,7 +16,7 @@
     "cpppj/src/o/RawPathRuntime.cpp": "2ecd4a9b2fdc3105fb6a4ed0a9c339a37e9c5fb8cbf1f53af41687d94cdaf5aa",
     "cpppj/src/o/RawPathRuntime.h": "234b6690b85006a74d5df74ceaeea027e47166006764e4e7f141de817c3e398d",
     "cpppj/src/o/RawPathStart.cpp": "a852f0c16cefc10b11e371510999e4d3836c83681adcbe2817feac570dec6d98",
-    "cpppj/tests/CMakeLists.txt": "f026e630d4049d27ad5eb86171a7c500e136d92207d539a9f8f91b8d5cb5722c",
+    "cpppj/tests/CMakeLists.txt": "c26ffcb3ed45e56f64fc832a79a0b182ea24e5cc3b9358dcaa9e9c3dc82fd68d",
     "cpppj/tests/CampaignSessionTests.cpp": "6a6d54fd15eb24c0609492756880c774120f855138441820a536ea5bd73ee4f0",
     "tools/cpp_dude_path_audit.py": "7037a22bae407e1724b69a1178534b18bfdc11cd71d42747e2a2debfd431ddfc",
     "tools/decomp_dude_path.py": "0ec52a476b4a33bec8587b3f36399e66ffe21e5b32d1ddce00ab3538e28876cf",
@@ -3758,6 +3758,20 @@
           "group": "/sources",
           "previous": "bf3f56f65438224c795ef443e0a3df5c7fdd1b7a5c9c2284e95300e464716c52",
           "current": "f026e630d4049d27ad5eb86171a7c500e136d92207d539a9f8f91b8d5cb5722c"
+        }
+      ]
+    },
+    {
+      "unit": "249",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "원문 실패/중단 화면의 재시작과 Abort 확인/Leave2 예약을 같은 원본 parser·문자열 고리·입력 큐·기존 재시작/종료 수신에 연결한다. 같은 시작 코드의 LF/CRLF 현재 핀만 갱신하고 과거 files/실행/원본/기대값을 보존한다. 제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "f026e630d4049d27ad5eb86171a7c500e136d92207d539a9f8f91b8d5cb5722c",
+          "current": "c26ffcb3ed45e56f64fc832a79a0b182ea24e5cc3b9358dcaa9e9c3dc82fd68d"
         }
       ]
     }

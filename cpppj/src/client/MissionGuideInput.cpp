@@ -1,10 +1,34 @@
 // 현재 안내의 원본 문자열 바이트·최종 DWORD 쓰기와 First의 즉시/예약 경계를 보존한다.
 #include "client/MissionGuideInput.h"
 #include "o/ConfigInterface.h"
+#include "o/OriginalText.h"
 #include <bit>
 #include <stdexcept>
 
 namespace netstorm::client {
+// 원본 이름 표에서 독립 관측한 실제 코드만 공급한다. 다른 명령을 임의 별칭으로 바꾸지 않는다.
+std::uint32_t MissionControlScriptCode(std::string_view name) {
+    const auto lower=o::AsciiLower(name); // 원본 stricmp의 ASCII 대소문자 비교 경계다.
+    if (lower=="missionrestart") return kMissionReloadCommand;
+    if (lower=="missionabort") return kMissionAbortCommand;
+    if (lower=="leavebattle") return kLeaveBattleCommand;
+    return 0xffffffffU;
+}
+// 이미 복원한 원본 parser를 공유하므로 부호/빈 문자열을 새로운 숫자 규칙으로 해석하지 않는다.
+bool QueueMissionControlAction(std::string_view name,std::string_view argument,InputQueue& queue,ScriptStringRing& strings) {
+    if (MissionControlScriptCode(name)==0xffffffffU) return false;
+    const auto source=std::string(name)+','+std::string(argument); // 실제 명령 parser가 받을 원본 두 필드다.
+    QueueScriptCommand(source,queue,strings,{MissionControlScriptCode,[](std::string_view) { throw std::logic_error("확인한 미션 제어 이름의 조회 실패"); }});
+    return true;
+}
+// 상위 입력 플래그를 먼저 제거하므로 명시 Abort의 release 표시는 이 분기에서 제외 조건이 아니다.
+bool DispatchMissionAbort(const InputEvent& event,InputQueue& queue,const std::function<void(std::string_view)>& tell) {
+    if ((event.code&0x03ffffffU)!=kMissionAbortCommand) return false;
+    if (event.y==0) {
+        if (!tell) throw std::logic_error("미션 중단 확인의 실제 ABORT Tell 연결 누락");tell("ABORT");
+    } else queue.PushCommand(kLeaveBattleCommand,2,2);
+    return true;
+}
 // 재시작 필드는 원본의 test/set 분기와 같이 비제로 전체를1로 만든다.
 MissionReloadRequest CaptureMissionReload(std::string_view name,std::uint32_t mode,std::uint32_t demo) {
     return {std::string(name),mode ? 1U : 0U,demo ? 1U : 0U};

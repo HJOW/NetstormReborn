@@ -1,0 +1,21 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-20",
+  "abortInputs": 960,
+  "scriptInputs": 42,
+  "normalReturns": 1002,
+  "instructions": 580682,
+  "actualQueueCalls": 426,
+  "scope": "Guide00463e40의 Abort/미처리 사건과 실제452fe0/452f90. 세 이름은 실제4c9090/4d52c0/토큰/큐/CRT다. Tell004cf960·하위 가상 입력·TLS/할당/로그는 명시 경계이며 실제 UI/월드 종료/재시작은 실행하지 않는다.",
+  "gameExecuted": false,
+  "osExecuted": false,
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_script_command.py": "4117195f63985867cf922237d297aaee6a83d9ca9c6dd4c5d7b1de30f51eb749",
+    "tools/decomp_mission_abort.py": "c86a490f3be7eded578d0df9589bf9bc91a7a2fa656067745966df269dd3f22e",
+    "cpppj/tests/fixtures/mission-abort-x86.tsv": "dd608d5f5c7bad4bcb70422c30719d2ed34e55b98473d77554dc6866e6a39889"
+  }
+}
