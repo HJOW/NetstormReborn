@@ -1417,3 +1417,14 @@ cpppj/mission-abort-native.json text eol=lf
 cpppj/mission-abort-session.json text eol=lf
 tools/decomp_mission_abort.py text eol=lf
 tools/cpp_mission_abort_audit.py text eol=lf
+# 실제 Guide 수명/월드 진입 Pause의 현재 소스와 최초 원문을 보존한다.
+cpppj/src/client/MissionLifecycle.h text eol=lf
+cpppj/src/client/MissionLifecycle.cpp text eol=lf
+cpppj/src/client/State.h text eol=lf
+cpppj/src/client/State.cpp text eol=lf
+cpppj/tests/MissionLifecycleTests.cpp text eol=lf
+cpppj/tests/fixtures/mission-lifecycle-x86.tsv text eol=lf
+cpppj/mission-lifecycle-native.json text eol=lf
+cpppj/mission-lifecycle-session.json text eol=lf
+tools/decomp_mission_lifecycle.py text eol=lf
+tools/cpp_mission_lifecycle_audit.py text eol=lf

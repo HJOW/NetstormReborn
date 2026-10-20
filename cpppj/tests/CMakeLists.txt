@@ -43,6 +43,7 @@ set_source_files_properties(FlyerPreDestroyTests.cpp PROPERTIES COMPILE_DEFINITI
 set_source_files_properties(BurningLifetimeDrawTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_BURNING_LIFETIME_DRAW_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/burning-lifetime-draw-x86.tsv\";NETSTORM_RENDER_FRAME_GATE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/render-frame-gate-x86.tsv\";NETSTORM_BURNING_ARCHER_CAPTURE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/burning-archer-capture-x86.tsv\"")
 add_executable(netstorm_tests
+    MissionLifecycleTests.cpp
     MissionControlTests.cpp
     MissionGuideInputTests.cpp
     ObjectCommandTests.cpp
@@ -1673,3 +1674,6 @@ set_source_files_properties(MissionGuideInputTests.cpp PROPERTIES COMPILE_DEFINI
 # 실제 Abort 사건과 세 제어 이름/토큰/큐의 최초 원문을 새 검사에서만 읽는다.
 set_source_files_properties(MissionControlTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_MISSION_ABORT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/mission-abort-x86.tsv\"")
+# 실제 Guide/얇은 단계/진입 Pause의 최초 전체 상태를 새 수명 검사에서 읽는다.
+set_source_files_properties(MissionLifecycleTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_MISSION_LIFECYCLE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/mission-lifecycle-x86.tsv\"")

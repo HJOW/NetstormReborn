@@ -1,5 +1,17 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-21 단위250 연결 완료: 실제 Guide 단계 반복·진입 Pause·단계3 Start
+
+- [x] 같은 goal을 이어 진행했다. 시작 HEAD `3485834e`, 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-20**가 일치한다. AGENTS와 양 인수인계를 다시 읽었고 새 디컴파일·원본/CD·AGENTS 변경은 없다. 직전 턴은 단위249 재시작/중단·기록·커밋을 마친 진행 턴이다. 다른 세션의 DN/README 변경·커밋은 포함하지 않는다.
+- [x] 원본 State7의 음악 뒤 `00463a40→가상+28`은 **Start가 아니라004c2a40 자기 정지**다. 실제 보호 Tutorial 가상표의 Start+10/정지+28을 확인했다. 기존 BeginMission 직접 Start와 순번0→1,초기 안내 전 월드 시각 진행을 실제 Guide 순서에 맞게 바꿨다. 과거 저장 플레이/초기 시각 관측을 이번 실행 성공으로 바꾸지 않는다.
+- [x] BeginMission은 빈 Runtime/Script를 만들고 실제 `RawMissionGuide`가 현재/전환 Pending/Dialog 관문과0..6을 반복한다. Runtime은 Session 전에 살아 있고 단계1에서만 Header/월드/로그인/커서·공통 프레임과 Start 연결부를 설치한다. 음악 뒤 같은 현재 미션의 Pause 한 깊이를 잡고 단계3에서만 기존 실제 Start를 호출해 순번3→4를 만든다. 단계4 Frame,차단 시 Postpone,단계2 init·5 Success/Failure·빈6도 연결했다. Guide 객체는 미션 해제 중 호출 스택이 살아 있도록 UberGump 수명에 둔다.
+- [x] `MissionLifecycle`은 얇은 단계/진입 Pause이며 큰 Init/Start/Frame은 현재 실제 소비자다. **전체 Init 이름 정규화/+b0/전역,비동기 State7·원본 공장/가상 소멸까지 모두 복원한 것은 아니다.** 기존 단일 플레이 설치/해제 어댑터를 사용한다. 현재 전환 큐의 Pending을 공급하고 단계0의 아직 없는 world도 Report가 안전하게 읽는다. 복원하지 않은 Battle/CD Guide를 이10.78 Tutorial 반복에 넣지 않는다.
+- [x] 제품 작성 전에 실제 Guide/얇은 단계/진입 Pause를 **831입력·1262정상 반환·44306명령**으로 독립 관측했다. 큰 Init/Start/Frame·Tell/UI·시계 효과·해제는 명시 경계다. 정상 반환/스택/보존 레지스터/x87와 전체208바이트/현재/깊이/호출 순서를 보존했고 게임/OS/창은 없다. 빠진 First/Postpone 범위는 실제 표/명령으로 확인했으며 디컴파일 파일은 고치지 않았다. 최초 원문/도구/보고서를 `extracted/mission-lifecycle-20261021-first-capture/`에 제품 작성 전에 보존했다.
+- [x] 새 검사3개는 독립831행,현재 State.Pending/빈 진입,실제 보호 캠페인 Session 설치→진입 Pause→단계3 Start→공통 Frame/10호출 안내·창 관문·7호출 재개다. 장치/UI/시각은 명시 입력이며 전체 Kernel/Client 창/자연 플레이가 아니다. **C++검사는 작성·컴파일만 했고 실행하지 않았다.** 전체 Release는 **경고0·오류0·종료0**, 로그 `extracted/cpp-mission-lifecycle-20261021-build.log`다. 실제 게임/C++검사/CTest/전체 회귀는 사용자 지시대로 통합 검증에 이월한다.
+- [x] 상세는 [작업 기록](docs/exe/cpp-mission-lifecycle-20261021.md), `cpppj/mission-lifecycle-native.json`·`mission-lifecycle-session.json`, `tools/decomp_mission_lifecycle.py --verify`·`tools/cpp_mission_lifecycle_audit.py --verify`다. 현재 핀만 후속 이력으로 갱신하고 전체 JSON을 시작 커밋으로 역변환해 원본/fixture/files/실행·바이너리/이력을 보존한다. 직전 공통 정적 감사는 Header 조회의 실제 단계1 이동을 확인하도록 바꾸며 과거 실행은 보존한다. 기존 CRLF/LF 역사 핀 차이도 새 통과로 기록하지 않는다.
+- [x] 최종 현재 핀은 **102보고서·130항목**이며 전체 JSON 역변환이 시작 커밋과 같다. 이번 원본/연결 감사와 갱신한 공통 미션 감사,변경 검사가 모두 종료0이다. 인수인계 뒤 날짜/CP 규칙으로 로컬 커밋하며 push하지 않는다.
+- [ ] **다음:** Guide Begin/Fork/Finish/후속 제어 명령,전체 Init/가상 소멸·State/네트워크 세부,Review Knowledge/ShowTechnology·중첩 창과 다른 키다. 초기 순번/정지 시각이 달라진11미션의 자연 완주·F8/재시작/중단·전략AI·지형/포획/희생/Dude 자연 대피와 외관/음향 동일성,새 검사 실행을 통합 실제 플레이에서 확인한다. 전체 goal은 **active/미완료**다.
+
 ## 2026-10-21 단위249 연결 완료: 실패/중단 화면의 재시작·확인·종료 큐
 
 - [x] 같은 goal을 이어 진행했다. 시작 HEAD `29d4682f`, 현재/마지막 정밀 디컴파일 PC **HJOW-Athlon / 2026-10-20**가 일치한다. AGENTS와 양 인수인계를 다시 읽었고 새 디컴파일·원본/CD·AGENTS 변경은 없다. 직전 턴은 단위248 공통 프레임/데모·기록·커밋을 마친 진행 턴이다. 다른 세션의 DN/README 변경·커밋은 포함하지 않는다.
@@ -10,7 +22,8 @@
 - [x] **C++검사는 작성·컴파일만 했고 실행하지 않았다.** 전체 Release는 **경고0·오류0·종료0**, 로그 `extracted/cpp-mission-abort-20261021-build.log`다. 실제 게임/C++검사/CTest/전체 회귀는 사용자 지시대로 후속 통합 실제 플레이에 이월한다.
 - [x] 상세는 [작업 기록](docs/exe/cpp-mission-abort-20261021.md), `cpppj/mission-abort-native.json`·`mission-abort-session.json`, `tools/decomp_mission_abort.py --verify`·`tools/cpp_mission_abort_audit.py --verify`다. 현재 소스 핀만 후속 이력으로 갱신하고 전체 JSON을 시작 커밋으로 역변환해 과거 files/원본/fixture/실행·바이너리/기존 이력을 보존한다. 보호 tell 본문의 SHA도 구별한다. 기존 RawTutorialLater의 CRLF/LF 역사 핀 차이는 새 통과로 기록하지 않는다.
 - [x] 최종 현재 핀은 **100보고서·125항목**이며 전체 JSON 역변환이 시작 커밋과 같다. 이번 원본/연결 감사와 직전 공통 미션 감사,변경 검사가 모두 종료0이다. 인수인계 후 날짜/CP 규칙으로 로컬 커밋하며 원격 push하지 않는다.
-- [ ] **다음:** Guide 전체0..6 수명/전환·Begin/Fork/Finish와 다른 키, Review Knowledge/ShowTechnology·중첩 Gump,전투 종료 State/네트워크 세부다. 기존 State/단일 플레이 teardown 어댑터는 남아 있다. 실제 실패→재시작/계속/중단과11미션 자연 완주·전략AI·지형 효과·포획/Drop·제단/희생·Dude 자연 대피/생성·외관/음향 동일성,새 검사 실행을 통합 검증에서 확인한다. 전체 goal은 **active/미완료**다.
+- [x] **단위250에서 반복/현재 소비자 연결 완료:** 실제 Guide0..6 반복과 단계1 설치/진입 Pause·단계3 Start,창/현재 전환 관문이다. 큰 Init 전체/원본 State·소멸과 실제 플레이 검증은 남는다.
+- [ ] **남는 경계:** Guide Begin/Fork/Finish와 다른 키,Review Knowledge/ShowTechnology·중첩 Gump,전투 종료 State/네트워크 세부다. 기존 State/단일 플레이 teardown 어댑터는 남아 있다. 실제 실패→재시작/계속/중단과11미션 자연 완주·전략AI·지형 효과·포획/Drop·제단/희생·Dude 자연 대피/생성·외관/음향 동일성,새 검사 실행을 통합 검증에서 확인한다. 전체 goal은 **active/미완료**다.
 
 ## 2026-10-21 단위248 연결 완료: 캠페인·데모 공통 프레임·F8·재시작 예약
 

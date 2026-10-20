@@ -11,6 +11,8 @@
 #include "client/RawCampaignMissionStartBindings.h"
 #include "client/RawCampaignTutorialOneBindings.h"
 #include "client/MissionGuideInput.h"
+#include "client/MissionLifecycle.h"
+#include "o/RawMissionGuide.h"
 #include "client/GifImage.h"
 #include "client/GumpVisual.h"
 #include "client/GumpBackground.h"
@@ -120,14 +122,14 @@ std::string Field(std::string text) { std::replace(text.begin(), text.end(), '\t
 struct UberGump::MissionRuntime {
     o::MissionFrameGateState gate; // demo/started/시각/안내 단계의 유일한 현재 미션 저장소다.
     o::MissionStartState state; // Start의 순번/현재 tellAt 항목/필드를 동일 수명으로 유지한다.
-    RawCampaignMissionStartBindings start; // 같은 Script/Session/전역을 참조하며 생성만으로 시작하지 않는다.
+    std::unique_ptr<RawCampaignMissionStartBindings> start; // 단계1의 실제 Session 설치 뒤 생성하고 단계3에서만 실행한다.
     std::uint32_t mode64{}; // 원본 Mission+64의 현재 값이다. 일반 진입은0이며 Reload는 해제 전에 bool로 캡처한다.
+    bool guided{}; // 실제 Tutorial 가상표를 사용하는 미션만 Guide0..6에 분배한다. 기존 Battle 진입은 별도다.
     std::unique_ptr<RawCampaignTutorialOneBindings> tutorial; // 지정11개를 포함한 Tutorial 형식 전체의 공통 프레임/입력과 선택된 Early 판정이다.
     // 원본00482bf0의 초기 demo0은 일반 MissionBegin,00463a00의 직접 쓰기는 StartDemo가 공급한다.
-    MissionRuntime(RawCampaignSession& session,MissionScript& script,std::uint32_t demo,std::uint32_t mode,CampaignMissionStartEffects effects)
-        :start(session,script,gate,state,session.MissionStartSettings(),session.MissionAiSettings(),std::move(effects)),mode64(mode) {
-        gate.demo=demo;gate.tutorialNumber=std::bit_cast<std::uint32_t>(o::ConfigParseLong(script.Get("tutorialNumber").value_or("")));
-        ApplyMissionDemo(script.Get("demo").value_or(""),gate.demo); // 원본 Init은 명시 demo 문자열이 있으면 StartDemo/Reload의 기존 지정값을 덮어쓴다.
+    MissionRuntime(MissionScript& script,std::uint32_t demo,std::uint32_t mode)
+        :mode64(mode),guided(o::AsciiLower(script.MissionType())=="tutorial") {
+        gate.demo=demo; // Header의 tutorialNumber/demo 조회는 실제 단계1까지 앞당기지 않는다.
     }
 };
 
@@ -178,6 +180,31 @@ UberGump::UberGump(Client& client) : client_(client) {
         client_.WorldAudio().Sounds().PlayByName("newWarnMessage.wav",0,0,0,0,0);
     });
     dialogBody_=std::make_unique<DialogBodyLayout>(client_.Fonts(),client_.GetScreen().Colors(),client_.Assets(),client_.Assets().Edition());
+    o::MissionGuideHooks guideHooks; // 같은 실제 현재 미션/전환 큐/창과 복원한 Guide 반복 몸체다.
+    guideHooks.current=[this]() -> o::MissionStartState* { return missionRuntime_ && missionRuntime_->guided ? &missionRuntime_->state : nullptr; };
+    guideHooks.pending=[this] { return state_.Pending() ? 1U : 0U; };
+    guideHooks.dialogsClear=[this] { return state_.phase!=ClientPhase::Dialog && state_.phase!=ClientPhase::Briefing; };
+    guideHooks.stage=[this](o::MissionStartState& state,std::uint32_t sequence) {
+        TutorialMissionStageHooks hooks; // 현재 단계가 실제로 도달한 소비자만 호출한다.
+        hooks.initialize=[this] { LoadMissionWorld(); };hooks.start=[this] { StartMissionWorld(); };
+        hooks.tellGlobal=[this](std::string_view name,std::uint32_t mode) {
+            if (mode!=1) throw std::logic_error("Guide init Tell의 원본 인자 위반");static_cast<void>(TryTell(std::string(name)));
+        };
+        hooks.frame=[this] { if (!missionRuntime_ || !missionRuntime_->tutorial) throw std::logic_error("Guide 프레임의 실제 미션 연결 누락");missionRuntime_->tutorial->Frame(); };
+        hooks.showStage=[this] { if (!missionRuntime_ || !missionRuntime_->tutorial) throw std::logic_error("Guide First의 현재 안내 연결 누락");missionRuntime_->tutorial->TellStage(); };
+        hooks.tellMission=[this](std::string_view section) { return mission_ && mission_->Section(section) && TryTell(std::string(section)) ? 1U : 0U; };
+        hooks.closeTransient=[this] { rawButtons_->RequestClosePopups(); };
+        hooks.pause=[this] { if (!missionRuntime_ || !missionRuntime_->tutorial) throw std::logic_error("Guide 안내의 실제 자기 정지 연결 누락");missionRuntime_->tutorial->Gate().PauseForDialog(); };
+        RunTutorialMissionStage(state,sequence,hooks);
+    };
+    guideHooks.postpone=[this](o::MissionStartState&) {
+        if (!missionRuntime_) throw std::logic_error("Guide 재지연의 현재 미션 없음");
+        if (missionRuntime_->tutorial) missionRuntime_->tutorial->Gate().Postpone();
+        else if (missionRuntime_->gate.nextStageSeconds!=0.0) missionRuntime_->gate.nextStageSeconds=static_cast<double>(missionRuntime_->gate.delaySeconds)+client_.Time().game; // 설치 전 기본0은 그대로 유지한다.
+    };
+    guideHooks.release=[this] { MainMenu();if (client_.Audio()) client_.Audio()->StartScene(false); };
+    guideHooks.invalidStage=[] { throw std::logic_error("Guide 현재 미션 순번0..6 위반"); };
+    if (client_.Assets().Edition()==o::OriginalEdition::Patch1078) guide_=std::make_unique<o::RawMissionGuide>(client_.Assets().Edition(),std::move(guideHooks)); // Guide 몸체의 복원 판본은10.78이며 CD 메인 메뉴 생성은 기존대로 둔다.
     MainMenu(); Compose(); client_.ShowScene();
 }
 // 입력 참조를 먼저 없애고 커널이 소유한 월드를 이 구현 파일에서 제거한다.
@@ -306,6 +333,17 @@ void UberGump::BeginMission(std::string name,std::uint32_t demo,std::uint32_t mo
     if (!mission_->Loaded()) throw std::runtime_error("Missing mission: " + name);
     const auto type = o::AsciiLower(mission_->MissionType());
     if (type != "tutorial" && type != "battle") throw std::runtime_error("Mission type pending: " + mission_->MissionType());
+    missionRuntime_=std::make_unique<MissionRuntime>(*mission_,demo,mode);
+    missionRuntime_->guided=missionRuntime_->guided && client_.Assets().Edition()==o::OriginalEdition::Patch1078; // 복원하지 않은 판본의 순번을 새 Guide에 분배하지 않는다.
+    briefingSections_.clear();briefingIndex_=0;state_.phase=ClientPhase::LoadingMission;pageName_="loading";popup_.clear();page_={};client_.Pause(false);RebuildControls();RefreshWindowTitle();
+    if (!missionRuntime_->guided) { LoadMissionWorld();StartMissionWorld(); } // 지정11개 이외의 기존 Battle 진입 동작은 유지한다.
+}
+// Guide 단계1에서만 실제 Header/월드/로그인/커서/공통 프레임을 설치한다. Start는 단계3으로 남긴다.
+void UberGump::LoadMissionWorld() {
+    if (!mission_ || !missionRuntime_ || world_) throw std::logic_error("Guide 초기화의 현재 Script/Runtime/빈 월드 계약 위반");
+    const auto type=o::AsciiLower(mission_->MissionType()); // 현재 미션의 실제 가상 형식에 맞는 기존 설치 경로다.
+    missionRuntime_->gate.tutorialNumber=std::bit_cast<std::uint32_t>(o::ConfigParseLong(mission_->Get("tutorialNumber").value_or("")));
+    ApplyMissionDemo(mission_->Get("demo").value_or(""),missionRuntime_->gate.demo);
     auto fort = o::FortTemplate::Parse(client_.Files().Read(mission_->FortPath()), client_.Assets().TypeTable());
     // 전체 요새 레코드를 세어 자동 검사에서 미션 선택과 파일 로드를 함께 확인한다.
     const auto count = [this](const o::FortChunkSection& section) { for (const auto& chunk : section.chunks) fortObjects_ += chunk.objects.size(); };
@@ -337,8 +375,8 @@ void UberGump::BeginMission(std::string name,std::uint32_t demo,std::uint32_t mo
         [this]() { return client_.GetRenderer().FullRedrawPending(); },
         [this](o::SquidDisplayRect rect,std::uint32_t flags) { client_.GetRenderer().Invalidate({rect.left,rect.top,rect.right,rect.bottom},flags); }};
     world_=world.get(); worldProcess_=client_.GetKernel().Add(std::move(world));
-    missionRuntime_=std::make_unique<MissionRuntime>(world_->Session(),*mission_,demo,mode,
-        MakeCampaignMissionStartEffects(client_,*world_,[this] {
+    missionRuntime_->start=std::make_unique<RawCampaignMissionStartBindings>(world_->Session(),*mission_,missionRuntime_->gate,missionRuntime_->state,
+        world_->Session().MissionStartSettings(),world_->Session().MissionAiSettings(),MakeCampaignMissionStartEffects(client_,*world_,[this] {
             // 원본0042e440은 현재00548740이0이면 아무 메시지도 보내지 않는다.
             if (commandGump_!=0) throw std::logic_error("미션 Start의 전용 명령 Gump0042e440 수신 미연결");
         }));
@@ -375,7 +413,7 @@ void UberGump::BeginMission(std::string name,std::uint32_t demo,std::uint32_t mo
         frameEffects.closeTransient=[this] { rawButtons_->RequestClosePopups(); };
         // 현재 월드의 선택 getter와 서로 다른 두 원본 선택 정리 몸체를 빌린다.
         frameEffects.selected=[this] { return world_->Selected(); };frameEffects.resetSelection=[this] { world_->ResetSelection(); };frameEffects.clearSelection=[this] { world_->ClearSelection(); };
-        missionRuntime_->tutorial=std::make_unique<RawCampaignTutorialOneBindings>(world_->Session(),*mission_,missionRuntime_->start,
+        missionRuntime_->tutorial=std::make_unique<RawCampaignTutorialOneBindings>(world_->Session(),*mission_,*missionRuntime_->start,
             missionRuntime_->gate,missionRuntime_->state,std::move(frameEffects));
     }
     // 원본 초기 브리핑은 A.이며 A1. 등은 본문 Tell 명령이 넘긴다.
@@ -388,8 +426,16 @@ void UberGump::BeginMission(std::string name,std::uint32_t demo,std::uint32_t mo
     } else client_.Pause(true);
     // 원본 004b6dd0의 미션 시작 절차(전투 여부를 켜고 FUN_00469fc0): 난수로 고른 원소 곡으로 전투 음악을 시작한다.
     if (client_.Audio()) client_.Audio()->StartScene(true);
-    // 원본004b6dd0의 음악 시작 뒤00463a40→가상+28을 같은 실제 로그인/월드에 한 번 실행한다.
-    missionRuntime_->start.Start();
+    // 원본004b6dd0의 음악 시작 뒤00463a40→가상+28은 Start가 아닌 자기 정지다.
+    if (missionRuntime_->guided) {
+        PauseMissionWorldEntry([this] { return missionRuntime_!=nullptr; },[this] { missionRuntime_->tutorial->Gate().PauseForDialog(); });
+        missionRuntime_->state.flags|=1U; // 원본004c3290은 실제 설치/허용 처리 뒤 다음 단계를 요청한다.
+    }
+}
+// 현재 설치된 같은 Session/Script와 장기 순번으로 원본 단계3 Start를 한 번 실행한다.
+void UberGump::StartMissionWorld() {
+    if (!missionRuntime_ || !missionRuntime_->start || !world_) throw std::logic_error("Guide 단계3의 실제 설치/Start 연결 누락");
+    missionRuntime_->start->Start();
 }
 // 첫 브리핑을 표시하거나 브리핑 종료 뒤 실제 월드 입력과 표시를 활성화한다.
 void UberGump::AdvanceBriefing() {
@@ -531,15 +577,15 @@ bool UberGump::Input() {
 void UberGump::Tick() {
     const bool loading = state_.phase == ClientPhase::LoadingMission;
     if (const auto action = state_.Take()) Execute(*action);
-    else if (loading) AdvanceBriefing();
+    else if (loading && !(missionRuntime_ && missionRuntime_->guided)) AdvanceBriefing();
     if (page_.timeoutSeconds > 0 && client_.Time().wall - opened_ >= page_.timeoutSeconds) {
         state_.Post(page_.timeout); page_.timeoutSeconds = 0;
     }
     if (rebuild_) Compose();
 }
-// 원본 루프8번에서 한 번 호출한다. Tutorial 전용 판정을 아직 연결하지 않은 미션은 기존 진입을 유지한다.
+// 원본 루프8번에서 현재 Guide의 상태/창 관문과0..6 단계를 한 번 실행한다.
 void UberGump::MissionFrame() {
-    if (missionRuntime_ && missionRuntime_->tutorial) missionRuntime_->tutorial->Frame();
+    if (guide_) guide_->Run();
 }
 // 커널의 이동·날씨와 비동기 Tell을 같은 프레임에 반영한다. 페이지가 같으면 입력 영역/누름 상태를 유지한다.
 void UberGump::Frame() {
@@ -799,10 +845,12 @@ std::string UberGump::Report() const {
             out<<"mission_start\t"<<gate.started<<'\t'<<state.sequence<<'\t'<<gate.demo<<'\t'<<gate.startSeconds<<'\t'<<gate.demoEndSeconds<<'\n';
             out<<"mission_gate\t"<<gate.tutorialNumber<<'\t'<<gate.stage<<'\t'<<gate.lockFrames<<'\t'<<gate.scriptPaused<<'\t'<<gate.clearFrames<<'\t'
                 <<(missionRuntime_->tutorial ? 1 : 0)<<'\t'<<gate.nextStageSeconds<<'\t'<<gate.tellAtSeconds<<'\n'; // 동일 현재 상태의 관측만 제공한다.
-            out<<"mission_bridges\t"<<world_->Session().TotalMade().BuiltForGenus(4)<<'\n'; // 단계 판정과 같은 누적 장부를 관찰하며 현재 살아 있는 다리 수와 구별한다.
-            out<<"mission_options\t"<<unsigned(world_->Session().BattleOption(2))<<'\t'<<unsigned(world_->Session().BattleOption(4))<<'\t'<<world_->Session().EnergySettings().radiusSquared<<'\n'; // 같은 현재 옵션/공급 범위를 읽기만 한다.
-            const auto& settings=world_->Session().MissionStartSettings(); // 원본 게임 명령이 공유할 같은 제한 전역이다.
-            out<<"mission_rules\t"<<settings.denySalvage<<'\t'<<settings.denyAscend<<'\t'<<settings.allowAnyCapture<<'\t'<<settings.ordinaryGeysers<<'\n';
+            if (world_) {
+                out<<"mission_bridges\t"<<world_->Session().TotalMade().BuiltForGenus(4)<<'\n'; // 단계 판정과 같은 누적 장부를 관찰하며 현재 살아 있는 다리 수와 구별한다.
+                out<<"mission_options\t"<<unsigned(world_->Session().BattleOption(2))<<'\t'<<unsigned(world_->Session().BattleOption(4))<<'\t'<<world_->Session().EnergySettings().radiusSquared<<'\n'; // 같은 현재 옵션/공급 범위를 읽기만 한다.
+                const auto& settings=world_->Session().MissionStartSettings(); // 원본 게임 명령이 공유할 같은 제한 전역이다.
+                out<<"mission_rules\t"<<settings.denySalvage<<'\t'<<settings.denyAscend<<'\t'<<settings.allowAnyCapture<<'\t'<<settings.ordinaryGeysers<<'\n';
+            }
         }
     }
     if (world_) out<<world_->Report();

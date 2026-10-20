@@ -1,0 +1,29 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-20",
+  "uniqueInputs": 831,
+  "normalReturns": 1262,
+  "instructions": 44306,
+  "calls": {
+    "00463bb0": 1230,
+    "004c3170": 734,
+    "004c2a70": 16,
+    "00482c80": 200,
+    "00463a40": 56,
+    "004c2a40": 60,
+    "004c2b00": 24,
+    "004c31a0": 40,
+    "004437f0": 64
+  },
+  "gameExecuted": false,
+  "osExecuted": false,
+  "scope": "실제 Guide/Advance/First/단계2·5/빈6/Postpone/463a40→Pause. 큰 Init/Start/Frame·Tell·UI/시계 효과/해제는 명시 경계이며 실제 월드/게임 실행 근거가 아니다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_mission_lifecycle.py": "28eeab439c109bff32bf9f9c00c1a73165f86e74792360f835f5382778a6c654",
+    "cpppj/tests/fixtures/mission-lifecycle-x86.tsv": "82d3e1856bed2caf550912d6d67c33ce8a6196f6fbe2127adb06d6ae1d0c81d2"
+  }
+}

@@ -3,6 +3,8 @@
 #include "client/RawCampaignMissionStartBindings.h"
 #include "client/RawCampaignTutorialOneBindings.h"
 #include "client/MissionGuideInput.h"
+#include "client/MissionLifecycle.h"
+#include "o/RawMissionGuide.h"
 #include "o/RawSunAviaryProcess.h"
 #include "o/RawRainAviaryProcess.h"
 #include "o/RawFlyerProcess.h"
@@ -155,6 +157,44 @@ TEST_CASE(CampaignMissionCommon_ActualFiveSessionsFrameReplayAndDemoQueue) {
         } else CHECK(gate.demoEndSeconds==0);
         CHECK(!session.Core().bookkeeping.depth && !session.Core().destroy.PreDepth() && !session.Core().destroy.PostDepth());
     }
+}
+// 실제 캠페인 설치/Start/공통 프레임이 Guide 순번과 진입 Pause를 같은 상태로 공유하는지 확인한다.
+TEST_CASE(CampaignMissionLifecycle_ActualSessionEntryPauseBeforeStart) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);ConfigInterface config([&](std::string_view path) { return assets.files.TryRead(path); });ConfigureStart(config);MissionScript script(config,"TheWarBegins");
+    MissionFrameGateState gate;MissionStartState state;StartExternal external;std::uint32_t depth{};std::size_t frames{};bool active=true,loaded{},dialog{};double now=123.5;
+    std::unique_ptr<RawCampaignMissionStartBindings> start;std::unique_ptr<RawCampaignTutorialOneBindings> runtime; // 단계1에서 실제 Session 설치 뒤에만 연결한다.
+    auto services=external.Services();services.missionOutcome.demo=[&] { return gate.demo; };services.missionOutcome.tellBlocked=[&] { return dialog ? 1U : 0U; };
+    const auto show=[&](std::string_view name) { if (!script.Section(name)) return false;dialog=true;return true; }; // 실제 보호 섹션의 존재만 UI 경계로 공급한다.
+    services.missionOutcome.section=show;services.missionOutcome.closeTransient=[] {};services.missionOutcome.onSection=[&] { runtime->Gate().PauseForDialog(); };
+    auto fort=FortTemplate::Parse(assets.files.Read(script.FortPath()),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),script.FortName(),std::move(services));
+    TutorialMissionStageHooks stages;
+    stages.initialize=[&] {
+        session.Load();loaded=true;auto startEffects=external.Effects();startEffects.gameSeconds=[&] { return now; };
+        start=std::make_unique<RawCampaignMissionStartBindings>(session,script,gate,state,session.MissionStartSettings(),session.MissionAiSettings(),std::move(startEffects));
+        CampaignTutorialOneEffects effects;effects.frame.gameSeconds=[&] { return now; };effects.frame.paused=[&] { return depth!=0; };effects.frame.dialogsClear=[&] { return !dialog; };
+        effects.frame.knowledgeOpen=[] { return false; };effects.frame.guideOpen=[&] { return dialog; };effects.frame.blockingGumpOpen=[] { return false; };
+        effects.frame.pause=[&] { ++depth; };effects.frame.resume=[&] { CHECK(depth);--depth; };effects.frame.endDemo=[] { throw std::logic_error("비데모 수명 검사의 데모 종료"); };
+        effects.tell=show;effects.closeTransient=[] {};runtime=std::make_unique<RawCampaignTutorialOneBindings>(session,script,*start,gate,state,std::move(effects));
+        PauseMissionWorldEntry([&] { return active; },[&] { runtime->Gate().PauseForDialog(); });CHECK(depth==1 && gate.scriptPaused && !gate.started);state.flags|=1U;
+    };
+    stages.tellGlobal=[&](std::string_view name,std::uint32_t mode) { CHECK(name=="init" && mode==1 && !script.Section(name)); };
+    stages.start=[&] { CHECK(loaded && !gate.started && depth==1 && state.sequence==3);start->Start(); };
+    stages.frame=[&] { ++frames;runtime->Frame(); };stages.showStage=[&] { runtime->TellStage(); };
+    stages.tellMission=[&](std::string_view name) { return show(name) ? 1U : 0U; };stages.closeTransient=[] {};stages.pause=[&] { runtime->Gate().PauseForDialog(); };
+    RawMissionGuide guide(OriginalEdition::Patch1078,{[&]() -> MissionStartState* { return active ? &state : nullptr; },[] { return 0U; },[&] { return !dialog; },
+        [&](MissionStartState& current,std::uint32_t sequence) { CHECK(&current==&state);RunTutorialMissionStage(current,sequence,stages); },
+        [&](MissionStartState&) { if (runtime) runtime->Gate().Postpone(); },[&] { active=false; },[] { throw std::logic_error("캠페인 Guide 순번 범위 위반"); }});
+    guide.Run();CHECK(!loaded && !start && !runtime && state.sequence==0 && state.flags==1 && !gate.started);
+    guide.Run();CHECK(loaded && start && runtime && state.sequence==4 && gate.started && frames==1 && gate.lockFrames==9 && depth==1 && !dialog && session.Sp(1)==3000);
+    // 초기 정지 상태의 다음 여덟 화면은 현재10호출 안내 카운터만 진행한다.
+    for (int frame=0;frame<8;++frame) guide.Run();
+    CHECK(frames==9 && gate.lockFrames==1 && depth==1);guide.Run();CHECK(frames==10 && dialog && runtime->StageShown()==1 && gate.scriptPaused && depth==1);
+    guide.Run();CHECK(frames==10 && depth==1); // 실제 Guide 창 관문은 공통 Frame을 다시 호출하지 않고 Postpone만 수행한다.
+    dialog=false;
+    // 빈 화면 여섯 호출에는 자기 정지가 남고 일곱 번째에서만 한 깊이를 반납한다.
+    for (int frame=0;frame<6;++frame) guide.Run();
+    CHECK(depth==1 && gate.clearFrames==6);guide.Run();CHECK(!depth && !gate.scriptPaused && state.sequence==4 && gate.stage=='A');
+    CHECK(external.refreshed==1 && external.commanded==1 && external.camera==1 && !session.Core().bookkeeping.depth);
 }
 // 같은 현재 미션의 owner별 이름은 원본 좁은문자열로 쓰며 미등록 능력도 진단 뒤 계속 적용한다.
 TEST_CASE(CampaignMissionStart_CurrentAiNameEncodingAndDiagnostics) {

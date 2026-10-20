@@ -9,6 +9,7 @@
 #include "client/VFXDraw.h"
 #include "o/Kernel.h"
 #include "o/Squid.h"
+#include "o/RawMissionGuide.h"
 #include <map>
 #include <memory>
 
@@ -28,7 +29,7 @@ public:
     ~UberGump();
     // 원본 루프 시작의 State 자리에서 대기 명령을 실행하고 시간 제한을 갱신한다.
     void Tick();
-    // 원본 루프8번의 미션 안내 자리다. Early1의 실제 공통 프레임을 입력보다 먼저 한 번 실행한다.
+    // 원본 루프8번의 Guide 자리다. 현재0..6 단계와 실제 공통 프레임을 입력보다 먼저 실행한다.
     void MissionFrame();
     // 커널이 월드를 진행한 직후 변경된 실제 장면을 제출한다.
     void Frame();
@@ -69,8 +70,12 @@ private:
     void RebuildControls();
     // 대기 중인 명령을 실행한다. 지원하지 않는 명령은 실제 동작으로 가장하지 않는다.
     void Execute(const DialogAction& action);
-    // 미션 스크립트·요새를 먼저 검증하고 Loading→Briefing으로 넘긴다.
+    // 미션 Script/빈 상태를 만들고 Tutorial의 순번0부터 실제 Guide가 설치/시작하도록 준비한다.
     void BeginMission(std::string name,std::uint32_t demo=0,std::uint32_t mode=0);
+    // 실제 Guide 단계1의 Header/월드/로그인/커서를 설치하고 다음 단계만 요청한다.
+    void LoadMissionWorld();
+    // 실제 Guide 단계3에서 같은 설치된 Session의 Start를 실행한다.
+    void StartMissionWorld();
     // 이미 읽힌 원본 브리핑 섹션 이름을 순서대로 연다.
     void AdvanceBriefing();
     // 현재 미션 자원을 해제하고 기본 메뉴로 돌아간다.
@@ -115,6 +120,7 @@ private:
     std::unique_ptr<CampaignObjectMenuClient> objectMenus_; // Client 수명이며 Session 해제 전 실제 팝업/Form을 먼저 닫는다.
     struct MissionRuntime; // 같은 미션의 Start/프레임 게이트 상태와 실제 연결을 고정 주소로 소유한다.
     std::unique_ptr<MissionRuntime> missionRuntime_; // 월드와 스크립트보다 먼저 해제한다.
+    std::unique_ptr<o::RawMissionGuide> guide_; // 현재 미션 해제 중에도 반복 호출 스택이 살아 있도록 UberGump 수명에 둔다.
     std::uint32_t commandGump_{}; // 원본00548740의 초기0이다. 현재 Client는 이 전용 Gump를 아직 생성하지 않는다.
     // world_: 미션 지도와 객체 상태를 갱신하고 월드 그림을 수집하는 프로세스 (GameWorld).
     GameWorld* world_{};

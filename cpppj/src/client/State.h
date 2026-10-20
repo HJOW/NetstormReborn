@@ -13,6 +13,8 @@ public:
     void Post(DialogAction action);
     // 루프 시작 시 하나 꺼낸다. 빈 큐는 아무 전환도 만들지 않는다.
     std::optional<DialogAction> Take();
+    // 원본 Guide의 pending 관문에 현재 다음 루프 전환 유무를 공급한다. 별도 완료 표식을 만들지 않는다.
+    bool Pending() const;
     // 현재 UI/미션 단계. 실제 미션 프로세스는 다음 월드 단계에서 연결한다.
     ClientPhase phase{ClientPhase::MainMenu};
 private:

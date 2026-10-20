@@ -9,4 +9,6 @@ std::optional<DialogAction> State::Take() {
     if (pending_.empty()) return {};
     auto action = std::move(pending_.front()); pending_.pop_front(); return action;
 }
+// 실제 전환 큐의 같은 저장소를 읽으며 조회만으로 전환을 꺼내지 않는다.
+bool State::Pending() const { return !pending_.empty(); }
 }

@@ -4,6 +4,8 @@
 target_sources(netstorm PRIVATE
     # 현재 미션 F8/First의 같은 입력 큐와 원본 안내 재표시를 연결한다.
     MissionGuideInput.cpp MissionGuideInput.h
+    # 실제 Guide 순번과 월드 진입 Pause/얇은 가상 단계를 현재 Client 수명에 연결한다.
+    MissionLifecycle.cpp MissionLifecycle.h
     # 실제 Client 수명의 원본 100기록 채팅 채널을 공유한다.
     RawChatChannels.cpp RawChatChannels.h
     DialogBodyLayout.cpp DialogBodyLayout.h
