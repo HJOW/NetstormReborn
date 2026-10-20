@@ -6,6 +6,7 @@
 #include "client/MenuGumpInput.h"
 #include "client/MenuGumpDraw.h"
 #include "client/StoneButtonGump.h"
+#include "client/QuickHelpControl.h"
 #include "o/GumpFormHost.h"
 #include <memory>
 
@@ -57,6 +58,7 @@ public:
     const TextGump& TextBackend() const; // 수량/예산도 기존 원본 한 줄 글자 처리기를 공유한다.
     const StyleText& StyleBackend() const; // 생산 글자도 같은 실제 조각·글꼴·그림 파서를 공유한다.
     const GumpBackgroundCreate& BackgroundBackend() const; // 실제 TYPE/SHP를 읽는 같은 배경 생성기다.
+    QuickHelpPopupState& PopupState() const; // 지식 카드 표식과 전용 Help Back이 공유할 같은 실제 저장소다.
     // 공통 기본 생성/가상 분배에서 현재 파생 노드를 직접 조회한다. 없는 토큰은 nullptr다.
     GumpCreateNode* Node(std::uint32_t token) const;
     StoneButtonGumpNode* Button(std::uint32_t token) const;

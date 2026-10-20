@@ -8,8 +8,8 @@
   "newDecompile": false,
   "sources": {
     "cpppj/src/client/UberGump.cpp": "4a3b578d46c101cd3e92cd61c49e13d93a2fc73483eb80daf60cbe692cf5e0e9",
-    "cpppj/src/client/CMakeLists.txt": "f4331fcea75cb14f5703124aa71a1c2db5f1d196b134fe909efd823df08225b0",
-    "cpppj/tests/CMakeLists.txt": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c",
+    "cpppj/src/client/CMakeLists.txt": "5283020971050c69f6db61190dfaee962948167910d2d02623ef31cbd9064836",
+    "cpppj/tests/CMakeLists.txt": "563b036b7566297db4635bfecbc363c789e7b340e061acd2343d3ff7b9d463b8",
     "cpppj/tests/CampaignMissionStartTests.cpp": "83e64926952399dda15209b6548cf9bd378a334e4a82723ddec0723c94348ed7",
     "tools/decomp_mission_technology.py": "177ea82462ca7b2fca504845f88914f23f869ceeb6c1651fc720eb7a0b41312b",
     "tools/cpp_mission_technology_audit.py": "f2c8abe0d980b2b2102db5764cfb45d812a3653eaf59bdd94386fbf94e2357b2",
@@ -1470,6 +1470,26 @@
           "group": "/sources",
           "previous": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
           "current": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+        }
+      ]
+    },
+    {
+      "unit": "254",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "실제 Quick Help 창 재사용·전체 입력 분배·이력/팝업 복귀를 복원하고 같은 RawMenuControls의 실제 지식 표식을 공용 저장소로 옮긴다. 전용 본문/창·Client Help 소비자는 후속이다. 현재 핀만 갱신하고 과거 files/evidence/원문/기대값/실행은 보존한다. 제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "f4331fcea75cb14f5703124aa71a1c2db5f1d196b134fe909efd823df08225b0",
+          "current": "5283020971050c69f6db61190dfaee962948167910d2d02623ef31cbd9064836"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c",
+          "current": "563b036b7566297db4635bfecbc363c789e7b340e061acd2343d3ff7b9d463b8"
         }
       ]
     }

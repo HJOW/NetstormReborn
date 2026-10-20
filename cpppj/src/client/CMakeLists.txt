@@ -182,3 +182,5 @@ target_sources(netstorm PRIVATE InventoryAboutMenu.h InventoryAboutMenu.cpp)
 
 # 실제 Quick Help 요청의 주제/이력/창·가상 부착 계층을 복원한다.
 target_sources(netstorm PRIVATE QuickHelpRequest.h QuickHelpRequest.cpp)
+# 실제 전용 도움말 창의 재사용·이력/팝업 상태·전체 입력 분배를 복원한다.
+target_sources(netstorm PRIVATE QuickHelpControl.h QuickHelpControl.cpp)

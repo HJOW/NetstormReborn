@@ -1,0 +1,18 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-20",
+  "inputs": 150,
+  "normalReturns": 150,
+  "instructions": 35367,
+  "scope": "실제4c62a0/4c5260/4c52c0/4c6d00/4c6e00/4c8e90/4652b0·CRT. 생성/등록조회·모달/좌표/스크롤/요청/링크/예약/학습/기본 입력·할당/반납은 명시 경계다. 전용 본문/창·게임/OS 관측이 아니다.",
+  "gameExecuted": false,
+  "osExecuted": false,
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_quick_help_control.py": "dc06387fb90a7d41a384e7d1b7815ed39d218ccf7f85c6446c6f4b15a5966b17",
+    "cpppj/tests/fixtures/quick-help-control-x86.tsv": "461a479171cf17f1e15fbe55c52d2c3f7f6dd004baf152ddd2e556486491f026"
+  }
+}

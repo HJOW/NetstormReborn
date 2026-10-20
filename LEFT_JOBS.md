@@ -1,5 +1,18 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-21 단위254 제어 복원 완료: Quick Help 창 재사용·이력·입력과 공용 팝업 표식
+
+- [x] 같은 goal을 이어 진행했다. 직전 턴은 전체 지식 카드/공용 정렬/실제 메뉴를 구현·기록·커밋한 진행 턴이다. 시작 HEAD `05df64c0`,현재/마지막 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-20**로 일치한다. AGENTS와 양 인수인계를 다시 읽었고 새 디컴파일·원본/CD·AGENTS 변경은 없다. 다른 세션 DN/README 작업은 포함하지 않는다.
+- [x] `QuickHelpControl`에 실제 `004c62a0`의 팝업 닫기/등록 조회/현재 모달 관문/전용 생성·중앙 부착·깊이 가산/모달·요청을 복원했다. 이미 존재한 Help는 다른 모달에 막혀도 반환한다. `004c5260/52c0/6d00`의 첫NUL/머리 연속 중복만 생략/원래 주제/단일 Back과 빈 문자열 노드를 보존한다.
+- [x] 실제 `004c6e00/70a7`의 전체 입력을 복원했다. 좌표 변환이 먼저이며 창 밖 왼쪽 누름/해제·NaN·PgUp/PgDn의 signed64 ftol 하위 DWORD/Up·Down·기본 입력/Help의 signed TYPE와 문자열·번역 접미/링크·버튼 serial·학습 후 닫기/Back을 유지한다. 마지막 Back은 command를 Kill 전에 보관하고 인자는 Kill 뒤 현재 저장소에서 읽는다. 같은 문자열을 두 번 예약한다.
+- [x] 실제 `004c5340`의 command+80BYTE를 `QuickHelpPopupState`로 소유하고 같은 RawMenuControls의 지식 카드 표식을 이 저장소에 연결했다. null만 전체80바이트를 지우고 비null 빈 문자열은 첫바이트만 지운다. `PopupState()`는 같은 저장소를 빌린다. 유효하지 않은 토큰/80바이트 초과/NUL 누락은 안전한 호스트에서 거부한다.
+- [x] 제품 변경 전에 실제 열기/이력/표식/입력/모달 없음/깊이 가산/ftol·CRT를 **150고유 입력·150정상 최상위 반환·35367명령**으로 관측했다. 등록/생성·모달/부착·좌표/스크롤·요청/링크/학습/기본 입력·할당/반납·예약은 명시 경계다. 원본 게임/OS/실제 전용 창 관측은 아니다. 스택/보존 레지스터/x87 제어어와 현재 이력·노드·팝업 바이트/호출 순서를 보존했다. 최초 도구/fixture/JSON은 `extracted/quick-help-control-20261021-first-capture/`에 제품 작성 전에 동결했다. 준비 중 thiscall 정리/분리된 꼬리 범위를 바로잡았으며 관측 뒤 기대값을 다시 만들지 않았다.
+- [x] 새 검사2개는 전체150행과 기존 실제 QuickHelpRequest→같은 이력→flags/Push 뒤 현재 위치 부착→Back→실제 InputQueue다. 기존 실제 보호 Session/지식 카드 검사에도 같은 표식과 전체80바이트 지우기를 추가했다. **C++검사는 컴파일만 했고 실행하지 않았다.** 전체 Release **경고0·오류0·종료0**,로그 `extracted/cpp-quick-help-control-20261021-build.log`다. 실제 게임/C++검사/CTest/전체 회귀는 사용자 지시대로 후속 통합 실제 플레이에 이월한다.
+- [x] 상세는 [작업 기록](docs/exe/cpp-quick-help-control-20261021.md),`cpppj/quick-help-control-native.json`·`quick-help-control-session.json`, `tools/decomp_quick_help_control.py --verify`·`tools/cpp_quick_help_control_audit.py --verify`다. 새 제어/기존 요청985·지식25의 최초 원문 보존과 새 제어/기존 지식·기술 허용·Guide 교체·공통 미션·미션 수명 정적 감사가 종료0이다. 현재 핀 **100보고서·130항목**의 전체 JSON 역변환이 시작 커밋과 같다. 과거 files/evidence/원문/기대값/실행·바이너리·기존 이력은 보존하고 RawTutorialLater의 역사 CRLF/LF 차이는 새 통과로 세지 않는다. 인수인계 뒤 날짜/CP 규칙으로 로컬 커밋하며 push하지 않는다.
+- [ ] **다음:** 전용 HTML 파생 `004c4c00/4cc0/5240/4c60`의 name/info·제목/능력치/스트림,전용 창 `004c5380`과 부착 `004c5d60`·본문/그림 `004c5970`을 같은 실제 HTML/StyleText/Gump/스크롤/돌 버튼/수명에 연결한다. **Help02000017/themeHelp의 실제 Client 소비자는 아직 활성화하지 않았다. 사용자에게 전용 화면이 열리는 단계가 아니다.** 일반 Tell로 대체하지 않는다. 링크4a00c0/학습492a30의 실제 소비자도 필요하다.
+- [ ] 기존 `QuickHelpRequest` type0의80바이트 거부는 정밀 C `004c5c00 local_150[336]`과 차이가 보인다. 실제 스택/서식 범위를 별도 최초 PE 관측으로 재검토한 뒤 결정한다. 단위184의985행/기대값/역사 기록은 보존한다. 새 입력 분배 `004c6e00 local_50[80]`와 구별한다.
+- [ ] 전체 Init 이름 정규화/+b0/전역·비동기 State/원본 공장·가상 소멸,전략AI·지형/자연 포획·희생·대피도 남는다. 전체11미션 자연 완주·지식/도움말/F6/제한 메뉴·재시작/중단·외관/음향 동일성과 이월 C++검사는 후속 통합 실제 플레이에서 확인한다. 전체 goal은 **active/미완료**다.
+
 ## 2026-10-21 단위253 연결 완료: Review Knowledge의 실제 카드/공용 정렬/메뉴 트리
 
 - [x] 같은 goal을 이어 진행했다. 직전 턴은 Early 기술 허용 목록을 구현·기록·커밋한 진행 턴이다. 시작 HEAD `bf68f0d4`, 현재/마지막 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-20**로 일치한다. AGENTS와 양 인수인계를 다시 읽었고 새 디컴파일·원본/CD·AGENTS 변경은 없다. 다른 세션 DN/README 작업은 포함하지 않는다.
@@ -8,7 +21,7 @@
 - [x] 제품 변경 전에 전체 지식 창/행/CRT정렬/폭·높이/표식을 **25고유 입력·25정상 반환·241740명령**으로 독립 관측했다. TYPE/내용물/제외·번역/서식·GUI 생성/부착/가상 Push·Pop/위치·스레드는 명시 경계다. 원본 게임/OS/실제 장치 관측은 아니다. 노드 필드·글자/명령·부착 순서·표식과 스택/보존 레지스터/x87를 보존했다. 최초 도구/fixture/JSON은 `extracted/knowledge-menu-20261021-first-capture/`에 제품 변경 전에 동결했다.
 - [x] 새 C++검사3개는 전체25행·공용 정렬/순서,실제 명령 parser/큐,실제 보호 Session→기술·커서 취소→공통 Gump/StyleText/SHP 픽셀·지연 삭제다. **컴파일만 했고 실행하지 않았다.** 최종 전체 Release **경고0·오류0·종료0**, 로그 `extracted/cpp-knowledge-menu-20261021-build4.log`다. 실제 게임/C++검사/CTest/전체 회귀는 사용자 지시대로 후속 통합 실제 플레이에 이월한다.
 - [x] 상세는 [작업 기록](docs/exe/cpp-knowledge-menu-20261021.md), `cpppj/knowledge-menu-native.json`·`knowledge-menu-session.json`, `tools/decomp_knowledge_menu.py --verify`·`tools/cpp_knowledge_menu_audit.py --verify`다. 최초 지식/기존 Factory 원문 감사와 새 연결/기존 기술 허용·Guide·미션 수명 정적 감사가 종료0이다. 현재 핀 **123보고서·303항목**의 전체 JSON 역변환은 시작 커밋과 같다. 과거 files/evidence/원문/기대값/실행·바이너리 기록을 보존하고 기존 RawTutorialLater의 CRLF/LF 역사 핀 차이는 새 통과로 세지 않는다. 인수인계 뒤 날짜/CP 규칙으로 로컬 커밋하며 push하지 않는다.
-- [ ] **다음:** 카드 `Help02000017` 상세 화면·정적 themeHelp 인자 소비자와 다른 팝업의 공용 마지막 표식·전체 키/중첩 모달 동작이다. 기존 Help를 임의 간략 화면으로 대체하지 않았다. 전체 Init의 이름 정규화/+b0/전역·비동기 State/원본 공장·가상 소멸,전략AI·지형/자연 포획/희생/대피도 남는다. 전체11미션 자연 완주·지식/도움말/F6/제한된 메뉴·재시작/중단·외관/음향 동일성과 이월 C++검사는 통합 실제 플레이에서 확인한다. 전체 goal은 **active/미완료**다.
+- [ ] **단위254에서 제어/공용 표식까지 복원:** 카드 `Help02000017`의 전용 창 재사용·이력/전체 입력·모달 관문과 같은 마지막 표식이다. 상세 본문/전용 창·Client/themeHelp 소비자는 아직 후속이며 임의 간략 화면으로 대체하지 않았다. 전체 Init의 이름 정규화/+b0/전역·비동기 State/원본 공장·가상 소멸,전략AI·지형/자연 포획/희생/대피도 남는다. 전체11미션 자연 완주·지식/도움말/F6/제한된 메뉴·재시작/중단·외관/음향 동일성과 이월 C++검사는 통합 실제 플레이에서 확인한다. 전체 goal은 **active/미완료**다.
 
 ## 2026-10-21 단위252 연결 완료: Early 기술 허용 목록과 공용 건설/생산 표
 

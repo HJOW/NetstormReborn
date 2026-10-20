@@ -14,8 +14,8 @@
     "cpppj/src/client/RawCampaignSession.h": "7cfca63bcb353cb161328764221f3ec62c3b4dec2ce6833e784601cfe2825a1c",
     "cpppj/src/client/RawObjectMenuOpen.cpp": "a077dad61ac2c980fb578b642fd7b22b75f5e81fa936bb92ae9402eae61fca86",
     "cpppj/src/client/RawObjectMenuOpen.h": "cb8124fe182ee1586128587ec4fa8a6fe152a1312550742aa21007c67b40b587",
-    "cpppj/tests/CMakeLists.txt": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c",
-    "cpppj/tests/CampaignObjectMenuTests.cpp": "c9f734313aefd637928b66cc20cdb5bfffb0bb1d6144bd814b27cd3452e699b6",
+    "cpppj/tests/CMakeLists.txt": "563b036b7566297db4635bfecbc363c789e7b340e061acd2343d3ff7b9d463b8",
+    "cpppj/tests/CampaignObjectMenuTests.cpp": "002d2f020d4fc3b456147b0090c50467026d60034c2b23b35285481b79c176d3",
     "cpppj/tests/ObjectMenuOpenTests.cpp": "17f364d169dc40b9d4276ed192fb4042c07ca212b3740bbb3abc2cb54fc54b77",
     "tools/decomp_object_menu_open.py": "88e0ed764e3ab5e54e1feb5177bd9313bf7edfcb3b9f79d8d4cd60581f03df17",
     "cpppj/tests/fixtures/object-menu-open-x86.tsv": "5ab274b7e92b4676b84bdd061954a1dfd92efbf6ff428671c884573cdf920e6f"
@@ -2037,6 +2037,26 @@
           "group": "/currentSources",
           "previous": "fea9198ea2150c42bb523f7ac9298c2f819acd1fc9b9887b53020c206ad62563",
           "current": "c9f734313aefd637928b66cc20cdb5bfffb0bb1d6144bd814b27cd3452e699b6"
+        }
+      ]
+    },
+    {
+      "unit": "254",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "실제 Quick Help 창 재사용·전체 입력 분배·이력/팝업 복귀를 복원하고 같은 RawMenuControls의 실제 지식 표식을 공용 저장소로 옮긴다. 전용 본문/창·Client Help 소비자는 후속이다. 현재 핀만 갱신하고 과거 files/evidence/원문/기대값/실행은 보존한다. 제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/currentSources",
+          "previous": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c",
+          "current": "563b036b7566297db4635bfecbc363c789e7b340e061acd2343d3ff7b9d463b8"
+        },
+        {
+          "path": "cpppj/tests/CampaignObjectMenuTests.cpp",
+          "group": "/currentSources",
+          "previous": "c9f734313aefd637928b66cc20cdb5bfffb0bb1d6144bd814b27cd3452e699b6",
+          "current": "002d2f020d4fc3b456147b0090c50467026d60034c2b23b35285481b79c176d3"
         }
       ]
     }

@@ -1463,3 +1463,11 @@ cpppj/knowledge-menu-native.json text eol=lf
 cpppj/knowledge-menu-session.json text eol=lf
 tools/decomp_knowledge_menu.py text eol=lf
 tools/cpp_knowledge_menu_audit.py text eol=lf
+# 실제 Quick Help 제어/이력과 최초 PE 관측을 UTF-8/LF로 보존한다.
+cpppj/src/client/QuickHelpControl.* text eol=lf
+cpppj/tests/QuickHelpControlTests.cpp text eol=lf
+cpppj/tests/fixtures/quick-help-control-x86.tsv text eol=lf
+cpppj/quick-help-control-native.json text eol=lf
+cpppj/quick-help-control-session.json text eol=lf
+tools/decomp_quick_help_control.py text eol=lf
+tools/cpp_quick_help_control_audit.py text eol=lf

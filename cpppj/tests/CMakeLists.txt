@@ -1585,6 +1585,9 @@ set_source_files_properties(InventoryAboutMenuTests.cpp PROPERTIES COMPILE_DEFIN
 
 # 새 C++ 전 동결한 실제 Quick Help 요청985행을 대조한다.
 target_sources(netstorm_tests PRIVATE QuickHelpRequestTests.cpp)
+target_sources(netstorm_tests PRIVATE QuickHelpControlTests.cpp)
+set_source_files_properties(QuickHelpControlTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_QUICK_HELP_CONTROL_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/quick-help-control-x86.tsv\"")
 set_source_files_properties(QuickHelpRequestTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_QUICK_HELP_REQUEST_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/quick-help-request-x86.tsv\"")
 

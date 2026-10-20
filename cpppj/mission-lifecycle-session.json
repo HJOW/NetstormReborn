@@ -11,8 +11,8 @@
     "cpppj/src/client/UberGump.h": "70b2e2e7479669d3ddb47c054d95c87440f266441fea44a2753c39278c12eb65",
     "cpppj/src/client/State.cpp": "07d6383c35edf6a79d0691afd8685d94dcbf8d3a5e89f5b4088f11e62ef3b281",
     "cpppj/src/client/State.h": "fbcb7c817dea1410d235a42a6b25f22815f759cbc5a74cfdc90f9e0006f95c83",
-    "cpppj/src/client/CMakeLists.txt": "f4331fcea75cb14f5703124aa71a1c2db5f1d196b134fe909efd823df08225b0",
-    "cpppj/tests/CMakeLists.txt": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c",
+    "cpppj/src/client/CMakeLists.txt": "5283020971050c69f6db61190dfaee962948167910d2d02623ef31cbd9064836",
+    "cpppj/tests/CMakeLists.txt": "563b036b7566297db4635bfecbc363c789e7b340e061acd2343d3ff7b9d463b8",
     "cpppj/tests/CampaignMissionStartTests.cpp": "83e64926952399dda15209b6548cf9bd378a334e4a82723ddec0723c94348ed7",
     "tools/cpp_mission_common_audit.py": "69bbcb39e8e8178e4b04b32b2c4ed68b6618ad36070c94d1f268e0bf088e24c4",
     "tools/decomp_mission_lifecycle.py": "28eeab439c109bff32bf9f9c00c1a73165f86e74792360f835f5382778a6c654",
@@ -1489,6 +1489,26 @@
           "group": "/sources",
           "previous": "af9e0e69a02c9041885be869c54ea2c398efd84d47a7073f3bc2fc1090234b09",
           "current": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c"
+        }
+      ]
+    },
+    {
+      "unit": "254",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "실제 Quick Help 창 재사용·전체 입력 분배·이력/팝업 복귀를 복원하고 같은 RawMenuControls의 실제 지식 표식을 공용 저장소로 옮긴다. 전용 본문/창·Client Help 소비자는 후속이다. 현재 핀만 갱신하고 과거 files/evidence/원문/기대값/실행은 보존한다. 제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "f4331fcea75cb14f5703124aa71a1c2db5f1d196b134fe909efd823df08225b0",
+          "current": "5283020971050c69f6db61190dfaee962948167910d2d02623ef31cbd9064836"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c",
+          "current": "563b036b7566297db4635bfecbc363c789e7b340e061acd2343d3ff7b9d463b8"
         }
       ]
     }

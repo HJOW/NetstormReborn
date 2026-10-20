@@ -44,7 +44,7 @@ struct RawMenuControls::Impl {
     std::int8_t backgroundColor{35}; // 원본 기본 배경 식별 BYTE다.
     std::uint32_t popup{}; // 마지막 루트 메뉴 토큰이며 원본 등록표의 생존 여부로 검사한다.
     std::vector<std::uint32_t> knowledge; // 같은 공통 트리에 실제 부착된 지식 카드 토큰이며 수명/열림은 노드에서 읽는다.
-    std::uint32_t popupCommand{};std::array<char,80> popupArgument{}; // 005ca938/940의 마지막 팝업 명령과 첫NUL 문자열이다.
+    QuickHelpPopupState popupState; // 005ca938/940의 마지막 팝업을 Help Back과 같은 저장소로 공유한다.
     mutable std::array<std::uint32_t,4> lastInput{}; // 실제 파생 가상 입력의 마지막 토큰/사건/좌표를 진단 보고에만 보관한다.
     std::map<std::uint32_t,std::unique_ptr<MenuGumpNode>> menus; // 같은 기본 배경을 가진 실제 메뉴 노드다.
     std::map<std::uint32_t,std::unique_ptr<GumpDecorationNode>> decorations; // 실제 모서리 장식 노드다.
@@ -206,6 +206,7 @@ void RawMenuControls::SetExternalGumps(RawMenuExternalGumps hooks) { impl_->exte
 const TextGump& RawMenuControls::TextBackend() const { return *impl_->costText; } // 같은 한 줄 처리기다.
 const StyleText& RawMenuControls::StyleBackend() const { return *impl_->style; } // 같은 조각 소유자다.
 const GumpBackgroundCreate& RawMenuControls::BackgroundBackend() const { return *impl_->backgroundCreate; } // 같은 실제 자산이다.
+QuickHelpPopupState& RawMenuControls::PopupState() const { return impl_->popupState; } // 현재 팝업 표식 사본을 만들지 않는다.
 // 공통 생성과 분배는 별도 기본 노드 복사본을 만들지 않는다.
 GumpCreateNode* RawMenuControls::Node(std::uint32_t token) const { return impl_->Node(token); }
 // 스크롤 화살표도 같은 ButtonGump 상태를 사용한다.
@@ -259,7 +260,7 @@ bool RawMenuControls::OpenKnowledge(RawCampaignSession& session,std::function<st
     hooks.attach=[&](std::int32_t x,std::int32_t y) { s.menu->AttachCurrent(x,y,s.common.create.collection.root); };
     hooks.push=[&](std::uint32_t token) { s.common.tree.Push(token); };hooks.pop=[&](std::uint32_t token) { const auto node=s.common.node(token);s.common.attach(token,node->x,node->y,0,0); };
     hooks.width=[&](std::uint32_t token,float value) { s.menu->SetWidth(token,value); };hooks.height=[&](std::uint32_t token,float value) { s.menu->SetHeight(token,value); };
-    hooks.position=[&](std::uint32_t token) { return s.common.collection.Position(token); };hooks.mark=[&](std::uint32_t command) { s.popupCommand=command;s.popupArgument.fill(0); };
+    hooks.position=[&](std::uint32_t token) { return s.common.collection.Position(token); };hooks.mark=[&](std::uint32_t command) { s.popupState.Mark(command); };
     auto tokens=session.ShowKnowledge(state,std::move(hooks));if (s.menuState.index) throw std::logic_error("지식 창 작성 뒤 controlled 스택 잔존");
     s.knowledge=std::move(tokens);s.popup=s.knowledge.empty() ? 0 : s.knowledge.front();s.common.changed();return !s.knowledge.empty();
 }

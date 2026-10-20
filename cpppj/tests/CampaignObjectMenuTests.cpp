@@ -119,7 +119,9 @@ struct ActualMenuUi {
 // 실제 Session 기술·커서 취소와 같은 Gump 생성/부착/원본 StyleText 그림·지연 수명을 함께 연결한다.
 TEST_CASE(CampaignKnowledge_ActualSessionAndMenuTree) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);MenuServices external;auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",external.Make());session.Load();ActualMenuUi ui(assets);ui.currentSession=&session;session.Cursor().SetEffects(ui.CursorEffects());
+    ui.menus->PopupState().Mark(0x2000abc,"previous"); // 실제 표식의 이전 값을 덮고 전체80바이트를 지우는지 확인한다.
     session.AddTechnology(1,"sunArcher;windBattery");CHECK(ui.menus->OpenKnowledge(session,[](std::string_view key) { const auto bytes=EncodeOriginalText(key);return std::string(bytes.begin(),bytes.end()); },1));
+    CHECK(ui.menus->PopupState().command==0x20000a0 && ui.menus->PopupState().Argument().empty());CHECK(std::all_of(ui.menus->PopupState().argument.begin(),ui.menus->PopupState().argument.end(),[](char value) { return value==0; }));
     CHECK(ui.menus->KnowledgeOpen() && ui.buttons.BlockingGumpOpen() && ui.menus->HasMenus());CHECK(ui.menus->Point("WIND").has_value() && ui.menus->Point("RAIN").has_value() && ui.menus->Point("THUN.").has_value() && ui.menus->Point("SUN").has_value());
     std::array<std::uint32_t,256> logical{};
     // 실제 보호 RGB를 기존 메뉴 명암 표 생성기에 전달한다.

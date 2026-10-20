@@ -22,8 +22,8 @@
     "cpppj/src/client/RawCarrierMenu.cpp": "4a0fada9b8ac9d00eab37955189a8ac669d26f1d22559deae229a6ce3637dc1e",
     "cpppj/src/client/RawCarrierMenu.h": "e4ef0cccd8c956ccf6c167a7b08e0a9350f46206e08a9670dbaed6272d7749d8",
     "cpppj/src/client/RawCursorDrop.h": "61de4218af3ad691e3be7a2a56902e5e35c0f7cdc10ba52b858f626010f13e5b",
-    "cpppj/src/client/RawMenuControls.cpp": "51990bde376f68670b1c549b0bb1135fbc966c340e7131ee9e5c1e08a4da1c93",
-    "cpppj/src/client/RawMenuControls.h": "84c7e0dc59650ac986b3a4e9c9a60083443c6da500081d1567e2e8986692412e",
+    "cpppj/src/client/RawMenuControls.cpp": "379bb83823100d91566e7c71740dc008d543e3e6c60552eec61cd0564b806034",
+    "cpppj/src/client/RawMenuControls.h": "ce840dfe96790e5c9bdec7e5b4f172b8c3765e2ae53d99f5e7f4da76b60bf1d5",
     "cpppj/src/client/RawObjectMenu.cpp": "f64429574e0fd57e325cd99b47e3c46197979b5047d879b1a9693fda7d58a1ef",
     "cpppj/src/client/RawObjectMenu.h": "47fa941dc9fe3becb679f297ea29c8f7cc662aa44d1e6f91c5643739aa905e9a",
     "cpppj/src/client/RawUserHighlight.cpp": "3ac1867b7da1f553b0fb46103207df3886f31a332e1332456b2590b089438767",
@@ -32,9 +32,9 @@
     "cpppj/src/client/UserInput.cpp": "fd1bee42a48c4a33098114e813a7909d449791671fb0e313b76efc55216c20bd",
     "cpppj/src/o/SquidFactory.h": "439126b14875597ae876ab82d1699d414fa15fdf76ec9ac83f6794d32595c549",
     "cpppj/src/o/SquidReward.h": "59cf154a0aa681fbce7bdf445728afc582409bd9af9b24e5b135e435e92aa362",
-    "cpppj/tests/CMakeLists.txt": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c",
+    "cpppj/tests/CMakeLists.txt": "563b036b7566297db4635bfecbc363c789e7b340e061acd2343d3ff7b9d463b8",
     "cpppj/tests/CampaignCursorClientEffectsTests.cpp": "f04679442eea66764f77ab814314c9edd1790dca1f61f39e95eb29804b78d92b",
-    "cpppj/tests/CampaignObjectMenuTests.cpp": "c9f734313aefd637928b66cc20cdb5bfffb0bb1d6144bd814b27cd3452e699b6",
+    "cpppj/tests/CampaignObjectMenuTests.cpp": "002d2f020d4fc3b456147b0090c50467026d60034c2b23b35285481b79c176d3",
     "cpppj/tests/CampaignSessionTests.cpp": "6a6d54fd15eb24c0609492756880c774120f855138441820a536ea5bd73ee4f0",
     "cpppj/tests/RawButtonCursorBoundaryTests.cpp": "1f24a7464493536890611554b51d41bdeb477fa23190a909933ebd0ef1873684",
     "cpppj/tests/UserHighlightTests.cpp": "a23f97791f61415d333d3d99b33ec56e6ec67423a021da43473934fadd3a57ab",
@@ -3099,6 +3099,38 @@
           "group": "/currentSources",
           "previous": "fea9198ea2150c42bb523f7ac9298c2f819acd1fc9b9887b53020c206ad62563",
           "current": "c9f734313aefd637928b66cc20cdb5bfffb0bb1d6144bd814b27cd3452e699b6"
+        }
+      ]
+    },
+    {
+      "unit": "254",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "실제 Quick Help 창 재사용·전체 입력 분배·이력/팝업 복귀를 복원하고 같은 RawMenuControls의 실제 지식 표식을 공용 저장소로 옮긴다. 전용 본문/창·Client Help 소비자는 후속이다. 현재 핀만 갱신하고 과거 files/evidence/원문/기대값/실행은 보존한다. 제품 실행은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawMenuControls.cpp",
+          "group": "/currentSources",
+          "previous": "51990bde376f68670b1c549b0bb1135fbc966c340e7131ee9e5c1e08a4da1c93",
+          "current": "379bb83823100d91566e7c71740dc008d543e3e6c60552eec61cd0564b806034"
+        },
+        {
+          "path": "cpppj/src/client/RawMenuControls.h",
+          "group": "/currentSources",
+          "previous": "84c7e0dc59650ac986b3a4e9c9a60083443c6da500081d1567e2e8986692412e",
+          "current": "ce840dfe96790e5c9bdec7e5b4f172b8c3765e2ae53d99f5e7f4da76b60bf1d5"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/currentSources",
+          "previous": "f25ecb90da4f93e8087f2a5077a0394e59b97ccac4773c6575cf47672a56eb4c",
+          "current": "563b036b7566297db4635bfecbc363c789e7b340e061acd2343d3ff7b9d463b8"
+        },
+        {
+          "path": "cpppj/tests/CampaignObjectMenuTests.cpp",
+          "group": "/currentSources",
+          "previous": "c9f734313aefd637928b66cc20cdb5bfffb0bb1d6144bd814b27cd3452e699b6",
+          "current": "002d2f020d4fc3b456147b0090c50467026d60034c2b23b35285481b79c176d3"
         }
       ]
     }
