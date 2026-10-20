@@ -28,9 +28,9 @@
     "cpppj/src/client/AiTypeRequiredEnergy.cpp": "a77ecbbece0a23b295c26e35ba5f788ea1c61a660b95880a83abc6988ef559c0",
     "cpppj/tests/fixtures/type-required-energy-x86.tsv": "8bcb3e215c958f5df0a395365059f5481801b1660569f2f04c0720f394f14f4c",
     "cpppj/tests/TypeRequiredEnergyTests.cpp": "0802ab400413ec5da3f2d03a4ac6b6f88e2d088915646609a2ca0bb39a02b05c",
-    "cpppj/src/o/CMakeLists.txt": "8fd2012644816c088a0283bde3e14ed3d9c3cff364d38c4c1bd5f4e6eaa81bd4",
+    "cpppj/src/o/CMakeLists.txt": "c9d0a7b1593fcecf72045b9f719c42cfc4c6db3cc9469d485ac17d4ff502ea79",
     "cpppj/src/client/CMakeLists.txt": "0ea1587f2d9dcd22fb2afbdeeefcb151242775b7083018dd39eb181a84fc0b06",
-    "cpppj/tests/CMakeLists.txt": "f76cfe04ff401b849f8db7dd5f97f1476ed5420f8a6fbb64af39bd07f1f5105d"
+    "cpppj/tests/CMakeLists.txt": "a88beacab21ab71fabd5083556280da5ffa19070f076417fb87d5f1539b13223"
   },
   "product_validation": {
     "configuration": "Release",
@@ -2722,6 +2722,26 @@
           "group": "/sha256",
           "previous": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30",
           "current": "f76cfe04ff401b849f8db7dd5f97f1476ed5420f8a6fbb64af39bd07f1f5105d"
+        }
+      ]
+    },
+    {
+      "unit": 261,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "실제 Template9/소유·빌림과Init 명시 정리/같은 State 섹션을 Client·Session에 연결했다. 현재 소스 핀만 갱신하고 과거 원문/기대값/실행·바이너리는 보존한다. 제품 검사는 이월하며 사용자 요청으로 이번 커밋 뒤 목표를 일시 정지한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/o/CMakeLists.txt",
+          "group": "/sha256",
+          "previous": "8fd2012644816c088a0283bde3e14ed3d9c3cff364d38c4c1bd5f4e6eaa81bd4",
+          "current": "c9d0a7b1593fcecf72045b9f719c42cfc4c6db3cc9469d485ac17d4ff502ea79"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sha256",
+          "previous": "f76cfe04ff401b849f8db7dd5f97f1476ed5420f8a6fbb64af39bd07f1f5105d",
+          "current": "a88beacab21ab71fabd5083556280da5ffa19070f076417fb87d5f1539b13223"
         }
       ]
     }

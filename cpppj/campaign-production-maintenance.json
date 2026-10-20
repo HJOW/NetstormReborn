@@ -167,15 +167,15 @@
   "currentSources": {
     "cpppj/src/CMakeLists.txt": "8834917133d33fda6dcd145dd64a93ee38ee014d25fede2eff5575b996df5847",
     "cpppj/src/client/RawButtonControls.cpp": "ca4f6842a5c2951e744060c2bc1c66b4d52f246d095dd6b36ea87a1c5393e472",
-    "cpppj/src/client/RawCampaignSession.cpp": "6aaef81339fe4682278a624c49650e5d0e0542ff1c0a45b4c211d47ebf0576dc",
-    "cpppj/src/client/RawCampaignSession.h": "792643b10d24fa01452430c639beb3d986b1f5012b0c28b746eb5b5e04ef4668",
+    "cpppj/src/client/RawCampaignSession.cpp": "f0a29e106d66694da5390befb2a20f41346270d827976447bddb6d0970f16902",
+    "cpppj/src/client/RawCampaignSession.h": "c7eb35c34efd4457beab89d66be64d2598bf24a833758ca264e09b3a2a27390b",
     "cpppj/src/client/RawProductionControls.cpp": "a6edd49e5a486449f4b23f3092719f7f1342ee86f66d1325867c306f52056d31",
     "cpppj/src/client/RawProductionControls.h": "8826c67edd4bc027f1d060bcd1e0fe5aa4638c4683b05fd6d2c57e931c90b346",
-    "cpppj/src/client/UberGump.cpp": "43849641465d1a9d96640aef0563e08bcf84c0dfe232b133784136fffc0f0666",
+    "cpppj/src/client/UberGump.cpp": "b1b3a1e22a6b7511a5597a4b95064bee0ca161fe6583cd5cb92a64d04e9f2aff",
     "cpppj/src/o/RawSquidNeighbors.cpp": "88ec2ee9dbaad0627d1ceb3629199361d860ba137f50d12fe0410a8cbbefa3f2",
     "cpppj/src/o/RawSquidNeighbors.h": "edb19d4782b671d6be80c9f7690b9455d200ef7dbe2df51059d5ca0c4a66175c",
-    "cpppj/tests/CMakeLists.txt": "f76cfe04ff401b849f8db7dd5f97f1476ed5420f8a6fbb64af39bd07f1f5105d",
-    "cpppj/tests/CampaignSessionTests.cpp": "578c171e7688b75c145dda0fcd3e56925bdee1d59882c2b5955c94f3e5e1ea97",
+    "cpppj/tests/CMakeLists.txt": "a88beacab21ab71fabd5083556280da5ffa19070f076417fb87d5f1539b13223",
+    "cpppj/tests/CampaignSessionTests.cpp": "a70538585ad7af14e773ed2452ff3a34d26e0a0795fcdbc7073aeef982ddf907",
     "tools/cpp_production_panel_smoke.py": "724988401741b93176a8a8d85a043ba712335b8c2cce85930f11016eae1a1e50",
     "cpppj/neighbor-boundary.json": "f867eca090662fcf3b5309055274552d0b826c6b2bc5929058ee604b595a2289",
     "cpppj/production-idle.json": "98765db8f237106b9b13db4fc3c09a8d02b0627a767dd76aa75d174b100c6f74",
@@ -2174,6 +2174,44 @@
           "group": "/currentSources",
           "previous": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b",
           "current": "578c171e7688b75c145dda0fcd3e56925bdee1d59882c2b5955c94f3e5e1ea97"
+        }
+      ]
+    },
+    {
+      "unit": 261,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "실제 Template9/소유·빌림과Init 명시 정리/같은 State 섹션을 Client·Session에 연결했다. 현재 소스 핀만 갱신하고 과거 원문/기대값/실행·바이너리는 보존한다. 제품 검사는 이월하며 사용자 요청으로 이번 커밋 뒤 목표를 일시 정지한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "group": "/currentSources",
+          "previous": "6aaef81339fe4682278a624c49650e5d0e0542ff1c0a45b4c211d47ebf0576dc",
+          "current": "f0a29e106d66694da5390befb2a20f41346270d827976447bddb6d0970f16902"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "group": "/currentSources",
+          "previous": "792643b10d24fa01452430c639beb3d986b1f5012b0c28b746eb5b5e04ef4668",
+          "current": "c7eb35c34efd4457beab89d66be64d2598bf24a833758ca264e09b3a2a27390b"
+        },
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "group": "/currentSources",
+          "previous": "43849641465d1a9d96640aef0563e08bcf84c0dfe232b133784136fffc0f0666",
+          "current": "b1b3a1e22a6b7511a5597a4b95064bee0ca161fe6583cd5cb92a64d04e9f2aff"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/currentSources",
+          "previous": "f76cfe04ff401b849f8db7dd5f97f1476ed5420f8a6fbb64af39bd07f1f5105d",
+          "current": "a88beacab21ab71fabd5083556280da5ffa19070f076417fb87d5f1539b13223"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "group": "/currentSources",
+          "previous": "578c171e7688b75c145dda0fcd3e56925bdee1d59882c2b5955c94f3e5e1ea97",
+          "current": "a70538585ad7af14e773ed2452ff3a34d26e0a0795fcdbc7073aeef982ddf907"
         }
       ]
     }

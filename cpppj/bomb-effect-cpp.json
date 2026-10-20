@@ -26,7 +26,7 @@
   },
   "sources": {
     "cpppj/src/CMakeLists.txt": "8834917133d33fda6dcd145dd64a93ee38ee014d25fede2eff5575b996df5847",
-    "cpppj/tests/CMakeLists.txt": "f76cfe04ff401b849f8db7dd5f97f1476ed5420f8a6fbb64af39bd07f1f5105d",
+    "cpppj/tests/CMakeLists.txt": "a88beacab21ab71fabd5083556280da5ffa19070f076417fb87d5f1539b13223",
     "cpppj/src/o/RawBombEffect.cpp": "d37f764b18b534480c566b40899eaacf600b4c1f1bc02e66e6e278587427e543",
     "cpppj/src/o/RawBombEffect.h": "78de4e8419940cdc10b434735bfd3d8a4e0a4832e9ed525bb4e81554c1bbc450",
     "cpppj/tests/BombEffectTests.cpp": "8cfaf59f4ddee64949e13474b30a18371c492d5846cca1c77ff0ae1e5cedc265",
@@ -420,6 +420,20 @@
           "group": "/sources",
           "previous": "b01aea5bb1c12479c2913d759abf01e8b95fe2091936fdfa3f714a72d8fa1e30",
           "current": "f76cfe04ff401b849f8db7dd5f97f1476ed5420f8a6fbb64af39bd07f1f5105d"
+        }
+      ]
+    },
+    {
+      "unit": 261,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "실제 Template9/소유·빌림과Init 명시 정리/같은 State 섹션을 Client·Session에 연결했다. 현재 소스 핀만 갱신하고 과거 원문/기대값/실행·바이너리는 보존한다. 제품 검사는 이월하며 사용자 요청으로 이번 커밋 뒤 목표를 일시 정지한다.",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "f76cfe04ff401b849f8db7dd5f97f1476ed5420f8a6fbb64af39bd07f1f5105d",
+          "current": "a88beacab21ab71fabd5083556280da5ffa19070f076417fb87d5f1539b13223"
         }
       ]
     }

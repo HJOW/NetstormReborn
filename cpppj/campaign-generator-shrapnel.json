@@ -92,9 +92,9 @@
     "originals/d/GIFCLOUD.COL": "785a2cda6ac1d3e295d375815b6d9650720683099db7c249382d598b5da00532"
   },
   "currentSources": {
-    "cpppj/src/client/RawCampaignSession.cpp": "6aaef81339fe4682278a624c49650e5d0e0542ff1c0a45b4c211d47ebf0576dc",
-    "cpppj/tests/CMakeLists.txt": "f76cfe04ff401b849f8db7dd5f97f1476ed5420f8a6fbb64af39bd07f1f5105d",
-    "cpppj/tests/CampaignSessionTests.cpp": "578c171e7688b75c145dda0fcd3e56925bdee1d59882c2b5955c94f3e5e1ea97",
+    "cpppj/src/client/RawCampaignSession.cpp": "f0a29e106d66694da5390befb2a20f41346270d827976447bddb6d0970f16902",
+    "cpppj/tests/CMakeLists.txt": "a88beacab21ab71fabd5083556280da5ffa19070f076417fb87d5f1539b13223",
+    "cpppj/tests/CampaignSessionTests.cpp": "a70538585ad7af14e773ed2452ff3a34d26e0a0795fcdbc7073aeef982ddf907",
     "tools/decomp_generator_capture.py": "d5b8b31e5c9c0ab00f24236460af8b63f86412e5115537d56f6f71feb6238b0f",
     "cpppj/generator-capture.json": "177c4bd3b90673160f0b4fe9b50c499ee6eda65838f09eed78b7c8f4ddf9506b",
     "cpppj/tests/fixtures/generator-capture-x86.tsv": "5db59d411828a19c8ef4f236058d14b3a7d1658fc2e8ab1a4571986ab3dcf1a1"
@@ -1453,6 +1453,32 @@
           "group": "/currentSources",
           "previous": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b",
           "current": "578c171e7688b75c145dda0fcd3e56925bdee1d59882c2b5955c94f3e5e1ea97"
+        }
+      ]
+    },
+    {
+      "unit": 261,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "실제 Template9/소유·빌림과Init 명시 정리/같은 State 섹션을 Client·Session에 연결했다. 현재 소스 핀만 갱신하고 과거 원문/기대값/실행·바이너리는 보존한다. 제품 검사는 이월하며 사용자 요청으로 이번 커밋 뒤 목표를 일시 정지한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "group": "/currentSources",
+          "previous": "6aaef81339fe4682278a624c49650e5d0e0542ff1c0a45b4c211d47ebf0576dc",
+          "current": "f0a29e106d66694da5390befb2a20f41346270d827976447bddb6d0970f16902"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/currentSources",
+          "previous": "f76cfe04ff401b849f8db7dd5f97f1476ed5420f8a6fbb64af39bd07f1f5105d",
+          "current": "a88beacab21ab71fabd5083556280da5ffa19070f076417fb87d5f1539b13223"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "group": "/currentSources",
+          "previous": "578c171e7688b75c145dda0fcd3e56925bdee1d59882c2b5955c94f3e5e1ea97",
+          "current": "a70538585ad7af14e773ed2452ff3a34d26e0a0795fcdbc7073aeef982ddf907"
         }
       ]
     }

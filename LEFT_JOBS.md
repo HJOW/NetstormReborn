@@ -1,5 +1,18 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-21 단위261 연결 완료: Template9 명시 수명·같은 State, 커밋 뒤 사용자 요청으로 일시 정지
+
+- [x] 같은 goal을 이어 진행했다. 직전 단위260은 요새 요청/Zone 소유·실제 로그인 소비를 구현·검증·커밋한 진행 턴이다. 시작 HEAD `8c653e23`,현재/마지막 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-20**으로 같다. AGENTS와 양 인수인계를 다시 읽었다. 새 디컴파일·원본/CD·AGENTS·DN/README 변경은 없다.
+- [x] 유효 보정 원문은 실제004bfb00/004bf690/004bd2e0 전체 부모의 **240고유 입력·240정상 반환·15483명령**이다. 실제 진입 수 전역108/단일108/초기화24와 전체180BYTE/양쪽8BYTE·각 소멸/free 직전 현재 헤더·소유/빌림/빈 stale·효과 뒤 재조회·ABI/보존 레지스터/x87/쓰기 범위를 확인했다. DataManager004bd330/CRT free는 명시 경계이며 내부 MemStream/힙/OS/게임 실행이 아니다.
+- [x] 제품 수정 전의 초기240행/13257명령은 공용 Oracle의대체 호출이단일/생성 본문 진입을가로챈 **경계 감사 실패**로 거부/보존했다. 첫 도구/fixture/JSON과 `extracted/template-lifetime-20261021-first-capture/`는 그대로다. 별도 v2는 세 본문을 직접 실행하고 진입 수를 센다. **보정은 제품 수정 뒤** 독립 원본 PE를 실행했으며 C++ 결과로 기대값을 만들거나 알고리즘을 맞추지 않았다. 유효 파일은 `template-lifetime-v2-native.json`/`template-lifetime-v2-x86.tsv`,`tools/decomp_template_lifetime_v2.py`이며 `extracted/template-lifetime-20261021-corrected-capture/`에 동결했다. `template-lifetime-initial-rejection.json`에 거부 이유/SHA를 기록하고 새 검사는 v2만 읽는다.
+- [x] 실제9개 헤더 정리·단일 반납·초기화와 `CampaignTemplateStorage`를 연결했다. Client가 실제 manager/파싱 자료를 소유하고 Session·로그인·로더가 같은 표/현재 getter를 빌린다. Init 첫 정리에서 실제 manager를 반납하며 `ClearWorld`는 이 자료를 앞당겨 없애지 않는다. 빌린 헤더는 같은 파싱 자료·State/지형 cursor를 쓰고 소유자 수명 밖 접근은 명시 거부한다. 원본 전역 정리의 포인터0 칸은 부가 stale DWORD를 유지한다.
+- [x] State는 별도 사본 대신 같은 Fort 원시 섹션을 사용하고,짧은 State 확장은 원문 복사 뒤 이전 실제 할당을 반납한다. 새 검사4건(전체240행·실제 소유/빌림/직렬화·짧은 State 확장·Session 이후 자료 생존/명시 정리)을 작성했다. 기존 원문/기대값·독립 배열/span 입력은 보존한다. C++검사/게임은 실행하지 않는다.
+- [x] 최종 전체 Release **종료0·경고0·오류0**,로그 `extracted/cpp-template-lifetime-20261021-build2.log`다. 보정 fixture 입력으로 다시 컴파일했으며 C++검사/게임은 실행하지 않았다. 직전 요새 요청 감사가 과거 바이너리를 새 빌드와 비교하던 오류만 고쳤고 과거 해시는 유지했다. 기존 Fort 이미지/패킷 원문 감사는 시작 커밋과 같은 `tools/decomp_priestmenu.py`에 대한 과거 SHA 차이로 종료1이다. 기대값을 바꾸거나 새 통과로 세지 않는다. 상세 SHA/경계는 [작업 기록](docs/exe/cpp-template-lifetime-20261021.md)에 있다.
+- [x] 최종 정적 감사 **10개가 종료0**이다. 새 Template 연결/v2 원문,기존 요새 요청·Init·미션 수명·기술 허용·공통 프레임·기본 옵션·Client Help·State 확장99입력/198반환 보존을 확인했다. 기존 Fort 이미지/패킷 원문 감사1건은 위의 시작 전 SHA 문제로 종료1이며 새 통과로 세지 않는다. 현재 핀 **140보고서·434항목**의 전체 JSON 역변환이 시작 커밋과 같다. `o/CMakeLists.txt`를 LF로 고정한 뒤 빌드했고 과거 원문/기대값/실행·바이너리·역사 핀 차이를 유지했다.
+- [x] 상세 [작업 기록](docs/exe/cpp-template-lifetime-20261021.md),`cpppj/template-lifetime-session.json`·`template-lifetime-v2-native.json`·`template-lifetime-initial-rejection.json`,`tools/cpp_template_lifetime_audit.py --verify`·`tools/decomp_template_lifetime_v2.py --verify`다. 최초 거부3개/보정 유효3개·현재 세 바이너리/스테이징 해시를 확인하고 **20261021-22 CP**로 로컬 커밋한다. push하지 않는다. 두 일회성 기록기는 다시 실행하지 않는다.
+- [x] **사용자 요청:** 이번 작업 완료·문서화·로컬 커밋 뒤 목표를 일시 정지한다. 다음 작업에는 착수하지 않는다.
+- [ ] **재개 지점:** 전체 비동기 State7/전투 정리4b2df0·전체 DataManager MemStream/파일/오류·Fort 선택/Guide 공장·가상 소멸에서 이어간다. 전체11미션 자연 완주·전략AI·지형/포획/희생/대피·외관/음향/동작 동일성은 미완료다. 게임/C++검사/CTest/전체 회귀는 이전 지시대로 후속 실제 통합 플레이로 이월한다. 목표 완료로 판정하지 않는다.
+
 ## 2026-10-21 단위260 연결 완료: Init의 원본 요청144BYTE와 같은 Zone의 실제 로그인 소비
 
 - [x] 같은 goal을 이어 진행했다. 직전 단위259는 Init 전체 제어/공유 전역/다음 루프 로드를 구현·검증·커밋한 진행 턴이다. 시작 HEAD `8ba4af11`,현재/마지막 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-20**으로 같다. AGENTS와 양 인수인계를 다시 읽었다. 새 디컴파일·원본/CD·AGENTS·DN/README 변경은 없다.
@@ -8,7 +21,7 @@
 - [x] 새 검사3건은 최초144행·이미지 소유/중복 캡처·현재 Zone subscriber7의 실제 로그인 소비/할당 반납을 검사하도록 작성했다. 기존 보호11개 Init 검사도 같은 요청/Zone이 Header 전에 준비되는지 확장했다. 실행은 하지 않는다.
 - [x] 최종 전체 Release **종료0·경고0·오류0**,로그 `extracted/cpp-mission-fort-request-20261021-build2.log`다. 첫 빌드 종료 뒤 최종 설치 할당 반납/검사 입력을 확실히 반영하도록 같은 원문 소스2개의mtime만 갱신해 다시 빌드했다. 새 요청 감사/첫 원문 보존과 기존 Init·미션 수명·기술 허용·공통 프레임·기본 옵션·실제 Client Help·로컬 전송66행 원문/SHA 감사가 종료0이다. **C++검사/게임은 실행하지 않았다.** 현재 핀 **133보고서·300항목**의 전체 JSON 역변환이 시작 커밋과 같고 세 최종 바이너리 해시도 보고서와 같다. 과거 원문/기대값/실행·바이너리와 역사 핀 문제를 보존했다.
 - [x] 상세 [작업 기록](docs/exe/cpp-mission-fort-request-20261021.md),`cpppj/mission-fort-request-native.json`·`mission-fort-request-session.json`,`tools/decomp_mission_fort_request.py --verify`·`tools/cpp_mission_fort_request_audit.py --verify`다. 인수인계 뒤 **20261021-21 CP**로 로컬 커밋하며 push하지 않는다.
-- [ ] 다음은 전체 비동기 State7/전투 정리4b2df0·전역 Template manager9개 헤더/빌린 버퍼·Fort 선택/Guide 공장/가상 소멸이다. 전체11미션 자연 완주·전략AI·지형/포획/희생/대피·외관/음향/동작 동일성은 미완료다. 게임/C++검사/CTest/전체 회귀는 이전 사용자 지시대로 후속 실제 통합 플레이로 이월하며 전체 goal은 **active/미완료**다.
+- [x] **후속 단위261:** 전역 Template9 헤더의 명시 소유/빌림 수명과 Client·Session의 같은 manager/State를 연결했다. 전체 State7/전투 정리·DataManager 내부 MemStream/파일/오류·Fort 선택/Guide 공장/가상 소멸과 전체11미션 자연 완주는 위 재개 항목에 남겼다. 단위261 커밋 뒤 사용자 요청으로 일시 정지한다.
 
 ## 2026-10-21 단위259 연결 완료: Tutorial Init 실제 제어·공유 전역·다음 루프 요새 로드
 

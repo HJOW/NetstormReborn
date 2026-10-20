@@ -41,9 +41,8 @@ struct RawCampaignSession::Impl::Login {
     }
     //현재 파일을 실제 VFS로 다시 읽어 같은Template/State/territory cursor를 교체한다.
     void Reload(std::uint32_t owner) {
-        if (owner!=1 || s.stateNames[owner].empty()) throw std::logic_error("로컬 미션 이외 Template 파일 선택 미연결");
-        s.templates[owner]=FortTemplate::Parse(s.assets.files.Read("d/"+s.stateNames[owner]+".fort"),s.assets.game.TypeTable());
-        const auto bytes=s.templates[owner].Section("State");s.stateBytes[owner].assign(bytes.begin(),bytes.end());s.stateStreams[owner]={s.stateBytes[owner],0,static_cast<std::uint32_t>(s.stateBytes[owner].size()),!s.stateBytes[owner].empty()};s.streams[owner]={s.templates[owner].territory,0,static_cast<std::uint32_t>(s.templates[owner].territory.size())};
+        const auto name=s.templateStorage->Name(owner);if (owner!=1 || name.empty()) throw std::logic_error("로컬 미션 이외 Template 파일 선택 미연결");
+        s.templateStorage->Install(owner,FortTemplate::Parse(s.assets.files.Read("d/"+name+".fort"),s.assets.game.TypeTable()),name);
     }
     //현재20BYTE zlocal주소에서 실제클라이언트의포트와주소를 제공한다.
     std::array<std::uint8_t,20> Address() const {
@@ -65,7 +64,7 @@ struct RawCampaignSession::Impl::Login {
         hooks.connectServer=[this](std::span<const std::uint8_t>,std::uint32_t) { transport->Connect(); };
         hooks.connectionStatus=[this](std::int32_t owner) { return owner==9 && transport->IsOpen() && (transport->Client().flags&2) ? 1 : 0; };
         hooks.connectionOpen=[this](std::int32_t owner) { return owner==9 && transport->IsOpen() && (transport->Client().flags&2) && !(transport->Client().flags&0x40); };
-        hooks.sendLogin=[this] { const auto image=RawFortImage(OriginalEdition::Patch1078,s.templates[s.playerState.templateOwner],{[this] { return static_cast<std::uint32_t>(s.core.types.size()); },{}}).Save();const auto packet=netstorm::zacket::MakeLocalMissionLogin(s.globals.mySubscriber,{reinterpret_cast<const char*>(s.handle.data())},image.Bytes());Send(9,packet.Bytes()); };
+        hooks.sendLogin=[this] { const auto image=RawFortImage(OriginalEdition::Patch1078,s.templateStorage->Template(s.playerState.templateOwner),{[this] { return static_cast<std::uint32_t>(s.core.types.size()); },{}}).Save();const auto packet=netstorm::zacket::MakeLocalMissionLogin(s.globals.mySubscriber,{reinterpret_cast<const char*>(s.handle.data())},image.Bytes());Send(9,packet.Bytes()); };
         hooks.connectedProgress=hooks.closeProgress=effects.refresh;
         hooks.fortAvailable=[this](std::uint32_t owner) { return owner<9 && Get(s.headers,owner*20)!=0; };hooks.loadCurrentFort=[this] { Reload(s.playerState.templateOwner); };
         hooks.fortCore=[this](std::uint32_t owner) { return s.templateState->Get(owner); };hooks.touchFort=[this](std::uint32_t owner) { s.templateState->Changed(owner); };
@@ -82,7 +81,7 @@ struct RawCampaignSession::Impl::Login {
         options=std::make_unique<RawMissionBattleOptions>(OriginalEdition::Patch1078,MissionBattleOptionState{s.battleOptions,s.world.MutableTypes(),typeUse,ranges,s.geyserType,range,s.energyState.radiusSquared,optionValue});
         MissionServerPacketHooks packets;packets.send=send;packets.peerAddress=[this](std::uint32_t) { return "*:"+std::to_string(Need(effects.configInt)("gameServerPort",6799)); };packets.log=effects.log;
         metadata=std::make_unique<RawMissionServerPackets>(s.players,MissionServerPacketState{s.core.processState.server,s.core.ownerMode.challenge,s.playerState.battleOwner,central,archipelago,Zone()},std::move(packets));
-        forts=std::make_unique<RawMissionLoginPackets>(OriginalEdition::Patch1078,s.players,MissionFortPacketReads{[this](std::uint32_t player)->const FortTemplate* { return player<9 && Get(s.headers,player*20) ? &s.templates[player] : nullptr; },[] { return std::uint16_t{4}; }},FortImageHooks{[this] { return static_cast<std::uint32_t>(s.core.types.size()); },{}},MissionFortPacketHooks{[this](std::uint32_t,std::int32_t) { Need(effects.log)("로컬 Fort 전송\n"); },send,{}});
+        forts=std::make_unique<RawMissionLoginPackets>(OriginalEdition::Patch1078,s.players,MissionFortPacketReads{[this](std::uint32_t player)->const FortTemplate* { return player<9 && Get(s.headers,player*20) ? &s.templateStorage->Template(player) : nullptr; },[] { return std::uint16_t{4}; }},FortImageHooks{[this] { return static_cast<std::uint32_t>(s.core.types.size()); },{}},MissionFortPacketHooks{[this](std::uint32_t,std::int32_t) { Need(effects.log)("로컬 Fort 전송\n"); },send,{}});
         MissionSettingsPacketHooks setting;setting.current=[this](MissionSettingsField field) { return settingValues.at(static_cast<std::size_t>(field)); };setting.setCurrent=[this](MissionSettingsField field,std::uint32_t value) { settingValues.at(static_cast<std::size_t>(field))=value;if (field==MissionSettingsField::ShootMyFriends) s.gunTargetState.friendlyFire=value!=0; };setting.send=send;settings=std::make_unique<RawMissionSettingsPacket>(OriginalEdition::Patch1078,std::move(setting));
         state=std::make_unique<RawLocalMissionState>(OriginalEdition::Patch1078,LocalMissionStateStorage{blocks[0],blocks[1],blocks[2],blocks[3],blocks[4]},LocalMissionStateGlobals{s.core.processState.server,s.assetState.boss,s.assetState.inBattle,s.globals.missionPost,saved,s.objectState.mission,simul,s.core.ownerMode.challenge,s.playerState,zonePending,ticks,source,randomSeed,blocks[2][33],metaRefresh,metaRebuild,title,battleByte,connectEnd,activityEnd,s.core.processState.now,wall},StateHooks());
         MissionLoginHooks serverHooks;serverHooks.send=send;serverHooks.broadcast=[this](std::span<const std::uint8_t> bytes) { s.broadcast->Send(bytes); };serverHooks.flush=[this] { transport->Flush(); };serverHooks.wallSeconds=effects.wallSeconds;serverHooks.clock=effects.clock;serverHooks.spBits=[this](std::uint32_t player) { return s.sp.Get(player); };

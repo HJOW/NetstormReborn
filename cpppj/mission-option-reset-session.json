@@ -9,15 +9,15 @@
   "sources": {
     "cpppj/src/o/RawMissionBattleOptions.cpp": "1c980ccb15f1895cc13efc8012eac01b734b07b9206289b7cb821dacd503c53d",
     "cpppj/src/o/RawMissionBattleOptions.h": "9dd14d4ffdf16003c3b3e0bc694704142ec22a7b7606fb5227fe63646647c433",
-    "cpppj/src/client/RawCampaignSessionLogin.inc": "9619b303ddb904f190a186f1c0adb3077e08a3e062c2ca96994a62afe1e69114",
+    "cpppj/src/client/RawCampaignSessionLogin.inc": "e9b49b754cbdc20010d3f8bc678f7e71083b661def84dad020c6c070abc481b2",
     "cpppj/tests/MissionBattleOptionsTests.cpp": "e832fc0d0768115ce509bdf2877955abafc01bb915e467ee4a6d5ded10e2fe5c",
-    "cpppj/tests/CampaignSessionTests.cpp": "578c171e7688b75c145dda0fcd3e56925bdee1d59882c2b5955c94f3e5e1ea97",
-    "cpppj/tests/CMakeLists.txt": "f76cfe04ff401b849f8db7dd5f97f1476ed5420f8a6fbb64af39bd07f1f5105d",
-    ".gitattributes": "b2dbce9da3575df0fdb318695866812d49c5b456bc2a5c4b5c9a640d39436cae",
+    "cpppj/tests/CampaignSessionTests.cpp": "a70538585ad7af14e773ed2452ff3a34d26e0a0795fcdbc7073aeef982ddf907",
+    "cpppj/tests/CMakeLists.txt": "a88beacab21ab71fabd5083556280da5ffa19070f076417fb87d5f1539b13223",
+    ".gitattributes": "816a2514baadeef047d56019988ff208721748bb207cfee289250c321de7d310",
     "tools/decomp_mission_option_reset.py": "d43635d38daee9eb413f44780311a284c77a07f4b44bc18194e6b29ea2c0df77",
     "tools/cpp_mission_option_reset_audit.py": "f6d552cbe62ac40213ca5e379f6a403685739ce4d9bbc5d84267f48de0a81535",
     "cpppj/src/o/RawMissionClientPackets.cpp": "e5593347ec53057635a218fc8783389fc68fac58224f1ac7333d8eaf9bde32f4",
-    "cpppj/src/client/RawCampaignSession.cpp": "6aaef81339fe4682278a624c49650e5d0e0542ff1c0a45b4c211d47ebf0576dc"
+    "cpppj/src/client/RawCampaignSession.cpp": "f0a29e106d66694da5390befb2a20f41346270d827976447bddb6d0970f16902"
   },
   "evidence": {
     "AGENTS.md": "0e112c50745cfa0a76f5996af47f98dddd36e8ccc07efe489868f62793913892",
@@ -2071,6 +2071,44 @@
           "group": "/sources",
           "previous": "31a5d0b8a79cedde26b766f59453fa4245d2df3e4a3e91cb204934c35d24d64b",
           "current": "578c171e7688b75c145dda0fcd3e56925bdee1d59882c2b5955c94f3e5e1ea97"
+        }
+      ]
+    },
+    {
+      "unit": 261,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "실제 Template9/소유·빌림과Init 명시 정리/같은 State 섹션을 Client·Session에 연결했다. 현재 소스 핀만 갱신하고 과거 원문/기대값/실행·바이너리는 보존한다. 제품 검사는 이월하며 사용자 요청으로 이번 커밋 뒤 목표를 일시 정지한다.",
+      "pins": [
+        {
+          "path": ".gitattributes",
+          "group": "/sources",
+          "previous": "b2dbce9da3575df0fdb318695866812d49c5b456bc2a5c4b5c9a640d39436cae",
+          "current": "816a2514baadeef047d56019988ff208721748bb207cfee289250c321de7d310"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "group": "/sources",
+          "previous": "6aaef81339fe4682278a624c49650e5d0e0542ff1c0a45b4c211d47ebf0576dc",
+          "current": "f0a29e106d66694da5390befb2a20f41346270d827976447bddb6d0970f16902"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSessionLogin.inc",
+          "group": "/sources",
+          "previous": "9619b303ddb904f190a186f1c0adb3077e08a3e062c2ca96994a62afe1e69114",
+          "current": "e9b49b754cbdc20010d3f8bc678f7e71083b661def84dad020c6c070abc481b2"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "f76cfe04ff401b849f8db7dd5f97f1476ed5420f8a6fbb64af39bd07f1f5105d",
+          "current": "a88beacab21ab71fabd5083556280da5ffa19070f076417fb87d5f1539b13223"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "group": "/sources",
+          "previous": "578c171e7688b75c145dda0fcd3e56925bdee1d59882c2b5955c94f3e5e1ea97",
+          "current": "a70538585ad7af14e773ed2452ff3a34d26e0a0795fcdbc7073aeef982ddf907"
         }
       ]
     }

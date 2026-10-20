@@ -7,23 +7,23 @@
   "lastDecompileDate": "2026-10-20",
   "newDecompile": false,
   "sources": {
-    "cpppj/src/client/UberGump.cpp": "43849641465d1a9d96640aef0563e08bcf84c0dfe232b133784136fffc0f0666",
-    "cpppj/src/client/UberGump.h": "51d6e8de3147a01e9f9c7c44e94e6c62d3fbd27e5c438b1451beaa199861c445",
-    "cpppj/src/client/RawCampaignSession.cpp": "6aaef81339fe4682278a624c49650e5d0e0542ff1c0a45b4c211d47ebf0576dc",
-    "cpppj/src/client/RawCampaignSession.h": "792643b10d24fa01452430c639beb3d986b1f5012b0c28b746eb5b5e04ef4668",
-    "cpppj/src/client/RawCampaignSessionLogin.inc": "9619b303ddb904f190a186f1c0adb3077e08a3e062c2ca96994a62afe1e69114",
+    "cpppj/src/client/UberGump.cpp": "b1b3a1e22a6b7511a5597a4b95064bee0ca161fe6583cd5cb92a64d04e9f2aff",
+    "cpppj/src/client/UberGump.h": "fe485ab16d210540affb9793df0026f981f6db96ac8a26a5509af4752bdb50fe",
+    "cpppj/src/client/RawCampaignSession.cpp": "f0a29e106d66694da5390befb2a20f41346270d827976447bddb6d0970f16902",
+    "cpppj/src/client/RawCampaignSession.h": "c7eb35c34efd4457beab89d66be64d2598bf24a833758ca264e09b3a2a27390b",
+    "cpppj/src/client/RawCampaignSessionLogin.inc": "e9b49b754cbdc20010d3f8bc678f7e71083b661def84dad020c6c070abc481b2",
     "cpppj/src/client/MissionTechnology.cpp": "5ba1a1bedfa2787092002a4b04177b88dd0d03fff245261e5344057525a91e61",
     "cpppj/src/client/MissionTechnology.h": "6dcc98a97d902154b82d7254d7274db823240dfb0edcabdeb3391c767df998bf",
     "cpppj/src/client/State.cpp": "1b2179923bc02592bf927393175d884b1ff79eab78c76afa5e2e1049356d614d",
     "cpppj/src/client/State.h": "0cfac26890477c90f165b8d69928226b92874644c837817a17ee170b919c830c",
     "cpppj/src/o/RawTotalMade.cpp": "461c0424485988241cbc2b6007ea97d2a4f2d4e90ff9193f10a0fe92da5b8cb7",
     "cpppj/src/o/RawTotalMade.h": "ad913f9113bea30dc3083b87c978a6e9c2e0c8165474d2ad6d389c62b154ea2a",
-    "cpppj/src/client/CMakeLists.txt": "a65c6c70bf559ed8be2ade2b501a5443b5bf6466794b65a711253e740e141094",
-    "cpppj/tests/CMakeLists.txt": "f76cfe04ff401b849f8db7dd5f97f1476ed5420f8a6fbb64af39bd07f1f5105d",
-    "cpppj/tests/CampaignSessionTests.cpp": "578c171e7688b75c145dda0fcd3e56925bdee1d59882c2b5955c94f3e5e1ea97",
+    "cpppj/src/client/CMakeLists.txt": "d12cc04005b8de427d86df11a754ada6954ffba48b5fbfd1ba0c908e2327f655",
+    "cpppj/tests/CMakeLists.txt": "a88beacab21ab71fabd5083556280da5ffa19070f076417fb87d5f1539b13223",
+    "cpppj/tests/CampaignSessionTests.cpp": "a70538585ad7af14e773ed2452ff3a34d26e0a0795fcdbc7073aeef982ddf907",
     "tools/cpp_mission_lifecycle_audit.py": "a67676f6e1b3931c4a620ccdc8a45b07618e25945d4bd356af4fd462739c1710",
     "tools/cpp_mission_technology_audit.py": "c39040499ff2b148ad171ea36d62cccbd7ee118330e7c5ce18a0c44be5ca1c1a",
-    ".gitattributes": "b2dbce9da3575df0fdb318695866812d49c5b456bc2a5c4b5c9a640d39436cae",
+    ".gitattributes": "816a2514baadeef047d56019988ff208721748bb207cfee289250c321de7d310",
     "cpppj/src/client/TutorialInit.cpp": "afad6b5e513817f85722d1123004c1c1d6cbf17e6b85b03037f799995bbebfb3",
     "cpppj/src/client/TutorialInit.h": "075188fb43b31e54a6a3e9e8e03e93e432745661bfab1d86f6e4eb9d7063d297",
     "cpppj/tests/TutorialInitTests.cpp": "c551005ca7bf616cde451eac940f747dcd1ab6fe8f842063f524791b3677c3db",
@@ -4174,6 +4174,68 @@
           "group": "/sources",
           "previous": "498d8091530e29415f083601fb807cd5af7bfb2bd5cc087008cd859d67eb93a1",
           "current": "c551005ca7bf616cde451eac940f747dcd1ab6fe8f842063f524791b3677c3db"
+        }
+      ]
+    },
+    {
+      "unit": 261,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "실제 Template9/소유·빌림과Init 명시 정리/같은 State 섹션을 Client·Session에 연결했다. 현재 소스 핀만 갱신하고 과거 원문/기대값/실행·바이너리는 보존한다. 제품 검사는 이월하며 사용자 요청으로 이번 커밋 뒤 목표를 일시 정지한다.",
+      "pins": [
+        {
+          "path": ".gitattributes",
+          "group": "/sources",
+          "previous": "b2dbce9da3575df0fdb318695866812d49c5b456bc2a5c4b5c9a640d39436cae",
+          "current": "816a2514baadeef047d56019988ff208721748bb207cfee289250c321de7d310"
+        },
+        {
+          "path": "cpppj/src/client/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "a65c6c70bf559ed8be2ade2b501a5443b5bf6466794b65a711253e740e141094",
+          "current": "d12cc04005b8de427d86df11a754ada6954ffba48b5fbfd1ba0c908e2327f655"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "group": "/sources",
+          "previous": "6aaef81339fe4682278a624c49650e5d0e0542ff1c0a45b4c211d47ebf0576dc",
+          "current": "f0a29e106d66694da5390befb2a20f41346270d827976447bddb6d0970f16902"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "group": "/sources",
+          "previous": "792643b10d24fa01452430c639beb3d986b1f5012b0c28b746eb5b5e04ef4668",
+          "current": "c7eb35c34efd4457beab89d66be64d2598bf24a833758ca264e09b3a2a27390b"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSessionLogin.inc",
+          "group": "/sources",
+          "previous": "9619b303ddb904f190a186f1c0adb3077e08a3e062c2ca96994a62afe1e69114",
+          "current": "e9b49b754cbdc20010d3f8bc678f7e71083b661def84dad020c6c070abc481b2"
+        },
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "group": "/sources",
+          "previous": "43849641465d1a9d96640aef0563e08bcf84c0dfe232b133784136fffc0f0666",
+          "current": "b1b3a1e22a6b7511a5597a4b95064bee0ca161fe6583cd5cb92a64d04e9f2aff"
+        },
+        {
+          "path": "cpppj/src/client/UberGump.h",
+          "group": "/sources",
+          "previous": "51d6e8de3147a01e9f9c7c44e94e6c62d3fbd27e5c438b1451beaa199861c445",
+          "current": "fe485ab16d210540affb9793df0026f981f6db96ac8a26a5509af4752bdb50fe"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "f76cfe04ff401b849f8db7dd5f97f1476ed5420f8a6fbb64af39bd07f1f5105d",
+          "current": "a88beacab21ab71fabd5083556280da5ffa19070f076417fb87d5f1539b13223"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "group": "/sources",
+          "previous": "578c171e7688b75c145dda0fcd3e56925bdee1d59882c2b5955c94f3e5e1ea97",
+          "current": "a70538585ad7af14e773ed2452ff3a34d26e0a0795fcdbc7073aeef982ddf907"
         }
       ]
     }

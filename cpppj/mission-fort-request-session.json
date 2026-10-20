@@ -7,21 +7,21 @@
   "lastDecompileDate": "2026-10-20",
   "newDecompile": false,
   "sources": {
-    ".gitattributes": "b2dbce9da3575df0fdb318695866812d49c5b456bc2a5c4b5c9a640d39436cae",
-    "cpppj/src/client/CMakeLists.txt": "a65c6c70bf559ed8be2ade2b501a5443b5bf6466794b65a711253e740e141094",
-    "cpppj/src/client/RawCampaignSession.h": "792643b10d24fa01452430c639beb3d986b1f5012b0c28b746eb5b5e04ef4668",
-    "cpppj/src/client/RawCampaignSessionLogin.inc": "9619b303ddb904f190a186f1c0adb3077e08a3e062c2ca96994a62afe1e69114",
-    "cpppj/src/client/UberGump.cpp": "43849641465d1a9d96640aef0563e08bcf84c0dfe232b133784136fffc0f0666",
-    "cpppj/src/client/UberGump.h": "51d6e8de3147a01e9f9c7c44e94e6c62d3fbd27e5c438b1451beaa199861c445",
-    "cpppj/tests/CMakeLists.txt": "f76cfe04ff401b849f8db7dd5f97f1476ed5420f8a6fbb64af39bd07f1f5105d",
-    "cpppj/tests/CampaignSessionTests.cpp": "578c171e7688b75c145dda0fcd3e56925bdee1d59882c2b5955c94f3e5e1ea97",
+    ".gitattributes": "816a2514baadeef047d56019988ff208721748bb207cfee289250c321de7d310",
+    "cpppj/src/client/CMakeLists.txt": "d12cc04005b8de427d86df11a754ada6954ffba48b5fbfd1ba0c908e2327f655",
+    "cpppj/src/client/RawCampaignSession.h": "c7eb35c34efd4457beab89d66be64d2598bf24a833758ca264e09b3a2a27390b",
+    "cpppj/src/client/RawCampaignSessionLogin.inc": "e9b49b754cbdc20010d3f8bc678f7e71083b661def84dad020c6c070abc481b2",
+    "cpppj/src/client/UberGump.cpp": "b1b3a1e22a6b7511a5597a4b95064bee0ca161fe6583cd5cb92a64d04e9f2aff",
+    "cpppj/src/client/UberGump.h": "fe485ab16d210540affb9793df0026f981f6db96ac8a26a5509af4752bdb50fe",
+    "cpppj/tests/CMakeLists.txt": "a88beacab21ab71fabd5083556280da5ffa19070f076417fb87d5f1539b13223",
+    "cpppj/tests/CampaignSessionTests.cpp": "a70538585ad7af14e773ed2452ff3a34d26e0a0795fcdbc7073aeef982ddf907",
     "cpppj/tests/TutorialInitTests.cpp": "c551005ca7bf616cde451eac940f747dcd1ab6fe8f842063f524791b3677c3db",
     "cpppj/src/client/MissionFortRequest.cpp": "0e6e5914657fac3371a4da5f7d96d895d239001e4fb89f18726abd8ee2355932",
     "cpppj/src/client/MissionFortRequest.h": "0bad2d0a8d067d3c1ba920b6e464b8beb63005bd8ee0b36e8849d1d4b09738c3",
     "cpppj/tests/MissionFortRequestTests.cpp": "c527b350f186fa58cef47be156918f139e8ade1ab23ef95f1909ea0f236bd47d",
     "tools/decomp_mission_fort_request.py": "9290c90ce9bf418ef26bf86b0657e910d594815f6addcf268df64c5299529fea",
-    "tools/cpp_mission_fort_request_audit.py": "ef67aee1eee1d4c7d9ded9d19211bf8cd688aceefb641fc6f806444214a2b4ca",
-    "cpppj/src/client/RawCampaignSession.cpp": "6aaef81339fe4682278a624c49650e5d0e0542ff1c0a45b4c211d47ebf0576dc",
+    "tools/cpp_mission_fort_request_audit.py": "e99ff0efc985d5758935825c78b968562bf7e04a73673dbaeb38d8da0e30bfcb",
+    "cpppj/src/client/RawCampaignSession.cpp": "f0a29e106d66694da5390befb2a20f41346270d827976447bddb6d0970f16902",
     "cpppj/src/o/RawLocalMissionState.cpp": "c59b2228d88a978570c5ea461b41ce902015c130b7e8817dc50bd26f184b1113",
     "cpppj/src/o/RawLocalMissionState.h": "728cbb8da133c1d155b496b0a3b3989065280411a28d3c79e795f9e06f11e5af",
     "cpppj/src/zacket/LocalMissionTransport.cpp": "f659b7bbcfcd3923147472a099fcf74c04014e0005eff3e46d273898c4a2d92a",
@@ -3098,5 +3098,75 @@
     "cpp_mission_option_reset_audit": 0,
     "cpp_quick_help_client_audit": 0,
     "decomp_local_mission_transport": 0
-  }
+  },
+  "integration_updates": [
+    {
+      "unit": 261,
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "실제 Template9/소유·빌림과Init 명시 정리/같은 State 섹션을 Client·Session에 연결했다. 현재 소스 핀만 갱신하고 과거 원문/기대값/실행·바이너리는 보존한다. 제품 검사는 이월하며 사용자 요청으로 이번 커밋 뒤 목표를 일시 정지한다.",
+      "pins": [
+        {
+          "path": ".gitattributes",
+          "group": "/sources",
+          "previous": "b2dbce9da3575df0fdb318695866812d49c5b456bc2a5c4b5c9a640d39436cae",
+          "current": "816a2514baadeef047d56019988ff208721748bb207cfee289250c321de7d310"
+        },
+        {
+          "path": "cpppj/src/client/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "a65c6c70bf559ed8be2ade2b501a5443b5bf6466794b65a711253e740e141094",
+          "current": "d12cc04005b8de427d86df11a754ada6954ffba48b5fbfd1ba0c908e2327f655"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "group": "/sources",
+          "previous": "6aaef81339fe4682278a624c49650e5d0e0542ff1c0a45b4c211d47ebf0576dc",
+          "current": "f0a29e106d66694da5390befb2a20f41346270d827976447bddb6d0970f16902"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "group": "/sources",
+          "previous": "792643b10d24fa01452430c639beb3d986b1f5012b0c28b746eb5b5e04ef4668",
+          "current": "c7eb35c34efd4457beab89d66be64d2598bf24a833758ca264e09b3a2a27390b"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSessionLogin.inc",
+          "group": "/sources",
+          "previous": "9619b303ddb904f190a186f1c0adb3077e08a3e062c2ca96994a62afe1e69114",
+          "current": "e9b49b754cbdc20010d3f8bc678f7e71083b661def84dad020c6c070abc481b2"
+        },
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "group": "/sources",
+          "previous": "43849641465d1a9d96640aef0563e08bcf84c0dfe232b133784136fffc0f0666",
+          "current": "b1b3a1e22a6b7511a5597a4b95064bee0ca161fe6583cd5cb92a64d04e9f2aff"
+        },
+        {
+          "path": "cpppj/src/client/UberGump.h",
+          "group": "/sources",
+          "previous": "51d6e8de3147a01e9f9c7c44e94e6c62d3fbd27e5c438b1451beaa199861c445",
+          "current": "fe485ab16d210540affb9793df0026f981f6db96ac8a26a5509af4752bdb50fe"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "f76cfe04ff401b849f8db7dd5f97f1476ed5420f8a6fbb64af39bd07f1f5105d",
+          "current": "a88beacab21ab71fabd5083556280da5ffa19070f076417fb87d5f1539b13223"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "group": "/sources",
+          "previous": "578c171e7688b75c145dda0fcd3e56925bdee1d59882c2b5955c94f3e5e1ea97",
+          "current": "a70538585ad7af14e773ed2452ff3a34d26e0a0795fcdbc7073aeef982ddf907"
+        },
+        {
+          "path": "tools/cpp_mission_fort_request_audit.py",
+          "group": "/sources",
+          "previous": "ef67aee1eee1d4c7d9ded9d19211bf8cd688aceefb641fc6f806444214a2b4ca",
+          "current": "e99ff0efc985d5758935825c78b968562bf7e04a73673dbaeb38d8da0e30bfcb"
+        }
+      ]
+    }
+  ]
 }

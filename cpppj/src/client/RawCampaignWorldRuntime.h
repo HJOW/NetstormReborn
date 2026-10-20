@@ -12,6 +12,8 @@ struct RawCampaignInstallData {
     std::span<o::FortTerritoryStream> territories; // 같은9 Template의 Territory cursor/120BYTE 저장소다.
     std::span<std::uint8_t> headers; // 실제9×20BYTE header이며 부모가 현재 owner의+8에 쓴다.
     std::span<std::uint8_t> handle; // 실제 mySubHandle의 NUL 포함 저장소다.
+    std::function<const o::FortTemplate&(std::uint32_t)> templateAt; // 실제 Client는 현재 manager를 조회해 빌린 자료도 같은 객체로 반환한다.
+    std::function<o::FortTerritoryStream&(std::uint32_t)> territoryAt; // 같은 manager의 현재 지형 cursor다. 기존 독립 입력은 위 span을 유지한다.
 };
 // Core 밖의 실제 UI/번역/가상 상태/진단 경계만 공급한다. gameplay 효과는 아래 실제 모듈을 사용한다.
 struct RawCampaignInstallEffects {

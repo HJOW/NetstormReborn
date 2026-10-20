@@ -16,6 +16,7 @@
 #include "client/MissionTechnology.h"
 #include "o/RawMissionBattleOptions.h"
 #include "client/MissionFortRequest.h"
+#include "client/CampaignTemplateStorage.h"
 #include "client/RawKnowledgeMenu.h"
 #include "o/RawMissionGuide.h"
 #include "client/GifImage.h"
@@ -141,6 +142,7 @@ struct UberGump::MissionRuntime {
 
 // 원본 GIF는 색 표의 RGB를 쓰지 않고 파일의 번호를 화면 팔레트에 바로 쓴다(00419ec0→004dae60).
 UberGump::UberGump(Client& client) : client_(client) {
+    templateStorage_=std::make_shared<CampaignTemplateStorage>(); // 시작 초기화와 미션별 명시 정리를 별개 수명으로 유지한다.
     auto& config = client_.Configuration();
     title_ = DecodeGif(client_.Files().Read(config.PathSpec("BackgroundGifSpec", "titleMenu")));
     clouds_ = DecodeGif(client_.Files().Read(config.PathSpec("CloudFileSpec")));
@@ -390,7 +392,7 @@ GuideMissionTransitionHooks UberGump::MissionTransitionEffects() {
 // 원본 Init은 현재 전역/Config를 쓰고 로드 요청 뒤 Header/flags를 수행한다. 실제 월드는 다음 루프에 설치한다.
 void UberGump::InitializeMission() {
     if (!mission_ || !missionRuntime_ || !missionRuntime_->guided || world_ || worldProcess_) throw std::logic_error("Tutorial Init의 현재/빈 월드 계약 위반");
-    TutorialInitHooks hooks;hooks.clearTemplates=[this] { if (world_ || worldProcess_ || rawButtons_->Production()) throw std::logic_error("이전 미션 템플릿/생산 UI가 아직 살아 있음"); }; // 현 어댑터는 Begin의 동기 ClearWorld에서 이전 Session/템플릿을 이미 반납한다.
+    TutorialInitHooks hooks;hooks.clearTemplates=[this] { if (world_ || worldProcess_ || rawButtons_->Production()) throw std::logic_error("이전 미션 월드/생산 UI가 아직 살아 있음");templateStorage_->ClearAll(); }; // Session보다 오래 보유한 실제9개 manager를 원본 Init 위치에서 반납한다.
     hooks.resetOptions=[this] { o::ResetMissionBattleOptions(o::OriginalEdition::Patch1078,*missionOptions_); };
     hooks.get=[this](std::string_view key,std::optional<std::string_view> fallback) { auto value=FontBytes(mission_->Get(key).value_or(""));if (const auto end=value.find('\0');end!=std::string::npos) value.resize(end);if (value.empty() && fallback) value=*fallback;return value; };
     hooks.set=[this](auto key,auto value) { const auto text=o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(value.data()),value.size()});static_cast<void>(mission_->Set(key,text)); };
@@ -425,7 +427,7 @@ void UberGump::LoadMissionWorld(std::optional<std::string> requestedFort) {
         [this] { RefreshWindowTitle(); },[this](std::string_view key) { Tell(std::string(key)); },
         [this](std::int32_t kind,std::int32_t player,std::int32_t parameter) { warnings_->Remove(kind,player,parameter);rebuild_=true; }}); // 현재 클라이언트의 설정·음향·입력·UI다.
     services.missionOutcome.demo=[this] { return missionRuntime_ ? missionRuntime_->gate.demo : 0U; };
-    services.missionOptions=missionOptions_;services.missionRestrictions=missionRestrictions_;services.missionSubscriber=initLoginSubscriber_;services.missionFortRequest=missionFortRequest_; // 같은 Init 전역/요청의 소유권과 실제 Zone을 설치 뒤에도 유지한다.
+    services.missionOptions=missionOptions_;services.missionRestrictions=missionRestrictions_;services.missionSubscriber=initLoginSubscriber_;services.missionFortRequest=missionFortRequest_;services.templateStorage=templateStorage_; // 같은 Init 전역/요청/Template9의 실제 소유권을 설치 뒤에도 유지한다.
     services.missionOutcome.tellBlocked=[this] { return state_.phase==ClientPhase::Dialog || state_.phase==ClientPhase::Briefing ? 1U : 0U; };
     services.missionOutcome.section=[this](std::string_view section) { return mission_ && mission_->Section(section) && TryTell(std::string(section)); };
     services.missionOutcome.closeTransient=[this] { rawButtons_->RequestClosePopups(); };

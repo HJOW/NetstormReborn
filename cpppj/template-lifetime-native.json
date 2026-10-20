@@ -1,0 +1,25 @@
+{
+  "date": "2026-10-21",
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "lastDecompileDate": "2026-10-20",
+  "uniqueInputs": 240,
+  "normalFunctionReturns": 240,
+  "instructions": 13257,
+  "gameExecuted": false,
+  "osExecuted": false,
+  "boundaries": [
+    "실제004bfb00/004bf690/004bd2e0의전체부모와20/180BYTE를격리실행",
+    "DataManager 소멸004bd330과CRT free는명시효과이며내부MemStream 목록/힙/OS/게임을실행하지않았다",
+    "전체196BYTE·각소멸/free직전현재헤더·효과뒤재조회·소유/빌림/빈stale차이·ABI/보존레지스터/x87/쓰기범위를관측"
+  ],
+  "sha256": {
+    "AGENTS.md": "0e112c50745cfa0a76f5996af47f98dddd36e8ccc07efe489868f62793913892",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_local_mission_transport.py": "db71da65079aa9a985a3a833edd224f089ba9a20137d92042551cb346937eb78",
+    "tools/decomp_template_lifetime.py": "7dee8b169101912bd2b64c1e503a0954d25f9c4fc9de947d22d8eb28e4b22b81",
+    "cpppj/tests/fixtures/template-lifetime-x86.tsv": "42f8a40fe6bb963e34175cd2d4864f84091953fca513605ca313ff6524a0e218"
+  }
+}

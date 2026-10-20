@@ -28,7 +28,12 @@ public:
         std::array<PlayerTemplateStateStream,9>& states,std::array<std::string,9>& fileNames,
         std::uint32_t& loadingDepth,const bool& inMission,std::function<void(PlayerTemplateStateAssertion)> assertion,
         std::function<void(std::uint32_t)> depthChanged,
-        std::function<std::span<std::uint8_t>(std::uint32_t,std::uint32_t)> allocate={});
+        std::function<std::span<std::uint8_t>(std::uint32_t,std::uint32_t)> allocate={},std::function<void(std::uint32_t)> allocationComplete={});
+    // 실제 Client의 빌린 헤더도 같은 manager의 State/name을 매번 조회하도록 연결한다.
+    RawPlayerTemplateState(OriginalEdition edition,std::span<std::uint8_t> headers,
+        std::function<PlayerTemplateStateStream&(std::uint32_t)> state,std::function<const std::string&(std::uint32_t)> name,
+        std::uint32_t& loadingDepth,const bool& inMission,std::function<void(PlayerTemplateStateAssertion)> assertion,
+        std::function<void(std::uint32_t)> depthChanged,std::function<std::span<std::uint8_t>(std::uint32_t,std::uint32_t)> allocate={},std::function<void(std::uint32_t)> allocationComplete={});
     // PATCH4bd550/CD427920의기존nonemptyState다. 처음pos0, 짧은원문은44d290처럼확장뒤pos/end28, 그외동일데이터를반환한다.
     std::span<std::uint8_t> Get(std::uint32_t slot) const;
     // PATCH4bd540/4bd360·CD427910/4275d0의Notify다. 실제isMine1 또는preventSave에서자연반환한다.
@@ -39,12 +44,13 @@ private:
     std::uint32_t Header(std::uint32_t slot,std::size_t offset) const;
     OriginalEdition edition_; // CD의즉시depth증감과각진단줄을분리한다.
     std::span<std::uint8_t> headers_; // 실제9×20BYTE/currentisMine/flags를원본자료로빌린다.
-    std::array<PlayerTemplateStateStream,9>& states_; // 실제mutableState데이터·cursor의현재참조다.
-    std::array<std::string,9>& names_; // 같은현재DataManager의실제파일이름이다.
+    std::function<PlayerTemplateStateStream&(std::uint32_t)> states_; // 현재 헤더가 빌린 manager의 같은 mutableState/cursor를 조회한다.
+    std::function<const std::string&(std::uint32_t)> names_; // 같은 현재 DataManager의 실제 파일 이름을 조회한다.
     std::uint32_t& depth_; // 같은Template/Object/Priest/Meta로딩깊이다.
     const bool& mission_; // 실제미션ctor가설정한594fa0/CD52e16c를공유한다.
     std::function<void(PlayerTemplateStateAssertion)> assertion_; // 원본보고후현재조건을재조회한다.
     std::function<std::span<std::uint8_t>(std::uint32_t,std::uint32_t)> allocate_; //shortState의실제새MemStream할당이다. 기존원문은본문이복사/0채움한다.
     std::function<void(std::uint32_t)> depthChanged_; // CD즉시증감값을실제소비자에전달한다.
+    std::function<void(std::uint32_t)> allocationComplete_; // 실제 원문 복사가 끝난 뒤 이전 State 할당을 반납한다.
 };
 }

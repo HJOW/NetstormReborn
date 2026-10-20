@@ -1,5 +1,6 @@
 // 기존 원본 몸체의 단일 저장소 조립을 실제 클라이언트 세션이 소유한다.
 #include "client/RawCampaignSession.h"
+#include "client/CampaignTemplateStorage.h"
 #include "client/RawProductionMaintenance.h"
 #include "client/RawKnowledgeMenu.h"
 #include "o/CanonDecoder.h"
@@ -226,6 +227,8 @@ struct RawCampaignSession::Impl {
     std::array<CarrierInputType,188> inputAudio{}; //현재 TYPE+78/+80의 음향 핸들이다.
     CarrierDropPointState inputDropState; //같은 지도 한계/실패점을 기존 위치 계산기에 공급한다.
     RawCampaignSessionServices services; // 실제 클라이언트의 선택 서비스이며 검사 관찰 기본값을 사용하지 않는다.
+    std::shared_ptr<CampaignTemplateStorage> templateStorage; // 같은 Client manager 표를 빌리며 독립 Session만 자체 저장소를 소유한다.
+    std::span<std::uint8_t> headers; // 같은 저장소의 실제9×20BYTE이며 파생 모듈에 사본을 만들지 않는다.
 
     SessionAssets assets; // 보호 archive의 현재 실제 자료다.
     PriestPlacementAssets metadata; // 실제 프레임/핫스폿/SHP이며 합성 그림 자료가 아니다.
@@ -307,10 +310,6 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawPlayerWorld> player; // 최초152 생성자/실제 PostPop/9기록을 연결한다.
     std::unique_ptr<RawPlayerRegular> playerRegular; // 현재 Player의 실제 사건1/2를 처리한다.
     std::unique_ptr<RawPlayerTemplateState> templateState; // 같은Template header/원본State28BYTE를 직접 읽는다.
-    std::array<std::vector<std::uint8_t>,9> stateGrowth; //짧은State의실제새버퍼이며기존입력은복사가끝날때까지보존한다.
-    std::array<std::vector<std::uint8_t>,9> stateBytes; // 실제 선택한 State 섹션의 writable 원문이다.
-    std::array<PlayerTemplateStateStream,9> stateStreams; // 같은 State cursor/end를 공유한다.
-    std::array<std::string,9> stateNames; // 같은 현재 Template manager의 실제 이름이다.
     RegionPaintState paint; // 실제 지역 도장의 장기 상태다.
     RegionOwnershipState votes; // 실제 현재 신전/워크샾 투표 상태다.
     std::vector<std::uint32_t> themes; // 현재 TYPE의 같은 원소 번호다.
@@ -511,9 +510,6 @@ struct RawCampaignSession::Impl {
     std::array<std::uint8_t,64> rainAviaryPacket{};bool writingRainAviary{}; // 실제0x73 writer와 송신이 공유하는 버퍼/분배 표식이다.
     std::uint32_t sunAviaryType{32},sunFlyerType{73}; // PATCH005410f0/0054117c의 현재 원본 타입 전역이다.
     std::array<std::uint8_t,64> sunAviaryPacket{};bool writingSunAviary{}; // 현재 writer/송신이 공유하는 패킷과 분배 표식이다.
-    std::array<FortTemplate,9> templates; // 실제 선택 자료는1번 Template에 둔다.
-    std::array<FortTerritoryStream,9> streams; // 같은 Template의 실제120BYTE view다.
-    std::array<std::uint8_t,180> headers{}; // 실제 Template9 header의 현재 바이트다.
     std::array<std::uint8_t,64> handle{}; // 현재 이름을 쓸 실제 저장소다.
     std::unique_ptr<RawCampaignWorldRuntime> runtime; // 위 실제 하위를 단일 캠페인 부모에 연결한다.
     PlayerPlacementAnchorState anchorState; // 현재 같은 Graph의 배치/도착 조회 전역이다.
@@ -557,7 +553,7 @@ struct RawCampaignSession::Impl {
 
     // 보호 자료를 읽기 전용으로 사용하며 모든 필수 후처리를 첫 생성 전에 등록한다.
     Impl(const GameAssets& game,const BaseFileSystem& files,FortTemplate fort,std::string mission,RawCampaignSessionServices input):
-        services(std::move(input)),assets(game,files),metadata(assets.game),
+        services(std::move(input)),templateStorage(services.templateStorage ? services.templateStorage : std::make_shared<CampaignTemplateStorage>()),headers(templateStorage->Headers()),assets(game,files),metadata(assets.game),
         world(OriginalEdition::Patch1078,assets.types,assets.frames,metadata.shapes,CampaignLinks(),terrainType),core(world.Core()),
         sp(random,[this] { return seed.Reseed(); }),hp(core.pool,core.types,core.bookkeeping,rewardState,&sp,SquidRewardHooks{{},services.refreshSp}),
         battleOptions(services.missionOptions ? *services.missionOptions : localBattleOptions),
@@ -657,9 +653,9 @@ struct RawCampaignSession::Impl {
         playerHooks.reserveRegular=[] { return true; };
         playerHooks.addRegular=[this](Sid sid,std::uint32_t event,float payload) { SessionCheck(core.processes.AddRegular(sid,event,payload)!=nullptr); };
         player=std::make_unique<RawPlayerWorld>(core.pool,core.postPop,players,playerState,std::move(playerHooks));core.postPop.SetPlayerPostPop(player.get());
-        templateState=std::make_unique<RawPlayerTemplateState>(core.pool.Edition(),headers,stateStreams,stateNames,
+        templateState=std::make_unique<RawPlayerTemplateState>(core.pool.Edition(),headers,[this](auto slot)->PlayerTemplateStateStream& { return templateStorage->State(slot); },[this](auto slot)->const std::string& { return templateStorage->Name(slot); },
             objectState.loadingDepth,objectState.mission,SessionMissing<void,PlayerTemplateStateAssertion>(),[this](std::uint32_t depth) { world.SetLoadingDepth(depth); },
-            [this](std::uint32_t owner,std::uint32_t size) { auto& buffer=stateGrowth.at(owner);buffer.resize(size);return std::span<std::uint8_t>(buffer); });
+            [this](auto owner,auto size) { return templateStorage->GrowState(owner,size); },[this](auto owner) { templateStorage->CommitStateGrowth(owner); });
         auto playerRegularHooks=services.player;playerRegularHooks.assertion=SessionMissing<void,PlayerRegularAssertion>();
         FillMissing(playerRegularHooks.log);
         playerRegularHooks.reserveRegular=[] { return true; };
@@ -1072,10 +1068,7 @@ struct RawCampaignSession::Impl {
         NormalTerrainDiagnostics diagnostics{SessionMissing<void,TerrainContextAssertion>(),SessionMissing<void,TerrainStampAssertion>(),SessionMissing<void,SquidRegionAssert>(),SessionMissing<void,FarmClusterAssertion>(),SessionMissing<void,TerrainFarmPostpassAssertion>()};
         normal=std::make_unique<RawNormalTerrainWorldBinding>(world,chunks,*islands,random,crt,terrainGlobals,stamp,randomPlacement,farm,piece,*pipeline,hp,*carrier,std::move(diagnostics));
         finish=std::make_unique<RawFortFinishOwner>(core.pool,core.types,assetState.residences,finishState,FortFinishOwnerHooks{SessionMissing<FortRandomRectangle,std::int32_t>(),SessionMissing<double>(),SessionMissing<std::uint32_t,GameRandom&,const FortRandomPlaceRequest&>(),SessionMissing<void>()});
-        templates[1]=std::move(fort);
-        const auto state=templates[1].Section("State");stateBytes[1].assign(state.begin(),state.end());
-        stateStreams[1]={stateBytes[1],0,static_cast<std::uint32_t>(stateBytes[1].size()),!stateBytes[1].empty()};stateNames[1]=std::string(mission);
-        streams[1]={templates[1].territory,0,static_cast<std::uint32_t>(templates[1].territory.size())};headers[20]=1;
+        templateStorage->Install(1,std::move(fort),std::string(mission)); // 실제 manager/State 섹션/지형 cursor를 같은 소유 객체로 설치한다.
         runtime=MakeRuntime();
         regionOwner=std::make_unique<RawRegionOwner>(core.pool,core.hash.Entries(0),terrainType);
         auto& ui=services.missionOutcome; // 선택되지 않은 UI를 기본 성공으로 채우지 않고 실제 Check에서 오류를 유지한다.
@@ -1835,7 +1828,7 @@ struct RawCampaignSession::Impl {
         factoryResearch=std::make_unique<RawFactoryResearch>(core.pool,core.types,FactoryResearchState{objectState.loadingDepth,core.bookkeeping.productionDirty,assetState.boss,core.processState.now,researchOutpost},std::move(research));
     }
     // 외부 config/UI는 현재 클라이언트 서비스를 사용하고 게임 계산은 동일 원본 모듈을 사용한다.
-    std::unique_ptr<RawCampaignWorldRuntime> MakeRuntime(std::size_t templateCount=9) {
+    std::unique_ptr<RawCampaignWorldRuntime> MakeRuntime() {
         auto hooks=services.install;
         FillMissing(hooks.translateYou);FillMissing(hooks.setConfig);
         FillMissing(hooks.refreshWindowTitle);FillMissing(hooks.resetCamera);
@@ -1843,7 +1836,7 @@ struct RawCampaignSession::Impl {
         hooks.notifySurface=[this](Sid sid) { core.building.NotifySurface(sid); };
         hooks.setState=[this](Sid sid,std::uint32_t value) { assetBindings->SetState(sid,value); };
         hooks.virtualCount=[this](Sid sid) { return static_cast<std::int32_t>(level->Get(sid)); };
-        return std::make_unique<RawCampaignWorldRuntime>(world,chunks,*islands,*player,*normal,random,hp,*ownership,*finish,*contained,objectState,globals,piece,noRegion,RawCampaignInstallData{std::span<const FortTemplate>(templates).first(templateCount),streams,headers,handle},std::move(hooks));
+        return std::make_unique<RawCampaignWorldRuntime>(world,chunks,*islands,*player,*normal,random,hp,*ownership,*finish,*contained,objectState,globals,piece,noRegion,RawCampaignInstallData{{},{},headers,handle,[this](auto slot)->const FortTemplate& { return templateStorage->Template(slot); },[this](auto slot)->FortTerritoryStream& { return templateStorage->Territory(slot); }},std::move(hooks));
     }
     // 공개 운반 어댑터와 일반 배치 통지가 같은 현재 원본 Builder를 조립한다.
     std::unique_ptr<RawConstructionBuilder> MakeBuilder(ConstructionBuilderState& state,ConstructionBuilderHooks hooks) {

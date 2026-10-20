@@ -128,6 +128,7 @@ target_sources(netstorm PRIVATE
     RawCampaignWorldLoad.cpp RawCampaignWorldLoad.h
     RawPlayerRegular.cpp RawPlayerRegular.h
     RawPlayerTemplateState.cpp RawPlayerTemplateState.h
+    RawTemplateLifetime.cpp RawTemplateLifetime.h
     RawBurningFrame.cpp RawBurningFrame.h
     RawPriestHalt.cpp RawPriestHalt.h
     RawCarrierArrival.cpp RawCarrierArrival.h

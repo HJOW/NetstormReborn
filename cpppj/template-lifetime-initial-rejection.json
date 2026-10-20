@@ -1,0 +1,13 @@
+{
+  "status": "rejected-boundary-audit",
+  "initialReport": "cpppj/template-lifetime-native.json",
+  "acceptedReport": "cpppj/template-lifetime-v2-native.json",
+  "reason": "공용 Oracle의TemplateFree/Template 대체 호출이004bf690/004bd2e0 진입을가로채 단일108/초기화24행의전체본문이실행되지않았다. 초기240행/13257명령은유효전체관측으로세지않는다.",
+  "firstAttemptFiles": {
+    "tools/decomp_template_lifetime.py": "7dee8b169101912bd2b64c1e503a0954d25f9c4fc9de947d22d8eb28e4b22b81",
+    "cpppj/template-lifetime-native.json": "8a56a7f1a67d76380d5fbc98c8414540ff89b30b0e76da867a2aefc53b517b15",
+    "cpppj/tests/fixtures/template-lifetime-x86.tsv": "42f8a40fe6bb963e34175cd2d4864f84091953fca513605ca313ff6524a0e218"
+  },
+  "correctedCaptureAfterProductEdits": true,
+  "productAlgorithmChangedToFitObservation": false
+}

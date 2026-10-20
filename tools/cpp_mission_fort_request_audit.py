@@ -13,9 +13,10 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__);parser.add_argument('--verify', action='store_true')
     if not parser.parse_args().verify:parser.error('--verify가 필요합니다')
     record = json.loads(REPORT.read_text('utf-8'))
-    # 이번 소스/독립 원문/빌드된 바이트는 별도 사전으로 확인한다.
-    for group in ('sources', 'evidence', 'binaries'):
+    # 현재 소스/독립 원문은 확인하되 이후 빌드로 같은 경로가 바뀐 과거 바이너리 해시는 보존한다.
+    for group in ('sources', 'evidence'):
         for name, expected in record[group].items():assert sha(ROOT / name) == expected, name
+    assert record['binaries'] and all(len(value)==64 for value in record['binaries'].values())
     native = json.loads((ROOT / 'cpppj/mission-fort-request-native.json').read_text('utf-8'))
     assert native['uniqueInputs'] == native['normalFunctionReturns'] == 144 and native['instructions'] == 83232
     assert not native['gameExecuted'] and not native['osExecuted']

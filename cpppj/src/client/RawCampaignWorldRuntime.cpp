@@ -33,7 +33,7 @@ struct RawCampaignWorldRuntime::Impl {
         if (&islands.Pool()!=&core.pool || &player.Pool()!=&core.pool || &normal.Pool()!=&core.pool ||
             &hp.Pool()!=&core.pool || &hp.Bookkeeping()!=&core.bookkeeping || &ownership.Vortex().Pool()!=&core.pool || &finish.Pool()!=&core.pool ||
             &contained.Pool()!=&core.pool || ownership.Vortex().Records().data()!=player.Records().data() ||
-            data.templates.size()!=9 || data.territories.size()!=9 || data.headers.size()!=180 || data.handle.empty() ||
+            (data.templates.size()!=9 && !data.templateAt) || (data.territories.size()!=9 && !data.territoryAt) || data.headers.size()!=180 || data.handle.empty() ||
             !effects.translateYou || !effects.setConfig || !effects.refreshWindowTitle || !effects.resetCamera ||
             !effects.builderAssertion || !effects.territoryAssertion || !effects.notifySurface || !effects.setState || !effects.virtualCount)
             throw std::invalid_argument("캠페인 설치의 동일 Core/Player/9 Template/실제 경계 누락");
@@ -51,7 +51,7 @@ struct RawCampaignWorldRuntime::Impl {
         objects=std::make_unique<o::RawFortObjectLoad>(core.pool,core.hash,core.types,core.frames,random,objectState,std::move(objectHooks));
         o::FortWorldLoadHooks territoryHooks;
         territoryHooks.templatePresent=[this](std::uint32_t slot) { CheckSlot(slot);const auto record=data.headers.subspan(slot*20,4);return record[0] || record[1] || record[2] || record[3]; };
-        territoryHooks.territory=[this](std::uint32_t slot)->o::FortTerritoryStream& { CheckSlot(slot);auto& stream=data.territories[slot];stream.position=0;return stream; };
+        territoryHooks.territory=[this](std::uint32_t slot)->o::FortTerritoryStream& { CheckSlot(slot);auto& stream=data.territoryAt ? data.territoryAt(slot) : data.territories[slot];stream.position=0;return stream; };
         territoryHooks.currentTemplate=[this](std::uint32_t slot)->const o::FortTemplate& { return Template(slot); };
         territoryHooks.assertion=effects.territoryAssertion;territoryHooks.builderAssertion=effects.builderAssertion;
         territoryHooks.loadingDepthChanged=[this](std::uint32_t depth) { world.SetLoadingDepth(depth); };
@@ -72,7 +72,7 @@ struct RawCampaignWorldRuntime::Impl {
     // 현재 Template 번호를 매 하위 호출 직전에 실제9칸 범위로 검사한다.
     void CheckSlot(std::uint32_t slot) const { if (slot>=9) throw std::out_of_range("캠페인 현재 Template의9칸 범위 오류"); }
     // 현재 Template 선택은 부모의 callback 뒤 변경된 owner도 반영한다.
-    const o::FortTemplate& Template(std::uint32_t slot) const { CheckSlot(slot);return data.templates[slot]; }
+    const o::FortTemplate& Template(std::uint32_t slot) const { CheckSlot(slot);return data.templateAt ? data.templateAt(slot) : data.templates[slot]; }
     // 원본 Builder의 실제 owner/bounds를 같은 일반 지형 소비자에 전달한다.
     void Generate(const o::RawIslandBuilderState& builder,std::int32_t region) { normal.Generate({builder.owner,builder.bounds,region,NormalTerrainBranch::Normal}); }
 };

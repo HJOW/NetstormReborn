@@ -1520,3 +1520,15 @@ cpppj/tests/fixtures/mission-fort-request-x86.tsv text eol=lf
 cpppj/mission-fort-request-*.json text eol=lf
 tools/decomp_mission_fort_request.py text eol=lf
 tools/cpp_mission_fort_request_audit.py text eol=lf
+# Template9의 명시 수명·같은 State와 최초 원문을 UTF-8/LF로 보존한다.
+cpppj/src/o/RawTemplateLifetime.* text eol=lf
+cpppj/src/o/CMakeLists.txt text eol=lf
+cpppj/src/o/RawPlayerTemplateState.* text eol=lf
+cpppj/src/client/CampaignTemplateStorage.* text eol=lf
+cpppj/tests/TemplateLifetimeTests.cpp text eol=lf
+cpppj/tests/fixtures/template-lifetime-x86.tsv text eol=lf
+cpppj/tests/fixtures/template-lifetime-v2-x86.tsv text eol=lf
+cpppj/template-lifetime-*.json text eol=lf
+tools/decomp_template_lifetime.py text eol=lf
+tools/decomp_template_lifetime_v2.py text eol=lf
+tools/cpp_template_lifetime_audit.py text eol=lf

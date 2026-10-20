@@ -1,5 +1,6 @@
 #include "client/RawCampaignTutorialOneBindings.h"
 #include "client/MissionGuideInput.h"
+#include "client/CampaignTemplateStorage.h"
 #include "client/RawProductionControls.h"
 #include "o/RawBridgeDraw.h"
 #include "client/RawMenuControls.h"
@@ -1969,6 +1970,16 @@ TEST_CASE(CampaignSession_InitSharedTablesBeforeInstall) {
     auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));CHECK(session.BattleOption(2)==2 && session.BattleOption(23)==0x79 && !session.TotalMade().Allowed(75));
     (*options)[2]=1;CHECK(session.BattleOption(2)==1);session.TotalMade().Allow(75,1);CHECK((*restrictions)[75]==0); // 양방향의 현재 참조를 확인한다.
     session.Load();CHECK(session.BattleOption(2)==1 && session.BattleOption(23)==0x79);session.TotalMade().AllowAll(0);CHECK((*restrictions)[75]==1 && restrictions->back()==0x7391);(*restrictions)[75]=0;CHECK(session.TotalMade().Allowed(75));
+}
+
+// Session이 해제돼도 Client 소유의 실제 Template/State는 명시 Init 정리 전까지 살아 있다.
+TEST_CASE(CampaignSession_TemplateSurvivesUntilExplicitInitClear) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto storage=std::make_shared<CampaignTemplateStorage>();const std::uint8_t* stateAddress{}; // 실제 Client와 같은 외부 소유 수명이다.
+    {
+        auto services=external.Services();UseWorldTestLogin(services);services.templateStorage=storage;auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));session.LoadLocalConnection();CHECK(session.LocalConnectionPhase()==14 && storage->OwnedImages()==1);
+        stateAddress=storage->State(1).bytes.data();CHECK(stateAddress==storage->Template(1).Section("State").data() && (storage->Template(1).Section("State")[0]&2U));
+    }
+    CHECK(storage->OwnedImages()==1 && stateAddress==storage->Template(1).Section("State").data());storage->ClearAll();CHECK(!storage->OwnedImages() && Get(storage->Headers(),20)==0);
 }
 
 // Init에서 소유한 Zone의 subscriber7을 실제 로그인에 사용하고 설치 뒤 같은 이미지의 수명을 반납한다.
