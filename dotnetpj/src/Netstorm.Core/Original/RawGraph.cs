@@ -10,9 +10,10 @@ namespace Netstorm.Core.Original;
 /// 원본처럼 0번 예약 레코드·251..253 의 틈·254 sentinel 을 구분한다.
 /// 이 조각은 표 저장소·초기화(<see cref="ResetTable"/>)·반납(<see cref="Free"/>)·공간/타입 일치와 함께
 /// 원본 슬롯·해시·점유 지도에서 표면 스냅샷을 만들어 영역 무효화(<see cref="InvalidateRegion"/>)·
-/// 추가(<see cref="Add"/>)·flood(<see cref="Flood"/>)·등록 후처리(<see cref="PostPop"/>)·빈 번호 할당(<see cref="Allocate"/>)을 수행한다.
+/// 추가(<see cref="Add"/>)·flood(<see cref="Flood"/>)·등록 후처리(<see cref="PostPop"/>)·빈 번호 할당(<see cref="Allocate"/>)·
+/// 삭제 준비(<see cref="Detach"/>)를 수행한다.
 /// 계산은 항상 사본에서 하고(<see cref="Calculate"/>) 성공한 계획만 commit 하므로, 거부된 호출은 표·스택·슬롯을 바꾸지 않는다.
-/// 삭제 준비(Detach)·전체 재구성(Rebuild)·PostDestroy 는 다음 조각으로 남겼다.
+/// 전체 재구성(Rebuild)·PostDestroy 는 다음 조각으로 남겼다.
 /// 근거: cpppj/src/o/RawGraph.cpp (W02 열넷째 조각, 2026-10-20).
 /// </summary>
 public sealed class RawGraph : IRawPostPopGraph
@@ -53,6 +54,9 @@ public sealed class RawGraph : IRawPostPopGraph
     /// <summary>슬롯 안 그래프 번호 바이트의 위치(10.78).</summary>
     private const int GraphOffset = 30;
 
+    /// <summary>슬롯 안 다음 번호(16비트)의 위치. 삭제 연결의 해시 체인을 읽는다.</summary>
+    private const int NextOffset = 4;
+
     /// <summary>슬롯 안 추가 비트 바이트의 위치(10.78).</summary>
     private const int ExtraOffset = 40;
 
@@ -64,6 +68,15 @@ public sealed class RawGraph : IRawPostPopGraph
 
     /// <summary>슬롯 안 y 좌표(float, 4바이트)의 위치.</summary>
     private const int YOffset = 18;
+
+    /// <summary>삭제 연결이 특수 프레임 치환 없이 통과하는지 볼 때 읽는 다리·폭탄 마스크(원본 0x104).</summary>
+    private const uint BridgeOrBombMask = TypeFlagBits.Bridge | TypeFlagBits.Bomb;
+
+    /// <summary>삭제 연결이 다리·폭탄 쪽을 'A'로 덮어쓰는지 볼 때 읽는 섬·건물군 마스크(원본 0x1044202).</summary>
+    private const uint LandObjectMask = 0x1044202;
+
+    /// <summary>삭제 연결의 치환 검사를 건너뛰게 하는 포대류 비트(원본 Emplacement).</summary>
+    private const uint EmplacementBit = TypeFlagBits.Emplacement;
 
     /// <summary>호출 SID 의 상태·그래프 byte 를 읽을 슬롯 풀.</summary>
     private readonly RawSidPool _pool;
@@ -338,6 +351,41 @@ public sealed class RawGraph : IRawPostPopGraph
     }
 
     /// <summary>
+    /// 죽은 원천의 이웃 무리를 탐색 순서대로 나누고 기존 번호에 마지막 하나를 남긴다(원본 004637b0).
+    /// 위치 조회로 고른 번호·치환 타입·분할 정책·감소 수를 함께 계산하며 Unpop·반납과 별도로 부른다.
+    /// </summary>
+    /// <param name="sid">죽음 비트가 켜진 원천 슬롯 번호.</param>
+    /// <param name="rebuild">참이면 마지막 이웃 무리도 새 번호로 옮기고 기존 번호를 비운다.</param>
+    /// <param name="removedSurfaces">줄일 표면 수(1 또는 특수 타입 9).</param>
+    /// <param name="sourceType">삭제 위치 정보만 치환할 타입 번호(없으면 원천 타입 유지).</param>
+    public void Detach(int sid, bool rebuild = false, byte removedSurfaces = 1, byte? sourceType = null)
+    {
+        // 감소 수는 원본처럼 1 또는 9만 받는다
+        if (removedSurfaces != 1 && removedSurfaces != 9)
+        {
+            throw new ArgumentException("raw 그래프 감소 수 오류", nameof(removedSurfaces));
+        }
+        Commit(Calculate(sid, Operation.Detach, (byte)((rebuild ? 1 : 0) | (removedSurfaces == 9 ? 2 : 0)), null, sourceType));
+    }
+
+    /// <summary>
+    /// 삭제 준비가 공간·표·스택을 바꾸기 전에 같은 검사를 수행한다. 쓰기는 없다.
+    /// </summary>
+    /// <param name="sid">죽음 비트가 켜진 원천 슬롯 번호.</param>
+    /// <param name="rebuild">참이면 마지막 이웃 무리도 새 번호로 옮긴다.</param>
+    /// <param name="removedSurfaces">줄일 표면 수(1 또는 9).</param>
+    /// <param name="sourceType">삭제 위치 정보만 치환할 타입 번호.</param>
+    public void ValidateDetach(int sid, bool rebuild = false, byte removedSurfaces = 1, byte? sourceType = null)
+    {
+        // 감소 수는 원본처럼 1 또는 9만 받는다
+        if (removedSurfaces != 1 && removedSurfaces != 9)
+        {
+            throw new ArgumentException("raw 그래프 감소 수 오류", nameof(removedSurfaces));
+        }
+        _ = Calculate(sid, Operation.Detach, (byte)((rebuild ? 1 : 0) | (removedSurfaces == 9 ? 2 : 0)), null, sourceType);
+    }
+
+    /// <summary>
     /// 사용하지 않는 가장 낮은 그래프 번호를 확보한다(원본 00463330 의 소진 복구 포함). 빈 번호를 확보하면 표면 수를 0, 사용 표시를 1로 쓴다.
     /// 풀·프레임·지도는 읽지 않는다.
     /// </summary>
@@ -364,13 +412,14 @@ public sealed class RawGraph : IRawPostPopGraph
 
     /// <summary>
     /// 원본 계획 계산. 표·스택 사본에서 모든 검사와 계산을 끝내고 성공한 계획을 돌려준다.
-    /// 거부 경로는 아무것도 바꾸지 않는다. 삭제 준비·전체 재구성은 이 조각에서 지원하지 않는다.
+    /// 거부 경로는 아무것도 바꾸지 않는다. 전체 재구성은 이 조각에서 지원하지 않는다.
     /// </summary>
     /// <param name="sid">대상 슬롯 번호(Allocate 는 0).</param>
     /// <param name="operation">연산 종류.</param>
-    /// <param name="target">Flood 목적 번호 또는 재구성 정책.</param>
+    /// <param name="target">Flood 목적 번호 또는 삭제 정책(하위 2비트: 재구성·특수 감소).</param>
     /// <param name="pop">Pop 예측값. 없으면 슬롯의 현재 좌표·단계를 읽는다.</param>
-    private Plan Calculate(int sid, Operation operation, byte target, PopProjection? pop)
+    /// <param name="sourceType">삭제 위치 정보만 치환할 타입 번호(없으면 원천 타입 유지).</param>
+    private Plan Calculate(int sid, Operation operation, byte target, PopProjection? pop, byte? sourceType = null)
     {
         bool global = operation is Operation.Rebuild or Operation.Allocate;
         var plan = new Plan
@@ -392,19 +441,71 @@ public sealed class RawGraph : IRawPostPopGraph
                 }
             }
         }
-        if (operation is Operation.Detach or Operation.Rebuild)
+        if (operation is Operation.Rebuild)
         {
-            throw new NotSupportedException("raw 그래프 삭제 준비·전체 재구성은 아직 옮기지 않았습니다");
+            throw new NotSupportedException("raw 그래프 전체 재구성은 아직 옮기지 않았습니다");
         }
         bool region = operation is Operation.Region or Operation.RegionAdd;
         bool add = operation is Operation.Add or Operation.RegionAdd;
-        bool fullPool = global || (_recovery == GraphRecovery.FullPool && add);
+        // 자동 재구성 가능 경로는 삭제 준비도 전체 풀에서 읽는다(원본 GraphRecovery.FullPool)
+        bool fullPool = global || (_recovery == GraphRecovery.FullPool && (add || operation == Operation.Detach));
         ReadOnlySpan<byte> root = _pool.Slot(sid);
         if (!global && (sid < 5 || sid > MaximumId || (root[RawSidPool.StateOffset] & (FreeBit | ContainedBit)) != 0
             || root[RawSidPool.TypeOffset] < OriginalConstructors.FirstAssetType || root[RawSidPool.TypeOffset] >= _types.Count
             || (operation != Operation.Region && (_types[root[RawSidPool.TypeOffset]].Flags1 & OriginalTypeRecord.Surface) == 0)))
         {
             throw new InvalidOperationException("raw 그래프 표면 SID 오류");
+        }
+        // 삭제 준비는 죽은 원천과 하위 2비트 정책만 받는다(원본 invalid_argument 대신)
+        if (operation == Operation.Detach && ((root[RawSidPool.StateOffset] & DeadBit) == 0 || (target & ~3) != 0))
+        {
+            throw new ArgumentException("raw 그래프 삭제 준비의 죽음 상태 또는 정책 오류", nameof(target));
+        }
+        byte detachGraph = root[GraphOffset];
+        if (operation == Operation.Detach)
+        {
+            // 위치 조회는 해시 객체 0단계 머리를 읽는다. 다른 단계의 원천은 자연 반환이 아니라 이 경로를 타지 않는다
+            int lookupX = Coordinate(BitConverter.UInt32BitsToSingle(Read(root, XOffset)));
+            int lookupY = Coordinate(BitConverter.UInt32BitsToSingle(Read(root, YOffset)));
+            int found = _hash.Entries(0)[lookupY * RawSquidHash.WorldCells + lookupX];
+            // 빈 머리는 finder 를 만들기 전에 자연 반환한다
+            if (found == 0)
+            {
+                return plan;
+            }
+            // 손상된 조회 SID 는 쓰기 전에 거부한다
+            if (found < 5 || found > MaximumId || found >= _pool.Capacity)
+            {
+                throw new ArgumentOutOfRangeException(nameof(sid), found, "raw 그래프 삭제 조회 SID 오류");
+            }
+            ReadOnlySpan<byte> lookup = _pool.Slot(found);
+            // 조회 머리의 free·contained·void, 타입 범위, 표면 여부, 좌표 일치를 확인한다
+            if ((lookup[RawSidPool.StateOffset] & (FreeBit | ContainedBit | VoidBit)) != 0
+                || lookup[RawSidPool.TypeOffset] < OriginalConstructors.FirstAssetType
+                || lookup[RawSidPool.TypeOffset] >= _types.Count
+                || (_types[lookup[RawSidPool.TypeOffset]].Flags1 & OriginalTypeRecord.Surface) == 0
+                || Coordinate(BitConverter.UInt32BitsToSingle(Read(lookup, XOffset))) != lookupX
+                || Coordinate(BitConverter.UInt32BitsToSingle(Read(lookup, YOffset))) != lookupY)
+            {
+                throw new InvalidOperationException("raw 그래프 삭제 조회 표면·위치 오류");
+            }
+            byte number = lookup[GraphOffset];
+            // 무효·미사용 번호는 원천 프레임 판독보다 먼저 자연 반환한다
+            if (number == Invalid)
+            {
+                return plan;
+            }
+            // 251~253 과 255 는 정상 번호가 아니다
+            if (number >= Count)
+            {
+                throw new ArgumentOutOfRangeException(nameof(sid), number, "raw 그래프 삭제 번호 오류");
+            }
+            // 미사용 번호도 finder 를 만들기 전에 자연 반환한다
+            if (plan.Records[number].InUse == 0)
+            {
+                return plan;
+            }
+            detachGraph = number;
         }
         if (pop is { } projected)
         {
@@ -560,6 +661,46 @@ public sealed class RawGraph : IRawPostPopGraph
         {
             graph.Add(sid, _recovery);
         }
+        else if (operation == Operation.Detach)
+        {
+            // 삭제의 일반 탐색은 소수 좌표를 정수 스냅샷으로 읽은 finder 위에서 수행한다
+            SurfaceObject source = finder.Object(sid);
+            // 치환 정보가 필요할 때만 실제 방향 코드를 확인한다
+            bool sourceFrameValid = true;
+            if (sourceType.HasValue)
+            {
+                // 치환 타입 번호가 표를 벗어나면 쓰기 전에 거부한다
+                if (sourceType.Value >= _types.Count)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(sourceType), sourceType.Value, "raw 그래프 삭제 치환 타입 오류");
+                }
+                OriginalTypeRecord replacement = _types[sourceType.Value];
+                uint frameIndex = Read(root, FrameOffset, 4);
+                // 치환 타입은 표면이어야 하고 발자국이 지도 안에 있어야 한다
+                if ((replacement.Flags1 & OriginalTypeRecord.Surface) == 0)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(sourceType), sourceType.Value, "raw 그래프 삭제 치환 표면 오류");
+                }
+                // 치환 발자국이 비어 있으면 쓰기 전에 거부한다
+                if (replacement.FootX < 1 || replacement.FootY < 1
+                    || replacement.FootX > RawSquidHash.WorldCells || replacement.FootY > RawSquidHash.WorldCells)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(sourceType), "raw 그래프 삭제 치환 발자국 오류");
+                }
+                sourceFrameValid = frameIndex < (uint)_frames[sourceType.Value].Count;
+                source = source with
+                {
+                    Width = replacement.FootX,
+                    Height = replacement.FootY,
+                    Flags1 = replacement.Flags1,
+                    Flags2 = replacement.Flags2,
+                    Frame = sourceFrameValid ? _frames[sourceType.Value][(int)frameIndex] : default,
+                };
+            }
+            // 연결 판단은 치환된 삭제 정보의 타입을 쓰되 전체 풀 재구성은 원본 raw 타입을 읽는다
+            graph.DetachAt(sid, detachGraph, DetachConnections(source, finder, sourceFrameValid),
+                (target & 1) != 0, (target & 2) != 0 ? (byte)9 : (byte)1, _recovery, source.Flags2);
+        }
         else
         {
             plan.Changed = graph.Flood(sid, target);
@@ -580,6 +721,130 @@ public sealed class RawGraph : IRawPostPopGraph
             MergeNumber(plan, member.Id, graph.Number(member.Id), member.Graph);
         }
         return plan;
+    }
+
+    /// <summary>
+    /// 삭제 연결의 일반 찾기. 원천 발자국 안쪽이 모두 안쪽 비트면 빈 목록이며, 그렇지 않으면 4단계 해시를
+    /// y·x·next 순서로 훑어 가로·세로 경계 접촉이 엇갈리는 이웃만 모은다(원본 DetachConnections).
+    /// 손상된 SID·자기 next·순환은 계획 계산 안에서 거부한다.
+    /// </summary>
+    /// <param name="source">삭제 원천의 표면 스냅샷(치환 타입이면 치환 값).</param>
+    /// <param name="finder">표면 이웃 탐색기(연결 판정에 쓴다).</param>
+    /// <param name="sourceFrameValid">치환 정보에서 실제 방향 코드를 읽을 수 있는지.</param>
+    private List<int> DetachConnections(SurfaceObject source, SurfaceFinder finder, bool sourceFrameValid)
+    {
+        var result = new List<int>();
+        // 원천 발자국 사각형을 1..255 로 자른 뒤 양 끝을 정리한다
+        static (int Left, int Top, int Right, int Bottom) Bounds(SurfaceObject item)
+        {
+            int x = Math.Clamp(item.X - item.Width + 1, 1, RawSquidHash.WorldCells - 1);
+            int y = Math.Clamp(item.Y - item.Height + 1, 1, RawSquidHash.WorldCells - 1);
+            return item.X > 0 && item.Y > 0 ? (x, y, item.X, item.Y) : (x, y, x, y);
+        }
+        (int left, int top, int right, int bottom) = Bounds(source);
+        int interior = 0xFF;
+        // 원천 발자국 spot 전체를 AND 해 안쪽 상태를 확인한다
+        for (int y = top; y <= bottom; y++)
+        {
+            // 원천의 정수 발자국 각 칸을 확인한다
+            for (int x = left; x <= right; x++)
+            {
+                interior &= _spots[y * RawSquidHash.WorldCells + x];
+            }
+        }
+        // 안쪽이면 이웃이 없다
+        if ((interior & 8) != 0)
+        {
+            return result;
+        }
+        // 가로·세로 경계 접촉이 엇갈릴 때만 연결로 본다
+        static bool Intersects(int left, int top, int right, int bottom, int aLeft, int aTop, int aRight, int aBottom)
+        {
+            int x1 = Math.Max(left, aLeft);
+            int y1 = Math.Max(top, aTop);
+            int x2 = Math.Min(right, aRight);
+            int y2 = Math.Min(bottom, aBottom);
+            return x1 > 0 && y1 > 0 && x2 < RawSquidHash.WorldCells && y2 < RawSquidHash.WorldCells && x1 <= x2 && y1 <= y2;
+        }
+        // 일반 finder 는 원천을 한 칸 넓히고 단계별 마지막 버킷도 하나 늘린다
+        for (int level = 0; level < RawSquidHash.Levels; level++)
+        {
+            int scale = HashScale(level);
+            int side = RawSquidHash.Side(level);
+            int startX = Math.Max(0, (left - 1) / scale);
+            int startY = Math.Max(0, (top - 1) / scale);
+            int endX = Math.Min(side - 1, Math.Min(RawSquidHash.WorldCells - 1, right + 1) / scale + 1);
+            int endY = Math.Min(side - 1, Math.Min(RawSquidHash.WorldCells - 1, bottom + 1) / scale + 1);
+            ReadOnlySpan<ushort> heads = _hash.Entries(level);
+            // 같은 단계 안에서는 y/x, 같은 버킷 안에서는 next 순서를 보존한다
+            for (int cy = startY; cy <= endY; cy++)
+            {
+                // 끝 버킷의 큰 발자국 후보도 원본과 같은 순서로 판정한다
+                for (int cx = startX; cx <= endX; cx++)
+                {
+                    int current = heads[cy * side + cx];
+                    var chain = new List<int>();
+                    // 손상된 SID·자기 next·순환은 쓰기 전에 거부한다
+                    while (current != 0)
+                    {
+                        // 손상된 번호·순환은 쓰기 전에 거부한다
+                        if (current < 5 || current > MaximumId || current >= _pool.Capacity || chain.Contains(current))
+                        {
+                            throw new InvalidOperationException("그래프 삭제 해시 범위/순환 오류");
+                        }
+                        chain.Add(current);
+                        ReadOnlySpan<byte> bytes = _pool.Slot(current);
+                        int candidate = current;
+                        current = (int)Read(bytes, NextOffset, 2);
+                        // free·contained·void 후보는 손상으로 본다
+                        if ((bytes[RawSidPool.StateOffset] & (FreeBit | ContainedBit | VoidBit)) != 0)
+                        {
+                            throw new InvalidOperationException("그래프 삭제 후보 상태 오류");
+                        }
+                        // 타입 번호가 표를 벗어나면 쓰기 전에 거부한다
+                        if (bytes[RawSidPool.TypeOffset] < OriginalConstructors.FirstAssetType || bytes[RawSidPool.TypeOffset] >= _types.Count)
+                        {
+                            throw new InvalidOperationException("그래프 삭제 후보 타입 오류");
+                        }
+                        // 죽음·매립·비표면 후보는 건너뛴다
+                        if ((bytes[RawSidPool.StateOffset] & DeadBit) != 0
+                            || (bytes[ExtraOffset] & BuriedBit) != 0
+                            || (_types[bytes[RawSidPool.TypeOffset]].Flags1 & OriginalTypeRecord.Surface) == 0)
+                        {
+                            continue;
+                        }
+                        SurfaceObject item = finder.Object(candidate);
+                        (int aLeft, int aTop, int aRight, int aBottom) = Bounds(item);
+                        // 기준점이 안쪽이거나 가로·세로 접촉이 같으면 건너뛴다
+                        if ((_spots[item.Y * RawSquidHash.WorldCells + item.X] & 8) != 0
+                            || Intersects(aLeft - 1, aTop, aRight + 1, aBottom, left, top, right, bottom)
+                                == Intersects(aLeft, aTop - 1, aRight, aBottom + 1, left, top, right, bottom))
+                        {
+                            continue;
+                        }
+                        // 치환 정보가 없으면 다리·폭탄→육지 연결의 두 번째 코드를 'A'로 덮어쓴 경우만 해석한다
+                        if (!sourceFrameValid
+                            && !(((item.Flags2 & BridgeOrBombMask) != 0) && ((source.Flags2 & LandObjectMask) != 0))
+                            && (source.Flags2 & EmplacementBit) == 0)
+                        {
+                            throw new ArgumentOutOfRangeException(nameof(source), "raw 그래프 삭제 치환 방향 코드가 필요합니다");
+                        }
+                        // 프레임 글자로 이어지지 않으면 건너뛴다
+                        if (!SurfaceFinder.Connects(item, source))
+                        {
+                            continue;
+                        }
+                        // 같은 후보가 두 번 나오면 손상으로 본다
+                        if (result.Contains(candidate))
+                        {
+                            throw new InvalidOperationException("그래프 삭제 중복 해시 후보");
+                        }
+                        result.Add(candidate);
+                    }
+                }
+            }
+        }
+        return result;
     }
 
     /// <summary>

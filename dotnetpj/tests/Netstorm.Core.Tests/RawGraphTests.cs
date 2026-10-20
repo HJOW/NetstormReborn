@@ -313,4 +313,85 @@ public sealed class RawGraphTests
         _ = spots;
         _ = types;
     }
+
+    /// <summary>
+    /// 위치 조회의 무효·미사용 번호는 finder 를 만들기 전에 자연 반환한다.
+    /// 원천 프레임이 깨져도 표·스택·풀·지도를 바꾸지 않는다.
+    /// </summary>
+    [Fact]
+    public void DetachInvalidOrUnusedHeadReturnsWithoutChanges()
+    {
+        (RawSidPool pool, RawSquidHash hash, byte[] spots) = Space();
+        OriginalTypeRecord[] types = Types();
+        types[74].Flags1 = OriginalTypeRecord.Surface;
+        types[74].FootX = types[74].FootY = 1;
+        List<IReadOnlyList<FrameCode>> frames = Enumerable.Range(0, types.Length)
+            .Select(_ => (IReadOnlyList<FrameCode>)new List<FrameCode> { new FrameCode('A', 'P', 1, FrameCodeFlags.None) }).ToList();
+        var records = new GraphRecord[RawGraph.TableSize];
+        records[0] = new GraphRecord { Surfaces = 3, InUse = 1 };
+        records[1] = new GraphRecord { Surfaces = 4, InUse = 0 };
+        var graph = new RawGraph(pool, hash, spots, types, records, null, frames);
+        int root = Surface(pool, 20, 20, 0, 2);
+        int head = Surface(pool, 20, 20, 0, 0);
+        // 같은 위치의 조회 머리를 가리킨다
+        hash.Bucket(0, 20, 20) = (ushort)head;
+        byte[] beforeSpots = spots.ToArray();
+        // 무효 번호와 미사용 번호는 잘못된 원천 프레임을 허용하고 그대로 둔다
+        foreach (byte number in new byte[] { RawGraph.Invalid, 1 })
+        {
+            pool.AllocatedBytes(head)[30] = number;
+            // 깨진 원천 프레임을 미리 넣어 둔다
+            Put(pool.AllocatedBytes(root), 36, 99);
+            byte[] beforePool = pool.Bytes.ToArray();
+            graph.ValidateDetach(root);
+            graph.Detach(root);
+            Assert.Equal(beforePool, pool.Bytes.ToArray());
+            Assert.Equal(beforeSpots, spots);
+            Assert.Equal(3, graph.Records[0].Surfaces);
+            Assert.Equal(4, graph.Records[1].Surfaces);
+            Assert.Equal(0, graph.Records[1].InUse);
+        }
+        _ = types;
+    }
+
+    /// <summary>
+    /// 죽지 않은 원천·잘못된 감소 수·손상된 조회 머리는 표·스택·풀·지도를 바꾸기 전에 거부한다.
+    /// </summary>
+    [Fact]
+    public void DetachPreflightRejectsBeforeMutation()
+    {
+        (RawSidPool pool, RawSquidHash hash, byte[] spots) = Space();
+        OriginalTypeRecord[] types = Types();
+        types[74].Flags1 = OriginalTypeRecord.Surface;
+        types[74].FootX = types[74].FootY = 1;
+        List<IReadOnlyList<FrameCode>> frames = Enumerable.Range(0, types.Length)
+            .Select(_ => (IReadOnlyList<FrameCode>)new List<FrameCode> { new FrameCode('A', 'P', 1, FrameCodeFlags.None) }).ToList();
+        var records = new GraphRecord[RawGraph.TableSize];
+        records[0] = new GraphRecord { Surfaces = 3, InUse = 1 };
+        var graph = new RawGraph(pool, hash, spots, types, records, null, frames);
+        int root = Surface(pool, 20, 20, 0, 2);
+        int head = Surface(pool, 20, 20, 0, 0);
+        // 같은 위치의 조회 머리를 가리킨다
+        hash.Bucket(0, 20, 20) = (ushort)head;
+        byte[] beforePool = pool.Bytes.ToArray();
+        byte[] beforeSpots = spots.ToArray();
+        // 감소 수는 1 또는 9만 받는다
+        Assert.Throws<ArgumentException>(() => graph.ValidateDetach(root, false, 2));
+        Assert.Throws<ArgumentException>(() => graph.Detach(root, false, 2));
+        // 죽지 않은 원천은 거부한다
+        pool.AllocatedBytes(root)[11] = 0;
+        Assert.Throws<ArgumentException>(() => graph.Detach(root));
+        pool.AllocatedBytes(root)[11] = 2;
+        // 조회 머리의 좌표가 다르면 위치 불일치로 거부한다
+        Put(pool.AllocatedBytes(head), 14, BitConverter.SingleToUInt32Bits(30));
+        Put(pool.AllocatedBytes(head), 18, BitConverter.SingleToUInt32Bits(30));
+        Assert.Throws<InvalidOperationException>(() => graph.ValidateDetach(root));
+        Assert.Throws<InvalidOperationException>(() => graph.Detach(root));
+        // 좌표를 되돌리면 풀·지도는 그대로다
+        Put(pool.AllocatedBytes(head), 14, BitConverter.SingleToUInt32Bits(20));
+        Put(pool.AllocatedBytes(head), 18, BitConverter.SingleToUInt32Bits(20));
+        Assert.Equal(beforePool, pool.Bytes.ToArray());
+        Assert.Equal(beforeSpots, spots);
+        _ = types;
+    }
 }

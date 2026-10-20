@@ -1,3 +1,14 @@
+## 2026-10-20 완료: W02 열다섯째 조각 — 그래프 삭제 준비(Detach)
+
+- [x] 사용자 요청("AGENTS.md 와 LEFT_JOBS.dotnetpj.md 문서를 읽고, dotnetpj 다음 단계를 진행해 줘")으로 직전 절이 정한 다음 시작점, 곧 `RawGraph` 의 삭제 준비(`Detach`)를 수행했다. `cpppj/`·공통 `LEFT_JOBS.md`는 수정하지 않았다. 현재 PC **HJOW-Athlon**은 공통 기록의 마지막 정밀 디컴파일 PC(**HJOW-Athlon, 2026-10-20**)와 같으나 **디컴파일 산출물을 읽지 않았고**, 새 디컴파일·원본 관찰·원본/클론 게임·창 실행은 없다. cpppj 커밋 소스·원본 fixture 에만 근거했다. 마지막 디컴파일 PC 기록은 그대로다. 상세·근거 표·경계는 [원본 월드 코어 W02 삭제 준비 조각](docs/dotnet-original-core-graphdetach-20261020.md).
+- [x] **동기화 먼저:** 시작할 때 반영 커밋은 `00ce6d72`, HEAD는 `86089809`(직전 DN 커밋)였다. 작업 중 cpppj 커밋 2건(`249c3a3d 20261020-24 CP` 제단 해방 — 연결 fixture·이식 모듈에 영향 없음, `e2dfe0d0 20261020-25 CP` 다이스 추가 그림 — 새 `dais-draw-x86.tsv`는 연결하지 않는다)을 검토했다. 쓸 fixture를 `--update --add graphremove:Core`·`--update --add graphlookup:Core`로 등록했고(연결 fixture 36→**38**개), 마지막에 `--update --reflect HEAD`로 반영 커밋을 `00ce6d72`→**`e2dfe0d0`** 로 올렸다([계획 7절 7번](docs/dotnet-cpp-port-plan-20261016.md#7-cpppj-진행을-따라가는-절차-다른-ai가-cpppj를-계속-진행-중)). 작업 트리의 cpppj 미커밋 변경(다른 세션 작업물)과 미연결 `dais-draw`·`dude-behavior` fixture는 쓰지 않았다.
+- [x] **구현(`dotnetpj/src/Netstorm.Core/Original/RawGraph.cs` 확장):** 원본 `Calculate` 의 `Detach` 경로 — 죽음·정책 검사→위치 조회(0단계 머리 SID·무효/미사용 자연 반환)→`DetachConnections`(원천 발자국 AND·4단계 해시 y/x/next 순서·가로/세로 접촉 XOR·치환 프레임·연결 판정)→`SurfaceGraph.DetachAt` 수행. `ValidateDetach`·`Detach`(재구성·특수 감소·치환 타입) 공개. `FullPool` 일 때 삭제 준비도 전체 풀에서 읽는다. 기준 판본은 10.78 뿐이다.
+- [x] **검증:** 전체 Release 경고 0·오류 0(`--no-incremental` 강제 전체 빌드), 단위 **1,215개 통과**(Assets 363 + Core 852; 이번 +4). `graphremove-x86.tsv` 10.78 몫 **386회**(Detach 128·Unpop 256·Release 2)와 `graphlookup-x86.tsv` 10.78 몫 **128회**(Detach 128)가 호출마다 7개 슬롯 50바이트·표/스택/해시/점유/풀 체크섬·TotalCost·깊이·세 Totalmade 표까지 전부 일치했다. 무효·미사용 조회의 자연 반환과 죽음·감소 수·위치 불일치의 쓰기 전 거부를 확인하는 합성 검사 2개를 더했다.
+- [x] **변이 확인:** 구현 3곳을 하나씩 망가뜨려 **2곳이 실패로 잡혔다**(조회 번호 대신 원천 번호 사용 — 슬롯·표 66행 불일치, 가로·세로 접촉 비교 반전 — 슬롯 60행 불일치). 빈 머리 조기 반환 제거는 이 장면에 빈 머리가 없어 잡히지 않았고 원본대로 유지했다. 소스는 모두 원복해 재통과를 확인했다.
+- [ ] **하지 않은 것(경계):** `Rebuild`(전체 재구성)·`PostDestroy`·`Frame` 은 옮기지 않았다. `graphrebuild`·`graphrecovery`·`graphforms`·`destroygraph` fixture 는 아직 연결하지 않았다. `GraphRecovery.FullPool` 재생 검증, CD 10.72·10.37, 실제 세션 연결, 파생 분배 허브는 그대로 미연결이다. 이 조각은 L1 모듈 단계이며 L2 이상으로 합산하지 않는다.
+- [ ] **다음 조각:** `Rebuild`(전체 재구성, `graphrebuild`·`graphforms`) → `Allocate` 소진 복구 재생(`graphrecovery` 의 `FullPool` 경로) → `PostDestroy`·`Frame`(`destroygraph`) → 파생 분배 허브·실제 세션 연결. 시작할 때 `python dotnetpj/tools/cpp_sync.py`를 먼저 실행하고 쓸 fixture를 `--update --add`로 등록한다.
+- [x] 인수인계 뒤 **`20261020-26 DN 원본 월드 코어의 그래프 삭제 준비를 원본 10.78 행 514회로 검증`** 으로 로컬 커밋한다. 번호 `25`는 작업 중 들어온 cpppj 커밋이 썼으므로 `26`을 쓴다. 원격 push는 하지 않는다.
+
 ## 2026-10-20 완료: 점검 수정 5건 — 처리량 기록·현행 계획·Allocate 복구 검사·주석·정리
 
 - [x] 사용자 요청("AGENTS.md 와 LEFT_JOBS.dotnetpj.md 문서를 읽고, dotnetpj 다음 단계를 진행해 줘")으로 직전 절이 정한 순서(수정 1~5 먼저, 그 뒤 Detach)대로 수행했다. `cpppj/`·공통 `LEFT_JOBS.md`는 수정하지 않았다. 현재 PC **HJOW-Athlon**은 공통 기록의 마지막 정밀 디컴파일 PC(**HJOW-Athlon, 2026-10-20**)와 같으나 **디컴파일 산출물을 읽지 않았고**, 새 디컴파일·원본 관찰·원본/클론 게임·창 실행은 없다. cpppj 커밋 소스·원본 fixture 에만 근거했다. 마지막 디컴파일 PC 기록은 그대로다. 상세는 [원본 월드 코어 W02 그래프 영역·추가·flood 조각](docs/dotnet-original-core-graphops-20261020.md).
@@ -274,7 +285,7 @@
 - [x] **판정 단계:** L1 모듈(fixture 10.78 행 전부) → L2 세션 시작 상태 → L3 고정 입력 진행 → L4 화면·소리 → L5 자연 완주 순서다. L1 통과를 L2 이후 완료로 합산하지 않는다. 1차 범위는 cpppj 목표와 같은 11개 미션(Tutorial1~6·캠페인 1-1·1-2·데모 3개)이다.
 - [ ] **P0 기반**(순서대로, 각 단위의 fixture·교체 대상·완료 기준은 계획 5절)
   - [x] W01 기준선·동기화 장치: 연결 fixture SHA 목록 검사, `X86Fixture` 확장, 반영 커밋 기록 (**완료 2026-10-16**, 위 절)
-  - [ ] W02 원본 월드 코어 ① 생성·등록: 객체 표·생성자·Pop/Unpop/PostPop·해시/spot·소유자/프레임·Graph 연결(D14) — **2026-10-20 기준(최신 `20261020-22`): 슬롯 풀·생성, 공간 해시·Unpop, Pop, 공통 PostPop·다리 접두, Carrier/Asset 후처리, 소유자, 프레임, 건물 공간, 이웃·탐색, 다리 사건 경유 재생, 미니맵 갱신 큐, RawGraph 표 저장소·초기화, 그래프 영역·추가/flood·등록 후처리까지 L1 모듈 이식**. 남은 것은 `Detach`(위치 조회·연결 목록·분할 정책), `Allocate` 소진 복구 검증·`Rebuild`(전체 재구성) 구현, `PostDestroy`·`Frame`, `graphremove`·`graphlookup`·`graphrebuild`·`graphrecovery`·`graphforms` 재생, 파생 분배 허브·실제 세션 연결이다(각 조각 상세는 위 절).
+  - [ ] W02 원본 월드 코어 ① 생성·등록: 객체 표·생성자·Pop/Unpop/PostPop·해시/spot·소유자/프레임·Graph 연결(D14) — **2026-10-20 기준(최신 `20261020-26`): 슬롯 풀·생성, 공간 해시·Unpop, Pop, 공통 PostPop·다리 접두, Carrier/Asset 후처리, 소유자, 프레임, 건물 공간, 이웃·탐색, 다리 사건 경유 재생, 미니맵 갱신 큐, RawGraph 표 저장소·초기화, 그래프 영역·추가/flood·등록 후처리, 그래프 삭제 준비까지 L1 모듈 이식**. 남은 것은 `Rebuild`(전체 재구성) 구현, `Allocate` 소진 복구 재생·`PostDestroy`·`Frame`, `graphrebuild`·`graphrecovery`·`graphforms` 재생, 파생 분배 허브·실제 세션 연결이다(각 조각 상세는 위 절).
   - [ ] W03 원본 월드 코어 ② 삭제·수명: 공통 삭제·Damageable·종속/내용물/Form·신전 삭제(D14)
   - [ ] W04 시간·Kernel·Process: Regular·ProcessForm·공통 프레임 진행, 24Hz/8틱 소비자를 하나씩 이행(D01)
   - [ ] W05 SP·보상·난수: float32 SP 저장소·쓰기마다 난수 160회·보상/환불/AI 지갑/샘 풀(D12)

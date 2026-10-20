@@ -198,6 +198,9 @@ public sealed class X86RawGraphReplayTests
         /// <summary>공통 Pop(표시를 끈 경로).</summary>
         public RawPop Pop { get; private set; }
 
+        /// <summary>공통 Unpop(표시를 끈 경로, 삭제 재생에서 쓴다).</summary>
+        public RawUnpop Unpop { get; private set; }
+
         /// <summary>Begin 행으로 풀과 타입·프레임을 준비하고 슬롯 7개를 확보한다.</summary>
         /// <param name="expectedIds">원본이 기대하는 슬롯 번호 순서.</param>
         public Scene(int[] expectedIds)
@@ -222,6 +225,7 @@ public sealed class X86RawGraphReplayTests
             Graph = new RawGraph(Pool, Hash, Spots, Types);
             Post = new RawPostPop(Pool, Types, State);
             Pop = new RawPop(Pool, Hash, Spots);
+            Unpop = new RawUnpop(Pool, Hash, Spots);
         }
 
         /// <summary>
@@ -283,6 +287,7 @@ public sealed class X86RawGraphReplayTests
             Graph = new RawGraph(Pool, Hash, Spots, Types, Records(row[3]), stack, Frames);
             Post = new RawPostPop(Pool, Types, State, Graph);
             Pop = new RawPop(Pool, Hash, Spots, null, Post);
+            Unpop = new RawUnpop(Pool, Hash, Spots);
         }
 
         /// <summary>노드 하나의 슬롯을 원본 Setup 입력으로 채운다.</summary>
@@ -370,6 +375,15 @@ public sealed class X86RawGraphReplayTests
                 case "Flood":
                     Expect("Flood 반환", scene.Graph.Flood(target, (byte)args[0][0]), X86Fixture.UInt(row[2]));
                     break;
+                case "Detach":
+                    scene.Graph.Detach(target, args[0][0] != 0, (byte)args[0][1]);
+                    break;
+                case "Unpop":
+                    scene.Unpop.Unpop(target, scene.Types[FirstType], (uint)args[0][0]);
+                    break;
+                case "Release":
+                    scene.Pool.Release(target);
+                    break;
                 default:
                     return false;
             }
@@ -423,6 +437,28 @@ public sealed class X86RawGraphReplayTests
             ["Pop"] = 96,
             ["PostPop"] = 160,
             ["Region"] = 160,
+        });
+    }
+
+    /// <summary>죽은 원천의 이웃 분리·다리/섬 해제·반납 장면을 10.78 몫 386회 재생한다.</summary>
+    [Fact]
+    public void DetachGeneralIslandBridgeUnpopAndReleaseMatchOriginalX86()
+    {
+        Replay("graphremove", true, 6, new Dictionary<string, int>
+        {
+            ["Detach"] = 128,
+            ["Unpop"] = 256,
+            ["Release"] = 2,
+        });
+    }
+
+    /// <summary>같은 위치의 다른 번호 조회·원천 프레임 유지 장면을 10.78 몫 128회 재생한다.</summary>
+    [Fact]
+    public void DetachUsesPositionHeadGraphMatchOriginalX86()
+    {
+        Replay("graphlookup", true, 6, new Dictionary<string, int>
+        {
+            ["Detach"] = 128,
         });
     }
 }
