@@ -15,7 +15,7 @@
     "cpppj/src/client/RawCampaignTutorialOneBindings.cpp": "c214b1a4ecba704d4b4a7cbad4599dd87a32bf900f2664c53578a481fcd968fa",
     "cpppj/src/client/RawCampaignTutorialOneBindings.h": "efe039f12651795463edaccdf0698c03ca469e2cfdb1afa0d94d583bcc4b4093",
     "cpppj/src/client/UberGump.cpp": "c160136246b091eed0d2dbdd6d091d068e7c0460191d935c77582ce1c137d932",
-    "cpppj/tests/CampaignSessionTests.cpp": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+    "cpppj/tests/CampaignSessionTests.cpp": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f",
     "cpppj/src/o/RawTutorialLater.cpp": "1f40efc3aefb38e02ff8a9b5d2553ca4c30f773c2c8b4f6dbb82cd3e5b9bc082",
     "cpppj/src/o/RawTutorialLater.h": "e531ab0c0fd025608fde58be59bd5ae83e94414220624f243f7ad891bd3e831f",
     "cpppj/src/o/RawTutorialOne.cpp": "4717a1c26fe6ffa6eebdfa420bd9d194902d5b810849ea6d8c8ab06e0a056f7c",
@@ -923,6 +923,20 @@
           "group": "/sources",
           "previous": "769b7c7b64412ec348b1b9311cf8ee1a2928063d597402e45eacb16ec2a03aea",
           "current": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd"
+        }
+      ]
+    },
+    {
+      "unit": "241",
+      "date": "2026-10-20",
+      "host": "HJOW-Athlon",
+      "note": "제단 해방의 가상 소유자와 실제 Tell 연결. 현재 소스 핀만 갱신하며 과거 실행 결과는 보존한다. 실행 검증은 통합 시점으로 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "group": "/sources",
+          "previous": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+          "current": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
         }
       ]
     }

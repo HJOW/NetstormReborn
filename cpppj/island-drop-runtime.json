@@ -183,7 +183,7 @@
     "cpppj/src/o/RawGraph.cpp": "5427d22b06ec1f9eb54ab9ede9c3e4008baeac3e3439cba3d8132236b9464fb1",
     "cpppj/src/o/RawGraph.h": "588b8a3a1ae30cff14b738a5491ed4d290b093e50cd2ff782460f7af983c208b",
     "cpppj/tests/BattleBroadcastTests.cpp": "7bfa23c46a8f8810fc2b8522f14cff40060f23cbfb9a8752d8294cea4f407a43",
-    "cpppj/tests/CampaignSessionTests.cpp": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+    "cpppj/tests/CampaignSessionTests.cpp": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f",
     "cpppj/tests/DestroyGraphTests.cpp": "a3618522256bcd8f3a5313b62d31e18640e7823d481cf08f21e874ec7933c471",
     "cpppj/tests/ShapeToBufferTests.cpp": "91d7010f9d6698f7237d8a2040e00658502a57dedea9da310173af4e96dd26e5",
     "tools/cpp_assets_smoke.py": "d71fbbe55dde7452c980509a68f228c40ce74ddaf9f3b7a7518092d76c0319e9",
@@ -584,6 +584,20 @@
           "group": "/sources",
           "previous": "769b7c7b64412ec348b1b9311cf8ee1a2928063d597402e45eacb16ec2a03aea",
           "current": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd"
+        }
+      ]
+    },
+    {
+      "unit": "241",
+      "date": "2026-10-20",
+      "host": "HJOW-Athlon",
+      "note": "제단 해방의 가상 소유자와 실제 Tell 연결. 현재 소스 핀만 갱신하며 과거 실행 결과는 보존한다. 실행 검증은 통합 시점으로 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "group": "/sources",
+          "previous": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+          "current": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
         }
       ]
     }

@@ -77,7 +77,7 @@
     "cpppj/src/o/RawGunTarget.cpp": "7ac9b51af58949ce8c23f9854679a7685468ba798768db0a1158f25b0ff95f14",
     "cpppj/src/o/RawGunTarget.h": "cfc9f229f1b1ed225188ef5600ea7f575304f7c5cd537b6e6d803caa7d8486a0",
     "cpppj/src/o/SquidDisplay.h": "c0fa956fb5da3d19e08b5f3eaaa8253ea233b60cad3db83f21ab750c7f95087d",
-    "cpppj/tests/CampaignSessionTests.cpp": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+    "cpppj/tests/CampaignSessionTests.cpp": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f",
     "cpppj/tests/GunTargetTests.cpp": "e3c5506385af4678241bebf53e3c7681a58b53d8e25b94b754dc448a51054587",
     "tools/cpp_cannon_combat_smoke.py": "130fe8ca64033d36e4559adbbd04661e60489a02b2309a3e312aee77e4eda98e",
     "tools/decomp_cannon_asset_ray.py": "5e08db9e72fe4327df8aef49f139d00ca49bc716879a41e9c8a6be30996ba659",
@@ -800,6 +800,20 @@
           "group": "/currentSources",
           "previous": "769b7c7b64412ec348b1b9311cf8ee1a2928063d597402e45eacb16ec2a03aea",
           "current": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd"
+        }
+      ]
+    },
+    {
+      "unit": "241",
+      "date": "2026-10-20",
+      "host": "HJOW-Athlon",
+      "note": "제단 해방의 가상 소유자와 실제 Tell 연결. 현재 소스 핀만 갱신하며 과거 실행 결과는 보존한다. 실행 검증은 통합 시점으로 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "group": "/currentSources",
+          "previous": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+          "current": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
         }
       ]
     }

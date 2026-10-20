@@ -2652,6 +2652,26 @@ TEST_CASE(CampaignDais_SavedRecordFirstPopRegistersAltar) {
     CHECK(!core.bookkeeping.depth && !core.destroy.PreDepth() && !core.destroy.PostDepth());
 }
 
+// 같은 소유자의 포획 사제는 원본 제단21에서 자동 해방된다. 가상 owner0이 원래 WORD의 소유자로 복귀해야 한다.
+TEST_CASE(CampaignAltar_AlliedReleaseUsesVirtualPriestOwner) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());
+    RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",external.Services());session.Load();auto core=session.Core();
+    const auto dais=session.World().Create(165);core.owner.Set(dais,1);session.World().Pop(dais,100,111,0);
+    const auto altars=ConstructionLive(core,164);CHECK(altars.size()==1);if (altars.size()!=1) return;const auto altar=altars.front(); // 실제 다이스 Pop이 만든 제단이다.
+    const auto before=ConstructionLive(core,158);const auto captured=session.CreateContained(dais,158,0x81,32,0,0); // 원래 소유자1인 명시 포획 입력이며 기존 사제는 바꾸지 않는다.
+    CHECK(Get(core.pool.Slot(altar),12,2)==1);auto* regular=core.processes.FindEvent(altar,21);CHECK(regular);if (!regular) return;
+    core.processState.now=regular->Time();regular->RunFrame(); // 같은 방향 동맹1→1을 실제 제단21이 읽고 ReleasePriest를 실행한다.
+    Sid released{};
+    // 기존 사제 목록의 결과를 덮어쓰지 않고 이번 해방이 생성한 SID만 찾는다.
+    for (const auto sid:ConstructionLive(core,158)) if (std::find(before.begin(),before.end(),sid)==before.end()) { CHECK(!released.value);released=sid; }
+    CHECK(released.value);if (!released.value) return;const auto raw=core.pool.Slot(released); // 사제 가상 Owner/PostPop이 실제로 기록한 현재 raw 상태다.
+    CHECK(raw[34]==1 && (Get(raw,12,2)&0x7fU)==1 && (raw[12]&0x80U));
+    CHECK((core.pool.Slot(captured)[11]&3U)==3U && !session.Priests().Carrier().FindContained(dais,0,158,0).value);
+    CHECK(!core.processes.FindEvent(altar,21) && Get(core.pool.Slot(altar),36)==static_cast<std::uint32_t>(core.frames[164].Run('P').first));
+    CHECK(!core.bookkeeping.depth && !core.destroy.PreDepth() && !core.destroy.PostDepth());
+}
+
 // 실제 Factory/전체Pop의 제단 생성·Player 등록과 부착 통지/제단 저항을 확인한다. 자연 포획 입력은 아니다.
 TEST_CASE(CampaignDais_ActualFactoryPopAndCapturedNotice) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();InputQueue commands;netstorm::zacket::LocalMissionTransport* wire{};std::vector<std::string> music;services.carrierRequest=[&](std::int32_t owner,std::span<const std::uint8_t> packet) { CHECK(wire);if (wire) wire->Send(owner,packet); };services.requestMusic=[&](std::string_view name) { music.emplace_back(name); };services.assets.queueCommand=[&](std::uint32_t command,std::int32_t x,std::int32_t y) { commands.PushCommand(command,x,y); }; // 실제 입력 큐와 자산을 쓴다.

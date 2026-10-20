@@ -113,7 +113,7 @@
   "sources": {
     "cpppj/src/client/RawCampaignSession.cpp": "aa78d6d841c3cb61f212fe645e9a0ffef7cf84f1bbcf2978a37fcad2c6d780e0",
     "cpppj/src/client/GameWorld.cpp": "af6d3aeb3bd53d83e2619c2bd20ba5df42c17fe718cb81786841606419f10c6c",
-    "cpppj/tests/CampaignSessionTests.cpp": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+    "cpppj/tests/CampaignSessionTests.cpp": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f",
     "cpppj/src/o/RawSunFlyerFrame.cpp": "b130537725f138521f7bd56b1c06b4656f101e83bb757a9404462e28bc648fce",
     "cpppj/src/o/RawSunFlyerFrame.h": "f582295f47fdf9e7a6c4d3eb8db3d5d20636a4c55151ef1a6b6d9edb95776c1a",
     "cpppj/src/o/RawSquidDestroy.cpp": "7be89b9d016cdacc80e0695f660bfca051dee6a18039978eb40117539ef89958",
@@ -477,6 +477,20 @@
           "group": "/sources",
           "previous": "769b7c7b64412ec348b1b9311cf8ee1a2928063d597402e45eacb16ec2a03aea",
           "current": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd"
+        }
+      ]
+    },
+    {
+      "unit": "241",
+      "date": "2026-10-20",
+      "host": "HJOW-Athlon",
+      "note": "제단 해방의 가상 소유자와 실제 Tell 연결. 현재 소스 핀만 갱신하며 과거 실행 결과는 보존한다. 실행 검증은 통합 시점으로 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "group": "/sources",
+          "previous": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+          "current": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
         }
       ]
     }

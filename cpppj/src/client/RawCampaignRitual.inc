@@ -32,7 +32,8 @@ void ConnectDaisLifecycle() {
     altar.playGlobal=[this](std::string_view name,std::uint32_t loop,std::uint32_t volume,std::uint32_t pan,std::uint32_t priority,std::uint32_t limit) { if (!services.sound.play) throw std::logic_error("제단 실제 전역 음향 미연결");services.sound.play(soundNames.Lookup(name),loop,volume,pan,priority,limit); };
     altar.removeAnimation=ritualExplosion; // 원본4605d0은 일반 폭발 효과이며 피해 전처리와 같은 몸체를 쓴다.
     altar.unpop=[this](Sid sid,std::uint32_t flags) { world.Unpop(sid,flags); };altar.repop=[this](Sid sid,std::uint32_t flags) { world.Repop(sid,flags); };
-    altar.setOwner=[this](Sid sid,std::uint32_t owner) { core.owner.Set(sid,owner); };altar.pop=[this](Sid sid,float x,float y,std::uint32_t flags) { world.Pop(sid,x,y,flags); };
+    altar.setOwner=[this](Sid sid,std::uint32_t owner) { ownership->SetOwner(sid,owner); }; // 448500의 가상+74(0)는 사제의 원래 소유자 WORD를 해석해야 한다.
+    altar.pop=[this](Sid sid,float x,float y,std::uint32_t flags) { world.Pop(sid,x,y,flags); };
     altar.escapeEffect=[this](Sid sid,float distance,std::uint32_t event) { if (!carrierEscape) throw std::logic_error("제단 해방 실제 회피 설치 전 호출");static_cast<void>(carrierEscape->Run(sid,distance,event)); };
     altar.refreshOwner=[this](std::uint32_t owner) { priestParticipation->Refresh(owner); };
     altar=MakeAltarSacrificeHooks(core.pool,core.frame,core.processes,core.factory,assetBindings->Regular(),random,std::move(altar));
@@ -48,7 +49,9 @@ void ConnectDaisLifecycle() {
     life.hasIsland=[this](Sid sid) { const auto genus=core.types[core.pool.Slot(sid)[10]].flags2;return (genus&2U)!=0 && (genus&0x1000000U)==0; }; // 실제4acdf0은 TYPE genus를 검사한다.
     life.islandNumber=[this](Sid sid) { const auto raw=core.pool.Slot(sid);const auto genus=core.types[raw[10]].flags2;if (!(genus&0x1000006U)) throw std::logic_error("다이스 원본 섬 번호 genus 진단");return (genus&4U) ? 127U : Read(raw,8)&0xffffU; }; // 실제4acda0의 WORD/다리 분기다.
     life.option=[this](std::string_view key) { if (!services.construction.configInt) throw std::logic_error("다이스 현재 설정 조회 미연결");return services.construction.configInt(key,0)!=0; };
-    FillMissing(life.chat); // 별도 경고 UI가 필요한 분기는 명시 경계로 남긴다.
+    life.chat=[this](std::string_view key) {
+        if (!services.priest.shield.tell) throw std::logic_error("홈섬 밖 제단의 실제 Tell 소비자 미연결");services.priest.shield.tell(key);
+    }; // 449320의4cf960은 채팅 기록이 아니라 같은 Tell(key,0) 안내 창이다.
     life.destroy=[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); };life.damageablePostDestroy=[this](Sid sid,std::uint32_t flags) { PrepareDamageablePost();damageablePost->PostDestroy(sid,flags); };
     daisLifecycle=std::make_unique<RawDaisLifecycle>(core.pool,core.hash,core.types,core.neighbors,*templeRitual,*altarSacrifice,*carrier,*damageablePre,*daisState,altarState,*daisLifecycleState,std::move(life));core.postPop.SetDaisPostPop(daisLifecycle.get());
     daisNoticeState=std::make_unique<DaisContentNoticeState>(DaisContentNoticeState{priestState.movement.priest,playerState.battleOwner,0x020000d7});

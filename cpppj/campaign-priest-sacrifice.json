@@ -308,7 +308,7 @@
     "cpppj/src/o/RawTempleRitual.h": "e5b853c7bfd9ca70c18c97d7b3f3a6e14b6e6d0ca89a6e5269e5117838937741",
     "cpppj/tests/AltarSacrificeTests.cpp": "3bcf850f018f097b44142038da311c135ae72c3b5c1e075856269f41b2adc0a1",
     "cpppj/tests/CMakeLists.txt": "49797f3b65f9f2b5bbb3c15a4521ecb361936cbf0c13f443f2f20f86bfe8f1cf",
-    "cpppj/tests/CampaignSessionTests.cpp": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+    "cpppj/tests/CampaignSessionTests.cpp": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f",
     "cpppj/tests/DaisBridgeTests.cpp": "3ddf0775e4388acad8f0a9b28d9340e8f40c24a5f66dcc980c05f7c51f3622a7",
     "cpppj/tests/DaisLifecycleTests.cpp": "30f2901c1e18d470e8b45ed3fb334ccd30774c0f6cefb1118ff9b886f46927b7",
     "cpppj/tests/DaisProgressTests.cpp": "2580113c0336b92d2a39efe957350d5ed25ee1af42e1f5de32e28991b3a2dacb",
@@ -319,7 +319,7 @@
     "cpppj/tests/fixtures/priest-sacrifice-request-x86.tsv": "b0ee93daba823701bab57a5a74314251436be61ddfc7e080b02a6bc90146856f",
     "cpppj/src/o/RawPriestSacrificeRequest.h": "862c74b13191c3392a88d781f64d655755b9d57656e25950cad376d5b8c1265e",
     "cpppj/src/o/RawPriestSacrificeRequest.cpp": "600747cb205419985d13a74dce383f3d5af575a5333d0bc128b2ad1cc3080bcd",
-    "cpppj/src/client/RawCampaignRitual.inc": "58bedee7b6bd9673e2ce45ac016f9421ef33ac4bd974e306dd54f83c631fe9f0",
+    "cpppj/src/client/RawCampaignRitual.inc": "c6ee6b6b111cf0f6fa0ff2b18da7253a65a75b9aa5e8edbbf03b05cf820df9bf",
     "cpppj/tests/PriestSacrificeRequestTests.cpp": "7ff575bd651d2217f0ac7d1b7bab817b7ac62d7b224c8658ce99cec6e5cfe8c4",
     "tools/decomp_ritual_shape_offsets.py": "a72baae56fc20de0de5335acf5f02c5e1a2020d052b22d04ce6dac169e64b694",
     "cpppj/ritual-shape-offsets.json": "96c98644d6c37ecaf6b3aefb6dff4b51a6ee6379dc27ff7087945ca82ac0a93b",
@@ -1491,6 +1491,26 @@
           "group": "/currentSources",
           "previous": "769b7c7b64412ec348b1b9311cf8ee1a2928063d597402e45eacb16ec2a03aea",
           "current": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd"
+        }
+      ]
+    },
+    {
+      "unit": "241",
+      "date": "2026-10-20",
+      "host": "HJOW-Athlon",
+      "note": "제단 해방의 가상 소유자와 실제 Tell 연결. 현재 소스 핀만 갱신하며 과거 실행 결과는 보존한다. 실행 검증은 통합 시점으로 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignRitual.inc",
+          "group": "/currentSources",
+          "previous": "58bedee7b6bd9673e2ce45ac016f9421ef33ac4bd974e306dd54f83c631fe9f0",
+          "current": "c6ee6b6b111cf0f6fa0ff2b18da7253a65a75b9aa5e8edbbf03b05cf820df9bf"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "group": "/currentSources",
+          "previous": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+          "current": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
         }
       ]
     }

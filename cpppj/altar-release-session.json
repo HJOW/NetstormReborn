@@ -1,0 +1,870 @@
+{
+  "unit": "241",
+  "baseline": "00ce6d72",
+  "date": "2026-10-20",
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "lastDecompileDate": "2026-10-20",
+  "newDecompile": false,
+  "sources": {
+    "cpppj/src/client/RawCampaignRitual.inc": "c6ee6b6b111cf0f6fa0ff2b18da7253a65a75b9aa5e8edbbf03b05cf820df9bf",
+    "cpppj/tests/CampaignSessionTests.cpp": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f",
+    "tools/cpp_dais_load_audit.py": "cd8f42c5bbea3bb8722e36e84563902b48545326bde5df806d696a97893152b4",
+    "tools/cpp_altar_release_audit.py": "4b4df644ef5b9f20d4d944c7841f1a2083dd6d90cc603ba6b1f271d13f133de4"
+  },
+  "evidence": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "cpppj/src/o/RawAltarSacrifice.cpp": "987b5a4654bcf8bd66c7eaef93258b36f92f14707f95de1101f652bfaf24893b",
+    "cpppj/src/o/RawPriestOwner.cpp": "51cf38d27ffc29ea5d890539344d76300dd89db9d02099462312ccf7dab6bc24",
+    "cpppj/src/o/RawDaisLifecycle.cpp": "e5d735f9ecea927d815c8cffe32b6bf5e14849aa4c72c1ee2710031c289f2c00",
+    "cpppj/tests/fixtures/altarsacrifice-x86.tsv": "10ff5e1a36607b575a7de140023ee353263ea79da90991b2d58f03cd2ddccac1",
+    "cpppj/tests/fixtures/priestowner-x86.tsv": "fe892a4fe7f1687079d12a2ebc99709a905d6ae5cde18a00e1897ad601ab5d01"
+  },
+  "build": {
+    "returnCode": 0,
+    "log": "extracted/cpp-altar-release-20261020-build.log",
+    "logSha256": "7e30c97e258d4f41cb2f4afaca1b9d625576eb9017ac977d0d31b8a9ef7c5dde",
+    "warnings": 0,
+    "errors": 0
+  },
+  "binaries": {
+    "cpppj/build/lib/Release/netstorm.lib": "cc99ac99f27b215dac49ed401abeeac5169f7cc6c94f7629369b0a9967210b8a",
+    "cpppj/build/bin/Release/NetstormCpp.exe": "11ddcce4d05b748b88a4fe2834ebd8e8e57ac64172f5b77a4e10677995f4a966",
+    "cpppj/build/bin/Release/netstorm_tests.exe": "75bef94f8504a974d2ba3c9ca27f7f72f17a4b609a40980fe624f08e82736e9e"
+  },
+  "releaseTest": "CampaignAltar_AlliedReleaseUsesVirtualPriestOwner",
+  "releaseTestCompiled": true,
+  "runtimeTestsDeferred": true,
+  "testsExecuted": false,
+  "gameExecuted": false,
+  "goalComplete": false,
+  "sourcePinReportCount": 73,
+  "sourcePinChanges": [
+    {
+      "report": "cpppj/board-approach.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/board-approach.json",
+      "pointer": [
+        "sha256",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/campaign-balloon-path.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/campaign-bridge-collapse.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/campaign-burning.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/campaign-cannon-combat.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/campaign-carrier-choice.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/campaign-carrier-escape.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/campaign-carrier-input.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/campaign-carrier-mining.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/campaign-carrier-move.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/campaign-carrier-pickup.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/campaign-carrier-steal.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/campaign-cursor-actions.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/campaign-cursor-client.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/campaign-cursor-display.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/campaign-cursor-session.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/campaign-dais-delivery.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/campaign-dais-runtime.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignRitual.inc"
+      ],
+      "source": "cpppj/src/client/RawCampaignRitual.inc",
+      "old": "58bedee7b6bd9673e2ce45ac016f9421ef33ac4bd974e306dd54f83c631fe9f0",
+      "new": "c6ee6b6b111cf0f6fa0ff2b18da7253a65a75b9aa5e8edbbf03b05cf820df9bf"
+    },
+    {
+      "report": "cpppj/campaign-dais-runtime.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/campaign-factory-display.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/campaign-flare-research.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/campaign-forward-battle.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/campaign-forward-window.json",
+      "pointer": [
+        "sources",
+        "cpppj/src/client/RawCampaignRitual.inc"
+      ],
+      "source": "cpppj/src/client/RawCampaignRitual.inc",
+      "old": "58bedee7b6bd9673e2ce45ac016f9421ef33ac4bd974e306dd54f83c631fe9f0",
+      "new": "c6ee6b6b111cf0f6fa0ff2b18da7253a65a75b9aa5e8edbbf03b05cf820df9bf"
+    },
+    {
+      "report": "cpppj/campaign-forward-window.json",
+      "pointer": [
+        "sources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/campaign-gem-reward.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/campaign-generator-shrapnel.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/campaign-lightning-screen.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/campaign-local-login.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/campaign-mission-start-client.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/campaign-nugget-replenish.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/campaign-object-menu-client.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/campaign-path-retarget.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/campaign-priest-sacrifice.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignRitual.inc"
+      ],
+      "source": "cpppj/src/client/RawCampaignRitual.inc",
+      "old": "58bedee7b6bd9673e2ce45ac016f9421ef33ac4bd974e306dd54f83c631fe9f0",
+      "new": "c6ee6b6b111cf0f6fa0ff2b18da7253a65a75b9aa5e8edbbf03b05cf820df9bf"
+    },
+    {
+      "report": "cpppj/campaign-priest-sacrifice.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/campaign-production-content.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/campaign-production-feedback.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/campaign-production-maintenance.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/campaign-production-panel.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/campaign-rune-progress.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignRitual.inc"
+      ],
+      "source": "cpppj/src/client/RawCampaignRitual.inc",
+      "old": "58bedee7b6bd9673e2ce45ac016f9421ef33ac4bd974e306dd54f83c631fe9f0",
+      "new": "c6ee6b6b111cf0f6fa0ff2b18da7253a65a75b9aa5e8edbbf03b05cf820df9bf"
+    },
+    {
+      "report": "cpppj/campaign-rune-progress.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/campaign-sacrifice-finish.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/src/client/RawCampaignRitual.inc"
+      ],
+      "source": "cpppj/src/client/RawCampaignRitual.inc",
+      "old": "58bedee7b6bd9673e2ce45ac016f9421ef33ac4bd974e306dd54f83c631fe9f0",
+      "new": "c6ee6b6b111cf0f6fa0ff2b18da7253a65a75b9aa5e8edbbf03b05cf820df9bf"
+    },
+    {
+      "report": "cpppj/campaign-sacrifice-finish.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/campaign-sacrifice-menu-suppression.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/campaign-salvage-command.json",
+      "pointer": [
+        "sources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/campaign-temple-draw.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/campaign-temple-shrapnel.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/campaign-workshop-completion.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/carrier-drop-session-cpp.json",
+      "pointer": [
+        "sources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/construction-command.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/construction-session.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/cursor-mana-display.json",
+      "pointer": [
+        "sha256",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/cursor-mana.json",
+      "pointer": [
+        "sha256",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/cursor-range.json",
+      "pointer": [
+        "sha256",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/dais-load-session.json",
+      "pointer": [
+        "sources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/dais-load-session.json",
+      "pointer": [
+        "sources",
+        "tools/cpp_dais_load_audit.py"
+      ],
+      "source": "tools/cpp_dais_load_audit.py",
+      "old": "859b395421750b29f0152c8bef746b0adc8ce69a0a7ac1dcca9a7f89f72c8085",
+      "new": "cd8f42c5bbea3bb8722e36e84563902b48545326bde5df806d696a97893152b4"
+    },
+    {
+      "report": "cpppj/devastation-session-cpp.json",
+      "pointer": [
+        "sources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/display-motion-runtime.json",
+      "pointer": [
+        "sources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/early5-devastation-runtime.json",
+      "pointer": [
+        "sources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/energy-sort.json",
+      "pointer": [
+        "sha256",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/energy-supply.json",
+      "pointer": [
+        "sha256",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/fence-lifetime.json",
+      "pointer": [
+        "sha256",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/flypath.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/general-construction-session.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/generator-draw-runtime.json",
+      "pointer": [
+        "sources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/geyser-bridge-display-runtime.json",
+      "pointer": [
+        "sources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/golem-display-runtime.json",
+      "pointer": [
+        "sources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/island-drop-runtime.json",
+      "pointer": [
+        "sources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/mana-bolt-display.json",
+      "pointer": [
+        "sha256",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/mana-bolt-regular.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/mana-bolt-regular.json",
+      "pointer": [
+        "sha256",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/modal-production.json",
+      "pointer": [
+        "sources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/object-command-session.json",
+      "pointer": [
+        "sources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/player-factory-init.json",
+      "pointer": [
+        "currentSources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/player-factory-init.json",
+      "pointer": [
+        "sha256",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/session-priest-menu.json",
+      "pointer": [
+        "sha256",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/sun-bomb-lifetime-runtime.json",
+      "pointer": [
+        "sources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/support-color-runtime.json",
+      "pointer": [
+        "sources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/thunder-display-runtime.json",
+      "pointer": [
+        "sources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/tutorial-later-runtime.json",
+      "pointer": [
+        "sources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/tutorial-one-runtime.json",
+      "pointer": [
+        "sources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    },
+    {
+      "report": "cpppj/tutorial-two-runtime.json",
+      "pointer": [
+        "sources",
+        "cpppj/tests/CampaignSessionTests.cpp"
+      ],
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "old": "818b14c9c7e83e2705a7439eb7d120ac22d90514c9a8f0340db85b79ead558bd",
+      "new": "f4e0469c34a5e0bea12a749a2493fd3566ddd70209b989712b77f0a4394fb80f"
+    }
+  ],
+  "semanticReversalToBaseline": true,
+  "limitations": [
+    "검사 실행·실제 사제 해방/경고 관측·자연 플레이는 미완료다.",
+    "지형 Devastation·포획/Drop·희생·전체 지정 미션·F8 Guide 통합 검증은 남아 있다."
+  ]
+}

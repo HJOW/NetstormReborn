@@ -24,6 +24,33 @@ def at(document, pointer):
     return document
 
 
+def verify_pins(record):
+    """후속 단위의 현재 핀을 역변환한 뒤 이 단위 이전의 보고서 전체를 대조한다."""
+    changes = record['sourcePinChanges']
+    # 뒤에 수행한 소스 갱신도 이력으로 되돌려 과거 실행 결과를 새 결과로 해석하지 않는다.
+    for name in sorted({item['report'] for item in changes}):
+        report = json.loads((ROOT / name).read_text('utf-8'))
+        while report['integration_updates'][-1]['unit'] != record['unit']:
+            later = report['integration_updates'].pop()
+            for pin in later['pins']:
+                parent = at(report, pin['group'].strip('/').split('/'))
+                assert parent[pin['path']] == pin['current']
+                parent[pin['path']] = pin['previous']
+        for item in changes:
+            if item['report'] != name:
+                continue
+            assert at(report, item['pointer']) == item['new']
+            parent = at(report, item['pointer'][:-1])
+            parent[item['pointer'][-1]] = item['old']
+        update = report['integration_updates'].pop()
+        assert update['unit'] == record['unit']
+        baseline_bytes = subprocess.check_output(['git', 'show', f"{record['baseline']}:{name}"], cwd=ROOT)
+        baseline = json.loads(baseline_bytes)
+        if 'integration_updates' not in baseline and not report['integration_updates']:
+            del report['integration_updates']
+        assert report == baseline, name
+
+
 def main():
     """현재 소스와 빌드·핀 역변환을 확인하며 게임/검사 실행 파일은 시작하지 않는다."""
     parser = argparse.ArgumentParser(description=__doc__)
@@ -47,24 +74,8 @@ def main():
     # 과거 원본/검사 결과는 새 통합 성공으로 갱신하지 않는다.
     assert record['runtimeTestsDeferred'] and not record['testsExecuted'] and not record['gameExecuted']
     assert not record['goalComplete']
-    changes = record['sourcePinChanges']
-    # 이번 새 핀만 되돌리면 시작 커밋의 보고서 내용 전체와 같아야 한다.
-    for name in sorted({item['report'] for item in changes}):
-        report = json.loads((ROOT / name).read_text('utf-8'))
-        for item in changes:
-            if item['report'] != name:
-                continue
-            assert at(report, item['pointer']) == item['new'] == sha(ROOT / item['source'])
-            parent = at(report, item['pointer'][:-1])
-            parent[item['pointer'][-1]] = item['old']
-        update = report['integration_updates'].pop()
-        assert update['unit'] == record['unit']
-        baseline_bytes = subprocess.check_output(['git', 'show', f"{record['baseline']}:{name}"], cwd=ROOT)
-        baseline = json.loads(baseline_bytes)
-        if 'integration_updates' not in baseline and not report['integration_updates']:
-            del report['integration_updates']
-        assert report == baseline, name
-    print(f"저장 다이스: 초기 등록 순서·Release 빌드·{len(changes)}개 현재 핀 보존 확인, 실행 검증 이월")
+    verify_pins(record)
+    print(f"저장 다이스: 초기 등록 순서·Release 빌드·{len(record['sourcePinChanges'])}개 현재 핀 보존 확인, 실행 검증 이월")
 
 
 if __name__ == '__main__':

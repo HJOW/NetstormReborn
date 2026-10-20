@@ -1348,3 +1348,5 @@ cpppj/tests/fixtures/worm-path-vtables.tsv text eol=lf
 # 저장 다이스 최초 Pop의 현재 소스/감사 해시를 다른 Windows 체크아웃에서도 보존한다.
 cpppj/dais-load-session.json text eol=lf
 tools/cpp_dais_load_audit.py text eol=lf
+cpppj/altar-release-session.json text eol=lf
+tools/cpp_altar_release_audit.py text eol=lf
