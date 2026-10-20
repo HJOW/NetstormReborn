@@ -1,0 +1,31 @@
+{
+  "host": "HJOW-Athlon",
+  "decompileHost": "HJOW-Athlon / 2026-10-20",
+  "uniqueInputs": 278,
+  "normalReturns": 264,
+  "sliceObservations": 14,
+  "instructions": 7407,
+  "calls": {
+    "004c2a70": 210,
+    "004c2a90": 153,
+    "00463e40": 72
+  },
+  "gameExecuted": false,
+  "osExecuted": false,
+  "boundaries": [
+    "482de0 Tell",
+    "466710 팝업 Kill",
+    "가상+28 정지",
+    "가상+24 하위 입력",
+    "452fe0 큐"
+  ],
+  "scope": "First/현재 안내 두 함수와 Guide 사건의 First/미처리 입력만. F8은 4d9611~4d9650/4d9670 내부 분기이며 전체 UserInput 반환이 아니다. release·다른 키·비활성/도전·편집·디버그 효과는 관측하지 않는다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/Netstorm.exe": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_mission_first.py": "b08aad7f753ea0549a8d68f39a3c74e0c06f3d3d0c85c5def3885c1f98e7cb95",
+    "cpppj/tests/fixtures/mission-first-x86.tsv": "31fd6fbe01a483a0557f48d2ca7dddf244614e2a0e44ee9c76e32e900800e794"
+  }
+}

@@ -1392,3 +1392,12 @@ cpppj/dude-regular-native.json text eol=lf
 cpppj/dude-regular-session.json text eol=lf
 tools/decomp_dude_regular.py text eol=lf
 tools/cpp_dude_regular_audit.py text eol=lf
+# 현재 미션 F8/First의 최초 관측과 새 코드 핀을 LF로 보존한다.
+cpppj/src/client/MissionGuideInput.h text eol=lf
+cpppj/src/client/MissionGuideInput.cpp text eol=lf
+cpppj/tests/MissionGuideInputTests.cpp text eol=lf
+cpppj/tests/fixtures/mission-first-x86.tsv text eol=lf
+cpppj/mission-first-native.json text eol=lf
+cpppj/mission-first-session.json text eol=lf
+tools/decomp_mission_first.py text eol=lf
+tools/cpp_mission_first_audit.py text eol=lf

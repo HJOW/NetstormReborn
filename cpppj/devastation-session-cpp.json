@@ -27,7 +27,7 @@
     "cpppj/src/o/RawBombEffect.h": "78de4e8419940cdc10b434735bfd3d8a4e0a4832e9ed525bb4e81554c1bbc450",
     "cpppj/src/client/RawBombBlastBindings.cpp": "34e95e06b4459afc5ece108a9474893f5a4db4bf598086977ad80722acc76b72",
     "cpppj/src/client/RawBombBlastBindings.h": "dca720eca862979c28da54bcb3daeae25593ca249b28d7de05d02bf5f3fa0443",
-    "cpppj/tests/CampaignSessionTests.cpp": "5dd5da22bc49c783d865582a49a46892cfc4a9658c20dd009e9d332495082676",
+    "cpppj/tests/CampaignSessionTests.cpp": "6a6d54fd15eb24c0609492756880c774120f855138441820a536ea5bd73ee4f0",
     "tools/decomp_bomb_packet.py": "53ce554c8c480e7d570210bfda5159575dbe2c31dfbcc6756918175352c3889b",
     "tools/decomp_devastation_draw.py": "01070e4fde7bc3d6f6c736adf695146ed1875fa2575d3c038bb6c39dabb2015d",
     "tools/cpp_devastation_session_audit.py": "aa3f45b0ae837beb03d23550130321b7335990b7a8e79f0d5e00ab87278e34d6",
@@ -247,6 +247,20 @@
           "group": "/sources",
           "previous": "b724f120fe690b89e8fecbc6dcdd9259edfdd69ea436a23f5a78204e8ec2e684",
           "current": "5dd5da22bc49c783d865582a49a46892cfc4a9658c20dd009e9d332495082676"
+        }
+      ]
+    },
+    {
+      "unit": "247",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "Early1~6의 같은 입력 큐·현재 Start/프레임/Tell·자기 정지에 F8/First를 연결한다. 같은 시작 코드의 LF/CRLF 현재 핀만 갱신하고 과거 files/실행/원본/기대값은 보존한다. 제품 실행 검증은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "group": "/sources",
+          "previous": "5dd5da22bc49c783d865582a49a46892cfc4a9658c20dd009e9d332495082676",
+          "current": "6a6d54fd15eb24c0609492756880c774120f855138441820a536ea5bd73ee4f0"
         }
       ]
     }

@@ -10,6 +10,7 @@
 #include "client/CampaignObjectMenuClient.h"
 #include "client/RawCampaignMissionStartBindings.h"
 #include "client/RawCampaignTutorialOneBindings.h"
+#include "client/MissionGuideInput.h"
 #include "client/GifImage.h"
 #include "client/GumpVisual.h"
 #include "client/GumpBackground.h"
@@ -363,7 +364,7 @@ void UberGump::BeginMission(std::string name,std::uint32_t demo) {
         frameEffects.frame.paused=[this] { return client_.Paused(); };
         frameEffects.frame.dialogsClear=[this] { return state_.phase!=ClientPhase::Dialog && state_.phase!=ClientPhase::Briefing; };
         frameEffects.frame.knowledgeOpen=[this] { return world_->Session().CursorDropSettings().lockDepth==0; };
-        frameEffects.frame.guideOpen=[] { return false; }; // 별도 Guide 스택은 현재 Client에 생성 경로가 없다. 실제 안내 대화상자는 dialogsClear가 조회한다.
+        frameEffects.frame.guideOpen=[this] { return state_.phase==ClientPhase::Dialog || state_.phase==ClientPhase::Briefing; }; // 원본005cab2c는 Tell 창 생성/소멸 수이며 별도 Guide 미션 순번과 구별한다.
         frameEffects.frame.blockingGumpOpen=[this] { return rawButtons_->BlockingGumpOpen(); };
         frameEffects.frame.pause=[this] { client_.PushGamePause(); };
         frameEffects.frame.resume=[this] { client_.PopGamePause(); };
@@ -440,6 +441,7 @@ void UberGump::Event(InputEvent event) {
         auto missionEvent=event; // 실제 카메라 F4 입력과 단계 판정이 같은 홈 명령을 보게 한다.
         if ((event.code&0x83ffffffU)==(0x73U<<InputCode::kVirtualKeyShift)) missionEvent.code=0x020000aeU;
         if (missionRuntime_->tutorial->Event(missionEvent)) return;
+        if (QueueMissionFirstKey(event,client_.Input(),true)) return; // 현재 Early1~6은 같은 큐 끝의 First 사건이 현재 안내/자기 정지를 다시 사용한다.
     }
     if (objectMenus_ && objectMenus_->Command(event)) { rebuild_=true;return; }
     const auto commandCode=event.code&0x03ffffffU; // 원본명령분배와같이최상위입력플래그만제거한다.

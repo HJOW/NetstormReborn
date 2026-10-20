@@ -40,7 +40,7 @@
     "cpppj/src/client/RawCampaignSession.cpp": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
     "cpppj/src/o/RawCarrierArrival.cpp": "05d47b6beb2267351faf0efff7ca6967010088b37ead976881a0c6dde6881610",
     "cpppj/src/o/RawCarrierArrival.h": "56355d323b96e074d549319884f492928ccec8a5c3530db745588cbeb2bcded3",
-    "cpppj/tests/CampaignSessionTests.cpp": "5dd5da22bc49c783d865582a49a46892cfc4a9658c20dd009e9d332495082676"
+    "cpppj/tests/CampaignSessionTests.cpp": "6a6d54fd15eb24c0609492756880c774120f855138441820a536ea5bd73ee4f0"
   },
   "binaries": {
     "cpppj/build/bin/Release/NetstormCpp.exe": "f4c51d0b421f3cba1574153de47d9ca5a3b38503829a2d088204b0f58f8563c5",
@@ -923,6 +923,20 @@
           "group": "/currentSources",
           "previous": "b724f120fe690b89e8fecbc6dcdd9259edfdd69ea436a23f5a78204e8ec2e684",
           "current": "5dd5da22bc49c783d865582a49a46892cfc4a9658c20dd009e9d332495082676"
+        }
+      ]
+    },
+    {
+      "unit": "247",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "Early1~6의 같은 입력 큐·현재 Start/프레임/Tell·자기 정지에 F8/First를 연결한다. 같은 시작 코드의 LF/CRLF 현재 핀만 갱신하고 과거 files/실행/원본/기대값은 보존한다. 제품 실행 검증은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "group": "/currentSources",
+          "previous": "5dd5da22bc49c783d865582a49a46892cfc4a9658c20dd009e9d332495082676",
+          "current": "6a6d54fd15eb24c0609492756880c774120f855138441820a536ea5bd73ee4f0"
         }
       ]
     }

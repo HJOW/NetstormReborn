@@ -1,4 +1,5 @@
 #include "client/RawCampaignTutorialOneBindings.h"
+#include "client/MissionGuideInput.h"
 #include "client/RawProductionControls.h"
 #include "o/RawBridgeDraw.h"
 #include "client/RawMenuControls.h"
@@ -2871,6 +2872,11 @@ TEST_CASE(CampaignTutorialOne_ActualSessionFrameAndInputPauseOwnership) {
     for (int frame=0;frame<9;++frame) runtime.Frame();
     CHECK(gate.lockFrames==1 && pages.size()==1);runtime.Frame();CHECK(gate.stage=='B' && pages==std::vector<std::string>({"A.","B."}) && depth==1 && dialog);
     CHECK(runtime.Event({0x020000d3U,0,0})==1 && gate.stage=='B' && depth==1); // 정지 중 수동 단계 명령도 같은 원본 관문에서 거부한다.
+    InputQueue replay;const auto sequence=startState.sequence,flags=startState.flags; // 같은 실제 Start 상태를 F8 재표시가 진행/복제하지 않는지 본다.
+    CHECK(QueueMissionFirstKey({0x770000U,0,0},replay,true) && pages.size()==2);CHECK(runtime.Event(replay.Pop(false))==1);
+    CHECK(pages==std::vector<std::string>({"A.","B.","B."}) && depth==1 && gate.scriptPaused && gate.stage=='B' && !gate.lockFrames);
+    CHECK(runtime.Event({InputCode::kRelease|kMissionFirstCommand,0,0})==1 && pages.size()==4 && depth==1);
+    CHECK(startState.sequence==sequence && startState.flags==flags && runtime.StageShown()==1); // 명시 First는 Guide가 release 이전에 소비한다.
     CHECK(session.Sp(1)==0 && session.TotalMade().BuiltForGenus(4)==0 && session.Core().bookkeeping.depth==0 && session.Core().destroy.PreDepth()==0 && session.Core().destroy.PostDepth()==0);
 }
 

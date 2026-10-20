@@ -186,7 +186,7 @@
     "cpppj/src/client/RawCarrierDropPoint.cpp": "a0c2130de14992eb2f3debda71840b9e0c9889398d17cfd92c2c8cb050b2acd5",
     "cpppj/tests/CarrierDropPointTests.cpp": "65a1f6834bad63ad10548fb4b0b96c26fc7e869a1f2447e07254190237f51b7c",
     "cpppj/src/client/CMakeLists.txt": "0ea1587f2d9dcd22fb2afbdeeefcb151242775b7083018dd39eb181a84fc0b06",
-    "cpppj/tests/CMakeLists.txt": "1aeb2f3c22c7de88a03f6432aa9ec69844d315cf27b13e1609caa44d0f638353",
+    "cpppj/tests/CMakeLists.txt": "bf3f56f65438224c795ef443e0a3df5c7fdd1b7a5c9c2284e95300e464716c52",
     "cpppj/src/client/RawCarrierMenu.h": "e4ef0cccd8c956ccf6c167a7b08e0a9350f46206e08a9670dbaed6272d7749d8",
     "cpppj/src/client/RawCarrierMenu.cpp": "4a0fada9b8ac9d00eab37955189a8ac669d26f1d22559deae229a6ce3637dc1e",
     "cpppj/src/o/RawCanonPlacementPipeline.h": "4c52d14dea023e6c5251c528b1afd6955e10d8d25a31e9766b4d79faa286e8fc",
@@ -1408,6 +1408,20 @@
           "group": "/sha256",
           "previous": "1dc1bfd464ba2c14a4a88a43e2d385ceca3c3489a63275bd3d7ad64fba8d905d",
           "current": "1aeb2f3c22c7de88a03f6432aa9ec69844d315cf27b13e1609caa44d0f638353"
+        }
+      ]
+    },
+    {
+      "unit": "247",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "Early1~6의 같은 입력 큐·현재 Start/프레임/Tell·자기 정지에 F8/First를 연결한다. 같은 시작 코드의 LF/CRLF 현재 핀만 갱신하고 과거 files/실행/원본/기대값은 보존한다. 제품 실행 검증은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sha256",
+          "previous": "1aeb2f3c22c7de88a03f6432aa9ec69844d315cf27b13e1609caa44d0f638353",
+          "current": "bf3f56f65438224c795ef443e0a3df5c7fdd1b7a5c9c2284e95300e464716c52"
         }
       ]
     }

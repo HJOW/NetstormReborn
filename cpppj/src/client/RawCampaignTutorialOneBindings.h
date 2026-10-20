@@ -22,7 +22,7 @@ public:
     RawCampaignTutorialOneBindings(const RawCampaignTutorialOneBindings&)=delete; // callback의 this와 실제 gate 주소를 고정한다. 이동도 허용하지 않는다.
     RawCampaignTutorialOneBindings& operator=(const RawCampaignTutorialOneBindings&)=delete; // 같은 장기 상태의 참조를 다른 연결 주소로 복제하지 않는다.
     void Frame() const; // 4c4770: 사건0으로 공통 프레임을 한 번 실행한다.
-    std::uint32_t Event(const InputEvent& event) const; // 4c33a0: 단계/시간 안내 명령을 먼저 소비한 뒤 현재 사건을 전달한다.
+    std::uint32_t Event(const InputEvent& event) const; // Guide First→4c33a0의 단계/시간 안내 명령→현재 사건 순서로 소비한다.
     void TellStage() const; // 4c2a90: 현재 단계 문자열→Tell→팝업 Kill→자기 정지 순서다.
     void TellAt() const; // 4c3470: 사제 생존→현재 목록 Tell→인덱스 증가→다음 예약이다.
     o::RawMissionFrameGate& Gate(); // 후속 UI가 같은 자기 정지 표식을 사용한다.

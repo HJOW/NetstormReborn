@@ -70,7 +70,7 @@
   },
   "currentSources": {
     "cpppj/src/client/CMakeLists.txt": "0ea1587f2d9dcd22fb2afbdeeefcb151242775b7083018dd39eb181a84fc0b06",
-    "cpppj/tests/CMakeLists.txt": "1aeb2f3c22c7de88a03f6432aa9ec69844d315cf27b13e1609caa44d0f638353",
+    "cpppj/tests/CMakeLists.txt": "bf3f56f65438224c795ef443e0a3df5c7fdd1b7a5c9c2284e95300e464716c52",
     "cpppj/src/client/ImageGump.h": "15376cf28db04c2582f3c5616ea0cfb2b5b202ec6a02c2aa55c8311b53d13316",
     "cpppj/src/client/ImageGump.cpp": "743e9b79acc24ca0b34430b73fba3b3d96ea50c7729c1821f317f8ded812a7cd",
     "cpppj/tests/ImageGumpTests.cpp": "4d1e0fd152abe55d08d9f94dc745c395a3a4588ec2c7062068eab3b1e769baa5",
@@ -639,6 +639,20 @@
           "group": "/currentSources",
           "previous": "1dc1bfd464ba2c14a4a88a43e2d385ceca3c3489a63275bd3d7ad64fba8d905d",
           "current": "1aeb2f3c22c7de88a03f6432aa9ec69844d315cf27b13e1609caa44d0f638353"
+        }
+      ]
+    },
+    {
+      "unit": "247",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "Early1~6의 같은 입력 큐·현재 Start/프레임/Tell·자기 정지에 F8/First를 연결한다. 같은 시작 코드의 LF/CRLF 현재 핀만 갱신하고 과거 files/실행/원본/기대값은 보존한다. 제품 실행 검증은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/currentSources",
+          "previous": "1aeb2f3c22c7de88a03f6432aa9ec69844d315cf27b13e1609caa44d0f638353",
+          "current": "bf3f56f65438224c795ef443e0a3df5c7fdd1b7a5c9c2284e95300e464716c52"
         }
       ]
     }

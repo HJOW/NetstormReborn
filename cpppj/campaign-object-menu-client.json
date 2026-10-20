@@ -26,9 +26,9 @@
     "cpppj/src/client/RawMenuControls.h": "70cf632cf282ea15c98c45ca1b8fba8b720dafb07eebc2a022723dfc35e3b1fa",
     "cpppj/src/client/Renderer.cpp": "29729e6b728f19e7cddfc4c193e1a719733c8b4c5934e8b0a864697fa8a4b4a2",
     "cpppj/src/client/Renderer.h": "d72b42478b0bbe275a02494181722ee4f3f4ed4d474966e56c9df30958f31ac2",
-    "cpppj/src/client/UberGump.cpp": "c160136246b091eed0d2dbdd6d091d068e7c0460191d935c77582ce1c137d932",
+    "cpppj/src/client/UberGump.cpp": "1107ea63fa96cfee0d29cb37bd7eb8b3c0afb79a43347a0949bf154dd8fcbb12",
     "cpppj/src/client/UberGump.h": "eb7f755056912e3b8b71c4a7ab05f2ea8379541fff4313a7f6b0f6b5b8d168e9",
-    "cpppj/tests/CampaignSessionTests.cpp": "5dd5da22bc49c783d865582a49a46892cfc4a9658c20dd009e9d332495082676",
+    "cpppj/tests/CampaignSessionTests.cpp": "6a6d54fd15eb24c0609492756880c774120f855138441820a536ea5bd73ee4f0",
     "cpppj/tests/RendererTests.cpp": "6aae8f544e9cb6a01738ee45a2c0eba57354106896ea59735db6842c318185cf",
     "cpppj/src/client/CampaignObjectMenuClient.h": "2d88a574f2b2feb27d4d2bf46761f58664521cb24b73af2b301741905b9deb73",
     "cpppj/src/client/CampaignObjectMenuClient.cpp": "2e1d9e0aea14df5eb579b320744b8cbe3a88a567361b687ef9064e84fe395001",
@@ -6785,6 +6785,26 @@
           "group": "/currentSources",
           "previous": "b724f120fe690b89e8fecbc6dcdd9259edfdd69ea436a23f5a78204e8ec2e684",
           "current": "5dd5da22bc49c783d865582a49a46892cfc4a9658c20dd009e9d332495082676"
+        }
+      ]
+    },
+    {
+      "unit": "247",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "Early1~6의 같은 입력 큐·현재 Start/프레임/Tell·자기 정지에 F8/First를 연결한다. 같은 시작 코드의 LF/CRLF 현재 핀만 갱신하고 과거 files/실행/원본/기대값은 보존한다. 제품 실행 검증은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "group": "/currentSources",
+          "previous": "c160136246b091eed0d2dbdd6d091d068e7c0460191d935c77582ce1c137d932",
+          "current": "1107ea63fa96cfee0d29cb37bd7eb8b3c0afb79a43347a0949bf154dd8fcbb12"
+        },
+        {
+          "path": "cpppj/tests/CampaignSessionTests.cpp",
+          "group": "/currentSources",
+          "previous": "5dd5da22bc49c783d865582a49a46892cfc4a9658c20dd009e9d332495082676",
+          "current": "6a6d54fd15eb24c0609492756880c774120f855138441820a536ea5bd73ee4f0"
         }
       ]
     }

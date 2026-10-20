@@ -13,7 +13,7 @@
     "cpppj/src/o/RawCarrierCandidateSort.cpp": "a7749297ad70712a059aea52088cfd41c0880801a4f72c68d2b1548495a5bc69",
     "cpppj/tests/CarrierCandidateSortTests.cpp": "0899bcd133f09fd587e42105e6e790b68eb622021242d63c87748d36b1820a4e",
     "cpppj/src/CMakeLists.txt": "8834917133d33fda6dcd145dd64a93ee38ee014d25fede2eff5575b996df5847",
-    "cpppj/tests/CMakeLists.txt": "1aeb2f3c22c7de88a03f6432aa9ec69844d315cf27b13e1609caa44d0f638353",
+    "cpppj/tests/CMakeLists.txt": "bf3f56f65438224c795ef443e0a3df5c7fdd1b7a5c9c2284e95300e464716c52",
     "tools/decomp_carrier_candidate_sort.py": "b33e27d24a1d4f2bf4cabbb6958164f8d1e6cbf672c1f0aa1c2635b0b96d20d1",
     "docs/exe/cpp-carrier-candidate-sort-20261018.md": "9e79257a499cde7bab8038aa3aee3928376e2233d88c88c62199c0f48d48d950"
   },
@@ -1008,6 +1008,20 @@
           "group": "/currentSources",
           "previous": "1dc1bfd464ba2c14a4a88a43e2d385ceca3c3489a63275bd3d7ad64fba8d905d",
           "current": "1aeb2f3c22c7de88a03f6432aa9ec69844d315cf27b13e1609caa44d0f638353"
+        }
+      ]
+    },
+    {
+      "unit": "247",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "Early1~6의 같은 입력 큐·현재 Start/프레임/Tell·자기 정지에 F8/First를 연결한다. 같은 시작 코드의 LF/CRLF 현재 핀만 갱신하고 과거 files/실행/원본/기대값은 보존한다. 제품 실행 검증은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/currentSources",
+          "previous": "1aeb2f3c22c7de88a03f6432aa9ec69844d315cf27b13e1609caa44d0f638353",
+          "current": "bf3f56f65438224c795ef443e0a3df5c7fdd1b7a5c9c2284e95300e464716c52"
         }
       ]
     }

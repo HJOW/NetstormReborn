@@ -13,7 +13,7 @@
     "cpppj/src/o/CMakeLists.txt": "8fd2012644816c088a0283bde3e14ed3d9c3cff364d38c4c1bd5f4e6eaa81bd4",
     "cpppj/src/client/RawCampaignSession.cpp": "3b16074fd680232bdce98d90733245a5c020785edcb582fd05aaa180fbe78249",
     "cpppj/tests/GunBlockerTests.cpp": "f6eac38c6f829b88e2de0395982035ec98203fd0b50c7c4a0fff0a9647e6b93a",
-    "cpppj/tests/CMakeLists.txt": "1aeb2f3c22c7de88a03f6432aa9ec69844d315cf27b13e1609caa44d0f638353",
+    "cpppj/tests/CMakeLists.txt": "bf3f56f65438224c795ef443e0a3df5c7fdd1b7a5c9c2284e95300e464716c52",
     "cpppj/tests/fixtures/gun-blocker-x86.tsv": "326003cc70d664a46313cf2090586a0da3e73390b1a242342db2ff4929b89898",
     "cpppj/tests/fixtures/gun-blocker-boundary-x86.tsv": "cfa8f3ef18b6a7cee79f2f79519e50e8e3951beb6d895709c5fa53d8be381623",
     "cpppj/tests/fixtures/tutorial-five-blocker-ui-input.tsv": "a2b30d1b5672a46047addb5ae67ddd64343f780bf0c3356f0b29bc53efb696e4",
@@ -30,7 +30,7 @@
     "cpppj/src/o/SquidProcess.cpp": "993e34a3c7b3b87f290a33f548a126415c3a77794a7a191801d68f405baf1780",
     "cpppj/src/o/RawMissile.cpp": "66c0881de9826b3027fd43f4e7b53ba717a163aefd76a7c543fc66fabcbb9ac6",
     "cpppj/src/o/RawTutorialLater.cpp": "1f40efc3aefb38e02ff8a9b5d2553ca4c30f773c2c8b4f6dbb82cd3e5b9bc082",
-    "cpppj/src/client/RawCampaignTutorialOneBindings.cpp": "c214b1a4ecba704d4b4a7cbad4599dd87a32bf900f2664c53578a481fcd968fa",
+    "cpppj/src/client/RawCampaignTutorialOneBindings.cpp": "61ec4c904402f73308629028d2de096062af3de7e00599df562975025837c582",
     "docs/exe/cpp-gun-blocker-20261019.md": "86d29144f14d8cf39ed3c695554ea4e04a560f3bc238a17eeecde1dff250d230",
     "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
     "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
@@ -520,6 +520,26 @@
           "group": "/sources",
           "previous": "1dc1bfd464ba2c14a4a88a43e2d385ceca3c3489a63275bd3d7ad64fba8d905d",
           "current": "1aeb2f3c22c7de88a03f6432aa9ec69844d315cf27b13e1609caa44d0f638353"
+        }
+      ]
+    },
+    {
+      "unit": "247",
+      "date": "2026-10-21",
+      "host": "HJOW-Athlon",
+      "note": "Early1~6의 같은 입력 큐·현재 Start/프레임/Tell·자기 정지에 F8/First를 연결한다. 같은 시작 코드의 LF/CRLF 현재 핀만 갱신하고 과거 files/실행/원본/기대값은 보존한다. 제품 실행 검증은 이월한다.",
+      "pins": [
+        {
+          "path": "cpppj/src/client/RawCampaignTutorialOneBindings.cpp",
+          "group": "/sources",
+          "previous": "c214b1a4ecba704d4b4a7cbad4599dd87a32bf900f2664c53578a481fcd968fa",
+          "current": "61ec4c904402f73308629028d2de096062af3de7e00599df562975025837c582"
+        },
+        {
+          "path": "cpppj/tests/CMakeLists.txt",
+          "group": "/sources",
+          "previous": "1aeb2f3c22c7de88a03f6432aa9ec69844d315cf27b13e1609caa44d0f638353",
+          "current": "bf3f56f65438224c795ef443e0a3df5c7fdd1b7a5c9c2284e95300e464716c52"
         }
       ]
     }

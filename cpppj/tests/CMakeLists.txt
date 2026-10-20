@@ -43,6 +43,7 @@ set_source_files_properties(FlyerPreDestroyTests.cpp PROPERTIES COMPILE_DEFINITI
 set_source_files_properties(BurningLifetimeDrawTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_BURNING_LIFETIME_DRAW_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/burning-lifetime-draw-x86.tsv\";NETSTORM_RENDER_FRAME_GATE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/render-frame-gate-x86.tsv\";NETSTORM_BURNING_ARCHER_CAPTURE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/burning-archer-capture-x86.tsv\"")
 add_executable(netstorm_tests
+    MissionGuideInputTests.cpp
     ObjectCommandTests.cpp
     BurningLifetimeDrawTests.cpp
     ShrapnelFrameTests.cpp
@@ -1665,3 +1666,6 @@ set_source_files_properties(DudeFootprintTests.cpp PROPERTIES COMPILE_DEFINITION
 target_sources(netstorm_tests PRIVATE DudeRegularTests.cpp)
 set_source_files_properties(DudeRegularTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_DUDE_REGULAR_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/dude-regular-x86.tsv\"")
+# First/현재 안내 함수와 제한된 F8 내부 분기의 최초 원문만 새 검사에 공급한다.
+set_source_files_properties(MissionGuideInputTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_MISSION_FIRST_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/mission-first-x86.tsv\"")

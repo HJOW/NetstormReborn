@@ -1,5 +1,6 @@
 // 원본 공통 프레임/입력과 Early1~6 판정 사이에 계산 결과를 합성하지 않고 실제 소비자만 묶는다.
 #include "client/RawCampaignTutorialOneBindings.h"
+#include "client/MissionGuideInput.h"
 #include "o/ConfigInterface.h"
 #include <bit>
 #include <stdexcept>
@@ -62,6 +63,7 @@ std::uint32_t RawCampaignTutorialOneBindings::Run(const InputEvent& event) const
 }
 // 원본 특수 명령은 공통 프레임을 추가 실행하지 않고 즉시1을 반환한다.
 std::uint32_t RawCampaignTutorialOneBindings::Event(const InputEvent& event) const {
+    if (DispatchMissionFirst(event,[this] { MissionFirst(startState_,[this] { TellStage(); }); })) return 1;
     const auto code=event.code&0x03ffffffU; // 원본 입력의 modifier만 제거한다.
     if (code==kNextStage) { static_cast<void>(gate_.Advance());return 1; }
     if (code==kNextTellAt) { TellAt();return 1; }
@@ -69,10 +71,8 @@ std::uint32_t RawCampaignTutorialOneBindings::Event(const InputEvent& event) con
 }
 // Tell이 없는 단계도 마지막 결과0을 기록한다. 창이 생긴 경우에만 원본 후속 정리를 실행한다.
 void RawCampaignTutorialOneBindings::TellStage() const {
-    std::string name(1,static_cast<char>(state_.stage));name+='.'; // 원본의 signed char 단계와 마침표다.
-    const bool shown=effects_.tell(name); // 현재 미션에 존재하는 섹션만 조회한다.
-    if (shown) { effects_.closeTransient();gate_.PauseForDialog(); }
-    stageShown_=shown ? 1U : 0U;
+    TellMissionStage(state_,stageShown_,{[this](std::string_view section) { return effects_.tell(section) ? 1U : 0U; },
+        effects_.closeTransient,[this] { gate_.PauseForDialog(); }});
 }
 // 원본처럼 사제가 죽었어도 목록 인덱스 증가와 다음 예약은 실행한다.
 void RawCampaignTutorialOneBindings::TellAt() const {
