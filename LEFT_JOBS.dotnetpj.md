@@ -1,3 +1,20 @@
+## 2026-10-20 인계: 최근 dotnetpj 점검의 수정 필요 사항
+
+- [x] 사용자 요청("발견 사항 중 수정해야 하는 사항을 LEFT_JOBS.dotnetpj.md 에 적어줘 (작업 PC 기록 제외)")에 따라 `4ecbfc90` 이후 dotnetpj 커밋 `8795b439`·`e69f9ead`·`0fee4104` 점검에서 나온 수정 항목을 이 절에 적었다. 이번 절은 기록만 하며 코드·문서·fixture 는 고치지 않았고 커밋도 하지 않았다. 점검에서 확인한 것은 빌드 경고 0·오류 0, 단위 **1,210개 통과**(Assets 363 + Core 847, 건너뜀 0), `cpp_sync.py` 종료 0(연결 fixture 36개 일치, 반영 커밋 `51b7d034`)이다. 게임 실행과 원본·CD 변경은 없었다.
+- [ ] **1. 처리량 기록 오류: rawgraph 10.78 몫 448 → 768, 합계 960 → 1,280.** Add 256 + Flood 128 + Pop 64 + PostPop 320 = 768이며, 테스트 기대값과 실제 재생 결과가 768이다. 고칠 곳은 이 파일 열넷째 절의 검증 줄, `docs/dotnet-original-core-graphops-20261020.md` 10행·18행, `docs/dotnet-cpp-port-plan-20261016.md` W02 행의 "rawgraph 448", `dotnetpj/tests/Netstorm.Core.Tests/X86RawGraphReplayTests.cs` 403행 XML 요약이다. 이 파일 열넷째 절 인계 줄의 커밋 제목 960은 커밋 메시지 수정 제외 결정(2026-10-20 절)에 따라 고치지 않고, 1,280의 오기라는 사실만 문서에 남긴다. 완료 기준: 위 기록이 모두 768·512, 합계 1,280으로 맞는다.
+- [ ] **2. 현행 계획의 W02 항목이 오래됐다.** 이 파일 「2026-10-16 현행 계획」 절의 W02 항목은 "최신 `20261020-15`"와 "남은 것: 이웃의 다리 사건 경유 재생, Graph 계열"을 적고 있다. 실제로는 다리 사건 재생(`-18`), 미니맵 큐(`-19`), RawGraph 표(`-20`)와 영역·추가/flood·등록 후처리(`-22`)가 끝났다. 고칠 내용: 최신 번호를 `20261020-22`로 바꾸고, 완료 목록에 위 조각을 더하고, 남은 것을 "Detach, Rebuild(전체 재구성), Allocate 소진 복구 검증, PostDestroy·Frame, graphremove·graphlookup·graphrebuild·graphrecovery·graphforms 재생, 파생 분배 허브·실제 세션 연결"로 바꾼다. 완료 기준: 현행 계획 W02 항목과 가장 최근 조각의 "다음 조각"이 같은 남은 일을 말한다.
+- [ ] **3. `Allocate` 소진 복구의 검증 공백과 설명 불일치.** `dotnetpj/src/Netstorm.Core/Original/RawGraph.cs` 347행 `Allocate()`는 빈 번호가 없으면 560행의 `graph.AllocateWithRecovery()`로 소진 복구를 부르지만, 이 경로를 검사하는 테스트가 없다. `RawGraphTests.AllocateUsesLowestFreeAndPreservesReserved`는 빈 번호 경로만 본다.
+  - 255개가 모두 사용 중인 표를 만드는 합성 검사를 추가해 복구 뒤 반환 번호·표·스택·풀 변화를 확인한다. 기대값은 원본 `00463330` 의 동작을 근거로 직접 적고, C# 결과를 복사하지 않는다.
+  - 344행 주석의 "사용 중이면 표면 수를 0 으로 쓴다"는 코드와 맞지 않는다. 빈 번호를 확보하면 표면 수를 0, 사용 표시를 1로 쓴다는 내용으로 고친다.
+  - 열넷째 절 다음 조각 문구의 "Rebuild/Allocate 소진 복구"는 "Allocate 복구 검증, Rebuild 구현"으로 나눠 적는다.
+  - 완료 기준: 새 검사가 통과하고, 560행의 복구 호출을 빼는 변이에서 실패한다. 테스트 개수가 바뀌면 이 파일의 1,210 기록도 갱신한다.
+- [ ] **4. 반복문 주석 누락(AGENTS 규칙).** `RawGraph.cs` 570행·574행의 두 `for`(표·스택 사본 반영)와 `dotnetpj/tests/Netstorm.Core.Tests/RawGraphTests.cs` 144행 `for (byte gap ...)`에 바로 앞 줄 `//` 주석이 없다. 무엇을 왜 하는지 한 줄로 적는다. 완료 기준: 새 반복문 앞 주석 점검에서 누락 0건.
+- [ ] **5. 사소한 코드·문서 정리.**
+  - `RawGraph.cs` 57행 `LevelOffset`은 사용처가 없다. 쓰지 않으면 지운다. 나중에 쓸 예정이면 어느 조각에서 쓰는지 주석에 적는다.
+  - `RawGraph.cs` 15행 클래스 요약의 `<see cref="RawGraph"/> 의 Detach`는 존재하지 않는 멤버 대신 클래스를 가리킨다. 삭제 준비(Detach, 다음 조각)를 일반 문장으로 풀어 적는다.
+  - 완료 기준: 빌드 경고 0 유지.
+- [ ] **다음 조각:** 위 1~5를 먼저 끝낸다. 1·2·4·5는 기록과 주석 수정이고, 3만 테스트를 추가한다. 수정 뒤 `dotnet build`·`dotnet test`로 통과를 확인하고, 그 뒤 Detach 로 넘어간다. 시작할 때 `python dotnetpj/tools/cpp_sync.py` 를 먼저 실행한다.
+
 ## 2026-10-20 완료: W02 열넷째 조각 — 그래프 영역·추가·flood·등록 후처리
 
 - [x] 사용자 요청("dotnetpj 다음 작업도 이어서 진행해 줘")으로 직전 절이 정한 다음 시작점, 곧 `RawGraph` 의 영역 무효화·추가/flood·등록 후처리를 수행했다. `cpppj/`·공통 `LEFT_JOBS.md`는 수정하지 않았다. 현재 PC **HJOW-Athlon**은 공통 기록의 마지막 정밀 디컴파일 PC(**HJOW-Athlon, 2026-10-20**)와 같으나 **디컴파일 산출물을 읽지 않았고**, 새 디컴파일·원본 관찰·원본/클론 게임·창 실행은 없다. cpppj 커밋 소스·원본 fixture 에만 근거했다. 마지막 디컴파일 PC 기록은 그대로다. 상세·근거 표·경계는 [원본 월드 코어 W02 그래프 연산 조각](docs/dotnet-original-core-graphops-20261020.md).
