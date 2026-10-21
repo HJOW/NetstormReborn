@@ -97,6 +97,7 @@
 #include "o/RawAiWallet.h"
 #include "o/RawAiObjectNotice.h"
 #include "o/RawAiWorldRegistration.h"
+#include "o/RawAiStrategySetup.h"
 #include "o/RawAiPreparation.h"
 #include "o/RawPriestLookup.h"
 #include "o/RawRunePostPop.h"
@@ -273,6 +274,7 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawAiObjectNotice> aiObjects; // 같은 Player/실제17목록을 생성·삭제·피해/후속 전략이 공유한다.
     std::unique_ptr<RawAiWorldRegistration> aiWorld; // 같은 현재 Pool/표면/동맹으로 기존 자산과 간헐천 후보를 등록한다.
     std::unique_ptr<RawAiPreparation> aiPreparation; // 원본00416eb0의 현재 목표·그래프·SP·최초 등록과 수량 판정이다.
+    std::unique_ptr<RawAiStrategySetup> aiStrategySetup; //같은 본체의00414af0 초기 전략/생산/다리와004139f0 목표 선택이다.
     std::array<std::uint32_t,4> aiWorkshops{86,87,88,85}; // PATCH004709d0의 theme0/1/2/3이 읽는005411b0/b4/b8/ac의 실제 기본 타입이다.
     std::uint32_t aiExcludedType{133},aiMissionFallback{}; // 실제 sunWalker 분류 제외 번호와 현재 getter를 사용할 때 읽지 않는 값형 호환 저장소다.
     bool loaded{}; // 같은 실제 저장 부모와 이동 설치가 정상 종료했을 때만 AI 생성 요청을 허용한다.
@@ -1762,6 +1764,12 @@ struct RawCampaignSession::Impl {
         preparation.demo=[this] { return services.missionOutcome.demo(); };preparation.knowledgeOpen=[this] { return cursorDrop.lockDepth==0; }; //00445330의 실제 공유 잠금 DWORD를 읽는다.
         preparation.blockingGumpOpen=[this] { if (!services.ai.blockingGumpOpen) throw std::logic_error("AI 현재 차단 Gump 조회 미연결");return services.ai.blockingGumpOpen(); };preparation.initialScan=[this](auto token) { aiWorld->FullScan(token); };
         aiPreparation=std::make_unique<RawAiPreparation>(aiMemory,core.pool,players,alliances,AiPreparationGlobals{playerState.battleOwner,playerState.playerKnown,noRegion,[this] { return static_cast<std::uint32_t>(core.bookkeeping.invalidGraph); },core.processState.now},std::move(preparation));
+        AiStrategySetupHooks setup;
+        setup.regionBounds=[this](auto region) { const auto bounds=chunks.Bounds(region);return std::array<float,4>{static_cast<float>(bounds.left*16),static_cast<float>(bounds.top*16),static_cast<float>(bounds.right*16),static_cast<float>(bounds.bottom*16)}; }; //같은 원본의 청크→칸 변환을 자기 지역에도 적용한다.
+        setup.temple=[this](auto region) { return islands->Temple(region); };setup.destroy=[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); };
+        setup.assertion=[this](std::string_view text) { if (!services.ai.assertion) throw std::logic_error("AI 전략 준비 원본 진단 미연결");services.ai.assertion(text); };
+        aiStrategySetup=std::make_unique<RawAiStrategySetup>(aiMemory,*player,*aiPreparation,priests->Carrier(),*contained,contentFinder,core.types,random,alliances,
+            AiStrategySetupGlobals{playerState.battleOwner,noRegion,templeProduct,contentState.bridgeType,cursorManaGlobals.mapLimit,core.processState.now},std::move(setup));
     }
     // 첫 실제 객체 이전에 같은 공통 삭제/내용물/Player 통지/기술 모듈을 한 번 연결한다.
     void InstallContents(const SquidDestroyHooks& deletion) {
@@ -2401,6 +2409,8 @@ std::uint32_t RawCampaignSession::CreateAi(std::uint32_t owner,std::span<const s
 }
 // 후속 전략 caller도 같은 준비 몸체를 사용한다. 생성 시점으로 최초 스캔을 당기지 않는다.
 bool RawCampaignSession::PrepareAi(std::uint32_t owner) { if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("실제 Session 설치 후 owner1..8 AI 준비만 허용");const auto token=impl_->participation->Brain(owner);if (!token) return false;impl_->aiPreparation->Update(token);return true; }
+// 원본417d30처럼258이0인 동안만 같은 초기 전략을 재시도한다. 자동 행동 프레임은 후속 연결이다.
+bool RawCampaignSession::InitializeAi(std::uint32_t owner) { if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("실제 Session 설치 후 owner1..8 AI 초기 전략만 허용");const auto token=impl_->participation->Brain(owner);if (!token) return false;if (!Read(impl_->aiMemory.Bytes(token),0x258)) impl_->aiStrategySetup->Initialize(token);return Read(impl_->aiMemory.Bytes(token),0x258)!=0; }
 // 명시 해제의 오류는 caller에 전파하고 destructor의 마지막 정리와 구분한다.
 void RawCampaignSession::RemoveAi(std::uint32_t owner) { impl_->participation->RemoveBrain(owner); }
 // 후속 실제 전략은 현재 Player 토큰으로 이 유일한 본체/목록 저장소를 조회해야 한다.

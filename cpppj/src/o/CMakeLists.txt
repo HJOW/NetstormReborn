@@ -375,3 +375,5 @@ target_sources(netstorm PRIVATE RawAiWallet.cpp RawAiWallet.h)
 target_sources(netstorm PRIVATE RawAiObjectNotice.cpp RawAiObjectNotice.h)
 # 같은 본체의 초기 자산 등록·간헐천 분류와 매 판단 전 준비를 복원한다.
 target_sources(netstorm PRIVATE RawAiWorldRegistration.cpp RawAiWorldRegistration.h RawAiPreparation.cpp RawAiPreparation.h)
+# 원본 공통 AI의 첫 전략 준비와 목표 선택을 같은 실제 월드에 연결한다.
+target_sources(netstorm PRIVATE RawAiStrategySetup.cpp RawAiStrategySetup.h)

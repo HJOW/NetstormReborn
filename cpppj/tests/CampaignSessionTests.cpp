@@ -422,6 +422,11 @@ TEST_CASE(CampaignSession_LocalAiPreparationSharesOriginalWorld) {
     const auto allocations=session.AiMemory().Allocations().size();const auto first=std::vector<std::uint8_t>(raw.begin(),raw.end());CHECK(session.PrepareAi(1));CHECK(session.AiMemory().Allocations().size()==allocations && std::equal(first.begin(),first.end(),raw.begin()));CHECK(!Get(raw,0x258)); // 14af0의 준비 완료 표식을 이 하위에서 가짜로 켜지 않는다.
     session.RemoveAi(1);CHECK(!session.PrepareAi(1));
 }
+// 초기 전략이 실제 내용물/기술부모/난수 세계를 사용하고 같은258으로 재호출을 막는지 검사한다.
+TEST_CASE(CampaignSession_AiStrategyInitializationUsesActualContents) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();services.ai.allocationBytes=[](auto bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0x71}); };services.ai.participation.clearChat=[](auto) {};services.ai.participation.addChat=[](auto,auto,auto) {};services.ai.localTransport=[] { return true; };services.missionOutcome.demo=[] { return 0U; };services.ai.assertion=[](std::string_view text) { throw std::logic_error(std::string(text)); };
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));CHECK(Throws([&] { session.InitializeAi(1); }));session.Load();CHECK(!session.InitializeAi(1));auto profile=SessionAiSettings("Local AI","sunWalker;sunCannon");Put(profile,0x238,3);const auto token=session.CreateAi(1,profile);CHECK(session.InitializeAi(1));const auto raw=session.AiMemory().Bytes(token);CHECK(Get(raw,0x258)==1 && !Get(raw,0x25c) && Get(raw,0x264)==2 && Get(raw,0x628)>=3);const auto first=std::vector<std::uint8_t>(raw.begin(),raw.end());const auto allocated=session.AiMemory().Allocations().size();CHECK(session.InitializeAi(1) && session.AiMemory().Allocations().size()==allocated && std::equal(first.begin(),first.end(),raw.begin()));session.RemoveAi(1);CHECK(!session.InitializeAi(1));
+}
 // 같은 Session의 실제 본체/기술/동맹/현재 그래프 getter와 정상 목록 소멸을 함께 검사한다.
 TEST_CASE(CampaignSession_AiUsesCurrentWorldAndLifetime) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
