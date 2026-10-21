@@ -1,5 +1,13 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-22 단위291 완료: 사제 AI의 건설 TYPE·비용 여유·적 자금
+
+- [x] 시작 HEAD`b5774c3a`에서 AGENTS/양 인수인계/깨끗한 작업 트리를 다시 읽었다. 현재 PC와 마지막 전체 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-21**로 같다. 기존 정밀 원문/보호 PE 정적 읽기만 했으며 새 디컴파일/원본/CD/AGENTS/dotnetpj 변경과 검사·게임 재개는 없다.
+- [x] `RawAiBuildChoice`에`00411b40/00411a40/00411ad0/004709d0/00470a30`의다음TYPE·수집자여유·적자금·테마getter를복원하고`RawAiWallet::Balance`로`00413c20`실제Player지갑조회를복원했다. 같은현재SP/지갑/사제상태/TYPE/선호·수량을연결했다. [상세](docs/exe/cpp-ai-build-choice-20261022.md).
+- [x] 새16검사는 **작성·컴파일만 했고 실행하지 않았다**. Release 빌드 세션49102의 실제 종료까지 조회했고 **종료0·경고0·오류0**이다. `extracted/cpp-ai-build-choice-20261022-build1.log`와별도`build1-result.json`을보존하고로그를내용/개행변경없이UTF-8로변환했다. [신규정적보고서](cpppj/ai-build-choice-static-20261022.json)는원본14함수/초기TYPE·점프표·비용폭·자금분기/보호원본동일SHA·최종소스/바이너리SHA·새16검사링크/같은실제연결을확인한다. 다음사제하위2개정적읽기도포함하며이번구현6함수와구별한다. C++검사/CTest/게임/native실행0이다.
+- [x] 빌드/정적기록/인수인계를완료상태로확정했으며 **20261022-14 CP**로로컬커밋한다. 원격push하지않는다. 다음은`00411cd0`전체사제행동이다. `00425ed0`은493h예약존재,`00491b30`은현재물리frame의signed첫문자-'A'가10..14인지검사한다(기존RawPathAnimation::Direction). `00448a90`은다이스위치altar의ownerBYTE가아닌argument WORD를적과비교한다. `0044c420`은기존RawSalvageCommand::Request다. `0041d7a0`은각축에float0.99999(PE502310/3f7fff58)를더한뒤ftol→float다. `0040ead0`은double0비교이며Native44h/parity분기상NaN도true다.
+- [ ] 건물/다리/가짜부족좌표선정과원래순서자동AI프레임/종료, 목표15개+Edit/custom Fort·시나리오수명/자연플레이·화면/음향동일성은남아있다. 검사·게임중지를유지한다.
+
 ## 2026-10-22 단위290 완료: 사제 AI의 실제 행별 배치 탐색
 
 - [x] 시작 HEAD`eb047e82`에서 AGENTS/양 인수인계/깨끗한 작업 트리를 다시 읽었다. 현재 PC와 마지막 전체 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-21**로 같다. 기존 정밀 원문/보호 PE 정적 읽기만 했으며 새 디컴파일/원본/CD/AGENTS/dotnetpj 변경과 검사·게임 재개는 없다.

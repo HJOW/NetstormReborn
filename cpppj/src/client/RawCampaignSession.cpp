@@ -107,6 +107,7 @@
 #include "o/RawAiResourceChoice.h"
 #include "o/RawAiCarrierActions.h"
 #include "o/RawAiBuildSearch.h"
+#include "o/RawAiBuildChoice.h"
 #include "o/RawAiPreparation.h"
 #include "o/RawPriestLookup.h"
 #include "o/RawRunePostPop.h"
@@ -300,6 +301,7 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawAiResourceChoice> aiResourceChoice; //같은본체/간헐천/포획운반목록의실제수집·귀환선택하위다.
     std::unique_ptr<RawAiCarrierActions> aiCarrierActions; //같은목록/내용물/현재경로의전체수집·포획행동이다.
     std::unique_ptr<RawAiBuildSearch> aiBuildSearch; //같은574상태/spot/실제배치검사와벽시각의행별탐색이다.
+    std::unique_ptr<RawAiBuildChoice> aiBuildChoice; //같은지갑/선호워크샾/적사제·SP의다음건설TYPE판단이다.
     std::uint32_t aiGeyserLog{29}; //0052f3e4의끊긴간헐천로그초기종류다.
     std::uint32_t aiMoveLog{99}; //0052f3d8의원본Debug Move초기로그종류다.
     std::uint32_t aiDrySpotLog{99}; //0052f3dc의원본Debug Dry Spot 초기로그종류다.
@@ -411,7 +413,7 @@ struct RawCampaignSession::Impl {
     std::uint32_t tutorialHomeCommand{0x020000aeU},tutorialReclaimCommand{0x02000008U}; // 보호PE5429ac/54271c의 같은 입력 토큰 저장소다.
     std::uint32_t tutorialWorkshopType{85},tutorialArcherType{71},tutorialSalvageCommand{0x0200005dU}; // 보호PE5411ac/541174/54286c의 현재 TYPE와 회수 입력이다.
     std::map<std::uint32_t,std::uint32_t> tutorialTypes{{0x541178,72},{0x541184,75},{0x541188,76},{0x54118c,77},{0x541190,78},
-        {0x541244,123},{0x541258,128},{0x541264,131},{0x541268,132},{0x54126c,133},{0x541288,140},{0x54128c,141},{0x5412ec,165}}; // 보호PE의 현재 TYPE 전역이다. Early2와 공유하는71/85는 기존 저장소에서 읽는다.
+        {0x541244,123},{0x541248,124},{0x54124c,125},{0x541258,128},{0x541264,131},{0x541268,132},{0x54126c,133},{0x541288,140},{0x54128c,141},{0x5412ec,165}}; // 보호PE의 현재 TYPE 전역이다. Early2와 공유하는71/85는 기존 저장소에서 읽는다.
     std::uint32_t tutorialContainedCommand{0x030000b1U},tutorialTechnologyCommand{0x020000b5U},tutorialCaptureCommand{0x020000d7U},tutorialAscendCommand{0x020000dfU}; // 보호PE5429b8/5429c8/542a50/542a70의 실제 큐 사건이다.
     std::unique_ptr<RawCampaignAssetBindings> assetBindings; // 실제 저장 건물 후처리와 Gun/Regular다.
     CanonPlacementPipelineState gameplayPlacement; // 생성용 지형 판정과 구별한 실제 요청/커서의 현재 모드·방향 동맹이다.
@@ -1805,7 +1807,7 @@ struct RawCampaignSession::Impl {
         setup.demo=[this] { return services.missionOutcome.demo()!=0; }; //기한 전 로컬 보충만 원본 데모 판정을 읽는다.
         aiStrategySetup=std::make_unique<RawAiStrategySetup>(aiMemory,*player,*aiPreparation,priests->Carrier(),*contained,contentFinder,core.types,random,alliances,
             AiStrategySetupGlobals{playerState.battleOwner,noRegion,templeProduct,contentState.bridgeType,cursorManaGlobals.mapLimit,core.processState.now},std::move(setup));
-        AiEconomyHooks economy;economy.demo=[this] { return services.missionOutcome.demo()!=0; };economy.captured=[this](auto owner) { if (owner<1 || owner>8) { if (!services.ai.assertion) throw std::logic_error("AI 경제 포획 owner 진단 미연결");services.ai.assertion("playerId > INVALID_PLAYER_ID && playerId < MAX_PLAYERS");return true; }return outcome->PriestCaptured(owner); }; //같은 현재 Player 플래그/ownerState 판정을 재사용한다.
+        AiEconomyHooks economy;economy.demo=[this] { return services.missionOutcome.demo()!=0; };economy.captured=[this](auto owner) { return AiPriestCaptured(owner); }; //건설선택과같은현재사제포획판정을공유한다.
         aiEconomy=std::make_unique<RawAiEconomy>(aiMemory,sp,core.processState.now,std::move(economy));
         AiDeploymentHooks deployment;deployment.product=[this](auto token,auto type) { return aiStrategySetup->FindProduct(token,type); };deployment.technology=[this](auto owner) { const auto parent=player->Technology(std::bit_cast<std::int32_t>(owner));if (parent>65535 || parent>=core.pool.Capacity()) throw std::out_of_range("AI 배치 현재 기술부모 SID 범위");return Sid{static_cast<std::uint16_t>(parent)}; };
         deployment.destroy=[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); };deployment.reserveRegular=[this] { try { aiPendingRegular=std::make_unique<RegularProcess>(0U,0.0F);return true; }catch (const std::bad_alloc&) { return false; } };
@@ -1826,9 +1828,15 @@ struct RawCampaignSession::Impl {
         aiFactoryProduction=std::make_unique<RawAiFactoryProduction>(aiMemory,core.pool,core.types,contentFinder,AiFactoryProductionGlobals{core.processState.now,[this] { return static_cast<std::uint32_t>(core.bookkeeping.invalidGraph); }},std::move(factories));
         AiDrySpotHooks dry;dry.energy=[this](std::string& text,float x,float y,auto type,auto owner) { return energySupply->Evaluate(text,x,y,type,owner); };dry.log=[this](auto token,bool fake) { if (!services.player.log) throw std::logic_error("AI DrySpot 실제 로그 미연결");services.player.log(aiDrySpotLog,"AI"+std::to_string(std::bit_cast<std::int32_t>(Read(aiMemory.Bytes(token),0x260)))+": "+(fake ? "Killed Fake Dry Spot\n" : "Killed Dry Spot\n")+"\n"); };
         aiDrySpots=std::make_unique<RawAiDrySpots>(aiMemory,core.pool,std::move(dry));
+        AiBuildChoiceHooks choice;choice.captured=[this](auto owner) { return AiPriestCaptured(owner); };choice.dead=[this](auto owner) { return AiPriestDead(owner); };choice.canAfford=[this](auto token,auto type) { return aiDeployment->CanAfford(token,type); };choice.wallet=[this](auto owner) { return aiWallet->Balance(owner); };choice.storedSp=[this](auto owner) { return std::bit_cast<float>(sp.Get(owner)); };choice.assertion=[this](std::string_view text,std::uint32_t line) { if (!services.ai.assertion) throw std::logic_error("AI 건설 선택 원본 진단 미연결 "+std::to_string(line));services.ai.assertion(text); };
+        AiBuildChoiceGlobals choiceGlobals{playerState.battleOwner,playerState.playerKnown,templeProduct,runeState.daisType,aiWorkshops,[this](auto theme) { return tutorialTypes.at(0x541244U+theme*4U); }};aiBuildChoice=std::make_unique<RawAiBuildChoice>(aiMemory,core.types,std::move(choiceGlobals),std::move(choice));
     }
     // 생산선택/포획행동이같은492280의현재참여/포획상태를공유한다.
     bool AiEnemyAvailable(std::uint32_t owner) const { if (owner<1 || owner>8) { if (!services.ai.assertion) throw std::logic_error("AI 적 사제 참여 진단 미연결");services.ai.assertion("playerId > INVALID_PLAYER_ID && playerId < MAX_PLAYERS");return false; }return (players[owner*180+0x50]&0x22)!=0 && priests->Priests().ownerState[owner]==0; }
+    // 원본492340의진단/범위밖true와같은현재포획ownerState를경제·건설이공유한다.
+    bool AiPriestCaptured(std::uint32_t owner) const { if (owner<1 || owner>8) { if (!services.ai.assertion) throw std::logic_error("AI 사제 포획 진단 미연결");services.ai.assertion("playerId > INVALID_PLAYER_ID && playerId < MAX_PLAYERS"); }return outcome->PriestCaptured(owner); }
+    // 원본4922e0의진단뒤같은Player활성/ownerState2를조회한다.
+    bool AiPriestDead(std::uint32_t owner) const { if (owner<1 || owner>8) { if (!services.ai.assertion) throw std::logic_error("AI 사제 생존 진단 미연결");services.ai.assertion("playerId > INVALID_PLAYER_ID && playerId < MAX_PLAYERS"); }return outcome->PriestDead(owner); }
     // 자산통지/수집행동이같은현재이동TYPE→종속→실제Host경로끝을읽는다.
     std::array<std::uint32_t,2> AiCarrierTargets(Sid sid) { const auto kind=priests->MovementProcessType(core.pool.Slot(sid)[10]);RawContainedLookup lookup(core.pool,[this](Sid target,std::uint32_t flags) { world.Destroy(target,flags); });const auto form=lookup.Find(sid,kind);if (!form.value) return {};const auto* path=dynamic_cast<RawPathProcess*>(core.processes.FromForm(form));if (!path) throw std::logic_error("AI 현재 이동 프로세스 미연결");return {path->Runtime().TargetA(),path->Runtime().TargetB()}; }
     // 실제Motion기하설치뒤이름/경로/의식/공유요청헤더를현재AI에연결한다.
@@ -2557,6 +2565,10 @@ bool RawCampaignSession::ManageAiCarriers(std::uint32_t owner) { if (!impl_->loa
 bool RawCampaignSession::StartAiBuildSearch(std::uint32_t owner,std::uint32_t type) { if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("설치 후 owner1..8 AI 배치 탐색 시작만 허용");const auto token=impl_->participation->Brain(owner);if (!token) return false;const auto raw=impl_->aiMemory.Bytes(token);const AiBuildSearchBounds bounds{std::bit_cast<float>(Read(raw,0x270)),std::bit_cast<float>(Read(raw,0x274)),std::bit_cast<float>(Read(raw,0x278)),std::bit_cast<float>(Read(raw,0x27c))};const RawPathPoint avoid{std::bit_cast<float>(Read(raw,0x2b0)),std::bit_cast<float>(Read(raw,0x2b4))};impl_->aiBuildSearch->Initialize(token,type,bounds,avoid,Read(raw,0x260));return true; }
 // 같은현재탐색을원본행예산정책으로진행한다.true는본체존재/호출이며배치후보존재가아니다.
 bool RawCampaignSession::AdvanceAiBuildSearch(std::uint32_t owner,std::uint32_t budgeted) { if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("설치 후 owner1..8 AI 배치 탐색만 허용");const auto token=impl_->participation->Brain(owner);if (!token) return false;impl_->aiBuildSearch->Scan(token,budgeted);return true; }
+// 현재같은지갑/사제상태/선호수량으로다음다이스·신전·워크샾TYPE를선택한다.
+std::uint32_t RawCampaignSession::SelectAiBuildType(std::uint32_t owner) const { if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("설치 후 owner1..8 AI 건설 선택만 허용");const auto token=impl_->participation->Brain(owner);return token ? impl_->aiBuildChoice->Select(token) : 0U; }
+// 원본411ad0의로컬분산SP/원격실제AI지갑1000미만조건을현재본체로조회한다.
+bool RawCampaignSession::AiEnemyLowFunds(std::uint32_t owner) const { if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("설치 후 owner1..8 AI 적 자금 조회만 허용");const auto token=impl_->participation->Brain(owner);return token && impl_->aiBuildChoice->EnemyLowFunds(token); }
 // 현재가상표의실제원본이름을반환한다.
 std::string RawCampaignSession::ObjectName(Sid parent) const { if (!impl_->loaded) throw std::logic_error("설치 전 객체 이름 조회");return impl_->objectNames->Name(parent); }
 // 명시 해제의 오류는 caller에 전파하고 destructor의 마지막 정리와 구분한다.

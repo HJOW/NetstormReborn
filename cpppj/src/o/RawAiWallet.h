@@ -16,6 +16,7 @@ public:
     // signed owner>0 및 현재 brain 비영인 경우만 DWORD 감김 가산 뒤 데모 하한1190을 적용한다.
     // 원본의 표 밖 접근/해제 포인터는 호스트 예외로 거부한다. SP/난수/화면 자체는 갱신하지 않는다.
     void Credit(std::uint32_t owner,std::int32_t amount) const;
+    std::int32_t Balance(std::uint32_t owner) const; //00413c20:현재모드/Player+b0/실제본체의signed지갑을읽는다.데모하한/분산SP는조회하지않는다.
 private:
     std::span<std::uint8_t> Body(std::uint32_t token) const; // 같은 실제 본체의 물리 폭을 확인하고 빌린다.
     RawAiBrainMemory& memory_; // 생성/부착/소멸과 같은 opaque 핸들 소유자다.

@@ -38,4 +38,6 @@ void RawAiWallet::Credit(std::uint32_t owner,std::int32_t amount) const {
     auto body=Body(token);Put(body,kWalletOffset,Read(body,kWalletOffset)+std::bit_cast<std::uint32_t>(amount));
     if (reads_.demo()) { body=Body(token);const auto current=std::bit_cast<std::int32_t>(Read(body,kWalletOffset));Put(body,kWalletOffset,static_cast<std::uint32_t>(current>kDemoFloor ? current : kDemoFloor)); }
 }
+// 현재Player포인터의같은본체를읽는다.비활성/비양수owner/NULLbrain은원문처럼0을반환한다.
+std::int32_t RawAiWallet::Balance(std::uint32_t owner) const { if (reads_.disabled() || std::bit_cast<std::int32_t>(owner)<1) return 0;if (owner>=kPlayerSlots) throw std::out_of_range("AI 지갑 조회 실제Player9 범위");const auto token=Read(players_,static_cast<std::size_t>(owner)*kPlayerBytes+kBrainOffset);return token ? std::bit_cast<std::int32_t>(Read(Body(token),kWalletOffset)) : 0; }
 }

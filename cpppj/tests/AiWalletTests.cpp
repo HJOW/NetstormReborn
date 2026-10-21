@@ -6,6 +6,15 @@
 using namespace netstorm::o;
 using namespace netstorm::test::rawscene;
 
+// 조회는현재Player포인터의signed지갑만읽으며데모/SP/본문바이트를변경하지않는다.
+TEST_CASE(AiWallet_BalanceUsesCurrentBrainWithoutDemoOrWrites) {
+    std::array<std::uint8_t,1620> players{};RawAiBrainMemory memory{0x4f000000,[](auto raw) { std::fill(raw.begin(),raw.end(),std::uint8_t{0x5a}); }};const auto first=memory.Allocate(RawAiBrainConstructor::kBytes),second=memory.Allocate(RawAiBrainConstructor::kBytes);Put(players,2*180+0xb0,first);Put(memory.Bytes(first),0x2d8,0x80000001U);Put(memory.Bytes(second),0x2d8,1200);std::size_t demos{};RawAiWallet wallet(memory,players,{[] { return false; },[&] { ++demos;return true; }});const auto before=std::vector<std::uint8_t>(memory.Bytes(first).begin(),memory.Bytes(first).end());CHECK(wallet.Balance(2)==std::bit_cast<std::int32_t>(0x80000001U));Put(players,2*180+0xb0,second);CHECK(wallet.Balance(2)==1200 && !demos && std::equal(before.begin(),before.end(),memory.Bytes(first).begin()));Put(players,2*180+0xb0,0);CHECK(wallet.Balance(2)==0 && !demos);
+}
+// 모드우선/비양수owner/NULLbrain과손상된물리포인터를구별한다.실행하지않는다.
+TEST_CASE(AiWallet_BalanceDisabledSignedOwnerAndPhysicalBounds) {
+    std::array<std::uint8_t,1620> players{};RawAiBrainMemory memory{0x4f000000,[](auto raw) { std::fill(raw.begin(),raw.end(),std::uint8_t{}); }};bool disabled=true;std::size_t modes{};Put(players,180+0xb0,0xdeadbeefU);RawAiWallet wallet(memory,players,{[&] { ++modes;return disabled; },[]()->bool { throw std::logic_error("조회에서데모호출금지"); }});CHECK(wallet.Balance(1)==0 && modes==1);disabled=false;CHECK(wallet.Balance(0)==0 && wallet.Balance(0xffffffffU)==0 && wallet.Balance(0x80000000U)==0 && wallet.Balance(8)==0);CHECK(Throws([&] { wallet.Balance(9); }) && Throws([&] { wallet.Balance(1); }));
+}
+
 // 비활성·signed 비양수·NULL brain은 지갑과 데모 경계를 선택하지 않는다.
 TEST_CASE(AiWallet_DisabledSignedOwnerAndNullBrain) {
     std::array<std::uint8_t,1620> players{};RawAiBrainMemory memory(0x10000000,[](auto bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0xa7}); });bool disabled=true;std::size_t modeReads{},demoReads{}; // 원본의 두 현재 읽기 위치를 분리한 입력이다.
