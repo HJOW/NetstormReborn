@@ -96,6 +96,8 @@
     <None Include="../../../cpppj/tests/fixtures/damageablehit-x86.tsv" Link="X86/damageablehit-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <!-- 원본 월드 코어 W03 삭제·수명 아홉째 조각: 사제 피격·레벨 보정·burning 3,424행 중 10.78 몫 1,712행. -->
     <None Include="../../../cpppj/tests/fixtures/priestdamage-x86.tsv" Link="X86/priestdamage-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <!-- 원본 월드 코어 W03 삭제·수명 열째 조각: 종속 조회·삭제 2,415행 중 10.78 몫 805행. -->
+    <None Include="../../../cpppj/tests/fixtures/contained-x86.tsv" Link="X86/contained-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <!-- 연결한 fixture 의 SHA-256 목록과 그 검사. cpppj 가 fixture 를 다시 만들면 실패해 재대조를 요구한다 (W01, 2026-10-16). 갱신: dotnetpj/tools/cpp_sync.py -->
     <None Include="../Shared/cpp-fixture-manifest.tsv" Link="X86/cpp-fixture-manifest.tsv" CopyToOutputDirectory="PreserveNewest" />
     <Compile Include="../Shared/CppFixtureManifest.cs" Link="Shared/CppFixtureManifest.cs" />
