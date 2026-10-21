@@ -656,6 +656,8 @@ struct RawCampaignSession::Impl {
         templateState=std::make_unique<RawPlayerTemplateState>(core.pool.Edition(),headers,[this](auto slot)->PlayerTemplateStateStream& { return templateStorage->SelectState(slot); },[this](auto slot)->const std::string& { return templateStorage->Name(slot); },
             objectState.loadingDepth,objectState.mission,SessionMissing<void,PlayerTemplateStateAssertion>(),[this](std::uint32_t depth) { world.SetLoadingDepth(depth); },
             [this](auto owner,auto size) { return templateStorage->GrowState(owner,size); },[this](auto owner) { templateStorage->CommitStateGrowth(owner); });
+        templateState->BindInitialization({[this](auto,std::span<std::uint8_t,28> bytes) { if (!services.templateStateBytes) throw std::logic_error("빈 State의 현재 미정 바이트 입력 미연결");services.templateStateBytes(bytes); },
+            [this](auto owner,std::span<const std::uint8_t,28> bytes)->PlayerTemplateStateStream& { return templateStorage->InitializeState(owner,bytes); }}); // 실제 새 State와 같은 헤더/manager 수명을 사용한다.
         auto playerRegularHooks=services.player;playerRegularHooks.assertion=SessionMissing<void,PlayerRegularAssertion>();
         FillMissing(playerRegularHooks.log);
         playerRegularHooks.reserveRegular=[] { return true; };

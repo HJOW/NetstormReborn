@@ -1,0 +1,41 @@
+{
+  "start_commit": "a728b81107f11ce1f9498700ed38423e240d705d",
+  "host": "VM-W11-Codex",
+  "last_decompile_host": "VM-W11-CODEX",
+  "last_decompile_date": "2026-10-21",
+  "original_rows": 2560,
+  "build_exit_code": 0,
+  "cpp_tests_executed": false,
+  "game_executed": false,
+  "limitations": [
+    "원본 관측 본문은4bd550/44cce0이며 선택/섹션 생성/확장은 명시 경계다.",
+    "호스트 섹션 재생성/버퍼/목록 어댑터다. 전체 DataManager 생성/파일/오류/힙 동등성의 관측이 아니다.",
+    "미정 State 바이트는 현재 호스트 malloc 입력이다. 원본 실행 당시 스택 바이트와 같다고 주장하지 않는다.",
+    "C++ 검사는 작성/컴파일했으며 실행 검증과11미션 자연 완주는 미완료다."
+  ],
+  "hashes": {
+    "cpppj/src/o/RawPlayerTemplateState.cpp": "d3e03db965a1f413b0918a723d5912682e728abde1fd2f2a2815aad7fc3aa18e",
+    "cpppj/src/o/RawPlayerTemplateState.h": "39b6a537f69996b99ce11e8e2426955abf56e436d36a68dbc921ee79241840ce",
+    "cpppj/src/client/CampaignTemplateStorage.cpp": "a22768a3ac0195918d28f6063cc4cd05f852da380122a2098b70dd366e24ec92",
+    "cpppj/src/client/CampaignTemplateStorage.h": "afcd0529a386136dd435a819cb485641e71b9daa1d870a3388e0f5162c7c1e46",
+    "cpppj/src/client/RawCampaignSession.cpp": "6c891debdef2df7c64ddf41983906e071d14b6d1b43becc95de58a381f91909e",
+    "cpppj/src/client/RawCampaignSession.h": "034c8f8d9e2532536a7ab36763f30bf98d6176333fa4f180a64e57b8e96f0f8b",
+    "cpppj/src/client/CampaignClientServices.cpp": "de7b2d5521a7054346c0e3a6b945f63973bd6ae31afe7ecb1a0f3840fdde2cab",
+    "cpppj/tests/PlayerStateInitializationTests.cpp": "700ee4f595306fe25995ad053f233e4eb78aa55ab38485120ead1ac2e0b36527",
+    "cpppj/tests/CMakeLists.txt": "9c3ef045639c5b5def44f7d328a083503a9385082d5ccb28442f153bb6646bd8",
+    "cpppj/player-state-initialization-native.json": "6bf9393f849248513f0695b7cc83cf2951b9b9fc6e9ee57603a222a54132b8d1",
+    "tools/cpp_player_state_initialization_audit.py": "4c6b7897354c67ff4a00be14f4c5f57e5edbf7c90f244278166e4afb11e0d83d",
+    ".gitattributes": "ded8a6b0f71b2ca02a722e44e666c5cabd2fb8bc757c1c4fe5b4379ee9ef1a62",
+    "extracted/cpp-player-state-initialization-20261021-build2.log": "197e5bb9c70d03d786085eb7aba42510b9858fc368a7e1844699dfbee6e2b0bd",
+    "extracted/cpp-player-state-initialization-20261021-build2-result.json": "a6dd523b013a21c669079f5af5cfe57cf80aafa0fa9948598cc66704a0775e1f",
+    "cpppj/build/lib/Release/netstorm.lib": "6ac4e474e7a4c0b00b6470f5bc9fed0569b85fdd20c030e6704e7d0b51004358",
+    "cpppj/build/bin/Release/NetstormCpp.exe": "aedbab31e854e50be61ee01f42cc696a62d297b9abcaf94499db36e970109bf7",
+    "cpppj/build/bin/Release/netstorm_tests.exe": "89ec14df735bbc95dadd0562121216c217c5e4aa6c11f71d1fa11b0cd47df2a7"
+  },
+  "tests_written_and_compiled": [
+    "PlayerStateInitialization_Native2560",
+    "CampaignTemplates_EmptyStateRecreatedWithCurrentBytesAndOrder",
+    "CampaignTemplates_StateRecreationCompactsPreviousTerritoryTail",
+    "PlayerStateInitialization_RequiredEffectsAndEdition"
+  ]
+}

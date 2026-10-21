@@ -1,0 +1,23 @@
+{
+  "host": "VM-W11-Codex",
+  "rows": 2560,
+  "normal_returns": 2560,
+  "instructions": 168960,
+  "entries": {
+    "0x4bd550": 2560,
+    "0x44cce0": 1536
+  },
+  "limitations": [
+    "실행 본문은4bd550과44cce0이다. 검색/선택44ceb0, 새 섹션44d1b0, 최소 확장44d290은 명시 경계다.",
+    "생성 뒤 alloc0x4000과 현재 버퍼는 명시 경계 입력이다. 실제 힙/게임/OS 실행이 아니다.",
+    "빈/기존28·32BYTE만 관측한다. 기존 short State 확장은 이전 별도 근거의 범위다.",
+    "스택 미정 바이트는 입력으로 보존하며 원본 보장 초기값으로 해석하지 않는다."
+  ],
+  "hashes": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_player_state_initialization.py": "cb79950d7c3e0b688c3a9ee0e89189950aef489dc69c1d277801ac700eae682b",
+    "cpppj/tests/fixtures/player-state-initialization-x86.tsv": "b3e93bb8106906a2ae11c2f1e84b505685aafbd25bba3aa35cbf9befbc6d613a"
+  }
+}

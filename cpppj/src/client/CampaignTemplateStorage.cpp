@@ -3,6 +3,7 @@
 #include "o/RawDataManagerLifetime.h"
 #include "o/RawDataManagerSelection.h"
 #include <algorithm>
+#include <bit>
 #include <stdexcept>
 namespace netstorm::client {
 namespace {
@@ -34,6 +35,66 @@ struct CampaignTemplateStorage::Image {
     std::vector<std::uint8_t> retiredState; // 확장 중 Get의 원문 복사가 끝날 때까지만 이전 할당을 보유한다.
     std::array<std::uint8_t,12> manager{}; // 소멸이 사용하는 vptr/head/current의 실제 현재 저장소다.
     std::map<std::uint32_t,std::unique_ptr<Stream>> streams; // 노드 반납 때 실제 객체 할당을 해제한다.
+    std::vector<std::uint32_t> streamOrder; // 원본 추가/교체 뒤 목록 순서를 고정 파일 섹션 번호와 구별한다.
+    // MemStream 소멸에서 요청한 같은 실제 raw 섹션 버퍼를 반납한다.
+    void ReleaseBuffer(std::uint32_t token) {
+        if (token<0x10001U || token>0x10000U+o::FortTemplate::kSectionCount) throw std::out_of_range("Template 실제 버퍼 핸들 범위");
+        std::vector<std::uint8_t>{}.swap(fort.sections.at(token-0x10001U));
+    }
+    // 현재 노드의 data/pos/end와 같은 raw 버퍼를 두 typed cursor에 다시 연결한다.
+    void PublishCursor(std::uint32_t handle) {
+        const auto& bytes=fort.sections.at(handle-1);const auto& node=streams.at(handle)->bytes;
+        if (handle==StateSection()+1) state={std::span<std::uint8_t>(fort.sections.at(handle-1)),Read(std::span(node).subspan(4)),Read(std::span(node).subspan(8)),Read(node)!=0};
+        if (handle==TerritorySection()+1) territory={bytes,Read(std::span(node).subspan(4)),Read(std::span(node).subspan(8))};
+    }
+    // 원본 ce10이 새 노드를 붙이기 전에 마지막 MemStream의 end에 맞춰 할당을 줄인다.
+    void CompactTail(std::uint32_t handle) {
+        auto& node=streams.at(handle)->bytes;const auto end=Read(std::span(node).subspan(8));
+        if (end==Read(std::span(node).subspan(12))) return;
+        if (std::bit_cast<std::int32_t>(end)>0) {
+            auto& buffer=fort.sections.at(handle-1);if (end>buffer.size()) throw std::out_of_range("Template 마지막 stream의 실제 end 범위");
+            auto previous=std::move(buffer);Put(node,0,0);buffer.assign(end,0);Put(node,0,0x10000U+handle);Put(node,4,0);Put(node,8,0);Put(node,12,end);
+            std::copy_n(previous.begin(),end,buffer.begin());Put(node,4,end);Put(node,8,end);std::vector<std::uint8_t>{}.swap(previous);
+        } else o::DestroyMemStream(node,[this](auto token) { ReleaseBuffer(token); });
+        PublishCursor(handle);
+    }
+    // 생성된 State 노드의 교체는 기존 노드 unlink/버퍼 반납/노드 반납 뒤 새 마지막 노드를 붙인다.
+    void InitializeState(std::span<const std::uint8_t,28> input) {
+        if (!retiredState.empty()) throw std::logic_error("State 확장 복사 중 새 섹션 생성 불가");
+        SyncStreams();const auto handle=static_cast<std::uint32_t>(StateSection()+1);const auto found=streams.find(handle);
+        if (found!=streams.end()) {
+            auto current=Read(std::span(manager).subspan(4));std::uint32_t previous{};
+            // 같은 head/next에서 교체할 기존 노드의 선행 노드를 찾는다.
+            while (current && current!=handle) { previous=current;current=Read(std::span(streams.at(current)->bytes).subspan(0x38)); }
+            if (!current) throw std::logic_error("State 기존 노드가 실제 목록에 없음");
+            const auto next=Read(std::span(found->second->bytes).subspan(0x38));
+            if (previous) Put(streams.at(previous)->bytes,0x38,next);else Put(manager,4,next);
+            o::DestroyMemStream(found->second->bytes,[this](auto token) { ReleaseBuffer(token); });streams.erase(found);
+            std::erase(streamOrder,handle);state={{},0,0,false};
+        }
+        if (fort.sections.size()<=StateSection()) fort.sections.resize(StateSection()+1);
+        auto node=std::make_unique<Stream>();const auto sectionName=std::string_view("State");std::copy(sectionName.begin(),sectionName.end(),node->bytes.begin()+16);
+        auto& buffer=fort.sections[StateSection()];buffer.assign(0x4000,0);Put(node->bytes,0,0x10000U+handle);Put(node->bytes,12,0x4000);
+        streams.emplace(handle,std::move(node));auto tail=Read(std::span(manager).subspan(4));
+        if (tail) {
+            // 원본처럼 현재 next를 따라 마지막 노드까지 이동한 뒤 압축/추가한다.
+            while (const auto next=Read(std::span(streams.at(tail)->bytes).subspan(0x38))) tail=next;
+            CompactTail(tail);Put(streams.at(tail)->bytes,0x38,handle);
+        } else Put(manager,4,handle);
+        Put(manager,8,handle);streamOrder.push_back(handle);
+        std::copy(input.begin(),input.end(),buffer.begin());buffer.resize(28);Put(streams.at(handle)->bytes,4,28);Put(streams.at(handle)->bytes,8,28);PublishCursor(handle);
+    }
+    // 공개 진단은 보조 순서 벡터 대신 실제 head/next와 이름을 읽는다.
+    std::vector<std::string> SectionOrder() const {
+        std::vector<std::string> result;auto current=Read(std::span(manager).subspan(4));
+        // 실제 노드 수보다 긴 사슬은 손상/순환으로 거부한다.
+        while (current) {
+            if (result.size()>=streams.size()) throw std::logic_error("Template 실제 섹션 목록 순환");
+            const auto& node=streams.at(current)->bytes;const auto first=node.begin()+16,end=std::find(first,first+40,std::uint8_t{});
+            if (end==first+40) throw std::logic_error("Template 섹션 이름 NUL 누락");result.emplace_back(first,end);current=Read(std::span(node).subspan(0x38));
+        }
+        return result;
+    }
     // 실제 원시State와 같은 커서를 노드에 반영한 뒤 원본 선택을 실행한다.
     void SelectState() {
         SyncStreams();const auto handle=static_cast<std::uint32_t>(StateSection()+1);const auto found=streams.find(handle);
@@ -62,13 +123,16 @@ struct CampaignTemplateStorage::Image {
     // 공개된 Fort/State의 현재 버퍼를 같은 목록에 연결하며 파일 읽기 구현 자체를 대신하지 않는다.
     void SyncStreams() {
         if (fort.sections.size()>o::FortTemplate::kSectionCount) throw std::logic_error("Template 실제 섹션35칸 범위");
-        const auto names=o::FortTemplate::SectionNames();const auto count=std::max(fort.sections.size(),streams.size());std::uint32_t previous{}; // 파일 섹션 순서의 마지막 실제 노드다.
+        const auto names=o::FortTemplate::SectionNames();const auto count=std::max(fort.sections.size(),streams.size());std::uint32_t previous{}; // 현재 목록의 마지막 실제 노드다.
         // 제거된 호스트 버퍼의 기존 노드도 빈 stream으로 반납하고 새 섹션은 목록 끝에 부착한다.
         for (std::size_t index=0;index<count;++index) {
             const auto handle=static_cast<std::uint32_t>(index+1);auto& stream=streams[handle];
-            if (!stream) { stream=std::make_unique<Stream>();std::copy(names[index].begin(),names[index].end(),stream->bytes.begin()+16); }
+            if (!stream) { stream=std::make_unique<Stream>();std::copy(names[index].begin(),names[index].end(),stream->bytes.begin()+16);streamOrder.push_back(handle); }
             const auto size=index<fort.sections.size() ? fort.sections[index].size() : 0U;const auto capacity=index<fort.sections.size() ? fort.sections[index].capacity() : 0U; // 제품의 현재 실제 벡터를 반납 경계에서 다시 조회한다.
             Put(stream->bytes,0,capacity ? 0x10000U+handle : 0U);Put(stream->bytes,8,static_cast<std::uint32_t>(size));Put(stream->bytes,12,static_cast<std::uint32_t>(capacity));Put(stream->bytes,0x38,0);
+        }
+        // State 교체가 만든 목록 순서를 이후 조회/소멸 때 파일 번호순으로 되돌리지 않는다.
+        for (const auto handle:streamOrder) {
             if (previous) Put(streams.at(previous)->bytes,0x38,handle);else Put(manager,4,handle);
             previous=handle;
         }
@@ -120,6 +184,10 @@ o::FortTemplate& CampaignTemplateStorage::Template(std::uint32_t slot) { return 
 o::PlayerTemplateStateStream& CampaignTemplateStorage::State(std::uint32_t slot) { return Current(slot).state; }
 // 실제 Player Stategetter가 같은 목록/current를 선택한 뒤 같은 cursor를 돌려받는다.
 o::PlayerTemplateStateStream& CampaignTemplateStorage::SelectState(std::uint32_t slot) { auto& image=Current(slot);image.SelectState();return image.state; }
+// 미정 바이트를 포함한 완성28BYTE를 실제 새 섹션에 쓰고 같은 현재 cursor를 반환한다.
+o::PlayerTemplateStateStream& CampaignTemplateStorage::InitializeState(std::uint32_t slot,std::span<const std::uint8_t,28> bytes) { auto& image=Current(slot);image.InitializeState(bytes);return image.state; }
+// 빌린 헤더도 같은 manager의 실제 연결 순서를 확인한다.
+std::vector<std::string> CampaignTemplateStorage::SectionOrder(std::uint32_t slot) { return Current(slot).SectionOrder(); }
 // 빌린 헤더도 같은 manager의 현재 섹션을 확인한다.
 std::string_view CampaignTemplateStorage::CurrentSection(std::uint32_t slot) { return Current(slot).CurrentSection(); }
 // 지형 cursor도 같은 manager의 원문을 빌린다.

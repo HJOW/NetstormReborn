@@ -1719,3 +1719,8 @@ set_source_files_properties(DataManagerLifetimeTests.cpp PROPERTIES COMPILE_DEFI
 target_sources(netstorm_tests PRIVATE DataManagerSelectionTests.cpp)
 set_source_files_properties(DataManagerSelectionTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_DATAMANAGER_SELECTION_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/datamanager-selection-x86.tsv\"")
+
+# 빈 State의 원본 부모2560입력과 실제 섹션 재생성/버퍼 공유를 컴파일한다.
+target_sources(netstorm_tests PRIVATE PlayerStateInitializationTests.cpp)
+set_source_files_properties(PlayerStateInitializationTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_PLAYER_STATE_INITIALIZATION_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/player-state-initialization-x86.tsv\"")

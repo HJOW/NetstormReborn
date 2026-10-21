@@ -63,6 +63,7 @@ RawCampaignSessionServices MakeCampaignClientServices(Client& client,RawButtonCo
     auto& audio=client.WorldAudio(); // noAudio도 같은 실제 이름표/비활성 재생 계층을 사용한다.
     auto& player=audio.Sounds(); // 반환한 콜백이 빌리는 장기 실제 SoundPlayer다.
     RawCampaignSessionServices services; // 게임 규칙 경계는 실제 세션의 명시 누락 판정을 유지한다.
+    services.templateStateBytes=CurrentAllocationBytes; // 원본이 쓰지 않는 State 바이트를 임의0 대신 현재 호스트 할당 입력에서 받는다.
     // 실제 커서 비용과 같은 Gump 트리/게임 시계에 Cast/Drop 금액 표시를 붙인다.
     services.carrierDropPopup=[&controls](std::int32_t cost,std::int32_t x,std::int32_t y,std::uint32_t reference) { auto* menus=controls.Menus();if (!menus) throw std::logic_error("Cast/Drop 비용표시 실제Gump미설치");menus->ShowSp(cost,x,y,reference); };
     services.ai.allocationBytes=CurrentAllocationBytes; // 실제 AI 생성자가 보존하는 바이트의 현재 힙 입력이다.

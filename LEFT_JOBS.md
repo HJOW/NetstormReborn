@@ -1,5 +1,14 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-21 단위265 완료: 빈 State의 원본 필드 초기화와 실제 섹션 재생성
+
+- [x] 직전 턴은 단위263/264의 구현·빌드·로컬 커밋을 마친 진행 턴이다. 시작 HEAD `a728b811`에서 `AGENTS.md`와 양 인수인계의 최신 작업/실행 이월 지시를 다시 확인했다. 현재/마지막 정밀 디컴파일 PC는 **VM-W11-CODEX / 2026-10-21**로 같다. 새 디컴파일·원본/CD·AGENTS·dotnetpj 변경·게임/창 실행은 없다.
+- [x] 제품 수정 전 원본004bd550과 실제 MemStream 쓰기0044cce0을 **2,560고유 입력·2,560정상 반환·168,960명령** 관측했다. 진입2,560/1,536회·원본 스택28BYTE 전후/현재stream16BYTE/버퍼64BYTE·선택/생성/확장 경계·EAX/ABI/보존 레지스터/x87/쓰기 범위를 확인했다. **선택44ceb0·생성44d1b0·최소 확장44d290은 명시 경계이며 전체 하위 실행 근거가 아니다.** 실제 CRT/OS/게임 실행도 아니다. 최초 도구/fixture/JSON은 `extracted/player-state-initialization-20261021-first-capture/`에 동결했다.
+- [x] `RawPlayerTemplateState`의 빈 State 오류 분기를 실제 생성 소비자에 연결했다. flags의 상위5비트와 미정11BYTE는 입력 그대로 두고 원본 필드만 초기화한다. 실제 Client는 기존 현재 malloc 바이트 입력을 공급하며 원본 당시 스택과 같은 값이라는 주장은 하지 않는다. 같은 저장소가 기존 State unlink→버퍼/노드 반납→새16,384BYTE 버퍼/목록 끝 추가→28BYTE 쓰기를 수행한다. 빌린 헤더/current/원시 State를 공유하고 이후 Sync가 원래 파일 순서로 되돌리지 않는다. tail 압축 때 Territory cursor도 새 버퍼에 연결한다. 호스트 어댑터이며 전체 DataManager/파일/힙 동등성 복원은 아니다. CD 빈 State는 별도 근거 없이 지원하지 않는다.
+- [x] 검사4개(원문2560행·실제 빈 State/목록/빌림/재조회·Territory tail 압축·필수 경계/CD 거부)를 작성·컴파일했다. 첫 빌드의 변수명 가림 경고1개를 수정한 최종 Release **종료0·경고0·오류0**, 로그 `extracted/cpp-player-state-initialization-20261021-build2.log`·원시 stdout·종료 코드 JSON을 보존했다. **C++검사/CTest/게임은 기존 실행 이월 지시대로 실행하지 않았다.** 새 정적 감사/최초2560행·기존 선택864행/소멸392행/Template v2 원문 보존은 종료0이다. 기존 과거 소스/빌드 핀은 변경하지 않았다.
+- [x] 상세 [작업 기록](docs/exe/cpp-player-state-initialization-20261021.md), `cpppj/player-state-initialization-native.json`·`player-state-initialization-session.json`, `tools/decomp_player_state_initialization.py --verify`·`tools/cpp_player_state_initialization_audit.py`다. 인수인계 후 **20261021-29 CP**로 로컬 커밋하며 push하지 않는다. 마지막 정밀 디컴파일 PC는 계속 **VM-W11-CODEX / 2026-10-21**이다.
+- [ ] **다음:** 전체 DataManager 생성/파일/저장·오류, append/remove/compact 전체 기계어 대조/일반 소비자, 기존 짧은 State 확장의 임시 노드/rename/순서, 전체 State7/전투 정리004b2df0·Fort 선택/Guide 공장/가상 소멸을 이어간다. **빈 State의 필드 초기화/현재 실제 섹션 재생성은 이번 완료 항목**이다. 전체11미션 자연 완주·전략AI·지형/포획/희생/대피·외관/음향/동작 동일성·통합 실행 검증은 미완료이며 목표는 active다.
+
 ## 2026-10-21 단위264 완료: 실제 Territory 선택과 같은 원시 섹션 버퍼
 
 - [x] 직전 단위263 커밋 `b68dd03f` 뒤 같은 `/goal`을 이어간다. 현재/마지막 정밀 디컴파일 PC는 **VM-W11-CODEX / 2026-10-21**로 같다. 양 인수인계의 최신 미완료/실행 이월 지시를 유지한다. 새 디컴파일·원본 관측·게임/창/C++검사 실행·원본/CD/AGENTS/dotnetpj 수정은 없다.

@@ -110,6 +110,7 @@ struct CampaignProductionServices {
 };
 // 게임 계산을 대신하지 않고 실제 클라이언트 UI/음향/전송의 선택 경계를 공급한다.
 struct RawCampaignSessionServices {
+    std::function<void(std::span<std::uint8_t>)> templateStateBytes; // 빈 State 초기화의 미정 바이트를 현재 실제 할당 입력으로 공급한다.
     std::shared_ptr<CampaignTemplateStorage> templateStorage; // Init의 명시 정리까지 실제 manager/State/이미지를 같은 저장소에 유지한다.
     std::shared_ptr<MissionFortLoadRequest> missionFortRequest; // Init에서 만든 같은 요청/Zone을 소비하며 설치 때 새 Zone을 만들지 않는다.
     std::shared_ptr<std::array<std::uint8_t,87>> missionOptions; // Client Init와 실제 로그인/세계/메뉴가 같은 전역87BYTE를 소유한다. 독립 검사는 자체 배열을 쓴다.

@@ -6,6 +6,18 @@
 #include <utility>
 
 namespace netstorm::o {
+// 원본 AND/OR와 개별 DWORD/WORD/BYTE 쓰기 밖의 미정 바이트는 변경하지 않는다.
+void InitializePlayerTemplateStateBytes(std::span<std::uint8_t,28> bytes) {
+    bytes[0]=static_cast<std::uint8_t>((bytes[0]&0xf9U)|1U);
+    std::fill(bytes.begin()+4,bytes.begin()+10,std::uint8_t{});
+    std::fill(bytes.begin()+12,bytes.begin()+18,std::uint8_t{});
+    std::fill(bytes.begin()+22,bytes.begin()+26,std::uint8_t{});
+}
+// CD 빈 State는 별도 근거가 필요하므로 PATCH에만 이 소비자를 설치한다.
+void RawPlayerTemplateState::BindInitialization(PlayerTemplateStateInitialization initialization) {
+    if (edition_!=OriginalEdition::Patch1078 || !initialization.bytes || !initialization.replace) throw std::invalid_argument("빈 State의 PATCH 미정 입력/실제 생성 연결 누락");
+    initialization_=std::move(initialization);
+}
 // 현재9개Template/State와선택진단·CD깊이효과를확인한다.
 RawPlayerTemplateState::RawPlayerTemplateState(OriginalEdition edition,std::span<std::uint8_t> headers,
     std::array<PlayerTemplateStateStream,9>& states,std::array<std::string,9>& fileNames,
@@ -32,8 +44,14 @@ std::span<std::uint8_t> RawPlayerTemplateState::Get(std::uint32_t slot) const {
     if (edition_==OriginalEdition::Cd1072) { ++depth_;depthChanged_(depth_);--depth_;depthChanged_(depth_); }
     if (!Header(slot,0)) assertion_(PlayerTemplateStateAssertion::MissingStateTemplate);
     if (!Header(slot,0)) throw std::logic_error("Player Stategetter실제manager0메모리경계");
-    auto& stream=states_(slot);stream.position=0; // 실제lookupState(writable1)의현재MemStream pos0쓰기다.
-    if (!stream.present || !stream.end) throw std::logic_error("Player 없는State초기화/stack미정BYTE/힙생성미복원");
+    auto* current=&states_(slot);current->position=0; // 실제lookupState(writable1)의현재MemStream pos0쓰기다.
+    if (!current->present || !current->end) {
+        if (!initialization_.bytes || !initialization_.replace) throw std::logic_error("Player 빈 State의 미정 바이트/실제 섹션 생성 미연결");
+        std::array<std::uint8_t,28> bytes;initialization_.bytes(slot,bytes);InitializePlayerTemplateStateBytes(bytes);
+        current=&initialization_.replace(slot,bytes); // 이전 stream 참조를 새 현재 State에 계속 사용하지 않는다.
+        if (!current->present || current->end!=28 || current->position!=28 || current->bytes.size()<28) throw std::logic_error("Player 실제 빈 State 생성/쓰기 계약 위반");
+    }
+    auto& stream=*current; // 생성된 경우에는 소비자가 돌려준 같은 새 현재 stream을 사용한다.
     if (std::bit_cast<std::int32_t>(stream.end)<28) {
         if (!allocate_) throw std::logic_error("Player shortState 실제MemStream할당 미연결");
         auto replacement=allocate_(slot,28); //원본44d290은새record를할당한뒤현재원문의길이/포인터를다시읽는다.

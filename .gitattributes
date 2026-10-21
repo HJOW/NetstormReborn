@@ -1550,3 +1550,8 @@ docs/exe/cpp-datamanager-selection-20261021.md text eol=lf
 cpppj/datamanager-territory-session.json text eol=lf
 tools/cpp_datamanager_territory_audit.py text eol=lf
 docs/exe/cpp-datamanager-territory-20261021.md text eol=lf
+# 빈 State의 보존 바이트·독립 원문·실제 소비자 근거를 UTF-8/LF로 고정한다.
+cpppj/tests/PlayerStateInitializationTests.cpp text eol=lf
+cpppj/player-state-initialization-*.json text eol=lf
+tools/cpp_player_state_initialization_audit.py text eol=lf
+docs/exe/cpp-player-state-initialization-20261021.md text eol=lf

@@ -12,6 +12,13 @@ struct PlayerTemplateStateStream {
     std::uint32_t position{},end{}; // lookup의pos0·existing최소28 검사를같은DWORD로보존한다.
     bool present{true}; // 원본data pointer0을길이0과구별한다.
 };
+// 원본 빈 State의 미정 스택 입력과 실제 섹션 재생성/28BYTE 쓰기를 분리한다.
+struct PlayerTemplateStateInitialization {
+    std::function<void(std::uint32_t,std::span<std::uint8_t,28>)> bytes; // 원본이 보존하는 미정 바이트를 현재 외부 입력으로 공급한다.
+    std::function<PlayerTemplateStateStream&(std::uint32_t,std::span<const std::uint8_t,28>)> replace; // 기존 State를 반납하고 새 현재 섹션에 같은28BYTE를 쓴다.
+};
+// 004bd550이 실제로 쓰는 필드만 초기화한다. 입력의 다른 바이트와 flags 상위5비트는 보존한다.
+void InitializePlayerTemplateStateBytes(std::span<std::uint8_t,28> bytes);
 // 원본 getter/Notify가보고후계속하는 진단종류다.
 enum class PlayerTemplateStateAssertion {
     MissingStateTemplate, // Get의Template첫DWORD가0이다.
@@ -34,10 +41,11 @@ public:
         std::function<PlayerTemplateStateStream&(std::uint32_t)> state,std::function<const std::string&(std::uint32_t)> name,
         std::uint32_t& loadingDepth,const bool& inMission,std::function<void(PlayerTemplateStateAssertion)> assertion,
         std::function<void(std::uint32_t)> depthChanged,std::function<std::span<std::uint8_t>(std::uint32_t,std::uint32_t)> allocate={},std::function<void(std::uint32_t)> allocationComplete={});
-    // PATCH4bd550/CD427920의기존nonemptyState다. 처음pos0, 짧은원문은44d290처럼확장뒤pos/end28, 그외동일데이터를반환한다.
+    // PATCH4bd550/CD427920: 처음pos0, 짧은원문은확장뒤pos/end28이다. PATCH 빈State는 연결된 생성 소비자를 사용한다.
     std::span<std::uint8_t> Get(std::uint32_t slot) const;
+    void BindInitialization(PlayerTemplateStateInitialization initialization); // PATCH 빈 State를 실제 미정 입력/섹션 생성 소비자에 연결한다.
     // PATCH4bd540/4bd360·CD427910/4275d0의Notify다. 실제isMine1 또는preventSave에서자연반환한다.
-    // 없는State초기화/실제파일저장은명시거부하며짧은기존State는실제할당이연결됐을때만28BYTE로확장한다.
+    // 실제파일저장은명시거부하며짧은기존State는실제할당이연결됐을때만28BYTE로확장한다.
     void Changed(std::uint32_t slot) const;
 private:
     // 현재Template한기록의DWORD를원본little endian폭으로조회한다.
@@ -48,6 +56,7 @@ private:
     std::function<const std::string&(std::uint32_t)> names_; // 같은 현재 DataManager의 실제 파일 이름을 조회한다.
     std::uint32_t& depth_; // 같은Template/Object/Priest/Meta로딩깊이다.
     const bool& mission_; // 실제미션ctor가설정한594fa0/CD52e16c를공유한다.
+    PlayerTemplateStateInitialization initialization_; // 실제로 빈 State가 선택됐을 때만 사용하는 필수 생성 경계다.
     std::function<void(PlayerTemplateStateAssertion)> assertion_; // 원본보고후현재조건을재조회한다.
     std::function<std::span<std::uint8_t>(std::uint32_t,std::uint32_t)> allocate_; //shortState의실제새MemStream할당이다. 기존원문은본문이복사/0채움한다.
     std::function<void(std::uint32_t)> depthChanged_; // CD즉시증감값을실제소비자에전달한다.

@@ -22,6 +22,8 @@ public:
     o::FortTemplate& Template(std::uint32_t slot); // 현재 헤더의 manager를 매번 읽는다.
     o::PlayerTemplateStateStream& State(std::uint32_t slot); // 같은 manager의 현재 State bytes/pos/end다.
     o::PlayerTemplateStateStream& SelectState(std::uint32_t slot); // 원본 검색/쓰기허용 선택으로 같은 manager.current/State.pos를 변경한다.
+    o::PlayerTemplateStateStream& InitializeState(std::uint32_t slot,std::span<const std::uint8_t,28> bytes); // 기존 State 반납 뒤 새 섹션을 목록 끝에 만들고 원본16384BYTE 버퍼에28BYTE를 쓴다.
+    std::vector<std::string> SectionOrder(std::uint32_t slot); // 실제 head/next를 따라 현재 섹션 순서를 조회한다.
     std::string_view CurrentSection(std::uint32_t slot); // 같은 manager가 마지막으로 선택한 실제 섹션 이름을 읽는다.
     o::FortTerritoryStream& Territory(std::uint32_t slot); // 같은 manager의 실제 Territory cursor다.
     o::FortTerritoryStream& SelectTerritory(std::uint32_t slot); // 원본 읽기 선택으로 같은 manager.current와 지형 커서를 초기화한다.
