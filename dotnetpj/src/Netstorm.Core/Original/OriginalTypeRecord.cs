@@ -45,4 +45,25 @@ public sealed class OriginalTypeRecord
 
     /// <summary>발자국 세로 칸 수(1~256). 기본 1. 추가: W02 Unpop 조각(2026-10-16).</summary>
     public int FootY { get; set; } = 1;
+
+    /// <summary>타입 그룹 번호(원본 타입 구조체 +0x9c). 기본값은 "그룹 없음"(10)이고, 삭제 수명주기의 잃어버린 소리 판정이 이 값을 본다. 추가: W03 삭제·수명 셋째 조각(2026-10-21).</summary>
+    public int Group { get; set; } = 10;
+
+    /// <summary>현재 값의 복사본을 만든다. 삭제 수명주기가 타입 입력을 고정할 때 쓴다(추가: W03 삭제·수명 셋째 조각, 2026-10-21).</summary>
+    public OriginalTypeRecord Clone()
+    {
+        // 원본 SquidDestroyLifecycle 가 타입 표를 값으로 복사해 장부 처리 중의 입력을 고정하는 것과 같다
+        return new OriginalTypeRecord
+        {
+            Flags1 = Flags1,
+            Flags2 = Flags2,
+            MaxHitPoints = MaxHitPoints,
+            Cost = Cost,
+            ZOrder = ZOrder,
+            ConstructorAddress = ConstructorAddress,
+            FootX = FootX,
+            FootY = FootY,
+            Group = Group,
+        };
+    }
 }
