@@ -108,6 +108,7 @@
 #include "o/RawAiCarrierActions.h"
 #include "o/RawAiBuildSearch.h"
 #include "o/RawAiBuildChoice.h"
+#include "o/RawAiPriestActions.h"
 #include "o/RawAiPreparation.h"
 #include "o/RawPriestLookup.h"
 #include "o/RawRunePostPop.h"
@@ -302,6 +303,7 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawAiCarrierActions> aiCarrierActions; //같은목록/내용물/현재경로의전체수집·포획행동이다.
     std::unique_ptr<RawAiBuildSearch> aiBuildSearch; //같은574상태/spot/실제배치검사와벽시각의행별탐색이다.
     std::unique_ptr<RawAiBuildChoice> aiBuildChoice; //같은지갑/선호워크샾/적사제·SP의다음건설TYPE판단이다.
+    std::unique_ptr<RawAiPriestActions> aiPriestActions; //같은사제/건설선택·탐색/의식/회수요청의전체사제행동이다.
     std::uint32_t aiGeyserLog{29}; //0052f3e4의끊긴간헐천로그초기종류다.
     std::uint32_t aiMoveLog{99}; //0052f3d8의원본Debug Move초기로그종류다.
     std::uint32_t aiDrySpotLog{99}; //0052f3dc의원본Debug Dry Spot 초기로그종류다.
@@ -1856,6 +1858,10 @@ struct RawCampaignSession::Impl {
         carriers.remember=[this](auto token,Sid actor) { aiResourceChoice->RememberCaptureCarrier(token,actor); };carriers.collect=[this](auto token,Sid actor) { aiResourceChoice->CollectOrHome(token,actor); };carriers.targets=[this](Sid actor) { return AiCarrierTargets(actor); };carriers.reclassify=[this](auto token) { aiResourceChoice->ReclassifyDisconnected(token); };carriers.stop=[this](Sid actor) { aiMovement->Stop(actor); };carriers.assertion=[this](std::string_view text,std::uint32_t line) { if (!services.ai.assertion) throw std::logic_error("AI 운반 행동 원본 진단 미연결 "+std::to_string(line));services.ai.assertion(text); };
         aiCarrierActions=std::make_unique<RawAiCarrierActions>(aiMemory,core.pool,core.types,AiCarrierActionGlobals{core.processState.now,assetState.boss,gunState.checking,[this] { return static_cast<std::uint32_t>(core.bookkeeping.invalidGraph); }},std::move(carriers));
         AiBuildSearchHooks search;search.wall=services.construction.wallSeconds;search.mayPlace=[this](const CanonPlacementQuery& query) { PrepareConstruction();return MayPlaceGameplay(query); };aiBuildSearch=std::make_unique<RawAiBuildSearch>(aiMemory,core.types,core.spots,kAiSearchTypeBase,std::move(search));
+        AiPriestActionHooks priest;priest.scan=[this](auto token,auto budgeted) { aiBuildSearch->Scan(token,budgeted); };priest.vulnerable=[this](Sid actor) { return aiCollectors->Vulnerable(actor); };priest.busy=[this](Sid actor) { return core.processes.FindEvent(actor,0x493)!=nullptr; };priest.path=[this](Sid actor) { return aiMovement->MovementForm(actor); };priest.maxHitPoints=[this](Sid actor) { return hp.MaxHitPoints(actor); };priest.ritual=[this](Sid actor) { return AiPriestInRitual(core.pool,core.frames,actor); };
+        priest.altarEnemy=[this](auto enemy,Sid dais) { return AiAltarContainsEnemy(core.pool,dais,enemy,runeState.altarType,[this](float x,float y,auto type) { return world.Find(x,y,type); }); };priest.target=[this](auto token,Sid actor,Sid target,auto sacrifice) { aiMovement->ToTarget(token,actor,target,sacrifice); };priest.distance=[this](RawPathPoint point,Sid dais) { return AiDistanceToFootprint(point,core.neighbors.Footprint(dais)); };priest.select=[this](auto token) { return aiBuildChoice->Select(token); };priest.home=[this](auto token,Sid actor) { aiMovement->Home(token,actor); };priest.collect=[this](auto token,Sid actor) { aiResourceChoice->CollectOrHome(token,actor); };
+        priest.deploy=[this](auto token,auto type,RawPathPoint point) { aiCollectors->DeployWithNotice(token,type,point.x,point.y,0,0); };priest.begin=[this](auto token,const AiPriestSearchRequest& request) { aiBuildSearch->Initialize(token,request.type,request.bounds,request.avoid,request.owner); };priest.point=[this](auto token,Sid actor,RawPathPoint point) { aiMovement->ToPoint(token,actor,point,0); };priest.enemyLowFunds=[this](auto token) { return aiBuildChoice->EnemyLowFunds(token); };priest.salvage=[this](Sid target) { salvageCommand->Request(target.value); };
+        aiPriestActions=std::make_unique<RawAiPriestActions>(aiMemory,core.pool,AiPriestActionGlobals{core.processState.now,cursorManaGlobals.mapLimit,runeState.daisType},std::move(priest));
     }
     // 사용자이동/대상접근/AI가같은489080종류별실제BFS/Host시작을공유한다.
     CarrierPathResult StartMotion(RawPathStartRequest request) {
@@ -2569,6 +2575,8 @@ bool RawCampaignSession::AdvanceAiBuildSearch(std::uint32_t owner,std::uint32_t 
 std::uint32_t RawCampaignSession::SelectAiBuildType(std::uint32_t owner) const { if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("설치 후 owner1..8 AI 건설 선택만 허용");const auto token=impl_->participation->Brain(owner);return token ? impl_->aiBuildChoice->Select(token) : 0U; }
 // 원본411ad0의로컬분산SP/원격실제AI지갑1000미만조건을현재본체로조회한다.
 bool RawCampaignSession::AiEnemyLowFunds(std::uint32_t owner) const { if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("설치 후 owner1..8 AI 적 자금 조회만 허용");const auto token=impl_->participation->Brain(owner);return token && impl_->aiBuildChoice->EnemyLowFunds(token); }
+// 같은현재본체/명시사제로원본전체사제행동을실행한다.사제0이어도탐색prefix는원문대로실행한다.
+bool RawCampaignSession::ManageAiPriest(std::uint32_t owner,Sid priest) { if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("설치 후 owner1..8 AI 사제 행동만 허용");const auto token=impl_->participation->Brain(owner);if (!token) return false;impl_->aiPriestActions->Act(token,priest);return true; }
 // 현재가상표의실제원본이름을반환한다.
 std::string RawCampaignSession::ObjectName(Sid parent) const { if (!impl_->loaded) throw std::logic_error("설치 전 객체 이름 조회");return impl_->objectNames->Name(parent); }
 // 명시 해제의 오류는 caller에 전파하고 destructor의 마지막 정리와 구분한다.

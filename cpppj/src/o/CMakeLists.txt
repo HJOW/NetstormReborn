@@ -405,3 +405,5 @@ target_sources(netstorm PRIVATE RawAiCarrierActions.cpp RawAiCarrierActions.h)
 target_sources(netstorm PRIVATE RawAiBuildSearch.cpp RawAiBuildSearch.h)
 # 사제AI의다음건설TYPE/수집자비용여유/실제적지갑조건을연결한다.
 target_sources(netstorm PRIVATE RawAiBuildChoice.cpp RawAiBuildChoice.h)
+# 실제사제의의식/건설/탐색/회수/수집·귀환전체행동을연결한다.
+target_sources(netstorm PRIVATE RawAiPriestActions.cpp RawAiPriestActions.h)

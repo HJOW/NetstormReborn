@@ -257,6 +257,7 @@ public:
     bool AdvanceAiBuildSearch(std::uint32_t owner,std::uint32_t budgeted); //0040f700의같은574상태/벽시각/실제배치검사를진행한다.0은전체행,비영은행시작예산이다.
     std::uint32_t SelectAiBuildType(std::uint32_t owner) const; //00411b40의실제다음건설TYPE다.본체없음/선택없음은0이다.
     bool AiEnemyLowFunds(std::uint32_t owner) const; //00411ad0의현재적자금1000미만조건이다.본체없음은false다.
+    bool ManageAiPriest(std::uint32_t owner,o::Sid priest); //00411cd0전체사제행동을같은실제하위로호출한다.true는본체존재/호출이며건설성공이아니다.
     std::string ObjectName(o::Sid parent) const; //실제가상68의현재번역/치환·Factory레벨접미사다.
     // 같은 현재 Player의 실제 목록 소멸→본체 반납→포인터0을 수행한다. flags20은 원본대로 보존한다.
     void RemoveAi(std::uint32_t owner);
