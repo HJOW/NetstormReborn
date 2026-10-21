@@ -99,3 +99,7 @@ TEST_CASE(AiDropEvaluation_EnergyFailureUsesActualDryBackingAndCurrentLog) {
 TEST_CASE(AiDropEvaluation_SelectedMissingHooksPreservePrefix) {
     EvaluationScene scene;scene.hooks.energy={};RawPathPoint best{7,8};std::int32_t score{};Sid target{9};CHECK(Throws([&] { scene.Actions().Consider(scene.token,90,{20.25F,30.75F},2,best,score,target); }) && target==Sid{5} && best.x==7 && score==0);scene.energy=0;scene.hooks.energy=[&](std::string&,float,float,auto,auto) { return 0U; };scene.hooks.dry={};CHECK(Throws([&] { scene.Actions().Consider(scene.token,90,{20.25F,30.75F},2,best,score,target); }) && !scene.Field(0xb00));
 }
+// 스캔의실제3e8은평가뒤읽고승인뒤그자리에서쓰며임시사본을되돌리지않는다.
+TEST_CASE(AiDropEvaluation_StoredScoreReadsCurrentBodyAtNativeSites) {
+    EvaluationScene scene;scene.Field(0x3e8,0);scene.duringRate=[&] { scene.Field(0x3e8,100); };RawPathPoint best{7,8};Sid target{9};CHECK(!scene.Actions().ConsiderStored(scene.token,90,{20.25F,30.75F},2,best,target) && scene.Field(0x3e8)==100 && target==Sid{5} && best.x==7);scene.duringRate=[&] { scene.Field(0x3e8,5); };scene.duringEnergy=[&] { CHECK(scene.Field(0x3e8)==5); };CHECK(scene.Actions().ConsiderStored(scene.token,90,{20.25F,30.75F},2,best,target) && scene.Field(0x3e8)==10 && best.x==20.25F && best.y==30.75F);
+}

@@ -411,3 +411,5 @@ target_sources(netstorm PRIVATE RawAiPriestActions.cpp RawAiPriestActions.h)
 target_sources(netstorm PRIVATE RawAiDropTargets.cpp RawAiDropTargets.h)
 # AI 별도지상검색/Depend필터와실제에너지·배치후보평가를연결한다.
 target_sources(netstorm PRIVATE RawGunGroundTarget.cpp RawGunGroundTarget.h RawAiDropEvaluation.cpp RawAiDropEvaluation.h)
+# 실제다리주변후보/원본예산스캔과같은본체30후보목록을연결한다.
+target_sources(netstorm PRIVATE RawAiDropScan.cpp RawAiDropScan.h)

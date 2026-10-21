@@ -26,10 +26,13 @@ public:
     std::int32_t SupplyScore(std::uint32_t token,RawPathPoint point) const; //004126c0:거리>1000-2반경→현재공급C문자열길이→저장float절삭/(길이+1)이다.
     std::int32_t Evaluate(std::uint32_t token,std::uint32_t type,RawPathPoint point,std::int32_t direction,Sid& target) const; //00412ab0의flags800/4000000/group3/0·1/6/진단순서를보존한다.
     bool Consider(std::uint32_t token,std::uint32_t type,RawPathPoint point,std::int32_t direction,RawPathPoint& bestPoint,std::int32_t& bestScore,Sid& target) const; //00412b90:배치→평가→양수동률허용→실제에너지→Y/X/점수기록또는부족좌표추가다.
+    bool ConsiderStored(std::uint32_t token,std::uint32_t type,RawPathPoint point,std::int32_t direction,RawPathPoint& bestPoint,Sid& target) const; //실제유일한412e10호출의점수포인터(this+3e8)를매조회/쓰기위치에서직접사용한다.
     const SidPool& Pool() const; //같은실제월드연결확인용이다.
 private:
     std::span<std::uint8_t> Body(std::uint32_t token) const; //현재살아있는실제0xb08본체만허용한다.
     std::uint32_t Field(std::uint32_t token,std::size_t at) const; //하위효과뒤현재DWORD를읽는다.
+    void Field(std::uint32_t token,std::size_t at,std::uint32_t value) const; //지정DWORD만쓰고현재본체의나머지를보존한다.
+    bool ConsiderScore(std::uint32_t token,std::uint32_t type,RawPathPoint point,std::int32_t direction,RawPathPoint& bestPoint,Sid& target,const std::function<std::int32_t()>& read,const std::function<void(std::int32_t)>& write) const; //외부참조/실제3e8의같은원본승인몸체다.평가뒤읽기/승인뒤쓰기시점을공유한다.
     const RiftTypeRecord& Type(std::uint32_t type) const; //현재전체TYPE범위를검사한다.
     RawAiBrainMemory& memory_; //같은본체/부족좌표backing저장소다.
     const SidPool& pool_; //같은실제월드정체성이다.
