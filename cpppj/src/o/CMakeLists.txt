@@ -417,3 +417,5 @@ target_sources(netstorm PRIVATE RawAiDropScan.cpp RawAiDropScan.h)
 target_sources(netstorm PRIVATE RawAiDropSelection.cpp RawAiDropSelection.h)
 # 가짜 부족좌표의 원본 수직 양방향 탐색/현재 지도/실제 디버그 표식을 연결한다.
 target_sources(netstorm PRIVATE RawAiDryGeometry.cpp RawAiDryGeometry.h)
+# 현재 공급시설/부족거리/같은 양방향 탐색으로 전체 가짜 부족좌표를 연결한다.
+target_sources(netstorm PRIVATE RawAiFakeDrySpots.cpp RawAiFakeDrySpots.h)

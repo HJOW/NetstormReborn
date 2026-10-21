@@ -246,7 +246,8 @@ public:
     bool RecordAiDrySpot(std::uint32_t owner,float x,float y,std::uint32_t type); //0040f1c0의같은실제본체/좌표목록등록이다.본체없음/중복/full은false다.
     std::uint32_t RecheckAiDrySpots(std::uint32_t owner); //0040f2b0/417c70의한좌표에너지재검사/제거·현재로그다.반환은제거TYPE 또는0이다.
     bool SeedAiDrySpot(std::uint32_t owner); //004133e0을 같은 실제 본체/공용 난수·Dry Spot 목록으로 호출한다. true는 본체 존재/호출이며 등록 성공을 뜻하지 않는다.
-    o::RawPathPoint ComputeAiDryCandidate(o::RawPathPoint source,o::RawPathPoint target); //00415bb0의 실제 현재 경계/지도·디버그 표식 탐색이다.전체415fe0과 자동프레임은 후속이다.
+    o::RawPathPoint ComputeAiDryCandidate(o::RawPathPoint source,o::RawPathPoint target); //00415bb0의 실제 현재 경계/지도·디버그 표식 탐색이다.전체415fe0도 같은 하위를 공유하며 자동프레임은 후속이다.
+    bool ExtendAiFakeDrySpots(std::uint32_t owner); //00415fe0 전체 가짜좌표 갱신이다.true는 본체 존재/호출이며 실제 추가 성공을 뜻하지 않는다.
     o::Sid AiMovementForm(o::Sid actor) const; //00411630의현재실제경로Form조회다.
     void StopAiMovement(o::Sid actor); //00411680의같은종속/Host경로삭제다.0은무동작이다.
     bool MoveAiToObject(std::uint32_t owner,o::Sid actor,o::Sid target,std::uint32_t sacrifice=0); //004116d0명령을현재본체로실행한다.true는경로도착이아닌본체존재/호출을뜻한다.

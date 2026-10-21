@@ -115,6 +115,7 @@
 #include "o/RawAiDropScan.h"
 #include "o/RawAiDropSelection.h"
 #include "o/RawAiDryGeometry.h"
+#include "o/RawAiFakeDrySpots.h"
 #include "o/RawAiPreparation.h"
 #include "o/RawPriestLookup.h"
 #include "o/RawRunePostPop.h"
@@ -316,6 +317,7 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawAiDropScan> aiDropScan; //같은실제다리/지도/난수·3e8과30후보목록의원본예산스캔다.
     std::unique_ptr<RawAiDropSelection> aiDropSelection; //같은실제기술내용물/직전후보·회전·기한의다음배치TYPE선택이다.
     std::unique_ptr<RawAiDryGeometry> aiDryGeometry; //같은 실제 현재 표면 지도/경계와 가짜좌표의 수직 양방향 탐색·표식 수명이다.
+    std::unique_ptr<RawAiFakeDrySpots> aiFakeDrySpots; //같은 현재 공급시설/부족거리·중심/실제 양방향 탐색과 전체 가짜좌표 갱신이다.
     std::uint32_t aiDryMarkerType{104}; //005411f8의 현재 디버그 표식 TYPE 초기값이다.
     std::uint32_t aiDropLog{29}; //0052f3d4의현재배치선택/스캔로그종류다.보호PE의초기값은29다.
     AiBuildSearchBounds aiDropScanBounds{10,10,246,246}; //CRT004fc530이00544d14..20에만드는현재원본경계다.BSS의0값이아니다.
@@ -1891,6 +1893,8 @@ struct RawCampaignSession::Impl {
         aiDropSelection=std::make_unique<RawAiDropSelection>(aiMemory,core.pool,core.types,std::span<const std::uint32_t>(constructionState.confirm.patternTypes).subspan(4),random,core.processState.now,std::move(selection));
         AiDryGeometryHooks geometry;geometry.surface=[this](auto x,auto y) { return core.hash.Cell(0,x,y); };geometry.create=[this](auto type,auto flags) { return world.Create(type,flags); };geometry.word=[this](Sid sid,auto word) { auto raw=core.pool.AllocatedBytes(sid);raw[12]=static_cast<std::uint8_t>(word);raw[13]=static_cast<std::uint8_t>(word>>8);if (raw[10]==core.bridgeState.bridgeType) core.building.NotifySurface(sid); };
         geometry.pop=[this](Sid sid,RawPathPoint point,auto flags) { world.Pop(sid,point.x,point.y,flags); };geometry.destroy=[this](Sid sid,auto flags) { world.Destroy(sid,flags); };aiDryGeometry=std::make_unique<RawAiDryGeometry>(core.pool,AiDryGeometryGlobals{aiDropScanBounds,aiDrySpotLog,aiDryMarkerType},std::move(geometry));
+        AiFakeDryHooks fake;fake.score=[this](auto token,RawPathPoint point,auto& index) { return aiDropEvaluation->DryDistance(token,point,index); };fake.center=[this](Sid sid) { const auto center=core.neighbors.Center(sid);return RawPathPoint{center[0],center[1]}; };fake.candidate=[this](RawPathPoint source,RawPathPoint target) { return aiDryGeometry->Candidate(source,target); };fake.add=[this](auto token,RawPathPoint point,auto type) { return aiDrySpots->Add(token,point.x,point.y,type); };fake.remove=[this](auto token,auto index) { aiDrySpots->Remove(token,index); };fake.seed=[this](auto token) { aiDrySpots->Seed(token,random); };fake.mark=[this](RawPathPoint point) { aiDryGeometry->Mark(point); };
+        fake.log=[this](auto token,AiFakeDryLog action,auto x,auto y) { if (!services.player.log) throw std::logic_error("AI 가짜 부족좌표 실제 로그 미연결");services.player.log(aiDrySpotLog,"AI"+std::to_string(std::bit_cast<std::int32_t>(Read(aiMemory.Bytes(token),0x260)))+": "+(action==AiFakeDryLog::Added ? "Added fake dry spot at (" : "Fake Discarded at (")+std::to_string(x)+","+std::to_string(y)+")\n\n"); };aiFakeDrySpots=std::make_unique<RawAiFakeDrySpots>(aiMemory,core.pool,AiFakeDryGlobals{cursorManaGlobals.radiusLimit,cursorManaGlobals.mapLimit,aiDrySpotLog},std::move(fake));
         AiPriestActionHooks priest;priest.scan=[this](auto token,auto budgeted) { aiBuildSearch->Scan(token,budgeted); };priest.vulnerable=[this](Sid actor) { return aiCollectors->Vulnerable(actor); };priest.busy=[this](Sid actor) { return core.processes.FindEvent(actor,0x493)!=nullptr; };priest.path=[this](Sid actor) { return aiMovement->MovementForm(actor); };priest.maxHitPoints=[this](Sid actor) { return hp.MaxHitPoints(actor); };priest.ritual=[this](Sid actor) { return AiPriestInRitual(core.pool,core.frames,actor); };
         priest.altarEnemy=[this](auto enemy,Sid dais) { return AiAltarContainsEnemy(core.pool,dais,enemy,runeState.altarType,[this](float x,float y,auto type) { return world.Find(x,y,type); }); };priest.target=[this](auto token,Sid actor,Sid target,auto sacrifice) { aiMovement->ToTarget(token,actor,target,sacrifice); };priest.distance=[this](RawPathPoint point,Sid dais) { return AiDistanceToFootprint(point,core.neighbors.Footprint(dais)); };priest.select=[this](auto token) { return aiBuildChoice->Select(token); };priest.home=[this](auto token,Sid actor) { aiMovement->Home(token,actor); };priest.collect=[this](auto token,Sid actor) { aiResourceChoice->CollectOrHome(token,actor); };
         priest.deploy=[this](auto token,auto type,RawPathPoint point) { aiCollectors->DeployWithNotice(token,type,point.x,point.y,0,0); };priest.begin=[this](auto token,const AiPriestSearchRequest& request) { aiBuildSearch->Initialize(token,request.type,request.bounds,request.avoid,request.owner); };priest.point=[this](auto token,Sid actor,RawPathPoint point) { aiMovement->ToPoint(token,actor,point,0); };priest.enemyLowFunds=[this](auto token) { return aiBuildChoice->EnemyLowFunds(token); };priest.salvage=[this](Sid target) { salvageCommand->Request(target.value); };
@@ -2588,6 +2592,8 @@ std::uint32_t RawCampaignSession::RecheckAiDrySpots(std::uint32_t owner) { if (!
 bool RawCampaignSession::SeedAiDrySpot(std::uint32_t owner) { if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("실제 Session 설치 후 owner1..8 AI 가짜 부족좌표 선택만 허용");const auto token=impl_->participation->Brain(owner);if (!token) return false;impl_->aiDrySpots->Seed(token,impl_->random);return true; }
 // 원본의 실제 현재 표면 지도/경계로 수직 양방향 후보를 계산한다.
 RawPathPoint RawCampaignSession::ComputeAiDryCandidate(RawPathPoint source,RawPathPoint target) { if (!impl_->loaded) throw std::logic_error("실제 Session 설치 후 AI 가짜좌표 경로 계산만 허용");return impl_->aiDryGeometry->Candidate(source,target); }
+// 원래 전체 가짜좌표 루틴을 같은 실제 본체와 연결한다.등록 결과와 호출 여부를 구분한다.
+bool RawCampaignSession::ExtendAiFakeDrySpots(std::uint32_t owner) { if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("실제 Session 설치 후 owner1..8 AI 가짜 부족좌표 갱신만 허용");const auto token=impl_->participation->Brain(owner);if (!token) return false;impl_->aiFakeDrySpots->Extend(token);return true; }
 // 실제종속Form을같은TYPE선택/조회몸체로읽는다.
 Sid RawCampaignSession::AiMovementForm(Sid actor) const { if (!impl_->loaded) throw std::logic_error("설치 전 AI 경로 조회");return impl_->aiMovement->MovementForm(actor); }
 // 실제가상삭제와Kernel/양쪽종속정리를사용한다.
