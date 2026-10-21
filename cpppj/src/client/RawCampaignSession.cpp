@@ -103,6 +103,7 @@
 #include "o/RawAiCollectors.h"
 #include "o/RawAiFactoryProduction.h"
 #include "o/RawAiDrySpots.h"
+#include "o/RawAiMovement.h"
 #include "o/RawAiPreparation.h"
 #include "o/RawPriestLookup.h"
 #include "o/RawRunePostPop.h"
@@ -290,6 +291,9 @@ struct RawCampaignSession::Impl {
     std::uint32_t aiLayLog{99}; //0052f3d0의 원본 Debug Lay Piece 초기 로그 종류다.29는 디버그 표시 선택값이다.
     std::unique_ptr<RawAiFactoryProduction> aiFactoryProduction; //같은 기술/생산 내용물과 시설 미처리/업그레이드 큐를 처리한다.
     std::unique_ptr<RawAiDrySpots> aiDrySpots; //같은본체의에너지부족좌표와실제Mana판정을연결한다.
+    std::unique_ptr<RawSquidName> objectNames; //같은현재가상68의실제설명/Factory레벨이름이다.
+    std::unique_ptr<RawAiMovement> aiMovement; //사제/수집자행동의공통실제경로조회·정지·이동·복귀다.
+    std::uint32_t aiMoveLog{99}; //0052f3d8의원본Debug Move초기로그종류다.
     std::uint32_t aiDrySpotLog{99}; //0052f3dc의원본Debug Dry Spot 초기로그종류다.
     std::uint32_t aiFactoryLog{99}; //0052f3e0의 원본 Debug Factory 초기 로그 종류다.
     std::array<std::uint32_t,4> aiWorkshops{86,87,88,85}; // PATCH004709d0의 theme0/1/2/3이 읽는005411b0/b4/b8/ac의 실제 기본 타입이다.
@@ -1818,6 +1822,22 @@ struct RawCampaignSession::Impl {
         AiDrySpotHooks dry;dry.energy=[this](std::string& text,float x,float y,auto type,auto owner) { return energySupply->Evaluate(text,x,y,type,owner); };dry.log=[this](auto token,bool fake) { if (!services.player.log) throw std::logic_error("AI DrySpot 실제 로그 미연결");services.player.log(aiDrySpotLog,"AI"+std::to_string(std::bit_cast<std::int32_t>(Read(aiMemory.Bytes(token),0x260)))+": "+(fake ? "Killed Fake Dry Spot\n" : "Killed Dry Spot\n")+"\n"); };
         aiDrySpots=std::make_unique<RawAiDrySpots>(aiMemory,core.pool,std::move(dry));
     }
+    // 실제Motion기하설치뒤이름/경로/의식/공유요청헤더를현재AI에연결한다.
+    void ConnectAiMovement() {
+        auto names=services.ai.names;names.level=[this](Sid parent) { return level->Get(parent); };objectNames=std::make_unique<RawSquidName>(core.pool,core.types,std::move(names));
+        AiMovementHooks hooks;hooks.movement=[this](auto type) { return priests->MovementProcessType(type); };hooks.lookup=[this](Sid parent,auto type,auto index,bool remove) { RawContainedLookup lookup(core.pool,[this](Sid object,auto flags) { world.Destroy(object,flags); });return lookup.Find(parent,type,index,remove); };hooks.footprint=[this](Sid target) { return core.neighbors.Footprint(target); };hooks.send=[this](auto target,std::span<const std::uint8_t> packet) { if (!services.carrierRequest) throw std::logic_error("AI 실제 이동 요청 송신 미연결");services.carrierRequest(target,packet); };
+        hooks.sacrifice=[this](Sid actor,Sid target) { sacrificeRequest->Begin(actor,target); };hooks.target=[this](Sid actor,Sid target,auto replace,auto helper) { return carrierTarget->StartTarget(actor,target,replace,helper); };hooks.start=[this](RawPathStartRequest request) { return StartMotion(request); };hooks.name=[this](Sid parent) { return objectNames->Name(parent); };hooks.distance=[this](RawPathPoint point,Sid target) { return AiDistanceToFootprint(point,core.neighbors.Footprint(target)); };
+        hooks.logTarget=[this](auto token,std::string_view source,std::string_view target) { if (!services.player.log) throw std::logic_error("AI 대상 이동 로그 미연결");services.player.log(aiMoveLog,"AI"+std::to_string(std::bit_cast<std::int32_t>(Read(aiMemory.Bytes(token),0x260)))+": Move "+std::string(source)+" to "+std::string(target)+"\n"); };hooks.logPoint=[this](auto token,std::string_view name,auto x,auto y) { if (!services.player.log) throw std::logic_error("AI 좌표 이동 로그 미연결");services.player.log(aiMoveLog,"AI"+std::to_string(std::bit_cast<std::int32_t>(Read(aiMemory.Bytes(token),0x260)))+": Move "+std::string(name)+" to ("+std::to_string(x)+","+std::to_string(y)+")\n"); };
+        aiMovement=std::make_unique<RawAiMovement>(aiMemory,core.pool,assetState.boss,*boardTarget,carrierMoveState,std::move(hooks));
+    }
+    // 사용자이동/대상접근/AI가같은489080종류별실제BFS/Host시작을공유한다.
+    CarrierPathResult StartMotion(RawPathStartRequest request) {
+        if (!motion) throw std::logic_error("현재 이동 설치 전 경로 시작");const auto kind=core.pool.Slot(request.parent)[10];RawPathProcess* path{};
+        if (kind==priestState.movement.priest) path=motion->Paths().StartPriest(request);
+        else if (kind==133 || kind==111 || kind==141) path=motion->Paths().StartCarrier(request);
+        else if (kind==priestState.movement.teleport || kind==priestState.movement.manaBolt) path=motion->Paths().StartConstruction(request);
+        else throw std::logic_error("다른 실제 운반 경로38/41/42 미복원 경계");return reinterpret_cast<CarrierPathResult>(path);
+    }
     // 첫 실제 객체 이전에 같은 공통 삭제/내용물/Player 통지/기술 모듈을 한 번 연결한다.
     void InstallContents(const SquidDestroyHooks& deletion) {
         gumpForms=std::make_unique<GumpFormHost>(core.pool,core.factory,core.types,core.destroy,
@@ -2221,13 +2241,7 @@ struct RawCampaignSession::Impl {
         effects.carrier.currentControlled=[this](std::uint32_t owner) { return participation->Brain(owner)!=0; };
         CarrierTargetHooks target;
         target.footprint=[this](Sid sid) { return core.neighbors.Footprint(sid); };
-        target.start=[this](RawPathStartRequest request)->CarrierPathResult {
-            if (!motion) throw std::logic_error("현재 이동 설치 전 운반 대상 시작");const auto kind=core.pool.Slot(request.parent)[10];RawPathProcess* path{}; // 실제 시작의 반환 포인터를 호스트 폭으로 보관한다.
-            if (kind==priestState.movement.priest) path=motion->Paths().StartPriest(request);
-            else if (kind==133 || kind==111 || kind==141) path=motion->Paths().StartCarrier(request);
-            else if (kind==priestState.movement.teleport || kind==priestState.movement.manaBolt) path=motion->Paths().StartConstruction(request);
-            else throw std::logic_error("다른 실제 운반 경로38/41/42 미복원 경계");return reinterpret_cast<CarrierPathResult>(path);
-        };
+        target.start=[this](RawPathStartRequest request)->CarrierPathResult { return StartMotion(request); };
         const auto startMove=target.start; //같은489080의 실제 종류별 시작을 서버 이동 수신도 사용한다.
         const auto startEscape=target.start; // 같은489080 분배/실제BFS/Host/직렬화 시작이다.
         target.chooseReturn=effects.carrier.chooseReturn;
@@ -2323,6 +2337,7 @@ struct RawCampaignSession::Impl {
         move.altarAllowed=[this](Sid dais,Sid priest) { return sacrificeRequest->Allowed(dais,priest); };move.sacrifice=[this](Sid priest,Sid dais) { sacrificeRequest->Begin(priest,dais); }; // 같은 실제 자격/내용물 제거/의식 이동/음악 순서다.
         move.start=[startMove](RawPathStartRequest request)->RawPathRuntime* { const auto result=startMove(request);return result ? &reinterpret_cast<RawPathProcess*>(result)->Runtime() : nullptr; };
         carrierMove=std::make_unique<RawCarrierMove>(core.pool,core.types,core.ownerMode.fort,carrierMoveState,std::move(move));
+        ConnectAiMovement();
         FillMissing(services.pathPacket);
         auto pathTx=motion->Paths().Transmission(pathHeader,pathBuffer,[this](std::int32_t length) {
             if (length<=0 || static_cast<std::size_t>(length)>pathBuffer.size()) throw std::logic_error("세션 Path 송신 길이 오류");
@@ -2503,6 +2518,18 @@ bool RawCampaignSession::ManageAiFactories(std::uint32_t owner) { if (!impl_->lo
 bool RawCampaignSession::RecordAiDrySpot(std::uint32_t owner,float x,float y,std::uint32_t type) { if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("실제 Session 설치 후 owner1..8 AI DrySpot 등록만 허용");const auto token=impl_->participation->Brain(owner);return token && impl_->aiDrySpots->Add(token,x,y,type); }
 // 원본의한항목검사/제거와현재로그만명시실행하며전체전략순서는자동시작하지않는다.
 std::uint32_t RawCampaignSession::RecheckAiDrySpots(std::uint32_t owner) { if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("실제 Session 설치 후 owner1..8 AI DrySpot 검사만 허용");const auto token=impl_->participation->Brain(owner);return token ? impl_->aiDrySpots->Maintain(token) : 0U; }
+// 실제종속Form을같은TYPE선택/조회몸체로읽는다.
+Sid RawCampaignSession::AiMovementForm(Sid actor) const { if (!impl_->loaded) throw std::logic_error("설치 전 AI 경로 조회");return impl_->aiMovement->MovementForm(actor); }
+// 실제가상삭제와Kernel/양쪽종속정리를사용한다.
+void RawCampaignSession::StopAiMovement(Sid actor) { if (!impl_->loaded) throw std::logic_error("설치 전 AI 경로 정지");impl_->aiMovement->Stop(actor); }
+// 현재Player의같은본체로원본대상이동명령만실행한다.
+bool RawCampaignSession::MoveAiToObject(std::uint32_t owner,Sid actor,Sid target,std::uint32_t sacrifice) { if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("설치 후 owner1..8 AI 대상 이동만 허용");const auto token=impl_->participation->Brain(owner);if (!token) return false;impl_->aiMovement->ToTarget(token,actor,target,sacrifice);return true; }
+// 도착/경로성공을합성하지않고현재본체의명령호출여부만돌려준다.
+bool RawCampaignSession::MoveAiToPoint(std::uint32_t owner,Sid actor,RawPathPoint point,std::uint32_t sacrifice) { if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("설치 후 owner1..8 AI 좌표 이동만 허용");const auto token=impl_->participation->Brain(owner);if (!token) return false;impl_->aiMovement->ToPoint(token,actor,point,sacrifice);return true; }
+// 거리판정뒤현재신전복귀를실행한다.
+bool RawCampaignSession::ReturnAiHome(std::uint32_t owner,Sid actor) { if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("설치 후 owner1..8 AI 복귀만 허용");const auto token=impl_->participation->Brain(owner);if (!token) return false;impl_->aiMovement->Home(token,actor);return true; }
+// 현재가상표의실제원본이름을반환한다.
+std::string RawCampaignSession::ObjectName(Sid parent) const { if (!impl_->loaded) throw std::logic_error("설치 전 객체 이름 조회");return impl_->objectNames->Name(parent); }
 // 명시 해제의 오류는 caller에 전파하고 destructor의 마지막 정리와 구분한다.
 void RawCampaignSession::RemoveAi(std::uint32_t owner) { impl_->participation->RemoveBrain(owner); }
 // 후속 실제 전략은 현재 Player 토큰으로 이 유일한 본체/목록 저장소를 조회해야 한다.

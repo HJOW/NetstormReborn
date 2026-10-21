@@ -45,6 +45,9 @@ CampaignMissionStartEffects MakeCampaignMissionStartEffects(Client& client,GameW
 }
 // Player SetAlliance의 실제 채널 수정과004410f0(defaultAiName)의 현재 원본 바이트를 같은 Client에 연결한다.
 void BindCampaignAiClientServices(Client& client,CampaignAiServices& ai) {
+    ai.names.language=[&client] { return static_cast<std::uint32_t>(client.LanguageNumber()); }; //원본현재언어0/1의이름번역생략관문을공유한다.
+    ai.names.translate=[&client](std::string_view source) { const auto bytes=o::EncodeOriginalText(client.Translate(source));return std::string(bytes.begin(),bytes.end()); };
+    ai.names.substitute=[&client](std::string_view source) { const auto text=client.Configuration().SubstituteLocal(o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(source.data()),source.size()}));const auto bytes=o::EncodeOriginalText(text);return std::string(bytes.begin(),bytes.end()); }; //같은현재설정치환과원본좁은문자열을사용한다.
     // 원본 Clear는 채널 BYTE만 지우고 Add는 현재 자기 subscriber의 자연 -1 반환까지 수행한다.
     ai.participation.clearChat=[&client](std::uint32_t channel) { client.ChatChannels().Clear(channel); };
     ai.participation.addChat=[&client](std::uint32_t subscriber,std::string_view name,std::uint32_t channel) {

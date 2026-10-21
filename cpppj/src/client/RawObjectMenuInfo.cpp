@@ -1,5 +1,6 @@
 // 제목/정보의실제번역·현재값읽기·서식·메뉴효과순서를보존한다.
 #include "client/RawObjectMenuInfo.h"
+#include "o/RawSquidName.h"
 #include <bit>
 #include <cmath>
 #include <stdexcept>
@@ -49,8 +50,7 @@ std::int32_t RawObjectMenuInfo::Truncate(float value) {
 }
 // slash문자열을한번분리하는원본의반환문자열과끝sentinel을값으로표현한다.
 std::string RawObjectMenuInfo::LevelName(std::uint32_t number) {
-    constexpr std::array<std::string_view,10> names{"I","II","III","IV","V","VI","VII","VIII","IX","X"}; // PE542420의실제원문순서다.
-    return number<names.size() ? std::string(names[number]) : std::string(1,static_cast<char>(0xff));
+    return o::SquidLevelName(number);
 }
 // 원본542444의8포인터순서를보존한다. Describe는첫5개또는None만사용한다.
 std::string_view RawObjectMenuInfo::ThemeName(std::int32_t number) {

@@ -9,6 +9,8 @@ namespace netstorm::o {
 struct CarrierMoveState {
     FormPacketHeader request{0x40,1,18}; //40a850이 매번 읽는 원본 초기 헤더다.
 };
+//0040a850의현재헤더와18바이트원문을작성한다.선택/동일목적지관문은호출자가수행한다.
+std::size_t WriteCarrierMoveCommand(const CarrierMoveState& state,Sid parent,RawPathPoint destination,std::uint32_t sacrifice,std::span<std::uint8_t> packet);
 // 현재 선택/경로/후보는 같은 실제 모듈을 빌리고 요청에서 서버를 직접 실행하지 않는다.
 struct CarrierMoveHooks {
     std::function<Sid()> selected; //4d5430의 현재 선택 번호다.

@@ -106,3 +106,7 @@ TEST_CASE(CarrierMove_LazyBoundariesAndPhysicalLength) {
     bool rejected{};try { move.Receive(1,std::span(scene.received).first(17)); }catch (const std::invalid_argument&) { rejected=true; }CHECK(rejected);
     rejected=false;try { move.Request(Sid{50},{0,0},0); }catch (const std::logic_error&) { rejected=true; }CHECK(rejected);
 }
+// AI와사용자공유writer는원본헤더/float비트/꼬리경계/짧은버퍼쓰기전거부를보존한다.
+TEST_CASE(CarrierMove_SharedWriterKeepsRawBitsAndTail) {
+    CarrierMoveState state;state.request={0x40,0xff,2};std::array<std::uint8_t,23> bytes;bytes.fill(0xa5);CHECK(WriteCarrierMoveCommand(state,Sid{17},{std::bit_cast<float>(0x7fc01234U),-0.0F},0xdeadbeefU,bytes)==18);CHECK(bytes[0]==0x7f && bytes[1]==0x40 && Get(bytes,2,2)==2 && Get(bytes,4,2)==17 && Get(bytes,6)==0x7fc01234U && Get(bytes,10)==0x80000000U && Get(bytes,14)==0xdeadbeefU);CHECK(std::all_of(bytes.begin()+18,bytes.end(),[](auto value) { return value==0xa5; }));const auto before=bytes;CHECK(Throws([&] { WriteCarrierMoveCommand(state,Sid{17},{1,2},0,std::span(bytes).first(17)); }) && bytes==before);
+}

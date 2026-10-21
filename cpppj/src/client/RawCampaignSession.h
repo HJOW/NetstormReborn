@@ -18,6 +18,7 @@
 #include "o/RawBattleBroadcast.h"
 #include "o/RawMissionOutcome.h"
 #include "o/RawAiBrain.h"
+#include "o/RawSquidName.h"
 #include "o/SpStore.h"
 #include "o/RawPriestParticipation.h"
 #include "o/RawDamageablePostDestroy.h"
@@ -97,6 +98,7 @@ struct CampaignMissionOutcomeUi {
 };
 // AI의 게임 계산과 색 표는 같은 Session이 소유하고 현재 언어/채팅/할당 및 표시 통지만 외부에서 받는다.
 struct CampaignAiServices {
+    o::SquidNameHooks names; //AI이동로그의같은현재언어/번역/설정치환이다.레벨은실제Session이연결한다.
     o::RawAiBrainMemory::Fill allocationBytes; // 실제 host 할당 직후의 입력 바이트다. 누락을 임의 0채움 성공으로 바꾸지 않는다.
     std::function<std::string()> defaultName; // 현재 defaultAiName 설정의 원본 좁은문자열을 반환한다.
     std::function<void(std::uint32_t,std::uint32_t)> changeColor; // 실제0043ca70의 표/섬 프레임 변경을 마친 뒤 보내는 선택형 화면 통지다.
@@ -243,6 +245,12 @@ public:
     bool ManageAiFactories(std::uint32_t owner); //004136b0의실제생산/시설큐·업그레이드요청을명시실행한다.전체자동전략순서는후속이다.
     bool RecordAiDrySpot(std::uint32_t owner,float x,float y,std::uint32_t type); //0040f1c0의같은실제본체/좌표목록등록이다.본체없음/중복/full은false다.
     std::uint32_t RecheckAiDrySpots(std::uint32_t owner); //0040f2b0/417c70의한좌표에너지재검사/제거·현재로그다.반환은제거TYPE 또는0이다.
+    o::Sid AiMovementForm(o::Sid actor) const; //00411630의현재실제경로Form조회다.
+    void StopAiMovement(o::Sid actor); //00411680의같은종속/Host경로삭제다.0은무동작이다.
+    bool MoveAiToObject(std::uint32_t owner,o::Sid actor,o::Sid target,std::uint32_t sacrifice=0); //004116d0명령을현재본체로실행한다.true는경로도착이아닌본체존재/호출을뜻한다.
+    bool MoveAiToPoint(std::uint32_t owner,o::Sid actor,o::RawPathPoint point,std::uint32_t sacrifice=0); //004117e0의현재권한별실제송신/경로시작이다.
+    bool ReturnAiHome(std::uint32_t owner,o::Sid actor); //004118a0의거리2경계/현재신전복귀다.전체행동순서는후속이다.
+    std::string ObjectName(o::Sid parent) const; //실제가상68의현재번역/치환·Factory레벨접미사다.
     // 같은 현재 Player의 실제 목록 소멸→본체 반납→포인터0을 수행한다. flags20은 원본대로 보존한다.
     void RemoveAi(std::uint32_t owner);
     // 후속 실제 전략/검사가 같은 본체/목록 소유 저장소를 확인한다. 여기서 메모리를 합성하지 않는다.

@@ -22,6 +22,8 @@ void Put(std::span<std::uint8_t> bytes,std::size_t at,std::uint32_t value,std::s
 // 수신 callback 뒤 바뀔 수 있는 caller의 두 float 비트를 현재 위치에서 읽는다.
 RawPathPoint Point(std::span<const std::uint8_t> packet) { return {std::bit_cast<float>(Read(packet,6)),std::bit_cast<float>(Read(packet,10))}; }
 }
+// 원본 생성자처럼protocol의bit7만제거하며length를4로보정하지않는다.
+std::size_t WriteCarrierMoveCommand(const CarrierMoveState& state,Sid parent,RawPathPoint destination,std::uint32_t sacrifice,std::span<std::uint8_t> packet) { if (packet.size()<18) throw std::out_of_range("이동 명령18바이트 저장소 부족");packet[0]=static_cast<std::uint8_t>(state.request.protocol&0x7fU);packet[1]=state.request.message;Put(packet,2,state.request.length,2);Put(packet,4,parent.value,2);Put(packet,6,std::bit_cast<std::uint32_t>(destination.x));Put(packet,10,std::bit_cast<std::uint32_t>(destination.y));Put(packet,14,sacrifice);return 18; }
 // 기존 현재 상태를 빌리며 장치나 전송을 열지 않는다.
 RawCarrierMove::RawCarrierMove(const SidPool& pool,std::span<const RiftTypeRecord> types,const bool& fort,
     CarrierMoveState& state,CarrierMoveHooks hooks):pool_(pool),types_(types),fort_(fort),state_(state),hooks_(std::move(hooks)) {
@@ -40,8 +42,7 @@ void RawCarrierMove::Request(Sid parent,RawPathPoint destination,std::uint32_t s
     }
     const auto movement=Need(hooks_.movement)(pool_.Slot(parent)[10]);auto* path=Need(hooks_.path)(parent,movement); //조회 효과 뒤 현재 경로만 읽는다.
     if (path) { const auto bytes=path->Bytes();if (std::bit_cast<float>(Read(bytes,0x186dc))==destination.x && std::bit_cast<float>(Read(bytes,0x186e0))==destination.y) return; }
-    std::array<std::uint8_t,18> packet{static_cast<std::uint8_t>(state_.request.protocol&0x7f),state_.request.message}; //40a850은 길이를4로 보정하지 않는다.
-    Put(packet,2,state_.request.length,2);Put(packet,4,parent.value,2);Put(packet,6,std::bit_cast<std::uint32_t>(destination.x));Put(packet,10,std::bit_cast<std::uint32_t>(destination.y));Put(packet,14,sacrifice);Need(hooks_.send)(9,packet);
+    std::array<std::uint8_t,18> packet{};WriteCarrierMoveCommand(state_,parent,destination,sacrifice,packet);Need(hooks_.send)(9,packet);
 }
 // 소유자는 전체DWORD로 비교하며 fort 모드일 때만 다른 소유자의 이동을 허용한다.
 void RawCarrierMove::Receive(std::uint32_t owner,std::span<const std::uint8_t> packet) const {

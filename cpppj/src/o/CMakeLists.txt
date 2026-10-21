@@ -393,3 +393,7 @@ target_sources(netstorm PRIVATE RawFactoryUpgrade.cpp RawFactoryUpgrade.h)
 target_sources(netstorm PRIVATE RawFactoryInput.cpp RawFactoryInput.h)
 # 원본AI의에너지부족좌표중복/순환검사/압축을같은실제본체에연결한다.
 target_sources(netstorm PRIVATE RawAiDrySpots.cpp RawAiDrySpots.h)
+# AI로그와객체메뉴가원본가상이름/같은레벨문자표를공유한다.
+target_sources(netstorm PRIVATE RawSquidName.cpp RawSquidName.h SquidNameVtables.inc)
+# 사제/수집자판단이공유할실제AI경로조회·정지·이동·복귀를연결한다.
+target_sources(netstorm PRIVATE RawAiMovement.cpp RawAiMovement.h)
