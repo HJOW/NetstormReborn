@@ -1,0 +1,44 @@
+{
+  "start_commit": "0429e57191f242339262e4296be6b2cb03ebae29",
+  "host": "VM-W11-Codex",
+  "last_decompile_host": "VM-W11-CODEX",
+  "last_decompile_date": "2026-10-21",
+  "original_rows": 404,
+  "build_exit_code": 0,
+  "tests_written_and_compiled": [
+    "DataManagerStreams_Native404",
+    "DataManagerStreams_PhysicalAndZeroContracts",
+    "DataManagerStreams_RemoveRequeriesRepairedPredecessor",
+    "CampaignTemplates_CommonStreamsRecreateAndReleaseEmptyTail"
+  ],
+  "cpp_tests_executed": false,
+  "game_executed": false,
+  "limitations": [
+    "여섯 본문은 직접 관측하며 new/free/진단만 명시 경계다. 실제 CRT/OS/게임 실행은 아니다.",
+    "실제 템플릿은 원시 섹션 벡터/임시 버퍼 토큰 어댑터다. 전체 DataManager 생성/파일/오류/힙 주소 동등성 복원은 아니다.",
+    "새404행과 이전 State 초기화2560행은 보존한다. C++ 검사는 실행하지 않았다.",
+    "전체11미션 자연 완주와 원본 외관/음향/동작 동일성은 미완료다."
+  ],
+  "hashes": {
+    "cpppj/src/o/RawMemStream.cpp": "2a1d9e44d9c05832f50e8b343930c0389fcf965f240bf62b3873360981b0ba99",
+    "cpppj/src/o/RawMemStream.h": "56d9dc078da36f35b0b25d005cb888837ccc81e296100c3722c16b6c5fcf701e",
+    "cpppj/src/o/RawDataManagerList.cpp": "4160e8be9619b908720b9a353e6e554501df984820c251e9f78bbec14315f498",
+    "cpppj/src/o/RawDataManagerList.h": "25892055db8c71b453f38946df05aae264355df23f32d96dbefb476b5a191768",
+    "cpppj/src/o/RawDataManagerLifetime.cpp": "cb5157d9732609cfd122460e65a1bed35dd507ed43b4c6fac53fb2b0eea69e19",
+    "cpppj/src/o/RawDataManagerLifetime.h": "ceb3feb4001e95d8bba91f620c6da08e05d9973d53c4b73e654a6aaecbd5d908",
+    "cpppj/src/client/CampaignTemplateStorage.cpp": "12181cecd603bdda079281785f8ca5f5dbcac047e75287acce17654c9505cc32",
+    "cpppj/src/o/CMakeLists.txt": "5efa6dfcfd4d5921d42883a8d4c576d08aebde3a878d13e8f9ba6bb092d36a17",
+    "cpppj/tests/DataManagerStreamsTests.cpp": "1adf82567c3067303273f8c95fc9d1c60e4cae7d58024a8447ebca8b66819cd6",
+    "cpppj/tests/CMakeLists.txt": "2872a65e6190d56a9cfb385e4dc9263543ebd3d8df8854b3ea4976a237973105",
+    "cpppj/datamanager-streams-native.json": "a4556798e6254efe41de705e4f3a38d91830c06035c0b495e7de26b608aa62fa",
+    "tools/decomp_datamanager_streams.py": "9d5021ffe6bb558d21b9a4eca3f8ef744462a7f6d6917c3107ec8a35de28001b",
+    "tools/decomp_local_mission_transport.py": "db71da65079aa9a985a3a833edd224f089ba9a20137d92042551cb346937eb78",
+    "tools/cpp_datamanager_streams_audit.py": "fa4876d237ad656ffeb5ea17a25229eb008444cba39b80129bccb2a79eff3e41",
+    ".gitattributes": "c4948e7cf68c45cef7720ac4c8a1e7653287f1d9153e2cc84c779aa83df03160",
+    "extracted/cpp-datamanager-streams-20261021-build2.log": "25ccb1f7d56425bc61f6b4437f6e7d6939fe23820fac721b3fd71e88e00fff61",
+    "extracted/cpp-datamanager-streams-20261021-build2-result.json": "a6dd523b013a21c669079f5af5cfe57cf80aafa0fa9948598cc66704a0775e1f",
+    "cpppj/build/lib/Release/netstorm.lib": "79e4affea3e191a1d1f733ca3d35de86bfa990ce14047acab72b8592d824755a",
+    "cpppj/build/bin/Release/NetstormCpp.exe": "4184cad7c64d84b77f96b21b449e100ae4b5baa91bb9014dc6e0ba854469b2cf",
+    "cpppj/build/bin/Release/netstorm_tests.exe": "f3ada162212c8a92658f79bb5733976f9c55e111a9a570d99c993751b199de55"
+  }
+}

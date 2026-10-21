@@ -2,8 +2,9 @@
 #include "client/CampaignTemplateStorage.h"
 #include "o/RawDataManagerLifetime.h"
 #include "o/RawDataManagerSelection.h"
+#include "o/RawDataManagerList.h"
+#include "o/RawMemStream.h"
 #include <algorithm>
-#include <bit>
 #include <stdexcept>
 namespace netstorm::client {
 namespace {
@@ -47,42 +48,52 @@ struct CampaignTemplateStorage::Image {
         if (handle==StateSection()+1) state={std::span<std::uint8_t>(fort.sections.at(handle-1)),Read(std::span(node).subspan(4)),Read(std::span(node).subspan(8)),Read(node)!=0};
         if (handle==TerritorySection()+1) territory={bytes,Read(std::span(node).subspan(4)),Read(std::span(node).subspan(8))};
     }
+    // 실제 임시 할당을 원본 포인터 토큰으로 빌린 뒤 완료한 같은 버퍼를 raw 섹션에 넘긴다.
+    template<class Operation> void WithMemory(std::uint32_t handle,Operation operation) {
+        std::vector<std::uint8_t> allocation;bool allocated{};const auto temporary=0x20000U+handle;auto& node=streams.at(handle)->bytes;
+        o::MemStreamHooks hooks;
+        hooks.buffer=[this,&allocation,temporary,&allocated](auto pointer)->std::span<std::uint8_t> {
+            if (pointer==temporary && allocated) return allocation;
+            if (pointer<0x10001U || pointer>0x10000U+o::FortTemplate::kSectionCount) throw std::out_of_range("Template MemStream 실제 버퍼 핸들 범위");return fort.sections.at(pointer-0x10001U);
+        }; // 옛 버퍼는 free 전까지 같은 실제 소유 벡터에서 읽는다.
+        hooks.allocate=[&allocation,&allocated,temporary](auto size) { if (allocated) throw std::logic_error("Template MemStream 한 작업의 중복 할당");allocation.resize(size);allocated=true;return temporary; }; // 실제 임시 할당은 원본 본문이0으로 채운다.
+        hooks.release=[this](auto pointer) { if (pointer) ReleaseBuffer(pointer); }; // 같은 원시 섹션의 옛 할당만 반납한다.
+        hooks.assertion=[](auto) { throw std::logic_error("Template 실제 MemStream 진단"); }; // 잘못된 저장 버퍼를 성공으로 대신하지 않는다.
+        operation(hooks);auto& buffer=fort.sections.at(handle-1);
+        if (Read(node)==temporary && allocated) { buffer=std::move(allocation);Put(node,0,0x10000U+handle); }
+        const auto end=Read(std::span(node).subspan(8));if (end>buffer.size()) throw std::out_of_range("Template MemStream 완료 뒤 실제 end 범위");buffer.resize(end);PublishCursor(handle);
+    }
+    // 같은 stream의 물리 할당을 노출하고 원본 쓰기 뒤 논리 end만 원시 섹션에 남긴다.
+    void WriteStream(std::uint32_t handle,std::span<const std::uint8_t> input) {
+        if (input.size()>0xffffffffU) throw std::out_of_range("Template MemStream 원문 DWORD 길이 초과");
+        auto& buffer=fort.sections.at(handle-1);const auto allocation=Read(std::span(streams.at(handle)->bytes).subspan(12));if (buffer.size()<allocation) buffer.resize(allocation);
+        WithMemory(handle,[this,handle,input](const auto& hooks) { o::WriteMemStream(streams.at(handle)->bytes,input,static_cast<std::uint32_t>(input.size()),hooks); });
+    }
     // 원본 ce10이 새 노드를 붙이기 전에 마지막 MemStream의 end에 맞춰 할당을 줄인다.
     void CompactTail(std::uint32_t handle) {
         auto& node=streams.at(handle)->bytes;const auto end=Read(std::span(node).subspan(8));
         if (end==Read(std::span(node).subspan(12))) return;
-        if (std::bit_cast<std::int32_t>(end)>0) {
-            auto& buffer=fort.sections.at(handle-1);if (end>buffer.size()) throw std::out_of_range("Template 마지막 stream의 실제 end 범위");
-            auto previous=std::move(buffer);Put(node,0,0);buffer.assign(end,0);Put(node,0,0x10000U+handle);Put(node,4,0);Put(node,8,0);Put(node,12,end);
-            std::copy_n(previous.begin(),end,buffer.begin());Put(node,4,end);Put(node,8,end);std::vector<std::uint8_t>{}.swap(previous);
-        } else o::DestroyMemStream(node,[this](auto token) { ReleaseBuffer(token); });
-        PublishCursor(handle);
+        WithMemory(handle,[this,handle](const auto& hooks) { o::CompactMemStream(streams.at(handle)->bytes,hooks); });
+    }
+    // 실제 노드/버퍼 반납과 마지막 압축을 같은 원본 목록 처리기에 공급한다.
+    o::DataManagerListHooks ListEffects() {
+        o::DataManagerListHooks hooks;hooks.lifetime.stream=[this](auto handle) { return std::span(streams.at(handle)->bytes); }; // 같은 현재60BYTE 노드를 빌린다.
+        hooks.lifetime.releaseBuffer=[this](auto pointer) { ReleaseBuffer(pointer); }; // 실제 raw 섹션 할당이다.
+        hooks.lifetime.releaseStream=[this](auto handle) {
+            if (streams.erase(handle)!=1) throw std::logic_error("Template 실제 노드 중복 반납");std::erase(streamOrder,handle);
+            if (handle==StateSection()+1) state={{},0,0,false};if (handle==TerritorySection()+1) territory={};
+        }; // 버퍼 소멸을 마친 노드와 그 typed cursor만 반납한다.
+        hooks.compact=[this](auto handle) { CompactTail(handle); };hooks.missingPredecessor=[] { throw std::logic_error("Template 실제 선행 노드 진단"); };return hooks;
     }
     // 생성된 State 노드의 교체는 기존 노드 unlink/버퍼 반납/노드 반납 뒤 새 마지막 노드를 붙인다.
     void InitializeState(std::span<const std::uint8_t,28> input) {
         if (!retiredState.empty()) throw std::logic_error("State 확장 복사 중 새 섹션 생성 불가");
         SyncStreams();const auto handle=static_cast<std::uint32_t>(StateSection()+1);const auto found=streams.find(handle);
-        if (found!=streams.end()) {
-            auto current=Read(std::span(manager).subspan(4));std::uint32_t previous{};
-            // 같은 head/next에서 교체할 기존 노드의 선행 노드를 찾는다.
-            while (current && current!=handle) { previous=current;current=Read(std::span(streams.at(current)->bytes).subspan(0x38)); }
-            if (!current) throw std::logic_error("State 기존 노드가 실제 목록에 없음");
-            const auto next=Read(std::span(found->second->bytes).subspan(0x38));
-            if (previous) Put(streams.at(previous)->bytes,0x38,next);else Put(manager,4,next);
-            o::DestroyMemStream(found->second->bytes,[this](auto token) { ReleaseBuffer(token); });streams.erase(found);
-            std::erase(streamOrder,handle);state={{},0,0,false};
-        }
+        if (found!=streams.end()) o::RemoveDataManagerStream(manager,handle,ListEffects());
         if (fort.sections.size()<=StateSection()) fort.sections.resize(StateSection()+1);
         auto node=std::make_unique<Stream>();const auto sectionName=std::string_view("State");std::copy(sectionName.begin(),sectionName.end(),node->bytes.begin()+16);
-        auto& buffer=fort.sections[StateSection()];buffer.assign(0x4000,0);Put(node->bytes,0,0x10000U+handle);Put(node->bytes,12,0x4000);
-        streams.emplace(handle,std::move(node));auto tail=Read(std::span(manager).subspan(4));
-        if (tail) {
-            // 원본처럼 현재 next를 따라 마지막 노드까지 이동한 뒤 압축/추가한다.
-            while (const auto next=Read(std::span(streams.at(tail)->bytes).subspan(0x38))) tail=next;
-            CompactTail(tail);Put(streams.at(tail)->bytes,0x38,handle);
-        } else Put(manager,4,handle);
-        Put(manager,8,handle);streamOrder.push_back(handle);
-        std::copy(input.begin(),input.end(),buffer.begin());buffer.resize(28);Put(streams.at(handle)->bytes,4,28);Put(streams.at(handle)->bytes,8,28);PublishCursor(handle);
+        streams.emplace(handle,std::move(node));WithMemory(handle,[this,handle](const auto& hooks) { o::AllocateMemStream(streams.at(handle)->bytes,0x4000,hooks); });
+        o::AppendDataManagerStream(manager,handle,ListEffects());streamOrder.push_back(handle);WriteStream(handle,input);
     }
     // 공개 진단은 보조 순서 벡터 대신 실제 head/next와 이름을 읽는다.
     std::vector<std::string> SectionOrder() const {

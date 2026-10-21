@@ -1724,3 +1724,8 @@ set_source_files_properties(DataManagerSelectionTests.cpp PROPERTIES COMPILE_DEF
 target_sources(netstorm_tests PRIVATE PlayerStateInitializationTests.cpp)
 set_source_files_properties(PlayerStateInitializationTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_PLAYER_STATE_INITIALIZATION_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/player-state-initialization-x86.tsv\"")
+
+# 중첩 하위까지 실행한 MemStream/DataManager의 최초404행을 같은 공통 몸체에 대조한다.
+target_sources(netstorm_tests PRIVATE DataManagerStreamsTests.cpp)
+set_source_files_properties(DataManagerStreamsTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_DATAMANAGER_STREAMS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/datamanager-streams-x86.tsv\"")

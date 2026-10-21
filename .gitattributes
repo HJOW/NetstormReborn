@@ -1555,3 +1555,10 @@ cpppj/tests/PlayerStateInitializationTests.cpp text eol=lf
 cpppj/player-state-initialization-*.json text eol=lf
 tools/cpp_player_state_initialization_audit.py text eol=lf
 docs/exe/cpp-player-state-initialization-20261021.md text eol=lf
+# MemStream/DataManager 목록의 전체 원문·공통 제품·검사를 같은 LF 바이트로 보존한다.
+cpppj/src/o/RawMemStream.* text eol=lf
+cpppj/src/o/RawDataManagerList.* text eol=lf
+cpppj/tests/DataManagerStreamsTests.cpp text eol=lf
+cpppj/datamanager-streams-*.json text eol=lf
+tools/cpp_datamanager_streams_audit.py text eol=lf
+docs/exe/cpp-datamanager-streams-20261021.md text eol=lf

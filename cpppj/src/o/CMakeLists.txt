@@ -358,3 +358,6 @@ target_sources(netstorm PRIVATE RawDudeRegular.cpp RawDudeRegular.h)
 
 # 현재 DataManager 섹션 검색/선택을 같은 Template 저장소에 연결한다.
 target_sources(netstorm PRIVATE RawDataManagerSelection.cpp RawDataManagerSelection.h)
+
+# 원본 MemStream 전체 처리와 같은 DataManager 추가/제거를 실제 템플릿 소비자에 공유한다.
+target_sources(netstorm PRIVATE RawMemStream.cpp RawMemStream.h RawDataManagerList.cpp RawDataManagerList.h)

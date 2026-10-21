@@ -1,5 +1,14 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-21 단위266 완료: MemStream 전체 하위·DataManager 추가/제거의 실제 공통 소비자
+
+- [x] 직전 턴은 단위265 구현·빌드·문서·로컬 커밋을 마친 진행 턴이다. 시작 HEAD `0429e571`에서 `AGENTS.md`와 양 인수인계를 다시 읽었다. 현재/마지막 정밀 디컴파일 PC는 **VM-W11-CODEX / 2026-10-21**로 같다. 새 디컴파일·원본/CD/AGENTS/dotnetpj 변경·게임/창 실행은 없다.
+- [x] 제품 수정 전 0044cc20/44cce0/44cd40/44ce10/44d040/44d0f0의 **실제 여섯 본문**을 **404고유 입력·404정상 반환·17,826명령** 관측했다. 진입114/234/120/108/32/32회·전체716BYTE/경계 직전 상태·진단/allocator/free 뒤 재조회·ABI/보존 레지스터/x87/쓰기 범위를 확인했다. 하위 본문 대체 호출은 없으며 **new/free/진단만 명시 경계**다. 실제 CRT/힙/OS/게임 실행이 아니다. 최초 세 파일은 `extracted/datamanager-streams-20261021-first-capture/`에 동결했다.
+- [x] `RawMemStream`의 할당/쓰기/압축과 `RawDataManagerList`의 추가/제거를 복원하고 실제 빈 State 재생성을 같은 함수에 연결했다. 기존 MemStream 소멸을 재사용한다. DWORD 겹침·signed 진단·경계 뒤 현재 필드·unlink 선행·stale current를 보존한다. 같은 실제 raw 섹션/임시 할당/노드·빌린 헤더를 사용한다. 전체 생성/파일/오류/힙 주소 동등성은 아니다.
+- [x] 새 검사4개(전체404행·0/물리 계약·합성 진단 수리 재조회·실제 반복 State/빈 tail 반납)를 작성·컴파일했다. 최종 Release **종료0·경고0·오류0**, 로그 `extracted/cpp-datamanager-streams-20261021-build2.log`·원시 stdout·종료 코드 JSON을 보존했다. **C++검사/CTest/게임은 기존 실행 이월 지시대로 실행하지 않았다.** 새 감사/최초404행·기존 State2560/선택864/소멸392행 보존·스테이징 근거 확인을 수행한다. 과거 소스/빌드 핀은 변경하지 않는다.
+- [x] 상세 [작업 기록](docs/exe/cpp-datamanager-streams-20261021.md), `cpppj/datamanager-streams-native.json`·`datamanager-streams-session.json`, `tools/decomp_datamanager_streams.py --verify`·`tools/cpp_datamanager_streams_audit.py`다. 인수인계 후 **20261021-30 CP**로 로컬 커밋하며 push하지 않는다. 마지막 정밀 디컴파일 PC는 계속 **VM-W11-CODEX / 2026-10-21**이다.
+- [ ] **다음:** 기존 짧은 State 확장의 임시 노드/rename/순서를 같은 공통 함수로 연결한다. 전체 DataManager 생성/파일 읽기/저장·오류·섹션 생성/이름 교체 부모, 전체 State7/전투 정리004b2df0·Fort 선택/Guide 공장/가상 소멸도 남는다. **공통 할당/쓰기/압축/추가/제거와 실제 빈 State 소비자는 이번 완료 항목**이다. 전체11미션 자연 완주·전략AI·지형/포획/희생/대피·외관/음향/동작 동일성·통합 실행 검증은 미완료이며 목표는 active다.
+
 ## 2026-10-21 단위265 완료: 빈 State의 원본 필드 초기화와 실제 섹션 재생성
 
 - [x] 직전 턴은 단위263/264의 구현·빌드·로컬 커밋을 마친 진행 턴이다. 시작 HEAD `a728b811`에서 `AGENTS.md`와 양 인수인계의 최신 작업/실행 이월 지시를 다시 확인했다. 현재/마지막 정밀 디컴파일 PC는 **VM-W11-CODEX / 2026-10-21**로 같다. 새 디컴파일·원본/CD·AGENTS·dotnetpj 변경·게임/창 실행은 없다.
