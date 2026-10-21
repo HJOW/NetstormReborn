@@ -397,3 +397,5 @@ target_sources(netstorm PRIVATE RawAiDrySpots.cpp RawAiDrySpots.h)
 target_sources(netstorm PRIVATE RawSquidName.cpp RawSquidName.h SquidNameVtables.inc)
 # 사제/수집자판단이공유할실제AI경로조회·정지·이동·복귀를연결한다.
 target_sources(netstorm PRIVATE RawAiMovement.cpp RawAiMovement.h)
+# 같은실제간헐천/포획운반목록의자원선택과신전귀환하위를연결한다.
+target_sources(netstorm PRIVATE RawAiResourceChoice.cpp RawAiResourceChoice.h)

@@ -29,4 +29,6 @@ private:
     // visited_: 방문.
     std::unordered_set<std::uint16_t> visited_;
 };
+//004acc60의 기본 finder로 kind DWORD/WORD mask 조건에 맞는 모든 내용물을 센다.중복/free/dead 후보를 임의 제외하지 않는다.
+std::int32_t CountContained(const SidPool& pool,const ContainedFinderState& state,Sid parent,std::uint32_t mask,std::uint32_t kind);
 }

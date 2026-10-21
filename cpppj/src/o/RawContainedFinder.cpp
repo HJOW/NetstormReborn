@@ -1,5 +1,6 @@
 // 외부 효과가 현재 후보의 next를 바꿔도 이미 저장한 다음 SID를 사용한다.
 #include "o/RawContainedFinder.h"
+#include <bit>
 #include <stdexcept>
 
 namespace netstorm::o {
@@ -33,5 +34,12 @@ Sid RawContainedFinder::Next() {
         if (raw[kType]==state_.containedType) return current;
     }
     return {};
+}
+// kind는 DWORD 그대로 비교하므로65536을0으로 축소하지 않는다.후보 mask는 전체 WORD다.
+std::int32_t CountContained(const SidPool& pool,const ContainedFinderState& state,Sid parent,std::uint32_t mask,std::uint32_t kind) {
+    std::uint32_t count{};RawContainedFinder finder(pool,state);
+    // 원본은 종류 판정 뒤에도 mask 조건을 평가하고 전체 현재 종속 체인을 순서대로 센다.
+    for (auto sid=finder.Begin(parent);sid.value;sid=finder.Next()) { const auto raw=pool.Slot(sid);const auto candidateKind=static_cast<std::uint32_t>(raw[18])|(static_cast<std::uint32_t>(raw[19])<<8);const bool matches=!kind || kind==candidateKind;const auto candidateMask=static_cast<std::uint32_t>(raw[20])|(static_cast<std::uint32_t>(raw[21])<<8);if ((!mask || (mask&candidateMask)) && matches) ++count; }
+    return std::bit_cast<std::int32_t>(count);
 }
 }

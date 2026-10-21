@@ -104,6 +104,7 @@
 #include "o/RawAiFactoryProduction.h"
 #include "o/RawAiDrySpots.h"
 #include "o/RawAiMovement.h"
+#include "o/RawAiResourceChoice.h"
 #include "o/RawAiPreparation.h"
 #include "o/RawPriestLookup.h"
 #include "o/RawRunePostPop.h"
@@ -293,6 +294,8 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawAiDrySpots> aiDrySpots; //같은본체의에너지부족좌표와실제Mana판정을연결한다.
     std::unique_ptr<RawSquidName> objectNames; //같은현재가상68의실제설명/Factory레벨이름이다.
     std::unique_ptr<RawAiMovement> aiMovement; //사제/수집자행동의공통실제경로조회·정지·이동·복귀다.
+    std::unique_ptr<RawAiResourceChoice> aiResourceChoice; //같은본체/간헐천/포획운반목록의실제수집·귀환선택하위다.
+    std::uint32_t aiGeyserLog{29}; //0052f3e4의끊긴간헐천로그초기종류다.
     std::uint32_t aiMoveLog{99}; //0052f3d8의원본Debug Move초기로그종류다.
     std::uint32_t aiDrySpotLog{99}; //0052f3dc의원본Debug Dry Spot 초기로그종류다.
     std::uint32_t aiFactoryLog{99}; //0052f3e0의 원본 Debug Factory 초기 로그 종류다.
@@ -1829,6 +1832,10 @@ struct RawCampaignSession::Impl {
         hooks.sacrifice=[this](Sid actor,Sid target) { sacrificeRequest->Begin(actor,target); };hooks.target=[this](Sid actor,Sid target,auto replace,auto helper) { return carrierTarget->StartTarget(actor,target,replace,helper); };hooks.start=[this](RawPathStartRequest request) { return StartMotion(request); };hooks.name=[this](Sid parent) { return objectNames->Name(parent); };hooks.distance=[this](RawPathPoint point,Sid target) { return AiDistanceToFootprint(point,core.neighbors.Footprint(target)); };
         hooks.logTarget=[this](auto token,std::string_view source,std::string_view target) { if (!services.player.log) throw std::logic_error("AI 대상 이동 로그 미연결");services.player.log(aiMoveLog,"AI"+std::to_string(std::bit_cast<std::int32_t>(Read(aiMemory.Bytes(token),0x260)))+": Move "+std::string(source)+" to "+std::string(target)+"\n"); };hooks.logPoint=[this](auto token,std::string_view name,auto x,auto y) { if (!services.player.log) throw std::logic_error("AI 좌표 이동 로그 미연결");services.player.log(aiMoveLog,"AI"+std::to_string(std::bit_cast<std::int32_t>(Read(aiMemory.Bytes(token),0x260)))+": Move "+std::string(name)+" to ("+std::to_string(x)+","+std::to_string(y)+")\n"); };
         aiMovement=std::make_unique<RawAiMovement>(aiMemory,core.pool,assetState.boss,*boardTarget,carrierMoveState,std::move(hooks));
+        AiResourceChoiceHooks resources;resources.center=[this](Sid sid) { const auto point=core.neighbors.Center(sid);return RawPathPoint{point[0],point[1]}; };resources.graph=[this](Sid sid) { return anchor->GraphFor(sid.value); };resources.crystals=[this](Sid actor) { return CountContained(core.pool,priestState.contained,actor,0x20,motionState.carrier.nuggetType); };
+        resources.target=[this](auto token,Sid actor,Sid target) { aiMovement->ToTarget(token,actor,target,0); };resources.home=[this](auto token,Sid actor) { aiMovement->Home(token,actor); };
+        resources.captureLog=[this](auto token,Sid actor) { if (!services.player.log) throw std::logic_error("AI 포획 운반자 실제 로그 미연결");services.player.log(29,"AI"+std::to_string(std::bit_cast<std::int32_t>(Read(aiMemory.Bytes(token),0x260)))+": PriestGetter=="+std::to_string(actor.value)+"\n\n"); };resources.disconnectedLog=[this](auto token,Sid geyser) { if (!services.player.log) throw std::logic_error("AI 끊긴 간헐천 실제 로그 미연결");services.player.log(aiGeyserLog,"AI"+std::to_string(std::bit_cast<std::int32_t>(Read(aiMemory.Bytes(token),0x260)))+": Put disconnectd geyser "+std::to_string(geyser.value)+" back into yetToConnect list.\n\n"); };resources.assertion=[this](std::string_view text) { if (!services.ai.assertion) throw std::logic_error("AI 간헐천 원본 진단 미연결");services.ai.assertion(text); };
+        aiResourceChoice=std::make_unique<RawAiResourceChoice>(aiMemory,core.pool,core.types,[this] { return static_cast<std::uint32_t>(core.bookkeeping.invalidGraph); },std::move(resources));
     }
     // 사용자이동/대상접근/AI가같은489080종류별실제BFS/Host시작을공유한다.
     CarrierPathResult StartMotion(RawPathStartRequest request) {
@@ -2528,6 +2535,10 @@ bool RawCampaignSession::MoveAiToObject(std::uint32_t owner,Sid actor,Sid target
 bool RawCampaignSession::MoveAiToPoint(std::uint32_t owner,Sid actor,RawPathPoint point,std::uint32_t sacrifice) { if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("설치 후 owner1..8 AI 좌표 이동만 허용");const auto token=impl_->participation->Brain(owner);if (!token) return false;impl_->aiMovement->ToPoint(token,actor,point,sacrifice);return true; }
 // 거리판정뒤현재신전복귀를실행한다.
 bool RawCampaignSession::ReturnAiHome(std::uint32_t owner,Sid actor) { if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("설치 후 owner1..8 AI 복귀만 허용");const auto token=impl_->participation->Brain(owner);if (!token) return false;impl_->aiMovement->Home(token,actor);return true; }
+// 현재Player의실제본체와내용물/그래프/경로로수집또는신전복귀를판단한다.true는호출여부다.
+bool RawCampaignSession::CollectAiOrReturnHome(std::uint32_t owner,Sid actor) { if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("설치 후 owner1..8 AI 수집·귀환만 허용");const auto token=impl_->participation->Brain(owner);if (!token) return false;impl_->aiResourceChoice->CollectOrHome(token,actor);return true; }
+// 실제현재330/348목록에서그래프가끊긴간헐천만원본순서대로옮긴다.
+bool RawCampaignSession::RecheckAiGeysers(std::uint32_t owner) { if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("설치 후 owner1..8 AI 간헐천 재분류만 허용");const auto token=impl_->participation->Brain(owner);if (!token) return false;impl_->aiResourceChoice->ReclassifyDisconnected(token);return true; }
 // 현재가상표의실제원본이름을반환한다.
 std::string RawCampaignSession::ObjectName(Sid parent) const { if (!impl_->loaded) throw std::logic_error("설치 전 객체 이름 조회");return impl_->objectNames->Name(parent); }
 // 명시 해제의 오류는 caller에 전파하고 destructor의 마지막 정리와 구분한다.

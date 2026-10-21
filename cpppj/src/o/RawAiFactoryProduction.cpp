@@ -75,9 +75,7 @@ std::uint32_t RawAiFactoryProduction::SelectTechnology(std::uint32_t token,std::
 }
 // 같은 종류의 중복 생산도 원본 총수에는 각각 포함한다.
 std::int32_t RawAiFactoryProduction::CountProducts(Sid factory) const {
-    std::uint32_t count{};RawContainedFinder cursor(pool_,finder_);
-    // 원본mask10 조건만 확인하며 pending/종류/소유자 필터를 추가하지 않는다.
-    for (auto form=cursor.Begin(factory);form.value;form=cursor.Next()) if (pool_.Slot(form)[20]&0x10U) ++count;return Signed(count);
+    return CountContained(pool_,finder_,factory,0x10,0); //수집과 같은004acc60 몸체를 사용하며 생산mask10/종류0만 지정한다.
 }
 // 미처리 첫 시설의 생산 등록 또는 업그레이드 대기 첫 시설의 요청만 처리한다.
 void RawAiFactoryProduction::Manage(std::uint32_t token) const {
