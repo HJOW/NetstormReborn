@@ -58,6 +58,7 @@ add_executable(netstorm_tests
     AiStrategySetupTests.cpp
     AiEconomyTests.cpp
     AiDeploymentTests.cpp
+    AiCollectorsTests.cpp
     MissionControlTests.cpp
     MissionGuideInputTests.cpp
     ObjectCommandTests.cpp

@@ -381,3 +381,5 @@ target_sources(netstorm PRIVATE RawAiStrategySetup.cpp RawAiStrategySetup.h)
 target_sources(netstorm PRIVATE RawAiEconomy.cpp RawAiEconomy.h)
 # 원본 공통 AI의 생산 조각 소비/대기/비용과 실제 건설 배치를 연결한다.
 target_sources(netstorm PRIVATE RawAiDeployment.cpp RawAiDeployment.h)
+# 원본 수집자 선택/자기 영역 무작위 후보/실제 생산 배치를 같은 월드에 연결한다.
+target_sources(netstorm PRIVATE RawAiCollectors.cpp RawAiCollectors.h)

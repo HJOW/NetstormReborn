@@ -100,6 +100,7 @@
 #include "o/RawAiStrategySetup.h"
 #include "o/RawAiEconomy.h"
 #include "o/RawAiDeployment.h"
+#include "o/RawAiCollectors.h"
 #include "o/RawAiPreparation.h"
 #include "o/RawPriestLookup.h"
 #include "o/RawRunePostPop.h"
@@ -280,6 +281,8 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawAiEconomy> aiEconomy; //같은 본체 지갑·현재 포획 상태·분산SP를 정리하는004138c0이다.
     std::unique_ptr<RawAiDeployment> aiDeployment; //같은 실제 생산 조각/지갑/건설 요청을 처리하는004106e0이다.
     std::unique_ptr<RegularProcess> aiPendingRegular; //원본 new(0x28) 성공 뒤 현재 생산 대기시간으로 구성할 예약 메모리다.
+    std::unique_ptr<RawAiCollectors> aiCollectors; //같은 현재 목록/사제 상태/난수로 수집자 종류와 합법 배치 후보를 선택한다.
+    std::uint32_t aiLayLog{99}; //0052f3d0의 원본 Debug Lay Piece 초기 로그 종류다.29는 디버그 표시 선택값이다.
     std::array<std::uint32_t,4> aiWorkshops{86,87,88,85}; // PATCH004709d0의 theme0/1/2/3이 읽는005411b0/b4/b8/ac의 실제 기본 타입이다.
     std::uint32_t aiExcludedType{133},aiMissionFallback{}; // 실제 sunWalker 분류 제외 번호와 현재 getter를 사용할 때 읽지 않는 값형 호환 저장소다.
     bool loaded{}; // 같은 실제 저장 부모와 이동 설치가 정상 종료했을 때만 AI 생성 요청을 허용한다.
@@ -1784,6 +1787,12 @@ struct RawCampaignSession::Impl {
         deployment.request=[this](const ConstructionConfirmRequest& request) { PrepareConstruction();static_cast<void>(construction->Request(request)); };deployment.localPlace=[this](ConstructionLocalRequest request) { if (!cursor) throw std::logic_error("AI 배치 실제 로컬4433b0 미설치");cursor->PlaceLocal(request); };
         deployment.demo=[this] { return services.missionOutcome.demo()!=0; };deployment.assertion=[this](std::string_view text) { if (!services.ai.assertion) throw std::logic_error("AI 배치 원본 진단 미연결");services.ai.assertion(text); };
         aiDeployment=std::make_unique<RawAiDeployment>(aiMemory,core.pool,core.types,*contained,AiDeploymentGlobals{assetState.boss,constructionState.notice.moveLocalBuilder,core.processState.now},std::move(deployment));
+        AiCollectorsHooks collectors;collectors.product=[this](auto token,auto type) { return aiStrategySetup->FindProduct(token,type); };collectors.canAfford=[this](auto token,auto type) { return aiDeployment->CanAfford(token,type); };collectors.maxHitPoints=[this](Sid sid) { return hp.MaxHitPoints(sid); };
+        collectors.enemyAvailable=[this](auto owner) { if (owner<1 || owner>8) { if (!services.ai.assertion) throw std::logic_error("AI 수집자 적 사제 참여 진단 미연결");services.ai.assertion("playerId > INVALID_PLAYER_ID && playerId < MAX_PLAYERS");return false; }return (players[owner*180+0x50]&0x22)!=0 && priests->Priests().ownerState[owner]==0; };
+        collectors.mayPlace=[this](const CanonPlacementQuery& query) { PrepareConstruction();return MayPlaceGameplay(query); };collectors.deploy=[this](auto token,auto type,float x,float y,auto argument,auto direction) { aiDeployment->Place(token,type,x,y,argument,direction); };
+        collectors.log=[this](auto token,auto type,auto x,auto y) { if (!services.player.log) throw std::logic_error("AI 수집자 Lay 로그 미연결");if (type>=core.types.size()) throw std::out_of_range("AI 수집자 Lay TYPE 범위");services.player.log(aiLayLog,"AI"+std::to_string(std::bit_cast<std::int32_t>(Read(aiMemory.Bytes(token),0x260)))+": Lay "+core.types[type].name+" at ("+std::to_string(x)+","+std::to_string(y)+")\n"); };
+        collectors.dropSound=[this] { if (!services.sound.play) throw std::logic_error("AI 수집자 로컬 드롭 음향 미연결");static_cast<void>(services.sound.play(soundNames.Lookup("droppiece.wav"),0,0,0,0,0)); };
+        aiCollectors=std::make_unique<RawAiCollectors>(aiMemory,core.pool,core.types,random,AiCollectorsGlobals{core.processState.now,playerState.battleOwner,[this] { return static_cast<std::uint32_t>(core.bookkeeping.invalidGraph); }},std::move(collectors));
     }
     // 첫 실제 객체 이전에 같은 공통 삭제/내용물/Player 통지/기술 모듈을 한 번 연결한다.
     void InstallContents(const SquidDestroyHooks& deletion) {
@@ -2431,6 +2440,8 @@ bool RawCampaignSession::RefreshAiBridges(std::uint32_t owner) { if (!impl_->loa
 bool RawCampaignSession::ReconcileAiEconomy(std::uint32_t owner) { if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("실제 Session 설치 후 owner1..8 AI 경제 정리만 허용");const auto token=impl_->participation->Brain(owner);if (!token) return false;impl_->aiEconomy->Reconcile(token);return true; }
 // 원본 전략이 고른 배치 입력을 실제 생산 소비/대기/지갑/서버 또는 로컬 예측에 전달한다.
 bool RawCampaignSession::DeployAi(std::uint32_t owner,std::uint32_t type,float x,float y,std::uint32_t argument,std::uint32_t direction) { if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("실제 Session 설치 후 owner1..8 AI 배치만 허용");const auto token=impl_->participation->Brain(owner);if (!token) return false;impl_->aiDeployment->Place(token,type,x,y,argument,direction);return true; }
+// 원본 수집자 선택/후보 탐색/생산 소비/실제 배치/생각 기한·소리까지 같은 월드에서 명시 진행한다.
+bool RawCampaignSession::EnsureAiCollectors(std::uint32_t owner) { if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("실제 Session 설치 후 owner1..8 AI 수집자 확보만 허용");const auto token=impl_->participation->Brain(owner);if (!token) return false;impl_->aiCollectors->Ensure(token);return true; }
 // 명시 해제의 오류는 caller에 전파하고 destructor의 마지막 정리와 구분한다.
 void RawCampaignSession::RemoveAi(std::uint32_t owner) { impl_->participation->RemoveBrain(owner); }
 // 후속 실제 전략은 현재 Player 토큰으로 이 유일한 본체/목록 저장소를 조회해야 한다.

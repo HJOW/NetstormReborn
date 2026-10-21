@@ -237,6 +237,7 @@ public:
     bool RefreshAiBridges(std::uint32_t owner); //같은 현재 brain/기술부모로0040fcb0 재고를 갱신한다. 본체 없음은false이며 자동 프레임은 후속이다.
     bool ReconcileAiEconomy(std::uint32_t owner); //같은 본체 지갑과 분산SP로004138c0을 명시 실행한다. 본체 없음은false이며 자동 프레임은 후속이다.
     bool DeployAi(std::uint32_t owner,std::uint32_t type,float x,float y,std::uint32_t argument=0,std::uint32_t direction=0); //선택된 전략 입력으로004106e0 실제 생산/비용/배치를 명시 실행한다. 자동 선택은 후속이다.
+    bool EnsureAiCollectors(std::uint32_t owner); //원본00415a10 수집자 선택→자기 영역 후보→실제 배치를 명시 실행한다. 전체 자동 프레임은 후속이다.
     // 같은 현재 Player의 실제 목록 소멸→본체 반납→포인터0을 수행한다. flags20은 원본대로 보존한다.
     void RemoveAi(std::uint32_t owner);
     // 후속 실제 전략/검사가 같은 본체/목록 소유 저장소를 확인한다. 여기서 메모리를 합성하지 않는다.
