@@ -1,0 +1,49 @@
+{
+  "start_commit": "c2a3fa5e2c457492514e996a8124002683e60444",
+  "host": "VM-W11-Codex",
+  "last_decompile_host": "VM-W11-CODEX",
+  "last_decompile_date": "2026-10-21",
+  "original_rows": 144,
+  "snapshot_bytes": 1400,
+  "build_exit_code": 0,
+  "tests_written_and_compiled": [
+    "DataManagerRead_Native144",
+    "DataManagerRead_MarkAssertionUsesCurrentFields",
+    "DataManagerRead_InitialPositionAndRequiredNames",
+    "CampaignTemplates_ReadTargetElevenFiles"
+  ],
+  "cpp_tests_executed": false,
+  "game_executed": false,
+  "limitations": [
+    "큰 원본 읽기 부모/하위 아홉 본문을 직접 관측한다. CRT 비교/new/free/가상 이름 표만 명시 경계이며 실제 CRT/힙/OS/게임 실행은 아니다.",
+    "실제 Client 초기/로그인 재로딩은 동일 파일 원문을 같은 새 목록/버퍼의 읽기 부모로 전달한다. 파일 열기/서명 가상 부모/저장/기본 섹션 전체 생성/전체 오류 처리는 미완료다.",
+    "보조 FortTemplate 해석과 명시 입력의 독립 Session 어댑터는 유지한다. 원본 힙 주소/미정 padding/외부 raw 포인터 정체성의 전체 일치를 주장하지 않는다.",
+    "목표11파일 검사는 작성/컴파일했으며 C++ 실행과 실제11미션 자연 완주/동작 동일성은 미검증이다."
+  ],
+  "hashes": {
+    "cpppj/src/o/RawDataManagerImage.cpp": "4fce3fba2019fb72d104f3256c9679afc94b5d3706c6c5b1cfe1a03f7650da2d",
+    "cpppj/src/o/RawDataManagerImage.h": "b0274fa822066b0246f6e14d9ec41f8beb3eb21c61912f1f033bd79f539d6cd0",
+    "cpppj/src/o/RawDataManagerResize.cpp": "d57f4a4bd1961b71ea888b54bc711b238c1808a500e0e385f98d625d6ad270f9",
+    "cpppj/src/o/RawDataManagerResize.h": "e5ed7ba3a4a8cbe9660f7f9aaa2dc47a75ba9de97f894a30ef3a8d3720d18bf5",
+    "cpppj/src/o/RawDataManagerList.cpp": "4160e8be9619b908720b9a353e6e554501df984820c251e9f78bbec14315f498",
+    "cpppj/src/o/RawDataManagerLifetime.cpp": "cb5157d9732609cfd122460e65a1bed35dd507ed43b4c6fac53fb2b0eea69e19",
+    "cpppj/src/o/RawMemStream.cpp": "e0efb4dd7f4090a1a373bbb0a75428dc710146cea6b3cf9b2bc971f9e1176652",
+    "cpppj/src/client/CampaignTemplateStorage.cpp": "42855af094bdc7af815e2d4659bc6365abb754940a28a59e3c4210d06518d589",
+    "cpppj/src/client/CampaignTemplateStorage.h": "4cc32f73b2573fdac106c0115ed08fc1457f4d4dce70d56f447502eb67e1b93c",
+    "cpppj/src/client/RawCampaignSession.cpp": "df108bbfb43abeb6f937d727705159d7710e679dbf3302bb57440dc2d2066cf6",
+    "cpppj/src/client/RawCampaignSession.h": "1df40f811e4ac76aff72b073a61a77d2d6193634375dad9aea2405d2862d1864",
+    "cpppj/src/client/RawCampaignSessionLogin.inc": "28aaefb9ea09975558be71d1a3c196fc34da50d37a6d0df3e0ec9b34d6e4d2bd",
+    "cpppj/src/client/UberGump.cpp": "d4fbe4bd176edd23b70d09736b2d48ad2718db9e184215394fec4ecff93498ac",
+    "cpppj/src/o/CMakeLists.txt": "6834cf7731f2cd46d0c8d96fa4b029c00124d3c953a8f5f582302fc5dc234cb4",
+    "cpppj/tests/CMakeLists.txt": "d5ecfc13cc5ab49c325d95232abdf0d03432bcd88861544dc731a04b44f612b4",
+    "cpppj/tests/DataManagerReadTests.cpp": "4cb03db62747bd047debf2f79c47aa89d2e7ed43b814799c85d525eef49e662b",
+    "cpppj/datamanager-read-native.json": "ba83f7b29f876e016367e786d01b243ae6fbf0141f7e79e67e5aeddb9d639909",
+    "tools/cpp_datamanager_read_audit.py": "09532523d21d53c70559a33a2ad248bdd99da2e75dd4358d31d65687a16e48d4",
+    ".gitattributes": "1f6438cee3e28b95d56b9d12bbc1c13f2256a811628017624b6b72a91a1c9e6f",
+    "extracted/cpp-datamanager-read-20261021-build.log": "83eeb79e1abf5bfbd7867e745d0a5935f2aa904af4dc29e70fda8588d21567b2",
+    "extracted/cpp-datamanager-read-20261021-build-result.json": "a6dd523b013a21c669079f5af5cfe57cf80aafa0fa9948598cc66704a0775e1f",
+    "cpppj/build/lib/Release/netstorm.lib": "c3d35b077c8fb02e586d559d9ac526ec976478b531119b37c959af609b79155d",
+    "cpppj/build/bin/Release/NetstormCpp.exe": "97e5fa87a8a13c88b9cb6ae3a888a6b756edc39dae28686dd00ad2a709608fab",
+    "cpppj/build/bin/Release/netstorm_tests.exe": "62a06b4e307c298add181e3b490c8551a701ccb5014f631d29912049d57a60b0"
+  }
+}

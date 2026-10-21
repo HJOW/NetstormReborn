@@ -42,7 +42,7 @@ struct RawCampaignSession::Impl::Login {
     //현재 파일을 실제 VFS로 다시 읽어 같은Template/State/territory cursor를 교체한다.
     void Reload(std::uint32_t owner) {
         const auto name=s.templateStorage->Name(owner);if (owner!=1 || name.empty()) throw std::logic_error("로컬 미션 이외 Template 파일 선택 미연결");
-        s.templateStorage->Install(owner,FortTemplate::Parse(s.assets.files.Read("d/"+name+".fort"),s.assets.game.TypeTable()),name);
+        const auto bytes=s.assets.files.Read("d/"+name+".fort");s.templateStorage->InstallFile(owner,FortTemplate::Parse(bytes,s.assets.game.TypeTable()),bytes,name);
     }
     //현재20BYTE zlocal주소에서 실제클라이언트의포트와주소를 제공한다.
     std::array<std::uint8_t,20> Address() const {

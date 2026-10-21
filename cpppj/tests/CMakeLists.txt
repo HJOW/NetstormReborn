@@ -1739,3 +1739,8 @@ set_source_files_properties(DataManagerResizeTests.cpp PROPERTIES COMPILE_DEFINI
 target_sources(netstorm_tests PRIVATE DataManagerCreateTests.cpp)
 set_source_files_properties(DataManagerCreateTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_DATAMANAGER_CREATE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/datamanager-create-x86.tsv\"")
+
+# 파일 이미지의 최초144행과 목표11파일의 실제 새 목록 연결을 컴파일한다.
+target_sources(netstorm_tests PRIVATE DataManagerReadTests.cpp)
+set_source_files_properties(DataManagerReadTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_DATAMANAGER_READ_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/datamanager-read-x86.tsv\"")

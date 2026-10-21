@@ -364,3 +364,6 @@ target_sources(netstorm PRIVATE RawMemStream.cpp RawMemStream.h RawDataManagerLi
 
 # 같은 원문/목록에서 최소 확장·임시 생성·이름 교체의 전체 부모를 연결한다.
 target_sources(netstorm PRIVATE RawDataManagerResize.cpp RawDataManagerResize.h)
+
+# 실제 파일 이미지의 섹션 병합/mark/이름 표 진행 부모를 같은 저장소에 연결한다.
+target_sources(netstorm PRIVATE RawDataManagerImage.cpp RawDataManagerImage.h)

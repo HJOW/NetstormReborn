@@ -5,6 +5,7 @@
 #include "o/RawDataManagerList.h"
 #include "o/RawMemStream.h"
 #include "o/RawDataManagerResize.h"
+#include "o/RawDataManagerImage.h"
 #include <algorithm>
 #include <stdexcept>
 namespace netstorm::client {
@@ -193,8 +194,33 @@ struct CampaignTemplateStorage::Image {
         hooks.releaseStream=[this](auto handle) { if (streams.erase(handle)!=1) throw std::logic_error("DataManager 같은 섹션 중복 반납"); }; // 버퍼 소멸이 끝난 노드만 반납한다.
         o::DestroyDataManager(manager,hooks);
     }
-    // State와 Territory 모두 파서가 소유한 원시 섹션의 같은 바이트를 연결한다.
-    Image(o::FortTemplate value,std::string file):fort(std::move(value)),name(std::move(file)) {
+    // 실제 F 이미지는 빈 manager에서 읽기 부모가 만든 노드/할당/목록을 그대로 소유한다.
+    void ReadFile(std::span<const std::uint8_t> input) {
+        if (!streams.empty() || Read(std::span(manager).subspan(4)) || input.size()<2 || input[0]!='F' || input.size()>0xffffffffU) throw std::invalid_argument("Template 실제 파일 이미지/빈 manager 계약 위반");
+        fort.sections.clear();fort.sections.resize(o::FortTemplate::kSectionCount);state={{},0,0,false};territory={};
+        std::vector<std::uint8_t> source(input.begin(),input.end()),names;std::array<std::uint8_t,20> cursor{};std::uint32_t allocating{},created{};
+        names.push_back('/');
+        // 원본 SNART와 같은 구분자/마지막 빈 이름을 읽기 부모에 공급한다.
+        for (const auto section:o::FortTemplate::SectionNames()) { names.insert(names.end(),section.begin(),section.end());names.push_back('/'); }
+        names.push_back('/');names.push_back(0);Put(cursor,0,0x30000);Put(cursor,4,2);Put(cursor,8,static_cast<std::uint32_t>(input.size()));Put(cursor,12,static_cast<std::uint32_t>(input.size()));Put(cursor,16,0xffffffffU);
+        o::DataManagerImageHooks hooks;hooks.names=[&names] { return std::span(names); };hooks.assertion=[](auto) { throw std::logic_error("Template 실제 파일 이미지의 원본 진단"); };
+        hooks.streams.selection.stream=[this](auto handle) { return std::span(streams.at(handle)->bytes); };hooks.streams.list=ListEffects();
+        hooks.streams.allocateStream=[this,&allocating,&created](auto size) { if (size!=60 || created>=o::FortTemplate::kSectionCount) throw std::logic_error("Template 파일 이미지의 새 노드 계약 위반");allocating=++created;if (!streams.emplace(allocating,std::make_unique<Stream>()).second) throw std::logic_error("Template 파일 이미지의 새 노드 중복");return allocating; };
+        hooks.streams.memory.buffer=[this,&source](auto pointer)->std::span<std::uint8_t> {
+            if (pointer==0x30000) return source;if (pointer<0x10001U || pointer>0x10000U+o::FortTemplate::kSectionCount) throw std::out_of_range("Template 파일 이미지의 실제 버퍼 토큰 범위");return fort.sections.at(pointer-0x10001U);
+        }; // 입력 원문과 새 할당도 같은 실제 버퍼를 조회한다.
+        hooks.streams.memory.allocate=[this,&allocating](auto size) { auto& buffer=fort.sections.at(allocating-1);if (!buffer.empty()) throw std::logic_error("Template 파일 이미지의 새 버퍼 중복 할당");buffer.resize(size);return 0x10000U+allocating; };
+        hooks.streams.memory.assertion=[](auto) { throw std::logic_error("Template 파일 이미지의 실제 MemStream 진단"); };
+        o::ReadDataManagerImage(manager,cursor,hooks);if (created!=o::FortTemplate::kSectionCount) throw std::logic_error("Template 실제 파일의 전체 이름 표 불일치");
+        auto current=Read(std::span(manager).subspan(4));
+        // 읽기 부모가 실제로 붙인 목록만 현재 순서로 보관하고 typed cursor도 같은 할당을 빌린다.
+        while (current) {
+            if (streamOrder.size()>=streams.size()) throw std::logic_error("Template 실제 파일 이미지의 목록 순환");auto& node=streams.at(current)->bytes;streamOrder.push_back(current);auto& buffer=fort.sections.at(current-1);const auto end=Read(std::span(node).subspan(8));if (end>buffer.size()) throw std::out_of_range("Template 실제 파일 이미지의 end 범위");buffer.resize(end);PublishCursor(current);current=Read(std::span(node).subspan(56));
+        }
+    }
+    // State와 Territory 모두 같은 원시 섹션 바이트를 빌리며 파일 입력이면 원본 읽기 부모가 초기 목록을 만든다.
+    Image(o::FortTemplate value,std::string file,bool fileImage=false):fort(std::move(value)),name(std::move(file)) {
+        if (fileImage) return;
         const auto at=StateSection();const auto bytes=at<fort.sections.size() ? std::span<std::uint8_t>(fort.sections[at]) : std::span<std::uint8_t>{};state={bytes,0,static_cast<std::uint32_t>(bytes.size()),!bytes.empty()};
         const auto territoryAt=TerritorySection();const auto territoryBytes=territoryAt<fort.sections.size() ? std::span<const std::uint8_t>(fort.sections[territoryAt]) : std::span<const std::uint8_t>{};
         territory={territoryBytes,0,static_cast<std::uint32_t>(territoryBytes.size())};SyncStreams();
@@ -219,6 +245,10 @@ o::TemplateLifetimeHooks CampaignTemplateStorage::Effects() {
 }
 // 기존 한 manager를 정확히 해제한 뒤 새 실제 객체를 소유한다.
 void CampaignTemplateStorage::Install(std::uint32_t slot,o::FortTemplate fort,std::string name) { Clear(slot);if (!nextHandle_) throw std::overflow_error("Template 호스트 manager 핸들 소진");const auto handle=nextHandle_++;images_.emplace(handle,std::make_unique<Image>(std::move(fort),std::move(name)));Put(Header(slot),0,handle); }
+// 파싱된 보조 자료와 같은 실제 파일 원문을 새 manager에 읽으며 임의 빈 섹션 목록을 먼저 만들지 않는다.
+void CampaignTemplateStorage::InstallFile(std::uint32_t slot,o::FortTemplate fort,std::span<const std::uint8_t> bytes,std::string name) {
+    Clear(slot);if (!nextHandle_) throw std::overflow_error("Template 파일 manager 핸들 소진");auto image=std::make_unique<Image>(std::move(fort),std::move(name),true);image->ReadFile(bytes);const auto handle=nextHandle_++;images_.emplace(handle,std::move(image));Put(Header(slot),0,handle);
+}
 // 빌린 헤더를 반납해도 원래 소유자의 실제 버퍼/커서는 유지된다.
 void CampaignTemplateStorage::Borrow(std::uint32_t slot,std::uint32_t source) { if (slot==source) throw std::invalid_argument("Template 자기 manager 빌림 계약");static_cast<void>(Current(source));const auto handle=Read(Header(source));const auto target=Header(slot);if (Read(target)==handle && !Read(target.subspan(4))) throw std::invalid_argument("Template 원래 소유자를 반납하는 같은 manager 빌림");Clear(slot);Put(Header(slot),0,handle);Put(Header(slot),4,1); }
 // 비영 포인터만 정리하는 원본 전역 몸체를 그대로 사용한다.

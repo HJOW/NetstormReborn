@@ -1,0 +1,32 @@
+{
+  "host": "VM-W11-Codex",
+  "rows": 144,
+  "normal_returns": 144,
+  "snapshot_bytes": 1400,
+  "instructions": 176232,
+  "entries": {
+    "0x44cc20": 504,
+    "0x44cce0": 72,
+    "0x44cdb0": 144,
+    "0x44d040": 96,
+    "0x44d070": 432,
+    "0x44d0f0": 96,
+    "0x44d380": 144,
+    "0x4a8800": 72,
+    "0x4a8850": 576
+  },
+  "limitations": [
+    "큰 부모의 인라인 본문과 실제 하위 아홉 본문을 직접 실행한다. CRT ASCII 비교/new/free/이름 표 가상 조회만 명시 경계다.",
+    "void 부모의 EAX는 반환 계약에 포함하지 않는다. ABI/보존 레지스터/x87/정상 SEH 복구와 전체 쓰기 범위를 확인한다.",
+    "파일 OS 읽기/실제 힙/CRT/게임/Windows 예외 실행은 아니다. 잘못된 포인터/음수 섹션 길이/OOM은 정상 관측 범위 밖이다."
+  ],
+  "hashes": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_local_mission_transport.py": "db71da65079aa9a985a3a833edd224f089ba9a20137d92042551cb346937eb78",
+    "tools/decomp_datamanager_create.py": "ea95c21d2ad7ccac4e1d1e78b02216e32fb8ee4697c902125523adbad26fb3ef",
+    "tools/decomp_datamanager_read.py": "3ddfd23ff3d3e526ada92e925f142507f474da3d3a2e25999e9d02ad0babdf0d",
+    "cpppj/tests/fixtures/datamanager-read-x86.tsv": "0e8eb4249bb68459ac041d1e92885cbdd8d1fb230fe56185e1e9f30f3e41ada7"
+  }
+}
