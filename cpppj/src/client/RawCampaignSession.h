@@ -269,6 +269,7 @@ public:
     bool AdvanceAiDropScan(std::uint32_t owner,std::uint32_t type,std::int32_t direction); //00412e10의같은3e8/af8·afc/실제지도·공용난수스캔다.true는미완료이며false는완료또는본체없음이다.
     bool RemoveAiDropChoice(std::uint32_t owner,std::int32_t index); //0040f390의같은30후보목록압축이다.true는본체존재/호출이며배치성공이아니다.
     bool SelectAiDropType(std::uint32_t owner); //00413100의실제기술순환/회전/직전후보재사용·기한선택이다.true는본체존재/호출이며TYPE비영을뜻하지않는다.
+    bool ManageAiDrops(std::uint32_t owner); //004162e0 전체 배치 행동이다.true는 본체 존재/호출이며 실제 배치/성공표적이 생겼다는 뜻이 아니다.자동프레임은 후속이다.
     std::string ObjectName(o::Sid parent) const; //실제가상68의현재번역/치환·Factory레벨접미사다.
     // 같은 현재 Player의 실제 목록 소멸→본체 반납→포인터0을 수행한다. flags20은 원본대로 보존한다.
     void RemoveAi(std::uint32_t owner);

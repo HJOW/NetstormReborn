@@ -419,3 +419,5 @@ target_sources(netstorm PRIVATE RawAiDropSelection.cpp RawAiDropSelection.h)
 target_sources(netstorm PRIVATE RawAiDryGeometry.cpp RawAiDryGeometry.h)
 # 현재 공급시설/부족거리/같은 양방향 탐색으로 전체 가짜 부족좌표를 연결한다.
 target_sources(netstorm PRIVATE RawAiFakeDrySpots.cpp RawAiFakeDrySpots.h)
+# 현재 선택/예산스캔·생산/사제 관문과 실제 배치·성공표적/후보 압축을 연결한다.
+target_sources(netstorm PRIVATE RawAiDropActions.cpp RawAiDropActions.h)

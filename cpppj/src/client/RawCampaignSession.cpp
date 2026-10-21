@@ -116,6 +116,7 @@
 #include "o/RawAiDropSelection.h"
 #include "o/RawAiDryGeometry.h"
 #include "o/RawAiFakeDrySpots.h"
+#include "o/RawAiDropActions.h"
 #include "o/RawAiPreparation.h"
 #include "o/RawPriestLookup.h"
 #include "o/RawRunePostPop.h"
@@ -316,6 +317,7 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawAiDropEvaluation> aiDropEvaluation; //같은 실제 마나/부족좌표·배치 승인과 시설별 평가다.
     std::unique_ptr<RawAiDropScan> aiDropScan; //같은실제다리/지도/난수·3e8과30후보목록의원본예산스캔다.
     std::unique_ptr<RawAiDropSelection> aiDropSelection; //같은실제기술내용물/직전후보·회전·기한의다음배치TYPE선택이다.
+    std::unique_ptr<RawAiDropActions> aiDropActions; //같은 실제 선택/스캔·생산/사제 조건과 후보 배치·성공표적/압축이다.
     std::unique_ptr<RawAiDryGeometry> aiDryGeometry; //같은 실제 현재 표면 지도/경계와 가짜좌표의 수직 양방향 탐색·표식 수명이다.
     std::unique_ptr<RawAiFakeDrySpots> aiFakeDrySpots; //같은 현재 공급시설/부족거리·중심/실제 양방향 탐색과 전체 가짜좌표 갱신이다.
     std::uint32_t aiDryMarkerType{104}; //005411f8의 현재 디버그 표식 TYPE 초기값이다.
@@ -1895,6 +1897,22 @@ struct RawCampaignSession::Impl {
         geometry.pop=[this](Sid sid,RawPathPoint point,auto flags) { world.Pop(sid,point.x,point.y,flags); };geometry.destroy=[this](Sid sid,auto flags) { world.Destroy(sid,flags); };aiDryGeometry=std::make_unique<RawAiDryGeometry>(core.pool,AiDryGeometryGlobals{aiDropScanBounds,aiDrySpotLog,aiDryMarkerType},std::move(geometry));
         AiFakeDryHooks fake;fake.score=[this](auto token,RawPathPoint point,auto& index) { return aiDropEvaluation->DryDistance(token,point,index); };fake.center=[this](Sid sid) { const auto center=core.neighbors.Center(sid);return RawPathPoint{center[0],center[1]}; };fake.candidate=[this](RawPathPoint source,RawPathPoint target) { return aiDryGeometry->Candidate(source,target); };fake.add=[this](auto token,RawPathPoint point,auto type) { return aiDrySpots->Add(token,point.x,point.y,type); };fake.remove=[this](auto token,auto index) { aiDrySpots->Remove(token,index); };fake.seed=[this](auto token) { aiDrySpots->Seed(token,random); };fake.mark=[this](RawPathPoint point) { aiDryGeometry->Mark(point); };
         fake.log=[this](auto token,AiFakeDryLog action,auto x,auto y) { if (!services.player.log) throw std::logic_error("AI 가짜 부족좌표 실제 로그 미연결");services.player.log(aiDrySpotLog,"AI"+std::to_string(std::bit_cast<std::int32_t>(Read(aiMemory.Bytes(token),0x260)))+": "+(action==AiFakeDryLog::Added ? "Added fake dry spot at (" : "Fake Discarded at (")+std::to_string(x)+","+std::to_string(y)+")\n\n"); };aiFakeDrySpots=std::make_unique<RawAiFakeDrySpots>(aiMemory,core.pool,AiFakeDryGlobals{cursorManaGlobals.radiusLimit,cursorManaGlobals.mapLimit,aiDrySpotLog},std::move(fake));
+        AiDropActionHooks drops;drops.product=[this](auto token,auto type) { return aiStrategySetup->FindProduct(token,type); };drops.select=[this](auto token) { aiDropSelection->Select(token); };drops.scan=[this](auto token,auto type,auto direction) { return aiDropScan->Scan(token,type,direction); };drops.canAfford=[this](auto token,auto type) { return aiDeployment->CanAfford(token,type); };drops.mayPlace=[this](const CanonPlacementQuery& query) { PrepareConstruction();return MayPlaceGameplay(query); };
+        drops.deploy=[this](auto token,auto type,RawPathPoint point,auto argument,auto direction) { aiCollectors->DeployWithNotice(token,type,point.x,point.y,argument,direction); };drops.fake=[this](auto token) { aiFakeDrySpots->Extend(token); };drops.seed=[this](auto token) { aiDrySpots->Seed(token,random); };drops.remove=[this](auto token,auto index) { aiDropScan->Remove(token,index); };drops.assertion=[this](std::string_view text,auto line) { if (!services.ai.assertion) throw std::logic_error("AI 배치 행동 원본 진단 미연결 "+std::to_string(line));services.ai.assertion(text); };
+        drops.log=[this](auto token,const AiDropActionNotice& notice) {
+            if (!services.player.log) throw std::logic_error("AI 배치 행동 실제 로그 미연결");std::string text;
+            switch (notice.action) {
+            case AiDropActionLog::LostAbility:text="Lost ability to build "+core.types[notice.type].name+"\n";break;
+            case AiDropActionLog::ScanComplete:text="Drop Scan Complete "+core.types[notice.type].name+" Rot="+std::to_string(notice.direction)+".\n";break;
+            case AiDropActionLog::PartialScan:text="Building with scan only partly done.\n";break;
+            case AiDropActionLog::CannotAfford:text="Can't afford "+core.types[notice.type].name+"\n";break;
+            case AiDropActionLog::BadChoice:text="Bad choice "+core.types[notice.type].name+" at ("+std::to_string(notice.x)+","+std::to_string(notice.y)+")\n";break;
+            case AiDropActionLog::Laying:text="Laying "+core.types[notice.type].name+" at ("+std::to_string(notice.x)+","+std::to_string(notice.y)+")\n";break;
+            case AiDropActionLog::Target:text="My target is the "+std::to_string(notice.type)+"/"+core.types[notice.type].name+" at ("+std::to_string(notice.x)+","+std::to_string(notice.y)+")\n";break;
+            }
+            services.player.log(aiDropLog,"AI"+std::to_string(std::bit_cast<std::int32_t>(Read(aiMemory.Bytes(token),0x260)))+": "+text+"\n");
+        };
+        aiDropActions=std::make_unique<RawAiDropActions>(aiMemory,core.pool,core.types,random,AiDropActionGlobals{core.processState.now,cursorManaGlobals.mapLimit,gunState.checking},std::move(drops));
         AiPriestActionHooks priest;priest.scan=[this](auto token,auto budgeted) { aiBuildSearch->Scan(token,budgeted); };priest.vulnerable=[this](Sid actor) { return aiCollectors->Vulnerable(actor); };priest.busy=[this](Sid actor) { return core.processes.FindEvent(actor,0x493)!=nullptr; };priest.path=[this](Sid actor) { return aiMovement->MovementForm(actor); };priest.maxHitPoints=[this](Sid actor) { return hp.MaxHitPoints(actor); };priest.ritual=[this](Sid actor) { return AiPriestInRitual(core.pool,core.frames,actor); };
         priest.altarEnemy=[this](auto enemy,Sid dais) { return AiAltarContainsEnemy(core.pool,dais,enemy,runeState.altarType,[this](float x,float y,auto type) { return world.Find(x,y,type); }); };priest.target=[this](auto token,Sid actor,Sid target,auto sacrifice) { aiMovement->ToTarget(token,actor,target,sacrifice); };priest.distance=[this](RawPathPoint point,Sid dais) { return AiDistanceToFootprint(point,core.neighbors.Footprint(dais)); };priest.select=[this](auto token) { return aiBuildChoice->Select(token); };priest.home=[this](auto token,Sid actor) { aiMovement->Home(token,actor); };priest.collect=[this](auto token,Sid actor) { aiResourceChoice->CollectOrHome(token,actor); };
         priest.deploy=[this](auto token,auto type,RawPathPoint point) { aiCollectors->DeployWithNotice(token,type,point.x,point.y,0,0); };priest.begin=[this](auto token,const AiPriestSearchRequest& request) { aiBuildSearch->Initialize(token,request.type,request.bounds,request.avoid,request.owner); };priest.point=[this](auto token,Sid actor,RawPathPoint point) { aiMovement->ToPoint(token,actor,point,0); };priest.enemyLowFunds=[this](auto token) { return aiBuildChoice->EnemyLowFunds(token); };priest.salvage=[this](Sid target) { salvageCommand->Request(target.value); };
@@ -2636,6 +2654,8 @@ bool RawCampaignSession::AdvanceAiDropScan(std::uint32_t owner,std::uint32_t typ
 bool RawCampaignSession::RemoveAiDropChoice(std::uint32_t owner,std::int32_t index) { if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("설치 후 owner1..8 AI 배치 후보 제거만 허용");const auto token=impl_->participation->Brain(owner);if (!token) return false;impl_->aiDropScan->Remove(token,index);return true; }
 // 실제배치TYPE/회전과같은후보·점수를원본순서로갱신한다.true는본체존재/호출이다.
 bool RawCampaignSession::SelectAiDropType(std::uint32_t owner) { if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("설치 후 owner1..8 AI 배치 TYPE 선택만 허용");const auto token=impl_->participation->Brain(owner);if (!token) return false;impl_->aiDropSelection->Select(token);return true; }
+// 전체 원본 배치 행동을 같은 실제 본체/선택·스캔/생산·배치/부족좌표로 호출한다.
+bool RawCampaignSession::ManageAiDrops(std::uint32_t owner) { if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("설치 후 owner1..8 AI 전체 배치 행동만 허용");const auto token=impl_->participation->Brain(owner);if (!token) return false;impl_->aiDropActions->Run(token);return true; }
 // 현재가상표의실제원본이름을반환한다.
 std::string RawCampaignSession::ObjectName(Sid parent) const { if (!impl_->loaded) throw std::logic_error("설치 전 객체 이름 조회");return impl_->objectNames->Name(parent); }
 // 명시 해제의 오류는 caller에 전파하고 destructor의 마지막 정리와 구분한다.

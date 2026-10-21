@@ -588,6 +588,15 @@ TEST_CASE(CampaignSession_AiDropSelectionUsesActualProductsScanAndLifetime) {
     for (std::size_t step=0;step<8;++step) { CHECK(session.SelectAiDropType(2));if (Get(raw,0x3e0)) break; }
     const auto type=Get(raw,0x3e0);CHECK(type && type<188 && !Get(raw,0x570) && !Get(raw,0x3e8) && !Get(raw,0x3ec) && Get(raw,0xaf8)==10 && Get(raw,0xafc)==10);if (type) CHECK(session.AdvanceAiDropScan(2,type,std::bit_cast<std::int32_t>(Get(raw,0x3e4))));CHECK(session.Sp(2)==sp && Get(raw,0x2d8)==wallet);session.RemoveAi(2);CHECK(!session.SelectAiDropType(2));
 }
+// 실제 생산 조각/선택·스캔을 전체 배치 행동으로 연결하고 원래 지갑 관문/수명을 확인한다.작성·컴파일만 한다.
+TEST_CASE(CampaignSession_AiDropActionsUseActualSelectionScanAndWallet) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services(); //보호 Fort와 명시 외부 장치 입력이다.
+    services.ai.allocationBytes=[](auto raw) { std::fill(raw.begin(),raw.end(),std::uint8_t{0x71}); };services.ai.participation.clearChat=[](auto) {};services.ai.participation.addChat=[](auto,auto,auto) {};services.ai.localTransport=[] { return true; };services.ai.assertion=[](std::string_view text) { throw std::logic_error(std::string(text)); };services.missionOutcome.demo=[] { return 0U; };
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));CHECK(Throws([&] { session.ManageAiDrops(2); }));session.Load();CHECK(!session.ManageAiDrops(2));auto profile=SessionAiSettings("Drop Actions AI","sunWalker;sunCannon");Put(profile,0x22c,1199);const auto token=session.CreateAi(2,profile);CHECK(token && session.PrepareAi(2));if (!token) return;auto core=session.Core();const auto known=session.FindTechnology(2,128);CHECK(known.value);if (!known.value) return;const auto parent=SquidForms(core.pool).Parent(known);CHECK(parent.value);if (!parent.value) return;const auto product=session.CreateContained(parent,128,0,8,0,0);CHECK(product.value);const auto raw=session.AiMemory().Bytes(token);const auto sp=session.Sp(2);CHECK(Get(raw,0x2d8)==1199);
+    // 실제 기술 순환이 운반체TYPE를 제외하면 다음 정상 호출에서 다시 선택한다.
+    for (std::size_t step=0;step<8;++step) { CHECK(session.ManageAiDrops(2));if (Get(raw,0x3e0)) break; }
+    CHECK(Get(raw,0x3e0) && (Get(raw,0xaf8)!=10 || Get(raw,0xafc)!=10 || Get(raw,0x3ec)));CHECK(session.ManageAiDrops(2) && Get(raw,0x2d8)==1199 && session.Sp(2)==sp && !Get(raw,0x3f4) && !Get(raw,0x3fc) && !(core.pool.Slot(product)[11]&1U) && !(Get(core.pool.Slot(product),20,2)&0x100U));session.RemoveAi(2);CHECK(!session.ManageAiDrops(2));
+}
 // 실제 AI의 자기/비교 영역·fake TYPE와 같은 Dry Spot backing 및 소멸을 검사한다. 작성·컴파일만 한다.
 TEST_CASE(CampaignSession_AiDrySeedUsesActualBrainListAndLifetime) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services(); // 보호 Fort와 명시 외부 장치 입력이다.
