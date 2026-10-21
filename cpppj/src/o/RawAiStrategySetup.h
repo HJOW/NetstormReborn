@@ -22,6 +22,7 @@ struct AiStrategySetupHooks {
     std::function<std::uint32_t(std::int32_t)> temple; //0046f260의 현재 지역 신전 조회다.
     std::function<void(Sid,std::uint32_t)> destroy; //가상+10의 실제 내용물 삭제다.
     std::function<void(std::string_view)> assertion; //원본 assert 이후 계속하는 진단이며 미공급이면 명시 실패한다.
+    std::function<bool()> demo; //0040fcb0이 기한 전 로컬 재고를 보충할 때만 현재 데모 여부를 읽는다.
 };
 // 초기화258과 최초 월드 스캔25c를 분리하고 실제 Player 기술부모/내용물/게임 난수를 공유한다.
 class RawAiStrategySetup {
@@ -35,6 +36,7 @@ public:
     Sid FindProduct(std::uint32_t token,std::uint32_t type) const; //00410360과004103c0은 모두 같은 mask8 조회다.
     void AddProduct(std::uint32_t token,Sid parent,std::uint32_t type) const; //00410420의 로컬/원격 생산 내용물 생성이다.
     void SeedBridges(std::uint32_t token,Sid parent,std::uint32_t count) const; //0040fc60의 기존 다리 스캔과 부족분 생성이다.
+    void RefreshBridges(std::uint32_t token,Sid parent) const; //0040fcb0:기존 재고/신전/기한·로컬 데모 관문 뒤 한 조각만 생성한다.
     const SidPool& Pool() const; //같은 실제 월드 조립 여부를 확인한다.
 private:
     std::span<std::uint8_t> Body(std::uint32_t token) const; //현재 살아 있는0xb08 본체를 다시 빌린다.
@@ -46,6 +48,7 @@ private:
     void Assert(std::string_view text) const; //선택된 원본 진단의 누락을 거부한다.
     void StoreBridge(std::uint32_t token,std::uint32_t pattern) const; //실제8DWORD 재고의 현재+628 칸에 쓴다.
     void AddBridge(std::uint32_t token,Sid parent) const; //0040fb30의 난수 소비·네 번째 직선·내용물·QWORD 기한이다.
+    std::uint32_t ScanBridges(std::uint32_t token,Sid parent) const; //0040fbd0의 재고 스캔과 보류 포함 총수다.
     RawAiBrainMemory& memory_; //기존 생성/삭제/지갑과 같은 본체 저장소다.
     RawPlayerWorld& player_; //같은9Player의 현재 기술부모와 지역을 읽는다.
     const RawAiPreparation& preparation_; //공유00410300 적 선택 몸체다.

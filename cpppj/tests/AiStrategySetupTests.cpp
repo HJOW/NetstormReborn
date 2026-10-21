@@ -112,4 +112,13 @@ TEST_CASE(AiStrategySetup_GoalResetOnlyOnChangeAndStrictPointBounds) {
     // 지도 끝·0·NaN은 특정 좌표 목표로 인정하지 않는다.
     for (float invalid:{0.0F,256.0F,std::numeric_limits<float>::quiet_NaN()}) { input.Field(0xaf0,std::bit_cast<std::uint32_t>(invalid));setup->SelectGoal(input.token);CHECK(input.Field(0x2d4)==3); }
 }
+// 신전 없음/충족/기한 전/데모 조건에서도 기존 재고를 먼저 스캔하며 한 번에 하나만 보충한다.
+TEST_CASE(AiStrategySetup_RefreshBridgeGatesAndLocalDemo) {
+    StrategyInput input;input.Field(0x604,3);input.Content(input.technology,0x40,82,7);auto setup=input.Make();setup->RefreshBridges(input.token,input.technology);CHECK(input.Field(0x628)==1 && input.attached.empty());input.pool.AllocatedBytes(input.technology)[34]=1;Put(input.players,180+0x7c,99);const auto future=std::bit_cast<std::uint64_t>(input.now+100);input.Field(0x630,static_cast<std::uint32_t>(future));input.Field(0x634,static_cast<std::uint32_t>(future>>32));input.hooks.demo=[] { return false; };input.Make()->RefreshBridges(input.token,input.technology);CHECK(input.attached.empty());input.hooks.demo=[] { return true; };input.Make()->RefreshBridges(input.token,input.technology);CHECK(input.attached.size()==1 && input.Field(0x628)==2);input.Make()->RefreshBridges(input.token,input.technology);CHECK(input.attached.size()==2 && input.Field(0x628)==3);input.hooks.demo={};input.Make()->RefreshBridges(input.token,input.technology);CHECK(input.attached.size()==2);
+}
+// 원격은 기한 전 데모 getter를 호출하지 않고, unordered 시각도 원본 C0 분기로 대기한다.
+TEST_CASE(AiStrategySetup_RefreshRemoteDeadlineAndUnordered) {
+    StrategyInput input;input.Field(0x604,2);input.pool.AllocatedBytes(input.technology)[34]=2;Put(input.players,360+0x7c,99);const auto due=std::bit_cast<std::uint64_t>(input.now+1);input.Field(0x630,static_cast<std::uint32_t>(due));input.Field(0x634,static_cast<std::uint32_t>(due>>32));auto setup=input.Make();setup->RefreshBridges(input.token,input.technology);CHECK(input.attached.empty());input.now+=1;setup->RefreshBridges(input.token,input.technology);CHECK(input.attached.size()==1);input.now=std::numeric_limits<double>::quiet_NaN();setup->RefreshBridges(input.token,input.technology);CHECK(input.attached.size()==1 && input.Field(0x628)==1);
+    input.pool.AllocatedBytes(input.technology)[34]=1;Put(input.players,180+0x7c,99);CHECK(Throws([&] { setup->RefreshBridges(input.token,input.technology); }));CHECK(input.Field(0x628)==1);
+}
 }

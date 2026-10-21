@@ -77,15 +77,28 @@ void RawAiStrategySetup::AddBridge(std::uint32_t token,Sid parent) const {
     Field(token,0x628,Field(token,0x628)+1U);const auto deadline=std::bit_cast<std::uint64_t>(static_cast<double>(std::bit_cast<float>(Field(token,0x600)))+globals_.now);Field(token,0x630,static_cast<std::uint32_t>(deadline));Field(token,0x634,static_cast<std::uint32_t>(deadline>>32));
 }
 // 사용 중인 다리도 총수에는 포함하고, 배치 가능한 패턴만8칸 재고에 모은다.
-void RawAiStrategySetup::SeedBridges(std::uint32_t token,Sid parent,std::uint32_t count) const {
-    Field(token,0x604,count);Field(token,0x628,0);std::uint32_t total{};RawContainedFinder cursor(Pool(),finderState_);
+std::uint32_t RawAiStrategySetup::ScanBridges(std::uint32_t token,Sid parent) const {
+    Field(token,0x628,0);std::uint32_t total{};RawContainedFinder cursor(Pool(),finderState_);
     // 저장된 next를 이용하는 같은 원본 내용물 순회로 현재 다리 상태를 읽는다.
     for (auto sid=cursor.Begin(parent);sid.value;sid=cursor.Next()) {
         const auto raw=Pool().Slot(sid);const auto flags=static_cast<std::uint32_t>(raw[20])|(static_cast<std::uint32_t>(raw[21])<<8);
         if (!(flags&0x40)) continue;++total;if ((flags&0x140)==0x40) { StoreBridge(token,static_cast<std::uint32_t>(raw[12])|(static_cast<std::uint32_t>(raw[13])<<8));Field(token,0x628,Field(token,0x628)+1U); }
     }
+    return total;
+}
+// 목표 개수는 첫 스캔 전에 저장하며 원본 부족분 반복만 수행한다.
+void RawAiStrategySetup::SeedBridges(std::uint32_t token,Sid parent,std::uint32_t count) const {
+    Field(token,0x604,count);const auto total=ScanBridges(token,parent);
     // 하위가 현재 목표 개수를 바꾸면 다음 비교에서 다시 읽으며 unsigned 감김 뒤 signed 비교한다.
     for (auto made=total;Signed(made)<Signed(Field(token,0x604));++made) AddBridge(token,parent);
+}
+// 원본은 신전/시간 관문에서 반환할 때에도 먼저 실제 패턴 재고를 갱신한다.
+void RawAiStrategySetup::RefreshBridges(std::uint32_t token,Sid parent) const {
+    const auto total=ScanBridges(token,parent);const auto owner=Pool().Slot(parent)[34];if (owner>=9) throw std::out_of_range("AI 다리 보충 현재 Player 범위");
+    if (!Read(player_.Records(),owner*kPlayerBytes+0x7c) || Signed(total)>=Signed(Field(token,0x604))) return;
+    const auto due=std::bit_cast<double>((std::uint64_t(Field(token,0x634))<<32)|Field(token,0x630));
+    if (!(globals_.now>=due)) { if (owner!=globals_.localOwner || !Need(hooks_.demo,"AI 다리 보충 현재 데모 조회 미연결")()) return; }
+    AddBridge(token,parent);
 }
 // 적과 양쪽 시작 지역이 준비되지 않았으면 완료 표식을 쓰지 않는다.
 void RawAiStrategySetup::Initialize(std::uint32_t token) const {

@@ -377,3 +377,5 @@ target_sources(netstorm PRIVATE RawAiObjectNotice.cpp RawAiObjectNotice.h)
 target_sources(netstorm PRIVATE RawAiWorldRegistration.cpp RawAiWorldRegistration.h RawAiPreparation.cpp RawAiPreparation.h)
 # 원본 공통 AI의 첫 전략 준비와 목표 선택을 같은 실제 월드에 연결한다.
 target_sources(netstorm PRIVATE RawAiStrategySetup.cpp RawAiStrategySetup.h)
+# 원본 AI 행동 말미의 지갑/분산SP 정리를 같은 실제 저장소에서 실행한다.
+target_sources(netstorm PRIVATE RawAiEconomy.cpp RawAiEconomy.h)

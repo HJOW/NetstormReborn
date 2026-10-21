@@ -98,6 +98,7 @@
 #include "o/RawAiObjectNotice.h"
 #include "o/RawAiWorldRegistration.h"
 #include "o/RawAiStrategySetup.h"
+#include "o/RawAiEconomy.h"
 #include "o/RawAiPreparation.h"
 #include "o/RawPriestLookup.h"
 #include "o/RawRunePostPop.h"
@@ -275,6 +276,7 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawAiWorldRegistration> aiWorld; // 같은 현재 Pool/표면/동맹으로 기존 자산과 간헐천 후보를 등록한다.
     std::unique_ptr<RawAiPreparation> aiPreparation; // 원본00416eb0의 현재 목표·그래프·SP·최초 등록과 수량 판정이다.
     std::unique_ptr<RawAiStrategySetup> aiStrategySetup; //같은 본체의00414af0 초기 전략/생산/다리와004139f0 목표 선택이다.
+    std::unique_ptr<RawAiEconomy> aiEconomy; //같은 본체 지갑·현재 포획 상태·분산SP를 정리하는004138c0이다.
     std::array<std::uint32_t,4> aiWorkshops{86,87,88,85}; // PATCH004709d0의 theme0/1/2/3이 읽는005411b0/b4/b8/ac의 실제 기본 타입이다.
     std::uint32_t aiExcludedType{133},aiMissionFallback{}; // 실제 sunWalker 분류 제외 번호와 현재 getter를 사용할 때 읽지 않는 값형 호환 저장소다.
     bool loaded{}; // 같은 실제 저장 부모와 이동 설치가 정상 종료했을 때만 AI 생성 요청을 허용한다.
@@ -1768,8 +1770,11 @@ struct RawCampaignSession::Impl {
         setup.regionBounds=[this](auto region) { const auto bounds=chunks.Bounds(region);return std::array<float,4>{static_cast<float>(bounds.left*16),static_cast<float>(bounds.top*16),static_cast<float>(bounds.right*16),static_cast<float>(bounds.bottom*16)}; }; //같은 원본의 청크→칸 변환을 자기 지역에도 적용한다.
         setup.temple=[this](auto region) { return islands->Temple(region); };setup.destroy=[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); };
         setup.assertion=[this](std::string_view text) { if (!services.ai.assertion) throw std::logic_error("AI 전략 준비 원본 진단 미연결");services.ai.assertion(text); };
+        setup.demo=[this] { return services.missionOutcome.demo()!=0; }; //기한 전 로컬 보충만 원본 데모 판정을 읽는다.
         aiStrategySetup=std::make_unique<RawAiStrategySetup>(aiMemory,*player,*aiPreparation,priests->Carrier(),*contained,contentFinder,core.types,random,alliances,
             AiStrategySetupGlobals{playerState.battleOwner,noRegion,templeProduct,contentState.bridgeType,cursorManaGlobals.mapLimit,core.processState.now},std::move(setup));
+        AiEconomyHooks economy;economy.demo=[this] { return services.missionOutcome.demo()!=0; };economy.captured=[this](auto owner) { if (owner<1 || owner>8) { if (!services.ai.assertion) throw std::logic_error("AI 경제 포획 owner 진단 미연결");services.ai.assertion("playerId > INVALID_PLAYER_ID && playerId < MAX_PLAYERS");return true; }return outcome->PriestCaptured(owner); }; //같은 현재 Player 플래그/ownerState 판정을 재사용한다.
+        aiEconomy=std::make_unique<RawAiEconomy>(aiMemory,sp,core.processState.now,std::move(economy));
     }
     // 첫 실제 객체 이전에 같은 공통 삭제/내용물/Player 통지/기술 모듈을 한 번 연결한다.
     void InstallContents(const SquidDestroyHooks& deletion) {
@@ -2411,6 +2416,10 @@ std::uint32_t RawCampaignSession::CreateAi(std::uint32_t owner,std::span<const s
 bool RawCampaignSession::PrepareAi(std::uint32_t owner) { if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("실제 Session 설치 후 owner1..8 AI 준비만 허용");const auto token=impl_->participation->Brain(owner);if (!token) return false;impl_->aiPreparation->Update(token);return true; }
 // 원본417d30처럼258이0인 동안만 같은 초기 전략을 재시도한다. 자동 행동 프레임은 후속 연결이다.
 bool RawCampaignSession::InitializeAi(std::uint32_t owner) { if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("실제 Session 설치 후 owner1..8 AI 초기 전략만 허용");const auto token=impl_->participation->Brain(owner);if (!token) return false;if (!Read(impl_->aiMemory.Bytes(token),0x258)) impl_->aiStrategySetup->Initialize(token);return Read(impl_->aiMemory.Bytes(token),0x258)!=0; }
+// 다리 행동이 호출할 같은 실제 재고 보충만 명시 실행한다. 다른 전략 행동은 수행하지 않는다.
+bool RawCampaignSession::RefreshAiBridges(std::uint32_t owner) { if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("실제 Session 설치 후 owner1..8 AI 다리 보충만 허용");const auto token=impl_->participation->Brain(owner);if (!token) return false;const auto parent=impl_->player->Technology(static_cast<std::int32_t>(owner));if (parent>65535 || parent>=impl_->core.pool.Capacity()) throw std::out_of_range("실제 AI 다리 보충 기술부모 SID 범위");impl_->aiStrategySetup->RefreshBridges(token,Sid{static_cast<std::uint16_t>(parent)});return true; }
+// 행동 말미의 실제 경제 정리를 명시 호출하며 보상 가산/별도 지갑 복사본을 사용하지 않는다.
+bool RawCampaignSession::ReconcileAiEconomy(std::uint32_t owner) { if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("실제 Session 설치 후 owner1..8 AI 경제 정리만 허용");const auto token=impl_->participation->Brain(owner);if (!token) return false;impl_->aiEconomy->Reconcile(token);return true; }
 // 명시 해제의 오류는 caller에 전파하고 destructor의 마지막 정리와 구분한다.
 void RawCampaignSession::RemoveAi(std::uint32_t owner) { impl_->participation->RemoveBrain(owner); }
 // 후속 실제 전략은 현재 Player 토큰으로 이 유일한 본체/목록 저장소를 조회해야 한다.
