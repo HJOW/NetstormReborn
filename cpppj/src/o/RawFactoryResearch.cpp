@@ -62,7 +62,7 @@ std::uint32_t RawFactoryResearch::Input(Sid parent,std::uint32_t code,std::uint3
 void RawFactoryResearch::Receive(std::uint32_t sender,std::span<const std::uint8_t> packet) const {
     if (packet.size()<8) throw std::out_of_range("Factory 연구 수신 본문 부족");
     const Sid parent{static_cast<std::uint16_t>(Get(packet,4,2))};if (Read(parent,11,1)&3U) return;
-    if (!packet[6]) { if (packet[7]==1) throw std::logic_error("Factory 업그레이드 수신 몸체 미복원");return; }
+    if (!packet[6]) { if (packet[7]==1) Required(hooks_.upgradeReceive)(packet);return; }
     const auto type=Read(parent,10,1);if (type>=types_.size()) throw std::out_of_range("Factory 연구 현재 TYPE 범위 오류");
     if (!(types_[type].flags2&0x4000U) || Read(parent,34,1)!=sender || Read(parent,10,1)==state_.outpostType) return;
     if (!state_.boss) { Required(hooks_.assertion)("boss");if (!state_.boss) return; }

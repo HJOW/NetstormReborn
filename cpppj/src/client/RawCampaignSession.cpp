@@ -125,6 +125,7 @@
 #include "o/RawProductionSync.h"
 #include "o/RawFlare.h"
 #include "o/RawFactoryResearch.h"
+#include "o/RawFactoryUpgradeCommand.h"
 #include "client/RawShapeToBuffer.h"
 #include "client/OwnerColorMaps.h"
 #include <bit>
@@ -481,6 +482,8 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawFlare> flare; // 같은 난수/Kernel/공간/표시/삭제를 사용하는 실제 효과다.
     std::unique_ptr<void,void(*)(void*)> pendingFlareRegular{nullptr,[](void* storage) { ::operator delete(storage); }}; // 실제 new40 예약부터 Regular 생성까지의 단일 메모리다.
     std::unique_ptr<RawFactoryResearch> factoryResearch; // 같은 내용물/생산 Deck/현재 권한과58h 송신을 연결한다.
+    std::unique_ptr<RawFactoryUpgradeCommand> factoryUpgradeCommand; //같은58h의 업그레이드 요청/수신과 실제 SP·SharedRegular을 연결한다.
+    std::unique_ptr<RegularProcess> factoryUpgradePending; //원본 new(0x28) 성공 뒤 현재 사건/지연으로 구성할 실제 예약 메모리다.
     DamageablePreDestroyState damageablePreState; // 같은 사제 타입을 읽는 실제 공통 삭제 전역이다.
     DamageableReleaseState damageableReleaseState; // 해방 요청마다 같은 현재 전투 모드를 공급한다.
     DamageablePostDestroyState damageablePostState; // 삭제 후의 현재 전투/권한 전역이다.
@@ -1910,7 +1913,12 @@ struct RawCampaignSession::Impl {
         research.flare=[this](Sid parent,std::int32_t count,std::uint32_t event) { if (!flare) throw std::logic_error("실제 연구 플레어 미설치");flare->Spawn(parent,count,event); };
         research.refresh=[this](std::uint32_t owner) { static_cast<void>(production->Refresh(owner)); };
         research.assertion=[](std::string_view message) { std::fprintf(stderr,"Factory 연구 원본 진단: %.*s\n",static_cast<int>(message.size()),message.data()); };
+        research.upgradeReceive=[this](std::span<const std::uint8_t> packet) { if (!factoryUpgradeCommand) throw std::logic_error("Factory 업그레이드 실제 수신 미설치");factoryUpgradeCommand->Receive(packet); };
         factoryResearch=std::make_unique<RawFactoryResearch>(core.pool,core.types,FactoryResearchState{objectState.loadingDepth,core.bookkeeping.productionDirty,assetState.boss,core.processState.now,researchOutpost},std::move(research));
+        FactoryUpgradeCommandHooks upgrade;upgrade.cost=[this](auto type) { return hp.TypeCostUnits(type); };upgrade.addSp=[this](auto owner,float delta) { hp.AddSp(owner,delta); };
+        upgrade.reserveShared=[this] { try { factoryUpgradePending=std::make_unique<RegularProcess>(0U,0.0F);return true; }catch (const std::bad_alloc&) { return false; } };upgrade.addShared=[this](Sid parent,auto event,float delay) { if (!factoryUpgradePending) throw std::logic_error("Factory 업그레이드 실제 SharedRegular 예약 누락");auto* memory=factoryUpgradePending.release();std::destroy_at(memory);std::construct_at(memory,event,delay);auto* attached=static_cast<RegularProcess*>(core.processes.Attach(std::unique_ptr<RegularProcess>(memory),61,parent,0x50));if (!attached) throw std::logic_error("Factory 업그레이드 실제 SharedRegular 부착 실패");attached->ResetTask(event,core.processState.now); };
+        upgrade.send=[this](auto target,std::span<const std::uint8_t> packet) { if (!services.carrierRequest) throw std::logic_error("Factory 업그레이드 실제 요청 송신 미연결");services.carrierRequest(static_cast<std::int32_t>(target),packet); };upgrade.broadcast=[this](std::span<const std::uint8_t> packet) { broadcast->Send(packet); };upgrade.log=[this](auto kind,std::string_view text) { if (!services.player.log) throw std::logic_error("Factory 업그레이드 실제 로그 미연결");services.player.log(kind,text); };upgrade.assertion=[](std::string_view text) { std::fprintf(stderr,"Factory 업그레이드 원본 진단: %.*s\n",static_cast<int>(text.size()),text.data()); };
+        factoryUpgradeCommand=std::make_unique<RawFactoryUpgradeCommand>(core.pool,core.types,FactoryUpgradeCommandState{assetState.boss,gunState.checking,core.processState.now},std::move(upgrade));
     }
     // 외부 config/UI는 현재 클라이언트 서비스를 사용하고 게임 계산은 동일 원본 모듈을 사용한다.
     std::unique_ptr<RawCampaignWorldRuntime> MakeRuntime() {
@@ -2327,6 +2335,8 @@ void RawCampaignSession::RegisterFactoryResearchCommands(RawPacketDispatch& disp
 std::uint32_t RawCampaignSession::SelectFactoryKnowledge(Sid parent,std::uint32_t code,std::uint32_t parameter) {
     if (!impl_->loaded || !impl_->factoryResearch->HandlesNotice(parent)) throw std::logic_error("실제 연구 입력의 미설치/Factory 가상 표 오류");return impl_->factoryResearch->Input(parent,code,parameter);
 }
+// 입력 부모의 자금/진행 관문을 별도로 둔 원본453bf0 요청 몸체만 명시 실행한다.
+void RawCampaignSession::RequestFactoryUpgrade(Sid parent) { if (!impl_->loaded) throw std::logic_error("설치 전 Factory 업그레이드 요청");impl_->factoryUpgradeCommand->Request(parent); }
 //현재프레임에서만같은실제두끝의큐를소비한다.
 void RawCampaignSession::PumpLocalConnection() { if (impl_->login) impl_->login->Pump(); }
 //진단은현재원본확정phase를읽고성공을합성하지않는다.

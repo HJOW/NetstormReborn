@@ -462,6 +462,14 @@ TEST_CASE(CampaignSession_AiFactoryProductionUsesOriginalWorkshops) {
     for (auto form=finder.Begin(factory);form.value;form=finder.Next()) if (Get(session.Core().pool.Slot(form),20,2)&16U) ++count;
     CHECK(count==1);session.RemoveAi(2);CHECK(!session.ManageAiFactories(2));
 }
+// 같은58h 분배/분산SP/Kernel의 실제 SharedRegular을 요청과 수신 양쪽에서 확인한다. 진행 프레임은 실행하지 않는다.
+TEST_CASE(CampaignSession_FactoryUpgradeCommandUsesActualHostAndSp) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();std::vector<std::vector<std::uint8_t>> packets;services.carrierRequest=[&](std::int32_t target,std::span<const std::uint8_t> packet) { CHECK(target==9);packets.emplace_back(packet.begin(),packet.end()); };
+    auto fort=FortTemplate::Parse(assets.files.Read("d/masterofwhirligigs.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"masterofwhirligigs",std::move(services));CHECK(Throws([&] { session.RequestFactoryUpgrade(Sid{1}); }));session.Load();auto core=session.Core();Sid factory{};
+    // 원본 저장 맵에서 복원된 살아 있는 소유자2 Factory를 실제 슬롯/가상 표로 찾는다.
+    for (std::uint32_t value=1;value<core.pool.Capacity();++value) { const auto sid=Sid{static_cast<std::uint16_t>(value)};const auto raw=core.pool.Slot(sid);if (!(raw[11]&3U) && raw[34]==2 && Get(raw,0)==0x509148U) { factory=sid;break; } }
+    CHECK(factory.value!=0);if (!factory.value) return;session.RequestFactoryUpgrade(factory);CHECK(packets.size()==1);const auto client=core.processes.FindEvent(factory,4);CHECK(client && client->Payload()==20.0F);if (packets.empty()) return;const auto before=session.Sp(2);const auto cost=session.HitPoints().TypeCostUnits(core.pool.Slot(factory)[10]);PacketDispatchHooks hooks;hooks.now=[] { return 19U; };hooks.record=[](auto&,auto,auto) {};hooks.terminate=[](auto&) {};hooks.close=[](auto&) {};hooks.release=[](auto&) {};RawPacketDispatch dispatch(OriginalEdition::Patch1078,hooks);session.RegisterFactoryResearchCommands(dispatch);PacketConnection connection;connection.sender=0xffffffffU;CHECK(dispatch.Dispatch(connection,packets[0]));const auto server=core.processes.FindEvent(factory,3);CHECK(server && server->Payload()==15.0F && session.Sp(2)==before-static_cast<float>(cost));
+}
 // 같은 Session의 실제 본체/기술/동맹/현재 그래프 getter와 정상 목록 소멸을 함께 검사한다.
 TEST_CASE(CampaignSession_AiUsesCurrentWorldAndLifetime) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;

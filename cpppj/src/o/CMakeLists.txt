@@ -385,3 +385,5 @@ target_sources(netstorm PRIVATE RawAiDeployment.cpp RawAiDeployment.h)
 target_sources(netstorm PRIVATE RawAiCollectors.cpp RawAiCollectors.h)
 # 원본 AI의 원소별 생산 선택과 시설의 미처리/업그레이드 대기 목록을 처리한다.
 target_sources(netstorm PRIVATE RawAiFactoryProduction.cpp RawAiFactoryProduction.h)
+# 기존58h 연구와 같은 메시지의 업그레이드 요청/수신 접두를 실제 Host/SP에 연결한다.
+target_sources(netstorm PRIVATE RawFactoryUpgradeCommand.cpp RawFactoryUpgradeCommand.h)

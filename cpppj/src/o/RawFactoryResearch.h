@@ -22,6 +22,7 @@ struct FactoryResearchHooks {
     std::function<void(Sid,std::int32_t,std::uint32_t)> flare; // 45a6c0(parent,6,2)의 실제 플레어 생성이다.
     std::function<void(std::uint32_t)> refresh; // 44f7c0의 같은 owner 생산 Deck 재계산이다.
     std::function<void(std::string_view)> assertion; // 원본 진단 뒤의 현재 전역 재조회도 허용한다.
+    std::function<void(std::span<const std::uint8_t>)> upgradeReceive; //동일58h kind0/mode1의 실제 업그레이드 수신 몸체다. 선택되지 않으면 요구하지 않는다.
 };
 // 40aba0 생성자와4547d0의 필드 기록이다. 뒤의 호스트 버퍼를 건드리지 않는다.
 std::size_t WriteFactoryResearchCommand(Sid parent,std::uint32_t kind,double now,std::span<std::uint8_t> packet);
@@ -36,7 +37,7 @@ public:
     void Learn(Sid parent,std::uint32_t kind,std::uint32_t attachFlags) const;
     // 4547d0의03000080만 처리한다. packedArgument의 상위 signed WORD가 선택한 종류다.
     std::uint32_t Input(Sid parent,std::uint32_t code,std::uint32_t packedArgument) const;
-    // 453d70의 연구/무동작 분기다. 미복원 업그레이드 요청은 변경 전에 명시 거부한다.
+    // 453d70의 연구/무동작 분기와 동일 원문의 업그레이드 수신 연결이다.미공급 선택은 변경 전에 거부한다.
     void Receive(std::uint32_t sender,std::span<const std::uint8_t> packet) const;
     // 453b50→475220: 플레어·중복 예측 삭제·현재 dirty/Deck 갱신 순서다.
     void Notice(Sid parent,Sid form,std::uint32_t reason) const;
