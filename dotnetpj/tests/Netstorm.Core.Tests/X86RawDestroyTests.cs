@@ -5,20 +5,24 @@ using Netstorm.Tests;
 namespace Netstorm.Core.Tests;
 
 /// <summary>
-/// 원본 월드 코어의 공통 삭제 본체(<see cref="RawSquidDestroy"/>)를 원본 x86 기대값에 대조한다.
+/// 원본 월드 코어의 공통 삭제 본체(<see cref="RawSquidDestroy"/>)와 다리 수명주기(<see cref="RawBridgeLifecycle"/>)를
+/// 원본 x86 기대값에 대조한다.
 /// 장면은 cpppj/tests/RawDestroyTests.cpp 의 Scene 과 같다: 실제 슬롯 풀·해시·점유 지도 위에서
 /// 죽음 표시→종속 끊기·죽음 알림→전송·선택 알림→Unpop→반납을 실행하고,
+/// 다리 행은 뿌리 삭제를 다리 사전·사후(연결 끊기·제거 알림·추락 소리·보행자 추락·공통 사전·사후)에 잇는다.
 /// 호출마다 효과 문자열·슬롯 바이트·풀 카운터·머리·꼬리·체크섬·고른 번호·깊이를 비교한다.
-/// 다리(Bridge) 64행은 다리 수명(<c>RawBridgeLifecycle</c>) 연결 뒤에 재생하므로 여기서는 Destroy 600행만 본다.
-/// 기준 판본은 10.78 이며 원본1037·CD 행은 읽지 않는다 (W03 삭제·수명 첫 조각, 2026-10-21).
+/// 기준 판본은 10.78 이며 원본1037·CD 행은 읽지 않는다 (W03 삭제·수명 둘째 조각, 2026-10-21).
 /// </summary>
 public sealed class X86RawDestroyTests
 {
     /// <summary>10.78 행의 판본 이름. 그 밖은 원본1037·CD 다.</summary>
     private const string PatchEdition = "originals";
 
-    /// <summary>10.78 Destroy 행 수. 다리 64행은 빼고 센다.</summary>
+    /// <summary>10.78 Destroy 행 수. 다리 64행은 별도로 센다.</summary>
     private const int DestroyRowsPerEdition = 600;
+
+    /// <summary>10.78 Bridge 행 수(서버 풀·역할 0~1·갈래 0~3).</summary>
+    private const int BridgeRowsPerEdition = 64;
 
     /// <summary>삭제 뿌리·종속의 타입 번호(자산). 종속 일부는 20·75 로 바뀐다.</summary>
     private const int RootType = 74;
@@ -103,6 +107,24 @@ public sealed class X86RawDestroyTests
         /// <summary>삭제 본체.</summary>
         public readonly RawSquidDestroy Destroy;
 
+        /// <summary>일반 찾기. 다리 장면의 탐색기가 쓴다.</summary>
+        public readonly RawSquidFinder Finder;
+
+        /// <summary>다리 사전·사후 파괴. 다리 장면에서 뿌리 삭제가 부른다.</summary>
+        public readonly RawBridgeLifecycle Bridge;
+
+        /// <summary>다리 탐색기 콜백 묶음.</summary>
+        public readonly BridgeLifecycleHooks BridgeHooks;
+
+        /// <summary>다리 장면인지. 참이면 뿌리 삭제가 다리 수명주기를 탄다.</summary>
+        public readonly bool BridgeMode;
+
+        /// <summary>다리 장면의 연결 타입 번호. 사전 탐색이 찾는 타입이다.</summary>
+        private const uint LinkType = 75;
+
+        /// <summary>다리 뿌리의 가상 표 값(10.78 다리 클래스 식별 값).</summary>
+        private const uint BridgeVtable = 0x5034C8;
+
         /// <summary>뿌리 번호(역할 0 이면 5, 1 이면 15009, 2 이면 23002).</summary>
         public readonly int Root;
 
@@ -124,10 +146,12 @@ public sealed class X86RawDestroyTests
         /// <summary>행 입력(서버 여부·역할·갈래)으로 장면을 준비한다.</summary>
         /// <param name="server">서버 풀인지.</param>
         /// <param name="role">뿌리 역할(0 클라이언트, 1 서버, 2 예측).</param>
-        /// <param name="scenario">입력 갈래(0~7).</param>
-        public Scene(bool server, int role, int scenario)
+        /// <param name="scenario">입력 갈래(0~7, 다리 장면은 0~3).</param>
+        /// <param name="bridgeMode">다리 장면이면 참. 뿌리 삭제를 다리 수명주기에 잇는다.</param>
+        public Scene(bool server, int role, int scenario, bool bridgeMode = false)
         {
             Scenario = scenario;
+            BridgeMode = bridgeMode;
             Pool = new RawSidPool(32768, server);
             Types = new OriginalTypeRecord[OriginalConstructors.TypeCount];
             // 타입 번호 전체에 빈 타입 레코드를 채운다
@@ -169,18 +193,33 @@ public sealed class X86RawDestroyTests
                     type = scenario == 3 ? 20 : 75;
                     state = scenario == 3 ? 0 : 8;
                 }
+                if (BridgeMode)
+                {
+                    if (sid == Ids[1] || sid == Ids[4])
+                    {
+                        type = (int)LinkType;
+                    }
+                    if (sid == Ids[2])
+                    {
+                        state = 2;
+                    }
+                }
                 Span<byte> raw = Pool.AllocatedBytes(sid);
                 raw.Clear();
-                Put(raw, 0, OriginalConstructors.BaseVtable);
+                Put(raw, 0, BridgeMode && sid == Root ? BridgeVtable : OriginalConstructors.BaseVtable);
                 Put(raw, 4, 0, 2);
                 raw[10] = (byte)type;
                 raw[11] = (byte)state;
                 Put(raw, 14, BitConverter.SingleToUInt32Bits(20.75f));
                 Put(raw, 18, BitConverter.SingleToUInt32Bits(21.9f));
                 Types[type].Flags1 = 0;
-                Types[type].Flags2 = 0;
+                Types[type].Flags2 = BridgeMode && sid == Root ? 4U : 0U;
                 Types[type].FootX = 1;
                 Types[type].FootY = 1;
+                if (BridgeMode && sid == Ids[5])
+                {
+                    Types[type].Flags2 = 0x10000;
+                }
                 if ((state & 12) == 0 && type >= OriginalConstructors.FirstAssetType)
                 {
                     ref ushort head = ref Hash.Bucket(sid == Root ? 0 : 1, 20.75f, 21.9f);
@@ -188,7 +227,7 @@ public sealed class X86RawDestroyTests
                     head = (ushort)sid;
                 }
             }
-            if (scenario >= 3 && scenario <= 6)
+            if (!BridgeMode && scenario >= 3 && scenario <= 6)
             {
                 Put(Pool.AllocatedBytes(Root), 6, (uint)Ids[1], 2);
                 Put(Pool.AllocatedBytes(Ids[1]), 4, scenario == 3 ? 0U : (uint)Ids[2], 2);
@@ -197,6 +236,17 @@ public sealed class X86RawDestroyTests
                     Put(Pool.AllocatedBytes(Ids[2]), 4, 0, 2);
                 }
             }
+            if (BridgeMode)
+            {
+                Types[RootType].Flags2 = 4;
+                Put(Pool.AllocatedBytes(Ids[1]), 12, (uint)Ids[2], 2);
+                Put(Pool.AllocatedBytes(Ids[1]), 8, 8, 2);
+                Put(Pool.AllocatedBytes(Ids[4]), 12, (uint)Ids[1], 2);
+                Put(Pool.AllocatedBytes(Ids[4]), 8, 8, 2);
+            }
+            Finder = new RawSquidFinder(Pool, Hash, Types);
+            Bridge = new RawBridgeLifecycle(Pool, Types);
+            BridgeHooks = RawBridgeLifecycle.MakeHooks(Finder, EmitBridge);
             Hooks = new SquidDestroyHooks { Emit = Emit, Selected = () => Selected };
         }
 
@@ -217,19 +267,33 @@ public sealed class X86RawDestroyTests
             {
                 case SquidDestroyEffect.PreDestroy:
                     Hook('P', effect.Sid, effect.Flags);
-                    Destroy.CompletePreDestroy();
-                    if (effect.Sid == Root && Scenario == 6)
+                    if (BridgeMode && effect.Sid == Root)
                     {
-                        Put(Pool.AllocatedBytes(Root), 6, 7, 2);
+                        Bridge.PreDestroy(Root, effect.Flags, LinkType, BridgeHooks);
                     }
-                    if (effect.Sid == Root && Scenario == 7)
+                    else
                     {
-                        Pool.AllocatedBytes(Root)[11] |= 4;
+                        Destroy.CompletePreDestroy();
+                        if (effect.Sid == Root && Scenario == 6)
+                        {
+                            Put(Pool.AllocatedBytes(Root), 6, 7, 2);
+                        }
+                        if (effect.Sid == Root && Scenario == 7)
+                        {
+                            Pool.AllocatedBytes(Root)[11] |= 4;
+                        }
                     }
                     break;
                 case SquidDestroyEffect.PostDestroy:
                     Hook('O', effect.Sid, effect.Flags);
-                    Destroy.CompletePostDestroy();
+                    if (BridgeMode && effect.Sid == Root)
+                    {
+                        Bridge.PostDestroy(Root, effect.Flags, BridgeHooks);
+                    }
+                    else
+                    {
+                        Destroy.CompletePostDestroy();
+                    }
                     break;
                 case SquidDestroyEffect.ReleaseDependent:
                     Events.Add($"R:{effect.Sid}:{effect.Parent}");
@@ -255,8 +319,77 @@ public sealed class X86RawDestroyTests
             }
         }
 
+        /// <summary>다리 수명주기의 바깥 효과를 받아 원본 시험처럼 풀을 직접 고친다.</summary>
+        /// <param name="effect">나간 다리 삭제 효과.</param>
+        private void EmitBridge(BridgeLifecycleEvent effect)
+        {
+            switch (effect.Effect)
+            {
+                case BridgeLifecycleEffect.DestroyLink:
+                    Destroy.Destroy(effect.Sid, effect.Flags, Hooks);
+                    break;
+                case BridgeLifecycleEffect.BasePreDestroy:
+                    Hook('A', effect.Sid, effect.Flags);
+                    Destroy.CompletePreDestroy();
+                    break;
+                case BridgeLifecycleEffect.BasePostDestroy:
+                    Hook('B', effect.Sid, effect.Flags);
+                    Destroy.CompletePostDestroy();
+                    break;
+                case BridgeLifecycleEffect.NotifyRemoval:
+                    Events.Add($"N:{effect.Sid}");
+                    break;
+                case BridgeLifecycleEffect.FallSound:
+                    Events.Add($"W:{BitConverter.SingleToUInt32Bits(effect.X)}:{BitConverter.SingleToUInt32Bits(effect.Y)}");
+                    break;
+                case BridgeLifecycleEffect.FallWalker:
+                    Events.Add($"F:{effect.Sid}");
+                    Pool.AllocatedBytes(effect.Sid)[11] |= 2;
+                    break;
+                default:
+                    throw new InvalidOperationException("알 수 없는 다리 삭제 효과");
+            }
+        }
+
         /// <summary>나간 효과 문자열. 없으면 "-" 다.</summary>
         public string EventText() => Events.Count == 0 ? "-" : string.Join(';', Events);
+    }
+
+    /// <summary>한 행을 재생하고 효과·슬롯·요약을 대조한다. 다리 행은 다리 장면으로 만든다.</summary>
+    /// <param name="row">fixture 행(10칸).</param>
+    /// <param name="bridgeMode">다리 장면인지.</param>
+    private static void PlayRow(string[] row, bool bridgeMode)
+    {
+        Assert.Equal(10, row.Length);
+        var scene = new Scene(row[3] == "1", X86Fixture.Int(row[4]), X86Fixture.Int(row[6]), bridgeMode);
+        scene.Destroy.Destroy(scene.Root, X86Fixture.UInt(row[5]), scene.Hooks);
+        Assert.Equal(row[7], scene.EventText());
+        string[] slots = row[8].Split(';');
+        // 슬롯마다 전체 50바이트를 원본과 비교한다
+        foreach (string entry in slots)
+        {
+            string[] fields = entry.Split(':');
+            int sid = int.Parse(fields[0]);
+            Assert.Equal(fields[1], Convert.ToHexStringLower(scene.Pool.Slot(sid).ToArray()));
+        }
+        uint[] expected = row[9].Split(',').Select(uint.Parse).ToArray();
+        uint[] actual =
+        [
+            scene.Pool.FreeCount,
+            scene.Pool.PredictableCursor,
+            (uint)scene.Pool.FirstFree(true),
+            (uint)scene.Pool.FirstFree(false),
+            (uint)scene.Pool.Tail(true),
+            (uint)scene.Pool.Tail(false),
+            X86Fixture.Adler32(scene.Pool.Bytes),
+            X86Fixture.Adler32(HeadBytes(scene.Hash)),
+            X86Fixture.Adler32(scene.Spots),
+            X86Fixture.Adler32(LogBytes(scene.Pool)),
+            (uint)scene.Selected,
+            scene.Destroy.PreDepth,
+            scene.Destroy.PostDepth,
+        ];
+        Assert.Equal(expected, actual);
     }
 
     /// <summary>
@@ -274,39 +407,32 @@ public sealed class X86RawDestroyTests
             {
                 return true;
             }
-            Assert.Equal(10, row.Length);
-            var scene = new Scene(row[3] == "1", X86Fixture.Int(row[4]), X86Fixture.Int(row[6]));
-            scene.Destroy.Destroy(scene.Root, X86Fixture.UInt(row[5]), scene.Hooks);
-            Assert.Equal(row[7], scene.EventText());
-            string[] slots = row[8].Split(';');
-            // 슬롯마다 전체 50바이트를 원본과 비교한다
-            foreach (string entry in slots)
-            {
-                string[] fields = entry.Split(':');
-                int sid = int.Parse(fields[0]);
-                Assert.Equal(fields[1], Convert.ToHexStringLower(scene.Pool.Slot(sid).ToArray()));
-            }
-            uint[] expected = row[9].Split(',').Select(uint.Parse).ToArray();
-            uint[] actual =
-            [
-                scene.Pool.FreeCount,
-                scene.Pool.PredictableCursor,
-                (uint)scene.Pool.FirstFree(true),
-                (uint)scene.Pool.FirstFree(false),
-                (uint)scene.Pool.Tail(true),
-                (uint)scene.Pool.Tail(false),
-                X86Fixture.Adler32(scene.Pool.Bytes),
-                X86Fixture.Adler32(HeadBytes(scene.Hash)),
-                X86Fixture.Adler32(scene.Spots),
-                X86Fixture.Adler32(LogBytes(scene.Pool)),
-                (uint)scene.Selected,
-                scene.Destroy.PreDepth,
-                scene.Destroy.PostDepth,
-            ];
-            Assert.Equal(expected, actual);
+            PlayRow(row, false);
             count++;
             return true;
         });
         Assert.Equal(DestroyRowsPerEdition, count);
+    }
+
+    /// <summary>
+    /// 삭제 fixture 의 10.78 Bridge 몫 64회를 다리 수명주기와 이어 재생한다.
+    /// 연결 끊기·제거 알림·추락 소리·보행자 추락·공통 사전·사후의 순서와 슬롯·요약을 대조한다.
+    /// </summary>
+    [Fact]
+    public void BridgeMatchOriginalX86()
+    {
+        string[][] rows = X86Fixture.Read("destroy");
+        int count = 0;
+        X86Fixture.CheckRows(rows, row =>
+        {
+            if (row[0] != "Bridge" || row[1] != PatchEdition)
+            {
+                return true;
+            }
+            PlayRow(row, true);
+            count++;
+            return true;
+        });
+        Assert.Equal(BridgeRowsPerEdition, count);
     }
 }

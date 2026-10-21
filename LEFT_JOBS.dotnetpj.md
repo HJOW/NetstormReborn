@@ -1,3 +1,15 @@
+## 2026-10-21 완료: W03 둘째 조각 — 다리 삭제 연결(RawBridgeLifecycle)
+
+- [x] 사용자 요청("dotnetpj 다음 작업 이어서 진행해 줘")으로 직전 절이 정한 다음 시작점, 곧 W03 원본 월드 코어 ② 삭제·수명의 둘째 조각인 다리 삭제 연결(`RawBridgeLifecycle`)을 수행했다. `cpppj/`·공통 `LEFT_JOBS.md`는 수정하지 않았다. 현재 PC **VM-W11-Codex**는 공통 기록의 마지막 정밀 디컴파일 PC(**VM-W11-Codex, 2026-10-21**)와 같으나 **디컴파일 산출물을 읽지 않았고**, 새 디컴파일·원본 관찰·원본/클론 게임·창 실행은 없다. cpppj 커밋 소스(`RawBridgeLifecycle.cpp`·`RawBridgeLifecycle.h`·`RawDestroyTests.cpp` 다리 장면)와 원본 fixture(`destroy-x86.tsv` Bridge 행)에만 근거했다. 마지막 디컴파일 PC 기록은 그대로다. 상세·근거 표·경계는 [원본 월드 코어 W03 다리 삭제 조각](docs/dotnet-original-core-bridgelifecycle-20261021.md).
+- [x] **동기화 먼저:** 시작할 때 반영 커밋은 `4a0f5843`, HEAD는 `7e50fe41`(직전 `20261021-25 DN`)이었다. 사이 cpppj 커밋이 없고 연결 fixture **42**개가 모두 일치한다. 쓸 fixture가 이미 연결돼 있어(`destroy`) `--add` 등록은 없고, 마지막에 `--update --reflect HEAD`로 반영 커밋을 `4a0f5843`→**`7e50fe41`** 로 올렸다([계획 7절 7번](docs/dotnet-cpp-port-plan-20261016.md#7-cpppj-진행을-따라가는-절차-다른-ai가-cpppj를-계속-진행-중)). 작업 트리의 미커밋·미연결 변경(다른 세션 작업물)은 쓰지 않았다.
+- [x] **구현(`dotnetpj/src/Netstorm.Core/Original/RawBridgeLifecycle.cs` 신규):** 원본 00422290·004221b0·00422300 의 10.78 경로 — 끊김 판정(첫·둘째 참조+죽음 비트, 일반만)·사전 3×3 탐색과 연결 삭제 알림·사후 제거·추락 소리·보행자 추락·지연 페이로드(ftol 묶음)·`MakeHooks`. 기준 판본은 10.78 뿐이다.
+- [x] **검사:** `X86RawDestroyTests` 장면에 다리 모드(가상 표·연결 타입·죽음 종속·참조·찾기·훅) 추가, `BridgeMatchOriginalX86` 1건(`destroy-x86.tsv` 10.78 Bridge **64행** 전부 일치). `RawBridgeLifecycleTests` 합성 4건(페이로드 비트·연결 판정·훅 거부·범위 밖). 새 fixture 연결 없음(`destroy` 재사용).
+- [x] **검증:** 전체 Release 경고 0·오류 0(`--no-incremental` 강제 전체 빌드), 단위 **1,234개 통과**(Assets 363 + Core 871; 이번 +5). 첫 실행에서 갈래 3 행 16개가 종속 상태 오류로 실패했고, 원인(다리 장면에 비상황 사슬 구성을 둠 — 원본 `!isBridge` 조건 누락)을 바로잡은 뒤 통과했다. 검사 작성 오류이며 소스를 고치지 않았다.
+- [x] **변이 확인:** 구현 2곳을 하나씩 망가뜨려 모두 실패로 잡혔다(사전 탐색 왼쪽 축소 — 48행 불일치로 실패, 페이로드 y 묶음 7비트 — 합성 1건 불일치로 실패). 소스는 모두 원복해 재통과를 확인했다.
+- [ ] **하지 않은 것(경계):** `SquidDestroyLifecycle`(Pre·Post·장부·보상·선택)·`destroylifecycle`·`destroygraph` 재생, Damageable·종속 조회·내용물·Form·신전, `bridgeeffects` 전체(W06), 지연 페이로드의 실제 사건 연결, CD 10.72·10.37, 파생 분배 허브·실제 세션 연결. 이 조각은 L1 모듈 단계이며 L2 이상으로 합산하지 않는다.
+- [ ] **다음 조각:** `SquidDestroyLifecycle`·`destroylifecycle` 재생 → `destroygraph` 전체 재생 → Damageable·내용물·Form·신전 → 파생 분배 허브·실제 세션 연결. 시작할 때 `python dotnetpj/tools/cpp_sync.py`를 먼저 실행하고 쓸 fixture를 `--update --add`로 등록한다.
+- [x] 인수인계 뒤 **`20261021-26 DN 원본 월드 코어의 다리 삭제 연결을 원본 10.78 행 64회로 검증`** 으로 로컬 커밋한다. 원격 push는 하지 않는다.
+
 ## 2026-10-21 완료: W03 첫째 조각 — 공통 삭제 본체(RawSquidDestroy)
 
 - [x] 사용자 요청("AGENTS.md, LEFT_JOBS.dotnetpj.md 를 읽고 dotnetpj 다음 작업 진행해 줘")으로 직전 절이 정한 다음 시작점, 곧 W03 원본 월드 코어 ② 삭제·수명의 첫 조각인 공통 삭제 본체(`RawSquidDestroy`)를 수행했다. `cpppj/`·공통 `LEFT_JOBS.md`는 수정하지 않았다. 현재 PC **VM-W11-Codex**는 공통 기록의 마지막 정밀 디컴파일 PC(**VM-W11-Codex, 2026-10-21**, 당일 사전 재디컴파일)와 같으나 **디컴파일 산출물을 읽지 않았고**, 새 디컴파일·원본 관찰·원본/클론 게임·창 실행은 없다. cpppj 커밋 소스(`RawSquidDestroy.cpp`·`RawSquidDestroy.h`)와 원본 fixture(`destroy-x86.tsv`)에만 근거했다. 마지막 디컴파일 PC 기록은 그대로다. 상세·근거 표·경계는 [원본 월드 코어 W03 삭제 본체 조각](docs/dotnet-original-core-destroy-20261021.md).
@@ -333,7 +345,7 @@
 - [ ] **P0 기반**(순서대로, 각 단위의 fixture·교체 대상·완료 기준은 계획 5절)
   - [x] W01 기준선·동기화 장치: 연결 fixture SHA 목록 검사, `X86Fixture` 확장, 반영 커밋 기록 (**완료 2026-10-16**, 위 절)
   - [ ] W02 원본 월드 코어 ① 생성·등록: 객체 표·생성자·Pop/Unpop/PostPop·해시/spot·소유자/프레임·Graph 연결(D14) — **2026-10-21 기준(최신 `20261021-25`): 슬롯 풀·생성, 공간 해시·Unpop, Pop, 공통 PostPop·다리 접두, Carrier/Asset 후처리, 소유자, 프레임, 건물 공간, 이웃·탐색, 다리 사건 경유 재생, 미니맵 갱신 큐, RawGraph 표 저장소·초기화, 그래프 영역·추가/flood·등록 후처리, 그래프 삭제 준비, 그래프 전체 재구성·소진 복구·삭제 후처리·방향 조회까지 L1 모듈 이식**. 남은 것은 파생 분배 허브·실제 세션 연결이다(각 조각 상세는 위 절).
-  - [ ] W03 원본 월드 코어 ② 삭제·수명: 공통 삭제·Damageable·종속/내용물/Form·신전 삭제(D14) — **2026-10-21 기준(최신 `20261021-25`): 공통 삭제 본체(`RawSquidDestroy`, destroy 10.78 Destroy 600행)까지 L1 모듈 이식**. 남은 것은 다리 삭제 연결·수명주기·`destroylifecycle`·`destroygraph` 재생, Damageable·내용물·Form·신전, 파생 분배 허브·실제 세션 연결이다.
+  - [ ] W03 원본 월드 코어 ② 삭제·수명: 공통 삭제·Damageable·종속/내용물/Form·신전 삭제(D14) — **2026-10-21 기준(최신 `20261021-26`): 공통 삭제 본체(`RawSquidDestroy`, destroy 10.78 Destroy 600행)·다리 삭제 연결(`RawBridgeLifecycle`, destroy 10.78 Bridge 64행)까지 L1 모듈 이식**. 남은 것은 수명주기·`destroylifecycle`·`destroygraph` 재생, Damageable·내용물·Form·신전, 파생 분배 허브·실제 세션 연결이다.
   - [ ] W04 시간·Kernel·Process: Regular·ProcessForm·공통 프레임 진행, 24Hz/8틱 소비자를 하나씩 이행(D01)
   - [ ] W05 SP·보상·난수: float32 SP 저장소·쓰기마다 난수 160회·보상/환불/AI 지갑/샘 풀(D12)
   - [ ] W06 미션 로드·월드 생성: Fort 적재·지형 성장·섬·영역·다리 연결
