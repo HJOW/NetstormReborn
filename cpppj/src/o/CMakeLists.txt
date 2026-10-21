@@ -415,3 +415,5 @@ target_sources(netstorm PRIVATE RawGunGroundTarget.cpp RawGunGroundTarget.h RawA
 target_sources(netstorm PRIVATE RawAiDropScan.cpp RawAiDropScan.h)
 # 실제기술목록/직전후보·회전/블로커우선과쿨다운의다음배치TYPE를연결한다.
 target_sources(netstorm PRIVATE RawAiDropSelection.cpp RawAiDropSelection.h)
+# 가짜 부족좌표의 원본 수직 양방향 탐색/현재 지도/실제 디버그 표식을 연결한다.
+target_sources(netstorm PRIVATE RawAiDryGeometry.cpp RawAiDryGeometry.h)

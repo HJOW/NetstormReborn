@@ -72,6 +72,7 @@ add_executable(netstorm_tests
     GunGroundTargetTests.cpp
     AiDropScanTests.cpp
     AiDropSelectionTests.cpp
+    AiDryGeometryTests.cpp
     SquidNameTests.cpp
     FactoryUpgradeCommandTests.cpp
     FactoryUpgradeTests.cpp
