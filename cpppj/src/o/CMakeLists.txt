@@ -391,3 +391,5 @@ target_sources(netstorm PRIVATE RawFactoryUpgradeCommand.cpp RawFactoryUpgradeCo
 target_sources(netstorm PRIVATE RawFactoryUpgrade.cpp RawFactoryUpgrade.h)
 # 실제Factory입력의자금/진행중안내와편집상태순환을기존연구/공통부모에합성한다.
 target_sources(netstorm PRIVATE RawFactoryInput.cpp RawFactoryInput.h)
+# 원본AI의에너지부족좌표중복/순환검사/압축을같은실제본체에연결한다.
+target_sources(netstorm PRIVATE RawAiDrySpots.cpp RawAiDrySpots.h)

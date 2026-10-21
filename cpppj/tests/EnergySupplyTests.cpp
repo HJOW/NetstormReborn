@@ -1,6 +1,7 @@
 // 원본 명령의 반환·공급 문구·잔여 문자·전체 공유 선택 목록을 두 정밀도 결과와 대조한다.
 #include "RawSceneSupport.h"
 #include "o/RawEnergySupply.h"
+#include "o/RawAiDrySpots.h"
 #include <fstream>
 using namespace netstorm::test::rawscene;
 namespace {
@@ -84,4 +85,9 @@ TEST_CASE(EnergySupply_ActualProviderVtables) {
     // 기본0과 다섯 실제 공급형 이외의 함수를 임의로 허용하지 않는다.
     for (const auto& row:fixture.rows) { CHECK(row.size()==2);const auto entry=EnergyProviderEntry(Number(row[0]));CHECK(entry==Number(row[1]));if (entry==0x41c170) ++supplying; }
     CHECK(supplying==5);CHECK(Throws([] { static_cast<void>(EnergyProviderEntry(0)); }));
+}
+// 같은실제에너지공급목록이부족좌표를유지/제거하고선택목록도공유하는지검사한다.작성·컴파일만한다.
+TEST_CASE(AiDrySpots_ActualEnergySupplyChangesRemoveCoordinate) {
+    EnergyScene scene;std::vector<std::uint32_t> values(30);values[0]=2;values[6]=1;values[7]=30;values[8]=1;values[9]=2;values[12]=2;values[13]=2;values[14]=std::bit_cast<std::uint32_t>(20.0F);values[15]=values[14];values[16]=std::bit_cast<std::uint32_t>(484.0F);values[17]=256;values[19]=0xffffffffU;values[20]=1;values[25]=values[14];values[26]=values[15];values[27]=2;values[28]=2;scene.Prepare(values,"","s");
+    RawAiBrainMemory memory(0x49000000,[](auto raw) { std::fill(raw.begin(),raw.end(),std::uint8_t{}); });const auto token=memory.Allocate(RawAiBrainConstructor::kBytes),backing=memory.Allocate(12);Put(memory.Bytes(token),0xadc,1);Put(memory.Bytes(token),0xae4,backing);Put(memory.Bytes(token),0xaec,2);AiDrySpotHooks hooks;hooks.energy=[&](std::string& text,float x,float y,auto type,auto owner) { return scene.logic->Evaluate(text,x,y,type,owner); };RawAiDrySpots dry(memory,scene.pool,hooks);CHECK(dry.Add(token,20,20,100));scene.providers.count=0;CHECK(dry.Scan(token)==0 && Get(memory.Bytes(token),0xae0)==1 && scene.selected.count==0);scene.providers.count=1;CHECK(dry.Scan(token)==100 && Get(memory.Bytes(token),0xae0)==0 && scene.selected.count==1 && scene.selected.entries[0]==10);
 }
