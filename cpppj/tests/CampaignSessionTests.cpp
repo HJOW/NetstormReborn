@@ -483,6 +483,27 @@ TEST_CASE(CampaignSession_FactoryUpgradePictureAndCompletionShareWorld) {
     for (auto form=Get(core.pool.Slot(image),6,2);form;form=Get(core.pool.Slot(Sid{static_cast<std::uint16_t>(form)}),4,2)) { const Sid candidate{static_cast<std::uint16_t>(form)};if (core.pool.Slot(candidate)[10]==30) construction=core.processes.FromForm(candidate)!=nullptr; }
     CHECK((core.pool.Slot(image)[40]&9U)==9 && construction);core.processState.now=15;regular->RunFrame();CHECK((core.pool.Slot(factory)[11]>>5)==1 && Get(core.pool.Slot(factory),26)==static_cast<std::uint32_t>(session.HitPoints().MaxHitPoints(factory)));CHECK(!core.processes.FindEvent(factory,3) && !session.FactoryUpgrading(factory) && (core.pool.Slot(image)[11]&1U));
 }
+namespace {
+// 원본MasterOfWhirligigs의살아있는소유자2 Factory를같은실제풀에서찾는다.
+Sid InputFactory(RawCampaignSession& session) {
+    auto core=session.Core();
+    // 자유/죽음슬롯을제외하고실제Factory가상표를확인한다.
+    for (std::uint32_t value=5;value<core.pool.Capacity();++value) { const Sid candidate{static_cast<std::uint16_t>(value)};const auto raw=core.pool.Slot(candidate);if (!(raw[11]&3U) && raw[34]==2 && Get(raw,0)==0x509148U) return candidate; }return {};
+}
+}
+// 실제로컬SP/같은event4와58h송신을입력관문에연결한다.검사는작성·컴파일만한다.
+TEST_CASE(CampaignSession_FactoryInputUsesActualSpAndPendingTimer) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();std::vector<std::string> tells;std::vector<std::vector<std::uint8_t>> packets;services.factoryTell=[&](std::string_view section) { tells.emplace_back(section); };services.carrierRequest=[&](std::int32_t target,std::span<const std::uint8_t> packet) { CHECK(target==9);packets.emplace_back(packet.begin(),packet.end()); };
+    auto fort=FortTemplate::Parse(assets.files.Read("d/masterofwhirligigs.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"masterofwhirligigs",std::move(services));CHECK(Throws([&] { session.CommandFactory(Sid{1},0x03000032U,0); }));session.Load();auto core=session.Core();const auto factory=InputFactory(session);CHECK(factory.value);if (!factory.value) return;const auto local=session.LocalOwner();const auto cost=session.HitPoints().TypeCostUnits(core.pool.Slot(factory)[10]);CHECK(cost>0 && core.pool.Slot(factory)[34]!=local);session.SetSp(local,0);CHECK(session.CommandFactory(factory,0xff000032U,factory.value)==1 && tells==std::vector<std::string>({"upgradeNoBucks"}) && packets.empty() && !session.FactoryUpgrading(factory));
+    session.SetSp(local,static_cast<float>(cost));CHECK(session.CommandFactory(factory,0x03000032U,factory.value)==1 && packets.size()==1 && session.FactoryUpgrading(factory));const auto wait=core.processes.FindEvent(factory,4);CHECK(wait && wait->Payload()==20.0F && session.Sp(local)==static_cast<float>(cost));CHECK(session.CommandFactory(factory,0x03000032U,factory.value)==1 && tells==std::vector<std::string>({"upgradeNoBucks","alreadyUpgrading"}) && packets.size()==1 && core.processes.FindEvent(factory,4)==wait);
+}
+// 동일입력의상태순환/연구도움말/미처리부모위임이실제Session에합성된다.실행하지않는다.
+TEST_CASE(CampaignSession_FactoryInputCycleHelpAndParent) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();std::uint32_t helps{};services.factoryHelp=[&](std::string_view section,std::uint32_t mode) { CHECK(section=="researchHelp" && mode==1);++helps; };auto fort=FortTemplate::Parse(assets.files.Read("d/masterofwhirligigs.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"masterofwhirligigs",std::move(services));session.Load();auto core=session.Core();const auto factory=InputFactory(session);CHECK(factory.value);if (!factory.value) return;
+    // 0→1→2→0의실제level/상태프레임보정과기존SP/업그레이드예약보존을확인한다.
+    for (std::uint32_t index=1;index<=3;++index) { CHECK(session.CommandFactory(factory,0xff000063U,0)==1);const auto raw=core.pool.Slot(factory);CHECK(static_cast<std::uint32_t>(raw[11]>>5)==index%3);CHECK(std::bit_cast<std::int32_t>(Get(raw,36))==core.frames[raw[10]].Run(static_cast<std::uint8_t>('A'+index%3)).first); }
+    CHECK(session.SelectFactoryKnowledge(factory,0x03000080U,factory.value)==1 && helps==1);CHECK(session.CommandFactory(factory,0,0xabcd0000U|factory.value)==0 && !session.FactoryUpgrading(factory));
+}
 // 같은 Session의 실제 본체/기술/동맹/현재 그래프 getter와 정상 목록 소멸을 함께 검사한다.
 TEST_CASE(CampaignSession_AiUsesCurrentWorldAndLifetime) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;

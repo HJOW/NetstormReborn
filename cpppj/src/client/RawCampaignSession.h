@@ -133,6 +133,8 @@ struct RawCampaignSessionServices {
     CampaignMissionOutcomeUi missionOutcome; // 현재 미션의 실제 UI/차단 조회 경계다. Check를 호출할 때만 필요하다.
     CampaignAiServices ai; // 선택된 실제 AI 초기화/참여의 외부 경계이며 Load/프레임에서 자동 호출하지 않는다.
     CampaignProductionServices production; // 같은 Player/Factory/허용 표가 사용할 Deck의 실제 외부 입력이다.
+    std::function<void(std::string_view)> factoryTell; //Factory 입력의 같은004cf960 안내 섹션을 실제 현재Tell에연결한다.
+    std::function<void(std::string_view,std::uint32_t)> factoryHelp; //researchHelp의실제전용도움말창/모드1이다.
     o::DamageablePreDestroyHooks damageablePre; // 붕괴/폭발/음향의 실제 장치/효과 경계다. 해방/공통 삭제는 Session이 공급한다.
     o::DamageablePostDestroyHooks damageablePost; // 드롭 Dude/받침의 실제 생성 경계다. 예약/현재 다리/공통 삭제는 Session이 공급한다.
     RawCampaignConstructionEffects construction; // 로컬 간헐천의 실제 설정/벽시각/표시/진단이며 일반 건설을 대신하지 않는다.
@@ -260,7 +262,8 @@ public:
     // 같은 실제58h 수신과 현재 입력의signedWORD 지식 선택을 연결한다.
     void RegisterFactoryResearchCommands(o::RawPacketDispatch& dispatch);
     std::uint32_t SelectFactoryKnowledge(o::Sid parent,std::uint32_t code,std::uint32_t parameter); // 실제 생성·예측·송신 몸체다.
-    void RequestFactoryUpgrade(o::Sid parent); //00453bf0의 실제 대기/58h 송신을 실행한다.사용자 입력의 자금/안내 관문은 후속이다.
+    std::uint32_t CommandFactory(o::Sid parent,std::uint32_t code,std::uint32_t parameter); //004547d0의상태순환/업그레이드관문/연구/공통부모입력이다.
+    void RequestFactoryUpgrade(o::Sid parent); //00453bf0의 실제 대기/58h 송신이다.사용자메뉴는CommandFactory의자금/안내관문을사용한다.
     bool FactoryUpgrading(o::Sid parent) const; //00453c90의실제예측그림→event4→event3조회다.
     // 같은 실제0x4f 일반포획/0x5b 채취/0x60 크랩포획 수신을현재캠페인에등록한다.
     void RegisterCarrierCommands(o::RawPacketDispatch& dispatch);

@@ -66,3 +66,10 @@ TEST_CASE(FactoryResearch_PacketDispatchAndMissingEffects) {
     CHECK(research.HandlesNotice(Sid{50}));Put(InputRaw(scene.pool,Sid{50}),0,0x509210U);CHECK(research.HandlesNotice(Sid{50}));Put(InputRaw(scene.pool,Sid{50}),0,0x5096a0U);CHECK(!research.HandlesNotice(Sid{50}));
     scene.hooks.flare={};RawFactoryResearch missing(scene.pool,scene.types,scene.State(),scene.hooks);CHECK(Throws([&] { missing.Notice(Sid{50},Sid{100},1); }));CHECK(scene.dirty==3);
 }
+// 슬롯로그뒤현재시각을읽고로그가슬롯을바꿔도입력의원래양수판단을유지한다.작성·컴파일만한다.
+TEST_CASE(FactoryResearch_InputLogBeforeClockAndCachedSlots) {
+    ResearchScene scene;std::vector<std::uint8_t> sent;scene.hooks.inputLog=[&](Sid parent,std::int32_t slots) { CHECK(parent.value==50 && slots==2);scene.Add("inputLog");scene.now=33.75;scene.slots=0; };scene.hooks.send=[&](auto channel,std::span<const std::uint8_t> packet) { CHECK(channel==9);scene.Add("send");sent.assign(packet.begin(),packet.end()); };
+    RawFactoryResearch research(scene.pool,scene.types,scene.State(),scene.hooks);CHECK(research.Input(Sid{50},0x03000080U,(128U<<16)|50U)==1);CHECK(scene.trace=="slots,2;inputLog;find,0;slots,0;send" && sent.size()==16);if (sent.size()!=16) return;std::uint64_t bits{};
+    // 패킷QWORD를독립적으로조립해로그뒤현재시각비트를확인한다.
+    for (std::size_t index=0;index<8;++index) bits|=static_cast<std::uint64_t>(sent[8+index])<<(index*8);CHECK(std::bit_cast<double>(bits)==33.75 && sent[6]==128);
+}

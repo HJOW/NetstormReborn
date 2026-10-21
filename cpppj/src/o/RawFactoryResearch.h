@@ -23,6 +23,7 @@ struct FactoryResearchHooks {
     std::function<void(std::uint32_t)> refresh; // 44f7c0의 같은 owner 생산 Deck 재계산이다.
     std::function<void(std::string_view)> assertion; // 원본 진단 뒤의 현재 전역 재조회도 허용한다.
     std::function<void(std::span<const std::uint8_t>)> upgradeReceive; //동일58h kind0/mode1의 실제 업그레이드 수신 몸체다. 선택되지 않으면 요구하지 않는다.
+    std::function<void(Sid,std::int32_t)> inputLog; //입력slots조회뒤의원본종류5로그다.기존독립fixture의관찰생략을허용하며실제Session은연결한다.
 };
 // 40aba0 생성자와4547d0의 필드 기록이다. 뒤의 호스트 버퍼를 건드리지 않는다.
 std::size_t WriteFactoryResearchCommand(Sid parent,std::uint32_t kind,double now,std::span<std::uint8_t> packet);

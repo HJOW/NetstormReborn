@@ -52,7 +52,8 @@ std::uint32_t RawFactoryResearch::Input(Sid parent,std::uint32_t code,std::uint3
     if ((code&0x03ffffffU)!=kResearch) throw std::logic_error("Factory 연구 외 입력 몸체 미복원");
     const auto kind=static_cast<std::int32_t>(std::bit_cast<std::int16_t>(static_cast<std::uint16_t>(packedArgument>>16)));
     if (!kind) { Required(hooks_.help)("researchHelp",1);return 1; }
-    if (Required(hooks_.slots)(parent)>0) {
+    const auto slots=Required(hooks_.slots)(parent);if (hooks_.inputLog) hooks_.inputLog(parent,slots);
+    if (slots>0) {
         std::array<std::uint8_t,kPacketBytes> packet{};WriteFactoryResearchCommand(parent,static_cast<std::uint32_t>(kind),state_.now,packet);
         Learn(parent,static_cast<std::uint32_t>(kind),16);Required(hooks_.send)(9,packet);
     }

@@ -22,7 +22,7 @@ public:
     std::uint32_t OpenProduction(GameWorld& world,const InventoryItemNode& item,ScreenPoint point,const std::function<bool(o::Sid)>& affordable); //43d330의 실제 내용물 정보 메뉴를 연다.
     void Clear(); // 팝업→메뉴 체인→현재 월드 순서로 참조를 해제한다.
     bool Active() const; // 마지막 실제 루트의 현재 visible/dead를 읽는다.
-    bool Command(const InputEvent& event); // 원본 연구/사제 건설/회수 선택을 처리하며 다른 명령은 false다.
+    bool Command(const InputEvent& event); //원본Factory입력/사제건설/회수/공통객체선택을처리하며다른명령은false다.
 private:
     struct Impl; // 실제 UI 경계/메뉴 체인/정적 문자열의 고정 주소 소유자다.
     std::unique_ptr<Impl> impl_; // Client/Gump 트리보다 먼저 반납한다.

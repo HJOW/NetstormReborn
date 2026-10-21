@@ -127,6 +127,7 @@
 #include "o/RawFactoryResearch.h"
 #include "o/RawFactoryUpgradeCommand.h"
 #include "o/RawFactoryUpgrade.h"
+#include "o/RawFactoryInput.h"
 #include "client/RawShapeToBuffer.h"
 #include "client/OwnerColorMaps.h"
 #include <bit>
@@ -485,6 +486,8 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawFactoryResearch> factoryResearch; // 같은 내용물/생산 Deck/현재 권한과58h 송신을 연결한다.
     std::unique_ptr<RawFactoryUpgradeCommand> factoryUpgradeCommand; //같은58h의 업그레이드 요청/수신과 실제 SP·SharedRegular을 연결한다.
     std::unique_ptr<RawFactoryUpgrade> factoryUpgrade; //같은 실제Factory의event3 그림/완료·예약/종속정리와AI통지다.
+    FactoryInputState factoryInputState{globals.editor,playerState.battleOwner}; //현재원본editor/로컬소유자와명령토큰이다.
+    std::unique_ptr<RawFactoryInput> factoryInput; //같은자금/Host그림·예약/실제요청/연구/공통부모를합성하는가상입력이다.
     std::unique_ptr<RegularProcess> factoryUpgradePending; //원본 new(0x28) 성공 뒤 현재 사건/지연으로 구성할 실제 예약 메모리다.
     DamageablePreDestroyState damageablePreState; // 같은 사제 타입을 읽는 실제 공통 삭제 전역이다.
     DamageableReleaseState damageableReleaseState; // 해방 요청마다 같은 현재 전투 모드를 공급한다.
@@ -1910,6 +1913,8 @@ struct RawCampaignSession::Impl {
         sync.assertion=[](std::string_view text) { std::fprintf(stderr,"생산 동기화 원본 진단: %.*s\n",static_cast<int>(text.size()),text.data()); };
         productionSync=std::make_unique<RawProductionSync>(core.pool,core.types,contentFinder,ProductionSyncState{playerState.battleOwner,fullDeck},std::move(sync));
         FactoryResearchHooks research;
+        research.help=[this](std::string_view section,std::uint32_t mode) { if (!services.factoryHelp) throw std::logic_error("Factory 실제 연구 도움말 미연결");services.factoryHelp(section,mode); };
+        research.inputLog=[this](Sid parent,std::int32_t slots) { if (!services.player.log) throw std::logic_error("Factory 실제 입력 슬롯 로그 미연결");services.player.log(5,std::to_string(core.pool.Slot(parent)[34])+": slotsRemaining/A="+std::to_string(slots)+"\n"); };
         research.find=[this](Sid parent,std::uint32_t mask,std::uint32_t kind,std::uint32_t index) { return priests->Carrier().FindContained(parent,mask,kind,index); };
         research.slots=[this](Sid parent) { return production->AppendFactoryProducts(parent,0); };
         research.destroy=[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); };
@@ -1925,6 +1930,14 @@ struct RawCampaignSession::Impl {
         upgrade.send=[this](auto target,std::span<const std::uint8_t> packet) { if (!services.carrierRequest) throw std::logic_error("Factory 업그레이드 실제 요청 송신 미연결");services.carrierRequest(static_cast<std::int32_t>(target),packet); };upgrade.broadcast=[this](std::span<const std::uint8_t> packet) { broadcast->Send(packet); };upgrade.log=[this](auto kind,std::string_view text) { if (!services.player.log) throw std::logic_error("Factory 업그레이드 실제 로그 미연결");services.player.log(kind,text); };upgrade.assertion=[](std::string_view text) { std::fprintf(stderr,"Factory 업그레이드 원본 진단: %.*s\n",static_cast<int>(text.size()),text.data()); };
         factoryUpgradeCommand=std::make_unique<RawFactoryUpgradeCommand>(core.pool,core.types,FactoryUpgradeCommandState{assetState.boss,gunState.checking,core.processState.now},std::move(upgrade));
         ConnectFactoryUpgrade();
+        ConnectFactoryInput();
+    }
+    // 메뉴와직접입력이같은분산SP/실제업그레이드/기존연구와공통객체를사용한다.
+    void ConnectFactoryInput() {
+        FactoryInputHooks hooks;hooks.level=[this](Sid parent) { return level->Get(parent); };hooks.setLevel=[this](Sid parent,auto value) { assetBindings->SetState(parent,value); };hooks.adjustFrame=[this](Sid parent) { assetBindings->AdjustFactoryFrame(parent); };
+        hooks.cost=[this](auto type) { return hp.TypeCostUnits(type); };hooks.money=[this](auto owner) { return std::bit_cast<float>(sp.Get(owner)); };hooks.upgrading=[this](Sid parent) { return factoryUpgrade->IsUpgrading(parent); };hooks.request=[this](Sid parent) { factoryUpgradeCommand->Request(parent); };hooks.tell=[this](std::string_view section) { if (!services.factoryTell) throw std::logic_error("Factory 실제 업그레이드 안내 미연결");services.factoryTell(section); };
+        hooks.research=[this](Sid parent,auto code,auto parameter) { return factoryResearch->Input(parent,code,parameter); };hooks.parent=[this](Sid parent,auto code,auto) { if (!objectCommand) throw std::logic_error("Factory 실제 공통 입력 미설치");return objectCommand->Command(parent,code); };
+        factoryInput=std::make_unique<RawFactoryInput>(core.pool,factoryInputState,std::move(hooks));
     }
     // 같은 실제Factory 가상경계/건설/종속쌍/AI본체를 연결한다.최초사건은Load완료후실행된다.
     void ConnectFactoryUpgrade() {
@@ -2348,11 +2361,13 @@ void RawCampaignSession::LoadLocalConnection() {
 void RawCampaignSession::RegisterFactoryResearchCommands(RawPacketDispatch& dispatch) { o::RegisterFactoryResearchCommand(dispatch,*impl_->factoryResearch); }
 // 현재 메뉴 부모와 signedWORD 종류를 원문 입력 몸체에 전달한다.
 std::uint32_t RawCampaignSession::SelectFactoryKnowledge(Sid parent,std::uint32_t code,std::uint32_t parameter) {
-    if (!impl_->loaded || !impl_->factoryResearch->HandlesNotice(parent)) throw std::logic_error("실제 연구 입력의 미설치/Factory 가상 표 오류");return impl_->factoryResearch->Input(parent,code,parameter);
+    return CommandFactory(parent,code,parameter);
 }
+// 같은원본가상표에상태순환/업그레이드/연구/공통부모전체입력을전달한다.
+std::uint32_t RawCampaignSession::CommandFactory(Sid parent,std::uint32_t code,std::uint32_t parameter) { if (!impl_->loaded || !impl_->factoryResearch->HandlesNotice(parent)) throw std::logic_error("실제 Factory 입력의 미설치/가상 표 오류");return impl_->factoryInput->Input(parent,code,parameter); }
 // 입력 부모의 자금/진행 관문을 별도로 둔 원본453bf0 요청 몸체만 명시 실행한다.
 void RawCampaignSession::RequestFactoryUpgrade(Sid parent) { if (!impl_->loaded) throw std::logic_error("설치 전 Factory 업그레이드 요청");impl_->factoryUpgradeCommand->Request(parent); }
-// 실제 종속그림과같은4/3예약을조회한다.입력UI의안내메시지는별도로복원한다.
+// 실제 종속그림과같은4/3예약을조회하며입력관문과같은판단을공유한다.
 bool RawCampaignSession::FactoryUpgrading(Sid parent) const { if (!impl_->loaded) throw std::logic_error("설치 전 Factory 업그레이드 조회");return impl_->factoryUpgrade->IsUpgrading(parent); }
 //현재프레임에서만같은실제두끝의큐를소비한다.
 void RawCampaignSession::PumpLocalConnection() { if (impl_->login) impl_->login->Pump(); }

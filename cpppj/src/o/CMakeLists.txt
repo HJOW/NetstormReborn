@@ -389,3 +389,5 @@ target_sources(netstorm PRIVATE RawAiFactoryProduction.cpp RawAiFactoryProductio
 target_sources(netstorm PRIVATE RawFactoryUpgradeCommand.cpp RawFactoryUpgradeCommand.h)
 # 원본Factory의예측그림/완료/예약·종속그림정리를같은Host에연결한다.
 target_sources(netstorm PRIVATE RawFactoryUpgrade.cpp RawFactoryUpgrade.h)
+# 실제Factory입력의자금/진행중안내와편집상태순환을기존연구/공통부모에합성한다.
+target_sources(netstorm PRIVATE RawFactoryInput.cpp RawFactoryInput.h)
