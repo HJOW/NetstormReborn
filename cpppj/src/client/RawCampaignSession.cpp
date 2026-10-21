@@ -105,6 +105,7 @@
 #include "o/RawAiDrySpots.h"
 #include "o/RawAiMovement.h"
 #include "o/RawAiResourceChoice.h"
+#include "o/RawAiCarrierActions.h"
 #include "o/RawAiPreparation.h"
 #include "o/RawPriestLookup.h"
 #include "o/RawRunePostPop.h"
@@ -295,6 +296,7 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawSquidName> objectNames; //같은현재가상68의실제설명/Factory레벨이름이다.
     std::unique_ptr<RawAiMovement> aiMovement; //사제/수집자행동의공통실제경로조회·정지·이동·복귀다.
     std::unique_ptr<RawAiResourceChoice> aiResourceChoice; //같은본체/간헐천/포획운반목록의실제수집·귀환선택하위다.
+    std::unique_ptr<RawAiCarrierActions> aiCarrierActions; //같은목록/내용물/현재경로의전체수집·포획행동이다.
     std::uint32_t aiGeyserLog{29}; //0052f3e4의끊긴간헐천로그초기종류다.
     std::uint32_t aiMoveLog{99}; //0052f3d8의원본Debug Move초기로그종류다.
     std::uint32_t aiDrySpotLog{99}; //0052f3dc의원본Debug Dry Spot 초기로그종류다.
@@ -1765,10 +1767,7 @@ struct RawCampaignSession::Impl {
             [this] { return core.ownerMode.challenge; }, // 원본00594fc8은 참여/동맹이 조회하는 같은 현재 모드다.
             [this] { return services.missionOutcome.demo()!=0; }}); //00463b50은 missionPost가 아니라 현재 미션+68의 demo를 읽는다.
         hp.BindPatchWallet([this](auto owner,auto amount) { aiWallet->Credit(owner,amount); }); // 새 brain이나 복제 지갑을 만들지 않고 현재 Player 포인터를 매번 조회한다.
-        AiObjectNoticeHooks objects;objects.carrierTargets=[this](Sid sid) {
-            const auto kind=priests->MovementProcessType(core.pool.Slot(sid)[10]);RawContainedLookup lookup(core.pool,[this](Sid target,std::uint32_t flags) { world.Destroy(target,flags); });const auto form=lookup.Find(sid,kind);if (!form.value) return std::array<std::uint32_t,2>{};
-            const auto* path=dynamic_cast<RawPathProcess*>(core.processes.FromForm(form));if (!path) throw std::logic_error("AI 삭제 통지의 현재 이동 프로세스 미연결");return std::array<std::uint32_t,2>{path->Runtime().TargetA(),path->Runtime().TargetB()};
-        }; //00426150의 같은 process form/경로 끝 두 DWORD를 읽는다.
+        AiObjectNoticeHooks objects;objects.carrierTargets=[this](Sid sid) { return AiCarrierTargets(sid); }; //00426150의같은현재경로TargetA/B를행동과공유한다.
         objects.distanceSquared=[this](Sid first,std::uint32_t second) {
             if (second>=core.pool.Capacity() || second>65535) throw std::out_of_range("AI 생성 통지 거리 SID 범위");const auto target=gunTarget->Center(Sid{static_cast<std::uint16_t>(second)}),source=gunTarget->Center(first);const double dx=static_cast<double>(source[0])-target[0],dy=static_cast<double>(source[1])-target[1];return dx*dx+dy*dy;
         }; //00411120의 두 발 중심을 목표→원본 순서로 읽는다.
@@ -1812,7 +1811,7 @@ struct RawCampaignSession::Impl {
         deployment.demo=[this] { return services.missionOutcome.demo()!=0; };deployment.assertion=[this](std::string_view text) { if (!services.ai.assertion) throw std::logic_error("AI 배치 원본 진단 미연결");services.ai.assertion(text); };
         aiDeployment=std::make_unique<RawAiDeployment>(aiMemory,core.pool,core.types,*contained,AiDeploymentGlobals{assetState.boss,constructionState.notice.moveLocalBuilder,core.processState.now},std::move(deployment));
         AiCollectorsHooks collectors;collectors.product=[this](auto token,auto type) { return aiStrategySetup->FindProduct(token,type); };collectors.canAfford=[this](auto token,auto type) { return aiDeployment->CanAfford(token,type); };collectors.maxHitPoints=[this](Sid sid) { return hp.MaxHitPoints(sid); };
-        collectors.enemyAvailable=[this](auto owner) { if (owner<1 || owner>8) { if (!services.ai.assertion) throw std::logic_error("AI 수집자 적 사제 참여 진단 미연결");services.ai.assertion("playerId > INVALID_PLAYER_ID && playerId < MAX_PLAYERS");return false; }return (players[owner*180+0x50]&0x22)!=0 && priests->Priests().ownerState[owner]==0; };
+        collectors.enemyAvailable=[this](auto owner) { return AiEnemyAvailable(owner); };
         collectors.mayPlace=[this](const CanonPlacementQuery& query) { PrepareConstruction();return MayPlaceGameplay(query); };collectors.deploy=[this](auto token,auto type,float x,float y,auto argument,auto direction) { aiDeployment->Place(token,type,x,y,argument,direction); };
         collectors.log=[this](auto token,auto type,auto x,auto y) { if (!services.player.log) throw std::logic_error("AI 수집자 Lay 로그 미연결");if (type>=core.types.size()) throw std::out_of_range("AI 수집자 Lay TYPE 범위");services.player.log(aiLayLog,"AI"+std::to_string(std::bit_cast<std::int32_t>(Read(aiMemory.Bytes(token),0x260)))+": Lay "+core.types[type].name+" at ("+std::to_string(x)+","+std::to_string(y)+")\n"); };
         collectors.dropSound=[this] { if (!services.sound.play) throw std::logic_error("AI 수집자 로컬 드롭 음향 미연결");static_cast<void>(services.sound.play(soundNames.Lookup("droppiece.wav"),0,0,0,0,0)); };
@@ -1825,6 +1824,10 @@ struct RawCampaignSession::Impl {
         AiDrySpotHooks dry;dry.energy=[this](std::string& text,float x,float y,auto type,auto owner) { return energySupply->Evaluate(text,x,y,type,owner); };dry.log=[this](auto token,bool fake) { if (!services.player.log) throw std::logic_error("AI DrySpot 실제 로그 미연결");services.player.log(aiDrySpotLog,"AI"+std::to_string(std::bit_cast<std::int32_t>(Read(aiMemory.Bytes(token),0x260)))+": "+(fake ? "Killed Fake Dry Spot\n" : "Killed Dry Spot\n")+"\n"); };
         aiDrySpots=std::make_unique<RawAiDrySpots>(aiMemory,core.pool,std::move(dry));
     }
+    // 생산선택/포획행동이같은492280의현재참여/포획상태를공유한다.
+    bool AiEnemyAvailable(std::uint32_t owner) const { if (owner<1 || owner>8) { if (!services.ai.assertion) throw std::logic_error("AI 적 사제 참여 진단 미연결");services.ai.assertion("playerId > INVALID_PLAYER_ID && playerId < MAX_PLAYERS");return false; }return (players[owner*180+0x50]&0x22)!=0 && priests->Priests().ownerState[owner]==0; }
+    // 자산통지/수집행동이같은현재이동TYPE→종속→실제Host경로끝을읽는다.
+    std::array<std::uint32_t,2> AiCarrierTargets(Sid sid) { const auto kind=priests->MovementProcessType(core.pool.Slot(sid)[10]);RawContainedLookup lookup(core.pool,[this](Sid target,std::uint32_t flags) { world.Destroy(target,flags); });const auto form=lookup.Find(sid,kind);if (!form.value) return {};const auto* path=dynamic_cast<RawPathProcess*>(core.processes.FromForm(form));if (!path) throw std::logic_error("AI 현재 이동 프로세스 미연결");return {path->Runtime().TargetA(),path->Runtime().TargetB()}; }
     // 실제Motion기하설치뒤이름/경로/의식/공유요청헤더를현재AI에연결한다.
     void ConnectAiMovement() {
         auto names=services.ai.names;names.level=[this](Sid parent) { return level->Get(parent); };objectNames=std::make_unique<RawSquidName>(core.pool,core.types,std::move(names));
@@ -1836,6 +1839,11 @@ struct RawCampaignSession::Impl {
         resources.target=[this](auto token,Sid actor,Sid target) { aiMovement->ToTarget(token,actor,target,0); };resources.home=[this](auto token,Sid actor) { aiMovement->Home(token,actor); };
         resources.captureLog=[this](auto token,Sid actor) { if (!services.player.log) throw std::logic_error("AI 포획 운반자 실제 로그 미연결");services.player.log(29,"AI"+std::to_string(std::bit_cast<std::int32_t>(Read(aiMemory.Bytes(token),0x260)))+": PriestGetter=="+std::to_string(actor.value)+"\n\n"); };resources.disconnectedLog=[this](auto token,Sid geyser) { if (!services.player.log) throw std::logic_error("AI 끊긴 간헐천 실제 로그 미연결");services.player.log(aiGeyserLog,"AI"+std::to_string(std::bit_cast<std::int32_t>(Read(aiMemory.Bytes(token),0x260)))+": Put disconnectd geyser "+std::to_string(geyser.value)+" back into yetToConnect list.\n\n"); };resources.assertion=[this](std::string_view text) { if (!services.ai.assertion) throw std::logic_error("AI 간헐천 원본 진단 미연결");services.ai.assertion(text); };
         aiResourceChoice=std::make_unique<RawAiResourceChoice>(aiMemory,core.pool,core.types,[this] { return static_cast<std::uint32_t>(core.bookkeeping.invalidGraph); },std::move(resources));
+        AiCarrierActionHooks carriers;carriers.maxHitPoints=[this](Sid sid) { return hp.MaxHitPoints(sid); };carriers.prisoner=[this](Sid actor) { return FindContainedGenus(core.pool,priestState.contained,core.types,actor,0x20,0x200000,0); };carriers.path=[this](Sid actor) { return aiMovement->MovementForm(actor); };carriers.daisPoint=[this](Sid dais) { return DaisApproachPoint(core.pool,core.types,gunState.checking,boardTargetState.invalid,services.ai.assertion,dais); };
+        carriers.point=[this](auto token,Sid actor,RawPathPoint point) { aiMovement->ToPoint(token,actor,point,0); };carriers.home=[this](auto token,Sid actor) { aiMovement->Home(token,actor); };carriers.enemyAvailable=[this](auto owner) { return AiEnemyAvailable(owner); };carriers.vulnerable=[this](Sid sid) { return aiCollectors->Vulnerable(sid); };carriers.flyingGetter=[this](auto token) { return aiResourceChoice->HasFlyingCaptureCarrier(token); };carriers.graph=[this](Sid sid) { return anchor->GraphFor(sid.value); };
+        carriers.crystals=[this](Sid actor) { return CountContained(core.pool,priestState.contained,actor,0x20,motionState.carrier.nuggetType); };carriers.firstCrystal=[this](Sid actor) { return priests->Carrier().FindContained(actor,0x20,motionState.carrier.nuggetType,0); };carriers.dropRequest=[this](Sid actor) { PrepareCarrierDrop();carrierDrop->Request(actor,Sid{}); };carriers.destroy=[this](Sid crystal) { world.Destroy(crystal,0); };carriers.target=[this](auto token,Sid actor,Sid target) { aiMovement->ToTarget(token,actor,target,0); };
+        carriers.remember=[this](auto token,Sid actor) { aiResourceChoice->RememberCaptureCarrier(token,actor); };carriers.collect=[this](auto token,Sid actor) { aiResourceChoice->CollectOrHome(token,actor); };carriers.targets=[this](Sid actor) { return AiCarrierTargets(actor); };carriers.reclassify=[this](auto token) { aiResourceChoice->ReclassifyDisconnected(token); };carriers.stop=[this](Sid actor) { aiMovement->Stop(actor); };carriers.assertion=[this](std::string_view text,std::uint32_t line) { if (!services.ai.assertion) throw std::logic_error("AI 운반 행동 원본 진단 미연결 "+std::to_string(line));services.ai.assertion(text); };
+        aiCarrierActions=std::make_unique<RawAiCarrierActions>(aiMemory,core.pool,core.types,AiCarrierActionGlobals{core.processState.now,assetState.boss,gunState.checking,[this] { return static_cast<std::uint32_t>(core.bookkeeping.invalidGraph); }},std::move(carriers));
     }
     // 사용자이동/대상접근/AI가같은489080종류별실제BFS/Host시작을공유한다.
     CarrierPathResult StartMotion(RawPathStartRequest request) {
@@ -2539,6 +2547,8 @@ bool RawCampaignSession::ReturnAiHome(std::uint32_t owner,Sid actor) { if (!impl
 bool RawCampaignSession::CollectAiOrReturnHome(std::uint32_t owner,Sid actor) { if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("설치 후 owner1..8 AI 수집·귀환만 허용");const auto token=impl_->participation->Brain(owner);if (!token) return false;impl_->aiResourceChoice->CollectOrHome(token,actor);return true; }
 // 실제현재330/348목록에서그래프가끊긴간헐천만원본순서대로옮긴다.
 bool RawCampaignSession::RecheckAiGeysers(std::uint32_t owner) { if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("설치 후 owner1..8 AI 간헐천 재분류만 허용");const auto token=impl_->participation->Brain(owner);if (!token) return false;impl_->aiResourceChoice->ReclassifyDisconnected(token);return true; }
+// 현재같은본체로전체수집/포획/귀환/경로취소를판단한다.자동프레임순서는후속이다.
+bool RawCampaignSession::ManageAiCarriers(std::uint32_t owner) { if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("설치 후 owner1..8 AI 운반 행동만 허용");const auto token=impl_->participation->Brain(owner);if (!token) return false;impl_->aiCarrierActions->Act(token);return true; }
 // 현재가상표의실제원본이름을반환한다.
 std::string RawCampaignSession::ObjectName(Sid parent) const { if (!impl_->loaded) throw std::logic_error("설치 전 객체 이름 조회");return impl_->objectNames->Name(parent); }
 // 명시 해제의 오류는 caller에 전파하고 destructor의 마지막 정리와 구분한다.

@@ -15,6 +15,7 @@
 #include "client/SpriteColorMaps.h"
 #include "client/VFXMappedDraw.h"
 #include "o/RawDaisDraw.h"
+#include "o/RawAiCarrierActions.h"
 #include "o/RawDudeBehavior.h"
 #include "o/RawDudeTask.h"
 #include "client/AiTypeRequiredEnergy.h"
@@ -528,6 +529,10 @@ TEST_CASE(CampaignSession_AiResourceChoiceUsesActualGraphContentsAndLifetime) {
     // 실제재분류후남은목록을실제GraphFor로읽으며기대그래프를주입하지않는다.
     for (std::uint32_t index=0;index<Get(raw,0x338);++index) CHECK(anchor.GraphFor(Get(connected,index*4))==Get(raw,0x298));
     session.RemoveAi(1);CHECK(!session.RecheckAiGeysers(1) && !session.CollectAiOrReturnHome(1,priest));
+}
+// 실제월드수집자/내용물genus/AI목록/경로Host와전체행동수명을함께검사한다.작성·컴파일만한다.
+TEST_CASE(CampaignSession_AiCarrierActionsUseActualWorldContentsAndLifetime) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();services.ai.allocationBytes=[](auto raw) { std::fill(raw.begin(),raw.end(),std::uint8_t{0x71}); };services.ai.participation.clearChat=[](auto) {};services.ai.participation.addChat=[](auto,auto,auto) {};services.ai.localTransport=[] { return true; };services.ai.assertion=[](std::string_view text) { throw std::logic_error(std::string(text)); };services.missionOutcome.demo=[] { return 0U; };services.ai.names.language=[] { return 1U; };services.ai.names.translate=services.ai.names.substitute=[](std::string_view text) { return std::string(text); };auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));CHECK(Throws([&] { session.ManageAiCarriers(2); }));session.Load();CHECK(!session.ManageAiCarriers(2));auto core=session.Core();const Sid priest{static_cast<std::uint16_t>(session.FindPriestParticipation(2))};CHECK(priest.value);if (!priest.value) return;const auto origin=core.pool.Slot(priest);const auto walker=session.World().Create(133,2);session.World().Pop(walker,std::bit_cast<float>(Get(origin,14)),std::bit_cast<float>(Get(origin,18)),0);core.owner.Set(walker,2);const auto token=session.CreateAi(2,SessionAiSettings("Carrier AI","sunWalker;sunCannon"));CHECK(token && session.PrepareAi(2));if (!token) return;const auto raw=session.AiMemory().Bytes(token);CHECK(Get(raw,0x2e4)==1 && Get(session.AiMemory().Bytes(Get(raw,0x2dc)),0)==walker.value);if (Get(raw,0x2e4)!=1) return;const auto captive=session.CreateContained(walker,158,3,0x20,0,0);CHECK(captive.value && FindContainedGenus(core.pool,session.ProductionFinder(),core.types,walker,0x20,0x200000,0)==captive);const auto before=session.Sp(2);CHECK(session.ManageAiCarriers(2) && Get(raw,0x6d0)==0 && Get(raw,0x2e4)==1 && session.Sp(2)==before && SquidForms(core.pool).Parent(captive)==walker);const auto form=session.AiMovementForm(walker);if (form.value) { CHECK(core.processes.FromForm(form)!=nullptr);session.StopAiMovement(walker);CHECK(!core.processes.FromForm(form)); }session.RemoveAi(2);CHECK(!session.ManageAiCarriers(2));
 }
 // 같은 Session의 실제 본체/기술/동맹/현재 그래프 getter와 정상 목록 소멸을 함께 검사한다.
 TEST_CASE(CampaignSession_AiUsesCurrentWorldAndLifetime) {

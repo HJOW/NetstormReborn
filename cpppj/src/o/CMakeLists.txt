@@ -399,3 +399,5 @@ target_sources(netstorm PRIVATE RawSquidName.cpp RawSquidName.h SquidNameVtables
 target_sources(netstorm PRIVATE RawAiMovement.cpp RawAiMovement.h)
 # 같은실제간헐천/포획운반목록의자원선택과신전귀환하위를연결한다.
 target_sources(netstorm PRIVATE RawAiResourceChoice.cpp RawAiResourceChoice.h)
+# 전체수집/포획행동과실제내용물genus조회·다이스접근점을연결한다.
+target_sources(netstorm PRIVATE RawAiCarrierActions.cpp RawAiCarrierActions.h)
