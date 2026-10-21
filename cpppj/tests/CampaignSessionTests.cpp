@@ -554,6 +554,14 @@ TEST_CASE(CampaignSession_AiPriestActionsUseActualSearchMovementAndLifetime) {
     if (form.value) { CHECK(core.processes.FromForm(form)!=nullptr);session.StopAiMovement(priest);CHECK(!core.processes.FromForm(form)); } // 실제 이동이 선택된 경우 같은 Host를 정상 종료한다.
     session.RemoveAi(2);CHECK(!session.ManageAiPriest(2,priest) && !core.destroy.PreDepth() && !core.destroy.PostDepth());
 }
+// 실제 운반체/사제 내용물/현재 TYPE hpPerSec/같은 Gun 검색과 AI 수명을 연결한다. 작성·컴파일만 한다.
+TEST_CASE(CampaignSession_AiDropTargetsUseActualContentsGunAndLifetime) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services(); // 보호 지도와 명시 장치 입력이다.
+    services.ai.allocationBytes=[](auto raw) { std::fill(raw.begin(),raw.end(),std::uint8_t{0x71}); };services.ai.participation.clearChat=[](auto) {};services.ai.participation.addChat=[](auto,auto,auto) {};services.ai.localTransport=[] { return true; };services.ai.assertion=[](std::string_view text) { throw std::logic_error(std::string(text)); };services.missionOutcome.demo=[] { return 0U; };
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));Sid result{9};CHECK(Throws([&] { session.ScoreAiTarget(2,Sid{}); }));session.Load();CHECK(!session.ScoreAiTarget(2,Sid{}) && !session.ScoreAiGun(2,128,20,30,2,result) && result==Sid{9});CHECK(!session.ScoreAiBlockers(2,78,20,30,0,result) && result==Sid{9});const auto token=session.CreateAi(2,SessionAiSettings("Drop Target AI","sunWalker;sunCannon"));CHECK(token && session.PrepareAi(2));if (!token) return;
+    auto core=session.Core();const auto raw=session.AiMemory().Bytes(token);CHECK(Get(raw,0x264)==1);const auto walker=session.World().Create(133,2);core.owner.Set(walker,1);const auto before=session.ScoreAiTarget(2,walker);const auto sp=session.Sp(2);const auto wallet=Get(raw,0x2d8);const auto captive=session.CreateContained(walker,158,3,0x20,0,0);CHECK(captive.value);CHECK(session.ScoreAiTarget(2,walker)==before+400 && session.Sp(2)==sp && Get(raw,0x2d8)==wallet);
+    const auto gunScore=session.ScoreAiGun(2,128,20,30,2,result);CHECK(gunScore==(result.value ? session.ScoreAiTarget(2,result) : 0));session.ScoreAiBlockers(2,78,20,30,0,result);CHECK(session.Sp(2)==sp && Get(raw,0x2d8)==wallet);session.RemoveAi(2);result=Sid{9};CHECK(!session.ScoreAiTarget(2,walker) && !session.ScoreAiGun(2,128,20,30,2,result) && !session.ScoreAiBlockers(2,78,20,30,0,result) && result==Sid{9});
+}
 // 같은 Session의 실제 본체/기술/동맹/현재 그래프 getter와 정상 목록 소멸을 함께 검사한다.
 TEST_CASE(CampaignSession_AiUsesCurrentWorldAndLifetime) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;

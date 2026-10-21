@@ -258,6 +258,9 @@ public:
     std::uint32_t SelectAiBuildType(std::uint32_t owner) const; //00411b40의실제다음건설TYPE다.본체없음/선택없음은0이다.
     bool AiEnemyLowFunds(std::uint32_t owner) const; //00411ad0의현재적자금1000미만조건이다.본체없음은false다.
     bool ManageAiPriest(std::uint32_t owner,o::Sid priest); //00411cd0전체사제행동을같은실제하위로호출한다.true는본체존재/호출이며건설성공이아니다.
+    std::int32_t ScoreAiTarget(std::uint32_t owner,o::Sid target) const; //00412770의 실제 현재 표적 점수다.본체가 없으면0이다.
+    std::int32_t ScoreAiGun(std::uint32_t owner,std::uint32_t type,float x,float y,std::int32_t direction,o::Sid& result) const; //004128f0:같은 Gun 검색/출력과 점수다.본체 부재는 출력을 보존한다.
+    std::int32_t ScoreAiBlockers(std::uint32_t owner,std::uint32_t type,float x,float y,std::int32_t direction,o::Sid& result) const; //00412950:같은 실제 목록의 감김 총점과 원본 첫SID 출력이다.
     std::string ObjectName(o::Sid parent) const; //실제가상68의현재번역/치환·Factory레벨접미사다.
     // 같은 현재 Player의 실제 목록 소멸→본체 반납→포인터0을 수행한다. flags20은 원본대로 보존한다.
     void RemoveAi(std::uint32_t owner);

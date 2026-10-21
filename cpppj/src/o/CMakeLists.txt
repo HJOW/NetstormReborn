@@ -407,3 +407,5 @@ target_sources(netstorm PRIVATE RawAiBuildSearch.cpp RawAiBuildSearch.h)
 target_sources(netstorm PRIVATE RawAiBuildChoice.cpp RawAiBuildChoice.h)
 # 실제사제의의식/건설/탐색/회수/수집·귀환전체행동을연결한다.
 target_sources(netstorm PRIVATE RawAiPriestActions.cpp RawAiPriestActions.h)
+# AI 건물 배치의 실제 표적 점수와 Gun/장애물 후보 평가를 연결한다.
+target_sources(netstorm PRIVATE RawAiDropTargets.cpp RawAiDropTargets.h)

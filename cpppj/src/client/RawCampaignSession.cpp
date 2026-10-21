@@ -109,6 +109,7 @@
 #include "o/RawAiBuildSearch.h"
 #include "o/RawAiBuildChoice.h"
 #include "o/RawAiPriestActions.h"
+#include "o/RawAiDropTargets.h"
 #include "o/RawAiPreparation.h"
 #include "o/RawPriestLookup.h"
 #include "o/RawRunePostPop.h"
@@ -304,6 +305,7 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawAiBuildSearch> aiBuildSearch; //같은574상태/spot/실제배치검사와벽시각의행별탐색이다.
     std::unique_ptr<RawAiBuildChoice> aiBuildChoice; //같은지갑/선호워크샾/적사제·SP의다음건설TYPE판단이다.
     std::unique_ptr<RawAiPriestActions> aiPriestActions; //같은사제/건설선택·탐색/의식/회수요청의전체사제행동이다.
+    std::unique_ptr<RawAiDropTargets> aiDropTargets; //같은 실제 TYPE/내용물/HP/Gun·장애물 검색을 공유하는 건물 배치 표적 점수다.
     std::uint32_t aiGeyserLog{29}; //0052f3e4의끊긴간헐천로그초기종류다.
     std::uint32_t aiMoveLog{99}; //0052f3d8의원본Debug Move초기로그종류다.
     std::uint32_t aiDrySpotLog{99}; //0052f3dc의원본Debug Dry Spot 초기로그종류다.
@@ -1858,6 +1860,9 @@ struct RawCampaignSession::Impl {
         carriers.remember=[this](auto token,Sid actor) { aiResourceChoice->RememberCaptureCarrier(token,actor); };carriers.collect=[this](auto token,Sid actor) { aiResourceChoice->CollectOrHome(token,actor); };carriers.targets=[this](Sid actor) { return AiCarrierTargets(actor); };carriers.reclassify=[this](auto token) { aiResourceChoice->ReclassifyDisconnected(token); };carriers.stop=[this](Sid actor) { aiMovement->Stop(actor); };carriers.assertion=[this](std::string_view text,std::uint32_t line) { if (!services.ai.assertion) throw std::logic_error("AI 운반 행동 원본 진단 미연결 "+std::to_string(line));services.ai.assertion(text); };
         aiCarrierActions=std::make_unique<RawAiCarrierActions>(aiMemory,core.pool,core.types,AiCarrierActionGlobals{core.processState.now,assetState.boss,gunState.checking,[this] { return static_cast<std::uint32_t>(core.bookkeeping.invalidGraph); }},std::move(carriers));
         AiBuildSearchHooks search;search.wall=services.construction.wallSeconds;search.mayPlace=[this](const CanonPlacementQuery& query) { PrepareConstruction();return MayPlaceGameplay(query); };aiBuildSearch=std::make_unique<RawAiBuildSearch>(aiMemory,core.types,core.spots,kAiSearchTypeBase,std::move(search));
+        AiDropTargetHooks scores;scores.captive=[this](Sid target) { return FindContainedGenus(core.pool,priestState.contained,core.types,target,0x20,0x200000,0); };scores.rate=[this](Sid target) { return hitTypes.at(core.pool.Slot(target)[10]).damagePerSecond; };scores.maxHitPoints=[this](Sid target) { return hp.MaxHitPoints(target); };
+        scores.gun=[this](float x,float y,auto type,auto direction,auto owner) { return gunTarget->FindTarget(x,y,type,direction,owner); };scores.blockers=[this](auto owner,RawPathPoint point,auto capacity) { return gunBlocker->Collect(owner,{point.x,point.y},capacity); };scores.center=[this](Sid target) { const auto center=core.neighbors.Center(target);return RawPathPoint{center[0],center[1]}; };scores.assertion=[this](std::string_view text,auto line) { if (!services.ai.assertion) throw std::logic_error("AI 배치 표적 원본 진단 미연결 "+std::to_string(line));services.ai.assertion(text); };
+        aiDropTargets=std::make_unique<RawAiDropTargets>(aiMemory,core.pool,core.types,AiDropTargetGlobals{runeState.altarType,constructionState.confirm.patternTypes[7]},std::move(scores));
         AiPriestActionHooks priest;priest.scan=[this](auto token,auto budgeted) { aiBuildSearch->Scan(token,budgeted); };priest.vulnerable=[this](Sid actor) { return aiCollectors->Vulnerable(actor); };priest.busy=[this](Sid actor) { return core.processes.FindEvent(actor,0x493)!=nullptr; };priest.path=[this](Sid actor) { return aiMovement->MovementForm(actor); };priest.maxHitPoints=[this](Sid actor) { return hp.MaxHitPoints(actor); };priest.ritual=[this](Sid actor) { return AiPriestInRitual(core.pool,core.frames,actor); };
         priest.altarEnemy=[this](auto enemy,Sid dais) { return AiAltarContainsEnemy(core.pool,dais,enemy,runeState.altarType,[this](float x,float y,auto type) { return world.Find(x,y,type); }); };priest.target=[this](auto token,Sid actor,Sid target,auto sacrifice) { aiMovement->ToTarget(token,actor,target,sacrifice); };priest.distance=[this](RawPathPoint point,Sid dais) { return AiDistanceToFootprint(point,core.neighbors.Footprint(dais)); };priest.select=[this](auto token) { return aiBuildChoice->Select(token); };priest.home=[this](auto token,Sid actor) { aiMovement->Home(token,actor); };priest.collect=[this](auto token,Sid actor) { aiResourceChoice->CollectOrHome(token,actor); };
         priest.deploy=[this](auto token,auto type,RawPathPoint point) { aiCollectors->DeployWithNotice(token,type,point.x,point.y,0,0); };priest.begin=[this](auto token,const AiPriestSearchRequest& request) { aiBuildSearch->Initialize(token,request.type,request.bounds,request.avoid,request.owner); };priest.point=[this](auto token,Sid actor,RawPathPoint point) { aiMovement->ToPoint(token,actor,point,0); };priest.enemyLowFunds=[this](auto token) { return aiBuildChoice->EnemyLowFunds(token); };priest.salvage=[this](Sid target) { salvageCommand->Request(target.value); };
@@ -2577,6 +2582,12 @@ std::uint32_t RawCampaignSession::SelectAiBuildType(std::uint32_t owner) const {
 bool RawCampaignSession::AiEnemyLowFunds(std::uint32_t owner) const { if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("설치 후 owner1..8 AI 적 자금 조회만 허용");const auto token=impl_->participation->Brain(owner);return token && impl_->aiBuildChoice->EnemyLowFunds(token); }
 // 같은현재본체/명시사제로원본전체사제행동을실행한다.사제0이어도탐색prefix는원문대로실행한다.
 bool RawCampaignSession::ManageAiPriest(std::uint32_t owner,Sid priest) { if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("설치 후 owner1..8 AI 사제 행동만 허용");const auto token=impl_->participation->Brain(owner);if (!token) return false;impl_->aiPriestActions->Act(token,priest);return true; }
+// 실제 현재 표적 점수만 읽고 별도 자금/건설 상태를 만들지 않는다.
+std::int32_t RawCampaignSession::ScoreAiTarget(std::uint32_t owner,Sid target) const { if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("설치 후 owner1..8 AI 표적 점수만 허용");const auto token=impl_->participation->Brain(owner);return token ? impl_->aiDropTargets->Score(token,target) : 0; }
+// 검색 결과 쓰기와 점수 계산의 원본 순서를 같은 실제 Gun에서 수행한다.
+std::int32_t RawCampaignSession::ScoreAiGun(std::uint32_t owner,std::uint32_t type,float x,float y,std::int32_t direction,Sid& result) const { if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("설치 후 owner1..8 AI Gun 점수만 허용");const auto token=impl_->participation->Brain(owner);return token ? impl_->aiDropTargets->Gun(token,type,{x,y},direction,result) : 0; }
+// 같은 실제 장애물 목록/현재 TYPE/방향과 원본 첫 SID 출력 규칙을 보존한다.
+std::int32_t RawCampaignSession::ScoreAiBlockers(std::uint32_t owner,std::uint32_t type,float x,float y,std::int32_t direction,Sid& result) const { if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("설치 후 owner1..8 AI 장애물 점수만 허용");const auto token=impl_->participation->Brain(owner);return token ? impl_->aiDropTargets->Blockers(token,type,{x,y},direction,result) : 0; }
 // 현재가상표의실제원본이름을반환한다.
 std::string RawCampaignSession::ObjectName(Sid parent) const { if (!impl_->loaded) throw std::logic_error("설치 전 객체 이름 조회");return impl_->objectNames->Name(parent); }
 // 명시 해제의 오류는 caller에 전파하고 destructor의 마지막 정리와 구분한다.
