@@ -90,6 +90,8 @@
     <None Include="../../../cpppj/tests/fixtures/damageablepredestroy-x86.tsv" Link="X86/damageablepredestroy-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <!-- 원본 월드 코어 W03 삭제·수명 여섯째 조각: 피해가능객체(Damageable) 종속 해방 4,512행 중 10.78 몫 1,504행. -->
     <None Include="../../../cpppj/tests/fixtures/damageablerelease-x86.tsv" Link="X86/damageablerelease-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <!-- 원본 월드 코어 W03 삭제·수명 일곱째 조각: 피해가능객체(Damageable) 삭제 후 처리 4,412행 중 10.78 몫 2,246행. -->
+    <None Include="../../../cpppj/tests/fixtures/damageablepostdestroy-x86.tsv" Link="X86/damageablepostdestroy-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <!-- 연결한 fixture 의 SHA-256 목록과 그 검사. cpppj 가 fixture 를 다시 만들면 실패해 재대조를 요구한다 (W01, 2026-10-16). 갱신: dotnetpj/tools/cpp_sync.py -->
     <None Include="../Shared/cpp-fixture-manifest.tsv" Link="X86/cpp-fixture-manifest.tsv" CopyToOutputDirectory="PreserveNewest" />
     <Compile Include="../Shared/CppFixtureManifest.cs" Link="Shared/CppFixtureManifest.cs" />
