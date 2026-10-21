@@ -10,8 +10,8 @@
     "cpppj/src/client/RawCampaignSession.cpp": "f0a29e106d66694da5390befb2a20f41346270d827976447bddb6d0970f16902",
     "cpppj/src/client/RawCampaignFactoryDisplay.cpp": "26bb51dabdf16d3d23bf7a2f0abe6673cee4db1e49674b848b423e8835acfd22",
     "cpppj/src/client/RawCampaignFactoryDisplay.h": "d6dd4cb3eacc60c3ee664fcb5bc9dae75ca01b38269c36fc6d930e5c3e71ffa7",
-    "cpppj/src/o/CMakeLists.txt": "c9d0a7b1593fcecf72045b9f719c42cfc4c6db3cc9469d485ac17d4ff502ea79",
-    "cpppj/tests/CMakeLists.txt": "a88beacab21ab71fabd5083556280da5ffa19070f076417fb87d5f1539b13223",
+    "cpppj/src/o/CMakeLists.txt": "2962026826c230041c728f2335806bdb34089922098126c81e25f242f172257c",
+    "cpppj/tests/CMakeLists.txt": "5c6f36e7b5bc3ff8fa81b94db85770530efb8555040d6bb517247c5fa3b1aedc",
     "cpppj/tests/CampaignSessionTests.cpp": "a70538585ad7af14e773ed2452ff3a34d26e0a0795fcdbc7073aeef982ddf907",
     "tools/cpp_dais_draw_audit.py": "a027ef5303cb15bd97bdf6b67ac0439979d7825c4b406703efae4d9d79bfef50",
     "tools/decomp_dais_draw.py": "70c707796adc7fddc85665ef1267877fa2f3088975aa6c108efaedc5366224d9",
@@ -3213,6 +3213,25 @@
           "group": "/sources",
           "previous": "578c171e7688b75c145dda0fcd3e56925bdee1d59882c2b5955c94f3e5e1ea97",
           "current": "a70538585ad7af14e773ed2452ff3a34d26e0a0795fcdbc7073aeef982ddf907"
+        }
+      ]
+    },
+    {
+      "unit": 262,
+      "date": "2026-10-21",
+      "description": "DataManager 섹션 소멸 연결의 현재 소스 핀; 과거 관측/바이너리/실행 결과는 보존",
+      "pins": [
+        {
+          "group": "/sources",
+          "path": "cpppj/src/o/CMakeLists.txt",
+          "previous": "c9d0a7b1593fcecf72045b9f719c42cfc4c6db3cc9469d485ac17d4ff502ea79",
+          "current": "2962026826c230041c728f2335806bdb34089922098126c81e25f242f172257c"
+        },
+        {
+          "group": "/sources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "a88beacab21ab71fabd5083556280da5ffa19070f076417fb87d5f1539b13223",
+          "current": "5c6f36e7b5bc3ff8fa81b94db85770530efb8555040d6bb517247c5fa3b1aedc"
         }
       ]
     }

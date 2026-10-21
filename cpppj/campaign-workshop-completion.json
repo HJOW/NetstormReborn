@@ -19,8 +19,8 @@
     "cpppj/src/client/RawShapeToBuffer.cpp": "a6e46ce3d717dd312323268a0bb1ebcd020d992c583d9a3d6e069588fbb50eab",
     "cpppj/src/client/RawShapeToBuffer.h": "f3788fbcdacd21dd4dabac2c63c96fbd4d28e1c27c9a19cf8b6519f98852a119",
     "cpppj/src/client/RawSurfaceWorld.cpp": "d6ebba7d5175b98dd5ddabba6de4744a977434913b4eb8b9c2e39068e7b94832",
-    "cpppj/src/o/CMakeLists.txt": "c9d0a7b1593fcecf72045b9f719c42cfc4c6db3cc9469d485ac17d4ff502ea79",
-    "cpppj/tests/CMakeLists.txt": "a88beacab21ab71fabd5083556280da5ffa19070f076417fb87d5f1539b13223",
+    "cpppj/src/o/CMakeLists.txt": "2962026826c230041c728f2335806bdb34089922098126c81e25f242f172257c",
+    "cpppj/tests/CMakeLists.txt": "5c6f36e7b5bc3ff8fa81b94db85770530efb8555040d6bb517247c5fa3b1aedc",
     "cpppj/tests/CampaignSessionTests.cpp": "a70538585ad7af14e773ed2452ff3a34d26e0a0795fcdbc7073aeef982ddf907",
     "cpppj/tests/ShapeToBufferTests.cpp": "91d7010f9d6698f7237d8a2040e00658502a57dedea9da310173af4e96dd26e5",
     "tools/cpp_priest_construction_smoke.py": "93524c9e1fb58e7e589fc25c7507e105e750b96cb66ad7ddbf9a58aae2756c2c",
@@ -6511,6 +6511,25 @@
           "group": "/currentSources",
           "previous": "578c171e7688b75c145dda0fcd3e56925bdee1d59882c2b5955c94f3e5e1ea97",
           "current": "a70538585ad7af14e773ed2452ff3a34d26e0a0795fcdbc7073aeef982ddf907"
+        }
+      ]
+    },
+    {
+      "unit": 262,
+      "date": "2026-10-21",
+      "description": "DataManager 섹션 소멸 연결의 현재 소스 핀; 과거 관측/바이너리/실행 결과는 보존",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/src/o/CMakeLists.txt",
+          "previous": "c9d0a7b1593fcecf72045b9f719c42cfc4c6db3cc9469d485ac17d4ff502ea79",
+          "current": "2962026826c230041c728f2335806bdb34089922098126c81e25f242f172257c"
+        },
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "a88beacab21ab71fabd5083556280da5ffa19070f076417fb87d5f1539b13223",
+          "current": "5c6f36e7b5bc3ff8fa81b94db85770530efb8555040d6bb517247c5fa3b1aedc"
         }
       ]
     }

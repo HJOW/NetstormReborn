@@ -40,7 +40,7 @@
     "cpppj/src/client/RawCampaignSession.h": "c7eb35c34efd4457beab89d66be64d2598bf24a833758ca264e09b3a2a27390b",
     "cpppj/src/o/RawGunTarget.cpp": "7ac9b51af58949ce8c23f9854679a7685468ba798768db0a1158f25b0ff95f14",
     "cpppj/src/o/RawGunTarget.h": "cfc9f229f1b1ed225188ef5600ea7f575304f7c5cd537b6e6d803caa7d8486a0",
-    "cpppj/tests/CMakeLists.txt": "a88beacab21ab71fabd5083556280da5ffa19070f076417fb87d5f1539b13223",
+    "cpppj/tests/CMakeLists.txt": "5c6f36e7b5bc3ff8fa81b94db85770530efb8555040d6bb517247c5fa3b1aedc",
     "cpppj/tests/CampaignSessionTests.cpp": "a70538585ad7af14e773ed2452ff3a34d26e0a0795fcdbc7073aeef982ddf907",
     "cpppj/src/client/RawCursorRange.cpp": "965b5bce38bdceb3d31cc63cbae3fc8db5da57ccb3bf8c71be81f23ec548ec2e",
     "cpppj/src/client/RawCursorRange.h": "5aa384b5432bd6fbee04ae0fc9bf65acf685d45b66553f8b91866261fcd79758",
@@ -3064,6 +3064,19 @@
           "group": "/sha256",
           "previous": "578c171e7688b75c145dda0fcd3e56925bdee1d59882c2b5955c94f3e5e1ea97",
           "current": "a70538585ad7af14e773ed2452ff3a34d26e0a0795fcdbc7073aeef982ddf907"
+        }
+      ]
+    },
+    {
+      "unit": 262,
+      "date": "2026-10-21",
+      "description": "DataManager 섹션 소멸 연결의 현재 소스 핀; 과거 관측/바이너리/실행 결과는 보존",
+      "pins": [
+        {
+          "group": "/sha256",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "a88beacab21ab71fabd5083556280da5ffa19070f076417fb87d5f1539b13223",
+          "current": "5c6f36e7b5bc3ff8fa81b94db85770530efb8555040d6bb517247c5fa3b1aedc"
         }
       ]
     }

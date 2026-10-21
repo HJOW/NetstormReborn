@@ -28,9 +28,9 @@
     "cpppj/src/client/AiTypeRequiredEnergy.cpp": "a77ecbbece0a23b295c26e35ba5f788ea1c61a660b95880a83abc6988ef559c0",
     "cpppj/tests/fixtures/type-required-energy-x86.tsv": "8bcb3e215c958f5df0a395365059f5481801b1660569f2f04c0720f394f14f4c",
     "cpppj/tests/TypeRequiredEnergyTests.cpp": "0802ab400413ec5da3f2d03a4ac6b6f88e2d088915646609a2ca0bb39a02b05c",
-    "cpppj/src/o/CMakeLists.txt": "c9d0a7b1593fcecf72045b9f719c42cfc4c6db3cc9469d485ac17d4ff502ea79",
+    "cpppj/src/o/CMakeLists.txt": "2962026826c230041c728f2335806bdb34089922098126c81e25f242f172257c",
     "cpppj/src/client/CMakeLists.txt": "0ea1587f2d9dcd22fb2afbdeeefcb151242775b7083018dd39eb181a84fc0b06",
-    "cpppj/tests/CMakeLists.txt": "a88beacab21ab71fabd5083556280da5ffa19070f076417fb87d5f1539b13223"
+    "cpppj/tests/CMakeLists.txt": "5c6f36e7b5bc3ff8fa81b94db85770530efb8555040d6bb517247c5fa3b1aedc"
   },
   "product_validation": {
     "configuration": "Release",
@@ -2742,6 +2742,25 @@
           "group": "/sha256",
           "previous": "f76cfe04ff401b849f8db7dd5f97f1476ed5420f8a6fbb64af39bd07f1f5105d",
           "current": "a88beacab21ab71fabd5083556280da5ffa19070f076417fb87d5f1539b13223"
+        }
+      ]
+    },
+    {
+      "unit": 262,
+      "date": "2026-10-21",
+      "description": "DataManager 섹션 소멸 연결의 현재 소스 핀; 과거 관측/바이너리/실행 결과는 보존",
+      "pins": [
+        {
+          "group": "/sha256",
+          "path": "cpppj/src/o/CMakeLists.txt",
+          "previous": "c9d0a7b1593fcecf72045b9f719c42cfc4c6db3cc9469d485ac17d4ff502ea79",
+          "current": "2962026826c230041c728f2335806bdb34089922098126c81e25f242f172257c"
+        },
+        {
+          "group": "/sha256",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "a88beacab21ab71fabd5083556280da5ffa19070f076417fb87d5f1539b13223",
+          "current": "5c6f36e7b5bc3ff8fa81b94db85770530efb8555040d6bb517247c5fa3b1aedc"
         }
       ]
     }

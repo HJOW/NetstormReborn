@@ -16,7 +16,7 @@
     "cpppj/src/client/RawCampaignSession.h": "c7eb35c34efd4457beab89d66be64d2598bf24a833758ca264e09b3a2a27390b",
     "cpppj/src/client/UberGump.cpp": "b1b3a1e22a6b7511a5597a4b95064bee0ca161fe6583cd5cb92a64d04e9f2aff",
     "cpppj/src/client/UserInput.cpp": "fd1bee42a48c4a33098114e813a7909d449791671fb0e313b76efc55216c20bd",
-    "cpppj/tests/CMakeLists.txt": "a88beacab21ab71fabd5083556280da5ffa19070f076417fb87d5f1539b13223",
+    "cpppj/tests/CMakeLists.txt": "5c6f36e7b5bc3ff8fa81b94db85770530efb8555040d6bb517247c5fa3b1aedc",
     "cpppj/tests/CampaignSessionTests.cpp": "a70538585ad7af14e773ed2452ff3a34d26e0a0795fcdbc7073aeef982ddf907",
     "tools/cpp_campaign_entry_smoke.py": "59b39e067a2e51cc7f6358d8adc198e4cbd5682bc6109e9b1e0407fa7f3550aa",
     "cpppj/src/client/RawCarrierInput.h": "27db41be147df6a13b60aa9faa68751dc1d54a09fae5945ee0e9f762f5979be4",
@@ -4158,6 +4158,19 @@
           "group": "/currentSources",
           "previous": "578c171e7688b75c145dda0fcd3e56925bdee1d59882c2b5955c94f3e5e1ea97",
           "current": "a70538585ad7af14e773ed2452ff3a34d26e0a0795fcdbc7073aeef982ddf907"
+        }
+      ]
+    },
+    {
+      "unit": 262,
+      "date": "2026-10-21",
+      "description": "DataManager 섹션 소멸 연결의 현재 소스 핀; 과거 관측/바이너리/실행 결과는 보존",
+      "pins": [
+        {
+          "group": "/currentSources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "a88beacab21ab71fabd5083556280da5ffa19070f076417fb87d5f1539b13223",
+          "current": "5c6f36e7b5bc3ff8fa81b94db85770530efb8555040d6bb517247c5fa3b1aedc"
         }
       ]
     }

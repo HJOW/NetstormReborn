@@ -1,0 +1,31 @@
+{
+  "date": "2026-10-21",
+  "host": "VM-W11-Codex",
+  "lastDecompileHost": "VM-W11-CODEX",
+  "lastDecompileDate": "2026-10-21",
+  "uniqueInputs": 392,
+  "normalFunctionReturns": 392,
+  "instructions": 20740,
+  "entryCounts": {
+    "004bd330": 192,
+    "0044da60": 384,
+    "0044d040": 664
+  },
+  "gameExecuted": false,
+  "osExecuted": false,
+  "cppExecuted": false,
+  "capturedBeforeProductEdits": true,
+  "boundaries": [
+    "004bd330의 실제 점프와0044da60/0044d040 전체 본문을 실행; CRT free만 명시 경계",
+    "현재 head를 먼저 unlink한 뒤 버퍼/노드를 반납하고 경계 뒤 head를 재조회; current/이름/next/양쪽8BYTE 보존",
+    "실제 CRT 힙/파일/OS/게임 실행과 가상 scalar 소멸은 범위 밖"
+  ],
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_local_mission_transport.py": "db71da65079aa9a985a3a833edd224f089ba9a20137d92042551cb346937eb78",
+    "tools/decomp_datamanager_lifetime.py": "93394acbaebea236706ff44ae5dffa21a6e5e4e90c6f77ee0a2a3bbc6475e9d7",
+    "cpppj/tests/fixtures/datamanager-lifetime-x86.tsv": "59bfee5d3d997f72f60d2c61572e6b8460c418af84d553d69dab09b1f3aff607"
+  }
+}

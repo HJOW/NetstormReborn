@@ -1,5 +1,15 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-21 단위262 완료: DataManager·섹션 MemStream 소멸과 실제 버퍼 반납
+
+- [x] 사용자 요청으로 cpppj 구현을 재개했다. `AGENTS.md`와 양 인수인계를 확인했고 시작 HEAD는 `eac5cfd2`다. 현재/마지막 정밀 디컴파일 PC는 **VM-W11-CODEX / 2026-10-21**로 같다. 새 디컴파일·원본/CD·AGENTS·dotnetpj 변경과 게임/창 실행은 없다.
+- [x] 제품 수정 전에 원본004bd330의 실제 점프→0044da60/0044d040 전체 본문을 **392고유 입력·392정상 반환·20,740명령**으로 관측했다. 진입 수192/384/664와 전체412BYTE·각 free 직전 현재 바이트·경계 뒤 head 재조회·ABI/보존 레지스터/x87/쓰기 범위를 확인했다. CRT free만 명시 경계이며 실제 힙/OS/게임 실행이 아니다. 최초 도구/fixture/JSON은 `extracted/datamanager-lifetime-20261021-first-capture/`에 동결했다.
+- [x] `RawDataManagerLifetime`에 base vptr·head 선행 unlink→버퍼 소멸→같은 노드 반납→현재 head 재조회를 복원했다. manager.current/섹션 이름·next는 보존한다. 실제 `CampaignTemplateStorage`의 같은 Fort 원시 섹션 벡터/노드 할당을 순서대로 반납하고 기존 헤더 수명이 manager를 마지막에 반납한다. 빌린 헤더는 소유 버퍼를 반납하지 않는다. 호스트 노드/벡터 어댑터이며 전체 DataManager 생성/파일/검색/current/오류 복원은 아니다.
+- [x] 검사3개(전체392행·물리/빈 계약·실제 나중 State/확장/빌림/빈 할당/섹션 축소 반납)를 작성·컴파일했다. 최종 Release **종료0·경고0·오류0**, 로그 `extracted/cpp-datamanager-lifetime-20261021-build2.log`다. **C++검사/CTest/게임/전체 회귀는 기존 지시대로 실행하지 않았다.**
+- [x] 신규 소멸 감사/최초392행/기존 Template v2 원문 보존3개는 종료0이다. 시작 소스와 일치하는107보고서·138현재 핀만 가역 갱신하고 전체 JSON 역변환을 확인했다. 과거 핀105개·원문/기대값/실행·바이너리 해시는 보존했다. 기존 감사3건은 현재 PC의 과거 임시 자료/로그 부재와 변경하지 않은 소스의 CRLF/LF SHA 차이로 종료1이며 새 통과로 세지 않는다. REA는 H: 경로 속성 Win32 87로 실패해 현재 PC Ghidra 산출물/독립 PE 관측을 사용했고 설정은 바꾸지 않았다.
+- [x] 상세 [작업 기록](docs/exe/cpp-datamanager-lifetime-20261021.md), `cpppj/datamanager-lifetime-native.json`·`datamanager-lifetime-session.json`, `tools/decomp_datamanager_lifetime.py --verify`·`tools/cpp_datamanager_lifetime_audit.py --verify`다. 인수인계 뒤 **20261021-24 CP**로 로컬 커밋하며 push하지 않는다. 마지막 정밀 디컴파일 PC는 계속 **VM-W11-CODEX / 2026-10-21**이다.
+- [ ] **다음:** 전체 DataManager 생성/파일·MemStream 연결/저장·오류 처리 또는 전체 State7/전투 정리004b2df0의 실제 소비자 연결에서 이어간다. Fort 선택/Guide 공장·scalar 가상 소멸도 남는다. 전체11미션 자연 완주·전략AI·지형/포획/희생/대피·외관/음향/동작 동일성과 이월 실행 검증은 미완료다. 이번 사용자 요청으로 재개했으나 전체 목표 완료로 판정하지 않는다.
+
 ## 2026-10-21 사전 작업 완료: VM-W11-CODEX 전체 재디컴파일 및 cpppj Release 빌드
 
 - [x] `AGENTS.md`와 양 인수인계 문서를 읽었다. 시작 커밋은 `9859f159`, 현재 PC는 **VM-W11-CODEX**다. 직전 최신 기록의 정밀 디컴파일 PC가 **HJOW-Athlon / 2026-10-20**이어서 10.78·CD 10.72 전체 디컴파일을 현재 PC에서 다시 수행했다. 진행 중이던 구현 목표는 재개하지 않았다.

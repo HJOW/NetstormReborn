@@ -250,7 +250,7 @@
   },
   "sources": {
     "cpppj/src/client/RawCampaignSession.cpp": "f0a29e106d66694da5390befb2a20f41346270d827976447bddb6d0970f16902",
-    "cpppj/src/o/CMakeLists.txt": "c9d0a7b1593fcecf72045b9f719c42cfc4c6db3cc9469d485ac17d4ff502ea79",
+    "cpppj/src/o/CMakeLists.txt": "2962026826c230041c728f2335806bdb34089922098126c81e25f242f172257c",
     "cpppj/src/o/RawSunAviaryCapture.cpp": "d042ce0de408bc7768395f951a3b34791064c0835a934740d1d22fe3aab2455a",
     "cpppj/src/o/RawSunAviaryCapture.h": "65df20e4611cc2cabc8ce7ec3445f96653965581b64d1d7c7ed22d361fcbe887",
     "cpppj/tests/ShapeToBufferTests.cpp": "91d7010f9d6698f7237d8a2040e00658502a57dedea9da310173af4e96dd26e5",
@@ -612,6 +612,19 @@
           "group": "/sources",
           "previous": "8fd2012644816c088a0283bde3e14ed3d9c3cff364d38c4c1bd5f4e6eaa81bd4",
           "current": "c9d0a7b1593fcecf72045b9f719c42cfc4c6db3cc9469d485ac17d4ff502ea79"
+        }
+      ]
+    },
+    {
+      "unit": 262,
+      "date": "2026-10-21",
+      "description": "DataManager 섹션 소멸 연결의 현재 소스 핀; 과거 관측/바이너리/실행 결과는 보존",
+      "pins": [
+        {
+          "group": "/sources",
+          "path": "cpppj/src/o/CMakeLists.txt",
+          "previous": "c9d0a7b1593fcecf72045b9f719c42cfc4c6db3cc9469d485ac17d4ff502ea79",
+          "current": "2962026826c230041c728f2335806bdb34089922098126c81e25f242f172257c"
         }
       ]
     }

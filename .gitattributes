@@ -1532,3 +1532,10 @@ cpppj/template-lifetime-*.json text eol=lf
 tools/decomp_template_lifetime.py text eol=lf
 tools/decomp_template_lifetime_v2.py text eol=lf
 tools/cpp_template_lifetime_audit.py text eol=lf
+# DataManager/섹션 소멸과 최초 관측의 전체 UTF-8/LF 바이트를 보존한다.
+cpppj/src/o/RawDataManagerLifetime.* text eol=lf
+cpppj/tests/DataManagerLifetimeTests.cpp text eol=lf
+cpppj/tests/fixtures/datamanager-lifetime-x86.tsv text eol=lf
+cpppj/datamanager-lifetime-*.json text eol=lf
+tools/decomp_datamanager_lifetime.py text eol=lf
+tools/cpp_datamanager_lifetime_audit.py text eol=lf

@@ -1710,3 +1710,7 @@ set_source_files_properties(MissionTechnologyTests.cpp PROPERTIES COMPILE_DEFINI
 # 원본 전체 지식 창25입력의 최초 결과를 이 검사에만 공급한다.
 set_source_files_properties(KnowledgeMenuTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_KNOWLEDGE_MENU_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/knowledge-menu-x86.tsv\"")
+# 실제 DataManager/섹션 소멸의 독립392입력과 저장소 반납을 컴파일한다.
+target_sources(netstorm_tests PRIVATE DataManagerLifetimeTests.cpp)
+set_source_files_properties(DataManagerLifetimeTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_DATAMANAGER_LIFETIME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/datamanager-lifetime-x86.tsv\"")

@@ -7,7 +7,7 @@
   "lastDecompileDate": "2026-10-20",
   "newDecompile": false,
   "sources": {
-    ".gitattributes": "816a2514baadeef047d56019988ff208721748bb207cfee289250c321de7d310",
+    ".gitattributes": "7f122dba7bbd4bec57a8a05065c09ed0ddd47702ff70c556de8aeb09da54236a",
     "cpppj/src/client/CMakeLists.txt": "d12cc04005b8de427d86df11a754ada6954ffba48b5fbfd1ba0c908e2327f655",
     "cpppj/src/client/RawCampaignSession.cpp": "f0a29e106d66694da5390befb2a20f41346270d827976447bddb6d0970f16902",
     "cpppj/src/client/RawCampaignSession.h": "c7eb35c34efd4457beab89d66be64d2598bf24a833758ca264e09b3a2a27390b",
@@ -16,14 +16,14 @@
     "cpppj/src/client/RawCampaignWorldRuntime.h": "2af849dceb0c63315770d1c4f89c0ae53bc70b8d90927f02eb96ebef1d4d048c",
     "cpppj/src/client/UberGump.cpp": "b1b3a1e22a6b7511a5597a4b95064bee0ca161fe6583cd5cb92a64d04e9f2aff",
     "cpppj/src/client/UberGump.h": "fe485ab16d210540affb9793df0026f981f6db96ac8a26a5509af4752bdb50fe",
-    "cpppj/src/o/CMakeLists.txt": "c9d0a7b1593fcecf72045b9f719c42cfc4c6db3cc9469d485ac17d4ff502ea79",
+    "cpppj/src/o/CMakeLists.txt": "2962026826c230041c728f2335806bdb34089922098126c81e25f242f172257c",
     "cpppj/src/o/RawPlayerTemplateState.cpp": "9018dddf0928f1f8f71996fec737e4d20a67eefac2360e5b48c695307f54a3d4",
     "cpppj/src/o/RawPlayerTemplateState.h": "d11c548c0fe6baabebb86048a91cfeb01f142dfd61492005eb824508106e4243",
-    "cpppj/tests/CMakeLists.txt": "a88beacab21ab71fabd5083556280da5ffa19070f076417fb87d5f1539b13223",
+    "cpppj/tests/CMakeLists.txt": "5c6f36e7b5bc3ff8fa81b94db85770530efb8555040d6bb517247c5fa3b1aedc",
     "cpppj/tests/CampaignSessionTests.cpp": "a70538585ad7af14e773ed2452ff3a34d26e0a0795fcdbc7073aeef982ddf907",
     "cpppj/src/o/RawTemplateLifetime.cpp": "b8dde22e04566685c717927195f869973c8d0c036786e8b61c58e6d094a58008",
     "cpppj/src/o/RawTemplateLifetime.h": "275a700cc84a0a56a88bb492bfc1f7754df771e7ed169071c7232689008e38ac",
-    "cpppj/src/client/CampaignTemplateStorage.cpp": "8bd92c4ac56f0775db180296b7ffdd783357821432a44e585b1cee4aef7444c8",
+    "cpppj/src/client/CampaignTemplateStorage.cpp": "2f8311b71bf0b566148b128533397d8f9abf53c9a4cd468b8749bf9ad6d4bed4",
     "cpppj/src/client/CampaignTemplateStorage.h": "b2d8e342613843e57ba93b35e1fa3968cac357f470b06d66d98885b2c6e0e76e",
     "cpppj/tests/TemplateLifetimeTests.cpp": "70482e1c744f2801160950f136fd37502eaa5fbad4ad9d21ec5e39cd48d66222",
     "tools/decomp_template_lifetime.py": "7dee8b169101912bd2b64c1e503a0954d25f9c4fc9de947d22d8eb28e4b22b81",
@@ -4479,5 +4479,38 @@
     "decomp_fort_image_packets": 1
   },
   "finalChecksPassed": 10,
-  "knownPreexistingCheckFailures": 1
+  "knownPreexistingCheckFailures": 1,
+  "integration_updates": [
+    {
+      "unit": 262,
+      "date": "2026-10-21",
+      "description": "DataManager 섹션 소멸 연결의 현재 소스 핀; 과거 관측/바이너리/실행 결과는 보존",
+      "pins": [
+        {
+          "group": "/sources",
+          "path": ".gitattributes",
+          "previous": "816a2514baadeef047d56019988ff208721748bb207cfee289250c321de7d310",
+          "current": "7f122dba7bbd4bec57a8a05065c09ed0ddd47702ff70c556de8aeb09da54236a"
+        },
+        {
+          "group": "/sources",
+          "path": "cpppj/src/o/CMakeLists.txt",
+          "previous": "c9d0a7b1593fcecf72045b9f719c42cfc4c6db3cc9469d485ac17d4ff502ea79",
+          "current": "2962026826c230041c728f2335806bdb34089922098126c81e25f242f172257c"
+        },
+        {
+          "group": "/sources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "a88beacab21ab71fabd5083556280da5ffa19070f076417fb87d5f1539b13223",
+          "current": "5c6f36e7b5bc3ff8fa81b94db85770530efb8555040d6bb517247c5fa3b1aedc"
+        },
+        {
+          "group": "/sources",
+          "path": "cpppj/src/client/CampaignTemplateStorage.cpp",
+          "previous": "8bd92c4ac56f0775db180296b7ffdd783357821432a44e585b1cee4aef7444c8",
+          "current": "2f8311b71bf0b566148b128533397d8f9abf53c9a4cd468b8749bf9ad6d4bed4"
+        }
+      ]
+    }
+  ]
 }

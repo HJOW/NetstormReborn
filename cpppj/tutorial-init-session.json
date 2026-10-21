@@ -19,11 +19,11 @@
     "cpppj/src/o/RawTotalMade.cpp": "461c0424485988241cbc2b6007ea97d2a4f2d4e90ff9193f10a0fe92da5b8cb7",
     "cpppj/src/o/RawTotalMade.h": "ad913f9113bea30dc3083b87c978a6e9c2e0c8165474d2ad6d389c62b154ea2a",
     "cpppj/src/client/CMakeLists.txt": "d12cc04005b8de427d86df11a754ada6954ffba48b5fbfd1ba0c908e2327f655",
-    "cpppj/tests/CMakeLists.txt": "a88beacab21ab71fabd5083556280da5ffa19070f076417fb87d5f1539b13223",
+    "cpppj/tests/CMakeLists.txt": "5c6f36e7b5bc3ff8fa81b94db85770530efb8555040d6bb517247c5fa3b1aedc",
     "cpppj/tests/CampaignSessionTests.cpp": "a70538585ad7af14e773ed2452ff3a34d26e0a0795fcdbc7073aeef982ddf907",
     "tools/cpp_mission_lifecycle_audit.py": "a67676f6e1b3931c4a620ccdc8a45b07618e25945d4bd356af4fd462739c1710",
     "tools/cpp_mission_technology_audit.py": "c39040499ff2b148ad171ea36d62cccbd7ee118330e7c5ce18a0c44be5ca1c1a",
-    ".gitattributes": "816a2514baadeef047d56019988ff208721748bb207cfee289250c321de7d310",
+    ".gitattributes": "7f122dba7bbd4bec57a8a05065c09ed0ddd47702ff70c556de8aeb09da54236a",
     "cpppj/src/client/TutorialInit.cpp": "afad6b5e513817f85722d1123004c1c1d6cbf17e6b85b03037f799995bbebfb3",
     "cpppj/src/client/TutorialInit.h": "075188fb43b31e54a6a3e9e8e03e93e432745661bfab1d86f6e4eb9d7063d297",
     "cpppj/tests/TutorialInitTests.cpp": "c551005ca7bf616cde451eac940f747dcd1ab6fe8f842063f524791b3677c3db",
@@ -4236,6 +4236,25 @@
           "group": "/sources",
           "previous": "578c171e7688b75c145dda0fcd3e56925bdee1d59882c2b5955c94f3e5e1ea97",
           "current": "a70538585ad7af14e773ed2452ff3a34d26e0a0795fcdbc7073aeef982ddf907"
+        }
+      ]
+    },
+    {
+      "unit": 262,
+      "date": "2026-10-21",
+      "description": "DataManager 섹션 소멸 연결의 현재 소스 핀; 과거 관측/바이너리/실행 결과는 보존",
+      "pins": [
+        {
+          "group": "/sources",
+          "path": "cpppj/tests/CMakeLists.txt",
+          "previous": "a88beacab21ab71fabd5083556280da5ffa19070f076417fb87d5f1539b13223",
+          "current": "5c6f36e7b5bc3ff8fa81b94db85770530efb8555040d6bb517247c5fa3b1aedc"
+        },
+        {
+          "group": "/sources",
+          "path": ".gitattributes",
+          "previous": "816a2514baadeef047d56019988ff208721748bb207cfee289250c321de7d310",
+          "current": "7f122dba7bbd4bec57a8a05065c09ed0ddd47702ff70c556de8aeb09da54236a"
         }
       ]
     }
