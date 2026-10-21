@@ -15,6 +15,7 @@ struct AiDropTargetHooks {
     std::function<float(Sid)> rate; //004ac550→0049acf0의 현재 TYPE+48 hpPerSec다.
     std::function<std::int32_t(Sid)> maxHitPoints; //004adcb0의 현재 최대HP다.현재HP는 먼저 저장한다.
     std::function<Sid(float,float,std::uint32_t,std::int32_t,std::uint32_t)> gun; //0046b6f0의 실제 Archer/Cannon finder다.
+    std::function<Sid(float,float,std::uint32_t,std::uint32_t)> ground; //0046b540의 별도 실제 지상 검색이다.일반Gun검색으로대신하지않는다.
     std::function<std::vector<std::uint32_t>(std::uint32_t,RawPathPoint,std::size_t)> blockers; //00469590의 같은 실제 Gun 수집이며 원본 임시 용량은30이다.
     std::function<RawPathPoint(Sid)> center; //004adea0의 현재 실제 발자국 중심이다.
     std::function<void(std::string_view,std::uint32_t)> assertion; //SID0 운반체에서 원본 진단 후 계속한다.
@@ -25,6 +26,7 @@ public:
     RawAiDropTargets(RawAiBrainMemory& memory,const SidPool& pool,std::span<const RiftTypeRecord> types,AiDropTargetGlobals globals,AiDropTargetHooks hooks); //같은 PATCH 저장소를 빌리며 생성 중 검색하지 않는다.
     std::int32_t Score(std::uint32_t token,Sid target) const; //00412770 전체 가산점→hpPerSec 합산 ftol→목록/집중→적 소유자 절반이다.
     std::int32_t Gun(std::uint32_t token,std::uint32_t type,RawPathPoint point,std::int32_t direction,Sid& result) const; //004128f0:실제 검색 결과를 먼저 쓰고 비영만 점수화한다.
+    std::int32_t Ground(std::uint32_t token,std::uint32_t type,RawPathPoint point,Sid& result) const; //00412a70:별도지상검색결과를먼저쓰고같은실제점수를계산한다.
     std::int32_t Blockers(std::uint32_t token,std::uint32_t type,RawPathPoint point,std::int32_t direction,Sid& result) const; //00412950:모든 점수의 감김 합이며 최고 갱신 시 원본처럼 목록 첫 SID를 쓴다.
     bool Facing(RawPathPoint point,std::int32_t direction,Sid target) const; //0048ece0:flags100000 제외→실제 중심→네 방향 일치다.홀수 방향도 중심은 조회한다.
     const SidPool& Pool() const; //같은 실제 월드 연결 확인용이다.

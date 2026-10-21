@@ -409,3 +409,5 @@ target_sources(netstorm PRIVATE RawAiBuildChoice.cpp RawAiBuildChoice.h)
 target_sources(netstorm PRIVATE RawAiPriestActions.cpp RawAiPriestActions.h)
 # AI 건물 배치의 실제 표적 점수와 Gun/장애물 후보 평가를 연결한다.
 target_sources(netstorm PRIVATE RawAiDropTargets.cpp RawAiDropTargets.h)
+# AI 별도지상검색/Depend필터와실제에너지·배치후보평가를연결한다.
+target_sources(netstorm PRIVATE RawGunGroundTarget.cpp RawGunGroundTarget.h RawAiDropEvaluation.cpp RawAiDropEvaluation.h)

@@ -261,6 +261,8 @@ public:
     std::int32_t ScoreAiTarget(std::uint32_t owner,o::Sid target) const; //00412770의 실제 현재 표적 점수다.본체가 없으면0이다.
     std::int32_t ScoreAiGun(std::uint32_t owner,std::uint32_t type,float x,float y,std::int32_t direction,o::Sid& result) const; //004128f0:같은 Gun 검색/출력과 점수다.본체 부재는 출력을 보존한다.
     std::int32_t ScoreAiBlockers(std::uint32_t owner,std::uint32_t type,float x,float y,std::int32_t direction,o::Sid& result) const; //00412950:같은 실제 목록의 감김 총점과 원본 첫SID 출력이다.
+    std::int32_t ScoreAiDrop(std::uint32_t owner,std::uint32_t type,float x,float y,std::int32_t direction,o::Sid& target) const; //00412ab0:현재시설별실제에너지/블로커/지상/Gun평가다.본체부재는출력을보존한다.
+    bool ConsiderAiDrop(std::uint32_t owner,std::uint32_t type,float x,float y,std::int32_t direction,o::RawPathPoint& bestPoint,std::int32_t& bestScore,o::Sid& target) const; //00412b90:현재배치/양수동률/실제에너지승인과부족좌표기록이다.배치실행성공과구분한다.
     std::string ObjectName(o::Sid parent) const; //실제가상68의현재번역/치환·Factory레벨접미사다.
     // 같은 현재 Player의 실제 목록 소멸→본체 반납→포인터0을 수행한다. flags20은 원본대로 보존한다.
     void RemoveAi(std::uint32_t owner);

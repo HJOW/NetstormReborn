@@ -43,6 +43,8 @@ std::int32_t RawAiDropTargets::Score(std::uint32_t token,Sid target) const {
 }
 // 출력은 검색 뒤 점수 계산 전이며0도 기록한다.
 std::int32_t RawAiDropTargets::Gun(std::uint32_t token,std::uint32_t type,RawPathPoint point,std::int32_t direction,Sid& result) const { const auto owner=Field(token,0x260);const auto found=Need(hooks_.gun)(point.x,point.y,type,direction,owner);result=found;return found.value ? Score(token,found) : 0; }
+// 별도지상검색도출력0/점수하위실패전쓰기순서를보존한다.
+std::int32_t RawAiDropTargets::Ground(std::uint32_t token,std::uint32_t type,RawPathPoint point,Sid& result) const { const auto owner=Field(token,0x260);const auto found=Need(hooks_.ground)(point.x,point.y,type,owner);result=found;return found.value ? Score(token,found) : 0; }
 // 특수 flags는 중심 조회 전에 반환하며 다른 방향값은 네 방향 중 하나와 정확히 같아야 한다.
 bool RawAiDropTargets::Facing(RawPathPoint point,std::int32_t direction,Sid target) const { if (Type(target).flags2&0x100000U) return false;const auto center=Need(hooks_.center)(target);const auto facing=RawSquidNeighbors::Direction(point.x,point.y,center.x,center.y);return (direction==0 || direction==2 || direction==4 || direction==6) && facing==direction; }
 // 모든 등장마다 점수를 계산하고 같은 양의 최고값은 출력 SID를 다시 쓰지 않는다.
