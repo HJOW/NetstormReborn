@@ -119,6 +119,14 @@ TEST_CASE(ConstructionEffects_RejectsInvalidBindings) {
     scene.state.blocked=true;effects.DropIsland(Float(0x7fc01234),21,0,3);CHECK(scene.events.empty());
 }
 
+// 실제 GUI에서 Dude의 실패 경로가 요청한 foot0을 검사한다. 원본443800→49ae80의 min/max 범위이며 게임 입력을 바꾸지 않는다.
+TEST_CASE(ConstructionEffects_DudeZeroFootprint) {
+    EffectsScene scene(OriginalEdition::Patch1078);scene.Prepare({70,Bits(20),Bits(21),0,0,3,0,0,1,2,0,3,0,0,0});
+    RawConstructionEffects effects(scene.pool,scene.hash,scene.types,scene.spots,scene.state,scene.Hooks());
+    CHECK(effects.Displace(20,21,70,3));CHECK(scene.events=="A:20:21:21:22");
+    scene.events.clear();scene.types[70].footX=-1;CHECK(Throws([&] { effects.Displace(20,21,70,3); }));CHECK(scene.events.empty());
+}
+
 // fall 뒤 현재 좌표, 삭제 뒤 현재 genus, 전파 뒤 현재 섬 타입/발자국을 사용하는지 검사한다.
 TEST_CASE(ConstructionEffects_ReadsCurrentInputsAfterBoundaries) {
     EffectsScene scene(OriginalEdition::Patch1078);scene.Prepare({100,Bits(20),Bits(21),3,3,3,0,0,1,2,0,3,0,0,0});

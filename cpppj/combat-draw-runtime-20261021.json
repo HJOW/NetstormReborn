@@ -1,0 +1,292 @@
+{
+  "date": "2026-10-21",
+  "host": "VM-W11-Codex",
+  "last_decompile_host": "VM-W11-CODEX",
+  "last_decompile_date": "2026-10-21",
+  "source_hash_basis": "실제 최종 빌드 입력의 작업 트리 바이트. Git 줄바꿈 정규화 뒤의 바이트와 구분한다.",
+  "status": "사용자 요청으로 테스트 중단. 그래픽 수정은 검증했고 스테이지 클리어와 GUI 자연 희생은 미완료다.",
+  "test_only_bridge_manipulation": "4번 ㅏ자 순서 지정은 테스트 임시 조작이며 원본 분석 결과가 아니다.",
+  "graphics_scope": "고정 본체/추가 그림 71·72와 별도 비행 그림자6타입. 모든 효과의 GUI 동일성 완료를 뜻하지 않는다.",
+  "focused_scope": "34개 집중 검사 통과. 표시 raw 교체와 주문/포획/희생 명시 입력은 GUI 자연 완주와 구분한다.",
+  "final_gui_limit": "Early5 D·SP1300·타워HP45·캐논577·적 썬더 캐논714. 타워 파괴 뒤 방어가 무너질 수 있어 클리어 가능 AI/전략의 검토가 필요하다.",
+  "additional_native_run": "과거 constructionclear/functions.tsv 누락으로 새 격리 실행은 시작하지 못했다. 기존 정밀 원문/관측을 근거로 사용하며 새 native 성공으로 세지 않는다.",
+  "build_source_sha256": {
+    "cpppj/src/client/GameWorld.cpp": "8d52be540ef983890227ba3f6f48b9b0e27a7a0e2c72a8868b62ac972bc2255f",
+    "cpppj/src/client/RawCampaignFactoryDisplay.cpp": "640a89ffe94ab608d787ef1bd577ba97dffe808eeb4f6ea1b3bf8829ec773cd6",
+    "cpppj/src/client/RawCampaignFactoryDisplay.h": "bbdb62357b5595be16f3cd2a94c98ad604213c92d6332fb1274f044b3b87fc3f",
+    "cpppj/src/o/RawConstructionEffects.cpp": "fc6b8e7929103afbf382f79918b12929db1519f9108bb7a66d58241c8735a76a",
+    "cpppj/tests/CampaignSessionTests.cpp": "5e300e8c439d6b0a10559423e1d2dd42ce96524b54f2da4e669084895f462fec",
+    "cpppj/tests/ConstructionEffectsTests.cpp": "103a84772bfc6d693d23a2ab7052c9c98da1900b7072481b5f029448f54ed9f6"
+  },
+  "binaries": {
+    "cpppj/build/bin/Release/NetstormCpp.exe": "9d7663dd4ba2824c99fefcb61c059e143567b9e21b8c07ed50aba041236d9f48",
+    "cpppj/build/bin/Release/netstorm_tests.exe": "9d2a16f65041b33a7a590230021de570df6371319659e44b60491cf151e7a303"
+  },
+  "final_build": {
+    "path": "extracted/cpp-combat-draw-20261021-build2.log",
+    "sha256": "beb2076d92de32ebb57a39960f10e8b20d0a804304e05c6717be07fa707d47b3",
+    "exit_code": 0,
+    "warnings": 0,
+    "errors": 0
+  },
+  "focused_runs": {
+    "pixels1": {
+      "command": [
+        "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+        "--filter",
+        "CampaignCombatDraw_"
+      ],
+      "binarySha256": "9d2a16f65041b33a7a590230021de570df6371319659e44b60491cf151e7a303",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 0.7350000000005821,
+      "stdoutSha256": "a801d88643184f8d3df2b417e3b6013a1b9f5c6a5cf899f6da6676b673a1bbec",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tests": 1,
+      "failed": 0,
+      "testOnlyBridgeManipulation": false
+    },
+    "sprite1": {
+      "command": [
+        "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+        "--filter",
+        "SpriteDraw_"
+      ],
+      "binarySha256": "9d2a16f65041b33a7a590230021de570df6371319659e44b60491cf151e7a303",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 0.9220000000022992,
+      "stdoutSha256": "9f0b61965e7c0d70f0e5fe8f51e65da918a03d57a96a98e85b6860459c17dd67",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tests": 12,
+      "failed": 0,
+      "testOnlyBridgeManipulation": false
+    },
+    "temple1": {
+      "command": [
+        "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+        "--filter",
+        "CampaignTempleDraw_"
+      ],
+      "binarySha256": "9d2a16f65041b33a7a590230021de570df6371319659e44b60491cf151e7a303",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 0.9379999999982829,
+      "stdoutSha256": "33fa987b1976936bf6b9f7a0cf70fd9923ac029dcab7422da9b47ca741bc7a4a",
+      "stderrSha256": "8b2a349673073bf084632fb6b51a8e7c752c14e5b633f498b73177dc1d1f6dc3",
+      "tests": 1,
+      "failed": 0,
+      "testOnlyBridgeManipulation": false
+    },
+    "foot1": {
+      "command": [
+        "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+        "--filter",
+        "ConstructionEffects_"
+      ],
+      "binarySha256": "9d2a16f65041b33a7a590230021de570df6371319659e44b60491cf151e7a303",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 0.2809999999990396,
+      "stdoutSha256": "9a1d1264622e85bfb8696b53c44a585f6a026905986a4a7d6691b4291171af8f",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tests": 7,
+      "failed": 0,
+      "testOnlyBridgeManipulation": false
+    },
+    "devastation1": {
+      "command": [
+        "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+        "--filter",
+        "CampaignDevastation_"
+      ],
+      "binarySha256": "9d2a16f65041b33a7a590230021de570df6371319659e44b60491cf151e7a303",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 0.6090000000003783,
+      "stdoutSha256": "0462e4fa2fd633b81f79168680ef11ab0e468b3ab7df5f38b0145513d04f727e",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tests": 4,
+      "failed": 0,
+      "testOnlyBridgeManipulation": false
+    },
+    "sacrifice1": {
+      "command": [
+        "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+        "--filter",
+        "CampaignSacrifice_"
+      ],
+      "binarySha256": "9d2a16f65041b33a7a590230021de570df6371319659e44b60491cf151e7a303",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 0.8280000000013388,
+      "stdoutSha256": "75f37dbed2a23b488103ad0a0246acaabc0fd14649790c20e81e621ab96e6754",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tests": 3,
+      "failed": 0,
+      "testOnlyBridgeManipulation": false
+    },
+    "dais1": {
+      "command": [
+        "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+        "--filter",
+        "CampaignDais_"
+      ],
+      "binarySha256": "9d2a16f65041b33a7a590230021de570df6371319659e44b60491cf151e7a303",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 1.8129999999982829,
+      "stdoutSha256": "7b42d16d8b8be3e95d52a75fc0b9a6b95479b1b256729fd19c4e53a760f30558",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tests": 5,
+      "failed": 0,
+      "testOnlyBridgeManipulation": false
+    },
+    "progress1": {
+      "command": [
+        "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+        "--filter",
+        "CampaignRitualProgress_"
+      ],
+      "binarySha256": "9d2a16f65041b33a7a590230021de570df6371319659e44b60491cf151e7a303",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 1.625,
+      "stdoutSha256": "1d68f8292bf284ada0d44dc51de43af00abac04a38f63ef9e620d24b3c10a7df",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tests": 1,
+      "failed": 0,
+      "testOnlyBridgeManipulation": false
+    }
+  },
+  "gui_runs": {
+    "ui5": {
+      "command": [
+        "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\Workspace\\git\\NetstormReborn\\originals",
+        "--mission",
+        "tutorial5",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "7603",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=40;sleepPerLoop=1;autoDemo=0;tellTips=0",
+        "--ui-script",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\ritual-runtime-20261021-ui5\\steps.tsv",
+        "--ui-report",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\ritual-runtime-20261021-ui5\\states.tsv",
+        "--test-bridge-patterns",
+        "3"
+      ],
+      "binarySha256": "a244b88c3010cd8f981d0a0ca51cd3ac67fcc277d881fe065d54b86da0a65555",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 216.03099999999904,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "f888b54becbb41add1c9422541d30f93372511fc552414813f37d47957ce922e",
+      "originalsUnchanged": true,
+      "testOnlyBridgeManipulation": true,
+      "bridgePatterns": "3",
+      "planSha256": "e7728239e56944237c5a3dc62cd404d66938286ee200d1aac48954877e839675"
+    },
+    "ui6": {
+      "command": [
+        "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\Workspace\\git\\NetstormReborn\\originals",
+        "--mission",
+        "tutorial5",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "4603",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=40;sleepPerLoop=1;autoDemo=0;tellTips=0",
+        "--ui-script",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\ritual-runtime-20261021-ui6\\steps.tsv",
+        "--ui-report",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\ritual-runtime-20261021-ui6\\states.tsv",
+        "--test-bridge-patterns",
+        "4"
+      ],
+      "binarySha256": "ff6dfe66383b071e26503c2cf7345e9e1b0dcfc6a8e9d3828f9a5f9d7b77da0b",
+      "returnCode": 1,
+      "timedOut": false,
+      "seconds": 116.03200000000288,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "cb7f5b1acb53556c81d543b04d5090544ccae08fc4b734847346f5c075243701",
+      "originalsUnchanged": true,
+      "testOnlyBridgeManipulation": true,
+      "bridgePatterns": "4",
+      "planSha256": "61ad4f0c6b45199e5d74830607318fab43f18a59709daa4ecd5bd05b5b72137c"
+    },
+    "ui7": {
+      "command": [
+        "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\Workspace\\git\\NetstormReborn\\originals",
+        "--mission",
+        "tutorial5",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "4603",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=40;sleepPerLoop=1;autoDemo=0;tellTips=0",
+        "--ui-script",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\ritual-runtime-20261021-ui7\\steps.tsv",
+        "--ui-report",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\ritual-runtime-20261021-ui7\\states.tsv",
+        "--test-bridge-patterns",
+        "4"
+      ],
+      "binarySha256": "9d7663dd4ba2824c99fefcb61c059e143567b9e21b8c07ed50aba041236d9f48",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 124.26499999999942,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "f52fcf64a7d0cca3f2075266409a097d956a848d6a34fcdbcd0cd52cca828252",
+      "originalsUnchanged": true,
+      "testOnlyBridgeManipulation": true,
+      "bridgePatterns": "4",
+      "planSha256": "de842c0ef37441e5f62448ebd70ec7a0dd3984a997b0f6ec525ea30c352c3ab9"
+    },
+    "ui8": {
+      "command": [
+        "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\Workspace\\git\\NetstormReborn\\originals",
+        "--mission",
+        "tutorial5",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "4603",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=40;sleepPerLoop=1;autoDemo=0;tellTips=0",
+        "--ui-script",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\ritual-runtime-20261021-ui8\\steps.tsv",
+        "--ui-report",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\ritual-runtime-20261021-ui8\\states.tsv",
+        "--test-bridge-patterns",
+        "4"
+      ],
+      "binarySha256": "9d7663dd4ba2824c99fefcb61c059e143567b9e21b8c07ed50aba041236d9f48",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 123.96900000000096,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "1c578959228a1abf884bc984ff6b87fb0387357c6a72867eb15757ef4f2fac2e",
+      "originalsUnchanged": true,
+      "testOnlyBridgeManipulation": true,
+      "bridgePatterns": "4",
+      "planSha256": "5bd7a2ba441df8092eab1ffbc9ad4426cd26aaac71dfc37a1defa57759833c59"
+    }
+  },
+  "audit_files": {
+    "extracted/draw-additional-audit-20261021.json": "70eae591e4327e037933273a671a11e7bcca3698f88f43ff11e934dac23a6228",
+    "extracted/draw-all-custom-audit-20261021.json": "36e4fab2b0c9995b7d0879341a016e840af022d88ba647beaed43d4b09b29783"
+  }
+}

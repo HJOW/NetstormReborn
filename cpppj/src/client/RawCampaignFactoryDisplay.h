@@ -5,7 +5,7 @@
 #include <functional>
 namespace netstorm::client {
 class GameAssets; // 현재 TYPE/SHP/파일 팔레트를 소유하는 실제 자산 저장소다.
-// 실제 Factory/아웃포스트·플레어·세 템플·다이스를 같은 원본 수집/일반Draw에 분배한다.
+// 실제 건물의 본체/추가 그림과 비행/벌룬 그림자를 같은 원본 수집/일반Draw에 분배한다.
 class RawCampaignFactoryDisplay {
 public:
     using TempleDraw=std::function<void(o::Sid,const std::function<void(std::int32_t)>&)>; // 같은 Session의 실제+a4와 조건부 음향 경계다.

@@ -43,9 +43,9 @@ SquidSearchArea Area(const std::array<float,4>& rectangle) {
     return {Ftol(rectangle[0]),Ftol(rectangle[1]),Ftol(static_cast<double>(rectangle[2])+kRoundUpBias),
         Ftol(static_cast<double>(rectangle[3])+kRoundUpBias)};
 }
-// 안전 계약에 쓰는 좌표/발자국 검증이다. 원본의 무제한 지도 포인터 산술은 실행하지 않는다.
+// 유한 좌표와 비음수 발자국을 검증한다. 원본49ae80은 Dude의 foot0도 x..x+1 사각형으로 펼친다.
 void Validate(float x,float y,const RiftTypeRecord& type) {
-    if (!std::isfinite(x) || !std::isfinite(y) || type.footX<1 || type.footY<1 || type.footX>256 || type.footY>256)
+    if (!std::isfinite(x) || !std::isfinite(y) || type.footX<0 || type.footY<0 || type.footX>256 || type.footY>256)
         throw std::out_of_range("건설 효과 좌표/발자국 오류");
 }
 }

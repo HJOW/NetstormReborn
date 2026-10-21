@@ -5,10 +5,10 @@
 ## 사용법
 
 ```powershell
-.\cpppj\build\bin\Release\NetstormCpp.exe --run .\originals --mission tutorial5 --window --test-bridge-patterns 3
+.\cpppj\build\bin\Release\NetstormCpp.exe --run .\originals --mission tutorial5 --window --test-bridge-patterns 4
 ```
 
-`--test-bridge-patterns 3`은 매번4칸 직선 조각을 공급한다. `0,3,1`은 한 칸/4칸/2칸 직선 순서를 반복한다. 번호는 `0~25`이며 나머지 모양은 `--inspect-canon-patterns .\originals`로 확인할 수 있다. 옵션을 생략하거나 `off`로 지정하면 원래 공급 규칙을 사용한다. 회전·배치·재고 슬롯·생성 타이머·품질 회복은 기존 경로를 사용한다. 설정 파일에 저장하지 않으므로 다음 일반 실행에 남지 않는다.
+`--test-bridge-patterns 4`는 매번 `ㅏ`자 조각(`J./BK/J.`)을 공급한다. 3은4칸 직선, `0,3,1`은 한 칸/4칸/2칸 직선 순서다. 번호는 `0~25`이며 나머지 모양은 `--inspect-canon-patterns .\originals`로 확인할 수 있다. 옵션을 생략하거나 `off`로 지정하면 원래 공급 규칙을 사용한다. 회전·배치·재고 슬롯·생성 타이머·품질 회복은 기존 경로를 사용한다. 설정 파일에 저장하지 않으므로 다음 일반 실행에 남지 않는다. Early5에서는 다리를 과도하게 지어 캐논의3×3 건설 공간을 채우지 않도록 [수정 방어 입력](cpp-combat-draw-and-defense-20261021.md)을 사용한다.
 
 UI 입력 스크립트에서는 `프레임<TAB>test-bridge-patterns<TAB>3,0,1`로 새 순서를 설정하거나 `off`로 해제한다. 이미 생성된 재고는 바뀌지 않고 다음 공급부터 적용된다. 새 목록을 설정하면 테스트 공급 횟수만0으로 돌아간다. 미션 전환/재그리기는 설정된 순서를 유지한다.
 

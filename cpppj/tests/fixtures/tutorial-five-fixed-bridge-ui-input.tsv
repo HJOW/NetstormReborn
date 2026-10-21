@@ -1,0 +1,106 @@
+# 테스트 전용 임시 입력이며 원본 분석 결과가 아니다. 4번 ㅏ자 다리를 공급하되 캐논 건설 공간을 남긴다.
+# 첫 타워 자리(135,93)에 재건하며 발사기는 제네레이터를 향한 훨리기그의 비행 경로(138,101)를 지킨다. HP/SP/적/미션 단계는 직접 바꾸지 않는다.
+1	test-bridge-patterns	4
+20	report	initial
+21	click	MORE
+41	click	OK
+60	right	world:sunFactory
+70	click	Put Knowledge into Production
+90	click	Stone Tower
+110	click	production:78
+130	click	placement:135,93
+140	report	placed
+500	report	stageB
+510	click	OK
+540	right	world:priest
+550	report	priestMenu
+560	click	Construct
+570	report	constructMenu
+580	click	Workshop
+590	report	workshopMenu
+600	click	 Build Sun Workshop for 800
+610	report	previewWorkshop
+620	click	placement-near:130,90
+630	report	placedWorkshop
+800	report	buildingWorkshop
+1000	report	completedWorkshop
+1000	snapshot	completedWorkshop
+1010	right	world:sunFactory
+1015	report	oldFactoryMenu
+1020	click	Put Knowledge into Production
+1030	report	oldKnowledge
+1040	click	Sun Disc Thrower
+1050	report	twoKnowledge
+1300	report	workshopReady
+1310	right	cell:127,86
+1315	report	newFactoryMenu
+1320	click	Put Knowledge into Production
+1330	report	newKnowledge
+1340	click	Sun Cannon
+1350	report	threeKnowledge
+1360	right	cell:127,86
+1370	click	Put Knowledge into Production
+1380	click	Wind Generator
+1400	report	fourKnowledge
+1450	report	stageC
+1450	snapshot	stageC
+1460	click	MORE
+1470	report	stageC1
+1480	click	OK
+1490	key	down
+1498	keyup	down
+1520	report	enemyView
+1520	snapshot	enemyView
+1530	click	cell:138,127
+1540	report	enemySelected
+1600	report	selectionEarly
+1800	report	selectionWait
+1950	report	stageD
+1950	snapshot	stageD
+1960	click	MORE
+1970	click	OK
+1980	report	attackStart
+2050	click-if	production:82
+2060	click-if	placement-reach:135,116
+2065	report	branchBridge0
+2120	click-if	production:82
+2130	click-if	placement-reach:135,116
+2135	report	branchBridge1
+2190	click-if	production:82
+2200	click-if	placement-reach:135,116
+2205	report	branchBridge2
+2260	click-if	production:82
+2270	click-if	placement-reach:135,116
+2275	report	branchBridge3
+2330	click-if	production:82
+2340	click-if	placement-reach:135,116
+2345	report	branchBridge4
+2700	when	page\tmission\n&&!object\t[0-9]+\tsunBlocker\t1\t;;click-if;;production:78
+2710	when	raw_cursor\t0\t[0-9]+\t78\t;;click-if;;placement:135,93
+2720	report	replacementTower
+3000	report	towerDefense
+3100	report	branchRoute
+3100	snapshot	branchRoute
+3110	click-if	production:75
+3120	click-if	placement-near:138,107
+3130	report	generator
+3400	click-if	production:71
+3410	report	throwerPreview
+3420	click-if	placement:138,101
+3425	report	throwerPlaced
+3426	when	raw_cursor\t0\t[0-9]+\t71\t;;esc;;cancel-preview
+3650	report	throwerReady
+3650	snapshot	throwerReady
+3670	click-if	production:128
+3680	click-if	placement-fire:136,112,15006
+3690	report	cannonPlaced
+3900	report	battle1
+4100	report	battle2
+4300	report	firing1
+4300	snapshot	firing1
+4400	report	battle3
+4400	snapshot	battle3
+4500	report	firing2
+4500	snapshot	firing2
+4600	report	final
+4600	snapshot	final

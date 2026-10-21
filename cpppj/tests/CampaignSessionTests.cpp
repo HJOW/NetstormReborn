@@ -12,6 +12,8 @@
 #include "client/GameWorld.h"
 #include <cmath>
 #include "client/RawCampaignFactoryDisplay.h"
+#include "client/SpriteColorMaps.h"
+#include "client/VFXMappedDraw.h"
 #include "o/RawDaisDraw.h"
 #include "o/RawDudeBehavior.h"
 #include "o/RawDudeTask.h"
@@ -2430,6 +2432,46 @@ TEST_CASE(CampaignTempleDraw_Native264BodyPixels) {
         CHECK(body && shadow);Renderer selected(512,400);selected.SetScene(sprites);std::vector<std::uint8_t> pixels(512*400,7);selected.Draw(pixels,512,7);CHECK(std::any_of(pixels.begin(),pixels.end(),[](auto value) { return value!=7; }));
     }
     CHECK(cases==264 && compared>1000000);std::cerr<<"실제 템플 표시 소비자: 합성 입력"<<cases<<"개 본체"<<compared<<"픽셀 일치. 썬더 실전 창 검증 별도\n";
+}
+
+// 본체를 빼고 동작 프레임만 그리던 실제 화면 연결을 검사한다. raw 교체는 표시 검사 입력이며 자연 생산 검사가 아니다.
+TEST_CASE(CampaignCombatDraw_BodiesAndSixFlyingShadows) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external; // 동일한 실제 자산/장치 경계다.
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"TheWarBegins",external.Services());session.Load();auto core=session.Core();const Sid object{15002}; // 기존 슬롯을 표시 입력으로만 바꾼다.
+    RawCampaignFactoryDisplay display(core,assets.game);std::array<ScreenColor,256> palette{};std::array<std::uint32_t,256> logical{}; // 파일 팔레트와 원본 그림자 치환 표 입력이다.
+    // 장치 BGR과 원본 R/G/B DWORD를 같은 팔레트에서 만든다.
+    for (std::size_t i=0;i<palette.size();++i) { const auto color=assets.game.Palette().Color(static_cast<std::uint8_t>(i));palette[i]={color.blue,color.green,color.red,0};logical[i]=std::uint32_t(color.red)|(std::uint32_t(color.green)<<8)|(std::uint32_t(color.blue)<<16); }
+    display.SetPalette(palette);const auto colors=BuildSpriteColorMaps(logical);std::size_t compared{},cases{}; // 전체 배경 대신 실제 원본의 불투명 픽셀을 비교한다.
+    const auto render=[&](std::uint32_t type,std::uint32_t table,std::uint32_t frame,std::uint8_t extra,std::uint16_t word) {
+        auto raw=core.pool.AllocatedBytes(object);raw[10]=static_cast<std::uint8_t>(type);Put(raw,0,table);Put(raw,36,frame);Put(raw,12,word,2);raw[40]=extra;raw[34]=1; // 게임 프레임/경로를 실행하지 않는 명시 표시 상태다.
+        CHECK(display.Handles(object));std::vector<std::uint8_t> pixels(512*400,255);const auto sprites=display.Sprites({0,0,512,400},1168,1036,1); // 현재 슬롯의 실제 수집/일반 Draw를 거친다.
+        // 동일 객체 본체 항목만 검사한다. 별도 shadow 레이어는 아래에서 독립 비교한다.
+        for (const auto& sprite:sprites) if (sprite.order.x==89 && sprite.order.y==116 && sprite.procedure) sprite.procedure->draw(pixels,512,400,{0,0,512,400});
+        return pixels;
+    };
+    // 이미 동결한 원본 훨리베이스 캡처의 실제32개 동작 프레임을 화면 소비자와 대조한다.
+    for (const auto& row:netstorm::test::rawscene::LoadFixture((std::filesystem::path(__FILE__).parent_path()/"fixtures/sun-aviary-capture-x86.tsv").string().c_str()).rows) {
+        if (row[1]!="2" || row[2]!="1") continue;const auto metadata=netstorm::test::rawscene::Split(row[3],',');const int width=std::stoi(metadata[0]),height=std::stoi(metadata[1]); // 원본 캡처는 TYPE hotspot(-2,3)을 추가한 값이다.
+        const int left=256-core.types[72].hotspotX-std::stoi(metadata[2])-2,top=240-core.types[72].hotspotY-std::stoi(metadata[3])+3;const auto actual=render(72,0x509930U,static_cast<std::uint32_t>(std::stoul(row[0])),2,0); // 원본 이미지 기준점으로 역변환한다.
+        // 기대 픽셀은 제품 합성으로 만들지 않고 원본 격리 캡처의 전체 바이트를 읽는다.
+        for (int y=0;y<height;++y) for (int x=0;x<width;++x) { const auto index=static_cast<std::size_t>(y*width+x);const auto value=static_cast<std::uint8_t>(std::stoul(row[4].substr(index*2,2),nullptr,16));if (value==255 || x+left<0 || x+left>=512 || y+top<0 || y+top>=400) continue;CHECK(actual[static_cast<std::size_t>((top+y)*512+left+x)]==value);++compared; }
+        ++cases;
+    }
+    // 썬 디스크 발사기는 고정 본체32 뒤 현재 동작/포구 디스크를 그린다. 캐논128은 추가 그림 없이 현재 전체 그림을 쓴다.
+    for (const auto frame:{0U,1U,17U,31U,32U}) for (const auto word:{0U,1U}) {
+        const auto actual=render(71,0x50b888U,frame,2,static_cast<std::uint16_t>(word));const auto& asset=assets.game.Find("sunArcher");std::vector<std::uint8_t> expected(512*400,255); // 본체가 빠지면 이 기대와 달라진다.
+        const int x=256-core.types[71].hotspotX,y=240-core.types[71].hotspotY; // 원본 일반 Draw의 TYPE 발 기준점이다.
+        static_cast<void>(DrawShape(expected,512,400,assets.game.Shapes(),asset.block,32,x,y,{0,0,511,399}));
+        if (frame!=32) { static_cast<void>(DrawShape(expected,512,400,assets.game.Shapes(),asset.block,frame,x,y,{0,0,511,399}));if (!word) { const auto& header=core.shapes[71].frames[frame];static_cast<void>(DrawShape(expected,512,400,assets.game.Shapes(),83-70,0,x+header.muzzleX,y+header.muzzleY,{0,0,511,399})); } }
+        CHECK(actual==expected);++cases;
+    }
+    // 별도 그림자 SID를 쓰는 여섯 타입의 첫/마지막 그림자를 모두 같은 원본 소스 색 치환과 기준점으로 대조한다.
+    for (const auto [type,table]:std::array<std::array<std::uint32_t,2>,6>{{{73,0x50a1e8U},{111,0x5040c0U},{138,0x50a050U},{141,0x5040c0U},{144,0x50a388U},{146,0x504198U}}}) for (const auto last:{false,true}) {
+        const auto count=static_cast<std::uint32_t>(core.shapes[type].frameCount),frame=last ? count*2-1 : count;const auto actual=render(type,table,frame,8,0); // 원본 여섯 생성자 VT와 물리 그림자 번호다.
+        std::vector<std::uint8_t> expected(512*400,255);static_cast<void>(DrawMappedShape(expected,512,400,assets.game.Shapes(),type-70,frame,256-core.types[type].hotspotX,240-core.types[type].hotspotY,{0,0,511,399},colors.shadow)); // 일반 원색 출력이면 일치하지 않는다.
+        CHECK(actual==expected);++cases;
+    }
+    CHECK(cases==54 && compared>10000);
 }
 
 // 기존 로그인/생산 클릭/허용점/두 제네레이터/캐논 전투에서 HP 주입 없이 실제14를 관찰한다.

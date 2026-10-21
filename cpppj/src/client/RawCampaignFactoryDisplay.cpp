@@ -9,6 +9,8 @@
 #include "o/RawDaisDraw.h"
 #include "o/RawTempleDraw.h"
 #include "o/RawThunderCannonCapture.h"
+#include "o/RawSunAviaryCapture.h"
+#include "o/RawBurningLifetimeDraw.h"
 #include "o/RawBridgeConnect.h"
 #include <bit>
 #include <stdexcept>
@@ -37,11 +39,17 @@ struct RawCampaignFactoryDisplay::Impl {
     }
     bool Temple(o::Sid sid) const { return o::IsPatchTemple(core.pool.Slot(sid)); } // 같은10.78 세 전용VT의 실제+a4 대상이다.
     bool ThunderCannon(o::Sid sid) const { return o::IsThunderCannonCapture(core.pool.Slot(sid)); } // 독립333캡처로 확인한 실제131/VT50bad0 쌍이다.
+    // 별도 SID로 복제된 flyershadow의 두 번째 물리 프레임 묶음이다. 여섯 비행/벌룬 타입에 같은 원본 색 치환을 적용한다.
+    bool FlyerShadow(o::Sid sid) const {
+        const auto raw=core.pool.Slot(sid);const auto type=raw[10]; // 현재 타입과 DWORD 프레임만 읽으며 부모/그림자 좌표를 바꾸지 않는다.
+        const auto frame=std::uint32_t(raw[36])|(std::uint32_t(raw[37])<<8)|(std::uint32_t(raw[38])<<16)|(std::uint32_t(raw[39])<<24);
+        return (core.types[type].flags1&0x400000U) && frame>=static_cast<std::uint32_t>(core.shapes[type].frameCount);
+    }
     // 실제4857a0이 설치한122/VT50da88만 간헐천 외형/현재 그림으로 분배한다.
     bool Geyser(o::Sid sid) const {
         const auto raw=core.pool.Slot(sid);return raw[10]==122 && raw[0]==0x88 && raw[1]==0xda && raw[2]==0x50 && raw[3]==0;
     }
-    bool Handles(o::Sid sid) const { return factory.Handles(sid) || Flare(sid) || Generator(sid) || Temple(sid) || o::IsPatchDais(core.pool.Slot(sid)) || ThunderCannon(sid) || Geyser(sid); } // 확인한 실제 VT만 같은 수집기에 포함한다.
+    bool Handles(o::Sid sid) const { return factory.Handles(sid) || Flare(sid) || Generator(sid) || Temple(sid) || o::IsPatchDais(core.pool.Slot(sid)) || ThunderCannon(sid) || Geyser(sid) || o::IsBurningArcherCapture(core.pool.Slot(sid)) || o::IsSunAviaryCapture(core.pool.Slot(sid)) || FlyerShadow(sid); } // 본체/추가 그림의 실제 VT와 공통 그림자 레이어를 포함한다.
     // 원본 PE 초기값만 설치하고 각 수집에서 현재 게임 값으로 갱신한다.
     Impl(RawWorldCore world,const GameAssets& data,TempleDraw supplied):core(world),assets(data),factory(core.pool,core.frames),
         collection(core.hash,core.pool,core.types,core.shapes),views(MakeSpriteAssetViews(data)),outpost(BuildStandardOwnerColorMaps(126,82)),templeDraw(std::move(supplied)),templeBaseFrames(core.types.size(),-1) {
@@ -70,6 +78,8 @@ struct RawCampaignFactoryDisplay::Impl {
         SpriteDrawHooks rules;rules.virtualFrame=[this](o::Sid object) {
             if (Temple(object)) return o::PatchTempleMainFrame(core.pool.Slot(object),templeBaseFrames);
             if (ThunderCannon(object)) return o::ThunderCannonCaptureMainFrame(core.pool.Slot(object),core.frames[core.pool.Slot(object)[10]]);
+            if (o::IsSunAviaryCapture(core.pool.Slot(object))) return o::SunAviaryCaptureMainFrame(core.pool.Slot(object));
+            if (o::IsBurningArcherCapture(core.pool.Slot(object))) return assets.Types()[core.pool.Slot(object)[10]-o::kFirstAssetTypeNumber].definition.specialFrames.baseFrame;
             return Flare(object) || Generator(object) || Geyser(object) || o::IsPatchDais(core.pool.Slot(object)) ? assets.Types()[core.pool.Slot(object)[10]-o::kFirstAssetTypeNumber].definition.specialFrames.baseFrame : factory.MainFrame(object);
         };rules.surface=MakeSpriteSurfaceLookup(core.hash);
         rules.resource=[this](o::Sid object)->std::optional<SpriteResourceStatus> {
@@ -78,6 +88,21 @@ struct RawCampaignFactoryDisplay::Impl {
         auto hooks=target.Hooks(std::move(rules));
         // +a4의0044c180은 같은 기준점/단위 배율의 plain SHP다. 일반 owner 문맥으로 바꾸지 않는다.
         hooks.virtualDraw=[this,shape=hooks.shape](o::Sid object,ScreenPoint point) {
+            const auto composite=core.pool.Slot(object); // 같은 프레임의 현재 본체/추가 그림 분배에 사용한다.
+            if (o::IsSunAviaryCapture(composite) || o::IsBurningArcherCapture(composite)) {
+                const auto draw=[this,object,&shape](auto type,auto frame,auto x,auto y) { // 실제497280과 같은 현재 추상/로컬 소유자 관문으로 추가 그림을 출력한다.
+                    const auto current=core.pool.Slot(object);
+                    if (!(current[40]&0x10U)) shape({type,frame,{x,y},SpriteShapeMode::Plain});
+                    else if (current[34]==state.localPlayer) shape({type,frame,{x,y},SpriteShapeMode::Abstract});
+                };
+                if (o::IsSunAviaryCapture(composite)) o::DrawSunAviaryCapture(composite,draw,point.x,point.y);
+                else {
+                    const auto frame=std::uint32_t(composite[36])|(std::uint32_t(composite[37])<<8)|(std::uint32_t(composite[38])<<16)|(std::uint32_t(composite[39])<<24); // 현재 동작 프레임의 포구 위치다.
+                    const auto& header=core.shapes[composite[10]].frames.at(frame); // 본체가 아닌 현재 프레임의 디스크 기준점을 읽는다.
+                    o::DrawBurningArcherCapture(composite,assets.Types()[composite[10]-o::kFirstAssetTypeNumber].definition.specialFrames.baseFrame,header.muzzleX,header.muzzleY,draw,point.x,point.y);
+                }
+                return;
+            }
             if (o::IsPatchDais(core.pool.Slot(object))) {
                 o::DrawDaisAdditional(core.pool.Slot(object),core.shapes[o::kPatchDaisExtraType].frameCount,[this,object,point,&shape](std::uint32_t type,std::int32_t frame) {
                     if (frame<0) throw std::out_of_range("다이스 추가 그림 음수 프레임");const auto current=core.pool.Slot(object); // 실제497280의 현재 추상/로컬 관문이다.
