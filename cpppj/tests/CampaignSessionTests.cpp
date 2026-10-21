@@ -2724,7 +2724,8 @@ TEST_CASE(CampaignDais_AdditionalDisplayAndShrapnelCapture) {
     display.SetPalette(palette);const auto depth=std::bit_cast<std::int8_t>(core.pool.Slot(dais)[35]);const ScreenRect clip{0,0,1024,768};
     auto sprites=display.Sprites(clip,1400,1000,1);std::erase_if(sprites,[&](const auto& sprite) { return sprite.order.depth!=depth || sprite.order.x!=100 || sprite.order.y!=111; });CHECK(!sprites.empty());
     Renderer renderer(1024,768);renderer.SetScene(sprites);const auto shown=renderer.SceneImage();CHECK(std::any_of(shown.indices.begin(),shown.indices.end(),[](auto color) { return color!=0; }));
-    CHECK(session.World().Destroy(dais,0));CHECK((core.pool.Slot(dais)[11]&3U)==3U);bool captured{};
+    // 파편 검사는 원본 Damageable preDestroy의 붕괴 비트200000h를 명시 요청해야 한다.
+    CHECK(session.World().Destroy(dais,0x200000U));CHECK((core.pool.Slot(dais)[11]&3U)==3U);bool captured{};
     // 파괴가 만든 실제 파편 프로세스에서 다이스의 등록 깊이와 비어 있지 않은 이미지가 보존돼야 한다.
     for (const auto token:session.Particles().Rendering().Slots()) {
         const auto* fields=session.Particles().Rendering().Lookup(token);if (!fields || fields->zOrder!=depth) continue;
