@@ -9,6 +9,24 @@ namespace {
 // 실제 원문 double의8바이트를 기존16진수 직렬화기에 공급한다.
 std::string DoubleHex(double value) { return Hex(std::bit_cast<std::array<std::uint8_t,8>>(value)); }
 }
+// 테스트 전용 임시 조작이며 원본 분석 결과가 아니다. 순환/0번/해제와 잘못된 설정의 원자성을 확인한다.
+TEST_CASE(ProductionMaintenance_TestBridgeSequence) {
+    ProductionMaintenanceGlobals globals;CHECK(!globals.NextTestBridgePattern());globals.ConfigureTestBridgePatterns("3, 0,25");
+    CHECK(globals.NextTestBridgePattern()==3U && globals.NextTestBridgePattern()==0U && globals.NextTestBridgePattern()==25U && globals.NextTestBridgePattern()==3U && globals.testBridgeDraws==4);
+    // 잘못된 항목 때문에 진행 중인 순서와 소비 횟수가 초기화되지 않아야 한다.
+    for (const auto invalid:{"26","-1","1,","x","1,,2"}) { bool rejected{};try { globals.ConfigureTestBridgePatterns(invalid); } catch (const std::invalid_argument&) { rejected=true; }CHECK(rejected && globals.testBridgeDraws==4 && globals.testBridgePatterns.size()==3); }
+    globals.ConfigureTestBridgePatterns("off");CHECK(globals.testBridgePatterns.empty() && !globals.testBridgeDraws && !globals.NextTestBridgePattern());
+}
+// 테스트 전용 임시 조작이며 원본 분석 결과가 아니다. 최종 덮어쓰기/0번/빈자리 관문/원래 난수 소비를 검사한다.
+TEST_CASE(ProductionMaintenance_TestBridgeOverrideAfterOriginalRules) {
+    SidPool pool(OriginalEdition::Patch1078,65535);CHECK(pool.Allocate(2)==Sid{5});auto raw=pool.AllocatedBytes({5});std::fill(raw.begin(),raw.end(),std::uint8_t{});raw[10]=152;raw[34]=1;
+    ContainedFinderState finder;ProductionMaintenanceGlobals globals;globals.forcedPattern=12;globals.ConfigureTestBridgePatterns("3,0");ProductionMaintenancePanel panel;panel.slots=1;std::vector<std::uint32_t> supplied;std::uint32_t randomCalls{};
+    ProductionMaintenanceReads reads;reads.active=[] { return true; };reads.technology=reads.templateTechnology=[] { return 5U; };reads.temple=[] { return 1U; };reads.editor=reads.generatorTimer=reads.stockRate=[] { return 0U; };reads.artificial=[](Sid) { return false; };
+    ProductionMaintenanceHooks hooks;hooks.wallSeconds=hooks.gameSeconds=[] { return 100.0; };hooks.money=[] { return 100.0F; };hooks.touchDeck=[] {};hooks.pattern=[&] { ++randomCalls;return 7U; };
+    hooks.create=[&](Sid,std::uint32_t,std::uint32_t pattern,std::uint32_t,std::uint32_t,std::uint32_t) { supplied.push_back(pattern); };hooks.destroy=[](Sid) {};hooks.allowed=[](auto) { return true; };hooks.cost=[](auto) { return 0; };hooks.refresh=[](auto) {};
+    RawProductionMaintenance maintenance(pool,188,finder,globals,panel,reads,hooks);maintenance.Run();maintenance.Run();CHECK((supplied==std::vector<std::uint32_t>{3,0}) && randomCalls==2 && globals.sequence==2);
+    panel.slots=0;maintenance.Run();CHECK(globals.testBridgeDraws==2 && randomCalls==2);globals.ConfigureTestBridgePatterns("off");panel.slots=1;maintenance.Run();CHECK(supplied.back()==12 && randomCalls==3 && globals.sequence==3);
+}
 // 기본53비트 출력 전체를 검증하며 보조64비트 차이는 원본 보고서에 별도 보존한다.
 TEST_CASE(ProductionMaintenance_NativeAllInputs) {
     std::size_t count{};

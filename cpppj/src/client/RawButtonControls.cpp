@@ -218,6 +218,8 @@ RawProductionControls& RawButtonControls::EnableProduction(RawCampaignSession& s
     s.production=std::make_unique<RawProductionControls>(std::move(tree),*s.menus,session,assets,s.productionGlobals,s.productionPanel,std::move(hooks));s.production->Open();return *s.production;
 }
 RawProductionControls* RawButtonControls::Production() const { return impl_->production.get(); } // 같은 현재 처리기다.
+// 테스트 전용 임시 조작이며 원본 분석 결과가 아니다. 게임 설정 파일에 저장하지 않는다.
+void RawButtonControls::ConfigureTestBridgePatterns(std::string_view patterns) { impl_->productionGlobals.ConfigureTestBridgePatterns(patterns); }
 void RawButtonControls::DisableProduction() { if (impl_->production) { impl_->production->Close();impl_->production.reset(); }impl_->productionPanel={}; } // 월드를 떠날 때 패널 필드만 새로 만들며 TYPE 시계와 순번은 전역 수명을 유지한다.
 
 // Form소유ID는알림시점의등록표에서해석하고기본가상+4의지연Kill만요청한다.

@@ -1,0 +1,7 @@
+# 테스트 전용 임시 조작의 공급 확인용이다. 원본 분석 결과가 아니다. CLI에서0,3,1을 지정한다.
+5	click	Play Mission
+15	report	early
+190	report	stock
+190	snapshot	stock
+390	report	full
+390	snapshot	full

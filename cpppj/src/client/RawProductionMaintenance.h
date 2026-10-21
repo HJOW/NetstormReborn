@@ -3,6 +3,8 @@
 #include "o/RawContainedFinder.h"
 #include <functional>
 #include <vector>
+#include <optional>
+#include <string_view>
 namespace netstorm::client {
 // 원본 전역의 수명은 개별 CombatGump와 미션보다 길다.
 struct ProductionMaintenanceGlobals {
@@ -10,6 +12,10 @@ struct ProductionMaintenanceGlobals {
     std::uint32_t sequence{},stockEnabled{1},quickBridges{},forcedPattern{}; // 557dac/5318f4/54db78/54db7c이다.
     std::uint32_t bridgeType{82}; // 현재5411a0이며 실제 Session의 다리 타입과 공유한다.
     std::int32_t stockLimit{1},bridgeDelay{1}; // 초기화 후54db74=1,531b2c=1이다.
+    std::vector<std::uint32_t> testBridgePatterns; // 테스트 전용 임시 조작이며 원본 분석 결과가 아니다. 비어 있으면 원본 조각 결정을 사용한다.
+    std::uint64_t testBridgeDraws{}; // 테스트 전용 지정 순서의 실제 공급 횟수다. 패널 재그리기로 되감지 않는다.
+    void ConfigureTestBridgePatterns(std::string_view text); // 테스트 전용: 0~25의 쉼표 목록을 반복한다. 빈 값/off는 해제하며 원본 분석 결과가 아니다.
+    std::optional<std::uint32_t> NextTestBridgePattern(); // 테스트 전용: 실제 새 조각 생성 때만 다음 번호를 반환한다. 원본 분석 결과가 아니다.
 };
 // 패널 필드는 다시 그리기와 구별하며 실제 월드를 떠날 때 새로 생성한다.
 struct ProductionMaintenancePanel {

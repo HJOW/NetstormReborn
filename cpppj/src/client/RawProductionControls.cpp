@@ -239,6 +239,12 @@ std::string RawProductionControls::Report() const {
     const auto& s=*impl_;std::ostringstream out;out.precision(17);out<<"raw_production_gump\t"<<s.rootToken<<'\t'<<s.root.id<<'\t'<<s.root.width<<'\t'<<s.root.height<<'\t'<<s.budget.amount<<'\n';
     out<<"raw_production_maintenance\t"<<s.productionGlobals.stockEnabled<<'\t'<<s.productionGlobals.sequence<<'\t'<<s.productionPanel.bridgeUntil<<'\t'<<s.productionPanel.oldMoney<<'\t'<<s.productionPanel.temple<<'\t'<<s.productionPanel.slots<<'\t'<<s.session.Core().processState.now<<'\n';
     o::RawContainedFinder finder(s.session.Core().pool,s.session.ProductionFinder());
+    // 테스트 전용 임시 조작이며 원본 분석 결과가 아니다. 비활성 기본 실행에는 조작 행을 만들지 않는다.
+    if (!s.productionGlobals.testBridgePatterns.empty()) {
+        out<<"test_bridge_patterns\t"<<s.productionGlobals.testBridgeDraws;
+        // 현재 지정 목록을 실제 공급 횟수와 함께 읽기 전용으로 기록한다.
+        for (const auto pattern:s.productionGlobals.testBridgePatterns) out<<'\t'<<pattern;out<<'\n';
+    }
     // 진단은 표시 항목 사본이 아니라 같은 현재 기술의 실제 내용물/종료값을 읽는다.
     for (auto sid=finder.Begin({static_cast<std::uint16_t>(s.session.CurrentTechnologyParent())});sid.value;sid=finder.Next()) {
         const auto raw=s.session.Core().pool.Slot(sid);const auto kind=Word(raw,18),flags=Word(raw,20);

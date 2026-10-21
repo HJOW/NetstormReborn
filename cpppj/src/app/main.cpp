@@ -42,6 +42,7 @@ constexpr const char* kTargetOriginalVersion = "10.78";
 
 // 실행 가능한 공용 계층의 명령과 아직 구현하지 않은 범위를 출력한다.
 void PrintBuildInfo() {
+    std::puts("  --run: --test-bridge-patterns 3,0,25 (test-only repeating sequence; off restores normal supply)");
     std::printf("NetstormCpp (menu and mission entry; playable world pending)\n");
     std::printf("  reconstructed from: NetStorm %s (decompiled)\n", kTargetOriginalVersion);
     std::printf("  default maxFPS: %d (frame interval %.6f s, 1ms clock: %u ms)\n",
@@ -603,6 +604,7 @@ int RunClient(std::vector<std::string> arguments) {
         else if (argument == "--audio-report") options.audioReport = value();
         else if (argument == "--ui-script") uiScript = value();
         else if (argument == "--ui-report") uiReport = value();
+        else if (argument == "--test-bridge-patterns") options.testBridgePatterns=value(); // 테스트 전용 임시 조작이며 원본 분석 결과가 아니다.
         else throw std::invalid_argument("Unknown --run option: " + argument);
     }
     if (!view.empty() && !options.mission.empty()) throw std::invalid_argument("--view and --mission cannot be combined");
@@ -650,6 +652,8 @@ int RunClient(std::vector<std::string> arguments) {
                     step.operation=operation;step.argument=argument;
                 }
                 if (step.operation == "snapshot" || step.operation == "report" || step.operation=="refresh") continue;
+                // 테스트 전용 임시 조작이며 원본 분석 결과가 아니다. 이미 생성된 조각은 바꾸지 않는다.
+                if (step.operation=="test-bridge-patterns") { c.Menu()->InspectBridgePatterns(step.argument);continue; }
                 // 직전 완성 프레임의 실제 상태가 조건을 만족할 때만 다음 검사 입력으로 진행한다.
                 if (step.operation=="require") {
                     if (step.argument.empty()) throw std::invalid_argument("UI require 조건이 비어 있음");
@@ -707,7 +711,10 @@ int RunClient(std::vector<std::string> arguments) {
             while (next < steps.size() && steps[next].frame == c.Time().number) {
                 const auto& step = steps[next++];
                 if (step.operation == "snapshot") c.Capture(step.argument);
-                if (step.operation == "report") report += "frame\t" + std::to_string(step.frame) + "\t" + step.argument + "\n" + c.Menu()->Report();
+                if (step.operation == "report") {
+                    report += "frame\t" + std::to_string(step.frame) + "\t" + step.argument + "\n" + c.Menu()->Report();
+                    saveUiReport(); // 구동 테스트가 중단돼도 직전 실제 관측을 남긴다. 게임 상태를 바꾸는 동작은 아니다.
+                }
                 // 다음 Tick에서 표시만 갱신하여 버튼 캡처/serial을 보존하는지 검사한다.
                 if (step.operation=="refresh") c.Menu()->Refresh();
             }

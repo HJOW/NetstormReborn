@@ -65,6 +65,7 @@ public:
     RawMenuControls* Menus() const;
     RawProductionControls& EnableProduction(RawCampaignSession& session,const GameAssets& assets,RawProductionHooks hooks); // 현재 미션 패널을 조립한다.
     RawProductionControls* Production() const; // 현재 살아 있는 패널 처리기다.
+    void ConfigureTestBridgePatterns(std::string_view patterns); // 테스트 전용 임시 조작이며 원본 분석 결과가 아니다. 초기/진행 중 지정 순서를 교체한다.
     void DisableProduction(); // Session 해제 전에 연결 노드/참조를 반납한다.
     // 실제현재등록표→가상+4의기본/메뉴Kill알림이다. 반환콜백은이UI보다먼저해제한다.
     o::GumpFormNotice ObjectNotice() const;

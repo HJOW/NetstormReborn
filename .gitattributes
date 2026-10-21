@@ -1579,3 +1579,7 @@ cpppj/tests/DataManagerReadTests.cpp text eol=lf
 cpppj/datamanager-read-*.json text eol=lf
 tools/cpp_datamanager_read_audit.py text eol=lf
 docs/exe/cpp-datamanager-read-20261021.md text eol=lf
+# 테스트 전용 다리 공급과 실제 구동 기록 도구를UTF-8/LF로 보존한다.
+tools/cpp_bridge_ritual_runtime.py text eol=lf
+docs/exe/cpp-test-bridge-runtime-20261021.md text eol=lf
+cpppj/test-bridge-runtime-20261021.json text eol=lf

@@ -40,6 +40,8 @@
 #include <iostream>
 
 namespace netstorm::client {
+// 테스트 전용 임시 조작이며 원본 분석 결과가 아니다. 미션 진행/적 상태/기술은 바꾸지 않는다.
+void UberGump::InspectBridgePatterns(std::string_view patterns) { rawButtons_->ConfigureTestBridgePatterns(patterns); }
 namespace {
 // 팝업 아래에 남는 기존 UI 글자를 같은 원본 글리프 몸체로 먼저 합성한다. 월드 전용 SceneImage는 UI 글자를 생략한다.
 void RasterMenuBackdropText(IndexedImage& image,std::span<const RenderText> texts) {
@@ -166,6 +168,8 @@ UberGump::UberGump(Client& client) : client_(client) {
             if (!world_ || form>65535U) throw std::logic_error("현재Client UI Form삭제의월드/SID오류");
             world_->Session().GumpForms().Destroy(o::Sid{static_cast<std::uint16_t>(form)},flags);
         }});
+    rawButtons_->ConfigureTestBridgePatterns(client_.TestBridgePatterns()); // 테스트 전용 임시 조작이며 원본 분석 결과가 아니다. 첫 조각 생성 전에 명시 CLI만 반영한다.
+    if (!client_.TestBridgePatterns().empty()) std::clog<<"테스트 전용 다리 조각 순서: "<<client_.TestBridgePatterns()<<" (원본 분석 결과 아님)\n";
     RawMenuHooks menuHooks;
     menuHooks.command=[this](auto command,auto id,auto parameter) {
         if (command==0x01ffffffU) {

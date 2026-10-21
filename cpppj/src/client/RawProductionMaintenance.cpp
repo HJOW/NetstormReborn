@@ -1,7 +1,9 @@
 // 원본의 signed 절삭/감김·서로 다른 두 시계·순회 중 삭제 순서를 보존한다.
 #include "client/RawProductionMaintenance.h"
+#include "o/CanonDecoder.h"
 #include <array>
 #include <bit>
+#include <charconv>
 #include <cmath>
 #include <stdexcept>
 namespace netstorm::client {
@@ -18,6 +20,28 @@ std::int32_t Truncate(double value) {
     return std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(static_cast<std::int64_t>(value)));
 }
 constexpr std::array<double,3> kStockIntervals{30,15,8}; // 원본 옵션BYTE2가 고르는 실제 초 간격이다.
+}
+// 테스트 전용 임시 조작이며 원본 분석 결과가 아니다. 실패한 설정은 기존 지정 순서/소비 횟수를 보존한다.
+void ProductionMaintenanceGlobals::ConfigureTestBridgePatterns(std::string_view text) {
+    std::vector<std::uint32_t> parsed;
+    if (!text.empty() && text!="off") {
+        std::size_t start{};
+        // 모든 번호를 먼저 검증한 뒤 한 번에 새 테스트 순서로 교체한다.
+        for (;;) {
+            const auto end=text.find(',',start);auto field=text.substr(start,end==text.npos ? end : end-start);
+            // 번호 양쪽의 공백만 제거하며 빈 항목은 허용하지 않는다.
+            while (!field.empty() && field.front()==' ') field.remove_prefix(1);
+            while (!field.empty() && field.back()==' ') field.remove_suffix(1);
+            std::uint32_t value{};const auto result=std::from_chars(field.data(),field.data()+field.size(),value);
+            if (field.empty() || result.ec!=std::errc{} || result.ptr!=field.data()+field.size() || value>=o::BridgePatterns().size()) throw std::invalid_argument("테스트 다리 조각은0~25의 쉼표 목록 또는 off여야 합니다");
+            parsed.push_back(value);if (end==text.npos) break;start=end+1;
+        }
+    }
+    testBridgePatterns=std::move(parsed);testBridgeDraws=0;
+}
+// 테스트 전용 임시 조작이며 원본 분석 결과가 아니다. 0번도 명시 지정으로 처리한다.
+std::optional<std::uint32_t> ProductionMaintenanceGlobals::NextTestBridgePattern() {
+    if (testBridgePatterns.empty()) return std::nullopt;const auto value=testBridgePatterns[static_cast<std::size_t>(testBridgeDraws%testBridgePatterns.size())];++testBridgeDraws;return value;
 }
 // 계산 입력이나 효과가 누락된 모듈은 실제 게임에 설치하지 않는다.
 RawProductionMaintenance::RawProductionMaintenance(o::SidPool& pool,std::size_t typeCount,const o::ContainedFinderState& finder,ProductionMaintenanceGlobals& globals,ProductionMaintenancePanel& panel,ProductionMaintenanceReads reads,ProductionMaintenanceHooks hooks)
@@ -48,6 +72,8 @@ void RawProductionMaintenance::Run() const {
             auto pattern=hooks_.pattern();const auto before=std::bit_cast<std::int32_t>(globals_.sequence++); // 원본 signed나머지와 DWORD 증가 감김이다.
             if (before%5==0 && !single) pattern=0;
             if (globals_.forcedPattern) pattern=globals_.forcedPattern;
+            // 테스트 전용 임시 조작이며 원본 분석 결과가 아니다. 원본 난수/한 칸 보충 결정 후 지정 결과만 덮어쓴다.
+            if (const auto specified=globals_.NextTestBridgePattern()) pattern=*specified;
             hooks_.create(parent,globals_.bridgeType,pattern,0x40,0x10,0);
         }
     }

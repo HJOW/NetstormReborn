@@ -61,6 +61,7 @@ struct ClientOptions {
     bool noAudio{};                        // 새 옵션(검사용): 참이면 소리 장치와 음악 스레드를 만들지 않는다(자동 검사가 소리를 내지 않게 한다).
     bool audioMute{};                      // 새 옵션(검사용): 참이면 장치를 열고 음악을 실제로 재생하되 소리는 내지 않는다(음소거 깊이 1로 시작).
     std::filesystem::path audioReport;     // 새 옵션(검사용): 닫기 직전의 소리·음악 상태를 이 파일에 `이름	값` 줄로 저장한다.
+    std::string testBridgePatterns; // 테스트 전용 임시 조작이며 원본 분석 결과가 아니다. 명시 CLI에서만 지정하고 설정 파일에 저장하지 않는다.
 };
 
 // 원본 전역 변수로 흩어져 있던 클라이언트 상태를 객체 하나로 묶는다. 한 프로세스에 하나만 만든다.
@@ -124,6 +125,7 @@ public:
     o::Kernel& GetKernel();
     // 복원한 그리기·글꼴·커서 기반. 초기화 뒤에만 쓴다.
     Renderer& GetRenderer();
+    std::string_view TestBridgePatterns() const { return options_.testBridgePatterns; } // 테스트 전용 지정 순서다. 비어 있으면 원본 동작이며 원본 분석 결과가 아니다.
     FontStore& Fonts();
     Cursor& GetCursor();
     // 그린 프레임·출력 사각형 횟수. 초기화 도중 창을 닫았으면 두 값 모두 0이다.
