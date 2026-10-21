@@ -8,6 +8,8 @@ namespace netstorm::client {
 namespace {
 // State의 실제 파일 섹션 위치를 기존 파서의 이름 표에서 찾는다.
 std::size_t StateSection() { const auto names=o::FortTemplate::SectionNames();const auto at=std::find(names.begin(),names.end(),"State");if (at==names.end()) throw std::logic_error("Template 실제 State 섹션 이름 누락");return static_cast<std::size_t>(at-names.begin()); }
+// 지형 getter도 파서의 편의 사본 대신 같은 원시 섹션 버퍼를 조회한다.
+std::size_t TerritorySection() { const auto names=o::FortTemplate::SectionNames();const auto at=std::find(names.begin(),names.end(),"Territory");if (at==names.end()) throw std::logic_error("Template 실제 Territory 섹션 이름 누락");return static_cast<std::size_t>(at-names.begin()); }
 // manager 핸들의 원본DWORD를 읽는다.
 std::uint32_t Read(std::span<const std::uint8_t> header) { std::uint32_t result{};
     // 같은 네 바이트를 낮은 비트부터 합친다.
@@ -27,7 +29,7 @@ struct CampaignTemplateStorage::Image {
     };
     o::FortTemplate fort; // 원시 State 섹션을 포함한 실제 파싱 자료와 소유 버퍼다.
     o::PlayerTemplateStateStream state; // 같은 fort.sections[State]의 현재 cursor다.
-    o::FortTerritoryStream territory; // 같은 fort.territory의 현재 cursor다.
+    o::FortTerritoryStream territory; // 같은 fort.sections[Territory]의 현재 cursor다.
     std::string name; // 같은 현재 파일 이름이다.
     std::vector<std::uint8_t> retiredState; // 확장 중 Get의 원문 복사가 끝날 때까지만 이전 할당을 보유한다.
     std::array<std::uint8_t,12> manager{}; // 소멸이 사용하는 vptr/head/current의 실제 현재 저장소다.
@@ -40,6 +42,15 @@ struct CampaignTemplateStorage::Image {
         hooks.assertion=[](auto) { throw std::logic_error("Template 현재 State 섹션 선택 진단: 생성/파일 연결 미복원"); }; // 누락 섹션을 다른 섹션으로 대신하지 않는다.
         const auto selected=o::SelectDataManagerSection(manager,"State",1,hooks);
         state.position=Read(std::span(streams.at(selected)->bytes).subspan(4));
+    }
+    // Territory120BYTE 읽기는 비어 있지 않은 섹션 선택을 먼저 수행한다.
+    void SelectTerritory() {
+        SyncStreams();const auto handle=static_cast<std::uint32_t>(TerritorySection()+1);const auto found=streams.find(handle);
+        if (found!=streams.end()) { Put(found->second->bytes,4,territory.position);Put(found->second->bytes,8,territory.end); }
+        o::DataManagerSelectionHooks hooks;hooks.stream=[this](auto node) { return std::span(streams.at(node)->bytes); }; // 같은 소유 노드의 현재 data/end와 이름을 읽는다.
+        hooks.assertion=[](auto) { throw std::logic_error("Template Territory 실제 읽기 섹션 선택 진단"); }; // 없는 섹션/빈 읽기를 다른 지형으로 대신하지 않는다.
+        const auto selected=o::SelectDataManagerSection(manager,"Territory",0,hooks);
+        territory.position=Read(std::span(streams.at(selected)->bytes).subspan(4));
     }
     // 선택된 노드는 소멸과 동일한 핸들/이름 저장소를 사용한다.
     std::string_view CurrentSection() const {
@@ -71,8 +82,12 @@ struct CampaignTemplateStorage::Image {
         hooks.releaseStream=[this](auto handle) { if (streams.erase(handle)!=1) throw std::logic_error("DataManager 같은 섹션 중복 반납"); }; // 버퍼 소멸이 끝난 노드만 반납한다.
         o::DestroyDataManager(manager,hooks);
     }
-    // 별도 State 사본을 만들지 않고 파서가 소유한 같은 바이트를 연결한다.
-    Image(o::FortTemplate value,std::string file):fort(std::move(value)),name(std::move(file)) { const auto at=StateSection();const auto bytes=at<fort.sections.size() ? std::span<std::uint8_t>(fort.sections[at]) : std::span<std::uint8_t>{};state={bytes,0,static_cast<std::uint32_t>(bytes.size()),!bytes.empty()};territory={fort.territory,0,static_cast<std::uint32_t>(fort.territory.size())};SyncStreams(); }
+    // State와 Territory 모두 파서가 소유한 원시 섹션의 같은 바이트를 연결한다.
+    Image(o::FortTemplate value,std::string file):fort(std::move(value)),name(std::move(file)) {
+        const auto at=StateSection();const auto bytes=at<fort.sections.size() ? std::span<std::uint8_t>(fort.sections[at]) : std::span<std::uint8_t>{};state={bytes,0,static_cast<std::uint32_t>(bytes.size()),!bytes.empty()};
+        const auto territoryAt=TerritorySection();const auto territoryBytes=territoryAt<fort.sections.size() ? std::span<const std::uint8_t>(fort.sections[territoryAt]) : std::span<const std::uint8_t>{};
+        territory={territoryBytes,0,static_cast<std::uint32_t>(territoryBytes.size())};SyncStreams();
+    }
 };
 // 시작 초기화는 기존 manager를 반납하는 전역 정리와 다르다.
 CampaignTemplateStorage::CampaignTemplateStorage() {
@@ -109,6 +124,8 @@ o::PlayerTemplateStateStream& CampaignTemplateStorage::SelectState(std::uint32_t
 std::string_view CampaignTemplateStorage::CurrentSection(std::uint32_t slot) { return Current(slot).CurrentSection(); }
 // 지형 cursor도 같은 manager의 원문을 빌린다.
 o::FortTerritoryStream& CampaignTemplateStorage::Territory(std::uint32_t slot) { return Current(slot).territory; }
+// 월드 로더가 같은 manager에서 원본 읽기 선택을 한 뒤 같은 지형 cursor를 사용한다.
+o::FortTerritoryStream& CampaignTemplateStorage::SelectTerritory(std::uint32_t slot) { auto& image=Current(slot);image.SelectTerritory();return image.territory; }
 // 원문 선택 때 쓴 같은 파일 이름을 반환한다.
 const std::string& CampaignTemplateStorage::Name(std::uint32_t slot) { return Current(slot).name; }
 // 원본을 옮겨 보존한 뒤 같은 Fort State 섹션에 대체 할당을 만든다.

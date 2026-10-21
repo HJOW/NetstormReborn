@@ -1546,3 +1546,7 @@ cpppj/datamanager-selection-native.json -text whitespace=cr-at-eol
 cpppj/datamanager-selection-session.json text eol=lf
 tools/cpp_datamanager_selection_audit.py text eol=lf
 docs/exe/cpp-datamanager-selection-20261021.md text eol=lf
+# 같은 원시 Territory 섹션의 실제 소비자와 현재 감사 근거도 LF로 보존한다.
+cpppj/datamanager-territory-session.json text eol=lf
+tools/cpp_datamanager_territory_audit.py text eol=lf
+docs/exe/cpp-datamanager-territory-20261021.md text eol=lf

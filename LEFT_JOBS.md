@@ -1,5 +1,13 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-21 단위264 완료: 실제 Territory 선택과 같은 원시 섹션 버퍼
+
+- [x] 직전 단위263 커밋 `b68dd03f` 뒤 같은 `/goal`을 이어간다. 현재/마지막 정밀 디컴파일 PC는 **VM-W11-CODEX / 2026-10-21**로 같다. 양 인수인계의 최신 미완료/실행 이월 지시를 유지한다. 새 디컴파일·원본 관측·게임/창/C++검사 실행·원본/CD/AGENTS/dotnetpj 수정은 없다.
+- [x] 현재 PC 정밀004bd660과 단위263의 검색/선택864행을 근거로 실제 월드 설치의 Territory 공급자를 같은 manager의 `SelectTerritory("Territory",writable0)`에 연결했다. 파서의 `fort.territory` 편의 사본 대신 `fort.sections[Territory]`의 같은 원시 버퍼/커서를 사용한다. State와 선택current를 공유하고 각 cursor/빌린 헤더/실제 반납을 보존한다. 전체 DataManager/파일/MemStream 복원은 아니다. 새 원본 관측 수는0이며 기존864행을 중복 합산하지 않는다.
+- [x] 실제 `thewarbegins.fort`의 두 섹션 전환·각 cursor 유지/초기화·원시 포인터/바이트 공유·빌림 반납 검사1개를 추가·컴파일했다. 최종 Release **종료0·경고0·오류0**, 로그 `extracted/cpp-datamanager-territory-20261021-build3.log`·원시 stdout·종료 코드 JSON을 보존했다. **C++검사/CTest/게임은 실행하지 않았다.** 새 지형 연결 정적 감사/단위263 최초 원문/기존 DataManager 소멸 보존은 종료0이다. 과거 소스/빌드 핀은 변경하지 않았으므로 과거 검사를 새 소스의 통과로 세지 않는다.
+- [x] 희생 UI를 조회했으나 캠페인의 보상창 생략 관문이 이미 원본대로 연결되어 있어 수정하지 않았다. 상세 [작업 기록](docs/exe/cpp-datamanager-territory-20261021.md), `cpppj/datamanager-territory-session.json`, `tools/cpp_datamanager_territory_audit.py`다. 인수인계 후 **20261021-28 CP**로 로컬 커밋하며 push하지 않는다. 마지막 정밀 디컴파일 PC는 계속 **VM-W11-CODEX / 2026-10-21**이다.
+- [ ] **다음:** 전체 DataManager 생성·섹션 추가/교체·MemStream/파일 읽기·저장/오류 또는 전체 State7/전투 정리004b2df0의 실제 소비자를 이어간다. 빈 State의 미정 바이트 초기화·Fort 선택/Guide 공장/가상 소멸도 남는다. 전체11미션 자연 완주·전략AI·지형/포획/희생/대피·외관/음향/동작 동일성과 통합 실행 검증은 미완료이며 목표는 active다.
+
 ## 2026-10-21 단위263 완료: DataManager 섹션 검색·선택과 실제 미션 State 조회
 
 - [x] 사용자 `/goal`로 지정11미션 구현 목표를 이어간다. `AGENTS.md`와 양 인수인계의 최신 작업·현행 목표·실행 이월 지시를 확인했다. 시작 HEAD는 `e569dc85`이며 현재/마지막 정밀 디컴파일 PC는 **VM-W11-CODEX / 2026-10-21**로 같다. 새 디컴파일·원본/CD·AGENTS·dotnetpj 변경 및 게임/창 실행은 없다.

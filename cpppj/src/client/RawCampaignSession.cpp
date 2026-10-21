@@ -1836,7 +1836,7 @@ struct RawCampaignSession::Impl {
         hooks.notifySurface=[this](Sid sid) { core.building.NotifySurface(sid); };
         hooks.setState=[this](Sid sid,std::uint32_t value) { assetBindings->SetState(sid,value); };
         hooks.virtualCount=[this](Sid sid) { return static_cast<std::int32_t>(level->Get(sid)); };
-        return std::make_unique<RawCampaignWorldRuntime>(world,chunks,*islands,*player,*normal,random,hp,*ownership,*finish,*contained,objectState,globals,piece,noRegion,RawCampaignInstallData{{},{},headers,handle,[this](auto slot)->const FortTemplate& { return templateStorage->Template(slot); },[this](auto slot)->FortTerritoryStream& { return templateStorage->Territory(slot); }},std::move(hooks));
+        return std::make_unique<RawCampaignWorldRuntime>(world,chunks,*islands,*player,*normal,random,hp,*ownership,*finish,*contained,objectState,globals,piece,noRegion,RawCampaignInstallData{{},{},headers,handle,[this](auto slot)->const FortTemplate& { return templateStorage->Template(slot); },[this](auto slot)->FortTerritoryStream& { return templateStorage->SelectTerritory(slot); }},std::move(hooks));
     }
     // 공개 운반 어댑터와 일반 배치 통지가 같은 현재 원본 Builder를 조립한다.
     std::unique_ptr<RawConstructionBuilder> MakeBuilder(ConstructionBuilderState& state,ConstructionBuilderHooks hooks) {

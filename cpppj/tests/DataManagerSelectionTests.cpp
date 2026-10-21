@@ -2,6 +2,7 @@
 #include "o/RawDataManagerSelection.h"
 #include "client/CampaignTemplateStorage.h"
 #include "RawSceneSupport.h"
+#include "DudeSpawnSupport.h"
 using namespace netstorm::o;
 using namespace netstorm::client;
 using namespace netstorm::test::rawscene;
@@ -60,4 +61,16 @@ TEST_CASE(CampaignTemplates_PlayerSelectsCurrentSectionAndSharedCursor) {
     const auto first=state.Get(8);CHECK(first.size()==28 && first[0]==0x12 && first[1]==0x34 && first[2]==0x56 && storage.CurrentSection(1)=="State" && storage.State(1).position==28);
     storage.State(8).position=17;const auto second=state.Get(1);CHECK(second.data()==first.data() && second.data()==storage.Template(8).Section("State").data() && !storage.State(8).position && storage.CurrentSection(8)=="State");
     storage.Clear(8);CHECK(storage.CurrentSection(1)=="State" && storage.OwnedImages()==1);storage.ClearAll();CHECK(!storage.OwnedImages());
+}
+// 실제 미션 파일에서 읽기/쓰기 선택을 바꿔도 빌린 헤더와 각 섹션의 cursor/원문을 공유한다.
+TEST_CASE(CampaignTemplates_TerritoryAndStateSelectSameManager) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);CampaignTemplateStorage storage;
+    storage.Install(1,FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable()),"thewarbegins");storage.Borrow(8,1);
+    storage.Territory(1).position=91;storage.State(1).position=17;
+    const auto& territory=storage.SelectTerritory(8);CHECK(&territory==&storage.Territory(1) && territory.position==0 && territory.end==120 && storage.CurrentSection(1)=="Territory");
+    CHECK(storage.State(1).position==17);storage.Territory(8).position=120;
+    const auto& state=storage.SelectState(1);CHECK(&state==&storage.State(8) && !state.position && storage.CurrentSection(8)=="State" && storage.Territory(1).position==120);
+    const auto before=storage.Template(1).Section("Territory");CHECK(before.size()==120 && before.data()==territory.bytes.data() && std::equal(before.begin(),before.end(),territory.bytes.begin()));
+    const auto names=FortTemplate::SectionNames();const auto at=static_cast<std::size_t>(std::find(names.begin(),names.end(),"Territory")-names.begin());storage.Template(1).sections[at][0]^=0x40;CHECK(territory.bytes[0]==storage.Template(8).Section("Territory")[0]);
+    storage.SelectTerritory(1);CHECK(!territory.position && storage.CurrentSection(8)=="Territory");storage.Clear(8);storage.ClearAll();CHECK(!storage.OwnedImages());
 }
