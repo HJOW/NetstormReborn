@@ -37,6 +37,9 @@ public sealed class OriginalTypeRecord
     /// <summary>그리기 깊이 zOrder(원본 타입 구조체 +0x104). 기본 Squid 에는 하위 8비트만 복사한다.</summary>
     public int ZOrder { get; set; }
 
+    /// <summary>피격 효과(원본 타입 구조체 +0xd4). 0 이면 타격/화상 효과가 없고 burning 판정도 건너뛴다. 추가: W03 삭제·수명 여덟째 조각(2026-10-21).</summary>
+    public int DamageEffect { get; set; }
+
     /// <summary>생성자 원본 주소(원본 타입 구조체 +0x1D0). 0 이면 기본 생성이다. OriginalConstructors 의 표에 있어야 지원한다.</summary>
     public uint ConstructorAddress { get; set; }
 
@@ -60,6 +63,7 @@ public sealed class OriginalTypeRecord
             MaxHitPoints = MaxHitPoints,
             Cost = Cost,
             ZOrder = ZOrder,
+            DamageEffect = DamageEffect,
             ConstructorAddress = ConstructorAddress,
             FootX = FootX,
             FootY = FootY,
