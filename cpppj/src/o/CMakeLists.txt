@@ -413,3 +413,5 @@ target_sources(netstorm PRIVATE RawAiDropTargets.cpp RawAiDropTargets.h)
 target_sources(netstorm PRIVATE RawGunGroundTarget.cpp RawGunGroundTarget.h RawAiDropEvaluation.cpp RawAiDropEvaluation.h)
 # 실제다리주변후보/원본예산스캔과같은본체30후보목록을연결한다.
 target_sources(netstorm PRIVATE RawAiDropScan.cpp RawAiDropScan.h)
+# 실제기술목록/직전후보·회전/블로커우선과쿨다운의다음배치TYPE를연결한다.
+target_sources(netstorm PRIVATE RawAiDropSelection.cpp RawAiDropSelection.h)
