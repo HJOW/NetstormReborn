@@ -83,6 +83,9 @@
     <None Include="../../../cpppj/tests/fixtures/destroy-x86.tsv" Link="X86/destroy-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <!-- 원본 월드 코어 W03 삭제·수명 셋째 조각: 공통 삭제 수명주기(destroylifecycle) 1,728행 중 10.78 Pair 384행·Destroy 192행. -->
     <None Include="../../../cpppj/tests/fixtures/destroylifecycle-x86.tsv" Link="X86/destroylifecycle-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <!-- 원본 월드 코어 W03 삭제·수명 네째 조각: 삭제 그래프(destroygraph) 1,728행 중 10.78 Pre·Post·Destroy 각 192행과 섬 H 치환 24행. -->
+    <None Include="../../../cpppj/tests/fixtures/destroygraph-x86.tsv" Link="X86/destroygraph-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/island-graph-frame-x86.tsv" Link="X86/island-graph-frame-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <!-- 연결한 fixture 의 SHA-256 목록과 그 검사. cpppj 가 fixture 를 다시 만들면 실패해 재대조를 요구한다 (W01, 2026-10-16). 갱신: dotnetpj/tools/cpp_sync.py -->
     <None Include="../Shared/cpp-fixture-manifest.tsv" Link="X86/cpp-fixture-manifest.tsv" CopyToOutputDirectory="PreserveNewest" />
     <Compile Include="../Shared/CppFixtureManifest.cs" Link="Shared/CppFixtureManifest.cs" />
