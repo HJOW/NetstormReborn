@@ -169,6 +169,8 @@ bool RawCampaignCursor::HandleInput(InputEvent event,std::uint32_t rotateMode) {
 }
 // 실제 내려놓기는 기존 Local/비용/송신과 같은 상태를 사용한다.
 void RawCampaignCursor::Drop() { impl_->Prepare();impl_->drop->Drop(); }
+// AI의 원본 직접 로컬 배치도 기존 Form/반환/Builder/송신 몸체와 현재 전역을 사용한다.
+void RawCampaignCursor::PlaceLocal(o::ConstructionLocalRequest request) { impl_->Prepare();impl_->local->Place(request); }
 // 메뉴의 전체 DWORD 플래그와 원래 Form을 그대로 전달한다.
 void RawCampaignCursor::Bind(PriestMenuHooks& hooks) { hooks.takePreview=[this](o::Sid form,std::uint32_t flags) { Take(form,flags); }; }
 // 현재 상태를 별도 복사하지 않고 직접 빌린다.

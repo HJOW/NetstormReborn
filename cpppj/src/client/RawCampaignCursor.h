@@ -63,6 +63,7 @@ public:
     void Rotate(std::int32_t step); // 실제446a70의 signed 방향·사정거리 수명을 실행한다.
     bool HandleInput(InputEvent event,std::uint32_t rotateMode); // 활성 커서의 실제 좌클릭/좌우키/우클릭/ESC 분기다.
     void Drop(); // 실제004473e0→4433b0→같은 Place/Builder→25바이트 송신을 실행한다.
+    void PlaceLocal(o::ConstructionLocalRequest request); //원본 AI가 만든 조각을 같은4433b0으로 예측 배치한다. 커서 취득/비용 차감을 추가하지 않는다.
     void Bind(PriestMenuHooks& hooks); // 실제 사제 메뉴 취득을 이 단일 커서에 연결한다.
     CursorLifecycleState& Lifecycle(); // 현재30SID/추상 타입/측정 상태를 빌린다.
     CursorPlacementState& Placement(); // 현재 허용 DWORD/dirty 범위를 빌린다.

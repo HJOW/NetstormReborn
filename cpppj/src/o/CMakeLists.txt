@@ -379,3 +379,5 @@ target_sources(netstorm PRIVATE RawAiWorldRegistration.cpp RawAiWorldRegistratio
 target_sources(netstorm PRIVATE RawAiStrategySetup.cpp RawAiStrategySetup.h)
 # 원본 AI 행동 말미의 지갑/분산SP 정리를 같은 실제 저장소에서 실행한다.
 target_sources(netstorm PRIVATE RawAiEconomy.cpp RawAiEconomy.h)
+# 원본 공통 AI의 생산 조각 소비/대기/비용과 실제 건설 배치를 연결한다.
+target_sources(netstorm PRIVATE RawAiDeployment.cpp RawAiDeployment.h)
