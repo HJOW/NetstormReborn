@@ -1070,7 +1070,7 @@ struct RawCampaignSession::Impl {
         NormalTerrainDiagnostics diagnostics{SessionMissing<void,TerrainContextAssertion>(),SessionMissing<void,TerrainStampAssertion>(),SessionMissing<void,SquidRegionAssert>(),SessionMissing<void,FarmClusterAssertion>(),SessionMissing<void,TerrainFarmPostpassAssertion>()};
         normal=std::make_unique<RawNormalTerrainWorldBinding>(world,chunks,*islands,random,crt,terrainGlobals,stamp,randomPlacement,farm,piece,*pipeline,hp,*carrier,std::move(diagnostics));
         finish=std::make_unique<RawFortFinishOwner>(core.pool,core.types,assetState.residences,finishState,FortFinishOwnerHooks{SessionMissing<FortRandomRectangle,std::int32_t>(),SessionMissing<double>(),SessionMissing<std::uint32_t,GameRandom&,const FortRandomPlaceRequest&>(),SessionMissing<void>()});
-        if (services.missionFortImage) { templateStorage->InstallFile(1,std::move(fort),*services.missionFortImage,std::string(mission));services.missionFortImage.reset(); }
+        if (services.missionFortImage) { templateStorage->InstallFile(1,std::move(fort),*services.missionFortImage,std::string(mission),static_cast<std::int32_t>(core.types.size()));services.missionFortImage.reset(); } // 파일 가상 서명도 같은 실제 현재 TYPE 수를 읽는다.
         else templateStorage->Install(1,std::move(fort),std::string(mission)); // 실제 Client는 파일 읽기 부모를 사용하고 독립 합성 Session은 명시 입력 섹션을 유지한다.
         runtime=MakeRuntime();
         regionOwner=std::make_unique<RawRegionOwner>(core.pool,core.hash.Entries(0),terrainType);

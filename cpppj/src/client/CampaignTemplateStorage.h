@@ -16,7 +16,7 @@ public:
     CampaignTemplateStorage& operator=(const CampaignTemplateStorage&)=delete; // 같은 수명의 표/실제 이미지를 별개 사본으로 만들지 않는다.
     std::span<std::uint8_t> Headers(); // 실제180BYTE를 같은 Player/로더에 공급한다.
     void Install(std::uint32_t slot,o::FortTemplate fort,std::string name); // 이전 한 헤더를 실제 반납한 뒤 새 소유 manager를 설치한다.
-    void InstallFile(std::uint32_t slot,o::FortTemplate fort,std::span<const std::uint8_t> image,std::string name); // 같은 파일 원문을 원본 읽기 부모로 새 실제 목록/버퍼에 설치하고 해석 자료를 함께 소유한다.
+    void InstallFile(std::uint32_t slot,o::FortTemplate fort,std::span<const std::uint8_t> image,std::string name,std::int32_t typeCount=188); // 실제 파일/서명/섹션 읽기 부모를 실행한다. 기본188은10.78 독립 호출용이며 Session은 현재 타입 수를 전달한다.
     void Borrow(std::uint32_t slot,std::uint32_t source); // 같은 manager를 빌리며 State/지형 cursor도 같은 객체를 사용한다.
     void ClearAll(); // 원본 전역 정리의 실제 소멸/할당 반납을 수행한다.
     void Clear(std::uint32_t slot); // 원본 단일 반납이다. 빈 포인터의 부가 필드도 비운다.
@@ -30,6 +30,7 @@ public:
     o::FortTerritoryStream& Territory(std::uint32_t slot); // 같은 manager의 실제 Territory cursor다.
     o::FortTerritoryStream& SelectTerritory(std::uint32_t slot); // 원본 읽기 선택으로 같은 manager.current와 지형 커서를 초기화한다.
     const std::string& Name(std::uint32_t slot); // 같은 manager의 현재 파일 이름이다.
+    std::array<std::uint32_t,2> FileHeader(std::uint32_t slot); // 같은 manager+10c/+110의 서명/FE 판정DWORD다. 아직 파일을 읽지 않았으면0/ffffffff다.
     std::span<std::uint8_t> GrowState(std::uint32_t slot,std::uint32_t size); // 원문을 보존한 채 같은 Fort의 실제 State 섹션에 새 버퍼를 만든다.
     void CommitStateGrowth(std::uint32_t slot); // Get이 복사를 끝낸 뒤 이전 State 할당을 반납한다.
     std::size_t OwnedImages() const; // 현재 실제 manager 할당 수를 읽기만 한다.

@@ -1,6 +1,7 @@
 // 큰 원본 부모의 인라인 본문도 같은 공통 하위와 효과 뒤 재조회 순서로 복원한다.
 #include "o/RawDataManagerImage.h"
 #include <algorithm>
+#include <array>
 #include <bit>
 #include <stdexcept>
 namespace netstorm::o {
@@ -70,5 +71,39 @@ void ReadDataManagerImage(std::span<std::uint8_t> manager,std::span<std::uint8_t
         }
         AdvanceDataManagerMark(source,hooks);
     }
+}
+
+// 서명은 논리 end의 두 BYTE 길이를 추가 검사하지 않는다. 실제 원본은 data/end의 비영만 확인하며 물리 범위는 별도로 보호한다.
+bool ReadTemplateFileSignature(std::span<std::uint8_t> manager,std::span<std::uint8_t> source,const TemplateFileSignatureHooks& hooks) {
+    Source(source);if (manager.size()<0x114) throw std::invalid_argument("Template 파일 서명의 manager276 누락");
+    if (!Read(source,0) || !Read(source,8)) return false;
+    if (!hooks.typeCount || !hooks.buffer) throw std::logic_error("Template 파일 서명의 현재 타입 수/버퍼 미연결");
+    if (hooks.typeCount()>=256) { if (!hooks.tooManyTypes) throw std::logic_error("Template 파일 서명의 타입 수 진단 미연결");hooks.tooManyTypes(); }
+    const auto byte=[&] { // 실제 BYTE마다 현재 data/pos를 다시 읽고 원본 DWORD 증가를 적용한다.
+        const auto pointer=Read(source,0),position=Read(source,4);auto bytes=hooks.buffer(pointer);
+        if (!pointer || position>=bytes.size()) throw std::out_of_range("Template 파일 서명의 실제 BYTE 물리 범위");
+        const auto value=bytes[position];Put(source,4,position+1U);return value;
+    };
+    Put(manager,0x10c,byte());const auto flag=byte();Put(manager,0x110,flag==0xfe ? 1U : 0U);
+    if (Read(manager,0x10c)==0x46) return true;
+    if (!hooks.fileName || !hooks.rejectFile) throw std::logic_error("Template 잘못된 서명의 현재 파일 처리 미연결");
+    hooks.rejectFile(hooks.fileName());return false;
+}
+
+// 원본 정상 복귀는 파일 할당만 반납한다. 호스트 예외에서도 같은 현재 포인터의 반납을 한 번만 시도한다.
+bool ReadDataManagerFile(std::span<std::uint8_t> manager,const DataManagerFileHooks& hooks) {
+    if (manager.size()<12 || !hooks.fileName || !hooks.readFile) throw std::invalid_argument("DataManager 파일 읽기 부모의 manager/파일 경계 누락");
+    std::array<std::uint8_t,20> source{};Put(source,16,0xffffffffU);bool releaseAttempted{}; // 원본의 첫 네 DWORD0/mark-1이며 반납 중 예외의 중복 해제를 막는다.
+    const auto release=[&] { // 서명/본문이 source.data를 바꾸면 원본처럼 마지막의 현재 포인터를 반납한다.
+        if (releaseAttempted) return;releaseAttempted=true;const auto pointer=Read(source,0);if (!pointer) return;
+        if (!hooks.releaseFile) throw std::logic_error("DataManager 실제 파일 할당 반납 미연결");hooks.releaseFile(pointer);
+    };
+    try {
+        const auto pointer=hooks.readFile(hooks.fileName(),1,std::span(source).subspan(12,4),0);Put(source,0,pointer);Put(source,8,Read(source,12));
+        if (!pointer) return false;
+        if (!hooks.signature) throw std::logic_error("DataManager 파일 읽기의 실제 가상 서명 미연결");
+        if (!hooks.signature(source)) { release();return false; }
+        ReadDataManagerImage(manager,source,hooks.image);release();return true;
+    } catch (...) { release();throw; }
 }
 }
