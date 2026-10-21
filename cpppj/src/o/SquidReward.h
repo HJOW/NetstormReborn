@@ -29,7 +29,7 @@ struct SquidRewardState {
     bool walletClamp{};                  // 지갑을 0x4a6 이상으로 올리는 객체 조건(DAT_005634a0->+0x68 / CD 00549a08->+0x68).
     bool priestQuarterHp{};              // priest 최대 HP 1/4 전역(DAT_005ca8f0 / CD 00511c90).
     bool debugAsserts{};                 // 패치 0049fce0의 디버그 assert 전역(DAT_005e4794). 켜지면 위반 입력을 거부한다.
-    std::array<std::int32_t,kPlayerCount+1> aiWallet{}; // AI 객체 +0x2d8. AI가 부착된 소유자만 갱신한다.
+    std::array<std::int32_t,kPlayerCount+1> aiWallet{}; // 독립 값형/CD 재생의 지갑이다. 실제 PATCH Session은 BindPatchWallet로 같은 brain+2d8에 연결한다.
     float cdLocalSp{};                   // CD판 로컬 SP 전역(005120d4). 패치판은 ScrambledSpStore를 쓴다.
 };
 // 객체 보상 외부 동작과 저장소 조회를 연결하는 콜백 묶음이다.
@@ -76,6 +76,8 @@ public:
     // 패치 00413bb0: SP를 바꾸기 전 너겟 내용물 삭제가 별도로 수행하는 AI 지갑 정수 가산이다.
     // 기존 지갑 비활성/부착/최솟값·DWORD 감김 규칙을 사용하며 SP 표시/난수를 갱신하지 않는다.
     void CreditWallet(std::uint32_t owner,std::int32_t amount);
+    // PATCH 실제 세션의00413bb0을 연결한다. 이후 모든 지갑 가산은 이 몸체를 쓰며 값형 부착/지갑 배열과 동기화하지 않는다.
+    void BindPatchWallet(std::function<void(std::uint32_t,std::int32_t)> credit);
 private:
     // vtable +0x80의 개수. 훅이 있으면 파생 구현이고 없으면 base의 상태 상위 3비트다.
     std::int32_t Count(Sid sid) const;
@@ -98,6 +100,7 @@ private:
     ScrambledSpStore* store_{};
     // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (SquidRewardHooks).
     SquidRewardHooks hooks_;
+    std::function<void(std::uint32_t,std::int32_t)> creditWallet_; // 실제 PATCH의 현재 Player/brain 지갑 처리기다. 미연결 독립 재생은 기존 값형 경로를 유지한다.
     // virtualCalls_: 가상 호출.
     mutable std::uint32_t virtualCalls_{};
 };

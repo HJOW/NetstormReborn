@@ -1,0 +1,189 @@
+{
+  "date": "2026-10-21",
+  "host": "VM-W11-Codex",
+  "last_decompile_host": "VM-W11-CODEX",
+  "last_decompile_date": "2026-10-21",
+  "source_hash_basis": "최종 빌드 입력의 작업 트리 바이트. Git 정규화 뒤 바이트와 구분한다.",
+  "source_sha256": {
+    "cpppj/src/o/RawAiWallet.h": "d21017f636055d7127ce895ac3e1938288da3a8b7279a0db56987d97706b3cb1",
+    "cpppj/src/o/RawAiWallet.cpp": "cac76868ba5d9b6d8e6dc0761d58ff0d707ce31294d81d9bfbd888696b0e16ca",
+    "cpppj/src/o/SquidReward.h": "f908d8875210f5668ab5571555013ebbbc5d37c760a786b68efb8db31b67c60e",
+    "cpppj/src/o/SquidReward.cpp": "a9e9f0331eec7aa11738c2b15ccb01eb8c224227afad42f17bbff8ac4b71225c",
+    "cpppj/src/o/CMakeLists.txt": "50f93694d64df51804b5fb804ae28e895c70ff2bae72f0e3d7b3901a4df196d4",
+    "cpppj/src/client/RawCampaignSession.cpp": "5d036841b56ad8f69be31942b0b1cfeda8bdd842af427be570584d480b5ef0a5",
+    "cpppj/tests/AiWalletTests.cpp": "cdfc6e49841cdb753141d523e1f30d576954b5ecffad9d0579a48ff4436e8c78",
+    "cpppj/tests/CampaignSessionTests.cpp": "c7ec6cf431d816a03c54e9b4c194a7bf4e93603c2086b0549a63455158743fb5",
+    "cpppj/tests/CMakeLists.txt": "1874771c95360a38a9d5f2d6bb0b0cfd663de14b4c9792fc1e34aa846de816cf"
+  },
+  "native_sha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+  "refined_sha256": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+  "functions": {
+    "0x413bb0": [
+      {
+        "first": "0x413bb0",
+        "last": "0x413c11",
+        "sha256": "bda54770c7a6cfd3631f7a3bcd25c710e00329a79ae6ebb206d895f6d4072c3c",
+        "instructions": [
+          "00413bb0 mov eax, dword ptr [0x594fc8]",
+          "00413bb5 test eax, eax",
+          "00413bb7 jne 0x413c11",
+          "00413bb9 mov eax, dword ptr [esp + 4]",
+          "00413bbd cmp eax, 1",
+          "00413bc0 jl 0x413c11",
+          "00413bc2 mov ecx, dword ptr [0x59534c]",
+          "00413bc8 imul eax, eax, 0xb4",
+          "00413bce add eax, ecx",
+          "00413bd0 je 0x413c11",
+          "00413bd2 push esi",
+          "00413bd3 mov esi, dword ptr [eax + 0xb0]",
+          "00413bd9 test esi, esi",
+          "00413bdb je 0x413c10",
+          "00413bdd mov edx, dword ptr [esi + 0x2d8]",
+          "00413be3 mov eax, dword ptr [esp + 0xc]",
+          "00413be7 add edx, eax",
+          "00413be9 mov dword ptr [esi + 0x2d8], edx",
+          "00413bef call 0x463b50",
+          "00413bf4 test eax, eax",
+          "00413bf6 je 0x413c10",
+          "00413bf8 mov eax, dword ptr [esi + 0x2d8]",
+          "00413bfe cmp eax, 0x4a6",
+          "00413c03 jg 0x413c0a",
+          "00413c05 mov eax, 0x4a6",
+          "00413c0a mov dword ptr [esi + 0x2d8], eax",
+          "00413c10 pop esi",
+          "00413c11 ret "
+        ]
+      }
+    ],
+    "0x463b50": [
+      {
+        "first": "0x463b50",
+        "last": "0x463b68",
+        "sha256": "8959b43fdb2679a66eba1d7731095cfef2142146601d849e01c06f99f0cbd18d",
+        "instructions": [
+          "00463b50 mov eax, dword ptr [0x5634a0]",
+          "00463b55 test eax, eax",
+          "00463b57 je 0x463b66",
+          "00463b59 mov ecx, dword ptr [eax + 0x68]",
+          "00463b5c test ecx, ecx",
+          "00463b5e je 0x463b66",
+          "00463b60 mov eax, 1",
+          "00463b65 ret ",
+          "00463b66 xor eax, eax",
+          "00463b68 ret "
+        ]
+      }
+    ],
+    "0x40eec0": [
+      {
+        "first": "0x40eec0",
+        "last": "0x40ef27",
+        "sha256": "f199ae89497d4fce94c8d1747286174ddac12a30692c3d50197f6a91721d1f15",
+        "instructions": [
+          "0040eec0 push ecx",
+          "0040eec1 mov ecx, dword ptr [0x540c70]",
+          "0040eec7 lea eax, [esp]",
+          "0040eeca push eax",
+          "0040eecb push ecx",
+          "0040eecc call 0x40ec50",
+          "0040eed1 mov eax, dword ptr [0x594fb8]",
+          "0040eed6 add esp, 8",
+          "0040eed9 test eax, eax",
+          "0040eedb jne 0x40eee6",
+          "0040eedd mov eax, dword ptr [0x5c85a4]",
+          "0040eee2 test eax, eax",
+          "0040eee4 je 0x40eef3",
+          "0040eee6 fld dword ptr [0x500ff8]",
+          "0040eeec fsub dword ptr [esp]",
+          "0040eeef fstp dword ptr [esp + 8]",
+          "0040eef3 fld dword ptr [esp]",
+          "0040eef6 mov edx, dword ptr [0x540c70]",
+          "0040eefc fadd dword ptr [esp + 8]",
+          "0040ef00 push ecx",
+          "0040ef01 fstp dword ptr [esp]",
+          "0040ef04 push edx",
+          "0040ef05 call 0x40edb0",
+          "0040ef0a fld dword ptr [esp + 0x10]",
+          "0040ef0e call 0x4e49c0",
+          "0040ef13 push eax",
+          "0040ef14 mov eax, dword ptr [0x540c70]",
+          "0040ef19 push eax",
+          "0040ef1a call 0x413bb0",
+          "0040ef1f call 0x43dad0",
+          "0040ef24 add esp, 0x14",
+          "0040ef27 ret "
+        ]
+      }
+    ],
+    "0x41df80": [
+      {
+        "first": "0x41df80",
+        "last": "0x41dfe0",
+        "sha256": "2b8023efd4c9e9956966628e0854f8541ca3ac8f8e4c263a36611e21bb6ad015",
+        "instructions": [
+          "0041df80 push ecx",
+          "0041df81 push esi",
+          "0041df82 mov esi, dword ptr [esp + 0xc]",
+          "0041df86 lea eax, [esp + 4]",
+          "0041df8a push eax",
+          "0041df8b push esi",
+          "0041df8c call 0x40ec50",
+          "0041df91 mov eax, dword ptr [0x594fb8]",
+          "0041df96 add esp, 8",
+          "0041df99 test eax, eax",
+          "0041df9b jne 0x41dfa6",
+          "0041df9d mov eax, dword ptr [0x5c85a4]",
+          "0041dfa2 test eax, eax",
+          "0041dfa4 je 0x41dfb4",
+          "0041dfa6 fld dword ptr [0x500ff8]",
+          "0041dfac fsub dword ptr [esp + 4]",
+          "0041dfb0 fstp dword ptr [esp + 0x10]",
+          "0041dfb4 fld dword ptr [esp + 4]",
+          "0041dfb8 push ecx",
+          "0041dfb9 fadd dword ptr [esp + 0x14]",
+          "0041dfbd fstp dword ptr [esp]",
+          "0041dfc0 push esi",
+          "0041dfc1 call 0x40edb0",
+          "0041dfc6 fld dword ptr [esp + 0x18]",
+          "0041dfca call 0x4e49c0",
+          "0041dfcf push eax",
+          "0041dfd0 push esi",
+          "0041dfd1 call 0x413bb0",
+          "0041dfd6 add esp, 0x10",
+          "0041dfd9 call 0x43dad0",
+          "0041dfde pop esi",
+          "0041dfdf pop ecx",
+          "0041dfe0 ret "
+        ]
+      }
+    ]
+  },
+  "build": {
+    "path": "extracted/cpp-ai-wallet-20261021-build2.log",
+    "sha256": "a3e42f35f8005aad41bc55b371846f23e7554effb9a82cbbb345f4310aa33ee9",
+    "exit_code": 0,
+    "warnings": 0,
+    "errors": 0
+  },
+  "binary_sha256": {
+    "cpppj/build/bin/Release/NetstormCpp.exe": "708aaf5033573af66781ec0f5f4ba328821234c0d174070ecaefbdad949e6e03",
+    "cpppj/build/bin/Release/netstorm_tests.exe": "5ec102c5ffef71b6a20e1d3257e06246f866c7e33a0c2563e93b1f8908087c22"
+  },
+  "compiled_test_names": [
+    "AiWallet_DisabledSignedOwnerAndNullBrain",
+    "AiWallet_WrapDemoFloorAndUnrelatedBytes",
+    "AiWallet_DemoBoundaryRereadsSavedBrain",
+    "AiWallet_RejectsMissingPhysicalBodyAndReaders",
+    "AiWallet_RewardUsesSameBrainAndKeepsLegacySeparate",
+    "CampaignSession_RefundCreditsCurrentActualAiWallet"
+  ],
+  "executed_cpp_tests": 0,
+  "executed_game_frames": 0,
+  "executed_native_instructions": 0,
+  "limits": [
+    "현재 지갑 가산 연결이며 전략 AI/SP 테스트 옵션을 구현하거나 활성화하지 않았다.",
+    "생성/삭제의 별도 aiAttached와 전략 목록 통지는 여전히 미복원이며 이번 연결로 켜지 않는다.",
+    "실제 Player9/0xb08 저장소 계약 밖 접근과 해제 토큰은 호스트 예외로 거부한다.",
+    "새 여섯 검사는 작성/컴파일만 했으며 실행 성공 또는 전체 미션 동일성의 증거가 아니다."
+  ]
+}

@@ -94,6 +94,7 @@
 #include "o/RawPlayerColor.h"
 #include "o/RawAiBrainInitialUpdate.h"
 #include "o/RawAiDamage.h"
+#include "o/RawAiWallet.h"
 #include "o/RawPriestLookup.h"
 #include "o/RawRunePostPop.h"
 #include "o/RawDaisRegular.h"
@@ -265,6 +266,7 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawAiBrainConstructor> aiConstructor; // 같은 Pool/현재 TYPE/mana/섬/방향별 동맹의 실제 생성·소멸이다.
     std::unique_ptr<RawAiBrainInitialUpdate> aiInitial; // 같은 Player 기술 부모/contained 분류를 실제 본체에 기록한다.
     std::unique_ptr<RawAiCreate> aiCreate; // 원본 Color→기존brain→NoTemple→생성/부착/초기갱신 순서다.
+    std::unique_ptr<RawAiWallet> aiWallet; // 같은 Player+b0/실제 본체+2d8을 보상·차감·너겟 가산에 공유한다.
     std::array<std::uint32_t,4> aiWorkshops{86,87,88,85}; // PATCH004709d0의 theme0/1/2/3이 읽는005411b0/b4/b8/ac의 실제 기본 타입이다.
     std::uint32_t aiExcludedType{133},aiMissionFallback{}; // 실제 sunWalker 분류 제외 번호와 현재 getter를 사용할 때 읽지 않는 값형 호환 저장소다.
     bool loaded{}; // 같은 실제 저장 부모와 이동 설치가 정상 종료했을 때만 AI 생성 요청을 허용한다.
@@ -1719,6 +1721,10 @@ struct RawCampaignSession::Impl {
         createHooks.construct=[this](std::uint32_t owner,std::span<const std::uint8_t> settings,std::size_t bytes) { return aiConstructor->Construct(owner,settings,bytes); };
         createHooks.initialUpdate=[this](std::uint32_t token,std::span<const std::uint8_t> settings) { aiInitial->Update(token,settings); };
         aiCreate=std::make_unique<RawAiCreate>(core.pool.Edition(),*participation,std::move(createHooks));
+        aiWallet=std::make_unique<RawAiWallet>(aiMemory,players,AiWalletReads{
+            [this] { return core.ownerMode.challenge; }, // 원본00594fc8은 참여/동맹이 조회하는 같은 현재 모드다.
+            [this] { return services.missionOutcome.demo()!=0; }}); //00463b50은 missionPost가 아니라 현재 미션+68의 demo를 읽는다.
+        hp.BindPatchWallet([this](auto owner,auto amount) { aiWallet->Credit(owner,amount); }); // 새 brain이나 복제 지갑을 만들지 않고 현재 Player 포인터를 매번 조회한다.
     }
     // 첫 실제 객체 이전에 같은 공통 삭제/내용물/Player 통지/기술 모듈을 한 번 연결한다.
     void InstallContents(const SquidDestroyHooks& deletion) {

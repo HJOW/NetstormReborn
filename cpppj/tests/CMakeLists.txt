@@ -51,6 +51,7 @@ add_executable(netstorm_tests
     MissionFortRequestTests.cpp
     TemplateLifetimeTests.cpp
     TemplateLoadTests.cpp
+    AiWalletTests.cpp
     MissionControlTests.cpp
     MissionGuideInputTests.cpp
     ObjectCommandTests.cpp

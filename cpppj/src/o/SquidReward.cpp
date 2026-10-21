@@ -1,4 +1,4 @@
-// 삭제/해체 보상의 판본별 x87 연산 순서를 복원한다. 파생 vtable과 AI 객체 안쪽은 훅/지갑 배열로 둔다.
+// 삭제/해체 보상의 판본별 x87 연산 순서를 복원한다. PATCH 실제 AI 지갑은 같은 본체 처리기에 연결한다.
 #include "o/SquidReward.h"
 #include <bit>
 #include <cmath>
@@ -161,6 +161,7 @@ SquidRewardResult SquidReward::Plan(Sid sid,std::uint32_t recipient,bool salvage
 }
 // 패치 00413bb0 / CD 004d8cc0·004d81f0. 소유자 1~8 중 AI가 부착된 경우만 지갑을 올린다.
 void SquidReward::AddWallet(std::uint32_t owner,std::int32_t amount) {
+    if (creditWallet_) { creditWallet_(owner,amount);return; }
     if (state_.aiMirrorDisabled || owner<1 || owner>kPlayerCount || !bookkeeping_.aiAttached[owner]) return;
     auto& wallet=state_.aiWallet[owner];
     wallet=Wrap(static_cast<std::int64_t>(wallet)+amount);
@@ -168,6 +169,10 @@ void SquidReward::AddWallet(std::uint32_t owner,std::int32_t amount) {
 }
 // 상위 내용물 삭제가 요구하는 선가산을 기존 실제 지갑 몸체에 전달한다.
 void SquidReward::CreditWallet(std::uint32_t owner,std::int32_t amount) { AddWallet(owner,amount); }
+// CD/불완전 바인딩으로 기존 판본의 값형 지갑을 바꾸지 않는다.
+void SquidReward::BindPatchWallet(std::function<void(std::uint32_t,std::int32_t)> credit) {
+    if (pool_.Edition()!=OriginalEdition::Patch1078 || !credit) throw std::invalid_argument("PATCH 실제 AI 지갑 가산 처리 누락/판본 불일치");creditWallet_=std::move(credit);
+}
 // 패치 0040eec0/0041df80 및 CD 00414680의 SP 가산과 AI 지갑 갱신, 표시 갱신이다.
 void SquidReward::AddSp(std::uint32_t owner,float delta) {
     const bool fixed=state_.fixedSpA || state_.fixedSpB;

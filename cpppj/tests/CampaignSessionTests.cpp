@@ -444,6 +444,17 @@ TEST_CASE(CampaignSession_AiUsesCurrentWorldAndLifetime) {
     CHECK(session.AiMemory().Frees().size()==18 && session.AiMemory().Frees().back()==token && (Get(records,2*0xb4+0x50)&0x20)!=0);
     CHECK(core.bookkeeping.depth==0 && core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0);
 }
+// 실제 서버 환불은 같은 SP/현재 Player brain에 가산하며 미연결 생명주기 부착 표를 켜지 않는다. 작성/컴파일만 수행한다.
+TEST_CASE(CampaignSession_RefundCreditsCurrentActualAiWallet) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();std::size_t demoReads{},moneyNotices{},refreshes{}; // 원본 부모의 선택된 현재 UI 경계만 관측한다.
+    services.ai.allocationBytes=[](auto bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0x71}); };services.ai.participation.clearChat=[](auto) {};services.ai.participation.addChat=[](auto,auto,auto) {};services.ai.localTransport=[] { return true; };
+    services.missionOutcome.demo=[&] { ++demoReads;return 0U; };services.refreshSp=[&] { ++refreshes; };services.construction.presentation.sendMoney=[&](auto owner,const auto& notice) { CHECK(owner==2 && notice.amount>0);++moneyNotices; };
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));session.Load();auto core=session.Core();const auto type=assets.game.TypeTable().Find("sunCannon");const auto cost=static_cast<std::int32_t>(core.types[type].cost);
+    const auto token=session.CreateAi(2,SessionAiSettings("Wallet AI","sunCannon"));CHECK(Get(session.AiMemory().Bytes(token),0x2d8)==777 && !core.bookkeeping.aiAttached[2]);const auto before=session.Sp(2);demoReads=moneyNotices=refreshes=0; // 로드/생성과 구분하여 명시 환불부터의 실제 통지만 계측한다.
+    session.Construction().Refund(type,2);CHECK(session.Sp(2)==before+static_cast<float>(cost) && Get(session.AiMemory().Bytes(token),0x2d8)==777U+static_cast<std::uint32_t>(cost));CHECK(demoReads==1 && moneyNotices==1 && refreshes==1 && !core.bookkeeping.aiAttached[2]);
+    core.ownerMode.challenge=true;session.Construction().Refund(type,2);CHECK(Get(session.AiMemory().Bytes(token),0x2d8)==777U+static_cast<std::uint32_t>(cost) && demoReads==1 && moneyNotices==2 && refreshes==2);core.ownerMode.challenge=false; // 같은00594fc8 비활성 조건은 SP 지급 뒤 지갑 단계만 건너뛴다.
+    session.RemoveAi(2);session.Construction().Refund(type,2);CHECK(!session.Participation().Brain(2) && demoReads==1 && moneyNotices==3 && refreshes==3);
+}
 // 언어/Chat/할당 누락을 생존 표식 성공으로 바꾸지 않고 선택 위치의 부분 효과와 실제 해제를 보존한다.
 TEST_CASE(CampaignSession_AiMissingServicesKeepRealFailure) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;

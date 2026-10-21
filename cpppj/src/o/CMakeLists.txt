@@ -369,3 +369,5 @@ target_sources(netstorm PRIVATE RawDataManagerResize.cpp RawDataManagerResize.h)
 target_sources(netstorm PRIVATE RawDataManagerImage.cpp RawDataManagerImage.h)
 # Template manager의 같은 파일명/생성자와 바깥 Load의 소유권 분기를 복원한다.
 target_sources(netstorm PRIVATE RawTemplateLoad.cpp RawTemplateLoad.h)
+# 보상/차감의 실제 AI 지갑 가산을 같은 Player/본체에 연결한다.
+target_sources(netstorm PRIVATE RawAiWallet.cpp RawAiWallet.h)
