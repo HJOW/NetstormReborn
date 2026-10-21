@@ -67,6 +67,8 @@ RawCampaignSessionServices MakeCampaignClientServices(Client& client,RawButtonCo
     // 실제 커서 비용과 같은 Gump 트리/게임 시계에 Cast/Drop 금액 표시를 붙인다.
     services.carrierDropPopup=[&controls](std::int32_t cost,std::int32_t x,std::int32_t y,std::uint32_t reference) { auto* menus=controls.Menus();if (!menus) throw std::logic_error("Cast/Drop 비용표시 실제Gump미설치");menus->ShowSp(cost,x,y,reference); };
     services.ai.allocationBytes=CurrentAllocationBytes; // 실제 AI 생성자가 보존하는 바이트의 현재 힙 입력이다.
+    services.ai.blockingGumpOpen=[&controls] { return controls.BlockingGumpOpen(); }; // 데모 로컬 준비가 같은 실제 Gump 직계 목록을 읽는다.
+    services.ai.assertion=[](std::string_view text) { std::clog<<"AI 원본 진단: "<<text<<'\n'; }; // 원본 진단 후 계속하는 경계를 기존 장치 로그로 전달한다.
     services.production.allocationBytes=CurrentAllocationBytes; // Deck 생성자도 초기화하는 5DWORD 이외의 입력을 보존한다.
     services.production.effects.configInt=[&client](std::string_view key) {
         std::int32_t value{};client.Configuration().ReadInt(key,value);return value;

@@ -102,6 +102,8 @@ struct CampaignAiServices {
     std::function<void(std::uint32_t,std::uint32_t)> changeColor; // 실제0043ca70의 표/섬 프레임 변경을 마친 뒤 보내는 선택형 화면 통지다.
     o::PlayerParticipationHooks participation; // 실제 Chat/동맹 송신/연결·진단이다. brain 소멸/반납은 Session의 실제 소유자로 교체한다.
     std::function<bool()> localTransport; // CheckLogin이 현재 로컬 전송 모드를 읽는 실제 경계다.
+    std::function<bool()> blockingGumpOpen; //004641d0의 현재 실제 루트 직계 차단 창 조회다.
+    std::function<void(std::string_view)> assertion; // AI 원본 진단 후 계속하는 장치 경계다. 누락을 빈 성공으로 바꾸지 않는다.
 };
 // 원본 Deck의 할당 입력과 현재 설정/진단을 실제 클라이언트에 연결한다.
 struct CampaignProductionServices {
@@ -230,6 +232,7 @@ public:
     std::uint8_t BattleOption(std::size_t offset) const; // 같은 실제87BYTE의 현재 메뉴 허용 값을 읽는다.
     // 설치 뒤 실제 생성자→현재 Player 부착→초기 갱신을 실행한다. 전략 프레임/자동 승패는 켜지 않는다.
     std::uint32_t CreateAi(std::uint32_t owner,std::span<const std::uint8_t> settings);
+    bool PrepareAi(std::uint32_t owner); // 같은 현재 brain에00416eb0 준비 전체를 명시 호출한다. 없음은false이며 전체 전략/프레임 자동 활성화는 후속이다.
     // 같은 현재 Player의 실제 목록 소멸→본체 반납→포인터0을 수행한다. flags20은 원본대로 보존한다.
     void RemoveAi(std::uint32_t owner);
     // 후속 실제 전략/검사가 같은 본체/목록 소유 저장소를 확인한다. 여기서 메모리를 합성하지 않는다.

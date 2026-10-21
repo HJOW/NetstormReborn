@@ -177,6 +177,8 @@ void RawCampaignAssetBindings::ActivatePostPop() { impl_->core.postPop.SetAssetP
 void RawCampaignAssetBindings::PrepareFrame(double now) { impl_->Prepare(now); }
 // 실제부모로더의중첩값을사본상태없이기존자산모듈에전달한다.
 void RawCampaignAssetBindings::SetLoadingDepth(std::uint32_t depth) { impl_->assets.loadingDepth=depth; }
+// 최초 Pop의 같은 번호순 Player 순회가 실제 본체 목록을 갱신하도록 연결한다.
+void RawCampaignAssetBindings::BindPatchGeyserAi(std::function<void(std::uint32_t,std::uint32_t,std::uint32_t)> update) { impl_->geyser.BindPatch(std::move(update)); }
 // actual 가상84의 Level 저장 후 기본 표시 갱신을 생략하지 않는다.
 void RawCampaignAssetBindings::SetState(o::Sid sid,std::uint32_t value) const { impl_->factory->SetState(*impl_->level,sid,value); }
 // 실제지원가상표만처리하고다른부모는호출자가준실제fallback에넘긴다.

@@ -397,23 +397,30 @@ TEST_CASE(CampaignSession_LocalGeysersUseCurrentInputs) {
     CHECK(core.pool.FreeCount()==free && local.Recent().count==3 && local.ResourcePool()==3000);core.ownerMode.fort=false;
     CHECK(core.bookkeeping.depth==0 && core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0);
 }
-// 실제CreateAi뒤간헐천등록은미복원AI하위를명시거부하며임시성공이나빈AI로대체하지않는다.
-TEST_CASE(CampaignSession_LocalGeysersKeepNonnullAiBoundary) {
+// 실제 AI 준비 뒤 최초 간헐천 Pop/삭제가 같은 본체의 다섯 후보 목록을 갱신한다. 작성·컴파일만 한다.
+TEST_CASE(CampaignSession_LocalGeysersUseActualAiRegistration) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
     auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());auto services=external.Services();
     services.ai.allocationBytes=[](std::span<std::uint8_t> bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0x71}); };
     services.ai.participation.clearChat=[&external](std::uint32_t) { ++external.notices; };
     services.ai.participation.addChat=[&external](std::uint32_t,std::string_view,std::uint32_t) { ++external.notices; };
+    services.missionOutcome.demo=[] { return 0U; };services.ai.assertion=[](std::string_view text) { throw std::logic_error(std::string(text)); };
     RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));session.Load();
     const auto token=session.CreateAi(2,SessionAiSettings("Explicit","sunCannon"));auto records=session.PlayerRecords();records[0xb4+0x50]=2;
-    CHECK(token!=0 && session.Participation().Brain(2)==token);bool rejected=false;
-    try { session.GenerateLocalGeysers(); } catch (const GeyserAiRegistrationBoundary& boundary) {
-        rejected=true;CHECK(boundary.owner==2 && boundary.aiPointer==token && boundary.state==1);
-        CHECK(boundary.sid>=session.Core().pool.Layout().serverFirst && session.Core().pool.Slot(Sid{static_cast<std::uint16_t>(boundary.sid)})[10]==122);
-    }
-    CHECK(rejected && session.Participation().Brain(2)==token && session.AiMemory().Contains(token));
-    CHECK(session.Construction().LocalGeysers().Recent().count==0); // 원본순서에서실패한Pop뒤최근목록추가는실행하지않는다.
+    CHECK(token!=0 && session.Participation().Brain(2)==token && session.PrepareAi(2));const auto raw=session.AiMemory().Bytes(token);const auto count=Get(raw,0x32c);session.GenerateLocalGeysers();
+    CHECK(session.Participation().Brain(2)==token && session.AiMemory().Contains(token) && Get(raw,0x32c)==count+3);CHECK(session.Construction().LocalGeysers().Recent().count==3);
+    const auto created=session.Construction().LocalGeysers().Recent().entries[0];CHECK(session.Core().pool.Slot(Sid{static_cast<std::uint16_t>(created)})[10]==122);CHECK(session.World().Destroy(Sid{static_cast<std::uint16_t>(created)},0x200000));CHECK(Get(raw,0x32c)==count+2);
+    // 실제 삭제된 간헐천은 다섯 활성 목록 어디에도 남지 않는다.
+    for (const auto at:{0x324U,0x330U,0x33cU,0x348U,0x354U}) { const auto list=session.AiMemory().Bytes(Get(raw,at));for (std::uint32_t index=0;index<Get(raw,at+8);++index) CHECK(Get(list,index*4)!=created); } // 안쪽 반복문은 현재 활성 count만 방문한다.
     session.RemoveAi(2);CHECK(session.Participation().Brain(2)==0);
+}
+// 우리 편도 같은 준비 몸체로 기존 자산을 한 번만 등록하며 전체 전략 자동 실행과 구분한다.
+TEST_CASE(CampaignSession_LocalAiPreparationSharesOriginalWorld) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();services.ai.allocationBytes=[](auto bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0x71}); };services.ai.participation.clearChat=[](auto) {};services.ai.participation.addChat=[](auto,auto,auto) {};services.ai.localTransport=[] { return true; };services.missionOutcome.demo=[] { return 0U; };services.ai.assertion=[](std::string_view text) { throw std::logic_error(std::string(text)); };
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));CHECK(Throws([&] { session.PrepareAi(1); }));session.Load();CHECK(!session.PrepareAi(1));
+    auto profile=SessionAiSettings("Local AI","sunWalker;sunCannon");Put(profile,0x22c,static_cast<std::uint32_t>(static_cast<std::int32_t>(session.Sp(1))));const auto token=session.CreateAi(1,profile);const auto raw=session.AiMemory().Bytes(token);CHECK(!Get(raw,0x25c) && !Get(raw,0x258));const auto before=session.Sp(1);CHECK(session.PrepareAi(1));CHECK(Get(raw,0x25c)==1 && Get(raw,0x264)==2 && Get(raw,0x294)!=0 && Get(raw,0x29c)==session.FindPriestParticipation(1) && session.Sp(1)==before);CHECK(!session.Core().bookkeeping.aiAttached[1]);
+    const auto allocations=session.AiMemory().Allocations().size();const auto first=std::vector<std::uint8_t>(raw.begin(),raw.end());CHECK(session.PrepareAi(1));CHECK(session.AiMemory().Allocations().size()==allocations && std::equal(first.begin(),first.end(),raw.begin()));CHECK(!Get(raw,0x258)); // 14af0의 준비 완료 표식을 이 하위에서 가짜로 켜지 않는다.
+    session.RemoveAi(1);CHECK(!session.PrepareAi(1));
 }
 // 같은 Session의 실제 본체/기술/동맹/현재 그래프 getter와 정상 목록 소멸을 함께 검사한다.
 TEST_CASE(CampaignSession_AiUsesCurrentWorldAndLifetime) {

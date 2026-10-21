@@ -96,6 +96,8 @@
 #include "o/RawAiDamage.h"
 #include "o/RawAiWallet.h"
 #include "o/RawAiObjectNotice.h"
+#include "o/RawAiWorldRegistration.h"
+#include "o/RawAiPreparation.h"
 #include "o/RawPriestLookup.h"
 #include "o/RawRunePostPop.h"
 #include "o/RawDaisRegular.h"
@@ -269,6 +271,8 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawAiCreate> aiCreate; // 원본 Color→기존brain→NoTemple→생성/부착/초기갱신 순서다.
     std::unique_ptr<RawAiWallet> aiWallet; // 같은 Player+b0/실제 본체+2d8을 보상·차감·너겟 가산에 공유한다.
     std::unique_ptr<RawAiObjectNotice> aiObjects; // 같은 Player/실제17목록을 생성·삭제·피해/후속 전략이 공유한다.
+    std::unique_ptr<RawAiWorldRegistration> aiWorld; // 같은 현재 Pool/표면/동맹으로 기존 자산과 간헐천 후보를 등록한다.
+    std::unique_ptr<RawAiPreparation> aiPreparation; // 원본00416eb0의 현재 목표·그래프·SP·최초 등록과 수량 판정이다.
     std::array<std::uint32_t,4> aiWorkshops{86,87,88,85}; // PATCH004709d0의 theme0/1/2/3이 읽는005411b0/b4/b8/ac의 실제 기본 타입이다.
     std::uint32_t aiExcludedType{133},aiMissionFallback{}; // 실제 sunWalker 분류 제외 번호와 현재 getter를 사용할 때 읽지 않는 값형 호환 저장소다.
     bool loaded{}; // 같은 실제 저장 부모와 이동 설치가 정상 종료했을 때만 AI 생성 요청을 허용한다.
@@ -1618,7 +1622,7 @@ struct RawCampaignSession::Impl {
         GeyserLifetimeHooks geyser;
         geyser.defaultFrame=[this](Sid sid) { const auto type=core.pool.Slot(sid)[10];if (type<70 || type-70>=assets.game.Types().size()) throw std::out_of_range("간헐천 기본 프레임 TYPE 오류");return static_cast<std::uint32_t>(assets.game.Types()[type-70].definition.specialFrames.defaultFrame); };
         geyser.update=[this](Sid sid) { core.display.Update(core.pool.Slot(sid)); };
-        geyser.registerAi=[this](Sid sid,std::uint32_t state) { RawGeyserAiRegistration(core.pool.Edition(),players).Register(sid.value,state); };
+        geyser.registerAi=[this](Sid sid,std::uint32_t state) { RawGeyserAiRegistration current(core.pool.Edition(),players);current.BindPatch([this](auto token,auto number,auto operation) { aiWorld->Geyser(token,number,operation); });current.Register(sid.value,state); }; // 삭제 통지도 최초 Pop과 같은 실제 AI 분류 목록을 사용한다.
         geyser.damageablePre=[this](Sid sid,std::uint32_t flags) { damageablePre->PreDestroy(sid,flags); };
         geyser.damageablePost=[this](Sid sid,std::uint32_t flags) { PrepareDamageablePost();damageablePost->PostDestroy(sid,flags); };
         geyser.dropIsland=[this](float x,float y,std::uint32_t flags,std::uint32_t owner) { PrepareBuilding(core.processState.now);buildingEffects->DropIsland(x,y,flags,owner); };
@@ -1742,6 +1746,22 @@ struct RawCampaignSession::Impl {
         }; // 기존 피해 로그와 같은 원본 종류29/현재 Player 장치를 사용한다.
         aiObjects=std::make_unique<RawAiObjectNotice>(aiMemory,core.pool,core.types,players,core.processState.now,researchOutpost,[this] { return core.ownerMode.challenge; },std::move(objects));
         core.postPop.BindPatchAiNotice([this](auto owner,auto sid,auto added) { aiObjects->Notice(owner,sid,added); });world.CommonDeletion().BindPatchAiNotice([this](auto owner,auto sid,auto added) { aiObjects->Notice(owner,sid,added); }); // 두 원본 통지 지점이 같은 현재 본체에 도달한다.
+        AiWorldRegistrationHooks registration;
+        registration.center=[this](Sid sid) { return gunTarget->Center(sid); }; //004112b0/004152b0은 같은 신전 발 중심을 사용한다.
+        registration.fartherGeyser=[this](auto token,auto sid) { const auto raw=aiMemory.Bytes(token);if (!Read(raw,0xb00)) return;if (!services.player.log) throw std::logic_error("AI 간헐천 거리 로그 미연결");services.player.log(29,"AI"+std::to_string(std::bit_cast<std::int32_t>(Read(raw,0x260)))+": Not closer to geyser "+std::to_string(std::bit_cast<std::int32_t>(sid))+".\n\n"); };
+        registration.missingSurface=[this](auto sid) { if (!services.ai.assertion) throw std::logic_error("AI 간헐천 표면 진단 미연결");services.ai.assertion("간헐천 표면 누락 SID="+std::to_string(sid)); };
+        aiWorld=std::make_unique<RawAiWorldRegistration>(aiMemory,core.pool,core.types,players,alliances,core.hash.Entries(0),*aiObjects,std::move(registration));
+        assetBindings->BindPatchGeyserAi([this](auto token,auto sid,auto state) { aiWorld->Geyser(token,sid,state); }); // 최초 간헐천 Pop과 삭제가 같은004153c0을 공유한다.
+        AiPreparationHooks preparation;
+        preparation.missingEnemyAssertion=[this] { if (!services.ai.assertion) throw std::logic_error("AI 적 목표 진단 미연결");services.ai.assertion("enemyPlayerId != INVALID_PLAYER_ID"); };
+        preparation.priest=[this](auto owner) { return RawPriestLookup(core.pool,priestState.priests).Find(owner); };preparation.temple=[this](auto region) { return islands->Temple(region); };preparation.maxHitPoints=[this](Sid sid) { return hp.MaxHitPoints(sid); };
+        preparation.pointDistance=[](auto source,auto target) { const double dx=static_cast<double>(source[0])-target[0],dy=static_cast<double>(source[1])-target[1];return std::sqrt(dx*dx+dy*dy); }; //0041cfc0은 두 사제의 raw 좌표 snapshot이며 발 중심을 추가하지 않는다.
+        preparation.graph=[this](auto sid) { return anchor->GraphFor(sid); }; // 기존 DWORD getter가0/물리 범위를 원본 위치에서 검사한다.
+        preparation.regionBounds=[this](auto region) { const auto bounds=chunks.Bounds(region);return std::array<float,4>{static_cast<float>(bounds.left*16),static_cast<float>(bounds.top*16),static_cast<float>(bounds.right*16),static_cast<float>(bounds.bottom*16)}; }; //00432210→0040d900의 실제 청크 범위를 칸 단위로 변환한다.
+        preparation.storedSp=[this](auto owner) { return std::bit_cast<float>(sp.Get(owner)); };preparation.addLocalSp=[this](float delta) { hp.AddSp(playerState.battleOwner,delta); }; // 같은 지갑 가산·SP 난수/표시 순서를 우회하지 않는다.
+        preparation.demo=[this] { return services.missionOutcome.demo(); };preparation.knowledgeOpen=[this] { return cursorDrop.lockDepth==0; }; //00445330의 실제 공유 잠금 DWORD를 읽는다.
+        preparation.blockingGumpOpen=[this] { if (!services.ai.blockingGumpOpen) throw std::logic_error("AI 현재 차단 Gump 조회 미연결");return services.ai.blockingGumpOpen(); };preparation.initialScan=[this](auto token) { aiWorld->FullScan(token); };
+        aiPreparation=std::make_unique<RawAiPreparation>(aiMemory,core.pool,players,alliances,AiPreparationGlobals{playerState.battleOwner,playerState.playerKnown,noRegion,[this] { return static_cast<std::uint32_t>(core.bookkeeping.invalidGraph); },core.processState.now},std::move(preparation));
     }
     // 첫 실제 객체 이전에 같은 공통 삭제/내용물/Player 통지/기술 모듈을 한 번 연결한다.
     void InstallContents(const SquidDestroyHooks& deletion) {
@@ -2379,6 +2399,8 @@ std::uint32_t RawCampaignSession::CreateAi(std::uint32_t owner,std::span<const s
     if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("실제 Session 설치 후 owner1..8 AI 생성만 허용");
     return impl_->aiCreate->Create(owner,settings);
 }
+// 후속 전략 caller도 같은 준비 몸체를 사용한다. 생성 시점으로 최초 스캔을 당기지 않는다.
+bool RawCampaignSession::PrepareAi(std::uint32_t owner) { if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("실제 Session 설치 후 owner1..8 AI 준비만 허용");const auto token=impl_->participation->Brain(owner);if (!token) return false;impl_->aiPreparation->Update(token);return true; }
 // 명시 해제의 오류는 caller에 전파하고 destructor의 마지막 정리와 구분한다.
 void RawCampaignSession::RemoveAi(std::uint32_t owner) { impl_->participation->RemoveBrain(owner); }
 // 후속 실제 전략은 현재 Player 토큰으로 이 유일한 본체/목록 저장소를 조회해야 한다.
