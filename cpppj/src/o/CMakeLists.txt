@@ -383,3 +383,5 @@ target_sources(netstorm PRIVATE RawAiEconomy.cpp RawAiEconomy.h)
 target_sources(netstorm PRIVATE RawAiDeployment.cpp RawAiDeployment.h)
 # 원본 수집자 선택/자기 영역 무작위 후보/실제 생산 배치를 같은 월드에 연결한다.
 target_sources(netstorm PRIVATE RawAiCollectors.cpp RawAiCollectors.h)
+# 원본 AI의 원소별 생산 선택과 시설의 미처리/업그레이드 대기 목록을 처리한다.
+target_sources(netstorm PRIVATE RawAiFactoryProduction.cpp RawAiFactoryProduction.h)

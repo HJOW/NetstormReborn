@@ -454,6 +454,14 @@ TEST_CASE(CampaignSession_AiCollectorSelectionUsesActualDeployment) {
     for (std::size_t attempt=0;attempt<20 && Get(session.AiMemory().Bytes(token),0x2e4)==before;++attempt) CHECK(session.EnsureAiCollectors(2));
     CHECK(Get(session.AiMemory().Bytes(token),0x2e4)==before+1);session.RemoveAi(2);CHECK(!session.EnsureAiCollectors(2));
 }
+// 원본 MasterOfWhirligigs의 빈 원격 워크샾에 같은 기술/생산 내용물과 Deck 통지를 연결한다.
+TEST_CASE(CampaignSession_AiFactoryProductionUsesOriginalWorkshops) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();services.ai.allocationBytes=[](auto bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0x71}); };services.ai.participation.clearChat=[](auto) {};services.ai.participation.addChat=[](auto,auto,auto) {};services.ai.localTransport=[] { return true; };services.missionOutcome.demo=[] { return 0U; };services.ai.assertion=[](std::string_view text) { throw std::logic_error(std::string(text)); };services.production.allocationBytes=[](auto bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0x71}); };services.production.effects.configInt=[](std::string_view) { return 0; };services.production.effects.modeAssertion=[] { throw std::logic_error("검사 외 생산 모드 진단"); };
+    auto fort=FortTemplate::Parse(assets.files.Read("d/masterofwhirligigs.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"masterofwhirligigs",std::move(services));CHECK(Throws([&] { session.ManageAiFactories(2); }));session.Load();CHECK(!session.ManageAiFactories(2));const auto token=session.CreateAi(2,SessionAiSettings("Factory AI","sunWalker;sunCannon"));CHECK(session.InitializeAi(2) && session.PrepareAi(2));const auto raw=session.AiMemory().Bytes(token);CHECK(Get(raw,0x314)==2);const auto list=session.AiMemory().Bytes(Get(raw,0x30c));const auto factory=Sid{static_cast<std::uint16_t>(Get(list,0))};CHECK(session.ManageAiFactories(2));CHECK(Get(raw,0x314)==2);RawContainedFinder finder(session.Core().pool,session.ProductionFinder());std::uint32_t count{};
+    // 실제 워크샾 내용물에서 원본 flags10 생산 등록을 확인한다.
+    for (auto form=finder.Begin(factory);form.value;form=finder.Next()) if (Get(session.Core().pool.Slot(form),20,2)&16U) ++count;
+    CHECK(count==1);session.RemoveAi(2);CHECK(!session.ManageAiFactories(2));
+}
 // 같은 Session의 실제 본체/기술/동맹/현재 그래프 getter와 정상 목록 소멸을 함께 검사한다.
 TEST_CASE(CampaignSession_AiUsesCurrentWorldAndLifetime) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;

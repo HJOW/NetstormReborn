@@ -101,6 +101,7 @@
 #include "o/RawAiEconomy.h"
 #include "o/RawAiDeployment.h"
 #include "o/RawAiCollectors.h"
+#include "o/RawAiFactoryProduction.h"
 #include "o/RawAiPreparation.h"
 #include "o/RawPriestLookup.h"
 #include "o/RawRunePostPop.h"
@@ -283,6 +284,8 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RegularProcess> aiPendingRegular; //원본 new(0x28) 성공 뒤 현재 생산 대기시간으로 구성할 예약 메모리다.
     std::unique_ptr<RawAiCollectors> aiCollectors; //같은 현재 목록/사제 상태/난수로 수집자 종류와 합법 배치 후보를 선택한다.
     std::uint32_t aiLayLog{99}; //0052f3d0의 원본 Debug Lay Piece 초기 로그 종류다.29는 디버그 표시 선택값이다.
+    std::unique_ptr<RawAiFactoryProduction> aiFactoryProduction; //같은 기술/생산 내용물과 시설 미처리/업그레이드 큐를 처리한다.
+    std::uint32_t aiFactoryLog{99}; //0052f3e0의 원본 Debug Factory 초기 로그 종류다.
     std::array<std::uint32_t,4> aiWorkshops{86,87,88,85}; // PATCH004709d0의 theme0/1/2/3이 읽는005411b0/b4/b8/ac의 실제 기본 타입이다.
     std::uint32_t aiExcludedType{133},aiMissionFallback{}; // 실제 sunWalker 분류 제외 번호와 현재 getter를 사용할 때 읽지 않는 값형 호환 저장소다.
     bool loaded{}; // 같은 실제 저장 부모와 이동 설치가 정상 종료했을 때만 AI 생성 요청을 허용한다.
@@ -1793,6 +1796,11 @@ struct RawCampaignSession::Impl {
         collectors.log=[this](auto token,auto type,auto x,auto y) { if (!services.player.log) throw std::logic_error("AI 수집자 Lay 로그 미연결");if (type>=core.types.size()) throw std::out_of_range("AI 수집자 Lay TYPE 범위");services.player.log(aiLayLog,"AI"+std::to_string(std::bit_cast<std::int32_t>(Read(aiMemory.Bytes(token),0x260)))+": Lay "+core.types[type].name+" at ("+std::to_string(x)+","+std::to_string(y)+")\n"); };
         collectors.dropSound=[this] { if (!services.sound.play) throw std::logic_error("AI 수집자 로컬 드롭 음향 미연결");static_cast<void>(services.sound.play(soundNames.Lookup("droppiece.wav"),0,0,0,0,0)); };
         aiCollectors=std::make_unique<RawAiCollectors>(aiMemory,core.pool,core.types,random,AiCollectorsGlobals{core.processState.now,playerState.battleOwner,[this] { return static_cast<std::uint32_t>(core.bookkeeping.invalidGraph); }},std::move(collectors));
+        AiFactoryProductionHooks factories;factories.technology=[this](auto owner) { const auto value=player->Technology(std::bit_cast<std::int32_t>(owner));if (value>65535 || value>=core.pool.Capacity()) throw std::out_of_range("AI 시설 생산 현재 기술부모 SID 범위");return Sid{static_cast<std::uint16_t>(value)}; };factories.product=[this](auto token,auto type) { return aiStrategySetup->FindProduct(token,type); };factories.addProduct=[this](auto token,Sid factory,auto type) { aiStrategySetup->AddProduct(token,factory,type); };
+        factories.level=[this](Sid factory) { const auto table=Read(core.pool.Slot(factory),0);if (table!=0x509148U && table!=0x509210U) throw std::logic_error("AI 시설 가상level80 미지원 실제 표");return level->Get(factory); };
+        // 업그레이드의 요청/수신/가상Regular·그림을 모두 복원하기 전에는 실제 선택 지점에서 기존 미복원 경계를 유지한다.
+        factories.upgrade=SessionMissing<void,Sid>();factories.log=[this](auto token,AiFactoryAction action,auto type) { if (!services.player.log) throw std::logic_error("AI 시설 생산 현재 로그 미연결");std::string message="Upgrade factory!\n";if (action==AiFactoryAction::AddedProduct) { if (type>=core.types.size()) throw std::out_of_range("AI 시설 생산 로그 TYPE 범위");message="Added "+core.types[type].name+" to factory.\n"; }services.player.log(aiFactoryLog,"AI"+std::to_string(std::bit_cast<std::int32_t>(Read(aiMemory.Bytes(token),0x260)))+": "+message+"\n"); };
+        aiFactoryProduction=std::make_unique<RawAiFactoryProduction>(aiMemory,core.pool,core.types,contentFinder,AiFactoryProductionGlobals{core.processState.now,[this] { return static_cast<std::uint32_t>(core.bookkeeping.invalidGraph); }},std::move(factories));
     }
     // 첫 실제 객체 이전에 같은 공통 삭제/내용물/Player 통지/기술 모듈을 한 번 연결한다.
     void InstallContents(const SquidDestroyHooks& deletion) {
@@ -2442,6 +2450,8 @@ bool RawCampaignSession::ReconcileAiEconomy(std::uint32_t owner) { if (!impl_->l
 bool RawCampaignSession::DeployAi(std::uint32_t owner,std::uint32_t type,float x,float y,std::uint32_t argument,std::uint32_t direction) { if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("실제 Session 설치 후 owner1..8 AI 배치만 허용");const auto token=impl_->participation->Brain(owner);if (!token) return false;impl_->aiDeployment->Place(token,type,x,y,argument,direction);return true; }
 // 원본 수집자 선택/후보 탐색/생산 소비/실제 배치/생각 기한·소리까지 같은 월드에서 명시 진행한다.
 bool RawCampaignSession::EnsureAiCollectors(std::uint32_t owner) { if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("실제 Session 설치 후 owner1..8 AI 수집자 확보만 허용");const auto token=impl_->participation->Brain(owner);if (!token) return false;impl_->aiCollectors->Ensure(token);return true; }
+// 같은 현재 본체로 원소별 기술 선택과 실제 시설 생산/대기 큐를 명시 진행한다. 미복원 업그레이드 선택은 거부한다.
+bool RawCampaignSession::ManageAiFactories(std::uint32_t owner) { if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("실제 Session 설치 후 owner1..8 AI 시설 생산만 허용");const auto token=impl_->participation->Brain(owner);if (!token) return false;impl_->aiFactoryProduction->Manage(token);return true; }
 // 명시 해제의 오류는 caller에 전파하고 destructor의 마지막 정리와 구분한다.
 void RawCampaignSession::RemoveAi(std::uint32_t owner) { impl_->participation->RemoveBrain(owner); }
 // 후속 실제 전략은 현재 Player 토큰으로 이 유일한 본체/목록 저장소를 조회해야 한다.
