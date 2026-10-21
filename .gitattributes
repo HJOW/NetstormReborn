@@ -1568,3 +1568,8 @@ cpppj/tests/DataManagerResizeTests.cpp text eol=lf
 cpppj/datamanager-resize-*.json text eol=lf
 tools/cpp_datamanager_resize_audit.py text eol=lf
 docs/exe/cpp-datamanager-resize-20261021.md text eol=lf
+# 생성/복제 부모의 최초 원문·공통 몸체·실제 소비자 근거를 같은LF로 보존한다.
+cpppj/tests/DataManagerCreateTests.cpp text eol=lf
+cpppj/datamanager-create-*.json text eol=lf
+tools/cpp_datamanager_create_audit.py text eol=lf
+docs/exe/cpp-datamanager-create-20261021.md text eol=lf

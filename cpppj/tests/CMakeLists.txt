@@ -1734,3 +1734,8 @@ set_source_files_properties(DataManagerStreamsTests.cpp PROPERTIES COMPILE_DEFIN
 target_sources(netstorm_tests PRIVATE DataManagerResizeTests.cpp)
 set_source_files_properties(DataManagerResizeTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_DATAMANAGER_RESIZE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/datamanager-resize-x86.tsv\"")
+
+# 생성/복제·대입 부모와 전체 실제16384BYTE의 최초220행을 컴파일한다.
+target_sources(netstorm_tests PRIVATE DataManagerCreateTests.cpp)
+set_source_files_properties(DataManagerCreateTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_DATAMANAGER_CREATE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/datamanager-create-x86.tsv\"")

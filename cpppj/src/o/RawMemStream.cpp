@@ -34,6 +34,17 @@ void AllocateMemStream(std::span<std::uint8_t> stream,std::uint32_t size,const M
     if (!hooks.allocate) throw std::logic_error("MemStream 실제 할당 미연결");const auto pointer=hooks.allocate(size);Put(stream,0,pointer);
     const auto length=Read(stream,12);auto target=Range(hooks,pointer,0,length);std::fill(target.begin(),target.end(),std::uint8_t{});Put(stream,4,0);Put(stream,8,0);
 }
+// free/할당 뒤의 원문 길이와 data를 다시 읽으며 원본 대입의 pos0을 유지한다.
+void CopyMemStream(std::span<std::uint8_t> stream,std::span<const std::uint8_t> source,const MemStreamHooks& hooks) {
+    Physical(stream);if (source.size()<16) throw std::invalid_argument("MemStream 대입의 실제 원문16BYTE 누락");
+    const auto previous=Read(stream,0);if (previous) { if (!hooks.release) throw std::logic_error("MemStream 대입의 실제 반납 미연결");hooks.release(previous); }
+    Put(stream,0,0);Put(stream,12,0);Put(stream,8,0);Put(stream,4,0);AllocateMemStream(stream,Read(source,8),hooks);
+    const auto length=Read(source,8);const auto input=Range(hooks,Read(source,0),0,length);auto output=Range(hooks,Read(stream,0),0,length);std::uint32_t position{};
+    // 겹침도 같은DWORD 전체를 읽은 뒤 쓰며 일반 memcpy로 치환하지 않는다.
+    for (;length-position>=4;position+=4) { const auto value=Read(input,position);Put(output,position,value); }
+    // 원본과 같이 나머지BYTE를 앞에서부터 순서대로 복사한다.
+    for (;position<length;++position) output[position]=input[position];Put(stream,8,Read(source,8));
+}
 // 일반 memcpy/memmove로 바꾸지 않고 원본 한DWORD 읽기/쓰기를 반복한다.
 void WriteMemStream(std::span<std::uint8_t> stream,std::span<const std::uint8_t> source,std::uint32_t length,const MemStreamHooks& hooks) {
     Physical(stream);const auto sum=Read(stream,4)+length;

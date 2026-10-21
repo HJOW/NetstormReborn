@@ -89,14 +89,20 @@ struct CampaignTemplateStorage::Image {
     // 생성된 State 노드의 교체는 기존 노드 unlink/버퍼 반납/노드 반납 뒤 새 마지막 노드를 붙인다.
     void InitializeState(std::span<const std::uint8_t,28> input) {
         if (!retiredState.empty()) throw std::logic_error("State 확장 복사 중 새 섹션 생성 불가");
-        SyncStreams();const auto handle=static_cast<std::uint32_t>(StateSection()+1);const auto found=streams.find(handle);
-        if (found!=streams.end()) o::RemoveDataManagerStream(manager,handle,ListEffects());
+        SyncStreams();const auto handle=static_cast<std::uint32_t>(StateSection()+1);
         if (fort.sections.size()<=StateSection()) fort.sections.resize(StateSection()+1);
-        streams.emplace(handle,std::make_unique<Stream>());WithMemory(handle,[this,handle](const auto& memory) {
-            o::DataManagerResizeHooks hooks;hooks.memory=memory;hooks.selection.stream=[this](auto stream) { return std::span(streams.at(stream)->bytes); }; // 생성자도 같은 실제 노드/할당을 사용한다.
-            o::ConstructDataManagerStream(handle,std::string_view("State"),0x4000,hooks);
-        });
-        o::AppendDataManagerStream(manager,handle,ListEffects());streamOrder.push_back(handle);WriteStream(handle,input);
+        const auto temporary=0x20000U+handle;std::vector<std::uint8_t> allocation;bool allocated{};o::DataManagerResizeHooks hooks;
+        hooks.selection.stream=[this](auto stream) { return std::span(streams.at(stream)->bytes); };hooks.list=ListEffects(); // 검색/기존 제거/새 추가도 같은 실제 부모에서 수행한다.
+        hooks.allocateStream=[this,handle](auto size) { if (size!=60 || streams.contains(handle)) throw std::logic_error("Template 새 State 실제 노드 할당 계약 위반");streams.emplace(handle,std::make_unique<Stream>());return handle; };
+        hooks.memory.buffer=[this,&allocation,temporary](auto pointer)->std::span<std::uint8_t> {
+            if (pointer==temporary) return allocation;
+            if (pointer<0x10001U || pointer>0x10000U+o::FortTemplate::kSectionCount) throw std::out_of_range("Template 생성 부모의 실제 버퍼 범위");return fort.sections.at(pointer-0x10001U);
+        }; // 새 할당은 완료 전까지 별도 소유하고 기존 tail 압축은 원래 실제 버퍼를 쓴다.
+        hooks.memory.allocate=[&allocation,&allocated,temporary](auto size) { if (allocated) throw std::logic_error("Template 생성 부모의 중복 할당");allocation.resize(size);allocated=true;return temporary; };
+        hooks.memory.assertion=[](auto) { throw std::logic_error("Template 생성 부모의 실제 MemStream 진단"); };
+        const auto current=o::CreateDataManagerStream(manager,"State",hooks);auto& node=streams.at(handle)->bytes;
+        if (current!=handle || !allocated || Read(node)!=temporary) throw std::logic_error("Template 생성 부모의 실제 현재 State 불일치");
+        Put(node,0,0x10000U+handle);allocation.resize(Read(std::span(node).subspan(8)));fort.sections.at(StateSection())=std::move(allocation);streamOrder.push_back(handle);PublishCursor(handle);WriteStream(handle,input);
     }
     // 실제 임시 노드가 살아 있는 동안 원본 부모를 실행하고 완료한 같은 할당을 State로 넘긴다.
     void EnsureStateSize(std::int32_t minimum) {

@@ -1,5 +1,14 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-21 단위268 완료: 섹션 생성·복제 부모와 실제 State 생성 연결
+
+- [x] 시작 HEAD `58de1f48`에서 `AGENTS.md`와 양 인수인계를 다시 읽었다. 현재/마지막 전체 정밀 디컴파일 PC는 **VM-W11-CODEX / 2026-10-21**로 같다. 새 디컴파일·원본/CD/AGENTS/dotnetpj 변경·게임/창 실행은 없다.
+- [x] 제품 수정 전 생성0044d1b0/복제44d230/대입44cc80과 모든 하위를 포함한 **열한 실제 본문**을 **220고유 입력·220정상 반환·851,030명령** 관측했다. 전체17,380BYTE(실제16384BYTE/양쪽 보호 포함)/non-void 반환EAX/모든 경계 직전 상태·할당/free 뒤 원문/current 재조회·ABI/보존 레지스터/x87/정상 SEH 복구/쓰기 범위를 확인했다. **CRT ASCII 비교/new/free/진단만 명시 경계**이며 실제 CRT/힙/OS/게임/Windows 예외 실행이 아니다. 최초 세 파일은 `extracted/datamanager-create-20261021-first-capture/`에 동결했다.
+- [x] 공통 생성/복제/대입 몸체를 복원했다. 실제 State 생성은 수동 remove/constructor/append 대신 `CreateDataManagerStream` 전체 부모로 연결했다. 같은 새 할당을 raw State/빌린 헤더의 현재 cursor로 인계한다. 복제는 공통 몸체/독립 검사이며 실제 파일/전송 소비자 전체 연결은 아직 아니다. 원본 힙 주소/미정 padding/외부 raw 노드 포인터 정체성 전체도 아니다.
+- [x] 새 검사4개(전체220행·빈 목록NULL/필수 효과·자기 대입·실제 반복 State/빌림/순서)를 작성·컴파일했다. 첫 Release 종료0의 새 검사 형변환 경고2개를 수정한 최종 Release **종료0·경고0·오류0**이다. 로그 `extracted/cpp-datamanager-create-20261021-build2.log`·원시 stdout·실제 종료 코드 JSON을 보존했다. **C++검사/CTest/게임은 기존 실행 이월 지시대로 실행하지 않았다.** 새 감사/최초220행·기존 최소확장286/stream404/State2560행 원문 보존은 종료0이며 현재 session은 소스/속성/로그/세 바이너리/새4검사 등록 문자열을 고정했다. 과거 session 핀은 변경하지 않는다.
+- [x] 상세 [작업 기록](docs/exe/cpp-datamanager-create-20261021.md), `cpppj/datamanager-create-native.json`·`datamanager-create-session.json`, `tools/decomp_datamanager_create.py --verify`·`tools/cpp_datamanager_create_audit.py`다. 최종 검증/인수인계 후 **20261021-32 CP**로 로컬 커밋하며 push하지 않는다. 마지막 전체 정밀 디컴파일 PC는 계속 **VM-W11-CODEX / 2026-10-21**이다.
+- [ ] **다음:** DataManager 전체 생성/파일 읽기/저장·오류·기본 섹션 전체 이름 표 순회0044d870·복제의 실제 전송 소비자·외부 raw 노드 포인터 소비자 수명/정체성, 전체 State7/전투 정리004b2df0·Fort 선택/Guide 공장/가상 소멸을 이어간다. **섹션 생성/복제/대입 몸체와 실제 State 생성 부모 연결은 이번 완료 항목**이다. 전체11미션 자연 완주·전략AI·지형/포획/희생/대피·외관/음향/동작 동일성·통합 실행 검증은 미완료이며 목표는 active다.
+
 ## 2026-10-21 단위267 완료: 짧은 State의 전체 최소 확장·임시 생성·이름 교체 연결
 
 - [x] 직전 턴은 단위266의 구현·빌드·문서·로컬 커밋을 마친 진행 턴이다. 시작 HEAD `78625d3d`에서 `AGENTS.md`와 양 인수인계를 다시 읽었다. 현재/마지막 전체 정밀 디컴파일 PC는 **VM-W11-CODEX / 2026-10-21**로 같다. 새 디컴파일·원본/CD/AGENTS/dotnetpj 변경·게임/창 실행은 없다.

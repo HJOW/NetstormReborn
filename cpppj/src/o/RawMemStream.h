@@ -15,6 +15,8 @@ struct MemStreamHooks {
 };
 // 0044cc20: alloc 선행 쓰기→할당→현재 alloc만큼0→pos/end0 순서다.
 void AllocateMemStream(std::span<std::uint8_t> stream,std::uint32_t size,const MemStreamHooks& hooks);
+// 0044cc80: 기존 할당 반납→첫16BYTE 비움→현재 원문 end로 할당→현재 data/end 복사, pos는0이다.
+void CopyMemStream(std::span<std::uint8_t> stream,std::span<const std::uint8_t> source,const MemStreamHooks& hooks);
 // 0044cce0: signed 용량 진단 뒤 DWORD/나머지 BYTE를 앞에서부터 복사하고 현재 pos/end를 갱신한다.
 void WriteMemStream(std::span<std::uint8_t> stream,std::span<const std::uint8_t> source,std::uint32_t length,const MemStreamHooks& hooks);
 // 0044cd40: end==alloc은 무동작, 양의 end는 재할당/복사/옛 버퍼 free, 나머지는 실제 소멸이다.

@@ -1,0 +1,34 @@
+{
+  "host": "VM-W11-Codex",
+  "rows": 220,
+  "normal_returns": 220,
+  "snapshot_bytes": 17380,
+  "instructions": 851030,
+  "entries": {
+    "0x44cc20": 522,
+    "0x44cc80": 180,
+    "0x44cce0": 152,
+    "0x44cd40": 152,
+    "0x44ce10": 190,
+    "0x44ce60": 350,
+    "0x44d040": 114,
+    "0x44d070": 190,
+    "0x44d0f0": 114,
+    "0x44d1b0": 190,
+    "0x44d230": 160
+  },
+  "limitations": [
+    "열한 실제 본문을 직접 실행하며 CRT ASCII 비교/new/free/진단만 명시 경계다.",
+    "void 대입의 미정 EAX는 반환 계약에 넣지 않는다. 모든 정상 반환은 ABI/보존 레지스터/x87/FS0 복구를 확인한다.",
+    "실제 CRT/힙/OS/게임/Windows 예외 실행은 아니다. OOM과잘못된 포인터는 정상 관측에 포함하지 않는다.",
+    "반복 바이트도 무손실 표기로 전체 저장하며 실제16384BYTE와 양쪽 보호 바이트를 빠짐없이 비교한다."
+  ],
+  "hashes": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_local_mission_transport.py": "db71da65079aa9a985a3a833edd224f089ba9a20137d92042551cb346937eb78",
+    "tools/decomp_datamanager_create.py": "ea95c21d2ad7ccac4e1d1e78b02216e32fb8ee4697c902125523adbad26fb3ef",
+    "cpppj/tests/fixtures/datamanager-create-x86.tsv": "121e1f53067d60afbe1ff0b92007935060b5fddf10bd307f2d23a75e05222ba2"
+  }
+}

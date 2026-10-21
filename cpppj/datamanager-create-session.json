@@ -1,0 +1,44 @@
+{
+  "start_commit": "58de1f48eeb1a6825c72488cd3b63004d8f1d2d0",
+  "host": "VM-W11-Codex",
+  "last_decompile_host": "VM-W11-CODEX",
+  "last_decompile_date": "2026-10-21",
+  "original_rows": 220,
+  "snapshot_bytes": 17380,
+  "build_exit_code": 0,
+  "tests_written_and_compiled": [
+    "DataManagerCreate_Native220",
+    "DataManagerCreate_EmptyNullAllocationAndRequiredEffects",
+    "MemStreamCopy_SelfAssignmentResetsBeforeReadingLength",
+    "CampaignTemplates_StateCreationParentPreservesSharedOrderAndTail"
+  ],
+  "cpp_tests_executed": false,
+  "game_executed": false,
+  "limitations": [
+    "열한 원본 본문을 직접 관측했다. CRT ASCII 비교/new/free/진단은 명시 경계이며 실제 CRT/힙/게임 실행은 아니다.",
+    "실제 State 생성 소비자만 전체 생성 부모에 연결했다. 복제 공통 몸체는 별도 컴파일 검사이며 파일 읽기/전체 기본 섹션 생성 부모/전송 직렬화 연결은 남는다.",
+    "실제 호스트는 완료한 같은 새 할당을 소유하지만 원본 힙 주소/미정 padding/외부 raw 노드 포인터 정체성 전체의 일치를 주장하지 않는다.",
+    "C++ 검사 실행과11미션 자연 완주는 미완료이며 기존 실행 이월 지시를 유지한다."
+  ],
+  "hashes": {
+    "cpppj/src/o/RawDataManagerResize.cpp": "d57f4a4bd1961b71ea888b54bc711b238c1808a500e0e385f98d625d6ad270f9",
+    "cpppj/src/o/RawDataManagerResize.h": "e5ed7ba3a4a8cbe9660f7f9aaa2dc47a75ba9de97f894a30ef3a8d3720d18bf5",
+    "cpppj/src/o/RawMemStream.cpp": "e0efb4dd7f4090a1a373bbb0a75428dc710146cea6b3cf9b2bc971f9e1176652",
+    "cpppj/src/o/RawMemStream.h": "9ef0787521cc6b8d9daf6f23563e11b55e96939a36d45f8698bcf78797049e7c",
+    "cpppj/src/client/CampaignTemplateStorage.cpp": "84d1c308513e7bb876d10b5ca95fc5be9b46e7f1ca77f5cc5b64e653b3d322f3",
+    "cpppj/src/client/CampaignTemplateStorage.h": "49656384a416c18c9bd8d9b7175b42bd15dfe649aee4562165e310fba79bc242",
+    "cpppj/src/client/RawCampaignSession.cpp": "c5c5db2a7858da5efb97049ac3a15ea615b40076ad6f25ae939992353e3cfd59",
+    "cpppj/src/o/RawPlayerTemplateState.cpp": "fa5941f6af8c83faaeef02914e5b7d76b0c2686cce42414cc0cd1576087bbe79",
+    "cpppj/src/o/CMakeLists.txt": "979af1f8e19ae8a435e40461c95f2738d487948702461dfc7e7bf8b9a0aa1196",
+    "cpppj/tests/CMakeLists.txt": "c3dd48309d23f7faa91121c435ff60936aa8f8674783c065fbd773ff76be31e3",
+    "cpppj/tests/DataManagerCreateTests.cpp": "f0f3756ef3a4c17bb6a7a7f632f22024ea5c0e5c1cc2ae0a45fe3f2549ec9c79",
+    "cpppj/datamanager-create-native.json": "56012abba65d794f05d1f62c598f58c90a8401bcaec55029160f4b6cbbba03d3",
+    "tools/cpp_datamanager_create_audit.py": "5f75fe55ec981b53966887debb8f1685d0d4c49815c71c8ae3818165e78a8572",
+    ".gitattributes": "8e955d5345a8489e649fea3d8691e86c7b31c3b53f5e10c63e6c5e41dd9938b6",
+    "extracted/cpp-datamanager-create-20261021-build2.log": "bab0d00ab174927a21a093c025abef67978d4fc77f697a426ae1c0f9c17aabc5",
+    "extracted/cpp-datamanager-create-20261021-build2-result.json": "a6dd523b013a21c669079f5af5cfe57cf80aafa0fa9948598cc66704a0775e1f",
+    "cpppj/build/lib/Release/netstorm.lib": "9e9ba919303abdcb3bb93de20131a6c8f86b656010bf06cc5970e6d1950cadf1",
+    "cpppj/build/bin/Release/NetstormCpp.exe": "54bdc0a65ff843ad5029a62cec5fe8ce77904782785496de49df2d933e6b2668",
+    "cpppj/build/bin/Release/netstorm_tests.exe": "65130ca08310e674cf7ea78e55d1aedad981144ab788840cef4822749123c5d4"
+  }
+}

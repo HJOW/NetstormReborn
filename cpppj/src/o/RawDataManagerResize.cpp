@@ -39,6 +39,19 @@ std::uint32_t ConstructDataManagerStream(std::uint32_t stream,std::optional<std:
     AllocateMemStream(node,static_cast<std::uint32_t>(std::max(size,1)),hooks.memory);
     if (name) Name(node,*name);else node[16]=0;Put(node,0x38,0);return stream;
 }
+// 원본 생성 부모는 새 this가 아니라 마지막 추가 효과 뒤의 manager.current를 반환한다.
+std::uint32_t CreateDataManagerStream(std::span<std::uint8_t> manager,std::string_view name,const DataManagerResizeHooks& hooks) {
+    const auto existing=FindDataManagerSection(manager,name,hooks.selection);if (existing) RemoveDataManagerStream(manager,existing,hooks.list);
+    if (!hooks.allocateStream) throw std::logic_error("DataManager 섹션 생성의 실제 노드 할당 미연결");const auto stream=hooks.allocateStream(60);
+    if (stream) ConstructDataManagerStream(stream,name,0x4000,hooks);AppendDataManagerStream(manager,stream,hooks.list);return Read(manager,8);
+}
+// 원문 노드는 생성 전의 같은 객체이며 그 data/end만 대상 생성이 끝난 뒤 다시 읽는다.
+std::uint32_t CloneDataManagerStream(std::span<std::uint8_t> manager,std::span<std::uint8_t> sourceManager,std::string_view name,const DataManagerResizeHooks& hooks) {
+    const auto original=FindDataManagerSection(sourceManager,name,hooks.selection);
+    if (!original) { if (!hooks.missingSource) throw std::logic_error("DataManager 복제의 원문 누락 진단 미연결");hooks.missingSource(); }
+    const auto source=Node(hooks,original);const auto stream=CreateDataManagerStream(manager,name,hooks);auto target=Node(hooks,stream);
+    if (Read(source,0)) CopyMemStream(target,source,hooks.memory);Put(target,4,0);return stream;
+}
 // 기존 대상의 반납 효과 뒤 원래 이름을 찾으므로 선행 current를 캐시하지 않는다.
 std::uint32_t RenameDataManagerStream(std::span<std::uint8_t> manager,std::string_view name,std::string_view previousName,const DataManagerResizeHooks& hooks) {
     const auto target=FindDataManagerSection(manager,name,hooks.selection);if (target) RemoveDataManagerStream(manager,target,hooks.list);
