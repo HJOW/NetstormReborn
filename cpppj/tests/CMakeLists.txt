@@ -1714,3 +1714,8 @@ set_source_files_properties(KnowledgeMenuTests.cpp PROPERTIES COMPILE_DEFINITION
 target_sources(netstorm_tests PRIVATE DataManagerLifetimeTests.cpp)
 set_source_files_properties(DataManagerLifetimeTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_DATAMANAGER_LIFETIME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/datamanager-lifetime-x86.tsv\"")
+
+# 현재 DataManager 검색/선택의 최초864입력과 실제 Player State 선택을 컴파일한다.
+target_sources(netstorm_tests PRIVATE DataManagerSelectionTests.cpp)
+set_source_files_properties(DataManagerSelectionTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_DATAMANAGER_SELECTION_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/datamanager-selection-x86.tsv\"")

@@ -1,5 +1,15 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-21 단위263 완료: DataManager 섹션 검색·선택과 실제 미션 State 조회
+
+- [x] 사용자 `/goal`로 지정11미션 구현 목표를 이어간다. `AGENTS.md`와 양 인수인계의 최신 작업·현행 목표·실행 이월 지시를 확인했다. 시작 HEAD는 `e569dc85`이며 현재/마지막 정밀 디컴파일 PC는 **VM-W11-CODEX / 2026-10-21**로 같다. 새 디컴파일·원본/CD·AGENTS·dotnetpj 변경 및 게임/창 실행은 없다.
+- [x] 제품 수정 전 원본 검색0044ce60/선택0044ceb0 전체 본문을 **864고유 입력·864정상 반환·28,578명령**으로 관측했다. 진입 수864/432, 전체256BYTE·비교/진단 직전 현재 상태·각 경계 뒤 current 재조회·반환EAX/ABI/보존 레지스터/x87/쓰기 범위를 확인했다. CRT ASCII 비교와 진단만 명시 경계이며 실제 CRT/OS/게임 실행이 아니다. 최초 도구/fixture/JSON은 `extracted/datamanager-selection-20261021-first-capture/`에 동결했다.
+- [x] `RawDataManagerSelection`의 첫 일치/누락/쓰기허용/빈 읽기 진단/pos0을 복원했다. 실제 `RawCampaignSession`의 Player Stategetter를 같은 `CampaignTemplateStorage` manager/current/노드·State 커서에 연결했다. 빌린 헤더도 같은 선택/바이트를 쓴다. 전체 DataManager 생성/파일/저장·빈 State 생성·MemStream 구현은 아니다.
+- [x] 새 검사3개(원문864행·물리/이름 계약·실제 Player Get/빌림/짧은 State 확장/재조회/반납)를 작성·컴파일했다. 최종 Release **종료0·경고0·오류0**, 로그 `extracted/cpp-datamanager-selection-20261021-build2.log`다. **C++검사/CTest/게임/전체 회귀는 실행 이월 지시대로 실행하지 않았다.** 새 정적 감사/최초864행/기존 DataManager 소멸/Template v2 원문 보존 검사는 종료0이다. 과거 보고서 소스/빌드 핀은 변경하지 않았으므로 과거 결과를 이번 소스 검증으로 세지 않는다.
+- [x] REA Ghidra는 H: 속성 Win32 87로 실패하여 같은 PC 정밀 산출물/독립 PE를 사용했고 설정은 바꾸지 않았다. 세션은 닫았다. 첫 감사의 로그 UTF-16 읽기 실패는 원시 로그 보존 후 UTF-8 변환으로 해결했다. 상세 [작업 기록](docs/exe/cpp-datamanager-selection-20261021.md), `cpppj/datamanager-selection-native.json`·`datamanager-selection-session.json`, `tools/decomp_datamanager_selection.py --verify`·`tools/cpp_datamanager_selection_audit.py --verify`다.
+- [x] 인수인계 후 **20261021-27 CP**로 로컬 커밋하며 push하지 않는다. 최초 커밋의 native JSON 스테이징 CRLF 차이는 `.gitattributes`의 원문 `-text` 보존/새 소스 LF 고정으로 보정하고 같은 단위 커밋을 수정한다. 최초 원문/해시는 그대로이며 근거에 포함한 스테이징 전체 소스/자료 SHA를 재확인한다. 마지막 정밀 디컴파일 PC는 계속 **VM-W11-CODEX / 2026-10-21**이다. 이번 단위는 섹션 선택 연결의 완료이며 전체11미션 플레이/동일성 완료가 아니다.
+- [ ] **다음:** DataManager 생성·섹션 추가/교체·MemStream/파일 저장·오류 처리와 다른 실제 선택 소비자 또는 전체 State7/전투 정리004b2df0를 이어간다. 빈 State의 미정 스택 바이트를 임의0으로 채우지 않는다. Fort 선택/Guide 공장·가상 소멸도 남는다. 전체11미션 자연 완주·전략AI·지형/포획/희생/대피·외관/음향/동작 동일성과 통합 실행 검증은 미완료이며 목표는 active다.
+
 ## 2026-10-21 단위262 완료: DataManager·섹션 MemStream 소멸과 실제 버퍼 반납
 
 - [x] 사용자 요청으로 cpppj 구현을 재개했다. `AGENTS.md`와 양 인수인계를 확인했고 시작 HEAD는 `eac5cfd2`다. 현재/마지막 정밀 디컴파일 PC는 **VM-W11-CODEX / 2026-10-21**로 같다. 새 디컴파일·원본/CD·AGENTS·dotnetpj 변경과 게임/창 실행은 없다.

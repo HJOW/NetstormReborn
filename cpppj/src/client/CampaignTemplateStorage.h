@@ -21,6 +21,8 @@ public:
     void Clear(std::uint32_t slot); // 원본 단일 반납이다. 빈 포인터의 부가 필드도 비운다.
     o::FortTemplate& Template(std::uint32_t slot); // 현재 헤더의 manager를 매번 읽는다.
     o::PlayerTemplateStateStream& State(std::uint32_t slot); // 같은 manager의 현재 State bytes/pos/end다.
+    o::PlayerTemplateStateStream& SelectState(std::uint32_t slot); // 원본 검색/쓰기허용 선택으로 같은 manager.current/State.pos를 변경한다.
+    std::string_view CurrentSection(std::uint32_t slot); // 같은 manager가 마지막으로 선택한 실제 섹션 이름을 읽는다.
     o::FortTerritoryStream& Territory(std::uint32_t slot); // 같은 manager의 실제 Territory cursor다.
     const std::string& Name(std::uint32_t slot); // 같은 manager의 현재 파일 이름이다.
     std::span<std::uint8_t> GrowState(std::uint32_t slot,std::uint32_t size); // 원문을 보존한 채 같은 Fort의 실제 State 섹션에 새 버퍼를 만든다.

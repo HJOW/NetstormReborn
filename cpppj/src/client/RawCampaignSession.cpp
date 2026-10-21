@@ -653,7 +653,7 @@ struct RawCampaignSession::Impl {
         playerHooks.reserveRegular=[] { return true; };
         playerHooks.addRegular=[this](Sid sid,std::uint32_t event,float payload) { SessionCheck(core.processes.AddRegular(sid,event,payload)!=nullptr); };
         player=std::make_unique<RawPlayerWorld>(core.pool,core.postPop,players,playerState,std::move(playerHooks));core.postPop.SetPlayerPostPop(player.get());
-        templateState=std::make_unique<RawPlayerTemplateState>(core.pool.Edition(),headers,[this](auto slot)->PlayerTemplateStateStream& { return templateStorage->State(slot); },[this](auto slot)->const std::string& { return templateStorage->Name(slot); },
+        templateState=std::make_unique<RawPlayerTemplateState>(core.pool.Edition(),headers,[this](auto slot)->PlayerTemplateStateStream& { return templateStorage->SelectState(slot); },[this](auto slot)->const std::string& { return templateStorage->Name(slot); },
             objectState.loadingDepth,objectState.mission,SessionMissing<void,PlayerTemplateStateAssertion>(),[this](std::uint32_t depth) { world.SetLoadingDepth(depth); },
             [this](auto owner,auto size) { return templateStorage->GrowState(owner,size); },[this](auto owner) { templateStorage->CommitStateGrowth(owner); });
         auto playerRegularHooks=services.player;playerRegularHooks.assertion=SessionMissing<void,PlayerRegularAssertion>();

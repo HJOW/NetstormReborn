@@ -1,0 +1,22 @@
+{
+  "host": "VM-W11-Codex",
+  "rows": 864,
+  "normal_returns": 864,
+  "instructions": 28578,
+  "entries": {
+    "0x44ce60": 864,
+    "0x44ceb0": 432
+  },
+  "limitations": [
+    "CRT stricmp는 ASCII 섹션 이름 비교의 명시 경계다.",
+    "진단은 기록/명시 current 수리 입력이며 실제 UI/CRT/OS/게임 실행이 아니다.",
+    "누락 current가 진단 뒤에도 0인 잘못된 메모리 경로는 정상 반환 관측에 포함하지 않는다."
+  ],
+  "hashes": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_datamanager_selection.py": "b59b642f3a070e8d9816da3eeaee01ba125ef66be314718f6096729dcaf01430",
+    "cpppj/tests/fixtures/datamanager-selection-x86.tsv": "6216c81a623bfb9c40feeab3916264d006f3c7661d85aa15de05beeae63755b9"
+  }
+}

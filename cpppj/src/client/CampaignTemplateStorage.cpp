@@ -1,6 +1,7 @@
 // 원본 명시 정리 시점까지 이전 이미지의 소유권을 Client에 유지한다.
 #include "client/CampaignTemplateStorage.h"
 #include "o/RawDataManagerLifetime.h"
+#include "o/RawDataManagerSelection.h"
 #include <algorithm>
 #include <stdexcept>
 namespace netstorm::client {
@@ -31,6 +32,22 @@ struct CampaignTemplateStorage::Image {
     std::vector<std::uint8_t> retiredState; // 확장 중 Get의 원문 복사가 끝날 때까지만 이전 할당을 보유한다.
     std::array<std::uint8_t,12> manager{}; // 소멸이 사용하는 vptr/head/current의 실제 현재 저장소다.
     std::map<std::uint32_t,std::unique_ptr<Stream>> streams; // 노드 반납 때 실제 객체 할당을 해제한다.
+    // 실제 원시State와 같은 커서를 노드에 반영한 뒤 원본 선택을 실행한다.
+    void SelectState() {
+        SyncStreams();const auto handle=static_cast<std::uint32_t>(StateSection()+1);const auto found=streams.find(handle);
+        if (found!=streams.end()) { Put(found->second->bytes,4,state.position);Put(found->second->bytes,8,state.end); }
+        o::DataManagerSelectionHooks hooks;hooks.stream=[this](auto node) { return std::span(streams.at(node)->bytes); }; // 선택은 같은 실제 목록 노드를 빌린다.
+        hooks.assertion=[](auto) { throw std::logic_error("Template 현재 State 섹션 선택 진단: 생성/파일 연결 미복원"); }; // 누락 섹션을 다른 섹션으로 대신하지 않는다.
+        const auto selected=o::SelectDataManagerSection(manager,"State",1,hooks);
+        state.position=Read(std::span(streams.at(selected)->bytes).subspan(4));
+    }
+    // 선택된 노드는 소멸과 동일한 핸들/이름 저장소를 사용한다.
+    std::string_view CurrentSection() const {
+        const auto handle=Read(std::span(manager).subspan(8));if (!handle) return {};
+        const auto& bytes=streams.at(handle)->bytes;const auto start=bytes.begin()+16,end=std::find(start,start+40,std::uint8_t{});
+        if (end==start+40) throw std::logic_error("Template 현재 섹션 이름 NUL 누락");
+        return {reinterpret_cast<const char*>(bytes.data()+16),static_cast<std::size_t>(end-start)};
+    }
     // 공개된 Fort/State의 현재 버퍼를 같은 목록에 연결하며 파일 읽기 구현 자체를 대신하지 않는다.
     void SyncStreams() {
         if (fort.sections.size()>o::FortTemplate::kSectionCount) throw std::logic_error("Template 실제 섹션35칸 범위");
@@ -86,6 +103,10 @@ void CampaignTemplateStorage::Clear(std::uint32_t slot) { o::ReleaseTemplateHead
 o::FortTemplate& CampaignTemplateStorage::Template(std::uint32_t slot) { return Current(slot).fort; }
 // 한 manager를 빌린 헤더끼리도 같은 cursor 객체를 반환한다.
 o::PlayerTemplateStateStream& CampaignTemplateStorage::State(std::uint32_t slot) { return Current(slot).state; }
+// 실제 Player Stategetter가 같은 목록/current를 선택한 뒤 같은 cursor를 돌려받는다.
+o::PlayerTemplateStateStream& CampaignTemplateStorage::SelectState(std::uint32_t slot) { auto& image=Current(slot);image.SelectState();return image.state; }
+// 빌린 헤더도 같은 manager의 현재 섹션을 확인한다.
+std::string_view CampaignTemplateStorage::CurrentSection(std::uint32_t slot) { return Current(slot).CurrentSection(); }
 // 지형 cursor도 같은 manager의 원문을 빌린다.
 o::FortTerritoryStream& CampaignTemplateStorage::Territory(std::uint32_t slot) { return Current(slot).territory; }
 // 원문 선택 때 쓴 같은 파일 이름을 반환한다.

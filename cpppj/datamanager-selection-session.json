@@ -1,0 +1,37 @@
+{
+  "start_commit": "e569dc851471349cc63d8ac3b694e92cfae4f4fd",
+  "host": "VM-W11-Codex",
+  "last_decompile_host": "VM-W11-CODEX",
+  "last_decompile_date": "2026-10-21",
+  "native_rows": 864,
+  "build_exit_code": 0,
+  "cpp_tests_executed": false,
+  "game_executed": false,
+  "tests_written_and_compiled": [
+    "DataManagerSelection_Native864",
+    "DataManagerSelection_PhysicalContractsAndAsciiNames",
+    "CampaignTemplates_PlayerSelectsCurrentSectionAndSharedCursor"
+  ],
+  "limitations": [
+    "원본 두 본문은 CRT 비교/진단만 명시 경계다. 실제 CRT/게임/OS 실행이 아니다.",
+    "Stategetter의 실제 검색/선택 연결이다. 전체 DataManager 생성/파일/저장/오류·빈 State 초기화/전체 MemStream은 미완료다.",
+    "기존 현재 소스 핀은 갱신하지 않았다. 과거 빌드/검사 결과는 이번 소스의 검증이 아니다.",
+    "지정11미션 자연 완주와 외관/음향/동작 동일성은 미완료다."
+  ],
+  "hashes": {
+    "cpppj/src/o/RawDataManagerSelection.h": "d13ae5cfde38101b80637352f9cf8cd18b719d6056a1377aab18d80f1fdb4a98",
+    "cpppj/src/o/RawDataManagerSelection.cpp": "c040a2b2e1531addc57adffa20e2e0b559fea2c48a5d6376687047e5da918e69",
+    "cpppj/src/client/CampaignTemplateStorage.h": "20f3988f53148f9cd6af7308c41b90bac6465a130bc5bfc13a22ffb297faae70",
+    "cpppj/src/client/CampaignTemplateStorage.cpp": "1dad1a677dbfe15d8b523c88fb38a78a3a30b3d140cbc8a2685245e80335ec5c",
+    "cpppj/src/client/RawCampaignSession.cpp": "9b67a8de3b24e5b87c9f04daf7bfdc89d07476c052297ccc6c5fe1731773ba7c",
+    "cpppj/src/o/CMakeLists.txt": "b5df44462bb6417fe07049624f61196937f553bae18ff814e8f77a54f12c20d6",
+    "cpppj/tests/CMakeLists.txt": "fed633e83766c0d5c6e78a5b688076cee2b15e748d1f7ddc42d2b12773407cb0",
+    "cpppj/tests/DataManagerSelectionTests.cpp": "2852f89acfb246385e16e26ec505cf8387d7edc372bfce6a8c8bbc79f05014a6",
+    "cpppj/datamanager-selection-native.json": "3156e23059595979d544fa043835b6666d7531bd7a40823778817ada343050ad",
+    "tools/cpp_datamanager_selection_audit.py": "9c9e54a7f9b23ac0754d936664a76b004de306e3fcbf249e5b83e1f44c3804d9",
+    "extracted/cpp-datamanager-selection-20261021-build2.log": "7cc96ace3dd5973cd003b89c72f666c8e83f61f862d5ecd5784fc0fe987c371b",
+    "cpppj/build/lib/Release/netstorm.lib": "78c605e1045c7f3742da333e3596a415b04d7a6361c2c92b3329413adb8f6eb2",
+    "cpppj/build/bin/Release/NetstormCpp.exe": "e343471c81461cfe67e2300e451cef69ceb1cbed7a9d3bc4b3ea560645593269",
+    "cpppj/build/bin/Release/netstorm_tests.exe": "4228ece6e2fe4582d6bfaeb8f3e7393f09f74405894a41d70ef459e1c38d4117"
+  }
+}

@@ -1539,3 +1539,10 @@ cpppj/tests/fixtures/datamanager-lifetime-x86.tsv text eol=lf
 cpppj/datamanager-lifetime-*.json text eol=lf
 tools/decomp_datamanager_lifetime.py text eol=lf
 tools/cpp_datamanager_lifetime_audit.py text eol=lf
+# 섹션 선택의 새 소스는 LF로 고정하고 최초 JSON은 관측 당시 바이트 그대로 보존한다.
+cpppj/src/o/RawDataManagerSelection.* text eol=lf
+cpppj/tests/DataManagerSelectionTests.cpp text eol=lf
+cpppj/datamanager-selection-native.json -text whitespace=cr-at-eol
+cpppj/datamanager-selection-session.json text eol=lf
+tools/cpp_datamanager_selection_audit.py text eol=lf
+docs/exe/cpp-datamanager-selection-20261021.md text eol=lf

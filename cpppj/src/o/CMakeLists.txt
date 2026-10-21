@@ -355,3 +355,6 @@ target_sources(netstorm PRIVATE RawDudeBehavior.cpp RawDudeBehavior.h)
 
 # Dude의 실제 정기/네 하위 처리와30칸 초기 목록을 같은 게임 상태에 연결한다.
 target_sources(netstorm PRIVATE RawDudeRegular.cpp RawDudeRegular.h)
+
+# 현재 DataManager 섹션 검색/선택을 같은 Template 저장소에 연결한다.
+target_sources(netstorm PRIVATE RawDataManagerSelection.cpp RawDataManagerSelection.h)
