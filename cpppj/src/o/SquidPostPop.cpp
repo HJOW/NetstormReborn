@@ -240,7 +240,7 @@ void SquidPostPop::ValidateBase(Sid sid,std::uint32_t flags,const RawGraphPop* p
     if (!(flags&1) || (bytes[patch ? 40 : 35]&kAbstractBuried)) return;
     const auto owner=bytes[patch ? 34 : 32];
     if (owner>kPlayerCount) throw std::out_of_range("postPop 소유자 범위 오류");
-    if (owner && state_.aiAttached[owner]) throw std::logic_error("postPop AI 생성 통지 미복원");
+    if (!aiNotice_ && owner && state_.aiAttached[owner]) throw std::logic_error("postPop AI 생성 통지 미복원");
     if (state_.pendingPlacement) throw std::logic_error("postPop 배치 선택 해제 미복원");
     static_cast<void>(TotalCost(bytes[10]));
     if (type.flags1&kProvider) static_cast<void>(state_.providers.Items());
@@ -355,14 +355,18 @@ void SquidPostPop::PostPopBase(Sid sid,std::uint32_t flags) {
             if (owner) Append(state_.ownerFactories[owner],sid);
             Append(state_.factories,sid); ++state_.productionDirty;
         }
-        // AI는 Validate에서 없는 연결만 허용했다. 소유자 0도 로컬 번호 0과 비교한다.
-        if (owner==state_.localOwner) { ++state_.localCounts[number]; ++state_.localSecondaryCounts[number]; }
-        ++state_.globalCounts[number];
+        if (aiNotice_) aiNotice_(pool_.Slot(sid)[34],sid,true); // 원본의 생산 목록 뒤·통계 앞에 현재 owner로004166e0을 호출한다.
+        const auto current=pool_.Slot(sid);const auto currentType=current[10];if (currentType>=types_.size()) throw std::out_of_range("AI 생성 통지 뒤 현재 TYPE 범위");
+        // 통지의 실제 하위가 바꾼 현재 owner/type을 다시 읽는다. 소유자0도 로컬 번호0과 비교한다.
+        if (current[patch ? 34 : 32]==state_.localOwner) { ++state_.localCounts[currentType];++state_.localSecondaryCounts[currentType]; }
+        ++state_.globalCounts[currentType];
     }
     --state_.depth;
 }
 // 서로 다른 SID 풀의 연결을 막는 읽기 전용 소유자다.
 const SidPool& SquidPostPop::Pool() const { return pool_; }
+// 실제 PATCH 통지와 해제만 허용한다. CD의 기존 가상 표/값형 입력은 별도로 유지한다.
+void SquidPostPop::BindPatchAiNotice(std::function<void(std::uint32_t,Sid,bool)> notice) { if (pool_.Edition()!=OriginalEdition::Patch1078) throw std::invalid_argument("PATCH AI 생성 통지 판본 불일치");aiNotice_=std::move(notice); }
 // 동일 SID라도 별도 해시/spot을 읽는 구성을 막는다.
 void SquidPostPop::ValidateSpace(const SquidHash& hash,std::span<const std::uint8_t> spots) const {
     if (graph_) graph_->ValidateSpace(hash,spots);

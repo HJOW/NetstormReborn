@@ -95,6 +95,7 @@
 #include "o/RawAiBrainInitialUpdate.h"
 #include "o/RawAiDamage.h"
 #include "o/RawAiWallet.h"
+#include "o/RawAiObjectNotice.h"
 #include "o/RawPriestLookup.h"
 #include "o/RawRunePostPop.h"
 #include "o/RawDaisRegular.h"
@@ -267,6 +268,7 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawAiBrainInitialUpdate> aiInitial; // 같은 Player 기술 부모/contained 분류를 실제 본체에 기록한다.
     std::unique_ptr<RawAiCreate> aiCreate; // 원본 Color→기존brain→NoTemple→생성/부착/초기갱신 순서다.
     std::unique_ptr<RawAiWallet> aiWallet; // 같은 Player+b0/실제 본체+2d8을 보상·차감·너겟 가산에 공유한다.
+    std::unique_ptr<RawAiObjectNotice> aiObjects; // 같은 Player/실제17목록을 생성·삭제·피해/후속 전략이 공유한다.
     std::array<std::uint32_t,4> aiWorkshops{86,87,88,85}; // PATCH004709d0의 theme0/1/2/3이 읽는005411b0/b4/b8/ac의 실제 기본 타입이다.
     std::uint32_t aiExcludedType{133},aiMissionFallback{}; // 실제 sunWalker 분류 제외 번호와 현재 getter를 사용할 때 읽지 않는 값형 호환 저장소다.
     bool loaded{}; // 같은 실제 저장 부모와 이동 설치가 정상 종료했을 때만 AI 생성 요청을 허용한다.
@@ -1725,6 +1727,21 @@ struct RawCampaignSession::Impl {
             [this] { return core.ownerMode.challenge; }, // 원본00594fc8은 참여/동맹이 조회하는 같은 현재 모드다.
             [this] { return services.missionOutcome.demo()!=0; }}); //00463b50은 missionPost가 아니라 현재 미션+68의 demo를 읽는다.
         hp.BindPatchWallet([this](auto owner,auto amount) { aiWallet->Credit(owner,amount); }); // 새 brain이나 복제 지갑을 만들지 않고 현재 Player 포인터를 매번 조회한다.
+        AiObjectNoticeHooks objects;objects.carrierTargets=[this](Sid sid) {
+            const auto kind=priests->MovementProcessType(core.pool.Slot(sid)[10]);RawContainedLookup lookup(core.pool,[this](Sid target,std::uint32_t flags) { world.Destroy(target,flags); });const auto form=lookup.Find(sid,kind);if (!form.value) return std::array<std::uint32_t,2>{};
+            const auto* path=dynamic_cast<RawPathProcess*>(core.processes.FromForm(form));if (!path) throw std::logic_error("AI 삭제 통지의 현재 이동 프로세스 미연결");return std::array<std::uint32_t,2>{path->Runtime().TargetA(),path->Runtime().TargetB()};
+        }; //00426150의 같은 process form/경로 끝 두 DWORD를 읽는다.
+        objects.distanceSquared=[this](Sid first,std::uint32_t second) {
+            if (second>=core.pool.Capacity() || second>65535) throw std::out_of_range("AI 생성 통지 거리 SID 범위");const auto target=gunTarget->Center(Sid{static_cast<std::uint16_t>(second)}),source=gunTarget->Center(first);const double dx=static_cast<double>(source[0])-target[0],dy=static_cast<double>(source[1])-target[1];return dx*dx+dy*dy;
+        }; //00411120의 두 발 중심을 목표→원본 순서로 읽는다.
+        objects.log=[this](std::uint32_t token,const AiObjectLog& value) {
+            const auto raw=aiMemory.Bytes(token);if (!Read(raw,0xb00)) return;if (!services.player.log) throw std::logic_error("AI 생성/삭제 통지 로그 장치 미연결");std::string text;
+            if (value.kind==AiObjectLogKind::Built) { if (value.type>=core.types.size()) throw std::out_of_range("AI 건설 로그 현재 TYPE 범위");text="Built "+core.types[value.type].name+" at ("+std::to_string(value.x)+","+std::to_string(value.y)+")"; }
+            else text=(value.kind==AiObjectLogKind::MadeGeyserIneligible ? "Made Geyser " : "Cannot make Geyser ")+std::to_string(value.object)+" Ineligible.\n";
+            services.player.log(29,"AI"+std::to_string(std::bit_cast<std::int32_t>(Read(raw,0x260)))+": "+text+"\n");
+        }; // 기존 피해 로그와 같은 원본 종류29/현재 Player 장치를 사용한다.
+        aiObjects=std::make_unique<RawAiObjectNotice>(aiMemory,core.pool,core.types,players,core.processState.now,researchOutpost,[this] { return core.ownerMode.challenge; },std::move(objects));
+        core.postPop.BindPatchAiNotice([this](auto owner,auto sid,auto added) { aiObjects->Notice(owner,sid,added); });world.CommonDeletion().BindPatchAiNotice([this](auto owner,auto sid,auto added) { aiObjects->Notice(owner,sid,added); }); // 두 원본 통지 지점이 같은 현재 본체에 도달한다.
     }
     // 첫 실제 객체 이전에 같은 공통 삭제/내용물/Player 통지/기술 모듈을 한 번 연결한다.
     void InstallContents(const SquidDestroyHooks& deletion) {
@@ -2225,6 +2242,7 @@ struct RawCampaignSession::Impl {
         try { world.ClearProcesses(); }
         catch (const std::exception& error) { std::fprintf(stderr,"실제 Session Kernel 정리 실패: %s\n",error.what()); }
         catch (...) { std::fprintf(stderr,"실제 Session Kernel 정리 실패: 알 수 없는 예외\n"); }
+        core.postPop.BindPatchAiNotice({});world.CommonDeletion().BindPatchAiNotice({}); // AI 본체/통지 처리기를 해제하기 전에 외부 공통 몸체의 참조를 분리한다.
         core.postPop.SetDudePostPop(nullptr); // 생성/최초 Pop 모듈보다 먼저 파생 분배를 반납한다.
         core.postPop.SetCarrierStealPostPop(nullptr); // 장기 크랩 몸체보다 먼저 가상 분배를 반납한다.
         core.postPop.SetPlayerPostPop(nullptr);

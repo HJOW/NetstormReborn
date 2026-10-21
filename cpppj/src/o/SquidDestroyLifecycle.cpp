@@ -89,7 +89,7 @@ void SquidDestroyLifecycle::ValidatePre(Sid sid,std::uint32_t flags) const {
     if (owner>kPlayerCount) throw std::out_of_range("삭제 훅 소유자 범위 오류");
     if (type.flags2&kFactoryMask) { if (owner) static_cast<void>(bookkeeping_.ownerFactories[owner].Items()); }
     if (!Ordinary(sid)) return;
-    if (owner && bookkeeping_.aiAttached[owner]) throw std::logic_error("삭제 훅 AI 통지 미복원");
+    if (!aiNotice_ && owner && bookkeeping_.aiAttached[owner]) throw std::logic_error("삭제 훅 AI 통지 미복원");
     // 보상 객체가 있으면 계산 입력 오류를 쓰기 전에 거부하고, 없으면 외부 보상 콜백이 필요하다.
     if (!(flags&kNoRefund)) { if (reward_) static_cast<void>(reward_->Plan(sid,(flags>>16)&15,false)); else if (!hooks_.emit) throw std::invalid_argument("삭제 훅 보상 콜백 누락"); }
     if (LostNotice(sid,flags) && (pool_.Edition()==OriginalEdition::Cd1072 || raw[kType]!=state_.silentType) && !hooks_.emit)
@@ -134,7 +134,7 @@ bool SquidDestroyLifecycle::NeedsPostGraph(Sid sid,std::uint32_t flags) const {
     return bookkeeping_.graphsEnabled && !(Object(sid)[pool_.Edition()==OriginalEdition::Patch1078 ? 40 : 35]&8) &&
         !(flags&kDestroyGraph) && (Type(sid).flags2&(state_.regionMask|8));
 }
-// 원본 순서: 선택→owner 작업장→보상→현재 타입 수→소리/좌표→provider→AI(null)→global 작업장→깊이 감소.
+// 원본 순서: 선택→owner 작업장→보상→현재 타입 수→소리/좌표→provider→현재 AI 통지→global 작업장→깊이 감소.
 void SquidDestroyLifecycle::PreDestroy(Sid sid,std::uint32_t flags) {
     ValidatePre(sid,flags);
     if (state_.selected==sid) {
@@ -162,7 +162,7 @@ void SquidDestroyLifecycle::PreDestroy(Sid sid,std::uint32_t flags) {
                 const auto raw=Object(sid);state_.lostX=Coordinate(raw,kX);state_.lostY=Coordinate(raw,kY);
             }
             if (Type(sid).flags1&kProvider) { Remove(bookkeeping_.providers,sid);++bookkeeping_.productionDirty; }
-            // AI 포인터가 있는 경우는 ValidatePre에서 거부했다. null 통지는 원본처럼 효과가 없다.
+            if (aiNotice_) aiNotice_(Owner(sid),sid,false); // 현재 owner의 실제 AI 통지는 공급 목록 뒤·전체 작업장 목록 앞이다.
             if (Type(sid).flags2&kFactoryMask) { Remove(bookkeeping_.factories,sid);++bookkeeping_.productionDirty; }
         }
     }
@@ -190,4 +190,6 @@ SquidDestroyHooks SquidDestroyLifecycle::Hooks() {
         },[this] { return state_.selected; }
     };
 }
+// 미연결/CD의 기존 검사 경로를 유지하며 PATCH에서만 현재 통지를 연결/분리한다.
+void SquidDestroyLifecycle::BindPatchAiNotice(std::function<void(std::uint32_t,Sid,bool)> notice) { if (pool_.Edition()!=OriginalEdition::Patch1078) throw std::invalid_argument("PATCH AI 삭제 통지 판본 불일치");aiNotice_=std::move(notice); }
 }

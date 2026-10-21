@@ -455,6 +455,20 @@ TEST_CASE(CampaignSession_RefundCreditsCurrentActualAiWallet) {
     core.ownerMode.challenge=true;session.Construction().Refund(type,2);CHECK(Get(session.AiMemory().Bytes(token),0x2d8)==777U+static_cast<std::uint32_t>(cost) && demoReads==1 && moneyNotices==2 && refreshes==2);core.ownerMode.challenge=false; // 같은00594fc8 비활성 조건은 SP 지급 뒤 지갑 단계만 건너뛴다.
     session.RemoveAi(2);session.Construction().Refund(type,2);CHECK(!session.Participation().Brain(2) && demoReads==1 && moneyNotices==3 && refreshes==3);
 }
+// 실제 새 자산의 Pop/삭제가 같은 brain 목록을 왕복하며 값형 부착 표 없이 통지한다. 작성·컴파일만 한다.
+TEST_CASE(CampaignSession_ObjectNoticesUseActualPopAndDeletion) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();
+    services.ai.allocationBytes=[](auto bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0x71}); };services.ai.participation.clearChat=[](auto) {};services.ai.participation.addChat=[](auto,auto,auto) {};services.ai.localTransport=[] { return true; };services.missionOutcome.demo=[] { return 0U; };
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));session.Load();auto core=session.Core();const auto point=EmptySessionSupport(core);
+    CHECK(session.ConfirmSupport(static_cast<float>(point.x),static_cast<float>(point.y)));const auto packet=session.Construction().LastPacket();CHECK(packet.size()==45);if (packet.size()!=45) return;float right=-10000,bottom=-10000; // 실제 생성된9칸의 공통 기준점만 읽는다.
+    // 받침 확정 결과의 실제 좌표를 사용하며 기대 목록을 결과에서 만들지 않는다.
+    for (std::size_t index=0;index<9;++index) { const Sid part{static_cast<std::uint16_t>(Get(packet,27+index*2,2))};const auto raw=core.pool.Slot(part);right=std::max(right,std::bit_cast<float>(Get(raw,14)));bottom=std::max(bottom,std::bit_cast<float>(Get(raw,18))); }
+    session.World().SetSupportOwner(right,bottom,2);const auto token=session.CreateAi(2,SessionAiSettings("Notice AI","windBattery"));const auto raw=session.AiMemory().Bytes(token);CHECK(!Get(raw,0x6d4+75*4) && !Get(raw,0x2fc) && !core.bookkeeping.aiAttached[2]);
+    const auto source=session.World().Create(75,0);core.owner.Set(source,2);session.World().Pop(source,right,bottom,1);
+    CHECK(Get(raw,0x6d4+75*4)==1 && Get(raw,0x2fc)==1 && Get(session.AiMemory().Bytes(Get(raw,0x2f4)),0)==source.value && !core.bookkeeping.aiAttached[2]);
+    CHECK(session.World().Destroy(source,0x200000));CHECK(!Get(raw,0x6d4+75*4) && !Get(raw,0x2fc) && !Get(raw,0x2f0) && !core.bookkeeping.aiAttached[2]);CHECK(!core.destroy.PreDepth() && !core.destroy.PostDepth() && !core.bookkeeping.depth);
+    session.RemoveAi(2);CHECK(!session.Participation().Brain(2) && !session.AiMemory().Contains(token));
+}
 // 언어/Chat/할당 누락을 생존 표식 성공으로 바꾸지 않고 선택 위치의 부분 효과와 실제 해제를 보존한다.
 TEST_CASE(CampaignSession_AiMissingServicesKeepRealFailure) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;

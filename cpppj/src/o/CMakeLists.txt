@@ -371,3 +371,5 @@ target_sources(netstorm PRIVATE RawDataManagerImage.cpp RawDataManagerImage.h)
 target_sources(netstorm PRIVATE RawTemplateLoad.cpp RawTemplateLoad.h)
 # 보상/차감의 실제 AI 지갑 가산을 같은 Player/본체에 연결한다.
 target_sources(netstorm PRIVATE RawAiWallet.cpp RawAiWallet.h)
+# 생성/삭제의 실제 AI 타입 수·목록·타이머를 같은 본체에 연결한다.
+target_sources(netstorm PRIVATE RawAiObjectNotice.cpp RawAiObjectNotice.h)

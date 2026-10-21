@@ -48,6 +48,7 @@ public:
     void PostDestroy(Sid sid,std::uint32_t flags);
     // 공통 destroy의 실제 가상 훅으로 연결한다. 파생 다리 훅은 BasePre/BasePost에서 이 몸체를 호출한다.
     SquidDestroyHooks Hooks();
+    void BindPatchAiNotice(std::function<void(std::uint32_t,Sid,bool)> notice); //PATCH004166e0의 같은 현재 Player/brain 삭제 통지다. 빈 함수는 수명 종료 때 분리한다.
 private:
     // 매 효과 사이에 현재 raw 타입/상태를 다시 읽는다. 호스트에서 원본 vtable을 호출하지 않는다.
     std::span<const std::uint8_t> Object(Sid sid) const;
@@ -77,5 +78,6 @@ private:
     SquidDeletionHooks hooks_;
     RawGraph* graph_{}; // 풀/타입/공간을 생성 시 확인하며 연결 객체는 더 오래 살아야 한다.
     SquidReward* reward_{}; // 있으면 보상 사건을 외부로 내보내지 않고 실제 SP/지갑/샘 풀 계산을 수행한다. 풀과 장부가 같아야 한다.
+    std::function<void(std::uint32_t,Sid,bool)> aiNotice_; // 공급 목록 제거 뒤·전체 작업장 제거 앞의 실제 삭제 통지다.
 };
 }
