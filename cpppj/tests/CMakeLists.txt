@@ -61,6 +61,7 @@ add_executable(netstorm_tests
     AiCollectorsTests.cpp
     AiFactoryProductionTests.cpp
     FactoryUpgradeCommandTests.cpp
+    FactoryUpgradeTests.cpp
     MissionControlTests.cpp
     MissionGuideInputTests.cpp
     ObjectCommandTests.cpp

@@ -40,6 +40,9 @@ struct AssetRegularHooks {
     std::function<std::int32_t(Sid,std::uint32_t,std::int32_t,std::uint32_t)> hitPoints; // 실제 가상 +98 피해/HP 처리다.
     std::function<Sid(Sid,std::uint32_t)> findAttached; // constructionProcessType의 현재 부착 프로세스를 조회한다.
     std::function<void(Sid,float)> startConstruction; // 건설 프로세스가 없는 abstract 객체의 실제 RawConstructionProcess::Start(parent,0)다.
+    std::function<void(Sid,float)> beginFactoryUpgrade; //PATCH event3/count0의 실제 client 그림·건설·종속쌍이다.
+    std::function<float(Sid)> finishFactoryUpgrade; //PATCH event3/count양수의 실제 완료·현재AI 통지다.
+    std::function<void(Sid,std::int32_t,std::uint32_t)> factoryFlare; //PATCH event5의 상위 레벨 실제 플레어다.
 };
 // +5c 가상 표의 실제 주소로 몸체를 선택하고 공통 Damageable의 event 분배까지 복원한다.
 class RawAssetRegular {
@@ -60,7 +63,7 @@ public:
     // 어댑터가 다른 월드의 풀을 섞지 않게 확인한다.
     const SidPool& Pool() const;
 private:
-    // Factory의 실제 사건2 프레임 난수와 공통 Damageable 위임이다. 큰 upgrade 사건은 명시 미복원이다.
+    // Factory의 프레임 난수/업그레이드/상위 플레어와 공통 Damageable 위임이다.
     float Factory(Sid sid,std::uint32_t event,std::uint32_t count,float payload) const;
     // 실제 가상 표에서 거주 구역1/간헐천2/신전3을 구한다.
     unsigned Kind(Sid sid) const;

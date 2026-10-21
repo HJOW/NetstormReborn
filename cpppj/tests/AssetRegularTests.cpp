@@ -142,6 +142,13 @@ TEST_CASE(AssetRegular_ReplaysPatch) { Replay("originals"); }
 // CD10.72의 다른 간헐천 주기·거주 구역 분기와 같은 신전/공통 사건을 독립 대조한다.
 TEST_CASE(AssetRegular_ReplaysCd) { Replay("originalCD"); }
 
+// PATCH Factory의event3은count0에서그림→프레임→부모,양수에서완료반환으로분기한다.
+TEST_CASE(AssetRegular_FactoryUpgradeDispatchAndUpperFlare) {
+    AssetRegularScene scene(OriginalEdition::Patch1078);scene.input.resize(25);auto raw=scene.pool.AllocatedBytes(kSource);std::fill(raw.begin(),raw.end(),std::uint8_t{});Put(raw,0,0x509148);raw[10]=85;raw[11]=4;std::vector<std::string> trace;AssetRegularHooks hooks;
+    hooks.beginFactoryUpgrade=[&](Sid parent,float duration) { CHECK(parent==kSource && duration==15);trace.push_back("begin"); };hooks.finishFactoryUpgrade=[&](Sid parent) { CHECK(parent==kSource);trace.push_back("finish");return -1.0F; };hooks.factoryFlare=[&](Sid parent,auto count,auto event) { CHECK(parent==kSource && count==2 && event==1);trace.push_back("flare"); };
+    RawAssetRegular regular(scene.pool,scene.hash,scene.types,scene.frames,scene.elements,scene.setter,scene.advance,scene.random,scene.assets,scene.state,hooks);CHECK(regular.Handle(kSource,3,0,15)==15 && scene.Frame(kSource)==1);CHECK(regular.Handle(kSource,3,1,15)==-1);raw[11]=100;CHECK(regular.Handle(kSource,5,0,2)==2 && trace==std::vector<std::string>({"begin","finish","flare"}));CHECK(regular.Handle(kSource,4,1,20)==0);
+}
+
 // 시각/float payload를 혼동하지 않고 postPop 등록된 첫 Regular가 현재 Kernel에서 바로 호출되는지 검사한다.
 TEST_CASE(AssetRegular_ComposesSharedKernelAndInitialTime) {
     AssetRegularScene scene(OriginalEdition::Patch1078);

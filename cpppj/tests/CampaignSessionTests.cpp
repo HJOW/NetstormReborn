@@ -470,6 +470,19 @@ TEST_CASE(CampaignSession_FactoryUpgradeCommandUsesActualHostAndSp) {
     for (std::uint32_t value=1;value<core.pool.Capacity();++value) { const auto sid=Sid{static_cast<std::uint16_t>(value)};const auto raw=core.pool.Slot(sid);if (!(raw[11]&3U) && raw[34]==2 && Get(raw,0)==0x509148U) { factory=sid;break; } }
     CHECK(factory.value!=0);if (!factory.value) return;session.RequestFactoryUpgrade(factory);CHECK(packets.size()==1);const auto client=core.processes.FindEvent(factory,4);CHECK(client && client->Payload()==20.0F);if (packets.empty()) return;const auto before=session.Sp(2);const auto cost=session.HitPoints().TypeCostUnits(core.pool.Slot(factory)[10]);PacketDispatchHooks hooks;hooks.now=[] { return 19U; };hooks.record=[](auto&,auto,auto) {};hooks.terminate=[](auto&) {};hooks.close=[](auto&) {};hooks.release=[](auto&) {};RawPacketDispatch dispatch(OriginalEdition::Patch1078,hooks);session.RegisterFactoryResearchCommands(dispatch);PacketConnection connection;connection.sender=0xffffffffU;CHECK(dispatch.Dispatch(connection,packets[0]));const auto server=core.processes.FindEvent(factory,3);CHECK(server && server->Payload()==15.0F && session.Sp(2)==before-static_cast<float>(cost));
 }
+// 같은 실제 Host의event3만명시호출하여예측그림/건설/감시쌍과완료의자기예약삭제를함께검사한다.작성·컴파일만한다.
+TEST_CASE(CampaignSession_FactoryUpgradePictureAndCompletionShareWorld) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto fort=FortTemplate::Parse(assets.files.Read("d/masterofwhirligigs.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"masterofwhirligigs",external.Services());CHECK(Throws([&] { session.FactoryUpgrading(Sid{1}); }));session.Load();auto core=session.Core();Sid factory{};
+    // 원본 Fort의레벨0/소유자2 Factory를같은실제풀에서찾는다.
+    for (std::uint32_t value=5;value<core.pool.Capacity();++value) { const Sid candidate{static_cast<std::uint16_t>(value)};const auto raw=core.pool.Slot(candidate);if (!(raw[11]&3U) && raw[34]==2 && Get(raw,0)==0x509148U && !(raw[11]>>5)) { factory=candidate;break; } }
+    CHECK(factory.value);if (!factory.value) return;auto* regular=core.processes.AddSharedRegular(factory,3,15);CHECK(regular && session.FactoryUpgrading(factory));if (!regular) return;regular->RunFrame();CHECK(regular->Count()==1);Sid image{};
+    // 현재client영역에서같은TYPE/extra8 그림과실제의존쌍을찾는다.
+    for (std::uint16_t value=5;value<15000;++value) { const Sid candidate{value};const auto raw=core.pool.Slot(candidate);if (!(raw[11]&3U) && (raw[40]&8U) && raw[10]==core.pool.Slot(factory)[10] && core.dependencies.Has(factory,candidate)) { image=candidate;break; } }
+    CHECK(image.value && (core.pool.Slot(image)[11]>>5)==1);if (!image.value) return;bool construction{};
+    // 그림head의마지막Depend와실제TYPE30건설프로세스를구분한다.
+    for (auto form=Get(core.pool.Slot(image),6,2);form;form=Get(core.pool.Slot(Sid{static_cast<std::uint16_t>(form)}),4,2)) { const Sid candidate{static_cast<std::uint16_t>(form)};if (core.pool.Slot(candidate)[10]==30) construction=core.processes.FromForm(candidate)!=nullptr; }
+    CHECK((core.pool.Slot(image)[40]&9U)==9 && construction);core.processState.now=15;regular->RunFrame();CHECK((core.pool.Slot(factory)[11]>>5)==1 && Get(core.pool.Slot(factory),26)==static_cast<std::uint32_t>(session.HitPoints().MaxHitPoints(factory)));CHECK(!core.processes.FindEvent(factory,3) && !session.FactoryUpgrading(factory) && (core.pool.Slot(image)[11]&1U));
+}
 // 같은 Session의 실제 본체/기술/동맹/현재 그래프 getter와 정상 목록 소멸을 함께 검사한다.
 TEST_CASE(CampaignSession_AiUsesCurrentWorldAndLifetime) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;

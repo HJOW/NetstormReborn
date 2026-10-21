@@ -1,6 +1,7 @@
 // 기술의 원소 분류와 현재 시설 목록·생산 슬롯·행동 기한을 원본 순서대로 처리한다.
 #include "o/RawAiFactoryProduction.h"
 #include <bit>
+#include <cmath>
 #include <limits>
 #include <stdexcept>
 #include <utility>
@@ -22,6 +23,8 @@ void Put(std::span<std::uint8_t> raw,std::size_t offset,std::uint32_t value) {
 }
 // signed 비교에서 DWORD 감김을 보존한다.
 std::int32_t Signed(std::uint32_t value) { return std::bit_cast<std::int32_t>(value); }
+// 원본ftol의 signed64 절삭 하위DWORD와 무효 입력의0을 보존한다.
+std::uint32_t Truncate(double value) { if (!std::isfinite(value) || value<-9223372036854775808.0 || value>=9223372036854775808.0) return 0;return static_cast<std::uint32_t>(static_cast<std::int64_t>(std::trunc(value))); }
 // 선택되지 않은 하위는 요구하지 않고 실제 선택 지점에서만 누락을 거부한다.
 template<class Function> const Function& Need(const Function& function,const char* message) { if (!function) throw std::logic_error(message);return function; }
 }
@@ -87,6 +90,8 @@ void RawAiFactoryProduction::Manage(std::uint32_t token) const {
     if (type && count<capacity) { Need(hooks_.addProduct,"AI 시설 실제 생산 등록00410420 미연결")(token,factory,type);static_cast<void>(Type(type));Action(token,AiFactoryAction::AddedProduct,type);if (Signed(static_cast<std::uint32_t>(count)+1U)<capacity) return; }
     Remove(token,0x30c,value);if (type && Signed(Need(hooks_.level,"AI 시설 현재 가상level 재조회 미연결")(factory))<2 && SelectTechnology(token,Theme(factory))) Append(token,0x318,value);
 }
+// 큐가 가득 차도 비용/데모 처리는 계속하며 중복 시설도 원본처럼 추가한다.
+void RawAiFactoryProduction::Upgraded(std::uint32_t token,Sid factory) const { Append(token,0x30c,factory.value);const auto delta=Truncate(-static_cast<double>(Type(pool_.Slot(factory)[10]).cost));Field(token,0x2d8,Field(token,0x2d8)+delta);if (Need(hooks_.demo,"AI 업그레이드 현재 데모 판정 미연결")()) { const auto wallet=Signed(Field(token,0x2d8));Field(token,0x2d8,static_cast<std::uint32_t>(wallet>1190 ? wallet : 1190)); } }
 // 같은 실제 월드 연결 확인용 풀이다.
 const SidPool& RawAiFactoryProduction::Pool() const { return pool_; }
 }

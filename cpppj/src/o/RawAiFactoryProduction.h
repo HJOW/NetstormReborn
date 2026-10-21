@@ -19,6 +19,7 @@ struct AiFactoryProductionHooks {
     std::function<std::uint32_t(Sid)> level; //가상+80/00453f40의 현재 시설 level이다.
     std::function<void(Sid)> upgrade; //00453bf0의 실제 업그레이드 요청이다. 미복원 호출은 선택된 위치에서 거부한다.
     std::function<void(std::uint32_t,AiFactoryAction,std::uint32_t)> log; //현재 원본 로그 종류와 TYPE 이름을 실제 장치에 전달한다.
+    std::function<bool()> demo; //00411180의현재 데모 지갑 하한 여부다.
 };
 // 현재 기술 내용물과 같은 본체의 미처리/업그레이드 큐만 사용한다.
 class RawAiFactoryProduction {
@@ -28,6 +29,7 @@ public:
     std::uint32_t SelectTechnology(std::uint32_t token,std::int32_t theme) const; //00413570의 첫 일치 미등록 기술과 battery 원소 치환을 선택한다.
     std::int32_t CountProducts(Sid factory) const; //004acc60(mask10,kind0)의 실제 내용물 총수다. 같은 종류도 각각 센다.
     void Manage(std::uint32_t token) const; //004136b0의 생산 추가/목록 이동/업그레이드 요청 경계를 실행한다.
+    void Upgraded(std::uint32_t token,Sid factory) const; //00411180:같은 시설을 미처리 목록에 추가→현재TYPE의 음수 비용 절삭 가산→데모1190 하한이다.
     const SidPool& Pool() const; //현재 세션 조립의 같은 풀인지 확인한다.
 private:
     std::span<std::uint8_t> Body(std::uint32_t token) const; //현재0xb08 본체를 물리 검사 뒤 다시 빌린다.

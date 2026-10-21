@@ -77,4 +77,12 @@ TEST_CASE(AiFactoryProduction_SelectedMissingAndPhysicalContracts) {
     FactoryAiInput missing;missing.hooks.addProduct={};CHECK(Throws([&] { missing.Make().Manage(missing.token); }));CHECK(missing.Field(0x314)==1 && missing.Time(0x5a8)==0);FactoryAiInput upgrade;upgrade.Field(0x314,0);upgrade.Field(0x320,1);Put(upgrade.memory.Bytes(upgrade.Field(0x318)),0,upgrade.factory.value);upgrade.hooks.upgrade={};CHECK(Throws([&] { upgrade.Make().Manage(upgrade.token); }));CHECK(upgrade.Field(0x320)==1 && upgrade.Time(0x5a8)==0);
     FactoryAiInput inactive;inactive.Field(0x294,0);inactive.hooks={};inactive.Make().Manage(inactive.token);inactive.Field(0x294,100);inactive.Field(0x298,254);inactive.Make().Manage(inactive.token);CHECK(inactive.trace.empty());const auto small=inactive.memory.Allocate(4);CHECK(Throws([&] { inactive.Make().SelectTechnology(small,3); }));
 }
+// 완료 시설 중복을 허용하며 TYPE의 음수 비용을 반올림 없이 절삭한다.
+TEST_CASE(AiFactoryProduction_UpgradedRequeuesAndSubtractsTypeCost) {
+    FactoryAiInput input;input.types[85].cost=500.75F;input.hooks.demo=[] { return false; };input.Make().Upgraded(input.token,input.factory);CHECK(input.Field(0x314)==2 && input.Item(0x30c,1)==input.factory.value && input.Field(0x2d8)==700);input.Make().Upgraded(input.token,input.factory);CHECK(input.Field(0x314)==3 && input.Item(0x30c,2)==input.factory.value && input.Field(0x2d8)==200);
+}
+// 목록이 가득 차도 지갑 처리는 계속하며 데모 판정 뒤 현재 지갑에1190하한을 적용한다.
+TEST_CASE(AiFactoryProduction_UpgradedFullQueueAndCurrentDemoWallet) {
+    FactoryAiInput input;input.Field(0x314,4);input.types[85].cost=1500.75F;input.hooks.demo=[&] { CHECK(input.Field(0x314)==4 && std::bit_cast<std::int32_t>(input.Field(0x2d8))==-300);input.Field(0x2d8,1400);return true; };input.Make().Upgraded(input.token,input.factory);CHECK(input.Field(0x314)==4 && input.Field(0x2d8)==1400);input.hooks.demo=[] { return true; };input.Make().Upgraded(input.token,input.factory);CHECK(input.Field(0x2d8)==1190);
+}
 }

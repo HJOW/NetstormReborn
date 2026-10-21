@@ -181,6 +181,8 @@ void RawCampaignAssetBindings::SetLoadingDepth(std::uint32_t depth) { impl_->ass
 void RawCampaignAssetBindings::BindPatchGeyserAi(std::function<void(std::uint32_t,std::uint32_t,std::uint32_t)> update) { impl_->geyser.BindPatch(std::move(update)); }
 // actual 가상84의 Level 저장 후 기본 표시 갱신을 생략하지 않는다.
 void RawCampaignAssetBindings::SetState(o::Sid sid,std::uint32_t value) const { impl_->factory->SetState(*impl_->level,sid,value); }
+// postPop와 업그레이드가 같은 프레임 구간/지정기를 공유한다.
+void RawCampaignAssetBindings::AdjustFactoryFrame(o::Sid sid) const { impl_->factory->AdjustFrame(sid); }
 // 실제지원가상표만처리하고다른부모는호출자가준실제fallback에넘긴다.
 o::RegularHandler RawCampaignAssetBindings::Handler(o::RegularHandler fallback) const { return impl_->regular->Handler(std::move(fallback)); }
 // 같은서버flags0의Gun packet만분배하고다른현재Process packet은기존경계를유지한다.

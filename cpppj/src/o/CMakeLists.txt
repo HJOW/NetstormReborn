@@ -387,3 +387,5 @@ target_sources(netstorm PRIVATE RawAiCollectors.cpp RawAiCollectors.h)
 target_sources(netstorm PRIVATE RawAiFactoryProduction.cpp RawAiFactoryProduction.h)
 # 기존58h 연구와 같은 메시지의 업그레이드 요청/수신 접두를 실제 Host/SP에 연결한다.
 target_sources(netstorm PRIVATE RawFactoryUpgradeCommand.cpp RawFactoryUpgradeCommand.h)
+# 원본Factory의예측그림/완료/예약·종속그림정리를같은Host에연결한다.
+target_sources(netstorm PRIVATE RawFactoryUpgrade.cpp RawFactoryUpgrade.h)

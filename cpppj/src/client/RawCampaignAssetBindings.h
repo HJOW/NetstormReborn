@@ -50,6 +50,7 @@ public:
     void BindPatchGeyserAi(std::function<void(std::uint32_t,std::uint32_t,std::uint32_t)> update); // 같은 실제 AI 본체의004153c0을 최초 간헐천 Pop에 연결한다.
     // 실제 Factory/아웃포스트 가상84의 Level→기본 표시 갱신을 같은 객체에 적용한다.
     void SetState(o::Sid sid,std::uint32_t value) const;
+    void AdjustFactoryFrame(o::Sid sid) const; //같은Factory 모듈의00453780으로 완료 프레임을 보정한다.
     // 사제/Player 등 기존 실제 사건 처리기를 fallback으로 합성한다.
     o::RegularHandler Handler(o::RegularHandler fallback={}) const;
     // Gun34만 실제 writer/송신으로 분배하고 기존 다른 프로세스 전송은 fallback에 전달한다.

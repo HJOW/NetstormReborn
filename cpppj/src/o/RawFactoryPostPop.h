@@ -38,6 +38,8 @@ public:
     void PostPop(Sid sid,std::uint32_t flags) const;
     // 실제 Factory 가상84는 공통Level 저장 뒤 같은 가상88 기본 표시 갱신을 호출한다.
     void SetState(const RawSquidLevel& level,Sid sid,std::uint32_t value) const;
+    //00453780/CD0047a1f0:업그레이드 완료에서도 동일한 실제 상태 프레임 보정을 사용한다.
+    void AdjustFrame(Sid sid) const;
     // 공통 분배기에 다른 풀의 처리기를 등록하지 않도록 소유자를 공개한다.
     const SidPool& Pool() const;
 private:
@@ -45,8 +47,6 @@ private:
     std::uint32_t Kind(Sid sid) const;
     // base 가상 +0x80은 raw 상태 상위 세 비트를 반환한다. 해당 네 가상 표에서만 사용한다.
     std::int32_t Count(Sid sid) const;
-    // 00453780/CD0047a1f0의 현재 상태 글자 구간 검사와 가상 프레임 설정이다.
-    void AdjustFrame(Sid sid) const;
     // 독립 할당 실패를 보존하며 다음 예약이나 공통 몸체를 계속한다.
     void Regular(Sid sid,std::uint32_t event,float delay) const;
     SidPool& pool_; // 모든 객체를 조회·수정하는 실제 SID 풀이다.

@@ -96,9 +96,11 @@ float RawAssetRegular::Factory(Sid sid,std::uint32_t event,std::uint32_t count,f
         advance_.Advance(sid,1,0);
     } else if (event==5) {
         // CD는 사건5 분기 자체가 없고 패치만 상위 상태에서 입자효과를 호출한다.
-        if (pool_.Edition()==OriginalEdition::Patch1078 && (pool_.Slot(sid)[11]>>5)>2) throw std::logic_error("Factory 상위 상태 입자효과0045a6c0 미연결");
+        if (pool_.Edition()==OriginalEdition::Patch1078 && (pool_.Slot(sid)[11]>>5)>2) { Require(hooks_.factoryFlare,"Factory 상위 상태 실제 플레어 미연결");hooks_.factoryFlare(sid,2,1); }
     } else if (event==3) {
-        throw std::logic_error("Factory 미복원 사건 "+std::to_string(event)+" count "+std::to_string(count));
+        if (pool_.Edition()!=OriginalEdition::Patch1078) throw std::logic_error("CD Factory 업그레이드 사건 미복원");
+        if (count) { Require(hooks_.finishFactoryUpgrade,"Factory 실제 업그레이드 완료 미연결");return hooks_.finishFactoryUpgrade(sid); }
+        Require(hooks_.beginFactoryUpgrade,"Factory 실제 업그레이드 그림 미연결");hooks_.beginFactoryUpgrade(sid,payload);advance_.Advance(sid,1,0);
     } else if (event==4 && count) return 0.0f;
     return DamageableHandle(sid,event,count,payload);
 }

@@ -260,7 +260,8 @@ public:
     // 같은 실제58h 수신과 현재 입력의signedWORD 지식 선택을 연결한다.
     void RegisterFactoryResearchCommands(o::RawPacketDispatch& dispatch);
     std::uint32_t SelectFactoryKnowledge(o::Sid parent,std::uint32_t code,std::uint32_t parameter); // 실제 생성·예측·송신 몸체다.
-    void RequestFactoryUpgrade(o::Sid parent); //00453bf0의 실제 대기/58h 송신만 명시 실행한다.입력 관문/진행·완료 가상 몸체는 후속이다.
+    void RequestFactoryUpgrade(o::Sid parent); //00453bf0의 실제 대기/58h 송신을 실행한다.사용자 입력의 자금/안내 관문은 후속이다.
+    bool FactoryUpgrading(o::Sid parent) const; //00453c90의실제예측그림→event4→event3조회다.
     // 같은 실제0x4f 일반포획/0x5b 채취/0x60 크랩포획 수신을현재캠페인에등록한다.
     void RegisterCarrierCommands(o::RawPacketDispatch& dispatch);
     // 실제427340은 선택 해제/연결·중복 검사 뒤40h만 송신한다. 경로 생성은 등록 수신에서 수행한다.

@@ -126,6 +126,7 @@
 #include "o/RawFlare.h"
 #include "o/RawFactoryResearch.h"
 #include "o/RawFactoryUpgradeCommand.h"
+#include "o/RawFactoryUpgrade.h"
 #include "client/RawShapeToBuffer.h"
 #include "client/OwnerColorMaps.h"
 #include <bit>
@@ -483,6 +484,7 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<void,void(*)(void*)> pendingFlareRegular{nullptr,[](void* storage) { ::operator delete(storage); }}; // 실제 new40 예약부터 Regular 생성까지의 단일 메모리다.
     std::unique_ptr<RawFactoryResearch> factoryResearch; // 같은 내용물/생산 Deck/현재 권한과58h 송신을 연결한다.
     std::unique_ptr<RawFactoryUpgradeCommand> factoryUpgradeCommand; //같은58h의 업그레이드 요청/수신과 실제 SP·SharedRegular을 연결한다.
+    std::unique_ptr<RawFactoryUpgrade> factoryUpgrade; //같은 실제Factory의event3 그림/완료·예약/종속정리와AI통지다.
     std::unique_ptr<RegularProcess> factoryUpgradePending; //원본 new(0x28) 성공 뒤 현재 사건/지연으로 구성할 실제 예약 메모리다.
     DamageablePreDestroyState damageablePreState; // 같은 사제 타입을 읽는 실제 공통 삭제 전역이다.
     DamageableReleaseState damageableReleaseState; // 해방 요청마다 같은 현재 전투 모드를 공급한다.
@@ -935,6 +937,9 @@ struct RawCampaignSession::Impl {
         assetEffects.regular.startConstruction=[this](Sid parent,float duration) {
             if (!building) throw std::logic_error("실제 건설 시작의 세션 처리기 미설치");PrepareBuilding(core.processState.now);building->Start(parent,duration);
         };
+        assetEffects.regular.beginFactoryUpgrade=[this](Sid parent,float duration) { if (!factoryUpgrade) throw std::logic_error("Factory 실제 업그레이드 그림 미설치");factoryUpgrade->Begin(parent,duration); };
+        assetEffects.regular.finishFactoryUpgrade=[this](Sid parent) { if (!factoryUpgrade) throw std::logic_error("Factory 실제 업그레이드 완료 미설치");return factoryUpgrade->Finish(parent); };
+        assetEffects.regular.factoryFlare=[this](Sid parent,std::int32_t count,std::uint32_t event) { if (!flare) throw std::logic_error("Factory 상위 상태 실제 플레어 미설치");flare->Spawn(parent,count,event); };
         // 거주 구역은 현재 일치 신전을 찾은 호출 위치에서 실제 theammode를 다시 읽는다.
         if (!assetEffects.regular.themeMode) assetEffects.regular.themeMode=services.ownership.themeMode;
         FillMissing(assetEffects.regular.themeMode);
@@ -1801,8 +1806,8 @@ struct RawCampaignSession::Impl {
         aiCollectors=std::make_unique<RawAiCollectors>(aiMemory,core.pool,core.types,random,AiCollectorsGlobals{core.processState.now,playerState.battleOwner,[this] { return static_cast<std::uint32_t>(core.bookkeeping.invalidGraph); }},std::move(collectors));
         AiFactoryProductionHooks factories;factories.technology=[this](auto owner) { const auto value=player->Technology(std::bit_cast<std::int32_t>(owner));if (value>65535 || value>=core.pool.Capacity()) throw std::out_of_range("AI 시설 생산 현재 기술부모 SID 범위");return Sid{static_cast<std::uint16_t>(value)}; };factories.product=[this](auto token,auto type) { return aiStrategySetup->FindProduct(token,type); };factories.addProduct=[this](auto token,Sid factory,auto type) { aiStrategySetup->AddProduct(token,factory,type); };
         factories.level=[this](Sid factory) { const auto table=Read(core.pool.Slot(factory),0);if (table!=0x509148U && table!=0x509210U) throw std::logic_error("AI 시설 가상level80 미지원 실제 표");return level->Get(factory); };
-        // 업그레이드의 요청/수신/가상Regular·그림을 모두 복원하기 전에는 실제 선택 지점에서 기존 미복원 경계를 유지한다.
-        factories.upgrade=SessionMissing<void,Sid>();factories.log=[this](auto token,AiFactoryAction action,auto type) { if (!services.player.log) throw std::logic_error("AI 시설 생산 현재 로그 미연결");std::string message="Upgrade factory!\n";if (action==AiFactoryAction::AddedProduct) { if (type>=core.types.size()) throw std::out_of_range("AI 시설 생산 로그 TYPE 범위");message="Added "+core.types[type].name+" to factory.\n"; }services.player.log(aiFactoryLog,"AI"+std::to_string(std::bit_cast<std::int32_t>(Read(aiMemory.Bytes(token),0x260)))+": "+message+"\n"); };
+        // 같은58h요청/수신/실제Regular그림·완료가 연결된 원본 업그레이드 경로를 선택한다.
+        factories.upgrade=[this](Sid parent) { factoryUpgradeCommand->Request(parent); };factories.demo=[this] { return services.missionOutcome.demo()!=0; };factories.log=[this](auto token,AiFactoryAction action,auto type) { if (!services.player.log) throw std::logic_error("AI 시설 생산 현재 로그 미연결");std::string message="Upgrade factory!\n";if (action==AiFactoryAction::AddedProduct) { if (type>=core.types.size()) throw std::out_of_range("AI 시설 생산 로그 TYPE 범위");message="Added "+core.types[type].name+" to factory.\n"; }services.player.log(aiFactoryLog,"AI"+std::to_string(std::bit_cast<std::int32_t>(Read(aiMemory.Bytes(token),0x260)))+": "+message+"\n"); };
         aiFactoryProduction=std::make_unique<RawAiFactoryProduction>(aiMemory,core.pool,core.types,contentFinder,AiFactoryProductionGlobals{core.processState.now,[this] { return static_cast<std::uint32_t>(core.bookkeeping.invalidGraph); }},std::move(factories));
     }
     // 첫 실제 객체 이전에 같은 공통 삭제/내용물/Player 통지/기술 모듈을 한 번 연결한다.
@@ -1919,6 +1924,16 @@ struct RawCampaignSession::Impl {
         upgrade.reserveShared=[this] { try { factoryUpgradePending=std::make_unique<RegularProcess>(0U,0.0F);return true; }catch (const std::bad_alloc&) { return false; } };upgrade.addShared=[this](Sid parent,auto event,float delay) { if (!factoryUpgradePending) throw std::logic_error("Factory 업그레이드 실제 SharedRegular 예약 누락");auto* memory=factoryUpgradePending.release();std::destroy_at(memory);std::construct_at(memory,event,delay);auto* attached=static_cast<RegularProcess*>(core.processes.Attach(std::unique_ptr<RegularProcess>(memory),61,parent,0x50));if (!attached) throw std::logic_error("Factory 업그레이드 실제 SharedRegular 부착 실패");attached->ResetTask(event,core.processState.now); };
         upgrade.send=[this](auto target,std::span<const std::uint8_t> packet) { if (!services.carrierRequest) throw std::logic_error("Factory 업그레이드 실제 요청 송신 미연결");services.carrierRequest(static_cast<std::int32_t>(target),packet); };upgrade.broadcast=[this](std::span<const std::uint8_t> packet) { broadcast->Send(packet); };upgrade.log=[this](auto kind,std::string_view text) { if (!services.player.log) throw std::logic_error("Factory 업그레이드 실제 로그 미연결");services.player.log(kind,text); };upgrade.assertion=[](std::string_view text) { std::fprintf(stderr,"Factory 업그레이드 원본 진단: %.*s\n",static_cast<int>(text.size()),text.data()); };
         factoryUpgradeCommand=std::make_unique<RawFactoryUpgradeCommand>(core.pool,core.types,FactoryUpgradeCommandState{assetState.boss,gunState.checking,core.processState.now},std::move(upgrade));
+        ConnectFactoryUpgrade();
+    }
+    // 같은 실제Factory 가상경계/건설/종속쌍/AI본체를 연결한다.최초사건은Load완료후실행된다.
+    void ConnectFactoryUpgrade() {
+        FactoryUpgradeHooks hooks;hooks.level=[this](Sid parent) { const auto table=Read(core.pool.Slot(parent),0);if (table!=0x509148U && table!=0x509210U) throw std::logic_error("업그레이드 현재Factory level 가상표 미복원");return level->Get(parent); };hooks.setLevel=[this](Sid parent,std::uint32_t value) { assetBindings->SetState(parent,value); };hooks.maxHp=[this](Sid parent) { return hp.MaxHitPoints(parent); };hooks.adjustFrame=[this](Sid parent) { assetBindings->AdjustFactoryFrame(parent); };hooks.display=[this](Sid parent) { core.display.Update(core.pool.Slot(parent)); };
+        hooks.soundAt=[this](float x,float y,std::string_view name) { if (!services.sound.playOnceAt) throw std::logic_error("업그레이드 실제 위치 소리 미연결");services.sound.playOnceAt(x,y,soundNames.Lookup(name),0,0); };hooks.sound=[this](std::string_view name) { if (!services.sound.play) throw std::logic_error("업그레이드 실제 로컬 소리 미연결");services.sound.play(soundNames.Lookup(name),0,0,0,1,0); };hooks.flare=[this](Sid parent,std::int32_t count,std::uint32_t event) { flare->Spawn(parent,count,event); };
+        hooks.create=[this](auto type,auto flags) { return world.Create(type,flags); };hooks.owner=[this](Sid parent,auto owner) { core.owner.Set(parent,owner); };hooks.pop=[this](Sid parent,float x,float y,auto flags) { world.Pop(parent,x,y,flags); };hooks.construction=[this](Sid parent,float duration) { PrepareBuilding(core.processState.now);building->Start(parent,duration); };hooks.depend=[this](Sid watched,Sid watcher) { static_cast<void>(core.dependencies.Create(watched,watcher)); };hooks.watcher=[this](Sid form) { return core.dependencies.Watcher(form); };hooks.destroy=[this](Sid parent,auto flags) { world.Destroy(parent,flags); };
+        hooks.aiPresent=[this](Sid parent) { const auto owner=core.pool.Slot(parent)[34];if (!owner) return false;if (owner>=9) throw std::out_of_range("업그레이드현재AI Player 범위");return Read(players,owner*0xb4U+0xb0U)!=0; };hooks.notifyAi=[this](auto owner,Sid parent) { if (core.ownerMode.challenge || std::bit_cast<std::int32_t>(owner)<=0) return;if (owner>=9) throw std::out_of_range("업그레이드완료AI Player 범위");const auto token=Read(players,owner*0xb4U+0xb0U);if (token) aiFactoryProduction->Upgraded(token,parent); };
+        hooks.log=[this](auto kind,std::string_view text) { if (!services.player.log) throw std::logic_error("업그레이드진행 실제로그 미연결");services.player.log(kind,text); };hooks.assertion=[](std::uint32_t line) { std::fprintf(stderr,"Factory 업그레이드 원본 진단 줄:%x\n",line); };
+        factoryUpgrade=std::make_unique<RawFactoryUpgrade>(core.pool,core.processes,FactoryUpgradeState{researchOutpost,flyerDependType,playerState.battleOwner,gunState.checking,core.ownerMode.challenge,assetState.boss},std::move(hooks));
     }
     // 외부 config/UI는 현재 클라이언트 서비스를 사용하고 게임 계산은 동일 원본 모듈을 사용한다.
     std::unique_ptr<RawCampaignWorldRuntime> MakeRuntime() {
@@ -2337,6 +2352,8 @@ std::uint32_t RawCampaignSession::SelectFactoryKnowledge(Sid parent,std::uint32_
 }
 // 입력 부모의 자금/진행 관문을 별도로 둔 원본453bf0 요청 몸체만 명시 실행한다.
 void RawCampaignSession::RequestFactoryUpgrade(Sid parent) { if (!impl_->loaded) throw std::logic_error("설치 전 Factory 업그레이드 요청");impl_->factoryUpgradeCommand->Request(parent); }
+// 실제 종속그림과같은4/3예약을조회한다.입력UI의안내메시지는별도로복원한다.
+bool RawCampaignSession::FactoryUpgrading(Sid parent) const { if (!impl_->loaded) throw std::logic_error("설치 전 Factory 업그레이드 조회");return impl_->factoryUpgrade->IsUpgrading(parent); }
 //현재프레임에서만같은실제두끝의큐를소비한다.
 void RawCampaignSession::PumpLocalConnection() { if (impl_->login) impl_->login->Pump(); }
 //진단은현재원본확정phase를읽고성공을합성하지않는다.
