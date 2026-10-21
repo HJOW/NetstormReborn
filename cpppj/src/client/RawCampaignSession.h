@@ -253,6 +253,8 @@ public:
     bool CollectAiOrReturnHome(std::uint32_t owner,o::Sid actor); //00411900의실제내용물/그래프별간헐천선택또는신전복귀다.true는본체존재/호출이며도착성공이아니다.
     bool RecheckAiGeysers(std::uint32_t owner); //00411350의현재330/348간헐천재분류다.전체자동AI순서는후속이다.
     bool ManageAiCarriers(std::uint32_t owner); //00412130전체수집/포획행동이다.true는현재본체존재/호출이며포획성공이아니다.
+    bool StartAiBuildSearch(std::uint32_t owner,std::uint32_t type); //0040f660을현재자기경계/적기준좌표로실행한다.원본14af0준비뒤사용한다.
+    bool AdvanceAiBuildSearch(std::uint32_t owner,std::uint32_t budgeted); //0040f700의같은574상태/벽시각/실제배치검사를진행한다.0은전체행,비영은행시작예산이다.
     std::string ObjectName(o::Sid parent) const; //실제가상68의현재번역/치환·Factory레벨접미사다.
     // 같은 현재 Player의 실제 목록 소멸→본체 반납→포인터0을 수행한다. flags20은 원본대로 보존한다.
     void RemoveAi(std::uint32_t owner);

@@ -401,3 +401,5 @@ target_sources(netstorm PRIVATE RawAiMovement.cpp RawAiMovement.h)
 target_sources(netstorm PRIVATE RawAiResourceChoice.cpp RawAiResourceChoice.h)
 # 전체수집/포획행동과실제내용물genus조회·다이스접근점을연결한다.
 target_sources(netstorm PRIVATE RawAiCarrierActions.cpp RawAiCarrierActions.h)
+# 사제AI의현재spot/배치허용/벽시각을공유하는실제행별탐색을연결한다.
+target_sources(netstorm PRIVATE RawAiBuildSearch.cpp RawAiBuildSearch.h)

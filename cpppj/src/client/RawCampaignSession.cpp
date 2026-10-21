@@ -106,6 +106,7 @@
 #include "o/RawAiMovement.h"
 #include "o/RawAiResourceChoice.h"
 #include "o/RawAiCarrierActions.h"
+#include "o/RawAiBuildSearch.h"
 #include "o/RawAiPreparation.h"
 #include "o/RawPriestLookup.h"
 #include "o/RawRunePostPop.h"
@@ -163,6 +164,7 @@ template<std::size_t Count> bool HasRegularTable(const std::array<std::uint32_t,
 BridgeConnectState CampaignLinks() { BridgeConnectState result;result.bridgeType=82;result.islandType=94;result.stalagType=95;result.connectorType=155;result.noIslandType=157;result.battle=true;result.mission=true;return result; }
 constexpr std::size_t kCampaignFactoryCapacity=500; // PATCH004fc990의push1f4→0044fb20이확보하는실제0055a4d0목록의DWORD수다.
 constexpr std::size_t kPlayerFactoryCapacity=30; // 실제4910a0이9개 Player 각각 new78/용량1e로 초기화하는 공장 목록이다.
+constexpr std::uint32_t kAiSearchTypeBase=0x6b000000U; //같은실제188TYPE의opaque32포인터기준이다.원본가상주소가아니며500stride대응만보존한다.
 // 실제83개 VT에서+10/+14/+18이4af780/44b4b0/44b9e0인14개만 일반 Damageable 수명으로 연결한다.
 constexpr std::array<std::uint32_t,14> kPlainDamageableTables{0x501ea0,0x509148,0x509930,0x5099e8,0x509aa0,0x50a820,0x50a8e8,0x50b6e8,0x50b7c0,0x50b888,0x50b9b8,0x50bad0,0x50e668,0x50e738};
 // 보호 GameAssets의 실제 TYPE/프레임을 보관하며 검사 전용74 변경을 적용하지 않는다.
@@ -297,6 +299,7 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawAiMovement> aiMovement; //사제/수집자행동의공통실제경로조회·정지·이동·복귀다.
     std::unique_ptr<RawAiResourceChoice> aiResourceChoice; //같은본체/간헐천/포획운반목록의실제수집·귀환선택하위다.
     std::unique_ptr<RawAiCarrierActions> aiCarrierActions; //같은목록/내용물/현재경로의전체수집·포획행동이다.
+    std::unique_ptr<RawAiBuildSearch> aiBuildSearch; //같은574상태/spot/실제배치검사와벽시각의행별탐색이다.
     std::uint32_t aiGeyserLog{29}; //0052f3e4의끊긴간헐천로그초기종류다.
     std::uint32_t aiMoveLog{99}; //0052f3d8의원본Debug Move초기로그종류다.
     std::uint32_t aiDrySpotLog{99}; //0052f3dc의원본Debug Dry Spot 초기로그종류다.
@@ -1844,6 +1847,7 @@ struct RawCampaignSession::Impl {
         carriers.crystals=[this](Sid actor) { return CountContained(core.pool,priestState.contained,actor,0x20,motionState.carrier.nuggetType); };carriers.firstCrystal=[this](Sid actor) { return priests->Carrier().FindContained(actor,0x20,motionState.carrier.nuggetType,0); };carriers.dropRequest=[this](Sid actor) { PrepareCarrierDrop();carrierDrop->Request(actor,Sid{}); };carriers.destroy=[this](Sid crystal) { world.Destroy(crystal,0); };carriers.target=[this](auto token,Sid actor,Sid target) { aiMovement->ToTarget(token,actor,target,0); };
         carriers.remember=[this](auto token,Sid actor) { aiResourceChoice->RememberCaptureCarrier(token,actor); };carriers.collect=[this](auto token,Sid actor) { aiResourceChoice->CollectOrHome(token,actor); };carriers.targets=[this](Sid actor) { return AiCarrierTargets(actor); };carriers.reclassify=[this](auto token) { aiResourceChoice->ReclassifyDisconnected(token); };carriers.stop=[this](Sid actor) { aiMovement->Stop(actor); };carriers.assertion=[this](std::string_view text,std::uint32_t line) { if (!services.ai.assertion) throw std::logic_error("AI 운반 행동 원본 진단 미연결 "+std::to_string(line));services.ai.assertion(text); };
         aiCarrierActions=std::make_unique<RawAiCarrierActions>(aiMemory,core.pool,core.types,AiCarrierActionGlobals{core.processState.now,assetState.boss,gunState.checking,[this] { return static_cast<std::uint32_t>(core.bookkeeping.invalidGraph); }},std::move(carriers));
+        AiBuildSearchHooks search;search.wall=services.construction.wallSeconds;search.mayPlace=[this](const CanonPlacementQuery& query) { PrepareConstruction();return MayPlaceGameplay(query); };aiBuildSearch=std::make_unique<RawAiBuildSearch>(aiMemory,core.types,core.spots,kAiSearchTypeBase,std::move(search));
     }
     // 사용자이동/대상접근/AI가같은489080종류별실제BFS/Host시작을공유한다.
     CarrierPathResult StartMotion(RawPathStartRequest request) {
@@ -2549,6 +2553,10 @@ bool RawCampaignSession::CollectAiOrReturnHome(std::uint32_t owner,Sid actor) { 
 bool RawCampaignSession::RecheckAiGeysers(std::uint32_t owner) { if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("설치 후 owner1..8 AI 간헐천 재분류만 허용");const auto token=impl_->participation->Brain(owner);if (!token) return false;impl_->aiResourceChoice->ReclassifyDisconnected(token);return true; }
 // 현재같은본체로전체수집/포획/귀환/경로취소를판단한다.자동프레임순서는후속이다.
 bool RawCampaignSession::ManageAiCarriers(std::uint32_t owner) { if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("설치 후 owner1..8 AI 운반 행동만 허용");const auto token=impl_->participation->Brain(owner);if (!token) return false;impl_->aiCarrierActions->Act(token);return true; }
+// 원본14af0준비가만든현재자기경계와적기준좌표/owner로같은574탐색을초기화한다.
+bool RawCampaignSession::StartAiBuildSearch(std::uint32_t owner,std::uint32_t type) { if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("설치 후 owner1..8 AI 배치 탐색 시작만 허용");const auto token=impl_->participation->Brain(owner);if (!token) return false;const auto raw=impl_->aiMemory.Bytes(token);const AiBuildSearchBounds bounds{std::bit_cast<float>(Read(raw,0x270)),std::bit_cast<float>(Read(raw,0x274)),std::bit_cast<float>(Read(raw,0x278)),std::bit_cast<float>(Read(raw,0x27c))};const RawPathPoint avoid{std::bit_cast<float>(Read(raw,0x2b0)),std::bit_cast<float>(Read(raw,0x2b4))};impl_->aiBuildSearch->Initialize(token,type,bounds,avoid,Read(raw,0x260));return true; }
+// 같은현재탐색을원본행예산정책으로진행한다.true는본체존재/호출이며배치후보존재가아니다.
+bool RawCampaignSession::AdvanceAiBuildSearch(std::uint32_t owner,std::uint32_t budgeted) { if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("설치 후 owner1..8 AI 배치 탐색만 허용");const auto token=impl_->participation->Brain(owner);if (!token) return false;impl_->aiBuildSearch->Scan(token,budgeted);return true; }
 // 현재가상표의실제원본이름을반환한다.
 std::string RawCampaignSession::ObjectName(Sid parent) const { if (!impl_->loaded) throw std::logic_error("설치 전 객체 이름 조회");return impl_->objectNames->Name(parent); }
 // 명시 해제의 오류는 caller에 전파하고 destructor의 마지막 정리와 구분한다.
