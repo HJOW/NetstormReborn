@@ -2579,6 +2579,8 @@ bool RawCampaignSession::ManageAiFactories(std::uint32_t owner) { if (!impl_->lo
 bool RawCampaignSession::RecordAiDrySpot(std::uint32_t owner,float x,float y,std::uint32_t type) { if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("실제 Session 설치 후 owner1..8 AI DrySpot 등록만 허용");const auto token=impl_->participation->Brain(owner);return token && impl_->aiDrySpots->Add(token,x,y,type); }
 // 원본의한항목검사/제거와현재로그만명시실행하며전체전략순서는자동시작하지않는다.
 std::uint32_t RawCampaignSession::RecheckAiDrySpots(std::uint32_t owner) { if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("실제 Session 설치 후 owner1..8 AI DrySpot 검사만 허용");const auto token=impl_->participation->Brain(owner);return token ? impl_->aiDrySpots->Maintain(token) : 0U; }
+// 원본 경계 좌표 선택은 같은 게임 공용 난수를 한 번 쓰며 별도 성공 결과를 만들지 않는다.
+bool RawCampaignSession::SeedAiDrySpot(std::uint32_t owner) { if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("실제 Session 설치 후 owner1..8 AI 가짜 부족좌표 선택만 허용");const auto token=impl_->participation->Brain(owner);if (!token) return false;impl_->aiDrySpots->Seed(token,impl_->random);return true; }
 // 실제종속Form을같은TYPE선택/조회몸체로읽는다.
 Sid RawCampaignSession::AiMovementForm(Sid actor) const { if (!impl_->loaded) throw std::logic_error("설치 전 AI 경로 조회");return impl_->aiMovement->MovementForm(actor); }
 // 실제가상삭제와Kernel/양쪽종속정리를사용한다.

@@ -1,6 +1,7 @@
 // AI의 에너지 부족 배치 좌표 목록을 같은0xb08 본체/12바이트 기록에서 처리한다.
 #pragma once
 #include "o/RawAiBrain.h"
+#include "o/SpStore.h"
 #include <string>
 
 namespace netstorm::o {
@@ -17,6 +18,7 @@ public:
     void Remove(std::uint32_t token,std::int32_t index) const; //0040f260:뒤기록을안정압축하고count만감소한다.꼬리/cursor는보존한다.
     std::uint32_t Scan(std::uint32_t token) const; //0040f2b0:다음signed나머지한항목만검사하고충족하면현재기록TYPE를읽어제거한다.
     std::uint32_t Maintain(std::uint32_t token) const; //00417c70의해당하위만실행하고현재fakeTYPE/디버그플래그로로그를분배한다.
+    void Seed(std::uint32_t token,GameRandom& random) const; //004133e0:능력 BYTE20h에서 같은 공용 난수8로 경계 좌표를 고르고 현재 fake TYPE로 등록한다. full/중복이어도 af0/af4를 유지한다.
     const SidPool& Pool() const; //같은실제월드연결을확인한다.
 private:
     std::span<std::uint8_t> Body(std::uint32_t token) const; //현재살아있는실제0xb08본체만빌린다.

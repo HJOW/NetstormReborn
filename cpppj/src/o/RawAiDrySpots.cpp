@@ -9,6 +9,7 @@ namespace netstorm::o {
 namespace {
 constexpr std::size_t kCapacity=0xadc,kCount=0xae0,kPointer=0xae4,kCursor=0xae8,kOwner=0xaec; //원본내장DrySpot목록의실제필드다.
 constexpr std::size_t kRecordBytes=12; //x/y의float비트와TYPE DWORD 한개를그대로담는다.
+constexpr double kQuarter=0.25,kHalf=0.5; //00501550/00500ee4의 정확한 float 상수이며 중간 합에는 float 저장을 넣지 않는다.
 // 비정렬DWORD를물리범위안에서읽는다.
 std::uint32_t Read(std::span<const std::uint8_t> raw,std::size_t offset) {
     if (offset>raw.size() || raw.size()-offset<4) throw std::out_of_range("AI DrySpot DWORD 읽기 범위");std::uint32_t value{};
@@ -61,6 +62,27 @@ std::uint32_t RawAiDrySpots::Scan(std::uint32_t token) const {
 }
 // 반환TYPE가0이면로그를내지않고현재fake종류와디버그값을읽는다.
 std::uint32_t RawAiDrySpots::Maintain(std::uint32_t token) const { const auto type=Scan(token);if (type) { const auto fake=type==Field(token,0x280);if (Field(token,0xb00)) Need(hooks_.log)(token,fake); }return type; }
+// 전체 합/곱 뒤 네 float를 저장하고, 난수 한 번 뒤 원본 순서로 두 좌표를 기록한다.
+void RawAiDrySpots::Seed(std::uint32_t token,GameRandom& random) const {
+    if (!(Field(token,0x248)&0x20U)) return;
+    // 이 조회는 현재 본체 float를 넓혀 읽고 계산 중간의 임의 float 반올림을 피한다.
+    const auto number=[this,token](std::size_t at) { return static_cast<double>(std::bit_cast<float>(Field(token,at))); };
+    const auto combinedX=static_cast<float>((((number(0x2c0)+number(0x2b8))+number(0x278))+number(0x270))*kQuarter);
+    const auto combinedY=static_cast<float>((((number(0x2c4)+number(0x2bc))+number(0x27c))+number(0x274))*kQuarter);
+    const auto ownX=static_cast<float>((number(0x278)+number(0x270))*kHalf),ownY=static_cast<float>((number(0x27c)+number(0x274))*kHalf);
+    switch (random.Next(8)) {
+    case 0:Field(token,0xaf4,Field(token,0x274));Field(token,0xaf0,std::bit_cast<std::uint32_t>(combinedX));break;
+    case 1:Field(token,0xaf4,Field(token,0x27c));Field(token,0xaf0,std::bit_cast<std::uint32_t>(combinedX));break;
+    case 2:Field(token,0xaf0,Field(token,0x270));Field(token,0xaf4,std::bit_cast<std::uint32_t>(combinedY));break;
+    case 3:Field(token,0xaf4,std::bit_cast<std::uint32_t>(combinedY));Field(token,0xaf0,Field(token,0x278));break;
+    case 4:Field(token,0xaf4,Field(token,0x274));Field(token,0xaf0,std::bit_cast<std::uint32_t>(ownX));break;
+    case 5:Field(token,0xaf4,Field(token,0x27c));Field(token,0xaf0,std::bit_cast<std::uint32_t>(ownX));break;
+    case 6:Field(token,0xaf0,Field(token,0x270));Field(token,0xaf4,std::bit_cast<std::uint32_t>(ownY));break;
+    case 7:Field(token,0xaf4,std::bit_cast<std::uint32_t>(ownY));Field(token,0xaf0,Field(token,0x278));break;
+    }
+    const auto type=Field(token,0x280),y=Field(token,0xaf4),x=Field(token,0xaf0);
+    static_cast<void>(Add(token,std::bit_cast<float>(x),std::bit_cast<float>(y),type));
+}
 // 같은 실제 월드의 풀인지 확인한다.
 const SidPool& RawAiDrySpots::Pool() const { return pool_; }
 }

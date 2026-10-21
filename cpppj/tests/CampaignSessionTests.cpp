@@ -588,6 +588,12 @@ TEST_CASE(CampaignSession_AiDropSelectionUsesActualProductsScanAndLifetime) {
     for (std::size_t step=0;step<8;++step) { CHECK(session.SelectAiDropType(2));if (Get(raw,0x3e0)) break; }
     const auto type=Get(raw,0x3e0);CHECK(type && type<188 && !Get(raw,0x570) && !Get(raw,0x3e8) && !Get(raw,0x3ec) && Get(raw,0xaf8)==10 && Get(raw,0xafc)==10);if (type) CHECK(session.AdvanceAiDropScan(2,type,std::bit_cast<std::int32_t>(Get(raw,0x3e4))));CHECK(session.Sp(2)==sp && Get(raw,0x2d8)==wallet);session.RemoveAi(2);CHECK(!session.SelectAiDropType(2));
 }
+// 실제 AI의 자기/비교 영역·fake TYPE와 같은 Dry Spot backing 및 소멸을 검사한다. 작성·컴파일만 한다.
+TEST_CASE(CampaignSession_AiDrySeedUsesActualBrainListAndLifetime) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services(); // 보호 Fort와 명시 외부 장치 입력이다.
+    services.ai.allocationBytes=[](auto raw) { std::fill(raw.begin(),raw.end(),std::uint8_t{0x71}); };services.ai.participation.clearChat=[](auto) {};services.ai.participation.addChat=[](auto,auto,auto) {};services.ai.localTransport=[] { return true; };services.ai.assertion=[](std::string_view text) { throw std::logic_error(std::string(text)); };services.missionOutcome.demo=[] { return 0U; };
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));CHECK(Throws([&] { session.SeedAiDrySpot(2); }));session.Load();CHECK(!session.SeedAiDrySpot(2));const auto token=session.CreateAi(2,SessionAiSettings("Dry Seed AI","sunCannon"));CHECK(token && session.PrepareAi(2));if (!token) return;const auto raw=session.AiMemory().Bytes(token);const auto backing=Get(raw,0xae4),type=Get(raw,0x280),wallet=Get(raw,0x2d8);const auto sp=session.Sp(2);CHECK((Get(raw,0x248)&0x20) && !Get(raw,0xae0) && type);CHECK(session.SeedAiDrySpot(2) && Get(raw,0xae0)==1);const auto records=session.AiMemory().Bytes(backing);CHECK(Get(records,0)==Get(raw,0xaf0) && Get(records,4)==Get(raw,0xaf4) && Get(records,8)==type && Get(raw,0x2d8)==wallet && session.Sp(2)==sp);session.RemoveAi(2);CHECK(!session.AiMemory().Contains(backing) && !session.SeedAiDrySpot(2));
+}
 // 같은 Session의 실제 본체/기술/동맹/현재 그래프 getter와 정상 목록 소멸을 함께 검사한다.
 TEST_CASE(CampaignSession_AiUsesCurrentWorldAndLifetime) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
