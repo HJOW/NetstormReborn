@@ -18,6 +18,10 @@ void RawPlayerTemplateState::BindInitialization(PlayerTemplateStateInitializatio
     if (edition_!=OriginalEdition::Patch1078 || !initialization.bytes || !initialization.replace) throw std::invalid_argument("빈 State의 PATCH 미정 입력/실제 생성 연결 누락");
     initialization_=std::move(initialization);
 }
+// 단순 새 버퍼 할당과 달리 실제 부모가 돌려준 새 현재 stream을 직접 연결한다.
+void RawPlayerTemplateState::BindMinimumSize(std::function<PlayerTemplateStateStream&(std::uint32_t,std::int32_t)> ensure) {
+    if (edition_!=OriginalEdition::Patch1078 || !ensure) throw std::invalid_argument("최소 State 확장의 PATCH 실제 부모 연결 누락");ensureMinimum_=std::move(ensure);
+}
 // 현재9개Template/State와선택진단·CD깊이효과를확인한다.
 RawPlayerTemplateState::RawPlayerTemplateState(OriginalEdition edition,std::span<std::uint8_t> headers,
     std::array<PlayerTemplateStateStream,9>& states,std::array<std::string,9>& fileNames,
@@ -51,7 +55,11 @@ std::span<std::uint8_t> RawPlayerTemplateState::Get(std::uint32_t slot) const {
         current=&initialization_.replace(slot,bytes); // 이전 stream 참조를 새 현재 State에 계속 사용하지 않는다.
         if (!current->present || current->end!=28 || current->position!=28 || current->bytes.size()<28) throw std::logic_error("Player 실제 빈 State 생성/쓰기 계약 위반");
     }
-    auto& stream=*current; // 생성된 경우에는 소비자가 돌려준 같은 새 현재 stream을 사용한다.
+    if (std::bit_cast<std::int32_t>(current->end)<28 && ensureMinimum_) {
+        current=&ensureMinimum_(slot,28);
+        if (!current->present || std::bit_cast<std::int32_t>(current->end)<28 || current->end>current->bytes.size()) throw std::logic_error("Player 최소 State 확장의 실제 현재 stream 계약 위반");
+    }
+    auto& stream=*current; // 생성/확장된 경우에는 소비자가 돌려준 같은 새 현재 stream을 사용한다.
     if (std::bit_cast<std::int32_t>(stream.end)<28) {
         if (!allocate_) throw std::logic_error("Player shortState 실제MemStream할당 미연결");
         auto replacement=allocate_(slot,28); //원본44d290은새record를할당한뒤현재원문의길이/포인터를다시읽는다.

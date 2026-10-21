@@ -1562,3 +1562,9 @@ cpppj/tests/DataManagerStreamsTests.cpp text eol=lf
 cpppj/datamanager-streams-*.json text eol=lf
 tools/cpp_datamanager_streams_audit.py text eol=lf
 docs/exe/cpp-datamanager-streams-20261021.md text eol=lf
+# 최소 확장/임시 생성/이름 교체의 전체 원문과 실제 소비자를 LF로 보존한다.
+cpppj/src/o/RawDataManagerResize.* text eol=lf
+cpppj/tests/DataManagerResizeTests.cpp text eol=lf
+cpppj/datamanager-resize-*.json text eol=lf
+tools/cpp_datamanager_resize_audit.py text eol=lf
+docs/exe/cpp-datamanager-resize-20261021.md text eol=lf

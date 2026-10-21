@@ -654,10 +654,10 @@ struct RawCampaignSession::Impl {
         playerHooks.addRegular=[this](Sid sid,std::uint32_t event,float payload) { SessionCheck(core.processes.AddRegular(sid,event,payload)!=nullptr); };
         player=std::make_unique<RawPlayerWorld>(core.pool,core.postPop,players,playerState,std::move(playerHooks));core.postPop.SetPlayerPostPop(player.get());
         templateState=std::make_unique<RawPlayerTemplateState>(core.pool.Edition(),headers,[this](auto slot)->PlayerTemplateStateStream& { return templateStorage->SelectState(slot); },[this](auto slot)->const std::string& { return templateStorage->Name(slot); },
-            objectState.loadingDepth,objectState.mission,SessionMissing<void,PlayerTemplateStateAssertion>(),[this](std::uint32_t depth) { world.SetLoadingDepth(depth); },
-            [this](auto owner,auto size) { return templateStorage->GrowState(owner,size); },[this](auto owner) { templateStorage->CommitStateGrowth(owner); });
+            objectState.loadingDepth,objectState.mission,SessionMissing<void,PlayerTemplateStateAssertion>(),[this](std::uint32_t depth) { world.SetLoadingDepth(depth); });
         templateState->BindInitialization({[this](auto,std::span<std::uint8_t,28> bytes) { if (!services.templateStateBytes) throw std::logic_error("빈 State의 현재 미정 바이트 입력 미연결");services.templateStateBytes(bytes); },
             [this](auto owner,std::span<const std::uint8_t,28> bytes)->PlayerTemplateStateStream& { return templateStorage->InitializeState(owner,bytes); }}); // 실제 새 State와 같은 헤더/manager 수명을 사용한다.
+        templateState->BindMinimumSize([this](auto owner,std::int32_t minimum)->PlayerTemplateStateStream& { return templateStorage->EnsureStateSize(owner,minimum); }); // 실제 임시 섹션/목록 교체까지 완료한 현재 stream이다.
         auto playerRegularHooks=services.player;playerRegularHooks.assertion=SessionMissing<void,PlayerRegularAssertion>();
         FillMissing(playerRegularHooks.log);
         playerRegularHooks.reserveRegular=[] { return true; };

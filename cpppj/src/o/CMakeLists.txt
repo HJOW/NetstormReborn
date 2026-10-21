@@ -361,3 +361,6 @@ target_sources(netstorm PRIVATE RawDataManagerSelection.cpp RawDataManagerSelect
 
 # 원본 MemStream 전체 처리와 같은 DataManager 추가/제거를 실제 템플릿 소비자에 공유한다.
 target_sources(netstorm PRIVATE RawMemStream.cpp RawMemStream.h RawDataManagerList.cpp RawDataManagerList.h)
+
+# 같은 원문/목록에서 최소 확장·임시 생성·이름 교체의 전체 부모를 연결한다.
+target_sources(netstorm PRIVATE RawDataManagerResize.cpp RawDataManagerResize.h)

@@ -1729,3 +1729,8 @@ set_source_files_properties(PlayerStateInitializationTests.cpp PROPERTIES COMPIL
 target_sources(netstorm_tests PRIVATE DataManagerStreamsTests.cpp)
 set_source_files_properties(DataManagerStreamsTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_DATAMANAGER_STREAMS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/datamanager-streams-x86.tsv\"")
+
+# 원본 최소 확장/생성/이름 교체와 모든 하위를 관측한 최초286행을 대조한다.
+target_sources(netstorm_tests PRIVATE DataManagerResizeTests.cpp)
+set_source_files_properties(DataManagerResizeTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_DATAMANAGER_RESIZE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/datamanager-resize-x86.tsv\"")

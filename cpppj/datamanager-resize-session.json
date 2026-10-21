@@ -1,0 +1,42 @@
+{
+  "start_commit": "78625d3d69884169b1608f92cd9712ad3d9b2761",
+  "host": "VM-W11-Codex",
+  "last_decompile_host": "VM-W11-CODEX",
+  "last_decompile_date": "2026-10-21",
+  "original_rows": 286,
+  "build_exit_code": 0,
+  "tests_written_and_compiled": [
+    "DataManagerResize_Native286",
+    "CampaignTemplates_MinimumStateUsesTemporarySectionAndSharedData",
+    "CampaignTemplates_MinimumStateTailCopiesBeforeCompaction",
+    "DataManagerResize_SufficientStateAndRequiredBinding"
+  ],
+  "cpp_tests_executed": false,
+  "game_executed": false,
+  "limitations": [
+    "열 본문을 직접 관측한다. CRT ASCII 비교/new/free/진단은 명시 경계이며 실제 CRT/힙/게임 실행은 아니다.",
+    "실제 저장소는 완료 후 비공개 임시 노드/버퍼 토큰을 State 토큰으로 매핑한다. 원본 힙 주소/외부 노드 포인터 동일성 전체를 주장하지 않는다.",
+    "분리 stream 입력의 기존 확장 어댑터는 유지하며 실제 Session은 전체 최소 확장 부모만 사용한다.",
+    "C++ 검사는 작성/컴파일했으며 실행 검증과11미션 자연 완주는 미완료다."
+  ],
+  "hashes": {
+    "cpppj/src/o/RawDataManagerResize.cpp": "5fdc076afb1b4d275d43269109cda6614e989860fb3df5aef9f73a5651b2939d",
+    "cpppj/src/o/RawDataManagerResize.h": "751d875797d83769feab8892a3014f0f84e5c68a1339b5b9a232c7b5b2d9743e",
+    "cpppj/src/o/RawPlayerTemplateState.cpp": "fa5941f6af8c83faaeef02914e5b7d76b0c2686cce42414cc0cd1576087bbe79",
+    "cpppj/src/o/RawPlayerTemplateState.h": "f8bebceabc21db278e19e526e0143c3c42728032aa173fc14b65f98b3973f304",
+    "cpppj/src/client/CampaignTemplateStorage.cpp": "4ab271ea3a2e086c3c4d3c09d477ede965cc3c22aa84d8b60012edaf1d2d9c9e",
+    "cpppj/src/client/CampaignTemplateStorage.h": "49656384a416c18c9bd8d9b7175b42bd15dfe649aee4562165e310fba79bc242",
+    "cpppj/src/client/RawCampaignSession.cpp": "c5c5db2a7858da5efb97049ac3a15ea615b40076ad6f25ae939992353e3cfd59",
+    "cpppj/src/o/CMakeLists.txt": "979af1f8e19ae8a435e40461c95f2738d487948702461dfc7e7bf8b9a0aa1196",
+    "cpppj/tests/CMakeLists.txt": "1d7980b4acd47a1a3498fd75ac4590b8000d7deac6f1c4375c0b3ab23baa7884",
+    "cpppj/tests/DataManagerResizeTests.cpp": "ead86f6e62ae93503766e87eeaa857559e6f76dc1436ee178c1fac068979f381",
+    "cpppj/datamanager-resize-native.json": "7428a02865c07305ba987188146f405121bed05b1baee124cc563a2f8ea777dc",
+    "tools/cpp_datamanager_resize_audit.py": "732e90dc86d676d4f80857850b078e212610ee115ab55ded8c548e8f96bb1355",
+    ".gitattributes": "7458ae563409199f35fe5597bae040629e0183c0e16362096f42f2f85a3e829d",
+    "extracted/cpp-datamanager-resize-20261021-build2.log": "31c764532b2e90918e82b2917cf1818970c842598b50efc8ee38bd42a85bdcdd",
+    "extracted/cpp-datamanager-resize-20261021-build2-result.json": "a6dd523b013a21c669079f5af5cfe57cf80aafa0fa9948598cc66704a0775e1f",
+    "cpppj/build/lib/Release/netstorm.lib": "59231b4e6c768cf19d8c4b14ebae77ee0302a693b5052b44ee0dd612ac5bace3",
+    "cpppj/build/bin/Release/NetstormCpp.exe": "895a0d84f5ebe7edb09792470ab18618eb4fba375f88df6b7e5b77413a0aa717",
+    "cpppj/build/bin/Release/netstorm_tests.exe": "cf244d1f0572d4061de23142e878285b781943d7bc80cecaee2debaf1ca40211"
+  }
+}

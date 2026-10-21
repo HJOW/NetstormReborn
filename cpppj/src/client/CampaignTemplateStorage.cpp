@@ -4,6 +4,7 @@
 #include "o/RawDataManagerSelection.h"
 #include "o/RawDataManagerList.h"
 #include "o/RawMemStream.h"
+#include "o/RawDataManagerResize.h"
 #include <algorithm>
 #include <stdexcept>
 namespace netstorm::client {
@@ -91,9 +92,38 @@ struct CampaignTemplateStorage::Image {
         SyncStreams();const auto handle=static_cast<std::uint32_t>(StateSection()+1);const auto found=streams.find(handle);
         if (found!=streams.end()) o::RemoveDataManagerStream(manager,handle,ListEffects());
         if (fort.sections.size()<=StateSection()) fort.sections.resize(StateSection()+1);
-        auto node=std::make_unique<Stream>();const auto sectionName=std::string_view("State");std::copy(sectionName.begin(),sectionName.end(),node->bytes.begin()+16);
-        streams.emplace(handle,std::move(node));WithMemory(handle,[this,handle](const auto& hooks) { o::AllocateMemStream(streams.at(handle)->bytes,0x4000,hooks); });
+        streams.emplace(handle,std::make_unique<Stream>());WithMemory(handle,[this,handle](const auto& memory) {
+            o::DataManagerResizeHooks hooks;hooks.memory=memory;hooks.selection.stream=[this](auto stream) { return std::span(streams.at(stream)->bytes); }; // 생성자도 같은 실제 노드/할당을 사용한다.
+            o::ConstructDataManagerStream(handle,std::string_view("State"),0x4000,hooks);
+        });
         o::AppendDataManagerStream(manager,handle,ListEffects());streamOrder.push_back(handle);WriteStream(handle,input);
+    }
+    // 실제 임시 노드가 살아 있는 동안 원본 부모를 실행하고 완료한 같은 할당을 State로 넘긴다.
+    void EnsureStateSize(std::int32_t minimum) {
+        if (!retiredState.empty()) throw std::logic_error("분리 State 복사 중 원본 최소 확장 불가");
+        SyncStreams();const auto stateHandle=static_cast<std::uint32_t>(StateSection()+1);const auto original=streams.find(stateHandle);
+        if (original!=streams.end()) { Put(original->second->bytes,4,state.position);Put(original->second->bytes,8,state.end); }
+        constexpr std::uint32_t kTemporaryStream=0x100,kTemporaryData=0x40000; // 공개하지 않는 동기 작업의 임시 노드/버퍼 토큰이며 실제 주소를 자르지 않는다.
+        if (streams.contains(kTemporaryStream)) throw std::logic_error("Template 임시 stream 토큰 충돌");
+        std::unique_ptr<Stream> temporary;std::vector<std::uint8_t> buffer;bool allocated{};o::DataManagerResizeHooks hooks;
+        hooks.selection.stream=[this,&temporary](auto handle)->std::span<std::uint8_t> { if (handle==kTemporaryStream && temporary) return temporary->bytes;return streams.at(handle)->bytes; }; // 검색/이름 교체도 같은 임시 노드를 조회한다.
+        hooks.list=ListEffects();hooks.list.lifetime.stream=hooks.selection.stream;
+        hooks.memory.buffer=[this,&buffer](auto pointer)->std::span<std::uint8_t> {
+            if (pointer==kTemporaryData) return buffer;
+            if (pointer<0x10001U || pointer>0x10000U+o::FortTemplate::kSectionCount) throw std::out_of_range("Template 확장의 실제 원문 버퍼 핸들 범위");return fort.sections.at(pointer-0x10001U);
+        }; // 복사는 원본 부모가 요청하는 현재 data/end를 사용한다.
+        hooks.memory.allocate=[&buffer,&allocated](auto size) { if (allocated) throw std::logic_error("Template 확장 임시 버퍼 중복 할당");buffer.resize(size);allocated=true;return kTemporaryData; };
+        hooks.memory.release=[this](auto pointer) { if (pointer) ReleaseBuffer(pointer); };hooks.memory.assertion=[](auto) { throw std::logic_error("Template 원본 확장의 MemStream 진단"); };
+        hooks.allocateStream=[&temporary](auto size) { if (size!=60 || temporary) throw std::logic_error("Template 실제 임시 노드 할당 계약 위반");temporary=std::make_unique<Stream>();return kTemporaryStream; };
+        hooks.missingSource=[] { throw std::logic_error("Template 원본 State 확장의 원문 섹션 누락"); };
+        const auto current=o::EnsureDataManagerStreamSize(manager,"State",minimum,hooks);
+        if (current!=kTemporaryStream) { if (current!=stateHandle) throw std::logic_error("Template 확장 반환의 실제 State 불일치");PublishCursor(stateHandle);return; }
+        if (!temporary || !allocated || streams.contains(stateHandle) || Read(temporary->bytes)!=kTemporaryData) throw std::logic_error("Template 원본 확장의 임시 소유권 계약 위반");
+        const auto end=Read(std::span(temporary->bytes).subspan(8));if (end>buffer.size()) throw std::out_of_range("Template 원본 확장 결과의 실제 end 범위");
+        // 외부에 노출하지 않은 임시 핸들을 동일 이미지의 State 핸들로 매핑하고 실제 새 노드/버퍼를 그대로 인계한다.
+        for (auto& entry:streams) if (Read(std::span(entry.second->bytes).subspan(0x38))==kTemporaryStream) Put(entry.second->bytes,0x38,stateHandle);
+        if (Read(std::span(manager).subspan(4))==kTemporaryStream) Put(manager,4,stateHandle);
+        Put(manager,8,stateHandle);Put(temporary->bytes,0,0x10000U+stateHandle);buffer.resize(end);fort.sections.at(StateSection())=std::move(buffer);streams.emplace(stateHandle,std::move(temporary));streamOrder.push_back(stateHandle);PublishCursor(stateHandle);
     }
     // 공개 진단은 보조 순서 벡터 대신 실제 head/next와 이름을 읽는다.
     std::vector<std::string> SectionOrder() const {
@@ -197,6 +227,8 @@ o::PlayerTemplateStateStream& CampaignTemplateStorage::State(std::uint32_t slot)
 o::PlayerTemplateStateStream& CampaignTemplateStorage::SelectState(std::uint32_t slot) { auto& image=Current(slot);image.SelectState();return image.state; }
 // 미정 바이트를 포함한 완성28BYTE를 실제 새 섹션에 쓰고 같은 현재 cursor를 반환한다.
 o::PlayerTemplateStateStream& CampaignTemplateStorage::InitializeState(std::uint32_t slot,std::span<const std::uint8_t,28> bytes) { auto& image=Current(slot);image.InitializeState(bytes);return image.state; }
+// 같은 manager의 전체 최소 확장 부모가 만든 실제 현재 State를 빌린다.
+o::PlayerTemplateStateStream& CampaignTemplateStorage::EnsureStateSize(std::uint32_t slot,std::int32_t minimum) { auto& image=Current(slot);image.EnsureStateSize(minimum);return image.state; }
 // 빌린 헤더도 같은 manager의 실제 연결 순서를 확인한다.
 std::vector<std::string> CampaignTemplateStorage::SectionOrder(std::uint32_t slot) { return Current(slot).SectionOrder(); }
 // 빌린 헤더도 같은 manager의 현재 섹션을 확인한다.

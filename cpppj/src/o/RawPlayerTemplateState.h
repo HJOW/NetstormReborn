@@ -44,8 +44,9 @@ public:
     // PATCH4bd550/CD427920: 처음pos0, 짧은원문은확장뒤pos/end28이다. PATCH 빈State는 연결된 생성 소비자를 사용한다.
     std::span<std::uint8_t> Get(std::uint32_t slot) const;
     void BindInitialization(PlayerTemplateStateInitialization initialization); // PATCH 빈 State를 실제 미정 입력/섹션 생성 소비자에 연결한다.
+    void BindMinimumSize(std::function<PlayerTemplateStateStream&(std::uint32_t,std::int32_t)> ensure); // PATCH 실제4d290이 만든 새 현재 State를 직접 받는다.
     // PATCH4bd540/4bd360·CD427910/4275d0의Notify다. 실제isMine1 또는preventSave에서자연반환한다.
-    // 실제파일저장은명시거부하며짧은기존State는실제할당이연결됐을때만28BYTE로확장한다.
+    // 실제 파일 저장은 명시 거부하며 짧은 State는 최소 확장 부모 또는 분리 할당 소비자가 있을 때만 확장한다.
     void Changed(std::uint32_t slot) const;
 private:
     // 현재Template한기록의DWORD를원본little endian폭으로조회한다.
@@ -57,9 +58,10 @@ private:
     std::uint32_t& depth_; // 같은Template/Object/Priest/Meta로딩깊이다.
     const bool& mission_; // 실제미션ctor가설정한594fa0/CD52e16c를공유한다.
     PlayerTemplateStateInitialization initialization_; // 실제로 빈 State가 선택됐을 때만 사용하는 필수 생성 경계다.
+    std::function<PlayerTemplateStateStream&(std::uint32_t,std::int32_t)> ensureMinimum_; // 실제 임시 섹션/이름 교체까지 수행하는 현재 최소 확장 소비자다.
     std::function<void(PlayerTemplateStateAssertion)> assertion_; // 원본보고후현재조건을재조회한다.
-    std::function<std::span<std::uint8_t>(std::uint32_t,std::uint32_t)> allocate_; //shortState의실제새MemStream할당이다. 기존원문은본문이복사/0채움한다.
+    std::function<std::span<std::uint8_t>(std::uint32_t,std::uint32_t)> allocate_; // 분리 stream 입력의 확장용 할당이다. 실제 Session은 ensureMinimum_ 부모를 사용한다.
     std::function<void(std::uint32_t)> depthChanged_; // CD즉시증감값을실제소비자에전달한다.
-    std::function<void(std::uint32_t)> allocationComplete_; // 실제 원문 복사가 끝난 뒤 이전 State 할당을 반납한다.
+    std::function<void(std::uint32_t)> allocationComplete_; // 분리 할당 어댑터의 원문 복사가 끝난 뒤 이전 State 할당을 반납한다.
 };
 }

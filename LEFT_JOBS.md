@@ -1,5 +1,14 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-21 단위267 완료: 짧은 State의 전체 최소 확장·임시 생성·이름 교체 연결
+
+- [x] 직전 턴은 단위266의 구현·빌드·문서·로컬 커밋을 마친 진행 턴이다. 시작 HEAD `78625d3d`에서 `AGENTS.md`와 양 인수인계를 다시 읽었다. 현재/마지막 전체 정밀 디컴파일 PC는 **VM-W11-CODEX / 2026-10-21**로 같다. 새 디컴파일·원본/CD/AGENTS/dotnetpj 변경·게임/창 실행은 없다.
+- [x] 제품 수정 전 생성0044d070/이름 교체44d160/최소 확장44d290과 모든 하위를 포함한 **열 실제 본문**을 **286고유 입력·286정상 반환·80,912명령** 관측했다. 전체796BYTE/반환EAX/경계 직전 상태·생성 뒤 원문 data/end/현재 alloc·free 뒤 current 재조회·ABI/보존 레지스터/x87/정상 SEH 복구/쓰기 범위를 확인했다. **CRT ASCII 비교/new/free/진단만 명시 경계**이며 실제 CRT/힙/OS/게임/Windows 예외 실행이 아니다. 최초 세 파일은 `extracted/datamanager-resize-20261021-first-capture/`에 동결했다.
+- [x] `RawDataManagerResize`의 생성/이름 교체/최소 확장을 복원했다. 실제 Session의 짧은 State는 `BindMinimumSize→EnsureStateSize`로 같은 임시 노드/원문 복사/0 채움/추가/기존 State 제거/이름 교체를 마친 새 현재 stream을 받는다. 실제 Session의 분리 `GrowState/Commit` 콜백은 제거했고 독립 stream/CD 검사 어댑터는 유지한다. 빈 State 생성도 같은 원본 생성자를 쓴다. 저장소는 완료한 실제 새 노드/버퍼를 인계하고 비공개 임시 토큰만 State 토큰으로 매핑한다. 원본 힙 주소/외부 raw 노드 포인터 동일성 전체는 아니다.
+- [x] 새 검사4개(전체286행·실제 새 버퍼/목록/빌림/분리 복사 미호출·State tail 원문 복사 후 압축/반납·signed 최소/충분한 상태/필수/CD 계약)를 작성·컴파일했다. 최종 Release **종료0·경고0·오류0**, 로그 `extracted/cpp-datamanager-resize-20261021-build2.log`·원시 stdout·실제 종료 코드 JSON을 보존했다. **C++검사/CTest/게임은 기존 실행 이월 지시대로 실행하지 않았다.** 새 감사/최초286행·기존 stream404/State2560/선택864/Template v2 원문 보존은 종료0이다. 과거 소스/빌드 핀은 변경하지 않는다.
+- [x] 상세 [작업 기록](docs/exe/cpp-datamanager-resize-20261021.md), `cpppj/datamanager-resize-native.json`·`datamanager-resize-session.json`, `tools/decomp_datamanager_resize.py --verify`·`tools/cpp_datamanager_resize_audit.py`다. 인수인계 후 **20261021-31 CP**로 로컬 커밋하며 push하지 않는다. 마지막 정밀 디컴파일 PC는 계속 **VM-W11-CODEX / 2026-10-21**이다.
+- [ ] **다음:** 전체 DataManager 생성/파일 읽기/저장·오류·전체 섹션 생성/복제 부모·외부 raw 노드 포인터 소비자 수명/정체성, 전체 State7/전투 정리004b2df0·Fort 선택/Guide 공장/가상 소멸을 이어간다. **실제 짧은 State의 전체 임시 생성/복사/추가/기존 제거/이름 교체와 새 현재 연결은 이번 완료 항목**이다. 전체11미션 자연 완주·전략AI·지형/포획/희생/대피·외관/음향/동작 동일성·통합 실행 검증은 미완료이며 목표는 active다.
+
 ## 2026-10-21 단위266 완료: MemStream 전체 하위·DataManager 추가/제거의 실제 공통 소비자
 
 - [x] 직전 턴은 단위265 구현·빌드·문서·로컬 커밋을 마친 진행 턴이다. 시작 HEAD `0429e571`에서 `AGENTS.md`와 양 인수인계를 다시 읽었다. 현재/마지막 정밀 디컴파일 PC는 **VM-W11-CODEX / 2026-10-21**로 같다. 새 디컴파일·원본/CD/AGENTS/dotnetpj 변경·게임/창 실행은 없다.

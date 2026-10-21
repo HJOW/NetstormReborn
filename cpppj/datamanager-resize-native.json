@@ -1,0 +1,31 @@
+{
+  "host": "VM-W11-Codex",
+  "rows": 286,
+  "normal_returns": 286,
+  "instructions": 80912,
+  "entries": {
+    "0x44cc20": 314,
+    "0x44cce0": 234,
+    "0x44cd40": 120,
+    "0x44ce10": 120,
+    "0x44d040": 136,
+    "0x44d0f0": 136,
+    "0x44ce60": 478,
+    "0x44d070": 200,
+    "0x44d160": 152,
+    "0x44d290": 174
+  },
+  "limitations": [
+    "기존 열 개 본문을 직접 실행하며 CRT ASCII 비교/new/free/진단만 명시 경계다.",
+    "실제 CRT/힙/OS/게임 실행이 아니다. OOM/예외·잘못된 노드/물리 범위는 정상 관측에 포함하지 않는다.",
+    "SEH는 격리 FS0의 정상 반환 복구만 확인하며 실제 Windows 예외 실행은 아니다."
+  ],
+  "hashes": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_local_mission_transport.py": "db71da65079aa9a985a3a833edd224f089ba9a20137d92042551cb346937eb78",
+    "tools/decomp_datamanager_resize.py": "be3d3401396eb8896e8e7b62d7c6ca7f9b10640e4910665c0b6ab6740f2dc1cc",
+    "cpppj/tests/fixtures/datamanager-resize-x86.tsv": "3989c2ea19eba6d08b1eabf51e9c80d46339dcf02cfdddac012d258d2cd1644b"
+  }
+}
