@@ -42,5 +42,6 @@ private:
     std::array<std::uint8_t,180> headers_{}; // Client보다 짧은 Session이 사라져도 유지되는 실제9개 헤더다.
     std::map<std::uint32_t,std::unique_ptr<Image>> images_; // 호스트 포인터를DWORD로 자르지 않는 실제 소유 객체 표다.
     std::uint32_t nextHandle_{1}; // 서로 살아 있는 manager를 구별하는 비영 호스트 핸들이다.
+    std::array<std::uint8_t,4> managerGlobal_{}; // 원본 생성자가0으로 쓰는005c89c0의 같은 Client 수명 저장소다. 전체 State7의 다른 사용처는 후속이다.
 };
 }

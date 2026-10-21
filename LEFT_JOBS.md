@@ -1,5 +1,14 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-21 단위271 완료: Template 생성자·파일명 getter·바깥 Load 제어 복원
+
+- [x] 시작 HEAD `e8689f8b`에서 `AGENTS.md`와 양 인수인계를 다시 확인했다. **사용자가 중단한 게임/집중 검사/희생 검증은 재개하지 않았으며 테스트용 AI도 시작하지 않았다.** 현재/마지막 전체 정밀 디컴파일 PC는 **VM-W11-CODEX / 2026-10-21**로 같다. 기존 정밀 원문과 보호 PE를 읽었고 새 디컴파일/원본/CD/AGENTS/dotnetpj 변경은 없다. 작업 트리의 다른 세션 dotnetpj 파일·`tools/sum_fixture.py`는 건드리지 않는다.
+- [x] `RawTemplateLoad`에004bcc60 생성자·004bcca0 getter·004bf550 바깥 Load를 복원했다. 지정 DWORD/전역005c89c0 초기화·NUL까지만 이름 복사·같은 파일의 기존 manager 유지/다른 이름 진단·readonly 사전 설정 단락 평가·현재 ptr 읽기·실패의 저장 ptr 소멸/free·부가 필드 보존·현재 슬롯만 제목 갱신을 명시 하위 효과 경계로 연결했다. 생성자의 원문 void 표기와 달리 실제 명령은 EAX에 this를 유지함도 확인했다.
+- [x] 0041af80은 파일 존재가 아닌 **읽기 전용 판정**이다. 출처2/4 또는 CRT stat 모드 BYTE 부호의 분기와00460730의 readonly 제목을 정적으로 확인했다. 실제 보관소는 새 생성자와 같은 manager+12 getter를 사용하고 생성자 전역도 같은 Client 수명 저장소에 쓴다. **바깥 Load 몸체를 실제 Session의 교체용 InstallFile에 연결한 것은 아니다.** 교체 API를 그대로 둔 범위와 전체 경로/readonly 연결 한계를 [상세 문서](docs/exe/cpp-template-load-20261021.md)에 기록했다.
+- [x] 새5검사는 바이트/tail/경계 보존·같은 메모리 이름·기존 파일/readonly/현재 슬롯 분기·효과 뒤 ptr 재조회·실패 저장 ptr free/부가 필드·NULL 경계를 작성/컴파일했다. Release **종료0·경고0·오류0**, `extracted/cpp-template-load-20261021-build1.log`와 종료 코드 JSON을 보존했다. **C++검사/CTest/게임/native 명령 실행0**이다. `tools/cpp_template_load_audit.py`와 `cpppj/template-load-static-20261021.json`은 정적 원본 명령/실제 작업 트리 입력/바이너리 SHA·새5검사 등록만 확인하며 실행 통과 증거가 아니다. 단위270과 과거 실행 기록은 덮어쓰지 않았다.
+- [ ] **다음 비실행 복원:** 새 바깥 Load와 실제 파일 출처/readonly·현재 슬롯/제목의 연결, 기본 이름 표 생성0044d870·저장·전체 State7/전투 정리004b2df0. 생성자 전역의 다른 소비자·전체 파일 경로/CRT/VFS/OS 오류·미정 할당 바이트도 남는다. 중단된 클리어/희생 GUI는 사용자 재지시 전 계속 보류한다. 전체11미션 자연 플레이/전략AI/표시·음향·동작 동일성은 미완료이며 goal은 active다.
+- [x] 인수인계 뒤 **20261021-40 CP**로 로컬 커밋하며 push하지 않는다.
+
 ## 2026-10-21 단위270 완료: 파일 읽기 부모·Template 서명·현재 원문 할당 반납 연결
 
 - [x] 자동 goal 계속 지시로 시작 HEAD `ec3c418c`에서 `AGENTS.md`와 양 인수인계를 다시 읽었다. 직전 턴은 표시 수정/테스트 중단 기록과 커밋을 마친 진행 턴이다. **중단한 게임/집중 검사/희생 검증은 재개하지 않았다.** 이번은 비실행 원본 복원이다. 현재/마지막 전체 정밀 디컴파일 PC는 **VM-W11-CODEX / 2026-10-21**로 같고 새 디컴파일/원본/CD/AGENTS/dotnetpj 변경은 없다.

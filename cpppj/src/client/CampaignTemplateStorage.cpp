@@ -6,6 +6,7 @@
 #include "o/RawMemStream.h"
 #include "o/RawDataManagerResize.h"
 #include "o/RawDataManagerImage.h"
+#include "o/RawTemplateLoad.h"
 #include <algorithm>
 #include <stdexcept>
 namespace netstorm::client {
@@ -211,7 +212,7 @@ struct CampaignTemplateStorage::Image {
         }; // 입력 원문과 새 할당도 같은 실제 버퍼를 조회한다.
         hooks.streams.memory.allocate=[this,&allocating](auto size) { auto& buffer=fort.sections.at(allocating-1);if (!buffer.empty()) throw std::logic_error("Template 파일 이미지의 새 버퍼 중복 할당");buffer.resize(size);return 0x10000U+allocating; };
         hooks.streams.memory.assertion=[](auto) { throw std::logic_error("Template 파일 이미지의 실제 MemStream 진단"); };
-        o::DataManagerFileHooks file;file.image=hooks;file.fileName=[this] { return std::string_view(name); }; // 이미 VFS에서 읽어 캡처한 같은 파일 식별자/원문을 가상 파일 입력 경계에 넘긴다.
+        o::DataManagerFileHooks file;file.image=hooks;file.fileName=[this] { return o::TemplateDataManagerFileName(manager); }; // 같은 manager+12의 가상 이름을 파일 입력 경계에 넘긴다. VFS 식별자의 전체 원본 경로 복원은 후속이다.
         file.readFile=[&source](std::string_view,std::int32_t mode,std::span<std::uint8_t> length,std::int32_t flags) {
             if (mode!=1 || flags || length.size()!=4) throw std::logic_error("Template 파일 읽기의 실제 요청 인수 불일치");Put(length,0,static_cast<std::uint32_t>(source.size()));return source.empty() ? 0U : 0x30000U;
         }; // 파일/OS를 재실행하지 않고 현재 소유 원문의 할당과 길이만 인계한다.
@@ -230,9 +231,9 @@ struct CampaignTemplateStorage::Image {
         }
     }
     // State와 Territory 모두 같은 원시 섹션 바이트를 빌리며 파일 입력이면 원본 읽기 부모가 초기 목록을 만든다.
-    Image(o::FortTemplate value,std::string file,bool fileImage=false):fort(std::move(value)),name(std::move(file)) {
+    Image(o::FortTemplate value,std::string file,std::span<std::uint8_t,4> global,bool fileImage=false):fort(std::move(value)),name(std::move(file)) {
         if (name.size()>=256 || name.find('\0')!=std::string::npos) throw std::invalid_argument("Template 실제 파일명256BYTE 계약 위반");
-        Put(manager,0,0x514690U);std::copy(name.begin(),name.end(),manager.begin()+12);Put(manager,0x110,0xffffffffU); // 기존 호스트 생성 어댑터에 실제 폭/파일명/서명 초기값만 설치한다. 원본 생성자의 별도 전역 초기화 전체는 아니다.
+        o::ConstructTemplateDataManager(manager,name,global); // 같은 Client 수명의 별도 전역0 쓰기도 원본 생성자 몸체에서 수행한다.
         if (fileImage) return;
         const auto at=StateSection();const auto bytes=at<fort.sections.size() ? std::span<std::uint8_t>(fort.sections[at]) : std::span<std::uint8_t>{};state={bytes,0,static_cast<std::uint32_t>(bytes.size()),!bytes.empty()};
         const auto territoryAt=TerritorySection();const auto territoryBytes=territoryAt<fort.sections.size() ? std::span<const std::uint8_t>(fort.sections[territoryAt]) : std::span<const std::uint8_t>{};
@@ -257,10 +258,10 @@ o::TemplateLifetimeHooks CampaignTemplateStorage::Effects() {
     return {[this](auto handle) { auto& image=*images_.at(handle);image.Destroy();image.fort=o::FortTemplate{};image.state={{},0,0,false};image.territory={};std::vector<std::uint8_t>{}.swap(image.retiredState); },[this](auto handle) { if (images_.erase(handle)!=1) throw std::logic_error("Template 같은 manager 중복 반납"); }};
 }
 // 기존 한 manager를 정확히 해제한 뒤 새 실제 객체를 소유한다.
-void CampaignTemplateStorage::Install(std::uint32_t slot,o::FortTemplate fort,std::string name) { Clear(slot);if (!nextHandle_) throw std::overflow_error("Template 호스트 manager 핸들 소진");const auto handle=nextHandle_++;images_.emplace(handle,std::make_unique<Image>(std::move(fort),std::move(name)));Put(Header(slot),0,handle); }
+void CampaignTemplateStorage::Install(std::uint32_t slot,o::FortTemplate fort,std::string name) { Clear(slot);if (!nextHandle_) throw std::overflow_error("Template 호스트 manager 핸들 소진");const auto handle=nextHandle_++;images_.emplace(handle,std::make_unique<Image>(std::move(fort),std::move(name),managerGlobal_));Put(Header(slot),0,handle); }
 // 파싱된 보조 자료와 같은 실제 파일 원문을 새 manager에 읽으며 임의 빈 섹션 목록을 먼저 만들지 않는다.
 void CampaignTemplateStorage::InstallFile(std::uint32_t slot,o::FortTemplate fort,std::span<const std::uint8_t> bytes,std::string name,std::int32_t typeCount) {
-    Clear(slot);if (!nextHandle_) throw std::overflow_error("Template 파일 manager 핸들 소진");auto image=std::make_unique<Image>(std::move(fort),std::move(name),true);image->ReadFile(bytes,typeCount);const auto handle=nextHandle_++;images_.emplace(handle,std::move(image));Put(Header(slot),0,handle);
+    Clear(slot);if (!nextHandle_) throw std::overflow_error("Template 파일 manager 핸들 소진");auto image=std::make_unique<Image>(std::move(fort),std::move(name),managerGlobal_,true);image->ReadFile(bytes,typeCount);const auto handle=nextHandle_++;images_.emplace(handle,std::move(image));Put(Header(slot),0,handle);
 }
 // 빌린 헤더를 반납해도 원래 소유자의 실제 버퍼/커서는 유지된다.
 void CampaignTemplateStorage::Borrow(std::uint32_t slot,std::uint32_t source) { if (slot==source) throw std::invalid_argument("Template 자기 manager 빌림 계약");static_cast<void>(Current(source));const auto handle=Read(Header(source));const auto target=Header(slot);if (Read(target)==handle && !Read(target.subspan(4))) throw std::invalid_argument("Template 원래 소유자를 반납하는 같은 manager 빌림");Clear(slot);Put(Header(slot),0,handle);Put(Header(slot),4,1); }

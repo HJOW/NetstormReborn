@@ -367,3 +367,5 @@ target_sources(netstorm PRIVATE RawDataManagerResize.cpp RawDataManagerResize.h)
 
 # 실제 파일 이미지의 섹션 병합/mark/이름 표 진행 부모를 같은 저장소에 연결한다.
 target_sources(netstorm PRIVATE RawDataManagerImage.cpp RawDataManagerImage.h)
+# Template manager의 같은 파일명/생성자와 바깥 Load의 소유권 분기를 복원한다.
+target_sources(netstorm PRIVATE RawTemplateLoad.cpp RawTemplateLoad.h)
