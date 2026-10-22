@@ -1,0 +1,36 @@
+{
+  "host": "VM-W11-Codex",
+  "baseCommit": "d01762e1",
+  "ctestExit": 0,
+  "seconds": 168.8,
+  "tests": 2217,
+  "failedChecks": 0,
+  "failedTests": [],
+  "focusedPassed": {
+    "CampaignForwardBattle_NaturalTempleAssault": 1
+  },
+  "naturalTemple": {
+    "placedCannon": [
+      129,
+      125
+    ],
+    "initialHp": 5000,
+    "finalHp": 0,
+    "finalFlags": 3,
+    "targets": [
+      15016,
+      15017,
+      15019
+    ]
+  },
+  "previousReport": "cpppj/geyser-shrapnel-regression-20261022.json",
+  "logs": {
+    "extracted/cpp-forward-cannon-space-20261022-build.log": "49446800edb950e2b093ca8d32229b1f16fdc801b7dfb23a5738654330c1f994",
+    "extracted/cpp-forward-cannon-space-20261022-assault.log": "b4481e7816bfafd1f7639756ec9d03b4c0d9f8628fae9a14295f4bc1798de7f0",
+    "extracted/cpp-forward-cannon-space-20261022-ctest.log": "d8fef1513def96ea7f8de8dfececf7157f659cf88aacb539e2ba61ea85653eb6",
+    "extracted/cpp-forward-cannon-space-20261022-all-tests.log": "af94aeb7cf9f68ed1e2f1b3e136a0fa215b1f0342e947c7768a08eee1596eb05"
+  },
+  "limitations": [
+    "자연 신전 파괴와 현재 단위 전체 검사는 통과했다. AI 다리 탐색·자동 프레임·15개 미션 완주·Edit 및 사용자 플레이 동일성 전체 목표는 미완료다."
+  ]
+}
