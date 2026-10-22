@@ -1,0 +1,42 @@
+{
+  "host": "VM-W11-Codex",
+  "decompile_host": "VM-W11-Codex",
+  "cases": 145,
+  "normal_runs": 290,
+  "x87": [
+    639,
+    895
+  ],
+  "actual_entries": {
+    "0x417c70": 196,
+    "0x417d30": 276,
+    "0x417de0": 100
+  },
+  "boundary_stubs": {
+    "0x414af0": "initialize",
+    "0x416eb0": "prepare",
+    "0x4139f0": "select",
+    "0x415a10": "collectors",
+    "0x4136b0": "factories",
+    "0x40f2b0": "dry",
+    "0x411cd0": "priest",
+    "0x4162e0": "drops",
+    "0x417bd0": "bridges",
+    "0x412130": "carriers",
+    "0x4138c0": "economy",
+    "0x40ef30": "money",
+    "0x460d70": "wall",
+    "0x4105b0": "log",
+    "0x4e0620": "assert",
+    "0x410100": "destruct",
+    "0x4e4354": "free"
+  },
+  "freed_body_normalization": "absent body is zero; freed bytes are not compared",
+  "game_started": false,
+  "sources": {
+    "originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD\\NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "tools\\decomp_ai_runtime.py": "af5506d696229e6a030a7f25b1d6b0e327dc2ee1cd59bd3db537d5daca2a8889",
+    "cpppj\\tests\\fixtures\\ai-runtime-x86.tsv": "38016d7426a64fc8473b1ce97ba775e8c99c04530d73a00f732f1209ee9ecb05"
+  }
+}
