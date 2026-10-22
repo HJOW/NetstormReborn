@@ -1,0 +1,49 @@
+{
+  "host": "VM-W11-Codex",
+  "baseCommit": "65654e6c",
+  "ctestExit": 8,
+  "seconds": 173.39,
+  "tests": 2212,
+  "failedChecks": 72,
+  "failedTests": [
+    "MissionGuideInput_QueueOrderCapacityAndRelease",
+    "CampaignSession_LocalGeysersUseActualAiRegistration",
+    "CampaignSession_LocalAiPreparationSharesOriginalWorld",
+    "CampaignSession_AiStrategyInitializationUsesActualContents",
+    "CampaignSession_AiEconomySharesActualSpAndWallet",
+    "CampaignSession_AiCollectorSelectionUsesActualDeployment",
+    "CampaignSession_AiFactoryProductionUsesOriginalWorkshops",
+    "CampaignSession_FactoryUpgradePictureAndCompletionShareWorld",
+    "CampaignSession_AiResourceChoiceUsesActualGraphContentsAndLifetime",
+    "CampaignSession_AiBuildChoiceUsesActualSpWalletAndLifetime",
+    "CampaignSession_AiDropTargetsUseActualContentsGunAndLifetime",
+    "CampaignSession_AiDropScanUsesActualMapsStateAndLifetime",
+    "CampaignSession_AiFakeDrySpotsUseActualStateAndLifetime",
+    "CampaignForwardBattle_NaturalTempleAssault",
+    "CampaignAltar_AlliedReleaseUsesVirtualPriestOwner",
+    "CampaignDude_ActualPathNoticeSpeedAndArrival",
+    "CampaignTutorialOne_ActualSessionFrameAndInputPauseOwnership",
+    "CampaignObjectCommand_ActualCarrierParentAndPriestOwner",
+    "CampaignMissionCommon_ActualFiveSessionsFrameReplayAndDemoQueue",
+    "CampaignMissionLifecycle_ActualSessionEntryPauseBeforeStart",
+    "PlayerRegular_PatchNativeStateAndActualHost",
+    "PlayerRegular_CdNativeStateAndActualHost",
+    "AssetRegular_FactoryUpgradeDispatchAndUpperFlare",
+    "RawMenuControls_HelpActualTreePixelsAndOutsideInput",
+    "RawMenuControls_HelpActualTypeInfoAndImage",
+    "CampaignKnowledge_ActualSessionAndMenuTree",
+    "DudeRegular_Native1600"
+  ],
+  "newBridgeTests": 13,
+  "newBridgeFailedChecks": 0,
+  "individuallyReproduced": [
+    "MissionGuideInput_QueueOrderCapacityAndRelease",
+    "PlayerRegular_PatchNativeStateAndActualHost",
+    "CampaignSession_AiStrategyInitializationUsesActualContents"
+  ],
+  "log": "extracted/cpp-ai-bridge-path-20261022-ctest.log",
+  "logSha256": "c082195bf82692470fbceb476d398a90cb97928d47bdae18e82d7382e79c9e2d",
+  "limitations": [
+    "?? HEAD ??? ?? ??? ???? ???. ?? ?? ??? ? ?? ??? ???? ???."
+  ]
+}

@@ -2,6 +2,8 @@
 # 클라이언트와 서버가 함께 쓰던 코드로 보인다. 이 폴더의 코드는 client/ 와 platform/ 을 포함하지 않는다.
 # 다시 만든 파일을 아래 목록에 더한다. 파일 이름은 SOURCE_MAP.md 의 "cpppj 경로"를 따른다.
 target_sources(netstorm PRIVATE
+    # AI 다리의 여섯 탐색 단계·조각 소비·연결점 진행이다.
+    RawAiBridgePath.cpp RawAiBridgePath.h
     # DataManager 목록의 unlink와 실제 MemStream 버퍼/섹션 소멸 순서다.
     RawDataManagerLifetime.cpp RawDataManagerLifetime.h
     # 썬 바리케이드의 현재 프레임/소유자/연결 수 변경과 실제 사건 위임이다.

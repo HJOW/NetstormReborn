@@ -1,0 +1,13 @@
+{
+  "host": "VM-W11-Codex",
+  "samples": 600,
+  "normalReturns": 600,
+  "entry": "004167a0",
+  "sha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+  "fixtureSha256": "2cd0d570668e97f0c45ffb720692b417bed0c8d4ba117e0a1a0be30822c6f19e",
+  "toolSha256": "6ae2b87789dad7a08d189720146dc0577527d81634c6288a6412112f24a3d989",
+  "limitations": [
+    "단계 분배의 실제 x86 명령만 실행한다. 초기화/후보 준비/탐색은 명시 하위 입력이다.",
+    "원본 게임·OS·창을 실행하지 않는다. 실제 경로 검색과 사용자 플레이 동일성은 검증하지 않는다."
+  ]
+}
