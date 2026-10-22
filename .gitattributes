@@ -1609,3 +1609,7 @@ cpppj/tests/PlayerRegularTests.cpp text eol=lf
 tools/decomp_datamanager_file_save.py text eol=lf
 cpppj/datamanager-file-save-20261022.json text eol=lf
 docs/exe/cpp-editor-file-save-20261022.md text eol=lf
+# TEST02 최신 원문과 원본 미션 누락 오류의 분석 근거를 바이트 단위로 보존한다.
+tools/analyze_test02_scenario.py text eol=lf
+cpppj/test02-scenario-20261022.json text eol=lf
+docs/exe/cpp-test02-scenario-20261022.md text eol=lf

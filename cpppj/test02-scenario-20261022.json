@@ -1,0 +1,596 @@
+{
+  "schema": 1,
+  "host": "VM-W11-Codex",
+  "lastFullDecompileHost": "VM-W11-Codex",
+  "lastFullDecompileDate": "2026-10-22",
+  "map": {
+    "summary": {
+      "flagFE": false,
+      "sections": 35,
+      "extraBytes": 0,
+      "sizes": {
+        "Subscriber": 13,
+        "State": 28,
+        "Mission": 0,
+        "CoreData": 0,
+        "Chaff": 769,
+        "Badges": 1,
+        "Territory": 120,
+        "TypeNames": 753,
+        "CompressedData": 0,
+        "Technology": 61,
+        "Money": 4,
+        "Deck": 193,
+        "Reserved2": 0,
+        "Reserved3": 0,
+        "Reserved4": 0,
+        "Terr00": 65,
+        "Terr01": 24,
+        "Terr02": 30,
+        "Terr03": 1,
+        "Terr04": 1,
+        "Terr05": 1,
+        "Terr06": 1,
+        "Terr07": 1,
+        "Terr08": 1,
+        "Terr09": 1,
+        "Terr10": 1,
+        "Terr11": 1,
+        "Terr12": 1,
+        "Terr13": 1,
+        "Terr14": 1,
+        "Terr15": 1,
+        "Terr16": 1,
+        "Terr17": 1,
+        "Terr18": 1,
+        "Terr19": 1
+      },
+      "subscriberId": 120200405,
+      "name": "Unnamed",
+      "money": 1187.0,
+      "technology": [
+        {
+          "typeNumber": 71,
+          "type": "sunArcher",
+          "listFlags": 4
+        },
+        {
+          "typeNumber": 72,
+          "type": "sunAviary",
+          "listFlags": 4
+        },
+        {
+          "typeNumber": 75,
+          "type": "windBattery",
+          "listFlags": 4
+        },
+        {
+          "typeNumber": 76,
+          "type": "rainBattery",
+          "listFlags": 4
+        },
+        {
+          "typeNumber": 77,
+          "type": "thunderBattery",
+          "listFlags": 4
+        },
+        {
+          "typeNumber": 78,
+          "type": "sunBlocker",
+          "listFlags": 4
+        },
+        {
+          "typeNumber": 79,
+          "type": "thunderBlocker",
+          "listFlags": 4,
+          "contents": []
+        },
+        {
+          "typeNumber": 111,
+          "type": "sunBalloon",
+          "listFlags": 4,
+          "contents": []
+        },
+        {
+          "typeNumber": 128,
+          "type": "sunCannon",
+          "listFlags": 4
+        },
+        {
+          "typeNumber": 129,
+          "type": "rainCannon",
+          "listFlags": 4
+        },
+        {
+          "typeNumber": 131,
+          "type": "thunderCannon",
+          "listFlags": 4
+        },
+        {
+          "typeNumber": 133,
+          "type": "sunWalker",
+          "listFlags": 4,
+          "contents": []
+        },
+        {
+          "typeNumber": 135,
+          "type": "bulf",
+          "listFlags": 4,
+          "contents": []
+        },
+        {
+          "typeNumber": 136,
+          "type": "sunFence",
+          "listFlags": 4
+        },
+        {
+          "typeNumber": 137,
+          "type": "windWalker",
+          "listFlags": 4,
+          "contents": []
+        },
+        {
+          "typeNumber": 139,
+          "type": "windAviary",
+          "listFlags": 4
+        },
+        {
+          "typeNumber": 140,
+          "type": "windArcher",
+          "listFlags": 4
+        },
+        {
+          "typeNumber": 141,
+          "type": "windBalloon",
+          "listFlags": 4,
+          "contents": []
+        },
+        {
+          "typeNumber": 142,
+          "type": "windBlocker",
+          "listFlags": 4
+        },
+        {
+          "typeNumber": 143,
+          "type": "rainAviary",
+          "listFlags": 4
+        },
+        {
+          "typeNumber": 145,
+          "type": "rainFence",
+          "listFlags": 4
+        },
+        {
+          "typeNumber": 146,
+          "type": "rainBalloon",
+          "listFlags": 4,
+          "contents": []
+        },
+        {
+          "typeNumber": 147,
+          "type": "rainBlocker",
+          "listFlags": 4
+        },
+        {
+          "typeNumber": 148,
+          "type": "thunderArcher",
+          "listFlags": 4
+        },
+        {
+          "typeNumber": 149,
+          "type": "thunderFence",
+          "listFlags": 4
+        },
+        {
+          "typeNumber": 156,
+          "type": "rainWalker",
+          "listFlags": 4,
+          "contents": []
+        }
+      ],
+      "chunkCounts": {
+        "Chaff": 256,
+        "Terr00": 9,
+        "Terr01": 5,
+        "Terr02": 5
+      },
+      "objects": {
+        "priest": 3,
+        "residence": 3,
+        "thunderVortex": 1,
+        "thunderFactory": 1,
+        "bulf": 1,
+        "geyser": 3,
+        "sunFactory": 1,
+        "rainVortex": 1
+      }
+    },
+    "objects": [
+      {
+        "territory": 0,
+        "chunkOrdinal": 4,
+        "version": 2,
+        "chunk": [
+          4,
+          0
+        ],
+        "cell": [
+          5,
+          15
+        ],
+        "type_index": 158,
+        "type_name": "priest",
+        "fields": {
+          "qa": 129,
+          "owner": 1,
+          "contents": []
+        }
+      },
+      {
+        "territory": 0,
+        "chunkOrdinal": 4,
+        "version": 2,
+        "chunk": [
+          4,
+          0
+        ],
+        "cell": [
+          9,
+          2
+        ],
+        "type_index": 89,
+        "type_name": "residence",
+        "fields": {
+          "owner": 1
+        }
+      },
+      {
+        "territory": 0,
+        "chunkOrdinal": 4,
+        "version": 2,
+        "chunk": [
+          4,
+          0
+        ],
+        "cell": [
+          13,
+          11
+        ],
+        "type_index": 125,
+        "type_name": "thunderVortex",
+        "fields": {
+          "owner": 1,
+          "contents": [
+            {
+              "type": "sunWalker",
+              "contents": []
+            }
+          ]
+        }
+      },
+      {
+        "territory": 0,
+        "chunkOrdinal": 4,
+        "version": 2,
+        "chunk": [
+          4,
+          0
+        ],
+        "cell": [
+          5,
+          10
+        ],
+        "type_index": 88,
+        "type_name": "thunderFactory",
+        "fields": {
+          "factory": 0,
+          "owner": 1,
+          "contents": []
+        }
+      },
+      {
+        "territory": 0,
+        "chunkOrdinal": 4,
+        "version": 2,
+        "chunk": [
+          4,
+          0
+        ],
+        "cell": [
+          14,
+          15
+        ],
+        "type_index": 135,
+        "type_name": "bulf",
+        "fields": {
+          "owner": 1,
+          "contents": []
+        }
+      },
+      {
+        "territory": 0,
+        "chunkOrdinal": 5,
+        "version": 2,
+        "chunk": [
+          5,
+          0
+        ],
+        "cell": [
+          0,
+          6
+        ],
+        "type_index": 122,
+        "type_name": "geyser",
+        "fields": {
+          "owner": 0
+        }
+      },
+      {
+        "territory": 0,
+        "chunkOrdinal": 5,
+        "version": 2,
+        "chunk": [
+          5,
+          0
+        ],
+        "cell": [
+          0,
+          9
+        ],
+        "type_index": 122,
+        "type_name": "geyser",
+        "fields": {
+          "owner": 0
+        }
+      },
+      {
+        "territory": 0,
+        "chunkOrdinal": 5,
+        "version": 2,
+        "chunk": [
+          5,
+          0
+        ],
+        "cell": [
+          0,
+          12
+        ],
+        "type_index": 122,
+        "type_name": "geyser",
+        "fields": {
+          "owner": 0
+        }
+      },
+      {
+        "territory": 0,
+        "chunkOrdinal": 7,
+        "version": 2,
+        "chunk": [
+          7,
+          0
+        ],
+        "cell": [
+          4,
+          2
+        ],
+        "type_index": 85,
+        "type_name": "sunFactory",
+        "fields": {
+          "factory": 0,
+          "owner": 1,
+          "contents": []
+        }
+      },
+      {
+        "territory": 1,
+        "chunkOrdinal": 1,
+        "version": 2,
+        "chunk": [
+          1,
+          0
+        ],
+        "cell": [
+          11,
+          8
+        ],
+        "type_index": 158,
+        "type_name": "priest",
+        "fields": {
+          "qa": 2,
+          "owner": 2,
+          "contents": []
+        }
+      },
+      {
+        "territory": 1,
+        "chunkOrdinal": 2,
+        "version": 2,
+        "chunk": [
+          2,
+          0
+        ],
+        "cell": [
+          4,
+          8
+        ],
+        "type_index": 89,
+        "type_name": "residence",
+        "fields": {
+          "owner": 0
+        }
+      },
+      {
+        "territory": 2,
+        "chunkOrdinal": 0,
+        "version": 2,
+        "chunk": [
+          0,
+          0
+        ],
+        "cell": [
+          6,
+          12
+        ],
+        "type_index": 89,
+        "type_name": "residence",
+        "fields": {
+          "owner": 3
+        }
+      },
+      {
+        "territory": 2,
+        "chunkOrdinal": 2,
+        "version": 2,
+        "chunk": [
+          2,
+          0
+        ],
+        "cell": [
+          11,
+          1
+        ],
+        "type_index": 158,
+        "type_name": "priest",
+        "fields": {
+          "qa": 3,
+          "owner": 3,
+          "contents": []
+        }
+      },
+      {
+        "territory": 2,
+        "chunkOrdinal": 2,
+        "version": 2,
+        "chunk": [
+          2,
+          0
+        ],
+        "cell": [
+          10,
+          4
+        ],
+        "type_index": 124,
+        "type_name": "rainVortex",
+        "fields": {
+          "owner": 3,
+          "contents": [
+            {
+              "type": "sunWalker",
+              "contents": []
+            }
+          ]
+        }
+      }
+    ],
+    "territoryRecords": [
+      "020996370000",
+      "0c09013d0000",
+      "0b090bd10000",
+      "000300ac0000",
+      "010300cf0000",
+      "020300d00000",
+      "030300a50000",
+      "0403007a0000",
+      "050300320000",
+      "060300e10000",
+      "0703007b0000",
+      "080300080000",
+      "090300e00000",
+      "0a0300150000",
+      "0b0300910000",
+      "0c0300c10000",
+      "0d0300640000",
+      "0e03009a0000",
+      "0f0300210000",
+      "100300540000"
+    ],
+    "cppInspection": "Mission: TEST02\r\n  script: \\D\\TEST02.english (loaded)\r\n  mission type: Tutorial\r\n  fort: TEST02 -> \\D\\TEST02.fort\r\n  title = TEST02\r\n  missionNumber = 1\r\n  moreGeysers = 0\r\n  myStartMoney = 500000\r\n  myTech = all\r\n  myAllyList = 1\r\n  ai2Name = Luitenent of Wind\r\n  ai2Tech = all\r\n  ai2StartMoney = 0\r\n  ai2AllyList = 2\r\n  ai2color = orange\r\n  ai2Ability = !USE_PRIEST_TO_COLLECT;!BUILD_DAIS\r\n  ai3Name = Thunder Demon\r\n  ai3Tech = all\r\n  ai3StartMoney = 0\r\n  ai3AllyList = 3\r\n  ai3color = red\r\n  ai3Ability = !USE_PRIEST_TO_COLLECT\r\nFort: \\D\\TEST02.fort\r\n  sections: 35, trailing bytes: 0, flag: 0x00\r\n  subscriber: 120200405 \"Unnamed\"\r\n  storm power: 1187\r\n  type names: 188, technology: 26, deck: 48\r\n  Chaff: version 2, 256 chunks, 0 objects\r\n  Terr00: version 2, 9 chunks, 9 objects\r\n    bulf                     1\r\n    geyser                   3\r\n    priest                   1\r\n    residence                1\r\n    sunFactory               1\r\n    thunderFactory           1\r\n    thunderVortex            1\r\n  Terr01: version 2, 5 chunks, 2 objects\r\n    priest                   1\r\n    residence                1\r\n  Terr02: version 2, 5 chunks, 3 objects\r\n    priest                   1\r\n    rainVortex               1\r\n    residence                1\r\n"
+  },
+  "native": {
+    "normal": {
+      "pointer": "0x1100000",
+      "eip": "0x3100000",
+      "stored": 1,
+      "error": null,
+      "invalid": []
+    },
+    "missing": {
+      "pointer": "0x0",
+      "eip": "0x4639da",
+      "stored": 0,
+      "error": "Invalid memory write (UC_ERR_WRITE_UNMAPPED)",
+      "invalid": [
+        {
+          "eip": "0x4639da",
+          "access": 20,
+          "address": "0x64",
+          "size": 4,
+          "value": 1
+        }
+      ]
+    },
+    "instructions": [
+      {
+        "address": "0x4639d0",
+        "bytes": "8b8100080000",
+        "mnemonic": "mov",
+        "operands": "eax, dword ptr [ecx + 0x800]"
+      },
+      {
+        "address": "0x4639d6",
+        "bytes": "8b4c2404",
+        "mnemonic": "mov",
+        "operands": "ecx, dword ptr [esp + 4]"
+      },
+      {
+        "address": "0x4639da",
+        "bytes": "894864",
+        "mnemonic": "mov",
+        "operands": "dword ptr [eax + 0x64], ecx"
+      },
+      {
+        "address": "0x4639dd",
+        "bytes": "c20400",
+        "mnemonic": "ret",
+        "operands": "4"
+      }
+    ]
+  },
+  "live": {
+    "session": "20261022T054114444Z-efb6b1cb3b02",
+    "pid": 11884,
+    "exitCode": "0xc0000005",
+    "eventId": 1000,
+    "faultOffset": "000639da",
+    "faultAddress": "0x4639da",
+    "positiveBattleScreenshot": "extracted\\test02-review-20261022\\shots\\012-battle.png",
+    "missingEnglishScreenshot": "extracted\\test02-review-20261022\\shots\\018-missing.png",
+    "stopped": true,
+    "eventRecordId": "3668"
+  },
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/d/TEST02.fort": "f785543d3b907fb3d09d568b740a21a8402a87e110f1469e873fc09f44858d6d",
+    "originals/d/TEST02.english": "03b41d7b2d9718d70fc7e29e14cec4e3779f77e95f7ea99722f83049c7052260",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/test02-review-20261022/exit-monitor.json": "bb368ccf11395d33cc0780f80516a686c483049061351cf2fa6a6444033c6f18",
+    "extracted/test02-review-20261022/application-error.xml": "26d5cd641de4a1c89568297b47b5b896454c4ebbad3e7ea53aaec5f6aa9783ae",
+    "extracted/test02-review-20261022/actions.jsonl": "f05ff08f61742b835dcfe738930715948f8974e216a95e4906aa3a12a69be053",
+    "extracted/test02-review-20261022/out/002-start.json": "88ac936600afa1525993821d5b88c102e264e8c2b98892e6d759c4abb1f3a8dc",
+    "extracted/test02-review-20261022/out/011-battle.json": "1509e244e40165bcbec57d193efa33fdf55cd148b1b1b3782957d5716826cd13",
+    "extracted/test02-review-20261022/out/012-go.json": "82d5aa9d23657b9a1f365c5b7975d1edfcc5c77b25f02c45a993166b84e6d8df",
+    "extracted/test02-review-20261022/out/015-return.json": "4dfc2cf47dccc763fcebced8353aad2b0739edf2ebbb6de327ad0658bcd9ccf5",
+    "extracted/test02-review-20261022/out/018-missing.json": "9828bdcb7d0d59b017a01814f4385914c6dab9c391523e5666cdd23ea2401286",
+    "extracted/test02-review-20261022/out/019-end.json": "45e048f8a2a6a986d62ceca8787aaf20602af11d6b1ca1f9516ab69a4480f18e",
+    "extracted/test02-review-20261022/shots/008-editor.png": "93cae1cb2f8e3f52e7cd0c2f958c47c111b7940264732ab6ad3a55cd7a13e232",
+    "extracted/test02-review-20261022/shots/011-briefing.png": "5f35fe599faf3af88e3db23fee2c84240c2755ab4d2ed38b8d7be2796448b723",
+    "extracted/test02-review-20261022/shots/012-battle.png": "f80fd59d099187b4ab0983de712dbbc3c86816c9a4276d228b62c1815036f86a",
+    "extracted/test02-review-20261022/shots/018-missing.png": "71901523f19ef3d8ef1600ad782c6577846daa5047b9210e89bbcc2c8c294ca7",
+    "tools/analyze_test02_scenario.py": "817ca83db7b84b4bc709ef2ba4231c3e2e4dc76edfde5f8f8ba08687ef016f53",
+    "tools/ns_driver.py": "90cc268a0da8dcb85019c87fd9d0aff0e4323ad41fce1bf60270c64afb456900",
+    "tools/cpp_fort_smoke.py": "96c7fcd524deb38d93274ded77620639bdc7012ec0f2aaeed0a488d938e9da83",
+    "tools/fort.py": "ee8ff8f00eea02771ac5c7a519dcd582e14cc07a2d97337c946c191022554e13"
+  }
+}
