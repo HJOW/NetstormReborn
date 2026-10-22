@@ -2985,14 +2985,16 @@ TEST_CASE(CampaignAltar_AlliedReleaseUsesVirtualPriestOwner) {
     const auto altars=ConstructionLive(core,164);CHECK(altars.size()==1);if (altars.size()!=1) return;const auto altar=altars.front(); // 실제 다이스 Pop이 만든 제단이다.
     const auto before=ConstructionLive(core,158);const auto captured=session.CreateContained(dais,158,0x81,32,0,0); // 원래 소유자1인 명시 포획 입력이며 기존 사제는 바꾸지 않는다.
     CHECK(Get(core.pool.Slot(altar),12,2)==1);auto* regular=core.processes.FindEvent(altar,21);CHECK(regular);if (!regular) return;
-    core.processState.now=regular->Time();regular->RunFrame(); // 같은 방향 동맹1→1을 실제 제단21이 읽고 ReleasePriest를 실행한다.
+    const auto originalForm=regular->Form();const auto originalPayload=regular->Payload();const auto originalTime=regular->Time();core.processState.now=originalTime;regular->RunFrame(); // 같은 방향 동맹1→1 해방의 반환-1은 원래21의 시각/count를 그대로 보존한다.
     Sid released{};
     // 기존 사제 목록의 결과를 덮어쓰지 않고 이번 해방이 생성한 SID만 찾는다.
     for (const auto sid:ConstructionLive(core,158)) if (std::find(before.begin(),before.end(),sid)==before.end()) { CHECK(!released.value);released=sid; }
     CHECK(released.value);if (!released.value) return;const auto raw=core.pool.Slot(released); // 사제 가상 Owner/PostPop이 실제로 기록한 현재 raw 상태다.
     CHECK(raw[34]==1 && (Get(raw,12,2)&0x7fU)==1 && (raw[12]&0x80U));
     CHECK((core.pool.Slot(captured)[11]&3U)==3U && !session.Priests().Carrier().FindContained(dais,0,158,0).value);
-    CHECK(!core.processes.FindEvent(altar,21) && Get(core.pool.Slot(altar),36)==static_cast<std::uint32_t>(core.frames[164].Run('P').first));
+    auto* preserved=core.processes.FindEvent(altar,21);CHECK(preserved==regular && core.processes.FromForm(originalForm)==preserved && preserved->Count()==0 && preserved->Payload()==originalPayload && preserved->Time()==originalTime); // 원본 Regular의 음수 반환을 삭제나 새 예약으로 해석하지 않는다.
+    CHECK(Get(core.pool.Slot(altar),36)==static_cast<std::uint32_t>(core.frames[164].Run('P').first));
+    if (preserved) { preserved->RunFrame();CHECK(core.processes.FindEvent(altar,21)==preserved && preserved->Form()==originalForm && preserved->Count()==1 && preserved->Time()==originalTime+static_cast<double>(originalPayload)); } // 다음 P방향 호출은 양수 payload를 반환해 같은21을3초 뒤로 재예약한다.
     CHECK(!core.bookkeeping.depth && !core.destroy.PreDepth() && !core.destroy.PostDepth());
 }
 
@@ -3062,10 +3064,15 @@ TEST_CASE(CampaignDude_ActualPathNoticeSpeedAndArrival) {
     // 실제 BFS가 고른 시간표만 보존하여 새로 만든 기대 경로로 대체하지 않는다.
     for (std::int32_t index=0;index<slow->Runtime().Count();++index) { times.push_back(slow->Runtime().Time(index));points.push_back(slow->Runtime().Point(index));directions.push_back(slow->Runtime().Direction(index)); }
     core.processes.Kill(*slow,0);CHECK(session.Dudes().Move(dude,target,true));const auto fastForm=FindAttachedProcess(core.pool,dude,24);auto* fast=dynamic_cast<RawPathProcess*>(core.processes.FromForm(fastForm));CHECK(fast);if (!fast) return;CHECK(fast->Runtime().Count()==static_cast<std::int32_t>(times.size()));std::size_t movingSegments{};
-    // 같은 위치·방향의 직선 구간은 임시 현재 속도2배에 의해 걸리는 시간이 정확히 절반이어야 한다.
+    constexpr double kFirstUnitSeconds=0.6666666865348816,kNextQuickUnitSeconds=0.5; // 원본 float 역수: 최초속도1.5의3f2aaaab과 정수1 복원 뒤 빠른속도2의3f000000이다.
+    CHECK(assets.game.Types()[0].definition.Number("speed").value()==1.5); // 최초 실제 Dude TYPE 입력을 독립 자산값과 함께 확인한다.
+    // 첫 요청 뒤 원본 정수 복원으로1.5→1이 되므로 다음 빠른 요청은2이며 최초 요청의 정확한 절반이 아니다.
     for (std::int32_t index=1;index<fast->Runtime().Count() && index<static_cast<std::int32_t>(times.size());++index) {
         const auto point=fast->Runtime().Point(index);CHECK(point.x==points[index].x && point.y==points[index].y && fast->Runtime().Direction(index)==directions[index]);
-        if ((point.x!=points[index-1].x || point.y!=points[index-1].y) && directions[index]==directions[index-1]) { CHECK_NEAR(fast->Runtime().Time(index)-fast->Runtime().Time(index-1),(times[index]-times[index-1])*0.5,1e-10);++movingSegments; }
+        if ((point.x!=points[index-1].x || point.y!=points[index-1].y) && directions[index]==directions[index-1]) {
+            const double dx=static_cast<double>(point.x)-points[index-1].x,dy=static_cast<double>(point.y)-points[index-1].y;const auto distance=std::sqrt(dx*dx+dy*dy); // 실제 BFS 구간 길이만 읽고 경로나 결과 시각을 수정하지 않는다.
+            CHECK_NEAR(times[index]-times[index-1],distance*kFirstUnitSeconds,1e-10);CHECK_NEAR(fast->Runtime().Time(index)-fast->Runtime().Time(index-1),distance*kNextQuickUnitSeconds,1e-10);++movingSegments;
+        }
     }
     CHECK(movingSegments && external.packets.size()==packets);CHECK(!core.processes.FromForm(form) || fastForm==form);CHECK(Throws([&] { static_cast<void>(session.StartDudeMovement({Sid{static_cast<std::uint16_t>(session.FindPriestParticipation(1))},source})); }));
     Put(core.pool.AllocatedBytes(dude),12,0x5107,2);CHECK(core.processes.AddRegular(dude,0x5107,5.0F,0x50)); // 최초Pop은Regular를 만들지 않는다. 최종 삭제 task/Regular만 명시 입력이며 본문은 후속 단위다.
@@ -3368,11 +3375,11 @@ TEST_CASE(CampaignObjectCommand_ActualCarrierParentAndPriestOwner) {
     // 소유자/HP를 검사에서 덮어쓰지 않고 원본 로드 결과로 대상을 고른다.
     for (const auto& object:session.World().Objects()) if (object.object.type==158 && object.object.owner==2) { enemy=object.sid;break; }
     CHECK(enemy.value);if (!enemy.value) return;
-    const auto before=session.Sp(1);const auto packets=external.packets.size();const auto hp=Get(session.Core().pool.Slot(enemy),26);
+    const auto before=session.Sp(1);const auto packets=external.packets.size();const auto hp=Get(session.Core().pool.Slot(enemy),26);const auto originalOwner=Get(session.Core().pool.Slot(enemy),12,2); // 전투의 사제 가상 Owner는 원래 소유자WORD를 사용한다.
     CHECK(session.CommandObject(Sid{},0xffffffffU)==0);
     CHECK(session.CommandCarrierDrop(enemy,0x030003feU,enemy)==0);
     CHECK(session.CommandCarrierDrop(enemy,0xff0000afU,enemy)==1);
-    CHECK(session.Core().pool.Slot(enemy)[34]==session.LocalOwner());
+    CHECK(session.Core().pool.Slot(enemy)[34]==2 && (Get(session.Core().pool.Slot(enemy),12,2)&0x7fU)==(originalOwner&0x7fU) && !(session.Core().pool.Slot(enemy)[12]&0x80U)); // 전투 중 로컬 소유자 인자는 원래 소유자를 바꾸지 않으며 로컬 표식도 켜지지 않는다.
     CHECK(Get(session.Core().pool.Slot(enemy),26)==hp && session.Sp(1)==before && external.packets.size()==packets);
 }
 

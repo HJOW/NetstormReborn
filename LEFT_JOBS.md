@@ -1,5 +1,13 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-22 단위310 완료: 사제·Dude·제단 검사의 원본 수명 기대
+
+- [x] 단위309를 `ce5a3884 / 20261022-34 CP`로 커밋하고 계속했다. 현재/마지막 전체 정밀 디컴파일 PC는 **VM-W11-Codex / 2026-10-22**로 같다. 제품/독립 fixture·보호 원본/CD·AGENTS/dotnetpj 변경이나 새 디컴파일·게임/창 실행은 없다.
+- [x] 원본 전투 사제 Owner가 요청을 무시하고 원래 owner2/WORD/로컬 표식을 유지하는 것을 공통 명령 검사에 적용했다. Dude는 첫1.5→정수1 복원 뒤 빠른 요청2를 사용하므로 실제 BFS 직선 구간을 원본 float 역수0.6666666865348816/0.5로 각각 검증한다. 제단 자동 해방은 실제 Form62/count0/payload3을 보존했다. 새 예약 추정은 폐기하고 음수-1 뒤 같은 Form/시각 보존, 다음 P호출 뒤 같은 Form/count1/시각+3을 확인했다. 임시 출력은 제거했다. [상세](docs/exe/cpp-original-lifecycle-expectations-20261022.md).
+- [x] Release `extracted/cpp-original-lifecycle-expectations-20261022-build3.log` **종료0**이고 같은 접두의 altar-final/dude-final/priest-final **세 집중 검사 모두 실패check0**이다. 전체를 반복하지 않았으므로 최신 전체는 단위309의2,217개/4개 검사 실패·4check 실패로 보존한다. 인수인계 후 **20261022-35 CP**로 로컬 커밋하며 push하지 않는다.
+- [ ] **다음 재개점:** 현재 알려진 미해결 실패는 `CampaignForwardBattle_NaturalTempleAssault`의 `place.has_value()`다. 최신 전체의 전진 건설 로그·`cpppj/tests/fixtures/campaign-forward-battle-plan.tsv`를 읽고 실제 생산/커서/배치/다리로 가능한 전진 자리를 진단한다. 원본 기대 fixture가 아닌 수동 전술 입력이며 HP/SP/생성/명중 결과를 주입해서 통과시키지 않는다. 세 집중 해결 뒤 새 전체 결과는 아직 없다.
+- [ ] AI 다리 초기화·후보/경로 탐색→네 전략/자동 전체 프레임/종료, 15개 미션·Edit/custom Fort·언어별 시나리오 수명·자연 플레이·표시/음향 동일성 목표는 미완료다. 원래 `/goal` 범위를 줄이거나 목표 완료로 표시하지 않는다.
+
 ## 2026-10-22 단위309 완료: 간헐천 원본 합성 캡처와 실제 AI 생성·삭제
 
 - [x] 단위308을 `7738c65a / 20261022-33 CP`로 커밋하고 계속했다. 현재/마지막 전체 정밀 디컴파일 PC는 **VM-W11-Codex / 2026-10-22**로 같다. 보호 원본/CD·AGENTS/dotnetpj·독립 fixture 변경이나 새 디컴파일·게임/창 실행은 없다. 보호 두 PE 해시도 기존 값과 같다.
