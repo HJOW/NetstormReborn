@@ -62,6 +62,9 @@ public:
     std::optional<std::vector<std::uint8_t>> TryRead(std::string_view name) const;
     // 캠페인 목록의 와일드카드: 디스크/TAFF/보조 경로를 합쳐 중복을 제거하고 이름순으로 반환한다.
     std::vector<std::string> Match(std::string_view pattern) const;
+    // 원본 Filespec.cpp의 Win32 FindFirst/Next 순서다. 기본 디스크만 열거하며 TAFF/보조 경로/정렬을 적용하지 않는다.
+    // 와일드카드가 없으면 원본처럼 존재 확인 없이 그 이름 한 개를 반환한다. cpppj의 Windows 경계다.
+    std::vector<std::string> MatchDisk(std::string_view pattern) const;
 private:
     // base_: 파생 처리에서 공통 동작을 위임하는 기본 객체.
     std::filesystem::path base_;

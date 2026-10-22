@@ -153,6 +153,18 @@ struct CampaignTemplateStorage::Image {
         const auto selected=o::SelectDataManagerSection(manager,"State",1,hooks);
         state.position=Read(std::span(streams.at(selected)->bytes).subspan(4));
     }
+    // 004bd4d0/004bcb60처럼 현재 원시 Subscriber를 선택하고 같은 노드의 cursor를 진행한다.
+    std::string ReadSubscriberName() {
+        SyncStreams();o::DataManagerSelectionHooks hooks;hooks.stream=[this](auto node) { return std::span(streams.at(node)->bytes); };
+        hooks.assertion=[](auto) { throw std::logic_error("Template Subscriber 실제 읽기 섹션 선택 진단"); };
+        const auto selected=o::SelectDataManagerSection(manager,"Subscriber",0,hooks);auto& node=streams.at(selected)->bytes;const auto& bytes=fort.sections.at(selected-1);
+        Put(node,4,Read(std::span(node).subspan(4))+4U); // 원본 DWORD ID는 반환하지 않고 cursor만 네 BYTE 진행한다.
+        auto position=Read(std::span(node).subspan(4));const auto end=Read(std::span(node).subspan(8));
+        if (position>end || position>bytes.size() || bytes.size()-position<2) throw std::out_of_range("Template Subscriber 길이 읽기의 실제 원문 범위");
+        const auto length=static_cast<std::uint32_t>(bytes[position]) | (static_cast<std::uint32_t>(bytes[position+1])<<8);Put(node,4,position+2U);position+=2U;
+        if (position>end || length>=0x8000U || length>=256 || length>end-position || length>bytes.size()-position) throw std::out_of_range("Template Subscriber signed 길이/목록256BYTE 출력 범위");
+        std::string result(reinterpret_cast<const char*>(bytes.data()+position),length);Put(node,4,position+length);result.resize(result.find('\0')==std::string::npos ? result.size() : result.find('\0'));return result;
+    }
     // Territory120BYTE 읽기는 비어 있지 않은 섹션 선택을 먼저 수행한다.
     void SelectTerritory() {
         SyncStreams();const auto handle=static_cast<std::uint32_t>(TerritorySection()+1);const auto found=streams.find(handle);
@@ -275,6 +287,8 @@ o::FortTemplate& CampaignTemplateStorage::Template(std::uint32_t slot) { return 
 o::PlayerTemplateStateStream& CampaignTemplateStorage::State(std::uint32_t slot) { return Current(slot).state; }
 // 실제 Player Stategetter가 같은 목록/current를 선택한 뒤 같은 cursor를 돌려받는다.
 o::PlayerTemplateStateStream& CampaignTemplateStorage::SelectState(std::uint32_t slot) { auto& image=Current(slot);image.SelectState();return image.state; }
+// 파싱 시점의 편의 사본이 아니라 실제 현재 섹션/노드를 읽는다.
+std::string CampaignTemplateStorage::ReadSubscriberName(std::uint32_t slot) { return Current(slot).ReadSubscriberName(); }
 // 미정 바이트를 포함한 완성28BYTE를 실제 새 섹션에 쓰고 같은 현재 cursor를 반환한다.
 o::PlayerTemplateStateStream& CampaignTemplateStorage::InitializeState(std::uint32_t slot,std::span<const std::uint8_t,28> bytes) { auto& image=Current(slot);image.InitializeState(bytes);return image.state; }
 // 같은 manager의 전체 최소 확장 부모가 만든 실제 현재 State를 빌린다.

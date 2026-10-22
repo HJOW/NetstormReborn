@@ -7,6 +7,9 @@ class Client;
 class RawButtonControls;
 class GameWorld; // 같은 실제 카메라 재설정을 사용하는 현재 월드다.
 struct CampaignMissionStartEffects; // 실제 미션 Start의 장치/할당 경계를 반환한다.
+struct SoloMapCatalogEffects; // 실제 파일 목록의 현재 타입/할당/언어/사용자 경계다.
+// 현재 이름의 소유자는 목록보다 오래 살아야 하며 UTF-8이 아닌 원본 좁은 바이트를 반환한다.
+SoloMapCatalogEffects MakeSoloMapCatalogClientEffects(Client& client,std::function<std::string()> currentName);
 // 실제 UI 소유자가 공급하는 경계다. 월드 생성 중에도 호출할 수 있어야 한다.
 struct CampaignClientUi {
     std::function<void()> refreshWindowTitle; // 현재 MissionScript의 설정 제목을 실제 창에 적용한다.

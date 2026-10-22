@@ -1,0 +1,93 @@
+{
+  "unit": 324,
+  "date": "2026-10-22",
+  "edition": "10.78",
+  "host": "VM-W11-Codex",
+  "last_full_refined_decompile_host": "VM-W11-Codex",
+  "last_full_refined_decompile_date": "2026-10-22",
+  "start_head": "448db39f",
+  "status": "verified",
+  "scope": "실제 Fort 파일/State/Subscriber와 원본 단독 맵 목록의 연결",
+  "native_source_functions": {
+    "00460650": "현재 fortSpec 경로 치환",
+    "00460c40": "별도 임시 Template 파일 읽기와 State+17 분류",
+    "004bd550": "기존 실제 State 조회/빈 생성/최소 확장",
+    "004bd4d0": "현재 Subscriber 선택과 ID 네 바이트 건너뜀",
+    "004bcb60": "signed WORD 문자열 길이/원문/cursor/NUL",
+    "004cafd0": "이전 단위의 독립 관측으로 복원한 최대50개 목록",
+    "004cb210": "이전 단위의 독립 관측으로 복원한 표시 행",
+    "0045a220": "실제 원본 디스크 열거 객체 생성",
+    "00459610": "FindFirstFileA와 와일드카드 없는 이름의 자연 반환",
+    "004597c0": "FindNextFileA의 OS 순서 유지",
+    "00459c40": "파일명 확장자 제거 종류 선택",
+    "004595a0": "같은 파일 이름 안의 모든 점 뒤 제거",
+    "00459b20": "현재 파일의 이름 부분 추출"
+  },
+  "observations": {
+    "fresh_full_decompile": false,
+    "fresh_original_game_run": false,
+    "fresh_clone_gui_run": false,
+    "fresh_unicorn_oracle": false,
+    "previous_list_oracle": "cpppj/solo-map-list-20261022.json",
+    "disk_fort_count": 433,
+    "disk_state_kind_counts": {
+      "0": 1,
+      "2": 432
+    },
+    "merged_vfs_fort_count": 465,
+    "native_menu_enumeration": "기본 디스크의 Win32 순서",
+    "content_read_order": [
+      "base_disk",
+      "taff",
+      "secondary_disk"
+    ],
+    "invalid_memory_policy": "원본의 물리 범위 밖 접근은 호스트 예외로 거부"
+  },
+  "verification": {
+    "build_log": "extracted/cpp-solo-map-catalog-20261022-build5.log",
+    "focused_log": "extracted/cpp-solo-map-catalog-20261022-tests4.log",
+    "full_log": "extracted/cpp-solo-map-catalog-20261022-full2.log",
+    "build_exit": 0,
+    "build_warnings": 0,
+    "build_errors": 0,
+    "focused_exit": 0,
+    "focused_cases": 6,
+    "focused_failed_checks": 0,
+    "full_exit": 0,
+    "full_cases": 2255,
+    "full_failed_checks": 0,
+    "full_test_seconds": 182.97,
+    "full_ctest_seconds": 182.99,
+    "full_process_seconds": 183.09,
+    "cases_log": "extracted/cpp-solo-map-catalog-20261022-cases.log"
+  },
+  "boundaries": [
+    "새 UI 소유자와 Edit 선택 입력은 아직 연결하지 않았다",
+    "현재 사용자 이름은 장기 소유자가 원본 좁은 문자열로 공급해야 한다",
+    "미정 입력은 현재 호스트 힙이며 원본 x86의 값과 일치한다는 뜻이 아니다",
+    "원본 Fort/PE는 바꾸지 않고 검사 전용 생성물만 build 아래에 만든다",
+    "사용자가 캠페인 전체로 목표를 확대했으며 기존15개 초기 진행은 부분 검증이다",
+    "Early Missions/전체 캠페인/데모3개의 완주와 GUI/음향 동일성 및 Edit 생성/저장/테스트 왕복은 미완료다"
+  ],
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/d/TEST01.fort": "3c8a7d73be785f5b06f4c94aea633697b52d95129ed502ebc43f1efe326bad8f",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "cpppj/src/client/SoloMapCatalog.h": "82191abf6e17edb0658e05a42257a60f5bd5efede982fbf7a845648a14aeba4d",
+    "cpppj/src/client/SoloMapCatalog.cpp": "fda4599e05f2dcb3acf46bfd65344a8c7392f6a384558436083fa7be158a6fe2",
+    "cpppj/src/client/CampaignTemplateStorage.h": "98fb512c150e6febfb86b2a61502f34cc096c0796728b92ab12894e7da1f1bd3",
+    "cpppj/src/client/CampaignTemplateStorage.cpp": "574cae37773769ced5d7800ddd4402c22d8989d2de26253440ce4a639d28b5ef",
+    "cpppj/src/client/CampaignClientServices.h": "b37c7540ef1070c15b71b7655ca1b536c8eac2909d29cf35281978ba3a62ee15",
+    "cpppj/src/client/CampaignClientServices.cpp": "9ce145d6ba79f9e8f15457b11da64c5521eb341b5f9f09479fbcd550f97682ed",
+    "cpppj/src/o/BaseFile.h": "1678bf5c1345732e583bcaaac908e67d625721243bd4234d01937d2fbe6d5cac",
+    "cpppj/src/o/BaseFile.cpp": "4666fd85e4d4b1f80fc6d1be8468f3116a4718dffa104d96da0a867f96e2e108",
+    "cpppj/tests/SoloMapCatalogTests.cpp": "f054ca7faccd1d5d17ed7060a5f2a50ee7f1cfae7af2a2f8eb313a88ae1b6b03",
+    "cpppj/tests/fixtures/solo-map-list-x86.tsv": "c71dc45bcce18e76a8050645ac3e3092ceac66d07aec55b8157b974d579cbbb5",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/cpp-solo-map-catalog-20261022-build5.log": "f2de9ed7912b19fb77084d40ff60cb4574842a0cb2f37c970f97fb45861bc5bc",
+    "extracted/cpp-solo-map-catalog-20261022-tests4.log": "c2922ca1a3b40546d59293daa5af70a9f092b6982aaf04531f44983c59faf1d7",
+    "extracted/cpp-solo-map-catalog-20261022-full2.log": "41550f903db0695153bd27b43cd2dcac816699921a33fdd9501e6e7e25017f02",
+    "extracted/cpp-solo-map-catalog-20261022-cases.log": "b934a47baa65b5f3143ba1defe440099fe9225969168ca4a249ff01f9ee9fa52"
+  }
+}

@@ -1590,3 +1590,11 @@ cpppj/tests/SoloMapListTests.cpp text eol=lf
 tools/decomp_solo_map_list.py text eol=lf
 cpppj/solo-map-list-20261022.json text eol=lf
 docs/exe/cpp-solo-map-list-20261022.md text eol=lf
+# 실제 Fort 목록 연결의 코드와 근거 바이트를 체크아웃 뒤에도 보존한다.
+cpppj/src/client/SoloMapCatalog.* text eol=lf
+cpppj/src/client/CampaignClientServices.h text eol=lf
+cpppj/tests/SoloMapCatalogTests.cpp text eol=lf
+cpppj/solo-map-catalog-20261022.json text eol=lf
+docs/exe/cpp-solo-map-catalog-20261022.md text eol=lf
+cpppj/src/o/BaseFile.h text eol=lf
+cpppj/src/o/BaseFile.cpp text eol=lf

@@ -1,5 +1,6 @@
 // 검사 관찰 콜백을 사용하지 않고 현재 클라이언트의 실제 서비스를 빌린다.
 #include "client/CampaignClientServices.h"
+#include "client/SoloMapCatalog.h"
 #include "client/RawCampaignMissionStartBindings.h"
 #include "client/GameWorld.h"
 #include "client/UberGump.h"
@@ -45,6 +46,13 @@ void CurrentBridgeScratchBytes(std::span<std::uint8_t> bytes) {
     throw std::logic_error("AI 검색 현재 caller8BYTE의 Windows 경계 미설치");
 #endif
 }
+}
+// 같은 Client의 실제 타입 수/언어/미정 할당을 파일 목록에 제공한다.
+SoloMapCatalogEffects MakeSoloMapCatalogClientEffects(Client& client,std::function<std::string()> currentName) {
+    if (!currentName) throw std::invalid_argument("맵 목록의 실제 현재 사용자 이름 미연결");
+    SoloMapCatalogEffects effects;effects.typeCount=[&client] { return static_cast<std::int32_t>(client.Assets().TypeTable().Types().size()); };
+    effects.allocationBytes=CurrentAllocationBytes;effects.userName=std::move(currentName);
+    effects.translate=[&client](std::string_view source) { const auto bytes=o::EncodeOriginalText(client.Translate(o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(source.data()),source.size()})));return std::string(bytes.begin(),bytes.end()); };return effects;
 }
 // 실제 힙 입력과 게임 시계/화면/카메라를 연결한다. 선택된 미복원 세계 생성은 명시 거부한다.
 CampaignMissionStartEffects MakeCampaignMissionStartEffects(Client& client,GameWorld& world,std::function<void()> refreshCommandGump) {

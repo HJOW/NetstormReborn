@@ -1,12 +1,23 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-22 단위324 완료: 실제 Fort 파일과 단독/편집 목록 연결
+
+- [x] 시작 HEAD `448db39f`의 깨끗한 트리, AGENTS 및 양 인수인계를 다시 확인했다. 직전 단위는 원본 목록의 독립 관측/복원/커밋을 완료한 **진행 턴**이다. 현재/마지막 전체 정밀 디컴파일 PC는 **VM-W11-Codex / 2026-10-22**로 같다. 보호 원본/CD·AGENTS·dotnetpj·기존 fixture 수정, 새 전체 디컴파일, 원본/클론 게임·창 실행은 없다.
+- [x] `SoloMapCatalog`에 현재 설정/FileSpec, 실제 Template 파일/섹션 읽기, 분류용 State+17, 별도 목록용 Subscriber/State/현재 사용자/예약 조회를 연결했다. 빈/짧은 State는 기존 실제 생성/최소 확장 부모를 사용한다. 전체 지형/기술 파싱을 메타 조회에 강제하지 않는다. `ReadSubscriberName`은 파서의 과거 사본 대신 현재 원시 섹션 선택/ID 건너뜀/signed 길이/같은 노드 cursor를 사용한다. Client의 실제 타입 수/힙 입력/번역 경계도 제공한다.
+- [x] 초기 공용 `Match` 연결 뒤 추가 원본 조사로 열거 차이를 발견했다. 0045a220→00459610/004597c0은 **기본 디스크의 Win32 FindFirst/Next 순서**이며 TAFF/보조 경로/정렬을 합치지 않는다. 새 `BaseFileSystem::MatchDisk`로 고쳤다. 와일드카드 없는 이름은 원본처럼 존재 확인 없이 하나를 반환하고 대소문자를 보존한다. 00459c40(1)→004595a0은 마지막 확장자뿐 아니라 첫 점부터 지우므로 `map.extra.fort`→`map`도 반영했다. 내용 읽기는 기존 VFS 우선순위를 유지한다. 공용 Match 자체의 동작은 바꾸지 않았다.
+- [x] 최종 Release 빌드5 **종료0·경고0·오류0**, 새 검사 **6개·실패check0**, 전체 **2,255개·실패check0·exit0·182.97초/전체182.99초**다. 실제 디스크433개(종류0=1/2=432), 내용 읽기465개, TEST01 종류2/flags0, 빈/짧은 State·종류1 편집 허용·현재 Subscriber·파일 소실·전체 점 제거를 확인했다. 첫 헤더 누락/명시 BYTE 경고를 고쳤고, 큰 빌드 중 추가한 파일명 수정은 마지막 증분 빌드5에서 다시 컴파일해 통과했다. 보호 SHA와 원문 재읽기, UTF-8/한국어 주석/diff, 스테이징/작업트리 근거 해시를 확인했다. `extracted/cpp-solo-map-catalog-20261022-{build*,tests*,full*,cases}.log`를 보존하고 **20261022-49 CP**로 로컬 커밋하며 push하지 않는다. [상세](docs/exe/cpp-solo-map-catalog-20261022.md),[실행 근거](cpppj/solo-map-catalog-20261022.json).
+- [ ] **다음 실제 UI/편집 월드:** 아직 UberGump가 목록을 소유/호출하지 않으며 **Edit는 미구현 안내 그대로**다. 020000c9/020000ca와 `*SOLOLIST*`를 연결하고 현재 사용자 이름의 장기 소유자를 제공해야 한다. 00460bb0은 현재 fort가 아닌 **pending 0055b494**에 쓴다. 004b3560의 상태1 요청을 처리하는 실제 부모는 **004b6dd0**의 상태1/2/3/6 분기다. 편집은 fort00594fb8뿐 아니라 **editor005c85a4와 post억제00594fa4**도 설정한다. 004b5ca0/004b5ec0/기존004b5f70/004904b0을 이어야 한다. 004904b0은 Human/Computer 표시·기술과 현재 이름을 번역된 `Player`로 초기화한다.
+- [x] **사용자 목표 확대 반영:** 단위324 마무리 중 `/goal`이 캠페인1-1~1-6에서 **캠페인 전체**로 확대됐다. 이후 목표는 Early Missions 전체·캠페인 전체·데모3개와 Edit/custom 시나리오다. 기존15개 미션 초기 진행/회귀는 부분 검증 범위이며 전체 캠페인 완료를 뜻하지 않는다.
+- [ ] **보호 파일/현재 목표:** 편집 진입 부모는 State dirty/Notify/저장을 요청하므로 보호 원본을 직접 쓰지 않는 실제 작업본/저장 경계를 먼저 마련한다. 생성·저장/불러오기·Test Battle/Return to Editing·언어별 custom 시나리오 수명과 Early Missions·전체 캠페인·데모3개의 완주/재시작·GUI/음향 동일성은 계속 미완료다. `/goal`을 축소하거나 완료로 표시하지 않는다.
+- [ ] **편집 연결 시 주의:** 현재 `RawCampaignWorldRuntime::Impl`의 기존 `RawFortWorldLoad`는 generic Fort의 money/badges/technology/populate에 미연결 예외를 둔다. 기존 `MakeFortWorldLoadHooks`와 Meta/Money 소비자를 실제 같은 Core에 조립해야 한다. Session의 `handle`은 세션별64BYTE이므로 장기 현재 이름00540c78/00540ca8의 공유 소유 수명도 필요하다.
+
 ## 2026-10-22 단위323 완료: 원본 단독/편집 맵 목록 캐시와 표시 행
 
 - [x] 시작HEAD `27b9dfbb`/깨끗한트리·AGENTS·양인수인계를다시확인했다. 직전턴은자동AI활동중전진공략/전체2,247개통과/커밋을완료한 **진행 턴**이다. 현재/마지막전체정밀디컴파일PC는 **VM-W11-Codex / 2026-10-22**로같다. 보호원본/CD·AGENTS/dotnetpj·기존fixture변경이나새전체디컴파일·게임/창실행은없다.
 - [x] `RawSoloMapList`로004cafd0의50포인터/flags/개수/dirty·옵션조회순서·파일종류/편집허용필터·캐시재사용·현재필드재조회·Template/Subscriber/State/예약읽기순서를복원했다.004cb210의현재/fallback선택·읽기실패/손상/일반형식·번역뒤현재이름·앞서읽은flags8활성관문도복원했다. `mayEditMissions`는캐시검사보다먼저읽고첫포인터가있으면mode가달라도캐시를재사용한다. dirty정리는이름이있는칸의flags만지워null칸의stale flags를보존한다.
 - [x] 보호PE두본체와실제0041aad0/004bd340을 **216입력·두정밀도432목록실행**으로관측했다. 행1914회·존재1410회·예약1110회다. 파일/Template/CRT/번역/메뉴장치는명시경계이며전체게임실행을뜻하지않는다. 새C++검사는전체50칸/행/순서와일치하고설정효과dirty지연·번역후현재이름/앞선flags효과도확인한다. [상세](docs/exe/cpp-solo-map-list-20261022.md),[출처](cpppj/solo-map-list-20261022.json).
 - [x] 도구의초기두thiscall경계인자반납을고쳤다. 관측확정뒤횟수기록추가시fixtureSHA가동일함을확인했다. 마지막산출물은새관측/코드/도구/출처의LF를명시하고커밋/작업트리양쪽SHA를일치시켰다. 첫CMaketarget등록위치를수정한최종Release빌드2 **종료0·경고0·오류0**,새검사 **2개·실패check0**이며LF고정뒤재통과했다. `extracted/cpp-solo-map-list-20261022-{build,build2,tests,tests2}.log`를보존한다. 최신전체통과는단위322의2,247개이며새2개를포함한전체통과로합산하지않는다. 보호PE/도구/fixture/코드SHA·UTF-8/한국어주석·diff검사후 **20261022-48 CP**로로컬커밋하며push하지않는다.
-- [ ] **바로 다음 실제 연결:**Client의BaseFileSystem.Match/현재fortSpec이름→파일Kind/State+17→실제Template/State/Subscriber읽기를목록hook에연결한다. 파일마다원본분류용과목록메타읽기는별도수명이다. `CampaignTemplateStorage`와`RawPlayerTemplateState`의기존실제Get/빈State/최소확장몸체를재사용한다.4bd340은정상원본에서항상0이지만누락Template진단은유지한다. 파일종류는00460c40이현재GetState의BYTE17을반환한다. 실제GUI의020000c9진입/020000ca선택/`*SOLOLIST*`행연결과편집월드·생성·저장/불러오기·Test Battle/Return to Editing을계속구현한다.
+- [x] **파일 연결은 단위324에서 완료:**현재 fortSpec→파일Kind/State+17→별도 Template/State/Subscriber를 기존 실제 부모와 연결했다. 추가 조사로 공용 Match 대신 원본의 디스크 전용 Win32 열거를 사용해야 함을 확인해 고쳤다. GUI020000c9/020000ca/`*SOLOLIST*`와 편집 월드·생성·저장/불러오기·Test Battle/Return to Editing은 단위324의 다음 작업으로 계속 남긴다.
 - [ ] **원래 목표 계속:**이번단위는목록계산만복원했고 **Edit버튼은아직미구현안내**다.15개미션완주/재시작·GUI/음향동일성·Edit/custom Fort·언어별시나리오수명은미완료다. `/goal`을축소하거나완료로표시하지않는다.
 
 ## 2026-10-22 단위322 완료: 자동 AI 활동 중 북쪽 우회·적 신전 자연 파괴와 전체 회귀

@@ -23,6 +23,7 @@ public:
     o::FortTemplate& Template(std::uint32_t slot); // 현재 헤더의 manager를 매번 읽는다.
     o::PlayerTemplateStateStream& State(std::uint32_t slot); // 같은 manager의 현재 State bytes/pos/end다.
     o::PlayerTemplateStateStream& SelectState(std::uint32_t slot); // 원본 검색/쓰기허용 선택으로 같은 manager.current/State.pos를 변경한다.
+    std::string ReadSubscriberName(std::uint32_t slot); // 004bd4d0처럼 실제 Subscriber 선택/ID 건너뜀/signed 길이 읽기로 현재 이름을 반환한다.
     o::PlayerTemplateStateStream& InitializeState(std::uint32_t slot,std::span<const std::uint8_t,28> bytes); // 기존 State 반납 뒤 새 섹션을 목록 끝에 만들고 원본16384BYTE 버퍼에28BYTE를 쓴다.
     o::PlayerTemplateStateStream& EnsureStateSize(std::uint32_t slot,std::int32_t minimum); // 원본 임시 생성/복사/추가/이름 교체 뒤 같은 새 현재 State를 돌려준다.
     std::vector<std::string> SectionOrder(std::uint32_t slot); // 실제 head/next를 따라 현재 섹션 순서를 조회한다.

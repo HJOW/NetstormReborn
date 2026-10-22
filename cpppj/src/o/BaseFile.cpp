@@ -6,6 +6,12 @@
 #include <algorithm>
 #include <fstream>
 #include <stdexcept>
+#ifdef _WIN32
+#ifndef NOMINMAX
+#define NOMINMAX // Win32 매크로가 기존 표준 함수 이름과 충돌하지 않게 한다.
+#endif
+#include <windows.h>
+#endif
 
 namespace netstorm::o {
 namespace {
@@ -128,6 +134,22 @@ std::vector<std::uint8_t> BaseFileSystem::Read(std::string_view name) const {
     auto bytes = TryRead(name);
     if (!bytes) throw std::runtime_error("Game file not found: " + std::string(name));
     return std::move(*bytes);
+}
+// 원본00459610/004597c0의 디스크 열거만 사용한다. 메뉴별 정렬은 이 원시 경계에서 수행하지 않는다.
+std::vector<std::string> BaseFileSystem::MatchDisk(std::string_view pattern) const {
+    std::string normalized(pattern.substr(0,pattern.find('\0')));std::replace(normalized.begin(),normalized.end(),'\\','/');
+    if (normalized.starts_with("./")) normalized.erase(0,2);const auto first=normalized.find_first_not_of('/');normalized=first==std::string::npos ? std::string{} : normalized.substr(first);
+    if (normalized.find_first_of("*?")==std::string::npos) return {normalized}; // 실제 이름의 대소문자는 Win32와 원본 FileSpec처럼 보존한다.
+#ifdef _WIN32
+    const std::filesystem::path path(normalized);const auto absolute=path.is_absolute() ? path : base_/path;WIN32_FIND_DATAA found{};std::vector<std::string> names;
+    const auto handle=FindFirstFileA(absolute.string().c_str(),&found);if (handle==INVALID_HANDLE_VALUE) return names;
+    try {
+        do { names.push_back((path.parent_path()/found.cFileName).generic_string()); } while (FindNextFileA(handle,&found)); // 디렉터리 속성도 원본처럼 별도로 제외하지 않고 같은 OS 반환 순서를 유지한다.
+    } catch (...) { FindClose(handle);throw; }
+    FindClose(handle);return names;
+#else
+    throw std::logic_error("원본 Filespec의 실제 Win32 디스크 열거는 Windows에서만 지원합니다");
+#endif
 }
 // 원본 004ce580은 파일 목록을 모은 뒤 이름을 대소문자 없이 정렬한다. 내용 읽기는 기존 우선순위를 따른다.
 std::vector<std::string> BaseFileSystem::Match(std::string_view pattern) const {

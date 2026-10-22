@@ -9,6 +9,7 @@ target_sources(netstorm PRIVATE
     TutorialInit.cpp TutorialInit.h
     MissionFortRequest.cpp MissionFortRequest.h
     CampaignTemplateStorage.cpp CampaignTemplateStorage.h
+    SoloMapCatalog.cpp SoloMapCatalog.h
     # 실제 Guide의 시작/분기/재시작/종료 교체와 원본 제어 사건을 연결한다.
     GuideMissionTransitions.cpp GuideMissionTransitions.h
     # 실제 초기화의 기술 허용 목록을 건설/생산의 동일 금지 표에 적용한다.
