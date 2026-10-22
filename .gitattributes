@@ -1646,3 +1646,13 @@ cpppj/tests/fixtures/wind-aviary-frame-x86.tsv text eol=lf
 tools/decomp_wind_aviary_frame.py text eol=lf
 cpppj/wind-aviary-frame-20261022.json text eol=lf
 docs/exe/cpp-wind-aviary-frame-20261022.md text eol=lf
+# 클라우드 플로터 전용 원문과 워크샾25종 근거를 UTF-8/LF로 고정한다.
+cpppj/src/o/RawBalloonBody.* text eol=lf
+cpppj/tests/CloudFloaterTests.cpp text eol=lf
+cpppj/tests/fixtures/cloud-floater-x86.tsv text eol=lf
+cpppj/cloud-floater-20261022.json text eol=lf
+cpppj/unit-restoration-inventory-20261022.json text eol=lf
+tools/decomp_cloud_floater.py text eol=lf
+tools/audit_unit_restoration.py text eol=lf
+docs/exe/cpp-cloud-floater-20261022.md text eol=lf
+docs/exe/cpp-unit-restoration-20261022.md text eol=lf

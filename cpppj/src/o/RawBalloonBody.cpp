@@ -29,13 +29,17 @@ RawBalloonBody::RawBalloonBody(SidPool& pool,std::span<const RiftTypeRecord> typ
     if (pool.Edition()!=OriginalEdition::Patch1078 || types.size()!=188 || spots.size()!=65536 || &post.Pool()!=&pool || &pre.Pool()!=&pool) throw std::invalid_argument("벌룬의 실제 원본 월드 연결 오류");
 }
 // 가상 표만 확인하며 원본의 두 동일 생성자 타입을 임의로 합성하지 않는다.
-bool RawBalloonBody::Handles(Sid sid) const { return Read(pool_.Slot(sid),0)==0x5040c0; }
+bool RawBalloonBody::Handles(Sid sid) const { const auto table=Read(pool_.Slot(sid),0);return table==0x5040c0 || table==0x504198; }
 // 공간 변경 전 현재 부모만 검사하며 상위 공통 ValidateBase와 효과를 중복 실행하지 않는다.
 void RawBalloonBody::Validate(Sid sid,std::uint32_t flags) const {
     (void)flags;const auto raw=pool_.AllocatedBytes(sid);if (!Handles(sid) || (raw[11]&9) || raw[10]<70 || raw[10]>=types_.size()) throw std::logic_error("벌룬 후처리의 현재 원시 부모 오류");
 }
 // 최초flag는 그림자 좌표 임시값과 별개다. 디컴파일의 같은 임시변수명으로 합치지 않는다.
 void RawBalloonBody::PostPop(Sid sid,std::uint32_t flags) const {
+    if (Read(pool_.Slot(sid),0)==0x504198U && (flags&1U)) {
+        if (!hooks_.allocateRegular) throw std::logic_error("클라우드 플로터 Regular 실제 할당 미연결");
+        if (hooks_.allocateRegular()) { if (!hooks_.constructRegular) throw std::logic_error("클라우드 플로터 Regular 실제 생성 미연결");hooks_.constructRegular(sid,3,0.1f); }
+    } // 실제42aed0은 추가 주기를 먼저 만든 뒤 현재 부모로42ac90을 호출한다.
     const auto kind=pool_.Slot(sid)[10];if (kind>=types_.size() || !hooks_.frames) throw std::logic_error("벌룬의 현재 TYPE 프레임 미연결");const auto& type=types_[kind];const bool first=(flags&1)!=0; //최초 TYPE 주소와 별도 보존한 최초flag다.
     if (first && std::bit_cast<std::int32_t>(Read(pool_.Slot(sid),36))<hooks_.frames(kind) && (type.flags1&0x400000U)) {
         const auto shadow=hooks_.create(pool_.Slot(sid)[10],2);Put(pool_.AllocatedBytes(shadow),36,Frame(pool_,sid,hooks_.frames(kind)));pool_.AllocatedBytes(shadow)[40]|=8;Put(pool_.AllocatedBytes(sid),8,shadow.value,2);
@@ -56,6 +60,14 @@ void RawBalloonBody::PostPop(Sid sid,std::uint32_t flags) const {
         }
     }
     if (!first && !boss_) hooks_.check(sid);post_.DamageablePostPop(sid,flags);
+}
+// 원본42af60은 count와 payload를 변경하지 않고 event3의 반환도 입력 payload다.
+float RawBalloonBody::CloudRegular(Sid sid,std::uint32_t event,std::uint32_t count,float payload,
+    const std::function<void(Sid,std::int32_t,std::uint32_t)>& advance,
+    const std::function<float(Sid,std::uint32_t,std::uint32_t,float)>& base) const {
+    if (Read(pool_.Slot(sid),0)!=0x504198U) throw std::invalid_argument("클라우드 플로터 전용 Regular의 다른 가상 표");
+    if (event==3) { if (!advance) throw std::logic_error("클라우드 플로터 실제 프레임 진행 미연결");advance(sid,1,0);return payload; }
+    if (!base) throw std::logic_error("클라우드 플로터 기본 Carrier Regular 미연결");return base(sid,event,count,payload);
 }
 // 42ae80은 그림자 삭제 뒤426890과 동일한 기본 효과 순서를 갖는다.
 void RawBalloonBody::PreDestroy(Sid sid,std::uint32_t flags) const {
