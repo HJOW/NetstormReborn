@@ -217,7 +217,7 @@ std::uint32_t Read(std::span<const std::uint8_t> raw,std::size_t offset) {
         (static_cast<std::uint32_t>(raw[offset+2])<<16)|(static_cast<std::uint32_t>(raw[offset+3])<<24);
 }
 // 원본 전체 캡처를 대조한 제네레이터·스톤/아이스 타워의 TYPE 기본/빈 추가 그림을 선택한다.
-bool IsPlainBuildingCapture(std::span<const std::uint8_t> raw) { return (raw[10]>=75 && raw[10]<=77 && Read(raw,0)==0x501ea0U) || ((raw[10]==78 || raw[10]==147) && Read(raw,0)==0x50e940U) || (raw[10]==79 && Read(raw,0)==0x50ea08U) || (raw[10]==142 && Read(raw,0)==0x50ead0U) || (raw[10]==149 && Read(raw,0)==0x50e668U) || (raw[10]==164 && Read(raw,0)==kPatchAltarVtable) || (raw[10]==95 && Read(raw,0)==kPatchStalagVtable) || (raw[10]==157 && Read(raw,0)==kPatchNoIslandVtable); } // 원본세Blocker표도+78=4acfe0/+a0=41c0f0/+a4=41c100이며현재타입별색표유무를보존한다.
+bool IsPlainBuildingCapture(std::span<const std::uint8_t> raw) { return (raw[10]>=75 && raw[10]<=77 && Read(raw,0)==0x501ea0U) || ((raw[10]==78 || raw[10]==147) && Read(raw,0)==0x50e940U) || (raw[10]==79 && Read(raw,0)==0x50ea08U) || (raw[10]==139 && Read(raw,0)==0x509aa0U) || (raw[10]==142 && Read(raw,0)==0x50ead0U) || (raw[10]==149 && Read(raw,0)==0x50e668U) || (raw[10]==164 && Read(raw,0)==kPatchAltarVtable) || (raw[10]==95 && Read(raw,0)==kPatchStalagVtable) || (raw[10]==157 && Read(raw,0)==kPatchNoIslandVtable); } // 데빌메이커와세Blocker표도+78=4acfe0/+a0=41c0f0/+a4=41c100이며현재타입별색표유무를보존한다.
 }
 // 메뉴의 현재 원문/참조와 자식 우선 소멸 순서를 한 고정 주소에 보관한다.
 struct RawCampaignObjectMenus::Impl {
@@ -1402,6 +1402,7 @@ struct RawCampaignSession::Impl {
         };
         hooks.bindFlyer=[this](Sid sid,Sid home) { flyer->Bind(sid,home); };
         hooks.circlePosition=SessionMissing<std::array<float,2>,Sid,std::int32_t,std::int32_t>(); // 주문부모의전용원주배치는후속원문대조가필요하다.
+        hooks.destroy=[this](Sid sid,std::uint32_t flags) { static_cast<void>(world.Destroy(sid,flags)); }; // 같은 풀/현재 가상 표의 삭제와 종속 정리를 실행한다.
         hooks.finish=[this](WindAviaryProcessFields& fields) {
             const Sid form{static_cast<std::uint16_t>(Read(fields.bytes,60))};auto* process=dynamic_cast<WindAviaryProcess*>(core.processes.FromForm(form));
             if (!process || &process->Fields()!=&fields) throw std::logic_error("데빌메이커종료Host/raw 불일치");core.processes.Kill(*process,0);

@@ -30,6 +30,7 @@ struct WindAviaryHooks {
     std::function<void(Sid,Sid)> bindFlyer; // 0045c1b0의 현재 홈 WORD 연결이다.
     std::function<std::array<float,2>(Sid,std::int32_t,std::int32_t)> circlePosition; // 특별 부모의004adea0/0041e020과 프레임13 높이를 적용한다.
     std::function<void(WindAviaryProcessFields&)> finish; // 상태13의 실제0041bf10(flags0)이다.
+    std::function<void(Sid,std::uint32_t)> destroy; // Form 삭제45c090의 현재 임시 비행체 가상10(flags0)을 실행한다.
 };
 // 생성자/패킷은 검증된 State 모듈을 공유하며 Frame은45f0a0 그대로 실행한다.
 class RawWindAviaryProcess {
@@ -38,6 +39,7 @@ public:
     void PostPop(Sid parent,std::uint32_t flags) const; // 0045edf0의 관문/할당/부착/공통 순서다.
     void Frame(WindAviaryProcessFields& fields) const; // 일반 생산과 특별 부모의 상태1..13이다.
     void FlyerDied(WindAviaryProcessFields& fields,const std::function<void(WindAviaryProcessFields&)>& refresh) const; // 0045b680의 상태2와 Form 갱신이다.
+    void FormDestroy(WindAviaryProcessFields& fields) const; // 0045c090: boss/현재DWORD주소/dead2 검사 뒤 임시 비행체를 정리한다.
 private:
     SidPool& pool_; WindAviaryGlobals globals_; WindAviaryHooks hooks_; // 원문·전역·효과의 단일 수명이다.
 };
@@ -47,6 +49,7 @@ public:
     WindAviaryProcess(const RawWindAviaryProcess& logic,WindAviaryProcessFields fields); // 초기화한80BYTE를 소유한다.
     void RunFrame() override; // 같은 Kernel 프레임을 원문 상태 기계로 전달한다.
     void OnAttached() override; // 현재 Host의 Form/부모를 inner에 기록한다.
+    void OnFormDestroy(std::uint32_t flags) override; // inner VT509ddc+0c이며 전달 flags는 원본처럼 사용하지 않는다.
     void Notify(std::uint32_t,std::uint32_t,std::uint32_t) override; // 원본 ret12의 빈 통지다.
     WindAviaryProcessFields& Fields(); // 수신/현재 상태를 사본 없이 제공한다.
     std::uint16_t WritePacket(std::span<std::uint8_t> packet,bool parentChanged); // 같은 Host의 실제0x74 writer다.

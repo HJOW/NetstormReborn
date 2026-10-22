@@ -1,0 +1,61 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-22",
+  "uniqueInputs": 880,
+  "normalReturns": 1760,
+  "nativeInstructions": 23960,
+  "precisionDifferentInputs": [],
+  "nativeCalls": {
+    "0045c090": 1760
+  },
+  "vtableEntries": {
+    "00509ddc": {
+      "0c": "0045c090",
+      "10": "0040b380"
+    },
+    "00509aa0": {
+      "14": "0044b4b0",
+      "18": "0044b9e0",
+      "78": "004acfe0",
+      "a0": "0041c0f0",
+      "a4": "0041c100"
+    }
+  },
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_wind_aviary_destroy.py": "2d4f7c3cdb9578f3eee46b185a11fda1a58033449ad12b106b9d67c292679418",
+    "tools/decomp_arc_spire.py": "a476a7af621fd08e49536e427e40b3d6b4b3df47a8f514740b1633e73adc534e",
+    "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+    "tools/decomp_cursor_position.py": "e15bcdbc4c6be9c131c30f15416c945d650dba9f7dc6def404b47f63c635c212",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "cpppj/tests/fixtures/wind-aviary-destroy-x86.tsv": "ee99ac43e1b003ca10f211554ca8f4c8a32a99ed52c31dcbdc4453ff8c68f2a5"
+  },
+  "limitations": [
+    "45c090 전체 몸체를 실행하고 가상10 객체 삭제와 개발자 진단은 명시 효과 경계로 둔다.",
+    "32비트 주소 곱셈의 bit31 별칭을 포함한다. 슬롯 경계 밖 비정렬 손상 포인터의 임의 가상 호출은 관측하지 않는다.",
+    "주문 부모의 원주 배치/139 및 모든25종 전체 동일성 완료 증거가 아니다."
+  ],
+  "implementationSha256": {
+    "cpppj/src/o/RawWindAviaryProcess.h": "418549073e50c4c5ab97832f8f2ebd1c8c732a4435f3d2dd64522eecabd70b06",
+    "cpppj/src/o/RawWindAviaryProcess.cpp": "e437d12017842d14fc6b34b19d4eba40c76cd3cb6f38adf3eacee10efca7c3cb",
+    "cpppj/src/client/RawCampaignSession.cpp": "be9c4ac71fd5131d703330d100950d8833ff6fba646f5369ee701de79a5e6a4a",
+    "cpppj/tests/WindAviaryDestroyTests.cpp": "d72967140b4ac724facfdce6eb6d3662d4a89ab9ee5e63bf7dd4bc5e06e609a8",
+    "cpppj/tests/CampaignSessionTests.cpp": "ada486490e57ba2c80fb77d4d6595233b06a6a56feb4f90c49a180da66ab2a2c"
+  },
+  "validation": {
+    "releaseBuildLog": "extracted/cpp-wind-aviary-destroy-20261023-build5.log",
+    "buildExitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "focusedLog": "extracted/cpp-wind-aviary-destroy-20261023-focused4.log",
+    "focusedTests": 3,
+    "fullCTestLog": "extracted/cpp-wind-aviary-destroy-20261023-ctest1.log",
+    "tests": 2308,
+    "failed": 0,
+    "ctestExitCode": 0,
+    "totalSeconds": 275.23,
+    "guiPlayed": false
+  }
+}

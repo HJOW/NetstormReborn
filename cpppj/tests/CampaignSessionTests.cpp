@@ -3971,3 +3971,44 @@ TEST_CASE(CampaignWindTower_RightClickConstructionAndFourFaces) {
         session.World().Destroy(source,0);std::cout<<"윈드타워 우클릭방향"<<direction<<"/건설"<<target.value<<"/완공코드"<<static_cast<char>(code)<<"/4면 방어 통과\n";
     }
 }
+
+// 실제 생산의 최초/임시 표시/비행 시작 단계에서 Form 삭제와 홈 파괴를 각각 진행한다.
+TEST_CASE(CampaignWindAviaryDestroy_ActualProductionAndFormLifetime) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);
+    for (const bool homeDeath:{false,true}) { // 직접 Form 삭제와 부모 삭제의 종속 경로를 구분한다.
+        for (const std::uint32_t phase:{0U,1U,2U}) { // 생산 단계를 검사 코드에서 쓰지 않고 실제 시각으로 기다린다.
+            SessionServicesFixture external;auto services=external.Services();std::vector<Sid> lost;services.unitLost=[&](Sid sid) { lost.push_back(sid); };services.formPacket=[&](std::span<const std::uint8_t> packet) { external.packets.emplace_back(packet.begin(),packet.end()); };
+            auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));session.Load();auto core=session.Core();
+            const auto home=session.World().Create(139);core.owner.Set(home,1);session.World().Pop(home,206,208,1);const auto form=FindAttachedProcess(core.pool,home,59);auto* maker=dynamic_cast<WindAviaryProcess*>(core.processes.FromForm(form));CHECK(maker);if (!maker) return;const auto pid=core.kernel.Find(*maker);Sid body{};std::uint64_t frame{};
+            if (!phase) { frame=1;session.RunFrame({.025,100.025,.025,frame},false);CHECK(Get(maker->Fields().bytes,48)==0); } // 원본 생성자가 남긴 미정+48은 최초 실제 Frame이 초기화한다.
+            if (phase) {
+                for (frame=1;frame<=320;++frame) { // 생산기의 처음 임시 SID를 보존하고 이후 필드0으로 덮어쓰지 않는다.
+                    session.RunFrame({frame*.025,100+frame*.025,.025,frame},false);if (!body.value) body=Sid{static_cast<std::uint16_t>(Get(maker->Fields().bytes,48))};
+                    if (body.value && (phase==1 || FindAttachedProcess(core.pool,body,31).value)) break;
+                }
+                CHECK(body.value && frame<=320);if (!body.value || frame>320) return;CHECK(core.pool.Slot(body)[10]==138 && !(core.pool.Slot(body)[11]&7U));
+            }
+            const Sid temporary{static_cast<std::uint16_t>(Get(maker->Fields().bytes,48))}; // 발사 직후 같은 Frame이 새로 만든 두 번째 임시 개체도 현재 원문에서 읽는다.
+            if (temporary.value) CHECK(core.pool.Slot(temporary)[10]==138 && !FindAttachedProcess(core.pool,temporary,31).value);if (phase==1) CHECK(temporary==body);
+            if (homeDeath) CHECK(session.World().Destroy(home,0x100000));else core.processes.Kill(*maker,0x200000); // 두 실제 삭제 경로가 같은 +0c에 도달한다.
+            CHECK(core.pool.Slot(form)[11]&1U);CHECK(!core.processes.IsRegistered(pid,maker));CHECK(!FindAttachedProcess(core.pool,home,59).value);CHECK(((core.pool.Slot(home)[11]&1U)!=0)==homeDeath); // 홈 파편이 같은 PID를 즉시 재사용할 수 있다.
+            if (body.value) { CHECK(((core.pool.Slot(body)[11]&1U)!=0)==(phase==1));CHECK((FindAttachedProcess(core.pool,body,31).value!=0)==(phase==2));if (phase==1) CHECK(!core.processes.FindEvent(body,0)); }
+            if (temporary.value) CHECK(core.pool.Slot(temporary)[11]&1U); // 원본이 참조하는 현재 임시 개체만 Form과 함께 정리한다.
+            CHECK(!core.destroy.PreDepth() && !core.destroy.PostDepth() && !core.bookkeeping.depth);
+            std::cout<<"실제 Wind Form삭제/홈파괴"<<homeDeath<<"/단계"<<phase<<"/frame"<<frame<<"/첫비행체"<<body.value<<"/현재임시"<<temporary.value<<"/첫비행체삭제"<<(body.value ? bool(core.pool.Slot(body)[11]&1U) : false)<<"/통지"<<lost.size()<<'\n';
+        }
+    }
+}
+
+// 실제139의 여섯 생산 프레임/owner/추가·추상 플래그 캡처54건을 보호PE 전체 픽셀과 대조한다.
+TEST_CASE(CampaignWindAviaryDestroy_Native54CapturePixels) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();services.unitLost=[](Sid) {};services.formPacket=[](std::span<const std::uint8_t>) {};
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));session.Load();auto core=session.Core();const auto home=session.World().Create(139);core.owner.Set(home,1);session.World().Pop(home,206,208,0);session.RunFrame({.025,100.025,.025,1},false);
+    auto raw=core.pool.AllocatedBytes(home);const std::vector<std::uint8_t> saved(raw.begin(),raw.end());auto& type=const_cast<RiftTypeRecord&>(core.types[139]);const auto hotX=type.hotspotX,hotY=type.hotspotY;type.hotspotX=-2;type.hotspotY=3;std::size_t rows{},pixels{};const auto path=(std::filesystem::path(__FILE__).parent_path()/"fixtures/wind-aviary-capture-x86.tsv").string();
+    for (const auto& row:netstorm::test::rawscene::LoadFixture(path.c_str()).rows) { // 생성자/생산 검사를 대체하지 않는 명시 캡처 입력이다.
+        CHECK(row.size()==7);if (row.size()!=7) continue;Put(raw,36,static_cast<std::uint32_t>(std::stoul(row[0])));raw[40]=static_cast<std::uint8_t>(std::stoul(row[1]));raw[34]=static_cast<std::uint8_t>(std::stoul(row[2]));Put(raw,12,0,2);
+        auto* effect=const_cast<RawCampaignParticles&>(session.Particles()).AddShrapnel(home,ShrapnelKind::Explosion);CHECK(effect);if (!effect) return;const auto& image=effect->Fields().image;const auto metadata=std::to_string(image.width)+','+std::to_string(image.height)+','+std::to_string(image.hotspotX)+','+std::to_string(image.hotspotY);
+        CHECK(metadata==row[3] && netstorm::test::rawscene::Hex(image.pixels)==row[4] && image.pixels.size()==std::stoul(row[5]) && row[6]=="1");pixels+=image.pixels.size();++rows;const auto dummy=effect->Parent();const auto token=effect->Fields().registration.token;core.processes.Kill(*effect,0);CHECK(!session.Particles().Rendering().Lookup(token) && (core.pool.Slot(dummy)[11]&1U));
+    }
+    type.hotspotX=hotX;type.hotspotY=hotY;std::copy(saved.begin(),saved.end(),raw.begin());CHECK(rows==54 && pixels==64152);std::cout<<"Wind 실제 파편 캡처"<<rows<<"행/전체"<<pixels<<"픽셀 통과\n";
+}

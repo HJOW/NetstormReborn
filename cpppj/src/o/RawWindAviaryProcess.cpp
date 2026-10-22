@@ -39,6 +39,15 @@ void RawWindAviaryProcess::PostPop(Sid parent,std::uint32_t flags) const {
 }
 // 원문45b680에는 난수나 대기 시각 변경이 없다.
 void RawWindAviaryProcess::FlyerDied(WindAviaryProcessFields& fields,const std::function<void(WindAviaryProcessFields&)>& refresh) const { if (!globals_.server) return;State(fields,2);Need(refresh)(fields); }
+// 원본은 임시DWORD를0으로 지우거나 free1을 검사하지 않으며 진단 뒤에도 처음 구한 포인터를 사용한다.
+void RawWindAviaryProcess::FormDestroy(WindAviaryProcessFields& fields) const {
+    if (!globals_.boss) return;const auto stored=Read(fields.bytes,48);if (!stored) return; // +48은 WORD가 아닌 현재 DWORD다.
+    const auto offset=stored*50U; // 원본32비트 주소 곱셈의 감김을 보존한다. 상위bit31 별칭도 같은 주소다.
+    if (offset<50U || offset>=pool_.Capacity()*50U) return;
+    if (offset%50U) throw std::logic_error("데빌메이커 임시 포인터가 슬롯 경계 밖입니다"); // 손상된 비정렬 포인터의 임의 가상 호출은 지원하지 않는다.
+    const Sid sid{static_cast<std::uint16_t>(offset/50U)};const auto raw=pool_.Slot(sid); // guard를 통과한 뒤에만 현재 슬롯을 읽는다.
+    if (raw[11]&2U) return;if (raw[10]!=globals_.flyerType) Need(hooks_.assertion)(0x8e4);Need(hooks_.destroy)(sid,0);
+}
 // 원문은 진입 부모를 보존하면서 생성/연결의 일부 인수만 현재 필드에서 다시 읽는다.
 void RawWindAviaryProcess::Frame(WindAviaryProcessFields& f) const {
     const auto parent=Parent(f);const auto raw=pool_.Slot(parent);if ((raw[40]&0x20U) || globals_.editor) return;
@@ -87,6 +96,7 @@ void RawWindAviaryProcess::Frame(WindAviaryProcessFields& f) const {
 WindAviaryProcess::WindAviaryProcess(const RawWindAviaryProcess& logic,WindAviaryProcessFields fields):logic_(logic),fields_(std::move(fields)) {} // 같은 초기80BYTE를 소유한다.
 void WindAviaryProcess::RunFrame() { logic_.Frame(fields_); } // 실제 Kernel 호출이다.
 void WindAviaryProcess::OnAttached() { Put(fields_.bytes,60,Form().value);Put(fields_.bytes,64,Parent().value); } // 실제 inner 부착 필드다.
+void WindAviaryProcess::OnFormDestroy(std::uint32_t) { logic_.FormDestroy(fields_); } // Form 삭제 전에 임시 객체만 정리하고 프로세스 반납은 Host에 맡긴다.
 void WindAviaryProcess::Notify(std::uint32_t,std::uint32_t,std::uint32_t) {} // 원본 빈 통지 몸체다.
 WindAviaryProcessFields& WindAviaryProcess::Fields() { return fields_; } // 현재 단일 원문이다.
 std::uint16_t WindAviaryProcess::WritePacket(std::span<std::uint8_t> packet,bool parentChanged) { OnAttached();return RawWindAviaryState::WriteProcess(fields_,packet,parentChanged); } // 부착 전 전송도 같은 Host 필드를 사용한다.

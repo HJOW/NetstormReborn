@@ -1731,3 +1731,13 @@ tools/decomp_wind_tower_zero.py text eol=lf
 cpppj/bulwark-hit-20261023.json text eol=lf
 cpppj/wind-tower-zero-20261023.json text eol=lf
 docs/exe/cpp-bulwark-hit-20261023.md text eol=lf
+
+# 데빌메이커 Form 삭제의 독립 원문과 검증 소스를 동일한 UTF-8 LF로 보존한다.
+cpppj/tests/WindAviaryDestroyTests.cpp text eol=lf
+cpppj/tests/fixtures/wind-aviary-destroy-x86.tsv text eol=lf
+tools/decomp_wind_aviary_destroy.py text eol=lf
+cpppj/wind-aviary-destroy-20261023.json text eol=lf
+docs/exe/cpp-wind-aviary-destroy-20261023.md text eol=lf
+cpppj/tests/fixtures/wind-aviary-capture-x86.tsv text eol=lf
+tools/decomp_wind_aviary_capture.py text eol=lf
+cpppj/wind-aviary-capture-20261023.json text eol=lf
