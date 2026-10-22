@@ -1,0 +1,111 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-22",
+  "uniqueInputs": 1426,
+  "normalReturns": 2852,
+  "nativeInstructions": 76058,
+  "precisionDifferentInputs": [],
+  "nativeCalls": {
+    "0048ead0": 424,
+    "004ac550": 620,
+    "0049a840": 620,
+    "0048ebe0": 1056,
+    "00496e70": 672,
+    "0048edf0": 1248,
+    "004ac220": 74,
+    "0048eb80": 124
+  },
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_ice_tower.py": "baf1e40518191b45e9d36b0ab3b79574b84c3b68bc37c66b29242c105437401a",
+    "tools/decomp_arc_spire.py": "a476a7af621fd08e49536e427e40b3d6b4b3df47a8f514740b1633e73adc534e",
+    "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+    "tools/decomp_cursor_position.py": "e15bcdbc4c6be9c131c30f15416c945d650dba9f7dc6def404b47f63c635c212",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "cpppj/tests/fixtures/ice-tower-x86.tsv": "92e9e45544b20f4ee40e1443e6b3be340a59b095e1bdcda02e0687d708d3ee5b"
+  },
+  "limitations": [
+    "48ead0/48eb80/48ebe0/48edf0과현재TYPE/WORD/일반Regular반환의전체몸체를실행한다.",
+    "큰생성자/가상Unpop·소유자·Pop·삭제/표면·genus조회/프레임표시/받침정리/공통PostPop·PostDestroy/Regular생성은명시경계다. 기존fixture는바꾸지않는다."
+  ],
+  "vtableEntries": {
+    "0050e940": {
+      "10": "004af780",
+      "14": "0044b4b0",
+      "18": "0048edf0",
+      "20": "0048eda0",
+      "5c": "0044b900",
+      "78": "004acfe0",
+      "98": "0044c8e0",
+      "a0": "0041c0f0",
+      "a4": "0041c100"
+    },
+    "0050ea08": {
+      "10": "004af780",
+      "14": "0044b4b0",
+      "18": "0048edf0",
+      "20": "0048eda0",
+      "5c": "0044b900",
+      "78": "004acfe0",
+      "98": "0048ef20",
+      "a0": "0041c0f0",
+      "a4": "0041c100"
+    },
+    "0050ead0": {
+      "10": "004af780",
+      "14": "0044b4b0",
+      "18": "0048edf0",
+      "20": "0048eda0",
+      "5c": "0044b900",
+      "78": "004acfe0",
+      "98": "0044c8e0",
+      "a0": "0041c0f0",
+      "a4": "0041c100"
+    },
+    "0050e888": {
+      "10": "004af780",
+      "14": "004b0950",
+      "18": "0048eb80",
+      "20": "0048ead0",
+      "5c": "0048ebe0",
+      "78": "004acfe0",
+      "98": "004add10",
+      "a0": "0041c0f0",
+      "a4": "0041c100"
+    }
+  },
+  "implementationSha256": {
+    "cpppj/src/o/RawIceTower.cpp": "966bd4891b4fa5f6f21096d8319aac3107c525c09d9f4d89939c73a52ffc4d3c",
+    "cpppj/src/o/RawIceTower.h": "61a42b9cd3c70de8358dc8869d1010cbf893fd14e7142a211480bbbfdbbba684",
+    "cpppj/src/o/RawAssetPostPop.cpp": "86023698814b0baea9351423f169ab440e7b8392b51085e3c342447d4936fdf8",
+    "cpppj/src/o/RawAssetPostPop.h": "801ead9dc26e4d74f502d5c4f04d6565a27f4a43c4dd11e5f723e9a4eac5a2b6",
+    "cpppj/src/o/CMakeLists.txt": "ef52a276343e8e69e88667f37dbdbb6cc7a3da000c0b91553ac9734709694231",
+    "cpppj/src/client/RawCampaignSession.cpp": "d5b726a9d43d1de3ced90c755aba94e122054da63cc6fc3cf0012818625e53d5",
+    "cpppj/tests/IceTowerTests.cpp": "4f907823cdb1ec817d76b1df14d43f3ffb9e9563628bd1f4c4d8b19d629a08cf",
+    "cpppj/tests/CampaignSessionTests.cpp": "6e5883729999d11fb616ae5bd2c327e4e24b94c9a30b29cf377344432ae3ab28",
+    "cpppj/tests/CMakeLists.txt": "77476f5cdd7d22eaa4fd201945fb6a29a99143e7872215bf4722dae185a6617d"
+  },
+  "validation": {
+    "releaseBuild": "extracted/cpp-ice-tower-20261023-build3.log",
+    "buildExitCode": 0,
+    "buildWarnings": 0,
+    "buildErrors": 0,
+    "focusedLog": "extracted/cpp-ice-tower-20261023-focused2.log",
+    "focusedTests": 3,
+    "focusedFailures": 0,
+    "ctestLog": "extracted/cpp-ice-tower-20261023-ctest1.log",
+    "ctestTests": 2300,
+    "ctestFailures": 0,
+    "ctestExitCode": 0,
+    "ctestSeconds": 311.61,
+    "actualIntermediateFrameValues": 13,
+    "actualRegrowthCompleteFrame": 1392,
+    "actualRegrowthCompleteSeconds": 34.8,
+    "actualDeletionGateScenes": 5,
+    "actualUiUnitLostCalls": 0,
+    "actualSupportUsesConfirmSupport": true,
+    "guiPlayExecuted": false
+  }
+}

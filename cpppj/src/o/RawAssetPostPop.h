@@ -73,6 +73,7 @@ struct AssetPostPopHooks {
     std::function<void()> refreshProduction; // Vortex 비로딩 slot 확인 뒤 0047d890/CD 004773a0이다.
     std::function<void(Sid,std::uint32_t)> sunFencePostPop; // 실제00457560의 이웃/연결선/Regular/Damageable 전체 몸체다.
     std::function<void(Sid,std::uint32_t)> nuggetPostPop; // 실제484f90의 조회/두 할당/게임 난수/Regular/Damageable 전체 몸체다.
+    std::function<void(Sid,std::uint32_t)> growingIcePostPop; //150의48ead0/실제new40와현재numFrames/공통후처리다.
 };
 // 실제 PE 가상 표 +0x20에 따라 초기 요새 건물의 전용 몸체를 분배한다.
 class RawAssetPostPop {

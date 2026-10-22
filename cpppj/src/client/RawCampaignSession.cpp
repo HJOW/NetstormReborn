@@ -8,6 +8,7 @@
 #include "o/RawArcSpire.h"
 #include "o/RawAcidZap.h"
 #include "o/RawAcidFence.h"
+#include "o/RawIceTower.h"
 #include "o/RawPlainUnitCapture.h"
 #include "o/RawBridgeDraw.h"
 #include "o/RawMissionStart.h"
@@ -215,7 +216,7 @@ std::uint32_t Read(std::span<const std::uint8_t> raw,std::size_t offset) {
         (static_cast<std::uint32_t>(raw[offset+2])<<16)|(static_cast<std::uint32_t>(raw[offset+3])<<24);
 }
 // 원본 전체 캡처를 대조한 제네레이터·스톤/아이스 타워의 TYPE 기본/빈 추가 그림을 선택한다.
-bool IsPlainBuildingCapture(std::span<const std::uint8_t> raw) { return (raw[10]>=75 && raw[10]<=77 && Read(raw,0)==0x501ea0U) || ((raw[10]==78 || raw[10]==147) && Read(raw,0)==0x50e940U) || (raw[10]==149 && Read(raw,0)==0x50e668U) || (raw[10]==164 && Read(raw,0)==kPatchAltarVtable) || (raw[10]==95 && Read(raw,0)==kPatchStalagVtable) || (raw[10]==157 && Read(raw,0)==kPatchNoIslandVtable); } // 제단/종유석/표면칸도+78=TYPE기본/+a4=빈ret8이며 현재 타입별 색표 유무는 그대로 사용한다.
+bool IsPlainBuildingCapture(std::span<const std::uint8_t> raw) { return (raw[10]>=75 && raw[10]<=77 && Read(raw,0)==0x501ea0U) || ((raw[10]==78 || raw[10]==147) && Read(raw,0)==0x50e940U) || (raw[10]==79 && Read(raw,0)==0x50ea08U) || (raw[10]==142 && Read(raw,0)==0x50ead0U) || (raw[10]==149 && Read(raw,0)==0x50e668U) || (raw[10]==164 && Read(raw,0)==kPatchAltarVtable) || (raw[10]==95 && Read(raw,0)==kPatchStalagVtable) || (raw[10]==157 && Read(raw,0)==kPatchNoIslandVtable); } // 원본세Blocker표도+78=4acfe0/+a0=41c0f0/+a4=41c100이며현재타입별색표유무를보존한다.
 }
 // 메뉴의 현재 원문/참조와 자식 우선 소멸 순서를 한 고정 주소에 보관한다.
 struct RawCampaignObjectMenus::Impl {
@@ -511,6 +512,9 @@ struct RawCampaignSession::Impl {
     AcidFenceTypes acidFenceTypes; //현재 비행체/벌룬의 여섯 TYPE 전역이다.
     std::unique_ptr<RegularProcess> pendingAcidRegular; //new40 성공부터 전용 애니메이션 부착까지 소유한다.
     std::unique_ptr<RawAcidFence> acidFence; //145의13영역 자동 포획과 전용 주기다.
+    IceTowerTypes iceTowerTypes; //현재147/150/157의 같은 원본 전역이다.
+    std::unique_ptr<RegularProcess> pendingIceRegular; //성장형의new40 성공부터부착까지 소유한다.
+    std::unique_ptr<RawIceTower> iceTower; //완성형 파괴/성장형 주기와 최종147 재생성이다.
     CarrierTransferState carrierTransferState; // 미등록187 분기의 공유 주기/재시도/마지막 기증자와 현재 헤더다.
     std::unique_ptr<RawCarrierTransfer> carrierTransfer; // 실제 내용물 재부착/491/송신/이동 삭제와 연결한다.
     BoardTargetState boardTargetState; // 실제 월드 초기화 후의 실패점 두 float다.
@@ -1003,6 +1007,7 @@ struct RawCampaignSession::Impl {
         auto assetEffects=services.assets;assetEffects.postPop.reserveRegular=[] { return true; };
         assetEffects.postPop.startBlocker=[this](Sid sid) { gunBlocker->Notify(sid); }; // 기존 이름을 유지하며 실제0046ae80의 장애물 통지를 연결한다.
         assetEffects.postPop.nuggetPostPop=[this](Sid sid,std::uint32_t flags) { if (!nuggetPostPop) throw std::logic_error("현재 너겟 PostPop 미설치");nuggetPostPop->PostPop(sid,flags); };
+        assetEffects.postPop.growingIcePostPop=[this](Sid sid,std::uint32_t flags) { if (!iceTower) throw std::logic_error("성장형 아이스 전체 후처리 설치 전 호출");iceTower->PostPop(sid,flags); };
         if (!assetEffects.regular.damageGround) assetEffects.regular=MakeAssetGunImpactHooks(hits->Impact(),std::move(assetEffects.regular));
         if (!assetEffects.regular.hitPoints) assetEffects.regular.hitPoints=[this](Sid victim,std::uint32_t amount,std::int32_t owner,std::uint32_t attacker) -> std::int32_t {
             if (attacker>65535U) throw std::out_of_range("예약 피해의 공격자 SID 범위 오류");const auto table=Read(core.pool.Slot(victim),0);const auto damage=std::bit_cast<std::int32_t>(amount);const Sid source{static_cast<std::uint16_t>(attacker)};
@@ -1074,6 +1079,7 @@ struct RawCampaignSession::Impl {
         ConnectFlare(); // 최초 내용물 부착 전에 실제 연구 효과의 수명/Kernel을 연결한다.
         ConnectConstruction(); // 실제공통삭제후설치뒤같은noIsland VT의표면가상분배를첫객체전등록한다.
         ConnectDamageable(); // 같은 공통 삭제와 신전/사제 해방의 파생 하위를 첫 객체 전에 연결한다.
+        ConnectIceTower(); //첫147/150 Pop 전에전용재생성/성장을같은월드에연결한다.
         ConnectCarrierSteal(); // 최초 크랩 Pop의 실제492예약/공통 장부다.
         ConnectAcidZap(); //최초61h 수신 전에 실제 분해18/현재 가상 삭제를 연결한다.
         ConnectAcidFence(); //첫145 Pop 전에 전용 주기/포획의 같은 세계를 연결한다.
@@ -1110,6 +1116,14 @@ struct RawCampaignSession::Impl {
                 if (event.effect==SquidDestroyEffect::PreDestroy) { PrepareRitual();if (altarSacrifice->Handles(event.sid)) daisLifecycle->AltarPreDestroy(event.sid,event.flags);else altarSacrifice->DaisPreDestroy(event.sid,event.flags);return; }
                 if (event.effect==SquidDestroyEffect::PostDestroy) { daisLifecycle->PostDestroy(event.sid,event.flags);return; }
             }
+            if (GrowingIce(event.sid)) {
+                if (event.effect==SquidDestroyEffect::PreDestroy) { world.CommonDeletion().PreDestroy(event.sid,event.flags);return; }
+                if (event.effect==SquidDestroyEffect::PostDestroy) { iceTower->GrowingPostDestroy(event.sid,event.flags);return; }
+            }
+            if (BlockerLifetime(event.sid)) {
+                if (event.effect==SquidDestroyEffect::PreDestroy) { damageablePre->PreDestroy(event.sid,event.flags);return; }
+                if (event.effect==SquidDestroyEffect::PostDestroy) { iceTower->PostDestroy(event.sid,event.flags);return; }
+            }
             if (PlainDamageable(event.sid) || SunFence(event.sid) || Nugget(event.sid)) {
                 if (event.effect==SquidDestroyEffect::PreDestroy) { if (SunFence(event.sid)) fenceLifetime->PreDestroy(event.sid,event.flags);else damageablePre->PreDestroy(event.sid,event.flags);return; }
                 if (event.effect==SquidDestroyEffect::PostDestroy) { PrepareDamageablePost();damageablePost->PostDestroy(event.sid,event.flags);return; }
@@ -1138,7 +1152,7 @@ struct RawCampaignSession::Impl {
         worldHooks.assets=priests->DestroyHooks(std::move(worldHooks.assets)); // 실제4919b0의 목록·보호막·Carrier 전처리를 같은 삭제 호출에 연결한다.
         auto previousDestroy=std::move(worldHooks.destroy); // 실제 신전 VT의 공통+10만 추가 분배한다.
         worldHooks.destroy=[this,previous=std::move(previousDestroy)](Sid sid,std::uint32_t flags,const SquidDestroyHooks& hooks) {
-            if (BridgeLifetime(sid) || BridgeConnector(sid) || geyserLifetime->Handles(sid) || Vortex(sid) || FenceCommon(sid) || Flyer(sid) || balloonBody->Handles(sid) || VisualDummy(sid) || PlainDamageable(sid) || SunFence(sid) || Nugget(sid) || (daisLifecycle && daisLifecycle->Handles(sid)) || (dudeBehavior && dudeBehavior->Handles(sid)) || PriestForcefield(sid) || PlainCarrierLifetime(sid) || PriestLifetime(sid) || BuriedLifetime(sid) || BombLifetime(sid) || RuneLifetime(sid)) return core.virtualDestroy.Destroy(sid,flags,hooks);return previous(sid,flags,hooks);
+            if (BridgeLifetime(sid) || BridgeConnector(sid) || geyserLifetime->Handles(sid) || Vortex(sid) || FenceCommon(sid) || Flyer(sid) || balloonBody->Handles(sid) || VisualDummy(sid) || PlainDamageable(sid) || BlockerLifetime(sid) || GrowingIce(sid) || SunFence(sid) || Nugget(sid) || (daisLifecycle && daisLifecycle->Handles(sid)) || (dudeBehavior && dudeBehavior->Handles(sid)) || PriestForcefield(sid) || PlainCarrierLifetime(sid) || PriestLifetime(sid) || BuriedLifetime(sid) || BombLifetime(sid) || RuneLifetime(sid)) return core.virtualDestroy.Destroy(sid,flags,hooks);return previous(sid,flags,hooks);
         };
         buriedRegular=std::make_unique<RawBuriedRegular>(core.pool,core.frames,core.frame,random);
         auto actualRegular=hits->Handler(combat->Handler(assetBindings->Handler(buriedRegular->Handler(priests->RegularHandler([this](Sid sid,std::uint32_t event,std::uint32_t count,float payload) {
@@ -1150,6 +1164,7 @@ struct RawCampaignSession::Impl {
             const auto raw=core.pool.Slot(sid);
             if (Read(raw,0)==0x50e668U) return arcSpire->Handle(sid,event,count,payload); //48c6e0의 전용 주기이며 공통44b900으로 바로 넘기지 않는다.
             if (Read(raw,0)==0x50e738U) return acidFence->Handle(sid,event,count,payload); //48ea30은첫count0부터공격하며공통Regular를호출하지않는다.
+            if (GrowingIce(sid)) return iceTower->Handle(sid,event,count,payload); //48ebe0의event3a6과현재numFrames/40초주기다.
             if (Read(raw,0)==0x50a050U) return windFlyer->Handle(sid,event,count,payload); // 실제45e8b0의주기범위공격이다.
             if (Read(raw,0)==0x504198U) return balloonBody->CloudRegular(sid,event,count,payload,
                 [this](Sid parent,std::int32_t delta,std::uint32_t flags) { RawFrameAdvance advance(core.pool,core.frames,core.frame);static_cast<void>(advance.Advance(parent,delta,flags)); },
@@ -1290,11 +1305,13 @@ struct RawCampaignSession::Impl {
     // 가상 주소를 호출하지 않고 검증한 일반 Damageable의 실제 표만 선택한다.
     bool PlainDamageable(Sid sid) const {
         const auto raw=core.pool.Slot(sid);const auto table=Read(raw,0);
-        // 스톤78의 전용48edf0은 현재147 비교를 건너뛰고44b9e0만 부른다. 같은VT의 아이스147 재생성을 공통화하지 않는다.
-        if (raw[10]==78 && table==0x50e940U) return true;
         // 현재 VT를 매 호출 다시 읽고 주소가 같은 순수 수명 몸체만 공유한다.
         for (const auto known:kPlainDamageableTables) if (known==table) return true;return false;
     }
+    // 세Blocker표의+14=44b4b0/+18=48edf0은TYPE147일때만재성장한다.
+    bool BlockerLifetime(Sid sid) const { const auto table=Read(core.pool.Slot(sid),0);return table==0x50e940U || table==0x50ea08U || table==0x50ead0U; }
+    // 성장형의공통Pre와고유Post/Regular를완성형Damageable과구분한다.
+    bool GrowingIce(Sid sid) const { return Read(core.pool.Slot(sid),0)==0x50e888U; }
     // 실제5034c8/+10=4220f0/+14=4221b0/+18=422300의 같은 다리 수명이며 거부/extra 조건은 기존 원본 몸체가 처리한다.
     bool BridgeLifetime(Sid sid) const { const auto raw=core.pool.Slot(sid);return raw[10]==core.bridgeState.bridgeType && Read(raw,0)==kPatchBridgeVtable; }
     // TYPE155 생성자422720의503360은+10/+14/+18이 각각 공통4af780/4b0950/4b0840이다.
@@ -1457,6 +1474,35 @@ struct RawCampaignSession::Impl {
         hooks.setFrame=[this](Sid sid,std::int32_t frame,std::uint32_t flags) { core.frame.Set(sid,frame,flags); };
         hooks.damageable=[this](Sid sid,std::uint32_t event,std::uint32_t count,float value) { return assetBindings->Regular().DamageableHandle(sid,event,count,value); };
         arcSpire=std::make_unique<RawArcSpire>(core.pool,core.types,core.frames,core.spots,alliances,globals.editor,std::move(hooks));
+    }
+    // 완성형 삭제와 성장형을 같은 실제 세계/공통장부/시계에 연결한다.
+    void ConnectIceTower() {
+        IceTowerHooks hooks;
+        hooks.reserveRegular=[this] { try { pendingIceRegular=std::make_unique<RegularProcess>(0,0.0F);return true; }catch (const std::bad_alloc&) { return false; } };
+        hooks.regular=[this](Sid sid,std::uint32_t event,float period) {
+            if (!pendingIceRegular) throw std::logic_error("성장형 아이스 Regular 예약 누락");auto* reserved=pendingIceRegular.get();std::destroy_at(reserved);std::construct_at(reserved,event,period);
+            auto* task=static_cast<RegularProcess*>(core.processes.Attach(std::move(pendingIceRegular),46,sid,0x50));if (!task) throw std::logic_error("성장형 아이스 Regular 부착 실패");task->ResetTask(event,core.processState.now);
+        };
+        hooks.basePop=[this](Sid sid,std::uint32_t flags) { core.postPop.PostPopBase(sid,flags); };
+        hooks.grid=[this](float x,float y) {
+            const auto cell=[](float value) { //40eaf0/CRT의plain절삭이며거의올림을추가하지않는다.
+                if (!std::isfinite(value) || static_cast<double>(value)<-9223372036854775808.0 || static_cast<double>(value)>=9223372036854775808.0) return std::int32_t{};
+                return std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(static_cast<std::int64_t>(value)));
+            };
+            const auto cx=cell(x),cy=cell(y);return cx<0 || cy<0 || cx>255 || cy>255 ? Sid{} : Sid{core.hash.Cell(0,cx,cy)};
+        };
+        hooks.genusAt=[this](float x,float y,std::uint32_t genus) { return damageablePost->GenusAt(x,y,genus); };
+        hooks.create=[this](std::uint32_t type,std::uint32_t flags) { return world.Create(type,flags); };
+        hooks.unpop=[this](Sid sid,std::uint32_t flags) { world.Unpop(sid,flags); };
+        hooks.word=[this](Sid sid,std::uint16_t value) { auto raw=core.pool.AllocatedBytes(sid);raw[12]=static_cast<std::uint8_t>(value);raw[13]=static_cast<std::uint8_t>(value>>8);if (raw[10]==core.bridgeState.bridgeType) core.building.NotifySurface(sid); };
+        hooks.owner=[this](Sid sid,std::uint8_t owner) { core.owner.Set(sid,owner); };
+        hooks.pop=[this](Sid sid,float x,float y,std::uint32_t flags) { world.Pop(sid,x,y,flags); };
+        hooks.destroy=[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); };
+        hooks.dropIsland=[this](float x,float y,std::uint32_t flags,std::uint32_t owner) { PrepareBuilding(core.processState.now);buildingEffects->DropIsland(x,y,flags,owner); };
+        hooks.damageablePost=[this](Sid sid,std::uint32_t flags) { PrepareDamageablePost();damageablePost->PostDestroy(sid,flags); };
+        hooks.basePost=[this](Sid sid,std::uint32_t flags) { world.CommonDeletion().PostDestroy(sid,flags); };
+        hooks.setFrame=[this](Sid sid,std::int32_t frame,std::uint32_t flags) { core.frame.Set(sid,frame,flags); };
+        iceTower=std::make_unique<RawIceTower>(core.pool,core.frames,iceTowerTypes,assetState.inBattle,assetState.boss,objectState.loadingDepth,std::move(hooks));
     }
     // 실제145의 양축/13영역·사제피해·포획패킷과 애니메이션을 같은 Host에 연결한다.
     void ConnectAcidFence() {

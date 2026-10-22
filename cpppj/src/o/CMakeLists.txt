@@ -449,3 +449,4 @@ target_sources(netstorm PRIVATE RawDissolveLifetime.h RawDissolveLifetime.cpp Di
 # 애시드 포획 수신/헤더와 검증한 일반 유닛의 실제 캡처 분배다.
 target_sources(netstorm PRIVATE RawAcidZap.h RawAcidZap.cpp RawPlainUnitCapture.h RawPlainUnitCapture.cpp)
 target_sources(netstorm PRIVATE RawAcidFence.h RawAcidFence.cpp)
+target_sources(netstorm PRIVATE RawIceTower.h RawIceTower.cpp)

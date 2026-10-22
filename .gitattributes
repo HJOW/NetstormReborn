@@ -1709,3 +1709,11 @@ cpppj/tests/fixtures/acid-fence-x86.tsv text eol=lf
 tools/decomp_acid_fence.py text eol=lf
 cpppj/acid-fence-20261023.json text eol=lf
 docs/exe/cpp-acid-fence-20261023.md text eol=lf
+
+# 아이스 타워 재성장의 원문/제품/검증 자료는 같은 UTF-8 LF 바이트를 유지한다.
+cpppj/src/o/RawIceTower.* text eol=lf
+cpppj/tests/IceTowerTests.cpp text eol=lf
+cpppj/tests/fixtures/ice-tower-x86.tsv text eol=lf
+tools/decomp_ice_tower.py text eol=lf
+cpppj/ice-tower-20261023.json text eol=lf
+docs/exe/cpp-ice-tower-20261023.md text eol=lf

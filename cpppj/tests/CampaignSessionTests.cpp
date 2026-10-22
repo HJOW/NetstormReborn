@@ -3874,3 +3874,50 @@ TEST_CASE(CampaignAcidFence_ActualKernelAutomaticCapture) {
         std::cout<<"애시드 실제 자동포획/방향"<<orientation<<"/포획frame"<<captureFrame<<"/전체frame"<<frame<<"/소리"<<sounds<<"/보상"<<refund<<'\n';
     }
 }
+
+// 실제받침확정경로가만든9표면/윗면/하단의기준점을읽으며검사에서직접조립하지않는다.
+std::array<float,2> IceSupport(RawCampaignSession& session,Sid& island) {
+    auto core=session.Core();const auto point=EmptySessionSupport(core);CHECK(session.ConfirmSupport(static_cast<float>(point.x),static_cast<float>(point.y)));const auto packet=session.Construction().LastPacket();CHECK(packet.size()==45 && packet[26]==9);if (packet.size()!=45) throw std::logic_error("아이스 받침 확정 패킷 부재");
+    float x=-10000,y=-10000;
+    for (std::size_t index=0;index<9;++index) { const Sid sid{static_cast<std::uint16_t>(Get(packet,27+index*2,2))};const auto raw=core.pool.Slot(sid);x=std::max(x,std::bit_cast<float>(Get(raw,14)));y=std::max(y,std::bit_cast<float>(Get(raw,18))); } //현재생성된오른쪽/아래기준점이다.
+    session.World().SetSupportOwner(x,y,1);island=session.World().Find(x,y,94);CHECK(island.value);return {x,y};
+}
+// 실제 섬/147을 배치하고 파괴→150→원래147과 반복재성장을 같은 Kernel만으로 진행한다.
+TEST_CASE(CampaignIceTower_ActualKernelRegrowthAndRepeat) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();std::size_t lost{};services.unitLost=[&](Sid) { ++lost; }; //외부소실통지만관찰한다.
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));session.Load();auto core=session.Core();
+    Sid island{};const auto point=IceSupport(session,island);const auto x=point[0],y=point[1];const Sid surface{core.hash.Cell(0,static_cast<int>(x),static_cast<int>(y))};CHECK(surface.value && core.pool.Slot(surface)[10]==157);
+    const auto source=session.World().Create(147,2);core.owner.Set(source,1);session.World().Pop(source,x,y,0);const auto raw=core.pool.Slot(source);const auto word=Get(raw,12,2);const auto depth=raw[35];const auto funds=session.Sp(1);
+    CHECK(Get(raw,0)==0x50e940U && session.World().Destroy(source,0) && (core.pool.Slot(source)[11]&1));
+    auto growing=ConstructionLive(core,150);CHECK(growing.size()==1);if (growing.size()!=1) return;const auto sprout=growing.front();const auto sproutRaw=core.pool.Slot(sprout);
+    CHECK(Get(sproutRaw,0)==0x50e888U && !(sproutRaw[11]&7) && sproutRaw[34]==1 && sproutRaw[35]==depth && Get(sproutRaw,12,2)==word && Get(sproutRaw,36)==0);
+    const auto total=core.frames[150].Codes().size();CHECK(total>3);const auto* initial=core.processes.FindEvent(sprout,0x3a6);CHECK(initial && initial->Payload()==40.0F/static_cast<float>(total) && initial->Count()==0);
+    CHECK(core.hash.Cell(0,static_cast<int>(x),static_cast<int>(y))==surface.value && !(core.pool.Slot(island)[11]&7));const auto form=FindAttachedProcess(core.pool,sprout,46);CHECK(form.value);
+    std::uint64_t frame{};std::set<std::uint32_t> animation;Sid rebuilt{};const auto tick=[&] { ++frame;session.RunFrame({frame*.025,100+frame*.025,.025,frame},false); }; //시각만진행하며프레임/생성단계/HP를바꾸지않는다.
+    for (std::uint32_t step=0;step<2400 && !rebuilt.value;++step) { //전용주기가자연성장/자기삭제/최종147Pop을수행한다.
+        tick();const auto current=core.pool.Slot(sprout);if (!(current[11]&3)) animation.insert(Get(current,36));
+        if (current[11]&1) rebuilt=session.World().Find(x,y,147);
+    }
+    CHECK(rebuilt.value && animation.size()>2 && !core.processes.FromForm(form));if (!rebuilt.value) return;const auto complete=core.pool.Slot(rebuilt);
+    CHECK(complete[34]==1 && !(complete[11]&7) && Get(complete,26)==static_cast<std::uint32_t>(session.HitPoints().MaxHitPoints(rebuilt)) && session.Sp(1)==funds);
+    CHECK(core.hash.Cell(0,static_cast<int>(x),static_cast<int>(y))==surface.value && !(core.pool.Slot(island)[11]&7));const auto completeFrame=frame;
+    CHECK(session.World().Destroy(rebuilt,0));growing=ConstructionLive(core,150);CHECK(growing.size()==1);if (growing.size()!=1) return;const auto again=growing.front();CHECK(core.pool.Slot(again)[34]==1 && Get(core.pool.Slot(again),36)==0 && core.processes.FindEvent(again,0x3a6));
+    // 성장형의실제받침정리비트로삭제하면섬/하단/9표면과자기예약을함께반납한다.
+    CHECK(session.World().Destroy(again,0x8000000U));CHECK((core.pool.Slot(again)[11]&1) && !FindAttachedProcess(core.pool,again,46).value && (core.pool.Slot(island)[11]&1) && !core.hash.Cell(0,static_cast<int>(x),static_cast<int>(y)) && ConstructionLive(core,150).empty());
+    CHECK(!core.destroy.PreDepth() && !core.destroy.PostDepth() && !core.bookkeeping.depth);
+    std::cout<<"아이스 실제 재성장: TYPE150 프레임"<<animation.size()<<"/완성frame"<<completeFrame<<"/완성시간"<<completeFrame*.025<<"/반복생성·받침정리/소실"<<lost<<'\n';
+}
+
+// 완성형의회수/받침낙하/로딩과성장형삭제가원본의별도관문을따라야한다.
+TEST_CASE(CampaignIceTower_ActualDeletionGates) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);
+    for (const auto mode:{0,1,2,3,4}) { //회수/받침낙하/로딩과같은삭제몸체의142/79를각각새세계로분리한다.
+        SessionServicesFixture external;auto services=external.Services();services.unitLost=[](Sid) {};
+        auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));session.Load();auto core=session.Core();
+        Sid island{};const auto point=IceSupport(session,island);const auto x=point[0],y=point[1];const auto source=session.World().Create(mode==3 ? 142U : mode==4 ? 79U : 147U,2);core.owner.Set(source,1);session.World().Pop(source,x,y,0);
+        if (mode==2) session.World().SetLoadingDepth(1);const auto flags=mode==0 ? 0x200000U : mode==1 ? 0x8000000U : 0U;
+        CHECK(session.World().Destroy(source,flags) && (core.pool.Slot(source)[11]&1) && ConstructionLive(core,150).empty());if (mode==2) session.World().SetLoadingDepth(0);
+        CHECK((core.hash.Cell(0,static_cast<int>(x),static_cast<int>(y))==0)==(mode!=2));CHECK(((core.pool.Slot(island)[11]&1)!=0)==(mode!=2));CHECK(!core.destroy.PreDepth() && !core.destroy.PostDepth() && !core.bookkeeping.depth);
+        std::cout<<"아이스 실제 삭제관문"<<mode<<"/성장형없음/받침존재"<<((core.pool.Slot(island)[11]&1)==0)<<'\n';
+    }
+}
