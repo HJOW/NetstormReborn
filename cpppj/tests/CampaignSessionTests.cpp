@@ -35,6 +35,8 @@
 #include "o/RawTempleRitual.h"
 #include "o/RawSpecialDamage.h"
 #include "o/RawPlainWorkshopCapture.h"
+#include "o/RawPlainAssetDraw.h"
+#include "client/OwnerColorMaps.h"
 #include "o/RawGemReward.h"
 #include "o/RawBombEffect.h"
 #include "client/RawBombBlastBindings.h"
@@ -965,6 +967,9 @@ TEST_CASE(CampaignSession_GolemNative64WalkingFrames) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
     auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());auto services=external.Services();services.install.resetCamera={};
     GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services),{1024,768});world.Resize(1024,768);
+    std::array<ScreenColor,256> palette{};
+    for (std::size_t index=0;index<palette.size();++index) { const auto color=assets.game.Palette().Color(static_cast<std::uint8_t>(index));palette[index]={color.blue,color.green,color.red,0}; } // 실제 원본 표시기에 파일 팔레트를 설치한다.
+    world.SetPalette(palette);
     const auto core=world.Session().Core();const auto origin=EmptySessionSupport(core);
     const float x=static_cast<float>(origin.x)+2.25f,y=static_cast<float>(origin.y)+3.625f; // 다른 선택 가능한 지형의 간섭을 피한 소수 월드 좌표의 표시 전용 입력이다.
     const auto sid=world.Session().World().Create(133,2);world.Session().World().Pop(sid,x,y,0);auto raw=core.pool.AllocatedBytes(sid);raw[34]=0;raw[40]=128; // 원문과 같은 중립/현재프레임 표시이며 실제 플레이의 소유권 조작이 아니다.
@@ -979,7 +984,7 @@ TEST_CASE(CampaignSession_GolemNative64WalkingFrames) {
         for (const auto camera:std::array<ScreenPoint,2>{{{0,0},{7,9}}}) {
             world.Scroll(camera.x,camera.y);const auto point=world.ToScreen(x,y);std::vector<RenderSprite> body;
             // 실제 골렘 본체만 분리해 지면/주변 유닛의 가림을 섞지 않는다.
-            for (const auto& sprite:world.Sprites()) if (sprite.block==133-70 && sprite.order.x==x && sprite.order.y==y) body.push_back(sprite);
+            for (const auto& sprite:world.Sprites()) if (sprite.procedure && !sprite.shadow && sprite.order.x==x && sprite.order.y==static_cast<float>(static_cast<double>(y)+0.5)) body.push_back(sprite);
             CHECK(body.size()==1);if (body.size()!=1) return;
             Renderer renderer(1024,768);renderer.SetScene(body);std::vector<std::uint8_t> actual(1024*768,199);renderer.Draw(actual,1024,199);
             const auto compared=CompareDisplayNative(actual,{point.x-hotX,point.y-hotY},width,height,row[2]);mismatches+=compared.first;pixels+=compared.second;CHECK(compared.second>0);++cases;world.Scroll(-camera.x,-camera.y);
@@ -2376,7 +2381,7 @@ void NaturalWorkshopPlacement(bool combat,bool burning=false,CellPoint cannonLoc
     RawCampaignFactoryDisplay display(core,assets.game,[&session](Sid sid,const auto& frame) { session.DrawTemple(sid,frame); });std::array<ScreenColor,256> palette{}; // 실제 Session의 같은 풀/SHP를 그리는 제품 표시기다.
     // 명시 파일 팔레트만 설치하며 HP/프레임/완공 필드는 쓰지 않는다.
     for (std::size_t i=0;i<palette.size();++i) { const auto color=assets.game.Palette().Color(static_cast<std::uint8_t>(i));palette[i]={color.blue,color.green,color.red,0}; }
-    display.SetPalette(palette);CHECK(display.Handles(target) && !display.Handles(priest));
+    display.SetPalette(palette);CHECK(display.Handles(target) && display.Handles(priest)); // 사제도 정확한 TYPE/VT의 일반 원본 Draw에 포함된다.
     // 실제 공간 수집의 본체/그림자 두 항목과 dirty 출력이 현재 슬롯의 건설 상태를 따르는지 확인한다.
     const auto render=[&](bool dead) {
         const ScreenRect clip{0,28,1024,768};const int cameraX=static_cast<int>(point.x*16)-512,cameraY=static_cast<int>(point.y*11)-384;
@@ -4056,4 +4061,50 @@ TEST_CASE(CampaignPlainWorkshopCapture_ActualDamageBurningAndDeletion) {
         CHECK(core.pool.Slot(target)[11]&1U);CHECK(!FindAttachedProcess(core.pool,target,14).value && !FindAttachedProcess(core.pool,target,34).value && !FindAttachedProcess(core.pool,target,60).value);CHECK(!core.processes.FindEvent(target,6699) && !session.Particles().Rendering().Lookup(token));CHECK(lost>0 && session.Particles().Rendering().Size()>0);CHECK(!core.destroy.PreDepth() && !core.destroy.PostDepth() && !core.bookkeeping.depth);
         std::cout<<"워크샾 실제 피해/연소/삭제 TYPE"<<number<<"/HP"<<maximum<<"→"<<maximum-damage<<"/연소픽셀"<<imagePixels<<"/파편표시"<<session.Particles().Rendering().Size()<<'\n';
     }
+}
+
+namespace {
+constexpr std::array<std::uint32_t,25> kWorkshopDisplayTypes{71,72,78,111,133,136,76,129,143,145,146,147,156,75,137,139,140,141,142,77,79,131,135,148,149}; // 사용자 범위인 썬6/레인7/윈드6/썬더6이다.
+// 실제 파일 팔레트를 원본 표시기의 RGBX 입력으로 변환한다.
+std::array<ScreenColor,256> WorkshopDisplayPalette(const GameAssets& assets) {
+    std::array<ScreenColor,256> palette{};for (std::size_t index=0;index<palette.size();++index) { const auto color=assets.Palette().Color(static_cast<std::uint8_t>(index));palette[index]={color.blue,color.green,color.red,0}; } // 원래256색 번호는 바꾸지 않는다.
+    return palette;
+}
+// 검사 카메라 안쪽의 명시 시작 상태도 원래 받침 확정 패킷으로 생성한다.
+std::array<float,2> WorkshopDisplaySupport(RawCampaignSession& session) {
+    auto core=session.Core();CHECK(session.ConfirmSupport(200,200));const auto packet=session.Construction().LastPacket();CHECK(packet.size()==45);if (packet.size()!=45) throw std::logic_error("워크샾 표시 받침 패킷 부재");float x{},y{};
+    for (std::size_t index=0;index<9;++index) { const auto sid=Sid{static_cast<std::uint16_t>(Get(packet,27+index*2,2))};x=std::max(x,std::bit_cast<float>(Get(core.pool.Slot(sid),14)));y=std::max(y,std::bit_cast<float>(Get(core.pool.Slot(sid),18))); } // 실제 생성된 오른쪽/아래 기준점을 읽는다.
+    session.World().SetSupportOwner(x,y,1);return {x,y};
+}
+}
+// 모든25종의 GameWorld가 동일 원본 표시기로 본체를 제출하고 일반19종은 상태/owner별 전체 픽셀이 맞는다.
+TEST_CASE(CampaignWorkshopDisplay_All25ActualBodyAndColors) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);const auto palette=WorkshopDisplayPalette(assets.game);std::array<std::uint32_t,256> logical{};
+    for (std::size_t index=0;index<logical.size();++index) logical[index]=std::uint32_t(palette[index].red)|(std::uint32_t(palette[index].green)<<8)|(std::uint32_t(palette[index].blue)<<16); // 실제 파일 색으로 원본 색 치환표만 준비한다.
+    const auto translated=BuildSpriteColorMaps(logical);std::size_t bodies{},plain{},comparisons{};
+    for (const auto number:kWorkshopDisplayTypes) { // 독립 시작 상태에서 모든 사용자 대상 타입을 같은 실제 생성/공간/표시 경로로 검사한다.
+        SessionServicesFixture external;auto services=external.Services();services.unitLost=[](Sid) {};services.formPacket=[](std::span<const std::uint8_t>) {};UseWorldTestLogin(services);
+        auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services),{1024,768});world.SetPalette(palette);const auto cursors=BindWorldTestInput(world);auto& session=world.Session();CHECK(session.LocalOwner()==1);auto core=session.Core();const auto spawn=WorkshopDisplaySupport(session);const auto actor=session.World().Create(number);core.owner.Set(actor,1);session.World().Pop(actor,spawn[0],spawn[1],9);session.RunFrame({.025,100.025,.025,1},false);
+        const std::array<float,2> position{std::bit_cast<float>(Get(core.pool.Slot(actor),14)),std::bit_cast<float>(Get(core.pool.Slot(actor),18))}; // 최초 Frame의 실제 보행/회피가 바꾼 현재 위치를 읽는다.
+        const auto before=world.ToScreen(position[0],position[1]);world.Scroll(before.x-512,before.y-384);const auto screen=world.ToScreen(position[0],position[1]);CHECK(screen.x==512 && screen.y==384);
+        RawCampaignFactoryDisplay display(core,assets.game,[&](Sid sid,const auto& draw) { session.DrawTemple(sid,draw); });display.SetPalette(palette);CHECK(display.Handles(actor));auto raw=core.pool.AllocatedBytes(actor);const auto saved=std::vector<std::uint8_t>(raw.begin(),raw.end());const ScreenRect clip{0,28,1024,768};
+        const auto drawBody=[&] { std::vector<std::uint8_t> result(1024*768,255);std::size_t count{};for (const auto& sprite:world.Sprites()) if (sprite.order.x==position[0] && sprite.order.y==static_cast<float>(static_cast<double>(position[1])+((core.types[number].flags2&0x10000U) ? 0.5 : 0.0)) && sprite.order.depth==std::bit_cast<std::int8_t>(raw[35]) && sprite.procedure && !sprite.shadow) { sprite.procedure->draw(result,1024,768,clip);++count; }if (count!=1) std::cout<<"워크샾 본체 수 TYPE"<<number<<"/수"<<count<<'\n';CHECK(count==1);return result; }; // 같은 좌표/깊이의 그림자 복제도 실제 수집기 표식으로 제외한다.
+        const auto first=drawBody();CHECK(first.size()==1024*768);++bodies;
+        raw[40]=0;world.Select(actor.value);CHECK(raw[40]&4U);const auto selected=drawBody();CHECK(std::any_of(selected.begin(),selected.end(),[](auto pixel) { return pixel!=255; }));world.Select(0);std::copy(saved.begin(),saved.end(),raw.begin()); // 실제 선택 서비스의 괄호/HP 및 선택 해제를 같은 원본 표시 경로로 확인한다.
+        if (IsPlainAssetDraw(raw)) {
+            ++plain;const auto frame=Get(raw,36);const auto x=screen.x-core.types[number].hotspotX,y=screen.y-core.types[number].hotspotY;core.bridgeState.ownerColors[1]=2;core.bridgeState.ownerColors[8]=7; // 실제 표시 전역의 명시 플레이어 색 입력이다.
+            for (const std::uint32_t owner:{1U,8U}) { // 현재 원본 소유자 색 전역을 사용하는 두 플레이어다.
+                raw[34]=static_cast<std::uint8_t>(owner);std::optional<ColorMap> ownerMap;
+                if (number==111 || number==141 || number==137) ownerMap=BuildSpecialOwnerColorMaps(logical,number)[static_cast<std::size_t>(core.bridgeState.ownerColors[owner])];
+                else if (number==133 || number==135 || number==146 || number==156) ownerMap=BuildStandardOwnerColorMaps(number,82)[static_cast<std::size_t>(core.bridgeState.ownerColors[owner])];
+                for (const std::uint8_t state:{std::uint8_t{0},std::uint8_t{1},std::uint8_t{16}}) { // 일반/건설 중/추상 표시 입력만 바꾸고 물리·프레임·HP 결과는 쓰지 않는다.
+                    raw[40]=state;std::vector<std::uint8_t> expected(1024*768,255);const ColorMap* colors=state==1 ? &translated.dead : state==16 ? &translated.bright : ownerMap ? &*ownerMap : nullptr;
+                    if (state!=16 || owner==session.LocalOwner()) { if (colors) CHECK(DrawMappedShape(expected,1024,768,assets.game.Shapes(),number-70,frame,x,y-clip.top,{0,28,1023,767},*colors)==0);else CHECK(DrawShape(expected,1024,768,assets.game.Shapes(),number-70,frame,x,y-clip.top,{0,28,1023,767})==0); } // 양 끝 포함 VFX pane은 좌표에 pane 원점을 더하므로 절대 화면 기준점에서 먼저 뺀다.
+                    const auto actual=drawBody();if (actual!=expected) { std::cout<<"실제 워크샾 표시 차이 TYPE"<<number<<"/owner"<<owner<<"/상태"<<unsigned(state)<<'\n';CHECK(false); }++comparisons;
+                }
+            }
+        }
+        std::copy(saved.begin(),saved.end(),raw.begin());CHECK(!core.destroy.PreDepth() && !core.destroy.PostDepth() && !core.bookkeeping.depth);std::cout<<"25종 실제 본체 표시 TYPE"<<number<<"/일반"<<IsPlainAssetDraw(raw)<<"/기준점"<<core.types[number].hotspotX<<','<<core.types[number].hotspotY<<'\n';
+    }
+    CHECK(bodies==25 && plain==19 && comparisons==114);std::cout<<"실제25종 본체/일반19종 상태·소유자"<<comparisons<<"장면 전체 픽셀 대조\n";
 }

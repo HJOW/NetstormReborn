@@ -1748,3 +1748,11 @@ cpppj/tests/fixtures/plain-workshop-capture-x86.tsv text eol=lf
 tools/decomp_plain_workshop_capture.py text eol=lf
 cpppj/plain-workshop-capture-20261023.json text eol=lf
 docs/exe/cpp-plain-workshop-capture-20261023.md text eol=lf
+
+# 워크샾 실제 Draw 분배와 원본 주소 감사 근거는 UTF-8 LF로 고정한다.
+cpppj/src/client/RawCampaignFactoryDisplay.cpp text eol=lf
+cpppj/src/client/SpriteDraw.cpp text eol=lf
+cpppj/src/o/RawPlainAssetDraw.* text eol=lf
+tools/audit_unit_draw_bindings.py text eol=lf
+cpppj/unit-draw-bindings-20261023.json text eol=lf
+docs/exe/cpp-workshop-display-20261023.md text eol=lf

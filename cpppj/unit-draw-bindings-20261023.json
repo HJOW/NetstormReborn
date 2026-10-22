@@ -1,0 +1,352 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-22",
+  "nativeDraw": "00498220",
+  "workshop": [
+    {
+      "type": 71,
+      "name": "sunArcher",
+      "vtable": "0050b888",
+      "route": "existing-special",
+      "methods": {
+        "78": "004acfe0",
+        "a0": "0041c0f0",
+        "a4": "0046a6e0"
+      }
+    },
+    {
+      "type": 72,
+      "name": "sunAviary",
+      "vtable": "00509930",
+      "route": "existing-special",
+      "methods": {
+        "78": "0045b530",
+        "a0": "0041c0f0",
+        "a4": "0045b560"
+      }
+    },
+    {
+      "type": 78,
+      "name": "sunBlocker",
+      "vtable": "0050e940",
+      "route": "plain",
+      "methods": {
+        "78": "004acfe0",
+        "a0": "0041c0f0",
+        "a4": "0041c100"
+      }
+    },
+    {
+      "type": 111,
+      "name": "sunBalloon",
+      "vtable": "005040c0",
+      "route": "plain",
+      "methods": {
+        "78": "004acfe0",
+        "a0": "0041c0f0",
+        "a4": "0041c100"
+      }
+    },
+    {
+      "type": 133,
+      "name": "sunWalker",
+      "vtable": "0050e568",
+      "route": "plain",
+      "methods": {
+        "78": "004acfe0",
+        "a0": "0041c0f0",
+        "a4": "0041c100"
+      }
+    },
+    {
+      "type": 136,
+      "name": "sunFence",
+      "vtable": "00509470",
+      "route": "plain",
+      "methods": {
+        "78": "004acfe0",
+        "a0": "0041c0f0",
+        "a4": "0041c100"
+      }
+    },
+    {
+      "type": 76,
+      "name": "rainBattery",
+      "vtable": "00501ea0",
+      "route": "existing-special",
+      "methods": {
+        "78": "004acfe0",
+        "a0": "0041c170",
+        "a4": "0041c100"
+      }
+    },
+    {
+      "type": 129,
+      "name": "rainCannon",
+      "vtable": "0050b9b8",
+      "route": "plain",
+      "methods": {
+        "78": "004acfe0",
+        "a0": "0041c0f0",
+        "a4": "0041c100"
+      }
+    },
+    {
+      "type": 143,
+      "name": "rainAviary",
+      "vtable": "005099e8",
+      "route": "plain",
+      "methods": {
+        "78": "004acfe0",
+        "a0": "0041c0f0",
+        "a4": "0041c100"
+      }
+    },
+    {
+      "type": 145,
+      "name": "rainFence",
+      "vtable": "0050e738",
+      "route": "plain",
+      "methods": {
+        "78": "004acfe0",
+        "a0": "0041c0f0",
+        "a4": "0041c100"
+      }
+    },
+    {
+      "type": 146,
+      "name": "rainBalloon",
+      "vtable": "00504198",
+      "route": "plain",
+      "methods": {
+        "78": "004acfe0",
+        "a0": "0041c0f0",
+        "a4": "0041c100"
+      }
+    },
+    {
+      "type": 147,
+      "name": "rainBlocker",
+      "vtable": "0050e940",
+      "route": "plain",
+      "methods": {
+        "78": "004acfe0",
+        "a0": "0041c0f0",
+        "a4": "0041c100"
+      }
+    },
+    {
+      "type": 156,
+      "name": "rainWalker",
+      "vtable": "00503f20",
+      "route": "plain",
+      "methods": {
+        "78": "004acfe0",
+        "a0": "0041c0f0",
+        "a4": "0041c100"
+      }
+    },
+    {
+      "type": 75,
+      "name": "windBattery",
+      "vtable": "00501ea0",
+      "route": "existing-special",
+      "methods": {
+        "78": "004acfe0",
+        "a0": "0041c170",
+        "a4": "0041c100"
+      }
+    },
+    {
+      "type": 137,
+      "name": "windWalker",
+      "vtable": "00503d80",
+      "route": "plain",
+      "methods": {
+        "78": "004acfe0",
+        "a0": "0041c0f0",
+        "a4": "0041c100"
+      }
+    },
+    {
+      "type": 139,
+      "name": "windAviary",
+      "vtable": "00509aa0",
+      "route": "plain",
+      "methods": {
+        "78": "004acfe0",
+        "a0": "0041c0f0",
+        "a4": "0041c100"
+      }
+    },
+    {
+      "type": 140,
+      "name": "windArcher",
+      "vtable": "0050b6e8",
+      "route": "plain",
+      "methods": {
+        "78": "004acfe0",
+        "a0": "0041c0f0",
+        "a4": "0041c100"
+      }
+    },
+    {
+      "type": 141,
+      "name": "windBalloon",
+      "vtable": "005040c0",
+      "route": "plain",
+      "methods": {
+        "78": "004acfe0",
+        "a0": "0041c0f0",
+        "a4": "0041c100"
+      }
+    },
+    {
+      "type": 142,
+      "name": "windBlocker",
+      "vtable": "0050ead0",
+      "route": "plain",
+      "methods": {
+        "78": "004acfe0",
+        "a0": "0041c0f0",
+        "a4": "0041c100"
+      }
+    },
+    {
+      "type": 77,
+      "name": "thunderBattery",
+      "vtable": "00501ea0",
+      "route": "existing-special",
+      "methods": {
+        "78": "004acfe0",
+        "a0": "0041c170",
+        "a4": "0041c100"
+      }
+    },
+    {
+      "type": 79,
+      "name": "thunderBlocker",
+      "vtable": "0050ea08",
+      "route": "plain",
+      "methods": {
+        "78": "004acfe0",
+        "a0": "0041c0f0",
+        "a4": "0041c100"
+      }
+    },
+    {
+      "type": 131,
+      "name": "thunderCannon",
+      "vtable": "0050bad0",
+      "route": "existing-special",
+      "methods": {
+        "78": "0046ae10",
+        "a0": "0041c0f0",
+        "a4": "0046ae30"
+      }
+    },
+    {
+      "type": 135,
+      "name": "bulf",
+      "vtable": "00503e50",
+      "route": "plain",
+      "methods": {
+        "78": "004acfe0",
+        "a0": "0041c0f0",
+        "a4": "0041c100"
+      }
+    },
+    {
+      "type": 148,
+      "name": "thunderArcher",
+      "vtable": "0050b7c0",
+      "route": "plain",
+      "methods": {
+        "78": "004acfe0",
+        "a0": "0041c0f0",
+        "a4": "0041c100"
+      }
+    },
+    {
+      "type": 149,
+      "name": "thunderFence",
+      "vtable": "0050e668",
+      "route": "plain",
+      "methods": {
+        "78": "004acfe0",
+        "a0": "0041c0f0",
+        "a4": "0041c100"
+      }
+    }
+  ],
+  "derived": [
+    {
+      "type": 73,
+      "name": "Whirligig",
+      "vtable": "0050a1e8",
+      "route": "plain",
+      "methods": {
+        "78": "004acfe0",
+        "a0": "0041c0f0",
+        "a4": "0041c100"
+      }
+    },
+    {
+      "type": 138,
+      "name": "Dust Devil",
+      "vtable": "0050a050",
+      "route": "plain",
+      "methods": {
+        "78": "004acfe0",
+        "a0": "0041c0f0",
+        "a4": "0041c100"
+      }
+    },
+    {
+      "type": 144,
+      "name": "Man o'War",
+      "vtable": "0050a388",
+      "route": "plain",
+      "methods": {
+        "78": "004acfe0",
+        "a0": "0041c0f0",
+        "a4": "0041c100"
+      }
+    },
+    {
+      "type": 150,
+      "name": "Growing Ice Tower",
+      "vtable": "0050e888",
+      "route": "plain",
+      "methods": {
+        "78": "004acfe0",
+        "a0": "0041c0f0",
+        "a4": "0041c100"
+      }
+    }
+  ],
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "cpppj/unit-restoration-inventory-20261022.json": "2ef129ad953f7ae5bb293841a6d23ab39ddaa9e955562e5774f1c0c52e2814cb",
+    "cpppj/src/o/RawPlainAssetDraw.cpp": "445ae560b6b9b6c5444fda37cbb1e7c365bf71ad2e21daca02e27ed1392c2bd4",
+    "cpppj/src/o/RawPlainUnitCapture.cpp": "52da90e7641007168f27fe64270f193dac2425548d97e7ce234e1fd0fc3e3ecf",
+    "cpppj/src/o/RawPlainWorkshopCapture.cpp": "f339509cc11781ad2431eb22d911163bcb0950d668c1ae00a9b5032cdbac45d7",
+    "cpppj/src/o/RawPlainAssetDraw.h": "d705351c990e04844c084aacd4b830de6ec9240818d1616c7d1ea098dc6b6bca",
+    "cpppj/src/o/CMakeLists.txt": "88a8c81d4089daf2b1e93c27203f087de4c30d9c65d93566f63e43fe5d4ca84b",
+    "cpppj/src/client/RawCampaignFactoryDisplay.cpp": "3e43648d79dfaf7ffe68d113f1cf0363660fcbbe07e8bfa69978bf4b62a5448f",
+    "cpppj/src/client/GameWorld.cpp": "8d52be540ef983890227ba3f6f48b9b0e27a7a0e2c72a8868b62ac972bc2255f",
+    "cpppj/src/client/SpriteDraw.cpp": "174ff5c12bb92396b6bb894b2e181bcf9af16d9598c84e3a2291bbfc86be3649",
+    "cpppj/src/client/OwnerColorMaps.cpp": "1dc23bab259f2bdbb6e88d7e12c4427a50f76304c8aa11cc6309800d0da7e620",
+    "cpppj/src/client/SpriteColorMaps.cpp": "9a2d39e42ba43fb32baf622923e4fa5a2629f0ae8c186dd3f2d1bb34a0dd9c61",
+    "cpppj/tests/CampaignSessionTests.cpp": "6cbb61b60ac648a59b9c2c9fa80ca9ed175e0a8ef4cd460b8672a65e7c6097c3",
+    "cpppj/tests/fixtures/spritedraw-x86.tsv": "9c5703b5c4d58ab4b7fa23a04784165dbd88a7de131b758d6bd30f9dc793d7ac",
+    "tools/audit_unit_draw_bindings.py": "5d3ebdd8ab301a66aea168f83bb33e4f18aff0919eb53dd26ae3a625eca55f82"
+  },
+  "limitations": [
+    "정적 주소/분배 근거이며 실제 화면/전체 수명 완료 판정은 아니다.",
+    "일반 Draw 본체의 기존 독립 spritedraw-x86.tsv와 새 실제25종 표시 검사를 별도 검증한다.",
+    "전체25종 게임 동작/사용자 GUI 플레이/전체 미션 및 Edit 완료 증거로 확대하지 않는다."
+  ]
+}

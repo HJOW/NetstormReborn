@@ -12,10 +12,18 @@
 #include "o/RawGeyserCapture.h"
 #include "o/RawSunAviaryCapture.h"
 #include "o/RawBurningLifetimeDraw.h"
+#include "o/RawPlainAssetDraw.h"
+#include "o/RawFlyerProcess.h"
+#include "o/RawSunAviaryProcess.h"
 #include "o/RawBridgeConnect.h"
 #include <bit>
 #include <stdexcept>
+#include <map>
 namespace netstorm::client {
+namespace {
+constexpr std::array<std::uint32_t,12> kStandardOwnerTypes{82,155,158,164,135,133,156,73,170,146,144,126}; // 원본43be30의 일반 색표 대상이다.
+constexpr std::array<std::uint32_t,5> kSpecialOwnerTypes{111,141,137,94,97}; // 원본43bc40의 명도 정렬 전용 색표 대상이다.
+}
 // 같은 월드만 참조하고 게임 진행 상태는 복제하지 않는 표시 전용 저장소다.
 struct RawCampaignFactoryDisplay::Impl {
     RawWorldCore core; // 실제 현재 풀/해시/TYPE/시계다.
@@ -25,7 +33,7 @@ struct RawCampaignFactoryDisplay::Impl {
     std::vector<SpriteTypeView> views; // 현재 SHP 선택 헤더와 기본 Gump 프레임이다.
     SpriteDrawState state; // 원본 표시 전역과 현재 카메라/로컬 소유자다.
     SpriteColorMaps colors; // 실제 파일 팔레트의 세 소스 치환 표다.
-    OwnerColorMaps outpost; // 원본43be30의 아웃포스트 일반9색 표다.
+    std::map<std::uint32_t,OwnerColorMaps> ownerColors; // 원본 일반12종/전용5종의 실제9색표이며 현재 팔레트로 갱신한다.
     TempleDraw templeDraw; // 같은 Session의 현재 전용Draw/상승음이며 그리기 시점에만 호출한다.
     std::vector<std::int32_t> templeBaseFrames; // 같은TYPE+128의 고정 본체 번호이며 썬더의-1을 보존한다.
     bool ready{}; // 파일 팔레트가 설치되기 전에 출력하지 않는다.
@@ -50,10 +58,10 @@ struct RawCampaignFactoryDisplay::Impl {
     bool Geyser(o::Sid sid) const {
         return o::IsGeyserCapture(core.pool.Slot(sid));
     }
-    bool Handles(o::Sid sid) const { return factory.Handles(sid) || Flare(sid) || Generator(sid) || Temple(sid) || o::IsPatchDais(core.pool.Slot(sid)) || ThunderCannon(sid) || Geyser(sid) || o::IsBurningArcherCapture(core.pool.Slot(sid)) || o::IsSunAviaryCapture(core.pool.Slot(sid)) || FlyerShadow(sid); } // 본체/추가 그림의 실제 VT와 공통 그림자 레이어를 포함한다.
+    bool Handles(o::Sid sid) const { return factory.Handles(sid) || Flare(sid) || Generator(sid) || Temple(sid) || o::IsPatchDais(core.pool.Slot(sid)) || ThunderCannon(sid) || Geyser(sid) || o::IsBurningArcherCapture(core.pool.Slot(sid)) || o::IsSunAviaryCapture(core.pool.Slot(sid)) || o::IsPlainAssetDraw(core.pool.Slot(sid)) || FlyerShadow(sid); } // 일반 자산도 같은 원본 본체/상태색/기준점/그림자 경로에 포함한다.
     // 원본 PE 초기값만 설치하고 각 수집에서 현재 게임 값으로 갱신한다.
     Impl(RawWorldCore world,const GameAssets& data,TempleDraw supplied):core(world),assets(data),factory(core.pool,core.frames),
-        collection(core.hash,core.pool,core.types,core.shapes),views(MakeSpriteAssetViews(data)),outpost(BuildStandardOwnerColorMaps(126,82)),templeDraw(std::move(supplied)),templeBaseFrames(core.types.size(),-1) {
+        collection(core.hash,core.pool,core.types,core.shapes),views(MakeSpriteAssetViews(data)),templeDraw(std::move(supplied)),templeBaseFrames(core.types.size(),-1) {
         // 실제 파싱한TYPE의 기본 프레임만 번호를 맞춰 공급한다. 템플은 원본 소유자 색표 대상이 아니다.
         for (const auto& type:assets.Types()) templeBaseFrames.at(type.block+o::kFirstAssetTypeNumber)=type.definition.specialFrames.baseFrame;
         state.filteredFlags=2421574144U;state.wideOwnerType=164;state.unfilteredType=84;state.shadowAliasType=158;
@@ -61,13 +69,16 @@ struct RawCampaignFactoryDisplay::Impl {
         state.markerEnabled=true;state.markerExcludeType=157;state.markerType=96;state.statusType=118;state.abstractStatusType=117;
         state.timerProcessType=31;state.statusProcessType=57;state.costType=122;state.timerTypes={138,144,73};
         state.selectionColors={84,84,249,184,140,150,112,156,222}; // 원본5319c4의 고정9DWORD다.
-        state.ownerMaps.resize(core.types.size());state.ownerMaps.at(126)=1;
+        state.ownerMaps.resize(core.types.size());
+        for (const auto type:kStandardOwnerTypes) { state.ownerMaps.at(type)=1;ownerColors.emplace(type,BuildStandardOwnerColorMaps(type,82)); } // 실제 일반9색표를 타입별로 보존한다.
+        for (const auto type:kSpecialOwnerTypes) state.ownerMaps.at(type)=2; // 존재 여부는 처음부터 실제 원본 표를 따르고 색은 SetPalette에서 만든다.
     }
     // 건설/추상/그림자는 명시 표, 아웃포스트는 같은 현재 소유자 색 번호로 변환한다.
     ColorMap Color(SpriteShapeMode mode,std::uint32_t type,std::uint32_t owner) const {
         if (mode==SpriteShapeMode::Abstract) return colors.bright;if (mode==SpriteShapeMode::Dead) return colors.dead;if (mode==SpriteShapeMode::Shadow) return colors.shadow;
-        if (mode!=SpriteShapeMode::Owner || type!=126 || owner>=core.bridgeState.ownerColors.size()) throw std::logic_error("Factory 원본 소유자 색표 미연결");
-        const auto index=core.bridgeState.ownerColors[owner];if (index<0 || index>8) throw std::out_of_range("Factory 현재 소유자 색 번호");return outpost[static_cast<std::size_t>(index)];
+        if (mode!=SpriteShapeMode::Owner || owner>=core.bridgeState.ownerColors.size()) throw std::logic_error("실제 자산 소유자 색표 분기 오류");
+        const auto found=ownerColors.find(type);if (found==ownerColors.end()) throw std::logic_error("실제 자산 현재 소유자 색표 미연결");
+        const auto index=core.bridgeState.ownerColors[owner];if (index<0 || index>8) throw std::out_of_range("실제 자산 현재 소유자 색 번호");return found->second[static_cast<std::size_t>(index)];
     }
     // 원본 현재 슬롯과 실제 dirty clip을 읽고 일반 Draw의 모든 픽셀을 같은 표면에 쓴다.
     void Draw(o::RenderCollectionEntry entry,std::span<std::uint8_t> pixels,int pitch,int height,ScreenRect clip) {
@@ -80,9 +91,22 @@ struct RawCampaignFactoryDisplay::Impl {
             if (Temple(object)) return o::PatchTempleMainFrame(core.pool.Slot(object),templeBaseFrames);
             if (ThunderCannon(object)) return o::ThunderCannonCaptureMainFrame(core.pool.Slot(object),core.frames[core.pool.Slot(object)[10]]);
             if (o::IsSunAviaryCapture(core.pool.Slot(object))) return o::SunAviaryCaptureMainFrame(core.pool.Slot(object));
-            if (o::IsBurningArcherCapture(core.pool.Slot(object))) return assets.Types()[core.pool.Slot(object)[10]-o::kFirstAssetTypeNumber].definition.specialFrames.baseFrame;
+            if (o::IsBurningArcherCapture(core.pool.Slot(object)) || o::IsPlainAssetDraw(core.pool.Slot(object))) return assets.Types()[core.pool.Slot(object)[10]-o::kFirstAssetTypeNumber].definition.specialFrames.baseFrame;
             return Flare(object) || Generator(object) || Geyser(object) || o::IsPatchDais(core.pool.Slot(object)) ? assets.Types()[core.pool.Slot(object)[10]-o::kFirstAssetTypeNumber].definition.specialFrames.baseFrame : factory.MainFrame(object);
         };rules.surface=MakeSpriteSurfaceLookup(core.hash);
+        rules.constructionActive=[this](o::Sid object) { return core.processes.FindEvent(object,0x25d)!=nullptr; }; // 491af0은 현재 사제의 기도 Regular를 조회한다.
+        rules.timers=[this](o::Sid object,std::uint32_t type)->std::optional<std::array<double,3>> {
+            const auto form=o::FindAttachedProcess(core.pool,object,type);if (!form.value) return std::nullopt;
+            const auto* process=dynamic_cast<const o::FlyerProcess*>(core.processes.FromForm(form)); // 4ae2d0의 현재 inner 포인터에 대응하는 같은 소유 프로세스다.
+            if (!process) throw std::logic_error("비행 선택 타이머의 현재 프로세스 미연결");
+            std::array<double,3> result{};const auto& bytes=process->Fields().bytes;
+            constexpr std::array<std::size_t,3> offsets{72,104,40}; // 원본498220의 outer+48/+68/+28이며 inner에서-30 보정한 뒤 읽는다.
+            for (std::size_t index=0;index<offsets.size();++index) { // 각 선택 막대의 실제 double 기한을 그대로 전달한다.
+                std::uint64_t bits{};for (std::size_t byte=0;byte<8;++byte) bits|=std::uint64_t(bytes[offsets[index]+byte])<<(byte*8); // unaligned 원문을 little endian으로 읽는다.
+                result[index]=std::bit_cast<double>(bits);
+            }
+            return result;
+        };
         rules.resource=[this](o::Sid object)->std::optional<SpriteResourceStatus> {
             if (core.processes.FindEvent(object,0x493)) throw std::logic_error("Factory 자원 내용물 막대 표시 미연결");return std::nullopt;
         };
@@ -90,6 +114,7 @@ struct RawCampaignFactoryDisplay::Impl {
         // +a4의0044c180은 같은 기준점/단위 배율의 plain SHP다. 일반 owner 문맥으로 바꾸지 않는다.
         hooks.virtualDraw=[this,shape=hooks.shape](o::Sid object,ScreenPoint point) {
             const auto composite=core.pool.Slot(object); // 같은 프레임의 현재 본체/추가 그림 분배에 사용한다.
+            if (o::IsPlainAssetDraw(composite)) return; // 검증한 일반 자산의+a4=41c100은 원본처럼 빈ret8이다.
             if (o::IsSunAviaryCapture(composite) || o::IsBurningArcherCapture(composite)) {
                 const auto draw=[this,object,&shape](auto type,auto frame,auto x,auto y) { // 실제497280과 같은 현재 추상/로컬 소유자 관문으로 추가 그림을 출력한다.
                     const auto current=core.pool.Slot(object);
@@ -150,6 +175,7 @@ void RawCampaignFactoryDisplay::SetPalette(std::span<const ScreenColor> palette)
     // 실제 현재 파일 팔레트의 모든 번호를 보존한다.
     for (std::size_t i=0;i<logical.size();++i) logical[i]=std::uint32_t(palette[i].red)|(std::uint32_t(palette[i].green)<<8)|(std::uint32_t(palette[i].blue)<<16)|(std::uint32_t(palette[i].reserved)<<24);
     const auto named=BuildPaletteColorTable(logical,impl_->assets.Edition());impl_->colors=BuildSpriteColorMaps(logical);impl_->state.barBackground=named.basic[0];
+    for (const auto type:kSpecialOwnerTypes) impl_->ownerColors.insert_or_assign(type,BuildSpecialOwnerColorMaps(logical,type)); // 파일 팔레트 변경 때 전용 명도 표도 같은 시점에 갱신한다.
     impl_->state.hitPointColors={named.named.at(10).index,named.basic[5],named.basic[1]};impl_->ready=true;
 }
 // 원본 수집기의 전체 순서/한 번의 그림자 보정/해시2단계 반환을 유지한다.
@@ -161,7 +187,7 @@ std::vector<RenderSprite> RawCampaignFactoryDisplay::Sprites(ScreenRect clip,int
     // 지원이 확인된 실제 가상 표만 제출하고 나머지는 기존 월드 출력에 남긴다.
     for (std::int32_t i=0;i<count;++i) {
         const auto entry=entries[static_cast<std::size_t>(i)];if (!self.Handles(self.collection.Object(entry.token))) continue;
-        RenderSprite sprite;sprite.clip=clip;sprite.order={entry.x,entry.y,entry.depth};
+        RenderSprite sprite;sprite.clip=clip;sprite.order={entry.x,entry.y,entry.depth};sprite.shadow=(entry.tail&4U)!=0; // 실제 수집기의 그림자 표식을 외부 스프라이트 메타데이터에도 보존한다.
         sprite.procedure=RenderProcedure{clip,[this,entry](std::span<std::uint8_t> pixels,int pitch,int height,ScreenRect cut) { impl_->Draw(entry,pixels,pitch,height,cut); }};result.push_back(std::move(sprite));
     }
     return result;

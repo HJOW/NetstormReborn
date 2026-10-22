@@ -203,7 +203,13 @@ std::vector<SpriteTypeView> MakeSpriteAssetViews(const GameAssets& assets) {
     // 전체 타입 번호를 유지한다.
     for (std::size_t i=0;i<shapes.size();++i) result[i].shape=std::move(shapes[i]);
     // 자산 없는 내장 타입은 null shape로 남겨 둔다.
-    for (std::size_t i=0;i<assets.Types().size();++i) result[o::kFirstAssetTypeNumber+i].gumpFrame=static_cast<std::uint32_t>(assets.Types()[i].definition.specialFrames.gumpFrame);
+    for (std::size_t i=0;i<assets.Types().size();++i) {
+        const auto& definition=assets.Types()[i].definition;auto& view=result[o::kFirstAssetTypeNumber+i]; // 같은 실제 TYPE 정의의 표시용 정수 속성이다.
+        view.gumpFrame=static_cast<std::uint32_t>(definition.specialFrames.gumpFrame);
+        view.capacity=TruncateSprite(definition.Number("casttime").value_or(0));
+        view.constructionTime=TruncateSprite(definition.Number("praytime").value_or(0));
+        view.duration=TruncateSprite(definition.Number("effecttime").value_or(0));
+    }
     return result;
 }
 // 타입 +0xdc의 alias 쓰기를 실제 자산 출력에서도 현재 값으로 읽는다.
