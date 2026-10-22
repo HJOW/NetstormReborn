@@ -49,7 +49,7 @@
     "cpppj/src/o/SquidProcess.cpp": "993e34a3c7b3b87f290a33f548a126415c3a77794a7a191801d68f405baf1780",
     "cpppj/tests/BombStatusTests.cpp": "0543f2f732bb68d0f66ef945067bef0ededd60f2693d60e9336f3b374ba8bc23",
     "cpppj/tests/CMakeLists.txt": "f8354d238a52d595c762494a73fd28df35b2e77de8974909026a885fd239c107",
-    "cpppj/tests/CampaignSessionTests.cpp": "5c6d66e93c64a1bd4af4951279867514087d7711c881d7ae9d866bf4854bd873",
+    "cpppj/tests/CampaignSessionTests.cpp": "509c708c4c13ccdda5b10602f7c339d306d5855edc90dc82bd7b64e7fd66c562",
     "cpppj/tests/FlareTests.cpp": "2d3ab1baf640fd2ca6092d34d1095e52cd451da153dba78d6056e46adda4152e",
     "cpppj/tests/WindAviaryProcessTests.cpp": "dbefd0fd379d28e6e95bae6653f56ba4966a62bb732385f5084d4c448de87ff1",
     "cpppj/tests/WindSpellTests.cpp": "02b1df2e1e4c7b82122ef2706254ec4d449ac75a95a12898542fc4fd8de564e3"
@@ -95,5 +95,6 @@
       "seconds": 300.35
     },
     "scope": "원본 기본PC53 계산/세 소환/전체12단계 및 실제 단일 플레이 시전·2/4/6개 원주 생성/비행과 자연 수명이다. 25종 전체 수명/GUI·전체 미션·Edit 완료 근거는 아니다."
-  }
+  },
+  "implementationRefresh351": "단위351은 제품 몸체를 바꾸지 않고 같은 CampaignSessionTests에 자연 훨리기그 공격·귀환/착륙·동일 개체 재출격 검사를 추가했다. 현재 검사 SHA만 갱신하며 기존 원문과 과거 validation은 보존한다."
 }

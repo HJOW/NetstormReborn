@@ -43,7 +43,7 @@
     "cpppj/src/o/CMakeLists.txt": "2e73c17ebccdd294389f3e425081ca3830975f0be93153c7c00967fe418c6f8f",
     "cpppj/tests/CMakeLists.txt": "f8354d238a52d595c762494a73fd28df35b2e77de8974909026a885fd239c107",
     "cpppj/tests/BombEffectTimerTests.cpp": "520c92558ae0c25fb250fe48ddab62ed0ec01bae68a55eda7dc5392af3cb6f44",
-    "cpppj/tests/CampaignSessionTests.cpp": "5c6d66e93c64a1bd4af4951279867514087d7711c881d7ae9d866bf4854bd873"
+    "cpppj/tests/CampaignSessionTests.cpp": "509c708c4c13ccdda5b10602f7c339d306d5855edc90dc82bd7b64e7fd66c562"
   },
   "validation": {
     "releaseBuild": 4,
@@ -57,5 +57,6 @@
   },
   "implementationRefresh348": "단위348의 타이머100칸 수정/새 송수신 모듈 등록에 맞춰 현재 공유 구현 SHA만 갱신했다. 기존 원문과 과거 validation 수치는 보존한다.",
   "implementationRefresh349": "단위349의 상태 주문/타이머 연결과 defaultFrame 자산 연결에 맞춰 현재 공유 구현 SHA만 갱신했다. 기존 원문/과거 validation 수치는 보존한다.",
-  "implementationRefresh350": "단위350의 윈드 소환 주문/원주 생산 연결과 공용 등록·검사 변경에 맞춰 현재 구현 SHA만 갱신했다. 기존 원문과 과거 validation 수치는 보존한다."
+  "implementationRefresh350": "단위350의 윈드 소환 주문/원주 생산 연결과 공용 등록·검사 변경에 맞춰 현재 구현 SHA만 갱신했다. 기존 원문과 과거 validation 수치는 보존한다.",
+  "implementationRefresh351": "단위351은 제품 몸체를 바꾸지 않고 같은 CampaignSessionTests에 자연 훨리기그 공격·귀환/착륙·동일 개체 재출격 검사를 추가했다. 현재 검사 SHA만 갱신하며 기존 원문과 과거 validation은 보존한다."
 }

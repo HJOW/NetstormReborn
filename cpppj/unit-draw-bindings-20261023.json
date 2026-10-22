@@ -344,7 +344,7 @@
     "cpppj/src/o/RawBombEffectTimer.cpp": "b8a759c37967908b09877796909d38b8279178ee633c6ec09b55ce92c27fd342",
     "cpppj/src/client/OwnerColorMaps.cpp": "1dc23bab259f2bdbb6e88d7e12c4427a50f76304c8aa11cc6309800d0da7e620",
     "cpppj/src/client/SpriteColorMaps.cpp": "9a2d39e42ba43fb32baf622923e4fa5a2629f0ae8c186dd3f2d1bb34a0dd9c61",
-    "cpppj/tests/CampaignSessionTests.cpp": "5c6d66e93c64a1bd4af4951279867514087d7711c881d7ae9d866bf4854bd873",
+    "cpppj/tests/CampaignSessionTests.cpp": "509c708c4c13ccdda5b10602f7c339d306d5855edc90dc82bd7b64e7fd66c562",
     "cpppj/tests/fixtures/spritedraw-x86.tsv": "9c5703b5c4d58ab4b7fa23a04784165dbd88a7de131b758d6bd30f9dc793d7ac",
     "tools/audit_unit_draw_bindings.py": "d63a48ff6649b26ab7110de1986c32140ec5aa6881ec93604fa571f56365b845"
   },

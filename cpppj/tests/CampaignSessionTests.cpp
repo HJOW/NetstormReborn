@@ -4286,3 +4286,26 @@ TEST_CASE(CampaignWindSpell_ActualThreeSummonsAndLifetime) {
         for (const auto& flight:flights) CHECK(!core.processes.IsRegistered(flight.first,flight.second));CHECK(!core.bookkeeping.depth && !core.destroy.PreDepth() && !core.destroy.PostDepth());std::cout<<"실제 Wind 소환 TYPE"<<spell<<"/원주"<<number<<"개/서버31·59/수명 frame"<<clock.frame<<'\n';
     }
 }
+
+// 실제 훨리베이스에서 출격한 동일 훨리기그가 공격·60초 귀환·착륙·재출격하는 전 과정을 확인한다.
+TEST_CASE(CampaignSunFlyer_ActualAttackReturnLandingAndRelaunch) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();UseWorldTestLogin(services);services.unitLost=[](Sid) {};services.formPacket=[](std::span<const std::uint8_t>) {};
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services),{1024,768});const auto cursors=BindWorldTestInput(world);auto& session=world.Session();auto core=session.Core();CampaignPrayerClock clock{session};
+    const auto home=session.World().Create(72);core.owner.Set(home,1);session.World().Pop(home,206,208,1);const auto victim=session.World().Create(79);core.owner.Set(victim,2);session.World().Pop(victim,216,208,1);const auto hp=Get(core.pool.Slot(victim),26,2);Sid actor{};FlyerProcess* flight{};ProcessId pid{};
+    while (clock.frame<2000 && !flight) { clock.Tick();for (const auto sid:ConstructionLive(core,73)) { const auto form=FindAttachedProcess(core.pool,sid,31);auto* process=dynamic_cast<FlyerProcess*>(core.processes.FromForm(form));if (process && process->Fields().Home()==home && Get(process->Fields().bytes,84)) { actor=sid;flight=process;pid=core.kernel.Find(*process);break; } } } // 생산 단계나 비행 Form을 쓰지 않고 실제 첫 출격을 기다린다.
+    CHECK(flight);if (!flight) return;const auto homeForm=FindAttachedProcess(core.pool,home,32);auto* aviary=dynamic_cast<SunAviaryProcess*>(core.processes.FromForm(homeForm));CHECK(aviary);if (!aviary) return;
+    const auto deadline=[](const FlyerProcessFields& fields) { return std::bit_cast<double>(std::uint64_t(Get(fields.bytes,40))|(std::uint64_t(Get(fields.bytes,44))<<32)); }; // 원문 outer+40의 현재 귀환 기한만 읽는다.
+    double firstDeadline{},secondDeadline{};std::uint64_t targetFrame{},bombFrame{},returnFrame{},landingFrame{},relaunchFrame{};bool sawAttack{},sawReturn{},sawLanding{};
+    while (clock.frame<10000 && !relaunchFrame && core.processes.IsRegistered(pid,flight)) { // 실제 시각·공통 비행·전용 폭탄·홈32를 함께 진행한다.
+        const auto& fields=flight->Fields();const auto target=Get(fields.bytes,12,2);const auto end=deadline(fields);
+        if (target==victim.value && end>0 && !firstDeadline) { firstDeadline=end;targetFrame=clock.frame;CHECK(end>=core.processState.now+59.9 && end<=core.processState.now+60.0);world.Select(actor.value);const auto image=DrawCampaignSelectionBars(session,assets.game,actor);const auto raw=core.pool.Slot(actor);const auto hpRow=((core.types[73].flags2&0x400000U) ? (raw[40]&1U) : (core.types[73].flags1&0x10U)) ? 1 : 0;CheckCampaignSelectionBar(image,hpRow,0x6b,static_cast<int>(end-core.processState.now),60); }
+        if (Get(fields.bytes,80)) sawAttack=true;if (Get(fields.bytes,96) && !bombFrame) { bombFrame=clock.frame;const auto bomb=Get(fields.bytes,96);CHECK(bomb<core.pool.Capacity() && core.pool.Slot({static_cast<std::uint16_t>(bomb)})[10]==163); }
+        if (firstDeadline && target==home.value && end==0 && !returnFrame) { returnFrame=clock.frame;sawReturn=true;CHECK(core.processState.now>=firstDeadline); }
+        if (sawReturn && Get(fields.bytes,88) && aviary->Fields().Stage()==9) { sawLanding=true;if (!landingFrame) landingFrame=clock.frame; }
+        if (sawLanding && end>firstDeadline && target==victim.value && !Get(fields.bytes,88)) { secondDeadline=end;relaunchFrame=clock.frame;CHECK(aviary->Fields().Stage()!=9 && end>=core.processState.now+59.9 && end<=core.processState.now+60.0); }
+        if (!relaunchFrame) clock.Tick();
+    }
+    std::size_t sameHome{};for (ProcessId id=1;id<=core.kernel.Capacity();++id) if (const auto* process=dynamic_cast<const FlyerProcess*>(core.kernel.Get(id));process && process->Fields().Home()==home) ++sameHome; // 같은 TYPE으로 복제한 그림자를 비행체로 중복 집계하지 않고 실제31을 센다.
+    std::cout<<"실제 훨리기그"<<actor.value<<"/첫표적"<<targetFrame<<"/폭탄"<<bombFrame<<"/귀환"<<returnFrame<<"/착륙"<<landingFrame<<"/재출격"<<relaunchFrame<<"/기한"<<firstDeadline<<','<<secondDeadline<<"/홈QA"<<Get(core.pool.Slot(home),12,2)<<"/불워크HP"<<Get(core.pool.Slot(victim),26,2)<<'/'<<hp<<"/동종슬롯"<<ConstructionLive(core,73).size()<<"/실제31"<<sameHome<<'\n';
+    CHECK(firstDeadline && sawAttack && bombFrame && sawReturn && sawLanding && relaunchFrame && secondDeadline>firstDeadline);CHECK(core.processes.IsRegistered(pid,flight));CHECK(Get(core.pool.Slot(home),12,2)==actor.value);CHECK(Get(core.pool.Slot(victim),26,2)==hp);CHECK(sameHome==1);CHECK(!core.bookkeeping.depth && !core.destroy.PreDepth() && !core.destroy.PostDepth());
+}

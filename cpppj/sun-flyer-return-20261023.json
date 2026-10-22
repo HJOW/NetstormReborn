@@ -1,0 +1,94 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-22",
+  "additionalDecompileHost": "HJOW-Athlon",
+  "additionalDecompileDate": "2026-10-23",
+  "newNativeObservations": 0,
+  "existingNativeObservations": {
+    "flyer-frame": 744,
+    "sun-flyer-frame": 410,
+    "sun-aviary": 1734
+  },
+  "returnFunction": {
+    "address": "0045e170",
+    "bytes": "d9053c9f5000c3",
+    "constantAddress": "00509f3c",
+    "floatSeconds": 60.0
+  },
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "cpppj/flyer-frame.json": "64a907a7030858d96c852cb18b0dc828d66f89ebd1506a98896f0c92f0aa0f39",
+    "cpppj/sun-flyer-frame.json": "8f433203431f08d2207b0aec3ec6b10dce563395ab57ccbf0b578d0805ba4cd1",
+    "cpppj/sun-aviary.json": "cc4788121ad5f061f4a49bcd041432edaf10520a2b4922edffedf1a009df3e83",
+    "cpppj/tests/fixtures/flyer-frame-x86.tsv": "627270d186495d6929cac8a1d4e74c29e92c69294558e020b7d774854b0dfc85",
+    "cpppj/tests/fixtures/sun-flyer-frame-x86.tsv": "aa3a4fd3f4e69b528f63dd070bdcd20e009ac77404a6f28d66c7d9bd8820c5f4",
+    "cpppj/tests/fixtures/sun-aviary-x86.tsv": "e64841e232f3ea3b79eba3fba4d21656277a9b4dd05766f1ff1e77414cb6d0db"
+  },
+  "implementationSha256": {
+    "cpppj/src/client/RawCampaignSession.cpp": "e101fdf269104d8ade573fae02b4ae7e935bc5d9c06969b74f6d20056bbbbad6",
+    "cpppj/tests/CampaignSessionTests.cpp": "509c708c4c13ccdda5b10602f7c339d306d5855edc90dc82bd7b64e7fd66c562",
+    "cpppj/tests/CampaignMissionStartTests.cpp": "47764f281f7d2b044cae2add110254f63b0acd2d3e783c703332a1310c6dec89",
+    "cpppj/src/o/RawFlyerFrame.h": "0c3f5b5e3bbe52ac34e00fe37819f3a490011596919b715045a0c983899cb92a",
+    "cpppj/src/o/RawFlyerFrame.cpp": "7752144c626f831c64bf0959ad8f9579d67bae1c87def2dcd0f1797b306f2049",
+    "cpppj/src/o/RawSunFlyerFrame.h": "4008eb5a418e2d3f648430e5839fb430b4c45839817c689862284086f2ba28f8",
+    "cpppj/src/o/RawSunFlyerFrame.cpp": "ab4ef4d47a873bf8c01aa3100eb8a7c9f2a4498b8805c09bd3ff1c4ae3bd14e2",
+    "cpppj/src/o/RawFlyerTarget.h": "dabdb2be4a6fd425be2a81d54bcd978f2253a6d650831cfac477a346ca998782",
+    "cpppj/src/o/RawFlyerTarget.cpp": "b325cb60c22f98b6e30faa2d330866d1a38f3a403a04388a394baefd188eb772",
+    "cpppj/src/o/RawSunAviaryProcess.h": "2a14e9256502d59e3d3af4376762adb37ab3172e13303c596e3a41add2b9f8e9",
+    "cpppj/src/o/RawSunAviaryProcess.cpp": "9da6f8ae3136c558f6efb3911660c7b30fbfb8953db5d0d47b5b11440bace7da",
+    "cpppj/src/o/RawFlyerProcess.h": "9a655e4dc3558f17fd77e47bd7c7566fdcf811d65616ba0c9dc2fd50f44f5e8c",
+    "cpppj/src/o/RawFlyerProcess.cpp": "4db6a1250b6b5545e5b0bbed8d97c634af746fc6d678576dac47d8b620668e4d",
+    "cpppj/src/o/RawBulwarkHit.h": "b98ebdf6b39128c69c8ef59f0623912fe8b9fb2c19b62665fb24bd80fd2147ea",
+    "cpppj/src/o/RawBulwarkHit.cpp": "87aa50b9ab295fd044b5a66df0ae1ca3ce2b15f98e89c2c3c977446aef52b262",
+    "cpppj/tests/FlyerFrameTests.cpp": "26252f6809f8262960fcaaee695251ba1eab7d7db0738c91f176bd46afe1ccba",
+    "cpppj/tests/SunFlyerFrameTests.cpp": "b7df8b622681d1fc10d35fb147b03acbf26d0be88f08ffdbdd1e30fd3ba144d8",
+    "cpppj/tests/SunAviaryProcessTests.cpp": "be6a0d003a3ee6d5f4fcfe3d5accff9721708f66ef14919e78ed1660bcd25f89"
+  },
+  "limitations": [
+    "기존 원문은 재생성하지 않았으며 고유 입력 수를 새 입력으로 합산하지 않는다.",
+    "실제 단일 플레이 공격·귀환/착륙·동일31 재출격 검사이며 GUI/전체25종·미션·Edit 완료 근거가 아니다."
+  ],
+  "validation": {
+    "releaseBuild": {
+      "log": "extracted/cpp-sun-return-20261023-build2.log",
+      "exit": 0,
+      "warnings": 0,
+      "errors": 0
+    },
+    "focused": {
+      "logs": [
+        "extracted/cpp-sun-return-20261023-focused2.log",
+        "extracted/cpp-sun-return-20261023-related2.log"
+      ],
+      "tests": 27,
+      "failed": 0
+    },
+    "actual": {
+      "actor": 15184,
+      "firstTargetFrame": 410,
+      "firstBombFrame": 692,
+      "returnFrame": 2810,
+      "landingFrame": 3001,
+      "relaunchFrame": 3272,
+      "firstReturnDeadline": 70.25,
+      "secondReturnDeadline": 141.8,
+      "bulwarkHpBefore": 3900,
+      "bulwarkHpAfter": 3900,
+      "sameHomeFlightProcesses": 1,
+      "type73SlotsIncludingShadow": 2,
+      "sameActorAndProcess": true,
+      "activeReturnBarPixels": true,
+      "injectedResults": false
+    },
+    "scope": "실제 단일 플레이 엔진의 공격·163폭탄·60초 자연 귀환/상태9 착륙·동일31 재출격이며 GUI/전체25종·미션·Edit 완료 근거는 아니다.",
+    "full": {
+      "log": "extracted/cpp-sun-return-20261023-ctest1.log",
+      "tests": 2331,
+      "failed": 0,
+      "exit": 0,
+      "seconds": 293.92
+    }
+  }
+}
