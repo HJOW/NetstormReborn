@@ -1811,3 +1811,12 @@ target_sources(netstorm_tests PRIVATE WalkerPathTests.cpp)
 
 # 아크 스파이어 다섯 몸체와 정수 근처 경계의 독립 원문을 대조한다.
 target_sources(netstorm_tests PRIVATE ArcSpireTests.cpp)
+# 원본 분해의84바이트 상태와 같은 장치의 전체 픽셀을 대조한다.
+target_sources(netstorm_tests PRIVATE DissolveFrameTests.cpp)
+set_source_files_properties(DissolveFrameTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_DISSOLVE_FRAME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/dissolve-frame-x86.tsv\"")
+# 원본 생성/등록/캡처/반납과 콜백 뒤 현재 부모를 대조한다.
+target_sources(netstorm_tests PRIVATE DissolveLifetimeTests.cpp)
+target_sources(netstorm_tests PRIVATE DissolveVisualSystemTests.cpp)
+set_source_files_properties(DissolveLifetimeTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_DISSOLVE_LIFETIME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/dissolve-lifetime-x86.tsv\"")

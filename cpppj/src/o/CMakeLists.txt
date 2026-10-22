@@ -442,3 +442,7 @@ target_sources(netstorm PRIVATE RawWindFlyer.h RawWindFlyer.cpp)
 
 # 아크 스파이어의 전용 동맹 연결·범위·연쇄 피해를 복원한다.
 target_sources(netstorm PRIVATE RawArcSpire.h RawArcSpire.cpp)
+# 애시드 분해의 실제 픽셀 입자와 최초 시계/표면 표시를 복원한다.
+target_sources(netstorm PRIVATE RawDissolveFrame.h RawDissolveFrame.cpp)
+# 같은 표시 목록/실제 Kernel과 dummy 상호 감시로 분해 수명을 연결한다.
+target_sources(netstorm PRIVATE RawDissolveLifetime.h RawDissolveLifetime.cpp DissolveVisualSystem.h DissolveVisualSystem.cpp)

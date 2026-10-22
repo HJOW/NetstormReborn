@@ -1678,3 +1678,12 @@ cpppj/tests/fixtures/arc-spire-x86.tsv text eol=lf
 tools/decomp_arc_spire.py text eol=lf
 cpppj/arc-spire-20261022.json text eol=lf
 docs/exe/cpp-arc-spire-20261022.md text eol=lf
+
+# 분해 효과의 원본/제품/검사를 UTF-8 LF의 동일 바이트로 유지한다.
+cpppj/src/o/RawDissolve*.* text eol=lf
+cpppj/src/o/DissolveVisualSystem.* text eol=lf
+cpppj/tests/Dissolve*Tests.cpp text eol=lf
+cpppj/tests/fixtures/dissolve-*-x86*.tsv text eol=lf
+tools/decomp_dissolve_*.py text eol=lf
+cpppj/dissolve-*-20261022.json text eol=lf
+docs/exe/cpp-dissolve-20261022.md text eol=lf

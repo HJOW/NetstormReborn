@@ -1,0 +1,77 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-22",
+  "uniqueInputs": 252,
+  "normalReturns": 768,
+  "precisionDifferentRows": [],
+  "nativeCalls": {
+    "004500a0": 192,
+    "004e49c0": 65440,
+    "00488100": 192,
+    "00487ab0": 192,
+    "00450460": 96,
+    "0044fde0": 96,
+    "0044fe40": 336,
+    "00418400": 96,
+    "00418430": 336,
+    "boundary-0041bf10": 96,
+    "boundary-004e4391": 112,
+    "00455930": 6544,
+    "004558f0": 6544,
+    "00487b20": 6544,
+    "004239f0": 12232,
+    "00487ba0": 240,
+    "boundary-00499310": 480,
+    "0044ffc0": 240,
+    "004a2230": 9668
+  },
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_dissolve_frame.py": "4ae50f8724870c0e73a711f94906951a4ef34bf9b4fcc69e5cfca28346d80e36",
+    "tools/decomp_shrapnel_frame.py": "292bc3ede10241c2244f79b5efd860b4c0525ead91d9afbea56a5bf8d4186265",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "cpppj/tests/fixtures/dissolve-frame-x86.tsv": "988f0b609a4bd74280ce11f803194faa85a9becad0804f0073abef34e41affad",
+    "cpppj/tests/fixtures/dissolve-frame-x86-p64.tsv": "988f0b609a4bd74280ce11f803194faa85a9becad0804f0073abef34e41affad",
+    "tools/decomp_dissolve_lifetime.py": "f393e7d621f1532d00fa73c4cb716ea529d3bb35de96b7ddca4c4de042fa02aa"
+  },
+  "limitations": [
+    "4500a0/450460/44fde0/44fe40/44ffc0와 입자 버퍼·두 게임 난수·시계·dirty 계산·실제 픽셀 출력은 원문이다.",
+    "캡처 이미지·큰 메모리 확보/반납·장치 dirty 소비·Form 삭제는 명시 경계다. 색 주소만 bitmap offset+1로 정규화한다.",
+    "사용하지 않는64/68은 의미 비교에서 제외한다. 53/64비트의 실제 저장값 차이는 그대로 보존한다."
+  ],
+  "implementationSha256": {
+    "cpppj/src/o/RawDissolveFrame.h": "b32b2bf322de483425dcb1970005ea7061e98c5923aa05cfc3e2a8808a979774",
+    "cpppj/src/o/RawDissolveFrame.cpp": "844e37a1fbe7a8d518785e457754552bf8394048251f892bf600f7a588aed1fa",
+    "cpppj/src/o/RawDissolveLifetime.h": "8fa57ef2faefa1d673c3e3b8280ef17925189373b4101b04a8e0910bdb59eef9",
+    "cpppj/src/o/RawDissolveLifetime.cpp": "464c54db55f7bbfcae113569ffc97312e1528329e2feaaa966add4ae25ec7ced",
+    "cpppj/src/o/DissolveVisualSystem.h": "bbec632031f5875fff122719191d04b47ecd68de4dda1694bc5b37d41fa5d828",
+    "cpppj/src/o/DissolveVisualSystem.cpp": "95d79ea13f502554b966f823d6cbe3aae0136182b90d83df54c3dfde0aee564b",
+    "cpppj/tests/DissolveFrameTests.cpp": "c6a69bf526ac7f568ca8c3a7c1527172ed09c82138b6fb6600a472b5fea8b145",
+    "cpppj/tests/DissolveLifetimeTests.cpp": "cfa22e1f22116e8791751383e31dee319e3db7203f2cf2eb582e219bd2377e46",
+    "cpppj/tests/DissolveVisualSystemTests.cpp": "25cc7464e938b0ca4bc1246e21acea989fe1f3aaf147f92d709a8a21e5cf0ee5",
+    "cpppj/src/o/RawShrapnelFrame.h": "51fad047de87a2135d8e8b7adbda9daf4a09785e9a5339dd3ac1a958787c9d2b",
+    "cpppj/src/o/RawShrapnelLifetime.h": "d3f78996cb89d5e761041e516a2615781874aaaaf8ab97d69b261783e5edca5a",
+    "cpppj/src/o/RenderProcessSystem.h": "d745fb0d6c9e08e8fa8b5744e9868fca141446899f6310f6ff5f87addd7a3f3a",
+    "cpppj/src/o/RenderProcessSystem.cpp": "cb1355f5836f4e5be3ce142501109a100beb9f76361dfc288b168f1bde759562",
+    "cpppj/src/o/DependFormHost.cpp": "d06add1b954c208811f3ffd477532601835996e7157140b6300414d62f8410d7",
+    "cpppj/src/o/SquidProcess.cpp": "993e34a3c7b3b87f290a33f548a126415c3a77794a7a191801d68f405baf1780"
+  },
+  "focusedValidation": {
+    "build": "extracted/cpp-dissolve-20261022-build3.log",
+    "log": "extracted/cpp-dissolve-20261022-focused4.log",
+    "newTests": 6,
+    "includingExistingDemoTests": 11,
+    "failedChecks": 0
+  },
+  "fullValidation": {
+    "tests": 2291,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "ctestSeconds": 297.75,
+    "log": "extracted/cpp-dissolve-20261022-ctest1.log",
+    "logSha256": "846e30dbfc8d2a754f85c0ddba0411e961d5d850ffc8a1454f3ab0735ccace55",
+    "cppChangedAfterValidation": false
+  }
+}
