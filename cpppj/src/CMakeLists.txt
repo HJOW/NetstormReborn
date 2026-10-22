@@ -167,3 +167,5 @@ if(MSVC)
 endif()
 # 데빌메이커 전용 본체와 상태 패킷의 실제 생성/부분 갱신 규칙이다.
 target_sources(netstorm PRIVATE o/RawWindAviaryState.cpp o/RawWindAviaryState.h)
+# 데빌메이커 생산 단계와 실제 Kernel 어댑터다.
+target_sources(netstorm PRIVATE o/RawWindAviaryProcess.cpp o/RawWindAviaryProcess.h)

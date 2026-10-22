@@ -1639,3 +1639,10 @@ cpppj/tests/fixtures/wind-aviary-state-x86.tsv text eol=lf
 tools/decomp_wind_aviary_state.py text eol=lf
 cpppj/wind-aviary-state-20261022.json text eol=lf
 docs/exe/cpp-wind-aviary-state-20261022.md text eol=lf
+# 데빌메이커 생산 프레임과 독립 기계어 관찰의 바이트를 고정한다.
+cpppj/src/o/RawWindAviaryProcess.* text eol=lf
+cpppj/tests/WindAviaryProcessTests.cpp text eol=lf
+cpppj/tests/fixtures/wind-aviary-frame-x86.tsv text eol=lf
+tools/decomp_wind_aviary_frame.py text eol=lf
+cpppj/wind-aviary-frame-20261022.json text eol=lf
+docs/exe/cpp-wind-aviary-frame-20261022.md text eol=lf

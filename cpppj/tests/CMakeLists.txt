@@ -1793,5 +1793,9 @@ target_sources(netstorm_tests PRIVATE DataManagerFileSaveTests.cpp)
 target_sources(netstorm_tests PRIVATE EditorFilesTests.cpp)
 # 데빌메이커 전용80BYTE 생성/송수신을 독립 원본 관찰로 대조한다.
 target_sources(netstorm_tests PRIVATE WindAviaryStateTests.cpp)
+# 원본 생산 상태의 독립1639행을 대조한다.
+target_sources(netstorm_tests PRIVATE WindAviaryProcessTests.cpp)
+set_source_files_properties(WindAviaryProcessTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_WIND_AVIARY_FRAME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/wind-aviary-frame-x86.tsv\"")
 set_source_files_properties(DataManagerFileSaveTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_DATAMANAGER_FILE_SAVE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/datamanager-file-save-x86.tsv\"")
