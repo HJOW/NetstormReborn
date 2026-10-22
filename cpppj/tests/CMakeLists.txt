@@ -49,6 +49,7 @@ add_executable(netstorm_tests
     AiBridgePathTests.cpp
     AiBridgeCandidatesTests.cpp
     AiBridgeSearchTests.cpp
+    AiBridgePlanningTests.cpp
     KnowledgeMenuTests.cpp
     MissionTechnologyTests.cpp
     GuideTransitionTests.cpp

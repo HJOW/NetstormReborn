@@ -1,0 +1,42 @@
+{
+  "host": "VM-W11-Codex",
+  "decompile_host": "VM-W11-Codex",
+  "rows": {
+    "random": 261,
+    "connected": 85,
+    "rectangle": 24,
+    "delay": 28
+  },
+  "normal_returns": 796,
+  "x87": [
+    639,
+    895
+  ],
+  "actual_entries": {
+    "0x411470": 522,
+    "0x4e49c0": 2756,
+    "0x4558f0": 11552,
+    "0x4ad390": 3366,
+    "0x49a840": 4166,
+    "0x40faa0": 558,
+    "0x4ad680": 630,
+    "0x410d40": 170,
+    "0x462bc0": 170,
+    "0x4ac1e0": 170,
+    "0x462b80": 170,
+    "0x40eaf0": 170,
+    "0x4119b0": 48,
+    "0x411310": 56
+  },
+  "stubs": [],
+  "game_started": false,
+  "sources": {
+    "originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD\\NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "tools\\decomp_ai_bridge_planning.py": "964324e72931b346ff013465e2126fff5b8db9f2eb43f8a9683f150a451832e2",
+    "cpppj\\tests\\fixtures\\ai-bridge-planning-random-x86.tsv": "fc3ccebee48825c8725f797ef8dc944cb4b76508564316c126c3a7f680812c06",
+    "cpppj\\tests\\fixtures\\ai-bridge-planning-connected-x86.tsv": "14fdbd43c53447db120c2e50b540bbb734ebbfd8926b0c2f1759b0829307e3e7",
+    "cpppj\\tests\\fixtures\\ai-bridge-planning-rectangle-x86.tsv": "b6b93db49ad315e9ab369bfd39e8646644cf3722d77cbdae63b916305749f8f9",
+    "cpppj\\tests\\fixtures\\ai-bridge-planning-delay-x86.tsv": "4dc60acbd7366854a6529b5c1db92e0d8410882eab8abbc9d8ae924f20560ca2"
+  }
+}

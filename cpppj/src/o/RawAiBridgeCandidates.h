@@ -12,6 +12,7 @@ struct AiBridgeCandidateTypes {
 };
 //0040fe90의 현재 상태/실제 hash0/spot/프레임 코드만 읽고 후보 상태를 갱신한다.
 class RawAiBridgeCandidates {
+    friend class RawAiBridgePlanning; //인접 원본 전략 하위만 같은 현재 graph/코드/지도 getter를 공유한다. 별도 월드 사본을 만들지 않는다.
 public:
     RawAiBridgeCandidates(RawAiBrainMemory& memory,const SidPool& pool,std::span<const RiftTypeRecord> types,std::span<const RiftTypeFrames> frames,std::span<const std::uint16_t> surfaces,std::span<const std::uint8_t> spots,AiBridgeCandidateTypes globals); //같은 PATCH188/65536 지도와 원본 본체를 빌린다.
     bool Prepare(std::uint32_t token) const; //한 호출24칸 후 false, 경계/나선24/단계8부터후보3개 조건에서 true이며 최대6개만 저장한다.
