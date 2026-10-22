@@ -77,6 +77,8 @@ struct MenuClient {
 TEST_CASE(RawMenuControls_HelpActualTreePixelsAndOutsideInput) {
     MenuClient client;client.EnableHelp();const auto root=client.buttons.RegisteredGump(0);const auto token=client.menus->OpenHelp(0x61000001U);
     CHECK(client.menus->HelpOpen() && client.buttons.RegisteredGump(0)==root);auto* window=static_cast<QuickHelpContentNode*>(client.menus->Node(token));CHECK(window && window->vtable==0x514ec4 && window->parent==root);if (!window) return;
+    // 실제 클라이언트 기본 전역은 TYPE92 fortGump의 프레임0이며 단색 배경과 구별한다.
+    for (auto child:{window->pictureBackground,window->bodyBackground}) { const auto* background=client.menus->Background(child);CHECK(background && background->type==92 && background->frame==0); }
     auto* body=static_cast<HtmlBodyGumpNode*>(client.menus->Node(window->body));CHECK(body && body->vtable==0x50bd38 && body->text);if (!body) return;CHECK(body->body[0] && client.menus->Node(body->text)->parent==window->body);
     auto* text=static_cast<ScrollingTextGumpNode*>(client.menus->Node(body->text));CHECK(text->buffer && text->slider);CHECK((text->textFlags&6)==6 && text->scrollRequest==0);
     client.buttons.Event({0x00280000U,0,0});CHECK(text->scrollRequest==10); // 원본 Down의 상대 스크롤 요청을 같은 표시 자식에서 읽는다.

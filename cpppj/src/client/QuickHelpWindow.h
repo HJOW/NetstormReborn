@@ -19,6 +19,7 @@ struct QuickHelpWindowState {
     bool battle{},challenge{}; // 00594fbc/fc8의 현재 기본 도움말 선택 모드다. battle이 우선이다.
     std::uint32_t infoMode{}; // 00565ec4의 현재 다중 줄 정보 해석 모드다.
     std::uint32_t noPictureA{},noPictureB{}; // 0054120c/12dc의 실제 그림 제외 TYPE를 공급한다.
+    std::uint32_t backgroundType{},backgroundFrame{}; //005ca920/005ca924의 현재 배경 TYPE/프레임이다. 두 질감 자식의 생성 때 각각 다시 읽는다.
 };
 // 모든 생성/표시 자식은 기존 실제 클래스다. 이 계층은 별도 간략 창/글자 렌더러를 만들지 않는다.
 struct QuickHelpWindowHooks {

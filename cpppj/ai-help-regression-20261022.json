@@ -1,0 +1,36 @@
+{
+  "host": "VM-W11-Codex",
+  "baseCommit": "d29c7184",
+  "ctestExit": 8,
+  "seconds": 197.71,
+  "tests": 2214,
+  "failedChecks": 24,
+  "failedTests": [
+    "CampaignSession_LocalGeysersUseActualAiRegistration",
+    "CampaignSession_FactoryUpgradePictureAndCompletionShareWorld",
+    "CampaignForwardBattle_NaturalTempleAssault",
+    "CampaignAltar_AlliedReleaseUsesVirtualPriestOwner",
+    "CampaignDude_ActualPathNoticeSpeedAndArrival",
+    "CampaignTutorialOne_ActualSessionFrameAndInputPauseOwnership",
+    "CampaignObjectCommand_ActualCarrierParentAndPriestOwner",
+    "CampaignMissionCommon_ActualFiveSessionsFrameReplayAndDemoQueue",
+    "CampaignMissionLifecycle_ActualSessionEntryPauseBeforeStart",
+    "AssetRegular_FactoryUpgradeDispatchAndUpperFlare"
+  ],
+  "focusedPassed": {
+    "CampaignSession_Ai": 23,
+    "RawMenuControls_": 8,
+    "QuickHelpWindow_": 2,
+    "SpriteColorMaps_": 1,
+    "CampaignKnowledge_ActualSessionAndMenuTree": 1,
+    "DudeRegular_": 1
+  },
+  "previousReport": "cpppj/ai-blocker-regression-20261022.json",
+  "logs": {
+    "extracted/cpp-help-color-runtime-20261022-build.log": "b72006dd014121bcbdbfe2b89663d0269c7c30c5735e8fd3fe4d3d340bb03b89",
+    "extracted/cpp-ai-help-runtime-20261022-ctest.log": "15414fabf56e179d92f8695d9cc825a5367ee7abf9e2631c38dbde80d02cfae2"
+  },
+  "limitations": [
+    "전체 검사는 통과하지 않았다. 남은10개 실패 검사의 원본 동일성과 실제 미션 수명 연결 조사가 필요하다."
+  ]
+}

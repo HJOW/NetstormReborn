@@ -8,6 +8,7 @@
 #include "client/QuickHelpWindow.h"
 #include "client/QuickHelpRequest.h"
 #include "client/GumpHelp.h"
+#include "client/SpriteColorMaps.h"
 #include "client/ImageGump.h"
 #include "o/OriginalText.h"
 #include <algorithm>
@@ -109,6 +110,11 @@ struct RawMenuControls::Impl {
             throw std::invalid_argument("실제 메뉴 판본/공통 트리/Client 연결 오류");
         const auto& fort=assets.Find("fortGump");const auto backgroundType=static_cast<std::uint32_t>(fort.block+o::kFirstAssetTypeNumber);
         widgetState.backgroundType=backgroundType;widgetState.backgroundFrame=1;widgetState.objectFormType=3;
+        helpState.backgroundType=backgroundType;helpState.backgroundFrame=0; //원본4c7160은5411c8의 fortGump TYPE와 프레임0을 Help의 공유 배경 전역에 쓴다.
+        std::array<std::uint32_t,256> picturePalette{}; //원본557738 그림 치환표를 만드는 파일 팔레트 RGB다.
+        // 일시 날씨 색 대신 이 자산 파일의 팔레트로 공유 그림자 표를 한 번 계산한다.
+        for (std::size_t index=0;index<picturePalette.size();++index) { const auto color=assets.Palette().Color(static_cast<std::uint8_t>(index));picturePalette[index]=color.red|(static_cast<std::uint32_t>(color.green)<<8)|(static_cast<std::uint32_t>(color.blue)<<16); }
+        pictureColors=BuildSpriteColorMaps(picturePalette).shadow;
         decorationState.backgroundType=backgroundType;decorationState.backgroundFrame=0;decorationState.cornerType=backgroundType;
         sliderWidgetState.defaultType=backgroundType;sliderWidgetState.defaultFrame=1;titleState.sliderType=backgroundType;titleState.sliderFrame=1;
         drawState.backgroundType=backgroundType;drawState.backgroundFrame=1;drawState.markerType=backgroundType;
@@ -125,7 +131,7 @@ struct RawMenuControls::Impl {
         GumpDecorationHooks dh;dh.node=[this](auto token) { return Find(decorations,token); };dh.base=common.node;BindGumpDecorationAssets(dh,assets);
         dh.shape=[this](auto type,auto frame,auto point) { activeBackground.shape({type,frame,point,false}); };dh.invalidate=[this](auto) { common.changed(); };
         decoration=std::make_unique<GumpDecoration>(common.create,decorationState,*backgroundCreate,*backgroundDraw,common.collection,common.lifetime,std::move(dh));
-        MarkupHooks ph;BindMarkupAssets(pictureState,ph,markupAssets);ph.color=[] { throw std::logic_error("메뉴 mapped 그림의 실제 전용 치환표 미연결"); };ph.shape=[this](auto request) { activePicture.shape(request); };pictures=std::make_unique<Markup>(fragments,pictureState,std::move(ph),assets.Edition());
+        MarkupHooks ph;BindMarkupAssets(pictureState,ph,markupAssets);ph.color=[this] { if (!activePicture.color) throw std::logic_error("메뉴 그림 실제 Draw 색표 문맥 없음");activePicture.color(); };ph.shape=[this](auto request) { activePicture.shape(request); };pictures=std::make_unique<Markup>(fragments,pictureState,std::move(ph),assets.Edition());
         StyleTextMarkupHooks mh;BindStyleTextMarkupAssets(mh,assets);BindStyleTextMarkupPalette(mh,palette);mh.sound=hooks.sound;markup=std::make_unique<StyleTextMarkup>(fragments,*pictures,markupState,std::move(mh),assets.Edition());
         StyleTextHooks sh;BindStyleTextFonts(sh,metrics);BindStyleTextPalette(sh,palette);BindMarkup(sh,*pictures);sh=markup->Hooks(std::move(sh));
         sh.textDraw=[this](auto bytes,auto point,const auto& context) { if (!activeText) throw std::logic_error("메뉴 글자 실제 Draw 문맥 없음");activeText->Draw(bytes,point,DecodeGumpTextContext(context)); };

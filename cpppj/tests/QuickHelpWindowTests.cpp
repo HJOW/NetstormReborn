@@ -28,6 +28,7 @@ struct WindowFixtureScene {
     QuickHelpWindowState state;QuickHelpPopupState popup;HtmlBodyGumpState bodyState;HtmlTextParserGlobals globals; // 원본과 같은 단일 현재 상태다.
     std::unique_ptr<HtmlBodyGump> html;std::unique_ptr<QuickHelpWindow> help;std::map<std::size_t,std::size_t> allocations; // 실제 제품 처리기와 명시 할당 순서다.
     float scale{1};bool script{},empty{},failure{};std::int32_t lineCount{1},frame{3};std::string trace,helpText="<a name=\"unitType\"><info><p>BODY</a>\nEND"; // 독립 GUI/파일/Config 입력이다.
+    std::function<void(std::uint32_t)> backgroundCreated; //질감 자식 생성 뒤 원본 전역이 바뀐 경우의 현재 값 재조회를 검사한다.
     // 첫 관측과 같은 현재 노드/기본 전역을 공급하고 제품 처리기만 조립한다.
     WindowFixtureScene() {
         // 실제 생성자가 덮기 전의 독립 기본 필드를 설치한다.
@@ -40,7 +41,7 @@ struct WindowFixtureScene {
         b.styled=[this](auto token,std::string_view text) { Event("Styled,"+std::to_string(token)+','+TextHex(text)); };b.scroll=[this](auto token,auto value) { Event("Scroll,"+std::to_string(token)+','+std::to_string(value)); };b.slider=[this](auto token,auto value) { Event("Slider,"+std::to_string(token)+','+std::to_string(value)); };b.scrollable=[this](auto token,auto value) { Event("Scrollable,"+std::to_string(token)+','+std::to_string(value)); };html=std::make_unique<HtmlBodyGump>(bodyState,std::move(b));
         QuickHelpWindowHooks h;h.node=[this](auto token) { CHECK(token==kWindow);return &window; };h.base=[this](auto token) { return &Base(token); };h.html=[this](auto token) { CHECK(token==kBody);return &body; };h.constructBase=[this](auto token,auto command,float width,float height,auto flags) { ConstructBase(token,command,width,height,flags); };h.allocate=[this](auto bytes) { return Allocate(bytes); };
         h.constructDecoration=[this](auto token,float width,float height) { Event("Decoration,"+std::to_string(token)+','+std::to_string(Bits(width))+','+std::to_string(Bits(height)));Fill(token,width,height,1);Base(token).alignFlags=0x20;Base(token).secondaryDepth=0x123; };
-        h.constructBackground=[this](auto token,float width,float height,auto background,auto flags,auto type,auto image) { Event("Background,"+std::to_string(token)+','+std::to_string(Bits(width))+','+std::to_string(Bits(height))+','+std::to_string(background)+','+std::to_string(flags)+','+std::to_string(type)+','+std::to_string(image));Fill(token,width,height,flags); };
+        h.constructBackground=[this](auto token,float width,float height,auto background,auto flags,auto type,auto image) { Event("Background,"+std::to_string(token)+','+std::to_string(Bits(width))+','+std::to_string(Bits(height))+','+std::to_string(background)+','+std::to_string(flags)+','+std::to_string(type)+','+std::to_string(image));Fill(token,width,height,flags);if (backgroundCreated) backgroundCreated(token); };
         h.constructHtml=[this](auto token) { html->Construct(token); };
         h.constructButton=[this](auto token,auto width,auto height,std::string_view label,auto unused,auto context) { Event("Stone,"+std::to_string(token)+','+std::to_string(width)+','+std::to_string(height)+','+TextHex(label)+','+std::to_string(unused)+','+std::to_string(context));Fill(token,60,20,0); };h.fitButton=[this](auto token) { Event("Fit,"+std::to_string(token)); };
         h.constructInformation=[this](auto token,auto width,auto height,auto font,auto color) { ConstructText(token,width,height,font,color); };
@@ -108,6 +109,15 @@ struct WindowFixtureScene {
         } else { CHECK(kind=="S");const auto type=Number(input[0]),old=Number(input[3]);frame=std::stoi(input[2]);window.picture=old ? kPicture : 0;window.information=old ? kInfo : 0;body.vtable=0x50bd38;body.text=old ? kScroll : 0;if (paths) { state.battle=Number(input[4])!=0;state.challenge=Number(input[5])!=0;empty=Number(input[6])!=0; }help->Show(kWindow,type,Topic(input[1])); }
     }
 };
+}
+// 두 질감 자식은 각각 현재005ca920/924를 읽고 단색 내부 배경에는 TYPE0을 유지한다.
+TEST_CASE(QuickHelpWindow_CurrentBackgroundGlobalsForEachChild) {
+    WindowFixtureScene scene;scene.state.backgroundType=92;scene.state.backgroundFrame=1;
+    scene.backgroundCreated=[&](auto token) { if (token==kPictureBg) { scene.state.backgroundType=93;scene.state.backgroundFrame=2; } };
+    scene.Run("C",{"0","1","0","1065353216"},false);
+    CHECK(scene.trace.find("Background,"+std::to_string(kInner)+",0,0,"+std::to_string(0x04000000U|35U)+",1,0,0")!=std::string::npos);
+    CHECK(scene.trace.find("Background,"+std::to_string(kPictureBg)+",0,0,"+std::to_string(0x03e40000U)+",1,92,1")!=std::string::npos);
+    CHECK(scene.trace.find("Background,"+std::to_string(kBodyBg)+",0,0,"+std::to_string(0x03e40000U)+",1,93,2")!=std::string::npos);
 }
 // 원본의 전체84행과 추가14경로를 대조한다. 실제 GUI/OS 실행은 포함하지 않는다.
 TEST_CASE(QuickHelpWindow_Native98) {

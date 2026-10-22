@@ -21,6 +21,7 @@ struct MenuServices {
     // 선택되는 장치/설정 경계만 공급하며 미복원 하위를 성공으로 채우지 않는다.
     RawCampaignSessionServices Make() {
         names.Initialize();RawCampaignSessionServices result;result.soundNames=&names;result.unixSeconds=[] { return 946684800; };
+        result.production.allocationBytes=[](auto bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0x71}); }; //현재 지식 카드가 조회하는 실제 Deck의 미작성 바이트 입력이다.
         result.sound.wallSeconds=[] { return 100.0; };result.sound.play=[](SoundHandle sound,std::uint32_t,std::uint32_t,std::uint32_t,std::uint32_t,std::uint32_t) { return sound; };
         result.sound.playLoopAt=[](float,float,SoundHandle current,SoundHandle sound) { return current ? current : sound; };
         result.sound.playOnceAt=[](float,float,SoundHandle sound,std::uint32_t,std::uint32_t) { return sound; };
