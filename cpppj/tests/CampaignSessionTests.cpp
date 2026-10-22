@@ -3158,7 +3158,7 @@ TEST_CASE(CampaignTutorialOne_ActualSessionFrameAndInputPauseOwnership) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();
     ConfigInterface config([&](std::string_view path) { return assets.files.TryRead(path); });
     config.Configuration().Assign("DataDir=\"d\"\ncurrentLanguage=\"english\"\nmissionSpec=\"{DataDir}\\{local.1}.{currentLanguage}\"\nfortSpec=\"{DataDir}\\{local.1}.fort\"\n[END]\n");
-    MissionScript script(config,"Tutorial1");CHECK(script.Loaded());bool dialog{};std::uint32_t depth{};double now=10;std::vector<std::string> pages;RawCampaignTutorialOneBindings* active{}; // 실제 UI/시계의 명시 외부 입력만 공급한다.
+    MissionScript script(config,"Tutorial1");CHECK(script.Loaded());bool dialog{};std::uint32_t depth{};double now=10;std::vector<std::string> pages;std::vector<bool> closePaused;RawCampaignTutorialOneBindings* active{}; // 실제 UI/시계와 팝업 정리 시점의 정지 소유권을 관측한다.
     services.missionOutcome.demo=[] { return 0U; };services.missionOutcome.tellBlocked=[&] { return dialog ? 1U : 0U; };
     services.missionOutcome.section=[&](std::string_view name) { CHECK(!script.Section(name));return false; }; // 이 보호 Early1에는 승패 사건 섹션이 없다.
     services.missionOutcome.closeTransient=[] { throw std::logic_error("보호 Early1에 없는 승패 창 정리"); };
@@ -3173,7 +3173,7 @@ TEST_CASE(CampaignTutorialOne_ActualSessionFrameAndInputPauseOwnership) {
     CampaignTutorialOneEffects effects;effects.frame.gameSeconds=[&] { return now; };effects.frame.paused=[&] { return depth!=0; };effects.frame.dialogsClear=[&] { return !dialog; };effects.frame.knowledgeOpen=[] { return false; };effects.frame.guideOpen=[] { return false; };effects.frame.blockingGumpOpen=[] { return false; };
     effects.frame.pause=[&] { ++depth; };effects.frame.resume=[&] { CHECK(depth>0);--depth; };effects.frame.endDemo=[] { throw std::logic_error("Early1의 데모 종료 도달"); };
     effects.tell=[&](std::string_view name) { if (!script.Section(name)) return false;dialog=true;pages.emplace_back(name);return true; };
-    effects.closeTransient=[&] { CHECK(dialog && active && !gate.scriptPaused); }; // Tell→팝업 정리→자기 정지의 순서까지 관찰한다.
+    effects.closeTransient=[&] { CHECK(dialog && active);closePaused.push_back(gate.scriptPaused!=0); }; // 최초/새 단계는 Tell→정리→정지이며 이미 열린 안내의 First 재표시는 기존 자기 정지를 보존한다.
     RawCampaignTutorialOneBindings runtime(session,script,start,gate,startState,std::move(effects));active=&runtime;
     runtime.Frame();CHECK(!gate.started && pages.empty() && gate.lockFrames==10);start.Start();CHECK(gate.started && session.Sp(1)==0 && session.TotalMade().BuiltForGenus(4)==0);
     // 입력이 없는 실제 화면 호출9회에는 초기 안내가 없고10회에만 A를 표시한다.
@@ -3195,6 +3195,7 @@ TEST_CASE(CampaignTutorialOne_ActualSessionFrameAndInputPauseOwnership) {
     CHECK(pages==std::vector<std::string>({"A.","B.","B."}) && depth==1 && gate.scriptPaused && gate.stage=='B' && !gate.lockFrames);
     CHECK(runtime.Event({InputCode::kRelease|kMissionFirstCommand,0,0})==1 && pages.size()==4 && depth==1);
     CHECK(startState.sequence==sequence && startState.flags==flags && runtime.StageShown()==1); // 명시 First는 Guide가 release 이전에 소비한다.
+    CHECK(closePaused==std::vector<bool>({false,false,true,true})); // A/B 최초 표시는 정지 전이고 F8/명시 First 재표시는 이미 보유한 한 정지 안에서 정리한다.
     CHECK(session.Sp(1)==0 && session.TotalMade().BuiltForGenus(4)==0 && session.Core().bookkeeping.depth==0 && session.Core().destroy.PreDepth()==0 && session.Core().destroy.PostDepth()==0);
 }
 

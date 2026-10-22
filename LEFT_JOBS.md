@@ -1,5 +1,13 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-22 단위307 완료: 공통 미션과 Early1 안내의 실제 로그인·정지 수명
+
+- [x] 단위306을 `9c20b226 / 20261022-31 CP`로 커밋하고 계속했다. 현재/마지막 전체 정밀 디컴파일 PC는 **VM-W11-Codex / 2026-10-22**로 같다. 제품 계산·독립 원본 fixture·새 디컴파일·보호 원본/CD·AGENTS/dotnetpj 변경이나 게임/창 실행은 없다.
+- [x] 두 비데모 검사에서 실제 관측한 로컬 Player+50=0 때문에 첫 프레임에 `Failed`가 먼저 열렸다. 독립 검사의 `.Load()` 생략 경로를 실제 `LoadLocalConnection()` 선행 절차로 수정해 같은 패킷/phase14/활성0x43을 확인했다. Guide 초기화도 같은 로그인 뒤 진입 정지/Start를 실행한다. Early1 재표시는 이미 보유한 자기 정지 중 정리된다는 실제 상태4개를 확인했다. 제품에 플래그 강제 쓰기·정지 생략을 추가하지 않았다. 임시 출력은 제거했다. [상세](docs/exe/cpp-mission-login-lifecycle-20261022.md).
+- [x] Release `extracted/cpp-mission-login-lifecycle-20261022-build.log` **종료0**, 공통5미션1개·Guide1개·Early1 수명1개 집중 검사 **실패check0**이다. 같은 접두의 common/guide/early1 로그를 보존한다. 전체 CTest는 반복하지 않았으며 최신 전체2,214개/10개 검사 실패·24check 실패를 전체 통과로 바꾸지 않는다. 인수인계 후 **20261022-32 CP**로 로컬 커밋하며 push하지 않는다.
+- [ ] **다음 재개점:** 실제 Session Factory 업그레이드 건설 그림의 `raw 그래픽 전용 색표 필요`와 파편 TYPE122 캡처 경계를 조사한다. 현재 보호 PE·기존 캡처 모듈/fixture를 읽기만 했고 제품 수정은 없다. `AssetRegular_FactoryUpgradeDispatchAndUpperFlare`는 합성 입력의 해시 단계 누락 가능성도 별도 확인한다.
+- [ ] AI 다리 초기화·후보/경로 탐색→네 전략/자동 전체 프레임/종료, 15개 미션·Edit/custom Fort·언어별 시나리오 수명·자연 플레이·표시/음향 동일성 목표는 미완료다.
+
 ## 2026-10-22 단위306 완료: 도움말 배경 전역과 지식 그림 치환표
 
 - [x] 단위305를 `d29c7184 / 20261022-30 CP`로 커밋하고 계속했다. 현재/마지막 전체 정밀 디컴파일 PC는 **VM-W11-Codex / 2026-10-22**로 같다. 새 디컴파일·보호 원본/CD·AGENTS/dotnetpj 변경이나 게임/창 실행은 없다.

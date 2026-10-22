@@ -46,6 +46,13 @@ struct StartExternal {
         s.ai.participation.assertion=[](PlayerParticipationAssertion) { throw std::logic_error("보호Start의예상하지않은원본참여진단"); };
         return s;
     }
+    // 실제 Client 진입과 같은 로컬 로그인에 시계/설정/표시 장치만 공급한다. 참여 플래그는 패킷 처리기가 기록한다.
+    RawCampaignSessionServices ConnectedServices() {
+        auto s=Services();CampaignLoginServices login; // 기존 월드 외부 입력과 동일한 장치 수명을 사용한다.
+        login.configInt=[](std::string_view,std::int32_t fallback) { return fallback; };login.wallSeconds=[] { return 100.25; };login.clock=[] { return 100250U; };
+        login.refresh=[this] { ++ui; };login.playerUiBusy=[] { return false; };login.playerNotice=[this](std::uint32_t,std::uint32_t,std::uint32_t) { ++ui; };login.log=[](std::string_view) {};
+        s.localLogin=std::move(login);return s;
+    }
     // 미초기화600BYTE 입력을 명시 패턴으로 공급하고 기존 실제 초기화 순서를 적용한다.
     CampaignMissionStartEffects Effects() {
         CampaignMissionStartEffects e;e.settingsBytes=[this](std::uint32_t,std::span<std::uint8_t> bytes) { ++settings;std::fill(bytes.begin(),bytes.end(),std::uint8_t{0xa7}); };
@@ -125,9 +132,10 @@ TEST_CASE(CampaignMissionCommon_ActualFiveSessionsFrameReplayAndDemoQueue) {
         gate.tutorialNumber=std::bit_cast<std::uint32_t>(ConfigParseLong(script.Get("tutorialNumber").value_or("")));CHECK(gate.tutorialNumber==0);
         MissionStartState state;StartExternal external;double now=123.5;std::uint32_t depth{};bool dialog{};InputQueue queue;std::vector<std::string> pages;RawCampaignTutorialOneBindings* active{}; // 시계/장치/UI만 명시 외부 입력이다.
         const auto show=[&](std::string_view name) { if (!script.Section(name)) return false;pages.emplace_back(name);dialog=true;return true; }; // 실제 원문 섹션의 존재 여부만 판단한다.
-        auto services=external.Services();services.missionOutcome.demo=[&] { return gate.demo; };services.missionOutcome.tellBlocked=[&] { return dialog ? 1U : 0U; };
+        auto services=external.ConnectedServices();services.missionOutcome.demo=[&] { return gate.demo; };services.missionOutcome.tellBlocked=[&] { return dialog ? 1U : 0U; };
         services.missionOutcome.section=show;services.missionOutcome.closeTransient=[] {};services.missionOutcome.onSection=[&] { CHECK(active);active->Gate().PauseForDialog(); };
-        auto fort=FortTemplate::Parse(assets.files.Read(script.FortPath()),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),script.FortName(),std::move(services));session.Load();
+        auto fort=FortTemplate::Parse(assets.files.Read(script.FortPath()),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),script.FortName(),std::move(services));session.LoadLocalConnection();
+        CHECK(session.LocalConnectionPhase()==14 && (session.PlayerRecords()[session.LocalOwner()*0xb4+0x50]&0x43U)==0x43U && !session.MissionPriestDead(session.LocalOwner()));
         auto startEffects=external.Effects();startEffects.gameSeconds=[&] { return now; };
         RawCampaignMissionStartBindings start(session,script,gate,state,session.MissionStartSettings(),session.MissionAiSettings(),std::move(startEffects));
         CampaignTutorialOneEffects effects;effects.frame.gameSeconds=[&] { return now; };effects.frame.paused=[&] { return depth!=0; };effects.frame.dialogsClear=[&] { return !dialog; };
@@ -164,13 +172,13 @@ TEST_CASE(CampaignMissionLifecycle_ActualSessionEntryPauseBeforeStart) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);ConfigInterface config([&](std::string_view path) { return assets.files.TryRead(path); });ConfigureStart(config);MissionScript script(config,"TheWarBegins");
     MissionFrameGateState gate;MissionStartState state;StartExternal external;std::uint32_t depth{};std::size_t frames{};bool active=true,loaded{},dialog{};double now=123.5;
     std::unique_ptr<RawCampaignMissionStartBindings> start;std::unique_ptr<RawCampaignTutorialOneBindings> runtime; // 단계1에서 실제 Session 설치 뒤에만 연결한다.
-    auto services=external.Services();services.missionOutcome.demo=[&] { return gate.demo; };services.missionOutcome.tellBlocked=[&] { return dialog ? 1U : 0U; };
+    auto services=external.ConnectedServices();services.missionOutcome.demo=[&] { return gate.demo; };services.missionOutcome.tellBlocked=[&] { return dialog ? 1U : 0U; };
     const auto show=[&](std::string_view name) { if (!script.Section(name)) return false;dialog=true;return true; }; // 실제 보호 섹션의 존재만 UI 경계로 공급한다.
     services.missionOutcome.section=show;services.missionOutcome.closeTransient=[] {};services.missionOutcome.onSection=[&] { runtime->Gate().PauseForDialog(); };
     auto fort=FortTemplate::Parse(assets.files.Read(script.FortPath()),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),script.FortName(),std::move(services));
     TutorialMissionStageHooks stages;
     stages.initialize=[&] {
-        session.Load();loaded=true;auto startEffects=external.Effects();startEffects.gameSeconds=[&] { return now; };
+        session.LoadLocalConnection();loaded=true;CHECK(session.LocalConnectionPhase()==14 && !session.MissionPriestDead(session.LocalOwner()));auto startEffects=external.Effects();startEffects.gameSeconds=[&] { return now; };
         start=std::make_unique<RawCampaignMissionStartBindings>(session,script,gate,state,session.MissionStartSettings(),session.MissionAiSettings(),std::move(startEffects));
         CampaignTutorialOneEffects effects;effects.frame.gameSeconds=[&] { return now; };effects.frame.paused=[&] { return depth!=0; };effects.frame.dialogsClear=[&] { return !dialog; };
         effects.frame.knowledgeOpen=[] { return false; };effects.frame.guideOpen=[&] { return dialog; };effects.frame.blockingGumpOpen=[] { return false; };
