@@ -33,6 +33,7 @@ struct AiBridgePathHooks {
 class RawAiBridgePath {
 public:
     RawAiBridgePath(RawAiBrainMemory& memory,const SidPool& pool,const ContainedFinderState& finder,AiBridgePathGlobals globals,AiBridgePathHooks hooks); //PATCH 풀과 현재 원본 저장소를 빌린다.
+    bool Initialize(std::uint32_t token,RawPathPoint source,RawPathPoint target) const; //0040fde0:실제 CRT 절삭·나선 시작·미정 결과·마지막 후보 번호만 초기화하고 현재 단계/주변 바이트를 보존한다.
     void Consume(std::uint32_t token,Sid parent,std::uint32_t pattern) const; //사용 가능하고 패턴 WORD가 전체 DWORD와 같은 첫 조각만 삭제한다.
     bool Step(std::uint32_t token,RawPathPoint& source,RawPathPoint target) const; //한 호출에서 한 탐색 단계만 처리하며 상태5에서만 true와 결과를 반환한다.
     RawPathPoint Extend(std::uint32_t token,RawPathPoint source,RawPathPoint target) const; //완료된 연결점의 배치→소비→재고 갱신을 원래 순서로 실행한다.

@@ -1,6 +1,7 @@
 // AI 다리의 실제 단계 함수 출력과 배치/내용물/timeout 경계를 검사한다.
 #include "o/RawAiBridgePath.h"
 #include "RawSceneSupport.h"
+#include <filesystem>
 #include <limits>
 using namespace netstorm::o;
 using namespace netstorm::test::rawscene;
@@ -49,6 +50,22 @@ struct BridgePathScene {
     // 현재 전역 참조와 같은 풀을 사용하는 복원 모듈을 만든다.
     RawAiBridgePath Path() { return {memory,pool,finder,{now,limit,bridge,kind,startMarker,endMarker,targetMarker},hooks}; }
 };
+}
+// 초기화/실제 CRT의144입력·두 x87 정밀도288반환에서 동결한 전체0xb08 바이트를 대조한다.
+TEST_CASE(AiBridgePath_NativeInitialize144FullBodies) {
+    const auto path=(std::filesystem::path(__FILE__).parent_path()/"fixtures/ai-bridge-initialize-x86.tsv").string();std::size_t count{}; // 새 독립 관측 파일을 기존 기대값과 구분한다.
+    for (const auto& row:LoadFixture(path.c_str()).rows) { // source/target/count/pattern은 caller 입력이며 전체 기대 본체를 재계산하지 않는다.
+        CHECK(row.size()==7);if (row.size()!=7) return;BridgePathScene scene;auto raw=scene.memory.Bytes(scene.token);std::fill(raw.begin(),raw.end(),static_cast<std::uint8_t>(Number(row[5])));scene.Field(0x628,Number(row[4]));
+        const RawPathPoint source{std::bit_cast<float>(Number(row[0])),std::bit_cast<float>(Number(row[1]))},target{std::bit_cast<float>(Number(row[2])),std::bit_cast<float>(Number(row[3]))}; // NaN/무한대/음수0도 원문 비트로 전달한다.
+        CHECK(scene.Path().Initialize(scene.token,source,target));const auto same=Hex(scene.memory.Bytes(scene.token))==row[6];if (!same) std::printf("AI 다리 초기화 전체 본체 차이 행%zu\n",count);CHECK(same);++count;
+    }
+    CHECK(count==144);
+}
+// 실제 초기화 콜백을 연결했을 때 Step은 본체 준비 뒤 현재 상태를 한 단계만 증가시킨다.
+TEST_CASE(AiBridgePath_StepUsesActualInitializationBody) {
+    BridgePathScene scene;scene.Field(0x5f0,1);scene.Field(0x628,0);scene.hooks.initialize=[&](auto token,auto source,auto target) { CHECK(scene.Path().Initialize(token,source,target)); };
+    RawPathPoint source{20.75F,-21.75F};CHECK(!scene.Path().Step(scene.token,source,{30.5F,40.5F}));CHECK(scene.Field(0x5f0)==2 && scene.Field(0x638)==20 && scene.Field(0x63c)==static_cast<std::uint32_t>(-21) && scene.Field(0x640)==30 && scene.Field(0x644)==40 && scene.Field(0x6c8)==0xffffffffU);
+    CHECK(source.x==20.75F && source.y==-21.75F && scene.Field(0x6bc)==0xc61c4000U && scene.Field(0x6c0)==0xc61c4000U);
 }
 // 실제 원본 명령의600개 입력/정상 반환과 하위 진입 순서를 재생한다.
 TEST_CASE(AiBridgePath_NativeStep600Inputs) {

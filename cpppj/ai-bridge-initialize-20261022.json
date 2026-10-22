@@ -1,0 +1,18 @@
+{
+  "host": "VM-W11-Codex",
+  "lastDecompile": "VM-W11-Codex / 2026-10-22",
+  "entry": "0040fde0",
+  "crt": "004e49c0",
+  "inputs": 144,
+  "normalReturns": 288,
+  "bytesCompared": 813312,
+  "sha256": {
+    "originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools\\decomp_ai_bridge_initialize.py": "247e62fd96e67d4ba851442ec121f98113dd9e97a822236db248f992e2c11f4f",
+    "cpppj\\tests\\fixtures\\ai-bridge-initialize-x86.tsv": "0450a3947aa6a4c6d07c5f5d368c0abd7656ea817c84756e8c5c83a219314901"
+  },
+  "limitations": [
+    "초기화와 실제 CRT 절삭의 전체 본체만 검증한다. 후보 준비/탐색/자동 AI와 사용자 플레이는 미완료다.",
+    "게임·OS·창을 실행하지 않는다."
+  ]
+}

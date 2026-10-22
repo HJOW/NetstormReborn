@@ -1,6 +1,7 @@
 // 다리 탐색의 signed 상태 전이와 배치 뒤 현재 값 재조회·부분 효과를 보존한다.
 #include "o/RawAiBridgePath.h"
 #include <bit>
+#include <cmath>
 #include <stdexcept>
 #include <utility>
 
@@ -16,6 +17,11 @@ std::uint32_t Read(std::span<const std::uint8_t> raw,std::size_t offset) {
 }
 // 원본 DWORD의 signed 비교를 보존한다.
 std::int32_t Signed(std::uint32_t value) { return std::bit_cast<std::int32_t>(value); }
+// 원본004e49c0은 signed64로0쪽 절삭한 낮은 DWORD를 반환한다. 비유한/범위 밖의 indefinite 하위는0이다.
+std::uint32_t Truncate(float value) {
+    if (!std::isfinite(value) || static_cast<double>(value)<-0x1p63 || static_cast<double>(value)>=0x1p63) return 0;
+    return static_cast<std::uint32_t>(static_cast<std::int64_t>(value));
+}
 // 도달한 하위가 없으면 앞선 효과를 유지하고 해당 위치에서 오류를 알린다.
 template<class Function> const Function& Need(const Function& function) { if (!function) throw std::logic_error("AI 다리 경로 실제 하위 미연결");return function; }
 }
@@ -39,6 +45,16 @@ RawPathPoint RawAiBridgePath::Point(std::uint32_t token,std::size_t offset) cons
 void RawAiBridgePath::Point(std::uint32_t token,std::size_t offset,RawPathPoint value) const { Field(token,offset,std::bit_cast<std::uint32_t>(value.x));Field(token,offset+4,std::bit_cast<std::uint32_t>(value.y)); }
 // mapLimit은 원본처럼 float에 저장한 뒤 strict 비교한다.
 bool RawAiBridgePath::Valid(RawPathPoint point) const { const auto limit=static_cast<float>(globals_.mapLimit);return point.x>0 && point.x<limit && point.y>0 && point.y<limit; }
+// this=본체+5f0이며 네 caller float를 순서대로 절삭한다. 소스·목표·후보 개수 이외의 입력은 그대로 둔다.
+bool RawAiBridgePath::Initialize(std::uint32_t token,RawPathPoint source,RawPathPoint target) const {
+    const auto x=Truncate(source.x);Field(token,0x638,x);const auto y=Truncate(source.y);Field(token,0x63c,y);
+    Field(token,0x640,Truncate(target.x));Field(token,0x644,Truncate(target.y));
+    Field(token,0x690,0);Field(token,0x694,0);Field(token,0x6a0,x);Field(token,0x6a4,y); // 원본+a0/a4 후보 집계와+b0/b4 나선 시작 칸이다.
+    Field(token,0x698,2);Field(token,0x69c,1);Field(token,0x6a8,0x10000); // 원본+a8/ac/b8의 나선 단계·남은 길이·현재 최적 비용이다.
+    Field(token,0x6c0,0xc61c4000U);Field(token,0x6bc,0xc61c4000U); // 원본+d0/cc의 무효 결과 XY=-10000 float 비트를 그대로 쓴다.
+    Field(token,0x6c4,0);Field(token,0x6cc,0);Field(token,0x6c8,Field(token,0x628)-1U); // 원본+d4/dc/d8의 검색 진행·현재 후보/마지막 인덱스이며0개는ffffffff로 감긴다.
+    return true;
+}
 // 삭제 이후의 현재 시각과 rate를 더하며 소유자/TYPE/kind 필터를 추가하지 않는다.
 void RawAiBridgePath::Consume(std::uint32_t token,Sid parent,std::uint32_t pattern) const {
     static_cast<void>(Body(token));RawContainedFinder cursor(pool_,finder_);
