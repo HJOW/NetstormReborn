@@ -98,6 +98,8 @@ struct SpriteDrawHooks {
     std::function<std::optional<SpriteResourceStatus>(o::Sid)> resource;
     // timers: 대상의 표시용 타이머 시각을 조회하는 콜백.
     std::function<std::optional<std::array<double,3>>(o::Sid,std::uint32_t)> timers;
+    // statusProcesses: 선택 막대 직전에 실제 Kernel 순서의 현재 상태 프로세스 목록을 조회한다.
+    std::function<std::span<const SpriteStatusProcess>()> statusProcesses;
 };
 // 00498220 ↔ CD 00455f60의 분기·프레임·색 선택·표식·선택/상태 막대를 복원한다.
 class SpriteDraw {

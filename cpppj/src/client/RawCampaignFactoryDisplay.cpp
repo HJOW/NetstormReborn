@@ -13,6 +13,8 @@
 #include "o/RawSunAviaryCapture.h"
 #include "o/RawBurningLifetimeDraw.h"
 #include "o/RawPlainAssetDraw.h"
+#include "o/RawBombEffectTimer.h"
+#include "o/RawContainedFinder.h"
 #include "o/RawFlyerProcess.h"
 #include "o/RawSunAviaryProcess.h"
 #include "o/RawBridgeConnect.h"
@@ -32,6 +34,7 @@ struct RawCampaignFactoryDisplay::Impl {
     ObjectCollection collection; // 같은 공간 해시의 원본 단계/깊이/그림자 수집기다.
     std::vector<SpriteTypeView> views; // 현재 SHP 선택 헤더와 기본 Gump 프레임이다.
     SpriteDrawState state; // 원본 표시 전역과 현재 카메라/로컬 소유자다.
+    std::vector<SpriteStatusProcess> statusSlots; // 첫0번과 현재Kernel 순서를 유지하는 선택용 읽기 전용 뷰다.
     SpriteColorMaps colors; // 실제 파일 팔레트의 세 소스 치환 표다.
     std::map<std::uint32_t,OwnerColorMaps> ownerColors; // 원본 일반12종/전용5종의 실제9색표이며 현재 팔레트로 갱신한다.
     TempleDraw templeDraw; // 같은 Session의 현재 전용Draw/상승음이며 그리기 시점에만 호출한다.
@@ -83,8 +86,6 @@ struct RawCampaignFactoryDisplay::Impl {
     // 원본 현재 슬롯과 실제 dirty clip을 읽고 일반 Draw의 모든 픽셀을 같은 표면에 쓴다.
     void Draw(o::RenderCollectionEntry entry,std::span<std::uint8_t> pixels,int pitch,int height,ScreenRect clip) {
         const auto sid=collection.Object(entry.token);if (!Handles(sid)) return;if (!ready) throw std::logic_error("Factory 파일 팔레트 미설치");
-        const auto raw=core.pool.Slot(sid);
-        if ((raw[40]&4U) && (raw[40]&0x30U)) throw std::logic_error("Factory 선택 상태 프로세스 목록 표시 미연결");
         state.now=core.processState.now;state.ownerPalettes.assign(core.bridgeState.ownerColors.begin(),core.bridgeState.ownerColors.end());
         SpritePixelTarget target(pixels,pitch,height,clip,MakeSpriteAssetShapes(assets,state),[this](auto mode,auto type,auto owner) { return Color(mode,type,owner); });
         SpriteDrawHooks rules;rules.virtualFrame=[this](o::Sid object) {
@@ -108,7 +109,21 @@ struct RawCampaignFactoryDisplay::Impl {
             return result;
         };
         rules.resource=[this](o::Sid object)->std::optional<SpriteResourceStatus> {
-            if (core.processes.FindEvent(object,0x493)) throw std::logic_error("Factory 자원 내용물 막대 표시 미연결");return std::nullopt;
+            const auto* cast=core.processes.FindEvent(object,0x493);if (!cast) return std::nullopt;
+            const o::ContainedFinderState current{core.processState.boss,6,false};o::RawContainedFinder finder(core.pool,current);o::Sid content{}; // 같은 실제 기본 finder의 타입6/mask1 조회다. 현재 제품의 개발자 dead 진단은 꺼져 있다.
+            for (auto candidate=finder.Begin(object);candidate.value;candidate=finder.Next()) { // 원본처럼 상태를 추가로 거르지 않고 첫 mask1 일치를 고른다.
+                const auto bytes=core.pool.Slot(candidate);if ((std::uint32_t(bytes[20])|(std::uint32_t(bytes[21])<<8))&1U) { content=candidate;break; }
+            }
+            const auto bytes=core.pool.Slot(content);return SpriteResourceStatus{std::uint32_t(bytes[18])|(std::uint32_t(bytes[19])<<8),std::bit_cast<std::int32_t>(cast->Count())}; // 빈 내용물도 원본은0번 슬롯의 kind를 읽는다.
+        };
+        rules.statusProcesses=[this]()->std::span<const SpriteStatusProcess> {
+            statusSlots.clear();statusSlots.push_back({}); // 원본이 건너뛰는 첫 슬롯을 유지한다.
+            for (o::ProcessId pid=1;pid<=core.kernel.Capacity();++pid) { // 실제 현재 Kernel을 원래 PID 순서로 읽으며57만 순서를 보존해 모은다.
+                const auto* process=dynamic_cast<const o::SquidProcess*>(core.kernel.Get(pid));if (!process || core.pool.Slot(process->Form())[10]!=state.statusProcessType) continue;
+                const auto* effect=dynamic_cast<const o::BombEffectTimerProcess*>(process);if (!effect) throw std::logic_error("상태57의 실제 타이머 필드 미연결");
+                const auto& fields=effect->Fields();statusSlots.push_back({state.statusProcessType,fields.flags,fields.members,fields.endTime}); // 별도 대상/시계를 만들지 않고 같은 현재 필드를 빌린다.
+            }
+            return statusSlots;
         };
         auto hooks=target.Hooks(std::move(rules));
         // +a4의0044c180은 같은 기준점/단위 배율의 plain SHP다. 일반 owner 문맥으로 바꾸지 않는다.
@@ -188,6 +203,7 @@ std::vector<RenderSprite> RawCampaignFactoryDisplay::Sprites(ScreenRect clip,int
     for (std::int32_t i=0;i<count;++i) {
         const auto entry=entries[static_cast<std::size_t>(i)];if (!self.Handles(self.collection.Object(entry.token))) continue;
         RenderSprite sprite;sprite.clip=clip;sprite.order={entry.x,entry.y,entry.depth};sprite.shadow=(entry.tail&4U)!=0; // 실제 수집기의 그림자 표식을 외부 스프라이트 메타데이터에도 보존한다.
+        sprite.sourceSid=self.collection.Object(entry.token).value; // 겹친 본체/임시 개체도 좌표 대신 원본 객체 신원으로 구별한다.
         sprite.procedure=RenderProcedure{clip,[this,entry](std::span<std::uint8_t> pixels,int pitch,int height,ScreenRect cut) { impl_->Draw(entry,pixels,pitch,height,cut); }};result.push_back(std::move(sprite));
     }
     return result;

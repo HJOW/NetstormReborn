@@ -180,9 +180,10 @@ void SpriteDraw::Selection(o::Sid sid,std::uint32_t type,std::uint32_t owner,std
     }
     if (raw[40]&0x30U) {
         int abstractTime=0,statusTime=0;
+        const auto processes=hooks_.statusProcesses ? hooks_.statusProcesses() : s.processes; // 본체 가상 Draw 뒤의 현재 실제 목록을 읽는다.
         // 실제 Kernel의 예약 슬롯 0은 검사하지 않는다. 현재 입력 표의 끝까지 원래 순서로 읽는다.
-        for (std::size_t index=1;index<s.processes.size();++index) {
-            const auto& process=s.processes[index];if (process.type!=s.statusProcessType) continue;
+        for (std::size_t index=1;index<processes.size();++index) {
+            const auto& process=processes[index];if (process.type!=s.statusProcessType) continue;
             // 목록 내 첫 SID 일치에서 멈추며 flag 1이 flag 2보다 우선한다.
             for (const auto member:process.members) if (member==sid.value) {
                 if (process.flags&1U) abstractTime=std::max(abstractTime,TruncateSprite(process.endTime-s.now));

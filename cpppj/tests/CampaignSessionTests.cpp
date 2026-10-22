@@ -12,6 +12,8 @@
 #include "client/GameWorld.h"
 #include <cmath>
 #include "client/RawCampaignFactoryDisplay.h"
+#include "client/PaletteColors.h"
+#include "o/RawBombEffectTimer.h"
 #include "client/SpriteColorMaps.h"
 #include "client/VFXMappedDraw.h"
 #include "o/RawDaisDraw.h"
@@ -4107,4 +4109,90 @@ TEST_CASE(CampaignWorkshopDisplay_All25ActualBodyAndColors) {
         std::copy(saved.begin(),saved.end(),raw.begin());CHECK(!core.destroy.PreDepth() && !core.destroy.PostDepth() && !core.bookkeeping.depth);std::cout<<"25종 실제 본체 표시 TYPE"<<number<<"/일반"<<IsPlainAssetDraw(raw)<<"/기준점"<<core.types[number].hotspotX<<','<<core.types[number].hotspotY<<'\n';
     }
     CHECK(bodies==25 && plain==19 && comparisons==114);std::cout<<"실제25종 본체/일반19종 상태·소유자"<<comparisons<<"장면 전체 픽셀 대조\n";
+}
+
+
+namespace {
+// 원본 선택 프레임의 화면 기준점과 실제8비트 출력이다.
+struct CampaignSelectionBarImage {
+    std::vector<std::uint8_t> pixels; // 실제 원본 표시기가 쓴 전체 화면이다.
+    int x{},y{},width{}; // Native 선택 헤더의 좌상단과 폭이다.
+    std::uint32_t background{}; // 같은 파일 팔레트의 원본 기본0번 색이다.
+};
+// 같은 실제 슬롯의 선택 본체만 원본 공간 수집기에서 골라 출력한다.
+CampaignSelectionBarImage DrawCampaignSelectionBars(RawCampaignSession& session,const GameAssets& assets,Sid actor) {
+    auto core=session.Core();const auto raw=core.pool.Slot(actor);CHECK(raw[40]&4U);const auto type=raw[10];const auto frame=Get(raw,36);const auto& header=core.shapes[type].frames.at(frame);const auto palette=WorkshopDisplayPalette(assets);
+    const auto x=std::bit_cast<float>(Get(raw,14)),y=std::bit_cast<float>(Get(raw,18));const int cameraX=std::bit_cast<std::int16_t>(static_cast<std::uint16_t>(Get(raw,22,2)))-512,cameraY=std::bit_cast<std::int16_t>(static_cast<std::uint16_t>(Get(raw,24,2)))-384;
+    std::array<std::uint32_t,256> logical{};for (std::size_t index=0;index<logical.size();++index) logical[index]=std::uint32_t(palette[index].red)|(std::uint32_t(palette[index].green)<<8)|(std::uint32_t(palette[index].blue)<<16); // 원래 팔레트 번호를 유지한다.
+    CampaignSelectionBarImage result{std::vector<std::uint8_t>(1024*768,255),512-header.hotspotX,384-header.hotspotY,header.width,BuildPaletteColorTable(logical,assets.Edition()).basic[0]};
+    RawCampaignFactoryDisplay display(core,assets,[&](Sid sid,const auto& draw) { session.DrawTemple(sid,draw); });display.SetPalette(palette);CHECK(display.Handles(actor));std::size_t bodies{};const ScreenRect clip{0,28,1024,768};
+    for (const auto& sprite:display.Sprites(clip,cameraX,cameraY,session.LocalOwner())) if (!sprite.shadow && sprite.sourceSid==actor.value) { CHECK(sprite.order.x==x && sprite.order.y==static_cast<float>(static_cast<double>(y)+((core.types[type].flags2&0x10000U) ? .5 : 0.0)) && sprite.order.depth==std::bit_cast<std::int8_t>(raw[35]));CHECK(sprite.procedure);if (sprite.procedure) sprite.procedure->draw(result.pixels,1024,768,clip);++bodies; } // 보행 정렬/그림자와 물리 화면 기준점은 구별한다.
+    if (bodies!=1) std::cout<<"선택 본체 TYPE"<<unsigned(type)<<"/frame"<<frame<<"/count"<<bodies<<"/state"<<unsigned(raw[11])<<"/extra"<<unsigned(raw[40])<<'\n';CHECK(bodies==1 && result.width>0);return result;
+}
+// 기존 독립 원문498220의 두 fill 행에서 실제 현재 값이 정한 길이와 경계색을 확인한다.
+void CheckCampaignSelectionBar(const CampaignSelectionBarImage& image,int row,std::uint32_t color,int current,int maximum) {
+    const auto amount=std::max(0,std::min(current,maximum));const auto length=amount*image.width/std::max(maximum,1);const auto top=image.y-row*3-4;
+    for (int y=top;y<top+2;++y) for (int x=image.x-1;x<=image.x+image.width;++x) { CHECK(x>=0 && x<1024 && y>=28 && y<768);if (x>=0 && x<1024 && y>=28 && y<768) CHECK(image.pixels[static_cast<std::size_t>(y*1024+x)]==(x>=image.x && x<image.x+length ? color : image.background)); } // 채움 두 행과 좌우 배경을 모두 비교한다.
+}
+}
+
+// 실제 Cast 명령의493 SharedRegular가 진행하는 동안 같은 내용물 casttime과 count로 막대를 그린다.
+TEST_CASE(CampaignSelectionBars_ActualCastCommandAndClock) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();UseWorldTestLogin(services);std::uint32_t requests{};services.localLogin->observePacket=[&](std::uint32_t,bool,std::uint32_t,std::span<const std::uint8_t> packet) { if (packet.size()>1 && packet[1]==0x50) ++requests; };
+    services.carrierDropPopup=[](std::int32_t,std::int32_t,std::int32_t,std::uint32_t) {};services.assets.queueCommand=[](std::uint32_t,std::int32_t,std::int32_t) {};
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services),{1024,768});const auto cursors=BindWorldTestInput(world);auto& session=world.Session();auto core=session.Core();CHECK(session.LocalConnectionPhase()==14);
+    const Sid priest{static_cast<std::uint16_t>(session.FindPriestParticipation(1))};CHECK(priest.value);if (!priest.value) return;const auto input=core.pool.Slot(priest);const auto caster=session.World().Create(133,2);session.World().Pop(caster,std::bit_cast<float>(Get(input,14)),std::bit_cast<float>(Get(input,18)),0);core.owner.Set(caster,1);const auto prayer=session.CreateContained(caster,168,0,1,0,0);session.SetSp(1,10000);
+    CHECK(session.CommandCarrierDrop(caster,0x0300011a,caster)==1);CHECK(SquidForms(core.pool).Parent(prayer)==caster);session.PumpLocalConnection();CHECK(requests==1);world.Select(caster.value);const auto maximum=static_cast<int>(assets.game.Types()[168-70].definition.Number("casttime").value_or(0))*10;CHECK(maximum>0);std::uint32_t before{};
+    for (std::uint32_t phase=0;phase<2;++phase) { // 결과 필드를 쓰지 않고 실제 Kernel의493 호출 횟수를 진행한다.
+        if (phase) for (std::uint32_t frame=1;frame<=20;++frame) session.RunFrame({frame*.025,100+frame*.025,.025,frame},false); // 첫0.5초의 자연 사건만 실행한다.
+        const auto* cast=core.processes.FindEvent(caster,0x493);CHECK(cast);if (!cast) return;const auto count=cast->Count();if (!phase) before=count;else CHECK(count>before && count<static_cast<std::uint32_t>(maximum));const auto image=DrawCampaignSelectionBars(session,assets.game,caster);CheckCampaignSelectionBar(image,1,0xbe,maximum-static_cast<int>(count),maximum);
+        std::cout<<"실제 Cast 선택 막대 count"<<count<<"/최대"<<maximum<<"/내용물"<<prayer.value<<'\n';
+    }
+    CHECK(!core.bookkeeping.depth && !core.destroy.PreDepth() && !core.destroy.PostDepth());
+}
+
+// 생산·발사로 생긴 세 비행체의 실제31 필드와 선택·현재 시각을 연결한다.
+TEST_CASE(CampaignSelectionBars_ActualThreeFlyerProductionTimers) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);
+    for (const auto [homeType,flyerType,index]:{std::array<std::uint32_t,3>{139,138,0},std::array<std::uint32_t,3>{143,144,1},std::array<std::uint32_t,3>{72,73,2}}) { // 세 원본 전용 생산기로 실제 부모/Form을 만든다.
+        SessionServicesFixture external;auto services=external.Services();UseWorldTestLogin(services);services.unitLost=[](Sid) {};services.formPacket=[](std::span<const std::uint8_t>) {};auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services),{1024,768});const auto cursors=BindWorldTestInput(world);auto& session=world.Session();auto core=session.Core();const auto home=session.World().Create(homeType);core.owner.Set(home,1);session.World().Pop(home,206,208,1);Sid actor{};std::uint64_t frame{};
+        for (frame=1;frame<=2000 && !actor.value;++frame) { // 준비·임시 표시·발사 단계를 입력하지 않고 자연 기한으로 기다린다.
+            session.RunFrame({frame*.025,100+frame*.025,.025,frame},false);
+            for (const auto sid:ConstructionLive(core,flyerType)) if (!(core.pool.Slot(sid)[40]&8U)) { const auto form=FindAttachedProcess(core.pool,sid,31);const auto* process=dynamic_cast<const FlyerProcess*>(core.processes.FromForm(form));if (process && Get(process->Fields().bytes,84)) { actor=sid;break; } } // 그림자나 임시 개체를 비행 프로세스로 세지 않는다.
+        }
+        CHECK(actor.value);if (!actor.value) return;--frame;world.Select(actor.value);double before{};
+        for (std::uint32_t phase=0;phase<2;++phase) { // 실제 게임1초 후에도 현재 동일 Form의 기한에서 남은 시간을 다시 계산한다.
+            if (phase) for (std::uint32_t step=0;step<40;++step) { ++frame;session.RunFrame({frame*.025,100+frame*.025,.025,frame},false); }
+            const auto form=FindAttachedProcess(core.pool,actor,31);const auto* process=dynamic_cast<const FlyerProcess*>(core.processes.FromForm(form));CHECK(process);if (!process) return;const auto& bytes=process->Fields().bytes;
+            constexpr std::array<std::size_t,3> offsets{72,104,40}; // 독립 원문498220이 읽는 세 outer 기한이다.
+            const auto end=std::bit_cast<double>(std::uint64_t(Get(bytes,offsets[index]))|(std::uint64_t(Get(bytes,offsets[index]+4))<<32));const auto left=end-core.processState.now;if (!phase) before=left;else CHECK(left<before);const auto image=DrawCampaignSelectionBars(session,assets.game,actor);const auto current=core.pool.Slot(actor);const auto hpRow=((core.types[flyerType].flags2&0x400000U) ? (current[40]&1U) : (core.types[flyerType].flags1&0x10U)) ? 1 : 0;CheckCampaignSelectionBar(image,hpRow,index==0 ? 0xd9U : index==1 ? 9U : 0x6bU,static_cast<int>(left),index==0 ? 20 : 60);
+            std::cout<<"실제 비행 선택 TYPE"<<flyerType<<"/HP막대"<<hpRow<<"/frame"<<frame<<"/기한"<<end<<"/현재"<<core.processState.now<<"/남은"<<left<<'\n';
+        }
+    }
+}
+
+// 명시 효과 적용 직후 상태에서 실제 Kernel57의 중복 목록·중첩 기한과 만료를 검사한다.
+TEST_CASE(CampaignSelectionBars_ActualStatusKernelAndExpiry) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();UseWorldTestLogin(services);auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services),{1024,768});const auto cursors=BindWorldTestInput(world);auto& session=world.Session();auto core=session.Core();const auto position=WorkshopDisplaySupport(session);const auto actor=session.World().Create(78);core.owner.Set(actor,1);session.World().Pop(actor,position[0],position[1],9);session.RunFrame({.025,100.025,.025,1},false);auto raw=core.pool.AllocatedBytes(actor);raw[40]=0;world.Select(actor.value);raw[40]|=0x30; // 원본117/118 효과 적용 직후의 명시 입력이며 효과 수신/자연 생산 완료를 주장하지 않는다.
+    BombEffectTimerHooks hooks;hooks.unpop=[&](Sid sid,std::uint32_t flags) { session.World().Unpop(sid,flags); };hooks.repop=[&](Sid sid,std::uint32_t flags) { session.World().Repop(sid,flags); };hooks.refresh=[&](Sid sid) { core.display.Update(core.pool.Slot(sid)); };hooks.fence=[](Sid) { throw std::logic_error("이 실제 상태 장면의 예상 밖 썬 바리케이드"); };
+    const std::array<std::uint32_t,2> twice{actor.value,actor.value};const std::array<std::uint32_t,1> once{actor.value};std::array<const BombEffectTimerProcess*,3> timers{};std::array<ProcessId,3> pids{};std::size_t slot{};
+    for (const auto [delay,flags]:{std::pair{6,1U},std::pair{9,3U},std::pair{8,2U}}) { // flags3의 우선순위와 각 효과의 최대 기한은 실제 현재 목록에서 얻는다.
+        auto process=std::make_unique<BombEffectTimerProcess>(core.pool,core.types,core.processState.now,delay,flags==1 ? std::span<const std::uint32_t>(twice) : std::span<const std::uint32_t>(once),flags,hooks);timers[slot]=process.get();CHECK(core.processes.Attach(std::move(process),57,actor,0x50)==timers[slot]);pids[slot]=core.kernel.Find(*timers[slot]);CHECK(pids[slot]);++slot;
+    }
+    const auto first=DrawCampaignSelectionBars(session,assets.game,actor);const auto abstractMaximum=static_cast<int>(assets.game.Types()[117-70].definition.Number("effecttime").value_or(0)),paralyzeMaximum=static_cast<int>(assets.game.Types()[118-70].definition.Number("effecttime").value_or(0));CHECK(abstractMaximum>=9 && paralyzeMaximum>=9);CheckCampaignSelectionBar(first,1,0xc3,9,abstractMaximum);CheckCampaignSelectionBar(first,2,0xfe,8,paralyzeMaximum);
+    for (std::uint32_t frame=2;frame<=401;++frame) { // 같은 Kernel에서0.025초씩 진행하고 실제 자기 삭제/공간 갱신을 실행한다.
+        session.RunFrame({frame*.025,100+frame*.025,.025,frame},false);
+        if (frame==41) { const auto image=DrawCampaignSelectionBars(session,assets.game,actor);CheckCampaignSelectionBar(image,1,0xc3,8,abstractMaximum);CheckCampaignSelectionBar(image,2,0xfe,7,paralyzeMaximum); }
+        if (frame==251) { CHECK(!(raw[40]&0x10U) && (raw[40]&0x20U));CHECK(!core.processes.IsRegistered(pids[0],timers[0]) && core.processes.IsRegistered(pids[1],timers[1]) && core.processes.IsRegistered(pids[2],timers[2])); } // 짧은 은신 효과가 먼저 끝나도 더 긴 flags3이 비트를 재적용하지 않는다.
+        if (frame==331) { CHECK(!(raw[40]&0x30U));CHECK(core.processes.IsRegistered(pids[1],timers[1]) && !core.processes.IsRegistered(pids[2],timers[2])); } // 마비 효과도 긴 flags3과 독립적으로 끝난다.
+    }
+    for (std::size_t index=0;index<timers.size();++index) CHECK(!core.processes.IsRegistered(pids[index],timers[index])); // 재사용된 번호를 다른 객체의 생존으로 오인하지 않는다.
+    CHECK(!(raw[40]&0x30U) && (raw[40]&4U) && !(raw[11]&7U));static_cast<void>(DrawCampaignSelectionBars(session,assets.game,actor));CHECK(!core.bookkeeping.depth && !core.destroy.PreDepth() && !core.destroy.PostDepth());std::cout<<"실제 상태57 세 목록/중복·최대 기한/중첩 만료 및 표시 통과\n";
+}
+
+// 저장 중 기도 상태의 입력을 복원하며 아직 미연결인605 실행 완료로 확대하지 않는다.
+TEST_CASE(CampaignSelectionBars_PriestPrayerSnapshot) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();UseWorldTestLogin(services);auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services),{1024,768});const auto cursors=BindWorldTestInput(world);auto& session=world.Session();auto core=session.Core();const Sid priest{static_cast<std::uint16_t>(session.FindPriestParticipation(1))};CHECK(priest.value);if (!priest.value) return;std::uint32_t kind{};int maximum{};
+    for (const auto& type:assets.game.Types()) if (const auto time=type.definition.Number("praytime");time && *time>0) { kind=70+static_cast<std::uint32_t>(type.block);maximum=static_cast<int>(*time);break; } // 실제 TYPE의 첫 유효 praytime을 명시 기도 입력으로 고른다.
+    CHECK(kind && maximum>0);auto raw=core.pool.AllocatedBytes(priest);const auto saved=std::vector<std::uint8_t>(raw.begin(),raw.end());Put(raw,42,kind);Put(raw,46,static_cast<std::uint32_t>(maximum/2));auto* prayer=core.processes.AddRegular(priest,0x25d,1);CHECK(prayer);if (!prayer) return;prayer->SetNextTime(core.processState.now+1000000);world.Select(priest.value);const auto image=DrawCampaignSelectionBars(session,assets.game,priest);CheckCampaignSelectionBar(image,1,0x7b,maximum-maximum/2,maximum);world.Select(0);core.processes.Kill(*prayer,0);std::copy(saved.begin(),saved.end(),raw.begin());std::cout<<"실제 사제 선택/605 기도 상태 표시 TYPE"<<kind<<"/praytime"<<maximum<<'\n';
 }

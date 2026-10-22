@@ -1,0 +1,58 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-22",
+  "uniqueInputs": 4416,
+  "normalReturns": 8832,
+  "nativeInstructions": 671656,
+  "precisionDifferentInputs": [],
+  "nativeCalls": {
+    "0041e100": 8832
+  },
+  "frame": "0041e100",
+  "constructor": "00420a40",
+  "vtable": "0050330c",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_bomb_effect_timer.py": "c6690617765925a60594ec439ce556333af58cd07de3c9ab6a0ff3dc210ea691",
+    "tools/decomp_arc_spire.py": "a476a7af621fd08e49536e427e40b3d6b4b3df47a8f514740b1633e73adc534e",
+    "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+    "tools/decomp_cursor_position.py": "e15bcdbc4c6be9c131c30f15416c945d650dba9f7dc6def404b47f63c635c212",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "cpppj/tests/fixtures/bomb-effect-timer-x86.tsv": "c10c47747f592ce756894ce5b3cd74e358467ba7572f76ba8fd6c2415cee6d6f"
+  },
+  "limitations": [
+    "41e100 전체 Frame을 실행한다. 가상48/4c/88·457890·41bf10 및 현재TYPE genus 조회는 명시 큰 경계다.",
+    "생성자 메모리 확보/벡터 복사, 네트워크 직렬화/수신 및117/118 주문 생산 전체의 완료 증거는 아니다.",
+    "손상된 DWORD SID의 주소 감김이나 임의 메모리 접근은 관측하지 않는다."
+  ],
+  "implementationSha256": {
+    "cpppj/src/o/RawBombEffectTimer.h": "e37de7520cb8485d71980a8abcf82a65609940a7b4779713454e067f8c67cfa9",
+    "cpppj/src/o/RawBombEffectTimer.cpp": "8449c508dea850709bc9b47654cd70f98758554731aa57dde6397a6c06ba34d8",
+    "cpppj/src/client/RawCampaignFactoryDisplay.cpp": "d2d13d0ce2551d25adf0d2a2a2d42e80e56baf24988e39ac3101dcd1c4dc31ca",
+    "cpppj/src/client/SpriteDraw.h": "293e0152b1f7b1c76d7c25b405c402133141bd9b80bda0367d730924accc3800",
+    "cpppj/src/client/SpriteDraw.cpp": "768da66057c3c6b385f375eba2203c35275a5fd9b2d1b18dcf266b383fae4fbe",
+    "cpppj/src/client/Renderer.h": "acf32895d26139545152359ef4b67bb100218e5ab37ef777644783a741d3da96",
+    "cpppj/src/o/RawContainedFinder.h": "22029dd6a4c4966d477967ca351caddbda0bce2277b8e2a583b413d35d40dc3d",
+    "cpppj/src/o/RawContainedFinder.cpp": "9dec9cd4d87a12739c269aec2c44201e97e221ce37f87839818f588578c3824d",
+    "cpppj/src/o/Kernel.h": "3c1bd7ac3ddcb7b60a1e7fef539633d9ca1b014d94759d2aa9a34128991e6f5b",
+    "cpppj/src/o/Kernel.cpp": "aebc153f596928d8f81cb89c824000a3486986f115505a544c6480b9e5655dc3",
+    "cpppj/src/o/SquidProcess.h": "481ad652080175ccb135c5f4981edc44e7d853584eaaebaab1a65d3873bc5399",
+    "cpppj/src/o/SquidProcess.cpp": "993e34a3c7b3b87f290a33f548a126415c3a77794a7a191801d68f405baf1780",
+    "cpppj/src/o/CMakeLists.txt": "ebca10d43829fbb266a4b6c57793771ddba34242cd8c2f0ec947bb7bd3a9582c",
+    "cpppj/tests/CMakeLists.txt": "5e0846226b62c39ac838b388b203e37b69b36c8aa1c7348f3636694ecf7271d0",
+    "cpppj/tests/BombEffectTimerTests.cpp": "520c92558ae0c25fb250fe48ddab62ed0ec01bae68a55eda7dc5392af3cb6f44",
+    "cpppj/tests/CampaignSessionTests.cpp": "1272afc6e707c386c8d2ddf8a1297fedf063ab4f649620758f7b308d970f54dc"
+  },
+  "validation": {
+    "releaseBuild": 4,
+    "warnings": 0,
+    "errors": 0,
+    "focusedTests": 5,
+    "totalTests": 2317,
+    "failedChecks": 0,
+    "ctestSeconds": 294.77,
+    "scope": "원문41e100 및 실제 Cast/비행체 생산 기한/명시 효과 상태57 만료/사제 저장 상태 표시. 전체605 및117/118 주문 수신 완료 증거가 아니다."
+  }
+}

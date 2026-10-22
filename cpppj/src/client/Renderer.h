@@ -65,6 +65,7 @@ struct RenderSprite {
     // 같은 객체 Draw 안에서 본 프레임 뒤에 순서대로 그릴 그림이다. 정렬은 객체당 한 번만 한다.
     std::vector<std::size_t> followingFrames;
     std::optional<RenderProcedure> procedure; // SHP 대신 같은 정렬 위치에서 실행할 실제 직접 그리기다. 소유자는 Draw 동안 살아 있어야 한다.
+    std::uint32_t sourceSid{}; // 원본 raw 자산 수집기의 객체 신원을 보존한다. raw 자산이 아닌 출력은0이다.
 };
 // 004a3f70의 글자 색·그림자·네 방향 외곽선 문맥. 문자열은 원본 코드 페이지 바이트다.
 struct RenderText {
