@@ -3564,6 +3564,44 @@ TEST_CASE(CampaignTest02_ActualStoredBulfSelectionAndNaturalMovement) {
     std::cout<<"TEST02 실제 기존 Bulf"<<bulf.value<<" 선택/40h/41: "<<source.x<<","<<source.y<<"→"<<destination.x<<","<<destination.y<<"/자연 프레임"<<frames<<"/회전"<<turning<<"/발소리"<<footsteps<<"/SP"<<session.Sp(1)<<'\n';
 }
 
+// 원본TEST02 작업본의 실제14자산 슬롯과 동일 Fort/시나리오를 읽은 생산 세션의 시작 상태를 비교한다.
+TEST_CASE(CampaignTest02_OriginalRuntimeStartupAssetParity) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
+    auto services=external.Services();UseWorldTestLogin(services);
+    services.ai.allocationBytes=[](std::span<std::uint8_t> bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0xa7}); };
+    services.ai.defaultName=[] { return std::string("AI"); };
+    const auto directory=std::filesystem::path(__FILE__).parent_path()/"fixtures";
+    const auto original=directory.parent_path().parent_path().parent_path()/"originals";
+    BaseFileSystem files(directory/"test02-runtime",original);files.RegisterArchive(original/"netstorm.tarc");
+    std::ifstream input(directory/"test02-runtime/d/TEST02.fort",std::ios::binary);
+    const std::vector<std::uint8_t> image{std::istreambuf_iterator<char>(input),std::istreambuf_iterator<char>()};CHECK(image.size()==2150);
+    services.missionFortImage=std::make_shared<const std::vector<std::uint8_t>>(image);
+    auto fort=FortTemplate::Parse(image,assets.game.TypeTable());
+    GameWorld world(assets.game,files,std::move(fort),MissionPlayers{},"TEST02",std::move(services),{1024,768});
+    auto& session=world.Session();auto core=session.Core();
+    ConfigInterface config([&](std::string_view path) { return assets.files.TryRead(path); });
+    config.Configuration().Assign("DataDir=\"d\"\ncurrentLanguage=\"english\"\nmissionSpec=\"{DataDir}\\{local.1}.{currentLanguage}\"\nfortSpec=\"{DataDir}\\{local.1}.fort\"\n[END]\n");
+    MissionScript script(config,"TEST02");MissionFrameGateState gate;MissionStartState state;CampaignMissionStartEffects effects;
+    effects.settingsBytes=[](std::uint32_t,std::span<std::uint8_t> bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0xa7}); };
+    effects.gameSeconds=[&] { return core.processState.now; };effects.refreshSp=[] {};effects.refreshCommandGump=[] {};effects.resetCamera=[] {};
+    effects.randomGeysers=[] { throw std::logic_error("원본TEST02 moreGeysers0에서 무작위 간헐천 도달"); };
+    RawCampaignMissionStartBindings start(session,script,gate,state,session.MissionStartSettings(),session.MissionAiSettings(),std::move(effects));
+    start.Start();session.PumpLocalConnection();CHECK(gate.started==1 && session.Sp(1)==500000);
+    world.Step(.025); // 원본 Go 뒤처럼 현재 시각의 초기 Regular를 같은 Kernel로 처리한다.
+    const auto path=(directory/"test02-original-runtime.tsv").string();std::size_t count{};
+    // 기대값은원본프로세스에서읽은type/owner/QA/좌표/HP이며검사에서결과를쓰지않는다.
+    for (const auto& row:LoadFixture(path.c_str()).rows) {
+        CHECK(row.size()==7);if (row.size()!=7) continue;const auto sid=Sid{static_cast<std::uint16_t>(Number(row[0]))};const auto raw=core.pool.Slot(sid);
+        std::array<std::uint32_t,6> actual{raw[10],raw[34],Get(raw,12,2),Get(raw,14),Get(raw,18),Get(raw,26)};
+        // 같은 원문에서 읽은 각 필드를 순서대로 비교한다.
+        for (std::size_t index=0;index<actual.size();++index) if (actual[index]!=Number(row[index+1])) {
+            std::cout<<"TEST02 원본 시작 SID"<<sid.value<<" 필드"<<index<<" C++"<<actual[index]<<" 원본"<<row[index+1]<<'\n';CHECK(false);
+        }
+        ++count;
+    }
+    CHECK(count==14);
+}
+
 // 실제40aca0의 독립909입력과 송신하지 않는 관문의 바이트 보존을 확인한다.
 TEST_CASE(CampaignDevastation_PacketLengthNative909) {
     const auto path=(std::filesystem::path(__FILE__).parent_path()/"fixtures/bomb-packet-x86.tsv").string();std::size_t rows{};

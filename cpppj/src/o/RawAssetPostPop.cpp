@@ -61,9 +61,14 @@ std::uint32_t Truncate(float value) {
 // 같은 풀의 직접 Damageable와 공통 장부를 사용해야 깊이를 한 번만 감소시킬 수 있다.
 RawAssetPostPop::RawAssetPostPop(SidPool& pool,std::span<const RiftTypeRecord> types,SquidPostPop& base,
     const RawCarrierPostPop& damageable,AssetPostPopState& state,AssetPostPopHooks hooks)
-    :pool_(pool),types_(types.begin(),types.end()),base_(base),damageable_(damageable),state_(state),hooks_(std::move(hooks)) {
+    :pool_(pool),types_(types),base_(base),damageable_(damageable),state_(state),hooks_(std::move(hooks)) {
     if (&base.Pool()!=&pool_ || &damageable.Pool()!=&pool_ || types.size()!=(pool.Edition()==OriginalEdition::Patch1078 ? 188U : 171U))
         throw std::invalid_argument("자산 postPop 풀/판본/타입 표 불일치");
+}
+// 원본004ac550처럼 호출 시점의 타입 번호와 현재 속성을 조회한다.
+const RiftTypeRecord& RawAssetPostPop::Type(Sid sid) const {
+    const auto number=pool_.Slot(sid)[10];if (number>=types_.size()) throw std::out_of_range("자산 postPop 현재 TYPE 범위 오류");
+    return types_[number];
 }
 // 전체 물리기록 크기를 확인한 뒤 같은9 Player 저장소와 현재 소유자 전역을 빌린다.
 void RawAssetPostPop::BindPlayerRecords(std::span<std::uint8_t> records,const std::uint32_t* currentLocalOwner) {
@@ -155,10 +160,10 @@ void RawAssetPostPop::Gun(Sid sid,std::uint32_t flags,std::uint32_t kind) const 
             hooks_.createGunProcess(sid);
             if (patch && state_.checkingForms) hooks_.checkForms(sid);
         }
-        if (kind==kGunSun && state_.loadingDepth && (types_.at(pool_.Slot(sid)[10]).flags1&0x1000))
+        if (kind==kGunSun && state_.loadingDepth && (Type(sid).flags1&0x1000))
             Write(pool_.AllocatedBytes(sid),word,Read(pool_.Slot(sid),12,2),patch ? 4U : 1U);
     }
-    if (kind==kGunSun && (types_.at(pool_.Slot(sid)[10]).flags1&0x1000))
+    if (kind==kGunSun && (Type(sid).flags1&0x1000))
         Write(pool_.AllocatedBytes(sid),12,Read(pool_.Slot(sid),word,patch ? 4U : 1U),2);
     damageable_.DamageablePostPop(sid,flags);
 }
@@ -188,7 +193,7 @@ void RawAssetPostPop::Geyser(Sid sid,std::uint32_t flags) const {
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
     if ((flags&1) && !(pool_.Slot(sid)[patch ? 40 : 35]&9)) {
         Add(state_.geysers,sid,false);hooks_.geyserRegistration(sid,1);
-        Write(pool_.AllocatedBytes(sid),12,Truncate(types_.at(pool_.Slot(sid)[10]).cost),2);Regular(sid,0,0.1f);
+        Write(pool_.AllocatedBytes(sid),12,Truncate(Type(sid).cost),2);Regular(sid,0,0.1f);
         const auto raw=pool_.Slot(sid);const auto neighbors=hooks_.atPosition(Position(raw,14),Position(raw,18));
         // 현재 지점에 걸린 섬 받침/종유석만 중립 프레임으로 다시 등록한다.
         for (const auto neighbor:neighbors) {

@@ -1,0 +1,808 @@
+{
+  "evidence": {
+    "host": "VM-W11-Codex",
+    "lastFullDecompileHost": "VM-W11-Codex",
+    "session": "20261022T064140479Z-a42fadb56a5e",
+    "pid": 11328,
+    "poolAddress": "0x60d2020",
+    "started": "2026-10-22T06:41:40.292Z",
+    "ended": "2026-10-22T06:42:25.418Z",
+    "frames": 643,
+    "closed": true,
+    "editorChangedSections": [
+      "Territory",
+      "Money",
+      "Deck",
+      "Terr00"
+    ],
+    "objects": [
+      {
+        "sid": 15000,
+        "type": 158,
+        "flags": 0,
+        "owner": 1,
+        "qa": 129,
+        "x": 133.0,
+        "y": 191.0,
+        "hp": 100,
+        "raw": "10f250000000070000009e0081000000054300003f4350083508640000000000000201ec0000000080000000000000000000",
+        "children": [
+          {
+            "sid": 7,
+            "raw": "982051000000000000002e0800000000983a0200000000000000000000000000000000000000000000000000000000000000",
+            "type": 46,
+            "kind": 2,
+            "flags": 0
+          }
+        ]
+      },
+      {
+        "sid": 15001,
+        "type": 135,
+        "flags": 0,
+        "owner": 1,
+        "qa": 0,
+        "x": 142.0,
+        "y": 191.0,
+        "hp": 800,
+        "raw": "503e50000000000000008700000000000e4300003f43e0083508200300000000000301ec0000000080000000000000000000",
+        "children": []
+      },
+      {
+        "sid": 15002,
+        "type": 88,
+        "flags": 0,
+        "owner": 1,
+        "qa": 0,
+        "x": 133.0,
+        "y": 186.0,
+        "hp": 4000,
+        "raw": "48915000993a08000000580000000000054300003a435008fe07a00f00000000000301ec0000000082000000000000000000",
+        "children": [
+          {
+            "sid": 8,
+            "raw": "982051000000000000002e08000000009a3a0300000000000000000000000000000000000000000000000000000000000000",
+            "type": 46,
+            "kind": 3,
+            "flags": 0
+          }
+        ]
+      },
+      {
+        "sid": 15003,
+        "type": 125,
+        "flags": 0,
+        "owner": 1,
+        "qa": 0,
+        "x": 141.0,
+        "y": 187.0,
+        "hp": 5000,
+        "raw": "189951009a3a090000007d00000000000d4300003b43d0080908881300000000000301ec0300000082000000000000000000",
+        "children": [
+          {
+            "sid": 9,
+            "raw": "982051000a00000000002e08000000009b3a0400000000000000000000000000000000000000000000000000000000000000",
+            "type": 46,
+            "kind": 4,
+            "flags": 0
+          },
+          {
+            "sid": 10,
+            "raw": "082251000000000000000608000009009b3a8500100000000000000000000000000000000000000000000000000000000000",
+            "type": 6,
+            "kind": 133,
+            "flags": 16
+          }
+        ]
+      },
+      {
+        "sid": 15004,
+        "type": 89,
+        "flags": 0,
+        "owner": 1,
+        "qa": 1,
+        "x": 137.0,
+        "y": 178.0,
+        "hp": 0,
+        "raw": "40f550009b3a0d0000005900010000000943000032439008a607000000000000000301000900000080000200000000000000",
+        "children": [
+          {
+            "sid": 13,
+            "raw": "982051000c00000000002e08000000009c3a0700000000000000000000000000000000000000000000000000000000000000",
+            "type": 46,
+            "kind": 7,
+            "flags": 0
+          },
+          {
+            "sid": 12,
+            "raw": "982051000b00000000002e0800000d009c3a0600000000000000000000000000000000000000000000000000000000000000",
+            "type": 46,
+            "kind": 6,
+            "flags": 0
+          },
+          {
+            "sid": 11,
+            "raw": "982051000000000000002e0800000c009c3a0500000000000000000000000000000000000000000000000000000000000000",
+            "type": 46,
+            "kind": 5,
+            "flags": 0
+          }
+        ]
+      },
+      {
+        "sid": 15005,
+        "type": 122,
+        "flags": 0,
+        "owner": 0,
+        "qa": 3000,
+        "x": 144.0,
+        "y": 188.0,
+        "hp": 0,
+        "raw": "88da500066650e0000007a00b80b0000104300003c4300091408000000000000000300ec0800000082000000000000000000",
+        "children": [
+          {
+            "sid": 14,
+            "raw": "982051000000000000002e08000000009d3a0800000000000000000000000000000000000000000000000000000000000000",
+            "type": 46,
+            "kind": 8,
+            "flags": 0
+          }
+        ]
+      },
+      {
+        "sid": 15006,
+        "type": 122,
+        "flags": 0,
+        "owner": 0,
+        "qa": 3000,
+        "x": 144.0,
+        "y": 185.0,
+        "hp": 0,
+        "raw": "88da50009d3a0f0000007a00b80b00001043000039430009f307000000000000000300ec0800000082000000000000000000",
+        "children": [
+          {
+            "sid": 15,
+            "raw": "982051000000000000002e08000000009e3a0900000000000000000000000000000000000000000000000000000000000000",
+            "type": 46,
+            "kind": 9,
+            "flags": 0
+          }
+        ]
+      },
+      {
+        "sid": 15007,
+        "type": 122,
+        "flags": 0,
+        "owner": 0,
+        "qa": 3000,
+        "x": 144.0,
+        "y": 182.0,
+        "hp": 0,
+        "raw": "88da50009e3a100000007a00b80b00001043000036430009d207000000000000000300ec0800000082000000000000000000",
+        "children": [
+          {
+            "sid": 16,
+            "raw": "982051000000000000002e08000000009f3a0a00000000000000000000000000000000000000000000000000000000000000",
+            "type": 46,
+            "kind": 10,
+            "flags": 0
+          }
+        ]
+      },
+      {
+        "sid": 15008,
+        "type": 85,
+        "flags": 0,
+        "owner": 1,
+        "qa": 0,
+        "x": 132.0,
+        "y": 194.0,
+        "hp": 3000,
+        "raw": "48915000cb681200000055000000000004430000424340085608b80b00000000000301ec0200000082000000000000000000",
+        "children": [
+          {
+            "sid": 18,
+            "raw": "982051001100000000002e0800000000a03a0c00000000000000000000000000000000000000000000000000000000000000",
+            "type": 46,
+            "kind": 12,
+            "flags": 0
+          },
+          {
+            "sid": 17,
+            "raw": "982051000000000000002e0800001200a03a0b00000000000000000000000000000000000000000000000000000000000000",
+            "type": 46,
+            "kind": 11,
+            "flags": 0
+          }
+        ]
+      },
+      {
+        "sid": 15009,
+        "type": 158,
+        "flags": 0,
+        "owner": 2,
+        "qa": 2,
+        "x": 43.0,
+        "y": 40.0,
+        "hp": 100,
+        "raw": "10f250000000130000009e00020000002c4200002042b002b801640000000000000202ec0000000080000000000000000000",
+        "children": [
+          {
+            "sid": 19,
+            "raw": "982051000000000000002e0800000000a13a0d00000000000000000000000000000000000000000000000000000000000000",
+            "type": 46,
+            "kind": 13,
+            "flags": 0
+          }
+        ]
+      },
+      {
+        "sid": 15010,
+        "type": 89,
+        "flags": 0,
+        "owner": 0,
+        "qa": 1,
+        "x": 52.0,
+        "y": 40.0,
+        "hp": 0,
+        "raw": "40f55000c25b160000005900010000005042000020424003b801000000000000000300000500000080000500000000000000",
+        "children": [
+          {
+            "sid": 22,
+            "raw": "982051001500000000002e0800000000a23a1000000000000000000000000000000000000000000000000000000000000000",
+            "type": 46,
+            "kind": 16,
+            "flags": 0
+          },
+          {
+            "sid": 21,
+            "raw": "982051001400000000002e0800001600a23a0f00000000000000000000000000000000000000000000000000000000000000",
+            "type": 46,
+            "kind": 15,
+            "flags": 0
+          },
+          {
+            "sid": 20,
+            "raw": "982051000000000000002e0800001500a23a0e00000000000000000000000000000000000000000000000000000000000000",
+            "type": 46,
+            "kind": 14,
+            "flags": 0
+          }
+        ]
+      },
+      {
+        "sid": 15011,
+        "type": 89,
+        "flags": 0,
+        "owner": 3,
+        "qa": 1,
+        "x": 214.0,
+        "y": 28.0,
+        "hp": 0,
+        "raw": "40f55000a25a1900000059000100000056430000e041600d3401000000000000000303001500000080000200000000000000",
+        "children": [
+          {
+            "sid": 25,
+            "raw": "982051001800000000002e0800000000a33a1300000000000000000000000000000000000000000000000000000000000000",
+            "type": 46,
+            "kind": 19,
+            "flags": 0
+          },
+          {
+            "sid": 24,
+            "raw": "982051001700000000002e0800001900a33a1200000000000000000000000000000000000000000000000000000000000000",
+            "type": 46,
+            "kind": 18,
+            "flags": 0
+          },
+          {
+            "sid": 23,
+            "raw": "982051000000000000002e0800001800a33a1100000000000000000000000000000000000000000000000000000000000000",
+            "type": 46,
+            "kind": 17,
+            "flags": 0
+          }
+        ]
+      },
+      {
+        "sid": 15012,
+        "type": 158,
+        "flags": 0,
+        "owner": 3,
+        "qa": 3,
+        "x": 219.0,
+        "y": 33.0,
+        "hp": 100,
+        "raw": "10f2500000001a0000009e00030000005b4300000442b00d6b01640000000000000203ec0000000080000000000000000000",
+        "children": [
+          {
+            "sid": 26,
+            "raw": "982051000000000000002e0800000000a43a1400000000000000000000000000000000000000000000000000000000000000",
+            "type": 46,
+            "kind": 20,
+            "flags": 0
+          }
+        ]
+      },
+      {
+        "sid": 15013,
+        "type": 124,
+        "flags": 0,
+        "owner": 3,
+        "qa": 0,
+        "x": 218.0,
+        "y": 36.0,
+        "hp": 5000,
+        "raw": "f09651000c5f1b0000007c00000000005a4300001042a00d8c01881300000000000303ec0800000082000000000000000000",
+        "children": [
+          {
+            "sid": 27,
+            "raw": "982051001c00000000002e0800000000a53a1500000000000000000000000000000000000000000000000000000000000000",
+            "type": 46,
+            "kind": 21,
+            "flags": 0
+          },
+          {
+            "sid": 28,
+            "raw": "082251007f0000000000060800001b00a53a8500100000000000000000000000000000000000000000000000000000000000",
+            "type": 6,
+            "kind": 133,
+            "flags": 16
+          },
+          {
+            "sid": 127,
+            "raw": "08225100000000000000060800001c00a53a8500100000010000000000000000000000000000000000000000000000000000",
+            "type": 6,
+            "kind": 133,
+            "flags": 16
+          }
+        ]
+      }
+    ],
+    "executedReaderSource": "# -*- coding: utf-8 -*-\n\"\"\"현재 호스트의 실행 예외로 TEST02 작업본을 열고 원본 슬롯을 읽은 뒤 세션을 닫는다.\"\"\"\nimport ctypes\nfrom ctypes import wintypes\nimport json\nfrom pathlib import Path\nimport struct\nimport sys\n\nROOT = Path(__file__).resolve().parents[2]  # 현재 저장소 루트이며 보호 원본에는 쓰지 않는다.\nsys.path.insert(0, str(ROOT / 'tools'))\nfrom analyze_test02_construct import Run\n\nWORK = Path(__file__).resolve().parent  # 실행/화면/읽은 원문은 Git 제외 작업 폴더에 보존한다.\nrun = Run(WORK)\ntry:\n    run.boot_to_battle()\n    status = run.step('status')\n    session = json.loads((run.d.session_dir / 'session.json').read_text(encoding='utf-8'))\n    kernel = ctypes.WinDLL('kernel32', use_last_error=True)\n    kernel.OpenProcess.argtypes = [wintypes.DWORD, wintypes.BOOL, wintypes.DWORD]\n    kernel.OpenProcess.restype = wintypes.HANDLE\n    kernel.ReadProcessMemory.argtypes = [wintypes.HANDLE, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_size_t, ctypes.POINTER(ctypes.c_size_t)]\n    kernel.CloseHandle.argtypes = [wintypes.HANDLE]\n    handle = kernel.OpenProcess(0x1010, False, session['processId'])\n    if not handle: raise ctypes.WinError(ctypes.get_last_error())\n    try:\n        def read(address, size):\n            \"\"\"대상 프로세스의 지정 범위를 읽기만 하며 부분 읽기는 실패로 보고한다.\"\"\"\n            buffer = ctypes.create_string_buffer(size)\n            received = ctypes.c_size_t()\n            if not kernel.ReadProcessMemory(handle, address, buffer, size, ctypes.byref(received)) or received.value != size:\n                raise ctypes.WinError(ctypes.get_last_error())\n            return buffer.raw\n\n        base = struct.unpack('<I', read(0x5c8464, 4))[0]\n        pool = read(base, 23000 * 50)\n        (WORK / 'pool.bin').write_bytes(pool)\n        found = []\n        # 실제 일반/서버 영역의 살아 있는 해당 자산만 뽑고 원문도 함께 보존한다.\n        for sid in range(5, 23000):\n            raw = pool[sid*50:(sid+1)*50]\n            if raw[10] not in (85, 88, 89, 122, 123, 124, 125, 135, 158) or raw[11] & 3: continue\n            children = []\n            child = struct.unpack_from('<H', raw, 6)[0]\n            # 현재 내용물의 실제 링크를 읽고 손상/순환이면 원문 판단을 멈춘다.\n            while child and len(children) < 64:\n                if child >= 23000 or any(item['sid'] == child for item in children): raise ValueError('invalid content chain')\n                body = pool[child*50:(child+1)*50]\n                children.append(dict(sid=child, raw=body.hex(), type=body[10], kind=struct.unpack_from('<H', body, 18)[0], flags=struct.unpack_from('<H', body, 20)[0]))\n                child = struct.unpack_from('<H', body, 4)[0]\n            found.append(dict(sid=sid, type=raw[10], flags=raw[11], owner=raw[34], qa=struct.unpack_from('<H', raw, 12)[0],\n                              x=struct.unpack_from('<f', raw, 14)[0], y=struct.unpack_from('<f', raw, 18)[0],\n                              hp=struct.unpack_from('<i', raw, 26)[0], raw=raw.hex(), children=children))\n        result = dict(session=run.d.session_id, pid=session['processId'], poolAddress=hex(base), objects=found)\n        (WORK / 'scene.json').write_text(json.dumps(result, ensure_ascii=False, indent=2)+'\\n', encoding='utf-8')\n        print(json.dumps(dict(session=run.d.session_id, objects=[{key: entry[key] for key in ('sid','type','owner','qa','x','y','hp')} for entry in found])))\n    finally:\n        kernel.CloseHandle(handle)\nfinally:\n    if run.d.session_id: run.step('end')\n    run.d.close()\n",
+    "optionsObservation": {
+      "session": "20261022T065939835Z-f4e4356d2495",
+      "pid": 3064,
+      "poolAddress": "0x60d3020",
+      "objects": [
+        {
+          "sid": 15000,
+          "type": 158,
+          "flags": 0,
+          "owner": 1,
+          "qa": 129,
+          "x": 133.0,
+          "y": 191.0,
+          "hp": 100,
+          "raw": "10f250000000070000009e0081000000054300003f4350083508640000000000000201ec0000000080000000000000000000",
+          "children": [
+            {
+              "sid": 7,
+              "raw": "982051000000000000002e0800000000983a0200000000000000000000000000000000000000000000000000000000000000",
+              "type": 46,
+              "kind": 2,
+              "flags": 0
+            }
+          ]
+        },
+        {
+          "sid": 15001,
+          "type": 135,
+          "flags": 0,
+          "owner": 1,
+          "qa": 0,
+          "x": 142.0,
+          "y": 191.0,
+          "hp": 800,
+          "raw": "503e50000000000000008700000000000e4300003f43e0083508200300000000000301ec0000000080000000000000000000",
+          "children": []
+        },
+        {
+          "sid": 15002,
+          "type": 88,
+          "flags": 0,
+          "owner": 1,
+          "qa": 0,
+          "x": 133.0,
+          "y": 186.0,
+          "hp": 4000,
+          "raw": "48915000993a08000000580000000000054300003a435008fe07a00f00000000000301ec0000000082000000000000000000",
+          "children": [
+            {
+              "sid": 8,
+              "raw": "982051000000000000002e08000000009a3a0300000000000000000000000000000000000000000000000000000000000000",
+              "type": 46,
+              "kind": 3,
+              "flags": 0
+            }
+          ]
+        },
+        {
+          "sid": 15003,
+          "type": 125,
+          "flags": 0,
+          "owner": 1,
+          "qa": 0,
+          "x": 141.0,
+          "y": 187.0,
+          "hp": 5000,
+          "raw": "189951009a3a090000007d00000000000d4300003b43d0080908881300000000000301ec0300000082000000000000000000",
+          "children": [
+            {
+              "sid": 9,
+              "raw": "982051000a00000000002e08000000009b3a0400000000000000000000000000000000000000000000000000000000000000",
+              "type": 46,
+              "kind": 4,
+              "flags": 0
+            },
+            {
+              "sid": 10,
+              "raw": "082251000000000000000608000009009b3a8500100000000000000000000000000000000000000000000000000000000000",
+              "type": 6,
+              "kind": 133,
+              "flags": 16
+            }
+          ]
+        },
+        {
+          "sid": 15004,
+          "type": 89,
+          "flags": 0,
+          "owner": 1,
+          "qa": 1,
+          "x": 137.0,
+          "y": 178.0,
+          "hp": 0,
+          "raw": "40f550009b3a0d0000005900010000000943000032439008a607000000000000000301000b00000080000400000000000000",
+          "children": [
+            {
+              "sid": 13,
+              "raw": "982051000c00000000002e08000000009c3a0700000000000000000000000000000000000000000000000000000000000000",
+              "type": 46,
+              "kind": 7,
+              "flags": 0
+            },
+            {
+              "sid": 12,
+              "raw": "982051000b00000000002e0800000d009c3a0600000000000000000000000000000000000000000000000000000000000000",
+              "type": 46,
+              "kind": 6,
+              "flags": 0
+            },
+            {
+              "sid": 11,
+              "raw": "982051000000000000002e0800000c009c3a0500000000000000000000000000000000000000000000000000000000000000",
+              "type": 46,
+              "kind": 5,
+              "flags": 0
+            }
+          ]
+        },
+        {
+          "sid": 15005,
+          "type": 122,
+          "flags": 0,
+          "owner": 0,
+          "qa": 3000,
+          "x": 144.0,
+          "y": 188.0,
+          "hp": 0,
+          "raw": "88da500066650e0000007a00b80b0000104300003c4300091408000000000000000300ec0700000082000000000000000000",
+          "children": [
+            {
+              "sid": 14,
+              "raw": "982051000000000000002e08000000009d3a0800000000000000000000000000000000000000000000000000000000000000",
+              "type": 46,
+              "kind": 8,
+              "flags": 0
+            }
+          ]
+        },
+        {
+          "sid": 15006,
+          "type": 122,
+          "flags": 0,
+          "owner": 0,
+          "qa": 3000,
+          "x": 144.0,
+          "y": 185.0,
+          "hp": 0,
+          "raw": "88da50009d3a0f0000007a00b80b00001043000039430009f307000000000000000300ec0700000082000000000000000000",
+          "children": [
+            {
+              "sid": 15,
+              "raw": "982051000000000000002e08000000009e3a0900000000000000000000000000000000000000000000000000000000000000",
+              "type": 46,
+              "kind": 9,
+              "flags": 0
+            }
+          ]
+        },
+        {
+          "sid": 15007,
+          "type": 122,
+          "flags": 0,
+          "owner": 0,
+          "qa": 3000,
+          "x": 144.0,
+          "y": 182.0,
+          "hp": 0,
+          "raw": "88da50009e3a100000007a00b80b00001043000036430009d207000000000000000300ec0700000082000000000000000000",
+          "children": [
+            {
+              "sid": 16,
+              "raw": "982051000000000000002e08000000009f3a0a00000000000000000000000000000000000000000000000000000000000000",
+              "type": 46,
+              "kind": 10,
+              "flags": 0
+            }
+          ]
+        },
+        {
+          "sid": 15008,
+          "type": 85,
+          "flags": 0,
+          "owner": 1,
+          "qa": 0,
+          "x": 132.0,
+          "y": 194.0,
+          "hp": 3000,
+          "raw": "48915000cb681200000055000000000004430000424340085608b80b00000000000301ec0200000082000000000000000000",
+          "children": [
+            {
+              "sid": 18,
+              "raw": "982051001100000000002e0800000000a03a0c00000000000000000000000000000000000000000000000000000000000000",
+              "type": 46,
+              "kind": 12,
+              "flags": 0
+            },
+            {
+              "sid": 17,
+              "raw": "982051000000000000002e0800001200a03a0b00000000000000000000000000000000000000000000000000000000000000",
+              "type": 46,
+              "kind": 11,
+              "flags": 0
+            }
+          ]
+        },
+        {
+          "sid": 15009,
+          "type": 158,
+          "flags": 0,
+          "owner": 2,
+          "qa": 2,
+          "x": 43.0,
+          "y": 40.0,
+          "hp": 100,
+          "raw": "10f250000000130000009e00020000002c4200002042b002b801640000000000000202ec0000000080000000000000000000",
+          "children": [
+            {
+              "sid": 19,
+              "raw": "982051000000000000002e0800000000a13a0d00000000000000000000000000000000000000000000000000000000000000",
+              "type": 46,
+              "kind": 13,
+              "flags": 0
+            }
+          ]
+        },
+        {
+          "sid": 15010,
+          "type": 89,
+          "flags": 0,
+          "owner": 0,
+          "qa": 1,
+          "x": 52.0,
+          "y": 40.0,
+          "hp": 0,
+          "raw": "40f55000c25b160000005900010000005042000020424003b801000000000000000300000100000080000100000000000000",
+          "children": [
+            {
+              "sid": 22,
+              "raw": "982051001500000000002e0800000000a23a1000000000000000000000000000000000000000000000000000000000000000",
+              "type": 46,
+              "kind": 16,
+              "flags": 0
+            },
+            {
+              "sid": 21,
+              "raw": "982051001400000000002e0800001600a23a0f00000000000000000000000000000000000000000000000000000000000000",
+              "type": 46,
+              "kind": 15,
+              "flags": 0
+            },
+            {
+              "sid": 20,
+              "raw": "982051000000000000002e0800001500a23a0e00000000000000000000000000000000000000000000000000000000000000",
+              "type": 46,
+              "kind": 14,
+              "flags": 0
+            }
+          ]
+        },
+        {
+          "sid": 15011,
+          "type": 89,
+          "flags": 0,
+          "owner": 3,
+          "qa": 1,
+          "x": 214.0,
+          "y": 28.0,
+          "hp": 0,
+          "raw": "40f55000a25a1900000059000100000056430000e041600d3401000000000000000303001500000080000200000000000000",
+          "children": [
+            {
+              "sid": 25,
+              "raw": "982051001800000000002e0800000000a33a1300000000000000000000000000000000000000000000000000000000000000",
+              "type": 46,
+              "kind": 19,
+              "flags": 0
+            },
+            {
+              "sid": 24,
+              "raw": "982051001700000000002e0800001900a33a1200000000000000000000000000000000000000000000000000000000000000",
+              "type": 46,
+              "kind": 18,
+              "flags": 0
+            },
+            {
+              "sid": 23,
+              "raw": "982051000000000000002e0800001800a33a1100000000000000000000000000000000000000000000000000000000000000",
+              "type": 46,
+              "kind": 17,
+              "flags": 0
+            }
+          ]
+        },
+        {
+          "sid": 15012,
+          "type": 158,
+          "flags": 0,
+          "owner": 3,
+          "qa": 3,
+          "x": 219.0,
+          "y": 33.0,
+          "hp": 100,
+          "raw": "10f2500000001a0000009e00030000005b4300000442b00d6b01640000000000000203ec0000000080000000000000000000",
+          "children": [
+            {
+              "sid": 26,
+              "raw": "982051000000000000002e0800000000a43a1400000000000000000000000000000000000000000000000000000000000000",
+              "type": 46,
+              "kind": 20,
+              "flags": 0
+            }
+          ]
+        },
+        {
+          "sid": 15013,
+          "type": 124,
+          "flags": 0,
+          "owner": 3,
+          "qa": 0,
+          "x": 218.0,
+          "y": 36.0,
+          "hp": 5000,
+          "raw": "f09651000c5f1b0000007c00000000005a4300001042a00d8c01881300000000000303ec0800000082000000000000000000",
+          "children": [
+            {
+              "sid": 27,
+              "raw": "982051001c00000000002e0800000000a53a1500000000000000000000000000000000000000000000000000000000000000",
+              "type": 46,
+              "kind": 21,
+              "flags": 0
+            },
+            {
+              "sid": 28,
+              "raw": "082251007f0000000000060800001b00a53a8500100000000000000000000000000000000000000000000000000000000000",
+              "type": 6,
+              "kind": 133,
+              "flags": 16
+            },
+            {
+              "sid": 127,
+              "raw": "08225100000000000000060800001c00a53a8500100000010000000000000000000000000000000000000000000000000000",
+              "type": 6,
+              "kind": 133,
+              "flags": 16
+            }
+          ]
+        }
+      ],
+      "options": "000202000300020101000001000101020201020200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010203040506070000000000000000",
+      "type122": "00000000676579736572000000000000000000000000000053746f726d204765797365720000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000020410000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000030000000a00000000000000000000000000536f75726365206f662053746f726d20506f776572000000000000803b450000000000000000000000000000000000000000b0309705000000000000000002040400100000106765797365720000000000000000000000000000ecffffff00000000ecffffff000000003300000031000000ffffffff32000000687e970231000000030000000000000031000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff32000000310000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000000000a0574800030000000300000003000000020000000000000000000000ffffffff00000000",
+      "modes": {
+        "0x594fb8": 0,
+        "0x594fbc": 1,
+        "0x594fa4": 1,
+        "0x5c85a4": 0,
+        "0x540c70": 1
+      }
+    },
+    "optionsClosed": true,
+    "executedOptionsReaderSource": "# -*- coding: utf-8 -*-\n\"\"\"현재 호스트의 실행 예외로 TEST02 작업본을 열고 원본 슬롯을 읽은 뒤 세션을 닫는다.\"\"\"\nimport ctypes\nfrom ctypes import wintypes\nimport json\nfrom pathlib import Path\nimport struct\nimport sys\n\nROOT = Path(__file__).resolve().parents[2]  # 현재 저장소 루트이며 보호 원본에는 쓰지 않는다.\nsys.path.insert(0, str(ROOT / 'tools'))\nfrom analyze_test02_construct import Run\n\nWORK = Path(__file__).resolve().parent  # 실행/화면/읽은 원문은 Git 제외 작업 폴더에 보존한다.\nrun = Run(WORK)\ntry:\n    run.boot_to_battle()\n    status = run.step('status')\n    session = json.loads((run.d.session_dir / 'session.json').read_text(encoding='utf-8'))\n    kernel = ctypes.WinDLL('kernel32', use_last_error=True)\n    kernel.OpenProcess.argtypes = [wintypes.DWORD, wintypes.BOOL, wintypes.DWORD]\n    kernel.OpenProcess.restype = wintypes.HANDLE\n    kernel.ReadProcessMemory.argtypes = [wintypes.HANDLE, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_size_t, ctypes.POINTER(ctypes.c_size_t)]\n    kernel.CloseHandle.argtypes = [wintypes.HANDLE]\n    handle = kernel.OpenProcess(0x1010, False, session['processId'])\n    if not handle: raise ctypes.WinError(ctypes.get_last_error())\n    try:\n        def read(address, size):\n            \"\"\"대상 프로세스의 지정 범위를 읽기만 하며 부분 읽기는 실패로 보고한다.\"\"\"\n            buffer = ctypes.create_string_buffer(size)\n            received = ctypes.c_size_t()\n            if not kernel.ReadProcessMemory(handle, address, buffer, size, ctypes.byref(received)) or received.value != size:\n                raise ctypes.WinError(ctypes.get_last_error())\n            return buffer.raw\n\n        base = struct.unpack('<I', read(0x5c8464, 4))[0]\n        pool = read(base, 23000 * 50)\n        (WORK / 'pool.bin').write_bytes(pool)\n        found = []\n        # 실제 일반/서버 영역의 살아 있는 해당 자산만 뽑고 원문도 함께 보존한다.\n        for sid in range(5, 23000):\n            raw = pool[sid*50:(sid+1)*50]\n            if raw[10] not in (85, 88, 89, 122, 123, 124, 125, 135, 158) or raw[11] & 3: continue\n            children = []\n            child = struct.unpack_from('<H', raw, 6)[0]\n            # 현재 내용물의 실제 링크를 읽고 손상/순환이면 원문 판단을 멈춘다.\n            while child and len(children) < 64:\n                if child >= 23000 or any(item['sid'] == child for item in children): raise ValueError('invalid content chain')\n                body = pool[child*50:(child+1)*50]\n                children.append(dict(sid=child, raw=body.hex(), type=body[10], kind=struct.unpack_from('<H', body, 18)[0], flags=struct.unpack_from('<H', body, 20)[0]))\n                child = struct.unpack_from('<H', body, 4)[0]\n            found.append(dict(sid=sid, type=raw[10], flags=raw[11], owner=raw[34], qa=struct.unpack_from('<H', raw, 12)[0],\n                              x=struct.unpack_from('<f', raw, 14)[0], y=struct.unpack_from('<f', raw, 18)[0],\n                              hp=struct.unpack_from('<i', raw, 26)[0], raw=raw.hex(), children=children))\n        # 전투 옵션과 현재 TYPE 및 모드도 읽기만 하여 수량 차이의 입력을 확인한다.\n        types = struct.unpack('<I', read(0x59ab20, 4))[0]\n        options = read(0x52f7e0, 87)\n        type122 = read(types + 122 * 500, 500)\n        modes = {hex(address): struct.unpack('<I', read(address, 4))[0]\n                 for address in (0x594fb8, 0x594fbc, 0x594fa4, 0x5c85a4, 0x540c70)}\n        result = dict(session=run.d.session_id, pid=session['processId'], poolAddress=hex(base), objects=found,\n                      options=options.hex(), type122=type122.hex(), modes=modes)\n        (WORK / 'scene.json').write_text(json.dumps(result, ensure_ascii=False, indent=2)+'\\n', encoding='utf-8')\n        print(json.dumps(dict(session=run.d.session_id, objects=[{key: entry[key] for key in ('sid','type','owner','qa','x','y','hp')} for entry in found])))\n    finally:\n        kernel.CloseHandle(handle)\nfinally:\n    if run.d.session_id: run.step('end')\n    run.d.close()\n",
+    "hashes": {
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "originals/d/TEST02.fort": "f785543d3b907fb3d09d568b740a21a8402a87e110f1469e873fc09f44858d6d",
+      "originals/d/TEST02.english": "03b41d7b2d9718d70fc7e29e14cec4e3779f77e95f7ea99722f83049c7052260",
+      "cpppj/tests/fixtures/test02-runtime/d/TEST02.fort": "eb8570b93bb73d9375fae59c97b192bd16702a0cf2cb58a84fe03ef496989963",
+      "cpppj/tests/fixtures/test02-original-runtime.tsv": "644947e8895075bcefa24bd94e3334c3110a0724731e193f4523e941bc6612a1",
+      "extracted/test02-live-20261022/read_scene.py": "54bd6ed87f972868e1c5148ca8c09a71c1247ff71d64c9f4bb0146a3b8afb5b1",
+      "extracted/test02-live-20261022/scene.json": "7ca2ad6cf052ebab1ff5a6a8f3590d2d59b2f25c55633a7b926a7f13de3eb4f5",
+      "extracted/test02-live-20261022/pool.bin": "b97f0022287c806b7aeffd4d40c1bab5a3ff939686754c554596848b318a62b3",
+      "extracted/test02-live-20261022/actions.jsonl": "e249472556926c96a3d8947ae23e1c4a4be83cb9901f38043b94841e3d7a83bb",
+      "extracted/test02-options-20261022/read_scene.py": "da40b45a1fd380d7fa1969d57b9cce7f472aa499cb1aadda7e0b2b0786874c8a",
+      "extracted/test02-options-20261022/scene.json": "fcfe31f19b08468b466cfc3fed455a149e826704bb30aa156168057e3b6ac949",
+      "extracted/test02-options-20261022/pool.bin": "15682485139fededc9dc902f3aea8eab7853d36afd5c6d25d5d6b9a4469cae3f",
+      "extracted/test02-options-20261022/actions.jsonl": "31b632d496ea096d51a33e930781c41d67fb77700eee8d0340fe9f658ab2a89c",
+      "extracted/analyzeManager/20261022T065939835Z-f4e4356d2495/session.json": "2a52f9e142e7e60dd15373e0c2cbfc80b12284beae041fa3076162752065034d",
+      "extracted/analyzeManager/20261022T064140479Z-a42fadb56a5e/session.json": "90cb9d8061c6acf68389bd7b79d8155f030fdea6d2b0677dff2bf9db4beba44e",
+      "tools/analyze_test02_runtime.py": "055d5e96c547924d6fe6d9b73ad8a2d8c0754bc742826cbf1f6b64080e362ddc",
+      "cpppj/tests/CampaignSessionTests.cpp": "f3b3c0f7aed595e81e7c3ccf6f4d02fd47d4d45c3f0980807c19e4fe34bb357d",
+      "cpppj/src/o/RawAssetPostPop.h": "eca47e52ed51aa0c2bde265f01b60ef6bf85de2cb64f6731853e7ded0e429f32",
+      "cpppj/src/o/RawAssetPostPop.cpp": "a93f79aa8b23983fad4b8322f92a0cf94aabb8dde096e2be192bcdaa3742bf11",
+      "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+      "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646"
+    }
+  },
+  "validation": {
+    "build": {
+      "exit": 0,
+      "warnings": 0,
+      "errors": 0,
+      "log": "extracted/cpp-test02-runtime-20261022-build5.log"
+    },
+    "focused": [
+      {
+        "filter": "CampaignTest02",
+        "tests": 2,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "AssetPostPop",
+        "tests": 9,
+        "failedChecks": 0,
+        "exit": 0
+      }
+    ],
+    "full": {
+      "tests": 2265,
+      "failedChecks": 0,
+      "exit": 0,
+      "seconds": 169.76,
+      "ctestSeconds": 169.79
+    },
+    "initialFailures": [
+      {
+        "log": "tests1",
+        "failedChecks": 26,
+        "cause": "로그인 재읽기가 관찰 작업본 대신 보호 원문을 읽던 검사 입력 문제"
+      },
+      {
+        "log": "tests2",
+        "failedChecks": 7,
+        "cause": "초기 Regular 미실행 시점 차이와 오래된 TYPE 사본"
+      },
+      {
+        "log": "tests3",
+        "failedChecks": 3,
+        "cause": "전투 옵션 적용 전의 오래된 TYPE 사본"
+      }
+    ]
+  },
+  "validationHashes": {
+    "extracted/cpp-test02-runtime-20261022-asset-final.log": "c9f2e83d6526f6002aa701ad91ee1a0694c073d1b729b4edcf0d90eb262ccbb0",
+    "extracted/cpp-test02-runtime-20261022-build1.log": "505042d902c9f875654d7c50fc9cd1e436e1f7f05e5ade57b9e6136557cf65c9",
+    "extracted/cpp-test02-runtime-20261022-build2.log": "a83eac7f143b10aa4d29a488ff0d60fba79debdd31a8a23a7160cfa280f2119e",
+    "extracted/cpp-test02-runtime-20261022-build3.log": "a83eac7f143b10aa4d29a488ff0d60fba79debdd31a8a23a7160cfa280f2119e",
+    "extracted/cpp-test02-runtime-20261022-build4.log": "a83eac7f143b10aa4d29a488ff0d60fba79debdd31a8a23a7160cfa280f2119e",
+    "extracted/cpp-test02-runtime-20261022-build5.log": "9b8cc1ddf2c1b307cc980fe3209b1de18243dbb24209cdf99cae5695e77bcf14",
+    "extracted/cpp-test02-runtime-20261022-ctest.log": "12fb01825df813c9b6e628c20f03a57ca8a010b94ced3565e3e307c8713b2dd9",
+    "extracted/cpp-test02-runtime-20261022-lasttest.log": "294494c69c1a2dbcfa4a210eb537a30070cf2374c44f3eea5ea4b5f72a002570",
+    "extracted/cpp-test02-runtime-20261022-test02-final.log": "8bfd973158ee1f3df8a7b157f8e4bc91b23f4778a2d1eee3e28df0e6e3d64230",
+    "extracted/cpp-test02-runtime-20261022-tests1.log": "7af9bf7d543af0f15c06b4183cbce9727e8184cf0624235cd3fbfff4b4cf3ff4",
+    "extracted/cpp-test02-runtime-20261022-tests2.log": "8b3e219ba1909a919b7ca2b5f317da41dcc92f19d4fc10b5d03265988814b23f",
+    "extracted/cpp-test02-runtime-20261022-tests3.log": "6ef6edc7dd1fefc08cf39e92c6d22c65e76ad43eacb01159827aef349ac4e399"
+  }
+}
