@@ -24,6 +24,7 @@ struct RawCampaignPathEffects {
     std::function<void(float,float)> balloonFlame; //현재 위치의 실제 balloonFlame.wav/loop0 장치다.
     std::function<std::int32_t(std::int32_t,std::int32_t)> bulfRandom; // 같은 게임의 반열린004558f0 범위를 소비한다.
     std::function<void(float,float,std::string_view)> bulfSound; // 원본41이 고른 파일/좌표의 실제 위치 음향이다.
+    std::function<std::uint32_t(o::Sid)> crabHalt; //156의42ab80은 공유 포획 counter와 원본 CarrierSteal.Halt를 호출한다.
     std::function<std::uint32_t(o::Sid)> dudeHalt; //70/508cc8 부모+38의 현재 지면·Fall 판정이다.
     std::function<std::uint32_t(o::Sid)> dudeArrival; //같은 부모+3c의 task별 실제 삭제·반환이다. 자신과 Path를 지울 수 있다.
 };

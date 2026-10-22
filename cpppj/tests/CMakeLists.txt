@@ -1805,3 +1805,6 @@ set_source_files_properties(CloudFloaterTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_CLOUD_FLOATER_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/cloud-floater-x86.tsv\"")
 set_source_files_properties(DataManagerFileSaveTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_DATAMANAGER_FILE_SAVE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/datamanager-file-save-x86.tsv\"")
+
+# Walker38의 실제 전체 프레임과 자기 삭제 경계를 검증한다.
+target_sources(netstorm_tests PRIVATE WalkerPathTests.cpp)

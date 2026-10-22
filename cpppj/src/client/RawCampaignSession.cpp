@@ -2064,9 +2064,9 @@ struct RawCampaignSession::Impl {
     CarrierPathResult StartMotion(RawPathStartRequest request) {
         if (!motion) throw std::logic_error("현재 이동 설치 전 경로 시작");const auto kind=core.pool.Slot(request.parent)[10];RawPathProcess* path{};
         if (kind==priestState.movement.priest) path=motion->Paths().StartPriest(request);
-        else if (kind==133 || kind==111 || kind==141 || kind==146 || kind==135) path=motion->Paths().StartCarrier(request);
+        else if (kind==133 || kind==111 || kind==141 || kind==146 || kind==135 || kind==137 || kind==156) path=motion->Paths().StartCarrier(request);
         else if (kind==priestState.movement.teleport || kind==priestState.movement.manaBolt) path=motion->Paths().StartConstruction(request);
-        else throw std::logic_error("다른 실제 운반 경로38 미복원 경계");return reinterpret_cast<CarrierPathResult>(path);
+        else throw std::logic_error("다른 실제 운반 경로 미복원 경계");return reinterpret_cast<CarrierPathResult>(path);
     }
     // 첫 실제 객체 이전에 같은 공통 삭제/내용물/Player 통지/기술 모듈을 한 번 연결한다.
     void InstallContents(const SquidDestroyHooks& deletion) {
@@ -2539,6 +2539,7 @@ struct RawCampaignSession::Impl {
             const auto speed=kind==70 ? dudeSpeeds[kind].speed : static_cast<float>(definition.Number("speed").value());
             return RawPathStartType{speed,static_cast<float>(definition.Number("turningSpeed").value()),definition.specialFrames.defaultFrame};
         };
+        effects.path.crabHalt=[this](Sid sid) { return carrierSteal->Halt(sid); }; // 공통 Halt로 우회하지 않고42ab80을 보존한다.
         effects.path.dudeHalt=[this](Sid sid) { return dudeBehavior->Halt(sid); };
         effects.path.dudeArrival=[this](Sid sid) { return dudeBehavior->Arrival(sid); };
         effects.path.soundId=[this](Sid sid) {

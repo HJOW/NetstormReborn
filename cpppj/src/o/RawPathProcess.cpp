@@ -4,6 +4,7 @@
 #include "o/RawProcessRemoval.h"
 #include "o/RawBalloonFrame.h"
 #include "o/RawBulfFrame.h"
+#include "o/RawWalkerFrame.h"
 #include <algorithm>
 #include <bit>
 #include <cmath>
@@ -34,8 +35,8 @@ int Cell(float value,bool biased) {
 // 필수 하위 가상 효과를 확인한다. 아직 없는 실제 BFS는 Init에서만 명시적으로 진단한다.
 RawPathProcess::RawPathProcess(SidPool& pool,const SquidHash& hash,std::span<const RiftTypeRecord> types,
     std::span<const RiftTypeFrames> frames,std::span<const SquidDisplayShape> shapes,std::span<const std::uint8_t> spots,
-    RawPathProcessState& state,RawPathProcessHooks hooks,bool priest,bool flying,bool worm,bool balloon,bool dude,bool bulf)
-    :pool_(pool),hash_(hash),types_(types),frames_(frames),shapes_(shapes),spots_(spots),state_(state),hooks_(std::move(hooks)),priest_(priest),flying_(flying),worm_(worm),balloon_(balloon),dude_(dude),bulf_(bulf),runtime_(pool.Edition(),priest,0,flying,worm,balloon,dude,bulf) {
+    RawPathProcessState& state,RawPathProcessHooks hooks,bool priest,bool flying,bool worm,bool balloon,bool dude,bool bulf,bool walker)
+    :pool_(pool),hash_(hash),types_(types),frames_(frames),shapes_(shapes),spots_(spots),state_(state),hooks_(std::move(hooks)),priest_(priest),flying_(flying),worm_(worm),balloon_(balloon),dude_(dude),walker_(walker),bulf_(bulf),runtime_(pool.Edition(),priest,0,flying,worm,balloon,dude,bulf,walker) {
     if (types.size()!=frames.size() || types.size()!=shapes.size() || spots.size()!=65536 || !hooks_.unpop || !hooks_.repop || !hooks_.pop || !hooks_.halt || !hooks_.arrival || !hooks_.soundId || !hooks_.stepSound || !hooks_.clearBlocked || !hooks_.cleanup)
         throw std::invalid_argument("경로 월드 연결 누락");
 }
@@ -49,11 +50,11 @@ RawPathProcess* RawPathProcess::Attach(SquidProcessHost& host,std::unique_ptr<Ra
     if (process->worm_) { const auto kind=process->pool_.Slot(parent)[10];if (kind!=process->state_.sunWalkerType && kind!=process->state_.emptyType) throw std::invalid_argument("웜40의 실제 sunWalker/empty 부착 검사"); }
     const auto type=process->MovementType();
     // 실제48af50은 새 비행 프로세스를 부착하기 전에 기존39를 모두 제거한다.
-    if (process->flying_ || process->balloon_) RemoveAttachedProcesses(host,parent,type);
+    if (process->flying_ || process->balloon_ || process->walker_) RemoveAttachedProcesses(host,parent,type);
     return static_cast<RawPathProcess*>(host.Attach(std::move(process),type,parent,flags,form));
 }
 // 서로 다른 실제 가상 표의 종류를 번호만으로 대체하지 않는다.
-std::uint32_t RawPathProcess::MovementType() const { return bulf_ ? state_.bulfProcess : dude_ ? state_.dudeProcess : balloon_ ? state_.balloonProcess : worm_ ? state_.wormProcess : flying_ ? state_.flyProcess : priest_ ? state_.priestProcess : state_.teleportProcess; }
+std::uint32_t RawPathProcess::MovementType() const { return walker_ ? state_.walkerProcess : bulf_ ? state_.bulfProcess : dude_ ? state_.dudeProcess : balloon_ ? state_.balloonProcess : worm_ ? state_.wormProcess : flying_ ? state_.flyProcess : priest_ ? state_.priestProcess : state_.teleportProcess; }
 // +0x14 원본 base 통지는 빈 몸체이며 현재 이미지의 번호만 같은 base 필드에 기록한다.
 void RawPathProcess::OnAttached() { runtime_.SetAttachment(Form(),Parent()); }
 // 같은 풀의 raw 좌표다.
@@ -73,7 +74,7 @@ void RawPathProcess::InitializePath(Sid parent,RawPathPoint destination,RawPathP
     if (!RawPathSurfaceAt(hash_,start).value) return;
     if (!hooks_.search) throw std::logic_error("실제 Path BFS 미복원 경계");
     if ((pool_.Slot(parent)[11]&4)!=0) hooks_.pop(parent,start,0);
-    hooks_.search(runtime_,parent,start,destination,bulf_ ? 1U : flags);runtime_.ResetCurrent();
+    hooks_.search(runtime_,parent,start,destination,(bulf_ || walker_) ? 1U : flags);runtime_.ResetCurrent();
 }
 // 외부 타입 속도는 mutable 원본 속성을 매 호출에서 읽어 공급해야 한다.
 void RawPathProcess::Prepare(float speedOverride,float speed,float turningSpeed) {
@@ -127,6 +128,15 @@ bool RawPathProcess::Blocked(RawPathPoint point) const {
 // type54은 사망/HP 이동 불가가 아니라 원본 Regular0x5105 존재를 먼저 검사한다.
 void RawPathProcess::RunFrame() {
     if (!Host()) throw std::logic_error("미부착 경로 RunFrame");
+    if (walker_) {
+        const auto parent=Parent();const auto watch=alive_; // 같은 실제 경로 수명만 관찰한다.
+        RunWalkerFrame(pool_,parent,runtime_,state_.clock.now,frames_,state_.windWalkerType,state_.rainWalkerType,state_.windWalkerCounter,
+            {[this,parent] { return (types_[pool_.Slot(parent)[10]].flags2&0x10000U) && Host()->FindEvent(parent,0x5105); },
+             [this] { return Halt(); },
+             [this,parent] { return runtime_.Step(state_.clock.now,Position(parent),state_.observation,[this,parent] { const auto point=Position(parent);hooks_.stepSound(parent,point.x,point.y,hooks_.soundId(parent)); },hooks_.observationStamp ? hooks_.observationStamp() : 0); },
+             [this](RawPathPoint point) { return GroundStop(point); },[this] { Arrive(); },hooks_.unpop,hooks_.pop},watch);
+        return;
+    }
     if (bulf_) {
         const auto parent=Parent();const auto watch=alive_; // 같은 실제 부모/경로의 수명을 효과 뒤 확인한다.
         RunBulfFrame(pool_,parent,runtime_,frames_,shapes_,

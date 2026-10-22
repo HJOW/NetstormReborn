@@ -80,6 +80,7 @@ target_sources(netstorm PRIVATE
     RawPathRuntime.cpp RawPathRuntime.h
     RawPathProcess.cpp RawPathProcess.h
     RawBulfFrame.cpp RawBulfFrame.h
+    RawWalkerFrame.cpp RawWalkerFrame.h
     RawPathSearch.cpp RawPathSearch.h
     RawFactoryPostPop.cpp RawFactoryPostPop.h
     RawMetadisplayDirty.cpp RawMetadisplayDirty.h

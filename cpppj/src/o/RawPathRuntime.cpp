@@ -28,7 +28,7 @@ RawPathLayout RawPathRuntime::Layout(OriginalEdition edition) {
     return {600,0x2f28,0x12d8,0x2598,0x2ef8,0x2f00,0x2f04,0x2f08,0x2f0c,0x2f10,0x2f14,0x2f24,0x503d28,0x503d60,0x503eb0};
 }
 // 미초기화 heap 입력을 보존하면서 실제 원본 생성자에서 쓰는 부분만 지운다.
-RawPathRuntime::RawPathRuntime(OriginalEdition edition,bool priest,std::uint8_t heapFill,bool flying,bool worm,bool balloon,bool dude,bool bulf)
+RawPathRuntime::RawPathRuntime(OriginalEdition edition,bool priest,std::uint8_t heapFill,bool flying,bool worm,bool balloon,bool dude,bool bulf,bool walker)
     :edition_(edition),layout_(Layout(edition)),bytes_(layout_.size,heapFill) {
     Write(0,priest ? layout_.priestVtable : layout_.teleportVtable);Write(4,0);Write(8,0);Write(0x10,0);
     if (flying) { if (edition!=OriginalEdition::Patch1078 || priest) throw std::invalid_argument("실제 fly39 생성자 판본/종류 오류");Write(0,0x50e2ec); }
@@ -36,6 +36,7 @@ RawPathRuntime::RawPathRuntime(OriginalEdition edition,bool priest,std::uint8_t 
     if (balloon) { if (edition!=OriginalEdition::Patch1078 || priest || flying || worm) throw std::invalid_argument("실제 벌룬42 생성자 판본/종류 오류");Write(0,0x50e2b8); }
     if (dude) { if (edition!=OriginalEdition::Patch1078 || priest || flying || worm || balloon) throw std::invalid_argument("실제 Dude24 생성자 판본/종류 오류");Write(0,0x50e3d8); }
     if (bulf) { if (edition!=OriginalEdition::Patch1078 || priest || flying || worm || balloon || dude) throw std::invalid_argument("실제 Bulf41 생성자 판본/종류 오류");Write(0,0x50e354); }
+    if (walker) { if (edition!=OriginalEdition::Patch1078 || priest || flying || worm || balloon || dude || bulf) throw std::invalid_argument("실제 Walker38 생성자 판본/종류 오류");Write(0,0x50e320); }
     // 원본 두 생성자 모두 시각 배열 전체만 0으로 만들고 꼭짓점/방향 배열은 보존한다.
     for (std::size_t i=0;i<layout_.capacity;++i) Write(layout_.times+i*8,0,8);
     Write(layout_.nextFrame,0,8);

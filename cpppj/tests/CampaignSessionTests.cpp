@@ -3697,3 +3697,79 @@ TEST_CASE(CampaignWindFlyer_ActualTest02NaturalProductionAndLifetime) {
     CHECK(!core.bookkeeping.depth && !core.destroy.PreDepth() && !core.destroy.PostDepth());
     std::cout<<"TEST02 실제 데빌메이커"<<home.value<<"/더스트 데빌"<<body.value<<"/표시"<<born<<"/비행"<<flying<<"/삭제"<<dead<<"/그림"<<animation.size()<<'\n';
 }
+
+// 실제 원본 지형에서 두 새 유닛의 UI 선택/40h/38/자연 도착과 부모 삭제를 확인한다.
+TEST_CASE(CampaignWalkerPath_ActualSelectionAndNaturalMovement) {
+    // 두 부모는 같은 경로38을 쓰되 서로 다른 애니메이션/포획 Halt를 실행한다.
+    for (const auto type:{137U,156U}) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
+    auto services=external.Services();UseWorldTestLogin(services);// 실제 로컬40h 명령을 사용한다.
+    std::vector<Sid> losses;services.unitLost=[&](Sid sid) { losses.push_back(sid); }; // 삭제가 요청한 실제 UI 통지를 관찰한다.
+    services.production.allocationBytes=[](std::span<std::uint8_t> bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0xa7}); };
+    services.production.effects.configInt=[](std::string_view) { return 0; };
+    services.production.effects.modeAssertion=[] { throw std::logic_error("Walker 실제 생산모드 진단"); };
+    services.ai.allocationBytes=[](std::span<std::uint8_t> bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0xa7}); };
+    services.ai.defaultName=[] { return std::string("AI"); };
+    ConfigInterface config([&](std::string_view path) { return assets.files.TryRead(path); });
+    config.Configuration().Assign("DataDir=\"d\"\ncurrentLanguage=\"english\"\nmissionSpec=\"{DataDir}\\{local.1}.{currentLanguage}\"\nfortSpec=\"{DataDir}\\{local.1}.fort\"\n[END]\n");
+    MissionScript script(config,"TEST02");CHECK(script.Loaded() && script.MissionType()=="Tutorial");
+    auto fort=FortTemplate::Parse(assets.files.Read(script.FortPath()),assets.game.TypeTable());
+    GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},script.FortName(),std::move(services),{1024,768});
+    auto& session=world.Session();auto core=session.Core();CHECK(session.LocalConnectionPhase()==14);
+    const auto cursors=BindWorldTestInput(world);MissionFrameGateState gate;MissionStartState state;CampaignMissionStartEffects effects;
+    effects.settingsBytes=[](std::uint32_t,std::span<std::uint8_t> bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0xa7}); };
+    effects.gameSeconds=[&] { return core.processState.now; };effects.refreshSp=[] {};effects.refreshCommandGump=[] {};effects.resetCamera=[] {};
+    effects.randomGeysers=[] { throw std::logic_error("TEST02 moreGeysers0에서 무작위 간헐천 도달"); };
+    RawCampaignMissionStartBindings start(session,script,gate,state,session.MissionStartSettings(),session.MissionAiSettings(),std::move(effects));
+    start.Start();session.PumpLocalConnection();CHECK(gate.started==1 && session.Sp(1)==500000 && session.Sp(2)==0 && session.Sp(3)==0);
+    Sid anchor{};
+    // 저장된 Bulf의 실제 섬 좌표를 입력으로만 빌리고 지형/다리는 바꾸지 않는다.
+    for (const auto& object:session.World().Objects()) if (object.object.type==135 && object.object.owner==1) anchor=object.sid;
+    CHECK(anchor.value);if (!anchor.value) return;
+    const auto anchorRaw=core.pool.Slot(anchor);const RawPathPoint source{std::bit_cast<float>(Get(anchorRaw,14)),std::bit_cast<float>(Get(anchorRaw,18))};
+    const auto walker=session.World().Create(type,2);core.owner.Set(walker,1);session.World().Pop(walker,source.x,source.y,0);
+    const auto raw=core.pool.Slot(walker);CHECK(Get(raw,0)==(type==137 ? 0x503d80U : 0x503f20U) && session.Priests().MovementProcessType(type)==38);
+    world.SetMousePoint(world.ToScreen(source.x,source.y));world.Select(walker.value);CHECK(world.InputMode()==5 && world.HighlightSettings().selectedSid==walker.value);
+    RawPathPoint destination{};bool found{};std::optional<ScreenPoint> target;
+    // 같은 실제 본섬의 충분히 떨어진 빈 칸만 골라 원본 BFS가 경로를 결정하게 한다.
+    for (int y=static_cast<int>(source.y)-7;y<=static_cast<int>(source.y)+7 && !found;++y) {
+        // 점유와 실제 표면을 모두 읽으며 테스트에서 지형/다리를 추가하지 않는다.
+        for (int x=static_cast<int>(source.x)-7;x<=static_cast<int>(source.x)+7 && !found;++x) {
+            if (x<1 || y<1 || x>=255 || y>=255 || std::abs(x-source.x)+std::abs(y-source.y)<8) continue;
+            const auto cell=static_cast<std::size_t>(y*256+x);
+            if ((core.spots[cell]&6U) && !(core.spots[cell]&8U) && core.hash.Cell(0,x,y)) {
+                // 서버는귀환장소를별도로조회하므로표면spot만빈칸으로판단하지않는다. 현재일반finder로주변자산도확인한다.
+                RawSquidFinder empty(core.pool,core.hash,core.types);if (empty.Begin({x-1,y-1,x+1,y+1},1).value) continue;
+                const auto probe=world.Point("cell:"+std::to_string(x)+','+std::to_string(y));if (!probe) continue;
+                world.SetMousePoint(*probe);world.UpdateMovementCursor();
+                if (!cursors->empty() && cursors->back()==18) { destination={static_cast<float>(x),static_cast<float>(y)};target=probe;found=true; }
+            }
+        }
+    }
+    CHECK(found);if (!found) return;
+    // 표시경계점이아닌칸내부이며실제이동커서18인후보만클릭한다. 신전귀환/운반명령과구분한다.
+    CHECK(target.has_value() && cursors->back()==18);if (!target) return;
+    CHECK(world.MoveSelected(*target));session.PumpLocalConnection();const auto form=FindAttachedProcess(core.pool,walker,38);
+    auto* path=dynamic_cast<RawPathProcess*>(core.processes.FromForm(form));CHECK(path && path->MovementType()==38);if (!path) return;
+    CHECK(Get(path->Runtime().Bytes(),0)==0x50e320U);const auto end=path->Runtime().Time(path->Runtime().Count()-1);const auto initialSp=session.Sp(1);
+    const auto endpoint=path->Runtime().Point(path->Runtime().Count()-1);std::cout<<"TEST02 요청"<<destination.x<<","<<destination.y<<"/실제경로끝"<<endpoint.x<<","<<endpoint.y<<"/커서"<<cursors->back()<<'\n';
+    // 원본38 Init은 cardinal 경로를 선택하며 대각 방향을 만들어 넣지 않는다.
+    for (std::int32_t index=0;index<path->Runtime().Count();++index) CHECK((path->Runtime().Direction(index)&1)==0);
+    std::size_t frames{};std::set<std::uint32_t> animation;
+    // AI와 같은 Kernel을 시간 순서대로 실행하며 도착/경로 제거 결과를 쓰지 않는다.
+    for (;frames<6000 && core.processes.FromForm(form);++frames) {
+        world.Step(.025);animation.insert(Get(core.pool.Slot(walker),36));
+        if (core.processState.now>end+5) break;
+    }
+    CHECK(!core.processes.FromForm(form) && frames>1 && animation.size()>2);
+    std::cout<<"TEST02 도착현재좌표"<<std::bit_cast<float>(Get(raw,14))<<","<<std::bit_cast<float>(Get(raw,18))<<'\n';
+    CHECK(std::bit_cast<float>(Get(raw,14))==destination.x && std::bit_cast<float>(Get(raw,18))==destination.y && session.Sp(1)==initialSp);
+    CHECK(!core.destroy.PreDepth() && !core.destroy.PostDepth() && !core.bookkeeping.depth);
+    std::cout<<"실제 Walker TYPE"<<type<<"/SID"<<walker.value<<"/선택·40h·38·도착 "<<frames<<"프레임/그림"<<animation.size()<<"/SP"<<session.Sp(1)<<'\n';
+    // 완료 후 다시 이동시킨 부모를 삭제하면 같은38 Form도 즉시 반납돼야 한다.
+    CHECK(session.StartCarrierMovement({walker,source,1,0,0,0,0}));const auto moving=FindAttachedProcess(core.pool,walker,38);CHECK(moving.value);
+    session.World().Destroy(walker,0);CHECK((core.pool.Slot(walker)[11]&1U) && !core.processes.FromForm(moving));
+    CHECK(std::find(losses.begin(),losses.end(),walker)!=losses.end());
+    CHECK(!core.destroy.PreDepth() && !core.destroy.PostDepth() && !core.bookkeeping.depth);
+    }
+}

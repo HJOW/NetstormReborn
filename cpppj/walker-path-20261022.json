@@ -1,0 +1,114 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-22",
+  "uniqueInputs": 348,
+  "normalReturns": 696,
+  "instructions": 136742,
+  "nativeCalls": {
+    "0048bed0": 12,
+    "0048b2c0": 6,
+    "0048b080": 684,
+    "0040e850": 604,
+    "0043fa50": 82,
+    "004e49c0": 82,
+    "0040eab0": 410,
+    "00447790": 168
+  },
+  "vtables": {
+    "0x50e320": {
+      "0x0": "0x48b6a0",
+      "0x4": "0x4437f0",
+      "0x8": "0x4895b0",
+      "0xc": "0x48aa00",
+      "0x10": "0x40b380",
+      "0x14": "0x4437f0",
+      "0x18": "0x48b080",
+      "0x1c": "0x480260",
+      "0x20": "0x48b700",
+      "0x24": "0x48b340",
+      "0x28": "0x489ff0",
+      "0x2c": "0x48b040",
+      "0x30": "0x48a200"
+    },
+    "0x503d80": {
+      "0x38": "0x42ab70",
+      "0x3c": "0x429800",
+      "0x40": "0x4437f0",
+      "0x44": "0x427750",
+      "0xc8": "0x4287d0"
+    },
+    "0x503f20": {
+      "0x38": "0x42ab80",
+      "0x3c": "0x429800",
+      "0x40": "0x4437f0",
+      "0x44": "0x427750",
+      "0xc8": "0x4287d0"
+    }
+  },
+  "boundaries": "48bed0/48b2c0/48b080/447790/43fa50/40e850/40eab0/CRT4e49c0을 실제 실행. 할당/immobile/Halt/Step/지면/도착/TYPE getter/공간은 명시 경계. 전체100080BYTE/부모50BYTE/공유counter/외부효과/GP/스택/canary/x87/접근범위를 검사.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_walker_path.py": "19ae71f89878bb3109e975b558c94fca04ec82288ed9e7dbcdc958ec9ed08f46",
+    "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+    "tools/decomp_cursor_position.py": "e15bcdbc4c6be9c131c30f15416c945d650dba9f7dc6def404b47f63c635c212",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "cpppj/tests/fixtures/walker-path-x86.tsv": "bf133ee926e5bb99a274285ffaa21465a65859f375944b95919b5907d3790006"
+  },
+  "implementationSha256": {
+    "cpppj/src/o/RawWalkerFrame.h": "42656ec05b3b330a1f5f8cb07868a3013b613eb8099acadae289640792b4a48b",
+    "cpppj/src/o/RawWalkerFrame.cpp": "334d5c3ba647a5a4ee37eec8d26d135d1f530515c0bba02350204c5db3fb7d5e",
+    "cpppj/src/o/RawPathRuntime.h": "593f7a6f260af75563c974a6c00f639c31409163e59d3ba3cc1292a533b092d0",
+    "cpppj/src/o/RawPathRuntime.cpp": "b3448afee8979e761bca831c803203ff9e5620fef2363ddcd342b1aba74c69ca",
+    "cpppj/src/o/RawPathProcess.h": "e3f69c2a824787fd64d314962bc21707ced5020d31c233285ee084d8a8b6c441",
+    "cpppj/src/o/RawPathProcess.cpp": "e1b066d76729a01f0623b12ae70d5dcb1949b2b13f26dd2ead07640f6cec4337",
+    "cpppj/src/o/RawPathStart.cpp": "98061bd03d7b02facf44d6dd9fd865a08c0ce308729b4614a250797a3e4b1141",
+    "cpppj/src/client/RawCampaignPathBindings.h": "c1fe7a3d2a5448458906e4398c02ade57c700268288e2f174e089a98372e7762",
+    "cpppj/src/client/RawCampaignPathBindings.cpp": "f691db48397498f6c7e9a9bfd9163789e171612ffc0e5d3f52626512c29f1f62",
+    "cpppj/src/client/RawCampaignSession.cpp": "2767c651e8b5c7fcb21cfc5737a784528304eda107cf1cbbe2190fdb1381e887",
+    "cpppj/src/o/RawCarrierSteal.h": "0b1d9a043731c29e1d585d206ef45f26294929baac86bc7268b51ff412ad492d",
+    "cpppj/src/o/RawCarrierSteal.cpp": "fd25cb306d2a4acd19f619d59e141254cc69346c3f0d27e7acbb25cbd776af07",
+    "cpppj/tests/WalkerPathTests.cpp": "e89e06981be5fc4e205092638d8c73a23ea87a65f09d352f818ac07f4714d248",
+    "cpppj/tests/CampaignSessionTests.cpp": "281092089c5101d93288a6a625d5fd3a7153fb88a193e173e3309cedba2ba9e5",
+    "cpppj/src/o/CMakeLists.txt": "8776947920b491ca615729b8a12e46bae17c17fe6f90d1d170854e8f4f8453af",
+    "cpppj/tests/CMakeLists.txt": "f52010a0b007ce9c884d4bc713d5ca84367cc48f6eeac5c0ed77cf8269b85f06"
+  },
+  "validation": {
+    "releaseBuilds": [
+      {
+        "run": 1,
+        "exitCode": 0,
+        "warnings": 0,
+        "errors": 0
+      },
+      {
+        "run": 2,
+        "exitCode": 0,
+        "warnings": 0,
+        "errors": 0
+      }
+    ],
+    "focusedTests": 3,
+    "focusedFailures": 0,
+    "fullTests": 2283,
+    "fullFailures": 0,
+    "ctestExitCode": 0,
+    "ctestWallSeconds": 275.64,
+    "testSeconds": 275.61,
+    "nativeFixtureUnchangedAfterCppValidation": true,
+    "guiPlay": false,
+    "movement": [
+      {
+        "type": 137,
+        "frames": 146,
+        "animationFrames": 14
+      },
+      {
+        "type": 156,
+        "frames": 184,
+        "animationFrames": 20
+      }
+    ]
+  }
+}

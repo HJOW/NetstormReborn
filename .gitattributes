@@ -1662,3 +1662,11 @@ cpppj/tests/WindFlyerTests.cpp text eol=lf
 tools/decomp_wind_flyer.py text eol=lf
 cpppj/wind-flyer-20261022.json text eol=lf
 docs/exe/cpp-wind-flyer-20261022.md text eol=lf
+
+# Walker38의 새 원문/제품/검사를 UTF-8 LF로 고정한다.
+cpppj/src/o/RawWalkerFrame.* text eol=lf
+cpppj/tests/WalkerPathTests.cpp text eol=lf
+cpppj/tests/fixtures/walker-path-x86.tsv text eol=lf
+tools/decomp_walker_path.py text eol=lf
+cpppj/walker-path-20261022.json text eol=lf
+docs/exe/cpp-walker-path-20261022.md text eol=lf

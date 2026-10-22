@@ -20,6 +20,7 @@ struct RawPathProcessState {
     std::uint32_t wormProcess{40},sunWalkerType{133},emptyType{187}; // PATCH40의 실제 부착 검사와 현재 두 부모 타입이다.
     std::uint32_t balloonProcess{42},balloonType{111}; //00541118/00541214의 현재 벌룬 이동·화염 타입이다.
     std::uint32_t dudeProcess{24},dudeType{70}; //005410d0/00541170의 실제 Dude 부착 종류와 부모다.
+    std::uint32_t walkerProcess{38},windWalkerType{137},rainWalkerType{156},windWalkerCounter{}; //00541108/54127c/5412c8/5951c4의 세션 공유 전역이다.
     std::uint32_t bulfProcess{41}; //00541114의 현재 Bulf 전용 회전/보행 경로다.
 };
 // 실제 가상 효과 및 아직 복원되지 않은 큰 하위 몸체의 경계다. 누락을 실행 가능한 빈 효과로 바꾸지 않는다.
@@ -45,7 +46,7 @@ public:
     // 타입 표·프레임·실제 SHP·지도·상태는 프로세스보다 오래 살아야 한다. 생성만으로 부착하지 않는다.
     RawPathProcess(SidPool& pool,const SquidHash& hash,std::span<const RiftTypeRecord> types,
         std::span<const RiftTypeFrames> frames,std::span<const SquidDisplayShape> shapes,std::span<const std::uint8_t> spots,
-        RawPathProcessState& state,RawPathProcessHooks hooks,bool priest,bool flying=false,bool worm=false,bool balloon=false,bool dude=false,bool bulf=false); //41은48b700/48b760/48b340을 사용한다.
+        RawPathProcessState& state,RawPathProcessHooks hooks,bool priest,bool flying=false,bool worm=false,bool balloon=false,bool dude=false,bool bulf=false,bool walker=false); //41은48b700/48b760/48b340을 사용한다.
     std::uint32_t MovementType() const; // 실제 종류가 사용하는 현재23/39/54 프로세스 번호다.
     // 원본 destructor는 deadFlag를 켠다. shared watch는 부모 callback이 this를 지운 뒤의 역참조를 막는다.
     ~RawPathProcess() override;
@@ -105,6 +106,7 @@ private:
     bool worm_{}; // 실제50e4c4의 공유48bb40/48bd90과 별도48bde0 부착을 선택한다.
     bool balloon_{}; //50e2b8의48acd0/48ad60/48ad20과 기존48b340 도착을 사용한다.
     bool dude_{}; //50e3d8의 공유48bb10/48bb40/48bd90과 고유48bab0 부착을 선택한다.
+    bool walker_{}; //50e320의48b080/48b700/48b340/48b040을 사용한다.
     bool bulf_{}; //50e354의 고유 회전/보행48b760과 일반 도착48b340을 선택한다.
     // runtime_: 원본 필드 배치를 사용하는 실행 중 상태.
     RawPathRuntime runtime_;
