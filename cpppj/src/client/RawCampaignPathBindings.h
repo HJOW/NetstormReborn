@@ -22,6 +22,8 @@ struct RawCampaignPathEffects {
     std::function<std::uint32_t(o::Sid,std::uint32_t,std::uint32_t)> constructionArrival; // 검증한134/105의 실제 부모 도착 분배다. 필요한 시작에서만 요구한다.
     std::function<std::uint32_t(o::Sid,std::uint32_t,std::uint32_t)> carrierArrival; // 썬 워커/empty의 실제429800을 같은 Carrier 모듈로 호출한다.
     std::function<void(float,float)> balloonFlame; //현재 위치의 실제 balloonFlame.wav/loop0 장치다.
+    std::function<std::int32_t(std::int32_t,std::int32_t)> bulfRandom; // 같은 게임의 반열린004558f0 범위를 소비한다.
+    std::function<void(float,float,std::string_view)> bulfSound; // 원본41이 고른 파일/좌표의 실제 위치 음향이다.
     std::function<std::uint32_t(o::Sid)> dudeHalt; //70/508cc8 부모+38의 현재 지면·Fall 판정이다.
     std::function<std::uint32_t(o::Sid)> dudeArrival; //같은 부모+3c의 task별 실제 삭제·반환이다. 자신과 Path를 지울 수 있다.
 };
@@ -68,7 +70,7 @@ private:
     std::unique_ptr<o::RawPathProcess> Create(bool priest);
     std::unique_ptr<o::RawPathProcess> CreateType(std::uint32_t type); // 실제23/39/54 생성자를 구분한다.
     void ValidateConstruction(o::Sid parent) const; // 타입뿐 아니라 현재 정확한 생성자 VT를 함께 확인한다.
-    void ValidateCarrier(o::Sid parent) const; // 같은133/50e568 및 실제40을 함께 검사한다.다른Halt를 공통 몸체로 바꾸지 않는다.
+    void ValidateCarrier(o::Sid parent) const; // 133/40·135/41·벌룬42의 정확한 부모 VT와 이동 번호를 검사한다.
     RawSurfaceWorld& world_; // 실제 가상 Pop/Unpop/Repop과 유일한 Kernel을 소유한 월드다.
     RawWorldCore core_; // 실제 pool/hash/spot/type/frame/SHP/Host를 빌리는 참조 묶음이다.
     const RawPriestWorldBindings& priests_; // 기존 mutable 이동 프로세스 선택 몸체를 공유한다.

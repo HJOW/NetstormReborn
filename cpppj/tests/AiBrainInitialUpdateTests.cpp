@@ -2,6 +2,7 @@
 #include "RawSceneSupport.h"
 #include "o/RawAiBrainInitialUpdate.h"
 #include <set>
+#include <filesystem>
 using namespace netstorm::o;
 using namespace netstorm::test::rawscene;
 namespace {
@@ -82,4 +83,16 @@ TEST_CASE(AiInitialUpdate_Native133) {
 TEST_CASE(AiInitialUpdate_MissingSelectedMetadataAndWalletPreserved) {
     InitialScene empty("0,0,0,0,1,0,19");RawAiBrainInitialUpdate inactive(*empty.memory,*empty.player,*empty.technology,empty.finderState,empty.types,{empty.mission,empty.excluded,empty.workshops},{});inactive.Update(empty.token,empty.profile);CHECK(Get(empty.memory->Bytes(empty.token),0x2d8)==999 && Get(empty.memory->Bytes(empty.token),0x22c)==777);
     InitialScene missing("1,1,1,0,1,0,19");auto hooks=missing.Hooks();hooks.requiredEnergy={};RawAiBrainInitialUpdate incomplete(*missing.memory,*missing.player,*missing.technology,missing.finderState,missing.types,{missing.mission,missing.excluded,missing.workshops},hooks);bool rejected=false;try { incomplete.Update(missing.token,missing.profile); } catch (const std::logic_error&) { rejected=true; }CHECK(rejected && Get(missing.memory->Bytes(missing.token),0x28c)==1 && Get(missing.memory->Bytes(missing.token),0x2d8)==999);
+}
+
+// theme5의실제stack칸공유와후속battery중립화·원소목록·전체본문을별도원본16입력으로대조한다.
+TEST_CASE(AiInitialUpdate_NativeTheme5AndSharedCounter) {
+    const auto path=(std::filesystem::path(__FILE__).parent_path()/"fixtures/ai-initial-update-theme5-x86.tsv").string();std::size_t count{};
+    // 기존133입력fixture는보존하고추가원문만읽는다.
+    for (const auto& row:LoadFixture(path.c_str()).rows) {
+        CHECK(row.size()==7);if (row.size()!=7) continue;InitialScene scene(row[1]);scene.types[1].theme=static_cast<std::int32_t>(Number(row[0]));
+        scene.runtime->Update(scene.token,scene.profile);CHECK(Hex(scene.memory->Bytes(scene.token))==row[2]);CHECK(Hex(scene.memory->Bytes(scene.builders))==row[3]);
+        CHECK(Hex(scene.records)==row[4] && scene.Born()==row[5] && (scene.trace.empty() ? "-" : scene.trace)==row[6]);++count;
+    }
+    CHECK(count==16);
 }

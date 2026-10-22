@@ -31,7 +31,7 @@ RawAiBrainInitialUpdate::RawAiBrainInitialUpdate(RawAiBrainMemory& memory,RawPla
 }
 // 타입0도원본처럼조회가능하며표밖은host메모리계약오류다.
 const RiftTypeRecord& RawAiBrainInitialUpdate::Type(std::uint32_t number) const { if (number>=types_.size()) throw std::out_of_range("AI초기갱신실제TYPE범위오류");return types_[number]; }
-// 실제유효분류theme은0..4이며4의workshop은0이다. 잘못된theme의원본stack손상은명시거부한다.
+// 원본 유효theme0..5를 받으며4/5의 workshop은0이다. 원본 범위 밖 값은 명시 거부한다.
 std::uint32_t RawAiBrainInitialUpdate::Workshop(std::int32_t theme) const { if (theme<0 || theme>5) throw std::out_of_range("AI초기갱신실제원소범위오류");return theme<4 ? globals_.workshops[static_cast<std::size_t>(theme)] : 0U; }
 
 // 원본은owner를600byte복사전에캡처하며이후기술처리는현재owner를다시읽는다.
@@ -52,8 +52,9 @@ void RawAiBrainInitialUpdate::Update(std::uint32_t token,std::span<const std::ui
         if ((entry.flags2&0x30000U) && builderCount<builderCapacity) { if (builderCount<0) throw std::out_of_range("AI초기갱신실제빌더count범위오류");auto builders=memory_.Bytes(Read(raw,0x284));Put(builders,static_cast<std::size_t>(builderCount)*4,type);Put(raw,0x28c,static_cast<std::uint32_t>(builderCount)+1U); }
         if (!hooks_.requiredEnergy) throw std::logic_error("AI초기갱신실제TYPE요구에너지누락");const auto firstLength=Length(hooks_.requiredEnergy(type));if (Read(raw,0xad8)<=firstLength) Put(raw,0xad8,static_cast<std::uint32_t>(Length(hooks_.requiredEnergy(type))));
         const auto maximum=static_cast<double>(std::bit_cast<std::int32_t>(Read(raw,0x290)));const auto cost=static_cast<double>(entry.cost);Put(raw,0x290,Truncate(maximum>cost ? maximum : cost));if (type==globals_.excludedType) continue;
-        const auto theme=entry.theme;if (theme<0 || theme>=5) throw std::out_of_range("AI초기갱신원본분류stack배열범위오류");const auto index=static_cast<std::size_t>(theme);++counts[index];
-        if (entry.flags2&0x800U) { ++counts[index+5];if (Read(raw,0x390)==3) Put(raw,0x390,static_cast<std::uint32_t>(theme)); }
+        // 원본의theme5는실제counts[5]를사용하여sun battery계수와같은칸을공유한다. 별도6번째원소로분리하지않는다.
+        const auto theme=entry.theme;if (theme<0 || theme>5) throw std::out_of_range("AI초기갱신원본분류stack배열범위오류");const auto index=static_cast<std::size_t>(theme);++counts[index];
+        if (entry.flags2&0x800U) { if (index+5>=counts.size()) throw std::out_of_range("AI초기갱신battery분류stack배열범위오류");++counts[index+5];if (Read(raw,0x390)==3) Put(raw,0x390,static_cast<std::uint32_t>(theme)); }
         if (counts[index]%5==1) { const auto count=std::bit_cast<std::int32_t>(Read(raw,0x3b0));if (count<0) throw std::out_of_range("AI초기갱신실제원소count범위오류");Put(raw,0x398+static_cast<std::size_t>(count)*4,static_cast<std::uint32_t>(theme));Put(raw,0x3b0,Read(raw,0x3b0)+1U);const auto candidate=Workshop(theme),previous=Read(raw,0x394);if (!previous || std::bit_cast<std::int32_t>(Truncate(Type(candidate).cost))>std::bit_cast<std::int32_t>(Truncate(Type(previous).cost))) Put(raw,0x394,candidate); }
     }
     // 원본은단독battery원소를중립3으로치환하거나한번제거하며기존목록count전체를압축한다.

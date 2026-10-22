@@ -1982,9 +1982,9 @@ struct RawCampaignSession::Impl {
     CarrierPathResult StartMotion(RawPathStartRequest request) {
         if (!motion) throw std::logic_error("현재 이동 설치 전 경로 시작");const auto kind=core.pool.Slot(request.parent)[10];RawPathProcess* path{};
         if (kind==priestState.movement.priest) path=motion->Paths().StartPriest(request);
-        else if (kind==133 || kind==111 || kind==141) path=motion->Paths().StartCarrier(request);
+        else if (kind==133 || kind==111 || kind==141 || kind==135) path=motion->Paths().StartCarrier(request);
         else if (kind==priestState.movement.teleport || kind==priestState.movement.manaBolt) path=motion->Paths().StartConstruction(request);
-        else throw std::logic_error("다른 실제 운반 경로38/41/42 미복원 경계");return reinterpret_cast<CarrierPathResult>(path);
+        else throw std::logic_error("다른 실제 운반 경로38 미복원 경계");return reinterpret_cast<CarrierPathResult>(path);
     }
     // 첫 실제 객체 이전에 같은 공통 삭제/내용물/Player 통지/기술 모듈을 한 번 연결한다.
     void InstallContents(const SquidDestroyHooks& deletion) {
@@ -2350,6 +2350,8 @@ struct RawCampaignSession::Impl {
         auto effects=services.motion;
         effects.carrier.currentAlliance=[this](std::uint32_t first,std::uint32_t second) { if (first>=9 || second>=9) throw std::out_of_range("운반 도착 현재 동맹 번호 범위");return alliances[first*9+second]; }; // 로그인/수신/AI가 공유하는 현재 DWORD를 읽고 별도 빈 사본으로 대신하지 않는다.
         effects.path.balloonFlame=[this](float x,float y) { if (!services.sound.playOnceAt) throw std::logic_error("벌룬 화염 위치 음향 미연결");services.sound.playOnceAt(x,y,soundNames.Lookup("balloonFlame.wav"),0,0); };
+        effects.path.bulfRandom=[this](std::int32_t low,std::int32_t high) { if (high<=low) throw std::invalid_argument("Bulf 공용 난수 범위 오류");return static_cast<std::int32_t>(random.Next(static_cast<std::uint32_t>(high-low)))+low; };
+        effects.path.bulfSound=[this](float x,float y,std::string_view name) { if (!services.sound.playOnceAt) throw std::logic_error("Bulf 발소리 장치 미연결");services.sound.playOnceAt(x,y,soundNames.Lookup(name),0,0); };
         effects.path.startBlocked=[this](RawPathPoint point,std::uint32_t type,std::uint32_t owner) { PrepareBuilding(core.processState.now);static_cast<void>(buildingEffects->Displace(point.x,point.y,type,owner)); };
         effects.path.arrivalBlocked=[this](Sid,RawPathPoint point,std::uint32_t type,std::uint32_t owner) { PrepareBuilding(core.processState.now);static_cast<void>(buildingEffects->Displace(point.x,point.y,type,owner)); };
         effects.path.constructionArrival=[this](Sid sid,std::uint32_t,std::uint32_t) { const auto type=core.pool.Slot(sid)[10];if (type==134) return buildArrival->Arrive(sid);if (type==105) return manaArrival->Arrive(sid);throw std::logic_error("실제 건설 도착 타입 오류"); };

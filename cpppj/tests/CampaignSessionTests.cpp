@@ -3494,6 +3494,76 @@ TEST_CASE(CampaignDevastation_ActualEnemyCaptureAndDropFromCast) {
     CHECK(link.recorded.size()==3 && link.recorded[0][1]==0x50 && link.recorded[1][1]==0x4f && link.recorded[2][1]==0x50);CHECK(!core.bookkeeping.depth && !core.destroy.PreDepth() && !core.destroy.PostDepth());wire=nullptr;
 }
 
+// 최신 사용자 TEST02 원문/실제 로그인/시나리오 시작 뒤 기존 Bulf를 선택하고 자연41 경로를 끝낸다.
+TEST_CASE(CampaignTest02_ActualStoredBulfSelectionAndNaturalMovement) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
+    auto services=external.Services();UseWorldTestLogin(services);std::size_t footsteps{};
+    const auto sound=services.sound.playOnceAt;
+    services.sound.playOnceAt=[&](float x,float y,SoundHandle id,std::uint32_t first,std::uint32_t second) {
+        // 실제 장치 요청만 세며 공용 난수나 선택 파일 번호는 바꾸지 않는다.
+        for (int variant=1;variant<=5;++variant) if (id==external.names.Lookup("bulfWalk"+std::to_string(variant)+".wav")) { CHECK(first==0 && second==0);++footsteps; }
+        return sound(x,y,id,first,second);
+    };
+    services.ai.allocationBytes=[](std::span<std::uint8_t> bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0xa7}); };
+    services.ai.defaultName=[] { return std::string("AI"); };
+    ConfigInterface config([&](std::string_view path) { return assets.files.TryRead(path); });
+    config.Configuration().Assign("DataDir=\"d\"\ncurrentLanguage=\"english\"\nmissionSpec=\"{DataDir}\\{local.1}.{currentLanguage}\"\nfortSpec=\"{DataDir}\\{local.1}.fort\"\n[END]\n");
+    MissionScript script(config,"TEST02");CHECK(script.Loaded() && script.MissionType()=="Tutorial");
+    auto fort=FortTemplate::Parse(assets.files.Read(script.FortPath()),assets.game.TypeTable());
+    GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},script.FortName(),std::move(services),{1024,768});
+    auto& session=world.Session();auto core=session.Core();CHECK(session.LocalConnectionPhase()==14);
+    const auto cursors=BindWorldTestInput(world);MissionFrameGateState gate;MissionStartState state;CampaignMissionStartEffects effects;
+    effects.settingsBytes=[](std::uint32_t,std::span<std::uint8_t> bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0xa7}); };
+    effects.gameSeconds=[&] { return core.processState.now; };effects.refreshSp=[] {};effects.refreshCommandGump=[] {};effects.resetCamera=[] {};
+    effects.randomGeysers=[] { throw std::logic_error("TEST02 moreGeysers0에서 무작위 간헐천 도달"); };
+    RawCampaignMissionStartBindings start(session,script,gate,state,session.MissionStartSettings(),session.MissionAiSettings(),std::move(effects));
+    start.Start();session.PumpLocalConnection();CHECK(gate.started==1 && session.Sp(1)==500000 && session.Sp(2)==0 && session.Sp(3)==0);
+    CHECK(session.Participation().Brain(2) && session.Participation().Brain(3));Sid bulf{};
+    // 사용자 맵에서 로드한 기존 객체만 사용하며 운반체/사제/좌표를 새로 만들지 않는다.
+    for (const auto& object:session.World().Objects()) if (object.object.type==135 && object.object.owner==1) { CHECK(!bulf.value);bulf=object.sid; }
+    CHECK(bulf.value);if (!bulf.value) return;
+    const auto raw=core.pool.Slot(bulf);CHECK(Get(raw,0)==0x503e50U && session.Priests().MovementProcessType(135)==41);
+    const RawPathPoint source{std::bit_cast<float>(Get(raw,14)),std::bit_cast<float>(Get(raw,18))};
+    world.SetMousePoint(world.ToScreen(source.x,source.y));world.Select(bulf.value);CHECK(world.InputMode()==5 && world.HighlightSettings().selectedSid==bulf.value);
+    RawPathPoint destination{};bool found{};std::optional<ScreenPoint> target;
+    // 같은 실제 본섬의 충분히 떨어진 빈 칸만 골라 원본 BFS가 경로를 결정하게 한다.
+    for (int y=static_cast<int>(source.y)-7;y<=static_cast<int>(source.y)+7 && !found;++y) {
+        // 점유와 실제 표면을 모두 읽으며 테스트에서 지형/다리를 추가하지 않는다.
+        for (int x=static_cast<int>(source.x)-7;x<=static_cast<int>(source.x)+7 && !found;++x) {
+            if (x<1 || y<1 || x>=255 || y>=255 || std::abs(x-source.x)+std::abs(y-source.y)<8) continue;
+            const auto cell=static_cast<std::size_t>(y*256+x);
+            if ((core.spots[cell]&6U) && !(core.spots[cell]&8U) && core.hash.Cell(0,x,y)) {
+                // 서버는귀환장소를별도로조회하므로표면spot만빈칸으로판단하지않는다. 현재일반finder로주변자산도확인한다.
+                RawSquidFinder empty(core.pool,core.hash,core.types);if (empty.Begin({x-1,y-1,x+1,y+1},1).value) continue;
+                const auto probe=world.Point("cell:"+std::to_string(x)+','+std::to_string(y));if (!probe) continue;
+                world.SetMousePoint(*probe);world.UpdateMovementCursor();
+                if (!cursors->empty() && cursors->back()==18) { destination={static_cast<float>(x),static_cast<float>(y)};target=probe;found=true; }
+            }
+        }
+    }
+    CHECK(found);if (!found) return;
+    // 표시경계점이아닌칸내부이며실제이동커서18인후보만클릭한다. 신전귀환/운반명령과구분한다.
+    CHECK(target.has_value() && cursors->back()==18);if (!target) return;
+    CHECK(world.MoveSelected(*target));session.PumpLocalConnection();const auto form=FindAttachedProcess(core.pool,bulf,41);
+    auto* path=dynamic_cast<RawPathProcess*>(core.processes.FromForm(form));CHECK(path && path->MovementType()==41);if (!path) return;
+    CHECK(Get(path->Runtime().Bytes(),0)==0x50e354U);const auto end=path->Runtime().Time(path->Runtime().Count()-1);const auto initialSp=session.Sp(1);
+    const auto endpoint=path->Runtime().Point(path->Runtime().Count()-1);std::cout<<"TEST02 요청"<<destination.x<<","<<destination.y<<"/실제경로끝"<<endpoint.x<<","<<endpoint.y<<"/커서"<<cursors->back()<<'\n';
+    // 원본41 Init은 cardinal 경로를 선택하며 대각 방향을 만들어 넣지 않는다.
+    for (std::int32_t index=0;index<path->Runtime().Count();++index) CHECK((path->Runtime().Direction(index)&1)==0);
+    std::size_t frames{};bool turning{};
+    // AI와 같은 Kernel을 시간 순서대로 실행하며 도착/경로 제거 결과를 쓰지 않는다.
+    for (;frames<6000 && core.processes.FromForm(form);++frames) {
+        world.Step(.025);const auto direction=RawPathAnimation::Direction(core.frames[135],static_cast<std::int32_t>(Get(core.pool.Slot(bulf),36)));
+        turning|=direction==4 || direction==5;
+        if (core.processState.now>end+5) break;
+    }
+    CHECK(!core.processes.FromForm(form) && frames>1 && turning && footsteps>0);
+    std::cout<<"TEST02 도착현재좌표"<<std::bit_cast<float>(Get(raw,14))<<","<<std::bit_cast<float>(Get(raw,18))<<'\n';
+    CHECK(std::bit_cast<float>(Get(raw,14))==destination.x && std::bit_cast<float>(Get(raw,18))==destination.y && session.Sp(1)==initialSp);
+    CHECK(!core.destroy.PreDepth() && !core.destroy.PostDepth() && !core.bookkeeping.depth);
+    std::cout<<"TEST02 실제 기존 Bulf"<<bulf.value<<" 선택/40h/41: "<<source.x<<","<<source.y<<"→"<<destination.x<<","<<destination.y<<"/자연 프레임"<<frames<<"/회전"<<turning<<"/발소리"<<footsteps<<"/SP"<<session.Sp(1)<<'\n';
+}
+
 // 실제40aca0의 독립909입력과 송신하지 않는 관문의 바이트 보존을 확인한다.
 TEST_CASE(CampaignDevastation_PacketLengthNative909) {
     const auto path=(std::filesystem::path(__FILE__).parent_path()/"fixtures/bomb-packet-x86.tsv").string();std::size_t rows{};

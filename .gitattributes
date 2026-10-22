@@ -1613,3 +1613,13 @@ docs/exe/cpp-editor-file-save-20261022.md text eol=lf
 tools/analyze_test02_scenario.py text eol=lf
 cpppj/test02-scenario-20261022.json text eol=lf
 docs/exe/cpp-test02-scenario-20261022.md text eol=lf
+# Bulf41 원문 관측과 제품/회귀 소스를 같은 UTF-8/LF 바이트로 보존한다.
+cpppj/src/o/RawBulfFrame.* text eol=lf
+cpppj/tests/BulfPathTests.cpp text eol=lf
+tools/decomp_bulf_path.py text eol=lf
+cpppj/tests/fixtures/bulf-path-x86.tsv text eol=lf
+cpppj/bulf-path-20261022.json text eol=lf
+docs/exe/cpp-bulf-path-20261022.md text eol=lf
+cpppj/src/o/RawAiBrainInitialUpdate.cpp text eol=lf
+cpppj/tests/AiBrainInitialUpdateTests.cpp text eol=lf
+cpppj/tests/fixtures/ai-initial-update-theme5-x86.tsv text eol=lf
