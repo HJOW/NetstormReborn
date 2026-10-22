@@ -52,4 +52,15 @@ public sealed class NetstormRandom
         uint current = State == 0 ? DefaultSeed : State;
         State = unchecked(current * Multiplier + Increment);
     }
+
+    /// <summary>
+    /// 현재 상태를 직접 바꾼다. 원본 GameRandom::SetState 와 같이 SP 저장소 초기화가 시각 기반 재시드 값을 주입할 때 쓴다.
+    /// 추가: W05 선행 SP 저장소 조각(2026-10-22).
+    /// </summary>
+    /// <param name="state">주입할 32비트 상태. 0 이면 다음 호출에서 기본 시드로 바뀐다.</param>
+    public void SetState(uint state)
+    {
+        // 원본 전역 상태를 그대로 덮어쓴다
+        State = state;
+    }
 }
