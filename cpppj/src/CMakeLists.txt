@@ -165,3 +165,5 @@ target_sources(netstorm PRIVATE o/RawSalvageCommand.cpp o/RawSalvageCommand.h)
 if(MSVC)
     set_property(SOURCE client/RawCampaignSession.cpp APPEND PROPERTY COMPILE_OPTIONS /bigobj)
 endif()
+# 데빌메이커 전용 본체와 상태 패킷의 실제 생성/부분 갱신 규칙이다.
+target_sources(netstorm PRIVATE o/RawWindAviaryState.cpp o/RawWindAviaryState.h)

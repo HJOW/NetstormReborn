@@ -1632,3 +1632,10 @@ docs/exe/cpp-test02-runtime-20261022.md text eol=lf
 # 사용자 요청으로 보류한 실제 벌룬 생산 관찰과 재개 지점을 보존한다.
 cpppj/test02-flight-observation-20261022.json text eol=lf
 docs/exe/cpp-test02-flight-observation-20261022.md text eol=lf
+# 데빌메이커 전용80BYTE 상태와 독립 원본 출처를 같은 바이트로 보존한다.
+cpppj/src/o/RawWindAviaryState.* text eol=lf
+cpppj/tests/WindAviaryStateTests.cpp text eol=lf
+cpppj/tests/fixtures/wind-aviary-state-x86.tsv text eol=lf
+tools/decomp_wind_aviary_state.py text eol=lf
+cpppj/wind-aviary-state-20261022.json text eol=lf
+docs/exe/cpp-wind-aviary-state-20261022.md text eol=lf

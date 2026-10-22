@@ -1791,5 +1791,7 @@ target_sources(netstorm_tests PRIVATE SoloMapCatalogTests.cpp)
 target_sources(netstorm_tests PRIVATE DataManagerFileSaveTests.cpp)
 # 실제 작업본의 Notify/직렬화/파일 쓰기/재읽기와 원본 보호를 확인한다.
 target_sources(netstorm_tests PRIVATE EditorFilesTests.cpp)
+# 데빌메이커 전용80BYTE 생성/송수신을 독립 원본 관찰로 대조한다.
+target_sources(netstorm_tests PRIVATE WindAviaryStateTests.cpp)
 set_source_files_properties(DataManagerFileSaveTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_DATAMANAGER_FILE_SAVE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/datamanager-file-save-x86.tsv\"")

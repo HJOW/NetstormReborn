@@ -1,0 +1,48 @@
+{
+  "host": "VM-W11-Codex",
+  "lastFullDecompileHost": "VM-W11-Codex",
+  "observations": 1894,
+  "scopes": {
+    "C": 18,
+    "W": 1108,
+    "R": 768
+  },
+  "precisionReplays": [
+    639,
+    895
+  ],
+  "normalReturns": 3788,
+  "instructions": 211490,
+  "gameGuiRuns": 0,
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_wind_aviary_state.py": "65ddc58cd4e708242e8876a009cd76f89167428d15ef9b83f16b93311624ea64",
+    "cpppj/src/o/RawWindAviaryState.h": "de1bc6bc4e95f3814f8d8528c2c89be97e7d8adc82e50088a1b286e0a613de1d",
+    "cpppj/src/o/RawWindAviaryState.cpp": "00121b2dc81c66ef2a13e79e3fb7dd1d73b91cf88e1fc1179b7634b4e1c45009",
+    "cpppj/tests/WindAviaryStateTests.cpp": "d19eb2e03bf9fc61100e82f09d846f915e7deeb31895f7e1638c24ebfcfa3643",
+    "cpppj/tests/fixtures/wind-aviary-state-x86.tsv": "9de1895040c7b643dfbd30e48ec8ff0b4b8be174c43398f24d223fcb3c79a273"
+  },
+  "lastFullDecompileDate": "2026-10-22",
+  "defaultHeader": {
+    "protocol": 1,
+    "message": 116,
+    "source": "0053278b/0053278a"
+  },
+  "validation": {
+    "build": 2,
+    "exit": 0,
+    "warnings": 0,
+    "errors": 0,
+    "focusedTests": 4,
+    "failedChecks": 0,
+    "fullSuiteRepeated": false,
+    "latestFullSuiteTests": 2265,
+    "connectedToSession": false
+  },
+  "validationHashes": {
+    "extracted/cpp-wind-aviary-state-20261022-build1.log": "671a9ef0ea5509169208a0d93bf9b3e2fbd556ef88761933a704092cd52f1301",
+    "extracted/cpp-wind-aviary-state-20261022-build2.log": "662de5f36ae69ebbed43b1720102d6675675eb61ccd9ca47eaa9140ecf7a64bc",
+    "extracted/cpp-wind-aviary-state-20261022-tests1.log": "4d7e17a4a03bf610c1e673855039981f9b352ad799d656a549c7230a125a30b0"
+  }
+}
