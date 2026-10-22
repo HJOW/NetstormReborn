@@ -1623,3 +1623,9 @@ docs/exe/cpp-bulf-path-20261022.md text eol=lf
 cpppj/src/o/RawAiBrainInitialUpdate.cpp text eol=lf
 cpppj/tests/AiBrainInitialUpdateTests.cpp text eol=lf
 cpppj/tests/fixtures/ai-initial-update-theme5-x86.tsv text eol=lf
+# TEST02 실제 실행의 작업본·슬롯·관찰 도구와 검증 출처를 같은 바이트로 보존한다.
+cpppj/tests/fixtures/test02-runtime/d/TEST02.fort -text
+cpppj/tests/fixtures/test02-original-runtime.tsv text eol=lf
+tools/analyze_test02_runtime.py text eol=lf
+cpppj/test02-runtime-20261022.json text eol=lf
+docs/exe/cpp-test02-runtime-20261022.md text eol=lf

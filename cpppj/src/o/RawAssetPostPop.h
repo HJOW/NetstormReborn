@@ -91,6 +91,8 @@ public:
     // SquidPostPop 구성 때 같은 풀인지 확인한다.
     const SidPool& Pool() const;
 private:
+    // 외부 효과 뒤에도 같은 현재 TYPE를 다시 읽고 잘못된 타입 번호는 명시적으로 거부한다.
+    const RiftTypeRecord& Type(Sid sid) const;
     // 두 PE 가상 주소를 실제 몸체 부류로 분류한다.
     std::uint32_t Kind(Sid sid) const;
     // 실패 가능한 두 Regular 확보를 각각 실행한다.
@@ -115,8 +117,8 @@ private:
     std::uint32_t LocalOwner() const;
     // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     SidPool& pool_;
-    // types_: 타입 번호로 속성·플래그를 조회하는 타입 표.
-    std::vector<RiftTypeRecord> types_;
+    // types_: 전투 옵션이 갱신하는 같은 현재 타입 표다. 소유 저장소는 이 객체보다 오래 살아야 한다.
+    std::span<const RiftTypeRecord> types_;
     // base_: 파생 처리에서 공통 동작을 위임하는 기본 객체.
     SquidPostPop& base_;
     // damageable_: 피해 가능한 객체의 HP·삭제·후처리 연결.
