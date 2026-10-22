@@ -1,0 +1,50 @@
+{
+  "host": "VM-W11-Codex",
+  "decompile_host": "VM-W11-Codex",
+  "cases": 198,
+  "normal_returns": 396,
+  "x87": [
+    639,
+    895
+  ],
+  "actual_entries": {
+    "0x417bd0": 396,
+    "0x4ac200": 164,
+    "0x49a840": 254,
+    "0x40f330": 90,
+    "0x4adea0": 90,
+    "0x49a900": 90,
+    "0x41d7a0": 90,
+    "0x4e49c0": 284,
+    "0x411310": 100,
+    "0x40ea00": 172,
+    "0x4558c0": 72,
+    "0x41d610": 22,
+    "0x4558f0": 132,
+    "0x40e850": 66,
+    "0x40e800": 52,
+    "0x40e9b0": 32
+  },
+  "boundary_stubs": {
+    "0x48fc90": "technology",
+    "0x40fcb0": "refresh",
+    "0x462bc0": "graph",
+    "0x410d40": "connected",
+    "0x4174c0": "advance",
+    "0x4112b0": "home",
+    "0x411350": "reclassify",
+    "0x410a30": "select",
+    "0x411470": "random",
+    "0x4173b0": "extend",
+    "0x4119b0": "rectangle",
+    "0x4105b0": "log",
+    "0x4e0620": "assert"
+  },
+  "game_started": false,
+  "sources": {
+    "originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD\\NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "tools\\decomp_ai_bridge_strategies.py": "d035941fd172febfe0e98e032353d45d16a8d73e8c168a936dfcd157fc46a79b",
+    "cpppj\\tests\\fixtures\\ai-bridge-strategies-x86.tsv": "e42982e1380f075b82558bb3567f019b27d4e308911523aa525631b558542e2f"
+  }
+}

@@ -7,6 +7,7 @@ target_sources(netstorm PRIVATE
     RawAiBridgeCandidates.cpp RawAiBridgeCandidates.h
     RawAiBridgeSearch.cpp RawAiBridgeSearch.h
     RawAiBridgePlanning.cpp RawAiBridgePlanning.h
+    RawAiBridgeStrategies.cpp RawAiBridgeStrategies.h
     # DataManager 목록의 unlink와 실제 MemStream 버퍼/섹션 소멸 순서다.
     RawDataManagerLifetime.cpp RawDataManagerLifetime.h
     # 썬 바리케이드의 현재 프레임/소유자/연결 수 변경과 실제 사건 위임이다.
