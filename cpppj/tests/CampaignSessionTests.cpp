@@ -2542,15 +2542,15 @@ void NaturalWorkshopPlacement(bool combat,bool burning=false,CellPoint cannonLoc
                     session.SetParticleView({0,0,0,0,1024,768},{});const Sid temple{15017};const auto initialTempleHp=Get(core.pool.Slot(temple),26); // 실제 남은 적 윈드 신전의 현재 HP를 읽는다.
                     const auto firingAt=[&](float x,float y) { const auto& type=core.types[128];return session.GunTargeting().MayTarget({x,y,static_cast<float>(x-type.footX*.5),static_cast<float>(y-type.footY*.5),128,0,1,0},temple); }; // 실제 창의 불가127,121과 자연 공략129,126을 같은 원본 ray로 구별한다.
                     CHECK(!firingAt(127,121) && firingAt(129,126));
-                    const auto leavesCannonSpace=[&] { // 사용자가 사격 가능한129,126의 캐논 발자국을 비워 두도록 다리 후보만 선택한다.
+                    const auto leavesCannonSpace=[&] { //사용자가계획한136,120의캐논발자국을비워두도록다리후보만선택한다.
                         const auto& previews=session.Cursor().Lifecycle();const auto& cannon=core.types[128];
                         for (std::int32_t index=0;index<previews.previewCount;++index) { // 실제 커서가 표시한 다리 셀만 읽고 공간/방향/원본 배치 결과를 바꾸지 않는다.
                             const auto raw=core.pool.Slot(previews.previews[static_cast<std::size_t>(index)]);if (raw[10]!=82) continue;
-                            const auto x=std::bit_cast<float>(Get(raw,14)),y=std::bit_cast<float>(Get(raw,18));if (x>=129-cannon.footX+1 && x<=129 && y>=126-cannon.footY+1 && y<=126) return false;
+                            const auto x=std::bit_cast<float>(Get(raw,14)),y=std::bit_cast<float>(Get(raw,18));if (x>=136-cannon.footX+1 && x<=136 && y>=120-cannon.footY+1 && y<=120) return false;
                         }
                         return true;
                     };
-                    const auto plan=netstorm::test::rawscene::LoadFixture(NETSTORM_FORWARD_BATTLE_PLAN);std::uint64_t forwardFrame=90000,battleFrames=0; // 수동 전술 입력이며 원본 기대값/HP/SP가 아니다.
+                    const auto plan=netstorm::test::rawscene::LoadFixture((std::filesystem::path(__FILE__).parent_path()/"fixtures/campaign-forward-battle-north-plan.tsv").string().c_str());std::uint64_t forwardFrame=90000,battleFrames=0; //기존동결계획을보존한북쪽수동전술입력이며HP/SP/배치성공을주입하지않는다.
                     const auto tickForward=[&] { const auto now=core.processState.now+1.0/60;wall+=1.0/60;session.RunFrame({now,wall,1.0/60,++forwardFrame},false);controls.Poll({InputCode::kRelease,500,350});menus.CleanupFrame(); }; // 실제 시계/입력/메뉴 정리를 한 프레임씩 진행한다.
                     for (const auto& command:plan.rows) { // 같은 실제 생산/커서/서버 경로에 명시 전략 입력을 순서대로 적용한다.
                         CHECK(command.size()==5);if (command.size()!=5) return;const auto wait=std::stoul(command[4]);
@@ -2563,23 +2563,29 @@ void NaturalWorkshopPlacement(bool combat,bool burning=false,CellPoint cannonLoc
                         CHECK(command[0]=="build" || command[0]=="build-fire");
                         const auto type=static_cast<std::uint32_t>(std::stoul(command[1]));const CellPoint preferred{std::stoi(command[2]),std::stoi(command[3])};const auto icon=production.Point(type);CHECK(icon.has_value());if (!icon) return;controls.Event({InputCode::kLeftButton,icon->x,icon->y});CHECK(session.CursorDropSettings().type==type);
                         std::optional<CellPoint> place;double nearest=1e9;std::uint32_t bestTurns{};std::size_t legalCandidates{},firingCandidates{};const auto orientations=type==82 ? 4U : 1U; // 다리는 실제 우클릭 네 방향을 비교하며 방문 후보의 배치/사격 관문을 구분해 센다.
-                        std::array<std::string,26> candidateMap; // 실패 때 합법L/사격F/교집합B의 실제 후보 위치를 보존하는 읽기 전용 관측이다.
-                        for (auto& row:candidateMap) row.assign(31,'.'); // 지도 범위x116..146/y110..135와 같은 칸 수만 초기화한다.
+                        constexpr int searchLeft=116,searchTop=102,searchRight=150,searchBottom=135; //AI가점유한앞길을북쪽으로우회할수있는실제사용자후보범위다.
+                        std::array<std::string,searchBottom-searchTop+1> candidateMap; //실패때합법L/사격F/교집합B의실제후보위치를보존한다.
+                        for (auto& row:candidateMap) row.assign(searchRight-searchLeft+1,'.'); //지정지도범위와같은칸수만초기화한다.
                         for (std::uint32_t turns=0;turns<orientations;++turns) { // 방향 필드를 직접 쓰지 않고 사용자 우클릭으로 회전한다.
-                            for (int x=116;x<=146;++x) { // 적 섬까지의 실제 전방 지도 칸이다.
-                                for (int y=110;y<=135;++y) { // 발자국 전체의 공간/공급 조건을 실제 미리보기로 검사한다.
+                            for (int x=searchLeft;x<=searchRight;++x) { //적섬까지의실제전방지도칸이다.
+                                for (int y=searchTop;y<=searchBottom;++y) { //북쪽우회후보를포함한발자국의공간/공급조건을실제미리보기로검사한다.
                                     const auto distance=(x-preferred.x)*(x-preferred.x)+(y-preferred.y)*(y-preferred.y);if (distance>=nearest) continue;ui.Point(session,{x,y},0,0,false);const bool fire=command[0]!="build-fire" || firingAt(session.CursorDropSettings().x,session.CursorDropSettings().y); // 현재 원본 사격 판정과 배치 판정은 독립 관측하며 결과를 쓰지 않는다.
                                     legalCandidates+=session.CursorDropSettings().legal ? 1U : 0U;firingCandidates+=fire ? 1U : 0U;if (session.CursorDropSettings().legal && fire && (type!=82 || leavesCannonSpace())) { nearest=distance;place=CellPoint{x,y};bestTurns=turns; }
-                                    candidateMap[static_cast<std::size_t>(y-110)][static_cast<std::size_t>(x-116)]=session.CursorDropSettings().legal ? (fire ? 'B' : 'L') : (fire ? 'F' : '.');
+                                    candidateMap[static_cast<std::size_t>(y-searchTop)][static_cast<std::size_t>(x-searchLeft)]=session.CursorDropSettings().legal ? (fire ? 'B' : 'L') : (fire ? 'F' : '.');
                                 }
                             }
                             if (type==82) CHECK(session.Cursor().HandleInput({InputCode::kRightButton,0,0},0)); // 네 번 뒤 원래 방향으로 돌아와 선택한 입력 횟수만 다시 적용한다.
                         }
                         for (std::uint32_t turns=0;turns<bestTurns;++turns) CHECK(session.Cursor().HandleInput({InputCode::kRightButton,0,0},0)); // 합법 후보의 실제 사용자 회전 입력만 재현한다.
                         ui.Point(session,preferred,0,0,false);const auto& rejected=session.Cursor().Placement();std::cout<<"전진 목표 판정 TYPE"<<type<<" 방향"<<session.CursorDropSettings().direction<<" 위치"<<preferred.x<<","<<preferred.y<<" desc"<<rejected.descriptionAllowed<<" place"<<rejected.placementAllowed<<" source"<<rejected.sourceAllowed<<" text"<<rejected.description<<" 방문 합법"<<legalCandidates<<"/사격"<<firingCandidates<<"\n";CHECK(place.has_value());if (!place) {
-                            for (std::size_t row=0;row<candidateMap.size();++row) std::cout<<"후보 지도 y"<<110+row<<" x116 "<<candidateMap[row]<<'\n'; // 실패한 현재 후보 집합만 출력하며 게임 판정을 대체하지 않는다.
+                            for (std::size_t row=0;row<candidateMap.size();++row) std::cout<<"후보 지도 y"<<searchTop+row<<" x"<<searchLeft<<' '<<candidateMap[row]<<'\n'; //실패한현재후보집합만출력하며게임판정을대체하지않는다.
                             for (int y=123;y<=127;++y) { //원래사격후보129,126주변의실제표면/소유/연결/점유입력만실패자료로보존한다.
                                 for (int x=126;x<=130;++x) { const auto sid=core.hash.Cell(0,x,y);const auto raw=core.pool.Slot(Sid{sid});std::printf("사격후보 지면(%d,%d) SID%u TYPE%u owner%u graph%u spot%02x\n",x,y,sid,raw[10],raw[34],raw[30],core.spots[y*256+x]); } //현재지도값을변경하지않는다.
+                            }
+                            const auto targetBounds=session.GunTargeting().Footprint(temple);std::printf("Temple bounds %g,%g,%g,%g\n",targetBounds.left,targetBounds.top,targetBounds.right,targetBounds.bottom); //현재표적발자국으로사격범위의원인을분리한다.
+                            for (const auto probePoint:std::array<CellPoint,3>{{{123,124},{129,126},{136,120}}}) { //서로다른실제후보의네방향ray를읽고배치/사격결과를변경하지않는다.
+                                const auto& cannonInfo=core.types[128];const GunTargetQuery query{static_cast<float>(probePoint.x),static_cast<float>(probePoint.y),static_cast<float>(probePoint.x-cannonInfo.footX*.5),static_cast<float>(probePoint.y-cannonInfo.footY*.5),128,0,1,0};
+                                for (int direction=0;direction<8;direction+=2) { const auto ray=session.GunTargeting().CannonRay(query,direction);std::printf("Cannon(%d,%d) dir%d ray %g,%g,%g,%g\n",probePoint.x,probePoint.y,direction,ray.left,ray.top,ray.right,ray.bottom); } //원본허용짝수방향만관측한다.
                             }
                             return;
                         }ui.Point(session,*place);const auto money=session.Sp(1);std::cout<<"전진 실제 허용 TYPE"<<type<<" 위치"<<place->x<<","<<place->y<<" SP"<<money<<"\n";

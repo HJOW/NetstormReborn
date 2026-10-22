@@ -1,0 +1,95 @@
+{
+  "host": "VM-W11-Codex",
+  "date": "2026-10-22",
+  "last_full_refined_host": "VM-W11-Codex",
+  "last_full_refined_date": "2026-10-22",
+  "baseline_commit": "eb4464e7",
+  "status": "natural-assault-and-full-regression-passed",
+  "new_native_oracle_inputs": 0,
+  "game_gui_runs": 0,
+  "remote_pushes": 0,
+  "scenario": {
+    "mission": "TheWarBegins",
+    "ai_frames_enabled": true,
+    "manual_plan": "cpppj/tests/fixtures/campaign-forward-battle-north-plan.tsv",
+    "preserved_plan": "cpppj/tests/fixtures/campaign-forward-battle-plan.tsv",
+    "bridge_inputs": 24,
+    "bridge_preference": [
+      138,
+      112
+    ],
+    "search_bounds": [
+      116,
+      102,
+      150,
+      135
+    ],
+    "cannon_preference": [
+      136,
+      120
+    ],
+    "actual_forward_cannon": [
+      150,
+      107
+    ],
+    "actual_forward_cannon_hp": 600,
+    "actual_forward_cannon_cost": 400,
+    "observed_sp_before_cannon": 1075,
+    "target_sid": 15017,
+    "observed_target_bounds": [
+      149,
+      115,
+      156,
+      124
+    ],
+    "observed_target_hp": [
+      5000,
+      4992,
+      3344,
+      1778,
+      130,
+      0
+    ],
+    "final_target_state": 3,
+    "observed_gun_targets": [
+      15017,
+      15023
+    ],
+    "injected_game_results": false
+  },
+  "focused_validation": {
+    "tests": 1,
+    "failed_checks": 0,
+    "exit_code": 0
+  },
+  "boundaries": [
+    "수동 전술과 탐색 범위만 변경했고 원본 배치·사격·AI·SP/HP 계산과 최종 신전 자연 파괴 조건은 유지했다.",
+    "원본 게임에서 같은 전체 입력을 재생한 검증이나 신규 전체 기계어 관측이 아니다.",
+    "미션 승리·15개 미션 완주·GUI/음향 동일성·Edit 구현은 미완료다."
+  ],
+  "build": {
+    "configuration": "Release",
+    "exit_code": 0,
+    "warnings": 0,
+    "errors": 0
+  },
+  "regression": {
+    "command": "ctest --test-dir cpppj/build -C Release --output-on-failure",
+    "ctest_exit_code": 0,
+    "internal_tests": 2247,
+    "failed_checks": 0,
+    "seconds": 170.48,
+    "total_seconds": 170.61,
+    "log": "extracted/cpp-forward-placement-20261022-all-tests.log"
+  },
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "cpppj/tests/CampaignSessionTests.cpp": "744b15d46f9db16bfc2c30bac383061387f346e0028abe5292784a2750aa38a9",
+    "cpppj/tests/fixtures/campaign-forward-battle-plan.tsv": "06388594a475df98a34251834b65faa21cecf94c0ddecc164c2831eb997b997a",
+    "cpppj/tests/fixtures/campaign-forward-battle-north-plan.tsv": "bdf23395711288429fcf0a7996e28ac73080dbc99412656e7a3bbe344961e368",
+    "cpppj/src/o/RawCanonPlacementCollision.cpp": "29a43fe50e1b95052afb0942465caa3c8e3eca3a892693a91f882c2ae584e9c3",
+    "cpppj/src/o/RawGunTarget.cpp": "7ac9b51af58949ce8c23f9854679a7685468ba798768db0a1158f25b0ff95f14",
+    "cpppj/src/client/RawCampaignSession.cpp": "c12295e3e17ea18af628c7d79968f35e60f975c50df7cc5c7fc1e5d4330b08b1"
+  }
+}
