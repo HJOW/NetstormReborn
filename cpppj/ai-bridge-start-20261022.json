@@ -1,0 +1,26 @@
+{
+  "host": "VM-W11-Codex",
+  "decompile_host": "VM-W11-Codex",
+  "cases": 399,
+  "normal_returns": 798,
+  "x87": [
+    639,
+    895
+  ],
+  "cells": 38446,
+  "helpers": {
+    "0x4e49c0": 7920,
+    "0x4ad390": 27088,
+    "0x49a840": 30700,
+    "0x40faa0": 3612,
+    "0x4ad680": 3612
+  },
+  "stubs": [],
+  "game_started": false,
+  "sources": {
+    "originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD\\NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "tools\\decomp_ai_bridge_start.py": "859a54d8a18f5ef988563fd8e2eaddeba2652dcab74bad5f68de3c42aa934ed1",
+    "cpppj\\tests\\fixtures\\ai-bridge-start-x86.tsv": "a615658b0d1059ac2948661d71d29ee2e02ab870f28af0eb42b4697b1c2b38cc"
+  }
+}

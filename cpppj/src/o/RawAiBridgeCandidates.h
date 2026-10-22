@@ -1,6 +1,7 @@
 // 실제 AI 다리 탐색의 나선24칸과 연결점 후보6개를 같은 현재 월드에서 준비한다.
 #pragma once
 #include "o/RawAiBrain.h"
+#include "o/RawAiBuildSearch.h"
 
 namespace netstorm::o {
 // 원본 getter가 읽는 현재 TYPE 전역이며 번호를 별도 사본으로 고정하지 않는다.
@@ -14,6 +15,8 @@ class RawAiBridgeCandidates {
 public:
     RawAiBridgeCandidates(RawAiBrainMemory& memory,const SidPool& pool,std::span<const RiftTypeRecord> types,std::span<const RiftTypeFrames> frames,std::span<const std::uint16_t> surfaces,std::span<const std::uint8_t> spots,AiBridgeCandidateTypes globals); //같은 PATCH188/65536 지도와 원본 본체를 빌린다.
     bool Prepare(std::uint32_t token) const; //한 호출24칸 후 false, 경계/나선24/단계8부터후보3개 조건에서 true이며 최대6개만 저장한다.
+    Sid Open(Sid surface,std::int32_t x,std::int32_t y) const; //0040faa0:현재코드의연결/다리구분에맞는빈이웃이있으면같은SID,없으면0이다.
+    RawPathPoint Start(std::uint32_t token,RawPathPoint target,const AiBuildSearchBounds& bounds) const; //00410b10:현재사각형X우선/안쪽Y순서의strict최소거리열린지면이며없으면{-10000,-10000}이다.
     const SidPool& Pool() const; //실제 Session 조립 시 다른 월드가 섞이지 않게 확인한다.
 private:
     std::span<std::uint8_t> Body(std::uint32_t token) const; //현재 살아 있는0xb08 본체만 조회한다.

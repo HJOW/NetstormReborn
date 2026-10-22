@@ -1,11 +1,19 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-22 단위316 완료: AI 다리 시작점·유효 연결과 원본399장면
+
+- [x] 검색 복원을 `de78dbaa / 20261022-40 CP`로 커밋하고 계속했다. 현재/마지막 전체 정밀 디컴파일 PC는 **VM-W11-Codex / 2026-10-22**로 같다. 보호 원본/CD·AGENTS/dotnetpj·기존 원본 fixture 변경이나 새 전체 디컴파일·게임/창 실행은 없다.
+- [x] `RawAiBridgeCandidates::Start/Open`으로00410b10/0040faa0의현재맵X우선/Y안쪽·전체graph/owner/bridge비교·빈이웃/현재코드·strict최소Manhattan거리와동률유지를복원했다. 실제helper/CRT까지계산스텁없이 **399장면·두x87정밀도798정상반환·38,446칸**을동결하고결과8BYTE/전체본문불변을C++로대조했다. 실제Advance와조립해52,64선택·시작점없음·기존timeout9보존도통과했다. [상세](docs/exe/cpp-ai-bridge-start-20261022.md), [원본출처](cpppj/ai-bridge-start-20261022.json).
+- [x] Release **첫 빌드 종료0·경고0·오류0**, 다리 **24개·실패check0**다. 원본/도구/fixture SHA4개와UTF-8/한국어주석/`git diff --check`를확인했다. `extracted/cpp-ai-bridge-start-20261022-{build,tests}.log`를보존한다. 전체는반복하지않아최신전체는직전단위315의 **2,226개·실패0**이며새2개를포함한전체통과로합산하지않는다. 인수인계후 **20261022-41 CP**로로컬커밋하며push하지않는다.
+- [ ] **다음 재개점:**실제Session에Start/Initialize/Prepare/Search/Step/Extend를연결한다. 배치=`aiCollectors->DeployWithNotice`,현재기술부모=Player`Technology`,소비=실제world삭제,보충=`aiStrategySetup->RefreshBridges`와같은풀/프레임/spot/hash0/시각/TYPE/공용난수/로그를공유한다. 검색scratch는원본미초기화caller입력임을명시한다. `CampaignAiServices`의현재allocationBytes계약과구분해실제임시입력공급을정한다. 이후네전략/00417bd0·00417c70전체순서/자동AI프레임/종료를연결한다.
+- [ ] **원래 목표 계속:**15개미션·Edit/custom Fort·언어별시나리오수명·사용자자연플레이·표시/음향동일성은미완료다. 현재단위검사통과로 `/goal` 완료를표시하지않는다.
+
 ## 2026-10-22 단위315 완료: AI 다리 끝점 점수·8개 예산 검색과 전체 회귀
 
 - [x] 시작 HEAD `fca3ae92`/깨끗한 트리·AGENTS·양 인수인계를 확인했다. 현재/마지막 전체 정밀 디컴파일 PC는 **VM-W11-Codex / 2026-10-22**로 같다. 보호 원본/CD·AGENTS/dotnetpj·기존 원본 fixture 변경이나 새 전체 디컴파일·게임/창 실행은 없다.
 - [x] `RawAiBridgeSearch`로 실제0040f400 모양/끝점·0040f880 점유·0040f910 signed 거리/방향 벌점·004144b0 검색을 복원했다. 호출당8개 평가·회전/역순재고/정순연결점 진행·동점일 때만 공용난수·후보/끝점 쓰기를 보존한다. 원본 caller의 미갱신 임시XY는 명시적scratch입력/출력으로 다룬다. 실제 decoder/CRT/난수까지 계산 스텁 없이 실행한 **208개전체모양·416점유·640점수·72장면/288검색반환 전체본체**와 일치했다. 두x87정밀도에서도 기존 기대 변경 없이 모두 재검증했다. [상세](docs/exe/cpp-ai-bridge-search-20261022.md), [원본 출처](cpppj/ai-bridge-search-20261022.json), [정밀도 교차 검증](cpppj/ai-bridge-search-precision-20261022.json).
 - [x] Release **종료0·경고0·오류0**, 다리 **22개·실패check0**, 전체 CTest **내부2,226개·실패check0·종료0·176.17초**다. 실제 초기화→후보준비→검색중단/재개→Step끝점반환 조립도 통과했다. `extracted/cpp-ai-bridge-search-20261022-{build,tests,ctest,all-tests}.log`와 [회귀 보고서](cpppj/ai-bridge-search-regression-20261022.json)를 보존한다. 인수인계 후 **20261022-40 CP**로 로컬 커밋하며 push하지 않는다.
-- [ ] **다음 재개점:**00410b10 시작점/0040faa0 유효 연결점을 복원한다. 현재 경계00544d14..20의X우선/안쪽Y 순회·목표XY의CRT절삭·Brain+298 graph/+260 owner·현재surface/spot/코드와strict최소Manhattan거리다. 이후 실제 Session의 Step/Extend→네 전략/00417bd0·00417c70 전체 순서/자동AI프레임/종료를 연결한다. 검색scratch는 원본미초기화caller입력임을 유지하며 임의성공점으로 초기화하지 않는다. 현재모듈은 실제Session자동다리에 아직 연결되지 않았다.
+- [x] **후속 단위316에서 완료:**00410b10 시작점/0040faa0 유효 연결과 원본399장면을 복원/검증했다. 실제Session의Step/Extend→네전략/자동전체프레임/종료는 계속 미완료다.
 - [ ] **원래 목표 계속:**15개 미션·Edit/custom Fort·언어별 시나리오 수명·사용자 자연 플레이·표시/음향 동일성은 미완료다. 이번 전체 회귀 통과로 `/goal` 완료를 표시하지 않는다.
 
 ## 2026-10-22 단위314 완료: AI 다리 나선 후보 준비와 실제 원본210장면

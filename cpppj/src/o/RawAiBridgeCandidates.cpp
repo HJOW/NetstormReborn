@@ -2,6 +2,7 @@
 #include "o/RawAiBridgeCandidates.h"
 #include "o/TerrainBuilder.h"
 #include <bit>
+#include <cmath>
 #include <stdexcept>
 
 namespace netstorm::o {
@@ -9,6 +10,10 @@ namespace {
 constexpr std::uint32_t kBudget=24,kCapacity=6,kCandidates=0x648; //원본 호출 예산·후보 용량·Brain+5f0+58의 실제 배열 시작이다.
 // DWORD의 signed 비교/산술 시프트를 호스트 signed overflow 없이 수행한다.
 std::int32_t Signed(std::uint32_t value) { return std::bit_cast<std::int32_t>(value); }
+// 실제__ftol의signed64 절삭 하위DWORD이며 indefinite의하위는0이다.
+std::uint32_t Truncate(float value) { if (!std::isfinite(value) || static_cast<double>(value)<-0x1p63 || static_cast<double>(value)>=0x1p63) return 0;return static_cast<std::uint32_t>(static_cast<std::int64_t>(value)); }
+// 원본xor/sub의INT_MIN감김도signed최소거리비교에그대로전달한다.
+std::uint32_t Absolute(std::uint32_t value) { return Signed(value)<0 ? 0U-value : value; }
 // raw 슬롯/본체의 비정렬 DWORD를 원본 little endian으로 읽는다.
 std::uint32_t Read(std::span<const std::uint8_t> raw,std::size_t offset) {
     if (offset>raw.size() || raw.size()-offset<4) throw std::out_of_range("AI 다리 후보 DWORD 읽기 범위");std::uint32_t result{};
@@ -41,6 +46,27 @@ std::uint32_t RawAiBridgeCandidates::Graph(Sid sid) const {
 // 현재 코드의 A~P 연결표는 지면 생성과 같은 원본0052f910을 공유한다.
 std::uint32_t RawAiBridgeCandidates::Connections(Sid sid) const {
     const auto raw=pool_.Slot(sid);const auto type=raw[10];const auto frame=Read(raw,36);if (type<70 || type>=frames_.size() || frame>=frames_[type].Codes().size()) throw std::out_of_range("AI 다리 후보의 현재 프레임 범위");return static_cast<std::uint32_t>(TerrainBuilder::Connection(static_cast<char>(frames_[type].Codes()[frame].side)));
+}
+//0040faa0의북/동/남/서 첫열린끝점만 확인하며 지면의owner/graph는caller가검사한다.
+Sid RawAiBridgeCandidates::Open(Sid surface,std::int32_t x,std::int32_t y) const {
+    const bool bridge=static_cast<std::uint32_t>(pool_.Slot(surface)[10])==globals_.bridge;const auto connections=Connections(surface); //다리TYPE는BYTE로축소하지않는다.
+    for (std::uint32_t direction=0;direction<8;direction+=2) { //현재코드의각cardinal비트와빈이웃을같은순서로검사한다.
+        const auto [dx,dy]=kNeighborCells[direction];if (((connections&(1U<<(direction/2)))!=0)==bridge && !Spot(x+dx,y+dy)) return surface;
+    }
+    return {};
+}
+// 현재맵 경계를clamp하지 않으며 같은거리에서는먼저발견한X/Y를유지한다.
+RawPathPoint RawAiBridgeCandidates::Start(std::uint32_t token,RawPathPoint target,const AiBuildSearchBounds& bounds) const {
+    static_cast<void>(Body(token));const auto targetX=Truncate(target.x),targetY=Truncate(target.y);std::int32_t best=65536;RawPathPoint result{-10000,-10000}; //원본은미정결과를두float에직접쓴다.
+    for (auto x=Truncate(bounds.left);static_cast<double>(Signed(x))<bounds.right;++x) { //원본의fild비교는float저장전정수값이며X가바깥순회다.
+        for (auto y=Truncate(bounds.top);static_cast<double>(Signed(y))<bounds.bottom;++y) { //각X마다현재위경계를다시절삭하고Y를올린다.
+            const auto graph=Field(token,0x298),owner=Field(token,0x260);if (Signed(x)<0 || Signed(y)<0 || x>=256 || y>=256) continue;const Sid surface{surfaces_[static_cast<std::size_t>(y)*256+x]}; //원본은각칸에서현재본체두필드를다시읽는다.
+            if (!surface.value || Graph(surface)!=graph || pool_.Slot(surface)[34]!=owner || (Spot(Signed(x)-1,Signed(y)) && Spot(Signed(x)+1,Signed(y)) && Spot(Signed(x),Signed(y)-1) && Spot(Signed(x),Signed(y)+1))) continue;
+            const auto score=Signed(Absolute(targetX-x)+Absolute(targetY-y));if (score>=best || !Open(surface,Signed(x),Signed(y)).value) continue; //거리부터비교하고엄격히작은후보만유효연결검사를실행한다.
+            result={static_cast<float>(Signed(x)),static_cast<float>(Signed(y))};best=score;
+        }
+    }
+    return result;
 }
 // helper 효과가 없는 실제 읽기 순서와 후보 기록 뒤 나선 진행을 보존한다.
 bool RawAiBridgeCandidates::Prepare(std::uint32_t token) const {

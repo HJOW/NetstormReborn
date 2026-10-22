@@ -54,3 +54,26 @@ TEST_CASE(AiBridgeCandidates_ComposesInitializationAndBudgetedStep) {
     for (int call=0;call<16 && Get(scene.memory.Bytes(scene.token),0x5f0)==2;++call) CHECK(!path.Step(scene.token,source,{80,80})); //실제 나선 상태가 완료할 때까지 동일 Step을 호출한다.
     CHECK(Get(scene.memory.Bytes(scene.token),0x5f0)==3 && source.x==50 && source.y==50 && &scene.Candidates().Pool()==&scene.pool);
 }
+// 원본시작점399개를caller입력만으로재실행하고결과XY/본문불변을검증한다.
+TEST_CASE(AiBridgeCandidates_Native399StartPoints) {
+    const auto path=(std::filesystem::path(__FILE__).parent_path()/"fixtures/ai-bridge-start-x86.tsv").string();std::size_t count{};
+    for (const auto& row:LoadFixture(path.c_str()).rows) { //같은거리동률/분수경계/현재전체DWORD비교도원본결과와대조한다.
+        CHECK(row.size()==13);if (row.size()!=13) return;CandidateScene scene({"0",row[1],row[2],"50","50","2","0","0","1","7","2","1","165","0","","0"});const auto mode=Number(row[0]);
+        for (std::uint32_t y=0;y<256;++y) { //원본관측의현재지도입력만행순서로구성한다.
+            for (std::uint32_t x=0;x<256;++x) { //비대칭지형/점유로X/Y전도를검출한다.
+                const auto at=y*256+x;scene.surfaces[at]=mode && (mode!=3 || (x+3*y)%5!=0) ? 50 : 0;scene.spots[at]=static_cast<std::uint8_t>(mode==2 ? 0x80 : mode==3 && (x+3*y)%5==0 ? 0x40 : 0);
+            }
+        }
+        scene.bridge=Number(row[11]);auto body=scene.memory.Bytes(scene.token);Put(body,0x298,Number(row[9]));Put(body,0x260,Number(row[10]));const auto before=Hex(body);const AiBuildSearchBounds bounds{std::bit_cast<float>(Number(row[3])),std::bit_cast<float>(Number(row[4])),std::bit_cast<float>(Number(row[5])),std::bit_cast<float>(Number(row[6]))};
+        const auto point=scene.Candidates().Start(scene.token,{std::bit_cast<float>(Number(row[7])),std::bit_cast<float>(Number(row[8]))},bounds);std::array<std::uint8_t,8> result{};Put(result,0,std::bit_cast<std::uint32_t>(point.x));Put(result,4,std::bit_cast<std::uint32_t>(point.y));const auto same=Hex(result)==row[12] && Hex(body)==before;
+        if (!same) std::printf("AI 다리 시작점 원본 차이 행%zu XY%s/%s\n",count,Hex(result).c_str(),row[12].c_str());CHECK(same);++count;
+    }
+    CHECK(count==399);
+}
+// 실제현재graph/owner를고르고시작점없음은기존timeout을변경하지않는다.
+TEST_CASE(AiBridgeCandidates_ComposesStartAndAdvance) {
+    CandidateScene scene({"1","97","80","50","50","2","0","0","1","7","2","1","165","0","","0"});auto body=scene.memory.Bytes(scene.token);Put(body,0x298,7);Put(body,0x260,2);Put(body,0x3d0,std::bit_cast<std::uint32_t>(-10000.0f));Put(body,0x3d4,std::bit_cast<std::uint32_t>(-10000.0f));Put(body,0x3d8,9);ContainedFinderState finder;double now{};std::int32_t limit{256};std::uint32_t logKind{},marker{};const AiBuildSearchBounds bounds{49.75f,61.5f,55.25f,67.5f};AiBridgePathHooks hooks;
+    hooks.start=[&](auto token,auto target) { return scene.Candidates().Start(token,target,bounds); };RawAiBridgePath path(scene.memory,scene.pool,finder,{now,limit,scene.bridge,logKind,marker,marker,marker},std::move(hooks));
+    CHECK(path.Advance(scene.token,{52.9f,64.1f}));CHECK(std::bit_cast<float>(Get(body,0x3d0))==52 && std::bit_cast<float>(Get(body,0x3d4))==64 && Get(body,0x3d8)==9);
+    Put(body,0x3d0,std::bit_cast<std::uint32_t>(-10000.0f));Put(body,0x3d4,std::bit_cast<std::uint32_t>(-10000.0f));Put(body,0x298,0x107);CHECK(path.Advance(scene.token,{52.9f,64.1f}));CHECK(std::bit_cast<float>(Get(body,0x3d0))==-10000 && std::bit_cast<float>(Get(body,0x3d4))==-10000 && Get(body,0x3d8)==9);
+}
