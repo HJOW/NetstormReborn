@@ -446,3 +446,5 @@ target_sources(netstorm PRIVATE RawArcSpire.h RawArcSpire.cpp)
 target_sources(netstorm PRIVATE RawDissolveFrame.h RawDissolveFrame.cpp)
 # 같은 표시 목록/실제 Kernel과 dummy 상호 감시로 분해 수명을 연결한다.
 target_sources(netstorm PRIVATE RawDissolveLifetime.h RawDissolveLifetime.cpp DissolveVisualSystem.h DissolveVisualSystem.cpp)
+# 애시드 포획 수신/헤더와 검증한 일반 유닛의 실제 캡처 분배다.
+target_sources(netstorm PRIVATE RawAcidZap.h RawAcidZap.cpp RawPlainUnitCapture.h RawPlainUnitCapture.cpp)

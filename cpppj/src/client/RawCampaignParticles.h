@@ -9,6 +9,7 @@
 #include "o/FieryTailVisualSystem.h"
 #include "o/LightningVisualSystem.h"
 #include "o/ShrapnelVisualSystem.h"
+#include "o/DissolveVisualSystem.h"
 #include "o/BurningVisualSystem.h"
 
 namespace netstorm::client {
@@ -34,6 +35,7 @@ public:
     o::LightningVisualProcess* AddScreenBolt(o::Sid parent,std::array<std::int32_t,2> from,std::array<std::int32_t,2> to,float life);
     // 실제 wrapper의 세 종류 파편을 같은 Host/Renderer에 생성한다. 확보 실패는nullptr다.
     o::ShrapnelVisualProcess* AddShrapnel(o::Sid source,o::ShrapnelKind kind);
+    o::DissolveVisualProcess* AddDissolve(o::Sid source,o::Sid first,o::Sid second,std::int32_t xOriented); //현재 캡처/게임 난수/표시 목록으로 애시드18을 생성한다.
     // 같은 표시 목록에 실제 건설 캡처/최대 HP를 연결한다. 첫 건설 전에 한 번만 호출한다.
     void ConnectConstruction(std::function<o::ConstructionVisualImage(o::Sid)> capture,std::function<std::int32_t(o::Sid)> maximum);
     // 실제17 표시와 캡처/입자를 만들며 부모 완료 뒤 같은 Kernel에서 종료한다.
@@ -57,6 +59,7 @@ private:
     o::LightningSystemHooks LightningHooks();
     // 실제 bitmap 픽셀을 현재 clip/pitch 표면에 연결하고 메모리는 소유 vector가 반납한다.
     o::ShrapnelSystemHooks ShrapnelHooks(CampaignShrapnelHooks hooks);
+    o::DissolveSystemHooks DissolveHooks(const CampaignShrapnelHooks& hooks); //같은 실제 dummy/캡처/반납과0바이트 입자 확보를 연결한다.
     // 현재 dirty 큐와 실제 renderer에 같은 요청을 전달한다.
     void Invalidate(o::FieryTailDirtyRect rect);
     // 장치 연결 전 쌓인 원본 변경 표는 버리지 않고 실제 장치에 전달한다.
@@ -93,6 +96,7 @@ private:
     std::vector<o::ParticleGradient> constructionGradients_; // 생성자가 요청하는 두 실제 색 띠다.
     std::unique_ptr<o::ConstructionVisualSystem> construction_; // 같은 표시 목록/Host/난수를 쓰는 실제17 수명이다.
     std::unique_ptr<o::ShrapnelVisualSystem> shrapnel_; // 실제 세계/캡처 경계가 제공된 Session의 process16이다.
+    std::unique_ptr<o::DissolveVisualSystem> dissolve_; //동일한 실제 세계/원본 캡처로 대상 삭제 뒤 유지하는18이다.
     o::BurningVisualState burningVisual_; // 같은 월드의 실제14/첫 공유 색 표다.
     o::BurningSourcesState burningSources_; // 같은 현재 약화 마나 옵션이다.
     o::BurningFrameState burningFrame_; // 현재 시각/카메라/16·11/바람이다. 바람 초기화의 전체Client 복원은 후속이다.

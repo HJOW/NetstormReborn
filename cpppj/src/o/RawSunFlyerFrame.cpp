@@ -70,7 +70,9 @@ void RawSunFlyerFrame::Notify(FlyerProcessFields& fields,std::uint32_t message,s
 }
 // 삭제 효과가 현재 폭탄 필드를 바꿔도 원본은 마지막에0을 다시 쓴다.
 void RawSunFlyerFrame::ClearBomb(FlyerProcessFields& fields) const {
-    const auto bomb=Bomb(fields);if (Need(hooks_.robust)(bomb,true)) Need(hooks_.destroy)(bomb,0x10);Write(fields,kBomb,0);
+    const auto value=Read(fields,kBomb);
+    if (value<=65535U) { const Sid bomb{static_cast<std::uint16_t>(value)};if (Need(hooks_.robust)(bomb,true)) Need(hooks_.destroy)(bomb,0x10); } //4ac140은전체DWORD가1..fffe밖이면부수효과없이0이며첫Frame전미정값도포함한다.
+    Write(fields,kBomb,0);
 }
 // 폭탄 정리 뒤에는 같은 현재 필드를 공통 홈 통지에 전달한다.
 void RawSunFlyerFrame::ParentDying(FlyerProcessFields& fields) const { ClearBomb(fields);Need(hooks_.baseParentDying)(fields); }

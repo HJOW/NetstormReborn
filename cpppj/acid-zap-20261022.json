@@ -1,0 +1,187 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-22",
+  "uniqueInputs": 1017,
+  "plainUnitCaptureMethods": [
+    {
+      "type": 70,
+      "vtable": "00508cc8",
+      "methods": [
+        "004acfe0",
+        "0041c0f0",
+        "0041c100"
+      ]
+    },
+    {
+      "type": 73,
+      "vtable": "0050a1e8",
+      "methods": [
+        "004acfe0",
+        "0041c0f0",
+        "0041c100"
+      ]
+    },
+    {
+      "type": 111,
+      "vtable": "005040c0",
+      "methods": [
+        "004acfe0",
+        "0041c0f0",
+        "0041c100"
+      ]
+    },
+    {
+      "type": 133,
+      "vtable": "0050e568",
+      "methods": [
+        "004acfe0",
+        "0041c0f0",
+        "0041c100"
+      ]
+    },
+    {
+      "type": 135,
+      "vtable": "00503e50",
+      "methods": [
+        "004acfe0",
+        "0041c0f0",
+        "0041c100"
+      ]
+    },
+    {
+      "type": 137,
+      "vtable": "00503d80",
+      "methods": [
+        "004acfe0",
+        "0041c0f0",
+        "0041c100"
+      ]
+    },
+    {
+      "type": 138,
+      "vtable": "0050a050",
+      "methods": [
+        "004acfe0",
+        "0041c0f0",
+        "0041c100"
+      ]
+    },
+    {
+      "type": 141,
+      "vtable": "005040c0",
+      "methods": [
+        "004acfe0",
+        "0041c0f0",
+        "0041c100"
+      ]
+    },
+    {
+      "type": 144,
+      "vtable": "0050a388",
+      "methods": [
+        "004acfe0",
+        "0041c0f0",
+        "0041c100"
+      ]
+    },
+    {
+      "type": 145,
+      "vtable": "0050e738",
+      "methods": [
+        "004acfe0",
+        "0041c0f0",
+        "0041c100"
+      ]
+    },
+    {
+      "type": 146,
+      "vtable": "00504198",
+      "methods": [
+        "004acfe0",
+        "0041c0f0",
+        "0041c100"
+      ]
+    },
+    {
+      "type": 156,
+      "vtable": "00503f20",
+      "methods": [
+        "004acfe0",
+        "0041c0f0",
+        "0041c100"
+      ]
+    },
+    {
+      "type": 158,
+      "vtable": "0050f210",
+      "methods": [
+        "004acfe0",
+        "0041c0f0",
+        "0041c100"
+      ]
+    }
+  ],
+  "normalReturns": 2034,
+  "nativeInstructions": 69740,
+  "precisionDifferentInputs": [],
+  "nativeCalls": {
+    "0048bfe0": 1854,
+    "004ac200": 712,
+    "004abaf0": 584,
+    "0040ad30": 180,
+    "004df230": 180
+  },
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_acid_zap.py": "94f1b4fcad29e47be0ba9801b2be683a204ffd22d7907f799356eb9f474475ec",
+    "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+    "tools/decomp_cursor_position.py": "e15bcdbc4c6be9c131c30f15416c945d650dba9f7dc6def404b47f63c635c212",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "cpppj/tests/fixtures/acid-zap-x86.tsv": "d98553359ce0380510e4aaa4d84f82207f1f471e257205bec1a776df8c147e73"
+  },
+  "limitations": [
+    "48bfe0/40ad30/4df230/4ac200/4abaf0 전체는 원문이며 TYPE 주소 조회·소리·분해 생성·가상 삭제만 명시 경계다.",
+    "콜백 뒤 현재 패킷과 원래 대상/첫 폴의 raw 슬롯을 별도 관측한다. 이 자료만으로145의범위 포획이나 실제 캠페인 연결을 완료 처리하지 않는다."
+  ],
+  "implementationSha256": {
+    "cpppj/src/o/RawAcidZap.cpp": "5db9a51dacb364b978cc29cbd6eb917ba75c79176b625bab2db6f07004b4b55a",
+    "cpppj/src/o/RawAcidZap.h": "347a709ea89af7a9eb9c79fa1aac35f9754130bd52defce6796318d1eecd4881",
+    "cpppj/src/o/RawPlainUnitCapture.cpp": "52da90e7641007168f27fe64270f193dac2425548d97e7ce234e1fd0fc3e3ecf",
+    "cpppj/src/o/RawPlainUnitCapture.h": "c6391f223a849ad05a49b99163168e11b556658dfd2941576124bc5e1494d330",
+    "cpppj/src/o/RawSunFlyerFrame.cpp": "ab4ef4d47a873bf8c01aa3100eb8a7c9f2a4498b8805c09bd3ff1c4ae3bd14e2",
+    "cpppj/src/client/RawCampaignParticles.cpp": "c89d01dbc879725b6fe84c9f263d90a263e19ab062602748ed9b516b5411b422",
+    "cpppj/src/client/RawCampaignParticles.h": "fce88880e00d137e732d2cae6507953456bc5a9a61efa2ead295353ee338d994",
+    "cpppj/src/client/RawCampaignSession.cpp": "384b402549fe0eaae72c7fe8266e835ecff720a944d4a8879bb01b464781b852",
+    "cpppj/tests/AcidZapTests.cpp": "daa9f3ed445c0cbadd685a572e1a48d3a76f15dfc6c50c8aafa7c1e5b24d6d7b",
+    "cpppj/tests/SunFlyerFrameTests.cpp": "b7df8b622681d1fc10d35fb147b03acbf26d0be88f08ffdbdd1e30fd3ba144d8",
+    "cpppj/tests/CampaignSessionTests.cpp": "e7ab8caa4e50bf1846f4410b9048c2cc91545936210454c5188c116b28a07073",
+    "cpppj/src/client/OwnerColorMaps.cpp": "1dc23bab259f2bdbb6e88d7e12c4427a50f76304c8aa11cc6309800d0da7e620",
+    "cpppj/src/client/OwnerColorMaps.h": "aed5d31073e2015b4d0773eef376a302d122c024a04f90533d0882fd28121abf",
+    "cpppj/src/client/RawShapeToBuffer.cpp": "a6e46ce3d717dd312323268a0bb1ebcd020d992c583d9a3d6e069588fbb50eab",
+    "cpppj/src/client/RawShapeToBuffer.h": "f3788fbcdacd21dd4dabac2c63c96fbd4d28e1c27c9a19cf8b6519f98852a119",
+    "cpppj/src/o/CMakeLists.txt": "5e95f654243c21938413e554adc7ec732953eac6d194d819346275285c0df9db",
+    "cpppj/tests/CMakeLists.txt": "57feb6e0c2c84047a5ea79d306e1542ce4d2463009adb1842c87e7dd4eefdf49"
+  },
+  "workStarted": "2026-10-22",
+  "validationDate": "2026-10-23",
+  "validation": {
+    "date": "2026-10-23",
+    "finalBuild": "extracted/cpp-acid-zap-20261022-build9.log",
+    "buildExitCode": 0,
+    "newTests": 4,
+    "newTestFailures": 0,
+    "sessionCases": 20,
+    "sessionPixels": 25980,
+    "sessionDissolveSounds": 20,
+    "focusLog": "extracted/cpp-acid-zap-20261022-focused-final1.log",
+    "fullTests": 2295,
+    "fullFailedChecks": 0,
+    "ctestExitCode": 0,
+    "ctestSeconds": 289.16,
+    "ctestLog": "extracted/cpp-acid-zap-20261022-ctest1.log",
+    "ctestLogSha256": "f4cf17a31410c317b4ca021350d838c2246cbbb1c939b33b26bcd4825cc5a833",
+    "cppChangedAfterValidation": false
+  }
+}

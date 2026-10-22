@@ -17,6 +17,7 @@ RawCampaignParticles::RawCampaignParticles(RawWorldCore core,o::GameRandom& rand
      fiery_(rendering_,random,lifetime_,frame_,colors_,FieryHooks()),lightning_(rendering_,random,lightningLifetime_,frame_,LightningHooks()) {
     if (shrapnel) {
         if (!shrapnel->crt) throw std::invalid_argument("파편 실제 공유 CRT 상태 미연결");auto& crt=*shrapnel->crt;
+        dissolve_=std::make_unique<o::DissolveVisualSystem>(rendering_,random_,frame_,DissolveHooks(*shrapnel));
         shrapnel_=std::make_unique<o::ShrapnelVisualSystem>(rendering_,random_,crt,frame_,ShrapnelHooks(std::move(*shrapnel)));
     }
 }
@@ -119,6 +120,19 @@ o::ShrapnelSystemHooks RawCampaignParticles::ShrapnelHooks(CampaignShrapnelHooks
 o::ShrapnelVisualProcess* RawCampaignParticles::AddShrapnel(o::Sid source,o::ShrapnelKind kind) {
     if (!shrapnel_) throw std::logic_error("캠페인 실제 파편 세계/캡처 미연결");
     try { return shrapnel_->Add(source,kind); }catch (const std::bad_alloc&) { return nullptr; }
+}
+// 캡처가 소유한 픽셀을 같은 원본18의 무중력 이동/수명/현재 표면에 연결한다.
+o::DissolveSystemHooks RawCampaignParticles::DissolveHooks(const CampaignShrapnelHooks& input) {
+    const auto shared=ShrapnelHooks(input);o::DissolveSystemHooks hooks;
+    hooks.lifetime.create=input.lifetime.create;hooks.lifetime.pop=input.lifetime.pop;hooks.lifetime.depend=input.lifetime.depend;hooks.lifetime.capture=input.lifetime.capture;hooks.destroyUnpaired=input.destroyUnpaired;
+    hooks.lifetime.reserve=[](std::uint32_t bytes) { if (bytes!=120) throw std::logic_error("분해 실제 객체 확보량 오류");return true; };
+    hooks.frame=shared.frame;hooks.frame.reserve=[](std::uint32_t) { return true; }; //원본new0도 성공 포인터이며 실제 저장소는vector가 소유한다.
+    hooks.release=shared.release;return hooks;
+}
+// 실제 실패는nullptr이며 캡처/색표 오류를 빈 효과로 무시하지 않는다.
+o::DissolveVisualProcess* RawCampaignParticles::AddDissolve(o::Sid source,o::Sid first,o::Sid second,std::int32_t xOriented) {
+    if (!dissolve_) throw std::logic_error("캠페인 실제 분해 세계/캡처 미연결");
+    try { return dissolve_->Add(source,first,second,xOriented); }catch (const std::bad_alloc&) { return nullptr; }
 }
 // 원본 게임 시각을 별도 고정 틱이나 벽시각으로 대체하지 않는다.
 void RawCampaignParticles::PrepareFrame(double now,std::uint32_t frameNumber,bool weakenedMana) {

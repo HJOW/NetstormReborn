@@ -1,0 +1,67 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-22",
+  "uniqueInputs": 30,
+  "normalReturns": 60,
+  "nativeInstructions": 2744,
+  "nativeCalls": {
+    "0045be00": 20,
+    "004ac140": 60,
+    "0045beb0": 40,
+    "0045b7a0": 40,
+    "0041bfb0": 40
+  },
+  "precisionDifferentInputs": [],
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_sun_flyer_frame.py": "afe8503d7b5de9afa80bf106d133d62b54ffe6eec66b22dfd9b3a91276dfb3fd",
+    "tools/decomp_flyer_frame.py": "c67f5954b8166d1792fca78faf7f082e1ef25358ef5a5183c12afb89f45d69a2",
+    "tools/decomp_sun_flyer_clear.py": "56ea9ea5242f324220e068fe7c5cefc5876d7dbfde6b362e7abe459c97284f7e",
+    "cpppj/tests/fixtures/sun-flyer-clear-x86.tsv": "fdd6b87b20e60b765830b3d2114a3c4a1a002914f58ade557019e87ff42ca307"
+  },
+  "limitations": [
+    "45be00/45beb0/45b7a0과실제4ac140을실행한다. 개발자상세진단은0이며별도world삭제/홈가상효과는기존명시경계다.",
+    "0/80/ffff및16비트밖값을관측한다. 1..fffe중격리슬롯밖을역참조하는비정상입력은정상관측으로세지않는다. 기존410행은변경하지않는다."
+  ],
+  "implementationSha256": {
+    "cpppj/src/o/RawAcidZap.cpp": "5db9a51dacb364b978cc29cbd6eb917ba75c79176b625bab2db6f07004b4b55a",
+    "cpppj/src/o/RawAcidZap.h": "347a709ea89af7a9eb9c79fa1aac35f9754130bd52defce6796318d1eecd4881",
+    "cpppj/src/o/RawPlainUnitCapture.cpp": "52da90e7641007168f27fe64270f193dac2425548d97e7ce234e1fd0fc3e3ecf",
+    "cpppj/src/o/RawPlainUnitCapture.h": "c6391f223a849ad05a49b99163168e11b556658dfd2941576124bc5e1494d330",
+    "cpppj/src/o/RawSunFlyerFrame.cpp": "ab4ef4d47a873bf8c01aa3100eb8a7c9f2a4498b8805c09bd3ff1c4ae3bd14e2",
+    "cpppj/src/client/RawCampaignParticles.cpp": "c89d01dbc879725b6fe84c9f263d90a263e19ab062602748ed9b516b5411b422",
+    "cpppj/src/client/RawCampaignParticles.h": "fce88880e00d137e732d2cae6507953456bc5a9a61efa2ead295353ee338d994",
+    "cpppj/src/client/RawCampaignSession.cpp": "384b402549fe0eaae72c7fe8266e835ecff720a944d4a8879bb01b464781b852",
+    "cpppj/tests/AcidZapTests.cpp": "daa9f3ed445c0cbadd685a572e1a48d3a76f15dfc6c50c8aafa7c1e5b24d6d7b",
+    "cpppj/tests/SunFlyerFrameTests.cpp": "b7df8b622681d1fc10d35fb147b03acbf26d0be88f08ffdbdd1e30fd3ba144d8",
+    "cpppj/tests/CampaignSessionTests.cpp": "e7ab8caa4e50bf1846f4410b9048c2cc91545936210454c5188c116b28a07073",
+    "cpppj/src/client/OwnerColorMaps.cpp": "1dc23bab259f2bdbb6e88d7e12c4427a50f76304c8aa11cc6309800d0da7e620",
+    "cpppj/src/client/OwnerColorMaps.h": "aed5d31073e2015b4d0773eef376a302d122c024a04f90533d0882fd28121abf",
+    "cpppj/src/client/RawShapeToBuffer.cpp": "a6e46ce3d717dd312323268a0bb1ebcd020d992c583d9a3d6e069588fbb50eab",
+    "cpppj/src/client/RawShapeToBuffer.h": "f3788fbcdacd21dd4dabac2c63c96fbd4d28e1c27c9a19cf8b6519f98852a119",
+    "cpppj/src/o/CMakeLists.txt": "5e95f654243c21938413e554adc7ec732953eac6d194d819346275285c0df9db",
+    "cpppj/tests/CMakeLists.txt": "57feb6e0c2c84047a5ea79d306e1542ce4d2463009adb1842c87e7dd4eefdf49"
+  },
+  "workStarted": "2026-10-22",
+  "validationDate": "2026-10-23",
+  "validation": {
+    "date": "2026-10-23",
+    "finalBuild": "extracted/cpp-acid-zap-20261022-build9.log",
+    "buildExitCode": 0,
+    "newTests": 4,
+    "newTestFailures": 0,
+    "sessionCases": 20,
+    "sessionPixels": 25980,
+    "sessionDissolveSounds": 20,
+    "focusLog": "extracted/cpp-acid-zap-20261022-focused-final1.log",
+    "fullTests": 2295,
+    "fullFailedChecks": 0,
+    "ctestExitCode": 0,
+    "ctestSeconds": 289.16,
+    "ctestLog": "extracted/cpp-acid-zap-20261022-ctest1.log",
+    "ctestLogSha256": "f4cf17a31410c317b4ca021350d838c2246cbbb1c939b33b26bcd4825cc5a833",
+    "cppChangedAfterValidation": false
+  }
+}

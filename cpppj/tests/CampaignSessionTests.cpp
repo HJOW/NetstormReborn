@@ -3802,3 +3802,48 @@ TEST_CASE(CampaignArcSpire_ActualKernelAttackAndDeletion) {
     CHECK(!core.destroy.PreDepth() && !core.destroy.PostDepth() && !core.bookkeeping.depth);
     std::cout<<"아크 스파이어 실제 Kernel: HP"<<hp<<"→"<<after<<"/빔 소리"<<zaps<<"/부모 삭제·예약 반납/SP"<<funds<<'\n';
 }
+
+// 원본0x61 수신은 폴TYPE를 검사하지 않는다. 두78은 수신/표시 검사의 명시 참조이며145의자연포획검사와구분한다.
+TEST_CASE(CampaignAcidZap_ActualPacketCapturePixelsAndNaturalExpiry) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);std::size_t cases{},totalPixels{},sounds{},lost{};
+    for (const auto type:{133U,135U,137U,111U,141U,146U,156U,73U,144U,138U}) { //실제 운반·비행 유닛의 일반/전용 소유자 색표를 포함한다.
+        for (const auto orientation:{0,1}) { //각 장면은 새 Session으로 격리하여 다른 홈의 후속 생산을 섞지 않는다.
+            SessionServicesFixture external;auto services=external.Services();const auto once=services.sound.playOnceAt;
+            services.sound.playOnceAt=[&](float x,float y,SoundHandle token,std::uint32_t first,std::uint32_t second) { if (token==external.names.Lookup("dissolve.wav")) ++sounds;return once(x,y,token,first,second); }; //실제 단발 위치 음향을 관찰한다.
+            services.unitLost=[&](Sid) { ++lost; };services.formPacket=[&](std::span<const std::uint8_t> packet) { external.packets.emplace_back(packet.begin(),packet.end()); }; //생산 홈/비행체의 실제 Form 직렬화도 소비한다.
+            auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));session.Load();auto core=session.Core();
+            std::vector<std::vector<std::uint8_t>> received;RawPacketDispatch dispatch(OriginalEdition::Patch1078,CommandDevice(received));session.RegisterCarrierCommands(dispatch);const auto& registration=dispatch.Registration(0x61);CHECK(registration.version==1 && registration.length==11 && registration.mismatch==0 && !registration.observer);
+            PacketConnection connection;connection.sender=8;const auto first=session.World().Create(78,2),second=session.World().Create(78,2);core.owner.Set(first,1);core.owner.Set(second,1);session.World().Pop(first,195,195,0);session.World().Pop(second,215,215,0);
+            constexpr SoundView kView{2768,1871,0,0,1024,768}; //205,205를 중앙에 두는 같은16·11 카메라다.
+            session.SetParticleView(kView,{});std::uint64_t frame{};const auto tick=[&] { ++frame;session.RunFrame({frame*.025,100+frame*.025,.025,frame},false); }; //현재 시각만 진행하며 생산 단계/피해 결과를 쓰지 않는다.
+            Sid victim{};
+            if (type==73 || type==144 || type==138) {
+                const auto homeType=type==73 ? 72U : type==144 ? 143U : 139U;const auto home=session.World().Create(homeType,2);core.owner.Set(home,2);session.World().Pop(home,206,208,0);
+                const auto makerForm=FindAttachedProcess(core.pool,home,59);auto* maker=type==138 ? dynamic_cast<WindAviaryProcess*>(core.processes.FromForm(makerForm)) : nullptr;
+                if (type==138) CHECK(maker);
+                Sid emerging{}; //더스트 데빌의첫몸체는31부착시임시48에서빠지므로후속표시번호로덮어쓰지않는다.
+                for (std::uint32_t step=0;step<1600 && !victim.value;++step) { //실제 홈이 만들고31을 붙인 비행체만 수신 표적으로 사용한다.
+                    tick();const auto value=type==138 && maker ? Get(maker->Fields().bytes,48) : Get(core.pool.Slot(home),12,2);
+                    if (!emerging.value && value && value<core.pool.Capacity()) emerging=Sid{static_cast<std::uint16_t>(value)};
+                    if (emerging.value) { const auto raw=core.pool.Slot(emerging);if (raw[10]==type && !(raw[11]&7) && !(raw[40]&8) && FindAttachedProcess(core.pool,emerging,31).value) victim=emerging; }
+                }
+                CHECK(victim.value);if (!victim.value) return;
+            } else { victim=session.World().Create(type,2);core.owner.Set(victim,2);session.World().Pop(victim,205,205,0); }
+            const auto money=session.Sp(1);const auto refund=session.HitPoints().Plan(victim,1,false).refund; //기존 원문 대조된 삭제 보상 계획과 실제 수신 지급을 비교한다.
+            std::array<std::uint8_t,11> packet{1,0x61,11,0};Put(packet,4,victim.value,2);Put(packet,6,first.value,2);Put(packet,8,second.value,2);packet[10]=static_cast<std::uint8_t>(orientation);const auto priorSounds=sounds;
+            CHECK(dispatch.Dispatch(connection,packet));CHECK((core.pool.Slot(victim)[11]&1) && sounds==priorSounds+1);CHECK(session.Sp(1)==money+refund);
+            const auto forms=ConstructionLive(core,18);CHECK(forms.size()==1);if (forms.size()!=1) return;const auto form=forms.front();auto* effect=dynamic_cast<DissolveVisualProcess*>(core.processes.FromForm(form));CHECK(effect);if (!effect) return;
+            const auto dummy=effect->Parent();const auto token=effect->Fields().common.registration.token;CHECK(core.dependencies.Has(form,dummy));const auto& image=effect->Fields().common.image;
+            CHECK(image.width>1 && image.height>1 && image.pixels.size()==static_cast<std::size_t>(image.width*image.height));const auto opaque=std::count_if(image.pixels.begin(),image.pixels.end(),[](auto color) { return color!=255; });CHECK(opaque>0 && effect->Fields().opaqueCount==opaque);
+            CHECK(dispatch.Dispatch(connection,packet) && sounds==priorSounds+1 && session.Sp(1)==money+refund); //같은free대상은효과/보상을반복하지않는다.
+            tick();effect=dynamic_cast<DissolveVisualProcess*>(core.processes.FromForm(form));CHECK(effect);if (!effect) return;
+            CHECK(effect->Fields().clockStarted && effect->Fields().common.delta==0);const auto bounds=RenderProcessRemovalBounds(effect->Fields().common.registration,static_cast<float>(kView.cameraX),static_cast<float>(kView.cameraY));
+            auto sprites=session.ParticleSprites({0,0,1024,768});std::erase_if(sprites,[&](const RenderSprite& sprite) { if (!sprite.procedure) return true;const auto area=sprite.procedure->bounds;return area.left!=bounds[0] || area.top!=bounds[1] || area.right!=bounds[2] || area.bottom!=bounds[3]; });CHECK(sprites.size()==1);
+            Renderer renderer(1024,768);renderer.SetScene(std::move(sprites));std::vector<std::uint8_t> pixels(1024*768,255);renderer.Draw(pixels,1024,255);const auto visible=std::count_if(pixels.begin(),pixels.end(),[](auto color) { return color!=255; });CHECK(visible>0);totalPixels+=static_cast<std::size_t>(visible);
+            for (std::uint32_t step=0;step<240 && core.processes.FromForm(form);++step) tick(); //같은 실제 Kernel만으로 저장 수명을 소진한다.
+            CHECK(!core.processes.FromForm(form) && !session.Particles().Rendering().Lookup(token) && (core.pool.Slot(dummy)[11]&3)==3);CHECK(session.Sp(1)==money+refund && !core.destroy.PreDepth() && !core.destroy.PostDepth() && !core.bookkeeping.depth);++cases;
+            std::cout<<"애시드 실제 수신 TYPE"<<type<<"/방향"<<orientation<<"/픽셀"<<visible<<"/삭제 보상"<<refund<<"/전체 frame"<<frame<<'\n';
+        }
+    }
+    CHECK(cases==20 && totalPixels>0);std::cout<<"애시드 실제 수신/캡처/자연소진:"<<cases<<"건/분해 표면"<<totalPixels<<"픽셀/소리"<<sounds<<"/소실"<<lost<<'\n';
+}

@@ -1818,5 +1818,12 @@ set_source_files_properties(DissolveFrameTests.cpp PROPERTIES COMPILE_DEFINITION
 # 원본 생성/등록/캡처/반납과 콜백 뒤 현재 부모를 대조한다.
 target_sources(netstorm_tests PRIVATE DissolveLifetimeTests.cpp)
 target_sources(netstorm_tests PRIVATE DissolveVisualSystemTests.cpp)
+# 애시드 포획 수신/헤더의 최초1017행을 비트 그대로 대조한다.
+target_sources(netstorm_tests PRIVATE AcidZapTests.cpp)
+set_source_files_properties(AcidZapTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_ACID_ZAP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/acid-zap-x86.tsv\"")
+# 훨리기그의기존원문410행과별도전체DWORD경계30행을같이사용한다.
+set_property(SOURCE SunFlyerFrameTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS
+    "NETSTORM_SUN_FLYER_CLEAR_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/sun-flyer-clear-x86.tsv\"")
 set_source_files_properties(DissolveLifetimeTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_DISSOLVE_LIFETIME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/dissolve-lifetime-x86.tsv\"")

@@ -1687,3 +1687,17 @@ cpppj/tests/fixtures/dissolve-*-x86*.tsv text eol=lf
 tools/decomp_dissolve_*.py text eol=lf
 cpppj/dissolve-*-20261022.json text eol=lf
 docs/exe/cpp-dissolve-20261022.md text eol=lf
+
+# 애시드 포획 수신/기본 유닛 캡처의 원문과 제품을 같은UTF-8 LF로 유지한다.
+cpppj/src/o/RawAcidZap.* text eol=lf
+cpppj/src/o/RawPlainUnitCapture.* text eol=lf
+cpppj/tests/AcidZapTests.cpp text eol=lf
+cpppj/tests/fixtures/acid-zap-x86.tsv text eol=lf
+tools/decomp_acid_zap.py text eol=lf
+cpppj/acid-zap-20261022.json text eol=lf
+docs/exe/cpp-acid-zap-20261022.md text eol=lf
+cpppj/tests/fixtures/sun-flyer-clear-x86.tsv text eol=lf
+cpppj/sun-flyer-clear-20261022.json text eol=lf
+tools/decomp_sun_flyer_clear.py text eol=lf
+cpppj/src/o/RawSunFlyerFrame.cpp text eol=lf
+cpppj/tests/SunFlyerFrameTests.cpp text eol=lf

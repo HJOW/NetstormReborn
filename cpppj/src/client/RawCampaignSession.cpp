@@ -6,6 +6,8 @@
 #include "o/CanonDecoder.h"
 #include "o/RawBridgeEvents.h"
 #include "o/RawArcSpire.h"
+#include "o/RawAcidZap.h"
+#include "o/RawPlainUnitCapture.h"
 #include "o/RawBridgeDraw.h"
 #include "o/RawMissionStart.h"
 #include "o/RawFactoryDraw.h"
@@ -502,6 +504,9 @@ struct RawCampaignSession::Impl {
     std::uint32_t stealHaltCounter{}; // 모든 크랩이 공유하는00545428이다.
     FormPacketHeader stealHeader{0x60,1,10}; // 실제40acf0의 현재 포획 헤더다.
     std::unique_ptr<RawCarrierSteal> carrierSteal; // 같은 내용물/공간/방향 동맹/이동/전역 음향의 실제 포획이다.
+    AcidZapState acidZapState; //현재 제단/성장 중 아이스 타워의 수신 제외TYPE다.
+    FormPacketHeader acidZapHeader{0x61,1,11}; //52ee42의message/protocol/선언길이다. wire는01/61 순서다.
+    std::unique_ptr<RawAcidZap> acidZap; //실제18 캡처와 같은 가상 삭제를 사용하는 포획 수신이다.
     CarrierTransferState carrierTransferState; // 미등록187 분기의 공유 주기/재시도/마지막 기증자와 현재 헤더다.
     std::unique_ptr<RawCarrierTransfer> carrierTransfer; // 실제 내용물 재부착/491/송신/이동 삭제와 연결한다.
     BoardTargetState boardTargetState; // 실제 월드 초기화 후의 실패점 두 float다.
@@ -621,6 +626,7 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawConstructionProcess> building; // 같은 Host의 실제30 시작/진행/완료를 소유한다.
     std::array<std::uint32_t,188> buildingMapTokens{}; // 원본 색표 초기화의 일반1/전용2/없는0 분류다.
     OwnerColorMaps buildingOwnerColors; // 일반 소유자 색 띠이며 다리는 별도 기존 분기로 취급한다.
+    std::map<std::uint32_t,OwnerColorMaps> buildingSpecialOwnerColors; //벌룬/에어쉽/세일 스케이터의 실제 명도 색표를 최초 사용 때 보관한다.
     ShapeToBufferState buildingCaptureState; // 건설 현재 SHP의 원본 fixed16/추가 TYPE 기준점이다.
     std::unique_ptr<RawShapeToBuffer> buildingCapture; // 같은 실제 자산에서 건설 버퍼를 캡처한다.
     std::unique_ptr<RawFactoryDraw> factoryDraw; // 같은 실제 Factory의 기본·추가 그림 가상 몸체다.
@@ -942,7 +948,7 @@ struct RawCampaignSession::Impl {
         shrapnel.lifetime.capture=[this](Sid sid) {
             const auto raw=core.pool.Slot(sid);
             // 독립 전체 캡처/가상Draw/RLE를 대조한 정확한 가상 표만 같은 실제 일반색 캡처에 연결한다.
-            if (IsPatchTemple(raw) || IsPatchDais(raw) || IsBurningArcherCapture(raw) || IsPlainBuildingCapture(raw) || IsThunderCannonCapture(raw) || IsSunAviaryCapture(raw) || IsGeyserCapture(raw)) { if (!buildingCapture) throw std::logic_error("실제 건물 파편 캡처 설치 전 호출");return buildingCapture->Capture(sid); }
+            if (IsPatchTemple(raw) || IsPatchDais(raw) || IsBurningArcherCapture(raw) || IsPlainBuildingCapture(raw) || IsPlainUnitCapture(raw) || IsThunderCannonCapture(raw) || IsSunAviaryCapture(raw) || IsGeyserCapture(raw)) { if (!buildingCapture) throw std::logic_error("실제 건물/유닛 캡처 설치 전 호출");return buildingCapture->Capture(sid); }
             if (!Flyer(sid) && !BridgeLifetime(sid) && Read(raw,0)!=0x502370U) throw std::logic_error("다른 실제 파편 source의 전용 색표/추가 그림 미복원 TYPE"+std::to_string(raw[10]));return shrapnelCapture->Capture(sid);
         };
         shrapnel.destroyUnpaired=[this](Sid sid) { world.Destroy(sid,0); };
@@ -1065,6 +1071,7 @@ struct RawCampaignSession::Impl {
         ConnectConstruction(); // 실제공통삭제후설치뒤같은noIsland VT의표면가상분배를첫객체전등록한다.
         ConnectDamageable(); // 같은 공통 삭제와 신전/사제 해방의 파생 하위를 첫 객체 전에 연결한다.
         ConnectCarrierSteal(); // 최초 크랩 Pop의 실제492예약/공통 장부다.
+        ConnectAcidZap(); //최초61h 수신 전에 실제 분해18/현재 가상 삭제를 연결한다.
         ConnectCarrierRegular(); // 첫491예약/프레임 전에 같은 내용물 그림과 만료 삭제를 연결한다.
         ConnectSunAviary(); // 실제 타입32/flags8 부착과 현재48BYTE 필드를 같은 Kernel에 등록한다.
         ConnectWindAviary(); // 첫저장객체Pop전에타입59의전용생산기를설치한다.
@@ -1629,6 +1636,14 @@ struct RawCampaignSession::Impl {
         steal.damageablePostPop=[this](Sid sid,std::uint32_t flags) { carrier->DamageablePostPop(sid,flags); };
         carrierSteal=std::make_unique<RawCarrierSteal>(core.pool,core.hash,core.types,assetState.boss,globals.editor,playerState.battleOwner,alliances,motionState.halt.carrierType,motionState.carrier.priestType,stealHeader,stealHaltCounter,std::move(steal));
         core.postPop.SetCarrierStealPostPop(carrierSteal.get());
+    }
+    // 원본48bfe0의음향→현재픽셀캡처/18→같은대상의가상삭제를연결한다.
+    void ConnectAcidZap() {
+        AcidZapHooks hooks;
+        hooks.sound=[this](float x,float y,std::string_view name,std::uint32_t loop) { if (loop || !services.sound.playOnceAt) throw std::logic_error("애시드 실제 단발 위치 음향 미연결");services.sound.playOnceAt(x,y,soundNames.Lookup(name),0,0); };
+        hooks.dissolve=[this](Sid victim,Sid first,Sid second,std::int32_t orientation) { static_cast<void>(particles->AddDissolve(victim,first,second,orientation)); };
+        hooks.destroy=[this](Sid victim,std::uint32_t flags) { static_cast<void>(world.Destroy(victim,flags)); };
+        acidZap=std::make_unique<RawAcidZap>(core.pool,core.types,acidZapState,acidZapHeader,std::move(hooks));
     }
     // 실제 Carrier 내용물 그림/표시/타이머를 현재 Session의 한 풀·시계·공유 타입에 연결한다.
     void ConnectCarrierRegular() {
@@ -2343,12 +2358,20 @@ struct RawCampaignSession::Impl {
         for (const auto type:std::array<std::uint32_t,7>{82,155,111,141,137,94,97}) buildingMapTokens[type]=2;
         buildingCaptureState.ownerTypeMaps=buildingMapTokens;
         buildingCaptureState.ownerColors=[this](std::uint32_t type,std::uint32_t owner)->std::span<const std::uint8_t> {
-            if (buildingMapTokens.at(type)!=1 || owner>=core.bridgeState.ownerColors.size()) throw std::logic_error("건설 전용 소유자 색표 미복원");
-            const auto color=core.bridgeState.ownerColors[owner];if (color<0 || color>8) throw std::out_of_range("건설 현재 소유자 색 번호 오류");return buildingOwnerColors[static_cast<std::size_t>(color)];
+            if (owner>=core.bridgeState.ownerColors.size()) throw std::out_of_range("실제 캡처 현재 소유자 번호 오류");
+            const auto color=core.bridgeState.ownerColors[owner];if (color<0 || color>8) throw std::out_of_range("건설 현재 소유자 색 번호 오류");
+            if (buildingMapTokens.at(type)==1) return buildingOwnerColors[static_cast<std::size_t>(color)];
+            if (buildingMapTokens[type]!=2 || (type!=111 && type!=141 && type!=137 && type!=94 && type!=97)) throw std::logic_error("현재 캡처 전용 소유자 색표 미복원");
+            if (!buildingSpecialOwnerColors.contains(type)) {
+                std::array<std::uint32_t,256> logical{}; //현재 같은 원본COL의RGBX 입력이며 별도 팔레트로 대신하지 않는다.
+                for (std::size_t index=0;index<logical.size();++index) { const auto rgb=assets.game.Palette().Color(static_cast<std::uint8_t>(index));logical[index]=std::uint32_t(rgb.red)|(std::uint32_t(rgb.green)<<8)|(std::uint32_t(rgb.blue)<<16); } //예약 바이트는 명도 계산에 쓰지 않는다.
+                buildingSpecialOwnerColors.emplace(type,BuildSpecialOwnerColorMaps(logical,type));
+            }
+            return buildingSpecialOwnerColors.at(type)[static_cast<std::size_t>(color)];
         };
         factoryDraw=std::make_unique<RawFactoryDraw>(core.pool,core.frames);
         buildingCaptureState.mainFrame=[this](Sid sid) { const auto raw=core.pool.Slot(sid);if (IsPatchDais(raw)) return -1; // 실제+a0=41c0f0은 빈 기본 캡처이며+a4만 별도169TYPE를 그린다.
-            if (IsSunAviaryCapture(raw)) return SunAviaryCaptureMainFrame(raw);if (IsThunderCannonCapture(raw)) return ThunderCannonCaptureMainFrame(raw,core.frames[raw[10]]);if (IsPatchTemple(raw) || IsBurningArcherCapture(raw) || IsPlainBuildingCapture(raw) || IsGeyserCapture(raw)) return assets.game.Types()[raw[10]-70].definition.specialFrames.baseFrame;return factoryDraw->MainFrame(sid); };
+            if (IsSunAviaryCapture(raw)) return SunAviaryCaptureMainFrame(raw);if (IsThunderCannonCapture(raw)) return ThunderCannonCaptureMainFrame(raw,core.frames[raw[10]]);if (IsPatchTemple(raw) || IsBurningArcherCapture(raw) || IsPlainBuildingCapture(raw) || IsPlainUnitCapture(raw) || IsGeyserCapture(raw)) return assets.game.Types()[raw[10]-70].definition.specialFrames.baseFrame;return factoryDraw->MainFrame(sid); };
         buildingCaptureState.additional=[this](Sid sid,ConstructionVisualImage& image,std::int32_t x,std::int32_t y) {
             if (IsPatchDais(core.pool.Slot(sid))) {
                 if (core.pool.Slot(sid)[40]&0x10U) throw std::logic_error("추상 다이스 실제 캡처 색상 미연결");
@@ -2361,7 +2384,7 @@ struct RawCampaignSession::Impl {
                 DrawTempleFrames(sid,[this,&image,x,y,type](std::int32_t frame) { if (frame<0) throw std::out_of_range("템플 캡처 음수 프레임");static_cast<void>(DrawShape(image.pixels,image.width,image.height,assets.game.Shapes(),type-70,static_cast<std::size_t>(frame),x,y,{0,0,image.width-1,image.height-1})); });return;
             }
             const auto raw=core.pool.Slot(sid);
-            if (IsPlainBuildingCapture(raw)) return; // 원본+a4=41c100은 추가/추상 비트와 관계없이 빈ret8이다.
+            if (IsPlainBuildingCapture(raw) || IsPlainUnitCapture(raw)) return; //원본+a4=41c100은 추가/추상 비트와 관계없이 빈ret8이다.
             if (IsGeyserCapture(raw)) {
                 if (raw[40]&0x10U) throw std::logic_error("추상 간헐천 실제 캡처 색상 미연결"); // 기존 독립 원문은 일반색/extra0·2·3 입력이다.
                 DrawGeyserCapture(raw,[this,&image](auto type,auto frame,auto px,auto py) { static_cast<void>(DrawShape(image.pixels,image.width,image.height,assets.game.Shapes(),type-70,frame,px,py,{0,0,image.width-1,image.height-1})); },x,y);return;
@@ -2874,6 +2897,8 @@ void RawCampaignSession::RegisterCarrierCommands(RawPacketDispatch& dispatch) {
     dispatch.Register(0x50,[this](std::uint32_t owner,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->PrepareCarrierDrop();impl_->carrierDrop->Receive(owner,packet); });
     dispatch.Observe(0x60,{});dispatch.Version(0x60,1,0);dispatch.RequireLength(0x60,10);
     dispatch.Register(0x60,[this](std::uint32_t owner,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->carrierSteal->Receive(owner,0,packet); });
+    dispatch.Observe(0x61,{});dispatch.Version(0x61,1,0);dispatch.RequireLength(0x61,11);
+    dispatch.Register(0x61,[this](std::uint32_t owner,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->acidZap->Receive(owner,0,packet); });
     dispatch.Observe(0x5c,{});dispatch.Version(0x5c,1,0);dispatch.RequireLength(0x5c,6);
     dispatch.Register(0x5c,[this](std::uint32_t,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->ReceiveDevastationActivation(packet); });
     dispatch.Observe(0x5f,{});dispatch.Version(0x5f,1,0);dispatch.RequireLength(0x5f,0xffff);

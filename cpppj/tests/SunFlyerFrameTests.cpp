@@ -108,3 +108,16 @@ TEST_CASE(SunFlyerFrame_Native410) {
     }
     CHECK(count==410);
 }
+// 최초Frame전미정DWORD는실제4ac140이거절하며범위검사자체의호출은외부게임효과가아니다.
+TEST_CASE(SunFlyerFrame_NativeFullDwordBombCleanup) {
+    std::size_t count{};
+    for (const auto& row:LoadFixture(NETSTORM_SUN_FLYER_CLEAR_FIXTURE).rows) { //기존410행과분리한새30경계다.
+        CHECK(row.size()==7);const auto kind=row[0][0];std::vector<std::uint64_t> input;
+        for (const auto& word:Split(row[1],',')) input.push_back(std::stoull(word)); //전체DWORD비트를좁히지않는다.
+        SunFrameScene scene(kind,input);if (kind=='P') scene.sun->ParentDying(scene.fields);else scene.sun->ClearBomb(scene.fields);
+        std::string effects;
+        for (const auto& event:Split(scene.events,';')) { if (event.empty() || event.starts_with("Sid,")) continue;if (!effects.empty()) effects+=';';effects+=event; } //새원문은순수helper도기계어이므로장치효과만대조한다.
+        CHECK(scene.Image()==row[2] && scene.Objects()==row[3] && scene.Globals(0)==row[4] && (effects.empty() ? "-" : effects)==row[6]);++count;
+    }
+    CHECK(count==30);
+}
