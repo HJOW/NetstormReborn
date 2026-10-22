@@ -451,3 +451,4 @@ target_sources(netstorm PRIVATE RawAcidZap.h RawAcidZap.cpp RawPlainUnitCapture.
 target_sources(netstorm PRIVATE RawAcidFence.h RawAcidFence.cpp)
 target_sources(netstorm PRIVATE RawIceTower.h RawIceTower.cpp)
 target_sources(netstorm PRIVATE RawBulwarkHit.h RawBulwarkHit.cpp)
+target_sources(netstorm PRIVATE RawPlainWorkshopCapture.h RawPlainWorkshopCapture.cpp)

@@ -1741,3 +1741,10 @@ docs/exe/cpp-wind-aviary-destroy-20261023.md text eol=lf
 cpppj/tests/fixtures/wind-aviary-capture-x86.tsv text eol=lf
 tools/decomp_wind_aviary_capture.py text eol=lf
 cpppj/wind-aviary-capture-20261023.json text eol=lf
+
+# 다섯 일반 워크샾 자산의 정확한 분배와 전체 픽셀 원문을 UTF-8 LF로 보존한다.
+cpppj/src/o/RawPlainWorkshopCapture.* text eol=lf
+cpppj/tests/fixtures/plain-workshop-capture-x86.tsv text eol=lf
+tools/decomp_plain_workshop_capture.py text eol=lf
+cpppj/plain-workshop-capture-20261023.json text eol=lf
+docs/exe/cpp-plain-workshop-capture-20261023.md text eol=lf

@@ -1,0 +1,126 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-22",
+  "rows": 2115,
+  "pixels": 5978430,
+  "types": {
+    "129": {
+      "name": "rainCannon",
+      "vtable": "0050b9b8",
+      "frames": 13,
+      "captureMethods": [
+        "004acfe0",
+        "0041c0f0",
+        "0041c100"
+      ]
+    },
+    "136": {
+      "name": "sunFence",
+      "vtable": "00509470",
+      "frames": 10,
+      "captureMethods": [
+        "004acfe0",
+        "0041c0f0",
+        "0041c100"
+      ]
+    },
+    "140": {
+      "name": "windArcher",
+      "vtable": "0050b6e8",
+      "frames": 101,
+      "captureMethods": [
+        "004acfe0",
+        "0041c0f0",
+        "0041c100"
+      ]
+    },
+    "143": {
+      "name": "rainAviary",
+      "vtable": "005099e8",
+      "frames": 14,
+      "captureMethods": [
+        "004acfe0",
+        "0041c0f0",
+        "0041c100"
+      ]
+    },
+    "148": {
+      "name": "thunderArcher",
+      "vtable": "0050b7c0",
+      "frames": 3,
+      "captureMethods": [
+        "004acfe0",
+        "0041c0f0",
+        "0041c100"
+      ]
+    }
+  },
+  "actualCalls": {
+    "0x4a7db0": 2115,
+    "0x4daa70": 846,
+    "0x4acfe0": 1269,
+    "0x41c100": 1269
+  },
+  "assertions": 0,
+  "captureReplaced": 0,
+  "rleReplaced": 0,
+  "osCalls": 0,
+  "boundaries": "실제 캡처/가상 기본·빈 추가/보호RLE. 명시 TYPE 발 기준점(-2,3)/단위배율/일반색이며 전체 자연 플레이 증거와 구별한다.",
+  "sha256": {
+    "cpppj/tests/fixtures/plain-workshop-capture-x86.tsv": "3233bba0b94e3c3d0259b31b602566f26919edf70fa90d45c7929d746233b790",
+    "extracted/burning-frame-helper/originals/creation.c": "a61efc5fe47da67c8ef639024a9bed67b231e7886727e544d414c9a83062c5cf",
+    "extracted/burning-frame-helper/originals/functions.tsv": "1ab906703d20e352aece5c1839dc16c08c74c8edd7b86856f649295a27356154",
+    "extracted/burning-frame-paint-helper/originals/creation.c": "c6ed005f927e5cbecc971704171572d8385216c6c9319a905d865d889693cb05",
+    "extracted/burning-frame-paint-helper/originals/functions.tsv": "9fe2585e0d90fbecc96ef35a9c1a14516ac6d19e8145eae49b9ae9c523bfb6a9",
+    "extracted/burning-frame-raster-helper/originals/creation.c": "221f3d06b23aab4802703c7a1f2603ac7de39bacb338a44b5b7e24100e69ddf5",
+    "extracted/burning-frame-raster-helper/originals/functions.tsv": "609d5d460cc2c10cc784e29635119d6544937bf25bb04f859972f00a399d6633",
+    "extracted/creation/originals/creation.c": "426ae0f7c99bece695fc93cd81c3b291ae3cb8303c9dcb7c6223e330e3fa81ae",
+    "extracted/creation/originals/functions.tsv": "42b14fee0b262fd92c833ec51db3cf772e92fd56b6ccbdc1c589955eb347ccb7",
+    "extracted/display/originals/creation.c": "bccd673912ada7da70332cd898646b18c109a85a9663cf5134e944a97f590804",
+    "extracted/display/originals/functions.tsv": "408c4530becac3e2ce5112b436e23b32437a729b36ec6b0ebae5b2da81eb51b4",
+    "extracted/dude-spawn/originals/creation.c": "fb498e44e72eab9c4a4aa7496af2c91262a543688188d9a4c4cf1a49b852fcd0",
+    "extracted/dude-spawn/originals/functions.tsv": "0df48f73f6418b0aae9cd8c4058998866e245ac632d76513c1a16f57eda670ea",
+    "extracted/owner/originals/creation.c": "f9919c046d5259526946f106b47b6259fe5e04971f743d6fa02d6a5361b9dc16",
+    "extracted/owner/originals/functions.tsv": "3ea66dace80a85999a8b2c2dbadb4d5f1bd18b0dcdb0768f9c41075206c7c72d",
+    "extracted/pop/helpers-originals/creation.c": "33272b9b553227ac3ec295bb3807a6e458cecb6cb885f984baa06aeb98d2fab9",
+    "extracted/pop/helpers-originals/functions.tsv": "fc21935402ba4781899da2002c5f844061e53150d0bddeeaa597f29b81d58cb8",
+    "extracted/pop/originals/creation.c": "e59b6c12246f8b9a21a2f1d128cc623a2d04bdf1c9fbe7b5f9989d11413f76b7",
+    "extracted/pop/originals/functions.tsv": "5b3241e336bcc1dea4c188121e3c458d3aef3414c5b6e9c4590db8c126414568",
+    "extracted/postpop/originals/creation.c": "a0df44a01f4e690d255c3d4721ef2b37f4c7452980c8d91bb334be8df89d5f79",
+    "extracted/postpop/originals/functions.tsv": "99dcfa55557ba03e55321146ccb750816cdebd8242c18b4d95e2e1a353a32021",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/setframe/originals/creation.c": "ac6f886701b50c2ee25ef5fb5411fbba8c97dfacd866220c3df6c50a70777b31",
+    "extracted/setframe/originals/functions.tsv": "31422114edd78937f1d285df1480190ad4ceb87b5436e6e1d407e335f621425e",
+    "extracted/sid/originals/functions.tsv": "3034dd0d393ebdfd77f2e9fafe8a5b252d5437f1e71ab94541cc229e8ef8694b",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originals/d/_shapes.shp": "c878353c8054208deef832e34c514b30fe670e175505b129333a5728ba70f68e",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "tools/decomp_factory_capture.py": "e5dd681fa0d5aa74779c7873c10814eff9ad15e193f7cb7322661c6ca02e27f1",
+    "tools/decomp_generator_capture.py": "d5b8b31e5c9c0ab00f24236460af8b63f86412e5115537d56f6f71feb6238b0f",
+    "tools/decomp_plain_workshop_capture.py": "9b6d520c44e1cb22c69ba0d30ee6ae70a206db202ce5d0dec1077ac3515bffd3",
+    "tools/decomp_shape_to_buffer_oracle.py": "3499edbde033d4fb5102bfb855a988adc30c8b17aae219d917d81346eea71eec",
+    "tools/decomp_temple_capture.py": "d39f2d4150b2b96eb885e17b1bbcd8f1727e21b9b71a16113b3b04a0e2ece045",
+    "tools/shp.py": "4cb8bee6ed773e29e8658ddb315594ebf5ac005ea5b96c6b760a177029515bfd"
+  },
+  "implementationSha256": {
+    "cpppj/src/o/RawPlainWorkshopCapture.h": "d7251034747b936bd464dedf061f226ca78a7073756f3d8a65a38ed1f0336a33",
+    "cpppj/src/o/RawPlainWorkshopCapture.cpp": "f339509cc11781ad2431eb22d911163bcb0950d668c1ae00a9b5032cdbac45d7",
+    "cpppj/src/client/RawCampaignSession.cpp": "ee9a30e0942d100eb72b24edacf624ec888cc95fa703c328992a7d2a5c0d1409",
+    "cpppj/tests/CampaignSessionTests.cpp": "2ee9aa97414254c25b974564140ec8b2b7d0510c657f0927dc211b82eff423c5"
+  },
+  "validation": {
+    "releaseBuildLog": "extracted/cpp-plain-workshop-capture-20261023-build2.log",
+    "buildExitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "focusedLog": "extracted/cpp-plain-workshop-capture-20261023-focused2.log",
+    "focusedTests": 3,
+    "fullCTestLog": "extracted/cpp-plain-workshop-capture-20261023-ctest1.log",
+    "tests": 2311,
+    "failed": 0,
+    "ctestExitCode": 0,
+    "totalSeconds": 286.59,
+    "guiPlayed": false
+  }
+}

@@ -11,6 +11,7 @@
 #include "o/RawIceTower.h"
 #include "o/RawBulwarkHit.h"
 #include "o/RawPlainUnitCapture.h"
+#include "o/RawPlainWorkshopCapture.h"
 #include "o/RawBridgeDraw.h"
 #include "o/RawMissionStart.h"
 #include "o/RawFactoryDraw.h"
@@ -217,7 +218,7 @@ std::uint32_t Read(std::span<const std::uint8_t> raw,std::size_t offset) {
         (static_cast<std::uint32_t>(raw[offset+2])<<16)|(static_cast<std::uint32_t>(raw[offset+3])<<24);
 }
 // 원본 전체 캡처를 대조한 제네레이터·스톤/아이스 타워의 TYPE 기본/빈 추가 그림을 선택한다.
-bool IsPlainBuildingCapture(std::span<const std::uint8_t> raw) { return (raw[10]>=75 && raw[10]<=77 && Read(raw,0)==0x501ea0U) || ((raw[10]==78 || raw[10]==147) && Read(raw,0)==0x50e940U) || (raw[10]==79 && Read(raw,0)==0x50ea08U) || (raw[10]==139 && Read(raw,0)==0x509aa0U) || (raw[10]==142 && Read(raw,0)==0x50ead0U) || (raw[10]==149 && Read(raw,0)==0x50e668U) || (raw[10]==164 && Read(raw,0)==kPatchAltarVtable) || (raw[10]==95 && Read(raw,0)==kPatchStalagVtable) || (raw[10]==157 && Read(raw,0)==kPatchNoIslandVtable); } // 데빌메이커와세Blocker표도+78=4acfe0/+a0=41c0f0/+a4=41c100이며현재타입별색표유무를보존한다.
+bool IsPlainBuildingCapture(std::span<const std::uint8_t> raw) { return IsPlainWorkshopCapture(raw) || (raw[10]>=75 && raw[10]<=77 && Read(raw,0)==0x501ea0U) || ((raw[10]==78 || raw[10]==147) && Read(raw,0)==0x50e940U) || (raw[10]==79 && Read(raw,0)==0x50ea08U) || (raw[10]==139 && Read(raw,0)==0x509aa0U) || (raw[10]==142 && Read(raw,0)==0x50ead0U) || (raw[10]==149 && Read(raw,0)==0x50e668U) || (raw[10]==164 && Read(raw,0)==kPatchAltarVtable) || (raw[10]==95 && Read(raw,0)==kPatchStalagVtable) || (raw[10]==157 && Read(raw,0)==kPatchNoIslandVtable); } // 현재타입별색표유무와빈+a4를보존하며다섯워크샾자산도같은실제캡처에포함한다.
 }
 // 메뉴의 현재 원문/참조와 자식 우선 소멸 순서를 한 고정 주소에 보관한다.
 struct RawCampaignObjectMenus::Impl {

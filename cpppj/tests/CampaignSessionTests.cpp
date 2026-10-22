@@ -34,6 +34,7 @@
 #include "o/RawCarrierMove.h"
 #include "o/RawTempleRitual.h"
 #include "o/RawSpecialDamage.h"
+#include "o/RawPlainWorkshopCapture.h"
 #include "o/RawGemReward.h"
 #include "o/RawBombEffect.h"
 #include "client/RawBombBlastBindings.h"
@@ -4011,4 +4012,48 @@ TEST_CASE(CampaignWindAviaryDestroy_Native54CapturePixels) {
         CHECK(metadata==row[3] && netstorm::test::rawscene::Hex(image.pixels)==row[4] && image.pixels.size()==std::stoul(row[5]) && row[6]=="1");pixels+=image.pixels.size();++rows;const auto dummy=effect->Parent();const auto token=effect->Fields().registration.token;core.processes.Kill(*effect,0);CHECK(!session.Particles().Rendering().Lookup(token) && (core.pool.Slot(dummy)[11]&1U));
     }
     type.hotspotX=hotX;type.hotspotY=hotY;std::copy(saved.begin(),saved.end(),raw.begin());CHECK(rows==54 && pixels==64152);std::cout<<"Wind 실제 파편 캡처"<<rows<<"행/전체"<<pixels<<"픽셀 통과\n";
+}
+
+// 원본이 공유하는128/129 가상 표도 타입과 함께 대조하며 미복원 파생을 일반화하지 않는다.
+TEST_CASE(CampaignPlainWorkshopCapture_ExactTypeAndVtable) {
+    std::array<std::uint8_t,50> raw{};
+    for (const auto [type,table]:{std::pair{129U,0x50b9b8U},std::pair{136U,0x509470U},std::pair{140U,0x50b6e8U},std::pair{143U,0x5099e8U},std::pair{148U,0x50b7c0U}}) { // 다섯 실제 쌍과 각 필드의 단독 불일치를 확인한다.
+        raw[10]=static_cast<std::uint8_t>(type);Put(raw,0,table);CHECK(IsPlainWorkshopCapture(raw));Put(raw,0,table+4);CHECK(!IsPlainWorkshopCapture(raw));Put(raw,0,table);raw[10]=128;CHECK(!IsPlainWorkshopCapture(raw));
+    }
+    CHECK(!IsPlainWorkshopCapture(std::span<const std::uint8_t>(raw).first(49)));
+}
+
+// 모든141클러스터×5상태×3소유자의 실제 캡처를 보호PE 2115행 전체 픽셀과 비교한다.
+TEST_CASE(CampaignPlainWorkshopCapture_Native2115Pixels) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);const auto path=(std::filesystem::path(__FILE__).parent_path()/"fixtures/plain-workshop-capture-x86.tsv").string();const auto fixture=netstorm::test::rawscene::LoadFixture(path.c_str());std::size_t rows{},pixels{};
+    for (const std::uint32_t number:{129U,136U,140U,143U,148U}) { // 각 실제 자산은 독립 세션의 원래 생성자/저장 Pop으로 준비한다.
+        SessionServicesFixture external;auto services=external.Services();services.unitLost=[](Sid) {};services.formPacket=[](std::span<const std::uint8_t>) {};
+        auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));session.Load();auto core=session.Core();Sid island{};const auto point=IceSupport(session,island);const auto source=session.World().Create(number);core.owner.Set(source,1);session.World().Pop(source,point[0],point[1],9);session.RunFrame({.025,100.025,.025,1},false); // flags9는 실제 Fort 로더의 저장 객체 Pop이다.
+        auto raw=core.pool.AllocatedBytes(source);const std::vector<std::uint8_t> saved(raw.begin(),raw.end());auto& type=const_cast<RiftTypeRecord&>(core.types[number]);const auto hotX=type.hotspotX,hotY=type.hotspotY;type.hotspotX=-2;type.hotspotY=3;std::size_t current{};
+        for (const auto& row:fixture.rows) { // 독립 원문이 공급한 현재 그림/추가·추상 상태/owner만 명시 입력으로 쓴다.
+            CHECK(row.size()==8);if (row.size()!=8 || std::stoul(row[0])!=number) continue;Put(raw,36,static_cast<std::uint32_t>(std::stoul(row[1])));raw[40]=static_cast<std::uint8_t>(std::stoul(row[2]));raw[34]=static_cast<std::uint8_t>(std::stoul(row[3]));Put(raw,12,0,2);CHECK(IsPlainWorkshopCapture(raw));
+            auto* effect=const_cast<RawCampaignParticles&>(session.Particles()).AddShrapnel(source,ShrapnelKind::Explosion);CHECK(effect);if (!effect) return;const auto& image=effect->Fields().image;const auto metadata=std::to_string(image.width)+','+std::to_string(image.height)+','+std::to_string(image.hotspotX)+','+std::to_string(image.hotspotY);
+            if (metadata!=row[4] || netstorm::test::rawscene::Hex(image.pixels)!=row[5] || image.pixels.size()!=std::stoul(row[6]) || row[7]!="1") { std::cout<<"워크샾 캡처 차이 TYPE"<<number<<"/그림"<<row[1]<<"/extra"<<row[2]<<"/owner"<<row[3]<<'\n';CHECK(false); }
+            pixels+=image.pixels.size();++rows;++current;const auto dummy=effect->Parent();const auto token=effect->Fields().registration.token;core.processes.Kill(*effect,0);CHECK(!session.Particles().Rendering().Lookup(token) && (core.pool.Slot(dummy)[11]&1U));
+        }
+        type.hotspotX=hotX;type.hotspotY=hotY;std::copy(saved.begin(),saved.end(),raw.begin());std::cout<<"워크샾 실제 캡처 TYPE"<<number<<"/전체"<<current<<"행 통과\n";
+    }
+    CHECK(rows==2115);std::cout<<"다섯 워크샾 캡처"<<rows<<"행/전체"<<pixels<<"픽셀 통과\n";
+}
+
+// 실제6699→HP 절반 미만→연소14 캡처/입자→치명 피해/파편과 Form 정리를 끝까지 진행한다.
+TEST_CASE(CampaignPlainWorkshopCapture_ActualDamageBurningAndDeletion) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);
+    for (const std::uint32_t number:{129U,136U,140U,143U,148U}) { // 정상 상태에서 각 자산의 전용 프로세스와 함께 실제 피해를 전달한다.
+        SessionServicesFixture external;auto services=external.Services();std::size_t lost{};services.unitLost=[&](Sid) { ++lost; };services.formPacket=[](std::span<const std::uint8_t>) {};
+        auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));session.Load();auto core=session.Core();Sid island{};const auto point=IceSupport(session,island);const auto target=session.World().Create(number);core.owner.Set(target,1);session.World().Pop(target,point[0],point[1],9);
+        const auto maximum=Get(core.pool.Slot(target),26),damage=maximum/2+1;CHECK(maximum==static_cast<std::uint32_t>(session.HitPoints().MaxHitPoints(target)) && maximum>1 && damage<65536 && core.types[number].damageEffect);
+        if (number==143) CHECK(FindAttachedProcess(core.pool,target,60).value);else if (number!=136) CHECK(FindAttachedProcess(core.pool,target,34).value); // 실제60 생산기/34 공격 프로세스가 생성된 상태에서 삭제 정리를 확인한다.
+        auto* request=core.processes.AddRegular(target,6699,0);CHECK(request);if (!request) return;request->SetInitialCount((2U<<16)|damage);std::uint64_t frame=1;session.RunFrame({frame*.025,100+frame*.025,.025,frame},false);CHECK(Get(core.pool.Slot(target),26)==maximum-damage);
+        const auto form=FindAttachedProcess(core.pool,target,14);auto* burning=dynamic_cast<BurningVisualProcess*>(core.processes.FromForm(form));CHECK(burning && burning->Fields().mode==1 && burning->Fields().victim==target);if (!burning) return;
+        for (++frame;frame<=120 && burning->Fields().image.pixels.empty();++frame) session.RunFrame({frame*.025,100+frame*.025,.025,frame},false); // 실제 표시 프로세스가 현재 그림을 캡처할 때까지 시각만 진행한다.
+        CHECK(!burning->Fields().image.pixels.empty());const auto token=burning->Fields().registration.token;const auto imagePixels=burning->Fields().image.pixels.size();request=core.processes.AddRegular(target,6699,0);CHECK(request);if (!request) return;request->SetInitialCount((2U<<16)|maximum);++frame;session.RunFrame({frame*.025,100+frame*.025,.025,frame},false);
+        CHECK(core.pool.Slot(target)[11]&1U);CHECK(!FindAttachedProcess(core.pool,target,14).value && !FindAttachedProcess(core.pool,target,34).value && !FindAttachedProcess(core.pool,target,60).value);CHECK(!core.processes.FindEvent(target,6699) && !session.Particles().Rendering().Lookup(token));CHECK(lost>0 && session.Particles().Rendering().Size()>0);CHECK(!core.destroy.PreDepth() && !core.destroy.PostDepth() && !core.bookkeeping.depth);
+        std::cout<<"워크샾 실제 피해/연소/삭제 TYPE"<<number<<"/HP"<<maximum<<"→"<<maximum-damage<<"/연소픽셀"<<imagePixels<<"/파편표시"<<session.Particles().Rendering().Size()<<'\n';
+    }
 }
