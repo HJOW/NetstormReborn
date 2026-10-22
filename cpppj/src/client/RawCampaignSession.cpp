@@ -50,6 +50,7 @@
 #include "o/RawBombActivation.h"
 #include "o/RawBombRegular.h"
 #include "o/RawBombEffect.h"
+#include "o/RawPriestPrayer.h"
 #include "o/RawCarrierDrop.h"
 #include "o/RawObjectCommand.h"
 #include "client/RawBombBlastBindings.h"
@@ -369,6 +370,8 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawContainedLookup> ritualLookup; // 의식과 내용물 제거가 같은 실제 종속 체인을 읽는다.
     std::unique_ptr<RawPriestRitualFrame> priestRitualFrame; // 같은 현재 코드표/605/프레임/음향의604 반복 처리다.
     std::unique_ptr<RawPriestRitualActions> ritualActions; // 같은 사제 K..P 프레임/604 예약이다.
+    std::vector<PriestPrayerType> priestPrayerTypes; // 같은188TYPE의기도횟수/기본프레임이다.
+    std::unique_ptr<RawPriestPrayer> priestPrayer; // 현재6d 수신/명령/605 진행을단일월드에연결한다.
     std::unique_ptr<RawTempleRitual> templeRitual; // 같은 SHP/지면/생성/Host의 의식 단계 몸체다.
     std::unique_ptr<RawRunePostPop> runePostPop; // 같은 실제 룬 건설/304 후처리다.
     std::unique_ptr<DaisRegularState> daisState; // 현재 원본 상태 참조와 방향별 동맹이다.
@@ -1177,6 +1180,7 @@ struct RawCampaignSession::Impl {
             if (raw[10]==6 && Read(raw,0)==0x512208U) return contentForms->Damage(sid,std::bit_cast<std::int32_t>(count),payload);
             const bool priest=raw[10]==kPriestType && Read(raw,0)==kPatchPriestVtable;
             if (priest && event==604) { if (!priestRitualFrame) throw std::logic_error("사제604 몸체 설치 전 호출");return priestRitualFrame->Tick(sid); }
+            if (priest && event==605) { if (!priestPrayer) throw std::logic_error("사제605 몸체 설치 전 호출");return priestPrayer->Tick(sid,count,payload); }
             // 사제의 다섯 고유 사건은 파생 처리기가 담당한다. 나머지만 원본 기본 Carrier로 넘긴다.
             if (carrierRegular->Handles(sid) || (priest && (event<0x259U || event>0x25dU))) return carrierRegular->Handle(sid,event,count,payload);
             // 원본 가상5c가44b900이고98이기존Base/Damageable인13개VT만 공통 예약 피해/재건설로 분배한다.
@@ -2523,6 +2527,7 @@ struct RawCampaignSession::Impl {
     // 같은 Graph/Host에 실제 경로와 의식 모듈을 연결한다. 저장 객체의 첫 Pop 전에 등록해야 한다.
     #include "client/RawCampaignDevastation.inc"
     #include "client/RawCampaignCarrierDrop.inc"
+    #include "client/RawCampaignPrayer.inc"
     void ConnectMotion() {
         if (motion) throw std::logic_error("실제 세션 경로 중복 연결");
         ConstructionArrivalHooks buildHooks;
@@ -2769,7 +2774,7 @@ RawCampaignSession::~RawCampaignSession()=default;
 void RawCampaignSession::Load() {
     impl_->ConnectBuilding();impl_->ConnectMotion();
     impl_->runtime->Load();
-    impl_->ConnectDevastation();impl_->ConnectCarrierDrop();impl_->buildingMover=impl_->MakeBuilder(impl_->buildingMoverState,{});
+    impl_->ConnectDevastation();impl_->ConnectCarrierDrop();impl_->ConnectPriestPrayer();impl_->buildingMover=impl_->MakeBuilder(impl_->buildingMoverState,{});
     impl_->ConnectGameplayPlacement();impl_->ConnectCursor();impl_->loaded=true;
 }
 // UI의 현재 크기/변경 전역을 빌리며 게임 소유자·모드는 실제 세션에서 다시 읽는다.
@@ -2979,6 +2984,8 @@ void RawCampaignSession::RegisterCarrierCommands(RawPacketDispatch& dispatch) {
     dispatch.Register(0x5c,[this](std::uint32_t,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->ReceiveDevastationActivation(packet); });
     dispatch.Observe(0x5f,{});dispatch.Version(0x5f,1,0);dispatch.RequireLength(0x5f,0xffff);
     dispatch.Register(0x5f,[this](std::uint32_t,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->ReceiveDevastationEffect(packet); });
+    dispatch.Observe(0x6d,{});dispatch.Version(0x6d,1,0);dispatch.RequireLength(0x6d,8);
+    dispatch.Register(0x6d,[this](std::uint32_t,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->priestPrayer->Receive(packet); }); // 원본493f80은송신자/두번째인수를기도관문에추가하지않는다.
 }
 // 요청은 실제 선택/중복 검사와 전송만 수행하고 직접 Start를 부르지 않는다.
 void RawCampaignSession::RequestCarrierMove(Sid parent,RawPathPoint destination,std::uint32_t sacrifice) { CarrierMove().Request(parent,destination,sacrifice); }
@@ -2988,6 +2995,8 @@ void RawCampaignSession::RequestCarrierDrop(Sid parent,Sid content) { if (!impl_
 std::uint32_t RawCampaignSession::CommandCarrierDrop(Sid parent,std::uint32_t command,Sid listParent) { if (!impl_->loaded) throw std::logic_error("설치 전 Cast/Drop 메뉴");impl_->PrepareCarrierDrop();return impl_->carrierDrop->Command(parent,command,listParent); }
 // 비캐리어 메뉴도 동일한 공통 객체/현재 가상 효과로 명령을 처리한다.
 std::uint32_t RawCampaignSession::CommandObject(Sid parent,std::uint32_t command) { if (!impl_->loaded || !impl_->objectCommand) throw std::logic_error("설치 전 공통 객체 명령");return impl_->objectCommand->Command(parent,command); }
+// 메뉴가 선택한현재사제와사건y의종류WORD를실제6d 요청으로전달한다.
+std::uint32_t RawCampaignSession::CommandPriest(Sid parent,std::uint32_t command,std::uint32_t parameter) { if (!impl_->loaded || !impl_->priestPrayer || impl_->core.pool.Slot(parent)[10]!=158 || Read(impl_->core.pool.Slot(parent),0)!=kPatchPriestVtable) throw std::logic_error("기도명령의현재사제/설치계약오류");return impl_->priestPrayer->Command(parent,command,parameter); }
 // 사용자 회수 명령은 같은 서버 요청을 보내며 결과/환불/삭제를 직접 만들지 않는다.
 void RawCampaignSession::RequestSalvage(std::uint32_t sid) { if (!impl_->loaded || !impl_->salvageCommand) throw std::logic_error("미설치Session의 실제 회수 요청");impl_->salvageCommand->Request(sid); }
 // 설치 뒤 같은 실제 요청/수신 모듈만 빌린다.

@@ -1,0 +1,76 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-22",
+  "uniqueInputs": 1126,
+  "normalReturns": 2252,
+  "nativeInstructions": 105242,
+  "nativeCalls": {
+    "004940b0": 132,
+    "00493f80": 804,
+    "00494580": 1316
+  },
+  "precisionDifferentInputs": [],
+  "entries": [
+    "004940b0",
+    "00493f80",
+    "00494580(event605)"
+  ],
+  "packet": {
+    "type": "6d",
+    "version": 1,
+    "length": 8
+  },
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_priest_prayer.py": "8eefcd5de51280efe350c2361cade0fb3cf6c8d51e7fa578c84af9d5d0c88c2d",
+    "tools/decomp_arc_spire.py": "a476a7af621fd08e49536e427e40b3d6b4b3df47a8f514740b1633e73adc534e",
+    "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+    "tools/decomp_cursor_position.py": "e15bcdbc4c6be9c131c30f15416c945d650dba9f7dc6def404b47f63c635c212",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "cpppj/tests/fixtures/priest-prayer-x86.tsv": "9697c1760aeea6b5a153da21f7a10ea66c4a1604ec2eac1940f6c5d191941c8d"
+  },
+  "limitations": [
+    "명령/수신 전체 root와494580의605 분기 및 실제6d 헤더를 실행한다. 큰 조회/이동제거/내용물/의식/송신/공유예약은 명시 경계다.",
+    "다른 사제 사건 및 panic491db0 전체나117/118 주문 효과 완료의 증거가 아니다."
+  ],
+  "implementationSha256": {
+    "cpppj/src/o/RawPriestPrayer.h": "101fbf51407517fed658239b5444ee15e0a1f674a01e2dd52a97d127f1436496",
+    "cpppj/src/o/RawPriestPrayer.cpp": "51c2ab0994e0afdc83023a10a68a76c217593ac3a01f7ab4e78d0fc264f015c7",
+    "cpppj/src/client/RawCampaignPrayer.inc": "040c7b2fe01143174b834684715616910fbe260c08b6c6ae19d6a9c2f3a1b430",
+    "cpppj/src/client/RawCampaignSession.h": "f86a6e1e62c0e360675e6cdd2f32d828bbc1bb44a63df29d0c67b3dd2cee9e51",
+    "cpppj/src/client/RawCampaignSession.cpp": "c4692619918c9b5e3bfcafd240b77b6903c2d29ddbc502f62e7374487e84639a",
+    "cpppj/src/client/CampaignObjectMenuClient.cpp": "5173341f0ff67b1f9ad9e2f5cd829605f85e42bdddde8bfa3d5f2fe8dca2d30b",
+    "cpppj/src/client/RawCampaignRitual.inc": "c6ee6b6b111cf0f6fa0ff2b18da7253a65a75b9aa5e8edbbf03b05cf820df9bf",
+    "cpppj/src/o/RawPriestRitualActions.h": "ccc14f6b619803f544dd377d578927af5942c5c99d50429f4540ed0261b981bd",
+    "cpppj/src/o/RawPriestRitualActions.cpp": "b26565b1f79e08785bca766c6c6d34632b552df3c697da6b0a10c6c5d9d486ae",
+    "cpppj/src/o/RawPriestRitualFrame.h": "1d5410a30086c3d41f96e0ffaa2aa98533646b75eede3b5918951a33f196f530",
+    "cpppj/src/o/RawPriestRitualFrame.cpp": "fb78c68478fadd2e55aea64a316f71be5ac5dc166bdf56cf3324f77484c4e379",
+    "cpppj/src/o/RawContainedLookup.h": "6b61feb38ffcb4a4ef021dcc39cbc759274e91b8d476f2caa14f0cf771b74410",
+    "cpppj/src/o/RawContainedLookup.cpp": "418921ae7f41be8c059293e1201c2539716da9e2c01808373c233e8f3d48437e",
+    "cpppj/src/o/RawCarrierPreDestroy.h": "d1f5903fc44c51dc7c6985ff073851b31f46f3f6fdd1a972cb568440cf7d173a",
+    "cpppj/src/o/RawCarrierPreDestroy.cpp": "18a4daeff34834590cfbc4d1b73f64475a009b4815a88ac98aa76f5b1e618c95",
+    "cpppj/src/o/RawPriestState.h": "4870d025740fbf7c4274529e6cac1d05971e2e3465b528da4cd4d027f80aa351",
+    "cpppj/src/o/RawPriestState.cpp": "e49b14dcf6780fa0e7c0c3a3d8dd6f290ede637b5619967087ac0af3c03901bb",
+    "cpppj/src/o/SquidProcess.h": "481ad652080175ccb135c5f4981edc44e7d853584eaaebaab1a65d3873bc5399",
+    "cpppj/src/o/SquidProcess.cpp": "993e34a3c7b3b87f290a33f548a126415c3a77794a7a191801d68f405baf1780",
+    "cpppj/src/o/CMakeLists.txt": "e25efe4533413ec8ae4198867e3bfabfa1ee0bb0514a954c53363f234c380408",
+    "cpppj/tests/CMakeLists.txt": "5874b31ae09d47101407055133acb30c0ba1c40532a5fa43c1929570b5e3c3d2",
+    "cpppj/tests/PriestPrayerTests.cpp": "ea9c31c40c8d505974f55dc70604a32dd165f2512045b906316163f993dfaefe",
+    "cpppj/tests/CampaignSessionTests.cpp": "1ca7ab514dc67cb60db6d6b220967733ac679488b87fe633111f5c8aa0383320"
+  },
+  "validation": {
+    "releaseBuild": 4,
+    "warnings": 0,
+    "errors": 0,
+    "focusedTests": 4,
+    "totalTests": 2321,
+    "failedChecks": 0,
+    "ctestSeconds": 288.22,
+    "actualPrayerSeconds": 40,
+    "actualPrayerCompletionFrame": 1605,
+    "queuedType113CompletionFrame": 2413,
+    "scope": "기도 명령/6d 수신/605·604/내용물 완료와 실제 이동 취소·재시작·연속 요청. panic491db0/117·118 효과 전체나OS GUI 플레이 완료의 증거가 아니다."
+  }
+}

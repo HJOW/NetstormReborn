@@ -4196,3 +4196,51 @@ TEST_CASE(CampaignSelectionBars_PriestPrayerSnapshot) {
     for (const auto& type:assets.game.Types()) if (const auto time=type.definition.Number("praytime");time && *time>0) { kind=70+static_cast<std::uint32_t>(type.block);maximum=static_cast<int>(*time);break; } // 실제 TYPE의 첫 유효 praytime을 명시 기도 입력으로 고른다.
     CHECK(kind && maximum>0);auto raw=core.pool.AllocatedBytes(priest);const auto saved=std::vector<std::uint8_t>(raw.begin(),raw.end());Put(raw,42,kind);Put(raw,46,static_cast<std::uint32_t>(maximum/2));auto* prayer=core.processes.AddRegular(priest,0x25d,1);CHECK(prayer);if (!prayer) return;prayer->SetNextTime(core.processState.now+1000000);world.Select(priest.value);const auto image=DrawCampaignSelectionBars(session,assets.game,priest);CheckCampaignSelectionBar(image,1,0x7b,maximum-maximum/2,maximum);world.Select(0);core.processes.Kill(*prayer,0);std::copy(saved.begin(),saved.end(),raw.begin());std::cout<<"실제 사제 선택/605 기도 상태 표시 TYPE"<<kind<<"/praytime"<<maximum<<'\n';
 }
+
+
+namespace {
+// 같은 실제 프레임·전송을 진행하며 기도 결과/count를 입력하지 않는 검사 시계다.
+struct CampaignPrayerClock {
+    RawCampaignSession& session; // 진행할 실제 현재 세션이다.
+    std::uint64_t frame{}; // 시작0에서 매0.025초 하나씩 증가하는 입력 프레임이다.
+    void Tick() { ++frame;session.RunFrame({frame*.025,100+frame*.025,.025,frame},false);session.PumpLocalConnection(); } // 원본 Kernel 실행 뒤 현재 송수신을 비운다.
+};
+// 같은 부모의 실제 Kernel 등록을 세어 재입력으로605/604가 중복되지 않는지 확인한다.
+std::size_t CampaignPrayerEvents(RawWorldCore core,Sid priest,std::uint32_t event) {
+    std::size_t result{};for (ProcessId pid=1;pid<=core.kernel.Capacity();++pid) if (const auto* regular=dynamic_cast<const RegularProcess*>(core.kernel.Get(pid));regular && regular->Parent()==priest && regular->Event()==event) ++result; // 실제 공유/일반 Regular의 현재 부모·사건만 읽는다.
+    return result;
+}
+// 현재 섬의 같은Graph에서 자유 지면을 골라 실제 이동 명령의 입력으로 사용한다.
+RawPathPoint CampaignPrayerMovePoint(RawWorldCore core,Sid priest) {
+    SquidPostPopList additional;ContainedFinderState finder;PlayerPlacementAnchorState state;state.graphReady=1;RawPlayerPlacementAnchor anchor(core.pool,core.types,core.hash.Entries(0),core.bookkeeping,additional,finder,state);const auto graph=anchor.GraphFor(priest.value);const auto raw=core.pool.Slot(priest);const int x=static_cast<int>(std::bit_cast<float>(Get(raw,14))),y=static_cast<int>(std::bit_cast<float>(Get(raw,18)));
+    for (int radius=4;radius<10;++radius) for (int dy=-radius;dy<=radius;++dy) for (int dx=-radius;dx<=radius;++dx) { const int px=x+dx,py=y+dy;if (px<2 || py<2 || px>=254 || py>=254) continue;if ((core.spots[py*256+px]&7)==2 && anchor.GraphAt(static_cast<float>(px),static_cast<float>(py))==graph) return {static_cast<float>(px),static_cast<float>(py)}; } // 공간/Graph 결과를 쓰지 않고 유효한 목표만 조회한다.
+    throw std::logic_error("기도 중단 검사의 실제 이동 지면 부재");
+}
+}
+
+// 실제 명령→6d 송수신→605/604→기도 막대→내용물/기본 프레임으로 완료한다.
+TEST_CASE(CampaignPriestPrayer_ActualCommandTransportAndCompletion) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();UseWorldTestLogin(services);std::vector<std::vector<std::uint8_t>> packets;services.localLogin->observePacket=[&](std::uint32_t,bool,std::uint32_t,std::span<const std::uint8_t> bytes) { if (bytes.size()>1 && bytes[1]==0x6d) packets.emplace_back(bytes.begin(),bytes.end()); };
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services),{1024,768});const auto cursors=BindWorldTestInput(world);auto& session=world.Session();auto core=session.Core();CampaignPrayerClock clock{session};CHECK(session.LocalConnectionPhase()==14);const Sid priest{static_cast<std::uint16_t>(session.FindPriestParticipation(1))};CHECK(priest.value);if (!priest.value) return;world.Select(priest.value);const auto duration=static_cast<std::uint32_t>(assets.game.Types()[168-70].definition.Number("praytime").value_or(0));CHECK(duration>1);CHECK(!session.Priests().Carrier().FindContained(priest,1,168,0).value);
+    CHECK(session.CommandPriest(priest,0x030000de,(168U<<16)|priest.value)==1);session.PumpLocalConnection();session.PumpLocalConnection();CHECK(!packets.empty());for (const auto& packet:packets) CHECK(packet.size()==8 && packet[0]==1 && packet[1]==0x6d && Get(packet,2,2)==8 && Get(packet,4,2)==priest.value && Get(packet,6,2)==168); // 실제 관측한 원문 헤더/두WORD다.
+    CHECK(CampaignPrayerEvents(core,priest,605)==1 && CampaignPrayerEvents(core,priest,604)==1);CHECK(Get(core.pool.Slot(priest),42)==168 && std::bit_cast<std::int32_t>(Get(core.pool.Slot(priest),36))==core.frames[158].Run('O').first);const auto* first=core.processes.FindEvent(priest,605);CHECK(first);if (!first) return;const auto firstPid=core.kernel.Find(*first);const auto packetCount=packets.size();CHECK(session.CommandPriest(priest,0x030000de,(113U<<16)|priest.value)==1);session.PumpLocalConnection();CHECK(packets.size()==packetCount && Get(core.pool.Slot(priest),42)==168 && core.processes.FindEvent(priest,605)==first);
+    bool displayed{};const auto limit=(std::uint64_t(duration)+4)*80;
+    while (clock.frame<limit && core.processes.IsRegistered(firstPid,first)) { clock.Tick();const auto raw=core.pool.Slot(priest);const auto count=Get(raw,46);if (!displayed && count>0 && count<duration && (raw[40]&4U)) { const auto image=DrawCampaignSelectionBars(session,assets.game,priest);CheckCampaignSelectionBar(image,1,0x7b,static_cast<int>(duration-count),static_cast<int>(duration));displayed=true; } } // 기도/count/프레임/내용물을 쓰지 않고 실제 기한으로 기다린다.
+    CHECK(displayed && !core.processes.IsRegistered(firstPid,first) && Get(core.pool.Slot(priest),46)==duration);for (std::uint32_t step=0;step<10 && core.processes.FindEvent(priest,604);++step) clock.Tick(); // 기본 프레임을 본604도 원본 조건으로 자연 종료한다.
+    const auto prayer=session.Priests().Carrier().FindContained(priest,1,168,0);CHECK(prayer.value && SquidForms(core.pool).Parent(prayer)==priest && !(core.pool.Slot(prayer)[11]&3U));CHECK(!core.processes.FindEvent(priest,604) && std::bit_cast<std::int32_t>(Get(core.pool.Slot(priest),36))==assets.game.Types()[158-70].definition.specialFrames.defaultFrame);CHECK(!core.bookkeeping.depth && !core.destroy.PreDepth() && !core.destroy.PostDepth());std::cout<<"실제 기도6d/605·604/막대/완료 TYPE168/praytime"<<duration<<"/frame"<<clock.frame<<"/내용물"<<prayer.value<<'\n';
+}
+
+// 실제 이동은 기존 기도/의식을 정리하고 새 기도 수신은 같은 현재 이동 Form을 제거한다.
+TEST_CASE(CampaignPriestPrayer_ActualMovementCancelAndRestart) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();UseWorldTestLogin(services);auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services),{1024,768});const auto cursors=BindWorldTestInput(world);auto& session=world.Session();auto core=session.Core();CampaignPrayerClock clock{session};const Sid priest{static_cast<std::uint16_t>(session.FindPriestParticipation(1))};CHECK(priest.value);if (!priest.value) return;const auto goal=CampaignPrayerMovePoint(core,priest);CHECK(session.CommandPriest(priest,0x030000de,(168U<<16)|priest.value)==1);session.PumpLocalConnection();clock.Tick();CHECK(core.processes.FindEvent(priest,605) && core.processes.FindEvent(priest,604));
+    CHECK(session.MovePriest(priest,goal));const auto movement=FindAttachedProcess(core.pool,priest,54);CHECK(movement.value && !core.processes.FindEvent(priest,605) && !core.processes.FindEvent(priest,604));clock.Tick();CHECK(!session.Priests().Carrier().FindContained(priest,1,168,0).value);CHECK(session.CommandPriest(priest,0x030000de,(168U<<16)|priest.value)==1);session.PumpLocalConnection();
+    CHECK(!FindAttachedProcess(core.pool,priest,54).value && CampaignPrayerEvents(core,priest,605)==1 && CampaignPrayerEvents(core,priest,604)==1);CHECK(std::bit_cast<std::int32_t>(Get(core.pool.Slot(priest),36))==core.frames[158].Run('O').first);CHECK(!core.bookkeeping.depth && !core.destroy.PreDepth() && !core.destroy.PostDepth());std::cout<<"실제 기도→이동 취소→새 기도의 현재54 정리/605·604 재시작 통과\n";
+}
+
+// 첫 수신 전 두 명령이 도착하면 두 번째 희망 종류는 쓰되 같은 기도 예약을 중복하지 않는다.
+TEST_CASE(CampaignPriestPrayer_ActualQueuedDesiredTypeChange) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();UseWorldTestLogin(services);auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services),{1024,768});const auto cursors=BindWorldTestInput(world);auto& session=world.Session();auto core=session.Core();CampaignPrayerClock clock{session};const Sid priest{static_cast<std::uint16_t>(session.FindPriestParticipation(1))};CHECK(priest.value);if (!priest.value) return;
+    CHECK(session.CommandPriest(priest,0x030000de,(168U<<16)|priest.value)==1);CHECK(session.CommandPriest(priest,0x830000de,(113U<<16)|priest.value)==1);session.PumpLocalConnection();session.PumpLocalConnection();CHECK(Get(core.pool.Slot(priest),42)==113 && CampaignPrayerEvents(core,priest,605)==1 && CampaignPrayerEvents(core,priest,604)==1);const auto duration=static_cast<std::uint32_t>(assets.game.Types()[113-70].definition.Number("praytime").value_or(0));const auto* first=core.processes.FindEvent(priest,605);CHECK(first && duration>0);if (!first) return;const auto pid=core.kernel.Find(*first);
+    while (clock.frame<(std::uint64_t(duration)+4)*80 && core.processes.IsRegistered(pid,first)) clock.Tick(); // 실제 변경된TYPE의기도기한으로기다리며결과를합성하지않는다.
+    const auto prayer=session.Priests().Carrier().FindContained(priest,1,113,0);CHECK(!core.processes.IsRegistered(pid,first) && Get(core.pool.Slot(priest),46)==duration && prayer.value);CHECK(!session.Priests().Carrier().FindContained(priest,1,168,0).value && !core.bookkeeping.depth);std::cout<<"실제 연속6d 수신의 희망TYPE113 변경/단일605 완료 frame"<<clock.frame<<'\n';
+}

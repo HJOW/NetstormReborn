@@ -174,10 +174,11 @@ bool CampaignObjectMenuClient::Active() const {
 bool CampaignObjectMenuClient::Command(const InputEvent& event) {
     const auto command=event.code&0x03ffffffU;
     const bool common=command==0x030000afU || command==0x030000e2U || command==0x03000015U; // 공통 메뉴가 실제로 작성하는 소유자/피해/삭제 명령이다.
-    if (!common && command!=0x02000060U && command!=0x03000080U && command!=0x03000032U && command!=0x03000063U && command!=0x0200005dU && command!=0x0300011aU && command!=0x03000076U) return false;
+    if (!common && command!=0x02000060U && command!=0x03000080U && command!=0x03000032U && command!=0x03000063U && command!=0x0200005dU && command!=0x0300011aU && command!=0x03000076U && command!=0x030000deU) return false;
     auto& s=*impl_;if (!s.world || !s.chain) throw std::logic_error("실제 사제 건설 메뉴의 현재 월드 수명 없음");
     const auto parameter=std::bit_cast<std::uint32_t>(event.y);
     if (common) return s.world->Session().CommandObject(o::Sid{static_cast<std::uint16_t>(parameter)},event.code)!=0;
+    if (command==0x030000deU) return s.world->Session().CommandPriest(o::Sid{static_cast<std::uint16_t>(parameter)},event.code,parameter)!=0; // 원본4940b0의같은packed y로기도요청을보낸다.
     // 원본42aa50은 이벤트의y를 내용물검색부모로 읽는다. 현재 메뉴의 부모도 같은 SID다.
     if (command==0x0300011aU || command==0x03000076U) { const o::Sid parent{static_cast<std::uint16_t>(parameter)};static_cast<void>(s.world->Session().CommandCarrierDrop(parent,event.code,parent));return true; }
     if (command==0x0200005dU) { s.world->Session().RequestSalvage(parameter);return true; }

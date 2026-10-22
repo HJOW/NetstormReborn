@@ -1766,3 +1766,13 @@ cpppj/tests/fixtures/bomb-effect-timer-x86.tsv text eol=lf
 tools/decomp_bomb_effect_timer.py text eol=lf
 cpppj/bomb-effect-timer-20261023.json text eol=lf
 docs/exe/cpp-selection-bars-20261023.md text eol=lf
+
+# 사제 기도 원문과 현재 명령/수신/605 연결은 UTF-8 LF로 고정한다.
+cpppj/src/o/RawPriestPrayer.* text eol=lf
+cpppj/src/client/RawCampaignPrayer.inc text eol=lf
+cpppj/tests/PriestPrayerTests.cpp text eol=lf
+cpppj/tests/fixtures/priest-prayer-x86.tsv text eol=lf
+tools/decomp_priest_prayer.py text eol=lf
+cpppj/priest-prayer-20261023.json text eol=lf
+docs/exe/cpp-priest-prayer-20261023.md text eol=lf
+cpppj/src/client/CampaignObjectMenuClient.cpp text eol=lf
