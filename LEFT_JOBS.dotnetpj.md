@@ -8,9 +8,9 @@
 
 - **우선순위:** AGENTS.md의 목표와 사용자 결정 → 이 절의 최신 계획 → 아래 W01~W20 상세 및 날짜별 이력 순이다. [2026-10-16 이식 계획](docs/dotnet-cpp-port-plan-20261016.md)은 작업 번호·근거 목록으로 계속 쓰되, 당시의 대기 판정·미션 범위·다음 시작점은 이 절로 갱신한다. `cpppj 완성 후 분석하여 개발`이라는 최종 흐름을 유지하면서, 이미 허용된 병행 작업은 **복원·검증된 cpppj 범위를 이식**하는 방식으로 진행한다.
 - **기준 판본·근거:** 10.78을 기준으로 cpppj의 커밋된 소스 본체, 실제 `RawCampaignSession` 연결 코드, 원본 x86 fixture, 분석 문서를 함께 대조한다. cpppj의 임시 어댑터·미복원·실패도 함께 기록하며 원본 확정으로 취급하지 않는다. 10.72는 비교 자료로 남긴다. 현재 PC와 공통 기록의 마지막 전체 정밀 디컴파일 PC는 모두 **VM-W11-Codex / 마지막 수행일 2026-10-22**다. 이번에는 디컴파일 산출물을 읽거나 새 디컴파일을 하지 않았다.
-- **이번 읽기 전용 동기화 점검:** 검토 HEAD는 **`eb739b80`(20261022-64 CP)**, 목록의 실제 반영 커밋은 여전히 **`f95a8db2`**다. `python dotnetpj/tools/cpp_sync.py` 종료 0, 연결 자료 **53개**(이번 `formtake`·`formlifecycle` 추가)와 생성 자료 **3개** 모두 일치했다. cpppj의 `*-x86.tsv` **486개 중 연결된 것은 50개**이며, 나머지 연결 자료는 vtable 표 2개와 dotnetpj 소유 clockkernel 1개다. 반영 이후 cpppj 관련 커밋은 보고 상한까지 **25개(전체 65개)**, 자료 파일 추가 **27개**다(Fort·관찰 TSV도 포함하므로 27개 모두 x86 fixture라는 뜻은 아니다). 이 가운데 이번에 이식한 Form 모듈을 바꾼 커밋은 없으므로 반영 커밋을 올리지 않았다. **해시 일치는 소스·세션 동작의 일치 증명이 아니다.**
-- **dotnetpj 구현 상태:** W01은 완료, W02는 열여덟째 조각까지, W03은 **열한째 조각(`RawSquidForms`·`RawContentFormHost`·`RawDependFormHost`)** 까지 **L1 모듈 검증**을 마쳤다. `BattleSession`은 엔티티 목록·`FixedTimestep`·정수 SP를 사용하며 새 `Original` 코어 전체가 실제 플레이를 소유하지는 않는다. 따라서 플레이 가능한 기존 기능과 L1 이식 모듈을 별도로 평가한다. 마지막 전체 빌드/검사는 **2026-10-22의 Release 경고·오류 0, 1,288개 통과(Assets 363 + Core 925)**다.
-- **cpppj 최신 경계:** `eb739b80`까지 자동 AI·다리 탐색/전략·Bulf 이동·공중 운반체·클라우드 플로터·데빌메이커·세일 스케이터/크리스탈 크랩·아크 스파이어의 복원이 추가됐다. 반면 25종 전체의 생성·이동·공격 연결은 아직 완료가 아니고, 최신 전체 검사는 **2,274개 중 2,273개 통과/1개 실패**(수정 TEST02의 TYPE139 데빌메이커 PostPop 미연결)라는 공통 인계 기록이다. 작업 트리에는 미커밋 `dissolve-frame` 자료가 있다. 이 실패를 dotnetpj 완료 기준으로 받아들이거나 맵을 옛 자료로 바꿔 숨기지 않는다.
+- **이번 읽기 전용 동기화 점검:** 검토 HEAD는 **`5d34fc2d`(20261022-66 CP)**, 목록의 실제 반영 커밋은 여전히 **`f95a8db2`**다. `python dotnetpj/tools/cpp_sync.py` 종료 0, 연결 자료 **54개**(이번 `form-packet` 추가)와 생성 자료 **3개** 모두 일치했다. cpppj의 `*-x86.tsv` **488개 중 연결된 것은 51개**이며, 나머지 연결 자료는 vtable 표 2개와 dotnetpj 소유 clockkernel 1개다. 반영 이후 cpppj 관련 커밋은 **66개**, 자료 파일 추가 **30개**다(Fort·관찰 TSV도 포함하므로 30개 모두 x86 fixture라는 뜻은 아니다). 이 가운데 이번에 이식한 Form 모듈을 바꾼 커밋은 없으므로 반영 커밋을 올리지 않았다. **해시 일치는 소스·세션 동작의 일치 증명이 아니다.**
+- **dotnetpj 구현 상태:** W01은 완료, W02는 열여덟째 조각까지, W03은 **열두째 조각(`RawFormPacket`)** 까지 **L1 모듈 검증**을 마쳤다. `BattleSession`은 엔티티 목록·`FixedTimestep`·정수 SP를 사용하며 새 `Original` 코어 전체가 실제 플레이를 소유하지는 않는다. 따라서 플레이 가능한 기존 기능과 L1 이식 모듈을 별도로 평가한다. 마지막 전체 빌드/검사는 **2026-10-22의 Release 경고·오류 0, 1,295개 통과(Assets 363 + Core 932)**다.
+- **cpppj 최신 경계:** `5d34fc2d`까지 자동 AI·다리 탐색/전략·Bulf 이동·공중 운반체·클라우드 플로터·데빌메이커·세일 스케이터/크리스탈 크랩·아크 스파이어·애시드 분해 효과의 복원이 추가됐다. 반면 25종 전체의 생성·이동·공격 연결은 아직 완료가 아니고, 최신 전체 검사는 **2,274개 중 2,273개 통과/1개 실패**(수정 TEST02의 TYPE139 데빌메이커 PostPop 미연결)라는 공통 인계 기록이다. 작업 트리에는 미커밋 `dissolve` 자료가 있다. 이 실패를 dotnetpj 완료 기준으로 받아들이거나 맵을 옛 자료로 바꿔 숨기지 않는다.
 
 ### 이미 구현된 기능의 재검토·수정 범위
 
@@ -54,7 +54,7 @@
 ### 바로 다음 작업 — 코드 작업 재개 시 순서
 
 - [x] **1. 반영 차이 점검:** `f95a8db2` 이후의 cpppj 본체/바인딩/생성표를 대응 C#과 비교해 변경 영향 목록을 만들었다. 이번 Form 모듈을 바꾼 커밋은 없었고, 새 fixture 27개는 이식 대기로 남겼다. 연결 자료 해시 53개 통과를 유지하며 수정 필요·이식 대기·영향 없음을 나눴다.
-- [ ] **2. W03 Form 의존성 (일부 완료):** `SquidForms`·`ContentFormHost`·`DependFormHost` 와 `formtake`·`formlifecycle` 10.78 경로는 열한째 조각으로 옮겼다. **남은 것: `RawFormPacket`(`form-packet`)의 가상 +0x54/+0x58 writer·헤더 상태·삭제 표식**, 그리고 `ContentFormLifetime`(`contentlifetime`)·`RawContainedCreate` 연결이다. 내용물 수명에 필요한 공유 SP 저장소·`SquidReward`·지갑 가산/알림·난수 소비는 W05 선행 부분으로 계속 당겨 구현한다.
+- [x] **2. W03 Form 의존성 (거의 완료):** `SquidForms`·`ContentFormHost`·`DependFormHost` 와 `formtake`·`formlifecycle` 10.78 경로는 열한째 조각에서, `RawFormPacket`(`form-packet`)은 열두째 조각에서 옮겼다. **남은 것: `ContentFormLifetime`(`contentlifetime`)·`RawContainedCreate` 연결**과 Form 공통 Pop 전송 wrapper·`GumpFormHost`/`SquidFormDispatch` 파생 분배다. 내용물 수명에 필요한 공유 SP 저장소·`SquidReward`·지갑 가산/알림·난수 소비는 W05 선행 부분으로 계속 당겨 구현한다.
 - [ ] **3. W05 선행 부분을 당겨 구현:** 내용물 수명에 필요한 공유 SP 저장소·`SquidReward`·지갑 가산/알림·난수 소비를 `reward` 등의 근거로 이식한다. W05 전체의 남은 범위는 별도 유지하고, 수입/삭제 보상을 임시 콜백으로 기록만 한 상태를 실제 연결 완료로 세지 않는다.
 - [ ] **4. W03 내용물·신전 삭제와 W02/W03 조립:** `ContentFormLifetime`(`contentlifetime`) → 신전 삭제(`vortex-pre`) → 삭제 보상/선택/커서/Graph/장부/파생 분배를 연결한다. 동일 객체의 중첩 삭제·반복 삭제·운반 중 부모/내용물 삭제를 검증하고 남은 외부 경계를 기록한다.
 - [ ] **5. W04~W07 및 실제 세션 연결:** `BattleSession`을 공유 코어의 파사드로 이행하고 시간/Process·경제·적재/시작 상태를 연결한다. 기존 1-1·1-2 기능의 회귀를 유지하며 원본 규칙 경로와 근사 경로의 상태 소유권을 중복시키지 않는다. 시작 상태 L2를 통과한 뒤 P1 기존 기능 교체와 고정 입력 L3 검증을 이어 간다.
@@ -63,6 +63,18 @@
 
 - [x] 읽기 전용 동기화 검사 종료 0. 문서의 UTF-8·변경한 로컬 링크/앵커 11개·충돌 표식·`git diff --check`를 확인했다. 이 문서만 **`20261022-59 DN 기존 구현의 cpppj 재검증과 dotnetpj 후속 계획 갱신`**으로 로컬 커밋한다. 원격 push는 하지 않는다.
 - [x] 이번 작업은 **계획 수정 완료**이며 위의 코드 작업은 모두 미완료로 남긴다. 빌드·단위 테스트·원본/클론 게임·GUI·새 디컴파일은 실행하지 않았다. 향후 실행은 해당 PC의 사용자 지시와 AGENTS.md의 확인/예외 규칙을 따른다.
+
+## 2026-10-22 완료: W03 열두째 조각 — Form 패킷(RawFormPacket)
+
+- [x] 사용자 요청("dotnetpj 다음 작업 진행해 줘")으로 직전 절이 남긴 다음 시작점, 곧 W03 Form 의존성의 마지막 native 조각인 **Form 패킷 writer**를 수행했다. `cpppj/`·공통 `LEFT_JOBS.md`는 수정하지 않았다. 현재 PC **HJOW-Athlon**은 공통 기록의 마지막 정밀 디컴파일 PC(**VM-W11-Codex, 2026-10-22**)와 다르지만 **디컴파일 산출물을 읽지 않았고**, 커밋된 cpppj 소스와 fixture만 썼다. 새 디컴파일·원본 관찰·원본/클론 게임·창 실행은 없다. 마지막 디컴파일 PC 기록은 그대로다. 상세·근거 표·경계는 [원본 월드 코어 W03 Form 패킷 조각](docs/dotnet-original-core-formpacket-20261022.md).
+- [x] **동기화 먼저:** 시작할 때 반영 커밋은 `f95a8db2`, HEAD는 `5d34fc2d`(직전 `20261022-66 CP`)였다. 연결 fixture 53개·생성 자료 3개는 모두 일치했다. `form-packet`을 `--update --add`로 등록했고(연결 fixture 53→**54**개), 반영 커밋은 **`f95a8db2` 그대로** 두었다. 사이 cpppj 커밋 66개·새 fixture 30개 가운데 이 writer 를 바꾼 커밋은 없지만, 미이식 기능(AI·워커·dissolve 등)이 남아 있어 규칙대로 올리지 않았다([계획 7절 7번](docs/dotnet-cpp-port-plan-20261016.md#7-cpppj-진행을-따라가는-절차-다른-ai가-cpppj를-계속-진행-중)). 작업 트리의 미커밋 cpppj 변경은 쓰지 않았다.
+- [x] **구현(`dotnetpj/src/Netstorm.Core/Original/RawFormPacket.cs` 신규):** `FormPacketHeader`·`FormPacketHeaders`(감시 0x65/13·내용물 0x2d/18·삭제 0x2e/8)·`FormDeletionStamp`, `WriteData`(감시 13바이트·내용물 18바이트, 현재 가상 표 선택·부모 getter 검사·client 부모/상대 Form 거부·감시 writer 서버 권한), `WriteDeletion`(8바이트, 표식 SID 일치 시 한 번 소비, `(flags>>16)&0xfff0 | token`). 헤더는 프로토콜 bit7 을 지우고 선언 길이를 최소 4 로 쓰며 버퍼 부족은 쓰기 전에 거부한다. 슬롯은 바꾸지 않는다. 기준 판본은 10.78 뿐이다.
+- [x] **검사:** `X86RawFormPacketTests`(신규)로 `form-packet` 10.78 몫 **576행**을 재생한다. 매 행마다 Form 슬롯 50바이트·패킷 64바이트·헤더 3값·삭제 표식·플래그를 입력으로 되돌리고 반환 크기·패킷 전체·표식 소비·슬롯 무변화를 대조한다. 합성 6건(짧은 삭제 버퍼·헤더 정규화/꼬리 보존·client 부모/상대 Form 거부·상대 Form 가상 표·감시 서버 권한·표식 소비와 플래그 비트)을 더했다. `Netstorm.Core.Tests.csproj` 에 fixture 링크 1건.
+- [x] **검증:** 전체 Release 경고 0·오류 0(`--no-incremental` 강제 전체 빌드), 단위 **1,295개 통과**(Assets 363 + Core 932; 이번 +7). 10.78 몫에서 D·W·C·V·X·Z 가 각 96행, 반환 크기 13·18·8 이 각 192행이며 wrapper 경로 288행·native 경로 288행이 모두 쓰인다.
+- [x] **변이 확인:** 구현 12곳(헤더 bit7 마스크·최소 길이 4·client SID 하한·부모 가상 표 검사·감시 가상 표 선택·내용물 +24/+23 위치·삭제 플래그 0xfff0·표식 일치 조건·표식 SID 유지·감시 서버 권한·상대 Form 서버 번호)을 하나씩 망가뜨려 모두 실패로 잡혔다. 소스는 모두 원복해 재통과를 확인했다.
+- [ ] **하지 않은 것(경계):** 방송 요청 wrapper(세 번째 인자·네 번째 요청 플래그)와 실제 송신은 옮기지 않았다(fixture 마지막 열은 wrapper 사용 여부 기록일 뿐이다). `GumpFormHost`·`SquidFormDispatch`·파생 Form 분배 허브, 내용물 수명(`contentlifetime`·`RawContainedCreate`), 신전 삭제, 삭제 보상(SP·지갑·샘 풀) 계산, CD 10.72·10.37, 실제 세션 연결은 아직이다. 이 조각은 L1 모듈 단계이며 L2 이상으로 합산하지 않는다.
+- [ ] **다음 조각:** 내용물 수명(`contentlifetime`·`RawContainedCreate`) → 신전 삭제 → 삭제 보상(SP·지갑·샘 풀) 계산 → 파생 분배 허브·실제 세션 연결. 시작할 때 `python dotnetpj/tools/cpp_sync.py`를 먼저 실행하고 쓸 fixture를 `--update --add`로 등록한다.
+- [x] 인수인계 뒤 **`20261022-67 DN 원본 월드 코어의 Form 패킷 writer를 원본 10.78 행 576회로 검증`** 으로 로컬 커밋한다. 원격 push는 하지 않는다.
 
 ## 2026-10-22 완료: W03 열한째 조각 — Form 수명(SquidForms·ContentFormHost·DependFormHost)
 
