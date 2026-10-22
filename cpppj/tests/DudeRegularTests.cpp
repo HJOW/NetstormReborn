@@ -52,6 +52,7 @@ TEST_CASE(DudeRegular_Native1600) {
         default:CHECK(false);return;
         }
         const auto observed=std::to_string(result)+'|'+(trace.empty() ? std::string("-") : trace)+'|'+Hex(raw)+'|'+std::to_string(random.State())+'|'+std::to_string(std::bit_cast<std::uint32_t>(providerIndex))+"|-";
+        if (observed!=row[1]) std::printf("Dude mismatch input=%s\nexpected=%s\nobserved=%s\n",row[0].c_str(),row[1].c_str(),observed.c_str());
         CHECK(observed==row[1]);++rows;
     }
     CHECK(rows==1600 && initializers==3);

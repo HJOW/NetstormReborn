@@ -44,7 +44,7 @@ float RawDudeRegular::Wander(Sid sid,std::int32_t count,bool quickly) const {
     if (!count || random_.Next(100)>=10) {
         const auto providers=state_.providers.Items();
         if (!providers.empty()) {
-            const auto next=std::bit_cast<std::int32_t>(std::bit_cast<std::uint32_t>(state_.providerIndex)+random_.Next(2)+1U);
+            const auto next=std::bit_cast<std::int32_t>(std::bit_cast<std::uint32_t>(state_.providerIndex)+random_.Next(1)+1U); //원본4558f0(1,2)는 상한 제외라 간격은1이며 난수는 한 번 소비한다.
             state_.providerIndex=next%static_cast<std::int32_t>(providers.size());
             if (state_.providerIndex<0) throw std::out_of_range("Dude 공급자 순환 음수 색인");const auto number=providers[static_cast<std::size_t>(state_.providerIndex)];
             if (number>0xffffU) throw std::out_of_range("Dude 공급자 SID 폭");if (MoveTo(sid,Sid{static_cast<std::uint16_t>(number)},quickly)) return 10.0F;
