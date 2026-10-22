@@ -1,5 +1,14 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-22 단위334 완료: 양 판본 정밀 디컴파일 및 cpppj Release 빌드
+
+- [x] 사용자 요청에 따라 `AGENTS.md`, `LEFT_JOBS.md`, `LEFT_JOBS.dotnetpj.md`를 먼저 읽었다. 시작 HEAD는 `697d305b / 20261022-60 WB`, 작업 트리는 깨끗했고 현재 호스트는 **HJOW-Athlon(192.168.0.94)** 이었다. 최신 기록의 마지막 전체 정밀 디컴파일 호스트 **VM-W11-Codex / 2026-10-22**와 달라 AGENTS 규칙에 따라 양 판본을 다시 디컴파일했다.
+- [x] `PYTHONUTF8=1`, `PYTHONIOENCODING=utf-8`, `PYTHONUNBUFFERED=1` 환경에서 `powershell -ExecutionPolicy Bypass -File tools/ghidra/refine_all.ps1`를 실행했다. 전체 스크립트 종료 코드는 0이다. 10.78 패치판 최종 5,549함수는 디컴파일 성공 5,549/실패 0, CD 10.72판 최종 5,823함수는 성공 5,822/실패 1이다. 최종 등급은 패치판 A2326/B3152/C40/D31, CD판 A2315/B2939/C484/D85이고 함수 포인터 표는 각각 1,652/1,121개다. 판본 대응은 2,496쌍(강 1,738/중 707/약 51), 최종 호출 규약 일치율 97.2%다. 산출물은 Git 제외 경로 `extracted/refined/`에 갱신했고 자세한 결과와 한계는 [작업 기록](docs/exe/cpp-decompilation-20261022.md)에 남겼다.
+- [x] Ghidra가 GIF 리소스 주소 몇 곳의 데이터 오류를 보고하고 일부 p-code 흐름을 경고했으며, CD판 내보내기에서 함수 1개가 실패로 집계됐다. Java `Unsafe` 폐기 예정 경고도 나왔다. 전체 headless 작업과 후처리/대응표 생성은 종료 0으로 끝났으며 실패한 함수 하나의 복구를 성공으로 간주하지 않는다. 원본 `originals/`, CD `originalCD/`, `AGENTS.md`는 수정하지 않았다.
+- [x] `cmake --build cpppj/build --config Release`를 실행했다. CMake 자동 재구성 후 MSBuild 18.11.0 빌드는 **종료 코드 0**, 컴파일 경고 0·오류 0으로 완료됐고 `cpppj/build/bin/Release/NetstormCpp.exe` 및 `netstorm_tests.exe`를 생성했다. 검사 실행 파일은 컴파일만 했고 CTest와 게임은 실행하지 않았다.
+- [x] 현재/마지막 전체 정밀 디컴파일 호스트를 **HJOW-Athlon / 2026-10-22**로 갱신했다. 이 작업은 기존 미션/유닛/편집기 구현 목표를 완료 처리하지 않으며, 다음 코드는 현행 단위332가 지정한 데빌메이커 세션 연결과 더스트 데빌 파생 복원이다.
+- [x] 인수인계와 작업 기록을 갱신하고 **20261022-61 CP**로 로컬 커밋한다. 원격 push는 하지 않는다.
+
 ## 2026-10-22 단위333 완료: 클라우드 플로터 이력의 Git 병합 충돌 정리
 
 - [x] 사용자 요청으로 진행 중인 병합의 `23cec0f0`과 `f0a9917a`를 비교했다. 두 이력의 실제 차이는 인수인계/근거JSON/문서3개이며 제품 소스 차이는 없다. 최신 쪽의 TEST02 추가 수정·현재5,282BYTE SHA·재검증 결과/로그 해시가 이전 쪽의 모든 내용을 포함함을 대조한 뒤,추가 기록을 유지하여 충돌을 해결했다. 충돌 원문과 양쪽 blob/대조 기록은 `extracted/merge-resolution-20261022-173437/`에 보존한다.
