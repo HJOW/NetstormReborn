@@ -2,11 +2,15 @@
 <html>
     <head>
         <meta charset="UTF-8"/>
-        <script type="module" src="netstorm.js"></script>
-        <script>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <title>NetStorm</title>
+        <script type="module">
+        // ES 모듈의 클래스는 일반 스크립트의 전역 이름이 아니므로 import 로 가져온다.
+        import { Netstorm } from './netstorm.js';
         document.addEventListener('DOMContentLoaded', function() {
             const netstorm = new Netstorm();
             netstorm.init( document.getElementById('netstorm_root') );
+            window.netstorm = netstorm; // 개발자 콘솔에서 setAspect() 등을 시험하기 위한 임시 노출
         });
         </script>
     </head>
