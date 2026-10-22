@@ -1,5 +1,14 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-22 단위323 완료: 원본 단독/편집 맵 목록 캐시와 표시 행
+
+- [x] 시작HEAD `27b9dfbb`/깨끗한트리·AGENTS·양인수인계를다시확인했다. 직전턴은자동AI활동중전진공략/전체2,247개통과/커밋을완료한 **진행 턴**이다. 현재/마지막전체정밀디컴파일PC는 **VM-W11-Codex / 2026-10-22**로같다. 보호원본/CD·AGENTS/dotnetpj·기존fixture변경이나새전체디컴파일·게임/창실행은없다.
+- [x] `RawSoloMapList`로004cafd0의50포인터/flags/개수/dirty·옵션조회순서·파일종류/편집허용필터·캐시재사용·현재필드재조회·Template/Subscriber/State/예약읽기순서를복원했다.004cb210의현재/fallback선택·읽기실패/손상/일반형식·번역뒤현재이름·앞서읽은flags8활성관문도복원했다. `mayEditMissions`는캐시검사보다먼저읽고첫포인터가있으면mode가달라도캐시를재사용한다. dirty정리는이름이있는칸의flags만지워null칸의stale flags를보존한다.
+- [x] 보호PE두본체와실제0041aad0/004bd340을 **216입력·두정밀도432목록실행**으로관측했다. 행1914회·존재1410회·예약1110회다. 파일/Template/CRT/번역/메뉴장치는명시경계이며전체게임실행을뜻하지않는다. 새C++검사는전체50칸/행/순서와일치하고설정효과dirty지연·번역후현재이름/앞선flags효과도확인한다. [상세](docs/exe/cpp-solo-map-list-20261022.md),[출처](cpppj/solo-map-list-20261022.json).
+- [x] 도구의초기두thiscall경계인자반납을고쳤다. 관측확정뒤횟수기록추가시fixtureSHA가동일함을확인했다. 마지막산출물은새관측/코드/도구/출처의LF를명시하고커밋/작업트리양쪽SHA를일치시켰다. 첫CMaketarget등록위치를수정한최종Release빌드2 **종료0·경고0·오류0**,새검사 **2개·실패check0**이며LF고정뒤재통과했다. `extracted/cpp-solo-map-list-20261022-{build,build2,tests,tests2}.log`를보존한다. 최신전체통과는단위322의2,247개이며새2개를포함한전체통과로합산하지않는다. 보호PE/도구/fixture/코드SHA·UTF-8/한국어주석·diff검사후 **20261022-48 CP**로로컬커밋하며push하지않는다.
+- [ ] **바로 다음 실제 연결:**Client의BaseFileSystem.Match/현재fortSpec이름→파일Kind/State+17→실제Template/State/Subscriber읽기를목록hook에연결한다. 파일마다원본분류용과목록메타읽기는별도수명이다. `CampaignTemplateStorage`와`RawPlayerTemplateState`의기존실제Get/빈State/최소확장몸체를재사용한다.4bd340은정상원본에서항상0이지만누락Template진단은유지한다. 파일종류는00460c40이현재GetState의BYTE17을반환한다. 실제GUI의020000c9진입/020000ca선택/`*SOLOLIST*`행연결과편집월드·생성·저장/불러오기·Test Battle/Return to Editing을계속구현한다.
+- [ ] **원래 목표 계속:**이번단위는목록계산만복원했고 **Edit버튼은아직미구현안내**다.15개미션완주/재시작·GUI/음향동일성·Edit/custom Fort·언어별시나리오수명은미완료다. `/goal`을축소하거나완료로표시하지않는다.
+
 ## 2026-10-22 단위322 완료: 자동 AI 활동 중 북쪽 우회·적 신전 자연 파괴와 전체 회귀
 
 - [x] 시작HEAD `eb4464e7`/깨끗한트리·AGENTS·양인수인계를다시확인했다. 직전턴은자동AI연결/15개미션초기진행/커밋을완료한 **진행 턴**이다. 현재/마지막전체정밀디컴파일PC는 **VM-W11-Codex / 2026-10-22**로같다. 보호원본/CD·AGENTS/dotnetpj·기존원본fixture변경이나새전체디컴파일·게임/창실행은없다.

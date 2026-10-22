@@ -1584,3 +1584,9 @@ tools/cpp_bridge_ritual_runtime.py text eol=lf
 docs/exe/cpp-test-bridge-runtime-20261021.md text eol=lf
 cpppj/test-bridge-runtime-20261021.json text eol=lf
 docs/exe/cpp-ritual-runtime-focused-20261021.md text eol=lf
+# 단독/편집 맵 원본 관측의 코드·생성기·출처 해시를 체크아웃 후에도 보존한다.
+cpppj/src/o/RawSoloMapList.* text eol=lf
+cpppj/tests/SoloMapListTests.cpp text eol=lf
+tools/decomp_solo_map_list.py text eol=lf
+cpppj/solo-map-list-20261022.json text eol=lf
+docs/exe/cpp-solo-map-list-20261022.md text eol=lf

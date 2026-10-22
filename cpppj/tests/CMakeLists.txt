@@ -1782,3 +1782,5 @@ set_source_files_properties(DataManagerCreateTests.cpp PROPERTIES COMPILE_DEFINI
 target_sources(netstorm_tests PRIVATE DataManagerReadTests.cpp)
 set_source_files_properties(DataManagerReadTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_DATAMANAGER_READ_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/datamanager-read-x86.tsv\"")
+# 원본 단독/편집 맵 목록의 전체캐시와행표시를독립관측과대조한다.
+target_sources(netstorm_tests PRIVATE SoloMapListTests.cpp)

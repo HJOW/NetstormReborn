@@ -431,3 +431,5 @@ target_sources(netstorm PRIVATE RawAiDryGeometry.cpp RawAiDryGeometry.h)
 target_sources(netstorm PRIVATE RawAiFakeDrySpots.cpp RawAiFakeDrySpots.h)
 # 현재 선택/예산스캔·생산/사제 관문과 실제 배치·성공표적/후보 압축을 연결한다.
 target_sources(netstorm PRIVATE RawAiDropActions.cpp RawAiDropActions.h)
+# 단독/편집 맵의 같은50개 캐시와 원본 목록 행 표시를 연결한다.
+target_sources(netstorm PRIVATE RawSoloMapList.cpp RawSoloMapList.h)

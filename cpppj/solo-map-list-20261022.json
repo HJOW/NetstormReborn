@@ -1,0 +1,58 @@
+{
+  "host": "VM-W11-Codex",
+  "date": "2026-10-22",
+  "inputs": 216,
+  "precision_runs": 432,
+  "entries": [
+    "004cafd0",
+    "004cb210",
+    "0041aad0",
+    "004bd340"
+  ],
+  "actual_calls": {
+    "004cafd0": 432,
+    "004cb210": 1914,
+    "0041aad0": 1410,
+    "004bd340": 1110
+  },
+  "boundaries": {
+    "00441270": 432,
+    "00460650": 1734,
+    "00459c60": 324,
+    "0045a220": 324,
+    "004595f0": 324,
+    "00459c40": 7236,
+    "00459b20": 7236,
+    "00460c40": 7236,
+    "004597c0": 7236,
+    "004e4354": 648,
+    "004e65ed": 2436,
+    "004a89e0": 1050,
+    "00477dd0": 1050,
+    "004de9a0": 304,
+    "004e78a5": 1410,
+    "004bd2e0": 1410,
+    "004bf550": 1410,
+    "004bd4d0": 1110,
+    "004bd550": 1110
+  },
+  "new_game_runs": 0,
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_solo_map_list.py": "2cede6a4f064ce68e717b269889ede380423ea58154c3b396c5dc447663ecc8f",
+    "cpppj/tests/fixtures/solo-map-list-x86.tsv": "c71dc45bcce18e76a8050645ac3e3092ceac66d07aec55b8157b974d579cbbb5",
+    "cpppj/src/o/RawSoloMapList.cpp": "ddad305f5c8eaa56f78dfe7149178a941c550407214d6673d79ea701b69d431c",
+    "cpppj/src/o/RawSoloMapList.h": "2cc052dfa47c08d5d3177c186018d016f394f9fc047bdd48f944fad9eb5590d6",
+    "cpppj/tests/SoloMapListTests.cpp": "288b6a8f36474a2900553a109b2f16c426bc74598a8f9e9f47746281ef80df0d"
+  },
+  "build": {
+    "exit_code": 0,
+    "warnings": 0,
+    "errors": 0
+  },
+  "focused_tests": {
+    "tests": 2,
+    "failed_checks": 0,
+    "exit_code": 0
+  }
+}
