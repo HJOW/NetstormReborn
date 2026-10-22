@@ -102,6 +102,9 @@
 #include "o/RawAiEconomy.h"
 #include "o/RawAiDeployment.h"
 #include "o/RawAiCollectors.h"
+#include "o/RawAiBridgePath.h"
+#include "o/RawAiBridgeCandidates.h"
+#include "o/RawAiBridgeSearch.h"
 #include "o/RawAiFactoryProduction.h"
 #include "o/RawAiDrySpots.h"
 #include "o/RawAiMovement.h"
@@ -303,6 +306,10 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawAiDeployment> aiDeployment; //같은 실제 생산 조각/지갑/건설 요청을 처리하는004106e0이다.
     std::unique_ptr<RegularProcess> aiPendingRegular; //원본 new(0x28) 성공 뒤 현재 생산 대기시간으로 구성할 예약 메모리다.
     std::unique_ptr<RawAiCollectors> aiCollectors; //같은 현재 목록/사제 상태/난수로 수집자 종류와 합법 배치 후보를 선택한다.
+    std::unique_ptr<RawAiBridgeCandidates> aiBridgeCandidates; //같은 실제 지면/연결 코드의 시작점과24칸 후보 준비다.
+    std::unique_ptr<RawAiBridgeSearch> aiBridgeSearch; //같은 실제 재고/점유/공용 난수의8개 예산 검색이다.
+    std::uint32_t aiBridgeLog{99}; //0052f3cc의 현재 다리 로그 종류이며29에서만 디버그 표식을 배치한다.
+    std::uint32_t aiBridgeStartType{113},aiBridgeEndType{119},aiBridgeTargetType{117}; //0054121c/234/22c의 현재 시작/끝/목표 표식 TYPE다.
     std::uint32_t aiLayLog{99}; //0052f3d0의 원본 Debug Lay Piece 초기 로그 종류다.29는 디버그 표시 선택값이다.
     std::unique_ptr<RawAiFactoryProduction> aiFactoryProduction; //같은 기술/생산 내용물과 시설 미처리/업그레이드 큐를 처리한다.
     std::unique_ptr<RawAiDrySpots> aiDrySpots; //같은본체의에너지부족좌표와실제Mana판정을연결한다.
@@ -1844,6 +1851,8 @@ struct RawCampaignSession::Impl {
         collectors.log=[this](auto token,auto type,auto x,auto y) { if (!services.player.log) throw std::logic_error("AI 수집자 Lay 로그 미연결");if (type>=core.types.size()) throw std::out_of_range("AI 수집자 Lay TYPE 범위");services.player.log(aiLayLog,"AI"+std::to_string(std::bit_cast<std::int32_t>(Read(aiMemory.Bytes(token),0x260)))+": Lay "+core.types[type].name+" at ("+std::to_string(x)+","+std::to_string(y)+")\n"); };
         collectors.dropSound=[this] { if (!services.sound.play) throw std::logic_error("AI 수집자 로컬 드롭 음향 미연결");static_cast<void>(services.sound.play(soundNames.Lookup("droppiece.wav"),0,0,0,0,0)); };
         aiCollectors=std::make_unique<RawAiCollectors>(aiMemory,core.pool,core.types,random,AiCollectorsGlobals{core.processState.now,playerState.battleOwner,[this] { return static_cast<std::uint32_t>(core.bookkeeping.invalidGraph); }},std::move(collectors));
+        aiBridgeCandidates=std::make_unique<RawAiBridgeCandidates>(aiMemory,core.pool,core.types,core.frames,core.hash.Entries(0),core.spots,AiBridgeCandidateTypes{contentState.bridgeType,fenceNodeType,gunState.windArcherType});
+        aiBridgeSearch=std::make_unique<RawAiBridgeSearch>(aiMemory,core.frames,core.spots,contentState.bridgeType,random);
         AiFactoryProductionHooks factories;factories.technology=[this](auto owner) { const auto value=player->Technology(std::bit_cast<std::int32_t>(owner));if (value>65535 || value>=core.pool.Capacity()) throw std::out_of_range("AI 시설 생산 현재 기술부모 SID 범위");return Sid{static_cast<std::uint16_t>(value)}; };factories.product=[this](auto token,auto type) { return aiStrategySetup->FindProduct(token,type); };factories.addProduct=[this](auto token,Sid factory,auto type) { aiStrategySetup->AddProduct(token,factory,type); };
         factories.level=[this](Sid factory) { const auto table=Read(core.pool.Slot(factory),0);if (table!=0x509148U && table!=0x509210U) throw std::logic_error("AI 시설 가상level80 미지원 실제 표");return level->Get(factory); };
         // 같은58h요청/수신/실제Regular그림·완료가 연결된 원본 업그레이드 경로를 선택한다.
@@ -1853,6 +1862,22 @@ struct RawCampaignSession::Impl {
         aiDrySpots=std::make_unique<RawAiDrySpots>(aiMemory,core.pool,std::move(dry));
         AiBuildChoiceHooks choice;choice.captured=[this](auto owner) { return AiPriestCaptured(owner); };choice.dead=[this](auto owner) { return AiPriestDead(owner); };choice.canAfford=[this](auto token,auto type) { return aiDeployment->CanAfford(token,type); };choice.wallet=[this](auto owner) { return aiWallet->Balance(owner); };choice.storedSp=[this](auto owner) { return std::bit_cast<float>(sp.Get(owner)); };choice.assertion=[this](std::string_view text,std::uint32_t line) { if (!services.ai.assertion) throw std::logic_error("AI 건설 선택 원본 진단 미연결 "+std::to_string(line));services.ai.assertion(text); };
         AiBuildChoiceGlobals choiceGlobals{playerState.battleOwner,playerState.playerKnown,templeProduct,runeState.daisType,aiWorkshops,[this](auto theme) { return tutorialTypes.at(0x541244U+theme*4U); }};aiBuildChoice=std::make_unique<RawAiBuildChoice>(aiMemory,core.types,std::move(choiceGlobals),std::move(choice));
+    }
+    // caller가 공급한 원본 임시XY만 빌려 같은 살아 있는 본체의 다리 진행을 조립한다.
+    RawAiBridgePath AiBridgePath(RawPathPoint& endpointScratch) {
+        const AiBridgePathGlobals current{core.processState.now,cursorManaGlobals.mapLimit,contentState.bridgeType,aiBridgeLog,aiBridgeStartType,aiBridgeEndType,aiBridgeTargetType}; //각 효과의 현재 전역 저장소를 그대로 참조한다.
+        AiBridgePathHooks hooks;
+        hooks.initialize=[this,current](auto token,auto source,auto target) { RawAiBridgePath initializer(aiMemory,core.pool,contentFinder,current,{});static_cast<void>(initializer.Initialize(token,source,target)); };
+        hooks.prepare=[this](auto token) { return aiBridgeCandidates->Prepare(token); };
+        hooks.search=[this,&endpointScratch](auto token) { return aiBridgeSearch->Search(token,endpointScratch); };
+        hooks.start=[this](auto token,auto target) { return aiBridgeCandidates->Start(token,target,aiDropScanBounds); };
+        hooks.deploy=[this](auto token,auto type,RawPathPoint point,auto pattern,auto direction) { aiCollectors->DeployWithNotice(token,type,point.x,point.y,pattern,direction); };
+        hooks.marker=[this](auto token,auto type,RawPathPoint point) { aiDeployment->Place(token,type,point.x,point.y,0,0); };
+        hooks.technology=[this](auto owner) { const auto parent=player->Technology(std::bit_cast<std::int32_t>(owner));if (parent>65535 || parent>=core.pool.Capacity()) throw std::out_of_range("AI 다리 현재 기술부모 SID 범위");return Sid{static_cast<std::uint16_t>(parent)}; };
+        hooks.destroy=[this](Sid sid,auto flags) { world.Destroy(sid,flags); };
+        hooks.refresh=[this](auto token,Sid parent) { aiStrategySetup->RefreshBridges(token,parent); };
+        hooks.log=[this](auto token,auto kind,std::string_view text) { if (!services.player.log) throw std::logic_error("AI 다리 현재 로그 장치 미연결");services.player.log(kind,"AI"+std::to_string(std::bit_cast<std::int32_t>(Read(aiMemory.Bytes(token),0x260)))+": "+std::string(text)+"\n"); };
+        return {aiMemory,core.pool,contentFinder,current,std::move(hooks)};
     }
     // 생산선택/포획행동이같은492280의현재참여/포획상태를공유한다.
     bool AiEnemyAvailable(std::uint32_t owner) const { if (owner<1 || owner>8) { if (!services.ai.assertion) throw std::logic_error("AI 적 사제 참여 진단 미연결");services.ai.assertion("playerId > INVALID_PLAYER_ID && playerId < MAX_PLAYERS");return false; }return (players[owner*180+0x50]&0x22)!=0 && priests->Priests().ownerState[owner]==0; }
@@ -2599,6 +2624,11 @@ bool RawCampaignSession::PrepareAi(std::uint32_t owner) { if (!impl_->loaded || 
 bool RawCampaignSession::InitializeAi(std::uint32_t owner) { if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("실제 Session 설치 후 owner1..8 AI 초기 전략만 허용");const auto token=impl_->participation->Brain(owner);if (!token) return false;if (!Read(impl_->aiMemory.Bytes(token),0x258)) impl_->aiStrategySetup->Initialize(token);return Read(impl_->aiMemory.Bytes(token),0x258)!=0; }
 // 다리 행동이 호출할 같은 실제 재고 보충만 명시 실행한다. 다른 전략 행동은 수행하지 않는다.
 bool RawCampaignSession::RefreshAiBridges(std::uint32_t owner) { if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("실제 Session 설치 후 owner1..8 AI 다리 보충만 허용");const auto token=impl_->participation->Brain(owner);if (!token) return false;const auto parent=impl_->player->Technology(static_cast<std::int32_t>(owner));if (parent>65535 || parent>=impl_->core.pool.Capacity()) throw std::out_of_range("실제 AI 다리 보충 기술부모 SID 범위");impl_->aiStrategySetup->RefreshBridges(token,Sid{static_cast<std::uint16_t>(parent)});return true; }
+// 네 전략의 다리 행동이 같은 시작점/탐색/배치/소비/보충을 한 번 진행하는 실제 관문이다.
+bool RawCampaignSession::AdvanceAiBridge(std::uint32_t owner,RawPathPoint target,RawPathPoint& endpointScratch) {
+    if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("실제 Session 설치 후 owner1..8 AI 다리 진행만 허용");const auto token=impl_->participation->Brain(owner);if (!token) return false;
+    return impl_->AiBridgePath(endpointScratch).Advance(token,target);
+}
 // 행동 말미의 실제 경제 정리를 명시 호출하며 보상 가산/별도 지갑 복사본을 사용하지 않는다.
 bool RawCampaignSession::ReconcileAiEconomy(std::uint32_t owner) { if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("실제 Session 설치 후 owner1..8 AI 경제 정리만 허용");const auto token=impl_->participation->Brain(owner);if (!token) return false;impl_->aiEconomy->Reconcile(token);return true; }
 // 원본 전략이 고른 배치 입력을 실제 생산 소비/대기/지갑/서버 또는 로컬 예측에 전달한다.

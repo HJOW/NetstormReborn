@@ -1,11 +1,20 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-22 단위317 완료: 실제 Session AI 다리 배치·소비·재고와 전체 회귀
+
+- [x] 직전 턴은 검색/시작점 구현·원본 대조·회귀·커밋 두 건을 완료한 **진행 턴**이다. 시작 HEAD `55ef3103`/깨끗한 트리·AGENTS·양 인수인계를 다시 확인했다. 현재/마지막 전체 정밀 디컴파일 PC는 **VM-W11-Codex / 2026-10-22**로 같다. 보호 원본/CD·AGENTS/dotnetpj·기존 원본 fixture 변경이나 새 전체 디컴파일·게임/창 실행은 없다.
+- [x] `AdvanceAiBridge`를 같은 현재 Session의 Start/Initialize/Prepare/Search/Step/Extend에 연결했다. 실제 `DeployWithNotice`→현재 Player 기술부모→`world.Destroy`→`RefreshBridges` 순서이며 현재 지도/프레임/TYPE/시각/공용 난수/로그를 공유한다. 검색의 원본 caller 임시XY는 호출자 명시 입력/출력으로 받고 힙 할당 입력이나 임의 성공점으로 바꾸지 않는다. 디버그 로그/표식 초기값도 보호 PE에서 확인했다. [상세](docs/exe/cpp-ai-bridge-session-20261022.md).
+- [x] 실제 로컬 로그인·AI 초기 재고4개·실제 상대 사제 목표로 **14호출** 뒤 패턴22/회전6/배치·끝점124,112를 선택했다. 실제 첫 일치 조각이 기술부모 체인에서 제거되고 **재고4→3·다리칸15→21**, 지갑/SP 불변이 통과했다. 본체 진행/승패/HP/SP를 강제로 만들지 않았다. 설치 전/owner0 거부·AI 없음/삭제 뒤false도 확인했다.
+- [x] Release **첫 빌드 종료0·경고0·오류0**, 새 실제 Session **1개·실패check0**, 전체 CTest **내부2,229개·실패check0·종료0·303.69초**다. 같은 실행 핸들을 끝까지 관찰했다. `extracted/cpp-ai-bridge-session-20261022-{build,tests,tests-utf8,ctest,all-tests}.log`와 [회귀 보고서](cpppj/ai-bridge-session-regression-20261022.json)에 보호 PE/제품/로그 SHA와 실제 출력을 보존했다. 인수인계 후 **20261022-42 CP**로 로컬 커밋하며 push하지 않는다.
+- [ ] **다음 재개점:**00417bd0 네 다리 전략→00417c70 전체 순서/00417d30·00417de0 자동 프레임/종료다. 선행 하위00410d40(같은graph 간헐천 가장자리12칸의 자기 J/K 다리 연결),00411310(yetToConnect count0이면현재+40초/그외+120초로5d0),00411470(20회y→x난수의현재열린지면),004119b0(inclusive빈사각형)을 먼저 실제 모듈/원본 대조로 복원한다. 함수00417bd0의 정밀 범위는4175b0..417bcd case영역과417bd0..417c57 입구를 함께 포함한다. 현재 명시 관문은 실제 다리를 만들지만 전체 자동 AI를 활성화한 것으로 합산하지 않는다.
+- [ ] **원래 목표 계속:**15개 미션·Edit/custom Fort·언어별 시나리오 수명·사용자 자연 플레이·표시/음향 동일성은 미완료다. 이번 전체 회귀 통과로 `/goal` 완료를 표시하지 않는다.
+
 ## 2026-10-22 단위316 완료: AI 다리 시작점·유효 연결과 원본399장면
 
 - [x] 검색 복원을 `de78dbaa / 20261022-40 CP`로 커밋하고 계속했다. 현재/마지막 전체 정밀 디컴파일 PC는 **VM-W11-Codex / 2026-10-22**로 같다. 보호 원본/CD·AGENTS/dotnetpj·기존 원본 fixture 변경이나 새 전체 디컴파일·게임/창 실행은 없다.
 - [x] `RawAiBridgeCandidates::Start/Open`으로00410b10/0040faa0의현재맵X우선/Y안쪽·전체graph/owner/bridge비교·빈이웃/현재코드·strict최소Manhattan거리와동률유지를복원했다. 실제helper/CRT까지계산스텁없이 **399장면·두x87정밀도798정상반환·38,446칸**을동결하고결과8BYTE/전체본문불변을C++로대조했다. 실제Advance와조립해52,64선택·시작점없음·기존timeout9보존도통과했다. [상세](docs/exe/cpp-ai-bridge-start-20261022.md), [원본출처](cpppj/ai-bridge-start-20261022.json).
 - [x] Release **첫 빌드 종료0·경고0·오류0**, 다리 **24개·실패check0**다. 원본/도구/fixture SHA4개와UTF-8/한국어주석/`git diff --check`를확인했다. `extracted/cpp-ai-bridge-start-20261022-{build,tests}.log`를보존한다. 전체는반복하지않아최신전체는직전단위315의 **2,226개·실패0**이며새2개를포함한전체통과로합산하지않는다. 인수인계후 **20261022-41 CP**로로컬커밋하며push하지않는다.
-- [ ] **다음 재개점:**실제Session에Start/Initialize/Prepare/Search/Step/Extend를연결한다. 배치=`aiCollectors->DeployWithNotice`,현재기술부모=Player`Technology`,소비=실제world삭제,보충=`aiStrategySetup->RefreshBridges`와같은풀/프레임/spot/hash0/시각/TYPE/공용난수/로그를공유한다. 검색scratch는원본미초기화caller입력임을명시한다. `CampaignAiServices`의현재allocationBytes계약과구분해실제임시입력공급을정한다. 이후네전략/00417bd0·00417c70전체순서/자동AI프레임/종료를연결한다.
+- [x] **후속 단위317에서 완료:**실제Session의명시Advance관문에Start/Initialize/Prepare/Search/Step/Extend·실제배치/소비/재고를연결하고다리칸15→21을검증했다. 검색scratch는caller명시입력/출력으로정했다. 네전략/전체자동프레임/종료는계속미완료다.
 - [ ] **원래 목표 계속:**15개미션·Edit/custom Fort·언어별시나리오수명·사용자자연플레이·표시/음향동일성은미완료다. 현재단위검사통과로 `/goal` 완료를표시하지않는다.
 
 ## 2026-10-22 단위315 완료: AI 다리 끝점 점수·8개 예산 검색과 전체 회귀

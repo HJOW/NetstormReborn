@@ -1,0 +1,25 @@
+{
+  "host": "VM-W11-Codex",
+  "decompile_host": "VM-W11-Codex",
+  "ctest_exit": 0,
+  "ctest_wall_seconds": 303.69,
+  "internal_summary": [
+    "2229 test(s), 0 failed check(s)"
+  ],
+  "natural_bridge_observation": "실제AI다리 호출14 재고4→3 패턴22 회전6 배치(124,112) 끝점(124,112) 다리칸15→21",
+  "game_started": false,
+  "sources": {
+    "originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD\\NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "cpppj\\src\\client\\RawCampaignSession.cpp": "34b4e1344e76bb09c4146ccdbd5acd953caa7c92fb2e20ced5b2ab8e68c1a8da",
+    "cpppj\\src\\client\\RawCampaignSession.h": "089003f1a5d616b01bdd651e2c75e9f35b0f188d46ab02eb203919bd685d5c29",
+    "cpppj\\tests\\CampaignSessionTests.cpp": "ce187c01c739cd284e1e4dba997dc70e39668b856cefbc469624f9a12f64eb53"
+  },
+  "logs": {
+    "extracted\\cpp-ai-bridge-session-20261022-build.log": "c9817839bdea6e09f5ed74a8d38d7890de0825ebf24393e20134280d6ae3907a",
+    "extracted\\cpp-ai-bridge-session-20261022-tests.log": "56039f09f60c574daf59b56c2adc9ecfd56929016c93e2478906ae773028d852",
+    "extracted\\cpp-ai-bridge-session-20261022-tests-utf8.log": "56039f09f60c574daf59b56c2adc9ecfd56929016c93e2478906ae773028d852",
+    "extracted\\cpp-ai-bridge-session-20261022-ctest.log": "3932ae5fac86f1be5b9bf254986fb83a6040eba7d2031e4a3eb9486840214d9f",
+    "extracted\\cpp-ai-bridge-session-20261022-all-tests.log": "6195660371395a8d4d633a461dffcedfdf5331941311bac94c2ae2ee429647a0"
+  }
+}

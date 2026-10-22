@@ -239,6 +239,7 @@ public:
     bool PrepareAi(std::uint32_t owner); // 같은 현재 brain에00416eb0 준비 전체를 명시 호출한다. 없음은false이며 전체 전략/프레임 자동 활성화는 후속이다.
     bool InitializeAi(std::uint32_t owner); //같은 현재 brain의00414af0 초기 전략을 명시 재시도한다.258 완료 여부를 반환하며 자동 프레임은 후속이다.
     bool RefreshAiBridges(std::uint32_t owner); //같은 현재 brain/기술부모로0040fcb0 재고를 갱신한다. 본체 없음은false이며 자동 프레임은 후속이다.
+    bool AdvanceAiBridge(std::uint32_t owner,o::RawPathPoint target,o::RawPathPoint& endpointScratch); //004174c0의실제시작점/예산검색/배치/소비/재고갱신이다.원본caller임시XY는명시입력/출력이며false는본체없음또는실제timeout이다.전체자동전략순서는후속이다.
     bool ReconcileAiEconomy(std::uint32_t owner); //같은 본체 지갑과 분산SP로004138c0을 명시 실행한다. 본체 없음은false이며 자동 프레임은 후속이다.
     bool DeployAi(std::uint32_t owner,std::uint32_t type,float x,float y,std::uint32_t argument=0,std::uint32_t direction=0); //선택된 전략 입력으로004106e0 실제 생산/비용/배치를 명시 실행한다. 자동 선택은 후속이다.
     bool EnsureAiCollectors(std::uint32_t owner); //원본00415a10 수집자 선택→자기 영역 후보→실제 배치를 명시 실행한다. 전체 자동 프레임은 후속이다.

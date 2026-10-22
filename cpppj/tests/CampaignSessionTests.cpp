@@ -2235,6 +2235,26 @@ TEST_CASE(CampaignSession_InitRequestUsedByActualLogin) {
     CHECK(session.CurrentSubscriber()==7 && session.LocalOwner()==1 && session.LocalConnectionPhase()==14 && Get(session.PlayerRecords(),0xb4+0x2c)==7);CHECK(request->consumed && request->zone.empty() && request->zone.capacity()==0 && request->next[0]==7 && request->sequence==1);
 }
 
+// 실제 다리 시작점/예산 검색이 자연 재고의 배치·소비·현재 재고 스캔까지 이어지는지 확인한다.
+TEST_CASE(CampaignSession_AiBridgeProgressUsesActualWorldAndContents) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();UseWorldTestLogin(services);
+    services.ai.allocationBytes=[](auto bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0x71}); };services.ai.localTransport=[] { return true; };services.missionOutcome.demo=[] { return 0U; };services.ai.assertion=[](std::string_view text) { throw std::logic_error(std::string(text)); };
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));RawPathPoint scratch{-10000,-10000};CHECK(Throws([&] { session.AdvanceAiBridge(2,{120,120},scratch); }));session.LoadLocalConnection();CHECK(!session.AdvanceAiBridge(2,{120,120},scratch));
+    auto profile=SessionAiSettings("Bridge AI","sunWalker;sunCannon");Put(profile,0x238,4);const auto token=session.CreateAi(2,profile);CHECK(session.InitializeAi(2) && session.PrepareAi(2));auto core=session.Core();const auto body=session.AiMemory().Bytes(token);const auto before=Get(body,0x628),wallet=Get(body,0x2d8);const auto sp=session.Sp(2);CHECK(before==4 && Get(body,0x604)==4);
+    const auto parent=Sid{static_cast<std::uint16_t>(Get(session.PlayerRecords(),2*180+0x9c))};RawContainedFinder finder(core.pool,session.ProductionFinder());std::vector<Sid> oldPieces;std::map<std::uint16_t,std::uint32_t> oldPatterns; //삭제 전 실제 패턴만 보관해 반납된 슬롯을 다시 읽지 않는다.
+    for (auto form=finder.Begin(parent);form.value;form=finder.Next()) { const auto raw=core.pool.Slot(form);if ((Get(raw,20,2)&0x140)==0x40) { oldPieces.push_back(form);oldPatterns.emplace(form.value,Get(raw,12,2)); } } //현재 기술부모가 실제로 소유한 준비 조각만 관측한다.
+    const auto enemy=Sid{static_cast<std::uint16_t>(session.FindPriestParticipation(1))};CHECK(enemy.value!=0);const auto enemyRaw=core.pool.Slot(enemy);const RawPathPoint target{std::bit_cast<float>(Get(enemyRaw,14)),std::bit_cast<float>(Get(enemyRaw,18))};
+    const auto bridgeCells=[&] { std::size_t count{};for (const auto sid:core.hash.Entries(0)) { if (!sid) continue;const auto raw=core.pool.Slot(Sid{sid});if (raw[10]==82 && raw[34]==2) ++count; }return count; }; //현재실제hash0에서owner2다리칸을세며생성을강제하지않는다.
+    const auto cellsBefore=bridgeCells();bool pending{},consumed{};std::size_t calls{};
+    for (;calls<120 && !consumed;++calls) { const auto stage=Get(body,0x5f0);CHECK(session.AdvanceAiBridge(2,target,scratch));if (stage==3 && Get(body,0x5f0)==3) pending=true;consumed=Get(body,0x628)<before; } //실제상태전이와예산중단을재개해첫조각소비까지진행한다.
+    CHECK(pending && consumed && Get(body,0x628)==before-1 && Get(body,0x5f0)==0);CHECK(Get(body,0x2d8)==wallet && session.Sp(2)==sp);
+    std::vector<Sid> currentPieces;for (auto form=finder.Begin(parent);form.value;form=finder.Next()) if ((Get(core.pool.Slot(form),20,2)&0x140)==0x40) currentPieces.push_back(form); //배치뒤실제내용물체인을다시읽어첫일치소비를확인한다.
+    CHECK(currentPieces.size()+1==oldPieces.size());const auto selected=Get(body,0x6b4);bool removedMatch{};
+    for (const auto sid:oldPieces) { if (std::find(currentPieces.begin(),currentPieces.end(),sid)==currentPieces.end() && oldPatterns.at(sid.value)==selected) removedMatch=true; } //원본선택패턴의실제기존조각이체인에서제거됐는지관측한다.
+    CHECK(removedMatch);session.RunFrame({0.1,0.1,0.1,1},false);const auto cellsAfter=bridgeCells();std::printf("실제AI다리 호출%zu 재고%u→%u 패턴%u 회전%u 배치(%g,%g) 끝점(%g,%g) 다리칸%zu→%zu\n",calls,before,Get(body,0x628),selected,Get(body,0x6b8),std::bit_cast<float>(Get(body,0x6ac)),std::bit_cast<float>(Get(body,0x6b0)),std::bit_cast<float>(Get(body,0x3d0)),std::bit_cast<float>(Get(body,0x3d4)),cellsBefore,cellsAfter);CHECK(cellsAfter>cellsBefore);
+    CHECK(Throws([&] { session.AdvanceAiBridge(0,target,scratch); }));session.RemoveAi(2);CHECK(!session.AdvanceAiBridge(2,target,scratch));
+}
+
 //성공flag를입력하지않고실제Zone→접속→Login→월드설치/응답→상태14/타이머를검사한다.
 TEST_CASE(CampaignSession_LocalLoginActualHandshakeAndWorldLoad) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();std::vector<std::string> trace;std::vector<std::array<std::uint32_t,3>> notices;std::map<std::string,std::int32_t> config;std::size_t refresh{},chat{}; //실제장치/설정의명시입력과관측이다.
