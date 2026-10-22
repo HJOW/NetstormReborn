@@ -1,0 +1,39 @@
+{
+  "host": "VM-W11-Codex",
+  "baseCommit": "fe4a71ac",
+  "ctestExit": 8,
+  "seconds": 185.84,
+  "tests": 2213,
+  "failedChecks": 62,
+  "failedTests": [
+    "CampaignSession_LocalGeysersUseActualAiRegistration",
+    "CampaignSession_AiCollectorSelectionUsesActualDeployment",
+    "CampaignSession_AiFactoryProductionUsesOriginalWorkshops",
+    "CampaignSession_FactoryUpgradePictureAndCompletionShareWorld",
+    "CampaignSession_AiDropScanUsesActualMapsStateAndLifetime",
+    "CampaignForwardBattle_NaturalTempleAssault",
+    "CampaignAltar_AlliedReleaseUsesVirtualPriestOwner",
+    "CampaignDude_ActualPathNoticeSpeedAndArrival",
+    "CampaignTutorialOne_ActualSessionFrameAndInputPauseOwnership",
+    "CampaignObjectCommand_ActualCarrierParentAndPriestOwner",
+    "CampaignMissionCommon_ActualFiveSessionsFrameReplayAndDemoQueue",
+    "CampaignMissionLifecycle_ActualSessionEntryPauseBeforeStart",
+    "AssetRegular_FactoryUpgradeDispatchAndUpperFlare",
+    "RawMenuControls_HelpActualTreePixelsAndOutsideInput",
+    "RawMenuControls_HelpActualTypeInfoAndImage",
+    "CampaignKnowledge_ActualSessionAndMenuTree",
+    "DudeRegular_Native1600"
+  ],
+  "gunBlockerFocusedPassed": 3,
+  "aiSessionFocusedTests": 23,
+  "aiSessionFocusedFailedChecks": 3,
+  "previousReport": "cpppj/ai-bridge-regression-20261022.json",
+  "logs": {
+    "extracted/cpp-ai-blocker-capacity-20261022-build.log": "eebb5c50ee0e302bc79049938fd9da0bed9af3b7eca6e7864d9762c1c173b169",
+    "extracted/cpp-ai-blocker-capacity-20261022-ai.log": "c7d345d69adbff3d629f6e352411509b236f84a312049bc46ce1e301549577fd",
+    "extracted/cpp-ai-blocker-capacity-20261022-ctest.log": "134f00eb33eee12ee0fce3308f952783e8d8931ce679093e35117c5bb9f84db3"
+  },
+  "limitations": [
+    "?? ??? ???? ???. ??17? ?? ??? ?? ???/??? ?? ??? ????."
+  ]
+}

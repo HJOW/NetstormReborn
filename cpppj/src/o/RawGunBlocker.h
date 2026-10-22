@@ -24,7 +24,7 @@ public:
         std::span<const GunTargetType> targetTypes,const RawGunTarget& targeting,
         const GunProcessState& process,const GunBlockerState& state,GunBlockerHooks hooks);
     // 00469590: 현재 소유자/새 위치의 스톤 타워보다 먼 표적을 보는 기존 Gun SID를 모은다.
-    // 원본 목록은20DWORD이며 같은 번호의 중복도 지우지 않는다. capacity는 독립 관측의 목록 한도다.
+    // 통지는20DWORD, AI 평가는30DWORD 목록을 전달한다. capacity는 caller의 signed 용량이며 중복도 지우지 않는다.
     std::vector<std::uint32_t> Collect(std::uint32_t owner,std::array<float,2> point,std::size_t capacity=20) const;
     // 0046ae80: boss일 때 현재 타워의 소유자/원점으로 수집하고 아직 존재하는 각 Gun에 통지한다.
     void Notify(Sid blocker) const;

@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <bit>
 #include <cmath>
+#include <limits>
 #include <stdexcept>
 #include <utility>
 
@@ -68,7 +69,7 @@ double RawGunBlocker::Score(std::array<float,2> center,Sid target,bool archer) c
 }
 // 현재 source owner 방향의 동맹만 검사하며 이미 가득 찬 목록에서도 원본 후보 순회를 끝낸다.
 std::vector<std::uint32_t> RawGunBlocker::Collect(std::uint32_t owner,std::array<float,2> point,std::size_t capacity) const {
-    if (owner>kPlayerCount || capacity>20 || !hooks_.currentTarget || !hooks_.mode || !hooks_.muzzle) throw std::invalid_argument("장애물 후보 수집 실제 경계/용량 오류");
+    if (owner>kPlayerCount || capacity>static_cast<std::size_t>(std::numeric_limits<std::int32_t>::max()) || !hooks_.currentTarget || !hooks_.mode || !hooks_.muzzle) throw std::invalid_argument("장애물 후보 수집 실제 경계/용량 오류"); //원본 목록의 signed 용량을 따른다. AI 호출자의30개를 통지 호출자의20개로 제한하지 않는다.
     const auto& stone=types_[state_.stoneTowerType];GunTargetRect box{point[0],point[1],point[0],point[1]};
     Include(box,{static_cast<float>(static_cast<double>(point[0])-(stone.footX-1)),static_cast<float>(static_cast<double>(point[1])-(stone.footY-1))});
     const auto middle=Center(box);std::vector<std::uint32_t> result;result.reserve(capacity);std::vector<int> heights;heights.reserve(targetTypes_.size());

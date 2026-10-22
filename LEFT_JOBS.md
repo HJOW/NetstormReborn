@@ -1,5 +1,13 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-22 단위303 완료: AI 장애물 후보의 실제30개 용량
+
+- [x] 단위302를 `fe4a71ac / 20261022-27 CP`로 커밋하고 계속했다. 현재/마지막 전체 정밀 디컴파일 PC는 **VM-W11-Codex / 2026-10-22**로 같다. `00412950`의30개 caller 목록과 `00469590`의 현재 개수/용량 비교 명령을 보호 PE·정밀 결과로 확인했다. 새 디컴파일/보호 원본/CD·AGENTS/dotnetpj 변경은 없다.
+- [x] `RawGunBlocker::Collect`의 잘못된20개 상한을 제거하고 caller의 signed DWORD 용량을 사용한다. 통지20개와 AI30개는 각각 유지하며 후보 순서·중복·표적/거리 판정을 바꾸지 않았다. 기존 독립 원본690행·반경6행과 새30개 caller 회귀를 포함한 GunBlocker3개가 통과했다. AI Session23개 중 **20개 통과·실패check3개**, 실제 `ScoreAiBlockers`의 예외는 해결됐다. [상세](docs/exe/cpp-ai-blocker-capacity-20261022.md).
+- [x] Release **종료0·경고0·오류0**이다. `extracted/cpp-ai-blocker-capacity-20261022-build.log`, `extracted/cpp-ai-blocker-capacity-20261022-ai.log`를 보존한다. 실제 게임/창은 실행하지 않았다.
+- [x] 최종 전체 CTest는 **종료8·185.84초·내부2,213개 중17개 검사 실패·실패check62개**다. 이번 턴 최초 전체 결과의27개/72check보다10개 검사·10check가 줄었으나 전체 통과는 아니다. 새 다리13개·GunBlocker3개와 복구한 큐/Player 재생·해결된 AI Session 연결은 전체에서도 통과했다. [최종 실패 목록·로그 SHA](cpppj/ai-blocker-regression-20261022.json)를 보존했다. UTF-8·보호 PE 두 개 SHA·한국어 주석 혼입 검사·`git diff --check`를 확인하고 **20261022-28 CP**로 로컬 커밋한다. 원격 push하지 않는다.
+- [ ] **다음 재개 지점:** AI Session의 수집자 배치/워크샾 생산 개수·스캔 진행과 나머지 전체 실패를 실제 입력/원본 하위와 대조한다. 다리 초기화·후보/경로 탐색→네 전략/자동 전체 프레임/종료, 15개 미션·Edit/custom Fort·언어별 시나리오 수명·자연 플레이·표시/음향 동일성은 미완료다.
+
 ## 2026-10-22 단위302 완료: 원본 동작을 유지한 회귀 검사 설정 복구
 
 - [x] 단위301을 `da3a5c8a / 20261022-26 CP`로 커밋하고 계속했다. 현재/마지막 전체 정밀 디컴파일 PC는 **VM-W11-Codex / 2026-10-22**로 같다. 실제 원본 큐 명령을 읽기 전용으로 확인했으며 새 디컴파일·보호 원본/CD·AGENTS·제품 코드·기존 golden fixture·dotnetpj 변경은 없다.

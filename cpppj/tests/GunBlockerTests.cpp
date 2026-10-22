@@ -97,6 +97,17 @@ TEST_CASE(GunBlocker_NativeCollectAndNotify) {
     CHECK(count==690 && positive>100);
 }
 
+// 원본 AI의30개 목록을 허용하며 포화 전 후보 순서/내용은 기존 독립 원본과 같아야 한다.
+TEST_CASE(GunBlocker_AiCallerCapacityThirtyKeepsNativeOrder) {
+    const auto rows=LoadFixture(NETSTORM_GUN_BLOCKER_FIXTURE).rows;GunBlockerScene scene;bool checked{};
+    // 원본20개 한도에 못 미치는 다섯 Gun 장면에서 비어 있지 않은 수집 입력을 찾는다.
+    for (const auto& row:rows) {
+        scene.Prepare(row[0]);if (scene.input[0] || scene.input[10]!=20 || row[1]=="-") continue;
+        scene.input[10]=30;const auto actual=scene.Run();CHECK(actual[0]==row[1] && actual[1]==row[2]);checked=true;break;
+    }
+    CHECK(checked);
+}
+
 // 최대 반경20에 정확히 닿는 후보는 포함하고 그보다 먼 후보는 제외하는 실제 원본 경계를 검사한다.
 TEST_CASE(GunBlocker_NativeRadiusBoundary) {
     const auto path=std::filesystem::path(NETSTORM_GUN_BLOCKER_FIXTURE).parent_path()/"gun-blocker-boundary-x86.tsv"; // 기존690행을 덮지 않는 별도 원본 입력이다.
