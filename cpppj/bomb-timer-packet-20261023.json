@@ -41,11 +41,11 @@
     "cpppj/src/o/SidPool.h": "a830f7fca8c42e5a2713a7d5d886314c81dc3bffb8271de85c1b0d1fc46de651",
     "cpppj/src/o/SidPool.cpp": "7bc612330f3b631cf8141be5e7a9ae51cefe8caee3ea3eb68be38252d68a6887",
     "cpppj/src/o/RiftType.h": "4d4a5a2bb251cf27fe253a5e42da91776d6d12d094d640dac25da5bad9b1b552",
-    "cpppj/src/o/CMakeLists.txt": "06362192a6a5fe09dfd71e5c0441cb9fa521fa052d56099be6759b978076e7f7",
+    "cpppj/src/o/CMakeLists.txt": "2e73c17ebccdd294389f3e425081ca3830975f0be93153c7c00967fe418c6f8f",
     "cpppj/tests/BombTimerPacketTests.cpp": "226cd2619a30e70f40ecfb1f62201481d8a8fe05d1b3f7a2e7e043524460bfb1",
     "cpppj/tests/BombEffectTimerTests.cpp": "520c92558ae0c25fb250fe48ddab62ed0ec01bae68a55eda7dc5392af3cb6f44",
     "cpppj/tests/RawSceneSupport.h": "87b79d463f38e142b1aa768384af28a08b404a276a6b989e90dd53b393642919",
-    "cpppj/tests/CMakeLists.txt": "b27e1234f27bab7b71363634cb30c04c89b919e9eea05d6d40e7a45e777dba5f"
+    "cpppj/tests/CMakeLists.txt": "f8354d238a52d595c762494a73fd28df35b2e77de8974909026a885fd239c107"
   },
   "validation": {
     "build": {
@@ -72,5 +72,6 @@
     },
     "scope": "원본 대조/기존Frame/실제 선택 표시까지 검증했다. Session57 서버 생성·7d 연결/117·118 전체 효과/전체 GUI는 미완료다."
   },
-  "implementationRefresh349": "단위349의 상태 주문/타이머 연결과 defaultFrame 자산 연결에 맞춰 현재 공유 구현 SHA만 갱신했다. 기존 원문/과거 validation 수치는 보존한다."
+  "implementationRefresh349": "단위349의 상태 주문/타이머 연결과 defaultFrame 자산 연결에 맞춰 현재 공유 구현 SHA만 갱신했다. 기존 원문/과거 validation 수치는 보존한다.",
+  "implementationRefresh350": "단위350의 윈드 소환 주문/원주 생산 연결과 공용 등록·검사 변경에 맞춰 현재 구현 SHA만 갱신했다. 기존 원문과 과거 validation 수치는 보존한다."
 }

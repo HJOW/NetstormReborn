@@ -1,6 +1,8 @@
 // Impl 안에서 포함하여 폭발/은신/마비 주문의 실제 월드·Host·경제·음향을 연결한다.
-// 같은 공용 시전/수신을 사용한다고 확인한 정확한 세 가상 표만 허용한다.
-bool ConnectedBombTable(std::uint32_t table) const { return table==0x502370U || table==0x502510U || table==0x502ff8U; }
+// 세 Wind 소환 주문은 bc의 소환 부수 효과와 별도 c0를 사용한다.
+bool WindSpellTable(std::uint32_t table) const { return table==0x5025d8U || table==0x502e68U || table==0x502f30U; }
+// 같은 공용 시전/수신을 사용하는 정확한 여섯 가상 표만 허용한다.
+bool ConnectedBombTable(std::uint32_t table) const { return table==0x502370U || table==0x502510U || table==0x502ff8U || WindSpellTable(table); }
 // 상태 효과의 적용/만료는 동일한 실제 가상 배치·표시·펜스 소비자를 사용한다.
 BombEffectTimerHooks MakeBombTimerHooks() {
     BombEffectTimerHooks hooks;hooks.unpop=[this](Sid sid,std::uint32_t flags) { world.Unpop(sid,flags); };hooks.repop=[this](Sid sid,std::uint32_t flags) { world.Repop(sid,flags); };
@@ -42,10 +44,15 @@ void ConnectDevastation() {
     for (const auto& asset:assets.game.Types()) { const auto name=asset.definition.String("fireSound");auto& type=devastationEffectTypes.at(70+asset.block);type.sound=name && !name->empty() ? soundNames.Lookup(*name) : 0;type.delay=static_cast<std::int32_t>(asset.definition.Number("effecttime").value_or(0)); }
     BombStatusHooks status;status.refresh=[this](Sid sid) { core.display.Update(core.pool.Slot(sid),0); };status.unpop=[this](Sid sid,std::uint32_t flags) { world.Unpop(sid,flags); };status.repop=[this](Sid sid,std::uint32_t flags) { world.Repop(sid,flags); };
     status.fence=[this](Sid sid) { fenceLifetime->Refresh(sid); };status.flare=[this](Sid sid,std::int32_t count,std::uint32_t event,std::uint32_t type,std::uint32_t direction) { flare->SpawnDirection(sid,count,event,type,direction); };bombStatusState.alliances=alliances;bombStatus=std::make_unique<RawBombStatus>(core.pool,core.types,bombStatusState,std::move(status));
+    windSpellCounts.resize(core.types.size());for (const auto& asset:assets.game.Types()) windSpellCounts.at(70+asset.block)=static_cast<std::int32_t>(asset.definition.Number("spawns").value_or(0)); // 현재 TYPE의 signed 소환 개수만 공급한다.
+    windSpellState.counts=windSpellCounts;WindSpellHooks summons;summons.exists=[this](Sid parent,std::uint32_t type) { return FindAttachedProcess(core.pool,parent,type).value!=0; };
+    summons.allocate=[]()->std::optional<WindAviaryProcessFields> { auto* storage=std::malloc(80);if (!storage) return std::nullopt;WindAviaryProcessFields fields;std::memcpy(fields.bytes.data(),storage,80);std::free(storage);return fields; };
+    summons.attach=[this](WindAviaryProcessFields fields,Sid parent,std::uint32_t type,std::uint32_t flags) { static_cast<void>(core.processes.Attach(std::make_unique<WindAviaryProcess>(*windAviary,std::move(fields)),type,parent,flags)); };
+    windSpell=std::make_unique<RawWindSpell>(core.pool,core.processState.server,core.processState.now,windSpellState,std::move(summons));
     BombTargetHooks targets;
     // 실제502370의b4는41e3c0이며 다른 표의 반경으로 대체하지 않는다.
     targets.radius=[this](Sid parent,std::uint32_t table) { if (!ConnectedBombTable(table)) throw std::logic_error("주문 반경 표 오류");return devastationTargets->DefaultRadius(parent); };
-    targets.eligible=[this](Sid parent,std::uint32_t table,Sid target) { if (!ConnectedBombTable(table)) throw std::logic_error("주문 자격 표 오류");PrepareDevastation();return table==0x502370U ? devastationBlast->MayTarget(target) : bombStatus->MayTarget(parent,target); };
+    targets.eligible=[this](Sid parent,std::uint32_t table,Sid target) { if (!ConnectedBombTable(table)) throw std::logic_error("주문 자격 표 오류");PrepareDevastation();return WindSpellTable(table) ? windSpell->MayTarget(parent) : table==0x502370U ? devastationBlast->MayTarget(target) : bombStatus->MayTarget(parent,target); };
     targets.assertion=[](std::uint32_t line) { throw std::logic_error("원본 Devastation 권한 진단 "+std::to_string(line)); };
     devastationTargets=std::make_unique<RawBombTargets>(core.pool,core.hash,core.types,fenceRanges,devastationTargetState,std::move(targets));
     devastationBlast=std::make_unique<RawBombBlast>(core.pool,core.types,core.frames,*devastationTargets,devastationBlastState,MakeCampaignBombBlastHooks(world,*hits,*devastationTargets));
@@ -81,7 +88,7 @@ void ConnectDevastation() {
         }
     };
     effect.allocate=[this](std::uint32_t bytes) { try { if (!devastationEffectMemory) devastationEffectMemory=std::make_unique<std::uint8_t[]>(bytes);else { if (bytes!=40 || pendingBombTimerStorage || pendingBombTimer) throw std::logic_error("상태 타이머 확보 순서 오류");pendingBombTimerStorage.reset(::operator new(sizeof(BombEffectTimerProcess))); }return true; }catch (const std::bad_alloc&) { return false; } };
-    effect.apply=[this](Sid parent,std::uint32_t table,Sid target) { if (!ConnectedBombTable(table)) throw std::logic_error("주문 효과 표 오류");PrepareDevastation();if (table==0x502370U) devastationBlast->Apply(parent,target);else bombStatus->Apply(parent,target); };
+    effect.apply=[this](Sid parent,std::uint32_t table,Sid target) { if (!ConnectedBombTable(table)) throw std::logic_error("주문 효과 표 오류");PrepareDevastation();if (table==0x502370U) devastationBlast->Apply(parent,target);else if (table!=0x5025d8U) bombStatus->Apply(parent,target); };
     effect.construct=[this](std::int32_t delay,std::uint32_t,std::span<const std::uint32_t> members,std::uint32_t flags) { if (!pendingBombTimerStorage || pendingBombTimer) throw std::logic_error("상태 타이머 생성 메모리 누락");auto* process=::new (pendingBombTimerStorage.get()) BombEffectTimerProcess(core.pool,core.types,core.processState.now,delay,members,flags,MakeBombTimerHooks());static_cast<void>(pendingBombTimerStorage.release());pendingBombTimer.reset(process);return 1U; };
     effect.argument=[this](std::uint32_t x,std::uint32_t y) { if (x || y) throw std::logic_error("상태 타이머 예약 인자 오류");return std::uint32_t(BombTimerParent(core.pool,core.types,assetState.residences.Items()).value); };
     effect.attach=[this](std::uint32_t token,std::uint32_t type,std::uint32_t parent,std::uint32_t form,std::uint32_t flags) { if (token!=1 || !pendingBombTimer || parent>65535 || form>65535) throw std::logic_error("상태 타이머 예약 객체/인자 오류");static_cast<void>(core.processes.Attach(std::move(pendingBombTimer),type,Sid{static_cast<std::uint16_t>(parent)},flags,Sid{static_cast<std::uint16_t>(form)})); };

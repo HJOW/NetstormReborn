@@ -24,7 +24,7 @@ public:
     bool MayTarget(Sid parent,Sid target) const; // 117의41eca0과118의41fdb0을 정확한 현재 VT로 분배한다.
     void Apply(Sid parent,Sid target) const; // 41fc50/41fdd0의 운반체 제외·상태·현재 가상 효과를 실행한다.
 private:
-    std::uint32_t Kind(Sid parent) const; // 정확한502510/502ff8만 은신/마비로 구분한다.
+    std::uint32_t Kind(Sid parent) const; // 정확한 은신/마비 적용 표와 같은41fc50인 두 Wind 적용 표만 구분한다.
     std::uint32_t Genus(Sid sid) const; // 효과 뒤 바뀐 현재 TYPE의 genus를 읽는다.
     SidPool& pool_; // 원본 extra를 직접 쓰는 단일 물리 저장소다.
     std::span<const RiftTypeRecord> types_; // 현재 종류/자격의 같은188TYPE다.

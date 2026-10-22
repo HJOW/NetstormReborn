@@ -30,7 +30,7 @@
   "implementationSha256": {
     "cpppj/src/o/RawBombEffectTimer.h": "13776b3e72fbcb9bf494d9f21039fd25444f1ca51a95d32f0cfd8396ddeb1fda",
     "cpppj/src/o/RawBombEffectTimer.cpp": "b8a759c37967908b09877796909d38b8279178ee633c6ec09b55ce92c27fd342",
-    "cpppj/src/client/RawCampaignFactoryDisplay.cpp": "4588576e481f8067199e4554b9cdd0beb2312dead912ca72caac22f7a08ad95b",
+    "cpppj/src/client/RawCampaignFactoryDisplay.cpp": "f24047267d20459b85238b291905803b7cb27b284e297a0c0f1e03138808c62d",
     "cpppj/src/client/SpriteDraw.h": "293e0152b1f7b1c76d7c25b405c402133141bd9b80bda0367d730924accc3800",
     "cpppj/src/client/SpriteDraw.cpp": "2bd9d880ef2b0ea476072bace12be8a227be0439a1d9ffde11ddc2e282af73d9",
     "cpppj/src/client/Renderer.h": "acf32895d26139545152359ef4b67bb100218e5ab37ef777644783a741d3da96",
@@ -40,10 +40,10 @@
     "cpppj/src/o/Kernel.cpp": "aebc153f596928d8f81cb89c824000a3486986f115505a544c6480b9e5655dc3",
     "cpppj/src/o/SquidProcess.h": "481ad652080175ccb135c5f4981edc44e7d853584eaaebaab1a65d3873bc5399",
     "cpppj/src/o/SquidProcess.cpp": "993e34a3c7b3b87f290a33f548a126415c3a77794a7a191801d68f405baf1780",
-    "cpppj/src/o/CMakeLists.txt": "06362192a6a5fe09dfd71e5c0441cb9fa521fa052d56099be6759b978076e7f7",
-    "cpppj/tests/CMakeLists.txt": "b27e1234f27bab7b71363634cb30c04c89b919e9eea05d6d40e7a45e777dba5f",
+    "cpppj/src/o/CMakeLists.txt": "2e73c17ebccdd294389f3e425081ca3830975f0be93153c7c00967fe418c6f8f",
+    "cpppj/tests/CMakeLists.txt": "f8354d238a52d595c762494a73fd28df35b2e77de8974909026a885fd239c107",
     "cpppj/tests/BombEffectTimerTests.cpp": "520c92558ae0c25fb250fe48ddab62ed0ec01bae68a55eda7dc5392af3cb6f44",
-    "cpppj/tests/CampaignSessionTests.cpp": "1928ecc24c942f0003580c9033f1bcca866a5cf601550d5ca7c2b0baca1efdf1"
+    "cpppj/tests/CampaignSessionTests.cpp": "5c6d66e93c64a1bd4af4951279867514087d7711c881d7ae9d866bf4854bd873"
   },
   "validation": {
     "releaseBuild": 4,
@@ -56,5 +56,6 @@
     "scope": "원문41e100 및 실제 Cast/비행체 생산 기한/명시 효과 상태57 만료/사제 저장 상태 표시. 전체605 및117/118 주문 수신 완료 증거가 아니다."
   },
   "implementationRefresh348": "단위348의 타이머100칸 수정/새 송수신 모듈 등록에 맞춰 현재 공유 구현 SHA만 갱신했다. 기존 원문과 과거 validation 수치는 보존한다.",
-  "implementationRefresh349": "단위349의 상태 주문/타이머 연결과 defaultFrame 자산 연결에 맞춰 현재 공유 구현 SHA만 갱신했다. 기존 원문/과거 validation 수치는 보존한다."
+  "implementationRefresh349": "단위349의 상태 주문/타이머 연결과 defaultFrame 자산 연결에 맞춰 현재 공유 구현 SHA만 갱신했다. 기존 원문/과거 validation 수치는 보존한다.",
+  "implementationRefresh350": "단위350의 윈드 소환 주문/원주 생산 연결과 공용 등록·검사 변경에 맞춰 현재 구현 SHA만 갱신했다. 기존 원문과 과거 validation 수치는 보존한다."
 }

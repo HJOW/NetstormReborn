@@ -11,6 +11,8 @@
 #include "o/RawIceTower.h"
 #include "o/RawBulwarkHit.h"
 #include "o/RawBombStatus.h"
+#include "o/RawWindCircle.h"
+#include "o/RawWindSpell.h"
 #include "o/RawBombTimerPacket.h"
 #include "o/RawPlainUnitCapture.h"
 #include "o/RawPlainWorkshopCapture.h"
@@ -580,6 +582,7 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawBombActivation> devastationActivation;std::unique_ptr<RawBombRegular> devastationRegular;std::unique_ptr<RawBombEffect> devastationEffect; // 0x5c/주기/0x5f의 실제 공용 몸체를 연결한다.
     std::unique_ptr<RegularProcess> pendingDevastationRegular; // 실제 활성화 확보부터 SharedRegular 부착까지 한 객체를 보관한다.
     std::unique_ptr<std::uint8_t[]> devastationSearchMemory,devastationEffectMemory; // 각각 원본new400/대상배열의 실제 확보와 해제 수명을 보존한다.
+    WindSpellState windSpellState;std::vector<std::int32_t> windSpellCounts;std::unique_ptr<RawWindSpell> windSpell; // 세 소환 주문의 현재spawns와 실제59 생성을 소유한다.
     BombStatusState bombStatusState;std::unique_ptr<RawBombStatus> bombStatus; // 같은 현재 동맹/가상 효과로 은신과 마비를 실행한다.
     std::uint32_t bombTimerType{57};std::unique_ptr<BombEffectTimerProcess> pendingBombTimer; // 수신/시전이 확보한 타이머를 같은 Host에 넘긴다.
     std::unique_ptr<void,void(*)(void*)> pendingBombTimerStorage{nullptr,[](void* memory) { ::operator delete(memory); }}; // new40 경계의 미생성 메모리를 예외 시에도 해제한다.
@@ -1350,7 +1353,7 @@ struct RawCampaignSession::Impl {
         if (raw[10]==163 && Read(raw,0)==0x509b98U) return true;
         if (raw[10]>=core.types.size() || !(core.types[raw[10]].flags2&0x100U)) return false;
         // 현재PE에서공통수명또는고유41e960을확인한가상표들이다.
-        for (const auto table:{0x502370U,0x502448U,0x502510U,0x502ff8U,0x5030c0U,0x503188U,0x501dd0U}) if (Read(raw,0)==table) return true;return false;
+        for (const auto table:{0x502370U,0x502448U,0x502510U,0x502ff8U,0x5030c0U,0x503188U,0x501dd0U,0x5025d8U,0x502e68U,0x502f30U}) if (Read(raw,0)==table) return true;return false;
     }
     bool PlainCarrierLifetime(Sid sid) const { return carrierRegular && carrierRegular->Handles(sid) && Read(core.pool.Slot(sid),0)!=0x5040c0U; }
     // 실제 PE의 신전 네 가상 표를 판정하며 다른 자산을 타입 이름만으로 허용하지 않는다.
@@ -1412,7 +1415,7 @@ struct RawCampaignSession::Impl {
             RawWindFlyer::Specialize(current->Fields());
         };
         hooks.bindFlyer=[this](Sid sid,Sid home) { flyer->Bind(sid,home); };
-        hooks.circlePosition=SessionMissing<std::array<float,2>,Sid,std::int32_t,std::int32_t>(); // 주문부모의전용원주배치는후속원문대조가필요하다.
+        hooks.circlePosition=[this](Sid parent,Sid flyer,const WindAviaryProcessFields& fields) { return WindCirclePosition(core.pool,core.types,parent,flyer,fields,[this](Sid sid,std::uint32_t,std::int32_t frame) { const auto type=core.pool.Slot(sid)[10];if (type<70 || frame<0) throw std::out_of_range("Wind 원주 실제 헤더 범위");const auto bytes=assets.game.Shapes().SquidHeader(type-70,static_cast<std::size_t>(frame));const auto& view=core.shapes[type].frames.at(static_cast<std::size_t>(frame));return WindCircleHeader{view.walkStepY,std::bit_cast<std::int16_t>(static_cast<std::uint16_t>(bytes[26]|(std::uint16_t(bytes[27])<<8))),std::bit_cast<std::int16_t>(static_cast<std::uint16_t>(bytes[30]|(std::uint16_t(bytes[31])<<8)))}; }); };
         hooks.destroy=[this](Sid sid,std::uint32_t flags) { static_cast<void>(world.Destroy(sid,flags)); }; // 같은 풀/현재 가상 표의 삭제와 종속 정리를 실행한다.
         hooks.finish=[this](WindAviaryProcessFields& fields) {
             const Sid form{static_cast<std::uint16_t>(Read(fields.bytes,60))};auto* process=dynamic_cast<WindAviaryProcess*>(core.processes.FromForm(form));

@@ -18,12 +18,13 @@ RawBombStatus::RawBombStatus(SidPool& pool,std::span<const RiftTypeRecord> types
     if (pool.Edition()!=OriginalEdition::Patch1078 || types.size()!=188) throw std::invalid_argument("상태 주문 PATCH/188TYPE 필요");
 }
 std::uint32_t RawBombStatus::Kind(Sid parent) const {
-    const auto table=Read(pool_.Slot(parent),0);if (table==0x502510U) return 1;if (table==0x502ff8U) return 2;throw std::invalid_argument("상태 주문의 현재 VT 불일치");
+    const auto table=Read(pool_.Slot(parent),0);if (table==0x502510U || table==0x502e68U || table==0x502f30U) return 1;if (table==0x502ff8U) return 2;throw std::invalid_argument("상태 주문의 현재 VT 불일치");
 }
 std::uint32_t RawBombStatus::Genus(Sid sid) const {
     const auto kind=pool_.Slot(sid)[10];if (kind>=types_.size()) throw std::out_of_range("상태 주문의 현재 TYPE 범위");return types_[kind].flags2;
 }
 bool RawBombStatus::MayTarget(Sid parent,Sid target) const {
+    const auto table=Read(pool_.Slot(parent),0);if (table!=0x502510U && table!=0x502ff8U) throw std::invalid_argument("상태 주문 자격의 현재 VT 불일치"); // Wind의 같은 은신 적용 함수와 별개인 소환 자격을 혼용하지 않는다.
     if (Kind(parent)==2) return (Genus(target)&0x170000U)!=0;
     if (Genus(target)&0x1570004U) return true;const auto kind=pool_.Slot(target)[10];return kind==state_.altar || kind==state_.outpost;
 }

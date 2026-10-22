@@ -1797,3 +1797,15 @@ cpppj/tests/fixtures/bomb-status*-x86.tsv text eol=lf
 tools/decomp_bomb_status.py text eol=lf
 cpppj/bomb-status-20261023.json text eol=lf
 docs/exe/cpp-bomb-status-20261023.md text eol=lf
+
+# Wind 원주·소환의 구현과 독립 원문은 UTF-8 LF로 고정한다.
+cpppj/src/o/RawWindCircle.* text eol=lf
+cpppj/src/o/RawWindSpell.* text eol=lf
+cpppj/tests/WindSpellTests.cpp text eol=lf
+cpppj/tests/fixtures/wind-circle*-x86.tsv text eol=lf
+cpppj/tests/fixtures/wind-spell-x86.tsv text eol=lf
+tools/decomp_wind_spell.py text eol=lf
+tools/decomp_wind_circle_frame.py text eol=lf
+cpppj/wind-spell-20261023.json text eol=lf
+cpppj/wind-circle-frame-20261023.json text eol=lf
+docs/exe/cpp-wind-spell-20261023.md text eol=lf

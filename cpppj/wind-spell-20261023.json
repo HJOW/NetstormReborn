@@ -1,0 +1,115 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-22",
+  "mathInputs": 232,
+  "spawnInputs": 300,
+  "normalReturns": 1064,
+  "nativeInstructions": 43450,
+  "nativeCalls": {
+    "0041e020": 464,
+    "0041ecf0": 200,
+    "0045d730": 234,
+    "0041fb60": 200,
+    "0041fcc0": 200
+  },
+  "precisionDifferentMathInputs": [
+    "3,2,3225419776,1077936128",
+    "5,4,3231711232,1084227584",
+    "6,5,3233808384,1086324736",
+    "360,359,3283353600,1135869952"
+  ],
+  "originalDefaultPrecision": "004e81da __setdefaultprecision -> __controlfp(0x10000,0x30000), PC53",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_wind_spell.py": "3f42069e8517c8ce6a31106f1424185e65dc6d8b6bcc1908e9f8eb0fa34cd3e7",
+    "tools/decomp_arc_spire.py": "a476a7af621fd08e49536e427e40b3d6b4b3df47a8f514740b1633e73adc534e",
+    "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+    "tools/decomp_cursor_position.py": "e15bcdbc4c6be9c131c30f15416c945d650dba9f7dc6def404b47f63c635c212",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "cpppj/tests/fixtures/wind-circle-point-x86.tsv": "10148eb52d02372c31c404c811279d25c1bc08c3bd2b35f017c2ca9b2fbd119c",
+    "cpppj/tests/fixtures/wind-spell-x86.tsv": "d76c1e931e38c3c880fdbeb5a8a4de3ba47dbbe0536d970a301032b7da9080c2"
+  },
+  "limitations": [
+    "41e020 계산/세 소환/45d730 생성자는 원문 명령이다. 힙/TYPE 조회/첫59 조회·부착은 명시 큰 경계다.",
+    "원본CRT 기본53비트를 기준으로 하며64비트 차이는 별도로 기록한다. 전체 게임 GUI/25종 전체 수명 완료 근거는 아니다."
+  ],
+  "implementationSha256": {
+    "cpppj/src/client/RawBombBlastBindings.cpp": "43b1211da05d50b8ba942da52d191530c40ee79af7b82c22fbe6123090cae3be",
+    "cpppj/src/client/RawCampaignCarrierDrop.inc": "8ca3dbdd9987924c7535b157757f04359ae2fe6e5373f9be85c9d493ced60984",
+    "cpppj/src/client/RawCampaignDevastation.inc": "804034ea44d491f1fac09268a731e4286ecef6b3ae0d4383a5236ac1700d874d",
+    "cpppj/src/client/RawCampaignFactoryDisplay.cpp": "f24047267d20459b85238b291905803b7cb27b284e297a0c0f1e03138808c62d",
+    "cpppj/src/client/RawCampaignSession.cpp": "e101fdf269104d8ade573fae02b4ae7e935bc5d9c06969b74f6d20056bbbbad6",
+    "cpppj/src/client/SpriteDraw.cpp": "2bd9d880ef2b0ea476072bace12be8a227be0439a1d9ffde11ddc2e282af73d9",
+    "cpppj/src/o/CMakeLists.txt": "2e73c17ebccdd294389f3e425081ca3830975f0be93153c7c00967fe418c6f8f",
+    "cpppj/src/o/RawBombEffect.cpp": "d37f764b18b534480c566b40899eaacf600b4c1f1bc02e66e6e278587427e543",
+    "cpppj/src/o/RawBombEffect.h": "78de4e8419940cdc10b434735bfd3d8a4e0a4832e9ed525bb4e81554c1bbc450",
+    "cpppj/src/o/RawBombEffectTimer.cpp": "b8a759c37967908b09877796909d38b8279178ee633c6ec09b55ce92c27fd342",
+    "cpppj/src/o/RawBombEffectTimer.h": "13776b3e72fbcb9bf494d9f21039fd25444f1ca51a95d32f0cfd8396ddeb1fda",
+    "cpppj/src/o/RawBombStatus.cpp": "d23d0bb3feb91d9f955423fc98ec27f224ed08574322416c03f186388772109d",
+    "cpppj/src/o/RawBombStatus.h": "ef77410efd8258f6d64795a716ddae3e53ad01ae65f46314992b3c168e265860",
+    "cpppj/src/o/RawBombTargets.cpp": "f2aa11b08479c114823fca68e87b0aadf27da965e5b63a2129d350f3c583700c",
+    "cpppj/src/o/RawBombTimerPacket.cpp": "70a7e9c2bc0cb9c8e9620f70b8e9d55f091e72c0bd1f5e38dc5b01c6534de7ac",
+    "cpppj/src/o/RawBombTimerPacket.h": "1a06e649248f211700be29b0de0b97a30fb2a7d65e8a042328027fbdac3de441",
+    "cpppj/src/o/RawFlare.cpp": "ccf50d1c0c5918661e46e4d85afe2299f13ccd404f419f9d98f5b903990c2daa",
+    "cpppj/src/o/RawFlare.h": "69e3af12cec7e02296b1dd394ee6cf8fed2ee8968c23304039a8760d55e8ef35",
+    "cpppj/src/o/RawWindAviaryProcess.cpp": "468b39893bc464abfc5b246e4afdd72b59aa1076e0d0359cca0c5f7c9ec69789",
+    "cpppj/src/o/RawWindAviaryProcess.h": "55d1c2c5244d527d4e7303e9e09972b09ef9e5299a35c7947b0302054d572247",
+    "cpppj/src/o/RawWindAviaryState.cpp": "00121b2dc81c66ef2a13e79e3fb7dd1d73b91cf88e1fc1179b7634b4e1c45009",
+    "cpppj/src/o/RawWindAviaryState.h": "de1bc6bc4e95f3814f8d8528c2c89be97e7d8adc82e50088a1b286e0a613de1d",
+    "cpppj/src/o/RawWindCircle.cpp": "c4d3e38664a536a2b113568cf3f008a025a4cd53e30506123fab09b670a5098d",
+    "cpppj/src/o/RawWindCircle.h": "662a25e4c35582e3712fc3aa8b1828537dd8c12d279c62a3eb58e0dfb187adf5",
+    "cpppj/src/o/RawWindSpell.cpp": "6f2372feb3a9db77a8d85286e3a57dc3625dde08ea7ab796da6de00ed7badd4d",
+    "cpppj/src/o/RawWindSpell.h": "7fcf677696e984601dba7a878280bb98494835e89f9e0974c8cf1389c1e4c06c",
+    "cpppj/src/o/SquidProcess.cpp": "993e34a3c7b3b87f290a33f548a126415c3a77794a7a191801d68f405baf1780",
+    "cpppj/tests/BombStatusTests.cpp": "0543f2f732bb68d0f66ef945067bef0ededd60f2693d60e9336f3b374ba8bc23",
+    "cpppj/tests/CMakeLists.txt": "f8354d238a52d595c762494a73fd28df35b2e77de8974909026a885fd239c107",
+    "cpppj/tests/CampaignSessionTests.cpp": "5c6d66e93c64a1bd4af4951279867514087d7711c881d7ae9d866bf4854bd873",
+    "cpppj/tests/FlareTests.cpp": "2d3ab1baf640fd2ca6092d34d1095e52cd451da153dba78d6056e46adda4152e",
+    "cpppj/tests/WindAviaryProcessTests.cpp": "dbefd0fd379d28e6e95bae6653f56ba4966a62bb732385f5084d4c448de87ff1",
+    "cpppj/tests/WindSpellTests.cpp": "02b1df2e1e4c7b82122ef2706254ec4d449ac75a95a12898542fc4fd8de564e3"
+  },
+  "validation": {
+    "releaseBuild": {
+      "log": "extracted/cpp-wind-spell-20261023-build4.log",
+      "exit": 0,
+      "warnings": 0,
+      "errors": 0
+    },
+    "focused": {
+      "tests": 14,
+      "failed": 0,
+      "actualLog": "extracted/cpp-wind-spell-20261023-focused4.log"
+    },
+    "actual": {
+      "spells": [
+        171,
+        172,
+        173
+      ],
+      "flyerCounts": [
+        2,
+        4,
+        6
+      ],
+      "completedLifetimeFrames": [
+        1059,
+        1059,
+        1059
+      ],
+      "serverProducerAndFlyerForms": true,
+      "actualPopCircleAndOwner": true,
+      "inventoryPreserved": true,
+      "injectedResults": false
+    },
+    "full": {
+      "log": "extracted/cpp-wind-spell-20261023-ctest1.log",
+      "tests": 2330,
+      "failed": 0,
+      "exit": 0,
+      "seconds": 300.35
+    },
+    "scope": "원본 기본PC53 계산/세 소환/전체12단계 및 실제 단일 플레이 시전·2/4/6개 원주 생성/비행과 자연 수명이다. 25종 전체 수명/GUI·전체 미션·Edit 완료 근거는 아니다."
+  }
+}

@@ -28,7 +28,7 @@ struct WindAviaryHooks {
     std::function<void(Sid,float,float)> pop; // 새 플라이어의 실제 가상90(flags0)이다.
     std::function<void(Sid,Sid)> createFlyerProcess; // new68 성공 시45e1c0의 생성·부착과 전용 표 쓰기다.
     std::function<void(Sid,Sid)> bindFlyer; // 0045c1b0의 현재 홈 WORD 연결이다.
-    std::function<std::array<float,2>(Sid,std::int32_t,std::int32_t)> circlePosition; // 특별 부모의004adea0/0041e020과 프레임13 높이를 적용한다.
+    std::function<std::array<float,2>(Sid,Sid,const WindAviaryProcessFields&)> circlePosition; // 부모/실제 새 비행체/현재 원문으로004adea0·0041e020과13번 헤더를 읽는다.
     std::function<void(WindAviaryProcessFields&)> finish; // 상태13의 실제0041bf10(flags0)이다.
     std::function<void(Sid,std::uint32_t)> destroy; // Form 삭제45c090의 현재 임시 비행체 가상10(flags0)을 실행한다.
 };
@@ -52,6 +52,7 @@ public:
     void OnFormDestroy(std::uint32_t flags) override; // inner VT509ddc+0c이며 전달 flags는 원본처럼 사용하지 않는다.
     void Notify(std::uint32_t,std::uint32_t,std::uint32_t) override; // 원본 ret12의 빈 통지다.
     WindAviaryProcessFields& Fields(); // 수신/현재 상태를 사본 없이 제공한다.
+    const WindAviaryProcessFields& Fields() const; // 읽기 전용 수명 관찰도 같은 원문을 조회한다.
     std::uint16_t WritePacket(std::span<std::uint8_t> packet,bool parentChanged); // 같은 Host의 실제0x74 writer다.
 private:
     const RawWindAviaryProcess& logic_; WindAviaryProcessFields fields_; // 처리기 참조와 유일한80BYTE 소유권이다.

@@ -87,7 +87,7 @@ void RawWindAviaryProcess::Frame(WindAviaryProcessFields& f) const {
     case 5:if (globals_.now-Time(f,40)>26.0) State(f,1);return;
     case 11:f.bytes[8]|=2;Time(f,16,globals_.now);State(f,12);Flyer(f,0);return;
     case 12:
-        if (globals_.server && Read(f.bytes,48)==0) { const auto sid=create();const auto pos=Need(hooks_.circlePosition)(parent,std::bit_cast<std::int32_t>(Read(f.bytes,68)),std::bit_cast<std::int32_t>(Read(f.bytes,72)));Put(pool_.AllocatedBytes(sid),12,Parent(f).value,2);Need(hooks_.pop)(sid,pos[0],pos[1]); }
+        if (globals_.server && Read(f.bytes,48)==0) { const auto sid=create();const auto pos=Need(hooks_.circlePosition)(parent,sid,f);Put(pool_.AllocatedBytes(sid),12,Parent(f).value,2);Need(hooks_.pop)(sid,pos[0],pos[1]); }
         if (Read(f.bytes,48)!=0 || globals_.boss==0) { if (globals_.server) { Need(hooks_.createFlyerProcess)(Flyer(f),Parent(f));Flyer(f,0); }State(f,13); }return;
     case 13:Need(hooks_.finish)(f);return;
     default:if (globals_.checking && (stage<1 || stage>13)) Need(hooks_.assertion)(0x8da);return;
@@ -99,5 +99,6 @@ void WindAviaryProcess::OnAttached() { Put(fields_.bytes,60,Form().value);Put(fi
 void WindAviaryProcess::OnFormDestroy(std::uint32_t) { logic_.FormDestroy(fields_); } // Form 삭제 전에 임시 객체만 정리하고 프로세스 반납은 Host에 맡긴다.
 void WindAviaryProcess::Notify(std::uint32_t,std::uint32_t,std::uint32_t) {} // 원본 빈 통지 몸체다.
 WindAviaryProcessFields& WindAviaryProcess::Fields() { return fields_; } // 현재 단일 원문이다.
+const WindAviaryProcessFields& WindAviaryProcess::Fields() const { return fields_; } // 관찰기에서 필드를 복제하거나 수정하지 않는다.
 std::uint16_t WindAviaryProcess::WritePacket(std::span<std::uint8_t> packet,bool parentChanged) { OnAttached();return RawWindAviaryState::WriteProcess(fields_,packet,parentChanged); } // 부착 전 전송도 같은 Host 필드를 사용한다.
 }

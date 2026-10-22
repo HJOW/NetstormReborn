@@ -50,7 +50,7 @@ struct RawCampaignFactoryDisplay::Impl {
         const auto raw=core.pool.Slot(sid);return raw[0]==0xa0 && raw[1]==0x1e && raw[2]==0x50 && raw[3]==0;
     }
     bool Temple(o::Sid sid) const { return o::IsPatchTemple(core.pool.Slot(sid)); } // 같은10.78 세 전용VT의 실제+a4 대상이다.
-    bool Bomb(o::Sid sid) const { const auto raw=core.pool.Slot(sid);const auto table=std::uint32_t(raw[0])|(std::uint32_t(raw[1])<<8)|(std::uint32_t(raw[2])<<16)|(std::uint32_t(raw[3])<<24);return (raw[10]==117 && table==0x502510U) || (raw[10]==118 && table==0x502ff8U) || (raw[10]==168 && table==0x502370U); } // 공통+a0=41c0f0/+a4=41e3d0인 세 주문이다.
+    bool Bomb(o::Sid sid) const { const auto raw=core.pool.Slot(sid);const auto table=std::uint32_t(raw[0])|(std::uint32_t(raw[1])<<8)|(std::uint32_t(raw[2])<<16)|(std::uint32_t(raw[3])<<24);return (raw[10]==117 && table==0x502510U) || (raw[10]==118 && table==0x502ff8U) || (raw[10]==168 && table==0x502370U) || (raw[10]==171 && table==0x5025d8U) || (raw[10]==172 && table==0x502e68U) || (raw[10]==173 && table==0x502f30U); } // 공통+a0=41c0f0/+a4=41e3d0인 여섯 주문이다.
     bool ThunderCannon(o::Sid sid) const { return o::IsThunderCannonCapture(core.pool.Slot(sid)); } // 독립333캡처로 확인한 실제131/VT50bad0 쌍이다.
     // 별도 SID로 복제된 flyershadow의 두 번째 물리 프레임 묶음이다. 여섯 비행/벌룬 타입에 같은 원본 색 치환을 적용한다.
     bool FlyerShadow(o::Sid sid) const {
