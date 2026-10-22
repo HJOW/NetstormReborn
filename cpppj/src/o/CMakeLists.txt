@@ -433,3 +433,5 @@ target_sources(netstorm PRIVATE RawAiFakeDrySpots.cpp RawAiFakeDrySpots.h)
 target_sources(netstorm PRIVATE RawAiDropActions.cpp RawAiDropActions.h)
 # 단독/편집 맵의 같은50개 캐시와 원본 목록 행 표시를 연결한다.
 target_sources(netstorm PRIVATE RawSoloMapList.cpp RawSoloMapList.h)
+# 원본 실제 파일 저장 부모의 현재 관문과 파일 장치 순서를 복원한다.
+target_sources(netstorm PRIVATE RawDataManagerFileSave.h RawDataManagerFileSave.cpp)

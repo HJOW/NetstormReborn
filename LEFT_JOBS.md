@@ -1,5 +1,13 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-22 단위325 완료: 원본 저장 부모와 실제 편집 작업본 저장
+
+- [x] 시작 HEAD `5916e84f`의 깨끗한 트리·AGENTS·양 인수인계를 다시 확인했다. 직전 단위는 실제 맵 목록/전체2,255개 통과/커밋을 완료한 **진행 턴**이다. 현재/마지막 전체 정밀 디컴파일 PC는 **VM-W11-Codex / 2026-10-22**로 같다. 전체 캠페인으로 확대된 현재 목표를 유지한다. 보호 원본/CD·AGENTS·dotnetpj·기존 fixture 수정, 새 전체 디컴파일, 원본/클론 게임·창 실행은 없다.
+- [x] 0044d8d0 저장 부모의 이미지 선행·현재readOnlyForts/로컬숨김 관문·보관 포인터·권한 전/쓰기 전 두 현재 이름 조회·길이 인자 시점·정상 반납을 복원했다. 보호PE 부모 **144입력/두 정밀도288회**, 실제 이름 getter108회를 실행했다. C++는 전체manager/source20/전역/요청 순서를 대조한다. 이미지/CRT/OS쓰기/free는 명시 외부 경계이며 새 fixture 헤더만 공용 형식에 맞춘 뒤 데이터행 SHA가 같음을 확인했다.
+- [x] `RawPlayerTemplateState::BindFileSave`와 `CampaignTemplateStorage::SaveFile`로 Notify 뒤 실제 저장 부모와 같은 현재 manager의 서명/검색/current/원시 섹션을 연결했다. manager+10c=F/+110의-1→0, 과거flag 사본 배제, signed 타입 수 JL을 반영했다. `EditorFiles`는 새 작업본만 원문으로 준비하고 기존 사용자 파일을 유지하며, 실제 경로 확인 뒤 작업본만 chmod/w+b로 쓴다. TEST01의 빌린 헤더 Notify→실제 저장→재읽기·원본 보존·저장/숨김/헤더 억제를 새 검사로 확인했다.
+- [x] 최종 Release 빌드4 **종료0·경고0·오류0**, 새 검사 **6개**, 기존 이미지4개·PlayerRegular3개가 실패check0이며, 전체 **2,261개·실패check0·exit0·176.65초/전체176.66초**다. 첫 중괄호/검사 상수 충돌/새 TSV 헤더 형식을 고쳤다. 첫 전체 회귀의 기존 PlayerRegular 두 경계 문구 대조도 같은 원본 주소로 인식하도록 고친 후 전체 재통과했다. 원본 fixture/게임 규칙은 바꾸지 않았다. 보호 PE 두 개·TEST01·TAFF SHA 및 원문 재읽기, UTF-8/한국어 주석/diff·스테이징/작업트리 근거 해시를 확인한다. `extracted/cpp-editor-file-save-20261022-*`에 모든 빌드/원본관측/집중/전체 로그를 보존하고 **20261022-50 CP**로 로컬 커밋하며 push하지 않는다. [상세](docs/exe/cpp-editor-file-save-20261022.md),[출처](cpppj/datamanager-file-save-20261022.json).
+- [ ] **바로 다음 Client/UI:** 새 작업본 장치를 실제 Client/Editor Session에 연결해야 한다. **현재 Edit 버튼은 미구현 안내 그대로**다. 작업 루트 선택·원본 맵 namespace 준비·장기 현재 이름·020000c9/020000ca/`*SOLOLIST*`→004b6dd0 편집 상태 전환→실제 월드를 잇는다. 기존 generic Fort의 money/badges/technology/populate 후처리도 조립해야 한다. NewFort/Save As·현재 월드 객체/지형 저장·Test Battle/Return to Editing·언어별 custom 시나리오 수명과 Early Missions/전체 캠페인/데모3 완주·GUI/음향 동일성은 계속 미완료다. `/goal`을 축소하거나 완료로 표시하지 않는다.
+
 ## 2026-10-22 단위324 완료: 실제 Fort 파일과 단독/편집 목록 연결
 
 - [x] 시작 HEAD `448db39f`의 깨끗한 트리, AGENTS 및 양 인수인계를 다시 확인했다. 직전 단위는 원본 목록의 독립 관측/복원/커밋을 완료한 **진행 턴**이다. 현재/마지막 전체 정밀 디컴파일 PC는 **VM-W11-Codex / 2026-10-22**로 같다. 보호 원본/CD·AGENTS·dotnetpj·기존 fixture 수정, 새 전체 디컴파일, 원본/클론 게임·창 실행은 없다.

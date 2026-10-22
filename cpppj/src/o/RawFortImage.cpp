@@ -1,6 +1,7 @@
 // 실제DataManager의고정배열/이전섹션길이수정/엄격한남은공간진단을보존한다.
 #include "o/RawFortImage.h"
 #include <algorithm>
+#include <bit>
 #include <stdexcept>
 #include <utility>
 
@@ -27,15 +28,15 @@ RawFortImage::RawFortImage(OriginalEdition edition,const FortTemplate& fort,Fort
 // 기존해석된Money/Technology대신현재각raw섹션끝까지원문그대로쓴다.
 FortImageData RawFortImage::Save() const {
     FortImageData result;result.storage.resize(kCapacity,0); //실제0044cc20의고정배열전체0초기화다.
-    if (hooks_.typeCount()>255) Assert(hooks_,FortImageAssertion::TypeCount);
-    result.storage[0]=0x46;result.storage[1]=fort_.flag==0xfe ? std::uint8_t{0xfe} : std::uint8_t{};
+    if (std::bit_cast<std::int32_t>(hooks_.typeCount())>=256) Assert(hooks_,FortImageAssertion::TypeCount); //원본004bcd8f의signed JL 관문이다.
+    result.storage[0]=0x46;result.storage[1]=hooks_.signatureFlag ? hooks_.signatureFlag() : fort_.flag==0xfe ? std::uint8_t{0xfe} : std::uint8_t{};
     std::size_t position=2,previous=kCapacity; //이전길이필드는다음섹션진입직전과마지막반환직전에수정한다.
     // 고정35이름순서로없는tail섹션도실제빈stream의길이2를쓴다.
     for (std::size_t index=0;index<FortTemplate::kSectionCount;++index) {
+        const auto section=hooks_.section ? hooks_.section(index) : index<fort_.sections.size() ? std::span<const std::uint8_t>(fort_.sections[index]) : std::span<const std::uint8_t>{}; //원본 검색/current는 이전 길이 수정에 앞서 수행한다.
         if (previous!=kCapacity) Length(result.storage,previous,position-previous);
         if (position>kCapacity-2) { Assert(hooks_,FortImageAssertion::StreamCapacity);throw std::out_of_range("Fort 이미지 길이 필드의 물리 범위 초과"); }
         previous=position;Length(result.storage,position,0);position+=2;
-        const auto section=index<fort_.sections.size() ? std::span<const std::uint8_t>(fort_.sections[index]) : std::span<const std::uint8_t>{}; //현재섹션stream의실제end만사용한다.
         if (section.size()>=kCapacity-position) Assert(hooks_,FortImageAssertion::SectionCapacity);
         if (section.size()>kCapacity-position) throw std::out_of_range("Fort 이미지 payload의 물리 범위 초과");
         std::copy(section.begin(),section.end(),result.storage.begin()+static_cast<std::ptrdiff_t>(position));position+=section.size();

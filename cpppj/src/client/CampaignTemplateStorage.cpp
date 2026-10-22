@@ -199,6 +199,27 @@ struct CampaignTemplateStorage::Image {
         }
         if (!previous) Put(manager,4,0);
     }
+    // 현재 manager의 서명/이름 검색 효과를 같은 파일 저장 부모에 공급한다.
+    void SaveFile(const o::DataManagerFileSaveState& stateInputs,o::FortImageHooks imageHooks,const TemplateFileWriteHooks& file) {
+        SyncStreams();o::FortImageData image;constexpr std::uint32_t kImage=0x50000; //이 동기 호출만 사용하는 이미지 할당의 불투명 토큰이다.
+        imageHooks.signatureFlag=[this] { Put(manager,0x10c,0x46);if (Read(std::span(manager).subspan(0x110))==0xffffffffU) Put(manager,0x110,0);return Read(std::span(manager).subspan(0x110)) ? std::uint8_t{0xfe} : std::uint8_t{}; };
+        imageHooks.section=[this](std::size_t index)->std::span<const std::uint8_t> {
+            o::DataManagerSelectionHooks selection;selection.stream=[this](auto handle) { return std::span(streams.at(handle)->bytes); };
+            const auto handle=o::FindDataManagerSection(manager,o::FortTemplate::SectionNames()[index],selection);if (!handle) throw std::logic_error("Template 실제 파일 저장의 누락 섹션 진단");
+            const auto& bytes=fort.sections.at(handle-1);const auto end=Read(std::span(streams.at(handle)->bytes).subspan(8));if (end>bytes.size()) throw std::out_of_range("Template 저장 섹션의 실제 end 범위");return std::span(bytes).first(end);
+        }; //검색은 같은 목록/current를 바꾸며 Source stream의 pos는 초기화하지 않는다.
+        o::DataManagerFileSaveHooks hooks;
+        hooks.image=[this,&image,&imageHooks](auto source,std::span<std::uint8_t,20> stream) {
+            if (source.data()!=manager.data()) throw std::logic_error("Template 저장의 실제 manager 불일치");image=o::RawFortImage(o::OriginalEdition::Patch1078,fort,imageHooks).Save();Put(stream,0,kImage);Put(stream,4,0);Put(stream,8,static_cast<std::uint32_t>(image.end));Put(stream,12,static_cast<std::uint32_t>(image.storage.size()));
+        };
+        hooks.fileName=[](auto source) { return o::TemplateDataManagerFileName(source); };
+        hooks.permissions=[&file](auto name,auto mode) { if (!file.permissions) throw std::logic_error("Template 실제 파일 권한 장치 미연결");file.permissions(name,mode); };
+        hooks.write=[&file,&image](auto name,auto pointer,auto length) {
+            if (pointer!=kImage || length>image.storage.size()) throw std::out_of_range("Template 파일 저장의 실제 이미지 포인터/길이 범위");if (!file.write) throw std::logic_error("Template 실제 파일 쓰기 장치 미연결");file.write(name,std::span(image.storage).first(length));
+        };
+        hooks.release=[&image](auto pointer) { if (pointer!=kImage) throw std::logic_error("Template 저장 이미지 할당 반납 불일치");std::vector<std::uint8_t>{}.swap(image.storage); };
+        o::SaveDataManagerFile(manager,stateInputs,hooks);
+    }
     // 현재 각 섹션의 버퍼를 먼저 반납하고 같은 노드의 실제 할당을 뒤에 해제한다.
     void Destroy() {
         SyncStreams();o::DataManagerLifetimeHooks hooks;
@@ -305,6 +326,8 @@ o::FortTerritoryStream& CampaignTemplateStorage::SelectTerritory(std::uint32_t s
 const std::string& CampaignTemplateStorage::Name(std::uint32_t slot) { return Current(slot).name; }
 // 빌린 헤더도 원래 소유자의 같은 manager 꼬리DWORD를 읽는다.
 std::array<std::uint32_t,2> CampaignTemplateStorage::FileHeader(std::uint32_t slot) { const auto& manager=Current(slot).manager;return {Read(std::span(manager).subspan(0x10c)),Read(std::span(manager).subspan(0x110))}; }
+// 빌린 헤더도 원래 소유자의 같은 현재 manager와 원시 섹션을 저장한다.
+void CampaignTemplateStorage::SaveFile(std::uint32_t slot,const o::DataManagerFileSaveState& state,o::FortImageHooks image,const TemplateFileWriteHooks& file) { Current(slot).SaveFile(state,std::move(image),file); }
 // 원본을 옮겨 보존한 뒤 같은 Fort State 섹션에 대체 할당을 만든다.
 std::span<std::uint8_t> CampaignTemplateStorage::GrowState(std::uint32_t slot,std::uint32_t size) { auto& image=Current(slot);if (!image.retiredState.empty()) throw std::logic_error("Template State 확장 복사 미완료");const auto at=StateSection();if (image.fort.sections.size()<=at) image.fort.sections.resize(at+1);auto& bytes=image.fort.sections[at];image.retiredState=std::move(bytes);bytes.resize(size);return bytes; }
 // 복사 뒤에만 이전 실제 버퍼를 반납한다.

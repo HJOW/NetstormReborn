@@ -1598,3 +1598,14 @@ cpppj/solo-map-catalog-20261022.json text eol=lf
 docs/exe/cpp-solo-map-catalog-20261022.md text eol=lf
 cpppj/src/o/BaseFile.h text eol=lf
 cpppj/src/o/BaseFile.cpp text eol=lf
+# 실제 파일 저장과 편집 작업본의 원본 관측/코드 해시를 같은 바이트로 보존한다.
+cpppj/src/o/RawDataManagerFileSave.* text eol=lf
+cpppj/src/o/RawFortImage.* text eol=lf
+cpppj/src/o/RawPlayerTemplateState.* text eol=lf
+cpppj/src/client/EditorFiles.* text eol=lf
+cpppj/tests/DataManagerFileSaveTests.cpp text eol=lf
+cpppj/tests/EditorFilesTests.cpp text eol=lf
+cpppj/tests/PlayerRegularTests.cpp text eol=lf
+tools/decomp_datamanager_file_save.py text eol=lf
+cpppj/datamanager-file-save-20261022.json text eol=lf
+docs/exe/cpp-editor-file-save-20261022.md text eol=lf

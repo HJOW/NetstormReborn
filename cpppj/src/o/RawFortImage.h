@@ -21,6 +21,8 @@ struct FortImageData {
 struct FortImageHooks {
     std::function<std::uint32_t()> typeCount; //004bcd80이읽는현재00541348이다.
     std::function<void(FortImageAssertion)> assertion; //해당원문진단이선택된위치에서만필수다.
+    std::function<std::uint8_t()> signatureFlag; //실제 manager의 서명 필드 쓰기/기본값 정규화 뒤 파일 flag를 조회한다. 값형 입력은 기존 fort.flag를 사용한다.
+    std::function<std::span<const std::uint8_t>(std::size_t)> section; //실제 manager의 이름 검색/current 효과와 같은 현재 섹션을 빌린다. 값형 입력은 기존 raw 배열을 사용한다.
 };
 // 섹션현재원문을복사하며예전파일bytes/해석필드로내용을대체하지않는다.
 class RawFortImage {

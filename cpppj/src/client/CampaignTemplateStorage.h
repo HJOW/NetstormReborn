@@ -4,9 +4,16 @@
 #include "o/RawFortWorldLoad.h"
 #include "o/RawPlayerTemplateState.h"
 #include "o/RawTemplateLifetime.h"
+#include "o/RawDataManagerFileSave.h"
+#include "o/RawFortImage.h"
 #include <map>
 #include <memory>
 namespace netstorm::client {
+// 원본 저장 부모가 선택한 현재 파일 장치이며 이미지를 복사해 별도 규칙으로 바꾸지 않는다.
+struct TemplateFileWriteHooks {
+    std::function<void(std::string_view,std::uint32_t)> permissions; //현재 이름의 CRT 권한 요청을 실제 쓰기 경계에 인계한다.
+    std::function<void(std::string_view,std::span<const std::uint8_t>)> write; //저장 부모가 결정한 현재 이름과 같은 이미지 원문을 쓴다.
+};
 // 실제 파싱 자료를 단독 소유하고 빌린 헤더는 같은 manager/State cursor를 조회한다.
 class CampaignTemplateStorage {
 public:
@@ -31,7 +38,8 @@ public:
     o::FortTerritoryStream& Territory(std::uint32_t slot); // 같은 manager의 실제 Territory cursor다.
     o::FortTerritoryStream& SelectTerritory(std::uint32_t slot); // 원본 읽기 선택으로 같은 manager.current와 지형 커서를 초기화한다.
     const std::string& Name(std::uint32_t slot); // 같은 manager의 현재 파일 이름이다.
-    std::array<std::uint32_t,2> FileHeader(std::uint32_t slot); // 같은 manager+10c/+110의 서명/FE 판정DWORD다. 아직 파일을 읽지 않았으면0/ffffffff다.
+    std::array<std::uint32_t,2> FileHeader(std::uint32_t slot); // 같은 manager+10c/+110의 서명/FE 판정DWORD다. 읽기/저장 전에는0/ffffffff다.
+    void SaveFile(std::uint32_t slot,const o::DataManagerFileSaveState& state,o::FortImageHooks image,const TemplateFileWriteHooks& file); //같은 manager의 실제 서명/검색/current와 저장 부모를 통해 현재 섹션을 파일에 쓴다.
     std::span<std::uint8_t> GrowState(std::uint32_t slot,std::uint32_t size); // 원문을 보존한 채 같은 Fort의 실제 State 섹션에 새 버퍼를 만든다.
     void CommitStateGrowth(std::uint32_t slot); // Get이 복사를 끝낸 뒤 이전 State 할당을 반납한다.
     std::size_t OwnedImages() const; // 현재 실제 manager 할당 수를 읽기만 한다.

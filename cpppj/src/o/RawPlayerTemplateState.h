@@ -45,8 +45,9 @@ public:
     std::span<std::uint8_t> Get(std::uint32_t slot) const;
     void BindInitialization(PlayerTemplateStateInitialization initialization); // PATCH 빈 State를 실제 미정 입력/섹션 생성 소비자에 연결한다.
     void BindMinimumSize(std::function<PlayerTemplateStateStream&(std::uint32_t,std::int32_t)> ensure); // PATCH 실제4d290이 만든 새 현재 State를 직접 받는다.
+    void BindFileSave(std::function<void(std::uint32_t)> save); //PATCH Notify의 실제0044d8d0 저장 부모를 같은 현재 Template 칸에 연결한다.
     // PATCH4bd540/4bd360·CD427910/4275d0의Notify다. 실제isMine1 또는preventSave에서자연반환한다.
-    // 실제 파일 저장은 명시 거부하며 짧은 State는 최소 확장 부모 또는 분리 할당 소비자가 있을 때만 확장한다.
+    // 연결된 실제 저장 부모만 호출하며 짧은 State는 최소 확장 부모 또는 분리 할당 소비자가 있을 때만 확장한다.
     void Changed(std::uint32_t slot) const;
 private:
     // 현재Template한기록의DWORD를원본little endian폭으로조회한다.
@@ -63,5 +64,6 @@ private:
     std::function<std::span<std::uint8_t>(std::uint32_t,std::uint32_t)> allocate_; // 분리 stream 입력의 확장용 할당이다. 실제 Session은 ensureMinimum_ 부모를 사용한다.
     std::function<void(std::uint32_t)> depthChanged_; // CD즉시증감값을실제소비자에전달한다.
     std::function<void(std::uint32_t)> allocationComplete_; // 분리 할당 어댑터의 원문 복사가 끝난 뒤 이전 State 할당을 반납한다.
+    std::function<void(std::uint32_t)> save_; //isMine/미션/누락/preventSave 관문 뒤에만 선택하는 실제 파일 저장 소비자다.
 };
 }

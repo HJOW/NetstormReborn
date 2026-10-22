@@ -22,6 +22,10 @@ void RawPlayerTemplateState::BindInitialization(PlayerTemplateStateInitializatio
 void RawPlayerTemplateState::BindMinimumSize(std::function<PlayerTemplateStateStream&(std::uint32_t,std::int32_t)> ensure) {
     if (edition_!=OriginalEdition::Patch1078 || !ensure) throw std::invalid_argument("최소 State 확장의 PATCH 실제 부모 연결 누락");ensureMinimum_=std::move(ensure);
 }
+// CD 저장 부모를PATCH 추정으로 대신하지 않고 실제10.78 저장 소비자만 설치한다.
+void RawPlayerTemplateState::BindFileSave(std::function<void(std::uint32_t)> save) {
+    if (edition_!=OriginalEdition::Patch1078 || !save) throw std::invalid_argument("Template Notify의 PATCH 실제 파일 저장 연결 누락");save_=std::move(save);
+}
 // 현재9개Template/State와선택진단·CD깊이효과를확인한다.
 RawPlayerTemplateState::RawPlayerTemplateState(OriginalEdition edition,std::span<std::uint8_t> headers,
     std::array<PlayerTemplateStateStream,9>& states,std::array<std::string,9>& fileNames,
@@ -81,6 +85,6 @@ void RawPlayerTemplateState::Changed(std::uint32_t slot) const {
     if (mission_) assertion_(PlayerTemplateStateAssertion::InMissionSave);
     if (!Header(slot,0)) assertion_(PlayerTemplateStateAssertion::MissingNotifyTemplate);
     if (Header(slot,16)) return;
-    throw std::logic_error("Player Template실제DataManager파일저장44d8d0/CD44cc40미복원");
+    if (!save_) throw std::logic_error("Player Template실제DataManager파일저장44d8d0/CD44cc40미연결");save_(slot);
 }
 }
