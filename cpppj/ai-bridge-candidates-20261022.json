@@ -1,0 +1,24 @@
+{
+  "host": "VM-W11-Codex",
+  "lastDecompile": "VM-W11-Codex / 2026-10-22",
+  "entry": "0040fe90",
+  "scenarios": 210,
+  "normalReturns": 220,
+  "visitedCells": 3560,
+  "helpers": {
+    "0x4ad390": 2042,
+    "0x49a840": 3268,
+    "0x40fa60": 1994,
+    "0x4ad680": 1226
+  },
+  "sha256": {
+    "originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools\\decomp_ai_bridge_candidates.py": "7b4cece2055d928b11b978767c4ae541daab343acf4a318d11de00f9ac8b8016",
+    "tools\\decomp_ai_bridge_initialize.py": "247e62fd96e67d4ba851442ec121f98113dd9e97a822236db248f992e2c11f4f",
+    "cpppj\\tests\\fixtures\\ai-bridge-candidates-x86.tsv": "acf30dfc323f9a38fcc4df328bc44729a6e291fdc6df66a9497acb505a092204"
+  },
+  "limitations": [
+    "후보 준비와 실제 그래프/프레임/빈 이웃/TYPE getter의 전체 본체를 검증한다. 경로 검색·자동 AI·플레이는 미완료다.",
+    "게임·OS·창을 실행하지 않는다."
+  ]
+}
