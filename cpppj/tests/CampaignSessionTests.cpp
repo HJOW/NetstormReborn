@@ -2515,13 +2515,18 @@ void NaturalWorkshopPlacement(bool combat,bool burning=false,CellPoint cannonLoc
                         }
                         CHECK(command[0]=="build" || command[0]=="build-fire");
                         const auto type=static_cast<std::uint32_t>(std::stoul(command[1]));const CellPoint preferred{std::stoi(command[2]),std::stoi(command[3])};const auto icon=production.Point(type);CHECK(icon.has_value());if (!icon) return;controls.Event({InputCode::kLeftButton,icon->x,icon->y});CHECK(session.CursorDropSettings().type==type);
-                        std::optional<CellPoint> place;double nearest=1e9; // 허용된 후보 중 지정 목표에 가까운 칸만 택한다.
-                        for (int x=116;x<=146;++x) { // 적 섬까지의 실제 전방 지도 칸이다.
-                            for (int y=110;y<=135;++y) { // 발자국 전체의 공간/공급 조건을 실제 미리보기로 검사한다.
-                                const auto distance=(x-preferred.x)*(x-preferred.x)+(y-preferred.y)*(y-preferred.y);if (distance>=nearest) continue;ui.Point(session,{x,y},0,0,false);if (session.CursorDropSettings().legal && (command[0]!="build-fire" || firingAt(session.CursorDropSettings().x,session.CursorDropSettings().y))) { nearest=distance;place=CellPoint{x,y}; }
+                        std::optional<CellPoint> place;double nearest=1e9;std::uint32_t bestTurns{};std::size_t legalCandidates{},firingCandidates{};const auto orientations=type==82 ? 4U : 1U; // 다리는 실제 우클릭 네 방향을 비교하며 방문 후보의 배치/사격 관문을 구분해 센다.
+                        for (std::uint32_t turns=0;turns<orientations;++turns) { // 방향 필드를 직접 쓰지 않고 사용자 우클릭으로 회전한다.
+                            for (int x=116;x<=146;++x) { // 적 섬까지의 실제 전방 지도 칸이다.
+                                for (int y=110;y<=135;++y) { // 발자국 전체의 공간/공급 조건을 실제 미리보기로 검사한다.
+                                    const auto distance=(x-preferred.x)*(x-preferred.x)+(y-preferred.y)*(y-preferred.y);if (distance>=nearest) continue;ui.Point(session,{x,y},0,0,false);const bool fire=command[0]!="build-fire" || firingAt(session.CursorDropSettings().x,session.CursorDropSettings().y); // 현재 원본 사격 판정과 배치 판정은 독립 관측하며 결과를 쓰지 않는다.
+                                    legalCandidates+=session.CursorDropSettings().legal ? 1U : 0U;firingCandidates+=fire ? 1U : 0U;if (session.CursorDropSettings().legal && fire) { nearest=distance;place=CellPoint{x,y};bestTurns=turns; }
+                                }
                             }
+                            if (type==82) CHECK(session.Cursor().HandleInput({InputCode::kRightButton,0,0},0)); // 네 번 뒤 원래 방향으로 돌아와 선택한 입력 횟수만 다시 적용한다.
                         }
-                        ui.Point(session,preferred,0,0,false);const auto& rejected=session.Cursor().Placement();std::cout<<"전진 목표 판정 "<<preferred.x<<","<<preferred.y<<" desc"<<rejected.descriptionAllowed<<" place"<<rejected.placementAllowed<<" source"<<rejected.sourceAllowed<<" text"<<rejected.description<<"\n";CHECK(place.has_value());if (!place) return;ui.Point(session,*place);const auto money=session.Sp(1);std::cout<<"전진 실제 허용 TYPE"<<type<<" 위치"<<place->x<<","<<place->y<<" SP"<<money<<"\n";
+                        for (std::uint32_t turns=0;turns<bestTurns;++turns) CHECK(session.Cursor().HandleInput({InputCode::kRightButton,0,0},0)); // 합법 후보의 실제 사용자 회전 입력만 재현한다.
+                        ui.Point(session,preferred,0,0,false);const auto& rejected=session.Cursor().Placement();std::cout<<"전진 목표 판정 TYPE"<<type<<" 방향"<<session.CursorDropSettings().direction<<" 위치"<<preferred.x<<","<<preferred.y<<" desc"<<rejected.descriptionAllowed<<" place"<<rejected.placementAllowed<<" source"<<rejected.sourceAllowed<<" text"<<rejected.description<<" 방문 합법"<<legalCandidates<<"/사격"<<firingCandidates<<"\n";CHECK(place.has_value());if (!place) return;ui.Point(session,*place);const auto money=session.Sp(1);std::cout<<"전진 실제 허용 TYPE"<<type<<" 위치"<<place->x<<","<<place->y<<" SP"<<money<<"\n";
                         session.Cursor().Drop();session.PumpLocalConnection();session.Cursor().Cancel();CHECK(session.Sp(1)==money-core.types[type].cost);
                         for (std::uint64_t frame=0;frame<wait;++frame) tickForward(); // 실제 반환/건설/전투 시간을 진행한다.
                         const auto live=ConstructionLive(core,type);std::cout<<"전진 건설 뒤 TYPE"<<type<<" 생존"<<live.size()<<" 신전HP"<<Get(core.pool.Slot(temple),26)<<"\n";for (auto built:live) std::cout<<"  내 자산"<<built.value<<" HP"<<Get(core.pool.Slot(built),26)<<" extra"<<unsigned(core.pool.Slot(built)[40])<<" xy"<<std::bit_cast<float>(Get(core.pool.Slot(built),14))<<","<<std::bit_cast<float>(Get(core.pool.Slot(built),18))<<"\n"; // 건설 중 피격/생존과 실제 좌표를 관찰한다.
