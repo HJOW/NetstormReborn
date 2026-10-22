@@ -4,6 +4,7 @@
 #include "o/SquidFactory.h"
 #include <bit>
 #include <cstdio>
+#include <filesystem>
 using namespace netstorm::o;
 using namespace netstorm::test::rawscene;
 
@@ -42,4 +43,18 @@ TEST_CASE(SpecialDamage_Native432) {
         CHECK(actual==Number(row[1]) && observed==row[2]);++count;
     }
     CHECK(count==432);
+}
+
+// 예약 피해의 공격자0도 원본처럼 현재 풀 슬롯을 읽으며 기존432행 기대값은 보존한다.
+TEST_CASE(SpecialDamage_WindTowerZeroAttackerNative216) {
+    const auto path=(std::filesystem::path(__FILE__).parent_path()/"fixtures/wind-tower-zero-x86.tsv").string();std::size_t count{};
+    for (const auto& row:LoadFixture(path.c_str()).rows) { // 새로 관측한0슬롯의 타입/기하/반환을 그대로 대조한다.
+        CHECK(row.size()==3);if (row.size()!=3) continue;std::vector<std::uint32_t> a;for (const auto& part:Split(row[0],',')) a.push_back(Number(part)); // 동결 DWORD 입력이다.
+        SidPool pool(OriginalEdition::Patch1078,24000);std::vector<RiftTypeRecord> types(188);const Sid victim{15000};
+        const auto writable=[&](Sid sid) { const auto raw=pool.Slot(sid);return std::span<std::uint8_t>(const_cast<std::uint8_t*>(raw.data()),50); }; // 0슬롯을 포함한 명시 원문 입력이다.
+        auto target=writable(victim),source=writable(Sid{});std::fill(target.begin(),target.end(),std::uint8_t{});std::fill(source.begin(),source.end(),std::uint8_t{});target[10]=142;source[10]=static_cast<std::uint8_t>(a[2]);Put(target,14,std::bit_cast<std::uint32_t>(50.F));Put(target,18,std::bit_cast<std::uint32_t>(50.F));Put(source,14,a[4]);Put(source,18,a[5]);types[142].footX=types[142].footY=2;types[a[2]].flags2=a[1];types[a[2]].footX=static_cast<std::int32_t>(a[6]);types[a[2]].footY=static_cast<std::int32_t>(a[7]);
+        std::vector<RiftTypeFrames> frames(188,RiftTypeFrames({}));frames[142]=RiftTypeFrames({{static_cast<std::uint8_t>(a[3]),0,0,0}});const auto actual=RawWindTowerDefense(pool,types,frames,victim,Sid{});
+        CHECK(actual==(Number(row[1])!=0) && row[2].empty());++count;
+    }
+    CHECK(count==216);
 }

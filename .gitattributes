@@ -1717,3 +1717,17 @@ cpppj/tests/fixtures/ice-tower-x86.tsv text eol=lf
 tools/decomp_ice_tower.py text eol=lf
 cpppj/ice-tower-20261023.json text eol=lf
 docs/exe/cpp-ice-tower-20261023.md text eol=lf
+
+# 불워크 피해와 윈드타워 공격자0의 원문/복원 자료 바이트를 고정한다.
+cpppj/src/o/RawBulwarkHit.* text eol=lf
+cpppj/src/o/RawSpecialDamage.* text eol=lf
+cpppj/tests/BulwarkHitTests.cpp text eol=lf
+cpppj/tests/SpecialDamageTests.cpp text eol=lf
+cpppj/tests/fixtures/bulwark-hit-x86.tsv text eol=lf
+# 마지막 효과 열의 빈 문자열은 원문 출력이므로 끝 TAB을 그대로 보존한다.
+cpppj/tests/fixtures/wind-tower-zero-x86.tsv text eol=lf whitespace=-blank-at-eol
+tools/decomp_bulwark_hit.py text eol=lf
+tools/decomp_wind_tower_zero.py text eol=lf
+cpppj/bulwark-hit-20261023.json text eol=lf
+cpppj/wind-tower-zero-20261023.json text eol=lf
+docs/exe/cpp-bulwark-hit-20261023.md text eol=lf

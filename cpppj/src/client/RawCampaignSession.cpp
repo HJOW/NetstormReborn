@@ -9,6 +9,7 @@
 #include "o/RawAcidZap.h"
 #include "o/RawAcidFence.h"
 #include "o/RawIceTower.h"
+#include "o/RawBulwarkHit.h"
 #include "o/RawPlainUnitCapture.h"
 #include "o/RawBridgeDraw.h"
 #include "o/RawMissionStart.h"
@@ -1011,6 +1012,7 @@ struct RawCampaignSession::Impl {
         if (!assetEffects.regular.damageGround) assetEffects.regular=MakeAssetGunImpactHooks(hits->Impact(),std::move(assetEffects.regular));
         if (!assetEffects.regular.hitPoints) assetEffects.regular.hitPoints=[this](Sid victim,std::uint32_t amount,std::int32_t owner,std::uint32_t attacker) -> std::int32_t {
             if (attacker>65535U) throw std::out_of_range("예약 피해의 공격자 SID 범위 오류");const auto table=Read(core.pool.Slot(victim),0);const auto damage=std::bit_cast<std::int32_t>(amount);const Sid source{static_cast<std::uint16_t>(attacker)};
+            if (table==0x50ea08U) return static_cast<std::int32_t>(RawBulwarkHit(core.pool,core.types,victim,damage,static_cast<std::uint32_t>(owner),source,[this](auto target,auto value,auto sourceOwner,auto attackerSid) { return static_cast<std::uint32_t>(hits->GeneralDamage().Hit(target,value,sourceOwner,attackerSid)); })); //실제48ef20의관문을6699에서도보존한다.
             if (HasRegularTable(kGeneralDamageableHitTables,table)) return hits->GeneralDamage().Hit(victim,damage,static_cast<std::uint32_t>(owner),source);
             if (HasRegularTable(kBaseDamageableHitTables,table)) return hits->GeneralDamage().BaseHit(victim,damage,static_cast<std::uint32_t>(owner),source);
             if (PriestLifetime(victim)) return hits->PriestDamage().Hit(victim,damage,static_cast<std::uint32_t>(owner),source);
@@ -1177,7 +1179,7 @@ struct RawCampaignSession::Impl {
             // 사제의 다섯 고유 사건은 파생 처리기가 담당한다. 나머지만 원본 기본 Carrier로 넘긴다.
             if (carrierRegular->Handles(sid) || (priest && (event<0x259U || event>0x25dU))) return carrierRegular->Handle(sid,event,count,payload);
             // 원본 가상5c가44b900이고98이기존Base/Damageable인13개VT만 공통 예약 피해/재건설로 분배한다.
-            if (HasRegularTable(kCommonDamageableRegularTables,Read(raw,0))) return assetBindings->Regular().DamageableHandle(sid,event,count,payload);
+            if (Read(raw,0)==0x50ea08U || HasRegularTable(kCommonDamageableRegularTables,Read(raw,0))) return assetBindings->Regular().DamageableHandle(sid,event,count,payload); //불워크의+5c도44b900이며고유+98때문에기존두일반HP표밖에있다.
             throw std::logic_error("캠페인 현재 Kernel의 다른 실제 Regular 부모 미연결: TYPE"+
                 std::to_string(core.pool.Slot(sid)[10])+" event"+std::to_string(event));
         })))));

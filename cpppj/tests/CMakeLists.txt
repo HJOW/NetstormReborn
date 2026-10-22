@@ -1822,6 +1822,7 @@ target_sources(netstorm_tests PRIVATE DissolveVisualSystemTests.cpp)
 target_sources(netstorm_tests PRIVATE AcidZapTests.cpp)
 target_sources(netstorm_tests PRIVATE AcidFenceTests.cpp)
 target_sources(netstorm_tests PRIVATE IceTowerTests.cpp)
+target_sources(netstorm_tests PRIVATE BulwarkHitTests.cpp)
 set_source_files_properties(AcidZapTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_ACID_ZAP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/acid-zap-x86.tsv\"")
 # 훨리기그의기존원문410행과별도전체DWORD경계30행을같이사용한다.

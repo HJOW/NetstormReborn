@@ -36,7 +36,8 @@ bool RawVortexDamage(const SidPool& pool,Sid victim,std::int32_t damage,std::uin
 // 원본은 공격자 제외 조건을 먼저 검사하며 제외되면 현재 피해자 프레임을 읽지 않는다.
 bool RawWindTowerDefense(const SidPool& pool,std::span<const RiftTypeRecord> types,std::span<const RiftTypeFrames> frames,
     Sid victim,Sid attacker,std::uint32_t arcSpireType) {
-    const auto source=Slot(pool,attacker);const auto type=source[10]; // 현재 공격자의 TYPE과 genus다.
+    if (pool.Edition()!=OriginalEdition::Patch1078 || attacker.value>=pool.Capacity()) throw std::invalid_argument("윈드 타워 공격자 판본/SID 오류");
+    const auto source=pool.Slot(attacker);const auto type=source[10]; // 원본48ef70은 공격자0도 현재 풀 슬롯의 TYPE/genus로 읽는다.
     if (type>=types.size()) throw std::out_of_range("윈드 타워 공격자 TYPE 범위 오류");
     if ((types[type].flags2&0x100100U) || type==arcSpireType) return false;
     const auto target=Slot(pool,victim);const auto targetType=target[10]; // 제외되지 않은 뒤에만 실제 방어자 자료를 읽는다.

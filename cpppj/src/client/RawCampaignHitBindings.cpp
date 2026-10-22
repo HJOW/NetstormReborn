@@ -3,6 +3,7 @@
 #include "o/RawContainedLookup.h"
 #include "o/RawPathSearch.h"
 #include "o/RawSquidDefense.h"
+#include "o/RawBulwarkHit.h"
 #include <stdexcept>
 namespace netstorm::client {
 namespace {
@@ -99,8 +100,10 @@ o::GunHitHooks RawCampaignHitBindings::DamageHooks(o::GunHitHooks hooks) const {
     hooks.damage=[this,fallback=std::move(hooks.damage)](o::Sid victim,std::int32_t amount,std::uint8_t owner,o::Sid attacker) {
         const auto table=HitTable(impl_->core.pool.Slot(victim)); // 호출 시점의 현재 가상 표다.
         // 타입 이름 대신 검증된 실제 가상 진입 주소를 대조한다.
-        for (const auto& entry:kCampaignDamageHitEntries) if (entry.vtable==table && entry.address==0x4dba40U) {
-            static_cast<void>(o::RawVortexDamage(impl_->core.pool,victim,amount,owner,attacker,impl_->vortex));return;
+        for (const auto& entry:kCampaignDamageHitEntries) if (entry.vtable==table) { //현재실제+98만고르며타입이름으로분배하지않는다.
+            if (entry.address==0x4dba40U) { static_cast<void>(o::RawVortexDamage(impl_->core.pool,victim,amount,owner,attacker,impl_->vortex));return; }
+            if (entry.address==0x48ef20U) { static_cast<void>(o::RawBulwarkHit(impl_->core.pool,impl_->core.types,victim,amount,owner,attacker,[this](auto target,auto value,auto sourceOwner,auto source) { return static_cast<std::uint32_t>(impl_->generalDamage->Hit(target,value,sourceOwner,source)); }));return; }
+            break;
         }
         if (!fallback) throw std::logic_error("캠페인 다른 실제 피해 미연결");fallback(victim,amount,owner,attacker);
     };

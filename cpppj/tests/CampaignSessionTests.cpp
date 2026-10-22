@@ -33,6 +33,7 @@
 #include "o/RawCarrierPickup.h"
 #include "o/RawCarrierMove.h"
 #include "o/RawTempleRitual.h"
+#include "o/RawSpecialDamage.h"
 #include "o/RawGemReward.h"
 #include "o/RawBombEffect.h"
 #include "client/RawBombBlastBindings.h"
@@ -3919,5 +3920,54 @@ TEST_CASE(CampaignIceTower_ActualDeletionGates) {
         CHECK(session.World().Destroy(source,flags) && (core.pool.Slot(source)[11]&1) && ConstructionLive(core,150).empty());if (mode==2) session.World().SetLoadingDepth(0);
         CHECK((core.hash.Cell(0,static_cast<int>(x),static_cast<int>(y))==0)==(mode!=2));CHECK(((core.pool.Slot(island)[11]&1)!=0)==(mode!=2));CHECK(!core.destroy.PreDepth() && !core.destroy.PostDepth() && !core.bookkeeping.depth);
         std::cout<<"아이스 실제 삭제관문"<<mode<<"/성장형없음/받침존재"<<((core.pool.Slot(island)[11]&1)==0)<<'\n';
+    }
+}
+
+// 실제 가상98의 지상 아크 피해와6699의 공격자0 피해가 모두 불워크 HP에 도달한다.
+TEST_CASE(CampaignBulwark_ActualGroundAndQueuedDamage) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();services.unitLost=[](Sid) {};
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));session.Load();auto core=session.Core();
+    const auto first=session.World().Create(149),second=session.World().Create(149),victim=session.World().Create(79);core.owner.Set(first,1);core.owner.Set(second,1);core.owner.Set(victim,2);
+    session.World().Pop(first,200,200,0);session.World().Pop(second,212,200,0);session.World().Pop(victim,206,200,0);const auto hp=Get(core.pool.Slot(victim),26);CHECK(Get(core.pool.Slot(victim),0)==0x50ea08U);
+    for (std::uint64_t frame=1;frame<=84;++frame) session.RunFrame({frame*.025,100+frame*.025,.025,frame},false); // 실제 검색/빔/가상98만으로 피해를 발생시킨다.
+    const auto after=Get(core.pool.Slot(victim),26);CHECK(after<hp && after>151);
+    auto* request=core.processes.AddRegular(victim,6699,0);CHECK(request);if (!request) return;request->SetInitialCount(65687); // owner1/피해151의 외부 예약 명령이며 HP 결과는 쓰지 않는다.
+    session.RunFrame({2.125,102.125,.025,85},false);CHECK(Get(core.pool.Slot(victim),26)==after-151);
+    std::cout<<"불워크 실제 지상 빔 HP"<<hp<<"→"<<after<<"/공격자0 예약→"<<Get(core.pool.Slot(victim),26)<<'\n';
+}
+
+// 같은 실제 더스트 데빌/방어자 배치를 두 장면에서 비교해 비행 공격 피해만 거부하는지 확인한다.
+TEST_CASE(CampaignBulwark_ActualAirAttackImmunity) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);
+    for (const std::uint32_t type:{78U,79U,142U}) { // 같은 공격 입력의 대조와 윈드타워의 비행 공격 예외도 함께 확인한다.
+        SessionServicesFixture external;auto services=external.Services();services.unitLost=[](Sid) {};auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));session.Load();auto core=session.Core();
+        const auto victim=session.World().Create(type),flyer=session.World().Create(138);core.owner.Set(victim,2);core.owner.Set(flyer,1);session.World().Pop(victim,200,200,0);session.World().Pop(flyer,199.5F,199.5F,1); // 실제 서버 객체/최초Pop의 공격 예약을 사용하며 생산/이동 완료를 주장하지 않는다.
+        const auto hp=Get(core.pool.Slot(victim),26);CHECK(core.types[138].flags2&0x100000U);CHECK(victim.value>=core.pool.Layout().serverFirst && core.processes.FindEvent(flyer,0));
+        for (std::uint64_t frame=1;frame<=40;++frame) session.RunFrame({frame*.025,100+frame*.025,.025,frame},false); // 실제 event0의 영역 검색/피해 처리만 진행한다.
+        const auto after=Get(core.pool.Slot(victim),26);CHECK(type==79 ? after==hp : after<hp);std::cout<<"실제 비행체"<<flyer.value<<"/방어자TYPE"<<type<<"/HP"<<hp<<"→"<<after<<'\n';
+    }
+}
+
+// 실제 우클릭→25바이트 건설 명령→서버 배치/완공의 방향이 네 면의 원본 방어와 일치한다.
+TEST_CASE(CampaignWindTower_RightClickConstructionAndFourFaces) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);
+    for (const std::uint32_t direction:{0U,2U,4U,6U}) { // 방향별로 독립 시작 상태를 사용한다.
+        SessionServicesFixture external;auto services=external.Services();services.unitLost=[](Sid) {};auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());
+        const auto ready=[](FortChunkSection& section) { for (auto& chunk:section.chunks) { /* 저장 순서와 공장 소유자는 유지한다. */ for (auto& object:chunk.objects) if (object.type==124) { if (!object.contents) object.contents=FortContentList{};FortContent part;part.type=142;part.listFlags=0x10;part.listFlagsStored=true;object.contents->items.push_back(part); } } }; // 실제 로더에 준비142 부품을 명시 공급한다.
+        for (auto& section:fort.territories) ready(section);ready(fort.chaff); // 모든 저장 섹션을 원래 로드 경로로 보낸다.
+        GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services),{1024,768});auto& session=world.Session();auto core=session.Core();SessionCursorUi ui;auto& cursor=session.Cursor();cursor.SetEffects(ui.Effects());cursor.SnapToGrid()=1;session.SetSp(1,5000);session.AddTechnology(1,core.types[142].assetName);CursorEnergyInput(session);
+        const auto windPoint=CommandPlacementPoint(session,1);const auto wind=session.World().Create(75,2);core.owner.Set(wind,1);session.World().Pop(wind,static_cast<float>(windPoint.x),static_cast<float>(windPoint.y),0); // 윈드타워의 실제 원소 공급을 제공하며 요구 조건을 우회하지 않는다.
+        const Sid factory{static_cast<std::uint16_t>(core.bookkeeping.ownerFactories[1].Items().front())};const auto form=cursor.Contents().Create(factory,142,0,8,0x10,3);cursor.Take(form,0x41);const auto point=CursorPlacementPoint(session,ui);
+        ClientOptions options;options.gameDirectory=std::filesystem::path(__FILE__).parent_path().parent_path().parent_path()/"originals";Client client(std::move(options));client.Configuration().Set("cursorSnapToGrid","1");client.Configuration().Set("rotmode","0");UserInput input(client,world);
+        for (std::uint32_t turn=0;turn<direction/2;++turn) input.Event({InputCode::kRightButton,ui.mouse.x,ui.mouse.y}); // 실제 UserInput이 현재 커서 회전을 선택한다.
+        CHECK(session.CursorDropSettings().direction==direction);input.UpdateCursor({InputCode::kLeftButton,ui.mouse.x,ui.mouse.y});input.Event({InputCode::kLeftButton,ui.mouse.x,ui.mouse.y});CHECK(ui.sent.size()==1);if (ui.sent.size()!=1) return;
+        const auto& sent=ui.sent.front();CHECK(sent[0]==1 && sent[1]==0x3e && sent[4]==142 && sent[15]==direction && Get(sent,5)==std::bit_cast<std::uint32_t>(static_cast<float>(point.x)) && Get(sent,9)==std::bit_cast<std::uint32_t>(static_cast<float>(point.y)));
+        std::vector<std::vector<std::uint8_t>> received;RawPacketDispatch dispatch(OriginalEdition::Patch1078,CommandDevice(received));session.RegisterConstructionCommands(dispatch);PacketConnection connection;connection.sender=1;CHECK(dispatch.Dispatch(connection,ui.sent.front()));const auto packet=session.Construction().LastPacket();CHECK(packet.size()==29);if (packet.size()!=29) return;const Sid target{static_cast<std::uint16_t>(packet[27]|(std::uint16_t(packet[28])<<8))};
+        const auto builders=ConstructionLive(core,134);CHECK(builders.size()==1);if (builders.size()!=1) return;FinishGeneralConstruction(session,builders.front(),target);const auto raw=core.pool.Slot(target);CHECK(raw[10]==142 && Get(raw,0)==0x50ead0U);const auto code=core.frames[142].Codes()[Get(raw,36)].side;CHECK(code=='L'+direction/2);
+        const auto source=session.World().Create(133,2);core.owner.Set(source,2); // 실제 지상 객체 생성자와 현재 발자국을 사용한다.
+        for (const std::uint32_t incoming:{0U,2U,4U,6U}) { // 네 면 각각을 실제 좌표/프레임 기반 방어 몸체에 전달한다.
+            const float x=static_cast<float>(point.x)+(incoming==2 ? 8.F : incoming==6 ? -8.F : 0.F),y=static_cast<float>(point.y)+(incoming==4 ? 8.F : incoming==0 ? -8.F : 0.F);session.World().Pop(source,x,y,0);CHECK(RawWindTowerDefense(core.pool,core.types,core.frames,target,source)==(incoming==direction));session.World().Unpop(source,0);
+        }
+        session.World().Destroy(source,0);std::cout<<"윈드타워 우클릭방향"<<direction<<"/건설"<<target.value<<"/완공코드"<<static_cast<char>(code)<<"/4면 방어 통과\n";
     }
 }

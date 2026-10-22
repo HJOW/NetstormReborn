@@ -1,0 +1,51 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-22",
+  "rows": 216,
+  "normalReturns": 432,
+  "instructions": 31760,
+  "precisionDifferences": 0,
+  "nativeCalls": {
+    "0048ef70": 432,
+    "004ac200": 720,
+    "0049a840": 1008,
+    "004adea0": 192,
+    "0049a900": 192,
+    "0041ce90": 96,
+    "004ac550": 96
+  },
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+    "tools/decomp_special_damage.py": "1c92b56b1c000238486f67c6b8ea31eed677e8ce598305d528a24a65cd6c0628",
+    "tools/decomp_wind_tower_zero.py": "f1480c565a8d2acd00f3fd79bd057863a2bd112da22368617e17f481c3139065",
+    "cpppj/tests/fixtures/wind-tower-zero-x86.tsv": "eb6db5547fc9bae7a945fd5903e24c9eea88a9fd2d106ebafcb5df5fc8e78336"
+  },
+  "limitations": [
+    "48ef70/TYPE/중심/방향의 실제 몸체를 실행한다.",
+    "0슬롯의 명시 입력이며 실제 세션 free-list 모양의 모든 경우를 주장하지 않는다. 기존432행은 바꾸지 않는다."
+  ],
+  "implementationSha256": {
+    "cpppj/src/o/RawSpecialDamage.h": "113b4235e6462bd3c2dbc31a7534911d24c3901e97d051da7db622025c2068a4",
+    "cpppj/src/o/RawSpecialDamage.cpp": "69497c9f7a270eb42fe22fdec946f4056f5367a6bdb4929acfe52166353fc5be",
+    "cpppj/tests/SpecialDamageTests.cpp": "64766451ce8af2cb41ddf995d87ecc15a9c0eb750173db43a1d98624b2dfe8fc",
+    "cpppj/src/client/RawCampaignHitBindings.cpp": "630840b5488e869da13a59dadecf315e1dc8a77797c858399cac0c99c77db17c",
+    "cpppj/src/client/RawCampaignSession.cpp": "6b9919a664b778c25dbc55391b6ef8a61fbb74f854aa3294510a022401ad6eeb",
+    "cpppj/tests/CampaignSessionTests.cpp": "214ec68902b37d1a92299f0472c6a5de09926756087ad7b558d52fec92a116cc"
+  },
+  "validation": {
+    "releaseBuildLog": "extracted/cpp-bulwark-hit-20261023-build5.log",
+    "buildExitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "fullCTestLog": "extracted/cpp-bulwark-hit-20261023-ctest1.log",
+    "tests": 2305,
+    "failed": 0,
+    "ctestExitCode": 0,
+    "totalSeconds": 278.35,
+    "newTests": 5,
+    "guiPlayed": false
+  }
+}

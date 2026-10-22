@@ -1,0 +1,61 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-22",
+  "uniqueInputs": 492,
+  "normalReturns": 984,
+  "nativeInstructions": 24810,
+  "precisionDifferentInputs": [],
+  "nativeCalls": {
+    "0048ef20": 984,
+    "004ac550": 594,
+    "0049a840": 594
+  },
+  "vtableEntries": {
+    "0050ea08": {
+      "5c": "0044b900",
+      "98": "0048ef20",
+      "9c": "0043d9b0"
+    },
+    "0050ead0": {
+      "5c": "0044b900",
+      "98": "0044c8e0",
+      "9c": "0048ef70"
+    }
+  },
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_bulwark_hit.py": "2b30938556a9c1f97c56640f47e650bffd1aa2b79d2035c47b1a3a02fdcf1065",
+    "tools/decomp_arc_spire.py": "a476a7af621fd08e49536e427e40b3d6b4b3df47a8f514740b1633e73adc534e",
+    "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+    "tools/decomp_cursor_position.py": "e15bcdbc4c6be9c131c30f15416c945d650dba9f7dc6def404b47f63c635c212",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "cpppj/tests/fixtures/bulwark-hit-x86.tsv": "501e3a39524b3554087e080f21face2d79e9bea0330d513eb2ac760154dd4e2a"
+  },
+  "limitations": [
+    "48ef20/4ac550/49a840의전체몸체를실행한다.",
+    "일반44c8e0은기존원문대조몸체의명시경계이며여기서는인수전달/현재상태변경/반환폭을검사한다. 기존일반피해/83행fixture는바꾸지않는다."
+  ],
+  "implementationSha256": {
+    "cpppj/src/o/RawBulwarkHit.h": "b98ebdf6b39128c69c8ef59f0623912fe8b9fb2c19b62665fb24bd80fd2147ea",
+    "cpppj/src/o/RawBulwarkHit.cpp": "87aa50b9ab295fd044b5a66df0ae1ca3ce2b15f98e89c2c3c977446aef52b262",
+    "cpppj/tests/BulwarkHitTests.cpp": "403ffeaed24911d7a1f0c1208102017c5de9e7a6c45832e8884f54779ec85b3f",
+    "cpppj/src/client/RawCampaignHitBindings.cpp": "630840b5488e869da13a59dadecf315e1dc8a77797c858399cac0c99c77db17c",
+    "cpppj/src/client/RawCampaignSession.cpp": "6b9919a664b778c25dbc55391b6ef8a61fbb74f854aa3294510a022401ad6eeb",
+    "cpppj/tests/CampaignSessionTests.cpp": "214ec68902b37d1a92299f0472c6a5de09926756087ad7b558d52fec92a116cc"
+  },
+  "validation": {
+    "releaseBuildLog": "extracted/cpp-bulwark-hit-20261023-build5.log",
+    "buildExitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "fullCTestLog": "extracted/cpp-bulwark-hit-20261023-ctest1.log",
+    "tests": 2305,
+    "failed": 0,
+    "ctestExitCode": 0,
+    "totalSeconds": 278.35,
+    "newTests": 5,
+    "guiPlayed": false
+  }
+}
