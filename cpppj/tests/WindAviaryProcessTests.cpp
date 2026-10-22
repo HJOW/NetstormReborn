@@ -11,14 +11,14 @@ constexpr std::array<std::uint16_t,3> kWindIds{50,60,70}; // 부모/임시 플�
 // 원문과 같은 입력/명시 효과만 준비하며 결과 계산은 실제 제품 Frame에 맡긴다.
 struct WindScene {
     SidPool pool{OriginalEdition::Patch1078,24000,false};WindAviaryProcessFields fields; // 실제 PATCH 풀과80BYTE다.
-    bool fort{},friendly{},server{true},checking{};std::uint32_t boss{1},editor{},processType{59},flyerType{138},aviaryType{139};double now{100}; // 현재 전역 입력이다.
+    bool fort{},friendly{},server{true},checking{},boss{true};std::uint32_t editor{},processType{59},flyerType{138},aviaryType{139};double now{100}; // 현재 전역 입력이며 boss는 실제 세션의 bool을 참조한다.
     std::string trace;std::unique_ptr<RawWindAviaryProcess> logic; // 원본 효과 순서 관찰과 제품 몸체다.
     // 독립 원문과 같은 현재 입력만 설치한다.
     WindScene(char kind,const std::vector<std::string>& in) {
         for (;;) { const auto sid=pool.Allocate(2);if (sid.value==70) break;if (!sid.value || sid.value>70) throw std::logic_error("Wind SID 입력 준비 실패"); } // 세 실제 슬롯까지 확보한다.
         for (auto id:kWindIds) { auto raw=pool.AllocatedBytes(Sid{id});std::fill(raw.begin(),raw.end(),std::uint8_t{0xa5});Put(raw,0,0x1240f000);Put(raw,4,0,2);Put(raw,6,id==50 ? 70U : 0U,2);Put(raw,8,0,2);raw[10]=id==50 ? 139 : id==60 ? 138 : 59;raw[11]=0;Put(raw,12,0,2);Put(raw,14,std::bit_cast<std::uint32_t>(static_cast<float>(id)+.25f));Put(raw,18,std::bit_cast<std::uint32_t>(static_cast<float>(id)+.5f));raw[34]=1;raw[40]=0;Put(raw,36,0); } // 세 슬롯의 전체50BYTE를 원문 입력 그대로 설치한다.
         fields.bytes.fill(0xa5);Put(fields.bytes,0,0x509dfc);fields.bytes[8]=0x10;D(16,100);Put(fields.bytes,24,1);D(32,99);D(40,100);Put(fields.bytes,48,0);Put(fields.bytes,56,0x509ddc);Put(fields.bytes,60,77);Put(fields.bytes,64,50);Put(fields.bytes,68,4);Put(fields.bytes,72,2);
-        if (kind=='F') { Put(fields.bytes,24,Number(in[0]));D(40,100-std::stod(in[1]));D(32,std::stod(in[2]));Put(fields.bytes,48,Number(in[3]));server=Number(in[4])!=0;boss=Number(in[5]);pool.AllocatedBytes(Sid{50})[10]=static_cast<std::uint8_t>(Number(in[6]));editor=Number(in[7]);pool.AllocatedBytes(Sid{50})[40]=static_cast<std::uint8_t>(Number(in[8]));Put(pool.AllocatedBytes(Sid{50}),36,static_cast<std::uint32_t>(std::stol(in[9]))); }
+        if (kind=='F') { Put(fields.bytes,24,Number(in[0]));D(40,100-std::stod(in[1]));D(32,std::stod(in[2]));Put(fields.bytes,48,Number(in[3]));server=Number(in[4])!=0;boss=Number(in[5])!=0;pool.AllocatedBytes(Sid{50})[10]=static_cast<std::uint8_t>(Number(in[6]));editor=Number(in[7]);pool.AllocatedBytes(Sid{50})[40]=static_cast<std::uint8_t>(Number(in[8]));Put(pool.AllocatedBytes(Sid{50}),36,static_cast<std::uint32_t>(std::stol(in[9]))); }
         else { server=Number(in[0])!=0;fort=Number(in[1])!=0;friendly=Number(in[2])!=0;fields.bytes.fill(0xa5);Put(pool.AllocatedBytes(Sid{50}),6,0,2); }
         logic=std::make_unique<RawWindAviaryProcess>(pool,WindAviaryGlobals{fort,friendly,server,boss,editor,checking,now,processType,flyerType,aviaryType},Hooks());
     }

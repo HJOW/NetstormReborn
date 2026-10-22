@@ -436,3 +436,5 @@ target_sources(netstorm PRIVATE RawAiDropActions.cpp RawAiDropActions.h)
 target_sources(netstorm PRIVATE RawSoloMapList.cpp RawSoloMapList.h)
 # 원본 실제 파일 저장 부모의 현재 관문과 파일 장치 순서를 복원한다.
 target_sources(netstorm PRIVATE RawDataManagerFileSave.h RawDataManagerFileSave.cpp)
+# 더스트 데빌의 전용104BYTE·애니메이션·범위 피해를 실제 월드에서 사용한다.
+target_sources(netstorm PRIVATE RawWindFlyer.h RawWindFlyer.cpp)

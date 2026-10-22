@@ -1,0 +1,124 @@
+{
+  "host": "HJOW-Athlon",
+  "last_full_refined_host": "HJOW-Athlon",
+  "last_full_refined_date": "2026-10-22",
+  "observations": 334,
+  "scopes": {
+    "C": 9,
+    "I": 9,
+    "A": 180,
+    "R": 72,
+    "D": 64
+  },
+  "precision_replays": [
+    639,
+    895
+  ],
+  "normal_returns": 668,
+  "instructions": 138662,
+  "game_gui_runs": 0,
+  "limits": "생성/초기화/애니메이션/주기/범위피해제어·DPSgetter·CRT는실제명령이다. 큰finder의세후보/힙/표적허용·중심/다리약화/가상피해/소리/삭제는명시경계다. 후보의실제공간해시순회는C++에서같은배치로연결한다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_wind_flyer.py": "45b0a59624e21b74558b439bdb31c92c28101119cebfdd214e643d70b459da8a",
+    "cpppj/tests/fixtures/wind-flyer-x86.tsv": "f405cf9f4d89da2daab5f3746838393fb2d90d4208e4e3d749dcda8accfb1aaa",
+    "cpppj/src/o/RawWindFlyer.h": "285f74c82ea14f4333df827807c7a860cf32785c9b078493df11fec5b70911a7",
+    "cpppj/src/o/RawWindFlyer.cpp": "b9edb53c0bd8a6327264af71d390f9fbd5b2eb75ad89670b9d5057feaf255626",
+    "cpppj/src/o/RawWindAviaryProcess.h": "c389b97fd9f54ebc8bf21af160040505c107fc29ca6638986bfe6240bdfd43bb",
+    "cpppj/src/o/RawWindAviaryProcess.cpp": "7f639ab919438093e55b11a75afa7de29162dd7bcf97b27924c4e7b6dc914049",
+    "cpppj/src/o/RawFlyerProcess.h": "9a655e4dc3558f17fd77e47bd7c7566fdcf811d65616ba0c9dc2fd50f44f5e8c",
+    "cpppj/src/o/RawFlyerProcess.cpp": "4db6a1250b6b5545e5b0bbed8d97c634af746fc6d678576dac47d8b620668e4d",
+    "cpppj/src/o/RawAssetPostPop.h": "ecace96cada79a8ad7869348fc3587b5e3a687bafd0efc674c74347dfe909c04",
+    "cpppj/src/o/RawAssetPostPop.cpp": "ebbee6cd15f05f5572072a7b08c70b8bc7d8988f4fa3ef0b085786da89635af5",
+    "cpppj/src/o/RawDamageablePostDestroy.h": "834a27b3ddadfdae7b1186f4d3c742df3007a73aa74a5a02b57c71112f106ee1",
+    "cpppj/src/client/RawCampaignSession.cpp": "2743d15e92e530ce76809a47e43a7a9425f556c6b75e48e4abe365b60ad2e309",
+    "cpppj/tests/WindFlyerTests.cpp": "14a8a3a09d3e7854e90ba995a06c2b90382c8271742eec0003bebdd26c49d04a",
+    "cpppj/tests/WindAviaryProcessTests.cpp": "5e0156bdaaa3c866fe5c78e1e9f382817fc089e24a820173619b09f1c27a640b",
+    "cpppj/tests/CampaignSessionTests.cpp": "8239e00aeffdeb517fbfc30eece8068368a38acfd49c46bb5672361156d630ea",
+    "cpppj/src/o/CMakeLists.txt": "7c28423eb77a8a308ecdddf3b18457ffcbfa45db12e8da48e2be778058104d09",
+    "cpppj/tests/CMakeLists.txt": "f42e6069634c9428e13d2b023856b790ae1922c0361977aeda5e747ce5ce654d",
+    "cpppj/tests/fixtures/wind-aviary-frame-x86.tsv": "5210995c295e336c4efc45eb9d4d40ec3be546f31ee55603fff807a0ab543bbb",
+    "cpppj/tests/fixtures/wind-aviary-state-x86.tsv": "9de1895040c7b643dfbd30e48ec8ff0b4b8be174c43398f24d223fcb3c79a273",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "originals/d/TEST02.fort": "85c328b764ccddc6395e0ce582d31b6241b0c6296ed600665d8ceb4465e46640",
+    "originals/d/TEST02.english": "03b41d7b2d9718d70fc7e29e14cec4e3779f77e95f7ea99722f83049c7052260",
+    "cpppj/tests/SoloMapCatalogTests.cpp": "ad2ef3beef4d7aa6f914f592ef5b836241e185639f9a8421fcbb40f1b97cb35f"
+  },
+  "validation": {
+    "status": "native-and-session-passed-full-suite-2280-passed",
+    "build_exit": 0,
+    "build_warnings": 0,
+    "build_errors": 0,
+    "focused_tests": {
+      "wind_flyer": 6,
+      "inherited_wind_aviary": 6,
+      "current_test02_bulf": 1,
+      "failed_checks": 0,
+      "solo_map_catalog": 6
+    },
+    "kernel_observation": {
+      "mission": "TEST02",
+      "home_sid": 15009,
+      "flyer_sid": 16072,
+      "step_seconds": 0.025,
+      "display_frame": 162,
+      "flight_frame": 242,
+      "destroy_frame": 962,
+      "distinct_frames": 22
+    },
+    "current_test02_bulf": {
+      "frames": 249,
+      "footsteps": 16,
+      "storm_power": 500000,
+      "source": [
+        142,
+        191
+      ],
+      "destination": [
+        146,
+        184
+      ]
+    },
+    "logs_sha256": {
+      "extracted/cpp-wind-flyer-20261022-build1.log": "91a013c6a8438317468921129fe853bd5c735fe2e945a2e2a80f0bc43b2b49da",
+      "extracted/cpp-wind-flyer-20261022-build2.log": "8a9949d9df884d19cfff14e8499d36302a953b9319584ca0e2a9af02e5f64432",
+      "extracted/cpp-wind-flyer-20261022-build3.log": "4ea1a74c03aec1fde8c61e5bca01c5194014bc83d31c74c5d014f54501bb3822",
+      "extracted/cpp-wind-flyer-20261022-build4.log": "68daf5268753a6f0253917d033a76282e07803e3b45f8c1951a34f7cbc6a3d34",
+      "extracted/cpp-wind-flyer-20261022-native1.log": "a494773bb10241840498e1e478aca90671d70efa6fcb9f16bb7430e29c16d3df",
+      "extracted/cpp-wind-flyer-20261022-native2.log": "378cafe01578f63d8c2c3167c4d9b5f560034f6fa59a322127d1de28bf6f4b8a",
+      "extracted/cpp-wind-flyer-20261022-native3.log": "378cafe01578f63d8c2c3167c4d9b5f560034f6fa59a322127d1de28bf6f4b8a",
+      "extracted/cpp-wind-flyer-20261022-native-cpp1.log": "507de3c2ef4c90c532f2d94414e9d311371409b4e14c354478f85e912690662e",
+      "extracted/cpp-wind-flyer-20261022-native-cpp2.log": "d3119e2c5f57843404cddf1eecd6ff2769573a180439334ad90f0334e54f0969",
+      "extracted/cpp-wind-flyer-20261022-focused3.log": "9b36a1e442d625531fcae3c9b1cdc09bbe07e0cb6d07b01396f9b914824c62be",
+      "extracted/cpp-wind-flyer-20261022-focused4.log": "d99a502f6d072a0440e5d8dfbe7b3e1e122129d4bbd7cce8a5dd13aeb7b163b4",
+      "extracted/cpp-wind-flyer-20261022-test02-bulf1.log": "4f1e123bcbaabae589ad1943c7292baf29140a453ed17b531f8f1efaba785de9",
+      "extracted/cpp-wind-flyer-20261022-test02-bulf2.log": "ab609435b5e26846e2f267bb3ae56096dcf534e32b5fe310c0f36bb18adc41fd",
+      "extracted/cpp-wind-flyer-20261022-aviary1.log": "06d6051afbf8b64fe7c54cad14d273bc777ac42b605f0f5e108bbcb452f762e7",
+      "extracted/cpp-wind-flyer-20261022-before-cache-fix.tsv": "a2fbcc495191b527176913e8e18981be0bde42c9bba4953cb90ebbfcc188dbeb",
+      "extracted/cpp-wind-flyer-20261022-before-cache-fix.json": "d7fe9c3924c606df449a71e6a58b06b835f126712c6ccb801103fb286bf3e05a",
+      "extracted/cpp-wind-flyer-20261022-ctest1.log": "fb489bdc9b689e2c6aabefc11c3a13c6207f009bb925a7594caee7ba29e24328",
+      "extracted/cpp-wind-flyer-20261022-catalog2.log": "fbc3a9d59dffcf8c941ddb14adc4d5224c655001bc9919cb878b98579e2a6c92",
+      "extracted/cpp-wind-flyer-20261022-build5.log": "0a41265cc774c53cee4151c19bbf113fc1634d4ddcbe7ebf5f2368898dcbca59",
+      "extracted/cpp-wind-flyer-20261022-ctest2.log": "0cf5b9eff24196b15162436d7bdb593c1a1c8904a778bf275da4918848eae76e",
+      "cpppj/build/Testing/Temporary/LastTest.log": "4385348d391c245fd6ea5fae5466507ac17e0512c47dffe3b1904dd6b7831ee4"
+    },
+    "first_full_suite": {
+      "tests": 2280,
+      "passed": 2279,
+      "failed": 1,
+      "seconds": 302.02,
+      "failed_case": "SoloMapCatalog_EmptyShortAndMetadataOnly",
+      "cause": "fixed filesystem enumeration order assumption; product ordering unchanged"
+    },
+    "full_suite": {
+      "tests": 2280,
+      "passed": 2280,
+      "failed": 0,
+      "ctest_exit": 0,
+      "seconds": 275.6,
+      "test_process_seconds": 275.56
+    }
+  },
+  "local_commit_prefix": "20261022-62 CP"
+}

@@ -86,6 +86,9 @@ struct FlyerPostPopHooks {
     std::function<void(Sid,std::uint32_t)> repop; // 최초 훨리베이스의frame10 뒤 실제 가상4c 재배치다.
     std::function<bool()> allocateSound; // 첫Pop의new0x28은 서버/클라이언트 모두 요청한다.
     std::function<void(Sid,std::uint32_t,std::uint32_t,std::uint32_t)> createSound; // 확보한 같은47 객체에 부모/74/6c/flags1을 전달한다.
+    std::function<bool(Sid,std::uint32_t)> hasRegular; // 더스트 데빌 최초Pop의event0 중복조회다.
+    std::function<bool()> allocateWindRegular; // 실제new28 성공뒤에만생성한다.
+    std::function<void(Sid,std::uint32_t,float)> createWindRegular; // 실제46에event0/0.25f를flags50으로부착한다.
 };
 // 실제 맨 오 워144/훨리기그73의 두 전용 PostPop과 공통45e6b0을 등록한다.
 class RawFlyerPostPop {

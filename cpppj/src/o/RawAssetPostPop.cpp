@@ -11,7 +11,7 @@ namespace netstorm::o {
 namespace {
 // 실제 후처리 몸체의 분류다. 숫자는 호스트 분배용이며 원본 타입 번호와 다르다.
 constexpr std::uint32_t kGenerator=1,kGunAngle=2,kGunFirst=3,kGunSun=4,kGunArcher=5,kGunDecoration=6,
-    kResidence=7,kBlocker=8,kGeyser=9,kVortexRain=10,kVortexWind=11,kVortexThunder=12,kSunAviary=13,kSunFence=14,kRainAviary=15,kNugget=16;
+    kResidence=7,kBlocker=8,kGeyser=9,kVortexRain=10,kVortexWind=11,kVortexThunder=12,kSunAviary=13,kSunFence=14,kRainAviary=15,kNugget=16,kWindAviary=17;
 // 독립 모듈의 기존 상태에서 신전 네 필드를 원본 저장 순서로 선택하는 멤버 주소다.
 constexpr std::array<std::uint32_t AssetPostPopPlayer::*,4> kTempleFields{
     &AssetPostPopPlayer::initialTemple,&AssetPostPopPlayer::initialTempleCopy,
@@ -19,11 +19,11 @@ constexpr std::array<std::uint32_t AssetPostPopPlayer::*,4> kTempleFields{
 // 복원한 PE 가상 표와 +0x20의 몸체 부류를 대응한다.
 struct PostPopTable { /* vtable: 원본 객체의 가상 함수 표 주소. */ /* kind: 자료나 동작의 종류를 구별하는 값. */ std::uint32_t vtable,kind; };
 // 패치10.78의 실제 +0x20 주소마다 분배한다. 캐논과 빈 패치타입186도 같은 VortexWind 몸체다.
-constexpr std::array<PostPopTable,20> kPatchTables{{
+constexpr std::array<PostPopTable,21> kPatchTables{{
     {0x501ea0,kGenerator},{0x50b6e8,kGunAngle},{0x50b7c0,kGunFirst},{0x50b9b8,kGunSun},{0x50bad0,kGunSun},
     {0x50b888,kGunArcher},{0x50b570,kGunDecoration},{0x50f540,kResidence},
     {0x50e940,kBlocker},{0x50ea08,kBlocker},{0x50ead0,kBlocker},{0x50da88,kGeyser},
-    {0x5196f0,kVortexRain},{0x519860,kVortexWind},{0x5197a8,kVortexWind},{0x519918,kVortexThunder},{0x509930,kSunAviary},{0x509470,kSunFence},{0x5099e8,kRainAviary},{0x50dc30,kNugget}}};
+    {0x5196f0,kVortexRain},{0x519860,kVortexWind},{0x5197a8,kVortexWind},{0x519918,kVortexThunder},{0x509930,kSunAviary},{0x509470,kSunFence},{0x5099e8,kRainAviary},{0x50dc30,kNugget},{0x509aa0,kWindAviary}}};
 // CD10.72는 캐논 부류의 두 가상 표와 거주 구역/제네레이터 위치가 다르다.
 constexpr std::array<PostPopTable,15> kCdTables{{
     {0x5022f8,kGenerator},{0x5011e8,kGunAngle},{0x5012b0,kGunFirst},{0x501120,kGunSun},{0x501378,kGunSun},
@@ -113,6 +113,7 @@ void RawAssetPostPop::Validate(Sid sid,std::uint32_t flags,const RawGraphPop* po
     if (kind==kNugget) { if (!hooks_.nuggetPostPop) throw std::logic_error("너겟 실제 전체 후처리 미연결");return; }
     if (kind==kSunAviary) { if (!hooks_.sunAviaryPostPop) throw std::logic_error("훨리베이스 실제 전체 후처리 미연결");return; } // 일반 Factory/신전 몸체로 분배하지 않는다.
     if (kind==kRainAviary) { if (!hooks_.rainAviaryPostPop) throw std::logic_error("맨 오 워 풀 실제 전체 후처리 미연결");return; } // 훨리베이스의 상태 기계로 대체하지 않는다.
+    if (kind==kWindAviary) { if (!hooks_.windAviaryPostPop) throw std::logic_error("데빌메이커 실제 전체 후처리 미연결");return; } // 전용80BYTE 생산기를 요구한다.
     if (kind==kSunFence) { if (!hooks_.sunFencePostPop) throw std::logic_error("썬 바리케이드 실제 전체 후처리 미연결");return; } // 다른 Damageable의 공통 몸체만 호출하지 않는다.
     if (kind==kGenerator) return;
     if (kind==kBlocker) {
@@ -275,6 +276,7 @@ void RawAssetPostPop::PostPop(Sid sid,std::uint32_t flags) const {
     if (kind==kSunAviary) hooks_.sunAviaryPostPop(sid,flags);
     else if (kind==kNugget) hooks_.nuggetPostPop(sid,flags);
     else if (kind==kRainAviary) hooks_.rainAviaryPostPop(sid,flags);
+    else if (kind==kWindAviary) hooks_.windAviaryPostPop(sid,flags);
     else if (kind==kSunFence) hooks_.sunFencePostPop(sid,flags);
     else if (kind==kGenerator) damageable_.DamageablePostPop(sid,flags);
     else if (kind>=kGunAngle && kind<=kGunArcher) Gun(sid,flags,kind);

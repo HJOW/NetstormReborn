@@ -103,7 +103,13 @@ TEST_CASE(SoloMapCatalog_EmptyShortAndMetadataOnly) {
     CHECK(catalog.Cached().names[0]=="case-empty" && catalog.Cached().flags[0]==2 && catalog.Cached().names[1]=="case-short" && !catalog.Cached().flags[1]);
     const auto row=catalog.Row(0,"","CASE-EMPTY");CHECK(row && row->checked && row->label=="case-empty (~rCORRUPT~.)");
     config.Set("fortSpec","case-edit.fort");CHECK(catalog.Refresh(2)==2);catalog.Invalidate();CHECK(catalog.Refresh(2)==1 && catalog.Cached().names[0]=="case-edit");
-    config.Set("fortSpec","{local.1}.fort");config.SetInt("mayEditMissions",1);catalog.Invalidate();CHECK(catalog.Refresh(2)==2 && catalog.Cached().names[1]=="case-mission");
+    config.Set("fortSpec","{local.1}.fort");config.SetInt("mayEditMissions",1);catalog.Invalidate();
+    std::vector<std::string> editableOrder; // 원본의OS열거순서를유지하며특정드라이브의알파벳순서를가정하지않는다.
+    for (const auto& path:files.MatchDisk("*.fort")) { // 두명시종류의기대이름만파일시스템의실제순서로읽는다.
+        const auto name=std::filesystem::path(path).stem().string();if (name=="case-edit" || name=="case-mission") editableOrder.push_back(name);
+    }
+    CHECK(editableOrder.size()==2 && catalog.Refresh(2)==2);
+    for (std::size_t index=0;index<editableOrder.size();++index) CHECK(catalog.Cached().names[index]==editableOrder[index]); // 두종류모두의포함과실제열거순서를검사한다.
     config.SetInt("mayEditMissions",0);CHECK(catalog.Refresh(2)==2);catalog.Invalidate();CHECK(catalog.Refresh(2)==1);CHECK(Rejected([&] { catalog.Kind("missing"); }));
 }
 

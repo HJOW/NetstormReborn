@@ -141,6 +141,8 @@
 #include "o/RawFlyerProcess.h"
 #include "o/RawFlyerFrame.h"
 #include "o/RawSunFlyerFrame.h"
+#include "o/RawWindAviaryProcess.h"
+#include "o/RawWindFlyer.h"
 #include "o/RawFlyerTarget.h"
 #include "o/RawDamageableRelease.h"
 #include "o/RawFlyerPreDestroy.h"
@@ -578,6 +580,12 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawFenceRebuild> fenceRebuild; //같은 동맹 최근접/사거리/두 생성기로 연결을 재생성한다.
     std::unique_ptr<RawSunAviaryProcess> sunAviary; // 같은 현재 Kernel/시계/풀의 실제 훨리베이스 프로세스 몸체다.
     std::unique_ptr<RawRainAviaryProcess> rainAviary; // 같은 현재 Kernel/풀의 맨 오 워 풀 전용 상태 기계다.
+    std::unique_ptr<RawWindAviaryProcess> windAviary; // 같은실제Kernel의데빌메이커80BYTE 생산기다.
+    std::unique_ptr<RawWindFlyer> windFlyer; // 더스트 데빌의전용104BYTE/애니메이션/범위공격이다.
+    std::vector<std::uint32_t> windActiveSounds; // 같은188TYPE의실제activeSound 토큰이다.
+    std::uint32_t windAviaryType{59},windAviaryAsset{139}; // 실제프로세스와건물의서로다른TYPE다.
+    std::array<std::uint8_t,64> windAviaryPacket{};bool writingWindAviary{}; // 실제0x74 writer와동일송신버퍼다.
+    std::unique_ptr<RegularProcess> pendingWindRegular; // 더스트 데빌첫Pop의new28 예약소유권이다.
     std::unique_ptr<RawFlyerProcess> flyer; // 같은 실제 Host의 공통 비행 생성/전송/홈 연결이다.
     std::unique_ptr<RawFlyerFrame> flyerFrame; // 같은 현재 시각/부모/표적/소리 장부의 실제 비행 Frame 제어다.
     std::unique_ptr<RawSunFlyerFrame> sunFlyerFrame; // 같은136바이트를 소비하는 훨리기그 전용45d2c0이다.
@@ -1029,6 +1037,7 @@ struct RawCampaignSession::Impl {
         FillMissing(assetEffects.postPop.playImpactSound);FillMissing(assetEffects.queueCommand);FillMissing(assetEffects.sendGunPacket);
         assetEffects.postPop.sunAviaryPostPop=[this](Sid sid,std::uint32_t flags) { sunAviary->PostPop(sid,flags); }; // 첫 실제 Pop 전에 아래에서 전체 몸체를 연결한다.
         assetEffects.postPop.rainAviaryPostPop=[this](Sid sid,std::uint32_t flags) { rainAviary->PostPop(sid,flags); }; // 같은 실제 TYPE143의 가상 후처리다.
+        assetEffects.postPop.windAviaryPostPop=[this](Sid sid,std::uint32_t flags) { windAviary->PostPop(sid,flags); }; // TYPE139의실제45edf0이다.
         assetEffects.postPop.sunFencePostPop=[this](Sid sid,std::uint32_t flags) { fencePostPop->PostPop(sid,flags); }; // 공간 쓰기 전에 전체 펜스 후처리를 조립한다.
         assetBindings=std::make_unique<RawCampaignAssetBindings>(world,*carrier,assetState,random,*islands,players,playerState,RawCampaignAssetGlobals{regularState,gunState,elements,archerCommand},std::move(assetEffects));assetBindings->ActivatePostPop();
         RawWorldRuntimeHooks worldHooks;
@@ -1056,6 +1065,7 @@ struct RawCampaignSession::Impl {
         ConnectCarrierSteal(); // 최초 크랩 Pop의 실제492예약/공통 장부다.
         ConnectCarrierRegular(); // 첫491예약/프레임 전에 같은 내용물 그림과 만료 삭제를 연결한다.
         ConnectSunAviary(); // 실제 타입32/flags8 부착과 현재48BYTE 필드를 같은 Kernel에 등록한다.
+        ConnectWindAviary(); // 첫저장객체Pop전에타입59의전용생산기를설치한다.
         ConnectRainAviary(); // 실제 타입60/flags8 부착과 별도 Frame/0x73 패킷을 구성한다.
         ConnectFlyer(); // TYPE144의 전체 후처리와 기본 표 부착→전용 표 쓰기의 실제 순서를 연결한다.
         ConnectFence(); // 실제 최근접/연결선 삭제/Regular를 첫 저장 펜스 Pop 전에 연결한다.
@@ -1123,6 +1133,7 @@ struct RawCampaignSession::Impl {
             if (manaRegular && manaRegular->Handles(sid)) return manaRegular->Run(sid,event,count);
             if (nuggetRegular && nuggetRegular->Handles(sid)) return nuggetRegular->Handle(sid,event,count,payload);
             const auto raw=core.pool.Slot(sid);
+            if (Read(raw,0)==0x50a050U) return windFlyer->Handle(sid,event,count,payload); // 실제45e8b0의주기범위공격이다.
             if (Read(raw,0)==0x504198U) return balloonBody->CloudRegular(sid,event,count,payload,
                 [this](Sid parent,std::int32_t delta,std::uint32_t flags) { RawFrameAdvance advance(core.pool,core.frames,core.frame);static_cast<void>(advance.Advance(parent,delta,flags)); },
                 [this](Sid parent,std::uint32_t code,std::uint32_t number,float value) { return carrierRegular->Handle(parent,code,number,value); }); // 가상5c의42af60만 전용 event3을 처리한다.
@@ -1304,7 +1315,7 @@ struct RawCampaignSession::Impl {
         const auto raw=core.pool.Slot(sid);const auto table=Read(raw,0);return (raw[10]==90 && table==0x005092d0) || (raw[10]==170 && table==0x00509388);
     }
     //144의 전용 Pre/Damageable Post가 확인된 실제 가상 표만 선택한다.
-    bool Flyer(Sid sid) const { const auto raw=core.pool.Slot(sid);return (raw[10]==144 && Read(raw,0)==0x0050a388) || (raw[10]==73 && Read(raw,0)==0x0050a1e8); } // 두 전용표의 Pre14/Post18은 같은45e7e0/44b9e0이다.
+    bool Flyer(Sid sid) const { const auto raw=core.pool.Slot(sid);return (raw[10]==144 && Read(raw,0)==0x0050a388) || (raw[10]==73 && Read(raw,0)==0x0050a1e8) || (raw[10]==138 && Read(raw,0)==0x0050a050); } // 세전용표의Pre14/Post18은같은45e7e0/44b9e0이다.
     //110의 실제 공통 Pre/Post/Pop 가상 표이며 다른 자산에 일반화하지 않는다.
     bool VisualDummy(Sid sid) const { const auto raw=core.pool.Slot(sid);return raw[10]==110 && Read(raw,0)==0x0050eb98; }
     // 같은 현재 원문/Host의 생성·프레임·QA·패킷을 연결한다. 미복원 BaseFlyer 하위는 선택 시 거부한다.
@@ -1320,6 +1331,46 @@ struct RawCampaignSession::Impl {
         hooks.pop=[this](Sid sid,float x,float y,std::uint32_t flags) { world.Pop(sid,x,y,flags); };
         hooks.destroy=[this](Sid sid,std::uint32_t flags) { static_cast<void>(world.Destroy(sid,flags)); };
         gemReward=std::make_unique<RawGemReward>(core.pool,core.types,random,constructionExcludedTypes,gemRewardState,std::move(hooks));
+    }
+    // 데빌메이커의실제80BYTE 생성/생산/104BYTE 비행체와같은Host를연결한다.
+    void ConnectWindAviary() {
+        WindAviaryHooks hooks;
+        hooks.findProcess=[this](Sid sid,std::uint32_t type) { return FindAttachedProcess(core.pool,sid,type); };
+        hooks.allocate=[]()->std::optional<WindAviaryProcessFields> {
+            auto* bytes=std::malloc(0x50);if (!bytes) return std::nullopt;
+            WindAviaryProcessFields fields;std::memcpy(fields.bytes.data(),bytes,0x50);std::free(bytes);return fields;
+        };
+        hooks.attach=[this](std::optional<WindAviaryProcessFields> fields,Sid sid,std::uint32_t type) {
+            if (!fields) throw std::bad_alloc();static_cast<void>(core.processes.Attach(std::make_unique<WindAviaryProcess>(*windAviary,std::move(*fields)),type,sid,8));
+        };
+        hooks.damageable=[this](Sid sid,std::uint32_t flags) { carrier->DamageablePostPop(sid,flags); };
+        hooks.assertion=SessionMissing<void,std::uint32_t>();
+        hooks.setFrame=[this](Sid sid,std::int32_t frame) { core.frame.Set(sid,frame,0); };
+        hooks.checkFrame=[this](Sid sid,std::int32_t frame,std::uint32_t line) {
+            const auto type=core.pool.Slot(sid)[10];const auto count=core.frames[type].Codes().size();
+            const auto multiplier=(core.types[type].flags1&0x440000U) ? 2U : 1U;
+            if (frame<0 || static_cast<std::size_t>(frame)>=count*multiplier) SessionMissing<void,std::uint32_t>()(line);
+        };
+        hooks.create=[this](std::uint32_t type) { return world.Create(type,0); };
+        hooks.setOwner=[this](Sid sid,std::uint32_t owner) { ownership->SetOwner(sid,owner); };
+        hooks.height=[this](Sid sid,std::int32_t frame) { const auto type=core.pool.Slot(sid)[10];return core.shapes[type].frames.at(static_cast<std::size_t>(frame)).walkStepY; }; // 원본SHP+14의float를현재표시자료에서읽는다.
+        hooks.footY=[this](Sid sid) { return static_cast<float>(core.types[core.pool.Slot(sid)[10]].footY); };
+        hooks.pop=[this](Sid sid,float x,float y) { world.Pop(sid,x,y,0); };
+        hooks.createFlyerProcess=[this](Sid sid,Sid home) {
+            auto* allocation=std::malloc(0x68);if (!allocation) return;
+            FlyerProcessFields fields;std::memcpy(fields.bytes.data(),allocation,0x68);std::free(allocation);
+            if (pendingFlyer) throw std::logic_error("더스트 데빌비행생성부착재진입");
+            pendingFlyer=std::make_unique<FlyerProcess>(*flyer,std::move(fields));auto* current=pendingFlyer.get();
+            flyer->Construct(current->Fields(),sid,home,std::bit_cast<std::uint32_t>(dudeSpeeds.at(core.pool.Slot(sid)[10]).speed),0.5f);
+            RawWindFlyer::Specialize(current->Fields());
+        };
+        hooks.bindFlyer=[this](Sid sid,Sid home) { flyer->Bind(sid,home); };
+        hooks.circlePosition=SessionMissing<std::array<float,2>,Sid,std::int32_t,std::int32_t>(); // 주문부모의전용원주배치는후속원문대조가필요하다.
+        hooks.finish=[this](WindAviaryProcessFields& fields) {
+            const Sid form{static_cast<std::uint16_t>(Read(fields.bytes,60))};auto* process=dynamic_cast<WindAviaryProcess*>(core.processes.FromForm(form));
+            if (!process || &process->Fields()!=&fields) throw std::logic_error("데빌메이커종료Host/raw 불일치");core.processes.Kill(*process,0);
+        };
+        windAviary=std::make_unique<RawWindAviaryProcess>(core.pool,WindAviaryGlobals{core.ownerMode.fort,gunTargetState.friendlyFire,core.processState.server,assetState.boss,globals.editor,gunState.checking,core.processState.now,windAviaryType,windFlyerType,windAviaryAsset},std::move(hooks));
     }
     void ConnectSunAviary() {
         SunAviaryProcessHooks hooks;hooks.findProcess=[this](Sid parent,std::uint32_t type) { return FindAttachedProcess(core.pool,parent,type); };
@@ -1383,7 +1434,11 @@ struct RawCampaignSession::Impl {
             if (!pendingFlyer || &pendingFlyer->Fields()!=&fields) throw std::logic_error("비행 생성자의 현재 원문/소유권 불일치");
             if (!core.processes.Attach(std::move(pendingFlyer),type,parent,flags)) throw std::logic_error("비행 생성자의 free/dead 부모 부착 거부");
         };
-        hooks.frame=[this](FlyerProcessFields& fields) { if (Read(fields.bytes,0)==0x509f24U) sunFlyerFrame->Frame(fields);else flyerFrame->Frame(fields); };
+        hooks.frame=[this](FlyerProcessFields& fields) {
+            if (Read(fields.bytes,0)==0x509f24U) sunFlyerFrame->Frame(fields);
+            else if (Read(fields.bytes,0)==0x509f98U) { if (!Read(fields.bytes,84)) windFlyer->Initialize(fields);flyerFrame->BaseFrame(fields); }
+            else flyerFrame->Frame(fields);
+        };
         hooks.notify=[this](FlyerProcessFields& fields,std::uint32_t message,std::uint32_t a,std::uint32_t b) { flyerFrame->Notify(fields,message,a,b); };
         hooks.parentDying=[this](FlyerProcessFields& fields) { if (Read(fields.bytes,0)==0x509f24U) sunFlyerFrame->ParentDying(fields);else flyerFrame->ParentDying(fields); };
         hooks.pieces=[this](Sid parent) { static_cast<void>(particles->AddShrapnel(parent,ShrapnelKind::Explosion)); };
@@ -1418,8 +1473,14 @@ struct RawCampaignSession::Impl {
         };
         post.create=[this](std::uint32_t type,std::uint32_t flags) { return world.Create(type,flags); };post.pop=[this](Sid sid,float x,float y,std::uint32_t flags) { world.Pop(sid,x,y,flags); };
         post.unpop=[this](Sid sid,std::uint32_t flags) { world.Unpop(sid,flags); };post.initializeUnit=[this](Sid sid) { gunHit->SetTime(sid,core.processState.now); };
-        post.shadowOffset=[this](Sid sid) { const auto table=Read(core.pool.Slot(sid),0);if (table==0x50a1e8U) return std::array<float,2>{-0.6f,3.5f};if (table!=0x50a388U) throw std::logic_error("다른 비행체 그림자 offset 미복원");return std::array<float,2>{0.5f,0.5f}; }; // 실제45ef10/45faa0의 두 상수다.
+        post.shadowOffset=[this](Sid sid) { const auto table=Read(core.pool.Slot(sid),0);if (table==0x50a050U) return std::array<float,2>{0,0};if (table==0x50a1e8U) return std::array<float,2>{-0.6f,3.5f};if (table!=0x50a388U) throw std::logic_error("다른 비행체 그림자 offset 미복원");return std::array<float,2>{0.5f,0.5f}; }; // Wind45ec30/Sun45ef10/Rain45faa0의실제상수다.
         post.damageable=[this](Sid sid,std::uint32_t flags) { carrier->DamageablePostPop(sid,flags); };
+        post.hasRegular=[this](Sid sid,std::uint32_t event) { return core.processes.FindEvent(sid,event)!=nullptr; };
+        post.allocateWindRegular=[this] { if (pendingWindRegular) throw std::logic_error("더스트 데빌Regular 중복예약");try { pendingWindRegular=std::make_unique<RegularProcess>(0,0.25f);return true; }catch (const std::bad_alloc&) { return false; } };
+        post.createWindRegular=[this](Sid sid,std::uint32_t event,float period) {
+            if (!pendingWindRegular || event!=0 || period!=0.25f) throw std::logic_error("더스트 데빌Regular 확보/인수불일치");
+            static_cast<void>(core.processes.Attach(std::move(pendingWindRegular),46,sid,0x50));
+        };
         std::vector<FlyerPostPopType> details(core.types.size()); // 실제 불변 TYPE의 speed/전체 물리 프레임 수다.
         for (const auto& asset:assets.game.Types()) {
             const auto type=70+asset.block;details[type].speed=std::bit_cast<std::uint32_t>(static_cast<float>(asset.definition.Number("speed").value_or(0)));details[type].frames=static_cast<std::int32_t>(core.frames[type].Codes().size()); // 원본 같은 번호의 불변 표다.
@@ -1436,10 +1497,10 @@ struct RawCampaignSession::Impl {
         hooks.sidRobust=[this](Sid sid,bool live) { if (!sid.value || sid.value==0xffff) return false;if (live && gunState.checking) throw std::logic_error("비행 개발자 SID 상세진단004ac040 미복원");return true; }; // checking0의004ac140은 추가 raw 검사를 하지 않는다.
         hooks.destroy=[this](Sid sid,std::uint32_t flags) { static_cast<void>(world.Destroy(sid,flags)); };
         hooks.finish=[this](FlyerProcessFields& fields) { flyer->Finish(fields); };
-        hooks.otherFrame=[this](FlyerProcessFields& fields)->std::int32_t { if (Read(fields.bytes,0)==0x509f24U) return sunFlyerFrame->Animation(fields);throw std::logic_error("다른 플라이어 outer+8 Frame 미복원"); };
+        hooks.otherFrame=[this](FlyerProcessFields& fields)->std::int32_t { if (Read(fields.bytes,0)==0x509f24U) return sunFlyerFrame->Animation(fields);if (Read(fields.bytes,0)==0x509f98U) return windFlyer->Animation(fields);throw std::logic_error("다른 플라이어 outer+8 Frame 미복원"); };
         hooks.sunInitialize=[this](FlyerProcessFields& fields) { sunFlyerFrame->Initialize(fields); };
         hooks.sunNotify=[this](FlyerProcessFields& fields,std::uint32_t message,std::uint32_t first,std::uint32_t second) { sunFlyerFrame->Notify(fields,message,first,second); };
-        hooks.offset=[this](Sid sid,bool home) { const auto table=Read(core.pool.Slot(sid),0);if (table==0x50a1e8) return std::array<float,2>{2,home ? -2.5f : -4.0f};if (table!=0x50a388) throw std::logic_error("다른 플라이어 이동 offset 미복원");return std::array<float,2>{1,0}; }; // 실제Sun45eed0/45eef0과Rain45fa80이다.
+        hooks.offset=[this](Sid sid,bool home) { const auto table=Read(core.pool.Slot(sid),0);if (table==0x50a050U) return std::array<float,2>{0,0};if (table==0x50a1e8) return std::array<float,2>{2,home ? -2.5f : -4.0f};if (table!=0x50a388) throw std::logic_error("다른 플라이어 이동 offset 미복원");return std::array<float,2>{1,0}; }; // Wind45ec30/Sun45eed0/45eef0/Rain45fa80의실제값이다.
         hooks.scatter=[this](Sid target,Sid flyer) { return flyerTarget->Scatter(target,flyer); };
         hooks.refreshTime=[this](Sid sid) { gunHit->SetTime(sid,core.processState.now); };hooks.hit=[this](Sid sid,Sid target) { gunHit->Hit(sid,target,core.processState.now); };
         hooks.removeSound=[this](Sid sid,std::uint32_t type) {
@@ -1486,13 +1547,25 @@ struct RawCampaignSession::Impl {
         for (std::size_t type=0;type<bombs.size();++type) bombs[type]={core.frames[type].Run('A').count,core.frames[type].Run('B').first,core.frames[type].Run('B').count,missileTypes[type].firingSound}; // end를first+count로 교체하지 않는다.
         flyerFrame=std::make_unique<RawFlyerFrame>(core.pool,core.types,details,std::span(soundState.typeFrames).first(core.types.size()),FlyerFrameGlobals{core.processState.server,assetState.boss,gunState.checking,core.processState.now,soundState.frame,sunFlyerType,windFlyerType,rainFlyerType,sunAviaryType,soundState.processType},std::move(hooks));
         sunFlyerFrame=std::make_unique<RawSunFlyerFrame>(core.pool,core.shapes,bombs,SunFlyerFrameGlobals{assetState.boss,flyerPaused,core.processState.now,sunBombType},std::move(sun));
+        WindFlyerHooks wind; // 같은실제프레임표와효과를전용처리기에연결한다.
+        wind.runCount=[this](Sid sid) { const auto raw=core.pool.Slot(sid);const auto frame=std::bit_cast<std::int32_t>(Read(raw,36));const auto& table=core.frames[raw[10]];if (frame<0 || static_cast<std::size_t>(frame)>=table.Codes().size()) throw std::out_of_range("더스트 데빌글자프레임범위");return table.Run(table.Codes()[static_cast<std::size_t>(frame)].side).count; };
+        wind.assertion=SessionMissing<void,std::uint32_t>();wind.damageable=[this](Sid sid,std::uint32_t event,std::uint32_t count,float value) { return assetBindings->Regular().DamageableHandle(sid,event,count,value); };
+        wind.destroy=[this](Sid sid,std::uint32_t flags) { static_cast<void>(world.Destroy(sid,flags)); };
+        wind.sound=[this](float x,float y,std::uint32_t token) { if (!services.sound.playOnceAt) throw std::logic_error("더스트 데빌위치소리미연결");services.sound.playOnceAt(x,y,token,0,0); };
+        wind.mayTarget=[this](Sid sid,Sid target) { const auto raw=core.pool.Slot(sid);const auto center=gunTarget->Center(sid);return gunTarget->MayTarget({std::bit_cast<float>(Read(raw,14)),std::bit_cast<float>(Read(raw,18)),center[0],center[1],raw[10],std::bit_cast<std::int32_t>(gunMode->Get(sid)),raw[34],std::bit_cast<std::int32_t>(Read(raw,36))},target); };
+        wind.damageRate=[this](Sid sid,Sid target) { const auto& type=hitTypes.at(core.pool.Slot(sid)[10]);return type.specialFlyerDamage && (core.types[core.pool.Slot(target)[10]].flags2&0x120000U) ? type.flyerDamagePerSecond : type.damagePerSecond; };
+        wind.damage=hits->DamageHooks({}).damage;
+        wind.weaken=[this](Sid sid) { PrepareDamageablePost();damageablePost->Weaken(sid); };
+        windActiveSounds.resize(core.types.size());
+        for (const auto& asset:assets.game.Types()) { const auto name=asset.definition.String("activeSound");windActiveSounds[70+asset.block]=name && !name->empty() ? soundNames.Lookup(*name) : 0U; } // 원본TYPE+6c 토큰을같은이름표에서읽는다.
+        windFlyer=std::make_unique<RawWindFlyer>(core.pool,core.hash,core.types,std::span(soundState.typeFrames).first(core.types.size()),windActiveSounds,core.processState.now,assetState.boss,soundState.frame,std::move(wind));
         ConnectFlyerTarget(); // 첫 Kernel 프레임 이전에 같은 표적 선택 본체를 설치한다.
     }
     // 원본의 일반 finder/의존 watcher/현재 Host 부모/표적 문맥을 동일 월드에 연결한다.
     void ConnectFlyerTarget() {
         FlyerTargetHooks hooks;hooks.assertion=SessionMissing<void,std::uint32_t>();
         hooks.checkForms=[this](Sid sid) { return flyerFrame->CheckForms(sid); };
-        hooks.offset=[this](Sid sid) { const auto table=Read(core.pool.Slot(sid),0);if (table==0x50a1e8) return std::array<float,2>{2,-4};if (table!=0x50a388) throw std::logic_error("다른 플라이어 검색 offset 미복원");return std::array<float,2>{1,0}; }; // Sun45eed0/Rain45fa80의 실제+cc다.
+        hooks.offset=[this](Sid sid) { const auto table=Read(core.pool.Slot(sid),0);if (table==0x50a050U) return std::array<float,2>{0,0};if (table==0x50a1e8) return std::array<float,2>{2,-4};if (table!=0x50a388) throw std::logic_error("다른 플라이어 검색 offset 미복원");return std::array<float,2>{1,0}; }; // Wind45ec30/Sun45eed0/Rain45fa80의실제+cc다.
         hooks.begin=[this](SquidSearchArea area,std::uint32_t flags) { flyerFinder=std::make_unique<RawSquidFinder>(core.pool,core.hash,core.types);return flyerFinder->Begin(area,flags); };
         hooks.next=[this] { if (!flyerFinder) throw std::logic_error("비행 표적 일반 finder 커서 누락");return flyerFinder->Next(); };
         hooks.mayTarget=[this](Sid sid,Sid target) { const auto raw=core.pool.Slot(sid);const auto center=gunTarget->Center(sid);const GunTargetQuery query{std::bit_cast<float>(Read(raw,14)),std::bit_cast<float>(Read(raw,18)),center[0],center[1],raw[10],std::bit_cast<std::int32_t>(gunMode->Get(sid)),raw[34],std::bit_cast<std::int32_t>(Read(raw,36))};return gunTarget->MayTarget(query,target); };
@@ -1512,8 +1585,8 @@ struct RawCampaignSession::Impl {
     // 타입31/32/60의 서로 다른 writer와 같은 실제 송신기를 연결한다.
     ProcessFormTransmission AviaryTransmission(ProcessFormTransmission fallback) {
         ProcessFormTransmission hooks;
-        hooks.writeData=[this,fallback](SquidProcess& process,bool parentChanged) { auto* flying=dynamic_cast<FlyerProcess*>(&process);writingFlyer=flying!=nullptr;auto* rain=dynamic_cast<RainAviaryProcess*>(&process);writingRainAviary=rain!=nullptr;auto* current=dynamic_cast<SunAviaryProcess*>(&process);writingSunAviary=current!=nullptr;if (flying) return static_cast<std::int32_t>(flying->WritePacket(flyerPacket,parentChanged));if (rain) return static_cast<std::int32_t>(rain->WritePacket(rainAviaryPacket,parentChanged));if (current) return static_cast<std::int32_t>(current->WritePacket(sunAviaryPacket,parentChanged));if (!fallback.writeData) throw std::logic_error("다른 실제 프로세스 writer 미연결");return fallback.writeData(process,parentChanged); };
-        hooks.transmit=[this,fallback](std::int32_t length) { if (writingFlyer) { if (length<0 || static_cast<std::size_t>(length)>flyerPacket.size()) throw std::out_of_range("비행 실제 패킷 길이 오류");services.formPacket(std::span<const std::uint8_t>(flyerPacket).first(static_cast<std::size_t>(length)));return; }if (writingRainAviary) { if (length<0 || static_cast<std::size_t>(length)>rainAviaryPacket.size()) throw std::out_of_range("맨 오 워 풀 실제 패킷 길이 오류");services.formPacket(std::span<const std::uint8_t>(rainAviaryPacket).first(static_cast<std::size_t>(length)));return; }if (writingSunAviary) { if (length<0 || static_cast<std::size_t>(length)>sunAviaryPacket.size()) throw std::out_of_range("훨리베이스 실제 패킷 길이 오류");services.formPacket(std::span<const std::uint8_t>(sunAviaryPacket).first(static_cast<std::size_t>(length)));return; }if (!fallback.transmit) throw std::logic_error("다른 실제 프로세스 송신 미연결");fallback.transmit(length); };return hooks;
+        hooks.writeData=[this,fallback](SquidProcess& process,bool parentChanged) { auto* flying=dynamic_cast<FlyerProcess*>(&process);writingFlyer=flying!=nullptr;auto* rain=dynamic_cast<RainAviaryProcess*>(&process);writingRainAviary=rain!=nullptr;auto* current=dynamic_cast<SunAviaryProcess*>(&process);writingSunAviary=current!=nullptr;auto* wind=dynamic_cast<WindAviaryProcess*>(&process);writingWindAviary=wind!=nullptr;if (wind) return static_cast<std::int32_t>(wind->WritePacket(windAviaryPacket,parentChanged));if (flying) return static_cast<std::int32_t>(flying->WritePacket(flyerPacket,parentChanged));if (rain) return static_cast<std::int32_t>(rain->WritePacket(rainAviaryPacket,parentChanged));if (current) return static_cast<std::int32_t>(current->WritePacket(sunAviaryPacket,parentChanged));if (!fallback.writeData) throw std::logic_error("다른 실제 프로세스 writer 미연결");return fallback.writeData(process,parentChanged); };
+        hooks.transmit=[this,fallback](std::int32_t length) { if (writingWindAviary) { if (length<0 || static_cast<std::size_t>(length)>windAviaryPacket.size()) throw std::out_of_range("데빌메이커 실제 패킷 길이 오류");services.formPacket(std::span<const std::uint8_t>(windAviaryPacket).first(static_cast<std::size_t>(length)));return; }if (writingFlyer) { if (length<0 || static_cast<std::size_t>(length)>flyerPacket.size()) throw std::out_of_range("비행 실제 패킷 길이 오류");services.formPacket(std::span<const std::uint8_t>(flyerPacket).first(static_cast<std::size_t>(length)));return; }if (writingRainAviary) { if (length<0 || static_cast<std::size_t>(length)>rainAviaryPacket.size()) throw std::out_of_range("맨 오 워 풀 실제 패킷 길이 오류");services.formPacket(std::span<const std::uint8_t>(rainAviaryPacket).first(static_cast<std::size_t>(length)));return; }if (writingSunAviary) { if (length<0 || static_cast<std::size_t>(length)>sunAviaryPacket.size()) throw std::out_of_range("훨리베이스 실제 패킷 길이 오류");services.formPacket(std::span<const std::uint8_t>(sunAviaryPacket).first(static_cast<std::size_t>(length)));return; }if (!fallback.transmit) throw std::logic_error("다른 실제 프로세스 송신 미연결");fallback.transmit(length); };return hooks;
     }
     // 저장 크랩의 첫Pop 전 전용492예약과 같은 공통장부를 연결한다.
     void ConnectCarrierSteal() {

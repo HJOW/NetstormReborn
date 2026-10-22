@@ -1656,3 +1656,9 @@ tools/decomp_cloud_floater.py text eol=lf
 tools/audit_unit_restoration.py text eol=lf
 docs/exe/cpp-cloud-floater-20261022.md text eol=lf
 docs/exe/cpp-unit-restoration-20261022.md text eol=lf
+# 더스트 데빌의 원문 관측·제품·회귀·근거를 체크아웃 뒤에도 같은 바이트로 유지한다.
+cpppj/src/o/RawWindFlyer.* text eol=lf
+cpppj/tests/WindFlyerTests.cpp text eol=lf
+tools/decomp_wind_flyer.py text eol=lf
+cpppj/wind-flyer-20261022.json text eol=lf
+docs/exe/cpp-wind-flyer-20261022.md text eol=lf

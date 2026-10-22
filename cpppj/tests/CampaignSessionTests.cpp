@@ -46,6 +46,7 @@
 #include <filesystem>
 #include "o/RawGunProcess.h"
 #include "o/RawSunFlyerFrame.h"
+#include "o/RawWindAviaryProcess.h"
 #include <type_traits>
 using namespace netstorm::client;
 //BYTE변환의임시DWORD를원본공유owner로빌리는오류를거부한다.
@@ -3498,6 +3499,9 @@ TEST_CASE(CampaignDevastation_ActualEnemyCaptureAndDropFromCast) {
 TEST_CASE(CampaignTest02_ActualStoredBulfSelectionAndNaturalMovement) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
     auto services=external.Services();UseWorldTestLogin(services);std::size_t footsteps{};
+    services.production.allocationBytes=[](std::span<std::uint8_t> bytes) { CHECK(bytes.size()==kProductionDeckBytes);std::fill(bytes.begin(),bytes.end(),std::uint8_t{0xa7}); }; // 이제실제로진행하는AI생산의힙입력만공급한다.
+    services.production.effects.configInt=[](std::string_view key) { CHECK(key=="getTeleportTechFree");return 0; }; // 기존튜토리얼생산검사와동일한설정입력이다.
+    services.production.effects.modeAssertion=[] { throw std::logic_error("TEST02 실제생산모드진단"); }; // 잘못된모드를성공으로넘기지않는다.
     const auto sound=services.sound.playOnceAt;
     services.sound.playOnceAt=[&](float x,float y,SoundHandle id,std::uint32_t first,std::uint32_t second) {
         // 실제 장치 요청만 세며 공용 난수나 선택 파일 번호는 바꾸지 않는다.
@@ -3654,4 +3658,42 @@ TEST_CASE(CampaignDevastation_ActualActivationEffectLifetime) {
     }
     CHECK(frames>1 && frames<4096 && (core.pool.Slot(timed)[11]&3U)==3U && !core.processes.FromForm(timedForm));CHECK(session.Sp(1)==before);
     CHECK(!core.bookkeeping.depth && !core.destroy.PreDepth() && !core.destroy.PostDepth());
+}
+
+// 사용자 TEST02의 저장 데빌메이커를 실제 Kernel로 생산·비행·주기 수명까지 진행한다.
+TEST_CASE(CampaignWindFlyer_ActualTest02NaturalProductionAndLifetime) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
+    auto services=external.Services();services.formPacket=[&](std::span<const std::uint8_t> packet) { external.packets.emplace_back(packet.begin(),packet.end()); }; // 실제Form송신요청만기록하고상태쓰기를대체하지않는다.
+    ConfigInterface config([&](std::string_view path) { return assets.files.TryRead(path); });
+    config.Configuration().Assign("DataDir=\"d\"\ncurrentLanguage=\"english\"\nmissionSpec=\"{DataDir}\\{local.1}.{currentLanguage}\"\nfortSpec=\"{DataDir}\\{local.1}.fort\"\n[END]\n");
+    MissionScript script(config,"TEST02");CHECK(script.Loaded());
+    auto fort=FortTemplate::Parse(assets.files.Read(script.FortPath()),assets.game.TypeTable());
+    RawCampaignSession session(assets.game,assets.files,std::move(fort),script.FortName(),std::move(services));session.Load();auto core=session.Core();
+    Sid home{},body{};std::uint32_t born{},flying{},dead{};std::set<std::uint32_t> animation; // 현재 실제 객체와 수명만 관찰한다.
+    for (const auto& object:session.World().Objects()) if (object.object.type==139 && !home.value) home=object.sid; // 사용자 원문에서 읽은 첫 데빌메이커를 쓴다.
+    CHECK(home.value);if (!home.value) return;
+    const auto form=FindAttachedProcess(core.pool,home,59);auto* maker=dynamic_cast<WindAviaryProcess*>(core.processes.FromForm(form));
+    CHECK(maker && maker->Parent()==home && Get(maker->Fields().bytes,24)==1);if (!maker) return;
+    CHECK(std::any_of(external.packets.begin(),external.packets.end(),[](const auto& packet) { return packet.size()>8 && packet[0]==1 && packet[1]==0x74; })); // 실제 Host 송신도 같은 전용 writer를 거친다.
+    GameClock clock;
+    for (std::uint32_t frame=1;frame<=1120;++frame) { // 현재 시계만 진행하며 생산 단계/표적/HP/결과는 쓰지 않는다.
+        session.RunFrame(clock.Capture(frame*25),false);
+        if (!body.value) {
+            const Sid temporary{static_cast<std::uint16_t>(Get(maker->Fields().bytes,48))}; // 최초Pop은+12를압축피해시각으로바꾸므로생산기의실제임시SID를읽는다.
+            if (temporary.value) { const auto raw=core.pool.Slot(temporary);CHECK(raw[10]==138 && !(raw[11]&7U));body=temporary;born=frame; }
+        }
+        if (!body.value) continue;
+        const auto raw=core.pool.Slot(body);if (raw[11]&1U) { dead=frame;break; }
+        CHECK(Get(raw,0)==0x50a050U && raw[34]==core.pool.Slot(home)[34]);animation.insert(Get(raw,36));
+        const auto flyerForm=FindAttachedProcess(core.pool,body,31);
+        if (flyerForm.value) {
+            const auto* process=dynamic_cast<const FlyerProcess*>(core.processes.FromForm(flyerForm));CHECK(process);if (!process) return;
+            CHECK(Get(process->Fields().bytes,0)==0x509f98U && Get(process->Fields().bytes,48)==0x509f78U && process->Fields().Home()==home);
+            if (!flying) flying=frame;
+        }
+    }
+    CHECK(born>0 && flying>born && dead>flying && animation.size()>2);
+    if (body.value) CHECK(!FindAttachedProcess(core.pool,body,31).value && !core.processes.FindEvent(body,0));
+    CHECK(!core.bookkeeping.depth && !core.destroy.PreDepth() && !core.destroy.PostDepth());
+    std::cout<<"TEST02 실제 데빌메이커"<<home.value<<"/더스트 데빌"<<body.value<<"/표시"<<born<<"/비행"<<flying<<"/삭제"<<dead<<"/그림"<<animation.size()<<'\n';
 }
