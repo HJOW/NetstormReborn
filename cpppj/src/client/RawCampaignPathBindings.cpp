@@ -87,7 +87,7 @@ void RawCampaignPathBindings::ValidateCarrier(o::Sid parent) const {
     if (core_.pool.Edition()!=o::OriginalEdition::Patch1078 || parent.value<5 || parent.value>=core_.pool.Capacity()) throw std::invalid_argument("웜40 부모 판본/SID 오류");
     const auto raw=core_.pool.AllocatedBytes(parent);const auto table=Vtable(raw);
     const auto movement=priests_.MovementProcessType(raw[10]);const bool worm=raw[10]==processState_.sunWalkerType && table==0x50e568U && movement==processState_.wormProcess; //기존 골렘의 정확한 부모다.
-    const bool balloon=(raw[10]==111 || raw[10]==141) && table==0x5040c0U && movement==processState_.balloonProcess; //두 원본 벌룬의 동일한 전용 VT다.
+    const bool balloon=(((raw[10]==111 || raw[10]==141) && table==0x5040c0U) || (raw[10]==146 && table==0x504198U)) && movement==processState_.balloonProcess; // 원본 벌룬/에어십과 전용 애니메이션을 더하는 클라우드 플로터도 같은42 이동이다.
     const bool bulf=raw[10]==135 && table==0x503e50U && movement==processState_.bulfProcess; // 실제42afb0 생성자가 설치한 부모 표다.
     if ((raw[11]&9) || (!worm && !balloon && !bulf)) throw std::logic_error("Carrier 실제 부모 타입/가상 표/이동 종류 오류: empty42ac60은 별도 미연결");
 }
@@ -111,7 +111,7 @@ o::RawPathProcess* RawCampaignPathBindings::StartDude(o::RawPathStartRequest req
 o::RawPathProcess* RawCampaignPathBindings::CurrentPath(o::Sid parent) const {
     if (parent.value<5 || parent.value>=core_.pool.Capacity()) throw std::out_of_range("캠페인 현재 Path 부모 SID 범위");
     const auto raw=core_.pool.Slot(parent);std::uint32_t movement=kActualPriestProcess;
-    if (raw[10]!=startState_.priestType) { if (raw[10]==startState_.dudeType) ValidateDude(parent);else if (raw[10]==processState_.sunWalkerType || raw[10]==processState_.emptyType || raw[10]==111 || raw[10]==141 || raw[10]==135) ValidateCarrier(parent);else ValidateConstruction(parent);movement=priests_.MovementProcessType(raw[10]); }
+    if (raw[10]!=startState_.priestType) { if (raw[10]==startState_.dudeType) ValidateDude(parent);else if (raw[10]==processState_.sunWalkerType || raw[10]==processState_.emptyType || raw[10]==111 || raw[10]==141 || raw[10]==146 || raw[10]==135) ValidateCarrier(parent);else ValidateConstruction(parent);movement=priests_.MovementProcessType(raw[10]); } // 40h 송수신도 같은 클라우드 플로터의 실제42 경로를 사용한다.
     const auto form=lookup_.Find(parent,movement);if (!form.value) return nullptr;
     auto* process=dynamic_cast<o::RawPathProcess*>(core_.processes.FromForm(form));
     if (!process || &process->Pool()!=&core_.pool || process->Parent()!=parent || process->Form()!=form)

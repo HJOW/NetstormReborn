@@ -397,6 +397,7 @@ struct RawCampaignSession::Impl {
     CarrierPostPopState carrierState; // Damageable의 실제 로딩 전역이다.
     std::unique_ptr<RawCarrierPostPop> carrier; // 같은 공통 장부와 실제 지면 소유자 경계다.
     std::unique_ptr<RawBalloonBody> balloonBody; //같은 풀/실제 그림자/전용 후처리와 그림자 우선 삭제다.
+    std::unique_ptr<void,void(*)(void*)> pendingCloudRegular{nullptr,[](void* storage) { ::operator delete(storage); }}; // 클라우드 플로터의 실제 Regular 확보와 생성 사이 메모리다.
     AssetRegularState regularState; // 실제 예약 사건의 현재 전역이다.
     GunProcessState gunState; // 실제 Gun 초기 Form/시각/서버 전역이다.
     GunTargetState gunTargetState; // 실제 자기 동맹/검색의 현재 상태다.
@@ -713,7 +714,7 @@ struct RawCampaignSession::Impl {
         };
         const auto otherWalkerFall=priestEffects.otherWalkerFall; // 별도 파생의 실제 외부 낙하 경계를 보존한다.
         priestEffects.otherWalkerFall=[this,otherWalkerFall](Sid sid) {
-            if (carrierRegular && carrierRegular->Handles(sid)) { if (!carrierFallStart) throw std::logic_error("캐리어 낙하 시작 설치 전 호출");return carrierFallStart->Begin(sid); }
+            if ((carrierRegular && carrierRegular->Handles(sid)) || (balloonBody && balloonBody->Handles(sid))) { if (!carrierFallStart) throw std::logic_error("캐리어 낙하 시작 설치 전 호출");return carrierFallStart->Begin(sid); } // 클라우드 플로터도 실제+44는 같은427750이다.
             if (!otherWalkerFall) throw std::logic_error("다른 실제 Walker 낙하 미연결");return otherWalkerFall(sid);
         };
         priestEffects.regen.refresh=[this](Sid sid) { core.display.Update(core.pool.Slot(sid)); };
@@ -759,6 +760,11 @@ struct RawCampaignSession::Impl {
         BalloonBodyHooks balloon;balloon.frames=[this](std::uint32_t type) { return static_cast<std::int32_t>(core.frames[type].Codes().size()); };
         balloon.create=[this](std::uint32_t type,std::uint32_t flags) { return world.Create(type,flags); };balloon.pop=[this](Sid sid,float x,float y,std::uint32_t flags) { world.Pop(sid,x,y,flags); };
         balloon.unpop=[this](Sid sid,std::uint32_t flags) { world.Unpop(sid,flags); };balloon.destroy=[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); };balloon.check=[this](Sid sid) { static_cast<void>(priests->CheckCarrier(sid)); };
+        balloon.allocateRegular=[this] { if (pendingCloudRegular) throw std::logic_error("클라우드 플로터 Regular 중복 예약");pendingCloudRegular.reset(::operator new(sizeof(RegularProcess),std::nothrow));return pendingCloudRegular!=nullptr; };
+        balloon.constructRegular=[this](Sid parent,std::uint32_t event,float delay) {
+            if (!pendingCloudRegular) throw std::logic_error("클라우드 플로터 Regular 실제 예약 누락");auto* storage=pendingCloudRegular.release();auto* process=new(storage) RegularProcess(event,delay);
+            auto* attached=static_cast<RegularProcess*>(core.processes.Attach(std::unique_ptr<RegularProcess>(process),46,parent,0x50));if (attached) attached->ResetTask(event,core.processState.now);
+        }; // 실제496e80은 부착 후 현재 시각을 쓴다.
         balloonBody=std::make_unique<RawBalloonBody>(core.pool,core.types,core.spots,assetState.boss,*carrier,priests->Carrier(),std::move(balloon));core.postPop.SetBalloonPostPop(balloonBody.get());
         // 빈/내장 타입을 포함해 실제 TYPE+98의 판본 초기값과 파싱값을 같은 번호의 모든 소비자에게 전달한다.
         for (std::size_t type=0;type<core.types.size();++type) {
@@ -1117,6 +1123,9 @@ struct RawCampaignSession::Impl {
             if (manaRegular && manaRegular->Handles(sid)) return manaRegular->Run(sid,event,count);
             if (nuggetRegular && nuggetRegular->Handles(sid)) return nuggetRegular->Handle(sid,event,count,payload);
             const auto raw=core.pool.Slot(sid);
+            if (Read(raw,0)==0x504198U) return balloonBody->CloudRegular(sid,event,count,payload,
+                [this](Sid parent,std::int32_t delta,std::uint32_t flags) { RawFrameAdvance advance(core.pool,core.frames,core.frame);static_cast<void>(advance.Advance(parent,delta,flags)); },
+                [this](Sid parent,std::uint32_t code,std::uint32_t number,float value) { return carrierRegular->Handle(parent,code,number,value); }); // 가상5c의42af60만 전용 event3을 처리한다.
             // 실제 ContentForm+5c(4af070)는 count0에서 payload를 반환하고 양수count에서 선택을 풀어 재부착한다.
             // 기존 ContentFormHost::Damage는 이 원본 몸체의 보존 API명이며 피해를 전달하는 경로가 아니다.
             if (raw[10]==6 && Read(raw,0)==0x512208U) return contentForms->Damage(sid,std::bit_cast<std::int32_t>(count),payload);
@@ -1982,7 +1991,7 @@ struct RawCampaignSession::Impl {
     CarrierPathResult StartMotion(RawPathStartRequest request) {
         if (!motion) throw std::logic_error("현재 이동 설치 전 경로 시작");const auto kind=core.pool.Slot(request.parent)[10];RawPathProcess* path{};
         if (kind==priestState.movement.priest) path=motion->Paths().StartPriest(request);
-        else if (kind==133 || kind==111 || kind==141 || kind==135) path=motion->Paths().StartCarrier(request);
+        else if (kind==133 || kind==111 || kind==141 || kind==146 || kind==135) path=motion->Paths().StartCarrier(request);
         else if (kind==priestState.movement.teleport || kind==priestState.movement.manaBolt) path=motion->Paths().StartConstruction(request);
         else throw std::logic_error("다른 실제 운반 경로38 미복원 경계");return reinterpret_cast<CarrierPathResult>(path);
     }

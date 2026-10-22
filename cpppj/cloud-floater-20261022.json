@@ -1,0 +1,82 @@
+{
+  "host": "VM-W11-Codex",
+  "last_full_refined_host": "VM-W11-Codex",
+  "last_full_refined_date": "2026-10-22",
+  "observations": 88,
+  "normal_returns": 176,
+  "precision_replays": [
+    639,
+    895
+  ],
+  "instructions": 2068,
+  "boundary": "실제42aed0/42af60의 최초 비트/할당 NULL/순서/event3/float 반환을 실행한다. 힙/Regular 생성/기존42ac90/프레임 진행/기본42a750은 명시 큰 경계이며 기존 독립 벌룬·Carrier·FrameAdvance 원문과 별도로 보존한다. GUI 플레이 검증은 아니다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originals/d/TEST02.fort": "85c328b764ccddc6395e0ce582d31b6241b0c6296ed600665d8ceb4465e46640",
+    "originals/d/TEST02.english": "03b41d7b2d9718d70fc7e29e14cec4e3779f77e95f7ea99722f83049c7052260",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_cloud_floater.py": "c67efddfa66019621a6bbc8108bb1e0b52ffae79640c9baebf07869125f7146a",
+    "tools/decomp_local_mission_transport.py": "db71da65079aa9a985a3a833edd224f089ba9a20137d92042551cb346937eb78",
+    "cpppj/src/o/RawBalloonBody.h": "4a7f857f78b43383207357b9737b7a2752d5b73f5eee3b3c434532b6642037df",
+    "cpppj/src/o/RawBalloonBody.cpp": "464c77d0ce9fae117b330f1bf959ea19b198438ac6454ba47a15b9a089d42e8f",
+    "cpppj/src/o/RawFrameAdvance.cpp": "995f3c181fd234f8c3ef7def2c0919f71780010db527c7b82ece09684175789a",
+    "cpppj/src/client/RawCampaignSession.cpp": "3a07b6d833c43925aa2ccbf5f4ffc533a014e210e9cf24a4315f878028f528d8",
+    "cpppj/src/client/RawCampaignPathBindings.cpp": "a509c457d95096593762869c3e67ba1ab759dcf8a189fb1c6e9a2843109a71e1",
+    "cpppj/tests/CloudFloaterTests.cpp": "05b21a7da3061da8c57c4a04a759b1b2cb4d63c08e07358c135061f368120fbb",
+    "cpppj/tests/CampaignSessionTests.cpp": "3d61cdd1aa8c38e5049d9e2f4536698ba67a5dfa39fc9ef78a51a5031c057271",
+    "cpppj/tests/fixtures/cloud-floater-x86.tsv": "0d7a125ec6f373cb1beba6f73ef94ff5a39ce147f88692a56c36edaf477c6af6"
+  },
+  "validation": {
+    "status": "native-and-cloud-flight-passed-devil-maker-session-pending",
+    "build": {
+      "exit": 0,
+      "warnings": 0,
+      "errors": 0,
+      "log": "extracted/cpp-cloud-floater-20261022-build4.log"
+    },
+    "native_tests": {
+      "tests": 3,
+      "failed_checks": 0
+    },
+    "shared_balloon_tests": {
+      "tests": 2,
+      "failed_checks": 0
+    },
+    "actual_kernel_flight": {
+      "types": [
+        111,
+        141,
+        146
+      ],
+      "frames": [
+        294,
+        194,
+        242
+      ],
+      "failed_checks": 0
+    },
+    "ctest": {
+      "tests": 2274,
+      "passed": 2273,
+      "failed": 1,
+      "seconds": 168.42,
+      "failure": "TEST02 TYPE139 VT509aa0 PostPop not connected"
+    },
+    "final_lf_build_and_focused_recheck": true,
+    "gui_runs": 0
+  },
+  "validation_logs_sha256": {
+    "extracted/cpp-cloud-floater-20261022-build1.log": "29e58f2ba62cd0e125c175a2abc326fc12c9bdc6ae8397cb08886bdedd162882",
+    "extracted/cpp-cloud-floater-20261022-cloud-tests.log": "7a1ca2bcb7aa40e5930b62fa61d3a43f412c9e50ddce7c1906256e50ae7b0e5d",
+    "extracted/cpp-cloud-floater-20261022-balloon-tests.log": "7ca6070c3a78838608618704e1bd3cc2ee149c2c0c00a42c4f71f98bbcc8d59c",
+    "extracted/cpp-cloud-floater-20261022-test02-start.log": "101dbca9feb0df61170bbeddddafce3600e369d648eed4c8267f59b97e517dcc",
+    "extracted/cpp-cloud-floater-20261022-build2.log": "d472e3fe83858db875940dbcd74799e8516c44bfb4d2ca6331ec4d2076d88f2a",
+    "extracted/cpp-cloud-floater-20261022-flight-tests.log": "171111ebfb68c28de756daa74d9acadb72dda25172193d319ca7820632212b74",
+    "extracted/cpp-cloud-floater-20261022-build3.log": "4636211631ee14c277cb08b9ed089fde1053242c880d0c13123f62178497a0ce",
+    "extracted/cpp-cloud-floater-20261022-flight-tests2.log": "26be8e4ac90a358910149194ab61b52cd659378f28e85402efb2839afc6031c3",
+    "extracted/cpp-cloud-floater-20261022-fulltests.log": "1159f9a9eb4fd49c4a1ed32e7016ccdd4b47764aa0eb6bbc5134b76f87a408ce",
+    "extracted/cpp-cloud-floater-20261022-build4.log": "b476aa35ceb1f14eae0709c302b5e4002eff2ca21d3024391d80ad993c447226",
+    "extracted/cpp-cloud-floater-20261022-cloud-tests2.log": "7a1ca2bcb7aa40e5930b62fa61d3a43f412c9e50ddce7c1906256e50ae7b0e5d",
+    "extracted/cpp-cloud-floater-20261022-flight-tests3.log": "26be8e4ac90a358910149194ab61b52cd659378f28e85402efb2839afc6031c3"
+  }
+}

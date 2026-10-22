@@ -1797,5 +1797,9 @@ target_sources(netstorm_tests PRIVATE WindAviaryStateTests.cpp)
 target_sources(netstorm_tests PRIVATE WindAviaryProcessTests.cpp)
 set_source_files_properties(WindAviaryProcessTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_WIND_AVIARY_FRAME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/wind-aviary-frame-x86.tsv\"")
+# 클라우드 플로터 전용 후처리/Regular의 독립88행을 대조한다.
+target_sources(netstorm_tests PRIVATE CloudFloaterTests.cpp)
+set_source_files_properties(CloudFloaterTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CLOUD_FLOATER_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/cloud-floater-x86.tsv\"")
 set_source_files_properties(DataManagerFileSaveTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_DATAMANAGER_FILE_SAVE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/datamanager-file-save-x86.tsv\"")

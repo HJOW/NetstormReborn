@@ -2160,8 +2160,8 @@ TEST_CASE(CampaignSession_RepeatedRewardPickupThroughActualLocalTransport) {
 
 // 실제 두 벌룬의 첫 그림자 Pop→42 이륙/이동/착륙→그림자 우선 삭제를 같은 Kernel로 진행한다.
 TEST_CASE(CampaignSession_BalloonFlightShadowAndLandingThroughActualKernel) {
-    // 같은 VT를 쓰는 원본 벌룬111과 에어 쉽141을 서로 새 세션에서 검증한다.
-    for (const std::uint32_t kind:{111U,141U}) {
+    // 벌룬/에어십과 전용 주기 애니메이션을 가진 클라우드 플로터를 각각 새 세션에서 검증한다.
+    for (const std::uint32_t kind:{111U,141U,146U}) {
         const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();double wall=100;std::vector<SoundHandle> sounds;std::vector<Sid> lost; //같은 실제 음향 이름표와 장치 시각·전역소리 요청 입력이다.
         services.sound.wallSeconds=[&] { return wall; };services.sound.playOnceAt=[&](float,float,SoundHandle sound,std::uint32_t loop,std::uint32_t priority) { CHECK(!loop && !priority);sounds.push_back(sound);return sound; };
         services.unitLost=[&](Sid sid) { lost.push_back(sid); }; //실제 Client의 unitLost.wav 장치 경계다. 삭제 관문의 결과를 기록한다.
