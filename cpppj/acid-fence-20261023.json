@@ -1,0 +1,84 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-22",
+  "uniqueInputs": 1125,
+  "normalReturns": 2250,
+  "nativeInstructions": 13565648,
+  "precisionDifferentInputs": [],
+  "nativeCalls": {
+    "0048ca70": 2210,
+    "0040d890": 2094,
+    "0041d770": 24622,
+    "004e49c0": 197976,
+    "0041d7a0": 24622,
+    "004ac200": 106276,
+    "0049a840": 129316,
+    "004ac550": 23040,
+    "0040ad30": 4486,
+    "004df230": 4486,
+    "0048bfe0": 4486,
+    "004abaf0": 3302,
+    "0048c830": 200,
+    "004ab7c0": 400,
+    "0048c300": 1460,
+    "0048c7a0": 100,
+    "0048ea30": 168
+  },
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_acid_fence.py": "8c8bfceb0c6d39d5b7ca52b8207a229654869fdaa2759834c2359a1fd1997609",
+    "tools/decomp_arc_spire.py": "a476a7af621fd08e49536e427e40b3d6b4b3df47a8f514740b1633e73adc534e",
+    "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+    "tools/decomp_cursor_position.py": "e15bcdbc4c6be9c131c30f15416c945d650dba9f7dc6def404b47f63c635c212",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "cpppj/tests/fixtures/acid-fence-x86.tsv": "c7380a4fd7c2b0daea334a0106934d6b5c03adf4eb1bc18e6ffc4352677b79c7"
+  },
+  "limitations": [
+    "48c7a0/48ea30/48c830/48ca70/48c300과13영역의전체산술/후보필터/packet/48bfe0수신을실행한다.",
+    "큰finder후보/heap/Regular생성/프레임표시/현재localOwner조회/세계음향/분해생성/삭제/가상피해는명시경계다. 기존fixture는바꾸지않는다."
+  ],
+  "implementationSha256": {
+    "cpppj/src/o/RawAcidFence.h": "ec86a287844ff1388da79a021484f084fd5b6d06410be7071badae3e5b51b5ee",
+    "cpppj/src/o/RawAcidFence.cpp": "ffdc8e0f5a19056084e11933d428f6484258ea51880b7611158ebe3153cd98c9",
+    "cpppj/src/o/RawAssetPostPop.cpp": "605c2d7e4c10355314393c892ad0d38e30ff17c5822220f70c348d6865928fd7",
+    "cpppj/src/o/CMakeLists.txt": "b9307fecca2324d5f4e3845d1b83f7f5267f60d3e90cf082c51f2f2d07d8e05a",
+    "cpppj/src/client/RawCampaignSession.cpp": "bf93eca76febbe64d152fad422db5471d683ee00656c77a484d7170d6884a55f",
+    "cpppj/tests/AcidFenceTests.cpp": "ae3ebe491456705df1f8f71ccdfe9450f5b38abe485bf6f413ef0f7c5375d579",
+    "cpppj/tests/CampaignSessionTests.cpp": "e45e61f41cca7d162b6bae3a3ef67cd2ebf050241e36b92a910da6fc362f489a",
+    "cpppj/tests/CMakeLists.txt": "692598dde147a321372645c0a90e9d3037ea70bc7e13dde414ad300d73d2ab6e"
+  },
+  "validation": {
+    "releaseBuild": "extracted/cpp-acid-fence-20261023-build5.log",
+    "buildExitCode": 0,
+    "buildWarnings": 0,
+    "buildErrors": 0,
+    "focusedLog": "extracted/cpp-acid-fence-20261023-focused2.log",
+    "focusedTests": 2,
+    "focusedFailures": 0,
+    "ctestLog": "extracted/cpp-acid-fence-20261023-ctest1.log",
+    "ctestTests": 2297,
+    "ctestFailures": 0,
+    "ctestExitCode": 0,
+    "ctestSeconds": 287.01,
+    "actualAutomaticCaptureOrientations": 2,
+    "actualFirstCaptureFrame": [
+      1,
+      1
+    ],
+    "actualLifetimeFrames": [
+      23,
+      19
+    ],
+    "actualDissolveSounds": [
+      1,
+      1
+    ],
+    "actualRefund": [
+      0,
+      0
+    ],
+    "guiPlayExecuted": false
+  }
+}

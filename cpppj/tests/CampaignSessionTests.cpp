@@ -3847,3 +3847,30 @@ TEST_CASE(CampaignAcidZap_ActualPacketCapturePixelsAndNaturalExpiry) {
     }
     CHECK(cases==20 && totalPixels>0);std::cout<<"애시드 실제 수신/캡처/자연소진:"<<cases<<"건/분해 표면"<<totalPixels<<"픽셀/소리"<<sounds<<"/소실"<<lost<<'\n';
 }
+
+// 두 실제145의 첫0.3F 주기가 양축finder부터 패킷/분해/삭제와 예약 정리까지 실행해야 한다.
+TEST_CASE(CampaignAcidFence_ActualKernelAutomaticCapture) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);
+    for (const auto orientation:{0,1}) { //같은행/열의두장면을각각새세계에서관찰한다.
+        SessionServicesFixture external;auto services=external.Services();std::size_t sounds{},lost{};const auto once=services.sound.playOnceAt;
+        services.sound.playOnceAt=[&](float x,float y,SoundHandle token,std::uint32_t first,std::uint32_t second) { if (token==external.names.Lookup("dissolve.wav")) ++sounds;return once(x,y,token,first,second); }; //실제세계음향요청이다.
+        services.unitLost=[&](Sid) { ++lost; };
+        auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));session.Load();auto core=session.Core();
+        const auto source=session.World().Create(145,2),other=session.World().Create(145,2),victim=session.World().Create(133,2),ally=session.World().Create(135,2);
+        core.owner.Set(source,1);core.owner.Set(other,1);core.owner.Set(victim,2);core.owner.Set(ally,1);
+        session.World().Pop(source,200,200,0);session.World().Pop(other,orientation ? 206.0F : 200.0F,orientation ? 200.0F : 206.0F,0);
+        session.World().Pop(victim,orientation ? 203.0F : 199.0F,orientation ? 199.0F : 203.0F,0);session.World().Pop(ally,orientation ? 204.0F : 199.0F,orientation ? 199.0F : 204.0F,0);
+        CHECK(Get(core.pool.Slot(source),0)==0x50e738U && Get(core.pool.Slot(other),0)==0x50e738U);const auto* initial=core.processes.FindEvent(source,0);CHECK(initial && initial->Payload()==.3F && initial->Count()==0);
+        const auto funds=session.Sp(1);const auto refund=session.HitPoints().Plan(victim,1,false).refund;std::uint64_t frame{};const auto tick=[&] { ++frame;session.RunFrame({frame*.025,100+frame*.025,.025,frame},false); }; //원본의 현재 시각만 진행한다.
+        for (std::uint32_t step=0;step<20 && !(core.pool.Slot(victim)[11]&1);++step) tick(); //검사에서 HP/결과/후보를 바꾸지 않는다.
+        const auto captureFrame=frame; //수명소진까지진행한전체프레임과첫자동포획시각을구분한다.
+        CHECK((core.pool.Slot(victim)[11]&1) && !(core.pool.Slot(ally)[11]&7) && sounds==1 && session.Sp(1)==funds+refund);
+        const auto effects=ConstructionLive(core,18);CHECK(effects.size()==1);if (effects.size()!=1) return;const auto form=effects.front();const auto* dissolve=dynamic_cast<const DissolveVisualProcess*>(core.processes.FromForm(form));CHECK(dissolve && dissolve->Fields().opaqueCount>0);if (!dissolve) return;
+        const auto dummy=dissolve->Parent();const auto token=dissolve->Fields().common.registration.token;
+        CHECK(core.processes.FindEvent(source,0) && core.processes.FindEvent(source,1) && core.processes.FindEvent(other,1));
+        session.World().Destroy(source,0);session.World().Destroy(other,0);CHECK((core.pool.Slot(source)[11]&1) && !FindAttachedProcess(core.pool,source,46).value && !FindAttachedProcess(core.pool,other,46).value && lost>0);
+        for (std::uint32_t step=0;step<240 && core.processes.FromForm(form);++step) tick(); //같은 Kernel의 자연 수명으로 분해를 마친다.
+        CHECK(!core.processes.FromForm(form) && !session.Particles().Rendering().Lookup(token) && (core.pool.Slot(dummy)[11]&3)==3);CHECK(!core.destroy.PreDepth() && !core.destroy.PostDepth() && !core.bookkeeping.depth);
+        std::cout<<"애시드 실제 자동포획/방향"<<orientation<<"/포획frame"<<captureFrame<<"/전체frame"<<frame<<"/소리"<<sounds<<"/보상"<<refund<<'\n';
+    }
+}

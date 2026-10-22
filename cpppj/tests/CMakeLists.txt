@@ -1820,6 +1820,7 @@ target_sources(netstorm_tests PRIVATE DissolveLifetimeTests.cpp)
 target_sources(netstorm_tests PRIVATE DissolveVisualSystemTests.cpp)
 # 애시드 포획 수신/헤더의 최초1017행을 비트 그대로 대조한다.
 target_sources(netstorm_tests PRIVATE AcidZapTests.cpp)
+target_sources(netstorm_tests PRIVATE AcidFenceTests.cpp)
 set_source_files_properties(AcidZapTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_ACID_ZAP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/acid-zap-x86.tsv\"")
 # 훨리기그의기존원문410행과별도전체DWORD경계30행을같이사용한다.

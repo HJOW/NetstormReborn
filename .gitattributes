@@ -1701,3 +1701,11 @@ cpppj/sun-flyer-clear-20261022.json text eol=lf
 tools/decomp_sun_flyer_clear.py text eol=lf
 cpppj/src/o/RawSunFlyerFrame.cpp text eol=lf
 cpppj/tests/SunFlyerFrameTests.cpp text eol=lf
+
+# 애시드 자동 포획의 원문/제품/검사 바이트를 모든 체크아웃에서 보존한다.
+cpppj/src/o/RawAcidFence.* text eol=lf
+cpppj/tests/AcidFenceTests.cpp text eol=lf
+cpppj/tests/fixtures/acid-fence-x86.tsv text eol=lf
+tools/decomp_acid_fence.py text eol=lf
+cpppj/acid-fence-20261023.json text eol=lf
+docs/exe/cpp-acid-fence-20261023.md text eol=lf

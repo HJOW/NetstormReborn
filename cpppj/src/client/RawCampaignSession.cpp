@@ -7,6 +7,7 @@
 #include "o/RawBridgeEvents.h"
 #include "o/RawArcSpire.h"
 #include "o/RawAcidZap.h"
+#include "o/RawAcidFence.h"
 #include "o/RawPlainUnitCapture.h"
 #include "o/RawBridgeDraw.h"
 #include "o/RawMissionStart.h"
@@ -507,6 +508,9 @@ struct RawCampaignSession::Impl {
     AcidZapState acidZapState; //현재 제단/성장 중 아이스 타워의 수신 제외TYPE다.
     FormPacketHeader acidZapHeader{0x61,1,11}; //52ee42의message/protocol/선언길이다. wire는01/61 순서다.
     std::unique_ptr<RawAcidZap> acidZap; //실제18 캡처와 같은 가상 삭제를 사용하는 포획 수신이다.
+    AcidFenceTypes acidFenceTypes; //현재 비행체/벌룬의 여섯 TYPE 전역이다.
+    std::unique_ptr<RegularProcess> pendingAcidRegular; //new40 성공부터 전용 애니메이션 부착까지 소유한다.
+    std::unique_ptr<RawAcidFence> acidFence; //145의13영역 자동 포획과 전용 주기다.
     CarrierTransferState carrierTransferState; // 미등록187 분기의 공유 주기/재시도/마지막 기증자와 현재 헤더다.
     std::unique_ptr<RawCarrierTransfer> carrierTransfer; // 실제 내용물 재부착/491/송신/이동 삭제와 연결한다.
     BoardTargetState boardTargetState; // 실제 월드 초기화 후의 실패점 두 float다.
@@ -1072,6 +1076,7 @@ struct RawCampaignSession::Impl {
         ConnectDamageable(); // 같은 공통 삭제와 신전/사제 해방의 파생 하위를 첫 객체 전에 연결한다.
         ConnectCarrierSteal(); // 최초 크랩 Pop의 실제492예약/공통 장부다.
         ConnectAcidZap(); //최초61h 수신 전에 실제 분해18/현재 가상 삭제를 연결한다.
+        ConnectAcidFence(); //첫145 Pop 전에 전용 주기/포획의 같은 세계를 연결한다.
         ConnectCarrierRegular(); // 첫491예약/프레임 전에 같은 내용물 그림과 만료 삭제를 연결한다.
         ConnectSunAviary(); // 실제 타입32/flags8 부착과 현재48BYTE 필드를 같은 Kernel에 등록한다.
         ConnectWindAviary(); // 첫저장객체Pop전에타입59의전용생산기를설치한다.
@@ -1144,6 +1149,7 @@ struct RawCampaignSession::Impl {
             if (nuggetRegular && nuggetRegular->Handles(sid)) return nuggetRegular->Handle(sid,event,count,payload);
             const auto raw=core.pool.Slot(sid);
             if (Read(raw,0)==0x50e668U) return arcSpire->Handle(sid,event,count,payload); //48c6e0의 전용 주기이며 공통44b900으로 바로 넘기지 않는다.
+            if (Read(raw,0)==0x50e738U) return acidFence->Handle(sid,event,count,payload); //48ea30은첫count0부터공격하며공통Regular를호출하지않는다.
             if (Read(raw,0)==0x50a050U) return windFlyer->Handle(sid,event,count,payload); // 실제45e8b0의주기범위공격이다.
             if (Read(raw,0)==0x504198U) return balloonBody->CloudRegular(sid,event,count,payload,
                 [this](Sid parent,std::int32_t delta,std::uint32_t flags) { RawFrameAdvance advance(core.pool,core.frames,core.frame);static_cast<void>(advance.Advance(parent,delta,flags)); },
@@ -1451,6 +1457,26 @@ struct RawCampaignSession::Impl {
         hooks.setFrame=[this](Sid sid,std::int32_t frame,std::uint32_t flags) { core.frame.Set(sid,frame,flags); };
         hooks.damageable=[this](Sid sid,std::uint32_t event,std::uint32_t count,float value) { return assetBindings->Regular().DamageableHandle(sid,event,count,value); };
         arcSpire=std::make_unique<RawArcSpire>(core.pool,core.types,core.frames,core.spots,alliances,globals.editor,std::move(hooks));
+    }
+    // 실제145의 양축/13영역·사제피해·포획패킷과 애니메이션을 같은 Host에 연결한다.
+    void ConnectAcidFence() {
+        AcidFenceHooks hooks;
+        hooks.range=[this](Sid sid) { return static_cast<float>(assets.game.Types()[core.pool.Slot(sid)[10]-70].definition.Number("range").value()); };
+        hooks.find=[this](float x,float y,std::uint32_t type) { return world.Find(x,y,type); };
+        hooks.iterate=[this](SquidSearchArea area,const std::function<void(Sid)>& consume) {
+            RawSquidFinder finder(core.pool,core.hash,core.types);
+            for (auto sid=finder.Begin(area,1);sid.value;sid=finder.Next()) consume(sid); //원래 현재 공간체인의 순서와 중복을 유지한다.
+        };
+        hooks.reserveRegular=[this] { try { pendingAcidRegular=std::make_unique<RegularProcess>(0,0.0F);return true; }catch (const std::bad_alloc&) { return false; } };
+        hooks.regular=[this](Sid sid,std::uint32_t event,float delay) {
+            if (!pendingAcidRegular) throw std::logic_error("애시드 Regular 예약 누락");auto* reserved=pendingAcidRegular.get();std::destroy_at(reserved);std::construct_at(reserved,event,delay);
+            auto* task=static_cast<RegularProcess*>(core.processes.Attach(std::move(pendingAcidRegular),46,sid,0x50));if (!task) throw std::logic_error("애시드 Regular 부착 실패");task->ResetTask(event,core.processState.now);
+        };
+        hooks.damage=hits->DamageHooks({}).damage;
+        hooks.broadcast=[this](std::span<std::uint8_t> packet) { broadcast->Send(packet); };
+        hooks.assertion=SessionMissing<void,std::uint32_t>();
+        hooks.setFrame=[this](Sid sid,std::int32_t frame,std::uint32_t flags) { core.frame.Set(sid,frame,flags); };
+        acidFence=std::make_unique<RawAcidFence>(core.pool,core.types,core.frames,core.spots,alliances,assetState.boss,globals.editor,gunTargetState.friendlyFire,playerState.battleOwner,acidFenceTypes,*acidZap,std::move(hooks));
     }
     // 같은 현재 Host에 기본 비행 생성자와 맨 오 워 전체 Pop을 연결한다.
     void ConnectFlyer() {
