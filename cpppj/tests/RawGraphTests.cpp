@@ -454,6 +454,20 @@ TEST_CASE(RawGraph_DetachPreflightRejectsBeforePoolSpaceOrGraphMutation) {
     inactive.Detach(root); CHECK(GraphHashes(inactive)==inactiveBefore && spots==oldSpots);
 }
 
+// 비표면 그림의 소수 좌표는 영역 칸만 절삭하며 현재 슬롯/이웃 칸/사전 검사 무변경을 보존한다.
+TEST_CASE(RawGraph_NonSurfaceFractionalRegionPreservesPositionAndNeighbor) {
+    const auto edition=o::OriginalEdition::Patch1078;auto types=Types(edition);types[74].flags1=o::TypeFlag1::kSurface;types[75].flags2=8;
+    std::vector<std::vector<o::FrameCode>> frames(types.size());frames[74]={{65,80,1,0}};o::SidPool pool(edition,32768,false);o::SquidFactory factory(pool,types);
+    const auto image=factory.Create(75,2),inside=factory.Create(74,2),outside=factory.Create(74,2); // 실제 풀에서 서로 다른 세 슬롯만 사용한다.
+    Node(pool,image,75,{20,20,1,1,0,8,65,80,0,0,9,254,1});Node(pool,inside,74,{20,20,1,1,2048,0,65,80,0,0,0,1,0});Node(pool,outside,74,{21,20,1,1,2048,0,65,80,0,0,0,2,0});
+    Put(pool.AllocatedBytes(image),14,std::bit_cast<std::uint32_t>(20.75F));Put(pool.AllocatedBytes(image),18,std::bit_cast<std::uint32_t>(20.999F));
+    o::SquidHash hash;hash.Cell(0,20,20)=inside.value;hash.Cell(0,21,20)=outside.value;std::vector<std::uint8_t> spots(65536);spots[20*256+20]=spots[20*256+21]=8;
+    std::array<o::GraphRecord,o::Graph::kTableSize> records{};records[1].surfaces=records[1].inUse=records[2].surfaces=records[2].inUse=1;o::RawGraph graph(pool,hash,spots,types,frames,records);
+    const auto before=GraphHashes(graph);const std::vector<std::uint8_t> source(pool.Slot(image).begin(),pool.Slot(image).end());const o::RawGraphPop projected{20.75F,20.999F,1,&types[75]}; // Pop 이전의 실제 예정 위치와 비표면 타입이다.
+    graph.ValidatePostPop(image,true,false,&projected);CHECK(GraphHashes(graph)==before && pool.Slot(inside)[30]==1 && pool.Slot(outside)[30]==2);
+    graph.InvalidateRegion(image);CHECK(pool.Slot(inside)[30]==254 && !graph.Records()[1].inUse && pool.Slot(outside)[30]==2 && graph.Records()[2].surfaces==1);
+    CHECK(std::equal(source.begin(),source.end(),pool.Slot(image).begin()));
+}
 // 서로 다른 풀/지도, 손상된 후보와 영역 체인 순환은 결과를 쓰기 전에 거부한다.
 TEST_CASE(RawGraph_CorruptCandidatesAndMismatchedConnectionsRejectBeforeMutation) {
     const auto edition=o::OriginalEdition::Patch1078; auto types=Types(edition); types[74].flags1=o::TypeFlag1::kSurface;

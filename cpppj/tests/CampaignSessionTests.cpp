@@ -491,6 +491,8 @@ TEST_CASE(CampaignSession_FactoryUpgradePictureAndCompletionShareWorld) {
     // 현재client영역에서같은TYPE/extra8 그림과실제의존쌍을찾는다.
     for (std::uint16_t value=5;value<15000;++value) { const Sid candidate{value};const auto raw=core.pool.Slot(candidate);if (!(raw[11]&3U) && (raw[40]&8U) && raw[10]==core.pool.Slot(factory)[10] && core.dependencies.Has(factory,candidate)) { image=candidate;break; } }
     CHECK(image.value && (core.pool.Slot(image)[11]>>5)==1);if (!image.value) return;bool construction{};
+    CHECK(Get(core.pool.Slot(image),14)==Get(core.pool.Slot(factory),14)); // 그래프 칸 변환이 원래 그림의 float 위치를 바꾸지 않아야 한다.
+    CHECK(std::bit_cast<float>(Get(core.pool.Slot(image),18))==static_cast<float>(static_cast<double>(std::bit_cast<float>(Get(core.pool.Slot(factory),18)))+static_cast<double>(0.0010000000474974513F))); // 원본509144의 깊이 오프셋을 정확히 보존한다.
     // 그림head의마지막Depend와실제TYPE30건설프로세스를구분한다.
     for (auto form=Get(core.pool.Slot(image),6,2);form;form=Get(core.pool.Slot(Sid{static_cast<std::uint16_t>(form)}),4,2)) { const Sid candidate{static_cast<std::uint16_t>(form)};if (core.pool.Slot(candidate)[10]==30) construction=core.processes.FromForm(candidate)!=nullptr; }
     CHECK((core.pool.Slot(image)[40]&9U)==9 && construction);core.processState.now=15;regular->RunFrame();CHECK((core.pool.Slot(factory)[11]>>5)==1 && Get(core.pool.Slot(factory),26)==static_cast<std::uint32_t>(session.HitPoints().MaxHitPoints(factory)));CHECK(!core.processes.FindEvent(factory,3) && !session.FactoryUpgrading(factory) && (core.pool.Slot(image)[11]&1U));

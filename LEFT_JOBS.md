@@ -1,11 +1,19 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-22 단위308 완료: Factory 예측 그림의 소수 좌표 영역 통지
+
+- [x] 단위307을 `1cce4bda / 20261022-32 CP`로 커밋하고 계속했다. 현재/마지막 전체 정밀 디컴파일 PC는 **VM-W11-Codex / 2026-10-22**로 같다. 보호 원본/CD·AGENTS/dotnetpj·독립 fixture 변경이나 새 디컴파일·게임/창 실행은 없다.
+- [x] 실제 Factory 예측 그림은 원본의 부모 Y+0.001 float 위치를 갖는다. 비표면 원천까지 정수 표면 스냅샷으로 검증하던 `RawGraph` 경계를 원본 `00462d40→004ade70→0049ae80→0041def0`의 영역 칸 변환으로 연결했다. raw 위치·이웃 그래프·사전 검사 무변경·표면 정수 계약을 유지한다. 실제 건설30→15초 완료→예약/그림/의존쌍 삭제가 통과했다. Regular 합성 검사의 누락된1×1 저장 단계1도 명시했다. [상세](docs/exe/cpp-factory-fractional-region-20261022.md).
+- [x] Release 두 빌드 **종료0**, RawGraph15개·실제 Factory 수명1개·Regular7개 **실패check0**이다. `extracted/cpp-factory-fractional-region-20261022-*.log`를 보존한다. 전체는 반복하지 않아 최신 전체는 단위306의2,214개/10개 검사 실패·24check 실패다. 인수인계 후 **20261022-33 CP**로 로컬 커밋하며 push하지 않는다.
+- [ ] **다음 재개점:** `CampaignSession_LocalGeysersUseActualAiRegistration`의 간헐천 후보 count 기대와 삭제 뒤 파편 TYPE122 미연결을 조사한다. 실제 원본 전체 캡처459행/918반환 fixture가 이미 있으며 기본 getter4acfe0/추가Draw485480이다. 현재 Session 파편 분배는 이 정확한VT50da88을 아직 허용하지 않는다. 범용 plain 추가 그림으로 대신하지 말고 원본 고정 본체+현재 그림을 연결한다.
+- [ ] AI 다리 초기화·후보/경로 탐색→네 전략/자동 전체 프레임/종료, 15개 미션·Edit/custom Fort·언어별 시나리오 수명·자연 플레이·표시/음향 동일성 목표는 미완료다.
+
 ## 2026-10-22 단위307 완료: 공통 미션과 Early1 안내의 실제 로그인·정지 수명
 
 - [x] 단위306을 `9c20b226 / 20261022-31 CP`로 커밋하고 계속했다. 현재/마지막 전체 정밀 디컴파일 PC는 **VM-W11-Codex / 2026-10-22**로 같다. 제품 계산·독립 원본 fixture·새 디컴파일·보호 원본/CD·AGENTS/dotnetpj 변경이나 게임/창 실행은 없다.
 - [x] 두 비데모 검사에서 실제 관측한 로컬 Player+50=0 때문에 첫 프레임에 `Failed`가 먼저 열렸다. 독립 검사의 `.Load()` 생략 경로를 실제 `LoadLocalConnection()` 선행 절차로 수정해 같은 패킷/phase14/활성0x43을 확인했다. Guide 초기화도 같은 로그인 뒤 진입 정지/Start를 실행한다. Early1 재표시는 이미 보유한 자기 정지 중 정리된다는 실제 상태4개를 확인했다. 제품에 플래그 강제 쓰기·정지 생략을 추가하지 않았다. 임시 출력은 제거했다. [상세](docs/exe/cpp-mission-login-lifecycle-20261022.md).
 - [x] Release `extracted/cpp-mission-login-lifecycle-20261022-build.log` **종료0**, 공통5미션1개·Guide1개·Early1 수명1개 집중 검사 **실패check0**이다. 같은 접두의 common/guide/early1 로그를 보존한다. 전체 CTest는 반복하지 않았으며 최신 전체2,214개/10개 검사 실패·24check 실패를 전체 통과로 바꾸지 않는다. 인수인계 후 **20261022-32 CP**로 로컬 커밋하며 push하지 않는다.
-- [ ] **다음 재개점:** 실제 Session Factory 업그레이드 건설 그림의 `raw 그래픽 전용 색표 필요`와 파편 TYPE122 캡처 경계를 조사한다. 현재 보호 PE·기존 캡처 모듈/fixture를 읽기만 했고 제품 수정은 없다. `AssetRegular_FactoryUpgradeDispatchAndUpperFlare`는 합성 입력의 해시 단계 누락 가능성도 별도 확인한다.
+- [ ] **다음 재개점:** 실제 Session Factory 업그레이드 건설 그림의 `raw 그래프는 지도 안 정수 좌표가 필요합니다`와 파편 TYPE122 캡처 경계를 조사한다. `AssetRegular_FactoryUpgradeDispatchAndUpperFlare`는 합성 입력의 해시 단계 누락 가능성도 별도 확인한다. 후속 단위308에서 원본+0.001 그림 위치의 비표면 영역 좌표 연결을 수정 중이다.
 - [ ] AI 다리 초기화·후보/경로 탐색→네 전략/자동 전체 프레임/종료, 15개 미션·Edit/custom Fort·언어별 시나리오 수명·자연 플레이·표시/음향 동일성 목표는 미완료다.
 
 ## 2026-10-22 단위306 완료: 도움말 배경 전역과 지식 그림 치환표

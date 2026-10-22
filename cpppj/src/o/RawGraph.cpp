@@ -20,11 +20,17 @@ std::uint32_t Read(std::span<const std::uint8_t> bytes,std::size_t offset,std::s
     for (std::size_t i=0;i<width;++i) value|=static_cast<std::uint32_t>(bytes[offset+i])<<(8*i);
     return value;
 }
-// 정수 스냅샷 밖 좌표를 반올림하여 원본 계산처럼 취급하지 않는다.
-int Coordinate(float value) {
-    if (!std::isfinite(value) || value<0 || value>=kWorldCells || std::trunc(value)!=value)
-        throw std::out_of_range("raw 그래프는 지도 안 정수 좌표가 필요합니다");
+// 비표면의 영역 통지는 원본004ade70→0049ae80→0041def0의 float 위치를0쪽 절삭한 칸에서 탐색한다.
+int RegionCoordinate(float value) {
+    if (!std::isfinite(value) || value<0 || value>=kWorldCells)
+        throw std::out_of_range("raw 그래프 영역은 지도 안 유한 좌표가 필요합니다");
     return static_cast<int>(value);
+}
+// 표면 스냅샷 자체는 정수 칸 연결을 유지하며 비표면의 표시 오프셋과 구분한다.
+int Coordinate(float value) {
+    if (std::trunc(value)!=value)
+        throw std::out_of_range("raw 그래프는 지도 안 정수 좌표가 필요합니다");
+    return RegionCoordinate(value);
 }
 }
 // 정상 표/스택을 소유하고 호출자가 준 타입/프레임 표의 수명을 분리한다.
@@ -62,8 +68,9 @@ void RawGraph::Region(Sid sid,const RawGraphPop* pop,std::span<const std::uint8_
     const auto root=pool_.Slot(sid); const auto& source=types_[root[10]];
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
     const auto extraOffset=patch ? 40U : 35U,graphOffset=patch ? 30U : 28U;
-    const int x=Coordinate(pop ? pop->x : std::bit_cast<float>(Read(root,14)));
-    const int y=Coordinate(pop ? pop->y : std::bit_cast<float>(Read(root,18)));
+    const auto cell=(source.flags1&TypeFlag1::kSurface) ? Coordinate : RegionCoordinate; // 비표면 업그레이드 그림의+0.001 위치도 원본 영역을 통지한다.
+    const int x=cell(pop ? pop->x : std::bit_cast<float>(Read(root,14)));
+    const int y=cell(pop ? pop->y : std::bit_cast<float>(Read(root,18)));
     if (source.footX<1 || source.footY<1 || source.footX>kWorldCells || source.footY>kWorldCells)
         throw std::out_of_range("그래프 영역 발자국 오류");
     const int left=std::max(0,x-source.footX+1),top=std::max(0,y-source.footY+1);
@@ -235,7 +242,8 @@ RawGraph::Plan RawGraph::Calculate(Sid sid,Operation operation,std::uint8_t targ
     std::vector<std::uint16_t> map(hash_.Entries(0).begin(),hash_.Entries(0).end());
     std::vector<std::uint8_t> spots(spots_.begin(),spots_.end());
     if (pop) {
-        const int x=Coordinate(pop->x),y=Coordinate(pop->y); const auto& type=types_[root[10]];
+        const auto& type=types_[root[10]];const auto cell=(type.flags1&TypeFlag1::kSurface) ? Coordinate : RegionCoordinate; // 실제 Pop이 보존한 비표면 소수 위치만 영역 칸으로 절삭한다.
+        const int x=cell(pop->x),y=cell(pop->y);
         if (pop->level==0) map[static_cast<std::size_t>(y*kWorldCells+x)]=sid.value;
         if (!(root[extraOffset]&kBuried)) {
             if (type.footX<1 || type.footY<1 || x-type.footX+1<1 || y-type.footY+1<1)
@@ -370,7 +378,8 @@ RawGraph::Plan RawGraph::CalculatePostDestroy(Sid sid) const {
     const auto root=pool_.Slot(sid);
     if (sid.value<5 || (root[11]&(kFree|kContained)) || root[10]<kFirstAssetTypeNumber || root[10]>=types_.size())
         throw std::logic_error("raw 그래프 postDestroy 자산 오류");
-    const auto& type=types_[root[10]];const int x=Coordinate(std::bit_cast<float>(Read(root,14))),y=Coordinate(std::bit_cast<float>(Read(root,18)));
+    const auto& type=types_[root[10]];const auto cell=(type.flags1&TypeFlag1::kSurface) ? Coordinate : RegionCoordinate; // 예측 그림 삭제 후의 표면 재연결도 같은 원본 발자국 칸을 사용한다.
+    const int x=cell(std::bit_cast<float>(Read(root,14))),y=cell(std::bit_cast<float>(Read(root,18)));
     if (type.footX<1 || type.footY<1 || type.footX>kWorldCells || type.footY>kWorldCells)
         throw std::out_of_range("raw 그래프 postDestroy 발자국 오류");
     const int left=std::clamp(x-type.footX+1,1,kWorldCells-1),top=std::clamp(y-type.footY+1,1,kWorldCells-1);

@@ -144,7 +144,7 @@ TEST_CASE(AssetRegular_ReplaysCd) { Replay("originalCD"); }
 
 // PATCH Factory의event3은count0에서그림→프레임→부모,양수에서완료반환으로분기한다.
 TEST_CASE(AssetRegular_FactoryUpgradeDispatchAndUpperFlare) {
-    AssetRegularScene scene(OriginalEdition::Patch1078);scene.input.resize(25);auto raw=scene.pool.AllocatedBytes(kSource);std::fill(raw.begin(),raw.end(),std::uint8_t{});Put(raw,0,0x509148);raw[10]=85;raw[11]=4;std::vector<std::string> trace;AssetRegularHooks hooks;
+    AssetRegularScene scene(OriginalEdition::Patch1078);scene.input.resize(25);auto raw=scene.pool.AllocatedBytes(kSource);std::fill(raw.begin(),raw.end(),std::uint8_t{});Put(raw,0,0x509148);raw[10]=85;raw[11]=4;raw[33]=1;std::vector<std::string> trace;AssetRegularHooks hooks; // 명시1×1 프레임의 해시 단계1을 공급해 같은 단계의 원본 프레임 갱신을 검사한다.
     hooks.beginFactoryUpgrade=[&](Sid parent,float duration) { CHECK(parent==kSource && duration==15);trace.push_back("begin"); };hooks.finishFactoryUpgrade=[&](Sid parent) { CHECK(parent==kSource);trace.push_back("finish");return -1.0F; };hooks.factoryFlare=[&](Sid parent,auto count,auto event) { CHECK(parent==kSource && count==2 && event==1);trace.push_back("flare"); };
     RawAssetRegular regular(scene.pool,scene.hash,scene.types,scene.frames,scene.elements,scene.setter,scene.advance,scene.random,scene.assets,scene.state,hooks);CHECK(regular.Handle(kSource,3,0,15)==15 && scene.Frame(kSource)==1);CHECK(regular.Handle(kSource,3,1,15)==-1);raw[11]=100;CHECK(regular.Handle(kSource,5,0,2)==2 && trace==std::vector<std::string>({"begin","finish","flare"}));CHECK(regular.Handle(kSource,4,1,20)==0);
 }
