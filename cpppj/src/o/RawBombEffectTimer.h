@@ -9,6 +9,7 @@ struct BombEffectTimerFields {
     std::vector<std::uint32_t> members; // 순서와 중복을 보존하는 원본 DWORD SID 목록이다.
     double endTime{}; // 생성 당시 현재 게임 시각 + signed 지연 시간이다.
     std::uint32_t flags{}; // 값1은 extra10(은신), 값2는 extra20(마비) 효과다.
+    std::uint32_t capacity{100}; // 원본 +10의 고정 저장 한도이며 vector의 실제 확보량과 구별한다.
 };
 // 실제 현재 가상 호출만 공급하며 초기 갱신과 만료 뒤 갱신을 구별하지 않고 그대로 실행한다.
 struct BombEffectTimerHooks {

@@ -1,5 +1,6 @@
 // 반복마다 현재 목록과 상태를 다시 읽는 원본41e100의 순서를 보존한다.
 #include "o/RawBombEffectTimer.h"
+#include <algorithm>
 #include <stdexcept>
 #include <utility>
 
@@ -16,7 +17,7 @@ RawBombEffectTimer::RawBombEffectTimer(SidPool& pool,std::span<const RiftTypeRec
 }
 // 원본의 signed 지연을 현재 double 시각에 더하며 대상 중복이나 inactive 상태를 미리 제외하지 않는다.
 BombEffectTimerFields RawBombEffectTimer::Construct(std::int32_t delay,std::span<const std::uint32_t> members,std::uint32_t flags) const {
-    BombEffectTimerFields result;result.members.reserve(100);result.endTime=static_cast<double>(delay)+now_;result.members.assign(members.begin(),members.end());result.flags=flags;return result;
+    BombEffectTimerFields result;result.members.reserve(100);result.endTime=static_cast<double>(delay)+now_;result.members.assign(members.begin(),members.begin()+std::min<std::size_t>(100,members.size()));result.flags=flags;return result;
 }
 Sid RawBombEffectTimer::Target(std::uint32_t member) const {
     if (member>=pool_.Capacity() || member>65535) throw std::out_of_range("상태 효과 목록의 물리 SID 범위");return {static_cast<std::uint16_t>(member)};

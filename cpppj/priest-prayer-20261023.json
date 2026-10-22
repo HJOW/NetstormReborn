@@ -55,8 +55,8 @@
     "cpppj/src/o/RawPriestState.cpp": "e49b14dcf6780fa0e7c0c3a3d8dd6f290ede637b5619967087ac0af3c03901bb",
     "cpppj/src/o/SquidProcess.h": "481ad652080175ccb135c5f4981edc44e7d853584eaaebaab1a65d3873bc5399",
     "cpppj/src/o/SquidProcess.cpp": "993e34a3c7b3b87f290a33f548a126415c3a77794a7a191801d68f405baf1780",
-    "cpppj/src/o/CMakeLists.txt": "e25efe4533413ec8ae4198867e3bfabfa1ee0bb0514a954c53363f234c380408",
-    "cpppj/tests/CMakeLists.txt": "5874b31ae09d47101407055133acb30c0ba1c40532a5fa43c1929570b5e3c3d2",
+    "cpppj/src/o/CMakeLists.txt": "68a76a842509fdbc9947f789c4c44481a79a50e27d112634a445b2b14190724f",
+    "cpppj/tests/CMakeLists.txt": "fbeab64c4c448f315a91d2dc3497fd51108bed4a36dac368efbc7473964fd7b3",
     "cpppj/tests/PriestPrayerTests.cpp": "ea9c31c40c8d505974f55dc70604a32dd165f2512045b906316163f993dfaefe",
     "cpppj/tests/CampaignSessionTests.cpp": "1ca7ab514dc67cb60db6d6b220967733ac679488b87fe633111f5c8aa0383320"
   },
@@ -72,5 +72,6 @@
     "actualPrayerCompletionFrame": 1605,
     "queuedType113CompletionFrame": 2413,
     "scope": "기도 명령/6d 수신/605·604/내용물 완료와 실제 이동 취소·재시작·연속 요청. panic491db0/117·118 효과 전체나OS GUI 플레이 완료의 증거가 아니다."
-  }
+  },
+  "implementationRefresh348": "단위348의 타이머100칸 수정/새 송수신 모듈 등록에 맞춰 현재 공유 구현 SHA만 갱신했다. 기존 원문과 과거 validation 수치는 보존한다."
 }

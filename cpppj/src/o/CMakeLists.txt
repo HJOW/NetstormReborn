@@ -455,3 +455,4 @@ target_sources(netstorm PRIVATE RawPlainWorkshopCapture.h RawPlainWorkshopCaptur
 target_sources(netstorm PRIVATE RawPlainAssetDraw.h RawPlainAssetDraw.cpp)
 target_sources(netstorm PRIVATE RawBombEffectTimer.h RawBombEffectTimer.cpp)
 target_sources(netstorm PRIVATE RawPriestPrayer.h RawPriestPrayer.cpp)
+target_sources(netstorm PRIVATE RawBombTimerPacket.h RawBombTimerPacket.cpp)

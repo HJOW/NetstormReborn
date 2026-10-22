@@ -1776,3 +1776,11 @@ tools/decomp_priest_prayer.py text eol=lf
 cpppj/priest-prayer-20261023.json text eol=lf
 docs/exe/cpp-priest-prayer-20261023.md text eol=lf
 cpppj/src/client/CampaignObjectMenuClient.cpp text eol=lf
+
+# 상태 타이머 생성/송수신의 새 독립 원문과 구현은 UTF-8 LF로 고정한다.
+cpppj/src/o/RawBombTimerPacket.* text eol=lf
+cpppj/tests/BombTimerPacketTests.cpp text eol=lf
+cpppj/tests/fixtures/bomb-timer-packet-x86.tsv text eol=lf
+tools/decomp_bomb_timer_packet.py text eol=lf
+cpppj/bomb-timer-packet-20261023.json text eol=lf
+docs/exe/cpp-bomb-timer-packet-20261023.md text eol=lf

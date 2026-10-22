@@ -1,0 +1,75 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-22",
+  "uniqueInputs": 602,
+  "normalReturns": 1396,
+  "nativeInstructions": 839840,
+  "precisionDifferentInputs": [],
+  "nativeCalls": {
+    "00420a40": 420,
+    "00420920": 420,
+    "0041e280": 80,
+    "004df590": 80,
+    "0040b3d0": 32744,
+    "0041e230": 648,
+    "0041e320": 128,
+    "0041e0a0": 192
+  },
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_bomb_timer_packet.py": "141436bdcd83dbec581c26c10132fd151017c8ec0af7e53da0108cabadd099e6",
+    "tools/decomp_arc_spire.py": "a476a7af621fd08e49536e427e40b3d6b4b3df47a8f514740b1633e73adc534e",
+    "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+    "tools/decomp_cursor_position.py": "e15bcdbc4c6be9c131c30f15416c945d650dba9f7dc6def404b47f63c635c212",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "cpppj/tests/fixtures/bomb-timer-packet-x86.tsv": "0ac997425cf46b208ed48f153d3326458cecf2cb8cc135c72004e0a8b8b314b4"
+  },
+  "limitations": [
+    "420a40/420920/41e280/41e230/41e320/41e0a0/40b3d0/4df590 전체 root를 실행한다. 힙/TYPE 조회/factory/진단/부착은 큰 경계다.",
+    "Session57 서버 부착/실제 네트워크 수신과117/118 전체 효과 및 전체 GUI 플레이 완료 근거는 아니다.",
+    "손상된 음수 목록 길이/범위 밖 SID 주소 감김과 운영체제 메모리 오류는 복원하지 않는다."
+  ],
+  "implementationSha256": {
+    "cpppj/src/o/RawBombTimerPacket.h": "a4e51346d9e48311a7e68287fad6bb141f0fe268da4f400b41bab29baa8bf9d6",
+    "cpppj/src/o/RawBombTimerPacket.cpp": "12897edb3509a40104a53a1fb80e768b4ddb48b125199768a173cd9ede176f77",
+    "cpppj/src/o/RawBombEffectTimer.h": "5338117ef137bab63802ce7c692aa5dc73c4d7e7cacbed56d0d78c2d80f7d257",
+    "cpppj/src/o/RawBombEffectTimer.cpp": "1fbf8d4d4f303be49cb325b78aa55c23008732421d3b3b51d9b139489950fb18",
+    "cpppj/src/o/SquidProcess.h": "481ad652080175ccb135c5f4981edc44e7d853584eaaebaab1a65d3873bc5399",
+    "cpppj/src/o/SquidProcess.cpp": "993e34a3c7b3b87f290a33f548a126415c3a77794a7a191801d68f405baf1780",
+    "cpppj/src/o/SidPool.h": "a830f7fca8c42e5a2713a7d5d886314c81dc3bffb8271de85c1b0d1fc46de651",
+    "cpppj/src/o/SidPool.cpp": "7bc612330f3b631cf8141be5e7a9ae51cefe8caee3ea3eb68be38252d68a6887",
+    "cpppj/src/o/RiftType.h": "4d4a5a2bb251cf27fe253a5e42da91776d6d12d094d640dac25da5bad9b1b552",
+    "cpppj/src/o/CMakeLists.txt": "68a76a842509fdbc9947f789c4c44481a79a50e27d112634a445b2b14190724f",
+    "cpppj/tests/BombTimerPacketTests.cpp": "226cd2619a30e70f40ecfb1f62201481d8a8fe05d1b3f7a2e7e043524460bfb1",
+    "cpppj/tests/BombEffectTimerTests.cpp": "520c92558ae0c25fb250fe48ddab62ed0ec01bae68a55eda7dc5392af3cb6f44",
+    "cpppj/tests/RawSceneSupport.h": "87b79d463f38e142b1aa768384af28a08b404a276a6b989e90dd53b393642919",
+    "cpppj/tests/CMakeLists.txt": "fbeab64c4c448f315a91d2dc3497fd51108bed4a36dac368efbc7473964fd7b3"
+  },
+  "validation": {
+    "build": {
+      "log": "extracted/cpp-bomb-timer-packet-20261023-build2.log",
+      "exit": 0,
+      "warnings": 0,
+      "errors": 0
+    },
+    "focused": {
+      "logs": [
+        "extracted/cpp-bomb-timer-packet-20261023-focused2.log",
+        "extracted/cpp-bomb-timer-packet-20261023-frame2.log",
+        "extracted/cpp-bomb-timer-packet-20261023-selection2.log"
+      ],
+      "tests": 7,
+      "failed": 0
+    },
+    "full": {
+      "log": "extracted/cpp-bomb-timer-packet-20261023-ctest1.log",
+      "exit": 0,
+      "tests": 2323,
+      "failed": 0,
+      "seconds": 294.68
+    },
+    "scope": "원본 대조/기존Frame/실제 선택 표시까지 검증했다. Session57 서버 생성·7d 연결/117·118 전체 효과/전체 GUI는 미완료다."
+  }
+}
