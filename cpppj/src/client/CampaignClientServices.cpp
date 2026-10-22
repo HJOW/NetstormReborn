@@ -10,6 +10,7 @@
 #include "client/RawChatChannels.h"
 #include "o/OriginalText.h"
 #include <algorithm>
+#include <array>
 #include <bit>
 #include <ctime>
 #include <cstdlib>
@@ -18,6 +19,12 @@
 #include <limits>
 #include <stdexcept>
 #include <utility>
+#ifdef _WIN32
+#ifndef NOMINMAX
+#define NOMINMAX //Win32의max매크로가표준numeric_limits와충돌하지않게한다.
+#endif
+#include <windows.h>
+#endif
 
 namespace netstorm::client {
 namespace {
@@ -27,6 +34,16 @@ void CurrentAllocationBytes(std::span<std::uint8_t> bytes) {
     void* allocation=std::malloc(bytes.size()); // 원본 malloc 계층처럼 zero 플래그 없는 실제 힙을 사용한다.
     if (!allocation) throw std::bad_alloc();
     std::memcpy(bytes.data(),allocation,bytes.size());std::free(allocation);
+}
+// 초기화하지않은현재caller8BYTE를자기프로세스읽기로복사하고C++미정값연산을피한다.
+void CurrentBridgeScratchBytes(std::span<std::uint8_t> bytes) {
+    if (bytes.size()!=8) throw std::invalid_argument("AI 검색 caller 입력8BYTE 크기 오류");
+#ifdef _WIN32
+    std::array<std::uint8_t,8> current;SIZE_T read{};
+    if (!ReadProcessMemory(GetCurrentProcess(),current.data(),bytes.data(),bytes.size(),&read) || read!=bytes.size()) throw std::runtime_error("AI 검색 현재 caller8BYTE 조회 실패");
+#else
+    throw std::logic_error("AI 검색 현재 caller8BYTE의 Windows 경계 미설치");
+#endif
 }
 }
 // 실제 힙 입력과 게임 시계/화면/카메라를 연결한다. 선택된 미복원 세계 생성은 명시 거부한다.
@@ -70,6 +87,7 @@ RawCampaignSessionServices MakeCampaignClientServices(Client& client,RawButtonCo
     // 실제 커서 비용과 같은 Gump 트리/게임 시계에 Cast/Drop 금액 표시를 붙인다.
     services.carrierDropPopup=[&controls](std::int32_t cost,std::int32_t x,std::int32_t y,std::uint32_t reference) { auto* menus=controls.Menus();if (!menus) throw std::logic_error("Cast/Drop 비용표시 실제Gump미설치");menus->ShowSp(cost,x,y,reference); };
     services.ai.allocationBytes=CurrentAllocationBytes; // 실제 AI 생성자가 보존하는 바이트의 현재 힙 입력이다.
+    services.ai.bridgeScratchBytes=CurrentBridgeScratchBytes; //검색의실제caller초기8BYTE는힙할당입력과별도로공급한다.
     services.ai.blockingGumpOpen=[&controls] { return controls.BlockingGumpOpen(); }; // 데모 로컬 준비가 같은 실제 Gump 직계 목록을 읽는다.
     services.ai.assertion=[](std::string_view text) { std::clog<<"AI 원본 진단: "<<text<<'\n'; }; // 원본 진단 후 계속하는 경계를 기존 장치 로그로 전달한다.
     services.production.allocationBytes=CurrentAllocationBytes; // Deck 생성자도 초기화하는 5DWORD 이외의 입력을 보존한다.

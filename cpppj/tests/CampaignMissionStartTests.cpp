@@ -22,6 +22,7 @@ struct StartExternal {
     std::vector<SoundHandle> once; // 자연 발사에서 실제 전달된 한 번 재생 토큰을 보존한다.
     std::array<std::uint8_t,4> you{'Y','o','u',0}; // 원본번역키의명시영어입력이다.
     std::size_t refreshed{},commanded{},camera{},settings{},randomGeysers{},ui{}; // 실제선택된외부요청만관찰한다.
+    const MissionFrameGateState* gate{}; //실제Start에서빌린같은현재데모상태이며독립사본을만들지않는다.
     // 실제월드설치에필요한장치/표시경계를공급하고그외게임규칙은Session몸체에맡긴다.
     RawCampaignSessionServices Services() {
         sounds.Initialize();RawCampaignSessionServices s;s.soundNames=&sounds;s.unixSeconds=[] { return 946684800; };
@@ -40,6 +41,14 @@ struct StartExternal {
         s.player.log=[this](std::uint32_t,std::string_view) { ++ui; };s.deletion.selected=[] { return Sid{}; };
         s.dependencyTransmit=[this](Sid,std::uint32_t) { ++ui; };s.playerContent.gump=[](std::uint32_t) { return 0U; };
         s.ai.allocationBytes=[](std::span<std::uint8_t> bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0xb3}); };
+        s.ai.bridgeScratchBytes=s.ai.allocationBytes;s.production.allocationBytes=s.ai.allocationBytes; //서로분리된초기바이트입력을명시하고행동결과를공급하지않는다.
+        s.ai.names.language=[] { return 1U; };s.ai.names.translate=s.ai.names.substitute=[](std::string_view text) { return std::string(text); }; //영어와치환없는검사설정의장치입력이다.
+        s.ai.assertion=[](std::string_view text) { throw std::logic_error(std::string(text)); }; //실제AI불변식실패를빈성공으로숨기지않는다.
+        s.ai.blockingGumpOpen=[] { return false; }; //이headless검사는차단UI를열지않으며AI생각기한계산은실제몸체를사용한다.
+        s.contentLifetime.localNotice=[this](std::uint32_t) { ++ui; };s.contentLifetime.sound=[this](float,float) { ++ui; };s.motion.path.stepSound=[this](Sid,float,float,std::uint32_t) { ++ui; }; //실제수입/이동음향의장치요청이며SP/이동은대신계산하지않는다.
+        s.construction.wallSeconds=[] { return 100.0; };s.construction.configInt=[](std::string_view,std::int32_t fallback) { return fallback; };s.construction.refresh=[this] { ++ui; }; //실제AI검색이읽는시계/설정과화면요청이다.
+        s.production.effects.configInt=[](std::string_view) { return 0; };s.production.effects.modeAssertion=[] { throw std::logic_error("보호Start의생산모드진단"); }; //별도옵션없는검사입력과실제진단이다.
+        s.missionOutcome.demo=[this] { if (!gate) throw std::logic_error("보호Start의현재데모게이트미연결");return gate->demo; };
         s.ai.defaultName=[] { return std::string("Default AI"); };s.ai.localTransport=[] { return false; };
         s.ai.participation.clearChat=[this](std::uint32_t) { ++ui; };s.ai.participation.addChat=[this](std::uint32_t,std::string_view,std::uint32_t) { ++ui; };
         s.ai.participation.sendAlliance=[this](std::uint32_t,std::uint32_t,std::uint32_t) { ++ui; };
@@ -51,10 +60,11 @@ struct StartExternal {
         auto s=Services();CampaignLoginServices login; // 기존 월드 외부 입력과 동일한 장치 수명을 사용한다.
         login.configInt=[](std::string_view,std::int32_t fallback) { return fallback; };login.wallSeconds=[] { return 100.25; };login.clock=[] { return 100250U; };
         login.refresh=[this] { ++ui; };login.playerUiBusy=[] { return false; };login.playerNotice=[this](std::uint32_t,std::uint32_t,std::uint32_t) { ++ui; };login.log=[](std::string_view) {};
-        s.localLogin=std::move(login);return s;
+        s.localLogin=std::move(login);s.ai.localTransport=[] { return true; };return s; //같은실제zlocal연결의원본local판정이다.
     }
     // 미초기화600BYTE 입력을 명시 패턴으로 공급하고 기존 실제 초기화 순서를 적용한다.
-    CampaignMissionStartEffects Effects() {
+    CampaignMissionStartEffects Effects(const MissionFrameGateState& current) {
+        gate=&current;
         CampaignMissionStartEffects e;e.settingsBytes=[this](std::uint32_t,std::span<std::uint8_t> bytes) { ++settings;std::fill(bytes.begin(),bytes.end(),std::uint8_t{0xa7}); };
         e.gameSeconds=[] { return 123.5; };e.refreshSp=[this] { ++refreshed; };e.refreshCommandGump=[this] { ++commanded; };e.resetCamera=[this] { ++camera; };
         e.randomGeysers=[this] { ++randomGeysers;throw std::logic_error("보호8미션에없는세계랜덤간헐천요청"); };return e;
@@ -106,7 +116,7 @@ TEST_CASE(CampaignMissionStart_ProtectedEightMissions) {
             CHECK(buried==2 && core.bookkeeping.depth==0);
         }
         MissionFrameGateState gate;MissionStartState state;MissionStartGlobals globals;MissionAiSettingsState ai;state.sequence=3;state.fieldC0=7;state.fieldC4=8;ai.stuffRefreshRate=4;
-        RawCampaignMissionStartBindings start(session,script,gate,state,globals,ai,external.Effects());CHECK(&start.Gate()==&gate && gate.started==0 && session.AiMemory().Allocations().empty());
+        RawCampaignMissionStartBindings start(session,script,gate,state,globals,ai,external.Effects(gate));CHECK(&start.Gate()==&gate && gate.started==0 && session.AiMemory().Allocations().empty());
         std::array<bool,9> live{};std::size_t requested{}; // 실제 초기 사제 입력을 Start 효과 전에 보존한다.
         // live 조회 결과는 원본 별도 검증 몸체를 사용하며 Start 뒤의 삭제/AI 결과로 재계산하지 않는다.
         for (std::uint32_t owner=1;owner<9;++owner) if (owner!=session.LocalOwner()) { live[owner]=start.FindLivePriest(owner)!=0;if (live[owner]) ++requested; }
@@ -136,7 +146,7 @@ TEST_CASE(CampaignMissionCommon_ActualFiveSessionsFrameReplayAndDemoQueue) {
         services.missionOutcome.section=show;services.missionOutcome.closeTransient=[] {};services.missionOutcome.onSection=[&] { CHECK(active);active->Gate().PauseForDialog(); };
         auto fort=FortTemplate::Parse(assets.files.Read(script.FortPath()),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),script.FortName(),std::move(services));session.LoadLocalConnection();
         CHECK(session.LocalConnectionPhase()==14 && (session.PlayerRecords()[session.LocalOwner()*0xb4+0x50]&0x43U)==0x43U && !session.MissionPriestDead(session.LocalOwner()));
-        auto startEffects=external.Effects();startEffects.gameSeconds=[&] { return now; };
+        auto startEffects=external.Effects(gate);startEffects.gameSeconds=[&] { return now; };
         RawCampaignMissionStartBindings start(session,script,gate,state,session.MissionStartSettings(),session.MissionAiSettings(),std::move(startEffects));
         CampaignTutorialOneEffects effects;effects.frame.gameSeconds=[&] { return now; };effects.frame.paused=[&] { return depth!=0; };effects.frame.dialogsClear=[&] { return !dialog; };
         effects.frame.knowledgeOpen=[] { return false; };effects.frame.guideOpen=[&] { return dialog; };effects.frame.blockingGumpOpen=[] { return false; };
@@ -178,7 +188,7 @@ TEST_CASE(CampaignMissionLifecycle_ActualSessionEntryPauseBeforeStart) {
     auto fort=FortTemplate::Parse(assets.files.Read(script.FortPath()),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),script.FortName(),std::move(services));
     TutorialMissionStageHooks stages;
     stages.initialize=[&] {
-        session.LoadLocalConnection();loaded=true;CHECK(session.LocalConnectionPhase()==14 && !session.MissionPriestDead(session.LocalOwner()));auto startEffects=external.Effects();startEffects.gameSeconds=[&] { return now; };
+        session.LoadLocalConnection();loaded=true;CHECK(session.LocalConnectionPhase()==14 && !session.MissionPriestDead(session.LocalOwner()));auto startEffects=external.Effects(gate);startEffects.gameSeconds=[&] { return now; };
         start=std::make_unique<RawCampaignMissionStartBindings>(session,script,gate,state,session.MissionStartSettings(),session.MissionAiSettings(),std::move(startEffects));
         CampaignTutorialOneEffects effects;effects.frame.gameSeconds=[&] { return now; };effects.frame.paused=[&] { return depth!=0; };effects.frame.dialogsClear=[&] { return !dialog; };
         effects.frame.knowledgeOpen=[] { return false; };effects.frame.guideOpen=[&] { return dialog; };effects.frame.blockingGumpOpen=[] { return false; };
@@ -211,7 +221,7 @@ TEST_CASE(CampaignMissionStart_CurrentAiNameEncodingAndDiagnostics) {
     MissionScript script(config,"TheWarBegins");script.Set("ai2Name","Fürst des Bösen");script.Set("ai2Ability","UNKNOWN_EXTRA_ABILITY");
     StartExternal external;auto fort=FortTemplate::Parse(assets.files.Read(script.FortPath()),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),script.FortName(),external.Services());session.Load();
     MissionFrameGateState gate;MissionStartState state;MissionStartGlobals globals;MissionAiSettingsState ai;ai.stuffRefreshRate=4;ai.checkingAsserts=true;
-    auto effects=external.Effects();std::size_t assertions{},logs{}; // 원본의 서로 다른 두 진단을 순서대로 관찰한다.
+    auto effects=external.Effects(gate);std::size_t assertions{},logs{}; // 원본의 서로 다른 두 진단을 순서대로 관찰한다.
     effects.unknownAbilityAssertion=[&](std::string_view name) { CHECK(name=="UNKNOWN_EXTRA_ABILITY" && logs==0);++assertions; };
     effects.unknownAbilityLog=[&](std::string_view name) { CHECK(name=="UNKNOWN_EXTRA_ABILITY" && assertions==1);++logs; };
     RawCampaignMissionStartBindings start(session,script,gate,state,globals,ai,std::move(effects));start.Start();
@@ -222,7 +232,7 @@ TEST_CASE(CampaignMissionStart_CurrentAiNameEncodingAndDiagnostics) {
 TEST_CASE(CampaignMissionStart_RequiredEffectFailurePreservesOriginalPartialWrites) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);ConfigInterface config([&](std::string_view path) { return assets.files.TryRead(path); });ConfigureStart(config);MissionScript script(config,"TheWarBegins");
     StartExternal external;auto fort=FortTemplate::Parse(assets.files.Read(script.FortPath()),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),script.FortName(),external.Services());session.Load();
-    MissionFrameGateState gate;MissionStartState state;MissionStartGlobals globals;MissionAiSettingsState ai;state.sequence=3;ai.stuffRefreshRate=4;auto effects=external.Effects();
+    MissionFrameGateState gate;MissionStartState state;MissionStartGlobals globals;MissionAiSettingsState ai;state.sequence=3;ai.stuffRefreshRate=4;auto effects=external.Effects(gate);
     effects.refreshSp=[] { throw std::logic_error("실제 SP 표시 소비자의 명시 실패 입력"); };
     RawCampaignMissionStartBindings start(session,script,gate,state,globals,ai,effects);CHECK(Throws([&] { start.Start(); }));
     CHECK(gate.started==0 && state.sequence==4 && session.Sp(session.LocalOwner())==3000 && external.settings==0 && session.AiMemory().Allocations().empty());
@@ -246,7 +256,7 @@ void StartProtectedDemo(std::string_view name) {
     }
     MissionFrameGateState gate;MissionStartState state;MissionStartGlobals globals;MissionAiSettingsState ai;ai.stuffRefreshRate=4;
     // 원본 StartDemo는00463b70의 현재 미션 생성 뒤00463a00으로 실제+68에1을 쓴다. 스크립트 demo 키로 대체하지 않는다.
-    gate.demo=1;RawCampaignMissionStartBindings start(session,script,gate,state,globals,ai,external.Effects());
+    gate.demo=1;RawCampaignMissionStartBindings start(session,script,gate,state,globals,ai,external.Effects(gate));
     CHECK(start.FindLivePriest(session.LocalOwner())!=0);std::array<bool,9> live{};std::size_t requested{}; // Start 이전 실제 사제의 참여 입력이다.
     for (std::uint32_t owner=1;owner<9;++owner) { live[owner]=start.FindLivePriest(owner)!=0;if (live[owner]) ++requested; } // 데모는 로컬 소유자도 AI 생성에 포함한다.
     std::vector<std::pair<Sid,std::uint32_t>> coloredSupports; // 시작 전 실제4번 받침의 프레임 입력이며 기대 출력은 독립 색 red=2에서 정한다.
@@ -283,13 +293,13 @@ namespace {
 // 원본 자원을 바꾸지 않고 실제 Start 뒤 같은 Session의 Kernel을10초 진행한다. Guide/GUI 경로 검사는 별도다.
 void RunProtectedKernelFrames(std::string_view name,bool demo) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);ConfigInterface config([&](std::string_view path) { return assets.files.TryRead(path); });ConfigureStart(config);MissionScript script(config,name);
-    StartExternal external;auto fort=FortTemplate::Parse(assets.files.Read(script.FortPath()),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),script.FortName(),external.Services());session.Load();
+    StartExternal external;auto fort=FortTemplate::Parse(assets.files.Read(script.FortPath()),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),script.FortName(),external.ConnectedServices());session.LoadLocalConnection();
     GameClock clock;MissionFrameGateState gate;MissionStartState state;MissionStartGlobals globals;MissionAiSettingsState ai;gate.demo=demo ? 1U : 0U;ai.stuffRefreshRate=4;
-    auto effects=external.Effects();effects.gameSeconds=[&] { return clock.GameSeconds(0); }; // 같은 세션의 초기 시각0을 실제 Start에 공급한다.
-    RawCampaignMissionStartBindings start(session,script,gate,state,globals,ai,std::move(effects));start.Start();CHECK(gate.started==1);
+    auto effects=external.Effects(gate);effects.gameSeconds=[&] { return clock.GameSeconds(0); }; // 같은 세션의 초기 시각0을 실제 Start에 공급한다.
+    RawCampaignMissionStartBindings start(session,script,gate,state,globals,ai,std::move(effects));start.Start();CHECK(gate.started==1);CHECK((session.Participation().Brain(session.LocalOwner())!=0)==demo); //실제Start가만든로컬AI는데모에서만존재한다.
     for (std::uint32_t frame=1;frame<=400;++frame) { //25ms는 명시 외부 시계 입력이며 원본 고정 FPS를 뜻하지 않는다.
         const auto time=clock.Capture(frame*25);
-        try { session.RunFrame(time,false); }
+        try { session.PumpLocalConnection();session.RunFrame(time,false); }
         catch (const std::exception& error) { throw std::runtime_error(std::string(name)+" Kernel frame"+std::to_string(frame)+" game"+std::to_string(time.game)+": "+error.what()); }
     }
     if (name=="Tutorial6" || name=="GuardMyBack") {
@@ -328,6 +338,14 @@ TEST_CASE(CampaignKernelFrames_Tutorial6) { RunProtectedKernelFrames("Tutorial6"
 TEST_CASE(CampaignKernelFrames_TheWarBegins) { RunProtectedKernelFrames("TheWarBegins",false); }
 // 캠페인1-2의 실제 훨리베이스/총 등 현재 배치다.
 TEST_CASE(CampaignKernelFrames_MasterOfWhirligigs) { RunProtectedKernelFrames("MasterOfWhirligigs",false); }
+//캠페인1-3의보호원문시작과실제연결/자동AI/Kernel을진행한다.
+TEST_CASE(CampaignKernelFrames_SaveTheIsland) { RunProtectedKernelFrames("SaveTheIsland",false); }
+//캠페인1-4의보호원문시작과실제연결/자동AI/Kernel을진행한다.
+TEST_CASE(CampaignKernelFrames_FragileFortune) { RunProtectedKernelFrames("FragileFortune",false); }
+//캠페인1-5의보호원문시작과실제연결/자동AI/Kernel을진행한다.
+TEST_CASE(CampaignKernelFrames_ThunderingPower) { RunProtectedKernelFrames("ThunderingPower",false); }
+//캠페인1-6은같은자원의데모와구별해사람로컬owner의AI를생성하지않는다.
+TEST_CASE(CampaignKernelFrames_DissolvedAllianceCampaign) { RunProtectedKernelFrames("DissolvedAlliance",false); }
 // 데모1의 로컬AI/맨 오 워 풀 등 실제 현재 프레임이다.
 TEST_CASE(CampaignKernelFrames_TheStormRages) { RunProtectedKernelFrames("DemoStormRages",true); }
 // 데모2의 네 참여자 배치와 실제 색 변경 뒤 상태다.
@@ -341,7 +359,7 @@ TEST_CASE(CampaignParticles_DissolvedAllianceNaturalShot) {
     StartExternal external;Renderer renderer(128,128);auto fort=FortTemplate::Parse(assets.files.Read(script.FortPath()),assets.game.TypeTable());
     RawCampaignSession session(assets.game,assets.files,std::move(fort),script.FortName(),external.Services());session.Load();
     GameClock clock;MissionFrameGateState gate;MissionStartState state;MissionStartGlobals globals;MissionAiSettingsState ai;gate.demo=1;ai.stuffRefreshRate=4;
-    auto effects=external.Effects();effects.gameSeconds=[&] { return clock.GameSeconds(0); };RawCampaignMissionStartBindings start(session,script,gate,state,globals,ai,std::move(effects));start.Start();
+    auto effects=external.Effects(gate);effects.gameSeconds=[&] { return clock.GameSeconds(0); };RawCampaignMissionStartBindings start(session,script,gate,state,globals,ai,std::move(effects));start.Start();
     // 총/표적/위치/HP/난수를 고치지 않고 최초 자연 발사와 다음 실제 시간 조각까지 진행한다.
     for (std::uint32_t frame=1;frame<=115;++frame) session.RunFrame(clock.Capture(frame*25),false);
     const auto core=session.Core();const auto& rendering=session.Particles().Rendering();CHECK(rendering.Size()>0);
@@ -369,7 +387,7 @@ TEST_CASE(CampaignThunderMissile_DissolvedAllianceNaturalShot) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);ConfigInterface config([&](std::string_view path) { return assets.files.TryRead(path); });ConfigureStart(config);MissionScript script(config,"DissolvedAlliance");
     StartExternal external;auto fort=FortTemplate::Parse(assets.files.Read(script.FortPath()),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),script.FortName(),external.Services());session.Load();
     GameClock clock;MissionFrameGateState gate;MissionStartState state;MissionStartGlobals globals;MissionAiSettingsState ai;gate.demo=1;ai.stuffRefreshRate=4;
-    auto effects=external.Effects();effects.gameSeconds=[&] { return clock.GameSeconds(0); };RawCampaignMissionStartBindings start(session,script,gate,state,globals,ai,std::move(effects));start.Start();
+    auto effects=external.Effects(gate);effects.gameSeconds=[&] { return clock.GameSeconds(0); };RawCampaignMissionStartBindings start(session,script,gate,state,globals,ai,std::move(effects));start.Start();
     // 실제 총/표적/시각/HP/난수를 고치지 않고 기존145프레임의 자연 생성 경계를 실행한다.
     for (std::uint32_t frame=1;frame<=145;++frame) session.RunFrame(clock.Capture(frame*25),false);
     const auto core=session.Core();std::size_t found=0;std::vector<std::pair<ProcessId,const BaseProcess*>> tracked; // 원래 프로세스의 삭제 여부만 주소 비교로 확인한다.
@@ -421,7 +439,7 @@ TEST_CASE(CampaignCrossbow_ActualArrowFlightAndDestroy) {
     StartExternal external;auto fort=FortTemplate::Parse(assets.files.Read(script.FortPath()),assets.game.TypeTable());
     RawCampaignSession session(assets.game,assets.files,std::move(fort),script.FortName(),external.Services());session.Load();
     GameClock clock;MissionFrameGateState gate;MissionStartState state;MissionStartGlobals globals;MissionAiSettingsState ai;gate.demo=1;ai.stuffRefreshRate=4;
-    auto effects=external.Effects();effects.gameSeconds=[&] { return clock.GameSeconds(0); };
+    auto effects=external.Effects(gate);effects.gameSeconds=[&] { return clock.GameSeconds(0); };
     RawCampaignMissionStartBindings start(session,script,gate,state,globals,ai,std::move(effects));start.Start();
     auto core=session.Core();Sid projectile{},missileForm{};std::array<std::uint32_t,2> initial{};bool moved=false;
     // 현재20프레임의 별도 피해 처리 경계 앞에서 실제 첫 화살의 생성·이동만 관찰한다.
@@ -519,7 +537,7 @@ void CheckStartedDemoAiReaction(bool tracked) {
     // 저장된 자연 배치에서만 표적 HP를 읽으며 새 공격 객체를 만들지 않는다.
     for (const auto& object:session.World().Objects()) if (object.object.type==131) health.emplace(object.sid.value,std::bit_cast<std::int32_t>(Get(core.pool.Slot(object.sid),26)));
     CHECK(!health.empty());GameClock clock;MissionFrameGateState gate;MissionStartState state;MissionStartGlobals globals;MissionAiSettingsState ai;gate.demo=1;ai.stuffRefreshRate=4;
-    auto effects=external.Effects();effects.gameSeconds=[&] { return clock.GameSeconds(0); };RawCampaignMissionStartBindings start(session,script,gate,state,globals,ai,std::move(effects));start.Start();
+    auto effects=external.Effects(gate);effects.gameSeconds=[&] { return clock.GameSeconds(0); };RawCampaignMissionStartBindings start(session,script,gate,state,globals,ai,std::move(effects));start.Start();
     Sid trackedTarget{}; // 실제 첫 화살에서 확인한 표적 한 개만 용량2의 원본 감시 목록에 명시한다.
     bool observed=false; // 첫 자연 피격 뒤 같은 현재 AI 목록에서 공격자가 확인됐는지 기록한다.
     // 이번 검사는 최초 피해와 목록 반응까지만 실행하며 이후 전투 완주를 주장하지 않는다.
@@ -568,7 +586,7 @@ TEST_CASE(CampaignSunFlyer_Tutorial5NaturalPostPop) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);ConfigInterface config([&](std::string_view path) { return assets.files.TryRead(path); });ConfigureStart(config);MissionScript script(config,"Tutorial5");
     StartExternal external;auto fort=FortTemplate::Parse(assets.files.Read(script.FortPath()),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),script.FortName(),external.Services());session.Load();
     GameClock clock;MissionFrameGateState gate;MissionStartState state;MissionStartGlobals globals;MissionAiSettingsState ai;ai.stuffRefreshRate=4;
-    auto effects=external.Effects();effects.gameSeconds=[&] { return clock.GameSeconds(0); };RawCampaignMissionStartBindings start(session,script,gate,state,globals,ai,std::move(effects));start.Start();
+    auto effects=external.Effects(gate);effects.gameSeconds=[&] { return clock.GameSeconds(0); };RawCampaignMissionStartBindings start(session,script,gate,state,globals,ai,std::move(effects));start.Start();
     bool observed{},frameBoundary{}; // 자연 생성 후 첫 전용Frame 경계에 도달했는지는 완료 판정과 구별한다.
     // 실제 원래 배치/시계/서버 명령으로 첫 생성까지만 진행하며 소유자·HP·좌표·대상을 쓰지 않는다.
     for (std::uint32_t frame=1;frame<=1200 && !observed;++frame) {
@@ -599,7 +617,7 @@ TEST_CASE(CampaignSunFlyer_Tutorial5NaturalDedicatedFrames60Seconds) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);ConfigInterface config([&](std::string_view path) { return assets.files.TryRead(path); });ConfigureStart(config);MissionScript script(config,"Tutorial5");
     StartExternal external;auto fort=FortTemplate::Parse(assets.files.Read(script.FortPath()),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),script.FortName(),external.Services());session.Load();
     GameClock clock;MissionFrameGateState gate;MissionStartState state;MissionStartGlobals globals;MissionAiSettingsState ai;ai.stuffRefreshRate=4;
-    auto effects=external.Effects();effects.gameSeconds=[&] { return clock.GameSeconds(0); };RawCampaignMissionStartBindings start(session,script,gate,state,globals,ai,std::move(effects));start.Start();
+    auto effects=external.Effects(gate);effects.gameSeconds=[&] { return clock.GameSeconds(0); };RawCampaignMissionStartBindings start(session,script,gate,state,globals,ai,std::move(effects));start.Start();
     Sid body{};std::uint32_t born{},observations{};std::set<std::uint32_t> animation; // 자연 생성 뒤 실제 같은 몸체/프레임의 관측만 모은다.
     // 실제 초기 배치/기존 전투를 그대로 진행하며 위치·표적·타이머·HP를 주입하지 않는다.
     for (std::uint32_t frame=1;frame<=2400;++frame) {
@@ -627,7 +645,7 @@ TEST_CASE(CampaignSunFlyer_Tutorial5NaturalDedicatedFrames60Seconds) {
 TEST_CASE(CampaignSunFlyer_ActualHomeNoticeAndNaturalRelaunch) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);ConfigInterface config([&](std::string_view path) { return assets.files.TryRead(path); });ConfigureStart(config);MissionScript script(config,"Tutorial5");
     StartExternal external;auto fort=FortTemplate::Parse(assets.files.Read(script.FortPath()),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),script.FortName(),external.Services());session.Load();auto core=session.Core();
-    GameClock clock;MissionFrameGateState gate;MissionStartState state;MissionStartGlobals globals;MissionAiSettingsState ai;ai.stuffRefreshRate=4;auto effects=external.Effects();effects.gameSeconds=[&] { return clock.GameSeconds(0); };RawCampaignMissionStartBindings start(session,script,gate,state,globals,ai,std::move(effects));start.Start();
+    GameClock clock;MissionFrameGateState gate;MissionStartState state;MissionStartGlobals globals;MissionAiSettingsState ai;ai.stuffRefreshRate=4;auto effects=external.Effects(gate);effects.gameSeconds=[&] { return clock.GameSeconds(0); };RawCampaignMissionStartBindings start(session,script,gate,state,globals,ai,std::move(effects));start.Start();
     Sid body{},home{},form{};std::uint32_t frame=1; // 같은 Kernel에서 자연 생성된 실제 객체만 선택한다.
     // 원본 시계/초기 배치를 유지해 첫 전용 비행 프로세스가 생성될 때까지 진행한다.
     for (;frame<=1200 && !body.value;++frame) {

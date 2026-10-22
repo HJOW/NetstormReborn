@@ -63,6 +63,10 @@ struct SessionServicesFixture {
     // 같은 fixture가 세션보다 오래 살아야 하며 모든 실제 선택 경계를 명시한다.
     RawCampaignSessionServices Services() {
         names.Initialize();RawCampaignSessionServices s;s.unixSeconds=[] { return 946684800; };s.soundNames=&names;
+        s.ai.bridgeScratchBytes=[](auto bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0x71}); }; //검사의명시caller초기입력이며본문진행/성공값을만들지않는다.
+        s.ai.names.language=[] { return 1U; };s.ai.names.translate=s.ai.names.substitute=[](std::string_view text) { return std::string(text); }; //영어와치환변수없는명시장치입력으로실제객체이름몸체를실행한다.
+        s.missionOutcome.demo=[] { return 0U; }; //공통Session검사는명시일반게임입력이며데모검사는자기게이트에연결한다.
+        s.contentLifetime.localNotice=[this](std::uint32_t) { ++notices; };s.contentLifetime.sound=[this](float,float) { ++notices; }; //실제수입큐/음향요청만관측하고지갑/SP는Session의Reward가갱신한다.
         s.sound.wallSeconds=[] { return 100.0; };
         s.sound.playLoopAt=[this](float,float,SoundHandle current,SoundHandle sound) { const auto token=current ? current : sound;playing.insert(token);++notices;return token; };
         s.sound.playOnceAt=[this](float,float,SoundHandle sound,std::uint32_t,std::uint32_t) { ++notices;return sound; };
@@ -470,9 +474,10 @@ TEST_CASE(CampaignSession_AiCollectorSelectionUsesActualDeployment) {
 // 원본 MasterOfWhirligigs의 빈 원격 워크샾에 같은 기술/생산 내용물과 Deck 통지를 연결한다.
 TEST_CASE(CampaignSession_AiFactoryProductionUsesOriginalWorkshops) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();services.ai.allocationBytes=[](auto bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0x71}); };services.ai.participation.clearChat=[](auto) {};services.ai.participation.addChat=[](auto,auto,auto) {};services.ai.localTransport=[] { return true; };services.missionOutcome.demo=[] { return 0U; };services.ai.assertion=[](std::string_view text) { throw std::logic_error(std::string(text)); };services.production.allocationBytes=[](auto bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0x71}); };services.production.effects.configInt=[](std::string_view) { return 0; };services.production.effects.modeAssertion=[] { throw std::logic_error("검사 외 생산 모드 진단"); };
-    auto fort=FortTemplate::Parse(assets.files.Read("d/masterofwhirligigs.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"masterofwhirligigs",std::move(services));CHECK(Throws([&] { session.ManageAiFactories(2); }));session.Load();CHECK(!session.ManageAiFactories(2));const auto token=session.CreateAi(2,SessionAiSettings("Factory AI","sunWalker;sunCannon"));CHECK(session.InitializeAi(2) && session.PrepareAi(2));const auto raw=session.AiMemory().Bytes(token);CHECK(Get(raw,0x314)==2);const auto list=session.AiMemory().Bytes(Get(raw,0x30c));const auto factory=Sid{static_cast<std::uint16_t>(Get(list,0))};session.RunFrame({3.0,3.0,3.0,1},false);CHECK(session.ManageAiFactories(2));CHECK(Get(raw,0x314)==2);RawContainedFinder finder(session.Core().pool,session.ProductionFinder());std::uint32_t count{};
-    // 실제 워크샾 내용물에서 원본 flags10 생산 등록을 확인한다.
-    for (auto form=finder.Begin(factory);form.value;form=finder.Next()) if (Get(session.Core().pool.Slot(form),20,2)&16U) ++count;
+    auto fort=FortTemplate::Parse(assets.files.Read("d/masterofwhirligigs.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"masterofwhirligigs",std::move(services));CHECK(Throws([&] { session.ManageAiFactories(2); }));session.Load();CHECK(!session.ManageAiFactories(2));const auto token=session.CreateAi(2,SessionAiSettings("Factory AI","sunWalker;sunCannon"));CHECK(session.InitializeAi(2) && session.PrepareAi(2));const auto raw=session.AiMemory().Bytes(token);CHECK(Get(raw,0x314)==2);const auto list=session.AiMemory().Bytes(Get(raw,0x30c));const auto factory=Sid{static_cast<std::uint16_t>(Get(list,0))};std::uint32_t count{};
+    // 전체AI의선행수집자행동도같은생각기한을사용하므로수동갱신을중복호출하지않고첫자연생산까지진행한다.
+    for (std::uint64_t frame=0;frame<400 && !count;++frame) { const auto now=3.0+static_cast<double>(frame)*0.1;session.RunFrame({now,now,0.1,frame+1},false);count=static_cast<std::uint32_t>(CountContained(session.Core().pool,session.ProductionFinder(),factory,0x10,0)); }
+    std::printf("자동AI 워크샾 첫생산%u 시각%g 수집자%u\n",count,session.Core().processState.now,Get(raw,0x2e4));CHECK(Get(raw,0x314)==2);
     CHECK(count==1);session.RemoveAi(2);CHECK(!session.ManageAiFactories(2));
 }
 // 같은58h 분배/분산SP/Kernel의 실제 SharedRegular을 요청과 수신 양쪽에서 확인한다. 진행 프레임은 실행하지 않는다.
@@ -2255,6 +2260,20 @@ TEST_CASE(CampaignSession_AiBridgeProgressUsesActualWorldAndContents) {
     CHECK(Throws([&] { session.AdvanceAiBridge(0,target,scratch); }));session.RemoveAi(2);CHECK(!session.AdvanceAiBridge(2,target,scratch));
 }
 
+// 수동AI행동API없이현재게임프레임만으로초기화/준비/전략/다리/수집자를실행한다.
+TEST_CASE(CampaignSession_AutomaticAiFramesUseCurrentTimeAndWorld) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();UseWorldTestLogin(services);services.ai.allocationBytes=[](auto bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0x71}); };services.missionOutcome.demo=[] { return 0U; };services.ai.assertion=[](std::string_view text) { throw std::logic_error(std::string(text)); };
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));session.LoadLocalConnection();auto profile=SessionAiSettings("Automatic AI","sunWalker;sunCannon");Put(profile,0x22c,5000);Put(profile,0x238,4);const auto token=session.CreateAi(2,profile);const auto body=session.AiMemory().Bytes(token);CHECK(!Get(body,0x258) && !Get(body,0x25c));auto core=session.Core();
+    const auto bridgeCells=[&] { std::size_t count{};for (const auto sid:core.hash.Entries(0)) { if (!sid) continue;const auto raw=core.pool.Slot(Sid{sid});if (raw[10]==82 && raw[34]==2) ++count; }return count; }; //실제현재지도에서AI다리칸을세며생성결과를직접만들지않는다.
+    const auto before=bridgeCells();session.RunFrame({0.0,0.0,0.0,0},true);CHECK(!Get(body,0x258) && !Get(body,0x25c));
+    for (int frame=1;frame<=240;++frame) { const auto now=frame*0.1;session.PumpLocalConnection();session.RunFrame({now,now,0.1,static_cast<std::uint64_t>(frame)},false); } //실제자동AI→같은월드Kernel을24초진행한다.
+    const auto after=bridgeCells();std::printf("자동AI 초기화%u 준비%u 목표%u 재고%u 다리%zu→%zu 수집자%u SP%g 지갑%u\n",Get(body,0x258),Get(body,0x25c),Get(body,0x2d4),Get(body,0x628),before,after,Get(body,0x2e4),session.Sp(2),Get(body,0x2d8));CHECK(Get(body,0x258)==1 && Get(body,0x25c)==1 && Get(body,0x2d4)>=1 && Get(body,0x2d4)<=4);CHECK(after>before && Get(body,0x2e4)>0);CHECK(session.Sp(2)==static_cast<float>(std::bit_cast<std::int32_t>(Get(body,0x2d8))));
+}
+// 실제프로필종료값은정지중유지하고다음비정지프레임에서동일소유자의본문/목록만반납한다.
+TEST_CASE(CampaignSession_AutomaticAiTerminationReleasesOwnedMemory) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();UseWorldTestLogin(services);services.ai.allocationBytes=[](auto bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0x71}); };auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));session.LoadLocalConnection();auto profile=SessionAiSettings("Terminating AI","sunWalker;sunCannon");Put(profile,0x254,1);const auto token=session.CreateAi(2,profile);const auto flags=session.PlayerRecords()[2*180+0x50];const auto before=session.AiMemory().Frees().size();session.RunFrame({0,0,0,0},true);CHECK(session.AiMemory().Contains(token) && session.Participation().Brain(2)==token);session.RunFrame({0.1,0.1,0.1,1},false);CHECK(!session.AiMemory().Contains(token) && !session.Participation().Brain(2) && session.PlayerRecords()[2*180+0x50]==flags && session.AiMemory().Frees().size()>before);
+}
+
 //성공flag를입력하지않고실제Zone→접속→Login→월드설치/응답→상태14/타이머를검사한다.
 TEST_CASE(CampaignSession_LocalLoginActualHandshakeAndWorldLoad) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();std::vector<std::string> trace;std::vector<std::array<std::uint32_t,3>> notices;std::map<std::string,std::int32_t> config;std::size_t refresh{},chat{}; //실제장치/설정의명시입력과관측이다.
@@ -2559,6 +2578,9 @@ void NaturalWorkshopPlacement(bool combat,bool burning=false,CellPoint cannonLoc
                         for (std::uint32_t turns=0;turns<bestTurns;++turns) CHECK(session.Cursor().HandleInput({InputCode::kRightButton,0,0},0)); // 합법 후보의 실제 사용자 회전 입력만 재현한다.
                         ui.Point(session,preferred,0,0,false);const auto& rejected=session.Cursor().Placement();std::cout<<"전진 목표 판정 TYPE"<<type<<" 방향"<<session.CursorDropSettings().direction<<" 위치"<<preferred.x<<","<<preferred.y<<" desc"<<rejected.descriptionAllowed<<" place"<<rejected.placementAllowed<<" source"<<rejected.sourceAllowed<<" text"<<rejected.description<<" 방문 합법"<<legalCandidates<<"/사격"<<firingCandidates<<"\n";CHECK(place.has_value());if (!place) {
                             for (std::size_t row=0;row<candidateMap.size();++row) std::cout<<"후보 지도 y"<<110+row<<" x116 "<<candidateMap[row]<<'\n'; // 실패한 현재 후보 집합만 출력하며 게임 판정을 대체하지 않는다.
+                            for (int y=123;y<=127;++y) { //원래사격후보129,126주변의실제표면/소유/연결/점유입력만실패자료로보존한다.
+                                for (int x=126;x<=130;++x) { const auto sid=core.hash.Cell(0,x,y);const auto raw=core.pool.Slot(Sid{sid});std::printf("사격후보 지면(%d,%d) SID%u TYPE%u owner%u graph%u spot%02x\n",x,y,sid,raw[10],raw[34],raw[30],core.spots[y*256+x]); } //현재지도값을변경하지않는다.
+                            }
                             return;
                         }ui.Point(session,*place);const auto money=session.Sp(1);std::cout<<"전진 실제 허용 TYPE"<<type<<" 위치"<<place->x<<","<<place->y<<" SP"<<money<<"\n";
                         session.Cursor().Drop();session.PumpLocalConnection();session.Cursor().Cancel();CHECK(session.Sp(1)==money-core.types[type].cost);
@@ -3171,12 +3193,12 @@ void ActualBuiltDaisDelivery(bool finish) {
     for (std::uint64_t step=1;step<=12000 && !(core.pool.Slot(target)[11]&3U);++step) { // 같은Kernel/로컬전송으로 최대300초 진행한다.
         const auto now=finishBegan+double(step)*.025;session.PumpLocalConnection();session.RunFrame({now,100+now,.025,20000+step},false);const bool live=!ConstructionLive(core,166).empty();if (live && !wasLive) ++born;if (!live && wasLive) ++retired;wasLive=live;
     }
-    CHECK(born==5 && retired==5 && menus==0);CHECK((core.pool.Slot(target)[11]&3U)!=0 && (core.pool.Slot(altars[0])[11]&3U)!=0 && (core.pool.Slot(delivered)[11]&3U)!=0);CHECK(session.Sp(1)==beforeFinish+5000 && spRefreshes==refreshBefore+1);CHECK(ritualTells==std::vector<std::string>{"SacrificeForStormpower"});
+    CHECK(born==5 && retired==5 && menus==0);CHECK((core.pool.Slot(target)[11]&3U)!=0 && (core.pool.Slot(altars[0])[11]&3U)!=0 && (core.pool.Slot(delivered)[11]&3U)!=0);CHECK(session.Sp(1)==beforeFinish+5000 && spRefreshes>=refreshBefore+1);CHECK(ritualTells==std::vector<std::string>{"SacrificeForStormpower"}); //전체AI의다른SP표시갱신도같은장치를사용하므로총호출을한번으로제한하지않는다.
     CHECK(session.Priests().Priests().ownerState[1]==0); // 원래 적 사제가 살아 있는 명시 포획 입력이므로 승리를 주장하지 않는다.
     for (std::uint32_t owner=1;owner<=8;++owner) { // Finish의8명갱신이같은현재조회/저장소를소비했는지확인한다.
         const auto found=session.FindPriestParticipation(owner);const auto expected=!found ? 2U : core.pool.Slot(Sid{static_cast<std::uint16_t>(found)})[10]==158 ? 0U : 1U;CHECK(session.Priests().Priests().ownerState[owner]==expected);
     }
-    CHECK(!core.destroy.PreDepth() && !core.destroy.PostDepth() && !core.bookkeeping.depth);std::cout<<"실제 캠페인 희생 완료: 룬5/메뉴0/다이스·제단·포획 삭제/SP"<<beforeFinish<<"→"<<session.Sp(1)<<"/표시1/Tell1/참여8명 갱신\n";
+    CHECK(!core.destroy.PreDepth() && !core.destroy.PostDepth() && !core.bookkeeping.depth);std::cout<<"실제 캠페인 희생 완료: 룬5/메뉴0/다이스·제단·포획 삭제/SP"<<beforeFinish<<"→"<<session.Sp(1)<<"/전체 표시"<<spRefreshes-refreshBefore<<"/Tell1/참여8명 갱신\n";
 }
 }
 // 기존 실제 메뉴/건설/명시 운반 회귀를 동일 입력과 종료점에서 실행한다.

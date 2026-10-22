@@ -1,0 +1,89 @@
+{
+  "host": "VM-W11-Codex",
+  "date": "2026-10-22",
+  "last_full_refined_host": "VM-W11-Codex",
+  "last_full_refined_date": "2026-10-22",
+  "baseline_commit": "ebd0dedb",
+  "status": "integration-complete-one-natural-assault-regression",
+  "scope": "현재 시각 반영→비정지 자동 AI→같은 월드 Kernel과 실제 행동·SP·소멸/반납 연결",
+  "new_native_oracle_inputs": 0,
+  "game_gui_runs": 0,
+  "remote_pushes": 0,
+  "automatic_session": {
+    "fort": "thewarbegins",
+    "connection": "실제 로컬 로그인",
+    "profile": "명시 AI2, SP5000, sunWalker;sunCannon, 최대 다리 재고4",
+    "manual_ai_action_calls": 0,
+    "frames": 240,
+    "delta_seconds": 0.1,
+    "initialization": 1,
+    "preparation": 1,
+    "goal": 2,
+    "bridge_inventory": 3,
+    "owner2_bridge_cells_before": 15,
+    "owner2_bridge_cells_after": 25,
+    "collectors": 3,
+    "sp": 5000,
+    "wallet": 5000,
+    "injected_game_results": false
+  },
+  "boundaries": [
+    "검사 장치·벽시각·영어/치환·할당 및 caller 초기 바이트는 명시 외부 입력이다.",
+    "실제 Windows caller 입력은 현재 자기 프로세스의 로컬8BYTE 복사이며 원본 x86 잔여 스택 바이트와의 동일성 보장은 없다.",
+    "다리 증가와 수집자 생성 검사는 15개 미션 완주·GUI·음향 동일성이나 전체 목표 완료가 아니다."
+  ],
+  "build": {
+    "configuration": "Release",
+    "exit_code": 0,
+    "warnings": 0,
+    "errors": 0
+  },
+  "focused_tests": {
+    "tests": 2,
+    "failed_checks": 0,
+    "exit_code": 0
+  },
+  "regression": {
+    "command": "ctest --test-dir cpppj/build -C Release --output-on-failure",
+    "ctest_exit_code": 8,
+    "internal_tests": 2247,
+    "internal_passed": 2246,
+    "internal_failed_tests": 1,
+    "failed_checks": 1,
+    "seconds": 162.75,
+    "failed_test": "CampaignForwardBattle_NaturalTempleAssault",
+    "log": "extracted/cpp-ai-automatic-session-20261022-all-tests2.log"
+  },
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "cpppj/src/client/RawCampaignSession.cpp": "c12295e3e17ea18af628c7d79968f35e60f975c50df7cc5c7fc1e5d4330b08b1",
+    "cpppj/src/client/RawCampaignSession.h": "dba7c214d352e4436c797de867e0a230824287ce6f2b5447f14396b4c8bd8acf",
+    "cpppj/src/client/CampaignClientServices.cpp": "4df4a547a6257a7554c0968c20cced4aada006caf2ea73adf9681012cc66688f",
+    "cpppj/tests/CampaignSessionTests.cpp": "0b65248b8b96448a6a069867f608e40adc24d9f448018720b56c521600412125",
+    "cpppj/tests/CampaignMissionStartTests.cpp": "47764f281f7d2b044cae2add110254f63b0acd2d3e783c703332a1310c6dec89",
+    "cpppj/tests/fixtures/campaign-forward-battle-plan.tsv": "06388594a475df98a34251834b65faa21cecf94c0ddecc164c2831eb997b997a"
+  },
+  "initial_scenes": {
+    "tests": 15,
+    "frames_per_scene": 400,
+    "seconds_per_scene": 10,
+    "total_frames": 6000,
+    "failed_checks": 0,
+    "local_connection": true,
+    "original_scripts": true,
+    "local_ai_only_in_demo": true
+  },
+  "source_native_addresses": [
+    "00417c70",
+    "00417d30",
+    "00417de0",
+    "004e2dc0"
+  ],
+  "prior_regression": {
+    "ctest_exit_code": 8,
+    "internal_tests": 2243,
+    "failed_checks": 19,
+    "seconds": 265.28
+  }
+}
