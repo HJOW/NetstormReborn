@@ -411,8 +411,9 @@ TEST_CASE(CampaignSession_LocalGeysersUseActualAiRegistration) {
     RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));session.Load();
     const auto token=session.CreateAi(2,SessionAiSettings("Explicit","sunCannon"));auto records=session.PlayerRecords();records[0xb4+0x50]=2;
     CHECK(token!=0 && session.Participation().Brain(2)==token && session.PrepareAi(2));const auto raw=session.AiMemory().Bytes(token);const auto count=Get(raw,0x32c);session.GenerateLocalGeysers();
-    CHECK(session.Participation().Brain(2)==token && session.AiMemory().Contains(token) && Get(raw,0x32c)==count+3);CHECK(session.Construction().LocalGeysers().Recent().count==3);
-    const auto created=session.Construction().LocalGeysers().Recent().entries[0];CHECK(session.Core().pool.Slot(Sid{static_cast<std::uint16_t>(created)})[10]==122);CHECK(session.World().Destroy(Sid{static_cast<std::uint16_t>(created)},0x200000));CHECK(Get(raw,0x32c)==count+2);
+    CHECK(records[0xb4+0x50]==2 && (records[2*0xb4+0x50]&0x22U)==0x20U && Get(records,0xb4+0x78)==0 && Get(records,2*0xb4+0x78)==1); // 실제1·2번 모두 활성 지역이 있어 원본 Generate가 각3개씩 생성한다.
+    CHECK(session.Participation().Brain(2)==token && session.AiMemory().Contains(token) && Get(raw,0x32c)==count+6);CHECK(session.Construction().LocalGeysers().Recent().count==3); // 최근 목록은 마지막2번 Populate의3개만 보존한다.
+    const auto created=session.Construction().LocalGeysers().Recent().entries[0];CHECK(session.Core().pool.Slot(Sid{static_cast<std::uint16_t>(created)})[10]==122);CHECK(session.World().Destroy(Sid{static_cast<std::uint16_t>(created)},0x200000));CHECK(Get(raw,0x32c)==count+5);
     // 실제 삭제된 간헐천은 다섯 활성 목록 어디에도 남지 않는다.
     for (const auto at:{0x324U,0x330U,0x33cU,0x348U,0x354U}) { const auto list=session.AiMemory().Bytes(Get(raw,at));for (std::uint32_t index=0;index<Get(raw,at+8);++index) CHECK(Get(list,index*4)!=created); } // 안쪽 반복문은 현재 활성 count만 방문한다.
     session.RemoveAi(2);CHECK(session.Participation().Brain(2)==0);

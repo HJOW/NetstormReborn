@@ -1,5 +1,14 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-22 단위309 완료: 간헐천 원본 합성 캡처와 실제 AI 생성·삭제
+
+- [x] 단위308을 `7738c65a / 20261022-33 CP`로 커밋하고 계속했다. 현재/마지막 전체 정밀 디컴파일 PC는 **VM-W11-Codex / 2026-10-22**로 같다. 보호 원본/CD·AGENTS/dotnetpj·독립 fixture 변경이나 새 디컴파일·게임/창 실행은 없다. 보호 두 PE 해시도 기존 값과 같다.
+- [x] 실제 TYPE122/VT50da88의 고정 본체4acfe0+현재 그림485480→497280을 기존 Session 파편 캡처에 연결했다. 화면과 캡처가 같은 `RawGeyserCapture` 요청을 공유한다. 기존 원본459입력/918반환 전체 픽셀 및 실제51프레임/두 카메라281,260픽셀과 일치한다. 일반색/추상색 경계를 구분하고 임의 plain 대체나 소유자 치환을 추가하지 않았다. [상세](docs/exe/cpp-geyser-shrapnel-capture-20261022.md).
+- [x] AI 검사에서 관측한 실제 생성은 활성1·2번 각각3개, 전체 후보14→20·최근3개였다. 최근 목록만 보고 전체+3을 기대하던 검사를 활성/지역·전체+6·삭제 뒤+5로 복구했다. 실제 생성/등록/파편 캡처/삭제가 모두 통과했고 임시 출력은 제거했다.
+- [x] Release 최종 `extracted/cpp-geyser-shrapnel-capture-20261022-build3.log` **종료0·경고0·오류0**, 집중4개 통과. 전체 CTest는 **2,217개/4개 검사 실패·4check 실패·167.20초**다. 이전 전체10개/24check에서6개/20check 감소했다. [회귀 보고서](cpppj/geyser-shrapnel-regression-20261022.json)에 실제 실패/로그 해시/실행 경계 종료값1을 보존했다. 전체 통과로 바꾸지 않는다. 인수인계 후 **20261022-34 CP**로 로컬 커밋하며 push하지 않는다.
+- [ ] **다음 재개점:** 남은4개는 `CampaignForwardBattle_NaturalTempleAssault`, `CampaignAltar_AlliedReleaseUsesVirtualPriestOwner`, `CampaignDude_ActualPathNoticeSpeedAndArrival`, `CampaignObjectCommand_ActualCarrierParentAndPriestOwner`다. 후속 조사에서 사제 전투 Owner는 인자를 무시하고 원래 owner를 사용하며, Dude 첫속도1.5는 Move 뒤 정수1로 복원되는 기존 원본 몸체/fixture를 확인했다. 제단 해방은 Unpop/직접P쓰기/Repop 때문에 새21 예약이 생기는지 현재 Form으로 진단할 필요가 있다. 아직 이 세 검사 기대나 제품은 수정하지 않았다.
+- [ ] AI 다리 초기화·후보/경로 탐색→네 전략/자동 전체 프레임/종료, 15개 미션·Edit/custom Fort·언어별 시나리오 수명·자연 플레이·표시/음향 동일성 목표는 미완료다.
+
 ## 2026-10-22 단위308 완료: Factory 예측 그림의 소수 좌표 영역 통지
 
 - [x] 단위307을 `1cce4bda / 20261022-32 CP`로 커밋하고 계속했다. 현재/마지막 전체 정밀 디컴파일 PC는 **VM-W11-Codex / 2026-10-22**로 같다. 보호 원본/CD·AGENTS/dotnetpj·독립 fixture 변경이나 새 디컴파일·게임/창 실행은 없다.

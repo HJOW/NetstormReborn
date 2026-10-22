@@ -1,0 +1,40 @@
+{
+  "host": "VM-W11-Codex",
+  "baseCommit": "7738c65a",
+  "ctestFailed": true,
+  "powershellRunnerExit": 1,
+  "seconds": 167.2,
+  "tests": 2217,
+  "failedChecks": 4,
+  "failedTests": [
+    "CampaignForwardBattle_NaturalTempleAssault",
+    "CampaignAltar_AlliedReleaseUsesVirtualPriestOwner",
+    "CampaignDude_ActualPathNoticeSpeedAndArrival",
+    "CampaignObjectCommand_ActualCarrierParentAndPriestOwner"
+  ],
+  "focusedPassed": {
+    "ShapeToBuffer_GeyserNative459Pixels": 1,
+    "GeyserCapture_ExactVtableAndCurrentFrame": 1,
+    "CampaignSession_GeyserBodyNative51Frames": 1,
+    "CampaignSession_LocalGeysersUseActualAiRegistration": 1
+  },
+  "nativeInputs": 459,
+  "nativeReturns": 918,
+  "displayComparedPixels": 281260,
+  "previousReport": "cpppj/ai-help-regression-20261022.json",
+  "logs": {
+    "extracted/cpp-geyser-shrapnel-capture-20261022-build3.log": "d6eb0f338b80592e57c7d02ce895304bdfd78776bbdcee12e86dbb8f1d82d757",
+    "extracted/cpp-geyser-shrapnel-capture-20261022-pixels.log": "91df23d7668f9b5b45d64d040dfed94402a01566fa0a3caa72f072e1a5213dbd",
+    "extracted/cpp-geyser-shrapnel-capture-20261022-pair.log": "88715a400ab1723fd2ea3efb042f5657d7ad55aed757008044f96adeef4d5ce2",
+    "extracted/cpp-geyser-shrapnel-capture-20261022-display.log": "5e78e6c3bebb276455b59ba06b41c8225ffe3d97a8abed63171ab7e3f54e8804",
+    "extracted/cpp-geyser-shrapnel-capture-20261022-session-final.log": "6c6a8aa3085f5e432e75254f6589d13f04d74fab91e740249cb2934af1521970",
+    "extracted/cpp-geyser-shrapnel-capture-20261022-ctest.log": "096f82ab884acd4300ce1ad779e324d68cb1b7dae9f74f0021eac3dffd85fc34"
+  },
+  "protectedBinaries": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233"
+  },
+  "limitations": [
+    "전체 검사는 통과하지 않았다. 남은4개 검사와 AI 다리·15개 미션·Edit 전체 수명 및 자연 플레이 동일성은 미완료다."
+  ]
+}

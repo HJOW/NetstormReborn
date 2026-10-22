@@ -9,6 +9,7 @@
 #include "o/RawDaisDraw.h"
 #include "o/RawTempleDraw.h"
 #include "o/RawThunderCannonCapture.h"
+#include "o/RawGeyserCapture.h"
 #include "o/RawSunAviaryCapture.h"
 #include "o/RawBurningLifetimeDraw.h"
 #include "o/RawBridgeConnect.h"
@@ -47,7 +48,7 @@ struct RawCampaignFactoryDisplay::Impl {
     }
     // 실제4857a0이 설치한122/VT50da88만 간헐천 외형/현재 그림으로 분배한다.
     bool Geyser(o::Sid sid) const {
-        const auto raw=core.pool.Slot(sid);return raw[10]==122 && raw[0]==0x88 && raw[1]==0xda && raw[2]==0x50 && raw[3]==0;
+        return o::IsGeyserCapture(core.pool.Slot(sid));
     }
     bool Handles(o::Sid sid) const { return factory.Handles(sid) || Flare(sid) || Generator(sid) || Temple(sid) || o::IsPatchDais(core.pool.Slot(sid)) || ThunderCannon(sid) || Geyser(sid) || o::IsBurningArcherCapture(core.pool.Slot(sid)) || o::IsSunAviaryCapture(core.pool.Slot(sid)) || FlyerShadow(sid); } // 본체/추가 그림의 실제 VT와 공통 그림자 레이어를 포함한다.
     // 원본 PE 초기값만 설치하고 각 수집에서 현재 게임 값으로 갱신한다.
@@ -112,9 +113,11 @@ struct RawCampaignFactoryDisplay::Impl {
             }
             if (Flare(object) || Generator(object)) return; // 실제+a4의 빈 몸체41c100이다.
             if (Geyser(object)) {
-                const auto current=core.pool.Slot(object);const auto frame=std::uint32_t(current[36])|(std::uint32_t(current[37])<<8)|(std::uint32_t(current[38])<<16)|(std::uint32_t(current[39])<<24); // 실제485480은 고정 외형 뒤 현재 SHP/프레임을 한 번 그린다.
-                if (!(current[40]&0x10U)) shape({current[10],frame,point,SpriteShapeMode::Plain});
-                else if (current[34]==state.localPlayer) shape({current[10],frame,point,SpriteShapeMode::Abstract});return;
+                o::DrawGeyserCapture(core.pool.Slot(object),[this,object,&shape](auto type,auto frame,auto x,auto y) {
+                    const auto current=core.pool.Slot(object); // 실제497280의 현재 추상/로컬 관문을 각 그림 요청에서 읽는다.
+                    if (!(current[40]&0x10U)) shape({type,frame,{x,y},SpriteShapeMode::Plain});
+                    else if (current[34]==state.localPlayer) shape({type,frame,{x,y},SpriteShapeMode::Abstract});
+                },point.x,point.y);return;
             }
             if (ThunderCannon(object)) {
                 // 원본46ae30→497280은 고정 본체 뒤 현재 그림을 같은 기준점에 겹친다.

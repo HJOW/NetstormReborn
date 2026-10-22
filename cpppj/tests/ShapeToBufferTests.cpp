@@ -6,6 +6,7 @@
 #include "o/RawFactoryDraw.h"
 #include "o/RawThunderCannonCapture.h"
 #include "o/RawSunAviaryCapture.h"
+#include "o/RawGeyserCapture.h"
 #include <cstdio>
 #include <filesystem>
 
@@ -173,4 +174,32 @@ TEST_CASE(SunAviaryCapture_ExactVtableAndSuppressedDraw) {
     raw[40]=10;CHECK(SunAviaryCaptureMainFrame(raw)==27);DrawSunAviaryCapture(raw,{},11,13);
     Put(raw,0,0x5099e8U);CHECK(!IsSunAviaryCapture(raw));bool rejected{};
     try { static_cast<void>(SunAviaryCaptureMainFrame(raw)); }catch (const std::invalid_argument&) { rejected=true; }CHECK(rejected);
+}
+
+// 원문459입력의 기본 본체/현재 그림/메타데이터/전체 픽셀을 두 x87 정밀도 결과와 독립 대조한다.
+TEST_CASE(ShapeToBuffer_GeyserNative459Pixels) {
+    const auto& assets=Assets(OriginalEdition::Patch1078);auto types=assets.types;types[122].hotspotX=-2;types[122].hotspotY=3;
+    SidPool pool(OriginalEdition::Patch1078,32768,true); // 원본 격리 장면의 client50 슬롯을 한 번 확보해 현재 입력만 매 행 다시 쓴다.
+    for (std::uint16_t sid=5;sid<=50;++sid) CHECK(pool.Allocate(2)==Sid{sid});
+    std::array<std::uint32_t,188> maps{};netstorm::client::ShapeToBufferState state;state.addTypeHotspot=true;state.ownerTypeMaps=maps;std::size_t count{}; // 간헐천에는 원본 일반 소유자 치환표가 없다.
+    state.mainFrame=[&](Sid sid) { CHECK(IsGeyserCapture(pool.Slot(sid)));return assets.game.Types()[122-70].definition.specialFrames.baseFrame; }; // 실제4acfe0의 TYPE+128 고정 본체를 공급한다.
+    state.additional=[&](Sid sid,ConstructionVisualImage& image,std::int32_t x,std::int32_t y) {
+        DrawGeyserCapture(pool.Slot(sid),[&](auto type,auto frame,auto px,auto py) { static_cast<void>(netstorm::client::DrawShape(image.pixels,image.width,image.height,assets.game.Shapes(),type-70,frame,px,py,{0,0,image.width-1,image.height-1})); },x,y);
+    };
+    netstorm::client::RawShapeToBuffer capture(pool,types,assets.shapes,assets.game.Shapes(),state);
+    const auto path=(std::filesystem::path(__FILE__).parent_path()/"fixtures/geyser-capture-x86.tsv").string(); // 기존 원본 기대 파일을 변경하지 않는다.
+    // 51프레임×extra0/2/3×owner0/1/8의 모든 독립 입력을 방문한다.
+    for (const auto& row:LoadFixture(path.c_str()).rows) {
+        CHECK(row.size()==7);if (row.size()!=7) return;auto raw=pool.AllocatedBytes(Sid{50});std::fill(raw.begin(),raw.end(),std::uint8_t{});Put(raw,0,0x50da88U);raw[10]=122;Put(raw,36,Number(row[0]));raw[40]=static_cast<std::uint8_t>(Number(row[1]));raw[34]=static_cast<std::uint8_t>(Number(row[2]));
+        const auto image=capture.Capture(Sid{50});const auto metadata=std::to_string(image.width)+','+std::to_string(image.height)+','+std::to_string(image.hotspotX)+','+std::to_string(image.hotspotY);const auto pixels=Hex(image.pixels); // 실제 캡처의 전부이며 기대 픽셀을 재계산하지 않는다.
+        const bool same=metadata==row[3] && pixels==row[4] && metadata==row[5] && pixels==row[6];if (!same) std::printf("간헐천 원문 픽셀 차이 %zu frame%s extra%s owner%s\n",count,row[0].c_str(),row[1].c_str(),row[2].c_str());CHECK(same);++count;
+    }
+    CHECK(count==459);
+}
+// 정확한 타입/가상 표와 실제 출력 소비자를 요구하고 현재 프레임/좌표를 바꾸지 않는다.
+TEST_CASE(GeyserCapture_ExactVtableAndCurrentFrame) {
+    std::array<std::uint8_t,50> raw{};Put(raw,0,0x50da88U);raw[10]=122;Put(raw,36,7);CHECK(IsGeyserCapture(raw));std::size_t draws{};
+    DrawGeyserCapture(raw,[&](auto type,auto frame,auto x,auto y) { CHECK(type==122 && frame==7 && x==-5 && y==9);++draws; },-5,9);CHECK(draws==1);
+    bool rejected{};try { DrawGeyserCapture(raw,{},0,0); } catch (const std::invalid_argument&) { rejected=true; }CHECK(rejected);
+    Put(raw,0,0x5196f0U);CHECK(!IsGeyserCapture(raw));rejected=false;try { DrawGeyserCapture(raw,{},0,0); } catch (const std::invalid_argument&) { rejected=true; }CHECK(rejected);
 }

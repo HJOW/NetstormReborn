@@ -10,6 +10,7 @@
 #include "o/RawFactoryDraw.h"
 #include "o/RawThunderCannonCapture.h"
 #include "o/RawSunAviaryCapture.h"
+#include "o/RawGeyserCapture.h"
 #include "o/RawDudeDrop.h"
 #include "o/RawDudeBehavior.h"
 #include "o/RawDudeRegular.h"
@@ -910,7 +911,7 @@ struct RawCampaignSession::Impl {
         shrapnel.lifetime.capture=[this](Sid sid) {
             const auto raw=core.pool.Slot(sid);
             // 독립 전체 캡처/가상Draw/RLE를 대조한 정확한 가상 표만 같은 실제 일반색 캡처에 연결한다.
-            if (IsPatchTemple(raw) || IsPatchDais(raw) || IsBurningArcherCapture(raw) || IsPlainBuildingCapture(raw) || IsThunderCannonCapture(raw) || IsSunAviaryCapture(raw)) { if (!buildingCapture) throw std::logic_error("실제 건물 파편 캡처 설치 전 호출");return buildingCapture->Capture(sid); }
+            if (IsPatchTemple(raw) || IsPatchDais(raw) || IsBurningArcherCapture(raw) || IsPlainBuildingCapture(raw) || IsThunderCannonCapture(raw) || IsSunAviaryCapture(raw) || IsGeyserCapture(raw)) { if (!buildingCapture) throw std::logic_error("실제 건물 파편 캡처 설치 전 호출");return buildingCapture->Capture(sid); }
             if (!Flyer(sid) && !BridgeLifetime(sid) && Read(raw,0)!=0x502370U) throw std::logic_error("다른 실제 파편 source의 전용 색표/추가 그림 미복원 TYPE"+std::to_string(raw[10]));return shrapnelCapture->Capture(sid);
         };
         shrapnel.destroyUnpaired=[this](Sid sid) { world.Destroy(sid,0); };
@@ -2181,7 +2182,7 @@ struct RawCampaignSession::Impl {
         };
         factoryDraw=std::make_unique<RawFactoryDraw>(core.pool,core.frames);
         buildingCaptureState.mainFrame=[this](Sid sid) { const auto raw=core.pool.Slot(sid);if (IsPatchDais(raw)) return -1; // 실제+a0=41c0f0은 빈 기본 캡처이며+a4만 별도169TYPE를 그린다.
-            if (IsSunAviaryCapture(raw)) return SunAviaryCaptureMainFrame(raw);if (IsThunderCannonCapture(raw)) return ThunderCannonCaptureMainFrame(raw,core.frames[raw[10]]);if (IsPatchTemple(raw) || IsBurningArcherCapture(raw) || IsPlainBuildingCapture(raw)) return assets.game.Types()[raw[10]-70].definition.specialFrames.baseFrame;return factoryDraw->MainFrame(sid); };
+            if (IsSunAviaryCapture(raw)) return SunAviaryCaptureMainFrame(raw);if (IsThunderCannonCapture(raw)) return ThunderCannonCaptureMainFrame(raw,core.frames[raw[10]]);if (IsPatchTemple(raw) || IsBurningArcherCapture(raw) || IsPlainBuildingCapture(raw) || IsGeyserCapture(raw)) return assets.game.Types()[raw[10]-70].definition.specialFrames.baseFrame;return factoryDraw->MainFrame(sid); };
         buildingCaptureState.additional=[this](Sid sid,ConstructionVisualImage& image,std::int32_t x,std::int32_t y) {
             if (IsPatchDais(core.pool.Slot(sid))) {
                 if (core.pool.Slot(sid)[40]&0x10U) throw std::logic_error("추상 다이스 실제 캡처 색상 미연결");
@@ -2195,6 +2196,10 @@ struct RawCampaignSession::Impl {
             }
             const auto raw=core.pool.Slot(sid);
             if (IsPlainBuildingCapture(raw)) return; // 원본+a4=41c100은 추가/추상 비트와 관계없이 빈ret8이다.
+            if (IsGeyserCapture(raw)) {
+                if (raw[40]&0x10U) throw std::logic_error("추상 간헐천 실제 캡처 색상 미연결"); // 기존 독립 원문은 일반색/extra0·2·3 입력이다.
+                DrawGeyserCapture(raw,[this,&image](auto type,auto frame,auto px,auto py) { static_cast<void>(DrawShape(image.pixels,image.width,image.height,assets.game.Shapes(),type-70,frame,px,py,{0,0,image.width-1,image.height-1})); },x,y);return;
+            }
             if (IsSunAviaryCapture(raw)) {
                 if (raw[40]&0x10U) throw std::logic_error("추상 훨리베이스 실제 캡처 색상 미연결"); // 독립 원문은 일반색/extra0·2·3·10 입력이다.
                 DrawSunAviaryCapture(raw,[this,&image](auto type,auto frame,auto px,auto py) { static_cast<void>(DrawShape(image.pixels,image.width,image.height,assets.game.Shapes(),type-70,frame,px,py,{0,0,image.width-1,image.height-1})); },x,y);return;
