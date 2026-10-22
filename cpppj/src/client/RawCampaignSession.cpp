@@ -55,6 +55,7 @@
 #include "o/RawBombRegular.h"
 #include "o/RawBombEffect.h"
 #include "o/RawPriestPrayer.h"
+#include "o/RawPriestPanic.h"
 #include "o/RawCarrierDrop.h"
 #include "o/RawObjectCommand.h"
 #include "client/RawBombBlastBindings.h"
@@ -431,6 +432,7 @@ struct RawCampaignSession::Impl {
     DamageableHitState generalDamageState{priestDamageState}; // 같은 레벨·현재 서버/로컬 소유자·주 섬의 일반 피해 전역이다.
     DamageableBurningState burningState; // 현재 nonzero damageEffect의 실제 생성 판정 전역이다.
     GunImpactState impactState; // 현재 충돌 시각 효과 억제/anim160 전역이다.
+    std::unique_ptr<RawPriestPanic> priestPanic; // 명령/중립 회복/도착이 공유하는 실제 대피·귀환 몸체다.
     std::vector<DudeNoticeTypeData> dudeSpeeds; // 실제 TYPE 이동속도의 현재 mutable 보충 표다.
     std::unique_ptr<RawPlayerDamageNotice> playerDamage; // 같은 Player9/모드의 실제 AI 조회와 피해 통지 래퍼다.
     std::unique_ptr<RawAiDamage> aiDamage; // 같은 AI 본체·목록에 실제 피해 대상/공격자 반응을 기록한다.
@@ -756,7 +758,7 @@ struct RawCampaignSession::Impl {
             if (!otherWalkerFall) throw std::logic_error("다른 실제 Walker 낙하 미연결");return otherWalkerFall(sid);
         };
         priestEffects.regen.refresh=[this](Sid sid) { core.display.Update(core.pool.Slot(sid)); };
-        FillMissing(priestEffects.regen.neutralAction);
+        priestEffects.regen.neutralAction=[this](Sid sid) { RunPriestPanic(sid); };
         // 회전과 뒤의 읽기를 분리하여 중립 동작/측정이 바꾼 현재 SP 전역도 원본 시점에 조회한다.
         priestEffects.regen.patchAudit=[this] { sp.Rotate(); };
         priestEffects.regen.spReads=BindPriestRegenSpStore(sp,priestState.regen.patch);
@@ -2537,6 +2539,7 @@ struct RawCampaignSession::Impl {
     #include "client/RawCampaignDevastation.inc"
     #include "client/RawCampaignCarrierDrop.inc"
     #include "client/RawCampaignPrayer.inc"
+    #include "client/RawCampaignPanic.inc"
     void ConnectMotion() {
         if (motion) throw std::logic_error("실제 세션 경로 중복 연결");
         ConstructionArrivalHooks buildHooks;
@@ -2666,10 +2669,10 @@ struct RawCampaignSession::Impl {
         effects.halt.carrierPickup=[this](Sid sid) { return carrierSteal->Try(sid); };
         carrierTransfer=std::make_unique<RawCarrierTransfer>(core.pool,core.hash,core.types,assetState.boss,globals.editor,playerState.battleOwner,carrierTransferState,std::move(transfer));
         effects.halt.nuggetTransfer=[this](Sid sid) { return carrierTransfer->Transfer(sid); };
-        FillMissing(effects.priest.neutralReturn);
+        effects.priest.neutralReturn=[this](Sid sid) { RunPriestPanic(sid); };
         effects.path.metadata=[this](Sid sid) {
             const auto kind=core.pool.Slot(sid)[10];const auto& definition=assets.game.Types()[kind-70].definition;
-            const auto speed=kind==70 ? dudeSpeeds[kind].speed : static_cast<float>(definition.Number("speed").value());
+            const auto speed=(kind==70 || kind==158) ? dudeSpeeds[kind].speed : static_cast<float>(definition.Number("speed").value());
             return RawPathStartType{speed,static_cast<float>(definition.Number("turningSpeed").value()),definition.specialFrames.defaultFrame};
         };
         effects.path.crabHalt=[this](Sid sid) { return carrierSteal->Halt(sid); }; // 공통 Halt로 우회하지 않고42ab80을 보존한다.
@@ -2681,7 +2684,7 @@ struct RawCampaignSession::Impl {
         };
         FillMissing(effects.path.stepSound);
         motion=std::make_unique<RawCampaignMotionBindings>(world,*priests,*islands,*contained,*anchor,hp,metadata.frames,motionState,start,process,std::move(effects));
-        ConnectRitual();
+        ConnectPriestPanic();ConnectRitual();
         salvageState=std::make_unique<SalvageCommandState>(SalvageCommandState{playerState.battleOwner,missionStart.denySalvage,gunState.checking,globals.missionPost,assetState.boss,runeState.altarType,runeState.daisType,motionState.carrier.nuggetType});
         SalvageCommandHooks salvage; // 요청은 전송만 하고 실제 서버 수신에서 기존 몸체를 호출한다.
         salvage.daisAt=[this](Sid sid) { return altarSacrifice->DaisAt(sid); };

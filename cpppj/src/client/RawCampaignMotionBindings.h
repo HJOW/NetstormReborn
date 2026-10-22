@@ -39,6 +39,8 @@ public:
     const o::RawCarrierArrival& CarrierArrival() const;
     std::uint32_t CommonHalt(o::Sid parent) const; // 같은42a5f0을187의 주기 wrapper에서도 재사용한다.
     const o::RawPathCleanup& Cleanup() const;
+    const o::RawPriestArrival& PriestArrival() const; // panic의plain 신전 조회도 같은 현재 도착 몸체를 재사용한다.
+    const o::RawCanonPlacementTerrain& Terrain() const; // panic의snapped 영역 조회도 같은 현재 지면을 읽는다.
     const o::SidPool& Pool() const;
 private:
     struct Impl; // 실제 모듈과 단일 Core의 참조를 고정 주소에 보관한다.

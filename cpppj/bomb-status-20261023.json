@@ -55,7 +55,7 @@
     "cpppj/src/o/RawBombTimerPacket.cpp": "70a7e9c2bc0cb9c8e9620f70b8e9d55f091e72c0bd1f5e38dc5b01c6534de7ac",
     "cpppj/src/client/RawCampaignDevastation.inc": "804034ea44d491f1fac09268a731e4286ecef6b3ae0d4383a5236ac1700d874d",
     "cpppj/src/client/RawCampaignCarrierDrop.inc": "8ca3dbdd9987924c7535b157757f04359ae2fe6e5373f9be85c9d493ced60984",
-    "cpppj/src/client/RawCampaignSession.cpp": "e101fdf269104d8ade573fae02b4ae7e935bc5d9c06969b74f6d20056bbbbad6",
+    "cpppj/src/client/RawCampaignSession.cpp": "24dff4df9834a47bb6c7e72735be04e1059b6a548d58934f9b4de340b9ae649a",
     "cpppj/src/client/RawCampaignFactoryDisplay.cpp": "f24047267d20459b85238b291905803b7cb27b284e297a0c0f1e03138808c62d",
     "cpppj/src/client/RawBombBlastBindings.cpp": "43b1211da05d50b8ba942da52d191530c40ee79af7b82c22fbe6123090cae3be",
     "cpppj/src/client/SpriteDraw.cpp": "2bd9d880ef2b0ea476072bace12be8a227be0439a1d9ffde11ddc2e282af73d9",
@@ -63,11 +63,11 @@
     "cpppj/src/o/RawBombEffect.cpp": "d37f764b18b534480c566b40899eaacf600b4c1f1bc02e66e6e278587427e543",
     "cpppj/src/o/RawBombTargets.cpp": "f2aa11b08479c114823fca68e87b0aadf27da965e5b63a2129d350f3c583700c",
     "cpppj/src/o/SquidProcess.cpp": "993e34a3c7b3b87f290a33f548a126415c3a77794a7a191801d68f405baf1780",
-    "cpppj/src/o/CMakeLists.txt": "2e73c17ebccdd294389f3e425081ca3830975f0be93153c7c00967fe418c6f8f",
-    "cpppj/tests/CMakeLists.txt": "f8354d238a52d595c762494a73fd28df35b2e77de8974909026a885fd239c107",
+    "cpppj/src/o/CMakeLists.txt": "bf9a8223110b8620169bb54d46cf4043403d31112753979d3dd97f6b91446b12",
+    "cpppj/tests/CMakeLists.txt": "7a01563d70b49a0c184a19ad0d82554bd88855564fc56fc4bfd201bf7923d6be",
     "cpppj/tests/FlareTests.cpp": "2d3ab1baf640fd2ca6092d34d1095e52cd451da153dba78d6056e46adda4152e",
     "cpppj/tests/BombStatusTests.cpp": "0543f2f732bb68d0f66ef945067bef0ededd60f2693d60e9336f3b374ba8bc23",
-    "cpppj/tests/CampaignSessionTests.cpp": "509c708c4c13ccdda5b10602f7c339d306d5855edc90dc82bd7b64e7fd66c562"
+    "cpppj/tests/CampaignSessionTests.cpp": "f43160361ae3f9f12883691b9e3e95a290deb78a20d96b8e157b14f22841106e"
   },
   "validation": {
     "build": {
@@ -115,5 +115,6 @@
     "scope": "실제 단일 플레이 시전/상태·선택/57 서버 부착·writer/같은 내용물 재시전·비용/자연 만료다. 두 인스턴스의 실제 클라이언트7d 수신/25종 전체 수명·전체 GUI/미션·Edit 완료 근거는 아니다."
   },
   "implementationRefresh350": "단위350의 윈드 소환 주문/원주 생산 연결과 공용 등록·검사 변경에 맞춰 현재 구현 SHA만 갱신했다. 기존 원문과 과거 validation 수치는 보존한다.",
-  "implementationRefresh351": "단위351은 제품 몸체를 바꾸지 않고 같은 CampaignSessionTests에 자연 훨리기그 공격·귀환/착륙·동일 개체 재출격 검사를 추가했다. 현재 검사 SHA만 갱신하며 기존 원문과 과거 validation은 보존한다."
+  "implementationRefresh351": "단위351은 제품 몸체를 바꾸지 않고 같은 CampaignSessionTests에 자연 훨리기그 공격·귀환/착륙·동일 개체 재출격 검사를 추가했다. 현재 검사 SHA만 갱신하며 기존 원문과 과거 validation은 보존한다.",
+  "implementationRefresh352": "단위352의 사제 panic/현재158 속도·중립 회복/도착·명령 연결과 실제 회귀 검사에 맞춰 공유 구현 SHA만 갱신했다. 기존 원문과 과거 validation 수치는 보존한다."
 }

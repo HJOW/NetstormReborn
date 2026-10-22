@@ -1836,3 +1836,5 @@ set_property(SOURCE SunFlyerFrameTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS
     "NETSTORM_SUN_FLYER_CLEAR_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/sun-flyer-clear-x86.tsv\"")
 set_source_files_properties(DissolveLifetimeTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_DISSOLVE_LIFETIME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/dissolve-lifetime-x86.tsv\"")
+
+target_sources(netstorm_tests PRIVATE PriestPanicTests.cpp)

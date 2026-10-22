@@ -459,3 +459,5 @@ target_sources(netstorm PRIVATE RawBombTimerPacket.h RawBombTimerPacket.cpp)
 target_sources(netstorm PRIVATE RawBombStatus.h RawBombStatus.cpp)
 target_sources(netstorm PRIVATE RawWindCircle.h RawWindCircle.cpp)
 target_sources(netstorm PRIVATE RawWindSpell.h RawWindSpell.cpp)
+
+target_sources(netstorm PRIVATE RawPriestPanic.h RawPriestPanic.cpp)

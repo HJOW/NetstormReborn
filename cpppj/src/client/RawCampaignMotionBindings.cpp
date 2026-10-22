@@ -79,6 +79,10 @@ const o::RawCarrierArrival& RawCampaignMotionBindings::CarrierArrival() const { 
 std::uint32_t RawCampaignMotionBindings::CommonHalt(o::Sid parent) const { return impl_->halt->CommonHalt(parent); }
 // 같은 실제 공간 이후 정리 몸체를 빌린다.
 const o::RawPathCleanup& RawCampaignMotionBindings::Cleanup() const { return *impl_->cleanup; }
+// 대피/귀환이 기존 현재 도착·영역 getter를 복제하지 않고 빌린다.
+const o::RawPriestArrival& RawCampaignMotionBindings::PriestArrival() const { return *impl_->arrival; }
+// 같은 실제 지면 조회를 다른 현재 부모 처리에도 제공한다.
+const o::RawCanonPlacementTerrain& RawCampaignMotionBindings::Terrain() const { return *impl_->terrain; }
 // 다른 runtime 하위가 같은 Pool인지 확인한다.
 const o::SidPool& RawCampaignMotionBindings::Pool() const { return impl_->core.pool; }
 }

@@ -27,8 +27,8 @@
     "cpppj/tests/fixtures/sun-aviary-x86.tsv": "e64841e232f3ea3b79eba3fba4d21656277a9b4dd05766f1ff1e77414cb6d0db"
   },
   "implementationSha256": {
-    "cpppj/src/client/RawCampaignSession.cpp": "e101fdf269104d8ade573fae02b4ae7e935bc5d9c06969b74f6d20056bbbbad6",
-    "cpppj/tests/CampaignSessionTests.cpp": "509c708c4c13ccdda5b10602f7c339d306d5855edc90dc82bd7b64e7fd66c562",
+    "cpppj/src/client/RawCampaignSession.cpp": "24dff4df9834a47bb6c7e72735be04e1059b6a548d58934f9b4de340b9ae649a",
+    "cpppj/tests/CampaignSessionTests.cpp": "f43160361ae3f9f12883691b9e3e95a290deb78a20d96b8e157b14f22841106e",
     "cpppj/tests/CampaignMissionStartTests.cpp": "47764f281f7d2b044cae2add110254f63b0acd2d3e783c703332a1310c6dec89",
     "cpppj/src/o/RawFlyerFrame.h": "0c3f5b5e3bbe52ac34e00fe37819f3a490011596919b715045a0c983899cb92a",
     "cpppj/src/o/RawFlyerFrame.cpp": "7752144c626f831c64bf0959ad8f9579d67bae1c87def2dcd0f1797b306f2049",
@@ -90,5 +90,6 @@
       "exit": 0,
       "seconds": 293.92
     }
-  }
+  },
+  "implementationRefresh352": "단위352의 사제 panic/현재158 속도·중립 회복/도착·명령 연결과 실제 회귀 검사에 맞춰 공유 구현 SHA만 갱신했다. 기존 원문과 과거 validation 수치는 보존한다."
 }

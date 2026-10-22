@@ -38,9 +38,9 @@
   "implementationSha256": {
     "cpppj/src/o/RawPriestPrayer.h": "101fbf51407517fed658239b5444ee15e0a1f674a01e2dd52a97d127f1436496",
     "cpppj/src/o/RawPriestPrayer.cpp": "51c2ab0994e0afdc83023a10a68a76c217593ac3a01f7ab4e78d0fc264f015c7",
-    "cpppj/src/client/RawCampaignPrayer.inc": "040c7b2fe01143174b834684715616910fbe260c08b6c6ae19d6a9c2f3a1b430",
+    "cpppj/src/client/RawCampaignPrayer.inc": "b276eb38ef511c0d8e445817f574b810e7cba0622fdc98fe4e95ce997b81ee91",
     "cpppj/src/client/RawCampaignSession.h": "f86a6e1e62c0e360675e6cdd2f32d828bbc1bb44a63df29d0c67b3dd2cee9e51",
-    "cpppj/src/client/RawCampaignSession.cpp": "e101fdf269104d8ade573fae02b4ae7e935bc5d9c06969b74f6d20056bbbbad6",
+    "cpppj/src/client/RawCampaignSession.cpp": "24dff4df9834a47bb6c7e72735be04e1059b6a548d58934f9b4de340b9ae649a",
     "cpppj/src/client/CampaignObjectMenuClient.cpp": "5173341f0ff67b1f9ad9e2f5cd829605f85e42bdddde8bfa3d5f2fe8dca2d30b",
     "cpppj/src/client/RawCampaignRitual.inc": "c6ee6b6b111cf0f6fa0ff2b18da7253a65a75b9aa5e8edbbf03b05cf820df9bf",
     "cpppj/src/o/RawPriestRitualActions.h": "ccc14f6b619803f544dd377d578927af5942c5c99d50429f4540ed0261b981bd",
@@ -55,10 +55,10 @@
     "cpppj/src/o/RawPriestState.cpp": "e49b14dcf6780fa0e7c0c3a3d8dd6f290ede637b5619967087ac0af3c03901bb",
     "cpppj/src/o/SquidProcess.h": "481ad652080175ccb135c5f4981edc44e7d853584eaaebaab1a65d3873bc5399",
     "cpppj/src/o/SquidProcess.cpp": "993e34a3c7b3b87f290a33f548a126415c3a77794a7a191801d68f405baf1780",
-    "cpppj/src/o/CMakeLists.txt": "2e73c17ebccdd294389f3e425081ca3830975f0be93153c7c00967fe418c6f8f",
-    "cpppj/tests/CMakeLists.txt": "f8354d238a52d595c762494a73fd28df35b2e77de8974909026a885fd239c107",
+    "cpppj/src/o/CMakeLists.txt": "bf9a8223110b8620169bb54d46cf4043403d31112753979d3dd97f6b91446b12",
+    "cpppj/tests/CMakeLists.txt": "7a01563d70b49a0c184a19ad0d82554bd88855564fc56fc4bfd201bf7923d6be",
     "cpppj/tests/PriestPrayerTests.cpp": "ea9c31c40c8d505974f55dc70604a32dd165f2512045b906316163f993dfaefe",
-    "cpppj/tests/CampaignSessionTests.cpp": "509c708c4c13ccdda5b10602f7c339d306d5855edc90dc82bd7b64e7fd66c562"
+    "cpppj/tests/CampaignSessionTests.cpp": "f43160361ae3f9f12883691b9e3e95a290deb78a20d96b8e157b14f22841106e"
   },
   "validation": {
     "releaseBuild": 4,
@@ -76,5 +76,6 @@
   "implementationRefresh348": "단위348의 타이머100칸 수정/새 송수신 모듈 등록에 맞춰 현재 공유 구현 SHA만 갱신했다. 기존 원문과 과거 validation 수치는 보존한다.",
   "implementationRefresh349": "단위349의 상태 주문/타이머 연결과 defaultFrame 자산 연결에 맞춰 현재 공유 구현 SHA만 갱신했다. 기존 원문/과거 validation 수치는 보존한다.",
   "implementationRefresh350": "단위350의 윈드 소환 주문/원주 생산 연결과 공용 등록·검사 변경에 맞춰 현재 구현 SHA만 갱신했다. 기존 원문과 과거 validation 수치는 보존한다.",
-  "implementationRefresh351": "단위351은 제품 몸체를 바꾸지 않고 같은 CampaignSessionTests에 자연 훨리기그 공격·귀환/착륙·동일 개체 재출격 검사를 추가했다. 현재 검사 SHA만 갱신하며 기존 원문과 과거 validation은 보존한다."
+  "implementationRefresh351": "단위351은 제품 몸체를 바꾸지 않고 같은 CampaignSessionTests에 자연 훨리기그 공격·귀환/착륙·동일 개체 재출격 검사를 추가했다. 현재 검사 SHA만 갱신하며 기존 원문과 과거 validation은 보존한다.",
+  "implementationRefresh352": "단위352의 사제 panic/현재158 속도·중립 회복/도착·명령 연결과 실제 회귀 검사에 맞춰 공유 구현 SHA만 갱신했다. 기존 원문과 과거 validation 수치는 보존한다."
 }

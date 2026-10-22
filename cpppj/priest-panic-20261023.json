@@ -1,0 +1,96 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-22",
+  "uniqueInputs": 600,
+  "normalReturns": 1200,
+  "nativeInstructions": 218430,
+  "nativeCalls": {
+    "00491db0": 1200,
+    "00455930": 3516,
+    "004e49c0": 408
+  },
+  "precisionDifferentInputs": [],
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_priest_panic.py": "4bd3e2b8ee5cbc359b87e2d5bd0d3961763f8196f4c988d6730f0dd86b2072ad",
+    "tools/decomp_arc_spire.py": "a476a7af621fd08e49536e427e40b3d6b4b3df47a8f514740b1633e73adc534e",
+    "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+    "tools/decomp_cursor_position.py": "e15bcdbc4c6be9c131c30f15416c945d650dba9f7dc6def404b47f63c635c212",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "cpppj/tests/fixtures/priest-panic-x86.tsv": "2edee42327cb649db426ff16470992fb6512bd44864c559b8a45d0ca4b631ffa"
+  },
+  "limitations": [
+    "491db0/455930/CRT절삭 전체 명령이다. 지형·현재 최대HP/TYPE 포인터·경로 시작은 명시 큰 경계다.",
+    "원본 CRT 기본PC53을 제품 기준으로 사용한다. GUI/전체25종·미션·Edit 완료 근거는 아니다."
+  ],
+  "implementationSha256": {
+    "cpppj/src/o/RawPriestPanic.h": "c95aab3263b706301aeceb48cd49772d0620e6a9296294c1b9b93058cf764334",
+    "cpppj/src/o/RawPriestPanic.cpp": "73aacbb9c43cdf248a3a0cb3ec23597c6108071800d680143585a46ce5e2b5dc",
+    "cpppj/src/client/RawCampaignPanic.inc": "7e47571604b40641f7cde157cd9b079edb9d0a7cd09cfa20a2828df44803cba5",
+    "cpppj/src/client/RawCampaignMotionBindings.h": "69e072632cc385b1f8327a89f39fc74fd6920859055d34a59f0b35fd4b0d563f",
+    "cpppj/src/client/RawCampaignMotionBindings.cpp": "1a42be3f330309c7e97e4b65c6cb72379bd11f205d25258736e1e6bc744db94b",
+    "cpppj/src/client/RawCampaignPrayer.inc": "b276eb38ef511c0d8e445817f574b810e7cba0622fdc98fe4e95ce997b81ee91",
+    "cpppj/src/client/RawCampaignSession.cpp": "24dff4df9834a47bb6c7e72735be04e1059b6a548d58934f9b4de340b9ae649a",
+    "cpppj/src/client/RawPriestWorldBindings.h": "bef744fbc276999b9e1aebafe0ae16445d9ee57d9cab73d9c1ad5248db0240b6",
+    "cpppj/src/client/RawPriestWorldBindings.cpp": "982722ce738ad8011c8f3efe2d6c351c22dd01fafd14a721f2c1f4dba11c7ed5",
+    "cpppj/src/o/RawPriestArrival.h": "33ca15f327ab858b673395e63c932051827e8b2ee71f80bedce7899c7476aac9",
+    "cpppj/src/o/RawPriestArrival.cpp": "6552e43202269a1c2dfabbc8dcd11878f320a34e95dba9691c870d3e7859b806",
+    "cpppj/src/o/RawPriestRegen.h": "0ea7ef4561af570e6e3159e9c1a8ac5be93a0407ce618157bc889a0ad05bad0c",
+    "cpppj/src/o/RawPriestRegen.cpp": "2f5d91ebcfe7ae579a7c9a9003a39acc81120bbd7b71530aea3076f85ad8fef9",
+    "cpppj/src/o/RawPriestPostPop.h": "7455e8fe47215746bcd223a35d0e8df82419b68efe9ae4b8609391ea61a96ec1",
+    "cpppj/src/o/RawPriestPostPop.cpp": "452f60d1b1afc344cdd618d7583cff295a4b6b41948d4d3f2ec950b72e720c0d",
+    "cpppj/src/o/RawCanonPlacementTerrain.h": "78b7c406b5ccef3ae85504595952b04034d7ccbd8fd98512b1e299efc37dfd45",
+    "cpppj/src/o/RawCanonPlacementTerrain.cpp": "1268d45f07491b7ea9d5b69116c283a323e5d5e2b7d05d48a0bdea75182d17f3",
+    "cpppj/src/o/RawCarrierTarget.h": "49e6340d4b120f87894cd07126c94fbf212a5e4d477bd44bdff22190e86f793d",
+    "cpppj/src/o/RawCarrierTarget.cpp": "82c9b3862969d5e664ed6acff2f63f97340898463c22347a667f278d9d519f08",
+    "cpppj/src/o/RawPathStart.h": "576188b61294a25b8abb6caa7bc129c56e21804a2fb79cf5de74cd25421a568f",
+    "cpppj/src/o/RawPathStart.cpp": "98061bd03d7b02facf44d6dd9fd865a08c0ce308729b4614a250797a3e4b1141",
+    "cpppj/src/o/RawPathRuntime.h": "593f7a6f260af75563c974a6c00f639c31409163e59d3ba3cc1292a533b092d0",
+    "cpppj/src/o/RawPathRuntime.cpp": "b3448afee8979e761bca831c803203ff9e5620fef2363ddcd342b1aba74c69ca",
+    "cpppj/src/o/RawDudeNotice.h": "660ca3cc52fc3988d6c158e2b1525a43171b4734fb0575329118f3a2651ac9da",
+    "cpppj/src/o/RawDudeNotice.cpp": "00b5878e7c8517145a12b9302ee93f41aabf75c530d614f34ec2f0c7438be350",
+    "cpppj/src/o/SpStore.h": "88a9d2f2913cefc4429ab312a841c01b4405fd5e3799a2d630c1262f66588030",
+    "cpppj/src/o/SpStore.cpp": "2319a90807d423b72b0e47e51101bc9ea1618f234c65e26b704c017313f4268a",
+    "cpppj/src/o/CMakeLists.txt": "bf9a8223110b8620169bb54d46cf4043403d31112753979d3dd97f6b91446b12",
+    "cpppj/tests/CMakeLists.txt": "7a01563d70b49a0c184a19ad0d82554bd88855564fc56fc4bfd201bf7923d6be",
+    "cpppj/tests/PriestPanicTests.cpp": "e0d5f6062905d2f80935858bc685d699620090b921fc93d586f9b967e6593013",
+    "cpppj/tests/CampaignSessionTests.cpp": "f43160361ae3f9f12883691b9e3e95a290deb78a20d96b8e157b14f22841106e"
+  },
+  "validation": {
+    "releaseBuild": {
+      "log": "extracted/cpp-priest-panic-20261023-build2.log",
+      "exit": 0,
+      "warnings": 0,
+      "errors": 0
+    },
+    "focused": {
+      "logs": [
+        "extracted/cpp-priest-panic-20261023-focused2.log",
+        "extracted/cpp-priest-panic-20261023-related3.log"
+      ],
+      "tests": 22,
+      "failed": 0
+    },
+    "actual": {
+      "healthyCommandArrivalFrame": 95,
+      "woundedHp": 67,
+      "maximumHp": 100,
+      "returnSpeed": 3.6,
+      "restoredSpeed": 1,
+      "returnAndFollowupFrame": 201,
+      "neutralNaturalPathCount": 2,
+      "neutralRegenAndRepeatedArrivalFrame": 321,
+      "injectedResults": false
+    },
+    "scope": "실제 단일 플레이의 명령/6699 피해·임시속도 신전복귀/절삭 후속속도와 중립25a 회복·54 이동/도착 재대피다. GUI/전체25종·미션·Edit 완료 근거는 아니다.",
+    "full": {
+      "log": "extracted/cpp-priest-panic-20261023-ctest1.log",
+      "tests": 2335,
+      "failed": 0,
+      "exit": 0,
+      "seconds": 293.28
+    }
+  }
+}

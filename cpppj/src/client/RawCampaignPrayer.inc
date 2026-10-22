@@ -18,7 +18,7 @@ void ConnectPriestPrayer() {
     };
     hooks.create=[this](Sid sid,std::uint32_t kind,std::uint32_t argument,std::uint32_t flags,std::uint32_t attachFlags,std::uint32_t quality) { static_cast<void>(contained->Create(sid,kind,argument,flags,attachFlags,quality)); };
     hooks.setFrame=[this](Sid sid,std::int32_t frame,std::uint32_t flags) { core.frame.Set(sid,frame,flags); };
-    hooks.panic=[](Sid) { throw std::logic_error("사제 panic491db0 전체 연결은 후속 복원 대상"); }; // 다른 명령의 미복원을 기도 성공으로 대신하지 않는다.
+    hooks.panic=[this](Sid sid) { RunPriestPanic(sid); }; // 같은 명령/중립 회복·도착의 실제491db0을 사용한다.
     hooks.parent=[this](Sid sid,std::uint32_t code,std::uint32_t parameter) { if (!carrierDrop) throw std::logic_error("사제 입력의 현재 Carrier 부모 미설치");return carrierDrop->Command(sid,code,Sid{static_cast<std::uint16_t>(parameter)}); };
     priestPrayer=std::make_unique<RawPriestPrayer>(core.pool,priestPrayerTypes,assetState.boss,std::move(hooks));
 }
