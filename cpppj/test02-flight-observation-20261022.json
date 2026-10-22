@@ -1,0 +1,3594 @@
+{
+  "host": "VM-W11-Codex",
+  "session": "20261022T071401768Z-8fdc36c4cafd",
+  "actions": [
+    {
+      "op": "start",
+      "started": "2026-10-22T07:14:01.624Z",
+      "sessionId": "20261022T071401768Z-8fdc36c4cafd",
+      "evidence": {
+        "path": "screens/3eb1594375aa2b0498cb594a3d3fdb4d3e955305bc1d634faa5b2031bf68294b.png",
+        "sha256": "3eb1594375aa2b0498cb594a3d3fdb4d3e955305bc1d634faa5b2031bf68294b",
+        "width": 1024,
+        "height": 768,
+        "region": {
+          "x": 0,
+          "y": 0,
+          "width": 1024,
+          "height": 768
+        },
+        "reused": false,
+        "window": {
+          "handle": 787464,
+          "title": "Activision and Titanic Entertainment Present: NetStorm",
+          "x": 8,
+          "y": 31,
+          "width": 1024,
+          "height": 768,
+          "foreground": true
+        },
+        "method": "screen"
+      },
+      "fps": 30,
+      "automaticRecording": {
+        "sessionId": "20261022T071401768Z-8fdc36c4cafd",
+        "runId": "bd02afd5f3ca4ec39381032c492b4f7c",
+        "fps": 30,
+        "processId": 1204,
+        "processStartedUtcTicks": 639282500586533408,
+        "processPath": "H:\\Workspace\\git\\NetstormReborn\\analyzeManager\\bin\\Release\\net10.0-windows\\Netstorm.AnalyzeManager.exe",
+        "state": "recording",
+        "frames": 4,
+        "elapsedMs": 243.1012,
+        "error": null,
+        "updatedUtc": "2026-10-22T07:14:19.1356915+00:00"
+      },
+      "report": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\report.md",
+      "isError": false,
+      "sessionDir": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd",
+      "finished": "2026-10-22T07:14:19.585Z",
+      "t": "2026-10-22T07:14:19.585Z"
+    },
+    {
+      "op": "click",
+      "started": "2026-10-22T07:14:28.591Z",
+      "isError": false,
+      "error": null,
+      "changedRatio": 0.027759552001953125,
+      "after": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\f23fd4a55ddcc222ab8b42663ece4d122bd2db3044cb13dc07b93ac1c7ad39f5.png",
+      "before": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\16d20b2048e425176d98cb924c64b388958bcd90115f4e4669b5bc0393a52604.png",
+      "args": {
+        "x": 661,
+        "y": 436,
+        "dur": 120,
+        "settle": 900
+      },
+      "cursor": {
+        "handle": 590933,
+        "flags": 1,
+        "showing": true,
+        "x": 669,
+        "y": 467
+      },
+      "finished": "2026-10-22T07:14:29.948Z",
+      "t": "2026-10-22T07:14:29.948Z"
+    },
+    {
+      "op": "click",
+      "started": "2026-10-22T07:14:29.948Z",
+      "isError": false,
+      "error": null,
+      "changedRatio": 0.08783721923828125,
+      "after": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\0fba1e0f784c316746bc38c72b7a6823fb57b6fd1e54ee5cb2e1742fa6e26fc7.png",
+      "before": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\f23fd4a55ddcc222ab8b42663ece4d122bd2db3044cb13dc07b93ac1c7ad39f5.png",
+      "args": {
+        "x": 511,
+        "y": 464,
+        "dur": 120,
+        "settle": 1200
+      },
+      "cursor": {
+        "handle": 590933,
+        "flags": 1,
+        "showing": true,
+        "x": 519,
+        "y": 495
+      },
+      "finished": "2026-10-22T07:14:31.467Z",
+      "t": "2026-10-22T07:14:31.467Z"
+    },
+    {
+      "op": "click",
+      "started": "2026-10-22T07:14:31.467Z",
+      "isError": false,
+      "error": null,
+      "changedRatio": 0.1829376220703125,
+      "after": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\5ec51f061d81327b05c2bb6c3937332cdf442f103ae5b5ac4ea6a4b0c5c94cb6.png",
+      "before": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\0fba1e0f784c316746bc38c72b7a6823fb57b6fd1e54ee5cb2e1742fa6e26fc7.png",
+      "args": {
+        "x": 393,
+        "y": 343,
+        "dur": 120,
+        "settle": 900,
+        "name": "b01-edit-list"
+      },
+      "cursor": {
+        "handle": 590933,
+        "flags": 1,
+        "showing": true,
+        "x": 401,
+        "y": 374
+      },
+      "copy": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\b01-edit-list.png",
+      "copyCursor": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\b01-edit-list.cur.png",
+      "finished": "2026-10-22T07:14:32.758Z",
+      "t": "2026-10-22T07:14:32.758Z"
+    },
+    {
+      "op": "click",
+      "started": "2026-10-22T07:14:32.758Z",
+      "isError": false,
+      "error": null,
+      "changedRatio": 0.020666758219401043,
+      "after": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\a6494212fbec35b3211c2760d74f9b0bc8a29456df6311b67439f22da7b42d27.png",
+      "before": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\5ec51f061d81327b05c2bb6c3937332cdf442f103ae5b5ac4ea6a4b0c5c94cb6.png",
+      "args": {
+        "x": 451,
+        "y": 647,
+        "dur": 120,
+        "settle": 900,
+        "name": "b02-new-name"
+      },
+      "cursor": {
+        "handle": 590933,
+        "flags": 1,
+        "showing": true,
+        "x": 459,
+        "y": 678
+      },
+      "copy": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\b02-new-name.png",
+      "copyCursor": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\b02-new-name.cur.png",
+      "finished": "2026-10-22T07:14:34.093Z",
+      "t": "2026-10-22T07:14:34.093Z"
+    },
+    {
+      "op": "key",
+      "started": "2026-10-22T07:14:34.093Z",
+      "isError": false,
+      "error": null,
+      "changedRatio": 2.5431315104166668e-05,
+      "after": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\5ae8b914c9595b74cee3b5e5db32c1804483b609fa1e1b824a3038460cf84eb8.png",
+      "before": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\492662f9acb1019869633926c56b54d633ea1f7496f020b73c0b7c9bb0422cf5.png",
+      "args": {
+        "key": "SHIFT+T",
+        "dur": 60,
+        "settle": 120
+      },
+      "cursor": {
+        "handle": 590933,
+        "flags": 1,
+        "showing": true,
+        "x": 459,
+        "y": 678
+      },
+      "finished": "2026-10-22T07:14:34.501Z",
+      "t": "2026-10-22T07:14:34.501Z"
+    },
+    {
+      "op": "key",
+      "started": "2026-10-22T07:14:34.501Z",
+      "isError": false,
+      "error": null,
+      "changedRatio": 4.9591064453125e-05,
+      "after": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\7b31164ea4e4614353054bdc810b7cc761c175fbbbe461092100b80e7238f359.png",
+      "before": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\5ae8b914c9595b74cee3b5e5db32c1804483b609fa1e1b824a3038460cf84eb8.png",
+      "args": {
+        "key": "SHIFT+E",
+        "dur": 60,
+        "settle": 120
+      },
+      "cursor": {
+        "handle": 590933,
+        "flags": 1,
+        "showing": true,
+        "x": 459,
+        "y": 678
+      },
+      "finished": "2026-10-22T07:14:34.915Z",
+      "t": "2026-10-22T07:14:34.915Z"
+    },
+    {
+      "op": "key",
+      "started": "2026-10-22T07:14:34.915Z",
+      "isError": false,
+      "error": null,
+      "changedRatio": 4.3233235677083336e-05,
+      "after": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\d8df82bbe4175838caaf3a1fe3d2d7bac8c9f5e9793a666a27ea014077ad6497.png",
+      "before": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\7b31164ea4e4614353054bdc810b7cc761c175fbbbe461092100b80e7238f359.png",
+      "args": {
+        "key": "SHIFT+S",
+        "dur": 60,
+        "settle": 120
+      },
+      "cursor": {
+        "handle": 590933,
+        "flags": 1,
+        "showing": true,
+        "x": 459,
+        "y": 678
+      },
+      "finished": "2026-10-22T07:14:35.319Z",
+      "t": "2026-10-22T07:14:35.319Z"
+    },
+    {
+      "op": "key",
+      "started": "2026-10-22T07:14:35.319Z",
+      "isError": false,
+      "error": null,
+      "changedRatio": 4.3233235677083336e-05,
+      "after": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\6ad496fa0064923017a30bf28a50b154bde574750b0c86c4ae6a0bba9514a3bd.png",
+      "before": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\d8df82bbe4175838caaf3a1fe3d2d7bac8c9f5e9793a666a27ea014077ad6497.png",
+      "args": {
+        "key": "SHIFT+T",
+        "dur": 60,
+        "settle": 120
+      },
+      "cursor": {
+        "handle": 590933,
+        "flags": 1,
+        "showing": true,
+        "x": 459,
+        "y": 678
+      },
+      "finished": "2026-10-22T07:14:35.783Z",
+      "t": "2026-10-22T07:14:35.783Z"
+    },
+    {
+      "op": "key",
+      "started": "2026-10-22T07:14:35.783Z",
+      "isError": false,
+      "error": null,
+      "changedRatio": 4.0690104166666664e-05,
+      "after": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\bcfa2db5d3925db8b10e9b637767992ab66bf71cb008a05d2fdadee9a9643188.png",
+      "before": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\6ad496fa0064923017a30bf28a50b154bde574750b0c86c4ae6a0bba9514a3bd.png",
+      "args": {
+        "key": "0",
+        "dur": 60,
+        "settle": 120
+      },
+      "cursor": {
+        "handle": 590933,
+        "flags": 1,
+        "showing": true,
+        "x": 459,
+        "y": 678
+      },
+      "finished": "2026-10-22T07:14:36.331Z",
+      "t": "2026-10-22T07:14:36.331Z"
+    },
+    {
+      "op": "key",
+      "started": "2026-10-22T07:14:36.331Z",
+      "isError": false,
+      "error": null,
+      "changedRatio": 4.57763671875e-05,
+      "after": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\511b45abf11c755b587314bf4c184bc6fa9c611513b1f95f6ada4487b203abb7.png",
+      "before": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\bcfa2db5d3925db8b10e9b637767992ab66bf71cb008a05d2fdadee9a9643188.png",
+      "args": {
+        "key": "2",
+        "dur": 60,
+        "settle": 120
+      },
+      "cursor": {
+        "handle": 590933,
+        "flags": 1,
+        "showing": true,
+        "x": 459,
+        "y": 678
+      },
+      "finished": "2026-10-22T07:14:36.795Z",
+      "t": "2026-10-22T07:14:36.795Z"
+    },
+    {
+      "op": "shot",
+      "started": "2026-10-22T07:14:36.795Z",
+      "isError": false,
+      "image": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\511b45abf11c755b587314bf4c184bc6fa9c611513b1f95f6ada4487b203abb7.png",
+      "cursor": {
+        "handle": 590933,
+        "flags": 1,
+        "showing": true,
+        "x": 459,
+        "y": 678
+      },
+      "copy": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\b03-typed.png",
+      "copyCursor": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\b03-typed.cur.png",
+      "finished": "2026-10-22T07:14:36.964Z",
+      "t": "2026-10-22T07:14:36.964Z"
+    },
+    {
+      "op": "click",
+      "started": "2026-10-22T07:14:36.965Z",
+      "isError": false,
+      "error": null,
+      "changedRatio": 0.5566317240397135,
+      "after": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\f0372f63c0418223badfcbb9c284c49ac159950b372a81ade8c6e7755d0a6c5c.png",
+      "before": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\511b45abf11c755b587314bf4c184bc6fa9c611513b1f95f6ada4487b203abb7.png",
+      "args": {
+        "x": 483,
+        "y": 419,
+        "dur": 120,
+        "settle": 1800,
+        "name": "b04-editor"
+      },
+      "cursor": {
+        "handle": 590933,
+        "flags": 1,
+        "showing": true,
+        "x": 491,
+        "y": 450
+      },
+      "copy": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\b04-editor.png",
+      "copyCursor": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\b04-editor.cur.png",
+      "finished": "2026-10-22T07:14:39.144Z",
+      "t": "2026-10-22T07:14:39.144Z"
+    },
+    {
+      "op": "mark",
+      "text": "편집기에서 TEST02 로드",
+      "t": "2026-10-22T07:14:39.144Z"
+    },
+    {
+      "op": "key",
+      "started": "2026-10-22T07:14:39.144Z",
+      "isError": false,
+      "error": null,
+      "changedRatio": 0.02098846435546875,
+      "after": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\2de99b20b2974512cf75942604440b7235d887f3275d0d127a91cb30a361eb84.png",
+      "before": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\68ae1e80db3a5d267da8bdb6306fcf9a8cd0d365eb40367378a7d51f15a3f54a.png",
+      "args": {
+        "key": "ESCAPE",
+        "dur": 90,
+        "settle": 700
+      },
+      "cursor": {
+        "handle": 590933,
+        "flags": 1,
+        "showing": true,
+        "x": 491,
+        "y": 450
+      },
+      "finished": "2026-10-22T07:14:40.206Z",
+      "t": "2026-10-22T07:14:40.206Z"
+    },
+    {
+      "op": "click",
+      "started": "2026-10-22T07:14:40.206Z",
+      "isError": false,
+      "error": null,
+      "changedRatio": 0.014104207356770834,
+      "after": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\ab5d2e4081a4dff37b4f6719b2342d4bea67e8c59cb0ca76a286c8a43064bf8b.png",
+      "before": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\c3bbcf7f4860bf56674f0d646fb336a5b934f75b962d123236ba4bc946f5671e.png",
+      "args": {
+        "x": 104,
+        "y": 9,
+        "dur": 100,
+        "settle": 700,
+        "name": "b05-game-menu"
+      },
+      "cursor": {
+        "handle": 590933,
+        "flags": 1,
+        "showing": true,
+        "x": 112,
+        "y": 40
+      },
+      "copy": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\b05-game-menu.png",
+      "copyCursor": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\b05-game-menu.cur.png",
+      "finished": "2026-10-22T07:14:41.446Z",
+      "t": "2026-10-22T07:14:41.446Z"
+    },
+    {
+      "op": "click",
+      "started": "2026-10-22T07:14:41.446Z",
+      "isError": false,
+      "error": null,
+      "changedRatio": 0.10484695434570312,
+      "after": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\199570e5bbba3acc1e061e707ca085d23edee6986902187fffe205f965022868.png",
+      "before": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\1f9ea22c4336b140d5612d69d3f12ada4d514f92cf6acd1228a9bf974a2f7ff1.png",
+      "args": {
+        "x": 130,
+        "y": 25,
+        "dur": 120,
+        "settle": 1800,
+        "name": "b06-briefing"
+      },
+      "cursor": {
+        "handle": 590933,
+        "flags": 1,
+        "showing": true,
+        "x": 138,
+        "y": 56
+      },
+      "copy": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\b06-briefing.png",
+      "copyCursor": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\b06-briefing.cur.png",
+      "finished": "2026-10-22T07:14:43.667Z",
+      "t": "2026-10-22T07:14:43.667Z"
+    },
+    {
+      "op": "click",
+      "started": "2026-10-22T07:14:43.667Z",
+      "isError": false,
+      "error": null,
+      "changedRatio": 0.0010808308919270833,
+      "after": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\bc74a75e41d01a3f5f945cad21d582b4e2e39ad33b229681157e0d3315e62a09.png",
+      "before": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\199570e5bbba3acc1e061e707ca085d23edee6986902187fffe205f965022868.png",
+      "args": {
+        "x": 598,
+        "y": 462,
+        "dur": 120,
+        "settle": 1500,
+        "name": "b07-battle"
+      },
+      "cursor": {
+        "handle": 590933,
+        "flags": 1,
+        "showing": true,
+        "x": 138,
+        "y": 56
+      },
+      "copy": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\b07-battle.png",
+      "copyCursor": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\b07-battle.cur.png",
+      "finished": "2026-10-22T07:14:45.564Z",
+      "t": "2026-10-22T07:14:45.564Z"
+    },
+    {
+      "op": "mark",
+      "text": "클릭 (598,462) 화면 변화 0.0011 < 0.02: 재시도 1",
+      "t": "2026-10-22T07:14:45.564Z"
+    },
+    {
+      "op": "click",
+      "started": "2026-10-22T07:14:47.574Z",
+      "isError": false,
+      "error": null,
+      "changedRatio": 0,
+      "after": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\40160378c09e1c2dc927f598c13bbb0eb7fc0821063c31dc7c0dc8f5fbbb6436.png",
+      "before": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\40160378c09e1c2dc927f598c13bbb0eb7fc0821063c31dc7c0dc8f5fbbb6436.png",
+      "args": {
+        "x": 598,
+        "y": 462,
+        "dur": 120,
+        "settle": 1500,
+        "name": "b07-battle"
+      },
+      "cursor": {
+        "handle": 590933,
+        "flags": 1,
+        "showing": true,
+        "x": 138,
+        "y": 56
+      },
+      "copy": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\b07-battle.png",
+      "copyCursor": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\b07-battle.cur.png",
+      "finished": "2026-10-22T07:14:49.583Z",
+      "t": "2026-10-22T07:14:49.583Z"
+    },
+    {
+      "op": "mark",
+      "text": "클릭 (598,462) 화면 변화 0.0000 < 0.02: 재시도 2",
+      "t": "2026-10-22T07:14:49.583Z"
+    },
+    {
+      "op": "click",
+      "started": "2026-10-22T07:14:51.583Z",
+      "isError": false,
+      "error": null,
+      "changedRatio": 0.043575286865234375,
+      "after": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\384b56d9645e49cf85ec5541e7ac35fed83852e8c11d5400c3815dc56e69ee74.png",
+      "before": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\40160378c09e1c2dc927f598c13bbb0eb7fc0821063c31dc7c0dc8f5fbbb6436.png",
+      "args": {
+        "x": 598,
+        "y": 462,
+        "dur": 120,
+        "settle": 1500,
+        "name": "b07-battle"
+      },
+      "cursor": {
+        "handle": 590933,
+        "flags": 1,
+        "showing": true,
+        "x": 606,
+        "y": 493
+      },
+      "copy": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\b07-battle.png",
+      "copyCursor": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\b07-battle.cur.png",
+      "finished": "2026-10-22T07:14:53.471Z",
+      "t": "2026-10-22T07:14:53.471Z"
+    },
+    {
+      "op": "mark",
+      "text": "시험 전투 시작",
+      "t": "2026-10-22T07:14:53.471Z"
+    },
+    {
+      "op": "click",
+      "started": "2026-10-22T07:15:18.394Z",
+      "isError": false,
+      "error": null,
+      "changedRatio": 0.06695556640625,
+      "after": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\6ff246c5746a88ad4a599ab2d9ffc671200bc8c057e5a8cfba53c359ec908af3.png",
+      "before": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\d6172368b045af92567e46c5531a42c6a5992116a514fc0664c67ead37048029.png",
+      "args": {
+        "x": 446,
+        "y": 377,
+        "button": "right",
+        "dur": 100,
+        "settle": 400,
+        "name": "p01-sun-menu"
+      },
+      "cursor": {
+        "handle": 590933,
+        "flags": 1,
+        "showing": true,
+        "x": 454,
+        "y": 408
+      },
+      "copy": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\p01-sun-menu.png",
+      "copyCursor": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\p01-sun-menu.cur.png",
+      "finished": "2026-10-22T07:15:19.208Z",
+      "t": "2026-10-22T07:15:19.208Z"
+    },
+    {
+      "op": "click",
+      "started": "2026-10-22T07:15:36.351Z",
+      "isError": false,
+      "error": null,
+      "changedRatio": 0.053530375162760414,
+      "after": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\b74f4fd1e2f8eaf4678475961a1a04986df6cc8248e5d634de6a1942d1f50ae0.png",
+      "before": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\d8dbd843638eeef0dacbd2f2333e14e02646f8c0042da1e77cf26100f0dbdb1c.png",
+      "args": {
+        "x": 529,
+        "y": 402,
+        "dur": 100,
+        "settle": 400,
+        "name": "p02-sun-knowledge"
+      },
+      "cursor": {
+        "handle": 590933,
+        "flags": 1,
+        "showing": true,
+        "x": 537,
+        "y": 433
+      },
+      "copy": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\p02-sun-knowledge.png",
+      "copyCursor": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\p02-sun-knowledge.cur.png",
+      "finished": "2026-10-22T07:15:37.153Z",
+      "t": "2026-10-22T07:15:37.153Z"
+    },
+    {
+      "op": "click",
+      "started": "2026-10-22T07:15:48.367Z",
+      "isError": false,
+      "error": null,
+      "changedRatio": 0.1099700927734375,
+      "after": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\e12f6d991d79530674b989f10dd28f4a5fb3510ce48ee1b8b8eadf70c084440e.png",
+      "before": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\7d10b3613eacf77015914c447ed68f6c34eea2e2cbfaf9f4d51a35b85bd1d26f.png",
+      "args": {
+        "x": 702,
+        "y": 539,
+        "dur": 100,
+        "settle": 600,
+        "name": "p03-balloon-registered"
+      },
+      "cursor": {
+        "handle": 590933,
+        "flags": 1,
+        "showing": true,
+        "x": 710,
+        "y": 570
+      },
+      "copy": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\p03-balloon-registered.png",
+      "copyCursor": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\p03-balloon-registered.cur.png",
+      "finished": "2026-10-22T07:15:49.390Z",
+      "t": "2026-10-22T07:15:49.390Z"
+    },
+    {
+      "op": "click",
+      "started": "2026-10-22T07:16:08.405Z",
+      "isError": false,
+      "error": null,
+      "changedRatio": 0.007467905680338542,
+      "after": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\c377e09e9e9010d5c0019816d7edc6e3ad593d3be4ed925165c542b44af47b10.png",
+      "before": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\5d5c0a2ba907dc8fc4ecc5ece566c8f27c34b4966a240cc6f2cc915b9891d0b1.png",
+      "args": {
+        "x": 40,
+        "y": 270,
+        "dur": 100,
+        "settle": 200
+      },
+      "cursor": {
+        "handle": 65539,
+        "flags": 1,
+        "showing": true,
+        "x": 1432,
+        "y": 820
+      },
+      "finished": "2026-10-22T07:16:09.011Z",
+      "t": "2026-10-22T07:16:09.011Z"
+    },
+    {
+      "op": "click",
+      "started": "2026-10-22T07:16:09.011Z",
+      "isError": false,
+      "error": null,
+      "changedRatio": 0.00740814208984375,
+      "after": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\2842d244221f7652734fd890879bca552c79ca9ffa458befca4792c6c5cbcb39.png",
+      "before": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\38bf74ca888f701a920ad07e1dc71e98ada0e5cf9b406f72e0fb7ff382470dac.png",
+      "args": {
+        "x": 740,
+        "y": 446,
+        "dur": 100,
+        "settle": 500,
+        "name": "p04-balloon-placed"
+      },
+      "cursor": {
+        "handle": 70517501,
+        "flags": 1,
+        "showing": true,
+        "x": 748,
+        "y": 477
+      },
+      "copy": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\p04-balloon-placed.png",
+      "copyCursor": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\p04-balloon-placed.cur.png",
+      "finished": "2026-10-22T07:16:09.905Z",
+      "t": "2026-10-22T07:16:09.905Z"
+    },
+    {
+      "op": "click",
+      "started": "2026-10-22T07:16:09.905Z",
+      "isError": false,
+      "error": null,
+      "changedRatio": 0.01187896728515625,
+      "after": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\b56e7349b415221b22a15e3b36f4a0f49aa2f76ebdf1867ef84c00b34389597b.png",
+      "before": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\45a5c2273ce939ea9bc67be31d9540eccf934c9fce0a2cb69f0d27a28b017aa8.png",
+      "args": {
+        "x": 446,
+        "y": 377,
+        "button": "right",
+        "dur": 100,
+        "settle": 300
+      },
+      "cursor": {
+        "handle": 70517501,
+        "flags": 1,
+        "showing": true,
+        "x": 454,
+        "y": 408
+      },
+      "finished": "2026-10-22T07:16:10.533Z",
+      "t": "2026-10-22T07:16:10.533Z"
+    },
+    {
+      "op": "click",
+      "started": "2026-10-22T07:16:10.533Z",
+      "isError": false,
+      "error": null,
+      "changedRatio": 0.011147816975911459,
+      "after": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\f4d1107ebb7e48eaf97da969ff2c47ad3e5b33339b6b7aa0e55ce35db07ed336.png",
+      "before": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\2b54f2793fcec78071d6a339550acbd25b75e05cc8c12d79b376e6aaf82e8f4f.png",
+      "args": {
+        "x": 529,
+        "y": 421,
+        "dur": 100,
+        "settle": 700,
+        "name": "p05-workshop-upgrade"
+      },
+      "cursor": {
+        "handle": 70517501,
+        "flags": 1,
+        "showing": true,
+        "x": 537,
+        "y": 452
+      },
+      "copy": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\p05-workshop-upgrade.png",
+      "copyCursor": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\p05-workshop-upgrade.cur.png",
+      "finished": "2026-10-22T07:16:11.606Z",
+      "t": "2026-10-22T07:16:11.606Z"
+    },
+    {
+      "op": "click",
+      "started": "2026-10-22T07:16:56.384Z",
+      "isError": false,
+      "error": null,
+      "changedRatio": 0.012074788411458334,
+      "after": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\bc42f42d4b22fad43c859e4e517af7f6eddeb2d96cce6bf023f5272d76704288.png",
+      "before": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\d1274a30031de2f1a8fc910f46943d23a783cc9dd51d37bc6b306e0344f3833e.png",
+      "args": {
+        "x": 446,
+        "y": 377,
+        "button": "right",
+        "dur": 100,
+        "settle": 200
+      },
+      "cursor": {
+        "handle": 70517501,
+        "flags": 1,
+        "showing": true,
+        "x": 454,
+        "y": 408
+      },
+      "finished": "2026-10-22T07:16:56.933Z",
+      "t": "2026-10-22T07:16:56.933Z"
+    },
+    {
+      "op": "click",
+      "started": "2026-10-22T07:16:56.933Z",
+      "isError": false,
+      "error": null,
+      "changedRatio": 0.004639943440755208,
+      "after": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\8f75b84a56fcb8dc920c14773ddb006b34dde667aba17ff1a5f7c6a75af18591.png",
+      "before": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\92a89d030f3cca48639e18cd8ae1ac30fde4138cae873b59d070421411527eb4.png",
+      "args": {
+        "x": 446,
+        "y": 377,
+        "button": "right",
+        "dur": 100,
+        "settle": 250
+      },
+      "cursor": {
+        "handle": 70517501,
+        "flags": 1,
+        "showing": true,
+        "x": 454,
+        "y": 408
+      },
+      "finished": "2026-10-22T07:16:57.494Z",
+      "t": "2026-10-22T07:16:57.494Z"
+    },
+    {
+      "op": "click",
+      "started": "2026-10-22T07:16:57.494Z",
+      "isError": false,
+      "error": null,
+      "changedRatio": 0.011778513590494791,
+      "after": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\aa7e7834451981a4d71430d26fd9024a9e26db97fccd405b756af16c9769a942.png",
+      "before": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\752c530ac22ebf1fa099e8a5fd8ae30a05e4939e17e22a0eee22a8addaca465e.png",
+      "args": {
+        "x": 529,
+        "y": 402,
+        "dur": 100,
+        "settle": 400,
+        "name": "p06-knowledge-after-balloon"
+      },
+      "cursor": {
+        "handle": 70517501,
+        "flags": 1,
+        "showing": true,
+        "x": 537,
+        "y": 433
+      },
+      "copy": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\p06-knowledge-after-balloon.png",
+      "copyCursor": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\p06-knowledge-after-balloon.cur.png",
+      "finished": "2026-10-22T07:16:58.264Z",
+      "t": "2026-10-22T07:16:58.264Z"
+    },
+    {
+      "op": "key",
+      "started": "2026-10-22T07:17:12.351Z",
+      "isError": false,
+      "error": null,
+      "changedRatio": 0.009665171305338541,
+      "after": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\0cc8fd9010495b93c99a440a184b09d241ef3af084d47e0a91918fbb750c6fd9.png",
+      "before": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\ff30e841e88f9edefe4cda90ceaadc0edc8a8a2a3dc6df80ba54b034f0633c07.png",
+      "args": {
+        "key": "ESCAPE",
+        "dur": 100,
+        "settle": 250
+      },
+      "cursor": {
+        "handle": 65541,
+        "flags": 1,
+        "showing": true,
+        "x": 1289,
+        "y": 704
+      },
+      "finished": "2026-10-22T07:17:13.090Z",
+      "t": "2026-10-22T07:17:13.090Z"
+    },
+    {
+      "op": "click",
+      "started": "2026-10-22T07:17:13.090Z",
+      "isError": false,
+      "error": null,
+      "changedRatio": 0.004473368326822917,
+      "after": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\ca5b1657fcc293f25437f6c307e03e04d612cb019b2373d157b6c0e4f532d2ba.png",
+      "before": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\7997608f6b046d94ca272ed3442e95a12227929f72c12111b8f9228636bff488.png",
+      "args": {
+        "x": 446,
+        "y": 377,
+        "button": "right",
+        "dur": 100,
+        "settle": 350,
+        "name": "p07-cancel-and-menu"
+      },
+      "cursor": {
+        "handle": 70517501,
+        "flags": 1,
+        "showing": true,
+        "x": 462,
+        "y": 415
+      },
+      "copy": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\p07-cancel-and-menu.png",
+      "copyCursor": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\p07-cancel-and-menu.cur.png",
+      "finished": "2026-10-22T07:17:13.801Z",
+      "t": "2026-10-22T07:17:13.801Z"
+    },
+    {
+      "op": "click",
+      "started": "2026-10-22T07:17:58.305Z",
+      "isError": false,
+      "error": null,
+      "changedRatio": 0.08650716145833333,
+      "after": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\6ec5a95f6f64d829fa9b0b5b423c21dc340d234609731a2ff4883818a38a021a.png",
+      "before": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\9229d57b6ae982c3d9a4da3a7bd878b5ca0e662169d4cb0ce6a0f918696aac9a.png",
+      "args": {
+        "x": 453,
+        "y": 368,
+        "button": "right",
+        "dur": 100,
+        "settle": 450,
+        "name": "p08-sun-menu"
+      },
+      "cursor": {
+        "handle": 590933,
+        "flags": 1,
+        "showing": true,
+        "x": 458,
+        "y": 408
+      },
+      "copy": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\p08-sun-menu.png",
+      "copyCursor": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\p08-sun-menu.cur.png",
+      "finished": "2026-10-22T07:17:59.078Z",
+      "t": "2026-10-22T07:17:59.078Z"
+    },
+    {
+      "op": "click",
+      "started": "2026-10-22T07:18:28.365Z",
+      "isError": false,
+      "error": null,
+      "changedRatio": 0.04641850789388021,
+      "after": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\629e8b33c98b6c1ad949745eeb6455edc5b811b2f72f6231da8c89fa4eb7ce01.png",
+      "before": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\49f855ec35410d4ac723a75c2b06698f78a1cabb2f0e212ab2eda461aa32281f.png",
+      "args": {
+        "x": 534,
+        "y": 393,
+        "dur": 100,
+        "settle": 300,
+        "name": "p09-generator-list"
+      },
+      "cursor": {
+        "handle": 590933,
+        "flags": 1,
+        "showing": true,
+        "x": 542,
+        "y": 424
+      },
+      "copy": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\p09-generator-list.png",
+      "copyCursor": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\p09-generator-list.cur.png",
+      "finished": "2026-10-22T07:18:29.020Z",
+      "t": "2026-10-22T07:18:29.020Z"
+    },
+    {
+      "op": "click",
+      "started": "2026-10-22T07:18:29.020Z",
+      "isError": false,
+      "error": null,
+      "changedRatio": 0.10326258341471355,
+      "after": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\3d0b2e747ea7eb12fb27dbd65eef6ec331996ac61604ccbe8b0919f8ed53b6a8.png",
+      "before": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\31539fe11dc49fa1ffa700997a17bd709fa399b5810a9fc6f510c2a94ae9ad53.png",
+      "args": {
+        "x": 712,
+        "y": 393,
+        "dur": 100,
+        "settle": 500,
+        "name": "p10-generator-registered"
+      },
+      "cursor": {
+        "handle": 590933,
+        "flags": 1,
+        "showing": true,
+        "x": 720,
+        "y": 424
+      },
+      "copy": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\p10-generator-registered.png",
+      "copyCursor": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\p10-generator-registered.cur.png",
+      "finished": "2026-10-22T07:18:29.861Z",
+      "t": "2026-10-22T07:18:29.861Z"
+    },
+    {
+      "op": "click",
+      "started": "2026-10-22T07:19:38.333Z",
+      "isError": false,
+      "error": null,
+      "changedRatio": 0.005727132161458333,
+      "after": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\909a3e167645b7965710a617a1924ca673181549155b664cbd496c3e8c599610.png",
+      "before": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\588d7bc605a4c90a93b8b364d38fa7d65b27411b7f24048b598e66b199c09da3.png",
+      "args": {
+        "x": 40,
+        "y": 370,
+        "dur": 100,
+        "settle": 150
+      },
+      "cursor": {
+        "handle": 8848379,
+        "flags": 1,
+        "showing": true,
+        "x": 48,
+        "y": 401
+      },
+      "finished": "2026-10-22T07:19:38.773Z",
+      "t": "2026-10-22T07:19:38.773Z"
+    },
+    {
+      "op": "click",
+      "started": "2026-10-22T07:19:38.773Z",
+      "isError": false,
+      "error": null,
+      "changedRatio": 0.007380167643229167,
+      "after": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\1c38322a096bbbec626e88a96e34c8cfde1c6bcd824376cf3b9a908ba0aaa830.png",
+      "before": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\7314193db5a6b7f34096fe6efe57cde6a469c3f385a380745e7862118d95c4e5.png",
+      "args": {
+        "x": 732,
+        "y": 436,
+        "dur": 100,
+        "settle": 700,
+        "name": "p11-generator-one"
+      },
+      "cursor": {
+        "handle": 590933,
+        "flags": 1,
+        "showing": true,
+        "x": 740,
+        "y": 467
+      },
+      "copy": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\p11-generator-one.png",
+      "copyCursor": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\p11-generator-one.cur.png",
+      "finished": "2026-10-22T07:19:39.796Z",
+      "t": "2026-10-22T07:19:39.796Z"
+    },
+    {
+      "op": "click",
+      "started": "2026-10-22T07:19:39.796Z",
+      "isError": false,
+      "error": null,
+      "changedRatio": 0.007333119710286458,
+      "after": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\2d3230c21d885a6e1f314680ecc3d747de35d87d7b4cb3238ac5650f7116c43b.png",
+      "before": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\4b1e445a2be22df71685065668fee679bfb821e5cec8504307dbc31b40712c07.png",
+      "args": {
+        "x": 40,
+        "y": 370,
+        "dur": 100,
+        "settle": 150
+      },
+      "cursor": {
+        "handle": 8848379,
+        "flags": 1,
+        "showing": true,
+        "x": 48,
+        "y": 401
+      },
+      "finished": "2026-10-22T07:19:40.218Z",
+      "t": "2026-10-22T07:19:40.218Z"
+    },
+    {
+      "op": "click",
+      "started": "2026-10-22T07:19:40.218Z",
+      "isError": false,
+      "error": null,
+      "changedRatio": 0.009576161702473959,
+      "after": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\ffeb9c5cad9f6d7cdd9ef2e4499875c78b7fb7bc2ba51d898cba28d80a35cf29.png",
+      "before": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\ccaf972cacd20334965988bb127cea80cabe85d2ac166837d5c0d44faa210f5c.png",
+      "args": {
+        "x": 806,
+        "y": 436,
+        "dur": 100,
+        "settle": 700,
+        "name": "p12-generator-two"
+      },
+      "cursor": {
+        "handle": 590933,
+        "flags": 1,
+        "showing": true,
+        "x": 814,
+        "y": 467
+      },
+      "copy": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\p12-generator-two.png",
+      "copyCursor": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\p12-generator-two.cur.png",
+      "finished": "2026-10-22T07:19:41.262Z",
+      "t": "2026-10-22T07:19:41.262Z"
+    },
+    {
+      "op": "click",
+      "started": "2026-10-22T07:20:10.396Z",
+      "isError": false,
+      "error": null,
+      "changedRatio": 0.00609588623046875,
+      "after": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\bdf98aea32d34f6cd7b200cbab07d6a2b7201fb7d918da84365de6e56505827f.png",
+      "before": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\93de468c6ff96c70a2fbaae47463b4722210dbe6f6ee9dd7388061d5fff23b67.png",
+      "args": {
+        "x": 40,
+        "y": 270,
+        "dur": 100,
+        "settle": 150
+      },
+      "cursor": {
+        "handle": 8848379,
+        "flags": 1,
+        "showing": true,
+        "x": 48,
+        "y": 301
+      },
+      "finished": "2026-10-22T07:20:10.840Z",
+      "t": "2026-10-22T07:20:10.840Z"
+    },
+    {
+      "op": "move",
+      "started": "2026-10-22T07:20:10.840Z",
+      "isError": false,
+      "error": null,
+      "changedRatio": 0.009730021158854166,
+      "after": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\8977b016ca6805cfb776ce782dec34d2bacb4ca96036a19ac7af216256b33934.png",
+      "before": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\54614558f6f714c455e62482582f88c10b8146598be3d0b3b310f2e771d53b3b.png",
+      "args": {
+        "x": 763,
+        "y": 477,
+        "settle": 300,
+        "name": "p13-balloon-two-energy-preview"
+      },
+      "cursor": {
+        "handle": 70517501,
+        "flags": 1,
+        "showing": true,
+        "x": 771,
+        "y": 508
+      },
+      "copy": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\p13-balloon-two-energy-preview.png",
+      "copyCursor": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\p13-balloon-two-energy-preview.cur.png",
+      "finished": "2026-10-22T07:20:11.356Z",
+      "t": "2026-10-22T07:20:11.356Z"
+    },
+    {
+      "op": "click",
+      "started": "2026-10-22T07:20:11.356Z",
+      "isError": false,
+      "error": null,
+      "changedRatio": 0.0022570292154947915,
+      "after": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\856af3f42e925e36820a5f226ada392e8c840450f945da240fdc20d3b617e95e.png",
+      "before": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\be45cce23fbb16ce48419ff223cafbd49400754d00f0fd87ad45c3e9fe37885d.png",
+      "args": {
+        "x": 763,
+        "y": 477,
+        "dur": 100,
+        "settle": 1200,
+        "name": "p14-balloon-built"
+      },
+      "cursor": {
+        "handle": 70517501,
+        "flags": 1,
+        "showing": true,
+        "x": 771,
+        "y": 508
+      },
+      "copy": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\p14-balloon-built.png",
+      "copyCursor": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\p14-balloon-built.cur.png",
+      "finished": "2026-10-22T07:20:12.894Z",
+      "t": "2026-10-22T07:20:12.894Z"
+    },
+    {
+      "op": "key",
+      "started": "2026-10-22T07:20:12.895Z",
+      "isError": false,
+      "error": null,
+      "changedRatio": 0.009073893229166666,
+      "after": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\85a1b24c1e369c3d1eecd41226e66dc7434e92e08614d5b47981c43b7378dc24.png",
+      "before": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\e8c5d26f9ed5856a700cad8ed151cb8f84a0115a4b12dd2a0136e5af413ef1b6.png",
+      "args": {
+        "key": "ESCAPE",
+        "dur": 100,
+        "settle": 300
+      },
+      "cursor": {
+        "handle": 590933,
+        "flags": 1,
+        "showing": true,
+        "x": 771,
+        "y": 508
+      },
+      "finished": "2026-10-22T07:20:13.466Z",
+      "t": "2026-10-22T07:20:13.466Z"
+    },
+    {
+      "op": "click",
+      "started": "2026-10-22T07:20:42.306Z",
+      "isError": false,
+      "error": null,
+      "changedRatio": 0.006490071614583333,
+      "after": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\8532cc6484fb0b6dbbcefc160ef6350668521642842d9c4e24b8f6e0bc9f7134.png",
+      "before": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\aabcda49e0789dcb809b007c9c136dc6dfb5e5032d1bc5df8344009cb4d32f8c.png",
+      "args": {
+        "x": 40,
+        "y": 270,
+        "dur": 100,
+        "settle": 200
+      },
+      "cursor": {
+        "handle": 8848379,
+        "flags": 1,
+        "showing": true,
+        "x": 48,
+        "y": 301
+      },
+      "finished": "2026-10-22T07:20:42.851Z",
+      "t": "2026-10-22T07:20:42.851Z"
+    },
+    {
+      "op": "move",
+      "started": "2026-10-22T07:20:42.851Z",
+      "isError": false,
+      "error": null,
+      "changedRatio": 0.009286244710286459,
+      "after": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\69814b7a5e68a6a52e6cc41f2c1f84726e9eada93e149953f757f1cf79986258.png",
+      "before": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\fe0174f5c606e262e65bccfb677df39e7d6c0e78ad8b71833b3c96c678b6a73e.png",
+      "args": {
+        "x": 766,
+        "y": 385,
+        "settle": 350,
+        "name": "p15-balloon-in-range"
+      },
+      "cursor": {
+        "handle": 70517501,
+        "flags": 1,
+        "showing": true,
+        "x": 774,
+        "y": 416
+      },
+      "copy": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\p15-balloon-in-range.png",
+      "copyCursor": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\p15-balloon-in-range.cur.png",
+      "finished": "2026-10-22T07:20:43.458Z",
+      "t": "2026-10-22T07:20:43.458Z"
+    },
+    {
+      "op": "click",
+      "started": "2026-10-22T07:20:43.458Z",
+      "isError": false,
+      "error": null,
+      "changedRatio": 0.007260640462239583,
+      "after": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\907b62afafdb780a51382163c3cc8627c72c6fc6f481f1035ca6af3c42550933.png",
+      "before": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\1c212b2ad23cf803dd9ac34a82138f0a34ac7c78079dafcd993d69440dcaf50f.png",
+      "args": {
+        "x": 766,
+        "y": 385,
+        "dur": 100,
+        "settle": 1200,
+        "name": "p16-balloon-placed"
+      },
+      "cursor": {
+        "handle": 590933,
+        "flags": 1,
+        "showing": true,
+        "x": 774,
+        "y": 416
+      },
+      "copy": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\p16-balloon-placed.png",
+      "copyCursor": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\p16-balloon-placed.cur.png",
+      "finished": "2026-10-22T07:20:44.991Z",
+      "t": "2026-10-22T07:20:44.991Z"
+    },
+    {
+      "op": "key",
+      "started": "2026-10-22T07:21:16.394Z",
+      "isError": false,
+      "error": null,
+      "changedRatio": 0.020730336507161457,
+      "after": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\8545b5f657d818e3853d4fc8ac147eeeb07e99e59db25b37304d258113b9f2d8.png",
+      "before": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\c1ff9f8425d57077a1f5a82c9cdbdd870ccee68a41768d437dbf825ebabd6f4e.png",
+      "args": {
+        "key": "ESCAPE",
+        "dur": 100,
+        "settle": 250
+      },
+      "cursor": {
+        "handle": 590933,
+        "flags": 1,
+        "showing": true,
+        "x": 774,
+        "y": 416
+      },
+      "finished": "2026-10-22T07:21:16.903Z",
+      "t": "2026-10-22T07:21:16.903Z"
+    },
+    {
+      "op": "click",
+      "started": "2026-10-22T07:21:16.903Z",
+      "isError": false,
+      "error": null,
+      "changedRatio": 0.021350860595703125,
+      "after": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\115eb6719af6c7427cffe1bdf6cdee7aebcac74734869fb891c091a5c930737a.png",
+      "before": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\70e1d9e20a50a32b9216b535d7698cf08f7f5322c65ddab9fa9178ff58d20bb9.png",
+      "args": {
+        "x": 745,
+        "y": 351,
+        "dur": 100,
+        "settle": 250
+      },
+      "cursor": {
+        "handle": 19334163,
+        "flags": 1,
+        "showing": true,
+        "x": 753,
+        "y": 382
+      },
+      "finished": "2026-10-22T07:21:17.462Z",
+      "t": "2026-10-22T07:21:17.462Z"
+    },
+    {
+      "op": "move",
+      "started": "2026-10-22T07:21:17.462Z",
+      "isError": false,
+      "error": null,
+      "changedRatio": 0.004192352294921875,
+      "after": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\db171ab30a923f24f331125f37c2f48827ab8c9bfec6c91f8322031c52723520.png",
+      "before": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\f3c4420b516cf5e6dfb6f9611cfaad2295bb8f06c0c9f534254146d7ceb60b9e.png",
+      "args": {
+        "x": 519,
+        "y": 383,
+        "settle": 300,
+        "name": "p17-balloon-own-priest-hover"
+      },
+      "cursor": {
+        "handle": 19334163,
+        "flags": 1,
+        "showing": true,
+        "x": 527,
+        "y": 414
+      },
+      "copy": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\p17-balloon-own-priest-hover.png",
+      "copyCursor": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\p17-balloon-own-priest-hover.cur.png",
+      "finished": "2026-10-22T07:21:17.988Z",
+      "t": "2026-10-22T07:21:17.988Z"
+    },
+    {
+      "op": "click",
+      "started": "2026-10-22T07:21:17.988Z",
+      "isError": false,
+      "error": null,
+      "changedRatio": 0.0070648193359375,
+      "after": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\b8b31120ffb33cd23cd8fd87cb74f01f853652506010e87a74dc4dc2d264c14f.png",
+      "before": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\51c8db5dfd85bfa8c36a04ce5745bff60f54e4b6d06626c63fb967668b9ceb1c.png",
+      "args": {
+        "x": 519,
+        "y": 383,
+        "dur": 100,
+        "settle": 1200,
+        "name": "p18-own-priest-pickup-order"
+      },
+      "cursor": {
+        "handle": 590933,
+        "flags": 1,
+        "showing": true,
+        "x": 527,
+        "y": 414
+      },
+      "copy": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\p18-own-priest-pickup-order.png",
+      "copyCursor": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\p18-own-priest-pickup-order.cur.png",
+      "finished": "2026-10-22T07:21:19.513Z",
+      "t": "2026-10-22T07:21:19.513Z"
+    },
+    {
+      "op": "click",
+      "started": "2026-10-22T07:21:52.339Z",
+      "isError": false,
+      "error": null,
+      "changedRatio": 0.004566192626953125,
+      "after": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\58ac4e202e771aa207ee9514c823b624891631e723c558dc406f78c63da367a4.png",
+      "before": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\524a207d71720d88c0ef5def706eb654a0db1a89227264b31e268e820832c245.png",
+      "args": {
+        "x": 762,
+        "y": 395,
+        "dur": 100,
+        "settle": 300,
+        "name": "p19-balloon-selected"
+      },
+      "cursor": {
+        "handle": 590933,
+        "flags": 1,
+        "showing": true,
+        "x": 770,
+        "y": 426
+      },
+      "copy": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\p19-balloon-selected.png",
+      "copyCursor": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\p19-balloon-selected.cur.png",
+      "finished": "2026-10-22T07:21:52.981Z",
+      "t": "2026-10-22T07:21:52.981Z"
+    },
+    {
+      "op": "move",
+      "started": "2026-10-22T07:21:52.981Z",
+      "isError": false,
+      "error": null,
+      "changedRatio": 0.004169464111328125,
+      "after": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\c79c4753d08b9c05e0fc9b1de2e959376806c434896801adc889fa365e378189.png",
+      "before": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\324cf82764b323e7608b3fce17be89d070ff1c8afb4aaaff05772f6722986a57.png",
+      "args": {
+        "x": 519,
+        "y": 383,
+        "settle": 300,
+        "name": "p20-own-priest-hover"
+      },
+      "cursor": {
+        "handle": 590933,
+        "flags": 1,
+        "showing": true,
+        "x": 527,
+        "y": 414
+      },
+      "copy": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\p20-own-priest-hover.png",
+      "copyCursor": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\p20-own-priest-hover.cur.png",
+      "finished": "2026-10-22T07:21:53.511Z",
+      "t": "2026-10-22T07:21:53.511Z"
+    },
+    {
+      "op": "key",
+      "started": "2026-10-22T07:22:32.395Z",
+      "isError": true,
+      "error": "durationMs는 1~2000, settleMs는 0~5000입니다.",
+      "changedRatio": null,
+      "after": "",
+      "before": "",
+      "args": {
+        "key": "LEFT",
+        "dur": 2500,
+        "settle": 150
+      },
+      "cursor": {
+        "handle": 590933,
+        "flags": 1,
+        "showing": true,
+        "x": 527,
+        "y": 414
+      },
+      "finished": "2026-10-22T07:22:32.419Z",
+      "t": "2026-10-22T07:22:32.419Z"
+    },
+    {
+      "op": "key",
+      "started": "2026-10-22T07:22:32.419Z",
+      "isError": true,
+      "error": "durationMs는 1~2000, settleMs는 0~5000입니다.",
+      "changedRatio": null,
+      "after": "",
+      "before": "",
+      "args": {
+        "key": "UP",
+        "dur": 3000,
+        "settle": 300,
+        "name": "p21-enemy-direction"
+      },
+      "cursor": {
+        "handle": 590933,
+        "flags": 1,
+        "showing": true,
+        "x": 527,
+        "y": 414
+      },
+      "finished": "2026-10-22T07:22:32.440Z",
+      "t": "2026-10-22T07:22:32.440Z"
+    },
+    {
+      "op": "move",
+      "started": "2026-10-22T07:23:10.346Z",
+      "isError": false,
+      "error": null,
+      "changedRatio": 0.004192352294921875,
+      "after": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\25ca7fb3e0629b7f2dd7e294df3e76163f290780bd1b5cf14e4623fe38fa07f0.png",
+      "before": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\945e523628b251d22c67bb3bf927b2d3dc280c53ae278f1d1af5ba637b087f1d.png",
+      "args": {
+        "x": 92,
+        "y": 38,
+        "settle": 100
+      },
+      "cursor": {
+        "handle": 590933,
+        "flags": 1,
+        "showing": true,
+        "x": 100,
+        "y": 69
+      },
+      "finished": "2026-10-22T07:23:10.616Z",
+      "t": "2026-10-22T07:23:10.616Z"
+    },
+    {
+      "op": "key",
+      "started": "2026-10-22T07:23:10.616Z",
+      "isError": true,
+      "error": "durationMs는 1~2000, settleMs는 0~5000입니다.",
+      "changedRatio": null,
+      "after": "",
+      "before": "",
+      "args": {
+        "key": "ALT",
+        "dur": 2500,
+        "settle": 300,
+        "name": "p22-scroll-northwest"
+      },
+      "cursor": {
+        "handle": 590933,
+        "flags": 1,
+        "showing": true,
+        "x": 100,
+        "y": 69
+      },
+      "finished": "2026-10-22T07:23:10.639Z",
+      "t": "2026-10-22T07:23:10.639Z"
+    },
+    {
+      "op": "move",
+      "started": "2026-10-22T07:23:20.327Z",
+      "isError": false,
+      "error": null,
+      "changedRatio": 0.004350026448567708,
+      "after": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\ae83b1415b627970246e2c49b178056b6b5852223fc2f1ec64a5a833ba9ab90f.png",
+      "before": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\e4414db4a59972a9a1e18be5f8ce3b827e8b8e767b6bddd446dc33a916c315f8.png",
+      "args": {
+        "x": 92,
+        "y": 38,
+        "settle": 100
+      },
+      "cursor": {
+        "handle": 590933,
+        "flags": 1,
+        "showing": true,
+        "x": 100,
+        "y": 69
+      },
+      "finished": "2026-10-22T07:23:20.589Z",
+      "t": "2026-10-22T07:23:20.589Z"
+    },
+    {
+      "op": "key",
+      "started": "2026-10-22T07:23:20.589Z",
+      "isError": false,
+      "error": null,
+      "changedRatio": 0.48550669352213544,
+      "after": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\15181cd353539de31c2a09f228c138aa9db3376090dc60c7f6e2e5d6d61a7d9c.png",
+      "before": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\1c3233085219b0080f005f5c65f14edc106363394ed6c17e0b02e0b3d243b2be.png",
+      "args": {
+        "key": "ALT",
+        "dur": 2000,
+        "settle": 300,
+        "name": "p23-scroll-northwest"
+      },
+      "cursor": {
+        "handle": 590933,
+        "flags": 1,
+        "showing": true,
+        "x": 100,
+        "y": 69
+      },
+      "copy": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\p23-scroll-northwest.png",
+      "copyCursor": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\p23-scroll-northwest.cur.png",
+      "finished": "2026-10-22T07:23:23.123Z",
+      "t": "2026-10-22T07:23:23.123Z"
+    },
+    {
+      "op": "click",
+      "started": "2026-10-22T07:24:04.362Z",
+      "isError": false,
+      "error": null,
+      "changedRatio": 0.0015805562337239583,
+      "after": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\e82d854b5f218b30c555780be51e7560238dafebfbf1b9c707c39a5d38e9c573.png",
+      "before": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\e75f015c186615ede90433432849666426991944b16228c999939a886c5bcfaf.png",
+      "args": {
+        "x": 40,
+        "y": 370,
+        "dur": 100,
+        "settle": 150
+      },
+      "cursor": {
+        "handle": 8848379,
+        "flags": 1,
+        "showing": true,
+        "x": 48,
+        "y": 401
+      },
+      "finished": "2026-10-22T07:24:04.853Z",
+      "t": "2026-10-22T07:24:04.853Z"
+    },
+    {
+      "op": "move",
+      "started": "2026-10-22T07:24:04.853Z",
+      "isError": false,
+      "error": null,
+      "changedRatio": 0.006573994954427083,
+      "after": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\44d13fcc87ea1fbb67485e61a4b845f063755e9cfc4cb7ca8a1ba3c0e0cd83d4.png",
+      "before": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\e82d854b5f218b30c555780be51e7560238dafebfbf1b9c707c39a5d38e9c573.png",
+      "args": {
+        "x": 735,
+        "y": 458,
+        "settle": 350,
+        "name": "p24-enemy-island-generator-preview"
+      },
+      "cursor": {
+        "handle": 70517501,
+        "flags": 1,
+        "showing": true,
+        "x": 743,
+        "y": 489
+      },
+      "copy": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\p24-enemy-island-generator-preview.png",
+      "copyCursor": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\p24-enemy-island-generator-preview.cur.png",
+      "finished": "2026-10-22T07:24:05.478Z",
+      "t": "2026-10-22T07:24:05.478Z"
+    },
+    {
+      "op": "key",
+      "started": "2026-10-22T07:27:24.337Z",
+      "isError": false,
+      "error": null,
+      "changedRatio": 0.004007975260416667,
+      "after": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\301ee5030ed13f5e6a914ba5dbf5f6ee6782249febd2159edc6e7043f08e91b1.png",
+      "before": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\25a83f0fa3a85e49700bc8865f2781fab717a4aa86f41c474d4584eae810643f.png",
+      "args": {
+        "key": "ESCAPE",
+        "dur": 100,
+        "settle": 100
+      },
+      "cursor": {
+        "handle": 65541,
+        "flags": 1,
+        "showing": true,
+        "x": 1334,
+        "y": 700
+      },
+      "finished": "2026-10-22T07:27:24.967Z",
+      "t": "2026-10-22T07:27:24.967Z"
+    },
+    {
+      "op": "key",
+      "started": "2026-10-22T07:27:24.967Z",
+      "isError": false,
+      "error": null,
+      "changedRatio": 0.46720250447591144,
+      "after": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\3a6d3888df5bc189a437fabd5ae740c6884c324b0f3c90a05ab626330cd989e0.png",
+      "before": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\301ee5030ed13f5e6a914ba5dbf5f6ee6782249febd2159edc6e7043f08e91b1.png",
+      "args": {
+        "key": "F4",
+        "dur": 100,
+        "settle": 350,
+        "name": "p25-home-temple"
+      },
+      "cursor": {
+        "handle": 65541,
+        "flags": 1,
+        "showing": true,
+        "x": 1334,
+        "y": 700
+      },
+      "copy": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\p25-home-temple.png",
+      "copyCursor": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\p25-home-temple.cur.png",
+      "finished": "2026-10-22T07:27:25.687Z",
+      "t": "2026-10-22T07:27:25.687Z"
+    },
+    {
+      "op": "key",
+      "started": "2026-10-22T07:27:25.687Z",
+      "isError": true,
+      "error": "게임 창의 포커스가 바뀌었습니다(현재 전면: handle=66440, pid=9884, 제목='RawPathProcess.cpp(작업 트리) (RawPathProcess.cpp) - NetstormReborn - Visual Studio Code'). 작업을 중단합니다.",
+      "changedRatio": null,
+      "after": "",
+      "before": "",
+      "args": {
+        "key": "Q",
+        "dur": 100,
+        "settle": 200
+      },
+      "cursor": {
+        "handle": 65541,
+        "flags": 1,
+        "showing": true,
+        "x": 1334,
+        "y": 700
+      },
+      "finished": "2026-10-22T07:27:26.457Z",
+      "t": "2026-10-22T07:27:26.457Z"
+    },
+    {
+      "op": "move",
+      "started": "2026-10-22T07:27:26.458Z",
+      "isError": false,
+      "error": null,
+      "changedRatio": 0.006982167561848958,
+      "after": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\09e65d2e139cc32bcfe477a555333c50cdeea963b3499c18c88611c1dbc10541.png",
+      "before": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\screens\\2118a167eb968d120d6cb7d90e2f54611b6666cd4cc2c79da988301807f6c61e.png",
+      "args": {
+        "x": 450,
+        "y": 70,
+        "settle": 200,
+        "name": "p26-first-bridge-preview"
+      },
+      "cursor": {
+        "handle": 70517501,
+        "flags": 1,
+        "showing": true,
+        "x": 458,
+        "y": 101
+      },
+      "copy": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\p26-first-bridge-preview.png",
+      "copyCursor": "H:\\Workspace\\git\\NetstormReborn\\extracted\\test02-sacrifice-20261022\\shots\\p26-first-bridge-preview.cur.png",
+      "finished": "2026-10-22T07:27:27.112Z",
+      "t": "2026-10-22T07:27:27.112Z"
+    },
+    {
+      "op": "end",
+      "started": "2026-10-22T07:28:21.862Z",
+      "sessionId": "20261022T071401768Z-8fdc36c4cafd",
+      "closed": true,
+      "automaticRecording": {
+        "sessionId": "20261022T071401768Z-8fdc36c4cafd",
+        "runId": "bd02afd5f3ca4ec39381032c492b4f7c",
+        "fps": 30,
+        "processId": 1204,
+        "processStartedUtcTicks": 639282500586533408,
+        "processPath": "H:\\Workspace\\git\\NetstormReborn\\analyzeManager\\bin\\Release\\net10.0-windows\\Netstorm.AnalyzeManager.exe",
+        "state": "failed",
+        "frames": 4200,
+        "elapsedMs": 169964.2439,
+        "error": "자동 녹화 오류: 게임 캡처 영역이 다른 창에 가려져 있습니다.",
+        "updatedUtc": "2026-10-22T07:17:08.8861362+00:00"
+      },
+      "report": "H:\\Workspace\\git\\NetstormReborn\\extracted\\analyzeManager\\20261022T071401768Z-8fdc36c4cafd\\report.md",
+      "isError": false,
+      "finished": "2026-10-22T07:28:22.009Z",
+      "t": "2026-10-22T07:28:22.009Z"
+    }
+  ],
+  "states": {
+    "balloon": {
+      "session": "20261022T071401768Z-8fdc36c4cafd",
+      "pid": 12512,
+      "time": "2026-10-22T07:20:52.666643+00:00",
+      "objects": [
+        {
+          "sid": 15000,
+          "type": 158,
+          "name": "priest",
+          "owner": 1,
+          "qa": 129,
+          "x": 133.0,
+          "y": 191.0,
+          "hp": 100,
+          "flags": 0,
+          "raw": "10f250000000070000009e0081000000054300003f4350083508640000000000000201ec0000000080000000000000000000",
+          "children": [
+            {
+              "sid": 7,
+              "type": 46,
+              "raw": "982051000000000000002e0800000000983a0200000000000000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15001,
+          "type": 135,
+          "name": "bulf",
+          "owner": 1,
+          "qa": 0,
+          "x": 142.0,
+          "y": 191.0,
+          "hp": 800,
+          "flags": 0,
+          "raw": "503e50000000000000008700000000000e4300003f43e0083508200300000000000301ec0000000080000000000000000000",
+          "children": []
+        },
+        {
+          "sid": 15002,
+          "type": 88,
+          "name": "thunderFactory",
+          "owner": 1,
+          "qa": 0,
+          "x": 133.0,
+          "y": 186.0,
+          "hp": 4000,
+          "flags": 0,
+          "raw": "48915000993a08000000580000000000054300003a435008fe07a00f00000000000301ec0000000082000000000000000000",
+          "children": [
+            {
+              "sid": 8,
+              "type": 46,
+              "raw": "982051000000000000002e08000000009a3a0300000000000000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15003,
+          "type": 125,
+          "name": "thunderVortex",
+          "owner": 1,
+          "qa": 0,
+          "x": 141.0,
+          "y": 187.0,
+          "hp": 5000,
+          "flags": 0,
+          "raw": "189951009a3a090000007d00000000000d4300003b43d0080908881300000000000301ec0500000082000000000000000000",
+          "children": [
+            {
+              "sid": 9,
+              "type": 46,
+              "raw": "982051000a00000000002e08000000009b3a0400000000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 10,
+              "type": 6,
+              "raw": "082251000000000000000608000009009b3a8500100000000000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15004,
+          "type": 89,
+          "name": "residence",
+          "owner": 1,
+          "qa": 0,
+          "x": 137.0,
+          "y": 178.0,
+          "hp": 0,
+          "flags": 0,
+          "raw": "40f550009b3a0d0000005900000000000943000032439008a607000000000000000301000600000080000100000000000000",
+          "children": [
+            {
+              "sid": 13,
+              "type": 46,
+              "raw": "982051000c00000000002e08000000009c3a0700000000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 12,
+              "type": 46,
+              "raw": "982051000b00000000002e0800000d009c3a0600000000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 11,
+              "type": 46,
+              "raw": "982051000000000000002e0800000c009c3a0500000000000000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15005,
+          "type": 122,
+          "name": "geyser",
+          "owner": 0,
+          "qa": 3000,
+          "x": 144.0,
+          "y": 188.0,
+          "hp": 0,
+          "flags": 0,
+          "raw": "88da500066650e0000007a00b80b0000104300003c4300091408000000000000000300ec0a00000082000000000000000000",
+          "children": [
+            {
+              "sid": 14,
+              "type": 46,
+              "raw": "982051000000000000002e08000000009d3a0800000000000000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15006,
+          "type": 122,
+          "name": "geyser",
+          "owner": 0,
+          "qa": 3000,
+          "x": 144.0,
+          "y": 185.0,
+          "hp": 0,
+          "flags": 0,
+          "raw": "88da50009d3a0f0000007a00b80b00001043000039430009f307000000000000000300ec0a00000082000000000000000000",
+          "children": [
+            {
+              "sid": 15,
+              "type": 46,
+              "raw": "982051000000000000002e08000000009e3a0900000000000000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15007,
+          "type": 122,
+          "name": "geyser",
+          "owner": 0,
+          "qa": 3000,
+          "x": 144.0,
+          "y": 182.0,
+          "hp": 0,
+          "flags": 0,
+          "raw": "88da50009e3a100000007a00b80b00001043000036430009d207000000000000000300ec0a00000082000000000000000000",
+          "children": [
+            {
+              "sid": 16,
+              "type": 46,
+              "raw": "982051000000000000002e08000000009f3a0a00000000000000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15008,
+          "type": 85,
+          "name": "sunFactory",
+          "owner": 1,
+          "qa": 0,
+          "x": 132.0,
+          "y": 194.0,
+          "hp": 3000,
+          "flags": 0,
+          "raw": "48915000cb681200000055000000000004430000424340085608b80b00000000000301ec0300000082000000000000000000",
+          "children": [
+            {
+              "sid": 18,
+              "type": 46,
+              "raw": "982051001100000000002e0800000000a03a0c00000000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 17,
+              "type": 46,
+              "raw": "98205100a63a000000002e0800001200a03a0b00000000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 15014,
+              "type": 6,
+              "raw": "08225100a73a00000000060800001100a03a6f00100000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 15015,
+              "type": 6,
+              "raw": "0822510000000000000006080000a63aa03a4c00100000010000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15009,
+          "type": 158,
+          "name": "priest",
+          "owner": 2,
+          "qa": 2,
+          "x": 43.0,
+          "y": 40.0,
+          "hp": 100,
+          "flags": 0,
+          "raw": "10f250000000130000009e00020000002c4200002042b002b801640000000000000202ec0000000080000000000000000000",
+          "children": [
+            {
+              "sid": 19,
+              "type": 46,
+              "raw": "982051000000000000002e0800000000a13a0d00000000000000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15010,
+          "type": 89,
+          "name": "residence",
+          "owner": 0,
+          "qa": 0,
+          "x": 52.0,
+          "y": 40.0,
+          "hp": 0,
+          "flags": 0,
+          "raw": "40f55000c25b160000005900000000005042000020424003b801000000000000000300000000000080000000000000000000",
+          "children": [
+            {
+              "sid": 22,
+              "type": 46,
+              "raw": "982051001500000000002e0800000000a23a1000000000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 21,
+              "type": 46,
+              "raw": "982051001400000000002e0800001600a23a0f00000000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 20,
+              "type": 46,
+              "raw": "982051000000000000002e0800001500a23a0e00000000000000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15011,
+          "type": 89,
+          "name": "residence",
+          "owner": 3,
+          "qa": 1,
+          "x": 214.0,
+          "y": 28.0,
+          "hp": 0,
+          "flags": 0,
+          "raw": "40f55000a25a1900000059000100000056430000e041600d3401000000000000000303001500000080000200000000000000",
+          "children": [
+            {
+              "sid": 25,
+              "type": 46,
+              "raw": "982051001800000000002e0800000000a33a1300000000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 24,
+              "type": 46,
+              "raw": "982051001700000000002e0800001900a33a1200000000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 23,
+              "type": 46,
+              "raw": "982051000000000000002e0800001800a33a1100000000000000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15012,
+          "type": 158,
+          "name": "priest",
+          "owner": 3,
+          "qa": 3,
+          "x": 219.0,
+          "y": 33.0,
+          "hp": 100,
+          "flags": 0,
+          "raw": "10f2500000001a0000009e00030000005b4300000442b00d6b01640000000000000203ec0000000080000000000000000000",
+          "children": [
+            {
+              "sid": 26,
+              "type": 46,
+              "raw": "982051000000000000002e0800000000a43a1400000000000000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15013,
+          "type": 124,
+          "name": "rainVortex",
+          "owner": 3,
+          "qa": 0,
+          "x": 218.0,
+          "y": 36.0,
+          "hp": 5000,
+          "flags": 0,
+          "raw": "f09651000c5f1b0000007c00000000005a4300001042a00d8c01881300000000000303ec0300000082000000000000000000",
+          "children": [
+            {
+              "sid": 27,
+              "type": 46,
+              "raw": "982051001c00000000002e0800000000a53a1500000000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 28,
+              "type": 6,
+              "raw": "082251007f0000000000060800001b00a53a8500100000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 127,
+              "type": 6,
+              "raw": "08225100000000000000060800001c00a53a8500100000010000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15016,
+          "type": 76,
+          "name": "rainBattery",
+          "owner": 1,
+          "qa": 0,
+          "x": 147.0,
+          "y": 197.0,
+          "hp": 700,
+          "flags": 0,
+          "raw": "a01e5000f568000000004c000000000013430000454330097708bc0200000000000301ec0000000080000000000000000000",
+          "children": []
+        },
+        {
+          "sid": 15017,
+          "type": 76,
+          "name": "rainBattery",
+          "owner": 1,
+          "qa": 0,
+          "x": 151.0,
+          "y": 197.0,
+          "hp": 700,
+          "flags": 0,
+          "raw": "a01e5000a83a000000004c000000000017430000454370097708bc0200000000000301ec0000000080000000000000000000",
+          "children": []
+        },
+        {
+          "sid": 15018,
+          "type": 111,
+          "name": "sunBalloon",
+          "owner": 1,
+          "qa": 0,
+          "x": 148.0,
+          "y": 194.0,
+          "hp": 100,
+          "flags": 0,
+          "raw": "c0405000a93a000063046f000000000014430000424340095608640000000000000301ec0000000080000000000000000000",
+          "children": []
+        }
+      ]
+    },
+    "bridge-preview": {
+      "session": "20261022T071401768Z-8fdc36c4cafd",
+      "pid": 12512,
+      "time": "2026-10-22T07:27:27.226090+00:00",
+      "cursorPreview": 129,
+      "camera": [
+        101.0,
+        144.09091186523438
+      ],
+      "cursor": {
+        "0x55a284": 82,
+        "0x55a288": 14,
+        "0x55a28c": 0,
+        "0x55a2a4": 0,
+        "0x55a1b8": 5
+      },
+      "cursorPoint": [
+        129.0,
+        150.0
+      ],
+      "objects": [
+        {
+          "sid": 15000,
+          "type": 158,
+          "name": "priest",
+          "owner": 1,
+          "qa": 129,
+          "x": 133.0,
+          "y": 191.0,
+          "hp": 100,
+          "flags": 0,
+          "raw": "10f250000000070000009e0081000000054300003f4350083508640000000000000201ec0000000080000000000000000000",
+          "children": [
+            {
+              "sid": 7,
+              "type": 46,
+              "raw": "982051000000000000002e0800000000983a0200000000000000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15001,
+          "type": 135,
+          "name": "bulf",
+          "owner": 1,
+          "qa": 0,
+          "x": 142.0,
+          "y": 191.0,
+          "hp": 800,
+          "flags": 0,
+          "raw": "503e50000000000000008700000000000e4300003f43e0083508200300000000000301ec0000000080000000000000000000",
+          "children": []
+        },
+        {
+          "sid": 15002,
+          "type": 88,
+          "name": "thunderFactory",
+          "owner": 1,
+          "qa": 0,
+          "x": 133.0,
+          "y": 186.0,
+          "hp": 4000,
+          "flags": 0,
+          "raw": "48915000993a08000000580000000000054300003a435008fe07a00f00000000000301ec0000000082000000000000000000",
+          "children": [
+            {
+              "sid": 8,
+              "type": 46,
+              "raw": "982051000000000000002e08000000009a3a0300000000000000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15003,
+          "type": 125,
+          "name": "thunderVortex",
+          "owner": 1,
+          "qa": 0,
+          "x": 141.0,
+          "y": 187.0,
+          "hp": 5000,
+          "flags": 0,
+          "raw": "189951009a3a090000007d00000000000d4300003b43d0080908881300000000000301ec0100000082000000000000000000",
+          "children": [
+            {
+              "sid": 9,
+              "type": 46,
+              "raw": "982051000a00000000002e08000000009b3a0400000000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 10,
+              "type": 6,
+              "raw": "082251000000000000000608000009009b3a8500100000000000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15004,
+          "type": 89,
+          "name": "residence",
+          "owner": 1,
+          "qa": 1,
+          "x": 137.0,
+          "y": 178.0,
+          "hp": 0,
+          "flags": 0,
+          "raw": "40f550009b3a0d0000005900010000000943000032439008a607000000000000000301000700000080000100000000000000",
+          "children": [
+            {
+              "sid": 13,
+              "type": 46,
+              "raw": "982051000c00000000002e08000000009c3a0700000000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 12,
+              "type": 46,
+              "raw": "982051000b00000000002e0800000d009c3a0600000000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 11,
+              "type": 46,
+              "raw": "982051000000000000002e0800000c009c3a0500000000000000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15005,
+          "type": 122,
+          "name": "geyser",
+          "owner": 0,
+          "qa": 3000,
+          "x": 144.0,
+          "y": 188.0,
+          "hp": 0,
+          "flags": 0,
+          "raw": "88da500066650e0000007a00b80b0000104300003c4300091408000000000000000300ec0600000082000000000000000000",
+          "children": [
+            {
+              "sid": 14,
+              "type": 46,
+              "raw": "982051000000000000002e08000000009d3a0800000000000000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15006,
+          "type": 122,
+          "name": "geyser",
+          "owner": 0,
+          "qa": 3000,
+          "x": 144.0,
+          "y": 185.0,
+          "hp": 0,
+          "flags": 0,
+          "raw": "88da50009d3a0f0000007a00b80b00001043000039430009f307000000000000000300ec0600000082000000000000000000",
+          "children": [
+            {
+              "sid": 15,
+              "type": 46,
+              "raw": "982051000000000000002e08000000009e3a0900000000000000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15007,
+          "type": 122,
+          "name": "geyser",
+          "owner": 0,
+          "qa": 3000,
+          "x": 144.0,
+          "y": 182.0,
+          "hp": 0,
+          "flags": 0,
+          "raw": "88da50009e3a100000007a00b80b00001043000036430009d207000000000000000300ec0600000082000000000000000000",
+          "children": [
+            {
+              "sid": 16,
+              "type": 46,
+              "raw": "982051000000000000002e08000000009f3a0a00000000000000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15008,
+          "type": 85,
+          "name": "sunFactory",
+          "owner": 1,
+          "qa": 0,
+          "x": 132.0,
+          "y": 194.0,
+          "hp": 3000,
+          "flags": 0,
+          "raw": "48915000cb681200000055000000000004430000424340085608b80b00000000000301ec0000000082000000000000000000",
+          "children": [
+            {
+              "sid": 18,
+              "type": 46,
+              "raw": "982051001100000000002e0800000000a03a0c00000000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 17,
+              "type": 46,
+              "raw": "98205100a63a000000002e0800001200a03a0b00000000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 15014,
+              "type": 6,
+              "raw": "08225100a73a00000000060800001100a03a6f00100000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 15015,
+              "type": 6,
+              "raw": "0822510000000000000006080000a63aa03a4c00100000010000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15009,
+          "type": 158,
+          "name": "priest",
+          "owner": 2,
+          "qa": 2,
+          "x": 43.0,
+          "y": 40.0,
+          "hp": 100,
+          "flags": 0,
+          "raw": "10f250000000130000009e00020000002c4200002042b002b801640000000000000202ec0000000080000000000000000000",
+          "children": [
+            {
+              "sid": 19,
+              "type": 46,
+              "raw": "982051000000000000002e0800000000a13a0d00000000000000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15010,
+          "type": 89,
+          "name": "residence",
+          "owner": 0,
+          "qa": 1,
+          "x": 52.0,
+          "y": 40.0,
+          "hp": 0,
+          "flags": 0,
+          "raw": "40f55000c25b160000005900010000005042000020424003b801000000000000000300000100000080000000000000000000",
+          "children": [
+            {
+              "sid": 22,
+              "type": 46,
+              "raw": "982051001500000000002e0800000000a23a1000000000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 21,
+              "type": 46,
+              "raw": "982051001400000000002e0800001600a23a0f00000000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 20,
+              "type": 46,
+              "raw": "982051000000000000002e0800001500a23a0e00000000000000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15011,
+          "type": 89,
+          "name": "residence",
+          "owner": 3,
+          "qa": 1,
+          "x": 214.0,
+          "y": 28.0,
+          "hp": 0,
+          "flags": 0,
+          "raw": "40f55000a25a1900000059000100000056430000e041600d3401000000000000000303001500000080000200000000000000",
+          "children": [
+            {
+              "sid": 25,
+              "type": 46,
+              "raw": "982051001800000000002e0800000000a33a1300000000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 24,
+              "type": 46,
+              "raw": "982051001700000000002e0800001900a33a1200000000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 23,
+              "type": 46,
+              "raw": "982051000000000000002e0800001800a33a1100000000000000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15012,
+          "type": 158,
+          "name": "priest",
+          "owner": 3,
+          "qa": 3,
+          "x": 219.0,
+          "y": 33.0,
+          "hp": 100,
+          "flags": 0,
+          "raw": "10f2500000001a0000009e00030000005b4300000442b00d6b01640000000000000203ec0000000080000000000000000000",
+          "children": [
+            {
+              "sid": 26,
+              "type": 46,
+              "raw": "982051000000000000002e0800000000a43a1400000000000000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15013,
+          "type": 124,
+          "name": "rainVortex",
+          "owner": 3,
+          "qa": 0,
+          "x": 218.0,
+          "y": 36.0,
+          "hp": 5000,
+          "flags": 0,
+          "raw": "f09651000c5f1b0000007c00000000005a4300001042a00d8c01881300000000000303ec0a00000082000000000000000000",
+          "children": [
+            {
+              "sid": 27,
+              "type": 46,
+              "raw": "982051001c00000000002e0800000000a53a1500000000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 28,
+              "type": 6,
+              "raw": "082251007f0000000000060800001b00a53a8500100000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 127,
+              "type": 6,
+              "raw": "08225100000000000000060800001c00a53a8500100000010000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15016,
+          "type": 76,
+          "name": "rainBattery",
+          "owner": 1,
+          "qa": 0,
+          "x": 147.0,
+          "y": 197.0,
+          "hp": 700,
+          "flags": 0,
+          "raw": "a01e5000f568000000004c000000000013430000454330097708bc0200000000000301ec0000000080000000000000000000",
+          "children": []
+        },
+        {
+          "sid": 15017,
+          "type": 76,
+          "name": "rainBattery",
+          "owner": 1,
+          "qa": 0,
+          "x": 151.0,
+          "y": 197.0,
+          "hp": 700,
+          "flags": 0,
+          "raw": "a01e5000a83a000000004c000000000017430000454370097708bc0200000000000301ec0000000080000000000000000000",
+          "children": []
+        },
+        {
+          "sid": 15018,
+          "type": 111,
+          "name": "sunBalloon",
+          "owner": 1,
+          "qa": 0,
+          "x": 133.0,
+          "y": 190.0,
+          "hp": 100,
+          "flags": 0,
+          "raw": "c04050009c3a000063046f0000000000054300003e4350082a08640000000000000301ec0000000080000000000000000000",
+          "children": []
+        }
+      ]
+    },
+    "generators": {
+      "session": "20261022T071401768Z-8fdc36c4cafd",
+      "pid": 12512,
+      "time": "2026-10-22T07:20:09.480635+00:00",
+      "objects": [
+        {
+          "sid": 15000,
+          "type": 158,
+          "name": "priest",
+          "owner": 1,
+          "qa": 129,
+          "x": 133.0,
+          "y": 191.0,
+          "hp": 100,
+          "flags": 0,
+          "raw": "10f250000000070000009e0081000000054300003f4350083508640000000000000201ec0000000080000000000000000000",
+          "children": [
+            {
+              "sid": 7,
+              "type": 46,
+              "raw": "982051000000000000002e0800000000983a0200000000000000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15001,
+          "type": 135,
+          "name": "bulf",
+          "owner": 1,
+          "qa": 0,
+          "x": 142.0,
+          "y": 191.0,
+          "hp": 800,
+          "flags": 0,
+          "raw": "503e50000000000000008700000000000e4300003f43e0083508200300000000000301ec0000000080000000000000000000",
+          "children": []
+        },
+        {
+          "sid": 15002,
+          "type": 88,
+          "name": "thunderFactory",
+          "owner": 1,
+          "qa": 0,
+          "x": 133.0,
+          "y": 186.0,
+          "hp": 4000,
+          "flags": 0,
+          "raw": "48915000993a08000000580000000000054300003a435008fe07a00f00000000000301ec0000000082000000000000000000",
+          "children": [
+            {
+              "sid": 8,
+              "type": 46,
+              "raw": "982051000000000000002e08000000009a3a0300000000000000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15003,
+          "type": 125,
+          "name": "thunderVortex",
+          "owner": 1,
+          "qa": 0,
+          "x": 141.0,
+          "y": 187.0,
+          "hp": 5000,
+          "flags": 0,
+          "raw": "189951009a3a090000007d00000000000d4300003b43d0080908881300000000000301ec0600000082000000000000000000",
+          "children": [
+            {
+              "sid": 9,
+              "type": 46,
+              "raw": "982051000a00000000002e08000000009b3a0400000000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 10,
+              "type": 6,
+              "raw": "082251000000000000000608000009009b3a8500100000000000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15004,
+          "type": 89,
+          "name": "residence",
+          "owner": 1,
+          "qa": 0,
+          "x": 137.0,
+          "y": 178.0,
+          "hp": 0,
+          "flags": 0,
+          "raw": "40f550009b3a0d0000005900000000000943000032439008a607000000000000000301000600000080000100000000000000",
+          "children": [
+            {
+              "sid": 13,
+              "type": 46,
+              "raw": "982051000c00000000002e08000000009c3a0700000000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 12,
+              "type": 46,
+              "raw": "982051000b00000000002e0800000d009c3a0600000000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 11,
+              "type": 46,
+              "raw": "982051000000000000002e0800000c009c3a0500000000000000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15005,
+          "type": 122,
+          "name": "geyser",
+          "owner": 0,
+          "qa": 3000,
+          "x": 144.0,
+          "y": 188.0,
+          "hp": 0,
+          "flags": 0,
+          "raw": "88da500066650e0000007a00b80b0000104300003c4300091408000000000000000300ec0500000082000000000000000000",
+          "children": [
+            {
+              "sid": 14,
+              "type": 46,
+              "raw": "982051000000000000002e08000000009d3a0800000000000000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15006,
+          "type": 122,
+          "name": "geyser",
+          "owner": 0,
+          "qa": 3000,
+          "x": 144.0,
+          "y": 185.0,
+          "hp": 0,
+          "flags": 0,
+          "raw": "88da50009d3a0f0000007a00b80b00001043000039430009f307000000000000000300ec0500000082000000000000000000",
+          "children": [
+            {
+              "sid": 15,
+              "type": 46,
+              "raw": "982051000000000000002e08000000009e3a0900000000000000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15007,
+          "type": 122,
+          "name": "geyser",
+          "owner": 0,
+          "qa": 3000,
+          "x": 144.0,
+          "y": 182.0,
+          "hp": 0,
+          "flags": 0,
+          "raw": "88da50009e3a100000007a00b80b00001043000036430009d207000000000000000300ec0500000082000000000000000000",
+          "children": [
+            {
+              "sid": 16,
+              "type": 46,
+              "raw": "982051000000000000002e08000000009f3a0a00000000000000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15008,
+          "type": 85,
+          "name": "sunFactory",
+          "owner": 1,
+          "qa": 0,
+          "x": 132.0,
+          "y": 194.0,
+          "hp": 3000,
+          "flags": 0,
+          "raw": "48915000cb681200000055000000000004430000424340085608b80b00000000000301ec0300000082000000000000000000",
+          "children": [
+            {
+              "sid": 18,
+              "type": 46,
+              "raw": "982051001100000000002e0800000000a03a0c00000000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 17,
+              "type": 46,
+              "raw": "98205100a63a000000002e0800001200a03a0b00000000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 15014,
+              "type": 6,
+              "raw": "08225100a73a00000000060800001100a03a6f00100000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 15015,
+              "type": 6,
+              "raw": "0822510000000000000006080000a63aa03a4c00100000010000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15009,
+          "type": 158,
+          "name": "priest",
+          "owner": 2,
+          "qa": 2,
+          "x": 43.0,
+          "y": 40.0,
+          "hp": 100,
+          "flags": 0,
+          "raw": "10f250000000130000009e00020000002c4200002042b002b801640000000000000202ec0000000080000000000000000000",
+          "children": [
+            {
+              "sid": 19,
+              "type": 46,
+              "raw": "982051000000000000002e0800000000a13a0d00000000000000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15010,
+          "type": 89,
+          "name": "residence",
+          "owner": 0,
+          "qa": 0,
+          "x": 52.0,
+          "y": 40.0,
+          "hp": 0,
+          "flags": 0,
+          "raw": "40f55000c25b160000005900000000005042000020424003b801000000000000000300000000000080000000000000000000",
+          "children": [
+            {
+              "sid": 22,
+              "type": 46,
+              "raw": "982051001500000000002e0800000000a23a1000000000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 21,
+              "type": 46,
+              "raw": "982051001400000000002e0800001600a23a0f00000000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 20,
+              "type": 46,
+              "raw": "982051000000000000002e0800001500a23a0e00000000000000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15011,
+          "type": 89,
+          "name": "residence",
+          "owner": 3,
+          "qa": 1,
+          "x": 214.0,
+          "y": 28.0,
+          "hp": 0,
+          "flags": 0,
+          "raw": "40f55000a25a1900000059000100000056430000e041600d3401000000000000000303001500000080000200000000000000",
+          "children": [
+            {
+              "sid": 25,
+              "type": 46,
+              "raw": "982051001800000000002e0800000000a33a1300000000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 24,
+              "type": 46,
+              "raw": "982051001700000000002e0800001900a33a1200000000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 23,
+              "type": 46,
+              "raw": "982051000000000000002e0800001800a33a1100000000000000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15012,
+          "type": 158,
+          "name": "priest",
+          "owner": 3,
+          "qa": 3,
+          "x": 219.0,
+          "y": 33.0,
+          "hp": 100,
+          "flags": 0,
+          "raw": "10f2500000001a0000009e00030000005b4300000442b00d6b01640000000000000203ec0000000080000000000000000000",
+          "children": [
+            {
+              "sid": 26,
+              "type": 46,
+              "raw": "982051000000000000002e0800000000a43a1400000000000000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15013,
+          "type": 124,
+          "name": "rainVortex",
+          "owner": 3,
+          "qa": 0,
+          "x": 218.0,
+          "y": 36.0,
+          "hp": 5000,
+          "flags": 0,
+          "raw": "f09651000c5f1b0000007c00000000005a4300001042a00d8c01881300000000000303ec0900000082000000000000000000",
+          "children": [
+            {
+              "sid": 27,
+              "type": 46,
+              "raw": "982051001c00000000002e0800000000a53a1500000000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 28,
+              "type": 6,
+              "raw": "082251007f0000000000060800001b00a53a8500100000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 127,
+              "type": 6,
+              "raw": "08225100000000000000060800001c00a53a8500100000010000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15016,
+          "type": 76,
+          "name": "rainBattery",
+          "owner": 1,
+          "qa": 0,
+          "x": 147.0,
+          "y": 197.0,
+          "hp": 700,
+          "flags": 0,
+          "raw": "a01e5000f568000000004c000000000013430000454330097708bc0200000000000301ec0000000080000000000000000000",
+          "children": []
+        },
+        {
+          "sid": 15017,
+          "type": 76,
+          "name": "rainBattery",
+          "owner": 1,
+          "qa": 0,
+          "x": 151.0,
+          "y": 197.0,
+          "hp": 700,
+          "flags": 0,
+          "raw": "a01e5000a83a000000004c000000000017430000454370097708bc0200000000000301ec0000000080000000000000000000",
+          "children": []
+        }
+      ]
+    },
+    "initial": {
+      "session": "20261022T071401768Z-8fdc36c4cafd",
+      "pid": 12512,
+      "time": "2026-10-22T07:19:02.499343+00:00",
+      "objects": [
+        {
+          "sid": 15000,
+          "type": 158,
+          "name": "priest",
+          "owner": 1,
+          "qa": 129,
+          "x": 133.0,
+          "y": 191.0,
+          "hp": 100,
+          "flags": 0,
+          "raw": "10f250000000070000009e0081000000054300003f4350083508640000000000000201ec0000000080000000000000000000",
+          "children": [
+            {
+              "sid": 7,
+              "type": 46,
+              "raw": "982051000000000000002e0800000000983a0200000000000000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15001,
+          "type": 135,
+          "name": "bulf",
+          "owner": 1,
+          "qa": 0,
+          "x": 142.0,
+          "y": 191.0,
+          "hp": 800,
+          "flags": 0,
+          "raw": "503e50000000000000008700000000000e4300003f43e0083508200300000000000301ec0000000080000000000000000000",
+          "children": []
+        },
+        {
+          "sid": 15002,
+          "type": 88,
+          "name": "thunderFactory",
+          "owner": 1,
+          "qa": 0,
+          "x": 133.0,
+          "y": 186.0,
+          "hp": 4000,
+          "flags": 0,
+          "raw": "48915000993a08000000580000000000054300003a435008fe07a00f00000000000301ec0000000082000000000000000000",
+          "children": [
+            {
+              "sid": 8,
+              "type": 46,
+              "raw": "982051000000000000002e08000000009a3a0300000000000000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15003,
+          "type": 125,
+          "name": "thunderVortex",
+          "owner": 1,
+          "qa": 0,
+          "x": 141.0,
+          "y": 187.0,
+          "hp": 5000,
+          "flags": 0,
+          "raw": "189951009a3a090000007d00000000000d4300003b43d0080908881300000000000301ec0500000082000000000000000000",
+          "children": [
+            {
+              "sid": 9,
+              "type": 46,
+              "raw": "982051000a00000000002e08000000009b3a0400000000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 10,
+              "type": 6,
+              "raw": "082251000000000000000608000009009b3a8500100000000000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15004,
+          "type": 89,
+          "name": "residence",
+          "owner": 1,
+          "qa": 0,
+          "x": 137.0,
+          "y": 178.0,
+          "hp": 0,
+          "flags": 0,
+          "raw": "40f550009b3a0d0000005900000000000943000032439008a607000000000000000301000600000080000100000000000000",
+          "children": [
+            {
+              "sid": 13,
+              "type": 46,
+              "raw": "982051000c00000000002e08000000009c3a0700000000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 12,
+              "type": 46,
+              "raw": "982051000b00000000002e0800000d009c3a0600000000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 11,
+              "type": 46,
+              "raw": "982051000000000000002e0800000c009c3a0500000000000000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15005,
+          "type": 122,
+          "name": "geyser",
+          "owner": 0,
+          "qa": 3000,
+          "x": 144.0,
+          "y": 188.0,
+          "hp": 0,
+          "flags": 0,
+          "raw": "88da500066650e0000007a00b80b0000104300003c4300091408000000000000000300ec0d00000082000000000000000000",
+          "children": [
+            {
+              "sid": 14,
+              "type": 46,
+              "raw": "982051000000000000002e08000000009d3a0800000000000000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15006,
+          "type": 122,
+          "name": "geyser",
+          "owner": 0,
+          "qa": 3000,
+          "x": 144.0,
+          "y": 185.0,
+          "hp": 0,
+          "flags": 0,
+          "raw": "88da50009d3a0f0000007a00b80b00001043000039430009f307000000000000000300ec0d00000082000000000000000000",
+          "children": [
+            {
+              "sid": 15,
+              "type": 46,
+              "raw": "982051000000000000002e08000000009e3a0900000000000000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15007,
+          "type": 122,
+          "name": "geyser",
+          "owner": 0,
+          "qa": 3000,
+          "x": 144.0,
+          "y": 182.0,
+          "hp": 0,
+          "flags": 0,
+          "raw": "88da50009e3a100000007a00b80b00001043000036430009d207000000000000000300ec0d00000082000000000000000000",
+          "children": [
+            {
+              "sid": 16,
+              "type": 46,
+              "raw": "982051000000000000002e08000000009f3a0a00000000000000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15008,
+          "type": 85,
+          "name": "sunFactory",
+          "owner": 1,
+          "qa": 0,
+          "x": 132.0,
+          "y": 194.0,
+          "hp": 3000,
+          "flags": 0,
+          "raw": "48915000cb681200000055000000000004430000424340085608b80b00000000000301ec0200000082000000000000000000",
+          "children": [
+            {
+              "sid": 18,
+              "type": 46,
+              "raw": "982051001100000000002e0800000000a03a0c00000000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 17,
+              "type": 46,
+              "raw": "98205100a63a000000002e0800001200a03a0b00000000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 15014,
+              "type": 6,
+              "raw": "08225100a73a00000000060800001100a03a6f00100000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 15015,
+              "type": 6,
+              "raw": "0822510000000000000006080000a63aa03a4c00100000010000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15009,
+          "type": 158,
+          "name": "priest",
+          "owner": 2,
+          "qa": 2,
+          "x": 43.0,
+          "y": 40.0,
+          "hp": 100,
+          "flags": 0,
+          "raw": "10f250000000130000009e00020000002c4200002042b002b801640000000000000202ec0000000080000000000000000000",
+          "children": [
+            {
+              "sid": 19,
+              "type": 46,
+              "raw": "982051000000000000002e0800000000a13a0d00000000000000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15010,
+          "type": 89,
+          "name": "residence",
+          "owner": 0,
+          "qa": 0,
+          "x": 52.0,
+          "y": 40.0,
+          "hp": 0,
+          "flags": 0,
+          "raw": "40f55000c25b160000005900000000005042000020424003b801000000000000000300000000000080000000000000000000",
+          "children": [
+            {
+              "sid": 22,
+              "type": 46,
+              "raw": "982051001500000000002e0800000000a23a1000000000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 21,
+              "type": 46,
+              "raw": "982051001400000000002e0800001600a23a0f00000000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 20,
+              "type": 46,
+              "raw": "982051000000000000002e0800001500a23a0e00000000000000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15011,
+          "type": 89,
+          "name": "residence",
+          "owner": 3,
+          "qa": 1,
+          "x": 214.0,
+          "y": 28.0,
+          "hp": 0,
+          "flags": 0,
+          "raw": "40f55000a25a1900000059000100000056430000e041600d3401000000000000000303001500000080000200000000000000",
+          "children": [
+            {
+              "sid": 25,
+              "type": 46,
+              "raw": "982051001800000000002e0800000000a33a1300000000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 24,
+              "type": 46,
+              "raw": "982051001700000000002e0800001900a33a1200000000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 23,
+              "type": 46,
+              "raw": "982051000000000000002e0800001800a33a1100000000000000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15012,
+          "type": 158,
+          "name": "priest",
+          "owner": 3,
+          "qa": 3,
+          "x": 219.0,
+          "y": 33.0,
+          "hp": 100,
+          "flags": 0,
+          "raw": "10f2500000001a0000009e00030000005b4300000442b00d6b01640000000000000203ec0000000080000000000000000000",
+          "children": [
+            {
+              "sid": 26,
+              "type": 46,
+              "raw": "982051000000000000002e0800000000a43a1400000000000000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15013,
+          "type": 124,
+          "name": "rainVortex",
+          "owner": 3,
+          "qa": 0,
+          "x": 218.0,
+          "y": 36.0,
+          "hp": 5000,
+          "flags": 0,
+          "raw": "f09651000c5f1b0000007c00000000005a4300001042a00d8c01881300000000000303ec0e00000082000000000000000000",
+          "children": [
+            {
+              "sid": 27,
+              "type": 46,
+              "raw": "982051001c00000000002e0800000000a53a1500000000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 28,
+              "type": 6,
+              "raw": "082251007f0000000000060800001b00a53a8500100000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 127,
+              "type": 6,
+              "raw": "08225100000000000000060800001c00a53a8500100000010000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        }
+      ]
+    },
+    "selected": {
+      "session": "20261022T071401768Z-8fdc36c4cafd",
+      "pid": 12512,
+      "time": "2026-10-22T07:22:01.458345+00:00",
+      "selected": 0,
+      "objects": [
+        {
+          "sid": 15000,
+          "type": 158,
+          "name": "priest",
+          "owner": 1,
+          "qa": 129,
+          "x": 133.0,
+          "y": 191.0,
+          "hp": 100,
+          "flags": 0,
+          "raw": "10f250000000070000009e0081000000054300003f4350083508640000000000000201ec0000000080000000000000000000",
+          "children": [
+            {
+              "sid": 7,
+              "type": 46,
+              "raw": "982051000000000000002e0800000000983a0200000000000000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15001,
+          "type": 135,
+          "name": "bulf",
+          "owner": 1,
+          "qa": 0,
+          "x": 142.0,
+          "y": 191.0,
+          "hp": 800,
+          "flags": 0,
+          "raw": "503e50000000000000008700000000000e4300003f43e0083508200300000000000301ec0000000080000000000000000000",
+          "children": []
+        },
+        {
+          "sid": 15002,
+          "type": 88,
+          "name": "thunderFactory",
+          "owner": 1,
+          "qa": 0,
+          "x": 133.0,
+          "y": 186.0,
+          "hp": 4000,
+          "flags": 0,
+          "raw": "48915000993a08000000580000000000054300003a435008fe07a00f00000000000301ec0000000082000000000000000000",
+          "children": [
+            {
+              "sid": 8,
+              "type": 46,
+              "raw": "982051000000000000002e08000000009a3a0300000000000000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15003,
+          "type": 125,
+          "name": "thunderVortex",
+          "owner": 1,
+          "qa": 0,
+          "x": 141.0,
+          "y": 187.0,
+          "hp": 5000,
+          "flags": 0,
+          "raw": "189951009a3a090000007d00000000000d4300003b43d0080908881300000000000301ec0100000082000000000000000000",
+          "children": [
+            {
+              "sid": 9,
+              "type": 46,
+              "raw": "982051000a00000000002e08000000009b3a0400000000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 10,
+              "type": 6,
+              "raw": "082251000000000000000608000009009b3a8500100000000000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15004,
+          "type": 89,
+          "name": "residence",
+          "owner": 1,
+          "qa": 0,
+          "x": 137.0,
+          "y": 178.0,
+          "hp": 0,
+          "flags": 0,
+          "raw": "40f550009b3a0d0000005900000000000943000032439008a607000000000000000301000600000080000100000000000000",
+          "children": [
+            {
+              "sid": 13,
+              "type": 46,
+              "raw": "982051000c00000000002e08000000009c3a0700000000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 12,
+              "type": 46,
+              "raw": "982051000b00000000002e0800000d009c3a0600000000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 11,
+              "type": 46,
+              "raw": "982051000000000000002e0800000c009c3a0500000000000000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15005,
+          "type": 122,
+          "name": "geyser",
+          "owner": 0,
+          "qa": 3000,
+          "x": 144.0,
+          "y": 188.0,
+          "hp": 0,
+          "flags": 0,
+          "raw": "88da500066650e0000007a00b80b0000104300003c4300091408000000000000000300ec0c00000082000000000000000000",
+          "children": [
+            {
+              "sid": 14,
+              "type": 46,
+              "raw": "982051000000000000002e08000000009d3a0800000000000000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15006,
+          "type": 122,
+          "name": "geyser",
+          "owner": 0,
+          "qa": 3000,
+          "x": 144.0,
+          "y": 185.0,
+          "hp": 0,
+          "flags": 0,
+          "raw": "88da50009d3a0f0000007a00b80b00001043000039430009f307000000000000000300ec0c00000082000000000000000000",
+          "children": [
+            {
+              "sid": 15,
+              "type": 46,
+              "raw": "982051000000000000002e08000000009e3a0900000000000000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15007,
+          "type": 122,
+          "name": "geyser",
+          "owner": 0,
+          "qa": 3000,
+          "x": 144.0,
+          "y": 182.0,
+          "hp": 0,
+          "flags": 0,
+          "raw": "88da50009e3a100000007a00b80b00001043000036430009d207000000000000000300ec0c00000082000000000000000000",
+          "children": [
+            {
+              "sid": 16,
+              "type": 46,
+              "raw": "982051000000000000002e08000000009f3a0a00000000000000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15008,
+          "type": 85,
+          "name": "sunFactory",
+          "owner": 1,
+          "qa": 0,
+          "x": 132.0,
+          "y": 194.0,
+          "hp": 3000,
+          "flags": 0,
+          "raw": "48915000cb681200000055000000000004430000424340085608b80b00000000000301ec0000000082000000000000000000",
+          "children": [
+            {
+              "sid": 18,
+              "type": 46,
+              "raw": "982051001100000000002e0800000000a03a0c00000000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 17,
+              "type": 46,
+              "raw": "98205100a63a000000002e0800001200a03a0b00000000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 15014,
+              "type": 6,
+              "raw": "08225100a73a00000000060800001100a03a6f00100000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 15015,
+              "type": 6,
+              "raw": "0822510000000000000006080000a63aa03a4c00100000010000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15009,
+          "type": 158,
+          "name": "priest",
+          "owner": 2,
+          "qa": 2,
+          "x": 43.0,
+          "y": 40.0,
+          "hp": 100,
+          "flags": 0,
+          "raw": "10f250000000130000009e00020000002c4200002042b002b801640000000000000202ec0000000080000000000000000000",
+          "children": [
+            {
+              "sid": 19,
+              "type": 46,
+              "raw": "982051000000000000002e0800000000a13a0d00000000000000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15010,
+          "type": 89,
+          "name": "residence",
+          "owner": 0,
+          "qa": 1,
+          "x": 52.0,
+          "y": 40.0,
+          "hp": 0,
+          "flags": 0,
+          "raw": "40f55000c25b160000005900010000005042000020424003b801000000000000000300000100000080000000000000000000",
+          "children": [
+            {
+              "sid": 22,
+              "type": 46,
+              "raw": "982051001500000000002e0800000000a23a1000000000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 21,
+              "type": 46,
+              "raw": "982051001400000000002e0800001600a23a0f00000000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 20,
+              "type": 46,
+              "raw": "982051000000000000002e0800001500a23a0e00000000000000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15011,
+          "type": 89,
+          "name": "residence",
+          "owner": 3,
+          "qa": 0,
+          "x": 214.0,
+          "y": 28.0,
+          "hp": 0,
+          "flags": 0,
+          "raw": "40f55000a25a1900000059000000000056430000e041600d3401000000000000000303001400000080000200000000000000",
+          "children": [
+            {
+              "sid": 25,
+              "type": 46,
+              "raw": "982051001800000000002e0800000000a33a1300000000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 24,
+              "type": 46,
+              "raw": "982051001700000000002e0800001900a33a1200000000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 23,
+              "type": 46,
+              "raw": "982051000000000000002e0800001800a33a1100000000000000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15012,
+          "type": 158,
+          "name": "priest",
+          "owner": 3,
+          "qa": 3,
+          "x": 219.0,
+          "y": 33.0,
+          "hp": 100,
+          "flags": 0,
+          "raw": "10f2500000001a0000009e00030000005b4300000442b00d6b01640000000000000203ec0000000080000000000000000000",
+          "children": [
+            {
+              "sid": 26,
+              "type": 46,
+              "raw": "982051000000000000002e0800000000a43a1400000000000000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15013,
+          "type": 124,
+          "name": "rainVortex",
+          "owner": 3,
+          "qa": 0,
+          "x": 218.0,
+          "y": 36.0,
+          "hp": 5000,
+          "flags": 0,
+          "raw": "f09651000c5f1b0000007c00000000005a4300001042a00d8c01881300000000000303ec0500000082000000000000000000",
+          "children": [
+            {
+              "sid": 27,
+              "type": 46,
+              "raw": "982051001c00000000002e0800000000a53a1500000000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 28,
+              "type": 6,
+              "raw": "082251007f0000000000060800001b00a53a8500100000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "sid": 127,
+              "type": 6,
+              "raw": "08225100000000000000060800001c00a53a8500100000010000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "sid": 15016,
+          "type": 76,
+          "name": "rainBattery",
+          "owner": 1,
+          "qa": 0,
+          "x": 147.0,
+          "y": 197.0,
+          "hp": 700,
+          "flags": 0,
+          "raw": "a01e5000f568000000004c000000000013430000454330097708bc0200000000000301ec0000000080000000000000000000",
+          "children": []
+        },
+        {
+          "sid": 15017,
+          "type": 76,
+          "name": "rainBattery",
+          "owner": 1,
+          "qa": 0,
+          "x": 151.0,
+          "y": 197.0,
+          "hp": 700,
+          "flags": 0,
+          "raw": "a01e5000a83a000000004c000000000017430000454370097708bc0200000000000301ec0000000080000000000000000000",
+          "children": []
+        },
+        {
+          "sid": 15018,
+          "type": 111,
+          "name": "sunBalloon",
+          "owner": 1,
+          "qa": 0,
+          "x": 133.0,
+          "y": 190.0,
+          "hp": 100,
+          "flags": 0,
+          "raw": "c04050009c3a000063046f0000000000054300003e4350082a08640000000000000301ec0000000080000000000000000000",
+          "children": []
+        }
+      ]
+    }
+  },
+  "helperSourceAtHandoff": {
+    "live.py": "# -*- coding: utf-8 -*-\n\"\"\"TEST02를 실제 열어 원래 사용자 입력을 수행하고 명령 폴더로 후속 조작을 받는다.\"\"\"\nfrom pathlib import Path\nimport sys\n\nROOT = Path(__file__).resolve().parents[2]  # 보호 원본을 읽는 저장소 루트다.\nWORK = Path(__file__).resolve().parent  # 조작/영상/관찰은 별도 작업 폴더에만 쓴다.\nsys.path.insert(0, str(ROOT / 'tools'))\nfrom analyze_test02_construct import Run\n\nrun = Run(WORK)\ntry:\n    run.boot_to_battle()\n    run.d.serve()\nfinally:\n    if run.d.session_id:\n        run.step('end')\n    run.d.close()\n",
+    "read_state.py": "# -*- coding: utf-8 -*-\n\"\"\"현재 분석 세션의 풀과 TYPE를 읽기만 하고 사용자 플레이의 관찰 시점을 저장한다.\"\"\"\nimport argparse\nimport ctypes\nfrom ctypes import wintypes\nfrom datetime import datetime, timezone\nimport json\nfrom pathlib import Path\nimport struct\n\nWORK = Path(__file__).resolve().parent  # 조작 기록과 같은 작업 폴더에 읽은 원문만 쓴다.\nROOT = WORK.parents[1]  # 세션이 소유한 독립 실행 파일 위치를 확인할 저장소다.\nparser = argparse.ArgumentParser(description=__doc__)\nparser.add_argument('name')\nargs = parser.parse_args()\nfirst = json.loads((WORK / 'actions.jsonl').read_text(encoding='utf-8').splitlines()[0])\nsession_root = ROOT / 'extracted/analyzeManager' / first['sessionId']\nsession = json.loads((session_root / 'session.json').read_text(encoding='utf-8'))\nkernel = ctypes.WinDLL('kernel32', use_last_error=True)\nkernel.OpenProcess.argtypes = [wintypes.DWORD, wintypes.BOOL, wintypes.DWORD]\nkernel.OpenProcess.restype = wintypes.HANDLE\nkernel.ReadProcessMemory.argtypes = [wintypes.HANDLE, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_size_t, ctypes.POINTER(ctypes.c_size_t)]\nkernel.CloseHandle.argtypes = [wintypes.HANDLE]\nhandle = kernel.OpenProcess(0x1010, False, session['processId'])\nif not handle:\n    raise ctypes.WinError(ctypes.get_last_error())\ntry:\n    def read(address, size):\n        \"\"\"부분 읽기를 거부하고 관찰 대상 메모리에는 쓰지 않는다. 진행 중인 게임의 비원자적 관찰이다.\"\"\"\n        buffer = ctypes.create_string_buffer(size)\n        received = ctypes.c_size_t()\n        if not kernel.ReadProcessMemory(handle, address, buffer, size, ctypes.byref(received)) or received.value != size:\n            raise ctypes.WinError(ctypes.get_last_error())\n        return buffer.raw\n\n    base = struct.unpack('<I', read(0x5c8464, 4))[0]\n    types = struct.unpack('<I', read(0x59ab20, 4))[0]\n    pool = read(base, 23000 * 50)\n    definitions = read(types, 188 * 500)\n    found = []  # 지형 받침을 제외한 실제 건물·이동 유닛·사제를 현재 슬롯에서 뽑는다.\n    # 살아 있는 실제 자산만 나열하고 원문 전체를 함께 저장한다.\n    for sid in range(15000, 23000):\n        raw = pool[sid * 50:(sid + 1) * 50]\n        number = raw[10]\n        if number < 70 or number >= 188 or raw[11] & 3:\n            continue\n        definition = definitions[number * 500:(number + 1) * 500]\n        genus = struct.unpack_from('<I', definition, 0xec)[0]\n        if not genus & 0xd0274200:\n            continue\n        name = definition[4:24].split(b'\\0')[0].decode('latin-1')\n        children = []\n        child = struct.unpack_from('<H', raw, 6)[0]\n        # 원문 풀 한 번의 읽기 안에서 현재 내용물/프로세스 링크를 확인한다.\n        while child and len(children) < 64:\n            if child >= 23000 or any(entry['sid'] == child for entry in children):\n                raise ValueError('invalid content chain')\n            body = pool[child * 50:(child + 1) * 50]\n            children.append(dict(sid=child, type=body[10], raw=body.hex()))\n            child = struct.unpack_from('<H', body, 4)[0]\n        found.append(dict(sid=sid, type=number, name=name, owner=raw[34], qa=struct.unpack_from('<H', raw, 12)[0],\n                          x=struct.unpack_from('<f', raw, 14)[0], y=struct.unpack_from('<f', raw, 18)[0],\n                          hp=struct.unpack_from('<i', raw, 26)[0], flags=raw[11], raw=raw.hex(), children=children))\n    result = dict(session=first['sessionId'], pid=session['processId'], time=datetime.now(timezone.utc).isoformat(),\n                  cursorPreview=struct.unpack('<I', read(0x55a2a8, 4))[0],\n                  camera=struct.unpack('<ff', read(0x59a900, 8)),\n                  cursor={hex(address): struct.unpack('<I', read(address, 4))[0]\n                          for address in (0x55a284, 0x55a288, 0x55a28c, 0x55a2a4, 0x55a1b8)},\n                  cursorPoint=struct.unpack('<ff', read(0x55a300, 8)), objects=found)\n    folder = WORK / 'states'\n    folder.mkdir(exist_ok=True)\n    (folder / (args.name + '.pool')).write_bytes(pool)\n    (folder / (args.name + '.json')).write_bytes((json.dumps(result, ensure_ascii=False, indent=2) + '\\n').encode('utf-8'))\n    print(json.dumps([{key: entry[key] for key in ('sid', 'type', 'name', 'owner', 'qa', 'x', 'y', 'hp')} for entry in found]))\nfinally:\n    kernel.CloseHandle(handle)\n",
+    "send.py": "# -*- coding: utf-8 -*-\n\"\"\"현재 드라이버에 명령 파일을 보내고 그 명령의 완료와 실제 입력 오류를 확인한다.\"\"\"\nimport json\nfrom pathlib import Path\nimport sys\nimport time\n\nWORK = Path(__file__).resolve().parent  # 이미 실행 중인 분석 세션의 명령/결과 디렉터리다.\nname = sys.argv[1]\ncommand = json.loads(sys.stdin.read())\npath = WORK / 'cmd' / (name + '.json')\nassert not path.exists() and not path.with_suffix('.done').exists()\ntemporary = path.with_suffix('.tmp')\ntemporary.write_bytes(json.dumps(command).encode('utf-8'))\ntemporary.rename(path)\nresult = WORK / 'out' / (name + '.json')\ndeadline = time.monotonic() + 45\n# 개별 명령의 결과 파일만 기다리며 새 게임을 열거나 동일 입력을 재전송하지 않는다.\nwhile not result.exists():\n    if time.monotonic() > deadline:\n        raise TimeoutError(str(result))\n    time.sleep(.1)\ndata = json.loads(result.read_text(encoding='utf-8'))\nprint(json.dumps(dict(session=data['sessionId'], error=data['error'],\n                      results=[{key: row[key] for key in ('op', 'isError', 'error', 'changedRatio', 'copy', 'after', 'image') if key in row}\n                               for row in data['results']])))\nassert not data['error'] and all(not row.get('isError') and not row.get('error') for row in data['results'])\n"
+  },
+  "artifactHashes": {
+    "extracted/test02-sacrifice-20261022/live.py": "89eb75905731ccbdb7f26f28eead53b3c8beecb4fd84a44f4e41df002da7da8a",
+    "extracted/test02-sacrifice-20261022/actions.jsonl": "8d1f34f7bd6a9b7f416edba38b95934116b78cbdfb8fea66b49f5614b12f3af2",
+    "extracted/test02-sacrifice-20261022/mcp-stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/test02-sacrifice-20261022/cursor_timeline.jsonl": "414c8eb2e11883da13359a17c83a9b5624674f0b4d7aeb0397cc0a7f9d72bb00",
+    "extracted/test02-sacrifice-20261022/ready.txt": "e25a98ce5f2fbaaa211d0f46f22cbc962165ea67bae170db62061a86ea82e464",
+    "extracted/test02-sacrifice-20261022/read_state.py": "b56e5c6352ae8821d41374d7ac32bd6e2cf5298e1455d4aa5124735e4ae22730",
+    "extracted/test02-sacrifice-20261022/send.py": "4972960f2fd75f68d5e46d65cb1b069f44fb595f64c750edb591268c11798b0d",
+    "extracted/test02-sacrifice-20261022/cmd/001-sun-menu.done": "8346bd6d62dca7f5e2348e7c877beb13a044dfd78f935a90010178fed8009340",
+    "extracted/test02-sacrifice-20261022/cmd/002-knowledge.done": "60c509344807e8dc3aba9bf504d74c337937246a5e2da98efeb05ef19baffef6",
+    "extracted/test02-sacrifice-20261022/cmd/003-register-balloon.done": "8e6ae5914d5cb106d94047267c04a0b84f8cad7dd809b0173ee46c64835f1c46",
+    "extracted/test02-sacrifice-20261022/cmd/004-produce-upgrade.done": "2dc87d78c20cf50a38d0a370c2ff9fd499b07260e2998c1c8c1a3c6fef649067",
+    "extracted/test02-sacrifice-20261022/cmd/005-generator-menu.done": "ca04bf32e05d34f3966bc8a36af3178bcfa0dd81a5308389ddc0795c22fc4496",
+    "extracted/test02-sacrifice-20261022/cmd/006-cancel.done": "12c7d5bc64383db75544c11b2c25c4cce4d952f54fc47ff8846b29bb9ebac38d",
+    "extracted/test02-sacrifice-20261022/cmd/007-sun-menu.done": "82a7fd935c2ef7a68f409186efa5da4f26945283dad1e70b77a20c4f2c9ff826",
+    "extracted/test02-sacrifice-20261022/cmd/008-register-generator.done": "57c0f33ed0cbb0a0b6bfc0496e5b4aa09a1bd46230c8ce3cf95d56d96ae01688",
+    "extracted/test02-sacrifice-20261022/cmd/009-generators.done": "a72948f5396481391ed87cdf1e69b7af69ee19cb4e02982a405a5323ea3a26a7",
+    "extracted/test02-sacrifice-20261022/cmd/010-balloon.done": "f08401335d1a1c0ea02397d09ef6ef784041d12ee193f000b35ef13c7f770164",
+    "extracted/test02-sacrifice-20261022/cmd/011-balloon-center.done": "8d98103d986af06126c9fec4e412ff4399d9de6a00e264ac2d1f2ff283f609f3",
+    "extracted/test02-sacrifice-20261022/cmd/012-pickup-own.done": "22f766e753ab05a05556a89ddab2b1e8ea004b172ffcdd53c003067686f26a43",
+    "extracted/test02-sacrifice-20261022/cmd/013-select-basket.done": "aae40b37f6fc1087f60e19f93ee8b41235208fc80144b4d7b65d4d2ebbfa9553",
+    "extracted/test02-sacrifice-20261022/cmd/014-camera-northwest.done": "11c53c51cd08e98c04c62f78d5b287555405742a184b02f79c00d5f61e3b259c",
+    "extracted/test02-sacrifice-20261022/cmd/015-alt-camera.done": "2cc54c2876129e0d86643b8a4fc81ce1ca968b4ec6c3706d4d5c973a832e9012",
+    "extracted/test02-sacrifice-20261022/cmd/016-alt-camera-valid.done": "7fc65822a8d78f98f317003bf27f765e40e157f418646f7c14feeb163ed2f0b7",
+    "extracted/test02-sacrifice-20261022/cmd/017-enemy-generator.done": "b48690eb9028203b3986480487f85d4376c1e6ff6083de849140362d7e9c384b",
+    "extracted/test02-sacrifice-20261022/cmd/018-home-bridge.done": "a493b949073dd46c682e22268ed44c185396b716531a273c4b2e3618023a665c",
+    "extracted/test02-sacrifice-20261022/cmd/QUIT": "b89c1cfd239c4e629ebffdc6ebede80eac8409c825e4db6ca1c2ce9d96461e29",
+    "extracted/test02-sacrifice-20261022/out/001-sun-menu.json": "3a41f54728512fad1b6939ee91268732992ee607dbfffba5be2ac18a15c45707",
+    "extracted/test02-sacrifice-20261022/out/002-knowledge.json": "d505abf3d273f24ef33901242a6e185583d65d3c044dee113f6d894f5a042c3a",
+    "extracted/test02-sacrifice-20261022/out/003-register-balloon.json": "6320d20a82982ca31015d774dd86cb62cc29b1a57fd72fa71d22a6944ac167ea",
+    "extracted/test02-sacrifice-20261022/out/004-produce-upgrade.json": "f39d888014ebd13c70419e7c0b150d9e1ef30a51f445b9f9160827703002c838",
+    "extracted/test02-sacrifice-20261022/out/005-generator-menu.json": "b98b5d97192ff5031403691cbc95f523850f82b0f0addc9f7063ffa87961b7a2",
+    "extracted/test02-sacrifice-20261022/out/006-cancel.json": "b1ea07146ea2dca917592d8a15d4b0c2d5cf3e148de43b6524a7212c161db72a",
+    "extracted/test02-sacrifice-20261022/out/007-sun-menu.json": "13d63c51759c7d43c21b10fe42efc4f5ce62f3963b19cb71e409d991a9cc76aa",
+    "extracted/test02-sacrifice-20261022/out/008-register-generator.json": "5973b7207f1979ddbedf8de046addbd9c84482f44040291e5595cb9e882c550d",
+    "extracted/test02-sacrifice-20261022/out/009-generators.json": "6b2f81feb04da8ce12ec6e9ffd3803988b82823c5be4cd5c2ecf8308f319ce38",
+    "extracted/test02-sacrifice-20261022/out/010-balloon.json": "6cd7bfff1517cefd677b4d38f7a35901b193a02980be623b4f609f18ca226b59",
+    "extracted/test02-sacrifice-20261022/out/011-balloon-center.json": "8c46cf5c9b8cb33e47abfc80655412954034b6efb205dd336b6fa1b6afa16045",
+    "extracted/test02-sacrifice-20261022/out/012-pickup-own.json": "0f42b620349adce62d46f6f2a12385815392ce027514f6e7ad71ce7aad1bb2ed",
+    "extracted/test02-sacrifice-20261022/out/013-select-basket.json": "a7eca3be6c79f2ecf9ebceb11cfcd309e569750e296722310b615fb34ec0bfbf",
+    "extracted/test02-sacrifice-20261022/out/014-camera-northwest.json": "dae9cda2f32c1a42cb62ec4c88bdd7c9af68092787efeb26fd999692d2aeae06",
+    "extracted/test02-sacrifice-20261022/out/015-alt-camera.json": "e41034de2be8baa89b025af9299c08557716beae8fff698ae6c8cd60c1906fd2",
+    "extracted/test02-sacrifice-20261022/out/016-alt-camera-valid.json": "5ce04250c64a555409c757a86a655cc7ae463ce13ddcd56b6482e6187058ab48",
+    "extracted/test02-sacrifice-20261022/out/017-enemy-generator.json": "945e177dc2b0407650b1f37fe3094eabf8cb14e67ccef9889fa76c5330d9f5b1",
+    "extracted/test02-sacrifice-20261022/out/018-home-bridge.json": "29ca100ff28ee21b12843e9de48eec54118b73ac47a537facd52ee769d31ee73",
+    "extracted/test02-sacrifice-20261022/cursors/65539.png": "a5650cc0c078a511e13022e57d833ad4de311ba60fd3dab5767be583f639a056",
+    "extracted/test02-sacrifice-20261022/cursors/65541.png": "cea66e28aae1e2f02de0f1d14ad5f19d9c0a3cf37dcdafebde41577cd67cbced",
+    "extracted/test02-sacrifice-20261022/cursors/65567.png": "78a1d8fc0b54f76fddd1b6535be937c14e10551101b59c67037e72e0ebe525fb",
+    "extracted/test02-sacrifice-20261022/cursors/590933.png": "93335603cc2fb7031053892a72841a4ad60bcc8d23fc34dda69e5e6b9b685524",
+    "extracted/test02-sacrifice-20261022/cursors/8848379.png": "48805aca4d578665b9dba9d0c8bf1ba1e066e3b18e626569fffb7f319db8ebc6",
+    "extracted/test02-sacrifice-20261022/cursors/70517501.png": "055b2bb8c300123c725dc933ca7ae1cb207c9c882a256c4eab1c8622928a116c",
+    "extracted/test02-sacrifice-20261022/cursors/65555.png": "bb9d4c1fb5280e2bb364a675c155118b1b896273314d8792fb298aefaf1a8efa",
+    "extracted/test02-sacrifice-20261022/cursors/19334163.png": "720cd3c84968ee412882d0675509823a7fd2dbb16c92e734256e4dca72db310d",
+    "extracted/test02-sacrifice-20261022/shots/b01-edit-list.png": "5ec51f061d81327b05c2bb6c3937332cdf442f103ae5b5ac4ea6a4b0c5c94cb6",
+    "extracted/test02-sacrifice-20261022/shots/b01-edit-list.cur.png": "c4777362d2586b44a460d56f035824e01d31da5b332fb09bd039769549ea7f92",
+    "extracted/test02-sacrifice-20261022/shots/b02-new-name.png": "a6494212fbec35b3211c2760d74f9b0bc8a29456df6311b67439f22da7b42d27",
+    "extracted/test02-sacrifice-20261022/shots/b02-new-name.cur.png": "eedb7cc1b0c9d9396075575c1e00e364b4720812ef4e6076fa2f8cdb59f3cb46",
+    "extracted/test02-sacrifice-20261022/shots/b03-typed.png": "511b45abf11c755b587314bf4c184bc6fa9c611513b1f95f6ada4487b203abb7",
+    "extracted/test02-sacrifice-20261022/shots/b03-typed.cur.png": "026578087f7968a4c8b8c3c865651f960d27846e7ff85e8f9e2727864720d16d",
+    "extracted/test02-sacrifice-20261022/shots/b04-editor.png": "f0372f63c0418223badfcbb9c284c49ac159950b372a81ade8c6e7755d0a6c5c",
+    "extracted/test02-sacrifice-20261022/shots/b04-editor.cur.png": "272553e1d13dc226ce9bc074d47586eb37696b10fc26cf015e391086e5ade76e",
+    "extracted/test02-sacrifice-20261022/shots/b05-game-menu.png": "ab5d2e4081a4dff37b4f6719b2342d4bea67e8c59cb0ca76a286c8a43064bf8b",
+    "extracted/test02-sacrifice-20261022/shots/b05-game-menu.cur.png": "227d873fa236d5f17a8789a2b11a874bc08a482c927c1cd8f40e9f659cd08bfc",
+    "extracted/test02-sacrifice-20261022/shots/b06-briefing.png": "199570e5bbba3acc1e061e707ca085d23edee6986902187fffe205f965022868",
+    "extracted/test02-sacrifice-20261022/shots/b06-briefing.cur.png": "100195f736e79623c1518e5948d7ff9d549b7997adc4298d72bda4aa6b26069b",
+    "extracted/test02-sacrifice-20261022/shots/b07-battle.png": "384b56d9645e49cf85ec5541e7ac35fed83852e8c11d5400c3815dc56e69ee74",
+    "extracted/test02-sacrifice-20261022/shots/b07-battle.cur.png": "e76a573457351df8b820d7d0e9d6aaccfbae76c14745abc35653531397894a5a",
+    "extracted/test02-sacrifice-20261022/shots/p01-sun-menu.png": "6ff246c5746a88ad4a599ab2d9ffc671200bc8c057e5a8cfba53c359ec908af3",
+    "extracted/test02-sacrifice-20261022/shots/p01-sun-menu.cur.png": "22ffc83a81fec5ae8479d799f0820f6480cb68045bd1afda53989d673dda2955",
+    "extracted/test02-sacrifice-20261022/shots/p02-sun-knowledge.png": "b74f4fd1e2f8eaf4678475961a1a04986df6cc8248e5d634de6a1942d1f50ae0",
+    "extracted/test02-sacrifice-20261022/shots/p02-sun-knowledge.cur.png": "05dbeb2b5d4920ebacc11fb59571a690e68ee3986d83dd2e521561aa9cb88ffb",
+    "extracted/test02-sacrifice-20261022/shots/p03-balloon-registered.png": "e12f6d991d79530674b989f10dd28f4a5fb3510ce48ee1b8b8eadf70c084440e",
+    "extracted/test02-sacrifice-20261022/shots/p03-balloon-registered.cur.png": "8dc498b8f0dcce42cd906ebb9d7612c9c4b13239c15d2934d038ccf4e2be5d21",
+    "extracted/test02-sacrifice-20261022/shots/p04-balloon-placed.png": "2842d244221f7652734fd890879bca552c79ca9ffa458befca4792c6c5cbcb39",
+    "extracted/test02-sacrifice-20261022/shots/p04-balloon-placed.cur.png": "1493e1528717b05927a515ed2fc0a8ff22f4d0d207375a5b3dd105fc754db9d6",
+    "extracted/test02-sacrifice-20261022/shots/p05-workshop-upgrade.png": "f4d1107ebb7e48eaf97da969ff2c47ad3e5b33339b6b7aa0e55ce35db07ed336",
+    "extracted/test02-sacrifice-20261022/shots/p05-workshop-upgrade.cur.png": "de6e09ab768c82c6333e794bb0a3d85ccd24e9edc279b3ac5a8e6713a4b422f2",
+    "extracted/test02-sacrifice-20261022/shots/p06-knowledge-after-balloon.png": "aa7e7834451981a4d71430d26fd9024a9e26db97fccd405b756af16c9769a942",
+    "extracted/test02-sacrifice-20261022/shots/p06-knowledge-after-balloon.cur.png": "c2d5faf923915f70a8b413751d33624c2803483ca4b808e46dd830c7126e360c",
+    "extracted/test02-sacrifice-20261022/shots/p07-cancel-and-menu.png": "ca5b1657fcc293f25437f6c307e03e04d612cb019b2373d157b6c0e4f532d2ba",
+    "extracted/test02-sacrifice-20261022/shots/p07-cancel-and-menu.cur.png": "fc203b1be4605ba9d93aedc8bbb0d8c0b6acc41f4351003c818af9f3d63fdfa8",
+    "extracted/test02-sacrifice-20261022/shots/p08-sun-menu.png": "6ec5a95f6f64d829fa9b0b5b423c21dc340d234609731a2ff4883818a38a021a",
+    "extracted/test02-sacrifice-20261022/shots/p08-sun-menu.cur.png": "e0486d3f90e683b4492ba2d93d68b1061ecaf7d07db0e84f5eb3ac2faee8e2a4",
+    "extracted/test02-sacrifice-20261022/shots/p09-generator-list.png": "629e8b33c98b6c1ad949745eeb6455edc5b811b2f72f6231da8c89fa4eb7ce01",
+    "extracted/test02-sacrifice-20261022/shots/p09-generator-list.cur.png": "2517a2efa04059063860fb71d9e04170faa4f1f99889dc3aef0f312ef95cad7f",
+    "extracted/test02-sacrifice-20261022/shots/p10-generator-registered.png": "3d0b2e747ea7eb12fb27dbd65eef6ec331996ac61604ccbe8b0919f8ed53b6a8",
+    "extracted/test02-sacrifice-20261022/shots/p10-generator-registered.cur.png": "d468cbe5d527405ffade5cb560273aa08c939857db756f3f139286e7cec02b20",
+    "extracted/test02-sacrifice-20261022/shots/p11-generator-one.png": "1c38322a096bbbec626e88a96e34c8cfde1c6bcd824376cf3b9a908ba0aaa830",
+    "extracted/test02-sacrifice-20261022/shots/p11-generator-one.cur.png": "a5b4d2c50f437b0c14720148bb939234250c31bbd6aeeedbf0c4d7d6269a602d",
+    "extracted/test02-sacrifice-20261022/shots/p12-generator-two.png": "ffeb9c5cad9f6d7cdd9ef2e4499875c78b7fb7bc2ba51d898cba28d80a35cf29",
+    "extracted/test02-sacrifice-20261022/shots/p12-generator-two.cur.png": "5edf10fdbcdf6168e53035f7c2c60d7b84c8789bcd38d87e32feba7988d73f5f",
+    "extracted/test02-sacrifice-20261022/shots/p13-balloon-two-energy-preview.png": "8977b016ca6805cfb776ce782dec34d2bacb4ca96036a19ac7af216256b33934",
+    "extracted/test02-sacrifice-20261022/shots/p13-balloon-two-energy-preview.cur.png": "f6845a53adb5ae2d48b5e990fed5b36b10c206e4999b1352cff0f8cfdd196f25",
+    "extracted/test02-sacrifice-20261022/shots/p14-balloon-built.png": "856af3f42e925e36820a5f226ada392e8c840450f945da240fdc20d3b617e95e",
+    "extracted/test02-sacrifice-20261022/shots/p14-balloon-built.cur.png": "a6a51c8a8e1732acbe277638fc556e09644c68f8f6bdb3a5736732fa20823a2d",
+    "extracted/test02-sacrifice-20261022/shots/p15-balloon-in-range.png": "69814b7a5e68a6a52e6cc41f2c1f84726e9eada93e149953f757f1cf79986258",
+    "extracted/test02-sacrifice-20261022/shots/p15-balloon-in-range.cur.png": "88ebe50cc51af0e90ac7716055cccda819ae7f10e23476d4c67e9082d7c79d17",
+    "extracted/test02-sacrifice-20261022/shots/p16-balloon-placed.png": "907b62afafdb780a51382163c3cc8627c72c6fc6f481f1035ca6af3c42550933",
+    "extracted/test02-sacrifice-20261022/shots/p16-balloon-placed.cur.png": "a215038aac9a356c9ddca963de5c99e851e706b43d717c0db5336065ae03f65c",
+    "extracted/test02-sacrifice-20261022/shots/p17-balloon-own-priest-hover.png": "db171ab30a923f24f331125f37c2f48827ab8c9bfec6c91f8322031c52723520",
+    "extracted/test02-sacrifice-20261022/shots/p17-balloon-own-priest-hover.cur.png": "f5b037228a71057cc0751165b906c39fd247247cf001a178b46413d6d7a964bc",
+    "extracted/test02-sacrifice-20261022/shots/p18-own-priest-pickup-order.png": "b8b31120ffb33cd23cd8fd87cb74f01f853652506010e87a74dc4dc2d264c14f",
+    "extracted/test02-sacrifice-20261022/shots/p18-own-priest-pickup-order.cur.png": "cb96fe4eec3fab7ce5a8f724639cfa5e232b24c7c02abab3dceae5ec23fd846a",
+    "extracted/test02-sacrifice-20261022/shots/p19-balloon-selected.png": "58ac4e202e771aa207ee9514c823b624891631e723c558dc406f78c63da367a4",
+    "extracted/test02-sacrifice-20261022/shots/p19-balloon-selected.cur.png": "f396f52d25e571336eeecc5fd49780b1974ed0c6c6d226c724b8ce20b82d80e3",
+    "extracted/test02-sacrifice-20261022/shots/p20-own-priest-hover.png": "c79c4753d08b9c05e0fc9b1de2e959376806c434896801adc889fa365e378189",
+    "extracted/test02-sacrifice-20261022/shots/p20-own-priest-hover.cur.png": "3a1e88a8d886c749549b133bd37a68422faf237e09683f4dc6552c621c119d4f",
+    "extracted/test02-sacrifice-20261022/shots/p23-scroll-northwest.png": "15181cd353539de31c2a09f228c138aa9db3376090dc60c7f6e2e5d6d61a7d9c",
+    "extracted/test02-sacrifice-20261022/shots/p23-scroll-northwest.cur.png": "25ec69573fc2b8147bdd27ab836185f38e51a34337bc2df0814ac9c7c74daff5",
+    "extracted/test02-sacrifice-20261022/shots/p24-enemy-island-generator-preview.png": "44d13fcc87ea1fbb67485e61a4b845f063755e9cfc4cb7ca8a1ba3c0e0cd83d4",
+    "extracted/test02-sacrifice-20261022/shots/p24-enemy-island-generator-preview.cur.png": "1443b00512e6225522e9f484708102c18e6cbe9f5f27db13cb5c082d54d0daaf",
+    "extracted/test02-sacrifice-20261022/shots/p25-home-temple.png": "3a6d3888df5bc189a437fabd5ae740c6884c324b0f3c90a05ab626330cd989e0",
+    "extracted/test02-sacrifice-20261022/shots/p25-home-temple.cur.png": "ddf5a2ee655b969bc3ceb4ba1d6cfc37647b35750447e215e14016226141f7a2",
+    "extracted/test02-sacrifice-20261022/shots/p26-first-bridge-preview.png": "09e65d2e139cc32bcfe477a555333c50cdeea963b3499c18c88611c1dbc10541",
+    "extracted/test02-sacrifice-20261022/shots/p26-first-bridge-preview.cur.png": "e846d4f27fe05fb55f74fb4fa6f28303b8ff4efd91e4b16115164432ff92e2c8",
+    "extracted/test02-sacrifice-20261022/states/initial.pool": "30db9fc1d102f37fe725c0b29660674fdf68e1c99b19b833e41c705554262f12",
+    "extracted/test02-sacrifice-20261022/states/initial.json": "d090285910395f30b9cc6f3380f3b811c60ed733274ab0d75fc8fc5a07bf315f",
+    "extracted/test02-sacrifice-20261022/states/generators.pool": "845c2a8d32bb171a307c4ca95cd86774b67a96fe712ff570aaf38fd3fc78afdd",
+    "extracted/test02-sacrifice-20261022/states/generators.json": "fa151d8dab51918378c648241385635e5c8558ff952e10209ff34ed267fa1cc4",
+    "extracted/test02-sacrifice-20261022/states/balloon.pool": "b6d26cfb35d08b28332375d41ee6cd85af0bacf84b4edf41eb5deb59bec24480",
+    "extracted/test02-sacrifice-20261022/states/balloon.json": "4337044e00e9aa8d92ba946e89a0ea51ec922648b125619f739baac90c35e601",
+    "extracted/test02-sacrifice-20261022/states/selected.pool": "e9424b4a786d3dfe2ad87fdb0b183c81c58e466a051e47db32b6aafd6f4f8c31",
+    "extracted/test02-sacrifice-20261022/states/selected.json": "c46777a3fac887489cceeea130c8edcfc61c8baf22a4240fc7c50a5572ea06da",
+    "extracted/test02-sacrifice-20261022/states/bridge-preview.pool": "e54a296e1154cd7457c1be81a92598ad09e3b1ad3129069e042c104bd49aca70",
+    "extracted/test02-sacrifice-20261022/states/bridge-preview.json": "3c9e6cb4b2d1ea4b65c7b21900cd53876400d22c7652523f251ddda498d7a22a"
+  },
+  "protectedHashes": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/d/TEST02.fort": "f785543d3b907fb3d09d568b740a21a8402a87e110f1469e873fc09f44858d6d",
+    "originals/d/TEST02.english": "03b41d7b2d9718d70fc7e29e14cec4e3779f77e95f7ea99722f83049c7052260"
+  },
+  "productCodeChanged": false,
+  "captureCompleted": false,
+  "sacrificeCompleted": false,
+  "testDeferredByUser": true
+}

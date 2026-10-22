@@ -1629,3 +1629,6 @@ cpppj/tests/fixtures/test02-original-runtime.tsv text eol=lf
 tools/analyze_test02_runtime.py text eol=lf
 cpppj/test02-runtime-20261022.json text eol=lf
 docs/exe/cpp-test02-runtime-20261022.md text eol=lf
+# 사용자 요청으로 보류한 실제 벌룬 생산 관찰과 재개 지점을 보존한다.
+cpppj/test02-flight-observation-20261022.json text eol=lf
+docs/exe/cpp-test02-flight-observation-20261022.md text eol=lf
