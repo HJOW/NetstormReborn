@@ -68,11 +68,11 @@ TEST_CASE(MissionGuideInput_QueueOrderCapacityAndRelease) {
     CHECK(queue.Pop(false).code==17);const auto first=queue.Pop(false);CHECK(first.code==kMissionFirstCommand && first.x==0 && first.y==0 && queue.Empty());
     CHECK(!QueueMissionFirstKey({InputCode::kRelease|0x770000U,0,0},queue,true));
     CHECK(!QueueMissionFirstKey({0x770000U,0,0},queue,false));CHECK(!QueueMissionFirstKey({0x780000U,0,0},queue,true));CHECK(queue.Empty());
-    // 앞선39개 사건이 가득 차면 F8의 새 First는 기존 큐 규칙대로 버린다.
-    for (std::uint32_t index=0;index<39;++index) queue.Push(index+100,0,0);
+    // DEL(127)의 원본 Ctrl+Backspace 변환과 용량 검사를 분리하려고 일반 문자1000부터 채운다.
+    for (std::uint32_t index=0;index<39;++index) queue.Push(index+1000,0,0);
     CHECK(QueueMissionFirstKey({0x770000U,0,0},queue,true));
     // 기존 사건39개의 순서는 F8 예약 시도 뒤에도 그대로다.
-    for (std::uint32_t index=0;index<39;++index) CHECK(queue.Pop(false).code==index+100);
+    for (std::uint32_t index=0;index<39;++index) CHECK(queue.Pop(false).code==index+1000);
     CHECK(queue.Empty());MissionStartState state;MissionFirst(state,{});CHECK(state.flags==1 && !state.sequence);
     state.sequence=1;CHECK(Throws([&] { MissionFirst(state,{}); }));
 }

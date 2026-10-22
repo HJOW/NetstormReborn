@@ -104,7 +104,8 @@ struct PlayerRegularScene {
         try { if (input[Kind]==0) returned=std::to_string(std::bit_cast<std::uint32_t>(regular->Handle(sid,input[Event],input[Count],std::bit_cast<float>(input[Payload]))));else if (input[Kind]==1) { events.push_back("T:"+std::to_string(input[TemplateOwner]));templateState->Get(input[TemplateOwner]); }else { events.push_back("C:"+std::to_string(input[TemplateOwner]));templateState->Changed(input[TemplateOwner]); } }
         catch (const std::logic_error& error) {
             const std::string message=error.what();const bool patch=pool.Edition()==OriginalEdition::Patch1078;status="boundary";returned="-";
-            if (message=="Player 없는State초기화/stack미정BYTE/힙생성미복원") boundary=patch ? "0044d1b0" : "0044c3c0";
+            // 기존 native 관측이 멈춘 빈 State 생성 경계다. 현재 생성 소비자 미연결 진단도 같은 경계를 뜻한다.
+            if (message=="Player 없는State초기화/stack미정BYTE/힙생성미복원" || message=="Player 빈 State의 미정 바이트/실제 섹션 생성 미연결") boundary=patch ? "0044d1b0" : "0044c3c0";
             // 이 기존 관측은 할당 진입에서 멈춘다. 새 확장 본문은 별도99행으로 대조하고 여기서는 할당을 공급하지 않는다.
             else if (message=="Player shortState 실제MemStream할당 미연결") boundary=patch ? "004e4391" : "004f1650";
             else if (message=="Player Template실제DataManager파일저장44d8d0/CD44cc40미복원") boundary=patch ? "0044d8d0" : "0044cc40";

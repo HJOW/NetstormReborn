@@ -57,6 +57,7 @@ struct SessionServicesFixture {
     std::unordered_set<SoundHandle> playing; // 장치 외부 입력의 현재 재생 상태다.
     std::array<std::uint8_t,4> you{'Y','o','u',0}; // 원본 부모의 명시 영어 번역 입력이다.
     std::vector<std::vector<std::uint8_t>> packets; // 실제 직렬화 송신 요청 전체바이트다.
+    std::vector<std::array<std::uint32_t,3>> allianceRequests; // 로컬 로그인 연결을 선택하지 않은 검사의 실제 서버/owner/동맹mask 송신 요청이다.
     std::size_t notices{}; // 외부 UI/음향 요청의 관찰 개수다.
     std::size_t constructionConfigReads{},constructionRefreshes{}; // 명시 건설 요청만 선택해야 하는 실제 설정/표시 외부 경계다.
     // 같은 fixture가 세션보다 오래 살아야 하며 모든 실제 선택 경계를 명시한다.
@@ -80,6 +81,7 @@ struct SessionServicesFixture {
         s.archer.missile.firingSound=s.archer.missile.impactSound=[this](float,float,std::uint32_t) { ++notices; };
         s.motion.path.stepSound=[this](Sid,float,float,std::uint32_t) { ++notices; };
         s.player.log=[this](std::uint32_t,std::string_view) { ++notices; };
+        s.ai.participation.sendAlliance=[this](std::uint32_t server,std::uint32_t owner,std::uint32_t mask) { allianceRequests.push_back({server,owner,mask}); }; // 외부 송신만 관찰하며 Session의 실제 동맹 표를 대신 변경하지 않는다.
         s.deletion.emit=[this](const SquidDestroyEvent& event) { if (event.effect!=SquidDestroyEffect::Transmit) throw std::logic_error("다른파생삭제미연결");++notices; };
         s.deletion.selected=[] { return Sid{}; };s.dependencyTransmit=[this](Sid,std::uint32_t) { ++notices; };
         s.construction.configInt=[this](std::string_view key,std::int32_t fallback) { CHECK(key=="predictableGeysers" && fallback==1);++constructionConfigReads;return 1; };

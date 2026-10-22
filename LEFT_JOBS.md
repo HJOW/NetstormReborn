@@ -1,5 +1,12 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-22 단위302 완료: 원본 동작을 유지한 회귀 검사 설정 복구
+
+- [x] 단위301을 `da3a5c8a / 20261022-26 CP`로 커밋하고 계속했다. 현재/마지막 전체 정밀 디컴파일 PC는 **VM-W11-Codex / 2026-10-22**로 같다. 실제 원본 큐 명령을 읽기 전용으로 확인했으며 새 디컴파일·보호 원본/CD·AGENTS·제품 코드·기존 golden fixture·dotnetpj 변경은 없다.
+- [x] MissionGuide 큐 용량 입력에서 원본 DEL→Ctrl+Backspace 변환과 충돌하는127을 피했고, Player Regular 재생기에 빈 State 생성의 현재 미연결 진단 문구를 같은 기존 native 경계로 연결했다. 독립 Session fixture의 누락된 외부 동맹 송신은 서버/owner/mask 관찰 기록으로 공급했다. 실제 동맹 표나 결과를 대신 쓰지 않는다. [상세](docs/exe/cpp-regression-fixtures-20261022.md).
+- [x] Release **종료0·경고0·오류0**, 큐4개·Player Regular3개 통과다. AI Session focused23개 중 **19개 통과·실패check4개**다. 나머지는 수집자 추가/워크샾 개수·장애물 후보 경계·스캔 진행이다. `extracted/cpp-regression-fixtures-20261022-build.log`, `extracted/cpp-regression-fixtures-20261022-ai.log`에 보존했다. 전체 CTest는 새로 반복하지 않았으며 단위301의2,212개/72check 실패 결과를 전체 통과로 바꾸지 않는다. **20261022-27 CP**로 로컬 커밋한다.
+- [ ] **다음 지점:** `CampaignSession_AiDropTargetsUseActualContentsGunAndLifetime`의 장애물 후보 경계/용량 오류부터 실제 하위를 확인한다. AI Session의 나머지3개와 단위301 실패 목록의 미션 Guide/이동·State/도움말/Dude 등도 남아 있다. 그 뒤 다리 초기화/후보·경로 탐색→네 전략/전체 행동 순서·자동 프레임/종료를 연결한다. 15개 미션·Edit/custom Fort·언어별 시나리오 수명·자연 플레이·표시/음향 동일성은 미완료이며 목표는 계속 활성 상태다.
+
 ## 2026-10-22 목표 재개·단위301 완료: AI 다리 탐색 단계와 연결점 진행
 
 - [x] 사용자 `/goal` 요청으로 **구현·검증을 재개**했다. 이전 절의 일시 중지/검사 중지는 이번 재개 전의 이력이다. 시작 HEAD `65654e6c`와 깨끗한 트리, AGENTS·공통/dotnetpj 인수인계를 확인했다. 현재 PC와 마지막 전체 정밀 디컴파일 PC는 **VM-W11-Codex / 2026-10-22**로 같다. 새 디컴파일/보호 원본·CD/AGENTS/dotnetpj 변경은 없다.
