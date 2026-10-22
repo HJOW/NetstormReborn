@@ -1,0 +1,12 @@
+{
+  "ctest_exit": 0,
+  "ctest_wall_seconds": 176.17,
+  "internal_summary": [
+    "2226 test(s), 0 failed check(s)"
+  ],
+  "logs": {
+    "extracted\\cpp-ai-bridge-search-20261022-all-tests.log": "b8e2cb224017b750ad4169ad01272464613bd03d82d51d2924556c65fa8e041d",
+    "extracted\\cpp-ai-bridge-search-20261022-ctest.log": "237229dc5c8eefabbe40ef59e1cdd69d0a563bdc94ead9ff67aaac1e3a70568b",
+    "extracted\\cpp-ai-bridge-search-20261022-build.log": "67f26b3d2d867c61dac14af72ffb550b0cbea463f74e50cd116487c99790cf7c"
+  }
+}

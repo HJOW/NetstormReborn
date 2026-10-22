@@ -5,6 +5,7 @@ target_sources(netstorm PRIVATE
     # AI 다리의 여섯 탐색 단계·조각 소비·연결점 진행이다.
     RawAiBridgePath.cpp RawAiBridgePath.h
     RawAiBridgeCandidates.cpp RawAiBridgeCandidates.h
+    RawAiBridgeSearch.cpp RawAiBridgeSearch.h
     # DataManager 목록의 unlink와 실제 MemStream 버퍼/섹션 소멸 순서다.
     RawDataManagerLifetime.cpp RawDataManagerLifetime.h
     # 썬 바리케이드의 현재 프레임/소유자/연결 수 변경과 실제 사건 위임이다.

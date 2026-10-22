@@ -1,0 +1,33 @@
+{
+  "precision_runs": [
+    {
+      "control_word": 639,
+      "rows": {
+        "shape": 208,
+        "clear": 416,
+        "score": 640,
+        "search": 72
+      },
+      "search_returns": 288
+    },
+    {
+      "control_word": 895,
+      "rows": {
+        "shape": 208,
+        "clear": 416,
+        "score": 640,
+        "search": 72
+      },
+      "search_returns": 288
+    }
+  ],
+  "fixture_modified": false,
+  "stubs": [],
+  "game_started": false,
+  "sources": {
+    "tools\\decomp_ai_bridge_search.py": "3fe14c6a217b9ece93559bfc76f5e2bb8dcb91af423c176cd05df80116dc20b1",
+    "tools\\decomp_ai_bridge_search_verify.py": "c30e615b335307e7dca456b07ed7da457c0a287de943e18a4a49032ace7da9a0",
+    "originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD\\NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233"
+  }
+}

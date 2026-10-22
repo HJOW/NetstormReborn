@@ -48,6 +48,7 @@ set_source_files_properties(BurningLifetimeDrawTests.cpp PROPERTIES COMPILE_DEFI
 add_executable(netstorm_tests
     AiBridgePathTests.cpp
     AiBridgeCandidatesTests.cpp
+    AiBridgeSearchTests.cpp
     KnowledgeMenuTests.cpp
     MissionTechnologyTests.cpp
     GuideTransitionTests.cpp
