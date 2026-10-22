@@ -32,6 +32,7 @@ public:
     bool Handles(Sid sid) const; // 실제 flare VT5096a0만 처리한다.
     // 원본 wrapper의 기본A구간으로 여러 클라이언트 효과를 만든다.
     void Spawn(Sid parent,std::int32_t count,std::uint32_t event) const;
+    void SpawnDirection(Sid parent,std::int32_t count,std::uint32_t event,std::uint32_t type,std::uint32_t direction) const; // 45a480의 현재 효과 종류/방향별 첫 프레임을 사용한다.
     // 마지막 전 프레임의 후속 생성·마지막 갱신/삭제·실제 frame·B소리·float 주기를 처리한다.
     float Handle(Sid sid,std::uint32_t event,std::uint32_t count,float payload) const;
     RegularHandler Handler(RegularHandler fallback={}) const; // 다른 실제 부모의 기존 분배는 보존한다.

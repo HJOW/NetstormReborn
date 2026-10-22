@@ -32,20 +32,20 @@
     "손상된 음수 목록 길이/범위 밖 SID 주소 감김과 운영체제 메모리 오류는 복원하지 않는다."
   ],
   "implementationSha256": {
-    "cpppj/src/o/RawBombTimerPacket.h": "a4e51346d9e48311a7e68287fad6bb141f0fe268da4f400b41bab29baa8bf9d6",
-    "cpppj/src/o/RawBombTimerPacket.cpp": "12897edb3509a40104a53a1fb80e768b4ddb48b125199768a173cd9ede176f77",
-    "cpppj/src/o/RawBombEffectTimer.h": "5338117ef137bab63802ce7c692aa5dc73c4d7e7cacbed56d0d78c2d80f7d257",
-    "cpppj/src/o/RawBombEffectTimer.cpp": "1fbf8d4d4f303be49cb325b78aa55c23008732421d3b3b51d9b139489950fb18",
+    "cpppj/src/o/RawBombTimerPacket.h": "1a06e649248f211700be29b0de0b97a30fb2a7d65e8a042328027fbdac3de441",
+    "cpppj/src/o/RawBombTimerPacket.cpp": "70a7e9c2bc0cb9c8e9620f70b8e9d55f091e72c0bd1f5e38dc5b01c6534de7ac",
+    "cpppj/src/o/RawBombEffectTimer.h": "13776b3e72fbcb9bf494d9f21039fd25444f1ca51a95d32f0cfd8396ddeb1fda",
+    "cpppj/src/o/RawBombEffectTimer.cpp": "b8a759c37967908b09877796909d38b8279178ee633c6ec09b55ce92c27fd342",
     "cpppj/src/o/SquidProcess.h": "481ad652080175ccb135c5f4981edc44e7d853584eaaebaab1a65d3873bc5399",
     "cpppj/src/o/SquidProcess.cpp": "993e34a3c7b3b87f290a33f548a126415c3a77794a7a191801d68f405baf1780",
     "cpppj/src/o/SidPool.h": "a830f7fca8c42e5a2713a7d5d886314c81dc3bffb8271de85c1b0d1fc46de651",
     "cpppj/src/o/SidPool.cpp": "7bc612330f3b631cf8141be5e7a9ae51cefe8caee3ea3eb68be38252d68a6887",
     "cpppj/src/o/RiftType.h": "4d4a5a2bb251cf27fe253a5e42da91776d6d12d094d640dac25da5bad9b1b552",
-    "cpppj/src/o/CMakeLists.txt": "68a76a842509fdbc9947f789c4c44481a79a50e27d112634a445b2b14190724f",
+    "cpppj/src/o/CMakeLists.txt": "06362192a6a5fe09dfd71e5c0441cb9fa521fa052d56099be6759b978076e7f7",
     "cpppj/tests/BombTimerPacketTests.cpp": "226cd2619a30e70f40ecfb1f62201481d8a8fe05d1b3f7a2e7e043524460bfb1",
     "cpppj/tests/BombEffectTimerTests.cpp": "520c92558ae0c25fb250fe48ddab62ed0ec01bae68a55eda7dc5392af3cb6f44",
     "cpppj/tests/RawSceneSupport.h": "87b79d463f38e142b1aa768384af28a08b404a276a6b989e90dd53b393642919",
-    "cpppj/tests/CMakeLists.txt": "fbeab64c4c448f315a91d2dc3497fd51108bed4a36dac368efbc7473964fd7b3"
+    "cpppj/tests/CMakeLists.txt": "b27e1234f27bab7b71363634cb30c04c89b919e9eea05d6d40e7a45e777dba5f"
   },
   "validation": {
     "build": {
@@ -71,5 +71,6 @@
       "seconds": 294.68
     },
     "scope": "원본 대조/기존Frame/실제 선택 표시까지 검증했다. Session57 서버 생성·7d 연결/117·118 전체 효과/전체 GUI는 미완료다."
-  }
+  },
+  "implementationRefresh349": "단위349의 상태 주문/타이머 연결과 defaultFrame 자산 연결에 맞춰 현재 공유 구현 SHA만 갱신했다. 기존 원문/과거 validation 수치는 보존한다."
 }

@@ -1,0 +1,117 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-22",
+  "additionalDecompileHost": "HJOW-Athlon",
+  "additionalDecompileDate": "2026-10-23",
+  "uniqueInputs": 612,
+  "normalReturns": 1224,
+  "nativeInstructions": 28324,
+  "precisionDifferentInputs": [],
+  "extraRanges": [
+    [
+      4324432,
+      4324539
+    ],
+    [
+      4324816,
+      4325004
+    ]
+  ],
+  "nativeCalls": {
+    "0041fc50": 534,
+    "0041fdd0": 534,
+    "0041eca0": 70,
+    "0041fdb0": 70,
+    "0040b390": 16
+  },
+  "flareInputs": 60,
+  "flareReturns": 120,
+  "flareInstructions": 121892,
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/cpp-bomb-status-20261023-decomp.c": "cf74f525b1a348163c5edd143b2929c4439ceb46f1da0910e366797b102ed521",
+    "tools/decomp_bomb_status.py": "7bb7d95b215104ddcecc7ab70caa0e04e262a7783026eb0089185b84f26648e1",
+    "tools/decomp_flare.py": "1d2560364693e266f7da65fdf4c6631e920c398687398056b66340daa0c20825",
+    "tools/decomp_arc_spire.py": "a476a7af621fd08e49536e427e40b3d6b4b3df47a8f514740b1633e73adc534e",
+    "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "cpppj/tests/fixtures/bomb-status-x86.tsv": "e01a5f5499029fdeac910ed106385e9acca1f1443e98e048ce9961d62092db26",
+    "cpppj/tests/fixtures/bomb-status-flare-x86.tsv": "c76b875ab7dabd2f099d6170dc5ddd431b0cb75b7cb08dbfaf4348f611c8365a"
+  },
+  "limitations": [
+    "은신/마비 적용·자격/observer 및 방향 지정 플레어 전체 root다. 상태 가상88/48/4c·TYPE조회·457e20·45a480은 첫 원문에서 큰 경계이며 플레어는 별도 원문에서 전체를 실행한다.",
+    "전체 GUI/사용자 플레이/미션·Edit 완료로 확대하지 않는다.10.72 새 상태 효과 대응은 미확정이다."
+  ],
+  "implementationSha256": {
+    "cpppj/src/o/RawBombStatus.h": "e04d9b853c208fdb5c724ab717a99a5ea1dad8eae9b7c9599c56de98bf850b74",
+    "cpppj/src/o/RawBombStatus.cpp": "37605dd09a5228fb09b36cb6822809aace32a1bd6c1974f318c83be9f0c24178",
+    "cpppj/src/o/RawFlare.h": "69e3af12cec7e02296b1dd394ee6cf8fed2ee8968c23304039a8760d55e8ef35",
+    "cpppj/src/o/RawFlare.cpp": "ccf50d1c0c5918661e46e4d85afe2299f13ccd404f419f9d98f5b903990c2daa",
+    "cpppj/src/o/RawBombEffectTimer.h": "13776b3e72fbcb9bf494d9f21039fd25444f1ca51a95d32f0cfd8396ddeb1fda",
+    "cpppj/src/o/RawBombEffectTimer.cpp": "b8a759c37967908b09877796909d38b8279178ee633c6ec09b55ce92c27fd342",
+    "cpppj/src/o/RawBombTimerPacket.h": "1a06e649248f211700be29b0de0b97a30fb2a7d65e8a042328027fbdac3de441",
+    "cpppj/src/o/RawBombTimerPacket.cpp": "70a7e9c2bc0cb9c8e9620f70b8e9d55f091e72c0bd1f5e38dc5b01c6534de7ac",
+    "cpppj/src/client/RawCampaignDevastation.inc": "9027f8e1574fe1e843d324a243cb0efeb7de54f77897834e3558f4ae0c1a7457",
+    "cpppj/src/client/RawCampaignCarrierDrop.inc": "665cf89d89f74bdfa3b5bf20f2c6bf830ea09ab4ff951a5497bcedcae8ad072d",
+    "cpppj/src/client/RawCampaignSession.cpp": "6e8a2d10762adc7e63710b77c2f3fc3abc1e1c4cf98be5bd346b9be3ad66b2de",
+    "cpppj/src/client/RawCampaignFactoryDisplay.cpp": "4588576e481f8067199e4554b9cdd0beb2312dead912ca72caac22f7a08ad95b",
+    "cpppj/src/client/RawBombBlastBindings.cpp": "af6ffdb591abeb01d86e723616296cbe5563d1154d186d03baea4dd772ed2c34",
+    "cpppj/src/client/SpriteDraw.cpp": "2bd9d880ef2b0ea476072bace12be8a227be0439a1d9ffde11ddc2e282af73d9",
+    "cpppj/src/o/RawBombEffect.h": "78de4e8419940cdc10b434735bfd3d8a4e0a4832e9ed525bb4e81554c1bbc450",
+    "cpppj/src/o/RawBombEffect.cpp": "d37f764b18b534480c566b40899eaacf600b4c1f1bc02e66e6e278587427e543",
+    "cpppj/src/o/RawBombTargets.cpp": "f2aa11b08479c114823fca68e87b0aadf27da965e5b63a2129d350f3c583700c",
+    "cpppj/src/o/SquidProcess.cpp": "993e34a3c7b3b87f290a33f548a126415c3a77794a7a191801d68f405baf1780",
+    "cpppj/src/o/CMakeLists.txt": "06362192a6a5fe09dfd71e5c0441cb9fa521fa052d56099be6759b978076e7f7",
+    "cpppj/tests/CMakeLists.txt": "b27e1234f27bab7b71363634cb30c04c89b919e9eea05d6d40e7a45e777dba5f",
+    "cpppj/tests/FlareTests.cpp": "2d3ab1baf640fd2ca6092d34d1095e52cd451da153dba78d6056e46adda4152e",
+    "cpppj/tests/BombStatusTests.cpp": "0543f2f732bb68d0f66ef945067bef0ededd60f2693d60e9336f3b374ba8bc23",
+    "cpppj/tests/CampaignSessionTests.cpp": "1928ecc24c942f0003580c9033f1bcca866a5cf601550d5ca7c2b0baca1efdf1"
+  },
+  "validation": {
+    "build": {
+      "log": "extracted/cpp-bomb-status-20261023-build3.log",
+      "exit": 0,
+      "warnings": 0,
+      "errors": 0
+    },
+    "focused": {
+      "logs": [
+        "extracted/cpp-bomb-status-20261023-native-cpp2.log",
+        "extracted/cpp-bomb-status-20261023-flare2.log",
+        "extracted/cpp-bomb-status-20261023-focused3.log",
+        "extracted/cpp-bomb-status-20261023-selection2.log",
+        "extracted/cpp-bomb-status-20261023-display2.log",
+        "extracted/cpp-bomb-status-20261023-devastation3.log"
+      ],
+      "tests": 13,
+      "failed": 0
+    },
+    "actual": {
+      "spells": [
+        117,
+        118
+      ],
+      "firstTimerEndTimes": [
+        46.4,
+        126.4
+      ],
+      "twoCastExpiryFrames": [
+        3712,
+        10112
+      ],
+      "inventoryPreserved": true,
+      "serverTimerFormAndWriter": true,
+      "injectedResults": false
+    },
+    "full": {
+      "log": "extracted/cpp-bomb-status-20261023-ctest1.log",
+      "tests": 2326,
+      "failed": 0,
+      "exit": 0,
+      "seconds": 295.86
+    },
+    "scope": "실제 단일 플레이 시전/상태·선택/57 서버 부착·writer/같은 내용물 재시전·비용/자연 만료다. 두 인스턴스의 실제 클라이언트7d 수신/25종 전체 수명·전체 GUI/미션·Edit 완료 근거는 아니다."
+  }
+}

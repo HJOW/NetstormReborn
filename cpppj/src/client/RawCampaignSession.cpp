@@ -10,6 +10,8 @@
 #include "o/RawAcidFence.h"
 #include "o/RawIceTower.h"
 #include "o/RawBulwarkHit.h"
+#include "o/RawBombStatus.h"
+#include "o/RawBombTimerPacket.h"
 #include "o/RawPlainUnitCapture.h"
 #include "o/RawPlainWorkshopCapture.h"
 #include "o/RawBridgeDraw.h"
@@ -578,6 +580,10 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawBombActivation> devastationActivation;std::unique_ptr<RawBombRegular> devastationRegular;std::unique_ptr<RawBombEffect> devastationEffect; // 0x5c/주기/0x5f의 실제 공용 몸체를 연결한다.
     std::unique_ptr<RegularProcess> pendingDevastationRegular; // 실제 활성화 확보부터 SharedRegular 부착까지 한 객체를 보관한다.
     std::unique_ptr<std::uint8_t[]> devastationSearchMemory,devastationEffectMemory; // 각각 원본new400/대상배열의 실제 확보와 해제 수명을 보존한다.
+    BombStatusState bombStatusState;std::unique_ptr<RawBombStatus> bombStatus; // 같은 현재 동맹/가상 효과로 은신과 마비를 실행한다.
+    std::uint32_t bombTimerType{57};std::unique_ptr<BombEffectTimerProcess> pendingBombTimer; // 수신/시전이 확보한 타이머를 같은 Host에 넘긴다.
+    std::unique_ptr<void,void(*)(void*)> pendingBombTimerStorage{nullptr,[](void* memory) { ::operator delete(memory); }}; // new40 경계의 미생성 메모리를 예외 시에도 해제한다.
+    std::array<std::uint8_t,222> bombTimerPacket{};bool writingBombTimer{}; // 최대100개 WORD 대상의 실제7d 송신 버퍼다.
     std::unique_ptr<RawDamageablePreDestroy> damageablePre; // 공통 삭제와 같은 깊이/Graph/장부를 사용한다.
     std::unique_ptr<RawFlyerPreDestroy> flyerPre; //144의 현재+8 WORD 대상 삭제 뒤 실제 Damageable Pre다.
     std::unique_ptr<RawDamageablePostDestroy> damageablePost; // 같은 실제 예약/다리/공통 후처리다.
@@ -947,9 +953,9 @@ struct RawCampaignSession::Impl {
             const auto color=core.bridgeState.ownerColors[owner];if (color<0 || color>8) throw std::out_of_range("파편 캡처 현재 소유자 색 번호 오류");return shrapnelOwnerColors.at(type)[static_cast<std::size_t>(color)];
         };
         bridgeDraw=std::make_unique<RawBridgeDraw>(core.pool,bridgeDrawState);
-        shrapnelCaptureState.mainFrame=[this](Sid sid) { if (Read(core.pool.Slot(sid),0)==0x502370U) return -1;return bridgeDraw->MainFrame(sid); }; // Devastation의+a0=41c0f0은 빈 그림이며+a4만 현재 프레임을 그린다.
+        shrapnelCaptureState.mainFrame=[this](Sid sid) { if (ConnectedBombTable(Read(core.pool.Slot(sid),0))) return -1;return bridgeDraw->MainFrame(sid); }; // Devastation의+a0=41c0f0은 빈 그림이며+a4만 현재 프레임을 그린다.
         shrapnelCaptureState.additional=[this](Sid sid,ConstructionVisualImage& image,std::int32_t x,std::int32_t y) {
-            if (Read(core.pool.Slot(sid),0)==0x502370U) {
+            if (ConnectedBombTable(Read(core.pool.Slot(sid),0))) {
                 DrawDevastationAdditional(core.pool,sid,x,y,[this,&image](std::uint32_t type,std::int32_t frame,std::int32_t px,std::int32_t py) { if (type<70 || frame<0) throw std::out_of_range("Devastation 캡처 TYPE/프레임 범위");static_cast<void>(DrawShape(image.pixels,image.width,image.height,assets.game.Shapes(),type-70,static_cast<std::size_t>(frame),px,py,{0,0,image.width-1,image.height-1})); });return;
             }
             bridgeDraw->Additional(sid,x,y);
@@ -962,7 +968,7 @@ struct RawCampaignSession::Impl {
             const auto raw=core.pool.Slot(sid);
             // 독립 전체 캡처/가상Draw/RLE를 대조한 정확한 가상 표만 같은 실제 일반색 캡처에 연결한다.
             if (IsPatchTemple(raw) || IsPatchDais(raw) || IsBurningArcherCapture(raw) || IsPlainBuildingCapture(raw) || IsPlainUnitCapture(raw) || IsThunderCannonCapture(raw) || IsSunAviaryCapture(raw) || IsGeyserCapture(raw)) { if (!buildingCapture) throw std::logic_error("실제 건물/유닛 캡처 설치 전 호출");return buildingCapture->Capture(sid); }
-            if (!Flyer(sid) && !BridgeLifetime(sid) && Read(raw,0)!=0x502370U) throw std::logic_error("다른 실제 파편 source의 전용 색표/추가 그림 미복원 TYPE"+std::to_string(raw[10]));return shrapnelCapture->Capture(sid);
+            if (!Flyer(sid) && !BridgeLifetime(sid) && !ConnectedBombTable(Read(raw,0))) throw std::logic_error("다른 실제 파편 source의 전용 색표/추가 그림 미복원 TYPE"+std::to_string(raw[10]));return shrapnelCapture->Capture(sid);
         };
         shrapnel.destroyUnpaired=[this](Sid sid) { world.Destroy(sid,0); };
         particles=std::make_unique<RawCampaignParticles>(core,random,assets.game.Palette(),[this](float x,float y,std::string_view name) {
@@ -1195,7 +1201,7 @@ struct RawCampaignSession::Impl {
         worldHooks.regular=[this,handler=std::move(actualRegular)](Sid sid,std::uint32_t event,std::uint32_t count,float payload) {
             try {
                 if (dudeRegular && dudeRegular->Handles(sid)) return dudeRegular->Handle(sid,event,count,payload);
-                if (devastationRegular && Read(core.pool.Slot(sid),0)==0x502370U) { PrepareDevastation();return devastationRegular->Handle(sid,event,count,payload); }
+                if (devastationRegular && ConnectedBombTable(Read(core.pool.Slot(sid),0))) { PrepareDevastation();return devastationRegular->Handle(sid,event,count,payload); }
                 return handler(sid,event,count,payload);
             }
             catch (...) { std::fprintf(stderr,"실제 Regular 실패 SID%u TYPE%u event%u count%u payload%08x\n",sid.value,sid.value<core.pool.Capacity() ? core.pool.Slot(sid)[10] : 0xffffU,event,count,std::bit_cast<std::uint32_t>(payload));throw; }
@@ -1692,8 +1698,8 @@ struct RawCampaignSession::Impl {
     // 타입31/32/60의 서로 다른 writer와 같은 실제 송신기를 연결한다.
     ProcessFormTransmission AviaryTransmission(ProcessFormTransmission fallback) {
         ProcessFormTransmission hooks;
-        hooks.writeData=[this,fallback](SquidProcess& process,bool parentChanged) { auto* flying=dynamic_cast<FlyerProcess*>(&process);writingFlyer=flying!=nullptr;auto* rain=dynamic_cast<RainAviaryProcess*>(&process);writingRainAviary=rain!=nullptr;auto* current=dynamic_cast<SunAviaryProcess*>(&process);writingSunAviary=current!=nullptr;auto* wind=dynamic_cast<WindAviaryProcess*>(&process);writingWindAviary=wind!=nullptr;if (wind) return static_cast<std::int32_t>(wind->WritePacket(windAviaryPacket,parentChanged));if (flying) return static_cast<std::int32_t>(flying->WritePacket(flyerPacket,parentChanged));if (rain) return static_cast<std::int32_t>(rain->WritePacket(rainAviaryPacket,parentChanged));if (current) return static_cast<std::int32_t>(current->WritePacket(sunAviaryPacket,parentChanged));if (!fallback.writeData) throw std::logic_error("다른 실제 프로세스 writer 미연결");return fallback.writeData(process,parentChanged); };
-        hooks.transmit=[this,fallback](std::int32_t length) { if (writingWindAviary) { if (length<0 || static_cast<std::size_t>(length)>windAviaryPacket.size()) throw std::out_of_range("데빌메이커 실제 패킷 길이 오류");services.formPacket(std::span<const std::uint8_t>(windAviaryPacket).first(static_cast<std::size_t>(length)));return; }if (writingFlyer) { if (length<0 || static_cast<std::size_t>(length)>flyerPacket.size()) throw std::out_of_range("비행 실제 패킷 길이 오류");services.formPacket(std::span<const std::uint8_t>(flyerPacket).first(static_cast<std::size_t>(length)));return; }if (writingRainAviary) { if (length<0 || static_cast<std::size_t>(length)>rainAviaryPacket.size()) throw std::out_of_range("맨 오 워 풀 실제 패킷 길이 오류");services.formPacket(std::span<const std::uint8_t>(rainAviaryPacket).first(static_cast<std::size_t>(length)));return; }if (writingSunAviary) { if (length<0 || static_cast<std::size_t>(length)>sunAviaryPacket.size()) throw std::out_of_range("훨리베이스 실제 패킷 길이 오류");services.formPacket(std::span<const std::uint8_t>(sunAviaryPacket).first(static_cast<std::size_t>(length)));return; }if (!fallback.transmit) throw std::logic_error("다른 실제 프로세스 송신 미연결");fallback.transmit(length); };return hooks;
+        hooks.writeData=[this,fallback](SquidProcess& process,bool parentChanged) { auto* timer=dynamic_cast<BombEffectTimerProcess*>(&process);writingBombTimer=timer!=nullptr;auto* flying=dynamic_cast<FlyerProcess*>(&process);writingFlyer=flying!=nullptr;auto* rain=dynamic_cast<RainAviaryProcess*>(&process);writingRainAviary=rain!=nullptr;auto* current=dynamic_cast<SunAviaryProcess*>(&process);writingSunAviary=current!=nullptr;auto* wind=dynamic_cast<WindAviaryProcess*>(&process);writingWindAviary=wind!=nullptr;if (timer) return static_cast<std::int32_t>(timer->WritePacket(bombTimerPacket,22));if (wind) return static_cast<std::int32_t>(wind->WritePacket(windAviaryPacket,parentChanged));if (flying) return static_cast<std::int32_t>(flying->WritePacket(flyerPacket,parentChanged));if (rain) return static_cast<std::int32_t>(rain->WritePacket(rainAviaryPacket,parentChanged));if (current) return static_cast<std::int32_t>(current->WritePacket(sunAviaryPacket,parentChanged));if (!fallback.writeData) throw std::logic_error("다른 실제 프로세스 writer 미연결");return fallback.writeData(process,parentChanged); };
+        hooks.transmit=[this,fallback](std::int32_t length) { if (writingBombTimer) { if (length<0 || static_cast<std::size_t>(length)>bombTimerPacket.size()) throw std::out_of_range("상태 타이머 실제 패킷 길이 오류");for (std::uint32_t owner=1;owner<9;++owner) if ((players[owner*180+0x50]&1U) && services.battlePeers[owner] && owner!=playerState.battleOwner) { FinalizeBombTimerPacket(bombTimerPacket,true);break; }services.formPacket(std::span<const std::uint8_t>(bombTimerPacket).first(static_cast<std::size_t>(length)));return; }if (writingWindAviary) { if (length<0 || static_cast<std::size_t>(length)>windAviaryPacket.size()) throw std::out_of_range("데빌메이커 실제 패킷 길이 오류");services.formPacket(std::span<const std::uint8_t>(windAviaryPacket).first(static_cast<std::size_t>(length)));return; }if (writingFlyer) { if (length<0 || static_cast<std::size_t>(length)>flyerPacket.size()) throw std::out_of_range("비행 실제 패킷 길이 오류");services.formPacket(std::span<const std::uint8_t>(flyerPacket).first(static_cast<std::size_t>(length)));return; }if (writingRainAviary) { if (length<0 || static_cast<std::size_t>(length)>rainAviaryPacket.size()) throw std::out_of_range("맨 오 워 풀 실제 패킷 길이 오류");services.formPacket(std::span<const std::uint8_t>(rainAviaryPacket).first(static_cast<std::size_t>(length)));return; }if (writingSunAviary) { if (length<0 || static_cast<std::size_t>(length)>sunAviaryPacket.size()) throw std::out_of_range("훨리베이스 실제 패킷 길이 오류");services.formPacket(std::span<const std::uint8_t>(sunAviaryPacket).first(static_cast<std::size_t>(length)));return; }if (!fallback.transmit) throw std::logic_error("다른 실제 프로세스 송신 미연결");fallback.transmit(length); };return hooks;
     }
     // 저장 크랩의 첫Pop 전 전용492예약과 같은 공통장부를 연결한다.
     void ConnectCarrierSteal() {
@@ -2984,6 +2990,8 @@ void RawCampaignSession::RegisterCarrierCommands(RawPacketDispatch& dispatch) {
     dispatch.Register(0x5c,[this](std::uint32_t,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->ReceiveDevastationActivation(packet); });
     dispatch.Observe(0x5f,{});dispatch.Version(0x5f,1,0);dispatch.RequireLength(0x5f,0xffff);
     dispatch.Register(0x5f,[this](std::uint32_t,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->ReceiveDevastationEffect(packet); });
+    dispatch.Observe(0x7d,{});dispatch.Version(0x7d,1,0);dispatch.RequireLength(0x7d,0xffff);
+    dispatch.Register(0x7d,[this](std::uint32_t,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->ReceiveBombTimer(packet); });
     dispatch.Observe(0x6d,{});dispatch.Version(0x6d,1,0);dispatch.RequireLength(0x6d,8);
     dispatch.Register(0x6d,[this](std::uint32_t,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->priestPrayer->Receive(packet); }); // 원본493f80은송신자/두번째인수를기도관문에추가하지않는다.
 }

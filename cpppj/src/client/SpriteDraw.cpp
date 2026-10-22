@@ -206,7 +206,7 @@ std::vector<SpriteTypeView> MakeSpriteAssetViews(const GameAssets& assets) {
     // 자산 없는 내장 타입은 null shape로 남겨 둔다.
     for (std::size_t i=0;i<assets.Types().size();++i) {
         const auto& definition=assets.Types()[i].definition;auto& view=result[o::kFirstAssetTypeNumber+i]; // 같은 실제 TYPE 정의의 표시용 정수 속성이다.
-        view.gumpFrame=static_cast<std::uint32_t>(definition.specialFrames.gumpFrame);
+        view.gumpFrame=static_cast<std::uint32_t>(definition.specialFrames.defaultFrame); // 기존 멤버 이름과 달리 원본498220은 TYPE+118의 기본 프레임을 읽는다.
         view.capacity=TruncateSprite(definition.Number("casttime").value_or(0));
         view.constructionTime=TruncateSprite(definition.Number("praytime").value_or(0));
         view.duration=TruncateSprite(definition.Number("effecttime").value_or(0));

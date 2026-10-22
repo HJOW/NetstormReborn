@@ -1,5 +1,6 @@
 // 반복마다 현재 목록과 상태를 다시 읽는 원본41e100의 순서를 보존한다.
 #include "o/RawBombEffectTimer.h"
+#include "o/RawBombTimerPacket.h"
 #include <algorithm>
 #include <stdexcept>
 #include <utility>
@@ -51,4 +52,7 @@ void BombEffectTimerProcess::RunFrame() {
     logic_.Frame(fields_,[this] { if (!Host()) throw std::logic_error("상태 효과 타이머 Host 미부착");Host()->Kill(*this,0); });
 }
 const BombEffectTimerFields& BombEffectTimerProcess::Fields() const { return fields_; }
+void BombEffectTimerProcess::Notify(std::uint32_t,std::uint32_t,std::uint32_t) {}
+void BombEffectTimerProcess::ReadPacket(std::span<const std::uint8_t> packet) { ReadBombTimerPacket(fields_,packet); }
+std::uint32_t BombEffectTimerProcess::WritePacket(std::span<std::uint8_t> packet,std::uint16_t declaredLength) const { return WriteBombTimerPacket(fields_,Form(),Parent(),packet,declaredLength); }
 }

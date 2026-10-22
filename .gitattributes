@@ -1784,3 +1784,16 @@ cpppj/tests/fixtures/bomb-timer-packet-x86.tsv text eol=lf
 tools/decomp_bomb_timer_packet.py text eol=lf
 cpppj/bomb-timer-packet-20261023.json text eol=lf
 docs/exe/cpp-bomb-timer-packet-20261023.md text eol=lf
+
+# 상태 주문의 실제 효과·세션 연결과 새 원문은 UTF-8 LF로 고정한다.
+cpppj/src/o/RawBombStatus.* text eol=lf
+cpppj/src/o/RawFlare.* text eol=lf
+cpppj/src/client/RawCampaignDevastation.inc text eol=lf
+cpppj/src/client/RawCampaignCarrierDrop.inc text eol=lf
+cpppj/src/client/RawBombBlastBindings.cpp text eol=lf
+cpppj/tests/BombStatusTests.cpp text eol=lf
+cpppj/tests/FlareTests.cpp text eol=lf
+cpppj/tests/fixtures/bomb-status*-x86.tsv text eol=lf
+tools/decomp_bomb_status.py text eol=lf
+cpppj/bomb-status-20261023.json text eol=lf
+docs/exe/cpp-bomb-status-20261023.md text eol=lf

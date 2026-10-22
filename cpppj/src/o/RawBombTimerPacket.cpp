@@ -40,6 +40,10 @@ void ReadBombTimerPacket(BombEffectTimerFields& fields,std::span<const std::uint
     }
     fields.endTime=std::bit_cast<double>(Read(packet,8,8));
 }
+void FinalizeBombTimerPacket(std::span<std::uint8_t> packet,bool writing) {
+    if (!writing) return;const auto count=Read(packet,16,2);if (count==65535) throw std::logic_error("원본 상태 타이머 대상 수 진단bda");
+    Write(packet,2,(count+11U)*2U,2);
+}
 Sid BombTimerParent(const SidPool& pool,std::span<const RiftTypeRecord> types,std::span<const std::uint32_t> members) {
     if (pool.Edition()!=OriginalEdition::Patch1078 || types.size()!=188) throw std::invalid_argument("상태 타이머 부모의 PATCH 풀/188TYPE 필요");
     for (const auto member:members) { // 순서대로 현재 TYPE를 읽으며 free/dead/void를 추가로 제외하지 않는다.

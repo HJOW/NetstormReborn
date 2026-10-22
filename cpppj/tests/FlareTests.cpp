@@ -1,6 +1,7 @@
 // 실제 x86에서 동결한 플레어139입력의 전체 슬롯·난수·호출 순서·반환float를 대조한다.
 #include "ConstructionSupport.h"
 #include "o/RawFlare.h"
+#include <filesystem>
 using namespace netstorm::test::construction;
 namespace {
 // 원본과 같은112개 프레임 코드/16구간의 명시 입력이다.
@@ -69,4 +70,14 @@ TEST_CASE(Flare_Native139) {
         CHECK(result==Number(row[2]));CHECK(scene.random.State()==Number(row[3]));CHECK(raw==row[4]);CHECK(trace==row[5]);
     }
     CHECK(spawnCount==30 && regularCount==109);
+}
+// C/D 방향은 별도 보호 원문으로 전체 슬롯·난수·예약 인자까지 비교한다.
+TEST_CASE(Flare_BombStatusDirectionsNative60) {
+    const auto path=(std::filesystem::path(__FILE__).parent_path()/"fixtures/bomb-status-flare-x86.tsv").string();std::size_t count{};
+    for (const auto& row:LoadFixture(path.c_str()).rows) { // 원본 입력30개를 두 방향에서 각각 실행한다.
+        const auto input=FlareInputs(row[1],true);FlareScene scene(input,true);RawFlare flare(scene.pool,scene.types,scene.frames,scene.random,{scene.suppressed,scene.loading,scene.type},scene.hooks);flare.SpawnDirection({50},std::bit_cast<std::int32_t>(input[0]),input[1],106,Number(row[0]));std::string raw;
+        for (const auto sid:std::array<std::uint16_t,11>{50,100,101,102,103,104,105,106,107,108,109}) raw+=Hex(scene.pool.Slot({sid})); // 방문하지 않은 주변 슬롯도 모두 비교한다.
+        CHECK(Number(row[2])==0 && scene.random.State()==Number(row[3]) && raw==row[4] && (scene.trace.empty() ? "-" : scene.trace)==row[5]);++count;
+    }
+    CHECK(count==60);
 }

@@ -7,6 +7,7 @@ namespace netstorm::o {
 std::uint32_t WriteBombTimerPacket(const BombEffectTimerFields& fields,Sid form,Sid parent,std::span<std::uint8_t> packet,std::uint16_t declaredLength,std::uint8_t protocol=1,std::uint8_t message=0x7d);
 // 41e230은 flags를 먼저 쓰고 현재 한도까지 기존 목록에 WORD 대상을 추가한 뒤 기한 비트를 복사한다.
 void ReadBombTimerPacket(BombEffectTimerFields& fields,std::span<const std::uint8_t> packet);
+void FinalizeBombTimerPacket(std::span<std::uint8_t> packet,bool writing); // 40b390의 송신 observer로 현재 수에 맞게 선언 길이만 확정한다.
 // 41e0a0은 상태 필터 없이 현재 목록의 TYPE genus40000000인 첫 물리 SID를 반환한다.
 Sid BombTimerParent(const SidPool& pool,std::span<const RiftTypeRecord> types,std::span<const std::uint32_t> members);
 // 큰 factory/진단/부착은 같은 Session의 실제 소비자에 맡긴다.

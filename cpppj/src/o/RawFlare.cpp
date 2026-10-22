@@ -49,8 +49,13 @@ RiftTypeFrames::LetterRun RawFlare::Run(Sid sid) const {
 }
 // 각 생성 후 현재 부모 좌표/기준점을 다시 읽고 로컬 Kernel 개수만 하나씩 증가시킨다.
 void RawFlare::Spawn(Sid parent,std::int32_t count,std::uint32_t event) const {
+    SpawnDirection(parent,count,event,state_.type,0);
+}
+// 주문은 같은 생성 몸체에 C/D 방향을 전달하며 기본 wrapper의 A 방향과 구별한다.
+void RawFlare::SpawnDirection(Sid parent,std::int32_t count,std::uint32_t event,std::uint32_t effectType,std::uint32_t direction) const {
     if (state_.suppressedTime!=0 || state_.loadingDepth) return;
-    const auto effectType=state_.type;const auto depth=pool_.Slot(parent)[35];auto size=Need(hooks_.processCount)();
+    if (direction>=16) throw std::out_of_range("플레어 생성 방향 범위");
+    const auto depth=pool_.Slot(parent)[35];auto size=Need(hooks_.processCount)();
     // 음수/0개는 생성하지 않으며30000개일 때는 마지막 하나만 더 만든다.
     for (std::int32_t i=0;i<count;++i) {
         if (size>30000) return;
@@ -59,7 +64,7 @@ void RawFlare::Spawn(Sid parent,std::int32_t count,std::uint32_t event) const {
         const bool shifted=(types_[type].flags2&0x30000U)!=0;const float offsetX=shifted ? -0.7F : 0.0F,offsetY=shifted ? -0.1F : 0.0F;
         const auto highX=static_cast<float>(double(hotspot[0])*0.0625+double(offsetX)),highY=static_cast<float>(double(hotspot[1])*double(kYScale)+double(offsetY));
         const auto randomX=Random(offsetX,highX),randomY=Random(offsetY,highY);const auto currentType=pool_.Slot(child)[10];if (currentType>=frames_.size()) throw std::out_of_range("플레어 생성 현재 TYPE 범위");
-        Put(child,36,static_cast<std::uint32_t>(frames_[currentType].Run('A').first));Need(hooks_.owner)(child,0);
+        Put(child,36,static_cast<std::uint32_t>(frames_[currentType].Run(static_cast<std::uint8_t>('A'+direction)).first));Need(hooks_.owner)(child,0);
         auto raw=pool_.AllocatedBytes(child);raw[40]|=8U;raw[35]=static_cast<std::uint8_t>(depth-1U);
         const float spawnX=Clamp(static_cast<float>(double(x)-randomX)),spawnY=Clamp(static_cast<float>(double(y)-randomY));Need(hooks_.pop)(child,spawnX,spawnY,0);
         if (Need(hooks_.reserveRegular)()) Need(hooks_.addRegular)(child,event,static_cast<float>(Random(0,0.07F)+0.05));

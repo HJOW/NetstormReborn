@@ -5,12 +5,12 @@
 #include <bit>
 #include <stdexcept>
 namespace netstorm::client {
-// 다른 주문의 추가 그림은 아직 포함하지 않고 실제502370의 요청만 전달한다.
+// 같은41e3d0 추가 그림을 쓰는 폭발/은신/마비의 정확한 표만 전달한다.
 void DrawDevastationAdditional(const o::SidPool& pool,o::Sid sid,std::int32_t x,std::int32_t y,const std::function<void(std::uint32_t,std::int32_t,std::int32_t,std::int32_t)>& draw) {
     const auto raw=pool.Slot(sid);std::uint32_t table{},frame{};
     // 원본 비정렬 가상 표와 프레임의 전체DWORD 비트를 읽는다.
     for (std::size_t index=0;index<4;++index) { table|=std::uint32_t(raw[index])<<(8*index);frame|=std::uint32_t(raw[36+index])<<(8*index); }
-    if (table!=0x502370U || !draw) throw std::invalid_argument("Devastation 추가 그림 표/소비자 오류");draw(raw[10],std::bit_cast<std::int32_t>(frame),x,y);
+    if ((table!=0x502370U && table!=0x502510U && table!=0x502ff8U) || !draw) throw std::invalid_argument("Devastation 추가 그림 표/소비자 오류");draw(raw[10],std::bit_cast<std::int32_t>(frame),x,y);
 }
 // 같은Pool을 구성 시 확인하고 실제 큰 효과는 요청 시점에만 실행한다.
 o::BombBlastHooks MakeCampaignBombBlastHooks(RawSurfaceWorld& world,const RawCampaignHitBindings& hits,const o::RawBombTargets& coordinates) {

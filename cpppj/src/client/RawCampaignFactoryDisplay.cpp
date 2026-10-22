@@ -50,6 +50,7 @@ struct RawCampaignFactoryDisplay::Impl {
         const auto raw=core.pool.Slot(sid);return raw[0]==0xa0 && raw[1]==0x1e && raw[2]==0x50 && raw[3]==0;
     }
     bool Temple(o::Sid sid) const { return o::IsPatchTemple(core.pool.Slot(sid)); } // 같은10.78 세 전용VT의 실제+a4 대상이다.
+    bool Bomb(o::Sid sid) const { const auto raw=core.pool.Slot(sid);const auto table=std::uint32_t(raw[0])|(std::uint32_t(raw[1])<<8)|(std::uint32_t(raw[2])<<16)|(std::uint32_t(raw[3])<<24);return (raw[10]==117 && table==0x502510U) || (raw[10]==118 && table==0x502ff8U) || (raw[10]==168 && table==0x502370U); } // 공통+a0=41c0f0/+a4=41e3d0인 세 주문이다.
     bool ThunderCannon(o::Sid sid) const { return o::IsThunderCannonCapture(core.pool.Slot(sid)); } // 독립333캡처로 확인한 실제131/VT50bad0 쌍이다.
     // 별도 SID로 복제된 flyershadow의 두 번째 물리 프레임 묶음이다. 여섯 비행/벌룬 타입에 같은 원본 색 치환을 적용한다.
     bool FlyerShadow(o::Sid sid) const {
@@ -61,7 +62,7 @@ struct RawCampaignFactoryDisplay::Impl {
     bool Geyser(o::Sid sid) const {
         return o::IsGeyserCapture(core.pool.Slot(sid));
     }
-    bool Handles(o::Sid sid) const { return factory.Handles(sid) || Flare(sid) || Generator(sid) || Temple(sid) || o::IsPatchDais(core.pool.Slot(sid)) || ThunderCannon(sid) || Geyser(sid) || o::IsBurningArcherCapture(core.pool.Slot(sid)) || o::IsSunAviaryCapture(core.pool.Slot(sid)) || o::IsPlainAssetDraw(core.pool.Slot(sid)) || FlyerShadow(sid); } // 일반 자산도 같은 원본 본체/상태색/기준점/그림자 경로에 포함한다.
+    bool Handles(o::Sid sid) const { return factory.Handles(sid) || Bomb(sid) || Flare(sid) || Generator(sid) || Temple(sid) || o::IsPatchDais(core.pool.Slot(sid)) || ThunderCannon(sid) || Geyser(sid) || o::IsBurningArcherCapture(core.pool.Slot(sid)) || o::IsSunAviaryCapture(core.pool.Slot(sid)) || o::IsPlainAssetDraw(core.pool.Slot(sid)) || FlyerShadow(sid); } // 일반 자산도 같은 원본 본체/상태색/기준점/그림자 경로에 포함한다.
     // 원본 PE 초기값만 설치하고 각 수집에서 현재 게임 값으로 갱신한다.
     Impl(RawWorldCore world,const GameAssets& data,TempleDraw supplied):core(world),assets(data),factory(core.pool,core.frames),
         collection(core.hash,core.pool,core.types,core.shapes),views(MakeSpriteAssetViews(data)),templeDraw(std::move(supplied)),templeBaseFrames(core.types.size(),-1) {
@@ -89,6 +90,7 @@ struct RawCampaignFactoryDisplay::Impl {
         state.now=core.processState.now;state.ownerPalettes.assign(core.bridgeState.ownerColors.begin(),core.bridgeState.ownerColors.end());
         SpritePixelTarget target(pixels,pitch,height,clip,MakeSpriteAssetShapes(assets,state),[this](auto mode,auto type,auto owner) { return Color(mode,type,owner); });
         SpriteDrawHooks rules;rules.virtualFrame=[this](o::Sid object) {
+            if (Bomb(object)) return -1; // 원본 공통 주문의+a0는 빈 본체다.
             if (Temple(object)) return o::PatchTempleMainFrame(core.pool.Slot(object),templeBaseFrames);
             if (ThunderCannon(object)) return o::ThunderCannonCaptureMainFrame(core.pool.Slot(object),core.frames[core.pool.Slot(object)[10]]);
             if (o::IsSunAviaryCapture(core.pool.Slot(object))) return o::SunAviaryCaptureMainFrame(core.pool.Slot(object));
@@ -129,6 +131,7 @@ struct RawCampaignFactoryDisplay::Impl {
         // +a4의0044c180은 같은 기준점/단위 배율의 plain SHP다. 일반 owner 문맥으로 바꾸지 않는다.
         hooks.virtualDraw=[this,shape=hooks.shape](o::Sid object,ScreenPoint point) {
             const auto composite=core.pool.Slot(object); // 같은 프레임의 현재 본체/추가 그림 분배에 사용한다.
+            if (Bomb(object)) { const auto frame=std::uint32_t(composite[36])|(std::uint32_t(composite[37])<<8)|(std::uint32_t(composite[38])<<16)|(std::uint32_t(composite[39])<<24);if (!(composite[40]&0x10U)) shape({composite[10],frame,point,SpriteShapeMode::Plain});else if (composite[34]==state.localPlayer) shape({composite[10],frame,point,SpriteShapeMode::Abstract});return; } // 같은 현재497280 상태색/로컬 관문으로 추가 그림을 그린다.
             if (o::IsPlainAssetDraw(composite)) return; // 검증한 일반 자산의+a4=41c100은 원본처럼 빈ret8이다.
             if (o::IsSunAviaryCapture(composite) || o::IsBurningArcherCapture(composite)) {
                 const auto draw=[this,object,&shape](auto type,auto frame,auto x,auto y) { // 실제497280과 같은 현재 추상/로컬 소유자 관문으로 추가 그림을 출력한다.

@@ -1,14 +1,30 @@
-// Impl 안에서 포함하여 Devastation의 실제 월드/Host/경제/음향을 같은 Session에 연결한다.
+// Impl 안에서 포함하여 폭발/은신/마비 주문의 실제 월드·Host·경제·음향을 연결한다.
+// 같은 공용 시전/수신을 사용한다고 확인한 정확한 세 가상 표만 허용한다.
+bool ConnectedBombTable(std::uint32_t table) const { return table==0x502370U || table==0x502510U || table==0x502ff8U; }
+// 상태 효과의 적용/만료는 동일한 실제 가상 배치·표시·펜스 소비자를 사용한다.
+BombEffectTimerHooks MakeBombTimerHooks() {
+    BombEffectTimerHooks hooks;hooks.unpop=[this](Sid sid,std::uint32_t flags) { world.Unpop(sid,flags); };hooks.repop=[this](Sid sid,std::uint32_t flags) { world.Repop(sid,flags); };
+    hooks.refresh=[this](Sid sid) { core.display.Update(core.pool.Slot(sid),0); };hooks.fence=[this](Sid sid) { fenceRebuild->Rebuild(sid); };return hooks;
+}
+// 7d는 현재 free Form에 새 타이머를 읽고 같은 Host의 지정 SID 부착으로 전달한다.
+void ReceiveBombTimer(std::span<const std::uint8_t> packet) {
+    const std::uint32_t boss=assetState.boss;BombTimerReceiveHooks hooks;
+    hooks.assertion=[](std::uint32_t line) { throw std::logic_error("원본 상태 타이머 수신 진단 "+std::to_string(line)); };
+    hooks.create=[this](std::uint32_t type,std::uint32_t x,std::uint32_t y) { if (type!=57 || x || y || pendingBombTimer) throw std::logic_error("상태 타이머 수신 factory 계약 오류");pendingBombTimer=std::make_unique<BombEffectTimerProcess>(core.pool,core.types,core.processState.now,0,std::span<const std::uint32_t>{},0,MakeBombTimerHooks());return 1U; };
+    hooks.read=[this](std::uint32_t token,std::span<const std::uint8_t> bytes) { if (token!=1 || !pendingBombTimer) throw std::logic_error("상태 타이머 수신 객체 누락");pendingBombTimer->ReadPacket(bytes); };
+    hooks.attach=[this](std::uint32_t token,std::uint32_t type,Sid parent,Sid form,std::uint32_t flags) { if (token!=1 || !pendingBombTimer) throw std::logic_error("상태 타이머 수신 부착 객체 누락");static_cast<void>(core.processes.Attach(std::move(pendingBombTimer),type,parent,flags,form)); };
+    ReceiveBombTimerPacket(core.pool,boss,bombTimerType,packet,hooks);
+}
 // 외부 효과 뒤 다시 들어오는 실제 몸체마다 현재 권한/로컬 owner/동맹을 공급한다.
 void PrepareDevastation() {
     devastationTargetState.boss=devastationBlastState.boss=devastationRegularState.boss=devastationEffectState.boss=assetState.boss;
     devastationRegularState.localOwner=playerState.battleOwner;devastationBlastState.alliances=alliances;
 }
-// 이월한 다른 주문을 Devastation 효과로 실행하지 않는다. 이미free/dead인 패킷은 원본 조기 반환을 유지한다.
+// 아직 복원하지 않은 파생을 다른 효과로 실행하지 않으며 free/dead의 원본 조기 반환은 유지한다.
 void CheckDevastationPacket(std::span<const std::uint8_t> packet) const {
     if (packet.size()<6) throw std::invalid_argument("Devastation 패킷 부모WORD 부족");
     const Sid parent{static_cast<std::uint16_t>(packet[4]|(std::uint16_t(packet[5])<<8))};const auto raw=core.pool.Slot(parent);
-    if (!(raw[11]&3U) && Read(raw,0)!=0x502370U) throw std::logic_error("다른 주문 Session 연결은 멀티플레이 단계로 이월");
+    if (!(raw[11]&3U) && !ConnectedBombTable(Read(raw,0))) throw std::logic_error("다른 주문 Session 연결은 미복원");
 }
 // 현재 원격 비용/SharedRegular를 실제 활성화 몸체에 맡긴다.
 void ReceiveDevastationActivation(std::span<const std::uint8_t> packet) { CheckDevastationPacket(packet);PrepareDevastation();devastationActivation->Receive(packet); }
@@ -23,11 +39,13 @@ void ConnectDevastation() {
         devastationRegularTypes[type]={core.frames[type].Run('A').first,carrierRegularTypes[type].castTime};devastationEffectTypes[type].cost=core.types[type].cost;
     }
     // 자산 로드 목록은188TYPE 전체와 길이가 다르므로 실제 block 번호로만 음향을 보충한다.
-    for (const auto& asset:assets.game.Types()) { const auto name=asset.definition.String("fireSound");devastationEffectTypes.at(70+asset.block).sound=name && !name->empty() ? soundNames.Lookup(*name) : 0; }
+    for (const auto& asset:assets.game.Types()) { const auto name=asset.definition.String("fireSound");auto& type=devastationEffectTypes.at(70+asset.block);type.sound=name && !name->empty() ? soundNames.Lookup(*name) : 0;type.delay=static_cast<std::int32_t>(asset.definition.Number("effecttime").value_or(0)); }
+    BombStatusHooks status;status.refresh=[this](Sid sid) { core.display.Update(core.pool.Slot(sid),0); };status.unpop=[this](Sid sid,std::uint32_t flags) { world.Unpop(sid,flags); };status.repop=[this](Sid sid,std::uint32_t flags) { world.Repop(sid,flags); };
+    status.fence=[this](Sid sid) { fenceLifetime->Refresh(sid); };status.flare=[this](Sid sid,std::int32_t count,std::uint32_t event,std::uint32_t type,std::uint32_t direction) { flare->SpawnDirection(sid,count,event,type,direction); };bombStatusState.alliances=alliances;bombStatus=std::make_unique<RawBombStatus>(core.pool,core.types,bombStatusState,std::move(status));
     BombTargetHooks targets;
     // 실제502370의b4는41e3c0이며 다른 표의 반경으로 대체하지 않는다.
-    targets.radius=[this](Sid parent,std::uint32_t table) { if (table!=0x502370U) throw std::logic_error("Devastation 반경 표 오류");return devastationTargets->DefaultRadius(parent); };
-    targets.eligible=[this](Sid,std::uint32_t table,Sid target) { if (table!=0x502370U) throw std::logic_error("Devastation 자격 표 오류");PrepareDevastation();return devastationBlast->MayTarget(target); };
+    targets.radius=[this](Sid parent,std::uint32_t table) { if (!ConnectedBombTable(table)) throw std::logic_error("주문 반경 표 오류");return devastationTargets->DefaultRadius(parent); };
+    targets.eligible=[this](Sid parent,std::uint32_t table,Sid target) { if (!ConnectedBombTable(table)) throw std::logic_error("주문 자격 표 오류");PrepareDevastation();return table==0x502370U ? devastationBlast->MayTarget(target) : bombStatus->MayTarget(parent,target); };
     targets.assertion=[](std::uint32_t line) { throw std::logic_error("원본 Devastation 권한 진단 "+std::to_string(line)); };
     devastationTargets=std::make_unique<RawBombTargets>(core.pool,core.hash,core.types,fenceRanges,devastationTargetState,std::move(targets));
     devastationBlast=std::make_unique<RawBombBlast>(core.pool,core.types,core.frames,*devastationTargets,devastationBlastState,MakeCampaignBombBlastHooks(world,*hits,*devastationTargets));
@@ -62,10 +80,13 @@ void ConnectDevastation() {
             const auto pid=core.kernel.Find(*cast);core.processes.Kill(*cast,0);if (core.processes.IsRegistered(pid,cast)) throw std::logic_error("Devastation 시전 종료의 실제 권한/삭제 실패");
         }
     };
-    effect.allocate=[this](std::uint32_t bytes) { if (devastationEffectMemory) throw std::logic_error("Devastation 효과 배열 중첩 확보");try { devastationEffectMemory=std::make_unique<std::uint8_t[]>(bytes);return true; }catch (const std::bad_alloc&) { return false; } };
-    effect.apply=[this](Sid parent,std::uint32_t table,Sid target) { if (table!=0x502370U) throw std::logic_error("Devastation 효과 표 오류");PrepareDevastation();devastationBlast->Apply(parent,target); };
+    effect.allocate=[this](std::uint32_t bytes) { try { if (!devastationEffectMemory) devastationEffectMemory=std::make_unique<std::uint8_t[]>(bytes);else { if (bytes!=40 || pendingBombTimerStorage || pendingBombTimer) throw std::logic_error("상태 타이머 확보 순서 오류");pendingBombTimerStorage.reset(::operator new(sizeof(BombEffectTimerProcess))); }return true; }catch (const std::bad_alloc&) { return false; } };
+    effect.apply=[this](Sid parent,std::uint32_t table,Sid target) { if (!ConnectedBombTable(table)) throw std::logic_error("주문 효과 표 오류");PrepareDevastation();if (table==0x502370U) devastationBlast->Apply(parent,target);else bombStatus->Apply(parent,target); };
+    effect.construct=[this](std::int32_t delay,std::uint32_t,std::span<const std::uint32_t> members,std::uint32_t flags) { if (!pendingBombTimerStorage || pendingBombTimer) throw std::logic_error("상태 타이머 생성 메모리 누락");auto* process=::new (pendingBombTimerStorage.get()) BombEffectTimerProcess(core.pool,core.types,core.processState.now,delay,members,flags,MakeBombTimerHooks());static_cast<void>(pendingBombTimerStorage.release());pendingBombTimer.reset(process);return 1U; };
+    effect.argument=[this](std::uint32_t x,std::uint32_t y) { if (x || y) throw std::logic_error("상태 타이머 예약 인자 오류");return std::uint32_t(BombTimerParent(core.pool,core.types,assetState.residences.Items()).value); };
+    effect.attach=[this](std::uint32_t token,std::uint32_t type,std::uint32_t parent,std::uint32_t form,std::uint32_t flags) { if (token!=1 || !pendingBombTimer || parent>65535 || form>65535) throw std::logic_error("상태 타이머 예약 객체/인자 오류");static_cast<void>(core.processes.Attach(std::move(pendingBombTimer),type,Sid{static_cast<std::uint16_t>(parent)},flags,Sid{static_cast<std::uint16_t>(form)})); };
     effect.sound=[this](std::array<std::uint32_t,6> values) { if (!services.sound.play) throw std::logic_error("Devastation 실제 효과음 미연결");services.sound.play(values[0],values[1],values[2],values[3],values[4],values[5]); };
-    effect.destroy=[this](Sid sid,std::uint32_t table,std::uint32_t flags) { if (table!=0x502370U) throw std::logic_error("Devastation 삭제 표 오류");static_cast<void>(world.Destroy(sid,flags)); };
+    effect.destroy=[this](Sid sid,std::uint32_t table,std::uint32_t flags) { if (!ConnectedBombTable(table)) throw std::logic_error("주문 삭제 표 오류");static_cast<void>(world.Destroy(sid,flags)); };
     effect.release=[this] { if (!devastationEffectMemory) throw std::logic_error("Devastation 효과 배열 해제 순서 오류");devastationEffectMemory.reset(); };
     devastationEffect=std::make_unique<RawBombEffect>(core.pool,devastationEffectTypes,devastationEffectState,std::move(effect));
     PrepareDevastation();
