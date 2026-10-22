@@ -439,3 +439,6 @@ target_sources(netstorm PRIVATE RawSoloMapList.cpp RawSoloMapList.h)
 target_sources(netstorm PRIVATE RawDataManagerFileSave.h RawDataManagerFileSave.cpp)
 # 더스트 데빌의 전용104BYTE·애니메이션·범위 피해를 실제 월드에서 사용한다.
 target_sources(netstorm PRIVATE RawWindFlyer.h RawWindFlyer.cpp)
+
+# 아크 스파이어의 전용 동맹 연결·범위·연쇄 피해를 복원한다.
+target_sources(netstorm PRIVATE RawArcSpire.h RawArcSpire.cpp)

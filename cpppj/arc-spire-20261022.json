@@ -1,0 +1,136 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-22",
+  "uniqueInputs": 665,
+  "normalReturns": 1330,
+  "scopes": {
+    "P": 50,
+    "R": 84,
+    "N": 192,
+    "A": 243,
+    "S": 90,
+    "T": 6
+  },
+  "instructions": 833330,
+  "nativeCalls": {
+    "0048c080": 100,
+    "0048c6e0": 168,
+    "0048c110": 510,
+    "004ac550": 1240,
+    "0049a840": 7828,
+    "004e49c0": 6132,
+    "0040d890": 894,
+    "004ab7c0": 1020,
+    "0048c410": 1212,
+    "0048c300": 3448,
+    "0041d770": 384,
+    "0041d7a0": 384,
+    "004adc60": 2232,
+    "004ac200": 2160
+  },
+  "entries": [
+    "0048c080",
+    "0048c6e0",
+    "0048c110",
+    "0048c300",
+    "0048c410",
+    "0040d890",
+    "004ac550",
+    "0049a840",
+    "004ac200",
+    "004adc60",
+    "0041d770",
+    "0041d7a0",
+    "004ab7c0",
+    "004e49c0"
+  ],
+  "boundaries": "48c080/48c6e0/48c110/48c300/48c410 전체 및 Buffer·작은 TYPE/getter/피격 가능 필터/좌표·지도/CRT는 실제 원문. 힙할당/큰finder/위치lookup/프레임/공통Damageable/가상피해/빔은 명시 경계. SEH·GP·스택·canary·x87·접근범위·변경raw/Buffer를 검사한다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_arc_spire.py": "a476a7af621fd08e49536e427e40b3d6b4b3df47a8f514740b1633e73adc534e",
+    "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+    "tools/decomp_cursor_position.py": "e15bcdbc4c6be9c131c30f15416c945d650dba9f7dc6def404b47f63c635c212",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "cpppj/tests/fixtures/arc-spire-x86.tsv": "6eb5d0a42837bce4b373884d808adb93e95c93d9044929de687d62ff9436568a"
+  },
+  "vtables": {
+    "0x50e668": {
+      "0x10": "0x4af780",
+      "0x14": "0x44b4b0",
+      "0x18": "0x44b9e0",
+      "0x20": "0x48c080",
+      "0x5c": "0x48c6e0",
+      "0x78": "0x4acfe0",
+      "0x98": "0x44c8e0",
+      "0xa4": "0x41c100",
+      "0xc8": "0x48c110"
+    },
+    "0x50e940": {
+      "0x10": "0x4af780",
+      "0x14": "0x44b4b0",
+      "0x18": "0x48edf0",
+      "0x20": "0x48eda0",
+      "0x5c": "0x44b900",
+      "0x78": "0x4acfe0",
+      "0x98": "0x44c8e0",
+      "0xa4": "0x41c100",
+      "0xc8": "0x4ad000"
+    },
+    "0x501ea0": {
+      "0x10": "0x4af780",
+      "0x14": "0x44b4b0",
+      "0x18": "0x44b9e0",
+      "0x20": "0x41c150",
+      "0x5c": "0x44b900",
+      "0x78": "0x4acfe0",
+      "0x98": "0x44c8e0",
+      "0xa4": "0x41c100",
+      "0xc8": "0x746c654d"
+    }
+  },
+  "implementationSha256": {
+    "cpppj/src/o/RawArcSpire.h": "e318ea64c67fdfc78993c9842352a02733c5574d4a1d6bda0964ca6e66b3e8f9",
+    "cpppj/src/o/RawArcSpire.cpp": "e5960d5ed90c0dff61164feb6c8f9509199a0e9f0f96767a949a6b0e9941da86",
+    "cpppj/src/o/RawAssetPostPop.cpp": "c1e68904b7f11249e6e0f05479f0bb318022fe9d115431f3f9c1001f17a97c8e",
+    "cpppj/src/client/RawCampaignSession.cpp": "5d61a811124996204ddd48f4b1c2845bd7dd9fca82f5d4071b2de063df45b65b",
+    "cpppj/tests/ArcSpireTests.cpp": "0ba744388814f3501689c76c396bc34268aa31a7bcadcbbea66ef4823d416a3e",
+    "cpppj/tests/CampaignSessionTests.cpp": "200308dc2edee5a141ffceca6636120b550f9b577a1f34f3c67037ef9bb8313a",
+    "cpppj/src/o/CMakeLists.txt": "4dd061fb4b84af287d0f229797137379bdac7cb516b7383d84da375d9978d071",
+    "cpppj/tests/CMakeLists.txt": "5bb17bc1ef3689f98972fb64967cac553b10ae3a6ada1cdc9ae05485d9214750"
+  },
+  "validation": {
+    "releaseBuilds": [
+      {
+        "run": 1,
+        "exitCode": 0,
+        "warnings": 0,
+        "errors": 0
+      },
+      {
+        "run": 2,
+        "exitCode": 0,
+        "warnings": 0,
+        "errors": 0
+      }
+    ],
+    "focusedTests": 2,
+    "focusedFailures": 0,
+    "fullTests": 2285,
+    "fullFailures": 0,
+    "ctestExitCode": 0,
+    "ctestWallSeconds": 285.23,
+    "testSeconds": 285.2,
+    "initialFullWallSeconds": 284.24,
+    "initial659NativeRowsUnchanged": true,
+    "coordinateBoundaryInputs": 6,
+    "guiPlay": false,
+    "kernelSeconds": 2.1,
+    "targetHpBefore": 2000,
+    "targetHpAfter": 1910,
+    "beamSounds": 4,
+    "spBefore": 0,
+    "spAfter": 0
+  }
+}

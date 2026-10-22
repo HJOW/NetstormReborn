@@ -1808,3 +1808,6 @@ set_source_files_properties(DataManagerFileSaveTests.cpp PROPERTIES COMPILE_DEFI
 
 # Walker38의 실제 전체 프레임과 자기 삭제 경계를 검증한다.
 target_sources(netstorm_tests PRIVATE WalkerPathTests.cpp)
+
+# 아크 스파이어 다섯 몸체와 정수 근처 경계의 독립 원문을 대조한다.
+target_sources(netstorm_tests PRIVATE ArcSpireTests.cpp)

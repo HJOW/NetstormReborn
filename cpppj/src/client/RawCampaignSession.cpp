@@ -5,6 +5,7 @@
 #include "client/RawKnowledgeMenu.h"
 #include "o/CanonDecoder.h"
 #include "o/RawBridgeEvents.h"
+#include "o/RawArcSpire.h"
 #include "o/RawBridgeDraw.h"
 #include "o/RawMissionStart.h"
 #include "o/RawFactoryDraw.h"
@@ -211,7 +212,7 @@ std::uint32_t Read(std::span<const std::uint8_t> raw,std::size_t offset) {
         (static_cast<std::uint32_t>(raw[offset+2])<<16)|(static_cast<std::uint32_t>(raw[offset+3])<<24);
 }
 // 원본 전체 캡처를 대조한 제네레이터·스톤/아이스 타워의 TYPE 기본/빈 추가 그림을 선택한다.
-bool IsPlainBuildingCapture(std::span<const std::uint8_t> raw) { return (raw[10]>=75 && raw[10]<=77 && Read(raw,0)==0x501ea0U) || ((raw[10]==78 || raw[10]==147) && Read(raw,0)==0x50e940U) || (raw[10]==164 && Read(raw,0)==kPatchAltarVtable) || (raw[10]==95 && Read(raw,0)==kPatchStalagVtable) || (raw[10]==157 && Read(raw,0)==kPatchNoIslandVtable); } // 제단/종유석/표면칸도+78=TYPE기본/+a4=빈ret8이며 현재 타입별 색표 유무는 그대로 사용한다.
+bool IsPlainBuildingCapture(std::span<const std::uint8_t> raw) { return (raw[10]>=75 && raw[10]<=77 && Read(raw,0)==0x501ea0U) || ((raw[10]==78 || raw[10]==147) && Read(raw,0)==0x50e940U) || (raw[10]==149 && Read(raw,0)==0x50e668U) || (raw[10]==164 && Read(raw,0)==kPatchAltarVtable) || (raw[10]==95 && Read(raw,0)==kPatchStalagVtable) || (raw[10]==157 && Read(raw,0)==kPatchNoIslandVtable); } // 제단/종유석/표면칸도+78=TYPE기본/+a4=빈ret8이며 현재 타입별 색표 유무는 그대로 사용한다.
 }
 // 메뉴의 현재 원문/참조와 자식 우선 소멸 순서를 한 고정 주소에 보관한다.
 struct RawCampaignObjectMenus::Impl {
@@ -581,6 +582,7 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawSunAviaryProcess> sunAviary; // 같은 현재 Kernel/시계/풀의 실제 훨리베이스 프로세스 몸체다.
     std::unique_ptr<RawRainAviaryProcess> rainAviary; // 같은 현재 Kernel/풀의 맨 오 워 풀 전용 상태 기계다.
     std::unique_ptr<RawWindAviaryProcess> windAviary; // 같은실제Kernel의데빌메이커80BYTE 생산기다.
+    std::unique_ptr<RawArcSpire> arcSpire; //149의 전용 +X/+Y 동맹 이웃·연쇄 빔·Regular다.
     std::unique_ptr<RawWindFlyer> windFlyer; // 더스트 데빌의전용104BYTE/애니메이션/범위공격이다.
     std::vector<std::uint32_t> windActiveSounds; // 같은188TYPE의실제activeSound 토큰이다.
     std::uint32_t windAviaryType{59},windAviaryAsset{139}; // 실제프로세스와건물의서로다른TYPE다.
@@ -1067,6 +1069,7 @@ struct RawCampaignSession::Impl {
         ConnectSunAviary(); // 실제 타입32/flags8 부착과 현재48BYTE 필드를 같은 Kernel에 등록한다.
         ConnectWindAviary(); // 첫저장객체Pop전에타입59의전용생산기를설치한다.
         ConnectRainAviary(); // 실제 타입60/flags8 부착과 별도 Frame/0x73 패킷을 구성한다.
+        ConnectArcSpire(); // 첫149 Pop 전에 같은 피해/빔/메타를 연결한다.
         ConnectFlyer(); // TYPE144의 전체 후처리와 기본 표 부착→전용 표 쓰기의 실제 순서를 연결한다.
         ConnectFence(); // 실제 최근접/연결선 삭제/Regular를 첫 저장 펜스 Pop 전에 연결한다.
         ConnectGemReward(); //첫오벨리스크Pop 전에실제보상추첨을연결한다.
@@ -1133,6 +1136,7 @@ struct RawCampaignSession::Impl {
             if (manaRegular && manaRegular->Handles(sid)) return manaRegular->Run(sid,event,count);
             if (nuggetRegular && nuggetRegular->Handles(sid)) return nuggetRegular->Handle(sid,event,count,payload);
             const auto raw=core.pool.Slot(sid);
+            if (Read(raw,0)==0x50e668U) return arcSpire->Handle(sid,event,count,payload); //48c6e0의 전용 주기이며 공통44b900으로 바로 넘기지 않는다.
             if (Read(raw,0)==0x50a050U) return windFlyer->Handle(sid,event,count,payload); // 실제45e8b0의주기범위공격이다.
             if (Read(raw,0)==0x504198U) return balloonBody->CloudRegular(sid,event,count,payload,
                 [this](Sid parent,std::int32_t delta,std::uint32_t flags) { RawFrameAdvance advance(core.pool,core.frames,core.frame);static_cast<void>(advance.Advance(parent,delta,flags)); },
@@ -1425,7 +1429,23 @@ struct RawCampaignSession::Impl {
         hooks.pop=[this](Sid sid,float x,float y,std::uint32_t flags) { world.Pop(sid,x,y,flags); };hooks.bindFlyer=[this](Sid sid,Sid home) { flyer->Bind(sid,home); };
         rainAviary=std::make_unique<RawRainAviaryProcess>(core.pool,RainAviaryProcessGlobals{core.ownerMode.fort,gunTargetState.friendlyFire,core.processState.server,globals.editor,gunState.checking,core.processState.now,rainAviaryType,rainFlyerType},std::move(hooks));
     }
-    // 같은 현재 Host에 기본 비행 생성자와 맨 오 워 전체 Pop을 연결한다. 비행 Frame/의존 해제는 선택 시 명시 오류다.
+    // 실제 원본149/50e668의 전용 공격을 같은 finder/피해/빔/시계에 연결한다.
+    void ConnectArcSpire() {
+        ArcSpireHooks hooks;
+        hooks.range=[this](Sid sid) { return static_cast<float>(assets.game.Types()[core.pool.Slot(sid)[10]-70].definition.Number("range").value()); };
+        hooks.damageRate=[this](Sid sid) { return hitTypes.at(core.pool.Slot(sid)[10]).damagePerSecond; };
+        hooks.find=[this](float x,float y,std::uint32_t type) { return world.Find(x,y,type); };
+        hooks.iterate=[this](SquidSearchArea area,const std::function<void(Sid)>& consume) {
+            RawSquidFinder finder(core.pool,core.hash,core.types);
+            for (auto sid=finder.Begin(area,1);sid.value;sid=finder.Next()) consume(sid); //현재 동적 공간 체인을 원본 순서로 읽는다.
+        };
+        hooks.beam=[this](Sid source,Sid target) { static_cast<void>(particles->AddBeam(source,target,std::string{"shortZap.wav"})); };
+        hooks.damage=hits->DamageHooks({}).damage;
+        hooks.setFrame=[this](Sid sid,std::int32_t frame,std::uint32_t flags) { core.frame.Set(sid,frame,flags); };
+        hooks.damageable=[this](Sid sid,std::uint32_t event,std::uint32_t count,float value) { return assetBindings->Regular().DamageableHandle(sid,event,count,value); };
+        arcSpire=std::make_unique<RawArcSpire>(core.pool,core.types,core.frames,core.spots,alliances,globals.editor,std::move(hooks));
+    }
+    // 같은 현재 Host에 기본 비행 생성자와 맨 오 워 전체 Pop을 연결한다.
     void ConnectFlyer() {
         FlyerProcessHooks hooks;hooks.assertion=SessionMissing<void,std::uint32_t>();
         hooks.findProcess=[this](Sid sid,std::uint32_t type) { return FindAttachedProcess(core.pool,sid,type); };

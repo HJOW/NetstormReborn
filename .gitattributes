@@ -1670,3 +1670,11 @@ cpppj/tests/fixtures/walker-path-x86.tsv text eol=lf
 tools/decomp_walker_path.py text eol=lf
 cpppj/walker-path-20261022.json text eol=lf
 docs/exe/cpp-walker-path-20261022.md text eol=lf
+
+# 아크 스파이어의 새 제품/원문/검증 근거를 같은 바이트로 유지한다.
+cpppj/src/o/RawArcSpire.* text eol=lf
+cpppj/tests/ArcSpireTests.cpp text eol=lf
+cpppj/tests/fixtures/arc-spire-x86.tsv text eol=lf
+tools/decomp_arc_spire.py text eol=lf
+cpppj/arc-spire-20261022.json text eol=lf
+docs/exe/cpp-arc-spire-20261022.md text eol=lf

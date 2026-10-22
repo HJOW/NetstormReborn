@@ -3773,3 +3773,32 @@ TEST_CASE(CampaignWalkerPath_ActualSelectionAndNaturalMovement) {
     CHECK(!core.destroy.PreDepth() && !core.destroy.PostDepth() && !core.bookkeeping.depth);
     }
 }
+
+// 두 실제149와 적 지상 건물의 Pop/Kernel/공간 검색/연쇄 빔/피해/삭제를 자연 진행한다.
+TEST_CASE(CampaignArcSpire_ActualKernelAttackAndDeletion) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
+    auto services=external.Services();std::size_t zaps{},lost{};const auto sound=services.sound.playOnceAt;
+    services.sound.playOnceAt=[&](float x,float y,SoundHandle token,std::uint32_t first,std::uint32_t second) {
+        if (token==external.names.Lookup("shortZap.wav")) ++zaps;
+        return sound(x,y,token,first,second);
+    }; // 실제 빔 생성의 위치 음향 요청만 관찰한다.
+    services.unitLost=[&](Sid) { ++lost; }; //실제 삭제가 요청하는 소실 음향 장치다.
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());
+    RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));session.Load();auto core=session.Core();
+    CHECK(session.Alliances()[10]!=0 && !session.Alliances()[11]);
+    const auto source=session.World().Create(149,2),other=session.World().Create(149,2),victim=session.World().Create(78,2);
+    const auto funds=session.Sp(1);core.owner.Set(source,1);core.owner.Set(other,1);core.owner.Set(victim,2);
+    // 표면은 원본 Pop 후처리가 생성하며 지형/Spot/피해 결과를 검사에서 직접 쓰지 않는다.
+    session.World().Pop(source,200,200,0);session.World().Pop(other,212,200,0);session.World().Pop(victim,206,200,0);
+    CHECK(Get(core.pool.Slot(source),0)==0x50e668U && Get(core.pool.Slot(other),0)==0x50e668U);
+    const auto* timer=core.processes.FindEvent(source,0);CHECK(timer && timer->Payload()==1.0F && timer->Count()==0);
+    CHECK(core.postPop.HandlesAsset(source));const auto hp=Get(core.pool.Slot(victim),26);CHECK(hp>90);
+    GameClock clock;
+    for (std::uint32_t frame=1;frame<=84;++frame) session.RunFrame(clock.Capture(frame*25),false); //2.1초의 실제 Kernel 예약만 진행한다.
+    const auto after=Get(core.pool.Slot(victim),26);CHECK(after<hp && after>0 && zaps>0 && session.Sp(1)==funds);
+    CHECK(core.processes.FindEvent(source,0) && core.processes.FindEvent(source,0)->Count()>=2);
+    // 현재 공통 삭제/파편 캡처와 종속 Regular 반납도 실제 객체에 적용한다.
+    session.World().Destroy(source,0);CHECK((core.pool.Slot(source)[11]&1U) && !FindAttachedProcess(core.pool,source,46).value && lost>0);
+    CHECK(!core.destroy.PreDepth() && !core.destroy.PostDepth() && !core.bookkeeping.depth);
+    std::cout<<"아크 스파이어 실제 Kernel: HP"<<hp<<"→"<<after<<"/빔 소리"<<zaps<<"/부모 삭제·예약 반납/SP"<<funds<<'\n';
+}
