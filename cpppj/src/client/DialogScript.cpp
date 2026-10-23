@@ -185,7 +185,8 @@ DialogPage ExtractRuntimeMetadata(std::string text,const DialogMetadataHooks& ho
         for (;kind<patterns.size();++kind) if (std::regex_search(text,match,patterns[kind])) break;
         if (kind==patterns.size()) break;
         if (kind>=6) throw std::logic_error("Tell 메타의실제Key/Input/Zsend컨트롤미연결");
-        const auto label=Trim(match[1].str());const DialogAction action{Trim(match[2].str()),Trim(match[3].str())};
+        const auto rawCommand=match[2].str(),rawArgument=match[3].str(); // 원문OnExit의숫자/고리판정에공백·인용바이트를남긴다.
+        const auto label=Trim(match[1].str());const DialogAction action{Trim(rawCommand),Trim(rawArgument)};
         if (hooks.resolveAction) hooks.resolveAction(action); // sentinel도 원래 placeholder의 조회/인자 효과를 먼저 실행한다.
         if (kind<4) {
             DialogItem item{label,action,kind==2 || kind==3,kind==3 && o::ConfigParseLong(match[4].str())!=0,
@@ -194,7 +195,10 @@ DialogPage ExtractRuntimeMetadata(std::string text,const DialogMetadataHooks& ho
             if (item.menu && hooks.appendMenu) hooks.appendMenu(page,std::move(item));else page.items.push_back(std::move(item));
         }
         else if (kind==4) { page.timeoutSeconds=o::ConfigParseLong(label);page.timeout=action; }
-        else page.onExit=action;
+        else {
+            if (hooks.resolveOnExit) hooks.resolveOnExit(rawCommand,rawArgument); // 기존Trim콜백뒤같은메타시점에현재HTML효과가끝난원문을전달한다.
+            page.onExit=action;
+        }
         const auto start=static_cast<std::size_t>(match.position());auto end=text.find_first_of("\n$",start+1);
         if (end==std::string::npos) end=text.size();else if (text[end]=='\n') ++end;
         text.erase(start,end-start); // 원본004c8bbd는캡처끝이아니라다음LF(포함)/$(제외)/NUL까지실제로제거한다.

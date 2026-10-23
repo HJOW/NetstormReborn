@@ -9,6 +9,8 @@ set_source_files_properties(GameMenuActionsTests.cpp PROPERTIES COMPILE_DEFINITI
     "NETSTORM_GAME_MENU_ACTIONS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/game-menu-actions-x86.tsv\"")
 set_source_files_properties(MessageGumpTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_MESSAGE_GUMP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/message-gump-x86.tsv\"")
+set_source_files_properties(DialogExitCommandTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_DIALOG_EXIT_COMMAND_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/dialog-exit-command-x86.tsv\"")
 # HUD 기하와 입력의 독립 원본 관측을 두 검사에만 공급한다.
 set_source_files_properties(HudDockTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_HUD_DOCK_GEOMETRY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/hud-dock-geometry-x86.tsv\"")
@@ -84,6 +86,7 @@ add_executable(netstorm_tests
     GameMenuActionsTests.cpp MessageGumpTests.cpp
     HideBuildingsTests.cpp
     CameraViewCommandsTests.cpp CampaignViewCommandsTests.cpp
+    DialogExitCommandTests.cpp
     HudDockTests.cpp
     HudDividerInputTests.cpp
     MinimapGeometryTests.cpp

@@ -1,5 +1,18 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-23 단위370 완료: 대화 OnExit와 실제 종료 수명
+
+- [x] 단위369를 **5adcf532 / 20261023-37 CP**로 커밋했다. AGENTS·공통/닷넷 인수인계/보호경로를 재확인했으며 현재/마지막 전체 정밀 디컴파일 PC는 **VM-W11-Codex / 2026-10-23**이다. 새 전체 디컴파일/보호 원문 변경은 없다.
+- [x] 실제 raw 메타 캡처→명령/인자 즉시 resolve·80칸 고리→부모 반납 시 같은40칸 큐1회 예약을 현재 페이지에 연결했다. 기존Trim(바깥따옴표제거 포함)표현은 보존하고 raw훅은 별도로 원문을 유지한다. 독립204입력/두정밀도408회/5266842명령 대조와 새메타6검사를 등록했다. SetSize2의OnExit메타 자체가 hasContent=true임을 실제2차파스 경계와 대조했다.
+- [x] 원본 입력→SaveOptions→미니맵→GumpCleanup→Idle→Kernel 순서와 Quit/WM_CLOSE경로의 추가저장없음을 확인했다. 페이지Kill과소멸을구별하여 CleanupDialogs를 설정저장뒤Kernel앞에 연결했다. Resize/Compose는 수명을 반납하지 않는다. CLI는 실제QuitRequested일때만 의도한조기종료를 허용하고, 프레임제한/오류의 미완료진단은 유지한다. [수명 상세](docs/exe/cpp-dialog-exit-lifetime-20261023.md).
+- [x] 빌드1의 새검사 legacy따옴표 기대3과 미등록DialogScript필터요청1을 바로잡았다. 최종 Release 빌드2 종료0/경고·오류0, 관련39검사 실패check0, 전체 CTest1 **2408검사·실패check0·종료0/189.91초**이며 LastTest 내부2408/0도 확인했다. 이후 제품·검사 C++ 변경은 없다.
+- [x] 실제 GUI2는 probe/No/Yes 모두종료0/시간제한미도달/전체originals해시동일이다. No는800프레임뒤1024×768/미션/비정지를 유지했고, Yes는정상조기종료·금지800report/캡처미도달 및복원전실제암호화options.cfg의800×600저장을 확인했다. GUI1의조기Quit오디오보고서기대실패는 제품변경없이도구에서미관측으로명시하고재실행했다. 다른설정값은기록하지않고허용설정은복원했다.
+- [x] 엄격UTF-8·새한국어주석·PythonAST·공백·보호경로·SHA를 확인하여 **20261023-38 CP**로 로컬 커밋한다. AGENTS·기존원본/CD·다른프로젝트 변경/원격push는 없다.
+- [ ] **단위371 다음:** [Gump프레임순서감사](docs/exe/cpp-gump-frame-order-20261023.md)에 따라 입력전Broadcast/Overlay,설정저장뒤Cleanup/Idle를 분리한다. 현재Poll은Broadcast+Idle을입력뒤에묶고!GameClockPaused를MovieUpdatePause대신쓰며Overlay실제호출도없다. MovieUpdatePause54dc58은GameClock55b4b0와별개다. Agent의제안patch `extracted/cpp-gump-frame-order-20261023-proposed.patch`가작성중이므로완료결과를확인한뒤검토/적용한다. 기존카메라Tick근사/논리HTML차단/별도Warning표 경계를 유지한다.
+- [ ] **미등록HUD자료:** HudChatGeometry/HudNsInfo Attach/TextEntryBuffer/TextEntryGump/ChatWindow/HudNsInfoCreate의새제품/검사/fixture/문서를보존한다. 독립MSVC컴파일/검사는 `extracted/cpp-hud-components-20261023-isolated/`에서agent가진행중이므로오류수정/동결보고를확인한다. NSInfo의정확한위상은직계background1+그아래13필수노드이며Player8*4/Battle3를합쳐최소50이다. ChatWindow최종관측90입력/180행,NSInfoCreate85입력/170행이며기존공통Scroll/Slider/Stone자식/registry callback까지실제binder연결이남는다.
+- [ ] **미니맵후속:** `docs/exe/cpp-minimap-blit-20261023.md`/원문120행/`MinimapBlitTests.cpp`(macroNETSTORM_MINIMAP_BLIT_FIXTURE)와 `extracted/cpp-minimap-blit-proposal-20261023.patch`는 미등록·미빌드·미적용이다. 원본은flat source읽기이며crop(-2,1)은정상범위,(-2,0)은heap앞2BYTE다. clip은대상만제한하며128밖여백배경을보존하고outline은전체Gump clip에그린다. 실제heapguard는미관측이라임의0/clamp로동일복원이라하지않는다.
+- [ ] 전체HUD dock/viewport(left85)/legacyGame버튼겹침,Chat/PlayerList/Editor Session·나머지옵션/영상·모든단축키·edgeScroll·전체사용자 Early Missions/캠페인/데모3 완주/원본 전체동일성·배포 목표는 계속 활성이다. 이번 대화 종료 단위 완료를 전체 목표 완료로 해석하지 않는다.
+
 ## 2026-10-23 단위369 완료: 실제 ESC 가로 메뉴와 원본 하위·사건 연결
 
 - [x] 단위368은 `d2dd9fcb / 20261023-36 CP`로 커밋했다. AGENTS·공통/닷넷 인수인계를 재확인했으며 현재/마지막 전체 정밀 디컴파일 PC는 **VM-W11-Codex / 2026-10-23**으로 같다. 기존 정밀 원문을 재사용했고 새 전체 디컴파일/보호 원문 변경은 없다.
@@ -8,7 +21,7 @@
 - [x] 빌드2의 검사 바이트 변환 경고1과 가로 부착 지연 교체에 어긋난 검사 기대1을 바로잡았다. 최종 Release 빌드3 종료0/경고·오류0, 관련40검사 실패check0, 전체 CTest1 **2399검사·실패check0·종료0/196.17초**이며 LastTest 내부2399/0도 확인했다. 최종 빌드/검사 뒤 제품·검사 C++를 바꾸지 않았다.
 - [x] 실제 GUI2의1024 core와 GUI3의1280 확장은 목표 재열기/Leave취소/View/Version/재시작·음량2/4·해상도No·메뉴 열린QWASZX·바깥 월드선택을 통과했다. Pause GUI는 영구 메시지/정지 중ESC·Options재열기/재개·안내제거·음소거깊이복구를 통과했다. 기존 미니맵·생산단축키/배치/회전/재공급 회귀도 통과했다. GUI1의초기 시점 실패와GUI2의1280 options.cfg 일시 쓰기 실패(원인미확정/재실행정상)도 상세/자료에 보존했다. 모든 실행의전체originals해시/허용설정복원을 확인했다.
 - [x] 엄격UTF-8·새한국어주석·PythonAST·공백·보호경로·SHA를 확인하고 **20261023-37 CP**로 로컬 커밋한다. 원격push/다른프로젝트·AGENTS·기존원본/CD변경은 없다.
-- [ ] **단위370 다음:** OnExit 실제 해석시 resolve/부모 소멸의1회 정수큐 예약을 현재 페이지 수명에 연결한다. 해상도Yes→QuitApp99는 미연결이며No검사만 완료다. 새 DialogExitCommand6파일/native408행/검사macro `NETSTORM_DIALOG_EXIT_COMMAND_FIXTURE`는 미등록·미빌드로 준비했다. 기존페이지 `resolveAction`은Trim하기때문에 원본raw capture 연결이 필요하다.
+- [x] **단위370 완료:** OnExit 실제 해석시 resolve/부모 소멸의1회 정수큐 예약을 현재 페이지 수명에 연결했다. 아래 미연결/미등록 표시는 단위369 당시 기록이다. 해상도Yes→QuitApp99는 미연결이며No검사만 완료다. 새 DialogExitCommand6파일/native408행/검사macro `NETSTORM_DIALOG_EXIT_COMMAND_FIXTURE`는 미등록·미빌드로 준비했다. 기존페이지 `resolveAction`은Trim하기때문에 원본raw capture 연결이 필요하다.
 - [ ] **HUD 후속:** HudChatGeometry·HudNsInfo Attach·TextEntryBuffer·TextEntryGump 새파일/원문/검사는 미등록·미빌드다. 병렬 ChatWindow 전체/NSInfoCreate 생성자 자료도 작성 중이므로 에이전트 결과를 확인한다. 실제14directchildren/Console·Scrolling·Button 생성과 dock/viewport 연결이 남으며 빈placeholder를 넣지 않는다. 현재고정HUD의legacyGame버튼과bar겹침·nativeleft85 미연결을 함께 해결한다. 보류 viewport patch는 `extracted/cpp-hud-viewport-20261023-pending.patch`다.
 - [ ] 전체 InterpretOptions·Chat/PlayerList 토글/Editor Session/모든단축키·edgeScroll과 실제사용자 Early Missions·전체캠페인·데모3 완주/원본 전체동일성·배포 목표는 계속 활성이다. 이번 메뉴 단위 완료를 전체 목표 완료로 해석하지 않는다.
 
@@ -18,7 +31,7 @@
 - [x] 원본004c6c50/004c4790/004c47f0/004c6530의 생성·슬레이브 등록/재배치·HUD1/3/4·채팅/지도 영역을 `HudDock`으로,004c49f0/004c4b00의 같은 공통 Gump 로컬/anchor/capture/프레임 드래그를 `HudDividerInput`으로 복원했다. 제품 라이브러리에 등록한 본체 복원이며 실제 Client dock 연결·GUI 완료는 아니다. [상세](docs/exe/cpp-hud-dock-20261023.md).
 - [x] 독립 기하1075입력/2150행(정상2144/명시stop6,683920명령·CRT65524)과 입력6699입력/13398행(987266명령)을 두 x87 정밀도 차이0으로 관측했다. 두 제품 검사가 전체15548행의 현재 raw/공개 효과/최종 가상 인자를 직접 대조한다. 일반 Draw/전체Route/GUI까지 통과했다고 확대하지 않는다.
 - [x] 빌드1의 검사 함수 이름 충돌을 `DockSplit`로 수정했다. 최종 Release 빌드2는 종료0/경고·오류0, 집중2검사 실패check0, 전체 CTest1은 **2375검사·실패check0·종료0/242.50초**이며 내부 LastTest.log의2375/0도 확인했다. 이후 제품/검사 C++ 변경은 없다. 도구/fixture의명시LF재생성·동일관측/집중재검사와엄격한UTF-8/한국어새주석·도구AST·SHA·diff/보호 경로를 검사한 뒤 **20261023-36 CP**로 로컬 커밋한다. 게임/별도GUI 실행·보호원문 변경·원격push는 하지 않았다.
-- [ ] 다음 단위는 실제 ESC 가로 메뉴/하위 Game·View·Options·Players와 원본 사건/문자열 큐 연결을 우선한다. 병렬 작성한 `RawGameMenuBar`/`RawGameMenus`, 검사/fixture/도구는 아직 **미등록·미커밋** 상태다. 독립 부모/GUI경계 대조와 실제 바인더/수명 검증을 구별한다. 원문005cad24는 등록 칸id가 아니라 **serial(+2c)**, 열기 준비00491680은 자동Pause를 하지 않는다.
+- [x] 단위369에서 실제 ESC 가로 메뉴/하위 Game·View·Options·Players와 원본 사건/문자열 큐를 연결했다. 아래 미등록 상태는 단위368 당시 기록이다. 병렬 작성한 `RawGameMenuBar`/`RawGameMenus`, 검사/fixture/도구는 아직 **미등록·미커밋** 상태다. 독립 부모/GUI경계 대조와 실제 바인더/수명 검증을 구별한다. 원문005cad24는 등록 칸id가 아니라 **serial(+2c)**, 열기 준비00491680은 자동Pause를 하지 않는다.
 - [ ] 실제 dock 연결에는 ChatWindow와 NSInfo의 실제 생성/자식/수명이 필요하다. NSInfo는 편집 정보/일반F6지식이 아닌 메타맵 Player List/Battle Status이며 숨김이어도 생성자를 항상 실행한다. 새 `HudChatGeometry`/`HudNsInfo` 및 관련 관측/문서는 다음 단위용 **미등록·미검증·미커밋** 파일이며 파일을 유실하지 않는다. GameWorld viewport 준비는 `extracted/cpp-hud-viewport-20261023-pending.patch`에 보관하고 이번 제품에서는 제외했다.
 - [ ] 좌측 덱/미니맵의 고정Resize를 실제 divider 관계로 교체하고 기본 지도영역left85/top0/bottomH−96, 드래그·폭/높이제한·메뉴 관문·현재 viewport/Draw·두 화면비·미션 이탈/재진입을 실제GUI로 검증해야 한다. 합법적폭130에서 bitmap128 밖 crop 블릿도 추가 분석한다.
 - [ ] 전체 Early Missions·전체 캠페인·데모3 사용자 완주/원본 동일성, Edit·커스텀맵/시나리오, Multiplayer 외 메인 메뉴와ESC/좌측덱·미니맵·QWASZX, 전체snapshot/Editor 저장 목표는 유지한다. 보호원문·AGENTS·다른dotnet 세션 파일 변경과 원격push는 하지 않는다.

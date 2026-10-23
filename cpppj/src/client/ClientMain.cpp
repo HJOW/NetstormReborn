@@ -362,6 +362,7 @@ int Client::Run() {
         // 갱신 목록의 배경 음악 전환(FUN_00469f60)은 프로세스 커널(FUN_00471a30)보다 앞이다. 프레임 갱신 정지는 영상 창일 때뿐이라 게임 시계 정지와 무관하다.
         if (audio_) audio_->SceneFrame();
         if (menu_) menu_->RefreshMinimap(); //00481320은게임시계정지와무관하며실제Kernel앞에서같은dirty를소비한다.
+        if (menu_) menu_->CleanupDialogs(); // 원본4662b0의 지연 부모 소멸은 설정 저장 뒤·같은Kernel앞에서 OnExit를 예약한다.
         kernel_.RunFrame();
         if (menu_) menu_->Frame();
         // 11. 프레임 제한 + 그리기.

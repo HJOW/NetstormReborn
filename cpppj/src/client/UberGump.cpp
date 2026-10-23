@@ -45,6 +45,7 @@
 #include <stdexcept>
 #include <bit>
 #include <iostream>
+#include <utility>
 
 namespace netstorm::client {
 // 테스트 전용 임시 조작이며 원본 분석 결과가 아니다. 미션 진행/적 상태/기술은 바꾸지 않는다.
@@ -264,9 +265,10 @@ UberGump::UberGump(Client& client) : client_(client) {
     MainMenu(); Compose(); client_.ShowScene();
 }
 // 입력 참조를 먼저 없애고 커널이 소유한 월드를 이 구현 파일에서 제거한다.
-UberGump::~UberGump() { ClearWorld(); }
+UberGump::~UberGump() { ClearWorld();DisposeRetiredPages(); }
 // 입력 참조를 먼저 없애고 커널의 실제 소유권을 해제한다. 위치 효과음은 카메라 0의 전체 메뉴 영역으로 되돌린다.
 void UberGump::ClearWorld() {
+    ClearPage(); // 현재 부모의 OnExit를 월드/미션 수명보다 먼저 같은 큐에 반납한다.
     if (world_) mapUserName_=world_->Session().CurrentHandle(); // 원본 Client 전역 이름은 월드를 해제한 뒤에도 다음 목록 조회에 남는다.
     state_.Cancel("LoadMissionFort"); // 현재 미션이 설치 전에 교체돼도 그 소유자의 이전 요청을 새 미션에서 소비하지 않는다.
     missionFortRequest_.reset(); // Session이 살아 있으면 공유 소유권으로 실제 설치/해제 완료까지 이미지를 보존한다.
@@ -341,6 +343,16 @@ DialogMetadataHooks UberGump::MapMetadata() {
         item.menuColumn=page.menuColumns-1;page.items.push_back(std::move(item));
     };return metadata;
 }
+// 실제 부모가 반납되는 변경에서만 호출하며 Resize/Compose는 이 수명을 건드리지 않는다.
+void UberGump::ClearPage() {
+    if (pageExit_.command) retiredPageExits_.push_back(pageExit_);
+    pageExit_={};page_={}; // 같은 부모를 두 번 반납하지 않고 실제 예약은 입력 드레인 뒤로 남긴다.
+}
+// 원본의 부모 Kill과 소멸을 구별하여 OnExit가 현재 입력 루프 안에서 바로 재실행되지 않게 한다.
+void UberGump::DisposeRetiredPages() {
+    auto retired=std::exchange(retiredPageExits_,{}); // 예약 콜백 전에 현재 반납 표를 비운다.
+    for (auto& exit:retired) DisposeDialogExitCommand(exit,client_.Input()); // 부모 반납 순서대로 같은40칸 큐에 한 번씩 쓴다.
+}
 // 명시 사용자 명령에서 잘못된 섹션은 기존 진단을 유지한다. 선택적 미션 사건은 TryTell을 사용한다.
 void UberGump::Tell(std::string target, bool briefing) {
     if (!TryTell(target,briefing)) throw std::runtime_error("Missing dialog section: "+target);
@@ -351,7 +363,7 @@ void UberGump::Tell(std::string target, bool briefing) {
 // 원본004cf730은 phase와 무관하게 현재 Mission의 설정에서 전체 target을 조회한다.
 bool UberGump::TryTell(std::string target,bool briefing) {
     if (o::AsciiLower(target) == "blank" || target.empty()) {
-        if (mission_) { state_.phase = ClientPhase::Mission; pageName_ = "mission"; popup_.clear(); page_ = {}; client_.Pause(false); }
+        if (mission_) { state_.phase = ClientPhase::Mission; pageName_ = "mission"; popup_.clear(); ClearPage(); client_.Pause(false); }
         else MainMenu();
         RebuildControls(); return true;
     }
@@ -373,7 +385,7 @@ bool UberGump::TryTell(std::string target,bool briefing) {
     if (!body) return false;
     const auto protectedBody = Replace(*body, "{cur.file}", "__CURRENT_FILE__");
     ScriptCommandHooks commands; // 현재복원된실제명령을원본ID로조회하고미등록은원본처럼진단뒤거부한다.
-    commands.lookup=[](std::string_view name) { const auto lower=o::AsciiLower(name);const auto mission=MissionControlScriptCode(name);return lower=="config" ? kScriptConfig : lower=="warning" ? kScriptWarning : mission!=0xffffffffU ? mission : KnowledgeScriptCode(name)!=0xffffffffU ? KnowledgeScriptCode(name) : GameMenuScriptCode(name); };
+    commands.lookup=[](std::string_view name) { const auto lower=o::AsciiLower(name);const auto mission=MissionControlScriptCode(name);return lower=="tell" ? 0x02000095U : lower=="config" ? kScriptConfig : lower=="warning" ? kScriptWarning : mission!=0xffffffffU ? mission : KnowledgeScriptCode(name)!=0xffffffffU ? KnowledgeScriptCode(name) : GameMenuScriptCode(name); };
     commands.unknown=[](std::string_view name) { std::clog<<"스크립트 명령 미연결: "<<name<<'\n'; };
     HtmlTextParserState htmlState;HtmlTextParserHooks htmlHooks;std::string background; // 원본처럼새페이지는shown=1로시작하고두번의HTML순회에서같은상태를공유한다.
     htmlHooks.background=[&](HtmlTextParserState&,std::string_view name) { background=name; }; // 두HTML순회가선택한실제배경이름을현재페이지표시경로에보관한다.
@@ -381,12 +393,14 @@ bool UberGump::TryTell(std::string target,bool briefing) {
     BindHtmlConditionConfig(htmlHooks,client_.Configuration(),client_.Assets().Edition()); // 초기전체치환결과의조건토큰을그시점의현재Config에서다시치환한다.
     BindHtmlPictureText(htmlHooks); // 원본인용그림표기를실제Markup/SHP를읽는본문버퍼에전달한다.
     const auto expanded=Replace(client_.Configuration().SubstituteLocal(protectedBody),"__CURRENT_FILE__","{cur.file}"); // 원본004cf270의선행전체치환을HTML조건평가보다먼저유지한다.
-    auto parsed=ParseDialogPage(expanded,htmlState,htmlGlobals_,htmlHooks,client_.Assets().Edition(),MapMetadata()); // 현재 목록/열도1차HTML뒤 실제 메타 추출 시점에 처리한다.
-    if (!parsed.hasContent) { rebuild_=true;return true; } // 원본004c8d50관문처럼명령효과만남고내용이없으면현재대화상자를교체하지않는다.
+    DialogExitCommandState parsedExit;auto metadata=MapMetadata();const auto exitHooks=MakeDialogExitResolveHooks(scriptStrings_,commands); // 새 부모의 메타 수명은 기존 표시 부모와 구별한다.
+    metadata.resolveOnExit=[&](std::string_view command,std::string_view argument) { ResolveDialogExitCommand(parsedExit,FontBytes(command),FontBytes(argument),exitHooks); }; // 원문 캡처는 Trim/따옴표 해제 없이 원본 바이트로 전달한다.
+    auto parsed=ParseDialogPage(expanded,htmlState,htmlGlobals_,htmlHooks,client_.Assets().Edition(),std::move(metadata)); // 현재 목록/열도1차HTML뒤 실제 메타 추출 시점에 처리한다.
+    if (!parsed.hasContent) { if (parsedExit.command) throw std::logic_error("내용 없는 HTML 부모의 OnExit 메타 관문 위반");rebuild_=true;return true; } // 원본004c8d50관문처럼명령효과만남고내용이없으면현재대화상자를교체하지않는다.
     const std::array<std::uint32_t,8> context{0,0,client_.GetScreen().Colors().basic[7],0,0,0,1,1}; // 실제기본TextGump의font0/normal/흰색/그림자오프셋문맥이다.
     dialogBody_->SetBody(FontBytes(parsed.htmlBody),context,htmlState,htmlGlobals_,std::move(htmlHooks));
     parsed.background=std::move(background); // 같은상태의2차HTML이선택한최종배경을실제표시에사용한다.
-    page_=std::move(parsed);
+    ClearPage();page_=std::move(parsed);pageExit_=parsedExit;
     ExpandMenus(page_);
     if (page_.items.empty()) page_.items.push_back({"OK", {"DoNothing", "0"}});
     state_.phase = briefing ? ClientPhase::Briefing : ClientPhase::Dialog;
@@ -399,7 +413,7 @@ void UberGump::MainMenu() {
     client_.GetRenderer().SetScene({}); client_.GetRenderer().SetBackground(nullptr);
     client_.GetRenderer().SetOverlay(nullptr);
     ClearWorld(); mission_.reset(); fortObjects_ = 0; briefingSections_.clear(); briefingIndex_ = 0;
-    state_.phase = ClientPhase::MainMenu; pageName_ = "main"; popup_.clear(); page_ = {}; input_.Cancel();
+    state_.phase = ClientPhase::MainMenu; pageName_ = "main"; popup_.clear(); ClearPage(); input_.Cancel();
     client_.Pause(false); RefreshWindowTitle(); RebuildControls();
 }
 // 현재 미션의 원본 제목 설정을 적용한다. 데모 모드는 같은 미션 객체의 직접 기록을 읽는다.
@@ -426,7 +440,7 @@ void UberGump::CreateMission(std::string name,std::uint32_t demo,std::uint32_t m
     if (type != "tutorial" && type != "battle") throw std::runtime_error("Mission type pending: " + mission_->MissionType());
     missionRuntime_=std::make_unique<MissionRuntime>(*mission_,demo,mode);
     missionRuntime_->guided=missionRuntime_->guided && client_.Assets().Edition()==o::OriginalEdition::Patch1078; // 복원하지 않은 판본의 순번을 새 Guide에 분배하지 않는다.
-    briefingSections_.clear();briefingIndex_=0;state_.phase=ClientPhase::LoadingMission;pageName_="loading";popup_.clear();page_={};client_.Pause(false);RebuildControls(); // 제목은 실제 단계1의 Header 적용/설치에서 갱신한다.
+    briefingSections_.clear();briefingIndex_=0;state_.phase=ClientPhase::LoadingMission;pageName_="loading";popup_.clear();ClearPage();client_.Pause(false);RebuildControls(); // 제목은 실제 단계1의 Header 적용/설치에서 갱신한다.
     if (!missionRuntime_->guided) { LoadMissionWorld();StartMissionWorld(); } // 지정11개 이외의 기존 Battle 진입 동작은 유지한다.
 }
 // Guide의 각 교체 함수가 같은 Runtime/Script/월드와 소유 정지 깊이를 직접 사용하게 한다.
@@ -548,7 +562,7 @@ void UberGump::LoadMissionWorld(std::optional<std::string> requestedFort) {
     // 원본 초기 브리핑은 A.이며 A1. 등은 본문 Tell 명령이 넘긴다.
     if (missionRuntime_->gate.demo!=0) briefingSections_.push_back("Demo");
     else if (mission_->Section("A.")) briefingSections_.push_back("A.");
-    state_.phase = ClientPhase::LoadingMission; pageName_ = "loading"; popup_.clear(); page_ = {}; RebuildControls();
+    state_.phase = ClientPhase::LoadingMission; pageName_ = "loading"; popup_.clear(); ClearPage(); RebuildControls();
     RefreshWindowTitle();
     if (missionRuntime_->tutorial) {
         state_.phase=ClientPhase::Mission;pageName_="mission";briefingSections_.clear();client_.Pause(false); // A/Demo 안내는 공통10호출 뒤 실제 TellStage가 연다.
@@ -569,7 +583,7 @@ void UberGump::StartMissionWorld() {
 // 첫 브리핑을 표시하거나 브리핑 종료 뒤 실제 월드 입력과 표시를 활성화한다.
 void UberGump::AdvanceBriefing() {
     if (briefingIndex_ < briefingSections_.size()) { Tell(briefingSections_[briefingIndex_++], true); return; }
-    state_.phase = ClientPhase::Mission; pageName_ = "mission"; page_ = {}; popup_.clear(); client_.Pause(false);
+    state_.phase = ClientPhase::Mission; pageName_ = "mission"; ClearPage(); popup_.clear(); client_.Pause(false);
     world_->Resize(client_.GetScreen().Width(),client_.GetScreen().Height()); userInput_->Cancel(); RebuildControls();
 }
 // 저장한serial은루트등록칸이나단순인스턴스수로대체하지않는다.
@@ -697,7 +711,7 @@ bool UberGump::GameMenuCommand(const InputEvent& event) {
 }
 void UberGump::OpenMenu(std::string name) {
     if (o::AsciiLower(name)=="game" && world_) { OpenGameMenu();return; } // 미션의실제수평부모는중앙임시메뉴와구별한다.
-    popup_ = o::AsciiLower(name); page_ = {}; auto& config = client_.Configuration();
+    popup_ = o::AsciiLower(name); ClearPage(); auto& config = client_.Configuration();
     // 목록 행에는 돌 버튼과 달리 누름 즉시 실행 규칙을 적용한다.
     const auto add = [this](std::string label, std::string command, std::string argument, bool checked = false, bool enabled = true) {
         page_.items.push_back({std::move(label), {std::move(command), std::move(argument)}, true, checked, enabled});
@@ -879,6 +893,8 @@ void UberGump::MissionFrame() {
 }
 // 원본의미니맵프레임은게임정지와별개로커널보다먼저실행한다.
 void UberGump::RefreshMinimap() { if (rawButtons_->Minimap() && rawButtons_->Minimap()->Refresh()) rebuild_=true; }
+// Client 정상 갱신의 원본4662b0 위치에서만 논리 페이지의 지연 소멸을 실행한다.
+void UberGump::CleanupDialogs() { DisposeRetiredPages(); }
 // 커널의 이동·날씨와 비동기 Tell을 같은 프레임에 반영한다. 페이지가 같으면 입력 영역/누름 상태를 유지한다.
 void UberGump::Frame() {
     if (world_ && world_->TakeChanged()) rebuild_=true;
@@ -908,7 +924,7 @@ void UberGump::Execute(const DialogAction& action) {
         if (state_.phase == ClientPhase::Briefing) AdvanceBriefing(); else Tell("Blank"); return;
     }
     if (command == "menu") {
-        if (action.argument == "close") { popup_.clear(); page_ = {}; if (world_ && state_.phase==ClientPhase::Mission) client_.Pause(false); RebuildControls(); }
+        if (action.argument == "close") { popup_.clear(); ClearPage(); if (world_ && state_.phase==ClientPhase::Mission) client_.Pause(false); RebuildControls(); }
         else OpenMenu(action.argument);
         return;
     }
@@ -916,16 +932,16 @@ void UberGump::Execute(const DialogAction& action) {
         auto& config = client_.Configuration(); config.SetInt(action.argument, config.GetInt(action.argument) == 0 ? 1 : 0);
         // 소리·음악·좌우 바꿈은 원본 Interpret Options처럼 장치와 현재 곡에 바로 반영한다.
         if (action.argument == "sound" || action.argument == "music" || action.argument == "swapLeftRightSpeakers") client_.ApplyAudioOptions();
-        popup_.clear(); page_ = {}; if (world_ && state_.phase==ClientPhase::Mission) client_.Pause(false); RebuildControls(); return;
+        popup_.clear(); ClearPage(); if (world_ && state_.phase==ClientPhase::Mission) client_.Pause(false); RebuildControls(); return;
     }
     if (command == "volume") {
         const auto equal = action.argument.find('='); client_.Configuration().SetInt(action.argument.substr(0, equal), o::ConfigParseLong(action.argument.substr(equal + 1)));
         client_.ApplyAudioOptions(); // 효과음·음악 음량 단계를 장치에 바로 적용한다.
-        popup_.clear(); page_ = {}; if (world_ && state_.phase==ClientPhase::Mission) client_.Pause(false); RebuildControls(); return;
+        popup_.clear(); ClearPage(); if (world_ && state_.phase==ClientPhase::Mission) client_.Pause(false); RebuildControls(); return;
     }
     if (command == "resolution") {
         const int width = o::ConfigParseLong(action.argument), height = width == 640 ? 480 : width == 800 ? 600 : 768;
-        client_.ChangeResolution(width, height); popup_.clear(); page_ = {}; if (world_ && state_.phase==ClientPhase::Mission) client_.Pause(false); RebuildControls(); return;
+        client_.ChangeResolution(width, height); popup_.clear(); ClearPage(); if (world_ && state_.phase==ClientPhase::Mission) client_.Pause(false); RebuildControls(); return;
     }
     throw std::runtime_error("Command pending: " + action.command);
 }

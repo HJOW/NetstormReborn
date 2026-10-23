@@ -726,7 +726,8 @@ int RunClient(std::vector<std::string> arguments) {
     int result{}; // 검사 도중 예외도 기존 관측을 보존한 뒤 호출자에게 전달한다.
     try { result=client.Run(); } catch (...) { saveUiReport();throw; }
     saveUiReport();
-    if (!uiScript.empty() && next < steps.size()) throw std::runtime_error("UI script ended before all steps ran");
+    // 실제 사용자 QuitApp의 정상 종료만 허용하며 프레임 제한/창 닫기/오류로 남은 단계는 계속 진단한다.
+    if (!uiScript.empty() && next < steps.size() && !(client.Menu() && client.Menu()->QuitRequested())) throw std::runtime_error("UI script ended before all steps ran");
     if (renderStats) {
         const auto counts = client.RenderCounts();
         std::printf("Renderer draws=%llu presents=%llu\n", static_cast<unsigned long long>(counts.first), static_cast<unsigned long long>(counts.second));

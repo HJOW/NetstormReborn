@@ -4,6 +4,7 @@
 import argparse
 import json
 import os
+import re
 from contextlib import contextmanager
 from pathlib import Path
 
@@ -12,6 +13,7 @@ from cpp_renderer_smoke import snapshots
 from cpp_smoke_files import preserve_game_settings
 from cpp_world_smoke import states
 from cpp_production_panel_smoke import repeated
+from nscfg import decode_file
 
 SIZES=((1024,768),(1280,720))  # 첫 화면비의 작은 core가 끝난 뒤 두번째 확장을 실행한다.
 COMMANDS={'review':0x02000091,'restart':0x0200008d,'leave':0x0200008c,'tell':0x02000095,
@@ -74,7 +76,22 @@ def audio_values(path):
     return dict(line.split('\t',1) for line in path.read_text(encoding='utf-8').splitlines() if '\t' in line)
 
 
-def protected_run(directory,width,height,steps,frames):
+def saved_screen_size(options_path):
+    """복원전실제암호화설정에서처음SCREENW/H두값만읽고다른설정은반환하지않는다."""
+    text=decode_file(str(options_path))  # 기존독립복호화기가보호서명을확인한다.
+    result=[]  # 허용한화면크기두정수만관측한다.
+    for key in ('SCREENW','SCREENH'):  # 원문설정처럼처음일치한키를사용한다.
+        found=re.search(r'(?im)^[ \t]*'+key+r'[ \t]*=[ \t]*([^\r\n]*)',text)
+        if not found:
+            raise RuntimeError('저장된화면설정키없음: '+key)
+        value=re.fullmatch(r'(?:"([+-]?\d+)"|([+-]?\d+))[ \t]*(?://.*)?',found[1].strip())
+        if not value:
+            raise RuntimeError('저장된화면설정숫자형식오류: '+key)
+        result.append(int(value[1] if value[1] is not None else value[2]))
+    return result
+
+
+def protected_run(directory,width,height,steps,frames,capture_saved_options=False):
     """기존execute의PID/SHA/종료관측을쓰고실패에도보호설정을복원한다."""
     directory.mkdir(parents=True,exist_ok=False)
     script,report=directory/'steps.tsv',directory/'states.tsv'  # 이번실행의별도입력/현재상태다.
@@ -86,8 +103,10 @@ def protected_run(directory,width,height,steps,frames):
     save(directory/'originals-before.json',before)
     result=dict(command=command,binarySha256=sha(GAME),scriptSha256=sha(script))  # 실행전실패도검토가능하게남긴다.
     try:
-        with preserve_game_settings(ROOT/'originals','d'),muted_device_environment():
+        with preserve_game_settings(ROOT/'originals','d') as options_path,muted_device_environment():
             result.update(execute(command,directory,GAME,max(90,frames/60*4+30)))
+            if capture_saved_options:
+                result['savedScreenSize']=saved_screen_size(options_path)  # execute완료뒤허용설정복원전에두키만읽는다.
     except Exception as error:
         result['exception']=repr(error)
         raise

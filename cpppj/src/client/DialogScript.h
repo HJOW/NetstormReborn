@@ -48,6 +48,7 @@ struct DialogPage {
 struct DialogMetadataHooks {
     std::function<void(const DialogAction&)> resolveAction; // 항목 종류 처리 전에 원본 명령 조회와 인자 변환 효과를 수행한다.
     std::function<void(DialogPage&,DialogItem)> appendMenu; // Menu/Checked가 선택된 바로 그 시점에 현재 열과 실제 목록을 추가한다.
+    std::function<void(std::string_view,std::string_view)> resolveOnExit; // OnExit만Trim전regex캡처명령/인자를즉시해석한다.인자뷰는호출중에만유효하다.
 };
 // 기존독립검사의문자열호환필터다. 실제Tell은아래현재상태/Config효과를받는overload만사용한다.
 std::string FilterDialogConditions(std::string_view source);

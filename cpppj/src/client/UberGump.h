@@ -1,5 +1,6 @@
 // 원본 Ubergump.cpp의 메인 메뉴·Tell·미션 진입을 현재 표시 기반과 연결한다.
 #pragma once
+#include "client/DialogExitCommand.h"
 #include "client/Gump.h"
 #include "client/RawButtonControls.h"
 #include "client/ScriptCommand.h"
@@ -58,6 +59,8 @@ public:
     std::string Report() const;
     // 버튼/목록의 실제 위치를 라벨로 찾는다. 없으면 빈 값.
     std::optional<ScreenPoint> ControlPoint(std::string_view label) const;
+    bool QuitRequested() const { return quit_; } // 실제 QuitApp/사용자 종료 요청만 읽으며 검사 프레임 제한 종료와 구별한다.
+    void CleanupDialogs(); // 원본처럼 설정 저장/미니맵 갱신 뒤 Kernel 전에 반납한 부모의 OnExit를 예약한다.
     // --ui-script 전용 검사 경계다. 실제 월드의 가상 삭제를 호출하며 일반 게임 입력에는 노출하지 않는다.
     bool InspectDestroySurface(std::string_view type,float x,float y);
     // --ui-script의 커널 검사에서 일반 게임과 같은 Tell 경로를 실행한다. 일반 사용자 명령으로 노출하지 않는다.
@@ -102,6 +105,8 @@ private:
     void ToggleGameMenu(); // ESC의현재serial조회→열기또는Kill/serial0/팝업닫기를실행한다.
     bool GameMenuOpen() const; // 현재serial을공통등록표에서조회하며과거열림bool을저장하지않는다.
     bool GameMenuCommand(const InputEvent& event); // 메뉴부모가예약한현재원본명령을각실제소유자로분배한다.
+    void ClearPage(); // 실제 페이지 교체/반납에서 부모의 OnExit를 지연 소멸 표로 옮기고 표시 소유 내용을 비운다.
+    void DisposeRetiredPages(); // 설정 저장 뒤 갱신에서 지연 반납한 부모들의 OnExit를 같은 큐에 예약한다.
 
     // 원본 우클릭 메뉴의 연결점. 건설/수확 명령은 다음 단계에서 활성화한다.
     void OpenObjectMenu(o::SquidId id,const InputEvent& event);
@@ -138,6 +143,8 @@ private:
     IndexedImage title_, clouds_;
     // page_: 표시할 페이지 또는 스크롤 페이지 크기.
     DialogPage page_;
+    DialogExitCommandState pageExit_; // 현재 표시 부모의 원문 +21e0/+21e4이며 메타 해석 시 고정한 명령/고리 토큰이다.
+    std::vector<DialogExitCommandState> retiredPageExits_; // 현재 입력 처리 중 Kill된 페이지의 지연 소멸 값이며 표시 재합성과 구별한다.
     // labels_: 라벨.
     std::vector<std::string> labels_;
     // actions_: 동작.
