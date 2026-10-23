@@ -20,6 +20,7 @@ public:
     RawBalloonBody(SidPool& pool,std::span<const RiftTypeRecord> types,std::span<const std::uint8_t> spots,
         const bool& boss,const RawCarrierPostPop& post,const RawCarrierPreDestroy& pre,BalloonBodyHooks hooks); //참조는 객체보다 오래 살아야 한다.
     bool Handles(Sid sid) const; // PATCH5040c0 벌룬/에어십과504198 클라우드 플로터의 실제 표만 처리한다.
+    bool Robust(Sid sid) const; //0042ae60: 최초 signed frame을 보관한 뒤 현재 TYPE의 프레임 수와 비교한다.
     void Validate(Sid sid,std::uint32_t flags) const; //현재 원시 부모를 검사한다. 상위 ValidateBase가 공통 장부를 검사한다.
     void PostPop(Sid sid,std::uint32_t flags) const; //그림자 생성/좌표/표시깊이/전용check→Damageable다.
     void PreDestroy(Sid sid,std::uint32_t flags) const; //현재 그림자를 먼저 삭제하고 같은 Carrier 기본 전처리를 실행한다.

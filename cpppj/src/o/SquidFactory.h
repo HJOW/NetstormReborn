@@ -33,6 +33,7 @@ public:
     // 현재 TYPE 생성자의 실제 최종 VT 기록값이다. 메뉴 등 가상 분배기는 이 값과 현재 raw VT를 먼저 대조한다.
     // 호스트 함수 포인터로 역참조하지 않으며 미등록 생성자는 기존 조회와 같이 거부한다.
     std::uint32_t ConstructorVtable(const RiftTypeRecord& type) const;
+    static bool SupportsConstructedVtable(OriginalEdition edition,std::uint32_t table); // 같은 판본의 base/검증된 recipe 표에 있는 현재 VT인지 확인한다. TYPE와 VT의 쌍 일치를 강제하지 않는다.
 private:
     // 주소 산술 전에 타입 범위와 원본 생성자 지원 여부를 검증한다.
     const RiftTypeRecord& Type(std::uint32_t number,bool requireSupported) const;

@@ -91,3 +91,11 @@ TEST_CASE(BalloonPath_IndependentShadowBodies) {
     }
     CHECK(count==489);
 }
+
+// 저장 가상60은 signed frame을 먼저 읽고 현재 TYPE의 그림 개수와 비교한다.
+TEST_CASE(FortObjectSaveBalloon_RobustCurrentFrameAndType) {
+    SidPool pool(OriginalEdition::Patch1078,32768);std::vector<RiftTypeRecord> types(188);std::vector<std::uint8_t> spots(65536);CarrierPostPopState state;CarrierPreDestroyState destruction;CarrierPostPopHooks postHooks;postHooks.carrierCheck=[](Sid) { throw std::logic_error("Robust에서 Carrier check 호출 오류"); };postHooks.claimGround=[](float,float,std::uint8_t) { throw std::logic_error("Robust에서 지면 주장 호출 오류"); };postHooks.validateBase=postHooks.base=[](Sid,std::uint32_t) { throw std::logic_error("Robust에서 Pop 호출 오류"); };RawCarrierPostPop post(pool,types,state,std::move(postHooks));CarrierPreDestroyHooks preHooks;preHooks.validateDamageable=preHooks.damageablePre=[](Sid,std::uint32_t) { throw std::logic_error("Robust에서 삭제 호출 오류"); };preHooks.dependentFound=[] { throw std::logic_error("Robust에서 종속 조회 오류"); };RawCarrierPreDestroy pre(pool,destruction,std::move(preHooks));auto raw=Raw(pool,50);std::fill(raw.begin(),raw.end(),std::uint8_t{});Put(raw,0,0x5040c0);raw[10]=111;bool mutate{};std::uint32_t expected=111;std::int32_t count=4;
+    BalloonBodyHooks hooks;hooks.frames=[&](auto type) { CHECK(type==expected);if (mutate) Put(raw,36,999);return count; };RawBalloonBody body(pool,types,spots,destruction.boss,post,pre,std::move(hooks));
+    Put(raw,36,3);CHECK(body.Robust(Sid{50}));Put(raw,36,4);CHECK(!body.Robust(Sid{50}));Put(raw,36,0xffffffffU);CHECK(body.Robust(Sid{50}));Put(raw,36,3);mutate=true;CHECK(body.Robust(Sid{50}) && Get(raw,36)==999);
+    raw[10]=146;expected=146;Put(raw,36,3);CHECK(body.Robust(Sid{50}));Put(raw,0,0x504198);Put(raw,36,3);CHECK(body.Robust(Sid{50}));count=-2;Put(raw,36,0xffffffffU);CHECK(!body.Robust(Sid{50}));
+}

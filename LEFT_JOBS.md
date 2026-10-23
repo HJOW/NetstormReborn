@@ -1,5 +1,17 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-23 단위365 완료: 단일 객체·청크 저장과 실제 가상 분배
+
+- [x] 이전 목표 턴은 Territory 구현/20,988독립관측/전체2364/0 검증과 `c7459e61 / 20261023-31 CP` 커밋으로 실제 상태를 바꾼 진행이다. AGENTS.md·공통/닷넷 인수인계를 다시 읽었다. 현재/마지막 전체 정밀 디컴파일 PC는 **VM-W11-Codex / 2026-10-23**으로 일치한다. 새 디컴파일/원본 게임 실행/보호 원문·AGENTS 변경 없이 기존 원문을 사용한다.
+- [ ] **갱신된 전체 목표:** 전체 Early Missions·캠페인·데모3의 사용자 플레이/원본 동일성, Edit·커스텀 맵/시나리오, Multiplayer 외 메인 메뉴에 더해 **진행 중 UI의 좌측 덱·좌측 하단 미니맵·QWASZX 다리 건설 단축키·ESC 메뉴**를 명시 검증한다. 현재 객체 저장은 Editor 필수 경로로 계속 진행하며, 네 UI의 실제 프레임/입력 연결도 병행 감사한다. 모듈 단위 검사 통과를 전체 플레이 완료로 계산하지 않는다.
+- [x] 004bd940 단일 객체/004be020 청크 writer를 원본 현재 globals·TYPE 재조회/폭별 쓰기/고정 countWORD에 맞춰 구현했다. 실제 생성83VT의 +60은 base72/항상0 9/벌룬2, +80은 base81/제단·다이스2임을 정적 PE로 확인했다. Pop26이나 ContentForm Robust로 축소하지 않는다.
+- [x] 실제 Session의 같은 Pool/Hash/Finder/가상 분배/내용물/stream 연결과 독립 PE3966행/새5검사를 작성했다. [상세](docs/exe/cpp-fort-object-save-20261023.md)에 범위·근거·UI 감사를 남겼다.
+- [x] Release 빌드1 종료0/경고·오류0이며 원본3966행·83VT·벌룬의4검사가 통과했다. 실제 월드 검사는 saveFrame 대상 부재로 선택 실패하여 실제 사제의 현재 owner를 쓰도록 고쳤다. 최종 감사의 **Finder upper bias→절삭→float32 재저장→재절삭**은 기존 RawCursorPosition::TruncatePoint/RawCarrierDropPoint::Snap에 연결했다. 빌드1 종료 뒤에만 C++를 수정했다.
+- [x] 최종 Release 빌드2 종료0/경고·오류0, 새5검사(독립3966행·현재 사제 owner 변경→실제 파일 저장·재읽기·83VT·벌룬), 기존 내용물3/좌표3검사 합계11검사가 실패check0이다. 검증 뒤 제품/검사 C++를 동결했다. UTF-8/새 한국어 주석·SHA4개·diff/보호 경로를 확인했다.
+- [x] 최종 전체 CTest1은 **2,369검사·실패check0·종료0/195.16초**이며 LastTest.log 내부2369/0도 확인했다. 로그는 `extracted/cpp-fort-object-save-20261023-*`다. 인수인계를 마감해 **20261023-33 CP**로 로컬 커밋한다. 이 검증 뒤 제품/검사 C++ 수정, 별도 dotnet 파일 포함 및 원격 push는 없다. 한 청크 저장 검증을 전체 지도 snapshot/Editor·사용자 완주 완료로 계산하지 않는다.
+- [ ] 이 단위 커밋 뒤 **QWASZX 두 경계를 Temp보다 우선** 복원한다. 원본 대소문자Q/W/A/S/Z/X→slot0..5, Y→4, E→0..5 순서 예약이며004d9bb3→452fe0(020000f4,slot,0)이다. Guide/Gump가 먼저 소비하고 release/Paused는 키 예약을 막는다. 이미 예약된f4 소비에 Paused/활성 커서 거부를 추가하지 않는다. 현재 UserInput 문자 분기와 UberGump 비마우스 조기 반환이 각각 예약/공통 Gump 전달을 막는다. 좌측 덱은 실제 공유 트리에 있으나 배치/사용자 조작 검증이 남고, 미니맵은 생성·Draw·입력·Refresh 미연결, ESC는 Leave Battle 한 행으로 원본 메뉴 막대와 다르다.
+- [ ] 이후 Terr/Chaff 부모의 Temp 동적 노드/rename과 version 공유(Storage.managerGlobal_/objectState.version의 기존 분리), Money/Mission/Badges/Notify·generic Editor 설치/State1/6·새 맵 및 사용자 완주·명시 UI 검증을 이어간다.
+
 ## 2026-10-23 단위364 완료: 현재 지도 Territory 저장
 
 - [x] 이전 목표 턴은 실제 기술 저장 구현·독립706행·전체2359/0 검증·`db1af853 / 20261023-30 CP` 커밋을 남긴 진행으로 분류한다. AGENTS.md와 공통/닷넷 인수인계를 다시 읽었다. 현재/마지막 전체 정밀 디컴파일 PC는 **VM-W11-Codex / 2026-10-23**으로 일치한다. 기존 정밀 원문을 사용하며 새 디컴파일/원본 게임 실행/보호 원문·AGENTS 변경은 없다.

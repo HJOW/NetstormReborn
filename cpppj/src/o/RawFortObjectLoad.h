@@ -13,6 +13,7 @@ struct FortObjectLoadState {
     std::uint32_t ownerSavedMask{0x5d77cf00},ownerClearedMask{0x10002000},fortKeepMask{0x40480002}; // 두 PE의 초기 mask다.
     bool special{},mission{},fort{},chaffMode{},fortDestroyBlocked{}; // 편집/미션·Fort/Chaff 허용·Fort 삭제 억제 전역이다.
     std::int32_t chunksX{16},chunksY{16}; // 현재 원본 청크 지도 크기다. 각 행/열에서 현재 값으로 비교한다.
+    std::uint32_t battleSavedMask{0x40480002}; //0054263c: 저장 시 현재 flags2와 비교하며 fortKeepMask와 다른 전역이다.
 };
 // 계산을 기본값으로 대체하지 않는 실제 가상/월드 경계다. 각 반환값은 현재 raw/type에 적용된다.
 struct FortObjectLoadHooks {

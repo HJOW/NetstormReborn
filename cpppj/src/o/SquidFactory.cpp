@@ -86,7 +86,13 @@ std::span<std::uint8_t> SquidFactory::LiveBytes(Sid sid) {
 std::uint32_t SquidFactory::BaseVtable() const { return pool_.Edition()==OriginalEdition::Patch1078 ? kPatchVtable : kCdVtable; }
 // 각 생성자의 최종 vtable만 읽는다. 중간 vtable은 ApplyConstructor에서 원본 순서로 쓴다.
 std::uint32_t SquidFactory::ConstructorVtable(const RiftTypeRecord& type) const {
-    return type.constructorAddress ? Recipe(pool_.Edition(),type.constructorAddress)->vtable : BaseVtable();
+    if (!type.constructorAddress) return BaseVtable();const auto recipe=Recipe(pool_.Edition(),type.constructorAddress);if (!recipe) throw std::logic_error("현재 TYPE의 미등록 생성자 가상 표 조회");return recipe->vtable;
+}
+// 원본 생성자 표를 재사용하므로 가상 분배용83개 목록을 별도로 복제하지 않는다.
+bool SquidFactory::SupportsConstructedVtable(OriginalEdition edition,std::uint32_t table) {
+    if (table==(edition==OriginalEdition::Patch1078 ? kPatchVtable : kCdVtable)) return true;
+    const auto recipes=edition==OriginalEdition::Patch1078 ? std::span<const ConstructorRecipe>(kPatchRecipes) : std::span<const ConstructorRecipe>(kCdRecipes);
+    for (const auto& recipe:recipes) if (recipe.vtable==table) return true;return false; // 현재 판본의 실제 최종 VT만 허용한다.
 }
 // 원본의 짧은 생성자는 같은 raw 슬롯에 mov/OR를 적용한다. CD Bomb 보조 생성자도 포함한다.
 void SquidFactory::ApplyConstructor(std::span<std::uint8_t> bytes,const RiftTypeRecord& type) const {

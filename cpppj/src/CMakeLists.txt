@@ -10,6 +10,8 @@
 # 게임 본체. 실행 파일과 테스트가 함께 쓰도록 정적 라이브러리로 묶는다.
 # 소스 목록은 각 폴더의 CMakeLists.txt 가 target_sources 로 더한다.
 add_library(netstorm STATIC)
+# 원본 단일 객체/청크 저장을 같은 현재 TYPE·가상 분배와 Finder에 연결한다.
+target_sources(netstorm PRIVATE o/RawFortObjectSave.cpp o/RawFortObjectSave.h)
 # 현재 섬 소유권/청크 기록과 원본 Territory 저장 부모를 함께 사용한다.
 target_sources(netstorm PRIVATE o/RawFortTerritorySave.cpp o/RawFortTerritorySave.h)
 # 현재 내용물의 robust/QA/flags/중첩 목록을 원본 stream 형식으로 저장한다.

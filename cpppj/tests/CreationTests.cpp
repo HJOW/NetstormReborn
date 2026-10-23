@@ -5,6 +5,7 @@
 #include <fstream>
 #include <memory>
 #include <sstream>
+#include <set>
 #include <stdexcept>
 
 using namespace netstorm::o;
@@ -229,4 +230,13 @@ TEST_CASE(SquidFactory_Construct_PreservesCallerFieldsAndGuardsSlotState) {
     bytes[11]|=8; const auto contained=std::vector(pool.Bytes().begin(),pool.Bytes().end());
     CHECK(Throws([&] { factory.Construct(82,sid); }));
     CHECK(std::equal(contained.begin(),contained.end(),pool.Bytes().begin()));
+}
+
+// 실제 생성자 자료 전체에서 현재 가상 표 지원을 확인하고 미복원 조회를 변경 없이 거부한다.
+TEST_CASE(FortObjectSaveFactory_ConstructedVtableCoverage) {
+    const auto edition=OriginalEdition::Patch1078;auto types=Types(edition);SidPool pool(edition,32768);SquidFactory factory(pool,types);std::set<std::uint32_t> tables;
+    for (std::size_t kind=70;kind<types.size();++kind) { // 실제 등록된 자산 생성자만 조회하며 assert/null 생성자는 지원되지 않는다.
+        try { const auto table=factory.ConstructorVtable(types[kind]);CHECK(SquidFactory::SupportsConstructedVtable(edition,table));tables.insert(table); } catch (const std::logic_error&) { CHECK(types[kind].constructorAddress!=0); }
+    }
+    CHECK(tables.size()==83 && !SquidFactory::SupportsConstructedVtable(edition,0));const auto before=Adler(pool.Bytes());RiftTypeRecord unknown;unknown.constructorAddress=0xffffffffU;CHECK(Throws([&] { factory.ConstructorVtable(unknown); }));CHECK(Adler(pool.Bytes())==before);
 }

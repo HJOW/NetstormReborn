@@ -30,6 +30,11 @@ RawBalloonBody::RawBalloonBody(SidPool& pool,std::span<const RiftTypeRecord> typ
 }
 // 가상 표만 확인하며 원본의 두 동일 생성자 타입을 임의로 합성하지 않는다.
 bool RawBalloonBody::Handles(Sid sid) const { const auto table=Read(pool_.Slot(sid),0);return table==0x5040c0 || table==0x504198; }
+// 현재 VT가 벌룬 경로일 때만 실행하며 TYPE 조회 전에 frame DWORD를 보관한다.
+bool RawBalloonBody::Robust(Sid sid) const {
+    if (!Handles(sid)) throw std::invalid_argument("벌룬 Robust의 다른 가상 표");const auto frame=std::bit_cast<std::int32_t>(Read(pool_.Slot(sid),36));const auto kind=pool_.Slot(sid)[10];
+    if (kind>=types_.size() || !hooks_.frames) throw std::logic_error("벌룬 Robust의 현재 TYPE 프레임 조회 누락");return frame<hooks_.frames(kind);
+}
 // 공간 변경 전 현재 부모만 검사하며 상위 공통 ValidateBase와 효과를 중복 실행하지 않는다.
 void RawBalloonBody::Validate(Sid sid,std::uint32_t flags) const {
     (void)flags;const auto raw=pool_.AllocatedBytes(sid);if (!Handles(sid) || (raw[11]&9) || raw[10]<70 || raw[10]>=types_.size()) throw std::logic_error("벌룬 후처리의 현재 원시 부모 오류");

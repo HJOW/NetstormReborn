@@ -3,6 +3,7 @@
 #include "client/CampaignTemplateStorage.h"
 #include "o/RawFortSnapshotBasics.h"
 #include "o/RawFortContentSave.h"
+#include "o/RawFortObjectSave.h"
 #include "o/RawFortTerritorySave.h"
 #include "client/RawProductionMaintenance.h"
 #include "client/RawKnowledgeMenu.h"
@@ -1840,6 +1841,63 @@ struct RawCampaignSession::Impl {
         hooks.damageable=[this](Sid sid,std::uint32_t event,std::uint32_t count,float payload) { return assetBindings->Regular().DamageableHandle(sid,event,count,payload); };
         carrierRegular=std::make_unique<RawCarrierRegular>(core.pool,core.types,carrierRegularTypes,assetState.boss,std::move(hooks));
     }
+    // 기술과 객체가 동일한 실제 Form6 저장 경계를 사용하며 stream은 값으로 보관한다.
+    FortContentSaveHooks ContentWriter(TemplateWriteStream stream) {
+        // 중첩 목록마다 독립 finder와 현재 SID를 소유하며 자식 반환 때까지 부모의 next를 보관한다.
+        struct Cursor {
+            RawContainedFinder finder;Sid current; // 같은 실제 Pool 검색기와 Begin/Next의 현재 반환값이다.
+            Cursor(const SidPool& pool,const ContainedFinderState& state,Sid selected):finder(pool,state),current(finder.Begin(selected)) {} // 원본 Begin의 첫 후보를 즉시 구한다.
+        };
+        FortContentSaveHooks hooks;
+        hooks.begin=[this](auto selected) { if (selected>=core.pool.Capacity()) throw std::out_of_range("실제 Technology 부모 SID 범위");auto cursor=std::make_shared<Cursor>(core.pool,contentFinder,Sid{static_cast<std::uint16_t>(selected)});
+            return FortContentSaveCursor{[cursor] { return cursor->current.value; },[cursor] { cursor->current=cursor->finder.Next(); }};
+        };
+        hooks.poolLimit=[this] { return core.pool.Capacity(); };hooks.robust=[this](auto candidate) { return contentForms->Robust(Sid{static_cast<std::uint16_t>(candidate)}); };
+        hooks.form=[this](auto candidate)->std::span<const std::uint8_t> { if (candidate>=core.pool.Capacity()) throw std::out_of_range("실제 Technology 현재 SID 범위");return core.pool.Slot(Sid{static_cast<std::uint16_t>(candidate)}); };
+        hooks.type=[this](auto kind) { if (kind>=core.types.size()) throw std::out_of_range("실제 Technology TYPE 범위");const auto& type=core.types[kind];return FortContentSaveType{type.flags1,type.contentListFlags,type.containerListFlags}; };
+        hooks.parentType=[this](auto selected) { if (selected>=core.pool.Capacity()) throw std::out_of_range("현재 내용물 부모 SID 범위");const auto kind=core.pool.Slot(Sid{static_cast<std::uint16_t>(selected)})[10];if (kind>=core.types.size()) throw std::out_of_range("현재 내용물 부모 TYPE 범위");const auto& type=core.types[kind];return FortContentSaveType{type.flags1,type.contentListFlags,type.containerListFlags}; };hooks.assertion=SessionMissing<void,FortContentSaveAssertion>();
+        hooks.access=[this,stream](auto token,const auto& operation) { if (token!=1) throw std::logic_error("실제 Technology stream 선택 불일치");templateStorage->AccessSection(stream,operation); };
+        return hooks;
+    }
+    // 실제 생성된 가상 함수 표를 검사하며 TYPE와의 인위적인 쌍 일치는 요구하지 않는다.
+    std::uint32_t SaveVtable(Sid sid) const {
+        const auto table=Read(core.pool.Slot(sid),0);
+        if (!SquidFactory::SupportsConstructedVtable(core.pool.Edition(),table)) throw std::logic_error("미복원 Fort 저장 가상 함수 표");return table;
+    }
+    // 단일 객체 저장이 읽는 현재 전역/TYPE/실제 파생 가상 몸체를 같은 월드에 연결한다.
+    FortObjectSaveHooks ObjectWriter(TemplateWriteStream stream) {
+        FortObjectSaveHooks hooks;
+        hooks.global=[this](auto key)->std::uint32_t {
+            switch (key) {
+            case FortObjectSaveGlobal::Battle:return core.ownerMode.battle;
+            case FortObjectSaveGlobal::Mission:return core.bridgeState.mission;
+            case FortObjectSaveGlobal::Editor:return globals.editor;
+            case FortObjectSaveGlobal::Scope:return objectState.scope;
+            case FortObjectSaveGlobal::Version:return objectState.version;
+            case FortObjectSaveGlobal::LocalOwner:return playerState.battleOwner;
+            case FortObjectSaveGlobal::BridgeType:return objectState.bridgeType;
+            case FortObjectSaveGlobal::LocalOnlyType:return runeState.daisType;
+            case FortObjectSaveGlobal::BattleMask:return objectState.battleSavedMask;
+            case FortObjectSaveGlobal::OwnerMask:return objectState.ownerSavedMask;
+            }throw std::logic_error("Fort 저장 전역 분배 누락");
+        };
+        hooks.form=[this](auto selected)->std::span<const std::uint8_t> { if (selected>=core.pool.Capacity()) throw std::out_of_range("실제 Fort 저장 SID 범위");return core.pool.Slot(Sid{static_cast<std::uint16_t>(selected)}); };
+        hooks.flags1=[this](auto selected) { const auto kind=core.pool.Slot(Sid{static_cast<std::uint16_t>(selected)})[10];if (kind>=core.types.size()) throw std::out_of_range("Fort 저장 flags1 TYPE 범위");return core.types[kind].flags1; };
+        hooks.flags2=[this](auto selected) { const auto kind=core.pool.Slot(Sid{static_cast<std::uint16_t>(selected)})[10];if (kind>=core.types.size()) throw std::out_of_range("Fort 저장 flags2 TYPE 범위");return core.types[kind].flags2; };
+        hooks.robust=[this](auto selected)->std::uint32_t {
+            const Sid sid{static_cast<std::uint16_t>(selected)};const auto table=SaveVtable(sid); // 현재 가상60은9개 거부/2개 풍선/나머지 공통으로 분배된다.
+            constexpr std::array<std::uint32_t,9> rejected{0x5070c0,0x508cc8,0x5092d0,0x5096a0,0x509758,0x509810,0x50a8e8,0x50db78,0x50ee08}; // 실제 생성 범위 중 항상0을 반환하는 가상 표다.
+            if (std::find(rejected.begin(),rejected.end(),table)!=rejected.end()) return 0;
+            if (balloonBody->Handles(sid)) return balloonBody->Robust(sid);
+            const auto kind=core.pool.Slot(sid)[10];if (kind>=core.types.size()) throw std::out_of_range("Fort Robust TYPE 범위");return !(core.types[kind].flags1&0x20000000U);
+        };
+        hooks.hasLevel=[this](auto selected) { return level->Has(Sid{static_cast<std::uint16_t>(selected)}); };
+        hooks.level=[this](auto selected)->std::uint32_t { const Sid sid{static_cast<std::uint16_t>(selected)};const auto table=SaveVtable(sid);if (table==0x5076b8) return altarSacrifice->Count(sid);if (table==0x507950) return templeRitual->Count(sid);return level->Get(sid); };
+        hooks.island=[this](auto x,auto y) { return core.building.HasIsland(std::bit_cast<float>(x),std::bit_cast<float>(y)); };
+        hooks.write=[this,stream](auto token,auto bytes) { if (token!=1) throw std::logic_error("객체 저장 stream 선택 불일치");templateStorage->WriteSection(stream,bytes); };
+        hooks.contents=[this,stream](auto selected,auto token) { if (token!=1) throw std::logic_error("객체 내용물 stream 선택 불일치");SaveFortContents(selected,token,ContentWriter(stream)); };
+        hooks.assertion=SessionMissing<void,FortObjectSaveAssertion>();return hooks;
+    }
     // 실제 PostDestroy의 세 전역은 각 호출 직전에 같은 현재 월드에서 읽는다.
     void PrepareDamageablePost() { damageablePostState.battle=core.ownerMode.battle;damageablePostState.boss=assetState.boss;damageablePostState.dudeCount=static_cast<std::int32_t>(dudePopulation.count); }
     // 실제 Damageable 해방/공통 삭제와 신전 Pre를 같은 현재 월드에 조립한다.
@@ -3063,21 +3121,7 @@ void RawCampaignSession::SnapshotFortDeck(std::uint32_t slot) { SnapshotFortBasi
 void RawCampaignSession::SnapshotFortTechnology(std::uint32_t slot) {
     auto& s=*impl_;if (!s.loaded || slot>=9) throw std::logic_error("실제 Technology snapshot의 설치/슬롯 계약 위반");
     static_cast<void>(s.templateStorage->Template(slot));const auto parent=s.player->CurrentTechnology();const auto stream=s.templateStorage->CreateSection(slot,"Technology");
-    // 중첩 목록마다 독립 finder와 현재 SID를 소유하며 자식 반환 때까지 부모의 next를 보관한다.
-    struct Cursor {
-        RawContainedFinder finder;Sid current; // 같은 실제 Pool 검색기와 Begin/Next의 현재 반환값이다.
-        Cursor(const SidPool& pool,const ContainedFinderState& state,Sid selected):finder(pool,state),current(finder.Begin(selected)) {} // 원본 Begin의 첫 후보를 즉시 구한다.
-    };
-    FortContentSaveHooks hooks;
-    hooks.begin=[&s](auto selected) { if (selected>=s.core.pool.Capacity()) throw std::out_of_range("실제 Technology 부모 SID 범위");auto cursor=std::make_shared<Cursor>(s.core.pool,s.contentFinder,Sid{static_cast<std::uint16_t>(selected)});
-        return FortContentSaveCursor{[cursor] { return cursor->current.value; },[cursor] { cursor->current=cursor->finder.Next(); }};
-    };
-    hooks.poolLimit=[&s] { return s.core.pool.Capacity(); };hooks.robust=[&s](auto candidate) { return s.contentForms->Robust(Sid{static_cast<std::uint16_t>(candidate)}); };
-    hooks.form=[&s](auto candidate)->std::span<const std::uint8_t> { if (candidate>=s.core.pool.Capacity()) throw std::out_of_range("실제 Technology 현재 SID 범위");return s.core.pool.Slot(Sid{static_cast<std::uint16_t>(candidate)}); };
-    hooks.type=[&s](auto kind) { if (kind>=s.core.types.size()) throw std::out_of_range("실제 Technology TYPE 범위");const auto& type=s.core.types[kind];return FortContentSaveType{type.flags1,type.contentListFlags,type.containerListFlags}; };
-    hooks.parentType=[&](auto selected) { return hooks.type(hooks.form(selected)[10]); };hooks.assertion=SessionMissing<void,FortContentSaveAssertion>();
-    hooks.access=[&](auto token,const auto& operation) { if (token!=1) throw std::logic_error("실제 Technology stream 선택 불일치");s.templateStorage->AccessSection(stream,operation); };
-    SaveFortContents(parent,1,hooks);
+    SaveFortContents(parent,1,s.ContentWriter(stream));
 }
 // 현재 섬 목록과 실제 청크를 읽으며 빈 지역 seed도 같은 공용 난수에서 소비한다.
 void RawCampaignSession::SnapshotFortTerritory(std::uint32_t slot) {
@@ -3090,6 +3134,28 @@ void RawCampaignSession::SnapshotFortTerritory(std::uint32_t slot) {
     hooks.current=[&](auto manager) { if (manager!=hooks.manager(static_cast<std::int32_t>(slot))) throw std::logic_error("실제 Territory 현재 manager 불일치");streams.push_back(s.templateStorage->CurrentWriteStream(slot));return static_cast<std::uint32_t>(streams.size()); };
     hooks.access=[&](auto token,const auto& operation) { s.templateStorage->AccessSection(streams.at(token-1),operation); };hooks.assertion=SessionMissing<void,FortTerritorySaveAssertion>();
     o::SnapshotFortTerritory(static_cast<std::int32_t>(slot),hooks);
+}
+// 로더와 저장 부모가 같은 현재 판본/범위/마스크를 사용한다.
+FortObjectLoadState& RawCampaignSession::FortObjectSettings() { return impl_->objectState; }
+// 호출자가 선택한 원본 stream에 한 청크만 쓰며 전체 지역 부모의 선택/삭제/이름 변경은 맡지 않는다.
+void RawCampaignSession::WriteFortObjectChunk(TemplateWriteStream stream,std::int32_t chunkX,std::int32_t chunkY) {
+    auto& s=*impl_;if (!s.loaded) throw std::logic_error("실제 Session 설치 전 객체 청크 저장");const auto objects=s.ObjectWriter(stream);
+    // 각 청크는 현재 해시를 읽는 독립 Finder와 현재 SID 수명을 소유한다.
+    struct Cursor {
+        RawSquidFinder finder;Sid current; // 같은 Pool/해시/TYPE를 읽는 검색기와 실제 현재 후보다.
+        //0041def0은 lower 절삭/upper 거의 올림 뒤 float32 재저장과 최종 절삭을 수행한다.
+        Cursor(Impl& state,const FortChunkSaveArea& area):finder(state.core.pool,state.core.hash,state.core.types) {
+            const auto lower=RawCursorPosition::TruncatePoint({area.left,area.top}); //0041d770의 signed DWORD→float 저장을 재사용한다.
+            const auto upper=RawCarrierDropPoint::Snap({area.right,area.bottom}); //0041d7a0의 bias 합산→절삭→float 저장이며 ceil로 바꾸지 않는다.
+            current=finder.Begin({FortSaveCoordinate(lower[0]),FortSaveCoordinate(lower[1]),FortSaveCoordinate(upper[0]),FortSaveCoordinate(upper[1])},0);
+        }
+    };
+    FortChunkSaveHooks hooks;
+    hooks.begin=[&s](const auto& area) { auto cursor=std::make_shared<Cursor>(s,area);return FortChunkSaveCursor{[cursor] { return cursor->current.value; },[cursor] { cursor->current=cursor->finder.Next(); }}; };
+    hooks.poolLimit=[&s] { return s.core.pool.Capacity(); };
+    hooks.object=[&objects](auto token,auto selected,auto x,auto y) { return SaveFortObject(token,selected,x,y,objects); };
+    hooks.access=[&s,stream](auto token,const auto& operation) { if (token!=1) throw std::logic_error("청크 저장 stream 선택 불일치");s.templateStorage->AccessSection(stream,operation); };
+    SaveFortChunk(1,chunkX,chunkY,hooks);
 }
 // 현재 세 카운터와 생산이 사용하는 같은 금지DWORD 표를 빌린다.
 RawTotalMade& RawCampaignSession::TotalMade() { return *impl_->totalMade; }

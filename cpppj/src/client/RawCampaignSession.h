@@ -44,9 +44,10 @@
 #include "o/RawTutorialLater.h"
 #include "o/RawMissionFrameGate.h"
 #include "client/RawCampaignParticles.h"
-namespace netstorm::o { class RawCarrierSteal; class RawCarrierPickup; class RawCarrierMove; class RawGemReward; class RawDudeBehavior; struct MissionStartGlobals; struct MissionAiSettingsState; } // 포획/Dude 몸체와 미션 시작 전역의 고정 참조만 공개한다.
+namespace netstorm::o { class RawCarrierSteal; class RawCarrierPickup; class RawCarrierMove; class RawGemReward; class RawDudeBehavior; struct MissionStartGlobals; struct MissionAiSettingsState; struct FortObjectLoadState; } // 포획/Dude 몸체와 미션 시작 전역의 고정 참조만 공개한다.
 namespace netstorm::client {
 class CampaignTemplateStorage; // Client보다 짧은 Session이 빌리는 같은 실제 Template9 수명이다.
+struct TemplateWriteStream; // 실제 Template 저장소가 발급하는 명시 쓰기 수명이다.
 struct QuickHelpTypeInfo; // 전용 도움말이 같은 현재 TYPE/요구 에너지를 읽는 정보다.
 class RawCampaignCursor; // 세션과 같은 실제 커서/로컬 예측의 고정 주소 소유자다.
 class RawProductionMaintenance;struct ProductionMaintenanceGlobals;struct ProductionMaintenancePanel; // 생산 전역/패널의 단일 상태를 빌리는 실제 유지 처리기다.
@@ -322,6 +323,8 @@ public:
     void SnapshotFortDeck(std::uint32_t slot); // 같은 실제 생산 재계산/덱에서004befd0을 명시 실행한다. 기존 Fort의 읽기 사본을 쓰지 않는다.
     void SnapshotFortTechnology(std::uint32_t slot); // 현재 Player 기술 부모와 같은 Form6 체인을004bcea0 순서로 새 Technology에 저장한다.
     void SnapshotFortTerritory(std::uint32_t slot); // 기존120BYTE와 현재 섬/지도/공유 난수에서004bf6d0을 명시 실행한다.
+    o::FortObjectLoadState& FortObjectSettings(); // 로드/저장 양쪽의 같은 현재 판본과 범위를 빌린다.
+    void WriteFortObjectChunk(TemplateWriteStream stream,std::int32_t chunkX,std::int32_t chunkY); // 같은 저장소의 명시 stream에 한 청크만 저장한다. 전체 지역 부모는 별도다.
     // 생산/튜토리얼/건설 표시가 함께 읽는 금지DWORD 표와 실제 세 카운터를 직접 조작한다.
     o::RawTotalMade& TotalMade();
     // 실제490250으로 명시 Player 부모를 생성한다. 로그인/참여 부모가 요청할 때만 호출하며 일반 확정에서 자동 생성하지 않는다.

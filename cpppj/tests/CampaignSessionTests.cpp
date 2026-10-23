@@ -1,3 +1,4 @@
+#include "o/RawFortObjectSave.h"
 #include "client/RawCampaignTutorialOneBindings.h"
 #include "client/MissionGuideInput.h"
 #include "client/CampaignTemplateStorage.h"
@@ -4396,4 +4397,26 @@ TEST_CASE(CampaignPriestPanic_NeutralRegenAndRepeatedArrival) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();UseWorldTestLogin(services);services.formPacket=[](std::span<const std::uint8_t>) {};services.unitLost=[](Sid) {};auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services),{1024,768});const auto cursors=BindWorldTestInput(world);auto& session=world.Session();auto core=session.Core();CampaignPrayerClock clock{session};const Sid owned{static_cast<std::uint16_t>(session.FindPriestParticipation(1))};CHECK(owned.value);if (!owned.value) return;const auto point=CampaignPrayerMovePoint(core,owned);const auto priest=session.World().Create(158);core.owner.Set(priest,0);session.World().Pop(priest,point.x,point.y,1);CHECK(core.processes.FindEvent(priest,0x25a));std::set<std::uint16_t> paths;bool moved{};
     while (clock.frame<6000 && paths.size()<2) { clock.Tick();const auto form=FindAttachedProcess(core.pool,priest,54);if (form.value) paths.insert(form.value);const auto raw=core.pool.Slot(priest);moved=moved || std::hypot(double(std::bit_cast<float>(Get(raw,14)))-point.x,double(std::bit_cast<float>(Get(raw,18)))-point.y)>.1; } // HP/프로세스 결과를 쓰지 않고 회복→첫 경로→도착 재경로를 기다린다.
     CHECK(paths.size()>=2 && moved && core.pool.Slot(priest)[34]==0 && !(core.pool.Slot(priest)[11]&3U));CHECK(!core.bookkeeping.depth && !core.destroy.PreDepth() && !core.destroy.PostDepth());std::cout<<"실제 중립 사제25a→54/이동·도착 재대피"<<paths.size()<<"경로/frame"<<clock.frame<<'\n';
+}
+
+// 현재 설치된 사제의 실제 owner 변경을 Finder로 저장하고 작업 파일의 재파싱까지 확인한다.
+TEST_CASE(CampaignSession_FortObjectSaveCurrentChunk) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);const auto original=assets.files.Read("d/thewarbegins.fort");SessionServicesFixture external;auto services=external.Services();const auto storage=std::make_shared<CampaignTemplateStorage>();services.templateStorage=storage;
+    RawCampaignSession session(assets.game,assets.files,FortTemplate::Parse(original,assets.game.TypeTable()),"thewarbegins",std::move(services));CHECK(Throws([&] { session.WriteFortObjectChunk({},0,0); }));session.Load();
+    const auto stamp=std::chrono::steady_clock::now().time_since_epoch().count();const auto root=assets.root.parent_path();EditorFiles files(root/"cpppj/build/test-data"/("snapshot-objects-"+std::to_string(stamp)),{assets.root,root/"originalCD"});const auto path=files.Prepare("ObjectSnapshot",original);storage->InstallFile(1,FortTemplate::Parse(original,assets.game.TypeTable()),original,path.string());session.SnapshotFortTypeNames(1);
+    const auto core=session.Core();const Sid target{static_cast<std::uint16_t>(session.FindPriestParticipation(1))};CHECK(target.value!=0);if (!target.value) return;auto raw=core.pool.AllocatedBytes(target);const auto kind=raw[10];auto& settings=session.FortObjectSettings();CHECK(kind==158 && (core.types[kind].flags2&settings.ownerSavedMask)!=0);settings.version=2;
+    const auto px=std::bit_cast<float>(Get(raw,14)),py=std::bit_cast<float>(Get(raw,18));settings.scope=core.building.HasIsland(px,py) ? 1 : 2;const std::string sectionName=settings.scope==1 ? "Terr00" : "Chaff"; // 실제 섬 판정이 선택하는 동일 저장 범위를 사용한다.
+    const auto x=FortSaveCoordinate(px),y=FortSaveCoordinate(py),chunkX=x/16,chunkY=y/16;const auto position=static_cast<std::uint8_t>(((x-chunkX*16)<<4)|(y-chunkY*16));const auto initial=raw[34];std::vector<std::uint8_t> previous;
+    std::uint32_t readOnly{},owner=session.LocalOwner();std::array<std::uint8_t,9> hidden{};FortImageHooks image;image.typeCount=[&] { return static_cast<std::uint32_t>(core.types.size()); };image.assertion=[](auto) { throw std::logic_error("객체 작업 파일의 예상 밖 이미지 진단"); };
+    for (std::uint32_t pass=0;pass<2;++pass) { // 같은 live 객체의 서로 다른 현재 owner가 두 저장 파일에 반영되어야 한다.
+        const auto selected=static_cast<std::uint8_t>(initial==2 ? 3-pass : 2+pass);raw[34]=selected;const auto stream=storage->CreateSection(1,sectionName);const std::array<std::uint8_t,1> version{2};storage->WriteSection(stream,version);session.WriteFortObjectChunk(stream,chunkX,chunkY);
+        storage->SaveFile(1,{readOnly,owner,hidden},image,files.Writer());const auto saved=ReadFileBytes(path);const auto decoded=FortTemplate::Parse(saved,assets.game.TypeTable());const auto& section=settings.scope==1 ? decoded.territories[0] : decoded.chaff;CHECK(saved!=original && saved!=previous && section.present && section.version==2 && section.chunks.size()==1);bool found{};
+        for (const auto& chunk:section.chunks) { // 해당 청크의 저장 순서 전체를 보존한다.
+            for (const auto& object:chunk.objects) { // 실제 선택 사제의 위치/종류/현재 owner를 찾는다.
+                if (object.position==position && object.type==kind && object.owner==selected) found=true;
+            }
+        }
+        CHECK(found);previous=saved;
+    }
+    CHECK(assets.files.Read("d/thewarbegins.fort")==original);
 }
