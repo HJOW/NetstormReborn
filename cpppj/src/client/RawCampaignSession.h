@@ -320,6 +320,7 @@ public:
     const RawCampaignProductionBindings& Production() const;
     void SnapshotFortTypeNames(std::uint32_t slot); // 같은 실제 State/TYPE에서004bd6f0을 명시 실행한다. 전체 월드 snapshot/파일 저장은 별도다.
     void SnapshotFortDeck(std::uint32_t slot); // 같은 실제 생산 재계산/덱에서004befd0을 명시 실행한다. 기존 Fort의 읽기 사본을 쓰지 않는다.
+    void SnapshotFortTechnology(std::uint32_t slot); // 현재 Player 기술 부모와 같은 Form6 체인을004bcea0 순서로 새 Technology에 저장한다.
     // 생산/튜토리얼/건설 표시가 함께 읽는 금지DWORD 표와 실제 세 카운터를 직접 조작한다.
     o::RawTotalMade& TotalMade();
     // 실제490250으로 명시 Player 부모를 생성한다. 로그인/참여 부모가 요청할 때만 호출하며 일반 확정에서 자동 생성하지 않는다.

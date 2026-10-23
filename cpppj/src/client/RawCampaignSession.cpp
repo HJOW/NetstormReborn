@@ -2,6 +2,7 @@
 #include "client/RawCampaignSession.h"
 #include "client/CampaignTemplateStorage.h"
 #include "o/RawFortSnapshotBasics.h"
+#include "o/RawFortContentSave.h"
 #include "client/RawProductionMaintenance.h"
 #include "client/RawKnowledgeMenu.h"
 #include "o/CanonDecoder.h"
@@ -3057,6 +3058,26 @@ void RawCampaignSession::SnapshotFortBasicSection(std::uint32_t slot,bool names)
 void RawCampaignSession::SnapshotFortTypeNames(std::uint32_t slot) { SnapshotFortBasicSection(slot,true); }
 // 실제 현재 생산 자료의 snapshot이며 화면 생산 덱과 같은 저장소를 사용한다.
 void RawCampaignSession::SnapshotFortDeck(std::uint32_t slot) { SnapshotFortBasicSection(slot,false); }
+// 현재 기술 부모를 섹션 생성 전에 보관하고 같은 Pool/가상 Robust/타입을 내용물 writer에 빌린다.
+void RawCampaignSession::SnapshotFortTechnology(std::uint32_t slot) {
+    auto& s=*impl_;if (!s.loaded || slot>=9) throw std::logic_error("실제 Technology snapshot의 설치/슬롯 계약 위반");
+    static_cast<void>(s.templateStorage->Template(slot));const auto parent=s.player->CurrentTechnology();const auto stream=s.templateStorage->CreateSection(slot,"Technology");
+    // 중첩 목록마다 독립 finder와 현재 SID를 소유하며 자식 반환 때까지 부모의 next를 보관한다.
+    struct Cursor {
+        RawContainedFinder finder;Sid current; // 같은 실제 Pool 검색기와 Begin/Next의 현재 반환값이다.
+        Cursor(const SidPool& pool,const ContainedFinderState& state,Sid selected):finder(pool,state),current(finder.Begin(selected)) {} // 원본 Begin의 첫 후보를 즉시 구한다.
+    };
+    FortContentSaveHooks hooks;
+    hooks.begin=[&s](auto selected) { if (selected>=s.core.pool.Capacity()) throw std::out_of_range("실제 Technology 부모 SID 범위");auto cursor=std::make_shared<Cursor>(s.core.pool,s.contentFinder,Sid{static_cast<std::uint16_t>(selected)});
+        return FortContentSaveCursor{[cursor] { return cursor->current.value; },[cursor] { cursor->current=cursor->finder.Next(); }};
+    };
+    hooks.poolLimit=[&s] { return s.core.pool.Capacity(); };hooks.robust=[&s](auto candidate) { return s.contentForms->Robust(Sid{static_cast<std::uint16_t>(candidate)}); };
+    hooks.form=[&s](auto candidate)->std::span<const std::uint8_t> { if (candidate>=s.core.pool.Capacity()) throw std::out_of_range("실제 Technology 현재 SID 범위");return s.core.pool.Slot(Sid{static_cast<std::uint16_t>(candidate)}); };
+    hooks.type=[&s](auto kind) { if (kind>=s.core.types.size()) throw std::out_of_range("실제 Technology TYPE 범위");const auto& type=s.core.types[kind];return FortContentSaveType{type.flags1,type.contentListFlags,type.containerListFlags}; };
+    hooks.parentType=[&](auto selected) { return hooks.type(hooks.form(selected)[10]); };hooks.assertion=SessionMissing<void,FortContentSaveAssertion>();
+    hooks.access=[&](auto token,const auto& operation) { if (token!=1) throw std::logic_error("실제 Technology stream 선택 불일치");s.templateStorage->AccessSection(stream,operation); };
+    SaveFortContents(parent,1,hooks);
+}
 // 현재 세 카운터와 생산이 사용하는 같은 금지DWORD 표를 빌린다.
 RawTotalMade& RawCampaignSession::TotalMade() { return *impl_->totalMade; }
 // 같은 실제 outcome이 읽는 Player 활성/현재 ownerState 판정을 재사용한다.

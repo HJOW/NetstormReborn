@@ -1,5 +1,13 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-23 단위363 완료: 실제 기술 내용물 저장
+
+- [x] AGENTS.md와 공통/닷넷 인수인계를 다시 읽고 `972b16b2 / 20261023-29 CP`에서 이어갔다. 현재/마지막 전체 정밀 디컴파일 PC는 **VM-W11-Codex / 2026-10-23**으로 일치한다. 기존 정밀 원문을 사용했으며 새 디컴파일/원본 게임 실행/보호 원문·AGENTS 변경은 없다.
+- [x] 원본004bcea0 내용물 writer의 고정 count BYTE·현재 후보/타입 재조회·QA BYTE/WORD·부모 fallback·재귀별 finder를 구현하고 실제 Session의 같은 Player 기술 부모/Pool/ContentForm Robust/TYPE/명시 stream에 연결했다. 독립 PE **353입력×두 정밀도706행·273,296본체명령·차이0**을 확보했다. [상세](docs/exe/cpp-fort-content-save-20261023.md)에 계약/범위/후속 작업을 기록한다.
+- [x] 최종 Release 빌드2는 종료0·경고/오류0, 독립706행/빈 목록·누락 장치·순환/실제 월드의 기술 추가·Robust 제외·삭제→작업 파일 저장/재읽기 관련3검사는 실패check0이다. 첫 비교의 비영 Robust DWORD를 bool로 줄인 검사 장치 문제2행을 수정했고 제품 본체는 바꾸지 않았다. 최종 전체 CTest1은 **2,359검사·실패check0·종료0/257.92초**이며 LastTest.log 내부2359/0도 확인했다. UTF-8/한국어 주석/diff/보호 경로/원본·도구·TSV 해시를 확인하고 **20261023-30 CP**로 로컬 커밋한다. 최종 검증 뒤 제품/검사 C++는 바꾸지 않았다. 별도 dotnet 세션 변경 및 원격 push는 없다.
+- [ ] 전체 snapshot004bf9a0에는 Objects/Terr·Chaff, Territory 현재 지역/120BYTE, 공유 난수 Money, 실제 Mission/Badges/Notify가 남아 있다. generic Fort 설치/Editor 입력·State1/6/새 맵/시나리오 및 전체 사용자 완주 목표도 계속 미완료다. 이 기술 저장 연결만으로 GUI Editor를 활성화하지 않는다.
+- [ ] 다음 Territory는 기존120BYTE→일반 owner필터/Editor 누락 지역 seed→현재 manager/current 재조회→고정 stream120BYTE 저장의 원본 순서를 복원한다. live chunks/islandBytes/RawIslandRuntime를 사용하되 Matches0046f200을0046f380/0046f3f0 대신 쓰지 않는다. 누락 seed는 같은 Impl::random.Next(254)+1이며 부분 필드만 바꾼다. 상세에 주소/정밀 원문 행을 보존했다. 마지막 Notify를 위한 BindFileSave 미연결과 Changed의 빈 filename 거부 차이도 후속에 남긴다.
+
 ## 2026-10-23 단위362 완료: 실제 TypeNames/Deck snapshot과 쓰기 stream 수명
 
 - [x] AGENTS.md·최신 공통/닷넷 인수인계를 다시 읽고 단위361의 `9eb899e4 / 20261023-27 CP`에서 재개했다. 현재/마지막 전체 정밀 디컴파일 PC는 **VM-W11-Codex / 2026-10-23**으로 일치한다. 새 디컴파일/원본 게임 실행/보호 원문·AGENTS 변경은 없다. 다른 세션의 dotnet 미커밋 파일은 건드리지 않는다.

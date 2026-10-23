@@ -853,6 +853,23 @@ TEST_CASE(CampaignSession_FortSnapshotBasicsSaveCurrentWorld) {
     storage->SaveFile(1,{readOnly,owner,hidden},image,files.Writer());const auto saved=ReadFileBytes(path);CHECK(saved!=original);const auto decoded=FortTemplate::Parse(saved,assets.game.TypeTable());CHECK(decoded.sections[namesIndex]==expectedNames && decoded.sections[deckIndex]==expectedDeck);
     CHECK(assets.files.Read("d/thewarbegins.fort")==original); // 현재 월드 자료는 새 작업본으로만 썼고 보호 파일은 읽기 전용이다.
 }
+// 현재 기술을 추가/삭제한 실제 Form 체인을 새 파일에 저장하고 다시 읽는다.
+TEST_CASE(CampaignSession_FortContentSaveCurrentTechnology) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);const auto original=assets.files.Read("d/thewarbegins.fort");SessionServicesFixture external;auto services=external.Services();
+    const auto storage=std::make_shared<CampaignTemplateStorage>();services.templateStorage=storage;services.playerContent.gump=[](auto) { return 0U; };
+    services.playerContent.handle=[](auto,auto,auto,auto) { throw std::logic_error("없는 기술 UI에 대한 예상 밖 처리"); };
+    RawCampaignSession session(assets.game,assets.files,FortTemplate::Parse(original,assets.game.TypeTable()),"thewarbegins",std::move(services));CHECK(Throws([&] { session.SnapshotFortTechnology(1); }));session.Load();
+    const auto stamp=std::chrono::steady_clock::now().time_since_epoch().count();const auto root=assets.root.parent_path();EditorFiles files(root/"cpppj/build/test-data"/("snapshot-technology-"+std::to_string(stamp)),{assets.root,root/"originalCD"});const auto path=files.Prepare("TechnologySnapshot",original);
+    storage->InstallFile(1,FortTemplate::Parse(original,assets.game.TypeTable()),original,path.string());session.ClearTechnology(1);session.AddTechnology(1,"sunCannon");
+    const auto type=assets.game.TypeTable().Find("sunCannon");CHECK(type>0);const auto form=session.FindTechnology(1,type);CHECK(form.value!=0);const auto core=session.Core();const auto parent=Sid{static_cast<std::uint16_t>(session.CurrentTechnologyParent())};CHECK(parent.value!=0);
+    const auto skipped=session.CreateContained(parent,static_cast<std::uint32_t>(type),7,1,0x10,0);CHECK((Get(core.pool.Slot(skipped),20,2)&0x34U)==0); // 실제 Robust가 거부하는 목록 항목도 함께 둔다.
+    session.SnapshotFortTypeNames(1);session.SnapshotFortTechnology(1);CHECK(storage->CurrentSection(1)=="Technology");
+    std::uint32_t readOnly{},owner=session.LocalOwner();std::array<std::uint8_t,9> hidden{};FortImageHooks image;image.typeCount=[&] { return static_cast<std::uint32_t>(core.types.size()); };image.assertion=[](auto) { throw std::logic_error("기술 snapshot 파일의 예상 밖 이미지 진단"); };
+    storage->SaveFile(1,{readOnly,owner,hidden},image,files.Writer());const auto saved=ReadFileBytes(path);const auto decoded=FortTemplate::Parse(saved,assets.game.TypeTable());CHECK(saved!=original && decoded.technology.complete && decoded.technology.items.size()==1);
+    if (decoded.technology.items.size()==1) { const auto& item=decoded.technology.items[0];CHECK(item.type==type && item.quantity==0 && item.contents.empty());CHECK(item.listFlags==Get(core.pool.Slot(form),20,2)); }
+    session.ClearTechnology(1);CHECK(session.FindTechnology(1,type).value==0);CHECK(core.pool.Slot(skipped)[10]==6);session.SnapshotFortTechnology(1);storage->SaveFile(1,{readOnly,owner,hidden},image,files.Writer());
+    const auto emptyBytes=ReadFileBytes(path);const auto empty=FortTemplate::Parse(emptyBytes,assets.game.TypeTable());CHECK(emptyBytes!=saved && empty.technology.complete && empty.technology.items.empty());CHECK(assets.files.Read("d/thewarbegins.fort")==original);
+}
 // 같은 생산 월드의 empty84는 관찰 카운터 대신 실제 공통 삭제/반납으로 들어가야 한다.
 TEST_CASE(CampaignSession_EmptyGeyserUsesCurrentDeletion) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
