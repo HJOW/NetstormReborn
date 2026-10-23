@@ -113,6 +113,22 @@ public sealed class RawSquidFactory
     }
 
     /// <summary>
+    /// 생산 칸에 넣는 contained Form(타입 6)을 만든다(원본 SquidFactory::CreateContained, 004af530 계열).
+    /// 자산 생성자 표가 아니라 내장 Form 생성자를 쓰므로 슬롯에는 가상 표와 타입만 쓰고 postCreate 는 부르지 않는다.
+    /// 생성 영역은 contained 생성기가 넘기는 원본 플래그(1 예측, 2 클라이언트, 0 서버)를 그대로 따른다.
+    /// 추가: W03 내용물 생성 조각(2026-10-23). 근거: cpppj/src/o/SquidFactory.cpp CreateContained.
+    /// </summary>
+    /// <param name="flags">원본 생성 플래그(1 예측, 2 클라이언트, 0 서버).</param>
+    /// <returns>새 contained Form 번호.</returns>
+    public int CreateContained(uint flags)
+    {
+        // 예측 비트가 클라이언트 비트보다 우선하는 원본 할당 순서를 그대로 쓴다
+        SidAllocation allocation = (flags & 1) != 0 ? SidAllocation.Predictable
+            : (flags & 2) != 0 ? SidAllocation.Client : SidAllocation.Server;
+        return new RawSquidForms(_pool).Create(6, allocation);
+    }
+
+    /// <summary>
     /// 이미 확보된 슬롯에 생성자 쓰기만 적용한다. 타입 바이트·상태·풀 목록·HP·소유자는 덮지 않는다(독립 검사와 재초기화용).
     /// 5 번 미만·빈·contained 슬롯은 거부한다.
     /// </summary>
