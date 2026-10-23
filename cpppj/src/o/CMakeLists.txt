@@ -500,3 +500,7 @@ target_sources(netstorm PRIVATE RawPriestPanic.h RawPriestPanic.cpp)
 target_sources(netstorm PRIVATE RawStateWorldCleanup.h RawStateWorldCleanup.cpp
     RawSavedStateRead.h RawSavedStateRead.cpp RawFortSpWrite.h RawFortSpWrite.cpp
     RawPlayerCoreRefresh.h RawPlayerCoreRefresh.cpp RawColorMapCache.h RawColorMapCache.cpp)
+# 원문 시계 전역·Core 기록·Player 링크·메타맵 표를 각각 같은 물리에 적용한다.
+target_sources(netstorm PRIVATE RawClockSyncReset.h RawClockSyncReset.cpp
+    RawPlayerCoreRecords.h RawPlayerCoreRecords.cpp RawPlayerLinksCleanup.h RawPlayerLinksCleanup.cpp
+    RawMetaZoneCleanup.h RawMetaZoneCleanup.cpp)

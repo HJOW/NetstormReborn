@@ -103,6 +103,8 @@ RawCampaignSessionServices MakeCampaignClientServices(Client& client,RawButtonCo
     auto& audio=client.WorldAudio(); // noAudio도 같은 실제 이름표/비활성 재생 계층을 사용한다.
     auto& player=audio.Sounds(); // 반환한 콜백이 빌리는 장기 실제 SoundPlayer다.
     RawCampaignSessionServices services; // 게임 규칙 경계는 실제 세션의 명시 누락 판정을 유지한다.
+    services.colorSortInput=client.ColorSortInput(); // 실제 Client의 같은 고정 초기입력 소유자를 반드시 전달한다.
+    services.screenPalette=[&client] { return client.GetScreen().Palette(); }; // Screen 재생성 뒤에도 그때의 현재 팔레트를 조회한다.
     services.randomGlobals=client.RandomGlobals(); // Session교체/Subscriber/파편/Seed/지형이같은Client의실제CRT를사용한다.
     services.localStateGlobals=client.LocalStateGlobals(); // 메뉴/Editor에서 사용한 같은 State와00544d58 기한을 로그인도 직접 빌린다.
     services.templateStateBytes=CurrentAllocationBytes; // 원본이 쓰지 않는 State 바이트를 임의0 대신 현재 호스트 할당 입력에서 받는다.

@@ -1990,3 +1990,24 @@ tools/decomp_player_core_refresh_guard.py -text
 tools/decomp_saved_state_read.py -text
 tools/decomp_state_world_cleanup.py -text
 cpppj/src/client/ClientMain.cpp whitespace=cr-at-eol
+cpppj/game-clock-reset-native.json -text whitespace=cr-at-eol
+cpppj/clock-sync-reset-native.json -text whitespace=cr-at-eol
+cpppj/player-core-records-native.json -text whitespace=cr-at-eol
+cpppj/player-links-cleanup-native.json -text whitespace=cr-at-eol
+cpppj/meta-zone-cleanup-native.json -text whitespace=cr-at-eol
+cpppj/tests/fixtures/game-clock-reset-x86.tsv -text whitespace=-blank-at-eol,cr-at-eol
+cpppj/tests/fixtures/clock-sync-reset-x86.tsv -text whitespace=-blank-at-eol,cr-at-eol
+cpppj/tests/fixtures/player-core-records-x86.tsv -text whitespace=-blank-at-eol,cr-at-eol
+cpppj/tests/fixtures/player-links-cleanup-x86.tsv -text whitespace=-blank-at-eol,cr-at-eol
+cpppj/tests/fixtures/meta-zone-cleanup-x86.tsv -text whitespace=-blank-at-eol,cr-at-eol
+tools/decomp_game_clock_reset.py -text whitespace=cr-at-eol
+tools/decomp_clock_sync_reset.py -text whitespace=cr-at-eol
+tools/decomp_player_core_records.py -text whitespace=cr-at-eol
+tools/decomp_player_links_cleanup.py -text whitespace=cr-at-eol
+tools/decomp_meta_zone_cleanup.py -text whitespace=cr-at-eol
+cpppj/type-tech-bit-native.json -text whitespace=cr-at-eol
+cpppj/type-tech-bit-assets-native.json -text whitespace=cr-at-eol
+cpppj/tests/fixtures/type-tech-bit-x86.tsv -text whitespace=-blank-at-eol,cr-at-eol
+cpppj/tests/fixtures/type-tech-bit-assets-x86.tsv -text whitespace=-blank-at-eol,cr-at-eol
+tools/decomp_type_tech_bit.py -text whitespace=cr-at-eol
+tools/decomp_type_tech_bit_assets.py -text whitespace=cr-at-eol

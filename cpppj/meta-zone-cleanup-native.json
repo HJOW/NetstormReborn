@@ -1,0 +1,37 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-23",
+  "entry": "0042b1b0",
+  "bodyBytes": 68,
+  "cdSourceMapAddress": "0045a230",
+  "cdExecuted": false,
+  "tableAddress": "00546908",
+  "recordCount": 51,
+  "recordStride": 144,
+  "tableBytes": 7344,
+  "initialFlagPeAddress": "00531760",
+  "initialFlagPeValue": 1,
+  "inputs": 19,
+  "observations": 38,
+  "statuses": {
+    "normal": 28,
+    "stop": 10
+  },
+  "instructions": 60398,
+  "precisionDifferentInputs": [],
+  "productAbsentBeforeObservation": true,
+  "externalChildren": [
+    "00479520: 실물 marker삭제 자식은 명시 장치; 고정index/선택변경/중단만 관측"
+  ],
+  "scope": "68BYTE 부모 전체와51회 호출·0x72c DWORD 쓰기. 실제 marker가상소멸/메타맵 전체/Client장기owner/게임실행은 미검증. TotalMade·Core·State5블록과 별도 표.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/refined/originalCD/Netstorm.c": "9306f621576571c85280f9e25f024e3ec8b7b68c5c8ec6731c1f109dc3f25ebb",
+    "extracted/refined/originalCD/functions.tsv": "453aa383c27baf8eefa00d97bf44051d18460150556511c2eb7a46f111e92def",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+    "tools/decomp_meta_zone_cleanup.py": "df43ca648614da67c9f46d5554da328a3e7f9d83369b3020f3f6171609e65aec",
+    "cpppj/tests/fixtures/meta-zone-cleanup-x86.tsv": "b1331f080470c7024b151674bac60815d35c89f89c2ac2bbe4d26fbd1f5a1ae8"
+  }
+}

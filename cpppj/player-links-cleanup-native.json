@@ -1,0 +1,29 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-23",
+  "sourceAbsentBeforeObservation": true,
+  "parentAddress": "0048fcd0",
+  "parentRanges": "48fcd0-48fcd7;48fce0-48fd26",
+  "parentBytes": 79,
+  "cdSourceMap": "0046dfb0",
+  "uniqueInputs": 81,
+  "observations": 162,
+  "statuses": {
+    "normal": 138,
+    "fault-null": 6,
+    "stop": 18
+  },
+  "instructions": 19842,
+  "selectedFreeCalls": 644,
+  "precisionDifferences": 0,
+  "gameOrOsExecuted": false,
+  "scope": "실제9Player0..8의현재base매접근재조회와+9c/+8/비0+68 free→현재base+68zero. _free는실제토큰반납을선택하는명시외부경계다.재진입중복free를안전하다고판정하지않는다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+    "tools/decomp_player_links_cleanup.py": "2f90a13a2d3c3ebd57c379bc04e2e3a6f9ad9ef64e75cf41e5e210a118119a5d",
+    "cpppj/tests/fixtures/player-links-cleanup-x86.tsv": "df2bbeff41340afb945de9aa84abba215a07c38d49934645b84e6c7d3e205617"
+  }
+}

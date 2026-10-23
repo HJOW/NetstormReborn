@@ -166,6 +166,7 @@ struct RiftTypeRecord {
     // maxUsage: 원소별 최대 에너지 사용량.
     std::array<float, 3> maxUsage{};    // +0x60: maxUsage·maxRainBattleUsage, maxThunderBattleUsage, maxWindBattleUsage
     std::int32_t level{};               // +0x94: `level` 속성 - 1
+    std::int32_t techBitIndex{-1};      // PATCH+0x1ec/CD+0x1cc: 실제 초기-1 뒤 techBit 숫자 AST가 쓰는 signedDWORD다.
     std::int32_t theme{};               // +0x98: `theme` 첫 BYTE의 조회값. 실제 Table 초기화가 PATCH5/CD4를 넣는다.
     std::int32_t group{kTypeNoGroup};   // +0x9c: `group` 속성의 이름 표 번호
     // flags1: 타입의 첫 번째 플래그 단어.

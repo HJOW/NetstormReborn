@@ -1,6 +1,7 @@
 // 기존 원본 몸체의 단일 저장소 조립을 실제 클라이언트 세션이 소유한다.
 #include "client/RawCampaignSession.h"
 #include "client/ClientRandomGlobals.h"
+#include "client/ClientColorSortInput.h"
 #include "client/ClientLocalStateGlobals.h"
 #include "client/CampaignTemplateStorage.h"
 #include "client/FortTypeConversionStorage.h"
@@ -2698,10 +2699,20 @@ struct RawCampaignSession::Impl {
         };
         game.moveBuilder=[this](std::uint32_t owner,Sid target,std::uint32_t low,std::uint32_t high) { static_cast<void>(buildingMover->Move(owner,target,low,high)); };
         cursor=std::make_unique<RawCampaignCursor>(CampaignCursorData{world,assets.game,gameplayPlacement.geometry,metadata.frames,*contentForms,*contained,hp,random,*construction,cursorDrop,gameplayPlacement.preview.blocked,sp,playerState.playerKnown,gunTargetState.windArcherType,cursorRangeGlobals.processType,contentCamera},std::move(game));
-        std::array<ScreenColor,256> palette; // 현재 파일 팔레트를 원본 논리 검정/흰색 끝점으로 준비한다.
-        // RGB와 예약 BYTE의 현재 파일 값을 그대로 공급한다.
-        for (std::size_t index=0;index<palette.size();++index) { const auto color=assets.game.Palette().Color(static_cast<std::uint8_t>(index));palette[index]={color.blue,color.green,color.red,assets.game.Palette().Reserved(static_cast<std::uint8_t>(index)).value_or(0)}; }
-        palette[0]={0,0,0,0};palette[255]={255,255,255,0};cursor->SetPalette(palette);cursor->SetView(cursorView);
+        if (services.colorSortInput || services.screenPalette) {
+            // 실제 Client의 일부 색 장치가 빠진 경우 COL을 대신 써서 성공하지 않는다.
+            if (!services.colorSortInput || !services.screenPalette) throw std::logic_error("캠페인 커서의 같은 ColorSort/현재 화면 색 서비스 미연결");
+            // 현재 화면의 명명색 입력과 최초 고정 lookup 입력은 서로 다른 저장소다.
+            const auto palette=services.screenPalette();
+            cursor->SetPalette(palette,services.colorSortInput->Logical());
+        } else {
+            // 두 서비스를 모두 생략한 기존 독립 headless 검사만 명시 COL adapter를 유지한다.
+            std::array<ScreenColor,256> palette;
+            // 원래 파일 RGB/예약 BYTE와 검정/흰색 끝점을 그대로 공급한다.
+            for (std::size_t index=0;index<palette.size();++index) { const auto color=assets.game.Palette().Color(static_cast<std::uint8_t>(index));palette[index]={color.blue,color.green,color.red,assets.game.Palette().Reserved(static_cast<std::uint8_t>(index)).value_or(0)}; }
+            palette[0]={0,0,0,0};palette[255]={255,255,255,0};cursor->SetPalette(palette);
+        }
+        cursor->SetView(cursorView);
     }
     // 같은 Session 전역을 건설 시작/프레임 직전에 갱신한다. 별도 건설 시계를 만들지 않는다.
     void PrepareBuilding(double now) {

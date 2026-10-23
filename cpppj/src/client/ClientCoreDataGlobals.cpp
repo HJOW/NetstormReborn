@@ -1,7 +1,10 @@
 // 실제 동일 CoreData 저장소를 기존 원문 helper에 빌리며 숨은 reset/사본 동기화를 추가하지 않는다.
 #include "client/ClientCoreDataGlobals.h"
+#include "o/RawPlayerCoreRecords.h"
 
 namespace netstorm::client {
+// 실제CRT표순서대로9기록을초기화한뒤별도lastKnown10을같은16BYTE자식으로초기화한다.
+ClientCoreDataGlobals::ClientCoreDataGlobals() { o::InitializePlayerCoreRecords({records_,0});o::InitializePlayerCore(cached_); }
 // 같은 포인터 슬롯 자체를 직접 빌린다.
 std::span<std::uint8_t>& ClientCoreDataGlobals::Current() { return current_; }
 // 읽기도 실제 슬롯 주소를 유지한다.
@@ -18,6 +21,12 @@ std::span<const std::uint8_t> ClientCoreDataGlobals::Cached() const { return cac
 std::span<std::uint8_t>& ClientCoreDataGlobals::Players() { return players_; }
 // 같은 현재Player뷰 슬롯을 읽는다.
 const std::span<std::uint8_t>& ClientCoreDataGlobals::Players() const { return players_; }
+// 같은Client수명의9기록물리전체를빌린다.
+std::span<std::uint8_t> ClientCoreDataGlobals::Records() { return records_; }
+// const조회도동일주소를사용한다.
+std::span<const std::uint8_t> ClientCoreDataGlobals::Records() const { return records_; }
+// 원문metadata44BYTE를같은144BYTE에실행하며Session교체로장부를초기화하지않는다.
+void ClientCoreDataGlobals::StoreMetadata(std::uint32_t owner,std::uint32_t subscriber,std::array<std::uint8_t,10> core) { o::WritePlayerCoreMetadata({records_,0},owner,subscriber,core); }
 // 모든 참조 대상은 helper 호출과 저장한 callback보다 오래 살아야 한다.
 o::PlayerCoreDataGlobals ClientCoreDataGlobals::Borrow(o::PlayerWorldState& player,const std::uint32_t& metamap) {
     return {player.templateOwner,player.battleOwner,player.playerKnown,active_,metamap,current_,cached_,players_};

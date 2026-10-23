@@ -1,0 +1,32 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-23",
+  "entry": "00460e70",
+  "bodyBytes": 13,
+  "cdSourceMapAddress": null,
+  "cdExecuted": false,
+  "rawInputs": 12,
+  "publicSequences": 6,
+  "observations": 138,
+  "resetCalls": 46,
+  "instructions": 3252,
+  "operations": {
+    "Reset": 46,
+    "Wall": 10,
+    "Game": 36,
+    "Pause": 18,
+    "Resume": 20,
+    "IsPaused": 8
+  },
+  "precisionDifferentSequences": [],
+  "productAbsentBeforeObservation": true,
+  "scope": "Reset13BYTE와기존Game/Wall/Pause/Resume/IsPaused실제PE. timeGetTime만명시응답. raw96BYTE불변과epoch/adjustment0의공개호출열은구별. Capture/FPS/전체clock초기화/난수실행없음.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+    "tools/decomp_game_clock_reset.py": "7b976553527bcf140ba07f76d043985ef1cf5b036e36224ac0963806fb4a37bf",
+    "cpppj/tests/fixtures/game-clock-reset-x86.tsv": "3ead4df4c5cc230d93573f70647697b70703f0479a92bd9cb971a071f29d9fd8"
+  }
+}

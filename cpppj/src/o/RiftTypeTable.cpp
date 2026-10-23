@@ -90,6 +90,13 @@ std::int32_t ToInt(double value) {
     return static_cast<std::int32_t>(value);
 }
 
+// techBit 숫자 AST는 float32를 실제 CRT _ftol의 signed64로 절삭한 뒤 낮은DWORD만 저장한다.
+std::int32_t TechBitNumber(double value) {
+    const double number=static_cast<double>(static_cast<float>(value)); // 기존 parser의 double 보관과 원문 float32 AST 경계를 구별한다.
+    if (!std::isfinite(number) || number< -9223372036854775808.0 || number>=9223372036854775808.0) return 0;
+    return std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(static_cast<std::int64_t>(number)));
+}
+
 // 패치 00540d10 / CD 0051c630의 23개 깊이 이름/값은 두 PE에서 같다.
 struct ZOrderName { /* name: 이름으로 조회·표시할 때 사용하는 문자열. */ std::string_view name; /* value: 읽기·쓰기·통지에 전달하는 값. */ std::int32_t value; };
 constexpr std::array<ZOrderName,23> kZOrders{{
@@ -184,6 +191,10 @@ void ApplyDefinition(RiftTypeRecord& type, const RiftTypeDefinition& definition,
             // 실제 0049c3b0/CD Parse의 type +0xd4를 숫자 절삭으로 채운다. 누락된 속성은 초기 0이다.
             if (!number) throw std::invalid_argument("damageEffect는 숫자여야 합니다");
             type.damageEffect=ToInt(*number);
+        }
+        else if (is("techBit")) {
+            if (!number) throw std::invalid_argument("techBit는숫자여야합니다");
+            type.techBitIndex=TechBitNumber(*number); // 현재 속성 순서대로 같은 실제 Record 필드를 덮어쓴다.
         }
         else if (is("minUsage") && number) type.minUsage[0] = static_cast<float>(*number);
         else if ((is("maxUsage") || is("maxRainBattleUsage")) && number) type.maxUsage[0] = static_cast<float>(*number);

@@ -2042,3 +2042,23 @@ set_source_files_properties(PlayerCoreRefreshTests.cpp PROPERTIES COMPILE_DEFINI
     "NETSTORM_PLAYER_CORE_REFRESH_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/player-core-refresh-x86.tsv\";NETSTORM_PLAYER_CORE_REFRESH_GUARD_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/player-core-refresh-guard-x86.tsv\"")
 set_source_files_properties(ColorMapCacheTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_COLOR_MAP_CACHE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/colorsort-cache-parent-x86.tsv\"")
+
+# 세션 전환의 개별 원문과 실제 장기 소유자·커서 서비스에 신규22검사를 등록한다.
+target_sources(netstorm_tests PRIVATE GameClockResetTests.cpp ClockSyncResetTests.cpp
+    PlayerCoreRecordsTests.cpp ClientCoreRecordsStorageTests.cpp PlayerLinksCleanupTests.cpp
+    MetaZoneCleanupTests.cpp ProductionDeckReleaseTests.cpp SessionCursorColorInputTests.cpp)
+# 최초 Native 자료를 새로 작성하지 않고 공용 검사에 같은 경로를 전달한다.
+set_source_files_properties(GameClockResetTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_GAME_CLOCK_RESET_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/game-clock-reset-x86.tsv\"")
+set_source_files_properties(ClockSyncResetTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CLOCK_SYNC_RESET_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/clock-sync-reset-x86.tsv\"")
+set_source_files_properties(PlayerCoreRecordsTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_PLAYER_CORE_RECORDS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/player-core-records-x86.tsv\"")
+set_source_files_properties(PlayerLinksCleanupTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_PLAYER_LINKS_CLEANUP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/player-links-cleanup-x86.tsv\"")
+set_source_files_properties(MetaZoneCleanupTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_META_ZONE_CLEANUP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/meta-zone-cleanup-x86.tsv\"")
+# 기술 비트의 원문 숫자 변환과 보호 TYPE 전체188필드를 별도2검사로 대조한다.
+target_sources(netstorm_tests PRIVATE TypeTechBitTests.cpp)
+set_source_files_properties(TypeTechBitTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_TYPE_TECH_BIT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/type-tech-bit-x86.tsv\";NETSTORM_TYPE_TECH_BIT_ASSETS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/type-tech-bit-assets-x86.tsv\";NETSTORM_TYPE_TECH_BIT_ORIGINALS=\"${CMAKE_CURRENT_SOURCE_DIR}/../../originals\"")

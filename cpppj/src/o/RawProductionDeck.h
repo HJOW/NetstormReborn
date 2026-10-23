@@ -34,6 +34,9 @@ public:
     void Compact(std::uint32_t token) const;
     // 후속재계산은같은raw항목/power/count를갱신한다.관찰결과별도목록을공급하지않는다.
     std::span<std::uint8_t> Bytes(std::uint32_t token) const;
+    // CRT free 경계: 같은 소유자의 한 블록만 반납한다. Player 필드/다른 블록/다음 토큰은 바꾸지 않는다.
+    // 0은 원문 free(NULL)처럼 무효과이며, 미등록 비영/중복 토큰은 명시 계약 오류다. 빌린 Bytes 뷰는 즉시 무효다.
+    void Release(std::uint32_t token) const;
     const SidPool& Pool() const; // 같은실제월드조립을확인한다.
     RawPlayerWorld& Player() const; // 같은현재9Player/두owner를후속부모가재사용한다.
 private:

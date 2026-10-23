@@ -1,0 +1,40 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-23",
+  "sourceAbsentBeforeObservation": true,
+  "initialPrefixes": 2,
+  "normalCallbacks": 232,
+  "assetTypes": 116,
+  "fieldCount": 188,
+  "selectedProperties": 23,
+  "controls": [
+    639,
+    895
+  ],
+  "precisionDifferences": 0,
+  "instructions": 1688380,
+  "gameOrOsExecuted": false,
+  "sha256": {
+    "cpppj/tests/fixtures/type-tech-bit-assets-x86.tsv": "0b9a94a945c114abc2a96b06c028b8d60744c32ea0e90931216969138d79c492",
+    "extracted/archer-type/originals/creation.c": "f91f9bc1884c57a974c07f71904f42e35697a2210d76681d36c3f7145aee17bf",
+    "extracted/archer-type/originals/functions.tsv": "9c354b3c13b4da517b576e40bd100b41aa3c9e437b5395a7ef6373b82024a014",
+    "extracted/archer-type-helper/originals/creation.c": "0c4d723a2b154e28f05d7700316b39ce8a6dc1269bac2f3a6126fbf1e27b05f3",
+    "extracted/archer-type-helper/originals/functions.tsv": "de852ac541cae8a79dfec1521200e7478a81ff228aa743e1a315a596ae38847a",
+    "extracted/owner/originals/creation.c": "f9919c046d5259526946f106b47b6259fe5e04971f743d6fa02d6a5361b9dc16",
+    "extracted/owner/originals/functions.tsv": "3ea66dace80a85999a8b2c2dbadb4d5f1bd18b0dcdb0768f9c41075206c7c72d",
+    "originals/d/_shapes.shp": "c878353c8054208deef832e34c514b30fe670e175505b129333a5728ba70f68e",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "tools/decomp_archertype_oracle.py": "2f02fdfc0e91fa1b112ccb34a53379ce6bb191dcecd4b0620deafaf25279f16a",
+    "tools/decomp_owner_oracle.py": "5a837ad7fd233d9d75c7241d52fbf2e5a508e24dc158d091f243a13ab698e7fb",
+    "tools/decomp_type_tech_bit.py": "bfa5046064f7af69dbb3a12d839f9983d293d3510738cc04dd7c04253d479951",
+    "tools/decomp_type_tech_bit_assets.py": "e35292c8689df17dab3633dfcbaf39cfe696b3434eb801d69fecec52e8bbaecb",
+    "tools/shp.py": "4cb8bee6ed773e29e8658ddb315594ebf5ac005ea5b96c6b760a177029515bfd"
+  },
+  "limits": [
+    "로딩순서는실제PE116포인터다.각번호의현재TYPE+1ec를전체callback의실제대입에서읽는다.",
+    "속성AST는현재보호type본문의techBit숫자줄만공급한다.본문SHA와입력pair를모두보존한다.",
+    "기하/클러스터는기존보호sunArcher35클러스터를모든callback에공급하는미선택필드경계다.다른각타입의실제geometry나전체TYPE복원을주장하지않는다.",
+    "전체188techBit의실제초기-1→해당type실제속성대입만대조한다.lexer/다른속성/전체게임설치는범위밖이다."
+  ]
+}

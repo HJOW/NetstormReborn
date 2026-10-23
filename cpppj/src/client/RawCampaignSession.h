@@ -56,6 +56,7 @@ class CampaignTemplateStorage; // Client보다 짧은 Session이 빌리는 같�
 class EditorFiles; // 실제 작업본 파일 장치이며 연결한 Session보다 오래 살아야 한다.
 class FortTypeConversionStorage; // 같은 Client의 현재 conversion DWORD와 실제 할당 소유자다.
 class ClientRandomGlobals; // 실제 Client의 CRT 상태와 Subscriber ID 최초시드 DWORD를 함께 빌린다.
+class ClientColorSortInput; // 같은 Client 최초 고정RGB 소유자이며 raw primary 전체 복원과 구별한다.
 class ClientLocalStateGlobals; // 실제 Client의 State 다섯 블록과 활동 기한의 장기 소유자다.
 struct TemplateWriteStream; // 실제 Template 저장소가 발급하는 명시 쓰기 수명이다.
 struct QuickHelpTypeInfo; // 전용 도움말이 같은 현재 TYPE/요구 에너지를 읽는 정보다.
@@ -196,6 +197,8 @@ struct RawCampaignSessionServices {
     std::function<void(std::int32_t,std::span<const std::uint8_t>)> carrierRequest; //4e2dc0의실제로컬전송/연결장치다.직접서버처리로대체하지않는다.
     std::function<void(std::int32_t,std::int32_t,std::int32_t,std::uint32_t)> carrierDropPopup; // 실제43dd20 비용 Gump의금액/화면x/y/참조SID다.
     o::BattlePacketPeers battlePeers; // 실제0..8 연결 객체 표다. 단독 캠페인은 NULL 연결이며 별도 송신 관찰 함수가 필요하지 않다.
+    std::shared_ptr<ClientColorSortInput> colorSortInput; // 실제 Client가 최초 고정 lookup 입력을 수명째 빌린다. 독립 장치 없는 기존 검사만 두 색 서비스 모두 생략한다.
+    std::function<std::span<const ScreenColor>()> screenPalette; // 연결 시점의 현재 화면 팔레트를 빌리며 Screen 교체 전 주소를 캐시하지 않는다.
     std::shared_ptr<ClientRandomGlobals> randomGlobals; // 생략된 독립 검사만 기존Session CRT0을 사용하고 실제Client는 같은장기소유자를 전달한다.
     std::shared_ptr<ClientLocalStateGlobals> localStateGlobals; // 생략된 독립 로그인 검사만 기존 local 블록/기한을 사용한다.
 };

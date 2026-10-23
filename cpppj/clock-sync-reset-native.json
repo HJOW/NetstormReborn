@@ -1,0 +1,26 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-23",
+  "entry": "004c1f20",
+  "bodyBytes": 18,
+  "cdSourceMapAddress": "004ec490",
+  "cdExecuted": false,
+  "inputs": 16,
+  "repeatsPerInputAndPrecision": 2,
+  "observations": 64,
+  "instructions": 320,
+  "precisionDifferentInputs": [],
+  "productAbsentBeforeObservation": true,
+  "externalChildren": [],
+  "scope": "18BYTE 전체 PE 실행. 동기화96/clock96/난수16BYTE와 실제 3store 순서 대조. 명령큐/공통Client/시간동기화 큰부모/공간해시 복원이나 게임 실행은 아님.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/refined/originalCD/Netstorm.c": "9306f621576571c85280f9e25f024e3ec8b7b68c5c8ec6731c1f109dc3f25ebb",
+    "extracted/refined/originalCD/functions.tsv": "453aa383c27baf8eefa00d97bf44051d18460150556511c2eb7a46f111e92def",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+    "tools/decomp_clock_sync_reset.py": "ac1fd4d276b638573665bd751ee5aff72df3bed86e4cc1d005295f3f3a92f097",
+    "cpppj/tests/fixtures/clock-sync-reset-x86.tsv": "c6d7c9cc0d365ee28a167e7fac55b80caad33be2a750b8829ed4359c6247e475"
+  }
+}

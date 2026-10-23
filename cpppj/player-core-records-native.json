@@ -1,0 +1,33 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-23",
+  "sourceAbsentBeforeObservation": true,
+  "entries": {
+    "42ce70": 16,
+    "48f350": 44,
+    "4feac0": 39,
+    "4feaf0": 10,
+    "43b540": 91
+  },
+  "uniqueInputs": 96,
+  "observations": 192,
+  "modeCounts": {
+    "0": 6,
+    "2": 6,
+    "3": 6,
+    "4": 6,
+    "1": 168
+  },
+  "instructions": 3090,
+  "precisionDifferences": 0,
+  "gameOrOsExecuted": false,
+  "scope": "Core44BYTEmetadata/16BYTEinit/39BYTE9recordCRT/10BYTElastKnownCRT를구별한다.43b540은별도ownerColors9DWORD identity표로귀속만관측하며Core모듈본문에포함하지않는다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+    "tools/decomp_player_core_records.py": "94b20be000f1e1f20c668303b1626170198b5fedbc2d8a8f0438f777a34dfaf3",
+    "cpppj/tests/fixtures/player-core-records-x86.tsv": "60e881b56bf325378e83459de04d938aa6a12f5f3c4f5151934093991d6a00a2"
+  }
+}

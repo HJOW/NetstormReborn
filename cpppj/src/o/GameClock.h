@@ -24,6 +24,8 @@ public:
     void Pause(std::uint32_t milliseconds);
     // 00460e30(A) ↔ CD 00401270: 마지막 정지가 풀릴 때만 정지 시간을 누적한다.
     void Resume(std::uint32_t milliseconds);
+    //00460e70의누적정지시간double만+0으로쓴다.원점/정지깊이/저장게임시각/현재Frame은변경하지않는다.
+    void Reset();
     // 00460de0: 중첩 정지 카운터가 양수인지 확인한다.
     bool IsPaused() const;
     // 00460e90(A) ↔ CD 004012d0의 시각 고정·delta·프레임 증가 부분.

@@ -28,6 +28,8 @@ void GameClock::Pause(std::uint32_t milliseconds) {
 void GameClock::Resume(std::uint32_t milliseconds) {
     if (pauseDepth_ != 0 && --pauseDepth_ == 0) pausedTotal_ = (GameSeconds(milliseconds) - pausedGame_) + pausedTotal_;
 }
+//원문13BYTE는0055b4f8에+0.0만쓰며현재시각조회/정지해제/프레임재캡처나난수를호출하지않는다.
+void GameClock::Reset() { pausedTotal_=0.0; }
 // 게임 시계 정지 여부를 반환한다.
 bool GameClock::IsPaused() const { return pauseDepth_ != 0; }
 // 갱신 전체가 같은 시각을 사용하도록 한 번 계산해 스냅샷을 반환한다.

@@ -44,6 +44,13 @@ std::size_t RawProductionDeck::PointerOffset(std::uint32_t owner) const {
 std::span<std::uint8_t> RawProductionDeck::Bytes(std::uint32_t token) const {
     const auto found=blocks_.find(token);if (found==blocks_.end()) throw std::out_of_range("현재PlayerDeck의실제할당블록누락");return found->second;
 }
+// 0048fcd0의 선택된 free 인자를 동일한 할당 소유자에 연결한다. Player+68의 후속0쓰기는 부모가 수행한다.
+void RawProductionDeck::Release(std::uint32_t token) const {
+    if (!token) return;
+    const auto found=blocks_.find(token); // 다른 월드/이미 반납한 비영 토큰을 성공으로 처리하지 않는다.
+    if (found==blocks_.end()) throw std::out_of_range("현재PlayerDeck의실제반납블록누락");
+    blocks_.erase(found);
+}
 // 새할당의미초기화영역은fill입력을보존하고원본다섯DWORD만쓴다.
 std::uint32_t RawProductionDeck::Get(std::uint32_t owner) const {
     const auto offset=PointerOffset(owner);const auto current=Read(player_.Records(),offset);if (current) { static_cast<void>(Bytes(current));return current; }
