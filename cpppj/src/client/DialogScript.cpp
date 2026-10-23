@@ -166,7 +166,7 @@ bool HasContent(std::string_view text) {
 }
 // 1차HTML이원문LF를공백으로바꾸므로원본메타regex의마지막인자경계와종류우선순위를사용한다.
 // Key/Input/Zsend의실제입력컨트롤은아직공급되지않아선택시명시적으로거부한다.
-DialogPage ExtractRuntimeMetadata(std::string text) {
+DialogPage ExtractRuntimeMetadata(std::string text,const DialogMetadataHooks& hooks) {
     static const std::array<std::regex,9> patterns{ // 원본004c83b0의같은대소문자/캡처/검색우선순위다.
         std::regex(R"(\$Button[ \t]*=[ \t]*([^,]+),([^,]+),([^$ ]+))"),
         std::regex(R"(\$ButtonInstant[ \t]*=[ \t]*([^,]+),([^,]+),([^$ ]+))"),
@@ -186,8 +186,12 @@ DialogPage ExtractRuntimeMetadata(std::string text) {
         if (kind==patterns.size()) break;
         if (kind>=6) throw std::logic_error("Tell 메타의실제Key/Input/Zsend컨트롤미연결");
         const auto label=Trim(match[1].str());const DialogAction action{Trim(match[2].str()),Trim(match[3].str())};
-        if (kind<4) page.items.push_back({label,action,kind==2 || kind==3,kind==3 && o::ConfigParseLong(match[4].str())!=0,
-            kind!=3 || o::ConfigParseLong(match[5].str())!=0,kind==1});
+        if (hooks.resolveAction) hooks.resolveAction(action); // sentinel도 원래 placeholder의 조회/인자 효과를 먼저 실행한다.
+        if (kind<4) {
+            DialogItem item{label,action,kind==2 || kind==3,kind==3 && o::ConfigParseLong(match[4].str())!=0,
+                kind!=3 || o::ConfigParseLong(match[5].str())!=0,kind==1};
+            if (item.menu && hooks.appendMenu) hooks.appendMenu(page,std::move(item));else page.items.push_back(std::move(item));
+        }
         else if (kind==4) { page.timeoutSeconds=o::ConfigParseLong(label);page.timeout=action; }
         else page.onExit=action;
         const auto start=static_cast<std::size_t>(match.position());auto end=text.find_first_of("\n$",start+1);
@@ -200,7 +204,7 @@ DialogPage ExtractRuntimeMetadata(std::string text) {
 // 기존검사의원문호환계약은유지하고실제Tell에서는이overload를선택하지않는다.
 DialogPage ParseDialogPage(std::string_view source) { return ExtractDialogPage(FilterDialogConditions(source),true); }
 // 1차HTML의효과·표시상태를메타추출보다먼저실행하고같은상태의2차HTML입력을반환한다.
-DialogPage ParseDialogPage(std::string_view source,HtmlTextParserState& state,HtmlTextParserGlobals& globals,HtmlTextParserHooks hooks,o::OriginalEdition edition) {
+DialogPage ParseDialogPage(std::string_view source,HtmlTextParserState& state,HtmlTextParserGlobals& globals,HtmlTextParserHooks hooks,o::OriginalEdition edition,DialogMetadataHooks metadata) {
     std::vector<std::string> commands,warnings;std::string background;
     const auto command=hooks.command;const auto setBackground=hooks.background;
     hooks.command=[&](HtmlTextParserState& current,std::string_view raw) {
@@ -212,7 +216,7 @@ DialogPage ParseDialogPage(std::string_view source,HtmlTextParserState& state,Ht
         background=name;if (setBackground) setBackground(current,name);
     }; // 실제배경이름은현재페이지의소유필드에도보관한다.
     const auto first=HtmlTextParser(state,globals,std::move(hooks),edition).Parse(source);
-    auto page=ExtractRuntimeMetadata(first);page.commands=std::move(commands);page.warnings=std::move(warnings);page.background=std::move(background);page.hasContent=HasContent(first);
+    auto page=ExtractRuntimeMetadata(first,metadata);page.commands=std::move(commands);page.warnings=std::move(warnings);page.background=std::move(background);page.hasContent=HasContent(first);
     std::string second;second.reserve(page.htmlBody.size());
     // 원본00504b0c→00515eb8과같이1차출력의모든LF를실제BR태그로되돌린다.
     for (const char byte:page.htmlBody) { if (byte=='\n') second+="<br>";else second+=byte; }

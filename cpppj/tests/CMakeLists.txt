@@ -1787,6 +1787,10 @@ set_source_files_properties(DataManagerReadTests.cpp PROPERTIES COMPILE_DEFINITI
 target_sources(netstorm_tests PRIVATE SoloMapListTests.cpp)
 # 실제 디스크/TAFF Fort와 같은 Template/State 수명의 목록 연결을 검사한다.
 target_sources(netstorm_tests PRIVATE SoloMapCatalogTests.cpp)
+# Tell 맵 목록 부모의 실제 기본블록 원문과 현재 메타 호출 시점을 대조한다.
+target_sources(netstorm_tests PRIVATE TellMapMenusTests.cpp)
+set_source_files_properties(TellMapMenusTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_TELL_MAP_MENUS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/tell-map-menus-x86.tsv\"")
 # 실제 저장 부모의 현재 관문과 두 가상 파일명 조회를 독립 관측에 대조한다.
 target_sources(netstorm_tests PRIVATE DataManagerFileSaveTests.cpp)
 # 실제 작업본의 Notify/직렬화/파일 쓰기/재읽기와 원본 보호를 확인한다.

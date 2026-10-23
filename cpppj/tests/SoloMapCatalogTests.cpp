@@ -1,6 +1,8 @@
 // 실제 보호 Fort와 별도 생성 파일을 사용해 목록의 파일/State/Subscriber 연결을 확인한다.
 #include "client/SoloMapCatalog.h"
 #include "client/CampaignTemplateStorage.h"
+#include "client/TellMapMenus.h"
+#include "client/DialogScript.h"
 #include "o/ConfigInterface.h"
 #include "o/OriginalText.h"
 #include "DudeSpawnSupport.h"
@@ -164,4 +166,34 @@ TEST_CASE(SoloMapCatalog_FileSpecChangesBetweenClassificationAndMetadata) {
     effects.typeCount=[&] { ++reads;if (reads==1) spec.SelectSolo();return 188; }; // 분류 파일 읽기 뒤 실제 콜백에서 같은 키 버퍼만 변경한다.
     SoloMapCatalog catalog(files,config,std::move(effects));CHECK(catalog.Refresh(2)==1 && reads==2 && catalog.Cached().names[0]=="map" && catalog.Cached().flags[0]==2);
     CHECK(keys==std::vector<std::string>({"fortSpec","fortSpec","SOLOSpec"}) && !allocations && !catalog.Cached().dirty);
+}
+
+// 실제 보호 파일의 목록을 Tell 메타 시점에 확장하고 현재 열/ReadFort/선택 이름을 연결한다.
+TEST_CASE(SoloMapCatalog_TellMetadataUsesActualFilesAndCurrentNames) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);ConfigInterface config({});
+    config.Set("fortSpec","d/{local.1}.fort");config.Set("SOLOSpec","d/{local.1}.fort");config.SetInt("mayEditMissions",1);
+    std::string user,current,fallback;std::size_t allocations{};SoloMapFileSpec spec;auto effects=Effects(user,allocations);
+    effects.fileSpecKey=[&] { return spec.Current(); }; // 같은 키 버퍼를 열거·분류·별도 메타 읽기에 제공한다.
+    SoloMapCatalog catalog(assets.files,config,std::move(effects));DialogMetadataHooks metadata;std::vector<std::uint32_t> columns,commands;
+    metadata.appendMenu=[&](DialogPage& page,DialogItem item) {
+        const auto hooks=MakeTellMapMenuHooks(catalog,spec,[&]() -> std::string_view { return current; },[&]() -> std::string_view { return fallback; },
+            [&](auto flags) { columns.push_back(flags); },[&](const auto& row,auto command) {
+                commands.push_back(command);page.items.push_back({row.label,{"ReadFort",row.name},true,row.checked,row.enabled,false,page.menuColumns-1});
+            }); // 실제 파일 Row의 반환 문자열/표시 관문을 현재 페이지로 옮긴다.
+        CHECK(AppendTellMapMenus(item.label,page.menuColumns,hooks));
+    };
+    HtmlTextParserState state;HtmlTextParserGlobals globals;const auto first=ParseDialogPage("Body$Menu=*SOLOLIST*,DoNothing,0",state,globals,{},OriginalEdition::Patch1078,metadata);
+    CHECK(catalog.Cached().count>15 && first.items.size()==static_cast<std::size_t>(catalog.Cached().count));CHECK(first.menuColumns==2 && columns==std::vector<std::uint32_t>({0x40000,0x40000}));
+    CHECK(spec.Current()=="fortSpec" && catalog.Cached().dirty==1 && !allocations);CHECK(first.items.front().menuColumn==0 && first.items.back().menuColumn==1);
+    CHECK(std::all_of(commands.begin(),commands.end(),[](auto code) { return code==0x020000ca; }));
+    for (std::size_t index=0;index<first.items.size();++index) CHECK(first.items[index].action.argument==catalog.Cached().names[index]); // 원본 OS 열거의50개 상한과 순서를 그대로 전달한다.
+    fallback=first.items.front().action.argument;columns.clear();commands.clear();state={};
+    const auto second=ParseDialogPage("Body$Menu=*SOLOLIST*,DoNothing,0",state,globals,{},OriginalEdition::Patch1078,metadata);
+    CHECK(second.items.front().checked);current=second.items.back().action.argument;state={};
+    const auto third=ParseDialogPage("Body$Menu=*SOLOLIST*,DoNothing,0",state,globals,{},OriginalEdition::Patch1078,metadata);
+    CHECK(!third.items.front().checked && third.items.back().checked); // 비어 있지 않은 현재 이름은 fallback 선택보다 우선한다.
+    config.Set("SOLOSpec","d/TEST01.fort");state={};columns.clear();commands.clear();
+    const auto custom=ParseDialogPage("Body$Menu=*SOLOLIST*,DoNothing,0",state,globals,{},OriginalEdition::Patch1078,metadata);
+    CHECK(custom.items.size()==1 && custom.items[0].action.argument=="TEST01" && custom.items[0].action.command=="ReadFort");
+    CHECK(custom.menuColumns==1 && commands==std::vector<std::uint32_t>({0x020000ca}) && spec.Current()=="fortSpec" && catalog.Cached().dirty==1);
 }

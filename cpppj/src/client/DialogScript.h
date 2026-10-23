@@ -2,6 +2,7 @@
 #pragma once
 #include "o/ConfigInterface.h"
 #include "client/HtmlTextParser.h"
+#include <functional>
 
 namespace netstorm::client {
 // 다이얼로그 항목이 실행할 명령과 인자이다.
@@ -17,6 +18,7 @@ struct DialogItem {
     // enabled: 해당 동작을 입력·실행할 수 있는지.
     // instant: 버튼 해제 대기 없이 누름 즉시 동작할지.
     bool menu{}, checked{}, enabled{true}, instant{};
+    std::uint32_t menuColumn{}; // Tell의 현재 세로 열 번호다. 하단 버튼은 사용하지 않는다.
 };
 // 다이얼로그 본문 한 문단과 글꼴 효과이다.
 struct DialogParagraph { /* text: 표시하거나 해석할 본문 문자열. */ std::string text; /* heading: 이동 방향 번호. */ int heading{}; /* italic: 본문에 기울임 글꼴 효과를 적용할지. */ /* bold: 본문에 굵은 글씨 효과를 적용할지. */ bool italic{}, bold{}; };
@@ -31,6 +33,7 @@ struct DialogPage {
     std::vector<DialogParagraph> paragraphs;
     // items: 읽거나 생성한 항목의 순서 있는 목록.
     std::vector<DialogItem> items;
+    std::uint32_t menuColumns{}; // 원본 Tell+21c8의 현재 메뉴 열 수다. 빈 맵 목록도 생성한 열을 보존한다.
     // background: 배경 출력 자료 또는 배경 Gump 토큰.
     std::string background;
     // timeoutSeconds: 다이얼로그 시간 제한의 길이(초).
@@ -39,6 +42,11 @@ struct DialogPage {
     // onExit: 페이지에서 나갈 때 실행할 동작.
     DialogAction timeout, onExit;
 };
+// 메타 추출 시점의 명령 조회/문자열 수명과 실제 메뉴 목록 장치를 공급한다.
+struct DialogMetadataHooks {
+    std::function<void(const DialogAction&)> resolveAction; // 항목 종류 처리 전에 원본 명령 조회와 인자 변환 효과를 수행한다.
+    std::function<void(DialogPage&,DialogItem)> appendMenu; // Menu/Checked가 선택된 바로 그 시점에 현재 열과 실제 목록을 추가한다.
+};
 // 기존독립검사의문자열호환필터다. 실제Tell은아래현재상태/Config효과를받는overload만사용한다.
 std::string FilterDialogConditions(std::string_view source);
 // 기존독립검사의원문/메타추출호환경로다. 실제게임의HTML효과·Config조회시점검증으로세지않는다.
@@ -46,5 +54,5 @@ DialogPage ParseDialogPage(std::string_view source);
 // 원본004cf270의1차HTML→기존메타추출→LF를<br>로재구성한다. source는선행전체Config치환결과다.
 // 같은state/globals/hooks로DialogBodyLayout::SetBody를호출해2차HTML을수행해야한다. inline명령은선택시실제hook을즉시호출한다.
 DialogPage ParseDialogPage(std::string_view source,HtmlTextParserState& state,HtmlTextParserGlobals& globals,HtmlTextParserHooks hooks,
-    o::OriginalEdition edition=o::OriginalEdition::Patch1078);
+    o::OriginalEdition edition=o::OriginalEdition::Patch1078,DialogMetadataHooks metadata={});
 }

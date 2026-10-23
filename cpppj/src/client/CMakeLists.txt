@@ -10,6 +10,7 @@ target_sources(netstorm PRIVATE
     MissionFortRequest.cpp MissionFortRequest.h
     CampaignTemplateStorage.cpp CampaignTemplateStorage.h
     SoloMapCatalog.cpp SoloMapCatalog.h
+    TellMapMenus.cpp TellMapMenus.h
     EditorFiles.cpp EditorFiles.h
     # 실제 Guide의 시작/분기/재시작/종료 교체와 원본 제어 사건을 연결한다.
     GuideMissionTransitions.cpp GuideMissionTransitions.h
