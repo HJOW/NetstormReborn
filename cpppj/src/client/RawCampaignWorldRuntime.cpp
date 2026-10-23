@@ -95,4 +95,6 @@ void RawCampaignWorldRuntime::Load() {
 const o::SidPool& RawCampaignWorldRuntime::Pool() const { return impl_->core.pool; }
 // 실제 저장객체 loader를 제공하며 별도 사본을 만들지 않는다.
 const o::RawFortObjectLoad& RawCampaignWorldRuntime::Objects() const { return *impl_->objects; }
+// 새 로드/재파싱 없이 같은 현재 manager의 Territory 읽기 부모를 실행한다.
+void RawCampaignWorldRuntime::ReadTerritory(std::uint32_t slot,std::span<std::uint8_t,120> output) const { impl_->territory->ReadTerritory(slot,output); }
 }

@@ -3,6 +3,7 @@
 #include "client/CampaignTemplateStorage.h"
 #include "o/RawFortSnapshotBasics.h"
 #include "o/RawFortContentSave.h"
+#include "o/RawFortTerritorySave.h"
 #include "client/RawProductionMaintenance.h"
 #include "client/RawKnowledgeMenu.h"
 #include "o/CanonDecoder.h"
@@ -3077,6 +3078,18 @@ void RawCampaignSession::SnapshotFortTechnology(std::uint32_t slot) {
     hooks.parentType=[&](auto selected) { return hooks.type(hooks.form(selected)[10]); };hooks.assertion=SessionMissing<void,FortContentSaveAssertion>();
     hooks.access=[&](auto token,const auto& operation) { if (token!=1) throw std::logic_error("실제 Technology stream 선택 불일치");s.templateStorage->AccessSection(stream,operation); };
     SaveFortContents(parent,1,hooks);
+}
+// 현재 섬 목록과 실제 청크를 읽으며 빈 지역 seed도 같은 공용 난수에서 소비한다.
+void RawCampaignSession::SnapshotFortTerritory(std::uint32_t slot) {
+    auto& s=*impl_;if (!s.loaded || slot>=9) throw std::logic_error("실제 Territory snapshot의 설치/슬롯 계약 위반");std::vector<TemplateWriteStream> streams;FortTerritorySaveHooks hooks;
+    hooks.load=[&s](auto selected,auto records) { s.runtime->ReadTerritory(static_cast<std::uint32_t>(selected),records); };hooks.special=[&s] { return s.globals.editor; };hooks.noRegion=[&s] { return s.noRegion; };
+    hooks.island=[&s](auto owner,auto region) { return FindFortTerritoryIsland(s.islands->Bytes(),s.core.ownerMode.fort,owner,region); };hooks.anyIsland=[&s](auto region) { return FindAnyFortTerritoryIsland(s.islands->Bytes(),region); };
+    hooks.record=[&s](auto island) { return FortTerritoryIslandRecord(s.chunks,island); };hooks.seed=[&s](auto record,auto index) { SeedFortTerritoryRecord(record,index,[&s](auto limit) { return s.random.Next(limit); }); };
+    hooks.manager=[&s](auto selected) { if (selected<0 || selected>=9) throw std::out_of_range("실제 Territory Template9 범위");return Read(s.templateStorage->Headers(),static_cast<std::size_t>(selected)*20); };
+    hooks.create=[&](auto manager) { if (manager!=hooks.manager(static_cast<std::int32_t>(slot))) throw std::logic_error("실제 Territory 생성 manager 불일치");static_cast<void>(s.templateStorage->CreateSection(slot,"Territory")); };
+    hooks.current=[&](auto manager) { if (manager!=hooks.manager(static_cast<std::int32_t>(slot))) throw std::logic_error("실제 Territory 현재 manager 불일치");streams.push_back(s.templateStorage->CurrentWriteStream(slot));return static_cast<std::uint32_t>(streams.size()); };
+    hooks.access=[&](auto token,const auto& operation) { s.templateStorage->AccessSection(streams.at(token-1),operation); };hooks.assertion=SessionMissing<void,FortTerritorySaveAssertion>();
+    o::SnapshotFortTerritory(static_cast<std::int32_t>(slot),hooks);
 }
 // 현재 세 카운터와 생산이 사용하는 같은 금지DWORD 표를 빌린다.
 RawTotalMade& RawCampaignSession::TotalMade() { return *impl_->totalMade; }

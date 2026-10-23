@@ -39,8 +39,9 @@ public:
     std::string ReadSubscriberName(std::uint32_t slot); // 004bd4d0처럼 실제 Subscriber 선택/ID 건너뜀/signed 길이 읽기로 현재 이름을 반환한다.
     o::PlayerTemplateStateStream& InitializeState(std::uint32_t slot,std::span<const std::uint8_t,28> bytes); // 기존 State 반납 뒤 새 섹션을 목록 끝에 만들고 원본16384BYTE 버퍼에28BYTE를 쓴다.
     TemplateWriteStream CreateSection(std::uint32_t slot,std::string_view name); // 표준 섹션을 원본 생성 부모로 교체하고 새 마지막 노드의 쓰기 참조를 반환한다.
+    TemplateWriteStream CurrentWriteStream(std::uint32_t slot); // 현재 헤더의 manager/current를 다시 읽어 같은 노드의 생성 수명을 고정한다.
     void WriteSection(TemplateWriteStream stream,std::span<const std::uint8_t> bytes); // 현재 선택과 무관하게 보관한 섹션의 원본 MemStream에 쓴다.
-    void AccessSection(TemplateWriteStream stream,const std::function<void(std::span<std::uint8_t>,const o::MemStreamHooks&)>& operation); // 인라인 원본 쓰기에 같은16BYTE 필드/실제 버퍼를 동기적으로 빌린다. 할당/노드 교체는 허용하지 않는다.
+    void AccessSection(TemplateWriteStream stream,const std::function<void(std::span<std::uint8_t>,const o::MemStreamHooks&)>& operation); // 인라인 쓰기에 같은16BYTE/버퍼를 동기적으로 빌린다. 할당/노드 교체와 같은 노드의 중첩 쓰기 빌림은 허용하지 않는다.
     o::PlayerTemplateStateStream& EnsureStateSize(std::uint32_t slot,std::int32_t minimum); // 원본 임시 생성/복사/추가/이름 교체 뒤 같은 새 현재 State를 돌려준다.
     std::vector<std::string> SectionOrder(std::uint32_t slot); // 실제 head/next를 따라 현재 섹션 순서를 조회한다.
     std::string_view CurrentSection(std::uint32_t slot); // 같은 manager가 마지막으로 선택한 실제 섹션 이름을 읽는다.

@@ -1,12 +1,21 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-23 단위364 완료: 현재 지도 Territory 저장
+
+- [x] 이전 목표 턴은 실제 기술 저장 구현·독립706행·전체2359/0 검증·`db1af853 / 20261023-30 CP` 커밋을 남긴 진행으로 분류한다. AGENTS.md와 공통/닷넷 인수인계를 다시 읽었다. 현재/마지막 전체 정밀 디컴파일 PC는 **VM-W11-Codex / 2026-10-23**으로 일치한다. 기존 정밀 원문을 사용하며 새 디컴파일/원본 게임 실행/보호 원문·AGENTS 변경은 없다.
+- [x] Territory 저장004bf6d0의 기존120BYTE 읽기·일반 owner필터/Editor 누락 순번·현재 지도record·생성 뒤 현재 manager/current 재조회·고정 stream 쓰기를 구현했다. 같은 live islandBytes/ChunkMap과 공유 Impl::random을 사용하며 원시 Fort의 과거 기록으로 현재 지도를 대체하지 않는다. getter0046f380/0046f3f0·빈 기록 seed004b37c0까지 독립 PE **10,494입력·두 정밀도20,988관측·948,506본체명령·차이0**으로 검증했다.
+- [x] 최종 Release 빌드2 종료0·경고/오류0, 독립20,988행과 실제 월드/현재 커서/참조·중첩 빌림 제약의 새5검사 및 기존 TypeNames·Deck4/Technology3검사 모두 실패check0이다. 첫 Storage 검사의 빈 tail 압축0용량 기대를 수정했다. [상세](docs/exe/cpp-fort-territory-save-20261023.md)에 근거/한계/Objects 후속 경로를 기록했다. 제품/검사 C++는 이 최종 검증 뒤 동결했다.
+- [x] 최종 전체 CTest1은 **2,364검사·실패check0·종료0/280.93초**이고 LastTest.log 내부2364/0도 확인했다. UTF-8/한국어 주석/원본·도구·세TSV 해시/diff/보호 경로를 확인하고 **20261023-31 CP**로 로컬 커밋한다. 로그는 `extracted/cpp-fort-territory-save-20261023-*`다. 다른 dotnet 세션 변경 및 원격 push는 없다. 현재 Editor/전체 snapshot 부모를 UI에 활성화한 것으로 계산하지 않는다.
+- [ ] 후속은 Objects/Terr·Chaff, 공유 난수 Money, 실제 Mission/Badges 및 마지막 Notify다. generic Fort 설치/Editor 입력·State1/6/새 맵·커스텀 시나리오·전체 Early Missions/캠페인/데모3 사용자 완주와 Multiplayer 외 메인 메뉴/GUI/음향·배포 검증은 계속 활성 목표다.
+- [ ] 다음 Objects는 단일 객체004bd940→청크/Finder004be020→Terr/Chaff004be230/350·부모004be430 순서다. 표시용 World.Objects 대신 원본 RawSquidFinder 순서를 사용한다. 정확한 임시 이름`Temp`의 동적 노드/rename 지원과005c89c0 version의 Storage/Session 수명 공유가 필요하다. 가상60은 ContentForm Robust와 다르며 기존 Pop VT26개 중22개는flags1 bit20000000 배제/4개는항상0이다. [상세](docs/exe/cpp-fort-territory-save-20261023.md)에 주소/재사용 모듈/한계를 남겼다.
+
 ## 2026-10-23 단위363 완료: 실제 기술 내용물 저장
 
 - [x] AGENTS.md와 공통/닷넷 인수인계를 다시 읽고 `972b16b2 / 20261023-29 CP`에서 이어갔다. 현재/마지막 전체 정밀 디컴파일 PC는 **VM-W11-Codex / 2026-10-23**으로 일치한다. 기존 정밀 원문을 사용했으며 새 디컴파일/원본 게임 실행/보호 원문·AGENTS 변경은 없다.
 - [x] 원본004bcea0 내용물 writer의 고정 count BYTE·현재 후보/타입 재조회·QA BYTE/WORD·부모 fallback·재귀별 finder를 구현하고 실제 Session의 같은 Player 기술 부모/Pool/ContentForm Robust/TYPE/명시 stream에 연결했다. 독립 PE **353입력×두 정밀도706행·273,296본체명령·차이0**을 확보했다. [상세](docs/exe/cpp-fort-content-save-20261023.md)에 계약/범위/후속 작업을 기록한다.
 - [x] 최종 Release 빌드2는 종료0·경고/오류0, 독립706행/빈 목록·누락 장치·순환/실제 월드의 기술 추가·Robust 제외·삭제→작업 파일 저장/재읽기 관련3검사는 실패check0이다. 첫 비교의 비영 Robust DWORD를 bool로 줄인 검사 장치 문제2행을 수정했고 제품 본체는 바꾸지 않았다. 최종 전체 CTest1은 **2,359검사·실패check0·종료0/257.92초**이며 LastTest.log 내부2359/0도 확인했다. UTF-8/한국어 주석/diff/보호 경로/원본·도구·TSV 해시를 확인하고 **20261023-30 CP**로 로컬 커밋한다. 최종 검증 뒤 제품/검사 C++는 바꾸지 않았다. 별도 dotnet 세션 변경 및 원격 push는 없다.
-- [ ] 전체 snapshot004bf9a0에는 Objects/Terr·Chaff, Territory 현재 지역/120BYTE, 공유 난수 Money, 실제 Mission/Badges/Notify가 남아 있다. generic Fort 설치/Editor 입력·State1/6/새 맵/시나리오 및 전체 사용자 완주 목표도 계속 미완료다. 이 기술 저장 연결만으로 GUI Editor를 활성화하지 않는다.
-- [ ] 다음 Territory는 기존120BYTE→일반 owner필터/Editor 누락 지역 seed→현재 manager/current 재조회→고정 stream120BYTE 저장의 원본 순서를 복원한다. live chunks/islandBytes/RawIslandRuntime를 사용하되 Matches0046f200을0046f380/0046f3f0 대신 쓰지 않는다. 누락 seed는 같은 Impl::random.Next(254)+1이며 부분 필드만 바꾼다. 상세에 주소/정밀 원문 행을 보존했다. 마지막 Notify를 위한 BindFileSave 미연결과 Changed의 빈 filename 거부 차이도 후속에 남긴다.
+- [ ] 전체 snapshot004bf9a0에는 Objects/Terr·Chaff, 공유 난수 Money, 실제 Mission/Badges/Notify가 남아 있다. generic Fort 설치/Editor 입력·State1/6/새 맵/시나리오 및 전체 사용자 완주 목표도 계속 미완료다. 이 기술 저장 연결만으로 GUI Editor를 활성화하지 않는다.
+- [x] 다음 Territory의 기존120BYTE→현재 지도/빈 seed→현재 manager/current→고정 stream 저장은 단위364에서 완료하고20,988 독립 관측/실제 월드/전체2364/0으로 검증했다. 마지막 Notify를 위한 BindFileSave 미연결과 Changed의 빈 filename 거부 차이는 계속 후속이다.
 
 ## 2026-10-23 단위362 완료: 실제 TypeNames/Deck snapshot과 쓰기 stream 수명
 

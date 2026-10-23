@@ -45,6 +45,7 @@ public:
     // 검사/후속 미션 부모가 같은 Pool과 저장객체 몸체를 확인할 때 사용한다.
     const o::SidPool& Pool() const;
     const o::RawFortObjectLoad& Objects() const;
+    void ReadTerritory(std::uint32_t slot,std::span<std::uint8_t,120> output) const; // 같은 실제 Territory getter를 snapshot 부모에서도 재사용한다.
 private:
     struct Impl; // 동일 Core와 실제 세 로더 몸체를 고정 주소에 소유한다.
     std::unique_ptr<Impl> impl_; // 공급한 상태와 객체는 이 구현보다 오래 살아야 한다.

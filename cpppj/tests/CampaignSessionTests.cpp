@@ -870,6 +870,20 @@ TEST_CASE(CampaignSession_FortContentSaveCurrentTechnology) {
     session.ClearTechnology(1);CHECK(session.FindTechnology(1,type).value==0);CHECK(core.pool.Slot(skipped)[10]==6);session.SnapshotFortTechnology(1);storage->SaveFile(1,{readOnly,owner,hidden},image,files.Writer());
     const auto emptyBytes=ReadFileBytes(path);const auto empty=FortTemplate::Parse(emptyBytes,assets.game.TypeTable());CHECK(emptyBytes!=saved && empty.technology.complete && empty.technology.items.empty());CHECK(assets.files.Read("d/thewarbegins.fort")==original);
 }
+// 실제 설치된 지도의 record를 작업 Territory에 반영하고 비활성 bit0의 기존 기록도 보존한다.
+TEST_CASE(CampaignSession_FortTerritorySaveCurrentWorld) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);const auto original=assets.files.Read("d/thewarbegins.fort");SessionServicesFixture external;auto services=external.Services();const auto storage=std::make_shared<CampaignTemplateStorage>();services.templateStorage=storage;
+    RawCampaignSession session(assets.game,assets.files,FortTemplate::Parse(original,assets.game.TypeTable()),"thewarbegins",std::move(services));CHECK(Throws([&] { session.SnapshotFortTerritory(1); }));session.Load();
+    const auto stamp=std::chrono::steady_clock::now().time_since_epoch().count();const auto root=assets.root.parent_path();EditorFiles files(root/"cpppj/build/test-data"/("snapshot-territory-"+std::to_string(stamp)),{assets.root,root/"originalCD"});const auto path=files.Prepare("TerritorySnapshot",original);storage->InstallFile(1,FortTemplate::Parse(original,assets.game.TypeTable()),original,path.string());
+    const auto names=FortTemplate::SectionNames();const auto territory=static_cast<std::size_t>(std::find(names.begin(),names.end(),"Territory")-names.begin());auto& raw=storage->Template(1).sections.at(territory);CHECK(raw.size()==120);
+    for (std::size_t region=0;region<20;++region) { raw[region*6]^=0x40;raw[region*6+1]|=1;raw[region*6+2]^=0x11;raw[region*6+3]^=0x33; } // 과거 파싱 사본과 구별되는 기존 기록 입력이며 실제 지도는 바꾸지 않는다.
+    const auto corrupt=raw;session.SnapshotFortTerritory(1);const auto current=storage->Template(1).sections.at(territory);CHECK(current.size()==120 && current!=corrupt && storage->CurrentSection(1)=="Territory");
+    std::vector<std::size_t> changed;for (std::size_t region=0;region<20;++region) if (!std::equal(current.begin()+region*6,current.begin()+region*6+6,corrupt.begin()+region*6)) changed.push_back(region); // 현재 소유권 조건으로 실제 갱신된 지역만 찾는다.
+    CHECK(!changed.empty());if (changed.empty()) return;const auto selected=changed.front()*6;auto& secondInput=storage->Template(1).sections.at(territory);secondInput[selected]^=0x80;secondInput[selected+1]&=0xfe;secondInput[selected+2]^=0x22;const auto disabled=secondInput;
+    session.SnapshotFortTerritory(1);CHECK(storage->Template(1).sections.at(territory)==disabled);CHECK(storage->Territory(1).position==120 && storage->Territory(1).end==120);
+    std::uint32_t readOnly{},owner=session.LocalOwner();std::array<std::uint8_t,9> hidden{};FortImageHooks image;image.typeCount=[&] { return static_cast<std::uint32_t>(session.Core().types.size()); };image.assertion=[](auto) { throw std::logic_error("Territory 작업 파일의 예상 밖 이미지 진단"); };
+    storage->SaveFile(1,{readOnly,owner,hidden},image,files.Writer());const auto saved=ReadFileBytes(path);const auto decoded=FortTemplate::Parse(saved,assets.game.TypeTable());CHECK(saved!=original && decoded.territory==disabled && decoded.sections.at(territory)==disabled);CHECK(assets.files.Read("d/thewarbegins.fort")==original);
+}
 // 같은 생산 월드의 empty84는 관찰 카운터 대신 실제 공통 삭제/반납으로 들어가야 한다.
 TEST_CASE(CampaignSession_EmptyGeyserUsesCurrentDeletion) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
