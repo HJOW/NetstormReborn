@@ -1,5 +1,16 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-24 단위384 완료: 실제 Subscriber·난수 수명과 Editor 외곽 연결
+
+- [x] 단위383을 **a9af29da / 20261024-05 CP**로 커밋했다. 전체2506검사 실패0/337.50초,최종제품·검사SHA와 originals1394동일은 직전 기록에 있다. 현재/마지막 전체 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-23**이다.
+- [x] 동결 ClientRandomGlobals(owner4a137a87…)→Subscriber(99ee09dc…)를 실제 공유 문맥에서 순차 check/apply 네 단계 모두 종료0으로 적용했다. 같은 Client CRT DWORD/장기wrapper/Subscriber 최초시드와 Session Seed·지형·파편을 연결하며 독립 Session CRT0 fallback은 보존한다. 정상 파일ID·등록설정·새ID 생성은 실제 Storage/Config/ID/handle에 연결했다. [진행 기록](docs/exe/cpp-editor-subscriber-runtime-20261024.md).
+- [x] State/UI12ba89ce…와 Storage.LoadFile836f938b… 및 Screen7b1441e8… 제안을 검토·적용했다. 같은 Client5×144BYTE/기한, actualHUD includeHidden1, State4 공통확정, 실제 섬count, manager 선공개/정상false·예외 부분효과와 일반GDI clear1/clip복구를 연결했다. 팔레트 부모의 ColorSort 오인명칭은 Cloud/Kencloud로 교정하고 최초7파일·tool/fixture/report는 보존했다.
+- [x] 신규 **26검사(소유자5/Subscriber4/tail4/Storage9/팔레트2/Screen2)**와 최종 전체 **2532검사 실패check0/종료0·312.81초(전체312.85초)**가 통과했다. 제품/검사 build1·2는 종료0·관측 경고오류0이다. 최초 팔레트 API 의미 교정 중 root가 검사 입력 레이블2개까지 바꾼 실패를 보존하고 원래 입력을 복구한 뒤 팔레트2/전체2532가 통과했다. 최초 fixture/report/제품 몸체는 그 수정으로 바꾸지 않았다. 시작 원본1394는383 최종과 같고 팔레트676/Screen166 최초자료SHA도 검증했다. 과거 Screen 입력7SHA는 별도 보존자료 매핑으로 확인하며 원보고서를 다시 쓰지 않았다.
+- [x] 같은 제품의 자연 Early1 수확·SP0→200→400→600·완료 안내·Tutorial2 Guide4 진입이 통과했다. 제품타이머1/상태주입0/기존 완료값1 보존이며 진행0→1·영구저장은 이번 범위가 아니다. 실행178.40초/마지막 게임시각106.843초·원본동일이다. 직접 창 캡처는 도구 시간초과/재선택·세션 초기화 뒤에도 실패해 성공으로 기록하지 않는다. **Early6·훈련9·캠페인16의31항목과 실제Demo 메뉴3항목, 총34개 진입이 모두 통과했다.** 전체 완주·완전한 동일성 판정은 아니다. 제품SHA `4f8bdc3a4aeb53e2e57b7707b77fb224bce227f857cf4f7f8cf7665ebec1a3f5`, 검사SHA `8e2d706eb0e8d975d43169a15b8a404693a4908e845d1b80ed82ed233e51325b`다.
+- [ ] 0042f540은 선택정보Gump가 아니라 Chatmanager의 랭크prefix라는 의미를 PE로 교정했다. 정상Client시작의42e050 생성자가 미복원이므로 Chat=상수0으로 우회하지 않는다. Kencloud/같은GameRandom·ColorSort입력수명, Chatmanager/prefix/CoreData, startupStateCheck 비영의saved-state reader는 후속독립준비이며 이번 공용 source와 분리한다.
+- [x] 최종 originals1394파일 추가·삭제·변경0과 양 실행물SHA 동일·UTF8/AST/JSON·로컬 링크·공백·보호경로를 확인했다. 최초 선택51파일 중 신규Chat 후속문서 링크를 가진 조사문서1개는385로 이월해 이번50파일만 커밋한다. ClientMain.cpp는 검사 뒤 원래CRLF로만 복구했고 각 행 본문 불변을 EOL 감사에 기록했다. 원시 `extracted/cpp-editor-subscriber-20261024-*`와 인수인계를 보존하고 **20261024-06 CP**로 로컬 커밋한다.
+- [ ] 전체 파일 설치 외곽·최종 HUD/State/loaded·실제 Edit/NewFort/Save as·편집 도구·저장/재로드·언어별 커스텀 시나리오와 전체 사용자 완주/동일성은 계속 남는다. 다음385는 실제 파일장치 ba7a9cda…→Session checkpoint76c1bb69… 제안과 독립 Startup390/Chat644/Kencloud246 관측 모듈을 통합한다. 제안의 구문검사와 격리관측을 실제 checkpoint 전체 성공으로 바꾸지 않는다. 빌드는 CL=/MP4와 직전 MTT 인자를 유지하며 goal은 active다.
+
 ## 2026-10-24 단위383 완료: 기존 Fort Editor의 최초 World·Deck와 원시 로더 복원
 
 - [x] 단위382는 **3b7de358 / 20261024-04 CP**로 커밋했다. AGENTS와 공통/닷넷 인계를 다시 읽었으며 현재/마지막 전체 정밀 디컴파일 PC는 **HJOW-Athlon / 마지막 수행2026-10-23**으로 일치한다.

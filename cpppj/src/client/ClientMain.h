@@ -31,6 +31,8 @@ class UberGump;
 class ClientAudio;
 class RawChatChannels;
 class FortTypeConversionStorage; // 원본 현재 변환표의 실제 할당을 Client 수명에 소유한다.
+class ClientRandomGlobals; // 같은 Client의 CRT holdrand와 Subscriber ID 최초시드 전역을 소유한다.
+class ClientLocalStateGlobals; // 실제 메뉴/Editor/로그인이 같은 State 블록과 벽시각 기한을 빌린다.
 struct ClientAudioOptions;
 
 // 설정 키 "maxFPS" 의 코드 기본값. 화면 루프를 초당 몇 번까지 돌릴지 정한다.
@@ -120,6 +122,8 @@ public:
     InputEvent Poll(std::uint32_t code) const;
 
     Screen& GetScreen();
+    void LoadPaletteFile(std::string_view path,std::uint32_t clear); //GamePalSpec완성경로를DataDir재결합없이같은Screen에전달한다.
+    void RefreshPaletteConsumers(); //기존AudioTints/커서/월드/UI소비자를이후maps경계에서갱신한다.
     InputQueue& Input();
     o::ConfigInterface& Configuration();
     // 원본0054db30의 Client 수명 DWORD를 빌린다. 저장할 때 설정을 다시 조회하지 않는다.
@@ -127,6 +131,8 @@ public:
     // 미션 교체와 무관한 같은 실제 장부의 공유 수명을 Session에 전달한다.
     const std::shared_ptr<o::RawFortBadgesGlobals>& FortBadges() const;
     const std::shared_ptr<FortTypeConversionStorage>& FortTypeConversion() const; // 로더들이 같은 current DWORD와 실제255BYTE 할당을 빌린다.
+    const std::shared_ptr<ClientRandomGlobals>& RandomGlobals() const; // 미션마다 복제하지 않는 실제 난수/ID초기화 소유자를 전달한다.
+    const std::shared_ptr<ClientLocalStateGlobals>& LocalStateGlobals() const; // 실제 State144BYTE와 활동기한의 Client 수명을 Session에 전달한다.
     const o::BaseFileSystem& Files() const;
     const GameAssets& Assets() const;
     o::Kernel& GetKernel();
@@ -197,6 +203,8 @@ private:
     std::uint32_t readOnlyForts_{};
     std::shared_ptr<o::RawFortBadgesGlobals> fortBadges_; // CRT 한 번과 시작 count reset을 구별하는 단일6160BYTE 소유자다.
     std::shared_ptr<FortTypeConversionStorage> fortTypeConversion_; // Session마다 새 현재 포인터나 할당 사본을 만들지 않는 단일 소유자다.
+    std::shared_ptr<ClientRandomGlobals> randomGlobals_; // 모든 실제 Session과 Subscriber 생성기가 같은 holdrand/초기화DWORD를 빌린다.
+    std::shared_ptr<ClientLocalStateGlobals> localStateGlobals_; // Session 소멸/Editor 메뉴 재진입에서 State/기한을 초기화하지 않는 한 소유자다.
     struct ChatState; // 실제 전역 Chat 기록과 현재 subscriber 처리기를 구현 파일의 고정 주소에 소유한다.
     std::unique_ptr<ChatState> chat_; // 메뉴/월드보다 오래 사는 단일100×48바이트이며 미션 수명과 분리한다.
     // translations_: 용어 키를 언어별 표시 문자열로 바꾸는 번역표.
@@ -215,6 +223,7 @@ private:
     // loadingFont_: 초기 로딩 화면의 문자를 그릴 GDI 글꼴 핸들.
     NativeHandle loadingFont_{};       // DAT_0054de74
     // screen_: 원본 Screen.cpp의 전역 변수 묶음을 객체 하나로 둔다. 창과 창의 장치 문맥은 ClientMain이 만든다 (std::unique_ptr<Screen>).
+    std::uint32_t paletteLoaded_{}; //00555e08실제DWORD를Screen보다오래소유하여해상도재생성으로0복제하지않는다.
     std::unique_ptr<Screen> screen_;
     // assets_: 타입·셰이프·팔레트 자산 또는 해당 자산의 처리 경계.
     std::unique_ptr<GameAssets> assets_;

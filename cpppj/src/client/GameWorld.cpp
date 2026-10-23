@@ -86,6 +86,8 @@ GameWorld::GameWorld(const GameAssets& assets,const o::BaseFileSystem& files,o::
         other(event);
     };
     const bool connect=services.localLogin.has_value(); //실제Client는로그인서버가Load를호출한다.
+    const bool existingEditor=services.installMode==CampaignInstallMode::ExistingEditor; //Editor는 전체 외곽/State가 끝나기 전 Campaign.Load나 로그인으로 우회하지 않는다.
+    if (existingEditor && !deferConnection) throw std::logic_error("기존 Editor는 실제 외곽의 명시 지연 설치가 필요함");
     campaign_=std::make_unique<RawCampaignSession>(assets,files,std::move(fort),std::move(mission),std::move(services));
     if (assets_.Edition()==o::OriginalEdition::Patch1078) {
         factoryDisplay_=std::make_unique<RawCampaignFactoryDisplay>(campaign_->Core(),assets_,[this](o::Sid sid,const auto& frame) { campaign_->DrawTemple(sid,frame); });std::array<ScreenColor,256> palette{};
@@ -93,7 +95,7 @@ GameWorld::GameWorld(const GameAssets& assets,const o::BaseFileSystem& files,o::
         for (std::size_t i=0;i<palette.size();++i) { const auto color=assets_.Palette().Color(static_cast<std::uint8_t>(i));palette[i]={color.blue,color.green,color.red,0}; }
         factoryDisplay_->SetPalette(palette);
     }
-    if (deferConnection) { if (!connect) throw std::logic_error("실제Client 지연로그인 장치 누락");return; }
+    if (deferConnection) { if (!existingEditor && !connect) throw std::logic_error("실제Client 지연로그인 장치 누락");return; } //기존 Campaign의 장치 조건은 유지하며 Editor는 외곽이 설치한다.
     if (connect) campaign_->LoadLocalConnection();else campaign_->Load();RefreshCampaignObjects();
 }
 //Client.CurrentSubscriber가현재Session을반환하는등록이끝난뒤에만실제로그인을시작한다.

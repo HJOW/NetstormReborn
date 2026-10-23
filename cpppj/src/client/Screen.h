@@ -108,7 +108,7 @@ private:
 class Screen {
 public:
     // 창(DAT_0054dbf4), 창의 장치 문맥(DAT_0054d960), 화면 크기(DAT_00531860·DAT_00531864).
-    Screen(NativeHandle window, NativeHandle windowDc, int width, int height);
+    Screen(NativeHandle window, NativeHandle windowDc, int width, int height,std::uint32_t* paletteLoaded=nullptr); //Client실제DWORD는Screen재생성을넘어유지하며독립화면만local을쓴다.
     ~Screen();
     Screen(const Screen&) = delete;
     Screen& operator=(const Screen&) = delete;
@@ -124,7 +124,8 @@ public:
     // apply가 참이면 현재 팔레트에 복사하고 DIB 색 표와 논리 팔레트에 반영한다.
     void SetPalette(unsigned start, unsigned count, ScreenColor* colors, bool apply);
     // 원본 FUN_004a4850: 팔레트 파일의 색을 저장 팔레트에 넣고 적용한다.
-    void LoadPalette(const GamePalette& palette,o::OriginalEdition edition=o::OriginalEdition::Patch1078);
+    void LoadPalette(const GamePalette& palette,o::OriginalEdition edition=o::OriginalEdition::Patch1078,std::uint32_t clear=0);
+    const std::uint32_t& PaletteLoaded() const; //00555e08 실제DWORD를 같은Screen수명으로빌린다.
     // 마지막 파일 팔레트로 계산한 원본 기본/표시/날씨 색 표다. SetPalette의 일시 번개/모드 적용으로 다시 계산하지 않는다.
     const PaletteColorTable& Colors() const;
     // 파일 팔레트의 GUI 밝음/어두움 변환표다. 번개의 일시 SetPalette와 화면 모드 적용으로 갱신하지 않는다.
@@ -162,6 +163,11 @@ public:
     // 창의 장치 문맥.
     NativeHandle WindowDc() const;
 private:
+    void WaitPaletteVerticalBlank(); //004a1fb0의GDI자연반환과미복원DirectDraw경계를구별한다.
+    void PresentPaletteClear(); //004a46d0의viewport복사전후같은clip을복구한다.
+    void FlipPaletteClear(); //004a16d0의bit4관문을보존하며미복원flip은거부한다.
+    std::uint32_t localPaletteLoaded_{}; //Client없는독립Screen만쓰는BSS0입력이다.
+    std::uint32_t& paletteLoaded_; //실제Client소유00555e08을빌려화면재생성으로초기화하지않는다.
     // window_: 게임 출력이나 장치 협조 수준에 사용하는 Win32 창 핸들.
     NativeHandle window_{};
     // windowDc_: Win32 창으로 그림을 전송할 장치 컨텍스트.

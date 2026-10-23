@@ -2,6 +2,8 @@
 # 클라이언트와 서버가 함께 쓰던 코드로 보인다. 이 폴더의 코드는 client/ 와 platform/ 을 포함하지 않는다.
 # 다시 만든 파일을 아래 목록에 더한다. 파일 이름은 SOURCE_MAP.md 의 "cpppj 경로"를 따른다.
 target_sources(netstorm PRIVATE
+    # 기존 Fort 팔레트 전환의 이름·Kencloud 수명과 장치 호출 순서다.
+    RawFortPaletteTransition.cpp RawFortPaletteTransition.h
     # 기존 Editor의 실제 타입 변환·덱 로드·지형 회복과 마지막 맵 정리다.
     RawFortTypeNamesLoad.cpp RawFortTypeNamesLoad.h
     RawFortContentsLoad.cpp RawFortContentsLoad.h

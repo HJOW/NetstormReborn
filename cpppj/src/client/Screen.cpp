@@ -6,6 +6,7 @@
 // 범위: 창 모드(DIB 섹션) 경로와 가장 가까운 색 검색·파일 팔레트의 전체 색 표다. 글꼴·커서는 별도 실제 모듈에 연결했다.
 // DirectDraw 표면(종류 3·4·5), 전체화면 전환, 플리핑, 구름 시차 표면은 아직 옮기지 않았다.
 #include "client/Screen.h"
+#include "client/ScreenPaletteApply.h"
 #include <algorithm>
 #include <bit>
 #include <stdexcept>
@@ -151,8 +152,8 @@ int ScreenSurface::Height() const { return height_; }
 int ScreenSurface::Pitch() const { return width_; }
 
 // 창과 크기만 받아 둔다. 표면은 Init·InitDibSection에서 만든다.
-Screen::Screen(NativeHandle window, NativeHandle windowDc, int width, int height)
-    : window_(window), windowDc_(windowDc), width_(width), height_(height) {}
+Screen::Screen(NativeHandle window, NativeHandle windowDc, int width, int height,std::uint32_t* paletteLoaded)
+    : paletteLoaded_(paletteLoaded?*paletteLoaded:localPaletteLoaded_),window_(window), windowDc_(windowDc), width_(width), height_(height) {}
 // 표면을 먼저 없애고 GDI 객체를 푼다.
 Screen::~Screen() {
     dibSurface_.reset();
@@ -272,18 +273,44 @@ void Screen::SetPalette(unsigned start, unsigned count, ScreenColor* colors, boo
     RealizePalette(windowDc);
 }
 // 원본 004a4850: 파일의 256색을 저장 팔레트(DAT_005acd28)에 RGBQUAD 순서로 읽고 FUN_004a2640(0, 256, 0, 1)로 적용한다.
-// 원본의 두 번째 인자 0(화면 지우지 않음)에 해당한다. 파일 적용 뒤 전체 색 표를 다시 계산하고 별칭을 저장한다.
-void Screen::LoadPalette(const GamePalette& palette,o::OriginalEdition edition) {
+// clear비영은현재GDI의실제지우기/viewport복사를팔레트적용전에실행한다.기존호출의default0은그대로다.
+void Screen::LoadPalette(const GamePalette& palette,o::OriginalEdition edition,std::uint32_t clear) {
     // 색 번호를 그대로 유지한다.
     for (std::size_t i = 0; i < saved_.size(); ++i) {
         const auto color = palette.Color(static_cast<std::uint8_t>(i));
         const auto reserved=palette.Reserved(static_cast<std::uint8_t>(i)).value_or(saved_[i].reserved);
         saved_[i] = {color.blue, color.green, color.red, reserved};
     }
+    const ScreenPaletteApplyHooks devices{
+        [this] { Lock(); }, //같은현재깊이/표면을사용한다.
+        [this] { if ((flags_&ScreenMode::kModeSet)==0) throw std::logic_error("팔레트전환Surface.fillBlt미복원");FillRect({0,0,width_,height_},0); }, //bit80없으면원문별도fillBlt경계를빈성공으로가장하지않는다.
+        [this] { Unlock(); }, //중단시이전부분효과를되돌리지않는다.
+        [this] { WaitPaletteVerticalBlank(); }, //GDI자연관문뒤에만표시로간다.
+        [this] { PresentPaletteClear(); }, //이전clip을viewport복사뒤복구한다.
+        [this] { FlipPaletteClear(); } //bit4가없을때만자연생략한다.
+    }; //원문loaded1과clear관문뒤의실제필수장치묶음이다.
+    ApplyScreenPaletteClear(clear,flags_,paletteLoaded_,devices);
     SetPalette(0, kPaletteSize, nullptr, true);
     colors_=BuildPaletteColorTable(logical_,edition);
     shadeMaps_=BuildGumpShadeMaps(logical_);
 }
+// 원문004a1fb0은DirectDraw비트0이면명령상자연반환한다.미복원장치를성공으로가장하지않는다.
+void Screen::WaitPaletteVerticalBlank() {
+    if ((flags_&ScreenMode::kFullScreen)!=0) throw std::logic_error("팔레트전환DirectDraw vblank장치미복원");
+}
+// 현재구현의viewport는SetMode에서정한0,0,width,height이다.004a46d0은Update가바꾼clip을복구한다.
+void Screen::PresentPaletteClear() {
+    const auto previous=clip_; //실제현재clip을Update앞에캡처한다.
+    if ((flags_&ScreenMode::kFullScreen)!=0) throw std::logic_error("팔레트전환DirectDraw표면미복원");
+    Update({0,0,width_,height_});
+    clip_=previous;
+}
+// 원문004a16d0은bit4가0이면자연반환한다.현재GDI의합법모드는이관문을그대로지나간다.
+void Screen::FlipPaletteClear() {
+    if ((flags_&ScreenMode::kFlipping)!=0) throw std::logic_error("팔레트전환DirectDraw flip장치미복원");
+}
+// 실제paletteLoaded의참조를돌려주며별도bool사본을만들지않는다.
+const std::uint32_t& Screen::PaletteLoaded() const { return paletteLoaded_; }
 // 원본처럼 파일 읽기가 끝난 뒤 계산된 표를 보존한다. 번개의 부분 적용/복구는 표를 다시 만들지 않는다.
 const PaletteColorTable& Screen::Colors() const { return colors_; }
 // GUI 어댑터는 마지막 파일에서 만든 표를 참조한다. 원본 paletteDirty 소비 수명은 후속 복원 대상이다.

@@ -1,8 +1,12 @@
 // 기존 원본 몸체의 단일 저장소 조립을 실제 클라이언트 세션이 소유한다.
 #include "client/RawCampaignSession.h"
+#include "client/ClientRandomGlobals.h"
+#include "client/ClientLocalStateGlobals.h"
 #include "client/CampaignTemplateStorage.h"
 #include "client/FortTypeConversionStorage.h"
 #include "o/RawFortTypeNamesLoad.h"
+#include "o/RawFortSubscriberLoad.h"
+#include "o/RawSubscriberIdGenerate.h"
 #include "o/RawFortContentsLoad.h"
 #include "o/RawFortDeckLoad.h"
 #include "o/RawDeckRestore.h"
@@ -419,7 +423,9 @@ struct RawCampaignSession::Impl {
     PlayerWorldState playerState; // 현재 battleOwner와 templateOwner는 별도 상태다.
     FortObjectLoadState objectState; // 저장객체의 실제 미션/로딩 상태다.
     CampaignWorldGlobals globals; // 실제 로그인과 missionPost의 장기 전역이다.
-    std::uint32_t revision{},ownerChanged{},vortexRevision{},piece{107},crt{}; // 원본 섬/신전/패턴/CRT 전역이다.
+    std::uint32_t revision{},ownerChanged{},vortexRevision{},piece{107}; // 원본 섬/신전/패턴 전역이다.
+    std::uint32_t localCrt{}; // 소유자 없는 기존 독립Session 검사에 한해서 보존하는 초기CRT0 입력이다.
+    std::uint32_t& crt{services.randomGlobals ? services.randomGlobals->CrtState() : localCrt}; // Seed/지형은같은Client실제DWORD를직접빌리며사본동기화를하지않는다.
     std::uint32_t randomMode{}; // 실제 재시드에서 임시로 변경하는 현재 DWORD다.
     RawGameRandomSeed seed; // 같은 CRT/게임 난수와 실제 Unix 초 입력을 연결한다.
     std::int32_t noRegion{127}; // 정상 지형 생성의 실제 현재 지역없음 번호다.
@@ -482,7 +488,8 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawProjectileGeometry> projectileGeometry; // 실제 포구/표적 치수/충돌 상자다.
     std::unique_ptr<RawFenceTarget> fenceTarget; // 같은 해시/배리어 끝점/현재 동맹의 실제 표적 코너 계산이다.
     std::unique_ptr<RawCampaignArcherBindings> combat; // 같은 Archer/Missile 생성/공간/Host를 소유한다.
-    CrtRandom particleCrt{CrtRandom::Borrow(crt)}; // 실제 시드 초기화/지형이 소비한 현재 CRT DWORD를 함께 사용한다.
+    CrtRandom localParticleCrt{CrtRandom::Borrow(localCrt)}; // 소유자 없는 독립검사의기존CRT0을빌리는fallback wrapper다.
+    CrtRandom& particleCrt{services.randomGlobals ? services.randomGlobals->Crt() : localParticleCrt}; // 실제Client에서는Subscriber와같은장기CRT객체를쓴다.
     std::array<std::uint32_t,188> shrapnelMapTokens{}; // 원본 일반 소유자 색표가 복원된 다리/73/144의 실제 토큰이다.
     std::map<std::uint32_t,OwnerColorMaps> shrapnelOwnerColors; // 현재 원본 후보로 만든 TYPE별9×256 색표이며 실제 소유자 색을 매번 선택한다.
     BridgeDrawState bridgeDrawState;std::unique_ptr<RawBridgeDraw> bridgeDraw; // 같은 기본0 수명 숫자 전역과 실제 다리 캡처 가상 몸체다.
@@ -2474,7 +2481,7 @@ struct RawCampaignSession::Impl {
         meta.releaseTypeConversion=[this,state] {
             auto& current=services.fortTypeConversion->Current();if (current) services.fortTypeConversion->Release(current);current=0;state->meta.hasTypeConversion=false;
         };
-        meta.refreshTechnologyUi=[this] { if (!services.fortTechnologyUi) throw std::logic_error("Fort 실제42f540 선택정보UI 미연결");services.fortTechnologyUi(); };
+        meta.refreshTechnologyUi=[this] { if (!services.fortTechnologyUi) throw std::logic_error("Fort 실제42f540 Chat 랭크prefix 갱신 미연결");services.fortTechnologyUi(); };
         children.meta=std::make_shared<RawFortMetaLoad>(core.pool,services.fortBadges->Records(),objectState.loadingDepth,state->meta,std::move(meta));
         children.selectMeta=[this,state](const FortTemplate&,auto owner,bool) {
             if (owner>=9) throw std::out_of_range("기존Editor Meta 고정Template 범위");state->slot=owner;
@@ -2485,6 +2492,22 @@ struct RawCampaignSession::Impl {
             auto& stream=templateStorage->SelectTechnology(state->slot);state->technology=templateStorage->CurrentWriteStream(state->slot);return stream;
         };
         return children;
+    }
+    // 파일읽기정상꼬리의현재owner를고정this로받고같은Subscriber노드/ID/handle에읽는다.
+    void ReadExistingEditorSubscriber(std::uint32_t slot) {
+        std::vector<TemplateWriteStream> streams;FortSubscriberLoadHooks hooks; //선택반환의생성수명만호출동안보존한다.
+        hooks.manager=[this](auto owner) { if (owner<0 || owner>=9) throw std::out_of_range("Subscriber 실제Template 범위");return Read(templateStorage->Headers(),static_cast<std::size_t>(owner)*20); };
+        hooks.select=[&](auto manager,auto name,auto writable) { if (manager!=hooks.manager(std::bit_cast<std::int32_t>(slot))) throw std::logic_error("Subscriber 현재manager 불일치");streams.push_back(templateStorage->SelectSection(slot,name,writable));return static_cast<std::uint32_t>(streams.size()); };
+        hooks.access=[&](auto token,const auto& operation) { if (!token || token>streams.size()) throw std::out_of_range("Subscriber 선택반환stream 범위");templateStorage->AccessSection(streams[token-1],operation); };
+        hooks.assertion=services.subscriber.assertion;hooks.readRegistered=services.subscriber.readRegistered;hooks.configure=services.subscriber.configure;
+        hooks.generate=[this] {
+            const auto randomOwner=services.randomGlobals;if (!randomOwner) throw std::logic_error("Subscriber 실제Client CRT 소유자 미연결"); //등록ID를새로만들때만같은장기소유자를요구한다.
+            SubscriberIdGenerateHooks devices;devices.time32=services.unixSeconds;devices.clock=services.subscriber.clock;
+            devices.expired=[this](auto level,auto text) { if (!services.player.log) throw std::logic_error("Subscriber ID 실제소진 로그 미연결");services.player.log(static_cast<std::uint32_t>(level),text); };
+            const auto bound=BindSubscriberIdCrtRandom(randomOwner->Crt(),std::move(devices)); //현재장기CRT를빌리고별도난수/시드를만들지않는다.
+            return GenerateSubscriberId({randomOwner->SubscriberIdInitialized()},bound);
+        };
+        LoadFortSubscriber(std::bit_cast<std::int32_t>(slot),handle,{globals.mySubscriber},hooks); //원시ID/문자열/등록마감만실행하고Config이름/제목/World는외곽이순서대로호출한다.
     }
     // 실제 반환 노드와 같은 fields/버퍼를 빌려 현재255BYTE 변환표를 준비하고 실패한 본문만 cleanup한다.
     void PrepareFortTypeNames(std::uint32_t slot) {
@@ -3046,6 +3069,11 @@ void RawCampaignSession::Load() {
     impl_->ConnectDevastation();impl_->ConnectCarrierDrop();impl_->ConnectPriestPrayer();impl_->buildingMover=impl_->MakeBuilder(impl_->buildingMoverState,{});
     impl_->ConnectGameplayPlacement();impl_->ConnectCursor();impl_->loaded=true;
 }
+// 파일설치/State통지뒤요청하는독립Subscriber단계다.World뒤나전체설치완료로대체하지않는다.
+void RawCampaignSession::LoadExistingEditorSubscriber() {
+    auto& state=*impl_;if (state.services.installMode!=CampaignInstallMode::ExistingEditor || state.loaded || state.editorWorldStarted) throw std::logic_error("기존Editor Subscriber의실제파일꼬리/World전계약");
+    state.ReadExistingEditorSubscriber(state.playerState.templateOwner);
+}
 // 일반Fort생성전모드는생성자가이미설정했다.캠페인Load로돌아가우회하지않는다.
 void RawCampaignSession::LoadExistingEditorWorld() {
     auto& s=*impl_;if (s.services.installMode!=CampaignInstallMode::ExistingEditor || s.loaded || s.editorWorldStarted || !s.services.fortBadges) throw std::logic_error("기존Editor실제입력/공유장부누락또는재설치");
@@ -3138,6 +3166,8 @@ std::uint32_t RawCampaignSession::TemplateOwner() const { return impl_->playerSt
 std::uint32_t RawCampaignSession::CurrentTechnologyParent() const { return impl_->player->CurrentTechnology(); }
 // 실제 생산 패널의 명시 갱신과 반복자는 같은 현재 장기 몸체를 사용한다.
 void RawCampaignSession::SynchronizeProductionContents() { if (!impl_->loaded) throw std::logic_error("설치 전 생산 패널 갱신");impl_->productionSync->Synchronize(); }
+// 구식 배치용 IslandList 벡터 대신 실제 섬 목록 첫DWORD를 현재 시점에 읽는다.
+std::uint32_t RawCampaignSession::IslandCount() const { return impl_->islands->Count(); }
 const ContainedFinderState& RawCampaignSession::ProductionFinder() const { return impl_->contentFinder; }
 // 원본43ef10의 생산 단락만 현재 Gump idle 위치에서 실행한다. 나머지HUD/공급 주기는 별도 몸체다.
 bool RawCampaignSession::UpdateProductionContents() {

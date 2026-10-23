@@ -16,6 +16,8 @@ struct CampaignClientUi {
     std::function<void(std::string_view)> tell; // 현재 미션/Tell 설정의 안내 섹션을 연다.
     std::function<void(std::int32_t,std::int32_t,std::int32_t)> removeMessage; // 같은 MessageBoard에서 종류·플레이어·매개변수 검색으로 지연 삭제한다.
 };
+// 화면/음향없이같은Client의등록Config/CRT clock/진단을연결한다.Client는반환서비스보다오래살아야한다.
+CampaignSubscriberServices MakeCampaignSubscriberClientServices(Client& client);
 // 장치 없이도 실제 Client의 장기 Chat/현재 기본이름만 연결한다. 할당·색·전송 경계는 채우지 않는다.
 // client는 이 서비스를 사용하는 모든 Session/AI보다 오래 살아야 한다.
 void BindCampaignAiClientServices(Client& client,CampaignAiServices& ai);

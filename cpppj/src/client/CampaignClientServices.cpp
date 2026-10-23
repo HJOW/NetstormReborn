@@ -9,6 +9,7 @@
 #include "client/RawButtonControls.h"
 #include "client/RawMenuControls.h"
 #include "client/RawChatChannels.h"
+#include "client/ScriptCommand.h"
 #include "o/OriginalText.h"
 #include <algorithm>
 #include <array>
@@ -20,6 +21,7 @@
 #include <limits>
 #include <stdexcept>
 #include <utility>
+#include <type_traits>
 #ifdef _WIN32
 #ifndef NOMINMAX
 #define NOMINMAX //Win32의max매크로가표준numeric_limits와충돌하지않게한다.
@@ -68,6 +70,16 @@ CampaignMissionStartEffects MakeCampaignMissionStartEffects(Client& client,GameW
     effects.unknownAbilityLog=[](std::string_view name) { std::clog<<"미등록 미션 AI 능력: "<<name<<'\n'; };
     return effects;
 }
+// ID의같은DWORD를실제ReadInt에넘기며시간/등록설정은도달할때만읽는다.화면/음향을요구하지않는다.
+CampaignSubscriberServices MakeCampaignSubscriberClientServices(Client& client) {
+    static_assert(sizeof(std::uint32_t)==4 && sizeof(std::int32_t)==4 && alignof(std::uint32_t)==alignof(std::int32_t)); //원문DWORD폭/대응형의정렬을확인한다.
+    static_assert(std::is_same_v<std::make_signed_t<std::uint32_t>,std::int32_t> && std::is_same_v<std::make_unsigned_t<std::int32_t>,std::uint32_t>); //서로대응하는signed/unsigned형에만허용되는같은객체alias다.
+    CampaignSubscriberServices result; //이서비스가빌린Client는전체Session보다오래살아야한다.
+    result.readRegistered=[&client](auto key,std::uint32_t& value) { return client.Configuration().ReadInt(key,reinterpret_cast<std::int32_t&>(value)); }; //사본없이기존ReadInt가Config.Get복귀뒤현재ID를다시비교한다.
+    result.configure=[&client](auto expression) { static_cast<void>(ApplyScriptConfig(expression,client.Configuration())); }; //00441580의기존토큰/Config.Set/변경callback을그대로재사용한다.
+    result.clock=[] { return static_cast<std::uint32_t>(std::clock()); }; //GameClock/벽시각이아닌실제CRT clock경계다.
+    result.assertion=[](auto line) { std::clog<<"Subscriber 원본 진단 줄: "<<static_cast<std::uint32_t>(line)<<'\n'; };return result;
+}
 // Player SetAlliance의 실제 채널 수정과004410f0(defaultAiName)의 현재 원본 바이트를 같은 Client에 연결한다.
 void BindCampaignAiClientServices(Client& client,CampaignAiServices& ai) {
     ai.names.language=[&client] { return static_cast<std::uint32_t>(client.LanguageNumber()); }; //원본현재언어0/1의이름번역생략관문을공유한다.
@@ -91,6 +103,8 @@ RawCampaignSessionServices MakeCampaignClientServices(Client& client,RawButtonCo
     auto& audio=client.WorldAudio(); // noAudio도 같은 실제 이름표/비활성 재생 계층을 사용한다.
     auto& player=audio.Sounds(); // 반환한 콜백이 빌리는 장기 실제 SoundPlayer다.
     RawCampaignSessionServices services; // 게임 규칙 경계는 실제 세션의 명시 누락 판정을 유지한다.
+    services.randomGlobals=client.RandomGlobals(); // Session교체/Subscriber/파편/Seed/지형이같은Client의실제CRT를사용한다.
+    services.localStateGlobals=client.LocalStateGlobals(); // 메뉴/Editor에서 사용한 같은 State와00544d58 기한을 로그인도 직접 빌린다.
     services.templateStateBytes=CurrentAllocationBytes; // 원본이 쓰지 않는 State 바이트를 임의0 대신 현재 호스트 할당 입력에서 받는다.
     // 실제 커서 비용과 같은 Gump 트리/게임 시계에 Cast/Drop 금액 표시를 붙인다.
     services.carrierDropPopup=[&controls](std::int32_t cost,std::int32_t x,std::int32_t y,std::uint32_t reference) { auto* menus=controls.Menus();if (!menus) throw std::logic_error("Cast/Drop 비용표시 실제Gump미설치");menus->ShowSp(cost,x,y,reference); };
@@ -110,6 +124,7 @@ RawCampaignSessionServices MakeCampaignClientServices(Client& client,RawButtonCo
             throw std::out_of_range("실제 캠페인 time32 지원 날짜 범위 초과");
         return static_cast<std::int32_t>(now);
     };
+    services.subscriber=MakeCampaignSubscriberClientServices(client); //실제Subscriber의같은등록Config/clock/진단을빌린다.정상ID는선택하지않는다.
     auto you=std::make_shared<std::vector<std::uint8_t>>(); // 원본 부모가 NUL까지 복사하는 동안 유지할 번역 바이트다.
     // 번역은 요청 시 다시 조회한다. 설치 사이에 바뀐 언어를 이전 문자열로 고정하지 않는다.
     services.install.translateYou=[&client,you]() -> std::span<const std::uint8_t> {

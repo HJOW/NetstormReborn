@@ -1,4 +1,8 @@
 # Editor 로드/회복의 최초 독립 PE 관측을 해당 검사에만 공급한다.
+set_source_files_properties(ScreenPaletteApplyTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_SCREEN_PALETTE_CLEAR_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/screen-palette-clear-x86.tsv\"")
+set_source_files_properties(FortPaletteTransitionTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_FORT_PALETTE_TRANSITION_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fort-palette-transition-x86.tsv\"")
 set_source_files_properties(FortSubscriberLoadTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_FORT_SUBSCRIBER_LOAD_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fort-subscriber-load-x86.tsv\"")
 set_source_files_properties(SubscriberIdGenerateTests.cpp PROPERTIES COMPILE_DEFINITIONS
@@ -135,6 +139,12 @@ set_source_files_properties(FlyerPreDestroyTests.cpp PROPERTIES COMPILE_DEFINITI
 set_source_files_properties(BurningLifetimeDrawTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_BURNING_LIFETIME_DRAW_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/burning-lifetime-draw-x86.tsv\";NETSTORM_RENDER_FRAME_GATE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/render-frame-gate-x86.tsv\";NETSTORM_BURNING_ARCHER_CAPTURE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/burning-archer-capture-x86.tsv\"")
 add_executable(netstorm_tests
+    CampaignTemplateLoadFileTests.cpp
+    ScreenPaletteApplyTests.cpp
+    ExistingEditorAfterCheckpointTests.cpp
+    ClientRandomGlobalsTests.cpp
+    CampaignExistingEditorSubscriberTests.cpp
+    FortPaletteTransitionTests.cpp
     FortTypeNamesAccessFixtureTests.cpp
     FortTypeNamesStorageAccessTests.cpp
     FortTypeConversionStorageTests.cpp

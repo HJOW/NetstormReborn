@@ -9,6 +9,8 @@
 #include "client/PaletteFlash.h"
 #include "client/RawChatChannels.h"
 #include "client/FortTypeConversionStorage.h"
+#include "client/ClientRandomGlobals.h"
+#include "client/ClientLocalStateGlobals.h"
 #include "client/UberGump.h"
 #include "o/OriginalText.h"
 #include "o/RawFortBadgesGlobals.h"
@@ -162,6 +164,8 @@ Client::Client(ClientOptions options)
       configuration_([this](std::string_view path) { return files_.TryRead(path); }),
       fortBadges_(std::make_shared<o::RawFortBadgesGlobals>()),
       fortTypeConversion_(std::make_shared<FortTypeConversionStorage>()),
+      randomGlobals_(std::make_shared<ClientRandomGlobals>()),
+      localStateGlobals_(std::make_shared<ClientLocalStateGlobals>()),
       chat_(std::make_unique<ChatState>(*this,options_.edition)) {
     files_.RegisterArchive(options_.gameDirectory / "netstorm.tarc");
     configuration_.Registry().environment = Environment;
@@ -254,7 +258,7 @@ int Client::Run() {
     SetWindowTextA(window, Translate(kWindowTitle).c_str());
 
     // "init screen" → "init palette": fortPal 이름을 GamePalSpec에 넣은 경로의 팔레트.
-    screen_ = std::make_unique<Screen>(window_, windowDc_, screenWidth_, screenHeight_);
+    screen_ = std::make_unique<Screen>(window_, windowDc_, screenWidth_, screenHeight_,&paletteLoaded_);
     screen_->Init();
     const auto palettePath = configuration_.PathSpec("GamePalSpec", configuration_.PathSpec("fortPal"));
     screen_->LoadPalette(GamePalette(files_.Read(palettePath)),options_.edition);
@@ -603,7 +607,15 @@ std::span<const std::uint8_t> Client::ChatRecords() const { return chat_->record
 // 팔레트 적용 → 원소 색 표 갱신 순서다. SceneMusic은 이 함수 호출 전에 tint를 썼으므로 여기서 현재 tint를 덮어쓰지 않는다.
 void Client::LoadScenePalette(std::string_view name) {
     const auto path=configuration_.PathSpec("DataDir")+"\\"+std::string(name);
-    screen_->LoadPalette(GamePalette(files_.Read(path)),options_.edition);
+    LoadPaletteFile(path,0);
+    RefreshPaletteConsumers();
+}
+// 완성된실제PathSpec경로를읽어원문clear DWORD를전달한다.미리DataDir를붙이지않는다.
+void Client::LoadPaletteFile(std::string_view path,std::uint32_t clear) {
+    screen_->LoadPalette(GamePalette(files_.Read(path)),options_.edition,clear);
+}
+// 기존소비자갱신은한군데에서재사용한다.구름캐시생성이나추가표부모자체의성공을대신하지않는다.
+void Client::RefreshPaletteConsumers() {
     if (audio_) audio_->SetSceneTints(screen_->Colors().weather);
     if (cursor_ && (screen_->Flags()&ScreenMode::kSoftwareMouse)!=0) cursor_->BuildSoftware(screen_->Palette());
     if (menu_) menu_->PaletteChanged();else if (renderer_) renderer_->InvalidateAll();
@@ -634,7 +646,7 @@ void Client::ChangeResolution(int width, int height) {
     sceneVisible_ = false;
     renderer_.reset(); screen_.reset();
     screenWidth_ = width; screenHeight_ = height;
-    screen_ = std::make_unique<Screen>(window_, windowDc_, width, height);
+    screen_ = std::make_unique<Screen>(window_, windowDc_, width, height,&paletteLoaded_);
     screen_->Init(); screen_->InitDibSection();
     screen_->LoadPalette(GamePalette(palette),options_.edition);
     RECT rect{0, 0, width, height};
@@ -841,6 +853,10 @@ const std::uint32_t& Client::ReadOnlyForts() const { return readOnlyForts_; }
 const std::shared_ptr<o::RawFortBadgesGlobals>& Client::FortBadges() const { return fortBadges_; }
 // 현재 변환표와 원래 할당을 같은 Client 수명으로 전달한다.
 const std::shared_ptr<FortTypeConversionStorage>& Client::FortTypeConversion() const { return fortTypeConversion_; }
+// 새 Session의 fallback을 만드는 대신 같은 Client의 실제 난수 소유자를 빌린다.
+const std::shared_ptr<ClientRandomGlobals>& Client::RandomGlobals() const { return randomGlobals_; }
+// 큰 메뉴/로컬 로그인 분배기가 같은 실제144BYTE 다섯 블록과 기한을 빌린다.
+const std::shared_ptr<ClientLocalStateGlobals>& Client::LocalStateGlobals() const { return localStateGlobals_; }
 // 파일 시스템.
 const o::BaseFileSystem& Client::Files() const { return files_; }
 // 타입·그림. Run이 "init types"에서 만든 뒤에만 쓴다.

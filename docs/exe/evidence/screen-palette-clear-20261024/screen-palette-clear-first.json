@@ -1,0 +1,27 @@
+{
+  "status": "단위384 제안 사본 전 최초 관측",
+  "entry": "004a4923 after-file-palette-read",
+  "checkpoint": "004a2640 call before SetPalette body",
+  "uniqueInputs": 83,
+  "observations": 166,
+  "completions": {
+    "checkpoint": 122,
+    "directdraw-vblank": 18,
+    "directdraw-flip": 18,
+    "lock": 2,
+    "fill": 2,
+    "unlock": 2,
+    "update": 2
+  },
+  "instructions": 7948,
+  "scope": "파일읽기/색표계산 전체가 아닌 prefix와 실제inline unlock/46d0 clip복구. Lock/FillRect/표면Unlock/Update는 명시 장치. DirectDraw vblank/flip은 실제 부모 진입에서 명시중단. OS/GUI/원본게임 실행 없음.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+    "extracted/cpp-palette-device-20261024-proposed/oracle_screen_palette_clear.py": "d80eca0d4258c0d40666de918145946da91218e2302b7404bf631349e793c0cc",
+    "extracted/cpp-palette-device-20261024-proposed/screen-palette-clear-first.tsv": "818ea41e1d24cc61017370cad49da36f37464c77ad3e170c56a7bbb89d812597",
+    "cpppj/src/client/Screen.h": "b4a8f8ccf1790cdc063f1ad3fdacf7401c906e5802bfb719cff692e9462a84af",
+    "cpppj/src/client/Screen.cpp": "b710c2cdb45712542a6a941dceff5201c447231a79523cf81690ad0cda04ae75"
+  }
+}

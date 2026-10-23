@@ -1,0 +1,83 @@
+{
+  "status": "단위383다음준비·신규독립미등록",
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-23",
+  "entries": {
+    "transition": "004b6100",
+    "cache": "00470c30",
+    "sort": "00471190",
+    "dirty": "004973c0"
+  },
+  "bodyBytes": {
+    "transition": 114,
+    "cache": 29,
+    "sort": 59,
+    "dirty": 20
+  },
+  "ranges": [
+    [
+      "004b6100",
+      "004b6172"
+    ],
+    [
+      "00470c30",
+      "00470c4d"
+    ],
+    [
+      "00471190",
+      "0047119d"
+    ],
+    [
+      "004711a0",
+      "004711ce"
+    ],
+    [
+      "004973c0",
+      "004973d4"
+    ]
+  ],
+  "uniqueInputs": 338,
+  "observations": 676,
+  "completions": {
+    "return": 642,
+    "log": 2,
+    "compare": 2,
+    "free": 2,
+    "build": 2,
+    "step1": 2,
+    "step2": 2,
+    "load-physical": 2,
+    "path": 2,
+    "load": 2,
+    "maps": 2,
+    "step3": 4,
+    "palette-write": 2,
+    "compare-physical": 2,
+    "sort-write": 6
+  },
+  "instructions": 179294,
+  "precisionDifferences": 0,
+  "boundaries": {
+    "log": 426,
+    "compare": 424,
+    "build": 360,
+    "path": 310,
+    "load": 308,
+    "maps": 304,
+    "step": 668,
+    "free": 238
+  },
+  "scope": "실제4b6100/470c30/471190/4973c0의로그뒤인자pointer캡처·이름비교결과분기·NUL포함전방BYTEcopy·alias/부분쓰기·free뒤현재cache무조건0·cache0일때만build·build뒤현재count캡처·step뒤count재조회없음·GamePalSpec4인자/LoadPalette(path,1)·maps뒤현재renderer/dirty. CRT비교/로그/free/471040/470b20/PathSpec/Screen arg2=1/43c010은명시필수하위이며실제장치/색표계산/파일/GUI/OS/SEH전체실행은아님. 음수DWORDcount는3번째step명시중단입력으로만관측.",
+  "gameExecuted": false,
+  "guiExecuted": false,
+  "osExecuted": false,
+  "filesMutated": false,
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+    "tools/decomp_fort_palette_transition.py": "42c55d50733ec629b44dfd50421a18e4318cbbce7f399518abc71656ae581eb0",
+    "cpppj/tests/fixtures/fort-palette-transition-x86.tsv": "73e8d0b30bc93d1626b743f40fa81ca80504fc8f5f4c037e175520eee29dea31"
+  }
+}

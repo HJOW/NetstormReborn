@@ -16,6 +16,7 @@
 #include "client/SoundProcess.h"
 #include "o/RawPlayerRegular.h"
 #include "o/RawFortMissionSave.h"
+#include "o/RawFortSubscriberLoad.h"
 #include "o/RawEditorPlayers.h"
 #include "o/RawBattleBroadcast.h"
 #include "o/RawMissionOutcome.h"
@@ -51,6 +52,8 @@ namespace netstorm::client {
 class CampaignTemplateStorage; // Client보다 짧은 Session이 빌리는 같은 실제 Template9 수명이다.
 class EditorFiles; // 실제 작업본 파일 장치이며 연결한 Session보다 오래 살아야 한다.
 class FortTypeConversionStorage; // 같은 Client의 현재 conversion DWORD와 실제 할당 소유자다.
+class ClientRandomGlobals; // 실제 Client의 CRT 상태와 Subscriber ID 최초시드 DWORD를 함께 빌린다.
+class ClientLocalStateGlobals; // 실제 Client의 State 다섯 블록과 활동 기한의 장기 소유자다.
 struct TemplateWriteStream; // 실제 Template 저장소가 발급하는 명시 쓰기 수명이다.
 struct QuickHelpTypeInfo; // 전용 도움말이 같은 현재 TYPE/요구 에너지를 읽는 정보다.
 class RawCampaignCursor; // 세션과 같은 실제 커서/로컬 예측의 고정 주소 소유자다.
@@ -120,6 +123,13 @@ struct CampaignProductionServices {
     o::RawProductionDeck::Fill allocationBytes; // 실제 할당 직후 바이트이며 생성자가 보존하는 꼬리를 임의 초기화하지 않는다.
     CampaignProductionEffects effects; // 현재 getTeleportTechFree와 원본 모드 진단이다.
 };
+// 실제Subscriber의등록설정/시각/진단만공급한다.정상ID의미선택장치를미리요구하지않는다.
+struct CampaignSubscriberServices {
+    std::function<bool(std::string_view,std::uint32_t&)> readRegistered; //00441270의실제같은ID참조/변경여부다.
+    std::function<void(std::string_view)> configure; //00441580의원문오탈자키와unsigned값/실제변경callback이다.
+    std::function<std::uint32_t()> clock; //새ID최초시드가선택할실제CRT clock이며벽시각으로대체하지않는다.
+    std::function<void(o::FortSubscriberLoadAssertion)> assertion; //고정Template/직접읽기의원문진단이다.
+};
 // 생성전선택이며캠페인생성후Editor bool을켜는전환으로대체하지않는다.
 enum class CampaignInstallMode { Campaign,ExistingEditor }; //NewFort alternate1은아직별도필수미연결이다.
 // 게임 계산을 대신하지 않고 실제 클라이언트 UI/음향/전송의 선택 경계를 공급한다.
@@ -135,6 +145,7 @@ struct RawCampaignSessionServices {
     std::function<void()> refreshSp; // 같은 실제 Reward.AddSp의0043dad0 표시 요청이다. 장치 없는 독립 검사는 비워 둘 수 있다.
     std::optional<CampaignLoginServices> localLogin; //실제Client는 원본 로컬로그인을 사용하며 독립 모듈 검사는 명시Load를 유지한다.
     std::function<std::int32_t()> unixSeconds; // 실제 time32의 현재 Unix 초다.
+    CampaignSubscriberServices subscriber; //현재같은Client등록Config/CRT clock/진단이며소진로그9는player.log를사용한다.
     RawPriestWorldEffects priest; // 원본 소유자 통지/보호막 안내/음향 등의 실제 외부 소비자다.
     CampaignOwnershipEffects ownership; // 실제 생산 UI/현재 themeMode 및 진단 경계다.
     RawCampaignInstallEffects install; // 실제 번역/설정/창 제목/카메라의 외부 소비자다.
@@ -149,7 +160,7 @@ struct RawCampaignSessionServices {
     std::shared_ptr<o::RawFortBadgesGlobals> fortBadges; // 같은 Client의 단일6160BYTE 장부이며 로드/변경/저장이 이 저장소를 공유한다.
     std::shared_ptr<FortTypeConversionStorage> fortTypeConversion; // Objects/Technology/Deck이 같은 현재 토큰과 할당을 빌린다.
     std::optional<o::FortMissionSaveHooks> fortMission; // Guide-only가 아닌 현재 실제 Runtime getter/진단이다. write는 각 Snapshot이 같은 새 stream에 연결한다.
-    std::function<void()> fortTechnologyUi; //0042f540의현재선택정보Gump/선택조건과실제표시갱신이다.생산refresh로대체하지않는다.
+    std::function<void()> fortTechnologyUi; //0042f540의현재Chatmanager/CoreData관문과랭크prefix갱신이다.생산refresh나입력접두로대체하지않는다.
     std::function<void(std::string_view)> factoryTell; //Factory 입력의 같은004cf960 안내 섹션을 실제 현재Tell에연결한다.
     std::function<void(std::string_view,std::uint32_t)> factoryHelp; //researchHelp의실제전용도움말창/모드1이다.
     o::DamageablePreDestroyHooks damageablePre; // 붕괴/폭발/음향의 실제 장치/효과 경계다. 해방/공통 삭제는 Session이 공급한다.
@@ -173,6 +184,8 @@ struct RawCampaignSessionServices {
     std::function<void(std::int32_t,std::span<const std::uint8_t>)> carrierRequest; //4e2dc0의실제로컬전송/연결장치다.직접서버처리로대체하지않는다.
     std::function<void(std::int32_t,std::int32_t,std::int32_t,std::uint32_t)> carrierDropPopup; // 실제43dd20 비용 Gump의금액/화면x/y/참조SID다.
     o::BattlePacketPeers battlePeers; // 실제0..8 연결 객체 표다. 단독 캠페인은 NULL 연결이며 별도 송신 관찰 함수가 필요하지 않다.
+    std::shared_ptr<ClientRandomGlobals> randomGlobals; // 생략된 독립 검사만 기존Session CRT0을 사용하고 실제Client는 같은장기소유자를 전달한다.
+    std::shared_ptr<ClientLocalStateGlobals> localStateGlobals; // 생략된 독립 로그인 검사만 기존 local 블록/기한을 사용한다.
 };
 // 초기 객체 생성부터 Kernel 해제까지 동일 주소에서 실제 모듈과 상태를 소유한다.
 class RawCampaignSession {
@@ -188,6 +201,7 @@ public:
     void Load();
     // 기존Fort의Player→CoreData자연생략→Territory회복→일반World단계까지만실행한다.전체loaded성공을설정하지않는다.
     void LoadExistingEditorWorld();
+    void LoadExistingEditorSubscriber(); //실제파일꼬리에서World보다먼저ID/handle을읽는다.전체외곽/loaded는완료하지않는다.
     void LoadExistingEditorDeck(); //실제World/Graph뒤의Deck부모만실행한다.외곽완료/loaded확정은별도다.
     // 외곽전체Snapshot/State/lastEditFort뒤호출한다.번역/format을받고 마지막0046e980은같은실제맵에연결한다.
     void InstallExistingEditorPlayers(o::EditorPlayersHooks ui);
@@ -240,6 +254,7 @@ public:
     std::uint32_t LocalOwner() const;
     std::uint32_t TemplateOwner() const; // 실제00540cac의 템플릿 소유자이며 로컬 소유자와 구별한다.
     std::uint32_t CurrentTechnologyParent() const; // 현재48fc60의 실제 기술 부모다.
+    std::uint32_t IslandCount() const; // 설치중 Add Island 관문도 현재3204BYTE IslandList의 countDWORD를 직접 읽는다.
     void SynchronizeProductionContents(); // 실제43ec00(first1)의43df80 직접 호출이다.
     const o::ContainedFinderState& ProductionFinder() const; // 같은 현재 내용물 검색 전역이다.
     bool UpdateProductionContents(); // 실제현재모드/부모/dirty→Deck 재계산→43df80 단락이다.

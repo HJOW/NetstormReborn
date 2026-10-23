@@ -242,6 +242,8 @@ void RawButtonControls::RetirePageControls() {
 }
 // 캡처 우선 및 includeHidden=1의 실제 원본 분배이며 UI 상태를 임의 갱신하지 않는다.
 void RawButtonControls::RefreshProduction() { impl_->input->Route(kRefreshProductionEvent,0,0,true); }
+// 원문004b7444의 includeHidden1을 실제 공통 Route에 전달하며 포인터 폴링 기록을 새로 쓰지 않는다.
+std::uint32_t RawButtonControls::NotifyHudMode(std::uint32_t command) { return impl_->input->Route(command,1,0,true); }
 // 공통 등록표와 현재 파생 가상 분배를 그대로 빌려 메뉴 처리기를 생성한다.
 RawMenuControls& RawButtonControls::EnableMenus(const GameAssets& assets,FontStore& fonts,RawMenuHooks hooks) {
     auto& s=*impl_;if (s.menus) throw std::logic_error("실제 메뉴 계층은 한 번만 연결 가능");

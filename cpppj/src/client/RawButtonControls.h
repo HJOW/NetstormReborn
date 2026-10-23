@@ -85,6 +85,7 @@ public:
     // 0047d890/CD004773a0: 현재 캡처/dialog/루트에 생산 갱신 사건을 원본 Route 순서로 분배한다.
     // 생산 패널 노드가 아직 없으면 실제 트리의 미처리 반환을 유지한다.
     void RefreshProduction();
+    std::uint32_t NotifyHudMode(std::uint32_t command); //현재 캡처/dialog/root에(command,1,0,includeHidden1)을 보내며 반환토큰과 캡처해제 효과를 보존한다.
     // 같은 트리/입력/수명에 실제 원본 메뉴 계층을 한 번 연결한다. 자산/글꼴은 Client가 소유한다.
     RawMenuControls& EnableMenus(const GameAssets& assets,FontStore& fonts,RawMenuHooks hooks);
     // 연결된 실제 메뉴를 빌린다. 연결 전에는 nullptr다.

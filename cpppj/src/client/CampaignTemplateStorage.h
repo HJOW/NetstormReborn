@@ -16,6 +16,18 @@ struct TemplateFileWriteHooks {
     std::function<void(std::string_view,std::uint32_t)> permissions; //현재 이름의 CRT 권한 요청을 실제 쓰기 경계에 인계한다.
     std::function<void(std::string_view,std::span<const std::uint8_t>)> write; //저장 부모가 결정한 현재 이름과 같은 이미지 원문을 쓴다.
 };
+// 원문 Load의 실제 파일/CRT/현재 슬롯/제목 경계다. 선택한 호출만 연결을 요구한다.
+struct TemplateFileLoadHooks {
+    std::function<std::vector<std::uint8_t>(std::string_view)> read; // 실제 읽기 시점의 파일 할당이다. 빈 벡터는 원문 open 실패이며 throw와 구별한다.
+    std::function<bool(std::string_view,std::string_view)> sameName; // 기존 manager 이름과 요청 이름의 실제 CRT stricmp==0이다.
+    std::function<void()> wrongName; // 기존 다른 이름의 isCalled 진단이며 반환하면 원문대로 기존 manager를 유지한다.
+    std::function<bool(std::string_view)> readOnly; // 파일 출처/권한으로 판정하는0041af80 경계다. 기존 header+8 비영이면 호출하지 않는다.
+    std::function<std::int32_t()> typeCount; // 실제 서명 검사가 도달한 순간의 현재 signed TYPE 개수다.
+    std::function<void()> tooManyTypes; // numTypes<256 진단이다. 반환하면 현재 원문 서명 읽기를 계속한다.
+    std::function<void(std::string_view)> rejectFile; // 잘못된 서명의 실제 파일 제거 요청이다. 보호 파일 삭제를 자동 허용하지 않는다.
+    std::function<std::uint32_t()> currentSlot; // 성공 뒤 원문 현재 Template 인덱스를 다시 조회한다.
+    std::function<void()> refreshTitle; // 현재 슬롯의 성공에서만00460730의 중간 제목 효과를 수행한다.
+};
 // 현재 섹션이 바뀌어도 같은 manager의 같은 생성 수명에 쓰기 위한 불투명 참조다.
 struct TemplateWriteStream {
     std::uint32_t manager{},section{}; // 실제 호스트 manager와 같은 생성 수명의 동적 섹션 토큰이다. 포인터를 DWORD로 자르지 않는다.
@@ -32,6 +44,7 @@ public:
     std::uint32_t& SerializationVersion(); // 생성자/객체로더/저장부모가직접같이쓰는실제005c89c0 DWORD다. 복사값을반환하지않는다.
     void Install(std::uint32_t slot,o::FortTemplate fort,std::string name); // 이전 한 헤더를 실제 반납한 뒤 새 소유 manager를 설치한다.
     void InstallFile(std::uint32_t slot,o::FortTemplate fort,std::span<const std::uint8_t> image,std::string name,std::int32_t typeCount=188); // 실제 파일/서명/섹션 읽기 부모를 실행한다. 기본188은10.78 독립 호출용이며 Session은 현재 타입 수를 전달한다.
+    void LoadFile(std::uint32_t slot,o::FortTemplate fort,std::string_view name,const TemplateFileLoadHooks& file); //004bf550의기존파일유지/읽기전공개/정상false부분정리를실제owner에서실행한다. fort는이미해석된보조metadata이며실제section은reader의할당을쓴다.
     void Borrow(std::uint32_t slot,std::uint32_t source); // 같은 manager를 빌리며 State/지형 cursor도 같은 객체를 사용한다.
     void ClearAll(); // 원본 전역 정리의 실제 소멸/할당 반납을 수행한다.
     void Clear(std::uint32_t slot); // 원본 단일 반납이다. 빈 포인터의 부가 필드도 비운다.

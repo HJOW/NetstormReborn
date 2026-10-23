@@ -1880,6 +1880,19 @@ docs/exe/cpp-dialog-exit-lifetime-20261023.md text eol=lf
 docs/exe/cpp-gump-frame-order-20261023.md text eol=lf
 # 기존 Editor 설치 기반의 동결 소스·관측·적용 제안 SHA를 체크아웃 후에도 유지한다.
 cpppj/src/client/FortTypeConversionStorage.* text eol=lf
+cpppj/src/client/ClientRandomGlobals.h text eol=lf
+cpppj/src/client/ClientLocalStateGlobals.h text eol=lf
+cpppj/src/client/ScreenPaletteApply.h text eol=lf
+docs/exe/evidence/screen-palette-clear-20261024/* -text
+cpppj/tests/ScreenPaletteApplyTests.cpp text eol=lf
+cpppj/tests/CampaignTemplateLoadFileTests.cpp text eol=lf
+cpppj/src/client/ExistingEditorAfterCheckpoint.* text eol=lf
+cpppj/src/o/RawFortPaletteTransition.* text eol=lf
+cpppj/tests/ClientRandomGlobalsTests.cpp text eol=lf
+cpppj/tests/CampaignExistingEditorSubscriberTests.cpp text eol=lf
+cpppj/tests/ExistingEditorAfterCheckpointTests.cpp text eol=lf
+cpppj/tests/FortPaletteTransitionTests.cpp text eol=lf
+cpppj/fort-palette-transition-native.json text eol=lf
 cpppj/src/o/RawFortTypeNamesLoad.* text eol=lf
 cpppj/src/o/RawFortContentsLoad.* text eol=lf
 cpppj/src/o/RawFortDeckLoad.* text eol=lf
@@ -1914,3 +1927,6 @@ cpppj/fort-type-names-load-native.json text eol=lf
 cpppj/subscriber-id-generate-native.json text eol=lf
 docs/exe/patches/cpp-editor-session-children-20261024.patch text eol=lf
 docs/exe/patches/cpp-editor-session-contents-20261024.patch text eol=lf
+# 원문 관측의 빈 마지막 TSV 칸과 최초 CRLF 바이트는 정리하지 않는다.
+cpppj/tests/fixtures/fort-palette-transition-x86.tsv whitespace=-blank-at-eol
+cpppj/tests/fixtures/screen-palette-clear-x86.tsv -text
