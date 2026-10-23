@@ -1826,3 +1826,12 @@ cpppj/tests/fixtures/priest-panic-x86.tsv text eol=lf
 cpppj/priest-panic-20261023.json text eol=lf
 tools/decomp_priest_panic.py text eol=lf
 docs/exe/cpp-priest-panic-20261023.md text eol=lf
+
+# HUD 구분선의 독립 원문과 제품 본체는 체크아웃 간 같은 LF 바이트를 유지한다.
+cpppj/src/client/HudDock.* text eol=lf
+cpppj/src/client/HudDividerInput.* text eol=lf
+cpppj/tests/HudDockTests.cpp text eol=lf
+cpppj/tests/HudDividerInputTests.cpp text eol=lf
+tools/decomp_hud_dock_geometry.py text eol=lf
+tools/decomp_hud_divider_input.py text eol=lf
+docs/exe/cpp-hud-dock-20261023.md text eol=lf

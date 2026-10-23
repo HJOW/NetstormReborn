@@ -2,6 +2,8 @@
 # (ClientMain·UserInput·Gump 계열·Screen·Renderer·Sound·State·Mission 등)
 # 다시 만든 파일을 아래 목록에 더한다. 파일 이름은 SOURCE_MAP.md 의 "cpppj 경로"를 따른다.
 target_sources(netstorm PRIVATE
+    # 원본 HUD의 divider 생성·슬레이브 재배치·지도 영역과 공통 입력 드래그 본체다.
+    HudDock.cpp HudDock.h HudDividerInput.cpp HudDividerInput.h
     # 현재 미션 F8/First의 같은 입력 큐와 원본 안내 재표시를 연결한다.
     MissionGuideInput.cpp MissionGuideInput.h
     # 실제 Guide 순번과 월드 진입 Pause/얇은 가상 단계를 현재 Client 수명에 연결한다.

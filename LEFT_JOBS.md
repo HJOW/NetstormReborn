@@ -1,5 +1,16 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-23 단위368 완료: 원본 HUD 구분선 기하·입력 본체
+
+- [x] 이전 단위367은 실제 미니맵 기본HUD와 전체2373/0을 `560df210 / 20261023-35 CP`로 커밋한 진행이다. AGENTS.md·공통/닷넷 인수인계를 다시 읽었으며 현재/마지막 전체 정밀 디컴파일 PC는 **VM-W11-Codex / 2026-10-23**으로 일치한다. 기존 정밀 원문을 재사용했고 새 전체 디컴파일은 하지 않았다.
+- [x] 원본004c6c50/004c4790/004c47f0/004c6530의 생성·슬레이브 등록/재배치·HUD1/3/4·채팅/지도 영역을 `HudDock`으로,004c49f0/004c4b00의 같은 공통 Gump 로컬/anchor/capture/프레임 드래그를 `HudDividerInput`으로 복원했다. 제품 라이브러리에 등록한 본체 복원이며 실제 Client dock 연결·GUI 완료는 아니다. [상세](docs/exe/cpp-hud-dock-20261023.md).
+- [x] 독립 기하1075입력/2150행(정상2144/명시stop6,683920명령·CRT65524)과 입력6699입력/13398행(987266명령)을 두 x87 정밀도 차이0으로 관측했다. 두 제품 검사가 전체15548행의 현재 raw/공개 효과/최종 가상 인자를 직접 대조한다. 일반 Draw/전체Route/GUI까지 통과했다고 확대하지 않는다.
+- [x] 빌드1의 검사 함수 이름 충돌을 `DockSplit`로 수정했다. 최종 Release 빌드2는 종료0/경고·오류0, 집중2검사 실패check0, 전체 CTest1은 **2375검사·실패check0·종료0/242.50초**이며 내부 LastTest.log의2375/0도 확인했다. 이후 제품/검사 C++ 변경은 없다. 도구/fixture의명시LF재생성·동일관측/집중재검사와엄격한UTF-8/한국어새주석·도구AST·SHA·diff/보호 경로를 검사한 뒤 **20261023-36 CP**로 로컬 커밋한다. 게임/별도GUI 실행·보호원문 변경·원격push는 하지 않았다.
+- [ ] 다음 단위는 실제 ESC 가로 메뉴/하위 Game·View·Options·Players와 원본 사건/문자열 큐 연결을 우선한다. 병렬 작성한 `RawGameMenuBar`/`RawGameMenus`, 검사/fixture/도구는 아직 **미등록·미커밋** 상태다. 독립 부모/GUI경계 대조와 실제 바인더/수명 검증을 구별한다. 원문005cad24는 등록 칸id가 아니라 **serial(+2c)**, 열기 준비00491680은 자동Pause를 하지 않는다.
+- [ ] 실제 dock 연결에는 ChatWindow와 NSInfo의 실제 생성/자식/수명이 필요하다. NSInfo는 편집 정보/일반F6지식이 아닌 메타맵 Player List/Battle Status이며 숨김이어도 생성자를 항상 실행한다. 새 `HudChatGeometry`/`HudNsInfo` 및 관련 관측/문서는 다음 단위용 **미등록·미검증·미커밋** 파일이며 파일을 유실하지 않는다. GameWorld viewport 준비는 `extracted/cpp-hud-viewport-20261023-pending.patch`에 보관하고 이번 제품에서는 제외했다.
+- [ ] 좌측 덱/미니맵의 고정Resize를 실제 divider 관계로 교체하고 기본 지도영역left85/top0/bottomH−96, 드래그·폭/높이제한·메뉴 관문·현재 viewport/Draw·두 화면비·미션 이탈/재진입을 실제GUI로 검증해야 한다. 합법적폭130에서 bitmap128 밖 crop 블릿도 추가 분석한다.
+- [ ] 전체 Early Missions·전체 캠페인·데모3 사용자 완주/원본 동일성, Edit·커스텀맵/시나리오, Multiplayer 외 메인 메뉴와ESC/좌측덱·미니맵·QWASZX, 전체snapshot/Editor 저장 목표는 유지한다. 보호원문·AGENTS·다른dotnet 세션 파일 변경과 원격push는 하지 않는다.
+
 ## 2026-10-23 단위367 완료: 실제 Sky Overview 기본 HUD 연결
 
 - [x] 이전 목표 턴은 QWASZX 생산 단축키/실제 GUI 취득·회전·배치·보충과 전체2,371/0을 `3db2dc47 / 20261023-34 CP`로 커밋한 진행이다. AGENTS.md·공통/닷넷 인수인계를 다시 읽었다. 현재/마지막 전체 정밀 디컴파일 PC는 **VM-W11-Codex / 2026-10-23**으로 일치하며 기존 정밀 원문을 재사용한다.
