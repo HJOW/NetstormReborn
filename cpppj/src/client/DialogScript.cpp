@@ -190,6 +190,7 @@ DialogPage ExtractRuntimeMetadata(std::string text,const DialogMetadataHooks& ho
         if (kind<4) {
             DialogItem item{label,action,kind==2 || kind==3,kind==3 && o::ConfigParseLong(match[4].str())!=0,
                 kind!=3 || o::ConfigParseLong(match[5].str())!=0,kind==1};
+            item.checkedDirective=kind==3; // $Checked의 거짓 체크값도 $Menu 이름 판별로 보내지 않는다.
             if (item.menu && hooks.appendMenu) hooks.appendMenu(page,std::move(item));else page.items.push_back(std::move(item));
         }
         else if (kind==4) { page.timeoutSeconds=o::ConfigParseLong(label);page.timeout=action; }

@@ -19,6 +19,7 @@ struct DialogItem {
     // instant: 버튼 해제 대기 없이 누름 즉시 동작할지.
     bool menu{}, checked{}, enabled{true}, instant{};
     std::uint32_t menuColumn{}; // Tell의 현재 세로 열 번호다. 하단 버튼은 사용하지 않는다.
+    bool checkedDirective{}; // 체크값이0인 $Checked도 일반 $Menu sentinel 분기와 구별한다.
 };
 // 다이얼로그 본문 한 문단과 글꼴 효과이다.
 struct DialogParagraph { /* text: 표시하거나 해석할 본문 문자열. */ std::string text; /* heading: 이동 방향 번호. */ int heading{}; /* italic: 본문에 기울임 글꼴 효과를 적용할지. */ /* bold: 본문에 굵은 글씨 효과를 적용할지. */ bool italic{}, bold{}; };
@@ -34,6 +35,7 @@ struct DialogPage {
     // items: 읽거나 생성한 항목의 순서 있는 목록.
     std::vector<DialogItem> items;
     std::uint32_t menuColumns{}; // 원본 Tell+21c8의 현재 메뉴 열 수다. 빈 맵 목록도 생성한 열을 보존한다.
+    std::vector<std::uint32_t> menuColumnFlags; // 실제 표시 어댑터가 소유하는 열 생성 자료다. 각 Begin의 플래그를 보존한다.
     // background: 배경 출력 자료 또는 배경 Gump 토큰.
     std::string background;
     // timeoutSeconds: 다이얼로그 시간 제한의 길이(초).

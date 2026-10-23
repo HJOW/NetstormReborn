@@ -12,6 +12,7 @@
 #include "o/RawMissionGuide.h"
 #include "client/GuideMissionTransitions.h"
 #include "client/TutorialInit.h"
+#include "client/SoloMapCatalog.h"
 #include <map>
 #include <memory>
 
@@ -69,6 +70,7 @@ private:
     o::Config& Script(std::string_view name);
     // @guideSpec/%userSpec 파일 목록을 현재 파일 설정으로 확장한다.
     void ExpandMenus(DialogPage& page);
+    DialogMetadataHooks MapMetadata(); // 실제 메타 추출 시점의 메뉴 열과 현재 파일 목록을 페이지 표시 자료에 연결한다.
     // 표시 상태를 합성한다. 페이지 교체 예약이 있을 때만 입력 영역과 실제 돌 버튼을 함께 교체한다.
     void Compose();
     // 새 페이지/팝업/해상도의 입력 영역 교체를 다음 합성에 예약한다. 단순 픽셀 갱신에는 쓰지 않는다.
@@ -112,6 +114,9 @@ private:
     std::unique_ptr<RawButtonControls> rawButtons_; // 돌 버튼은 실제 공유 트리/수명/캡처를 사용한다. input_은 메뉴 행/판정 보고용이다.
     std::unique_ptr<WarningMessages> warnings_; // 원본의 모달이 아닌10초 글자 안내와 실제 StyleText/Gump 수명이다.
     ScriptStringRing scriptStrings_; // 입력 큐에 예약한 문자열의 원본80칸 수명이며 페이지가 바뀌어도 보존한다.
+    SoloMapFileSpec mapFileSpec_; // 페이지 교체 뒤에도 같은9BYTE FileSpec 키를 보존한다.
+    std::unique_ptr<SoloMapCatalog> mapCatalog_; // 현재 파일 캐시/dirty/이름을 Client 수명에 소유한다.
+    std::string mapUserName_,pendingFortName_; // 원본 초기 빈 사용자 이름과 별도 pending 이름이다. current Fort 이름과 합치지 않는다.
     std::unique_ptr<DialogBodyLayout> dialogBody_; // 현재페이지의실제StyleText입력/표시복제를소유하며Compose때효과를재실행하지않는다.
     HtmlTextParserGlobals htmlGlobals_; // 원본의페이지간공유P억제전역이다.
     std::uint32_t buttonTextureType_{},buttonTextureFrame_{}; // 실제 버튼 배경 생성자에 전달할 fortGump/A01 타입·프레임 번호다.

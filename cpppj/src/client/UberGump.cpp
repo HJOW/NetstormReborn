@@ -17,6 +17,7 @@
 #include "o/RawMissionBattleOptions.h"
 #include "client/MissionFortRequest.h"
 #include "client/CampaignTemplateStorage.h"
+#include "client/TellMapMenus.h"
 #include "client/RawKnowledgeMenu.h"
 #include "o/RawMissionGuide.h"
 #include "client/GifImage.h"
@@ -146,6 +147,13 @@ struct UberGump::MissionRuntime {
 UberGump::UberGump(Client& client) : client_(client) {
     templateStorage_=std::make_shared<CampaignTemplateStorage>(); // 시작 초기화와 미션별 명시 정리를 별개 수명으로 유지한다.
     auto& config = client_.Configuration();
+    SoloMapCatalogEffects mapEffects; // 현재 실제 장치만 제공하며 목록 분류/행 처리는 기존 몸체를 사용한다.
+    mapEffects.typeCount=[this] { return static_cast<std::int32_t>(client_.Assets().TypeTable().Types().size()); };
+    mapEffects.allocationBytes=[](auto) { throw std::logic_error("맵 목록의 빈 State 생성에 필요한 현재 미정 할당 바이트 미연결"); }; // 정상 보호 파일은 이 경계를 선택하지 않는다. 미정 바이트를 임의0으로 만들지 않는다.
+    mapEffects.userName=[this] { return world_ ? std::string(world_->Session().CurrentHandle()) : mapUserName_; };
+    mapEffects.translate=[this](auto text) { return FontBytes(client_.Translate(o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(text.data()),text.size()}))); };
+    mapEffects.fileSpecKey=[this] { return mapFileSpec_.Current(); };
+    mapCatalog_=std::make_unique<SoloMapCatalog>(client_.Files(),config,std::move(mapEffects));
     title_ = DecodeGif(client_.Files().Read(config.PathSpec("BackgroundGifSpec", "titleMenu")));
     clouds_ = DecodeGif(client_.Files().Read(config.PathSpec("CloudFileSpec")));
     const auto& type = client_.Assets().Find("fortGump");
@@ -244,6 +252,7 @@ UberGump::UberGump(Client& client) : client_(client) {
 UberGump::~UberGump() { ClearWorld(); }
 // 입력 참조를 먼저 없애고 커널의 실제 소유권을 해제한다. 위치 효과음은 카메라 0의 전체 메뉴 영역으로 되돌린다.
 void UberGump::ClearWorld() {
+    if (world_) mapUserName_=world_->Session().CurrentHandle(); // 원본 Client 전역 이름은 월드를 해제한 뒤에도 다음 목록 조회에 남는다.
     state_.Cancel("LoadMissionFort"); // 현재 미션이 설치 전에 교체돼도 그 소유자의 이전 요청을 새 미션에서 소비하지 않는다.
     missionFortRequest_.reset(); // Session이 살아 있으면 공유 소유권으로 실제 설치/해제 완료까지 이미지를 보존한다.
     if (rawButtons_ && rawButtons_->Menus()) rawButtons_->Menus()->CloseHelp(); // 동적 정보/그림의 현재 Session보다 먼저 실제 창을 반납한다.
@@ -297,6 +306,24 @@ void UberGump::ExpandMenus(DialogPage& page) {
     }
     page.items = std::move(items);
 }
+// 목록을 전체 파싱 뒤 다시 찾지 않고 실제 메타 추출 순서에서 현재 파일/이름/열을 읽는다.
+DialogMetadataHooks UberGump::MapMetadata() {
+    DialogMetadataHooks metadata;
+    metadata.appendMenu=[this](DialogPage& page,DialogItem item) {
+        const auto current=mission_ ? mission_->FortName() : std::string(); // 현재 설치된 미션 Fort 이름과 별도 pending 이름의 수명을 구별한다.
+        const auto begin=[&](auto flags) { page.menuColumnFlags.push_back(flags); }; // 표시 어댑터의 실제 열 생성 자료를 현재 페이지에 소유한다.
+        const auto hooks=MakeTellMapMenuHooks(*mapCatalog_,mapFileSpec_,[&]() -> std::string_view { return current; },
+            [this]() -> std::string_view { return pendingFortName_; },begin,[&](const auto& row,auto command) {
+                if (command!=kReadFortCommand) throw std::logic_error("Tell 맵 행의 원본 ReadFort 명령 불일치");
+                const auto decode=[](std::string_view bytes) { return o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(bytes.data()),bytes.size()}); }; // 원본 좁은 파일/라벨을 기존 페이지의UTF-8 경계로 옮긴다.
+                page.items.push_back({decode(row.label),{"ReadFort",decode(row.name)},true,row.checked,row.enabled,false,page.menuColumns-1});
+            });
+        if (item.checkedDirective) {
+            if (!page.menuColumns) { begin(kTellMenuFlags);++page.menuColumns; }
+        } else if (AppendTellMapMenus(item.label,page.menuColumns,hooks)) return;
+        item.menuColumn=page.menuColumns-1;page.items.push_back(std::move(item));
+    };return metadata;
+}
 // 명시 사용자 명령에서 잘못된 섹션은 기존 진단을 유지한다. 선택적 미션 사건은 TryTell을 사용한다.
 void UberGump::Tell(std::string target, bool briefing) {
     if (!TryTell(target,briefing)) throw std::runtime_error("Missing dialog section: "+target);
@@ -332,7 +359,7 @@ bool UberGump::TryTell(std::string target,bool briefing) {
     BindHtmlConditionConfig(htmlHooks,client_.Configuration(),client_.Assets().Edition()); // 초기전체치환결과의조건토큰을그시점의현재Config에서다시치환한다.
     BindHtmlPictureText(htmlHooks); // 원본인용그림표기를실제Markup/SHP를읽는본문버퍼에전달한다.
     const auto expanded=Replace(client_.Configuration().SubstituteLocal(protectedBody),"__CURRENT_FILE__","{cur.file}"); // 원본004cf270의선행전체치환을HTML조건평가보다먼저유지한다.
-    auto parsed=ParseDialogPage(expanded,htmlState,htmlGlobals_,htmlHooks,client_.Assets().Edition()); // 1차HTML→조건을통과한메타추출→LF의BR재구성을수행한다.
+    auto parsed=ParseDialogPage(expanded,htmlState,htmlGlobals_,htmlHooks,client_.Assets().Edition(),MapMetadata()); // 현재 목록/열도1차HTML뒤 실제 메타 추출 시점에 처리한다.
     if (!parsed.hasContent) { rebuild_=true;return true; } // 원본004c8d50관문처럼명령효과만남고내용이없으면현재대화상자를교체하지않는다.
     const std::array<std::uint32_t,8> context{0,0,client_.GetScreen().Colors().basic[7],0,0,0,1,1}; // 실제기본TextGump의font0/normal/흰색/그림자오프셋문맥이다.
     dialogBody_->SetBody(FontBytes(parsed.htmlBody),context,htmlState,htmlGlobals_,std::move(htmlHooks));
@@ -850,12 +877,16 @@ void UberGump::Compose() {
                 if (it != decorations_.end()) Paste(*canvas, it->second, (width - static_cast<int>(it->second.width)) / 2, (height - static_cast<int>(it->second.height)) / 2, all);
             }
             const int contentWidth = std::min(480, width - 64), panelWidth = contentWidth + 32;
-            int contentHeight = 0, menuRows = 0, totalButtonWidth = 0, buttons = 0; // 원본본문측정과기존목록/버튼의현재패널높이를합친다.
+            int contentHeight = 0, menuRows = 0, totalButtonWidth = 0, buttons = 0; // 본문과 가장 긴 현재 열/하단 버튼의 높이를 합친다.
+            const auto columnCount=std::max(1U,page_.menuColumns);std::vector<int> rowsByColumn(columnCount); // 단일 열 페이지도 같은 계산을 사용한다.
             const auto measured=dialogBody_->Layout(contentWidth,{0,0},{0,0,contentWidth,height}); // 실제원본버퍼의전체줄높이를구하고inline서식은별도문단으로쪼개지않는다.
             contentHeight=measured.height;
             // 목록과 하단 버튼의 실제 높이를 더한다.
             for (const auto& item : page_.items) {
-                if (item.menu) ++menuRows; else { ++buttons; totalButtonWidth += std::max(kButtonWidth, font.Measure(FontBytes(item.label)) + 16) + 4; }
+                if (item.menu) {
+                    if (item.menuColumn>=columnCount) throw std::out_of_range("Tell 표시의 현재 메뉴 열 범위 오류");
+                    menuRows=std::max(menuRows,++rowsByColumn[item.menuColumn]);
+                } else { ++buttons; totalButtonWidth += std::max(kButtonWidth, font.Measure(FontBytes(item.label)) + 16) + 4; }
             }
             const int panelHeight = std::min(height - 32, contentHeight + menuRows * kRowHeight + (buttons ? 27 : 0) + 32);
             const int left = (width - panelWidth) / 2, top = (height - panelHeight) / 2;
@@ -864,13 +895,15 @@ void UberGump::Compose() {
             const auto bodyLayout=dialogBody_->Layout(contentWidth,{left+16,top+16},{left+16,top+16,left+16+contentWidth,footerTop}); // 같은표시복제를현재본문내부영역에서만출력한다.
             text.insert(text.end(),bodyLayout.text.begin(),bodyLayout.text.end());
             dialogSprites=bodyLayout.sprites;
-            int row = footerTop;
+            std::fill(rowsByColumn.begin(),rowsByColumn.end(),footerTop); // 각 열의 첫 행은 같은 footer 위쪽 기준에서 시작한다.
             // 캠페인 제목/완료 체크/잠금 조건은 원본 스크립트 값을 그대로 사용한다.
             for (const auto& item : page_.items) if (item.menu) {
-                const int id = control(item, {left + 16, row, left + panelWidth - 16, row + kRowHeight});
-                if (input_.HoveredMenu() == id) Fill(*canvas, {left + 16, row, left + panelWidth - 16, row + kRowHeight}, dark);
-                if (item.checked) Paste(*canvas, decorations_.at("J02"), left + 17, row + 3, panel);
-                text.push_back({&font, FontBytes(item.label), left + 32, row + 1, item.enabled ? static_cast<std::uint8_t>(255) : dark, 0, {1, 1}, true, false}); row += kRowHeight;
+                auto& row=rowsByColumn[item.menuColumn];const auto column=static_cast<int>(item.menuColumn),columns=static_cast<int>(columnCount);
+                const ScreenRect rect{left+16+contentWidth*column/columns,row,left+16+contentWidth*(column+1)/columns,row+kRowHeight};
+                const int id = control(item,rect);
+                if (input_.HoveredMenu() == id) Fill(*canvas,rect,dark);
+                if (item.checked) Paste(*canvas, decorations_.at("J02"),rect.left+1,row+3,panel);
+                text.push_back({&font,FontBytes(item.label),rect.left+16,row+1,item.enabled ? static_cast<std::uint8_t>(255) : dark,0,{1,1},true,false});text.back().clip=rect;row+=kRowHeight;
             }
             int x = (width - totalButtonWidth + 4) / 2;
             // 하단 버튼은 라벨 폭에 맞춰 나란히 놓는다.
@@ -939,6 +972,7 @@ std::string UberGump::Report() const {
     out << "phase\t" << static_cast<int>(state_.phase) << "\npage\t" << Field(pageName_) << "\npopup\t" << Field(popup_) << "\n";
     out << "size\t" << client_.GetScreen().Width() << '\t' << client_.GetScreen().Height() << "\n";
     out << "paused\t" << client_.Paused() << "\nsound\t" << client_.Configuration().GetInt("sound") << "\n";
+    out<<"map_menu\t"<<page_.menuColumns<<'\t'<<mapCatalog_->Cached().count<<'\t'<<mapCatalog_->Cached().dirty<<'\t'<<mapFileSpec_.Current()<<'\n'; // 실제 표시/캐시 상태만 관찰하며 선택/로딩 성공을 합성하지 않는다.
     out << "thunder_processes\t" << client_.ThunderFlashCount() << '\n';
     out<<rawButtons_->Report()<<'\n';
     out<<rawButtons_->Menus()->Report();

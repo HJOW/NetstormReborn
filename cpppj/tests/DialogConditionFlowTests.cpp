@@ -45,6 +45,7 @@ TEST_CASE(DialogConditionFlow_MetadataPriorityAndBodyBoundary) {
     const auto page=ParseDialogPage("Body\n$Menu=Choice,Tell,menu\n$Button=Back,Tell,back\nTail\n$Checked=Locked,MissionBegin,next,1,0\n$Timeout=12,Tell,done",state,globals,{});
     CHECK(page.items.size()==3);CHECK(page.items[0].label=="Back" && page.items[0].action.argument=="back");
     CHECK(page.items[1].menu && page.items[1].label=="Choice");CHECK(page.items[2].checked && !page.items[2].enabled);
+    CHECK(!page.items[1].checkedDirective && page.items[2].checkedDirective); // 체크값과 별도로 메타 종류를 현재 메뉴 장치에 보존한다.
     CHECK(page.timeoutSeconds==12 && page.timeout.argument=="done");CHECK(page.htmlBody.find("Tail")==std::string::npos);CHECK(page.htmlBody.find('$')==std::string::npos); // 1차LF가공백이되어메타뒤평문도다음$까지삭제되는원본동작이다.
 }
 

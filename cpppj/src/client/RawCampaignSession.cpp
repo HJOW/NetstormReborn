@@ -2816,6 +2816,11 @@ const RawCampaignParticles& RawCampaignSession::Particles() const { return *impl
 void RawCampaignSession::CheckMissionOutcome() { impl_->outcome->Check(); }
 // 실제 worldLoad의 loginSubscriber 복사 대상과 같은 장기 전역을 매번 읽는다.
 std::uint32_t RawCampaignSession::CurrentSubscriber() const { return impl_->globals.mySubscriber; }
+// 현재 사용자 이름을 새 설정 조회나 Player 표시 이름으로 대체하지 않는다.
+std::string_view RawCampaignSession::CurrentHandle() const {
+    const auto& bytes=impl_->handle;const auto end=std::find(bytes.begin(),bytes.end(),std::uint8_t{});
+    return {reinterpret_cast<const char*>(bytes.data()),static_cast<std::size_t>(end-bytes.begin())};
+}
 // 로그인/기술/AI가 공유하는 현재 원본 로컬 Player 번호다.
 std::uint32_t RawCampaignSession::LocalOwner() const { return impl_->playerState.battleOwner; }
 // 원본 정보 설명이 읽는 같은 PlayerWorld 템플릿 소유자다.

@@ -1,0 +1,14 @@
+2	kernel-tell	LoadEditable
+3	require	map_menu\t2\t50\t1\tfortSpec
+3	report	solo
+4	snapshot	extracted/cpp-tell-map-display-20261023-solo.bmp
+6	esc
+8	kernel-tell	LoadMultiplayer
+9	require	map_menu\t1\t1\t0\tfortSpec
+9	report	fort
+10	snapshot	extracted/cpp-tell-map-display-20261023-fort.bmp
+12	esc
+14	kernel-tell	LoadEditable
+15	require	map_menu\t2\t50\t1\tfortSpec
+15	report	solo-again
+16	snapshot	extracted/cpp-tell-map-display-20261023-solo-again.bmp
