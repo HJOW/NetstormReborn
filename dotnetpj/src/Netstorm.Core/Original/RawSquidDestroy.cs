@@ -165,6 +165,9 @@ public sealed class RawSquidDestroy
         {
             throw new ArgumentException("삭제 본체와 그래프의 슬롯 풀이 다릅니다", nameof(graph));
         }
+        // 원본 SquidUnpop::ValidateGraph 처럼 같은 공간 해시·같은 점유 지도인지도 확인한다
+        // (W03 자산 삭제 분배 조각, 2026-10-23: 가상 삭제가 다른 공간의 Graph 를 읽지 않게 한다)
+        graph.ValidateSpace(_unpop.Hash, _unpop.Spots);
     }
 
     /// <summary>슬롯의 16비트 값을 리틀 엔디언으로 읽는다.</summary>

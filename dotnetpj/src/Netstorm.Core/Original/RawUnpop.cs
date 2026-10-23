@@ -126,6 +126,18 @@ public sealed class RawUnpop : IRawUnpop
     /// <summary>이 모듈이 쓰는 슬롯 풀. 팩토리가 같은 풀인지 확인해 서로 다른 수명 상태의 혼용을 막는다.</summary>
     public RawSidPool Pool => _pool;
 
+    /// <summary>
+    /// 이 모듈이 쓰는 공간 해시. 삭제 본체가 Graph 와 같은 공간인지 확인할 때 쓴다.
+    /// W03 자산 삭제 분배 조각(2026-10-23)에서 원본 SquidUnpop::ValidateGraph 의 대조를 위해 추가했다.
+    /// </summary>
+    public RawSquidHash Hash => _hash;
+
+    /// <summary>
+    /// 이 모듈이 쓰는 칸별 점유 지도(65,536바이트). Graph 와 같은 배열인지 확인할 때 쓴다.
+    /// W03 자산 삭제 분배 조각(2026-10-23)에서 추가했다.
+    /// </summary>
+    public byte[] Spots => _spots;
+
     /// <summary>건물 옆면 해제 몸체를 연결한다. 이 모듈과 같은 풀·같은 공간 해시를 쓰는 몸체만 받는다. null 이면 연결을 푼다.</summary>
     /// <param name="building">건물 공간 몸체.</param>
     public void SetBuildingSide(IRawBuildingSide? building)

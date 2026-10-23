@@ -348,7 +348,7 @@ public sealed class RawSquidNeighbors
     }
 
     /// <summary>이웃 탐색기가 쓰는 타입 표.</summary>
-    internal IReadOnlyList<OriginalTypeRecord> Types => _types;
+    public IReadOnlyList<OriginalTypeRecord> Types => _types;
 }
 
 /// <summary>
