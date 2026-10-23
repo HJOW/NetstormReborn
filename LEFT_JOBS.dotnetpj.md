@@ -7,10 +7,10 @@
 ### 기준과 현재 상태
 
 - **우선순위:** AGENTS.md의 목표와 사용자 결정 → 이 절의 최신 계획 → 아래 W01~W20 상세 및 날짜별 이력 순이다. [2026-10-16 이식 계획](docs/dotnet-cpp-port-plan-20261016.md)은 작업 번호·근거 목록으로 계속 쓰되, 당시의 대기 판정·미션 범위·다음 시작점은 이 절로 갱신한다. `cpppj 완성 후 분석하여 개발`이라는 최종 흐름을 유지하면서, 이미 허용된 병행 작업은 **복원·검증된 cpppj 범위를 이식**하는 방식으로 진행한다.
-- **기준 판본·근거:** 10.78을 기준으로 cpppj의 커밋된 소스 본체, 실제 `RawCampaignSession` 연결 코드, 원본 x86 fixture, 분석 문서를 함께 대조한다. cpppj의 임시 어댑터·미복원·실패도 함께 기록하며 원본 확정으로 취급하지 않는다. 10.72는 비교 자료로 남긴다. 현재 PC와 공통 기록의 마지막 전체 정밀 디컴파일 PC는 모두 **VM-W11-Codex / 마지막 수행일 2026-10-22**다. 이번에는 디컴파일 산출물을 읽거나 새 디컴파일을 하지 않았다.
-- **현재 동기화 점검(2026-10-23 갱신):** 검토 HEAD는 **`145190d1`(20261023-16 CP)**, 목록의 실제 반영 커밋은 여전히 **`f95a8db2`**다. `python dotnetpj/tools/cpp_sync.py` 종료 0, 연결 자료 **57개**(`contentlifetime` 추가)와 생성 자료 **3개** 모두 일치했다. cpppj의 `*-x86.tsv` **505개 중 연결된 것은 54개**이며, 나머지 연결 자료는 vtable 표 2개와 dotnetpj 소유 clockkernel 1개다. 반영 이후 cpppj 관련 커밋은 **81개**, 자료 파일 추가 **48개**다(Fort·관찰 TSV도 포함하므로 48개 모두 x86 fixture라는 뜻은 아니다). 이 가운데 이번에 이식한 내용물 수명·contained 생성 모듈을 바꾼 커밋은 없으므로 반영 커밋을 올리지 않았다. **해시 일치는 소스·세션 동작의 일치 증명이 아니다.**
-- **dotnetpj 구현 상태:** W01은 완료, W02는 열여덟째 조각까지, W03은 열세째 조각(`RawContentLifetime`·`RawContainedCreate`)까지, **W05 선행 부분(`RawSpStore`·`RawSquidReward`)** 까지 **L1 모듈 검증**을 마쳤다. `BattleSession`은 엔티티 목록·`FixedTimestep`·정수 SP를 사용하며 새 `Original` 코어 전체가 실제 플레이를 소유하지는 않는다. 따라서 플레이 가능한 기존 기능과 L1 이식 모듈을 별도로 평가한다. 마지막 전체 빌드/검사는 **2026-10-23의 Release 경고·오류 0, 1,310개 통과(Assets 363 + Core 947)**다.
-- **cpppj 최신 경계:** 최신 커밋은 **`145190d1`(20261023-16 CP, 양 판본 디컴파일 및 cpppj Release 컴파일)** 이고, 그 사이 자동 AI·다리 탐색/전략·공중 운반체·데빌메이커·세일 스케이터/크리스탈 크랩·아크 스파이어·애시드 분해·은신/마비 시전·윈드 소환·훨리기그 자연 공격·사제 대피와 신전 복귀의 복원이 추가됐다. 반면 25종 전체의 생성·이동·공격 연결은 아직 완료가 아니며, 공통 인계 기록의 마지막 전체 검사는 **2,274개 중 2,273개 통과/1개 실패**(수정 TEST02의 TYPE139 데빌메이커 PostPop 미연결)다. 이번에는 cpppj 전체 검사를 다시 돌리지 않았고, 이 조각이 쓰는 모듈을 바꾼 커밋이 있는지만 확인했다. 작업 트리에는 미커밋 `dissolve`·`acid-zap` 등 다른 세션 작업물이 있다. 이 실패를 dotnetpj 완료 기준으로 받아들이거나 맵을 옛 자료로 바꿔 숨기지 않는다.
+- **기준 판본·근거:** 10.78을 기준으로 cpppj의 커밋된 소스 본체, 실제 `RawCampaignSession` 연결 코드, 원본 x86 fixture, 분석 문서를 함께 대조한다. cpppj의 임시 어댑터·미복원·실패도 함께 기록하며 원본 확정으로 취급하지 않는다. 10.72는 비교 자료로 남긴다. 현재 PC와 공통 기록의 마지막 전체 정밀 디컴파일 PC는 모두 **VM-W11-Codex / 마지막 수행일 2026-10-23**다. 이번에는 디컴파일 산출물을 읽거나 새 디컴파일을 하지 않았다.
+- **현재 동기화 점검(2026-10-23 갱신):** 검토 HEAD는 **`3b88f86a`(20261023-21 CP)**, 목록의 실제 반영 커밋은 여전히 **`f95a8db2`**다. `python dotnetpj/tools/cpp_sync.py` 종료 0, 연결 자료 **58개**(`vortex-pre` 추가)와 생성 자료 **3개** 모두 일치했다. cpppj의 `*-x86.tsv` **505개 중 연결된 것은 55개**이며, 나머지 연결 자료는 vtable 표 2개와 dotnetpj 소유 clockkernel 1개다. 반영 이후 cpppj 관련 커밋은 **86개**, 자료 파일 추가 **48개**다(Fort·관찰 TSV도 포함하므로 48개 모두 x86 fixture라는 뜻은 아니다). 이 가운데 이번에 이식한 신전 삭제 모듈을 바꾼 커밋은 없으므로 반영 커밋을 올리지 않았다. **해시 일치는 소스·세션 동작의 일치 증명이 아니다.**
+- **dotnetpj 구현 상태:** W01은 완료, W02는 열여덟째 조각까지, W03은 열네째 조각(`RawVortexPreDestroy`)까지, **W05 선행 부분(`RawSpStore`·`RawSquidReward`)** 까지 **L1 모듈 검증**을 마쳤다. `BattleSession`은 엔티티 목록·`FixedTimestep`·정수 SP를 사용하며 새 `Original` 코어 전체가 실제 플레이를 소유하지는 않는다. 따라서 플레이 가능한 기존 기능과 L1 이식 모듈을 별도로 평가한다. 마지막 전체 빌드/검사는 **2026-10-23의 Release 경고·오류 0, 1,318개 통과(Assets 363 + Core 955)**다.
+- **cpppj 최신 경계:** 최신 커밋은 **`3b88f86a`(20261023-21 CP, 단독 맵 목록의 검색 키·캐시 수명)** 이고, 그 사이 Fort 선택·목표 재개·돌 버튼 질감·자동 AI·다리 탐색/전략·공중 운반체·데빌메이커·세일 스케이터/크리스탈 크랩·아크 스파이어·애시드 분해·은신/마비 시전·윈드 소환·훨리기그 자연 공격·사제 대피와 신전 복귀의 복원이 추가됐다. 반면 25종 전체의 생성·이동·공격 연결은 아직 완료가 아니며, 공통 인계 기록의 마지막 전체 검사는 **2,274개 중 2,273개 통과/1개 실패**(수정 TEST02의 TYPE139 데빌메이커 PostPop 미연결)다. 이번에는 cpppj 전체 검사를 다시 돌리지 않았고, 이 조각이 쓰는 모듈을 바꾼 커밋이 있는지만 확인했다. 작업 트리에는 미커밋 `SoloMapCatalog` 등 다른 세션 작업물이 있다. 이 실패를 dotnetpj 완료 기준으로 받아들이거나 맵을 옛 자료로 바꿔 숨기지 않는다.
 
 ### 이미 구현된 기능의 재검토·수정 범위
 
@@ -57,13 +57,26 @@
 - [x] **2. W03 Form 의존성 (거의 완료):** `SquidForms`·`ContentFormHost`·`DependFormHost` 와 `formtake`·`formlifecycle` 10.78 경로는 열한째 조각에서, `RawFormPacket`(`form-packet`)은 열두째 조각에서 옮겼다. **남은 것: `ContentFormLifetime`(`contentlifetime`)·`RawContainedCreate` 연결**과 Form 공통 Pop 전송 wrapper·`GumpFormHost`/`SquidFormDispatch` 파생 분배다. 그 내용물 수명이 요구하는 SP 저장소·보상은 W05 선행 조각으로 먼저 이식했다.
 - [x] **3. W05 선행 부분 (완료):** 내용물 수명에 필요한 공유 SP 저장소(`RawSpStore`)·`RawSquidReward`·AI 지갑 가산/알림·`NetstormRandom.SetState` 를 `sprotate`·`reward` 10.78 몫으로 검증해 이식했다. W05 전체의 남은 범위(실제 세션 지갑/SP 표시, CD 판, 샘 생성·수입 흐름)는 별도 유지한다.
 - [x] **4-a. W03 내용물 수명·contained 생성 (완료):** `ContentFormLifetime`(`contentlifetime`)을 `RawContentLifetime` 으로 옮겨 10.78 몫 198행의 효과 순서·부모 알림·전체 풀 체크섬·깊이를 대조했고, 같은 삭제 효과가 실제 SP 저장소·AI 지갑에 연결됨을 확인했다. `RawContainedCreate`(contained 생성)와 `RawSquidFactory.CreateContained` 도 함께 옮겼으나 이 몸체는 cpppj 전용 x86 fixture 가 없어 합성 계약으로만 검증했다(경계 기록).
-- [ ] **4-b. W03 신전 삭제와 W02/W03 조립:** 신전 삭제(`vortex-pre`) → 삭제 보상/선택/커서/Graph/장부/파생 분배(`GumpFormHost`·`SquidFormDispatch`·`BindCreate`)를 연결한다. 동일 객체의 중첩 삭제·반복 삭제·운반 중 부모/내용물 삭제를 검증하고 남은 외부 경계를 기록한다.
+- [x] **4-b1. W03 신전 삭제 전처리 (완료):** 신전 삭제(`vortex-pre`)를 `RawVortexPreDestroy` 로 옮겨 10.78 몫 102행의 목록·섬·지역·공통·Player 정리와 합성 경계 7건을 대조했다. 남은 삭제 수명주기 조립은 4-b2 로 둔다.
+- [ ] **4-b2. W02/W03 조립:** 삭제 보상/선택/커서/Graph/장부/파생 분배(`GumpFormHost`·`SquidFormDispatch`·`BindCreate`)를 연결한다. 동일 객체의 중첩 삭제·반복 삭제·운반 중 부모/내용물 삭제를 검증하고 남은 외부 경계를 기록한다.
 - [ ] **5. W04~W07 및 실제 세션 연결:** `BattleSession`을 공유 코어의 파사드로 이행하고 시간/Process·경제·적재/시작 상태를 연결한다. 기존 1-1·1-2 기능의 회귀를 유지하며 원본 규칙 경로와 근사 경로의 상태 소유권을 중복시키지 않는다. 시작 상태 L2를 통과한 뒤 P1 기존 기능 교체와 고정 입력 L3 검증을 이어 간다.
 
 ### 이번 문서 작업의 검증·인수인계
 
 - [x] 읽기 전용 동기화 검사 종료 0. 문서의 UTF-8·변경한 로컬 링크/앵커 11개·충돌 표식·`git diff --check`를 확인했다. 이 문서만 **`20261022-59 DN 기존 구현의 cpppj 재검증과 dotnetpj 후속 계획 갱신`**으로 로컬 커밋한다. 원격 push는 하지 않는다.
 - [x] 이번 작업은 **계획 수정 완료**이며 위의 코드 작업은 모두 미완료로 남긴다. 빌드·단위 테스트·원본/클론 게임·GUI·새 디컴파일은 실행하지 않았다. 향후 실행은 해당 PC의 사용자 지시와 AGENTS.md의 확인/예외 규칙을 따른다.
+
+## 2026-10-23 완료: W03 열네째 조각 — 신전 삭제 전처리(RawVortexPreDestroy)
+
+- [x] 사용자 요청("AGENTS.md, LEFT_JOBS.dotnetpj.md 를 읽고 dotnetpj 다음 작업 진행해 줘")으로 직전 절이 지목한 다음 시작점, 곧 W03 원본 월드 코어 ② 삭제·수명의 열네째 조각인 **신전 삭제 전처리**를 수행했다. `cpppj/`·공통 `LEFT_JOBS.md`는 수정하지 않았다. 현재 PC **VM-W11-Codex**는 공통 기록의 마지막 정밀 디컴파일 PC(**VM-W11-Codex, 2026-10-23**)와 같으나 **디컴파일 산출물을 읽지 않았고**, 커밋된 cpppj 소스와 fixture만 썼다. 새 디컴파일·원본 관찰·원본/클론 게임·창 실행은 없다. 마지막 디컴파일 PC 기록은 그대로다. 상세·근거 표·경계는 [원본 월드 코어 W03 신전 삭제 조각](docs/dotnet-original-core-vortexpre-20261023.md).
+- [x] **동기화 먼저:** 시작할 때 반영 커밋은 `f95a8db2`, HEAD는 `9f401229`(직전 `20261023-20 CP`)였다. 연결 fixture 57개·생성 자료 3개는 모두 일치했다. `vortex-pre`를 `--update --add`로 등록했고(연결 fixture 57→**58**개), 반영 커밋은 **`f95a8db2` 그대로** 두었다. 종료 시점 HEAD `3b88f86a`(`20261023-21 CP`)까지 사이 cpppj 관련 커밋 86개·새 fixture 48개 가운데 이번에 옮긴 `RawVortexPreDestroy` 와 의존 모듈(`RawPostPopList`·`RawSidPool`)을 바꾼 커밋은 없지만, 미이식 기능(삭제 수명주기 조립·실제 세션 연결 등)이 남아 있어 규칙대로 올리지 않았다([계획 7절 7번](docs/dotnet-cpp-port-plan-20261016.md#7-cpppj-진행을-따라가는-절차-다른-ai가-cpppj를-계속-진행-중)). 작업 트리의 미커밋 cpppj 변경(`SoloMapCatalog` 등)은 쓰지 않았다.
+- [x] **구현(`dotnetpj/src/Netstorm.Core/Original/RawVortexPreDestroy.cs` 신규):** `VortexPreDestroyState`(로딩 깊이)·`VortexPreDestroyHooks`(섬 번호·존재·신전·지우기·소유자·지역·공통 하위·생산 갱신·진단)·`RawVortexPreDestroy`(`PreDestroy`: 목록 압축→섬 조회·진단→섬 지우기·소유자 전파→지역 갱신→outpost 지역 갱신→공통 하위→생산 갱신→Player 4필드 정리, `Remove`·`Position`·`Field`). 기준 판본은 10.78 뿐이다.
+- [x] **검사:** `X86RawVortexPreDestroyTests`(신규)로 `vortex-pre` 10.78 몫 **102행**을 재생한다. 매 행마다 Player 1,620바이트·세 슬롯 150바이트·목록 48바이트·로딩·효과 문자열(섬·존재·신전·지우기·소유자·지역·공통·생산·진단)을 대조한다. `RawVortexPreDestroyTests`(신규)로 합성 경계 7건(필수 하위 누락 뒤 앞선 쓰기 보존·저장소 크기·가림 건너뛰기·outpost 범위·소유자 범위·로딩 억제·Player 미러 정리)을 확인한다. `Netstorm.Core.Tests.csproj` 에 fixture 링크 1건.
+- [x] **검증:** 전체 Release 경고 0·오류 0(`--no-incremental` 강제 전체 빌드), 단위 **1,318개 통과**(Assets 363 + Core 955; 이번 +8). 10.78 몫 102행은 효과 5종(전체·로딩 억제·가림·존재 진단·신전 진단)과 변형 1~4(공통 뒤 소유자·가림·로딩·생산 뒤 소유자 변경)를 실제로 잡는다.
+- [x] **변이 확인:** 구현 8곳(가림 마스크·거주 제거·두 번째 지역 좌표·outpost 소유자 비교·로딩 검사·중립 정리·첫 미러 복사·outpost 범위)을 하나씩 망가뜨려 모두 실패로 잡혔다. 소스는 모두 원복해 재통과를 확인했다.
+- [ ] **하지 않은 것(경계):** 삭제 수명주기 조립(선택·커서·Graph·장부·파생 분배 허브·`ContentFormHost.BindCreate`)과 실제 세션 연결은 아직이다. CD 10.72·10.37 도 남는다. 이 조각은 L1 모듈 단계이며 L2 이상으로 합산하지 않는다.
+- [ ] **다음 조각:** 삭제 수명주기 조립(선택·커서·Graph·장부·파생 분배 허브) → 실제 세션 연결. 시작할 때 `python dotnetpj/tools/cpp_sync.py`를 먼저 실행하고 쓸 fixture를 `--update --add`로 등록한다.
+- [x] 인수인계 뒤 **`20261023-22 DN 원본 월드 코어의 신전 삭제를 원본 10.78 행 102회로 검증`** 으로 로컬 커밋한다. 원격 push는 하지 않는다.
 
 ## 2026-10-23 완료: W03 열세째 조각 — 내용물 수명(RawContentLifetime)과 contained 생성(RawContainedCreate)
 
