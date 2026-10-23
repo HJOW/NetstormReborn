@@ -1,11 +1,15 @@
 // 원본의 기술 보유/필터·설명 줄 나눔·언어3/제외·행 누적과 popup 표식을 보존한다.
 #include "client/RawKnowledgeMenu.h"
+#include "client/ThemeTechnologyCommand.h"
 #include "o/OriginalText.h"
 #include <algorithm>
 #include <stdexcept>
 namespace netstorm::client {
 // 이름 비교는 기존 원본 ASCII 규칙을 사용한다.
-std::uint32_t KnowledgeScriptCode(std::string_view name) { return o::AsciiLower(name)=="showtechnology" ? kShowTechnologyCommand : 0xffffffffU; }
+std::uint32_t KnowledgeScriptCode(std::string_view name) {
+    const auto lower=o::AsciiLower(name); // 두 기술 명령도 원본 ASCII 이름 비교를 공유한다.
+    return lower=="showtechnology" ? kShowTechnologyCommand : lower=="cheatalltechnology" ? kCheatAllTechnologyCommand : 0xffffffffU;
+}
 namespace {
 // 선택된 실제 효과의 누락을 빈 성공으로 숨기지 않는다.
 template<class F> const F& KnowledgeEffect(const F& effect) { if (!effect) throw std::logic_error("지식 창의 실제 게임/GUI 효과 연결 누락");return effect; }

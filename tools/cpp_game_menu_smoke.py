@@ -103,7 +103,7 @@ def protected_run(directory,width,height,steps,frames,capture_saved_options=Fals
     save(directory/'originals-before.json',before)
     result=dict(command=command,binarySha256=sha(GAME),scriptSha256=sha(script))  # 실행전실패도검토가능하게남긴다.
     try:
-        with preserve_game_settings(ROOT/'originals','d') as options_path,muted_device_environment():
+        with preserve_game_settings(ROOT/'originals','d',directory/'settings-backup') as options_path,muted_device_environment():
             result.update(execute(command,directory,GAME,max(90,frames/60*4+30)))
             if capture_saved_options:
                 result['savedScreenSize']=saved_screen_size(options_path)  # execute완료뒤허용설정복원전에두키만읽는다.

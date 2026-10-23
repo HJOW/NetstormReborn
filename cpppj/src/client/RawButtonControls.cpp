@@ -234,6 +234,12 @@ void RawButtonControls::Cancel() {
     auto& state=*impl_;if (state.life.focus) state.input->Route(InputCode::kLeftButton|InputCode::kRelease,0xffffffffU,0xffffffffU);
     state.activated.reset();
 }
+// 현재 입력 드레인의 후속 사건이 반납된 HTML 자식을 다시 pick/발화하지 못하게 한다.
+void RawButtonControls::RetirePageControls() {
+    auto& state=*impl_;
+    for (const auto& control:state.controls) state.lifetime->Kill(control.second); // 버튼/자식 배경은 기존 가상 Kill을 따른다.
+    state.controls.clear();state.activated.reset();state.changed=true;
+}
 // 캡처 우선 및 includeHidden=1의 실제 원본 분배이며 UI 상태를 임의 갱신하지 않는다.
 void RawButtonControls::RefreshProduction() { impl_->input->Route(kRefreshProductionEvent,0,0,true); }
 // 공통 등록표와 현재 파생 가상 분배를 그대로 빌려 메뉴 처리기를 생성한다.

@@ -1,5 +1,18 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-23 단위376 완료: Fury 원소 기술과 HTML 선택 부모 수명
+
+- [x] 단위375는 **7838109a / 20261023-45 CP**로 완료 커밋했다. 현재/마지막 전체 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-23**이다. AGENTS·공통/닷넷 인수인계를 재확인했고 새 전체 디컴파일/보호 원문 변경은 없다.
+- [x] 독립 원문492ae0의1200입력과 c79b0의258입력(두 정밀도516회)을 신규 모듈·fixture로 보존했다. 원소 기술은 현재getter→Find4→없으면 현재getter 재조회→Create4/10 순서이며 타입0·현재 count 재조회도 유지한다. 기술 함수에는 창 종료 효과를 넣지 않는다.
+- [x] 실제 바인딩/관련 검증: HTML 일반·Instant 버튼/timeout은 메타 생성 때 고정한 DWORD를 같은40칸 입력 큐에 먼저 예약하고 부모를 Kill한다. OnExit0인 부모도 Cleanup까지 개수를 보존하며 무본문 Tell은 기존 표시 부모를 닫지 않고 창 생성 여부를 별도로 보고한다. 같은 드레인 중복 발화를 막는 실제 자식 Kill도 추가했다. 빌드 원시는 `extracted/cpp-fury-technology-20261023-build1.log`, `...-build2.log`다.
+- [x] **진행 갱신:** 최종 Release 빌드2 종료0/관측 경고·오류0, 관련58검사/실패check0이다. 실제 Fury 네 테마 각18조건,1024/1280 ESC·메뉴/재시작/QWASZX·해상도Yes/No·OnExit를 통과했다. 같은 최종 제품SHA `d53095e8f6f3cea34b9f086023d89dc06d046053f917a859185e8131e8d111bd`로 Early6/훈련9/캠페인16/Demo3 **총34진입 경로 전부 통과**·전체1394파일 SHA동일이다. 사용자 완주/승패/전체 동일성 판정은 아니다. [상세](docs/exe/cpp-fury-technology-runtime-20261023.md).
+- [x] **전체 검증:** 전체 CTest 종료0/323.07초이며 내부 **2433검사/실패check0**도 확인했다(`extracted/cpp-fury-technology-20261023-ctest.log`, `...-ctest-internal.log`). 이후 제품/검사 C++ 변경은 없다. 최초 Rain의SaveOptions열기실패와 최초메뉴검사의Python설정복원OSError22는 원시기록을 보존했다. 후자는 실행전SHA와같은git원시바이트로정확복구/전체1394동일을확인했고 보호도구의영구백업·제한재시도·다른설정계속복원·오류전파와격리실패주입2검사를추가했다.
+- [x] 신규 `tools/cpp_fury_technology_smoke.py`로 네 테마의 초기/최종 내용물 SID·개수·flags/quality와 실제 단회 버튼 선택을 검증했다. 초기 기술 포함 Wind7/Rain9/Thunder8/Sun9이다. 실제 Session 재적용/중복방지·Known0 getter 구별·생성시 메타 DWORD도 검사에 등록/통과했고 missionOutcome을 포함한 TryTell caller가 실제 창 생성 여부를 구별한다.
+- [x] 엄격UTF-8·Python AST·새 문서 링크·공백·보호 경로·최종 SHA·새 GUI/빌드 프로세스 반납을 확인하고 **20261023-46 CP**로 로컬 커밋한다. 원격 push/AGENTS·기존 원본/CD·닷넷/웹 변경은 없다. 설정복구가 일시 실패했던 허용 options.cfg도 최종 원래 바이트와 같다.
+- [ ] **다음 단위377 준비:** [Edit 잔여/전체Objects·Temp저장 기반](docs/exe/cpp-editor-gap-audit-20261023.md)에 따라 전체Objects 저장 부모004be430의 신규 독립 모듈/fixture/검사를 준비한다. CMake/실제 Session 등록·빌드·완료 커밋 전이며 단위376의 검증 완료 범위에 넣지 않는다. 실제 Temp동적노드/rename·전체스냅샷·generic Editor설치·작업본 저장을 이어야 메인Edit를 활성화할 수 있다.
+- [ ] **일반 메뉴/HUD:** HTML 메뉴 행의 첫 인자 menu.id/일반 부모의 완전한 공통 Gump 이행·물리 Enter 경로는 독립 경계다. [메뉴 다음 조각](docs/exe/cpp-tell-menu-identity-next-20261023.md)을 작성했다. 메타 시점 실제 부모·돌 버튼·메뉴 열의 생성/등록순서와 Compose의루트정리소유권도 함께 바꿔야 한다. 전체 HUD/Edit·사용자 완주·전체 동일성 목표는 계속 활성이다.
+- [ ] **파일 접근:** 제품 최초SaveOptions fopen실패의 근본 원인은 미확정이다. 최초Rain/단위369의간헐실패와 Python복원OSError22를 구별해 추적하고, 다음 실제 쓰기 실패에는 errno/OS오류를 확보한다. 이번 보호도구 재시도를 제품 최초열기실패 해결로 간주하지 않는다.
+
 ## 2026-10-23 단위375 완료: 미니맵 평면 복사와 전체 Gump 외곽선
 
 - [x] 단위374는 **03135055 / 20261023-44 CP**로 완료 커밋했다. 현재/마지막 전체 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-23**으로 일치한다. 새 전체 디컴파일/디컴파일 소스 변경은 없다.
@@ -7,7 +20,7 @@
 - [x] 검사/게임 Release 빌드 모두 종료0·관측 경고·오류0이다. **관련25검사/실패check0**(Minimap4/GumpDraw11/RawMenuControls10), 독립120개 전체 표면·guard40행 BYTE 주소 집합, 기존 래스터4,722행/공통 세 판본 Draw·clip 복구·메뉴 수명이 통과했다. `extracted/cpp-minimap-blit-20261023-tests.log`에 보존했다. 원본 fixture SHA7b6eec53...30497b3는 동일하다. 전체 CTest2,420/0은 이전 단위373 결과이며 이번 이후 전체 결과로 합산하지 않는다.
 - [x] 실제1024×768/1280×720 GUI에서 모달 중 입력 억제·드래그/해제/캡처·ESC/Game/Leave/Main Menu·미션 반납을 통과했다. 두 실행은 종료0/상한 미도달/전체 originals SHA 동일이다. 경로는 `extracted/cpp-minimap-blit-20261023-gui1024`, `...-gui1280`이다. 최종 제품 SHA는 `656e918ad2e3cdf5625faec575949d2081495c777051e8e00c35a7f39e73cc90`다. 실제 넓은 dock 드래그는 아직 연결하지 않았으며120행의 넓은 창 검증과 구별한다.
 - [x] UTF-8·도구 AST·새 문서 링크·공백·보호 경로/작업 트리를 확인하고 **20261023-45 CP**로 로컬 커밋한다. 원격 push/AGENTS·기존 원본/CD·닷넷/웹 변경은 없다. 새 GUI/빌드 프로세스를 남기지 않는다.
-- [ ] **다음 첫 작업 — Fury War:** 단위374의 bc8fury76 기술 선택 @1 잔류를 해결한다. `CheatAllTechnology` 명령02000028/00492ae0의 정확한 타입 필터·현재 기술 부모 getter/재조회·FindContained/생성을 원문으로 검증해 실제 큐에 연결한다. 기존 Ensure(owner,type)는 다른 타입 assertion/명시 owner getter를 사용하므로 순서 확인 없이 대체하지 않는다. c79b0은 버튼 명령 예약 뒤 부모 Kill이며 기술 지급 본체에는 닫기가 없다. 부모 종료를 기술 함수에 넣으면 사제 희생 후 본문까지 잘못 닫을 수 있다. 일반 비 Instant 부모 Kill/지연 OnExit·명령 전용 Tell/자기 정지 프레임 수명을 함께 고치고 실제 훈련/Sun·다른 원소 분기를 검사한다.
+- [x] **단위376 완료 — Fury War:** bc8fury76 기술 선택 @1 잔류를 해결했다. 실제492ae0·현재 기술 부모 재조회·contained를 연결했고 일반/Instant 모두 선택 예약→부모 Kill·후반 OnExit 순서를 복원했다. 기술 지급 본체에 닫기는 넣지 않았다. 네 원소와 전체34진입·2433전체 검증은 위 최신 절을 따른다. 사제 희생의 실제 안내 본문·완주는 별도 잔여다.
 - [ ] **유지할 한계:** 진입 감사는 Early6/캠페인16/훈련8/Demo3의33/34이며 위1미완료다. Surrounded의65초 상한에는 조건마다 전체 Report(수만 오브젝트)를 만드는 검사 비용이 포함되어 제품 FPS라고 단정하지 않는다. 전체 HUD6모듈/MinimapBlit 이후 실제 dock·viewport·일반 HTML/Edit·전체 사용자 완주/승패·동일성·배포 목표는 계속 활성이다.
 
 ## 2026-10-23 단위374 완료 / 단위375 진행 인수인계

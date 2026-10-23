@@ -5,7 +5,7 @@
 #include <variant>
 namespace netstorm::client {
 inline constexpr std::uint32_t kShowTechnologyCommand=0x020000a0U; // 보호00542974의 실제 스크립트/사제/F6 명령이다.
-// 원본 이름 표의 ShowTechnology만 조회한다. 미등록은 기존 원본ffffffff를 반환한다.
+// 원본 이름 표의 ShowTechnology/CheatAllTechnology를 조회한다. 미등록은 원본ffffffff다.
 std::uint32_t KnowledgeScriptCode(std::string_view name);
 // 화면/언어/아이콘 치수와 원본 타입/명령 전역을 현재 호출에서 제공한다.
 struct KnowledgeMenuState {

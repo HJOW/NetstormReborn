@@ -3,6 +3,8 @@
 """cpppj 검사 동안 원본 설정을 보관하고 성공·실패 모두 원래 바이트와 존재 상태로 되돌린다."""
 from contextlib import contextmanager
 import os
+import sys
+import time
 from pathlib import Path
 
 # 자동 검사가 소리 장치를 열거나 음악을 내지 않게 한다(NetstormCpp --run이 읽는 환경 변수). 소리를 일부러 검사하는 도구만 이 값을 지운다.
@@ -10,7 +12,7 @@ os.environ.setdefault('NETSTORM_CPP_NO_AUDIO', '1')
 
 
 @contextmanager
-def preserve_game_settings(root, data_dir):
+def preserve_game_settings(root, data_dir, backup_dir=None):
     """AGENTS.md가 허용한 options.cfg·fullscreenStateFile.dat만 복구한다. 다른 원본 파일에는 쓰지 않는다."""
     game_root = Path(root).resolve()
     options_path = game_root / data_dir / 'options.cfg'
@@ -21,13 +23,35 @@ def preserve_game_settings(root, data_dir):
         if path.is_symlink() or path.resolve().parent != path.parent.resolve():
             raise ValueError(f'설정 파일이 원래 폴더 밖을 가리킴: {path.name}')
         originals[path] = path.read_bytes() if path.exists() else None
+    if backup_dir is not None:
+        backup = Path(backup_dir).resolve()  # 실패 뒤에도 실행 전 원시 바이트를 복구할 수 있는 검사 산출물 경로다.
+        backup.mkdir(parents=True, exist_ok=False)
+        # 원래 없던 파일은 별도 표식으로 구별해 빈 파일과 혼동하지 않는다.
+        for path, original in originals.items():
+            if original is None:
+                (backup / (path.name + '.absent')).write_bytes(b'')
+            else:
+                (backup / path.name).write_bytes(original)
     try:
         yield options_path
     finally:
+        restore_error = None  # 한 설정의 실패 때문에 다른 허용 설정의 복원까지 생략하지 않는다.
         # 실패·예외에도 복구한다. 원래 없던 파일은 이 두 경로에 한해서 지운다.
         for path, original in originals.items():
-            if original is not None:
-                path.write_bytes(original)
-            elif path.exists():
-                path.unlink()
+            # 일시적인 OS 쓰기 실패는 기록하고 제한 재시도한다. 최종 실패를 성공으로 숨기지 않는다.
+            for attempt in range(5):
+                try:
+                    if original is not None:
+                        path.write_bytes(original)
+                    elif path.exists():
+                        path.unlink()
+                    break
+                except OSError as error:
+                    print(f'설정 복원 실패 {path.name} ({attempt + 1}/5): {error!r}', file=sys.stderr)
+                    if attempt == 4:
+                        restore_error = error
+                        break
+                    time.sleep(0.1)
+        if restore_error is not None:
+            raise restore_error
 

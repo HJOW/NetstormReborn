@@ -1,0 +1,20 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-23",
+  "entry": "00492ae0",
+  "range": "00492ae0-00492b5f",
+  "inputs": 1200,
+  "normalReturns": 1200,
+  "instructions": 180747,
+  "scope": "실제 128바이트의 타입0부터 현재 count 재조회/필터/Current 재조회/Find/Create 호출. 타입 getter49a840·Current48fc60·Find4acac0·Create4afa70은 명시 외부 경계다. contained 하위/실제 게임/OS/UI 종료는 실행하지 않는다.",
+  "gameExecuted": false,
+  "osExecuted": false,
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+    "tools/decomp_theme_technology.py": "7d3e94a1ab1fcde13f9cd90ab7e865ad8e0d64080bdc5e18e7251171d1375128",
+    "cpppj/tests/fixtures/theme-technology-x86.tsv": "8a1cf581c52716c2444208fb62aeeeaa1661e9fc44139ce13f935d27a67d8843"
+  }
+}

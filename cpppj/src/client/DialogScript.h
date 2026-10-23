@@ -6,7 +6,10 @@
 
 namespace netstorm::client {
 // 다이얼로그 항목이 실행할 명령과 인자이다.
-struct DialogAction { /* command: 선택·클릭할 때 실행할 명령 이름 또는 명령 ID. */ /* argument: 타입·패턴·명령에 별도로 전달하는 첫 인자. */ std::string command, argument; };
+struct DialogAction {
+    std::string command, argument; // 선택 명령의 이름과 표시/검사에 보존할 인자다.
+    std::uint32_t commandCode{0xffffffffU},parameter{}; // 메타 해석 시 고정한 실제 명령/숫자 또는 문자열 고리 토큰이다.
+};
 // 다이얼로그의 표시 문구·동작·버튼 상태이다.
 struct DialogItem {
     // label: 화면에 표시할 항목 문구 또는 패턴 번호.
@@ -49,6 +52,7 @@ struct DialogMetadataHooks {
     std::function<void(const DialogAction&)> resolveAction; // 항목 종류 처리 전에 원본 명령 조회와 인자 변환 효과를 수행한다.
     std::function<void(DialogPage&,DialogItem)> appendMenu; // Menu/Checked가 선택된 바로 그 시점에 현재 열과 실제 목록을 추가한다.
     std::function<void(std::string_view,std::string_view)> resolveOnExit; // OnExit만Trim전regex캡처명령/인자를즉시해석한다.인자뷰는호출중에만유효하다.
+    std::function<void(DialogAction&,std::string_view,std::string_view)> resolveRuntimeAction; // 버튼/timeout의 원문 캡처를 실제 생성 시점에 조회해 DWORD로 고정한다.
 };
 // 기존독립검사의문자열호환필터다. 실제Tell은아래현재상태/Config효과를받는overload만사용한다.
 std::string FilterDialogConditions(std::string_view source);

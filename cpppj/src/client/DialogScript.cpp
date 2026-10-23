@@ -186,8 +186,9 @@ DialogPage ExtractRuntimeMetadata(std::string text,const DialogMetadataHooks& ho
         if (kind==patterns.size()) break;
         if (kind>=6) throw std::logic_error("Tell 메타의실제Key/Input/Zsend컨트롤미연결");
         const auto rawCommand=match[2].str(),rawArgument=match[3].str(); // 원문OnExit의숫자/고리판정에공백·인용바이트를남긴다.
-        const auto label=Trim(match[1].str());const DialogAction action{Trim(rawCommand),Trim(rawArgument)};
+        const auto label=Trim(match[1].str());DialogAction action{Trim(rawCommand),Trim(rawArgument)};
         if (hooks.resolveAction) hooks.resolveAction(action); // sentinel도 원래 placeholder의 조회/인자 효과를 먼저 실행한다.
+        if (kind!=5 && hooks.resolveRuntimeAction) hooks.resolveRuntimeAction(action,rawCommand,rawArgument); // OnExit의 기존 별도 해석과 중복해 고리를 진행하지 않는다.
         if (kind<4) {
             DialogItem item{label,action,kind==2 || kind==3,kind==3 && o::ConfigParseLong(match[4].str())!=0,
                 kind!=3 || o::ConfigParseLong(match[5].str())!=0,kind==1};

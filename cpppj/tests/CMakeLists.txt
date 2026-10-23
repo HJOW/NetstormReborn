@@ -1,4 +1,8 @@
 # 게임메뉴부모와Tell인자의독립PE관측을해당검사에만공급한다.
+set_source_files_properties(ThemeTechnologyTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_THEME_TECHNOLOGY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/theme-technology-x86.tsv\"")
+set_source_files_properties(DialogCommandLifetimeTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_DIALOG_COMMAND_LIFETIME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/dialog-command-lifetime-x86.tsv\"")
 set_source_files_properties(GameMenuBarTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_GAME_MENU_BAR_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/game-menu-bar-x86.tsv\"")
 set_source_files_properties(GameMenusTests.cpp PROPERTIES COMPILE_DEFINITIONS
@@ -96,6 +100,10 @@ add_executable(netstorm_tests
     HideBuildingsTests.cpp
     CameraViewCommandsTests.cpp CampaignViewCommandsTests.cpp
     DialogExitCommandTests.cpp
+    ThemeTechnologyTests.cpp
+    DialogCommandLifetimeTests.cpp
+    DialogRuntimeActionTests.cpp
+    CampaignThemeTechnologyTests.cpp
     GumpPointerBoundaryTests.cpp
     MissionLoadingMessageTests.cpp
     HudDockTests.cpp

@@ -81,6 +81,7 @@ public:
     bool Poll(InputEvent event);
     // 화면 전환/포커스 상실 때 실제 캡처 처리기에 화면 밖 release를 전달한다.
     void Cancel();
+    void RetirePageControls(); // 현재 HTML 돌 버튼만 즉시 detach/Kill하고 실제 소멸은 후반 Cleanup에 남긴다. 월드 HUD는 보존한다.
     // 0047d890/CD004773a0: 현재 캡처/dialog/루트에 생산 갱신 사건을 원본 Route 순서로 분배한다.
     // 생산 패널 노드가 아직 없으면 실제 트리의 미처리 반환을 유지한다.
     void RefreshProduction();

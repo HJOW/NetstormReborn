@@ -122,3 +122,13 @@ TEST_CASE(RawButtonControls_RouteAndSerialStayDistinctAcrossDeletion) {
     input.KillGump(button);CHECK(input.SerialGump(2)==0); // 지연해제전에도dead대상을serial조회로다시선택하지않는다.
     input.SetControls(kControls,kLabels,640,480,kAssets);CHECK(input.RootToken()==root);CHECK(input.RegisteredGump(1)!=button && input.RegisteredGump(1)!=0);CHECK(input.SerialGump(2)==0);
 }
+// 부모 Kill 뒤 같은 드레인의 후속 release/click은 옛 자식을 다시 발화하지 않는다.
+TEST_CASE(RawButtonControls_RetiredPageStopsInputBeforeCleanup) {
+    RawButtonControls input(netstorm::o::OriginalEdition::Patch1078);input.SetControls(kControls,kLabels,640,480,kAssets);
+    const auto root=input.RootToken();CHECK(!input.Event({InputCode::kLeftButton,20,25}) && input.HasCapture());
+    input.RetirePageControls();CHECK(!input.HasCapture() && input.RootToken()==root);
+    CHECK(!input.Event({InputCode::kLeftButton|InputCode::kRelease,20,25}));CHECK(!input.Event({InputCode::kLeftButton,20,25}));
+    CHECK(!input.RouteInput({InputCode::kLeftButton|InputCode::kRelease,20,25}).activated);
+    input.CleanupGumps();input.SetControls(kControls,kLabels,640,480,kAssets); // 지연 소멸 뒤 새 자식은 같은 루트에서 정상 입력을 받는다.
+    input.Event({InputCode::kLeftButton,20,25});CHECK(input.Event({InputCode::kLeftButton|InputCode::kRelease,20,25})==7);
+}

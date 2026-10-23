@@ -2,6 +2,8 @@
 # 클라이언트와 서버가 함께 쓰던 코드로 보인다. 이 폴더의 코드는 client/ 와 platform/ 을 포함하지 않는다.
 # 다시 만든 파일을 아래 목록에 더한다. 파일 이름은 SOURCE_MAP.md 의 "cpppj 경로"를 따른다.
 target_sources(netstorm PRIVATE
+    # 원소별 현재 기술의 조회/중복 방지/실제 contained 생성 순서다.
+    RawThemeTechnology.cpp RawThemeTechnology.h
     # AI 다리의 여섯 탐색 단계·조각 소비·연결점 진행이다.
     RawAiBridgePath.cpp RawAiBridgePath.h
     RawAiBridgeCandidates.cpp RawAiBridgeCandidates.h

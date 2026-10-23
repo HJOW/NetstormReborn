@@ -36,7 +36,7 @@ def run(directory, mission, demo_label=None):
     for frame in range(12, frames-2, 8):  # Guide의 일곱 프레임 재개 관문을 지난 다음 상태를 관측한다.
         if not demo_label:
             for label in BUTTONS:  # 현재 표시된 정확한 라벨만 선택하고 없는 버튼 입력은 만들지 않는다.
-                condition = r'phase\t3\n&&control\t'+re.escape(label)+r'\t'
+                condition = r'phase\t[13]\n&&control\t'+re.escape(label)+r'\t'  # 실제 Tell 큐로 연 Dialog와 초기 Briefing의 표시된 버튼을 모두 허용한다.
                 steps.append((frame, 'when', condition+';;click;;'+label))
         steps.append((frame, 'report', str(frame)))
     steps.extend(((frames-1, 'report', 'final'), (frames-1, 'snapshot', str(directory / 'final.bmp'))))
@@ -91,7 +91,7 @@ def main():
     before = snapshots(ROOT / 'originals')  # 허용 설정까지 포함한 전체 파일의 실행 전 해시다.
     records = []  # 실패가 뒤 스테이지의 관측을 생략하지 않게 한다.
     try:
-        with preserve_game_settings(ROOT / 'originals', 'd'):
+        with preserve_game_settings(ROOT / 'originals', 'd', output / 'settings-backup'):
             for mission, label in names:  # 같은 옵션 파일을 사용하는 실제 창은 한 번에 하나만 실행한다.
                 try:
                     record = run(output / mission, mission, label)

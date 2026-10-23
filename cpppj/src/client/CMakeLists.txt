@@ -28,6 +28,8 @@ target_sources(netstorm PRIVATE
     MissionTechnology.cpp MissionTechnology.h
     # 전체 지식 창과 Factory가 같은 원본 행/CRT 정렬을 사용하고 실제 메뉴 카드를 작성한다.
     KnowledgeSort.cpp KnowledgeSort.h RawKnowledgeMenu.cpp RawKnowledgeMenu.h
+    ThemeTechnologyCommand.cpp ThemeTechnologyCommand.h
+    DialogCommandLifetime.cpp DialogCommandLifetime.h
     # 실제 Client 수명의 원본 100기록 채팅 채널을 공유한다.
     RawChatChannels.cpp RawChatChannels.h
     DialogBodyLayout.cpp DialogBodyLayout.h
