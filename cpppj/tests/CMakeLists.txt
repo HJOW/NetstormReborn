@@ -2070,3 +2070,7 @@ set_source_files_properties(SubscriberGlobalsTests.cpp PROPERTIES COMPILE_DEFINI
     "NETSTORM_SUBSCRIBER_LIFETIME_EDGES_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/subscriber-lifetime-edges-v2-x86.tsv\"")
 set_source_files_properties(ColorSortPrimaryTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_COLORSORT_PRIMARY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/colorsort-primary-x86.tsv\"")
+# State 정리의 점유 Chat 행 전체 반납을 최초216행의 독립 PE 관측과 대조한다.
+target_sources(netstorm_tests PRIVATE ChatStateClearTests.cpp)
+set_source_files_properties(ChatStateClearTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CHAT_STATE_CLEAR_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/chat-state-clear-x86.tsv\"")

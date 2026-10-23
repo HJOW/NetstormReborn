@@ -1,5 +1,13 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-24 단위389 완료: State 정리용 점유 Chat 기록 반납
+
+- [x] 단위388은 **c1b8fbf4 / 20261024-11 CP**로 커밋했다. 전체2652검사/실패0, 자연Early1/Early2·고유34진입·두 비율 게임 메뉴·원본1394동일을 확인했다. 현재/마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-10-23**이다.
+- [x] 제품 변경 전에00445140의 실제37BYTE를 새 PE 격리 도구로 **108입력×2정밀도=216관측**했다. 정상반환/ESP/보존 GP/CW·전체4800BYTE·양쪽 guard·My/Login 불변을 확인했다. 게임/GUI/OS 호출과 외부 성공 대체는0이며 최초 fixture와 `cpppj/chat-state-clear-native-20261024.json`은 보존한다.
+- [x] 같은 RawChatChannels의 현재 Subscriber 비0 행만48BYTE 전체0으로 만드는 ResetOccupied를 추가했다. 기존 Clear(mask)와 실제 My/Login DWORD는 그대로다. 새 원문216대조·빈 행/guard·실제 Client/AI 소비자 공유3검사를 등록했다. configure1/build1은 종료0·관측 경고오류0이며 신규3·기존 Chat5/Subscriber9 **집중17검사/실패0**이다.
+- [x] 전체 CTest1은 **2655검사/실패0·종료0·316.59초(전체316.65초)**다. 제품SHA **b51ee2d9…869db82**, 검사SHA **8f337dc1…999dff8**이며 검사 전후 동일하다. 원본1394/1394동일·보호 경로 추적 변경0이다. 원시 `extracted/cpp-chat-state-clear-389-*`, [완료 기록](docs/exe/cpp-chat-state-clear-20261024.md), [새 제품 보고서](cpppj/chat-state-clear-runtime-20261024.json)에 Native216/집중17/전체2655와 소스9·증거6 SHA를 보존했다. 최종 UTF-8/링크/원시 SHA/stage를 확인해 **20261024-12 CP**로 로컬 커밋한다.
+- [ ] 이는 같은 Client 저장소의 자식 복원이며 전체 State 정리 부모 연결·Edit·모든 사용자 완주 완료는 아니다. 새 GUI 실행0이며388 제품의 자연플레이/34진입을389 관측으로 합산하지 않는다. 다음은 단일 Client/Player/Core/Pool의 전송·정지·UI/Kernel·Core0/Pool/Player 재구성·SP 순서를 이어야 한다.0054d4e8 PlayerNoMake 경고 표의 정확 제품 owner도 미확인이다. 목표는 계속 활성 상태다.
+
 ## 2026-10-24 목표 재개·단위388 완료: Core·Subscriber·색상 입력 수명 접합
 
 - [x] 사용자의 새 `/goal` 요청으로 목표를 재개했다. AGENTS.md 및 공통/닷넷 인수인계를 다시 확인했다. 현재 호스트와 마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-10-23**으로 일치한다. 기준 HEAD는 **88834c49 / 20261024-10 CP**이며 시작 작업본은 깨끗했다. 아래 일시중지 지시는 당시 이력이고 이번 재개 지시가 우선한다.
@@ -10,7 +18,7 @@
 - [x] 같은 제품의 일반31·Demo3 고유34진입과 게임 메뉴1024×768/1280×720의 ESC·목표·재시작·QWASZX/음량/해상도 No 회귀가 모두 통과했다. 각 실행의 제품SHA와 원본1394동일을 확인했다. 이번에는 옵션 열기/복구 OSError22를 관측하지 않았으며 과거 간헐 원인 해결을 주장하지 않는다.
 - [x] 모든 게임과 설정 복원 종료 뒤 전체 CTest1은 **2652검사/실패0·종료0·338.07초(전체338.13초)**다. 최종 제품/검사SHA는 위 실제 회귀와 같으며 원본1394/1394·추가0·삭제0·변경0이다. [새 결과 보고서](cpppj/shared-identity-color-runtime-20261024.json)에 소스35·증거48 SHA와 최초 실패/한계를 기록했다. UTF-8/로컬 링크/원시 보존과 선택 stage를 확인한 뒤 **20261024-11 CP**로 로컬 커밋한다.
 - [ ] 전체 사용자 완주·Edit 최종 HUD/State/loaded·편집 도구/언어별 시나리오·픽셀/음향/규칙 완전 동일성은 계속 미완료다. 목표는 활성 상태이며 다음은 같은 Client/Player/Core/Pool의 State 정리와 SP 순서를 접합하는 작업이다.
-- [ ] 다음 정리의 정적 근거: 현재 정밀 C의00445140은 RawChatChannels와 같은00558ed0의100×48BYTE에서 +2c Subscriber 비0 행만 전체0이다. 기존 Clear(mask)의 한 BYTE 변경으로 대체하지 않는다. 새 몸체/Native/부모 접합은 미구현이다. 004328a0의0054d4e8/255DWORD는 PlayerNoMake 중복 경고 표이며 정확 제품 owner는 계속 미확인이다. [단위388 기록](docs/exe/cpp-shared-identity-color-runtime-20261024.md)에 위치와 한계를 남겼다.
+- [x] 388에서 확인한00445140의 같은00558ed0/100×48BYTE 자식과 Native216대조는 **단위389에서 완료**했다. 기존 Clear(mask)의 한 BYTE 변경으로 대체하지 않고 ResetOccupied를 사용한다. 전체 부모 접합과004328a0의0054d4e8/255DWORD PlayerNoMake 표 owner는 위389 잔여로 유지한다. [단위388 기록](docs/exe/cpp-shared-identity-color-runtime-20261024.md)은 당시 정적 확인 이력이다.
 
 ## 2026-10-24 사용자 요청에 따른 목표 일시중지 인계
 

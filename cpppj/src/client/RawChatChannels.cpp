@@ -99,4 +99,10 @@ void RawChatChannels::Clear(std::uint32_t mask) const {
     // 모든100기록을 방문하고 실제 subscriber가비제로일 때만 한BYTE를 쓴다.
     for (std::size_t index=0;index<kCount;++index) if (Subscriber(index)!=0) records_[index*kStride+kFlags]&=keep;
 }
+// State 정리가 요구하는00445140이다. 채널 마스크 정리와 달리 현재 점유 행의 이름/flags/padding/ID를 전부 반납한다.
+void RawChatChannels::ResetOccupied() const {
+    for (std::size_t index=0;index<kCount;++index) { // 원문처럼 현재100행을 앞에서부터 순회하고 각 행의 현재 DWORD를 읽는다.
+        if (Subscriber(index)!=0) std::fill_n(records_.begin()+index*kStride,kStride,std::uint8_t{});
+    }
+}
 }

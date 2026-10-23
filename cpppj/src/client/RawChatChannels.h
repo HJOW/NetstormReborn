@@ -29,6 +29,8 @@ public:
     std::int32_t AddToChannel(std::uint32_t subscriber,std::string_view name,std::uint32_t channel) const;
     // 원본 Clear는 subscriber가 비제로인 기록에만 flags &= ~BYTE(mask)를 쓰며 이름/효과는 건드리지 않는다.
     void Clear(std::uint32_t mask) const;
+    // 원본00445140: Subscriber 비0인 행만48BYTE 전체0으로 정리한다. 빈 행의 stale 값과 두 Subscriber 전역은 유지한다.
+    void ResetOccupied() const;
 private:
     // 정렬되지 않은 실제 기록+2c의 DWORD subscriber를 읽는다.
     std::uint32_t Subscriber(std::size_t index) const;

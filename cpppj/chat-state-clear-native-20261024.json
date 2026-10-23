@@ -1,0 +1,21 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-24",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "entry": "00445140",
+  "bytes": 37,
+  "observations": 216,
+  "distinctInputs": 108,
+  "normalReturn": true,
+  "gameGuiOsCalls": 0,
+  "externalSubstitutions": 0,
+  "productWritten": false,
+  "cdExecuted": false,
+  "inputs": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+    "tools/decomp_chat_state_clear.py": "bc580076b661c79b09f6c859e88eef55fd2d561c13dd03cf7fd33f9137fcf4f2",
+    "cpppj/tests/fixtures/chat-state-clear-x86.tsv": "86e01b2defe684cba52c0178df35091a8ab06df8e436ca5d8fbf26aacd1f1910"
+  }
+}

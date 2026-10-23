@@ -1,0 +1,73 @@
+{
+  "unit": 389,
+  "date": "2026-10-24",
+  "edition": "10.78",
+  "baseline": "c1b8fbf4",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "nativeObservations": 216,
+  "nativeInputs": 108,
+  "nativePrecisionPairsEqual": 108,
+  "newTests": 3,
+  "focusedTests": 17,
+  "totalTests": 2655,
+  "failedChecks": 0,
+  "productSha256": "b51ee2d9c796894f62de7d32ea602bb4d94a23333923d077e43f2c571869db82",
+  "testBinarySha256": "8f337dc10f6ba20a6d6f18a98fcfa4598a9cc7ea1044861c61cb588be999dff8",
+  "focused": [
+    {
+      "filter": "ChatStateClear_",
+      "tests": 3,
+      "failed": 0
+    },
+    {
+      "filter": "ChatChannels_",
+      "tests": 5,
+      "failed": 0
+    },
+    {
+      "filter": "SubscriberGlobals_",
+      "tests": 9,
+      "failed": 0
+    }
+  ],
+  "ctest": {
+    "returnCode": 0,
+    "seconds": 316.85466499999166,
+    "internalCounts": [
+      [
+        "2655",
+        "0"
+      ]
+    ],
+    "testBinarySha256": "8f337dc10f6ba20a6d6f18a98fcfa4598a9cc7ea1044861c61cb588be999dff8",
+    "productSha256": "b51ee2d9c796894f62de7d32ea602bb4d94a23333923d077e43f2c571869db82",
+    "sameTestBinary": true,
+    "sameProduct": true,
+    "originalsCount": 1394,
+    "originalsUnchanged": true
+  },
+  "newGuiExecutions": 0,
+  "stateCleanupParentConnected": false,
+  "goalComplete": false,
+  "cdExecuted": false,
+  "sources": {
+    "cpppj/src/client/RawChatChannels.h": "1c441828d835262aac522a2840d8627543b89e9b3ed690d6398ed7e2bae0a070",
+    "cpppj/src/client/RawChatChannels.cpp": "34869171a629afbc2cb897a0277af58913dd7f1b0a5c13b6a5bf97bac2cbc2e6",
+    "cpppj/src/client/ClientMain.cpp": "befe057c2923bba683cdb5123f60b41d25f2c09f28dc94080d45af5bfb96ad0a",
+    "cpppj/src/client/CampaignClientServices.cpp": "0d9272d9198d075c91370c0e50c28aaee9afe4ff8b746017be783512fc61f1e9",
+    "cpppj/tests/ChatStateClearTests.cpp": "08c920197ba8b3296ed0e09171405568f7591ef59fe2a80f2a8d5949ec90a4d3",
+    "cpppj/tests/CMakeLists.txt": "5a244fe4aaee8e702af4e48bdcf810da1b5f5c0b5609c762f48e62114b79f519",
+    "tools/decomp_chat_state_clear.py": "bc580076b661c79b09f6c859e88eef55fd2d561c13dd03cf7fd33f9137fcf4f2",
+    "cpppj/tests/fixtures/chat-state-clear-x86.tsv": "86e01b2defe684cba52c0178df35091a8ab06df8e436ca5d8fbf26aacd1f1910",
+    "cpppj/chat-state-clear-native-20261024.json": "aacb378b7aa107716eee4ceb05ed8866b463d27774d81c4e215a6c6010f1be75"
+  },
+  "evidence": {
+    "extracted/cpp-chat-state-clear-389-ctest1.json": "e2572d47b825d64dc12f47a44fc508f2a86abcfc370e3676e7cb324b5264f6e1",
+    "extracted/cpp-chat-state-clear-389-ctest1-tests.log": "4319a7acb16a6cf1b99c358c78fb3beeecec44845326398ec8c7b5d415e6a119",
+    "extracted/cpp-chat-state-clear-389-originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-chat-state-clear-389-focused1-ChatStateClear_.log": "5f63c2ddd448efb9bd5b6af54a0224d509de6df29dd013364c5a920960d90740",
+    "extracted/cpp-chat-state-clear-389-focused1-ChatChannels_.log": "fdec6fbef992b2764148ab265101d5187bcee24333a2158004614f253ca3348e",
+    "extracted/cpp-chat-state-clear-389-focused1-SubscriberGlobals_.log": "ce917a63cb7326d9cf8245ab8eec41a2cc95cc6fe5f8cca22b7fcc682639567d"
+  }
+}

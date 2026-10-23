@@ -2033,3 +2033,7 @@ cpppj/handoff/paused-20261024/subscriber-freeze.json -text whitespace=cr-at-eol
 cpppj/handoff/paused-20261024/colorsort-primary-pause.json -text whitespace=cr-at-eol
 cpppj/handoff/paused-20261024/colorsort-primary-isolated.json -text whitespace=cr-at-eol
 cpppj/handoff/paused-20261024/manifest.json -text whitespace=cr-at-eol
+# Chat 정리의 최초 Native 보고서·도구·관측은 체크아웃에서도 바이트를 유지한다.
+cpppj/chat-state-clear-native-20261024.json -text
+cpppj/tests/fixtures/chat-state-clear-x86.tsv -text
+tools/decomp_chat_state_clear.py -text
