@@ -1,5 +1,14 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-23 단위378 완료: Early1 자연 완주 재검증과 검사 계약 교정
+
+- [x] 단위377을 **f3619bcd / 20261023-47 CP**로 커밋했다. AGENTS·공통/닷넷 인수인계를 재확인했고 현재/마지막 전체 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-23**이다. 전체2442검사/실패0과 같은제품34진입통과는377의범위이며 전체목표는계속활성이다.
+- [x] 기존987행Early1입력과과거원시결과를보존하고helper를현재Guide4·기본재고설정1·실제초기Done값보존으로교정했다. 명시초기0프로필은별도옵션이며 기본실행에주입하지않는다. 메모리진행변화는 `progressObservedTransition`, 디스크영속성은 `persistedProgressVerified=false`로구별한다. GUI없는15계약검사와진행값교정3사례가통과했다. [재검증계획](docs/exe/cpp-early1-natural-play-plan-20261023.md).
+- [x] 같은제품SHA `4e9d28dd308411fd40ec149203ea060fcb84636dd6d40455751e2ca34c9b3786`로 초기값보존·상태주입없는 실제Early1완주를통과했다. A~G/SP0→200→400→600/사제SID15002·22위치·40h명령1회/완료게임99.217초/다음Tutorial2·Guide4·SP10000을확인했다. 종료0/174.71초·상한미도달, 전체1394파일manifest동일·허용설정복원이다. 초기Done1→1이므로새완료저장증거가아니다. [실행기록](docs/exe/cpp-early1-natural-play-runtime-20261023.md), 원시 `extracted/cpp-early1-20261023-natural1`.
+- [x] 새 `cpppj/tutorial-one-harvest-20261023.json`에현재소스14개/새원시12개SHA를고정했다. helper의검증전용REPORT경로만새날짜로바꾸고실제입력/실행/판정은변경하지않았다. 현재 `--verify`와실행원시재판정을확인한다. 기존단위203보고서/987행fixture/과거gui8은그대로다. 완료G와새Tutorial2월드는BMP로확인했으나next.bmp는안내합성전장면이므로다음A본문표시의증거로확대하지않는다.
+- [x] [Edit Snapshot 후속설계](docs/exe/cpp-editor-snapshot-next-20261023.md)와 [Client/작업namespace·이름입력설계](docs/exe/cpp-editor-client-next-20261023.md)를함께기록한다. 설계는미구현이며 실제Editor성공관측이아니다. 전체목표/Early2~6·캠페인/데모의사용자완주·전체UI/음향동일성은계속미완료다. 단위378인수인계를마치고날짜/순번을확인해로컬커밋한다.
+- [ ] **다음 단위 미등록 준비:** `RawFortSnapshotParent` 4부모/2728원문관측·격리2검사, `RawFortMoneySave` 2210원문실행·격리3검사는공용CMake/실제Session미등록이다. `RawFortMissionSave`는병렬작성중이며미완료다. 새버전전역공유는메인Storage·SoloMapCatalog의임시MapProbe Storage·Session이같은DWORD를물리참조하도록우선통합한다. Badges실제장부·전체Notify·genericEditor/실제메뉴는여전히후속이다. 새모듈은단위378커밋에포함하지않고다음완결단위에서검증/커밋한다.
+
 ## 2026-10-23 단위377 완료: 전체 Objects 저장과 동적 Temp 수명
 
 - [x] 이전 단위376은 **229a2c10 / 20261023-46 CP**로 완료 커밋했다. AGENTS·공통/닷넷 인수인계를 재독했고 현재/마지막 전체 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-23**으로 같다. 이전 단위는2433전체 검사/34진입 경로 통과이며 전체 사용자 완주/동일성·Edit 완료는 아니다.
