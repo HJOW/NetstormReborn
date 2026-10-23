@@ -1,0 +1,20 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-23",
+  "sourceAbsentBeforeObservation": true,
+  "observations": 20,
+  "statuses": {
+    "fault-guard": 16,
+    "normal": 4
+  },
+  "instructions": 628,
+  "scope": "초기642중논리길이mem-write정지24행은Unicorn store커밋때문에진짜물리fault동일대조에서제외한다. 이별도20행은A/B의실제미매핑page끝입력이다. 고정캐시C의임의짧은span은별도host계약이며Nativepagefault라고하지않는다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+    "tools/decomp_player_core_refresh.py": "2eb1b07e0468931c0c00d7278006233a295c97612110c720f7563cc7c78d1b8d",
+    "tools/decomp_player_core_refresh_guard.py": "8fd97fcba9901f87dfc645fd4b559d2822653a0d6437a2413330eb5550bf731c",
+    "cpppj/tests/fixtures/player-core-refresh-x86.tsv": "db0ba92699032313ac1fc8b72d7b37c97c7dbc65f3bcc8bfb07d2dbfaabc734e",
+    "cpppj/tests/fixtures/player-core-refresh-guard-x86.tsv": "5bfcc35714f2f3ea93256a97ef777032b8f9f0f73861f85bed1c29208e4b4aa2"
+  }
+}

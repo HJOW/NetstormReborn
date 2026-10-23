@@ -135,7 +135,7 @@ void RawCampaignCursor::SetEffects(CampaignCursorEffects effects) { impl_->effec
 // 현재 표시기의 주소는 장치/메뉴 교체 동안 바뀌지 않는다.
 RawCampaignCursorDisplay& RawCampaignCursor::Display() { return *impl_->display; }
 // Native Take의 words[2]는 글꼴 번호가 아닌 팔레트 색이다. 실제 흰색/노랑 전역을 공급한다.
-void RawCampaignCursor::SetPalette(std::span<const ScreenColor> palette) { impl_->display->SetPalette(palette);const auto colors=impl_->display->TextColors();impl_->lifecycleState.warningFont=colors[0];impl_->lifecycleState.costFont=colors[1]; }
+void RawCampaignCursor::SetPalette(std::span<const ScreenColor> palette,std::span<const std::uint32_t> colorSortLogical) { impl_->display->SetPalette(palette,colorSortLogical);const auto colors=impl_->display->TextColors();impl_->lifecycleState.warningFont=colors[0];impl_->lifecycleState.costFont=colors[1]; }
 // 같은 화면 원점을 마우스의 카메라 비트와 별도로 원본 Draw의 signed 픽셀 빼기에 공급한다.
 void RawCampaignCursor::SetView(SoundView view) { impl_->placementState.screenOrigin={view.cameraX,view.cameraY};impl_->display->SetView(view); }
 // 실제 취득의 Cancel/Query/생성/측정/위치 꼬리를 그대로 실행한다.

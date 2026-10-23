@@ -48,7 +48,7 @@ public:
     // 화면 크기를 갱신한다. 실제 캠페인의 최초 시야는 생성자의 원본 로더가 설정하며 이전 어댑터는 최초 Resize에서 홈을 고른다.
     void Resize(int width,int height);
     // 표시 팔레트를 바꾸고 팔레트에 의존하는 지면 명도 변환표를 다시 계산하게 한다. 화면 팔레트 적용 직후 부른다.
-    void SetPalette(std::span<const ScreenColor> palette);
+    void SetPalette(std::span<const ScreenColor> palette,std::span<const std::uint32_t> colorSortLogical={}); //실제Client는같은고정초기RGB를별도전달하며기존독립검사는명시fallback이다.
     void BindHideBuildings(std::function<std::uint32_t()> current); // 실제0059a8ac를매표시/선택시현재조회한다.호출대상은월드보다오래살아야한다.
     // 카메라를 월드 픽셀 범위 안에서 옮긴다.
     void Scroll(int dx,int dy);
@@ -172,6 +172,7 @@ private:
     std::array<int,99> coreVariants_{};
     // palette_: 그림의 색 인덱스를 실제 출력 색으로 바꿀 팔레트.
     std::array<PaletteColor,256> palette_{};
+    std::span<const std::uint32_t> colorSortLogical_; //World보다오래사는Client의고정초기입력이며별도값동기화는없다.
     // remaps_: 소유자·타입별 출력 색 변환표 캐시.
     mutable std::map<std::pair<std::size_t,int>,ColorMap> remaps_;
     // width_: 가로 크기.

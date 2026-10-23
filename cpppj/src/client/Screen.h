@@ -6,6 +6,7 @@
 #include "client/PaletteShade.h"
 #include <array>
 #include <cstdint>
+#include <functional>
 #include <memory>
 #include <optional>
 #include <span>
@@ -130,6 +131,8 @@ public:
     const PaletteColorTable& Colors() const;
     // 파일 팔레트의 GUI 밝음/어두움 변환표다. 번개의 일시 SetPalette와 화면 모드 적용으로 갱신하지 않는다.
     const GumpShadeMaps& ShadeMaps() const;
+    std::span<const std::uint32_t,256> LogicalPalette() const; //원문005c7954의실제현재논리RGBX를최초캡처위치에만빌린다.
+    void BindColorSortInput(std::function<std::span<const std::uint32_t,256>()> current); //Client의고정초기입력현재조회기를두Screen수명에같이연결한다.
     // 현재 논리 팔레트에서 RGB 색을 찾는다. SetPalette(apply=false)로 준비한 논리 팔레트도 검색에 반영한다.
     std::uint32_t FindColor(std::int32_t red,std::int32_t green,std::int32_t blue) const;
     // 현재 논리 팔레트에서 날씨 RGB 네 색을 검색하는 계산 도우미다. 파일 로더의 저장 별칭은 Colors().weather를 쓴다.
@@ -198,6 +201,7 @@ private:
     std::array<ScreenColor, 256> saved_{};         // DAT_005acd28
     std::array<std::uint32_t, 256> logical_{};     // DAT_005c7954: PALETTEENTRY(빨강·초록·파랑·플래그) 256개
     PaletteColorTable colors_;                   // 파일 팔레트 로더가 다시 계산하는 원본 기본/표시/날씨 색 표.
+    std::function<std::span<const std::uint32_t,256>()> colorSortInput_; //소유자없는독립Screen만기존현재논리입력fallback이다.
     GumpShadeMaps shadeMaps_;                    // 돌 배경 소스 번호를 변환하는 파일 팔레트 명암 표.
     // flags_: 동작을 선택하는 플래그 비트.
     std::uint32_t flags_{};                        // DAT_005c78d4

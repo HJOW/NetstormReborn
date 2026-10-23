@@ -1,4 +1,5 @@
 // 원본433660→498220→Factory +78/+a4를 실제8비트 장면의 동일 정렬 위치에서 실행한다.
+#include "client/ClientColorSortInput.h"
 #include "client/RawCampaignFactoryDisplay.h"
 #include "client/ObjectCollection.h"
 #include "client/SpriteDraw.h"
@@ -188,12 +189,12 @@ RawCampaignFactoryDisplay::RawCampaignFactoryDisplay(RawWorldCore core,const Gam
 RawCampaignFactoryDisplay::~RawCampaignFactoryDisplay()=default; // procedure가 더 이상 호출되지 않을 때 반납한다.
 bool RawCampaignFactoryDisplay::Handles(o::Sid sid) const { return impl_->Handles(sid); } // 별도 TYPE 이름 휴리스틱을 쓰지 않는다.
 // 장치 BGRX와 별개로 원본 R/G/B/예약 DWORD를 만들어 실제 파일 색 표를 계산한다.
-void RawCampaignFactoryDisplay::SetPalette(std::span<const ScreenColor> palette) {
+void RawCampaignFactoryDisplay::SetPalette(std::span<const ScreenColor> palette,std::span<const std::uint32_t> colorSortLogical) {
     if (palette.size()!=256) throw std::invalid_argument("Factory 파일 팔레트256색 계약");std::array<std::uint32_t,256> logical{};
     // 실제 현재 파일 팔레트의 모든 번호를 보존한다.
     for (std::size_t i=0;i<logical.size();++i) logical[i]=std::uint32_t(palette[i].red)|(std::uint32_t(palette[i].green)<<8)|(std::uint32_t(palette[i].blue)<<16)|(std::uint32_t(palette[i].reserved)<<24);
-    const auto named=BuildPaletteColorTable(logical,impl_->assets.Edition());impl_->colors=BuildSpriteColorMaps(logical);impl_->state.barBackground=named.basic[0];
-    for (const auto type:kSpecialOwnerTypes) impl_->ownerColors.insert_or_assign(type,BuildSpecialOwnerColorMaps(logical,type)); // 파일 팔레트 변경 때 전용 명도 표도 같은 시점에 갱신한다.
+    const auto named=BuildPaletteColorTable(logical,impl_->assets.Edition());impl_->colors=BuildSpriteColorMaps(ColorSortLogicalInput(colorSortLogical,logical));impl_->state.barBackground=named.basic[0];
+    for (const auto type:kSpecialOwnerTypes) impl_->ownerColors.insert_or_assign(type,BuildSpecialOwnerColorMaps(ColorSortLogicalInput(colorSortLogical,logical),type)); // 파일 팔레트 변경 때 전용 명도 표도 같은 시점에 갱신한다.
     impl_->state.hitPointColors={named.named.at(10).index,named.basic[5],named.basic[1]};impl_->ready=true;
 }
 // 원본 수집기의 전체 순서/한 번의 그림자 보정/해시2단계 반환을 유지한다.

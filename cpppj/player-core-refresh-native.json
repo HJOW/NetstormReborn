@@ -1,0 +1,48 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-23",
+  "sourceAbsentBeforeObservation": true,
+  "entries": [
+    4520960,
+    4780240,
+    4783200,
+    4924016,
+    4922144,
+    4512416,
+    4827200,
+    4371072,
+    4254528
+  ],
+  "parentRanges": "44fc00-44fc35;44fc40-44fd6e",
+  "parentBytes": 357,
+  "uniqueInputs": 321,
+  "observations": 642,
+  "statuses": {
+    "normal": 588,
+    "stop": 20,
+    "fault": 24,
+    "fault-null": 10
+  },
+  "instructions": 168112,
+  "boundaries": {
+    "g": 2904,
+    "p": 608,
+    "b": 606,
+    "t": 764,
+    "n": 876,
+    "v": 502,
+    "a": 28
+  },
+  "precisionDifferences": 0,
+  "gameExecuted": false,
+  "osExecuted": false,
+  "scope": "실제357BYTE부모/현재Coregetter/현재기술부모/Finder Begin·Next·true가상필터/TYPEgetter/Ch/iterator. level80과진단은명시외부장치. TYPE65535는실제500배주소산술. 짧은Core와NULL은명시물리중단.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+    "tools/decomp_player_core_refresh.py": "2eb1b07e0468931c0c00d7278006233a295c97612110c720f7563cc7c78d1b8d",
+    "cpppj/tests/fixtures/player-core-refresh-x86.tsv": "db0ba92699032313ac1fc8b72d7b37c97c7dbc65f3bcc8bfb07d2dbfaabc734e"
+  }
+}

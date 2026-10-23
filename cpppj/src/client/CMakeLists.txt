@@ -215,5 +215,8 @@ target_sources(netstorm PRIVATE QuickHelpControl.h QuickHelpControl.cpp)
 target_sources(netstorm PRIVATE QuickHelpHtml.h QuickHelpHtml.cpp HtmlLinkText.h HtmlLinkText.cpp)
 # 실제 전용 Help의 전체 생성/배치/본문·그림 갱신과 HTML 부모를 같은 기존 Gump에 연결한다.
 target_sources(netstorm PRIVATE QuickHelpWindow.h QuickHelpWindow.cpp HtmlBodyGump.h HtmlBodyGump.cpp)
+# 실제 고정 색상 입력과 초기 say를 보존하는 같은 Client 명령 표를 등록한다.
+target_sources(netstorm PRIVATE ClientColorSortInput.h ClientColorSortInput.cpp
+    RawDotCommandRegister.h RawDotCommandRegister.cpp ClientDotCommandGlobals.h ClientDotCommandGlobals.cpp)
 # 편집 맵의 pending 이름과 다음 State 덮어쓰기 및 전투 Fort 보존 순서다.
 target_sources(netstorm PRIVATE FortSelection.h FortSelection.cpp)

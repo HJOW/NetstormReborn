@@ -1,0 +1,31 @@
+{
+  "status": "단위385후속·제품전최초고정",
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-23",
+  "observations": 6,
+  "stagesPerControl": 3,
+  "controls": [
+    639,
+    895
+  ],
+  "mapsInstructions": 50045682,
+  "sortAddress": 286330880,
+  "screenInputAddress": 286326784,
+  "mapPrecisionDifferentStages": 3,
+  "sortPrecisionDifferentStages": 3,
+  "unchangedSortBytes": 14336,
+  "scope": "기존실제439de0 한번→같은물리ColorSort에서현재화면RGB만2회변경→전체43c010의9표.43b430/파일캐시/OS/GUI 전체생성부모는범위밖.",
+  "gameExecuted": false,
+  "guiExecuted": false,
+  "sha256": {
+    "cpppj/tests/fixtures/colorsort-fixed-input-x86.tsv": "70684bfd514b29e981d67faa4d2abc6cababcc5ed275b22f495f58e41d65813f",
+    "extracted/gumpbackground/originals/creation.c": "27eb8b91b31efd7579872ec373f77e6046d089ee8882f7936d9580c9530f4977",
+    "extracted/gumpbackground/originals/functions.tsv": "16f342ccfe19127c285dc12bb66450c59b1ca1a7564bfb75ace6c11a71afa215",
+    "originals/d/GIFCLOUD.COL": "785a2cda6ac1d3e295d375815b6d9650720683099db7c249382d598b5da00532",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_colorsort_fixed_input.py": "d4c967824796b97388a7cf68e69bb2010902da4d6ba2d95e44ef6effca55b81b",
+    "tools/decomp_gumpbackground_oracle.py": "21905551a392adc1be9e2f992de2d2c1b19a9f8b37c2beeb240f284e9a372228",
+    "tools/decomp_gumpvisual_oracle.py": "b7c70b2e10036bb9c938c34ad8d4a7ca9a30b5d2082f218d0b5914a6941b1658",
+    "tools/decomp_owner_oracle.py": "5a837ad7fd233d9d75c7241d52fbf2e5a508e24dc158d091f243a13ab698e7fb"
+  }
+}

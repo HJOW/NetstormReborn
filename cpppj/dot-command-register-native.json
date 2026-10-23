@@ -1,0 +1,24 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-23",
+  "entry": "0043f660",
+  "cdEntry": "0043ee80",
+  "bodyBytes": 141,
+  "uniqueInputs": 125,
+  "observations": 250,
+  "instructions": 5144,
+  "precisionDifferences": 0,
+  "completions": {
+    "return": 248,
+    "copy-stop": 2
+  },
+  "scope": "부모만 실행/strncpy31은 명시 하위/게임·GUI·OS 아님/인접 전체2568BYTE·callback뒤현재count·표시포인터와종단쓰기. 유효한 초기count0..65이며 음수/잘못된physical은 별도 계약이다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+    "tools/decomp_dot_command_register.py": "94df41e0012685826ab4820d3defe4ed407ffd10c897d196c6f507708cc1bc9d",
+    "cpppj/tests/fixtures/dot-command-register-x86.tsv": "e20c7a33500cbf6ae1c6ca94c4a462393cbbc34920c675690e07f67b60bac5ac"
+  }
+}

@@ -2019,3 +2019,26 @@ set_source_files_properties(DissolveLifetimeTests.cpp PROPERTIES COMPILE_DEFINIT
     "NETSTORM_DISSOLVE_LIFETIME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/dissolve-lifetime-x86.tsv\"")
 
 target_sources(netstorm_tests PRIVATE PriestPanicTests.cpp)
+
+# 원문 최초 관측과 실제 Client 소유자를 구별해 신규34검사를 같은 실행 파일에 등록한다.
+target_sources(netstorm_tests PRIVATE ColorSortFixedInputTests.cpp StateWorldCleanupTests.cpp
+    SavedStateReadTests.cpp DotCommandRegisterTests.cpp ClientDotCommandGlobalsTests.cpp
+    FortSpWriteTests.cpp PlayerCoreRefreshTests.cpp ColorMapCacheTests.cpp
+    ClientChatCoreOwnersTests.cpp ClientFortCoreSeedTests.cpp ClientDotCommandOwnerTests.cpp)
+# 각 원문 검사에는 최초 fixture의 실제 절대 경로만 전달한다.
+set_source_files_properties(ColorSortFixedInputTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_COLORSORT_FIXED_INPUT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/colorsort-fixed-input-x86.tsv\"")
+set_source_files_properties(StateWorldCleanupTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_STATE_WORLD_CLEANUP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/state-world-cleanup-x86.tsv\"")
+set_source_files_properties(SavedStateReadTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_SAVED_STATE_READ_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/saved-state-read-x86.tsv\"")
+set_source_files_properties(DotCommandRegisterTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_DOT_COMMAND_REGISTER_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/dot-command-register-x86.tsv\";NETSTORM_DOT_COMMAND_REGISTER_V2_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/dot-command-register-v2-x86.tsv\"")
+set_source_files_properties(ClientDotCommandGlobalsTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_DOT_COMMAND_STATIC_IMAGE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/dot-command-static-image.hex\"")
+set_source_files_properties(FortSpWriteTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_FORT_SP_WRITE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fort-sp-write-x86.tsv\"")
+set_source_files_properties(PlayerCoreRefreshTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_PLAYER_CORE_REFRESH_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/player-core-refresh-x86.tsv\";NETSTORM_PLAYER_CORE_REFRESH_GUARD_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/player-core-refresh-guard-x86.tsv\"")
+set_source_files_properties(ColorMapCacheTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_COLOR_MAP_CACHE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/colorsort-cache-parent-x86.tsv\"")

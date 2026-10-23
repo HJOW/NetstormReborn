@@ -1,4 +1,5 @@
 // kind4 쌍의 현재 좌표/깊이/tail을 보존하고 실제8비트 dirty 표면에 그린다.
+#include "client/ClientColorSortInput.h"
 #include "client/RawCampaignCursorDisplay.h"
 #include "client/RawCursorPlacement.h"
 #include "client/PreviewColorMaps.h"
@@ -81,13 +82,13 @@ struct RawCampaignCursorDisplay::Impl {
 RawCampaignCursorDisplay::RawCampaignCursorDisplay(RawWorldCore core,CursorPreviewSource source,const GameAssets& assets,o::ScrambledSpStore& sp,const std::uint32_t& known):impl_(std::make_unique<Impl>(core,source,assets,sp,known)) {}
 RawCampaignCursorDisplay::~RawCampaignCursorDisplay()=default; // 상위 커서가 현재 표시 callback보다 오래 살아야 한다.
 // 파일 팔레트가 바뀌면 원본 세 표와 흰색/빨강 윤곽 번호를 같은 논리 RGB로 다시 계산한다.
-void RawCampaignCursorDisplay::SetPalette(std::span<const ScreenColor> palette) {
+void RawCampaignCursorDisplay::SetPalette(std::span<const ScreenColor> palette,std::span<const std::uint32_t> colorSortLogical) {
     if (palette.size()!=256) throw std::invalid_argument("커서 실제 파일 팔레트256색 계약");std::array<std::uint32_t,256> logical;
     // BGRX 호스트 구조와 별개로 원본 R/G/B 순 DWORD를 만든다.
     for (std::size_t index=0;index<logical.size();++index) logical[index]=std::uint32_t(palette[index].red)|(std::uint32_t(palette[index].green)<<8)|(std::uint32_t(palette[index].blue)<<16)|(std::uint32_t(palette[index].reserved)<<24);
-    const auto named=BuildPaletteColorTable(logical,impl_->assets.Edition());impl_->textColors={named.basic[7],named.basic[5]};impl_->colors=BuildPreviewColorMaps(logical,named.basic[1]);impl_->settings.goodColor=static_cast<std::uint8_t>(named.basic[7]);impl_->settings.badColor=static_cast<std::uint8_t>(named.basic[1]);
+    const auto named=BuildPaletteColorTable(logical,impl_->assets.Edition());impl_->textColors={named.basic[7],named.basic[5]};impl_->colors=BuildPreviewColorMaps(ColorSortLogicalInput(colorSortLogical,logical),named.basic[1]);impl_->settings.goodColor=static_cast<std::uint8_t>(named.basic[7]);impl_->settings.badColor=static_cast<std::uint8_t>(named.basic[1]);
     // 실제 전용5종의 현재 파일 명도 표도 함께 다시 만든다.
-    for (const auto type:kSpecial) impl_->ownerColors[type]=BuildSpecialOwnerColorMaps(logical,type);
+    for (const auto type:kSpecial) impl_->ownerColors[type]=BuildSpecialOwnerColorMaps(ColorSortLogicalInput(colorSortLogical,logical),type);
     impl_->paletteReady=true;
 }
 // 실제 월드 clip과 원본 ThemeMode의 두 표 활성화를 현재 표시 상태에 반영한다.

@@ -496,3 +496,7 @@ target_sources(netstorm PRIVATE RawWindCircle.h RawWindCircle.cpp)
 target_sources(netstorm PRIVATE RawWindSpell.h RawWindSpell.cpp)
 
 target_sources(netstorm PRIVATE RawPriestPanic.h RawPriestPanic.cpp)
+# 같은 Player/Core/stream 물리와 필수 장치를 빌리는 실제 저장·정리·색상 캐시 부모다.
+target_sources(netstorm PRIVATE RawStateWorldCleanup.h RawStateWorldCleanup.cpp
+    RawSavedStateRead.h RawSavedStateRead.cpp RawFortSpWrite.h RawFortSpWrite.cpp
+    RawPlayerCoreRefresh.h RawPlayerCoreRefresh.cpp RawColorMapCache.h RawColorMapCache.cpp)

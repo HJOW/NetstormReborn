@@ -1,4 +1,5 @@
 #include "client/GameWorld.h"
+#include "client/ClientColorSortInput.h"
 #include "client/RawCampaignFactoryDisplay.h"
 #include "client/RawCampaignCursor.h"
 #include "client/RawCursorPosition.h"
@@ -169,12 +170,14 @@ void GameWorld::Place(const o::FortChunkSection& section,std::span<const o::Chun
         }
 }
 // 기존 월드 어댑터의 색 검색·소유자별 지면 명도도 현재 화면 팔레트를 사용한다.
-void GameWorld::SetPalette(std::span<const ScreenColor> palette) {
+void GameWorld::SetPalette(std::span<const ScreenColor> palette,std::span<const std::uint32_t> colorSortLogical) {
     if (palette.size()!=palette_.size()) throw std::invalid_argument("World palette needs 256 colors");
     // 색 번호는 유지하고 RGB만 교체한다.
     for (std::size_t i=0;i<palette_.size();++i) palette_[i]={palette[i].red,palette[i].green,palette[i].blue};
-    if (campaign_) campaign_->Cursor().SetPalette(palette); // 실제 커서도 같은 파일 팔레트의 원본 색표를 사용한다.
-    if (factoryDisplay_) factoryDisplay_->SetPalette(palette); // 원본 SpriteDraw도 같은 파일 팔레트에서만 색표를 만든다.
+    if (!colorSortLogical.empty() && colorSortLogical.size()!=256) throw std::invalid_argument("World 고정ColorSort256색 계약");
+    colorSortLogical_=colorSortLogical;
+    if (campaign_) campaign_->Cursor().SetPalette(palette,colorSortLogical_); // 실제 커서도 같은 파일 팔레트의 원본 색표를 사용한다.
+    if (factoryDisplay_) factoryDisplay_->SetPalette(palette,colorSortLogical_); // 원본 SpriteDraw도 같은 파일 팔레트에서만 색표를 만든다.
     remaps_.clear();changed_=true;
 }
 // 메뉴명령의같은DWORD를복사하지않아열린메뉴뒤의표시/선택도현재상태를읽는다.
@@ -577,7 +580,7 @@ std::optional<ColorMap> GameWorld::Remap(const TypeAsset& type,int owner) const 
         std::array<std::uint32_t,256> logical{}; // 원본 ColorSort와 같은 R/G/B 순서의 파일 팔레트다.
         // 현재 팔레트의 각 색 번호를 유지하며 장치 BGR로 바꾸지 않는다.
         for (std::size_t index=0;index<logical.size();++index) { const auto& value=palette_[index];logical[index]=std::uint32_t(value.red)|(std::uint32_t(value.green)<<8)|(std::uint32_t(value.blue)<<16); }
-        const auto result=BuildSpecialOwnerColorMaps(logical,94)[static_cast<std::size_t>(color)]; // 지면 소스33색에 보정0을 쓰는 기존 독립 검증 몸체다.
+        const auto result=BuildSpecialOwnerColorMaps(ColorSortLogicalInput(colorSortLogical_,logical),94)[static_cast<std::size_t>(color)]; // 지면 소스33색에 보정0을 쓰는 기존 독립 검증 몸체다.
         remaps_.emplace(key,result);return result;
     }
     const bool isle=name=="isle" || name=="edgefarm";

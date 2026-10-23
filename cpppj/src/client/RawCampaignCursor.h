@@ -52,7 +52,7 @@ public:
     // 같은 장기 몸체를 유지하면서 현재 장치/GUI/전송기를 교체한다.
     void SetEffects(CampaignCursorEffects effects);
     RawCampaignCursorDisplay& Display(); // 같은 현재 커서/격자를 수집하고 그리는 단일 표시기다.
-    void SetPalette(std::span<const ScreenColor> palette); // 실제 파일 팔레트와 Native Take의 두 현재 색을 연결한다.
+    void SetPalette(std::span<const ScreenColor> palette,std::span<const std::uint32_t> colorSortLogical={}); //실제Client는같은고정초기RGB를별도전달하며기존독립검사는명시fallback이다. // 실제 파일 팔레트와 Native Take의 두 현재 색을 연결한다.
     void SetView(SoundView view); // 현재 화면 픽셀 원점을 Query/Prepare/Draw가 공유하게 한다.
     void Take(o::Sid form,std::uint32_t flags); // 실제00447000의 전체 DWORD flags를 전달한다.
     void Cancel(); // 잠긴 상태에서도 실제 꼬리 정리/프로세스 반납을 실행한다.

@@ -21,6 +21,8 @@ public:
     const o::GameRandom& Game() const { return game_; } //현재같은게임난수객체의읽기참조다.
     std::uint32_t& GameMode() { return gameMode_; } //005c89a8현재DWORD를같은Seed/Reseed가참조한다.
     const std::uint32_t& GameMode() const { return gameMode_; } //현재모드의사본을새로만들지않는다.
+    std::uint32_t& FortCoreSeed() { return fortCoreSeed_; } //005c89b4의같은전체DWORD를CoreWrite/후속실제cleanup이빌린다.새Session값으로대체하지않는다.
+    const std::uint32_t& FortCoreSeed() const { return fortCoreSeed_; } //상위WORD까지보존하는같은실제저장소의읽기참조다.
     std::uint32_t& SubscriberIdInitialized() { return subscriberIdInitialized_; } // 005c89a4의현재DWORD를 생성기와 함께 읽고 쓴다.
     const std::uint32_t& SubscriberIdInitialized() const { return subscriberIdInitialized_; } // 같은 최초시드 상태를 복제 없이 조회한다.
 private:
@@ -28,6 +30,7 @@ private:
     o::CrtRandom crt_{o::CrtRandom::Borrow(crtState_)}; // 동일한 실제DWORD를 빌리는 장기wrapper 한개이며 미션마다 다시 만들지 않는다.
     o::GameRandom game_{55}; //보호PE00532710의실제data초기값0x37이다.Session생성/반납으로재초기화하지않는다.
     std::uint32_t gameMode_{}; //005c89a8의실제BSS0이며CRT/IDinit과별개상태다.
+    std::uint32_t fortCoreSeed_{}; //005c89b4의PE가상zero초기0이며새Client에서만구성한다.원문cleanup은lowWORD만지운다.
     std::uint32_t subscriberIdInitialized_{}; // 원본005c89a4의BSS0이며 Session 생성/반납에서 초기화하지 않는다.
 };
 }

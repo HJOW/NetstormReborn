@@ -1,0 +1,29 @@
+{
+  "correction": "최초보고서entries와도구설명의cleanup6BYTE는표기오류다.실행범위는처음부터004fb5d0<=PC<004fb5db로11BYTE였으며원시관측은변경하지않았다.",
+  "entry": "004fb5d0",
+  "end_exclusive": "004fb5db",
+  "actual_bytes": 11,
+  "original_report_label": 6,
+  "machine_code": "8d8d78feffffe935fef1ff",
+  "instructions": [
+    {
+      "address": "004fb5d0",
+      "size": 6,
+      "operation": "lea ecx, [ebp - 0x188]"
+    },
+    {
+      "address": "004fb5d6",
+      "size": 5,
+      "operation": "jmp 0x41b410"
+    }
+  ],
+  "native_observations_unchanged": 542,
+  "separate_cleanups_unchanged": 24,
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_saved_state_read.py": "7c5f3a1f58b40c14892e3b23856c6dba340f953f10ea915824fb991e3163580b",
+    "cpppj/saved-state-read-native.json": "711cdeec733c0d1a63de01062d4b915ea1717e9f95cce86a42bd0a246a10c524",
+    "cpppj/tests/fixtures/saved-state-read-x86.tsv": "f08cdcc2b456c2a835dcd7aca7f8afb0ddace2ed70bdb7be2bdb4008b83b85a2",
+    "tools/audit_saved_state_read_cleanup_size.py": "4d3e3d8b1d14217bcac3341e3a65d742907fc3408fcf9b5719ff5ed54aa390f6"
+  }
+}

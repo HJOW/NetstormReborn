@@ -1,0 +1,41 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-23",
+  "entry": "004be960",
+  "bodyBytes": 267,
+  "ranges": [
+    [
+      4974944,
+      4975211
+    ],
+    [
+      5130688,
+      5130805
+    ],
+    [
+      4544704,
+      4544744
+    ]
+  ],
+  "cdSourceMapAddress": null,
+  "cdExecuted": false,
+  "uniqueInputs": 99,
+  "observations": 198,
+  "statuses": {
+    "normal": 178,
+    "stop": 20
+  },
+  "instructions": 2257176,
+  "precisionDifferences": 0,
+  "equalDraws": 2658,
+  "productAbsentBeforeObservation": true,
+  "scope": "SP writer267BYTE/실제_ftol117BYTE/실제GameRandom40BYTE. 진단line36만명시장치. 전체3×256BYTE/같은stream16BYTEalias/현재RNG상태/전체512회순서/부분중단을보존. 게임·GUI·OS없음.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+    "tools/decomp_fort_sp_write.py": "afdefaef69038c7f58362d8517d225d9bf54fc70e3e90d8b6b24ecf1720e88c4",
+    "cpppj/tests/fixtures/fort-sp-write-x86.tsv": "602f3d42b77816832294470e0c2a10788a155c32ab135b33e7cd104499d3825c"
+  }
+}

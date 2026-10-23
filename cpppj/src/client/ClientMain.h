@@ -31,8 +31,12 @@ class UberGump;
 class ClientAudio;
 class RawChatChannels;
 class FortTypeConversionStorage; // 원본 현재 변환표의 실제 할당을 Client 수명에 소유한다.
+class ClientColorSortInput; //최초논리RGB와43c010의같은표입력을Client수명으로소유한다.
 class ClientRandomGlobals; // 같은 Client의 CRT holdrand와 Subscriber ID 최초시드 전역을 소유한다.
 class ClientLocalStateGlobals; // 실제 메뉴/Editor/로그인이 같은 State 블록과 벽시각 기한을 빌린다.
+class ClientCoreDataGlobals; //현재Core/active/캐시와 빌린 Player 슬롯을 Client 수명에 소유한다.
+class ClientChatManagerGlobals; //현재 Chatmanager와 실제 미초기화 할당들을 Client 수명에 소유한다.
+class ClientDotCommandGlobals; //최초 say와 같은 인접 명령 표를 Session보다 오래 보유한다.
 struct ClientAudioOptions;
 
 // 설정 키 "maxFPS" 의 코드 기본값. 화면 루프를 초당 몇 번까지 돌릴지 정한다.
@@ -123,6 +127,7 @@ public:
 
     Screen& GetScreen();
     void LoadPaletteFile(std::string_view path,std::uint32_t clear); //GamePalSpec완성경로를DataDir재결합없이같은Screen에전달한다.
+    void RebuildColorSortMaps(); //43c010의고정초기RGB/현재빨강9표만생성하며소비자갱신과구별한다.
     void RefreshPaletteConsumers(); //기존AudioTints/커서/월드/UI소비자를이후maps경계에서갱신한다.
     InputQueue& Input();
     o::ConfigInterface& Configuration();
@@ -131,8 +136,12 @@ public:
     // 미션 교체와 무관한 같은 실제 장부의 공유 수명을 Session에 전달한다.
     const std::shared_ptr<o::RawFortBadgesGlobals>& FortBadges() const;
     const std::shared_ptr<FortTypeConversionStorage>& FortTypeConversion() const; // 로더들이 같은 current DWORD와 실제255BYTE 할당을 빌린다.
+    const std::shared_ptr<ClientColorSortInput>& ColorSortInput() const; //현재ScreenRGB로재캡처하지않는같은초기입력소유자를빌린다.
     const std::shared_ptr<ClientRandomGlobals>& RandomGlobals() const; // 미션마다 복제하지 않는 실제 난수/ID초기화 소유자를 전달한다.
     const std::shared_ptr<ClientLocalStateGlobals>& LocalStateGlobals() const; // 실제 State144BYTE와 활동기한의 Client 수명을 Session에 전달한다.
+    const std::shared_ptr<ClientCoreDataGlobals>& CoreDataGlobals() const; //같은 현재 Core 슬롯/캐시를 빌리며 Player 자동 선택이나 해제를 실행하지 않는다.
+    const std::shared_ptr<ClientChatManagerGlobals>& ChatManagerGlobals() const; //실제 manager 소유자를 빌리며 조회로 공통 startup을 실행하지 않는다.
+    const std::shared_ptr<ClientDotCommandGlobals>& DotCommandGlobals() const; //최초 say를 보존하는 같은 장기 등록 표를 빌린다.
     const o::BaseFileSystem& Files() const;
     const GameAssets& Assets() const;
     o::Kernel& GetKernel();
@@ -204,7 +213,11 @@ private:
     std::shared_ptr<o::RawFortBadgesGlobals> fortBadges_; // CRT 한 번과 시작 count reset을 구별하는 단일6160BYTE 소유자다.
     std::shared_ptr<FortTypeConversionStorage> fortTypeConversion_; // Session마다 새 현재 포인터나 할당 사본을 만들지 않는 단일 소유자다.
     std::shared_ptr<ClientRandomGlobals> randomGlobals_; // 모든 실제 Session과 Subscriber 생성기가 같은 holdrand/초기화DWORD를 빌린다.
+    std::shared_ptr<ClientColorSortInput> colorSortInput_; //메뉴/월드/두Screen생성경로보다오래유지하는같은초기RGB다.
     std::shared_ptr<ClientLocalStateGlobals> localStateGlobals_; // Session 소멸/Editor 메뉴 재진입에서 State/기한을 초기화하지 않는 한 소유자다.
+    std::shared_ptr<ClientCoreDataGlobals> coreDataGlobals_; //menu/Session보다 먼저 선언해 소비자 반납 뒤에도 현재/캐시가 살아 있게 한다.
+    std::shared_ptr<ClientChatManagerGlobals> chatManagerGlobals_; //같은 Client의 현재 manager/할당을 보유하며 Session마다 재구성하지 않는다.
+    std::shared_ptr<ClientDotCommandGlobals> dotCommandGlobals_; //menu/Session보다 먼저 구성한 실제 인접 표이며 현재 count를 별도로 복제하지 않는다.
     struct ChatState; // 실제 전역 Chat 기록과 현재 subscriber 처리기를 구현 파일의 고정 주소에 소유한다.
     std::unique_ptr<ChatState> chat_; // 메뉴/월드보다 오래 사는 단일100×48바이트이며 미션 수명과 분리한다.
     // translations_: 용어 키를 언어별 표시 문자열로 바꾸는 번역표.

@@ -1,0 +1,41 @@
+{
+  "status": "최초PE고정·제품미작성",
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-23",
+  "entries": {
+    "004b5890": 772,
+    "004fb5d0": 6
+  },
+  "uniqueInputs": 271,
+  "observations": 542,
+  "normalReturns": 506,
+  "separateSehCleanups": 24,
+  "statuses": {
+    "normal": 506,
+    "stop": 32,
+    "fault": 4
+  },
+  "instructions": 375590,
+  "boundaries": {
+    "path": 542,
+    "exists": 540,
+    "open": 346,
+    "read": 14834,
+    "pending": 240,
+    "init": 1806,
+    "metadata": 1792,
+    "close": 340
+  },
+  "precisionDifferences": 0,
+  "gameExecuted": false,
+  "osExecuted": false,
+  "scope": "실제772BYTE부모와필요시실제6BYTESEHcleanup. 파일경로/존재/open/read/close·CRT점검색·pending·Core초기화·메타데이터저장은명시하위이며짧은read와392BYTE초기stack를별도명시입력으로보존한다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+    "tools/decomp_saved_state_read.py": "7c5f3a1f58b40c14892e3b23856c6dba340f953f10ea915824fb991e3163580b",
+    "cpppj/tests/fixtures/saved-state-read-x86.tsv": "f08cdcc2b456c2a835dcd7aca7f8afb0ddace2ed70bdb7be2bdb4008b83b85a2"
+  }
+}

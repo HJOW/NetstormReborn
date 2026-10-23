@@ -15,6 +15,7 @@
 #include "client/EditorFortFileDevices.h"
 #include "o/RawFortSnapshotParent.h"
 #include "o/RawFortCoreWrite.h"
+#include "o/RawFortSpWrite.h"
 #include "o/RawFortMoneySave.h"
 #include "o/RawFortBadgesGlobals.h"
 #include "o/RawFortBadgesSave.h"
@@ -3133,14 +3134,21 @@ void RawCampaignSession::WriteExistingEditorCoreData(std::uint32_t slot) {
     auto& s=*impl_;if (s.services.installMode!=CampaignInstallMode::ExistingEditor || s.loaded || slot>=9) throw std::logic_error("기존Editor CoreWrite의실제설치중/9슬롯계약");
     FortCoreWriteGlobals globals;globals.metamap=[&s] { return s.core.ownerMode.challenge ? 1U : 0U; };globals.missionPost=[&s] { return s.globals.missionPost; };globals.editor=[&s] { return s.globals.editor; };
     globals.players=[&s]()->std::span<std::uint8_t> { return s.players; };globals.playerOwner=[&s] { return s.playerState.battleOwner; }; //현재실제9Player와00540c70을빌리며Template owner와합치지않는다.
-    //005c89b4의실제Client소유자는아직없다.globals.seed를비워선택위치의필수누락을보존하고새스크래치를만들지않는다.
+    if (const auto owner=s.services.randomGlobals) globals.seed=[owner]()->std::uint32_t& { return owner->FortCoreSeed(); }; //같은Client전체DWORD만빌린다.미주입은선택위치의필수누락이며새Session스크래치는없다.
     FortCoreWriteHooks hooks;std::optional<TemplateWriteStream> stream; //한번Create한실제노드/생성수명을부모끝까지보관한다.
     hooks.manager=[&s](auto selected) { if (selected<0 || selected>=9) throw std::out_of_range("기존Editor CoreWrite의현재Template범위");return Read(s.templateStorage->Headers(),static_cast<std::size_t>(selected)*20); };
     hooks.assertion=[](auto reason) { throw std::logic_error("기존Editor CoreWrite의실제Template.cpp진단장치미연결:"+std::to_string(static_cast<std::uint32_t>(reason))); }; //선택된실제행번호를보존하며진단을빈성공으로넘기지않는다.
     hooks.create=[&](auto manager,auto name) { if (manager!=hooks.manager(static_cast<std::int32_t>(slot))) throw std::logic_error("기존Editor CoreWrite의현재manager불일치");stream=s.templateStorage->CreateSection(slot,name);return stream->manager && stream->section ? 1U : 0U; };
     hooks.write=[&](auto token,auto bytes) { if (token!=1 || !stream) throw std::out_of_range("기존Editor CoreWrite의고정stream참조");s.templateStorage->WriteSection(*stream,bytes); }; //같은실제일반MemStream몸체다.
     hooks.prepareRandom=[&s] { static_cast<void>(s.seed.Reseed()); };hooks.nextRandom=[&s](auto limit) { return s.random.Next(limit); }; //기존같은CRT/모드/게임난수이며별도owner를생성하지않는다.
-    //0044fc00현재Core갱신과004be960의88BYTE난수SPwriter는미복원이다.빈refresh/SP성공을추가하지않는다.
+    hooks.sp=[&](auto token,float value) { //Create가반환한같은실제stream만검사하고빌림을동기본문밖으로내보내지않는다.
+        if (token!=1 || !stream || !stream->manager || !stream->section) throw std::out_of_range("기존Editor SP writer의 고정stream 참조");
+        s.templateStorage->AccessSection(*stream,[&s,value](auto fields,const auto& memory) {
+            FortSpWriteHooks sp;sp.nextRandom=[&s](auto limit) { return s.random.Next(limit); };sp.stream=memory; //현재Client공유난수와같은16BYTE/실제버퍼장치다.
+            WriteFortSp(fields,value,sp);
+        });
+    };
+    //0044fc00현재Core갱신은아직미복원이다.hooks.refresh를비워선택도달의필수실패를그대로유지한다.
     o::WriteFortCoreData(static_cast<std::int32_t>(slot),globals,hooks);
 }
 // checkpoint완료와전체Session설치완료를같은flag로합치지않는다.

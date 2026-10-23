@@ -1,4 +1,5 @@
 // 43e640/43ddd0/43ec00을 기존 격자·항목·SHP·글자 및 현재 Session에 조립한다.
+#include "client/ClientColorSortInput.h"
 #include "client/RawProductionControls.h"
 #include "client/ProductionShortcuts.h"
 #include "client/InventoryItemGump.h"
@@ -227,13 +228,13 @@ void RawProductionControls::ParentGone(std::uint32_t token,std::uint32_t parent)
 void RawProductionControls::DeleteScalar(std::uint32_t token,std::uint32_t flags) { if (impl_->hints.contains(token)) impl_->hint->DeleteScalar(token,flags);else if (impl_->Text(token)) impl_->menus.TextBackend().DeleteScalar(token,flags);else impl_->common.lifetime.DeleteScalar(token,flags); } // 같은 자식 우선 소멸이다.
 void RawProductionControls::Release(std::uint32_t token) { auto& s=*impl_;s.grids.erase(token);s.items.erase(token);s.images.erase(token);s.texts.erase(token);s.backgrounds.erase(token);s.hints.erase(token); } // 실제 release만 저장소를 반납한다.
 // 파일 팔레트 변경만 색표를 다시 만들며 일시 번개에는 재계산하지 않는다.
-void RawProductionControls::SetPalette(std::span<const ScreenColor> palette) {
+void RawProductionControls::SetPalette(std::span<const ScreenColor> palette,std::span<const std::uint32_t> colorSortLogical) {
     if (palette.size()!=256) throw std::invalid_argument("생산 팔레트256색 필요");std::array<std::uint32_t,256> logical{};
     // 원본 PALETTEENTRY의 성분 순서를 보존한다.
     for (std::size_t i=0;i<logical.size();++i) logical[i]=std::uint32_t(palette[i].red)|(std::uint32_t(palette[i].green)<<8)|(std::uint32_t(palette[i].blue)<<16)|(std::uint32_t(palette[i].reserved)<<24);
-    auto& s=*impl_;s.colors=BuildProductionColorMaps(logical);s.shades=BuildGumpShadeMaps(logical);const auto paletteColors=BuildPaletteColorTable(logical);s.hintState.white=paletteColors.basic[7];s.hintState.black=paletteColors.basic[0];
+    auto& s=*impl_;s.colors=BuildProductionColorMaps(ColorSortLogicalInput(colorSortLogical,logical));s.shades=BuildGumpShadeMaps(ColorSortLogicalInput(colorSortLogical,logical));const auto paletteColors=BuildPaletteColorTable(logical);s.hintState.white=paletteColors.basic[7];s.hintState.black=paletteColors.basic[0];
     // 전용 HSL 표도 원본에 등록된 다섯 TYPE만 생성한다.
-    for (const auto type:kSpecial) s.ownerColors[type]=BuildSpecialOwnerColorMaps(logical,type);
+    for (const auto type:kSpecial) s.ownerColors[type]=BuildSpecialOwnerColorMaps(ColorSortLogicalInput(colorSortLogical,logical),type);
 }
 // 자동 입력도 실제 항목/내용물 SID/화면 경계를 읽는다.
 std::string RawProductionControls::Report() const {

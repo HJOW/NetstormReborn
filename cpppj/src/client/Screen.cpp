@@ -10,6 +10,7 @@
 #include <algorithm>
 #include <bit>
 #include <stdexcept>
+#include <utility>
 
 #define WIN32_LEAN_AND_MEAN
 #define NOMINMAX
@@ -292,7 +293,7 @@ void Screen::LoadPalette(const GamePalette& palette,o::OriginalEdition edition,s
     ApplyScreenPaletteClear(clear,flags_,paletteLoaded_,devices);
     SetPalette(0, kPaletteSize, nullptr, true);
     colors_=BuildPaletteColorTable(logical_,edition);
-    shadeMaps_=BuildGumpShadeMaps(logical_);
+    shadeMaps_=BuildGumpShadeMaps(colorSortInput_ ? colorSortInput_() : std::span<const std::uint32_t,256>(logical_));
 }
 // 원문004a1fb0은DirectDraw비트0이면명령상자연반환한다.미복원장치를성공으로가장하지않는다.
 void Screen::WaitPaletteVerticalBlank() {
@@ -315,6 +316,8 @@ const std::uint32_t& Screen::PaletteLoaded() const { return paletteLoaded_; }
 const PaletteColorTable& Screen::Colors() const { return colors_; }
 // GUI 어댑터는 마지막 파일에서 만든 표를 참조한다. 원본 paletteDirty 소비 수명은 후속 복원 대상이다.
 const GumpShadeMaps& Screen::ShadeMaps() const { return shadeMaps_; }
+std::span<const std::uint32_t,256> Screen::LogicalPalette() const { return logical_; } //논리팔레트를현재화면RGB사본으로바꾸지않는다.
+void Screen::BindColorSortInput(std::function<std::span<const std::uint32_t,256>()> current) { if (!current) throw std::invalid_argument("Screen 고정ColorSort 입력조회기누락");colorSortInput_=std::move(current); }
 // apply와 무관하게 논리 팔레트가 색 검색의 원본이다.
 std::uint32_t Screen::FindColor(std::int32_t red,std::int32_t green,std::int32_t blue) const {
     return FindPaletteColor(logical_,red,green,blue);

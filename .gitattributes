@@ -1957,3 +1957,36 @@ tools/decomp_kencloud.py -text
 tools/decomp_kencloud_v2.py -text
 tools/decomp_player_core_data.py -text
 tools/decomp_startup_state_check.py -text
+cpppj/colorsort-cache-parent-native.json -text
+cpppj/colorsort-fixed-input-native.json -text
+cpppj/dot-command-register-native.json -text
+cpppj/dot-command-register-v2-native.json -text
+cpppj/dot-command-static-image.json -text whitespace=cr-at-eol
+cpppj/fort-sp-write-native.json -text
+cpppj/player-core-refresh-guard-native.json -text whitespace=cr-at-eol
+cpppj/player-core-refresh-native.json -text whitespace=cr-at-eol
+cpppj/saved-state-read-cleanup-scope.json -text whitespace=cr-at-eol
+cpppj/saved-state-read-native.json -text
+cpppj/state-world-cleanup-native.json -text
+cpppj/tests/fixtures/colorsort-cache-parent-x86.tsv -text whitespace=-blank-at-eol
+cpppj/tests/fixtures/colorsort-fixed-input-x86.tsv -text whitespace=-blank-at-eol
+cpppj/tests/fixtures/dot-command-register-v2-x86.tsv -text whitespace=-blank-at-eol
+cpppj/tests/fixtures/dot-command-register-x86.tsv -text whitespace=-blank-at-eol
+cpppj/tests/fixtures/dot-command-static-image.hex -text whitespace=cr-at-eol
+cpppj/tests/fixtures/fort-sp-write-x86.tsv -text whitespace=-blank-at-eol
+cpppj/tests/fixtures/player-core-refresh-guard-x86.tsv -text whitespace=-blank-at-eol
+cpppj/tests/fixtures/player-core-refresh-x86.tsv -text whitespace=-blank-at-eol
+cpppj/tests/fixtures/saved-state-read-x86.tsv -text whitespace=-blank-at-eol
+cpppj/tests/fixtures/state-world-cleanup-x86.tsv -text whitespace=-blank-at-eol
+tools/audit_dot_command_static_image.py -text
+tools/audit_saved_state_read_cleanup_size.py -text
+tools/decomp_colorsort_cache_parent.py -text
+tools/decomp_colorsort_fixed_input.py -text
+tools/decomp_dot_command_register.py -text
+tools/decomp_dot_command_register_v2.py -text
+tools/decomp_fort_sp_write.py -text
+tools/decomp_player_core_refresh.py -text
+tools/decomp_player_core_refresh_guard.py -text
+tools/decomp_saved_state_read.py -text
+tools/decomp_state_world_cleanup.py -text
+cpppj/src/client/ClientMain.cpp whitespace=cr-at-eol

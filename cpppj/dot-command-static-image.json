@@ -1,0 +1,14 @@
+{
+  "kind": "static-pe-data-no-execution",
+  "address": "00531b30",
+  "bytes": 2568,
+  "count": 1,
+  "firstName": "say",
+  "firstCallback": "0x42f1e0",
+  "firstVisible": "0x531b30",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/audit_dot_command_static_image.py": "25164a21b6de3493e0d5d7d864c4defafb0fc20e61619853b231e18a46d4d587",
+    "cpppj/tests/fixtures/dot-command-static-image.hex": "014d7d120e081dc12c0d74007e81fb8f1afa9d5df4fd5bb328bb4a91bb5c182a"
+  }
+}

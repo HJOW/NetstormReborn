@@ -10,7 +10,11 @@
 #include "client/RawChatChannels.h"
 #include "client/FortTypeConversionStorage.h"
 #include "client/ClientRandomGlobals.h"
+#include "client/ClientColorSortInput.h"
 #include "client/ClientLocalStateGlobals.h"
+#include "client/ClientCoreDataGlobals.h"
+#include "client/ClientChatManagerGlobals.h"
+#include "client/ClientDotCommandGlobals.h"
 #include "client/UberGump.h"
 #include "o/OriginalText.h"
 #include "o/RawFortBadgesGlobals.h"
@@ -165,7 +169,11 @@ Client::Client(ClientOptions options)
       fortBadges_(std::make_shared<o::RawFortBadgesGlobals>()),
       fortTypeConversion_(std::make_shared<FortTypeConversionStorage>()),
       randomGlobals_(std::make_shared<ClientRandomGlobals>()),
+      colorSortInput_(std::make_shared<ClientColorSortInput>()),
       localStateGlobals_(std::make_shared<ClientLocalStateGlobals>()),
+      coreDataGlobals_(std::make_shared<ClientCoreDataGlobals>()),
+      chatManagerGlobals_(std::make_shared<ClientChatManagerGlobals>()),
+      dotCommandGlobals_(std::make_shared<ClientDotCommandGlobals>()),
       chat_(std::make_unique<ChatState>(*this,options_.edition)) {
     files_.RegisterArchive(options_.gameDirectory / "netstorm.tarc");
     configuration_.Registry().environment = Environment;
@@ -264,6 +272,9 @@ int Client::Run() {
     screen_->LoadPalette(GamePalette(files_.Read(palettePath)),options_.edition);
     // [원본] 설치 검사(GameInstalledTest), 전체 시계·zacket·프로토콜 검사·플레이어 초기화 — 옮기지 않았다.
     clock_ = o::GameClock(timeGetTime()); // "init full time"(FUN_00461090)의 시작 시각.
+    //00439537의초기ColorSort입력위치다.이캡처만으로미연결43b430검색/색띠전체를성공시킨것은아니다.
+    colorSortInput_->Capture(screen_->LogicalPalette());
+    screen_->BindColorSortInput([owner=colorSortInput_] { return owner->Logical(); });
     // "init dib section"
     screen_->InitDibSection();
     if (!PumpMessages()) return 0;
@@ -615,6 +626,8 @@ void Client::LoadPaletteFile(std::string_view path,std::uint32_t clear) {
     screen_->LoadPalette(GamePalette(files_.Read(path)),options_.edition,clear);
 }
 // 기존소비자갱신은한군데에서재사용한다.구름캐시생성이나추가표부모자체의성공을대신하지않는다.
+void Client::RebuildColorSortMaps() { static_cast<void>(colorSortInput_->Rebuild(screen_->Colors().basic[1])); }
+//현재명명색과같은초기ColorSort입력은별개로소비자에전달한다.
 void Client::RefreshPaletteConsumers() {
     if (audio_) audio_->SetSceneTints(screen_->Colors().weather);
     if (cursor_ && (screen_->Flags()&ScreenMode::kSoftwareMouse)!=0) cursor_->BuildSoftware(screen_->Palette());
@@ -648,6 +661,7 @@ void Client::ChangeResolution(int width, int height) {
     screenWidth_ = width; screenHeight_ = height;
     screen_ = std::make_unique<Screen>(window_, windowDc_, width, height,&paletteLoaded_);
     screen_->Init(); screen_->InitDibSection();
+    screen_->BindColorSortInput([owner=colorSortInput_] { return owner->Logical(); }); //해상도재생성은초기입력을다시캡처하지않는다.
     screen_->LoadPalette(GamePalette(palette),options_.edition);
     RECT rect{0, 0, width, height};
     AdjustWindowRectEx(&rect, static_cast<DWORD>(GetWindowLongPtrA(static_cast<HWND>(window_), GWL_STYLE)), FALSE, 0);
@@ -854,9 +868,16 @@ const std::shared_ptr<o::RawFortBadgesGlobals>& Client::FortBadges() const { ret
 // 현재 변환표와 원래 할당을 같은 Client 수명으로 전달한다.
 const std::shared_ptr<FortTypeConversionStorage>& Client::FortTypeConversion() const { return fortTypeConversion_; }
 // 새 Session의 fallback을 만드는 대신 같은 Client의 실제 난수 소유자를 빌린다.
+const std::shared_ptr<ClientColorSortInput>& Client::ColorSortInput() const { return colorSortInput_; } //같은Client소유슬롯이다.
 const std::shared_ptr<ClientRandomGlobals>& Client::RandomGlobals() const { return randomGlobals_; }
 // 큰 메뉴/로컬 로그인 분배기가 같은 실제144BYTE 다섯 블록과 기한을 빌린다.
 const std::shared_ptr<ClientLocalStateGlobals>& Client::LocalStateGlobals() const { return localStateGlobals_; }
+//같은 Client의 현재 Core/캐시 소유자를 조회하며 외부 Player 수명을 변경하지 않는다.
+const std::shared_ptr<ClientCoreDataGlobals>& Client::CoreDataGlobals() const { return coreDataGlobals_; }
+//현재 manager와 실제 할당의 한 소유자를 반환하며 공통 초기화 시점을 앞당기지 않는다.
+const std::shared_ptr<ClientChatManagerGlobals>& Client::ChatManagerGlobals() const { return chatManagerGlobals_; }
+//초기 say와 이후 등록을 보존한 같은 표를 반환하며 Session 해제 때 다시 초기화하지 않는다.
+const std::shared_ptr<ClientDotCommandGlobals>& Client::DotCommandGlobals() const { return dotCommandGlobals_; }
 // 파일 시스템.
 const o::BaseFileSystem& Client::Files() const { return files_; }
 // 타입·그림. Run이 "init types"에서 만든 뒤에만 쓴다.

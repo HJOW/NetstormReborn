@@ -1,0 +1,34 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-23",
+  "entry": "0043f660",
+  "cdEntry": "0043ee80",
+  "bodyBytes": 141,
+  "cdExecuted": false,
+  "uniqueInputs": 6,
+  "observations": 12,
+  "instructions": 284,
+  "precisionDifferences": 0,
+  "completions": {
+    "return": 4,
+    "physical-store-stop": 4,
+    "name-copy-stop": 4
+  },
+  "correctionAbsentBeforeObservation": true,
+  "scope": "count64 정상/복사뒤count65의표밖종단store직전부분효과/진입count-1은strncpy실행전표앞인자경계. 실제CRT·OS접근위반은실행하지않음.",
+  "beforeProductSha256": {
+    "cpppj/src/client/RawDotCommandRegister.h": "a2ce02d4e94aa7360c30c857bdbd1764a196e1bf349635bfc7918a90874cafe7",
+    "cpppj/src/client/RawDotCommandRegister.cpp": "a5e12b6b3a3cca88b82e3f9639b1f5cf0a1daa686b28006c8200d074889fc8c5",
+    "cpppj/tests/DotCommandRegisterTests.cpp": "f699e9f459e0d1eb4dd0f172809d6c1a0d12f17c74581715e68f2e942fb90d36"
+  },
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+    "tools/decomp_dot_command_register.py": "94df41e0012685826ab4820d3defe4ed407ffd10c897d196c6f507708cc1bc9d",
+    "tools/decomp_dot_command_register_v2.py": "c4844e14d99f9bcc9ade4237b50a7ba620bacd33ac5e0993d2ea0e4838c19e8d",
+    "cpppj/dot-command-register-native.json": "266380fc841309c1a6d69ccd4311d65cf5b5c152e76285ff8716da3414523c5c",
+    "cpppj/tests/fixtures/dot-command-register-x86.tsv": "e20c7a33500cbf6ae1c6ca94c4a462393cbbc34920c675690e07f67b60bac5ac",
+    "cpppj/tests/fixtures/dot-command-register-v2-x86.tsv": "6f1c66622b9fdd1ece4503e1652466b2131ccb760bdd1a68de336286541ea4eb",
+    "extracted/cpp-dot-command-register-20261024-before-correction/sha256.json": "b1951ba3601eaeb78a318149cc883eb046aaf33037f93b7632af53c1d6f75fb6"
+  }
+}

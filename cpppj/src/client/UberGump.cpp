@@ -34,6 +34,7 @@
 #include "client/GameWorld.h"
 #include "client/RawCampaignCursor.h"
 #include "client/RawCampaignCursorDisplay.h"
+#include "client/ClientColorSortInput.h"
 #include "client/CampaignCursorClientEffects.h"
 #include "client/UserInput.h"
 #include "client/WindowTitle.h"
@@ -590,7 +591,7 @@ void UberGump::LoadMissionWorld(std::optional<std::string> requestedFort) {
     // 브리핑으로 게임 시계가 멈추기 전에도 첫 카메라/표시 영역이 음악·효과음에 전달되게 한다.
     world_->Resize(client_.GetScreen().Width(),client_.GetScreen().Height());
     // 직전 미션의 날씨 팔레트가 유지된 재진입도 현재 화면 색을 사용한다.
-    world_->SetPalette(client_.GetScreen().Palette());
+    world_->SetPalette(client_.GetScreen().Palette(),client_.ColorSortInput()->Logical());
     // 같은 단일 커서에 현재 장치/트리·비용 표시·선택 해제·실제 로그인 전송을 공급한다.
     auto cursorEffects=MakeCampaignCursorClientEffects(client_,*rawButtons_);
     cursorEffects.send=[session=&world_->Session()](std::uint32_t target,std::span<const std::uint8_t> packet) { session->SendLocalPacket(std::bit_cast<std::int32_t>(target),packet); };
@@ -1000,9 +1001,9 @@ void UberGump::Frame() {
 void UberGump::Refresh() { rebuild_=true;client_.GetRenderer().InvalidateAll(); }
 // 새 RGB를 월드에 공급한 뒤 UI의 장식·글자·선택 색도 다시 합성한다.
 void UberGump::PaletteChanged() {
-    if (world_) world_->SetPalette(client_.GetScreen().Palette());
+    if (world_) world_->SetPalette(client_.GetScreen().Palette(),client_.ColorSortInput()->Logical());
     rawButtons_->SetPalette(ButtonColors(client_.GetScreen().Colors()));
-    if (rawButtons_->Production()) rawButtons_->Production()->SetPalette(client_.GetScreen().Palette());
+    if (rawButtons_->Production()) rawButtons_->Production()->SetPalette(client_.GetScreen().Palette(),client_.ColorSortInput()->Logical());
     if (rawButtons_->Minimap()) rawButtons_->Minimap()->SetPalette(client_.GetScreen().Colors());
     Refresh();
 }
@@ -1213,7 +1214,7 @@ void UberGump::Compose() {
                 [this](std::string_view key) { return FontBytes(client_.Translate(o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(key.data()),key.size()}))); },
                 [this](const InventoryItemNode& item,ScreenPoint point,const std::function<bool(o::Sid)>& affordable) { if (!world_ || !objectMenus_) throw std::logic_error("생산 정보의 현재 월드 없음");return objectMenus_->OpenProduction(*world_,item,point,affordable); }});
             auto& production=*rawButtons_->Production(); // 같은 미션의 안내/복귀는 예산/등록ID를 재생성하지 않는다.
-            production.Resize(height);production.SetPalette(client_.GetScreen().Palette());
+            production.Resize(height);production.SetPalette(client_.GetScreen().Palette(),client_.ColorSortInput()->Logical());
             if (!rawButtons_->Minimap()) rawButtons_->EnableMinimap(world_->Session(),RawMinimapHooks{
                 [this] { return world_->MinimapView(); },[this](auto x,auto y) { world_->CenterCamera(x,y); },
                 [this](auto x,auto y) { world_->MoveFromMinimap(x,y); },[this] { return world_->InputMode(); },[this] { return client_.Poll(0xffff); }});

@@ -1,0 +1,35 @@
+{
+  "status": "제품 전 최초 Native 고정",
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-23",
+  "entries": {
+    "0043c4e0": 1163,
+    "0043c96b": 256,
+    "004f9c20": 8,
+    "004f9c28": 11
+  },
+  "uniqueInputs": 65,
+  "observations": 130,
+  "completions": {
+    "prefix": 8,
+    "return": 76,
+    "stop": 26,
+    "unable": 10,
+    "other": 10
+  },
+  "instructions": 4753814,
+  "separateCleanupCalls": 36,
+  "externalTypedDispatches": 6,
+  "msvcrtTypedDispatchExecuted": false,
+  "gameExecuted": false,
+  "guiExecuted": false,
+  "scope": "부모/prefix/독립catch/실제cleanup 명령만. EX_UNABLE_TO_OPEN_FILE 형은 PE EH 메타데이터로 분류하며 typed dispatch는 명시 외부 장치다. Path/TYPE표등록/43c010계산/File24BYTE 생성·읽기·쓰기·close는 명시 하위 입력이다. 미완성 ctor의 outer close 생략, 일반 오류 전파, 부분 read/write와 cleanup 순서를 보존한다. 이중예외는 미관측이다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+    "tools/decomp_colorsort_cache_parent.py": "30453e23e413edbfe3bf88ba577e94e3044bbdaec8904e8e16bfab46f139d438",
+    "cpppj/tests/fixtures/colorsort-cache-parent-x86.tsv": "6c798d40024bd57c7b0c07712238938b193c6aea5efc885d9c89ae99415bc3e6"
+  }
+}
