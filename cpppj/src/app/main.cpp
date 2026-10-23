@@ -6,6 +6,7 @@
 #include <exception>
 #include <filesystem>
 #include <fstream>
+#include <iomanip>
 #include <sstream>
 #include <map>
 #include <regex>
@@ -625,9 +626,9 @@ int RunClient(std::vector<std::string> arguments) {
         // UI 검사 마우스는 같은 좌표를 쓴다. 가운데 폴링이 실제 바탕 화면 위치로 커서를 덮지 않게 한다.
         client.inspectPoll=[&](std::uint32_t code) -> std::optional<netstorm::client::InputEvent> {
             using namespace netstorm::client;
-            if (!scriptPointer || (code!=InputCode::kLeftButton && code!=InputCode::kRightButton && code!=InputCode::kMiddleButton && code!=0xffff)) return std::nullopt; // 원본 미니맵의ffff 좌표 폴링도 동일한 실제 자동 입력점을 읽는다.
+            if (!scriptPointer || (code!=InputCode::kLeftButton && code!=InputCode::kRightButton && code!=InputCode::kMiddleButton && code!=0xffff && code!=(0x12U<<InputCode::kVirtualKeyShift) && code!=(0x11U<<InputCode::kVirtualKeyShift))) return std::nullopt; // 원본 미니맵의ffff 좌표 폴링도 동일한 실제 자동 입력점을 읽는다.
             auto event=*scriptPointer;event.code=(event.code&(InputCode::kOutside|InputCode::kRelease))|code;
-            if (code!=InputCode::kLeftButton) event.code|=InputCode::kRelease;return event;
+            if (code!=(scriptPointer->code&0x00ffffffU)) event.code|=InputCode::kRelease;return event;
         };
         client.beforeInput = [&](netstorm::client::Client& c) {
             // 이번 프레임의 입력만 실제 InputQueue에 넣는다.
@@ -648,7 +649,7 @@ int RunClient(std::vector<std::string> arguments) {
                     }
                     if (!allowed) continue;
                     const auto operation=step.argument.substr(first+2,second-first-2),argument=step.argument.substr(second+2); // 원래 입력 큐가 소비할 같은 동작/인자다.
-                    if (operation!="click" && operation!="click-if" && operation!="up-if" && operation!="down" && operation!="up" && operation!="right" && operation!="outside" && operation!="esc" && operation!="key" && operation!="keyup") throw std::invalid_argument("UI when supports input operations only");
+                    if (operation!="click" && operation!="click-if" && operation!="up-if" && operation!="down" && operation!="up" && operation!="right" && operation!="outside" && operation!="pointer" && operation!="esc" && operation!="key" && operation!="keyup") throw std::invalid_argument("UI when supports input operations only");
                     step.operation=operation;step.argument=argument;
                 }
                 if (step.operation == "snapshot" || step.operation == "report" || step.operation=="refresh") continue;
@@ -691,6 +692,13 @@ int RunClient(std::vector<std::string> arguments) {
                     const std::map<std::string,unsigned> keys{{"left",0x25},{"up",0x26},{"right",0x27},{"down",0x28},{"home",0x73},{"priest",0x74}};
                     const auto found=keys.find(step.argument); if (found==keys.end()) throw std::invalid_argument("Unknown UI key: "+step.argument);
                     c.Input().Push((found->second<<InputCode::kVirtualKeyShift)|(step.operation=="keyup" ? InputCode::kRelease : 0),0,0); continue;
+                }
+                if (step.operation=="pointer") {
+                    // 검사 폴링의 원본 code,x,y만 바꾼다. 큐에 사건을 넣지 않아 재진입 합성 release의 실제 소비를 따로 관측할 수 있다.
+                    std::istringstream fields(step.argument);std::uint32_t pointerCode{};std::int32_t pointerX{},pointerY{};char firstComma{},secondComma{};
+                    if (!(fields>>std::setbase(0)>>pointerCode>>firstComma>>pointerX>>secondComma>>pointerY) || firstComma!=',' || secondComma!=',' || (fields>>std::ws && !fields.eof()))
+                        throw std::invalid_argument("UI pointer requires code,x,y");
+                    scriptPointer=InputEvent{pointerCode,pointerX,pointerY};continue;
                 }
                 const bool optional=step.operation=="click-if" || step.operation=="up-if"; // 검사 전용: 현재 화면에 조작부가 없으면 사용자 클릭을 보내지 않는다.
                 const std::string_view operation=step.operation=="click-if" ? "click" : step.operation=="up-if" ? "up" : std::string_view(step.operation); // 기존 입력 주입 순서는 그대로 보존한다.

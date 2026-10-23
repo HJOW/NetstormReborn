@@ -356,15 +356,17 @@ int Client::Run() {
             SendMessageA(window, WM_CLOSE, 0, 0);
             continue;
         }
-        // 10. 갱신 목록. 지금은 프로세스 커널만 돈다(FUN_00471a30). 나머지는 옮기지 않았다.
-        // 원본 00439ad3 → 00441de0: 설정 변경이 있으면 커널 갱신보다 먼저 저장한다.
-        if (configuration_.Configuration().changed) SaveOptions();
-        // 갱신 목록의 배경 음악 전환(FUN_00469f60)은 프로세스 커널(FUN_00471a30)보다 앞이다. 프레임 갱신 정지는 영상 창일 때뿐이라 게임 시계 정지와 무관하다.
-        if (audio_) audio_->SceneFrame();
-        if (menu_) menu_->RefreshMinimap(); //00481320은게임시계정지와무관하며실제Kernel앞에서같은dirty를소비한다.
-        if (menu_) menu_->CleanupDialogs(); // 원본4662b0의 지연 부모 소멸은 설정 저장 뒤·같은Kernel앞에서 OnExit를 예약한다.
-        kernel_.RunFrame();
-        if (menu_) menu_->Frame();
+        // 10. 원본439abe는54dc58의 양수만 검사한다. 현재 Moviegump 소유자는 미연결이므로 실제 BSS0 정상 가지이며 게임 Pause를 대신 읽지 않는다.
+        if (movieUpdatePauseDepth_<=0) {
+            // 원본439ad3의 설정 저장은439b13의 가상 소멸/OnExit 예약보다 먼저다.
+            if (configuration_.Configuration().changed) SaveOptions();
+            if (audio_) audio_->SceneFrame(); //469f60은 미니맵/Gump/Kernel보다 앞이다.
+            if (menu_) menu_->RefreshMinimap(); //481320은 게임 시계 정지와 무관하다.
+            if (menu_) menu_->CleanupGumps(); //439b13→4662b0: 이 단계가 예약한 입력은 다음 Input에서만 소비한다.
+            if (menu_) menu_->IdleGumps(); //439b18→464170: 정리 뒤·Kernel 앞의 같은 표 한 번이다.
+            kernel_.RunFrame();
+        } else if (menu_) menu_->IdleGumps(); //439b69: 영상 갱신 잠금 중에도 Idle만 계속 실행한다.
+        if (menu_) menu_->Frame(); // 합성/그리기 경계는 양쪽 가지 모두 유지하며 State Tick과 합치지 않는다.
         // 11. 프레임 제한 + 그리기.
         Frame();
         if (afterFrame) afterFrame(*this);

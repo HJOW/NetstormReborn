@@ -45,6 +45,12 @@ struct RawButtonInputResult {
     std::uint32_t consumed{}; // 실제00466200의 성공 Gump 토큰이며 단순 화면 hit와 다르다.
     std::optional<int> activated; // 현재 루트의 돌 버튼 부모 click이 확정한 화면 명령이다.
 };
+// 입력 폴링 통지의 raw Overlay 반환과 부모 click 활성화 및 표시 변경을 각각 보존한다.
+struct RawButtonPointerResult {
+    std::optional<std::uint32_t> overlay; // 미호출은 빈 값이며 실제 반환0과 구별한다. 성공 값은 Gump 토큰으로 바꾸지 않는다.
+    std::optional<int> activated; // 현재 통지 콜백이 실제 부모 click으로 확정한 화면 명령이다.
+    bool changed{}; // 이 단계가 소비한 현재 표시 변경 요청이다.
+};
 // 안정된 파생 저장소와 실제 원본 UI 처리기를 소유한다. 메뉴 행은 기존 메뉴 어댑터가 처리한다.
 class RawButtonControls {
 public:
@@ -64,7 +70,14 @@ public:
     std::uint32_t SerialGump(std::uint32_t serial) const; //00464020: 등록1..999에서 같은serial·비dead의 첫 대상이다.
     void KillGump(std::uint32_t token); // 같은 실제 수명으로 Kill만 하고 callback 밖 프레임 Cleanup을 유지한다.
 
-    // 원본 등록표 Broadcast/Idle에 현재 폴링 좌표를 전달하고 누름 그림 변경 여부를 반환한다.
+    // 004d68c2/004d69f4: 안쪽 포인터의 조건부 Overlay 뒤 raw code/x/y Broadcast만 실행한다. 일반 큐 드레인보다 앞에서 한 번 부른다.
+    // cursorActive는445330의 참/거짓이고 mode는005cae90이다. allowOverlay는 아직 공통 부모가 아닌 논리 HTML의 명시 호스트 차단 경계다.
+    RawButtonPointerResult NotifyPointer(InputEvent event,std::uint32_t mode,bool cursorActive,bool allowOverlay=true);
+    // 00439b13: 같은 공통 kill 큐의 실제 소멸만 실행하며 GameClock 정지를 검사하지 않는다.
+    bool CleanupGumps();
+    // 00439b18/00439b69: 같은 현재 idle 표를 한 번 순회한다. Broadcast/정리/활성화 초기화를 섞지 않는다.
+    bool IdleGumps();
+    // 기존 독립 검사 호환용 Broadcast(0)/밖 release/Idle 결합이다. 실제 Client는 위 세 단계를 각각 사용한다.
     bool Poll(InputEvent event);
     // 화면 전환/포커스 상실 때 실제 캡처 처리기에 화면 밖 release를 전달한다.
     void Cancel();

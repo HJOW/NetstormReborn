@@ -26,7 +26,11 @@ public:
     void PauseStatus(bool enabled);
     // 원본 Show의 enabled=false로 같은 종류/플레이어/매개변수 메시지를 지연 삭제한다.
     void Remove(std::int32_t kind,std::int32_t player,std::int32_t parameter);
-    // 원본 idle 시간 판정과 실제 지연 삭제를 처리하고 표시 변화 여부를 반환한다.
+    // 정상 Client의 Cleanup 단계에서 현재 지연 삭제만 실행한다. 다른 HUD와의 단일 전역 큐 통합은 후속 경계다.
+    bool CleanupGumps();
+    // 정상 Client의 Idle 단계에서 벽시계 만료/Kill만 실행한다. 같은 호출에서 실제 소멸시키지 않는다.
+    bool IdleGumps();
+    // 독립 기존 검사 호환용 Idle→Cleanup 결합이다. 실제 Client는 위 두 단계만 사용한다.
     bool Idle();
     // TextGump의 실제 기준선/클립/StyleText 출력 순서를 Renderer에 제출한다.
     std::vector<RenderText> Text() const;

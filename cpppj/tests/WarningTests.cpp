@@ -4,6 +4,7 @@
 #include "client/MessageBoard.h"
 #include "client/WarningMessages.h"
 #include "client/DialogScript.h"
+#include "o/GameClock.h"
 #include <cmath>
 #include <limits>
 using namespace netstorm::client;
@@ -112,6 +113,32 @@ TEST_CASE(Warnings_PauseSharesBoardAndPermanentText) {
     now=100;CHECK(messages.Idle());const auto paused=messages.Text();CHECK(paused.size()==1 && paused[0].bytes=="Game Paused!");
     messages.PauseStatus(false);CHECK(messages.Text().empty());CHECK(messages.Idle());
     messages.PauseStatus(true);CHECK(messages.Text().size()==1 && names==2 && sounds==1);
+}
+// 실제 게임 시계가 멈춰도 Cleanup→Idle의 벽시계 만료는 실행되고 영구 Pause 안내는 남는다.
+TEST_CASE(Warnings_SeparatedFrameStagesExpireWhileGameClockIsPaused) {
+    const auto& assets=netstorm::test::dudespawn::Assets(netstorm::o::OriginalEdition::Patch1078);FontStore fonts(assets.files,"Arial");const auto palette=WarningPalette(assets.game);
+    netstorm::o::GameClock clock;std::uint32_t milliseconds=100;std::size_t reads{},sounds{};MessageGumpHooks context; // 게임 시간과 Warning의 실제 벽시계 공급을 구별한다.
+    context.challenge=[] { return 0U; };context.playerName=[](auto) {};context.translate=[](auto text) { return std::string(text); };
+    WarningMessages messages(fonts,palette,[&] { ++reads;return clock.WallSeconds(milliseconds); },[&] { ++sounds; },std::move(context));messages.SetView(640,480,palette);
+    messages.PauseStatus(true);messages.Add("~E~yTimed warning");CHECK(messages.Text().size()==2 && sounds==1);const auto initialReads=reads;
+    clock.Pause(milliseconds);milliseconds=10100;CHECK(clock.IsPaused() && clock.GameSeconds(milliseconds)==0.1);
+    messages.CleanupGumps();CHECK(reads==initialReads && messages.Text().size()==2); // 만료 시각이어도 Cleanup 자체는 시계를 조회하거나 Idle하지 않는다.
+    CHECK(messages.IdleGumps());const auto permanent=messages.Text();CHECK(reads==initialReads+1 && clock.IsPaused());
+    CHECK(permanent.size()==1 && permanent[0].bytes=="Game Paused!"); // 같은 board의 영구 기한0은 실제 Warning 만료와 다르다.
+    CHECK(!messages.IdleGumps() && reads==initialReads+1); // Kill된 Warning은 다음 Cleanup 전에도 idle 표에서 제외된다.
+    messages.CleanupGumps();CHECK(reads==initialReads+1 && messages.Text().size()==1);
+    messages.PauseStatus(false);CHECK(messages.Text().empty());messages.CleanupGumps();CHECK(clock.IsPaused() && reads==initialReads+1);
+}
+// Idle에서 죽은 실제 메시지의 stale serial 칸은 다음 Cleanup 전에도 새 표시가 재사용한다.
+TEST_CASE(Warnings_SeparatedIdleReusesBoardSlotBeforeFollowingCleanup) {
+    const auto& assets=netstorm::test::dudespawn::Assets(netstorm::o::OriginalEdition::Patch1078);FontStore fonts(assets.files,"Arial");const auto palette=WarningPalette(assets.game);
+    double now=0.1;std::size_t reads{},sounds{};WarningMessages messages(fonts,palette,[&] { ++reads;return now; },[&] { ++sounds; });messages.SetView(640,480,palette); // 같은 실제 노드/StyleText/20칸 표를 사용한다.
+    messages.Add("~E~yFirst row");messages.CleanupGumps();CHECK(messages.Text().size()==1 && reads==1);
+    now=10.1;messages.CleanupGumps();CHECK(messages.Text().size()==1 && reads==1);CHECK(messages.IdleGumps());CHECK(messages.Text().empty() && reads==2);
+    messages.Add("~E~yReused row");const auto replacement=messages.Text();CHECK(replacement.size()==1 && replacement[0].bytes=="Reused row" && replacement[0].y==0);CHECK(reads==3 && sounds==2);
+    messages.CleanupGumps();const auto afterCleanup=messages.Text();CHECK(reads==3 && afterCleanup.size()==1 && afterCleanup[0].bytes=="Reused row" && afterCleanup[0].y==0); // 이전 dead 노드의 반납이 새 노드의 소유 조각을 해제하면 안 된다.
+    CHECK(!messages.IdleGumps() && reads==4 && messages.Text().size()==1);now=100;CHECK(messages.IdleGumps() && reads==5 && messages.Text().empty());messages.CleanupGumps();
+    // Warning 공개 Text/Report는 dead를 제외한다. 실제 반납 전 주소/등록 칸 잔존은 RawButtonCursorBoundary의 공통 실제 수명 검사에서 확인한다.
 }
 // TextGump 내부 클립을 Renderer가 실제 글자·그림자 픽셀에도 적용한다.
 TEST_CASE(Warnings_RendererTextClip) {

@@ -863,16 +863,25 @@ void UberGump::Event(InputEvent event) {
 // 네이티브 입력 큐의 버튼 사건과 폴링 좌표를 같은 Gump 판정기에 전달한다.
 bool UberGump::Input() {
     // 사건 순서를 유지한다. 첫 상태 전환만 다음 프레임에 예약된다.
-    const auto mouse=client_.Poll(InputCode::kLeftButton); // 원본처럼 큐 처리 전에 현재 마우스 위치를 갱신한다.
-    if (userInput_ && state_.phase==ClientPhase::Mission && popup_.empty()) userInput_->UpdateCursor(mouse);
-    while (!client_.Input().Empty()) Event(client_.Input().Pop(false));
-    if (warnings_->Idle()) rebuild_=true;
-
-    if (!client_.Paused()) rawButtons_->Menus()->CleanupFrame(); // 원본의 비정지 갱신은 삭제 정리 뒤 같은 idle 표를 실행한다.
-    if (rawButtons_->Poll(mouse)) rebuild_=true;
-    if (input_.Move({mouse.x, mouse.y}, (mouse.code & InputCode::kOutside) == 0)) rebuild_ = true;
+    const auto mouse=PrepareGumpPointerBoundary(pointerBoundary_,static_cast<std::uint32_t>(client_.LanguageNumber()),
+        [this](auto code) { return client_.Poll(code); },client_.Input()); // Alt/언어3 Ctrl·재진입 release를 같은 원본40칸 큐에 연결한다.
+    if (missionRuntime_ && missionRuntime_->tutorial) static_cast<void>(missionRuntime_->tutorial->Event(mouse)); //4d65a7의Guide 폴링 통지는 반환을 검사하지 않는다. 일반 큐 Event의 소비 관문은 별개다.
+    // 현재 카메라 폴링 어댑터는 원본처럼 Overlay/일반 큐보다 앞에서 실행한다. Tick 내부 UpdateCursor와 기존 직접 호출을 중복하지 않는다.
     if (userInput_ && state_.phase==ClientPhase::Mission && popup_.empty()) userInput_->Tick();
     else if (userInput_) userInput_->Cancel();
+    const auto mode=world_ ? world_->InputMode() : 0U; //005cae90의 현재 강조 모드이며 페이지 phase로 대체하지 않는다.
+    const bool cursorActive=world_ && world_->Session().CursorDropSettings().lockDepth==0; //445330은5325c8==0이며 Session의 같은 깊이를 읽는다.
+    const bool logicalModal=state_.phase==ClientPhase::Dialog || state_.phase==ClientPhase::Briefing || !popup_.empty(); // 아직 공통 modal 부모가 아닌 기존 HTML/임시 팝업 뒤의 overlay만 막는 호스트 경계다.
+    const auto pointer=rawButtons_->NotifyPointer(mouse,mode,cursorActive,!logicalModal); // 원본4d69f4는 일반 큐 Pop보다 앞이다.
+    if (pointer.overlay && *pointer.overlay==0) client_.GetCursor().Set(1); // 실제466150 반환0의4d68cc→4d69d3 fallback이며 미호출과 구별한다.
+    if (pointer.changed) rebuild_=true;
+    if (pointer.activated) {
+        if (*pointer.activated<0 || static_cast<std::size_t>(*pointer.activated)>=actions_.size()) throw std::logic_error("현재 포인터 부모 click 명령 범위 오류");
+        if (state_.phase==ClientPhase::MainMenu && popup_.empty()) client_.ClearFullScreenState();
+        state_.Post(actions_[static_cast<std::size_t>(*pointer.activated)]);rebuild_=true;
+    }
+    while (!client_.Input().Empty()) Event(client_.Input().Pop(false));
+    if (input_.Move({mouse.x, mouse.y}, (mouse.code & InputCode::kOutside) == 0)) rebuild_ = true;
     if (world_ && world_->TakeChanged()) rebuild_=true;
     if (rebuild_) Compose();
     return quit_;
@@ -895,6 +904,17 @@ void UberGump::MissionFrame() {
 void UberGump::RefreshMinimap() { if (rawButtons_->Minimap() && rawButtons_->Minimap()->Refresh()) rebuild_=true; }
 // Client 정상 갱신의 원본4662b0 위치에서만 논리 페이지의 지연 소멸을 실행한다.
 void UberGump::CleanupDialogs() { DisposeRetiredPages(); }
+// 단일 전역 큐를 아직 공유하지 않는 Warning/논리 HTML은 명시 순서 어댑터다. raw 부모의 실제 정리는 같은 공통 큐 한 번뿐이다.
+void UberGump::CleanupGumps() {
+    if (rawButtons_->CleanupGumps()) rebuild_=true;
+    if (warnings_->CleanupGumps()) rebuild_=true;
+    CleanupDialogs();
+}
+// 원본 일반/영상잠금 양쪽 가지에서 같은 idle을 한 번 실행하고 표시 변화는 뒤쪽 Frame 합성으로 넘긴다.
+void UberGump::IdleGumps() {
+    if (rawButtons_->IdleGumps()) rebuild_=true;
+    if (warnings_->IdleGumps()) rebuild_=true;
+}
 // 커널의 이동·날씨와 비동기 Tell을 같은 프레임에 반영한다. 페이지가 같으면 입력 영역/누름 상태를 유지한다.
 void UberGump::Frame() {
     if (world_ && world_->TakeChanged()) rebuild_=true;

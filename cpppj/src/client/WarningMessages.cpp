@@ -150,9 +150,13 @@ void WarningMessages::Add(std::string_view styledText) { impl_->board->Show(17,0
 void WarningMessages::PauseStatus(bool enabled) { impl_->board->Show(11,0,enabled,0,""); }
 // 새 메시지를 만들지 않고 기존 MessageBoard의 실제 검색·Kill 경로를 사용한다.
 void WarningMessages::Remove(std::int32_t kind,std::int32_t player,std::int32_t parameter) { impl_->board->Show(kind,player,false,parameter,""); }
-// 원본 idle 순회에서 만료 노드를 Kill하고 지연 큐를 정리한다.
+// 정상 프레임의 삭제 정리는 Idle보다 먼저 호출한다. 현재 별도 Warning 저장소의 순서 어댑터다.
+bool WarningMessages::CleanupGumps() { impl_->lifetime->Cleanup();return std::exchange(impl_->changed,false); }
+// 만료한 Warning은 Kill만 한다. 다음 정상 Cleanup의 실제 반납까지 dead 저장소를 보존한다.
+bool WarningMessages::IdleGumps() { impl_->frame->Idle();return std::exchange(impl_->changed,false); }
+// 기존 독립 검사에서 사용한 결합 순서는 유지하되 실제 Client는 이를 호출하지 않는다.
 bool WarningMessages::Idle() {
-    const bool prior=std::exchange(impl_->changed,false);impl_->frame->Idle();impl_->lifetime->Cleanup();return std::exchange(impl_->changed,false)||prior;
+    const bool changed=IdleGumps();return CleanupGumps() || changed;
 }
 // 같은 TextGump 소유 체인의 실제 Draw가 Renderer에 줄 글자를 만든다.
 std::vector<RenderText> WarningMessages::Text() const {

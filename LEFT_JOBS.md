@@ -1,5 +1,18 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-23 단위371 완료: Gump 입력 통지·지연 정리·Idle 순서
+
+- [x] 단위370을 **5391fc2e / 20261023-38 CP**로 커밋했다. AGENTS·공통/닷넷 인수인계를 재확인했으며 현재/마지막 전체 정밀 디컴파일 PC는 **VM-W11-Codex / 2026-10-23**으로 일치한다. 새 전체 디컴파일/보호 원문 변경은 없다.
+- [x] 실제 Client를 원본 입력 준비→Guide폴링(반환무시)→카메라/커서→Overlay/Broadcast→일반큐, 설정저장→Scene/미니맵→Cleanup→Idle→Kernel 순서로 연결했다. GameClock Pause로 UI갱신을 막지 않으며 MovieUpdatePause0054dc58의 별도 BSS0/미복원소유 경계를 유지했다. [실행 상세](docs/exe/cpp-gump-frame-runtime-20261023.md).
+- [x] GumpPointerBoundary의 Alt/언어3 Ctrl·초기wasInside1·밖버튼기록/재진입좌우 raw release를 같은40칸 큐에 연결했다. 독립 원문3878입력/두정밀도7756회/549668명령 차이0이다. 밖통지skip은capture를임의취소하지않으며실제재진입GUI에서capture28→0을확인했다. 새CLI pointer는폴링만바꾸고release를주입하지않는다.
+- [x] 최종 Release 빌드3 종료0/경고·오류0, 관련8필터 **56검사·실패check0**, 전체 CTest1 **2416검사·실패check0·종료0/215.06초**(전체215.70초)이며 LastTest 내부2416/0도 확인했다. 새Fancy검사장치의중복Attach/미완료끝줄·ShowSp clamp 기대오류를검사에서바로잡았다. fixture와제품은이오류를숨기기위해바꾸지않았다. 최종검증뒤제품·검사C++변경없음이다.
+- [x] 실제GUI는1024메뉴core/1280확장·Pause중메뉴/영구문구·미니맵1280드래그/뗌/이탈·생산6슬롯/QWASZX/회전/배치/재공급·해상도No계속실행/Yes정상종료와복원전800×600저장을모두통과했다. 전체originals해시와허용설정복원을확인했다.
+- [x] 엄격UTF-8·새한국어주석·PythonAST·공백·보호경로·SHA를확인하고 **20261023-39 CP**로 로컬커밋한다. 원격push와다른프로젝트/AGENTS/기존원본·CD변경없음이다.
+- [ ] **사용자 추가 우선 요청 — 단위372 로딩화면:** 원본/클론을각각별도전체사본으로실행한baseline은 `extracted/cpp-loading-20261023-gui1`이다. 원본의지도147은328×464/중앙348,152·152192픽셀RGB1.0과우하단두줄을관측했고전체원본해시는동일하다. 클론은loading분류실패이며앞두비로딩프레임보존만으로원인을단정하지않는다. 새도구에전체unique메타/후반프레임관측을보강하여 실제표시도달·리소스/WM_PAINT/ShowScene을확인한다. 초기GDI그리기는기존Client에있으며임의최소대기/미션Loading전부에지도덮기를하지않는다.
+- [ ] **미등록 준비:** HUD6모듈의독립Release13CPP/링크경고·오류0·8검사/원문7482행통과는 `extracted/cpp-hud-components-20261023-isolated/verification-final.json`에있다. getter46ee50의객체별실제포인터로새도구/미등록fixture를교정했으며기존/신규SHA·차이를보존했다. TextEntryGump/Chat 문서의과거해시·명령수·미빌드표기갱신과CMake/실제dock연결은후속이다. 미니맵blit자료도미적용으로보존한다.
+- [ ] **미션로딩 후속:** 새 MissionLoadingMessage의6파일/fixture1540입력·두정밀도3080회/1638460명령은미등록·미빌드다. cf570의LF/Cancel·serial갱신/metadata제자리삭제→body와400/30요청을복원했으며현재StartingMission중앙문구와같지않다. 초기지도·title스플래시·미션HTML을구별한다.
+- [ ] 전체HUD/viewport(left85)/Chat·PlayerList/Editor Session·나머지메뉴·모든캠페인과Early Missions/데모3 사용자완주·원본전체동일성·배포목표는계속활성이다. 이번단위완료를전체목표완료로해석하지않는다.
+
 ## 2026-10-23 단위370 완료: 대화 OnExit와 실제 종료 수명
 
 - [x] 단위369를 **5adcf532 / 20261023-37 CP**로 커밋했다. AGENTS·공통/닷넷 인수인계/보호경로를 재확인했으며 현재/마지막 전체 정밀 디컴파일 PC는 **VM-W11-Codex / 2026-10-23**이다. 새 전체 디컴파일/보호 원문 변경은 없다.
@@ -8,7 +21,7 @@
 - [x] 빌드1의 새검사 legacy따옴표 기대3과 미등록DialogScript필터요청1을 바로잡았다. 최종 Release 빌드2 종료0/경고·오류0, 관련39검사 실패check0, 전체 CTest1 **2408검사·실패check0·종료0/189.91초**이며 LastTest 내부2408/0도 확인했다. 이후 제품·검사 C++ 변경은 없다.
 - [x] 실제 GUI2는 probe/No/Yes 모두종료0/시간제한미도달/전체originals해시동일이다. No는800프레임뒤1024×768/미션/비정지를 유지했고, Yes는정상조기종료·금지800report/캡처미도달 및복원전실제암호화options.cfg의800×600저장을 확인했다. GUI1의조기Quit오디오보고서기대실패는 제품변경없이도구에서미관측으로명시하고재실행했다. 다른설정값은기록하지않고허용설정은복원했다.
 - [x] 엄격UTF-8·새한국어주석·PythonAST·공백·보호경로·SHA를 확인하여 **20261023-38 CP**로 로컬 커밋한다. AGENTS·기존원본/CD·다른프로젝트 변경/원격push는 없다.
-- [ ] **단위371 다음:** [Gump프레임순서감사](docs/exe/cpp-gump-frame-order-20261023.md)에 따라 입력전Broadcast/Overlay,설정저장뒤Cleanup/Idle를 분리한다. 현재Poll은Broadcast+Idle을입력뒤에묶고!GameClockPaused를MovieUpdatePause대신쓰며Overlay실제호출도없다. MovieUpdatePause54dc58은GameClock55b4b0와별개다. Agent의제안patch `extracted/cpp-gump-frame-order-20261023-proposed.patch`가작성중이므로완료결과를확인한뒤검토/적용한다. 기존카메라Tick근사/논리HTML차단/별도Warning표 경계를 유지한다.
+- [x] **단위371에서 실제 연결·검증 완료. 아래는 단위370 당시의 후속 기록이다:** [Gump프레임순서감사](docs/exe/cpp-gump-frame-order-20261023.md)에 따라 입력전Broadcast/Overlay,설정저장뒤Cleanup/Idle를 분리한다. 현재Poll은Broadcast+Idle을입력뒤에묶고!GameClockPaused를MovieUpdatePause대신쓰며Overlay실제호출도없다. MovieUpdatePause54dc58은GameClock55b4b0와별개다. Agent의제안patch `extracted/cpp-gump-frame-order-20261023-proposed.patch`가작성중이므로완료결과를확인한뒤검토/적용한다. 기존카메라Tick근사/논리HTML차단/별도Warning표 경계를 유지한다.
 - [ ] **미등록HUD자료:** HudChatGeometry/HudNsInfo Attach/TextEntryBuffer/TextEntryGump/ChatWindow/HudNsInfoCreate의새제품/검사/fixture/문서를보존한다. 독립MSVC컴파일/검사는 `extracted/cpp-hud-components-20261023-isolated/`에서agent가진행중이므로오류수정/동결보고를확인한다. NSInfo의정확한위상은직계background1+그아래13필수노드이며Player8*4/Battle3를합쳐최소50이다. ChatWindow최종관측90입력/180행,NSInfoCreate85입력/170행이며기존공통Scroll/Slider/Stone자식/registry callback까지실제binder연결이남는다.
 - [ ] **미니맵후속:** `docs/exe/cpp-minimap-blit-20261023.md`/원문120행/`MinimapBlitTests.cpp`(macroNETSTORM_MINIMAP_BLIT_FIXTURE)와 `extracted/cpp-minimap-blit-proposal-20261023.patch`는 미등록·미빌드·미적용이다. 원본은flat source읽기이며crop(-2,1)은정상범위,(-2,0)은heap앞2BYTE다. clip은대상만제한하며128밖여백배경을보존하고outline은전체Gump clip에그린다. 실제heapguard는미관측이라임의0/clamp로동일복원이라하지않는다.
 - [ ] 전체HUD dock/viewport(left85)/legacyGame버튼겹침,Chat/PlayerList/Editor Session·나머지옵션/영상·모든단축키·edgeScroll·전체사용자 Early Missions/캠페인/데모3 완주/원본 전체동일성·배포 목표는 계속 활성이다. 이번 대화 종료 단위 완료를 전체 목표 완료로 해석하지 않는다.

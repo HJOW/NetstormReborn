@@ -221,6 +221,7 @@ private:
     // clock_: 프레임 판정에 현재 게임 시각을 공급하는 시계.
     o::GameClock clock_;
     bool uiPaused_{}; // 메뉴/브리핑의 단일 정지 소유 표식이다. 원본 미션 scriptPaused와 별도로 유지한다.
+    std::int32_t movieUpdatePauseDepth_{}; // 원본0054dc58의 BSS0 정상 경계다. Moviegump483680/4837f0의435dc0 소유 연결은 미복원이며 GameClock 깊이로 합성하지 않는다.
     // time_: 프레임의 게임 시각과 벽 시각 및 시간 차 (o::FrameTime).
     o::FrameTime time_{};
     // kernel_: 프로세스 등록과 프레임 실행을 담당하는 커널.

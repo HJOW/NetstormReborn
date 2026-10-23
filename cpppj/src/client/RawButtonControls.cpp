@@ -10,6 +10,7 @@
 #include <map>
 #include <sstream>
 #include <stdexcept>
+#include <utility>
 
 namespace netstorm::client {
 namespace {
@@ -19,6 +20,8 @@ constexpr std::int8_t kButtonType=56,kStoneType=49,kBackgroundType=35;
 // Gump 기본/배경 할당 크기와 즉시 버튼 플래그다. 모든 실제 파생 노드는 별도로 소유한다.
 constexpr std::size_t kBackgroundSize=0xb8;
 constexpr std::uint32_t kInstant=4;
+// 보호10.78의005427e4 초기 DWORD다. Overlay는 현재 사건 대신 이 별도 전역을 가상+28에 전달한다.
+constexpr std::uint32_t kOverlayEvent=0x0200003b;
 // 원본 생산 목록 갱신 문자열 ID의 초기 DWORD다(PATCH00542708/CD00512890).
 constexpr std::uint32_t kRefreshProductionEvent=0x02000003;
 }
@@ -58,6 +61,7 @@ struct RawButtonControls::Impl {
     // 모든 분배 훅은 실제 호출 때 현재 노드와 처리기를 조회하여 순환 의존을 연결한다.
     Impl(o::OriginalEdition edition,RawButtonHooks supplied):hooks(std::move(supplied)) {
         create.collection.edition=edition;stoneState.color=kStoneType;stoneState.defaultContext={0,0,0,0,0,0,1,1};
+        inputState.overlayEvent=kOverlayEvent; // 새 Client 포인터 연결의 원본 별도 사건 전역이며 caller의 raw code와 구별한다.
         factory=std::make_unique<GumpCreate>(create,GumpCreateHooks{
             [this](auto token) { return Node(token); },[this](auto bytes) { return Allocate(bytes); }});
         collection=std::make_unique<GumpCollection>(create.collection,factory->CollectionHooks());
@@ -202,7 +206,23 @@ std::uint32_t RawButtonControls::SerialGump(std::uint32_t serial) const {
 }
 // Kill에서 즉시 해제하지 않아 현재 메뉴 입력 callback의 나머지 실행을 보존한다.
 void RawButtonControls::KillGump(std::uint32_t token) { impl_->lifetime->Kill(token);impl_->changed=true; }
-// 현재 벽 시계·폴링 상태의 실제 원본 프레임 처리를 한 번 실행한다.
+// 004d68c2의 현재 focus/dialog 관문 뒤004d69f4의 raw 사건 통지를 일반 큐보다 먼저 실행한다.
+RawButtonPointerResult RawButtonControls::NotifyPointer(InputEvent event,std::uint32_t mode,bool cursorActive,bool allowOverlay) {
+    auto& state=*impl_;state.currentPoll=event;state.activated.reset();
+    RawButtonPointerResult result; // 미호출 Overlay와 실제 반환0을 구별하여 커서 fallback을 상위에 전달한다.
+    if (!(event.code&InputCode::kOutside)) {
+        const bool overlayAllowed=state.life.currentDialog!=0 || (allowOverlay && mode==0 && !state.life.focus && !cursorActive); // 실제 modal OR는 host 차단/focus/활성 커서 조건보다 바깥이며 현재 Pick이 modal 앞 대상을 고른다.
+        if (overlayAllowed) result.overlay=state.input->Overlay(event.code,{event.x,event.y});
+        state.frame->Broadcast(event.code,std::bit_cast<std::uint32_t>(event.x),std::bit_cast<std::uint32_t>(event.y));
+    }
+    // 원본 밖 포인터는 이 두 통지를 건너뛴다. 합성 release 보정은 별도 입력 준비 경계이며 여기서 캡처를 임의 해제하지 않는다.
+    result.activated=std::exchange(state.activated,{});result.changed=std::exchange(state.changed,false);return result;
+}
+// Kill 예약을 같은 공통 표의 가상 소멸로 옮긴다. 현재 삭제 큐 재조회는 기존 GumpLifetime이 소유한다.
+bool RawButtonControls::CleanupGumps() { impl_->lifetime->Cleanup();return std::exchange(impl_->changed,false); }
+// 같은 idle 표에 대한 실제 가상 분배만 실행한다. Idle 중 Kill한 대상은 다음 Cleanup까지 실제 저장소에 남는다.
+bool RawButtonControls::IdleGumps() { impl_->frame->Idle();return std::exchange(impl_->changed,false); }
+// 기존 독립 검사 계약을 유지하는 결합 경계다. Client 프레임 연결에서는 사용하지 않는다.
 bool RawButtonControls::Poll(InputEvent event) {
     auto& state=*impl_;state.currentPoll=event;
     if (event.code&InputCode::kOutside) Cancel();

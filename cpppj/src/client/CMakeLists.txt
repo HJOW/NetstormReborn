@@ -7,6 +7,8 @@ target_sources(netstorm PRIVATE
     GameMenuCommands.cpp GameMenuCommands.h TellParameters.cpp TellParameters.h
     GameMenuActions.cpp GameMenuActions.h MessageGump.cpp MessageGump.h
     DialogExitCommand.cpp DialogExitCommand.h
+    # 원본 창 경계의 Alt/Ctrl 폴링과 재진입 좌우 release 보정을 같은 입력 큐에 연결한다.
+    GumpPointerBoundary.cpp GumpPointerBoundary.h
     # 원본 HUD의 divider 생성·슬레이브 재배치·지도 영역과 공통 입력 드래그 본체다.
     HudDock.cpp HudDock.h HudDividerInput.cpp HudDividerInput.h
     # 현재 미션 F8/First의 같은 입력 큐와 원본 안내 재표시를 연결한다.
