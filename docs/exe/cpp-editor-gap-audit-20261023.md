@@ -1,5 +1,7 @@
 # Edit·커스텀 맵·시나리오의 실제 저장 경로 잔여 감사
 
+**단위377 이후:** 전체 Objects/동적 Temp의 실제 통합 상태는 [현재 실행 기록](cpp-fort-objects-runtime-20261023.md), 다음 전체 Snapshot의 원본 순서·전역 공유는 [후속 설계](cpp-editor-snapshot-next-20261023.md)를 따른다. 아래 Objects/Temp 미완료 서술은 이 감사 작성 당시의 기록이다.
+
 2026-10-23 단위376 진행 중의 읽기 전용 조사다. LEFT_JOBS.md는 최신 상단95행만 읽고 관련 문서와 현재 cpppj 소스를 확인했다. 현재/마지막 전체 정밀 디컴파일 PC는 HJOW-Athlon / 2026-10-23이다. 게임·GUI·빌드·검사·git을 실행하지 않았으며 신규 분석 문서 외 제품/공용 파일을 변경하지 않았다. 아래 상태는 소스 연결의 정적 증거이며 실제 사용자 저장 성공 관측이 아니다.
 
 ## 현재 경로에서 막히는 정확한 위치
@@ -25,7 +27,7 @@
 
 그 다음 세 writer는 다음처럼 기존 실제 저장소에 연결해야 한다.
 
-- **Money:** 현재 Session의 실제 SP와 Impl::random을 써야 한다. 별도 난수 사본 또는 과거 Fort Money 섹션을 재사용하면 snapshot 뒤 난수 소비 순서·현재 자원이 달라진다. [snapshot 분석](cpp-fort-snapshot-basics-20261023.md)의 마지막 절에004832c0의 Next(0x3f2)+333.0f 경계가 있다.
+- **Money:** 원본004832c0은 현재 SP를 저장하지 않는다. 같은 Session의 Impl::random에서 Next(0x3f2)을 한 번 소비하고 PE0050d7c4의333.0f를 더한 float4BYTE를 쓴다. SP.Get·별도 난수 사본·과거 Fort Money로 대체하면 파일 내용과 공유 난수열이 달라진다. [후속 원문 근거](cpp-editor-snapshot-next-20261023.md)와 [snapshot 분석](cpp-fort-snapshot-basics-20261023.md)의 마지막 절을 따른다.
 - **Mission:** 실제 UberGump::MissionRuntime::state/현재 MissionScript/flags와 파일명을 사용해야 한다. guided Tutorial 전용 getter만으로 존재를 판단하면 일반 Battle을 놓친다. 같은 분석 문서의 마지막 절을 따른다.
 - **Badges:** [RawFortMetaLoad.h](../../cpppj/src/o/RawFortMetaLoad.h):38~39의 로더는 장기28×220BYTE 실제 장부를 요구한다. client 전체의 현재 참조는 loader API와 원시 Template cursor뿐이고 실제 Session 장부/Meta 인스턴스는 발견하지 못했다. 원시 Badges 섹션을 live 장부라고 간주하지 말고 소유자·초기화·수량 갱신과 writer를 함께 복원해야 한다.
 

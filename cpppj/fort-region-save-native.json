@@ -1,0 +1,28 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-23",
+  "inputs": 930,
+  "executions": 1860,
+  "normalReturns": 1820,
+  "instructions": 133422,
+  "boundaries": {
+    "y": 4540,
+    "x": 6454,
+    "cell": 4738,
+    "allow": 2534,
+    "chunk": 3946
+  },
+  "ranges": {
+    "territory": "004be230-004be2b1",
+    "chaff": "004be350-004be3b8"
+  },
+  "gameExecuted": false,
+  "osExecuted": false,
+  "scope": "원본 두 몸체의 크기 읽기/scope쓰기/signed BYTE/순회/분기/인자/현재 재조회. 432180/46f200/4be020은 명시 하위 장치다. 청크 저장·섬 판정·GUI·OS는 실행하지 않는다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "tools/decomp_fort_region_save.py": "039cfb75a7c1fd4061ff1639e8192cfeb051dfa41c1fc160f9055a740306198b",
+    "cpppj/tests/fixtures/fort-region-save-x86.tsv": "5d50f51052e7cfcd39697062fdcfd959fa4d8edb3ef951c0e736cba7ddc25d3b"
+  }
+}

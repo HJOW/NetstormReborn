@@ -8,6 +8,7 @@
 #include "o/RawDataManagerImage.h"
 #include "o/RawTemplateLoad.h"
 #include <algorithm>
+#include <optional>
 #include <stdexcept>
 namespace netstorm::client {
 namespace {
@@ -15,10 +16,11 @@ namespace {
 std::size_t StateSection() { const auto names=o::FortTemplate::SectionNames();const auto at=std::find(names.begin(),names.end(),"State");if (at==names.end()) throw std::logic_error("Template 실제 State 섹션 이름 누락");return static_cast<std::size_t>(at-names.begin()); }
 // 지형 getter도 파서의 편의 사본 대신 같은 원시 섹션 버퍼를 조회한다.
 std::size_t TerritorySection() { const auto names=o::FortTemplate::SectionNames();const auto at=std::find(names.begin(),names.end(),"Territory");if (at==names.end()) throw std::logic_error("Template 실제 Territory 섹션 이름 누락");return static_cast<std::size_t>(at-names.begin()); }
-// 경제/메타 getter도 공식35개 섹션 이름으로 같은 실제 노드를 찾는다.
-std::uint32_t LoadSection(std::string_view name) {
-    const auto names=o::FortTemplate::SectionNames();const auto at=std::find(names.begin(),names.end(),name);
-    if (at==names.end()) throw std::logic_error("Template 경제/메타 섹션 이름 누락");return static_cast<std::uint32_t>(at-names.begin()+1);
+// 표준 파일 저장 위치와 동적 노드의 식별값을 분리한다. 이름이 바뀌어도 노드 handle은 바꾸지 않는다.
+std::optional<std::size_t> CanonicalSection(std::string_view name) {
+    const auto names=o::FortTemplate::SectionNames();
+    for (std::size_t index=0;index<names.size();++index) if (!o::CompareDataManagerSectionNames(names[index],name)) return index; // 원본 검색과 같은 ASCII 대소문자 비교다.
+    return {};
 }
 // manager 핸들의 원본DWORD를 읽는다.
 std::uint32_t Read(std::span<const std::uint8_t> header) { std::uint32_t result{};
@@ -36,48 +38,83 @@ struct CampaignTemplateStorage::Image {
     // 파싱 자료의 각 실제 버퍼에 대응하는 원본60BYTE 섹션 노드다.
     struct Stream {
         std::array<std::uint8_t,60> bytes{}; // 첫16BYTE와 이름40BYTE 및 next DWORD를 같은 노드에 둔다.
+        std::optional<std::size_t> canonical; // 현재 실제 버퍼가 놓인 Fort35칸의 위치이며 handle과 독립적이다.
+        std::vector<std::uint8_t> extra; // Temp 같은 비표준 이름의 실제 할당이며 Rename 때 벡터 move로 같은 할당을 넘긴다.
+        std::uint64_t generation{}; // 같은 이름 재생성/노드 반납과 구별하는 생성 당시의 비영 수명이다.
+        bool accessing{}; // 이 노드의 raw cursor/버퍼를 인라인 쓰기에 빌려준 동안만 참이다.
     };
-    std::array<std::uint64_t,o::FortTemplate::kSectionCount> streamGeneration{}; // 각 표준 노드의 새 생성 수명을 구별한다.
     std::uint64_t nextStreamGeneration{}; // 같은 manager 안에서 재생성마다 증가하는 비영 번호다.
-    std::array<bool,o::FortTemplate::kSectionCount> accessing{}; // 빌린 노드는 raw cursor가 현재 값이며 같은 노드의 중첩 쓰기 빌림을 거부한다.
+    std::uint32_t nextStreamHandle{1}; // 이름/표준 파일 위치와 독립적인 단조 증가 노드 토큰이다.
+    std::array<bool,o::FortTemplate::kSectionCount> seeded{}; // 외부 파싱 자료의 각 표준 위치를 최초 목록에 한 번만 연결한다.
     o::FortTemplate fort; // 원시 State 섹션을 포함한 실제 파싱 자료와 소유 버퍼다.
     o::PlayerTemplateStateStream state; // 같은 fort.sections[State]의 현재 cursor다.
     o::FortTerritoryStream territory; // 같은 fort.sections[Territory]의 현재 cursor다.
     o::FortMoneyCursor money; // 같은 Money 노드의 현재 pos/end이며 SP 값의 편의 사본을 사용하지 않는다.
     o::FortMetaStream badges,technology; // 같은 원시 섹션 버퍼와 각각의 현재 pos/end/present다.
     std::uint32_t loadCursors{}; // 공개한 Money/Badges/Technology cursor의 유효 비트1/2/4다. 미공개 노드의 초기 상태는 보존한다.
+    std::uint32_t stateHandle{},territoryHandle{},moneyHandle{},badgesHandle{},technologyHandle{}; // 현재 typed cursor를 소유한 실제 노드이며 Rename/재생성 뒤 이름으로 다시 공개한다.
     std::string name; // 같은 현재 파일 이름이다.
     std::vector<std::uint8_t> retiredState; // 확장 중 Get의 원문 복사가 끝날 때까지만 이전 할당을 보유한다.
     std::array<std::uint8_t,276> manager{}; // 원본 Template manager의 vptr/head/current·파일명256·서명/FE 판정DWORD를 같은 저장소에 둔다.
     std::map<std::uint32_t,std::unique_ptr<Stream>> streams; // 노드 반납 때 실제 객체 할당을 해제한다.
     std::vector<std::uint32_t> streamOrder; // 원본 추가/교체 뒤 목록 순서를 고정 파일 섹션 번호와 구별한다.
+    // 노드마다 같은 포인터 토큰을 사용하므로 Rename의 버퍼 위치 move가 원문 data 필드를 바꾸지 않는다.
+    static std::uint32_t BufferToken(std::uint32_t handle) { return 0x10000000U+handle; }
+    // 같은 노드의 현재 실제 할당을 표준 파일 위치 또는 동적 벡터에서 빌린다.
+    std::vector<std::uint8_t>& Buffer(std::uint32_t handle) {
+        auto& stream=*streams.at(handle);if (!stream.canonical) return stream.extra;
+        if (fort.sections.size()<=*stream.canonical) fort.sections.resize(*stream.canonical+1);return fort.sections.at(*stream.canonical);
+    }
+    // 원본60BYTE에 저장된 현재 이름을 읽는다. handle 값으로 표준 종류를 추정하지 않는다.
+    std::string_view StreamName(std::uint32_t handle) const {
+        const auto& bytes=streams.at(handle)->bytes;const auto first=bytes.begin()+16,end=std::find(first,first+40,std::uint8_t{});
+        if (end==first+40) throw std::logic_error("Template 실제 섹션 이름 NUL 누락");return {reinterpret_cast<const char*>(bytes.data()+16),static_cast<std::size_t>(end-first)};
+    }
+    // 실제60BYTE 객체를 할당하고 같은 생성 수명을 부여한다. 원본 생성자는 호출자가 별도로 수행한다.
+    std::uint32_t AllocateStream(std::optional<std::size_t> canonical={}) {
+        if (!nextStreamHandle || nextStreamHandle>=0x10000000U || !++nextStreamGeneration) throw std::overflow_error("Template 동적 노드/생성 수명 소진");
+        const auto handle=nextStreamHandle++;auto stream=std::make_unique<Stream>();stream->canonical=canonical;stream->generation=nextStreamGeneration;
+        if (canonical) seeded.at(*canonical)=true;streams.emplace(handle,std::move(stream));return handle;
+    }
+    // 저장 중인 raw 빌림의 포인터/노드를 구조 변경으로 반납하지 않는다.
+    void RequireNoAccess() const {
+        for (const auto& [handle,stream]:streams) { static_cast<void>(handle);if (stream->accessing) throw std::logic_error("Template raw 쓰기 빌림 중 섹션 구조 변경 금지"); } // 현재 manager의 모든 실제 노드를 검사한다.
+    }
+    // 같은 typed cursor가 반납되거나 다른 이름으로 바뀌면 이전 위치/span을 새 노드에 쓰지 않는다.
+    void RetireCursor(std::uint32_t handle) {
+        if (stateHandle==handle) { stateHandle=0;state={{},0,0,false}; }
+        if (territoryHandle==handle) { territoryHandle=0;territory={}; }
+        if (moneyHandle==handle) { moneyHandle=0;money={};loadCursors&=~1U; }
+        if (badgesHandle==handle) { badgesHandle=0;badges={};loadCursors&=~2U; }
+        if (technologyHandle==handle) { technologyHandle=0;technology={};loadCursors&=~4U; }
+    }
     // MemStream 소멸에서 요청한 같은 실제 raw 섹션 버퍼를 반납한다.
     void ReleaseBuffer(std::uint32_t token) {
-        if (token<0x10001U || token>0x10000U+o::FortTemplate::kSectionCount) throw std::out_of_range("Template 실제 버퍼 핸들 범위");
-        std::vector<std::uint8_t>{}.swap(fort.sections.at(token-0x10001U));
+        if (token<=0x10000000U || !streams.contains(token-0x10000000U)) throw std::out_of_range("Template 실제 버퍼 핸들 범위");
+        std::vector<std::uint8_t>{}.swap(Buffer(token-0x10000000U));
     }
     // 현재 노드의 data/pos/end와 같은 raw 버퍼를 두 typed cursor에 다시 연결한다.
     void PublishCursor(std::uint32_t handle) {
-        const auto& bytes=fort.sections.at(handle-1);const auto& node=streams.at(handle)->bytes;
-        if (handle==StateSection()+1) state={std::span<std::uint8_t>(fort.sections.at(handle-1)),Read(std::span(node).subspan(4)),Read(std::span(node).subspan(8)),Read(node)!=0};
-        if (handle==TerritorySection()+1) territory={bytes,Read(std::span(node).subspan(4)),Read(std::span(node).subspan(8))};
-        if (handle==LoadSection("Money")) { money={Read(std::span(node).subspan(4)),Read(std::span(node).subspan(8))};loadCursors|=1U; }
-        if (handle==LoadSection("Badges")) { badges={bytes,Read(std::span(node).subspan(4)),Read(std::span(node).subspan(8)),Read(node)!=0};loadCursors|=2U; }
-        if (handle==LoadSection("Technology")) { technology={bytes,Read(std::span(node).subspan(4)),Read(std::span(node).subspan(8)),Read(node)!=0};loadCursors|=4U; }
+        auto& bytes=Buffer(handle);const auto& node=streams.at(handle)->bytes;const auto sectionName=StreamName(handle);
+        if (!o::CompareDataManagerSectionNames(sectionName,"State")) { stateHandle=handle;state={bytes,Read(std::span(node).subspan(4)),Read(std::span(node).subspan(8)),Read(node)!=0}; }
+        if (!o::CompareDataManagerSectionNames(sectionName,"Territory")) { territoryHandle=handle;territory={bytes,Read(std::span(node).subspan(4)),Read(std::span(node).subspan(8))}; }
+        if (!o::CompareDataManagerSectionNames(sectionName,"Money")) { moneyHandle=handle;money={Read(std::span(node).subspan(4)),Read(std::span(node).subspan(8))};loadCursors|=1U; }
+        if (!o::CompareDataManagerSectionNames(sectionName,"Badges")) { badgesHandle=handle;badges={bytes,Read(std::span(node).subspan(4)),Read(std::span(node).subspan(8)),Read(node)!=0};loadCursors|=2U; }
+        if (!o::CompareDataManagerSectionNames(sectionName,"Technology")) { technologyHandle=handle;technology={bytes,Read(std::span(node).subspan(4)),Read(std::span(node).subspan(8)),Read(node)!=0};loadCursors|=4U; }
     }
     // 실제 임시 할당을 원본 포인터 토큰으로 빌린 뒤 완료한 같은 버퍼를 raw 섹션에 넘긴다.
     template<class Operation> void WithMemory(std::uint32_t handle,Operation operation) {
-        std::vector<std::uint8_t> allocation;bool allocated{};const auto temporary=0x20000U+handle;auto& node=streams.at(handle)->bytes;
+        std::vector<std::uint8_t> allocation;bool allocated{};const auto temporary=0x20000000U+handle;auto& node=streams.at(handle)->bytes;
         o::MemStreamHooks hooks;
         hooks.buffer=[this,&allocation,temporary,&allocated](auto pointer)->std::span<std::uint8_t> {
             if (pointer==temporary && allocated) return allocation;
-            if (pointer<0x10001U || pointer>0x10000U+o::FortTemplate::kSectionCount) throw std::out_of_range("Template MemStream 실제 버퍼 핸들 범위");return fort.sections.at(pointer-0x10001U);
+            if (pointer<=0x10000000U || !streams.contains(pointer-0x10000000U)) throw std::out_of_range("Template MemStream 실제 버퍼 핸들 범위");return Buffer(pointer-0x10000000U);
         }; // 옛 버퍼는 free 전까지 같은 실제 소유 벡터에서 읽는다.
         hooks.allocate=[&allocation,&allocated,temporary](auto size) { if (allocated) throw std::logic_error("Template MemStream 한 작업의 중복 할당");allocation.resize(size);allocated=true;return temporary; }; // 실제 임시 할당은 원본 본문이0으로 채운다.
         hooks.release=[this](auto pointer) { if (pointer) ReleaseBuffer(pointer); }; // 같은 원시 섹션의 옛 할당만 반납한다.
         hooks.assertion=[](auto) { throw std::logic_error("Template 실제 MemStream 진단"); }; // 잘못된 저장 버퍼를 성공으로 대신하지 않는다.
-        operation(hooks);auto& buffer=fort.sections.at(handle-1);
-        if (Read(node)==temporary && allocated) { buffer=std::move(allocation);Put(node,0,0x10000U+handle); }
+        operation(hooks);auto& buffer=Buffer(handle);
+        if (Read(node)==temporary && allocated) { buffer=std::move(allocation);Put(node,0,BufferToken(handle)); }
         const auto end=Read(std::span(node).subspan(8));if (end>buffer.size()) throw std::out_of_range("Template MemStream 완료 뒤 실제 end 범위");buffer.resize(end);PublishCursor(handle);
     }
     // 같은 stream의 물리 할당을 노출하고 원본 쓰기 뒤 논리 end만 원시 섹션에 남긴다.
@@ -96,82 +133,85 @@ struct CampaignTemplateStorage::Image {
         o::DataManagerListHooks hooks;hooks.lifetime.stream=[this](auto handle) { return std::span(streams.at(handle)->bytes); }; // 같은 현재60BYTE 노드를 빌린다.
         hooks.lifetime.releaseBuffer=[this](auto pointer) { ReleaseBuffer(pointer); }; // 실제 raw 섹션 할당이다.
         hooks.lifetime.releaseStream=[this](auto handle) {
-            if (streams.erase(handle)!=1) throw std::logic_error("Template 실제 노드 중복 반납");std::erase(streamOrder,handle);
-            if (handle==StateSection()+1) state={{},0,0,false};if (handle==TerritorySection()+1) territory={};
-            if (handle==LoadSection("Money")) { money={};loadCursors&=~1U; } // 새 경제 섹션에 해제된 옛 cursor를 다시 동기화하지 않는다.
-            if (handle==LoadSection("Badges")) { badges={};loadCursors&=~2U; } // 새 메타 노드의 실제 cursor는 생성 뒤 다시 공개한다.
-            if (handle==LoadSection("Technology")) { technology={};loadCursors&=~4U; } // 기술 snapshot도 기존 읽기 cursor 수명과 분리한다.
+            RetireCursor(handle);if (streams.erase(handle)!=1) throw std::logic_error("Template 실제 노드 중복 반납");std::erase(streamOrder,handle);
         }; // 버퍼 소멸을 마친 노드와 그 typed cursor만 반납한다.
         hooks.compact=[this](auto handle) { CompactTail(handle); };hooks.missingPredecessor=[] { throw std::logic_error("Template 실제 선행 노드 진단"); };return hooks;
     }
-    // 표준 섹션의 교체는 기존 노드 unlink/버퍼 반납/노드 반납 뒤 새 마지막 노드를 붙인다.
+    // 같은 이름의 기존 노드 unlink/버퍼 반납 뒤 이름과 독립적인 새 마지막 노드를 붙인다.
     std::uint32_t CreateSection(std::string_view sectionName) {
         if (!retiredState.empty()) throw std::logic_error("State 확장 복사 중 새 섹션 생성 불가");
-        const auto handle=LoadSection(sectionName);SyncStreams();
-        if (fort.sections.size()<handle) fort.sections.resize(handle);
-        const auto temporary=0x20000U+handle;std::vector<std::uint8_t> allocation;bool allocated{};o::DataManagerResizeHooks hooks;
+        RequireNoAccess();SyncStreams();std::uint32_t handle{};std::vector<std::uint8_t> allocation;bool allocated{};o::DataManagerResizeHooks hooks;
         hooks.selection.stream=[this](auto stream) { return std::span(streams.at(stream)->bytes); };hooks.list=ListEffects(); // 검색/기존 제거/새 추가도 같은 실제 부모에서 수행한다.
-        hooks.allocateStream=[this,handle](auto size) { if (size!=60 || streams.contains(handle)) throw std::logic_error("Template 새 섹션 실제 노드 할당 계약 위반");streams.emplace(handle,std::make_unique<Stream>());return handle; };
-        hooks.memory.buffer=[this,&allocation,temporary](auto pointer)->std::span<std::uint8_t> {
-            if (pointer==temporary) return allocation;
-            if (pointer<0x10001U || pointer>0x10000U+o::FortTemplate::kSectionCount) throw std::out_of_range("Template 생성 부모의 실제 버퍼 범위");return fort.sections.at(pointer-0x10001U);
+        hooks.allocateStream=[this,&handle,sectionName](auto size) { if (size!=60 || handle) throw std::logic_error("Template 새 섹션 실제 노드 할당 계약 위반");handle=AllocateStream(CanonicalSection(sectionName));return handle; };
+        hooks.memory.buffer=[this,&allocation,&handle](auto pointer)->std::span<std::uint8_t> {
+            if (pointer==0x20000000U+handle) return allocation;
+            if (pointer<=0x10000000U || !streams.contains(pointer-0x10000000U)) throw std::out_of_range("Template 생성 부모의 실제 버퍼 범위");return Buffer(pointer-0x10000000U);
         }; // 새 할당은 완료 전까지 별도 소유하고 기존 tail 압축은 원래 실제 버퍼를 쓴다.
-        hooks.memory.allocate=[&allocation,&allocated,temporary](auto size) { if (allocated) throw std::logic_error("Template 생성 부모의 중복 할당");allocation.resize(size);allocated=true;return temporary; };
+        hooks.memory.allocate=[&allocation,&allocated,&handle](auto size) { if (allocated) throw std::logic_error("Template 생성 부모의 중복 할당");allocation.resize(size);allocated=true;return 0x20000000U+handle; };
         hooks.memory.assertion=[](auto) { throw std::logic_error("Template 생성 부모의 실제 MemStream 진단"); };
         const auto current=o::CreateDataManagerStream(manager,sectionName,hooks);auto& node=streams.at(handle)->bytes;
-        if (current!=handle || !allocated || Read(node)!=temporary) throw std::logic_error("Template 생성 부모의 실제 현재 섹션 불일치");
-        Put(node,0,0x10000U+handle);allocation.resize(Read(std::span(node).subspan(8)));fort.sections.at(handle-1)=std::move(allocation);streamOrder.push_back(handle);PublishCursor(handle);
-        if (!++nextStreamGeneration) throw std::overflow_error("Template 쓰기 섹션 생성 수명 소진");streamGeneration.at(handle-1)=nextStreamGeneration;return handle;
+        if (current!=handle || !allocated || Read(node)!=0x20000000U+handle) throw std::logic_error("Template 생성 부모의 실제 현재 섹션 불일치");
+        Put(node,0,BufferToken(handle));allocation.resize(Read(std::span(node).subspan(8)));Buffer(handle)=std::move(allocation);streamOrder.push_back(handle);PublishCursor(handle);return handle;
     }
     // 기존 State 생성 호출도 같은 일반 생성/원본 쓰기 부모를 사용한다.
     void InitializeState(std::span<const std::uint8_t,28> input) { const auto handle=CreateSection("State");WriteStream(handle,input); }
     // 읽기 부모가 진행한 typed cursor의 현재 위치를 같은 실제 노드에 반영한다. 생성 수명/current 선택은 바꾸지 않는다.
     void SyncCursorPosition(std::uint32_t handle) {
-        if (accessing.at(handle-1)) return; // 바깥 인라인 쓰기가 진행한 raw 위치를 아직 공개하지 않은 typed 위치로 되돌리지 않는다.
+        if (streams.at(handle)->accessing) return; // 바깥 인라인 쓰기가 진행한 raw 위치를 아직 공개하지 않은 typed 위치로 되돌리지 않는다.
         auto& node=streams.at(handle)->bytes;
-        if (handle==StateSection()+1) Put(node,4,state.position);
-        if (handle==TerritorySection()+1) Put(node,4,territory.position);
-        if (handle==LoadSection("Money") && (loadCursors&1U)) Put(node,4,money.position);
-        if (handle==LoadSection("Badges") && (loadCursors&2U)) Put(node,4,badges.position);
-        if (handle==LoadSection("Technology") && (loadCursors&4U)) Put(node,4,technology.position);
+        if (handle==stateHandle) Put(node,4,state.position);
+        if (handle==territoryHandle) Put(node,4,territory.position);
+        if (handle==moneyHandle && (loadCursors&1U)) Put(node,4,money.position);
+        if (handle==badgesHandle && (loadCursors&2U)) Put(node,4,badges.position);
+        if (handle==technologyHandle && (loadCursors&4U)) Put(node,4,technology.position);
     }
     // 현재 선택을 바꾸지 않고 명시 노드에 인라인 쓰기를 적용한 뒤 논리 끝만 원시 섹션에 공개한다.
     void AccessSection(std::uint32_t handle,const std::function<void(std::span<std::uint8_t>,const o::MemStreamHooks&)>& operation) {
         if (!operation) throw std::invalid_argument("Template 인라인 쓰기 장치 누락");
-        if (accessing.at(handle-1)) throw std::logic_error("Template 같은 stream의 중첩 쓰기 빌림 금지");
-        SyncCursorPosition(handle);auto& buffer=fort.sections.at(handle-1);auto& node=streams.at(handle)->bytes;const auto allocation=Read(std::span(node).subspan(12));if (buffer.size()<allocation) buffer.resize(allocation);
-        accessing.at(handle-1)=true;
+        if (streams.at(handle)->accessing) throw std::logic_error("Template 같은 stream의 중첩 쓰기 빌림 금지");
+        SyncCursorPosition(handle);auto& buffer=Buffer(handle);auto& node=streams.at(handle)->bytes;const auto allocation=Read(std::span(node).subspan(12));if (buffer.size()<allocation) buffer.resize(allocation);
+        streams.at(handle)->accessing=true;
         try { WithMemory(handle,[&](const auto& hooks) { operation(std::span(node).first(16),hooks); }); }
-        catch (...) { accessing.at(handle-1)=false;const auto end=Read(std::span(node).subspan(8));if (end<=buffer.size()) buffer.resize(end);PublishCursor(handle);throw; } // 예외 전의 pos/end/부분 쓰기를 보존하며 물리 할당을 논리 자료로 잘못 공개하지 않는다.
-        accessing.at(handle-1)=false;
+        catch (...) { streams.at(handle)->accessing=false;const auto end=Read(std::span(node).subspan(8));if (end<=buffer.size()) buffer.resize(end);PublishCursor(handle);throw; } // 예외 전의 pos/end/부분 쓰기를 보존하며 물리 할당을 논리 자료로 잘못 공개하지 않는다.
+        streams.at(handle)->accessing=false;
+    }
+    // 실제 이름 교체가 끝난 같은 노드의 할당을 새 표준 위치/동적 저장소로 이동한다. 바이트/할당을 복사하지 않는다.
+    void BindRenamedBuffer(std::uint32_t handle) {
+        auto& stream=*streams.at(handle);const auto destination=CanonicalSection(StreamName(handle));
+        if (destination==stream.canonical) { PublishCursor(handle);return; }
+        auto allocation=std::move(Buffer(handle));RetireCursor(handle);stream.canonical=destination;
+        if (destination) seeded.at(*destination)=true;Buffer(handle)=std::move(allocation);PublishCursor(handle);
+    }
+    // 이름 검색은 원문처럼 현재 선택을 갱신하되 현재 위치와 목록을 바꾸지 않는다.
+    std::uint32_t FindSection(std::string_view sectionName) {
+        SyncStreams();o::DataManagerSelectionHooks hooks;hooks.stream=[this](auto handle) { return std::span(streams.at(handle)->bytes); };
+        return o::FindDataManagerSection(manager,sectionName,hooks);
+    }
+    // 원본 Rename이 대상 제거/현재 source 재검색/이름 쓰기를 끝낸 뒤 버퍼의 호스트 위치만 매핑한다.
+    std::uint32_t RenameSection(std::string_view destination,std::string_view source) {
+        RequireNoAccess();SyncStreams();o::DataManagerResizeHooks hooks;hooks.selection.stream=[this](auto handle) { return std::span(streams.at(handle)->bytes); };hooks.list=ListEffects();
+        const auto current=o::RenameDataManagerStream(manager,destination,source,hooks);BindRenamedBuffer(current);return current;
     }
     // 실제 임시 노드가 살아 있는 동안 원본 부모를 실행하고 완료한 같은 할당을 State로 넘긴다.
     void EnsureStateSize(std::int32_t minimum) {
         if (!retiredState.empty()) throw std::logic_error("분리 State 복사 중 원본 최소 확장 불가");
-        SyncStreams();const auto stateHandle=static_cast<std::uint32_t>(StateSection()+1);const auto original=streams.find(stateHandle);
-        if (original!=streams.end()) { Put(original->second->bytes,4,state.position);Put(original->second->bytes,8,state.end); }
-        constexpr std::uint32_t kTemporaryStream=0x100,kTemporaryData=0x40000; // 공개하지 않는 동기 작업의 임시 노드/버퍼 토큰이며 실제 주소를 자르지 않는다.
-        if (streams.contains(kTemporaryStream)) throw std::logic_error("Template 임시 stream 토큰 충돌");
-        std::unique_ptr<Stream> temporary;std::vector<std::uint8_t> buffer;bool allocated{};o::DataManagerResizeHooks hooks;
-        hooks.selection.stream=[this,&temporary](auto handle)->std::span<std::uint8_t> { if (handle==kTemporaryStream && temporary) return temporary->bytes;return streams.at(handle)->bytes; }; // 검색/이름 교체도 같은 임시 노드를 조회한다.
-        hooks.list=ListEffects();hooks.list.lifetime.stream=hooks.selection.stream;
-        hooks.memory.buffer=[this,&buffer](auto pointer)->std::span<std::uint8_t> {
-            if (pointer==kTemporaryData) return buffer;
-            if (pointer<0x10001U || pointer>0x10000U+o::FortTemplate::kSectionCount) throw std::out_of_range("Template 확장의 실제 원문 버퍼 핸들 범위");return fort.sections.at(pointer-0x10001U);
+        RequireNoAccess();SyncStreams();std::uint32_t temporary{};std::vector<std::uint8_t> buffer;bool allocated{};o::DataManagerResizeHooks hooks;
+        hooks.selection.stream=[this](auto handle) { return std::span(streams.at(handle)->bytes); }; // 원문과 임시 노드 모두 같은 실제 저장소에 둔다.
+        hooks.list=ListEffects();
+        hooks.memory.buffer=[this,&buffer,&temporary](auto pointer)->std::span<std::uint8_t> {
+            if (pointer==0x20000000U+temporary) return buffer;
+            if (pointer<=0x10000000U || !streams.contains(pointer-0x10000000U)) throw std::out_of_range("Template 확장의 실제 원문 버퍼 핸들 범위");return Buffer(pointer-0x10000000U);
         }; // 복사는 원본 부모가 요청하는 현재 data/end를 사용한다.
-        hooks.memory.allocate=[&buffer,&allocated](auto size) { if (allocated) throw std::logic_error("Template 확장 임시 버퍼 중복 할당");buffer.resize(size);allocated=true;return kTemporaryData; };
+        hooks.memory.allocate=[&buffer,&allocated,&temporary](auto size) { if (allocated) throw std::logic_error("Template 확장 임시 버퍼 중복 할당");buffer.resize(size);allocated=true;return 0x20000000U+temporary; };
         hooks.memory.release=[this](auto pointer) { if (pointer) ReleaseBuffer(pointer); };hooks.memory.assertion=[](auto) { throw std::logic_error("Template 원본 확장의 MemStream 진단"); };
-        hooks.allocateStream=[&temporary](auto size) { if (size!=60 || temporary) throw std::logic_error("Template 실제 임시 노드 할당 계약 위반");temporary=std::make_unique<Stream>();return kTemporaryStream; };
+        hooks.allocateStream=[this,&temporary](auto size) { if (size!=60 || temporary) throw std::logic_error("Template 실제 임시 노드 할당 계약 위반");temporary=AllocateStream();return temporary; };
         hooks.missingSource=[] { throw std::logic_error("Template 원본 State 확장의 원문 섹션 누락"); };
         const auto current=o::EnsureDataManagerStreamSize(manager,"State",minimum,hooks);
-        if (current!=kTemporaryStream) { if (current!=stateHandle) throw std::logic_error("Template 확장 반환의 실제 State 불일치");PublishCursor(stateHandle);return; }
-        if (!temporary || !allocated || streams.contains(stateHandle) || Read(temporary->bytes)!=kTemporaryData) throw std::logic_error("Template 원본 확장의 임시 소유권 계약 위반");
-        const auto end=Read(std::span(temporary->bytes).subspan(8));if (end>buffer.size()) throw std::out_of_range("Template 원본 확장 결과의 실제 end 범위");
-        // 외부에 노출하지 않은 임시 핸들을 동일 이미지의 State 핸들로 매핑하고 실제 새 노드/버퍼를 그대로 인계한다.
-        for (auto& entry:streams) if (Read(std::span(entry.second->bytes).subspan(0x38))==kTemporaryStream) Put(entry.second->bytes,0x38,stateHandle);
-        if (Read(std::span(manager).subspan(4))==kTemporaryStream) Put(manager,4,stateHandle);
-        Put(manager,8,stateHandle);Put(temporary->bytes,0,0x10000U+stateHandle);buffer.resize(end);fort.sections.at(StateSection())=std::move(buffer);streams.emplace(stateHandle,std::move(temporary));streamOrder.push_back(stateHandle);PublishCursor(stateHandle);
-        if (!++nextStreamGeneration) throw std::overflow_error("Template State 생성 수명 소진");streamGeneration.at(stateHandle-1)=nextStreamGeneration;
+        if (!temporary) { PublishCursor(current);return; }
+        auto& node=streams.at(current)->bytes;if (current!=temporary || !allocated || Read(node)!=0x20000000U+temporary) throw std::logic_error("Template 원본 확장의 임시 소유권 계약 위반");
+        const auto end=Read(std::span(node).subspan(8));if (end>buffer.size()) throw std::out_of_range("Template 원본 확장 결과의 실제 end 범위");
+        // 원문 Rename의 현재/head/next와 임시 node handle을 그대로 유지하고 같은 벡터 할당만 인계한다.
+        Put(node,0,BufferToken(current));buffer.resize(end);Buffer(current)=std::move(buffer);streamOrder.push_back(current);BindRenamedBuffer(current);
     }
     // 공개 진단은 보조 순서 벡터 대신 실제 head/next와 이름을 읽는다.
     std::vector<std::string> SectionOrder() const {
@@ -186,18 +226,13 @@ struct CampaignTemplateStorage::Image {
     }
     // 실제 원시State와 같은 커서를 노드에 반영한 뒤 원본 선택을 실행한다.
     void SelectState() {
-        SyncStreams();const auto handle=static_cast<std::uint32_t>(StateSection()+1);const auto found=streams.find(handle);
-        if (found!=streams.end()) { Put(found->second->bytes,4,state.position);Put(found->second->bytes,8,state.end); }
-        o::DataManagerSelectionHooks hooks;hooks.stream=[this](auto node) { return std::span(streams.at(node)->bytes); }; // 선택은 같은 실제 목록 노드를 빌린다.
-        hooks.assertion=[](auto) { throw std::logic_error("Template 현재 State 섹션 선택 진단: 생성/파일 연결 미복원"); }; // 누락 섹션을 다른 섹션으로 대신하지 않는다.
-        const auto selected=o::SelectDataManagerSection(manager,"State",1,hooks);
-        state.position=Read(std::span(streams.at(selected)->bytes).subspan(4));
+        SelectLoadSection("State",1);
     }
     // 004bd4d0/004bcb60처럼 현재 원시 Subscriber를 선택하고 같은 노드의 cursor를 진행한다.
     std::string ReadSubscriberName() {
         SyncStreams();o::DataManagerSelectionHooks hooks;hooks.stream=[this](auto node) { return std::span(streams.at(node)->bytes); };
         hooks.assertion=[](auto) { throw std::logic_error("Template Subscriber 실제 읽기 섹션 선택 진단"); };
-        const auto selected=o::SelectDataManagerSection(manager,"Subscriber",0,hooks);auto& node=streams.at(selected)->bytes;const auto& bytes=fort.sections.at(selected-1);
+        const auto selected=o::SelectDataManagerSection(manager,"Subscriber",0,hooks);auto& node=streams.at(selected)->bytes;const auto& bytes=Buffer(selected);
         Put(node,4,Read(std::span(node).subspan(4))+4U); // 원본 DWORD ID는 반환하지 않고 cursor만 네 BYTE 진행한다.
         auto position=Read(std::span(node).subspan(4));const auto end=Read(std::span(node).subspan(8));
         if (position>end || position>bytes.size() || bytes.size()-position<2) throw std::out_of_range("Template Subscriber 길이 읽기의 실제 원문 범위");
@@ -207,24 +242,20 @@ struct CampaignTemplateStorage::Image {
     }
     // Territory120BYTE 읽기는 비어 있지 않은 섹션 선택을 먼저 수행한다.
     void SelectTerritory() {
-        SyncStreams();const auto handle=static_cast<std::uint32_t>(TerritorySection()+1);const auto found=streams.find(handle);
-        if (found!=streams.end()) { Put(found->second->bytes,4,territory.position);Put(found->second->bytes,8,territory.end); }
-        o::DataManagerSelectionHooks hooks;hooks.stream=[this](auto node) { return std::span(streams.at(node)->bytes); }; // 같은 소유 노드의 현재 data/end와 이름을 읽는다.
-        hooks.assertion=[](auto) { throw std::logic_error("Template Territory 실제 읽기 섹션 선택 진단"); }; // 없는 섹션/빈 읽기를 다른 지형으로 대신하지 않는다.
-        const auto selected=o::SelectDataManagerSection(manager,"Territory",0,hooks);
-        territory.position=Read(std::span(streams.at(selected)->bytes).subspan(4));
+        SelectLoadSection("Territory",0);
     }
     // 현재 노드가 없는 읽기/빈 읽기는 원본 선택의 진단으로 남기고, 메타의 빈 쓰기 허용은 그대로 유지한다.
-    void SelectLoadSection(std::string_view sectionName,std::int32_t writable) {
+    std::uint32_t SelectLoadSection(std::string_view sectionName,std::int32_t writable) {
         SyncStreams();o::DataManagerSelectionHooks hooks;
         hooks.stream=[this](auto node) { return std::span(streams.at(node)->bytes); }; // 같은 manager의 실제 목록 노드를 선택한다.
         hooks.assertion=[](auto) { throw std::logic_error("Template 경제/메타 실제 섹션 선택 진단"); }; // 누락/읽기 불가를 가짜 빈 성공으로 바꾸지 않는다.
-        PublishCursor(o::SelectDataManagerSection(manager,sectionName,writable,hooks));
+        const auto selected=o::SelectDataManagerSection(manager,sectionName,writable,hooks);PublishCursor(selected);return selected;
     }
     // 선택 없이 typed cursor를 처음 공개할 때도 같은 원시 노드에서 현재 상태를 읽는다.
     void LoadCursor(std::string_view sectionName) {
-        SyncStreams();const auto handle=LoadSection(sectionName);
-        if (!streams.contains(handle)) throw std::logic_error("Template 경제/메타 현재 노드 누락");PublishCursor(handle);
+        SyncStreams();std::uint32_t handle{};
+        for (const auto& [candidate,stream]:streams) { static_cast<void>(stream);if (!o::CompareDataManagerSectionNames(StreamName(candidate),sectionName)) { handle=candidate;break; } } // getter는 current를 바꾸지 않고 현재 이름의 실제 노드를 빌린다.
+        if (!handle) throw std::logic_error("Template 경제/메타 현재 노드 누락");PublishCursor(handle);
     }
     // 선택된 노드는 소멸과 동일한 핸들/이름 저장소를 사용한다.
     std::string_view CurrentSection() const {
@@ -236,26 +267,17 @@ struct CampaignTemplateStorage::Image {
     // 공개된 Fort/State의 현재 버퍼를 같은 목록에 연결하며 파일 읽기 구현 자체를 대신하지 않는다.
     void SyncStreams() {
         if (fort.sections.size()>o::FortTemplate::kSectionCount) throw std::logic_error("Template 실제 섹션35칸 범위");
-        const auto names=o::FortTemplate::SectionNames();const auto count=std::max(fort.sections.size(),streams.size());std::uint32_t previous{}; // 현재 목록의 마지막 실제 노드다.
-        // 제거된 호스트 버퍼의 기존 노드도 빈 stream으로 반납하고 새 섹션은 목록 끝에 부착한다.
-        for (std::size_t index=0;index<count;++index) {
-            const auto handle=static_cast<std::uint32_t>(index+1);auto& stream=streams[handle];
-            if (!stream) { stream=std::make_unique<Stream>();std::copy(names[index].begin(),names[index].end(),stream->bytes.begin()+16);streamOrder.push_back(handle); }
-            const auto size=index<fort.sections.size() ? fort.sections[index].size() : 0U;const auto capacity=index<fort.sections.size() ? fort.sections[index].capacity() : 0U; // 제품의 현재 실제 벡터를 반납 경계에서 다시 조회한다.
-            Put(stream->bytes,0,capacity ? 0x10000U+handle : 0U);Put(stream->bytes,8,static_cast<std::uint32_t>(size));Put(stream->bytes,12,static_cast<std::uint32_t>(capacity));Put(stream->bytes,0x38,0);
+        const auto names=o::FortTemplate::SectionNames();const auto count=fort.sections.size(); // 파싱 자료/외부 추가 표준 위치만 최초 연결한다.
+        for (std::size_t index=0;index<count;++index) if (!seeded[index]) { // 원문 생성/rename로 제거된 이름을 이름표 기준으로 되살리지 않는다.
+            const auto handle=AllocateStream(index);auto& node=streams.at(handle)->bytes;std::copy(names[index].begin(),names[index].end(),node.begin()+16);
+            auto tail=Read(std::span(manager).subspan(4));if (!tail) Put(manager,4,handle);else { while (const auto next=Read(std::span(streams.at(tail)->bytes).subspan(56))) tail=next;Put(streams.at(tail)->bytes,56,handle); } // 파싱/외부 자료의 최초 연결은 current를 바꾸지 않는다.
+            streamOrder.push_back(handle);
         }
-        // State 교체가 만든 목록 순서를 이후 조회/소멸 때 파일 번호순으로 되돌리지 않는다.
-        for (const auto handle:streamOrder) {
-            if (previous) Put(streams.at(previous)->bytes,0x38,handle);else Put(manager,4,handle);
-            previous=handle;
+        for (const auto& [handle,stream]:streams) { // 실제 목록/head/current/next는 보존하고 현재 외부 버퍼와 공개 cursor만 동기화한다.
+            if (stream->accessing) continue;auto& buffer=Buffer(handle);
+            if (buffer.size()>0xffffffffU || buffer.capacity()>0xffffffffU) throw std::out_of_range("Template 실제 섹션 DWORD 크기 초과");
+            Put(stream->bytes,0,buffer.capacity() ? BufferToken(handle) : 0U);Put(stream->bytes,8,static_cast<std::uint32_t>(buffer.size()));Put(stream->bytes,12,static_cast<std::uint32_t>(buffer.capacity()));SyncCursorPosition(handle);PublishCursor(handle);
         }
-        if (!previous) Put(manager,4,0);
-        // 하위 Money/Meta가 소비한 위치를 같은 노드에 반영하고, 외부 raw 버퍼 교체 뒤에는 새 실제 span/end를 빌린다.
-        const auto syncLoad=[this](std::string_view sectionName,std::uint32_t bit,std::uint32_t position) {
-            if (!(loadCursors&bit)) return;const auto handle=LoadSection(sectionName);const auto found=streams.find(handle);
-            if (found==streams.end()) throw std::logic_error("Template 공개 경제/메타 노드 수명 오류");Put(found->second->bytes,4,position);PublishCursor(handle);
-        };
-        syncLoad("Money",1U,money.position);syncLoad("Badges",2U,badges.position);syncLoad("Technology",4U,technology.position);
     }
     // 현재 manager의 서명/이름 검색 효과를 같은 파일 저장 부모에 공급한다.
     void SaveFile(const o::DataManagerFileSaveState& stateInputs,o::FortImageHooks imageHooks,const TemplateFileWriteHooks& file) {
@@ -264,7 +286,7 @@ struct CampaignTemplateStorage::Image {
         imageHooks.section=[this](std::size_t index)->std::span<const std::uint8_t> {
             o::DataManagerSelectionHooks selection;selection.stream=[this](auto handle) { return std::span(streams.at(handle)->bytes); };
             const auto handle=o::FindDataManagerSection(manager,o::FortTemplate::SectionNames()[index],selection);if (!handle) throw std::logic_error("Template 실제 파일 저장의 누락 섹션 진단");
-            const auto& bytes=fort.sections.at(handle-1);const auto end=Read(std::span(streams.at(handle)->bytes).subspan(8));if (end>bytes.size()) throw std::out_of_range("Template 저장 섹션의 실제 end 범위");return std::span(bytes).first(end);
+            const auto& bytes=Buffer(handle);const auto end=Read(std::span(streams.at(handle)->bytes).subspan(8));if (end>bytes.size()) throw std::out_of_range("Template 저장 섹션의 실제 end 범위");return std::span(bytes).first(end);
         }; //검색은 같은 목록/current를 바꾸며 Source stream의 pos는 초기화하지 않는다.
         o::DataManagerFileSaveHooks hooks;
         hooks.image=[this,&image,&imageHooks](auto source,std::span<std::uint8_t,20> stream) {
@@ -282,7 +304,7 @@ struct CampaignTemplateStorage::Image {
     void Destroy() {
         SyncStreams();o::DataManagerLifetimeHooks hooks;
         hooks.stream=[this](auto handle) { return std::span(streams.at(handle)->bytes); }; // 현재 같은60BYTE 노드만 빌린다.
-        hooks.releaseBuffer=[this](auto handle) { const auto index=static_cast<std::size_t>(handle-0x10001U);std::vector<std::uint8_t>{}.swap(fort.sections.at(index)); }; // 실제 raw 섹션 할당이다.
+        hooks.releaseBuffer=[this](auto pointer) { ReleaseBuffer(pointer); }; // 이름 변경 뒤에도 같은 data 토큰의 현재 할당만 반납한다.
         hooks.releaseStream=[this](auto handle) { if (streams.erase(handle)!=1) throw std::logic_error("DataManager 같은 섹션 중복 반납"); }; // 버퍼 소멸이 끝난 노드만 반납한다.
         o::DestroyDataManager(manager,hooks);
     }
@@ -297,11 +319,11 @@ struct CampaignTemplateStorage::Image {
         names.push_back('/');names.push_back(0);
         o::DataManagerImageHooks hooks;hooks.names=[&names] { return std::span(names); };hooks.assertion=[](auto) { throw std::logic_error("Template 실제 파일 이미지의 원본 진단"); };
         hooks.streams.selection.stream=[this](auto handle) { return std::span(streams.at(handle)->bytes); };hooks.streams.list=ListEffects();
-        hooks.streams.allocateStream=[this,&allocating,&created](auto size) { if (size!=60 || created>=o::FortTemplate::kSectionCount) throw std::logic_error("Template 파일 이미지의 새 노드 계약 위반");allocating=++created;if (!streams.emplace(allocating,std::make_unique<Stream>()).second) throw std::logic_error("Template 파일 이미지의 새 노드 중복");return allocating; };
+        hooks.streams.allocateStream=[this,&allocating,&created](auto size) { if (size!=60 || created>=o::FortTemplate::kSectionCount) throw std::logic_error("Template 파일 이미지의 새 노드 계약 위반");allocating=AllocateStream(created++);return allocating; };
         hooks.streams.memory.buffer=[this,&source](auto pointer)->std::span<std::uint8_t> {
-            if (pointer==0x30000) return source;if (pointer<0x10001U || pointer>0x10000U+o::FortTemplate::kSectionCount) throw std::out_of_range("Template 파일 이미지의 실제 버퍼 토큰 범위");return fort.sections.at(pointer-0x10001U);
+            if (pointer==0x30000) return source;if (pointer<=0x10000000U || !streams.contains(pointer-0x10000000U)) throw std::out_of_range("Template 파일 이미지의 실제 버퍼 토큰 범위");return Buffer(pointer-0x10000000U);
         }; // 입력 원문과 새 할당도 같은 실제 버퍼를 조회한다.
-        hooks.streams.memory.allocate=[this,&allocating](auto size) { auto& buffer=fort.sections.at(allocating-1);if (!buffer.empty()) throw std::logic_error("Template 파일 이미지의 새 버퍼 중복 할당");buffer.resize(size);return 0x10000U+allocating; };
+        hooks.streams.memory.allocate=[this,&allocating](auto size) { auto& buffer=Buffer(allocating);if (!buffer.empty()) throw std::logic_error("Template 파일 이미지의 새 버퍼 중복 할당");buffer.resize(size);return BufferToken(allocating); };
         hooks.streams.memory.assertion=[](auto) { throw std::logic_error("Template 파일 이미지의 실제 MemStream 진단"); };
         o::DataManagerFileHooks file;file.image=hooks;file.fileName=[this] { return o::TemplateDataManagerFileName(manager); }; // 같은 manager+12의 가상 이름을 파일 입력 경계에 넘긴다. VFS 식별자의 전체 원본 경로 복원은 후속이다.
         file.readFile=[&source](std::string_view,std::int32_t mode,std::span<std::uint8_t> length,std::int32_t flags) {
@@ -318,7 +340,7 @@ struct CampaignTemplateStorage::Image {
         auto current=Read(std::span(manager).subspan(4));
         // 읽기 부모가 실제로 붙인 목록만 현재 순서로 보관하고 typed cursor도 같은 할당을 빌린다.
         while (current) {
-            if (streamOrder.size()>=streams.size()) throw std::logic_error("Template 실제 파일 이미지의 목록 순환");auto& node=streams.at(current)->bytes;streamOrder.push_back(current);auto& buffer=fort.sections.at(current-1);const auto end=Read(std::span(node).subspan(8));if (end>buffer.size()) throw std::out_of_range("Template 실제 파일 이미지의 end 범위");buffer.resize(end);PublishCursor(current);current=Read(std::span(node).subspan(56));
+            if (streamOrder.size()>=streams.size()) throw std::logic_error("Template 실제 파일 이미지의 목록 순환");auto& node=streams.at(current)->bytes;streamOrder.push_back(current);auto& buffer=Buffer(current);const auto end=Read(std::span(node).subspan(8));if (end>buffer.size()) throw std::out_of_range("Template 실제 파일 이미지의 end 범위");buffer.resize(end);PublishCursor(current);current=Read(std::span(node).subspan(56));
         }
     }
     // State와 Territory 모두 같은 원시 섹션 바이트를 빌리며 파일 입력이면 원본 읽기 부모가 초기 목록을 만든다.
@@ -371,18 +393,23 @@ std::string CampaignTemplateStorage::ReadSubscriberName(std::uint32_t slot) { re
 // 미정 바이트를 포함한 완성28BYTE를 실제 새 섹션에 쓰고 같은 현재 cursor를 반환한다.
 o::PlayerTemplateStateStream& CampaignTemplateStorage::InitializeState(std::uint32_t slot,std::span<const std::uint8_t,28> bytes) { auto& image=Current(slot);image.InitializeState(bytes);return image.state; }
 // 생성한 manager/노드/수명을 고정하고 이후 current 변경과 분리한다.
-TemplateWriteStream CampaignTemplateStorage::CreateSection(std::uint32_t slot,std::string_view name) { const auto manager=Read(Header(slot));auto& image=Current(slot);const auto section=image.CreateSection(name);return {manager,section,image.streamGeneration.at(section-1)}; }
+TemplateWriteStream CampaignTemplateStorage::CreateSection(std::uint32_t slot,std::string_view name) { const auto manager=Read(Header(slot));auto& image=Current(slot);const auto section=image.CreateSection(name);return {manager,section,image.streams.at(section)->generation}; }
+// 검색 실패도 원문 current0을 유지하며 참조 유효성과 빈 결과를 구별한다.
+TemplateWriteStream CampaignTemplateStorage::FindSection(std::uint32_t slot,std::string_view name) { const auto manager=Read(Header(slot));auto& image=Current(slot);const auto section=image.FindSection(name);return section ? TemplateWriteStream{manager,section,image.streams.at(section)->generation} : TemplateWriteStream{}; }
+// 선택 부모의 실제 pos0/읽기 진단을 끝낸 같은 노드의 생성 수명을 반환한다.
+TemplateWriteStream CampaignTemplateStorage::SelectSection(std::uint32_t slot,std::string_view name,std::int32_t writable) { const auto manager=Read(Header(slot));auto& image=Current(slot);const auto section=image.SelectLoadSection(name,writable);return {manager,section,image.streams.at(section)->generation}; }
+// 실제 Rename 부모가 source 노드를 그대로 남긴 결과를 사용하며 current/head/next를 편의 재기록하지 않는다.
+TemplateWriteStream CampaignTemplateStorage::RenameSection(std::uint32_t slot,std::string_view destination,std::string_view source) { const auto manager=Read(Header(slot));auto& image=Current(slot);const auto section=image.RenameSection(destination,source);return {manager,section,image.streams.at(section)->generation}; }
 // Create 반환값과 독립적으로 현재 선택을 보관한다. 과거 파일에서 읽은 노드에도 첫 빌림 수명을 부여한다.
 TemplateWriteStream CampaignTemplateStorage::CurrentWriteStream(std::uint32_t slot) {
     const auto manager=Read(Header(slot));auto& image=Current(slot);const auto section=Read(std::span(image.manager).subspan(8));
-    if (!section || section>o::FortTemplate::kSectionCount || !image.streams.contains(section)) throw std::logic_error("Template 현재 쓰기 stream의 실제 노드 누락");
+    if (!section || !image.streams.contains(section)) throw std::logic_error("Template 현재 쓰기 stream의 실제 노드 누락");
     image.SyncCursorPosition(section);
-    auto& generation=image.streamGeneration.at(section-1);if (!generation) { if (!++image.nextStreamGeneration) throw std::overflow_error("Template 현재 쓰기 수명 소진");generation=image.nextStreamGeneration; }
-    return {manager,section,generation};
+    return {manager,section,image.streams.at(section)->generation};
 }
 // 반납된 manager와 재생성된 동일 이름의 새 노드를 이전 쓰기 대상으로 취급하지 않는다.
 CampaignTemplateStorage::Image& CampaignTemplateStorage::Writable(TemplateWriteStream stream) {
-    const auto found=images_.find(stream.manager);if (found==images_.end() || !stream.section || stream.section>o::FortTemplate::kSectionCount || !stream.generation || found->second->streamGeneration.at(stream.section-1)!=stream.generation || !found->second->streams.contains(stream.section)) throw std::logic_error("Template 쓰기 참조의 해제된 manager/섹션 수명");return *found->second;
+    const auto found=images_.find(stream.manager);if (found==images_.end() || !stream.section || !stream.generation || !found->second->streams.contains(stream.section) || found->second->streams.at(stream.section)->generation!=stream.generation) throw std::logic_error("Template 쓰기 참조의 해제된 manager/섹션 수명");return *found->second;
 }
 // 원본 일반 MemStream 쓰기는 보관한 노드의 현재 cursor에 적용한다.
 void CampaignTemplateStorage::WriteSection(TemplateWriteStream stream,std::span<const std::uint8_t> bytes) { Writable(stream).WriteStream(stream.section,bytes); }

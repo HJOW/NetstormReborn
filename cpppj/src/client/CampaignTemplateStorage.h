@@ -17,7 +17,7 @@ struct TemplateFileWriteHooks {
 };
 // 현재 섹션이 바뀌어도 같은 manager의 같은 생성 수명에 쓰기 위한 불투명 참조다.
 struct TemplateWriteStream {
-    std::uint32_t manager{},section{}; // 실제 호스트 manager와 표준35개 섹션의 토큰이다. 포인터를 DWORD로 자르지 않는다.
+    std::uint32_t manager{},section{}; // 실제 호스트 manager와 같은 생성 수명의 동적 섹션 토큰이다. 포인터를 DWORD로 자르지 않는다.
     std::uint64_t generation{}; // 같은 이름의 섹션을 재생성한 뒤 이전 참조로 쓰는 것을 거부한다.
 };
 // 실제 파싱 자료를 단독 소유하고 빌린 헤더는 같은 manager/State cursor를 조회한다.
@@ -38,7 +38,10 @@ public:
     o::PlayerTemplateStateStream& SelectState(std::uint32_t slot); // 원본 검색/쓰기허용 선택으로 같은 manager.current/State.pos를 변경한다.
     std::string ReadSubscriberName(std::uint32_t slot); // 004bd4d0처럼 실제 Subscriber 선택/ID 건너뜀/signed 길이 읽기로 현재 이름을 반환한다.
     o::PlayerTemplateStateStream& InitializeState(std::uint32_t slot,std::span<const std::uint8_t,28> bytes); // 기존 State 반납 뒤 새 섹션을 목록 끝에 만들고 원본16384BYTE 버퍼에28BYTE를 쓴다.
-    TemplateWriteStream CreateSection(std::uint32_t slot,std::string_view name); // 표준 섹션을 원본 생성 부모로 교체하고 새 마지막 노드의 쓰기 참조를 반환한다.
+    TemplateWriteStream CreateSection(std::uint32_t slot,std::string_view name); // 원본 생성 부모로 이름의 기존 노드를 교체하고 새 마지막 노드의 참조를 반환한다. Temp 같은 동적 이름도 허용한다.
+    TemplateWriteStream FindSection(std::uint32_t slot,std::string_view name); // 원본 검색으로 current를 갱신한다. 없으면 current0/빈 참조이며 pos는 보존한다.
+    TemplateWriteStream SelectSection(std::uint32_t slot,std::string_view name,std::int32_t writable); // 실제 선택 부모의 검색/진단/pos0을 같은 노드에 수행한다.
+    TemplateWriteStream RenameSection(std::uint32_t slot,std::string_view destination,std::string_view source); // 실제 Rename 부모가 대상을 반납한 뒤 원래 source 노드의 이름만 교체한다. handle/생성수명/버퍼할당을 보존한다.
     TemplateWriteStream CurrentWriteStream(std::uint32_t slot); // 현재 헤더의 manager/current를 다시 읽어 같은 노드의 생성 수명을 고정한다.
     void WriteSection(TemplateWriteStream stream,std::span<const std::uint8_t> bytes); // 현재 선택과 무관하게 보관한 섹션의 원본 MemStream에 쓴다.
     void AccessSection(TemplateWriteStream stream,const std::function<void(std::span<std::uint8_t>,const o::MemStreamHooks&)>& operation); // 인라인 쓰기에 같은16BYTE/버퍼를 동기적으로 빌린다. 할당/노드 교체와 같은 노드의 중첩 쓰기 빌림은 허용하지 않는다.

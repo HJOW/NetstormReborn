@@ -1,5 +1,14 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-23 단위377 완료: 전체 Objects 저장과 동적 Temp 수명
+
+- [x] 이전 단위376은 **229a2c10 / 20261023-46 CP**로 완료 커밋했다. AGENTS·공통/닷넷 인수인계를 재독했고 현재/마지막 전체 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-23**으로 같다. 이전 단위는2433전체 검사/34진입 경로 통과이며 전체 사용자 완주/동일성·Edit 완료는 아니다.
+- [x] 원본004be430 전체Objects 부모,004be230/004be350의 Terr/Chaff 순회와 같은 CampaignTemplateStorage의 실제 동적 Temp/Create/Find/Select/Rename·노드/버퍼/세대 수명을 등록·통합했다. RawCampaignSession::SnapshotFortObjects는 같은 Player/현재 버전/청크 지도/Island Matches/Finder·객체 writer에 연결했다. Release 제품/검사 빌드 종료0·관측 경고오류0, 관련9필터63검사/실패check0, 전체CTest **2442검사/실패check0·종료0/322.57초**다. [실행 기록](docs/exe/cpp-fort-objects-runtime-20261023.md).
+- [x] 실제 서로 다른Terr00/Terr01와Chaff에 생성한3기의 현재owner를6/7/8→3/4/5로바꾸어 두차례 전체Objects저장·실제작업파일·재파싱/별도Session재로드를 통과했다. Chaff분기는 검사에서명시fort모드입력으로선택하며genericEditor설치로가장하지않는다. 전체snapshot/Money/Mission/Badges/Notify·generic Editor·사용자작업본·메인Edit/NewFort/SaveAs/TestBattle/Return 연결은 후속으로 유지한다.
+- [x] 같은 최종제품SHA `4e9d28dd308411fd40ec149203ea060fcb84636dd6d40455751e2ca34c9b3786`로 Early6/훈련9/캠페인16과Demo3 **34진입 경로 전부 통과**했다. 두 실행군 모두 전체originals해시동일이며 허용설정을복원했다. Fury최종BMP도확인했다. 사용자완주/승패·전체UI/외관/음향동일성판정은아니다.
+- [ ] **후속:** Storage의manager 생성자005c89c0 초기화와 Session.objectState.version의 전체 Client 수명 공유는 아직 미통합이다. 목록SoloMapCatalog의임시Storage도같은전역을빌려야한다. 이번 Objects는 같은 Session 버전을 부모/단일 writer가 함께 쓰며 CreateSection은 manager생성자를 부르지 않는다. generic Editor/NewFort 전에 이 전역 경계를 통합하고, 캐시/복제값으로 원본 전체수명 복원이라고 하지 않는다.
+- [x] 이전 단위 뒤 추가된 [일반 Tell 부모/메뉴 API·소유권 설계](docs/exe/cpp-tell-menu-identity-next-20261023.md)를포함한다. 실제 HTML 부모·메타 시점 돌 버튼/메뉴 생성과 Compose의 루트 전체 정리 분리는 후속이다. Money는현재SP저장이아니라공유난수Next(0x3f2)+333.0f라는기존감사의오류를정정했다. 엄격UTF8/PythonAST/JSON/공백·보호경로를확인하여 **20261023-47 CP** 로컬커밋한다. Early1검사helper교정과후속설계/독립모듈은다음단위의미커밋작업으로구별한다. AGENTS/기존원본·CD/다른프로젝트변경이나원격push는없다.
+
 ## 2026-10-23 단위376 완료: Fury 원소 기술과 HTML 선택 부모 수명
 
 - [x] 단위375는 **7838109a / 20261023-45 CP**로 완료 커밋했다. 현재/마지막 전체 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-23**이다. AGENTS·공통/닷넷 인수인계를 재확인했고 새 전체 디컴파일/보호 원문 변경은 없다.

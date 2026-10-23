@@ -1,4 +1,8 @@
 # 게임메뉴부모와Tell인자의독립PE관측을해당검사에만공급한다.
+set_source_files_properties(FortObjectsSaveTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_FORT_OBJECTS_PARENT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fort-objects-parent-x86.tsv\"")
+set_source_files_properties(FortRegionSaveTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_FORT_REGION_SAVE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fort-region-save-x86.tsv\"")
 set_source_files_properties(ThemeTechnologyTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_THEME_TECHNOLOGY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/theme-technology-x86.tsv\"")
 set_source_files_properties(DialogCommandLifetimeTests.cpp PROPERTIES COMPILE_DEFINITIONS
@@ -95,6 +99,10 @@ set_source_files_properties(FlyerPreDestroyTests.cpp PROPERTIES COMPILE_DEFINITI
 set_source_files_properties(BurningLifetimeDrawTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_BURNING_LIFETIME_DRAW_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/burning-lifetime-draw-x86.tsv\";NETSTORM_RENDER_FRAME_GATE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/render-frame-gate-x86.tsv\";NETSTORM_BURNING_ARCHER_CAPTURE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/burning-archer-capture-x86.tsv\"")
 add_executable(netstorm_tests
+    FortObjectsSaveTests.cpp
+    FortRegionSaveTests.cpp
+    CampaignTemplateDynamicTests.cpp
+    CampaignFortObjectsSnapshotTests.cpp
     GameMenuBarTests.cpp GameMenusTests.cpp CampaignGameMenuTests.cpp TellParametersTests.cpp
     GameMenuActionsTests.cpp MessageGumpTests.cpp
     HideBuildingsTests.cpp

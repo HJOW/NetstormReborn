@@ -9,6 +9,8 @@
 using namespace netstorm::o;
 using namespace netstorm::client;
 namespace {
+// 동적 노드 ID와 파일 섹션 번호를 혼동하지 않고 이름으로 조회한 논리 BYTE를 비교한다.
+std::vector<std::uint8_t> SectionBytes(std::span<const std::uint8_t> bytes) { return {bytes.begin(),bytes.end()}; }
 // 독립 TSV의 마지막 빈 필드까지 그대로 분리한다.
 std::vector<std::string> Fields(std::string_view source) {
     std::vector<std::string> result;std::size_t start{};
@@ -82,17 +84,17 @@ TEST_CASE(FortSnapshotBasics_ExplicitStorageStreamLifetime) {
     FortTemplate fort;fort.sections.resize(FortTemplate::kSectionCount);CampaignTemplateStorage storage;storage.Install(1,std::move(fort),"work.fort");
     std::array<std::uint8_t,28> state{};state[17]=1;storage.InitializeState(1,state);const auto names=storage.CreateSection(1,"TypeNames");storage.SelectState(1);
     const std::array<std::uint8_t,1> count{188};storage.WriteSection(names,count);storage.AccessSection(names,[](auto fields,const auto& memory) { const std::array<std::uint8_t,4> hash{1,2,3,4};WriteMemStream(fields,hash,4,memory); });
-    CHECK(storage.CurrentSection(1)=="State");const auto order=storage.SectionOrder(1);CHECK(order.back()=="TypeNames");CHECK(storage.Template(1).sections[names.section-1]==std::vector<std::uint8_t>({188,1,2,3,4}));
+    CHECK(storage.CurrentSection(1)=="State");const auto order=storage.SectionOrder(1);CHECK(order.back()=="TypeNames");CHECK(SectionBytes(storage.Template(1).Section("TypeNames"))==std::vector<std::uint8_t>({188,1,2,3,4}));
     const auto replacement=storage.CreateSection(1,"TypeNames");CHECK(Rejects([&] { storage.WriteSection(names,count); }));storage.Borrow(8,1);storage.WriteSection(replacement,count);storage.Clear(8);storage.WriteSection(replacement,count);
-    CHECK(storage.Template(1).sections[replacement.section-1]==std::vector<std::uint8_t>({188,188}));storage.Clear(1);CHECK(Rejects([&] { storage.WriteSection(replacement,count); }));
+    CHECK(SectionBytes(storage.Template(1).Section("TypeNames"))==std::vector<std::uint8_t>({188,188}));storage.Clear(1);CHECK(Rejects([&] { storage.WriteSection(replacement,count); }));
 }
 
 // 호스트 예외에서도 원문이 쓴 논리 끝/부분자료만 보존하며16384BYTE 물리 할당을 파일 자료로 공개하지 않는다.
 TEST_CASE(FortSnapshotBasics_StoragePartialWriteAndMissingDevices) {
     FortTemplate fort;fort.sections.resize(FortTemplate::kSectionCount);CampaignTemplateStorage storage;storage.Install(1,std::move(fort),"partial.fort");const auto stream=storage.CreateSection(1,"Deck");
-    const std::vector<std::uint8_t> tooLarge(16385,1);CHECK(Rejects([&] { storage.WriteSection(stream,tooLarge); }));CHECK(storage.Template(1).sections[stream.section-1].empty());storage.SectionOrder(1);
+    const std::vector<std::uint8_t> tooLarge(16385,1);CHECK(Rejects([&] { storage.WriteSection(stream,tooLarge); }));CHECK(storage.Template(1).Section("Deck").empty());storage.SectionOrder(1);
     storage.AccessSection(stream,[](auto fields,const auto&) { CHECK(U(fields,4)==0 && U(fields,8)==0); }); // 실패한 일반 쓰기의 물리0패딩을 논리 end로 공개하지 않는다.
     CHECK(Rejects([&] { storage.AccessSection(stream,[](auto fields,const auto& memory) { const std::array<std::uint8_t,2> bytes{7,9};WriteMemStream(fields,bytes,2,memory);throw std::logic_error("명시 쓰기 중단"); }); }));
-    CHECK(storage.Template(1).sections[stream.section-1]==std::vector<std::uint8_t>({7,9}));Devices d;d.manager=11;d.mine=0;d.state[17]=0;auto hooks=d.Hooks();hooks.write={};hooks.access={};SnapshotFortTypeNames(0,d.mine,d.typeCount,hooks);CHECK(d.trace=="create:11:TypeNames;state:0");
-    d.state[17]=1;CHECK(Rejects([&] { SnapshotFortTypeNames(0,d.mine,d.typeCount,hooks); }));CHECK(Rejects([&] { storage.CreateSection(1,"unknown-section"); }));
+    CHECK(SectionBytes(storage.Template(1).Section("Deck"))==std::vector<std::uint8_t>({7,9}));Devices d;d.manager=11;d.mine=0;d.state[17]=0;auto hooks=d.Hooks();hooks.write={};hooks.access={};SnapshotFortTypeNames(0,d.mine,d.typeCount,hooks);CHECK(d.trace=="create:11:TypeNames;state:0");
+    d.state[17]=1;CHECK(Rejects([&] { SnapshotFortTypeNames(0,d.mine,d.typeCount,hooks); }));const auto dynamic=storage.CreateSection(1,"unknown-section");CHECK(dynamic.section && storage.CurrentSection(1)=="unknown-section"); // DataManager는 파일 표준35개 밖의 실제 이름도 생성한다.
 }

@@ -4,6 +4,8 @@
 #include "o/RawFortSnapshotBasics.h"
 #include "o/RawFortContentSave.h"
 #include "o/RawFortObjectSave.h"
+#include "o/RawFortObjectsSave.h"
+#include "o/RawFortRegionSave.h"
 #include "o/RawFortTerritorySave.h"
 #include "client/RawProductionMaintenance.h"
 #include "client/RawKnowledgeMenu.h"
@@ -3221,6 +3223,32 @@ void RawCampaignSession::SnapshotFortTerritory(std::uint32_t slot) {
     hooks.current=[&](auto manager) { if (manager!=hooks.manager(static_cast<std::int32_t>(slot))) throw std::logic_error("실제 Territory 현재 manager 불일치");streams.push_back(s.templateStorage->CurrentWriteStream(slot));return static_cast<std::uint32_t>(streams.size()); };
     hooks.access=[&](auto token,const auto& operation) { s.templateStorage->AccessSection(streams.at(token-1),operation); };hooks.assertion=SessionMissing<void,FortTerritorySaveAssertion>();
     o::SnapshotFortTerritory(static_cast<std::int32_t>(slot),hooks);
+}
+// 실제 DataManager 부모와 각 지역/Chaff가 같은 현재 지도·섬 판정·객체 풀·버전을 사용한다.
+void RawCampaignSession::SnapshotFortObjects(std::uint32_t slot) {
+    auto& s=*impl_;if (!s.loaded || slot>=9) throw std::logic_error("실제 Objects snapshot의 설치/슬롯 계약 위반");
+    std::vector<TemplateWriteStream> streams;FortObjectsSaveHooks hooks; // 각 원본 포인터는 같은 manager/노드/생성 수명을 소유한 불투명 참조로 연결한다.
+    const auto remember=[&](TemplateWriteStream stream)->std::uint32_t {
+        if (!stream.manager || !stream.section) return 0;streams.push_back(stream);return static_cast<std::uint32_t>(streams.size());
+    };
+    hooks.manager=[&s](std::int32_t selected) {
+        if (selected<0 || selected>=9) throw std::out_of_range("실제 Objects Template9 범위");return Read(s.templateStorage->Headers(),static_cast<std::size_t>(selected)*20);
+    };
+    const auto currentManager=[&](std::uint32_t manager) { if (manager!=hooks.manager(static_cast<std::int32_t>(slot))) throw std::logic_error("Objects 현재 Template manager 불일치"); };
+    hooks.assertion=SessionMissing<void,FortObjectsSaveAssertion>();
+    hooks.find=[&](auto manager,auto name) { currentManager(manager);return remember(s.templateStorage->FindSection(slot,name)); };
+    hooks.create=[&](auto manager,auto name) { currentManager(manager);return remember(s.templateStorage->CreateSection(slot,name)); };
+    hooks.select=[&](auto manager,auto name,auto writable) { currentManager(manager);return remember(s.templateStorage->SelectSection(slot,name,writable)); };
+    hooks.rename=[&](auto manager,auto destination,auto source) { currentManager(manager);static_cast<void>(s.templateStorage->RenameSection(slot,destination,source)); };
+    hooks.access=[&](auto token,const auto& operation) { if (!token || token>streams.size()) throw std::out_of_range("Objects 현재 stream 참조 범위");s.templateStorage->AccessSection(streams[token-1],operation); };
+    FortRegionSaveHooks regions; // 로더/Builder와 같은 폭·높이·BYTE 지도·섬 목록을 저장에서도 조회한다.
+    regions.chunksX=[&s] { return s.objectState.chunksX; };regions.chunksY=[&s] { return s.objectState.chunksY; };
+    regions.chunkRegion=[&s](auto x,auto y) { return s.chunks.At(x,y).island; };
+    regions.allowed=[&s](std::int32_t island,std::uint32_t owner,std::int32_t region) { return s.islands->Matches(island,std::bit_cast<std::int32_t>(owner),region) ? 1U : 0U; };
+    regions.chunk=[&](auto token,auto x,auto y) { if (!token || token>streams.size()) throw std::out_of_range("영역 저장의 현재 stream 참조 범위");WriteFortObjectChunk(streams[token-1],x,y); };
+    hooks.territory=[&](auto token,auto owner,auto region) { SaveFortTerritoryChunks(token,owner,region,s.objectState.scope,regions); };
+    hooks.chaff=[&](auto token) { SaveFortChaffChunks(token,s.objectState.scope,regions); };
+    SaveFortObjects(static_cast<std::int32_t>(slot),{s.playerState.templateOwner,s.objectState.version,[&s] { return s.core.ownerMode.fort ? 1U : 0U; }},hooks);
 }
 // 로더와 저장 부모가 같은 현재 판본/범위/마스크를 사용한다.
 FortObjectLoadState& RawCampaignSession::FortObjectSettings() { return impl_->objectState; }

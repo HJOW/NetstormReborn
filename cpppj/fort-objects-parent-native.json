@@ -1,0 +1,33 @@
+{
+  "status": "단위377 준비·미등록",
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-23",
+  "entry": "004be430",
+  "bodyBytes": 471,
+  "uniqueInputs": 357,
+  "observations": 714,
+  "normalReturns": 666,
+  "explicitStops": 48,
+  "instructions": 1038830,
+  "precisionDifferences": 0,
+  "boundaries": {
+    "assert": 3042,
+    "find": 13368,
+    "create": 20452,
+    "territory": 13356,
+    "select": 13338,
+    "rename": 10212,
+    "chaffbody": 408
+  },
+  "scope": "실제004be430의20영역/Temp버전BYTE·pos/end/현재manager재조회/빈선택·rename/최종fort조건. Find/Create/Select/Rename·영역4be230·Chaff4be350·서식/진단은 명시 하위 경계. DataManager 실제노드 및 전체영역·Chaff순회/단일청크/파일저장/OS/게임은 실행하지 않는다.",
+  "gameExecuted": false,
+  "osExecuted": false,
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+    "tools/decomp_fort_objects_parent.py": "e171f8b4dfc5ecf6278eb08adfa5fc8a684e91725490cd7b341f9645db78bc44",
+    "cpppj/tests/fixtures/fort-objects-parent-x86.tsv": "df0dc804a10b5f6f802bb8b4501c05b99148e9112325caddc5e98eea79eaf232"
+  }
+}

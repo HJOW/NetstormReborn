@@ -340,6 +340,7 @@ public:
     void SnapshotFortDeck(std::uint32_t slot); // 같은 실제 생산 재계산/덱에서004befd0을 명시 실행한다. 기존 Fort의 읽기 사본을 쓰지 않는다.
     void SnapshotFortTechnology(std::uint32_t slot); // 현재 Player 기술 부모와 같은 Form6 체인을004bcea0 순서로 새 Technology에 저장한다.
     void SnapshotFortTerritory(std::uint32_t slot); // 기존120BYTE와 현재 섬/지도/공유 난수에서004bf6d0을 명시 실행한다.
+    void SnapshotFortObjects(std::uint32_t slot); // 현재 월드의 Terr00~19와 조건부 Chaff를 실제 Temp/rename·청크 writer로 저장한다. 전체 snapshot/Notify는 별도다.
     o::FortObjectLoadState& FortObjectSettings(); // 로드/저장 양쪽의 같은 현재 판본과 범위를 빌린다.
     void WriteFortObjectChunk(TemplateWriteStream stream,std::int32_t chunkX,std::int32_t chunkY); // 같은 저장소의 명시 stream에 한 청크만 저장한다. 전체 지역 부모는 별도다.
     // 생산/튜토리얼/건설 표시가 함께 읽는 금지DWORD 표와 실제 세 카운터를 직접 조작한다.
