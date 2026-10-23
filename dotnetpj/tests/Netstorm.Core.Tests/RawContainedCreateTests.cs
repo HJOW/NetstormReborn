@@ -175,6 +175,50 @@ public sealed class RawContainedCreateTests
     }
 
     /// <summary>
+    /// BindCreate 는 기존 contained 생성기의 부착 경계만 ContentForm 정렬 부착기로 바꾼다.
+    /// 생성은 실제 팩토리의 contained 생성자를 쓰고, 부착은 부모 알림·목록 순서를 따르며 기존 Attach 콜백은 부르지 않는다.
+    /// 추가: W03 삭제·수명 열다섯째 조각(2026-10-23).
+    /// </summary>
+    [Fact]
+    public void BindCreateReplacesOnlyAttachBoundary()
+    {
+        var scene = new Scene();
+        var factory = new RawSquidFactory(scene.Pool, scene.Types);
+        var reasons = new List<(int Parent, int Form, uint Reason)>();
+        var forms = new RawContentFormHost(scene.Pool, scene.Types,
+            (parent, form, reason) => reasons.Add((parent, form, reason)));
+        int parent = factory.Create(90, SidAllocation.Client);
+        var hooks = new ContainedCreateHooks
+        {
+            NotifySurface = sid => scene.Notified.Add(sid),
+            // BindCreate 가 이 부착 콜백을 ContentForm 정렬 부착기로 바꿔야 한다
+            Attach = (_, _, _) => throw new InvalidOperationException("기존 부착 경계가 호출됐습니다"),
+        };
+        ContainedCreateHooks bound = forms.BindCreate(factory, hooks);
+        var contained = new RawContainedCreate(scene.Pool, new ContainedCreateState(), bound);
+        int sid = contained.Create(parent, 100, 0x0182, 0, 0x10, 2);
+        // 생성은 실제 팩토리의 contained 전용 생성자를 그대로 쓴다
+        Assert.Equal(ContainedVtable, Dword(scene.Pool, sid, 0));
+        Assert.Equal(6, scene.Pool.Slot(sid)[10]);
+        Assert.Equal(100, Word(scene.Pool, sid, 18));
+        // 정렬 부착기가 부모 머리와 contained 비트를 세우고 void 를 끈다
+        Assert.Equal(sid, Word(scene.Pool, parent, 6));
+        Assert.Equal(8, scene.Pool.Slot(sid)[11] & 0x0c);
+        Assert.True(forms.Linked(sid));
+        // 부모 부착 알림은 한 번만 나가며 표면 통지(다리 아님)는 없다
+        Assert.Equal(new List<(int, int, uint)> { (parent, sid, 1u) }, reasons);
+        Assert.Empty(scene.Notified);
+        // 다른 풀의 팩토리는 부착 경계를 바꾸기 전에 거부한다
+        var other = new RawSidPool(PoolCapacity, true);
+        var otherFactory = new RawSquidFactory(other, scene.Types);
+        Assert.Throws<ArgumentException>(() => forms.BindCreate(otherFactory, new ContainedCreateHooks
+        {
+            NotifySurface = _ => { },
+            Attach = (_, _, _) => { },
+        }));
+    }
+
+    /// <summary>
     /// 실제 팩토리 연결은 같은 풀만 받고, contained 전용 타입 6 만 만들어 내장 Form 가상 표를 쓴다.
     /// 다른 풀의 팩토리와 다른 타입 요청은 쓰기 전에 거부한다.
     /// </summary>

@@ -301,6 +301,25 @@ public sealed class RawContentFormHost
     }
 
     /// <summary>
+    /// 기존 contained 생성기의 타입6 생성과 부착 경계를 같은 저장소로 연결한다(원본 ContentFormHost::BindCreate).
+    /// 생성 콜백은 실제 팩토리의 contained 전용 생성자를 쓰고, 부착 콜백은 이 몸체의 정렬 부착기를 쓴다.
+    /// 그래야 생성기는 슬롯 필드만 채우고 부모 알림·목록 순서는 ContentForm 규칙을 따른다.
+    /// 추가: W03 삭제·수명 열다섯째 조각(2026-10-23). 근거: cpppj/src/o/ContentFormHost.cpp BindCreate.
+    /// </summary>
+    /// <param name="factory">내장 Form 생성기. 같은 풀이어야 한다.</param>
+    /// <param name="hooks">표면 통지 등 나머지 경계를 채운 묶음.</param>
+    /// <returns>부착만 이 몸체로 바꾼 contained 생성 경계.</returns>
+    public ContainedCreateHooks BindCreate(RawSquidFactory factory, ContainedCreateHooks hooks)
+    {
+        ArgumentNullException.ThrowIfNull(factory);
+        ArgumentNullException.ThrowIfNull(hooks);
+        // 실제 팩토리 연결은 같은 풀 only·타입 6 only 를 생성 시점 계약으로 삼는다
+        ContainedCreateHooks bound = RawContainedCreate.ConnectFactory(_pool, factory, hooks);
+        bound.Attach = (form, parent, flags) => Attach(form, parent, flags);
+        return bound;
+    }
+
+    /// <summary>
     /// 공통 Form Unpop 을 수행한다. 부모 dead/free 판정과 알림 시점은 공통 몸체가 정한다.
     /// </summary>
     /// <param name="form">해제할 ContentForm 번호.</param>
