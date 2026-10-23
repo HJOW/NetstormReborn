@@ -114,13 +114,13 @@ private:
     ScriptStringRing scriptStrings_; // 입력 큐에 예약한 문자열의 원본80칸 수명이며 페이지가 바뀌어도 보존한다.
     std::unique_ptr<DialogBodyLayout> dialogBody_; // 현재페이지의실제StyleText입력/표시복제를소유하며Compose때효과를재실행하지않는다.
     HtmlTextParserGlobals htmlGlobals_; // 원본의페이지간공유P억제전역이다.
-    std::uint32_t buttonTextureType_{},buttonTextureFrame_{}; // 실제 A00 배경 생성자에 전달할 타입/프레임 번호다.
+    std::uint32_t buttonTextureType_{},buttonTextureFrame_{}; // 실제 버튼 배경 생성자에 전달할 fortGump/A01 타입·프레임 번호다.
     // scripts_: 스크립트.
     std::map<std::string, std::unique_ptr<o::Config>> scripts_;
     // decorations_: 장식.
     std::map<std::string, IndexedImage> decorations_;
-    SquidFrameMetrics buttonTextureMetrics_{}; // 원본 A00의 signed short 폭/높이. 반복 주기는 각각 1을 뺀 값이다.
-    ScreenPoint buttonTextureOffset_{}; // A00 VFX 픽셀 영역의 기준점 상대 위치.
+    SquidFrameMetrics buttonTextureMetrics_{}; // 원본 A01의 signed short 폭/높이. 반복 주기는 각각 1을 뺀 값이다.
+    ScreenPoint buttonTextureOffset_{}; // A01 VFX 픽셀 영역의 기준점 상대 위치.
     // title_: 화면에 표시할 제목 또는 제목 Gump의 토큰.
     // clouds_: 팔레트 인덱스 픽셀로 구성한 그림 (IndexedImage).
     IndexedImage title_, clouds_;

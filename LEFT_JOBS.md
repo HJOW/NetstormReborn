@@ -1,5 +1,13 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-23 단위354 완료: 목표 재개 및 메인 메뉴 돌 버튼 질감
+
+- [x] 사용자의 이번 `/goal` 지시로 단위352/353에서 중지했던 cpppj 전체 목표를 재개했다. 현재 PC/마지막 전체 정밀 디컴파일 PC는 **VM-W11-Codex / 2026-10-23**으로 일치한다. 시작 HEAD `39cd2549`, 작업 트리 깨끗함을 확인하고 AGENTS.md·공통/닷넷 인수인계를 다시 읽었다. 기존 디컴파일 소스 변경은 없다.
+- [x] 아래 webpj 공통 인계의 버튼 프레임 차이를 보호 PE DWORD(00542664=1/005411c8=92)와 기존004254b0으로 확인하고, UberGump의 생성 정보/실제 합성을 모두 fortGump A01로 수정했다. Release 빌드2 종료0·경고/오류0, 기존 관련25검사 실패check0이다. 전체 CTest는 이 단위에서 재실행하지 않았으며 이전2335/0 기록과 구별한다.
+- [x] 클론 실제 창1024×768/음소거/6프레임 종료0. 원본 스크린샷 대비 RGB 평균차는 전체2.68585/버튼6.33664다. 허용 options.cfg 변경은 시작 Git 내용으로 복원한다. REA의 H드라이브 Ghidra admission 실패와 읽기 전용 doctor 결과는 [상세](docs/exe/cpp-main-menu-texture-20261023.md)에 기록했으며 기존 산출물/pefile로 근거를 확인했다. 원본 게임 실행·설정 도구 갱신은 없다.
+- [x] 인수인계/상세를 마감하고 **20261023-18 CP**로 로컬 커밋한다. 원격 push는 하지 않는다.
+- [ ] 다음은 실제 Edit 진입/Client Editor Session이다. 현재 Edit→NotImplemented, 제품의 EditorFiles/BindFileSave 미연결과 generic Fort money/badges/technology/populate 경계를 먼저 해결한다. Early Missions 전체·캠페인 전체·데모3개 자연 완주/다른 메뉴·음향/배포 목표는 계속 활성이다.
+
 ## 2026-10-23 공통 참고(webpj WB03-M1에서 발견): cpppj 돌 버튼 질감 프레임
 
 - [x] webpj 메인 메뉴 복원(**20261023-17 WB**, [기록](docs/webpj-main-menu-20261023.md), [webpj 인계](LEFT_JOBS.webpj.md))은 현재 PC **VM-W11-Codex** 와 마지막 전체 정밀 디컴파일 PC(**VM-W11-Codex / 2026-10-23**)가 일치하여 새 디컴파일 없이 기존 `extracted/refined/originals/` 를 읽었다. cpppj·원본/CD·AGENTS.md 는 수정하지 않았다. 디컴파일 소스 변경도 없으므로 마지막 디컴파일 호스트 기록은 그대로다.

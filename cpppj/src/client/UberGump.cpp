@@ -153,7 +153,8 @@ UberGump::UberGump(Client& client) : client_(client) {
     for (const char* name : {"A00", "A01", "I00", "I01", "I02", "I03", "J02"}) {
         const auto frame = client_.Assets().FrameIndex(type, name, 0);
         decorations_.emplace(name, client_.Assets().Shapes().Decode(type.block, frame));
-        if (std::string_view(name)=="A00") {
+        // 원본 버튼 생성자004254b0은 전역00542664의 프레임1(A01 Sandy marble)을 배경 자식에 전달한다.
+        if (std::string_view(name)=="A01") {
             buttonTextureType_=static_cast<std::uint32_t>(o::kFirstAssetTypeNumber+type.block);
             buttonTextureFrame_=static_cast<std::uint32_t>(frame);
             buttonTextureMetrics_=client_.Assets().Shapes().SquidMetrics(type.block,frame);
@@ -797,7 +798,7 @@ void UberGump::Compose() {
         // 실제 raw 자식의 상대 (1,1) 부착/크기/눌림을 사용한다. 첫 준비 합성은 다음 raw 합성으로 대체된다.
         const auto background=!drawRaw ? PlanGumpBackground({r.left+1,r.top+1,r.right-1,r.bottom-1},all,
             buttonTextureMetrics_.width,buttonTextureMetrics_.height,GumpBackgroundFlags::kButton) : rawButtons_->BackgroundPlan(id,all);
-        DrawGumpBackground(*canvas,decorations_.at("A00"),buttonTextureOffset_,background,client_.GetScreen().ShadeMaps());
+        DrawGumpBackground(*canvas,decorations_.at("A01"),buttonTextureOffset_,background,client_.GetScreen().ShadeMaps());
         const auto plan=!drawRaw ? PlanButtonDraw({r,font.Measure(label),font.Height(),0,0,item.enabled ? 0U : 1U},buttonContexts,buttonColors.edge) :
             rawButtons_->DrawPlan(id,font.Measure(label),font.Height());
         DrawGumpLines(*canvas,plan.lines);
