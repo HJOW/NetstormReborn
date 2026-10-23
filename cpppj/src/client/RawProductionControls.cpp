@@ -1,5 +1,6 @@
 // 43e640/43ddd0/43ec00을 기존 격자·항목·SHP·글자 및 현재 Session에 조립한다.
 #include "client/RawProductionControls.h"
+#include "client/ProductionShortcuts.h"
 #include "client/InventoryItemGump.h"
 #include "client/ProductionHintGump.h"
 #include "client/ImageGump.h"
@@ -164,7 +165,7 @@ struct RawProductionControls::Impl {
             if (!session.Core().types[Word(raw,18)].flags2) return 1;session.Cursor().Take({static_cast<std::uint16_t>(first)},(Word(raw,20)&8) ? 0x41U : 1U);hooks.sound("getPiece.wav");common.changed();return 1;
         }
         if (code==0x0200003d) { Bind(bridgeGrid,session.CurrentTechnologyParent());Bind(teleportGrid,session.CurrentTechnologyParent());if (first==1) session.SynchronizeProductionContents();return 0; }
-        if (code==0x020000f4) {
+        if (code==kProductionBridgeCommand) {
             o::RawContainedFinder finder(session.Core().pool,session.ProductionFinder());
             // 실제 현재 기술의flags40/슬롯 BYTE가 같은 항목을 순서대로 찾는다.
             for (auto sid=finder.Begin({static_cast<std::uint16_t>(session.CurrentTechnologyParent())});sid.value;sid=finder.Next()) { const auto raw=session.Core().pool.Slot(sid);if ((Word(raw,20)&0x40) && raw[23]==first) { session.Cursor().Take(sid,0);hooks.sound("getPiece.wav");return 1; } }

@@ -685,6 +685,9 @@ int RunClient(std::vector<std::string> arguments) {
                 }
                 if (step.operation == "esc") { c.Input().Push(0x1b, 0, 0); continue; }
                 if (step.operation=="key" || step.operation=="keyup") {
+                    if (step.argument.size()==1 && static_cast<unsigned char>(step.argument[0])>=0x20 && static_cast<unsigned char>(step.argument[0])<0x7f) {
+                        c.Input().Push(static_cast<unsigned char>(step.argument[0])|(step.operation=="keyup" ? InputCode::kRelease : 0),0,0);continue; // WM_CHAR와 같은 하위 문자 코드를 넣는다. 가상 키 번호로 바꾸지 않는다.
+                    }
                     const std::map<std::string,unsigned> keys{{"left",0x25},{"up",0x26},{"right",0x27},{"down",0x28},{"home",0x73},{"priest",0x74}};
                     const auto found=keys.find(step.argument); if (found==keys.end()) throw std::invalid_argument("Unknown UI key: "+step.argument);
                     c.Input().Push((found->second<<InputCode::kVirtualKeyShift)|(step.operation=="keyup" ? InputCode::kRelease : 0),0,0); continue;

@@ -1,4 +1,5 @@
 #include "client/UserInput.h"
+#include "client/ProductionShortcuts.h"
 #include "client/ClientMain.h"
 #include "client/RawCampaignCursor.h"
 #include <algorithm>
@@ -20,6 +21,7 @@ std::optional<o::SquidId> UserInput::Event(InputEvent event) {
     ReadCursorOptions();std::int32_t rotateMode=0; // 원본 rotmode의 누락 기본값0이다.
     client_.Configuration().ReadInt("rotmode",rotateMode);
     if (world_.Session().Cursor().HandleInput(event,static_cast<std::uint32_t>(rotateMode))) return {};
+    if (QueueProductionShortcut(event,client_.Paused(),{[] { return kProductionBridgeCommand; },[this](auto command,auto slot,auto zero) { client_.Input().PushCommand(command,slot,zero); }})) return {}; // 실제 Gump 경로가 같은 큐의 다음 사건을 소비한다.
     const auto key=(event.code>>InputCode::kVirtualKeyShift)&255u;
     const bool release=(event.code & InputCode::kRelease)!=0;
     if (key>=8) {

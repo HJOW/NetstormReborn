@@ -1,6 +1,9 @@
 # 단위 테스트. 외부 테스트 프레임워크 없이 TestSupport.h 의 작은 도구만 쓴다
 # (첫 구성 때 인터넷에서 내려받을 것이 없다).
 # 테스트 파일을 만들면 아래 목록에 더한다. 파일 안의 TEST_CASE 는 자동으로 등록된다.
+# 생산 단축키의 독립 원문 중 실제 키 구간에 도달한 관측을 대조한다.
+set_source_files_properties(ProductionShortcutsTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_PRODUCTION_SHORTCUTS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/production-shortcuts-x86.tsv\"")
 # 객체/청크 writer의 독립 PE 관측을 해당 검사에서만 읽는다.
 set_source_files_properties(FortObjectSaveTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_FORT_OBJECT_SAVE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fort-object-save-x86.tsv\";NETSTORM_FORT_CHUNK_SAVE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fort-chunk-save-x86.tsv\"")
@@ -55,6 +58,7 @@ set_source_files_properties(FlyerPreDestroyTests.cpp PROPERTIES COMPILE_DEFINITI
 set_source_files_properties(BurningLifetimeDrawTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_BURNING_LIFETIME_DRAW_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/burning-lifetime-draw-x86.tsv\";NETSTORM_RENDER_FRAME_GATE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/render-frame-gate-x86.tsv\";NETSTORM_BURNING_ARCHER_CAPTURE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/burning-archer-capture-x86.tsv\"")
 add_executable(netstorm_tests
+    ProductionShortcutsTests.cpp
     FortTerritorySaveTests.cpp
     FortContentSaveTests.cpp
     FortObjectSaveTests.cpp
