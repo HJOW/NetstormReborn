@@ -180,6 +180,12 @@ With the Visual Studio generator, the executable is `cpppj/build/bin/Release/Net
 
 `--run <game-data folder>` runs the C++ reconstruction. `--view fonts`, `--view types`, and `--view TEST01` open font, type and mission inspection scenes. Live construction, production, bridges, harvesting/transport and combat are connected, while the complete automatic shared AI loop, full playthroughs of all 15 target missions, Edit/custom maps/scenarios and original-parity verification remain unfinished. See [C++ build](docs/cpp-build.md) for build instructions and the [handover](LEFT_JOBS.md) for current integration status.
 
+Build a distributable archive (executable, Visual C++ runtime DLLs, original 10.78 game data and launcher batch files) with the script below. If you omit the output path it prompts for one, and an empty answer cancels. See section 7 of [C++ build](docs/cpp-build.md) for the layout and options.
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File cpppj\package-cpppj.ps1 D:\dist\NetstormReborn-cpppj.zip
+```
+
 # Key documents
 
 - [C++/shared handover](LEFT_JOBS.md) / [C# handover](LEFT_JOBS.dotnetpj.md): latest completed work, remaining boundaries and resume order

@@ -279,3 +279,20 @@ double FrameIntervalSeconds(int maxFps);
   - 2026-10-05: 파일 읽기·원시 설정·번역, 타입 자산·SHP·프레임 코드/검색, 커널 실행 인터페이스·시계, 팔레트·기본 8비트 합성 일부를 복원했다. 다음은 **Config 치환→`.fort`·타입 연결→TEST01 정적 창→실제 프로세스·입력→캠페인 1-1 플레이**다. 전체 모듈 이식 완료로 보지 않는다.
   - 2026-10-05(이어서): 설정·타입·요새 파일·영역 배치·Win32 창·창 모드 화면·입력 큐·메인 루프 뼈대와 **Renderer·원본 글꼴·커서 표시 기반**을 옮겼다. 다음은 [현재 계획](cpp-playable-plan.md)의 **메인 메뉴/브리핑→실제 월드/조작→1-1 완주**다.
 * **두 빌드의 결과를 비교하는 방법.** 같은 미션에서 C# 빌드와 C++ 빌드의 동작을 대조하는 도구는 없다.
+
+## 7. 배포판 압축파일 만들기
+
+2026-10-23: [`cpppj/package-cpppj.ps1`](../cpppj/package-cpppj.ps1) 이 클론 실행 파일, Visual C++ 런타임 DLL, 원본 10.78 게임 데이터를 하나의 zip 으로 묶는다(AGENTS.md 의 배포판 압축 스크립트 요구사항). 받는 사람은 압축을 풀고 `Netstorm.bat` 를 실행하면 된다.
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File cpppj\package-cpppj.ps1 D:\dist\NetstormReborn-cpppj.zip
+```
+
+* **저장 위치.** 첫 매개변수다. 생략하면 실행 중에 입력받고, 빈 값을 입력하면 취소한다(종료 코드 0). 폴더만 주면 `NetstormReborn-cpppj-YYYYMMDD.zip` 으로 만들고, 확장자를 생략하면 `.zip` 을 붙인다.
+* **빌드.** 실행 파일(`cpppj/build/bin/Release/NetstormCpp.exe`)이 없거나 `cpppj/src` 보다 오래됐으면 `NetstormCpp` 대상만 Release 로 빌드한다. `-NoBuild` 로 끄고, `-ExePath` 로 미리 만든 실행 파일을 지정하며, `-DryRun` 은 압축 없이 계획만 보여 준다.
+* **구성.** 최상위에 `NetstormCpp.exe`, 실행 파일이 가져오는 `msvcp140.dll` 등 런타임 DLL, `Netstorm.bat`(창 모드)·`Netstorm-SavedMode.bat`(저장된 화면 모드), `README.txt`, `BUILD_INFO.txt`, `LICENSE.txt` 가 들어가고 `game\` 에 `netstorm.tarc`·`Netstorm.exe`·`d\`·`sound\`·`music\` 이 들어간다. 데이터는 `originals/` 에서 읽기만 한다(`-GameSource` 로 바꿀 수 있다).
+* **원본 `Netstorm.exe` 를 넣는 이유.** 클라이언트가 아이콘·커서·로딩 그림 리소스를 이 파일에서 읽는다(`ClientMain.cpp`, `LOAD_LIBRARY_AS_DATAFILE`). 실행하지 않으며 없으면 기본 아이콘과 화살표 커서로 대체된다. `assets/game-data` 에는 이 파일이 없어 데이터 원천은 `originals/` 이다.
+* **제외.** 실행 중 만들어지는 `d\options.cfg`, 남아 있으면 창 모드로 강제되는 `fullscreenStateFile.dat`, 내려받은 지도 묶음의 잔재인 `d\request*.php`. 클론이 읽지 않는 `help\`·`movie\`·`w\`와 원본 DLL·도구도 넣지 않는다.
+* **쓰기 권한.** 클라이언트가 시작할 때 `game\d\options.cfg` 를 쓰므로 압축을 푸는 폴더는 쓰기 가능해야 한다.
+* **런타임 DLL.** UCRT 는 Windows 10/11 에 기본 포함되어 넣지 않는다. 실행 파일에서 발견한 `MSVCP140`·`VCRUNTIME140` 계열만 `VCToolsRedistDir` → Visual Studio 재배포 폴더 → System32 순으로 찾아 동봉한다. 필요한 DLL 을 못 찾으면 오류로 멈춘다(`-NoRuntime` 으로 생략 가능).
+* **확인 한계.** 자동 빌드 분기와 런타임이 없는 깨끗한 Windows 에서의 실행은 아직 확인하지 않았다([LEFT_JOBS.md](../LEFT_JOBS.md) 단위359).

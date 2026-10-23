@@ -178,6 +178,12 @@ Visual Studio 생성기 기준 실행 파일은 `cpppj/build/bin/Release/Netstor
 
 `--run <게임 데이터 폴더>`는 C++ 복원판을 실행합니다. `--view fonts`, `--view types`, `--view TEST01`은 글꼴·타입·미션 검사 장면입니다. 실제 건설·생산·다리·채취/운반·전투가 연결돼 있으나 공통 전략 AI의 전체 자동 실행, 목표15개 전체 완주, Edit·커스텀 맵/시나리오와 원본 동일성 검증은 미완료입니다. 빌드 절차는 [C++ 빌드](docs/cpp-build.md), 실제 최신 연결 상태는 [인수인계](LEFT_JOBS.md)를 참고하세요.
 
+배포용 압축파일(실행 파일·Visual C++ 런타임·원본 10.78 게임 데이터·실행 배치 파일)은 다음 스크립트로 만듭니다. 저장 위치를 생략하면 실행 중에 입력받고, 빈 값을 입력하면 취소합니다. 구성과 옵션은 [C++ 빌드 7절](docs/cpp-build.md)을 봅니다.
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File cpppj\package-cpppj.ps1 D:\dist\NetstormReborn-cpppj.zip
+```
+
 # 주요 문서
 
 - [cpppj·공통 인수인계](LEFT_JOBS.md) / [dotnetpj 인수인계](LEFT_JOBS.dotnetpj.md): 최신 완료·미완료 범위와 재개 순서
