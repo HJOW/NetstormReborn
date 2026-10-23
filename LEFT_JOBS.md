@@ -1,5 +1,15 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-24 단위379 완료: Client 전체 저장 판본 DWORD의 실제 공유
+
+- [x] 단위378은 **e5ef1dce / 20261023-48 CP**로 커밋했다. 날짜는2026-10-24로넘어갔으며현재PC/마지막전체정밀디컴파일PC는같은 **HJOW-Athlon / 마지막수행2026-10-23**이다. 보호원문재디컴파일이나AGENTS/원본·CD변경은없다.
+- [x] `o::FortSerializationGlobals`의실제uint32_t 한개를Client가소유하고주CampaignTemplateStorage/SoloMapCatalog의두임시MapProbe/실제Session모두같은판본을빌리도록바인딩했다. Storage의Image생성자004bcc60만실제DWORD BYTE뷰에0을쓰고CreateSection/Clear/Storage생성에는임의0쓰기를추가하지않는다. FortObjectLoadState.version은필수생성자로받은참조이며독립검사는각자명시DWORD를공급한다. 제품빌드1과최종검사빌드2는종료0/관측경고오류0이다.
+- [x] 관련9필터68검사중최초1실패는새검사가원본tail압축(cap2)뒤pos2에2BYTE를추가하려한입력오류였다. 제품버퍼확장정책을바꾸지않고실제SelectSection의pos0뒤같은옛ref로덮어쓰도록검사만교정했다. 최종새4검사/실패0과나머지64검사통과,실제Session저장왕복의Storage동일주소도확인했다. 최초로그와검사빌드2/재검사로그를보존했다.
+- [x] **최종 전체회귀:** 제품SHA `e679808354853f6ccd8895fcc8db8ffb943f268f50415ff699ffb36ce191e43e`,최종검사SHA `aaf723b33c6028d65a444c68024872b0319fdd549b8b55d61bf218cb654cd887`이다. 전체CTest **2446검사/실패check0·종료0/331.93초**(전체331.98초),동일제품Early6/훈련9/캠페인16/Demo3 **34진입전부통과**다. 모든실행SHA일치/두GUI실행군complete·originalsUnchanged=true를직접확인했다. 제품/검사소스는최종검증뒤변경없다. [현재기록](docs/exe/cpp-fort-serialization-globals-20261024.md).
+- [x] 같은새제품의 `extracted/cpp-fort-version-20261024-natural1` 실제Early1은종료0/173.28초·상한미도달이다. A~G/SP0→200→400→600/사제21위치·40h1회/G게임99.894초/다음Tutorial2·Guide4·SP10000과전체1394파일manifest동일을확인했다. 초기Done1보존이며새진행저장/디스크영속성증거로확대하지않는다.
+- [x] `extracted/cpp-fort-version-20261024-*`에제품/검사빌드1·검사빌드2·최초관련실패/재검사·전체CTest/내부로그·자연Early1·31미션·3데모원시와설정영구백업을보존했다. 새완료G의BMP도확인했다. 엄격UTF8/공백/보호경로를확인해 **20261024-01 CP**로로컬커밋한다. 기존원본·CD/AGENTS/다른프로젝트변경이나원격push는없다.
+- [ ] **후속 미등록 준비:** 전체SnapshotParent(2728관측/2검사),Money(2210원문실행/3검사),Mission(230관측+48별도부모/2검사),Badges저장·getter(1352관측/2검사),Badges단일6160BYTE장부초기화(64관측/3검사),EditorPlayers(666관측/2검사)는동결·격리통과이나공용CMake/실제Session미등록이다. Notify최소patch는공유소스미적용·격리1596관측/기존회귀합5검사통과이며EditorFiles회귀는적용뒤필요하다. CurrentFortName(876원문관측)의새제품/검사는진행중이다. 새파일/원문fixture/report/tool/doc와 `extracted/cpp-fort-notify-20261024-proposed.patch`를보존하고다음완결단위에서통합한다. 실제Badges공유장부·전체Snapshot/Notify·readOnly파일저장전역·genericEditor/작업namespace/메뉴연결·사용자전체완주/동일성은계속미완료다.
+
 ## 2026-10-23 단위378 완료: Early1 자연 완주 재검증과 검사 계약 교정
 
 - [x] 단위377을 **f3619bcd / 20261023-47 CP**로 커밋했다. AGENTS·공통/닷넷 인수인계를 재확인했고 현재/마지막 전체 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-23**이다. 전체2442검사/실패0과 같은제품34진입통과는377의범위이며 전체목표는계속활성이다.

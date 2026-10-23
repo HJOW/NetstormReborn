@@ -127,7 +127,8 @@ TEST_CASE(FortMetaLoad_ActualSamePoolContentsAndMandatoryBoundaries) {
         ContentFormHost forms(pool,types,[&](Sid owner,Sid child,std::uint32_t reason) { CHECK(owner==parent && reason==1);children.push_back(child); },
             [&](Sid,std::uint32_t) { ++transmissions; });
         ContainedCreateState containedState;RawContainedCreate contained(pool,containedState,forms.BindCreate(factory,{{},[](Sid) { Unsupported(); },{}}));
-        GameRandom random{12345};FortObjectLoadState objectState;RawFortObjectLoad objects(pool,hash,types,frames,random,objectState,ContentsOnly(contained));
+        std::uint32_t serializationVersion{}; // 이독립검사가소유하고객체/내용물로더가같이읽는판본입력이다.
+        GameRandom random{12345};FortObjectLoadState objectState{serializationVersion};RawFortObjectLoad objects(pool,hash,types,frames,random,objectState,ContentsOnly(contained));
         FortTemplate fort;fort.sections.resize(FortTemplate::kSectionCount);const auto names=FortTemplate::SectionNames();
         const auto index=static_cast<std::size_t>(std::ranges::find(names,"Technology")-names.begin());fort.sections[index]={2,110,9,111,254,255,0xee};fort.technologyTrailingBytes=1;
         FortContent first;first.storedType=110;first.type=110;first.quantity=9;FortContent second;second.storedType=111;second.type=111;second.quantity=-2;fort.technology.items={first,second};

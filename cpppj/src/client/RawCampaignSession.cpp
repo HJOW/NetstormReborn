@@ -695,7 +695,7 @@ struct RawCampaignSession::Impl {
         aiMemory(0x20000000,[this](std::span<std::uint8_t> bytes) {
             if (!services.ai.allocationBytes) throw std::logic_error("실제 Session AI 할당 입력 바이트 미연결");services.ai.allocationBytes(bytes);
         }),
-        seed(random,crt,randomMode,services.unixSeconds),themes(core.types.size()),elements(core.types.size()),
+        objectState(templateStorage->SerializationVersion()),seed(random,crt,randomMode,services.unixSeconds),themes(core.types.size()),elements(core.types.size()),
         gunTypes(core.types.size()),hitTypes(core.types.size()),firingIntervals(core.types.size()),dudeSpeeds(core.types.size()),
         soundNames(RequireSounds(services)),archerTypes(core.types.size()),missileTypes(core.types.size()),projectileTypes(core.types.size()),
         restrictions(services.missionRestrictions ? *services.missionRestrictions : localRestrictions),

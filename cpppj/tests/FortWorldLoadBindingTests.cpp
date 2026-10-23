@@ -98,7 +98,8 @@ TEST_CASE(FortWorldLoadBinding_ActualSelectedWorldAndTwoRandomStores) {
             [](SquidRegionAssert) { UnrestoredWorldEffect(); },[](FarmClusterAssertion) { UnrestoredWorldEffect(); },[](TerrainFarmPostpassAssertion) { UnrestoredWorldEffect(); }};
         RawNormalTerrainWorldBinding normal(world,chunks,islands,random,crt,globals,stamp,placement,farm,piece,pipeline,hp,carrier,diagnostics);
         FortTemplate fort;fort.territory.resize(120);std::copy_n(std::array<std::uint8_t,6>{3,1,0x11,7,0xaa,0xbb}.begin(),6,fort.territory.begin());
-        std::vector<std::string> effects;FortObjectLoadState objectState;objectState.loadingDepth=depth;
+        std::uint32_t serializationVersion{}; // 이독립일반월드장치의실제판본DWORD를상태에명시제공한다.
+        std::vector<std::string> effects;FortObjectLoadState objectState{serializationVersion};objectState.loadingDepth=depth;
         // 현재깊이는한DWORD이고모든child/Carrier/표면에같은값을전달한다.
         const auto sync=[&](std::uint32_t value) { depth=value;objectState.loadingDepth=value;carrierState.loadingDepth=value;world.SetLoadingDepth(value); };
         FortFinishOwnerHooks finishHooks{[](std::int32_t)->FortRandomRectangle { UnrestoredWorldEffect(); },[]()->double { UnrestoredWorldEffect(); },

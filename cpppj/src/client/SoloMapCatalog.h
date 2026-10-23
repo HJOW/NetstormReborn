@@ -5,7 +5,7 @@
 #include <memory>
 #include <span>
 
-namespace netstorm::o { class BaseFileSystem;class ConfigInterface; }
+namespace netstorm::o { class BaseFileSystem;class ConfigInterface;struct FortSerializationGlobals; }
 namespace netstorm::client {
 // 원본005327ac의 같은9BYTE를 덮어쓰는 키 저장소다. Client가 소유하면 모든 목록 경계가 같은 수명을 빌린다.
 class SoloMapFileSpec {
@@ -23,6 +23,7 @@ struct SoloMapCatalogEffects {
     std::function<std::string()> userName; // 원본 00540ca8의 현재 좁은 사용자 이름이다.
     std::function<std::string(std::string_view)> translate; // 손상 행 형식의 현재 좁은 번역이다.
     std::function<std::string_view()> fileSpecKey; // 각 PathSpec 직전의 현재 키다. 생략하면 catalog 수명의 기본 fortSpec 버퍼를 사용한다.
+    std::shared_ptr<o::FortSerializationGlobals> serializationGlobals; // 분류/메타두임시Storage도같은Client의005c89c0을쓴다. 생략하면catalog수명에한개를만든다.
 };
 // 파일마다 분류와 목록 메타 조회를 다른 임시 Template에서 수행한다.
 class SoloMapCatalog {

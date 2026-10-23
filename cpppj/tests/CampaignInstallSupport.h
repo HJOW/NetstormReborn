@@ -49,7 +49,8 @@ struct InstallScene {
     AssetPostPopState assetState; // 실제 신전/거주 구역/간헐천/아웃포스트 목록이다.
     RawPriestWorldState priestState; // 실제 사제/Carrier/보호막 장기 전역이다.
     PlayerWorldState playerState; // 현재 battleOwner와 templateOwner는 별도 상태다.
-    FortObjectLoadState objectState; // 저장객체의 실제 미션/로딩 상태다.
+    std::uint32_t serializationVersion{}; // 독립설치장치가소유하는005c89c0의명시DWORD이며로더상태보다오래산다.
+    FortObjectLoadState objectState{serializationVersion}; // 저장객체의 실제 미션/로딩 상태와같은판본참조다.
     CampaignWorldGlobals globals; // 실제 로그인과 missionPost의 장기 전역이다.
     std::uint32_t revision{},ownerChanged{},vortexRevision{},piece{107},crt{7}; // 원본 섬/신전/패턴/CRT 전역이다.
     std::int32_t noRegion{127}; // 정상 지형 생성의 실제 현재 지역없음 번호다.

@@ -8,7 +8,10 @@
 namespace netstorm::o {
 // 객체/상위 로더가 매 분기에서 다시 읽는 원본 전역이다. 미션 기본 소유자는 Load의 Template 칸으로 전달한다.
 struct FortObjectLoadState {
-    std::uint32_t version{},loadingDepth{},scope{}; // 005c89c0/005c89b8/005c89b0: 판본·로딩 깊이·Terr1/Chaff2다.
+    // 원본005c89c0은 manager 생성자와 같은 실제 DWORD를 빌린다. 호출자가 이 상태보다 오래 소유해야 한다.
+    explicit FortObjectLoadState(std::uint32_t& sharedVersion):version(sharedVersion) {}
+    std::uint32_t& version; // 005c89c0: 같은 Client의 저장/목록/객체 로더가 읽고 쓰는 실제 판본이다.
+    std::uint32_t loadingDepth{},scope{}; // 005c89b8/005c89b0: 중첩 로딩 깊이와Terr1/Chaff2의별도전역이다.
     std::uint32_t bridgeType{82},islandType{94},largeIslandType{95},noIslandType{157}; // 실제 PE의 다리/island/islandStalag/noIsland 전역이다. 지면isle97/98과 구별한다.
     std::uint32_t ownerSavedMask{0x5d77cf00},ownerClearedMask{0x10002000},fortKeepMask{0x40480002}; // 두 PE의 초기 mask다.
     bool special{},mission{},fort{},chaffMode{},fortDestroyBlocked{}; // 편집/미션·Fort/Chaff 허용·Fort 삭제 억제 전역이다.

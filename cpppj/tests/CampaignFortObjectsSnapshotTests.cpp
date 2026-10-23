@@ -117,6 +117,7 @@ TEST_CASE(CampaignFortObjectsSnapshot_TwoTerritoriesAndChaffRealRoundtrip) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);const auto original=assets.files.Read("d/thewarbegins.fort");const auto source=FortTemplate::Parse(original,assets.game.TypeTable());ObjectsSnapshotLayout layout(source,assets.frames.at(107));
     ObjectsSnapshotServices external;auto services=external.Make();const auto storage=std::make_shared<CampaignTemplateStorage>();services.templateStorage=storage;
     RawCampaignSession session(assets.game,assets.files,source,"thewarbegins",std::move(services));session.Load();const auto core=session.Core();CHECK(session.LocalOwner()==1 && session.TemplateOwner()==1);CHECK(session.FortObjectSettings().chaffMode && !core.ownerMode.fort);
+    CHECK(&session.FortObjectSettings().version==&storage->SerializationVersion()); // 실제저장/로더와manager가복제값없이같은DWORD를빌려야한다.
     // 원본두섬의현재신전Owner는각각1/2다.chaffMode의영역선택을두섬모두owner1인상태로가장하지않는다.
     for (std::uint32_t region=0;region<2;++region) {
         const auto owner=region+1;const auto temple=Get(session.PlayerRecords(),owner*0xb4+0x7c);if (!temple || temple>=core.pool.Capacity()) throw std::logic_error("원본두섬의실제현재신전부재");const auto raw=core.pool.Slot(Sid{static_cast<std::uint16_t>(temple)});CHECK(raw[34]==owner);

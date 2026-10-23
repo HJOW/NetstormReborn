@@ -31,7 +31,7 @@ struct MapProbe {
     bool mission{}; // 목록의 임시 Template은 미션 소유자가 아니다.
     o::RawPlayerTemplateState state; // 같은 현재 manager의 State를 읽는 실제 getter다.
     // 원본 10.78의 기존/빈/짧은 State 부모를 모두 동일 저장소에 연결한다.
-    explicit MapProbe(SoloMapCatalogEffects& effects):state(o::OriginalEdition::Patch1078,storage.Headers(),
+    explicit MapProbe(SoloMapCatalogEffects& effects):storage(effects.serializationGlobals),state(o::OriginalEdition::Patch1078,storage.Headers(),
         [this](auto slot)->o::PlayerTemplateStateStream& { return storage.SelectState(slot); },
         [this](auto slot)->const std::string& { return storage.Name(slot); },depth,mission,
         [](auto) { throw std::logic_error("단독 맵 메타 조회의 실제 Template State 진단"); },
@@ -62,6 +62,7 @@ struct SoloMapCatalog::Impl {
     // 콜백이 빌리는 주소가 고정된 뒤 원본 목록을 구성한다.
     Impl(const o::BaseFileSystem& source,o::ConfigInterface& settings,SoloMapCatalogEffects devices)
         :files(source),config(settings),effects(std::move(devices)),list(cache,Hooks()) {
+        if (!effects.serializationGlobals) effects.serializationGlobals=std::make_shared<o::FortSerializationGlobals>(); // 같은catalog의분류/메타가공유하는한개DWORD이며Storage생성시마다복제하지않는다.
         if (!effects.fileSpecKey) effects.fileSpecKey=[this] { return defaultFileSpec.Current(); }; // 현재 기본 키도 파일 읽기 직전에 조회한다.
     }
     // 원본 분류 함수의 임시 Template은 목록 메타 Template을 건드리지 않는다.

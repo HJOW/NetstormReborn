@@ -7,6 +7,7 @@
 #include "o/RawDataManagerFileSave.h"
 #include "o/RawFortImage.h"
 #include "o/RawMemStream.h"
+#include "o/FortSerializationGlobals.h"
 #include <map>
 #include <memory>
 namespace netstorm::client {
@@ -23,11 +24,12 @@ struct TemplateWriteStream {
 // 실제 파싱 자료를 단독 소유하고 빌린 헤더는 같은 manager/State cursor를 조회한다.
 class CampaignTemplateStorage {
 public:
-    CampaignTemplateStorage(); // 원본처럼9개 초기 헤더를0으로 만든다. 이후 전역 정리는 별도다.
+    explicit CampaignTemplateStorage(std::shared_ptr<o::FortSerializationGlobals> serializationGlobals={}); // 원본9개헤더를초기화하고같은Client전역을빌린다. 생략하면독립전역한개를소유한다.
     ~CampaignTemplateStorage(); // 호스트 종료 때 남은 실제 소유 이미지를 반납한다. 원본 State 전환을 대신하지 않는다.
     CampaignTemplateStorage(const CampaignTemplateStorage&)=delete; // 고정 헤더/이미지 참조는 복사하지 않는다.
     CampaignTemplateStorage& operator=(const CampaignTemplateStorage&)=delete; // 같은 수명의 표/실제 이미지를 별개 사본으로 만들지 않는다.
     std::span<std::uint8_t> Headers(); // 실제180BYTE를 같은 Player/로더에 공급한다.
+    std::uint32_t& SerializationVersion(); // 생성자/객체로더/저장부모가직접같이쓰는실제005c89c0 DWORD다. 복사값을반환하지않는다.
     void Install(std::uint32_t slot,o::FortTemplate fort,std::string name); // 이전 한 헤더를 실제 반납한 뒤 새 소유 manager를 설치한다.
     void InstallFile(std::uint32_t slot,o::FortTemplate fort,std::span<const std::uint8_t> image,std::string name,std::int32_t typeCount=188); // 실제 파일/서명/섹션 읽기 부모를 실행한다. 기본188은10.78 독립 호출용이며 Session은 현재 타입 수를 전달한다.
     void Borrow(std::uint32_t slot,std::uint32_t source); // 같은 manager를 빌리며 State/지형 cursor도 같은 객체를 사용한다.
@@ -68,9 +70,9 @@ private:
     Image& Writable(TemplateWriteStream stream); // manager 반납이나 같은 섹션 재생성 뒤 오래된 참조를 거부한다.
     std::span<std::uint8_t> Header(std::uint32_t slot); // 같은 표의 한20BYTE를 빌린다.
     o::TemplateLifetimeHooks Effects(); // 실제 manager 소멸과 객체 할당 반납을 분리한다.
+    std::shared_ptr<o::FortSerializationGlobals> serializationGlobals_; // 모든Image/외부Session보다먼저확보하는실제공유DWORD소유권이다.
     std::array<std::uint8_t,180> headers_{}; // Client보다 짧은 Session이 사라져도 유지되는 실제9개 헤더다.
     std::map<std::uint32_t,std::unique_ptr<Image>> images_; // 호스트 포인터를DWORD로 자르지 않는 실제 소유 객체 표다.
     std::uint32_t nextHandle_{1}; // 서로 살아 있는 manager를 구별하는 비영 호스트 핸들이다.
-    std::array<std::uint8_t,4> managerGlobal_{}; // 원본 생성자가0으로 쓰는005c89c0의 같은 Client 수명 저장소다. 전체 State7의 다른 사용처는 후속이다.
 };
 }

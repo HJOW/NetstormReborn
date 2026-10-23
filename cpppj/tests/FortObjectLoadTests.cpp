@@ -54,7 +54,11 @@ struct FortLoadScene {
     // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀. 입력 구성 또는 실행 결과 대조에 사용한다.
     SidPool pool;/* hash: 좌표별 객체 후보를 찾는 공간 해시. 입력 구성 또는 실행 결과 대조에 사용한다. */ SquidHash hash;/* types: 타입 번호로 속성·플래그를 조회하는 타입 표. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::vector<RiftTypeRecord> types;/* frames: 타입별 프레임 자료. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::vector<RiftTypeFrames> frames;
     // random: 원본 FUN_004558c0: 상태 0이면 0x0bad0bad로 바꾼 뒤 상태*0x10003+3의 상위 16비트를 limit로 나눈 나머지를 쓴다 (GameRandom).
-    GameRandom random;/* state: 검사 입력과 실행 뒤 결과를 보관할 상태. */ FortObjectLoadState state;/* books: 장부. 입력 구성 또는 실행 결과 대조에 사용한다. */ SquidPostPopState books;/* rewardState: 보상 계산이 읽거나 갱신하는 판본별 전역과 AI 지갑이다. 패치 주소/CD 주소는 괄호에 둔다 (SquidRewardState). */ SquidRewardState rewardState;
+    GameRandom random;
+    std::uint32_t serializationVersion{}; // 독립원문입력의판본DWORD이며상태가같은주소를빌린다.
+    FortObjectLoadState state{serializationVersion}; // 검사입력과실행뒤결과가같이읽고쓰는실제판본참조와로딩상태다.
+    SquidPostPopState books; // 실제객체후처리장부이며실행결과대조에사용한다.
+    SquidRewardState rewardState; // 보상계산이읽거나갱신하는판본별전역과AI지갑이다.
     // store: 패치판이 플레이어별 SP를 32개의 9칸 DWORD 배열에 흩뿌려 보관하는 방식이다 (std::unique_ptr<ScrambledSpStore>).
     std::unique_ptr<ScrambledSpStore> store;/* hp: 객체의 HP를 조회·변경하는 처리기 또는 HP 값. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::unique_ptr<SquidReward> hp;/* v: V. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::vector<std::uint32_t> v;
     // events: 발생한 이벤트 또는 이벤트 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
