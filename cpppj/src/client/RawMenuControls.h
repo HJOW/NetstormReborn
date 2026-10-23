@@ -101,7 +101,7 @@ public:
     void Open(ScreenPoint point,const std::function<void(const MenuGumpWidgets&,const MenuGumpControls&,const MenuGump&)>& builder);
     // builder가원본객체부착까지마치고루트메뉴토큰(거부시0)을반환한다. controlled스택은0칸이어야한다.
     // 원본Open/위치의계산을반복하거나마우스점에다시부착하지않는다.
-    void OpenAttached(const std::function<std::uint32_t(const MenuGumpWidgets&,const MenuGumpControls&,const MenuGump&)>& builder);
+    void OpenAttached(const std::function<std::uint32_t(const MenuGumpWidgets&,const MenuGumpControls&,const MenuGump&)>& builder,bool closeExisting=true);
     // 실제 루트 직계 sticky 팝업을 Kill하고 같은 삭제 큐를 정리한다.
     void Close();
     // 원본00466710처럼 현재 루트 팝업을 Kill만 한다. callback 반환 전에는 노드/등록을 해제하지 않는다.
@@ -114,6 +114,7 @@ public:
     std::optional<ScreenPoint> Point(std::string_view label) const;
     std::vector<GumpControl> Controls() const;
     bool HasMenus() const;
+    std::uint32_t MenuInstances() const; //00593024의 같은 현재 MenuGump 인스턴스 전체DWORD다.
     // 같은 controlled/Gump/StyleText에 실제 전체 지식 카드를 작성하고 원본 네 줄에 부착한다.
     bool OpenKnowledge(RawCampaignSession& session,std::function<std::string(std::string_view)> translate,std::uint32_t language);
     // 저장한 카드 토큰의 현재 등록/visible/dead를 직접 읽는다. 별도 열림 bool을 두지 않는다.

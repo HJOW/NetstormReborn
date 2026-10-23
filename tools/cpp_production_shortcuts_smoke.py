@@ -21,7 +21,8 @@ def main():
     steps = [(5, 'key', 'q'), (8, 'report', 'briefingKey'), (10, 'click', 'Play Mission'),
              (15, 'key', 'X'), (18, 'report', 'missingSlot'),
              (1100, 'report', 'mature'), (1100, 'snapshot', str(out/'mature.bmp')),
-             (1105, 'esc', ''), (1108, 'key', 'q'), (1110, 'report', 'pausedKey'), (1115, 'esc', '')]  # 실제 브리핑과 ESC 팝업이 키를 막는지도 관찰한다.
+             (1105, 'esc', ''), (1107, 'report', 'menuOpen'), (1108, 'key', 'q'), (1110, 'report', 'menuKey'),
+             (1115, 'esc', ''), (1119, 'report', 'closedMenu')]  # 실제막대는자동Pause하지않으므로q취득후ESC로커서/팝업을취소한다.
     for index, (key, slot) in enumerate(KEYS):  # 현재 공급 슬롯에 있거나 없는 모든 키를 같은 활성 커서에서 차례대로 누른다.
         frame = 1130 + index*10;steps.extend([(frame, 'key', key), (frame+4, 'report', 'key'+key)])
     steps.extend([(1215, 'keyup', 'W'), (1218, 'report', 'releasedKey'), (1220, 'key', 'q'), (1224, 'report', 'retaken'),
@@ -46,8 +47,10 @@ def main():
     assert 5 not in early_slots and observed['missingSlot']['raw_cursor'][0]!='0', early_slots
     mature = observed['mature'];slots = {int(row[4]):int(row[0]) for row in contents['mature'] if int(row[2])&0x40}  # 실제로 공급된 동일 기술의 SID만 기대 입력으로 사용한다.
     assert mature['paused']==['0'] and mature['popup']==[''] and mature['mission_start'][0]=='1' and slots, mature
-    cursor = observed['pausedKey']['raw_cursor']
-    assert observed['pausedKey']['paused']==['1'] and observed['pausedKey']['popup']==['game'] and cursor[0]!='0', cursor
+    assert observed['menuOpen']['paused']==['0'] and observed['menuOpen']['popup']==[''] and observed['menuOpen']['game_menu_bar'][1]=='1', observed['menuOpen']
+    cursor = observed['menuKey']['raw_cursor']
+    assert observed['menuKey']['paused']==['0'] and cursor[0]=='0' and int(cursor[2])==82 and int(cursor[3])==slots[0], cursor
+    assert observed['closedMenu']['paused']==['0'] and observed['closedMenu']['game_menu_bar'][1]=='0' and observed['closedMenu']['raw_cursor'][0]!='0', observed['closedMenu']
     previous = None;selection = []
     for key, slot in KEYS:  # 없는 슬롯은 이전 커서가 유지되고 E는 현재 존재하는 마지막 슬롯까지 순서대로 취득한다.
         target = max(slots) if slot is None else slot

@@ -18,9 +18,7 @@ namespace {
 // 원본 Warning 파생 가상표와 dead 비트다. 다른 메시지 생성자는 이 어댑터에서 선택하지 않는다.
 constexpr std::uint32_t kWarningVtable=0x517b60,kDead=0x10000;
 // TextGump와 같은 실제 노드에 종류/검색 키/기한을 보관한다.
-struct WarningNode:TextGumpNode {
-    std::int32_t kind{},player{},parameter{}; // 원본+a4/+a8/+b8의 메시지 검색 키다.
-    double deadline{}; // 원본+b0의 벽 시계 만료 기한이다.
+struct WarningNode:MessageGumpNode {
     std::string source; // 실제 창 보고에만 사용하는 원문 사본이며 출력은 소유 StyleText 체인을 읽는다.
 };
 }
@@ -51,9 +49,10 @@ struct WarningMessages::Impl {
     std::unique_ptr<GumpFrame> frame; // 실제 idle 표를 순회한다.
     std::unique_ptr<TextGump> text; // 원본 TextGump의 생성/측정/출력을 재사용한다.
     std::unique_ptr<MessageBoard> board; // 원본20칸 검색/생성/부착 순서를 처리한다.
+    std::unique_ptr<MessageGump> pauseMessage; // 같은 파생 노드와 TextGump를 사용하는 원본 종류11 생성자다.
 
     // callback 대상은 이 구현보다 오래 사는 Client 글꼴/음향/벽 시각이다.
-    Impl(FontStore& suppliedFonts,const PaletteColorTable& suppliedPalette,std::function<double()> suppliedNow,std::function<void()> suppliedSound)
+    Impl(FontStore& suppliedFonts,const PaletteColorTable& suppliedPalette,std::function<double()> suppliedNow,std::function<void()> suppliedSound,MessageGumpHooks pauseContext)
         :fonts(suppliedFonts),palette(suppliedPalette),now(std::move(suppliedNow)),sound(std::move(suppliedSound)),metrics(fonts) {
         if (!now || !sound) throw std::invalid_argument("Warning 실제 벽 시각/음향 연결 누락");
         StyleTextHooks styleHooks;BindStyleTextFonts(styleHooks,metrics);BindStyleTextPalette(styleHooks,palette);
@@ -79,6 +78,14 @@ struct WarningMessages::Impl {
         lifetime=std::make_unique<GumpLifetime>(create,life,std::move(lifeHooks));
         text=std::make_unique<TextGump>(create,textState,*factory,*lifetime,*collection,clip,*style,TextGumpHooks{
             [this](auto token)->TextGumpNode* { const auto it=messages.find(token);return it==messages.end() ? nullptr : it->second.get(); },[this](auto token) { return Node(token); }});
+        // 외부 소유자는 현재 모드/이름/번역만 공급하고 실제 노드·문자열·측정은 같은 저장소를 쓴다.
+        if (pauseContext.challenge) {
+            pauseContext.node=[this](auto token)->MessageGumpNode* { const auto it=messages.find(token);return it==messages.end() ? nullptr : it->second.get(); };
+            pauseContext.constructText=[this](auto token) { text->Construct(token,0,0,0,0); };
+            pauseContext.style=[this](auto token,auto value) { auto& node=*messages.at(token);node.source=value;style->Parse(node.head,value,node.textContext); };
+            pauseContext.fit=[this](auto token,auto x,auto y) { text->Fit(token,x,y); };
+            pauseMessage=std::make_unique<MessageGump>(create,std::move(pauseContext));
+        }
         GumpFrameHooks frameHooks;frameHooks.node=[this](auto token) { return Node(token); };
         frameHooks.idle=[this](auto token) {
             const auto deadline=messages.at(token)->deadline;
@@ -88,8 +95,12 @@ struct WarningMessages::Impl {
         MessageBoardHooks boardHooks;boardHooks.lookup=[this](auto serial) { return Lookup(serial); };
         boardHooks.kill=[this](auto token) { lifetime->Kill(token); };
         boardHooks.create=[this](auto kind,auto player,auto parameter,std::string_view source) {
-            if (kind!=17) throw std::logic_error("다른 원본 메시지 생성자 미연결");
+            if (kind!=17 && kind!=11) throw std::logic_error("다른 원본 메시지 생성자 미연결");
             const auto token=++nextToken;auto& node=*messages.emplace(token,std::make_unique<WarningNode>()).first->second;
+            if (kind==11) {
+                if (!pauseMessage) throw std::logic_error("Pause 메시지의 현재 모드/이름/번역 미연결");
+                pauseMessage->Construct(token,kind,player,parameter);return MessageBoardRecord{token,node.serial,kind,player,parameter};
+            }
             text->Construct(token,0,0,0,0);node.vtable=kWarningVtable;node.kind=kind;node.player=player;node.parameter=parameter;node.source=source;
             sound();style->Parse(node.head,source,node.textContext);node.deadline=WarningDeadline(now());lifetime->SetIdle(token,true);text->Fit(token);
             return MessageBoardRecord{token,node.serial,kind,player,parameter};
@@ -122,8 +133,8 @@ struct WarningMessages::Impl {
     }
 };
 // 글꼴/색/벽 시각/음향의 실제 공급자를 같은 구현에 보관한다.
-WarningMessages::WarningMessages(FontStore& fonts,const PaletteColorTable& palette,std::function<double()> now,std::function<void()> sound)
-    :impl_(std::make_unique<Impl>(fonts,palette,std::move(now),std::move(sound))) {}
+WarningMessages::WarningMessages(FontStore& fonts,const PaletteColorTable& palette,std::function<double()> now,std::function<void()> sound,MessageGumpHooks pauseContext)
+    :impl_(std::make_unique<Impl>(fonts,palette,std::move(now),std::move(sound),std::move(pauseContext))) {}
 // 구현 소멸자가 파생 텍스트의 실제 수명을 먼저 정리한다.
 WarningMessages::~WarningMessages()=default;
 // 화면 경계는 실제 루트/표시 클립과 메시지 배치 전역이 같은 값을 사용한다.
@@ -135,6 +146,8 @@ void WarningMessages::SetView(int width,int height,const PaletteColorTable& pale
 }
 // Warning은 기존 대화상자 상태/일시정지/입력을 바꾸지 않는다.
 void WarningMessages::Add(std::string_view styledText) { impl_->board->Show(17,0,true,0,styledText); }
+// 시계/음향은 명령 소유자가 처리하며 이 경로는 실제 상태 메시지만 변경한다.
+void WarningMessages::PauseStatus(bool enabled) { impl_->board->Show(11,0,enabled,0,""); }
 // 새 메시지를 만들지 않고 기존 MessageBoard의 실제 검색·Kill 경로를 사용한다.
 void WarningMessages::Remove(std::int32_t kind,std::int32_t player,std::int32_t parameter) { impl_->board->Show(kind,player,false,parameter,""); }
 // 원본 idle 순회에서 만료 노드를 Kill하고 지연 큐를 정리한다.

@@ -52,6 +52,7 @@ struct QuickHelpTypeInfo; // 전용 도움말이 같은 현재 TYPE/요구 에�
 class RawCampaignCursor; // 세션과 같은 실제 커서/로컬 예측의 고정 주소 소유자다.
 class RawProductionMaintenance;struct ProductionMaintenanceGlobals;struct ProductionMaintenancePanel; // 생산 전역/패널의 단일 상태를 빌리는 실제 유지 처리기다.
 struct KnowledgeMenuState;struct KnowledgeMenuHooks; // 지식 창의 게임 조회는 같은 실제 세션에서 공급한다.
+struct GameMenusHooks; // 상단 메뉴 부모도 같은 실제 모드/Player/SP/사제 수명을 빌린다.
 struct CursorPlacementHooks; // 실제 커서 배치의 설명/에너지 경계만 연결할 때 사용한다.
 // 실제 Client의 메뉴 작성·번역·Chat·정적 문자열 수명을 공급한다. 게임 계산 훅은 factory가 같은 세션으로 교체한다.
 struct CampaignObjectMenuUi {
@@ -78,6 +79,7 @@ public:
     void OpenCarrier(o::Sid sid) const; // 원본 가상 메뉴가 Carrier일 때만 같은 전체 부모 체인을 작성한다.
     void OpenDamageable(o::Sid sid) const; // 원본 가상 메뉴가 Damageable일 때 실제 회수/공통 체인을 작성한다.
     void OpenObject(o::Sid sid) const; // 원본 기본 객체 메뉴를 작성한다. 파생 메뉴를 임의로 이 함수로 대체하지 않는다.
+    std::uint32_t OpenPlayer(std::uint32_t subscriber) const; // 실제상단Players목록도같은현재RawPlayerMenu부모를사용한다.
     void Summary(o::Sid sid) const; // 현재객체의실제4인자정보/extra/포획표시를같은메뉴에작성한다.
     void Describe(std::uint32_t type,std::uint32_t count,std::uint32_t owner,std::uint32_t sid) const; // 원본4ad780의4인자를직접보존한다.
     bool SelectBuild(std::uint32_t type,o::Sid priest) const; // 같은 Open의 현재 기술/SP 관문과 실제 세션 커서 취득을 실행한다.
@@ -186,6 +188,18 @@ public:
     void StartConstruction(o::Sid parent,float duration);
     // 현재 같은 풀/TYPE/실제 로컬 소유자·모드로 원본 초기 시야를 계산하여 화면에 적용한다.
     void ResetCamera(CameraHomeState& state,std::function<void(std::int32_t,std::int32_t)> apply) const;
+    //00433ba0의 현재 SID 중심 이동과 Carrier 내용물 표시를 같은 실제 로딩 깊이/Kernel에 연결한다.
+    void CenterCameraOn(std::uint32_t sid,CameraHomeState& state,std::function<void(std::int32_t,std::int32_t)> apply) const;
+    //현재 localPlayer의 같은 Player +7c를 먼저 읽고0일 때만 +84로 직접 CenterOn한다. 외부 메뉴 모드 관문은 호출자가 처리한다.
+    void ViewHome(CameraHomeState& state,std::function<void(std::int32_t,std::int32_t)> apply) const;
+    //004950d0→00494f10: live 사제/포획 Carrier/제단을 실제 참여 조회로 찾은 뒤 같은 CenterOn을 호출한다.
+    void ViewYourPriest(std::uint32_t owner,CameraHomeState& state,std::function<void(std::int32_t,std::int32_t)> apply) const;
+    //ReloadTheams의 현재 signed count다. first는0055a70c outposts, second는005e189c factories이며 사본을 만들지 않는다.
+    std::int32_t GameMenuReloadCount(bool second) const;
+    //현재 목록의 DWORD SID를 그 호출 시점에 다시 읽는다. count 확인/순회는 원본 GameMenuActions가 소유한다.
+    std::uint32_t GameMenuReloadSid(bool second,std::uint32_t index) const;
+    //455380의 실제 mode0 지역 투표/도장을 같은 ownership 몸체로 실행한다. 좌표는 원문 float비트다.
+    void ReloadTheamAt(std::uint32_t x,std::uint32_t y,std::uint32_t mode=0) const;
     // 현재 같은 시각을 모든 모듈에 공급한 뒤 동일 Kernel을 실행한다.
     void RunFrame(o::FrameTime time,bool paused);
     // 같은 실제 카메라와 현재 장치의 dirty 경계를 process11에 공급한다.
@@ -228,6 +242,9 @@ public:
     o::MissionAiSettingsState& MissionAiSettings();
     // 같은 실제32×9 원문 배열/offset/추적주소를 읽기만 한다. 별도 SP 저장소를 생성하지 않는다.
     const o::ScrambledSpStore& SpStore() const;
+    void PrepareGameMenus(); //00491680의같은실제SP회전을호출한다. 메뉴열기를위해게임정지를추가하지않는다.
+    std::int32_t& GameMenuTrackingOffset(); //0054d4e0의기존사제/SP공유소유주소를직접빌린다. 값복사나사본동기화가아니다.
+    GameMenusHooks BindGameMenus(GameMenusHooks hooks); //현재Session의모드/Player/사제/SP/로그인/신전비용으로게임조회만연결한다.
     // 실제 로그인/AI 초기화가 사용하는 동일9 Player 원문을 빌린다. 프레임별 사본을 만들지 않는다.
     std::span<std::uint8_t> PlayerRecords();
     // 실제 방향별동맹 초기화가 쓰고 승패가 읽는 같은81DWORD를 빌린다.

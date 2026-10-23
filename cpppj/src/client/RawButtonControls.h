@@ -40,6 +40,11 @@ struct RawButtonHooks {
     std::function<void()> sound;
     std::function<void(std::uint32_t,std::uint32_t)> deleteForm; // 현재Session의UI종속Form을같은공통삭제로반납한다.
 };
+// 같은 Gump Route의 소비 토큰과 부모 click 명령을 구별한다.
+struct RawButtonInputResult {
+    std::uint32_t consumed{}; // 실제00466200의 성공 Gump 토큰이며 단순 화면 hit와 다르다.
+    std::optional<int> activated; // 현재 루트의 돌 버튼 부모 click이 확정한 화면 명령이다.
+};
 // 안정된 파생 저장소와 실제 원본 UI 처리기를 소유한다. 메뉴 행은 기존 메뉴 어댑터가 처리한다.
 class RawButtonControls {
 public:
@@ -54,6 +59,11 @@ public:
         int width,int height,RawButtonAssets assets,bool preserveWorldUi=false);
     // 실제 GumpInput::Route와 부모 click 통지로 활성화된 화면 명령 번호를 반환한다.
     std::optional<int> Event(InputEvent event);
+    RawButtonInputResult RouteInput(InputEvent event); // 같은 실제 Route를 한 번 실행해 월드 전 입력 소비를 돌려준다.
+    std::uint32_t RootToken() const; // 현재 등록표0칸의 실제 공통 루트다.
+    std::uint32_t SerialGump(std::uint32_t serial) const; //00464020: 등록1..999에서 같은serial·비dead의 첫 대상이다.
+    void KillGump(std::uint32_t token); // 같은 실제 수명으로 Kill만 하고 callback 밖 프레임 Cleanup을 유지한다.
+
     // 원본 등록표 Broadcast/Idle에 현재 폴링 좌표를 전달하고 누름 그림 변경 여부를 반환한다.
     bool Poll(InputEvent event);
     // 화면 전환/포커스 상실 때 실제 캡처 처리기에 화면 밖 release를 전달한다.

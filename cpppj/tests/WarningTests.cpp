@@ -100,6 +100,20 @@ TEST_CASE(Warnings_ActualStyleAndGumpLifetime) {
     messages.Add("~E~yAgain");CHECK(messages.Text().size()==1 && messages.Text()[0].y==0 && sounds==21);
 }
 // TextGump 내부 클립을 Renderer가 실제 글자·그림자 픽셀에도 적용한다.
+// Pause와 만료 Warning이 같은20칸 검색/실제 글꼴/삭제 수명을 공유하는지 확인한다.
+TEST_CASE(Warnings_PauseSharesBoardAndPermanentText) {
+    const auto& assets=netstorm::test::dudespawn::Assets(netstorm::o::OriginalEdition::Patch1078);FontStore fonts(assets.files,"Arial");const auto palette=WarningPalette(assets.game);
+    double now{};int sounds{},names{},translations{};MessageGumpHooks context;
+    context.challenge=[] { return 0U; };context.playerName=[&](auto player) { CHECK(player==0);++names; };
+    context.translate=[&](auto text) { CHECK(text=="~E~wGame Paused!");++translations;return std::string(text); };
+    WarningMessages messages(fonts,palette,[&] { return now; },[&] { ++sounds; },std::move(context));messages.SetView(640,480,palette);
+    messages.PauseStatus(true);messages.Add("~E~yWarning");const auto initial=messages.Text();CHECK(initial.size()==2 && names==1 && translations==1 && sounds==1);
+    CHECK(initial[0].bytes=="Game Paused!" && initial[0].y==0 && initial[1].y==12);
+    now=100;CHECK(messages.Idle());const auto paused=messages.Text();CHECK(paused.size()==1 && paused[0].bytes=="Game Paused!");
+    messages.PauseStatus(false);CHECK(messages.Text().empty());CHECK(messages.Idle());
+    messages.PauseStatus(true);CHECK(messages.Text().size()==1 && names==2 && sounds==1);
+}
+// TextGump 내부 클립을 Renderer가 실제 글자·그림자 픽셀에도 적용한다.
 TEST_CASE(Warnings_RendererTextClip) {
     const auto& assets=netstorm::test::dudespawn::Assets(netstorm::o::OriginalEdition::Patch1078);FontStore fonts(assets.files,"Arial");const auto palette=WarningPalette(assets.game);
     WarningMessages messages(fonts,palette,[] { return 0.0; },[] {});messages.SetView(320,40,palette);messages.Add("~B~E~yWarning");auto text=messages.Text();CHECK(text.size()==1);

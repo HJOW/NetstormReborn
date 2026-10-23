@@ -7,6 +7,8 @@
 #include "o/RawFortTerritorySave.h"
 #include "client/RawProductionMaintenance.h"
 #include "client/RawKnowledgeMenu.h"
+#include "client/RawGameMenus.h"
+#include "o/RawMissionLoginTimer.h"
 #include "o/CanonDecoder.h"
 #include "o/RawBridgeEvents.h"
 #include "o/RawArcSpire.h"
@@ -259,6 +261,8 @@ void RawCampaignObjectMenus::OpenPriest(Sid sid) const { impl_->priest->Open(sid
 void RawCampaignObjectMenus::OpenCarrier(Sid sid) const { impl_->carrier->Open(sid); } // 실제 가상 메뉴가 Carrier인 caller가 선택한다.
 void RawCampaignObjectMenus::OpenDamageable(Sid sid) const { impl_->object->OpenDamageable(sid); } // 실제 Damageable 회수 관문을 보존한다.
 void RawCampaignObjectMenus::OpenObject(Sid sid) const { impl_->object->Open(sid); } // 기본 메뉴를 파생 기능의 대체 성공으로 쓰지 않는다.
+// 상단Players목록과객체의Player하위는같은Identity/Player/동맹/정적문자열몸체를사용한다.
+std::uint32_t RawCampaignObjectMenus::OpenPlayer(std::uint32_t subscriber) const { return impl_->player->Open(subscriber); }
 // 임의제목입력대신같은현재객체와원본정보작성몸체를사용한다.
 void RawCampaignObjectMenus::Summary(Sid sid) const { impl_->info->Summary(sid); }
 // 객체없는타입메뉴도원본4인자와SID=-1계약을그대로전달한다.
@@ -2784,6 +2788,17 @@ struct RawCampaignSession::Impl {
         });
         core.processes.SetFormTransmit(AviaryTransmission(assetBindings->Transmission(std::move(pathTx))));
     }
+    // 카메라의005c89b8은 별도 UI 카운터가 아니라 실제 월드 로딩 전역과 같은 저장소다.
+    CameraHome Camera(CameraHomeState& state,std::function<void(std::int32_t,std::int32_t)> apply) {
+        state.localPlayer=playerState.battleOwner;state.fort=core.ownerMode.fort;state.battle=core.ownerMode.battle;state.challenge=core.ownerMode.challenge;
+        state.suppressionDepth=objectState.loadingDepth;CameraHomeHooks hooks; // 같은 현재 세션의 타입/소유자·깊이를 호출 때 다시 읽는다.
+        hooks.suppressionDepth=[this] { return objectState.loadingDepth; };
+        hooks.setSuppressionDepth=[this](std::uint32_t depth) { world.SetLoadingDepth(depth); };
+        hooks.contentPreview=[this](Sid parent) {
+            StartSelectionContentPreview(core.pool,parent,objectState.loadingDepth,[this](Sid sid,std::uint32_t event,float payload) { static_cast<void>(core.processes.AddRegular(sid,event,payload)); },SessionMissing<void>());
+        };
+        return CameraHome(core.pool,core.types,state,std::move(apply),std::move(hooks));
+    }
     #include "client/RawCampaignRitual.inc"
     // 외부 콜백이 참조하는 모듈을 해제하기 전에 현재 Kernel을 비운다.
     ~Impl() {
@@ -2852,9 +2867,35 @@ void RawCampaignSession::Load() {
 }
 // UI의 현재 크기/변경 전역을 빌리며 게임 소유자·모드는 실제 세션에서 다시 읽는다.
 void RawCampaignSession::ResetCamera(CameraHomeState& state,std::function<void(std::int32_t,std::int32_t)> apply) const {
-    state.localPlayer=impl_->playerState.battleOwner;state.fort=impl_->core.ownerMode.fort;
-    state.battle=impl_->core.ownerMode.battle;state.challenge=impl_->core.ownerMode.challenge;
-    CameraHome(impl_->core.pool,impl_->core.types,state,std::move(apply)).Reset();
+    impl_->Camera(state,std::move(apply)).Reset();
+}
+// DWORD SID를 검증한 뒤 WORD 물리 주소로 바꾸며0은 원문 CenterOn의 자연 반환이다.
+void RawCampaignSession::CenterCameraOn(std::uint32_t sid,CameraHomeState& state,std::function<void(std::int32_t,std::int32_t)> apply) const {
+    if (!sid) return;
+    if (sid>65535 || sid>=impl_->core.pool.Capacity()) throw std::out_of_range("카메라 중심 이동의 현재 SID 범위");
+    impl_->Camera(state,std::move(apply)).CenterOn(Sid{static_cast<std::uint16_t>(sid)});
+}
+// 원문 ViewHome은 GameWorld의 임의 Home/Reset 선택을 거치지 않고 현재 Player 두 SID를 직접 읽는다.
+void RawCampaignSession::ViewHome(CameraHomeState& state,std::function<void(std::int32_t,std::int32_t)> apply) const {
+    const auto owner=impl_->playerState.battleOwner;if (owner>=9) throw std::out_of_range("ViewHome의 현재 로컬 Player 범위");
+    const auto player=std::span<const std::uint8_t>(impl_->players).subspan(owner*180U,180U);const auto first=Read(player,0x7c); // 앞 SID가 비0이면 free/dead여도 두 번째로 대체하지 않는다.
+    const auto sid=first ? first : Read(player,0x84);if (sid) CenterCameraOn(sid,state,std::move(apply));
+}
+// 기존 참여 조회의 살아 있는 사제 우선/첫 Carrier/마지막 제단 경로를 그대로 사용한다.
+void RawCampaignSession::ViewYourPriest(std::uint32_t owner,CameraHomeState& state,std::function<void(std::int32_t,std::int32_t)> apply) const {
+    const auto sid=impl_->priestParticipation->Find(owner);if (sid) CenterCameraOn(sid,state,std::move(apply));
+}
+// 원본 첫 목록은 outposts이며 두 번째 factories와 순서를 바꾸지 않는다.
+std::int32_t RawCampaignSession::GameMenuReloadCount(bool second) const {
+    const auto& list=second ? impl_->core.bookkeeping.factories : impl_->assetState.outposts;return std::bit_cast<std::int32_t>(list.count);
+}
+// Items는 같은 목록의 현재 저장소 뷰이며 뒤따르는 효과 후에는 다음 호출이 다시 읽는다.
+std::uint32_t RawCampaignSession::GameMenuReloadSid(bool second,std::uint32_t index) const {
+    const auto& list=second ? impl_->core.bookkeeping.factories : impl_->assetState.outposts;const auto items=list.Items();if (index>=items.size()) throw std::out_of_range("ReloadTheams의 현재 목록 인덱스");return items[index];
+}
+// 기존 ownership이 실제 원본455380의 투표/지형 갱신 전체를 소유한다.
+void RawCampaignSession::ReloadTheamAt(std::uint32_t x,std::uint32_t y,std::uint32_t mode) const {
+    if (mode) throw std::invalid_argument("게임메뉴 ReloadTheams의 원본 mode0 필요");impl_->ownership->UpdateRegion(std::bit_cast<float>(x),std::bit_cast<float>(y));
 }
 // 같은 원본 건설 시작을 후속 배치/룬 부모와 공유한다.
 void RawCampaignSession::StartConstruction(Sid parent,float duration) {
@@ -2929,6 +2970,52 @@ MissionStartGlobals& RawCampaignSession::MissionStartSettings() { return impl_->
 MissionAiSettingsState& RawCampaignSession::MissionAiSettings() { return impl_->missionAiSettings; }
 // 후속 소비자는 현재 같은 원문 배열의 주소와 offset을 검사할 수 있다.
 const ScrambledSpStore& RawCampaignSession::SpStore() const { return impl_->sp; }
+// 메뉴부모가호출하는491680도기존사제회복과동일한SP저장소/난수를쓴다.
+void RawCampaignSession::PrepareGameMenus() {
+    if (!impl_->loaded) throw std::logic_error("설치전게임메뉴SP준비요청");impl_->sp.Rotate();
+}
+// SpStore가첫초기화전부터빌린같은기존소유자의주소를반환한다.
+std::int32_t& RawCampaignSession::GameMenuTrackingOffset() {
+    if (!impl_->loaded) throw std::logic_error("설치전게임메뉴추적주소요청");return impl_->priestState.regen.patch.sequence;
+}
+// GUI/설정/현재미션/네트워크경계는caller가유지하고실제Session소유자료만현재getter로연결한다.
+GameMenusHooks RawCampaignSession::BindGameMenus(GameMenusHooks hooks) {
+    if (!impl_->loaded) throw std::logic_error("설치전게임메뉴현재연결요청");auto* current=impl_.get(); // 반환훅이빌리는같은장기Session주소다.
+    const auto otherGlobal=hooks.global; // 화면/음향/명령등다른실제소유자의현재조회는보존한다.
+    hooks.global=[current,otherGlobal](std::uint32_t address)->std::uint32_t {
+        switch (address) {
+        case 0x5c85a4:return current->globals.editor;
+        case 0x594fbc:return current->core.ownerMode.battle ? 1U : 0U;
+        case 0x594fa4:return current->globals.missionPost ? 1U : 0U;
+        case 0x594fb8:return current->core.ownerMode.fort ? 1U : 0U;
+        case 0x594fc8:return current->core.ownerMode.challenge ? 1U : 0U;
+        case 0x594fa0:return current->core.bridgeState.mission ? 1U : 0U;
+        case 0x595344:return current->playerState.playerKnown;
+        case 0x540c70:return current->playerState.battleOwner;
+        case 0x59507c:return std::bit_cast<std::uint32_t>(current->missionStart.denyAscend);
+        case 0x5cab30:return current->energyState.userCheat;
+        default:break;
+        }
+        if (address>=0x52f81e && address<0x52f827) return current->hiddenPlayers[address-0x52f81e];
+        if (!otherGlobal) throw std::logic_error("게임메뉴의다른현재전역소유자미연결");return otherGlobal(address);
+    };
+    hooks.player=[current](std::uint32_t owner)->std::span<const std::uint8_t> {
+        if (owner>=9) throw std::out_of_range("게임메뉴현재Player0..8범위");return std::span<const std::uint8_t>(current->players).subspan(owner*180U,180U);
+    };
+    hooks.loggedIn=[current] { const MissionLoginPlayerCounts counts(current->core.pool.Edition(),current->players);return counts.LoggedIn(); };
+    hooks.priest=[current](std::uint32_t owner) { const RawPriestLookup lookup(current->core.pool,current->priestState.priests);return lookup.Find(owner); };
+    hooks.priestBusy=[current](std::uint32_t sid) {
+        if (sid>65535) throw std::out_of_range("게임메뉴현재사제SID폭");return current->priests->PriestState().GroundImmobile(Sid{static_cast<std::uint16_t>(sid)}) ? 1U : 0U;
+    };
+    hooks.captured=[current](std::uint32_t owner) { return current->outcome->PriestCaptured(owner) ? 1U : 0U; };
+    hooks.money=[current](std::uint32_t owner) { return std::bit_cast<float>(current->sp.Get(owner)); };
+    hooks.templeCost=[current] {
+        const auto type=current->tutorialTypes.at(0x541244U); // 원본00541244의현재신전타입을SP조회뒤읽는다.
+        if (type>=current->core.types.size()) throw std::out_of_range("게임메뉴현재신전TYPE범위");return current->core.types[type].cost;
+    };
+    hooks.refreshPriest=[current](std::uint32_t owner) { current->priestParticipation->Refresh(owner); };
+    return hooks;
+}
 // 원본 로그인/AI 초기화와 승패 판정은 같은9 Player 바이트를 공유한다.
 std::span<std::uint8_t> RawCampaignSession::PlayerRecords() { return impl_->players; }
 // 방향별 DWORD를 그대로 공유하여 한쪽 변경을 대칭화하거나 bool로 줄이지 않는다.

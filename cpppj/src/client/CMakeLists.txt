@@ -2,6 +2,10 @@
 # (ClientMain·UserInput·Gump 계열·Screen·Renderer·Sound·State·Mission 등)
 # 다시 만든 파일을 아래 목록에 더한다. 파일 이름은 SOURCE_MAP.md 의 "cpppj 경로"를 따른다.
 target_sources(netstorm PRIVATE
+    # 실제게임메뉴부모·명령ID와Tell지역param파서를같은Client/Session에연결한다.
+    RawGameMenuBar.cpp RawGameMenuBar.h RawGameMenus.cpp RawGameMenus.h
+    GameMenuCommands.cpp GameMenuCommands.h TellParameters.cpp TellParameters.h
+    GameMenuActions.cpp GameMenuActions.h MessageGump.cpp MessageGump.h
     # 원본 HUD의 divider 생성·슬레이브 재배치·지도 영역과 공통 입력 드래그 본체다.
     HudDock.cpp HudDock.h HudDividerInput.cpp HudDividerInput.h
     # 현재 미션 F8/First의 같은 입력 큐와 원본 안내 재표시를 연결한다.

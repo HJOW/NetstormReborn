@@ -183,11 +183,25 @@ void RawButtonControls::SetControls(std::span<const GumpControl> controls,std::s
     state.changed=true;
 }
 // 명령은 부모 가상 통지 시에만 생성된다. release의 화면 위치만으로 새 명령을 만들지 않는다.
-std::optional<int> RawButtonControls::Event(InputEvent event) {
+std::optional<int> RawButtonControls::Event(InputEvent event) { return RouteInput(event).activated; }
+// 성공 Gump 토큰을 잃지 않아 같은 사건을 UI와 월드에 두 번 적용하지 않는다.
+RawButtonInputResult RawButtonControls::RouteInput(InputEvent event) {
     auto& state=*impl_;state.activated.reset();state.currentPoll=event;
-    state.input->Route(event.code,std::bit_cast<std::uint32_t>(event.x),std::bit_cast<std::uint32_t>(event.y));
-    return state.activated;
+    const auto consumed=state.input->Route(event.code,std::bit_cast<std::uint32_t>(event.x),std::bit_cast<std::uint32_t>(event.y)); // 현재 공통 focus/dialog/root 순서를 그대로 쓴다.
+    return {consumed,state.activated};
 }
+// 루트 교체 뒤에도 처음 생성한 토큰의 사본을 반환하지 않는다.
+std::uint32_t RawButtonControls::RootToken() const { return impl_->create.entries[0]; }
+// count/visible로 대체하지 않고 원문처럼 고정 등록칸과 현재 serial/dead만 읽는다.
+std::uint32_t RawButtonControls::SerialGump(std::uint32_t serial) const {
+    for (std::size_t index=1;index<impl_->create.entries.size();++index) { // 등록0칸의 루트는 검색하지 않는다.
+        const auto token=impl_->create.entries[index];if (!token) continue;const auto& node=*impl_->Node(token); // 각 현재 비영 슬롯만 역참조한다.
+        if (node.serial==serial && !(node.flags&0x10000U)) return token;
+    }
+    return 0;
+}
+// Kill에서 즉시 해제하지 않아 현재 메뉴 입력 callback의 나머지 실행을 보존한다.
+void RawButtonControls::KillGump(std::uint32_t token) { impl_->lifetime->Kill(token);impl_->changed=true; }
 // 현재 벽 시계·폴링 상태의 실제 원본 프레임 처리를 한 번 실행한다.
 bool RawButtonControls::Poll(InputEvent event) {
     auto& state=*impl_;state.currentPoll=event;

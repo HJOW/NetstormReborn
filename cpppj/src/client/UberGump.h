@@ -22,6 +22,7 @@ class GameWorld;
 class UserInput;
 class WarningMessages;
 class DialogBodyLayout;
+struct GameMenuBarState; // 현재Session의기존검산참조와메뉴serial만빌린다.
 class CampaignObjectMenuClient; // 같은 실제 원본 객체 메뉴와 현재 명령 큐를 연결한다.
 struct MissionFortLoadRequest; // Init부터 실제 Session 설치까지 같은 요청과 Zone 이미지를 소유한다.
 class CampaignTemplateStorage; // 원본 명시 Init/State 정리까지 같은9개 manager의 수명을 소유한다.
@@ -97,6 +98,11 @@ private:
     void RefreshWindowTitle();
     // 원본 Options/Help의 목록과 하위 메뉴를 구성한다.
     void OpenMenu(std::string name);
+    void OpenGameMenu(); //004cc210의같은controlled가로막대와실제하위메뉴를현재Session에작성한다.
+    void ToggleGameMenu(); // ESC의현재serial조회→열기또는Kill/serial0/팝업닫기를실행한다.
+    bool GameMenuOpen() const; // 현재serial을공통등록표에서조회하며과거열림bool을저장하지않는다.
+    bool GameMenuCommand(const InputEvent& event); // 메뉴부모가예약한현재원본명령을각실제소유자로분배한다.
+
     // 원본 우클릭 메뉴의 연결점. 건설/수확 명령은 다음 단계에서 활성화한다.
     void OpenObjectMenu(o::SquidId id,const InputEvent& event);
     // 커널이 소유한 월드와 입력 참조를 안전한 순서로 제거한다.
@@ -138,10 +144,14 @@ private:
     std::vector<DialogAction> actions_;
     // mission_: 미션 이름에 맞는 스크립트를 읽고 섹션을 선택하는 처리기 (std::unique_ptr<MissionScript>).
     std::unique_ptr<MissionScript> mission_;
+    std::unique_ptr<GameMenuBarState> gameMenuState_; // Session해제전에같은검산참조를반납한다.
     std::unique_ptr<CampaignObjectMenuClient> objectMenus_; // Client 수명이며 Session 해제 전 실제 팝업/Form을 먼저 닫는다.
     struct MissionRuntime; // 같은 미션의 Start/프레임 게이트 상태와 실제 연결을 고정 주소로 소유한다.
     std::unique_ptr<MissionRuntime> missionRuntime_; // 월드와 스크립트보다 먼저 해제한다.
     std::unique_ptr<o::RawMissionGuide> guide_; // 현재 미션 해제 중에도 반복 호출 스택이 살아 있도록 UberGump 수명에 둔다.
+    std::uint32_t hideBuildings_{}; // 원본0059a8ac의현재표시모드이며메뉴체크와실제Draw가공유한다.
+    std::uint32_t worldRedraw_{}; // 원본0059a8b0의 메뉴 명령 갱신 요청이며 실제 Renderer 무효화에 전달한다.
+    std::uint32_t menuConfigRevision_{}; // 원본00542678의 설정 명령 증가를 같은 Client 수명에 보관한다.
     std::uint32_t commandGump_{}; // 원본00548740의 초기0이다. 현재 Client는 이 전용 Gump를 아직 생성하지 않는다.
     // world_: 미션 지도와 객체 상태를 갱신하고 월드 그림을 수집하는 프로세스 (GameWorld).
     GameWorld* world_{};

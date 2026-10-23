@@ -110,3 +110,15 @@ TEST_CASE(RawButtonControls_CurrentRegisteredDirectHandle) {
     CHECK(invalid);
     input.SetControls({},kLabels,640,480,kAssets);CHECK(input.RegisteredGump(0)==root);
 }
+
+// UI성공토큰을단순hit나부모명령과혼동하지않고재사용id/증가serial의수명차이를검사한다.
+TEST_CASE(RawButtonControls_RouteAndSerialStayDistinctAcrossDeletion) {
+    RawButtonControls input(netstorm::o::OriginalEdition::Patch1078);input.SetControls(kControls,kLabels,640,480,kAssets);
+    const auto root=input.RootToken(),button=input.RegisteredGump(1); // 첫돌버튼은id1/serial2이며화면명령은7이다.
+    CHECK(root==input.RegisteredGump(0));CHECK(button!=0 && input.SerialGump(2)==button);CHECK(input.SerialGump(1)==0);
+    const auto down=input.RouteInput({InputCode::kLeftButton,20,25});CHECK(down.consumed==button && !down.activated && input.HasCapture());
+    const auto up=input.RouteInput({InputCode::kLeftButton|InputCode::kRelease,20,25});CHECK(up.consumed==button && up.activated==7 && !input.HasCapture());
+    const auto outside=input.RouteInput({InputCode::kLeftButton,300,300});CHECK(!outside.consumed && !outside.activated);
+    input.KillGump(button);CHECK(input.SerialGump(2)==0); // 지연해제전에도dead대상을serial조회로다시선택하지않는다.
+    input.SetControls(kControls,kLabels,640,480,kAssets);CHECK(input.RootToken()==root);CHECK(input.RegisteredGump(1)!=button && input.RegisteredGump(1)!=0);CHECK(input.SerialGump(2)==0);
+}

@@ -161,6 +161,12 @@ std::uint32_t CampaignObjectMenuClient::OpenProduction(GameWorld& world,const In
         InventoryAboutMenu menu(world.Session().Core().pool,state,std::move(h));accepted=menu.Open(item,point);return s.root;
     });return accepted;
 }
+// 상위 가로 메뉴를 닫거나 새 루트를 만들지 않고 현재 controlled 스택 안에 하위만 작성한다.
+std::uint32_t CampaignObjectMenuClient::BuildPlayerMenu(GameWorld& world,std::uint32_t subscriber,const MenuGumpWidgets& widgets,const MenuGumpControls& controls,const MenuGump& menu) {
+    auto& state=*impl_;if (state.world && state.world!=&world) throw std::logic_error("Player 하위의 이전 Session을 먼저 반납해야 합니다");
+    state.world=&world;if (!state.chain) state.chain=world.Session().MakeObjectMenus(state.Ui(widgets,controls,menu));
+    return state.chain->OpenPlayer(subscriber);
+}
 // 팝업의 실제 Form이 먼저 반납된 뒤 빌린 세션/서식 callback을 해제한다.
 void CampaignObjectMenuClient::Clear() {
     auto& s=*impl_;if (s.world) s.buttons.Menus()->Close();s.root=0;s.opener.reset();s.chain.reset();s.world=nullptr;

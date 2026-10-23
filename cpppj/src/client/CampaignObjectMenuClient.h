@@ -12,6 +12,7 @@ namespace netstorm::client {
 class Client;
 class GameWorld;
 class RawButtonControls;
+class MenuGumpWidgets;class MenuGumpControls;class MenuGump; // 실제 공통 controlled 메뉴 처리기의 고정 수명을 빌린다.
 struct InventoryItemNode; // 같은 현재 생산 항목의 내용물/객체 필드를 빌린다.
 // Client의 메뉴 수명은 모든 월드보다 길다. Clear는 Session을 반납하기 전에 호출한다.
 class CampaignObjectMenuClient {
@@ -20,6 +21,7 @@ public:
     ~CampaignObjectMenuClient(); // 월드가 살아 있는 동안 Clear로 객체 Form을 먼저 반납한다.
     void Open(GameWorld& world,o::Sid sid,const InputEvent& event); // 현재 사건 참조와 원본 파생 메뉴 슬롯을 사용한다.
     std::uint32_t OpenProduction(GameWorld& world,const InventoryItemNode& item,ScreenPoint point,const std::function<bool(o::Sid)>& affordable); //43d330의 실제 내용물 정보 메뉴를 연다.
+    std::uint32_t BuildPlayerMenu(GameWorld& world,std::uint32_t subscriber,const MenuGumpWidgets& widgets,const MenuGumpControls& controls,const MenuGump& menu); // 같은 작성 스택 안에서 기존 전체 Player 하위를 작성한다.
     void Clear(); // 팝업→메뉴 체인→현재 월드 순서로 참조를 해제한다.
     bool Active() const; // 마지막 실제 루트의 현재 visible/dead를 읽는다.
     bool Command(const InputEvent& event); //원본Factory입력/사제건설/회수/공통객체선택을처리하며다른명령은false다.

@@ -27,6 +27,7 @@ namespace {
 constexpr int kCellPixelsX=16,kCellPixelsY=11,kMenuHeight=28;
 // 현재 연결한 지형/받침/물체의 상대 깊이. 전체 원본 zorder 표는 후속 복원 대상이다.
 constexpr std::int16_t kLandDepth=30,kCliffDepth=40,kObjectDepth=0;
+constexpr std::uint32_t kHideBuildingsMask=2421574144U,kHideWideOwnerType=164,kHideUnfilteredType=84; // PATCH005424b4/5412e8/5411a8이며기존SpriteDraw와같은현재TYPE분류다.
 // 00531a08의 소유자 색 후보 표.
 constexpr std::array<std::array<std::uint8_t,8>,8> kOwnerColors{{
     {81,80,76,145,146,147,4,10},{94,100,170,169,204,249,217,227},{195,93,185,35,31,149,70,15},{207,131,133,128,136,2,142,143},
@@ -173,6 +174,11 @@ void GameWorld::SetPalette(std::span<const ScreenColor> palette) {
     if (campaign_) campaign_->Cursor().SetPalette(palette); // 실제 커서도 같은 파일 팔레트의 원본 색표를 사용한다.
     if (factoryDisplay_) factoryDisplay_->SetPalette(palette); // 원본 SpriteDraw도 같은 파일 팔레트에서만 색표를 만든다.
     remaps_.clear();changed_=true;
+}
+// 메뉴명령의같은DWORD를복사하지않아열린메뉴뒤의표시/선택도현재상태를읽는다.
+void GameWorld::BindHideBuildings(std::function<std::uint32_t()> current) {
+    if (!current) throw std::invalid_argument("건물숨김의현재0059a8ac조회기누락");
+    hideBuildings_=std::move(current);changed_=true;
 }
 // 연결 방향 후보와 원소별 묶음에서 지면/절벽의 실제 클러스터를 고른다.
 std::size_t GameWorld::TerrainFrame(const TypeAsset& type,char a,char b,int theme,int x,int y,bool core) const {
@@ -341,8 +347,12 @@ void GameWorld::Scroll(int dx,int dy) {
     if (x!=scrollX_ || y!=scrollY_) { scrollX_=x; scrollY_=y; changed_=true; }
     SurfaceView();
 }
-// 처음에는 내 신전, 신전이 없으면 내 사제를 가운데에 둔다.
+// 실제 캠페인은 현재 Player의 두 Home SID 또는 실제 사제 참여 조회를 사용한다.
 void GameWorld::Home(bool priest) {
+    if (campaign_) {
+        cameraHome_.width=width_;cameraHome_.height=height_;const auto apply=[this](std::int32_t x,std::int32_t y) { scrollX_=x;scrollY_=y;changed_=true;SurfaceView(); }; // 같은 원점/표시/위치 음향을 한 변경 지점에 갱신한다.
+        if (priest) campaign_->ViewYourPriest(campaign_->LocalOwner(),cameraHome_,apply);else campaign_->ViewHome(cameraHome_,apply);return;
+    }
     const o::Squid* target=nullptr;
     // 내 객체만 홈 대상으로 고른다.
     for (const auto& object:objects_) if (object.owner==1) {
@@ -351,6 +361,21 @@ void GameWorld::Home(bool priest) {
         if (!target && Has(type,"priest")) target=&object;
     }
     if (target) { const auto size=assets_.Types()[static_cast<std::size_t>(target->type-o::kFirstAssetTypeNumber)].definition.Footprint(); scrollX_=static_cast<int>((target->x-(size[0]-1)*0.5)*16)-width_/2; scrollY_=static_cast<int>((target->y-(size[1]-1)*0.5)*11)-height_/2; Scroll(0,0); changed_=true; }
+}
+// 메뉴가 이미 선택한 DWORD SID도 같은 raw Session에서 현재 TYPE/좌표/내용물을 다시 읽는다.
+void GameWorld::CenterOnObject(std::uint32_t sid) {
+    if (campaign_) {
+        cameraHome_.width=width_;cameraHome_.height=height_;
+        campaign_->CenterCameraOn(sid,cameraHome_,[this](std::int32_t x,std::int32_t y) { scrollX_=x;scrollY_=y;changed_=true;SurfaceView(); });return;
+    }
+    const auto* target=Object(sid);if (!target) return;const auto size=assets_.Types()[static_cast<std::size_t>(target->type-o::kFirstAssetTypeNumber)].definition.Footprint(); // 이전 값형 월드의 기존 가운데/테두리 동작을 유지한다.
+    scrollX_=static_cast<int>((target->x-(size[0]-1)*0.5)*16)-width_/2;scrollY_=static_cast<int>((target->y-(size[1]-1)*0.5)*11)-height_/2;Scroll(0,0);changed_=true;
+}
+// Players 명령의 명시 소유자는 같은 현재 Session의 참여 조회로 전달한다.
+void GameWorld::ViewPriest(std::uint32_t owner) {
+    if (!campaign_) { Home(true);return; }
+    cameraHome_.width=width_;cameraHome_.height=height_;
+    campaign_->ViewYourPriest(owner,cameraHome_,[this](std::int32_t x,std::int32_t y) { scrollX_=x;scrollY_=y;changed_=true;SurfaceView(); });
 }
 // 월드 기준점은 원본 SHP 사각형의 원점과 동일하다.
 ScreenPoint GameWorld::ToScreen(double x,double y) const { return {static_cast<int>(std::lround(x*16))-scrollX_,static_cast<int>(std::lround(y*11))-scrollY_}; }
@@ -403,6 +428,11 @@ o::SquidId GameWorld::Pick(ScreenPoint point) const {
     o::SquidId picked=0; double best=std::numeric_limits<double>::max();
     // 겹친 그림은 클릭과 중심점의 거리가 가장 가까운 객체를 고른다.
     for (const auto& object:objects_) if (object.selectable) {
+        if (campaign_ && hideBuildings_()) { // 원본004d5840의현재숨김관문만기존근사선택앞에연결한다.
+            const auto core=campaign_->Core();const auto type=core.pool.Slot(o::Sid{static_cast<std::uint16_t>(object.id)})[10]; // 표시사본대신현재raw TYPE를읽는다.
+            if (type>=core.types.size()) throw std::out_of_range("건물숨김선택의현재TYPE범위오류");
+            if ((core.types[type].flags2&kHideBuildingsMask) || type==kHideWideOwnerType || type==kHideUnfilteredType) continue;
+        }
         const auto r=Bounds(object); const int margin=object.mobile ? 4 : 0;
         if (point.x<r.left-margin || point.x>=r.right+margin || point.y<r.top-margin || point.y>=r.bottom+margin) continue;
         const double dx=point.x-(r.left+r.right)*0.5,dy=point.y-(r.top+r.bottom)*0.5,distance=dx*dx+dy*dy;
@@ -498,7 +528,7 @@ std::vector<RenderSprite> GameWorld::Sprites() const {
         add(type,object.frame,object.x,object.y,object.owner,kObjectDepth,false);
     }
     // Factory 본체/그림자는 원본 수집 깊이와 y보정을 유지하고 공통 장면 정렬에 넣는다.
-    if (factoryDisplay_) for (auto& sprite:factoryDisplay_->Sprites(clip,scrollX_,scrollY_,campaign_->LocalOwner())) result.push_back(std::move(sprite));
+    if (factoryDisplay_) for (auto& sprite:factoryDisplay_->Sprites(clip,scrollX_,scrollY_,campaign_->LocalOwner(),hideBuildings_())) result.push_back(std::move(sprite));
     // 실제 입자도 같은 Renderer 정렬에 넣으며 화면의 뒤에 별도 overlay로 덮지 않는다.
     if (campaign_) for (auto& sprite:campaign_->ParticleSprites(clip)) result.push_back(std::move(sprite));
     return result;

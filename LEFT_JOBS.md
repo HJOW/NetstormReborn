@@ -1,5 +1,17 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-23 단위369 완료: 실제 ESC 가로 메뉴와 원본 하위·사건 연결
+
+- [x] 단위368은 `d2dd9fcb / 20261023-36 CP`로 커밋했다. AGENTS·공통/닷넷 인수인계를 재확인했으며 현재/마지막 전체 정밀 디컴파일 PC는 **VM-W11-Codex / 2026-10-23**으로 같다. 기존 정밀 원문을 재사용했고 새 전체 디컴파일/보호 원문 변경은 없다.
+- [x] 실제 가로 부모/Game·Edit·View·Options·Players·About 하위를 같은 공통 Gump/현재 Session/SP Rotate·검산 sequence/serial 수명/원본 정수·문자열 큐에 연결했다. Guide 뒤 한 번 UI 판정→바깥 좌우 누름의 같은 월드 사건 진행, ESC 커서취소/serial 토글, 열기만으로 Pause하지 않는 원본 동작을 적용했다. 호스트 선행 Close/Cleanup은 생략하되 실제 Attach replace가 기존 팝업을 지연 Kill한다. 가로 열 자동 입력 좌표와 중복 Route도 수정했다.
+- [x] Tell 실제 인자/param2 event.y, RequestQuitApp·음량·Pause11 영구 메시지·현재 시계/음소거·홈/명시 사제 카메라·건물 숨김/선택 필터·outposts→factories ReloadTheams를 기존 실제 코어에 연결했다. 독립 원문 총4286행과 제품 대조, 새 실제공통트리/현재Session/픽셀 검사를 추가했다. [상세](docs/exe/cpp-game-menu-runtime-20261023.md).
+- [x] 빌드2의 검사 바이트 변환 경고1과 가로 부착 지연 교체에 어긋난 검사 기대1을 바로잡았다. 최종 Release 빌드3 종료0/경고·오류0, 관련40검사 실패check0, 전체 CTest1 **2399검사·실패check0·종료0/196.17초**이며 LastTest 내부2399/0도 확인했다. 최종 빌드/검사 뒤 제품·검사 C++를 바꾸지 않았다.
+- [x] 실제 GUI2의1024 core와 GUI3의1280 확장은 목표 재열기/Leave취소/View/Version/재시작·음량2/4·해상도No·메뉴 열린QWASZX·바깥 월드선택을 통과했다. Pause GUI는 영구 메시지/정지 중ESC·Options재열기/재개·안내제거·음소거깊이복구를 통과했다. 기존 미니맵·생산단축키/배치/회전/재공급 회귀도 통과했다. GUI1의초기 시점 실패와GUI2의1280 options.cfg 일시 쓰기 실패(원인미확정/재실행정상)도 상세/자료에 보존했다. 모든 실행의전체originals해시/허용설정복원을 확인했다.
+- [x] 엄격UTF-8·새한국어주석·PythonAST·공백·보호경로·SHA를 확인하고 **20261023-37 CP**로 로컬 커밋한다. 원격push/다른프로젝트·AGENTS·기존원본/CD변경은 없다.
+- [ ] **단위370 다음:** OnExit 실제 해석시 resolve/부모 소멸의1회 정수큐 예약을 현재 페이지 수명에 연결한다. 해상도Yes→QuitApp99는 미연결이며No검사만 완료다. 새 DialogExitCommand6파일/native408행/검사macro `NETSTORM_DIALOG_EXIT_COMMAND_FIXTURE`는 미등록·미빌드로 준비했다. 기존페이지 `resolveAction`은Trim하기때문에 원본raw capture 연결이 필요하다.
+- [ ] **HUD 후속:** HudChatGeometry·HudNsInfo Attach·TextEntryBuffer·TextEntryGump 새파일/원문/검사는 미등록·미빌드다. 병렬 ChatWindow 전체/NSInfoCreate 생성자 자료도 작성 중이므로 에이전트 결과를 확인한다. 실제14directchildren/Console·Scrolling·Button 생성과 dock/viewport 연결이 남으며 빈placeholder를 넣지 않는다. 현재고정HUD의legacyGame버튼과bar겹침·nativeleft85 미연결을 함께 해결한다. 보류 viewport patch는 `extracted/cpp-hud-viewport-20261023-pending.patch`다.
+- [ ] 전체 InterpretOptions·Chat/PlayerList 토글/Editor Session/모든단축키·edgeScroll과 실제사용자 Early Missions·전체캠페인·데모3 완주/원본 전체동일성·배포 목표는 계속 활성이다. 이번 메뉴 단위 완료를 전체 목표 완료로 해석하지 않는다.
+
 ## 2026-10-23 단위368 완료: 원본 HUD 구분선 기하·입력 본체
 
 - [x] 이전 단위367은 실제 미니맵 기본HUD와 전체2373/0을 `560df210 / 20261023-35 CP`로 커밋한 진행이다. AGENTS.md·공통/닷넷 인수인계를 다시 읽었으며 현재/마지막 전체 정밀 디컴파일 PC는 **VM-W11-Codex / 2026-10-23**으로 일치한다. 기존 정밀 원문을 재사용했고 새 전체 디컴파일은 하지 않았다.

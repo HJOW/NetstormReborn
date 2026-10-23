@@ -197,8 +197,8 @@ void RawCampaignFactoryDisplay::SetPalette(std::span<const ScreenColor> palette)
     impl_->state.hitPointColors={named.named.at(10).index,named.basic[5],named.basic[1]};impl_->ready=true;
 }
 // 원본 수집기의 전체 순서/한 번의 그림자 보정/해시2단계 반환을 유지한다.
-std::vector<RenderSprite> RawCampaignFactoryDisplay::Sprites(ScreenRect clip,int cameraX,int cameraY,std::uint32_t localPlayer) {
-    auto& self=*impl_;self.state.cameraX=cameraX;self.state.cameraY=cameraY;self.state.localPlayer=localPlayer;
+std::vector<RenderSprite> RawCampaignFactoryDisplay::Sprites(ScreenRect clip,int cameraX,int cameraY,std::uint32_t localPlayer,std::uint32_t hideBuildings) {
+    auto& self=*impl_;self.state.cameraX=cameraX;self.state.cameraY=cameraY;self.state.localPlayer=localPlayer;self.state.specialMode=hideBuildings; // 기존SpriteDraw의그림자/Abstract/가상Draw분기에현재메뉴값을공급한다.
     const o::RenderWorldRect view{static_cast<float>((static_cast<double>(clip.left)+cameraX)/16),static_cast<float>((static_cast<double>(clip.top)+cameraY)/11),
         static_cast<float>((static_cast<double>(clip.right)+cameraX)/16),static_cast<float>((static_cast<double>(clip.bottom)+cameraY)/11)};
     std::array<o::RenderCollectionEntry,kDrawSubmissionCapacity> entries{};const auto count=self.collection.Collect(view,entries,kDrawSubmissionCapacity);std::vector<RenderSprite> result;

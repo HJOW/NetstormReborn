@@ -6,6 +6,10 @@
 #include "client/UberGump.h"
 #include "client/ProductionShortcuts.h"
 #include "client/RawMenuControls.h"
+#include "client/RawGameMenus.h"
+#include "client/GameMenuCommands.h"
+#include "client/GameMenuActions.h"
+#include "client/TellParameters.h"
 #include "client/ClientAudio.h"
 #include "client/ClientMain.h"
 #include "client/CampaignClientServices.h"
@@ -122,7 +126,7 @@ std::string FontBytes(std::string_view text) {
 // 현재 단계에서 실제 처리 경로가 있는 메뉴 명령만 활성화한다.
 bool Supported(std::string_view command) {
     const auto name = o::AsciiLower(command);
-    return MissionControlScriptCode(name)!=0xffffffffU || KnowledgeScriptCode(name)!=0xffffffffU || name == "tell" || name == "missionbegin" || name == "startdemo" || name == "donothing" ||
+    return MissionControlScriptCode(name)!=0xffffffffU || KnowledgeScriptCode(name)!=0xffffffffU || GameMenuScriptCode(name)!=0xffffffffU || name == "tell" || name == "missionbegin" || name == "startdemo" || name == "donothing" ||
         name == "quit" || name == "menu" || name == "toggle" || name == "resolution" || name == "volume" || name == "resume";
 }
 // 자동 검사 보고에는 개행/탭을 제거하여 한 항목 한 줄을 유지한다.
@@ -188,7 +192,7 @@ UberGump::UberGump(Client& client) : client_(client) {
             state_.Post(actions_[parameter-1]); // 기존 DialogAction의 임시 호스트 번호이며 원본 게임 명령 토큰과 구별한다.
         } else {
             // 실제 메뉴 항목이 선택한 미연결 명령은 여기서 거부한다. 돌 버튼의 별도 기본 클릭 통지와 구별한다.
-            if (command!=0x02000060U && command!=0x03000080U && command!=0x03000032U && command!=0x03000063U && command!=0x0200005dU && command!=0x02000017U && command!=0x030000afU && command!=0x030000e2U && command!=0x03000015U && command!=0x0300011aU && command!=0x03000076U) throw std::logic_error("현재 Client 원본 메뉴 항목 명령 미연결: "+std::to_string(command));
+            if (command!=0x02000060U && command!=0x03000080U && command!=0x03000032U && command!=0x03000063U && command!=0x0200005dU && command!=0x02000017U && command!=0x030000afU && command!=0x030000e2U && command!=0x03000015U && command!=0x0300011aU && command!=0x03000076U && !IsGameMenuCommand(command)) throw std::logic_error("현재 Client 원본 메뉴 항목 명령 미연결: "+std::to_string(command));
             client_.Input().PushCommand(command,std::bit_cast<std::int32_t>(id),std::bit_cast<std::int32_t>(parameter));
         }
     };
@@ -210,7 +214,7 @@ UberGump::UberGump(Client& client) : client_(client) {
     help.hitPoints=[this](auto type) { if (world_) return world_->Session().HitPoints().TypeHitPoints(type);const auto types=client_.Assets().TypeTable().Types();if (type>=types.size()) throw std::out_of_range("월드 설치 전 Help HP 범위");return types[type].maxHitPoints; };
     help.helpFrame=[this](auto type) { const auto types=client_.Assets().Types();if (type<o::kFirstAssetTypeNumber || type-o::kFirstAssetTypeNumber>=types.size()) return -1;return types[type-o::kFirstAssetTypeNumber].definition.specialFrames.helpFrame; };help.nearestColor=[this](auto r,auto g,auto b) { return client_.GetScreen().FindColor(r,g,b); };
     help.queue=[this](auto command,auto first,auto second) { const auto x=scriptStrings_.Store(first),y=scriptStrings_.Store(second);client_.Input().PushCommand(command,std::bit_cast<std::int32_t>(x),std::bit_cast<std::int32_t>(y)); };
-    help.script=[this](auto text) { QueueScriptCommand(text,client_.Input(),scriptStrings_,{[](auto name) { const auto lower=o::AsciiLower(name);const auto mission=MissionControlScriptCode(name);return lower=="tell" ? 0x02000095U : lower=="config" ? kScriptConfig : lower=="warning" ? kScriptWarning : mission!=0xffffffffU ? mission : KnowledgeScriptCode(name); },[](auto name) { std::clog<<"도움말 스크립트 명령 미연결: "<<name<<'\n'; }}); };
+    help.script=[this](auto text) { QueueScriptCommand(text,client_.Input(),scriptStrings_,{[](auto name) { const auto lower=o::AsciiLower(name);const auto mission=MissionControlScriptCode(name);return lower=="tell" ? 0x02000095U : lower=="config" ? kScriptConfig : lower=="warning" ? kScriptWarning : mission!=0xffffffffU ? mission : KnowledgeScriptCode(name)!=0xffffffffU ? KnowledgeScriptCode(name) : GameMenuScriptCode(name); },[](auto name) { std::clog<<"도움말 스크립트 명령 미연결: "<<name<<'\n'; }}); };
     help.external=[](auto text) { throw std::logic_error("도움말 외부 OS 프로토콜 미복원: "+std::string(text)); };help.learn=[](auto type) { throw std::logic_error("도움말 기술 학습492a30 미연결: "+std::to_string(type)); };
     help.scripted=[this] { return state_.phase==ClientPhase::Dialog || state_.phase==ClientPhase::Briefing; };help.scriptName=[this] { return FontBytes(pageName_); };
     help.battle=[this] { return world_ && world_->Session().Core().ownerMode.battle; };help.challenge=[this] { return world_ && world_->Session().Core().ownerMode.challenge; };
@@ -219,9 +223,18 @@ UberGump::UberGump(Client& client) : client_(client) {
     help.html.background=[](auto&,auto name) { throw std::logic_error("도움말 배경 태그 미복원: "+std::string(name)); };
     if (client_.Assets().Edition()==o::OriginalEdition::Patch1078) rawButtons_->Menus()->EnableHelp(std::move(help)); // 10.72에10.78 전용 이미지/창을 임의로 설치하지 않는다.
     objectMenus_=std::make_unique<CampaignObjectMenuClient>(client_,*rawButtons_,[this](std::string_view key) { state_.Post({"Tell",std::string(key)}); });
+    MessageGumpHooks pauseContext; // 같은 현재 Session의 모드/이름과 Client 번역을 Pause 생성 시 조회한다.
+    pauseContext.challenge=[this] { return world_ && world_->Session().Core().ownerMode.challenge ? 1U : 0U; };
+    pauseContext.playerName=[this](std::int32_t owner) {
+        if (owner<=0 || owner>=9) return; // 원본48f480은 범위 밖에서 빈 문자열 포인터만 반환한다.
+        if (!world_) throw std::logic_error("Pause 이름 조회의 현재 Session 없음");
+        static_cast<void>(world_->Session().PlayerRecords().subspan(static_cast<std::size_t>(owner)*180U+12U)); // 반환 이름은 종류11에서 읽지 않는다.
+    };
+    pauseContext.challengePlayerName=[](auto) { throw std::logic_error("Challenge 메시지 현재 이름 관리자 미연결"); };
+    pauseContext.translate=[this](auto value) { return FontBytes(client_.Translate(value)); };
     warnings_=std::make_unique<WarningMessages>(client_.Fonts(),client_.GetScreen().Colors(),[this] { return client_.WallSeconds(); },[this] {
         client_.WorldAudio().Sounds().PlayByName("newWarnMessage.wav",0,0,0,0,0);
-    });
+    },std::move(pauseContext));
     dialogBody_=std::make_unique<DialogBodyLayout>(client_.Fonts(),client_.GetScreen().Colors(),client_.Assets(),client_.Assets().Edition());
     o::MissionGuideHooks guideHooks; // 같은 실제 현재 미션/전환 큐/창과 복원한 Guide 반복 몸체다.
     guideHooks.current=[this]() -> o::MissionStartState* { return missionRuntime_ && missionRuntime_->guided ? &missionRuntime_->state : nullptr; };
@@ -259,6 +272,7 @@ void UberGump::ClearWorld() {
     missionFortRequest_.reset(); // Session이 살아 있으면 공유 소유권으로 실제 설치/해제 완료까지 이미지를 보존한다.
     if (rawButtons_ && rawButtons_->Menus()) rawButtons_->Menus()->CloseHelp(); // 동적 정보/그림의 현재 Session보다 먼저 실제 창을 반납한다.
     if (world_ && rawButtons_ && rawButtons_->Menus()) rawButtons_->Menus()->Close(); // 같은Form을반납한뒤에만Session/월드포인터를해제한다.
+    gameMenuState_.reset(); // 같은Session의검산참조를월드보다먼저반납한다.
     if (rawButtons_) rawButtons_->DisableMinimap(); // 같은Session/공통Gump보다먼저공간통지와미니맵을반납한다.
     if (rawButtons_) rawButtons_->DisableProduction(); // 실제 Session보다 먼저 UI Form을 반납한다.
     client_.ClearThunderFlashes();
@@ -341,6 +355,11 @@ bool UberGump::TryTell(std::string target,bool briefing) {
         else MainMenu();
         RebuildControls(); return true;
     }
+    o::Config parameters(client_.Configuration().Registry(),"param"); // 원본지역param은즉시본문처리와두HTML순회가끝날때까지같은Registry에남는다.
+    const auto original=ParseTellParameters(FontBytes(target),TellParameterHooks{
+        [this](std::string_view value) { const auto decoded=o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(value.data()),value.size()});return FontBytes(client_.Configuration().SubstituteLocal(decoded)); },
+        [&parameters](std::string_view line) { parameters.Append(o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(line.data()),line.size()})); }}); // 원문치환과Append사이에인용escape를끼우지않는다.
+    target=o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(original.data()),original.size()});
     std::optional<std::string> body;
     const auto split = target.find('.');
     if (split != std::string::npos && split + 1 < target.size()) {
@@ -354,7 +373,7 @@ bool UberGump::TryTell(std::string target,bool briefing) {
     if (!body) return false;
     const auto protectedBody = Replace(*body, "{cur.file}", "__CURRENT_FILE__");
     ScriptCommandHooks commands; // 현재복원된실제명령을원본ID로조회하고미등록은원본처럼진단뒤거부한다.
-    commands.lookup=[](std::string_view name) { const auto lower=o::AsciiLower(name);const auto mission=MissionControlScriptCode(name);return lower=="config" ? kScriptConfig : lower=="warning" ? kScriptWarning : mission!=0xffffffffU ? mission : KnowledgeScriptCode(name); };
+    commands.lookup=[](std::string_view name) { const auto lower=o::AsciiLower(name);const auto mission=MissionControlScriptCode(name);return lower=="config" ? kScriptConfig : lower=="warning" ? kScriptWarning : mission!=0xffffffffU ? mission : KnowledgeScriptCode(name)!=0xffffffffU ? KnowledgeScriptCode(name) : GameMenuScriptCode(name); };
     commands.unknown=[](std::string_view name) { std::clog<<"스크립트 명령 미연결: "<<name<<'\n'; };
     HtmlTextParserState htmlState;HtmlTextParserHooks htmlHooks;std::string background; // 원본처럼새페이지는shown=1로시작하고두번의HTML순회에서같은상태를공유한다.
     htmlHooks.background=[&](HtmlTextParserState&,std::string_view name) { background=name; }; // 두HTML순회가선택한실제배경이름을현재페이지표시경로에보관한다.
@@ -476,6 +495,7 @@ void UberGump::LoadMissionWorld(std::optional<std::string> requestedFort) {
         selectedFort,std::move(services),ScreenPoint{client_.GetScreen().Width(),client_.GetScreen().Height()},true);
     world->elapsed=[this]() { return client_.Time().delta; }; world->paused=[this]() { return client_.Paused(); };
     world->frameTime=[this]() { return client_.Time(); };
+    world->BindHideBuildings([this] { return hideBuildings_; }); // 메뉴 체크·현재 Draw·선택 후보가 같은 원본 DWORD를 조회한다.
     // 카메라/해상도 변경 직후 위치 효과음의 기준을 갱신한다. 월드와 소리 묶음의 수신은 모두 주 스레드에서 실행한다.
     world->soundViewChanged=[this](SoundView view) { client_.WorldAudio().SetView(view); };
     // 장치 재생성 뒤에도 현재 Renderer로 raw 변경 영역을 전달한다.
@@ -552,8 +572,131 @@ void UberGump::AdvanceBriefing() {
     state_.phase = ClientPhase::Mission; pageName_ = "mission"; page_ = {}; popup_.clear(); client_.Pause(false);
     world_->Resize(client_.GetScreen().Width(),client_.GetScreen().Height()); userInput_->Cancel(); RebuildControls();
 }
+// 저장한serial은루트등록칸이나단순인스턴스수로대체하지않는다.
+bool UberGump::GameMenuOpen() const { return gameMenuState_ && rawButtons_->SerialGump(gameMenuState_->menuSerial)!=0; }
+// 004d958c의serial조회와Kill/0쓰기/66710순서를유지한다.
+void UberGump::ToggleGameMenu() {
+    if (!world_) return;
+    const auto token=gameMenuState_ ? rawButtons_->SerialGump(gameMenuState_->menuSerial) : 0U; // 현재비dead인동일serial만선택한다.
+    if (!token) OpenGameMenu();
+    else { rawButtons_->KillGump(token);gameMenuState_->menuSerial=0;rawButtons_->RequestClosePopups();rebuild_=true; }
+}
+// 실제현재Session의조회/검산과기존공통controlled메뉴를한수명안에서작성한다.
+void UberGump::OpenGameMenu() {
+    if (!world_ || !missionRuntime_ || state_.phase!=ClientPhase::Mission) throw std::logic_error("게임메뉴의현재미션없음");
+    auto& session=world_->Session(); // 원본cc210은앞서열린다른팝업을임의로닫지않는다.
+    if (!gameMenuState_) gameMenuState_=std::make_unique<GameMenuBarState>(session.GameMenuTrackingOffset());
+    rawButtons_->Menus()->SetPalette(client_.GetScreen().Colors());
+    rawButtons_->Menus()->OpenAttached([&](const MenuGumpWidgets& widgets,const MenuGumpControls& controls,const MenuGump& menu) {
+        GameMenusHooks hooks; // 실제Session외전역은각조회시점에같은현재Client에서읽는다.
+        hooks.global=[this](std::uint32_t address)->std::uint32_t {
+            if (const auto value=GameMenuCommandValue(address)) return *value;
+            switch (address) {
+            case 0x563e38:return rawButtons_->RootToken();
+            case 0x531860:case 0x5c78f0:return static_cast<std::uint32_t>(client_.GetScreen().Width());
+            case 0x531864:case 0x5c78f4:return static_cast<std::uint32_t>(client_.GetScreen().Height());
+            case 0x5c78d4:return client_.GetScreen().Flags();
+            case 0x5c7910:return 0; // 현재실제Screen은DIB전용이며DirectDraw장치를설치하지않는다.
+            case 0x5c7b14:return client_.WorldAudio().DeviceReady() ? 1U : 0U;
+            case 0x531900:return std::bit_cast<std::uint32_t>(client_.Configuration().GetInt("soundVolume"));
+            case 0x531904:return std::bit_cast<std::uint32_t>(client_.Configuration().GetInt("musicVolume"));
+            case 0x55b4b0:return client_.Paused() ? 1U : 0U; // 이소비자는원본깊이의양수여부만검사한다.
+            case 0x59a8ac:return hideBuildings_;
+            default:throw std::logic_error("게임메뉴현재전역미연결: "+std::to_string(address));
+            }
+        };
+        hooks.config=[this](auto key) { return client_.Configuration().GetInt(key); };
+        hooks.readInt=[this](auto key,std::int32_t& value) { client_.Configuration().ReadInt(key,value); };
+        hooks.translate=[this](auto text) { return FontBytes(client_.Translate(o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(text.data()),text.size()}))); };
+        hooks.editingMission=[this] { return missionRuntime_->mode64; };hooks.demo=[this] { return missionRuntime_->gate.demo; };
+        hooks.playerMenu=[&](auto subscriber) { return objectMenus_->BuildPlayerMenu(*world_,subscriber,widgets,controls,menu); };
+        BindGameMenusControls(hooks,widgets,controls,menu,[this](auto text) { return scriptStrings_.Store(text); });
+        hooks.node=[this](auto token) { return rawButtons_->Menus()->Node(token); };
+        hooks=session.BindGameMenus(std::move(hooks));const auto globals=hooks.global;const auto translate=hooks.translate; // 바인더가교체한같은현재소유자의getter를빌린다.
+        RawGameMenus children(std::move(hooks));GameMenuBarHooks bar;
+        bar.prepare=[&session] { session.PrepareGameMenus(); };bar.translate=translate;
+        bar.read=[this,globals](GameMenuBarValue value) {
+            switch (value) {
+            case GameMenuBarValue::Editor:return globals(0x5c85a4);
+            case GameMenuBarValue::Battle:return globals(0x594fbc);
+            case GameMenuBarValue::Mission:return globals(0x594fa4);
+            case GameMenuBarValue::Cheat:return globals(0x5cab30);
+            case GameMenuBarValue::Width:return static_cast<std::uint32_t>(client_.GetScreen().Width());
+            case GameMenuBarValue::Left:return static_cast<std::uint32_t>(world_->MinimapView().viewport.left);
+            case GameMenuBarValue::Root:return rawButtons_->RootToken();
+            }
+            throw std::logic_error("게임메뉴조회종류오류");
+        };
+        bar.about=[this] { const auto value=client_.Configuration().Configuration().Get("helpWord");if (!value) throw std::logic_error("게임메뉴현재helpWord포인터없음");return FontBytes(*value); };
+        bar.technicalHelp=[this] { std::string exe,file;const auto first=client_.Configuration().ReadString("techHelpExe",exe),second=client_.Configuration().ReadString("techHelpFile",file);return first && second ? 1U : 0U; };
+        bar.child=[&](GameMenuBarChild child) {
+            switch (child) {
+            case GameMenuBarChild::Game:return children.Game();case GameMenuBarChild::Edit:return children.Edit();
+            case GameMenuBarChild::View:return children.View();case GameMenuBarChild::Options:return children.Options();
+            case GameMenuBarChild::Players:return children.Players();
+            case GameMenuBarChild::Cheat:throw std::logic_error("원본Cheat부모생성미연결");
+            }
+            throw std::logic_error("게임메뉴하위종류오류");
+        };
+        BindGameMenuBarControls(bar,widgets,controls,menu,[this](auto token) { return rawButtons_->Menus()->Node(token); },[this](auto text) { return scriptStrings_.Store(text); });
+        return RawGameMenuBar(*gameMenuState_,std::move(bar)).Open();
+    },false);
+    rebuild_=true; // 실제메뉴열기는게임시계를정지하거나별도중앙팝업상태를만들지않는다.
+}
 // 현재 복원 범위에서 의미가 있는 원본 옵션을 구성한다. 소리 장치와 전체화면 항목은 후속이다.
+// 공통 입력/Guide가 소비하지 않은 현재 메뉴 명령을 같은 Session·음향·설정·시계에 전달한다.
+bool UberGump::GameMenuCommand(const InputEvent& event) {
+    const auto code=event.code&0x03ffffffU;
+    if (code==0x020000beU) {
+        if (state_.phase==ClientPhase::Dialog) Tell("Blank"); // 원본 대화 부모의 MenuJustClosed→Kill에 대응하는 페이지 수명 정리다.
+        rawButtons_->RequestClosePopups();rebuild_=true;return true;
+    }
+    if (code==0x0200006dU) {
+        if (event.code&InputCode::kRelease) return true;
+        if (event.y) {
+            ApplyScriptConfig(scriptStrings_.Resolve(std::bit_cast<std::uint32_t>(event.y)),[this](auto key,auto value) {
+                const auto decode=[](std::string_view bytes) { return o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(bytes.data()),bytes.size()}); }; // 실제 설정의 내부 인코딩 경계만 변환한다.
+                return client_.Configuration().Set(decode(key),decode(value));
+            });
+            client_.ApplyAudioOptions(); // 현재 복원된 옵션 장치에 실제 효과음·음악 값을 반영한다.
+        }
+        ++menuConfigRevision_;worldRedraw_=1;rawButtons_->RouteInput(event);Refresh();return true; // 원본 이 분기의 두 번째466200 호출을 보존한다.
+    }
+    if (!IsGameMenuCommand(code)) return false;
+    auto binding=world_ ? world_->Session().BindGameMenus({}) : GameMenusHooks{}; // 종료/음량은 월드 설치 전후에도 같은 Client 명령이다.
+    if (!world_) binding.global=[](std::uint32_t address)->std::uint32_t {
+        switch (address) { // 메인 메뉴에서 해제된 미션/Player 모드는 원본 초기0이다.
+        case 0x5c85a4:case 0x594fb8:case 0x594fc8:case 0x594fa4:case 0x595344:case 0x540c70:return 0;
+        default:throw std::logic_error("월드 밖 메뉴의 다른 현재 전역 미연결");
+        }
+    };
+    const auto session=[this]()->RawCampaignSession& { if (!world_) throw std::logic_error("현재 메뉴 명령의 Session 없음");return world_->Session(); }; // 필요한 분기에서만 현재 월드를 다시 조회한다.
+    GameMenuActionHooks hooks;
+    hooks.command=[](auto command) { const auto value=GameMenuCommandValue(static_cast<std::uint32_t>(command));if (!value) throw std::logic_error("메뉴 명령의 현재 원문 ID 없음");return *value; };
+    hooks.queue=[this](auto command,auto first,auto second) { client_.Input().PushCommand(command,first,second); };
+    hooks.tell=[this](auto name) { Tell(std::string(name)); };
+    hooks.config=[this](auto assignment) { ApplyScriptConfig(assignment,client_.Configuration());client_.ApplyAudioOptions(); };
+    hooks.sound=[this](auto name,auto a,auto b,auto c,auto d,auto e) { client_.WorldAudio().Sounds().PlayByName(name,a,b,c,d,e); };
+    hooks.paused=[this] { return client_.Paused(); };
+    hooks.status=[this](auto kind,auto owner,auto enabled,auto parameter,auto text) {
+        if (kind!=11 || owner || parameter || !text.empty()) throw std::logic_error("다른 메뉴 상태 안내 분기 미연결");
+        warnings_->SetView(client_.GetScreen().Width(),client_.GetScreen().Height(),client_.GetScreen().Colors());warnings_->PauseStatus(enabled!=0);
+    };
+    hooks.cancelCursor=[session] { session().Cursor().Cancel(); };
+    hooks.pauseClock=[this] { client_.PushGamePause(); };hooks.resumeClock=[this] { client_.PopGamePause(); };
+    hooks.muteSound=[this] { client_.WorldAudio().PushMute(); };hooks.resumeSound=[this] { client_.WorldAudio().PopMute(); };
+    hooks.player=binding.player;hooks.centerObject=[this,session](auto sid) { static_cast<void>(session());world_->CenterOnObject(sid); };
+    hooks.viewPriest=[this](auto owner) { if (world_) world_->ViewPriest(owner); }; // 일반 F5와 명시 메뉴 owner를 구별한다.
+    hooks.reloadCount=[this,session](auto list) { return world_ ? session().GameMenuReloadCount(list==GameMenuReloadList::Second) : 0; };
+    hooks.reloadSid=[session](auto list,auto index) { return session().GameMenuReloadSid(list==GameMenuReloadList::Second,index); };
+    hooks.form=[session](auto sid)->std::span<const std::uint8_t> { if (sid>65535) throw std::out_of_range("메뉴 Form SID 폭");return session().Core().pool.Slot(o::Sid{static_cast<std::uint16_t>(sid)}); };
+    hooks.reloadAt=[session](auto x,auto y,auto mode) { session().ReloadTheamAt(x,y,mode); };
+    hooks.assertion=[](auto line) { throw std::logic_error("원본 메뉴 입력 진단: "+std::to_string(line)); };
+    const auto result=GameMenuActions({binding.global,hideBuildings_,worldRedraw_},std::move(hooks)).Handle(event.code,std::bit_cast<std::uint32_t>(event.x),std::bit_cast<std::uint32_t>(event.y));
+    if (!result) return false;if (*result) quit_=true;Refresh();return true;
+}
 void UberGump::OpenMenu(std::string name) {
+    if (o::AsciiLower(name)=="game" && world_) { OpenGameMenu();return; } // 미션의실제수평부모는중앙임시메뉴와구별한다.
     popup_ = o::AsciiLower(name); page_ = {}; auto& config = client_.Configuration();
     // 목록 행에는 돌 버튼과 달리 누름 즉시 실행 규칙을 적용한다.
     const auto add = [this](std::string label, std::string command, std::string argument, bool checked = false, bool enabled = true) {
@@ -614,15 +757,26 @@ void UberGump::Event(InputEvent event) {
         if (missionRuntime_->tutorial->Event(missionEvent)) return;
         if (QueueMissionFirstKey(event,client_.Input(),true)) return; // 모든 연결된 Tutorial 형식은 큐 끝의 First가 현재 안내/자기 정지를 다시 사용한다.
     }
+    bool worldUiRouted=false; // 미션사건은같은공통Gump에서먼저한번만소비를판정한다.
+    if (world_ && state_.phase==ClientPhase::Mission && popup_.empty()) {
+        const auto old=rawButtons_->Pressed();const auto routed=rawButtons_->RouteInput(event);worldUiRouted=true; // nativeGuide뒤466200의현재성공토큰이다.
+        if (old!=rawButtons_->Pressed()) rebuild_=true;
+        if (routed.activated) {
+            if (*routed.activated<0 || static_cast<std::size_t>(*routed.activated)>=actions_.size()) throw std::logic_error("현재UI부모click명령범위오류");
+            state_.Post(actions_[static_cast<std::size_t>(*routed.activated)]);rebuild_=true;return;
+        }
+        if (routed.consumed) { rebuild_=true;return; }
+        if (!(event.code&InputCode::kRelease) && (transitionCode==InputCode::kLeftButton || transitionCode==InputCode::kRightButton)) rawButtons_->RequestClosePopups(); // UI밖누름은팝업Kill뒤같은사건으로월드에진행한다.
+    }
     if (transitionCode==0x02000017U || transitionCode==0x02000057U) {
         if (!(event.code&InputCode::kRelease)) rawButtons_->Menus()->OpenHelp(std::bit_cast<std::uint32_t>(event.y ? event.y : event.x),transitionCode==0x02000057U ? 0 : 1,0);
         rebuild_=true;return; // Tutorial 소비 뒤 원본 Help/요청의 현재 주제/TYPE 인자를 보존한다.
     }
-    if (transitionCode==0x02000095U) { if (!(event.code&InputCode::kRelease)) { const auto name=std::string(scriptStrings_.Resolve(std::bit_cast<std::uint32_t>(event.x)));static_cast<void>(TryTell(name)); }return; } // Help Back의 스크립트 복귀다.
+    if (transitionCode==0x02000095U) { if (!(event.code&InputCode::kRelease)) { const auto name=std::string(scriptStrings_.Resolve(std::bit_cast<std::uint32_t>(event.y)));static_cast<void>(TryTell(name)); }return; } // Help Back의 스크립트 복귀다.
     if (!(event.code&InputCode::kRelease) && transitionCode==(0x70U<<InputCode::kVirtualKeyShift)) { client_.Input().PushCommand(0x02000017U,0,0x61000003);return; } // 원본4d8c47의 F1Help 문자열이며 Control/Shift를 별도 거부하지 않는다.
-    if (rawButtons_->Menus()->HelpOpen()) { static_cast<void>(rawButtons_->Event(event));rebuild_=true;return; } // 현재 공통 모달/스크롤/태그/돌 버튼을 실제 GumpInput에 전달한다.
+    if (rawButtons_->Menus()->HelpOpen()) { if (!worldUiRouted) static_cast<void>(rawButtons_->Event(event));rebuild_=true;return; } // 현재 공통 모달/스크롤/태그/돌 버튼을 실제 GumpInput에 전달한다.
     if (transitionCode==kProductionBridgeCommand) {
-        static_cast<void>(rawButtons_->Event(event));rebuild_=true;return; // Guide/현재 모달 뒤 같은 Gump 트리로 전달한다. 정지/활성 커서 관문을 추가하지 않는다.
+        if (!worldUiRouted) static_cast<void>(rawButtons_->Event(event));rebuild_=true;return; // Guide/현재 모달 뒤 같은 Gump 트리로 전달한다. 정지/활성 커서 관문을 추가하지 않는다.
     }
     if (transitionCode==kShowTechnologyCommand) {
         if (!(event.code&InputCode::kRelease) && world_) rawButtons_->Menus()->OpenKnowledge(world_->Session(),[this](std::string_view key) { return FontBytes(client_.Translate(key)); },static_cast<std::uint32_t>(client_.LanguageNumber()));
@@ -631,7 +785,7 @@ void UberGump::Event(InputEvent event) {
     if (world_ && state_.phase==ClientPhase::Mission && !(event.code&(InputCode::kRelease|InputCode::kControl|InputCode::kShift)) && transitionCode==(0x75U<<InputCode::kVirtualKeyShift)) {
         client_.Input().PushCommand(kShowTechnologyCommand,0,0);return; // 사제 메뉴/Review 버튼과 같은 명령 큐로 F6을 예약한다.
     }
-    if (rawButtons_->Menus()->KnowledgeOpen()) {
+    if (!worldUiRouted && rawButtons_->Menus()->KnowledgeOpen()) {
         if ((event.code&0xffffU)==0x1b && !(event.code&InputCode::kRelease)) { rawButtons_->Menus()->RequestClosePopups();rebuild_=true;return; }
         if (transitionCode==InputCode::kLeftButton || transitionCode==InputCode::kRightButton || transitionCode==InputCode::kMiddleButton) { static_cast<void>(rawButtons_->Event(event));rebuild_=true;return; }
     }
@@ -641,22 +795,20 @@ void UberGump::Event(InputEvent event) {
     }
     if (objectMenus_ && objectMenus_->Command(event)) { rebuild_=true;return; }
     const auto commandCode=event.code&0x03ffffffU; // 원본명령분배와같이최상위입력플래그만제거한다.
-    if (commandCode==kScriptConfig) {
-        // 토큰 제한은 원본바이트에 적용하고 Config의 내부UTF-8 경계에서만 변환한다.
-        ApplyScriptConfig(scriptStrings_.Resolve(std::bit_cast<std::uint32_t>(event.x)),[&](std::string_view key,std::string_view value) {
-            const auto decode=[](std::string_view bytes) { return o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(bytes.data()),bytes.size()}); }; // 각토큰의원본Windows-1252를내부UTF-8로되돌린다.
-            return client_.Configuration().Set(decode(key),decode(value));
-        });return;
-    }
     if (commandCode==kScriptWarning) {
         warnings_->SetView(client_.GetScreen().Width(),client_.GetScreen().Height(),client_.GetScreen().Colors());
-        warnings_->Add(scriptStrings_.Resolve(std::bit_cast<std::uint32_t>(event.x)));rebuild_=true;return;
+        warnings_->Add(scriptStrings_.Resolve(std::bit_cast<std::uint32_t>(event.y)));rebuild_=true;return;
     }
+    if (GameMenuCommand(event)) return;
+    if (IsGameMenuCommand(commandCode)) throw std::logic_error("현재 메뉴 선택 명령의 실제 장치 미연결: "+std::to_string(commandCode));
     // 원본 ESC 글자 사건. 초기 브리핑은 확인 버튼으로만 닫는다.
     if ((event.code & 0xffffu) == 0x1b && (event.code & InputCode::kRelease) == 0) {
         if (state_.phase == ClientPhase::Briefing || state_.phase == ClientPhase::LoadingMission) return;
-        if (objectMenus_ && objectMenus_->Active()) { rawButtons_->Menus()->RequestClosePopups();rebuild_=true;return; }
-        if (world_ && userInput_ && state_.phase==ClientPhase::Mission && popup_.empty() && !world_->Session().CursorDropSettings().lockDepth) { userInput_->Event(event);return; }
+        if (world_ && userInput_ && state_.phase==ClientPhase::Mission && popup_.empty()) {
+            if (!world_->Session().CursorDropSettings().lockDepth) { userInput_->Event(event);rawButtons_->RequestClosePopups();rebuild_=true; }
+            else ToggleGameMenu(); // 현재커서가없으면같은serial조회로막대를열거나닫는다.
+            return;
+        }
         if (!popup_.empty()) state_.Post({"Menu", "close"});
         else if (mission_ && state_.phase == ClientPhase::Mission) state_.Post({"Menu", "game"});
         else if (state_.phase == ClientPhase::Dialog) state_.Post({"Tell", "Blank"});
@@ -666,7 +818,7 @@ void UberGump::Event(InputEvent event) {
         (event.code & InputCode::kRelease) == 0 && !rawButtons_->Menus()->Contains({event.x,event.y})) {
         state_.Post({"Menu", "close"}); return;
     }
-    if (objectMenus_ && objectMenus_->Active() && rawButtons_->Menus()->Contains({event.x,event.y})) {
+    if (!worldUiRouted && objectMenus_ && objectMenus_->Active() && rawButtons_->Menus()->Contains({event.x,event.y})) {
         static_cast<void>(rawButtons_->Event(event));rebuild_=true;return;
     }
     if (world_ && userInput_ && state_.phase==ClientPhase::Mission && popup_.empty()) {
@@ -683,7 +835,7 @@ void UberGump::Event(InputEvent event) {
             return GumpControlInput::Contains(control.rect,{event.x,event.y});
         })) return; // 보존한 생산 패널을 안내창 뒤에서 조작하지 않는다.
     }
-    const auto old=rawButtons_->Pressed();auto activated=rawButtons_->Event(event);
+    const auto old=rawButtons_->Pressed();auto activated=worldUiRouted ? std::optional<int>{} : rawButtons_->Event(event);
     // 메뉴 행은 현재 어댑터에서 누름 즉시 실행한다. 돌 버튼 명령은 실제 부모 click 통지만 사용한다.
     if (popup_.empty() && !activated && std::any_of(input_.Controls().begin(),input_.Controls().end(),[&](const GumpControl& control) {
         return control.menu && GumpControlInput::Contains(control.rect,{event.x,event.y}); })) activated=input_.Event(event);
@@ -746,6 +898,7 @@ void UberGump::PaletteChanged() {
 void UberGump::Execute(const DialogAction& action) {
     if (o::AsciiLower(action.command)=="loadmissionfort") { if (!missionRuntime_ || !missionRuntime_->guided) throw std::logic_error("현재 Tutorial 없는 지연 요새 로드");LoadMissionWorld(action.argument);return; } // 같은 전환 큐의 다음 루프에서만 설치한다.
     if (QueueMissionControlAction(action.command,action.argument,client_.Input(),scriptStrings_)) return;
+    if (GameMenuScriptCode(action.command)!=0xffffffffU) { QueueScriptCommand(action.command+','+action.argument,client_.Input(),scriptStrings_,{GameMenuScriptCode,{}});return; } // 원본확인창/메뉴닫기효과도같은정수명령큐를사용한다.
     if (KnowledgeScriptCode(action.command)!=0xffffffffU) { QueueScriptCommand(action.command+','+action.argument,client_.Input(),scriptStrings_,{KnowledgeScriptCode,{}});return; }
     const auto command = o::AsciiLower(action.command);
     if (command == "quit") { quit_ = true; return; }
@@ -974,7 +1127,7 @@ std::optional<ScreenPoint> UberGump::ControlPoint(std::string_view label) const 
     if (rawButtons_->Minimap() && label.starts_with("minimap:")) return rawButtons_->Minimap()->Point(label);
     if (rawButtons_->Production() && label.starts_with("production:")) return rawButtons_->Production()->Point(static_cast<std::uint32_t>(std::stoul(std::string(label.substr(11)))));
     if (world_ && (label.starts_with("world:") || label.starts_with("cell:") || label.starts_with("placement:") || label.starts_with("placement-near:") || label.starts_with("placement-reach:") || label.starts_with("placement-fire:"))) return world_->Point(label);
-    if (objectMenus_ && objectMenus_->Active()) if (const auto point=rawButtons_->Menus()->Point(FontBytes(label))) return point;
+    if (rawButtons_->Menus()->HasMenus()) if (const auto point=rawButtons_->Menus()->Point(FontBytes(label))) return point;
     // 동일 라벨의 첫 영역을 선택한다.
     for (const auto& control : input_.Controls()) if (labels_.at(static_cast<std::size_t>(control.id)) == label)
         return ScreenPoint{(control.rect.left + control.rect.right) / 2, (control.rect.top + control.rect.bottom) / 2};
@@ -988,6 +1141,7 @@ std::string UberGump::Report() const {
     out << "paused\t" << client_.Paused() << "\nsound\t" << client_.Configuration().GetInt("sound") << "\n";
     out<<"map_menu\t"<<page_.menuColumns<<'\t'<<mapCatalog_->Cached().count<<'\t'<<mapCatalog_->Cached().dirty<<'\t'<<mapFileSpec_.Current()<<'\n'; // 실제 표시/캐시 상태만 관찰하며 선택/로딩 성공을 합성하지 않는다.
     out << "thunder_processes\t" << client_.ThunderFlashCount() << '\n';
+    out<<"game_menu_bar\t"<<(gameMenuState_ ? gameMenuState_->menuSerial : 0U)<<'\t'<<GameMenuOpen()<<'\t'<<(gameMenuState_ ? gameMenuState_->checksum : 0)<<'\n'; // 같은serial조회와기존SP검산을관찰한다.
     out<<rawButtons_->Report()<<'\n';
     out<<rawButtons_->Menus()->Report();
     out<<warnings_->Report();

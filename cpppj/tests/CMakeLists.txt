@@ -1,3 +1,14 @@
+# 게임메뉴부모와Tell인자의독립PE관측을해당검사에만공급한다.
+set_source_files_properties(GameMenuBarTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_GAME_MENU_BAR_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/game-menu-bar-x86.tsv\"")
+set_source_files_properties(GameMenusTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_GAME_MENUS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/game-menus-x86.tsv\";NETSTORM_PLAYER_LIST_MENU_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/player-list-menu-x86.tsv\"")
+set_source_files_properties(TellParametersTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_TELL_PARAMETERS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/tell-parameters-x86.tsv\"")
+set_source_files_properties(GameMenuActionsTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_GAME_MENU_ACTIONS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/game-menu-actions-x86.tsv\"")
+set_source_files_properties(MessageGumpTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_MESSAGE_GUMP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/message-gump-x86.tsv\"")
 # HUD 기하와 입력의 독립 원본 관측을 두 검사에만 공급한다.
 set_source_files_properties(HudDockTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_HUD_DOCK_GEOMETRY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/hud-dock-geometry-x86.tsv\"")
@@ -69,6 +80,10 @@ set_source_files_properties(FlyerPreDestroyTests.cpp PROPERTIES COMPILE_DEFINITI
 set_source_files_properties(BurningLifetimeDrawTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_BURNING_LIFETIME_DRAW_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/burning-lifetime-draw-x86.tsv\";NETSTORM_RENDER_FRAME_GATE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/render-frame-gate-x86.tsv\";NETSTORM_BURNING_ARCHER_CAPTURE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/burning-archer-capture-x86.tsv\"")
 add_executable(netstorm_tests
+    GameMenuBarTests.cpp GameMenusTests.cpp CampaignGameMenuTests.cpp TellParametersTests.cpp
+    GameMenuActionsTests.cpp MessageGumpTests.cpp
+    HideBuildingsTests.cpp
+    CameraViewCommandsTests.cpp CampaignViewCommandsTests.cpp
     HudDockTests.cpp
     HudDividerInputTests.cpp
     MinimapGeometryTests.cpp

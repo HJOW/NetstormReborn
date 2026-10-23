@@ -148,6 +148,35 @@ TEST_CASE(RawMenuControls_CommonTreeInputAndDisabledItem) {
     client.buttons.Event({InputCode::kLeftButton,30,20});const auto activated=client.buttons.Event({InputCode::kLeftButton|InputCode::kRelease,30,20});CHECK(activated && *activated==0);
 }
 // 실제 fancy 생성/제목/숨긴 Slider·하위 확장/픽셀/공통 삭제를 한 수명에서 검사한다.
+// 실제 가로 메뉴의 열 중심·클릭·루트 부착의 원본 지연 교체를 같은 등록표에서 확인한다.
+TEST_CASE(RawMenuControls_HorizontalPointAndDeferredReplace) {
+    MenuClient client;std::uint32_t priorToken{};client.menus->Open({100,100},[&](const auto& widgets,const auto& controls,const auto&) {
+        priorToken=widgets.BeginVertical();controls.AddText("Prior",0x02000060,7);
+    });
+    const auto prior=client.menus->Point("Prior");CHECK(prior);const auto count=client.menus->MenuInstances();
+    std::uint32_t token{};
+    client.menus->OpenAttached([&](const auto& widgets,const auto& controls,const auto& menu) {
+        token=widgets.BeginHorizontal();controls.AddText("Game",0x020000a0,11);controls.AddText("View",0x020000a0,22);controls.AddText("Options",0x020000a0,33);
+        menu.AttachCurrent(85,0,client.buttons.RootToken());return token;
+    },false);
+    // 호스트 선행 Cleanup은 생략하지만 실제 루트 Attach의 replace 비트는 이전 팝업을 Kill한다.
+    CHECK(client.menus->MenuInstances()==count+1);CHECK(!client.menus->Point("Prior"));
+    CHECK(client.menus->Node(priorToken) && (client.menus->Node(priorToken)->flags&0x10000U));
+    const auto* node=static_cast<MenuGumpNode*>(client.menus->Node(token));CHECK(node && node->id!=node->serial);if (!node) return;
+    CHECK(client.buttons.SerialGump(node->serial)==token && client.buttons.SerialGump(node->id)!=token);
+    const auto regions=client.menus->Controls();CHECK(regions.size()==3);
+    std::optional<ScreenPoint> previous;
+    // 현재 세 열은 서로 다른 실제 X와 같은 행 내부 Y를 사용해야 한다.
+    for (const auto label:{"Game","View","Options"}) {
+        const auto point=client.menus->Point(label);CHECK(point);if (!point) continue;
+        CHECK(point->y>=0 && point->y<node->height);if (previous) CHECK(point->x>previous->x);previous=point;
+    }
+    const auto options=client.menus->Point("Options");CHECK(options);if (!options) return;
+    CHECK(GumpControlInput::Contains(regions[2].rect,*options));client.Click(*options);
+    CHECK(client.commands.size()==1);if (!client.commands.empty()) CHECK(client.commands[0][0]==0x020000a0 && client.commands[0][2]==33);
+    CHECK(client.buttons.SerialGump(node->serial)==0);client.menus->CleanupFrame();CHECK(!client.menus->HasMenus());
+}
+// 실제 fancy 생성/제목/숨긴 Slider·하위 확장/픽셀/공통 삭제를 한 수명에서 검사한다.
 TEST_CASE(RawMenuControls_FancySubmenuPixelsAndCleanup) {
     MenuClient client;client.Resize(320,240);client.menus->Open({290,210},[](const auto& widgets,const auto& controls,const auto& menus) {
         widgets.BeginFancy();controls.AddTitle("Priest\n");widgets.BeginVertical();controls.AddText("Temple",0x02000060,0x007b0032);const auto child=menus.TakeCurrent();

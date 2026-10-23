@@ -370,8 +370,8 @@ void RawMenuControls::Open(ScreenPoint point,const std::function<void(const Menu
     builder(*s.widgets,*s.controls,*s.menu);if (s.menuState.index!=1) throw std::logic_error("실제 메뉴 builder 루트 한 칸 필요");s.popup=s.menu->Current();s.menu->AttachCurrent(point.x,point.y,s.common.create.collection.root);s.common.changed();
 }
 // 원본객체Open이이미부착한같은메뉴를기록한다. 호스트의자동두번째부착은수행하지않는다.
-void RawMenuControls::OpenAttached(const std::function<std::uint32_t(const MenuGumpWidgets&,const MenuGumpControls&,const MenuGump&)>& builder) {
-    Close();auto& s=*impl_;if (!builder || s.menuState.index) throw std::invalid_argument("객체메뉴 builder/controlled 스택계약오류");
+void RawMenuControls::OpenAttached(const std::function<std::uint32_t(const MenuGumpWidgets&,const MenuGumpControls&,const MenuGump&)>& builder,bool closeExisting) {
+    if (closeExisting) Close();auto& s=*impl_;if (!builder || s.menuState.index) throw std::invalid_argument("객체메뉴 builder/controlled 스택계약오류");
     const auto root=builder(*s.widgets,*s.controls,*s.menu);if (s.menuState.index) throw std::logic_error("객체메뉴 부착뒤controlled스택잔존");
     if (root && (!s.menus.contains(root) || s.common.node(root)->parent!=s.common.create.collection.root)) throw std::logic_error("객체메뉴 실제루트부착필요");
     s.popup=root;s.common.changed();
@@ -451,7 +451,12 @@ std::optional<ScreenPoint> RawMenuControls::Point(std::string_view label) const 
             // 실제 소유 체인의 모든 일반 문자열 조각을 순서대로 읽는다.
             for (auto part=item.styled;part;part=s.fragments.fragments.at(part).next) { const auto& bytes=s.fragments.fragments.at(part).text;value.append(bytes.begin(),std::find(bytes.begin(),bytes.end(),'\0')); }
         } else value=std::string(item.label.data(),std::find(item.label.begin(),item.label.end(),'\0')-item.label.begin());
-        if (value==label && (node->flags&1)) { const auto p=s.common.collection.Position(token);const auto offset=s.menu->ItemPosition(token,static_cast<std::int32_t>(index));return ScreenPoint{p.x+static_cast<int>(node->width/2),p.y+static_cast<int>(offset[1]+node->heights[index]/2)}; }
+        if (value==label && (node->flags&1)) {
+            const auto p=s.common.collection.Position(token);
+            // 가로 ItemPosition의 Y는 하위 메뉴 부착점이므로 실제 행 높이와 열 너비로 누를 곳을 구한다.
+            if (node->menuFlags&0x40000U) return ScreenPoint{p.x+static_cast<int>((index+0.5F)*node->itemWidth),p.y+static_cast<int>(node->height/2)};
+            const auto offset=s.menu->ItemPosition(token,static_cast<std::int32_t>(index));return ScreenPoint{p.x+static_cast<int>(node->width/2),p.y+static_cast<int>(offset[1]+node->heights[index]/2)};
+        }
     }
     }
     return {};
@@ -460,10 +465,19 @@ std::optional<ScreenPoint> RawMenuControls::Point(std::string_view label) const 
 std::vector<GumpControl> RawMenuControls::Controls() const {
     auto& s=*impl_;std::vector<GumpControl> result;const auto* node=Find(s.menus,s.popup);if (!node) return result;const auto position=s.common.collection.Position(s.popup);
     // 원본 항목 크기/활성 flags를 직접 사용한다.
-    for (std::uint32_t index=0;index<node->itemCount;++index) { const auto offset=s.menu->ItemPosition(s.popup,static_cast<std::int32_t>(index));const auto top=position.y+static_cast<int>(offset[1]);result.push_back({static_cast<int>(index),{position.x,top,position.x+static_cast<int>(node->width),top+static_cast<int>(node->heights[index])},true,(node->items[index].flags&0x200)==0,true}); }return result;
+    for (std::uint32_t index=0;index<node->itemCount;++index) {
+        // 가로 메뉴는 한 행의 실제 열 경계이며 ItemPosition의 하위 메뉴 부착 높이를 사용하지 않는다.
+        if (node->menuFlags&0x40000U) {
+            result.push_back({static_cast<int>(index),{position.x+static_cast<int>(index*node->itemWidth),position.y,position.x+static_cast<int>((index+1)*node->itemWidth),position.y+static_cast<int>(node->height)},true,(node->items[index].flags&0x200)==0,true});
+        } else {
+            const auto offset=s.menu->ItemPosition(s.popup,static_cast<std::int32_t>(index));const auto top=position.y+static_cast<int>(offset[1]);result.push_back({static_cast<int>(index),{position.x,top,position.x+static_cast<int>(node->width),top+static_cast<int>(node->heights[index])},true,(node->items[index].flags&0x200)==0,true});
+        }
+    }return result;
 }
 // 원본 생성/소멸 개수와 실제 현재 표시 여부를 구분해 인스턴스 생존을 반환한다.
 bool RawMenuControls::HasMenus() const { return impl_->menuState.instances!=0; }
+// 정지나 도움말 모달의 다른 카운터를 대신 읽지 않는다.
+std::uint32_t RawMenuControls::MenuInstances() const { return impl_->menuState.instances; }
 // 동일 원본 처리기를 통해 실제 비용 표시를 생성한다. 다른 판본을 추정하지 않는다.
 std::uint32_t RawMenuControls::ShowSp(std::int32_t cost,std::int32_t x,std::int32_t y,std::uint32_t reference) {
     auto& s=*impl_;if (!s.costGump) throw std::logic_error("현재 판본의 비용 표시 미복원");const auto token=s.costGump->Show(cost,x,y,reference);s.common.changed();return token;

@@ -49,6 +49,7 @@ public:
     void Resize(int width,int height);
     // 표시 팔레트를 바꾸고 팔레트에 의존하는 지면 명도 변환표를 다시 계산하게 한다. 화면 팔레트 적용 직후 부른다.
     void SetPalette(std::span<const ScreenColor> palette);
+    void BindHideBuildings(std::function<std::uint32_t()> current); // 실제0059a8ac를매표시/선택시현재조회한다.호출대상은월드보다오래살아야한다.
     // 카메라를 월드 픽셀 범위 안에서 옮긴다.
     void Scroll(int dx,int dy);
     MinimapGeometryView MinimapView() const; // 같은 실제 카메라와 현재 월드 viewport를 미니맵에 빌린다.
@@ -56,6 +57,10 @@ public:
     void MoveFromMinimap(float x,float y); // 실제 선택Carrier에월드좌표그대로명령한뒤강조0을적용한다.
     // F4/H·F5의 원본 홈 신전/사제 보기를 연결한다.
     void Home(bool priest);
+    // 실제 캠페인은433ba0의 명시 SID/Carrier preview를 같은 Session과 현재 화면 원점에 연결한다.
+    void CenterOnObject(std::uint32_t sid);
+    // Players 메뉴의 명시 owner DWORD로4950d0을 실행한다. Home(true)의 로컬 소유자로 바꾸지 않는다.
+    void ViewPriest(std::uint32_t owner);
     // 화면 좌표와 실제 렌더링 그림으로 선택 가능한 오브젝트를 찾는다.
     o::SquidId Pick(ScreenPoint point) const;
     // 선택 번호를 현재 월드에서 검증하고 표시를 갱신한다.
@@ -151,6 +156,7 @@ private:
     std::unique_ptr<Input> input_; // 현재 Client 장치를 설치한 뒤 원본 입력을 처리한다.
     std::unique_ptr<RawCampaignSession> campaign_; // 실제 설치/전투/경로/HP/현재 Kernel의 단일 수명 소유자다.
     std::unique_ptr<RawCampaignFactoryDisplay> factoryDisplay_; // Session보다 먼저 해제할 실제 Factory 그림/선택 출력기다.
+    std::function<std::uint32_t()> hideBuildings_=[] { return 0U; }; // 원본BSS초기0의입력이다.실제Client는같은메뉴DWORD조회기를설치한다.
     CameraHomeState cameraHome_; // 실제 화면 크기·초기 시야 억제 깊이·요청/변환 갱신 번호를 보관한다.
     // surfaceTime_: 표면 프레임 갱신에 누적한 게임 시각(초).
     o::FrameTime surfaceTime_{};
