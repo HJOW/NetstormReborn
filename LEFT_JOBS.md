@@ -1,5 +1,14 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-23 단위374 완료 / 단위375 진행 인수인계
+
+- [x] 단위373은 **69cfa858 / 20261023-43 CP**로 완료 커밋했다. 아래 전체 목표는 계속 활성이다. 현재/마지막 전체 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-23**이다.
+- [x] **374 실제 전체 진입 감사 완료:** 새 `tools/cpp_solo_entry_smoke.py`가 원본 offical1~5에서 Early6/캠페인16/훈련9 목록을 읽고 실제 표시 안내 버튼만 누른다. Guide sequence4/일곱 프레임 재개·현재 미션/월드·로딩 부모 반납·최종 정상 종료를 검사했다. **Early6·캠페인16·훈련8·실제 메뉴 Demo3 = 34경로 중33통과/1미완료**다. Demo3은 자연15초 안내 timeout과 로컬 AI도 확인했다. [전수 결과·실패 보존·원문 근거](docs/exe/cpp-solo-entry-audit-20261023.md).
+- [x] 관측은 `extracted/cpp-solo-entry-20261023-early`, `...-campaign`(15통과), `...-surrounded-retry`(1통과), `...-training-final`(8/9), `...-demos-final`(3/3)이다. Surrounded/데모 최초 시간 상한과 훈련 최초 라벨 미처리 실패는 삭제하지 않았다. 모든 범위 종료 후 허용 설정을 복원했고 **전체 originals 해시 동일**이다. 제품 C++/바이너리는 단위373 그대로이며 마지막 SHA는 `2a8eeaa40d586226bcd14a2fad1edce6f844b6710ef7bb9946d728d785c10dac`다. UTF-8/도구 AST/공백 검사 뒤 **20261023-44 CP**로 374 파일만 로컬 커밋한다.
+- [ ] **실제 잔여 Fury War:** `bc8fury76`는 기술 선택 @1에 남는다. 원본 `CheatAllTechnology`(이름00518d68/명령02000028/전역00542798/00492ae0)가 실제 명령 큐와 기술 생성에 미연결이다. 선택 theme의 group≠10/theme≠5 → 현재 기술 부모 FindContained(mask4,type,0) → 없으면 현재 부모 재조회/4afa70(...,0,4,0x10,0) 순서를 복원해야 한다. 내용 없는 Tell과 비 Instant 부모 종료도 c79b0와 대조한다. 이1건을 성공으로 세지 않으며 전체 훈련/전체 목표 완료는 아니다.
+- [ ] **375 미니맵 복사/전체 외곽선 진행:** `GumpDraw`의 RawBitmap/LinesClipped, RawMinimapControls의 평면 source/전체 Gump clip 연결, 독립120행 MinimapBlit/가려진 guard 경계 검사를 작성했다. **검사 대상만 빌드 중**이다(`extracted/cpp-minimap-blit-20261023-build-tests.log`, exec32310). 게임 exe는 바꾸지 않고 정적 라이브러리/검사만 빌드해374 GUI와 제품 SHA를 분리했다. 아직 검사 실행/375 게임 exe 빌드/실제 미니맵 GUI는 미실행이다. 실제 heap guard 장치가 없으므로 보이는 할당 밖 BYTE만 명시 예외로 유지하며 임의0/clamp를 하지 않는다.
+- [ ] 다음 순서: 374 커밋 → 375 검사 빌드 완료/독립120행·관련 회귀 → 게임 exe 빌드/미니맵 실제 두 화면비 회귀 → 인수인계·별도 커밋 → Fury 명령/부모 종료와 실제 훈련 진입 수정. 전체 HUD6모듈/dock·일반 HTML/Edit/전체 사용자 완주·동일성·배포는 계속 미완료다.
+
 ## 2026-10-23 단위373 완료: 미션 로딩 창 실패 수정 및 실제 원본 픽셀 대조
 
 - [x] 사용자가 전체 목표를 재개했다. AGENTS.md·공통/닷넷 인수인계를 다시 읽었다. 현재/마지막 전체 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-23**으로 일치한다. 이전 중단 절의 ‘일시 정지’는 과거 상태이며 이번 목표는 계속 활성이다.
