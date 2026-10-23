@@ -1,13 +1,23 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-23 단위375 완료: 미니맵 평면 복사와 전체 Gump 외곽선
+
+- [x] 단위374는 **03135055 / 20261023-44 CP**로 완료 커밋했다. 현재/마지막 전체 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-23**으로 일치한다. 새 전체 디컴파일/디컴파일 소스 변경은 없다.
+- [x] GumpPixelTarget::RawBitmap/LinesClipped를 추가하고 실제 RawMinimapControls에 연결했다. 음수 crop의 유효 flat 주소를 허용하고, 대상 clip 뒤 보이는 source BYTE만 읽는다. bitmap128 밖의 여백/전체 외곽선을 보존한다. 미관측 heap guard는 임의0/clamp 대신 명시 장치 부재를 거부한다. [상세·원문 범위·경계](docs/exe/cpp-minimap-blit-runtime-20261023.md).
+- [x] 검사/게임 Release 빌드 모두 종료0·관측 경고·오류0이다. **관련25검사/실패check0**(Minimap4/GumpDraw11/RawMenuControls10), 독립120개 전체 표면·guard40행 BYTE 주소 집합, 기존 래스터4,722행/공통 세 판본 Draw·clip 복구·메뉴 수명이 통과했다. `extracted/cpp-minimap-blit-20261023-tests.log`에 보존했다. 원본 fixture SHA7b6eec53...30497b3는 동일하다. 전체 CTest2,420/0은 이전 단위373 결과이며 이번 이후 전체 결과로 합산하지 않는다.
+- [x] 실제1024×768/1280×720 GUI에서 모달 중 입력 억제·드래그/해제/캡처·ESC/Game/Leave/Main Menu·미션 반납을 통과했다. 두 실행은 종료0/상한 미도달/전체 originals SHA 동일이다. 경로는 `extracted/cpp-minimap-blit-20261023-gui1024`, `...-gui1280`이다. 최종 제품 SHA는 `656e918ad2e3cdf5625faec575949d2081495c777051e8e00c35a7f39e73cc90`다. 실제 넓은 dock 드래그는 아직 연결하지 않았으며120행의 넓은 창 검증과 구별한다.
+- [x] UTF-8·도구 AST·새 문서 링크·공백·보호 경로/작업 트리를 확인하고 **20261023-45 CP**로 로컬 커밋한다. 원격 push/AGENTS·기존 원본/CD·닷넷/웹 변경은 없다. 새 GUI/빌드 프로세스를 남기지 않는다.
+- [ ] **다음 첫 작업 — Fury War:** 단위374의 bc8fury76 기술 선택 @1 잔류를 해결한다. `CheatAllTechnology` 명령02000028/00492ae0의 정확한 타입 필터·현재 기술 부모 getter/재조회·FindContained/생성을 원문으로 검증해 실제 큐에 연결한다. 기존 Ensure(owner,type)는 다른 타입 assertion/명시 owner getter를 사용하므로 순서 확인 없이 대체하지 않는다. c79b0은 버튼 명령 예약 뒤 부모 Kill이며 기술 지급 본체에는 닫기가 없다. 부모 종료를 기술 함수에 넣으면 사제 희생 후 본문까지 잘못 닫을 수 있다. 일반 비 Instant 부모 Kill/지연 OnExit·명령 전용 Tell/자기 정지 프레임 수명을 함께 고치고 실제 훈련/Sun·다른 원소 분기를 검사한다.
+- [ ] **유지할 한계:** 진입 감사는 Early6/캠페인16/훈련8/Demo3의33/34이며 위1미완료다. Surrounded의65초 상한에는 조건마다 전체 Report(수만 오브젝트)를 만드는 검사 비용이 포함되어 제품 FPS라고 단정하지 않는다. 전체 HUD6모듈/MinimapBlit 이후 실제 dock·viewport·일반 HTML/Edit·전체 사용자 완주/승패·동일성·배포 목표는 계속 활성이다.
+
 ## 2026-10-23 단위374 완료 / 단위375 진행 인수인계
 
 - [x] 단위373은 **69cfa858 / 20261023-43 CP**로 완료 커밋했다. 아래 전체 목표는 계속 활성이다. 현재/마지막 전체 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-23**이다.
 - [x] **374 실제 전체 진입 감사 완료:** 새 `tools/cpp_solo_entry_smoke.py`가 원본 offical1~5에서 Early6/캠페인16/훈련9 목록을 읽고 실제 표시 안내 버튼만 누른다. Guide sequence4/일곱 프레임 재개·현재 미션/월드·로딩 부모 반납·최종 정상 종료를 검사했다. **Early6·캠페인16·훈련8·실제 메뉴 Demo3 = 34경로 중33통과/1미완료**다. Demo3은 자연15초 안내 timeout과 로컬 AI도 확인했다. [전수 결과·실패 보존·원문 근거](docs/exe/cpp-solo-entry-audit-20261023.md).
 - [x] 관측은 `extracted/cpp-solo-entry-20261023-early`, `...-campaign`(15통과), `...-surrounded-retry`(1통과), `...-training-final`(8/9), `...-demos-final`(3/3)이다. Surrounded/데모 최초 시간 상한과 훈련 최초 라벨 미처리 실패는 삭제하지 않았다. 모든 범위 종료 후 허용 설정을 복원했고 **전체 originals 해시 동일**이다. 제품 C++/바이너리는 단위373 그대로이며 마지막 SHA는 `2a8eeaa40d586226bcd14a2fad1edce6f844b6710ef7bb9946d728d785c10dac`다. UTF-8/도구 AST/공백 검사 뒤 **20261023-44 CP**로 374 파일만 로컬 커밋한다.
 - [ ] **실제 잔여 Fury War:** `bc8fury76`는 기술 선택 @1에 남는다. 원본 `CheatAllTechnology`(이름00518d68/명령02000028/전역00542798/00492ae0)가 실제 명령 큐와 기술 생성에 미연결이다. 선택 theme의 group≠10/theme≠5 → 현재 기술 부모 FindContained(mask4,type,0) → 없으면 현재 부모 재조회/4afa70(...,0,4,0x10,0) 순서를 복원해야 한다. 내용 없는 Tell과 비 Instant 부모 종료도 c79b0와 대조한다. 이1건을 성공으로 세지 않으며 전체 훈련/전체 목표 완료는 아니다.
-- [ ] **375 미니맵 복사/전체 외곽선 진행:** `GumpDraw`의 RawBitmap/LinesClipped, RawMinimapControls의 평면 source/전체 Gump clip 연결, 독립120행 MinimapBlit/가려진 guard 경계 검사를 작성했다. **검사 대상만 빌드 중**이다(`extracted/cpp-minimap-blit-20261023-build-tests.log`, exec32310). 게임 exe는 바꾸지 않고 정적 라이브러리/검사만 빌드해374 GUI와 제품 SHA를 분리했다. 아직 검사 실행/375 게임 exe 빌드/실제 미니맵 GUI는 미실행이다. 실제 heap guard 장치가 없으므로 보이는 할당 밖 BYTE만 명시 예외로 유지하며 임의0/clamp를 하지 않는다.
-- [ ] 다음 순서: 374 커밋 → 375 검사 빌드 완료/독립120행·관련 회귀 → 게임 exe 빌드/미니맵 실제 두 화면비 회귀 → 인수인계·별도 커밋 → Fury 명령/부모 종료와 실제 훈련 진입 수정. 전체 HUD6모듈/dock·일반 HTML/Edit/전체 사용자 완주·동일성·배포는 계속 미완료다.
+- [x] **375 완료 — 상단 최신 기록 참조:** 아래 검증 전 기록은 과거 상태다. 검사/게임 빌드·관련25검사·독립120행/실제 두 화면비를 통과했다. actual heap guard 장치/전체 dock 드래그는 남는다.
+- [ ] 다음 순서는 상단375의 Fury 명령/부모 종료 및 실제 훈련 진입 수정이다. 전체 HUD6모듈/dock·일반 HTML/Edit/전체 사용자 완주·동일성·배포는 계속 미완료다.
 
 ## 2026-10-23 단위373 완료: 미션 로딩 창 실패 수정 및 실제 원본 픽셀 대조
 

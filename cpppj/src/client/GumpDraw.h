@@ -52,8 +52,14 @@ public:
     GumpPixelTarget(std::span<std::uint8_t> pixels,int pitch,int height,const GumpDrawState& state);
     // 양 끝 포함 직교/대각선 선을 순서대로 그리며 매 선에서 현재 클립을 읽는다. 대각선은 실제 VFX 분수/클립을 쓴다.
     void Lines(std::span<const GumpLine> lines) const;
+    // 전체 Gump 경계와 현재 클립의 교집합에 선을 그린다. 공유 클립 전역은 변경하지 않는다.
+    void LinesClipped(std::span<const GumpLine> lines,ScreenRect bounds) const;
     // position은 해제한 이미지의 왼쪽 위다. 투명도/선택적 소스 색 치환을 유지한다.
     void Image(const IndexedImage& image,ScreenPoint position,const ColorMap* colors=nullptr) const;
+    // 소스를 행 경계 제한 없는 평면 바이트 주소로 읽는다. 보이는 할당 밖 읽기만 outside 장치가 필요하다.
+    void RawBitmap(std::span<const std::uint8_t> source,std::int32_t stride,std::int64_t sourceBase,
+        ScreenPoint size,ScreenPoint destination,ScreenRect bounds,
+        const std::function<std::uint8_t(std::int64_t)>& outside={}) const;
     // position은 실제 VFX 기준점이다. 회전 없는 signed 16.16 배율을 원본 끝점/표본으로 현재 클립에 그린다.
     void ScaledImage(const IndexedImage& image,const ShapeFrame& frame,ScreenPoint position,
         std::int32_t scaleX,std::int32_t scaleY,const ColorMap* colors=nullptr) const;

@@ -1,5 +1,4 @@
-// 미적용 minimap-blit 제안 patch의 실제8BIT 출력과 독립 PE 전체 표면을 대조한다.
-// GumpPixelTarget::RawBitmap/LinesClipped가 등록되기 전에는 이 파일도 빌드에 등록하지 않는다.
+// 실제 미니맵 평면 복사와 전체 외곽선의8BIT 출력을 독립 PE 전체 표면과 대조한다.
 #include "TestSupport.h"
 #include "client/GumpDraw.h"
 #include "client/MinimapGeometry.h"
@@ -98,4 +97,15 @@ TEST_CASE(MinimapBlit_IndependentNativeFullSurfaceAndGuardReads) {
         if (netstorm::test::FailureCount()!=failures) std::fprintf(stderr,"미니맵 raw 블릿 native 입력: %s / cw%s\n",fields[0].c_str(),fields[1].c_str());
     }
     CHECK(rows==120 && guardRows==40);
+}
+
+// 실제로 가려진 할당 밖 소스는 읽지 않고 보이는 미확인 BYTE만 거부하는 경계를 검사한다.
+TEST_CASE(MinimapBlit_ClippedGuardAndMissingDevice) {
+    const std::array<std::uint8_t,4> source{{10,20,30,40}};std::array<std::uint8_t,4> pixels{{99,99,99,99}}; // 작은 입력/표면은 주소 접근만 검증한다.
+    GumpDrawState clip;SetGumpDrawClip(clip,{1,0,2,1});const GumpPixelTarget target(pixels,2,2,clip);
+    target.RawBitmap(source,2,-1,{2,1},{0,0},{0,0,2,1});CHECK(pixels[0]==99 && pixels[1]==10 && pixels[2]==99 && pixels[3]==99);
+    SetGumpDrawClip(clip,{0,0,2,1});bool rejected{}; // 같은 음수 주소가 이제 보일 때만 필수 장치 부재를 거부한다.
+    try { target.RawBitmap(source,2,-1,{2,1},{0,0},{0,0,2,1}); }
+    catch (const std::out_of_range&) { rejected=true; }
+    CHECK(rejected && pixels[0]==99);
 }

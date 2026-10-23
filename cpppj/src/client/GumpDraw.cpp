@@ -4,6 +4,7 @@
 #include "client/VFXLine.h"
 #include <algorithm>
 #include <bit>
+#include <limits>
 #include <stdexcept>
 
 namespace netstorm::client {
@@ -70,6 +71,37 @@ void GumpPixelTarget::Lines(std::span<const GumpLine> lines) const {
 // 기존 실제 VFX 해제/투명 합성기를 같은 현재 클립에 연결한다.
 void GumpPixelTarget::Image(const IndexedImage& image,ScreenPoint position,const ColorMap* colors) const {
     DrawIndexedImage(pixels_,pitch_,height_,image,position.x,position.y,Clip(),colors);
+}
+// 같은 표면을 임시 클립으로 빌려 bitmap보다 넓은 Gump의 외곽선도 유지한다.
+void GumpPixelTarget::LinesClipped(std::span<const GumpLine> lines,ScreenRect bounds) const {
+    GumpDrawState clipped=state_;SetGumpDrawClip(clipped,ClipScreenRect(bounds,Clip()));
+    GumpPixelTarget(pixels_,pitch_,height_,clipped).Lines(lines);
+}
+// 대상 클립을 먼저 계산하므로 가려진 소스 guard는 읽지 않으며 음수 X의 유효 flat 주소도 허용한다.
+void GumpPixelTarget::RawBitmap(std::span<const std::uint8_t> source,std::int32_t stride,std::int64_t sourceBase,
+    ScreenPoint size,ScreenPoint destination,ScreenRect bounds,
+    const std::function<std::uint8_t(std::int64_t)>& outside) const {
+    if (stride<=0) throw std::invalid_argument("원시 bitmap의 양수 행 간격 필요");
+    if (size.x<=0 || size.y<=0) return;
+    const auto clip=ClipScreenRect(bounds,Clip()); // 실제 화면과 전체 Gump 경계를 먼저 교차한다.
+    const auto left=std::max<std::int64_t>(clip.left,destination.x),top=std::max<std::int64_t>(clip.top,destination.y);
+    const auto right=std::min<std::int64_t>(clip.right,std::int64_t(destination.x)+size.x);
+    const auto bottom=std::min<std::int64_t>(clip.bottom,std::int64_t(destination.y)+size.y);
+    // 보이는 행만 순회하며 원본 stride를 유지한다. 창의 남은 여백은 기존 픽셀을 보존한다.
+    for (auto y=top;y<bottom;++y) {
+        // 평면 소스의 X가 음수여도 최종 BYTE 주소가 할당 안이면 그대로 읽는다.
+        for (auto x=left;x<right;++x) {
+            const auto delta=(y-destination.y)*stride+(x-destination.x); // 비음수 대상 상대 좌표의 평면 이동량이다.
+            if (sourceBase>std::numeric_limits<std::int64_t>::max()-delta) throw std::overflow_error("원시 bitmap 소스 주소 넘침");
+            const auto offset=sourceBase+delta;std::uint8_t value{};
+            if (offset>=0 && static_cast<std::uint64_t>(offset)<source.size()) value=source[static_cast<std::size_t>(offset)];
+            else {
+                if (!outside) throw std::out_of_range("원시 bitmap의 보이는 할당 밖 BYTE 공급 필요");
+                value=outside(offset);
+            }
+            pixels_[static_cast<std::size_t>(y)*pitch_+static_cast<std::size_t>(x)]=value;
+        }
+    }
 }
 // 원본 변환 커널의 직교 배율 분배도 일반 그림과 같은 현재 클립/대상 저장소를 사용한다.
 void GumpPixelTarget::ScaledImage(const IndexedImage& image,const ShapeFrame& frame,ScreenPoint position,

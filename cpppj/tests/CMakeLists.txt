@@ -28,6 +28,9 @@ set_source_files_properties(MissionLoadingMessageTests.cpp PROPERTIES COMPILE_DE
 # 미니맵기하의독립원본관측을해당검사에만공급한다.
 set_source_files_properties(MinimapGeometryTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_MINIMAP_GEOMETRY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/minimap-geometry-x86.tsv\"")
+# 실제 미니맵 복사·전체 외곽선의 독립 x86 픽셀과 guard 읽기 주소를 이 검사에만 공급한다.
+set_source_files_properties(MinimapBlitTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_MINIMAP_BLIT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/minimap-blit-x86.tsv\"")
 # 미니맵셀의독립원본전체bitmap관측을이검사에만공급한다.
 set_source_files_properties(MinimapRasterTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_MINIMAP_CELL_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/minimap-cell-x86.tsv\"")
@@ -98,6 +101,7 @@ add_executable(netstorm_tests
     HudDockTests.cpp
     HudDividerInputTests.cpp
     MinimapGeometryTests.cpp
+    MinimapBlitTests.cpp
     MinimapRasterTests.cpp
     ProductionShortcutsTests.cpp
     FortTerritorySaveTests.cpp

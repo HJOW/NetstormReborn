@@ -32,14 +32,12 @@ struct RawMinimapControls::Impl {
     // 원본 clipGump 안에서 crop 블릿→양 끝 포함 카메라 사각형을 같은8BIT 픽셀로 합성한다.
     void Draw(GumpPixelTarget& target) {
         if (state.bitmap.empty()) return;SyncSize();const auto plan=PlanMinimapDraw(geometry,hooks.view(),common.collection.Position(token)); // 같은 실제 화면 원점이다.
-        if (plan.size.x<=0 || plan.size.y<=0) return;
-        if (plan.source.x<0 || plan.source.y<0 || plan.source.x+plan.size.x>128 || plan.source.y+plan.size.y>128) throw std::out_of_range("미니맵 실제 crop 블릿 범위 오류");
-        IndexedImage image;image.width=static_cast<std::uint32_t>(plan.size.x);image.height=static_cast<std::uint32_t>(plan.size.y);image.indices.resize(static_cast<std::size_t>(plan.size.x)*plan.size.y);image.opacity.assign(image.indices.size(),255); // 원본 블릿은 검정도 불투명하게 쓴다.
-        // 원본은 bitmap의 선택한 사각형을 크기 변경 없이 행별로 복사한다.
-        for (int y=0;y<plan.size.y;++y) std::copy_n(state.bitmap.begin()+(plan.source.y+y)*128+plan.source.x,plan.size.x,image.indices.begin()+static_cast<std::size_t>(y)*plan.size.x);
-        const auto left=plan.camera.left-plan.destination.x,top=plan.camera.top-plan.destination.y,right=plan.camera.right-plan.destination.x-1,bottom=plan.camera.bottom-plan.destination.y-1; // crop 내부의 실제 outline 좌표다.
-        const std::array<GumpLine,4> lines{{{{left,top},{right,top},colors.owners[2]},{{right,top},{right,bottom},colors.owners[2]},{{right,bottom},{left,bottom},colors.owners[2]},{{left,bottom},{left,top},colors.owners[2]}}}; // 원본005bec2c 흰색으로 네 변을 그린다.
-        DrawGumpLines(image,lines);target.Image(image,plan.destination);
+        const auto bounds=common.collection.Bounds(token); // bitmap의128폭과 구별되는 실제 전체 Gump 경계다.
+        const auto sourceBase=std::int64_t(plan.source.y)*128+plan.source.x; // 원본의 평면 BYTE 오프셋이다.
+        target.RawBitmap(state.bitmap,128,sourceBase,plan.size,plan.destination,bounds);
+        const auto left=plan.camera.left,top=plan.camera.top,right=plan.camera.right-1,bottom=plan.camera.bottom-1; // 원본 외곽선은 화면 절대 좌표를 쓴다.
+        const std::array<GumpLine,4> lines{{{{left,top},{right,top},colors.owners[2]},{{left,bottom},{right,bottom},colors.owners[2]},{{left,top},{left,bottom},colors.owners[2]},{{right,top},{right,bottom},colors.owners[2]}}}; // 원본005bec2c 흰색의 위/아래/왼쪽/오른쪽 순서다.
+        target.LinesClipped(lines,bounds);
     }
 };
 // 생성 전에 같은Session 참조와 실제 장치 경계를 확인한다.
