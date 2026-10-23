@@ -1,0 +1,37 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-23",
+  "scope": "직접쓰기 최소기계어구간만. 큰Init/Editor/Login/leave부모의분기·실제함수전체호출은아님. 기존Native자료불변. 4DWORD연결hex는관측표현이며실제인접배열이아님.",
+  "initialPeDwords": {
+    "mySubscriber": {
+      "address": "00540c74",
+      "value": 4294967295
+    },
+    "loginSubscriber": {
+      "address": "0054265c",
+      "value": 1
+    },
+    "editor": {
+      "address": "005c85a4",
+      "value": 0
+    },
+    "missionPost": {
+      "address": "00594fa4",
+      "value": 0
+    }
+  },
+  "directStoreSites": 0,
+  "observations": 0,
+  "instructionCounter": 0,
+  "proposalProductAbsentBeforeObservation": true,
+  "wholeParentOrIndirectWritesVerified": false,
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+    "tools/decomp_subscriber_lifetime_edges.py": "5e463e7c715aa9816e12092b1494cfd04562f81de28cfa37282ddeed54af289f",
+    "cpppj/tests/fixtures/subscriber-lifetime-edges-x86.tsv": "52ed7950a5d1ca40d7d4cf1c965fe96dc33322ae5f40def31fbd36c822444e3c",
+    "extracted/cpp-client-subscriber-globals-20261024-static.json": "ff3199de6399be2915fb936a1fcdd24afed116bedf5991ba242d7c589cf1fbd1"
+  }
+}

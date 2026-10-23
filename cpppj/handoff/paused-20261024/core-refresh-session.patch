@@ -1,0 +1,169 @@
+--- a/cpppj/src/client/RawCampaignSession.h
++++ b/cpppj/src/client/RawCampaignSession.h
+@@ -221,6 +221,7 @@
+     void InstallExistingEditorCheckpoint(const CampaignExistingEditorCheckpointServices& effects,const std::uint32_t& readOnlyForts,const EditorFiles& files); //명시지연Editor의실제파일부터004b743b까지한번조립한다.참조장치는Session보다오래살며최종loaded는쓰지않는다.
+     bool ExistingEditorCheckpointReady() const; //전체설치성공이아닌위한정부모의정상복귀여부만조회한다.
+     void WriteExistingEditorCoreData(std::uint32_t slot); //명시Editor의실제004beb30을현재Storage/모드에연결한다.직렬화하위미복원은선택위치에서거부하며loaded를변경하지않는다.
++    void RefreshCurrentPlayerCore(); //실제선택Login Core/현재기술/다이스count로0044fc00을실행한다.선택Core없음은필수누락이며loaded/owner를바꾸지않는다.
+ 
+     // 외곽전체Snapshot/State/lastEditFort뒤호출한다.번역/format을받고 마지막0046e980은같은실제맵에연결한다.
+     void InstallExistingEditorPlayers(o::EditorPlayersHooks ui);
+--- a/cpppj/src/client/RawCampaignSession.cpp
++++ b/cpppj/src/client/RawCampaignSession.cpp
+@@ -102,6 +102,8 @@
+ #include "client/RawCarrierDropPoint.h"
+ #include "o/RawProcessRemoval.h"
+ #include "o/RawSquidLevel.h"
++#include "o/RawPlayerCoreData.h"
++#include "o/RawPlayerCoreRefresh.h"
+ #include "o/RawSquidSelection.h"
+ #include "o/RawCarrierRegular.h"
+ #include "o/RawContentPreviewProcess.h"
+@@ -3140,6 +3142,46 @@
+         s.editorCheckpointReady=true;s.editorCheckpointRunning=false; //004b743b정상복귀만표시하며후반HUD/State/최종loaded를앞당기지않는다.
+     }catch (...) { s.editorCheckpointRunning=false;throw; } //동기진입guard만반납한다.manager/State/Config/파일/객체/난수는rollback하지않는다.
+ }
++// 현재 Login이 실제 선택한 Core만 갱신한다.Editor의 임의 owner선택/Client장기alias를 만들지 않는다.
++void RawCampaignSession::RefreshCurrentPlayerCore() {
++    auto& s=*impl_;PlayerCoreRefreshHooks hooks; // 모든 하위 callback은 동기 부모가 끝나기 전 반납된다.
++    constexpr std::uint32_t poolBase=0x12000000U; // 같은 실제 Pool의50BYTE 상대주소를 나타내는opaque32기준이며 host포인터/두번째풀은아니다.
++    hooks.core=[&s] { //0048f0d0의 현재 포인터/진단을 기존 몸체로 실행하며 Core 사본은 만들지 않는다.
++        if (!s.login) throw std::logic_error("현재Core갱신의실제Login선택Core소유자미연결");
++        const auto players=std::span<std::uint8_t>(s.players); // 이 getter에서 실제 Read가 쓰지 않는 현재 Player뷰다.
++        const std::uint32_t metamap=s.core.ownerMode.challenge ? 1U : 0U; // getter의원문1회읽기입력일뿐bool전역의alias/쓰기동기화가아니다.
++        return ReadPlayerCoreData({s.playerState.templateOwner,s.playerState.battleOwner,s.playerState.playerKnown,s.login->coreActive,
++            metamap,s.login->currentCore,s.login->cachedCore,players},{SessionMissing<void,std::uint32_t>()});
++    };
++    hooks.technologyParent=[&s] { return s.player->CurrentTechnology(); };
++    struct Cursor { // Begin마다 실제 Finder/현재후보를 따로 소유해 재진입 순서를 유지한다.
++        RawContainedFinder finder;Sid current; // 같은 Pool/현재contentFinder를 빌리며 결과목록을 복제하지 않는다.
++        Cursor(Impl& state,std::uint32_t parent):finder(state.core.pool,state.contentFinder) {
++            if (parent>65535U || parent>=state.core.pool.Capacity()) throw std::out_of_range("현재Core갱신의실제기술부모SID범위");
++            current=finder.Begin(Sid{static_cast<std::uint16_t>(parent)});
++        }
++    };
++    hooks.begin=[&s](auto parent) { const auto cursor=std::make_shared<Cursor>(s,parent);return PlayerCoreRefreshCursor{
++        [cursor] { return cursor->current.value; },[cursor] { cursor->current=cursor->finder.Next(); }}; };
++    hooks.pool=[&s] { return PlayerCoreRefreshPool{s.core.pool.Bytes(),poolBase,s.core.pool.Capacity()}; };
++    hooks.technologyBit=[&s](auto type) { //49a840에는진단이없다.호스트실제TYPE범위밖만선택load위치에서거부한다.
++        if (type>=s.core.types.size()) throw std::out_of_range("현재Core갱신의실제TYPE기술bit물리범위");
++        return s.core.types[type].techBitIndex;
++    };
++    hooks.playerType=[&s] { return s.runeState.daisType; }; //005412ec정상165이며Player152의005412b8과다르다.
++    hooks.owner=[&s] { return s.playerState.battleOwner; };
++    hooks.level=[&s](PlayerCoreRefreshForm form)->std::int32_t { //실제같은다이스VT+80의Count를선택하며state상위level로대체하지않는다.
++        const auto bytes=s.core.pool.Bytes(); // 앞선가상효과뒤현재Pool과현재물리를다시확인한다.
++        if (form.address<poolBase || (form.address-poolBase)%50U) throw std::out_of_range("현재Core갱신가상객체주소범위");
++        const auto number=(form.address-poolBase)/50U; // 동일Pool의상대주소를원래SID로되돌린다.
++        if (number>=s.core.pool.Capacity() || number>65535U || form.bytes.size()!=50 || form.bytes.data()!=bytes.data()+number*50U)
++            throw std::out_of_range("현재Core갱신가상객체현재물리불일치");
++        if (Read(form.bytes,0)!=0x507950U) throw std::logic_error("현재Core갱신의선택된가상80몸체미연결");
++        return std::bit_cast<std::int32_t>(s.templeRitual->Count(Sid{static_cast<std::uint16_t>(number)}));
++    };
++    hooks.assertion=SessionMissing<void,std::uint32_t>(); //Ch.cpp15a진단도선택위치에서실제누락을보고한다.
++    RefreshPlayerCore(hooks);
++}
+ // 실제기존Editor에서만004beb30의manager/Metamap진단과현재post/editor자연관문을재사용한다.
+ void RawCampaignSession::WriteExistingEditorCoreData(std::uint32_t slot) {
+     auto& s=*impl_;if (s.services.installMode!=CampaignInstallMode::ExistingEditor || s.loaded || slot>=9) throw std::logic_error("기존Editor CoreWrite의실제설치중/9슬롯계약");
+@@ -3159,7 +3201,7 @@
+             WriteFortSp(fields,value,sp);
+         });
+     };
+-    //0044fc00현재Core갱신은아직미복원이다.hooks.refresh를비워선택도달의필수실패를그대로유지한다.
++    hooks.refresh=[this] { RefreshCurrentPlayerCore(); }; //원문부모의자연editor/post관문뒤선택될때만현재실제Core를요구한다.
+     o::WriteFortCoreData(static_cast<std::int32_t>(slot),globals,hooks);
+ }
+ // checkpoint완료와전체Session설치완료를같은flag로합치지않는다.
+--- /dev/null
++++ b/cpppj/tests/SessionPlayerCoreRefreshTests.cpp
+@@ -0,0 +1,89 @@
++// 후속388 미실행 초안: 실제 LocalLogin Corealias와 같은 TYPE/다이스의 갱신을 검사한다.
++#include "DudeSpawnSupport.h"
++#include "client/RawCampaignSession.h"
++#include <algorithm>
++#include <array>
++#include <stdexcept>
++#include <string>
++#include <vector>
++
++namespace {
++using namespace netstorm::o;
++using namespace netstorm::client;
++// 기존 ThemeSessionServices/LocalLogin 검사의 외부 소리·번역·설정만 공급한다.
++struct CoreRefreshSessionDevices {
++    SoundList names{OriginalEdition::Patch1078}; // 실제 Session보다 오래 사는 소리 이름표다.
++    std::array<std::uint8_t,4> you{'Y','o','u',0}; // 명시 headless 번역 입력이다.
++    // Player/기술/LocalLogin/다이스/현재Core는 실제 Session 몸체에 맡긴다.
++    RawCampaignSessionServices Make(bool login) {
++        names.Initialize();RawCampaignSessionServices result; // 게임 계산을 반환하는 가짜 hook은 넣지 않는다.
++        result.soundNames=&names;result.unixSeconds=[] { return 946684800; };
++        result.production.allocationBytes=[](auto bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0x71}); };
++        result.sound.wallSeconds=[] { return 100.0; };
++        result.sound.play=[](SoundHandle sound,std::uint32_t,std::uint32_t,std::uint32_t,std::uint32_t,std::uint32_t) { return sound; };
++        result.sound.playLoopAt=[](float,float,SoundHandle current,SoundHandle sound) { return current?current:sound; };
++        result.sound.playOnceAt=[](float,float,SoundHandle sound,std::uint32_t,std::uint32_t) { return sound; };
++        result.sound.stop=[](SoundHandle) {};result.sound.isPlaying=[](SoundHandle) { return 0U; };
++        result.install.translateYou=[this] { return std::span<const std::uint8_t>(you); };
++        result.install.setConfig=[](std::string_view,std::span<const std::uint8_t>) {};result.install.refreshWindowTitle=[] {};result.install.resetCamera=[] {};
++        result.ownership.refreshProduction=[] {};result.ownership.themeMode=[] { return 0U; };
++        result.assets.postPop.playImpactSound=[](std::uint32_t) {};result.assets.queueCommand=[](std::uint32_t,std::int32_t,std::int32_t) {};
++        result.priest.shield.noticeSound=[](const PriestShieldNotice&) {};result.priest.shield.translate=[](std::string_view key) { return std::string(key); };result.priest.shield.tell=[](std::string_view) {};
++        result.playerContent.gump=[](std::uint32_t) { return 0U; };
++        result.playerContent.handle=[](std::uint32_t,std::uint32_t,std::uint32_t,std::uint32_t) { throw std::logic_error("Core갱신검사의미설치UI대상"); };
++        result.deletion.selected=[] { return Sid{}; };result.deletion.emit=[](const SquidDestroyEvent&) { throw std::logic_error("Core갱신검사의미선택삭제"); };
++        result.player.log=[](std::uint32_t,std::string_view) {};result.missionOutcome.demo=[] { return 0U; };
++        if (login) {
++            CampaignLoginServices effects; // 실제 로컬 handshake의 장치 경계만 제공한다.
++            effects.configInt=[](std::string_view,std::int32_t fallback) { return fallback; };effects.wallSeconds=[] { return 100.25; };effects.clock=[] { return 100250U; };
++            effects.refresh=[] {};effects.playerUiBusy=[] { return false; };effects.playerNotice=[](std::uint32_t,std::uint32_t,std::uint32_t) {};effects.log=[](std::string_view) {};
++            result.localLogin=std::move(effects);result.ai.participation.clearChat=[](std::uint32_t) {};result.ai.participation.addChat=[](std::uint32_t,std::string_view,std::uint32_t) {};
++        }
++        return result;
++    }
++};
++// 실제 Player/Core/다이스 필드폭으로만 명시 입력을 쓴다.
++void CoreRefreshPut(std::span<std::uint8_t> bytes,std::size_t offset,std::uint32_t value) {
++    for (std::size_t byte=0;byte<4;++byte) bytes[offset+byte]=static_cast<std::uint8_t>(value>>(byte*8)); // 정확한DWORD 입력이다.
++}
++// 같은 실제 저장소의 DWORD를 읽는다.
++std::uint32_t CoreRefreshRead(std::span<const std::uint8_t> bytes,std::size_t offset) {
++    std::uint32_t value{}; // 낮은 BYTE부터 조립할 원시 비트다.
++    for (std::size_t byte=0;byte<4;++byte) value|=std::uint32_t(bytes[offset+byte])<<(byte*8); // 인접Core필드를 읽지 않는다.
++    return value;
++}
++}
++
++// 실제 handshake가 선택한 Player+6c를 갱신하며 별도 Core 복사/Clientalias를 만들지 않는다.
++TEST_CASE(SessionPlayerCoreRefresh_CurrentLoginAliasAndActualDaisCount) {
++    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);CoreRefreshSessionDevices devices; // Session보다 오래 사는 읽기전용 자료/장치다.
++    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",devices.Make(true));
++    session.LoadLocalConnection();CHECK(session.LocalConnectionPhase()==14);session.ClearTechnology(1);session.AddTechnology(1,"windBattery;sunAviary");
++    const auto world=session.Core();auto records=session.PlayerRecords();auto current=records.subspan(session.LocalOwner()*180+0x6c,10); // 실제 Login이 같은 Player기록을 선택한 alias다.
++    current[5]=0;CoreRefreshPut(current,6,0xffffffffU);
++    const auto dais=session.World().Create(165,2);auto raw=world.pool.AllocatedBytes(dais);raw[34]=static_cast<std::uint8_t>(session.LocalOwner());CoreRefreshPut(raw,36,120); // 실제 다이스ctor 뒤 count3을 나타내는 명시현재frame이다.
++    const auto owner=session.LocalOwner(),selected=session.TemplateOwner();session.RefreshCurrentPlayerCore();
++    CHECK(CoreRefreshRead(current,6)==0x11U && current[5]==2); // Native실제속성 windBattery bit4/sunAviary bit0와다이스count3−1이다.
++    CHECK(session.LocalOwner()==owner && session.TemplateOwner()==selected && session.LocalConnectionPhase()==14);
++    CoreRefreshPut(raw,36,3);session.RefreshCurrentPlayerCore();CHECK(CoreRefreshRead(current,6)==0x11U && current[5]==2); // 현재다이스count가내려가도기존Core+5하한은줄이지않는다.
++}
++
++// 직접Load/Editor처럼 Login현재선택이없는 경로는 임의 owner1 Core를 만들지 않는다.
++TEST_CASE(SessionPlayerCoreRefresh_RequiresSelectedLoginCoreBeforeFirstStore) {
++    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);CoreRefreshSessionDevices devices; // 실제 장치 수명을 보존한다.
++    auto fort=FortTemplate::Parse(assets.files.Read("d/bc8fury76.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"bc8fury76",devices.Make(false));session.Load();
++    const auto before=std::vector<std::uint8_t>(session.PlayerRecords().begin(),session.PlayerRecords().end());bool rejected{}; // Core+6을쓰기전선택필수실패여야한다.
++    try { session.RefreshCurrentPlayerCore(); }catch (const std::logic_error& error) { rejected=std::string(error.what()).find("Login선택Core")!=std::string::npos; }
++    CHECK(rejected && std::equal(before.begin(),before.end(),session.PlayerRecords().begin()));
++}
++
++// 미복원가상80은기술bit완료뒤선택위치에서중단하고앞선직접효과를되돌리지않는다.
++TEST_CASE(SessionPlayerCoreRefresh_UnknownSelectedVirtualKeepsTechnologyPrefix) {
++    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);CoreRefreshSessionDevices devices; // 같은실제Session/Player/기술장치를사용한다.
++    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",devices.Make(true));session.LoadLocalConnection();
++    session.ClearTechnology(1);session.AddTechnology(1,"windBattery;sunAviary");auto records=session.PlayerRecords();auto current=records.subspan(session.LocalOwner()*180+0x6c,10);current[5]=0;CoreRefreshPut(current,6,0xffffffffU);
++    const auto world=session.Core();const auto dais=session.World().Create(165,2);auto raw=world.pool.AllocatedBytes(dais);raw[34]=static_cast<std::uint8_t>(session.LocalOwner());CoreRefreshPut(raw,0,0xdeadbeefU);bool rejected{}; // 물리TYPE/owner는맞고선택VT만미복원인명시입력이다.
++    try { session.RefreshCurrentPlayerCore(); }catch (const std::logic_error& error) { rejected=std::string(error.what()).find("가상80몸체")!=std::string::npos; }
++    CoreRefreshPut(raw,0,0x507950U); // 같은실제생성VT로복구한뒤Session을소멸한다.원문중단효과를rollback한것으로합산하지않는다.
++    CHECK(rejected && CoreRefreshRead(current,6)==0x11U && current[5]==0);
++}

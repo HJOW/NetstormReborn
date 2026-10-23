@@ -1,0 +1,67 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-23",
+  "staticOnly": true,
+  "nativeExecution": false,
+  "normalComparedType": {
+    "globalAddress": "005412ec",
+    "initialDword": 165,
+    "constructor": "0044b200",
+    "vtable": "00507950",
+    "virtual80": "004478f0",
+    "existingBody": "RawTempleRitual::Count"
+  },
+  "otherPlayerType": {
+    "globalAddress": "005412b8",
+    "initialDword": 152,
+    "vtable": "0050ee08",
+    "virtual80": "004ad0f0",
+    "existingBody": "RawSquidLevel::Get/Has"
+  },
+  "bodySourceMap": {
+    "4478f0": {
+      "ranges": "4478f0-44792e",
+      "pieces": [
+        {
+          "first": "004478f0",
+          "last": "0044792e",
+          "hex": "568b7124e8175e060083f80d7507b8010000005ec383f80c7507b8020000005ec383f80b7507b8030000005ec383fe407cdc33c083fe780f9dc05e83c002c3"
+        }
+      ]
+    },
+    "44fc00": {
+      "ranges": "44fc00-44fc35;44fc40-44fd6e",
+      "pieces": [
+        {
+          "first": "0044fc00",
+          "last": "0044fc35",
+          "hex": "83ec105356e8c6f4030033f6897006e84c000400508d4c240cc744240cf40f500089742418e8462606008b4424103bc67459b304eb0a"
+        },
+        {
+          "first": "0044fc40",
+          "last": "0044fd6e",
+          "hex": "8b0d64845c006bc0328a54081403c184d30fb74812742351e8e3ab04008b80ec01000083c40483f8ff740f6a0150e85df403008bc8e806b6fdff8d4c2408e89d1e06008b4424103bc675b58b157c845c0055bb01000000578d4c2410895c241089542414e897eefbff8b6c24148b7c24108b1564845c008bf76bf6328d0c168d42323bc87270a17c845c006bc03203c23bc873620fb6410a3b05ec12540075390fb641223b05700c5400752d8b11ff92800000003bc38b1564845c007e1b8a44160ba8028d0c1675108b01ff90800000008b1564845c008bd8473bfd7d998bcf6bc9328d44110bf60001748b4783c0323bfd7cf3eb818d73ffe892f303000fb650053bf25f5d7e108bdee881f303005e8858055b83c410c3e873f303000fb65805e86af303005e8858055b83c410c3"
+        }
+      ]
+    },
+    "4ad0f0": {
+      "ranges": "4ad0f0-4ad108",
+      "pieces": [
+        {
+          "first": "004ad0f0",
+          "last": "004ad108",
+          "hex": "568bf1e8a8ffffff85c074090fb6460bc1e8055ec333c05ec3"
+        }
+      ]
+    }
+  },
+  "sha256": {
+    "extracted/audit_player_core_refresh_target_20261024.py": "b84616eb36ba666c0d68b258a764906e1b24d9fd411fe10fa8b5093c808cc8c6",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "cpppj/src/o/RawTempleRitual.cpp": "4da7a7c1516a35016897471780d92be973f3d238dfd4bf5c36548a9fe9b803bb",
+    "cpppj/src/o/DerivedConstructors.inc": "fac1a032778ba7e6745476904a13446c36b79625e38c40120195bc009a798b00"
+  },
+  "correction": "Player152의level재사용제안은CoreRefresh정상대상해석으로폐기한다.첫부모Native/알고리즘/명시입력은변경하지않는다."
+}

@@ -1,0 +1,83 @@
+{
+  "date": "2026-10-24",
+  "scope": "paused handoff only; patches not applied; no new build or gameplay",
+  "files": [
+    {
+      "name": "core-refresh-target.patch",
+      "source": "extracted/cpp-player-core-refresh-target-20261024-proposed.patch",
+      "sha256": "63a1eaf05cc34df5ea24b1c5ba319ce66d17c3a718671229bdf044711df6b395",
+      "sameBytes": true,
+      "kind": "unapplied-patch"
+    },
+    {
+      "name": "core-refresh-session.patch",
+      "source": "extracted/cpp-player-core-refresh-session-20261024-proposed.patch",
+      "sha256": "2eac199075e29ac6c411c4c5ffaabb5537b0e303295c7ce313d0ccff04ac8577",
+      "sameBytes": true,
+      "kind": "unapplied-patch"
+    },
+    {
+      "name": "client-subscriber.patch",
+      "source": "extracted/cpp-client-subscriber-globals-20261024-proposed.patch",
+      "sha256": "22510ce0bc6d1884c10a425aab33de6abd16a519fb8669db560e0e57a676209d",
+      "sameBytes": true,
+      "kind": "unapplied-patch"
+    },
+    {
+      "name": "client-colorsort-primary.patch",
+      "source": "extracted/cpp-client-colorsort-primary-20261024-proposed.patch",
+      "sha256": "40b4d5833871b7f87867bc569760b80954f7370229a43488bd11a80ee6eb03c9",
+      "sameBytes": true,
+      "kind": "unapplied-patch"
+    },
+    {
+      "name": "core-target-baseline.json",
+      "source": "extracted/cpp-player-core-refresh-target-20261024-proposed/baseline-sha.json",
+      "sha256": "b023f76c345caf5be24b9f045e26d15f204bde340dc3c155d7de32730fe5100d",
+      "sameBytes": true,
+      "kind": "frozen-proof"
+    },
+    {
+      "name": "core-session-baseline.json",
+      "source": "extracted/cpp-player-core-refresh-session-20261024-proposed/baseline-sha.json",
+      "sha256": "0e85f0d4b843f7f060b593b58fa028bf8237859f2a41816d25f68203e2108199",
+      "sameBytes": true,
+      "kind": "frozen-proof"
+    },
+    {
+      "name": "core-session-apply-verification.json",
+      "source": "extracted/cpp-player-core-refresh-session-20261024-proposed/apply-verification.json",
+      "sha256": "863fe2851682bc899125293a4f5509c915d48dccd8cdd1d3004aa55613c9d9e9",
+      "sameBytes": true,
+      "kind": "frozen-proof"
+    },
+    {
+      "name": "core-target-static.json",
+      "source": "extracted/cpp-player-core-refresh-target-20261024-static.json",
+      "sha256": "8a1859da49149c25e263122333f9a6056340972c8d45d22a9b7897f83f776e89",
+      "sameBytes": true,
+      "kind": "frozen-proof"
+    },
+    {
+      "name": "subscriber-freeze.json",
+      "source": "extracted/cpp-client-subscriber-globals-20261024-proposed/freeze.json",
+      "sha256": "b4752fe9838b974888d67c3608e9f9a164f6e3f1228e2dd0d625139d14b0b06e",
+      "sameBytes": true,
+      "kind": "frozen-proof"
+    },
+    {
+      "name": "colorsort-primary-pause.json",
+      "source": "extracted/cpp-client-colorsort-primary-20261024-proposed/pause-handoff.json",
+      "sha256": "38d0ce9743168f4f1b720c9b23a83fcfb5269212bdecdf98220fdfa6a61b2260",
+      "sameBytes": true,
+      "kind": "frozen-proof"
+    },
+    {
+      "name": "colorsort-primary-isolated.json",
+      "source": "extracted/colorsort-primary-20261024-isolated/verification.json",
+      "sha256": "b8d0201da74c4ab1f548064463a181d7dee5f18f8c05c84cc4cb6015f5c5a2d5",
+      "sameBytes": true,
+      "kind": "frozen-proof"
+    }
+  ]
+}

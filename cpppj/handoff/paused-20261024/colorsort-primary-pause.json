@@ -1,0 +1,137 @@
+{
+  "status": "단위388 준비·미등록·일시중지 인계",
+  "patchSha256": "40b4d5833871b7f87867bc569760b80954f7370229a43488bd11a80ee6eb03c9",
+  "patchMatchesPreparation": true,
+  "files": [
+    {
+      "path": "cpppj/src/client/ClientColorSortInput.h",
+      "baselineSha256": "3664d63a1e068242e6670a350887a35d0f428f22bea57943c5b6e244c39f49df",
+      "currentSharedSha256": "3664d63a1e068242e6670a350887a35d0f428f22bea57943c5b6e244c39f49df",
+      "proposedSha256": "92446273a5ae846b6004a4298fbcbe9aa621d9d3727a0a147584a5d49ae35abd",
+      "actualAppliedSha256": "92446273a5ae846b6004a4298fbcbe9aa621d9d3727a0a147584a5d49ae35abd",
+      "sharedStillBaseline": true,
+      "copyAndActualAppliedMatch": true
+    },
+    {
+      "path": "cpppj/src/client/ClientColorSortInput.cpp",
+      "baselineSha256": "2495412cb2e2c241484a653941caed13d303b0de27ae559382e9f9e686e166c5",
+      "currentSharedSha256": "2495412cb2e2c241484a653941caed13d303b0de27ae559382e9f9e686e166c5",
+      "proposedSha256": "6a0817b8dec0af464e19922e674cd3c87733667310debe264d1ca2812bb66516",
+      "actualAppliedSha256": "6a0817b8dec0af464e19922e674cd3c87733667310debe264d1ca2812bb66516",
+      "sharedStillBaseline": true,
+      "copyAndActualAppliedMatch": true
+    },
+    {
+      "path": "cpppj/src/client/OwnerColorMaps.h",
+      "baselineSha256": "aed5d31073e2015b4d0773eef376a302d122c024a04f90533d0882fd28121abf",
+      "currentSharedSha256": "aed5d31073e2015b4d0773eef376a302d122c024a04f90533d0882fd28121abf",
+      "proposedSha256": "79669ca4265295a6f01a31d330ee2b43a0abe2b7f394b8e1ed7f8fbf80c75078",
+      "actualAppliedSha256": "79669ca4265295a6f01a31d330ee2b43a0abe2b7f394b8e1ed7f8fbf80c75078",
+      "sharedStillBaseline": true,
+      "copyAndActualAppliedMatch": true
+    },
+    {
+      "path": "cpppj/src/client/OwnerColorMaps.cpp",
+      "baselineSha256": "1dc23bab259f2bdbb6e88d7e12c4427a50f76304c8aa11cc6309800d0da7e620",
+      "currentSharedSha256": "1dc23bab259f2bdbb6e88d7e12c4427a50f76304c8aa11cc6309800d0da7e620",
+      "proposedSha256": "45e6ea42f033465499f406988593c823ad7aedfeb106da58db4edd34b0b12ead",
+      "actualAppliedSha256": "45e6ea42f033465499f406988593c823ad7aedfeb106da58db4edd34b0b12ead",
+      "sharedStillBaseline": true,
+      "copyAndActualAppliedMatch": true
+    },
+    {
+      "path": "cpppj/src/client/RawCampaignSession.cpp",
+      "baselineSha256": "762768b19e927ad111990530175052e84d2cee85fbd73bb934d42fb6a4a58d72",
+      "currentSharedSha256": "762768b19e927ad111990530175052e84d2cee85fbd73bb934d42fb6a4a58d72",
+      "proposedSha256": "0c93ba8b8ed8e30edc484ff92c119bc7a171be540897be57a724e9f6ac791631",
+      "actualAppliedSha256": "0c93ba8b8ed8e30edc484ff92c119bc7a171be540897be57a724e9f6ac791631",
+      "sharedStillBaseline": true,
+      "copyAndActualAppliedMatch": true
+    },
+    {
+      "path": "cpppj/src/client/CampaignClientServices.cpp",
+      "baselineSha256": "406deaa4da7c2d558daaad0ed230189b32d3951ff724f9789bd27b1a3d27ea53",
+      "currentSharedSha256": "406deaa4da7c2d558daaad0ed230189b32d3951ff724f9789bd27b1a3d27ea53",
+      "proposedSha256": "19ec984de8f650cfbaa273441ae274c4eaf4531794e0ccdd5c5b4985ab628f73",
+      "actualAppliedSha256": "19ec984de8f650cfbaa273441ae274c4eaf4531794e0ccdd5c5b4985ab628f73",
+      "sharedStillBaseline": true,
+      "copyAndActualAppliedMatch": true
+    },
+    {
+      "path": "cpppj/src/client/ClientMain.cpp",
+      "baselineSha256": "b842f89dde96ce5ae62e2766831df3ca6038838b6317be7a8e767437d3f63af7",
+      "currentSharedSha256": "b842f89dde96ce5ae62e2766831df3ca6038838b6317be7a8e767437d3f63af7",
+      "proposedSha256": "a076dfcec5e1fc280472ea2ac1bea47384dafd2041c43321b29429e03342a4ff",
+      "actualAppliedSha256": "a076dfcec5e1fc280472ea2ac1bea47384dafd2041c43321b29429e03342a4ff",
+      "sharedStillBaseline": true,
+      "copyAndActualAppliedMatch": true
+    },
+    {
+      "path": "cpppj/src/client/CurrentAllocationBytes.h",
+      "newFile": true,
+      "sharedExists": false,
+      "proposedSha256": "4068d2adbe15a1911db08f96a17a5e3e3743bcf90dfb5a499ef2daa5ad9c1ee2",
+      "actualAppliedSha256": "4068d2adbe15a1911db08f96a17a5e3e3743bcf90dfb5a499ef2daa5ad9c1ee2",
+      "copyAndActualAppliedMatch": true
+    }
+  ],
+  "actualAppliedRoot": "C:\\Users\\BUZZ\\AppData\\Local\\Temp\\NetstormReborn-colorsort-primary-20261024-wyos4lff\\applied",
+  "strictHunksApplied": 14,
+  "skippedFiles": 0,
+  "frozenNativeAndProduct": [
+    {
+      "path": "cpppj/src/o/RawColorSortPrimary.h",
+      "sha256": "91be5bd4bd22200cf004a0d8c0dd3622535a77f53a07f52e3f56152c0f04eba9",
+      "matchesFrozen": true
+    },
+    {
+      "path": "cpppj/src/o/RawColorSortPrimary.cpp",
+      "sha256": "27ed9956a63989632e34961e3d0c8ebc0f1ba965d99225c20c3b8814719d1592",
+      "matchesFrozen": true
+    },
+    {
+      "path": "cpppj/tests/ColorSortPrimaryTests.cpp",
+      "sha256": "e5d0e0090504984190f1b528ac700df201ddb38c22cfdafadf1158fc6a465280",
+      "matchesFrozen": true
+    },
+    {
+      "path": "tools/decomp_colorsort_primary.py",
+      "sha256": "bb9957d5e29ea5573efb6accdb42f8257f79175b8702d003d26f2a79e97e4b42",
+      "matchesFrozen": true
+    },
+    {
+      "path": "cpppj/tests/fixtures/colorsort-primary-x86.tsv",
+      "sha256": "ddc522d49ab538e33c27661efcc4198f27a2e1e581bfa92de44020acec6ebc29",
+      "matchesFrozen": true
+    },
+    {
+      "path": "cpppj/colorsort-primary-native.json",
+      "sha256": "fcd08999171286a49ec3adbde480fb927a2ba8eae37aa6663b9c30e0399ab019",
+      "matchesFrozen": true
+    },
+    {
+      "path": "docs/exe/cpp-colorsort-primary-native-20261024.md",
+      "sha256": "7f74981159b350a4fe1467737fd7314b3fcb476a09c8d70488ae35f0623f86f9",
+      "matchesFrozen": true
+    }
+  ],
+  "otherFrozenEvidenceSha256": {
+    "cpppj/tests/fixtures/colorsort-fixed-input-x86.tsv": "70684bfd514b29e981d67faa4d2abc6cababcc5ed275b22f495f58e41d65813f",
+    "cpppj/tests/fixtures/owner-hsl-colors-x86.tsv": "9a59ed66b04a0eb972ee68b708a28e016d77bdc1f96db5935c40eec38efe0902"
+  },
+  "newTestsWritten": 0,
+  "proposalCompiled": false,
+  "proposalLinked": false,
+  "proposalExecuted": false,
+  "gameOrGuiExecuted": false,
+  "sharedSourceWritten": false,
+  "sharedCMakeOrBuildOrGitUsed": false,
+  "validationScope": "기존7개 baseline SHA, 신규1개 포함8개 C:Temp 실제적용 BYTE 대조, 최초자료 불변만 확인",
+  "pending": [
+    "신규 primary Client/Screen 수명 검사 작성",
+    "저장 L 직접변경에 대한 전용5종 검사 작성",
+    "최초80/6/Owner15 자료 그대로 격리 대조",
+    "사본 /W4 /WX 컴파일·링크·검사",
+    "재개 시 공유 baseline 문맥 재대조 후 root가 적용·공용등록·실제 Client 검증"
+  ]
+}

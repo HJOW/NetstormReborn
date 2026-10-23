@@ -1,0 +1,525 @@
+diff --git a/cpppj/src/client/CampaignClientServices.cpp b/cpppj/src/client/CampaignClientServices.cpp
+--- a/cpppj/src/client/CampaignClientServices.cpp
++++ b/cpppj/src/client/CampaignClientServices.cpp
+@@ -103,6 +103,7 @@
+     auto& audio=client.WorldAudio(); // noAudio도 같은 실제 이름표/비활성 재생 계층을 사용한다.
+     auto& player=audio.Sounds(); // 반환한 콜백이 빌리는 장기 실제 SoundPlayer다.
+     RawCampaignSessionServices services; // 게임 규칙 경계는 실제 세션의 명시 누락 판정을 유지한다.
++    services.subscriberGlobals=client.SubscriberGlobals(); //Init/Chat/모든Session이같은두DWORD를수명째빌린다.
+     services.randomGlobals=client.RandomGlobals(); // Session교체/Subscriber/파편/Seed/지형이같은Client의실제CRT를사용한다.
+     services.localStateGlobals=client.LocalStateGlobals(); // 메뉴/Editor에서 사용한 같은 State와00544d58 기한을 로그인도 직접 빌린다.
+     services.templateStateBytes=CurrentAllocationBytes; // 원본이 쓰지 않는 State 바이트를 임의0 대신 현재 호스트 할당 입력에서 받는다.
+diff --git a/cpppj/src/client/ClientMain.cpp b/cpppj/src/client/ClientMain.cpp
+--- a/cpppj/src/client/ClientMain.cpp
++++ b/cpppj/src/client/ClientMain.cpp
+@@ -10,6 +10,7 @@
+ #include "client/RawChatChannels.h"
+ #include "client/FortTypeConversionStorage.h"
+ #include "client/ClientRandomGlobals.h"
++#include "client/ClientSubscriberGlobals.h"
+ #include "client/ClientColorSortInput.h"
+ #include "client/ClientLocalStateGlobals.h"
+ #include "client/ClientCoreDataGlobals.h"
+@@ -168,6 +169,7 @@
+       configuration_([this](std::string_view path) { return files_.TryRead(path); }),
+       fortBadges_(std::make_shared<o::RawFortBadgesGlobals>()),
+       fortTypeConversion_(std::make_shared<FortTypeConversionStorage>()),
++      subscriberGlobals_(std::make_shared<ClientSubscriberGlobals>()),
+       randomGlobals_(std::make_shared<ClientRandomGlobals>()),
+       colorSortInput_(std::make_shared<ClientColorSortInput>()),
+       localStateGlobals_(std::make_shared<ClientLocalStateGlobals>()),
+@@ -607,7 +609,7 @@
+ // 기본 UI만 제공한다. 검사 장면의 독립 실행은 기존 연결점을 보존한다.
+ UberGump* Client::Menu() { return menu_.get(); }
+ // 설치 중에는 menu/world가 아직 없을 수 있다. 별도 subscriber 사본이나 로컬 번호 상수를 쓰지 않는다.
+-std::uint32_t Client::CurrentSubscriber() const { return menu_ ? menu_->CurrentSubscriber() : 0U; }
++const std::uint32_t& Client::CurrentSubscriber() const { return subscriberGlobals_->MySubscriber(); }
+ // 실제 PATCH 몸체를 반환하며 CD 호출은 미복원 경계로 명시 거부한다.
+ RawChatChannels& Client::ChatChannels() {
+     if (!chat_->channels) throw std::logic_error("CD Chat 채널 몸체는 아직 복원되지 않음");
+@@ -869,6 +871,8 @@
+ const std::shared_ptr<FortTypeConversionStorage>& Client::FortTypeConversion() const { return fortTypeConversion_; }
+ // 새 Session의 fallback을 만드는 대신 같은 Client의 실제 난수 소유자를 빌린다.
+ const std::shared_ptr<ClientColorSortInput>& Client::ColorSortInput() const { return colorSortInput_; } //같은Client소유슬롯이다.
++// 같은 Client 두 DWORD owner를 수명째 빌리며 새 객체/캐시를 만들지 않는다.
++const std::shared_ptr<ClientSubscriberGlobals>& Client::SubscriberGlobals() const { return subscriberGlobals_; }
+ const std::shared_ptr<ClientRandomGlobals>& Client::RandomGlobals() const { return randomGlobals_; }
+ // 큰 메뉴/로컬 로그인 분배기가 같은 실제144BYTE 다섯 블록과 기한을 빌린다.
+ const std::shared_ptr<ClientLocalStateGlobals>& Client::LocalStateGlobals() const { return localStateGlobals_; }
+diff --git a/cpppj/src/client/ClientMain.h b/cpppj/src/client/ClientMain.h
+--- a/cpppj/src/client/ClientMain.h
++++ b/cpppj/src/client/ClientMain.h
+@@ -33,6 +33,7 @@
+ class FortTypeConversionStorage; // 원본 현재 변환표의 실제 할당을 Client 수명에 소유한다.
+ class ClientColorSortInput; //최초논리RGB와43c010의같은표입력을Client수명으로소유한다.
+ class ClientRandomGlobals; // 같은 Client의 CRT holdrand와 Subscriber ID 최초시드 전역을 소유한다.
++class ClientSubscriberGlobals; // 같은 Client의 실제 my/login 두 DWORD만 장기 소유한다.
+ class ClientLocalStateGlobals; // 실제 메뉴/Editor/로그인이 같은 State 블록과 벽시각 기한을 빌린다.
+ class ClientCoreDataGlobals; //현재Core/active/캐시와 빌린 Player 슬롯을 Client 수명에 소유한다.
+ class ClientChatManagerGlobals; //현재 Chatmanager와 실제 미초기화 할당들을 Client 수명에 소유한다.
+@@ -100,8 +101,8 @@
+     void Title(std::string_view title);
+     // 기본 실행의 메뉴 상태와 입력 경로. --view 검사에서는 널이다.
+     UberGump* Menu();
+-    // 현재 설치된 실제 월드의 globals.mySubscriber를 읽는다. 메뉴/월드 설치 전에는 0이다.
+-    std::uint32_t CurrentSubscriber() const;
++    // 메뉴/월드 유무와 관계없이 같은 Client의 실제00540c74 const참조다.
++    const std::uint32_t& CurrentSubscriber() const;
+     // Client 전체 수명의 유일한 PATCH Chat 기록 처리기다. 미션 교체 때 새로 만들거나 지우지 않는다.
+     RawChatChannels& ChatChannels();
+     // 같은 실제 100기록을 읽기 전용으로 빌린다. UI/검사는 별도 채널 사본을 만들지 않는다.
+@@ -137,6 +138,7 @@
+     const std::shared_ptr<o::RawFortBadgesGlobals>& FortBadges() const;
+     const std::shared_ptr<FortTypeConversionStorage>& FortTypeConversion() const; // 로더들이 같은 current DWORD와 실제255BYTE 할당을 빌린다.
+     const std::shared_ptr<ClientColorSortInput>& ColorSortInput() const; //현재ScreenRGB로재캡처하지않는같은초기입력소유자를빌린다.
++    const std::shared_ptr<ClientSubscriberGlobals>& SubscriberGlobals() const; //Init/Session이 같은 실제 두 DWORD를 빌리는 owner다.
+     const std::shared_ptr<ClientRandomGlobals>& RandomGlobals() const; // 미션마다 복제하지 않는 실제 난수/ID초기화 소유자를 전달한다.
+     const std::shared_ptr<ClientLocalStateGlobals>& LocalStateGlobals() const; // 실제 State144BYTE와 활동기한의 Client 수명을 Session에 전달한다.
+     const std::shared_ptr<ClientCoreDataGlobals>& CoreDataGlobals() const; //같은 현재 Core 슬롯/캐시를 빌리며 Player 자동 선택이나 해제를 실행하지 않는다.
+@@ -212,6 +214,7 @@
+     std::uint32_t readOnlyForts_{};
+     std::shared_ptr<o::RawFortBadgesGlobals> fortBadges_; // CRT 한 번과 시작 count reset을 구별하는 단일6160BYTE 소유자다.
+     std::shared_ptr<FortTypeConversionStorage> fortTypeConversion_; // Session마다 새 현재 포인터나 할당 사본을 만들지 않는 단일 소유자다.
++    std::shared_ptr<ClientSubscriberGlobals> subscriberGlobals_; //Chat/메뉴/Session보다 먼저 만들고 그 소비자보다 오래 유지한다.
+     std::shared_ptr<ClientRandomGlobals> randomGlobals_; // 모든 실제 Session과 Subscriber 생성기가 같은 holdrand/초기화DWORD를 빌린다.
+     std::shared_ptr<ClientColorSortInput> colorSortInput_; //메뉴/월드/두Screen생성경로보다오래유지하는같은초기RGB다.
+     std::shared_ptr<ClientLocalStateGlobals> localStateGlobals_; // Session 소멸/Editor 메뉴 재진입에서 State/기한을 초기화하지 않는 한 소유자다.
+diff --git a/cpppj/src/client/ClientSubscriberGlobals.h b/cpppj/src/client/ClientSubscriberGlobals.h
+new file mode 100644
+--- /dev/null
++++ b/cpppj/src/client/ClientSubscriberGlobals.h
+@@ -0,0 +1,22 @@
++// Client 수명의 실제 두 Subscriber DWORD만 소유한다. 모드·Player·State 정리와 분리한다.
++#pragma once
++#include <cstdint>
++
++namespace netstorm::client {
++// 같은 Client의 Init/Session/Chat이 동일 주소를 빌리며 새 Client에서만 PE 초기값을 구성한다.
++class ClientSubscriberGlobals {
++public:
++    ClientSubscriberGlobals()=default; //00540c74=-1/0054265c=1을 최초 한 번만 구성한다.
++    ClientSubscriberGlobals(const ClientSubscriberGlobals&)=delete; // 실제 전역 두 주소를 값 복제로 나누지 않는다.
++    ClientSubscriberGlobals& operator=(const ClientSubscriberGlobals&)=delete; // 기존 소비자의 alias를 대입으로 바꾸지 않는다.
++    ClientSubscriberGlobals(ClientSubscriberGlobals&&)=delete; // 실제 owner 주소는 수명 동안 고정한다.
++    ClientSubscriberGlobals& operator=(ClientSubscriberGlobals&&)=delete; // 소비자가 빌린 참조를 이전 주소에 남기지 않는다.
++    std::uint32_t& MySubscriber() { return my_; } //00540c74의 같은 현재 DWORD다.
++    const std::uint32_t& MySubscriber() const { return my_; } //Chat prefix가 빌리는 실제 const 참조다.
++    std::uint32_t& LoginSubscriber() { return login_; } //0054265c의 같은 현재 DWORD다. 생성 뒤 임의1쓰기를 추가하지 않는다.
++    const std::uint32_t& LoginSubscriber() const { return login_; } //Init/World의 현재값 읽기도 같은 주소다.
++private:
++    std::uint32_t my_{0xffffffffU}; // 실제 PE 초기 -1이며 메뉴/월드 부재를0으로 표현하지 않는다.
++    std::uint32_t login_{1}; // 실제 PE 초기1이며 확인된 직접읽기는 Init/World의 두 위치다.
++};
++}
+diff --git a/cpppj/src/client/RawCampaignSession.cpp b/cpppj/src/client/RawCampaignSession.cpp
+--- a/cpppj/src/client/RawCampaignSession.cpp
++++ b/cpppj/src/client/RawCampaignSession.cpp
+@@ -1,6 +1,7 @@
+ // 기존 원본 몸체의 단일 저장소 조립을 실제 클라이언트 세션이 소유한다.
+ #include "client/RawCampaignSession.h"
+ #include "client/ClientRandomGlobals.h"
++#include "client/ClientSubscriberGlobals.h"
+ #include "client/ClientLocalStateGlobals.h"
+ #include "client/CampaignTemplateStorage.h"
+ #include "client/FortTypeConversionStorage.h"
+@@ -429,7 +430,7 @@
+     std::unique_ptr<RegularProcess> pendingRitualRegular; // 실제 확보 한 번을 예약/생성/부착까지 유지한다.
+     PlayerWorldState playerState; // 현재 battleOwner와 templateOwner는 별도 상태다.
+     FortObjectLoadState objectState; // 저장객체의 실제 미션/로딩 상태다.
+-    CampaignWorldGlobals globals; // 실제 로그인과 missionPost의 장기 전역이다.
++    CampaignWorldGlobals globals=services.subscriberGlobals ? CampaignWorldGlobals::BorrowSubscribers(services.subscriberGlobals->MySubscriber(),services.subscriberGlobals->LoginSubscriber()) : CampaignWorldGlobals{}; //두ID만명시바인딩하며editor/post는기존Session별값이다.
+     std::uint32_t revision{},ownerChanged{},vortexRevision{},piece{107}; // 원본 섬/신전/패턴 전역이다.
+     std::uint32_t localCrt{}; // 소유자 없는 기존 독립Session 검사에 한해서 보존하는 초기CRT0 입력이다.
+     std::uint32_t& crt{services.randomGlobals ? services.randomGlobals->CrtState() : localCrt}; // Seed/지형은같은Client실제DWORD를직접빌리며사본동기화를하지않는다.
+@@ -3215,7 +3216,7 @@
+ // 원본 미션 게이트가 지정한 순서에 호출하며 Session Kernel 프레임에서는 자동 실행하지 않는다.
+ void RawCampaignSession::CheckMissionOutcome() { impl_->outcome->Check(); }
+ // 실제 worldLoad의 loginSubscriber 복사 대상과 같은 장기 전역을 매번 읽는다.
+-std::uint32_t RawCampaignSession::CurrentSubscriber() const { return impl_->globals.mySubscriber; }
++const std::uint32_t& RawCampaignSession::CurrentSubscriber() const { return impl_->globals.mySubscriber; }
+ // 현재 사용자 이름을 새 설정 조회나 Player 표시 이름으로 대체하지 않는다.
+ std::string_view RawCampaignSession::CurrentHandle() const {
+     const auto& bytes=impl_->handle;const auto end=std::find(bytes.begin(),bytes.end(),std::uint8_t{});
+diff --git a/cpppj/src/client/RawCampaignSession.h b/cpppj/src/client/RawCampaignSession.h
+--- a/cpppj/src/client/RawCampaignSession.h
++++ b/cpppj/src/client/RawCampaignSession.h
+@@ -56,6 +56,7 @@
+ class EditorFiles; // 실제 작업본 파일 장치이며 연결한 Session보다 오래 살아야 한다.
+ class FortTypeConversionStorage; // 같은 Client의 현재 conversion DWORD와 실제 할당 소유자다.
+ class ClientRandomGlobals; // 실제 Client의 CRT 상태와 Subscriber ID 최초시드 DWORD를 함께 빌린다.
++class ClientSubscriberGlobals; // 실제 Client의 my/login 두 Subscriber DWORD만 빌린다.
+ class ClientLocalStateGlobals; // 실제 Client의 State 다섯 블록과 활동 기한의 장기 소유자다.
+ struct TemplateWriteStream; // 실제 Template 저장소가 발급하는 명시 쓰기 수명이다.
+ struct QuickHelpTypeInfo; // 전용 도움말이 같은 현재 TYPE/요구 에너지를 읽는 정보다.
+@@ -196,6 +197,7 @@
+     std::function<void(std::int32_t,std::span<const std::uint8_t>)> carrierRequest; //4e2dc0의실제로컬전송/연결장치다.직접서버처리로대체하지않는다.
+     std::function<void(std::int32_t,std::int32_t,std::int32_t,std::uint32_t)> carrierDropPopup; // 실제43dd20 비용 Gump의금액/화면x/y/참조SID다.
+     o::BattlePacketPeers battlePeers; // 실제0..8 연결 객체 표다. 단독 캠페인은 NULL 연결이며 별도 송신 관찰 함수가 필요하지 않다.
++    std::shared_ptr<ClientSubscriberGlobals> subscriberGlobals; //생략된 독립 검사만 기존0/0 및 Begin값복사 경로를 유지한다.
+     std::shared_ptr<ClientRandomGlobals> randomGlobals; // 생략된 독립 검사만 기존Session CRT0을 사용하고 실제Client는 같은장기소유자를 전달한다.
+     std::shared_ptr<ClientLocalStateGlobals> localStateGlobals; // 생략된 독립 로그인 검사만 기존 local 블록/기한을 사용한다.
+ };
+@@ -264,7 +266,7 @@
+     // Early3~6의 실제 옵션/사제/Graph/생산/HP/지역을 연결한다. UI와 같은 Start 상태는 호출자가 빌려준다.
+     std::unique_ptr<o::RawTutorialLater> MakeTutorialLater(o::RawMissionFrameGate& gate,o::MissionStartState& state,o::TutorialLaterHooks hooks);
+     // 원본 로그인/월드 로더가 공유하는 현재 globals.mySubscriber를 읽기만 한다. 별도 캐시를 만들지 않는다.
+-    std::uint32_t CurrentSubscriber() const;
++    const std::uint32_t& CurrentSubscriber() const;
+     std::string_view CurrentHandle() const; // 실제 월드 로더가 갱신한 같은64BYTE 사용자 이름을 NUL까지 빌린다.
+     // 같은 실제 PlayerWorld의00540c70을 읽는다. 자산/UI 어댑터의 로컬 번호 사본을 사용하지 않는다.
+     std::uint32_t LocalOwner() const;
+diff --git a/cpppj/src/client/RawCampaignSessionLogin.inc b/cpppj/src/client/RawCampaignSessionLogin.inc
+--- a/cpppj/src/client/RawCampaignSessionLogin.inc
++++ b/cpppj/src/client/RawCampaignSessionLogin.inc
+@@ -110,7 +110,7 @@
+     MissionLoginPlayerCounts counts{OriginalEdition::Patch1078,s.players}; //같은 Player9의 현재 집계를 타이머에 공급한다.
+     //원본 미션 부모의 로컬 Zone을 설치하고 실제 상태8에서 접속한다.
+     void Begin() {
+-        s.globals.loginSubscriber=s.services.missionSubscriber.value_or(1);s.globals.mySubscriber=s.globals.loginSubscriber; // Init이 이미 복사한 현재 구독자를 사용하며 owner/접속 성공과 구별한다.
++        if (!s.services.subscriberGlobals) { s.globals.loginSubscriber=s.services.missionSubscriber.value_or(1);s.globals.mySubscriber=s.globals.loginSubscriber; } //독립fallback만기존복사를수행한다.실제Client는Init현재쓰기뒤Login에서ID를재복사하지않는다.
+         s.connectionAssign=[this](std::int32_t pending,std::int32_t player) { transport->AssignConnection(pending,player);s.services.battlePeers.at(static_cast<std::size_t>(player))=transport->Peer(static_cast<std::uint32_t>(player)); };
+         s.connectionAlliance=[this](std::uint32_t target,std::uint32_t owner,std::uint32_t mask) {
+             std::array<std::uint8_t,9> packet{1,0x3d,9,0}; // 원본0040a780/0052ede2의 version1/type3d/length9다.
+diff --git a/cpppj/src/client/UberGump.cpp b/cpppj/src/client/UberGump.cpp
+--- a/cpppj/src/client/UberGump.cpp
++++ b/cpppj/src/client/UberGump.cpp
+@@ -14,6 +14,7 @@
+ #include "client/TellParameters.h"
+ #include "client/ClientAudio.h"
+ #include "client/ClientMain.h"
++#include "client/ClientSubscriberGlobals.h"
+ #include "client/CampaignClientServices.h"
+ #include "client/CampaignObjectMenuClient.h"
+ #include "client/RawCampaignMissionStartBindings.h"
+@@ -168,7 +169,7 @@
+ };
+ 
+ // 원본 GIF는 색 표의 RGB를 쓰지 않고 파일의 번호를 화면 팔레트에 바로 쓴다(00419ec0→004dae60).
+-UberGump::UberGump(Client& client) : client_(client) {
++UberGump::UberGump(Client& client) : client_(client),initLoginSubscriber_(client.SubscriberGlobals()->MySubscriber()),initialSubscriber_(client.SubscriberGlobals()->LoginSubscriber()) {
+     serializationGlobals_=std::make_shared<o::FortSerializationGlobals>(); // 원본BSS와같은한DWORD를모든manager/객체소비자보다오래소유한다.
+     templateStorage_=std::make_shared<CampaignTemplateStorage>(serializationGlobals_); // 시작 초기화와 미션별 명시 정리를 별개 수명으로 유지한다.
+     auto& config = client_.Configuration();
+@@ -316,7 +317,7 @@
+ // 현재 어댑터의 월드 수명으로 원본 번개 부모 조회 경계를 제공한다.
+ bool UberGump::HasWorld() const { return world_!=nullptr; }
+ // 별도 로그인 값 없이 현재 월드의 같은 Session 전역을 직접 조회한다.
+-std::uint32_t UberGump::CurrentSubscriber() const { return world_ ? world_->CurrentSubscriber() : 0U; }
++std::uint32_t UberGump::CurrentSubscriber() const { return client_.CurrentSubscriber(); }
+ // 기본 메뉴를 초기화한 다음 프레임에 미션을 시작한다.
+ void UberGump::StartMission(std::string name) { state_.Post({"MissionBegin",std::move(name)}); }
+ // 캠페인 이름의 설정 객체를 보존하여 officalN.title 같은 참조를 복원한다.
+@@ -557,7 +558,7 @@
+         [this](std::int32_t kind,std::int32_t player,std::int32_t parameter) { warnings_->Remove(kind,player,parameter);rebuild_=true; }}); // 현재 클라이언트의 설정·음향·입력·UI다.
+     services.factoryHelp=[this](std::string_view section,std::uint32_t mode) { const auto token=scriptStrings_.Store(section);if (token>0x0fffffffU) throw std::overflow_error("Factory 도움말 문자열 별칭 토큰 소진");rawButtons_->Menus()->OpenHelp(0x70000000U|token,static_cast<std::int32_t>(mode),0); }; //기존Help와같은문자열고리/별칭과실제전용창을사용한다.
+     services.missionOutcome.demo=[this] { return missionRuntime_ ? missionRuntime_->gate.demo : 0U; };
+-    services.missionOptions=missionOptions_;services.missionRestrictions=missionRestrictions_;services.missionSubscriber=initLoginSubscriber_;services.missionFortRequest=missionFortRequest_;services.templateStorage=templateStorage_;services.missionFortImage=fortImage; // 같은 Init 전역/요청/Template9와 실제 선택 파일 원문을 설치에 전달한다.
++    services.missionOptions=missionOptions_;services.missionRestrictions=missionRestrictions_;services.missionFortRequest=missionFortRequest_;services.templateStorage=templateStorage_;services.missionFortImage=fortImage; // 같은 Init 전역/요청/Template9와 실제 선택 파일 원문을 설치에 전달한다.
+     services.fortBadges=client_.FortBadges();services.fortMission=FortMissionSaveEffects(); // 실제 Client 단일 장부와 현재 Runtime getter를 같은 Session에 빌린다.
+     services.fortTypeConversion=client_.FortTypeConversion(); // 같은 Client의 현재 타입 변환표 소유자를 전달한다.
+     services.missionOutcome.tellBlocked=[this] { return state_.phase==ClientPhase::Dialog || state_.phase==ClientPhase::Briefing ? 1U : 0U; };
+diff --git a/cpppj/src/client/UberGump.h b/cpppj/src/client/UberGump.h
+--- a/cpppj/src/client/UberGump.h
++++ b/cpppj/src/client/UberGump.h
+@@ -127,7 +127,9 @@
+     std::shared_ptr<MissionFortLoadRequest> missionFortRequest_; // 현재 미션의 지연 요청이다. 미션 교체 시 이전 큐와 함께 반납한다.
+     std::shared_ptr<std::array<std::uint8_t,87>> missionOptions_{std::make_shared<std::array<std::uint8_t,87>>()}; // 월드보다 오래 사는 실제 Init/로그인 옵션이다.
+     std::shared_ptr<std::array<std::uint32_t,256>> missionRestrictions_{std::make_shared<std::array<std::uint32_t,256>>()}; // 설치 전/후가 공유하는 기술 허용 표다.
+-    std::uint32_t missionNumber_{},tutorialSeen_{},initLoginSubscriber_{},initialSubscriber_{1}; // 실제5ca8e0/f0·540c74/54265c의 현재 전역이다.
++    std::uint32_t missionNumber_{},tutorialSeen_{}; // 실제5ca8e0/f0의 현재 전역이다.
++    std::uint32_t& initLoginSubscriber_; //호환 이름이며 실제540c74의 같은 Client DWORD다.
++    const std::uint32_t& initialSubscriber_; //실제54265c의 현재 const참조이며 생성 때1을 다시 쓰지 않는다.
+     std::uint32_t nextMissionSaveToken_{}; // 64비트 포인터를 자르지 않는 실제 Runtime별 비영 수명 토큰이며 미션 교체에서 되돌리지 않는다.
+     // input_: 처리할 입력 또는 입력 분배기.
+     GumpControlInput input_;
+diff --git a/cpppj/src/o/RawCampaignWorldLoad.h b/cpppj/src/o/RawCampaignWorldLoad.h
+--- a/cpppj/src/o/RawCampaignWorldLoad.h
++++ b/cpppj/src/o/RawCampaignWorldLoad.h
+@@ -7,9 +7,31 @@
+ namespace netstorm::o {
+ // 실제 부모 prologue와 선택한 mission 후처리가 읽는 현재 전역이다.
+ struct CampaignWorldGlobals {
+-    std::uint32_t mySubscriber{},loginSubscriber{}; // PATCH540c74/54265c·CD50f6cc/511c7c의 현재 두값이다.
++private:
++    std::uint32_t localMy_{},localLogin_{}; // 소유자 없는 독립 장치와 명시 값사본만 기존0/0부터 시작한다.
++    struct BorrowTag {}; // 명시 바인딩과 기존 값 생성의 overload를 구별한다.
++    // 실제 두 DWORD 참조만 연결하며 외부 owner에 초기화 쓰기를 하지 않는다.
++    CampaignWorldGlobals(BorrowTag,std::uint32_t& my,std::uint32_t& login):mySubscriber(my),loginSubscriber(login) {}
++public:
++    std::uint32_t& mySubscriber; // PATCH540c74/CD50f6cc: 명시 외부 owner 또는 자기 fallback의 같은 DWORD다.
++    std::uint32_t& loginSubscriber; // PATCH54265c/CD511c7c: 명시 외부 owner 또는 자기 fallback의 같은 DWORD다.
+     std::uint32_t editor{}; // PATCH5c85a4/CD518904: 현재 Player의 residence/island DWORD를0으로 쓴다.
+     bool missionPost{true}; // PATCH594fa4/CD52e170: 후처리923e0/40daf0의 두큰분기를 모두 생략하는 실제 미션 전역이다.
++    CampaignWorldGlobals():mySubscriber(localMy_),loginSubscriber(localLogin_) {} // 기존 독립 기본값0/0/0/true를 보존한다.
++    // 기존 {my,login,editor,post}와 부분 값 초기화는 자기 fallback을 소유하는 값 생성이다.
++    CampaignWorldGlobals(std::uint32_t my,std::uint32_t login=0,std::uint32_t selectedEditor=0,bool post=true)
++        :localMy_(my),localLogin_(login),mySubscriber(localMy_),loginSubscriber(localLogin_),editor(selectedEditor),missionPost(post) {}
++    // 복사/이동은 현재 네 값을 자기 fallback으로 복제하며 외부 참조를 암묵 전파하지 않는다.
++    CampaignWorldGlobals(const CampaignWorldGlobals& source):CampaignWorldGlobals(source.mySubscriber,source.loginSubscriber,source.editor,source.missionPost) {}
++    CampaignWorldGlobals(CampaignWorldGlobals&& source):CampaignWorldGlobals(static_cast<const CampaignWorldGlobals&>(source)) {} // 원본 값형의 이동과 같이 source 값은 보존한다.
++    // 대입은 destination의 기존 binding을 유지하고 source 네 값을 먼저 캡처한 뒤 쓴다.
++    CampaignWorldGlobals& operator=(const CampaignWorldGlobals& source) {
++        const auto my=source.mySubscriber,login=source.loginSubscriber,selectedEditor=source.editor;const bool post=source.missionPost; // 교차 alias에서도 source 값 묶음을 보존한다.
++        mySubscriber=my;loginSubscriber=login;editor=selectedEditor;missionPost=post;return *this;
++    }
++    CampaignWorldGlobals& operator=(CampaignWorldGlobals&& source) { return operator=(static_cast<const CampaignWorldGlobals&>(source)); } // destination 주소를 재바인딩하지 않는다.
++    // 외부 저장소는 이 view보다 오래 살아야 한다. C++17의 prvalue 반환으로 명시 binding을 직접 구성한다.
++    static CampaignWorldGlobals BorrowSubscribers(std::uint32_t& my,std::uint32_t& login) { return CampaignWorldGlobals(BorrowTag{},my,login); }
+ };
+ // 이미 완료한 동일 월드 하위 몸체와 명시 번역/config/spec/UI 경계를 공급한다.
+ struct CampaignWorldLoadHooks {
+diff --git a/cpppj/tests/ChatChannelsTests.cpp b/cpppj/tests/ChatChannelsTests.cpp
+--- a/cpppj/tests/ChatChannelsTests.cpp
++++ b/cpppj/tests/ChatChannelsTests.cpp
+@@ -95,12 +95,12 @@
+     ClientOptions options; // 보호 아카이브는 읽기 전용 등록만 하며 실제 게임/GUI를 시작하지 않는다.
+     options.gameDirectory=std::filesystem::path(__FILE__).parent_path().parent_path().parent_path()/"originals";
+     Client client(std::move(options));
+-    CHECK(client.Menu()==nullptr && client.CurrentSubscriber()==0);
++    CHECK(client.Menu()==nullptr && client.CurrentSubscriber()==0xffffffffU);
+     const auto records=client.ChatRecords(); // 이 주소는 각 binder가 생성한 서비스보다 오래 유지되는 실제4800바이트다.
+     CHECK(records.size()==RawChatChannels::kBytes);
+     CHECK(std::all_of(records.begin(),records.end(),[](std::uint8_t byte) { return byte==0; }));
+     CampaignAiServices first;BindCampaignAiClientServices(client,first);
+-    first.participation.addChat(0,"현재자기",0x40); // 미설치 subscriber0의 자연 반환은 기록을 쓰지 않는다.
++    first.participation.addChat(client.CurrentSubscriber(),"현재자기",0x40); // 미설치 subscriber-1의 자연 반환은 기록을 쓰지 않는다.
+     CHECK(std::all_of(records.begin(),records.end(),[](std::uint8_t byte) { return byte==0; }));
+     first.participation.addChat(77,"A B",0x140);
+     CHECK(records[0]=='A' && records[1]=='B' && records[2]==0 && records[0x28]==0x40);
+@@ -110,7 +110,7 @@
+     second.participation.addChat(77,"Changed",0x80);CHECK(records[0x28]==0xc0 && Get(records,0x2c)==77);
+     first.participation.clearChat(0x140);CHECK(records[0x28]==0x80 && Get(records,0x2c)==77);
+     second.participation.addChat(88,"Next",0x40);CHECK(Get(records,RawChatChannels::kStride+0x2c)==88);
+-    CHECK(client.ChatRecords().data()==records.data() && client.CurrentSubscriber()==0);
++    CHECK(client.ChatRecords().data()==records.data() && client.CurrentSubscriber()==0xffffffffU);
+     CHECK(!first.allocationBytes && !first.changeColor && !first.localTransport);
+     CHECK(!first.participation.assignConnection && !first.participation.rejectLogin && !first.participation.disconnect);
+     CHECK(!first.participation.sendAlliance && !first.participation.destructBrain && !first.participation.freeBrain);
+diff --git a/cpppj/tests/ClientSubscriberGlobalsTests.cpp b/cpppj/tests/ClientSubscriberGlobalsTests.cpp
+new file mode 100644
+--- /dev/null
++++ b/cpppj/tests/ClientSubscriberGlobalsTests.cpp
+@@ -0,0 +1,99 @@
++// 실제 Client/Session의 두 Subscriber alias를 검사하는 통합 적용후용 검사다. Run/창/음향 시작을 호출하지 않는다.
++#include "DudeSpawnSupport.h"
++#include "client/ClientMain.h"
++#include "client/ClientSubscriberGlobals.h"
++#include "client/RawCampaignSession.h"
++#include "o/RawChatManagerPrefix.h"
++#include <algorithm>
++#include <array>
++#include <memory>
++#include <stdexcept>
++#include <type_traits>
++#include <utility>
++
++namespace {
++using namespace netstorm::client;
++// 기존 실제 Client 생성자 검사처럼 보호 자산 읽기만 허용한다.
++ClientOptions SubscriberClientOptions() {
++    ClientOptions options; // 경로는 공용 tests에 복사한 뒤의 실제 저장소 기준이다.
++    options.gameDirectory=std::filesystem::path(__FILE__).parent_path().parent_path().parent_path()/"originals";return options;
++}
++// Session constructor의 도달 효과만 기존 실제 몸체에 제공한다. Subscriber 알고리즘을 대체하지 않는다.
++struct SubscriberSessionDevices {
++    SoundList names{OriginalEdition::Patch1078}; // Session보다 오래 사는 실제 소리 이름표다.
++    std::array<std::uint8_t,4> you{'Y','o','u',0}; // 번역 효과의 NUL 포함 명시 입력이다.
++    RawCampaignSessionServices Make(std::shared_ptr<ClientSubscriberGlobals> owner={}) {
++        names.Initialize();RawCampaignSessionServices result;result.subscriberGlobals=std::move(owner);result.soundNames=&names; // 생략시 기존 독립 fallback을 선택한다.
++        result.unixSeconds=[] { return 946684800; };
++        result.production.allocationBytes=[](auto bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0x71}); };
++        result.production.effects.configInt=[](std::string_view key) { if (key!="getTeleportTechFree") throw std::logic_error("Subscriber 검사의 생산 설정");return 0; };
++        result.sound.wallSeconds=[] { return 100.0; };
++        result.sound.play=[](SoundHandle sound,std::uint32_t,std::uint32_t,std::uint32_t,std::uint32_t,std::uint32_t) { return sound; };
++        result.sound.playLoopAt=[](float,float,SoundHandle current,SoundHandle sound) { return current?current:sound; };
++        result.sound.playOnceAt=[](float,float,SoundHandle sound,std::uint32_t,std::uint32_t) { return sound; };
++        result.sound.stop=[](SoundHandle) {};result.sound.isPlaying=[](SoundHandle) { return 0U; };
++        result.install.translateYou=[this] { return std::span<const std::uint8_t>(you); };
++        result.install.setConfig=[](std::string_view,std::span<const std::uint8_t>) {};result.install.refreshWindowTitle=[] {};result.install.resetCamera=[] {};
++        result.ownership.refreshProduction=[] {};result.ownership.themeMode=[] { return 0U; };
++        result.assets.postPop.playImpactSound=[](std::uint32_t) {};result.assets.queueCommand=[](std::uint32_t,std::int32_t,std::int32_t) {};
++        result.priest.shield.noticeSound=[](const PriestShieldNotice&) {};result.priest.shield.translate=[](std::string_view key) { return std::string(key); };result.priest.shield.tell=[](std::string_view) {};
++        result.playerContent.gump=[](std::uint32_t) { return 0U; };
++        result.playerContent.handle=[](std::uint32_t,std::uint32_t,std::uint32_t,std::uint32_t) { throw std::logic_error("Subscriber 검사의 미선택 UI"); };
++        result.deletion.selected=[] { return Sid{}; };result.deletion.emit=[](const SquidDestroyEvent&) { throw std::logic_error("Subscriber 검사의 미선택 삭제"); };
++        result.player.log=[](std::uint32_t,std::string_view) {};return result;
++    }
++};
++// Login Begin의 첫 현재 설정 조회에서 명시 중단하여 이후 packet의 정상 Subscriber 쓰기와 분리한다.
++struct SubscriberBeginCheckpoint {};
++}
++
++// 메뉴/월드 부재에서도 실제 Client owner의 같은 constref를 반환하고 새 Client만 PE 초기값을 구성한다.
++TEST_CASE(ClientSubscriberGlobals_ActualClientAndChatReferenceLifetime) {
++    static_assert(std::is_same_v<decltype(std::declval<const Client&>().CurrentSubscriber()),const std::uint32_t&>); // temporary 값을 Chat constref에 연결하지 않는다.
++    std::shared_ptr<ClientSubscriberGlobals> retained;std::weak_ptr<ClientSubscriberGlobals> lifetime; // Client 반납 뒤 실제 참조 보유자의 수명을 확인한다.
++    {
++        Client client(SubscriberClientOptions());retained=client.SubscriberGlobals();lifetime=retained;
++        CHECK(retained && client.CurrentSubscriber()==0xffffffffU && retained->LoginSubscriber()==1);
++        CHECK(&client.CurrentSubscriber()==&retained->MySubscriber());
++        std::uint32_t manager{},active{};netstorm::o::ChatManagerPrefixGlobals chat{manager,client.CurrentSubscriber(),active}; // 실제 Chat 전역의 참조형에 직접 연결한다.
++        retained->MySubscriber()=0x12345678U;retained->LoginSubscriber()=77;
++        client.Configuration().Configuration().AppendSection("END");client.Configuration().SetInt("readOnlyForts",1);
++        CHECK(&chat.subscriber==&client.CurrentSubscriber() && chat.subscriber==0x12345678U && retained->LoginSubscriber()==77);
++    }
++    CHECK(!lifetime.expired() && retained->MySubscriber()==0x12345678U && retained->LoginSubscriber()==77);
++    {
++        Client fresh(SubscriberClientOptions());CHECK(fresh.SubscriberGlobals().get()!=retained.get());
++        CHECK(fresh.CurrentSubscriber()==0xffffffffU && fresh.SubscriberGlobals()->LoginSubscriber()==1 && retained->LoginSubscriber()==77);
++    }
++    retained.reset();CHECK(lifetime.expired()); // 반납한 참조/주소를 이후 역참조하지 않는다.
++}
++
++// 실제 Editor/Campaign 두 Session은 같은 두 DWORD만 빌리고 Editor 플래그는 새 Session에 전파하지 않는다.
++TEST_CASE(ClientSubscriberGlobals_TwoActualSessionsShareOnlySubscribers) {
++    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);const auto image=assets.files.Read("d/thewarbegins.fort"); // 보호 원문은 읽기만 한다.
++    Client client(SubscriberClientOptions());auto owner=client.SubscriberGlobals();owner->MySubscriber()=31;owner->LoginSubscriber()=41;
++    SubscriberSessionDevices firstDevices,secondDevices,independentDevices; // 모든 callback/소리표는 각 Session보다 먼저 생성한다.
++    auto editorServices=firstDevices.Make(owner);editorServices.installMode=CampaignInstallMode::ExistingEditor;editorServices.missionFortImage=std::make_shared<const std::vector<std::uint8_t>>(image);
++    RawCampaignSession editor(assets.game,assets.files,FortTemplate::Parse(image,assets.game.TypeTable()),"subscriber-editor",std::move(editorServices));
++    RawCampaignSession campaign(assets.game,assets.files,FortTemplate::Parse(image,assets.game.TypeTable()),"subscriber-campaign",secondDevices.Make(owner));
++    CHECK(&editor.CurrentSubscriber()==&owner->MySubscriber() && &campaign.CurrentSubscriber()==&client.CurrentSubscriber());
++    CHECK(owner->MySubscriber()==31 && owner->LoginSubscriber()==41 && editor.Editor()==1 && campaign.Editor()==0);
++    owner->MySubscriber()=0x80000000U;CHECK(editor.CurrentSubscriber()==0x80000000U && campaign.CurrentSubscriber()==0x80000000U);
++    RawCampaignSession independent(assets.game,assets.files,FortTemplate::Parse(image,assets.game.TypeTable()),"subscriber-independent",independentDevices.Make());
++    CHECK(independent.CurrentSubscriber()==0 && &independent.CurrentSubscriber()!=&owner->MySubscriber() && owner->LoginSubscriber()==41);
++    CHECK(assets.files.Read("d/thewarbegins.fort")==image); // 선택한 보호 입력의 재읽기이며 전체1394manifest 검사는 아니다.
++}
++
++// bound Login은 Init 값을 재복사하지 않으며 기존 독립 장치는 legacy missionSubscriber 입력을 그대로 사용한다.
++TEST_CASE(ClientSubscriberGlobals_LoginBeginPreservesBoundCurrentValues) {
++    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);const auto image=assets.files.Read("d/thewarbegins.fort");
++    Client client(SubscriberClientOptions());auto owner=client.SubscriberGlobals();owner->MySubscriber()=51;owner->LoginSubscriber()=61;
++    for (const bool bound:{true,false}) { // 같은 checkpoint에서 명시 owner 유무만 달리하여 기존 fallback 계약과 비교한다.
++        SubscriberSessionDevices devices;auto services=devices.Make(bound?owner:std::shared_ptr<ClientSubscriberGlobals>{});services.missionSubscriber=7;CampaignLoginServices login;std::size_t reached{}; // bound에서 이 값사본은 재복사되지 않아야 한다.
++        login.configInt=[&](std::string_view key,std::int32_t)->std::int32_t { CHECK(key=="gameServerPort");++reached;throw SubscriberBeginCheckpoint{}; };
++        services.localLogin=std::move(login);RawCampaignSession session(assets.game,assets.files,FortTemplate::Parse(image,assets.game.TypeTable()),"subscriber-login",std::move(services));bool stopped{};
++        try { session.LoadLocalConnection(); } catch (const SubscriberBeginCheckpoint&) { stopped=true; }
++        CHECK(stopped && reached==1 && session.CurrentSubscriber()==(bound?51U:7U));
++        CHECK(owner->MySubscriber()==51 && owner->LoginSubscriber()==61); // packet 설치 전 명시 중단의 범위다. 전체 로그인 성공을 주장하지 않는다.
++    }
++}
+diff --git a/cpppj/tests/SubscriberGlobalsTests.cpp b/cpppj/tests/SubscriberGlobalsTests.cpp
+new file mode 100644
+--- /dev/null
++++ b/cpppj/tests/SubscriberGlobalsTests.cpp
+@@ -0,0 +1,119 @@
++// 실제 두 Subscriber 소유자와 기존 값형/명시 참조형의 수명 계약을 독립 검사한다.
++#include "TestSupport.h"
++#include "client/ClientSubscriberGlobals.h"
++#include "client/TutorialInit.h"
++#include "o/RawCampaignWorldLoad.h"
++#include "o/RawChatManagerPrefix.h"
++#include <array>
++#include <filesystem>
++#include <fstream>
++#include <memory>
++#include <stdexcept>
++#include <string>
++#include <type_traits>
++#include <utility>
++#include <vector>
++
++namespace {
++using namespace netstorm::client;
++using netstorm::o::CampaignWorldGlobals;
++// Native 칼럼의 little endian DWORD만 읽으며 제품 값으로 기대를 만들지 않는다.
++std::uint32_t SubscriberDword(std::string_view hex) {
++    if (hex.size()!=8) throw std::logic_error("Subscriber 원시 DWORD 폭");
++    std::uint32_t value{}; // 원문 현재 DWORD의 비트다.
++    for (std::size_t byte=0;byte<4;++byte) value|=static_cast<std::uint32_t>(std::stoul(std::string(hex.substr(byte*2,2)),nullptr,16))<<(byte*8); // 낮은 BYTE부터 합친다.
++    return value;
++}
++// 원시 TSV의 빈 칼럼도 유지하며 모든 관측행을 분류한다.
++std::vector<std::string> SubscriberFields(std::string_view line) {
++    std::vector<std::string> fields;std::size_t first{}; // 분리 결과와 현재 시작 위치다.
++    for (;;) { // 마지막 칼럼까지 원문 순서대로 읽는다.
++        const auto next=line.find('\t',first);fields.emplace_back(line.substr(first,next==line.npos?line.npos:next-first));
++        if (next==line.npos) return fields;
++        first=next+1;
++    }
++}
++}
++
++// PE 초기 두 DWORD만 새 Client 소유자가 구성하며 같은 const/nonconst 주소를 제공한다.
++TEST_CASE(SubscriberGlobals_OriginalInitialValuesAndStableReferences) {
++    static_assert(sizeof(ClientSubscriberGlobals)==8); // editor/post를 숨은 공유 상태로 추가하지 않는다.
++    static_assert(!std::is_copy_constructible_v<ClientSubscriberGlobals> && !std::is_move_constructible_v<ClientSubscriberGlobals>); // 빌린 주소를 이동하지 않는다.
++    ClientSubscriberGlobals owner;const auto& readOnly=owner; // 실제 새 owner와 같은 읽기 view다.
++    CHECK(owner.MySubscriber()==0xffffffffU && owner.LoginSubscriber()==1);
++    CHECK(&owner.MySubscriber()==&readOnly.MySubscriber() && &owner.LoginSubscriber()==&readOnly.LoginSubscriber());
++    owner.MySubscriber()=0x80000000U;owner.LoginSubscriber()=0xabcdef01U;
++    CHECK(readOnly.MySubscriber()==0x80000000U && readOnly.LoginSubscriber()==0xabcdef01U);
++}
++
++// 기존 독립 기본/부분 중괄호 입력은 자기 저장소를 소유하는 값 생성으로 보존한다.
++TEST_CASE(SubscriberGlobals_IndependentDefaultsAndValueConstruction) {
++    CampaignWorldGlobals empty,one{7},two{8,9},four{10,11,12,false}; // 기존 호출 문법과 네 값의 기본값을 함께 확인한다.
++    CHECK(empty.mySubscriber==0 && empty.loginSubscriber==0 && empty.editor==0 && empty.missionPost);
++    CHECK(one.mySubscriber==7 && one.loginSubscriber==0 && one.editor==0 && one.missionPost);
++    CHECK(two.mySubscriber==8 && two.loginSubscriber==9 && four.mySubscriber==10 && four.loginSubscriber==11 && four.editor==12 && !four.missionPost);
++    CHECK(&empty.mySubscriber!=&one.mySubscriber && &empty.loginSubscriber!=&two.loginSubscriber);
++}
++
++// 명시 binding은 외부 DWORD에 쓰지 않으며 Editor/post는 각 Session view에 남긴다.
++TEST_CASE(SubscriberGlobals_BoundConstructionDoesNotResetOrShareModes) {
++    ClientSubscriberGlobals owner;owner.MySubscriber()=0x12345678U;owner.LoginSubscriber()=0xfedcba98U; // 이미 Init/이전 Session이 남긴 현재 입력이다.
++    auto first=CampaignWorldGlobals::BorrowSubscribers(owner.MySubscriber(),owner.LoginSubscriber());
++    auto second=true?CampaignWorldGlobals::BorrowSubscribers(owner.MySubscriber(),owner.LoginSubscriber()):CampaignWorldGlobals{}; // Session 필드와 같은 prvalue 조건식이다.
++    CHECK(owner.MySubscriber()==0x12345678U && owner.LoginSubscriber()==0xfedcba98U);
++    CHECK(&first.mySubscriber==&owner.MySubscriber() && &second.mySubscriber==&owner.MySubscriber() && &second.loginSubscriber==&owner.LoginSubscriber());
++    first.editor=1;first.missionPost=false;first.mySubscriber=25;
++    CHECK(second.editor==0 && second.missionPost && second.mySubscriber==25 && owner.MySubscriber()==25);
++}
++
++// 값 복사/이동은 alias를 암묵 전파하지 않고 대입은 목적지의 기존 binding을 유지한다.
++TEST_CASE(SubscriberGlobals_CopyMoveAndCrossAliasAssignment) {
++    ClientSubscriberGlobals owner;owner.MySubscriber()=17;owner.LoginSubscriber()=29;
++    auto bound=CampaignWorldGlobals::BorrowSubscribers(owner.MySubscriber(),owner.LoginSubscriber());bound.editor=1;bound.missionPost=false;
++    CampaignWorldGlobals copy(bound),moved(std::move(bound)); // source의 현재 네 값을 각자 독립 fallback에 복사한다.
++    CHECK(&copy.mySubscriber!=&owner.MySubscriber() && &moved.loginSubscriber!=&owner.LoginSubscriber());
++    copy.mySubscriber=99;CHECK(owner.MySubscriber()==17 && moved.mySubscriber==17 && bound.mySubscriber==17);
++    CHECK(moved.editor==1 && !moved.missionPost && bound.editor==1 && !bound.missionPost);
++    auto reversed=CampaignWorldGlobals::BorrowSubscribers(owner.LoginSubscriber(),owner.MySubscriber()); // 교차 alias에서 순차 쓰기 전 source 캡처가 필요하다.
++    reversed=bound;CHECK(owner.MySubscriber()==29 && owner.LoginSubscriber()==17);
++    CHECK(&reversed.mySubscriber==&owner.LoginSubscriber() && &reversed.loginSubscriber==&owner.MySubscriber());
++    CampaignWorldGlobals values{51,61,0,true};bound=std::move(values);bound=bound;
++    CHECK(owner.MySubscriber()==51 && owner.LoginSubscriber()==61 && bound.editor==0 && bound.missionPost);
++    CHECK(&bound.mySubscriber==&owner.MySubscriber() && values.mySubscriber==51 && values.loginSubscriber==61);
++}
++
++// Chat이 빌리는 const 참조는 복제 값이 아니며 실제 공유 owner를 유지하는 소비자보다 먼저 소멸하지 않는다.
++TEST_CASE(SubscriberGlobals_ChatConstReferenceAndSharedOwnerLifetime) {
++    auto owner=std::make_shared<ClientSubscriberGlobals>();const auto retained=owner;std::weak_ptr<ClientSubscriberGlobals> lifetime=owner; // 실제 장기 owner의 소유/참조 수명을 구별한다.
++    std::uint32_t manager{},active{}; // Chat helper의 별도 현재 DWORD 입력이다.
++    netstorm::o::ChatManagerPrefixGlobals chat{manager,owner->MySubscriber(),active}; // 실제 constref API에 직접 연결한다.
++    owner.reset();retained->MySubscriber()=71;
++    CHECK(!lifetime.expired() && &chat.subscriber==&retained->MySubscriber() && chat.subscriber==71);
++}
++
++// 실제 Tutorial Init이 fileName callback 뒤 현재 login을 복사하는 10개 원문 checkpoint와 대조한다.
++TEST_CASE(SubscriberGlobals_TutorialInitUsesCurrentLoginAfterConfiguration) {
++#ifdef NETSTORM_SUBSCRIBER_LIFETIME_EDGES_FIXTURE
++    const std::filesystem::path path=NETSTORM_SUBSCRIBER_LIFETIME_EDGES_FIXTURE; // 제품 전 동결된 실제 x86 관측 경로다.
++#else
++    const auto path=std::filesystem::path(__FILE__).parent_path()/"fixtures/subscriber-lifetime-edges-v2-x86.tsv";
++#endif
++    std::ifstream file(path);if (!file) throw std::runtime_error("Subscriber 원문 fixture 누락");std::string line;std::size_t rows{},selected{}; // 모든120행과 실제 선택10행을 구별한다.
++    while (std::getline(file,line)) { // 부모 전체가 아닌 선택 store checkpoint 관측만 사용한다.
++        if (line.empty() || line[0]=='#') continue;
++        if (line.back()=='\r') line.pop_back();
++        const auto fields=SubscriberFields(line);if (fields.size()!=10) throw std::logic_error("Subscriber 원시 칼럼 수");++rows;
++        if (fields[0]!="004c335c") continue;
++        CHECK(fields[2]=="currentLoginLoad");ClientSubscriberGlobals owner;owner.MySubscriber()=SubscriberDword(std::string_view(fields[5]).substr(0,8)); // Native 진입 my만 명시 입력한다.
++        std::uint32_t tutorial{},mission{},seen{},flags{},demo{};TutorialInitState state{"Tutorial1"}; // 별도 Init 상태이며 두 Subscriber를 소유하지 않는다.
++        TutorialInitGlobals globals{tutorial,mission,seen,owner.MySubscriber(),owner.LoginSubscriber()};TutorialInitHooks hooks;std::vector<std::string> trace; // 실제 helper에 큰 효과 장치만 제공한다.
++        hooks.clearTemplates=[&] { trace.emplace_back("clear"); };hooks.resetOptions=[&] { trace.emplace_back("reset"); };
++        hooks.get=[](std::string_view key,std::optional<std::string_view> fallback) { return key=="demo"?std::string{}:std::string(fallback.value_or("0")); };
++        hooks.set=[&](std::string_view key,std::string_view value) { CHECK(key=="fileName" && value=="Tutorial1");CHECK(owner.MySubscriber()==SubscriberDword(std::string_view(fields[5]).substr(0,8)));owner.LoginSubscriber()=static_cast<std::uint32_t>(std::stoull(fields[3]));trace.emplace_back("set"); };
++        hooks.requestFort=[&](std::string_view name) { CHECK(name=="Tutorial1" && owner.MySubscriber()==SubscriberDword(std::string_view(fields[6]).substr(0,8)));trace.emplace_back("request"); };
++        hooks.header=[&] { CHECK(owner.LoginSubscriber()==SubscriberDword(std::string_view(fields[6]).substr(8,8)));trace.emplace_back("header"); };
++        InitializeTutorialMission(state,flags,demo,globals,hooks);
++        CHECK(flags==1 && trace==std::vector<std::string>({"clear","reset","set","request","header"}));++selected;
++    }
++    CHECK(rows==120 && selected==10);
++}

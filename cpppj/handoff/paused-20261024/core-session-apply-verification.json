@@ -1,0 +1,144 @@
+{
+  "cwd": "C:\\Users\\BUZZ\\AppData\\Local\\Temp\\cpp-core-refresh-bind-5xpzb0m4",
+  "noGitAncestor": true,
+  "patches": {
+    "cpp-type-tech-bit-20261024-proposed.patch": "eeeef5b60066d3bb6004d37151f1c8da1d4b409e8f467e6a9b35e8a8bb73ba8e",
+    "cpp-player-core-refresh-target-20261024-proposed.patch": "63a1eaf05cc34df5ea24b1c5ba319ce66d17c3a718671229bdf044711df6b395",
+    "cpp-player-core-refresh-session-20261024-proposed.patch": "2eac199075e29ac6c411c4c5ffaabb5537b0e303295c7ce313d0ccff04ac8577"
+  },
+  "commands": [
+    {
+      "command": [
+        "git",
+        "apply",
+        "--check",
+        "--verbose",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-type-tech-bit-20261024-proposed.patch"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "Checking patch cpppj/src/o/RiftType.h...\nChecking patch cpppj/src/o/RiftTypeTable.cpp...\nChecking patch cpppj/tests/TypeTechBitTests.cpp...\n"
+    },
+    {
+      "command": [
+        "git",
+        "apply",
+        "--verbose",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-type-tech-bit-20261024-proposed.patch"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "Checking patch cpppj/src/o/RiftType.h...\nChecking patch cpppj/src/o/RiftTypeTable.cpp...\nChecking patch cpppj/tests/TypeTechBitTests.cpp...\nApplied patch cpppj/src/o/RiftType.h cleanly.\nApplied patch cpppj/src/o/RiftTypeTable.cpp cleanly.\nApplied patch cpppj/tests/TypeTechBitTests.cpp cleanly.\n"
+    },
+    {
+      "command": [
+        "git",
+        "apply",
+        "--check",
+        "--verbose",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-player-core-refresh-target-20261024-proposed.patch"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "Checking patch cpppj/src/o/RawPlayerCoreRefresh.h...\nChecking patch cpppj/src/o/RawPlayerCoreRefresh.cpp...\nChecking patch docs/exe/cpp-player-core-refresh-20261024.md...\n"
+    },
+    {
+      "command": [
+        "git",
+        "apply",
+        "--verbose",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-player-core-refresh-target-20261024-proposed.patch"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "Checking patch cpppj/src/o/RawPlayerCoreRefresh.h...\nChecking patch cpppj/src/o/RawPlayerCoreRefresh.cpp...\nChecking patch docs/exe/cpp-player-core-refresh-20261024.md...\nApplied patch cpppj/src/o/RawPlayerCoreRefresh.h cleanly.\nApplied patch cpppj/src/o/RawPlayerCoreRefresh.cpp cleanly.\nApplied patch docs/exe/cpp-player-core-refresh-20261024.md cleanly.\n"
+    },
+    {
+      "command": [
+        "git",
+        "apply",
+        "--check",
+        "--verbose",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-player-core-refresh-session-20261024-proposed.patch"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "Checking patch cpppj/src/client/RawCampaignSession.h...\nChecking patch cpppj/src/client/RawCampaignSession.cpp...\nChecking patch cpppj/tests/SessionPlayerCoreRefreshTests.cpp...\n"
+    },
+    {
+      "command": [
+        "git",
+        "apply",
+        "--verbose",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-player-core-refresh-session-20261024-proposed.patch"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "Checking patch cpppj/src/client/RawCampaignSession.h...\nChecking patch cpppj/src/client/RawCampaignSession.cpp...\nChecking patch cpppj/tests/SessionPlayerCoreRefreshTests.cpp...\nApplied patch cpppj/src/client/RawCampaignSession.h cleanly.\nApplied patch cpppj/src/client/RawCampaignSession.cpp cleanly.\nApplied patch cpppj/tests/SessionPlayerCoreRefreshTests.cpp cleanly.\n"
+    }
+  ],
+  "files": {
+    "cpppj/tests/TypeTechBitTests.cpp": {
+      "actualSha256": "068aecec07ec74ff8d35c47807fba9c18e3f75dec9e12d09b4f7e5363a4f0b92",
+      "expectedSha256": "f91becea28a07a21e6c68a4a8fe069bea6828c99bf270538f39f0bd4eb2f2ea1",
+      "normalizedTextEqual": true
+    },
+    "cpppj/src/o/RiftType.h": {
+      "actualSha256": "7483e08f5a5e2cbae5191b7e3362e66ba99d3711a41e54a3e84f18bcb6f7c9f3",
+      "expectedSha256": "e2160eca68581d6bb94a8b312927cff9d027259e4c5c47841267559ee3008434",
+      "normalizedTextEqual": true
+    },
+    "cpppj/src/o/RiftTypeTable.cpp": {
+      "actualSha256": "b36fff27932051217dbdf6fbbbd57bccd3dc4de67f9ad18e264997d0f1a3a0bd",
+      "expectedSha256": "39053d2dda253d4e8f54ba12e286e2353ada448464fe9a1281d260a0d8fc45b1",
+      "normalizedTextEqual": true
+    },
+    "docs/exe/cpp-player-core-refresh-20261024.md": {
+      "actualSha256": "ec487516d5ddb78b5de06c3f3822d1a9290a1dd78da6065e84a9c76f44393694",
+      "expectedSha256": "57301af38a4f76a1b07d154f076ade29bf287eaa742885fcb19988410a6dcc98",
+      "normalizedTextEqual": true
+    },
+    "cpppj/src/o/RawPlayerCoreRefresh.h": {
+      "actualSha256": "42342e6de760836827635220de324e563eea4f8c3ab4121440946323f27c4375",
+      "expectedSha256": "6d8b65a5e1770a49146b6a60392e6566bd79cd87f49c8ecf3f4c837f5ddcb4da",
+      "normalizedTextEqual": true
+    },
+    "cpppj/src/o/RawPlayerCoreRefresh.cpp": {
+      "actualSha256": "741dcf0e6b52c9320d932fd93d1834471a565bb0a9ba54238837be540c743b1b",
+      "expectedSha256": "18a1303aa6ae1fc2614cbe3abf63055c2e5ec9f9f11c735895c7331aa10957dc",
+      "normalizedTextEqual": true
+    },
+    "cpppj/tests/SessionPlayerCoreRefreshTests.cpp": {
+      "actualSha256": "300a53bf1d9abded8bac8334fdff0029bcf3a23a6de715a879ce8ff60000f902",
+      "expectedSha256": "4210e5fd4b82bab556516563c04ad44acbf2893a4eea0912fae34103b9761703",
+      "normalizedTextEqual": true
+    },
+    "cpppj/src/client/RawCampaignSession.h": {
+      "actualSha256": "1658095ccbfe6741e11c73ff82ee4686d6dc17616f5b4422df5ca1613f506a9a",
+      "expectedSha256": "30350a161e5e86664a81d71648055b7570c8be624726503c333b933fc738aa8e",
+      "normalizedTextEqual": true
+    },
+    "cpppj/src/client/RawCampaignSession.cpp": {
+      "actualSha256": "f8dbc2b1f6a047b319ca342ae8baade41735f9bbdcf3d022a9ecb957d8d9c030",
+      "expectedSha256": "24f02c45008165d1c444fa76308ba6917a4551d0272a9a9668ac1364927657b8",
+      "normalizedTextEqual": true
+    }
+  },
+  "parentCommentsOnly": {
+    "cpppj/src/o/RawPlayerCoreRefresh.h": true,
+    "cpppj/src/o/RawPlayerCoreRefresh.cpp": true
+  },
+  "sharedUnchanged": {
+    "cpppj/src/o/RiftType.h": true,
+    "cpppj/src/o/RiftTypeTable.cpp": true,
+    "cpppj/src/o/RawPlayerCoreRefresh.h": true,
+    "cpppj/src/o/RawPlayerCoreRefresh.cpp": true,
+    "docs/exe/cpp-player-core-refresh-20261024.md": true,
+    "cpppj/src/client/RawCampaignSession.h": true,
+    "cpppj/src/client/RawCampaignSession.cpp": true
+  },
+  "newSessionTestsCreated": true,
+  "limits": [
+    "사본적용/전체결과정적확인만수행했다.기존첫Native/제품게임실행/새Session검사실행을주장하지않는다."
+  ]
+}

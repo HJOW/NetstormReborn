@@ -1,0 +1,242 @@
+--- a/cpppj/src/client/ClientColorSortInput.h
++++ b/cpppj/src/client/ClientColorSortInput.h
+@@ -4,8 +4,10 @@
+ #include <array>
+ #include <cstdint>
+ #include <span>
++#include <memory>
+ #include <stdexcept>
+ 
++namespace netstorm::o { class RawColorSortPrimary; } // 실제0x3800저장소는 장기 입력과 같은수명으로 빌린다.
+ namespace netstorm::client {
+ // 실제Client는고정초기입력을필수로주며소유자없는기존독립표시검사만명시current fallback을사용한다.
+ inline std::span<const std::uint32_t,256> ColorSortLogicalInput(std::span<const std::uint32_t> fixed,std::span<const std::uint32_t,256> independentCurrent) {
+@@ -13,7 +15,7 @@
+     if (fixed.size()!=256) throw std::invalid_argument("ColorSort 고정 초기RGB256색 계약");
+     return std::span<const std::uint32_t,256>(fixed.data(),256);
+ }
+-// raw0x3800/0x5008전체객체를가장하지않는고정RGB입력과43c010의전체9표소유자다.
++// 같은raw0x3800와고정RGB/기존9표를소유한다.검색0x5008/qsort/cache전체부모는별도다.
+ class ClientColorSortInput {
+ public:
+     ClientColorSortInput()=default; //실제439de0입력캡처전에는현재ScreenRGB로빈성공을만들지않는다.
+@@ -22,12 +24,16 @@
+     ClientColorSortInput(ClientColorSortInput&&)=delete; //Client수명의고정주소를유지한다.
+     ClientColorSortInput& operator=(ClientColorSortInput&&)=delete; //이미빌린span을이전소유자에남기지않는다.
+     void Capture(std::span<const std::uint32_t,256> logical); //439de0의명시생성위치에서만전체RGBX입력을복사한다.일반palette변경은호출하지않는다.
++    void CaptureWithPrimary(std::span<const std::uint32_t,256> logical); // 기존 실제malloc 초기BYTE 장치를 재사용하는 Client 시작 경로다.
++    void CaptureWithPrimary(std::span<const std::uint32_t,256> logical,std::span<const std::uint8_t> allocationBytes); // 명시 실제0x3800초기물리로만 같은raw생성을 수행한다.
++    const std::shared_ptr<o::RawColorSortPrimary>& Primary() const; // 누락/미완성은 명시거부하며 RGB/COL에서 즉석대체하지않는다.
+     bool Captured() const; //호스트입력계약의준비상태이며원문paletteLoaded와별개다.
+     std::span<const std::uint32_t,256> Logical() const; //초기입력의같은주소를빌린다.미캡처는명시오류다.
+     const std::array<ColorMap,9>& Rebuild(std::uint32_t currentRed); //43c010의현재빨강과같은초기입력으로기본53비트9표를갱신한다.64비트별도출력은혼합하지않는다.
+     const std::array<ColorMap,9>& Maps() const; //명시Rebuild뒤같은현재표를빌린다.
+ private:
+     std::array<std::uint32_t,256> logical_{}; //주소가변하지않는최초ColorSort입력이다.미캡처0은유효입력이아니다.
++    std::shared_ptr<o::RawColorSortPrimary> primary_; // Scene/Screen/Session교체와무관하게같은저장double을보유한다.
+     std::array<ColorMap,9> maps_{}; //555e38/55f38/56038/56138/56238/56338/56438/57738/57838순서다.
+     bool captured_{},built_{}; //실제원문DWORD를대신하지않는host물리준비계약이다.
+ };
+--- a/cpppj/src/client/ClientColorSortInput.cpp
++++ b/cpppj/src/client/ClientColorSortInput.cpp
+@@ -1,5 +1,7 @@
+ // 기존Sprite/Preview의동일계산을재사용하고아직노출되지않은1.6RGB/명도표만원문전체9표선관측에대조한다.
+ #include "client/ClientColorSortInput.h"
++#include "client/CurrentAllocationBytes.h"
++#include "o/RawColorSortPrimary.h"
+ #include "client/SpriteColorMaps.h"
+ #include "client/PreviewColorMaps.h"
+ #include <algorithm>
+@@ -7,7 +9,26 @@
+ #include <stdexcept>
+ 
+ namespace netstorm::client {
+-void ClientColorSortInput::Capture(std::span<const std::uint32_t,256> logical) { std::copy(logical.begin(),logical.end(),logical_.begin());captured_=true;built_=false; }
++// 기존 독립 adapter의 logical캡처는 실제primary가 있다고 가장하지않고 이전raw연결을끊는다.
++void ClientColorSortInput::Capture(std::span<const std::uint32_t,256> logical) { primary_.reset();std::copy(logical.begin(),logical.end(),logical_.begin());captured_=true;built_=false; }
++// 기존 장치와 같은 실제malloc 초기BYTE를 읽으며 임의0이나 별도Client소유자를 만들지않는다.
++void ClientColorSortInput::CaptureWithPrimary(std::span<const std::uint32_t,256> logical) {
++    std::array<std::uint8_t,o::kColorSortPrimaryBytes> allocation; // helper가전체를채우는실제초기물리의필수입력이다.
++    CurrentAllocationBytes(allocation);
++    CaptureWithPrimary(logical,allocation);
++}
++// 정상 constructor반환뒤에만새primary를발행한다.실패때부분raw를성공입력으로제공하지않는다.
++void ClientColorSortInput::CaptureWithPrimary(std::span<const std::uint32_t,256> logical,std::span<const std::uint8_t> allocationBytes) {
++    primary_.reset();captured_=false;built_=false;
++    std::copy(logical.begin(),logical.end(),logical_.begin());
++    auto primary=std::make_shared<o::RawColorSortPrimary>(allocationBytes); // raw클래스가초기padding전체를그대로소유한다.
++    primary->Construct({reinterpret_cast<const std::uint8_t*>(logical_.data()),sizeof(logical_)});
++    primary_=std::move(primary);captured_=true;
++}
++// 같은현재슬롯만빌린다.기존독립logical adapter에숨은raw생성을추가하지않는다.
++const std::shared_ptr<o::RawColorSortPrimary>& ClientColorSortInput::Primary() const {
++    if (!primary_ || !primary_->Constructed()) throw std::logic_error("ColorSort 실제primary 미연결");return primary_;
++}
+ bool ClientColorSortInput::Captured() const { return captured_; }
+ std::span<const std::uint32_t,256> ClientColorSortInput::Logical() const { if (!captured_) throw std::logic_error("ColorSort 최초 논리RGB 미캡처");return logical_; }
+ const std::array<ColorMap,9>& ClientColorSortInput::Maps() const { if (!built_) throw std::logic_error("ColorSort 실제9표 미생성");return maps_; }
+--- a/cpppj/src/client/OwnerColorMaps.h
++++ b/cpppj/src/client/OwnerColorMaps.h
+@@ -4,6 +4,7 @@
+ #include <cstdint>
+ #include <span>
+ 
++namespace netstorm::o { class RawColorSortPrimary; } // 저장명도에직접접근하는실제raw소유자다.
+ namespace netstorm::client {
+ // owner 색 번호0..8 각각의 현재256색 변환표다.0번은 항등이다.
+ using OwnerColorMaps=std::array<std::array<std::uint8_t,256>,9>;
+@@ -17,4 +18,8 @@
+ // original CRT 기본53비트에 맞추며64비트 관측과의 차이는 별도 fixture에 보존한다.
+ OwnerColorMaps BuildSpecialOwnerColorMaps(std::span<const std::uint32_t,256> logical,std::uint32_t type,
+     std::span<const std::uint32_t,72> candidates=OriginalOwnerColorCandidates());
++// 실제Client용입력은동일raw+8저장double이다.기존logical overload는독립adapter로만남긴다.
++OwnerColorMaps BuildSpecialOwnerColorMaps(const o::RawColorSortPrimary& primary,std::uint32_t type,
++    std::span<const std::uint32_t,72> candidates=OriginalOwnerColorCandidates());
++
+ }
+--- a/cpppj/src/client/OwnerColorMaps.cpp
++++ b/cpppj/src/client/OwnerColorMaps.cpp
+@@ -1,5 +1,6 @@
+ // DWORD 후보의 높은 바이트를 색 번호에 섞지 않고 원본 아홉 표를 생성한다.
+ #include "client/OwnerColorMaps.h"
++#include "o/RawColorSortPrimary.h"
+ #include <algorithm>
+ #include <cmath>
+ #include <stdexcept>
+@@ -34,35 +35,49 @@
+     return result;
+ }
+ // 실제 지정 소스만 바꾸며 등록되지 않은 소스/중립0표는 항등을 유지한다.
+-OwnerColorMaps BuildSpecialOwnerColorMaps(std::span<const std::uint32_t,256> logical,std::uint32_t type,std::span<const std::uint32_t,72> candidates) {
++namespace {
++// 기존소스/후보/보정본문을공유하며명도읽기장치만실제raw와독립adapter로구별한다.
++template<class Lightness>
++OwnerColorMaps BuildSpecialOwnerFromLightness(const Lightness& light,std::uint32_t type,std::span<const std::uint32_t,72> candidates) {
+     constexpr std::array<std::uint8_t,33> surface{44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,3,177,200,203,224,220,221,222,223,114,201,226}; // 43bc40의 동일 받침/지면 소스다.
+     constexpr std::array<std::uint8_t,20> first{86,188,85,247,84,31,34,75,82,74,83,156,153,70,72,71,73,152,13,144}; // 111의 전용 소스다.
+     constexpr std::array<std::uint8_t,21> second{87,88,85,86,84,156,75,82,153,74,73,83,155,72,71,44,152,154,70,13,144}; // 141의 전용 소스다.
+     constexpr std::array<std::uint8_t,19> third{218,219,220,52,53,54,55,56,57,58,59,66,161,210,19,21,214,141,18}; // 137의 전용 소스다.
+     constexpr std::array<double,8> offsets{-0.1,-0.17,0.15,0,0,0.05,-0.2,0}; // 실제43b750의 소유자별 double 명도 보정이다.
+-    constexpr double normalize=1.0/255.0,otherOffset=-0.15000000596046448; // 원본 ColorSort 정규화 및141의 저장 double 값이다.
++    constexpr double otherOffset=-0.15000000596046448; // 원본 ColorSort 정규화 및141의 저장 double 값이다.
+     std::span<const std::uint8_t> sources; // 같은 Native 호출자가 선택한 소스 목록만 빌린다.
+     if (type==111) sources=first;else if (type==141) sources=second;else if (type==137) sources=third;else if (type==94 || type==97) sources=surface;else throw std::invalid_argument("전용 소유자 색표 TYPE 범위");
+-    OwnerColorMaps result;std::array<double,256> light; // 실제 항등9표와 ColorSort +8 명도다.
+-    // 정규 RGB를 먼저 double로 저장한 뒤 원본 명도를 계산한다.
+-    for (std::size_t index=0;index<light.size();++index) {
+-        const double red=(logical[index]&255)*normalize,green=((logical[index]>>8)&255)*normalize,blue=((logical[index]>>16)&255)*normalize;
+-        light[index]=(std::max({red,green,blue})+std::min({red,green,blue}))*0.5;
+-        // 중립을 포함한9표의 모든 소스는 원본43b950처럼 항등으로 시작한다.
+-        for (auto& map:result) map[index]=static_cast<std::uint8_t>(index);
++    OwnerColorMaps result; // 실제항등9표이며명도는현재읽기장치에서필요할때직접조회한다.
++    // 중립을포함한9표를원본43b950처럼항등으로시작한다.
++    for (std::size_t index=0;index<256;++index) { // 소스색순서를유지한다.
++        for (auto& map:result) map[index]=static_cast<std::uint8_t>(index); // 현재원래번호를아홉행에쓴다.
+     }
+     // 실제 변환은 소유자1..8에만 쓰고 동일 거리 후보는 앞의 번호를 유지한다.
+     for (std::size_t owner=1;owner<result.size();++owner) {
+         const double offset=type==97 ? offsets[owner-1] : (type==141 ? otherOffset : 0.0);
+         // 실제 호출자의 지정 소스 순서대로 같은 표를 수정한다.
+         for (const auto source:sources) {
+-            const double target=light[source]+offset;std::size_t selected{};double minimum=std::min(99.0,std::abs(target-light[candidates[owner*8]]));
++            const double target=light(source)+offset;std::size_t selected{};double minimum=std::min(99.0,std::abs(target-light(candidates[owner*8])));
+             // 후보1..7은 엄격히 더 가까울 때만 교체하며 float로 최소값을 좁히지 않는다.
+-            for (std::size_t shade=1;shade<8;++shade) { const double distance=std::abs(target-light[candidates[owner*8+shade]]);if (distance<minimum) { minimum=distance;selected=shade; } }
++            for (std::size_t shade=1;shade<8;++shade) { const double distance=std::abs(target-light(candidates[owner*8+shade]));if (distance<minimum) { minimum=distance;selected=shade; } }
+             result[owner][source]=static_cast<std::uint8_t>(candidates[owner*8+selected]);
+         }
+     }
+     return result;
+ }
+-
+ }
++// 기존Native15관측과장치없는독립adapter는같은logical계산을유지한다.
++OwnerColorMaps BuildSpecialOwnerColorMaps(std::span<const std::uint32_t,256> logical,std::uint32_t type,std::span<const std::uint32_t,72> candidates) {
++    constexpr double normalize=1.0/255.0; // 기존adapter의binary64상수다.
++    std::array<double,256> light; // 실제Client의raw소유자로세지않는명시독립입력이다.
++    for (std::size_t index=0;index<light.size();++index) { // 기존RGB→명도계산순서를그대로유지한다.
++        const double red=(logical[index]&255)*normalize,green=((logical[index]>>8)&255)*normalize,blue=((logical[index]>>16)&255)*normalize;
++        light[index]=(std::max({red,green,blue})+std::min({red,green,blue}))*0.5;
++    }
++    return BuildSpecialOwnerFromLightness([&light](std::size_t index) { return light[index]; },type,candidates);
++}
++// 실제소비자는같은primary의현재+8double을읽고RGB에서명도를재계산하지않는다.
++OwnerColorMaps BuildSpecialOwnerColorMaps(const o::RawColorSortPrimary& primary,std::uint32_t type,std::span<const std::uint32_t,72> candidates) {
++    return BuildSpecialOwnerFromLightness([&primary](std::size_t index) { return primary.Lightness(index); },type,candidates);
++}
++}
+--- a/cpppj/src/client/RawCampaignSession.cpp
++++ b/cpppj/src/client/RawCampaignSession.cpp
+@@ -2743,9 +2743,15 @@
+             if (buildingMapTokens.at(type)==1) return buildingOwnerColors[static_cast<std::size_t>(color)];
+             if (buildingMapTokens[type]!=2 || (type!=111 && type!=141 && type!=137 && type!=94 && type!=97)) throw std::logic_error("현재 캡처 전용 소유자 색표 미복원");
+             if (!buildingSpecialOwnerColors.contains(type)) {
+-                std::array<std::uint32_t,256> logical{}; //현재 같은 원본COL의RGBX 입력이며 별도 팔레트로 대신하지 않는다.
+-                for (std::size_t index=0;index<logical.size();++index) { const auto rgb=assets.game.Palette().Color(static_cast<std::uint8_t>(index));logical[index]=std::uint32_t(rgb.red)|(std::uint32_t(rgb.green)<<8)|(std::uint32_t(rgb.blue)<<16); } //예약 바이트는 명도 계산에 쓰지 않는다.
+-                buildingSpecialOwnerColors.emplace(type,BuildSpecialOwnerColorMaps(logical,type));
++                if (services.colorSortInput) {
++                    // 실제Client는같은raw+8저장double을읽는다.미연결primary를COL성공으로바꾸지않는다.
++                    buildingSpecialOwnerColors.emplace(type,BuildSpecialOwnerColorMaps(*services.colorSortInput->Primary(),type));
++                } else {
++                    // 실제ColorSort서비스를생략한기존headless검사만원래COL adapter를유지한다.
++                    std::array<std::uint32_t,256> logical{};
++                    for (std::size_t index=0;index<logical.size();++index) { const auto rgb=assets.game.Palette().Color(static_cast<std::uint8_t>(index));logical[index]=std::uint32_t(rgb.red)|(std::uint32_t(rgb.green)<<8)|(std::uint32_t(rgb.blue)<<16); } //예약BYTE는명도에쓰지않는다.
++                    buildingSpecialOwnerColors.emplace(type,BuildSpecialOwnerColorMaps(logical,type));
++                }
+             }
+             return buildingSpecialOwnerColors.at(type)[static_cast<std::size_t>(color)];
+         };
+--- a/cpppj/src/client/CampaignClientServices.cpp
++++ b/cpppj/src/client/CampaignClientServices.cpp
+@@ -1,5 +1,6 @@
+ // 검사 관찰 콜백을 사용하지 않고 현재 클라이언트의 실제 서비스를 빌린다.
+ #include "client/CampaignClientServices.h"
++#include "client/CurrentAllocationBytes.h"
+ #include "client/SoloMapCatalog.h"
+ #include "client/RawCampaignMissionStartBindings.h"
+ #include "client/GameWorld.h"
+@@ -31,13 +32,6 @@
+ 
+ namespace netstorm::client {
+ namespace {
+-// 원본 생성자가 초기화하지 않는 바이트는 현재 CRT 할당의 실제 입력을 복사한다. 할당은 복사 뒤 즉시 반환한다.
+-void CurrentAllocationBytes(std::span<std::uint8_t> bytes) {
+-    if (bytes.empty()) return;
+-    void* allocation=std::malloc(bytes.size()); // 원본 malloc 계층처럼 zero 플래그 없는 실제 힙을 사용한다.
+-    if (!allocation) throw std::bad_alloc();
+-    std::memcpy(bytes.data(),allocation,bytes.size());std::free(allocation);
+-}
+ // 초기화하지않은현재caller8BYTE를자기프로세스읽기로복사하고C++미정값연산을피한다.
+ void CurrentBridgeScratchBytes(std::span<std::uint8_t> bytes) {
+     if (bytes.size()!=8) throw std::invalid_argument("AI 검색 caller 입력8BYTE 크기 오류");
+--- a/cpppj/src/client/ClientMain.cpp
++++ b/cpppj/src/client/ClientMain.cpp
+@@ -274,7 +274,7 @@
+     // [원본] 설치 검사(GameInstalledTest), 전체 시계·zacket·프로토콜 검사·플레이어 초기화 — 옮기지 않았다.
+     clock_ = o::GameClock(timeGetTime()); // "init full time"(FUN_00461090)의 시작 시각.
+     //00439537의초기ColorSort입력위치다.이캡처만으로미연결43b430검색/색띠전체를성공시킨것은아니다.
+-    colorSortInput_->Capture(screen_->LogicalPalette());
++    colorSortInput_->CaptureWithPrimary(screen_->LogicalPalette());
+     screen_->BindColorSortInput([owner=colorSortInput_] { return owner->Logical(); });
+     // "init dib section"
+     screen_->InitDibSection();
+--- /dev/null
++++ b/cpppj/src/client/CurrentAllocationBytes.h
+@@ -0,0 +1,17 @@
++// 기존CurrentAllocationBytes의본문과호출계약을그대로공유한다.기본0초기화나새Clientowner를추가하지않는다.
++#pragma once
++#include <cstdint>
++#include <cstdlib>
++#include <cstring>
++#include <new>
++#include <span>
++
++namespace netstorm::client {
++// 원본 생성자가 초기화하지 않는 바이트는 현재 CRT 할당의 실제 입력을 복사한다. 할당은 복사 뒤 즉시 반환한다.
++inline void CurrentAllocationBytes(std::span<std::uint8_t> bytes) {
++    if (bytes.empty()) return;
++    void* allocation=std::malloc(bytes.size()); // 원본 malloc 계층처럼 zero 플래그 없는 실제 힙을 사용한다.
++    if (!allocation) throw std::bad_alloc();
++    std::memcpy(bytes.data(),allocation,bytes.size());std::free(allocation);
++}
++}

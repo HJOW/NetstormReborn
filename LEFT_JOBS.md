@@ -1,8 +1,16 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-24 사용자 요청에 따른 목표 일시중지 인계
+
+- [x] 현재단위387은 **adb9739e / 20261024-09 CP**로커밋했다. 공용빌드종료0·경고오류0/신규24·전체2634검사실패0·자연Early1/Early2·최종원본1394동일을확인했다. [완료기록](docs/exe/cpp-session-transition-runtime-20261024.md). 이인계보관커밋을마친뒤 **goal을paused로전환하고작업을중지한다. 388은시작하지않는다.** 전체사용자완주/동일성/Editor완료는미완료다.
+- [x] 기존후속자료31개만동결보관한다. [재개안내](cpppj/handoff/paused-20261024/README.md)와같은폴더의manifest.json에미적용patch4개·기존proof7개의원출처/SHA/복사바이트동일성을기록했다. CoreRefresh대상교정→Session접합,Subscriber두DWORD공유,ClientColorSortPrimary소유자제안은 **공용미적용**이다. RawColorSortPrimary소스·검사도공용CMake미등록이며현재2634에포함하지않는다.
+- [x] 동결자료31개UTF8·AST3·JSON11·문서링크75/SHA동일을확인했다. 보관커밋에서는.gitattributes/이인계를더한33파일만선택하고정확원시21경로의바이트를유지한다. 최초실패인Subscriber v1관측0은그대로보존하며v2의120checkpoint와합산하지않는다. 새Native탐색·공용빌드·통합검사·게임실행은추가하지않는다.
+- [ ] 재개시AGENTS/이인계/LEFT_JOBS.dotnetpj.md를다시읽고현재호스트와마지막전체정밀디컴파일 **HJOW-Athlon / 2026-10-23**을대조한다. 현재387기준과후속patch기준을다시합성해야하며단순연속적용을보장하지않는다. 실제Corealias공유는Player해제전Native정리를갖추기전에앞당기지않는다.
+- [ ] 다음실제작업은미적용CoreRefresh/Subscriber/ColorSort제안을재검토한뒤단일Client/Player/Core/Pool수명·State정리부모·SP초기화순서·최종Editor HUD/State/loaded/도구·저장·언어별scenario·재로드를연결하는것이다. [State정리34항목과추가12hook](docs/exe/cpp-state-world-cleanup-reuse-20261024.md)의미완료경계를유지한다. options.cfg실패/OSError22의실제원인도미확정이다. 전Early/캠페인/Demo사용자완주·픽셀/음향/규칙의완전동일성은계속남으며사용자재개전에는진행하지않는다.
+
 ## 2026-10-24 단위387 완료: 세션 전환의 정리 몸체와 현재 입력 접합
 
-- [ ] **사용자 일시중지 요청(2026-10-24): 현재387의 빌드·검증·인수인계·커밋을 마친 뒤 goal을 paused로 전환한다. 388은 시작하지 않는다.** 병행 중인388사본/State정리표는 확인한 범위까지만 동결 인계하며 새 범위를 추가하지 않는다.
+- [x] **사용자 일시중지 요청(2026-10-24): 현재387의 빌드·검증·인수인계·커밋을 완료했다. 동결 인계 보관 직후 goal을 paused로 전환한다. 388은 시작하지 않는다.** 병행 중이던388사본/State정리표는 확인한 범위까지만 동결 인계하며 새 범위를 추가하지 않는다.
 - [x] 단위386은 **d207940c / 20261024-08 CP**로 커밋했다. 신규34·전체2610검사/실패0, 같은제품503d2e25…의자연Early1·일반31·Demo3·게임메뉴두비율이통과했다. 메뉴두probe의설정복구OSError22×3/×2는최초로그와함께보존했고최종원본1394동일이다. 현재/마지막전체정밀디컴파일PC는 **HJOW-Athlon / 2026-10-23**이다.
 - [x] 동결GameClockReset/Core9기록/Deck개별Release/Cursor색서비스/단회SaveOptions실패진단5사본은실제root에서check/apply모두0이며대상전파일SHA변경/새검사생성을확인했다. TYPE+1ec techBit사본eeeef5b6…도별도check/apply0이다. 원시제안/Native는보존한다.
 - [x] 독립ClockSyncReset/PlayerLinks/MetaZone과신규 **24검사/예상전체2634**를공용등록했고configure1/7Native입력SHA검증3은종료0이다. build1제품/검사링크종료0·관측경고오류0이며 **신규24검사모두통과**했다. 검사SHA는 **330872d5…5da878**이다. 전체CTest1은실제게임종료·설정복구뒤시작했다. [단위기록](docs/exe/cpp-session-transition-runtime-20261024.md).

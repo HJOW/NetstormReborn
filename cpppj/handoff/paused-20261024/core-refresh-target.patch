@@ -1,0 +1,50 @@
+--- a/cpppj/src/o/RawPlayerCoreRefresh.h
++++ b/cpppj/src/o/RawPlayerCoreRefresh.h
+@@ -1,4 +1,4 @@
+-// 현재Core의기술bit와자기Player객체level하한을0044fc00순서로갱신한다.
++// 현재Core의기술bit와자기소유다이스의count하한을0044fc00순서로갱신한다.
+ #pragma once
+ #include <cstdint>
+ #include <functional>
+@@ -28,9 +28,9 @@
+     std::function<PlayerCoreRefreshCursor(std::uint32_t)> begin; //004b2270의실제독립Finder와기본true필터다.
+     std::function<PlayerCoreRefreshPool()> pool; //현재Pool/base/capacity를직접조회하는순수provider다.
+     std::function<std::int32_t(std::uint32_t)> technologyBit; //0049a840이반환한현재TYPE+1ec의signedDWORD다.종류WORDffff를부모가미리거부하지않는다.
+-    std::function<std::uint32_t()> playerType; //005412ec의현재DWORD를순수조회한다.
++    std::function<std::uint32_t()> playerType; //005412ec의현재다이스타입DWORD(정상165)를순수조회한다.Player152전역005412b8과다르다.
+     std::function<std::uint32_t()> owner; //00540c70의현재DWORD를순수조회한다.
+-    std::function<std::int32_t(PlayerCoreRefreshForm)> level; //선택한같은객체의가상+80이며첫째/둘째반환을합치지않는다.
++    std::function<std::int32_t(PlayerCoreRefreshForm)> level; //선택한같은객체의가상+80이다.정상VT507950은004478f0다이스count이며첫째/둘째반환을합치지않는다.
+     std::function<void(std::uint32_t)> assertion; //Ch.cpp346의기술bit범위진단이며복귀후같은Core물리에쓴다.
+ };
+ // 원문357BYTE부모다.짧은span/원시무효포인터는선택접근의물리계약오류로거부한다.
+--- a/cpppj/src/o/RawPlayerCoreRefresh.cpp
++++ b/cpppj/src/o/RawPlayerCoreRefresh.cpp
+@@ -45,7 +45,7 @@
+     }
+ }
+ }
+-// 기술순회를먼저완료하고같은현재Player의실제객체로Core+5하한을갱신한다.
++// 기술순회를먼저완료하고같은현재소유자의다이스count로Core+5하한을갱신한다.
+ void RefreshPlayerCore(const PlayerCoreRefreshHooks& hooks) {
+     Write(Need(hooks.core)(),6,4,0);
+     const auto parent=Need(hooks.technologyParent)();auto cursor=Need(hooks.begin)(parent);
+--- a/docs/exe/cpp-player-core-refresh-20261024.md
++++ b/docs/exe/cpp-player-core-refresh-20261024.md
+@@ -1,4 +1,7 @@
+ # 현재 Core 기술과 level 하한 갱신 독립 복원
++
++> 대상 해석 정정(후속388): PE005412ec의 실제 초기DWORD는165(daisType)다. Player152는005412b8이다. 정상VT00507950의+80(005079d0)은004478f0이며 기존RawTempleRitual::Count를 호출한다. 앞선 자기Player152의state상위3비트 level 또는RawSquidLevel::Get 재사용 제안은 이 정상대상에 적용하지 않는다. 최초Native/알고리즘은주소005412ec를명시입력으로이미사용했으므로변경하지않는다.
++
+ 
+ 2026-10-24 **후속386 독립 준비**다. 현재/마지막 전체 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-23**이다. PATCH10.78 **0044fc00의357BYTE**(`44fc00-44fc35;44fc40-44fd6e`)를 신규 제품 전에 PE 격리 실행으로 고정했다. 정밀 SourceMap의 CD10.72 대응은 **0045f0d0**이며 이번에는 CD 몸체를 실행하지 않았다. 공유 기존 소스·CMake·LEFT·git·공용 build/lib·GUI와 보호 원본/CD는 변경하거나 실행하지 않았다.
+ 
+@@ -28,7 +31,7 @@
+ 
+ begin은 기존 **RawContainedFinder::Begin/Next**를 **Begin마다 새 finder+현재SID 저장**으로 감싸 current/next를 반환하면 된다. 한 전역 finder를 재진입마다 덮지 않는다. 현재 RawContainedFinder는 같은 SidPool 객체를 고정 참조하므로 원시 Pool 교체 Native 입력 전체를 그 클래스로 표현했다고 주장하지 않는다. fixture 장치는 현재 rawPool/containedType을 읽는 하위 경계이며 부모의 Core/max 기대를 계산하지 않는다. Native에서는 그 Finder/기본true 필터 몸체까지 직접 실행했다.
+ 
+-pool/playerType/owner provider는 현재 실제 저장소의 **순수 조회**다. pool.bytes는 같은 SidPool.Bytes, capacity는 같은 현재 Capacity, address는 해당 물리의 안정32비트 식별자여야 한다. 임의 parsed 객체목록이나 base가 바뀌었는데 옛 bytes를 반환하는 조합은 계약 밖이다. level은 전달한 **현재 같은 raw객체**의 실제 가상+80을 실행해야 하며 상수 최대값/빈 성공을 넣지 않는다. technologyBit는 현재 TYPE의 +1ec DWORD를 읽고 signed비트를 반환한다.
++pool/playerType/owner provider는 현재 실제 저장소의 **순수 조회**다. pool.bytes는 같은 SidPool.Bytes, capacity는 같은 현재 Capacity, address는 해당 물리의 안정32비트 식별자여야 한다. 임의 parsed 객체목록이나 base가 바뀌었는데 옛 bytes를 반환하는 조합은 계약 밖이다. level은 전달한 **현재 같은 raw객체**의 실제 가상+80을 실행해야 하며 상수 최대값/빈 성공을 넣지 않는다. 정상165/VT507950은 기존 **RawTempleRitual::Count(004478f0)**다. hook의 playerType 이름은 실제005412ec의현재다이스타입을뜻하며 PlayerWorldState.playerType(005412b8/152)와연결하면틀린다. technologyBit는 현재 TYPE의 +1ec DWORD를 읽고 signed비트를 반환한다.
+ 
+ 부모가 항상value1로 호출하는 Ch42b280의 선택 부분은 이 모듈의 private `SetTechnology`에 복원했다. 독립 일반 Ch API/value0·잘못된value의 다른 진단까지 새로 완료했다고 세지 않는다. 기존 공용 Ch 몸체를 찾지 못해 이 좁은 선택 부분을 포함했으며 Native에서 실제 Ch127BYTE 전체를 실행한 value1 경로와 비교했다.
+ 

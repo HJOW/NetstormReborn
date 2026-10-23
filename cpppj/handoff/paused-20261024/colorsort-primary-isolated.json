@@ -1,0 +1,160 @@
+{
+  "scope": "unit388 independent RawColorSortPrimary; not publicly registered or connected to Client",
+  "createdUtc": "2026-10-23T21:38:44.895418+00:00",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": "2026-10-23",
+  "nativeFirstFilesStillUnchanged": {
+    "tools/decomp_colorsort_primary.py": "bb9957d5e29ea5573efb6accdb42f8257f79175b8702d003d26f2a79e97e4b42",
+    "cpppj/tests/fixtures/colorsort-primary-x86.tsv": "ddc522d49ab538e33c27661efcc4198f27a2e1e581bfa92de44020acec6ebc29",
+    "cpppj/colorsort-primary-native.json": "fcd08999171286a49ec3adbde480fb927a2ba8eae37aa6663b9c30e0399ab019"
+  },
+  "native": {
+    "rows": 80,
+    "controls": [
+      639,
+      895
+    ],
+    "normalReturns": 36,
+    "explicitStops": 44,
+    "instructions": 1656884,
+    "precisionFieldDifferences": {
+      "hue": 409,
+      "saturation": 451
+    }
+  },
+  "productSupportedPrecision": "binary53 nearest (027f semantics);037f kept as independent native evidence only",
+  "productReplay": {
+    "control": "027f",
+    "rows": 40,
+    "normal": 18,
+    "explicitStops": 22,
+    "rawBytesEach": 14336,
+    "normalStores": 1792,
+    "storedLightnessBitsCompared": 4608
+  },
+  "isolatedBuild": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "flags": "/std:c++20 /EHsc /utf-8 /MD /fp:precise /W4 /WX /D_CRT_SECURE_NO_WARNINGS"
+  },
+  "isolatedTests": {
+    "tests": 3,
+    "failures": 0,
+    "exitCode": 0
+  },
+  "nativeVerifyRows": 80,
+  "utf8StrictFiles": 11,
+  "pythonAstFiles": 1,
+  "localLinksChecked": 11,
+  "existingSourceCmakeLeftGitChangedByThisTask": false,
+  "gameGuiSharedBuildRun": false,
+  "originalFilesWrittenOrDeleted": false,
+  "rawPrimaryClientIntegrationCompleted": false,
+  "whole43b430SearchQsortCacheClaimed": false,
+  "artifacts": [
+    {
+      "path": "cpppj/src/o/RawColorSortPrimary.h",
+      "bytes": 3356,
+      "sha256": "91be5bd4bd22200cf004a0d8c0dd3622535a77f53a07f52e3f56152c0f04eba9"
+    },
+    {
+      "path": "cpppj/src/o/RawColorSortPrimary.cpp",
+      "bytes": 5828,
+      "sha256": "27ed9956a63989632e34961e3d0c8ebc0f1ba965d99225c20c3b8814719d1592"
+    },
+    {
+      "path": "cpppj/tests/ColorSortPrimaryTests.cpp",
+      "bytes": 10148,
+      "sha256": "e5d0e0090504984190f1b528ac700df201ddb38c22cfdafadf1158fc6a465280"
+    },
+    {
+      "path": "tools/decomp_colorsort_primary.py",
+      "bytes": 15537,
+      "sha256": "bb9957d5e29ea5573efb6accdb42f8257f79175b8702d003d26f2a79e97e4b42"
+    },
+    {
+      "path": "cpppj/tests/fixtures/colorsort-primary-x86.tsv",
+      "bytes": 7105483,
+      "sha256": "ddc522d49ab538e33c27661efcc4198f27a2e1e581bfa92de44020acec6ebc29"
+    },
+    {
+      "path": "cpppj/colorsort-primary-native.json",
+      "bytes": 4522,
+      "sha256": "fcd08999171286a49ec3adbde480fb927a2ba8eae37aa6663b9c30e0399ab019"
+    },
+    {
+      "path": "docs/exe/cpp-colorsort-primary-native-20261024.md",
+      "bytes": 6719,
+      "sha256": "7f74981159b350a4fe1467737fd7314b3fcb476a09c8d70488ae35f0623f86f9"
+    },
+    {
+      "path": "extracted/colorsort-primary-20261024-isolated/build.ps1",
+      "bytes": 1337,
+      "sha256": "7e3f80eabe0fc4fdd5ef6b9978161cd90296ebc4f3bd899f5a540f9603e9c828"
+    },
+    {
+      "path": "extracted/colorsort-primary-20261024-isolated/build1.log",
+      "bytes": 166,
+      "sha256": "5fc2b0dbeee8936809367602a6b6a2e89b002e4c9ddab28dce6ad6716e0ca2a5"
+    },
+    {
+      "path": "extracted/colorsort-primary-20261024-isolated/ColorSortPrimaryTests.exe",
+      "bytes": 129536,
+      "sha256": "620005b8281937e80729c364063cb143ee930bb530ecb98afd61123507bf9d0c"
+    },
+    {
+      "path": "extracted/colorsort-primary-20261024-isolated/ColorSortPrimaryTests.obj",
+      "bytes": 810784,
+      "sha256": "fbc0981b36ac1266e4774964428fcc22f0b2a571757062b97586902b2b504d90"
+    },
+    {
+      "path": "extracted/colorsort-primary-20261024-isolated/native-first-freeze.json",
+      "bytes": 467,
+      "sha256": "27b6cb7b5a3605433e94fa100c0e1ee7fa97c3b4c08e2dede3982cb53ad4a7c3"
+    },
+    {
+      "path": "extracted/colorsort-primary-20261024-isolated/native1.log",
+      "bytes": 3150,
+      "sha256": "402874ff6c34dccb5dba82c57bdbf012fc923bb5e4adea0ae25af078af842c85"
+    },
+    {
+      "path": "extracted/colorsort-primary-20261024-isolated/RawColorSortPrimary.obj",
+      "bytes": 49607,
+      "sha256": "f83c6f052bfb322e5f4917e20ea5060d1830393457a1d371808576cea52d50ca"
+    },
+    {
+      "path": "extracted/colorsort-primary-20261024-isolated/Runner.cpp",
+      "bytes": 843,
+      "sha256": "63d172e9cac19376158e3cbc41789a41ccb87b6fb9bfb8584a7b4ff3e9e55b93"
+    },
+    {
+      "path": "extracted/colorsort-primary-20261024-isolated/Runner.obj",
+      "bytes": 16513,
+      "sha256": "eaa2aa7eea233d7139f4b840a44a4ba6acd081482b1054e49833fbc58198ece0"
+    },
+    {
+      "path": "extracted/colorsort-primary-20261024-isolated/test1.json",
+      "bytes": 94,
+      "sha256": "c40fe6f9e9e3526260c641d593a7d9e665c67d587e7d332f43caea039c46cce8"
+    },
+    {
+      "path": "extracted/colorsort-primary-20261024-isolated/test1.log",
+      "bytes": 20,
+      "sha256": "345359cb59b4a46dc8a0870c0fd5c712a899794888f72e5ece092871b88384e5"
+    }
+  ],
+  "localLinks": [
+    "../../cpppj/src/o/RawColorSortPrimary.h",
+    "../../cpppj/src/o/RawColorSortPrimary.cpp",
+    "../../tools/decomp_colorsort_primary.py",
+    "../../cpppj/tests/fixtures/colorsort-primary-x86.tsv",
+    "../../cpppj/colorsort-primary-native.json",
+    "../../extracted/colorsort-primary-20261024-isolated/native-first-freeze.json",
+    "../../cpppj/tests/ColorSortPrimaryTests.cpp",
+    "../../extracted/colorsort-primary-20261024-isolated/build1.log",
+    "../../extracted/colorsort-primary-20261024-isolated/test1.log",
+    "../../extracted/colorsort-primary-20261024-isolated/verification.json",
+    "cpp-session-color-input-next-20261024.md"
+  ]
+}
