@@ -271,6 +271,8 @@ void UberGump::ClearWorld() {
     ClearPage(); // 현재 부모의 OnExit를 월드/미션 수명보다 먼저 같은 큐에 반납한다.
     if (world_) mapUserName_=world_->Session().CurrentHandle(); // 원본 Client 전역 이름은 월드를 해제한 뒤에도 다음 목록 조회에 남는다.
     state_.Cancel("LoadMissionFort"); // 현재 미션이 설치 전에 교체돼도 그 소유자의 이전 요청을 새 미션에서 소비하지 않는다.
+    state_.Cancel("LoadMissionWorld"); // 비 Tutorial의 지연 설치도 같은 소유자 해제 때 취소한다.
+    if (rawButtons_ && rawButtons_->Menus()) rawButtons_->Menus()->CloseMissionLoading(); // 로딩 중 이탈한 부모를 다음 장면에 남기지 않는다.
     missionFortRequest_.reset(); // Session이 살아 있으면 공유 소유권으로 실제 설치/해제 완료까지 이미지를 보존한다.
     if (rawButtons_ && rawButtons_->Menus()) rawButtons_->Menus()->CloseHelp(); // 동적 정보/그림의 현재 Session보다 먼저 실제 창을 반납한다.
     if (world_ && rawButtons_ && rawButtons_->Menus()) rawButtons_->Menus()->Close(); // 같은Form을반납한뒤에만Session/월드포인터를해제한다.

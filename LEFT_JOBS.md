@@ -1,5 +1,15 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-23 단위373 완료: 미션 로딩 창 실패 수정 및 실제 원본 픽셀 대조
+
+- [x] 사용자가 전체 목표를 재개했다. AGENTS.md·공통/닷넷 인수인계를 다시 읽었다. 현재/마지막 전체 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-23**으로 일치한다. 이전 중단 절의 ‘일시 정지’는 과거 상태이며 이번 목표는 계속 활성이다.
+- [x] c7c60/c7aa0의 생성 직후 부모 부착 → Fit의 Push/재부착을 연결했다. 본문 +34를 잘못된 alignFlags가 아닌 secondaryDepth(-1)에 쓴다. 기본 Gump 예외를 숨기거나 약화하지 않았다. 미션 해제 시 로딩 부모 Kill/비 Tutorial 지연 설치 취소도 연결했다. [상세 및 한계](docs/exe/cpp-mission-loading-runtime-20261023.md).
+- [x] 최종 Release build3 종료0/관측 경고·오류0, MissionLoading 4개/RawMenuControls 10개(고유13개) 통과다. 실제 자식 부착/상대 깊이·serial 재사용·Cancel 정수 명령·지연 삭제·최종 부모 반납을 검사한다. 최종 제품 SHA는 `2a8eeaa40d586226bcd14a2fad1edce6f844b6710ef7bb9946d728d785c10dac`다.
+- [x] 원본 전체 사본 세션 `20261023T122824095Z-d1a6d7b16649`에서 Early Missions 첫 미션 로딩을 새로 관측했다. 원본 PNG `6d55f55d2cdc1a8b8c8ad261505cc95946ce58a925a48dc872d3338fcf0f1893.png`와 최종 클론의 **400×80 돌 창 RGB 차이0**이다. 왼쪽 전체 HUD는 미동일/미완료다. 원본 정상 종료 closed=true/전체 originals 해시 동일이며 녹화 종료 경계의 failed는 상세에 별도 기록했다.
+- [x] 최종 실제 GUI에서 첫 Early 진입/Cancel, Demo 메뉴 세 항목 진입/로딩 부모 반납, Guard My Back 데모 Cancel을 통과했다. 앞선 build2로 캠페인1-1·TEST01 진입/TEST01 Cancel도 통과했다. 최종 원시 관측은 `extracted/cpp-mission-loading-20261023-final-*`다. 전체 원본 해시는 모든 실행에서 동일하다.
+- [x] 전체 CTest 종료0, **2,420검사/실패check0**, 483.87초(CTest 전체483.93초)다. `extracted/cpp-mission-loading-20261023-ctest.log`와 LastTest 내부 결과를 모두 확인했다. UTF-8·Python AST·공백 검사를 확인하고 **20261023-43 CP**로 로컬 커밋한다. 원격 push/AGENTS·기존 원본/CD·닷넷/웹·디컴파일 소스 변경은 없다.
+- [ ] **다음 단위:** 기존 진입 도구의 Guide 단계/일곱 프레임 재개/원본 Header demo 기대를 고치고 Early6·전체 캠페인16·Priest Training9 및 실제 Demo3 진입을 검사한다. 현재 옛 도구의11실패는 상세에 보존했으며 원문 계약에 맞춘 제품을 옛 기대에 맞추지 않는다. HUD6모듈/MinimapBlit 등록·실제 dock/viewport·일반 HTML/Edit/전체 사용자 완주·동일성·배포 목표는 계속 남는다. `--verify`는 이전 PC extracted 보고서 부재로 미성공이고 Native1540 fixture 검사는 통과했다.
+
 ## 2026-10-23 완료: 정밀 디컴파일 재실행 및 cpppj Release 컴파일
 
 - [x] 사용자가 AGENTS.md와 인수인계 문서를 먼저 읽고 기존 게임 디컴파일 및 cpppj 컴파일을 요청했다. 현재 PC **HJOW-Athlon (192.168.0.94)** 은 원본 실행 확인 예외 시스템이며, 중단 인계 당시 기록된 마지막 정밀 디컴파일 PC **VM-W11-Codex** 와 달라 양 판본 정밀 디컴파일을 다시 수행했다.
@@ -14,7 +24,7 @@
 - [x] 직전 단위372는 **42021fd2 /20261023-40 CP** 완료 커밋이다. 아래 단위373은 **진행 중 상태를 보존하는 중단 커밋(20261023-41 CP)** 이며 완료 판정이 아니다.
 - [x] [재개 절차와 미완료 상세](docs/exe/cpp-pause-handoff-20261023.md), [보존 파일 SHA 목록](docs/exe/cpp-pause-handoff-20261023.json)을 작성했다. 미등록 HUD6모듈/MinimapBlit 준비 소스·검사·fixture·도구·문서도 커밋해 인계한다. 공식 연결 완료로 세지 않는다.
 - [x] 단위373 build2는 종료0/경고·오류0, 원문1540행 --verify 종료0이다. MissionLoading 필터4검사 중 원문3통과/새 실제 창1실패, RawMenuControls10검사 중 기존9통과/같은 새 창1실패다. 실패는 **void인 Gump 밀어내기** 예외이며 수정 제품 GUI/픽셀 비교·전체 CTest는 미실행이다.
-- [ ] **재개 첫 작업:** LoadingMetadata/LoadingBody의 초기 Attach 전 Push 순서를 c83b0/c7aa0/c7d40과 대조해 새 실제 창 검사를 고친다. 예외 숨기기/기본 Gump 검사의 약화는 금지한다. 이어 실제 튜토리얼/캠페인/데모 진입·Cancel·픽셀 대조와 관련 회귀를 수행한다.
+- [x] **재개 첫 작업은 상단 단위373에서 해결:** 초기 Attach와 +34 상대 깊이 수정을 원문과 대조했고 새 실제 창 검사·튜토리얼/캠페인/데모 진입·Cancel·돌 창 픽셀 차이0을 확인했다. 전체 HUD/미션 완주·원본 전체 동일성은 별도 잔여다.
 - [x] 원본 게임은 사용자가 직접 종료했으며 원본 사본 세션은 정리 완료/전체 originals 해시 동일이다. 진행 빌드/검사는 종료했고 새 GUI를 실행하지 않았다. AGENTS/기존 원본·CD/닷넷/웹/정밀 디컴파일 변경 및 원격 push는 없다.
 
 ## 2026-10-23 단위373 진행: 사용자 확인 미션 로딩 돌 창

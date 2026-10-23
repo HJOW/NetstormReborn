@@ -250,8 +250,11 @@ struct RawMenuControls::Impl {
     void LoadingBody(std::uint32_t token,std::string_view body,ScreenRect mapView) {
         auto& fields=loading.at(token);if (fields.body) common.lifetime.Kill(fields.body);
         fields.body=Allocate(0xd8,0);titleWidgets->Construct(fields.body,0,0,0,palette.basic[7]);
-        auto& text=*Find(titles,fields.body);text.alignFlags=0xffffffffU;titleWidgets->SetScrollable(fields.body,0);
-        titleMarkup->Parse(fields.body,body);title->FitContent(fields.body);title->FitHeight(fields.body);
+        // 본문 +34는 부모 기준 상대 깊이다. 정렬 플래그 +8과 구별한다.
+        auto& text=*Find(titles,fields.body);text.secondaryDepth=0xffffffffU;titleWidgets->SetScrollable(fields.body,0);
+        titleMarkup->Parse(fields.body,body);
+        // c7aa0은 생성 직후 본문을 먼저 부모에 붙인다. Fit의 Push는 이 유효한 부착을 해제한다.
+        titleWidgets->Attach(fields.body,0,0,token,0);title->FitContent(fields.body);title->FitHeight(fields.body);
         const auto button=fields.button;common.stones.FitToText(button);const auto& cancel=*common.node(button);
         // 원문 target=max(buttonWidth,400-40)이며 이 경로는 자연 본문 폭이 target 이하인 분기다.
         const float target=std::max(cancel.baseWidth,360.0F);
@@ -260,7 +263,7 @@ struct RawMenuControls::Impl {
         common.tree.Push(button);common.stones.Attach(button,static_cast<float>(static_cast<int>((parent.baseWidth-cancel.baseWidth)*0.5F)),
             static_cast<float>(static_cast<int>(text.baseHeight+30.0F)),token,0);
         // body 자연 폭을 유지한 채 가운데 붙인다. 360폭 왼쪽 정렬로 바꾸지 않는다.
-        titleWidgets->Attach(fields.body,static_cast<float>(static_cast<int>(parent.baseWidth-text.baseWidth)/2),20,token,0);
+        common.tree.Push(fields.body);titleWidgets->Attach(fields.body,static_cast<float>(static_cast<int>(parent.baseWidth-text.baseWidth)/2),20,token,0);
         if (parent.parent) common.tree.Push(token);
         common.tree.Attach(token,(mapView.right-mapView.left-parent.baseWidth)*0.5F+mapView.left,
             (mapView.bottom-mapView.top-parent.baseHeight)*0.5F+mapView.top,common.create.collection.root,0);
@@ -273,6 +276,8 @@ struct RawMenuControls::Impl {
             throw std::logic_error("미션 시작 안내 기본 Cancel 메타 계약 위반");
         source.erase(position);auto& fields=loading.at(token);if (fields.button) common.lifetime.Kill(fields.button);
         fields.button=AllocateHelp(0x170);const std::string label(cancel);common.stones.Construct(fields.button,0,0,label.c_str());
+        // c7c60은 버튼 생성 직후 (0,0)에 부착한다. 이후 c7d40의 Fit이 Push/재부착한다.
+        common.stones.Attach(fields.button,0,0,token,0);
         Find(helpButtons,fields.button)->buttonFlags|=4U; // c83b0의 ButtonInstant 플래그다.
     }
     // 원문 cf570의 기존 serial 재사용/신규 생성·재조회 순서를 실제 동일 노드에 연결한다.
@@ -582,6 +587,11 @@ bool RawMenuControls::Contains(ScreenPoint point) const {
 // 같은 실제 저장소의 개수/controlled 깊이를 진단 보고에 기록한다.
 std::string RawMenuControls::Report() const {
     auto& s=*impl_;std::ostringstream out;out<<"raw_menus\t"<<s.menuState.instances<<'\t'<<s.menuState.index<<'\t'<<s.menus.size()<<'\t'<<s.titles.size()<<'\t'<<s.fragments.fragments.size()<<'\n';
+    // 로딩 부모와 실제 자식의 현재 토큰/직사각형만 읽어 잔존·재사용·화면 위치를 관측한다.
+    if (const auto token=s.Reference(s.loadingState.transientSerial)) {
+        const auto& fields=s.loading.at(token);const auto rect=s.common.collection.Bounds(token);
+        out<<"raw_mission_loading\t"<<token<<'\t'<<s.common.node(token)->serial<<'\t'<<fields.body<<'\t'<<fields.button<<'\t'<<rect.left<<'\t'<<rect.top<<'\t'<<rect.right<<'\t'<<rect.bottom<<'\n';
+    }
     // 같은 전용 노드/자식/이력과 실제 링크 토큰을 후속 통합 플레이에서 읽는다.
     for (const auto& [token,node]:s.helpWindows) out<<"raw_help\t"<<token<<'\t'<<node->serial<<'\t'<<node->flags<<'\t'<<node->body<<'\t'<<node->information<<'\t'<<node->picture<<'\t'<<node->backButton<<'\t'<<node->learnButton<<'\t'<<s.helpHistory.Topics().size()<<'\n';
     // 출력 원문은 변경하지 않고 진단 행에서만 줄바꿈/탭을 공백으로 표시한다.

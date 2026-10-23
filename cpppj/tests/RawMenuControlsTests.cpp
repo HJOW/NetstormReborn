@@ -289,6 +289,13 @@ TEST_CASE(RawMenuControls_MissionLoadingUsesSharedTreeAndCancel) {
     if (!bounds) return;
     CHECK(bounds->right-bounds->left==400);CHECK(bounds->left==354);CHECK(bounds->top>=344 && bounds->top<=345);
     CHECK(client.buttons.SerialGump(serial)!=0);const auto point=client.menus->Point("Cancel");CHECK(point.has_value());
+    // 본문 상대 깊이와 초기 부착을 검사하여 잘못된 정렬·void·중복 부착을 함께 잡는다.
+    const auto parent=client.buttons.SerialGump(serial);std::size_t textChildren{};
+    for (auto child=client.menus->Node(parent)->child;child;child=client.menus->Node(child)->next) {
+        const auto* node=client.menus->Node(child);CHECK(node->parent==parent && !(node->flags&8));
+        if (node->vtable==0x51454cU && !(node->flags&0x10000U)) { ++textChildren;CHECK(node->secondaryDepth==0xffffffffU && node->alignFlags==0); }
+    }
+    CHECK(textChildren==1);
     CHECK(client.menus->ShowMissionLoading("Starting Mission...","Cancel",{85,0,1024,768})==serial);
     // 실제 원본 자산을 모든 자식과 함께 출력하여 Draw가 메타/사본에 의존하지 않는지 확인한다.
     std::vector<std::uint8_t> pixels(1024*768);std::array<std::uint32_t,256> logical{};
@@ -303,4 +310,5 @@ TEST_CASE(RawMenuControls_MissionLoadingUsesSharedTreeAndCancel) {
     client.buttons.CleanupGumps();
     const auto next=client.menus->ShowMissionLoading("Starting Mission...","Cancel",{85,0,1024,768});CHECK(next!=serial);
     client.menus->CloseMissionLoading();client.buttons.CleanupGumps();CHECK(!client.menus->Point("Cancel"));
+    CHECK(client.menus->Report().find("raw_mission_loading\t")==std::string::npos);
 }
