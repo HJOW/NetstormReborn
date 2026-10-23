@@ -1,0 +1,341 @@
+{
+  "status": "사용자 요청으로 중단한 진행 중 작업",
+  "files": [
+    {
+      "path": "cpppj/src/client/CMakeLists.txt",
+      "sha256": "0b61545a5bc3e8529715e59d2fd9bf439f1b2708cc8b8641333949f485ad420e",
+      "bytes": 11356,
+      "registeredBeforePause": true
+    },
+    {
+      "path": "cpppj/src/client/ClientMain.cpp",
+      "sha256": "501a33faede59f6d9320943d23ef7893d27c37eab2ea1ceb3304b038e38e4f6a",
+      "bytes": 52560,
+      "registeredBeforePause": true
+    },
+    {
+      "path": "cpppj/src/client/ClientMain.h",
+      "sha256": "e62785460a3f38ae961f9cd6e987fc0f01b2bcec7ca8985c0969b6d6e7f95e03",
+      "bytes": 17775,
+      "registeredBeforePause": true
+    },
+    {
+      "path": "cpppj/src/client/RawMenuControls.cpp",
+      "sha256": "687a119afc427464f27c044d62ad2ffb7816963628ac9406c8cfcb4f3303ac63",
+      "bytes": 75212,
+      "registeredBeforePause": true
+    },
+    {
+      "path": "cpppj/src/client/RawMenuControls.h",
+      "sha256": "ec9e8bcb2d872196aa189ce240660fd736748b635ce4d41265f63dbcaff2d249",
+      "bytes": 12411,
+      "registeredBeforePause": true
+    },
+    {
+      "path": "cpppj/src/client/UberGump.cpp",
+      "sha256": "c69e746cd8bdb49e13d26521261fe82caa1470207d0a051708083da0bdefbe57",
+      "bytes": 115011,
+      "registeredBeforePause": true
+    },
+    {
+      "path": "cpppj/tests/CMakeLists.txt",
+      "sha256": "1da16d0a81d69b4e21214e916c6951aa131fa4c82742697452b957240659e258",
+      "bytes": 129309,
+      "registeredBeforePause": true
+    },
+    {
+      "path": "cpppj/tests/RawMenuControlsTests.cpp",
+      "sha256": "598f0631fd3c7d1aeab4434fcecf7f0c47e975533662e464954314f0db0cb384",
+      "bytes": 33199,
+      "registeredBeforePause": true
+    },
+    {
+      "path": "cpppj/src/client/ChatWindow.cpp",
+      "sha256": "7e2ca9b512434cd9b7bf7549ce183d3271ccf23f2697d6943b7942fc4c805d76",
+      "bytes": 20368,
+      "registeredBeforePause": false
+    },
+    {
+      "path": "cpppj/src/client/ChatWindow.h",
+      "sha256": "e663708f226b95f2d1d888a51bbcbd53c9e76955d7663a13baef36d1b0f20ccf",
+      "bytes": 8568,
+      "registeredBeforePause": false
+    },
+    {
+      "path": "cpppj/src/client/HudChatGeometry.cpp",
+      "sha256": "f69c0c522b4688106b5a23d057db577a57869fb10f7ffad3d85a6bed6be8354b",
+      "bytes": 5567,
+      "registeredBeforePause": false
+    },
+    {
+      "path": "cpppj/src/client/HudChatGeometry.h",
+      "sha256": "624cab908cdbf8b4fb3d53f941de894710f21f1ba02051e70543475fdbe8efea",
+      "bytes": 3306,
+      "registeredBeforePause": false
+    },
+    {
+      "path": "cpppj/src/client/HudNsInfo.cpp",
+      "sha256": "6e4f59dddeefd419416e4417cbef88e84490fc57f5cbaaac464752b6014dd95d",
+      "bytes": 1996,
+      "registeredBeforePause": false
+    },
+    {
+      "path": "cpppj/src/client/HudNsInfo.h",
+      "sha256": "26d055205442b9f3e1f7b10f3e618a1300bd451f363df24b1077b8f4ffc0e937",
+      "bytes": 2740,
+      "registeredBeforePause": false
+    },
+    {
+      "path": "cpppj/src/client/HudNsInfoCreate.cpp",
+      "sha256": "058092ff2c01bc8efc7aeaa73516e82c344de361083ff1e2aa3155834b4755f2",
+      "bytes": 8166,
+      "registeredBeforePause": false
+    },
+    {
+      "path": "cpppj/src/client/HudNsInfoCreate.h",
+      "sha256": "543560d80e281c28d610ad0ab9004facfad8bd5ba19477cf5bfa8f31aa80a459",
+      "bytes": 6282,
+      "registeredBeforePause": false
+    },
+    {
+      "path": "cpppj/src/client/MissionLoadingMessage.cpp",
+      "sha256": "c3befddffb57d71d033c8f1b6777b4fefc736a036837e195b046ad3994611bf0",
+      "bytes": 3199,
+      "registeredBeforePause": false
+    },
+    {
+      "path": "cpppj/src/client/MissionLoadingMessage.h",
+      "sha256": "9b0245f282290723b1f128b1ff3d3597ecdb9631d65db78977e1ad6455b307a2",
+      "bytes": 2460,
+      "registeredBeforePause": false
+    },
+    {
+      "path": "cpppj/src/client/TextEntryBuffer.cpp",
+      "sha256": "bb7862db4bf61abfdd5ba8177cfe4df10adee7aff480d542fe1c749bbb12904d",
+      "bytes": 13475,
+      "registeredBeforePause": false
+    },
+    {
+      "path": "cpppj/src/client/TextEntryBuffer.h",
+      "sha256": "594c08b574f57c8cd34258186f7f136ceefd08caa1477931036a3fec28d73989",
+      "bytes": 5140,
+      "registeredBeforePause": false
+    },
+    {
+      "path": "cpppj/src/client/TextEntryGump.cpp",
+      "sha256": "f13c99d61cc4b49f7f9998e0eee731520ffb54c2c4d51f1c0d95b00ce959f823",
+      "bytes": 30444,
+      "registeredBeforePause": false
+    },
+    {
+      "path": "cpppj/src/client/TextEntryGump.h",
+      "sha256": "6d03d522f869d84b1cfce84199f9cae64ec124d61b3c61fe59f9c962158432e4",
+      "bytes": 9590,
+      "registeredBeforePause": false
+    },
+    {
+      "path": "cpppj/tests/ChatWindowTestSupport.h",
+      "sha256": "79240179e26725810910de7c3d724e014c14e857ee40dde323d0862c8f982dfd",
+      "bytes": 19765,
+      "registeredBeforePause": false
+    },
+    {
+      "path": "cpppj/tests/ChatWindowTests.cpp",
+      "sha256": "6fe9c37f7964cad7a7586ac2979ca943cd2f30d4a8a87724b64bed43b8f0e9ee",
+      "bytes": 14319,
+      "registeredBeforePause": false
+    },
+    {
+      "path": "cpppj/tests/HudChatGeometryTests.cpp",
+      "sha256": "c9913cf69f8869cf3a41fc11c1d5e89cefd85fb97ddbb32b361b21a1401dff49",
+      "bytes": 8065,
+      "registeredBeforePause": false
+    },
+    {
+      "path": "cpppj/tests/HudNsInfoCreateTests.cpp",
+      "sha256": "982760c5c0ab392157676a87c3e3cdcf01fdd8e49460dc3892d945c0b4f89f9e",
+      "bytes": 23453,
+      "registeredBeforePause": false
+    },
+    {
+      "path": "cpppj/tests/HudNsInfoTests.cpp",
+      "sha256": "b83bebec3ef75ebbd639ba154d6ee402de38a5c3549f12907382214b550a3c94",
+      "bytes": 10519,
+      "registeredBeforePause": false
+    },
+    {
+      "path": "cpppj/tests/MinimapBlitTests.cpp",
+      "sha256": "8c84111c4c4aab2c5ba56e1cfb956aee26d499e9fbd9de4ccaa2ae267951b98a",
+      "bytes": 8754,
+      "registeredBeforePause": false
+    },
+    {
+      "path": "cpppj/tests/MissionLoadingMessageTests.cpp",
+      "sha256": "f27a6db3b8136296bb9b5f7e5dd2cf7097ac6a90480be746ec256b2f6e6147e8",
+      "bytes": 7227,
+      "registeredBeforePause": false
+    },
+    {
+      "path": "cpppj/tests/TextEntryBufferTests.cpp",
+      "sha256": "85f6a12a720fffcd11c06c7c1b1d268a4d49ab1a1b624435afeb4e6395e6f362",
+      "bytes": 14606,
+      "registeredBeforePause": false
+    },
+    {
+      "path": "cpppj/tests/TextEntryGumpTests.cpp",
+      "sha256": "3dd5abb9dac260bf908fbd847f00e3f3b13453d79503a065bb9dc54f200b56e8",
+      "bytes": 23394,
+      "registeredBeforePause": false
+    },
+    {
+      "path": "cpppj/tests/fixtures/chat-window-base-x86.tsv",
+      "sha256": "10733b34b909bbb32d0eac76e9fcb5b176dfbb105c81f71be542caa9f2434463",
+      "bytes": 461951,
+      "registeredBeforePause": false
+    },
+    {
+      "path": "cpppj/tests/fixtures/chat-window-x86.tsv",
+      "sha256": "e7faa97fbd0bf4c4d8b9d5a48bb6c64e3930ed3a0365948f850ecf65623ee5e5",
+      "bytes": 572205,
+      "registeredBeforePause": false
+    },
+    {
+      "path": "cpppj/tests/fixtures/hud-chat-geometry-x86.tsv",
+      "sha256": "9c3cb7eba22c800405b726861d102c4fa0deb4b911b5dbe4a77238984f22504a",
+      "bytes": 2362800,
+      "registeredBeforePause": false
+    },
+    {
+      "path": "cpppj/tests/fixtures/hud-nsinfo-attach-x86.tsv",
+      "sha256": "4ca63e7e21c465476924022cc0e30c5fe20ffa72c84f11c3094cdbe38827eaff",
+      "bytes": 2924232,
+      "registeredBeforePause": false
+    },
+    {
+      "path": "cpppj/tests/fixtures/hud-nsinfo-create-x86.tsv",
+      "sha256": "f55acf0d793978c0856cb73df51a54edb0dd7cafbfb82333ec5d444b66da7762",
+      "bytes": 5734550,
+      "registeredBeforePause": false
+    },
+    {
+      "path": "cpppj/tests/fixtures/minimap-blit-x86.tsv",
+      "sha256": "7b6eec53b0d69a138b41d7d438bc04495b5b4b1e7ee438d96194fed2930497b3",
+      "bytes": 2431647,
+      "registeredBeforePause": false
+    },
+    {
+      "path": "cpppj/tests/fixtures/mission-loading-message-x86.tsv",
+      "sha256": "9770007e448fa9710c3e7fe3eee8c26503cd21bddcfee3231b91db0ebc47a0c5",
+      "bytes": 607951,
+      "registeredBeforePause": false
+    },
+    {
+      "path": "cpppj/tests/fixtures/text-entry-buffer-x86.tsv",
+      "sha256": "a3b518175625a1a947e8be40bce26eb23c83552513783a6fa6a82b736496d137",
+      "bytes": 3995907,
+      "registeredBeforePause": false
+    },
+    {
+      "path": "cpppj/tests/fixtures/text-entry-gump-x86.tsv",
+      "sha256": "658245fb178eae9f9b03365caabd65f8f189fe04867babbcda0c102fca003474",
+      "bytes": 7381138,
+      "registeredBeforePause": false
+    },
+    {
+      "path": "docs/exe/cpp-chat-window-20261023.md",
+      "sha256": "ef90dbe911635e29a926a59039b468e7eb631c4682a2b29b81dd5e93b7e88ef1",
+      "bytes": 10799,
+      "registeredBeforePause": false
+    },
+    {
+      "path": "docs/exe/cpp-hud-chat-20261023.md",
+      "sha256": "dbc14759d56f9e61317ebfa4a412bc7c1a60adfacebf072e238754948583d723",
+      "bytes": 18063,
+      "registeredBeforePause": false
+    },
+    {
+      "path": "docs/exe/cpp-hud-nsinfo-20261023.md",
+      "sha256": "1e56848d4ff4a869af784ec934e60c5639dad3a56e5cb847d3c3a1e16f85029f",
+      "bytes": 14795,
+      "registeredBeforePause": false
+    },
+    {
+      "path": "docs/exe/cpp-hud-nsinfo-create-20261023.md",
+      "sha256": "25c18190ebd76927965d7a4b4b6cf5018c68d758ce4b96440190c09408ab1ee4",
+      "bytes": 9447,
+      "registeredBeforePause": false
+    },
+    {
+      "path": "docs/exe/cpp-minimap-blit-20261023.md",
+      "sha256": "2119aeb304a4fe4a3b0cda9ce18cff65aa6635c05241807e61dd99a665de2f1e",
+      "bytes": 10434,
+      "registeredBeforePause": false
+    },
+    {
+      "path": "docs/exe/cpp-mission-loading-message-20261023.md",
+      "sha256": "858df2431fbeb87832ad9ca0a9254e575ba53d8c94ea246f3ee2b9ca98bbd876",
+      "bytes": 14217,
+      "registeredBeforePause": false
+    },
+    {
+      "path": "docs/exe/cpp-text-entry-buffer-20261023.md",
+      "sha256": "e9b6f1d08ed42c41859898467f900241980e060689f1f29cdb3873d8b4186b35",
+      "bytes": 7267,
+      "registeredBeforePause": false
+    },
+    {
+      "path": "docs/exe/cpp-text-entry-gump-20261023.md",
+      "sha256": "4cfe79410a9dc937dc9d6577f3587fb5fd05a0904642533424cc2e98e8fd3d78",
+      "bytes": 10608,
+      "registeredBeforePause": false
+    },
+    {
+      "path": "tools/decomp_chat_window.py",
+      "sha256": "a7e435229acb03718996b0d5d9be30edde3db54a77ad0a1c737302d9fe32042d",
+      "bytes": 20708,
+      "registeredBeforePause": false
+    },
+    {
+      "path": "tools/decomp_hud_chat_geometry.py",
+      "sha256": "60a088770393cee7464c59f5e3e3eb03f53d4803f4cb6393dca5669e721ccdcb",
+      "bytes": 12759,
+      "registeredBeforePause": false
+    },
+    {
+      "path": "tools/decomp_hud_nsinfo_attach.py",
+      "sha256": "8ba9239b9588fd32a45f0c11eb405e03e0320a752036727ee53d13ac1a7b5ee7",
+      "bytes": 6030,
+      "registeredBeforePause": false
+    },
+    {
+      "path": "tools/decomp_hud_nsinfo_create.py",
+      "sha256": "213271880a90a9eb6a6ee96a78c2688938451113dc1a24f067d8256d5dd0da7e",
+      "bytes": 19580,
+      "registeredBeforePause": false
+    },
+    {
+      "path": "tools/decomp_minimap_blit.py",
+      "sha256": "e330b7aa19f16d8403c24a4553bef86b9d0ec8f12cfbe5456c1480abcc0c55d8",
+      "bytes": 15931,
+      "registeredBeforePause": false
+    },
+    {
+      "path": "tools/decomp_mission_loading_message.py",
+      "sha256": "4463867a0e2e2e481f722734033a2b482f631eb125f38f2f9c597f2baabd1108",
+      "bytes": 9797,
+      "registeredBeforePause": false
+    },
+    {
+      "path": "tools/decomp_text_entry_buffer.py",
+      "sha256": "25db4ac870d7083a924722162bb897db10f8a4b9386477e72bde2e9060d0a4a1",
+      "bytes": 21208,
+      "registeredBeforePause": false
+    },
+    {
+      "path": "tools/decomp_text_entry_gump.py",
+      "sha256": "f7799f7288ed5648ad8830e50952a588d89a5d010527fbff305052b13f2f7a6b",
+      "bytes": 22649,
+      "registeredBeforePause": false
+    }
+  ]
+}

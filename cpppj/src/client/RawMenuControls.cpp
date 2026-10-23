@@ -6,6 +6,8 @@
 #include "client/RawKnowledgeMenu.h"
 #include "client/RawCampaignSession.h"
 #include "client/QuickHelpWindow.h"
+#include "client/MissionLoadingMessage.h"
+#include "client/MissionGuideInput.h"
 #include "client/QuickHelpRequest.h"
 #include "client/GumpHelp.h"
 #include "client/SpriteColorMaps.h"
@@ -48,6 +50,12 @@ struct RawMenuControls::Impl {
     ScrollGumpWidgetState sliderWidgetState; // 실제 Slider/화살표 정렬과 기본 배경이다.
     ScrollingTextGumpWidgetState titleState; // 실제 제목 생성/입력 사건 전역이다.
     std::int8_t backgroundColor{35}; // 원본 기본 배경 식별 BYTE다.
+    // cf120의 미션 안내가 사용하는 파생 필드다. 기본 주소는 decorations의 같은 실제 노드다.
+    struct LoadingFields {
+        std::uint32_t body{},button{},updateDepth{}; // +21b8/20c4/21bc의 현재 실제 자식·갱신 깊이다.
+    };
+    std::map<std::uint32_t,LoadingFields> loading; // 공통 등록 토큰으로 소유하며 부모 scalar release 때 반납한다.
+    MissionLoadingMessageState loadingState; // 현재 transient/최근 생성 serial은 등록 id와 별개다.
     std::uint32_t popup{}; // 마지막 루트 메뉴 토큰이며 원본 등록표의 생존 여부로 검사한다.
     std::vector<std::uint32_t> knowledge; // 같은 공통 트리에 실제 부착된 지식 카드 토큰이며 수명/열림은 노드에서 읽는다.
     QuickHelpPopupState popupState; // 005ca938/940의 마지막 팝업을 Help Back과 같은 저장소로 공유한다.
@@ -223,6 +231,13 @@ struct RawMenuControls::Impl {
     // 부모가 전달한 원본 사건을 대상 자신에게 분배한다.
     std::uint32_t Handle(std::uint32_t token,std::uint32_t event,std::uint32_t first,std::uint32_t second) const {
         lastInput={token,event,first,second};
+        if (const auto found=loading.find(token);found!=loading.end()) {
+            const auto code=event&0x03ffffffU;const auto button=common.node(found->second.button);
+            if ((code==0x0200002cU && button && button->serial==first) || code==0x020000beU) {
+                if (code==0x0200002cU) hooks.command(kLeaveBattleCommand,3,3);
+                common.lifetime.Kill(token);common.changed();return 1; // c79b0: 예약 다음 Kill이며 callback 안에서 scalar 삭제하지 않는다.
+            }
+        }
         if (helpWindows.contains(token)) return HelpEvent(token,{event,std::bit_cast<std::int32_t>(first),std::bit_cast<std::int32_t>(second)});
         if (menus.contains(token)) return input->Handle(token,event,first,second);if (titles.contains(token)) return titleWidgets->Handle(token,event,first,second);
         if (sliders.contains(token)) return slider->Handle(token,event,first,second);if (thumbs.contains(token)) return slider->ThumbHandle(token,event,first,second);return BaseHelp(token,event,first,second);
@@ -230,6 +245,51 @@ struct RawMenuControls::Impl {
     // 공통 Frame의 현재 마우스 좌표와 실제 파생 통지를 사용한다.
     void Broadcast(std::uint32_t token,std::uint32_t event,std::uint32_t first,std::uint32_t second) const {
         if (menus.contains(token)) input->Broadcast(token,event,first,second);else if (titles.contains(token)) titleWidgets->Broadcast(token,event,first,second);else if (thumbs.contains(token)) slider->ThumbBroadcast(token,event,first,second);
+    }
+    // 기본 미션 안내 한 줄의 native c7aa0/c7d40 경로다. 긴 HTML/메뉴 열의 일반 Tell Fit을 대신하지 않는다.
+    void LoadingBody(std::uint32_t token,std::string_view body,ScreenRect mapView) {
+        auto& fields=loading.at(token);if (fields.body) common.lifetime.Kill(fields.body);
+        fields.body=Allocate(0xd8,0);titleWidgets->Construct(fields.body,0,0,0,palette.basic[7]);
+        auto& text=*Find(titles,fields.body);text.alignFlags=0xffffffffU;titleWidgets->SetScrollable(fields.body,0);
+        titleMarkup->Parse(fields.body,body);title->FitContent(fields.body);title->FitHeight(fields.body);
+        const auto button=fields.button;common.stones.FitToText(button);const auto& cancel=*common.node(button);
+        // 원문 target=max(buttonWidth,400-40)이며 이 경로는 자연 본문 폭이 target 이하인 분기다.
+        const float target=std::max(cancel.baseWidth,360.0F);
+        if (text.baseWidth>target) throw std::logic_error("미션 시작 안내의 긴 본문 Fit 경로 미복원");
+        auto& parent=*common.node(token);parent.baseWidth=parent.width=target+40.0F;parent.baseHeight=parent.height=text.baseHeight+65.0F;
+        common.tree.Push(button);common.stones.Attach(button,static_cast<float>(static_cast<int>((parent.baseWidth-cancel.baseWidth)*0.5F)),
+            static_cast<float>(static_cast<int>(text.baseHeight+30.0F)),token,0);
+        // body 자연 폭을 유지한 채 가운데 붙인다. 360폭 왼쪽 정렬로 바꾸지 않는다.
+        titleWidgets->Attach(fields.body,static_cast<float>(static_cast<int>(parent.baseWidth-text.baseWidth)/2),20,token,0);
+        if (parent.parent) common.tree.Push(token);
+        common.tree.Attach(token,(mapView.right-mapView.left-parent.baseWidth)*0.5F+mapView.left,
+            (mapView.bottom-mapView.top-parent.baseHeight)*0.5F+mapView.top,common.create.collection.root,0);
+        common.tree.AddDepth(token,static_cast<std::uint32_t>(-80)-parent.depth);common.changed();
+    }
+    // cf570 기본 메타만 같은 현재 문자열에서 제거하고 실제 Instant 돌 버튼을 교체한다.
+    void LoadingMetadata(std::uint32_t token,std::string& source,std::string_view cancel) {
+        const std::string metadata="$ButtonInstant="+std::string(cancel)+",LeaveBattle,3";
+        const auto position=source.find(metadata);if (position==std::string::npos || position+metadata.size()!=source.size())
+            throw std::logic_error("미션 시작 안내 기본 Cancel 메타 계약 위반");
+        source.erase(position);auto& fields=loading.at(token);if (fields.button) common.lifetime.Kill(fields.button);
+        fields.button=AllocateHelp(0x170);const std::string label(cancel);common.stones.Construct(fields.button,0,0,label.c_str());
+        Find(helpButtons,fields.button)->buttonFlags|=4U; // c83b0의 ButtonInstant 플래그다.
+    }
+    // 원문 cf570의 기존 serial 재사용/신규 생성·재조회 순서를 실제 동일 노드에 연결한다.
+    std::uint32_t ShowLoading(std::string_view message,std::string_view cancel,ScreenRect mapView) {
+        MissionLoadingMessageHooks h;h.cancelText=[cancel] { return std::string(cancel); };
+        h.findSerial=[this](auto serial) { return Reference(serial); };h.serial=[this](auto token) { return common.node(token)->serial; };
+        h.updateDepth=[this](auto token)->std::uint32_t& { return loading.at(token).updateDepth; };
+        h.metadata=[this,cancel](auto token,std::string& source) { LoadingMetadata(token,source,cancel); };
+        h.body=[this,mapView](auto token,auto source) { LoadingBody(token,source,mapView); };
+        h.create=[this,cancel,mapView](auto source,auto flags,auto width,auto height) {
+            if (flags || width!=400 || height!=30) throw std::logic_error("미션 시작 안내 생성 인자 위반");
+            const auto token=Allocate(0xc4,0);decoration->Construct(token,0,0);loading.emplace(token,LoadingFields{});
+            common.node(token)->vtable=0x00515e7cU; // cf120의 실제 HTML 부모 표이며 별도 FancyMenu로 바꾸지 않는다.
+            loadingState.createdSerial=common.node(token)->serial;auto text=std::string(source);
+            LoadingMetadata(token,text,cancel);LoadingBody(token,text,mapView);return common.node(token)->serial;
+        };
+        return ShowMissionLoadingMessage(loadingState,message,h);
     }
     // 전용 창의 serial은 등록 인덱스와 다르다. 죽은 노드는 원본464020처럼 제외한다.
     std::uint32_t Reference(std::uint32_t serial) const {
@@ -338,6 +398,12 @@ const GumpBackgroundCreate& RawMenuControls::BackgroundBackend() const { return 
 QuickHelpPopupState& RawMenuControls::PopupState() const { return impl_->popupState; } // 현재 팝업 표식 사본을 만들지 않는다.
 void RawMenuControls::EnableHelp(RawHelpHooks hooks) { impl_->EnableHelp(std::move(hooks)); } // 같은 실제 처리기를 설치한다.
 std::uint32_t RawMenuControls::OpenHelp(std::uint32_t topic,std::int32_t mode,std::uint32_t learnType) { return impl_->OpenHelp(topic,mode,learnType); } // 원본 전용 재사용 경로다.
+// 같은 현재 transient를 실제 원본 생성/갱신 경로에 전달한다.
+std::uint32_t RawMenuControls::ShowMissionLoading(std::string_view message,std::string_view cancel,ScreenRect mapView) { return impl_->ShowLoading(message,cancel,mapView); }
+// 새 화면에서 이전 안내를 현재 serial로 반납하며 다른 메뉴/생산 자식은 건드리지 않는다.
+void RawMenuControls::CloseMissionLoading() { auto& s=*impl_;if (const auto token=s.Reference(s.loadingState.transientSerial)) s.common.lifetime.Kill(token);s.common.changed(); }
+// 자동 검사도 그림과 같은 실제 공통 경계를 읽는다.
+std::optional<ScreenRect> RawMenuControls::MissionLoadingBounds() const { const auto& s=*impl_;if (const auto token=s.Reference(s.loadingState.transientSerial)) return s.common.collection.Bounds(token);return {}; }
 bool RawMenuControls::HelpOpen() const { const auto token=impl_->Reference(impl_->helpState.id);return token && (impl_->common.node(token)->flags&1) && impl_->common.node(token)->parent; } // 현재 등록/표시를 직접 읽는다.
 void RawMenuControls::CloseHelp() { if (const auto token=impl_->Reference(impl_->helpState.id)) impl_->common.lifetime.Kill(token);impl_->common.lifetime.Cleanup();impl_->common.changed(); } // Session보다 먼저 삭제한다.
 // 공통 생성과 분배는 별도 기본 노드 복사본을 만들지 않는다.
@@ -363,7 +429,7 @@ void RawMenuControls::DeleteScalar(std::uint32_t token,std::uint32_t flags) cons
     else if (s.decorations.contains(token)) s.decoration->DeleteScalar(token,flags);else if (s.costs.contains(token)) s.costGump->DeleteScalar(token,flags);else if (s.sliders.contains(token) || s.thumbs.contains(token) || s.arrows.contains(token)) s.sliderWidgets->DeleteScalar(token,flags);else s.common.lifetime.DeleteScalar(token,flags);
 }
 // 공통 scalar의 release만 실제 저장소를 지운다.
-void RawMenuControls::Release(std::uint32_t token) { auto& s=*impl_;s.helpWindows.erase(token);s.helpBodies.erase(token);s.helpButtons.erase(token);s.helpImages.erase(token);s.helpLinks.erase(token);s.menus.erase(token);s.decorations.erase(token);s.titles.erase(token);s.sliders.erase(token);s.arrows.erase(token);s.thumbs.erase(token);s.backgrounds.erase(token);s.costs.erase(token); }
+void RawMenuControls::Release(std::uint32_t token) { auto& s=*impl_;s.loading.erase(token);s.helpWindows.erase(token);s.helpBodies.erase(token);s.helpButtons.erase(token);s.helpImages.erase(token);s.helpLinks.erase(token);s.menus.erase(token);s.decorations.erase(token);s.titles.erase(token);s.sliders.erase(token);s.arrows.erase(token);s.thumbs.erase(token);s.backgrounds.erase(token);s.costs.erase(token); }
 // controlled 스택의 실제 루트 메뉴를 공통 루트에 부착한다.
 void RawMenuControls::Open(ScreenPoint point,const std::function<void(const MenuGumpWidgets&,const MenuGumpControls&,const MenuGump&)>& builder) {
     Close();auto& s=*impl_;if (!builder || s.menuState.index) throw std::invalid_argument("실제 메뉴 builder/controlled 스택 계약 오류");
@@ -438,6 +504,11 @@ void RawMenuControls::Draw(std::span<std::uint8_t> pixels,int pitch,int height,c
 // 실제 입력/출력과 같은 현재 배치에서 자동 입력 지점을 읽는다.
 std::optional<ScreenPoint> RawMenuControls::Point(std::string_view label) const {
     auto& s=*impl_;
+    // 현재 미션 안내의 실제 돌 버튼도 같은 공통 위치에서 라벨 지점을 읽는다.
+    if (const auto token=s.Reference(s.loadingState.transientSerial)) {
+        const auto button=s.loading.at(token).button;const auto* node=Find(s.helpButtons,button);
+        if (node && std::string_view(node->label.data())==label) { const auto rect=s.common.collection.Bounds(button);return ScreenPoint{(rect.left+rect.right)/2,(rect.top+rect.bottom)/2}; }
+    }
     // 저장된 스타일 원문은 별도 라벨 사본으로 치환하지 않는다.
     for (const auto& [token,node]:s.menus) {
         bool visible=true;

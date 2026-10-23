@@ -280,3 +280,27 @@ TEST_CASE(RawMenuControls_CarrierAndObjectMenuChain) {
     CHECK(client.commands.size()==3);if (client.commands.size()==3) CHECK(client.commands[2][0]==playerState.findPriest && client.commands[2][2]==1);
     client.menus->Close();CHECK(!client.menus->HasMenus());
 }
+
+// 실제 시작 안내의 serial 재사용/돌 버튼 즉시 명령과 부모 자식 정리를 함께 검증한다.
+TEST_CASE(RawMenuControls_MissionLoadingUsesSharedTreeAndCancel) {
+    MenuClient client;client.Resize(1024,768);
+    const auto serial=client.menus->ShowMissionLoading("Starting Mission...","Cancel",{85,0,1024,768});
+    const auto bounds=client.menus->MissionLoadingBounds();CHECK(bounds.has_value());
+    if (!bounds) return;
+    CHECK(bounds->right-bounds->left==400);CHECK(bounds->left==354);CHECK(bounds->top>=344 && bounds->top<=345);
+    CHECK(client.buttons.SerialGump(serial)!=0);const auto point=client.menus->Point("Cancel");CHECK(point.has_value());
+    CHECK(client.menus->ShowMissionLoading("Starting Mission...","Cancel",{85,0,1024,768})==serial);
+    // 실제 원본 자산을 모든 자식과 함께 출력하여 Draw가 메타/사본에 의존하지 않는지 확인한다.
+    std::vector<std::uint8_t> pixels(1024*768);std::array<std::uint32_t,256> logical{};
+    // 실제 팔레트의 RGB를 원본 명암 표 입력으로 옮긴다.
+    for (std::size_t index=0;index<logical.size();++index) { const auto color=client.assets.Palette().Color(static_cast<std::uint8_t>(index));logical[index]=color.red|(std::uint32_t(color.green)<<8)|(std::uint32_t(color.blue)<<16); }
+    const auto maps=BuildGumpShadeMaps(logical);
+    client.menus->Draw(pixels,1024,768,client.Palette(),maps);
+    if (point) client.Click(*point);
+    CHECK(client.commands.size()==1);
+    if (!client.commands.empty()) CHECK((client.commands[0]==std::array<std::uint32_t,3>{0x020000c5U,3,3}));
+    CHECK(!client.menus->MissionLoadingBounds());CHECK(client.buttons.SerialGump(serial)==0);
+    client.buttons.CleanupGumps();
+    const auto next=client.menus->ShowMissionLoading("Starting Mission...","Cancel",{85,0,1024,768});CHECK(next!=serial);
+    client.menus->CloseMissionLoading();client.buttons.CleanupGumps();CHECK(!client.menus->Point("Cancel"));
+}

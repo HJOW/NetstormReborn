@@ -19,6 +19,9 @@ set_source_files_properties(HudDockTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_HUD_DOCK_GEOMETRY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/hud-dock-geometry-x86.tsv\"")
 set_source_files_properties(HudDividerInputTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_HUD_DIVIDER_INPUT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/hud-divider-input-x86.tsv\"")
+# 미션 시작 안내의 독립 원문 조립/serial 재사용 관측을 해당 검사에 공급한다.
+set_source_files_properties(MissionLoadingMessageTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_MISSION_LOADING_MESSAGE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/mission-loading-message-x86.tsv\"")
 # 단위 테스트. 외부 테스트 프레임워크 없이 TestSupport.h 의 작은 도구만 쓴다
 # (첫 구성 때 인터넷에서 내려받을 것이 없다).
 # 테스트 파일을 만들면 아래 목록에 더한다. 파일 안의 TEST_CASE 는 자동으로 등록된다.
@@ -91,6 +94,7 @@ add_executable(netstorm_tests
     CameraViewCommandsTests.cpp CampaignViewCommandsTests.cpp
     DialogExitCommandTests.cpp
     GumpPointerBoundaryTests.cpp
+    MissionLoadingMessageTests.cpp
     HudDockTests.cpp
     HudDividerInputTests.cpp
     MinimapGeometryTests.cpp

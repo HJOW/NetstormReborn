@@ -132,6 +132,7 @@ public:
     std::pair<std::uint64_t, std::uint64_t> RenderCounts() const;
     // 로딩 화면에서 실제 Renderer 장면으로 전환한다. 후속 메인 메뉴도 이 경로를 사용한다.
     void ShowScene();
+    void PresentScene(); // 현재 장면만 즉시 출력한다. 미션 파일 적재 전 안내를 표시하며 루프/시계/검사 프레임은 진행하지 않는다.
     // 소리·음악 묶음. 소리를 끈 실행(noAudio)이거나 초기화 전이면 널이다.
     ClientAudio* Audio();
     // 캠페인의 유일한 이름표/재생 계층이다. noAudio에서는 장치·스레드 없는 비활성 묶음을 빌린다.

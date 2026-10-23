@@ -83,6 +83,11 @@ public:
     QuickHelpPopupState& PopupState() const; // 지식 카드 표식과 전용 Help Back이 공유할 같은 실제 저장소다.
     void EnableHelp(RawHelpHooks hooks); // 현재 Client 경계를 같은 공통 트리에 한 번 연결한다.
     std::uint32_t OpenHelp(std::uint32_t topic=0,std::int32_t mode=1,std::uint32_t learnType=0); // 실제 전용 창 재사용/모달/요청이다.
+    // 원본 cf570의 미션 시작 안내를 같은 등록표/장식/다중 줄/즉시 돌 버튼에 작성한다.
+    // 현재 복원 범위는 기본 Starting Mission/Cancel 경로이며 일반 Tell 전체 부모와 구별한다.
+    std::uint32_t ShowMissionLoading(std::string_view message,std::string_view cancel,ScreenRect mapView);
+    void CloseMissionLoading(); // 실제 transient serial을 찾아 Kill하며 프레임 Cleanup까지 저장소를 유지한다.
+    std::optional<ScreenRect> MissionLoadingBounds() const; // 살아 있는 원본 부모의 현재 화면 경계다.
     bool HelpOpen() const; // 현재 serial/등록/visible/dead를 조회한다.
     void CloseHelp(); // Session 해제 전에 같은 창과 지연 삭제 큐를 정리한다.
     // 공통 기본 생성/가상 분배에서 현재 파생 노드를 직접 조회한다. 없는 토큰은 nullptr다.

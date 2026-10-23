@@ -441,7 +441,8 @@ void UberGump::CreateMission(std::string name,std::uint32_t demo,std::uint32_t m
     missionRuntime_=std::make_unique<MissionRuntime>(*mission_,demo,mode);
     missionRuntime_->guided=missionRuntime_->guided && client_.Assets().Edition()==o::OriginalEdition::Patch1078; // 복원하지 않은 판본의 순번을 새 Guide에 분배하지 않는다.
     briefingSections_.clear();briefingIndex_=0;state_.phase=ClientPhase::LoadingMission;pageName_="loading";popup_.clear();ClearPage();client_.Pause(false);RebuildControls(); // 제목은 실제 단계1의 Header 적용/설치에서 갱신한다.
-    if (!missionRuntime_->guided) { LoadMissionWorld();StartMissionWorld(); } // 지정11개 이외의 기존 Battle 진입 동작은 유지한다.
+    Compose();client_.PresentScene(); // 동기 요새 적재 전에 같은 실제 안내를 먼저 출력하며 임의 최소 표시 시간은 두지 않는다.
+    if (!missionRuntime_->guided) state_.Post({"LoadMissionWorld",{}}); // 다음 루프에 같은 로드를 수행하여 입력/Cancel을 한 차례 처리한다.
 }
 // Guide의 각 교체 함수가 같은 Runtime/Script/월드와 소유 정지 깊이를 직접 사용하게 한다.
 GuideMissionTransitionHooks UberGump::MissionTransitionEffects() {
@@ -932,6 +933,7 @@ void UberGump::PaletteChanged() {
 }
 // 선택한 원본 명령의 작은 부분집합. 지원하지 않는 항목은 활성화하지 않는다.
 void UberGump::Execute(const DialogAction& action) {
+    if (o::AsciiLower(action.command)=="loadmissionworld") { LoadMissionWorld();StartMissionWorld();return; } // 비 Tutorial도 표시/입력 뒤 같은 원본 월드 설치를 수행한다.
     if (o::AsciiLower(action.command)=="loadmissionfort") { if (!missionRuntime_ || !missionRuntime_->guided) throw std::logic_error("현재 Tutorial 없는 지연 요새 로드");LoadMissionWorld(action.argument);return; } // 같은 전환 큐의 다음 루프에서만 설치한다.
     if (QueueMissionControlAction(action.command,action.argument,client_.Input(),scriptStrings_)) return;
     if (GameMenuScriptCode(action.command)!=0xffffffffU) { QueueScriptCommand(action.command+','+action.argument,client_.Input(),scriptStrings_,{GameMenuScriptCode,{}});return; } // 원본확인창/메뉴닫기효과도같은정수명령큐를사용한다.
@@ -976,7 +978,7 @@ void UberGump::Compose() {
     canvas->indices.resize(static_cast<std::size_t>(width) * height); canvas->opacity.assign(canvas->indices.size(), 255);
     Tile(*canvas, clouds_, all);
     std::vector<RenderText> text; std::vector<GumpControl> regions;
-    const auto& font = client_.Fonts().Get(0); const auto& body = client_.Fonts().Get(5);
+    const auto& font = client_.Fonts().Get(0);
     const auto palette = client_.GetScreen().Palette();
     const auto light = Color(palette, 191, 178, 139), dark = Color(palette, 49, 44, 36);
     // 마지막 파일 로딩의 실제 버튼 색/문맥을 사용한다. 일시 번개 팔레트에서 색 번호를 다시 찾지 않는다.
@@ -1111,17 +1113,23 @@ void UberGump::Compose() {
                 const auto& image = decorations_.at("I0" + std::to_string(corner));
                 Paste(*canvas, image, corner % 2 ? panel.right - static_cast<int>(image.width) : panel.left, corner / 2 ? panel.bottom - static_cast<int>(image.height) : panel.top, panel);
             }
-        } else if (state_.phase == ClientPhase::LoadingMission) {
-            text.push_back({&body, "Starting Mission...", (width - body.Measure("Starting Mission...")) / 2, height / 2, 255});
+        } else if (state_.phase == ClientPhase::LoadingMission && !controls) {
+            rawButtons_->Menus()->Draw(canvas->indices,width,height,client_.GetScreen().Colors(),client_.GetScreen().ShadeMaps());
         }
         appendWarnings();client_.GetRenderer().SetBackground(canvas); client_.GetRenderer().SetScene(std::move(dialogSprites), std::move(text));
     }
     if (controls) {
+        if (state_.phase!=ClientPhase::LoadingMission) rawButtons_->Menus()->CloseMissionLoading();
         std::vector<std::string> originalLabels;originalLabels.reserve(labels_.size());
         // 원본 돌 버튼의 63바이트 라벨은 UTF-8가 아닌 기존 게임 글꼴 바이트를 사용한다.
         for (const auto& label:labels_) originalLabels.push_back(FontBytes(label));
         if (popup_.empty()) rawButtons_->SetControls(regions,originalLabels,width,height,{buttonTextureType_,buttonTextureFrame_,
             static_cast<std::int16_t>(buttonTextureMetrics_.width),static_cast<std::int16_t>(buttonTextureMetrics_.height),buttonColors},world_!=nullptr);
+        if (state_.phase==ClientPhase::LoadingMission) {
+            rawButtons_->Menus()->SetPalette(client_.GetScreen().Colors());
+            // 원본 기본 HUD의 수직 구분선 오른쪽 지도 사각형이다. 전체 dock 드래그 연결 전의 초기값85를 사용한다.
+            rawButtons_->Menus()->ShowMissionLoading(FontBytes(client_.Translate("Starting Mission...")),FontBytes(client_.Translate("Cancel")),{85,0,width,height});
+        }
         if (popup_.empty() && world_) {
             if (!rawButtons_->Production()) rawButtons_->EnableProduction(world_->Session(),client_.Assets(),RawProductionHooks{
                 [this] { return client_.WallSeconds(); },[this](std::string_view name) { client_.WorldAudio().Sounds().PlayByName(name,0,0,0,0,0); },
@@ -1163,7 +1171,7 @@ std::optional<ScreenPoint> UberGump::ControlPoint(std::string_view label) const 
     if (rawButtons_->Minimap() && label.starts_with("minimap:")) return rawButtons_->Minimap()->Point(label);
     if (rawButtons_->Production() && label.starts_with("production:")) return rawButtons_->Production()->Point(static_cast<std::uint32_t>(std::stoul(std::string(label.substr(11)))));
     if (world_ && (label.starts_with("world:") || label.starts_with("cell:") || label.starts_with("placement:") || label.starts_with("placement-near:") || label.starts_with("placement-reach:") || label.starts_with("placement-fire:"))) return world_->Point(label);
-    if (rawButtons_->Menus()->HasMenus()) if (const auto point=rawButtons_->Menus()->Point(FontBytes(label))) return point;
+    if (rawButtons_->Menus()->HasMenus() || state_.phase==ClientPhase::LoadingMission) if (const auto point=rawButtons_->Menus()->Point(FontBytes(label))) return point;
     // 동일 라벨의 첫 영역을 선택한다.
     for (const auto& control : input_.Controls()) if (labels_.at(static_cast<std::size_t>(control.id)) == label)
         return ScreenPoint{(control.rect.left + control.rect.right) / 2, (control.rect.top + control.rect.bottom) / 2};

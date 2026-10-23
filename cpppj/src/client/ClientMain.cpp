@@ -505,6 +505,22 @@ void Client::Frame() {
         while (clock_.WallSeconds(timeGetTime()) - lastDraw_ < frameInterval_) {}
     }
     lastDraw_ = clock_.WallSeconds(timeGetTime());
+    PresentScene();
+    ++frames_;
+    if (options_.frameLimit != 0 && frames_ == options_.frameLimit) {
+        if (!options_.screenshot.empty()) SaveScreenshot();
+        // 새 검사 기능: 소리·음악 상태를 줄 단위 글로 남긴다(소리 장치가 실제로 재생 중인지 청취 없이 확인한다).
+        if (!options_.audioReport.empty() && audio_) {
+            std::ofstream report(options_.audioReport, std::ios::binary);
+            report << audio_->Describe();
+        }
+        PostMessageA(static_cast<HWND>(window_), WM_CLOSE, 0, 0);
+    }
+}
+
+// 현재 화면 버퍼를 팔레트로 색을 입혀 저장한다.
+// 같은 실제 Draw/Lock/Present 경로를 장면 표시와 일반 프레임에서 공유한다. 프레임 대기는 호출자가 소유한다.
+void Client::PresentScene() {
     if (sceneVisible_) {
         if ((screen_->Flags() & ScreenMode::kSoftwareMouse) != 0) {
             const auto position = Poll(0); const auto hotspot = cursor_->Hotspot();
@@ -519,19 +535,7 @@ void Client::Frame() {
         screen_->Unlock();
         renderer_->Present([this](ScreenRect rect) { screen_->Update(rect); });
     }
-    ++frames_;
-    if (options_.frameLimit != 0 && frames_ == options_.frameLimit) {
-        if (!options_.screenshot.empty()) SaveScreenshot();
-        // 새 검사 기능: 소리·음악 상태를 줄 단위 글로 남긴다(소리 장치가 실제로 재생 중인지 청취 없이 확인한다).
-        if (!options_.audioReport.empty() && audio_) {
-            std::ofstream report(options_.audioReport, std::ios::binary);
-            report << audio_->Describe();
-        }
-        PostMessageA(static_cast<HWND>(window_), WM_CLOSE, 0, 0);
-    }
 }
-
-// 현재 화면 버퍼를 팔레트로 색을 입혀 저장한다.
 void Client::SaveScreenshot() {
     Capture(options_.screenshot);
 }
