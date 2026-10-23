@@ -1,0 +1,54 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-23",
+  "entry": "0046e980",
+  "nativeRanges": [
+    [
+      "0046e980",
+      "0046ea76"
+    ],
+    [
+      "0046ea80",
+      "0046ebc1"
+    ],
+    [
+      "0040eb40",
+      "0040eb71"
+    ],
+    [
+      "0041d770",
+      "0041d79a"
+    ],
+    [
+      "004e49c0",
+      "004e4a34"
+    ]
+  ],
+  "uniqueInputs": 309,
+  "observations": 618,
+  "normalReturns": 576,
+  "explicitStops": {
+    "surface-range": 36,
+    "begin": 2,
+    "next1": 2,
+    "graph": 2
+  },
+  "instructions": 388648,
+  "boundaries": {
+    "graph": 578,
+    "begin": 536,
+    "unpop": 326,
+    "release": 326,
+    "next": 838
+  },
+  "scope": "부모전체·실제0040eb40 iterator·0041d770 정수화·004e49c0 ftol. Finder Begin/Next,가상+48,Release004abf60,Graph00463110은명시경계이며하위실제효과성공을주장하지않음. 직접surface/spot쓰기·현재Pool/표/좌표/타입/board와순서·전체두Pool/네표해시·스택/callee-save/x87/실행바이트불변관측.",
+  "gameExecuted": false,
+  "osExecuted": false,
+  "productRead": false,
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "tools/decomp_editor_world_finish.py": "c7b3434ca9152483df4c1a85389d773b33cc10f42a951a1c06751bb223d3eab1",
+    "cpppj/tests/fixtures/editor-world-finish-x86.tsv": "58759a28af968d4effd838d991376b9c7bba0d79af583d524200e0a436d97fb7"
+  }
+}

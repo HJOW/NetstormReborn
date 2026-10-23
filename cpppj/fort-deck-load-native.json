@@ -1,0 +1,38 @@
+{
+  "status": "최초부모원문고정·제품미작성",
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-23",
+  "entry": "004bf190",
+  "bodyBytes": 431,
+  "cleanupBytes": 15,
+  "uniqueInputs": 510,
+  "observations": 1020,
+  "normalReturns": 998,
+  "explicitStops": 22,
+  "separateCleanupReturns": 22,
+  "instructions": 532894,
+  "precisionDifferences": 0,
+  "boundaries": {
+    "assert": 732,
+    "get": 1018,
+    "select": 1016,
+    "clear": 1014,
+    "open": 1012,
+    "prepare": 352,
+    "append": 12908,
+    "free": 278,
+    "refresh": 344,
+    "full": 496
+  },
+  "gameExecuted": false,
+  "osExecuted": false,
+  "scope": "부모431BYTE의slot1..8/owner0clamp·manager재조회·Select뒤Clear/Open·현재fullDeck·count와4BYTE직접읽기·type<246현재변환·free뒤무조건0·Refresh·정상깊이와별도cleanup15BYTE다. Get/Select/Clear/Open/FullDeck/Append/TypeNames/free/진단/Refresh하위는명시경계이며원본SEH분배기·게임·GUI·OS를실행하지않는다. primitive본체는별도후속관측범위다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+    "tools/decomp_fort_deck_load.py": "8354efe25860540beb8e550155b48129a62deb4d196b2bb764ef5f4eb41ea381",
+    "cpppj/tests/fixtures/fort-deck-load-x86.tsv": "b7f42acf232eec9c919c691b42ce44b8cc17668db27bdb4406c818d45051d436"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "status": "최초primitive원문고정·제품미작성",
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-23",
+  "ranges": {
+    "0044f160": "44f160-44f1fa",
+    "0044f250": "44f250-44f278",
+    "0044f290": "44f290-44f32c",
+    "0044f330": "44f330-44f3cf",
+    "0044f680": "44f680-44f6f7",
+    "004558c0": "4558c0-4558e7"
+  },
+  "uniqueInputs": 430,
+  "observations": 860,
+  "normalReturns": 844,
+  "explicitStops": 16,
+  "instructions": 658526,
+  "precisionDifferences": 0,
+  "boundaries": {
+    "assert": 1744,
+    "type": 8394
+  },
+  "gameExecuted": false,
+  "osExecuted": false,
+  "scope": "실제Open44f250/RestoreAppend44f330/FullDeck44f680과도달하는Append44f290/Entry44f160/공유난수4558c0여섯몸체다. TYPE주소조회/진단만명시경계다.352BYTE물리범위내metadata겹침·count재조회·전인자DWORD/저장BYTE/진단뒤현재필드를비교한다. 부모/실제Client/OS/GUI/게임실행은별도다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+    "tools/decomp_deck_restore.py": "4a2bf1e45233400aa46c17a12d326d3b121a61c16a2bf75462615abd6d478fa8",
+    "cpppj/tests/fixtures/deck-restore-x86.tsv": "0222adba1b6ab80ef308aca07adadfdaf7baf8300ae0af5dd186594190ebcc0a"
+  }
+}

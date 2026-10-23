@@ -1,0 +1,170 @@
+{
+  "status": "단위383후속외곽·분석전용·제품미적용",
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-23",
+  "entry": "004b6dd0",
+  "checkpoint": "004b743b(004904b0명시하위복귀뒤·후속UI전)",
+  "context": "currentState1/동일case2,previousState4,battle0,명시공통cleanup경계,실제비영헤더/기존파일명/manager,기존파일유효경로. mode2는AskEditFort목록모드이며실제선택nextState는1.",
+  "ranges": [
+    [
+      "004b6dd0",
+      "004b6e62"
+    ],
+    [
+      "004b6fa9",
+      "004b7028"
+    ],
+    [
+      "004b7169",
+      "004b717f"
+    ],
+    [
+      "004b71a5",
+      "004b7244"
+    ],
+    [
+      "004b72eb",
+      "004b743b"
+    ],
+    [
+      "004b5ca0",
+      "004b5ced"
+    ],
+    [
+      "004b5d57",
+      "004b5d7d"
+    ],
+    [
+      "004b5e0c",
+      "004b5e2a"
+    ],
+    [
+      "004b5e80",
+      "004b5eb8"
+    ],
+    [
+      "004bd340",
+      "004bd35f"
+    ],
+    [
+      "004b5ba0",
+      "004b5c99"
+    ]
+  ],
+  "uniqueInputs": 129,
+  "observations": 258,
+  "completions": {
+    "checkpoint-editor-children-returned": 202,
+    "outside-new-name": 4,
+    "outside-new-fort": 2,
+    "outside-invalid-file": 2,
+    "outside-mission": 2,
+    "poll": 2,
+    "cleanup": 2,
+    "name": 2,
+    "load": 2,
+    "state1": 2,
+    "notify1": 2,
+    "subscriber": 2,
+    "player": 2,
+    "recover": 2,
+    "world": 2,
+    "deck": 2,
+    "camera": 2,
+    "production": 2,
+    "corewrite": 2,
+    "snapshot": 2,
+    "state2": 2,
+    "notify2": 2,
+    "startup": 2,
+    "lastedit": 2,
+    "editorplayers": 2,
+    "state0": 2,
+    "saved": 2,
+    "startup-option": 2
+  },
+  "instructions": 86696,
+  "precisionDifferences": 0,
+  "boundaries": {
+    "poll": 258,
+    "trace": 256,
+    "cleanup": 256,
+    "pre0042e440": 254,
+    "pre004e22c0": 254,
+    "owners": 254,
+    "clockreset": 254,
+    "preserve": 254,
+    "pre0041cc10": 254,
+    "screen": 254,
+    "compare": 254,
+    "install": 248,
+    "path": 494,
+    "exists": 248,
+    "load": 246,
+    "valid": 244,
+    "state": 460,
+    "notify": 454,
+    "subscriber": 238,
+    "handleconfig": 236,
+    "title": 236,
+    "player": 234,
+    "coreread": 232,
+    "recover": 232,
+    "world": 230,
+    "deck": 228,
+    "priests": 226,
+    "camera": 226,
+    "production": 224,
+    "corewrite": 222,
+    "snapshot": 220,
+    "startup": 212,
+    "startup-option": 210,
+    "lastedit": 200,
+    "editorplayers": 198,
+    "saved": 106,
+    "time": 104,
+    "translate": 156,
+    "format": 104,
+    "tell": 52,
+    "name": 144,
+    "missionname": 2,
+    "guide": 2
+  },
+  "currentFields": [
+    "005c87e8",
+    "005c8878",
+    "005c86c8",
+    "005c85a4",
+    "00594fb8",
+    "00594fa0",
+    "00594fa4",
+    "0054db14",
+    "00540cac",
+    "00540c70",
+    "00540c74",
+    "00542640",
+    "00540bc0",
+    "00540bc4",
+    "0054c8a0",
+    "00594fc4",
+    "005c85ac",
+    "0055a420",
+    "0055b490",
+    "0055b494",
+    "00540ca8",
+    "00565e70"
+  ],
+  "scope": "실제전체함수진입prologue/State1·2switch/144BYTE복사/Editor모드설정/기존파일선택4b5ca0·4bd340/State flag1설정·해제/현재owner·이름재조회/Subscriber·config·제목호출/실제startup4b5ba0의관문·x87경과분·Tell분기. cleanup/CRT비교/파일·Guide·게임하위·Subscriber·State·Notify·시계/저장파일읽기5890/번역·format·Tell/EditorPlayers는명시하위다. 004b743b부분checkpoint는전체4b6dd0정상ret/loaded완료/후속UI/OSSEH실행이아니다.",
+  "gameExecuted": false,
+  "guiExecuted": false,
+  "osExecuted": false,
+  "filesMutated": false,
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+    "tools/decomp_existing_editor_install_outer.py": "5acdd8a31528824b67a1f90a0761a82711f5aa7094fa72d027d24abd4dea390b",
+    "cpppj/tests/fixtures/existing-editor-install-outer-x86.tsv": "eeb11836fe3ddbbb0228c11f40bfdd8461bf0a45221ebb225667aa86f6a51f4a"
+  }
+}

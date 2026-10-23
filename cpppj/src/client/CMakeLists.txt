@@ -19,6 +19,7 @@ target_sources(netstorm PRIVATE
     TutorialInit.cpp TutorialInit.h
     MissionFortRequest.cpp MissionFortRequest.h
     CampaignTemplateStorage.cpp CampaignTemplateStorage.h
+    FortTypeConversionStorage.cpp FortTypeConversionStorage.h
     SoloMapCatalog.cpp SoloMapCatalog.h
     TellMapMenus.cpp TellMapMenus.h
     EditorFiles.cpp EditorFiles.h

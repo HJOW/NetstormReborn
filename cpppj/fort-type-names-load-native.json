@@ -1,0 +1,57 @@
+{
+  "status": "신규 독립 준비·미등록",
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-23",
+  "entry": "004bd800",
+  "bodyBytes": 314,
+  "cleanupBytes": 15,
+  "ranges": [
+    [
+      "004bd800",
+      "004bd93a"
+    ],
+    [
+      "004fb820",
+      "004fb828"
+    ],
+    [
+      "004bcc50",
+      "004bcc57"
+    ]
+  ],
+  "uniqueInputs": 332,
+  "observations": 664,
+  "normalReturns": 626,
+  "explicitStops": {
+    "hash-read": 8,
+    "count-read": 16,
+    "select": 2,
+    "assert": 2,
+    "allocate": 2,
+    "conversion-write": 2,
+    "record1": 2,
+    "record2": 2,
+    "allocation0": 2
+  },
+  "separateCleanupReturns": 38,
+  "instructions": 2410126,
+  "precisionDifferences": 0,
+  "boundaries": {
+    "select": 664,
+    "allocate": 324,
+    "record": 6596,
+    "assert": 178
+  },
+  "scope": "실제TypeNames314BYTE의depth/pos/end/현재conversion255zero/hash/첫일치·현재count와별도예외funclet8BYTE/helper7BYTE만실행. Select/allocate/TYPE/진단은명시경계. 본문부분중단과별도cleanup결과를구별한다. 데이터끝/할당0/현재conversion0의물리거부는원문자체의검사가아니다. OS SEH/CxxFrameHandler/게임/GUI/파일조작은실행하지않음.",
+  "gameExecuted": false,
+  "osExecuted": false,
+  "filesMutated": false,
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+    "tools/decomp_fort_type_names_load.py": "76c43de74374c02fd3fdfaab88e6b8a7a7c24de69423a4285de3bb841d077db1",
+    "cpppj/tests/fixtures/fort-type-names-load-x86.tsv": "4c824ec764b85b73ef1d2387c7e6043611b767e983f66abc3f1a98da2d0ef86c"
+  }
+}

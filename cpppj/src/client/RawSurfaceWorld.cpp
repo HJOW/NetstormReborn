@@ -193,6 +193,13 @@ RawWorldCore RawSurfaceWorld::Core() {
         *s.factory,*s.owner,*s.frame,*s.pop,*s.unpop,*s.postPop,*s.display,*s.building,*s.graph,*s.neighbors,
         *s.baseDestroy,*s.virtualDestroy,*s.lifecycle,*s.events,*s.formDispatch,*s.dependencies,*s.host,s.processState,s.kernel,s.links};
 }
+// Session의globals만바꾸고private BridgeDecayMode.editor를남기지않는다.
+void RawSurfaceWorld::ConfigureInstallModes(bool fort,bool battle,bool challenge,bool editor) {
+    auto& s=*impl_;if (s.runtimeBound || s.loading || s.loaded || s.kernel.Size() || s.pool.FreeCount()!=s.pool.Capacity()-5) throw std::logic_error("실제설치모드는첫객체/Runtime등록전에필요");
+    // 지정Take가freeCount를보존하는경우도이미만든실제슬롯을거부한다.
+    for (std::uint32_t sid=5;sid<s.pool.Capacity();++sid) if (!(s.pool.Slot(o::Sid{static_cast<std::uint16_t>(sid)})[11]&1)) throw std::logic_error("실제설치모드설정전에객체존재");
+    s.ownerMode={fort,battle,challenge};s.links.battle=battle;s.mode.editor=editor;
+}
 //현재같은전역TYPE의수정가능범위를원본옵션소비자에게만빌린다.
 std::span<o::RiftTypeRecord> RawSurfaceWorld::MutableTypes() { return impl_->types; }
 // 완성된 실제 파생 훅을 설치할 때 Form/Regular의 기존 callback도 현재 경계를 읽게 한다.

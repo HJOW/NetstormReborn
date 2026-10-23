@@ -558,6 +558,7 @@ void UberGump::LoadMissionWorld(std::optional<std::string> requestedFort) {
     services.missionOutcome.demo=[this] { return missionRuntime_ ? missionRuntime_->gate.demo : 0U; };
     services.missionOptions=missionOptions_;services.missionRestrictions=missionRestrictions_;services.missionSubscriber=initLoginSubscriber_;services.missionFortRequest=missionFortRequest_;services.templateStorage=templateStorage_;services.missionFortImage=fortImage; // 같은 Init 전역/요청/Template9와 실제 선택 파일 원문을 설치에 전달한다.
     services.fortBadges=client_.FortBadges();services.fortMission=FortMissionSaveEffects(); // 실제 Client 단일 장부와 현재 Runtime getter를 같은 Session에 빌린다.
+    services.fortTypeConversion=client_.FortTypeConversion(); // 같은 Client의 현재 타입 변환표 소유자를 전달한다.
     services.missionOutcome.tellBlocked=[this] { return state_.phase==ClientPhase::Dialog || state_.phase==ClientPhase::Briefing ? 1U : 0U; };
     services.missionOutcome.section=[this](std::string_view section) { bool created=false;return mission_ && mission_->Section(section) && TryTell(std::string(section),false,&created) && created; };
     services.missionOutcome.closeTransient=[this] { rawButtons_->RequestClosePopups(); };

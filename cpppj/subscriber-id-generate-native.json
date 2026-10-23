@@ -1,0 +1,38 @@
+{
+  "status": "최초원문고정·제품미작성",
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-23",
+  "entries": {
+    "004bc950": 161,
+    "004e649e": 13,
+    "004e64ab": 34
+  },
+  "uniqueInputs": 512,
+  "observations": 1024,
+  "normalFunctionReturns": 1458,
+  "statuses": {
+    "normal": 994,
+    "stop": 30
+  },
+  "instructions": 3807618,
+  "precisionDifferences": 0,
+  "boundaries": {
+    "time": 380,
+    "clock": 376,
+    "seed": 372,
+    "ptd": 148076,
+    "rand": 268744,
+    "expired": 106
+  },
+  "gameExecuted": false,
+  "osExecuted": false,
+  "scope": "실제ID부모161와CRT srand13/rand34BYTE.순수PTD주소/OS time32·clock/실패로그만외부장치이며rawMode1은별도명시signedRAND응답으로최대16회/실패경계를관측한다.동일현재초기화플래그와CRT연속두번호출/100warmup/시각·seed·rand뒤상태변경·중단을고정한다.27비트mask때문에후보ffffffff비교의실패분기는정상입력으로도달하지않는다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+    "tools/decomp_subscriber_id_generate.py": "4b02c24966371eb4b796fcd8502234ff9d0efe2b64fb30c1c10583e07dd759d6",
+    "cpppj/tests/fixtures/subscriber-id-generate-x86.tsv": "1955ae6371f73b1213b5f81b38da18b36b65fe35bc62bed4b8dabaa988ed29ee"
+  }
+}

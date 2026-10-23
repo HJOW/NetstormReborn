@@ -127,6 +127,8 @@ public:
     RawWorldCore Core();
     //원본옵션의TYPE+c4 쓰기가같은월드의188TYPE를직접사용하게한다. 새사본을만들지않는다.
     std::span<o::RiftTypeRecord> MutableTypes();
+    // 최초객체/Runtime등록전에원본모드의실제소유권·연결색·다리붕괴소비자를함께설정한다.
+    void ConfigureInstallModes(bool fort,bool battle,bool challenge,bool editor);
     // 미리보기도 같은 실제 연결 생성기와 현재 표면 전역을 사용한다.
     o::RawBridgeConnect& BridgeConnections();
     // 같은 저장소를 사용하는 자산/Regular/Form 전송/낙하/로딩 경계를 설치한다. 미연결 콜백을 생략하지 않는다.

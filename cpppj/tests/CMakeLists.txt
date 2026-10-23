@@ -1,3 +1,22 @@
+# Editor 로드/회복의 최초 독립 PE 관측을 해당 검사에만 공급한다.
+set_source_files_properties(FortSubscriberLoadTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_FORT_SUBSCRIBER_LOAD_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fort-subscriber-load-x86.tsv\"")
+set_source_files_properties(SubscriberIdGenerateTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_SUBSCRIBER_ID_GENERATE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/subscriber-id-generate-x86.tsv\"")
+set_source_files_properties(ExistingEditorInstallOuterTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_EXISTING_EDITOR_INSTALL_OUTER_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/existing-editor-install-outer-x86.tsv\"")
+set_source_files_properties(FortContentsLoadTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_FORT_CONTENTS_LOAD_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fort-contents-load-x86.tsv\"")
+set_source_files_properties(FortTypeNamesLoadTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_FORT_TYPE_NAMES_LOAD_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fort-type-names-load-x86.tsv\"")
+set_source_files_properties(FortTypeNamesAccessFixtureTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_FORT_TYPE_NAMES_LOAD_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fort-type-names-load-x86.tsv\"")
+set_source_files_properties(FortDeckLoadTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_FORT_DECK_LOAD_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fort-deck-load-x86.tsv\"")
+set_source_files_properties(DeckRestoreTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_DECK_RESTORE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/deck-restore-x86.tsv\"")
+set_source_files_properties(FortTerritoryRecoverTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_FORT_TERRITORY_RECOVER_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fort-territory-recover-x86.tsv\"")
 # 전체 저장과 Editor 기반의 독립 PE 관측을 각 검사에만 공급한다.
 set_source_files_properties(FortSnapshotParentTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_FORT_SNAPSHOT_PARENT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fort-snapshot-parent-x86.tsv\"")
@@ -116,6 +135,19 @@ set_source_files_properties(FlyerPreDestroyTests.cpp PROPERTIES COMPILE_DEFINITI
 set_source_files_properties(BurningLifetimeDrawTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_BURNING_LIFETIME_DRAW_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/burning-lifetime-draw-x86.tsv\";NETSTORM_RENDER_FRAME_GATE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/render-frame-gate-x86.tsv\";NETSTORM_BURNING_ARCHER_CAPTURE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/burning-archer-capture-x86.tsv\"")
 add_executable(netstorm_tests
+    FortTypeNamesAccessFixtureTests.cpp
+    FortTypeNamesStorageAccessTests.cpp
+    FortTypeConversionStorageTests.cpp
+    FortContentsLoadTests.cpp
+    ExistingEditorInstallOuterTests.cpp
+    FortSubscriberLoadTests.cpp
+    SubscriberIdGenerateTests.cpp
+    CampaignExistingEditorTests.cpp
+    FortTypeNamesLoadTests.cpp
+    FortDeckLoadTests.cpp
+    DeckRestoreTests.cpp
+    FortTerritoryRecoverTests.cpp
+    EditorWorldFinishTests.cpp
     CampaignFortSnapshotTests.cpp
     ClientFortFileOptionsTests.cpp
     FortSnapshotParentTests.cpp

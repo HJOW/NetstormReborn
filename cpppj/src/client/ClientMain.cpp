@@ -8,6 +8,7 @@
 #include "client/ClientAudio.h"
 #include "client/PaletteFlash.h"
 #include "client/RawChatChannels.h"
+#include "client/FortTypeConversionStorage.h"
 #include "client/UberGump.h"
 #include "o/OriginalText.h"
 #include "o/RawFortBadgesGlobals.h"
@@ -160,6 +161,7 @@ Client::Client(ClientOptions options)
     : options_(std::move(options)), files_(options_.gameDirectory),
       configuration_([this](std::string_view path) { return files_.TryRead(path); }),
       fortBadges_(std::make_shared<o::RawFortBadgesGlobals>()),
+      fortTypeConversion_(std::make_shared<FortTypeConversionStorage>()),
       chat_(std::make_unique<ChatState>(*this,options_.edition)) {
     files_.RegisterArchive(options_.gameDirectory / "netstorm.tarc");
     configuration_.Registry().environment = Environment;
@@ -837,6 +839,8 @@ o::ConfigInterface& Client::Configuration() { return configuration_; }
 const std::uint32_t& Client::ReadOnlyForts() const { return readOnlyForts_; }
 // 같은 Client가 소유한 실제 장부만 전달하며 새 Session용 복제본을 만들지 않는다.
 const std::shared_ptr<o::RawFortBadgesGlobals>& Client::FortBadges() const { return fortBadges_; }
+// 현재 변환표와 원래 할당을 같은 Client 수명으로 전달한다.
+const std::shared_ptr<FortTypeConversionStorage>& Client::FortTypeConversion() const { return fortTypeConversion_; }
 // 파일 시스템.
 const o::BaseFileSystem& Client::Files() const { return files_; }
 // 타입·그림. Run이 "init types"에서 만든 뒤에만 쓴다.

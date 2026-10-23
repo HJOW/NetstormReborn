@@ -16,6 +16,7 @@
 #include "client/SoundProcess.h"
 #include "o/RawPlayerRegular.h"
 #include "o/RawFortMissionSave.h"
+#include "o/RawEditorPlayers.h"
 #include "o/RawBattleBroadcast.h"
 #include "o/RawMissionOutcome.h"
 #include "o/RawAiBrain.h"
@@ -49,6 +50,7 @@ namespace netstorm::o { class RawCarrierSteal; class RawCarrierPickup; class Raw
 namespace netstorm::client {
 class CampaignTemplateStorage; // Client보다 짧은 Session이 빌리는 같은 실제 Template9 수명이다.
 class EditorFiles; // 실제 작업본 파일 장치이며 연결한 Session보다 오래 살아야 한다.
+class FortTypeConversionStorage; // 같은 Client의 현재 conversion DWORD와 실제 할당 소유자다.
 struct TemplateWriteStream; // 실제 Template 저장소가 발급하는 명시 쓰기 수명이다.
 struct QuickHelpTypeInfo; // 전용 도움말이 같은 현재 TYPE/요구 에너지를 읽는 정보다.
 class RawCampaignCursor; // 세션과 같은 실제 커서/로컬 예측의 고정 주소 소유자다.
@@ -118,8 +120,11 @@ struct CampaignProductionServices {
     o::RawProductionDeck::Fill allocationBytes; // 실제 할당 직후 바이트이며 생성자가 보존하는 꼬리를 임의 초기화하지 않는다.
     CampaignProductionEffects effects; // 현재 getTeleportTechFree와 원본 모드 진단이다.
 };
+// 생성전선택이며캠페인생성후Editor bool을켜는전환으로대체하지않는다.
+enum class CampaignInstallMode { Campaign,ExistingEditor }; //NewFort alternate1은아직별도필수미연결이다.
 // 게임 계산을 대신하지 않고 실제 클라이언트 UI/음향/전송의 선택 경계를 공급한다.
 struct RawCampaignSessionServices {
+    CampaignInstallMode installMode{CampaignInstallMode::Campaign}; //기존모든호출은캠페인입력을보존한다.
     std::function<void(std::span<std::uint8_t>)> templateStateBytes; // 빈 State 초기화의 미정 바이트를 현재 실제 할당 입력으로 공급한다.
     std::shared_ptr<CampaignTemplateStorage> templateStorage; // Init의 명시 정리까지 실제 manager/State/이미지를 같은 저장소에 유지한다.
     std::shared_ptr<const std::vector<std::uint8_t>> missionFortImage; // 실제 선택 파일의 같은 원문이며 초기 manager 읽기 부모가 소비한 뒤 반납한다.
@@ -142,7 +147,9 @@ struct RawCampaignSessionServices {
     CampaignAiServices ai; // 선택된 실제 AI 초기화/참여의 외부 경계이며 Load/프레임에서 자동 호출하지 않는다.
     CampaignProductionServices production; // 같은 Player/Factory/허용 표가 사용할 Deck의 실제 외부 입력이다.
     std::shared_ptr<o::RawFortBadgesGlobals> fortBadges; // 같은 Client의 단일6160BYTE 장부이며 로드/변경/저장이 이 저장소를 공유한다.
+    std::shared_ptr<FortTypeConversionStorage> fortTypeConversion; // Objects/Technology/Deck이 같은 현재 토큰과 할당을 빌린다.
     std::optional<o::FortMissionSaveHooks> fortMission; // Guide-only가 아닌 현재 실제 Runtime getter/진단이다. write는 각 Snapshot이 같은 새 stream에 연결한다.
+    std::function<void()> fortTechnologyUi; //0042f540의현재선택정보Gump/선택조건과실제표시갱신이다.생산refresh로대체하지않는다.
     std::function<void(std::string_view)> factoryTell; //Factory 입력의 같은004cf960 안내 섹션을 실제 현재Tell에연결한다.
     std::function<void(std::string_view,std::uint32_t)> factoryHelp; //researchHelp의실제전용도움말창/모드1이다.
     o::DamageablePreDestroyHooks damageablePre; // 붕괴/폭발/음향의 실제 장치/효과 경계다. 해방/공통 삭제는 Session이 공급한다.
@@ -179,6 +186,11 @@ public:
     RawCampaignSession& operator=(const RawCampaignSession&)=delete; // 다른 월드 상태와 복사하지 않는다.
     // 실제 부모 설치를 한 번 실행한다. 실제 큰 하위가 누락되면 오류를 그대로 반환한다.
     void Load();
+    // 기존Fort의Player→CoreData자연생략→Territory회복→일반World단계까지만실행한다.전체loaded성공을설정하지않는다.
+    void LoadExistingEditorWorld();
+    void LoadExistingEditorDeck(); //실제World/Graph뒤의Deck부모만실행한다.외곽완료/loaded확정은별도다.
+    // 외곽전체Snapshot/State/lastEditFort뒤호출한다.번역/format을받고 마지막0046e980은같은실제맵에연결한다.
+    void InstallExistingEditorPlayers(o::EditorPlayersHooks ui);
     //현재실제설정/시계/Player/Template로 원본로컬로그인 후 같은Load를 정확한 위치에서 실행한다.
     void LoadLocalConnection();
     //프레임마다현재실제송신/수신큐와로그인타이머를진행한다.
@@ -435,6 +447,10 @@ public:
     const RawPriestWorldBindings& Priests() const;
 private:
     void SnapshotFortBasicSection(std::uint32_t slot,bool names); // 실제 manager/State/덱과 같은 생성 수명의 쓰기 참조를 묶는다.
+    void SnapshotFortBody(std::uint32_t slot); // 실제 월드 설치 뒤의 Editor 외곽만 loaded 이전에 호출할 수 있는 전체 저장 본문이다.
+    void WriteFortTerritory(std::uint32_t slot); // 현재 지형의 같은 저장 본문이며 공개 호출의 설치 검사는 별도다.
+    void WriteFortObjects(std::uint32_t slot); // 전체 지역/Chaff 저장 본문을 설치 외곽에서도 같은 순서로 실행한다.
+    void WriteFortObjectChunkBody(TemplateWriteStream stream,std::int32_t chunkX,std::int32_t chunkY); // 같은 청크 저장 본문이며 공개 설치 계약을 우회 노출하지 않는다.
     void WriteFortTechnology(std::uint32_t parent,TemplateWriteStream stream); // 부모가 이미 만든 같은 stream에 body-token1로 기술 본문만 쓴다.
     struct Impl; // 단일 월드의 실제 모듈/현재 배열과 외부 서비스의 고정 수명 소유자다.
     std::unique_ptr<Impl> impl_; // Kernel 해제 뒤 실제 상태/서비스를 해제한다.

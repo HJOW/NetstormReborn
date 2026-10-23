@@ -1,5 +1,16 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-24 단위383 완료: 기존 Fort Editor의 최초 World·Deck와 원시 로더 복원
+
+- [x] 단위382는 **3b7de358 / 20261024-04 CP**로 커밋했다. AGENTS와 공통/닷넷 인계를 다시 읽었으며 현재/마지막 전체 정밀 디컴파일 PC는 **HJOW-Athlon / 마지막 수행2026-10-23**으로 일치한다.
+- [x] ExistingEditor를 최초 객체 생성 전 선택하고 실제 Surface/다리/Player/Objects/보상/사제 소비자를 설정했다. Client의 단일 변환표 DWORD·미초기화255BYTE 할당 소유자와 실제 Storage.AccessSection/TypeNames/Contents/Money/Badges/Deck/지형 회복/맵 후처리를 연결했다. 공개 Snapshot의 최종 loaded 계약은 유지하고 설치 외곽용 private 본문만 분리했다.
+- [x] 원문9모듈과 신규34검사를 공용 등록했다. 기존 객체 로더는 수정하지 않았다. 최초 실제 Editor 검사에서 저장 사제가 삭제되는 실패를 발견해 PE004b71e1/004bdfc3와 기존 oracle의 **같은0054db14(FullDeck/객체 삭제 억제)**를 대조하고 두 소비자를 함께 설정했다. 첫 실패·진단·소스와 모든 빌드 로그는 보존했다.
+- [x] 최종 **build5 종료0/관측 경고·오류0**, 신규34와 기존 관련12를 합친 **46검사 실패0**다. 사제2/소유자1·2/보호TYPE 최대HP/고정26기술/SP194162, 실제 작업manager의120BYTE 회복·장부·FullDeck 및 누락 장치의 부분효과를 확인했다. 전체 Editor 성공은 아니다. [근거와 검증 경계](docs/exe/cpp-editor-install-foundation-20261024.md).
+- [x] 최종 전체CTest **2506검사 실패check0/종료0·337.50초(전체337.56초)**, originals1394파일 추가·삭제·변경0을 확인했다. 제품SHA `6c31bab2c03323cba008dc447435b9826a0196d0a499f6bd43d9f5775189e5e0`, 검사SHA `5032329e702439c49f23a91bb5eba1d71fdece128e08950f8f4843f2cbc56be2`다. 최초 경로 구분자 형식 감사 실패는 별도 보존하고 같은 Windows 상대경로로 대조했다. 원문9도구 --verify/UTF8/AST/JSON·링크·공백·보호 경로와 인수인계를 확인해 **20261024-05 CP**로 커밋한다. 원시 `extracted/cpp-editor-install-20261024-*`를 보존하며 이번 게임/GUI 실행0이다.
+- [x] 첫 순차 빌드 중단, /MP4 제품 성공 뒤 C4458 이름 교정, 검사별 직렬 빌드 중단과 MTT 전환의 재컴파일은 원래 로그로 남겼다. 이후 **CL=/MP4 및 /p:UseMultiToolTask=true /p:EnforceProcessCountAcrossBuilds=true /p:CL_MPCount=4 /p:MultiProcMaxCount=4**를 고정한다. 완료된 중간 파일은 삭제하지 않았다.
+- [ ] 후속은 실제 파일 설치/Subscriber→전체 설치 외곽→최종 HUD/State/loaded→메뉴→전체 저장 후 별도 Editor 재로드다. ClientRandomGlobals(owner4a137a87…)→Subscriber(99ee09dc…) 제안은 별도 사본에서 순차 check/apply 네 단계 종료0이며 빌드/실행은 아직 없다. 신규 팔레트 전환7파일도 격리676관측/2검사만 검증했고 이번 공용 등록·커밋에서 제외한다.
+- [ ] 실제 Edit/NewFort/Save as/편집 도구·언어별 커스텀 시나리오 및 Early 전체/캠페인 전체/Demo3 사용자 완주·UI/화면/소리 동일성은 계속 남는다. 전체 목표는 active다.
+
 ## 2026-10-24 단위382 완료: 실제 Session 전체 Fort 저장과 Client 전역 연결
 
 - [x] 단위381은 **fa7762f9 / 20261024-03 CP**로 커밋했다. 공용 전체2464검사/실패0을 확인했고, 현재/마지막 정밀 디컴파일 PC는 **HJOW-Athlon / 마지막 수행2026-10-23**이다.

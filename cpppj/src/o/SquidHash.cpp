@@ -54,6 +54,8 @@ std::uint16_t& SquidHash::Bucket(int level,float x,float y) { return heads_.at(s
 const std::uint16_t& SquidHash::Bucket(int level,float x,float y) const { return heads_.at(static_cast<std::size_t>(level)).at(BucketIndex(level,x,y)); }
 // 0단계 배열이 원본의 표면 지도 전역에 연결되는 관계를 보존한다.
 std::span<const std::uint16_t> SquidHash::Entries(int level) const { Side(level); return heads_[static_cast<std::size_t>(level)]; }
+// 같은 실제 버킷 저장소를 Editor의 직접 WORD 쓰기에만 빌린다.
+std::span<std::uint16_t> SquidHash::MutableEntries(int level) { Side(level);return heads_[static_cast<std::size_t>(level)]; }
 // 발자국 크기 대신 현재 SHP 헤더의 실제 가로/세로 크기를 입력으로 받는다.
 int SquidHash::ObjectLevel(std::uint32_t flags2,float frameWidth,float frameHeight) {
     if ((flags2 & (TypeFlag2::kIsland|TypeFlag2::kBridge))!=0) return 0;

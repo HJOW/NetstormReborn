@@ -30,6 +30,7 @@ namespace netstorm::client {
 class UberGump;
 class ClientAudio;
 class RawChatChannels;
+class FortTypeConversionStorage; // 원본 현재 변환표의 실제 할당을 Client 수명에 소유한다.
 struct ClientAudioOptions;
 
 // 설정 키 "maxFPS" 의 코드 기본값. 화면 루프를 초당 몇 번까지 돌릴지 정한다.
@@ -125,6 +126,7 @@ public:
     const std::uint32_t& ReadOnlyForts() const;
     // 미션 교체와 무관한 같은 실제 장부의 공유 수명을 Session에 전달한다.
     const std::shared_ptr<o::RawFortBadgesGlobals>& FortBadges() const;
+    const std::shared_ptr<FortTypeConversionStorage>& FortTypeConversion() const; // 로더들이 같은 current DWORD와 실제255BYTE 할당을 빌린다.
     const o::BaseFileSystem& Files() const;
     const GameAssets& Assets() const;
     o::Kernel& GetKernel();
@@ -194,6 +196,7 @@ private:
     // 원본0054db30의 최초 BSS0이다. 미션 교체·누락 키로 초기화하지 않는 실제 한 DWORD다.
     std::uint32_t readOnlyForts_{};
     std::shared_ptr<o::RawFortBadgesGlobals> fortBadges_; // CRT 한 번과 시작 count reset을 구별하는 단일6160BYTE 소유자다.
+    std::shared_ptr<FortTypeConversionStorage> fortTypeConversion_; // Session마다 새 현재 포인터나 할당 사본을 만들지 않는 단일 소유자다.
     struct ChatState; // 실제 전역 Chat 기록과 현재 subscriber 처리기를 구현 파일의 고정 주소에 소유한다.
     std::unique_ptr<ChatState> chat_; // 메뉴/월드보다 오래 사는 단일100×48바이트이며 미션 수명과 분리한다.
     // translations_: 용어 키를 언어별 표시 문자열로 바꾸는 번역표.

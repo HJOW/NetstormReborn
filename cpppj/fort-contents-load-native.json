@@ -1,0 +1,34 @@
+{
+  "status": "최초원문고정·제품미작성",
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-23",
+  "entry": "004bd130",
+  "bodyBytes": 422,
+  "uniqueInputs": 334,
+  "observations": 668,
+  "normalReturns": 622,
+  "statuses": {
+    "normal": 622,
+    "stop": 44,
+    "fault": 2
+  },
+  "instructions": 514232,
+  "precisionDifferences": 0,
+  "boundaries": {
+    "type": 14570,
+    "parent": 4986,
+    "create": 7262,
+    "assert": 306
+  },
+  "gameExecuted": false,
+  "osExecuted": false,
+  "scope": "원시Contents422BYTE와같은실제재귀.현재conversion/checking/두TYPE조회·부모가상TYPE/QAQB·QB현재pos와signedend진단/Local형제지속·중첩값전달·직접Create인자·조기0·본문depth무변경을관측한다. TYPE/부모TYPE/Create/진단만명시외부경계이며실제ContainedCreate/Pool생성/OS/GUI/게임은별도다. nullconversion의진단뒤실제BYTE접근실패도정상반환과구별한다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+    "tools/decomp_fort_contents_load.py": "e931996550aebfdd1de671e8ef0df5d79b9d1130c2bac64bd8052e3b1aaaa811",
+    "cpppj/tests/fixtures/fort-contents-load-x86.tsv": "22851fa72e8905ac9465aadb64cb5669695dfd7d2847435fb0dcb25d4048948e"
+  }
+}

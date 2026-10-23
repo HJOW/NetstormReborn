@@ -32,6 +32,7 @@ public:
     static std::size_t BucketIndex(int level,float x,float y);
     // SurfaceFinder 등은 0단계를 읽는다. 객체 번호 체인의 삽입/제거는 이 배열을 사용하는 호출자 범위다.
     std::span<const std::uint16_t> Entries(int level) const;
+    std::span<std::uint16_t> MutableEntries(int level); // 원본 Editor 후처리가 같은 실제 표면 WORD 배열에 직접 쓰도록 빌린다.
     // 004ace40 ↔ CD 004acb00: 섬/다리는 0, 다른 객체는 현재 SHP 크기의 최대 변으로 1~3을 선택한다.
     static int ObjectLevel(std::uint32_t flags2,float frameWidth,float frameHeight);
 private:

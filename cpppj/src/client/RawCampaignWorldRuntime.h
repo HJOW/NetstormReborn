@@ -4,8 +4,19 @@
 #include "client/RawNormalTerrainWorldBinding.h"
 #include "o/RawCampaignWorldLoad.h"
 #include <memory>
+#include <optional>
 
 namespace netstorm::client {
+// 일반Fort의기존완료Money/Meta몸체와각wrapper안에서늦게선택하는실제stream이다.
+struct RawExistingFortChildren {
+    std::shared_ptr<void> stateOwner; //factory의장기상태소유자를모듈/selector보다나중에반납한다.이미Client장기소유면비울수있다.
+    std::shared_ptr<o::RawFortMoneyLoad> money; //같은Session SP/Player/깊이를빌리는실제Money모듈이다.
+    std::shared_ptr<o::RawFortMetaLoad> meta; //Client의단일6160BYTE Badges/같은Technology내용물모듈이다.
+    std::function<void(const o::FortTemplate&,std::uint32_t)> selectMoney; //wrapper진입전에현재manager존재/정책전역을같은MoneyState에동기화한다.
+    std::function<o::FortMoneyCursor&(const o::FortTemplate&,std::uint32_t)> moneyStream; //깊이/진단뒤같은현재manager Money를선택한다.
+    std::function<void(const o::FortTemplate&,std::uint32_t,bool)> selectMeta; //고정this/현재owner/manager 상태를실제MetaState에선택한다.
+    std::function<o::FortMetaStream&(const o::FortTemplate&,bool)> metaStream; //기술부모조회뒤Technology/Badges를실제manager에서선택한다.
+};
 // 상위 로그인/Template 계층이 소유하는 현재 저장소를 그대로 빌린다.
 struct RawCampaignInstallData {
     std::span<const o::FortTemplate> templates; // 현재9 Template의 실제 값형 해석 자료다.
@@ -14,6 +25,7 @@ struct RawCampaignInstallData {
     std::span<std::uint8_t> handle; // 실제 mySubHandle의 NUL 포함 저장소다.
     std::function<const o::FortTemplate&(std::uint32_t)> templateAt; // 실제 Client는 현재 manager를 조회해 빌린 자료도 같은 객체로 반환한다.
     std::function<o::FortTerritoryStream&(std::uint32_t)> territoryAt; // 같은 manager의 현재 지형 cursor다. 기존 독립 입력은 위 span을 유지한다.
+    std::function<RawExistingFortChildren(const o::RawFortObjectLoad&)> existingFort; //실제Object모듈생성뒤같은모듈을재사용해Money/Meta를구성한다.캠페인은비워둔다.
 };
 // Core 밖의 실제 UI/번역/가상 상태/진단 경계만 공급한다. gameplay 효과는 아래 실제 모듈을 사용한다.
 struct RawCampaignInstallEffects {
@@ -42,6 +54,8 @@ public:
     RawCampaignWorldRuntime& operator=(const RawCampaignWorldRuntime&)=delete;
     // BeginLoad→실제 캠페인 부모→Graph(false) 이후 종료를 한 번 실행한다. 실패를 로드 완료로 바꾸지 않는다.
     void Load();
+    // BeginLoad뒤원본외곽의Player/CoreData/회복을실행하고004b5f70(alternate0)만설치한다.전체Editor완료가아니다.
+    void LoadExistingFort(const std::function<void()>& beforeWorld);
     // 검사/후속 미션 부모가 같은 Pool과 저장객체 몸체를 확인할 때 사용한다.
     const o::SidPool& Pool() const;
     const o::RawFortObjectLoad& Objects() const;

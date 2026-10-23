@@ -1,0 +1,39 @@
+{
+  "status": "최초원문고정·제품미작성",
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-23",
+  "entries": {
+    "004bd450": 122,
+    "004bcb60": 144,
+    "004b38d0": 78
+  },
+  "uniqueInputs": 347,
+  "observations": 694,
+  "normalReturns": 658,
+  "statuses": {
+    "normal": 658,
+    "fault": 22,
+    "stop": 14
+  },
+  "instructions": 68452,
+  "precisionDifferences": 0,
+  "boundaries": {
+    "select": 598,
+    "assert": 1300,
+    "read": 190,
+    "generate": 176,
+    "sprintf": 174,
+    "config": 174
+  },
+  "gameExecuted": false,
+  "osExecuted": false,
+  "scope": "실제Subscriber부모122/string144/등록helper78BYTE. 현재manager재조회/ID쓰기후pos재조회/signed길이와DWORD단위직접복사/현재data·pos·end진단/부분복사실패/같은실제ID등록관문을관측한다.Select/진단/ConfigRead/새ID/CRT서식/Config식만명시외부경계다.부모는깊이·TYPE를읽거나쓰지않는다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+    "tools/decomp_fort_subscriber_load.py": "bbcec1c828479163d72b6f223196d83fee70cc5d5424a267b0d1488648e39d44",
+    "cpppj/tests/fixtures/fort-subscriber-load-x86.tsv": "b411318ef787f7401779816b568104c8283e3046a24aab311e7c1eadaa6bc638"
+  }
+}

@@ -1,5 +1,6 @@
 // 기존 완료 몸체를 재작성하지 않고 캠페인 최초 설치의 실제 하위 경로로 연결한다.
 #include "client/RawCampaignWorldRuntime.h"
+#include "client/RawFortWorldLoadBinding.h"
 #include <bit>
 #include <stdexcept>
 #include <utility>
@@ -20,6 +21,7 @@ struct RawCampaignWorldRuntime::Impl {
     std::unique_ptr<o::RawFortObjectLoad> objects; // 실제 저장172객체의 로더이며 결과는 같은 Pool에 쓴다.
     std::unique_ptr<o::RawFortWorldLoad> territory; // 실제120BYTE 읽기 몸체를 재사용한다.
     std::unique_ptr<o::RawCampaignWorldLoad> campaign; // 현재 순서/두owner를 보존하는 원본 미션 부모다.
+    std::optional<RawExistingFortChildren> existing; //Money/Meta와그실제입력수명을같은WorldRuntime동안보존한다.
     bool started{}; // 실패한 부분 설치의 재실행으로 중복 객체가 생기지 않게 한다.
 
     // 실제 저장소 동일성과 필수 경계를 최초 등록/쓰기 전에 검사한다.
@@ -61,6 +63,15 @@ struct RawCampaignWorldRuntime::Impl {
         territoryHooks.money=territoryHooks.badges=territoryHooks.technology=[](const o::FortTemplate&,std::uint32_t) { throw std::logic_error("캠페인 설치에서 generic Fort 부모 후처리를 실행할 수 없습니다"); };
         territoryHooks.populateIsland=[](const o::RawIslandBuilderState&,std::int32_t) { throw std::logic_error("캠페인 설치의 alternate Fort populate 미연결"); };
         territoryHooks.rebuildGraph=[this](bool mode) { core.graph.Rebuild(mode); };
+        if (data.existingFort) {
+            existing=data.existingFort(*objects);
+            if (!existing->money || !existing->meta || !existing->selectMoney) throw std::invalid_argument("일반Fort 실제Money/Meta몸체미연결");
+            territoryHooks=MakeFortWorldLoadBinding(world,normal,*objects,*existing->money,*existing->meta,
+                existing->moneyStream,existing->selectMeta,existing->metaStream,std::move(territoryHooks)); //Object/Generate/Graph도기존같은완료몸체를쓴다.
+            auto moneyLoad=std::move(territoryHooks.money);territoryHooks.money=[this,body=std::move(moneyLoad)](const o::FortTemplate& fort,std::uint32_t owner) {
+                existing->selectMoney(fort,owner);body(fort,owner); //실제stream선택은여전히LoadSelected의깊이/진단뒤다.
+            };
+        }
         territory=std::make_unique<o::RawFortWorldLoad>(core.pool,chunks,islands,core.frames,puzzlePiece,player.State().templateOwner,noRegion,objectState.loadingDepth,std::move(territoryHooks));
         o::CampaignWorldLoadHooks campaignHooks{effects.translateYou,effects.setConfig,effects.refreshWindowTitle,effects.builderAssertion,
             [this](const o::RawIslandBuilderState& builder,std::int32_t region) { Generate(builder,region); },
@@ -90,6 +101,13 @@ void RawCampaignWorldRuntime::Load() {
     auto& state=*impl_;if (state.started) throw std::logic_error("캠페인 동일 월드의 중복/실패 후 설치 재실행");
     state.started=true;state.world.BeginLoad();state.objectState.loadingDepth=1;state.campaign->Load();
     state.world.FinishLoadAfterGraph();state.objectState.loadingDepth=0;
+}
+// 캠페인전용이름/readonly/Objects부모를우회호출하지않고일반Fort의실제네child를선택한다.
+void RawCampaignWorldRuntime::LoadExistingFort(const std::function<void()>& beforeWorld) {
+    auto& state=*impl_;if (state.started || !state.existing || !beforeWorld) throw std::logic_error("일반Fort실제자원/외곽준비누락또는재실행");
+    state.started=true;state.world.BeginLoad();state.objectState.loadingDepth=1;
+    beforeWorld();state.territory->Load(0); //Player생성/회복의필수원본단계를지난뒤에만일반월드를설치한다.
+    state.world.FinishLoadAfterGraph();state.objectState.loadingDepth=0; //부모의Graph(false)를중복호출하지않는다.
 }
 // 참조를 비교할 실제 Pool을 반환한다.
 const o::SidPool& RawCampaignWorldRuntime::Pool() const { return impl_->core.pool; }

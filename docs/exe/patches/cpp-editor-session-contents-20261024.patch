@@ -1,0 +1,48 @@
+--- a/cpppj/src/client/RawCampaignSession.cpp
++++ b/cpppj/src/client/RawCampaignSession.cpp
+@@ -3,6 +3,7 @@
+ #include "client/CampaignTemplateStorage.h"
+ #include "client/FortTypeConversionStorage.h"
+ #include "o/RawFortTypeNamesLoad.h"
++#include "o/RawFortContentsLoad.h"
+ #include "o/RawFortDeckLoad.h"
+ #include "o/RawDeckRestore.h"
+ #include "client/EditorFiles.h"
+@@ -2422,7 +2423,7 @@
+         hooks.log=[this](auto kind,std::string_view text) { if (!services.player.log) throw std::logic_error("업그레이드진행 실제로그 미연결");services.player.log(kind,text); };hooks.assertion=[](std::uint32_t line) { std::fprintf(stderr,"Factory 업그레이드 원본 진단 줄:%x\n",line); };
+         factoryUpgrade=std::make_unique<RawFactoryUpgrade>(core.pool,core.processes,FactoryUpgradeState{researchOutpost,flyerDependType,playerState.battleOwner,gunState.checking,core.ownerMode.challenge,assetState.boss},std::move(hooks));
+     }
+-    // 같은 실제 Session/Storage/Client 전역을 일반 Fort child에 연결한다. Contents reader는 별도 원문 복원 뒤 교체한다.
++    // 같은 실제 Session/Storage/Client 전역과원시Contents reader를일반Fort child에연결한다.
+     RawExistingFortChildren MakeExistingFortChildren(const RawFortObjectLoad& objects) {
+         if (&objects.Pool()!=&core.pool) throw std::logic_error("기존Editor child의 실제Pool 불일치");
+         if (!services.fortBadges || !services.fortTypeConversion) throw std::logic_error("기존Editor 실제Client 장부/변환표 소유자 미연결");
+@@ -2449,10 +2450,24 @@
+         meta.loadingDepthChanged=[this](auto depth) { world.SetLoadingDepth(depth); };
+         meta.technologyParent=[this] { const auto parent=player->CurrentTechnology();if (parent>65535 || parent>=core.pool.Capacity()) throw std::out_of_range("기존Editor 현재기술부모 실제SID 범위");return Sid{static_cast<std::uint16_t>(parent)}; };
+         meta.prepareTypeNames=[this,state] { PrepareFortTypeNames(state->slot);state->meta.hasTypeConversion=services.fortTypeConversion->Current()!=0; };
+-        meta.contents=[this,state](Sid,FortMetaStream&,std::uint32_t,bool) {
+-            // 004bd130은 현재conversion/TYPE/QA/QB를 실제 cursor에서 순서대로 읽고 즉시 Create해야 한다.
+-            // parsed FortContent.item.type 복사/일괄 재변환은 저장폭과 callback 순서를 바꾸므로 성공 대체를 금지한다.
+-            static_cast<void>(state);throw std::logic_error("기존Editor 실제004bd130 원시Contents reader 복원 대기");
++        meta.contents=[this,state](Sid parent,FortMetaStream&,std::uint32_t flags,bool relaxedConversion) {
++            FortContentsLoadHooks reader; //원문이선택한같은Technology생성수명과현재Client변환표를빌린다.
++            reader.access=[this,state](auto token,const auto& operation) { if (token!=1) throw std::out_of_range("Contents 실제Technology stream 토큰");templateStorage->AccessSection(state->technology,operation); };
++            reader.conversionBuffer=[this](auto token)->std::span<const std::uint8_t> { return services.fortTypeConversion->Bytes(token); };
++            reader.type=[this](auto kind) { if (kind>=core.types.size()) throw std::out_of_range("Contents 현재TYPE 물리범위");const auto& record=core.types[kind];return FortContentsLoadType{record.flags1,record.contentListFlags}; };
++            reader.parentListFlags=[this](auto selected) { //004ac550은같은부모raw주소의현재+10실제type을읽는다.저장type WORD를쓰지않는다.
++                if (selected>65535 || selected>=core.pool.Capacity()) throw std::out_of_range("Contents 부모의실제Pool 범위");
++                const auto kind=core.pool.Slot(Sid{static_cast<std::uint16_t>(selected)})[10];if (kind>=core.types.size()) throw std::out_of_range("Contents 부모현재TYPE 물리범위");return core.types[kind].containerListFlags;
++            };
++            reader.create=[this](auto selected,auto kind,auto quantity,auto listFlags,auto attachFlags,auto quality) {
++                if (selected>65535 || selected>=core.pool.Capacity()) throw std::out_of_range("Contents 생성부모의실제Pool 범위");
++                if (!contained || &contained->Pool()!=&core.pool) throw std::logic_error("Contents 실제ContainedCreate 미연결/Pool 불일치");
++                return static_cast<std::uint32_t>(contained->Create(Sid{static_cast<std::uint16_t>(selected)},kind,quantity,listFlags,attachFlags,quality).value);
++            }; //수량DWORD/listFlags/attachFlags/quality0을그대로전달하고실제하위가생성/부착한다.
++            reader.assertion=SessionMissing<void,FortContentsLoadAssertion>();
++            const FortContentsLoadGlobals globals{services.fortTypeConversion->Current(),[this] { return gunState.checking ? 1U : 0U; }}; //005c89bc는사본이아닌같은현재DWORD참조다.
++            static_cast<void>(LoadFortContents(parent.value,1,flags,relaxedConversion ? 1U : 0U,globals,reader)); //기술wrapper는원문false를무시하고그뒤현재표해제/UI를계속한다.
++            state->meta.hasTypeConversion=services.fortTypeConversion->Current()!=0; //reader/실제Create가바꾼현재pointer를반환직후해제관문에동기화한다.
+         };
+         meta.releaseTypeConversion=[this,state] {
+             auto& current=services.fortTypeConversion->Current();if (current) services.fortTypeConversion->Release(current);current=0;state->meta.hasTypeConversion=false;
