@@ -39,7 +39,7 @@
     "extracted/cpp-early1-20261023-natural1/stderr.log": "6f786a44746592199af0c4b3de0ec2cc5603c46b5ac1a67a42c715f1d0cb59b3"
   },
   "executedHelperSha256": "d25943b63e39f00403aa809c22735e96977852c1584e0893b6e334793be0a580",
-  "verificationOnlyChangeAfterRun": "REPORT ?? ??? ? ?? ???? ??? ??/??/?? ??? ???? ???.",
+  "verificationOnlyChangeAfterRun": "REPORT 기본 경로만 새 날짜 보고서로 바꿨고 입력/실행/판정 코드는 변경하지 않았다.",
   "observation": {
     "returnCode": 0,
     "originalsUnchanged": true,
@@ -80,5 +80,5 @@
     "binarySha256": "4e9d28dd308411fd40ec149203ea060fcb84636dd6d40455751e2ca34c9b3786"
   },
   "goalComplete": false,
-  "scope": "Early1 ?? ??? Tutorial2 ????. ??Done1?????? ?? ???????????????????."
+  "scope": "Early1 자연 완주와 Tutorial2 전환이다. 초기 Done1을 보존했으며 진행 디스크 영속성과 전체 목표 완료는 검증하지 않았다."
 }

@@ -1,5 +1,11 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-24 단위380 완료: Early1 출처 설명의 한국어 인코딩 복구
+
+- [x] 단위379를 **3a62aded / 20261024-01 CP**로 커밋했다. 현재/마지막 전체 정밀 디컴파일 PC는 **HJOW-Athlon / 마지막수행2026-10-23**이다. 목표는계속활성이다.
+- [x] `cpppj/tutorial-one-harvest-20261023.json`의설명두필드가PowerShell파이프의문자인코딩때문에물음표로저장된것을확인했다. UTF8을직접지원하는patch로한국어설명만복구했다. sources/evidence/observation·제품/실행SHA·실제판정은변경하지않았고JSON비교로확인했다. 설명복구이므로게임재실행/전체재검사는추가하지않는다.
+- [x] 엄격UTF8/JSON/공백과원본·CD/AGENTS비변경을확인해 **20261024-02 CP**로로컬커밋한다. 이후PowerShell파이프로Python소스를보낼때는ASCII소스/Unicode escape를사용하거나UTF8직접쓰기장치를사용한다. 신규독립저장모듈/Notify제안patch/CurrentName진행상태는아래379후속기록을유지하며공용미등록이다.
+
 ## 2026-10-24 단위379 완료: Client 전체 저장 판본 DWORD의 실제 공유
 
 - [x] 단위378은 **e5ef1dce / 20261023-48 CP**로 커밋했다. 날짜는2026-10-24로넘어갔으며현재PC/마지막전체정밀디컴파일PC는같은 **HJOW-Athlon / 마지막수행2026-10-23**이다. 보호원문재디컴파일이나AGENTS/원본·CD변경은없다.
