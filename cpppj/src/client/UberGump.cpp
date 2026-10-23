@@ -151,6 +151,7 @@ std::string Field(std::string text) { std::replace(text.begin(), text.end(), '\t
 
 // 원본 Mission의 같은+68/+70/+88 상태를 실제 Start와 후속 프레임 소비자에 보존한다.
 struct UberGump::MissionRuntime {
+    std::uint32_t saveToken; // 같은 Runtime의 이름/필드를 식별하는 호스트 수명 토큰이며 원본 게임 규칙 값이 아니다.
     TutorialInitState init; // 원본+4/+b0와 Init 지역 문자열의 현재 입력이다.
     o::MissionFrameGateState gate; // demo/started/시각/안내 단계의 유일한 현재 미션 저장소다.
     o::MissionStartState state; // Start의 순번/현재 tellAt 항목/필드를 동일 수명으로 유지한다.
@@ -159,8 +160,8 @@ struct UberGump::MissionRuntime {
     bool guided{}; // 실제 Tutorial 가상표를 사용하는 미션만 Guide0..6에 분배한다. 기존 Battle 진입은 별도다.
     std::unique_ptr<RawCampaignTutorialOneBindings> tutorial; // 지정11개를 포함한 Tutorial 형식 전체의 공통 프레임/입력과 선택된 Early 판정이다.
     // 원본00482bf0의 초기 demo0은 일반 MissionBegin,00463a00의 직접 쓰기는 StartDemo가 공급한다.
-    MissionRuntime(MissionScript& script,std::uint32_t demo,std::uint32_t mode)
-        :mode64(mode),guided(o::AsciiLower(script.MissionType())=="tutorial") {
+    MissionRuntime(MissionScript& script,std::uint32_t demo,std::uint32_t mode,std::uint32_t token)
+        :saveToken(token),mode64(mode),guided(o::AsciiLower(script.MissionType())=="tutorial") {
         gate.demo=demo;init.name=FontBytes(script.Name()); // 번호/demo/이름 정규화는 실제 단계1까지 앞당기지 않는다.
     }
 };
@@ -477,7 +478,8 @@ void UberGump::CreateMission(std::string name,std::uint32_t demo,std::uint32_t m
     if (!mission_->Loaded()) throw std::runtime_error("Missing mission: " + name);
     const auto type = o::AsciiLower(mission_->MissionType());
     if (type != "tutorial" && type != "battle") throw std::runtime_error("Mission type pending: " + mission_->MissionType());
-    missionRuntime_=std::make_unique<MissionRuntime>(*mission_,demo,mode);
+    if (nextMissionSaveToken_==0xffffffffU) throw std::overflow_error("Mission 저장 수명 토큰 소진");
+    missionRuntime_=std::make_unique<MissionRuntime>(*mission_,demo,mode,++nextMissionSaveToken_);
     missionRuntime_->guided=missionRuntime_->guided && client_.Assets().Edition()==o::OriginalEdition::Patch1078; // 복원하지 않은 판본의 순번을 새 Guide에 분배하지 않는다.
     briefingSections_.clear();briefingIndex_=0;state_.phase=ClientPhase::LoadingMission;pageName_="loading";popup_.clear();ClearPage();client_.Pause(false);RebuildControls(); // 제목은 실제 단계1의 Header 적용/설치에서 갱신한다.
     Compose();client_.PresentScene(); // 동기 요새 적재 전에 같은 실제 안내를 먼저 출력하며 임의 최소 표시 시간은 두지 않는다.
@@ -516,6 +518,24 @@ void UberGump::InitializeMission() {
     InitializeTutorialMission(missionRuntime_->init,missionRuntime_->state.flags,missionRuntime_->gate.demo,{missionRuntime_->gate.tutorialNumber,missionNumber_,tutorialSeen_,initLoginSubscriber_,initialSubscriber_},hooks);
     rebuild_=true;
 }
+// Guide-only 조건 없이 실제 현재 Runtime을 읽으며 선택한 미션 수명이 바뀌면 물리 경계로 거부한다.
+o::FortMissionSaveHooks UberGump::FortMissionSaveEffects() {
+    o::FortMissionSaveHooks hooks; // write는 각 Snapshot이 소유한 실제 stream에 동기적으로 연결한다.
+    hooks.current=[this] { return missionRuntime_ ? missionRuntime_->saveToken : 0U; };
+    hooks.name=[this]()->std::optional<std::span<const std::uint8_t>> {
+        if (!missionRuntime_) throw std::logic_error("현재 Mission 없는 이름 물리 접근");
+        const auto& name=missionRuntime_->init.name; // 같은 Runtime의 NUL 포함 버퍼이며 저장 중 복제하지 않는다.
+        return std::span(reinterpret_cast<const std::uint8_t*>(name.c_str()),name.size()+1);
+    };
+    hooks.field=[this](auto token,auto offset) {
+        if (!missionRuntime_ || token!=missionRuntime_->saveToken) throw std::logic_error("선택 Mission의 저장 수명 만료");
+        if (offset==0x58) return missionRuntime_->state.sequence;
+        if (offset==0x54) return missionRuntime_->state.flags;
+        throw std::out_of_range("Mission 저장의 실제 필드 범위");
+    };
+    hooks.assertion=[](auto) { throw std::logic_error("Mission 저장 원문 이름 진단"); };
+    return hooks;
+}
 // 캡처한 요새 요청을 다음 State 자리에서 실제 설치한다. Start는 원래 Guide 단계3에 남긴다.
 void UberGump::LoadMissionWorld(std::optional<std::string> requestedFort) {
     if (!mission_ || !missionRuntime_ || world_) throw std::logic_error("Guide 초기화의 현재 Script/Runtime/빈 월드 계약 위반");
@@ -537,6 +557,7 @@ void UberGump::LoadMissionWorld(std::optional<std::string> requestedFort) {
     services.factoryHelp=[this](std::string_view section,std::uint32_t mode) { const auto token=scriptStrings_.Store(section);if (token>0x0fffffffU) throw std::overflow_error("Factory 도움말 문자열 별칭 토큰 소진");rawButtons_->Menus()->OpenHelp(0x70000000U|token,static_cast<std::int32_t>(mode),0); }; //기존Help와같은문자열고리/별칭과실제전용창을사용한다.
     services.missionOutcome.demo=[this] { return missionRuntime_ ? missionRuntime_->gate.demo : 0U; };
     services.missionOptions=missionOptions_;services.missionRestrictions=missionRestrictions_;services.missionSubscriber=initLoginSubscriber_;services.missionFortRequest=missionFortRequest_;services.templateStorage=templateStorage_;services.missionFortImage=fortImage; // 같은 Init 전역/요청/Template9와 실제 선택 파일 원문을 설치에 전달한다.
+    services.fortBadges=client_.FortBadges();services.fortMission=FortMissionSaveEffects(); // 실제 Client 단일 장부와 현재 Runtime getter를 같은 Session에 빌린다.
     services.missionOutcome.tellBlocked=[this] { return state_.phase==ClientPhase::Dialog || state_.phase==ClientPhase::Briefing ? 1U : 0U; };
     services.missionOutcome.section=[this](std::string_view section) { bool created=false;return mission_ && mission_->Section(section) && TryTell(std::string(section),false,&created) && created; };
     services.missionOutcome.closeTransient=[this] { rawButtons_->RequestClosePopups(); };

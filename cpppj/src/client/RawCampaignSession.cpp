@@ -1,6 +1,11 @@
 // 기존 원본 몸체의 단일 저장소 조립을 실제 클라이언트 세션이 소유한다.
 #include "client/RawCampaignSession.h"
 #include "client/CampaignTemplateStorage.h"
+#include "client/EditorFiles.h"
+#include "o/RawFortSnapshotParent.h"
+#include "o/RawFortMoneySave.h"
+#include "o/RawFortBadgesGlobals.h"
+#include "o/RawFortBadgesSave.h"
 #include "o/RawFortSnapshotBasics.h"
 #include "o/RawFortContentSave.h"
 #include "o/RawFortObjectSave.h"
@@ -3210,7 +3215,7 @@ void RawCampaignSession::SnapshotFortDeck(std::uint32_t slot) { SnapshotFortBasi
 void RawCampaignSession::SnapshotFortTechnology(std::uint32_t slot) {
     auto& s=*impl_;if (!s.loaded || slot>=9) throw std::logic_error("실제 Technology snapshot의 설치/슬롯 계약 위반");
     static_cast<void>(s.templateStorage->Template(slot));const auto parent=s.player->CurrentTechnology();const auto stream=s.templateStorage->CreateSection(slot,"Technology");
-    SaveFortContents(parent,1,s.ContentWriter(stream));
+    WriteFortTechnology(parent,stream);
 }
 // 현재 섬 목록과 실제 청크를 읽으며 빈 지역 seed도 같은 공용 난수에서 소비한다.
 void RawCampaignSession::SnapshotFortTerritory(std::uint32_t slot) {
@@ -3249,6 +3254,78 @@ void RawCampaignSession::SnapshotFortObjects(std::uint32_t slot) {
     hooks.territory=[&](auto token,auto owner,auto region) { SaveFortTerritoryChunks(token,owner,region,s.objectState.scope,regions); };
     hooks.chaff=[&](auto token) { SaveFortChaffChunks(token,s.objectState.scope,regions); };
     SaveFortObjects(static_cast<std::int32_t>(slot),{s.playerState.templateOwner,s.objectState.version,[&s] { return s.core.ownerMode.fort ? 1U : 0U; }},hooks);
+}
+// 전체 부모가 만든 명시 stream에 같은 실제 기술 내용물만 쓴다. 내부 body의 토큰1은 외부 registry와 구별한다.
+void RawCampaignSession::WriteFortTechnology(std::uint32_t parent,TemplateWriteStream stream) {
+    SaveFortContents(parent,1,impl_->ContentWriter(stream));
+}
+// 현재 Fort 모드와 선택을 원본 부모가 진단하며 각 child는 같은 저장소/월드/난수/장부를 사용한다.
+void RawCampaignSession::SnapshotFort(std::uint32_t slot) {
+    auto& s=*impl_; // 현재 Session의 단일 실제 상태이며 모드나 owner를 사본으로 만들지 않는다.
+    if (!s.loaded || slot>=9) throw std::logic_error("실제 전체 Fort snapshot의 설치/슬롯 계약 위반");
+    std::vector<TemplateWriteStream> streams; // 동기 부모 한 번에 발급한 manager/노드/생성수명을 종료까지 보관한다.
+    FortSnapshotParentHooks hooks; // 원본 부모의 Create와 각 child 본문을 별개로 연결한다.
+    const auto remember=[&](TemplateWriteStream stream)->std::uint32_t { // 실제 Create 반환 참조에만 호출별 비영 토큰을 부여한다.
+        if (!stream.manager || !stream.section) return 0;
+        streams.push_back(stream);return static_cast<std::uint32_t>(streams.size());
+    };
+    const auto resolve=[&](std::uint32_t token)->TemplateWriteStream { // current가 바뀌어도 최초 반환된 같은 생성수명을 돌려준다.
+        if (!token || token>streams.size()) throw std::out_of_range("전체 Fort snapshot의 명시 stream 참조 범위");
+        return streams[token-1];
+    };
+    hooks.manager=[&s](std::int32_t selected) { // 진단/기술/Money/Mission/Create에서 요청할 때마다 실제 헤더를 다시 읽는다.
+        if (selected<0 || selected>=9) throw std::out_of_range("전체 Fort snapshot의 실제 Template9 범위");
+        return Read(s.templateStorage->Headers(),static_cast<std::size_t>(selected)*20);
+    };
+    hooks.assertion=SessionMissing<void,FortSnapshotParentAssertion>();
+    hooks.create=[&](auto manager,auto name) { // 부모가 넘긴 현재 manager와 같은 슬롯에서 실제 새 노드를 한 번만 만든다.
+        if (manager!=hooks.manager(static_cast<std::int32_t>(slot))) throw std::logic_error("전체 Fort snapshot의 현재 manager 불일치");
+        return remember(s.templateStorage->CreateSection(slot,name));
+    };
+    const auto write=[&](std::uint32_t token,std::span<const std::uint8_t> bytes) { // 일반 쓰기도 반환 당시 같은 참조에만 연결한다.
+        s.templateStorage->WriteSection(resolve(token),bytes);
+    };
+    const auto access=[&](std::uint32_t token,const std::function<void(std::span<std::uint8_t>,const MemStreamHooks&)>& operation) { // 인라인 writer에 같은 필드/버퍼를 동기적으로 빌린다.
+        s.templateStorage->AccessSection(resolve(token),operation);
+    };
+    hooks.typeNames=[this](auto selected) { SnapshotFortTypeNames(static_cast<std::uint32_t>(selected)); };
+    hooks.technologyParent=[&s] { return s.player->CurrentTechnology(); };
+    hooks.technology=[&](auto parent,auto token) { WriteFortTechnology(parent,resolve(token)); };
+    hooks.objects=[this](auto selected) { SnapshotFortObjects(static_cast<std::uint32_t>(selected)); };
+    hooks.territory=[this](auto selected) { SnapshotFortTerritory(static_cast<std::uint32_t>(selected)); };
+    hooks.deck=[this](auto selected) { SnapshotFortDeck(static_cast<std::uint32_t>(selected)); };
+    hooks.money=[&](auto token) { SaveFortMoney(token,s.random,write); }; // 단독 Money 부모를 부르지 않아 Create를 중복하지 않는다.
+    hooks.mission=[&](auto token) { // 부모가 Mission을 만든 뒤 현재 실제 Runtime의 읽기 장치를 요구한다.
+        if (!s.services.fortMission) throw std::logic_error("전체 Fort snapshot의 실제 현재 Mission 읽기 장치 미연결");
+        auto mission=*s.services.fortMission; // 읽기 getter는 현재 주소를 유지하고 쓰기만 이 호출의 고정 참조에 연결한다.
+        mission.write=write;SaveFortMission(token,mission);
+    };
+    hooks.badges=[&](auto selected) { // Badges는 자체 부모가 Create/최초 count BYTE 쓰기를 소유한다.
+        FortBadgesSaveHooks badges; // 같은 manager와 실제 Client 장부를 빌리며 원시 파일로 장부를 대신하지 않는다.
+        badges.manager=hooks.manager;badges.create=hooks.create;badges.access=access;
+        badges.assertion=SessionMissing<void,FortBadgesSaveAssertion>();
+        badges.count=[&s](auto type) { // 누락 장부도 원본의 첫 getter 위치에 도달했을 때만 거부해 앞선 부분효과를 보존한다.
+            if (!s.services.fortBadges) throw std::logic_error("전체 Fort snapshot의 실제 Client Badges 장부 미연결");
+            return ReadFortBadgeCount(s.services.fortBadges->Records(),type);
+        };
+        SaveFortBadges(selected,badges);
+    };
+    hooks.notify=[&s](auto selected) { s.templateState->Changed(static_cast<std::uint32_t>(selected)); };
+    FortSnapshotParentGlobals globals; // 부모의 각 읽기 위치에서 현재 Template owner/두 모드를 조회한다.
+    globals.templateOwner=[&s] { return s.playerState.templateOwner; };
+    globals.fort=[&s] { return s.core.ownerMode.fort ? 1U : 0U; };
+    globals.battle=[&s] { return s.core.ownerMode.battle ? 1U : 0U; };
+    SnapshotFortTemplate(static_cast<std::int32_t>(slot),globals,hooks);
+}
+// ReadOnly/숨김 관문은 이미지 생성 뒤 실제 저장 부모가 읽는다. 연결할 때 값을 복제하거나 저장을 앞당기지 않는다.
+void RawCampaignSession::BindFortFileSave(const std::uint32_t& readOnlyForts,const EditorFiles& files) {
+    auto* const current=impl_.get(); // Impl은 Session 수명 동안 고정되며 참조한 두 Client 장치는 Session보다 오래 살아야 한다.
+    current->templateState->BindFileSave([current,&readOnlyForts,&files](std::uint32_t selected) {
+        FortImageHooks image; // 같은 현재 TYPE 수와 원본 이미지 진단만 실제 저장소에 공급한다.
+        image.typeCount=[current] { return static_cast<std::uint32_t>(current->core.types.size()); };
+        image.assertion=SessionMissing<void,FortImageAssertion>();
+        current->templateStorage->SaveFile(selected,{readOnlyForts,current->playerState.battleOwner,current->hiddenPlayers},std::move(image),files.Writer());
+    });
 }
 // 로더와 저장 부모가 같은 현재 판본/범위/마스크를 사용한다.
 FortObjectLoadState& RawCampaignSession::FortObjectSettings() { return impl_->objectState; }

@@ -1,0 +1,239 @@
+--- a/cpppj/src/client/RawCampaignWorldRuntime.h
++++ b/cpppj/src/client/RawCampaignWorldRuntime.h
+@@ -4,8 +4,19 @@
+ #include "client/RawNormalTerrainWorldBinding.h"
+ #include "o/RawCampaignWorldLoad.h"
+ #include <memory>
++#include <optional>
+ 
+ namespace netstorm::client {
++// 일반Fort의기존완료Money/Meta몸체와각wrapper안에서늦게선택하는실제stream이다.
++struct RawExistingFortChildren {
++    std::shared_ptr<void> stateOwner; //factory의장기상태소유자를모듈/selector보다나중에반납한다.이미Client장기소유면비울수있다.
++    std::shared_ptr<o::RawFortMoneyLoad> money; //같은Session SP/Player/깊이를빌리는실제Money모듈이다.
++    std::shared_ptr<o::RawFortMetaLoad> meta; //Client의단일6160BYTE Badges/같은Technology내용물모듈이다.
++    std::function<void(const o::FortTemplate&,std::uint32_t)> selectMoney; //wrapper진입전에현재manager존재/정책전역을같은MoneyState에동기화한다.
++    std::function<o::FortMoneyCursor&(const o::FortTemplate&,std::uint32_t)> moneyStream; //깊이/진단뒤같은현재manager Money를선택한다.
++    std::function<void(const o::FortTemplate&,std::uint32_t,bool)> selectMeta; //고정this/현재owner/manager 상태를실제MetaState에선택한다.
++    std::function<o::FortMetaStream&(const o::FortTemplate&,bool)> metaStream; //기술부모조회뒤Technology/Badges를실제manager에서선택한다.
++};
+ // 상위 로그인/Template 계층이 소유하는 현재 저장소를 그대로 빌린다.
+ struct RawCampaignInstallData {
+     std::span<const o::FortTemplate> templates; // 현재9 Template의 실제 값형 해석 자료다.
+@@ -14,6 +25,7 @@
+     std::span<std::uint8_t> handle; // 실제 mySubHandle의 NUL 포함 저장소다.
+     std::function<const o::FortTemplate&(std::uint32_t)> templateAt; // 실제 Client는 현재 manager를 조회해 빌린 자료도 같은 객체로 반환한다.
+     std::function<o::FortTerritoryStream&(std::uint32_t)> territoryAt; // 같은 manager의 현재 지형 cursor다. 기존 독립 입력은 위 span을 유지한다.
++    std::function<RawExistingFortChildren(const o::RawFortObjectLoad&)> existingFort; //실제Object모듈생성뒤같은모듈을재사용해Money/Meta를구성한다.캠페인은비워둔다.
+ };
+ // Core 밖의 실제 UI/번역/가상 상태/진단 경계만 공급한다. gameplay 효과는 아래 실제 모듈을 사용한다.
+ struct RawCampaignInstallEffects {
+@@ -42,6 +54,8 @@
+     RawCampaignWorldRuntime& operator=(const RawCampaignWorldRuntime&)=delete;
+     // BeginLoad→실제 캠페인 부모→Graph(false) 이후 종료를 한 번 실행한다. 실패를 로드 완료로 바꾸지 않는다.
+     void Load();
++    // BeginLoad뒤원본외곽의Player/CoreData/회복을실행하고004b5f70(alternate0)만설치한다.전체Editor완료가아니다.
++    void LoadExistingFort(const std::function<void()>& beforeWorld);
+     // 검사/후속 미션 부모가 같은 Pool과 저장객체 몸체를 확인할 때 사용한다.
+     const o::SidPool& Pool() const;
+     const o::RawFortObjectLoad& Objects() const;
+--- a/cpppj/src/client/RawCampaignWorldRuntime.cpp
++++ b/cpppj/src/client/RawCampaignWorldRuntime.cpp
+@@ -1,5 +1,6 @@
+ // 기존 완료 몸체를 재작성하지 않고 캠페인 최초 설치의 실제 하위 경로로 연결한다.
+ #include "client/RawCampaignWorldRuntime.h"
++#include "client/RawFortWorldLoadBinding.h"
+ #include <bit>
+ #include <stdexcept>
+ #include <utility>
+@@ -20,6 +21,7 @@
+     std::unique_ptr<o::RawFortObjectLoad> objects; // 실제 저장172객체의 로더이며 결과는 같은 Pool에 쓴다.
+     std::unique_ptr<o::RawFortWorldLoad> territory; // 실제120BYTE 읽기 몸체를 재사용한다.
+     std::unique_ptr<o::RawCampaignWorldLoad> campaign; // 현재 순서/두owner를 보존하는 원본 미션 부모다.
++    std::optional<RawExistingFortChildren> existing; //Money/Meta와그실제입력수명을같은WorldRuntime동안보존한다.
+     bool started{}; // 실패한 부분 설치의 재실행으로 중복 객체가 생기지 않게 한다.
+ 
+     // 실제 저장소 동일성과 필수 경계를 최초 등록/쓰기 전에 검사한다.
+@@ -61,6 +63,15 @@
+         territoryHooks.money=territoryHooks.badges=territoryHooks.technology=[](const o::FortTemplate&,std::uint32_t) { throw std::logic_error("캠페인 설치에서 generic Fort 부모 후처리를 실행할 수 없습니다"); };
+         territoryHooks.populateIsland=[](const o::RawIslandBuilderState&,std::int32_t) { throw std::logic_error("캠페인 설치의 alternate Fort populate 미연결"); };
+         territoryHooks.rebuildGraph=[this](bool mode) { core.graph.Rebuild(mode); };
++        if (data.existingFort) {
++            existing=data.existingFort(*objects);
++            if (!existing->money || !existing->meta || !existing->selectMoney) throw std::invalid_argument("일반Fort 실제Money/Meta몸체미연결");
++            territoryHooks=MakeFortWorldLoadBinding(world,normal,*objects,*existing->money,*existing->meta,
++                existing->moneyStream,existing->selectMeta,existing->metaStream,std::move(territoryHooks)); //Object/Generate/Graph도기존같은완료몸체를쓴다.
++            auto moneyLoad=std::move(territoryHooks.money);territoryHooks.money=[this,body=std::move(moneyLoad)](const o::FortTemplate& fort,std::uint32_t owner) {
++                existing->selectMoney(fort,owner);body(fort,owner); //실제stream선택은여전히LoadSelected의깊이/진단뒤다.
++            };
++        }
+         territory=std::make_unique<o::RawFortWorldLoad>(core.pool,chunks,islands,core.frames,puzzlePiece,player.State().templateOwner,noRegion,objectState.loadingDepth,std::move(territoryHooks));
+         o::CampaignWorldLoadHooks campaignHooks{effects.translateYou,effects.setConfig,effects.refreshWindowTitle,effects.builderAssertion,
+             [this](const o::RawIslandBuilderState& builder,std::int32_t region) { Generate(builder,region); },
+@@ -91,6 +102,13 @@
+     state.started=true;state.world.BeginLoad();state.objectState.loadingDepth=1;state.campaign->Load();
+     state.world.FinishLoadAfterGraph();state.objectState.loadingDepth=0;
+ }
++// 캠페인전용이름/readonly/Objects부모를우회호출하지않고일반Fort의실제네child를선택한다.
++void RawCampaignWorldRuntime::LoadExistingFort(const std::function<void()>& beforeWorld) {
++    auto& state=*impl_;if (state.started || !state.existing || !beforeWorld) throw std::logic_error("일반Fort실제자원/외곽준비누락또는재실행");
++    state.started=true;state.world.BeginLoad();state.objectState.loadingDepth=1;
++    beforeWorld();state.territory->Load(0); //Player생성/회복의필수원본단계를지난뒤에만일반월드를설치한다.
++    state.world.FinishLoadAfterGraph();state.objectState.loadingDepth=0; //부모의Graph(false)를중복호출하지않는다.
++}
+ // 참조를 비교할 실제 Pool을 반환한다.
+ const o::SidPool& RawCampaignWorldRuntime::Pool() const { return impl_->core.pool; }
+ // 실제 저장객체 loader를 제공하며 별도 사본을 만들지 않는다.
+--- a/cpppj/src/client/RawSurfaceWorld.h
++++ b/cpppj/src/client/RawSurfaceWorld.h
+@@ -127,6 +127,8 @@
+     RawWorldCore Core();
+     //원본옵션의TYPE+c4 쓰기가같은월드의188TYPE를직접사용하게한다. 새사본을만들지않는다.
+     std::span<o::RiftTypeRecord> MutableTypes();
++    // 최초객체/Runtime등록전에원본모드의실제소유권·연결색·다리붕괴소비자를함께설정한다.
++    void ConfigureInstallModes(bool fort,bool battle,bool challenge,bool editor);
+     // 미리보기도 같은 실제 연결 생성기와 현재 표면 전역을 사용한다.
+     o::RawBridgeConnect& BridgeConnections();
+     // 같은 저장소를 사용하는 자산/Regular/Form 전송/낙하/로딩 경계를 설치한다. 미연결 콜백을 생략하지 않는다.
+--- a/cpppj/src/client/RawSurfaceWorld.cpp
++++ b/cpppj/src/client/RawSurfaceWorld.cpp
+@@ -193,6 +193,13 @@
+         *s.factory,*s.owner,*s.frame,*s.pop,*s.unpop,*s.postPop,*s.display,*s.building,*s.graph,*s.neighbors,
+         *s.baseDestroy,*s.virtualDestroy,*s.lifecycle,*s.events,*s.formDispatch,*s.dependencies,*s.host,s.processState,s.kernel,s.links};
+ }
++// Session의globals만바꾸고private BridgeDecayMode.editor를남기지않는다.
++void RawSurfaceWorld::ConfigureInstallModes(bool fort,bool battle,bool challenge,bool editor) {
++    auto& s=*impl_;if (s.runtimeBound || s.loading || s.loaded || s.kernel.Size() || s.pool.FreeCount()!=s.pool.Capacity()-5) throw std::logic_error("실제설치모드는첫객체/Runtime등록전에필요");
++    // 지정Take가freeCount를보존하는경우도이미만든실제슬롯을거부한다.
++    for (std::uint32_t sid=5;sid<s.pool.Capacity();++sid) if (!(s.pool.Slot(o::Sid{static_cast<std::uint16_t>(sid)})[11]&1)) throw std::logic_error("실제설치모드설정전에객체존재");
++    s.ownerMode={fort,battle,challenge};s.links.battle=battle;s.mode.editor=editor;
++}
+ //현재같은전역TYPE의수정가능범위를원본옵션소비자에게만빌린다.
+ std::span<o::RiftTypeRecord> RawSurfaceWorld::MutableTypes() { return impl_->types; }
+ // 완성된 실제 파생 훅을 설치할 때 Form/Regular의 기존 callback도 현재 경계를 읽게 한다.
+--- a/cpppj/src/client/RawCampaignSession.h
++++ b/cpppj/src/client/RawCampaignSession.h
+@@ -43,6 +43,7 @@
+ #include "o/RawTutorialTwo.h"
+ #include "o/RawTutorialLater.h"
+ #include "o/RawMissionFrameGate.h"
++#include "o/RawEditorPlayers.h"
+ #include "client/RawCampaignParticles.h"
+ namespace netstorm::o { class RawCarrierSteal; class RawCarrierPickup; class RawCarrierMove; class RawGemReward; class RawDudeBehavior; struct MissionStartGlobals; struct MissionAiSettingsState; struct FortObjectLoadState; } // 포획/Dude 몸체와 미션 시작 전역의 고정 참조만 공개한다.
+ namespace netstorm::client {
+@@ -116,8 +117,24 @@
+     o::RawProductionDeck::Fill allocationBytes; // 실제 할당 직후 바이트이며 생성자가 보존하는 꼬리를 임의 초기화하지 않는다.
+     CampaignProductionEffects effects; // 현재 getTeleportTechFree와 원본 모드 진단이다.
+ };
++// 생성전선택이며캠페인생성후Editor bool을켜는전환으로대체하지않는다.
++enum class CampaignInstallMode { Campaign,ExistingEditor }; //NewFort alternate1은아직별도필수미연결이다.
++// 실제기존Fort child factory가빌리는Session의현재저장소다.
++struct CampaignExistingFortContext {
++    RawSurfaceWorld& world; //같은실제Pool/Factory/장부/Graph다.
++    o::RawPlayerWorld& player; //현재PlayerKnown/두owner/직접Create를공유한다.
++    const o::RawFortObjectLoad& objects; //같은저장객체와Contents생성몸체다.
++    o::SquidRewardState& reward; //현재fort/editor/battle HP·SP모드다.
++    o::ScrambledSpStore& sp; //같은게임난수를쓰는실제SP저장소다.
++    std::uint32_t& loadingDepth; //모든wrapper가직접같이쓰는현재DWORD다.
++    CampaignTemplateStorage& storage; //SelectMoney/Badges/Technology가같은manager/stream을선택한다.
++    std::span<std::uint8_t> badges; //Client RawFortBadgesGlobals::Records의단일6160BYTE다.
++};
+ // 게임 계산을 대신하지 않고 실제 클라이언트 UI/음향/전송의 선택 경계를 공급한다.
+ struct RawCampaignSessionServices {
++    CampaignInstallMode installMode{CampaignInstallMode::Campaign}; //기존모든호출은캠페인입력을보존한다.
++    std::function<RawExistingFortChildren(const CampaignExistingFortContext&)> existingFortChildren; //실제Money/Meta/TypeNames/UI를생성하는필수장치factory다.
++    std::function<void(const CampaignExistingFortContext&)> recoverEditorTerritory; //004b5ec0의실제읽기/flags회복/쓰기/State수정이다.빈성공을넣지않는다.
+     std::function<void(std::span<std::uint8_t>)> templateStateBytes; // 빈 State 초기화의 미정 바이트를 현재 실제 할당 입력으로 공급한다.
+     std::shared_ptr<CampaignTemplateStorage> templateStorage; // Init의 명시 정리까지 실제 manager/State/이미지를 같은 저장소에 유지한다.
+     std::shared_ptr<const std::vector<std::uint8_t>> missionFortImage; // 실제 선택 파일의 같은 원문이며 초기 manager 읽기 부모가 소비한 뒤 반납한다.
+@@ -175,6 +192,10 @@
+     RawCampaignSession& operator=(const RawCampaignSession&)=delete; // 다른 월드 상태와 복사하지 않는다.
+     // 실제 부모 설치를 한 번 실행한다. 실제 큰 하위가 누락되면 오류를 그대로 반환한다.
+     void Load();
++    // 기존Fort의Player→CoreData자연생략→Territory회복→일반World단계까지만실행한다.전체loaded성공을설정하지않는다.
++    void LoadExistingEditorWorld();
++    // 외곽전체Snapshot/State/lastEditFort뒤호출한다.번역/format/마지막0046e980은필수실제ui입력이다.
++    void InstallExistingEditorPlayers(o::EditorPlayersHooks ui);
+     //현재실제설정/시계/Player/Template로 원본로컬로그인 후 같은Load를 정확한 위치에서 실행한다.
+     void LoadLocalConnection();
+     //프레임마다현재실제송신/수신큐와로그인타이머를진행한다.
+--- a/cpppj/src/client/RawCampaignSession.cpp
++++ b/cpppj/src/client/RawCampaignSession.cpp
+@@ -1,6 +1,7 @@
+ // 기존 원본 몸체의 단일 저장소 조립을 실제 클라이언트 세션이 소유한다.
+ #include "client/RawCampaignSession.h"
+ #include "client/CampaignTemplateStorage.h"
++#include "o/RawFortBadgesGlobals.h"
+ #include "o/RawFortSnapshotBasics.h"
+ #include "o/RawFortContentSave.h"
+ #include "o/RawFortObjectSave.h"
+@@ -372,6 +373,7 @@
+     std::array<std::uint32_t,4> aiWorkshops{86,87,88,85}; // PATCH004709d0의 theme0/1/2/3이 읽는005411b0/b4/b8/ac의 실제 기본 타입이다.
+     std::uint32_t aiExcludedType{133},aiMissionFallback{}; // 실제 sunWalker 분류 제외 번호와 현재 getter를 사용할 때 읽지 않는 값형 호환 저장소다.
+     bool loaded{}; // 같은 실제 저장 부모와 이동 설치가 정상 종료했을 때만 AI 생성 요청을 허용한다.
++    bool editorWorldStarted{},editorWorldReady{}; //부분World단계/실제완료를구별하며전체Editor loaded로가장하지않는다.
+     MissionOutcomeState outcomeState; // 미션 종료까지 유지하는43개 사건 잠금이며 입력 배열은 현재 원문 연결로 대체한다.
+     MissionStartGlobals missionStart; // 실제 Start가 쓰는 미션 제한 전역의 유일한 저장소다.
+     MissionAiSettingsState missionAiSettings; // 실제600BYTE 설정 초기화가 읽는 현재 기본 전역이다.
+@@ -704,6 +706,15 @@
+         level=std::make_unique<RawSquidLevel>(core.pool,core.types,SessionMissing<void,SquidLevelAssertion>());
+         finishState.chaffMode=true;objectState.mission=true;objectState.chaffMode=true;
+         playerState.playerKnown=1;assetState.boss=true;assetState.inBattle=true;assetState.localOwner=1;gunState.boss=true;
++        if (services.installMode==CampaignInstallMode::ExistingEditor) {
++            world.ConfigureInstallModes(true,false,false,true); //최초Player/지형/저장객체보다먼저모든실제표면소비자를설정한다.
++            globals.editor=1;globals.missionPost=true;fullDeck=1;
++            playerState.fortMode=true;assetState.fortMode=true;assetState.inBattle=false;regularState.fortMode=true;
++            objectState.special=true;objectState.mission=false;objectState.fort=true;objectState.chaffMode=true;
++            finishState.chaffMode=true;finishState.special=true;finishState.fort=true;
++            rewardState.fixedSpA=true;rewardState.fixedSpB=true;rewardState.halfHealthMode=false;rewardState.aiMirrorDisabled=false;
++            priestState.regen.modeBlocked=true;
++        }
+         //BYTE호환값을DWORD const참조로넘기면임시값수명오류가나므로실제Player DWORD를빌린다.
+         broadcast=std::make_unique<RawBattleBroadcast>(core.pool.Edition(),players,services.battlePeers,playerState.battleOwner,assetState.boss);
+         // 별도 관찰/장치 송신이 없으면 실제 분배기를 사용한다. NULL 연결은 원본 조건에서 자연스럽게 생략한다.
+@@ -2410,7 +2421,12 @@
+         hooks.notifySurface=[this](Sid sid) { core.building.NotifySurface(sid); };
+         hooks.setState=[this](Sid sid,std::uint32_t value) { assetBindings->SetState(sid,value); };
+         hooks.virtualCount=[this](Sid sid) { return static_cast<std::int32_t>(level->Get(sid)); };
+-        return std::make_unique<RawCampaignWorldRuntime>(world,chunks,*islands,*player,*normal,random,hp,*ownership,*finish,*contained,objectState,globals,piece,noRegion,RawCampaignInstallData{{},{},headers,handle,[this](auto slot)->const FortTemplate& { return templateStorage->Template(slot); },[this](auto slot)->FortTerritoryStream& { return templateStorage->SelectTerritory(slot); }},std::move(hooks));
++        RawCampaignInstallData data{{},{},headers,handle,[this](auto slot)->const FortTemplate& { return templateStorage->Template(slot); },[this](auto slot)->FortTerritoryStream& { return templateStorage->SelectTerritory(slot); }};
++        if (services.installMode==CampaignInstallMode::ExistingEditor) data.existingFort=[this](const RawFortObjectLoad& objects) {
++            if (!services.existingFortChildren || !services.fortBadges) throw std::logic_error("기존Editor의실제child/공유Badges미연결");
++            return services.existingFortChildren({world,*player,objects,rewardState,sp,objectState.loadingDepth,*templateStorage,services.fortBadges->Records()});
++        }; //services.fortBadges는병렬전체Snapshot제안의동일필드이며여기서별도소유자를만들지않는다.
++        return std::make_unique<RawCampaignWorldRuntime>(world,chunks,*islands,*player,*normal,random,hp,*ownership,*finish,*contained,objectState,globals,piece,noRegion,std::move(data),std::move(hooks));
+     }
+     // 공개 운반 어댑터와 일반 배치 통지가 같은 현재 원본 Builder를 조립한다.
+     std::unique_ptr<RawConstructionBuilder> MakeBuilder(ConstructionBuilderState& state,ConstructionBuilderHooks hooks) {
+@@ -2862,10 +2878,31 @@
+ RawCampaignSession::~RawCampaignSession()=default;
+ // 저장 다이스/룬의 전체 후처리를 먼저 등록한 뒤 동일 원본 부모로 월드를 로드한다.
+ void RawCampaignSession::Load() {
++    if (impl_->services.installMode!=CampaignInstallMode::Campaign) throw std::logic_error("기존Editor는별도World단계와외곽완료부모필요");
+     impl_->ConnectBuilding();impl_->ConnectMotion();
+     impl_->runtime->Load();
+     impl_->ConnectDevastation();impl_->ConnectCarrierDrop();impl_->ConnectPriestPrayer();impl_->buildingMover=impl_->MakeBuilder(impl_->buildingMoverState,{});
+     impl_->ConnectGameplayPlacement();impl_->ConnectCursor();impl_->loaded=true;
++}
++// 일반Fort생성전모드는생성자가이미설정했다.캠페인Load로돌아가우회하지않는다.
++void RawCampaignSession::LoadExistingEditorWorld() {
++    auto& s=*impl_;if (s.services.installMode!=CampaignInstallMode::ExistingEditor || s.loaded || s.editorWorldStarted || !s.services.recoverEditorTerritory || !s.services.fortBadges) throw std::logic_error("기존Editor실제입력/회복누락또는재설치");
++    s.editorWorldStarted=true;s.ConnectBuilding();s.ConnectMotion();
++    s.runtime->LoadExistingFort([&s] {
++        s.player->Create(std::bit_cast<std::int32_t>(s.playerState.battleOwner));
++        if (!s.globals.editor && !s.globals.missionPost) throw std::logic_error("004beca0의기존Editor자연생략관문변경");
++        s.services.recoverEditorTerritory({s.world,*s.player,s.runtime->Objects(),s.rewardState,s.sp,s.objectState.loadingDepth,*s.templateStorage,s.services.fortBadges->Records()});
++    });
++    s.editorWorldReady=true; //Deck/생산/전체Snapshot/State/EditorPlayers는아직안끝났으므로loaded는false다.
++}
++// 원본004904b0의게임효과는같은현재Player와직접ContainedCreate로교체한다.
++void RawCampaignSession::InstallExistingEditorPlayers(EditorPlayersHooks ui) {
++    auto& s=*impl_;if (s.services.installMode!=CampaignInstallMode::ExistingEditor || !s.editorWorldReady) throw std::logic_error("기존Editor실제World전Player초기화");
++    ui.players=[&s]()->std::span<std::uint8_t> { return s.players; };ui.handle=[&s]()->std::span<std::uint8_t> { return s.handle; };
++    ui.technology=[&s](auto owner) { return s.player->Create(std::bit_cast<std::int32_t>(owner)); }; //CurrentTechnology/Find/Ensure로대체하지않는다.
++    ui.typeCount=[&s] { return static_cast<std::int32_t>(s.core.types.size()); };ui.typeAt=[&s](auto type)->const RiftTypeRecord& { return s.core.types[static_cast<std::size_t>(type)]; };
++    ui.createContained=[&s](auto parent,auto type,auto argument,auto flags,auto attach,auto quality) { return s.contained->Create(parent,type,argument,flags,attach,quality); };
++    o::InitializeEditorPlayers(ui); //실제번역/format/0046e980중하나라도미연결이면원문도달위치에서중단한다.
+ }
+ // UI의 현재 크기/변경 전역을 빌리며 게임 소유자·모드는 실제 세션에서 다시 읽는다.
+ void RawCampaignSession::ResetCamera(CameraHomeState& state,std::function<void(std::int32_t,std::int32_t)> apply) const {

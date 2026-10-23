@@ -12,6 +12,7 @@
 #include "o/Kernel.h"
 #include "o/Squid.h"
 #include "o/RawMissionGuide.h"
+#include "o/RawFortMissionSave.h"
 #include "client/GuideMissionTransitions.h"
 #include "client/TutorialInit.h"
 #include "client/SoloMapCatalog.h"
@@ -94,6 +95,7 @@ private:
     // 실제 Guide 단계1의 Header/월드/로그인/커서를 설치하고 다음 단계만 요청한다.
     void InitializeMission(); // 실제 Tutorial Init은 번호/설정/전역을 쓰고 다음 루프의 로드 요청과 Header를 수행한다.
     void LoadMissionWorld(std::optional<std::string> requestedFort={}); // Init이 캡처한 요새 이름을 사용한다. 기존 Battle은 현재 설정을 읽는다.
+    o::FortMissionSaveHooks FortMissionSaveEffects(); // 현재 Runtime의 이름과 같은 실제 sequence/flags를 동기 저장에 빌린다.
     // 실제 Guide 단계3에서 같은 설치된 Session의 Start를 실행한다.
     void StartMissionWorld();
     // 이미 읽힌 원본 브리핑 섹션 이름을 순서대로 연다.
@@ -126,6 +128,7 @@ private:
     std::shared_ptr<std::array<std::uint8_t,87>> missionOptions_{std::make_shared<std::array<std::uint8_t,87>>()}; // 월드보다 오래 사는 실제 Init/로그인 옵션이다.
     std::shared_ptr<std::array<std::uint32_t,256>> missionRestrictions_{std::make_shared<std::array<std::uint32_t,256>>()}; // 설치 전/후가 공유하는 기술 허용 표다.
     std::uint32_t missionNumber_{},tutorialSeen_{},initLoginSubscriber_{},initialSubscriber_{1}; // 실제5ca8e0/f0·540c74/54265c의 현재 전역이다.
+    std::uint32_t nextMissionSaveToken_{}; // 64비트 포인터를 자르지 않는 실제 Runtime별 비영 수명 토큰이며 미션 교체에서 되돌리지 않는다.
     // input_: 처리할 입력 또는 입력 분배기.
     GumpControlInput input_;
     GumpPointerBoundaryState pointerBoundary_; // 원본 정적 안팎/버튼 기록은 같은 Client UI 수명 동안 유지하고 페이지·월드 교체에서 지우지 않는다.

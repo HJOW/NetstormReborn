@@ -21,9 +21,9 @@ std::vector<std::uint8_t> SerializationCatalogImage() {
         const auto length=bytes.size()+2;image.push_back(static_cast<std::uint8_t>(length));image.push_back(static_cast<std::uint8_t>(length>>8));image.insert(image.end(),bytes.begin(),bytes.end());
     }return image;
 }
-// 검사전용작업디렉터리에만새합성파일을만들며원본/CD에는쓰지않는다.
+// 실행 작업 디렉터리와 무관하게 빌드 아래에 합성 파일을 만들며 원본/CD에는 쓰지 않는다.
 std::filesystem::path SerializationCatalogFile() {
-    const auto root=std::filesystem::current_path()/"test-data/template-serialization-globals";std::filesystem::create_directories(root);const auto image=SerializationCatalogImage();
+    const auto root=std::filesystem::path(__FILE__).parent_path().parent_path()/"build/test-data/template-serialization-globals";std::filesystem::create_directories(root);const auto image=SerializationCatalogImage();
     std::ofstream output(root/"shared.fort",std::ios::binary|std::ios::trunc);output.write(reinterpret_cast<const char*>(image.data()),static_cast<std::streamsize>(image.size()));
     if (!output) throw std::runtime_error("직렬화전역검사전용Fort쓰기실패");return root;
 }

@@ -1,5 +1,14 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-24 단위382 완료: 실제 Session 전체 Fort 저장과 Client 전역 연결
+
+- [x] 단위381은 **fa7762f9 / 20261024-03 CP**로 커밋했다. 공용 전체2464검사/실패0을 확인했고, 현재/마지막 정밀 디컴파일 PC는 **HJOW-Athlon / 마지막 수행2026-10-23**이다.
+- [x] 전체 Snapshot 부모를 같은 Session의 Storage·기술 부모·Objects·Territory·Deck·공유 난수·현재 Mission·Badges 장부·Notify에 연결했다. 생성한 같은 stream에 본문만 기록하며 내부 token1을 외부 registry와 구별한다. 실제 readOnly DWORD/현재 owner/숨김 표를 이미지 작성 뒤 읽고, 작업본 저장·재파싱·별도 Session 재로드 두 pass 및 누락/부분효과3검사가 통과했다.
+- [x] Client 수명의 단일 Badges 장부/시작 reset과 readOnly 옵션을 연결하고 실제 Runtime의 비영 수명 토큰·현재 이름/sequence/flags hook를 공급했다. 실제 Client5검사와 기존 관련30을 합친 **38검사/실패0**이다. 공용 제품/검사 빌드는 종료0·관측 경고오류0이며 전체CTest는 **2472검사/실패check0·종료0/310.01초(전체310.05초)**다. 제품SHA `ba96540c2532d11702a9d0f254a054157291d909b0db9b3682797b64a1e5dda8`, 검사SHA `b725e2be52be14f0cd36f4333847741c84a006d0fe3ffb1eac4d134fd29aab71`이다.
+- [x] 같은 제품의 양 판본 설정 CLI, 실제 해상도 No/Yes·800×600 저장 후 종료, 1024×768/1280×720 ESC/음량/해상도No/QWASZX 회귀가 통과했다. 각 GUI의 제품SHA 동일·원본동일을 직접 확인했다. [현재 실행 기록](docs/exe/cpp-fort-snapshot-session-runtime-20261024.md)과 `extracted/cpp-fort-snapshot-session-20261024-*`에 원시를 보존했다. 전체1394파일manifest 동일과 UTF8/링크/공백·보호경로를 확인한 뒤 **20261024-04 CP**로 커밋한다. 목표는 계속 활성이다.
+- [x] 최초 stage 두 번은 남아 있던 `.git/index.lock` 때문에128로 실패했다. 실행 Git 없음·9분 된0BYTE·배타 열기 가능을 확인해 해당 파일만 `extracted/cpp-fort-snapshot-session-20261024-stale-index.lock`으로 보존한 뒤16파일 stage와 공백 검사가 통과했다. 실제 index나 다른 Git 자료는 삭제하지 않았다.
+- [ ] 기존 Fort Editor의 최초 설치/타입 변환표/Deck 부모/필수 후처리와 실제 메뉴는 별도 잔여다. 캠페인 설치 후 명시 Fort 입력으로 실행하는 headless 저장 검사를 실제 Editor 설치 성공으로 표현하지 않는다. 미적용 [generic 설치 patch](docs/exe/patches/cpp-generic-editor-install-20261024.patch)를 저장소에 보존하고 현재 Session 변경 이후 문맥은 재검토한다. TypeNames/Deck/Editor tail 신규 원문 모듈은 병렬 준비 중이며 공용 미등록이다.
+
 ## 2026-10-24 단위381 완료: 전체 저장 기반과 Editor Player·이름·Notify 공용 등록
 
 - [x] 단위380은 **5166c972 / 20261024-02 CP**로 커밋했다. AGENTS와 공통/닷넷 인수인계를 다시 읽었으며 현재 PC와 마지막 전체 정밀 디컴파일 PC는 **HJOW-Athlon / 마지막 수행 2026-10-23**으로 일치한다. 전체 목표는 계속 활성이다.

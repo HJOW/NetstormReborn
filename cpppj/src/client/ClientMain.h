@@ -25,6 +25,7 @@
 #include <utility>
 #include <vector>
 
+namespace netstorm::o { class RawFortBadgesGlobals; } // Client 수명의 원본 Badges 장부를 고정 주소로 소유한다.
 namespace netstorm::client {
 class UberGump;
 class ClientAudio;
@@ -120,6 +121,10 @@ public:
     Screen& GetScreen();
     InputQueue& Input();
     o::ConfigInterface& Configuration();
+    // 원본0054db30의 Client 수명 DWORD를 빌린다. 저장할 때 설정을 다시 조회하지 않는다.
+    const std::uint32_t& ReadOnlyForts() const;
+    // 미션 교체와 무관한 같은 실제 장부의 공유 수명을 Session에 전달한다.
+    const std::shared_ptr<o::RawFortBadgesGlobals>& FortBadges() const;
     const o::BaseFileSystem& Files() const;
     const GameAssets& Assets() const;
     o::Kernel& GetKernel();
@@ -163,6 +168,8 @@ private:
     void SaveOptions();
     // 원본 FUN_00435220("Interpret Options")의 일부: 화면 크기·창 위치·프레임 제한 등 설정을 읽는다.
     void InterpretOptions();
+    // 원본00435860의 현재 ReadInt만 재해석한다. 설정 변경 callback과 초기 해석이 공유한다.
+    void InterpretFortFileOptions();
     // 원본 FUN_00436260: 로딩 화면(검은 바탕, 가운데 그림, 오른쪽 아래의 두 줄 글).
     void PaintLoading(NativeHandle dc);
     // 원본 FUN_00436450: 프레임 제한 뒤 그리고 창으로 내보낸다.
@@ -184,6 +191,9 @@ private:
     o::BaseFileSystem files_;
     // configuration_: 현재 언어와 실행 설정을 조회하는 인터페이스.
     o::ConfigInterface configuration_;
+    // 원본0054db30의 최초 BSS0이다. 미션 교체·누락 키로 초기화하지 않는 실제 한 DWORD다.
+    std::uint32_t readOnlyForts_{};
+    std::shared_ptr<o::RawFortBadgesGlobals> fortBadges_; // CRT 한 번과 시작 count reset을 구별하는 단일6160BYTE 소유자다.
     struct ChatState; // 실제 전역 Chat 기록과 현재 subscriber 처리기를 구현 파일의 고정 주소에 소유한다.
     std::unique_ptr<ChatState> chat_; // 메뉴/월드보다 오래 사는 단일100×48바이트이며 미션 수명과 분리한다.
     // translations_: 용어 키를 언어별 표시 문자열로 바꾸는 번역표.

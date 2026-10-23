@@ -10,9 +10,11 @@
 #include "client/RawChatChannels.h"
 #include "client/UberGump.h"
 #include "o/OriginalText.h"
+#include "o/RawFortBadgesGlobals.h"
 #include "platform/Bitmap.h"
 #include <algorithm>
 #include <array>
+#include <bit>
 #include <cstring>
 #include <cstdlib>
 #include <cstdio>
@@ -157,14 +159,18 @@ struct Client::ChatState {
 Client::Client(ClientOptions options)
     : options_(std::move(options)), files_(options_.gameDirectory),
       configuration_([this](std::string_view path) { return files_.TryRead(path); }),
+      fortBadges_(std::make_shared<o::RawFortBadgesGlobals>()),
       chat_(std::make_unique<ChatState>(*this,options_.edition)) {
     files_.RegisterArchive(options_.gameDirectory / "netstorm.tarc");
     configuration_.Registry().environment = Environment;
     if (g_client) throw std::logic_error("Only one client may exist");
+    // 원본00558dd0의 Set 직후 동기 시점에 같은 DWORD를 갱신한다. 현재는 이 옵션만 연결한다.
+    configuration_.onChanged = [this] { InterpretFortFileOptions(); };
     g_client = this;
 }
 // 월드/소리 프로세스→음악·음향→화면→GDI/창 순서로 참조 대상보다 사용자를 먼저 정리한다.
 Client::~Client() {
+    configuration_.onChanged = {}; // 부분 반납 중인 Client를 콜백으로 다시 읽지 않게 먼저 해제한다.
     menu_.reset();
     ClearThunderFlashes();
     audio_.reset(); // 월드의 반복 소리를 멈춘 뒤 음악 스레드를 합류하고 장치를 닫는다.
@@ -324,6 +330,7 @@ int Client::Run() {
     if (!PumpMessages()) return 0;
     // [원본] 송수신기, squid 목록(120000), 좌표 해시, spot 배열, 영상, Guide, 그래프,
     //        전체 명령 표, 인트로 감지, 연락처, 지도 모드, HTTP 서버 — 옮기지 않았다.
+    fortBadges_->ResetCounts(); // 원본0043984a의 시작 지도 초기화 뒤 count reset이며 매 Session 생성 때 반복하지 않는다.
     // 원본 00438dc0 "loadContactList" 다음의 FUN_00469fc0: 전투 밖이므로 메뉴 곡 ser22.mus로 시작한다.
     if (audio_) audio_->StartScene(false);
     // 현재 UberGump는 단일 플레이 메뉴/브리핑과 저장 미션의 지형·선택·이동 월드를 연결한다.
@@ -433,6 +440,13 @@ void Client::ClearFullScreenState() {
     std::remove((options_.gameDirectory / kFullScreenStateFile).string().c_str());
 }
 
+// 현재 DWORD에서 시작하므로 누락 ReadInt는 이전 값을 보존하며 signed 전체 비트도 바꾸지 않는다.
+void Client::InterpretFortFileOptions() {
+    auto value = std::bit_cast<std::int32_t>(readOnlyForts_); // 원본 ReadInt가 받는 동일 DWORD의 signed 작업값이다.
+    configuration_.ReadInt("readOnlyForts", value);
+    readOnlyForts_ = std::bit_cast<std::uint32_t>(value);
+}
+
 // 원본 00435220에서 지금 쓰는 설정만 읽는다. 나머지 키(소리·네트워크·치트·구름 등)는 해당 모듈을 옮길 때 더한다.
 void Client::InterpretOptions() {
     std::string language;
@@ -460,6 +474,7 @@ void Client::InterpretOptions() {
     }
     configuration_.ReadInt("highPriorityValue", highPriority_);
     configuration_.ReadInt("initWindowPos", initWindowPos_);
+    InterpretFortFileOptions(); // 원본처럼 sleepPerLoop/maxFPS보다 먼저 같은 저장 관문 DWORD를 읽는다.
     configuration_.ReadInt("sleepPerLoop", sleepPerLoop_);
     maxFps_ = kDefaultMaxFps;
     configuration_.ReadInt("maxFPS", maxFps_);
@@ -818,6 +833,10 @@ Screen& Client::GetScreen() { return *screen_; }
 InputQueue& Client::Input() { return input_; }
 // 설정.
 o::ConfigInterface& Client::Configuration() { return configuration_; }
+// 같은 Client의 실제 한 DWORD 주소를 저장 소비자에 제공한다.
+const std::uint32_t& Client::ReadOnlyForts() const { return readOnlyForts_; }
+// 같은 Client가 소유한 실제 장부만 전달하며 새 Session용 복제본을 만들지 않는다.
+const std::shared_ptr<o::RawFortBadgesGlobals>& Client::FortBadges() const { return fortBadges_; }
 // 파일 시스템.
 const o::BaseFileSystem& Client::Files() const { return files_; }
 // 타입·그림. Run이 "init types"에서 만든 뒤에만 쓴다.
