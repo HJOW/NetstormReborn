@@ -149,7 +149,8 @@ target_sources(netstorm PRIVATE
     RawCursorReturnPiece.cpp RawCursorReturnPiece.h
 )
 # 원본처럼 Win32 GDI·멀티미디어 타이머를 직접 쓴다(Screen·ClientMain).
-target_link_libraries(netstorm PUBLIC user32 gdi32 winmm)
+# 시작 로딩의 실제 Windows 합성 표시 완료를 기다리는 DwmFlush를 연결한다.
+target_link_libraries(netstorm PUBLIC user32 gdi32 winmm dwmapi)
 
 # 실제 입자 색 할당/인접 메모리와 같은 캠페인의 Renderer/VFX 출력을 연결한다.
 target_sources(netstorm PRIVATE ParticlePaletteMemory.cpp ParticlePaletteMemory.h RawCampaignParticles.cpp RawCampaignParticles.h)

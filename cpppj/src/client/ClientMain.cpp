@@ -23,6 +23,7 @@
 #define WIN32_LEAN_AND_MEAN
 #define NOMINMAX
 #include <windows.h>
+#include <dwmapi.h>
 #include <mmsystem.h>
 
 namespace netstorm::client {
@@ -316,6 +317,8 @@ int Client::Run() {
     if ((mode & ScreenMode::kSoftwareMouse) != 0) cursor_->BuildSoftware(screen_->Palette());
     screen_->ShowCursor(true);
     if (!PumpMessages()) return 0;
+    // 초기 메뉴가 준비되기 전 현재 창에 원본147/Arial20 로딩을 확정 출력한다. 표시 여부가 WM_PAINT 예약만의 타이밍에 의존하지 않게 하며 별도 대기시간은 두지 않는다.
+    InvalidateRect(window,nullptr,FALSE);UpdateWindow(window);GdiFlush();DwmFlush(); // 유효한 WM_PAINT 갱신을 실행한 뒤 Windows 합성 화면의 다음 표시까지 완료하여 빠른 메뉴 교체가 로딩을 덮지 않게 한다.
     // "init types"(FUN_0049ebb0): 타입·그림·타입 표.
     assets_ = std::make_unique<GameAssets>(files_, options_.edition, palettePath);
     if (!PumpMessages()) return 0;
