@@ -66,6 +66,16 @@
 - [x] 읽기 전용 동기화 검사 종료 0. 문서의 UTF-8·변경한 로컬 링크/앵커 11개·충돌 표식·`git diff --check`를 확인했다. 이 문서만 **`20261022-59 DN 기존 구현의 cpppj 재검증과 dotnetpj 후속 계획 갱신`**으로 로컬 커밋한다. 원격 push는 하지 않는다.
 - [x] 이번 작업은 **계획 수정 완료**이며 위의 코드 작업은 모두 미완료로 남긴다. 빌드·단위 테스트·원본/클론 게임·GUI·새 디컴파일은 실행하지 않았다. 향후 실행은 해당 PC의 사용자 지시와 AGENTS.md의 확인/예외 규칙을 따른다.
 
+## 2026-10-23 완료: 배포판 압축 스크립트(package-dotnetpj.ps1)
+
+- [x] 사용자 요청("dotnetpj 쪽 배포판 압축파일 생성용 스크립트도 작성해 줘")으로 AGENTS.md가 요구한 **dotnetpj 배포판 압축 스크립트**를 작성했다. 먼저 AGENTS.md와 두 인수인계를 읽었고, cpppj 쪽 스크립트(`20261023-24 CP`)와 같은 규칙을 따른다. 작업 PC는 **DESKTOP-HJOW**, 시작 HEAD는 `c4009b9b`다. 원본/CD/AGENTS와 W03 이식 코드·fixture는 수정하지 않았다.
+- [x] [dotnetpj/package-dotnetpj.ps1](dotnetpj/package-dotnetpj.ps1)(UTF-8 BOM·CRLF, Windows PowerShell 5.1 호환)을 추가했다. 첫 매개변수가 저장 위치(파일명 포함)이고, 생략하면 입력받으며 빈 값이면 취소(종료 코드 0)한다. 폴더만 주면 `NetstormReborn-dotnetpj-YYYYMMDD.zip`, 확장자를 생략하면 `.zip`을 붙이고 다른 확장자는 오류다. 옵션은 `-PublishDir`(이미 게시한 폴더를 그대로 묶음, 그 폴더는 지우지 않음), `-SelfContained`, `-DryRun`이다.
+- [x] **동작:** 임시 폴더에 `dotnet publish Netstorm.Game.csproj -c Release -r win-x64 --self-contained false -o <임시>`(README의 배포 명령과 같음)를 실행하고, `*.pdb`를 뺀 결과에 `README.txt`(한/영)·`BUILD_INFO.txt`·`LICENSE.txt`·`licenses/`를 더해 `NetstormReborn-dotnetpj/` 아래로 묶는다. 임시 폴더는 끝나면 지운다. 기본은 AGENTS.md의 가정(받는 사람이 .NET 런타임을 미리 설치)대로 **프레임워크 종속**이며 `-SelfContained`는 런타임까지 포함한다. 게임 데이터(`game-data/` 1,351개)와 한국어 글꼴(`fonts/`)은 csproj가 게시 결과에 이미 넣는다. 화면·소리 설정은 `%APPDATA%\NetstormReborn\settings.json`에 저장되므로 압축을 푼 폴더에 설정을 쓰지 않는다.
+- [x] **라이선스 고지:** 라이선스 이름을 기억에 의존하지 않고 게시 결과의 `deps.json`에 적힌 NuGet 패키지마다 NuGet 캐시의 nuspec에서 읽어 `licenses/THIRD_PARTY_NOTICES.txt`를 만든다(MonoGame.Framework.DesktopGL MS-PL, FontStashSharp Zlib, Cyotek MIT, StbImageSharp/StbTrueTypeSharp Unlicense OR MIT 등). 라이선스를 파일로 제공하는 패키지(MonoGame.Library.SDL·OpenAL, NVorbis)는 그 파일을 `licenses/`에 복사한다. 자체 포함이면 .NET 런타임 팩(MIT)도 들어간다. D2Coding 고지문은 글꼴 파일 내부 name 표(저작권 0번, 라이선스 설명 13번, 주소 14번)에서 그대로 옮겼다(NHN Corporation, SIL OFL 1.1).
+- [x] **검증(DESKTOP-HJOW, 게임 창 실행 없음):** 기본 실행(임시 게시→압축→검증→임시 폴더 삭제, 항목 1,375개·130.4MB·23초)과 `-SelfContained`(항목 1,562개·164.5MB·38초, `coreclr.dll`·`hostfxr.dll` 포함)를 실제로 실행했다. Python `zipfile`로 CRC·역슬래시 이름 0·최상위 폴더 1개·`.pdb` 0을 독립 확인했고, 풀어서 `game-data` 1,351개가 `assets/game-data`와, 글꼴이 `fonts/`와, 실행 파일·DLL이 빌드 출력과 SHA-256이 같음을 확인했다. 대화형 흐름(빈 Enter 취소, 따옴표 폴더 입력, 상대 경로, 잘못된 확장자 종료 1, 비대화형 종료 1), 없는 `-PublishDir`·필수 파일이 빠진 게시 폴더(zip 미생성), `-PublishDir` 폴더 보존, 같은 경로 덮어쓰기와 `.partial` 정리도 확인했다. 함수·반복문·상수 50곳의 한국어 주석을 AST로 전수 점검했다. 시험 산출물은 스크래치패드에서 지웠다.
+- [ ] **미검증/남은 일:** (a) 풀어낸 `NetstormClone.exe`를 실제로 실행하지 않았다(`DESKTOP-HJOW`에서는 창 실행 금지). 구성이 게시 결과와 같음은 해시로 확인했지만, .NET 런타임이 없는 PC의 설치 안내 동작과 자체 포함판의 실제 시작은 창 실행이 가능한 PC에서 확인해야 한다. (b) **SIL OFL 1.1 전문 파일이 저장소에 없다.** OFL은 글꼴을 재배포할 때 전문을 함께 주어야 하므로 공식 원문을 `fonts/OFL.txt`로 추가하면 스크립트가 `licenses/`에 자동으로 넣는다(없으면 경고만 한다). 원문은 임의로 작성하지 않았다. (c) MS-PL·Zlib·MIT처럼 식 이름만 있는 패키지의 전문은 넣지 않았다. (d) 설치형(인스톨러) 배포와 Linux 배포는 하지 않았다. 14단계 체크리스트에 반영했다.
+- [x] 인수인계 뒤 **`20261023-26 DN dotnetpj 배포판 압축파일 생성 스크립트 추가`** 로 로컬 커밋한다. 원격 push는 하지 않는다.
+
 ## 2026-10-23 완료: W03 열네째 조각 — 신전 삭제 전처리(RawVortexPreDestroy)
 
 - [x] 사용자 요청("AGENTS.md, LEFT_JOBS.dotnetpj.md 를 읽고 dotnetpj 다음 작업 진행해 줘")으로 직전 절이 지목한 다음 시작점, 곧 W03 원본 월드 코어 ② 삭제·수명의 열네째 조각인 **신전 삭제 전처리**를 수행했다. `cpppj/`·공통 `LEFT_JOBS.md`는 수정하지 않았다. 현재 PC **VM-W11-Codex**는 공통 기록의 마지막 정밀 디컴파일 PC(**VM-W11-Codex, 2026-10-23**)와 같으나 **디컴파일 산출물을 읽지 않았고**, 커밋된 cpppj 소스와 fixture만 썼다. 새 디컴파일·원본 관찰·원본/클론 게임·창 실행은 없다. 마지막 디컴파일 PC 기록은 그대로다. 상세·근거 표·경계는 [원본 월드 코어 W03 신전 삭제 조각](docs/dotnet-original-core-vortexpre-20261023.md).
@@ -3345,11 +3355,11 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
 
 #### 14단계. 패키징 · 배포
 
-- [ ] Windows 10/11 x64: `dotnet publish -r win-x64 --self-contained` 결과를 zip 또는 설치형으로 배포
+- [x] Windows 10/11 x64: `dotnet publish -r win-x64 --self-contained` 결과를 zip 또는 설치형으로 배포 — zip은 2026-10-23 `dotnetpj/package-dotnetpj.ps1` 로 구현(설치형은 미정)
 - [ ] 원본 자산 동봉 배포 (재활용 가능, 1.3절) — 필요한 파일만 선별해 패키지 크기 최소화
-- [ ] D2Coding 글꼴 동봉 + SIL OFL 1.1 라이선스 고지 포함
+- [ ] D2Coding 글꼴 동봉 + SIL OFL 1.1 라이선스 고지 포함 — 글꼴 동봉과 고지문(`THIRD_PARTY_NOTICES.txt`)은 2026-10-23 완료, OFL 전문 파일은 저장소에 없어 미완
 - [ ] (후순위) Linux: `dotnet publish -r linux-x64 --self-contained` + AppImage 우선(필요 시 Flatpak), X11·Wayland 양쪽 동작 확인
-- [ ] 라이선스·면책 고지 문서
+- [ ] 라이선스·면책 고지 문서 — 제3자 라이선스 고지는 `package-dotnetpj.ps1` 이 배포판에 생성(2026-10-23), 면책 고지는 미작성
 
 #### 15단계. 검증 · QA (상시)
 
