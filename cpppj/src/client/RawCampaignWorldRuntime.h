@@ -56,6 +56,7 @@ public:
     void Load();
     // BeginLoad뒤원본외곽의Player/CoreData/회복을실행하고004b5f70(alternate0)만설치한다.전체Editor완료가아니다.
     void LoadExistingFort(const std::function<void()>& beforeWorld);
+    void FinishMissionPriests() const; //같은RawCampaignWorldLoad의실제923e0관문을외곽정확한순서에서재사용한다.
     // 검사/후속 미션 부모가 같은 Pool과 저장객체 몸체를 확인할 때 사용한다.
     const o::SidPool& Pool() const;
     const o::RawFortObjectLoad& Objects() const;

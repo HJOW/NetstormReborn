@@ -1,0 +1,37 @@
+{
+  "status": "최초PE고정·제품미작성",
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-23",
+  "entries": {
+    "004beb30": 364
+  },
+  "uniqueInputs": 169,
+  "observations": 338,
+  "normalReturns": 322,
+  "statuses": {
+    "normal": 322,
+    "stop": 16
+  },
+  "instructions": 25612,
+  "boundaries": {
+    "assert": 286,
+    "create": 208,
+    "refresh": 208,
+    "write": 412,
+    "prepare": 158,
+    "random": 406,
+    "sp": 600
+  },
+  "precisionDifferences": 0,
+  "gameExecuted": false,
+  "osExecuted": false,
+  "scope": "실제CoreWrite364BYTE. Create/44fc00/일반writer/난수준비·Next/SP는명시외부장치이며부모의manager/metamap/post/editor/currentPlayer/seedlow16/직접Player재읽기·부분중단을관측한다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+    "tools/decomp_fort_core_write.py": "d26bcfdabcb55936ef94447a0fc93799edbbd87bb081c603e1576f81d57504fe",
+    "cpppj/tests/fixtures/fort-core-write-x86.tsv": "5d87a16ad853181b699d3bba206d7dfdc80dc141aeb8cf15a237923c91f3e49c"
+  }
+}

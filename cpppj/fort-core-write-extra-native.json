@@ -1,0 +1,33 @@
+{
+  "status": "추가PE고정·제품미작성",
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-23",
+  "uniqueInputs": 11,
+  "observations": 22,
+  "normalReturns": 20,
+  "statuses": {
+    "normal": 20,
+    "stop": 2
+  },
+  "instructions": 1766,
+  "boundaries": {
+    "assert": 40,
+    "create": 14,
+    "refresh": 12,
+    "write": 24,
+    "prepare": 10,
+    "random": 26,
+    "sp": 36
+  },
+  "gameExecuted": false,
+  "osExecuted": false,
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "tools/decomp_fort_core_write.py": "d26bcfdabcb55936ef94447a0fc93799edbbd87bb081c603e1576f81d57504fe",
+    "tools/decomp_fort_core_write_extra.py": "929eaf5866998b423857f76720bb2c981387e18b593b611d19c51764739b2052",
+    "cpppj/tests/fixtures/fort-core-write-x86.tsv": "5d87a16ad853181b699d3bba206d7dfdc80dc141aeb8cf15a237923c91f3e49c",
+    "cpppj/fort-core-write-native.json": "2483981a33d8002649bfd2e2c6fc71a7fced1209f55fb6c81671ae4d20778748",
+    "cpppj/tests/fixtures/fort-core-write-extra-x86.tsv": "19c69aeedae078f61a2f6c308e596a3753107e586e6dc8f3b45f987bac649cca"
+  }
+}

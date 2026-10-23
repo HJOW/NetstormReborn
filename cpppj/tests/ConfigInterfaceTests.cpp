@@ -82,7 +82,7 @@ TEST_CASE(ConfigInterface_Startup_BuildsSectionsInOriginalOrder) {
     CHECK(config.PathSpec("missionSpec") == "\\D\\{LOCAL.1}.german");
     CHECK(config.SubstituteLocal("{local.1}-{local.2|x}-{DataDir}", "a") == "a-x-\\D");
     // 임시 local 객체는 조회가 끝나면 목록에서 빠진다.
-    CHECK(config.Registry().Objects().size() == 2);
+    CHECK(config.Registry().Objects().size() == 4);
 }
 
 // 정수·문자열 읽기와 "0에서 달라졌는가" 판정.
@@ -112,7 +112,7 @@ TEST_CASE(ConfigInterface_MissionLookup_ReadsMissionScriptThroughSpec) {
     CHECK(config.Configuration().Get("missing") == "none");
     CHECK(config.Configuration().Substitute("{@tutorial1.nokey}") == "{@TUTORIAL1}"); // '.'에서 잘린 키가 남는다.
     CHECK(config.Configuration().Substitute("{@nodot}").empty());
-    CHECK(config.Registry().Objects().size() == 2);
+    CHECK(config.Registry().Objects().size() == 4);
     // 용어표는 전역 설정보다 먼저 등록되어 조회에서는 뒤 순위다.
     config.LoadLanguage(*config.Configuration().Get("currentLanguage"));
     CHECK(config.Configuration().Get("Sun") == "Sonne");
@@ -225,14 +225,14 @@ TEST_CASE(MissionScript_ResolvesScriptFortAndType) {
         CHECK(first.Get("myStartMoney") == "3000" && !first.Get("nokey"));
         // 미션 객체가 살아 있는 동안 다른 설정에서 `{mission.키}`를 쓸 수 있다.
         CHECK(config.Configuration().Get("banner") == "First \\D");
-        CHECK(config.Registry().Objects().size() == 3);
+        CHECK(config.Registry().Objects().size() == 5);
         const auto sections=first.SectionNames("@"); // 실제 Start가 같은 Config에 저장할 원본 예약 섹션 목록이다.
         CHECK(sections=="@10;@25;");CHECK(!first.Set("tellAtList",sections));
         CHECK(first.Get("tellAtList")==sections && config.PathSpec("mission.tellAtList")==sections);
         CHECK(!config.Configuration().GetRaw("tellAtList")); // 현재 미션 쓰기가 전역 설정에 새 키를 만들지 않아야 한다.
         CHECK(first.Set("title","Changed {DataDir}") && config.Configuration().Get("banner")=="Changed \\D");
     }
-    CHECK(config.Registry().Objects().size() == 2 && config.Configuration().Get("banner") == "none");
+    CHECK(config.Registry().Objects().size() == 4 && config.Configuration().Get("banner") == "none");
     // loadFort가 있으면 그 요새를 읽는다. 추가 설정 글은 스크립트보다 먼저 들어가 우선한다.
     netstorm::client::MissionScript second(config, "second", "missionType=\"Override\";extra=1");
     CHECK(second.FortName() == "shared" && second.FortPath() == "\\D\\shared.fort");
@@ -240,4 +240,64 @@ TEST_CASE(MissionScript_ResolvesScriptFortAndType) {
     // 스크립트가 없으면 미션 이름이 요새 이름이 된다.
     netstorm::client::MissionScript missing(config, "nofile");
     CHECK(!missing.Loaded() && missing.MissionType().empty() && missing.FortPath() == "\\D\\nofile.fort");
+}
+
+// 실제004fc8c0~004fc920의 네 CRT 객체는 같은 Registry에 그 순서로 한 번씩 등록된다.
+TEST_CASE(ConfigInterface_StaticOwnersMatchPatchCrtOrder) {
+    ConfigInterface config({}); // 파일·GUI 없이 실제 Config 생성자와 같은 Registry를 사용한다.
+    const auto objects = config.Registry().Objects(); // 추가 등록 전의 네 장기 객체 주소만 관측한다.
+    auto* const global = config.Registry().FindByName("global"); // 이름 조회도 원문 ConfigRegistry 몸체를 사용한다.
+    auto* const fort = config.Registry().FindByName("fort"); // 별도 임시 fixture 객체를 만들지 않는다.
+    CHECK(objects.size() == 4);
+    if (objects.size() != 4) return;
+    CHECK(objects[0] == &config.Language() && objects[1] == &config.Configuration());
+    CHECK(objects[2] == global && objects[3] == fort && global && fort && global != fort);
+    CHECK(objects[0]->Prefix().empty() && objects[1]->Prefix().empty());
+    CHECK(objects[2]->Prefix() == "global." && objects[3]->Prefix() == "fort.");
+    CHECK(config.Registry().FindByName("FORT") == fort && config.Registry().FindByName("GLOBAL") == global);
+}
+
+// qualified 쓰기는 실제 장기 객체의 로컬 키에 기록하며 같은 이름의 루트·언어 값을 덮어쓰지 않는다.
+TEST_CASE(ConfigInterface_QualifiedSetKeepsGlobalFortAndRootSeparate) {
+    ConfigInterface config({}); // Get의 원문 this 버퍼 관문을 실제 루트 입력으로 통과한다.
+    config.Configuration().Assign("mySubHandle = \"Root\"\r\n");
+    config.Language().Assign("mySubHandle = \"Language\"\r\n");
+    auto* const global = config.Registry().FindByName("global"); // 장기 원본 객체이며 검사 전용 대체 버퍼가 아니다.
+    auto* const fort = config.Registry().FindByName("fort"); // 같은 Fort 로컬 키의 실제 저장 위치다.
+    CHECK(global && fort);
+    if (!global || !fort) return;
+    std::size_t notifications{}; // 실제 ConfigInterface::Set의 변경 통지 수만 관측한다.
+    config.onChanged = [&notifications] { ++notifications; };
+    CHECK(!config.Set("fort.mySubHandle", "Player"));
+    CHECK(!config.Set("global.mySubHandle", "Global"));
+    CHECK(config.Configuration().Get("fort.mySubHandle") == "Player");
+    CHECK(config.Configuration().Get("global.mySubHandle") == "Global");
+    CHECK(fort->GetRaw("mySubHandle") == "Player" && global->GetRaw("mySubHandle") == "Global");
+    CHECK(config.Configuration().GetRaw("mySubHandle") == "Root" && config.Language().GetRaw("mySubHandle") == "Language");
+    CHECK(!config.Configuration().GetRaw("fort.mySubHandle") && !config.Configuration().GetRaw("global.mySubHandle"));
+    CHECK(!fort->GetRaw("fort.mySubHandle") && !global->GetRaw("global.mySubHandle"));
+    CHECK(config.Set("fort.mySubHandle", "Player2") && config.Configuration().Get("fort.mySubHandle") == "Player2");
+    CHECK(config.Set("mySubHandle", "Root2") && config.Configuration().Get("mySubHandle") == "Root2");
+    CHECK(fort->GetRaw("mySubHandle") == "Player2" && global->GetRaw("mySubHandle") == "Global" && notifications == 4);
+}
+
+// 네 장기 객체를 추가해도 기존 무접두어 우선순위·알 수 없는 접두어·임시 local 반납은 같은 몸체를 따른다.
+TEST_CASE(ConfigInterface_StaticOwnersPreserveLegacyRootsAndTemporaryScope) {
+    ConfigInterface config({}); // 무명 두 객체에만 기존 입력을 넣어 이전 기본 동작을 대조한다.
+    config.Language().Assign("shared = \"Language\"\r\nlangOnly = \"Translation\"\r\n");
+    config.Configuration().Assign("shared = \"Root\"\r\nrootOnly = \"RootValue\"\r\n");
+    CHECK(config.Configuration().Get("shared") == "Root" && config.Configuration().Get("langOnly") == "Translation");
+    CHECK(config.Set("shared", "ChangedRoot") && config.Configuration().GetRaw("shared") == "ChangedRoot");
+    CHECK(config.Language().GetRaw("shared") == "Language");
+    CHECK(!config.Set("unknown.key", "FallbackRoot") && config.Configuration().GetRaw("key") == "FallbackRoot");
+    CHECK(!config.Configuration().Get("unknown.key"));
+    {
+        Config local(config.Registry(), "local"); // 실제 임시 Config 생성·등록·소멸을 통째로 사용한다.
+        CHECK(config.Registry().Objects().size() == 5 && config.Registry().FindByName("local") == &local);
+        CHECK(!config.Set("local.key", "Temporary") && local.GetRaw("key") == "Temporary");
+        CHECK(config.Configuration().Get("local.key") == "Temporary" && config.Configuration().GetRaw("key") == "FallbackRoot");
+    }
+    CHECK(config.Registry().Objects().size() == 4 && !config.Registry().FindByName("local"));
+    CHECK(!config.Configuration().Get("local.key") && config.Configuration().Get("key") == "FallbackRoot");
+    CHECK(config.Registry().FindByName("fort")->Text().empty() && config.Registry().FindByName("global")->Text().empty());
 }

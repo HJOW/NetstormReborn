@@ -1,0 +1,35 @@
+{
+  "status": "후속384독립준비·제품작성전최초고정",
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-23",
+  "uniqueInputs": 123,
+  "observations": 246,
+  "completions": {
+    "return": 150,
+    "fill-physical": 72,
+    "step-tail": 8,
+    "step-read": 2,
+    "file-path-write": 2,
+    "path": 2,
+    "exists": 2,
+    "decode": 2,
+    "free": 2,
+    "alloc": 2,
+    "random1": 2
+  },
+  "instructions": 4666262,
+  "precisionDifferences": 0,
+  "scope": "실제471040/470b20/470bb0와4558c0 GameRandom. PathSpec/exists/GIF/allocate/free/CRTmemmove는명시물리장치이며관측callback후현재값재조회. 정확한256BYTE파일scratch입력/출력보존. 실제OS/GUI/원본게임실행아님. 물리할당범위/Divide0/명시하위중단을정상반환과구분. ColorSort와별개Kencloud.",
+  "gameExecuted": false,
+  "guiExecuted": false,
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+    "tools/decomp_kencloud.py": "084d296dbbb3cb82a1024450a96c5f2d714bcce3ebd7978f523a4a7cffbe3ce3",
+    "cpppj/tests/fixtures/kencloud-x86.tsv": "cc95b1e1f7deea284804adfce2c93d9721e85074436a3a41f21839cf89b12553",
+    "cpppj/src/o/SpStore.h": "88a9d2f2913cefc4429ab312a841c01b4405fd5e3799a2d630c1262f66588030",
+    "cpppj/src/o/SpStore.cpp": "2319a90807d423b72b0e47e51101bc9ea1618f234c65e26b704c017313f4268a"
+  }
+}

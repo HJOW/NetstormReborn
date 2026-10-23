@@ -35,9 +35,36 @@ std::filesystem::path EditorFiles::Checked(const std::filesystem::path& path) co
 // 원본 pending fort 이름의 점 없는 계약과 실제 Windows 파일명의 물리 범위를 지킨다.
 std::filesystem::path EditorFiles::Prepare(std::string_view name,std::span<const std::uint8_t> original) {
     if (name.empty() || name.find('\0')!=std::string_view::npos || name.find_first_of("./\\:*?\"<>|")!=std::string_view::npos) throw std::invalid_argument("편집 Fort 이름의 원본 점/경로 문자 계약 위반");
-    const auto target=Checked(root_/"d"/(std::string(name)+".fort"));
+    return PreparePath((std::filesystem::path("d")/(std::string(name)+".fort")).string(),original);
+}
+// 실제 설정 경로도 기존의 같은 root/보호 루트 검사를 거친다.
+std::filesystem::path EditorFiles::ResolvePath(std::string_view configuredPath) const { return Checked(std::filesystem::path(configuredPath)); }
+// 원래 Prepare의 기존 파일 보존/새 파일 생성 순서를 설정 경로에서도 그대로 사용한다.
+std::filesystem::path EditorFiles::PreparePath(std::string_view configuredPath,std::span<const std::uint8_t> original) {
+    const auto target=ResolvePath(configuredPath);
     if (std::filesystem::exists(target)) { if (!std::filesystem::is_regular_file(target)) throw std::runtime_error("편집 작업본이 일반 파일이 아닙니다");return target; }
     std::filesystem::create_directories(target.parent_path());Write(target.string(),original);return target;
+}
+// 경로를 가진 파일의 원문분기는 아카이브/보조 경로보다 해당 실제 파일만 fopen한다.
+std::int32_t EditorFiles::Exists(std::string_view fileName) const {
+    const auto path=ResolvePath(fileName);FILE* file=std::fopen(path.string().c_str(),"rb");if (!file) return 0;std::fclose(file);return 5;
+}
+// 실제 작업 파일은 원문 resolver의출처5다. stat의쓰기비트는NTFS readonly속성을반영하고ACL쓰기성공검사는하지않는다.
+bool EditorFiles::ReadOnly(std::string_view fileName,const std::function<void(std::uint32_t)>& assertion) const {
+    if (fileName.empty()) { if (!assertion) throw std::logic_error("편집 readonly의원문빈이름진단미연결");assertion(0x480);throw std::invalid_argument("편집 readonly의빈실제경로"); }
+    const auto path=ResolvePath(fileName);
+#ifdef _WIN32
+    static_assert(_S_IWRITE==0x80); //원문stat mode하위BYTE의부호비트와같은CRT쓰기비트다.
+    struct _stat64 status{};const auto result=_stat64(path.string().c_str(),&status);
+#else
+    struct stat status{};const auto result=stat(path.string().c_str(),&status);
+#endif
+    if (result) { if (!assertion) throw std::logic_error("편집 readonly의원문stat실패진단미연결");assertion(0x48e);throw std::runtime_error("편집 readonly의stat실패뒤미정mode접근미복원"); }
+#ifdef _WIN32
+    return (status.st_mode&_S_IWRITE)==0;
+#else
+    return (status.st_mode&S_IWUSR)==0; //cpppj Windows외의호스트용대응이며NTFS관측으로주장하지않는다.
+#endif
 }
 // chmod 실패는 원본처럼 쓰기를 중단시키지 않는다. 실제 쓰기 실패는 Write가 보고한다.
 void EditorFiles::MakeWritable(std::string_view fileName,std::uint32_t mode) const {

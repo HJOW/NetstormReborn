@@ -1,0 +1,31 @@
+{
+  "scope": "실제 PE 두 몸체 최초 격리 관측/유효 Player1..8 선택과 현재 물리 부분 읽기",
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-23",
+  "ranges": [
+    [
+      4780240,
+      4780287
+    ],
+    [
+      4780976,
+      4781102
+    ]
+  ],
+  "uniqueInputs": 402,
+  "observations": 804,
+  "statuses": {
+    "normal": 730,
+    "fault": 72,
+    "stop": 2
+  },
+  "instructions": 10650,
+  "sourcesAbsentBeforeObservation": true,
+  "invalidNonzeroPlayerSelectionOutsidePhysicalContract": true,
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "tools/decomp_player_core_data.py": "68c2d3645d191ed65d1bdc53e6dbccb4177351dc0e1969cc66e51892d10a2e06",
+    "cpppj/tests/fixtures/player-core-data-x86.tsv": "212746b781f029872cac42da93bfd5cbda5f62ca6048dfc296f0c4e6c7d28f43"
+  }
+}

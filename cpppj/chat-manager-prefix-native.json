@@ -1,0 +1,60 @@
+{
+  "scope": "독립 PE 최초 관측/게임·OS·GUI 아님",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-23",
+  "host": "HJOW-Athlon",
+  "ranges": [
+    [
+      4382720,
+      4382798
+    ],
+    [
+      4382800,
+      4383193
+    ],
+    [
+      4380192,
+      4380221
+    ],
+    [
+      4387968,
+      4388147
+    ],
+    [
+      4388160,
+      4388226
+    ]
+  ],
+  "uniqueInputs": 322,
+  "observations": 644,
+  "statuses": {
+    "normal": 524,
+    "fault": 94,
+    "stop": 26
+  },
+  "instructions": 220442,
+  "boundaries": {
+    "new": 498,
+    "assert": 162,
+    "command": 768,
+    "read": 506,
+    "strncpy": 464,
+    "max": 576,
+    "minor": 242,
+    "append": 232,
+    "core": 46
+  },
+  "productSourcesAbsentBeforeObservation": true,
+  "freshEngineAfterFaultOrStop": true,
+  "wholeManagerBytes": 2712,
+  "wholeInternalBufferBytes": 128,
+  "rankOutputBytes": 256,
+  "currentCoreGetterAndRankCountsAreExplicitBoundaries": true,
+  "crtFormattingAndStrncpyAreExplicitBoundaries": true,
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_chat_manager_prefix.py": "71d3f7887cd3c8b54dc1ab146d783c7b2e603f15db232525fb9759aaaeaf73d9",
+    "cpppj/tests/fixtures/chat-manager-prefix-x86.tsv": "5999267e1ed10d5b5a2ea0bdd73fa952ad22dc28d21daf733d56b6bb6e222033"
+  }
+}

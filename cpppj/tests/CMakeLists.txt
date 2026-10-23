@@ -1,3 +1,21 @@
+# 현재 작업본·설치 checkpoint와 독립 부모의 최초 관측을 공용 회귀에 포함한다.
+# NTFS readonly를 확인할 사용자 임시 경로와 원본/CD 보호 루트를 해당 검사에만 공급한다.
+file(TO_CMAKE_PATH "$ENV{TEMP}/netstorm-editor-file-devices" _netstorm_editor_file_device_root)
+get_filename_component(_netstorm_repository_root "${CMAKE_CURRENT_SOURCE_DIR}/../.." ABSOLUTE)
+set_source_files_properties(EditorFortFileDevicesTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_EDITOR_FILE_DEVICE_TEST_ROOT=\"${_netstorm_editor_file_device_root}\";NETSTORM_REPOSITORY_ROOT=\"${_netstorm_repository_root}\"")
+set_source_files_properties(FortCoreWriteTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_FORT_CORE_WRITE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fort-core-write-x86.tsv\";NETSTORM_FORT_CORE_WRITE_EXTRA_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fort-core-write-extra-x86.tsv\";NETSTORM_FORT_CORE_WRITE_CALLBACKS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fort-core-write-callbacks-x86.tsv\"")
+set_source_files_properties(StartupStateCheckTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_STARTUP_STATE_CHECK_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/startup-state-check-x86.tsv\"")
+set_source_files_properties(ChatManagerPrefixTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CHAT_MANAGER_PREFIX_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/chat-manager-prefix-x86.tsv\"")
+set_source_files_properties(PlayerCoreDataTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_PLAYER_CORE_DATA_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/player-core-data-x86.tsv\"")
+set_source_files_properties(KencloudTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_KENCLOUD_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/kencloud-v2-x86.tsv\"")
+set_source_files_properties(ColorSortStartupTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_COLORSORT_STARTUP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/colorsort-startup-x86.tsv\"")
 # Editor 로드/회복의 최초 독립 PE 관측을 해당 검사에만 공급한다.
 set_source_files_properties(ScreenPaletteApplyTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_SCREEN_PALETTE_CLEAR_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/screen-palette-clear-x86.tsv\"")
@@ -139,6 +157,11 @@ set_source_files_properties(FlyerPreDestroyTests.cpp PROPERTIES COMPILE_DEFINITI
 set_source_files_properties(BurningLifetimeDrawTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_BURNING_LIFETIME_DRAW_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/burning-lifetime-draw-x86.tsv\";NETSTORM_RENDER_FRAME_GATE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/render-frame-gate-x86.tsv\";NETSTORM_BURNING_ARCHER_CAPTURE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/burning-archer-capture-x86.tsv\"")
 add_executable(netstorm_tests
+    EditorFortFileDevicesTests.cpp CampaignExistingEditorCheckpointTests.cpp
+    StartupStateCheckTests.cpp ChatManagerPrefixTests.cpp PlayerCoreDataTests.cpp
+    KencloudTests.cpp ClientGameRandomOwnerTests.cpp FortCoreWriteTests.cpp
+    ClientChatCoreGlobalsTests.cpp
+    ColorSortStartupTests.cpp
     CampaignTemplateLoadFileTests.cpp
     ScreenPaletteApplyTests.cpp
     ExistingEditorAfterCheckpointTests.cpp

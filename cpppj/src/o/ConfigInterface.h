@@ -1,4 +1,4 @@
-// 원본 Configinterface.cpp: 전역 설정 `theConfiguration`(00558de8)·언어 용어표(00558e00)와 접근 함수.
+// 원본 Configinterface.cpp: 언어 용어표·전역 설정·장기 global/fort 설정과 접근 함수.
 // 전역 변수 대신 객체 하나로 묶는다. 근거·검증 범위: docs/exe/cpp-config-reconstruction.md
 #pragma once
 #include "o/Config.h"
@@ -39,7 +39,7 @@ public:
         std::string cdDir;            // CDDir에 쓸 값(원본은 CD를 찾지 못하면 InstallDir과 같다).
     };
 
-    // 원본 정적 초기화 순서대로 언어 용어표, 전역 설정을 등록한다(004fc8c0, 004fc8e0).
+    // 원본 CRT 순서대로 language→configuration→global→fort를 같은 Registry에 등록한다(004fc8c0~004fc920).
     explicit ConfigInterface(FileReader reader);
 
     // 원본 FUN_00440e00 ↔ CD 004a9120: `[ARGS]`, 인자(첫 `@` 인자 전까지는 글, 그 뒤는 파일), `[END]`.
@@ -97,5 +97,9 @@ private:
     Config language_;
     // configuration_: 현재 언어와 실행 설정을 조회하는 인터페이스.
     Config configuration_;
+    // global_: 004fc900이 만든00558e40의 장기 "global." 객체이며 전역 루트와 다른 버퍼를 소유한다.
+    Config global_;
+    // fort_: 004fc920이 만든00558e58의 장기 "fort." 객체이며 Session 교체보다 오래 살아 현재 Fort 설정을 보존한다.
+    Config fort_;
 };
 }

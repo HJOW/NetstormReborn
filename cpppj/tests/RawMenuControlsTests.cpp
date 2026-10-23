@@ -214,6 +214,7 @@ TEST_CASE(RawMenuControls_ObjectMenuCommandsAndCurrentConfig) {
     for (std::uint32_t number=5;number<=50;++number) CHECK(pool.Allocate(2).value==number);
     auto raw=pool.AllocatedBytes(Sid{50});raw[10]=150;raw[34]=1;
     ConfigInterface config([](std::string_view)->std::optional<std::vector<std::uint8_t>> { return std::nullopt; });
+    config.Configuration().Assign("objectMenuInput=1"); //실제 실행처럼 루트 설정 입력을 두어 원문 Get의 this 버퍼 관문을 유지한다.
     ObjectMenuState state;state.denySalvage=1;ObjectMenuHooks hooks;
     hooks.salvageRefund=[](Sid sid,std::uint32_t type,std::uint32_t count) { CHECK(sid.value==50 && type==150 && count==3);return 45; };
     hooks.format=[](std::string_view key,std::span<const PriestMenuArgument> arguments) { std::string text(key);CHECK(arguments.size()==1);text.replace(text.find("%d"),2,std::to_string(std::get<std::int32_t>(arguments[0])));return text; };
@@ -229,8 +230,10 @@ TEST_CASE(RawMenuControls_ObjectMenuCommandsAndCurrentConfig) {
     };
     open();CHECK(client.commands.size()==1);if (client.commands.size()==1) CHECK(client.commands[0][0]==state.tellCommand && client.commands[0][2]==denyToken);
     CHECK(!config.Configuration().GetRaw("salvageSid"));client.menus->Close();state.denySalvage=0;open();
-    // 실제 Config.Set의 global. 경로는 현재 기본 설정의 salvageSid 키에 쓴다.
-    CHECK(config.GetInt("salvageSid")==50);CHECK(client.commands.size()==2);if (client.commands.size()==2) CHECK(client.commands[1][0]==state.salvageCommand && client.commands[1][2]==50);
+    // 실제 Config.Set의 global. 경로는 장기 global 객체에 쓰고 루트에 같은 키를 만들지 않는다.
+    CHECK(config.GetInt("global.salvageSid")==50 && !config.Configuration().GetRaw("salvageSid"));
+    const auto* global=config.Registry().FindByName("global"); //원본 CRT에서 생성된 실제 저장 객체도 함께 확인한다.
+    CHECK(global && global->GetRaw("salvageSid")=="50");CHECK(client.commands.size()==2);if (client.commands.size()==2) CHECK(client.commands[1][0]==state.salvageCommand && client.commands[1][2]==50);
     client.menus->Close();CHECK(!client.menus->HasMenus());
 }
 // 사제 기본 호출→Carrier→회수/객체 메뉴를 같은 실제 트리에서 조립하고 Cast 입력을 전달한다.

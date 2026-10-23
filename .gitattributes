@@ -1930,3 +1930,30 @@ docs/exe/patches/cpp-editor-session-contents-20261024.patch text eol=lf
 # 원문 관측의 빈 마지막 TSV 칸과 최초 CRLF 바이트는 정리하지 않는다.
 cpppj/tests/fixtures/fort-palette-transition-x86.tsv whitespace=-blank-at-eol
 cpppj/tests/fixtures/screen-palette-clear-x86.tsv -text
+cpppj/chat-manager-prefix-native.json -text
+cpppj/colorsort-startup-native.json -text
+cpppj/fort-core-write-callbacks-native.json -text
+cpppj/fort-core-write-extra-native.json -text
+cpppj/fort-core-write-native.json -text
+cpppj/kencloud-native.json -text
+cpppj/kencloud-v2-native.json -text
+cpppj/player-core-data-native.json -text
+cpppj/startup-state-check-native.json -text
+cpppj/tests/fixtures/chat-manager-prefix-x86.tsv -text whitespace=-blank-at-eol
+cpppj/tests/fixtures/colorsort-startup-x86.tsv -text whitespace=-blank-at-eol
+cpppj/tests/fixtures/fort-core-write-callbacks-x86.tsv -text whitespace=-blank-at-eol
+cpppj/tests/fixtures/fort-core-write-extra-x86.tsv -text whitespace=-blank-at-eol
+cpppj/tests/fixtures/fort-core-write-x86.tsv -text whitespace=-blank-at-eol
+cpppj/tests/fixtures/kencloud-v2-x86.tsv -text whitespace=-blank-at-eol
+cpppj/tests/fixtures/kencloud-x86.tsv -text whitespace=-blank-at-eol
+cpppj/tests/fixtures/player-core-data-x86.tsv -text whitespace=-blank-at-eol
+cpppj/tests/fixtures/startup-state-check-x86.tsv -text whitespace=-blank-at-eol
+tools/decomp_chat_manager_prefix.py -text
+tools/decomp_colorsort_startup.py -text
+tools/decomp_fort_core_write.py -text
+tools/decomp_fort_core_write_callbacks.py -text
+tools/decomp_fort_core_write_extra.py -text
+tools/decomp_kencloud.py -text
+tools/decomp_kencloud_v2.py -text
+tools/decomp_player_core_data.py -text
+tools/decomp_startup_state_check.py -text

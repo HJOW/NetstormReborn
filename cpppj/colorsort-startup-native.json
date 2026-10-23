@@ -1,0 +1,30 @@
+{
+  "status": "단위385후속·제품전최초고정",
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-23",
+  "observations": 116,
+  "completions": {
+    "return": 100,
+    "assert": 2,
+    "free1": 2,
+    "alloc1": 2,
+    "sort": 2,
+    "search": 2,
+    "qsort": 2,
+    "alloc3": 2,
+    "gradient": 2
+  },
+  "instructions": 12246,
+  "precisionDifferences": 0,
+  "gameExecuted": false,
+  "guiExecuted": false,
+  "scope": "실제43b430/43b300 부모만. 하위439de0/43a8e0/qsort/43ad20는명시생성장치이며전체ColorSort물리완료를주장하지않음.진단뒤계속·free뒤무조건0·생성반환값·현재count캡처·부분중단.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+    "tools/decomp_colorsort_startup.py": "d6b9d6f366fa76bc552b54b88d4b75c35cce818fac8878e4a516d8da1db8ad2a",
+    "cpppj/tests/fixtures/colorsort-startup-x86.tsv": "d0667b2814f450f6ab9ea9812ece0172ac0a5a431c5e32c3bfa68aa0e2415e3c"
+  }
+}

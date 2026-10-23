@@ -12,7 +12,9 @@
 #include "o/RawDeckRestore.h"
 #include "o/RawFortTerritoryRecover.h"
 #include "client/EditorFiles.h"
+#include "client/EditorFortFileDevices.h"
 #include "o/RawFortSnapshotParent.h"
+#include "o/RawFortCoreWrite.h"
 #include "o/RawFortMoneySave.h"
 #include "o/RawFortBadgesGlobals.h"
 #include "o/RawFortBadgesSave.h"
@@ -323,7 +325,8 @@ struct RawCampaignSession::Impl {
     std::map<std::uint16_t,ConstructionBuilderPath> builderPaths; // SID별 안정된 반환 view이며 계산 값 대신 같은 현재 경로를 읽는다.
     std::uint32_t builderApproachMask{0x50444200}; // 실제005424b8의 접근점 genus 전역이다.
     std::unique_ptr<RegularProcess> builderPendingRegular; // 원본 new28 성공부터 같은 Host 부착까지의 실제 예약 객체다.
-    GameRandom random; // 게임 난수의 명시 초기 입력이다.
+    GameRandom localRandom; //소유자없는기존독립Session만종전최초0입력을유지한다.
+    GameRandom& random{services.randomGlobals ? services.randomGlobals->Game() : localRandom}; //모든기존SP/객체/지형/AI/저장이같은실제Client객체를직접빌린다.
     ScrambledSpStore sp; // 같은 게임 난수를 사용하는 실제 패치 SP 저장소다.
     SquidRewardState rewardState; // 실제 HP getter의 장기 전역이다.
     SquidReward hp; // 같은 Pool/TYPE/장부로 최대HP와 실제HP를 읽는다.
@@ -389,6 +392,9 @@ struct RawCampaignSession::Impl {
     std::uint32_t aiExcludedType{133},aiMissionFallback{}; // 실제 sunWalker 분류 제외 번호와 현재 getter를 사용할 때 읽지 않는 값형 호환 저장소다.
     bool loaded{}; // 같은 실제 저장 부모와 이동 설치가 정상 종료했을 때만 AI 생성 요청을 허용한다.
     bool editorWorldStarted{},editorWorldReady{}; //부분World단계/실제완료를구별하며전체Editor loaded로가장하지않는다.
+    bool editorCheckpointStarted{},editorCheckpointRunning{},editorCheckpointReady{}; //부분실패재실행/동기단계진입/정상checkpoint복귀를전체loaded와구별한다.
+    std::optional<FortTemplate> deferredEditorFort; //명시지연입력의같은파일보조metadata다.rawsection은File.load의실제reader가소유한다.
+
     MissionOutcomeState outcomeState; // 미션 종료까지 유지하는43개 사건 잠금이며 입력 배열은 현재 원문 연결로 대체한다.
     MissionStartGlobals missionStart; // 실제 Start가 쓰는 미션 제한 전역의 유일한 저장소다.
     MissionAiSettingsState missionAiSettings; // 실제600BYTE 설정 초기화가 읽는 현재 기본 전역이다.
@@ -426,7 +432,8 @@ struct RawCampaignSession::Impl {
     std::uint32_t revision{},ownerChanged{},vortexRevision{},piece{107}; // 원본 섬/신전/패턴 전역이다.
     std::uint32_t localCrt{}; // 소유자 없는 기존 독립Session 검사에 한해서 보존하는 초기CRT0 입력이다.
     std::uint32_t& crt{services.randomGlobals ? services.randomGlobals->CrtState() : localCrt}; // Seed/지형은같은Client실제DWORD를직접빌리며사본동기화를하지않는다.
-    std::uint32_t randomMode{}; // 실제 재시드에서 임시로 변경하는 현재 DWORD다.
+    std::uint32_t localRandomMode{}; //독립Session의기존BSS0입력만보존한다.
+    std::uint32_t& randomMode{services.randomGlobals ? services.randomGlobals->GameMode() : localRandomMode}; //기존Seed/Reseed도Client의같은현재005c89a8을빌린다.
     RawGameRandomSeed seed; // 같은 CRT/게임 난수와 실제 Unix 초 입력을 연결한다.
     std::int32_t noRegion{127}; // 정상 지형 생성의 실제 현재 지역없음 번호다.
     std::unique_ptr<RawIslandRuntime> islands; // 위3204BYTE와 동일 Pool을 공유한다.
@@ -720,6 +727,7 @@ struct RawCampaignSession::Impl {
         soundNames(RequireSounds(services)),archerTypes(core.types.size()),missileTypes(core.types.size()),projectileTypes(core.types.size()),
         restrictions(services.missionRestrictions ? *services.missionRestrictions : localRestrictions),
         start{core.processState,priestState.movement.dude,priestState.movement.teleport,priestState.movement.manaBolt,priestState.movement.priest,geyserType,snap,retrying},process{core.processState} {
+        if (services.deferExistingEditorFile && services.installMode!=CampaignInstallMode::ExistingEditor) throw std::invalid_argument("파일지연은명시ExistingEditor전용입니다");
         sp.BindTrackingOffset(priestState.regen.patch.sequence);sp.Initialize();
         level=std::make_unique<RawSquidLevel>(core.pool,core.types,SessionMissing<void,SquidLevelAssertion>());
         finishState.chaffMode=true;objectState.mission=true;objectState.chaffMode=true;
@@ -1268,8 +1276,9 @@ struct RawCampaignSession::Impl {
         NormalTerrainDiagnostics diagnostics{SessionMissing<void,TerrainContextAssertion>(),SessionMissing<void,TerrainStampAssertion>(),SessionMissing<void,SquidRegionAssert>(),SessionMissing<void,FarmClusterAssertion>(),SessionMissing<void,TerrainFarmPostpassAssertion>()};
         normal=std::make_unique<RawNormalTerrainWorldBinding>(world,chunks,*islands,random,crt,terrainGlobals,stamp,randomPlacement,farm,piece,*pipeline,hp,*carrier,std::move(diagnostics));
         finish=std::make_unique<RawFortFinishOwner>(core.pool,core.types,assetState.residences,finishState,FortFinishOwnerHooks{SessionMissing<FortRandomRectangle,std::int32_t>(),SessionMissing<double>(),SessionMissing<std::uint32_t,GameRandom&,const FortRandomPlaceRequest&>(),SessionMissing<void>()});
-        if (services.missionFortImage) { templateStorage->InstallFile(1,std::move(fort),*services.missionFortImage,std::string(mission),static_cast<std::int32_t>(core.types.size()));services.missionFortImage.reset(); } // 파일 가상 서명도 같은 실제 현재 TYPE 수를 읽는다.
-        else templateStorage->Install(1,std::move(fort),std::string(mission)); // 실제 Client는 파일 읽기 부모를 사용하고 독립 합성 Session은 명시 입력 섹션을 유지한다.
+        if (services.deferExistingEditorFile) deferredEditorFort.emplace(std::move(fort)); //manager를공개하거나현재Slot을Clear하지않고입력/파일요청수명만보유한다.
+        else if (services.missionFortImage) { templateStorage->InstallFile(1,std::move(fort),*services.missionFortImage,std::string(mission),static_cast<std::int32_t>(core.types.size()));services.missionFortImage.reset(); } //기존Campaign/LocalLogin/단계별Editor의즉시설치계약은그대로다.
+        else templateStorage->Install(1,std::move(fort),std::string(mission)); //기존합성입력의실제섹션목록도변경하지않는다.
         runtime=MakeRuntime();
         regionOwner=std::make_unique<RawRegionOwner>(core.pool,core.hash.Entries(0),terrainType);
         auto& ui=services.missionOutcome; // 선택되지 않은 UI를 기본 성공으로 채우지 않고 실제 Check에서 오류를 유지한다.
@@ -3071,12 +3080,12 @@ void RawCampaignSession::Load() {
 }
 // 파일설치/State통지뒤요청하는독립Subscriber단계다.World뒤나전체설치완료로대체하지않는다.
 void RawCampaignSession::LoadExistingEditorSubscriber() {
-    auto& state=*impl_;if (state.services.installMode!=CampaignInstallMode::ExistingEditor || state.loaded || state.editorWorldStarted) throw std::logic_error("기존Editor Subscriber의실제파일꼬리/World전계약");
+    auto& state=*impl_;if (state.services.installMode!=CampaignInstallMode::ExistingEditor || state.loaded || state.editorWorldStarted || (state.services.deferExistingEditorFile && !state.editorCheckpointRunning)) throw std::logic_error("기존Editor Subscriber의실제파일꼬리/World전계약");
     state.ReadExistingEditorSubscriber(state.playerState.templateOwner);
 }
 // 일반Fort생성전모드는생성자가이미설정했다.캠페인Load로돌아가우회하지않는다.
 void RawCampaignSession::LoadExistingEditorWorld() {
-    auto& s=*impl_;if (s.services.installMode!=CampaignInstallMode::ExistingEditor || s.loaded || s.editorWorldStarted || !s.services.fortBadges) throw std::logic_error("기존Editor실제입력/공유장부누락또는재설치");
+    auto& s=*impl_;if (s.services.installMode!=CampaignInstallMode::ExistingEditor || s.loaded || s.editorWorldStarted || !s.services.fortBadges || (s.services.deferExistingEditorFile && !s.editorCheckpointRunning)) throw std::logic_error("기존Editor실제입력/공유장부누락또는재설치");
     s.editorWorldStarted=true;s.ConnectBuilding();s.ConnectMotion();
     s.runtime->LoadExistingFort([&s] {
         s.player->Create(std::bit_cast<std::int32_t>(s.playerState.battleOwner));
@@ -3087,12 +3096,58 @@ void RawCampaignSession::LoadExistingEditorWorld() {
 }
 // 같은실제World단계뒤원본외곽이요청할때만Deck을로드한다.
 void RawCampaignSession::LoadExistingEditorDeck() {
-    auto& state=*impl_;if (state.services.installMode!=CampaignInstallMode::ExistingEditor || !state.editorWorldReady || state.loaded) throw std::logic_error("기존Editor Deck의실제World/미완료외곽계약");
+    auto& state=*impl_;if (state.services.installMode!=CampaignInstallMode::ExistingEditor || !state.editorWorldReady || state.loaded || (state.services.deferExistingEditorFile && !state.editorCheckpointRunning)) throw std::logic_error("기존Editor Deck의실제World/미완료외곽계약");
     state.ReadExistingFortDeck(state.playerState.templateOwner);
 }
+// 실제File/World/Deck/저장/State/Startup/EditorPlayers의원문부모를단일Session에묶는다.
+void RawCampaignSession::InstallExistingEditorCheckpoint(const CampaignExistingEditorCheckpointServices& effects,const std::uint32_t& readOnlyForts,const EditorFiles& files) {
+    auto& s=*impl_;
+    if (s.services.installMode!=CampaignInstallMode::ExistingEditor || !s.services.deferExistingEditorFile || s.loaded || s.editorCheckpointStarted || s.editorWorldStarted) throw std::logic_error("명시지연Editor checkpoint의한번설치계약");
+    s.editorCheckpointStarted=true;s.editorCheckpointRunning=true;
+    try {
+        BindFortFileSave(readOnlyForts,files); //setName의선택snapshot/Notify보다도먼저같은실제저장장치를빌린다.
+        auto fort=effects.fort;auto file=effects.file; //외부이름/Config/장치는현재getter를유지하고게임child만아래같은owner로연결한다.
+        const auto owner=[&s] { return s.playerState.templateOwner; }; //원문이재조회할때마다같은현재owner를읽는다.
+        const auto state=[&s](auto slot) { return s.templateState->Get(slot); };const auto notify=[&s](auto slot) { s.templateState->Changed(slot); }; //반환State span은각동기접근에만쓴다.
+        file.owner=owner;file.load=[&s,&effects](auto slot,auto path) {
+            if (!s.deferredEditorFort) throw std::logic_error("지연Editor의실제파일보조입력수명누락");auto load=effects.load;
+            load.typeCount=[&s] { return static_cast<std::int32_t>(s.core.types.size()); };load.currentSlot=[&s] { return s.playerState.templateOwner; };load.refreshTitle=effects.file.title; //raw Load의첫Title도같은실제00460730이다.
+            s.templateStorage->LoadFile(slot,std::move(*s.deferredEditorFort),path,load);s.deferredEditorFort.reset();s.services.missionFortImage.reset(); //정상false는원문부모의현재ptr정리결과를그대로인계한다.
+        };
+        file.valid=[&s](auto slot) { return ExistingEditorTemplateValid(*s.templateStorage,slot); }; //서명재파싱이아닌실제header첫DWORD다.
+        file.manager=[&s](auto slot) { if (slot>=9) throw std::out_of_range("EditorFile의실제9슬롯범위");return Read(s.templateStorage->Headers(),slot*20); };
+        file.state=state;file.notify=notify;file.subscriber=[&s](auto slot) { s.ReadExistingEditorSubscriber(slot); };file.handle=[this] { return CurrentHandle(); };file.setConfig=fort.setConfig;
+        fort.owner=owner;fort.inMission=[&s] { return s.core.bridgeState.mission ? 1U : 0U; };fort.editor=[&s] { return s.globals.editor; }; //기존GameMenus도같은두현재전역을읽는다.
+        fort.file=[&file] { o::InstallExistingEditorFile(file); };fort.world=[this] { LoadExistingEditorWorld(); };
+        fort.deck=[&s](auto slot) { if (!s.editorWorldReady) throw std::logic_error("Editor checkpoint의World전Deck");s.ReadExistingFortDeck(slot); }; //부모가인자로고정한slot을편의현재값으로다시바꾸지않는다.
+        fort.priests=[&s] { s.runtime->FinishMissionPriests(); };fort.camera=s.services.install.resetCamera;fort.production=s.services.ownership.refreshProduction; //빈기본효과없이같은기존몸체/실제장치를선택한다.
+        fort.coreWrite=[this](auto slot) { WriteExistingEditorCoreData(slot); }; //외부의빈성공/임의Editor생략대신현재같은실제부모가진단과자연관문을판정한다.
+        fort.snapshot=[this](auto slot) { SnapshotFortBody(slot); };fort.state=state;fort.notify=notify;
+        fort.startupStateCheck=[&effects] { static_cast<void>(o::CheckStartupState(effects.startup)); };fort.editorPlayers=[this,&effects] { InstallExistingEditorPlayers(effects.players); };
+        o::InstallExistingEditorFort(fort); //CoreWrite는위의실제004beb30으로연결된다.후반HUD/State/loaded는여전히이부모밖이다.
+        s.editorCheckpointReady=true;s.editorCheckpointRunning=false; //004b743b정상복귀만표시하며후반HUD/State/최종loaded를앞당기지않는다.
+    }catch (...) { s.editorCheckpointRunning=false;throw; } //동기진입guard만반납한다.manager/State/Config/파일/객체/난수는rollback하지않는다.
+}
+// 실제기존Editor에서만004beb30의manager/Metamap진단과현재post/editor자연관문을재사용한다.
+void RawCampaignSession::WriteExistingEditorCoreData(std::uint32_t slot) {
+    auto& s=*impl_;if (s.services.installMode!=CampaignInstallMode::ExistingEditor || s.loaded || slot>=9) throw std::logic_error("기존Editor CoreWrite의실제설치중/9슬롯계약");
+    FortCoreWriteGlobals globals;globals.metamap=[&s] { return s.core.ownerMode.challenge ? 1U : 0U; };globals.missionPost=[&s] { return s.globals.missionPost; };globals.editor=[&s] { return s.globals.editor; };
+    globals.players=[&s]()->std::span<std::uint8_t> { return s.players; };globals.playerOwner=[&s] { return s.playerState.battleOwner; }; //현재실제9Player와00540c70을빌리며Template owner와합치지않는다.
+    //005c89b4의실제Client소유자는아직없다.globals.seed를비워선택위치의필수누락을보존하고새스크래치를만들지않는다.
+    FortCoreWriteHooks hooks;std::optional<TemplateWriteStream> stream; //한번Create한실제노드/생성수명을부모끝까지보관한다.
+    hooks.manager=[&s](auto selected) { if (selected<0 || selected>=9) throw std::out_of_range("기존Editor CoreWrite의현재Template범위");return Read(s.templateStorage->Headers(),static_cast<std::size_t>(selected)*20); };
+    hooks.assertion=[](auto reason) { throw std::logic_error("기존Editor CoreWrite의실제Template.cpp진단장치미연결:"+std::to_string(static_cast<std::uint32_t>(reason))); }; //선택된실제행번호를보존하며진단을빈성공으로넘기지않는다.
+    hooks.create=[&](auto manager,auto name) { if (manager!=hooks.manager(static_cast<std::int32_t>(slot))) throw std::logic_error("기존Editor CoreWrite의현재manager불일치");stream=s.templateStorage->CreateSection(slot,name);return stream->manager && stream->section ? 1U : 0U; };
+    hooks.write=[&](auto token,auto bytes) { if (token!=1 || !stream) throw std::out_of_range("기존Editor CoreWrite의고정stream참조");s.templateStorage->WriteSection(*stream,bytes); }; //같은실제일반MemStream몸체다.
+    hooks.prepareRandom=[&s] { static_cast<void>(s.seed.Reseed()); };hooks.nextRandom=[&s](auto limit) { return s.random.Next(limit); }; //기존같은CRT/모드/게임난수이며별도owner를생성하지않는다.
+    //0044fc00현재Core갱신과004be960의88BYTE난수SPwriter는미복원이다.빈refresh/SP성공을추가하지않는다.
+    o::WriteFortCoreData(static_cast<std::int32_t>(slot),globals,hooks);
+}
+// checkpoint완료와전체Session설치완료를같은flag로합치지않는다.
+bool RawCampaignSession::ExistingEditorCheckpointReady() const { return impl_->editorCheckpointReady; }
 // 원본004904b0의게임효과는같은현재Player와직접ContainedCreate로교체한다.
 void RawCampaignSession::InstallExistingEditorPlayers(EditorPlayersHooks ui) {
-    auto& s=*impl_;if (s.services.installMode!=CampaignInstallMode::ExistingEditor || !s.editorWorldReady) throw std::logic_error("기존Editor실제World전Player초기화");
+    auto& s=*impl_;if (s.services.installMode!=CampaignInstallMode::ExistingEditor || !s.editorWorldReady || (s.services.deferExistingEditorFile && !s.editorCheckpointRunning)) throw std::logic_error("기존Editor실제World전Player초기화");
     ui.players=[&s]()->std::span<std::uint8_t> { return s.players; };ui.handle=[&s]()->std::span<std::uint8_t> { return s.handle; };
     ui.technology=[&s](auto owner) { return s.player->Create(std::bit_cast<std::int32_t>(owner)); }; //CurrentTechnology/Find/Ensure로대체하지않는다.
     ui.typeCount=[&s] { return static_cast<std::int32_t>(s.core.types.size()); };ui.typeAt=[&s](auto type)->const RiftTypeRecord& { return s.core.types[static_cast<std::size_t>(type)]; };

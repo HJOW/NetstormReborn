@@ -1,0 +1,32 @@
+{
+  "status": "단위385 독립 부모 선관측·공용 미등록",
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-23",
+  "entry": "004b5ba0",
+  "range": "004b5ba0..004b5c98",
+  "uniqueInputs": 195,
+  "observations": 390,
+  "instructions": 12430,
+  "precisionDifferences": 0,
+  "completions": {
+    "return": 374,
+    "startup-option": 2,
+    "saved": 2,
+    "time": 2,
+    "translate": 2,
+    "translate2": 2,
+    "format": 2,
+    "format2": 2,
+    "tell": 2
+  },
+  "scope": "실제 GetInt관문/reader호출뒤벽시각/x87 signedDWORD→double차·1/60곱·float32저장/엄격0<분<45/UI호출순서/ret. saved-state772BYTE reader·Config/번역/format/Tell은 기존 oracle의 명시 하위이며 실제 파일·OS·GUI·재접속 실행이 아니다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+    "tools/decomp_existing_editor_install_outer.py": "5acdd8a31528824b67a1f90a0761a82711f5aa7094fa72d027d24abd4dea390b",
+    "tools/decomp_startup_state_check.py": "39801f3d37041411ed704c27bc5a1f00e36d66967084818a24ca07dbe317e5ab",
+    "cpppj/tests/fixtures/startup-state-check-x86.tsv": "6c342db72c8f55fb934f5bbcceec253305b5c448418849a3fd2edf357f22edbe"
+  }
+}

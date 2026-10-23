@@ -60,9 +60,10 @@ std::vector<std::uint8_t> EncodeConfigFile(std::string_view text) {
     return bytes;
 }
 
-// 멤버 선언 순서가 등록 순서다: 용어표가 먼저, 전역 설정이 나중이라 조회는 전역 설정을 먼저 본다.
+// 005280ac~005280b8의 CRT 순서와 같다. 멤버는 fort→global→configuration→language 역순으로 반납한다.
 ConfigInterface::ConfigInterface(FileReader reader)
-    : reader_(std::move(reader)), language_(registry_), configuration_(registry_) {
+    : reader_(std::move(reader)), language_(registry_), configuration_(registry_),
+      global_(registry_, "global"), fort_(registry_, "fort") {
     // `{@미션.키}`: 원본 00440760은 missionSpec 경로의 미션 스크립트를 임시 객체에 읽는다.
     registry_.loadMission = [this](Config& temporary, std::string_view mission) {
         LoadFile(temporary, PathSpec("missionSpec", mission));

@@ -2,6 +2,15 @@
 # 클라이언트와 서버가 함께 쓰던 코드로 보인다. 이 폴더의 코드는 client/ 와 platform/ 을 포함하지 않는다.
 # 다시 만든 파일을 아래 목록에 더한다. 파일 이름은 SOURCE_MAP.md 의 "cpppj 경로"를 따른다.
 target_sources(netstorm PRIVATE
+    # 실제 저장상태 질문·Chat 랭크 접두·CoreData 선택과 Kencloud 계산을 원문 부모로 사용한다.
+    RawStartupStateCheck.cpp RawStartupStateCheck.h
+    RawChatManagerPrefix.cpp RawChatManagerPrefix.h
+    RawPlayerCoreData.cpp RawPlayerCoreData.h
+    RawKencloud.cpp RawKencloud.h
+    # Editor에서도 manager·Metamap 진단을 수행하는 실제 CoreData 저장 부모다.
+    RawFortCoreWrite.cpp RawFortCoreWrite.h
+    # 팔레트 초기 논리 RGB를 검색 객체로 고정하는 실제 생성 부모의 순서다.
+    RawColorSortStartup.cpp RawColorSortStartup.h
     # 기존 Fort 팔레트 전환의 이름·Kencloud 수명과 장치 호출 순서다.
     RawFortPaletteTransition.cpp RawFortPaletteTransition.h
     # 기존 Editor의 실제 타입 변환·덱 로드·지형 회복과 마지막 맵 정리다.

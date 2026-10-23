@@ -25,6 +25,11 @@ target_sources(netstorm PRIVATE
     SoloMapCatalog.cpp SoloMapCatalog.h
     TellMapMenus.cpp TellMapMenus.h
     EditorFiles.cpp EditorFiles.h
+    # 현재 Fort 설정 경로를 같은 보호된 작업본 파일 장치에 연결한다.
+    EditorFortFileDevices.cpp EditorFortFileDevices.h
+    # 실제 Chat 할당과 현재 CoreData/캐시의 주소 수명을 서로 분리해 소유한다.
+    ClientChatManagerGlobals.cpp ClientChatManagerGlobals.h
+    ClientCoreDataGlobals.cpp ClientCoreDataGlobals.h
     # 실제 Guide의 시작/분기/재시작/종료 교체와 원본 제어 사건을 연결한다.
     GuideMissionTransitions.cpp GuideMissionTransitions.h
     # 실제 초기화의 기술 허용 목록을 건설/생산의 동일 금지 표에 적용한다.

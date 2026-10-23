@@ -3,6 +3,9 @@
 #include "client/GameAssets.h"
 #include "client/CampaignLoginServices.h"
 #include "client/MissionFortRequest.h"
+#include "client/CampaignTemplateStorage.h"
+#include "o/RawExistingEditorInstallOuter.h"
+#include "o/RawStartupStateCheck.h"
 #include <optional>
 #include <memory>
 #include "client/RawCampaignWorldRuntime.h"
@@ -132,9 +135,18 @@ struct CampaignSubscriberServices {
 };
 // 생성전선택이며캠페인생성후Editor bool을켜는전환으로대체하지않는다.
 enum class CampaignInstallMode { Campaign,ExistingEditor }; //NewFort alternate1은아직별도필수미연결이다.
+// 기존raw부모가소유한외곽순서에현재Client장치만공급한다.게임저장소는Session이덮어연결한다.
+struct CampaignExistingEditorCheckpointServices {
+    o::ExistingEditorFortHooks fort; //현재/pending이름·비교·Guide·setName·Config·outside만외부에서공급한다.CoreWrite를포함한게임child는Session이연결한다.
+    o::ExistingEditorFileHooks file; //현재path/exists·실제제목·진단410·outside를공급한다.own/load/valid/State/Notify/Subscriber/handle/Config는같은Session으로연결한다.
+    TemplateFileLoadHooks load; //같은작업본read/readonly/CRT비교/원문진단이다.현재TYPE/owner/중간Title은Session이연결한다.
+    o::StartupStateCheckHooks startup; //실제004b5ba0이다.옵션0의자연ret외의선택reader/벽시각/서식/Tell누락을성공으로채우지않는다.
+    o::EditorPlayersHooks players; //번역/서식만외부장치다.같은Player/TYPE/ContainedCreate/실제맵tail은Session이연결한다.
+};
 // 게임 계산을 대신하지 않고 실제 클라이언트 UI/음향/전송의 선택 경계를 공급한다.
 struct RawCampaignSessionServices {
     CampaignInstallMode installMode{CampaignInstallMode::Campaign}; //기존모든호출은캠페인입력을보존한다.
+    bool deferExistingEditorFile{}; //명시ExistingEditor만ctor파일설치를checkpoint의실제File.load까지지연한다.기존Campaign/LocalLogin/단계검사는false를유지한다.
     std::function<void(std::span<std::uint8_t>)> templateStateBytes; // 빈 State 초기화의 미정 바이트를 현재 실제 할당 입력으로 공급한다.
     std::shared_ptr<CampaignTemplateStorage> templateStorage; // Init의 명시 정리까지 실제 manager/State/이미지를 같은 저장소에 유지한다.
     std::shared_ptr<const std::vector<std::uint8_t>> missionFortImage; // 실제 선택 파일의 같은 원문이며 초기 manager 읽기 부모가 소비한 뒤 반납한다.
@@ -203,6 +215,10 @@ public:
     void LoadExistingEditorWorld();
     void LoadExistingEditorSubscriber(); //실제파일꼬리에서World보다먼저ID/handle을읽는다.전체외곽/loaded는완료하지않는다.
     void LoadExistingEditorDeck(); //실제World/Graph뒤의Deck부모만실행한다.외곽완료/loaded확정은별도다.
+    void InstallExistingEditorCheckpoint(const CampaignExistingEditorCheckpointServices& effects,const std::uint32_t& readOnlyForts,const EditorFiles& files); //명시지연Editor의실제파일부터004b743b까지한번조립한다.참조장치는Session보다오래살며최종loaded는쓰지않는다.
+    bool ExistingEditorCheckpointReady() const; //전체설치성공이아닌위한정부모의정상복귀여부만조회한다.
+    void WriteExistingEditorCoreData(std::uint32_t slot); //명시Editor의실제004beb30을현재Storage/모드에연결한다.직렬화하위미복원은선택위치에서거부하며loaded를변경하지않는다.
+
     // 외곽전체Snapshot/State/lastEditFort뒤호출한다.번역/format을받고 마지막0046e980은같은실제맵에연결한다.
     void InstallExistingEditorPlayers(o::EditorPlayersHooks ui);
     //현재실제설정/시계/Player/Template로 원본로컬로그인 후 같은Load를 정확한 위치에서 실행한다.

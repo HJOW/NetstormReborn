@@ -1,5 +1,22 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-24 단위385 완료: 실제 작업본 파일과 Editor 설치 checkpoint 통합
+
+- [x] 단위384를 **29bee739 / 20261024-06 CP**로 커밋했다. 최종2532검사/실패0·312.81초, 같은 제품의 자연Early1 및 전체34진입이 통과했고 originals1394는 동일하다. 현재/마지막 전체 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-23**이다.
+- [x] 동결 실제 파일장치 제안 **ba7a9cda55e66e341ae5715c646b46c9518556b1c433d889f0532a69c6d6bc48**을 check/apply 뒤 checkpoint 제안 **76c1bb69e7b1580c3bd9e2a68510a11ee9b7fd46393e7ca1f004bccae3677ac5**을 check/apply해 모두 종료0이다. 전자는 실제NTFS 격리9검사, 후자는 구문검사만 완료한 제안이며 이번 실제 통합 실행과 구별한다.
+- [x] 실제 파일장치·checkpoint와 독립 Startup390/Chat644/Kencloud v2 246/CoreData804/CoreWrite396/ColorSortStartup116 모듈·검사를 공용 등록했다. Client Chat/Core 실제 소유자5검사와 공유GameRandom2검사도 포함한다. CoreWrite Session delta **e4646f2ec0fa6d27e4db7ca35e98d3f13bf3653dd6cb4468c8b93eaeb900dc53**을 check/apply해 종료0이며 실제 부모를 checkpoint에 자동 연결한다. 원시 제안·최초fixture/report는 보존한다. checkpoint는 최종HUD/State/loaded 성공을 설정하지 않는다.
+- [x] 최초 checkpoint1실패의 진단에서 장기 `global`·`fort` Config 객체 누락을 찾았다. 실제 양판본 CRT 생성·파괴를 확인한 최소3파일 제안 **f2dd0aee…ec6b34**을 check/apply해 종료0이다. 기존 Config::Set/Native fixture는 바꾸지 않고 네 객체 순서를 복구했으며, checkpoint도 원래 qualified 조회 기대를 유지한다. 최초 빌드1의 검사 경로 매크로 누락과 빌드2~4·진단·임시 무접두어 기대는 원시로 보존한다.
+- [x] 공용 빌드5 제품/검사 종료0·관측 경고오류0이며 신규 **44검사/실패0**이다. 제품SHA **9694a261…0db0cc**, 검사SHA **8f210de8…22da54**다. 같은 제품의 자연Early1도 A~G/세 차례 수확·귀환/SP0→200→400→600/다음Tutorial2 Guide4를 통과했다. 제품타이머1/주입0/기존완료1→1이며 진행도 영구저장 검증은 아니다. 실행 종료0/원본1394동일이다.
+- [x] 첫 전체2576검사는 **실패check1/종료8·421.00초(전체421.05초)**였다. 기존 Object 메뉴 검사가 `global.salvageSid` 쓰기를 루트 키로 기대하던 문제다. 실제 원문/Native의 qualified 키와 새 CRT 장기 global 소유자를 근거로 검사만 교정하고, 실제 global 값과 루트 부재를 함께 대조한다. 제품 메뉴/Config 몸체·최초 Native 자료는 그대로이며 초기 잘못된 메뉴 해석도 날짜를 붙여 문서화했다.
+- [x] 빌드6 종료0·관측 경고오류0, 기존 메뉴1검사/실패0이다. 제품SHA는9694a261…0db0cc로 같고 최종검사SHA는 **66640f53…461e7**이다. 원문입력만 구분한10보고서 검증도 종료0이다. 옛 Object메뉴 --verify의 역사 제품핀3개(검사/CMake2) 불일치는 그대로 보존하며 최초보고서/Native를 바꾸지 않았다.
+- [x] 같은 제품 일반31진입(전Early6/훈련9/캠페인16)은 **31/31PASS·원본1394동일**이다. 최초 Demo3 중StormRages/DissolvedAlliance는PASS, **GuardMyBack 검사 시작0.483초/종료1·Unable to open d/options.cfg/상태0BYTE**다. 메뉴 입력 이전 설정 저장 실패이며 원인은 미확정이다. 옵션은복구후954BYTE·Archive·readonly아님이다. 첫 실패를 보존하고 정적 조사/별도 재검증할 것.
+- [x] 최종 전체 CTest2는 **2576검사/실패check0·종료0·405.89초(전체405.96초)**다. Demo 종료·설정 복구 뒤 실행했고 그동안 다른 게임/설정쓰기는0이다. 결합 wrapper 종료1은 앞선Demo실패 때문이며 CTest종료와 구별한다.
+- [x] 같은 제품 GuardMyBack 재실행1·2 모두 실제Demo/자연15초안내/AI/플레이진입 통과·종료0이다. 한 실행의설정복구 OSError22×3은 기존제한재시도내복구됐다. 최종원본 **1394/1394·변경0·추가0**, 모든제품SHA동일이다. 고유34진입 성공이지만 전체36시도중최초1실패/35성공을보존하며 사용자완주/동일성/파일실패해결로세지않는다.
+- [x] 선택89파일만stage했고 최초원문fixture/tool/report27개의 작업본/인덱스 원시SHA가모두같다. staged공백검사는종료0이다. 최종정적감사·인수인계를정리해 **20261024-07 CP**로커밋한다. [통합 기록](docs/exe/cpp-editor-checkpoint-runtime-20261024.md).
+- [ ] options.cfg fopen/복구OSError22 원인은미확정이다. 과거19/23일에도반복됐고 원본/UCRT공유정책은같다. 후속정적·격리합성프로브는실제실패원인과분리해계속조사한다. 원본옵션에진단용쓰기를추가하지않는다.
+- [ ] 후속386에는 ColorSort고정입력15파일→ClientChat/Core소유자2파일 제안(순차사본충돌0), 같은seed/SPwriter접합3파일, 독립SavedReader/StateCleanup/Dot·정적표/CoreRefresh/SPwriter/색상캐시부모를통합한다. 현재이들은공용미등록/미적용이며독립관측·격리통과를실제Run/Session완료로세지않는다. 실제Chat/Core/Subscriber/Player와SP초기화전체수명·Native정리·최종loaded/UI가먼저해결돼야한다.
+- [ ] 실제 Chatmanager/CoreData/Subscriber/Player 수명과 CoreWrite 부모 접합을 완료해야 정상 checkpoint 전체를 검증할 수 있다. Client 시작 이전부터 필요한 같은 GameRandom/SP/추적DWORD 수명도 현재 Session 난수 getter만으로 해결하지 않는다. 전체 메뉴·편집/저장·재로드·모든 사용자 완주/동일성은 여전히 미완료이며 goal은 active다.
+
 ## 2026-10-24 단위384 완료: 실제 Subscriber·난수 수명과 Editor 외곽 연결
 
 - [x] 단위383을 **a9af29da / 20261024-05 CP**로 커밋했다. 전체2506검사 실패0/337.50초,최종제품·검사SHA와 originals1394동일은 직전 기록에 있다. 현재/마지막 전체 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-23**이다.

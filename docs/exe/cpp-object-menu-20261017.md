@@ -1,5 +1,9 @@
 # 공통 객체·Damageable·회수 메뉴 복원
 
+**단위385 교정(2026-10-24):** 아래 초기 기록의 `global.salvageSid`가 루트 `salvageSid`에 저장된 결과는 당시 Registry에 무명 객체 둘만 있던 결함 때문이다. 실제 양판본 CRT에는 [장기 global·fort 객체](cpp-config-static-owners-20261024.md)가 있다. 두 객체를 복구한 뒤 실제 메뉴 검사는 `global.salvageSid=50`과 루트에 같은 키가 없는 것을 확인하도록 교정한다. 원문 Get의 this 버퍼 관문을 유지하도록 검사에 명시 루트 입력 한 항목도 둔다. 원문 메뉴/Config 본체·기존 Native fixture/report는 변경하지 않았다. 당시 실패와 잘못된 해석은 아래에 역사 자료로 남긴다.
+
+이 교정 뒤 옛 `decomp_object_menu.py --verify`는 역사 제품 핀(메뉴 검사/CMake2파일)의 변경 때문에 종료1이다. 최초 report/도구/fixture는 그대로 보존한다. 현재 원문 입력6개와1434고유입력만 검증할 때는 `python tools/verify_native_manifest.py cpppj/object-menu.json`을 사용한다. 실제 제품 검사와 최종 전체 결과는 [단위385 기록](cpp-editor-checkpoint-runtime-20261024.md)에 있으며 옛 제품 핀을 현재 검증 결과로 고치지 않는다.
+
 **단위115 교정:** 당시 외부 경계로 둔 `004844f0`/Player 메뉴의 문자열 API 해석은 잘못됐다. 실제 반환/전달 값은 subscriber DWORD다. [실제 조회와 형식 교정](cpp-player-identity-20261017.md)에서 두 판본의 실제 getter/검색 몸체와 메뉴48입력을 추가 대조했다. 아래1,434행은 당시 공급한 하위 경계와 상위 메뉴 몸체의 범위로 읽으며, 실제 이름 반환의 근거로 사용하지 않는다. 과거 fixture는 보존했다.
 
 2026-10-17, `HJOW-Athlon`. 마지막 전체 정밀 디컴파일도 `HJOW-Athlon / 2026-10-16`이다. 새 Ghidra 내보내기나 원본/클론 게임 실행은 없다. 보호 PE를 Unicorn의 격리 메모리 사본에서 읽었다.

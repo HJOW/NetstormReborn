@@ -109,6 +109,8 @@ void RawCampaignWorldRuntime::LoadExistingFort(const std::function<void()>& befo
     beforeWorld();state.territory->Load(0); //Player생성/회복의필수원본단계를지난뒤에만일반월드를설치한다.
     state.world.FinishLoadAfterGraph();state.objectState.loadingDepth=0; //부모의Graph(false)를중복호출하지않는다.
 }
+// 별도사제stub을만들지않고같은실제globals를읽는기존몸체로전달한다.
+void RawCampaignWorldRuntime::FinishMissionPriests() const { impl_->campaign->FinishMissionPriests(); }
 // 참조를 비교할 실제 Pool을 반환한다.
 const o::SidPool& RawCampaignWorldRuntime::Pool() const { return impl_->core.pool; }
 // 실제 저장객체 loader를 제공하며 별도 사본을 만들지 않는다.
