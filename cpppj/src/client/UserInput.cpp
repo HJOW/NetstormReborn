@@ -55,7 +55,7 @@ void UserInput::Tick() {
         x=(mouse.x>client_.GetScreen().Width()/2+16)-(mouse.x<client_.GetScreen().Width()/2-16);
         y=(mouse.y>client_.GetScreen().Height()/2+16)-(mouse.y<client_.GetScreen().Height()/2-16);
     }
-    const int amount=static_cast<int>(std::lround(delta*kCameraPixelsPerSecond)); world_.Scroll(x*amount,y*amount);UpdateCursor(mouse);
+    const int amount=static_cast<int>(std::lround(delta*kCameraPixelsPerSecond));if (x || y) world_.Scroll(x*amount,y*amount);UpdateCursor(mouse); // 이동 입력이 없을 때 원본497f20의 카메라 중심을 Scroll(0,0)의 clamp로 다시 바꾸지 않는다.
 }
 // 메뉴/비활성으로 건너뛴 키 올림 사건이 다음 월드 조작에 남지 않게 한다.
 void UserInput::Cancel() { held_.fill(false); lastWall_=client_.Time().wall; }

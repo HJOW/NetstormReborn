@@ -1,4 +1,5 @@
 #include "client/RawProductionControls.h"
+#include "client/RawMinimapControls.h"
 #include "client/CampaignUserInputServices.h"
 // 원본 004d0120·004cebf0·004cf270·004ce580의 메뉴/명령 흐름을 표시 기반과 연결한다.
 // 전체 Gump/StyleText와 게임 규칙은 후속이다. 저장 미션 월드는 GameWorld에 연결한다.
@@ -258,6 +259,7 @@ void UberGump::ClearWorld() {
     missionFortRequest_.reset(); // Session이 살아 있으면 공유 소유권으로 실제 설치/해제 완료까지 이미지를 보존한다.
     if (rawButtons_ && rawButtons_->Menus()) rawButtons_->Menus()->CloseHelp(); // 동적 정보/그림의 현재 Session보다 먼저 실제 창을 반납한다.
     if (world_ && rawButtons_ && rawButtons_->Menus()) rawButtons_->Menus()->Close(); // 같은Form을반납한뒤에만Session/월드포인터를해제한다.
+    if (rawButtons_) rawButtons_->DisableMinimap(); // 같은Session/공통Gump보다먼저공간통지와미니맵을반납한다.
     if (rawButtons_) rawButtons_->DisableProduction(); // 실제 Session보다 먼저 UI Form을 반납한다.
     client_.ClearThunderFlashes();
     if (world_) client_.GetRenderer().SetExtraCollection({}); // 월드 반납 전에 빌린 실제 커서 수집/Draw callback을 해제한다.
@@ -723,6 +725,8 @@ void UberGump::Tick() {
 void UberGump::MissionFrame() {
     if (guide_) guide_->Run();
 }
+// 원본의미니맵프레임은게임정지와별개로커널보다먼저실행한다.
+void UberGump::RefreshMinimap() { if (rawButtons_->Minimap() && rawButtons_->Minimap()->Refresh()) rebuild_=true; }
 // 커널의 이동·날씨와 비동기 Tell을 같은 프레임에 반영한다. 페이지가 같으면 입력 영역/누름 상태를 유지한다.
 void UberGump::Frame() {
     if (world_ && world_->TakeChanged()) rebuild_=true;
@@ -735,6 +739,7 @@ void UberGump::PaletteChanged() {
     if (world_) world_->SetPalette(client_.GetScreen().Palette());
     rawButtons_->SetPalette(ButtonColors(client_.GetScreen().Colors()));
     if (rawButtons_->Production()) rawButtons_->Production()->SetPalette(client_.GetScreen().Palette());
+    if (rawButtons_->Minimap()) rawButtons_->Minimap()->SetPalette(client_.GetScreen().Colors());
     Refresh();
 }
 // 선택한 원본 명령의 작은 부분집합. 지원하지 않는 항목은 활성화하지 않는다.
@@ -937,6 +942,10 @@ void UberGump::Compose() {
                 [this](const InventoryItemNode& item,ScreenPoint point,const std::function<bool(o::Sid)>& affordable) { if (!world_ || !objectMenus_) throw std::logic_error("생산 정보의 현재 월드 없음");return objectMenus_->OpenProduction(*world_,item,point,affordable); }});
             auto& production=*rawButtons_->Production(); // 같은 미션의 안내/복귀는 예산/등록ID를 재생성하지 않는다.
             production.Resize(height);production.SetPalette(client_.GetScreen().Palette());
+            if (!rawButtons_->Minimap()) rawButtons_->EnableMinimap(world_->Session(),RawMinimapHooks{
+                [this] { return world_->MinimapView(); },[this](auto x,auto y) { world_->CenterCamera(x,y); },
+                [this](auto x,auto y) { world_->MoveFromMinimap(x,y); },[this] { return world_->InputMode(); },[this] { return client_.Poll(0xffff); }});
+            rawButtons_->Minimap()->Resize(height);rawButtons_->Minimap()->SetPalette(client_.GetScreen().Colors());
         }
         if (!popup_.empty()) {
             auto& menus=*rawButtons_->Menus();menus.SetPalette(client_.GetScreen().Colors());
@@ -962,6 +971,7 @@ void UberGump::Compose() {
 }
 // 자동 검사는 라벨 좌표를 읽고 실제 버튼 입력을 보낸다. 명령을 직접 호출하지 않는다.
 std::optional<ScreenPoint> UberGump::ControlPoint(std::string_view label) const {
+    if (rawButtons_->Minimap() && label.starts_with("minimap:")) return rawButtons_->Minimap()->Point(label);
     if (rawButtons_->Production() && label.starts_with("production:")) return rawButtons_->Production()->Point(static_cast<std::uint32_t>(std::stoul(std::string(label.substr(11)))));
     if (world_ && (label.starts_with("world:") || label.starts_with("cell:") || label.starts_with("placement:") || label.starts_with("placement-near:") || label.starts_with("placement-reach:") || label.starts_with("placement-fire:"))) return world_->Point(label);
     if (objectMenus_ && objectMenus_->Active()) if (const auto point=rawButtons_->Menus()->Point(FontBytes(label))) return point;

@@ -625,7 +625,7 @@ int RunClient(std::vector<std::string> arguments) {
         // UI 검사 마우스는 같은 좌표를 쓴다. 가운데 폴링이 실제 바탕 화면 위치로 커서를 덮지 않게 한다.
         client.inspectPoll=[&](std::uint32_t code) -> std::optional<netstorm::client::InputEvent> {
             using namespace netstorm::client;
-            if (!scriptPointer || (code!=InputCode::kLeftButton && code!=InputCode::kRightButton && code!=InputCode::kMiddleButton)) return std::nullopt;
+            if (!scriptPointer || (code!=InputCode::kLeftButton && code!=InputCode::kRightButton && code!=InputCode::kMiddleButton && code!=0xffff)) return std::nullopt; // 원본 미니맵의ffff 좌표 폴링도 동일한 실제 자동 입력점을 읽는다.
             auto event=*scriptPointer;event.code=(event.code&(InputCode::kOutside|InputCode::kRelease))|code;
             if (code!=InputCode::kLeftButton) event.code|=InputCode::kRelease;return event;
         };

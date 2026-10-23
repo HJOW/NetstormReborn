@@ -1,6 +1,12 @@
 # 단위 테스트. 외부 테스트 프레임워크 없이 TestSupport.h 의 작은 도구만 쓴다
 # (첫 구성 때 인터넷에서 내려받을 것이 없다).
 # 테스트 파일을 만들면 아래 목록에 더한다. 파일 안의 TEST_CASE 는 자동으로 등록된다.
+# 미니맵기하의독립원본관측을해당검사에만공급한다.
+set_source_files_properties(MinimapGeometryTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_MINIMAP_GEOMETRY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/minimap-geometry-x86.tsv\"")
+# 미니맵셀의독립원본전체bitmap관측을이검사에만공급한다.
+set_source_files_properties(MinimapRasterTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_MINIMAP_CELL_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/minimap-cell-x86.tsv\"")
 # 생산 단축키의 독립 원문 중 실제 키 구간에 도달한 관측을 대조한다.
 set_source_files_properties(ProductionShortcutsTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_PRODUCTION_SHORTCUTS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/production-shortcuts-x86.tsv\"")
@@ -58,6 +64,8 @@ set_source_files_properties(FlyerPreDestroyTests.cpp PROPERTIES COMPILE_DEFINITI
 set_source_files_properties(BurningLifetimeDrawTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_BURNING_LIFETIME_DRAW_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/burning-lifetime-draw-x86.tsv\";NETSTORM_RENDER_FRAME_GATE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/render-frame-gate-x86.tsv\";NETSTORM_BURNING_ARCHER_CAPTURE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/burning-archer-capture-x86.tsv\"")
 add_executable(netstorm_tests
+    MinimapGeometryTests.cpp
+    MinimapRasterTests.cpp
     ProductionShortcutsTests.cpp
     FortTerritorySaveTests.cpp
     FortContentSaveTests.cpp

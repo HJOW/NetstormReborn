@@ -38,6 +38,7 @@ public:
     void MissionFrame();
     // 커널이 월드를 진행한 직후 변경된 실제 장면을 제출한다.
     void Frame();
+    void RefreshMinimap(); // 원본00481320의커널앞위치에서실제같은HUD큐를소비한다.
     // 날씨 곡 전환의 화면 갱신 요청이다(0043dad0 경계). 같은 프레임의 Frame에서 UI를 다시 합성한다.
     void Refresh();
     // 새 화면 팔레트를 월드 어댑터에도 전달하고 UI/표시를 다시 그린다.

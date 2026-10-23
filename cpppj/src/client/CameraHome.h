@@ -21,9 +21,9 @@ public:
         std::function<void(std::int32_t,std::int32_t)> apply);
     // free만 건너뛰며 마지막 내 사제를 고른다. dead 후보의 CenterOn 자연 반환도 유지한다.
     void Reset() const;
-private:
-    // 실제 카메라 변환의 음수 16/11 곱→ftol→화면 절반 차감과 현재 요청 전역을 적용한다.
+    //497f20: 미니맵도 같은 음수16/11 곱→ftol→화면 절반 차감과 현재 요청 전역을 사용한다.
     void CenterPoint(float x,float y) const;
+private:
     // 자산 좌표에서 TYPE의 전체 footX/footY를 뺀 뒤 단정도로 저장하고 중심을 이동한다.
     void CenterOn(o::Sid sid) const;
     const o::SidPool& pool_; // 원본 번호순 조회와 free/dead/좌표를 공유하는 실제 풀이다.

@@ -12,6 +12,8 @@
 namespace netstorm::client {
 class RawCampaignSession; // 생산 패널과 같은 현재 실제 월드다.
 struct RawProductionHooks; // 현재 생산 UI 장치 효과다.
+class RawMinimapControls; // 같은 월드의 실제 Sky Overview 처리기다.
+struct RawMinimapHooks; // 현재 카메라/입력 장치다.
 class RawProductionControls; // 같은 등록표의 실제 생산 파생 처리기다.
 class RawMenuControls; // 같은 트리에 연결하는 실제 메뉴 처리기다.
 struct RawMenuHooks; // 현재 Client의 메뉴 외부 효과다.
@@ -66,6 +68,9 @@ public:
     RawProductionControls& EnableProduction(RawCampaignSession& session,const GameAssets& assets,RawProductionHooks hooks); // 현재 미션 패널을 조립한다.
     RawProductionControls* Production() const; // 현재 살아 있는 패널 처리기다.
     void ConfigureTestBridgePatterns(std::string_view patterns); // 테스트 전용 임시 조작이며 원본 분석 결과가 아니다. 초기/진행 중 지정 순서를 교체한다.
+    RawMinimapControls& EnableMinimap(RawCampaignSession& session,RawMinimapHooks hooks); // 같은 실제 트리/월드에 미니맵을 생성한다.
+    RawMinimapControls* Minimap() const; // 살아 있는 실제 미니맵 처리기다.
+    void DisableMinimap(); // 현재Session보다먼저통지/입력/표시참조를반납한다.
     void DisableProduction(); // Session 해제 전에 연결 노드/참조를 반납한다.
     // 실제현재등록표→가상+4의기본/메뉴Kill알림이다. 반환콜백은이UI보다먼저해제한다.
     o::GumpFormNotice ObjectNotice() const;

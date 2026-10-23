@@ -73,7 +73,9 @@ public:
     ~RawMenuControls();
     RawMenuControls(const RawMenuControls&)=delete; // 고정 주소를 참조하는 훅을 복사하지 않는다.
     RawMenuControls& operator=(const RawMenuControls&)=delete; // 같은 저장소/처리기를 유지한다.
-    void SetExternalGumps(RawMenuExternalGumps hooks); // 생산 패널의 현재 저장소를 같은 출력 계층에 연결/해제한다.
+    void SetExternalGumps(RawMenuExternalGumps hooks);
+    void SetExternalGumps(std::uint32_t slot,RawMenuExternalGumps hooks); // 독립 월드 UI가 같은 수집/정렬/클립을 공유하며 슬롯별로 수명을 반납한다.
+    std::uint32_t BaseHandle(std::uint32_t token,std::uint32_t event,std::uint32_t first,std::uint32_t second) const; // 외부 파생도 같은 기본 우클릭 Help로 위임한다. // 생산 패널의 현재 저장소를 같은 출력 계층에 연결/해제한다.
     const TextGump& TextBackend() const; // 수량/예산도 기존 원본 한 줄 글자 처리기를 공유한다.
     const StyleText& StyleBackend() const; // 생산 글자도 같은 실제 조각·글꼴·그림 파서를 공유한다.
     void MeasureText(std::span<const char> bytes,const std::array<std::uint32_t,8>& context,std::int32_t& width,std::int32_t& height,std::uint32_t limit) const; // 공통 돌 버튼 Fit도 같은 원본 글꼴 측정기를 사용한다.

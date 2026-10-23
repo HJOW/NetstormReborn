@@ -104,6 +104,15 @@ void GameWorld::ResetCampaignCamera() {
     cameraHome_.width=width_;cameraHome_.height=height_;
     campaign_->ResetCamera(cameraHome_,[this](std::int32_t x,std::int32_t y) { scrollX_=x;scrollY_=y;changed_=true;SurfaceView(); });
 }
+// 실제 카메라 비트는 같은 scroll 원점에서 원본497490의 단정도 저장으로 계산한다.
+MinimapGeometryView GameWorld::MinimapView() const { return {RawCursorPosition::CameraFromPixels(scrollX_,scrollY_),{0,std::min(kMenuHeight,height_),width_,height_},16,11}; }
+// 홈 선택과 미니맵 클릭은 동일한497f20을 사용하며 임의 월드 가장자리clamp를 추가하지 않는다.
+void GameWorld::CenterCamera(float x,float y) {
+    if (!campaign_) throw std::logic_error("실제 미니맵 카메라의 Session 없음");cameraHome_.width=width_;cameraHome_.height=height_;const auto core=campaign_->Core(); // 현재 공유 풀/TYPE다.
+    CameraHome(core.pool,core.types,cameraHome_,[this](auto px,auto py) { scrollX_=px;scrollY_=py;changed_=true;SurfaceView(); }).CenterPoint(x,y);
+}
+// 원본 미니맵은 일반화면의4971e0/41d770 변환을 다시 거치지 않는다.
+void GameWorld::MoveFromMinimap(float x,float y) { if (!input_) throw std::logic_error("실제 미니맵 선택 장치 없음");input_->carrier->Commit(selected_,{x,y});input_->highlight->Highlight(0);changed_=true; }
 // 같은 실제 슬롯의 표시/선택용 뷰다. 이 목록에는 이동/HP 계산이나 별도 경로를 저장하지 않는다.
 void GameWorld::RefreshCampaignObjects() {
     if (!campaign_) return;objects_.clear();const auto core=campaign_->Core();

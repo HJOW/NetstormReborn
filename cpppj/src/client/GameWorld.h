@@ -7,6 +7,7 @@
 #include "client/RawCampaignSession.h"
 #include "client/Sound.h"
 #include "client/RawUserHighlight.h"
+#include "client/MinimapGeometry.h"
 #include "o/BaseProcess.h"
 #include "o/Player.h"
 #include "o/Squid.h"
@@ -50,6 +51,9 @@ public:
     void SetPalette(std::span<const ScreenColor> palette);
     // 카메라를 월드 픽셀 범위 안에서 옮긴다.
     void Scroll(int dx,int dy);
+    MinimapGeometryView MinimapView() const; // 같은 실제 카메라와 현재 월드 viewport를 미니맵에 빌린다.
+    void CenterCamera(float x,float y); // 미니맵도 초기 시야와 같은497f20/변경 전역을 사용한다.
+    void MoveFromMinimap(float x,float y); // 실제 선택Carrier에월드좌표그대로명령한뒤강조0을적용한다.
     // F4/H·F5의 원본 홈 신전/사제 보기를 연결한다.
     void Home(bool priest);
     // 화면 좌표와 실제 렌더링 그림으로 선택 가능한 오브젝트를 찾는다.
