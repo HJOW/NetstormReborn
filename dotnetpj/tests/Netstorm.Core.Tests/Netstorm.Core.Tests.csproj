@@ -112,6 +112,12 @@
     <None Include="../../../cpppj/tests/fixtures/contentlifetime-x86.tsv" Link="X86/contentlifetime-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <!-- W03 신전 삭제 조각: 신전 사전 파괴 102행의 목록·섬·지역·공통·Player 정리 -->
     <None Include="../../../cpppj/tests/fixtures/vortex-pre-x86.tsv" Link="X86/vortex-pre-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <!-- W03 다리 밖 자산 삭제 재정의 조각: 사제 사전 파괴 6,552행 중 10.78 몫 2,184행. -->
+    <None Include="../../../cpppj/tests/fixtures/priestdestroy-x86.tsv" Link="X86/priestdestroy-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <!-- W03 다리 밖 자산 삭제 재정의 조각: Point Blast Bomb 사전 파괴 96행(32/64비트 관찰 중복 포함). -->
+    <None Include="../../../cpppj/tests/fixtures/bomb-predestroy-x86.tsv" Link="X86/bomb-predestroy-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <!-- W03 다리 밖 자산 삭제 재정의 조각: 플라이어 사전 파괴 96행(네 슬롯 200바이트 포함). -->
+    <None Include="../../../cpppj/tests/fixtures/flyer-predestroy-x86.tsv" Link="X86/flyer-predestroy-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <!-- 연결한 fixture 의 SHA-256 목록과 그 검사. cpppj 가 fixture 를 다시 만들면 실패해 재대조를 요구한다 (W01, 2026-10-16). 갱신: dotnetpj/tools/cpp_sync.py -->
     <None Include="../Shared/cpp-fixture-manifest.tsv" Link="X86/cpp-fixture-manifest.tsv" CopyToOutputDirectory="PreserveNewest" />
     <Compile Include="../Shared/CppFixtureManifest.cs" Link="Shared/CppFixtureManifest.cs" />
