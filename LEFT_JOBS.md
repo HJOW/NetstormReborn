@@ -1,5 +1,13 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-23 단위355 완료: 편집 Fort의 Money/Badges/Technology 실제 섹션 선택
+
+- [x] 단위354를 `0e3a7418 / 20261023-18 CP`로 커밋했다. 현재/마지막 전체 정밀 디컴파일 PC는 **VM-W11-Codex / 2026-10-23**, 새 디컴파일이나 기존 산출물 변경은 없다. 원본004bf340은 Money 선택0,004be8e0/004beee0은 Badges/Technology 선택1임을 기존 정밀 원문에서 확인했다.
+- [x] CampaignTemplateStorage에 세 typed cursor와 같은 manager/current/공유 raw 버퍼를 사용하는 선택 API를 추가했다. 빌린 헤더·값형/실제 파일 설치·소비 위치 보존·빈 읽기/빈 메타 선택 차이 및 실제 Money SP/Badge 장부/빈 Technology 부모·UI를 확인할 두 검사를 작성했다.
+- [x] 빌드1의 새 매개변수 `name`이 기존 파일명 멤버를 숨기는 C4458을 발견해 `sectionName`으로 고쳤다. 최종 Release 빌드2 종료0·경고/오류0, 새2개를 포함한 관련35검사 실패check0이다. 최종 전체 CTest1은 **2337개·실패check0·종료0/200.27초**다. [상세](docs/exe/cpp-fort-streams-20261023.md)에 원본 모드와 검증 경계를 기록했다. 제품/검사 C++는 최종 검사 뒤 바꾸지 않았다.
+- [x] 인수인계를 마감하여 **20261023-19 CP**로 로컬 커밋한다. 새 디컴파일/원본/CD/AGENTS/기존 fixture/다른 프로젝트 수정과 원격 push는 없다.
+- [ ] 다음 실제 Editor Session 연결은 여전히 남아 있다. RawCampaignWorldRuntime::Load는 캠페인 부모 전용이므로 별도 generic Fort 진입과 실제 Money/Meta 상태/장부·기술 부모/변환/UI·저장 장치가 필요하다. alternate populate0046e630 하위는 완료 모듈이 없어 명시 실패를 유지한다. Edit UI만 열어 완료로 처리하거나 일반 지형으로 populate를 대체하지 않는다.
+
 ## 2026-10-23 단위354 완료: 목표 재개 및 메인 메뉴 돌 버튼 질감
 
 - [x] 사용자의 이번 `/goal` 지시로 단위352/353에서 중지했던 cpppj 전체 목표를 재개했다. 현재 PC/마지막 전체 정밀 디컴파일 PC는 **VM-W11-Codex / 2026-10-23**으로 일치한다. 시작 HEAD `39cd2549`, 작업 트리 깨끗함을 확인하고 AGENTS.md·공통/닷넷 인수인계를 다시 읽었다. 기존 디컴파일 소스 변경은 없다.
@@ -11,7 +19,7 @@
 ## 2026-10-23 공통 참고(webpj WB03-M1에서 발견): cpppj 돌 버튼 질감 프레임
 
 - [x] webpj 메인 메뉴 복원(**20261023-17 WB**, [기록](docs/webpj-main-menu-20261023.md), [webpj 인계](LEFT_JOBS.webpj.md))은 현재 PC **VM-W11-Codex** 와 마지막 전체 정밀 디컴파일 PC(**VM-W11-Codex / 2026-10-23**)가 일치하여 새 디컴파일 없이 기존 `extracted/refined/originals/` 를 읽었다. cpppj·원본/CD·AGENTS.md 는 수정하지 않았다. 디컴파일 소스 변경도 없으므로 마지막 디컴파일 호스트 기록은 그대로다.
-- [ ] **cpppj 확인 필요:** 원본 돌 버튼 생성자 `004254b0` 의 배경 자식은 `004655d0(..., DAT_005ca920, DAT_00542664)` 를 쓰며 `DAT_005ca920 = DAT_005411c8 = 92`(fortGump), `DAT_00542664` 는 정적 초기값 **1**(쓰기 참조 없음)이다. 즉 원본 버튼 질감은 fortGump **프레임 1(클러스터 A01 "Sandy marble")** 이다. cpppj `UberGump.cpp` 는 `FrameIndex(type,"A00",0)`(프레임 0)을 `buttonTextureFrame_` 로 쓴다. `screenShots/mainMenu.png` 버튼 내부 픽셀의 질감 위상 탐색에서도 프레임 1·위상 (0,0)이 평균 오차 32.5, 프레임 0 최적 위상이 90.8 로 프레임 1 이 원본과 맞았다. cpppj 목표 재개 시 이 근거로 질감 프레임을 다시 대조·수정한다(웹은 프레임 1 사용, 검사 `webpj/tests/main-menu.test.mjs` 의 스크린샷 대조가 프레임 1<프레임 0 을 확인한다).
+- [x] **cpppj 단위354에서 수정·검증 완료:** 원본 돌 버튼 생성자 `004254b0` 의 배경 자식은 `004655d0(..., DAT_005ca920, DAT_00542664)` 를 쓰며 `DAT_005ca920 = DAT_005411c8 = 92`(fortGump), `DAT_00542664` 는 정적 초기값 **1**(쓰기 참조 없음)이다. 즉 원본 버튼 질감은 fortGump **프레임 1(클러스터 A01 "Sandy marble")** 이다. cpppj `UberGump.cpp` 는 `FrameIndex(type,"A00",0)`(프레임 0)을 `buttonTextureFrame_` 로 쓴다. `screenShots/mainMenu.png` 버튼 내부 픽셀의 질감 위상 탐색에서도 프레임 1·위상 (0,0)이 평균 오차 32.5, 프레임 0 최적 위상이 90.8 로 프레임 1 이 원본과 맞았다. cpppj는 단위354에서 이 근거로 질감 프레임을 수정하고 실제 창 캡처도 대조했다(웹은 프레임 1 사용, 검사 `webpj/tests/main-menu.test.mjs` 의 스크린샷 대조가 프레임 1<프레임 0 을 확인한다).
 - [x] 참고: 원본 SetPalette(`004a2640`)의 0번 검정·255번 흰색 고정을 적용한 명암 표는 원본 캐시 `originals/d/!color.dat` 의 밝음·어두움 표 512바이트와 일치함을 webpj 검사로 다시 확인했다(cpppj `Screen::SetPalette` 와 같은 규칙).
 
 ## 2026-10-23 단위353 완료: cpppj 사전 준비 — 양 판본 디컴파일 및 Release 컴파일

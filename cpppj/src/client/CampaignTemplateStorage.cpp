@@ -15,6 +15,11 @@ namespace {
 std::size_t StateSection() { const auto names=o::FortTemplate::SectionNames();const auto at=std::find(names.begin(),names.end(),"State");if (at==names.end()) throw std::logic_error("Template 실제 State 섹션 이름 누락");return static_cast<std::size_t>(at-names.begin()); }
 // 지형 getter도 파서의 편의 사본 대신 같은 원시 섹션 버퍼를 조회한다.
 std::size_t TerritorySection() { const auto names=o::FortTemplate::SectionNames();const auto at=std::find(names.begin(),names.end(),"Territory");if (at==names.end()) throw std::logic_error("Template 실제 Territory 섹션 이름 누락");return static_cast<std::size_t>(at-names.begin()); }
+// 경제/메타 getter도 공식35개 섹션 이름으로 같은 실제 노드를 찾는다.
+std::uint32_t LoadSection(std::string_view name) {
+    const auto names=o::FortTemplate::SectionNames();const auto at=std::find(names.begin(),names.end(),name);
+    if (at==names.end()) throw std::logic_error("Template 경제/메타 섹션 이름 누락");return static_cast<std::uint32_t>(at-names.begin()+1);
+}
 // manager 핸들의 원본DWORD를 읽는다.
 std::uint32_t Read(std::span<const std::uint8_t> header) { std::uint32_t result{};
     // 같은 네 바이트를 낮은 비트부터 합친다.
@@ -35,6 +40,9 @@ struct CampaignTemplateStorage::Image {
     o::FortTemplate fort; // 원시 State 섹션을 포함한 실제 파싱 자료와 소유 버퍼다.
     o::PlayerTemplateStateStream state; // 같은 fort.sections[State]의 현재 cursor다.
     o::FortTerritoryStream territory; // 같은 fort.sections[Territory]의 현재 cursor다.
+    o::FortMoneyCursor money; // 같은 Money 노드의 현재 pos/end이며 SP 값의 편의 사본을 사용하지 않는다.
+    o::FortMetaStream badges,technology; // 같은 원시 섹션 버퍼와 각각의 현재 pos/end/present다.
+    std::uint32_t loadCursors{}; // 공개한 Money/Badges/Technology cursor의 유효 비트1/2/4다. 미공개 노드의 초기 상태는 보존한다.
     std::string name; // 같은 현재 파일 이름이다.
     std::vector<std::uint8_t> retiredState; // 확장 중 Get의 원문 복사가 끝날 때까지만 이전 할당을 보유한다.
     std::array<std::uint8_t,276> manager{}; // 원본 Template manager의 vptr/head/current·파일명256·서명/FE 판정DWORD를 같은 저장소에 둔다.
@@ -50,6 +58,9 @@ struct CampaignTemplateStorage::Image {
         const auto& bytes=fort.sections.at(handle-1);const auto& node=streams.at(handle)->bytes;
         if (handle==StateSection()+1) state={std::span<std::uint8_t>(fort.sections.at(handle-1)),Read(std::span(node).subspan(4)),Read(std::span(node).subspan(8)),Read(node)!=0};
         if (handle==TerritorySection()+1) territory={bytes,Read(std::span(node).subspan(4)),Read(std::span(node).subspan(8))};
+        if (handle==LoadSection("Money")) { money={Read(std::span(node).subspan(4)),Read(std::span(node).subspan(8))};loadCursors|=1U; }
+        if (handle==LoadSection("Badges")) { badges={bytes,Read(std::span(node).subspan(4)),Read(std::span(node).subspan(8)),Read(node)!=0};loadCursors|=2U; }
+        if (handle==LoadSection("Technology")) { technology={bytes,Read(std::span(node).subspan(4)),Read(std::span(node).subspan(8)),Read(node)!=0};loadCursors|=4U; }
     }
     // 실제 임시 할당을 원본 포인터 토큰으로 빌린 뒤 완료한 같은 버퍼를 raw 섹션에 넘긴다.
     template<class Operation> void WithMemory(std::uint32_t handle,Operation operation) {
@@ -174,6 +185,18 @@ struct CampaignTemplateStorage::Image {
         const auto selected=o::SelectDataManagerSection(manager,"Territory",0,hooks);
         territory.position=Read(std::span(streams.at(selected)->bytes).subspan(4));
     }
+    // 현재 노드가 없는 읽기/빈 읽기는 원본 선택의 진단으로 남기고, 메타의 빈 쓰기 허용은 그대로 유지한다.
+    void SelectLoadSection(std::string_view sectionName,std::int32_t writable) {
+        SyncStreams();o::DataManagerSelectionHooks hooks;
+        hooks.stream=[this](auto node) { return std::span(streams.at(node)->bytes); }; // 같은 manager의 실제 목록 노드를 선택한다.
+        hooks.assertion=[](auto) { throw std::logic_error("Template 경제/메타 실제 섹션 선택 진단"); }; // 누락/읽기 불가를 가짜 빈 성공으로 바꾸지 않는다.
+        PublishCursor(o::SelectDataManagerSection(manager,sectionName,writable,hooks));
+    }
+    // 선택 없이 typed cursor를 처음 공개할 때도 같은 원시 노드에서 현재 상태를 읽는다.
+    void LoadCursor(std::string_view sectionName) {
+        SyncStreams();const auto handle=LoadSection(sectionName);
+        if (!streams.contains(handle)) throw std::logic_error("Template 경제/메타 현재 노드 누락");PublishCursor(handle);
+    }
     // 선택된 노드는 소멸과 동일한 핸들/이름 저장소를 사용한다.
     std::string_view CurrentSection() const {
         const auto handle=Read(std::span(manager).subspan(8));if (!handle) return {};
@@ -198,6 +221,12 @@ struct CampaignTemplateStorage::Image {
             previous=handle;
         }
         if (!previous) Put(manager,4,0);
+        // 하위 Money/Meta가 소비한 위치를 같은 노드에 반영하고, 외부 raw 버퍼 교체 뒤에는 새 실제 span/end를 빌린다.
+        const auto syncLoad=[this](std::string_view sectionName,std::uint32_t bit,std::uint32_t position) {
+            if (!(loadCursors&bit)) return;const auto handle=LoadSection(sectionName);const auto found=streams.find(handle);
+            if (found==streams.end()) throw std::logic_error("Template 공개 경제/메타 노드 수명 오류");Put(found->second->bytes,4,position);PublishCursor(handle);
+        };
+        syncLoad("Money",1U,money.position);syncLoad("Badges",2U,badges.position);syncLoad("Technology",4U,technology.position);
     }
     // 현재 manager의 서명/이름 검색 효과를 같은 파일 저장 부모에 공급한다.
     void SaveFile(const o::DataManagerFileSaveState& stateInputs,o::FortImageHooks imageHooks,const TemplateFileWriteHooks& file) {
@@ -322,6 +351,18 @@ std::string_view CampaignTemplateStorage::CurrentSection(std::uint32_t slot) { r
 o::FortTerritoryStream& CampaignTemplateStorage::Territory(std::uint32_t slot) { return Current(slot).territory; }
 // 월드 로더가 같은 manager에서 원본 읽기 선택을 한 뒤 같은 지형 cursor를 사용한다.
 o::FortTerritoryStream& CampaignTemplateStorage::SelectTerritory(std::uint32_t slot) { auto& image=Current(slot);image.SelectTerritory();return image.territory; }
+// 같은 manager의 현재 Money 노드를 선택 효과 없이 빌린다.
+o::FortMoneyCursor& CampaignTemplateStorage::Money(std::uint32_t slot) { auto& image=Current(slot);image.LoadCursor("Money");return image.money; }
+// Money는 원본 wrapper의 읽기 전용 선택을 적용한다.
+o::FortMoneyCursor& CampaignTemplateStorage::SelectMoney(std::uint32_t slot) { auto& image=Current(slot);image.SelectLoadSection("Money",0);return image.money; }
+// 같은 manager의 Badges 노드와 실제 버퍼를 빌린다.
+o::FortMetaStream& CampaignTemplateStorage::Badges(std::uint32_t slot) { auto& image=Current(slot);image.LoadCursor("Badges");return image.badges; }
+// 빈 Badges도 허용하는 원본 선택 모드를 유지한다.
+o::FortMetaStream& CampaignTemplateStorage::SelectBadges(std::uint32_t slot) { auto& image=Current(slot);image.SelectLoadSection("Badges",1);return image.badges; }
+// 같은 manager의 Technology 노드와 실제 버퍼를 빌린다.
+o::FortMetaStream& CampaignTemplateStorage::Technology(std::uint32_t slot) { auto& image=Current(slot);image.LoadCursor("Technology");return image.technology; }
+// 원본 기술 로더가 빈 섹션의 부모/UI 처리 여부를 직접 결정하게 한다.
+o::FortMetaStream& CampaignTemplateStorage::SelectTechnology(std::uint32_t slot) { auto& image=Current(slot);image.SelectLoadSection("Technology",1);return image.technology; }
 // 원문 선택 때 쓴 같은 파일 이름을 반환한다.
 const std::string& CampaignTemplateStorage::Name(std::uint32_t slot) { return Current(slot).name; }
 // 빌린 헤더도 원래 소유자의 같은 manager 꼬리DWORD를 읽는다.

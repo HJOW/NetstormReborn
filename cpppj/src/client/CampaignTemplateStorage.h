@@ -37,6 +37,12 @@ public:
     std::string_view CurrentSection(std::uint32_t slot); // 같은 manager가 마지막으로 선택한 실제 섹션 이름을 읽는다.
     o::FortTerritoryStream& Territory(std::uint32_t slot); // 같은 manager의 실제 Territory cursor다.
     o::FortTerritoryStream& SelectTerritory(std::uint32_t slot); // 원본 읽기 선택으로 같은 manager.current와 지형 커서를 초기화한다.
+    o::FortMoneyCursor& Money(std::uint32_t slot); // 같은 manager의 Money pos/end를 빌리며 현재 섹션은 바꾸지 않는다.
+    o::FortMoneyCursor& SelectMoney(std::uint32_t slot); // 004bf340의 읽기 선택(0)으로 Money를 선택하고 pos를0으로 되돌린다.
+    o::FortMetaStream& Badges(std::uint32_t slot); // 같은 실제 Badges 버퍼/present/pos/end를 빌린다.
+    o::FortMetaStream& SelectBadges(std::uint32_t slot); // 004be8e0의 쓰기 허용 선택(1)으로 빈 Badges도 그대로 전달한다.
+    o::FortMetaStream& Technology(std::uint32_t slot); // 같은 실제 Technology 버퍼/present/pos/end를 빌린다.
+    o::FortMetaStream& SelectTechnology(std::uint32_t slot); // 004beee0의 쓰기 허용 선택(1)으로 현재 Technology를 선택한다.
     const std::string& Name(std::uint32_t slot); // 같은 manager의 현재 파일 이름이다.
     std::array<std::uint32_t,2> FileHeader(std::uint32_t slot); // 같은 manager+10c/+110의 서명/FE 판정DWORD다. 읽기/저장 전에는0/ffffffff다.
     void SaveFile(std::uint32_t slot,const o::DataManagerFileSaveState& state,o::FortImageHooks image,const TemplateFileWriteHooks& file); //같은 manager의 실제 서명/검색/current와 저장 부모를 통해 현재 섹션을 파일에 쓴다.

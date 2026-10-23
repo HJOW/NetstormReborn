@@ -74,3 +74,51 @@ TEST_CASE(CampaignTemplates_TerritoryAndStateSelectSameManager) {
     const auto names=FortTemplate::SectionNames();const auto at=static_cast<std::size_t>(std::find(names.begin(),names.end(),"Territory")-names.begin());storage.Template(1).sections[at][0]^=0x40;CHECK(territory.bytes[0]==storage.Template(8).Section("Territory")[0]);
     storage.SelectTerritory(1);CHECK(!territory.position && storage.CurrentSection(8)=="Territory");storage.Clear(8);storage.ClearAll();CHECK(!storage.OwnedImages());
 }
+
+// 실제 파일/값형 설치 모두 빌린 헤더와 같은 세 노드/원시 버퍼/커서를 사용하고 선택 때만 위치를 초기화한다.
+TEST_CASE(CampaignTemplates_EconomyMetaSelectSameManagerAndBorrowedCursors) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);const auto bytes=assets.files.Read("d/TEST01.fort");
+    // 실제 이미지 읽기 부모와 기존 값형 설치의 두 진입을 같은 원문으로 비교한다.
+    for (const bool fileImage:{false,true}) {
+        CampaignTemplateStorage storage;auto fort=FortTemplate::Parse(bytes,assets.game.TypeTable());
+        if (fileImage) storage.InstallFile(1,std::move(fort),bytes,"TEST01");else storage.Install(1,std::move(fort),"TEST01");storage.Borrow(8,1);
+        const auto initial=std::string(storage.CurrentSection(1));auto& money=storage.Money(8);auto& badges=storage.Badges(8);auto& technology=storage.Technology(8);
+        CHECK(storage.CurrentSection(1)==initial && &money==&storage.Money(1) && &badges==&storage.Badges(1) && &technology==&storage.Technology(1));
+        CHECK(money.end==storage.Template(1).Section("Money").size() && badges.bytes.data()==storage.Template(1).Section("Badges").data() && technology.bytes.data()==storage.Template(1).Section("Technology").data());
+        money.position=4;badges.position=3;technology.position=2;
+        CHECK(&storage.SelectMoney(1)==&money && !money.position && storage.CurrentSection(8)=="Money" && badges.position==3 && technology.position==2);
+        money.position=4;CHECK(&storage.SelectBadges(8)==&badges && !badges.position && money.position==4 && technology.position==2 && storage.CurrentSection(1)=="Badges");
+        badges.position=1;CHECK(&storage.SelectTechnology(1)==&technology && !technology.position && money.position==4 && badges.position==1 && storage.CurrentSection(8)=="Technology");
+        const auto order=storage.SectionOrder(1);storage.SelectState(8);storage.SelectTerritory(1);
+        CHECK(money.position==4 && badges.position==1 && !technology.position && storage.SectionOrder(8)==order);
+        storage.Clear(8);CHECK(&storage.Money(1)==&money && storage.OwnedImages()==1);storage.ClearAll();CHECK(!storage.OwnedImages());
+    }
+}
+
+// Money의 실제 SP 정책과 Badges의 raw 장부 갱신에 새 selector를 연결하며 빈 Technology의 부모/UI 경로도 실행한다.
+TEST_CASE(CampaignTemplates_EconomyMetaActualChildrenAndEmptySelectionModes) {
+    FortTemplate fort;fort.sections.resize(FortTemplate::kSectionCount);
+    // 저장 섹션의 명시 입력만 준비한다. SP/장부 결과는 기존 생산 로더가 계산한다.
+    const auto section=[&](std::string_view name)->std::vector<std::uint8_t>& { const auto names=FortTemplate::SectionNames();return fort.sections.at(static_cast<std::size_t>(std::find(names.begin(),names.end(),name)-names.begin())); };
+    section("Money")={0xef,0xbe,0xad,0xde};section("Badges")={2,80,7,81,9};
+    CampaignTemplateStorage storage;storage.Install(1,std::move(fort),"economy-meta");storage.Borrow(8,1);
+    std::uint32_t depth=3;SquidRewardState reward;reward.fixedSpA=true;SquidPostPopState players;players.localOwner=1;
+    GameRandom random(12345);ScrambledSpStore sp(random,[] { return 12345U; });std::vector<std::uint8_t> records(9*0xb4);FortMoneyState moneyState;
+    RawFortMoneyLoad money(OriginalEdition::Patch1078,reward,players,records,depth,moneyState,&sp,{
+        [](auto) { throw std::logic_error("실제 Money 선택에서 예상 밖 진단"); },[&](auto current) { CHECK(current==depth); },[] { throw std::logic_error("고정 Fort SP 읽기에서 표시 요청 없음"); }});
+    money.Load(storage.SelectMoney(8));CHECK(storage.Money(1).position==4 && depth==3 && sp.Get(1)==std::bit_cast<std::uint32_t>(194162.0f));
+    SidPool pool(OriginalEdition::Patch1078,kCapacity,false);std::vector<std::uint8_t> badgeRecords(28*220,0xa5);Put(badgeRecords,3*220,80);Put(badgeRecords,4*220,81);const auto before=badgeRecords;
+    FortMetaLoadState metaState;std::uint32_t parents{},refreshes{};FortMetaLoadHooks hooks;
+    hooks.assertion=[](auto) { throw std::logic_error("실제 Meta 선택에서 예상 밖 진단"); };hooks.loadingDepthChanged=[&](auto current) { CHECK(current==depth); };
+    hooks.technologyParent=[&] { ++parents;return Sid{}; };hooks.refreshTechnologyUi=[&] { ++refreshes; };
+    hooks.prepareTypeNames=hooks.releaseTypeConversion=[] { throw std::logic_error("빈 기술에서 변환 요청 없음"); };
+    hooks.contents=[](Sid,FortMetaStream&,std::uint32_t,bool) { throw std::logic_error("빈 기술에서 내용물 생성 요청 없음"); };
+    RawFortMetaLoad meta(pool,badgeRecords,depth,metaState,hooks);meta.LoadBadges(storage.SelectBadges(1));auto expected=before;Put(expected,3*220+216,7);Put(expected,4*220+216,9);
+    CHECK(badgeRecords==expected && storage.Badges(8).position==5 && depth==3);
+    auto& technology=storage.SelectTechnology(8);CHECK(technology.bytes.empty() && !technology.present && !technology.end && storage.CurrentSection(1)=="Technology");
+    meta.LoadTechnology(technology);CHECK(parents==1 && refreshes==1 && depth==3);
+    const auto names=FortTemplate::SectionNames();const auto badgesAt=static_cast<std::size_t>(std::find(names.begin(),names.end(),"Badges")-names.begin());const auto moneyAt=static_cast<std::size_t>(std::find(names.begin(),names.end(),"Money")-names.begin());
+    std::vector<std::uint8_t>{}.swap(storage.Template(1).sections[badgesAt]);auto& empty=storage.SelectBadges(8);CHECK(empty.bytes.empty() && !empty.end && !empty.present);meta.LoadBadges(empty);CHECK(badgeRecords==expected);
+    std::vector<std::uint8_t>{}.swap(storage.Template(1).sections[moneyAt]);bool rejected{};try { storage.SelectMoney(1); } catch (const std::logic_error&) { rejected=true; }
+    CHECK(rejected && storage.CurrentSection(8)=="Money" && storage.Money(8).end==0 && depth==3);storage.Clear(8);storage.ClearAll();
+}
