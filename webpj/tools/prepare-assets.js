@@ -1,0 +1,145 @@
+// webpj 자산 준비 도구이다. 클론 공용 원본 자산 폴더(assets/game-data)에서 웹 실행에 필요한 파일을
+// 웹 공개 루트(webpj/www/data)로 변환 없이 그대로 복사하고, 경로·용도 묶음·크기·SHA-256 을 기록한 manifest.json 을 만든다.
+// 원본 파일을 바이트 그대로 복사하므로 Git 에서는 같은 blob 을 공유해 저장소 크기가 늘지 않는다.
+// 사용법(저장소 루트 기준):
+//   node webpj/tools/prepare-assets.js          복사 + 매니페스트 작성
+//   node webpj/tools/prepare-assets.js --check  복사본·매니페스트가 원본과 같은지 검사만 한다(다르면 종료 코드 1)
+// originals/·originalCD/ 는 읽지 않는다. 브라우저 실행 중에도 원본 설치 폴더를 찾지 않는다.
+// (2026-10-23 WB03-M1: 메인 메뉴 자산 묶음 준비를 위해 추가)
+'use strict';
+
+const fs = require('fs');
+const path = require('path');
+const crypto = require('crypto');
+
+// webpj 폴더의 절대 경로이다. (2026-10-23 WB03-M1)
+const WEBPJ_ROOT = path.resolve(__dirname, '..');
+
+// 저장소 루트의 절대 경로이다. (2026-10-23 WB03-M1)
+const REPO_ROOT = path.resolve(WEBPJ_ROOT, '..');
+
+// 복사할 원본 자산이 있는 폴더(클론 공용 실행 데이터)이다. (2026-10-23 WB03-M1)
+const SOURCE_ROOT = path.join(REPO_ROOT, 'assets', 'game-data');
+
+// 복사본을 둘 웹 공개 데이터 폴더이다. 정적 서버는 webpj/www 만 공개하므로 이 아래에 둔다. (2026-10-23 WB03-M1)
+const DATA_ROOT = path.join(WEBPJ_ROOT, 'www', 'data');
+
+// 매니페스트 파일 경로이다. 브라우저 적재기(www/assets/asset-loader.js)가 읽는다. (2026-10-23 WB03-M1)
+const MANIFEST_PATH = path.join(DATA_ROOT, 'manifest.json');
+
+// 매니페스트 형식 번호이다. 브라우저 적재기의 MANIFEST_FORMAT 과 같아야 한다. (2026-10-23 WB03-M1)
+const MANIFEST_FORMAT = 1;
+
+// 용도 묶음 이름과 설명이다. 'menu' 는 메인 메뉴 표시 전에 필수, 'menu-music' 은 뒤에서 받는 음악이다. (2026-10-23 WB03-M1)
+const BUNDLES = Object.freeze({
+    menu: '메인 메뉴 표시 전에 받아야 하는 필수 자산',
+    'menu-music': '메인 메뉴 음악(크기가 커서 화면 표시를 막지 않고 뒤에서 받음)',
+});
+
+// 복사할 자산 목록이다. path 는 assets/game-data 와 www/data 양쪽의 같은 상대 경로, use 는 원본 근거와 용도다. (2026-10-23 WB03-M1)
+const ASSET_FILES = Object.freeze([
+    { path: 'd/GIFCLOUD.COL', bundle: 'menu', use: '기본 게임 팔레트(setup.cfg fortPal="gifcloud", GamePalSpec)' },
+    { path: 'd/Gifcloud.gif', bundle: 'menu', use: '메인 메뉴 구름 배경(setup.cfg CloudFileSpec, 512x512)' },
+    { path: 'd/titleMenu.gif', bundle: 'menu', use: '메인 메뉴 타이틀 그림(backgroundGifSpec + titleMenu)' },
+    { path: 'd/_shapes.shp', bundle: 'menu', use: '셰이프 데이터베이스(fortGump 블록 22 프레임 1 = 돌 버튼 질감)' },
+    { path: 'd/!Arial.normal.14.700.chfnt', bundle: 'menu', use: '원본 글꼴 슬롯 0(Arial 굵게 14) 캐시, 버튼 라벨' },
+    { path: 'cursors/RT_CURSOR_8.bin', bundle: 'menu', use: '원본 기본 커서 번호 1(흰 화살표, 핫스폿 10,6)' },
+    { path: 'sound/button.wav', bundle: 'menu', use: '돌 버튼을 누르는 순간의 효과음' },
+    { path: 'music/ser22.mus', bundle: 'menu-music', use: '메인 메뉴(전투 밖) 음악, RIFF WAV PCM' },
+]);
+
+// 바이트 배열의 SHA-256 을 16진 문자열로 계산한다. (2026-10-23 WB03-M1)
+function sha256(buffer) {
+    return crypto.createHash('sha256').update(buffer).digest('hex');
+}
+
+// 상대 경로(슬래시 구분)를 운영체제 경로로 바꿔 기준 폴더와 합친다. (2026-10-23 WB03-M1)
+function resolveIn(root, relativePath) {
+    return path.join(root, ...relativePath.split('/'));
+}
+
+// 원본 자산을 읽어 매니페스트 객체를 만든다. 원본 파일이 없으면 오류를 던진다. (2026-10-23 WB03-M1)
+function buildManifest() {
+    const files = ASSET_FILES.map((asset) => {
+        const source = resolveIn(SOURCE_ROOT, asset.path);
+        if (!fs.existsSync(source)) throw new Error(`원본 자산이 없습니다: assets/game-data/${asset.path}`);
+        const bytes = fs.readFileSync(source);
+        return {
+            path: asset.path,
+            source: `assets/game-data/${asset.path}`,
+            bundle: asset.bundle,
+            size: bytes.length,
+            sha256: sha256(bytes),
+            use: asset.use,
+        };
+    });
+    return {
+        format: MANIFEST_FORMAT,
+        generator: 'webpj/tools/prepare-assets.js',
+        source: 'assets/game-data',
+        description: 'webpj 공개 루트의 원본 자산 복사본 목록. 파일은 변환 없이 복사하며 크기·SHA-256 은 원본과 같다.',
+        bundles: BUNDLES,
+        files,
+    };
+}
+
+// 매니페스트를 JSON 문자열(UTF-8, LF, 두 칸 들여쓰기)로 만든다. 같은 입력이면 같은 문자열이 나온다. (2026-10-23 WB03-M1)
+function serializeManifest(manifest) {
+    return `${JSON.stringify(manifest, null, 2)}\n`;
+}
+
+// 원본을 복사하고 매니페스트를 쓴다. 복사한 파일 목록을 돌려준다. (2026-10-23 WB03-M1)
+function prepareAssets() {
+    const manifest = buildManifest();
+    // 각 자산을 원본과 같은 상대 경로로 복사한다.
+    for (const entry of manifest.files) {
+        const target = resolveIn(DATA_ROOT, entry.path);
+        fs.mkdirSync(path.dirname(target), { recursive: true });
+        fs.copyFileSync(resolveIn(SOURCE_ROOT, entry.path), target);
+    }
+    fs.writeFileSync(MANIFEST_PATH, serializeManifest(manifest), 'utf8');
+    return manifest.files.map((entry) => entry.path);
+}
+
+// 복사본·매니페스트가 현재 원본과 같은지 검사한다. 문제 설명 문자열 목록을 돌려준다(비어 있으면 정상). (2026-10-23 WB03-M1)
+function checkAssets() {
+    const problems = [];
+    let expected;
+    try {
+        expected = buildManifest();
+    } catch (error) {
+        return [error.message];
+    }
+    if (!fs.existsSync(MANIFEST_PATH)) return ['매니페스트가 없습니다: webpj/www/data/manifest.json'];
+    const written = fs.readFileSync(MANIFEST_PATH, 'utf8');
+    if (written !== serializeManifest(expected)) problems.push('매니페스트 내용이 현재 원본·자산 목록과 다릅니다.');
+    // 각 복사본의 존재·크기·해시를 원본 기준으로 확인한다.
+    for (const entry of expected.files) {
+        const target = resolveIn(DATA_ROOT, entry.path);
+        if (!fs.existsSync(target)) {
+            problems.push(`복사본이 없습니다: www/data/${entry.path}`);
+            continue;
+        }
+        const bytes = fs.readFileSync(target);
+        if (bytes.length !== entry.size || sha256(bytes) !== entry.sha256) problems.push(`복사본이 원본과 다릅니다: www/data/${entry.path}`);
+    }
+    return problems;
+}
+
+// 명령행 진입점이다. --check 면 검사만 하고, 아니면 복사와 매니페스트 작성을 한다. (2026-10-23 WB03-M1)
+function main(argv) {
+    if (argv.includes('--check')) {
+        const problems = checkAssets();
+        // 발견한 문제를 한 줄씩 알린다.
+        for (const problem of problems) console.error(`[webpj assets] ${problem}`);
+        if (problems.length === 0) console.log('[webpj assets] 복사본과 매니페스트가 원본과 같습니다.');
+        return problems.length === 0 ? 0 : 1;
+    }
+    const copied = prepareAssets();
+    console.log(`[webpj assets] ${copied.length}개 파일을 webpj/www/data 로 복사하고 manifest.json 을 썼습니다.`);
+    return 0;
+}
+
+if (require.main === module) process.exitCode = main(process.argv.slice(2));
+
+module.exports = { ASSET_FILES, BUNDLES, MANIFEST_FORMAT, SOURCE_ROOT, DATA_ROOT, MANIFEST_PATH, buildManifest, checkAssets, prepareAssets, sha256 };

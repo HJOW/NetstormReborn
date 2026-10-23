@@ -1,0 +1,5 @@
+{
+  "name": "netstorm-web-runtime",
+  "private": true,
+  "type": "module"
+}

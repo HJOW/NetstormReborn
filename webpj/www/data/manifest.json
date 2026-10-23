@@ -1,0 +1,76 @@
+{
+  "format": 1,
+  "generator": "webpj/tools/prepare-assets.js",
+  "source": "assets/game-data",
+  "description": "webpj 공개 루트의 원본 자산 복사본 목록. 파일은 변환 없이 복사하며 크기·SHA-256 은 원본과 같다.",
+  "bundles": {
+    "menu": "메인 메뉴 표시 전에 받아야 하는 필수 자산",
+    "menu-music": "메인 메뉴 음악(크기가 커서 화면 표시를 막지 않고 뒤에서 받음)"
+  },
+  "files": [
+    {
+      "path": "d/GIFCLOUD.COL",
+      "source": "assets/game-data/d/GIFCLOUD.COL",
+      "bundle": "menu",
+      "size": 776,
+      "sha256": "785a2cda6ac1d3e295d375815b6d9650720683099db7c249382d598b5da00532",
+      "use": "기본 게임 팔레트(setup.cfg fortPal=\"gifcloud\", GamePalSpec)"
+    },
+    {
+      "path": "d/Gifcloud.gif",
+      "source": "assets/game-data/d/Gifcloud.gif",
+      "bundle": "menu",
+      "size": 83390,
+      "sha256": "8bf7707b77526bf4dbac82c711f15c078406f2a7bc3dcef1c35330ea3a128cf0",
+      "use": "메인 메뉴 구름 배경(setup.cfg CloudFileSpec, 512x512)"
+    },
+    {
+      "path": "d/titleMenu.gif",
+      "source": "assets/game-data/d/titleMenu.gif",
+      "bundle": "menu",
+      "size": 130259,
+      "sha256": "94abb526de09f8e9a91f951e978e0b4762dfedd546673b4de0ede0e12971ca12",
+      "use": "메인 메뉴 타이틀 그림(backgroundGifSpec + titleMenu)"
+    },
+    {
+      "path": "d/_shapes.shp",
+      "source": "assets/game-data/d/_shapes.shp",
+      "bundle": "menu",
+      "size": 5618120,
+      "sha256": "c878353c8054208deef832e34c514b30fe670e175505b129333a5728ba70f68e",
+      "use": "셰이프 데이터베이스(fortGump 블록 22 프레임 1 = 돌 버튼 질감)"
+    },
+    {
+      "path": "d/!Arial.normal.14.700.chfnt",
+      "source": "assets/game-data/d/!Arial.normal.14.700.chfnt",
+      "bundle": "menu",
+      "size": 24278,
+      "sha256": "ec1e2b485d296824990dba444d8fdc8b27d0d6d2b44466574bc88b875fadd74d",
+      "use": "원본 글꼴 슬롯 0(Arial 굵게 14) 캐시, 버튼 라벨"
+    },
+    {
+      "path": "cursors/RT_CURSOR_8.bin",
+      "source": "assets/game-data/cursors/RT_CURSOR_8.bin",
+      "bundle": "menu",
+      "size": 308,
+      "sha256": "868323a223a073add050769dc20701926c3a10baca1f16da48ce19276cd71774",
+      "use": "원본 기본 커서 번호 1(흰 화살표, 핫스폿 10,6)"
+    },
+    {
+      "path": "sound/button.wav",
+      "source": "assets/game-data/sound/button.wav",
+      "bundle": "menu",
+      "size": 3435,
+      "sha256": "9c1e7a93cca643e57029a7989fab52d2abd3b43d43bca968f60bc28e22638c3a",
+      "use": "돌 버튼을 누르는 순간의 효과음"
+    },
+    {
+      "path": "music/ser22.mus",
+      "source": "assets/game-data/music/ser22.mus",
+      "bundle": "menu-music",
+      "size": 17988172,
+      "sha256": "d75d5b9e522176a3779e9483cebe544ba5f5b6a49052b1e8a92958dcaaee2398",
+      "use": "메인 메뉴(전투 밖) 음악, RIFF WAV PCM"
+    }
+  ]
+}

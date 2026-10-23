@@ -1,5 +1,11 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-23 공통 참고(webpj WB03-M1에서 발견): cpppj 돌 버튼 질감 프레임
+
+- [x] webpj 메인 메뉴 복원(**20261023-17 WB**, [기록](docs/webpj-main-menu-20261023.md), [webpj 인계](LEFT_JOBS.webpj.md))은 현재 PC **VM-W11-Codex** 와 마지막 전체 정밀 디컴파일 PC(**VM-W11-Codex / 2026-10-23**)가 일치하여 새 디컴파일 없이 기존 `extracted/refined/originals/` 를 읽었다. cpppj·원본/CD·AGENTS.md 는 수정하지 않았다. 디컴파일 소스 변경도 없으므로 마지막 디컴파일 호스트 기록은 그대로다.
+- [ ] **cpppj 확인 필요:** 원본 돌 버튼 생성자 `004254b0` 의 배경 자식은 `004655d0(..., DAT_005ca920, DAT_00542664)` 를 쓰며 `DAT_005ca920 = DAT_005411c8 = 92`(fortGump), `DAT_00542664` 는 정적 초기값 **1**(쓰기 참조 없음)이다. 즉 원본 버튼 질감은 fortGump **프레임 1(클러스터 A01 "Sandy marble")** 이다. cpppj `UberGump.cpp` 는 `FrameIndex(type,"A00",0)`(프레임 0)을 `buttonTextureFrame_` 로 쓴다. `screenShots/mainMenu.png` 버튼 내부 픽셀의 질감 위상 탐색에서도 프레임 1·위상 (0,0)이 평균 오차 32.5, 프레임 0 최적 위상이 90.8 로 프레임 1 이 원본과 맞았다. cpppj 목표 재개 시 이 근거로 질감 프레임을 다시 대조·수정한다(웹은 프레임 1 사용, 검사 `webpj/tests/main-menu.test.mjs` 의 스크린샷 대조가 프레임 1<프레임 0 을 확인한다).
+- [x] 참고: 원본 SetPalette(`004a2640`)의 0번 검정·255번 흰색 고정을 적용한 명암 표는 원본 캐시 `originals/d/!color.dat` 의 밝음·어두움 표 512바이트와 일치함을 webpj 검사로 다시 확인했다(cpppj `Screen::SetPalette` 와 같은 규칙).
+
 ## 2026-10-23 단위353 완료: cpppj 사전 준비 — 양 판본 디컴파일 및 Release 컴파일
 
 - [x] 사용자가 요청한 사전 준비만 수행했다. 시작 HEAD는 `ab3ef43d / 20261023-15 CP`, 작업 트리는 깨끗했고 현재 호스트는 **VM-W11-Codex**였다. 마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-10-22** 기록이므로 호스트 불일치에 따라 10.78 패치판과 10.72 CD판을 다시 디컴파일했다.

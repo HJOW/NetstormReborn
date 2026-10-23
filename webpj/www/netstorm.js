@@ -1,10 +1,26 @@
-// NetStorm 웹 클론(webpj)의 실행 골격 모듈이다.
+// NetStorm 웹 클론(webpj)의 앱 수명·장면 전환 모듈이다.
 // 브라우저 안에 게임 Canvas 를 만들고, 컨테이너 크기·화면비(4:3, 16:10, 16:9)·기기 픽셀 비율에 맞춰
 // Canvas 의 크기와 위치를 계산·적용하며, 포인터·키보드 입력을 게임 논리 좌표로 바꾸고,
-// "로딩 → 클릭하여 시작 → 메인 메뉴(임시 화면)" 장면 전환과 프레임 루프를 제공한다.
-// 게임 규칙·원본 자산·소리 재생은 cpppj 복원 이후 단계(WB02 이후)에서 채운다.
+// "로딩(자산 적재) → 클릭하여 시작 → 메인 메뉴(원본 복원)" 장면 전환과 프레임 루프를 제공한다.
+// 메인 메뉴는 원본 자산(www/data)을 8비트 색 번호로 합성해 표시하고, 돌 버튼 입력·button.wav·메뉴 음악을 원본 규칙대로 처리한다.
+// 메인 메뉴 버튼이 여는 다음 화면(캠페인·데모·도움말·옵션 등)과 게임 규칙은 아직 없다(후속 단계).
 // 이 모듈은 import 시점에 DOM 을 건드리지 않으므로 Node 에서도 불러와 계산 함수를 검사할 수 있다.
 // (2026-10-23 WB01: 실행 골격 최초 작성)
+// (2026-10-23 WB03-M1: 원본 자산 적재·메인 메뉴·소리·원본 커서 연결)
+import { AssetLoader } from './assets/asset-loader.js';
+import {
+    BUTTON_SOUND_NAME,
+    MENU_ASSET_PATHS,
+    MENU_BUNDLE,
+    MENU_MUSIC_BUNDLE,
+    MENU_MUSIC_NAME,
+    buildMenuResources,
+} from './assets/menu-assets.js';
+import { AudioSystem, createAudioContext } from './audio/audio-system.js';
+import { IndexedSurface } from './render/indexed-surface.js';
+import { IndexedPresenter, normalizeScaling } from './render/presenter.js';
+import { MainMenuScreen } from './ui/main-menu.js';
+import { applyCursorStyle, buildCursorCss } from './ui/cursor.js';
 
 // ---------------------------------------------------------------------------------------------
 // 상수
@@ -42,6 +58,12 @@ const MAX_FRAME_DELTA_MS = 250;
 // 초당 프레임 수를 갱신하는 측정 구간(ms)이다. (2026-10-23 WB01)
 const FPS_WINDOW_MS = 500;
 
+// 원본 메인 메뉴의 창 제목(config.english 의 BlankWindowName)이다. 메인 메뉴에서 문서 제목으로 쓴다. (2026-10-23 WB03-M1)
+const MAIN_MENU_WINDOW_TITLE = 'NetStorm Main Menu';
+
+// 데이터 폴더의 기본 위치(문서 기준 상대 URL)이다. 정적 서버는 webpj/www 를 공개하므로 www/data 를 가리킨다. (2026-10-23 WB03-M1)
+const DEFAULT_ASSET_BASE = './data/';
+
 // 앱의 상태 목록이다. 로딩 → 클릭 대기 → 메인 메뉴 순으로 진행하고, 로딩에 실패하면 ERROR 에서 클릭으로 재시도한다.
 // IDLE 은 init 전, DESTROYED 는 destroy 후다. 메뉴 복귀·미션 상태는 해당 단계에서 추가한다. (2026-10-23 WB01)
 export const AppState = Object.freeze({
@@ -53,8 +75,8 @@ export const AppState = Object.freeze({
     DESTROYED: 'destroyed',
 });
 
-// 언어별 화면 문구이다. 원본 글꼴(.chfnt)과 D2Coding 글꼴 적재(WB02)와 번역표가 준비되면 그쪽으로 옮긴다.
-// 모르는 언어는 영어로 대체한다. (2026-10-23 WB01)
+// 웹 전용 화면(로딩·오류·클릭하여 시작)의 언어별 문구이다. 원본 메인 메뉴의 버튼 라벨은 원본 글꼴로 그리므로 여기에 없다.
+// 모르는 언어는 영어로 대체한다. (2026-10-23 WB01, 2026-10-23 WB03-M1: 임시 메뉴 문구 제거)
 const TEXTS = Object.freeze({
     english: Object.freeze({
         title: 'NetStorm',
@@ -62,7 +84,6 @@ const TEXTS = Object.freeze({
         loadFailed: 'Failed to load game data.',
         retry: 'Click to retry',
         clickToStart: 'Click to start',
-        menuPlaceholder: 'Main menu (placeholder)',
     }),
     korean: Object.freeze({
         title: 'NetStorm',
@@ -70,7 +91,6 @@ const TEXTS = Object.freeze({
         loadFailed: '게임 데이터를 불러오지 못했습니다.',
         retry: '클릭하여 다시 시도',
         clickToStart: '클릭하여 시작',
-        menuPlaceholder: '메인 메뉴 (임시 화면)',
     }),
 });
 
@@ -303,9 +323,15 @@ function readQueryParams() {
 //  - fillWindow: true(기본)면 루트 요소를 브라우저 창 전체로 채운다. false 면 호스트가 정한 루트 크기를 따른다.
 //  - autoFocus: true(기본)면 시작할 때 Canvas 에 포커스를 줘 Enter/Space 로 바로 시작할 수 있게 한다.
 //  - maxCanvasPixels: Canvas 내부 픽셀 수(가로 x 세로)의 상한(기본 16,777,216). 넘으면 같은 비율로 줄인다.
-//  - prepare: async (app) => void. 자산 준비 단계 훅(WB02 에서 채움). 예외를 던지면 ERROR 상태가 된다.
+//  - assetBase: 데이터 폴더 URL(문서 기준, 기본 './data/'). manifest.json 과 원본 자산 복사본이 있는 곳이다.
+//  - fetch: 자산을 받을 fetch 함수(기본은 루트 문서 window 의 fetch). 검사에서 가짜 함수를 넘길 수 있다.
+//  - scaling: 'sharp' | 'nearest' | 'smooth'. 8비트 화면의 확대 방식(기본 ?scaling, 없으면 sharp).
+//  - audio: false 면 소리를 쓰지 않는다(기본 true, ?mute 가 있으면 false).
+//  - soundVolume / musicVolume: 원본 음량 단계 1~5(기본 3 / 2).
+//  - prepare: async (app) => void. 내장 자산 적재 뒤 실행하는 추가 준비 훅. 예외를 던지면 ERROR 상태가 된다.
 //  - onStateChange: (새 상태, 이전 상태) => void. 상태가 바뀔 때 호출된다.
-// (2026-10-23 WB01)
+//  - onMenuCommand: (명령, 라벨) => void. 메인 메뉴 버튼이 실행됐을 때 호출된다(다음 화면은 아직 없음).
+// (2026-10-23 WB01, 2026-10-23 WB03-M1: 자산·소리·메뉴 옵션 추가)
 export class Netstorm {
     // 앱을 만든다. DOM 은 init 에서 만든다.
     constructor(options = {}) {
@@ -319,8 +345,15 @@ export class Netstorm {
             fillWindow: options.fillWindow ?? true,
             autoFocus: options.autoFocus ?? true,
             maxCanvasPixels: Math.max(1, Math.floor(options.maxCanvasPixels ?? DEFAULT_MAX_CANVAS_PIXELS) || DEFAULT_MAX_CANVAS_PIXELS),
+            assetBase: options.assetBase ?? DEFAULT_ASSET_BASE,
+            fetch: options.fetch ?? null,
+            scaling: normalizeScaling(options.scaling ?? params.get('scaling')),
+            audio: options.audio ?? !params.has('mute'),
+            soundVolume: options.soundVolume ?? 3,
+            musicVolume: options.musicVolume ?? 2,
             prepare: options.prepare ?? (async () => {}),
             onStateChange: options.onStateChange ?? null,
+            onMenuCommand: options.onMenuCommand ?? null,
         };
         // 현재 화면비 설정이다. setAspect 로 바꿀 수 있다.
         this._aspect = findScreenMode(requestedAspect) ? requestedAspect : AUTO_ASPECT;
@@ -350,10 +383,34 @@ export class Netstorm {
         this._loadError = null;
         // 오디오 컨텍스트다. '클릭하여 시작' 입력 안에서 만든다.
         this._audioContext = null;
-        // 오디오 준비 상태 문자열이다. none | unsupported | suspended | running | closed | failed.
+        // 오디오 준비 상태 문자열이다. none | unsupported | suspended | running | closed | failed | disabled.
         this._audioStatus = 'none';
         // 입력 상태다. pointer 는 논리 좌표, keys 는 눌린 키의 code 집합이다.
         this._input = { pointer: { x: -1, y: -1, inside: false, buttons: 0, type: 'mouse' }, keys: new Set() };
+        // 메인 메뉴 그리기 자원 묶음(buildMenuResources 결과)이다. 자산 적재 전에는 null 이며, 재시작해도 다시 받지 않는다.
+        this._resources = null;
+        // 버튼 효과음 파일 바이트다. 오디오 문맥이 생기면 해독한다.
+        this._buttonSoundBytes = null;
+        // 메뉴 음악 파일 바이트다. 뒤에서 받으며 다 받기 전에는 null 이다.
+        this._musicBytes = null;
+        // 메뉴 음악 상태 문자열이다. none | loading | loaded | decoding | ready | playing | failed.
+        this._musicStatus = 'none';
+        // 자산 적재 진행률이다. loaded/total 은 바이트 수다.
+        this._loadProgress = { loaded: 0, total: 0 };
+        // Web Audio 재생기(AudioSystem)다. '클릭하여 시작' 입력 안에서 만든다.
+        this._audio = null;
+        // 8비트 색 번호 화면 버퍼(논리 크기)다.
+        this._surface = null;
+        // 8비트 화면 표시기다.
+        this._presenter = null;
+        // 메인 메뉴 화면이다. 메인 메뉴에 처음 들어갈 때 만든다.
+        this._mainMenu = null;
+        // 다음 프레임에 Canvas 를 반드시 다시 그려야 하는지 여부다(크기 변경 등).
+        this._displayDirty = true;
+        // init 때 저장한 문서 제목이다. destroy 가 되돌린다.
+        this._savedTitle = null;
+        // 마지막으로 적용한 커서 CSS 의 열쇠(배율·픽셀 비율)다. 같으면 다시 만들지 않는다.
+        this._cursorKey = '';
     }
 
     // ----- 읽기 전용 속성 -----
@@ -398,6 +455,21 @@ export class Netstorm {
         return TEXTS[this.options.language] ?? TEXTS.english;
     }
 
+    // 메인 메뉴 화면 객체이다. 메인 메뉴에 들어가기 전에는 null 이다. (2026-10-23 WB03-M1)
+    get mainMenu() {
+        return this._mainMenu;
+    }
+
+    // 메인 메뉴 그리기 자원 묶음이다. 자산 적재 전에는 null 이다. (2026-10-23 WB03-M1)
+    get resources() {
+        return this._resources;
+    }
+
+    // 메뉴 음악 상태 문자열이다. (2026-10-23 WB03-M1)
+    get musicStatus() {
+        return this._musicStatus;
+    }
+
     // ----- 수명 -----
 
     // 루트 요소 안에 게임을 만들고 시작한다. 이미 시작된 앱이면 먼저 destroy 한다.
@@ -419,6 +491,12 @@ export class Netstorm {
         this._clock = new FrameClock();
         this._input = { pointer: { x: -1, y: -1, inside: false, buttons: 0, type: 'mouse' }, keys: new Set() };
         this._audioStatus = 'none';
+        this._presenter = new IndexedPresenter(doc, this.options.scaling);
+        // 이전 수명에서 이미 받은 자원이 있으면(재시작) 팔레트를 바로 설치한다.
+        if (this._resources) this._presenter.setPalette(this._resources.palette.rgb);
+        this._displayDirty = true;
+        this._cursorKey = '';
+        this._savedTitle = doc.title;
         try {
             this._applyRootStyle();
             this._applyCanvasStyle();
@@ -448,11 +526,25 @@ export class Netstorm {
         this._abort = null;
         this._resizeObserver?.disconnect();
         this._resizeObserver = null;
-        if (this._audioContext) {
+        this._mainMenu?.cancel();
+        this._mainMenu = null;
+        if (this._audio) {
+            // 음악을 멈추고 문맥을 닫는다. 닫기에 실패해도 정리를 막지 않는다.
+            this._audio.close();
+            this._audio = null;
+            this._audioContext = null;
+        } else if (this._audioContext) {
             // 닫기에 실패해도 정리를 막지 않는다.
             Promise.resolve(this._audioContext.close?.()).catch(() => {});
             this._audioContext = null;
         }
+        // 받은 음악 바이트는 재시작을 위해 남기고, 오디오 문맥에 묶인 해독·재생 상태만 되돌린다.
+        if (this._musicStatus === 'decoding' || this._musicStatus === 'ready' || this._musicStatus === 'playing') this._musicStatus = 'loaded';
+        this._presenter?.release();
+        this._presenter = null;
+        this._surface = null;
+        if (this._savedTitle !== null && this._root.ownerDocument) this._root.ownerDocument.title = this._savedTitle;
+        this._savedTitle = null;
         this._canvas?.remove();
         this._restoreRootStyle();
         this._root = null;
@@ -488,7 +580,8 @@ export class Netstorm {
         }
     }
 
-    // 자산 준비 훅을 실행한다. 성공하면 클릭 대기, 실패하면 오류 화면(클릭으로 재시도)이 된다.
+    // 자산을 적재하고 추가 준비 훅을 실행한다. 성공하면 클릭 대기, 실패하면 오류 화면(클릭으로 재시도)이 된다.
+    // 메인 메뉴 필수 묶음(menu)은 기다리고, 음악 묶음(menu-music)은 뒤에서 받는다. 이미 받은 자원은 재시도·재시작에서 다시 받지 않는다.
     // 오래된 세대의 결과는 버린다. 준비 단계에서는 오디오를 재생하지 않는다.
     async _load() {
         this._loadGeneration += 1;
@@ -496,6 +589,20 @@ export class Netstorm {
         this._loadError = null;
         this._setState(AppState.LOADING);
         try {
+            if (!this._resources) {
+                const loader = this._createAssetLoader();
+                await loader.loadManifest();
+                if (generation !== this._loadGeneration) return;
+                const files = await loader.loadBundle(MENU_BUNDLE, (loaded, total) => {
+                    this._loadProgress = { loaded, total };
+                });
+                if (generation !== this._loadGeneration) return;
+                this._resources = buildMenuResources(files);
+                this._buttonSoundBytes = files.get(MENU_ASSET_PATHS.buttonSound) ?? null;
+                this._presenter?.setPalette(this._resources.palette.rgb);
+                this._applyCursor();
+                this._startMusicDownload(loader);
+            }
             await this.options.prepare(this);
         } catch (error) {
             if (generation !== this._loadGeneration) return;
@@ -507,6 +614,34 @@ export class Netstorm {
         this._setState(AppState.CLICK_TO_START);
     }
 
+    // 데이터 폴더 URL 과 fetch 함수로 자산 적재기를 만든다. 데이터 폴더는 루트 문서의 주소를 기준으로 푼다. (2026-10-23 WB03-M1)
+    _createAssetLoader() {
+        const doc = this._root.ownerDocument;
+        const view = this._view();
+        const fetchFunction = this.options.fetch ?? (typeof view.fetch === 'function' ? view.fetch.bind(view) : null);
+        if (!fetchFunction) throw new Error('이 브라우저에서는 fetch 를 쓸 수 없습니다.');
+        return new AssetLoader({ baseUrl: new URL(this.options.assetBase, doc.baseURI), fetchFunction });
+    }
+
+    // 메뉴 음악 묶음을 뒤에서 받는다. 다 받으면 오디오가 준비된 경우 해독해 메인 메뉴에서 재생한다.
+    // 실패해도 게임은 계속되며(원본도 음악 파일이 없으면 소리 없이 진행) 콘솔과 상태 문자열로만 알린다. (2026-10-23 WB03-M1)
+    _startMusicDownload(loader) {
+        if (this._musicBytes || this._musicStatus === 'loading' || !this.options.audio) return;
+        this._musicStatus = 'loading';
+        loader
+            .loadBundle(MENU_MUSIC_BUNDLE)
+            .then((files) => {
+                this._musicBytes = files.get(MENU_ASSET_PATHS.music) ?? null;
+                if (!this._musicBytes) throw new Error(`메뉴 음악 파일이 묶음에 없습니다: ${MENU_ASSET_PATHS.music}`);
+                this._musicStatus = 'loaded';
+                this._prepareMusic();
+            })
+            .catch((error) => {
+                this._musicStatus = 'failed';
+                console.warn('Netstorm: 메뉴 음악을 받지 못했습니다. 음악 없이 계속합니다.', error);
+            });
+    }
+
     // 사용자의 시작 입력(클릭·Enter·Space)을 처리한다.
     // ERROR 에서는 로딩을 다시 시도하고, CLICK_TO_START 에서는 오디오를 준비한 뒤 메인 메뉴로 넘어간다.
     // 오디오 활성화는 사용자 입력 처리 안에서 동기로 요청해야 브라우저 정책을 통과하므로 상태 전환보다 먼저 한다.
@@ -515,7 +650,51 @@ export class Netstorm {
             this._load();
         } else if (this._state === AppState.CLICK_TO_START) {
             this._unlockAudio();
-            this._setState(AppState.MAIN_MENU);
+            this._enterMainMenu();
+        }
+    }
+
+    // 메인 메뉴로 들어간다. 메뉴 화면을 만들고(처음 한 번) 현재 논리 크기로 배치하며, 창 제목과 메뉴 음악을 원본처럼 맞춘다.
+    // (2026-10-23 WB03-M1)
+    _enterMainMenu() {
+        if (!this._resources) return;
+        if (!this._mainMenu) {
+            this._mainMenu = new MainMenuScreen({
+                resources: this._resources,
+                onCommand: (command, label) => this._onMenuCommand(command, label),
+                onButtonSound: () => this._audio?.playSound(BUTTON_SOUND_NAME),
+            });
+        }
+        this._ensureSurface();
+        this._setState(AppState.MAIN_MENU);
+        this._root.ownerDocument.title = MAIN_MENU_WINDOW_TITLE;
+        this._displayDirty = true;
+        this._playMenuMusic();
+    }
+
+    // 메인 메뉴 버튼이 실행됐을 때 호출된다. 원본은 여기서 Tell 섹션(캠페인·데모·크레딧)이나 펼침 메뉴(도움말·옵션)를 연다.
+    // 그 화면들은 아직 복원하지 않았으므로 호스트 훅과 콘솔에만 알린다. (2026-10-23 WB03-M1)
+    _onMenuCommand(command, label) {
+        try {
+            this.options.onMenuCommand?.(command, label);
+        } catch (error) {
+            console.error('Netstorm: onMenuCommand 훅에서 예외가 발생했습니다.', error);
+        }
+        console.info(`Netstorm: 메인 메뉴 '${label}' 실행(다음 화면은 아직 구현되지 않음)`, command);
+    }
+
+    // 논리 화면 크기의 8비트 표면을 준비한다. 크기가 바뀌면 새로 만들고 메인 메뉴를 다시 배치한다. (2026-10-23 WB03-M1)
+    _ensureSurface() {
+        const layout = this._layout;
+        if (!layout) return;
+        const width = layout.logicalWidth;
+        const height = layout.logicalHeight;
+        if (!this._surface || this._surface.width !== width || this._surface.height !== height) {
+            this._surface = new IndexedSurface(width, height);
+            this._mainMenu?.resize(width, height);
+            this._displayDirty = true;
+        } else if (this._mainMenu && (this._mainMenu.width !== width || this._mainMenu.height !== height)) {
+            this._mainMenu.resize(width, height);
         }
     }
 
@@ -527,17 +706,27 @@ export class Netstorm {
 
     // ----- 오디오 -----
 
-    // AudioContext 를 만들고 재생 재개를 요청한다. 사용자 입력 처리 안에서 불러야 한다.
+    // AudioContext 와 재생기(AudioSystem)를 만들고 재생 재개를 요청한다. 사용자 입력 처리 안에서 불러야 한다.
+    // 문맥은 원본 표본 빈도(22,050Hz)로 만들고, 받은 효과음·음악을 해독해 둔다.
     // 지원하지 않거나 실패해도 게임은 계속되며 상태 문자열로만 알린다. 메인 메뉴에서 다음 입력 때 다시 시도한다.
+    // (2026-10-23 WB01, 2026-10-23 WB03-M1: 재생기·해독 연결)
     _unlockAudio() {
-        const view = this._view();
-        const AudioContextClass = view.AudioContext ?? view.webkitAudioContext;
-        if (!AudioContextClass) {
-            this._audioStatus = 'unsupported';
+        if (!this.options.audio) {
+            this._audioStatus = 'disabled';
             return;
         }
         try {
-            if (!this._audioContext) this._audioContext = new AudioContextClass();
+            if (!this._audioContext) {
+                const context = createAudioContext(this._view());
+                if (!context) {
+                    this._audioStatus = 'unsupported';
+                    return;
+                }
+                this._audioContext = context;
+                this._audio = new AudioSystem(context, { soundVolumeStep: this.options.soundVolume, musicVolumeStep: this.options.musicVolume });
+                this._prepareSounds();
+                this._prepareMusic();
+            }
             const context = this._audioContext;
             this._audioStatus = context.state;
             if (context.state !== 'running') {
@@ -553,6 +742,42 @@ export class Netstorm {
         } catch (error) {
             this._audioStatus = 'failed';
         }
+    }
+
+    // 받은 버튼 효과음을 현재 재생기에 해독해 등록한다. 실패하면 소리 없이 계속한다. (2026-10-23 WB03-M1)
+    _prepareSounds() {
+        const audio = this._audio;
+        if (!audio || !this._buttonSoundBytes) return;
+        audio.loadSound(BUTTON_SOUND_NAME, this._buttonSoundBytes).catch((error) => {
+            console.warn('Netstorm: 버튼 효과음을 해독하지 못했습니다.', error);
+        });
+    }
+
+    // 받은 메뉴 음악을 현재 재생기에 해독한다. 재생기와 음악 바이트가 모두 있을 때만 진행하며, 끝나면 메인 메뉴에서 재생한다.
+    // (2026-10-23 WB03-M1)
+    _prepareMusic() {
+        const audio = this._audio;
+        if (!audio || !this._musicBytes || this._musicStatus !== 'loaded') return;
+        this._musicStatus = 'decoding';
+        audio
+            .loadMusic(MENU_MUSIC_NAME, this._musicBytes)
+            .then(() => {
+                if (this._audio !== audio) return;
+                this._musicStatus = 'ready';
+                this._playMenuMusic();
+            })
+            .catch((error) => {
+                if (this._audio !== audio) return;
+                this._musicStatus = 'failed';
+                console.warn('Netstorm: 메뉴 음악을 해독하지 못했습니다. 음악 없이 계속합니다.', error);
+            });
+    }
+
+    // 메인 메뉴이고 음악이 해독돼 있으면 메뉴 곡(ser22.mus)을 반복 재생한다(원본 SceneMusic Start: 전투 밖 곡). (2026-10-23 WB03-M1)
+    _playMenuMusic() {
+        if (this._state !== AppState.MAIN_MENU || !this._audio) return;
+        if (this._musicStatus !== 'ready' && this._musicStatus !== 'playing') return;
+        if (this._audio.playMusic(MENU_MUSIC_NAME)) this._musicStatus = 'playing';
     }
 
     // ----- 스타일과 배치 -----
@@ -626,7 +851,27 @@ export class Netstorm {
         style.left = `${next.left}px`;
         style.top = `${next.top}px`;
         style.visibility = next.visible ? 'visible' : 'hidden';
+        this._displayDirty = true;
+        if (this._state === AppState.MAIN_MENU) this._ensureSurface();
+        this._applyCursor();
         if (next.visible) this._render(view.performance?.now?.() ?? 0);
+    }
+
+    // 원본 기본 커서를 현재 화면 배율에 맞춰 Canvas 에 적용한다. 자원이 없거나 배율·픽셀 비율이 같으면 아무것도 하지 않는다.
+    // (2026-10-23 WB03-M1)
+    _applyCursor() {
+        const layout = this._layout;
+        if (!this._canvas || !this._resources || !layout?.visible) return;
+        const scale = Math.max(1, Math.round(layout.scale));
+        const key = `${scale}:${layout.devicePixelRatio}`;
+        if (key === this._cursorKey) return;
+        this._cursorKey = key;
+        try {
+            applyCursorStyle(this._canvas, buildCursorCss(this._root.ownerDocument, this._resources.cursor, layout.scale, layout.devicePixelRatio));
+        } catch (error) {
+            // 커서 그림을 만들 수 없는 환경이면 기본 커서를 그대로 쓴다.
+            console.warn('Netstorm: 원본 커서를 적용하지 못했습니다.', error);
+        }
     }
 
     // ----- 이벤트 -----
@@ -645,7 +890,7 @@ export class Netstorm {
         this._listen(canvas, 'pointerdown', (event) => this._onPointerDown(event));
         this._listen(canvas, 'pointermove', (event) => this._onPointerMove(event));
         this._listen(canvas, 'pointerup', (event) => this._onPointerUp(event));
-        this._listen(canvas, 'pointercancel', (event) => this._onPointerUp(event));
+        this._listen(canvas, 'pointercancel', (event) => this._onPointerCancel(event));
         this._listen(canvas, 'pointerleave', (event) => this._onPointerLeave(event));
         // 시작·재시도 입력은 오디오 정책을 모든 포인터 종류에서 통과하도록 click 으로 받는다.
         this._listen(canvas, 'click', (event) => this._onClick(event));
@@ -703,6 +948,8 @@ export class Netstorm {
     }
 
     // 버튼을 눌렀을 때: 포커스를 받고, 화면 밖으로 끌어도 이벤트를 받도록 포인터를 붙잡는다.
+    // 메인 메뉴에서는 왼쪽 버튼 누름만 돌 버튼에 전달한다(원본: 오른쪽·가운데 버튼은 반응 없음). 게임 화면 밖(레터박스) 누름은 무시한다.
+    // (2026-10-23 WB01, 2026-10-23 WB03-M1: 메인 메뉴 입력 연결)
     _onPointerDown(event) {
         this._canvas.focus({ preventScroll: true });
         try {
@@ -712,17 +959,32 @@ export class Netstorm {
         }
         this._updatePointer(event);
         this._retryAudioOnGesture();
+        const pointer = this._input.pointer;
+        if (this._state === AppState.MAIN_MENU && this._mainMenu && event.button === 0 && pointer.inside) {
+            this._mainMenu.pointerDown(pointer.x, pointer.y);
+        }
     }
 
-    // 포인터가 움직였을 때 좌표를 갱신한다.
+    // 포인터가 움직였을 때 좌표를 갱신하고, 메인 메뉴의 붙잡힌 버튼 모양을 갱신한다(원본 Broadcast).
     _onPointerMove(event) {
         this._updatePointer(event);
+        if (this._state === AppState.MAIN_MENU && this._mainMenu) this._mainMenu.pointerMove(this._input.pointer.x, this._input.pointer.y);
     }
 
-    // 버튼을 뗐거나 입력이 취소됐을 때 버튼 상태를 갱신한다.
+    // 버튼을 뗐을 때 버튼 상태를 갱신하고, 메인 메뉴에서는 왼쪽 버튼 뗌을 돌 버튼에 전달한다(안쪽에서 떼면 실행).
     _onPointerUp(event) {
         this._updatePointer(event);
         this._input.pointer.buttons = event.buttons ?? 0;
+        if (this._state === AppState.MAIN_MENU && this._mainMenu && event.button === 0) {
+            this._mainMenu.pointerUp(this._input.pointer.x, this._input.pointer.y);
+        }
+    }
+
+    // 브라우저가 포인터 입력을 취소했을 때(터치 제스처 등) 버튼 상태를 비우고 메뉴 누름을 실행 없이 취소한다. (2026-10-23 WB03-M1)
+    _onPointerCancel(event) {
+        this._updatePointer(event);
+        this._input.pointer.buttons = event.buttons ?? 0;
+        this._mainMenu?.cancel();
     }
 
     // 포인터가 Canvas 를 벗어났을 때 안쪽 표시를 끈다. 가장자리 스크롤 등은 이 값을 기준으로 멈춘다.
@@ -749,28 +1011,34 @@ export class Netstorm {
         this._input.keys.delete(event.code);
     }
 
-    // 포커스를 잃거나 탭이 숨겨질 때 눌린 키·버튼이 남지 않도록 입력 상태를 비운다.
+    // 포커스를 잃거나 탭이 숨겨질 때 눌린 키·버튼이 남지 않도록 입력 상태를 비우고, 메뉴 누름을 실행 없이 취소한다.
     _clearInput() {
         this._input.keys.clear();
         this._input.pointer.buttons = 0;
         this._input.pointer.inside = false;
+        this._mainMenu?.cancel();
     }
 
     // 시작 이후의 입력에서 오디오가 아직 재생 가능 상태가 아니면 다시 활성화를 시도한다.
     _retryAudioOnGesture() {
-        if (this._state === AppState.MAIN_MENU && this._audioStatus !== 'running' && this._audioStatus !== 'unsupported') {
+        if (this._state === AppState.MAIN_MENU && this._audioStatus !== 'running' && this._audioStatus !== 'unsupported' && this._audioStatus !== 'disabled') {
             this._unlockAudio();
         }
     }
 
-    // 탭이 숨겨지면 프레임 루프를 멈추고 입력을 비우며, 돌아오면 시계 기준점을 다시 잡고 재개한다.
+    // 탭이 숨겨지면 프레임 루프를 멈추고 입력을 비우며 소리를 멈추고, 돌아오면 시계 기준점을 다시 잡고 재개한다.
+    // 원본 효과음·음악 버퍼는 창이 포커스를 잃으면 들리지 않으므로(GLOBALFOCUS 없음) 웹에서는 탭 숨김을 그 대응으로 쓴다.
+    // (2026-10-23 WB01, 2026-10-23 WB03-M1: 소리 일시 정지 추가)
     _onVisibilityChange() {
         if (this._root.ownerDocument.hidden) {
             this._stopFrameLoop();
             this._clearInput();
+            this._audio?.suspend().catch(() => {});
         } else {
             this._clock.reset();
+            this._displayDirty = true;
             this._startFrameLoop();
+            this._audio?.resume().catch(() => {});
         }
     }
 
@@ -801,12 +1069,24 @@ export class Netstorm {
 
     // ----- 그리기 -----
 
-    // 현재 상태에 맞는 장면을 Canvas 에 그린다. 논리 좌표로 그리고 내부 픽셀 배율(drawScaleX/Y)은 변환 행렬로 적용한다.
+    // 현재 상태에 맞는 장면을 Canvas 에 그린다. 웹 전용 화면은 논리 좌표로 그리고 내부 픽셀 배율(drawScaleX/Y)은 변환 행렬로 적용한다.
+    // 메인 메뉴는 8비트 표면을 합성해 표시기로 Canvas 전체에 그리며, 바뀐 것이 없으면(디버그 표시 제외) 다시 그리지 않는다.
+    // (2026-10-23 WB01, 2026-10-23 WB03-M1: 원본 메인 메뉴 표시)
     _render(now) {
         const ctx = this._ctx;
         const layout = this._layout;
         if (!ctx || !layout?.visible) return;
         const { logicalWidth: width, logicalHeight: height, drawScaleX, drawScaleY } = layout;
+        if (this._state === AppState.MAIN_MENU && this._mainMenu && this._surface) {
+            const changed = this._mainMenu.dirty;
+            if (!changed && !this._displayDirty && !this.options.debug) return;
+            if (changed) this._mainMenu.render(this._surface);
+            this._presenter.present(ctx, this._surface, layout, changed);
+            this._displayDirty = false;
+            ctx.setTransform(drawScaleX, 0, 0, drawScaleY, 0, 0);
+            if (this.options.debug) this._drawDebug(ctx);
+            return;
+        }
         ctx.setTransform(drawScaleX, 0, 0, drawScaleY, 0, 0);
         ctx.imageSmoothingEnabled = false;
         ctx.fillStyle = '#000';
@@ -822,12 +1102,10 @@ export class Netstorm {
             case AppState.CLICK_TO_START:
                 this._drawClickToStart(ctx, width, height, now);
                 break;
-            case AppState.MAIN_MENU:
-                this._drawMainMenuPlaceholder(ctx, width, height);
-                break;
             default:
                 break;
         }
+        this._displayDirty = true;
         if (this.options.debug) this._drawDebug(ctx);
     }
 
@@ -842,7 +1120,8 @@ export class Netstorm {
         ctx.globalAlpha = 1;
     }
 
-    // 로딩 화면: 제목과 회전하는 표시를 그린다.
+    // 로딩 화면: 제목과 회전하는 표시, 자산 적재 진행 막대·백분율을 그린다(웹 전용 화면).
+    // (2026-10-23 WB01, 2026-10-23 WB03-M1: 진행 막대 추가)
     _drawLoading(ctx, width, height, now) {
         const texts = this.texts;
         this._drawText(ctx, texts.title, width / 2, height / 2 - 70, 64, '#d8e4f0');
@@ -852,7 +1131,17 @@ export class Netstorm {
         ctx.beginPath();
         ctx.arc(width / 2, height / 2 + 10, 22, angle, angle + Math.PI * 1.5);
         ctx.stroke();
-        this._drawText(ctx, texts.loading, width / 2, height / 2 + 70, 24, '#9fb4c8');
+        const { loaded, total } = this._loadProgress;
+        const ratio = total > 0 ? Math.min(1, loaded / total) : 0;
+        const barWidth = 320;
+        const barLeft = Math.round(width / 2 - barWidth / 2);
+        const barTop = Math.round(height / 2 + 52);
+        ctx.strokeStyle = '#4f7aa6';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(barLeft, barTop, barWidth, 10);
+        ctx.fillStyle = '#7aa7d8';
+        ctx.fillRect(barLeft + 2, barTop + 2, Math.round((barWidth - 4) * ratio), 6);
+        this._drawText(ctx, `${texts.loading} ${Math.floor(ratio * 100)}%`, width / 2, height / 2 + 90, 24, '#9fb4c8');
     }
 
     // 로딩 실패 화면: 실패 안내와 원인, 재시도 안내를 그린다.
@@ -873,56 +1162,18 @@ export class Netstorm {
         this._drawText(ctx, texts.clickToStart, width / 2, height / 2 + 50, 30, '#9fd0ff', 'center', blink);
     }
 
-    // 메인 메뉴 임시 화면: 원본 메뉴(WB03)가 만들어지기 전까지 화면 구성과 좌표 변환을 눈으로 확인하는 용도다.
-    // 논리 화면의 테두리와 모서리 표시, 포인터 위치의 십자선을 그린다. 원본 메뉴를 복원한 화면이 아니다.
-    _drawMainMenuPlaceholder(ctx, width, height) {
-        ctx.strokeStyle = '#2f4a66';
-        ctx.lineWidth = 2;
-        ctx.strokeRect(1, 1, width - 2, height - 2);
-        ctx.strokeStyle = '#4f7aa6';
-        ctx.lineWidth = 3;
-        const tick = 24;
-        // 네 모서리에 L 자 표시를 그린다.
-        for (const [x, y, dx, dy] of [
-            [0, 0, 1, 1],
-            [width, 0, -1, 1],
-            [0, height, 1, -1],
-            [width, height, -1, -1],
-        ]) {
-            ctx.beginPath();
-            ctx.moveTo(x + dx * tick, y);
-            ctx.lineTo(x, y);
-            ctx.lineTo(x, y + dy * tick);
-            ctx.stroke();
-        }
-        const texts = this.texts;
-        this._drawText(ctx, texts.title, width / 2, height / 2 - 40, 72, '#d8e4f0');
-        this._drawText(ctx, texts.menuPlaceholder, width / 2, height / 2 + 40, 26, '#9fb4c8');
-
-        const pointer = this._input.pointer;
-        if (pointer.inside) {
-            ctx.strokeStyle = '#ffd36b';
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.moveTo(pointer.x - 12, pointer.y + 0.5);
-            ctx.lineTo(pointer.x + 13, pointer.y + 0.5);
-            ctx.moveTo(pointer.x + 0.5, pointer.y - 12);
-            ctx.lineTo(pointer.x + 0.5, pointer.y + 13);
-            ctx.stroke();
-        }
-    }
-
-    // 개발용 정보 겹침: 상태·화면 구성·입력·오디오·프레임 수를 왼쪽 위에 그린다. ?debug 로 켠다.
+    // 개발용 정보 겹침: 상태·화면 구성·입력·오디오·음악·프레임 수를 왼쪽 위에 그린다. ?debug 로 켠다.
+    // (2026-10-23 WB01, 2026-10-23 WB03-M1: 음악·확대 방식 표시 추가)
     _drawDebug(ctx) {
         const layout = this._layout;
         const pointer = this._input.pointer;
         const lines = [
             `state ${this._state}  aspect ${this._aspect}  fps ${this._clock.fps.toFixed(1)}`,
-            `mode ${layout.mode}  logical ${layout.logicalWidth}x${layout.logicalHeight}`,
+            `mode ${layout.mode}  logical ${layout.logicalWidth}x${layout.logicalHeight}  scaling ${this.options.scaling}`,
             `css ${layout.cssWidth}x${layout.cssHeight} @(${layout.left},${layout.top})  scale ${layout.scale.toFixed(3)}`,
             `canvas ${layout.canvasWidth}x${layout.canvasHeight}  draw ${layout.drawScaleX.toFixed(3)}x${layout.drawScaleY.toFixed(3)}  dpr ${layout.devicePixelRatio}`,
             `pointer ${pointer.x},${pointer.y} inside=${pointer.inside} buttons=${pointer.buttons} (${pointer.type})`,
-            `keys ${[...this._input.keys].join(' ')}  audio ${this._audioStatus}`,
+            `keys ${[...this._input.keys].join(' ')}  audio ${this._audioStatus}  music ${this._musicStatus}`,
         ];
         ctx.fillStyle = 'rgba(0, 0, 0, 0.55)';
         ctx.fillRect(8, 8, 620, lines.length * 20 + 8);
