@@ -138,3 +138,30 @@ TEST_CASE(SoloMapCatalog_FileSpecStripsAllExtensions) {
     BaseFileSystem files(root);ConfigInterface config({});config.Set("fortSpec","map.extra.fort");std::string user="Me";std::size_t allocations{};SoloMapCatalog catalog(files,config,Effects(user,allocations));
     CHECK(catalog.Refresh(2)==1 && catalog.Cached().names[0]=="map");const auto row=catalog.Row(0,"map","");CHECK(row && row->label=="map" && row->checked);
 }
+
+// 같은9BYTE 키 변경과 명시 dirty를 분리하고 실제 다른 두 경로의 분류/메타를 현재 시점에 읽는다.
+TEST_CASE(SoloMapCatalog_CurrentFileSpecAndExplicitInvalidation) {
+    const auto root=std::filesystem::path(__FILE__).parent_path().parent_path()/"build/test-data/solo-current-spec";std::filesystem::create_directories(root/"fort");std::filesystem::create_directories(root/"solo");
+    std::array<std::uint8_t,28> fortState{},soloState{};fortState[17]=2;soloState[17]=1;soloState[0]=1;Write(root/"fort/map.fort",FileImage(fortState));Write(root/"solo/map.fort",FileImage(soloState));
+    BaseFileSystem files(root);ConfigInterface config({});config.Set("fortSpec","fort/{local.1}.fort");config.Set("SOLOSpec","solo/{local.1}.fort");config.SetInt("mayEditMissions",1);
+    SoloMapFileSpec spec;const auto original=spec.Current();CHECK(original=="fortSpec" && original.data()[8]=='\0');spec.SelectSolo();CHECK(original=="SOLOSpec" && original.data()==spec.Current().data() && original.data()[8]=='\0');spec.SelectFort();
+    std::string user="Me";std::size_t allocations{};std::vector<std::string> keys;auto effects=Effects(user,allocations);
+    effects.fileSpecKey=[&] { keys.emplace_back(spec.Current());return spec.Current(); }; // 각 실제 PathSpec 호출 직전의 현재 버퍼 내용을 기록한다.
+    SoloMapCatalog catalog(files,config,std::move(effects));CHECK(catalog.Refresh(2)==1 && catalog.Cached().flags[0]==0 && keys==std::vector<std::string>({"fortSpec","fortSpec","fortSpec"}));
+    keys.clear();spec.SelectSolo();CHECK(catalog.Refresh(99)==1 && keys.empty() && catalog.Cached().flags[0]==0);CHECK(catalog.Kind("map")==1 && keys==std::vector<std::string>{"SOLOSpec"});
+    keys.clear();catalog.Invalidate();CHECK(catalog.Refresh(2)==1 && catalog.Cached().flags[0]==2 && keys==std::vector<std::string>({"SOLOSpec","SOLOSpec","SOLOSpec"}));
+    keys.clear();spec.SelectFort();CHECK(catalog.Kind("map")==2 && keys==std::vector<std::string>{"fortSpec"} && catalog.Refresh(2)==1 && catalog.Cached().flags[0]==2);
+    catalog.Invalidate();CHECK(catalog.Refresh(2)==1 && catalog.Cached().flags[0]==0 && !allocations);
+}
+
+// 분류 원문을 읽은 뒤 키가 바뀌면 별도 메타 읽기는 새 키를 사용해야 하며 Refresh 시작 때 키를 캡처하면 실패한다.
+TEST_CASE(SoloMapCatalog_FileSpecChangesBetweenClassificationAndMetadata) {
+    const auto root=std::filesystem::path(__FILE__).parent_path().parent_path()/"build/test-data/solo-changing-spec";std::filesystem::create_directories(root/"fort");std::filesystem::create_directories(root/"solo");
+    std::array<std::uint8_t,28> fortState{},soloState{};fortState[17]=2;soloState[17]=1;soloState[0]=1;Write(root/"fort/map.fort",FileImage(fortState));Write(root/"solo/map.fort",FileImage(soloState));
+    BaseFileSystem files(root);ConfigInterface config({});config.Set("fortSpec","fort/{local.1}.fort");config.Set("SOLOSpec","solo/{local.1}.fort");SoloMapFileSpec spec;
+    std::string user="Me";std::size_t allocations{},reads{};std::vector<std::string> keys;auto effects=Effects(user,allocations);
+    effects.fileSpecKey=[&] { keys.emplace_back(spec.Current());return spec.Current(); }; // 열거·분류·별도 메타의 각 실제 호출 시점을 기록한다.
+    effects.typeCount=[&] { ++reads;if (reads==1) spec.SelectSolo();return 188; }; // 분류 파일 읽기 뒤 실제 콜백에서 같은 키 버퍼만 변경한다.
+    SoloMapCatalog catalog(files,config,std::move(effects));CHECK(catalog.Refresh(2)==1 && reads==2 && catalog.Cached().names[0]=="map" && catalog.Cached().flags[0]==2);
+    CHECK(keys==std::vector<std::string>({"fortSpec","fortSpec","SOLOSpec"}) && !allocations && !catalog.Cached().dirty);
+}

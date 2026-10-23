@@ -1,17 +1,28 @@
 // 실제 파일 시스템과 Template/State 수명을 원본 단독 맵 목록에 연결한다.
 #pragma once
 #include "o/RawSoloMapList.h"
+#include <array>
 #include <memory>
 #include <span>
 
 namespace netstorm::o { class BaseFileSystem;class ConfigInterface; }
 namespace netstorm::client {
+// 원본005327ac의 같은9BYTE를 덮어쓰는 키 저장소다. Client가 소유하면 모든 목록 경계가 같은 수명을 빌린다.
+class SoloMapFileSpec {
+public:
+    std::string_view Current() const; // 현재8문자 키를 빌린다. 반환 view의 주소는 키 변경 뒤에도 같다.
+    void SelectFort(); // 같은 버퍼를 fortSpec/NUL로 복구한다. 목록 dirty는 별도 원본 호출자가 설정한다.
+    void SelectSolo(); // 같은 버퍼를 SOLOSpec/NUL로 바꾼다. 캐시를 자동 무효화하지 않는다.
+private:
+    std::array<char,9> key_{'f','o','r','t','S','p','e','c','\0'}; // 기본 원본 키와 마지막 NUL을 같은 고정 할당에 둔다.
+};
 // 게임 규칙 대신 현재 호스트/언어/사용자 자료만 제공하는 경계다.
 struct SoloMapCatalogEffects {
     std::function<std::int32_t()> typeCount; // 파일 서명 검사가 읽는 현재 타입 개수다.
     std::function<void(std::span<std::uint8_t>)> allocationBytes; // 빈 State가 보존하는 현재 미정 바이트 입력이다.
     std::function<std::string()> userName; // 원본 00540ca8의 현재 좁은 사용자 이름이다.
     std::function<std::string(std::string_view)> translate; // 손상 행 형식의 현재 좁은 번역이다.
+    std::function<std::string_view()> fileSpecKey; // 각 PathSpec 직전의 현재 키다. 생략하면 catalog 수명의 기본 fortSpec 버퍼를 사용한다.
 };
 // 파일마다 분류와 목록 메타 조회를 다른 임시 Template에서 수행한다.
 class SoloMapCatalog {

@@ -1,5 +1,14 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-23 단위357 완료: 단독 맵 목록의 현재 FileSpec 키
+
+- [x] 단위356을 `9f401229 / 20261023-20 CP`로 커밋했다. 현재/마지막 전체 정밀 디컴파일 PC는 **VM-W11-Codex / 2026-10-23**, 새 디컴파일/기존 산출물 변경은 없다.
+- [x] 원본005327ac/005327e0의 고정9BYTE 버퍼/포인터를 보호PE로 확인하고 같은 버퍼의 fortSpec/SOLOSpec 전환을 보유하는 SoloMapFileSpec을 추가했다. SoloMapCatalog의 열거·분류용 파일·별도 메타 파일에서 각각 PathSpec 직전 현재 키 getter를 조회한다. 생략한 기존 호출자는 catalog 수명의 기본 fortSpec을 사용한다. 키 변경은 cache dirty를 자동 설정하지 않는다.
+- [x] 새2검사는 같은 키 주소/NUL, 실제 두 폴더의 다른 State 분류/메타, 명시 dirty 전까지 캐시 보존, 분류 읽기 뒤 키 변경 시 메타 읽기의 새 키 사용을 확인한다. RawSoloMapList/기존 원본 fixture는 바꾸지 않는다.
+- [x] Release 빌드1 종료0·경고/오류0, 새2개를 포함한 Catalog8/기존 List2의 **관련10검사·실패check0**이다. 실제 보호 목록과 별도 검사 폴더의 서로 다른 원문을 사용했다. [상세](docs/exe/cpp-solo-file-spec-20261023.md)에 실제/명시 효과의 경계를 기록했다. 제품/검사 C++는 최종 검증 뒤 바꾸지 않는다.
+- [x] 최종 전체 CTest1은 **2342개·실패check0·종료0/183.35초**다. 변경 C++/상세 UTF-8·추가 주석/보호 경로/diff를 확인하고 인수인계를 마감하여 **20261023-21 CP**로 로컬 커밋한다. 제품/검사 C++는 최종 검증 뒤 바꾸지 않았다. 원격 push는 없다.
+- [ ] 다음 시작점: 실제 SOLOLIST/FORTLIST 행 조립/명령020000ca·열 분할·dirty/키 복구, c9/ca의 pending·State 예약과 Editor Session이다. 단위355/356의 실제 getter/호출 시점과 이번 현재 키 모듈은 완료했으므로 다시 미복원으로 세지 않는다. 새 파일/입력 컨트롤·현재 월드 snapshot·generic 설치/기술 변환/UI/populate·사용자 완주/배포 목표는 계속 활성이다. 원본 주소·의존성은 이번/직전 상세의 마지막 절에 있다.
+
 ## 2026-10-23 단위356 완료: Fort 선택의 원본 호출 시점
 
 - [x] 단위355를 `1c625ee6 / 20261023-19 CP`로 커밋했다. 현재/마지막 전체 정밀 디컴파일 PC는 **VM-W11-Codex / 2026-10-23**, 기존 산출물/원본/CD/AGENTS/다른 프로젝트는 변경하지 않는다.
@@ -7,7 +16,7 @@
 - [x] 진단/부모에서 현재 cursor가 변경되는 입력, 선택 실패 시 깊이 복구 및 필수 selector 누락을 검증할 새3검사를 추가하고 실제 두 판본 Fort binding의 깊이/선택 순서 검사도 강화했다. 기존 x86 fixture와 기대 결과는 변경하지 않는다.
 - [x] Release 빌드1 종료0·경고/오류0, 새3개를 포함한 관련33검사 실패check0이다. 기존 Money408/Meta 장부·wrapper/Fort 부모534/DataManager 선택864 원문은 그대로 대조했다. 변경 C++9개 UTF-8 및 diff를 확인했다. 제품/검사 C++는 이 최종 검증 뒤 바꾸지 않는다.
 - [x] 최종 전체 CTest1은 **2340개·실패check0·종료0/179.76초**다. 원문/새 선택 순서/실제 binding·저장 회귀를 확인하고 [상세](docs/exe/cpp-fort-selection-order-20261023.md)·인수인계를 마감하여 **20261023-20 CP**로 로컬 커밋한다. 제품/검사 C++는 최종 검증 뒤 바꾸지 않았다. 전체 Edit Session/기술 변환/UI/populate/사용자 완주 목표는 계속 활성이다.
-- [ ] 다음 단위357 후보: 현재 FileSpec 키의 장기 수명과 catalog 열거/분류/별도 메타 읽기 세 PathSpec 직전 getter를 연결한다. 원본005327ac의9BYTE fortSpec/SOLOSpec 버퍼와005327e0 포인터,SOLOLIST의dirty→키변경→Refresh2/행→dirty→복구를 정밀 원문/보호PE로 확인했다. 키 변경만으로 자동 무효화하지 않는다. 이후 c9/ca는 pending 이름/모드와 next State 요청으로 연결하며 즉시 설치로 바꾸지 않는다. 자세한 원본 주소/잔여는 위 상세의 마지막 절에 있다.
+- [x] 단위357에서 현재 FileSpec 키의 장기 수명과 catalog 열거/분류/별도 메타 읽기 세 PathSpec 직전 getter를 연결·검증했다. 원본005327ac의9BYTE fortSpec/SOLOSpec 버퍼와005327e0 포인터,SOLOLIST의dirty→키변경→Refresh2/행→dirty→복구를 정밀 원문/보호PE로 확인했으며 키 변경만으로 자동 무효화하지 않는다. 실제 sentinel 행/dirty·복구와 c9/ca의 pending 이름/모드·next State 요청은 후속이다. 자세한 원본 주소/잔여는 위 상세의 마지막 절에 있다.
 
 ## 2026-10-23 단위355 완료: 편집 Fort의 Money/Badges/Technology 실제 섹션 선택
 

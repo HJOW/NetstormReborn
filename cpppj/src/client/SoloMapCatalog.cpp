@@ -3,11 +3,18 @@
 #include "client/CampaignTemplateStorage.h"
 #include "o/BaseFile.h"
 #include "o/ConfigInterface.h"
+#include <algorithm>
 #include <filesystem>
 #include <stdexcept>
 #include <utility>
 
 namespace netstorm::client {
+// 현재 키는 원본처럼 동일한 고정 버퍼를 가리키며 문자열 포인터를 교체하지 않는다.
+std::string_view SoloMapFileSpec::Current() const { return {key_.data(),key_.size()-1}; }
+// 정상 목록 키의 NUL까지 같은9BYTE에 복사한다. dirty 수명은 이 저장소가 소유하지 않는다.
+void SoloMapFileSpec::SelectFort() { std::copy_n("fortSpec",key_.size(),key_.begin()); }
+// 단독 시나리오 목록 키의 NUL까지 같은 버퍼에 복사한다.
+void SoloMapFileSpec::SelectSolo() { std::copy_n("SOLOSpec",key_.size(),key_.begin()); }
 namespace {
 // 실제로 선택한 외부 경계만 요구한다.
 template<class Function> const Function& Need(const Function& function) {
@@ -35,7 +42,7 @@ struct MapProbe {
     }
     // 파일이 없어지면 빈 Template을 유지한다. 서명/본문 오류를 성공으로 대신하지 않는다.
     void Load(const o::BaseFileSystem& files,o::ConfigInterface& config,SoloMapCatalogEffects& effects,std::string_view name,bool mine) {
-        const auto path=config.PathSpec("fortSpec",name);const auto bytes=files.TryRead(path);if (!bytes) return;
+        const auto path=config.PathSpec(Need(effects.fileSpecKey)(),name);const auto bytes=files.TryRead(path);if (!bytes) return;
         storage.InstallFile(0,{},*bytes,path,Need(effects.typeCount)());
         storage.Headers()[8]=mine ? 1 : 0; // 목록 임시 Template의 isMine=1은 실제 파일 쓰기를 발생시키지 않는다.
     }
@@ -47,13 +54,16 @@ struct MapProbe {
 struct SoloMapCatalog::Impl {
     const o::BaseFileSystem& files; // 기본 디스크 열거와 디스크/TAFF/보조 경로의 내용 읽기를 빌린다.
     o::ConfigInterface& config; // fortSpec과 mayEditMissions의 현재 설정이다.
+    SoloMapFileSpec defaultFileSpec; // 별도 Client 전역을 공급하지 않은 기존 호출도 실제 catalog보다 짧지 않은 기본 버퍼를 빌린다.
     SoloMapCatalogEffects effects; // 언어/사용자/미정 입력의 실제 장치다.
     o::SoloMapListState cache; // 원본 50개 이름/flags/dirty의 단일 저장소다.
     std::unique_ptr<MapProbe> metadata; // 마지막 construct/load가 선택한 실제 임시 Template이다.
     o::RawSoloMapList list; // 파일 분류를 대신 계산하지 않는 원본 목록 몸체다.
     // 콜백이 빌리는 주소가 고정된 뒤 원본 목록을 구성한다.
     Impl(const o::BaseFileSystem& source,o::ConfigInterface& settings,SoloMapCatalogEffects devices)
-        :files(source),config(settings),effects(std::move(devices)),list(cache,Hooks()) {}
+        :files(source),config(settings),effects(std::move(devices)),list(cache,Hooks()) {
+        if (!effects.fileSpecKey) effects.fileSpecKey=[this] { return defaultFileSpec.Current(); }; // 현재 기본 키도 파일 읽기 직전에 조회한다.
+    }
     // 원본 분류 함수의 임시 Template은 목록 메타 Template을 건드리지 않는다.
     std::uint8_t Kind(std::string_view name) {
         MapProbe probe(effects);probe.Load(files,config,effects,name,false);return probe.state.Get(0)[17];
@@ -67,7 +77,7 @@ struct SoloMapCatalog::Impl {
         o::SoloMapListHooks hooks;hooks.mayEditMissions=[this] { return config.GetInt("mayEditMissions"); };
         hooks.enumerate=[this] {
             std::vector<std::string> names;
-            for (const auto& path:files.MatchDisk(config.PathSpec("fortSpec","*"))) names.push_back(MapName(path)); // 원본 OS 순서와 전체 점 제거를 유지하고 TAFF 목록은 합치지 않는다.
+            for (const auto& path:files.MatchDisk(config.PathSpec(Need(effects.fileSpecKey)(),"*"))) names.push_back(MapName(path)); // 원본 OS 순서와 전체 점 제거를 유지하고 TAFF 목록은 합치지 않는다.
             return names;
         };
         hooks.kind=[this](auto name) { return Kind(name); };
