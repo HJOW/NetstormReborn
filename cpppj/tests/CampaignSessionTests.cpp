@@ -1,6 +1,8 @@
 #include "client/RawCampaignTutorialOneBindings.h"
 #include "client/MissionGuideInput.h"
 #include "client/CampaignTemplateStorage.h"
+#include "client/EditorFiles.h"
+#include <chrono>
 #include "client/RawProductionControls.h"
 #include "o/RawBridgeDraw.h"
 #include "client/RawMenuControls.h"
@@ -827,6 +829,29 @@ TEST_CASE(CampaignSession_ProductionMissingAllocationLeavesPlayerUnchanged) {
     auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",external.Services());
     const std::vector<std::uint8_t> before(session.PlayerRecords().begin(),session.PlayerRecords().end());
     CHECK(Throws([&] { session.Production().RefreshCurrent(); }));CHECK(std::equal(before.begin(),before.end(),session.PlayerRecords().begin()));
+}
+// 현재 월드의 실제 금지표/생산 덱을 작업 Fort에 저장하고 원문 파일과 구별해 다시 읽는다.
+TEST_CASE(CampaignSession_FortSnapshotBasicsSaveCurrentWorld) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);const auto original=assets.files.Read("d/thewarbegins.fort");SessionServicesFixture external;auto services=external.Services();
+    const auto storage=std::make_shared<CampaignTemplateStorage>();services.templateStorage=storage;
+    services.production.allocationBytes=[](auto bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0xa7}); }; // 실제 덱의 명시 할당 입력이다. 초기화/생산 결과는 기존 부모가 쓴다.
+    services.production.effects.configInt=[](std::string_view key) { CHECK(key=="getTeleportTechFree");return 0; };
+    RawCampaignSession session(assets.game,assets.files,FortTemplate::Parse(original,assets.game.TypeTable()),"thewarbegins",std::move(services));CHECK(Throws([&] { session.SnapshotFortDeck(1); }));session.Load();
+    const auto stamp=std::chrono::steady_clock::now().time_since_epoch().count();const auto root=assets.root.parent_path();EditorFiles files(root/"cpppj/build/test-data"/("snapshot-world-"+std::to_string(stamp)),{assets.root,root/"originalCD"});const auto path=files.Prepare("WorldSnapshot",original);
+    storage->InstallFile(1,FortTemplate::Parse(original,assets.game.TypeTable()),original,path.string());
+    const auto sectionIndex=[](std::string_view name) { const auto names=FortTemplate::SectionNames();const auto found=std::find(names.begin(),names.end(),name);if (found==names.end()) throw std::logic_error("snapshot 검사 섹션 이름 누락");return static_cast<std::size_t>(found-names.begin()); }; // 실제 표준 이름으로 원시 섹션을 찾는다.
+    const auto namesIndex=sectionIndex("TypeNames"),deckIndex=sectionIndex("Deck");storage->Template(1).sections[namesIndex]={0xfe};storage->Template(1).sections[deckIndex]={0xfd};
+    const auto beforeState=storage->State(1).bytes;const std::vector<std::uint8_t> stateCopy(beforeState.begin(),beforeState.end());session.SnapshotFortTypeNames(1);CHECK(storage->CurrentSection(1)=="State");
+    std::vector<std::uint8_t> expectedNames{static_cast<std::uint8_t>(assets.game.TypeTable().Types().size())};
+    for (const auto& type:assets.game.TypeTable().Types()) { const auto hash=RiftTypeTable::NameHash(type.name);for (std::size_t byte=0;byte<4;++byte) expectedNames.push_back(static_cast<std::uint8_t>(hash>>(byte*8))); } // 현재 실제 TYPE 이름의 전체 해시를 기록한다.
+    CHECK(storage->Template(1).sections[namesIndex]==expectedNames);CHECK(std::vector<std::uint8_t>(storage->State(1).bytes.begin(),storage->State(1).bytes.end())==stateCopy);
+    session.SnapshotFortDeck(1);CHECK(session.Production().Contains(133));const auto initialDeck=storage->Template(1).sections[deckIndex];session.TotalMade().Allow(133,0);session.SnapshotFortDeck(1);CHECK(!session.Production().Contains(133));CHECK(storage->Template(1).sections[deckIndex]!=initialDeck);
+    const auto raw=session.Production().Deck().Bytes(session.Production().Deck().Get(1));std::vector<std::uint8_t> expectedDeck{raw[0x14c]};
+    for (std::size_t index=0;index<raw[0x14c];++index) for (std::size_t byte=0;byte<4;++byte) expectedDeck.push_back(raw[index*5+byte]); // 런타임의다섯째BYTE를제외한현재덱만저장해야한다.
+    CHECK(storage->Template(1).sections[deckIndex]==expectedDeck);const auto order=storage->SectionOrder(1);CHECK(order[order.size()-2]=="TypeNames" && order.back()=="Deck");
+    std::uint32_t readOnly{},owner=session.LocalOwner();std::array<std::uint8_t,9> hidden{};FortImageHooks image;image.typeCount=[&] { return static_cast<std::uint32_t>(assets.game.TypeTable().Types().size()); };image.assertion=[](auto) { throw std::logic_error("snapshot 파일의 예상 밖 이미지 진단"); };
+    storage->SaveFile(1,{readOnly,owner,hidden},image,files.Writer());const auto saved=ReadFileBytes(path);CHECK(saved!=original);const auto decoded=FortTemplate::Parse(saved,assets.game.TypeTable());CHECK(decoded.sections[namesIndex]==expectedNames && decoded.sections[deckIndex]==expectedDeck);
+    CHECK(assets.files.Read("d/thewarbegins.fort")==original); // 현재 월드 자료는 새 작업본으로만 썼고 보호 파일은 읽기 전용이다.
 }
 // 같은 생산 월드의 empty84는 관찰 카운터 대신 실제 공통 삭제/반납으로 들어가야 한다.
 TEST_CASE(CampaignSession_EmptyGeyserUsesCurrentDeletion) {

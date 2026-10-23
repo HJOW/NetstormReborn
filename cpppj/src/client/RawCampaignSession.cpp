@@ -1,6 +1,7 @@
 // 기존 원본 몸체의 단일 저장소 조립을 실제 클라이언트 세션이 소유한다.
 #include "client/RawCampaignSession.h"
 #include "client/CampaignTemplateStorage.h"
+#include "o/RawFortSnapshotBasics.h"
 #include "client/RawProductionMaintenance.h"
 #include "client/RawKnowledgeMenu.h"
 #include "o/CanonDecoder.h"
@@ -3034,6 +3035,28 @@ void RawCampaignSession::GenerateLocalGeysers() {
 const RawCampaignConstructionBindings& RawCampaignSession::Construction() const { return *impl_->construction; }
 // 동일 Pool/Player 기록과 현재 Factory 목록을 읽으며 자동 재계산을 추가하지 않는다.
 const RawCampaignProductionBindings& RawCampaignSession::Production() const { return *impl_->production; }
+// 새 섹션의 현재 선택과 실제 쓰기 수명을 분리하고 원본 부모가 선택한 두 writer만 실행한다.
+void RawCampaignSession::SnapshotFortBasicSection(std::uint32_t slot,bool names) {
+    auto& s=*impl_;if (!s.loaded || slot>=9) throw std::logic_error("실제 Fort snapshot의 설치/슬롯 계약 위반");
+    std::vector<TemplateWriteStream> streams;FortSnapshotBasicsHooks hooks;
+    hooks.manager=[&s](auto selected) { if (selected<0 || selected>=9) throw std::out_of_range("실제 snapshot Template9 범위");std::uint32_t value{};const auto header=s.templateStorage->Headers().subspan(static_cast<std::size_t>(selected)*20,4);
+        for (std::size_t byte=0;byte<4;++byte) value|=std::uint32_t(header[byte])<<(byte*8);return value; // 현재 같은 헤더의 manager DWORD를 읽는다.
+    };
+    hooks.assertion=SessionMissing<void,FortSnapshotAssertion>();
+    hooks.create=[&](auto manager,auto section) { if (manager!=hooks.manager(static_cast<std::int32_t>(slot))) throw std::logic_error("실제 snapshot manager 선택 불일치");streams.push_back(s.templateStorage->CreateSection(slot,section));return static_cast<std::uint32_t>(streams.size()); };
+    hooks.write=[&](auto token,auto bytes) { s.templateStorage->WriteSection(streams.at(token-1),bytes); };
+    hooks.access=[&](auto token,const auto& operation) { s.templateStorage->AccessSection(streams.at(token-1),operation); };
+    hooks.state=[&s](auto selected)->std::span<const std::uint8_t> { return s.templateState->Get(static_cast<std::uint32_t>(selected)); };
+    hooks.typeName=[&s](auto index)->std::string_view { if (index<0 || static_cast<std::size_t>(index)>=s.core.types.size()) throw std::out_of_range("실제 snapshot TYPE 범위");return s.core.types[static_cast<std::size_t>(index)].name; };
+    hooks.refreshDeck=[&s](auto owner) { static_cast<void>(s.production->Refresh(owner)); };hooks.getDeck=[&s](auto owner) { return s.production->Deck().Get(owner); };
+    hooks.deck=[&s](auto token)->std::span<const std::uint8_t> { return s.production->Deck().Bytes(token); };
+    const auto typeCount=static_cast<std::int32_t>(s.core.types.size()); // GameAssets의 고정 TYPE 표는 이 Session 수명에 바뀌지 않는다.
+    if (names) o::SnapshotFortTypeNames(static_cast<std::int32_t>(slot),s.playerState.templateOwner,typeCount,hooks);else o::SnapshotFortDeck(static_cast<std::int32_t>(slot),hooks);
+}
+// 호출 위치는 전체 snapshot 부모에 맡기며 여기서 Notify/다른 writer를 앞당기지 않는다.
+void RawCampaignSession::SnapshotFortTypeNames(std::uint32_t slot) { SnapshotFortBasicSection(slot,true); }
+// 실제 현재 생산 자료의 snapshot이며 화면 생산 덱과 같은 저장소를 사용한다.
+void RawCampaignSession::SnapshotFortDeck(std::uint32_t slot) { SnapshotFortBasicSection(slot,false); }
 // 현재 세 카운터와 생산이 사용하는 같은 금지DWORD 표를 빌린다.
 RawTotalMade& RawCampaignSession::TotalMade() { return *impl_->totalMade; }
 // 같은 실제 outcome이 읽는 Player 활성/현재 ownerState 판정을 재사용한다.

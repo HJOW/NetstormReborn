@@ -1789,6 +1789,10 @@ target_sources(netstorm_tests PRIVATE SoloMapListTests.cpp)
 target_sources(netstorm_tests PRIVATE SoloMapCatalogTests.cpp)
 # Tell 맵 목록 부모의 실제 기본블록 원문과 현재 메타 호출 시점을 대조한다.
 target_sources(netstorm_tests PRIVATE FortSelectionTests.cpp)
+# TypeNames/Deck snapshot의 독립 기계어와 실제 명시 stream 수명을 확인한다.
+target_sources(netstorm_tests PRIVATE FortSnapshotBasicsTests.cpp)
+set_source_files_properties(FortSnapshotBasicsTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_FORT_SNAPSHOT_BASICS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fort-snapshot-basics-x86.tsv\"")
 set_source_files_properties(FortSelectionTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_FORT_SELECTION_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fort-selection-x86.tsv\"")
 target_sources(netstorm_tests PRIVATE TellMapMenusTests.cpp)

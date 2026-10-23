@@ -6,6 +6,7 @@
 #include "o/RawTemplateLifetime.h"
 #include "o/RawDataManagerFileSave.h"
 #include "o/RawFortImage.h"
+#include "o/RawMemStream.h"
 #include <map>
 #include <memory>
 namespace netstorm::client {
@@ -13,6 +14,11 @@ namespace netstorm::client {
 struct TemplateFileWriteHooks {
     std::function<void(std::string_view,std::uint32_t)> permissions; //현재 이름의 CRT 권한 요청을 실제 쓰기 경계에 인계한다.
     std::function<void(std::string_view,std::span<const std::uint8_t>)> write; //저장 부모가 결정한 현재 이름과 같은 이미지 원문을 쓴다.
+};
+// 현재 섹션이 바뀌어도 같은 manager의 같은 생성 수명에 쓰기 위한 불투명 참조다.
+struct TemplateWriteStream {
+    std::uint32_t manager{},section{}; // 실제 호스트 manager와 표준35개 섹션의 토큰이다. 포인터를 DWORD로 자르지 않는다.
+    std::uint64_t generation{}; // 같은 이름의 섹션을 재생성한 뒤 이전 참조로 쓰는 것을 거부한다.
 };
 // 실제 파싱 자료를 단독 소유하고 빌린 헤더는 같은 manager/State cursor를 조회한다.
 class CampaignTemplateStorage {
@@ -32,6 +38,9 @@ public:
     o::PlayerTemplateStateStream& SelectState(std::uint32_t slot); // 원본 검색/쓰기허용 선택으로 같은 manager.current/State.pos를 변경한다.
     std::string ReadSubscriberName(std::uint32_t slot); // 004bd4d0처럼 실제 Subscriber 선택/ID 건너뜀/signed 길이 읽기로 현재 이름을 반환한다.
     o::PlayerTemplateStateStream& InitializeState(std::uint32_t slot,std::span<const std::uint8_t,28> bytes); // 기존 State 반납 뒤 새 섹션을 목록 끝에 만들고 원본16384BYTE 버퍼에28BYTE를 쓴다.
+    TemplateWriteStream CreateSection(std::uint32_t slot,std::string_view name); // 표준 섹션을 원본 생성 부모로 교체하고 새 마지막 노드의 쓰기 참조를 반환한다.
+    void WriteSection(TemplateWriteStream stream,std::span<const std::uint8_t> bytes); // 현재 선택과 무관하게 보관한 섹션의 원본 MemStream에 쓴다.
+    void AccessSection(TemplateWriteStream stream,const std::function<void(std::span<std::uint8_t>,const o::MemStreamHooks&)>& operation); // 인라인 원본 쓰기에 같은16BYTE 필드/실제 버퍼를 동기적으로 빌린다. 할당/노드 교체는 허용하지 않는다.
     o::PlayerTemplateStateStream& EnsureStateSize(std::uint32_t slot,std::int32_t minimum); // 원본 임시 생성/복사/추가/이름 교체 뒤 같은 새 현재 State를 돌려준다.
     std::vector<std::string> SectionOrder(std::uint32_t slot); // 실제 head/next를 따라 현재 섹션 순서를 조회한다.
     std::string_view CurrentSection(std::uint32_t slot); // 같은 manager가 마지막으로 선택한 실제 섹션 이름을 읽는다.
@@ -52,6 +61,7 @@ public:
 private:
     struct Image; // 파싱한 요새·같은State/지형 cursor·임시 이전 State를 하나로 소유한다.
     Image& Current(std::uint32_t slot); // 현재 불투명 manager 핸들로 실제 이미지를 찾는다.
+    Image& Writable(TemplateWriteStream stream); // manager 반납이나 같은 섹션 재생성 뒤 오래된 참조를 거부한다.
     std::span<std::uint8_t> Header(std::uint32_t slot); // 같은 표의 한20BYTE를 빌린다.
     o::TemplateLifetimeHooks Effects(); // 실제 manager 소멸과 객체 할당 반납을 분리한다.
     std::array<std::uint8_t,180> headers_{}; // Client보다 짧은 Session이 사라져도 유지되는 실제9개 헤더다.

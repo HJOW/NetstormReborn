@@ -1,5 +1,15 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-23 단위362 완료: 실제 TypeNames/Deck snapshot과 쓰기 stream 수명
+
+- [x] AGENTS.md·최신 공통/닷넷 인수인계를 다시 읽고 단위361의 `9eb899e4 / 20261023-27 CP`에서 재개했다. 현재/마지막 전체 정밀 디컴파일 PC는 **VM-W11-Codex / 2026-10-23**으로 일치한다. 새 디컴파일/원본 게임 실행/보호 원문·AGENTS 변경은 없다. 다른 세션의 dotnet 미커밋 파일은 건드리지 않는다.
+- [x] CampaignTemplateStorage의 기존 State 생성 부모를 표준35개 쓰기 섹션 생성에 재사용하고 manager/section/generation 참조와 명시 쓰기/인라인 접근을 추가했다. current가 State로 바뀌어도 TypeNames에 계속 쓰며 같은 이름 재생성/manager 해제 뒤 오래된 참조는 거부한다. 원본 목록 제거/16384BYTE 생성/마지막 부착/논리 끝과 부분 쓰기를 보존한다.
+- [x] 원본004bd6f0/004befd0에 맞춰 TypeNames의 State+17·현재 타입 수·signed 이름 hash와 Deck의 현재 생산 재계산/owner clamp/5BYTE 중4BYTE 저장을 구현하고 실제 RawCampaignSession에 명시 writer를 연결했다. UI 입력/전체 snapshot 부모의 위치는 아직 앞당기지 않는다.
+- [x] 보호 PE 두 본체의 **1,030입력·두정밀도2,060관측·994,328본체명령·정밀도 차이0**을 새 fixture로 확보했다. getter/Stream 생성·헤더 Write 등은 명시 경계이며 hash/인라인 쓰기/현재 개수 재조회는 원문 실행이다. 기존 fixture는 수정하지 않는다.
+- [x] Release 최종 빌드3 종료0·경고/오류0, 독립 전체2,060관측/명시 stream 수명/실패 부분쓰기/실제 월드→새 작업본 저장·재읽기의 관련4검사가 실패check0이다. 16385BYTE 실패에서 물리0패딩이 논리 자료로 남던 경로를 수정했다. 첫 빌드 도중 수정에 따른 중간 빌드2의 옛 오브젝트 재사용/관련 검사 실패는 해당 소스의 명시 재컴파일·빌드3/재검사로 해결했다. [상세](docs/exe/cpp-fort-snapshot-basics-20261023.md)에 근거/실제 원문 입력/경계/잔여를 기록했다.
+- [x] 최종 전체 CTest1은 **2,356검사·실패check0·종료0/271.61초**이며 LastTest.log 내부2356/0도 확인했다. UTF-8/한국어 주석/diff/보호 경로 확인 후 **20261023-29 CP**로 로컬 커밋한다. 작업 중 별도 DN `4ff49495 / 20261023-28 DN`이 들어왔으며 이 단위에 섞지 않는다. 제품/검사 C++는 최종 검증 뒤 바꾸지 않았다.
+- [ ] 다음은 Technology4bcea0의 현재 내용물 직렬화다. 기존 RawContainedFinder::Begin/Next와 ContentFormHost::Robust(가상60)를 재사용해 같은 Pool/CurrentTechnology/stream에 연결한다. Money는 같은 Impl::random, Mission은 UberGump Runtime의 실제 state/이름이 필요하며 guided Tutorial 전용 getter로 일반 미션을 생략하면 안 된다. Badges의 live28×220 장부 소유/Objects·Territory/Notify·전체 snapshot·generic 설치/Editor 입력·새 맵은 남아 있다. 상세에 다음 연결 근거/제한을 보존했다. 전체 Early Missions·캠페인·데모3개 사용자 완주/Editor 실제 진입·시나리오·메인 메뉴/GUI·음향·최신 배포 목표는 계속 활성이다.
+
 ## 2026-10-23 단위361 완료: 편집 맵 선택의 pending/next 예약
 
 - [x] AGENTS.md·공통/닷넷 인수인계를 다시 읽었다. 시작 HEAD는 `c4009b9b / 20261023-25 CP`, 현재/마지막 전체 정밀 디컴파일 PC는 **VM-W11-Codex / 2026-10-23**으로 일치한다. 새 디컴파일/원본 게임 실행은 없다. 사용자 `/goal`의 전체 범위를 유지하며 원본 동일성 완료로 축소하지 않는다.

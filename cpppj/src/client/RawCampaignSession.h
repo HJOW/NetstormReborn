@@ -318,6 +318,8 @@ public:
     const RawCampaignConstructionBindings& Construction() const;
     // 같은 Player+68과 현재 Factory 목록을 사용하는 실제 생산 계산기를 빌린다. 조회만으로 재계산하지 않는다.
     const RawCampaignProductionBindings& Production() const;
+    void SnapshotFortTypeNames(std::uint32_t slot); // 같은 실제 State/TYPE에서004bd6f0을 명시 실행한다. 전체 월드 snapshot/파일 저장은 별도다.
+    void SnapshotFortDeck(std::uint32_t slot); // 같은 실제 생산 재계산/덱에서004befd0을 명시 실행한다. 기존 Fort의 읽기 사본을 쓰지 않는다.
     // 생산/튜토리얼/건설 표시가 함께 읽는 금지DWORD 표와 실제 세 카운터를 직접 조작한다.
     o::RawTotalMade& TotalMade();
     // 실제490250으로 명시 Player 부모를 생성한다. 로그인/참여 부모가 요청할 때만 호출하며 일반 확정에서 자동 생성하지 않는다.
@@ -403,6 +405,7 @@ public:
     // 실제 사제 목록/움직임/보호막 상태의 읽기 경계를 빌린다.
     const RawPriestWorldBindings& Priests() const;
 private:
+    void SnapshotFortBasicSection(std::uint32_t slot,bool names); // 실제 manager/State/덱과 같은 생성 수명의 쓰기 참조를 묶는다.
     struct Impl; // 단일 월드의 실제 모듈/현재 배열과 외부 서비스의 고정 수명 소유자다.
     std::unique_ptr<Impl> impl_; // Kernel 해제 뒤 실제 상태/서비스를 해제한다.
 };

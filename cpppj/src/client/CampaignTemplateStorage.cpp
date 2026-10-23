@@ -37,6 +37,8 @@ struct CampaignTemplateStorage::Image {
     struct Stream {
         std::array<std::uint8_t,60> bytes{}; // 첫16BYTE와 이름40BYTE 및 next DWORD를 같은 노드에 둔다.
     };
+    std::array<std::uint64_t,o::FortTemplate::kSectionCount> streamGeneration{}; // 각 표준 노드의 새 생성 수명을 구별한다.
+    std::uint64_t nextStreamGeneration{}; // 같은 manager 안에서 재생성마다 증가하는 비영 번호다.
     o::FortTemplate fort; // 원시 State 섹션을 포함한 실제 파싱 자료와 소유 버퍼다.
     o::PlayerTemplateStateStream state; // 같은 fort.sections[State]의 현재 cursor다.
     o::FortTerritoryStream territory; // 같은 fort.sections[Territory]의 현재 cursor다.
@@ -80,8 +82,7 @@ struct CampaignTemplateStorage::Image {
     // 같은 stream의 물리 할당을 노출하고 원본 쓰기 뒤 논리 end만 원시 섹션에 남긴다.
     void WriteStream(std::uint32_t handle,std::span<const std::uint8_t> input) {
         if (input.size()>0xffffffffU) throw std::out_of_range("Template MemStream 원문 DWORD 길이 초과");
-        auto& buffer=fort.sections.at(handle-1);const auto allocation=Read(std::span(streams.at(handle)->bytes).subspan(12));if (buffer.size()<allocation) buffer.resize(allocation);
-        WithMemory(handle,[this,handle,input](const auto& hooks) { o::WriteMemStream(streams.at(handle)->bytes,input,static_cast<std::uint32_t>(input.size()),hooks); });
+        AccessSection(handle,[input](auto fields,const auto& hooks) { o::WriteMemStream(fields,input,static_cast<std::uint32_t>(input.size()),hooks); });
     }
     // 원본 ce10이 새 노드를 붙이기 전에 마지막 MemStream의 end에 맞춰 할당을 줄인다.
     void CompactTail(std::uint32_t handle) {
@@ -96,26 +97,39 @@ struct CampaignTemplateStorage::Image {
         hooks.lifetime.releaseStream=[this](auto handle) {
             if (streams.erase(handle)!=1) throw std::logic_error("Template 실제 노드 중복 반납");std::erase(streamOrder,handle);
             if (handle==StateSection()+1) state={{},0,0,false};if (handle==TerritorySection()+1) territory={};
+            if (handle==LoadSection("Money")) { money={};loadCursors&=~1U; } // 새 경제 섹션에 해제된 옛 cursor를 다시 동기화하지 않는다.
+            if (handle==LoadSection("Badges")) { badges={};loadCursors&=~2U; } // 새 메타 노드의 실제 cursor는 생성 뒤 다시 공개한다.
+            if (handle==LoadSection("Technology")) { technology={};loadCursors&=~4U; } // 기술 snapshot도 기존 읽기 cursor 수명과 분리한다.
         }; // 버퍼 소멸을 마친 노드와 그 typed cursor만 반납한다.
         hooks.compact=[this](auto handle) { CompactTail(handle); };hooks.missingPredecessor=[] { throw std::logic_error("Template 실제 선행 노드 진단"); };return hooks;
     }
-    // 생성된 State 노드의 교체는 기존 노드 unlink/버퍼 반납/노드 반납 뒤 새 마지막 노드를 붙인다.
-    void InitializeState(std::span<const std::uint8_t,28> input) {
+    // 표준 섹션의 교체는 기존 노드 unlink/버퍼 반납/노드 반납 뒤 새 마지막 노드를 붙인다.
+    std::uint32_t CreateSection(std::string_view sectionName) {
         if (!retiredState.empty()) throw std::logic_error("State 확장 복사 중 새 섹션 생성 불가");
-        SyncStreams();const auto handle=static_cast<std::uint32_t>(StateSection()+1);
-        if (fort.sections.size()<=StateSection()) fort.sections.resize(StateSection()+1);
+        const auto handle=LoadSection(sectionName);SyncStreams();
+        if (fort.sections.size()<handle) fort.sections.resize(handle);
         const auto temporary=0x20000U+handle;std::vector<std::uint8_t> allocation;bool allocated{};o::DataManagerResizeHooks hooks;
         hooks.selection.stream=[this](auto stream) { return std::span(streams.at(stream)->bytes); };hooks.list=ListEffects(); // 검색/기존 제거/새 추가도 같은 실제 부모에서 수행한다.
-        hooks.allocateStream=[this,handle](auto size) { if (size!=60 || streams.contains(handle)) throw std::logic_error("Template 새 State 실제 노드 할당 계약 위반");streams.emplace(handle,std::make_unique<Stream>());return handle; };
+        hooks.allocateStream=[this,handle](auto size) { if (size!=60 || streams.contains(handle)) throw std::logic_error("Template 새 섹션 실제 노드 할당 계약 위반");streams.emplace(handle,std::make_unique<Stream>());return handle; };
         hooks.memory.buffer=[this,&allocation,temporary](auto pointer)->std::span<std::uint8_t> {
             if (pointer==temporary) return allocation;
             if (pointer<0x10001U || pointer>0x10000U+o::FortTemplate::kSectionCount) throw std::out_of_range("Template 생성 부모의 실제 버퍼 범위");return fort.sections.at(pointer-0x10001U);
         }; // 새 할당은 완료 전까지 별도 소유하고 기존 tail 압축은 원래 실제 버퍼를 쓴다.
         hooks.memory.allocate=[&allocation,&allocated,temporary](auto size) { if (allocated) throw std::logic_error("Template 생성 부모의 중복 할당");allocation.resize(size);allocated=true;return temporary; };
         hooks.memory.assertion=[](auto) { throw std::logic_error("Template 생성 부모의 실제 MemStream 진단"); };
-        const auto current=o::CreateDataManagerStream(manager,"State",hooks);auto& node=streams.at(handle)->bytes;
-        if (current!=handle || !allocated || Read(node)!=temporary) throw std::logic_error("Template 생성 부모의 실제 현재 State 불일치");
-        Put(node,0,0x10000U+handle);allocation.resize(Read(std::span(node).subspan(8)));fort.sections.at(StateSection())=std::move(allocation);streamOrder.push_back(handle);PublishCursor(handle);WriteStream(handle,input);
+        const auto current=o::CreateDataManagerStream(manager,sectionName,hooks);auto& node=streams.at(handle)->bytes;
+        if (current!=handle || !allocated || Read(node)!=temporary) throw std::logic_error("Template 생성 부모의 실제 현재 섹션 불일치");
+        Put(node,0,0x10000U+handle);allocation.resize(Read(std::span(node).subspan(8)));fort.sections.at(handle-1)=std::move(allocation);streamOrder.push_back(handle);PublishCursor(handle);
+        if (!++nextStreamGeneration) throw std::overflow_error("Template 쓰기 섹션 생성 수명 소진");streamGeneration.at(handle-1)=nextStreamGeneration;return handle;
+    }
+    // 기존 State 생성 호출도 같은 일반 생성/원본 쓰기 부모를 사용한다.
+    void InitializeState(std::span<const std::uint8_t,28> input) { const auto handle=CreateSection("State");WriteStream(handle,input); }
+    // 현재 선택을 바꾸지 않고 명시 노드에 인라인 쓰기를 적용한 뒤 논리 끝만 원시 섹션에 공개한다.
+    void AccessSection(std::uint32_t handle,const std::function<void(std::span<std::uint8_t>,const o::MemStreamHooks&)>& operation) {
+        if (!operation) throw std::invalid_argument("Template 인라인 쓰기 장치 누락");
+        auto& buffer=fort.sections.at(handle-1);auto& node=streams.at(handle)->bytes;const auto allocation=Read(std::span(node).subspan(12));if (buffer.size()<allocation) buffer.resize(allocation);
+        try { WithMemory(handle,[&](const auto& hooks) { operation(std::span(node).first(16),hooks); }); }
+        catch (...) { const auto end=Read(std::span(node).subspan(8));if (end<=buffer.size()) buffer.resize(end);PublishCursor(handle);throw; } // 예외 전의 pos/end/부분 쓰기를 보존하며 물리 할당을 논리 자료로 잘못 공개하지 않는다.
     }
     // 실제 임시 노드가 살아 있는 동안 원본 부모를 실행하고 완료한 같은 할당을 State로 넘긴다.
     void EnsureStateSize(std::int32_t minimum) {
@@ -143,6 +157,7 @@ struct CampaignTemplateStorage::Image {
         for (auto& entry:streams) if (Read(std::span(entry.second->bytes).subspan(0x38))==kTemporaryStream) Put(entry.second->bytes,0x38,stateHandle);
         if (Read(std::span(manager).subspan(4))==kTemporaryStream) Put(manager,4,stateHandle);
         Put(manager,8,stateHandle);Put(temporary->bytes,0,0x10000U+stateHandle);buffer.resize(end);fort.sections.at(StateSection())=std::move(buffer);streams.emplace(stateHandle,std::move(temporary));streamOrder.push_back(stateHandle);PublishCursor(stateHandle);
+        if (!++nextStreamGeneration) throw std::overflow_error("Template State 생성 수명 소진");streamGeneration.at(stateHandle-1)=nextStreamGeneration;
     }
     // 공개 진단은 보조 순서 벡터 대신 실제 head/next와 이름을 읽는다.
     std::vector<std::string> SectionOrder() const {
@@ -341,6 +356,16 @@ o::PlayerTemplateStateStream& CampaignTemplateStorage::SelectState(std::uint32_t
 std::string CampaignTemplateStorage::ReadSubscriberName(std::uint32_t slot) { return Current(slot).ReadSubscriberName(); }
 // 미정 바이트를 포함한 완성28BYTE를 실제 새 섹션에 쓰고 같은 현재 cursor를 반환한다.
 o::PlayerTemplateStateStream& CampaignTemplateStorage::InitializeState(std::uint32_t slot,std::span<const std::uint8_t,28> bytes) { auto& image=Current(slot);image.InitializeState(bytes);return image.state; }
+// 생성한 manager/노드/수명을 고정하고 이후 current 변경과 분리한다.
+TemplateWriteStream CampaignTemplateStorage::CreateSection(std::uint32_t slot,std::string_view name) { const auto manager=Read(Header(slot));auto& image=Current(slot);const auto section=image.CreateSection(name);return {manager,section,image.streamGeneration.at(section-1)}; }
+// 반납된 manager와 재생성된 동일 이름의 새 노드를 이전 쓰기 대상으로 취급하지 않는다.
+CampaignTemplateStorage::Image& CampaignTemplateStorage::Writable(TemplateWriteStream stream) {
+    const auto found=images_.find(stream.manager);if (found==images_.end() || !stream.section || stream.section>o::FortTemplate::kSectionCount || !stream.generation || found->second->streamGeneration.at(stream.section-1)!=stream.generation || !found->second->streams.contains(stream.section)) throw std::logic_error("Template 쓰기 참조의 해제된 manager/섹션 수명");return *found->second;
+}
+// 원본 일반 MemStream 쓰기는 보관한 노드의 현재 cursor에 적용한다.
+void CampaignTemplateStorage::WriteSection(TemplateWriteStream stream,std::span<const std::uint8_t> bytes) { Writable(stream).WriteStream(stream.section,bytes); }
+// TypeNames처럼 current가 다른 섹션으로 바뀐 경우에도 보관한 실제 노드만 빌린다.
+void CampaignTemplateStorage::AccessSection(TemplateWriteStream stream,const std::function<void(std::span<std::uint8_t>,const o::MemStreamHooks&)>& operation) { Writable(stream).AccessSection(stream.section,operation); }
 // 같은 manager의 전체 최소 확장 부모가 만든 실제 현재 State를 빌린다.
 o::PlayerTemplateStateStream& CampaignTemplateStorage::EnsureStateSize(std::uint32_t slot,std::int32_t minimum) { auto& image=Current(slot);image.EnsureStateSize(minimum);return image.state; }
 // 빌린 헤더도 같은 manager의 실제 연결 순서를 확인한다.
