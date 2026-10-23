@@ -10,6 +10,7 @@
 #include "client/RawChatChannels.h"
 #include "client/FortTypeConversionStorage.h"
 #include "client/ClientRandomGlobals.h"
+#include "client/ClientSubscriberGlobals.h"
 #include "client/ClientColorSortInput.h"
 #include "client/ClientLocalStateGlobals.h"
 #include "client/ClientCoreDataGlobals.h"
@@ -169,6 +170,7 @@ Client::Client(ClientOptions options)
       configuration_([this](std::string_view path) { return files_.TryRead(path); }),
       fortBadges_(std::make_shared<o::RawFortBadgesGlobals>()),
       fortTypeConversion_(std::make_shared<FortTypeConversionStorage>()),
+      subscriberGlobals_(std::make_shared<ClientSubscriberGlobals>()),
       randomGlobals_(std::make_shared<ClientRandomGlobals>()),
       colorSortInput_(std::make_shared<ClientColorSortInput>()),
       localStateGlobals_(std::make_shared<ClientLocalStateGlobals>()),
@@ -274,7 +276,7 @@ int Client::Run() {
     // [원본] 설치 검사(GameInstalledTest), 전체 시계·zacket·프로토콜 검사·플레이어 초기화 — 옮기지 않았다.
     clock_ = o::GameClock(timeGetTime()); // "init full time"(FUN_00461090)의 시작 시각.
     //00439537의초기ColorSort입력위치다.이캡처만으로미연결43b430검색/색띠전체를성공시킨것은아니다.
-    colorSortInput_->Capture(screen_->LogicalPalette());
+    colorSortInput_->CaptureWithPrimary(screen_->LogicalPalette());
     screen_->BindColorSortInput([owner=colorSortInput_] { return owner->Logical(); });
     // "init dib section"
     screen_->InitDibSection();
@@ -622,7 +624,7 @@ void Client::Title(std::string_view title) { SetWindowTextA(static_cast<HWND>(wi
 // 기본 UI만 제공한다. 검사 장면의 독립 실행은 기존 연결점을 보존한다.
 UberGump* Client::Menu() { return menu_.get(); }
 // 설치 중에는 menu/world가 아직 없을 수 있다. 별도 subscriber 사본이나 로컬 번호 상수를 쓰지 않는다.
-std::uint32_t Client::CurrentSubscriber() const { return menu_ ? menu_->CurrentSubscriber() : 0U; }
+const std::uint32_t& Client::CurrentSubscriber() const { return subscriberGlobals_->MySubscriber(); }
 // 실제 PATCH 몸체를 반환하며 CD 호출은 미복원 경계로 명시 거부한다.
 RawChatChannels& Client::ChatChannels() {
     if (!chat_->channels) throw std::logic_error("CD Chat 채널 몸체는 아직 복원되지 않음");
@@ -884,6 +886,8 @@ const std::shared_ptr<o::RawFortBadgesGlobals>& Client::FortBadges() const { ret
 const std::shared_ptr<FortTypeConversionStorage>& Client::FortTypeConversion() const { return fortTypeConversion_; }
 // 새 Session의 fallback을 만드는 대신 같은 Client의 실제 난수 소유자를 빌린다.
 const std::shared_ptr<ClientColorSortInput>& Client::ColorSortInput() const { return colorSortInput_; } //같은Client소유슬롯이다.
+// 같은 Client 두 DWORD owner를 수명째 빌리며 새 객체/캐시를 만들지 않는다.
+const std::shared_ptr<ClientSubscriberGlobals>& Client::SubscriberGlobals() const { return subscriberGlobals_; }
 const std::shared_ptr<ClientRandomGlobals>& Client::RandomGlobals() const { return randomGlobals_; }
 // 큰 메뉴/로컬 로그인 분배기가 같은 실제144BYTE 다섯 블록과 기한을 빌린다.
 const std::shared_ptr<ClientLocalStateGlobals>& Client::LocalStateGlobals() const { return localStateGlobals_; }

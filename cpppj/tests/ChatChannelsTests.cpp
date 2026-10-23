@@ -95,12 +95,12 @@ TEST_CASE(ChatChannels_ClientLifetimeAndSharedAiBinding) {
     ClientOptions options; // 보호 아카이브는 읽기 전용 등록만 하며 실제 게임/GUI를 시작하지 않는다.
     options.gameDirectory=std::filesystem::path(__FILE__).parent_path().parent_path().parent_path()/"originals";
     Client client(std::move(options));
-    CHECK(client.Menu()==nullptr && client.CurrentSubscriber()==0);
+    CHECK(client.Menu()==nullptr && client.CurrentSubscriber()==0xffffffffU);
     const auto records=client.ChatRecords(); // 이 주소는 각 binder가 생성한 서비스보다 오래 유지되는 실제4800바이트다.
     CHECK(records.size()==RawChatChannels::kBytes);
     CHECK(std::all_of(records.begin(),records.end(),[](std::uint8_t byte) { return byte==0; }));
     CampaignAiServices first;BindCampaignAiClientServices(client,first);
-    first.participation.addChat(0,"현재자기",0x40); // 미설치 subscriber0의 자연 반환은 기록을 쓰지 않는다.
+    first.participation.addChat(client.CurrentSubscriber(),"현재자기",0x40); // 미설치 subscriber-1의 자연 반환은 기록을 쓰지 않는다.
     CHECK(std::all_of(records.begin(),records.end(),[](std::uint8_t byte) { return byte==0; }));
     first.participation.addChat(77,"A B",0x140);
     CHECK(records[0]=='A' && records[1]=='B' && records[2]==0 && records[0x28]==0x40);
@@ -110,7 +110,7 @@ TEST_CASE(ChatChannels_ClientLifetimeAndSharedAiBinding) {
     second.participation.addChat(77,"Changed",0x80);CHECK(records[0x28]==0xc0 && Get(records,0x2c)==77);
     first.participation.clearChat(0x140);CHECK(records[0x28]==0x80 && Get(records,0x2c)==77);
     second.participation.addChat(88,"Next",0x40);CHECK(Get(records,RawChatChannels::kStride+0x2c)==88);
-    CHECK(client.ChatRecords().data()==records.data() && client.CurrentSubscriber()==0);
+    CHECK(client.ChatRecords().data()==records.data() && client.CurrentSubscriber()==0xffffffffU);
     CHECK(!first.allocationBytes && !first.changeColor && !first.localTransport);
     CHECK(!first.participation.assignConnection && !first.participation.rejectLogin && !first.participation.disconnect);
     CHECK(!first.participation.sendAlliance && !first.participation.destructBrain && !first.participation.freeBrain);

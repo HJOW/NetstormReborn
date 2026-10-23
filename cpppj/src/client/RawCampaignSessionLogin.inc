@@ -110,7 +110,7 @@ struct RawCampaignSession::Impl::Login {
     MissionLoginPlayerCounts counts{OriginalEdition::Patch1078,s.players}; //같은 Player9의 현재 집계를 타이머에 공급한다.
     //원본 미션 부모의 로컬 Zone을 설치하고 실제 상태8에서 접속한다.
     void Begin() {
-        s.globals.loginSubscriber=s.services.missionSubscriber.value_or(1);s.globals.mySubscriber=s.globals.loginSubscriber; // Init이 이미 복사한 현재 구독자를 사용하며 owner/접속 성공과 구별한다.
+        if (!s.services.subscriberGlobals) { s.globals.loginSubscriber=s.services.missionSubscriber.value_or(1);s.globals.mySubscriber=s.globals.loginSubscriber; } //독립fallback만기존복사를수행한다.실제Client는Init현재쓰기뒤Login에서ID를재복사하지않는다.
         s.connectionAssign=[this](std::int32_t pending,std::int32_t player) { transport->AssignConnection(pending,player);s.services.battlePeers.at(static_cast<std::size_t>(player))=transport->Peer(static_cast<std::uint32_t>(player)); };
         s.connectionAlliance=[this](std::uint32_t target,std::uint32_t owner,std::uint32_t mask) {
             std::array<std::uint8_t,9> packet{1,0x3d,9,0}; // 원본0040a780/0052ede2의 version1/type3d/length9다.

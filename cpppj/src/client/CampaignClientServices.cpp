@@ -1,5 +1,6 @@
 // 검사 관찰 콜백을 사용하지 않고 현재 클라이언트의 실제 서비스를 빌린다.
 #include "client/CampaignClientServices.h"
+#include "client/CurrentAllocationBytes.h"
 #include "client/SoloMapCatalog.h"
 #include "client/RawCampaignMissionStartBindings.h"
 #include "client/GameWorld.h"
@@ -31,13 +32,6 @@
 
 namespace netstorm::client {
 namespace {
-// 원본 생성자가 초기화하지 않는 바이트는 현재 CRT 할당의 실제 입력을 복사한다. 할당은 복사 뒤 즉시 반환한다.
-void CurrentAllocationBytes(std::span<std::uint8_t> bytes) {
-    if (bytes.empty()) return;
-    void* allocation=std::malloc(bytes.size()); // 원본 malloc 계층처럼 zero 플래그 없는 실제 힙을 사용한다.
-    if (!allocation) throw std::bad_alloc();
-    std::memcpy(bytes.data(),allocation,bytes.size());std::free(allocation);
-}
 // 초기화하지않은현재caller8BYTE를자기프로세스읽기로복사하고C++미정값연산을피한다.
 void CurrentBridgeScratchBytes(std::span<std::uint8_t> bytes) {
     if (bytes.size()!=8) throw std::invalid_argument("AI 검색 caller 입력8BYTE 크기 오류");
@@ -103,6 +97,7 @@ RawCampaignSessionServices MakeCampaignClientServices(Client& client,RawButtonCo
     auto& audio=client.WorldAudio(); // noAudio도 같은 실제 이름표/비활성 재생 계층을 사용한다.
     auto& player=audio.Sounds(); // 반환한 콜백이 빌리는 장기 실제 SoundPlayer다.
     RawCampaignSessionServices services; // 게임 규칙 경계는 실제 세션의 명시 누락 판정을 유지한다.
+    services.subscriberGlobals=client.SubscriberGlobals(); // Init/Chat/모든 Session이 같은 두 DWORD를 수명째 빌린다.
     services.colorSortInput=client.ColorSortInput(); // 실제 Client의 같은 고정 초기입력 소유자를 반드시 전달한다.
     services.screenPalette=[&client] { return client.GetScreen().Palette(); }; // Screen 재생성 뒤에도 그때의 현재 팔레트를 조회한다.
     services.randomGlobals=client.RandomGlobals(); // Session교체/Subscriber/파편/Seed/지형이같은Client의실제CRT를사용한다.

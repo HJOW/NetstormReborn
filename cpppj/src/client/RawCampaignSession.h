@@ -56,6 +56,7 @@ class CampaignTemplateStorage; // Client보다 짧은 Session이 빌리는 같�
 class EditorFiles; // 실제 작업본 파일 장치이며 연결한 Session보다 오래 살아야 한다.
 class FortTypeConversionStorage; // 같은 Client의 현재 conversion DWORD와 실제 할당 소유자다.
 class ClientRandomGlobals; // 실제 Client의 CRT 상태와 Subscriber ID 최초시드 DWORD를 함께 빌린다.
+class ClientSubscriberGlobals; // 실제 Client의 my/login 두 Subscriber DWORD만 빌린다.
 class ClientColorSortInput; // 같은 Client 최초 고정RGB 소유자이며 raw primary 전체 복원과 구별한다.
 class ClientLocalStateGlobals; // 실제 Client의 State 다섯 블록과 활동 기한의 장기 소유자다.
 struct TemplateWriteStream; // 실제 Template 저장소가 발급하는 명시 쓰기 수명이다.
@@ -200,6 +201,7 @@ struct RawCampaignSessionServices {
     std::shared_ptr<ClientColorSortInput> colorSortInput; // 실제 Client가 최초 고정 lookup 입력을 수명째 빌린다. 독립 장치 없는 기존 검사만 두 색 서비스 모두 생략한다.
     std::function<std::span<const ScreenColor>()> screenPalette; // 연결 시점의 현재 화면 팔레트를 빌리며 Screen 교체 전 주소를 캐시하지 않는다.
     std::shared_ptr<ClientRandomGlobals> randomGlobals; // 생략된 독립 검사만 기존Session CRT0을 사용하고 실제Client는 같은장기소유자를 전달한다.
+    std::shared_ptr<ClientSubscriberGlobals> subscriberGlobals; // 생략된 독립 검사만 기존 0/0 및 Begin 값 복사를 유지한다.
     std::shared_ptr<ClientLocalStateGlobals> localStateGlobals; // 생략된 독립 로그인 검사만 기존 local 블록/기한을 사용한다.
 };
 // 초기 객체 생성부터 Kernel 해제까지 동일 주소에서 실제 모듈과 상태를 소유한다.
@@ -221,6 +223,7 @@ public:
     void InstallExistingEditorCheckpoint(const CampaignExistingEditorCheckpointServices& effects,const std::uint32_t& readOnlyForts,const EditorFiles& files); //명시지연Editor의실제파일부터004b743b까지한번조립한다.참조장치는Session보다오래살며최종loaded는쓰지않는다.
     bool ExistingEditorCheckpointReady() const; //전체설치성공이아닌위한정부모의정상복귀여부만조회한다.
     void WriteExistingEditorCoreData(std::uint32_t slot); //명시Editor의실제004beb30을현재Storage/모드에연결한다.직렬화하위미복원은선택위치에서거부하며loaded를변경하지않는다.
+    void RefreshCurrentPlayerCore(); //실제선택Login Core/현재기술/다이스count로0044fc00을실행한다.선택Core없음은필수누락이며loaded/owner를바꾸지않는다.
 
     // 외곽전체Snapshot/State/lastEditFort뒤호출한다.번역/format을받고 마지막0046e980은같은실제맵에연결한다.
     void InstallExistingEditorPlayers(o::EditorPlayersHooks ui);
@@ -267,7 +270,7 @@ public:
     // Early3~6의 실제 옵션/사제/Graph/생산/HP/지역을 연결한다. UI와 같은 Start 상태는 호출자가 빌려준다.
     std::unique_ptr<o::RawTutorialLater> MakeTutorialLater(o::RawMissionFrameGate& gate,o::MissionStartState& state,o::TutorialLaterHooks hooks);
     // 원본 로그인/월드 로더가 공유하는 현재 globals.mySubscriber를 읽기만 한다. 별도 캐시를 만들지 않는다.
-    std::uint32_t CurrentSubscriber() const;
+    const std::uint32_t& CurrentSubscriber() const; // 같은 Client 또는 독립 Session의 실제 My DWORD 참조다.
     std::string_view CurrentHandle() const; // 실제 월드 로더가 갱신한 같은64BYTE 사용자 이름을 NUL까지 빌린다.
     // 같은 실제 PlayerWorld의00540c70을 읽는다. 자산/UI 어댑터의 로컬 번호 사본을 사용하지 않는다.
     std::uint32_t LocalOwner() const;

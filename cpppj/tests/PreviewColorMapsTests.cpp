@@ -2,6 +2,7 @@
 #include "ConstructionSupport.h"
 #include "client/PreviewColorMaps.h"
 #include "client/OwnerColorMaps.h"
+#include "o/RawColorSortPrimary.h"
 using namespace netstorm::client;
 using namespace netstorm::test::construction;
 namespace {
@@ -34,8 +35,14 @@ TEST_CASE(PreviewColorMaps_SpecialOwnerMatchesActualDefaultPrecision) {
         // 현재 관측의 원본 R/G/B DWORD를 재생한다.
         for (std::size_t index=0;index<logical.size();++index) logical[index]=Get(raw,index*4);
         const auto maps=BuildSpecialOwnerColorMaps(logical,Number(row[1]));const auto expected=ColorBytes(row[3]);bool same=true;
+        std::array<std::uint8_t,netstorm::o::kColorSortPrimaryBytes> allocation;allocation.fill(0xa7); // 동일 원문 RGBX를 raw constructor에 주며 미작성 padding은 별도 입력이다.
+        netstorm::o::RawColorSortPrimary primary(allocation);primary.Construct(raw); // 최초 Native 15행을 현재 저장 L 경로에도 그대로 재생한다.
+        const auto storedMaps=BuildSpecialOwnerColorMaps(primary,Number(row[1])); // RGB adapter 결과를 raw의 기대값으로 대체하지 않는다.
         // 중립0/소유자1..8의 전체2304바이트를 한 번씩 검사한다.
-        for (std::size_t owner=0;owner<maps.size();++owner) same=same && std::equal(maps[owner].begin(),maps[owner].end(),expected.begin()+owner*256);
+        for (std::size_t owner=0;owner<maps.size();++owner) { // 두 소비자의 전체 2304BYTE를 같은 독립 Native 출력에 각각 대조한다.
+            same=same && std::equal(maps[owner].begin(),maps[owner].end(),expected.begin()+owner*256);
+            CHECK(std::equal(storedMaps[owner].begin(),storedMaps[owner].end(),expected.begin()+owner*256));
+        }
         CHECK(same);if (!same) std::printf("소유자 색표 입력 %s/%s 불일치\n",row[0].c_str(),row[1].c_str());different+=row[3]!=row[4];++count;
     }
     CHECK(count==15 && different>0);

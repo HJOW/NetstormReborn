@@ -1,5 +1,17 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-24 목표 재개·단위388 완료: Core·Subscriber·색상 입력 수명 접합
+
+- [x] 사용자의 새 `/goal` 요청으로 목표를 재개했다. AGENTS.md 및 공통/닷넷 인수인계를 다시 확인했다. 현재 호스트와 마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-10-23**으로 일치한다. 기준 HEAD는 **88834c49 / 20261024-10 CP**이며 시작 작업본은 깨끗했다. 아래 일시중지 지시는 당시 이력이고 이번 재개 지시가 우선한다.
+- [x] 보관한 대상 교정 및 CoreRefresh Session patch의 root check/apply는 모두0이다. Subscriber 최초 check1은 세 파일의 387 문맥 차이이며, 그 세 파일만 수동 합성하고 나머지는 원 patch로 적용했다. ColorSort primary patch도 root check/apply0이다. 보관한 네 원시 patch와 최초 Native fixture는 수정하지 않는다.
+- [x] 같은 Login Core/실제 다이스 Count·TYPE 기술 비트, Client의 같은 My/Login 두 DWORD, 실제 primary 0x3800 및 저장 L 소비를 연결했다. 원문 정리 이전의 Client Core alias 공유는 추가하지 않았다. Subscriber의 기존 비-guided My=1 어댑터 시점 동등성은 아직 미확정이다.
+- [x] 신규18검사를 공용 등록했고 configure1/build1/build2는 종료0·관측 경고오류0이다. 첫 Subscriber 통합검사1실패는 Editor 검사 입력의 실제 Client 장부/변환표 누락이며 실제 소유자를 제공해 교정했다. 최초 실패를 보존했고 최종 신규18·관련 고유29검사는 모두 통과했다. 원문 primary80/Subscriber120의 기존 SHA 검증도0이다. 원시는 `extracted/cpp-resume-388-*`, [통합 기록](docs/exe/cpp-shared-identity-color-runtime-20261024.md)에 있다.
+- [x] 같은 제품 **d96f7e17…2a766c**의 자연 Early1 A~G/수확/SP600/다음Tutorial2와 Early2 A~I/신전·워크샾/발사기4→3·환불75/다음Tutorial3이 통과했다. 제품타이머1·상태주입0·기존완료1→1이며 각각 원본1394동일이다. 최종 검사SHA는 **8fea56a9…5b4f8f3**이다. 진행0→1 영구저장/전체동일성 증거로 확대하지 않는다.
+- [x] 같은 제품의 일반31·Demo3 고유34진입과 게임 메뉴1024×768/1280×720의 ESC·목표·재시작·QWASZX/음량/해상도 No 회귀가 모두 통과했다. 각 실행의 제품SHA와 원본1394동일을 확인했다. 이번에는 옵션 열기/복구 OSError22를 관측하지 않았으며 과거 간헐 원인 해결을 주장하지 않는다.
+- [x] 모든 게임과 설정 복원 종료 뒤 전체 CTest1은 **2652검사/실패0·종료0·338.07초(전체338.13초)**다. 최종 제품/검사SHA는 위 실제 회귀와 같으며 원본1394/1394·추가0·삭제0·변경0이다. [새 결과 보고서](cpppj/shared-identity-color-runtime-20261024.json)에 소스35·증거48 SHA와 최초 실패/한계를 기록했다. UTF-8/로컬 링크/원시 보존과 선택 stage를 확인한 뒤 **20261024-11 CP**로 로컬 커밋한다.
+- [ ] 전체 사용자 완주·Edit 최종 HUD/State/loaded·편집 도구/언어별 시나리오·픽셀/음향/규칙 완전 동일성은 계속 미완료다. 목표는 활성 상태이며 다음은 같은 Client/Player/Core/Pool의 State 정리와 SP 순서를 접합하는 작업이다.
+- [ ] 다음 정리의 정적 근거: 현재 정밀 C의00445140은 RawChatChannels와 같은00558ed0의100×48BYTE에서 +2c Subscriber 비0 행만 전체0이다. 기존 Clear(mask)의 한 BYTE 변경으로 대체하지 않는다. 새 몸체/Native/부모 접합은 미구현이다. 004328a0의0054d4e8/255DWORD는 PlayerNoMake 중복 경고 표이며 정확 제품 owner는 계속 미확인이다. [단위388 기록](docs/exe/cpp-shared-identity-color-runtime-20261024.md)에 위치와 한계를 남겼다.
+
 ## 2026-10-24 사용자 요청에 따른 목표 일시중지 인계
 
 - [x] 현재단위387은 **adb9739e / 20261024-09 CP**로커밋했다. 공용빌드종료0·경고오류0/신규24·전체2634검사실패0·자연Early1/Early2·최종원본1394동일을확인했다. [완료기록](docs/exe/cpp-session-transition-runtime-20261024.md). 이인계보관커밋을마친뒤 **goal을paused로전환하고작업을중지한다. 388은시작하지않는다.** 전체사용자완주/동일성/Editor완료는미완료다.

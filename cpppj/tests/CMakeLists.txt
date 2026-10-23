@@ -2062,3 +2062,11 @@ set_source_files_properties(MetaZoneCleanupTests.cpp PROPERTIES COMPILE_DEFINITI
 target_sources(netstorm_tests PRIVATE TypeTechBitTests.cpp)
 set_source_files_properties(TypeTechBitTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_TYPE_TECH_BIT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/type-tech-bit-x86.tsv\";NETSTORM_TYPE_TECH_BIT_ASSETS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/type-tech-bit-assets-x86.tsv\";NETSTORM_TYPE_TECH_BIT_ORIGINALS=\"${CMAKE_CURRENT_SOURCE_DIR}/../../originals\"")
+
+# 같은 Core/Subscriber/색상 소유자의 실제 접합과 보존된 원문 관측을 함께 검사한다.
+target_sources(netstorm_tests PRIVATE SessionPlayerCoreRefreshTests.cpp SubscriberGlobalsTests.cpp
+    ClientSubscriberGlobalsTests.cpp ColorSortPrimaryTests.cpp ClientColorSortPrimaryTests.cpp)
+set_source_files_properties(SubscriberGlobalsTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_SUBSCRIBER_LIFETIME_EDGES_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/subscriber-lifetime-edges-v2-x86.tsv\"")
+set_source_files_properties(ColorSortPrimaryTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_COLORSORT_PRIMARY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/colorsort-primary-x86.tsv\"")

@@ -1,5 +1,8 @@
 # 현재 Core 기술과 level 하한 갱신 독립 복원
 
+> 대상 해석 정정(후속388): PE005412ec의 실제 초기DWORD는165(daisType)다. Player152는005412b8이다. 정상VT00507950의+80(005079d0)은004478f0이며 기존RawTempleRitual::Count를 호출한다. 앞선 자기Player152의state상위3비트 level 또는RawSquidLevel::Get 재사용 제안은 이 정상대상에 적용하지 않는다. 최초Native/알고리즘은주소005412ec를명시입력으로이미사용했으므로변경하지않는다.
+
+
 2026-10-24 **후속386 독립 준비**다. 현재/마지막 전체 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-23**이다. PATCH10.78 **0044fc00의357BYTE**(`44fc00-44fc35;44fc40-44fd6e`)를 신규 제품 전에 PE 격리 실행으로 고정했다. 정밀 SourceMap의 CD10.72 대응은 **0045f0d0**이며 이번에는 CD 몸체를 실행하지 않았다. 공유 기존 소스·CMake·LEFT·git·공용 build/lib·GUI와 보호 원본/CD는 변경하거나 실행하지 않았다.
 
 새 [공개 API](../../cpppj/src/o/RawPlayerCoreRefresh.h)와 [본문](../../cpppj/src/o/RawPlayerCoreRefresh.cpp), [검사](../../cpppj/tests/PlayerCoreRefreshTests.cpp)는 실제 Current Core/Technology/Finder/Pool/TYPE/가상 level 장치를 빌린다. 실제 Session이나 전체 checkpoint에는 아직 연결하지 않았다. **격리 build3 종료0·W4 관측 경고오류0, 신규4검사/실패check0**이다. 전체 사용자 게임/Editor 설치의 동일성 판정으로 확대하지 않는다.
@@ -28,7 +31,7 @@ guard 길이9의4행에서도 Unicorn은 page 안 앞3BYTE를 쓴 뒤 fault한�
 
 begin은 기존 **RawContainedFinder::Begin/Next**를 **Begin마다 새 finder+현재SID 저장**으로 감싸 current/next를 반환하면 된다. 한 전역 finder를 재진입마다 덮지 않는다. 현재 RawContainedFinder는 같은 SidPool 객체를 고정 참조하므로 원시 Pool 교체 Native 입력 전체를 그 클래스로 표현했다고 주장하지 않는다. fixture 장치는 현재 rawPool/containedType을 읽는 하위 경계이며 부모의 Core/max 기대를 계산하지 않는다. Native에서는 그 Finder/기본true 필터 몸체까지 직접 실행했다.
 
-pool/playerType/owner provider는 현재 실제 저장소의 **순수 조회**다. pool.bytes는 같은 SidPool.Bytes, capacity는 같은 현재 Capacity, address는 해당 물리의 안정32비트 식별자여야 한다. 임의 parsed 객체목록이나 base가 바뀌었는데 옛 bytes를 반환하는 조합은 계약 밖이다. level은 전달한 **현재 같은 raw객체**의 실제 가상+80을 실행해야 하며 상수 최대값/빈 성공을 넣지 않는다. technologyBit는 현재 TYPE의 +1ec DWORD를 읽고 signed비트를 반환한다.
+pool/playerType/owner provider는 현재 실제 저장소의 **순수 조회**다. pool.bytes는 같은 SidPool.Bytes, capacity는 같은 현재 Capacity, address는 해당 물리의 안정32비트 식별자여야 한다. 임의 parsed 객체목록이나 base가 바뀌었는데 옛 bytes를 반환하는 조합은 계약 밖이다. level은 전달한 **현재 같은 raw객체**의 실제 가상+80을 실행해야 하며 상수 최대값/빈 성공을 넣지 않는다. 정상165/VT507950은 기존 **RawTempleRitual::Count(004478f0)**다. hook의 playerType 이름은 실제005412ec의현재다이스타입을뜻하며 PlayerWorldState.playerType(005412b8/152)와연결하면틀린다. technologyBit는 현재 TYPE의 +1ec DWORD를 읽고 signed비트를 반환한다.
 
 부모가 항상value1로 호출하는 Ch42b280의 선택 부분은 이 모듈의 private `SetTechnology`에 복원했다. 독립 일반 Ch API/value0·잘못된value의 다른 진단까지 새로 완료했다고 세지 않는다. 기존 공용 Ch 몸체를 찾지 못해 이 좁은 선택 부분을 포함했으며 Native에서 실제 Ch127BYTE 전체를 실행한 value1 경로와 비교했다.
 

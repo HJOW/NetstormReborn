@@ -127,7 +127,9 @@ private:
     std::shared_ptr<MissionFortLoadRequest> missionFortRequest_; // 현재 미션의 지연 요청이다. 미션 교체 시 이전 큐와 함께 반납한다.
     std::shared_ptr<std::array<std::uint8_t,87>> missionOptions_{std::make_shared<std::array<std::uint8_t,87>>()}; // 월드보다 오래 사는 실제 Init/로그인 옵션이다.
     std::shared_ptr<std::array<std::uint32_t,256>> missionRestrictions_{std::make_shared<std::array<std::uint32_t,256>>()}; // 설치 전/후가 공유하는 기술 허용 표다.
-    std::uint32_t missionNumber_{},tutorialSeen_{},initLoginSubscriber_{},initialSubscriber_{1}; // 실제5ca8e0/f0·540c74/54265c의 현재 전역이다.
+    std::uint32_t missionNumber_{},tutorialSeen_{}; // 실제5ca8e0/f0의 현재 전역이다.
+    std::uint32_t& initLoginSubscriber_; //호환 이름이며 실제540c74의 같은 Client DWORD다.
+    const std::uint32_t& initialSubscriber_; //실제54265c의 현재 const참조이며 생성 때1을 다시 쓰지 않는다.
     std::uint32_t nextMissionSaveToken_{}; // 64비트 포인터를 자르지 않는 실제 Runtime별 비영 수명 토큰이며 미션 교체에서 되돌리지 않는다.
     // input_: 처리할 입력 또는 입력 분배기.
     GumpControlInput input_;

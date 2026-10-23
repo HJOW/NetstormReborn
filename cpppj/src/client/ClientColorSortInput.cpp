@@ -1,5 +1,7 @@
 // 기존Sprite/Preview의동일계산을재사용하고아직노출되지않은1.6RGB/명도표만원문전체9표선관측에대조한다.
 #include "client/ClientColorSortInput.h"
+#include "client/CurrentAllocationBytes.h"
+#include "o/RawColorSortPrimary.h"
 #include "client/SpriteColorMaps.h"
 #include "client/PreviewColorMaps.h"
 #include <algorithm>
@@ -7,7 +9,26 @@
 #include <stdexcept>
 
 namespace netstorm::client {
-void ClientColorSortInput::Capture(std::span<const std::uint32_t,256> logical) { std::copy(logical.begin(),logical.end(),logical_.begin());captured_=true;built_=false; }
+// 기존 독립 adapter의 logical캡처는 실제primary가 있다고 가장하지않고 이전raw연결을끊는다.
+void ClientColorSortInput::Capture(std::span<const std::uint32_t,256> logical) { primary_.reset();std::copy(logical.begin(),logical.end(),logical_.begin());captured_=true;built_=false; }
+// 기존 장치와 같은 실제malloc 초기BYTE를 읽으며 임의0이나 별도Client소유자를 만들지않는다.
+void ClientColorSortInput::CaptureWithPrimary(std::span<const std::uint32_t,256> logical) {
+    std::array<std::uint8_t,o::kColorSortPrimaryBytes> allocation; // helper가전체를채우는실제초기물리의필수입력이다.
+    CurrentAllocationBytes(allocation);
+    CaptureWithPrimary(logical,allocation);
+}
+// 정상 constructor반환뒤에만새primary를발행한다.실패때부분raw를성공입력으로제공하지않는다.
+void ClientColorSortInput::CaptureWithPrimary(std::span<const std::uint32_t,256> logical,std::span<const std::uint8_t> allocationBytes) {
+    primary_.reset();captured_=false;built_=false;
+    std::copy(logical.begin(),logical.end(),logical_.begin());
+    auto primary=std::make_shared<o::RawColorSortPrimary>(allocationBytes); // raw클래스가초기padding전체를그대로소유한다.
+    primary->Construct({reinterpret_cast<const std::uint8_t*>(logical_.data()),sizeof(logical_)});
+    primary_=std::move(primary);captured_=true;
+}
+// 같은현재슬롯만빌린다.기존독립logical adapter에숨은raw생성을추가하지않는다.
+const std::shared_ptr<o::RawColorSortPrimary>& ClientColorSortInput::Primary() const {
+    if (!primary_ || !primary_->Constructed()) throw std::logic_error("ColorSort 실제primary 미연결");return primary_;
+}
 bool ClientColorSortInput::Captured() const { return captured_; }
 std::span<const std::uint32_t,256> ClientColorSortInput::Logical() const { if (!captured_) throw std::logic_error("ColorSort 최초 논리RGB 미캡처");return logical_; }
 const std::array<ColorMap,9>& ClientColorSortInput::Maps() const { if (!built_) throw std::logic_error("ColorSort 실제9표 미생성");return maps_; }

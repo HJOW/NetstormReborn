@@ -1,6 +1,7 @@
 // 기존 원본 몸체의 단일 저장소 조립을 실제 클라이언트 세션이 소유한다.
 #include "client/RawCampaignSession.h"
 #include "client/ClientRandomGlobals.h"
+#include "client/ClientSubscriberGlobals.h"
 #include "client/ClientColorSortInput.h"
 #include "client/ClientLocalStateGlobals.h"
 #include "client/CampaignTemplateStorage.h"
@@ -102,6 +103,8 @@
 #include "client/RawCarrierDropPoint.h"
 #include "o/RawProcessRemoval.h"
 #include "o/RawSquidLevel.h"
+#include "o/RawPlayerCoreData.h"
+#include "o/RawPlayerCoreRefresh.h"
 #include "o/RawSquidSelection.h"
 #include "o/RawCarrierRegular.h"
 #include "o/RawContentPreviewProcess.h"
@@ -430,7 +433,7 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RegularProcess> pendingRitualRegular; // 실제 확보 한 번을 예약/생성/부착까지 유지한다.
     PlayerWorldState playerState; // 현재 battleOwner와 templateOwner는 별도 상태다.
     FortObjectLoadState objectState; // 저장객체의 실제 미션/로딩 상태다.
-    CampaignWorldGlobals globals; // 실제 로그인과 missionPost의 장기 전역이다.
+    CampaignWorldGlobals globals=services.subscriberGlobals ? CampaignWorldGlobals::BorrowSubscribers(services.subscriberGlobals->MySubscriber(),services.subscriberGlobals->LoginSubscriber()) : CampaignWorldGlobals{}; // 두 ID만 빌리며 editor/post는 Session별 값을 유지한다.
     std::uint32_t revision{},ownerChanged{},vortexRevision{},piece{107}; // 원본 섬/신전/패턴 전역이다.
     std::uint32_t localCrt{}; // 소유자 없는 기존 독립Session 검사에 한해서 보존하는 초기CRT0 입력이다.
     std::uint32_t& crt{services.randomGlobals ? services.randomGlobals->CrtState() : localCrt}; // Seed/지형은같은Client실제DWORD를직접빌리며사본동기화를하지않는다.
@@ -2743,9 +2746,15 @@ struct RawCampaignSession::Impl {
             if (buildingMapTokens.at(type)==1) return buildingOwnerColors[static_cast<std::size_t>(color)];
             if (buildingMapTokens[type]!=2 || (type!=111 && type!=141 && type!=137 && type!=94 && type!=97)) throw std::logic_error("현재 캡처 전용 소유자 색표 미복원");
             if (!buildingSpecialOwnerColors.contains(type)) {
-                std::array<std::uint32_t,256> logical{}; //현재 같은 원본COL의RGBX 입력이며 별도 팔레트로 대신하지 않는다.
-                for (std::size_t index=0;index<logical.size();++index) { const auto rgb=assets.game.Palette().Color(static_cast<std::uint8_t>(index));logical[index]=std::uint32_t(rgb.red)|(std::uint32_t(rgb.green)<<8)|(std::uint32_t(rgb.blue)<<16); } //예약 바이트는 명도 계산에 쓰지 않는다.
-                buildingSpecialOwnerColors.emplace(type,BuildSpecialOwnerColorMaps(logical,type));
+                if (services.colorSortInput) {
+                    // 실제Client는같은raw+8저장double을읽는다.미연결primary를COL성공으로바꾸지않는다.
+                    buildingSpecialOwnerColors.emplace(type,BuildSpecialOwnerColorMaps(*services.colorSortInput->Primary(),type));
+                } else {
+                    // 실제ColorSort서비스를생략한기존headless검사만원래COL adapter를유지한다.
+                    std::array<std::uint32_t,256> logical{};
+                    for (std::size_t index=0;index<logical.size();++index) { const auto rgb=assets.game.Palette().Color(static_cast<std::uint8_t>(index));logical[index]=std::uint32_t(rgb.red)|(std::uint32_t(rgb.green)<<8)|(std::uint32_t(rgb.blue)<<16); } //예약BYTE는명도에쓰지않는다.
+                    buildingSpecialOwnerColors.emplace(type,BuildSpecialOwnerColorMaps(logical,type));
+                }
             }
             return buildingSpecialOwnerColors.at(type)[static_cast<std::size_t>(color)];
         };
@@ -3140,6 +3149,46 @@ void RawCampaignSession::InstallExistingEditorCheckpoint(const CampaignExistingE
         s.editorCheckpointReady=true;s.editorCheckpointRunning=false; //004b743b정상복귀만표시하며후반HUD/State/최종loaded를앞당기지않는다.
     }catch (...) { s.editorCheckpointRunning=false;throw; } //동기진입guard만반납한다.manager/State/Config/파일/객체/난수는rollback하지않는다.
 }
+// 현재 Login이 실제 선택한 Core만 갱신한다.Editor의 임의 owner선택/Client장기alias를 만들지 않는다.
+void RawCampaignSession::RefreshCurrentPlayerCore() {
+    auto& s=*impl_;PlayerCoreRefreshHooks hooks; // 모든 하위 callback은 동기 부모가 끝나기 전 반납된다.
+    constexpr std::uint32_t poolBase=0x12000000U; // 같은 실제 Pool의50BYTE 상대주소를 나타내는opaque32기준이며 host포인터/두번째풀은아니다.
+    hooks.core=[&s] { //0048f0d0의 현재 포인터/진단을 기존 몸체로 실행하며 Core 사본은 만들지 않는다.
+        if (!s.login) throw std::logic_error("현재Core갱신의실제Login선택Core소유자미연결");
+        const auto players=std::span<std::uint8_t>(s.players); // 이 getter에서 실제 Read가 쓰지 않는 현재 Player뷰다.
+        const std::uint32_t metamap=s.core.ownerMode.challenge ? 1U : 0U; // getter의원문1회읽기입력일뿐bool전역의alias/쓰기동기화가아니다.
+        return ReadPlayerCoreData({s.playerState.templateOwner,s.playerState.battleOwner,s.playerState.playerKnown,s.login->coreActive,
+            metamap,s.login->currentCore,s.login->cachedCore,players},{SessionMissing<void,std::uint32_t>()});
+    };
+    hooks.technologyParent=[&s] { return s.player->CurrentTechnology(); };
+    struct Cursor { // Begin마다 실제 Finder/현재후보를 따로 소유해 재진입 순서를 유지한다.
+        RawContainedFinder finder;Sid current; // 같은 Pool/현재contentFinder를 빌리며 결과목록을 복제하지 않는다.
+        Cursor(Impl& state,std::uint32_t parent):finder(state.core.pool,state.contentFinder) {
+            if (parent>65535U || parent>=state.core.pool.Capacity()) throw std::out_of_range("현재Core갱신의실제기술부모SID범위");
+            current=finder.Begin(Sid{static_cast<std::uint16_t>(parent)});
+        }
+    };
+    hooks.begin=[&s](auto parent) { const auto cursor=std::make_shared<Cursor>(s,parent);return PlayerCoreRefreshCursor{
+        [cursor] { return cursor->current.value; },[cursor] { cursor->current=cursor->finder.Next(); }}; };
+    hooks.pool=[&s] { return PlayerCoreRefreshPool{s.core.pool.Bytes(),poolBase,s.core.pool.Capacity()}; };
+    hooks.technologyBit=[&s](auto type) { //49a840에는진단이없다.호스트실제TYPE범위밖만선택load위치에서거부한다.
+        if (type>=s.core.types.size()) throw std::out_of_range("현재Core갱신의실제TYPE기술bit물리범위");
+        return s.core.types[type].techBitIndex;
+    };
+    hooks.playerType=[&s] { return s.runeState.daisType; }; //005412ec정상165이며Player152의005412b8과다르다.
+    hooks.owner=[&s] { return s.playerState.battleOwner; };
+    hooks.level=[&s](PlayerCoreRefreshForm form)->std::int32_t { //실제같은다이스VT+80의Count를선택하며state상위level로대체하지않는다.
+        const auto bytes=s.core.pool.Bytes(); // 앞선가상효과뒤현재Pool과현재물리를다시확인한다.
+        if (form.address<poolBase || (form.address-poolBase)%50U) throw std::out_of_range("현재Core갱신가상객체주소범위");
+        const auto number=(form.address-poolBase)/50U; // 동일Pool의상대주소를원래SID로되돌린다.
+        if (number>=s.core.pool.Capacity() || number>65535U || form.bytes.size()!=50 || form.bytes.data()!=bytes.data()+number*50U)
+            throw std::out_of_range("현재Core갱신가상객체현재물리불일치");
+        if (Read(form.bytes,0)!=0x507950U) throw std::logic_error("현재Core갱신의선택된가상80몸체미연결");
+        return std::bit_cast<std::int32_t>(s.templeRitual->Count(Sid{static_cast<std::uint16_t>(number)}));
+    };
+    hooks.assertion=SessionMissing<void,std::uint32_t>(); //Ch.cpp15a진단도선택위치에서실제누락을보고한다.
+    RefreshPlayerCore(hooks);
+}
 // 실제기존Editor에서만004beb30의manager/Metamap진단과현재post/editor자연관문을재사용한다.
 void RawCampaignSession::WriteExistingEditorCoreData(std::uint32_t slot) {
     auto& s=*impl_;if (s.services.installMode!=CampaignInstallMode::ExistingEditor || s.loaded || slot>=9) throw std::logic_error("기존Editor CoreWrite의실제설치중/9슬롯계약");
@@ -3159,7 +3208,7 @@ void RawCampaignSession::WriteExistingEditorCoreData(std::uint32_t slot) {
             WriteFortSp(fields,value,sp);
         });
     };
-    //0044fc00현재Core갱신은아직미복원이다.hooks.refresh를비워선택도달의필수실패를그대로유지한다.
+    hooks.refresh=[this] { RefreshCurrentPlayerCore(); }; //원문부모의자연editor/post관문뒤선택될때만현재실제Core를요구한다.
     o::WriteFortCoreData(static_cast<std::int32_t>(slot),globals,hooks);
 }
 // checkpoint완료와전체Session설치완료를같은flag로합치지않는다.
@@ -3226,7 +3275,7 @@ const RawCampaignParticles& RawCampaignSession::Particles() const { return *impl
 // 원본 미션 게이트가 지정한 순서에 호출하며 Session Kernel 프레임에서는 자동 실행하지 않는다.
 void RawCampaignSession::CheckMissionOutcome() { impl_->outcome->Check(); }
 // 실제 worldLoad의 loginSubscriber 복사 대상과 같은 장기 전역을 매번 읽는다.
-std::uint32_t RawCampaignSession::CurrentSubscriber() const { return impl_->globals.mySubscriber; }
+const std::uint32_t& RawCampaignSession::CurrentSubscriber() const { return impl_->globals.mySubscriber; }
 // 현재 사용자 이름을 새 설정 조회나 Player 표시 이름으로 대체하지 않는다.
 std::string_view RawCampaignSession::CurrentHandle() const {
     const auto& bytes=impl_->handle;const auto end=std::find(bytes.begin(),bytes.end(),std::uint8_t{});

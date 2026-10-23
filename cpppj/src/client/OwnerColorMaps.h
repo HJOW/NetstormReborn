@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <span>
 
+namespace netstorm::o { class RawColorSortPrimary; } // 저장명도에직접접근하는실제raw소유자다.
 namespace netstorm::client {
 // owner 색 번호0..8 각각의 현재256색 변환표다.0번은 항등이다.
 using OwnerColorMaps=std::array<std::array<std::uint8_t,256>,9>;
@@ -17,4 +18,8 @@ OwnerColorMaps BuildStandardOwnerColorMaps(std::uint32_t type,std::uint32_t brid
 // original CRT 기본53비트에 맞추며64비트 관측과의 차이는 별도 fixture에 보존한다.
 OwnerColorMaps BuildSpecialOwnerColorMaps(std::span<const std::uint32_t,256> logical,std::uint32_t type,
     std::span<const std::uint32_t,72> candidates=OriginalOwnerColorCandidates());
+// 실제Client용입력은동일raw+8저장double이다.기존logical overload는독립adapter로만남긴다.
+OwnerColorMaps BuildSpecialOwnerColorMaps(const o::RawColorSortPrimary& primary,std::uint32_t type,
+    std::span<const std::uint32_t,72> candidates=OriginalOwnerColorCandidates());
+
 }

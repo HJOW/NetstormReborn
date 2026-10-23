@@ -14,6 +14,7 @@
 #include "client/TellParameters.h"
 #include "client/ClientAudio.h"
 #include "client/ClientMain.h"
+#include "client/ClientSubscriberGlobals.h"
 #include "client/CampaignClientServices.h"
 #include "client/CampaignObjectMenuClient.h"
 #include "client/RawCampaignMissionStartBindings.h"
@@ -168,7 +169,7 @@ struct UberGump::MissionRuntime {
 };
 
 // 원본 GIF는 색 표의 RGB를 쓰지 않고 파일의 번호를 화면 팔레트에 바로 쓴다(00419ec0→004dae60).
-UberGump::UberGump(Client& client) : client_(client) {
+UberGump::UberGump(Client& client) : client_(client),initLoginSubscriber_(client.SubscriberGlobals()->MySubscriber()),initialSubscriber_(client.SubscriberGlobals()->LoginSubscriber()) {
     serializationGlobals_=std::make_shared<o::FortSerializationGlobals>(); // 원본BSS와같은한DWORD를모든manager/객체소비자보다오래소유한다.
     templateStorage_=std::make_shared<CampaignTemplateStorage>(serializationGlobals_); // 시작 초기화와 미션별 명시 정리를 별개 수명으로 유지한다.
     auto& config = client_.Configuration();
@@ -316,7 +317,7 @@ void UberGump::ClearWorld() {
 // 현재 어댑터의 월드 수명으로 원본 번개 부모 조회 경계를 제공한다.
 bool UberGump::HasWorld() const { return world_!=nullptr; }
 // 별도 로그인 값 없이 현재 월드의 같은 Session 전역을 직접 조회한다.
-std::uint32_t UberGump::CurrentSubscriber() const { return world_ ? world_->CurrentSubscriber() : 0U; }
+std::uint32_t UberGump::CurrentSubscriber() const { return client_.CurrentSubscriber(); }
 // 기본 메뉴를 초기화한 다음 프레임에 미션을 시작한다.
 void UberGump::StartMission(std::string name) { state_.Post({"MissionBegin",std::move(name)}); }
 // 캠페인 이름의 설정 객체를 보존하여 officalN.title 같은 참조를 복원한다.
@@ -557,7 +558,7 @@ void UberGump::LoadMissionWorld(std::optional<std::string> requestedFort) {
         [this](std::int32_t kind,std::int32_t player,std::int32_t parameter) { warnings_->Remove(kind,player,parameter);rebuild_=true; }}); // 현재 클라이언트의 설정·음향·입력·UI다.
     services.factoryHelp=[this](std::string_view section,std::uint32_t mode) { const auto token=scriptStrings_.Store(section);if (token>0x0fffffffU) throw std::overflow_error("Factory 도움말 문자열 별칭 토큰 소진");rawButtons_->Menus()->OpenHelp(0x70000000U|token,static_cast<std::int32_t>(mode),0); }; //기존Help와같은문자열고리/별칭과실제전용창을사용한다.
     services.missionOutcome.demo=[this] { return missionRuntime_ ? missionRuntime_->gate.demo : 0U; };
-    services.missionOptions=missionOptions_;services.missionRestrictions=missionRestrictions_;services.missionSubscriber=initLoginSubscriber_;services.missionFortRequest=missionFortRequest_;services.templateStorage=templateStorage_;services.missionFortImage=fortImage; // 같은 Init 전역/요청/Template9와 실제 선택 파일 원문을 설치에 전달한다.
+    services.missionOptions=missionOptions_;services.missionRestrictions=missionRestrictions_;services.missionFortRequest=missionFortRequest_;services.templateStorage=templateStorage_;services.missionFortImage=fortImage; // 같은 Init 전역/요청/Template9와 실제 선택 파일 원문을 설치에 전달한다.
     services.fortBadges=client_.FortBadges();services.fortMission=FortMissionSaveEffects(); // 실제 Client 단일 장부와 현재 Runtime getter를 같은 Session에 빌린다.
     services.fortTypeConversion=client_.FortTypeConversion(); // 같은 Client의 현재 타입 변환표 소유자를 전달한다.
     services.missionOutcome.tellBlocked=[this] { return state_.phase==ClientPhase::Dialog || state_.phase==ClientPhase::Briefing ? 1U : 0U; };

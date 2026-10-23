@@ -220,3 +220,5 @@ target_sources(netstorm PRIVATE ClientColorSortInput.h ClientColorSortInput.cpp
     RawDotCommandRegister.h RawDotCommandRegister.cpp ClientDotCommandGlobals.h ClientDotCommandGlobals.cpp)
 # 편집 맵의 pending 이름과 다음 State 덮어쓰기 및 전투 Fort 보존 순서다.
 target_sources(netstorm PRIVATE FortSelection.h FortSelection.cpp)
+# Client와 모든 Session이 같은 Subscriber 주소 및 할당 입력 장치를 빌린다.
+target_sources(netstorm PRIVATE ClientSubscriberGlobals.h CurrentAllocationBytes.h)

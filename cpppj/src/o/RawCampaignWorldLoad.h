@@ -7,9 +7,31 @@
 namespace netstorm::o {
 // 실제 부모 prologue와 선택한 mission 후처리가 읽는 현재 전역이다.
 struct CampaignWorldGlobals {
-    std::uint32_t mySubscriber{},loginSubscriber{}; // PATCH540c74/54265c·CD50f6cc/511c7c의 현재 두값이다.
+private:
+    std::uint32_t localMy_{},localLogin_{}; // 소유자 없는 독립 장치와 명시 값사본만 기존0/0부터 시작한다.
+    struct BorrowTag {}; // 명시 바인딩과 기존 값 생성의 overload를 구별한다.
+    // 실제 두 DWORD 참조만 연결하며 외부 owner에 초기화 쓰기를 하지 않는다.
+    CampaignWorldGlobals(BorrowTag,std::uint32_t& my,std::uint32_t& login):mySubscriber(my),loginSubscriber(login) {}
+public:
+    std::uint32_t& mySubscriber; // PATCH540c74/CD50f6cc: 명시 외부 owner 또는 자기 fallback의 같은 DWORD다.
+    std::uint32_t& loginSubscriber; // PATCH54265c/CD511c7c: 명시 외부 owner 또는 자기 fallback의 같은 DWORD다.
     std::uint32_t editor{}; // PATCH5c85a4/CD518904: 현재 Player의 residence/island DWORD를0으로 쓴다.
     bool missionPost{true}; // PATCH594fa4/CD52e170: 후처리923e0/40daf0의 두큰분기를 모두 생략하는 실제 미션 전역이다.
+    CampaignWorldGlobals():mySubscriber(localMy_),loginSubscriber(localLogin_) {} // 기존 독립 기본값0/0/0/true를 보존한다.
+    // 기존 {my,login,editor,post}와 부분 값 초기화는 자기 fallback을 소유하는 값 생성이다.
+    CampaignWorldGlobals(std::uint32_t my,std::uint32_t login=0,std::uint32_t selectedEditor=0,bool post=true)
+        :localMy_(my),localLogin_(login),mySubscriber(localMy_),loginSubscriber(localLogin_),editor(selectedEditor),missionPost(post) {}
+    // 복사/이동은 현재 네 값을 자기 fallback으로 복제하며 외부 참조를 암묵 전파하지 않는다.
+    CampaignWorldGlobals(const CampaignWorldGlobals& source):CampaignWorldGlobals(source.mySubscriber,source.loginSubscriber,source.editor,source.missionPost) {}
+    CampaignWorldGlobals(CampaignWorldGlobals&& source):CampaignWorldGlobals(static_cast<const CampaignWorldGlobals&>(source)) {} // 원본 값형의 이동과 같이 source 값은 보존한다.
+    // 대입은 destination의 기존 binding을 유지하고 source 네 값을 먼저 캡처한 뒤 쓴다.
+    CampaignWorldGlobals& operator=(const CampaignWorldGlobals& source) {
+        const auto my=source.mySubscriber,login=source.loginSubscriber,selectedEditor=source.editor;const bool post=source.missionPost; // 교차 alias에서도 source 값 묶음을 보존한다.
+        mySubscriber=my;loginSubscriber=login;editor=selectedEditor;missionPost=post;return *this;
+    }
+    CampaignWorldGlobals& operator=(CampaignWorldGlobals&& source) { return operator=(static_cast<const CampaignWorldGlobals&>(source)); } // destination 주소를 재바인딩하지 않는다.
+    // 외부 저장소는 이 view보다 오래 살아야 한다. C++17의 prvalue 반환으로 명시 binding을 직접 구성한다.
+    static CampaignWorldGlobals BorrowSubscribers(std::uint32_t& my,std::uint32_t& login) { return CampaignWorldGlobals(BorrowTag{},my,login); }
 };
 // 이미 완료한 동일 월드 하위 몸체와 명시 번역/config/spec/UI 경계를 공급한다.
 struct CampaignWorldLoadHooks {

@@ -33,6 +33,7 @@ class RawChatChannels;
 class FortTypeConversionStorage; // 원본 현재 변환표의 실제 할당을 Client 수명에 소유한다.
 class ClientColorSortInput; //최초논리RGB와43c010의같은표입력을Client수명으로소유한다.
 class ClientRandomGlobals; // 같은 Client의 CRT holdrand와 Subscriber ID 최초시드 전역을 소유한다.
+class ClientSubscriberGlobals; // 같은 Client의 실제 my/login 두 DWORD만 장기 소유한다.
 class ClientLocalStateGlobals; // 실제 메뉴/Editor/로그인이 같은 State 블록과 벽시각 기한을 빌린다.
 class ClientCoreDataGlobals; //현재Core/active/캐시와 빌린 Player 슬롯을 Client 수명에 소유한다.
 class ClientChatManagerGlobals; //현재 Chatmanager와 실제 미초기화 할당들을 Client 수명에 소유한다.
@@ -100,8 +101,8 @@ public:
     void Title(std::string_view title);
     // 기본 실행의 메뉴 상태와 입력 경로. --view 검사에서는 널이다.
     UberGump* Menu();
-    // 현재 설치된 실제 월드의 globals.mySubscriber를 읽는다. 메뉴/월드 설치 전에는 0이다.
-    std::uint32_t CurrentSubscriber() const;
+    // 메뉴/월드 유무와 관계없이 같은 Client의 실제00540c74 const참조다.
+    const std::uint32_t& CurrentSubscriber() const;
     // Client 전체 수명의 유일한 PATCH Chat 기록 처리기다. 미션 교체 때 새로 만들거나 지우지 않는다.
     RawChatChannels& ChatChannels();
     // 같은 실제 100기록을 읽기 전용으로 빌린다. UI/검사는 별도 채널 사본을 만들지 않는다.
@@ -137,6 +138,7 @@ public:
     const std::shared_ptr<o::RawFortBadgesGlobals>& FortBadges() const;
     const std::shared_ptr<FortTypeConversionStorage>& FortTypeConversion() const; // 로더들이 같은 current DWORD와 실제255BYTE 할당을 빌린다.
     const std::shared_ptr<ClientColorSortInput>& ColorSortInput() const; //현재ScreenRGB로재캡처하지않는같은초기입력소유자를빌린다.
+    const std::shared_ptr<ClientSubscriberGlobals>& SubscriberGlobals() const; //Init/Session이 같은 실제 두 DWORD를 빌리는 owner다.
     const std::shared_ptr<ClientRandomGlobals>& RandomGlobals() const; // 미션마다 복제하지 않는 실제 난수/ID초기화 소유자를 전달한다.
     const std::shared_ptr<ClientLocalStateGlobals>& LocalStateGlobals() const; // 실제 State144BYTE와 활동기한의 Client 수명을 Session에 전달한다.
     const std::shared_ptr<ClientCoreDataGlobals>& CoreDataGlobals() const; //같은 현재 Core 슬롯/캐시를 빌리며 Player 자동 선택이나 해제를 실행하지 않는다.
@@ -212,6 +214,7 @@ private:
     std::uint32_t readOnlyForts_{};
     std::shared_ptr<o::RawFortBadgesGlobals> fortBadges_; // CRT 한 번과 시작 count reset을 구별하는 단일6160BYTE 소유자다.
     std::shared_ptr<FortTypeConversionStorage> fortTypeConversion_; // Session마다 새 현재 포인터나 할당 사본을 만들지 않는 단일 소유자다.
+    std::shared_ptr<ClientSubscriberGlobals> subscriberGlobals_; //Chat/메뉴/Session보다 먼저 만들고 그 소비자보다 오래 유지한다.
     std::shared_ptr<ClientRandomGlobals> randomGlobals_; // 모든 실제 Session과 Subscriber 생성기가 같은 holdrand/초기화DWORD를 빌린다.
     std::shared_ptr<ClientColorSortInput> colorSortInput_; //메뉴/월드/두Screen생성경로보다오래유지하는같은초기RGB다.
     std::shared_ptr<ClientLocalStateGlobals> localStateGlobals_; // Session 소멸/Editor 메뉴 재진입에서 State/기한을 초기화하지 않는 한 소유자다.

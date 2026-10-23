@@ -45,7 +45,7 @@ void Advance(std::int32_t& index,std::int32_t cachedEnd,const PlayerCoreRefreshP
     }
 }
 }
-// 기술순회를먼저완료하고같은현재Player의실제객체로Core+5하한을갱신한다.
+// 기술순회를먼저완료하고같은현재소유자의다이스count로Core+5하한을갱신한다.
 void RefreshPlayerCore(const PlayerCoreRefreshHooks& hooks) {
     Write(Need(hooks.core)(),6,4,0);
     const auto parent=Need(hooks.technologyParent)();auto cursor=Need(hooks.begin)(parent);
