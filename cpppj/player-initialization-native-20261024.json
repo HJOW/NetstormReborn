@@ -1,0 +1,29 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-24",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "entry": "004910a0",
+  "parentBytes": 236,
+  "allianceBytes": 491,
+  "cdSourceMapCandidate": "00406200",
+  "cdExecuted": false,
+  "observations": 202,
+  "distinctInputs": 101,
+  "statuses": {
+    "normal": 174,
+    "fault-null": 8,
+    "stop": 20
+  },
+  "gameGuiOsCalls": 0,
+  "productWritten": false,
+  "allocatorBoundary": "명시 CRT malloc/free/new; VM 물리는 사후 비교용 보존",
+  "inputs": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+    "tools/decomp_chat_channels.py": "b1601cd2081effd21d2004a4efcf13c5efc3c4cd5eeaf60c38cf624eb4261f09",
+    "tools/decomp_player_initialization.py": "56a296aa8281a344d510f2b20fd08edf7dbbdb9e1ad0581d243a4affa35961c2",
+    "cpppj/tests/fixtures/player-initialization-x86.tsv": "71a08f435250150de5a4ec528f638ca63b90e5dd31bbb09497c955d7ef5b703f"
+  }
+}

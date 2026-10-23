@@ -2037,3 +2037,7 @@ cpppj/handoff/paused-20261024/manifest.json -text whitespace=cr-at-eol
 cpppj/chat-state-clear-native-20261024.json -text
 cpppj/tests/fixtures/chat-state-clear-x86.tsv -text
 tools/decomp_chat_state_clear.py -text
+# Player 전체 초기화의 최초 Native 자료는 줄끝 변환 없이 원시 바이트를 보존한다.
+cpppj/player-initialization-native-20261024.json -text
+cpppj/tests/fixtures/player-initialization-x86.tsv -text
+tools/decomp_player_initialization.py -text

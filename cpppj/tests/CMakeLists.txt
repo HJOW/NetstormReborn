@@ -2074,3 +2074,7 @@ set_source_files_properties(ColorSortPrimaryTests.cpp PROPERTIES COMPILE_DEFINIT
 target_sources(netstorm_tests PRIVATE ChatStateClearTests.cpp)
 set_source_files_properties(ChatStateClearTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_CHAT_STATE_CLEAR_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/chat-state-clear-x86.tsv\"")
+# 원문202행의 전체 물리/순서와 실제 Core 선택 해제 후 재할당 수명을 대조한다.
+target_sources(netstorm_tests PRIVATE PlayerInitializationTests.cpp)
+set_source_files_properties(PlayerInitializationTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_PLAYER_INITIALIZATION_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/player-initialization-x86.tsv\"")

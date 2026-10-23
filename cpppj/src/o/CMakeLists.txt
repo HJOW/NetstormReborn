@@ -506,3 +506,5 @@ target_sources(netstorm PRIVATE RawClockSyncReset.h RawClockSyncReset.cpp
     RawMetaZoneCleanup.h RawMetaZoneCleanup.cpp)
 # 최초 80행 관측으로 복원한 ColorSort 기록을 실제 Client 소유자에 연결한다.
 target_sources(netstorm PRIVATE RawColorSortPrimary.h RawColorSortPrimary.cpp)
+# 이전 공장/Player 해제와 같은 현재base 재조회로236BYTE 전체 초기화를 실행한다.
+target_sources(netstorm PRIVATE RawPlayerInitialization.h RawPlayerInitialization.cpp)

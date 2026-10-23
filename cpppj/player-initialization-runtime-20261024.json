@@ -1,0 +1,70 @@
+{
+  "unit": 390,
+  "date": "2026-10-24",
+  "edition": "10.78",
+  "baseline": "65bc3e0c",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "nativeObservations": 202,
+  "nativeInputs": 101,
+  "nativeStatuses": {
+    "normal": 174,
+    "fault-null": 8,
+    "stop": 20
+  },
+  "nativePrecisionPairsEqual": 101,
+  "newTests": 3,
+  "relatedTests": 8,
+  "totalTests": 2658,
+  "failedChecks": 0,
+  "ctest": {
+    "returnCode": 0,
+    "seconds": 305.4780212000478,
+    "log": "extracted/cpp-player-initialize-390-ctest1.log",
+    "internalCounts": [
+      [
+        "2658",
+        "0"
+      ]
+    ],
+    "testBinarySha256": "c70b3585c567fa418c8030848b405ba98ecad5439b486242f76cce9dba428763",
+    "productSha256": "908424cd619d0b0e9baddde0d222fcb1bbd28e088276ce45d6b41e376f050fe4",
+    "sameTestBinary": true,
+    "sameProduct": true,
+    "originalsCount": 1394,
+    "originalsUnchanged": true
+  },
+  "coreDetachBeforeReleaseVerified": true,
+  "actualClientPlayerOwnerConnected": false,
+  "stateCleanupParentConnected": false,
+  "newGuiExecutions": 0,
+  "goalComplete": false,
+  "cdExecuted": false,
+  "sources": {
+    "cpppj/src/o/RawPlayerInitialization.h": "14e15b20e1df4e44215d5e9d3bfc2b0f05fdea47f504002179d9ec34401b0908",
+    "cpppj/src/o/RawPlayerInitialization.cpp": "988aaf2a61a6a6dda039b7bef5bc83ef5227db802854a88fb46a088737dc824e",
+    "cpppj/src/o/RawPlayerParticipation.h": "22d0031dd843733a9452f9ee497d79e7028a40915524bf11ca4ff59b549b1cb4",
+    "cpppj/src/o/RawPlayerParticipation.cpp": "682b1cf72b1889d2bf44540446d5cba40c24679e9e99055b154155224185dec7",
+    "cpppj/src/client/RawChatChannels.h": "1c441828d835262aac522a2840d8627543b89e9b3ed690d6398ed7e2bae0a070",
+    "cpppj/src/client/RawChatChannels.cpp": "34869171a629afbc2cb897a0277af58913dd7f1b0a5c13b6a5bf97bac2cbc2e6",
+    "cpppj/src/client/ClientCoreDataGlobals.h": "3208d4952449da595784cce8b57f0930298945026468a388537836b3093dcff2",
+    "cpppj/src/client/ClientCoreDataGlobals.cpp": "e45e56bf4b0dc62ad956c2e2a9faf24aa10b9c7dde174d4738c6f9358569784d",
+    "cpppj/src/o/CMakeLists.txt": "7d202554a856e1c2f6e18b8da7c1987dd73638cd14821aac26c8a90a3d3cd82e",
+    "cpppj/tests/CMakeLists.txt": "0b18bc48a6c439df29c4e3556da2896000a4ec542ddc63c5723c7f471b567891",
+    "cpppj/tests/PlayerInitializationTests.cpp": "629b7e8c2d7abf8e8ef4af8861333ad91580a5e5882e99fda12ecb62cd77d0b6",
+    "tools/decomp_player_initialization.py": "56a296aa8281a344d510f2b20fd08edf7dbbdb9e1ad0581d243a4affa35961c2",
+    "cpppj/tests/fixtures/player-initialization-x86.tsv": "71a08f435250150de5a4ec528f638ca63b90e5dd31bbb09497c955d7ef5b703f",
+    "cpppj/player-initialization-native-20261024.json": "3422aa76920adea17d3804f6e1010515c2cc1bb9b343c167aa33481821e7d39e"
+  },
+  "evidence": {
+    "extracted/cpp-player-initialize-390-focused1.log": "3d7dc6ec110bb4713d8f1e250deda237f5dab113bb4659ac6be08cdea6840b41",
+    "extracted/cpp-player-initialize-390-related1.json": "cd1870ec461831de45706ad9178a3287ba5e6eeadfd55200517e09b2433659e6",
+    "extracted/cpp-player-initialize-390-ctest1.json": "75f8828da7166f60c459c512ae58fdfea3869f3dc1eeef074544e631371f2b5b",
+    "extracted/cpp-player-initialize-390-ctest1-tests.log": "bb28ec950f6b48fe5f672f11986803ce377d347608eda88cb4f3352594546478",
+    "extracted/cpp-player-initialize-390-originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-player-initialize-390-disasm1.log": "9717654a11ae25f7f2959277d583571aabea127501d8f465c5ffddce5538505d",
+    "extracted/cpp-player-initialize-390-related1-PlayerCoreData_.log": "56bca91478940ad2a0a113df7db7a76d2917493141ddd3a6603ee228413a9880",
+    "extracted/cpp-player-initialize-390-related1-ClientCoreRecords_.log": "339fb3fe8b289cb443c6284cc790d6e45e6b14f3e540d85668aa22c49b1c992f",
+    "extracted/cpp-player-initialize-390-related1-ClientChatCoreOwners_.log": "0fa3a993b5b552384636c34420a0fc8258be334e2a917ca23f064204225f3e84"
+  }
+}
