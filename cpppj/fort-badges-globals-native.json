@@ -1,0 +1,30 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-23",
+  "inputs": 32,
+  "executions": 64,
+  "normalFunctionReturns": 96,
+  "instructions": 112656,
+  "stageInstructions": {
+    "crt": 107136,
+    "reset": 5520
+  },
+  "peInitialSha256": "155fb7024ecfd37be15220ff6dc1c60f798285b0e82dfedae4ea8e0255acdbce",
+  "nativeCrtZeroSha256": "40e455f3941361b21cc236838aa108416bf859a5214aa76dbd7cbb23d159cbc8",
+  "staticExpectedSha256": "40e455f3941361b21cc236838aa108416bf859a5214aa76dbd7cbb23d159cbc8",
+  "nativeMatchesStatic": true,
+  "gameExecuted": false,
+  "osExecuted": false,
+  "externalCalls": 0,
+  "ranges": {
+    "crt": "004fcbe0-004fea0f",
+    "reset": "0047d860-0047d882"
+  },
+  "scope": "CRT/reset본체전체·전체6160BYTE·허용쓰기·스택/callee-save/x87불변을실제실행. 로더/저장/Client/GUI/OS미실행.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "tools/decomp_fort_badges_globals.py": "bc44790f6bb91f82b5370d144ba6715690a1985f96742538ebf9ae3c822b824c",
+    "cpppj/tests/fixtures/fort-badges-globals-x86.tsv": "8e743060a2d555dea66ccadbcbb9075fd0ce8224cddf2e741f8a006dd7b8cf51"
+  }
+}

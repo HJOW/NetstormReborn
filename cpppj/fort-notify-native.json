@@ -1,0 +1,32 @@
+{
+  "status": "최초독립원문고정·제안patch미작성",
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-23",
+  "entry": "004bd360",
+  "bodyBytes": 155,
+  "uniqueInputs": 798,
+  "observations": 1596,
+  "statuses": {
+    "fault": 128,
+    "return": 1388,
+    "stop": 80
+  },
+  "instructions": 38036,
+  "boundaries": {
+    "name": 1468,
+    "save": 336,
+    "assert": 2074
+  },
+  "precisionDifferences": 0,
+  "scope": "실제155BYTE Notify와첫manager+c BYTE읽기. manager0은실제0xc미매핑읽기실패다. 진단/SaveFile은명시경계이며save:0진입은하위파일저장성공이아니다. 진단복귀뒤+8재조회/현재미션/manager진단/preventSave/저장인자와부분중단을관측한다. OS·게임실행없음.",
+  "gameExecuted": false,
+  "osExecuted": false,
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+    "tools/decomp_fort_notify.py": "3a51f3c0d7e8ae056f67047dbf94e4c0e31b3f0b5fef8727c02723ddf841ae39",
+    "cpppj/tests/fixtures/fort-notify-x86.tsv": "058ffe03a7e6ab151467ca350915d682ab84aab8d56f51083842eb3fac583576"
+  }
+}

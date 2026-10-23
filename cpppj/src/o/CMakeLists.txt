@@ -2,6 +2,15 @@
 # 클라이언트와 서버가 함께 쓰던 코드로 보인다. 이 폴더의 코드는 client/ 와 platform/ 을 포함하지 않는다.
 # 다시 만든 파일을 아래 목록에 더한다. 파일 이름은 SOURCE_MAP.md 의 "cpppj 경로"를 따른다.
 target_sources(netstorm PRIVATE
+    # 전체 Fort 저장 부모와 실제 Money·Mission·Badges 기록의 원문 순서다.
+    RawFortSnapshotParent.cpp RawFortSnapshotParent.h
+    RawFortMoneySave.cpp RawFortMoneySave.h
+    RawFortMissionSave.cpp RawFortMissionSave.h
+    RawFortBadgesSave.cpp RawFortBadgesSave.h
+    RawFortBadgesGlobals.cpp RawFortBadgesGlobals.h
+    # Editor 플레이어 초기화와 현재 Fort 이름의 원문 부수 효과다.
+    RawEditorPlayers.cpp RawEditorPlayers.h
+    RawFortCurrentName.cpp RawFortCurrentName.h
     # 같은 실제 Temp/rename 부모와 Territory/Chaff 전체 청크 순회다.
     RawFortObjectsSave.cpp RawFortObjectsSave.h
     RawFortRegionSave.cpp RawFortRegionSave.h

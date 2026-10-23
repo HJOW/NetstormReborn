@@ -1,0 +1,62 @@
+{
+  "status": "최초 원문 고정·제품 미작성",
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-23",
+  "entries": [
+    "004bf9a0",
+    "004bf880",
+    "004bfac0",
+    "004bfb50"
+  ],
+  "ranges": [
+    [
+      "004bf880",
+      "004bf991"
+    ],
+    [
+      "004bf9a0",
+      "004bfab8"
+    ],
+    [
+      "004bfac0",
+      "004bfafb"
+    ],
+    [
+      "004bfb50",
+      "004bfb98"
+    ]
+  ],
+  "bodyBytes": 684,
+  "uniqueInputs": 1364,
+  "observations": 2728,
+  "normalReturns": 2350,
+  "explicitStops": 378,
+  "instructions": 187894,
+  "precisionDifferences": 0,
+  "boundaries": {
+    "assert": 2050,
+    "names": 1288,
+    "parent": 2606,
+    "create": 7398,
+    "technology": 2550,
+    "objects": 2506,
+    "territory": 2478,
+    "deck": 2498,
+    "money": 2410,
+    "mission": 2354,
+    "badges": 1152,
+    "notify": 2294,
+    "core": 1174
+  },
+  "scope": "네 실제 부모의 진단/고정this/현재owner·mode·manager읽기/inlineTechnology·Money·Mission Create/stream캡처/두wrappernested호출/tail복귀. 모든writer·Guide저장·실제DataManager·진단보고는명시외부경계. 제품CPP와기대값을읽지않으며게임/OS실행없음.",
+  "gameExecuted": false,
+  "osExecuted": false,
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+    "tools/decomp_fort_snapshot_parent.py": "8f3e57a3df167845aeea01ef85ec80b57cebd96afb248fdf83cc58ace272cc0b",
+    "cpppj/tests/fixtures/fort-snapshot-parent-x86.tsv": "96d7f6deb4769a4a818c572c8bd930e8fe63d1ee5f89fb5df634c6b138825cd0"
+  }
+}

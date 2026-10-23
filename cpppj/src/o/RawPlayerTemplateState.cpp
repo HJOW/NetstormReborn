@@ -76,8 +76,12 @@ std::span<std::uint8_t> RawPlayerTemplateState::Get(std::uint32_t slot) const {
 }
 // 실제isMine후재검사에의한earlyreturn은빈callback대체가아니다.
 void RawPlayerTemplateState::Changed(std::uint32_t slot) const {
-    if (slot>=9 || names_(slot).empty()) throw std::out_of_range("Player Notify현재manager.fileName물리BYTE누락");
-    if (names_(slot)[0]=='.') assertion_(PlayerTemplateStateAssertion::DotFileName);
+    if (slot>=9) throw std::out_of_range("Player Notify 실제9칸 범위");
+    // 원본은 첫 manager+c BYTE를 진단보다 먼저 읽으므로 manager0은 여기서 물리 경계로 거부한다.
+    if (!Header(slot,0)) throw std::out_of_range("Player Notify manager0 파일명 첫BYTE 물리접근경계");
+    const auto& name=names_(slot);
+    // 빈 정상 std::string의 c_str 첫 NUL도 원본의 유효한 첫BYTE이며 점 이름만 진단한다.
+    if (name.c_str()[0]=='.') assertion_(PlayerTemplateStateAssertion::DotFileName);
     if (Header(slot,8)) {
         if (Header(slot,12)) assertion_(PlayerTemplateStateAssertion::MineTransientFlag);
         if (Header(slot,8)) return;

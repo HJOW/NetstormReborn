@@ -1,0 +1,30 @@
+{
+  "status": "최초 독립 원문 고정·제품 미작성",
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-23",
+  "parent": "004be7f0",
+  "getter": "0047d7c0",
+  "bodyBytes": 288,
+  "uniqueInputs": 676,
+  "observations": 1352,
+  "normalReturns": 1272,
+  "explicitStops": 80,
+  "instructions": 29662486,
+  "precisionDifferences": 0,
+  "boundaries": {
+    "create": 710,
+    "count": 167834,
+    "assert": 3788
+  },
+  "scope": "실제저장부모와28x220BYTE첫type일치DWORDgetter. 모든255type순회/처음count포인터/인라인BYTE·pos/end/선택진단/부분중단. Create·진단보고만명시외부장치이며getter복귀/진단의입력callback변경은독립명시효과다. Client장부초기화·UI갱신·원시파일load·OS·게임실행없음.",
+  "gameExecuted": false,
+  "osExecuted": false,
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+    "tools/decomp_fort_badges_save.py": "95f0112f0711147973510669c68fc445c3ad5d9e5f996397a50b659d054ad360",
+    "cpppj/tests/fixtures/fort-badges-save-x86.tsv": "ec75999aa1489573f259d3c5257a7ed6fb954f6c57f6afc2f8d08c439eadda2f"
+  }
+}

@@ -1,3 +1,20 @@
+# 전체 저장과 Editor 기반의 독립 PE 관측을 각 검사에만 공급한다.
+set_source_files_properties(FortSnapshotParentTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_FORT_SNAPSHOT_PARENT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fort-snapshot-parent-x86.tsv\"")
+set_source_files_properties(FortMoneySaveTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_FORT_MONEY_SAVE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fort-money-save-x86.tsv\"")
+set_source_files_properties(FortMissionSaveTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_FORT_MISSION_SAVE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fort-mission-save-x86.tsv\"")
+set_source_files_properties(FortBadgesSaveTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_FORT_BADGES_SAVE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fort-badges-save-x86.tsv\"")
+set_source_files_properties(FortBadgesGlobalsTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_FORT_BADGES_GLOBALS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fort-badges-globals-x86.tsv\"")
+set_source_files_properties(EditorPlayersTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_EDITOR_PLAYERS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/editor-players-x86.tsv\"")
+set_source_files_properties(FortCurrentNameTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_FORT_CURRENT_NAME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fort-current-name-x86.tsv\"")
+set_source_files_properties(FortNotifyTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_FORT_NOTIFY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fort-notify-x86.tsv\"")
 # 게임메뉴부모와Tell인자의독립PE관측을해당검사에만공급한다.
 set_source_files_properties(FortObjectsSaveTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_FORT_OBJECTS_PARENT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fort-objects-parent-x86.tsv\"")
@@ -99,6 +116,14 @@ set_source_files_properties(FlyerPreDestroyTests.cpp PROPERTIES COMPILE_DEFINITI
 set_source_files_properties(BurningLifetimeDrawTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_BURNING_LIFETIME_DRAW_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/burning-lifetime-draw-x86.tsv\";NETSTORM_RENDER_FRAME_GATE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/render-frame-gate-x86.tsv\";NETSTORM_BURNING_ARCHER_CAPTURE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/burning-archer-capture-x86.tsv\"")
 add_executable(netstorm_tests
+    FortSnapshotParentTests.cpp
+    FortMoneySaveTests.cpp
+    FortMissionSaveTests.cpp
+    FortBadgesSaveTests.cpp
+    FortBadgesGlobalsTests.cpp
+    EditorPlayersTests.cpp
+    FortCurrentNameTests.cpp
+    FortNotifyTests.cpp
     TemplateSerializationGlobalsTests.cpp
     FortObjectsSaveTests.cpp
     FortRegionSaveTests.cpp

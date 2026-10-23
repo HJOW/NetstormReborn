@@ -1,5 +1,13 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-24 단위381 완료: 전체 저장 기반과 Editor Player·이름·Notify 공용 등록
+
+- [x] 단위380은 **5166c972 / 20261024-02 CP**로 커밋했다. AGENTS와 공통/닷넷 인수인계를 다시 읽었으며 현재 PC와 마지막 전체 정밀 디컴파일 PC는 **HJOW-Athlon / 마지막 수행 2026-10-23**으로 일치한다. 전체 목표는 계속 활성이다.
+- [x] 동결된 SnapshotParent·Money·Mission·Badges 저장·Badges 전역·EditorPlayers·CurrentName 일곱 모듈과 독립 원문 여덟 검사를 공용 CMake에 등록했다. Notify의 manager 첫 BYTE 물리 접근과 빈 정상 C 문자열 처리를 원문 관측대로 최소 교정했다. 여덟 원문 도구의 SHA 검증은 모두 종료0이며 최초 fixture/report는 덮어쓰지 않았다.
+- [x] 공용 Release 제품/검사 빌드는 종료0·관측 경고오류0이다. 신규18과 기존 관련16을 합친 **34검사/실패check0**, 최종 전체 **2464검사/실패check0·종료0/324.10초(전체324.14초)**다. 잘못 지정한 동적 저장소 필터의 대상없음 종료1을 보존하고 올바른 이름으로3검사 통과했다. 제품SHA `be150cdccc7b8a0aaa8bec93d3c8198100ce3d934ef9757e08e6b58b2aebc45e`, 검사SHA `4ba58a5bbea707b6800b6efd1ae4ad5065f5adae5fe0348c2f7104eb3cf60ec3`이다.
+- [x] 원본1394파일 전체 SHA가 단위379 실행 후와 모두 같다. UTF8/AST/JSON과 보호경로를 확인했고 원시 `extracted/cpp-fort-snapshot-core-20261024-*` 및 [공용 등록 기록](docs/exe/cpp-fort-snapshot-core-20261024.md)을 보존한다. 이번에는 GUI 전체진입을 반복하지 않았으며 이전 제품의34진입/자연Early1 증거를 새 제품 관측으로 바꾸지 않는다. 인수인계 후 **20261024-03 CP**로 로컬 커밋한다.
+- [ ] 실제 Session의 전체 Snapshot·Client Badges/readOnly 공유·generic Editor 설치 및 메뉴 연결은 다음 단위다. 병렬 작업은 기존 공유 파일을 변경하지 않는 제안 patch로 준비하며, 미선택 Battle CoreData와 Editor 후처리는 성공으로 가장하지 않는다. 기존 원본/CD·AGENTS·다른 프로젝트 변경과 원격 push는 하지 않는다.
+
 ## 2026-10-24 단위380 완료: Early1 출처 설명의 한국어 인코딩 복구
 
 - [x] 단위379를 **3a62aded / 20261024-01 CP**로 커밋했다. 현재/마지막 전체 정밀 디컴파일 PC는 **HJOW-Athlon / 마지막수행2026-10-23**이다. 목표는계속활성이다.

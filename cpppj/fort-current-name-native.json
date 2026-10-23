@@ -1,0 +1,77 @@
+{
+  "status": "신규 독립 준비·미등록",
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-23",
+  "entries": [
+    "00460980",
+    "004bf630"
+  ],
+  "ranges": [
+    [
+      "00460980",
+      "00460ba7"
+    ],
+    [
+      "004bf630",
+      "004bf68b"
+    ],
+    [
+      "004e63d0",
+      "004e63d5"
+    ],
+    [
+      "004e63e0",
+      "004e649e"
+    ],
+    [
+      "004ef510",
+      "004ef55e"
+    ]
+  ],
+  "bodyBytes": [
+    551,
+    91
+  ],
+  "uniqueInputs": 438,
+  "observations": 876,
+  "normalReturns": 720,
+  "explicitStops": {
+    "manager0": 24,
+    "manager-name-size": 28,
+    "old-path-size": 56,
+    "current-size": 32,
+    "snapshot1": 2,
+    "notify": 2,
+    "snapshot2": 2,
+    "delete": 2,
+    "title": 2,
+    "state": 2,
+    "config1": 2,
+    "assert88": 2
+  },
+  "instructions": 792378,
+  "precisionDifferences": 0,
+  "boundaries": {
+    "title": 700,
+    "config": 418,
+    "assert": 328,
+    "path": 1406,
+    "snapshot": 866,
+    "notify": 490,
+    "compare": 338,
+    "delete": 182,
+    "state": 126
+  },
+  "scope": "실제현재이름/setter의주소재조회/필드쓰기/문자복사/2snapshot/Notify/삭제요청/제목·dirty·설정관문과실제strchr·C로케일stricmp. PathSpec/snapshot/Notify/삭제·제목·State/config/진단은명시경계. oldpath미초기화스택은Prior+명시BYTE입력,256BYTE복사한계와manager0은실제쓰기직전명시중단. 실제파일조작/OS/게임/전체snapshot·Notify본문은실행하지않음.",
+  "gameExecuted": false,
+  "osExecuted": false,
+  "filesMutated": false,
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+    "tools/decomp_fort_current_name.py": "c5078c2c1a3fb0ee475c174394b72f137498459a53fd7ba57ec0d2ecf2de97fd",
+    "cpppj/tests/fixtures/fort-current-name-x86.tsv": "4c89096cbf763420fde7f95977c2d1d505ac01efb7c62f728a453c1de1869604"
+  }
+}

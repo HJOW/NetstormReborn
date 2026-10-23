@@ -1,0 +1,30 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-23",
+  "inputs": 1105,
+  "executions": 2210,
+  "normalReturns": 2198,
+  "instructions": 137678,
+  "boundaries": {
+    "write": 2206,
+    "manager": 134,
+    "create": 132,
+    "assert": 52
+  },
+  "distinctMoneyBits": 1010,
+  "ranges": {
+    "money": "004832c0-004832f1",
+    "parent": "004beec0-004beed3",
+    "random": "004558c0-004558e7",
+    "write": "0044cce0-0044cd3d"
+  },
+  "gameExecuted": false,
+  "osExecuted": false,
+  "scope": "10.78 Money 부모/공유난수/FILD/FADD333/FSTP DWORD/일반 stream writer 실제 실행. Create와capacity진단은 명시 경계다. 단독 부모에는isMine/slot clamp/manager진단이 없으며 전체Snapshot 부모는 실행하지 않는다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "tools/decomp_fort_money_save.py": "c0d228656bbe3b67696410ca1ca38c6a888c0980f1295d338f29893494f82a56",
+    "cpppj/tests/fixtures/fort-money-save-x86.tsv": "8e00dee550343283727a3c3b8188a509ed00533545883f4223106fa39a11beb3"
+  }
+}

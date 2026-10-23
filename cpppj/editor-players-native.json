@@ -1,0 +1,42 @@
+{
+  "status": "신규 독립 준비·미등록",
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-23",
+  "entry": "004904b0",
+  "range": "004904b0-004905c0",
+  "bodyBytes": 273,
+  "uniqueInputs": 333,
+  "observations": 666,
+  "normalReturns": 626,
+  "explicitStops": {
+    "human": 6,
+    "player": 6,
+    "technology3": 6,
+    "format2": 6,
+    "record1": 6,
+    "create1": 4,
+    "finish": 6
+  },
+  "instructions": 761158,
+  "precisionDifferences": 0,
+  "boundaries": {
+    "translate": 5772,
+    "technology": 4452,
+    "format": 4446,
+    "count-read": 26738,
+    "finish": 632,
+    "type": 22308,
+    "create": 6936
+  },
+  "scope": "실제273BYTE의Human/현재handle이름복사,owner2..8의고정레코드+2c/이름/+50 flags,타입0/현재signedcount재조회/group/theme필터/직접ContainedCreate/마지막tail후처리. 번역/00490250/서식/TYPE/004afa70/0046e980은명시외부경계이며하위실제생성/전체Editor/파일/OS/게임은실행하지않음. 본문에는config/title/Find/Ensure호출이없음.",
+  "gameExecuted": false,
+  "osExecuted": false,
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+    "tools/decomp_editor_players.py": "9df50d8db455d4f25953133212d3caa65edd76c167ac150f327d1fef06a5876c",
+    "cpppj/tests/fixtures/editor-players-x86.tsv": "7da2dcf1c11fcc0fcdfe5558f0a39d8e2ff015c08cb4c3dff2b1a3a42365baf7"
+  }
+}
