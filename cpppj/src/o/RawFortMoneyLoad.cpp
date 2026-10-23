@@ -44,13 +44,17 @@ void RawFortMoneyLoad::SetPlayerSp(std::int32_t owner,std::int32_t amount) const
 
 // wrapper의현재깊이/Template진단뒤Money4바이트소비·현재모드별SP를순서대로적용한다.
 void RawFortMoneyLoad::Load(FortMoneyCursor& stream) const {
+    LoadSelected([&stream]() -> FortMoneyCursor& { stream.position=0;return stream; }); // 독립 입력도 원본 getter 시점에서 위치를 초기화한다.
+}
+// 실제 getter는 wrapper의 현재 깊이/진단 효과 뒤에 실행하고 실패 시 같은 원래 깊이를 복구한다.
+void RawFortMoneyLoad::LoadSelected(const std::function<FortMoneyCursor&()>& select) const {
+    if (!select) throw std::invalid_argument("Fort Money 실제 섹션 선택 누락");
     const bool patch=edition_==OriginalEdition::Patch1078;
     if (patch && reward_.halfHealthMode && !state_.economyBlocked) state_.spCheckCount=kSpCheckCount;
     ++loadingDepth_;hooks_.loadingDepthChanged(loadingDepth_);
     try {
         if (!state_.templatePresent) hooks_.assertion(FortMoneyAssertion::MissingTemplate);
-        stream.position=0; // 실제DataManager의Money 섹션조회는현재pos를0으로초기화한다.
-        ReadMoney(stream);
+        ReadMoney(select()); // 실제DataManager getter가 같은 현재 노드를 선택하고 위치를 초기화한다.
     } catch (...) {
         --loadingDepth_;hooks_.loadingDepthChanged(loadingDepth_);throw;
     }

@@ -48,8 +48,9 @@ FortWorldLoadHooks MakeFortWorldChildrenHooks(const SidPool& pool,const RawFortO
     std::function<void(const FortTemplate&,std::uint32_t,bool)> selectMeta,std::function<FortMetaStream&(const FortTemplate&,bool)> metaStream,FortWorldLoadHooks hooks) {
     if (&objects.Pool()!=&pool || &meta.Pool()!=&pool || !selectMeta || !metaStream) throw std::invalid_argument("Fort World child 실제풀/현재전역/섹션조회불일치");
     hooks.objects=[&objects](const FortTemplate& fort,std::uint32_t owner) { objects.Load(fort,std::bit_cast<std::int32_t>(owner),0,20); };
-    hooks.badges=[&meta,selectMeta,metaStream](const FortTemplate& fort,std::uint32_t owner) { selectMeta(fort,owner,false);meta.LoadBadges(metaStream(fort,false)); };
-    hooks.technology=[&meta,selectMeta,metaStream](const FortTemplate& fort,std::uint32_t owner) { selectMeta(fort,owner,true);meta.LoadTechnology(metaStream(fort,true)); };
+    // 실제 섹션 getter는 각 wrapper의 Template 진단/기술 부모 뒤에 실행하고 현재 Template 입력을 유지한다.
+    hooks.badges=[&meta,selectMeta,metaStream](const FortTemplate& fort,std::uint32_t owner) { selectMeta(fort,owner,false);meta.LoadBadgesSelected([&]() -> FortMetaStream& { return metaStream(fort,false); }); };
+    hooks.technology=[&meta,selectMeta,metaStream](const FortTemplate& fort,std::uint32_t owner) { selectMeta(fort,owner,true);meta.LoadTechnologySelected([&]() -> FortMetaStream& { return metaStream(fort,true); }); };
     return hooks;
 }
 }

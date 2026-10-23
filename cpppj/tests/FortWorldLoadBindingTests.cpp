@@ -119,11 +119,14 @@ TEST_CASE(FortWorldLoadBinding_ActualSelectedWorldAndTwoRandomStores) {
         hooks.assertion=[](FortWorldLoadAssertion) { UnrestoredWorldEffect(); };hooks.loadingDepthChanged=sync;hooks.builderAssertion=[](RawIslandBuilderAssertion) { UnrestoredWorldEffect(); };
         hooks.populateIsland=[](const RawIslandBuilderState&,std::int32_t) { UnrestoredWorldEffect(); };
         hooks=MakeFortWorldLoadBinding(world,normal,objects,money,meta,[&](const FortTemplate& current,std::uint32_t owner)->FortMoneyCursor& {
-            CHECK(&current==&fort && owner==1);effects.push_back("money");moneyState.templatePresent=true;return moneyCursor;
+            CHECK(&current==&fort && owner==1 && depth==2);effects.push_back("money");moneyState.templatePresent=true;moneyCursor.position=0;return moneyCursor;
         },[&](const FortTemplate& current,std::uint32_t owner,bool technology) {
             CHECK(&current==&fort);metaState.templateSlot=std::bit_cast<std::int32_t>(owner);metaState.localOwner=std::bit_cast<std::int32_t>(localOwner);metaState.templatePresent=true;
             effects.push_back(technology ? "technology" : "badges");
-        },[&](const FortTemplate& current,bool technology)->FortMetaStream& { CHECK(&current==&fort);return technology ? techStream : badgeStream; },std::move(hooks));
+        },[&](const FortTemplate& current,bool technology)->FortMetaStream& {
+            CHECK(&current==&fort && depth==(technology ? 2U : 1U));if (technology) CHECK(effects.back()=="parent-boundary");
+            effects.push_back(technology ? "technology-select" : "badges-select");auto& stream=technology ? techStream : badgeStream;stream.position=0;return stream;
+        },std::move(hooks));
         // 실제generate/objects/Graph만관찰로감싸고완료body호출은그대로유지한다.
         auto generate=hooks.generate;auto loadObjects=hooks.objects;auto rebuild=hooks.rebuildGraph;
         hooks.generate=[&,generate](const RawIslandBuilderState& state,std::int32_t region) {
@@ -138,7 +141,7 @@ TEST_CASE(FortWorldLoadBinding_ActualSelectedWorldAndTwoRandomStores) {
         world.BeginLoad();sync(1);RawFortWorldLoad parent(core.pool,chunks,islands,core.frames,piece,localOwner,noRegion,depth,hooks);parent.Load(0);
         CHECK(ChunkBytesHex(chunks)==golden[5] && Hex(islandBytes)==golden[6]);
         CHECK(islands.Count()==1 && islands.Exists(0)==1 && islands.Owner(0)==1 && chunks.At(2,2).island==0 && territory.position==120 && territory.end==120);
-        CHECK(effects==std::vector<std::string>({"generate","objects","money","badges","technology","parent-boundary","ui-boundary","graph0"}));
+        CHECK(effects==std::vector<std::string>({"generate","objects","money","badges","badges-select","technology","parent-boundary","technology-select","ui-boundary","graph0"}));
         CHECK(depth==1 && objectState.loadingDepth==1 && carrierState.loadingDepth==1 && moneyCursor.position==4 && badgeStream.position==1 && techStream.position==0);
         CHECK(random.State()!=0x12345678 && crt!=7 && stamp.variants.has_value() && !sp.Initialized());
         const auto objectsNow=world.Objects();CHECK(!objectsNow.empty());std::size_t farms=0;

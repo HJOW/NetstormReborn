@@ -44,8 +44,12 @@ public:
     std::int32_t FindBadge(std::uint32_t type) const;
     // 004be8e0/CD00428fc0:조회pos0→개수BYTE→type/count BYTE쌍→실제setter순서다.
     void LoadBadges(FortMetaStream& stream) const;
+    // 실제 manager 선택을 판본별 깊이/Template 진단 뒤에 지연하며 빈 섹션 여부는 본문이 판단한다.
+    void LoadBadgesSelected(const std::function<FortMetaStream&()>& select) const;
     // 004beee0/CD004293d0:깊이→Template/isMine→부모조회→Tech조회→변환준비/Contents→해제→UI→깊이순서다.
     void LoadTechnology(FortMetaStream& stream) const;
+    // 실제 기술 부모를 조회한 뒤 현재 manager에서 Technology를 선택한다. 선택 중 실패도 깊이를 복구한다.
+    void LoadTechnologySelected(const std::function<FortMetaStream&()>& select) const;
     // 실제contents어댑터가다른SID풀을섞지않았는지확인한다.
     const SidPool& Pool() const;
 private:

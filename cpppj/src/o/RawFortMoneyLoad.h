@@ -37,6 +37,8 @@ public:
         FortMoneyState& state,ScrambledSpStore* patchStore,FortMoneyHooks hooks);
     // 실제4바이트소비→모드별현재SP/난수/99회검사카운터를적용하고깊이를복구한다.
     void Load(FortMoneyCursor& stream) const;
+    // 실제 manager 선택은 깊이 증가/Template 진단 뒤에 호출한다. selector가 반환하는 같은 cursor를 소비한다.
+    void LoadSelected(const std::function<FortMoneyCursor&()>& select) const;
     // 패치00483300/CD00414720의Money본문만실행한다. wrapper/조회/깊이/99회설정은별도다.
     void ReadMoney(FortMoneyCursor& stream) const;
     // 패치00447810: 유효로컬/비로컬모두special 고정SP를적용한다. 로컬활성때만표시를갱신한다.

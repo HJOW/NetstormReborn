@@ -1,5 +1,14 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-23 단위356 완료: Fort 선택의 원본 호출 시점
+
+- [x] 단위355를 `1c625ee6 / 20261023-19 CP`로 커밋했다. 현재/마지막 전체 정밀 디컴파일 PC는 **VM-W11-Codex / 2026-10-23**, 기존 산출물/원본/CD/AGENTS/다른 프로젝트는 변경하지 않는다.
+- [x] 기존 binding의 `loader.Load(selector())`가 깊이/Template 진단보다 섹션을 먼저 선택하던 순서를 발견했다. Money는 깊이/진단 뒤, Badges는 판본별 즉시 깊이/진단 뒤, Technology는 깊이/진단·현재 기술 부모 뒤에 선택하도록 같은 loader 몸체와 binding에 지연 selector를 연결했다. 기존 직접 cursor 입력도 같은 선택 시점에서 pos0 효과를 수행한다.
+- [x] 진단/부모에서 현재 cursor가 변경되는 입력, 선택 실패 시 깊이 복구 및 필수 selector 누락을 검증할 새3검사를 추가하고 실제 두 판본 Fort binding의 깊이/선택 순서 검사도 강화했다. 기존 x86 fixture와 기대 결과는 변경하지 않는다.
+- [x] Release 빌드1 종료0·경고/오류0, 새3개를 포함한 관련33검사 실패check0이다. 기존 Money408/Meta 장부·wrapper/Fort 부모534/DataManager 선택864 원문은 그대로 대조했다. 변경 C++9개 UTF-8 및 diff를 확인했다. 제품/검사 C++는 이 최종 검증 뒤 바꾸지 않는다.
+- [x] 최종 전체 CTest1은 **2340개·실패check0·종료0/179.76초**다. 원문/새 선택 순서/실제 binding·저장 회귀를 확인하고 [상세](docs/exe/cpp-fort-selection-order-20261023.md)·인수인계를 마감하여 **20261023-20 CP**로 로컬 커밋한다. 제품/검사 C++는 최종 검증 뒤 바꾸지 않았다. 전체 Edit Session/기술 변환/UI/populate/사용자 완주 목표는 계속 활성이다.
+- [ ] 다음 단위357 후보: 현재 FileSpec 키의 장기 수명과 catalog 열거/분류/별도 메타 읽기 세 PathSpec 직전 getter를 연결한다. 원본005327ac의9BYTE fortSpec/SOLOSpec 버퍼와005327e0 포인터,SOLOLIST의dirty→키변경→Refresh2/행→dirty→복구를 정밀 원문/보호PE로 확인했다. 키 변경만으로 자동 무효화하지 않는다. 이후 c9/ca는 pending 이름/모드와 next State 요청으로 연결하며 즉시 설치로 바꾸지 않는다. 자세한 원본 주소/잔여는 위 상세의 마지막 절에 있다.
+
 ## 2026-10-23 단위355 완료: 편집 Fort의 Money/Badges/Technology 실제 섹션 선택
 
 - [x] 단위354를 `0e3a7418 / 20261023-18 CP`로 커밋했다. 현재/마지막 전체 정밀 디컴파일 PC는 **VM-W11-Codex / 2026-10-23**, 새 디컴파일이나 기존 산출물 변경은 없다. 원본004bf340은 Money 선택0,004be8e0/004beee0은 Badges/Technology 선택1임을 기존 정밀 원문에서 확인했다.

@@ -156,3 +156,34 @@ TEST_CASE(FortMetaLoad_RejectsMissingRecordsEffectsAndTruncatedMemory) {
     CHECK(Throws([&] { RawFortMetaLoad bad(pool,std::span(scene.badges).first(6159),scene.depth,scene.state,scene.Hooks()); }));
     RawFortMetaLoad loader(pool,scene.badges,scene.depth,scene.state,scene.Hooks());scene.stream.bytes={};CHECK(Throws([&] { loader.LoadBadges(scene.stream); }));
 }
+
+// 두 판본의 깊이/Template 진단과 기술 부모가 현재 섹션을 바꾼 뒤에만 실제 getter를 실행한다.
+TEST_CASE(FortMetaLoad_SelectsAfterDiagnosticsAndTechnologyParent) {
+    // 두 판본은 Badges의 즉시 깊이 증감만 다르며 Technology 선택 시점은 같다.
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
+        SidPool pool(edition,kCapacity,false);auto badges=BadgeInput(0);std::uint32_t depth=3;FortMetaLoadState state;state.templatePresent=false;state.templateSlot=8;state.localOwner=1;
+        std::vector<std::uint8_t> bytes{0};FortMetaStream first{bytes,11,1,true},second{bytes,19,1,true};auto* current=&first;std::vector<std::string> effects;FortMetaLoadHooks hooks;
+        hooks.assertion=[&](auto reason) { effects.push_back("A"+std::to_string(static_cast<unsigned>(reason)));if (reason==FortMetaAssertion::MissingBadgesTemplate) current=&second; };
+        hooks.loadingDepthChanged=[&](auto value) { CHECK(value==depth);effects.push_back("L"+std::to_string(value)); };
+        hooks.technologyParent=[&] { CHECK(depth==4);effects.push_back("P");current=&second;return Sid{50}; };
+        hooks.prepareTypeNames=[&] { effects.push_back("N");state.hasTypeConversion=true; };
+        hooks.contents=[&](Sid parent,FortMetaStream& stream,auto flags,bool relaxed) { CHECK(parent==Sid{50} && &stream==&second && flags==17 && relaxed && !stream.position && depth==4);effects.push_back("C");stream.position=1; };
+        hooks.releaseTypeConversion=[&] { effects.push_back("F"); };hooks.refreshTechnologyUi=[&] { effects.push_back("U"); };
+        RawFortMetaLoad meta(pool,badges,depth,state,hooks);
+        meta.LoadBadgesSelected([&]() -> FortMetaStream& { CHECK(depth==3 && current==&second);effects.push_back("S3");current->position=0;return *current; });
+        const auto badgeEffects=edition==OriginalEdition::Patch1078 ? std::vector<std::string>{"A0","S3"} : std::vector<std::string>{"L4","L3","A0","S3"};
+        CHECK(effects==badgeEffects && first.position==11 && second.position==1 && depth==3);effects.clear();current=&first;
+        meta.LoadTechnologySelected([&]() -> FortMetaStream& { CHECK(depth==4 && current==&second && effects.back()=="P");effects.push_back("S4");current->position=0;return *current; });
+        CHECK(effects==std::vector<std::string>({"L4","A2","A3","P","S4","N","C","F","U","L3"}) && first.position==11 && second.position==1 && !state.hasTypeConversion && depth==3);
+    }
+}
+
+// 기술 selector 실패도 이미 수행한 부모 조회는 유지하면서 원래 깊이를 복구하고 빠진 callback은 쓰기 전에 거부한다.
+TEST_CASE(FortMetaLoad_SelectionFailureRestoresDepth) {
+    SidPool pool(OriginalEdition::Patch1078,kCapacity,false);auto badges=BadgeInput(0);std::uint32_t depth=3,parents{};FortMetaLoadState state;FortMetaLoadHooks hooks;
+    hooks.assertion=[](auto) { throw std::logic_error("정상 Template의 예상 밖 진단"); };hooks.loadingDepthChanged=[&](auto value) { CHECK(value==depth); };
+    hooks.technologyParent=[&] { CHECK(depth==4);++parents;return Sid{}; };hooks.prepareTypeNames=hooks.releaseTypeConversion=hooks.refreshTechnologyUi=[] { throw std::logic_error("선택 실패 뒤 추가 처리 없음"); };
+    hooks.contents=[](Sid,FortMetaStream&,std::uint32_t,bool) { throw std::logic_error("선택 실패 뒤 내용물 없음"); };RawFortMetaLoad meta(pool,badges,depth,state,hooks);
+    CHECK(Throws([&] { meta.LoadTechnologySelected([&]() -> FortMetaStream& { CHECK(depth==4 && parents==1);throw std::runtime_error("기술 파일 선택 실패 입력"); }); }));
+    CHECK(depth==3 && parents==1 && Throws([&] { meta.LoadTechnologySelected({}); }) && Throws([&] { meta.LoadBadgesSelected({}); }) && depth==3 && parents==1);
+}

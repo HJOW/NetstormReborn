@@ -111,3 +111,19 @@ TEST_CASE(FortMoneyLoad_SharesCurrentWorldOwnerStoreAndRandom) {
     money.SetPlayerSp(2,3000);CHECK(store.Get(2)==std::bit_cast<std::uint32_t>(194162.0f));CHECK(refreshes==2);
     CHECK(random.State()!=0);CHECK(depth==3);
 }
+
+// 진단에서 현재 섹션을 바꾸면 새 getter는 증가한 깊이에서 변경된 cursor를 소비하고 실패 때 깊이를 복구한다.
+TEST_CASE(FortMoneyLoad_SelectsAfterDepthAndTemplateDiagnostic) {
+    SquidRewardState reward;reward.fixedSpA=true;SquidPostPopState players;players.localOwner=1;FortMoneyState state;state.templatePresent=false;
+    GameRandom random(12345);ScrambledSpStore sp(random,[] { return 12345U; });std::vector<std::uint8_t> records(9*0xb4);std::uint32_t depth=3;
+    FortMoneyCursor first{17,4},second{19,4};auto* current=&first;std::vector<std::string> effects;
+    RawFortMoneyLoad money(OriginalEdition::Patch1078,reward,players,records,depth,state,&sp,{
+        [&](FortMoneyAssertion reason) { CHECK(reason==FortMoneyAssertion::MissingTemplate && depth==4);effects.push_back("A");current=&second;state.templatePresent=true; },
+        [&](auto value) { CHECK(value==depth);effects.push_back("L"+std::to_string(value)); },[] { throw std::logic_error("고정 Fort SP의 예상 밖 표시"); }});
+    money.LoadSelected([&]() -> FortMoneyCursor& { CHECK(depth==4 && current==&second);effects.push_back("S4");current->position=0;return *current; });
+    CHECK(effects==std::vector<std::string>({"L4","A","S4","L3"}) && first.position==17 && second.position==4 && depth==3);
+    CHECK(sp.Get(1)==std::bit_cast<std::uint32_t>(194162.0f));effects.clear();
+    CHECK(Throws([&] { money.LoadSelected([&]() -> FortMoneyCursor& { CHECK(depth==4);effects.push_back("SF");throw std::runtime_error("선택 파일 실패 입력"); }); }));
+    CHECK(effects==std::vector<std::string>({"L4","SF","L3"}) && depth==3);effects.clear();
+    CHECK(Throws([&] { money.LoadSelected({}); }) && effects.empty() && depth==3);
+}

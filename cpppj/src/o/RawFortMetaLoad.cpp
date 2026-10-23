@@ -50,20 +50,30 @@ std::uint8_t RawFortMetaLoad::ReadByte(FortMetaStream& stream) const {
 void RawFortMetaLoad::ChangeDepth(std::uint32_t value) const { loadingDepth_=value;hooks_.loadingDepthChanged(value); }
 // patch는깊이를쓰지않고CD는entry의두helper에서바로증감한다.
 void RawFortMetaLoad::LoadBadges(FortMetaStream& stream) const {
+    LoadBadgesSelected([&stream]() -> FortMetaStream& { stream.position=0;return stream; }); // 기존 독립 원문 입력의 선택 효과도 같은 시점에 수행한다.
+}
+// 실제 Badges 선택은 CD의 즉시 깊이 증감과 현재 Template 진단 뒤에 수행한다.
+void RawFortMetaLoad::LoadBadgesSelected(const std::function<FortMetaStream&()>& select) const {
+    if (!select) throw std::invalid_argument("Fort Badges 실제 섹션 선택 누락");
     if (pool_.Edition()==OriginalEdition::Cd1072) { ChangeDepth(loadingDepth_+1U);ChangeDepth(loadingDepth_-1U); }
     if (!state_.templatePresent) hooks_.assertion(FortMetaAssertion::MissingBadgesTemplate);
-    stream.position=0;if (!stream.present || !stream.end) return;
+    auto& stream=select();if (!stream.present || !stream.end) return;
     const auto count=ReadByte(stream);
     // 저장BYTE순서를그대로따르며앞setter효과를새종류/개수로정렬하지않는다.
     for (std::uint32_t index=0;index<count;++index) { const auto type=ReadByte(stream);const auto quantity=ReadByte(stream);SetBadge(type,quantity); }
 }
 // 현재부모/변환표/깊이를다시읽고항상UI를호출한뒤원래깊이만복구한다.
 void RawFortMetaLoad::LoadTechnology(FortMetaStream& stream) const {
+    LoadTechnologySelected([&stream]() -> FortMetaStream& { stream.position=0;return stream; }); // 독립 원문의 cursor 초기화도 실제 기술 부모 조회 뒤에 한다.
+}
+// 실제 Technology 선택을 깊이/Template/isMine 진단과 기술 부모 조회 뒤의 원본 위치에서 수행한다.
+void RawFortMetaLoad::LoadTechnologySelected(const std::function<FortMetaStream&()>& select) const {
+    if (!select) throw std::invalid_argument("Fort Technology 실제 섹션 선택 누락");
     ChangeDepth(loadingDepth_+1U);
     try {
         if (!state_.templatePresent) hooks_.assertion(FortMetaAssertion::MissingTechnologyTemplate);
         if (state_.templateSlot!=state_.localOwner) hooks_.assertion(FortMetaAssertion::TechnologyNotMine);
-        const auto parent=hooks_.technologyParent();stream.position=0;
+        const auto parent=hooks_.technologyParent();auto& stream=select();
         if (stream.present && stream.end) {
             hooks_.prepareTypeNames();hooks_.contents(parent,stream,0x11, true);
             if (state_.hasTypeConversion) hooks_.releaseTypeConversion();state_.hasTypeConversion=false;
