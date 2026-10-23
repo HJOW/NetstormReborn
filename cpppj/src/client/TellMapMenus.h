@@ -1,10 +1,10 @@
 // 원본 Tell 메타의 단독/저장 맵 목록 부모와 실제 파일 목록을 연결한다.
 #pragma once
 #include "client/SoloMapCatalog.h"
+#include "client/FortSelection.h"
 
 namespace netstorm::client {
 inline constexpr std::uint32_t kTellMenuFlags=0x40000U; // 004c83b0의 Tell 세로 메뉴 생성 플래그다.
-inline constexpr std::uint32_t kReadFortCommand=0x020000caU; // 004cb210의 실제 ReadFort 맵 선택 명령이다.
 // 목록 부모가 호출하는 장치다. 반환 개수를 캐시하지 않고 각 성공 행 뒤 현재 값을 읽는다.
 struct TellMapMenuHooks {
     std::function<void(std::uint32_t)> beginVertical; // 현재 메뉴 스택에 새 세로 열을 만든다.

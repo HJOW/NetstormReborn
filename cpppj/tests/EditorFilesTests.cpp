@@ -1,5 +1,6 @@
 // 보호 원본을 바꾸지 않고 실제 Notify/저장 부모/파일 장치/다시 읽기 전체 경로를 확인한다.
 #include "client/EditorFiles.h"
+#include "client/FortSelection.h"
 #include "client/CampaignTemplateStorage.h"
 #include "DudeSpawnSupport.h"
 #include <chrono>
@@ -62,4 +63,33 @@ TEST_CASE(EditorFiles_RejectsProtectedPathsAndKeepsExistingWork) {
 TEST_CASE(EditorFiles_ProtectedNameRejectedThroughSaveParent) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);const auto path=assets.root/"d/TEST01.fort";const auto original=ReadFileBytes(path);CampaignTemplateStorage storage;storage.InstallFile(1,FortTemplate::Parse(original,assets.game.TypeTable()),original,path.string());
     std::uint32_t readOnly{},owner=1;std::array<std::uint8_t,9> hidden{};EditorFiles files(WorkRoot("parent"),Protected());CHECK(Rejects([&] { storage.SaveFile(1,{readOnly,owner,hidden},ImageHooks(),files.Writer()); }));CHECK(ReadFileBytes(path)==original);
+}
+
+// ReadFort가 pending/next만 예약하면서 기존 전투 Fort의 실제 State/Notify/저장도 같은 장치에 적용한다.
+TEST_CASE(EditorFiles_FortSelectionUsesCurrentStateAndWriter) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);const auto original=assets.files.Read("d/TEST01.fort");
+    EditorFiles files(WorkRoot("selection"),Protected());const auto path=files.Prepare("CurrentMap",original);CampaignTemplateStorage storage;
+    storage.InstallFile(1,FortTemplate::Parse(original,assets.game.TypeTable()),original,path.string());
+    std::uint32_t depth{},readOnly{},templateOwner=1,mode=2,next=7,battle=1,currentState=14,owner=7;bool mission{};
+    std::array<std::uint8_t,9> hidden{};std::size_t saves{},loads{};std::string pending="old";
+    RawPlayerTemplateState state(OriginalEdition::Patch1078,storage.Headers(),[&](auto slot)->PlayerTemplateStateStream& { return storage.SelectState(slot); },[&](auto slot)->const std::string& { return storage.Name(slot); },depth,mission,
+        [](auto) { throw std::logic_error("Fort 선택의 예상 밖 State 진단"); },[](auto) { throw std::logic_error("PATCH Fort 선택의 CD 깊이 변경 금지"); });
+    state.BindMinimumSize([&](auto slot,auto size)->PlayerTemplateStateStream& { return storage.EnsureStateSize(slot,size); });
+    state.BindFileSave([&](auto slot) { ++saves;storage.SaveFile(slot,{readOnly,owner,hidden},ImageHooks(),files.Writer()); });
+    hidden[templateOwner]=1; // 저장 관문은 Template 슬롯1이 아닌 실제 owner7의 hidden을 읽어야 한다.
+    const auto initial=state.Get(1);const std::vector<std::uint8_t> before(initial.begin(),initial.end());
+    FortSelectionHooks hooks;hooks.resolveString=[](auto token)->std::string_view { CHECK(token==202);return "NextMap"; };
+    hooks.pending=[&](auto name) { SetPendingFortName(pending,name); };hooks.currentFortPath=[&] { return storage.Name(templateOwner); };
+    hooks.loadFort=[&](auto slot,auto fileName) { // 실파일 읽기는 기존 현재 이름을 사용하며 선택한 pending 맵을 설치하지 않는다.
+        CHECK(slot==1 && fileName==path.string());const auto bytes=ReadFileBytes(std::filesystem::path(fileName));storage.InstallFile(slot,FortTemplate::Parse(bytes,assets.game.TypeTable()),bytes,std::string(fileName));++loads;
+    };
+    hooks.core=[&](auto slot) { return state.Get(slot); };hooks.gameSeconds=[] { return 45.75; };
+    hooks.ownedIslands=[](auto selected) { CHECK(selected==7);return 0; };hooks.notify=[&](auto slot) { state.Changed(slot); };
+    CHECK(DispatchFortSelectionCommand({kReadFortCommand,101,202},{mode,next,battle,currentState,templateOwner,owner},hooks));
+    CHECK(pending=="NextMap" && next==1 && mode==2 && loads==1 && saves==1 && storage.Name(1)==path.string());
+    auto expected=before;expected[0]&=0xf9U;expected[12]=45;expected[13]=0;expected[14]=0;expected[15]=0;
+    const auto after=state.Get(1);CHECK(std::vector<std::uint8_t>(after.begin(),after.end())==expected);
+    const auto saved=ReadFileBytes(path);CHECK(saved!=original);const auto decoded=FortTemplate::Parse(saved,assets.game.TypeTable());CHECK(decoded.sections==storage.Template(1).sections);
+    CampaignTemplateStorage reload;reload.InstallFile(1,decoded,saved,path.string());const auto reloaded=reload.State(1).bytes;CHECK(std::vector<std::uint8_t>(reloaded.begin(),reloaded.end())==expected);
+    CHECK(assets.files.Read("d/TEST01.fort")==original); // 원본은 읽기 전용 입력으로만 사용했고 저장은 새 작업본에 수행했다.
 }

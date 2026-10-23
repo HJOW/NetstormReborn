@@ -1,5 +1,15 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-23 단위361 완료: 편집 맵 선택의 pending/next 예약
+
+- [x] AGENTS.md·공통/닷넷 인수인계를 다시 읽었다. 시작 HEAD는 `c4009b9b / 20261023-25 CP`, 현재/마지막 전체 정밀 디컴파일 PC는 **VM-W11-Codex / 2026-10-23**으로 일치한다. 새 디컴파일/원본 게임 실행은 없다. 사용자 `/goal`의 전체 범위를 유지하며 원본 동일성 완료로 축소하지 않는다.
+- [x] `FortSelection`에 AskEditFort의 mode2→PathSpec→pending→Refresh2→Tell, ReadFort의 사건y→pending→현재mode→next6/1, 기존next 덮어쓰기와 전투 State14의 실제 Fort/State BYTE·시간 DWORD·섬 수/Notify 순서를 복원했다. Script 원본 parser/문자열 고리/입력 큐 연결도 추가했고 기존 Tell 맵 행은 같은 ReadFort 상수를 쓴다. [상세](docs/exe/cpp-fort-selection-20261023.md)에 계약/근거/경계를 기록했다.
+- [x] 보호 PE의 지정 기본블록/3550/3560/실제 CRT를 실행한 **1,836입력·두정밀도3,672관측·77,956본체명령·정밀도 차이0**을 새 fixture로 대조했다. 콜백의 mode/slot/owner/next 변경과 전체32BYTE Core를 포함한다. 기존 fixture는 바꾸지 않는다. 실제 TEST01 작업본의 현재 파일 재읽기→State 수정→Notify→저장→재읽기도 통과했고 원본은 같다.
+- [x] Release 최종 빌드5 종료0·경고/오류0, 관련5검사 실패check0이다. 새 검사 span/vector 비교 오류와 감사에서 찾은 저장 hidden의 owner/Template 슬롯 오연결을 수정했다. 독립3672행 전체 관문과 owner7/slot1의 다른 hidden 입력도 확인했다. 수정 전 CTest1은 재검증을 위해 중단했고, 그 실행파일 잠금으로 실패한 빌드4는 최종 검증으로 세지 않는다. 로그는 `extracted/cpp-fort-selection-20261023-*`다.
+- [x] 최종 전체 CTest2는 **2,352검사·실패check0·종료0/310.21초**이며 LastTest.log 내부2352/0도 확인했다. UTF-8/추가 한국어 주석/diff/보호 경로를 확인하고 **20261023-27 CP**로 로컬 커밋한다. 제품/검사 C++는 최종 빌드/집중·전체 검사 뒤 바꾸지 않았다. 작업 중 별도 세션의 `954acb92 / 20261023-26 DN` 배포 스크립트가 커밋됐으며 해당 변경과 미커밋 dotnet 파일은 이 단위에 섞지 않는다. 원격 push는 하지 않는다.
+- [ ] 실제 UberGump 입력의 Guide→Gump 소비 뒤 같은 사건 묶음 안 즉시 예약, State1/6·Editor 설치는 미연결이므로 메인 Edit/ReadFort 관문은 유지한다. 다음은 필수 현재 월드 snapshot004bf9a0의 writer 부모·하위(TypeNames/기술/객체/Territory/Deck/Money/Mission/Badges/Notify), 공유 모드/기존·새 Fort 준비/generic 설치/Editor Player 직접 생성이다. 전체 사용자 완주·커스텀 맵/시나리오·메인 메뉴/GUI·음향·최신 배포 검증은 계속 남아 있다.
+- [ ] 다음 snapshot 첫 연결은 같은 manager의 일반 쓰기 섹션 생성과 TypeNames/Deck writer다. 기존 WithMemory/WriteStream(handle,input), NameHash, RawCampaignProductionBindings::Refresh(owner)/RawProductionDeck::Get·Bytes를 재사용한다. TypeNames는 새 stream을 보관한 뒤 State.Get이 current를 바꾸므로 명시 stream handle로 계속 써야 한다. **Money004832c0은 현재 SP가 아닌 공유난수Next(0x3f2)+333.0f의4BYTE**이며 SP.Get로 대체하면 안 된다(기존 정밀 원문105801/보호PE0050d7c4 직접 확인). 상세에 잔여와 원본 호출 순서를 보존했다.
+
 ## 2026-10-23 단위360 완료: 실제 Tell 맵 목록 표시 연결
 
 - [x] 단위358은 `adb059fc / 20261023-23 CP`로 커밋했다. 중단 파일 점검/마감과 전체2347/0 검사는 해당 커밋의 결과다. 작업 중 별도 세션의 배포 단위359(`12b1b56e / 20261023-24 CP`)가 들어와 이 작업은360으로 구별한다. 현재/마지막 전체 정밀 디컴파일 PC는 **VM-W11-Codex / 2026-10-23**이며 새 디컴파일은 없다.
