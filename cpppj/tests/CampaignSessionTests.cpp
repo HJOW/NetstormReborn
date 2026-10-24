@@ -9,6 +9,7 @@
 #include "client/RawMenuControls.h"
 #include "client/ClientMain.h"
 #include "client/ClientPlayerRecords.h"
+#include "client/ClientCoreDataGlobals.h"
 #include "client/RawCampaignMissionStartBindings.h"
 #include "client/UserInput.h"
 // 생산 세션과 GameWorld의 표시/선택/명령이 같은 실제 raw 월드를 사용하는지 검사한다.
@@ -1678,6 +1679,127 @@ TEST_CASE(CampaignSession_ActualClientPlayerOwnerAcrossSessions) {
     auto second=make();CHECK(records->Base()!=previous && second->PlayerRecords().data()==records->Records().data());CHECK(records->FortCount()==0 && records->LastLoginPlayer()==0);
     auto next=second->Core();for (std::uint32_t owner=0;owner<9;++owner) CHECK(next.bookkeeping.ownerFactories[owner].Count()==0 && Get(records->Records(),owner*180+8)==0); // 새 초기화는 이전 활성SID를 남기지 않는다.
     second->Load();CHECK(second->PlayerRecords().data()==records->Records().data());
+}
+
+namespace {
+// 실제 Client를 창 없이 같은 보호 자료 경로로 구성한다.
+ClientOptions SessionLinksOptions() { ClientOptions options;options.gameDirectory=std::filesystem::path(__FILE__).parent_path().parent_path().parent_path()/"originals";return options; }
+// Native Player의 선택 DWORD를 검사 입력에만 직접 쓴다.
+void SessionLinksPut(std::span<std::uint8_t> raw,std::size_t offset,std::uint32_t value) {
+    for (std::size_t byte=0;byte<4;++byte) raw[offset+byte]=static_cast<std::uint8_t>(value>>(byte*8)); // 정확한4BYTE만 바꾼다.
+}
+// 실제 같은 Deck owner에서 해당 토큰이 반납됐는지 조회하며 다른 예외를 통과로 세지 않는다.
+bool SessionDeckReleased(const RawProductionDeck& deck,std::uint32_t token) {
+    try { static_cast<void>(deck.Bytes(token));return false; }catch (const std::out_of_range&) { return true; }
+}
+// 실제 Kernel 가상 소멸 시점의 관측만 실행한다. 원문 정리 효과를 대신 계산하지 않는다.
+class SessionLinksProbe final:public BaseProcess {
+public:
+    explicit SessionLinksProbe(std::function<void()> inspect):inspect_(std::move(inspect)) {} // 실제 삭제 시의 읽기 장치다.
+    ~SessionLinksProbe() override { inspect_(); } // 슬롯이 아직 살아 있는 Native Kernel 소멸 위치에서 관측한다.
+private:
+    std::function<void()> inspect_; // Player/Deck/Kernel보다 먼저 반납하는 외부 관측 callback이다.
+};
+// 실제 Client Player/factory와 Session Deck을 소유하며 입력 카운터는 모든 callback보다 오래 산다.
+struct SessionLinksScene {
+    SessionServicesFixture external; // 계산을 대체하지 않는 기존 실제 장치 fixture다.
+    Client client{SessionLinksOptions()}; // 실제 제품 생성자가 보유하는 Player/Core owner다.
+    std::shared_ptr<ClientPlayerRecords> records{client.PlayerRecords()}; // Session 소멸 뒤에도 같은 Player 물리를 보존한다.
+    std::size_t allocations{}; // 실제 Deck Fill에 도달한 수다. 정리 중 암묵 새 할당을 검출한다.
+    std::array<std::uint32_t,9> tokens{}; // 같은 실제 Deck::Get으로 얻은 각 행의 토큰이다.
+    std::unique_ptr<RawCampaignSession> session; // 위의 실제 장치/카운터/Client보다 먼저 소멸시킨다.
+    // 명시 패턴은 미초기화 Deck 입력일 뿐이며 원문 계산/반납의 결과를 제공하지 않는다.
+    std::unique_ptr<RawCampaignSession> Make() {
+        const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);auto services=external.Services();services.playerRecords=records;
+        services.production.allocationBytes=[this](auto bytes) { ++allocations;std::fill(bytes.begin(),bytes.end(),std::uint8_t{0x6b}); };
+        auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());
+        return std::make_unique<RawCampaignSession>(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));
+    }
+    // Player0까지 Native의9행을 모두 선택하며 같은 실제 +0/+4 factory 물리는 건드리지 않는다.
+    explicit SessionLinksScene(bool decks=true) {
+        session=Make();const auto raw=records->Records();
+        for (std::uint32_t owner=0;owner<9;++owner) { // 실제 부모가 방문할 세 DWORD와 선택 Deck의 명시 입력이다.
+            if (decks) tokens[owner]=session->Production().Deck().Get(owner);
+            SessionLinksPut(raw,owner*180+0x9c,owner+31);SessionLinksPut(raw,owner*180+8,owner+1);
+        }
+    }
+};
+// 실제162관측의 +9c/+8/+68만0이라는 결과를 이웃 전체 BYTE 보존과 함께 확인한다.
+void CheckSessionLinksBytes(std::span<const std::uint8_t> before,std::span<const std::uint8_t> after) {
+    CHECK(before.size()==1620 && after.size()==before.size());
+    if (before.size()!=1620 || after.size()!=before.size()) return; // 물리 오류를 검사기 자신의 범위 밖 읽기로 숨기지 않는다.
+    for (std::size_t index=0;index<after.size();++index) { // Native가 쓰는 세 DWORD 이외에는 전체 기록을 보존한다.
+        const auto field=index%180;const bool cleared=(field>=8 && field<12) || (field>=0x68 && field<0x6c) || (field>=0x9c && field<0xa0);
+        CHECK(after[index]==(cleared ? 0 : before[index]));
+    }
+}
+}
+
+// 명시 정리는 같은 실제 Player/Deck만 바꾸며 Kernel/Core/Player/factory 할당을 유지한다.
+TEST_CASE(CampaignSession_PlayerLinks_ExplicitCleanupKeepsKernelCoreAndFactoryStorage) {
+    std::size_t deletes{};SessionLinksScene scene;const auto before=std::vector<std::uint8_t>(scene.records->Records().begin(),scene.records->Records().end());
+    const auto base=scene.records->Base();auto core=scene.session->Core();const auto& deck=scene.session->Production().Deck();
+    const auto probe=core.kernel.Add(std::make_unique<SessionLinksProbe>([&] { ++deletes; }));const auto count=core.kernel.Size();
+    const auto globals=scene.client.CoreDataGlobals();std::fill(globals->Cached().begin(),globals->Cached().end(),std::uint8_t{0x92});globals->Current()=globals->Cached();globals->Active()=17;
+    scene.session->ReleasePlayerLinks();CheckSessionLinksBytes(before,scene.records->Records());
+    CHECK(scene.records->Base()==base && scene.allocations==9 && deletes==0 && core.kernel.Size()==count && core.kernel.Get(probe));
+    CHECK(globals->Current().data()==globals->Cached().data() && globals->Active()==17 && globals->Cached()[0]==0x92 && globals->Cached()[9]==0x92);
+    for (std::uint32_t owner=0;owner<9;++owner) { // facade와 실제 +8이 같은0이고 같은 실제 Deck 블록은 모두 반납됐다.
+        CHECK(SessionDeckReleased(deck,scene.tokens[owner]));CHECK(core.bookkeeping.ownerFactories[owner].Count()==0 && core.bookkeeping.ownerFactories[owner].Capacity()==30);
+        CHECK(Get(scene.records->Records(),owner*180)==Get(before,owner*180) && Get(scene.records->Records(),owner*180+4)==30);
+    }
+    scene.session->ReleasePlayerLinks();CHECK(scene.allocations==9 && deletes==0); // 이미0인 Deck은 새 Get/free를 선택하지 않는다.
+    scene.session.reset();CHECK(deletes==1);
+}
+
+// 실제 Session 소멸의 첫 Kernel 가상 소멸자가 모든 Player 링크/덱 반납 완료를 관측해야 한다.
+TEST_CASE(CampaignSession_PlayerLinks_DestructorRunsBeforeKernelAndNextPlayerAllocation) {
+    std::size_t deletes{};ProcessId probe{};SessionLinksScene scene;const auto base=scene.records->Base();const auto before=std::vector<std::uint8_t>(scene.records->Records().begin(),scene.records->Records().end());
+    const auto& deck=scene.session->Production().Deck();auto core=scene.session->Core();
+    probe=core.kernel.Add(std::make_unique<SessionLinksProbe>([&,core,before,base] {
+        ++deletes;CHECK(core.kernel.Get(probe)!=nullptr && scene.records->Base()==base && scene.allocations==9);CheckSessionLinksBytes(before,scene.records->Records());
+        for (std::uint32_t owner=0;owner<9;++owner) { // 아직 실제 Player/factory는 살아 있고 동적 Deck만 먼저 없어야 한다.
+            CHECK(SessionDeckReleased(deck,scene.tokens[owner]));CHECK(core.bookkeeping.ownerFactories[owner].Items().empty() && core.bookkeeping.ownerFactories[owner].Capacity()==30);
+        }
+    }));
+    scene.session.reset();CHECK(deletes==1 && scene.records->Base()==base);CheckSessionLinksBytes(before,scene.records->Records());
+    scene.session=scene.Make();CHECK(scene.records->Base()!=base && scene.allocations==9); // 이전 소비자 소멸 뒤 실제 초기화 부모가 이전 Player/factory를 반납한다.
+}
+
+// 모든 +68이0이면 정리는 실제 Deck 할당/반납을 선택하지 않아야 한다.
+TEST_CASE(CampaignSession_PlayerLinks_ZeroDecksDoNotAllocateDuringCleanup) {
+    SessionLinksScene scene(false);const auto before=std::vector<std::uint8_t>(scene.records->Records().begin(),scene.records->Records().end());
+    CHECK(scene.allocations==0);scene.session->ReleasePlayerLinks();CheckSessionLinksBytes(before,scene.records->Records());
+    scene.session.reset();CHECK(scene.allocations==0);
+}
+
+// 명시 State 경계의 실패는 부분효과를 보존하고 Kernel을 실행하지 않으며 후속 정상 호출도 실제 소유자를 쓴다.
+TEST_CASE(CampaignSession_PlayerLinks_InvalidDeckStopsAtSelectedFreeWithPrefix) {
+    std::size_t deletes{};SessionLinksScene scene;auto raw=scene.records->Records();const auto& deck=scene.session->Production().Deck();
+    auto core=scene.session->Core();core.kernel.Add(std::make_unique<SessionLinksProbe>([&] { ++deletes; }));
+    SessionLinksPut(raw,3*180+0x68,0xdeadcaf0U);bool rejected{};try { scene.session->ReleasePlayerLinks(); }catch (const std::out_of_range&) { rejected=true; }
+    CHECK(rejected && deletes==0 && scene.allocations==9);
+    for (std::uint32_t owner=0;owner<9;++owner) { // 실제 선택 free 전후의 행과 뒤의 미방문 행을 구분한다.
+        if (owner<3) CHECK(Get(raw,owner*180+0x68)==0 && SessionDeckReleased(deck,scene.tokens[owner]));
+        else CHECK(!SessionDeckReleased(deck,scene.tokens[owner]));
+        CHECK(Get(raw,owner*180+0x9c)==(owner<=3 ? 0U : owner+31));CHECK(Get(raw,owner*180+8)==(owner<=3 ? 0U : owner+1));
+    }
+    CHECK(Get(raw,3*180+0x68)==0xdeadcaf0U);SessionLinksPut(raw,3*180+0x68,scene.tokens[3]);scene.session->ReleasePlayerLinks();
+    CHECK(deletes==0 && scene.allocations==9);scene.session.reset();CHECK(deletes==1);
+}
+
+// 서비스가 마지막 보유 callback을 반납할 때도 이전 Session의 Player 대여는 아직 살아 있어야 한다.
+TEST_CASE(CampaignSession_PlayerLinks_PlayerLeaseOutlivesServiceCaptures) {
+    bool observed{},blocked{};Client client(SessionLinksOptions());const auto records=client.PlayerRecords();SessionServicesFixture external;
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);auto services=external.Services();services.playerRecords=records;
+    std::shared_ptr<int> watch(new int{0},[&](int* marker) { // 마지막 서비스 보유자가 소멸하는 실제 위치만 관측한다.
+        delete marker;observed=true;
+        try { static_cast<void>(records->Acquire()); }catch (const std::logic_error&) { blocked=true; }
+    });
+    services.unitLost=[watch](Sid) {};watch.reset(); // callback 자체는 게임 결과를 만들지 않으며 다른 검사 소유권도 남기지 않는다.
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());
+    auto session=std::make_unique<RawCampaignSession>(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));services.unitLost={};session.reset();
+    CHECK(observed);CHECK(blocked);const auto next=records->Acquire();CHECK(next!=nullptr); // 모든 소비자가 반납된 뒤에만 다음 대여를 허용한다.
 }
 
 // 실제 서버 abstract/134 도착이30과17을 만들고 같은 시각으로 HP/완료/공간/표시 종료를 실행한다.

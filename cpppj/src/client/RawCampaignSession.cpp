@@ -3,6 +3,7 @@
 #include "client/ClientRandomGlobals.h"
 #include "client/ClientSubscriberGlobals.h"
 #include "client/ClientPlayerRecords.h"
+#include "o/RawPlayerLinksCleanup.h"
 #include "client/ClientColorSortInput.h"
 #include "client/ClientLocalStateGlobals.h"
 #include "client/CampaignTemplateStorage.h"
@@ -300,6 +301,9 @@ std::string_view RawCampaignObjectMenus::TextParameter(std::uint32_t token) cons
 bool RawCampaignObjectMenus::ResolveIdentity(PlayerIdentityRecord& record) const { return impl_->identity->Resolve(record); }
 // 실제 월드/상태와 모든 callback 대상을 같은 고정 주소에 소유한다.
 struct RawCampaignSession::Impl {
+    std::shared_ptr<ClientPlayerRecords> playerRecords; // 모든 소비자보다 먼저 구성하고 마지막에 반납하는 실제 Client Player owner다.
+    std::unique_ptr<ClientPlayerRecords::Use> playerUse; // Login과 서비스 callback까지 모두 소멸한 뒤 다음 Player 재할당을 허용한다.
+    RawCampaignSessionServices services; // Login/장기 callback보다 먼저 만들고 나중에 반납하는 실제 클라이언트 장치다.
     struct SelectionLink { RawUserSelection* selection{}; }; // 살아 있는 실제 선택 객체의 주소이며 약한 토큰으로만 빌린다.
     std::weak_ptr<SelectionLink> activeSelection; // UI 몸체가 먼저 파괴돼도 낙하가 해제된 주소를 호출하지 않는다.
     struct Login; //같은실제원본로그인과현재전송의고정주소 소유자다.
@@ -309,9 +313,6 @@ struct RawCampaignSession::Impl {
     CarrierInputState inputState; //같은 Carrier.cpp 커서/희생/진단 전역이다.
     std::array<CarrierInputType,188> inputAudio{}; //현재 TYPE+78/+80의 음향 핸들이다.
     CarrierDropPointState inputDropState; //같은 지도 한계/실패점을 기존 위치 계산기에 공급한다.
-    RawCampaignSessionServices services; // 실제 클라이언트의 선택 서비스이며 검사 관찰 기본값을 사용하지 않는다.
-    std::shared_ptr<ClientPlayerRecords> playerRecords{services.playerRecords ? services.playerRecords : std::make_shared<ClientPlayerRecords>()}; // 실제 Client 저장소 또는 독립 검사의 같은 실제 소유자다.
-    std::unique_ptr<ClientPlayerRecords::Use> playerUse{playerRecords->Acquire()}; // world와 모든 고정span 소비자보다 먼저 만들고 모두 소멸한 뒤 반납한다.
     std::shared_ptr<CampaignTemplateStorage> templateStorage; // 같은 Client manager 표를 빌리며 독립 Session만 자체 저장소를 소유한다.
     std::span<std::uint8_t> headers; // 같은 저장소의 실제9×20BYTE이며 파생 모듈에 사본을 만들지 않는다.
 
@@ -722,6 +723,7 @@ struct RawCampaignSession::Impl {
 
     // 보호 자료를 읽기 전용으로 사용하며 모든 필수 후처리를 첫 생성 전에 등록한다.
     Impl(const GameAssets& game,const BaseFileSystem& files,FortTemplate fort,std::string mission,RawCampaignSessionServices input):
+        playerRecords(input.playerRecords ? input.playerRecords : std::make_shared<ClientPlayerRecords>()),playerUse(playerRecords->Acquire()),
         services(std::move(input)),templateStorage(services.templateStorage ? services.templateStorage : std::make_shared<CampaignTemplateStorage>()),headers(templateStorage->Headers()),assets(game,files),metadata(assets.game),
         world(OriginalEdition::Patch1078,assets.types,assets.frames,metadata.shapes,CampaignLinks(),terrainType),core(world.Core()),
         sp(random,[this] { return seed.Reseed(); }),hp(core.pool,core.types,core.bookkeeping,rewardState,&sp,SquidRewardHooks{{},services.refreshSp}),
@@ -3041,6 +3043,12 @@ struct RawCampaignSession::Impl {
         return CameraHome(core.pool,core.types,state,std::move(apply),std::move(hooks));
     }
     #include "client/RawCampaignRitual.inc"
+    // State 부모가 지정하는 같은 현재 Player와 같은 실제 Deck owner를 기존 원문 자식에 빌린다.
+    void ReleasePlayerLinks() {
+        CleanupPlayerLinks({[this] { return playerRecords->Records(); },[this](std::uint32_t token) {
+            if (!productionDeck) throw std::logic_error("실제 Session Player링크의 Deck 소유자 미연결");productionDeck->Release(token);
+        }});
+    }
     // 외부 콜백이 참조하는 모듈을 해제하기 전에 현재 Kernel을 비운다.
     ~Impl() {
         // 다른 AI의 손상/외부 예외가 나더라도 나머지 실제 brain과 Kernel 정리를 계속하고 오류를 남긴다.
@@ -3049,6 +3057,10 @@ struct RawCampaignSession::Impl {
             catch (const std::exception& error) { std::fprintf(stderr,"실제 Session AI 정리 실패 owner%u: %s\n",owner,error.what()); }
             catch (...) { std::fprintf(stderr,"실제 Session AI 정리 실패 owner%u: 알 수 없는 예외\n",owner); }
         }
+        // 원문0048fcd0은 Kernel보다 앞선다. 실패한 명시 State 호출과 달리 C++ 최종 소멸은 진단 뒤 나머지 소유권을 반납한다.
+        try { ReleasePlayerLinks(); }
+        catch (const std::exception& error) { std::fprintf(stderr,"실제 Session Player링크 정리 실패: %s\n",error.what()); }
+        catch (...) { std::fprintf(stderr,"실제 Session Player링크 정리 실패: 알 수 없는 예외\n"); }
         try { world.ClearProcesses(); }
         catch (const std::exception& error) { std::fprintf(stderr,"실제 Session Kernel 정리 실패: %s\n",error.what()); }
         catch (...) { std::fprintf(stderr,"실제 Session Kernel 정리 실패: 알 수 없는 예외\n"); }
@@ -3386,6 +3398,8 @@ GameMenusHooks RawCampaignSession::BindGameMenus(GameMenusHooks hooks) {
 }
 // 원본 로그인/AI 초기화와 승패 판정은 같은9 Player 바이트를 공유한다.
 std::span<std::uint8_t> RawCampaignSession::PlayerRecords() { return impl_->players; }
+// 명시 State 호출은 선택된 free 실패를 전파하며 앞선 Player 쓰기와 나머지 월드 수명을 보존한다.
+void RawCampaignSession::ReleasePlayerLinks() { impl_->ReleasePlayerLinks(); }
 // 방향별 DWORD를 그대로 공유하여 한쪽 변경을 대칭화하거나 bool로 줄이지 않는다.
 std::span<std::uint32_t> RawCampaignSession::Alliances() { return impl_->alliances; }
 // 같은 현재 Player 참여/동맹/실제 AI 소유자 수명을 후속 로그인 부모에 빌린다.

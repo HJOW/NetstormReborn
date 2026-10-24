@@ -1,0 +1,263 @@
+{
+  "unit": 392,
+  "date": "2026-10-24",
+  "edition": "10.78",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "baseline": "ca34d0be",
+  "productSha256": "ecd705109d6df15a2316918f1b5329e321c58ebcfd0ba1d7959610952f85b376",
+  "testBinarySha256": "f2263305340a1e2840efc0f9e57fad2aa881cf5c4e8b595d7c4f482b6f9f8074",
+  "newTests": 5,
+  "focusedDistinct": 18,
+  "totalTests": 2669,
+  "failedChecks": 0,
+  "nativeObservationsReused": 162,
+  "newNativeObservations": 0,
+  "firstGuardRegression": {
+    "tests": 1,
+    "failedChecks": 1
+  },
+  "failedGameRunsPreserved": [
+    {
+      "label": "natural-early1",
+      "exitCode": 1,
+      "lastStage": 68,
+      "lastSp": 0,
+      "binarySha256": "701b2806c987316d1e4239e387612aae8171e0d740e3b1a03c21df532b5fd20d"
+    },
+    {
+      "label": "natural-early1-alt",
+      "exitCode": 1,
+      "lastStage": 68,
+      "lastSp": 0,
+      "binarySha256": "701b2806c987316d1e4239e387612aae8171e0d740e3b1a03c21df532b5fd20d"
+    },
+    {
+      "label": "natural-early1-shortcuts2",
+      "exitCode": 1,
+      "lastStage": 70,
+      "lastSp": 400,
+      "binarySha256": "701b2806c987316d1e4239e387612aae8171e0d740e3b1a03c21df532b5fd20d"
+    }
+  ],
+  "baselineDiagnosticPassed": true,
+  "baselineIsControlledClockRngExperiment": false,
+  "guiRuns": [
+    {
+      "label": "natural-early1-long",
+      "command": [
+        "C:\\Program Files\\Python\\313\\python.exe",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-session-player-links-392-long-run.py"
+      ],
+      "returnCode": 0,
+      "seconds": 307.6582320999587,
+      "productSha256": "ecd705109d6df15a2316918f1b5329e321c58ebcfd0ba1d7959610952f85b376",
+      "sameProduct": true,
+      "originalsUnchanged": true
+    },
+    {
+      "label": "natural-early2",
+      "command": [
+        "C:\\Program Files\\Python\\313\\python.exe",
+        "H:\\T5Workspace\\NetstormReborn\\tools\\cpp_tutorial_two_smoke.py",
+        "--output",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-session-player-links-392-natural-early2"
+      ],
+      "returnCode": 0,
+      "seconds": 195.1819550000364,
+      "productSha256": "ecd705109d6df15a2316918f1b5329e321c58ebcfd0ba1d7959610952f85b376",
+      "sameProduct": true,
+      "originalsUnchanged": true
+    },
+    {
+      "label": "menus1024",
+      "command": [
+        "C:\\Program Files\\Python\\313\\python.exe",
+        "H:\\T5Workspace\\NetstormReborn\\tools\\cpp_game_menu_smoke.py",
+        "--output",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-session-player-links-392-menus1024",
+        "--only",
+        "1024x768"
+      ],
+      "returnCode": 0,
+      "seconds": 16.843900799984112,
+      "productSha256": "ecd705109d6df15a2316918f1b5329e321c58ebcfd0ba1d7959610952f85b376",
+      "sameProduct": true,
+      "originalsUnchanged": true
+    },
+    {
+      "label": "menus1280",
+      "command": [
+        "C:\\Program Files\\Python\\313\\python.exe",
+        "H:\\T5Workspace\\NetstormReborn\\tools\\cpp_game_menu_smoke.py",
+        "--output",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-session-player-links-392-menus1280",
+        "--only",
+        "1280x720"
+      ],
+      "returnCode": 0,
+      "seconds": 58.991997899953276,
+      "productSha256": "ecd705109d6df15a2316918f1b5329e321c58ebcfd0ba1d7959610952f85b376",
+      "sameProduct": true,
+      "originalsUnchanged": true
+    },
+    {
+      "label": "solo31",
+      "command": [
+        "C:\\Program Files\\Python\\313\\python.exe",
+        "H:\\T5Workspace\\NetstormReborn\\tools\\cpp_solo_entry_smoke.py",
+        "--output",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-session-player-links-392-solo31",
+        "--scope",
+        "all"
+      ],
+      "returnCode": 0,
+      "seconds": 271.69210230000317,
+      "productSha256": "ecd705109d6df15a2316918f1b5329e321c58ebcfd0ba1d7959610952f85b376",
+      "sameProduct": true,
+      "originalsUnchanged": true
+    },
+    {
+      "label": "demo3",
+      "command": [
+        "C:\\Program Files\\Python\\313\\python.exe",
+        "H:\\T5Workspace\\NetstormReborn\\tools\\cpp_solo_entry_smoke.py",
+        "--output",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-session-player-links-392-demo3",
+        "--demos"
+      ],
+      "returnCode": 0,
+      "seconds": 135.5090276999399,
+      "productSha256": "ecd705109d6df15a2316918f1b5329e321c58ebcfd0ba1d7959610952f85b376",
+      "sameProduct": true,
+      "originalsUnchanged": true
+    }
+  ],
+  "ctest": {
+    "returnCode": 0,
+    "seconds": 314.78913740010466,
+    "log": "extracted/cpp-session-player-links-392-ctest1.log",
+    "internalCounts": [
+      [
+        "2669",
+        "0"
+      ]
+    ],
+    "productSha256": "ecd705109d6df15a2316918f1b5329e321c58ebcfd0ba1d7959610952f85b376",
+    "testBinarySha256": "f2263305340a1e2840efc0f9e57fad2aa881cf5c4e8b595d7c4f482b6f9f8074",
+    "sameProduct": true,
+    "sameTestBinary": true,
+    "originalsCount": 1394,
+    "originalsUnchanged": true
+  },
+  "inputPlanAudit": {
+    "defaultCommandsAndInputsUnchanged": true,
+    "defaultFrames": 3924,
+    "longFrames": 7424,
+    "actualLongPlanOperationsEqual": true,
+    "keys": [
+      "a",
+      "q",
+      "s",
+      "w",
+      "x",
+      "z"
+    ],
+    "keySelections": 100,
+    "forbiddenInputsRejected": 2,
+    "gameExecuted": false
+  },
+  "originalsCount": 1394,
+  "originalsUnchanged": true,
+  "goalComplete": false,
+  "sources": {
+    "cpppj/src/client/RawCampaignSession.cpp": "602c2b2a7b62ebcb3bb3f2e3f7a4d9831c5a30d7707936983ec80ba617a31bf5",
+    "cpppj/src/client/RawCampaignSession.h": "7a7bea9f865cd30351397ef11e565533db74daeaa7994d29485cced0c1c3ef95",
+    "cpppj/tests/CampaignSessionTests.cpp": "28e50efa8be754d0b6aa503dcfdee39d38b75ceda69a3b50e43d52985a7c3199",
+    "tools/cpp_tutorial_harvest_smoke.py": "06ea48c9203ef25d8018cd07b03f1dba9c8a9d9300823435fd41a5423139a713",
+    "cpppj/tests/fixtures/tutorial-one-harvest-six-slots-ui-input.tsv": "7f0c0b185f18175113a9ee4593302f57064c22fe00271a4ff63ee6e7b935a7ac"
+  },
+  "evidence": {
+    "cpppj/player-links-cleanup-native.json": "0834c6ef7034b4e6f4ee5546659e0a1f7ffd7856a5b19232a36ca6bdd3504bf4",
+    "cpppj/tests/fixtures/player-links-cleanup-x86.tsv": "df2bbeff41340afb945de9aa84abba215a07c38d49934645b84e6c7d3e205617",
+    "tools/decomp_player_links_cleanup.py": "2f90a13a2d3c3ebd57c379bc04e2e3a6f9ad9ef64e75cf41e5e210a118119a5d",
+    "cpppj/src/o/RawPlayerLinksCleanup.cpp": "8f138fcd4de20a48d0f5ed0e728b2cf27e46eeec39f6e88a84b35cec2d3c27f8",
+    "cpppj/src/o/RawPlayerLinksCleanup.h": "afd0e164ee1f48ec250e76bdafd4787f6c7f25358f628467af55abbb1b38d864",
+    "cpppj/src/o/RawProductionDeck.cpp": "7bf63e1c40db223d0cfc4ddd6967e59eda1a5a88a57b756d240796bb8934b075",
+    "cpppj/src/o/RawProductionDeck.h": "b6d5d7a581d3a7349dbc7649795d81b43d0bbb4ce73ac654b4e364f0450251b1",
+    "extracted/cpp-session-player-links-392-native-verify1.log": "d74e5616d34f0dae5a28e8cce1b77fabb9d135c4235fc1a1a3da2fc5b2b5f404",
+    "extracted/cpp-session-player-links-392-build1.log": "499a98342faa59b238adc4044661ade435e42a4944c609d79702576be003d99b",
+    "extracted/cpp-session-player-links-392-build2.log": "7e30c97e258d4f41cb2f4afaca1b9d625576eb9017ac977d0d31b8a9ef7c5dde",
+    "extracted/cpp-session-player-links-392-lease-before-build1.log": "1b1301616cb0ce8ed359b0e9067357d16f2690495224ea25cdbcf5cd5fc4508f",
+    "extracted/cpp-session-player-links-392-lease-before1.log": "2118a9429e37293896928bfe3ab60958475d85c34f21a15505132dd6d08862c9",
+    "extracted/cpp-session-player-links-392-focused1.json": "c5665c51d550cac0ef0fc4e6d1f69073a69d3e9e481e49e3c80281afd66687c9",
+    "extracted/cpp-session-player-links-392-focused2.json": "ca202cca3d35f9d25aa03cbc4f065fba04d037746e4c19d1f88aad1eaf2bdcf2",
+    "extracted/cpp-session-player-links-392-gui2.json": "b2f1a5e9576bc18f5e7c0c680136813d0bd80037c6ce0416310a9586c087e352",
+    "extracted/cpp-session-player-links-392-originals-before2.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-session-player-links-392-gui2-originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-session-player-links-392-ctest1.json": "24825abddb1bd45bec15a7a2887b5e9c8529be250012643d95ae4d8cb0519704",
+    "extracted/cpp-session-player-links-392-ctest1.log": "0a38b8c7b6f799fa81b423b2858333c78c19d4b85f3e319064121346de9024f7",
+    "extracted/cpp-session-player-links-392-ctest1-tests.log": "153f211f7c3eb9dfb5a4eb74cce179ef4866fdf54b286b3a02863c8854d535aa",
+    "extracted/cpp-session-player-links-392-prepare-audit1.json": "8f4d703b02682be6a46d10b90625489c29972c854331ed8db1ee17457ab92f7f",
+    "extracted/cpp-session-player-links-392-prepare-audit1.log": "9adda39e4a41a384728aa9f74b9a3805307c35dca3d1d884267f1049f5587083",
+    "extracted/cpp-session-player-links-392-baseline391-prepared.json": "69e7c1d627c26ef987de2594e17021f2d45c40202793007c2e58fcfa4e0ae7d9",
+    "extracted/cpp-session-player-links-392-baseline391-early1-result.json": "28e86a3ca890775dce343ba29a00ac98cdcca9377ef20bdb8b97a405b17acfc2",
+    "extracted/cpp-session-player-links-392-baseline-build1.log": "a45b68b6ee104a2ccbf199fe44f5ac78b90f549836e00b27fc3d94728d0200d3",
+    "extracted/cpp-session-player-links-392-baseline-configure1.log": "737a2252b4924ee0dcf25c99f9cd472cb30e0da75a9db6b8301e681b81200289",
+    "extracted/cpp-session-player-links-392-baseline-configure-restore1.log": "a0b4017585339516d39e1b440bf50bbeb36a4c469ad10c1c855121ef49d94b27",
+    "extracted/cpp-session-player-links-392-alternate-early1-input.json": "38490c577fa0d767696b43205845153309bc8f3da78592bcabf204175a77375a",
+    "extracted/cpp-session-player-links-392-alternate-early1-input.tsv": "7b99dec39d226927696c6e997a66ff98def5d4cbdc419a8aba254f2e6dac361b",
+    "extracted/cpp-session-player-links-392-shortcuts-early1-input.json": "b1b04170c0040f38756ac5fbeaedeb4c167cecbb30d91d08696b820b0ca10cbf",
+    "extracted/cpp-session-player-links-392-shortcuts-early1-input.tsv": "0e1bcdcf768f6e76dfe8c7d211d930eb646f59f3fbf75210bfdebe9bbf860486",
+    "extracted/cpp-session-player-links-392-long-early1-input.tsv": "b3663a894121ab2ff74d732456257a7ee94f2a9a12399a58820e3f2eca31b70e",
+    "extracted/cpp-session-player-links-392-natural-early1-shortcuts1.log": "65a8deb50a119859fa3e2f78f5bcfa3a7957d852b7d4dce87a544d44a31adab7",
+    "extracted/cpp-session-player-links-392-harvest-before.py": "2136ff5322aadc3bb6e171a2a1c660b6ad59d27d25c5e87aeaa43df2c53db5fd",
+    "extracted/cpp-session-player-links-392-harvest-long-version.py": "9f3acabe5bdbdbcaad5ef618692f088a91ddd65e6acbfe9df04aaf45c69f8d30",
+    "tools/cpp_tutorial_two_smoke.py": "f4a9b679bda15bd377fce7bd6ee23a5108444549c2dce389b1c384a39d96577d",
+    "tools/cpp_game_menu_smoke.py": "d8821c209e0d934e9ce720b68222ee31c5062b5c58fac42b64becd13bc91d848",
+    "tools/cpp_solo_entry_smoke.py": "e91dbabea882c4c4f6ab6553eb46b9a7863aabc7120741d044b050b4203601ec",
+    "extracted/cpp-session-player-links-392-focused2-CampaignSession_PlayerLinks_.log": "92dd3b233ea52ef75b8fc85e7aad6c78f4b07e95fca1a4ff39f6bfa591b7c984",
+    "extracted/cpp-session-player-links-392-focused2-PlayerLinksCleanup_.log": "c1aeb3b3e2b47a846006e2262d9b491e8220500f2c032e75243492c43a04c1c6",
+    "extracted/cpp-session-player-links-392-focused2-ProductionDeckRelease_.log": "a651502f9438609bc0291e208196a901d113a803a171dc0c8c716bc28b99f87b",
+    "extracted/cpp-session-player-links-392-focused2-CampaignSession_ActualClientPlayerOwnerAcrossSessions.log": "9fa13fe7ea12bc559d7daf278d5ee76824de845550fc38f96edf96fc520af651",
+    "extracted/cpp-session-player-links-392-focused2-PlayerInitialization_.log": "482aaf2e5684eeff061e2a73870207691c7dfdcb123d13da709a722d4e57c627",
+    "extracted/cpp-session-player-links-392-focused2-PlayerCoreData_.log": "56bca91478940ad2a0a113df7db7a76d2917493141ddd3a6603ee228413a9880",
+    "extracted/cpp-session-player-links-392-natural-early1/execution.json": "ff195f8025a7b665e03a2e6eb4b851a817b5f63f2cf29b814b3e15b1a3b897e5",
+    "extracted/cpp-session-player-links-392-natural-early1/states.tsv": "90e756b6be38d5ae3f2b0bd173dc3fe8d63c893ef58df1ba3d92f4e581060548",
+    "extracted/cpp-session-player-links-392-natural-early1/stderr.log": "b556892cbd51de82ac129034eec7230fd4d494ff89ce1dd7e05a73090b9994a1",
+    "extracted/cpp-session-player-links-392-natural-early1/goal.bmp": "ab6ca4155524396f78152fe84f3ec6a58645197ce0b80734b6ba49ce42bf9019",
+    "extracted/cpp-session-player-links-392-natural-early1-alt/execution.json": "90628f615dd319b572e8bec14e0dd8748f4b59981527eb59115fcc93741ee29d",
+    "extracted/cpp-session-player-links-392-natural-early1-alt/states.tsv": "ca7e4b86a3409a93a0aad1294894e8c31a7569bdd5cae5486e0e4c53fc1cfbb0",
+    "extracted/cpp-session-player-links-392-natural-early1-alt/stderr.log": "b556892cbd51de82ac129034eec7230fd4d494ff89ce1dd7e05a73090b9994a1",
+    "extracted/cpp-session-player-links-392-natural-early1-alt/goal.bmp": "337e1e173f3f2190cc25fcd130f96985c1ef1cd398fc1e956e181dd73e471d70",
+    "extracted/cpp-session-player-links-392-natural-early1-shortcuts2/execution.json": "ae7e6ded690a51a1dc1ec3f852b6c3c850ba2c259943d2fe3c1e33f3a887eb99",
+    "extracted/cpp-session-player-links-392-natural-early1-shortcuts2/states.tsv": "a33b94ca9660eabf176cc4343c1ccf319c7fb7cc1691a573829939ee59f01600",
+    "extracted/cpp-session-player-links-392-natural-early1-shortcuts2/stderr.log": "5d10db866b236b6da5e33775459cd41ea2182a6b82f66f61bf72a14d3917edd0",
+    "extracted/cpp-session-player-links-392-natural-early1-shortcuts2/goal.bmp": "85c62fac445bc1cf48e0d8af1cea553c6eb11c4de6f14dffeae641f425decfc7",
+    "extracted/cpp-session-player-links-392-menus1024/summary.json": "ecefa91ad405fa70ada09529070964877700f0fb6d6ece5c7991f4c298904af7",
+    "extracted/cpp-session-player-links-392-menus1280/summary.json": "1646a091fac7ecd7dd4620f48d783c6f3f11dae858dca02fc00af0136f458c21",
+    "extracted/cpp-session-player-links-392-natural-early1-long2.log": "09db64cb43bef70282d4c12dcaa0c69e01aa2bdfce7c0ecbaeba1b598ae45db6",
+    "extracted/cpp-session-player-links-392-natural-early1-long2-execution.json": "b53f7fe6d32743cd4541bf96b9566bb2090a7379bb1c4bd10b2f7306bd5bd152",
+    "extracted/cpp-session-player-links-392-natural-early1-long/results.json": "bf86c6208904182295d2ef62cb44dbd78fb0b14f0ebc2663d699e9265134ba96",
+    "extracted/cpp-session-player-links-392-natural-early22.log": "17b45816b0aa79136e0c0d9742caba071ad3b8a381c8c3082ca4e8996d7af830",
+    "extracted/cpp-session-player-links-392-natural-early22-execution.json": "469e7af9d6a01fe06a8120930ce2d604217f5c24f230023d57b6a2552d8bf7a3",
+    "extracted/cpp-session-player-links-392-natural-early2/results.json": "17a6858392913b8a8b4ac323910ebd7bc44b740f0040de97b68576c63cff3591",
+    "extracted/cpp-session-player-links-392-menus10242.log": "1149659f9ae988bb9fa4fd05ca7bb63f656bd4af5c0bc93e1b556d5a844cae00",
+    "extracted/cpp-session-player-links-392-menus10242-execution.json": "237576060c31f357e82206669bf86538c1ce5150a6f4c6f0293842876bf3d160",
+    "extracted/cpp-session-player-links-392-menus12802.log": "7a1c1c6af258eaa68115fab4144b170e23c58c12fb7081cb9ba64c101f3f3794",
+    "extracted/cpp-session-player-links-392-menus12802-execution.json": "4cb89f7e5545c4f60cf1e24250a8a3cd2f7f637a00f01e3dccc3a30f8667858b",
+    "extracted/cpp-session-player-links-392-solo312.log": "7b1c4536f089de349cacf1994a2b0fa9b1b02e21668496828f1060f9babcd763",
+    "extracted/cpp-session-player-links-392-solo312-execution.json": "16fa570785996a0d3f13d8f0e7ed4648834d4ef2d259c245fad98efa3447fcda",
+    "extracted/cpp-session-player-links-392-solo31/results.json": "d7ff08eccbbf91e36077834189584b782d638bd617822dc5550efa93103f21de",
+    "extracted/cpp-session-player-links-392-demo32.log": "e6f965f1c5132a38066430113831df136f285de5eb202fb53c7821e1ce81aee9",
+    "extracted/cpp-session-player-links-392-demo32-execution.json": "4fac1c180c3678154d41256e1696a873bf079e054275db84c0d82d9381ca651d",
+    "extracted/cpp-session-player-links-392-demo3/results.json": "64cf58baf123ba69035bcc9992663e379ff41538cc5bc18c18f4ecba6c6d7617",
+    "extracted/cpp-session-player-links-392-natural-early1-long/goal.bmp": "0054f13ef6b84d385f6a886060bf956c553375f33e5f651651716a6ad3808df5",
+    "extracted/cpp-session-player-links-392-natural-early2/goal.bmp": "6b0bfc2440905b6b4a6fc2ea1b94f69a0bd6c5ab3ca75e2d2d6de8a60c634f6d"
+  },
+  "limits": [
+    "전체 Native State/Gump/단일 Kernel 및 Client/Login Core 공유는 미완료다.",
+    "최초 첫 항목 고정 입력의 D 정체 원인은 확정하지 않았으며 대체 성공으로 실패를 재판정하지 않았다.",
+    "긴 QWASZX 계획의 실제 입력만 통과했으며 진행0→1 저장/전 사용자 완주/픽셀·음향·규칙 완전 동일성은 미완료다."
+  ]
+}

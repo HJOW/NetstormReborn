@@ -1,5 +1,19 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-24 단위392 완료: 실제 Session의 Player 링크 반납 선행 순서
+
+- [x] AGENTS.md·공통/닷넷 인계를 다시 확인했다. 시작 HEAD는 **ca34d0be / 20261024-14 CP**이며 작업본은 깨끗했다. 현재/마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-10-23**으로 일치한다. 기존 PlayerLinks 최초162관측의 `--verify`는 종료0이며 원시 도구/fixture/보고서는 변경하지 않았다.
+- [x] Core 공유의 선행 조건을 조사하던 중 실제 Session 소멸에서0048fcd0이 미연결임을 확인했다. 같은 Client Player 현재뷰와 같은 실제 RawProductionDeck::Release를 기존 부모에 연결했다. 명시 ReleasePlayerLinks API는 선택된 free 실패를 전파하고 Kernel/Core/Player/factory를 건드리지 않는다. 정상 Session 소멸은 AI 반납 뒤 PlayerLinks→기존 world.ClearProcesses 순서다. C++ 최종 소멸의 예외 진단/계속 반납과 Native State 부모의 실패 중단 계약은 구별한다.
+- [x] build1 종료0·관측 경고오류0이며 신규4검사(명시 범위·실제 Kernel 가상 소멸 전/다음 Player 할당·미선택 Deck·선택 free 실패 부분효과)와 관련13의 **고유17/실패0**이 첫 실행에서 통과했다. 제품은 **701b2806…b5fd20d**이다. 당시 전체2668검사는 실행하지 않았으며 아래 교정 제품에서 최종 전체검사를 했다.
+- [x] 실제 Early1의 최초 기존 입력과 대체 간헐천35,33 입력은 모두 D단계/SP0에서 미연결로 남아 Next Tutorial 클릭을 찾지 못해 종료1이었다. 각각 원본1394동일이며 첫 실행/화면/입력/실패를 `extracted/cpp-session-player-links-392-natural-early1*`에 보존한다. 실패를 통과로 재판정하지 않았다. 최초 D 정체 원인은 미확정이며 후속 다른 입력의 성공을 원인 증명으로 세지 않는다.
+- [x] 직전391 Session 소스/헤더만 별도 경로로 가져온 진단 파일 **7f05c238…10f3f060**은 기존 입력의 자연 Early1/SP600/다음Tutorial2를 통과했다. 시계/난수가 동일한 통제실험은 아니므로 원인 확정이나 현재 제품 성공으로 합산하지 않는다. 공용 제품/검사701 원본은 `extracted/cpp-session-player-links-392-baseline391/`에 SHA와 함께 보존했다. CMake 진단 hook은 빌드 뒤 `CMAKE_PROJECT_TOP_LEVEL_INCLUDES=`로 복구했다. 세션21012/55136은 종료0이다.
+- [x] 기존 입력의 D는 첫 matching 다리 항목만 고르므로 실제 QWASZX 여섯 슬롯 입력을 별도 계획으로 만들었다. 최초 준비는 기존 도구의 조건부 키 대상 제한으로 게임 실행 전 종료1이었다. 도구에 여섯 문자만 허용하는 검증을 추가했고 실제 키 입력에서는 D→E→F/SP400까지 진행했으나 기존3924프레임 상한이 세 번째 귀환 전에 끝나 Next 클릭에서 종료1이었다. 이 실패도 그대로 보존했다. 기본 계획은3924를 유지하며 긴 계획의 마지막 관측+4까지 허용하도록 도구만 확장했다. UI/완료값/SP/난수/stocktimer1/게임 시계는 쓰지 않는다.
+- [x] Login/서비스가 Player 대여보다 앞에 선언돼 늦게 소멸하는 경계를 확인했고 새 수명 회귀가 교정 전1검사/1check 실패했다. Player owner→Use→services를 Impl의 첫 멤버로 옮겨 모든 소비자 소멸 뒤에만 재대여하게 교정했다. build2 종료0·관측 경고오류0, 신규5+관련13의 **고유18/실패0**이다. 첫17검사/수명 실패/진단/GUI 실패는 덮어쓰지 않았다.
+- [x] 교정 제품 **ecd705109d6df15a2316918f1b5329e321c58ebcfd0ba1d7959610952f85b376**에서 실제 QWASZX100주기/7424프레임 계획의 자연 Early1 A~G·SP0→200→400→600·다음Tutorial2 Guide4/SP10000과 Early2 A~I·신전/워크샾·발사기4→3·환불75/SP3075·다음Tutorial3을 통과했다. 초기 완료값1→1/주입0/stocktimer1이며 완료 화면을 직접 확인했다. ESC1024/1280, 일반31 CLI/실제 Play 진입, Demo3 실제 메뉴/15초 자연 timeout/AI도 통과했다. 여섯 그룹 모두 종료0·제품SHA동일·원본1394동일이다. 일반31/Demo3의 자연 완주나 모든 메뉴 선택까지 증명한 것은 아니다. 세션83216은 종료0이다.
+- [x] 모든 게임 종료/설정 복구 뒤 최종 CTest1은 **2669검사/실패0·종료0·314.67초(전체314.71초, wrapper314.79초)**다. 제품SHA와 검사SHA **f2263305340a1e2840efc0f9e57fad2aa881cf5c4e8b595d7c4f482b6f9f8074**는 전후 같고 원본1394/1394동일이다. 세션56807은 종료0이다. [완료 문서](docs/exe/cpp-session-player-links-20261024.md)와 [제품 보고서](cpppj/session-player-links-runtime-20261024.json)에 결과·최초 실패·남은 범위를 기록한다.
+- [x] 최종 감사1은 종료0이며 소스/계획5개·증거76개 SHA를 고정했다. 최초 Native 세 자료는 HEAD/작업본 원시 BYTE가 같고 기존 자식/Deck 구현 변경0, 보호 경로 추적 변경0이다. 기본 입력3924프레임 불변·명시 계획7424프레임·잘못된 키/상태 쓰기 거부를 준비 전용으로 확인했다. UTF-8/링크/선택8파일 stage 감사를 마쳐 **20261024-15 CP**로 로컬 커밋한다.
+- [ ] 다음393은 실제 State 부모의 선행 정리와 단일 Kernel/Gump 수명, 같은 Client/Login current Core·cache·active 공유를 원문 순서로 접합한다. 392의 링크 정리와 대여 수명 교정은 그 선행 조건이며 전체 State/Core 공유 완료는 아니다. 최종 Editor HUD/State/loaded·편집 도구·저장/재로드·언어별 시나리오·모든 Early/캠페인/Demo 사용자 완주·완전 동일성은 미완료이며 목표는 활성 상태다.
+
 ## 2026-10-24 단위391 완료: 실제 Client Player/factory 소유자 연결
 
 - [x] AGENTS.md·공통/닷넷 인계를 다시 확인했다. 현재 호스트와 마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-10-23**이며 시작 HEAD는 **7e53489e / 20261024-13 CP**, 작업본은 깨끗했다. 새 디컴파일/Native 관측 자료 생성은 없으며390의 최초202관측 SHA 검증은 종료0이다.
@@ -7,7 +21,7 @@
 - [x] configure1/build1은 종료0·관측 경고오류0이다. 신규6개(원문Owner1000행 bound 재생1·소유자/실패/수명4·실제 Client 연속 Session1)는 첫 실제 실행에서 모두 통과했다. 집중 고유35개/검사 실패0이다. 최초 집계기는 `owner_`가 부분문자열로14개를 고르는데5개로 기대해 종료1이었다. 제품/검사/입력/첫 출력을 보존하고 통과한4+14개를 재실행하지 않은 채 나머지5그룹만 이어 실행했다.
 - [x] 새 제품 **d94c0941…c1b494**의 자연 Early1 A~G·SP0→200→400→600·다음Tutorial2와 Early2 A~I·신전/워크샾·발사기4→3·환불75·SP3075·다음Tutorial3이 통과했다. 각 게임 종료0·원본1394동일이고 완료값1→1/주입0/stocktimer1이다. 두 goal.bmp를 직접 확인했다. 일반31 CLI 진입·Demo3 실제 메뉴/15초 자연 timeout/AI도 모두 통과했다. 모든 실제 게임 종료/설정 복구 뒤 전체 검사를 시작했다.
 - [x] 최종 CTest1은 **2664검사/실패0·종료0·316.73초(전체316.79초, wrapper316.94초)**다. 제품SHA **d94c0941…c1b494**/검사SHA **d3acf86b…9f110b0**은 검사 전후 같고 원본1394/1394동일·보호 경로 추적 변경0이다. 최종 감사1은 GUI 보고서의 실제 originalsUnchanged 대신 originals_unchanged를 읽은 KeyError로 종료1이었으며 첫 출력 보존/감사 조회만 교정했다. [완료 문서](docs/exe/cpp-client-player-records-20261024.md)와 [제품 보고서](cpppj/client-player-records-runtime-20261024.json)에 소스17·증거43 SHA 및 한계를 기록한다. 원시 `extracted/cpp-player-owner-391-*`와 최초 Native4파일의 원시 BYTE를 보존하고 UTF-8/링크/선택 stage 감사를 마쳐 **20261024-14 CP**로 로컬 커밋한다.
-- [ ] 다음392는 같은 실제 Client/Login current Core·cache·active의 공유와 Player 해제 전 정리를 실제 State 부모 순서에 접합하는 작업이다. 현재 단일 대여는 Session 고정span만 보호하며 새 외부 소비자는 그 반납 순서를 지켜야 한다. ClientCoreDataGlobals의 Player/current alias를 선행 Native 정리 없이 앞당기지 않는다. 전체 State의 PlayerLinks/Kernel/Gump/연결22/Pool/Zone·0054d4e8 PlayerNoMake 경고 표 owner, 최종 Editor HUD/State/loaded·편집·저장/재로드·언어별 시나리오·전체 사용자 완주·완전 동일성은 계속 미완료다. 과거388 GUI를 새 제품 관측에 합산하지 않으며 목표는 활성 상태다.
+- [ ] 다음392에서 실제 Session PlayerLinks와 모든 소비자 이후 대여 반납을 교정했다. 같은 실제 Client/Login current Core·cache·active의 공유와 Player 해제 전 전체 정리의 State 부모 접합은393 이후로 남는다. 새 외부 소비자는 대여 반납 순서를 지켜야 한다. ClientCoreDataGlobals의 Player/current alias를 선행 Native 정리 없이 앞당기지 않는다. 전체 State의 Kernel/Gump/연결22/Pool/Zone·0054d4e8 PlayerNoMake 경고 표 owner, 최종 Editor HUD/State/loaded·편집·저장/재로드·언어별 시나리오·전체 사용자 완주·완전 동일성은 계속 미완료다. 과거388 GUI를 새 제품 관측에 합산하지 않으며 목표는 활성 상태다.
 
 ## 2026-10-24 단위390 완료: Player 전체 할당과 Core 해제 순서 기반
 

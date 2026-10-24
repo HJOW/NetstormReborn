@@ -302,6 +302,7 @@ public:
     GameMenusHooks BindGameMenus(GameMenusHooks hooks); //현재Session의모드/Player/사제/SP/로그인/신전비용으로게임조회만연결한다.
     // 실제 로그인/AI 초기화가 사용하는 동일9 Player 원문을 빌린다. 프레임별 사본을 만들지 않는다.
     std::span<std::uint8_t> PlayerRecords();
+    void ReleasePlayerLinks(); //0048fcd0의 실제9기록 링크/개수/덱만 정리한다. 실패는 전파하며 Kernel/Core/Player 할당은 유지한다.
     // 실제 방향별동맹 초기화가 쓰고 승패가 읽는 같은81DWORD를 빌린다.
     std::span<std::uint32_t> Alliances();
     // 로그인/Stage3의 후속 부모가 같은 현재 Player9/동맹/brain 수명을 직접 사용한다.
