@@ -29,6 +29,7 @@ struct GameMenuBarState; // 현재Session의기존검산참조와메뉴serial만
 class CampaignObjectMenuClient; // 같은 실제 원본 객체 메뉴와 현재 명령 큐를 연결한다.
 struct MissionFortLoadRequest; // Init부터 실제 Session 설치까지 같은 요청과 Zone 이미지를 소유한다.
 class CampaignTemplateStorage; // 원본 명시 Init/State 정리까지 같은9개 manager의 수명을 소유한다.
+struct RawHtmlWindowContext; // 실제 전체 HTML에 현재 게임 소유자의 장치를 빌린다.
 // 메뉴·브리핑·미션 페이지와 해당 UI 동작을 관리하는 처리기이다.
 class UberGump {
 public:
@@ -82,6 +83,7 @@ private:
     // @guideSpec/%userSpec 파일 목록을 현재 파일 설정으로 확장한다.
     void ExpandMenus(DialogPage& page);
     DialogMetadataHooks MapMetadata(); // 실제 메타 추출 시점의 메뉴 열과 현재 파일 목록을 페이지 표시 자료에 연결한다.
+    RawHtmlWindowContext LoadingHtmlContext(ScreenRect mapView); // 같은 Client/Config/큐와 매번 현재 뷰를 공급한다.
     // 표시 상태를 합성한다. 페이지 교체 예약이 있을 때만 입력 영역과 실제 돌 버튼을 함께 교체한다.
     void Compose();
     // 새 페이지/팝업/해상도의 입력 영역 교체를 다음 합성에 예약한다. 단순 픽셀 갱신에는 쓰지 않는다.
@@ -144,6 +146,7 @@ private:
     std::string mapUserName_,pendingFortName_; // 원본 초기 빈 사용자 이름과 별도 pending 이름이다. current Fort 이름과 합치지 않는다.
     std::unique_ptr<DialogBodyLayout> dialogBody_; // 현재페이지의실제StyleText입력/표시복제를소유하며Compose때효과를재실행하지않는다.
     HtmlTextParserGlobals htmlGlobals_; // 원본의페이지간공유P억제전역이다.
+    ScreenRect htmlMapView_{};std::string htmlCurrentFortName_; // 각 조회에서 현재 뷰와 반환 문자열의 수명을 보존한다.
     std::uint32_t buttonTextureType_{},buttonTextureFrame_{}; // 실제 버튼 배경 생성자에 전달할 fortGump/A01 타입·프레임 번호다.
     // scripts_: 스크립트.
     std::map<std::string, std::unique_ptr<o::Config>> scripts_;

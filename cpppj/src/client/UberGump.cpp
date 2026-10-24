@@ -8,6 +8,7 @@
 #include "client/ThemeTechnologyCommand.h"
 #include "client/ProductionShortcuts.h"
 #include "client/RawMenuControls.h"
+#include "client/RawHtmlWindowContext.h"
 #include "client/RawGameMenus.h"
 #include "client/GameMenuCommands.h"
 #include "client/GameMenuActions.h"
@@ -350,6 +351,22 @@ void UberGump::ExpandMenus(DialogPage& page) {
     page.items = std::move(items);
 }
 // 목록을 전체 파싱 뒤 다시 찾지 않고 실제 메타 추출 순서에서 현재 파일/이름/열을 읽는다.
+RawHtmlWindowContext UberGump::LoadingHtmlContext(ScreenRect mapView) { // 미션 안내의 실제 전체 HTML 경계를 같은 장기 소유자에 연결한다.
+    htmlMapView_=mapView;RawHtmlWindowContext context;context.globals=client_.HtmlWindowGlobals();context.wallSeconds=[this] { return client_.WallSeconds(); };
+    context.queue=[this](auto command,auto first,auto second) { client_.Input().Push(command,std::bit_cast<std::int32_t>(first),std::bit_cast<std::int32_t>(second)); };context.link=[this](auto token) { rawButtons_->Menus()->ActivateHtmlWindowLink(token); };
+    context.metadata.commands={DialogScriptCode,[](auto name) { std::clog<<"HTML 메타 명령 미연결: "<<name<<'\n'; }};context.metadata.strings=&scriptStrings_;context.metadata.maps=mapCatalog_.get();context.metadata.fileSpec=&mapFileSpec_;
+    context.metadata.currentMap=[this]() -> std::string_view { htmlCurrentFortName_=mission_ ? mission_->FortName() : std::string{};return htmlCurrentFortName_; };context.metadata.fallbackMap=[this]() -> std::string_view { return pendingFortName_; };
+    context.factory.globals=&htmlGlobals_;context.factory.html.command=[this](auto&,auto text) { QueueScriptCommand(text,client_.Input(),scriptStrings_,{DialogScriptCode,[](auto name) { std::clog<<"HTML 스크립트 명령 미연결: "<<name<<'\n'; }}); };
+    BindHtmlConditionConfig(context.factory.html,client_.Configuration(),client_.Assets().Edition());BindHtmlPictureText(context.factory.html);
+    context.factory.html.background=[](auto&,auto name) { throw std::logic_error("전체 HTML 배경 태그 미복원: "+std::string(name)); };
+    context.factory.substitute=[this](auto text,auto) { return FontBytes(client_.Configuration().SubstituteLocal(o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(text.data()),text.size()}))); };context.factory.fallback=[this] { return FontBytes(client_.Configuration().PathSpec("OkButton")); };
+    context.read=[this](auto address)->std::uint32_t { switch (address) {
+        case 0x531860:case 0x5c78f0:return static_cast<std::uint32_t>(client_.GetScreen().Width());case 0x531864:case 0x5c78f4:return static_cast<std::uint32_t>(client_.GetScreen().Height());
+        case 0x5ca9b4:return static_cast<std::uint32_t>(htmlMapView_.right-htmlMapView_.left);case 0x5ca9cc:return std::bit_cast<std::uint32_t>(htmlMapView_.left);case 0x5ca9d0:return std::bit_cast<std::uint32_t>(htmlMapView_.top);case 0x5ca9d4:return std::bit_cast<std::uint32_t>(htmlMapView_.right);case 0x5ca9d8:return std::bit_cast<std::uint32_t>(htmlMapView_.bottom);case 0x563e38:return rawButtons_->RootToken();
+        default:throw std::logic_error("전체 HTML 현재 Client 전역 미연결: "+std::to_string(address));
+    } };return context;
+}
+// 실제 메타 추출 시점에 현재 맵 목록을 기존 페이지에 연결한다.
 DialogMetadataHooks UberGump::MapMetadata() {
     DialogMetadataHooks metadata;
     metadata.appendMenu=[this](DialogPage& page,DialogItem item) {
@@ -1211,7 +1228,7 @@ void UberGump::Compose() {
         if (state_.phase==ClientPhase::LoadingMission) {
             rawButtons_->Menus()->SetPalette(client_.GetScreen().Colors());
             // 원본 기본 HUD의 수직 구분선 오른쪽 지도 사각형이다. 전체 dock 드래그 연결 전의 초기값85를 사용한다.
-            rawButtons_->Menus()->ShowMissionLoading(FontBytes(client_.Translate("Starting Mission...")),FontBytes(client_.Translate("Cancel")),{85,0,width,height});
+            rawButtons_->Menus()->ShowMissionLoading(LoadingHtmlContext({85,0,width,height}),FontBytes(client_.Translate("Starting Mission...")),[this] { return FontBytes(client_.Translate("Cancel")); });
         }
         if (popup_.empty() && world_) {
             if (!rawButtons_->Production()) rawButtons_->EnableProduction(world_->Session(),client_.Assets(),RawProductionHooks{

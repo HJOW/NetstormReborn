@@ -11,6 +11,9 @@ struct MissionLoadingMessageState {
     std::uint32_t transientSerial{}; //005cab34의 진행 안내 부모 serial이다. 등록 id/객체 토큰이 아니다.
     std::uint32_t createdSerial{}; //005cab38의 가장 최근 cf270 부모 serial이며 create 직후 다시 읽는다.
 };
+struct MissionLoadingMessageView { // 같은 Client HTML 전역의 두 필드를 값 복제 없이 빌린다.
+    std::uint32_t& transientSerial;std::uint32_t& createdSerial; //005cab34/38이며 호출과 모든 하위 효과보다 오래 살아야 한다.
+};
 // 외부 HTML 본체는 현재 노드/필드를 제공한다. 포맷된 원문은 이미 Windows-1252 등 실제 바이트여야 한다.
 struct MissionLoadingMessageHooks {
     std::function<std::string()> cancelText; // 실제 Cancel 번역은 기본 버튼을 추가하는 분기에서만 조회한다.
@@ -27,4 +30,6 @@ std::string BuildMissionLoadingMessageBody(std::string_view formatted,const std:
 // 본문 조립→현재 transient 검색→기존 갱신 또는 새 생성/현재created 검색→현재 serial 저장 순서다.
 std::uint32_t ShowMissionLoadingMessage(MissionLoadingMessageState& state,std::string_view formatted,
     const MissionLoadingMessageHooks& hooks);
+std::uint32_t ShowMissionLoadingMessage(MissionLoadingMessageView state,std::string_view formatted,
+    const MissionLoadingMessageHooks& hooks); // 실제 Client의 비연속 필드도 같은 현재 참조로 읽으며 소유 상태판과 같은 본체를 사용한다.
 }

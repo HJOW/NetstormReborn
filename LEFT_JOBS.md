@@ -1,5 +1,13 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-25 단위407 완료: 실제 미션 안내 전체 HTML 이행·사용자 요청 일시 중지
+
+- [x] **사용자 요청:** 이번 단위 구현·검증과 문서화/로컬 git 커밋을 마친 뒤 `/goal`을 일시 중지한다. 전체 목표는 미완료이며 단위408 이후 작업은 시작하지 않는다. 재개 요청을 받을 때 아래 재개 지점에서 이어간다.
+- [x] AGENTS/공통/닷넷 인계와 **fd9438a2 / 20261024-29 CP**를 확인했다. 현재/마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-10-23**이며 PE/정밀 SHA가 같다. 새 전체 디컴파일·원본 게임 실행0, 실제 클론 GUI1회다. AGENTS/원본/CD/기존 Native 자료 변경0과 originals1394개 동일을 확인했다.
+- [x] cf570은 실제 Client의 transient/created serial을 참조로 읽고, LoadingFields/0xc4 부분 부모·기본 Cancel 전용 메타/부분 Fit/별도 입력을 실제 전체 HtmlWindowFactory/Metadata/Gump/Fit으로 교체했다. 신규 공장 뒤 현재 createdSerial의 재갱신/현재 depth·serial 재조회·지연 반납을 유지한다. 게임 소유자의 Config/같은 파서 전역·고리·원시 큐·벽 시각·현재 뷰/화면·맵 캐시와 Help/cmd/외부 링크 분배를 연결했다.
+- [x] 원문 HTML732행+안내1540입력/두 정밀도3080반환이 모두 같고 정밀도차이0·자료 변경0이다. 새 실제 결합4+기존 마우스/픽셀·Help 등을 포함해 집중 **175/0**, 전체 CTest **2767/0·348.41초**다. GUI는 주입 없이 실제 Tutorial2 첫45프레임에서 전체 안내 부모를 관측하고 정상 종료했다. 제품 **449a2f3904ff63296323df7a61f61add5a633ec8dcc7e1464f5435f4f39daa96**, 검사 **5c1833cef35bb7d5e1f5b0a860576d6f221feb7576b311752d628913086549d9**가 집중/전체/GUI에서 같다. [완료 문서](docs/exe/cpp-mission-loading-html-client-20261025.md)/[제품 보고서](cpppj/mission-loading-html-client-runtime-20261025.json)에 SHA·원시·경계를 남겼다. 선택 파일 감사 후 **20261025-01 CP**로 로컬 커밋하며 push하지 않는다.
+- [ ] **재개 지점:** 기존 Tell/full Uber 전체 교체, 기술/@/#/%/Input·전송·배경/Checked 전역, 기존 페이지와 전체 HTML 개수/Guide 통합·dock 초기85의 실제 연동이다. Production/Minimap 동시 제공자·State/Core/Pool/Win32 접합과 모든 Early/캠페인/Demo 사용자 완주·Edit/언어별 시나리오 전체·완전 동일성 및393 Wide SaveOptions 원인도 미완료다. 10.72 비교는 후속이며 이번 시작 전환 GUI를 전체 사용자 완주의 증거로 취급하지 않는다.
+
 ## 2026-10-24 단위406 완료: 실제 HTML 전체 생성·링크/공통 모달
 
 - [x] AGENTS/공통/닷넷 인계와 **50b114b9 / 20261024-28 CP**를 확인했다. 현재/마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-10-23**이고 보호/정밀 SHA가 같다. 새 전체 디컴파일/원본 직접 실행/게임 GUI 0이며 보호 1394/AGENTS/기존 Native 추적 변경 0이다.

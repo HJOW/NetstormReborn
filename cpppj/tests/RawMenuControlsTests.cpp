@@ -1,6 +1,7 @@
 // 실제 공통 트리의 메뉴 입력/하위 메뉴/제목·픽셀/삭제와 기존 버튼 복귀를 검사한다.
 #include "RawSceneSupport.h"
 #include "client/RawMenuControls.h"
+#include "client/RawHtmlWindowContext.h"
 #include "client/RawButtonControls.h"
 #include "client/RawObjectMenu.h"
 #include "client/RawCarrierMenu.h"
@@ -32,6 +33,13 @@ struct MenuClient {
     std::uint32_t cursor{}; // 제목 입력이 선택한 실제 커서 번호다.
     double gameSeconds{}; // 비용 표시는 벽시계 대신 이 현재 게임 시각을 읽는다.
     HtmlTextParserGlobals helpGlobals;ScriptStringRing helpStrings;std::unique_ptr<ConfigInterface> helpConfig; // 창 조립에 쓰는 실제 HTML 전역/80칸 고리/조건 설정이다.
+    std::shared_ptr<ClientHtmlWindowGlobals> htmlOwner=std::make_shared<ClientHtmlWindowGlobals>();ScreenRect htmlView{};int screenWidth{},screenHeight{}; // 실제 장기 HTML 상태와 현재 출력/지도 경계다.
+    ~MenuClient() { menus->CloseHtmlWindows(); } // 외부 관측/Config 수명보다 먼저 같은 부모를 반납한다.
+    RawHtmlWindowContext LoadingContext(ScreenRect view) { // 실제 전체 공장/Config/원시 큐를 기존 공통 트리에 연결한다.
+        htmlView=view;if (!helpConfig) helpConfig=std::make_unique<ConfigInterface>([this](auto path) { return files.TryRead(path); });helpConfig->Set("OkButton","$Button=Okay,LeaveBattle,3");RawHtmlWindowContext c;c.globals=htmlOwner;c.wallSeconds=[] { return 0.0; };c.queue=[this](auto command,auto first,auto second) { commands.push_back({command,first,second}); };c.metadata.strings=&helpStrings;c.metadata.commands.lookup=[](auto name) { return name=="LeaveBattle" ? 0x020000c5U : 0xffffffffU; };c.metadata.commands.unknown=[](auto) { throw std::logic_error("안내 검사 미등록 명령"); };
+        c.factory.globals=&helpGlobals;BindHtmlPictureText(c.factory.html);BindHtmlConditionConfig(c.factory.html,*helpConfig,assets.Edition());c.factory.substitute=[this](auto text,auto) { return helpConfig->SubstituteLocal(text); };c.factory.fallback=[this] { return helpConfig->PathSpec("OkButton"); };
+        c.read=[this](auto address)->std::uint32_t { switch (address) { case 0x531860:case 0x5c78f0:return screenWidth;case 0x531864:case 0x5c78f4:return screenHeight;case 0x5ca9b4:return htmlView.right-htmlView.left;case 0x5ca9cc:return htmlView.left;case 0x5ca9d0:return htmlView.top;case 0x5ca9d4:return htmlView.right;case 0x5ca9d8:return htmlView.bottom;case 0x563e38:return buttons.RootToken();default:throw std::logic_error("안내 검사 미등록 전역"); } };return c;
+    }
     // 게임/창을 열지 않고 실제 보호 자산과 모든 복원 모듈을 조립한다.
     explicit MenuClient(OriginalEdition edition=OriginalEdition::Patch1078):root(std::filesystem::path(__FILE__).parent_path().parent_path().parent_path()/"originals"),files(root),assets(Register(),edition),fonts(files,"Arial"),
         buttons(edition,{[] { return 0.0; },[this](auto) { return poll; },[] {}}) {
@@ -52,6 +60,7 @@ struct MenuClient {
     }
     // 공통 트리 크기와 실제 돌 버튼을 같은 SetControls로 갱신한다.
     void Resize(int width,int height) {
+        screenWidth=width;screenHeight=height;
         const auto& asset=assets.Find("fortGump");const auto frame=assets.FrameIndex(asset,"A00",0);const auto metrics=assets.Shapes().SquidMetrics(asset.block,frame);
         const std::array<GumpControl,1> controls{{{0,{10,10,90,32},false,true,false}}};const std::array<std::string,1> labels{{"Under"}};
         buttons.SetControls(controls,labels,width,height,{static_cast<std::uint32_t>(asset.block+70),static_cast<std::uint32_t>(frame),metrics.width,metrics.height,ButtonColors(Palette())});
@@ -60,7 +69,7 @@ struct MenuClient {
     void Click(ScreenPoint point) { poll={InputCode::kLeftButton,point.x,point.y};buttons.Poll(poll);buttons.Event(poll); }
     // 실제 보호 Help/TYPE/자산과 기존 공통 트리를 연결한다. 메인 메뉴와 같은 월드 설치 전 경계다.
     void EnableHelp() {
-        RawHelpHooks h;h.globals=&helpGlobals;BindHtmlPictureText(h.html);helpConfig=std::make_unique<ConfigInterface>([this](auto path) { return files.TryRead(path); });helpConfig->SetInt("global.inMission",0);BindHtmlConditionConfig(h.html,*helpConfig,assets.Edition());h.translate=[](auto text) { return std::string(text); };h.config=[](auto key) { return key=="Quick Help Spec" ? std::string("d/help.english") : std::string(key); };h.substitute=[](auto text) { return std::string(text); };
+        RawHelpHooks h;h.globals=&helpGlobals;BindHtmlPictureText(h.html);if (!helpConfig) helpConfig=std::make_unique<ConfigInterface>([this](auto path) { return files.TryRead(path); });helpConfig->SetInt("global.inMission",0);BindHtmlConditionConfig(h.html,*helpConfig,assets.Edition());h.translate=[](auto text) { return std::string(text); };h.config=[](auto key) { return key=="Quick Help Spec" ? std::string("d/help.english") : std::string(key); };h.substitute=[](auto text) { return std::string(text); };
         h.load=[this](auto path) -> std::optional<std::string> { const auto bytes=files.TryRead(path);if (!bytes) return std::nullopt;return std::string(bytes->begin(),bytes->end()); };
         h.text=[this](auto token) { return std::string(helpStrings.Resolve(token&0x0fffffffU)); };h.storeText=[this](auto text) { return Topic(text); };
         h.lookup=[this](auto name) { return assets.TypeTable().Find(name); };h.typeName=[this](auto type) { return assets.TypeTable().Types()[type].name; };
@@ -304,7 +313,7 @@ TEST_CASE(RawMenuControls_CarrierAndObjectMenuChain) {
 // 실제 시작 안내의 serial 재사용/돌 버튼 즉시 명령과 부모 자식 정리를 함께 검증한다.
 TEST_CASE(RawMenuControls_MissionLoadingUsesSharedTreeAndCancel) {
     MenuClient client;client.Resize(1024,768);
-    const auto serial=client.menus->ShowMissionLoading("Starting Mission...","Cancel",{85,0,1024,768});
+    const auto serial=client.menus->ShowMissionLoading(client.LoadingContext({85,0,1024,768}),"Starting Mission...",[] { return std::string("Cancel"); });
     const auto bounds=client.menus->MissionLoadingBounds();CHECK(bounds.has_value());
     if (!bounds) return;
     CHECK(bounds->right-bounds->left==400);CHECK(bounds->left==354);CHECK(bounds->top>=344 && bounds->top<=345);
@@ -316,7 +325,7 @@ TEST_CASE(RawMenuControls_MissionLoadingUsesSharedTreeAndCancel) {
         if (node->vtable==0x51454cU && !(node->flags&0x10000U)) { ++textChildren;CHECK(node->secondaryDepth==0xffffffffU && node->alignFlags==0); }
     }
     CHECK(textChildren==1);
-    CHECK(client.menus->ShowMissionLoading("Starting Mission...","Cancel",{85,0,1024,768})==serial);
+    CHECK(client.menus->ShowMissionLoading(client.LoadingContext({85,0,1024,768}),"Starting Mission...",[] { return std::string("Cancel"); })==serial);
     // 실제 원본 자산을 모든 자식과 함께 출력하여 Draw가 메타/사본에 의존하지 않는지 확인한다.
     std::vector<std::uint8_t> pixels(1024*768);std::array<std::uint32_t,256> logical{};
     // 실제 팔레트의 RGB를 원본 명암 표 입력으로 옮긴다.
@@ -328,7 +337,7 @@ TEST_CASE(RawMenuControls_MissionLoadingUsesSharedTreeAndCancel) {
     if (!client.commands.empty()) CHECK((client.commands[0]==std::array<std::uint32_t,3>{0x020000c5U,3,3}));
     CHECK(!client.menus->MissionLoadingBounds());CHECK(client.buttons.SerialGump(serial)==0);
     client.buttons.CleanupGumps();
-    const auto next=client.menus->ShowMissionLoading("Starting Mission...","Cancel",{85,0,1024,768});CHECK(next!=serial);
+    const auto next=client.menus->ShowMissionLoading(client.LoadingContext({85,0,1024,768}),"Starting Mission...",[] { return std::string("Cancel"); });CHECK(next!=serial);
     client.menus->CloseMissionLoading();client.buttons.CleanupGumps();CHECK(!client.menus->Point("Cancel"));
     CHECK(client.menus->Report().find("raw_mission_loading\t")==std::string::npos);
 }

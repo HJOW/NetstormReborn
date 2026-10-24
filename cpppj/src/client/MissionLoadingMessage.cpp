@@ -30,7 +30,7 @@ std::string BuildMissionLoadingMessageBody(std::string_view formatted,const std:
     return body;
 }
 // 신규 경로는 create의 반환 serial과 create가 바꾼 현재createdSerial을 서로 바꾸지 않는다.
-std::uint32_t ShowMissionLoadingMessage(MissionLoadingMessageState& state,std::string_view formatted,
+std::uint32_t ShowMissionLoadingMessage(MissionLoadingMessageView state,std::string_view formatted,
     const MissionLoadingMessageHooks& hooks) {
     auto source=BuildMissionLoadingMessageBody(formatted,hooks.cancelText);
     if (const auto existing=Need(hooks.findSerial)(state.transientSerial)) {
@@ -40,4 +40,5 @@ std::uint32_t ShowMissionLoadingMessage(MissionLoadingMessageState& state,std::s
     if (const auto current=Need(hooks.findSerial)(state.createdSerial)) Update(current,source,hooks);
     state.transientSerial=created;return created;
 }
+std::uint32_t ShowMissionLoadingMessage(MissionLoadingMessageState& state,std::string_view formatted,const MissionLoadingMessageHooks& hooks) { return ShowMissionLoadingMessage(MissionLoadingMessageView{state.transientSerial,state.createdSerial},formatted,hooks); } // 기존 독립 소유자도 현재 필드 참조를 공유하는 같은 원문 본체를 사용한다.
 }

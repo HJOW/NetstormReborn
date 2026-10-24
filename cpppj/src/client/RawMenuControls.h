@@ -106,15 +106,15 @@ public:
     std::uint32_t ProcessHtmlMetadata(std::uint32_t token,std::span<char> buffer); // 실제 부모/메뉴 스택/80칸 고리에 원문 메타를 적용한다.
     std::uint32_t ShowHtmlWindow(RawHtmlWindowContext context,std::string_view source,std::uint32_t suppress,std::uint32_t width,std::uint32_t height); // 원문 전체 생성의 최종serial 또는0이다. 창 없는 첫 파서 효과도 보존한다.
     std::string ResolveHtmlWindowLink(std::uint32_t token) const; // Kill 뒤 Cleanup 전까지 실제 부모8192BYTE를 읽고 반납된 링크는 거부한다.
+    void ActivateHtmlWindowLink(std::uint32_t token); // 실제 부모 링크를 같은 Help/cmd/외부 요청 분배기에 전달한다. 선택 외부 경계의 실패를 보존한다.
     void CloseHtmlWindows(); // 미부착/부분 생성도 같은 공통 수명으로 반납한다.
     void CloseBackgroundGifs(); // 미부착/부분 생성도 같은 공통 수명으로 반납한다.
     ButtonGumpNode* BaseButton(std::uint32_t token) const; // 실제 특수 Button 파생도 공통 입력 처리기에 빌린다.
     QuickHelpPopupState& PopupState() const; // 지식 카드 표식과 전용 Help Back이 공유할 같은 실제 저장소다.
     void EnableHelp(RawHelpHooks hooks); // 현재 Client 경계를 같은 공통 트리에 한 번 연결한다.
     std::uint32_t OpenHelp(std::uint32_t topic=0,std::int32_t mode=1,std::uint32_t learnType=0); // 실제 전용 창 재사용/모달/요청이다.
-    // 원본 cf570의 미션 시작 안내를 같은 등록표/장식/다중 줄/즉시 돌 버튼에 작성한다.
-    // 현재 복원 범위는 기본 Starting Mission/Cancel 경로이며 일반 Tell 전체 부모와 구별한다.
-    std::uint32_t ShowMissionLoading(std::string_view message,std::string_view cancel,ScreenRect mapView);
+    // 원본cf570의 전체 HTML 생성/현재 부모 재갱신을 같은 Client 전역과 실제 공장에 연결한다.
+    std::uint32_t ShowMissionLoading(RawHtmlWindowContext context,std::string_view message,std::function<std::string()> cancelText); // Cancel 번역은 기본 버튼이 필요한 분기에서만 조회한다.
     void CloseMissionLoading(); // 실제 transient serial을 찾아 Kill하며 프레임 Cleanup까지 저장소를 유지한다.
     std::optional<ScreenRect> MissionLoadingBounds() const; // 살아 있는 원본 부모의 현재 화면 경계다.
     bool HelpOpen() const; // 현재 serial/등록/visible/dead를 조회한다.
