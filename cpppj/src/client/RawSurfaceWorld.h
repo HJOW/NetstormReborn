@@ -116,8 +116,9 @@ public:
     // 프레임/타입/SHP를 소유하여 GUI 참조와 raw 조회가 같은 판본을 사용하게 한다.
     RawSurfaceWorld(o::OriginalEdition edition,std::span<const o::RiftTypeRecord> types,
         std::span<const o::RiftTypeFrames> frames,std::span<const o::SquidDisplayShape> shapes,
-        o::BridgeConnectState links,std::uint32_t terrainType);
-    // 내부 Kernel을 먼저 해제하여 ProcessForm이 pool보다 오래 살아남지 않게 한다.
+        o::BridgeConnectState links,std::uint32_t terrainType,o::Kernel* processKernel=nullptr);
+    // 실제 Client는 같은 전역 Kernel을 빌리고 독립 월드만 자체 Kernel을 소유한다. 빌린 Kernel은 월드보다 오래 살아야 한다.
+    // 빌린 경우 호출자는 모듈 반납 전에 DrainProcesses를 마쳐야 한다. 자체 Kernel은 이 월드의 다른 멤버보다 먼저 반납한다.
     ~RawSurfaceWorld();
     RawSurfaceWorld(const RawSurfaceWorld&)=delete;
     RawSurfaceWorld& operator=(const RawSurfaceWorld&)=delete;
@@ -151,10 +152,12 @@ public:
     void Repop(o::Sid sid,std::uint32_t flags);
     // 외부 연결 모듈을 해제하기 전에 예약 객체를 먼저 정리한다. 월드 자료는 유지한다.
     void ClearProcesses();
+    void DrainProcesses(); // C++ 최종 소멸 전용으로 소멸자가 지난 슬롯에 만든 프로세스까지 반납한다. 원문 Clear 한 번과 구별한다.
     // 파생 로더의 중첩 깊이를 표면과 비표면 몸체에 동일하게 전달한다.
     void SetLoadingDepth(std::uint32_t depth);
     // 원본 고정 게임 시각을 모든 Regular에 공급한다. 정지 중에는 커널을 실행하지 않는다.
     void RunFrame(o::FrameTime time,bool paused);
+    void PrepareFrame(o::FrameTime time); // 같은 시각만 공급한다. 실제 Client는 이후 전역 Kernel을 정확히 한 번 실행한다.
     // 카메라/viewport와 현재 Renderer의 표시 전달 경로를 갱신한다.
     void SetDisplay(o::SquidDisplayView view,SurfaceDisplayHooks hooks);
     // 지정 위치의 실제 객체/받침을 조회한다. 없으면 SID 0이다.

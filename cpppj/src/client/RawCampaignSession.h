@@ -204,6 +204,7 @@ struct RawCampaignSessionServices {
     std::shared_ptr<ClientRandomGlobals> randomGlobals; // 생략된 독립 검사만 기존Session CRT0을 사용하고 실제Client는 같은장기소유자를 전달한다.
     std::shared_ptr<ClientSubscriberGlobals> subscriberGlobals; // 생략된 독립 검사만 기존 0/0 및 Begin 값 복사를 유지한다.
     std::shared_ptr<ClientPlayerRecords> playerRecords; // 미연결 독립 Session만 자체 실제 할당 소유자를 만든다.
+    o::Kernel* processKernel{}; // 실제 Client의 한 전역 Kernel을 빌린다. 소유자는 모든 Session/월드 소비자보다 오래 살아야 한다.
     std::shared_ptr<ClientLocalStateGlobals> localStateGlobals; // 생략된 독립 로그인 검사만 기존 local 블록/기한을 사용한다.
 };
 // 초기 객체 생성부터 Kernel 해제까지 동일 주소에서 실제 모듈과 상태를 소유한다.
@@ -256,6 +257,7 @@ public:
     void ReloadTheamAt(std::uint32_t x,std::uint32_t y,std::uint32_t mode=0) const;
     // 현재 같은 시각을 모든 모듈에 공급한 뒤 동일 Kernel을 실행한다.
     void RunFrame(o::FrameTime time,bool paused);
+    void PrepareFrame(o::FrameTime time,bool paused); // 실제 GUI가 단일 전역 Kernel 앞에서 시각/AI/표시 입력만 준비한다.
     // 같은 실제 카메라와 현재 장치의 dirty 경계를 process11에 공급한다.
     void SetParticleView(SoundView view,SurfaceDisplayHooks display);
     // 실제 원본 표시 목록의 현재 직접 그리기를 다른 월드 SHP와 함께 정렬한다.

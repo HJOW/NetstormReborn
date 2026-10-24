@@ -84,12 +84,14 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
     std::unique_ptr<o::SquidFormDispatch> formDispatch;
     // dependencies: 같은 삭제 분배기에 영구 등록하는 실제 감시 Form 쌍 소유자다.
     std::unique_ptr<o::DependFormHost> dependencies;
-    o::Kernel kernel; // 모듈/host보다 먼저 해제되어 예약 프로세스의 참조 수명을 보장한다.
+    std::unique_ptr<o::Kernel> localKernel; // 독립 월드만 소유하며 모듈/host보다 먼저 소멸한다. 실제 Client에는 두 번째 Kernel을 만들지 않는다.
+    o::Kernel& kernel; // 모든 Form/경로/Regular가 같은 실제 Client Kernel 또는 독립 소유자를 직접 빌린다.
     // 순환하는 콜백은 실제 호출 전에 모든 모듈을 구성한다. 생성 중에는 Pop하지 않는다.
     Impl(o::OriginalEdition selected,std::span<const o::RiftTypeRecord> inputTypes,std::span<const o::RiftTypeFrames> inputFrames,
-        std::span<const o::SquidDisplayShape> inputShapes,o::BridgeConnectState state,std::uint32_t terrain)
+        std::span<const o::SquidDisplayShape> inputShapes,o::BridgeConnectState state,std::uint32_t terrain,o::Kernel* processKernel)
         :edition(selected),types(inputTypes.begin(),inputTypes.end()),frames(inputFrames.begin(),inputFrames.end()),
-         shapes(inputShapes.begin(),inputShapes.end()),codes(types.size()),pool(edition,kCapacity,true),links(state),terrainType(terrain) {
+         shapes(inputShapes.begin(),inputShapes.end()),codes(types.size()),pool(edition,kCapacity,true),links(state),terrainType(terrain),
+         localKernel(processKernel ? nullptr : std::make_unique<o::Kernel>()),kernel(processKernel ? *processKernel : *localKernel) {
         if (frames.size()!=types.size() || shapes.size()!=types.size()) throw std::invalid_argument("raw 표면 월드 자산 표 크기 오류");
         // Graph와 이웃 탐색기는 같은 원본 코드 배열을 사용한다.
         for (std::size_t i=0;i<frames.size();++i) codes[i].assign(frames[i].Codes().begin(),frames[i].Codes().end());
@@ -183,9 +185,9 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
 };
 // 공개 객체는 내부 참조/콜백이 이동하지 않게 단일 구현 객체를 소유한다.
 RawSurfaceWorld::RawSurfaceWorld(o::OriginalEdition edition,std::span<const o::RiftTypeRecord> types,
-    std::span<const o::RiftTypeFrames> frames,std::span<const o::SquidDisplayShape> shapes,o::BridgeConnectState links,std::uint32_t terrainType)
-    :impl_(std::make_unique<Impl>(edition,types,frames,shapes,links,terrainType)) {}
-// 프로세스와 raw 데이터는 같은 월드 수명으로 해제된다. GUI의 전역 Kernel에는 form을 등록하지 않는다.
+    std::span<const o::RiftTypeFrames> frames,std::span<const o::SquidDisplayShape> shapes,o::BridgeConnectState links,std::uint32_t terrainType,o::Kernel* processKernel)
+    :impl_(std::make_unique<Impl>(edition,types,frames,shapes,links,terrainType,processKernel)) {}
+// 프로세스가 빌린 raw 데이터보다 먼저 반납되며 외부 Client Kernel 자체는 파괴하지 않는다.
 RawSurfaceWorld::~RawSurfaceWorld()=default;
 // 이 뷰는 내부 모듈의 현재 참조만 돌려주며 새 배열/풀을 만들지 않는다.
 RawWorldCore RawSurfaceWorld::Core() {
@@ -195,7 +197,7 @@ RawWorldCore RawSurfaceWorld::Core() {
 }
 // Session의globals만바꾸고private BridgeDecayMode.editor를남기지않는다.
 void RawSurfaceWorld::ConfigureInstallModes(bool fort,bool battle,bool challenge,bool editor) {
-    auto& s=*impl_;if (s.runtimeBound || s.loading || s.loaded || s.kernel.Size() || s.pool.FreeCount()!=s.pool.Capacity()-5) throw std::logic_error("실제설치모드는첫객체/Runtime등록전에필요");
+    auto& s=*impl_;if (s.runtimeBound || s.loading || s.loaded || s.pool.FreeCount()!=s.pool.Capacity()-5) throw std::logic_error("실제설치모드는첫객체/Runtime등록전에필요");
     // 지정Take가freeCount를보존하는경우도이미만든실제슬롯을거부한다.
     for (std::uint32_t sid=5;sid<s.pool.Capacity();++sid) if (!(s.pool.Slot(o::Sid{static_cast<std::uint16_t>(sid)})[11]&1)) throw std::logic_error("실제설치모드설정전에객체존재");
     s.ownerMode={fort,battle,challenge};s.links.battle=battle;s.mode.editor=editor;
@@ -205,7 +207,7 @@ std::span<o::RiftTypeRecord> RawSurfaceWorld::MutableTypes() { return impl_->typ
 // 완성된 실제 파생 훅을 설치할 때 Form/Regular의 기존 callback도 현재 경계를 읽게 한다.
 void RawSurfaceWorld::BindRuntime(RawWorldRuntimeHooks hooks) {
     auto& s=*impl_;
-    if (s.runtimeBound || s.loading || s.loaded || s.kernel.Size() || s.pool.FreeCount()!=s.pool.Capacity()-5)
+    if (s.runtimeBound || s.loading || s.loaded || s.pool.FreeCount()!=s.pool.Capacity()-5)
         throw std::logic_error("월드 runtime은 초기 객체 생성 전에 한 번 연결해야 합니다");
     // 지정 Take는 freeCount를 보존하므로 실제 슬롯도 확인하여 기존 객체가 있는 늦은 설치를 거부한다.
     for (std::uint32_t id=5;id<s.pool.Capacity();++id)
@@ -218,7 +220,7 @@ void RawSurfaceWorld::BindRuntime(RawWorldRuntimeHooks hooks) {
 // 기존표면분배기가보유한proxy를유지하면서단일공통삭제state의실제경제/UI소비자를교체한다.
 void RawSurfaceWorld::BindDeletion(o::SquidReward& reward,std::function<o::Sid()> selected,o::SquidDeletionHooks hooks) {
     auto& state=*impl_;
-    if (state.deletionBound || state.loading || state.loaded || state.kernel.Size() || state.pool.FreeCount()!=state.pool.Capacity()-5)
+    if (state.deletionBound || state.loading || state.loaded || state.pool.FreeCount()!=state.pool.Capacity()-5)
         throw std::logic_error("공통 삭제 실제 소비자는 첫 객체 생성 전에 한 번 연결해야 합니다");
     // Take는freeCount를보존할수있으므로동일물리슬롯도검사한다.
     for (std::uint32_t id=5;id<state.pool.Capacity();++id)
@@ -261,6 +263,8 @@ void RawSurfaceWorld::Repop(o::Sid sid,std::uint32_t flags) {
 }
 // 예약 프로세스를 연결 모듈보다 먼저 해제해 가상 소멸자의 참조 수명을 보장한다.
 void RawSurfaceWorld::ClearProcesses() { impl_->kernel.Clear(); }
+// 최종 소멸자는 지난 슬롯의 후속 등록도 같은 모듈이 살아 있을 때 반납해야 한다.
+void RawSurfaceWorld::DrainProcesses() { do { impl_->kernel.Clear(); } while (impl_->kernel.Size()); }
 // 중첩 로딩의 표면/사제/자산 후처리가 같은 값을 읽게 한다.
 void RawSurfaceWorld::SetLoadingDepth(std::uint32_t depth) {
     impl_->loadState.loadingDepth=depth;if (impl_->runtimeBound) impl_->runtime.loadingDepth(depth);
@@ -292,11 +296,13 @@ void RawSurfaceWorld::Load(std::span<const SurfaceSeed> seeds) {
     }
     FinishLoad();
 }
-// GUI가 고정한 한 프레임의 시각을 모든 raw 프로세스가 공유한다.
-void RawSurfaceWorld::RunFrame(o::FrameTime time,bool paused) {
+// GUI의 준비 단계는 시각만 쓰며 Kernel을 중첩 실행하지 않는다.
+void RawSurfaceWorld::PrepareFrame(o::FrameTime time) {
     if (!std::isfinite(time.game) || time.game<impl_->time.game) throw std::invalid_argument("raw 월드의 역행/비유한 게임 시각");
-    impl_->time=time;impl_->processState.now=time.game;if (!paused) impl_->kernel.RunFrame();
+    impl_->time=time;impl_->processState.now=time.game;
 }
+// 독립 호출자는 같은 준비 뒤 Kernel을 한 번 실행하며 기존 정지 계약을 유지한다.
+void RawSurfaceWorld::RunFrame(o::FrameTime time,bool paused) { PrepareFrame(time);if (!paused) impl_->kernel.RunFrame(); }
 // 현재 카메라의 원본 픽셀 기준값과 GUI 변경 표를 연결한다.
 void RawSurfaceWorld::SetDisplay(o::SquidDisplayView view,SurfaceDisplayHooks hooks) { impl_->display->SetView(view);impl_->displayHooks=std::move(hooks); }
 // 일반 4단계 해시와 실제 타입 필터를 사용하는 조회다.

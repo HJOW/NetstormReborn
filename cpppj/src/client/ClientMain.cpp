@@ -396,7 +396,9 @@ int Client::Run() {
             if (menu_) menu_->RefreshMinimap(); //481320은 게임 시계 정지와 무관하다.
             if (menu_) menu_->CleanupGumps(); //439b13→4662b0: 이 단계가 예약한 입력은 다음 Input에서만 소비한다.
             if (menu_) menu_->IdleGumps(); //439b18→464170: 정리 뒤·Kernel 앞의 같은 표 한 번이다.
+            if (menu_) menu_->PrepareKernelFrame(); // 같은 실제 시각/연결/AI 입력을 준비하며 Kernel은 호출하지 않는다.
             kernel_.RunFrame();
+            if (menu_) menu_->FinishKernelFrame(); // 모든 원문 프로세스가 같은 슬롯 순회를 끝낸 뒤 표시를 수집한다.
         } else if (menu_) menu_->IdleGumps(); //439b69: 영상 갱신 잠금 중에도 Idle만 계속 실행한다.
         if (menu_) menu_->Frame(); // 합성/그리기 경계는 양쪽 가지 모두 유지하며 State Tick과 합치지 않는다.
         // 11. 프레임 제한 + 그리기.

@@ -1802,6 +1802,103 @@ TEST_CASE(CampaignSession_PlayerLinks_PlayerLeaseOutlivesServiceCaptures) {
     CHECK(observed);CHECK(blocked);const auto next=records->Acquire();CHECK(next!=nullptr); // 모든 소비자가 반납된 뒤에만 다음 대여를 허용한다.
 }
 
+namespace {
+// 실제 Client의 한 Kernel에서 프레임/가상 소멸 위치만 관측한다. 게임 계산은 대체하지 않는다.
+class SharedKernelProbe final:public BaseProcess {
+public:
+    SharedKernelProbe(std::function<void()> frame,std::function<void()> release={}):frame_(std::move(frame)),release_(std::move(release)) {} // 두 관측 장치의 수명을 보유한다.
+    void RunFrame() override { if (frame_) frame_(); } // 원문 슬롯 순회가 실제 선택한 횟수만 기록한다.
+    ~SharedKernelProbe() override { if (release_) release_(); } // 실제 소멸 중 같은 Player/Kernel/서비스가 살아 있는지 관측한다.
+private:
+    std::function<void()> frame_,release_; // 모든 관측 대상보다 먼저 반납하는 장치다.
+};
+// 실제 Client 저장소를 독립 음향 장치 fixture와 조립하며 규칙/시간 결과는 공급하지 않는다.
+RawCampaignSessionServices SharedKernelServices(Client& client,SessionServicesFixture& external) {
+    auto result=external.Services();result.playerRecords=client.PlayerRecords();result.processKernel=&client.GetKernel();
+    result.production.allocationBytes=[](auto bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0x71}); };return result; // 실제 Deck 생성자가 보존하는 미정 바이트의 명시 입력이다.
+}
+// 같은 보호 미션을 읽기 전용으로 파싱하며 원본 파일이나 완료 상태는 쓰지 않는다.
+std::unique_ptr<RawCampaignSession> SharedKernelSession(RawCampaignSessionServices services) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());
+    return std::make_unique<RawCampaignSession>(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));
+}
+}
+
+// 실제 Form PID가 Client Kernel을 가리키고 준비 단계는 실행하지 않으며 원문 한 순회만 진행한다.
+TEST_CASE(CampaignSharedKernel_ActualFormsAndSingleClientFrame) {
+    std::vector<int> visits;Client client(SessionLinksOptions());SessionServicesFixture external;
+    auto session=SharedKernelSession(SharedKernelServices(client,external));session->Load();const auto core=session->Core();
+    CHECK(&core.kernel==&client.GetKernel());std::size_t forms{};
+    for (std::uint32_t index=5;index<core.pool.Capacity();++index) { // 실제 살아 있는 ProcessForm의 현재 DWORD PID를 같은 Kernel에서 찾는다.
+        const Sid sid{static_cast<std::uint16_t>(index)};const auto raw=core.pool.Slot(sid);
+        if (raw[10]<10 || raw[10]>=63 || (raw[11]&3U)) continue; // 원문 Attach는 기반2로 만든 뒤 실제 프로세스 TYPE10..62를 기록한다.
+        const auto pid=Get(raw,18);CHECK(pid && client.GetKernel().Get(pid)==core.processes.FromForm(sid));++forms;
+    }
+    CHECK(forms>0);client.GetKernel().Add(std::make_unique<SharedKernelProbe>([&] { visits.push_back(1); }));
+    client.GetKernel().Add(std::make_unique<SharedKernelProbe>([&] { visits.push_back(2); }));
+    session->PrepareFrame({.25,.25,.25,1},false);CHECK(visits.empty() && core.processState.now==.25);
+    client.GetKernel().RunFrame();CHECK(visits==std::vector<int>({1,2}));
+    session->PrepareFrame({.25,.5,0,2},true);CHECK(visits==std::vector<int>({1,2}));
+    client.GetKernel().RunFrame();CHECK(visits==std::vector<int>({1,2,1,2})); // 원문 Client 루프는 게임 시계 정지와 무관하게 Kernel을 한 번 실행한다.
+    session.reset();CHECK(client.GetKernel().Size()==0);
+}
+
+// 전역 Clear는 호스트 GameWorld를 소멸하지 않으며 월드가 살아 있는 동안 Player/Pool을 유지한다.
+TEST_CASE(CampaignSharedKernel_GameWorldSurvivesExplicitGlobalClear) {
+    std::size_t frames{},deletes{};Client client(SessionLinksOptions());SessionServicesFixture external;
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());
+    auto world=std::make_unique<GameWorld>(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",SharedKernelServices(client,external),ScreenPoint{1024,768});
+    const auto core=world->Session().Core();const auto base=world->Session().PlayerRecords().data();const auto poolBase=core.pool.Bytes().data();
+    FrameTime time{.25,.25,.25,1};world->frameTime=[&] { return time; };world->paused=[] { return false; };
+    client.GetKernel().Add(std::make_unique<SharedKernelProbe>([&] { ++frames; },[&] { ++deletes; }));
+    world->PrepareKernelFrame();CHECK(!frames);client.GetKernel().RunFrame();world->FinishKernelFrame();CHECK(frames==1);
+    world->Session().ReleasePlayerLinks();world->Session().World().ClearProcesses();
+    CHECK(deletes==1 && client.GetKernel().Size()==0 && &core.kernel==&client.GetKernel());
+    CHECK(world->Session().PlayerRecords().data()==base && client.PlayerRecords()->Records().data()==base && world->Session().Core().pool.Bytes().data()==poolBase);
+    CHECK(Throws([&] { static_cast<void>(client.PlayerRecords()->Acquire()); })); // 호스트 월드가 살아 있으므로 Player 대여는 아직 유지된다.
+    world.reset();CHECK(client.GetKernel().Size()==0);const auto next=client.PlayerRecords()->Acquire();CHECK(next!=nullptr);
+}
+
+// 원문 Clear가 남기는 앞 슬롯은 보존하고 최종 소멸은 PlayerLinks/서비스 소비자 사이에서 끝까지 반납한다.
+TEST_CASE(CampaignSharedKernel_FinalDrainPrecedesPlayerAndServiceRelease) {
+    bool lateDeleted{},earlyDeleted{},serviceReleased{};Client client(SessionLinksOptions());SessionServicesFixture external;
+    auto services=SharedKernelServices(client,external);
+    std::shared_ptr<int> watch(new int{},[&](int* marker) { delete marker;serviceReleased=true; }); // 마지막 실제 서비스 보유자의 반납 위치다.
+    services.unitLost=[watch](Sid) {};watch.reset();auto session=SharedKernelSession(std::move(services));services.unitLost={};
+    const auto core=session->Core();const auto base=client.PlayerRecords()->Records().data();
+    for (std::uint32_t owner=0;owner<9;++owner) { // 실제 동적 Deck과 Native 정리 DWORD를 모든 Player 행에 준비한다.
+        static_cast<void>(session->Production().Deck().Get(owner));SessionLinksPut(session->PlayerRecords(),owner*180+8,owner+1);SessionLinksPut(session->PlayerRecords(),owner*180+0x9c,owner+5);
+    }
+    const auto first=client.GetKernel().Add(std::make_unique<SharedKernelProbe>(std::function<void()>{}));
+    const auto late=client.GetKernel().Add(std::make_unique<SharedKernelProbe>(std::function<void()>{},[&,core,base] {
+        lateDeleted=true;CHECK(!serviceReleased && client.PlayerRecords()->Records().data()==base);
+        client.GetKernel().Add(std::make_unique<SharedKernelProbe>(std::function<void()>{},[&,core,base] {
+            earlyDeleted=true;CHECK(!serviceReleased && client.PlayerRecords()->Records().data()==base);
+            for (std::uint32_t owner=0;owner<9;++owner) { // 최종 반납 때 실제 PlayerLinks가 이미 세 DWORD를 지웠는지 읽는다.
+                const auto bytes=client.PlayerRecords()->Records();CHECK(Get(bytes,owner*180+8)==0 && Get(bytes,owner*180+0x68)==0 && Get(bytes,owner*180+0x9c)==0);
+            }
+            CHECK(core.pool.Capacity()>5 && Throws([&] { static_cast<void>(client.PlayerRecords()->Acquire()); }));
+        }));
+    }));
+    CHECK(first==1 && late==2);session->World().ClearProcesses();CHECK(lateDeleted && !earlyDeleted && !serviceReleased && client.GetKernel().Size()==1);
+    session.reset();CHECK(earlyDeleted && serviceReleased && client.GetKernel().Size()==0);const auto next=client.PlayerRecords()->Acquire();CHECK(next!=nullptr);
+}
+
+// 기존 외부 프로세스가 있어도 정상 접합하며 부분 생성 실패는 해당 프로세스/Player 대여를 보존한다.
+TEST_CASE(CampaignSharedKernel_PartialConstructorPreservesExistingProcess) {
+    bool deleted{};Client client(SessionLinksOptions());SessionServicesFixture external;
+    const auto id=client.GetKernel().Add(std::make_unique<SharedKernelProbe>(std::function<void()>{},[&] { deleted=true; }));
+    auto invalid=SharedKernelServices(client,external);invalid.deferExistingEditorFile=true; // Campaign에 Editor 전용 파일 지연을 지정해 첫 실제 객체 전 계약 실패를 선택한다.
+    bool rejected{};try { static_cast<void>(SharedKernelSession(std::move(invalid))); }
+    catch (const std::logic_error& error) { rejected=std::string_view(error.what()).find("파일지연은")!=std::string_view::npos; }
+    CHECK(rejected && !deleted && client.GetKernel().Size()==1 && client.GetKernel().Get(id));
+    { const auto next=client.PlayerRecords()->Acquire();CHECK(next!=nullptr); } // 부분 생성의 대여 반납을 확인한 뒤 정상 Session이 다시 빌릴 수 있게 한다.
+    auto session=SharedKernelSession(SharedKernelServices(client,external));CHECK(!deleted && client.GetKernel().Size()==1 && client.GetKernel().Get(id));
+    session->Load();CHECK(!deleted && client.GetKernel().Size()>1 && &session->Core().kernel==&client.GetKernel());
+    session.reset();CHECK(deleted && client.GetKernel().Size()==0); // 정상 Session의 최종 전역 정리는 기존 프로세스까지 같은 실제 순서로 반납한다.
+}
+
 // 실제 서버 abstract/134 도착이30과17을 만들고 같은 시각으로 HP/완료/공간/표시 종료를 실행한다.
 TEST_CASE(CampaignSession_ConstructionArrivalRunsActualProgressAndVisual) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();services.unitLost=[&](Sid) { ++external.notices; };

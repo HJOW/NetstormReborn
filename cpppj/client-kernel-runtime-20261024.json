@@ -1,0 +1,440 @@
+{
+  "unit": 393,
+  "date": "2026-10-24",
+  "baseline": "a6f12d98",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "productSha256": "ea3e9e67e61cde9c80d0f385292a275c6c6b9b7c89f61d2b1c46928a4054d0c9",
+  "testBinarySha256": "f9331b5a7d600967de8cd7e7323aef26c7d9cef0d99d2471bbbe3f3830544b61",
+  "newTests": 4,
+  "focusedTests": 17,
+  "totalTests": 2673,
+  "failedChecks": 0,
+  "firstTests": {
+    "total": 4,
+    "failedChecks": 2,
+    "kind": "부착 TYPE 기대/명시 Deck 입력 누락의 검사 오류; 첫 출력/소스/파일 보존"
+  },
+  "firstTestCorrectionKeptProduct": true,
+  "foreignProcessLifetimeCorrected": true,
+  "firstGuiProductSha256": "46adb377c79c239450a20856e50e73db445cafe729b25c6e43376217f8b1d209",
+  "firstGuiRuns": [
+    {
+      "returnCode": 0,
+      "seconds": 351.5354766000528,
+      "log": "extracted/cpp-shared-kernel-393-gui1-early1.log",
+      "command": [
+        "C:\\Program Files\\Python\\313\\python.exe",
+        "tools/cpp_tutorial_harvest_smoke.py",
+        "--output",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-shared-kernel-393-early1",
+        "--plan",
+        "cpppj/tests/fixtures/tutorial-one-harvest-six-slots-ui-input.tsv"
+      ],
+      "label": "early1",
+      "sameProduct": true,
+      "originalsUnchanged": true
+    },
+    {
+      "returnCode": 0,
+      "seconds": 195.1698550999863,
+      "log": "extracted/cpp-shared-kernel-393-gui1-early2.log",
+      "command": [
+        "C:\\Program Files\\Python\\313\\python.exe",
+        "tools/cpp_tutorial_two_smoke.py",
+        "--output",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-shared-kernel-393-early2"
+      ],
+      "label": "early2",
+      "sameProduct": true,
+      "originalsUnchanged": true
+    },
+    {
+      "returnCode": 0,
+      "seconds": 16.415050900075585,
+      "log": "extracted/cpp-shared-kernel-393-gui1-menus1024.log",
+      "command": [
+        "C:\\Program Files\\Python\\313\\python.exe",
+        "tools/cpp_game_menu_smoke.py",
+        "--output",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-shared-kernel-393-menus1024",
+        "--only",
+        "1024x768"
+      ],
+      "label": "menus1024",
+      "sameProduct": true,
+      "originalsUnchanged": true
+    },
+    {
+      "returnCode": 1,
+      "seconds": 19.204455700004473,
+      "log": "extracted/cpp-shared-kernel-393-gui1-menus1280.log",
+      "command": [
+        "C:\\Program Files\\Python\\313\\python.exe",
+        "tools/cpp_game_menu_smoke.py",
+        "--output",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-shared-kernel-393-menus1280",
+        "--only",
+        "1280x720"
+      ],
+      "label": "menus1280",
+      "sameProduct": true,
+      "originalsUnchanged": true
+    }
+  ],
+  "builds": [
+    {
+      "number": 1,
+      "returnCode": 0
+    },
+    {
+      "number": 2,
+      "returnCode": 0
+    },
+    {
+      "number": 3,
+      "returnCode": 0
+    }
+  ],
+  "ctest": {
+    "returnCode": 0,
+    "seconds": 329.4372813999653,
+    "log": "extracted/cpp-shared-kernel-393-ctest1.log",
+    "command": [
+      "ctest",
+      "--test-dir",
+      "H:\\T5Workspace\\NetstormReborn\\cpppj\\build",
+      "-C",
+      "Release",
+      "--output-on-failure"
+    ],
+    "counts": [
+      [
+        "2673",
+        "0"
+      ]
+    ],
+    "sameProduct": true,
+    "sameTests": true,
+    "originalsUnchanged": true
+  },
+  "gui": {
+    "productSha256": "ea3e9e67e61cde9c80d0f385292a275c6c6b9b7c89f61d2b1c46928a4054d0c9",
+    "runs": [
+      {
+        "returnCode": 0,
+        "seconds": 324.25238350010477,
+        "log": "extracted/cpp-shared-kernel-393-gui2-early1.log",
+        "command": [
+          "C:\\Program Files\\Python\\313\\python.exe",
+          "tools/cpp_tutorial_harvest_smoke.py",
+          "--output",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-shared-kernel-393-final-early1",
+          "--plan",
+          "cpppj/tests/fixtures/tutorial-one-harvest-six-slots-ui-input.tsv"
+        ],
+        "label": "early1",
+        "sameProduct": true,
+        "originalsUnchanged": true
+      },
+      {
+        "returnCode": 0,
+        "seconds": 194.82998479995877,
+        "log": "extracted/cpp-shared-kernel-393-gui2-early2.log",
+        "command": [
+          "C:\\Program Files\\Python\\313\\python.exe",
+          "tools/cpp_tutorial_two_smoke.py",
+          "--output",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-shared-kernel-393-final-early2"
+        ],
+        "label": "early2",
+        "sameProduct": true,
+        "originalsUnchanged": true
+      },
+      {
+        "returnCode": 0,
+        "seconds": 16.321772999945097,
+        "log": "extracted/cpp-shared-kernel-393-gui2-menus1024.log",
+        "command": [
+          "C:\\Program Files\\Python\\313\\python.exe",
+          "tools/cpp_game_menu_smoke.py",
+          "--output",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-shared-kernel-393-final-menus1024",
+          "--only",
+          "1024x768"
+        ],
+        "label": "menus1024",
+        "sameProduct": true,
+        "originalsUnchanged": true
+      },
+      {
+        "returnCode": 1,
+        "seconds": 19.081958300084807,
+        "log": "extracted/cpp-shared-kernel-393-gui2-menus1280.log",
+        "command": [
+          "C:\\Program Files\\Python\\313\\python.exe",
+          "tools/cpp_game_menu_smoke.py",
+          "--output",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-shared-kernel-393-final-menus1280",
+          "--only",
+          "1280x720"
+        ],
+        "label": "menus1280",
+        "sameProduct": true,
+        "originalsUnchanged": true
+      },
+      {
+        "returnCode": 0,
+        "seconds": 280.53884970000945,
+        "log": "extracted/cpp-shared-kernel-393-gui2-solo31.log",
+        "command": [
+          "C:\\Program Files\\Python\\313\\python.exe",
+          "tools/cpp_solo_entry_smoke.py",
+          "--output",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-shared-kernel-393-final-solo31",
+          "--scope",
+          "all"
+        ],
+        "label": "solo31",
+        "sameProduct": true,
+        "originalsUnchanged": true
+      },
+      {
+        "returnCode": 0,
+        "seconds": 126.54618439998012,
+        "log": "extracted/cpp-shared-kernel-393-gui2-demo3.log",
+        "command": [
+          "C:\\Program Files\\Python\\313\\python.exe",
+          "tools/cpp_solo_entry_smoke.py",
+          "--output",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-shared-kernel-393-final-demo3",
+          "--demos"
+        ],
+        "label": "demo3",
+        "sameProduct": true,
+        "originalsUnchanged": true
+      }
+    ],
+    "originalsCount": 1394,
+    "originalsUnchanged": true,
+    "complete": true,
+    "passed": false,
+    "canonicalWidePassed": false,
+    "scope": "일반31/Demo3은 진입/단기 재생이며 Wide 원본 데이터 경로의 옵션 저장 실패는 미해결이다."
+  },
+  "validationPassed": false,
+  "kernelUnitTestsPassed": true,
+  "failedGuiGroups": 1,
+  "canonicalWidePassed": false,
+  "isolatedWidePassed": true,
+  "isolatedWideSameNormalizedInput": true,
+  "isolatedWide": {
+    "scope": "같은 게임 입력의 데이터 경로 의존성 진단; 보호 원본 경로 성공이나 원인 해결로 합산하지 않음",
+    "productSha256": "ea3e9e67e61cde9c80d0f385292a275c6c6b9b7c89f61d2b1c46928a4054d0c9",
+    "copiedCount": 1394,
+    "copiedBytesEqual": true,
+    "copySeconds": 14.1985894999234,
+    "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-shared-kernel-393-isolated-data\\originals",
+    "output": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-shared-kernel-393-isolated-wide",
+    "returnCode": 0,
+    "originalsUnchanged": true,
+    "copyRestored": true,
+    "sameProduct": true
+  },
+  "fileObjectRefresh": {
+    "replaced": true,
+    "before": {
+      "inode": 18422121440,
+      "links": 1,
+      "attributes": 32,
+      "size": 954
+    },
+    "after": {
+      "inode": 18422157440,
+      "links": 1,
+      "attributes": 32,
+      "size": 954
+    },
+    "byteEqual": true,
+    "originalsUnchanged": true
+  },
+  "fileObjectRefreshResolvedFailure": false,
+  "kernelObservations": [
+    {
+      "label": "early1",
+      "reports": 106,
+      "sameKernel": true,
+      "countsEqual": true
+    },
+    {
+      "label": "early2",
+      "reports": 78,
+      "sameKernel": true,
+      "countsEqual": true
+    },
+    {
+      "label": "menus1024",
+      "reports": 19,
+      "sameKernel": true,
+      "countsEqual": true
+    },
+    {
+      "label": "menus1280",
+      "reports": 23,
+      "sameKernel": true,
+      "countsEqual": true,
+      "gameplayPassed": false
+    },
+    {
+      "label": "solo31",
+      "reports": 372,
+      "sameKernel": true,
+      "countsEqual": true,
+      "gameplayPassed": true
+    },
+    {
+      "label": "demo3",
+      "reports": 225,
+      "sameKernel": true,
+      "countsEqual": true,
+      "gameplayPassed": true
+    }
+  ],
+  "originalsCount": 1394,
+  "originalsUnchanged": true,
+  "newNativeObservations": 0,
+  "goalComplete": false,
+  "sources": {
+    "cpppj/src/client/CampaignClientServices.cpp": "de62a80239a217209267725d1ce5ec7199ad93edf6c001539c96757e6d0c8ed5",
+    "cpppj/src/client/ClientMain.cpp": "08d9144eacd9829f36292c5e4b7a317acaae2311b8f4ceac124841c5acef9440",
+    "cpppj/src/client/GameWorld.cpp": "b31b46db82927b1a3c784b358e5c0afe52ea8a865eb09e21bcdc72ad6b43122b",
+    "cpppj/src/client/GameWorld.h": "e7170baeb60bbe992e147c2540b63bc7b6279cbc62998011a116383de0d32f2d",
+    "cpppj/src/client/RawCampaignSession.cpp": "ac2c59ddcb1da330066af761483994ab64b0e065369677831827ed0c21a6c7ee",
+    "cpppj/src/client/RawCampaignSession.h": "79d25a374c4c788218469d0a3d42c3b0becfc2b223bc4480a78a6d5bd46afce9",
+    "cpppj/src/client/RawSurfaceWorld.cpp": "8b39536aa6ab182ee1ce22a670789ede77e8132fbb3e7f21c3ff4df25384f8a3",
+    "cpppj/src/client/RawSurfaceWorld.h": "cd7774aa1e44be5ed5c3eaf6cd0220cddd5b27065fc7582a44fe30714070f49a",
+    "cpppj/src/client/UberGump.cpp": "4be0c7844c3acafc4f2bc816372cc8ae3c5d990a4a9c069511081029bc2e65f1",
+    "cpppj/src/client/UberGump.h": "d4b8d614bd45e9a8ccc9193902575327d6818e9182e8c27fdd8b2a3515f1e59e",
+    "cpppj/tests/CampaignSessionTests.cpp": "6b21fc999ebd88966b3890144b2f74e946325537f976642ef297feeedadc3bbc"
+  },
+  "evidence": {
+    "cpppj/src/o/Kernel.cpp": "aebc153f596928d8f81cb89c824000a3486986f115505a544c6480b9e5655dc3",
+    "cpppj/src/o/Kernel.h": "3c1bd7ac3ddcb7b60a1e7fef539633d9ca1b014d94759d2aa9a34128991e6f5b",
+    "cpppj/player-links-cleanup-native.json": "0834c6ef7034b4e6f4ee5546659e0a1f7ffd7856a5b19232a36ca6bdd3504bf4",
+    "cpppj/tests/fixtures/player-links-cleanup-x86.tsv": "df2bbeff41340afb945de9aa84abba215a07c38d49934645b84e6c7d3e205617",
+    "tools/decomp_player_links_cleanup.py": "2f90a13a2d3c3ebd57c379bc04e2e3a6f9ad9ef64e75cf41e5e210a118119a5d",
+    "extracted/cpp-shared-kernel-393-first/sources.json": "f6d7b9a96945620f4a8bb9c9683cbca95403789cb18a3f120bebd2ca4a0c67cc",
+    "extracted/cpp-shared-kernel-393-first/CampaignSessionTests.cpp": "ea9bbf3cfe4efa3381eb69f98630913d6ba4da3672ebb760c81890ed902a0760",
+    "extracted/cpp-shared-kernel-393-first/cpp-shared-kernel-393-checks.py": "f63e78e6a2e8a4606a89b71627065d67aa2c37f0647a305221c03be9e455ece8",
+    "extracted/cpp-shared-kernel-393-focused1-CampaignSharedKernel_.log": "66fe2ffdcc7c96adf55a9131f5c001b5e6c0506a6f88a521dd4108b0bb157ae1",
+    "extracted/cpp-shared-kernel-393-focused1-progress1.json": "9d2d0dbff7668c19874ecf478961a216decee9ab23301ad39683084c0d0b8e79",
+    "extracted/cpp-shared-kernel-393-focused2.json": "aec1132d96a43e86641aaa0dad86778d0232df7f0732eedd8876c2f3dd5f9ae5",
+    "extracted/cpp-shared-kernel-393-focused3.json": "3117897bd85f5ac555fbb050358fa4ce5f2b7c6c4d177be723e252965e77a5cb",
+    "extracted/cpp-shared-kernel-393-originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-shared-kernel-393-build1.log": "282047a3d4112b63c6c1a56b0fddae75d1e95e605dbbc1be5b38fdaaaf8a0584",
+    "extracted/cpp-shared-kernel-393-build2.log": "68daf5268753a6f0253917d033a76282e07803e3b45f8c1951a34f7cbc6a3d34",
+    "extracted/cpp-shared-kernel-393-build3.log": "ea695171a056b924bd2073c050b45b5b75bd94116c3fb5e275525fd6fb434145",
+    "extracted/cpp-shared-kernel-393-gui2.json": "42a7ff6ebde88471f8a88cad231476cb259f617fda3138f32bd508f253f19122",
+    "extracted/cpp-shared-kernel-393-ctest1.json": "a63f9a5baca37262a52541dd27d71a45f781a62c75c0554f1c951f3319c3a0a0",
+    "extracted/cpp-shared-kernel-393-ctest1.log": "05d57640f43d407f857fb591180e491872aff87dc42e332df1d1924ffd658dae",
+    "extracted/cpp-shared-kernel-393-ctest1-tests.log": "f11bc4b90d3b502384b68e910b4f636de37927fae2da864b25bd526aeae4696c",
+    "tools/cpp_tutorial_harvest_smoke.py": "06ea48c9203ef25d8018cd07b03f1dba9c8a9d9300823435fd41a5423139a713",
+    "tools/cpp_tutorial_two_smoke.py": "f4a9b679bda15bd377fce7bd6ee23a5108444549c2dce389b1c384a39d96577d",
+    "tools/cpp_game_menu_smoke.py": "d8821c209e0d934e9ce720b68222ee31c5062b5c58fac42b64becd13bc91d848",
+    "tools/cpp_solo_entry_smoke.py": "e91dbabea882c4c4f6ab6553eb46b9a7863aabc7120741d044b050b4203601ec",
+    "cpppj/tests/fixtures/tutorial-one-harvest-six-slots-ui-input.tsv": "7f0c0b185f18175113a9ee4593302f57064c22fe00271a4ff63ee6e7b935a7ac",
+    "extracted/cpp-shared-kernel-393-checks.py": "68847e20871de321a19bdbe24f29d9f1e0433896cd38af9144e7d473c8f110b0",
+    "extracted/cpp-shared-kernel-393-before-prefix/sources.json": "e10914f89d1bd871e9661f910ad3ba47dc3241f351dde87b3e2a5e2934fbe74c",
+    "extracted/cpp-shared-kernel-393-before-prefix/CampaignClientServices.cpp": "de62a80239a217209267725d1ce5ec7199ad93edf6c001539c96757e6d0c8ed5",
+    "extracted/cpp-shared-kernel-393-before-prefix/ClientMain.cpp": "08d9144eacd9829f36292c5e4b7a317acaae2311b8f4ceac124841c5acef9440",
+    "extracted/cpp-shared-kernel-393-before-prefix/GameWorld.cpp": "b31b46db82927b1a3c784b358e5c0afe52ea8a865eb09e21bcdc72ad6b43122b",
+    "extracted/cpp-shared-kernel-393-before-prefix/GameWorld.h": "e7170baeb60bbe992e147c2540b63bc7b6279cbc62998011a116383de0d32f2d",
+    "extracted/cpp-shared-kernel-393-before-prefix/RawCampaignSession.cpp": "ac2c59ddcb1da330066af761483994ab64b0e065369677831827ed0c21a6c7ee",
+    "extracted/cpp-shared-kernel-393-before-prefix/RawCampaignSession.h": "79d25a374c4c788218469d0a3d42c3b0becfc2b223bc4480a78a6d5bd46afce9",
+    "extracted/cpp-shared-kernel-393-before-prefix/RawSurfaceWorld.cpp": "866b6f8124ef685023275578c25aa1e21064a1f5d5b6f6d1dec0d44d2e13daca",
+    "extracted/cpp-shared-kernel-393-before-prefix/RawSurfaceWorld.h": "79932e0ccda29722423665d43116f2c22fbbd1ddd87e5789758b0cf60bdeb2b6",
+    "extracted/cpp-shared-kernel-393-before-prefix/UberGump.cpp": "4be0c7844c3acafc4f2bc816372cc8ae3c5d990a4a9c069511081029bc2e65f1",
+    "extracted/cpp-shared-kernel-393-before-prefix/UberGump.h": "d4b8d614bd45e9a8ccc9193902575327d6818e9182e8c27fdd8b2a3515f1e59e",
+    "extracted/cpp-shared-kernel-393-before-prefix/CampaignSessionTests.cpp": "f09ecfab05cc45eb6ec9cb53397143d113d15b2e8ed370ef3396721ad8bf91c1",
+    "extracted/cpp-shared-kernel-393-gui1-early1.json": "b96bce743b28d7bcabc3abcc362a4cbeace17d0cf3b4ee1063abcecfd332539e",
+    "extracted/cpp-shared-kernel-393-gui1-early1.log": "5761708e10181b5f3cc42dd295abce9b2e5150bf4aead931628dc8a0df644c39",
+    "extracted/cpp-shared-kernel-393-gui1-early2.json": "aef6f12e684b66906d42fd7ec7af8b850d6a24c051edde086a40c5a8fa0d164f",
+    "extracted/cpp-shared-kernel-393-gui1-early2.log": "719225660df017a1b698b0ffff33ce02dc723f699fa443fcc4ef3cb498131d8c",
+    "extracted/cpp-shared-kernel-393-gui1-menus1024.json": "df4572a35a67d0df6f60f988945d4ccc57bc1e210ebafa463142847eb610091c",
+    "extracted/cpp-shared-kernel-393-gui1-menus1024.log": "945cffa278c9cfe76547c0bf76a4e79d3c989206d3e506dc079ad1c433e0f64d",
+    "extracted/cpp-shared-kernel-393-gui1-menus1280.json": "16b10c7ede69dcebf0aa8ded8600d836ab435a8abfc1d6e72d210daa24dec206",
+    "extracted/cpp-shared-kernel-393-gui1-menus1280.log": "5a5dc21d73e32324d8eba485ca136f0368f0c30df02f80471fef004ec15df8bc",
+    "extracted/cpp-shared-kernel-393-menus1280/1280x720/scenario/stderr.log": "b7fd59e60232ce204d75b8e612d341995f65c408821667e55828decac45c8d9d",
+    "extracted/cpp-shared-kernel-393-menus1280/1280x720/scenario/run.json": "7b5bb23eb0a3c82ef355c349c7d2bfd18565ac8328d4827dbcd0952c2d5fb606",
+    "extracted/cpp-shared-kernel-393-menus1280/1280x720/scenario/states.tsv": "0cc793d6a940e2afcc397f3c07389f8f73412ce1a7b544b39b8d6d1b767c7f9b",
+    "extracted/cpp-shared-kernel-393-menus1280/summary.json": "3099b10667a1a7496ba474888246248ccd1c18cdef925d9dec35ca06a5c8f94d",
+    "extracted/cpp-shared-kernel-393-focused3-CampaignSharedKernel_.log": "6d05afca73baab099c985eb1bfec69a8c1449a63d346ec75be1e3fb88c3143df",
+    "extracted/cpp-shared-kernel-393-focused3-CampaignSession_PlayerLinks_.log": "92dd3b233ea52ef75b8fc85e7aad6c78f4b07e95fca1a4ff39f6bfa591b7c984",
+    "extracted/cpp-shared-kernel-393-focused3-Kernel_MutationUsesLiveSlots_InOriginalOrder.log": "784932fd37c9ff650398c2b18b331bbbbb121fc6c708d87046826513369d1940",
+    "extracted/cpp-shared-kernel-393-focused3-RawSurfaceWorld_.log": "7f50abce8e01778f80ed6307873d585fd13227d45328e0540b1912af2ca1a56e",
+    "extracted/cpp-shared-kernel-393-gui2-early1.log": "262073365b68f21c5bc6180ce5159502609994e46673765b7c1e5b21a440bfd3",
+    "extracted/cpp-shared-kernel-393-gui2-early1.json": "19b2734a12f2608e9aa0fd64843314cef536b177d57354cdedcb684954eb0dc2",
+    "extracted/cpp-shared-kernel-393-kernel2-observation-early1.json": "93bacf36fe57ed1fd3c48d0304add7429418febc1141c10c326972b4c37fd5ca",
+    "extracted/cpp-shared-kernel-393-final-early1/results.json": "167e9d138836d61b7093151fa84cc00d4d97d5e2bec9d7eae87ca663308adc81",
+    "extracted/cpp-shared-kernel-393-gui2-early2.log": "552edce39ce5d6cb07e5cc5ad9dfe4310be72e22ade81e3402b07e6f3695d95b",
+    "extracted/cpp-shared-kernel-393-gui2-early2.json": "a5bb0cbe4eac0502eef57606b17506f39ddf01e1de4d778295be07c754d3785f",
+    "extracted/cpp-shared-kernel-393-kernel2-observation-early2.json": "37bf67538a94be689d3ecd8141996cde61300bc59fb5b06152f37a6a5239e351",
+    "extracted/cpp-shared-kernel-393-final-early2/results.json": "4b4217d00181400d2f032e6fd0c2efafe42940b2f68366e7e52579d0b8a63df3",
+    "extracted/cpp-shared-kernel-393-gui2-menus1024.log": "a1d4c3115273b2abc0291f54aab68b0f89cd0810d4cc1d14f43079c2ef5a7995",
+    "extracted/cpp-shared-kernel-393-gui2-menus1024.json": "a067152b16fa7b1ac3e13e2e3bb005bffabf4dc0432d1f6109ce52fc1697bb00",
+    "extracted/cpp-shared-kernel-393-kernel2-observation-menus1024.json": "33267603773fce0c81470b24bf56484259f847f067b1b30aa8485393f38a2f78",
+    "extracted/cpp-shared-kernel-393-final-menus1024/summary.json": "f31089d37c32fc70553a6700c1f72a45ede1b6092f21ce8b18b8667e6827154c",
+    "extracted/cpp-shared-kernel-393-gui2-menus1280.log": "19f8e5039491025e712e85e143870d11828b0b11bc460e0d7950ea6ad7631ae4",
+    "extracted/cpp-shared-kernel-393-gui2-menus1280.json": "22c8cff21cb311aad12f049180e5787cedb52e3c8fb76e5d30c1b35fcd7b17fa",
+    "extracted/cpp-shared-kernel-393-kernel2-observation-menus1280.json": "1e0d003072b8f97203c1f38de03a1a086192e1c7b32c01ad21b0bca19dc23cf7",
+    "extracted/cpp-shared-kernel-393-final-menus1280/summary.json": "b1b149425e14b9b03cde0197cc744f70b0edfd2c35cc72d0854e96f6d03329e5",
+    "extracted/cpp-shared-kernel-393-gui2-solo31.log": "b1ddcaf0e4ed3167684a92f0dab2a6805b92520b9c4ddbdc8daab36d1d666820",
+    "extracted/cpp-shared-kernel-393-gui2-solo31.json": "77c9a3cc4b8705c78ca9241ef8d5b37e5fd93f83e34b3bc0b19f82b62fe12861",
+    "extracted/cpp-shared-kernel-393-kernel2-observation-solo31.json": "c0ffe2a847b4211b884d6a03dbebbb484c4d02e1558cbb3d3740b9b852802269",
+    "extracted/cpp-shared-kernel-393-final-solo31/results.json": "5f1a62a6984a46a58f75bf48eb1d619b8d90206ef0e64e6740b59a20d5ca7353",
+    "extracted/cpp-shared-kernel-393-gui2-demo3.log": "c002508b669d413a777244dfb0a1ee38fa751e7bcaf13627dd5242b0e8ba9bde",
+    "extracted/cpp-shared-kernel-393-gui2-demo3.json": "0123abb2c719977f2073fbd1453055db19390dd9fbe6d1ffa3fb897cd46d47de",
+    "extracted/cpp-shared-kernel-393-kernel2-observation-demo3.json": "a00b64cc016d74f52f36db03c9572c61f8878dae8e5bb74a19ed1391934f86d6",
+    "extracted/cpp-shared-kernel-393-final-demo3/results.json": "b796ecdd729f347282b0d07fc2ec80ff571d7fd0e88303ef1894bb28418b1138",
+    "extracted/cpp-shared-kernel-393-final-menus1280/1280x720/scenario/run.json": "114f1ff5565c921dfc3b2d924b63626a6b97b80c912393c31bef60a0dd31d17f",
+    "extracted/cpp-shared-kernel-393-final-menus1280/1280x720/scenario/stderr.log": "b7fd59e60232ce204d75b8e612d341995f65c408821667e55828decac45c8d9d",
+    "extracted/cpp-shared-kernel-393-final-menus1280/1280x720/scenario/states.tsv": "1568d957243d541e29e4b6da9e853aa5bee8951c4f3f384317ccf0382793ea5d",
+    "extracted/cpp-shared-kernel-393-final-menus1280/1280x720/scenario/steps.tsv": "ec61dcab04b94a23c3e31deae7926928ba9b5afaaa8bd014bbf2111c4cbbce3c",
+    "extracted/cpp-shared-kernel-393-tail.py": "cc8180d43879a1492779b7c1c58e60a0dad58fa169c5f64a5d251245ef56ec49",
+    "extracted/cpp-shared-kernel-393-tail1-wrapper.log": "09bf6d5bf645f7efc70ba5e42faac6a98c9aa7aaab0bf5775aa1453192db7c2e",
+    "extracted/cpp-shared-kernel-393-file-users.py": "cbdbaf094ba716c222508a341a693d4f72dfd9b7fcd71755f9f86edfb9c4ca27",
+    "extracted/cpp-shared-kernel-393-file-users1.jsonl": "ed4ee77bd9b106de2419b53fda384c3644e405a95a237912d2962afc99815422",
+    "extracted/cpp-shared-kernel-393-file-users2.jsonl": "e0664af91f9ab273a2b48f2198db9a6e83271c3958353037bdffd06009470c3a",
+    "extracted/cpp-shared-kernel-393-map-watch.py": "93280db3d325b74a8b883d6e375b38ff46b5952cabdad0a9a30a3229e1db3482",
+    "extracted/cpp-shared-kernel-393-map-users1.jsonl": "5e44bbd4cd683fab39e479f70e65545083d080ea9cf35c4d0a71853e398b15e6",
+    "extracted/cpp-shared-kernel-393-isolated-wide.py": "20bcf76e111cb70c6b1774437d22074c2a6287c374ee0198cc75e601f432889c",
+    "extracted/cpp-shared-kernel-393-isolated-wide1.json": "16b8835299f82404f0304227260b56a4c4eef01a6a8319f927974a394d8f8ab4",
+    "extracted/cpp-shared-kernel-393-isolated-wide/summary.json": "da5195bb42dec77b84f7e4830369102e02fcfd78b3e2b7b7434638c381ff4b18",
+    "extracted/cpp-shared-kernel-393-isolated-wide/1280x720/scenario/steps.tsv": "fc1d62be6a1799558bb798e28767a0ee693a47da9bef9f6518a0db8d5da14536",
+    "extracted/cpp-shared-kernel-393-refresh-options.py": "8169bff1c4977f9060192d6868482e9fba2d4e2d0b98b37630047cff58a0eb07",
+    "extracted/cpp-shared-kernel-393-options-refresh-before.json": "32f85c039d8f707d5eef3153b3a11a7f4149fcea78b77a7b3084b12bba0df01b",
+    "extracted/cpp-shared-kernel-393-options-refresh-result.json": "40a11b05cf0b537a6becba897c209835b0afd4e6b333aeea01c5407c633424dd",
+    "extracted/cpp-shared-kernel-393-options-before-refresh.bin": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-shared-kernel-393-wide-refreshed1.json": "b9fc1e2e65a698c1abba396c1ff20772ed7d98b781bb2abd313a575d2ae7cd76",
+    "extracted/cpp-shared-kernel-393-wide-refreshed/1280x720/scenario/run.json": "777b1b6a769317aa6971d74004d78139641430f21163f3bc7ae936dddef9bcf4",
+    "extracted/cpp-shared-kernel-393-wide-refreshed/1280x720/scenario/stderr.log": "b7fd59e60232ce204d75b8e612d341995f65c408821667e55828decac45c8d9d",
+    "extracted/cpp-shared-kernel-393-wide-diagnostic/1280x720/scenario/run.json": "2598aac18a027bf8694fcf9513622903eae0378ba14bba2651df804c667dcab6",
+    "extracted/cpp-shared-kernel-393-wide-diagnostic/1280x720/scenario/stderr.log": "b7fd59e60232ce204d75b8e612d341995f65c408821667e55828decac45c8d9d",
+    "extracted/cpp-shared-kernel-393-final-early1/goal.bmp": "5bf4b788f4b925917ec1f8f2e3b6f42526940639cdd789b4aeb60855e7799ff7",
+    "extracted/cpp-shared-kernel-393-final-early1/states.tsv": "436f89dbb6cbc5b571dea864f109cca00602ab8408dfd051e42971917dc0212d",
+    "extracted/cpp-shared-kernel-393-final-early1/execution.json": "a1f656bfef62ab39afedff94603810870ac9aeb30a75b134dfa25bb8170884b6",
+    "extracted/cpp-shared-kernel-393-final-early1/stderr.log": "6f786a44746592199af0c4b3de0ec2cc5603c46b5ac1a67a42c715f1d0cb59b3",
+    "extracted/cpp-shared-kernel-393-final-early2/goal.bmp": "fbc93adaa8f7069743fee408870cd6bc3732ff62e0e34f4b4d8b3c8cf3c64c18",
+    "extracted/cpp-shared-kernel-393-final-early2/states.tsv": "32be8b3afe0507d6cfeca1200e6551332e8cd04f7dc734d52194e62c8a0a5548",
+    "extracted/cpp-shared-kernel-393-final-early2/execution.json": "0efcfdcd45c18088c3e5c7f6f972cf63fd972bb5acceb8f02a694ab401d1ba7c",
+    "extracted/cpp-shared-kernel-393-final-early2/stderr.log": "7bda425048640ffbe4f58f699a5c42b3cd433844b83d886ded35b1cce28766c9"
+  },
+  "limits": [
+    "전체 Native State/Gump/Client와 Login Core 공유는 아직 미완료다.",
+    "기존 준비 몸체 분리는 모든 pre-Kernel 자식의 원문 순서 완료를 뜻하지 않는다.",
+    "일반31은 진입, Demo3은 단기 재생이며 사용자 자연 완주/전체 동일성은 미완료다.",
+    "Editor/커스텀 맵/시나리오·저장/재로드의 최종 구현은 남는다.",
+    "보호 원본 데이터 경로의 1280 메뉴 실행은 options.cfg errno22/doserrno1224로 실패한다. 복사본의 같은 입력 통과를 이 경로의 성공이나 원인 해결로 합산하지 않는다.",
+    "실제 매핑 조회에는 접근 불가 프로세스가 있었으며 원인 미확정이다. 허용된 options.cfg의 파일 객체만 바꿔도 이 실패는 재현됐다."
+  ]
+}

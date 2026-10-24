@@ -284,9 +284,9 @@ UberGump::UberGump(Client& client) : client_(client),initLoginSubscriber_(client
     if (client_.Assets().Edition()==o::OriginalEdition::Patch1078) guide_=std::make_unique<o::RawMissionGuide>(client_.Assets().Edition(),std::move(guideHooks)); // Guide 몸체의 복원 판본은10.78이며 CD 메인 메뉴 생성은 기존대로 둔다.
     MainMenu(); Compose(); client_.ShowScene();
 }
-// 입력 참조를 먼저 없애고 커널이 소유한 월드를 이 구현 파일에서 제거한다.
+// 입력 참조를 먼저 없애고 메뉴가 소유한 월드를 이 구현 파일에서 제거한다.
 UberGump::~UberGump() { ClearWorld();DisposeRetiredPages(); }
-// 입력 참조를 먼저 없애고 커널의 실제 소유권을 해제한다. 위치 효과음은 카메라 0의 전체 메뉴 영역으로 되돌린다.
+// 입력 참조를 먼저 없애고 월드의 실제 소유권을 해제한다. 위치 효과음은 카메라 0의 전체 메뉴 영역으로 되돌린다.
 void UberGump::ClearWorld() {
     ClearPage(); // 현재 부모의 OnExit를 월드/미션 수명보다 먼저 같은 큐에 반납한다.
     if (world_) mapUserName_=world_->Session().CurrentHandle(); // 원본 Client 전역 이름은 월드를 해제한 뒤에도 다음 목록 조회에 남는다.
@@ -309,9 +309,8 @@ void UberGump::ClearWorld() {
     if (missionRuntime_ && missionRuntime_->guided) { o::SetTotalMadeAllowAll(*missionRestrictions_,1);missionNumber_=0;missionRuntime_->gate.tutorialNumber=0;missionRuntime_->gate.stage=0;missionRuntime_->gate.stageDirty=0; } // 실제 Tutorial 소멸의 허용/번호/단계 해제를 전역 수명에도 유지한다.
     missionRuntime_.reset(); // 같은 Session/Script를 참조하는 Start를 대상보다 먼저 해제한다.
     userInput_.reset();
-    const auto process=worldProcess_; // 해제 중의 현재 subscriber 조회가 파괴 중인 월드를 따라가지 않도록 번호만 보관한다.
-    world_=nullptr; worldProcess_=0;
-    if (process) client_.GetKernel().Remove(process);
+    auto retiringWorld=std::move(world_); // 실제 소멸 callback의 현재 subscriber 조회는 이미 NULL인 같은 슬롯을 본다.
+    retiringWorld.reset(); // Session이 같은 전역 Kernel을 먼저 비운 뒤 나머지 월드 소유권을 반납한다.
     client_.WorldAudio().SetView({0,0,0,0,client_.GetScreen().Width(),client_.GetScreen().Height()});
 }
 // 현재 어댑터의 월드 수명으로 원본 번개 부모 조회 경계를 제공한다.
@@ -503,8 +502,8 @@ GuideMissionTransitionHooks UberGump::MissionTransitionEffects() {
 }
 // 원본 Init은 현재 전역/Config를 쓰고 로드 요청 뒤 Header/flags를 수행한다. 실제 월드는 다음 루프에 설치한다.
 void UberGump::InitializeMission() {
-    if (!mission_ || !missionRuntime_ || !missionRuntime_->guided || world_ || worldProcess_) throw std::logic_error("Tutorial Init의 현재/빈 월드 계약 위반");
-    TutorialInitHooks hooks;hooks.clearTemplates=[this] { if (world_ || worldProcess_ || rawButtons_->Production()) throw std::logic_error("이전 미션 월드/생산 UI가 아직 살아 있음");templateStorage_->ClearAll(); }; // Session보다 오래 보유한 실제9개 manager를 원본 Init 위치에서 반납한다.
+    if (!mission_ || !missionRuntime_ || !missionRuntime_->guided || world_) throw std::logic_error("Tutorial Init의 현재/빈 월드 계약 위반");
+    TutorialInitHooks hooks;hooks.clearTemplates=[this] { if (world_ || rawButtons_->Production()) throw std::logic_error("이전 미션 월드/생산 UI가 아직 살아 있음");templateStorage_->ClearAll(); }; // Session보다 오래 보유한 실제9개 manager를 원본 Init 위치에서 반납한다.
     hooks.resetOptions=[this] { o::ResetMissionBattleOptions(o::OriginalEdition::Patch1078,*missionOptions_); };
     hooks.get=[this](std::string_view key,std::optional<std::string_view> fallback) { auto value=FontBytes(mission_->Get(key).value_or(""));if (const auto end=value.find('\0');end!=std::string::npos) value.resize(end);if (value.empty() && fallback) value=*fallback;return value; };
     hooks.set=[this](auto key,auto value) { const auto text=o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(value.data()),value.size()});static_cast<void>(mission_->Set(key,text)); };
@@ -580,7 +579,7 @@ void UberGump::LoadMissionWorld(std::optional<std::string> requestedFort) {
     world->surfaceDisplay={
         [this]() { return client_.GetRenderer().FullRedrawPending(); },
         [this](o::SquidDisplayRect rect,std::uint32_t flags) { client_.GetRenderer().Invalidate({rect.left,rect.top,rect.right,rect.bottom},flags); }};
-    world_=world.get(); worldProcess_=client_.GetKernel().Add(std::move(world));
+    world_=std::move(world); // 호스트 어댑터는 원문 프로세스 슬롯을 차지하지 않는다.
     missionRuntime_->start=std::make_unique<RawCampaignMissionStartBindings>(world_->Session(),*mission_,missionRuntime_->gate,missionRuntime_->state,
         world_->Session().MissionStartSettings(),world_->Session().MissionAiSettings(),MakeCampaignMissionStartEffects(client_,*world_,[this] {
             // 원본0042e440은 현재00548740이0이면 아무 메시지도 보내지 않는다.
@@ -978,6 +977,10 @@ void UberGump::Tick() {
 void UberGump::MissionFrame() {
     if (guide_) guide_->Run();
 }
+// 호스트 어댑터가 자기 자신을 소유한 Kernel을 중첩 호출하지 않도록 준비를 분리한다.
+void UberGump::PrepareKernelFrame() { if (world_) world_->PrepareKernelFrame(); }
+// 현재 단일 Kernel의 이동/생성/삭제가 끝난 같은 프레임에서만 표시 사본을 갱신한다.
+void UberGump::FinishKernelFrame() { if (world_) world_->FinishKernelFrame(); }
 // 원본의미니맵프레임은게임정지와별개로커널보다먼저실행한다.
 void UberGump::RefreshMinimap() { if (rawButtons_->Minimap() && rawButtons_->Minimap()->Refresh()) rebuild_=true; }
 // Client 정상 갱신의 원본4662b0 위치에서만 논리 페이지의 지연 소멸을 실행한다.
@@ -1287,7 +1290,11 @@ std::string UberGump::Report() const {
             }
         }
     }
-    if (world_) out<<world_->Report();
+    if (world_) {
+        const auto core=world_->Session().Core(); // 관찰 전용이며 같은 실제 Kernel 주소와 개수만 읽는다.
+        out<<"shared_kernel\t"<<(&core.kernel==&client_.GetKernel())<<'\t'<<core.kernel.Size()<<'\t'<<client_.GetKernel().Size()<<'\n';
+        out<<world_->Report();
+    }
     // 화면/월드와 같은 프레임에 위치 효과음이 실제로 읽는 여섯 값을 기록한다. 소리 없는 실행에는 항목을 만들지 않는다.
     if (client_.Audio()) {
         const auto& view=client_.Audio()->View();

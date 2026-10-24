@@ -725,7 +725,7 @@ struct RawCampaignSession::Impl {
     Impl(const GameAssets& game,const BaseFileSystem& files,FortTemplate fort,std::string mission,RawCampaignSessionServices input):
         playerRecords(input.playerRecords ? input.playerRecords : std::make_shared<ClientPlayerRecords>()),playerUse(playerRecords->Acquire()),
         services(std::move(input)),templateStorage(services.templateStorage ? services.templateStorage : std::make_shared<CampaignTemplateStorage>()),headers(templateStorage->Headers()),assets(game,files),metadata(assets.game),
-        world(OriginalEdition::Patch1078,assets.types,assets.frames,metadata.shapes,CampaignLinks(),terrainType),core(world.Core()),
+        world(OriginalEdition::Patch1078,assets.types,assets.frames,metadata.shapes,CampaignLinks(),terrainType,services.processKernel),core(world.Core()),
         sp(random,[this] { return seed.Reseed(); }),hp(core.pool,core.types,core.bookkeeping,rewardState,&sp,SquidRewardHooks{{},services.refreshSp}),
         battleOptions(services.missionOptions ? *services.missionOptions : localBattleOptions),
         aiMemory(0x20000000,[this](std::span<std::uint8_t> bytes) {
@@ -3061,7 +3061,7 @@ struct RawCampaignSession::Impl {
         try { ReleasePlayerLinks(); }
         catch (const std::exception& error) { std::fprintf(stderr,"실제 Session Player링크 정리 실패: %s\n",error.what()); }
         catch (...) { std::fprintf(stderr,"실제 Session Player링크 정리 실패: 알 수 없는 예외\n"); }
-        try { world.ClearProcesses(); }
+        try { world.DrainProcesses(); } // 호스트 최종 소멸이므로 지난 슬롯의 후속 등록까지 소비자보다 먼저 반납한다.
         catch (const std::exception& error) { std::fprintf(stderr,"실제 Session Kernel 정리 실패: %s\n",error.what()); }
         catch (...) { std::fprintf(stderr,"실제 Session Kernel 정리 실패: 알 수 없는 예외\n"); }
         core.postPop.BindPatchAiNotice({});world.CommonDeletion().BindPatchAiNotice({}); // AI 본체/통지 처리기를 해제하기 전에 외부 공통 몸체의 참조를 분리한다.
@@ -3280,8 +3280,10 @@ void RawCampaignSession::StartConstruction(Sid parent,float duration) {
     if (!impl_->loaded || !impl_->building) throw std::logic_error("미설치 Session의 실제 건설 시작");
     impl_->PrepareBuilding(impl_->core.processState.now);impl_->building->Start(parent,duration);
 }
-// 현재 같은 시각을 공격/소리/실제 Kernel에 공급한다.
-void RawCampaignSession::RunFrame(FrameTime time,bool paused) { impl_->flyerPaused=paused;impl_->core.processState.now=time.game;impl_->PrepareBuilding(time.game);impl_->assetBindings->PrepareFrame(time.game);impl_->combat->PrepareFrame(time);impl_->particles->PrepareFrame(time.game,static_cast<std::uint32_t>(time.number),impl_->rewardState.priestQuarterHp);impl_->soundState.frame=static_cast<std::uint32_t>(time.number);if (!paused) { if (!impl_->aiRuntime) throw std::logic_error("실제 Session 자동 AI 프레임 설치 전 호출");impl_->aiRuntime->Frame(); }impl_->world.RunFrame(time,paused); }
+// 현재 같은 시각을 공격/소리/AI에 공급하되 Kernel은 호출자의 원문 위치에서 한 번만 실행한다.
+void RawCampaignSession::PrepareFrame(FrameTime time,bool paused) { impl_->flyerPaused=paused;impl_->core.processState.now=time.game;impl_->PrepareBuilding(time.game);impl_->assetBindings->PrepareFrame(time.game);impl_->combat->PrepareFrame(time);impl_->particles->PrepareFrame(time.game,static_cast<std::uint32_t>(time.number),impl_->rewardState.priestQuarterHp);impl_->soundState.frame=static_cast<std::uint32_t>(time.number);if (!paused) { if (!impl_->aiRuntime) throw std::logic_error("실제 Session 자동 AI 프레임 설치 전 호출");impl_->aiRuntime->Frame(); }impl_->world.PrepareFrame(time); }
+// 독립 검사/호출자는 기존 준비와 단일 Kernel 실행을 함께 요청한다. 실제 GUI는 두 단계를 분리한다.
+void RawCampaignSession::RunFrame(FrameTime time,bool paused) { PrepareFrame(time,paused);if (!paused) impl_->core.kernel.RunFrame(); }
 // 해상도/카메라 변경과 동일 위치 효과음의 view를 process11에도 전달한다.
 void RawCampaignSession::SetParticleView(SoundView view,SurfaceDisplayHooks display) {
     impl_->contentScreenOrigin={view.cameraX,view.cameraY};

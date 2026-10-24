@@ -40,6 +40,8 @@ public:
     void Tick();
     // 원본 루프8번의 Guide 자리다. 현재0..6 단계와 실제 공통 프레임을 입력보다 먼저 실행한다.
     void MissionFrame();
+    void PrepareKernelFrame(); // 같은 실제 GameWorld가 전역 Kernel 앞에서 프레임 입력만 준비한다.
+    void FinishKernelFrame(); // 전역 Kernel 뒤 같은 월드의 표시 자료만 수집한다.
     // 커널이 월드를 진행한 직후 변경된 실제 장면을 제출한다.
     void Frame();
     void RefreshMinimap(); // 원본00481320의커널앞위치에서실제같은HUD큐를소비한다.
@@ -116,7 +118,7 @@ private:
 
     // 원본 우클릭 메뉴의 연결점. 건설/수확 명령은 다음 단계에서 활성화한다.
     void OpenObjectMenu(o::SquidId id,const InputEvent& event);
-    // 커널이 소유한 월드와 입력 참조를 안전한 순서로 제거한다.
+    // 메뉴가 소유한 월드와 입력 참조를 안전한 순서로 제거한다.
     void ClearWorld();
     // client_: 원본 전역 변수로 흩어져 있던 클라이언트 상태를 객체 하나로 묶는다. 한 프로세스에 하나만 만든다 (Client).
     Client& client_;
@@ -172,10 +174,7 @@ private:
     std::uint32_t worldRedraw_{}; // 원본0059a8b0의 메뉴 명령 갱신 요청이며 실제 Renderer 무효화에 전달한다.
     std::uint32_t menuConfigRevision_{}; // 원본00542678의 설정 명령 증가를 같은 Client 수명에 보관한다.
     std::uint32_t commandGump_{}; // 원본00548740의 초기0이다. 현재 Client는 이 전용 Gump를 아직 생성하지 않는다.
-    // world_: 미션 지도와 객체 상태를 갱신하고 월드 그림을 수집하는 프로세스 (GameWorld).
-    GameWorld* world_{};
-    // worldProcess_: 월드 프로세스.
-    o::ProcessId worldProcess_{};
+    std::unique_ptr<GameWorld> world_; // 호스트 월드를 Kernel 밖에서 소유하여 전역 Clear 중 중복 소멸/중첩 프레임을 막는다.
     // userInput_: 플레이 입력을 선택·카메라·명령 동작으로 전달하는 처리기 (std::unique_ptr<UserInput>).
     std::unique_ptr<UserInput> userInput_;
     // fortObjects_: Fort 객체.

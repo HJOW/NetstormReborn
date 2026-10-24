@@ -320,6 +320,15 @@ void GameWorld::RunFrame() {
         if (!stopped) AdvanceObjects(surfaceTime_.delta);
     } else if (elapsed && !stopped) Step(elapsed());
 }
+// 실제 GUI는 GameWorld를 Kernel에 등록하지 않으며 전체 프로세스 실행 전 이 준비만 요청한다.
+void GameWorld::PrepareKernelFrame() {
+    if (!campaign_ || !frameTime) throw std::logic_error("실제 Client Kernel 프레임의 Session/시각 공급자 누락");
+    surfaceTime_=frameTime();SurfaceView();campaign_->PumpLocalConnection();campaign_->PrepareFrame(surfaceTime_,paused && paused());
+}
+// 원문 단일 Kernel이 끝난 뒤에만 이동/생성/삭제된 실제 객체를 화면용 뷰에 반영한다.
+void GameWorld::FinishKernelFrame() {
+    if (!campaign_) throw std::logic_error("실제 Client Kernel 후처리의 Session 누락");RefreshCampaignObjects();
+}
 // 콘솔에서는 같은 실행 경로에 누적된 게임 시각을 공급한다.
 void GameWorld::Step(double seconds) {
     if (!std::isfinite(seconds) || seconds<0) throw std::invalid_argument("월드 시간차 범위 오류");

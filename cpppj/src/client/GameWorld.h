@@ -8,7 +8,6 @@
 #include "client/Sound.h"
 #include "client/RawUserHighlight.h"
 #include "client/MinimapGeometry.h"
-#include "o/BaseProcess.h"
 #include "o/Player.h"
 #include "o/Squid.h"
 #include "o/Islandbuilder.h"
@@ -16,8 +15,8 @@
 
 namespace netstorm::client {
 class RawCampaignFactoryDisplay; // 같은 실제 풀의 원본 Factory 화면 출력기다.
-// 미션 지도와 객체 상태를 갱신하고 월드 그림을 수집하는 프로세스이다.
-class GameWorld : public o::BaseProcess {
+// 미션 Session과 표시/입력을 소유하는 호스트 어댑터다. 원문 Kernel에는 실제 게임 프로세스만 등록한다.
+class GameWorld {
 public:
     // 저장 위치를 쓰는 Tutorial 미션의 초기 월드를 만든다. Battle 재배치는 아직 지원하지 않는다.
     GameWorld(const GameAssets& assets,const o::FortTemplate& fort,o::MissionPlayers players);
@@ -27,8 +26,8 @@ public:
     //실제Client가현재월드포인터를등록한뒤로그인한다. Chat의자기subscriber 조회도같은Session을보아야한다.
     void BeginLocalConnection();
     // 콜백이 읽는 선택/그림 저장소의 수명이 끝나기 전에 실제 캠페인 프로세스를 정리한다.
-    ~GameWorld() override;
-    // Kernel에서 호출할 실제 게임 시간과 정지 상태의 공급자를 연결한다.
+    ~GameWorld();
+    // 프레임 준비에 사용할 실제 게임 시간과 정지 상태의 공급자를 연결한다.
     std::function<double()> elapsed;
     // paused: 현재 게임 시계가 정지했는지 조회하는 콜백.
     std::function<bool()> paused;
@@ -39,8 +38,10 @@ public:
     // 현재 카메라와 실제 월드 표시 영역을 위치 효과음에 전달한다. Resize·Scroll 및 raw 프레임 처리 전에 호출한다.
     // 수신 객체는 월드보다 오래 살아야 한다. 비어 있으면 소리 없이 같은 월드 경로를 사용한다.
     std::function<void(SoundView)> soundViewChanged;
-    // 원본 클라이언트 커널의 갱신 단계에서 이동을 진행한다.
-    void RunFrame() override;
+    // 독립 호출자는 준비/Kernel 한 번/표시 수집을 함께 진행한다.
+    void RunFrame();
+    void PrepareKernelFrame(); // 실제 Client의 Kernel 앞에서 현재 같은 시각/연결/AI/그림 입력만 준비한다.
+    void FinishKernelFrame(); // 같은 전역 Kernel 실행 뒤 변경된 실제 SID를 표시 자료로 수집한다.
     // 실제 미션 게이트의 checkOutcome 위치에서 동일 캠페인의 현재 Player/사제/영역을 판정한다.
     void CheckMissionOutcome();
     // 검사에서는 OS 시계 없이 같은 이동 경로를 진행한다.
