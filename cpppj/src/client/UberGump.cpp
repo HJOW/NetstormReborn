@@ -245,7 +245,7 @@ UberGump::UberGump(Client& client) : client_(client),initLoginSubscriber_(client
     help.battle=[this] { return world_ && world_->Session().Core().ownerMode.battle; };help.challenge=[this] { return world_ && world_->Session().Core().ownerMode.challenge; };
     help.html.command=[this](auto&,auto text) { QueueScriptCommand(text,client_.Input(),scriptStrings_,{KnowledgeScriptCode,[](auto name) { std::clog<<"도움말 HTML 명령 미연결: "<<name<<'\n'; }}); };
     BindHtmlConditionConfig(help.html,client_.Configuration(),client_.Assets().Edition());BindHtmlPictureText(help.html);
-    help.html.background=[](auto&,auto name) { throw std::logic_error("도움말 배경 태그 미복원: "+std::string(name)); };
+    BindHtmlBackground(help.html,htmlGlobals_); // Help와 Tell의 실제565e70을 같은 Client 수명에 보관한다.
     if (client_.Assets().Edition()==o::OriginalEdition::Patch1078) rawButtons_->Menus()->EnableHelp(std::move(help)); // 10.72에10.78 전용 이미지/창을 임의로 설치하지 않는다.
     objectMenus_=std::make_unique<CampaignObjectMenuClient>(client_,*rawButtons_,[this](std::string_view key) { state_.Post({"Tell",std::string(key)}); });
     MessageGumpHooks pauseContext; // 같은 현재 Session의 모드/이름과 Client 번역을 Pause 생성 시 조회한다.
@@ -361,7 +361,7 @@ RawHtmlWindowContext UberGump::LoadingHtmlContext(ScreenRect mapView) { // 미�
     context.metadata.currentMap=[this]() -> std::string_view { htmlCurrentFortName_=mission_ ? mission_->FortName() : std::string{};return htmlCurrentFortName_; };context.metadata.fallbackMap=[this]() -> std::string_view { return pendingFortName_; };
     context.factory.globals=&htmlGlobals_;context.factory.html.command=[this](auto&,auto text) { QueueScriptCommand(text,client_.Input(),scriptStrings_,{DialogScriptCode,[](auto name) { std::clog<<"HTML 스크립트 명령 미연결: "<<name<<'\n'; }}); };
     BindHtmlConditionConfig(context.factory.html,client_.Configuration(),client_.Assets().Edition());BindHtmlPictureText(context.factory.html);
-    context.factory.html.background=[](auto&,auto name) { throw std::logic_error("전체 HTML 배경 태그 미복원: "+std::string(name)); };
+    BindHtmlBackground(context.factory.html,htmlGlobals_); // 미션 안내의 전체 HTML도 같은 현재 배경을 쓴다.
     context.factory.substitute=[this](auto text,auto) { return FontBytes(client_.Configuration().SubstituteLocal(o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(text.data()),text.size()}))); };context.factory.fallback=[this] { return FontBytes(client_.Configuration().PathSpec("OkButton")); };
     context.read=[this](auto address)->std::uint32_t { switch (address) {
         case 0x531860:case 0x5c78f0:return static_cast<std::uint32_t>(client_.GetScreen().Width());case 0x531864:case 0x5c78f4:return static_cast<std::uint32_t>(client_.GetScreen().Height());
@@ -443,8 +443,8 @@ bool UberGump::TryTell(std::string target,bool briefing,bool* windowCreated) {
     ScriptCommandHooks commands; // 현재복원된실제명령을원본ID로조회하고미등록은원본처럼진단뒤거부한다.
     commands.lookup=DialogScriptCode;
     commands.unknown=[](std::string_view name) { std::clog<<"스크립트 명령 미연결: "<<name<<'\n'; };
-    HtmlTextParserState htmlState;HtmlTextParserHooks htmlHooks;std::string background; // 원본처럼새페이지는shown=1로시작하고두번의HTML순회에서같은상태를공유한다.
-    htmlHooks.background=[&](HtmlTextParserState&,std::string_view name) { background=name; }; // 두HTML순회가선택한실제배경이름을현재페이지표시경로에보관한다.
+    HtmlTextParserState htmlState;HtmlTextParserHooks htmlHooks; // 원본처럼새페이지는shown=1로시작하고두번의HTML순회에서같은상태를공유한다.
+    BindHtmlBackground(htmlHooks,htmlGlobals_); // 페이지가 아닌 같은565e70의 현재80BYTE를 두 번의HTML과Help가 공유한다.
     htmlHooks.command=[&](HtmlTextParserState&,std::string_view raw) { QueueScriptCommand(FontBytes(raw),client_.Input(),scriptStrings_,commands); }; // 원본1차HTML의선택시점에기존40칸입력큐로예약한다.
     BindHtmlConditionConfig(htmlHooks,client_.Configuration(),client_.Assets().Edition()); // 초기전체치환결과의조건토큰을그시점의현재Config에서다시치환한다.
     BindHtmlPictureText(htmlHooks); // 원본인용그림표기를실제Markup/SHP를읽는본문버퍼에전달한다.
@@ -459,7 +459,7 @@ bool UberGump::TryTell(std::string target,bool briefing,bool* windowCreated) {
     if (!parsed.hasContent) { if (parsedExit.command) throw std::logic_error("내용 없는 HTML 부모의 OnExit 메타 관문 위반");retiredPageExits_.push_back({});rebuild_=true;return true; } // 원본cf120→Kill 임시 부모는 Cleanup까지 세지만 기존 표시 부모를 닫지 않는다.
     const std::array<std::uint32_t,8> context{0,0,client_.GetScreen().Colors().basic[7],0,0,0,1,1}; // 실제기본TextGump의font0/normal/흰색/그림자오프셋문맥이다.
     dialogBody_->SetBody(FontBytes(parsed.htmlBody),context,htmlState,htmlGlobals_,std::move(htmlHooks));
-    parsed.background=std::move(background); // 같은상태의2차HTML이선택한최종배경을실제표시에사용한다.
+    parsed.background=HtmlBackgroundName(htmlGlobals_); // 구형 표시 어댑터도 현재 전역을 읽는다. 전체 Uber의 GIF 생성/교체는 별도 이행한다.
     ClearPage();page_=std::move(parsed);pageExit_=parsedExit;pageAlive_=true;
     ExpandMenus(page_);
     if (page_.items.empty()) page_.items.push_back({"OK", {"DoNothing", "0",kDialogDoNothing,0}});

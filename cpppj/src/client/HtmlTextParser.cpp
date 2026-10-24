@@ -31,6 +31,18 @@ std::string HtmlPictureText(std::string_view raw) {
 void BindHtmlPictureText(HtmlTextParserHooks& hooks) {
     hooks.picture=[](HtmlTextParserState&,std::string_view raw) { return HtmlPictureText(raw); }; // 원본 helper의 정확한 바이트 출력을 공급한다.
 }
+// 이미 태그 파서가 구한 원문 이름을 복사하며 뒤쪽 기존 바이트를 지우지 않는다.
+void BindHtmlBackground(HtmlTextParserHooks& hooks,HtmlTextParserGlobals& globals) {
+    hooks.background=[&globals](HtmlTextParserState&,std::string_view name) { // 실제 쓰기 직전까지 같은 Client 저장소의 수명을 빌린다.
+        name=name.substr(0,name.find('\0'));if (name.size()>=globals.background.size()) throw std::length_error("HTML 배경80BYTE NUL 범위 초과");
+        std::copy(name.begin(),name.end(),globals.background.begin());globals.background[name.size()]=0;
+    };
+}
+// 태그가 없는 다음 페이지나 숨긴 태그도 직전 전역 이름을 유지한다.
+std::string_view HtmlBackgroundName(const HtmlTextParserGlobals& globals) {
+    const auto end=std::find(globals.background.begin(),globals.background.end(),'\0');if (end==globals.background.end()) throw std::length_error("HTML 배경80BYTE NUL 없음");
+    return {globals.background.data(),static_cast<std::size_t>(end-globals.background.begin())};
+}
 // 현재 객체의 수명을 빌리며 생성 시 게임/UI/외부 효과는 실행하지 않는다.
 HtmlTextParser::HtmlTextParser(HtmlTextParserState& state,HtmlTextParserGlobals& globals,HtmlTextParserHooks hooks,o::OriginalEdition edition)
     :state_(state),globals_(globals),hooks_(std::move(hooks)),edition_(edition) {}

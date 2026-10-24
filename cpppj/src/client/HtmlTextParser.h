@@ -1,6 +1,7 @@
 // 원본 HtmlGump의 본문 변환을 실제 StyleText 입력 문자열로 제공한다.
 #pragma once
 #include "o/RiftType.h"
+#include <array>
 #include <functional>
 #include <string>
 #include <string_view>
@@ -19,6 +20,7 @@ struct HtmlTextParserState {
 // 같은 미션/Tell의 HTML 변환이 읽는 원본 전역이다.
 struct HtmlTextParserGlobals {
     std::uint32_t suppressParagraph{}; // PATCH00565ec0/CD00536368: 다음 P에서 출력 대신0으로 돌아간다.
+    std::array<char,80> background{}; // PATCH00565e70..565ebf의 실제 이름 저장소다. 페이지 교체와 짧은 덮어쓰기에서 나머지 바이트를 보존한다.
 };
 // 조건/명령/그림/링크/배경 및 TextHtml 파생 동작은 실제 공급자가 필요하다.
 struct HtmlTextParserHooks {
@@ -35,6 +37,10 @@ struct HtmlTextParserHooks {
 std::string HtmlPictureText(std::string_view raw);
 // 실제 그림 문자열 helper를 picture 효과에 연결한다. 이후 StyleTextMarkup의 실제 자산 연결은 별도로 필요하다.
 void BindHtmlPictureText(HtmlTextParserHooks& hooks);
+// PATCH 배경 태그의 쓰기를 같은 Client의80BYTE에 연결한다. 원본 범위 밖 입력은 명시 거부한다.
+void BindHtmlBackground(HtmlTextParserHooks& hooks,HtmlTextParserGlobals& globals);
+// 현재 첫NUL 앞 이름을 빌린다. 전체 Uber의 GIF 생성도 같은 저장소를 읽을 수 있다.
+std::string_view HtmlBackgroundName(const HtmlTextParserGlobals& globals);
 // PATCH0046bea0/bed0/bf00/c090/c810의 기본 변환이다. Config나 게임 명령을 직접 재구현하지 않는다.
 class HtmlTextParser {
 public:

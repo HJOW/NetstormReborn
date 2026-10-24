@@ -1,5 +1,14 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-25 단위412 완료: HTML 배경 전역의 장기 수명 연결
+
+- [x] 단위411 **fda0fca4 / 20261025-05 CP** 뒤 이어서 진행한다. 현재/마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-10-23**이다. 새 전체 디컴파일/원본 직접 실행/새 GUI0이며 보호 기준은 `extracted/cpp-html-background-412-baseline.json`이다.
+- [x] 원문46c321의 배경 쓰기는565e70에서 시작해 다음 단락 전역565ec0 앞의80BYTE에 저장한다. 같은 장기 HTML 전역에 연결해 Tell/Help/전체 공장의 지역 배경/누락 장치를 교체했다. 짧은 이름의 NUL 뒤 바이트를 보존하고 유효 범위 밖 쓰기는 명시 거부한다. 기존 Tell 표시만 현재 이름을 읽으며 전체 Uber의 GIF 생성/교체는 후속이다.
+- [x] 새 원본 전체 HTML 순회/태그 **648행·471900명령**과 읽기 재생이 같다. CRT tolower는 명시 ASCII 장치이고 게임/OS 실행은 없다. 정수 경로로 두 x87 정밀도 비교를 수행하지 않았다. 기존 자료는 변경하지 않았다.
+- [x] Release 빌드 종료0, 집중 파서8+실제 전체 공장8=**16/0**이다. 신규 원문/장기 수명/실제 전체 HTML 공장의 일반·빈 부모·창 생략/반납 결합을 확인했다.
+- [x] 전체 CTest **2787/0·319.57초**, 보호 **1821개 동일**이다. 제품 **7d13019fdc91f627f84c10ce399930c71ec29c8fb34073939ef0ff11ce7c2330**, 검사 **08d282a9ff46f98bb0499cb37abd0b71c57cd17be5c143649848042abe0dc505**이며 빌드 관측 경고오류0이다. [완료 문서](docs/exe/cpp-html-background-client-20261025.md)/[제품 보고서](cpppj/html-background-client-runtime-20261025.json)에 원시 SHA·경계를 남겼다. **20261025-06 CP**로 로컬 커밋하고 push하지 않는다. /goal은 활성/미완료다.
+- [ ] Checked의 실제 userCheat/developer 전역, 기존 Tell 전체 부모/구형 % 표시·Guide/full Uber와 전체 미션 완주/Edit/완전 동일성은 계속 미완료다. 기술 보상 목록/Input/Zsend는 리소스 조사에서 주로 Multiplayer 서비스에 해당하므로 현재 사용자 플레이 범위의 공통 UI를 우선한다.
+
 ## 2026-10-25 단위411 완료: Tell % 행별 ERROR 복구
 
 - [x] 단위410 **eed492b4 / 20261025-04 CP** 뒤 이어서 진행한다. 현재/마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-10-23**이며 새 전체 디컴파일/원본 직접 실행/새 GUI0이다. 보호 기준은 `extracted/cpp-tell-errors-411-baseline.json`이다.

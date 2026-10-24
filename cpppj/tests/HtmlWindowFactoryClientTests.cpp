@@ -40,6 +40,16 @@ struct FactoryScene { // UI callback이 참조하는 모든 실제 장치를 UI�
 };
 }
 
+// 같은 실제 전체 공장의 일반/빈 부모/창 생략과 반납 뒤에도 배경 전역만 현재값으로 유지한다.
+TEST_CASE(HtmlWindowFactoryClient_ActualBackgroundAcrossWindowsAndSuppressedParsing) {
+    FactoryScene scene;auto context=scene.Context();BindHtmlBackground(context.factory.html,scene.parserGlobals);const auto before=scene.Count();
+    const auto first=scene.menus->ShowHtmlWindow(context,"<background=\"nsstart\">First page",0,400,0);CHECK(first && HtmlBackgroundName(scene.parserGlobals)=="nsstart");const auto saved=scene.parserGlobals.background;scene.menus->CloseHtmlWindows();CHECK(scene.Count()==before && scene.parserGlobals.background==saved);
+    CHECK(scene.menus->ShowHtmlWindow(context,"Second page",0,400,0)!=0 && scene.parserGlobals.background==saved);scene.menus->CloseHtmlWindows();
+    CHECK(scene.menus->ShowHtmlWindow(context,"<background=\"b\">!?",0,400,0)==0 && HtmlBackgroundName(scene.parserGlobals)=="b" && scene.parserGlobals.background[2]=='s');scene.buttons.CleanupGumps();CHECK(scene.Count()==before);
+    CHECK(scene.menus->ShowHtmlWindow(context,"<background=\"nsisles\">No window",1,400,0)==0 && HtmlBackgroundName(scene.parserGlobals)=="nsisles" && scene.Count()==before);
+    HtmlTextParserState help;HtmlTextParserHooks hooks;BindHtmlBackground(hooks,scene.parserGlobals);HtmlTextParser(help,scene.parserGlobals,std::move(hooks)).Parse("<background=\"\">Help");CHECK(HtmlBackgroundName(scene.parserGlobals).empty() && scene.parserGlobals.background[1]=='s');
+}
+
 // 실제 Config 치환·기본OkButton·전체 본문/Fit/모달 입력과 반납을 함께 확인한다.
 TEST_CASE(HtmlWindowFactoryClient_ActualConfigFallbackBodyModalAndQueue) {
     FactoryScene scene;scene.config.Set("caption","Storm Islands");const auto before=scene.Count();const auto serial=scene.menus->ShowHtmlWindow(scene.Context(),"{caption}<br>Choose a route.",0,400,0);const auto root=scene.buttons.SerialGump(serial);CHECK(serial && root && scene.client.HtmlWindowGlobals()->window.createdSerial==serial && scene.client.HtmlWindowGlobals()->window.lastCloseTime==100.5 && scene.wallCalls==1 && scene.fallbackCalls==1 && scene.Root(root).controlCount==1 && scene.Root(root).body && scene.Root(root).parent==scene.buttons.RootToken());

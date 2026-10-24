@@ -1,0 +1,61 @@
+{
+  "unit": 412,
+  "goalComplete": false,
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "originalGameExecuted": false,
+  "cloneGameExecuted": false,
+  "guiExecuted": false,
+  "productSha256": "7d13019fdc91f627f84c10ce399930c71ec29c8fb34073939ef0ff11ce7c2330",
+  "testBinarySha256": "08d282a9ff46f98bb0499cb37abd0b71c57cd17be5c143649848042abe0dc505",
+  "sourceHashes": {
+    "cpppj/src/client/HtmlTextParser.cpp": "d354f2536e4636d531b65acd0b43270b8fd1f689e882df2fbb47617d5d4e8883",
+    "cpppj/src/client/HtmlTextParser.h": "dec88daebc5cbfc0fe207170c171469eaa4464b97ee642a7cfd0528a67a94b34",
+    "cpppj/src/client/UberGump.cpp": "757d14a8755d25af332bc5b90cfecff08a30668a8c12c4ac4af5e9667e0d0d8b",
+    "cpppj/tests/HtmlTextParserTests.cpp": "d834d708d661d35577950a766fb6c77702cf8e4d692de99f25df0d84fb2cfa3a",
+    "cpppj/tests/HtmlWindowFactoryClientTests.cpp": "59af5d2f9e111b71b39b4216f7e6450a1065be387ae3dd83589f84184b91cf61",
+    "tools/decomp_html_background.py": "d5a17fa0666bf611c959b37dfddfed58dcd7be0fbd5deb948020075092d37b67",
+    "cpppj/tests/fixtures/html-background-x86.tsv": "44491cd8ae6b1a808f5bcd988dae69f4390700c00081a39815f8ac6c892bad6f",
+    "docs/exe/cpp-html-background-client-20261025.md": "2d7d0cf404c78947195c21afb650ca0a2af5558a5286172ece7c0b6187ac6e5b"
+  },
+  "referenceHashes": {
+    "AGENTS.md": "7f853771930147c26e67d444ced94114992510a3fa072f5ed6bd63da7ba88bd9",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "tools/decomp_htmltext_oracle.py": "577cd2e9e96ea6ce039fbc05baa37142437cce1f4d3f33160c71f92c4c4b8ef7",
+    "cpppj/src/client/HtmlWindowFactory.cpp": "804b78258bbe8f6292d8db53976dfb9ebdc4ba28af661f2223c78af0cc2f1d69",
+    "cpppj/src/client/RawMenuHtml.inc": "a719baf217f13e85f8c9a8fd69bc86ed0777db2082fe6122c7cef953e1fdbc4a",
+    "cpppj/src/client/UberRootGump.cpp": "caf4194b597d3146ea1c80f27bb119d56f56b72e6e02a67d0f7bc7a00d1e92ac"
+  },
+  "rawHashes": {
+    "extracted/cpp-html-background-412-audit.py": "c54d649750b1eaa4ee785fd58eae615fa4515bbcf422292e5350bce3b7c0aa21",
+    "extracted/cpp-html-background-412-baseline.json": "56b75c7c1e0194b8d3c9a41ef58124bac06f66e714da6fd6babbd4f8fc198901",
+    "extracted/cpp-html-background-412-build1.log": "68dbb59898e8f72c3bd08db980c08a6f94ff6f5982998d79db80fb6a8c42a2c8",
+    "extracted/cpp-html-background-412-ctest1-tests.log": "73cfc6bc2af3e63645ac70407738f29f2b47d71fc34be4e228084bbdd08e1973",
+    "extracted/cpp-html-background-412-ctest1.log": "1c2639f638130d389fc352731de38db391f9d43497974bb229cdecc6e80ebca9",
+    "extracted/cpp-html-background-412-factory1.log": "4dc68adc6bc2fa3b8bc9f0c4a6138cd2ed631a513f2011ee08ab73aeda7afc50",
+    "extracted/cpp-html-background-412-native.json": "7f140a844b33b05170a692ab830ce4a1598fc801a3dd4f6320fdad81a690874b",
+    "extracted/cpp-html-background-412-parser1.log": "40882f92deecf1a1e64b18b6d3edbae6478e772ebde58adf296d4b7c833a2598",
+    "extracted/cpp-html-background-412-replay.json": "8a7534b6561d7b4f505e9cc9bd60659d4f868f1c41ed0bbe3359d802a52d8575",
+    "extracted/cpp-html-background-412-resource-uses.json": "fc319d1e46529cee7030af3df5e331201ea5d215c3248613b40d6e80503d124b"
+  },
+  "protectedAudit": {
+    "compared": 1821,
+    "changed": []
+  },
+  "checks": {
+    "nativeRows": 648,
+    "nativeInstructions": 471900,
+    "nativeReadOnlyReplay": true,
+    "focusedPassed": 16,
+    "fullPassed": 2787,
+    "fullFailedChecks": 0
+  },
+  "limits": [
+    "CRT tolower의 ASCII 장치만 공급한다. 게임/UI/OS 전체 실행 검증은 아니다.",
+    "최대79BYTE 이름만 실행한다. 원문80BYTE 밖 쓰기는 호스트에서 명시 거부한다.",
+    "정수/문자 경로이며 두 x87 정밀도 비교는 수행하지 않았다.",
+    "전체 Uber의 배경 GIF 생성/교체와 Checked 전역·기존 Tell 전체 부모/Guide/full Uber 및 전체 사용자 완주는 미완료다."
+  ]
+}

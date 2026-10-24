@@ -6,6 +6,7 @@
 #include <filesystem>
 #include <sstream>
 #include <stdexcept>
+#include <algorithm>
 
 using namespace netstorm::client;
 namespace {
@@ -42,6 +43,26 @@ TEST_CASE(HtmlTextParser_IndependentPeFixture) {
         CHECK(state.inTag==std::stoul(row[10]));CHECK(state.textAllowed==std::stoul(row[11]));CHECK(state.afterHeading==std::stoul(row[12]));CHECK(globals.suppressParagraph==std::stoul(row[13]));++count;
     }
     CHECK(count==816);
+}
+// 원본 전체 순회가 남긴 출력/상태와 배경80BYTE 전체를 대조해 짧은 덮어쓰기의 뒤쪽 보존도 확인한다.
+TEST_CASE(HtmlTextParser_IndependentBackgroundPeFixture) {
+    std::ifstream input(std::filesystem::path(__FILE__).parent_path()/"fixtures/html-background-x86.tsv");CHECK(input.good());std::string line;std::size_t count{};
+    while (std::getline(input,line)) { // 기대값은 C++에서 만들지 않고 원문 입력/출력 열을 읽는다.
+        if (line.empty() || line.front()=='#') continue;const auto row=Columns(line);CHECK(row.size()==14);if (row.size()!=14) continue;
+        const auto seed=Unhex(row[0]);HtmlTextParserGlobals globals;CHECK(seed.size()==globals.background.size());std::copy(seed.begin(),seed.end(),globals.background.begin());globals.suppressParagraph=static_cast<std::uint32_t>(std::stoul(row[4]));
+        HtmlTextParserState state;state.shown=static_cast<std::uint32_t>(std::stoul(row[2]));state.hiddenDepth=static_cast<std::uint32_t>(std::stoul(row[3]));HtmlTextParserHooks hooks;BindHtmlBackground(hooks,globals);
+        CHECK(HtmlTextParser(state,globals,std::move(hooks)).Parse(Unhex(row[1]))==Unhex(row[5]));CHECK(state.inputOffset==std::stoul(row[6]));CHECK(state.shown==std::stoul(row[7]) && state.hiddenDepth==std::stoul(row[8]));CHECK(state.inTag==std::stoul(row[9]) && state.textAllowed==std::stoul(row[10]) && state.afterHeading==std::stoul(row[11]));CHECK(globals.suppressParagraph==std::stoul(row[12]));CHECK(std::string(globals.background.data(),globals.background.size())==Unhex(row[13]));++count;
+    }
+    CHECK(count==648);
+}
+// 새 파서/빈 이름/첫NUL/숨긴 태그에서도 같은 장기 배경을 사용하고 원문 오버런만 거부한다.
+TEST_CASE(HtmlTextParser_SharedBackgroundLifetimeAndPhysicalLimit) {
+    HtmlTextParserGlobals globals;HtmlTextParserHooks first,second;BindHtmlBackground(first,globals);BindHtmlBackground(second,globals);HtmlTextParserState a,b;
+    CHECK(HtmlBackgroundName(globals).empty());HtmlTextParser(a,globals,first).Parse("<background=\"nsstart\">First");CHECK(HtmlBackgroundName(globals)=="nsstart");const auto saved=globals.background;
+    HtmlTextParser(b,globals,second).Parse("Next page");CHECK(globals.background==saved);b.shown=0;HtmlTextParser(b,globals,second).Parse("<background=\"hidden\">");CHECK(globals.background==saved);
+    b.shown=1;second.background(b,std::string_view("ab\0ignored",10));CHECK(HtmlBackgroundName(globals)=="ab" && globals.background[3]=='t');const auto shortened=globals.background;
+    bool rejected{};try { HtmlTextParser(b,globals,second).Parse("<background=\""+std::string(80,'x')+"\">"); }catch (const std::length_error&) { rejected=true; }CHECK(rejected && globals.background==shortened);
+    HtmlTextParser(b,globals,second).Parse("<background=\"\">");CHECK(HtmlBackgroundName(globals).empty() && globals.background[1]=='b');std::fill(globals.background.begin(),globals.background.end(),'x');rejected=false;try { static_cast<void>(HtmlBackgroundName(globals)); }catch (const std::length_error&) { rejected=true; }CHECK(rejected);
 }
 // 구현하지 않은 실제 효과가 선택되면 조용히 성공하지 않으며 숨긴 비조건 태그는 호출하지 않는다.
 TEST_CASE(HtmlTextParser_ExplicitEffectBoundaries) {
