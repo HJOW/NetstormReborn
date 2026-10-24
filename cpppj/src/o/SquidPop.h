@@ -28,6 +28,7 @@ public:
     void SetBuildingSpace(const RawBuildingSpace* space);
     // 원본 표면/다리 통지를 같은 풀의 실제 미니맵 큐에 연결한다. nullptr은 표시 객체가 없는 기존 경로다.
     void SetMetadisplayDirty(const RawMetadisplayDirty* dirty);
+    bool ReleaseMetadisplayDirty(const RawMetadisplayDirty* expected); // 같은 관측자 대여만 끊는다. 이후 연결한 새 미니맵의 대여는 유지한다.
 private:
     // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     SidPool& pool_;

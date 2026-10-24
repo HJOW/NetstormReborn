@@ -29,6 +29,7 @@ public:
     void SetBuildingSpace(const RawBuildingSpace* space);
     // void 비트를 쓴 직후 기존 좌표를 원본 미니맵 큐에 통지한다. nullptr은 표시 객체가 없는 경로다.
     void SetMetadisplayDirty(const RawMetadisplayDirty* dirty);
+    bool ReleaseMetadisplayDirty(const RawMetadisplayDirty* expected); // 현재 대여가 반납자의 것일 때만 끊으며 새 관측자를 지우지 않는다.
 private:
     // 원본 unaligned raw 필드를 호스트 포인터 산술로 해석하지 않는다.
     std::span<std::uint8_t> Bytes(Sid sid);

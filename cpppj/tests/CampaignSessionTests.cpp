@@ -3668,11 +3668,11 @@ struct ProductionLifetimeScene {
 };
 
 TEST_CASE(CampaignProductionLifetime_GlobalCleanupRetiresRootAndBudget) {
-    ProductionLifetimeScene scene;auto& panel=*scene.controls->Production();const auto root=scene.Token(0x5069c0),budget=scene.Token(0x506948); // 실제 공통 등록표의 두 inline 저장소다.
+    ProductionLifetimeScene scene;const auto root=scene.Token(0x5069c0),budget=scene.Token(0x506948); // 실제 공통 등록표의 두 inline 저장소다.
+    const auto rootId=scene.controls->Production()->Node(root)->id,budgetId=scene.controls->Production()->Node(budget)->id; // 정리 뒤 반납된 처리기를 역참조하지 않고 같은 등록칸을 확인한다.
     CHECK(root && budget && root!=budget && scene.Count()>scene.baseCount);scene.controls->KillGump(root);scene.controls->CleanupGumps();
-    CHECK(scene.Count()==scene.baseCount && !panel.Node(root) && !panel.Node(budget));CHECK(scene.TextRetired(budget));
-    if (panel.Node(root) || panel.Node(budget)) return; // 최초 실패에서는 죽은 객체를 재삭제해 이후 검사의 공통 등록표를 손상시키지 않는다.
-    panel.Close();panel.Close();CHECK(scene.Count()==scene.baseCount);scene.controls->DisableProduction();CHECK(!scene.controls->Production() && scene.Count()==scene.baseCount);
+    CHECK(scene.Count()==scene.baseCount && !scene.controls->Production() && !scene.controls->RegisteredGump(rootId) && !scene.controls->RegisteredGump(budgetId));CHECK(scene.TextRetired(budget));
+    scene.controls->DisableProduction();scene.controls->DisableProduction();CHECK(!scene.controls->Production() && scene.Count()==scene.baseCount); // 이미 반납된 소유자는 공개 제거 경계에서도 다시 소멸하지 않는다.
     auto& next=scene.OpenProduction();CHECK(scene.Token(0x5069c0)!=root && scene.Token(0x506948)!=budget);CHECK(!next.Node(root) && !next.Node(budget));
     scene.controls->DisableProduction();CHECK(scene.Count()==scene.baseCount && scene.session->Sp(1)==10000);
 }
@@ -3687,8 +3687,8 @@ TEST_CASE(CampaignProductionLifetime_IndependentBudgetCleanupRetiresText) {
 TEST_CASE(CampaignProductionLifetime_QueuedKillThenCloseDrainsOnce) {
     ProductionLifetimeScene scene;auto& panel=*scene.controls->Production();const auto root=scene.Token(0x5069c0),budget=scene.Token(0x506948);const auto count=scene.Count(); // Cleanup 전에는 원래 주소/등록이 남아 있어야 한다.
     scene.controls->KillGump(root);CHECK(panel.Node(root) && panel.Node(budget) && scene.Count()==count);CHECK(panel.Node(root)->flags&0x10000);
-    panel.Close();CHECK(scene.Count()==scene.baseCount && !panel.Node(root) && !panel.Node(budget) && scene.TextRetired(budget));
-    scene.controls->CleanupGumps();CHECK(scene.Count()==scene.baseCount);panel.Close();CHECK(scene.Count()==scene.baseCount);scene.controls->DisableProduction();CHECK(scene.Count()==scene.baseCount);
+    panel.Close();panel.Close();CHECK(scene.Count()==scene.baseCount && !panel.Node(root) && !panel.Node(budget) && scene.TextRetired(budget)); // 반복 Close는 실제 소유자가 살아 있는 동안 검사한다.
+    scene.controls->CleanupGumps();CHECK(scene.Count()==scene.baseCount && !scene.controls->Production());scene.controls->DisableProduction();CHECK(scene.Count()==scene.baseCount); // 공통 정리 뒤에는 해제된 C++ 참조 대신 현재 조회를 사용한다.
 }
 
 TEST_CASE(CampaignProductionLifetime_DuplicateOpenAndProviderRecreation) {

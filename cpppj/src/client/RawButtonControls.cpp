@@ -13,6 +13,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <utility>
+#include <vector>
 
 namespace netstorm::client {
 namespace {
@@ -56,11 +57,30 @@ struct RawButtonControls::Impl {
     std::unique_ptr<GumpFrame> frame;/* buttons: 돌 버튼 생성/텍스트/부착은 StoneButtonGump에 맡기는 상태 처리기다. GumpEvents/입력/프레임 훅에 연결한다 (std::unique_ptr<ButtonGump>). */ std::unique_ptr<ButtonGump> buttons;/* backgroundCreate: 기본 생성/등록은 GumpCreate, 부착/파괴는 같은 저장소의 GumpTree/GumpLifetime이 맡는다 (std::unique_ptr<GumpBackgroundCreate>). */ std::unique_ptr<GumpBackgroundCreate> backgroundCreate;
     // stone: 같은 ButtonGump/GumpCreate/GumpTree/GumpLifetime을 사용한다. 자동 Client 연결은 별도 계층이 맡는다 (std::unique_ptr<StoneButtonGump>).
     std::unique_ptr<StoneButtonGump> stone;
-    std::unique_ptr<RawProductionControls> production; // 같은 등록표와 현재 Session의 생산 패널이다.
+    std::vector<std::unique_ptr<RawProductionControls>> productions; // 새/이전 생산 처리기가 같은 등록표에서 실제 자식 소멸까지 함께 산다.
     o::MetadisplayDirtyState minimapState; // 원본전역bitmap/큐/프레임은개별Gump와월드교체보다오래살아있다.
-    std::unique_ptr<RawMinimapControls> minimap; // 같은 Gump/Pool의 실제 미니맵이며 월드보다 먼저 반납한다.
+    RawMinimapGlobals minimapGlobals;std::vector<std::unique_ptr<RawMinimapControls>> minimaps; // 현재표시/serial과개별미니맵의동시수명을분리한다.
     std::unique_ptr<RawMenuControls> menus; // 실제 메뉴도 같은 루트/serial/등록표/입력/수명을 공유한다.
     std::unique_ptr<WarningMessages> warnings; // 메뉴보다 먼저 해제하며 같은 현재 루트의 안내 노드만 소유한다.
+    // 새/이전 세대 중 해당 실제 토큰을 보유한 처리기만 같은 가상 분배에 공급한다.
+    RawProductionControls* ProductionOwner(std::uint32_t token) const { for (const auto& value:productions) if (value->Node(token)) return value.get();return nullptr; }
+    // 미부착/삭제대기 노드도 실제 scalar 해제 전까지 같은 주소를 유지한다.
+    RawMinimapControls* MinimapOwner(std::uint32_t token) const { for (const auto& value:minimaps) if (value->Node(token)) return value.get();return nullptr; }
+    // 원문00557d7c의생성serial을검색하며죽은최신생산대신이전생산으로되돌아가지않는다.
+    RawProductionControls* CurrentProduction() const {
+        for (const auto& value:productions) { const auto* node=value->Node(value->RootToken());if (node && node->serial==productionGlobals.rootSerial && !(node->flags&0x10000U)) return value.get(); }return nullptr; // 각 현재 루트의 실제serial/죽음만 검사한다.
+    }
+    // 미니맵은serial 재검색이아닌원문현재포인터를해석하며이전표시로fallback하지않는다.
+    RawMinimapControls* CurrentMinimap() const { return MinimapOwner(minimapGlobals.current); }
+    // 공통scalar가모든노드를반납한뒤에만호스트처리기/자기출력을반납한다.
+    void RetireHudOwners() {
+        std::erase_if(productions,[](const auto& value) { return !value->HasNodes(); });
+        std::erase_if(minimaps,[](const auto& value) { return !value->RootToken(); });
+    }
+    // 부분생성의미부착자식도각자실제Close를실행한뒤전체소유자를반납한다.
+    void CloseProduction() { for (const auto& value:productions) value->Close();productions.clear(); }
+    // 현재월드의관측대여는각소유자소멸이자기연결과일치할때만해제한다.
+    void CloseMinimaps() { for (const auto& value:minimaps) value->Close();minimaps.clear(); }
     // 모든 분배 훅은 실제 호출 때 현재 노드와 처리기를 조회하여 순환 의존을 연결한다.
     Impl(o::OriginalEdition edition,RawButtonHooks supplied):hooks(std::move(supplied)) {
         create.collection.edition=edition;stoneState.color=kStoneType;stoneState.defaultContext={0,0,0,0,0,0,1,1};
@@ -77,9 +97,9 @@ struct RawButtonControls::Impl {
         lifeHooks.push=[this](auto token) { tree->Push(token); };
         lifeHooks.deleteForm=[this](std::uint32_t form,std::uint32_t flags) { if (!hooks.deleteForm) throw std::logic_error("현재UI Form삭제소비자미연결");hooks.deleteForm(form,flags); };
         lifeHooks.deletingDestructor=[this](auto token,auto flags) {
-            if (warnings && warnings->Node(token)) warnings->DeleteScalar(token,flags);else if (minimap && minimap->Node(token)) minimap->DeleteScalar(token,flags);else if (production && production->Node(token)) production->DeleteScalar(token,flags);else if (menus && menus->Node(token)) menus->DeleteScalar(token,flags);else if (stones.contains(token)) stone->DeleteScalar(token,flags);else lifetime->DeleteScalar(token,flags);
+            if (warnings && warnings->Node(token)) warnings->DeleteScalar(token,flags);else if (auto* minimap=MinimapOwner(token)) minimap->DeleteScalar(token,flags);else if (auto* production=ProductionOwner(token)) production->DeleteScalar(token,flags);else if (menus && menus->Node(token)) menus->DeleteScalar(token,flags);else if (stones.contains(token)) stone->DeleteScalar(token,flags);else lifetime->DeleteScalar(token,flags);
         };
-        lifeHooks.release=[this](auto token) { if (warnings) warnings->Release(token);if (minimap) minimap->Release(token);if (production) production->Release(token);if (menus) menus->Release(token);bases.erase(token);stones.erase(token);backgrounds.erase(token); };
+        lifeHooks.release=[this](auto token) { if (warnings) warnings->Release(token);if (auto* minimap=MinimapOwner(token)) minimap->Release(token);if (auto* production=ProductionOwner(token)) production->Release(token);if (menus) menus->Release(token);bases.erase(token);stones.erase(token);backgrounds.erase(token); };
         lifetime=std::make_unique<GumpLifetime>(create,life,std::move(lifeHooks));
         GumpEventHooks eventHooks;eventHooks.node=[this](auto token) { return Node(token); };
         eventHooks.handle=[this](auto token,auto event,auto first,auto second) { return Handle(token,event,first,second); };
@@ -89,10 +109,10 @@ struct RawButtonControls::Impl {
         input=std::make_unique<GumpInput>(create,life,inputState,*collection,*events,std::move(inputHooks));
         GumpFrameHooks frameHooks;frameHooks.node=[this](auto token) { return Node(token); };
         frameHooks.redraw=[this](auto,bool) { changed=true; };
-        frameHooks.idle=[this](auto token) { if (warnings && warnings->Node(token)) warnings->Idle(token);else if (stones.contains(token) || (menus && menus->BaseButton(token))) buttons->Idle(token);else if (minimap && minimap->Node(token)) minimap->Idle(token);else if (production && production->Node(token)) production->Idle(token);else if (menus && menus->Node(token)) menus->Idle(token); };
+        frameHooks.idle=[this](auto token) { if (warnings && warnings->Node(token)) warnings->Idle(token);else if (stones.contains(token) || (menus && menus->BaseButton(token))) buttons->Idle(token);else if (auto* minimap=MinimapOwner(token)) minimap->Idle(token);else if (auto* production=ProductionOwner(token)) production->Idle(token);else if (menus && menus->Node(token)) menus->Idle(token); };
         frameHooks.broadcast=[this](auto token,auto event,auto first,auto second) {
             if (stones.contains(token) || (menus && menus->BaseButton(token))) buttons->Broadcast(token,event,first,second);
-            else if (production && production->Node(token)) production->Broadcast(token,event,first,second);
+            else if (auto* production=ProductionOwner(token)) production->Broadcast(token,event,first,second);
             else if (menus && menus->Node(token)) menus->Broadcast(token,event,first,second);
         };
         frame=std::make_unique<GumpFrame>(create,life,std::move(frameHooks));
@@ -124,8 +144,8 @@ struct RawButtonControls::Impl {
         if (warnings) if (auto* node=warnings->Node(token)) return node;
         if (const auto it=stones.find(token);it!=stones.end()) return it->second.get();
         if (const auto it=backgrounds.find(token);it!=backgrounds.end()) return it->second.get();
-        if (minimap) if (auto* node=minimap->Node(token)) return node;
-        if (production) if (auto* node=production->Node(token)) return node;
+        if (auto* minimap=MinimapOwner(token)) return minimap->Node(token);
+        if (auto* production=ProductionOwner(token)) return production->Node(token);
         if (menus) if (auto* node=menus->Node(token)) return node;
         const auto it=bases.find(token);return it==bases.end() ? nullptr : it->second.get();
     }
@@ -138,13 +158,13 @@ struct RawButtonControls::Impl {
     }
     // 돌 버튼 가상 부착의 실제 배경 Push/Attach를 먼저 실행한다.
     void Attach(std::uint32_t token,float x,float y,std::uint32_t parent,std::uint32_t mode) {
-        if (minimap && minimap->Node(token)) minimap->Attach(token,x,y,parent,mode);else if (production && production->Node(token)) production->Attach(token,x,y,parent,mode);else if (menus && menus->Node(token)) menus->Attach(token,x,y,parent,mode);else if (stones.contains(token)) stone->Attach(token,x,y,parent,mode);else tree->Attach(token,x,y,parent,mode);
+        if (auto* minimap=MinimapOwner(token)) minimap->Attach(token,x,y,parent,mode);else if (auto* production=ProductionOwner(token)) production->Attach(token,x,y,parent,mode);else if (menus && menus->Node(token)) menus->Attach(token,x,y,parent,mode);else if (stones.contains(token)) stone->Attach(token,x,y,parent,mode);else tree->Attach(token,x,y,parent,mode);
     }
     // 루트 부모 click의 serial을 화면 명령 번호로 변환한다. right/repeat는 미지원 상위 명령으로 보존한다.
     std::uint32_t Handle(std::uint32_t token,std::uint32_t event,std::uint32_t first,std::uint32_t second) {
         if (stones.contains(token) || (menus && menus->BaseButton(token))) return buttons->Handle(token,event,first,second);
-        if (minimap && minimap->Node(token)) return minimap->Handle(token,event,first,second);
-        if (production && production->Node(token)) return production->Handle(token,event,first,second);
+        if (auto* minimap=MinimapOwner(token)) return minimap->Handle(token,event,first,second);
+        if (auto* production=ProductionOwner(token)) return production->Handle(token,event,first,second);
         if (menus && menus->Node(token)) return menus->Handle(token,event,first,second);
         if (token==root && (event&0x03ffffffU)==buttonState.clickEvent) {
             // ID와 serial의 크기/순서를 같다고 가정하지 않는다.
@@ -161,7 +181,7 @@ struct RawButtonControls::Impl {
             // Kill이 root.child를 바꾸므로 현재 머리를 매번 읽는다.
             while (Node(root)->child) lifetime->Kill(Node(root)->child);
         }
-        if (!deferCleanup) lifetime->Cleanup();if (!preserveWorldUi) { minimap.reset();if (production) production->Close();production.reset();if (menus) { menus->CloseHtmlWindows();menus->CloseBackgroundGifs();menus->CloseChatWindows();menus->CloseNsInfo();menus->CloseTextEntries(); } }controls.clear();activated.reset();
+        if (!deferCleanup) lifetime->Cleanup();if (!preserveWorldUi) { CloseMinimaps();CloseProduction();if (menus) { menus->CloseHtmlWindows();menus->CloseBackgroundGifs();menus->CloseChatWindows();menus->CloseNsInfo();menus->CloseTextEntries(); } }controls.clear();activated.reset();
     }
 };
 // 구현 주소는 생성 이후 이동하지 않아 순환 훅이 안정된 처리기를 조회한다.
@@ -225,7 +245,7 @@ RawButtonPointerResult RawButtonControls::NotifyPointer(InputEvent event,std::ui
     result.activated=std::exchange(state.activated,{});result.changed=std::exchange(state.changed,false);return result;
 }
 // Kill 예약을 같은 공통 표의 가상 소멸로 옮긴다. 현재 삭제 큐 재조회는 기존 GumpLifetime이 소유한다.
-bool RawButtonControls::CleanupGumps() { impl_->lifetime->Cleanup();return std::exchange(impl_->changed,false); }
+bool RawButtonControls::CleanupGumps() { impl_->lifetime->Cleanup();impl_->RetireHudOwners();return std::exchange(impl_->changed,false); }
 // 같은 idle 표에 대한 실제 가상 분배만 실행한다. Idle 중 Kill한 대상은 다음 Cleanup까지 실제 저장소에 남는다.
 bool RawButtonControls::IdleGumps() { impl_->frame->Idle();return std::exchange(impl_->changed,false); }
 // 기존 독립 검사 계약을 유지하는 결합 경계다. Client 프레임 연결에서는 사용하지 않는다.
@@ -255,7 +275,7 @@ RawMenuControls& RawButtonControls::EnableMenus(const GameAssets& assets,FontSto
     auto& s=*impl_;if (s.menus) throw std::logic_error("실제 메뉴 계층은 한 번만 연결 가능");
     s.productionGlobals.backgroundType=static_cast<std::uint32_t>(assets.Find("fortGump").block+o::kFirstAssetTypeNumber); // 초기 HUD도 실제 원문 타입 연결 뒤 같은 배경 전역을 읽는다.
     RawMenuTree tree{s.create,s.life,*s.factory,*s.collection,*s.tree,*s.lifetime,*s.events,*s.input,*s.stone,
-        [&s](auto token) { const auto it=s.backgrounds.find(token);return it==s.backgrounds.end() ? (s.production ? s.production->Background(token) : nullptr) : it->second.get(); },
+        [&s](auto token) { const auto it=s.backgrounds.find(token);const auto* production=s.ProductionOwner(token);return it==s.backgrounds.end() ? (production ? production->Background(token) : nullptr) : it->second.get(); },
         [&s] { return ++s.nextToken; },[&s](auto token) { return s.Node(token); },
         [&s](auto token,float x,float y,auto parent,auto mode) { s.Attach(token,x,y,parent,mode); },[&s] { s.changed=true; }};
     s.menus=std::make_unique<RawMenuControls>(std::move(tree),assets,fonts,std::move(hooks));return *s.menus;
@@ -281,27 +301,27 @@ WarningMessages& RawButtonControls::EnableWarnings(std::function<double()> now,s
 WarningMessages* RawButtonControls::Warnings() const { return impl_->warnings.get(); }
 // 같은 공통 참조와 가상 분배를 생산 노드에도 빌려 준다.
 RawProductionControls& RawButtonControls::EnableProduction(RawCampaignSession& session,const GameAssets& assets,RawProductionHooks hooks) {
-    auto& s=*impl_;if (s.production || !s.menus) throw std::logic_error("생산 패널 수명/메뉴 연결 오류");
+    auto& s=*impl_;if (s.CurrentProduction() || !s.menus) throw std::logic_error("생산 패널 수명/메뉴 연결 오류");
     RawMenuTree tree{s.create,s.life,*s.factory,*s.collection,*s.tree,*s.lifetime,*s.events,*s.input,*s.stone,
         [&s](auto token) { const auto it=s.backgrounds.find(token);return it==s.backgrounds.end() ? nullptr : it->second.get(); },
         [&s] { return ++s.nextToken; },[&s](auto token) { return s.Node(token); },
         [&s](auto token,float x,float y,auto parent,auto mode) { s.Attach(token,x,y,parent,mode); },[&s] { s.changed=true; }};
     if (!hooks.poll) hooks.poll=[&s](auto code) { return s.hooks.poll ? s.hooks.poll(code) : s.currentPoll; }; // 같은 공통 폴링 기록을 구분선도 읽는다.
-    s.production=std::make_unique<RawProductionControls>(std::move(tree),*s.menus,session,assets,s.productionGlobals,std::move(hooks));s.production->Open();return *s.production;
+    auto value=std::make_unique<RawProductionControls>(std::move(tree),*s.menus,session,assets,s.productionGlobals,std::move(hooks));auto& result=*value;s.productions.push_back(std::move(value));result.Open();return result;
 }
 // 실제 전체 생성 경계를 같은 등록표/노드/문자열 수명에 연결한다.
 RawProductionControls& RawButtonControls::ConstructProduction(ProductionControlContext context,const GameAssets& assets,RawProductionHooks hooks) {
-    auto& s=*impl_;if (s.production || !s.menus) throw std::logic_error("초기 생산 생성의 공통 수명/메뉴 불일치");
+    auto& s=*impl_;if (!s.menus) throw std::logic_error("초기 생산 생성의 공통 메뉴 미연결");
     RawMenuTree tree{s.create,s.life,*s.factory,*s.collection,*s.tree,*s.lifetime,*s.events,*s.input,*s.stone,
         [&s](auto token) { const auto it=s.backgrounds.find(token);return it==s.backgrounds.end() ? nullptr : it->second.get(); },
         [&s] { return ++s.nextToken; },[&s](auto token) { return s.Node(token); },[&s](auto token,float x,float y,auto parent,auto mode) { s.Attach(token,x,y,parent,mode); },[&s] { s.changed=true; }};
     if (!hooks.poll) hooks.poll=[&s](auto code) { return s.hooks.poll ? s.hooks.poll(code) : s.currentPoll; };
-    s.production=std::make_unique<RawProductionControls>(std::move(tree),*s.menus,std::move(context),assets,s.productionGlobals,std::move(hooks));s.production->Construct();return *s.production;
+    auto value=std::make_unique<RawProductionControls>(std::move(tree),*s.menus,std::move(context),assets,s.productionGlobals,std::move(hooks));auto& result=*value;s.productions.push_back(std::move(value));result.Construct();return result;
 }
-RawProductionControls* RawButtonControls::Production() const { return impl_->production.get(); } // 같은 현재 처리기다.
+RawProductionControls* RawButtonControls::Production() const { return impl_->CurrentProduction(); } // 실제현재생성serial만조회하며이전소유자로되돌아가지않는다.
 // 테스트 전용 임시 조작이며 원본 분석 결과가 아니다. 게임 설정 파일에 저장하지 않는다.
 void RawButtonControls::ConfigureTestBridgePatterns(std::string_view patterns) { impl_->productionGlobals.ConfigureTestBridgePatterns(patterns); }
-void RawButtonControls::DisableProduction() { if (impl_->production) { impl_->production->Close();impl_->production.reset(); } } // 패널은 실제 노드와 함께 반납하고 전역 TYPE 시계/순번은 유지한다.
+void RawButtonControls::DisableProduction() { impl_->CloseProduction(); } // 모든실제세대의노드를먼저반납하며전역TYPE시계/순번은유지한다.
 
 // 같은 등록표/수명/입력/원본 셀 그림을 현재Session과 공유한다.
 RawMinimapControls& RawButtonControls::EnableMinimap(RawCampaignSession& session,RawMinimapHooks hooks) {
@@ -309,22 +329,31 @@ RawMinimapControls& RawButtonControls::EnableMinimap(RawCampaignSession& session
 }
 // 초기 전체 HUD의 생성도 같은 토큰/공통 수명/실제 물리를 사용한다.
 RawMinimapControls& RawButtonControls::EnableMinimap(std::shared_ptr<RawSurfaceStorage> storage,RawMinimapHooks hooks) {
-    auto& s=*impl_;if (s.minimap || !s.menus) throw std::logic_error("미니맵 공통 트리/수명 오류");
+    auto& s=*impl_;if (s.CurrentMinimap() || !s.menus) throw std::logic_error("미니맵 공통 트리/수명 오류");
     RawMenuTree tree{s.create,s.life,*s.factory,*s.collection,*s.tree,*s.lifetime,*s.events,*s.input,*s.stone,
         [&s](auto token) { const auto it=s.backgrounds.find(token);return it==s.backgrounds.end() ? nullptr : it->second.get(); },
         [&s] { return ++s.nextToken; },[&s](auto token) { return s.Node(token); },
         [&s](auto token,float x,float y,auto parent,auto mode) { s.Attach(token,x,y,parent,mode); },[&s] { s.changed=true; }};
-    s.minimap=std::make_unique<RawMinimapControls>(std::move(tree),*s.menus,std::move(storage),s.minimapState,std::move(hooks));s.minimap->Open();return *s.minimap;
+    auto value=std::make_unique<RawMinimapControls>(std::move(tree),*s.menus,std::move(storage),s.minimapState,s.minimapGlobals,std::move(hooks));auto& result=*value;s.minimaps.push_back(std::move(value));result.Open();return result;
 }
 // 같은 실제 미니맵의 안정된 처리기만 빌린다.
-RawMinimapControls* RawButtonControls::Minimap() const { return impl_->minimap.get(); }
+RawMinimapControls* RawButtonControls::Minimap() const { return impl_->CurrentMinimap(); }
+// 새Uber가이전표시를반납하기전에실제미부착새미니맵공장을실행한다.
+RawMinimapControls& RawButtonControls::ConstructMinimap(std::shared_ptr<RawSurfaceStorage> storage,RawMinimapHooks hooks) {
+    auto& s=*impl_;if (!s.menus) throw std::logic_error("초기 미니맵 생성의 공통 메뉴 미연결");
+    RawMenuTree tree{s.create,s.life,*s.factory,*s.collection,*s.tree,*s.lifetime,*s.events,*s.input,*s.stone,
+        [&s](auto token) { const auto it=s.backgrounds.find(token);return it==s.backgrounds.end() ? nullptr : it->second.get(); },
+        [&s] { return ++s.nextToken; },[&s](auto token) { return s.Node(token); },
+        [&s](auto token,float x,float y,auto parent,auto mode) { s.Attach(token,x,y,parent,mode); },[&s] { s.changed=true; }};
+    auto value=std::make_unique<RawMinimapControls>(std::move(tree),*s.menus,std::move(storage),s.minimapState,s.minimapGlobals,std::move(hooks));auto& result=*value;s.minimaps.push_back(std::move(value));result.Construct();return result;
+}
 // Pop/Unpop이현재Session의해제된dirty를호출하지않도록노드보다먼저월드를반납하지않는다.
-void RawButtonControls::DisableMinimap() { if (impl_->minimap) { impl_->minimap->Close();impl_->minimap.reset(); } }
+void RawButtonControls::DisableMinimap() { impl_->CloseMinimaps(); }
 
 // Form소유ID는알림시점의등록표에서해석하고기본가상+4의지연Kill만요청한다.
 o::GumpFormNotice RawButtonControls::ObjectNotice() const {
     auto* current=impl_.get();return MakeGumpFormNotice(current->create,[current](std::uint32_t token,o::Sid object) {
-        if (current->production && current->production->Node(token)) current->production->ParentGone(token,object.value);else ReleaseGumpObject(*current->lifetime,token,object);current->changed=true;
+        if (auto* production=current->ProductionOwner(token)) production->ParentGone(token,object.value);else ReleaseGumpObject(*current->lifetime,token,object);current->changed=true;
     });
 }
 // 원본00463ff0과 같은 실제 등록 배열을 요청 시 읽는다. 등록 없는0은 그대로 반환한다.
@@ -404,6 +433,10 @@ std::string RawButtonControls::Report() const {
     const auto& state=*impl_;std::ostringstream out;
     out<<"RawButtons\t"<<state.controls.size()<<'\t'<<state.create.count<<'\t'<<state.create.serial<<'\t'<<state.life.focus<<'\t'
        <<std::count_if(state.life.idle.begin(),state.life.idle.end(),[](auto token) { return token!=0; })<<'\t'
-       <<state.bases.size()+state.stones.size()+state.backgrounds.size();if (state.production) out<<'\n'<<state.production->Report();if (state.minimap) out<<'\n'<<state.minimap->Report();return out.str();
+       <<state.bases.size()+state.stones.size()+state.backgrounds.size();
+    out<<"\nraw_hud_owners\t"<<state.productions.size()<<'\t'<<state.minimaps.size()<<'\t'<<state.productionGlobals.rootSerial<<'\t'<<state.minimapGlobals.current<<'\t'<<state.minimapGlobals.serial; // 실제소유자수와원문현재대상을동시에읽는다.
+    for (const auto& value:state.productions) out<<'\n'<<value->Report(); // 새/이전각세대의실제노드를보고한다.
+    for (const auto& value:state.minimaps) if (value->RootToken()) out<<'\n'<<value->Report(); // 현재전역과구별되는살아있는모든표시노드다.
+    return out.str();
 }
 }

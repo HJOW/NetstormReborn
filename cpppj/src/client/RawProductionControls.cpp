@@ -41,6 +41,7 @@ constexpr std::array<std::uint32_t,5> kSpecial{111,141,137,94,97}; // 실제 전
 // 현재 월드를 참조하는 처리기/원본 파생 필드의 단일 고정 주소 소유자다.
 struct RawProductionControls::Impl {
     RawMenuTree common;RawMenuControls& menus;ProductionControlContext context;const GameAssets& assets;RawProductionHooks hooks; // 공통 상태와 외부 장치다.
+    std::uint32_t drawRegistration{}; // 같은 메뉴 수집기에 등록한 자기 출력 수명만 반납한다.
     ProductionMaintenanceGlobals& productionGlobals;std::unique_ptr<RawProductionMaintenance> maintenance; // 전역/패널의 단일 상태와 같은 Session 유지 몸체다.
     ProductionRootNode root;ProductionMaintenancePanel& productionPanel{root.panel};std::uint32_t rootToken{};bool constructing{}; // 파생 본체/유지 상태의 동일 주소와 생성 중 추가 동기화 억제다.
     std::uint32_t &budgetToken{root.budgetToken},&top{root.top},&middle{root.middle},&bottom{root.bottom},&bridgeGrid{root.bridgeGrid},&teleportGrid{root.teleportGrid},&separator{root.separator};std::uint32_t slotLimit{}; // 43e640의 실제 자식 포인터다.
@@ -109,7 +110,7 @@ struct RawProductionControls::Impl {
         dividerGeometry=std::make_unique<HudDividerGump>(common.create.screenWidth,common.create.screenHeight,dividerKind,dividerHooks);
         HudDividerInputHooks dh;dh.divider=[this](auto token) { return Find(dividers,token); };dh.baseHandle=[this](auto token,auto event,auto a,auto b) { return menus.BaseHandle(token,event,a,b); };
         dh.base=common.node;dh.cursor=hooks.cursor;dh.poll=hooks.poll;dh.menuInstances=[this] { return menus.MenuInstances(); };dividerInput=std::make_unique<HudDividerInput>(common.collection,common.input,common.tree,std::move(dh));
-        menus.SetExternalGumps({[this](auto token) { return Text(token); },[this](auto token) { return Node(token)!=nullptr; },[this](auto token,auto& target,auto& currentColors,auto& background) { Draw(token,target,currentColors,background); }});
+        drawRegistration=menus.RegisterExternalGumps({[this](auto token) { return Text(token); },[this](auto token) { return Node(token)!=nullptr; },[this](auto token,auto& target,auto& currentColors,auto& background) { Draw(token,target,currentColors,background); }});
     }
     // 초기 생성도 실제 현재 전역을 읽으며 빈 Session이나 고정 성공값을 만들지 않는다.
     void ReadCurrent() { owner=context.gameplay->player.battleOwner;editor=context.gameplay->world.editor!=0;productionGlobals.bridgeType=context.storage->links.bridgeType;backgroundType=productionGlobals.backgroundType;backgroundFrame=productionGlobals.backgroundFrame;point={context.gameplay->cursor.screenX,context.gameplay->cursor.screenY};cursorFlags=context.gameplay->cursor.inputFlags; }
@@ -265,7 +266,11 @@ void RawProductionControls::Close() {
     }
     impl_->common.lifetime.Cleanup();impl_->rootToken=0;impl_->budgetToken=0;
 } // 같은 자식 우선 수명으로 현재 생산 소유자의 등록만 반납한다.
-RawProductionControls::~RawProductionControls() { impl_->menus.SetExternalGumps({}); } // 공유 출력의 참조부터 끊는다.
+RawProductionControls::~RawProductionControls() { impl_->menus.UnregisterExternalGumps(impl_->drawRegistration); } // 자기 출력만 반납하며 다른 세대의 생산은 유지한다.
+std::uint32_t RawProductionControls::RootToken() const { return impl_->rootToken; } // 동일 실제 루트 주소 별칭이다.
+bool RawProductionControls::HasNodes() const {
+    const auto& s=*impl_;return s.rootToken || s.budgetToken || !s.dividers.empty() || !s.grids.empty() || !s.items.empty() || !s.images.empty() || !s.texts.empty() || !s.backgrounds.empty() || !s.hints.empty();
+} // 실제 scalar 해제가 모두 끝나기 전에는 처리기 주소를 반납하지 않는다.
 std::uint32_t RawProductionControls::Construct() { return impl_->Construct(); } // 실제 원문 생성만 수행한다.
 void RawProductionControls::Open() { impl_->Open(); } // 실제 생성과 첫 갱신이다.
 // 예산/아이템/등록ID를 재생성하지 않고 기존 Attach의 자식 재배치만 수행한다.

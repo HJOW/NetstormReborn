@@ -1,0 +1,1882 @@
+{
+  "unit": 417,
+  "goalComplete": false,
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "originalGameExecuted": false,
+  "newNativeExecutions": 0,
+  "productSha256": "92299a09c2e56a08688fde1a24b16373d8a5f2eeb469d7e38cc15b41bcc692c9",
+  "testBinarySha256": "1647c924f3db987c9526084d0d73c74e81cf75077b52b3b79140fd05049c4c5f",
+  "sourceHashes": {
+    "cpppj/src/client/RawButtonControls.cpp": "00a0c79f673b5f295767b7448d8195f542ce0b9bf8c247dec0bf4c68cf46413b",
+    "cpppj/src/client/RawButtonControls.h": "528cbe7b124bad23e58f65814ef24f469326162882600f531a50cff2ec90fa85",
+    "cpppj/src/client/RawMenuControls.cpp": "42774349001f448620abd38d4f5d79ed615ceaefaf2ac18426ba1248e4b24ab1",
+    "cpppj/src/client/RawMenuControls.h": "91d799b56fce08be23d43395430f2a3b75a49b82ae0a8335a08d649ee04698c3",
+    "cpppj/src/client/RawMinimapControls.cpp": "dd0794ee16952baddb4e9e16ab4921db51ca60fade47e71eb753e45b9fb8bd8a",
+    "cpppj/src/client/RawMinimapControls.h": "b27183ae11c7c153213c491da5ef641ba0885dafa7fea953fa07778cb6626708",
+    "cpppj/src/client/RawProductionControls.cpp": "a8b2b7e5c9a2415c10d3e615426d4e403ef8b2f69e8bdea8d0804824a7ae148b",
+    "cpppj/src/client/RawProductionControls.h": "49420e3afca50e379fefed1e27ea0c3171ac21323920c1ad51b68687a5031ccc",
+    "cpppj/src/o/SquidPop.cpp": "f2e60791258ce71dddf23ee346e3a4dc67448f248ae9e65c56a59bfe09eb2f59",
+    "cpppj/src/o/SquidPop.h": "0d348f7c8c8fb9f6311a774e75b75b59aeabc24141c35bbaa518c64e9aa43b93",
+    "cpppj/src/o/SquidUnpop.cpp": "630ee43d42d0116fbce5a60642aa66c6da4689bf09348b990cbde75c179d9dbe",
+    "cpppj/src/o/SquidUnpop.h": "f003c599ddd0da6fcf5f5af7ca3700b90e4d12765df3a76f71e610a783635f1b",
+    "cpppj/tests/CampaignSessionTests.cpp": "cea987103dab3303ed8e1c68efc7d4e2497c6a209804fe1014f119c6b14e3c92",
+    "cpppj/tests/ProductionInitialContextTests.cpp": "96a73ea9c981d865bac31541b609482efec5e2f131dcbb0ac275a74732031375",
+    "cpppj/tests/RawMenuControlsTests.cpp": "554a13fe45d33246bc8d4d958d7ad96ce3b92401289bf4cfb1512d553a6157a5",
+    "docs/exe/cpp-hud-lifetime-20261025.md": "616fc133a1d7ee5e818b0c441163554ffa3fdf9881985e8623e8951bb930a9f1"
+  },
+  "referenceHashes": {
+    "AGENTS.md": "7f853771930147c26e67d444ced94114992510a3fa072f5ed6bd63da7ba88bd9",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "cpppj/src/client/UberRootGump.cpp": "caf4194b597d3146ea1c80f27bb119d56f56b72e6e02a67d0f7bc7a00d1e92ac",
+    "cpppj/src/o/RawMetadisplayDirty.h": "dc985bd7adf108f50cf37b4752127e4aba5a4f20e81ee6978df434eb31dbf9b9",
+    "cpppj/src/o/RawMetadisplayDirty.cpp": "ac6035e88d02430e2dc3ff1f4531a2bcd07b72286f6e15bf3e95b3f6770cbae4",
+    "cpppj/src/o/RawMinimapRaster.cpp": "c2c331a1f6373d2cd6b55c6c2c3f7d43d8e1549ffe4c26bfe17bb13d816a0328",
+    "cpppj/tests/fixtures/tutorial-one-harvest-six-slots-ui-input.tsv": "7f0c0b185f18175113a9ee4593302f57064c22fe00271a4ff63ee6e7b935a7ac",
+    "tools/cpp_tutorial_harvest_smoke.py": "d472f305edca8fefad63d13c8b12e2312bdfdb7aab7c0ad39dfb8cf68d12f375",
+    "tools/cpp_tutorial_two_smoke.py": "4c78eadeee9a752c10417168e4033d83941ccfacb34bb52ff778f97d995fb9d4",
+    "tools/cpp_editor_selection_smoke.py": "e2e37a63bcb4dd1e0870a8fc58521ca187cc3df2d489fa4805447809490a1d17"
+  },
+  "rawHashes": {
+    "extracted/cpp-hud-lifetime-417-audit.py": "4a08a167112fe8b70c84f67dbc1dc06f052ff473d75437ed1db0dc9f6b623e14",
+    "extracted/cpp-hud-lifetime-417-baseline.json": "9d03264ad32c259d1eeb60181f4378b87b4d9beb7bd98bb74dcc32ef9bf45d1d",
+    "extracted/cpp-hud-lifetime-417-build1.log": "72dc112f4124d0fde1122dc1ae575b8e71e2bde6d99a77558ed7f2d3fccf540c",
+    "extracted/cpp-hud-lifetime-417-build2.log": "1aec5935e532cecc881894f2d6f0316ef43fa7ad8a6bd4f7d5fb204f45230bfa",
+    "extracted/cpp-hud-lifetime-417-build3.log": "68daf5268753a6f0253917d033a76282e07803e3b45f8c1951a34f7cbc6a3d34",
+    "extracted/cpp-hud-lifetime-417-CampaignSessionTests-before-lifetime-fix.cpp": "d3ed2dd4c76b7423162a9fef3abc0eedf6ecd26f41e43ad1c2034a5c257f997e",
+    "extracted/cpp-hud-lifetime-417-ctest1-tests-failed.log": "f0515d1b5f2c1fe58ad4ce17b6440ce123e9aef2da074ac9812533a8b7242122",
+    "extracted/cpp-hud-lifetime-417-ctest1.log": "b4f8aa4c86dd3853c3e985fed446b0e6fd5cafb3405048a67607f4b70b39621f",
+    "extracted/cpp-hud-lifetime-417-ctest2-tests.log": "3acf0a26e02c300e8df751fedfc75176d0e8074babd62780f033d2272b0a9f68",
+    "extracted/cpp-hud-lifetime-417-ctest2.log": "01d7d0e67679b09163c683f697bd1c58cb575c36048bdb16359b24848f0733e9",
+    "extracted/cpp-hud-lifetime-417-early1/A.bmp": "e69f966d85cdd6638e88878b8500bb3cc0c10aae92f9cdca8384f779d65a21bd",
+    "extracted/cpp-hud-lifetime-417-early1/cycle0.bmp": "d613fccd88d705665431d31b6ad536b17f18b65c289e333494bbb398e935777a",
+    "extracted/cpp-hud-lifetime-417-early1/cycle1.bmp": "96452401606d0721c4a860962ecdef0cf1108d1632188edee388b952af371d26",
+    "extracted/cpp-hud-lifetime-417-early1/cycle10.bmp": "00bb754c1c545f7a97bdc5d748cc825a93f524dadf09ff2ba20589deb729cc29",
+    "extracted/cpp-hud-lifetime-417-early1/cycle11.bmp": "0a04d4b02542d3a0216fc7f192e317da2c8d2aaad33db1dd65590e4bcff500a4",
+    "extracted/cpp-hud-lifetime-417-early1/cycle12.bmp": "132eb48cafa4c2ce4e4c14fc8d2f73d1fb43ba3a81b41d9f23d3d33bc4a08e63",
+    "extracted/cpp-hud-lifetime-417-early1/cycle13.bmp": "8e3a3bacd0e2183fa02e55b2428e12ce78786a33f114cada959f9cb0cdd7e4b2",
+    "extracted/cpp-hud-lifetime-417-early1/cycle14.bmp": "dc7cde9b1e5703fc502281c457d974de17a9faa8191a62b1e5fd5301adbc80e8",
+    "extracted/cpp-hud-lifetime-417-early1/cycle15.bmp": "39ba8d23d1baae12592ac5449e196ae96955558bd08c307ec5463b4f34b19e38",
+    "extracted/cpp-hud-lifetime-417-early1/cycle16.bmp": "f08f3a9aad93a3e2b4f115f962e8f687ee761b77a1385282c3c1ad9757d5db34",
+    "extracted/cpp-hud-lifetime-417-early1/cycle17.bmp": "0e9b89781945d77a247fba44bc792ffb5d12ebff1946856a86cc9a031fab71a2",
+    "extracted/cpp-hud-lifetime-417-early1/cycle18.bmp": "9d6484793f20f0ae68fe3f5479187c0a5ccb5284c1b89111aaaeea46659b826f",
+    "extracted/cpp-hud-lifetime-417-early1/cycle19.bmp": "b60dfd6622c45983fc6241a41d0d04207c76a31360f4b1ca5fc40cbf5c52c053",
+    "extracted/cpp-hud-lifetime-417-early1/cycle2.bmp": "1ea11ce0be445509100780f7ed2d85bcbf17e3f4aab4acbc802ac76cd01db84a",
+    "extracted/cpp-hud-lifetime-417-early1/cycle20.bmp": "a602cd57e726dbb0e80eb84697dea3faba209150800ae83a2ebc8b3c6dc3190d",
+    "extracted/cpp-hud-lifetime-417-early1/cycle21.bmp": "82b31badc6e98755c985d62cf1d33160b8c45c695cd9bca9d7705a6577df7fb0",
+    "extracted/cpp-hud-lifetime-417-early1/cycle22.bmp": "4a0b1bb51a1cd21f4663fd4714bc8cb424011a8ea2a926bee3fd95fd418b497b",
+    "extracted/cpp-hud-lifetime-417-early1/cycle23.bmp": "4d5243b7d83cb8d73c091b94a818139b7f50e62699900db4b812c70933f54140",
+    "extracted/cpp-hud-lifetime-417-early1/cycle24.bmp": "23c7c81197ed0d45b9e4921585d16db4ff03d9c027894a876d3037c9b3aedf15",
+    "extracted/cpp-hud-lifetime-417-early1/cycle25.bmp": "5737dd82f4fd889c4ecad46c5d09f459e128fd3dfc89a19e87545d3cdbfd372f",
+    "extracted/cpp-hud-lifetime-417-early1/cycle26.bmp": "d7d8b5be5e4c91a55339fbc0ec0454d82253952c3c29e0308ac3457d3a5d4df0",
+    "extracted/cpp-hud-lifetime-417-early1/cycle27.bmp": "dce25a0934b72e38b9d592560172b6278d7f3ef5a6df1b249f0a41db433b5a69",
+    "extracted/cpp-hud-lifetime-417-early1/cycle28.bmp": "6f91b3d2973fe30bc3e080cb8aeae08c9640ddb10ea6d6b2eeb308ce7894f20d",
+    "extracted/cpp-hud-lifetime-417-early1/cycle29.bmp": "2e13205bc5dfff9732039f59cfc970759c46e5d44f507807ca4c80f392c0aac1",
+    "extracted/cpp-hud-lifetime-417-early1/cycle3.bmp": "93c6eaaacc50222f41fdd3b88322c798db7034f4d4ac12f04b43d1fd54286e17",
+    "extracted/cpp-hud-lifetime-417-early1/cycle30.bmp": "5afb405902ace8a78bf8bc62e731b5d003b639d12b2be01693351176ebc4ab2b",
+    "extracted/cpp-hud-lifetime-417-early1/cycle31.bmp": "be7f6b37a3a90329fea1482cc0f6d2158d14502fb499dd8c78e8ba5a8fa6f565",
+    "extracted/cpp-hud-lifetime-417-early1/cycle32.bmp": "6daf17e98e6793d0a509acd06fd6ccc5090ff54d29b4b7526becc85894962b86",
+    "extracted/cpp-hud-lifetime-417-early1/cycle33.bmp": "a8b5a44915d5f378d1f6c59f6e70ec5cd65dadf32e7f4cf9b1234adf9d72240c",
+    "extracted/cpp-hud-lifetime-417-early1/cycle34.bmp": "6ada995702438b7cb36c904b15998d18d1c5fe1cb7371b879f6f2154c3354c05",
+    "extracted/cpp-hud-lifetime-417-early1/cycle35.bmp": "c4cac7bdf12688e2fa43187ac57f9a1769550485b042cc752b463b324a331918",
+    "extracted/cpp-hud-lifetime-417-early1/cycle36.bmp": "cdae6f8679c0deb7936fc60e79ce7e7b91859eb38c65c850302feadd807ef3ba",
+    "extracted/cpp-hud-lifetime-417-early1/cycle37.bmp": "dcdc439028b1ae735c23918dc7f884eac63718335b1b093b7e5415c26f4d5df4",
+    "extracted/cpp-hud-lifetime-417-early1/cycle38.bmp": "421d65a7d80f0ad6ff4fcf10eb3feb295f375bb8bef618b4f6a200127ead781d",
+    "extracted/cpp-hud-lifetime-417-early1/cycle39.bmp": "146fa75d5c698492f3a6ab40567cd3a12768f74e06598d87fcd43d1caba7c4a6",
+    "extracted/cpp-hud-lifetime-417-early1/cycle4.bmp": "016b51688a52a6794b1628db42776cbae79c6cd3531bee8f7e0ae7d2a3562f96",
+    "extracted/cpp-hud-lifetime-417-early1/cycle40.bmp": "62122cd36a74dec994b1132ab772e2a9b6aed6810877bbfbda3b7914a647e56a",
+    "extracted/cpp-hud-lifetime-417-early1/cycle41.bmp": "7602c0218a3639735541a5b607b6cdc0fdca862b22a6f6fe71db4ea63aa40c7e",
+    "extracted/cpp-hud-lifetime-417-early1/cycle42.bmp": "edc7caf0e1822b0ca9f9d573806c8ff8fa2888326e3b78018ff10a86c8b23192",
+    "extracted/cpp-hud-lifetime-417-early1/cycle43.bmp": "674e7fad30b418409f80312e0e9c057c1182ee3dfd34222de1fc14ce4a0ae074",
+    "extracted/cpp-hud-lifetime-417-early1/cycle44.bmp": "5bc4aa0126f3b327e37d38ca6a744f5cff26b3a5d6f2341b87251dfab9a39838",
+    "extracted/cpp-hud-lifetime-417-early1/cycle45.bmp": "96b2263e474a85df7bd12951aa7ea68b4a03e1de10c934c25060c735deb6d10e",
+    "extracted/cpp-hud-lifetime-417-early1/cycle46.bmp": "abaa2c91ccee7ff07403dc3d104a74fc13f10bb5d85fbbfdcaed6cdc55569d74",
+    "extracted/cpp-hud-lifetime-417-early1/cycle47.bmp": "e093ccfc39ce668f228ddc7a52ddb675366deb36929d4b87ffc4ef1d5e9f1995",
+    "extracted/cpp-hud-lifetime-417-early1/cycle48.bmp": "c089d2e7dd54401b7fcb774b875b55fea8f74c4fa1bf19fc289a0330cc773582",
+    "extracted/cpp-hud-lifetime-417-early1/cycle49.bmp": "c556b1fb4003ba018a0b912ffb398751c35f0fb93282ed485d8bbb4a60f77692",
+    "extracted/cpp-hud-lifetime-417-early1/cycle5.bmp": "a6477a593c2abec286824afd7ad08a3d81da8380fcc18e6a2680fffe565d9f6a",
+    "extracted/cpp-hud-lifetime-417-early1/cycle50.bmp": "70cb81497fa9c95de2ae9880ff889c86d5beedf427bba2a10083894355b4f7d7",
+    "extracted/cpp-hud-lifetime-417-early1/cycle51.bmp": "13d07005bc650316f64aeaeb0ed46bf7ca289577b76e54400e7ebf6c5d18edb3",
+    "extracted/cpp-hud-lifetime-417-early1/cycle52.bmp": "32888dfdece492711c3802840ac494d8f145ee6e9ffc4bf30a3bb6c4c214de3b",
+    "extracted/cpp-hud-lifetime-417-early1/cycle53.bmp": "3c93517033340e54598bad0df2c40aaac40c54117174d7c7d9e6c9e12d4f7980",
+    "extracted/cpp-hud-lifetime-417-early1/cycle54.bmp": "c95099d961ae1036d464c9e67195cf526448de6ddbc409e18858e42463e00b74",
+    "extracted/cpp-hud-lifetime-417-early1/cycle55.bmp": "eba00c79c85d3f83db965c246950ac6bcba8ecb10898bb6d4a404363f35b42b6",
+    "extracted/cpp-hud-lifetime-417-early1/cycle56.bmp": "6940acce2a9ff5a65dd244e50370134b64f68fc0bef05d3f73d795d5f07127ea",
+    "extracted/cpp-hud-lifetime-417-early1/cycle57.bmp": "3497615022f39d3dd1e99d3ecad3d4cadbcd2653e82ed22a08bf8233d47fbff9",
+    "extracted/cpp-hud-lifetime-417-early1/cycle58.bmp": "fe0ad01b26e9584d66c42e921d250a5301eece342dd3e34652a7803a3be57c37",
+    "extracted/cpp-hud-lifetime-417-early1/cycle59.bmp": "86c3ee7d9e34dee6021404ac0d23b076fbfe65e881de613af15bfe98221e0ea6",
+    "extracted/cpp-hud-lifetime-417-early1/cycle6.bmp": "f1809428248d94029a1571f5def4a2f3486ca933d2e9a6c0d94e11d9ea7babe4",
+    "extracted/cpp-hud-lifetime-417-early1/cycle60.bmp": "03841214a6fb55d157236bd0bc9116b5ad34ca8969346cf572f8da07bcfbf9b3",
+    "extracted/cpp-hud-lifetime-417-early1/cycle61.bmp": "fe168e1047950d21d17f9083ad575f9c661399eb29d4334647a167acbd25d7d0",
+    "extracted/cpp-hud-lifetime-417-early1/cycle62.bmp": "84425c2c29217d9054934c6d2acb8c10e096d7b3f179238682f349da526918c7",
+    "extracted/cpp-hud-lifetime-417-early1/cycle63.bmp": "870aadb390cf7b9fe900b8f17f27838e7e99f498a7659aac2c6a7638a44f30c3",
+    "extracted/cpp-hud-lifetime-417-early1/cycle64.bmp": "d5d18a33b5a4bc68ef8496eb63cfb75774c90b64d314749ef1c1b6cd0eb69d47",
+    "extracted/cpp-hud-lifetime-417-early1/cycle65.bmp": "bd15096fdb5cb0491a24d1de41f39d4b8803fbedb51c0a326b830ca5a7de571c",
+    "extracted/cpp-hud-lifetime-417-early1/cycle66.bmp": "b1f238aec7ef3e078a760845d114af16f1a42ffa1d331898d64bcb46851dbee1",
+    "extracted/cpp-hud-lifetime-417-early1/cycle67.bmp": "81be009f894216365183d5fe60f02a1984f72557206511dab42ff35a6568de51",
+    "extracted/cpp-hud-lifetime-417-early1/cycle68.bmp": "a31c344e4b752c936213653612df0e05da25f58f94f99f402346e0f94a0366be",
+    "extracted/cpp-hud-lifetime-417-early1/cycle69.bmp": "fede93892be3c230e1fa65638954e576b26626f437030ee8cde1a3fe349b5b37",
+    "extracted/cpp-hud-lifetime-417-early1/cycle7.bmp": "0a81d5478afc07882aa2d2f102702f51ec671a59f9a1ae77acd777a199896f22",
+    "extracted/cpp-hud-lifetime-417-early1/cycle70.bmp": "767f07303be29b06cb5105a5433a5abb754454dc22925749901680656dd50301",
+    "extracted/cpp-hud-lifetime-417-early1/cycle71.bmp": "fa826f565dad486a5f465e0b1143cb7b2f388d64cac2bddd304e567e012b1299",
+    "extracted/cpp-hud-lifetime-417-early1/cycle72.bmp": "63d54ab47f65a18f31b23617651d4e518e817f494869f5367e5f0e030f173038",
+    "extracted/cpp-hud-lifetime-417-early1/cycle73.bmp": "b3af3e7758ee609fd4e5476e666ace38356b62faac6a683c20f76b5148980e66",
+    "extracted/cpp-hud-lifetime-417-early1/cycle74.bmp": "facf85c4f4eab04952a277daaa58182f77309a0ca679a4f70052cd2d5a035ed2",
+    "extracted/cpp-hud-lifetime-417-early1/cycle75.bmp": "7153825e2242133e489e963188fc2277cc8bd88356d02292c4a088b48274c0ee",
+    "extracted/cpp-hud-lifetime-417-early1/cycle76.bmp": "991bcdcece8a1a31fe15af98a6204159841e8cfaf1dec8f67a0235fc23609001",
+    "extracted/cpp-hud-lifetime-417-early1/cycle77.bmp": "d323b87d0f200ec201b56e932f2305f117db257ebd80b539b955c4229adea28b",
+    "extracted/cpp-hud-lifetime-417-early1/cycle78.bmp": "a2e39e449a4442233e9299b1774128e789083257f2f93b7afa1ba3787e080ab7",
+    "extracted/cpp-hud-lifetime-417-early1/cycle79.bmp": "cc0974e6dc4b91f24cd6d20bd4f777c745609af23c15ae05bbb301a655989979",
+    "extracted/cpp-hud-lifetime-417-early1/cycle8.bmp": "327791a044996f8f54f2d38a9dc3fbe933cca1230d102b47cb328554a599533b",
+    "extracted/cpp-hud-lifetime-417-early1/cycle80.bmp": "b32283d7604cebeaf036c3ea47df47c8cda9b6743a4210a1db6243979d109383",
+    "extracted/cpp-hud-lifetime-417-early1/cycle81.bmp": "c63e24e1eba21b4dbd9e5693ba75e61f38a3392232d2e86ea3c9f087f561570c",
+    "extracted/cpp-hud-lifetime-417-early1/cycle82.bmp": "814a7f8486a7f10915958e0a813d357e97cbb2cb397cc739c85d1e5b36e1cc96",
+    "extracted/cpp-hud-lifetime-417-early1/cycle83.bmp": "52af214ef30a96ad45ef4c7b82c4c682344b165cb5ed9bb1b70ee5d4772b3423",
+    "extracted/cpp-hud-lifetime-417-early1/cycle84.bmp": "07f0852c115e1340221e9c5f9b8c93164d58dca8be097fe06262ad33f4aa26b6",
+    "extracted/cpp-hud-lifetime-417-early1/cycle85.bmp": "4cf45d64157f9fcbe4d6b79cc93751872e16ebfacfcc2381bd2f70e26496010a",
+    "extracted/cpp-hud-lifetime-417-early1/cycle86.bmp": "8ab5dd23c2f7d3be8e1fa8be79bb39089dcd55200fa9f956fcbc117be0ab050b",
+    "extracted/cpp-hud-lifetime-417-early1/cycle87.bmp": "c3507c7f75d2595e995c87c59d0d45dce00e8b3badb47daa815b0612114b8212",
+    "extracted/cpp-hud-lifetime-417-early1/cycle88.bmp": "bd4727038d2ebd02315a819474058d1a71ad8f3b40936d234b1cfaa42e4cf5aa",
+    "extracted/cpp-hud-lifetime-417-early1/cycle89.bmp": "82f1a243b1c5a27c7aa809224c69f1624d67d1bc449444ce7734f7b4e47e0c39",
+    "extracted/cpp-hud-lifetime-417-early1/cycle9.bmp": "7bd4bf3f74ccb9e0f21148b27f6592230a7dd3ba4513b4435b9982a46768f1b3",
+    "extracted/cpp-hud-lifetime-417-early1/cycle90.bmp": "c66dbd6052fa7f9fd6b9e963fd5a269e1f25270657e1f4d04a2b582996b55207",
+    "extracted/cpp-hud-lifetime-417-early1/cycle91.bmp": "3957789136234b12a1ca650b6fa2193173ea19fead846b650d7d6086899816cd",
+    "extracted/cpp-hud-lifetime-417-early1/cycle92.bmp": "af5484f9c48ae984d1ffc7f50842ee1ffefb9dc66b7c9d7ee3844527cb6251e8",
+    "extracted/cpp-hud-lifetime-417-early1/cycle93.bmp": "10ebc0aa60f42536dbcedf6684765eea101e8a805b0da3987d29f8434dc9658a",
+    "extracted/cpp-hud-lifetime-417-early1/cycle94.bmp": "93448233384940439539409e48db0b73d5aaf7d6866c319e5bd0cb78de55a6f8",
+    "extracted/cpp-hud-lifetime-417-early1/cycle95.bmp": "7064fb84ec91973e90df5aabfe54302b3fe06f9a94b68b908bee7aec44a3faf8",
+    "extracted/cpp-hud-lifetime-417-early1/cycle96.bmp": "bf44fdce39c368e23e3d7333d1277c6072aee2539d7f036920da1a9c700365e6",
+    "extracted/cpp-hud-lifetime-417-early1/cycle97.bmp": "1dd16f459b4572e12a2576222fa0e52cd75089f484a2f8419e72098c7b0eb534",
+    "extracted/cpp-hud-lifetime-417-early1/cycle98.bmp": "68b01bf0fd17276fa07c9a014cb7e49bc194f9c604b7c4525fc662aa6dcc469f",
+    "extracted/cpp-hud-lifetime-417-early1/cycle99.bmp": "d2419eb77efadde299d0d12449d50ca63bfa6feeb0f88c4e8f88a1ce044f9deb",
+    "extracted/cpp-hud-lifetime-417-early1/execution.json": "23e6fbe2f829dd668a08aa09068c2d00d74856351c03e1254ac29277024bc6d1",
+    "extracted/cpp-hud-lifetime-417-early1/goal.bmp": "8d9400592ad8658e36ee7e13cc9c9763a38ae2101f7ade94ad2a55cd628f9a8c",
+    "extracted/cpp-hud-lifetime-417-early1/goal.png": "8f2a0dbf3bd2a6b81c602bcb3efa52d89e9c20dc5bb61932603931db0c6990d8",
+    "extracted/cpp-hud-lifetime-417-early1/originals-after.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-hud-lifetime-417-early1/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-hud-lifetime-417-early1/prepared.json": "0f6ad95d36d8dcda838f0abd4952cb887fee1d1e3eb49c88ad4dfd7715dd90e2",
+    "extracted/cpp-hud-lifetime-417-early1/running.json": "fd31912c8ed531fcf0edb58d79e9b751b486e042f147cf1fc93641f27bf9c171",
+    "extracted/cpp-hud-lifetime-417-early1/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-hud-lifetime-417-early1/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-hud-lifetime-417-early1/states.tsv": "eecd2105dc59e6975523e987b00d4d9ce09e26fdcf03850affb9019db85152e0",
+    "extracted/cpp-hud-lifetime-417-early1/stderr.log": "b556892cbd51de82ac129034eec7230fd4d494ff89ce1dd7e05a73090b9994a1",
+    "extracted/cpp-hud-lifetime-417-early1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-hud-lifetime-417-early1/steps.tsv": "9e30df34a6d5965fda60918a5eb33089099a17970a9760365f8c0c2d51cc490a",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/A.bmp": "91013ab805223db48bac1bc30d3493b34cde5cfad81e45deddb72f7f1e13fe39",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle0.bmp": "06f9a3049e0fc58dd5e17b43340b3cb0d0e1429e127023a1339ba669d3180a2d",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle1.bmp": "864847a9b31e7a602ae28a0c8376eba067bff0d1b03f6d882c27d2ad395c480d",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle10.bmp": "64ef7b350b4f3b4c416fe69841aadbd75d107b341d05e02493f0e5637851471b",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle11.bmp": "91fe7283d0dfe2eba93ef73cc319355f03058465d7da6dda62d6b69d6576028a",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle12.bmp": "5d628b5f7c0467c7a59ff277a3152ee5b652e22d7ddaf23183910cd245cb5c2a",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle13.bmp": "34acf04812aa4be58659c455291095493f39b943e24914d9a9973c6cdfee082f",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle14.bmp": "8324d823edeec7c42d0c4b317eeb76b15394cc7a6b9bf5e4db24997575b982f9",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle15.bmp": "d1d0001a5cf85e80e1092d5c8480c3b280ff986bcb55c2adb8b9ab356064a63e",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle16.bmp": "e1ebf12d2d66632a4594aa829b80d41545d54d09dce81e1d029d45dfb82fe474",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle17.bmp": "87be0acb7d9530f988e0bbb39c24b27b07866b77529d1121471660197ddf3900",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle18.bmp": "7b6336c45172e57fdca62f2c55d71b21c394d2dfba13f6c15cce04a916c5aea2",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle19.bmp": "a73c46f09614cebea4f29c169937d26e05922099fbc0cc5c8c248a602f2ebac0",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle2.bmp": "30de9bb230dbcce909096b7662c48fd97ab8db190bb48bcf0dafc3abf7ba1565",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle20.bmp": "00b9dc3a290b7c39d570563f0cfc4779312cb993579867ead5a597d726dad946",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle21.bmp": "9eff91ae9e91ed842ff63a4cf8b4732c16f15b51d6f3f6ff3804f4b45475ad12",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle22.bmp": "627175085bf93ea1ef0f805886750441c2249ba9994cad4131469d2b0b11928e",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle23.bmp": "5aaebf925234a5f7030947bed02103f4eb96968c4333ca55f505e6000340c160",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle24.bmp": "22cfcf1c33c29742117418b3cb89ef9c84b765afb15df9c63787f251684b1266",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle25.bmp": "7edc650f86462d38cc3898dae906aa391a458c2155789cdbddf126e946d48d77",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle26.bmp": "2eba4a0670cd70b9a1ecb55537c63ea101f6b4e147c54bda0c9cb95a08e24bc8",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle27.bmp": "9d8170e226ef18bf37c75ffbe79d7d3672a6dc2759f4c6ec162b39307b826a8a",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle28.bmp": "aff8be3304256242fdd09c74048146a0de5e5cecea1f8c50f0954f98d133ea78",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle29.bmp": "9463c5001e03ba4e08cf0aee5d26eeb4ef6041f8e5f9664ec49ffdc3b51716ba",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle3.bmp": "f373b54d5885b709cfc341557840c928315e5722e247b9c803981c992be14778",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle30.bmp": "457655d70c6b77a21c19741e481b9026b1afdaea9f79bc4f3fa0fa61083e4472",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle31.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle32.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle33.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle34.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle35.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle36.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle37.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle38.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle39.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle4.bmp": "712c75563ab81a681d027f2c8d0126fecb6989755aec402cce5c1c72d9dd7e28",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle40.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle41.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle42.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle43.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle44.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle45.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle46.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle47.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle48.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle49.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle5.bmp": "dc60e24fb7e50b57a047de9b388e6f0efd6ae90d3d2bf063560c3c4db7cf02ad",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle50.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle51.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle52.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle53.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle54.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle55.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle56.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle57.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle58.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle59.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle6.bmp": "663fb8d6a676e5b88c47b12d082b9e0ad4e3b2f64cf1a9130d13f4ac40f1ab82",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle60.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle61.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle62.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle63.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle64.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle65.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle66.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle67.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle68.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle69.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle7.bmp": "b5a86fc4b4446ac3ec4f03dc12bae2292e59fd0da6549057fb00f230c9cea4f0",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle70.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle71.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle72.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle73.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle74.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle75.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle76.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle77.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle78.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle79.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle8.bmp": "5a4c8e1de7b7e077cb7d1aa3ea7d8659a5168f91ff677f24ebe0e72b55709723",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle80.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle81.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle82.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle83.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle84.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle85.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle86.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle87.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle88.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle89.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle9.bmp": "f7b4b4d02a8af29c256601ba757dac2ec44bcae715bdea57004ade2030485d75",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle90.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle91.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle92.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle93.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle94.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle95.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle96.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle97.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle98.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/cycle99.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/execution.json": "29d6ddcbbd3f1338d0a564f7209d002d8467dd6247ff1e2c4e8f949fe17b5233",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/goal.bmp": "7aefdc8c131b5c63bc2ed9b5458a8b33772497fc621977b6e84d0e01a36cc209",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/next.bmp": "d9bad8966544bfe7e1cf23aec1be97f6b26cfdebbb8df60b16cdd0b419e4799a",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/nextBriefing.bmp": "199cf34f47a3984a30f4ea752dbb80ce279eb181a912037c83d4a87aa4c87c8b",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/nextBriefing.png": "73eec63be3d84970575210625fdd7ed51adcf0c20985fbfcfc74cdcfbd0c8711",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/originals-after.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/prepared.json": "06c93fb679e49ef354bbd912974ed13ff4bab53901cd5f755433cb0a0ea1750b",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/results.json": "5c7b662788bbb6db0d436781526e08d5893e01f5f15fa42bf8c3003ca316121b",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/running.json": "949eea32779a6332d3083f3ab1d82f180c64f93f46174802034169bf9bcce0a4",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/states.tsv": "bb7a501020536aad8c59d28041bb6b0c0cb1546b5570551897d2810b517d4865",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/stderr.log": "6f786a44746592199af0c4b3de0ec2cc5603c46b5ac1a67a42c715f1d0cb59b3",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-hud-lifetime-417-early1-northwest/steps.tsv": "010806bfa1a88416f4b6b4d81eac056ec3c155babecc6276220b434ef43a5208",
+    "extracted/cpp-hud-lifetime-417-early1-northwest.log": "37427df34f89a965c6ffdc5ea8f39ab4fd0b102e489c38e4bfa7381fe676ec16",
+    "extracted/cpp-hud-lifetime-417-early1.log": "a11d733522d48c522ff6d6d2518adb344042fd4f79e659a2adb50431da4fc1c0",
+    "extracted/cpp-hud-lifetime-417-early2/A.bmp": "a3d1ee85bf04c4607bf2e5e5baae85640509912b912883df6851f5782b3371b1",
+    "extracted/cpp-hud-lifetime-417-early2/cycle0.bmp": "4fda6025f4cd943fa737feff79e15ce8714d0d3b74a77a7fc9f5b4d768be00cc",
+    "extracted/cpp-hud-lifetime-417-early2/cycle1.bmp": "77b4d01fce81becc03c62009f184d24be9f75bc738aca006aac2ee0003490ce6",
+    "extracted/cpp-hud-lifetime-417-early2/cycle10.bmp": "77fc57837c88a829f31c5c71bafadd1f8b5ab10bd7619cf6fa5ec67077d9a827",
+    "extracted/cpp-hud-lifetime-417-early2/cycle11.bmp": "22b11bdeb111d270ddb3abfcde38bd6fac6f2808d6e25fb07e78760d92a8ad65",
+    "extracted/cpp-hud-lifetime-417-early2/cycle12.bmp": "a53e8094dd2ef8d18f693824596a5e70c37e47cbce0214b92aa1bab7305d0487",
+    "extracted/cpp-hud-lifetime-417-early2/cycle13.bmp": "e7984111643ab11e1be1b2a5daea5f32b6f87a6d6459041c67ebf16288c62707",
+    "extracted/cpp-hud-lifetime-417-early2/cycle14.bmp": "c2c677a91ea17fc153a1d18d0e2d5bca8c0ad8dda280f13c1890b5bb020396b8",
+    "extracted/cpp-hud-lifetime-417-early2/cycle15.bmp": "cc72e68d59ee2a8175528bc474e550ed4b739f15c748e68a7e603c40935a05c0",
+    "extracted/cpp-hud-lifetime-417-early2/cycle16.bmp": "566cf81b1134278a1f1871b8b4d5ffe9a274b7eca947e0474685c68765c982c5",
+    "extracted/cpp-hud-lifetime-417-early2/cycle17.bmp": "fcaeea79c791e83fde08aa3579f845305d8bc74f216cb0ea4ef8a87ce854b72f",
+    "extracted/cpp-hud-lifetime-417-early2/cycle18.bmp": "f017b328a1c78b5a06267fc0be0d74d17e2cb36b54eab0b71597d1bc81769112",
+    "extracted/cpp-hud-lifetime-417-early2/cycle19.bmp": "5642d91f8448e8e0086841312261c3bb99035e2ce5f9c47382be3e3459d15f77",
+    "extracted/cpp-hud-lifetime-417-early2/cycle2.bmp": "12992bf4ad1a19371d5597f110e6a80eede2ed6e7504f10107fbe4b279c36468",
+    "extracted/cpp-hud-lifetime-417-early2/cycle20.bmp": "5642d91f8448e8e0086841312261c3bb99035e2ce5f9c47382be3e3459d15f77",
+    "extracted/cpp-hud-lifetime-417-early2/cycle21.bmp": "5642d91f8448e8e0086841312261c3bb99035e2ce5f9c47382be3e3459d15f77",
+    "extracted/cpp-hud-lifetime-417-early2/cycle22.bmp": "5642d91f8448e8e0086841312261c3bb99035e2ce5f9c47382be3e3459d15f77",
+    "extracted/cpp-hud-lifetime-417-early2/cycle23.bmp": "5642d91f8448e8e0086841312261c3bb99035e2ce5f9c47382be3e3459d15f77",
+    "extracted/cpp-hud-lifetime-417-early2/cycle24.bmp": "5642d91f8448e8e0086841312261c3bb99035e2ce5f9c47382be3e3459d15f77",
+    "extracted/cpp-hud-lifetime-417-early2/cycle25.bmp": "5642d91f8448e8e0086841312261c3bb99035e2ce5f9c47382be3e3459d15f77",
+    "extracted/cpp-hud-lifetime-417-early2/cycle26.bmp": "5642d91f8448e8e0086841312261c3bb99035e2ce5f9c47382be3e3459d15f77",
+    "extracted/cpp-hud-lifetime-417-early2/cycle27.bmp": "5642d91f8448e8e0086841312261c3bb99035e2ce5f9c47382be3e3459d15f77",
+    "extracted/cpp-hud-lifetime-417-early2/cycle28.bmp": "5642d91f8448e8e0086841312261c3bb99035e2ce5f9c47382be3e3459d15f77",
+    "extracted/cpp-hud-lifetime-417-early2/cycle29.bmp": "5642d91f8448e8e0086841312261c3bb99035e2ce5f9c47382be3e3459d15f77",
+    "extracted/cpp-hud-lifetime-417-early2/cycle3.bmp": "26cb1b238297503fdce2af9dfb71619b0311d8023db1a1b8ef01eb88708af74a",
+    "extracted/cpp-hud-lifetime-417-early2/cycle30.bmp": "5642d91f8448e8e0086841312261c3bb99035e2ce5f9c47382be3e3459d15f77",
+    "extracted/cpp-hud-lifetime-417-early2/cycle31.bmp": "5642d91f8448e8e0086841312261c3bb99035e2ce5f9c47382be3e3459d15f77",
+    "extracted/cpp-hud-lifetime-417-early2/cycle32.bmp": "5642d91f8448e8e0086841312261c3bb99035e2ce5f9c47382be3e3459d15f77",
+    "extracted/cpp-hud-lifetime-417-early2/cycle33.bmp": "5642d91f8448e8e0086841312261c3bb99035e2ce5f9c47382be3e3459d15f77",
+    "extracted/cpp-hud-lifetime-417-early2/cycle34.bmp": "5642d91f8448e8e0086841312261c3bb99035e2ce5f9c47382be3e3459d15f77",
+    "extracted/cpp-hud-lifetime-417-early2/cycle35.bmp": "5642d91f8448e8e0086841312261c3bb99035e2ce5f9c47382be3e3459d15f77",
+    "extracted/cpp-hud-lifetime-417-early2/cycle4.bmp": "f36ed4d743e57b3451ae7e14674d8096cd4b3ef54e871ba8f13b3c23e559efeb",
+    "extracted/cpp-hud-lifetime-417-early2/cycle5.bmp": "e79abc7384a295f962e0a739e55d945dca0483f5cfe2094d2c0fcb3d281d57bb",
+    "extracted/cpp-hud-lifetime-417-early2/cycle6.bmp": "e17e857e5772e5888db65beeef852b18d4371216490a6559e5e5d8621d04615f",
+    "extracted/cpp-hud-lifetime-417-early2/cycle7.bmp": "eda8c286615ba0d915adf1f7cfb61dc84f7e2326138cb347908d9c652aa1beec",
+    "extracted/cpp-hud-lifetime-417-early2/cycle8.bmp": "499e4b6bf953a49604fb42efe8a26ad2950692e50e6547f932c2295266e7c93c",
+    "extracted/cpp-hud-lifetime-417-early2/cycle9.bmp": "01ab6b6cac9d52ca1ea3e8a62ec143f1be3e0ccab56cbd924d6f2c27b290386e",
+    "extracted/cpp-hud-lifetime-417-early2/execution.json": "2c83b5c130183c4b5cf1d33320293e608b8e5727cdc25624bae0f40190e2c666",
+    "extracted/cpp-hud-lifetime-417-early2/goal.bmp": "5642d91f8448e8e0086841312261c3bb99035e2ce5f9c47382be3e3459d15f77",
+    "extracted/cpp-hud-lifetime-417-early2/goal.png": "d0a1a8078e0f7153c560011f7aed0aa08f97d3fbcc35499fede580adcd8234d7",
+    "extracted/cpp-hud-lifetime-417-early2/nextBriefing.bmp": "7f4ffcbc30eb3ad4d6bb84f8e186309742d6ee8bf7db9e8baf315020aba63334",
+    "extracted/cpp-hud-lifetime-417-early2/nextBriefing.png": "fbfd5fb006b2d77ba9f1913e7dade25a8bae30b307dd984379952975565aa592",
+    "extracted/cpp-hud-lifetime-417-early2/originals-after.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-hud-lifetime-417-early2/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-hud-lifetime-417-early2/prepared.json": "0dfef7d4bfa4d84f40e8b1a1943fea605328535847939def6b94c8288cc2ea6b",
+    "extracted/cpp-hud-lifetime-417-early2/results.json": "ceb5658922b828e8999572bc1aae8a6a07f1d9e8de105deef2caeabcba46b359",
+    "extracted/cpp-hud-lifetime-417-early2/running.json": "434aa5fd1334e3940c9ab8cfd10f765ffa54139aa7e9a187a866a7c1811c93b2",
+    "extracted/cpp-hud-lifetime-417-early2/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-hud-lifetime-417-early2/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-hud-lifetime-417-early2/states.tsv": "ce15e6772705d108aeb08a565829c41ac153693baec84ce2d5a058c156617180",
+    "extracted/cpp-hud-lifetime-417-early2/stderr.log": "7bda425048640ffbe4f58f699a5c42b3cd433844b83d886ded35b1cce28766c9",
+    "extracted/cpp-hud-lifetime-417-early2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-hud-lifetime-417-early2/steps.tsv": "3475f9b43c607860366d72b1a4a16afc8c0c2cb84e56c048e041debf048ec1f3",
+    "extracted/cpp-hud-lifetime-417-early2.log": "fc5014e6c500d51cdc297b27daad80c1f66ad004fb853b6b625706060ba1367e",
+    "extracted/cpp-hud-lifetime-417-fault-symbol-attempt1.log": "dee3de98b78d7d7257e8cfb4c78b9a8873b5c35ccfe24d8ad07a09cc7bc893d9",
+    "extracted/cpp-hud-lifetime-417-fault-symbol-attempt1.py": "f3c3ccbd3939015abc210b6d314f8c9e50b965262a1ea639e9bbba0f94eb9ced",
+    "extracted/cpp-hud-lifetime-417-fault-symbol.json": "257e9fc7bc1708f76a3c331cd3b9a4e98da3c7f6ccda7acfb14d0f2ad9179c05",
+    "extracted/cpp-hud-lifetime-417-fault-symbol.log": "dee3de98b78d7d7257e8cfb4c78b9a8873b5c35ccfe24d8ad07a09cc7bc893d9",
+    "extracted/cpp-hud-lifetime-417-fault-symbol.py": "9d5bde4e8e04ce592f9868ae1861ec02e6f1ec2f3f40635297ba2f4c1effa8b7",
+    "extracted/cpp-hud-lifetime-417-fault-symbol2.log": "5ba80ebc35cbf14ee8d8b90c59cb5fc21a742e866f0516338db2bbd5c5583794",
+    "extracted/cpp-hud-lifetime-417-fault-symbol3.log": "5ba80ebc35cbf14ee8d8b90c59cb5fc21a742e866f0516338db2bbd5c5583794",
+    "extracted/cpp-hud-lifetime-417-final-source/cpppj/build/bin/Release/netstorm_tests.exe": "2bb6637f49b8404dd75a74eaf48874502d2097141dc68d32e86a6d4e074d2cc6",
+    "extracted/cpp-hud-lifetime-417-final-source/cpppj/build/bin/Release/NetstormCpp.exe": "92299a09c2e56a08688fde1a24b16373d8a5f2eeb469d7e38cc15b41bcc692c9",
+    "extracted/cpp-hud-lifetime-417-final-source/cpppj/src/client/RawButtonControls.cpp": "00a0c79f673b5f295767b7448d8195f542ce0b9bf8c247dec0bf4c68cf46413b",
+    "extracted/cpp-hud-lifetime-417-final-source/cpppj/src/client/RawButtonControls.h": "528cbe7b124bad23e58f65814ef24f469326162882600f531a50cff2ec90fa85",
+    "extracted/cpp-hud-lifetime-417-final-source/cpppj/src/client/RawMenuControls.cpp": "42774349001f448620abd38d4f5d79ed615ceaefaf2ac18426ba1248e4b24ab1",
+    "extracted/cpp-hud-lifetime-417-final-source/cpppj/src/client/RawMenuControls.h": "91d799b56fce08be23d43395430f2a3b75a49b82ae0a8335a08d649ee04698c3",
+    "extracted/cpp-hud-lifetime-417-final-source/cpppj/src/client/RawMinimapControls.cpp": "dd0794ee16952baddb4e9e16ab4921db51ca60fade47e71eb753e45b9fb8bd8a",
+    "extracted/cpp-hud-lifetime-417-final-source/cpppj/src/client/RawMinimapControls.h": "b27183ae11c7c153213c491da5ef641ba0885dafa7fea953fa07778cb6626708",
+    "extracted/cpp-hud-lifetime-417-final-source/cpppj/src/client/RawProductionControls.cpp": "a8b2b7e5c9a2415c10d3e615426d4e403ef8b2f69e8bdea8d0804824a7ae148b",
+    "extracted/cpp-hud-lifetime-417-final-source/cpppj/src/client/RawProductionControls.h": "49420e3afca50e379fefed1e27ea0c3171ac21323920c1ad51b68687a5031ccc",
+    "extracted/cpp-hud-lifetime-417-final-source/cpppj/src/o/SquidPop.cpp": "f2e60791258ce71dddf23ee346e3a4dc67448f248ae9e65c56a59bfe09eb2f59",
+    "extracted/cpp-hud-lifetime-417-final-source/cpppj/src/o/SquidPop.h": "0d348f7c8c8fb9f6311a774e75b75b59aeabc24141c35bbaa518c64e9aa43b93",
+    "extracted/cpp-hud-lifetime-417-final-source/cpppj/src/o/SquidUnpop.cpp": "630ee43d42d0116fbce5a60642aa66c6da4689bf09348b990cbde75c179d9dbe",
+    "extracted/cpp-hud-lifetime-417-final-source/cpppj/src/o/SquidUnpop.h": "f003c599ddd0da6fcf5f5af7ca3700b90e4d12765df3a76f71e610a783635f1b",
+    "extracted/cpp-hud-lifetime-417-final-source/cpppj/tests/ProductionInitialContextTests.cpp": "96a73ea9c981d865bac31541b609482efec5e2f131dcbb0ac275a74732031375",
+    "extracted/cpp-hud-lifetime-417-final-source/cpppj/tests/RawMenuControlsTests.cpp": "554a13fe45d33246bc8d4d958d7ad96ce3b92401289bf4cfb1512d553a6157a5",
+    "extracted/cpp-hud-lifetime-417-final-source/hashes.json": "c0ddc44693218de03d7626c65b1346d15605dc387e452e5c54d2f0bf2f086972",
+    "extracted/cpp-hud-lifetime-417-freeze-final.log": "29244e3e5c9b08d700808977b2759473168afb773d9f37380ce2606747aae78b",
+    "extracted/cpp-hud-lifetime-417-freeze-final.py": "00ee1b8c81755a1befaa5f8ea651a26fd4175cd4ab7576f3e03bea9a3878e47d",
+    "extracted/cpp-hud-lifetime-417-freeze1.log": "730670b1168950b04531e74a4b523121fde2bfc363d85bb8231be545f6a856bf",
+    "extracted/cpp-hud-lifetime-417-freeze1.py": "c194e8e65dfc929dbc7c83800807ce0c42bb527d8f5c546e0009d12832fc0330",
+    "extracted/cpp-hud-lifetime-417-freeze3.log": "c8f1af9234d230b60697e0d31b6868becedb24364c2fba57b90d502652e34d94",
+    "extracted/cpp-hud-lifetime-417-freeze3.py": "80d440474de7885528499002ba25690d7aeea2788c1664e735d27f7341a11c32",
+    "extracted/cpp-hud-lifetime-417-gui-early/campaign.bmp": "e375ac0f254506a91be64e3225242c2bdd6bb42ac725ae25ea447c6771728edd",
+    "extracted/cpp-hud-lifetime-417-gui-early/campaign.png": "48e966186d428cda6ce61afeb9c9a52d9ab860aae08b386526f5926ffd0d73e1",
+    "extracted/cpp-hud-lifetime-417-gui-early/continued.bmp": "3ac85a9eb6bb7a7d7484495f91068a43596da5a4087f2ad39bb79037abf2c1e8",
+    "extracted/cpp-hud-lifetime-417-gui-early/continued.png": "1de73bc20b1a1f2d406b083f8e0064e83561c4c7b8e70badc040c33fa7898478",
+    "extracted/cpp-hud-lifetime-417-gui-early/early.bmp": "3901369f51647844a1df20100cd16b83203ab11e12b2a3b1ec53b008cabbf77c",
+    "extracted/cpp-hud-lifetime-417-gui-early/early.png": "2c8b5f75a958c58326a59f73ccba2787f9c080b651680b9a1c07307f28cb95cd",
+    "extracted/cpp-hud-lifetime-417-gui-early/home.bmp": "fb5f993ebea8189a99ce63bbed9f43347c1bd0be877e7640266a7ee51ead1a71",
+    "extracted/cpp-hud-lifetime-417-gui-early/home.png": "b10cebf02a3a7f7c6fd0e81e72f63ed2ef8ea1acdd37f0e624ad13097acf0a77",
+    "extracted/cpp-hud-lifetime-417-gui-early/loading.bmp": "c9d8e09ac4d4b488ff621a566da38ddb8eb76d3517bf1df0c8ea7dccfc8ace94",
+    "extracted/cpp-hud-lifetime-417-gui-early/loading.png": "7b3e0d3777d35e6991d52e24e62d060a1be9e958b9f0c92364564042cfffb2b6",
+    "extracted/cpp-hud-lifetime-417-gui-early/ready.bmp": "ebda001d5e23b14abbcc4d0e6fd55689a03f551b8b3f97245c5205dff0aebad4",
+    "extracted/cpp-hud-lifetime-417-gui-early/ready.png": "c1571446f1f9ee590f419e30840f8c685630332002210b104a7b45a9413fac5e",
+    "extracted/cpp-hud-lifetime-417-gui-early/result.json": "05a701fae7cb338841599411cb7d4ebd08aa7d41a5dc5fa96ef1267bf880128c",
+    "extracted/cpp-hud-lifetime-417-gui-early/running.json": "bd6c891ccb440ed6d77a471f5c67f84d027f49c6ca4e4d81e71296880e04d5ee",
+    "extracted/cpp-hud-lifetime-417-gui-early/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-hud-lifetime-417-gui-early/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-hud-lifetime-417-gui-early/started.bmp": "faa29083586b1b87e6956eb8b66fe8f54d57040ab9f3aa948377287d0975536d",
+    "extracted/cpp-hud-lifetime-417-gui-early/started.png": "1680a86753b1162a1d446ad97f6c5aa80c1620111253b231d838df84e21d53a9",
+    "extracted/cpp-hud-lifetime-417-gui-early/states.tsv": "51e10a669f94226ab7107510a5149fed8baae859e000c2255e7ee9d4f28bbcda",
+    "extracted/cpp-hud-lifetime-417-gui-early/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/cpp-hud-lifetime-417-gui-early/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-hud-lifetime-417-gui-early/steps.tsv": "a68174234020cf415d86c7ff3d3af07acd256baa6b245cf2fd15cf7e725c7af6",
+    "extracted/cpp-hud-lifetime-417-gui-early.log": "6e5c58d4e29ba73e803464910aa963a5e8e3597ddc643f66e13236dfd1b6e741",
+    "extracted/cpp-hud-lifetime-417-gui-edit/editable.bmp": "86ac347fde566232a3d868f339c71591ea1f6b737ff661d37fa77eec9e83a0f8",
+    "extracted/cpp-hud-lifetime-417-gui-edit/editable.png": "c2ca0684196a904f53c2c1050e034a24a0d4d270b72a3d3f278b6ca75511effe",
+    "extracted/cpp-hud-lifetime-417-gui-edit/execution.json": "4f319e0ecae8fd3dfc0ab8ccb7a7fa38f961b83ac64d9ac21fd0ecdcde023694",
+    "extracted/cpp-hud-lifetime-417-gui-edit/main.bmp": "78508b37669a9706f508a4b89b25b3d2a7d3c0e0cf914cf93d64dccd7177925e",
+    "extracted/cpp-hud-lifetime-417-gui-edit/main.png": "5568372bf07af158b4e848ddd156a5dba1844ec7cf51113064abdc0d61f61af3",
+    "extracted/cpp-hud-lifetime-417-gui-edit/maps/TEST01.fort": "3c8a7d73be785f5b06f4c94aea633697b52d95129ed502ebc43f1efe326bad8f",
+    "extracted/cpp-hud-lifetime-417-gui-edit/maps/TEST02.fort": "85c328b764ccddc6395e0ce582d31b6241b0c6296ed600665d8ceb4465e46640",
+    "extracted/cpp-hud-lifetime-417-gui-edit/opened.bmp": "86ac347fde566232a3d868f339c71591ea1f6b737ff661d37fa77eec9e83a0f8",
+    "extracted/cpp-hud-lifetime-417-gui-edit/opened.png": "c2ca0684196a904f53c2c1050e034a24a0d4d270b72a3d3f278b6ca75511effe",
+    "extracted/cpp-hud-lifetime-417-gui-edit/originals-after.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-hud-lifetime-417-gui-edit/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-hud-lifetime-417-gui-edit/prepared.json": "8305525c073c8c09f5e094aa13c0cb8c0774a448195846cc90d5db5a2f025e70",
+    "extracted/cpp-hud-lifetime-417-gui-edit/requested.bmp": "78508b37669a9706f508a4b89b25b3d2a7d3c0e0cf914cf93d64dccd7177925e",
+    "extracted/cpp-hud-lifetime-417-gui-edit/requested.png": "5568372bf07af158b4e848ddd156a5dba1844ec7cf51113064abdc0d61f61af3",
+    "extracted/cpp-hud-lifetime-417-gui-edit/results.json": "979e7e7071c65352d944e5bfb75286847148645fb122ba27156a5500b31dd7e8",
+    "extracted/cpp-hud-lifetime-417-gui-edit/returned.bmp": "78508b37669a9706f508a4b89b25b3d2a7d3c0e0cf914cf93d64dccd7177925e",
+    "extracted/cpp-hud-lifetime-417-gui-edit/returned.png": "5568372bf07af158b4e848ddd156a5dba1844ec7cf51113064abdc0d61f61af3",
+    "extracted/cpp-hud-lifetime-417-gui-edit/running.json": "d6d832819e38f8f5e704efaa8d5186346e73ba2c454b2521d3ef9deaf300bf69",
+    "extracted/cpp-hud-lifetime-417-gui-edit/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-hud-lifetime-417-gui-edit/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-hud-lifetime-417-gui-edit/states.tsv": "b4ed4717ef8c559354c2e6cb7f3ffa2bf2c51b1495f75213edf5292be8703250",
+    "extracted/cpp-hud-lifetime-417-gui-edit/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-hud-lifetime-417-gui-edit/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-hud-lifetime-417-gui-edit/steps.tsv": "d47b170d4d4bc3aca3f90293d7f5bfe3ec6daafa297a085b709c35abfd00f77e",
+    "extracted/cpp-hud-lifetime-417-gui-edit.log": "1589d5fe17a9f5275b51d92e0fd3e815966211f8415240901c732af09b30c1d2",
+    "extracted/cpp-hud-lifetime-417-gui-menus/campaign.bmp": "e375ac0f254506a91be64e3225242c2bdd6bb42ac725ae25ea447c6771728edd",
+    "extracted/cpp-hud-lifetime-417-gui-menus/campaign.png": "48e966186d428cda6ce61afeb9c9a52d9ab860aae08b386526f5926ffd0d73e1",
+    "extracted/cpp-hud-lifetime-417-gui-menus/early.bmp": "3901369f51647844a1df20100cd16b83203ab11e12b2a3b1ec53b008cabbf77c",
+    "extracted/cpp-hud-lifetime-417-gui-menus/early.png": "2c8b5f75a958c58326a59f73ccba2787f9c080b651680b9a1c07307f28cb95cd",
+    "extracted/cpp-hud-lifetime-417-gui-menus/result.json": "3efd2f60922d33e1a48056a0ac32715f75d5b7b54578e2b0cacb7a21b9fc3e93",
+    "extracted/cpp-hud-lifetime-417-gui-menus/running.json": "b549bec31ad44df169b5f2c19ebd060316996891269ef5ad64e37ac4f2e3373e",
+    "extracted/cpp-hud-lifetime-417-gui-menus/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-hud-lifetime-417-gui-menus/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-hud-lifetime-417-gui-menus/states.tsv": "159bb69bcaf0c30087c61da75a64d99c5a2e84a8323af724194d25cf0454bfae",
+    "extracted/cpp-hud-lifetime-417-gui-menus/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-hud-lifetime-417-gui-menus/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-hud-lifetime-417-gui-menus/steps.tsv": "22080bf8c6d91ab80c7531f4a080581db0ed77ec2696d9655f6333ec1cc24a44",
+    "extracted/cpp-hud-lifetime-417-gui-menus.log": "2c4cda472a62590895bd69348195e87195e595ff086a92bc7dcd422cdba131f9",
+    "extracted/cpp-hud-lifetime-417-gui.py": "990869f8774074a2136e8e1f7d0dd9952e15dc3b19db659626a003c200eb9f49",
+    "extracted/cpp-hud-lifetime-417-menus1.log": "8dfa653a59af5c4913dc590b244f75908d62148f0fb3678358fc20cdb7f86065",
+    "extracted/cpp-hud-lifetime-417-menus2.log": "ba593a3573d3ca8f700455f7120abf638fc99efa741860e38eb1103137db53da",
+    "extracted/cpp-hud-lifetime-417-menus3.log": "ba593a3573d3ca8f700455f7120abf638fc99efa741860e38eb1103137db53da",
+    "extracted/cpp-hud-lifetime-417-native-slices-attempt1.py": "d02fa25853514fe8ecaf687e3b45e0c6d13aaa8066e88f3a728b7c47940ce9f1",
+    "extracted/cpp-hud-lifetime-417-native-slices.log": "8342766a246791f77a281453b1e796fc0d6045ef61658e8e7772b2b32e84e735",
+    "extracted/cpp-hud-lifetime-417-native-slices.py": "4f66dbe45ac84db5623fb1d079a66195fe5f33ce638d2dbfbcfcf633a1a5a5fe",
+    "extracted/cpp-hud-lifetime-417-native-slices2.log": "62024d94c1319f24bbb813f7a2c19409deb332ca7db62c9e7351aa8269661f41",
+    "extracted/cpp-hud-lifetime-417-native-static.json": "3e2ab90ae7f126bebdb87c5b2da45909e0f4282ff96fac80f60ef3f8161920aa",
+    "extracted/cpp-hud-lifetime-417-northwest-plan.tsv": "e5508c5724c6a85550d21501ed8da4043909313b9546f33a410ed2b8ec44a7c2",
+    "extracted/cpp-hud-lifetime-417-production-lifetime1.log": "5a298821397a173812c32e6dce1db961baf7ca2967618758c4c88669d333d360",
+    "extracted/cpp-hud-lifetime-417-production-lifetime3.log": "5a298821397a173812c32e6dce1db961baf7ca2967618758c4c88669d333d360",
+    "extracted/cpp-hud-lifetime-417-production1.log": "a894a031a093ce4b1ef9f08f42a0f93d22c9cb9c321160c0232b9b8cf1ffdad9",
+    "extracted/cpp-hud-lifetime-417-production2.log": "a894a031a093ce4b1ef9f08f42a0f93d22c9cb9c321160c0232b9b8cf1ffdad9",
+    "extracted/cpp-hud-lifetime-417-production3.log": "a894a031a093ce4b1ef9f08f42a0f93d22c9cb9c321160c0232b9b8cf1ffdad9",
+    "extracted/cpp-hud-lifetime-417-ritual1.log": "a4f9dd03d7ef3749510bd61d549f17350f2bb782f7a5f6ce3f6f3cdbc52be4b6",
+    "extracted/cpp-hud-lifetime-417-ritual3.log": "a4f9dd03d7ef3749510bd61d549f17350f2bb782f7a5f6ce3f6f3cdbc52be4b6",
+    "extracted/cpp-hud-lifetime-417-source1/cpppj/build/bin/Release/netstorm_tests.exe": "9308ee03241566334649a7beac4e727a5ab42ab87790826ae607c306d705d4c3",
+    "extracted/cpp-hud-lifetime-417-source1/cpppj/build/bin/Release/NetstormCpp.exe": "32f0cac9cbd710b33a21c535c2f88e1f7ac7a3e0bfb44d509ded16a0429f5cca",
+    "extracted/cpp-hud-lifetime-417-source1/cpppj/src/client/RawButtonControls.cpp": "00a0c79f673b5f295767b7448d8195f542ce0b9bf8c247dec0bf4c68cf46413b",
+    "extracted/cpp-hud-lifetime-417-source1/cpppj/src/client/RawButtonControls.h": "528cbe7b124bad23e58f65814ef24f469326162882600f531a50cff2ec90fa85",
+    "extracted/cpp-hud-lifetime-417-source1/cpppj/src/client/RawMenuControls.cpp": "42774349001f448620abd38d4f5d79ed615ceaefaf2ac18426ba1248e4b24ab1",
+    "extracted/cpp-hud-lifetime-417-source1/cpppj/src/client/RawMenuControls.h": "91d799b56fce08be23d43395430f2a3b75a49b82ae0a8335a08d649ee04698c3",
+    "extracted/cpp-hud-lifetime-417-source1/cpppj/src/client/RawMinimapControls.cpp": "21621c0d3959987d326b3a2fa3b76f5d4582100a4cfd7f62bd00cb03009b976d",
+    "extracted/cpp-hud-lifetime-417-source1/cpppj/src/client/RawMinimapControls.h": "b27183ae11c7c153213c491da5ef641ba0885dafa7fea953fa07778cb6626708",
+    "extracted/cpp-hud-lifetime-417-source1/cpppj/src/client/RawProductionControls.cpp": "a8b2b7e5c9a2415c10d3e615426d4e403ef8b2f69e8bdea8d0804824a7ae148b",
+    "extracted/cpp-hud-lifetime-417-source1/cpppj/src/client/RawProductionControls.h": "49420e3afca50e379fefed1e27ea0c3171ac21323920c1ad51b68687a5031ccc",
+    "extracted/cpp-hud-lifetime-417-source1/cpppj/src/o/SquidPop.cpp": "f2e60791258ce71dddf23ee346e3a4dc67448f248ae9e65c56a59bfe09eb2f59",
+    "extracted/cpp-hud-lifetime-417-source1/cpppj/src/o/SquidPop.h": "0d348f7c8c8fb9f6311a774e75b75b59aeabc24141c35bbaa518c64e9aa43b93",
+    "extracted/cpp-hud-lifetime-417-source1/cpppj/src/o/SquidUnpop.cpp": "630ee43d42d0116fbce5a60642aa66c6da4689bf09348b990cbde75c179d9dbe",
+    "extracted/cpp-hud-lifetime-417-source1/cpppj/src/o/SquidUnpop.h": "f003c599ddd0da6fcf5f5af7ca3700b90e4d12765df3a76f71e610a783635f1b",
+    "extracted/cpp-hud-lifetime-417-source1/cpppj/tests/ProductionInitialContextTests.cpp": "088c64f8798a32b9b3b8f45eff13840eb3e972bc33b2d741fc2a733a13577881",
+    "extracted/cpp-hud-lifetime-417-source1/cpppj/tests/RawMenuControlsTests.cpp": "efb9e5da31e2046bfc5782e795a59c827ad8a557cb51a1f98ce91f944ff151a9",
+    "extracted/cpp-hud-lifetime-417-source1/hashes.json": "3262f628f2578cec7e300839880825cfd05fb59d8e66461c146bb229ff480700",
+    "extracted/cpp-hud-lifetime-417-verified-source3/cpppj/build/bin/Release/netstorm_tests.exe": "1647c924f3db987c9526084d0d73c74e81cf75077b52b3b79140fd05049c4c5f",
+    "extracted/cpp-hud-lifetime-417-verified-source3/cpppj/build/bin/Release/NetstormCpp.exe": "92299a09c2e56a08688fde1a24b16373d8a5f2eeb469d7e38cc15b41bcc692c9",
+    "extracted/cpp-hud-lifetime-417-verified-source3/cpppj/src/client/RawButtonControls.cpp": "00a0c79f673b5f295767b7448d8195f542ce0b9bf8c247dec0bf4c68cf46413b",
+    "extracted/cpp-hud-lifetime-417-verified-source3/cpppj/src/client/RawButtonControls.h": "528cbe7b124bad23e58f65814ef24f469326162882600f531a50cff2ec90fa85",
+    "extracted/cpp-hud-lifetime-417-verified-source3/cpppj/src/client/RawMenuControls.cpp": "42774349001f448620abd38d4f5d79ed615ceaefaf2ac18426ba1248e4b24ab1",
+    "extracted/cpp-hud-lifetime-417-verified-source3/cpppj/src/client/RawMenuControls.h": "91d799b56fce08be23d43395430f2a3b75a49b82ae0a8335a08d649ee04698c3",
+    "extracted/cpp-hud-lifetime-417-verified-source3/cpppj/src/client/RawMinimapControls.cpp": "dd0794ee16952baddb4e9e16ab4921db51ca60fade47e71eb753e45b9fb8bd8a",
+    "extracted/cpp-hud-lifetime-417-verified-source3/cpppj/src/client/RawMinimapControls.h": "b27183ae11c7c153213c491da5ef641ba0885dafa7fea953fa07778cb6626708",
+    "extracted/cpp-hud-lifetime-417-verified-source3/cpppj/src/client/RawProductionControls.cpp": "a8b2b7e5c9a2415c10d3e615426d4e403ef8b2f69e8bdea8d0804824a7ae148b",
+    "extracted/cpp-hud-lifetime-417-verified-source3/cpppj/src/client/RawProductionControls.h": "49420e3afca50e379fefed1e27ea0c3171ac21323920c1ad51b68687a5031ccc",
+    "extracted/cpp-hud-lifetime-417-verified-source3/cpppj/src/o/SquidPop.cpp": "f2e60791258ce71dddf23ee346e3a4dc67448f248ae9e65c56a59bfe09eb2f59",
+    "extracted/cpp-hud-lifetime-417-verified-source3/cpppj/src/o/SquidPop.h": "0d348f7c8c8fb9f6311a774e75b75b59aeabc24141c35bbaa518c64e9aa43b93",
+    "extracted/cpp-hud-lifetime-417-verified-source3/cpppj/src/o/SquidUnpop.cpp": "630ee43d42d0116fbce5a60642aa66c6da4689bf09348b990cbde75c179d9dbe",
+    "extracted/cpp-hud-lifetime-417-verified-source3/cpppj/src/o/SquidUnpop.h": "f003c599ddd0da6fcf5f5af7ca3700b90e4d12765df3a76f71e610a783635f1b",
+    "extracted/cpp-hud-lifetime-417-verified-source3/cpppj/tests/CampaignSessionTests.cpp": "cea987103dab3303ed8e1c68efc7d4e2497c6a209804fe1014f119c6b14e3c92",
+    "extracted/cpp-hud-lifetime-417-verified-source3/cpppj/tests/ProductionInitialContextTests.cpp": "96a73ea9c981d865bac31541b609482efec5e2f131dcbb0ac275a74732031375",
+    "extracted/cpp-hud-lifetime-417-verified-source3/cpppj/tests/RawMenuControlsTests.cpp": "554a13fe45d33246bc8d4d958d7ad96ce3b92401289bf4cfb1512d553a6157a5",
+    "extracted/cpp-hud-lifetime-417-verified-source3/hashes.json": "813fe4254bbd86b9492308630f308eb978cd9a2b1eba6008f11b158d93ca2b0c",
+    "extracted/cpp-hud-lifetime-417-wer.xml": "1c284385a158b17a8f36de812f302d3cf0e1228eb24c74393cfbf68565811929"
+  },
+  "protectedAudit": {
+    "compared": 1821,
+    "changed": []
+  },
+  "checks": {
+    "focusedExecutions": {
+      "production3": 10,
+      "menus3": 13,
+      "production-lifetime3": 4,
+      "ritual3": 1
+    },
+    "focusedUniqueTests": 28,
+    "newTests": 7,
+    "fullPassed": 2803,
+    "fullFailedChecks": 0,
+    "buildObservedWarningsErrors": 0
+  },
+  "staticNativeEvidence": {
+    "staticOnly": true,
+    "nativeExecutions": 0,
+    "originalGameExecutions": 0,
+    "peSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "globals": {
+      "0x540438": 29,
+      "0x5949cc": 0,
+      "0x5949d0": 0,
+      "0x5949dc": 0
+    },
+    "slices": {
+      "constructor": {
+        "start": "0x4801b0",
+        "endExclusive": "0x480260",
+        "sha256": "68fac52327988daeaab24b10c4653808a570f4a9f46ab99497c9a486dc2698f7",
+        "instructions": [
+          {
+            "address": "0x4801b0",
+            "mnemonic": "push",
+            "operands": "-1"
+          },
+          {
+            "address": "0x4801b2",
+            "mnemonic": "push",
+            "operands": "0x4fad88"
+          },
+          {
+            "address": "0x4801b7",
+            "mnemonic": "mov",
+            "operands": "eax, dword ptr fs:[0]"
+          },
+          {
+            "address": "0x4801bd",
+            "mnemonic": "push",
+            "operands": "eax"
+          },
+          {
+            "address": "0x4801be",
+            "mnemonic": "mov",
+            "operands": "dword ptr fs:[0], esp"
+          },
+          {
+            "address": "0x4801c5",
+            "mnemonic": "sub",
+            "operands": "esp, 8"
+          },
+          {
+            "address": "0x4801c8",
+            "mnemonic": "fild",
+            "operands": "dword ptr [0x5949cc]"
+          },
+          {
+            "address": "0x4801ce",
+            "mnemonic": "push",
+            "operands": "esi"
+          },
+          {
+            "address": "0x4801cf",
+            "mnemonic": "push",
+            "operands": "edi"
+          },
+          {
+            "address": "0x4801d0",
+            "mnemonic": "push",
+            "operands": "0x301"
+          },
+          {
+            "address": "0x4801d5",
+            "mnemonic": "fstp",
+            "operands": "dword ptr [esp + 0xc]"
+          },
+          {
+            "address": "0x4801d9",
+            "mnemonic": "mov",
+            "operands": "esi, ecx"
+          },
+          {
+            "address": "0x4801db",
+            "mnemonic": "mov",
+            "operands": "eax, dword ptr [esp + 0xc]"
+          },
+          {
+            "address": "0x4801df",
+            "mnemonic": "push",
+            "operands": "eax"
+          },
+          {
+            "address": "0x4801e0",
+            "mnemonic": "push",
+            "operands": "eax"
+          },
+          {
+            "address": "0x4801e1",
+            "mnemonic": "xor",
+            "operands": "edi, edi"
+          },
+          {
+            "address": "0x4801e3",
+            "mnemonic": "push",
+            "operands": "edi"
+          },
+          {
+            "address": "0x4801e4",
+            "mnemonic": "mov",
+            "operands": "dword ptr [esp + 0x1c], esi"
+          },
+          {
+            "address": "0x4801e8",
+            "mnemonic": "call",
+            "operands": "0x4642c0"
+          },
+          {
+            "address": "0x4801ed",
+            "mnemonic": "mov",
+            "operands": "dword ptr [esi], 0x50d51c"
+          },
+          {
+            "address": "0x4801f3",
+            "mnemonic": "movsx",
+            "operands": "eax, byte ptr [0x540438]"
+          },
+          {
+            "address": "0x4801fa",
+            "mnemonic": "push",
+            "operands": "0x50d50c"
+          },
+          {
+            "address": "0x4801ff",
+            "mnemonic": "mov",
+            "operands": "ecx, 0x5e22b8"
+          },
+          {
+            "address": "0x480204",
+            "mnemonic": "mov",
+            "operands": "dword ptr [esp + 0x1c], edi"
+          },
+          {
+            "address": "0x480208",
+            "mnemonic": "mov",
+            "operands": "dword ptr [esi + 0x20], eax"
+          },
+          {
+            "address": "0x48020b",
+            "mnemonic": "mov",
+            "operands": "dword ptr [esi + 0xa4], edi"
+          },
+          {
+            "address": "0x480211",
+            "mnemonic": "mov",
+            "operands": "dword ptr [esi + 0xa0], edi"
+          },
+          {
+            "address": "0x480217",
+            "mnemonic": "mov",
+            "operands": "dword ptr [esi + 0xa8], edi"
+          },
+          {
+            "address": "0x48021d",
+            "mnemonic": "call",
+            "operands": "0x4de9a0"
+          },
+          {
+            "address": "0x480222",
+            "mnemonic": "push",
+            "operands": "eax"
+          },
+          {
+            "address": "0x480223",
+            "mnemonic": "push",
+            "operands": "esi"
+          },
+          {
+            "address": "0x480224",
+            "mnemonic": "call",
+            "operands": "0x464ed0"
+          },
+          {
+            "address": "0x480229",
+            "mnemonic": "push",
+            "operands": "0x50d500"
+          },
+          {
+            "address": "0x48022e",
+            "mnemonic": "push",
+            "operands": "esi"
+          },
+          {
+            "address": "0x48022f",
+            "mnemonic": "call",
+            "operands": "0x464f80"
+          },
+          {
+            "address": "0x480234",
+            "mnemonic": "mov",
+            "operands": "ecx, dword ptr [esi + 0x2c]"
+          },
+          {
+            "address": "0x480237",
+            "mnemonic": "add",
+            "operands": "esp, 0x10"
+          },
+          {
+            "address": "0x48023a",
+            "mnemonic": "mov",
+            "operands": "dword ptr [0x5949dc], ecx"
+          },
+          {
+            "address": "0x480240",
+            "mnemonic": "mov",
+            "operands": "ecx, dword ptr [esp + 0x10]"
+          },
+          {
+            "address": "0x480244",
+            "mnemonic": "pop",
+            "operands": "edi"
+          },
+          {
+            "address": "0x480245",
+            "mnemonic": "mov",
+            "operands": "eax, esi"
+          },
+          {
+            "address": "0x480247",
+            "mnemonic": "pop",
+            "operands": "esi"
+          },
+          {
+            "address": "0x480248",
+            "mnemonic": "mov",
+            "operands": "dword ptr fs:[0], ecx"
+          },
+          {
+            "address": "0x48024f",
+            "mnemonic": "add",
+            "operands": "esp, 0x14"
+          },
+          {
+            "address": "0x480252",
+            "mnemonic": "ret",
+            "operands": ""
+          },
+          {
+            "address": "0x480253",
+            "mnemonic": "int3",
+            "operands": ""
+          },
+          {
+            "address": "0x480254",
+            "mnemonic": "int3",
+            "operands": ""
+          },
+          {
+            "address": "0x480255",
+            "mnemonic": "int3",
+            "operands": ""
+          },
+          {
+            "address": "0x480256",
+            "mnemonic": "int3",
+            "operands": ""
+          },
+          {
+            "address": "0x480257",
+            "mnemonic": "int3",
+            "operands": ""
+          },
+          {
+            "address": "0x480258",
+            "mnemonic": "int3",
+            "operands": ""
+          },
+          {
+            "address": "0x480259",
+            "mnemonic": "int3",
+            "operands": ""
+          },
+          {
+            "address": "0x48025a",
+            "mnemonic": "int3",
+            "operands": ""
+          },
+          {
+            "address": "0x48025b",
+            "mnemonic": "int3",
+            "operands": ""
+          },
+          {
+            "address": "0x48025c",
+            "mnemonic": "int3",
+            "operands": ""
+          },
+          {
+            "address": "0x48025d",
+            "mnemonic": "int3",
+            "operands": ""
+          },
+          {
+            "address": "0x48025e",
+            "mnemonic": "int3",
+            "operands": ""
+          },
+          {
+            "address": "0x48025f",
+            "mnemonic": "int3",
+            "operands": ""
+          }
+        ]
+      },
+      "factory": {
+        "start": "0x4815b0",
+        "endExclusive": "0x481620",
+        "sha256": "6e91ccb80c4f6567c1cf5b862c3ba8909529e73145d1ad6ead48a04c0ba4d0d7",
+        "instructions": [
+          {
+            "address": "0x4815b0",
+            "mnemonic": "push",
+            "operands": "-1"
+          },
+          {
+            "address": "0x4815b2",
+            "mnemonic": "push",
+            "operands": "0x4fadeb"
+          },
+          {
+            "address": "0x4815b7",
+            "mnemonic": "mov",
+            "operands": "eax, dword ptr fs:[0]"
+          },
+          {
+            "address": "0x4815bd",
+            "mnemonic": "push",
+            "operands": "eax"
+          },
+          {
+            "address": "0x4815be",
+            "mnemonic": "mov",
+            "operands": "dword ptr fs:[0], esp"
+          },
+          {
+            "address": "0x4815c5",
+            "mnemonic": "push",
+            "operands": "ecx"
+          },
+          {
+            "address": "0x4815c6",
+            "mnemonic": "push",
+            "operands": "0xac"
+          },
+          {
+            "address": "0x4815cb",
+            "mnemonic": "call",
+            "operands": "0x4e4391"
+          },
+          {
+            "address": "0x4815d0",
+            "mnemonic": "add",
+            "operands": "esp, 4"
+          },
+          {
+            "address": "0x4815d3",
+            "mnemonic": "mov",
+            "operands": "dword ptr [esp], eax"
+          },
+          {
+            "address": "0x4815d6",
+            "mnemonic": "test",
+            "operands": "eax, eax"
+          },
+          {
+            "address": "0x4815d8",
+            "mnemonic": "mov",
+            "operands": "dword ptr [esp + 0xc], 0"
+          },
+          {
+            "address": "0x4815e0",
+            "mnemonic": "je",
+            "operands": "0x4815fd"
+          },
+          {
+            "address": "0x4815e2",
+            "mnemonic": "mov",
+            "operands": "ecx, eax"
+          },
+          {
+            "address": "0x4815e4",
+            "mnemonic": "call",
+            "operands": "0x4801b0"
+          },
+          {
+            "address": "0x4815e9",
+            "mnemonic": "mov",
+            "operands": "dword ptr [0x5949d0], eax"
+          },
+          {
+            "address": "0x4815ee",
+            "mnemonic": "mov",
+            "operands": "ecx, dword ptr [esp + 4]"
+          },
+          {
+            "address": "0x4815f2",
+            "mnemonic": "mov",
+            "operands": "dword ptr fs:[0], ecx"
+          },
+          {
+            "address": "0x4815f9",
+            "mnemonic": "add",
+            "operands": "esp, 0x10"
+          },
+          {
+            "address": "0x4815fc",
+            "mnemonic": "ret",
+            "operands": ""
+          },
+          {
+            "address": "0x4815fd",
+            "mnemonic": "mov",
+            "operands": "ecx, dword ptr [esp + 4]"
+          },
+          {
+            "address": "0x481601",
+            "mnemonic": "xor",
+            "operands": "eax, eax"
+          },
+          {
+            "address": "0x481603",
+            "mnemonic": "mov",
+            "operands": "dword ptr [0x5949d0], eax"
+          },
+          {
+            "address": "0x481608",
+            "mnemonic": "mov",
+            "operands": "dword ptr fs:[0], ecx"
+          },
+          {
+            "address": "0x48160f",
+            "mnemonic": "add",
+            "operands": "esp, 0x10"
+          },
+          {
+            "address": "0x481612",
+            "mnemonic": "ret",
+            "operands": ""
+          },
+          {
+            "address": "0x481613",
+            "mnemonic": "int3",
+            "operands": ""
+          },
+          {
+            "address": "0x481614",
+            "mnemonic": "int3",
+            "operands": ""
+          },
+          {
+            "address": "0x481615",
+            "mnemonic": "int3",
+            "operands": ""
+          },
+          {
+            "address": "0x481616",
+            "mnemonic": "int3",
+            "operands": ""
+          },
+          {
+            "address": "0x481617",
+            "mnemonic": "int3",
+            "operands": ""
+          },
+          {
+            "address": "0x481618",
+            "mnemonic": "int3",
+            "operands": ""
+          },
+          {
+            "address": "0x481619",
+            "mnemonic": "int3",
+            "operands": ""
+          },
+          {
+            "address": "0x48161a",
+            "mnemonic": "int3",
+            "operands": ""
+          },
+          {
+            "address": "0x48161b",
+            "mnemonic": "int3",
+            "operands": ""
+          },
+          {
+            "address": "0x48161c",
+            "mnemonic": "int3",
+            "operands": ""
+          },
+          {
+            "address": "0x48161d",
+            "mnemonic": "int3",
+            "operands": ""
+          },
+          {
+            "address": "0x48161e",
+            "mnemonic": "int3",
+            "operands": ""
+          },
+          {
+            "address": "0x48161f",
+            "mnemonic": "int3",
+            "operands": ""
+          }
+        ]
+      }
+    },
+    "verified": true,
+    "scope": "실제 생성자의 기본생성/번역/Help/HelpWord/serial과 공장의 생성복귀뒤현재포인터 쓰기 및 PE 초기값이다. 런타임/전체원문Gump/SEH 관측이 아니다."
+  },
+  "failedFullTestFault": {
+    "staticOnly": true,
+    "originalGameExecuted": false,
+    "binarySha256": "2bb6637f49b8404dd75a74eaf48874502d2097141dc68d32e86a6d4e074d2cc6",
+    "peTimestamp": 1792881763,
+    "windowsApplication1000": {
+      "exceptionCode": "c0000005",
+      "faultOffset": 15559865,
+      "processId": 22488,
+      "recordId": 10444
+    },
+    "functionSymbol": "?Close@RawProductionControls@client@netstorm@@QEAAXXZ",
+    "coffSection": 2876,
+    "functionRva": [
+      15559696,
+      15559956
+    ],
+    "comparedBytes": 240,
+    "relocationBytes": 20,
+    "objectSha256": "fc016cd977701bad9ad9616039d8ef2205b99c9c59dc4c51aeeafa602fc15747",
+    "fault": {
+      "rva": 15559865,
+      "mnemonic": "mov",
+      "operands": "esi, dword ptr [rax + rbx*4]"
+    },
+    "instructions": [
+      {
+        "rva": 15559696,
+        "mnemonic": "push",
+        "operands": "rbx"
+      },
+      {
+        "rva": 15559698,
+        "mnemonic": "push",
+        "operands": "rsi"
+      },
+      {
+        "rva": 15559699,
+        "mnemonic": "push",
+        "operands": "rdi"
+      },
+      {
+        "rva": 15559700,
+        "mnemonic": "push",
+        "operands": "r14"
+      },
+      {
+        "rva": 15559702,
+        "mnemonic": "sub",
+        "operands": "rsp, 0x28"
+      },
+      {
+        "rva": 15559706,
+        "mnemonic": "mov",
+        "operands": "rax, qword ptr [rcx]"
+      },
+      {
+        "rva": 15559709,
+        "mnemonic": "mov",
+        "operands": "r14, rcx"
+      },
+      {
+        "rva": 15559712,
+        "mnemonic": "mov",
+        "operands": "rbx, qword ptr [rax + 0xf20]"
+      },
+      {
+        "rva": 15559719,
+        "mnemonic": "mov",
+        "operands": "rbx, qword ptr [rbx]"
+      },
+      {
+        "rva": 15559722,
+        "mnemonic": "cmp",
+        "operands": "byte ptr [rbx + 0x19], 0"
+      },
+      {
+        "rva": 15559726,
+        "mnemonic": "jne",
+        "operands": "0xed6c96"
+      },
+      {
+        "rva": 15559728,
+        "mnemonic": "mov",
+        "operands": "rax, qword ptr [rbx + 0x28]"
+      },
+      {
+        "rva": 15559732,
+        "mnemonic": "test",
+        "operands": "dword ptr [rax], 0x10000"
+      },
+      {
+        "rva": 15559738,
+        "mnemonic": "jne",
+        "operands": "0xed6c4b"
+      },
+      {
+        "rva": 15559740,
+        "mnemonic": "mov",
+        "operands": "rcx, qword ptr [r14]"
+      },
+      {
+        "rva": 15559743,
+        "mnemonic": "mov",
+        "operands": "edx, dword ptr [rbx + 0x20]"
+      },
+      {
+        "rva": 15559746,
+        "mnemonic": "mov",
+        "operands": "rcx, qword ptr [rcx + 0x28]"
+      },
+      {
+        "rva": 15559750,
+        "mnemonic": "call",
+        "operands": "0xd8d2b0"
+      },
+      {
+        "rva": 15559755,
+        "mnemonic": "mov",
+        "operands": "rax, qword ptr [rbx + 0x10]"
+      },
+      {
+        "rva": 15559759,
+        "mnemonic": "cmp",
+        "operands": "byte ptr [rax + 0x19], 0"
+      },
+      {
+        "rva": 15559763,
+        "mnemonic": "je",
+        "operands": "0xed6c78"
+      },
+      {
+        "rva": 15559765,
+        "mnemonic": "mov",
+        "operands": "rax, qword ptr [rbx + 8]"
+      },
+      {
+        "rva": 15559769,
+        "mnemonic": "cmp",
+        "operands": "byte ptr [rax + 0x19], 0"
+      },
+      {
+        "rva": 15559773,
+        "mnemonic": "jne",
+        "operands": "0xed6c73"
+      },
+      {
+        "rva": 15559775,
+        "mnemonic": "nop",
+        "operands": ""
+      },
+      {
+        "rva": 15559776,
+        "mnemonic": "cmp",
+        "operands": "rbx, qword ptr [rax + 0x10]"
+      },
+      {
+        "rva": 15559780,
+        "mnemonic": "jne",
+        "operands": "0xed6c73"
+      },
+      {
+        "rva": 15559782,
+        "mnemonic": "mov",
+        "operands": "rbx, rax"
+      },
+      {
+        "rva": 15559785,
+        "mnemonic": "mov",
+        "operands": "rax, qword ptr [rax + 8]"
+      },
+      {
+        "rva": 15559789,
+        "mnemonic": "cmp",
+        "operands": "byte ptr [rax + 0x19], 0"
+      },
+      {
+        "rva": 15559793,
+        "mnemonic": "je",
+        "operands": "0xed6c60"
+      },
+      {
+        "rva": 15559795,
+        "mnemonic": "mov",
+        "operands": "rbx, rax"
+      },
+      {
+        "rva": 15559798,
+        "mnemonic": "jmp",
+        "operands": "0xed6c90"
+      },
+      {
+        "rva": 15559800,
+        "mnemonic": "mov",
+        "operands": "rbx, rax"
+      },
+      {
+        "rva": 15559803,
+        "mnemonic": "mov",
+        "operands": "rax, qword ptr [rax]"
+      },
+      {
+        "rva": 15559806,
+        "mnemonic": "cmp",
+        "operands": "byte ptr [rax + 0x19], 0"
+      },
+      {
+        "rva": 15559810,
+        "mnemonic": "jne",
+        "operands": "0xed6c90"
+      },
+      {
+        "rva": 15559812,
+        "mnemonic": "mov",
+        "operands": "rbx, qword ptr [rbx]"
+      },
+      {
+        "rva": 15559815,
+        "mnemonic": "mov",
+        "operands": "rax, qword ptr [rbx]"
+      },
+      {
+        "rva": 15559818,
+        "mnemonic": "cmp",
+        "operands": "byte ptr [rax + 0x19], 0"
+      },
+      {
+        "rva": 15559822,
+        "mnemonic": "je",
+        "operands": "0xed6c84"
+      },
+      {
+        "rva": 15559824,
+        "mnemonic": "cmp",
+        "operands": "byte ptr [rbx + 0x19], 0"
+      },
+      {
+        "rva": 15559828,
+        "mnemonic": "je",
+        "operands": "0xed6c30"
+      },
+      {
+        "rva": 15559830,
+        "mnemonic": "mov",
+        "operands": "rcx, qword ptr [r14]"
+      },
+      {
+        "rva": 15559833,
+        "mnemonic": "mov",
+        "operands": "rcx, qword ptr [rcx + 0x28]"
+      },
+      {
+        "rva": 15559837,
+        "mnemonic": "call",
+        "operands": "0xd8cdc0"
+      },
+      {
+        "rva": 15559842,
+        "mnemonic": "mov",
+        "operands": "ebx, 1"
+      },
+      {
+        "rva": 15559847,
+        "mnemonic": "nop",
+        "operands": "word ptr [rax + rax]"
+      },
+      {
+        "rva": 15559856,
+        "mnemonic": "mov",
+        "operands": "rdi, qword ptr [r14]"
+      },
+      {
+        "rva": 15559859,
+        "mnemonic": "mov",
+        "operands": "rcx, rdi"
+      },
+      {
+        "rva": 15559862,
+        "mnemonic": "mov",
+        "operands": "rax, qword ptr [rdi]"
+      },
+      {
+        "rva": 15559865,
+        "mnemonic": "mov",
+        "operands": "esi, dword ptr [rax + rbx*4]"
+      },
+      {
+        "rva": 15559868,
+        "mnemonic": "mov",
+        "operands": "edx, esi"
+      },
+      {
+        "rva": 15559870,
+        "mnemonic": "call",
+        "operands": "0xed8fb0"
+      },
+      {
+        "rva": 15559875,
+        "mnemonic": "test",
+        "operands": "rax, rax"
+      },
+      {
+        "rva": 15559878,
+        "mnemonic": "je",
+        "operands": "0xed6cdb"
+      },
+      {
+        "rva": 15559880,
+        "mnemonic": "test",
+        "operands": "dword ptr [rax], 0x10000"
+      },
+      {
+        "rva": 15559886,
+        "mnemonic": "jne",
+        "operands": "0xed6cdb"
+      },
+      {
+        "rva": 15559888,
+        "mnemonic": "mov",
+        "operands": "rcx, qword ptr [rdi + 0x28]"
+      },
+      {
+        "rva": 15559892,
+        "mnemonic": "mov",
+        "operands": "edx, esi"
+      },
+      {
+        "rva": 15559894,
+        "mnemonic": "call",
+        "operands": "0xd8d2b0"
+      },
+      {
+        "rva": 15559899,
+        "mnemonic": "inc",
+        "operands": "rbx"
+      },
+      {
+        "rva": 15559902,
+        "mnemonic": "cmp",
+        "operands": "rbx, 0x3e8"
+      },
+      {
+        "rva": 15559909,
+        "mnemonic": "jne",
+        "operands": "0xed6cb0"
+      },
+      {
+        "rva": 15559911,
+        "mnemonic": "mov",
+        "operands": "rcx, qword ptr [r14]"
+      },
+      {
+        "rva": 15559914,
+        "mnemonic": "mov",
+        "operands": "rcx, qword ptr [rcx + 0x28]"
+      },
+      {
+        "rva": 15559918,
+        "mnemonic": "call",
+        "operands": "0xd8cdc0"
+      },
+      {
+        "rva": 15559923,
+        "mnemonic": "mov",
+        "operands": "rax, qword ptr [r14]"
+      },
+      {
+        "rva": 15559926,
+        "mnemonic": "xor",
+        "operands": "edx, edx"
+      },
+      {
+        "rva": 15559928,
+        "mnemonic": "mov",
+        "operands": "dword ptr [rax + 0x520], edx"
+      },
+      {
+        "rva": 15559934,
+        "mnemonic": "mov",
+        "operands": "rax, qword ptr [r14]"
+      },
+      {
+        "rva": 15559937,
+        "mnemonic": "mov",
+        "operands": "rcx, qword ptr [rax + 0x528]"
+      },
+      {
+        "rva": 15559944,
+        "mnemonic": "mov",
+        "operands": "dword ptr [rcx], edx"
+      },
+      {
+        "rva": 15559946,
+        "mnemonic": "add",
+        "operands": "rsp, 0x28"
+      },
+      {
+        "rva": 15559950,
+        "mnemonic": "pop",
+        "operands": "r14"
+      },
+      {
+        "rva": 15559952,
+        "mnemonic": "pop",
+        "operands": "rdi"
+      },
+      {
+        "rva": 15559953,
+        "mnemonic": "pop",
+        "operands": "rsi"
+      },
+      {
+        "rva": 15559954,
+        "mnemonic": "pop",
+        "operands": "rbx"
+      },
+      {
+        "rva": 15559955,
+        "mnemonic": "ret",
+        "operands": ""
+      }
+    ],
+    "conclusion": "오류 RVA는 실제 RawProductionControls::Close의 공통 등록표 entries 읽기다. 기존 두 검사는 CleanupGumps가 소유자를 반납한 뒤 같은 C++ 참조를 다시 사용했다. 마지막 버퍼 출력만으로 Ritual 본체 오류라고 판정하지 않는다."
+  },
+  "finalNaturalPlay": {
+    "early1-northwest": {
+      "returnCode": 0,
+      "originalsUnchanged": true,
+      "stages": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G"
+      ],
+      "money": [
+        0.0,
+        200.0,
+        400.0,
+        600.0
+      ],
+      "doneBefore": 1,
+      "doneAfter": 1,
+      "progressObservedTransition": false,
+      "persistedProgressVerified": false,
+      "initialProgressInjected": false,
+      "progressProfile": "preserved",
+      "stockTimersObserved": [
+        1
+      ],
+      "defaultStockTimersVerified": true,
+      "priest": 15002,
+      "distinctPositions": 21,
+      "movePackets": 1,
+      "lastGameTime": 95.457,
+      "nextMission": "tutorial2",
+      "nextSp": 10000,
+      "naturalTutorialOneComplete": true,
+      "goalComplete": false,
+      "sameFrameNextBriefingVerified": true,
+      "scope": "실제 A~G/합법 다리·회전/간헐천 연결/한 번의 사제 명령/세 번 채취·귀환/SP600/다음 Tutorial2 Guide4다. 진행0→1은 실제 초기값이0일 때의 메모리 관측이며 디스크 저장·Early2 진행·전체 동일성은 별도다.",
+      "binarySha256": "92299a09c2e56a08688fde1a24b16373d8a5f2eeb469d7e38cc15b41bcc692c9",
+      "seconds": 311.9046885999851
+    },
+    "early2": {
+      "returnCode": 0,
+      "originalsUnchanged": true,
+      "stages": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "I"
+      ],
+      "startSp": 10000,
+      "finalSp": 3075,
+      "templeCount": 1,
+      "workshopCount": 1,
+      "maxArchers": 4,
+      "finalArchers": 3,
+      "salvagePackets": 1,
+      "refund": 75,
+      "doneBefore": 1,
+      "doneAfter": 1,
+      "nextMission": "tutorial3",
+      "nextSp": 2000,
+      "initialProgressInjected": false,
+      "noStateInjection": true,
+      "nextGuideSequence": 4,
+      "inspectionContract": "native-guide-0-6",
+      "lastGameTime": 81.585,
+      "naturalTutorialTwoComplete": true,
+      "goalComplete": false,
+      "sameFrameNextBriefingVerified": true,
+      "scope": "실제 A~I/사제 신전·워크샾/지식·생산/발사기4개/신전 선택/정상 회수·완료값 관측/다음 Tutorial3 진입이다. 영구 진행 저장·Early3 진행·전체 동일성은 별도다.",
+      "binarySha256": "92299a09c2e56a08688fde1a24b16373d8a5f2eeb469d7e38cc15b41bcc692c9",
+      "productTimers": 1,
+      "testStateInjection": false,
+      "seconds": 193.15486849995796
+    }
+  },
+  "finalGuis": {
+    "gui-early": {
+      "execution": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\originals",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "140",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;sleepPerLoop=10;autoDemo=0;tellTips=0;currentLanguage=english",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-hud-lifetime-417-gui-early\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-hud-lifetime-417-gui-early\\states.tsv"
+        ],
+        "binarySha256": "92299a09c2e56a08688fde1a24b16373d8a5f2eeb469d7e38cc15b41bcc692c9",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 4.257481799926609,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e"
+      },
+      "observed": {
+        "exitCode": 0,
+        "home": [
+          [
+            "1",
+            "66",
+            "0",
+            "1",
+            "0",
+            "1",
+            "2.49",
+            "0"
+          ]
+        ],
+        "page": [
+          [
+            "B."
+          ]
+        ],
+        "html": [
+          [
+            "1",
+            "1",
+            "1"
+          ]
+        ]
+      }
+    },
+    "gui-menus": {
+      "execution": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\originals",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "28",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;sleepPerLoop=10;autoDemo=0;tellTips=0;currentLanguage=english",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-hud-lifetime-417-gui-menus\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-hud-lifetime-417-gui-menus\\states.tsv"
+        ],
+        "binarySha256": "92299a09c2e56a08688fde1a24b16373d8a5f2eeb469d7e38cc15b41bcc692c9",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 1.5993671000469476,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "observed": {
+        "exitCode": 0,
+        "campaignRows": [
+          "Early Missions",
+          "Priest Training",
+          "",
+          "Struggle For Freedom",
+          "A Nation Rises",
+          "Complete Victory",
+          "",
+          "User Made Campaigns"
+        ],
+        "earlyRows": [
+          "1 Bridge the Gap",
+          "2 Secret Workshop",
+          "3 Capture The Priest",
+          "4 Tactical Combat",
+          "5 Subtle Defense",
+          "6 Raw Power"
+        ],
+        "pages": {
+          "main": [
+            [
+              "main"
+            ]
+          ],
+          "campaign": [
+            [
+              "UCampaign"
+            ]
+          ],
+          "early": [
+            [
+              "offical1.overview"
+            ]
+          ],
+          "campaign-returned": [
+            [
+              "UCampaign"
+            ]
+          ],
+          "returned": [
+            [
+              "main"
+            ]
+          ]
+        }
+      }
+    },
+    "gui-edit": {
+      "binarySha256": "92299a09c2e56a08688fde1a24b16373d8a5f2eeb469d7e38cc15b41bcc692c9",
+      "originalsUnchanged": true,
+      "sameFrameVerified": true,
+      "observed": {
+        "main": {
+          "frame": 2,
+          "phase": [
+            "0"
+          ],
+          "page": [
+            "main"
+          ],
+          "fort_selection": [
+            "0",
+            "0",
+            "0",
+            "0",
+            ""
+          ],
+          "fort_catalog": [
+            "0",
+            "0",
+            "0",
+            "fortSpec"
+          ],
+          "html_window_state": [
+            "0",
+            "0",
+            "0"
+          ]
+        },
+        "opened": {
+          "frame": 3,
+          "phase": [
+            "1"
+          ],
+          "page": [
+            "LoadEditable"
+          ],
+          "fort_selection": [
+            "2",
+            "0",
+            "0",
+            "0",
+            "TEST01"
+          ],
+          "fort_catalog": [
+            "2",
+            "1",
+            "0",
+            "fortSpec"
+          ],
+          "html_window_state": [
+            "1",
+            "1",
+            "1"
+          ]
+        },
+        "editable": {
+          "frame": 12,
+          "phase": [
+            "1"
+          ],
+          "page": [
+            "LoadEditable"
+          ],
+          "fort_selection": [
+            "2",
+            "0",
+            "0",
+            "0",
+            "TEST01"
+          ],
+          "fort_catalog": [
+            "2",
+            "1",
+            "0",
+            "fortSpec"
+          ],
+          "html_window_state": [
+            "1",
+            "1",
+            "1"
+          ]
+        },
+        "requested": {
+          "frame": 15,
+          "phase": [
+            "0"
+          ],
+          "page": [
+            "main"
+          ],
+          "fort_selection": [
+            "2",
+            "0",
+            "0",
+            "1",
+            "TEST02"
+          ],
+          "fort_catalog": [
+            "2",
+            "1",
+            "0",
+            "fortSpec"
+          ],
+          "html_window_state": [
+            "0",
+            "0",
+            "0"
+          ]
+        },
+        "returned": {
+          "frame": 22,
+          "phase": [
+            "0"
+          ],
+          "page": [
+            "main"
+          ],
+          "fort_selection": [
+            "2",
+            "0",
+            "0",
+            "1",
+            "TEST02"
+          ],
+          "fort_catalog": [
+            "2",
+            "1",
+            "0",
+            "fortSpec"
+          ],
+          "html_window_state": [
+            "0",
+            "0",
+            "0"
+          ]
+        }
+      },
+      "menuItems": [
+        [
+          "23",
+          "0",
+          "66693",
+          "33554634",
+          "103",
+          "1",
+          "TEST01"
+        ],
+        [
+          "23",
+          "1",
+          "66689",
+          "33554634",
+          "104",
+          "1",
+          "TEST02"
+        ]
+      ],
+      "selectorOnly": true,
+      "editorInstallVerified": false,
+      "goalComplete": false
+    }
+  },
+  "failedSoutheastAttempt": {
+    "profile": {
+      "initialProgressInjected": false,
+      "productTimers": 1,
+      "testStateInjection": false,
+      "sameFrameNextBriefing": true,
+      "noStateInjection": true,
+      "planSha256": "7f0c0b185f18175113a9ee4593302f57064c22fe00271a4ff63ee6e7b935a7ac",
+      "replaySha256": "9e30df34a6d5965fda60918a5eb33089099a17970a9760365f8c0c2d51cc490a",
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\originals",
+        "--mission",
+        "tutorial1",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "7424",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=40;sleepPerLoop=25;autoDemo=0;tellTips=0;useProductTimers=1",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-hud-lifetime-417-early1\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-hud-lifetime-417-early1\\states.tsv"
+      ]
+    },
+    "completed": false,
+    "passed": false,
+    "command": [
+      "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+      "--run",
+      "H:\\T5Workspace\\NetstormReborn\\originals",
+      "--mission",
+      "tutorial1",
+      "--window",
+      "--no-audio",
+      "--frames",
+      "7424",
+      "--set",
+      "SCREENW=1024;SCREENH=768;maxFPS=40;sleepPerLoop=25;autoDemo=0;tellTips=0;useProductTimers=1",
+      "--ui-script",
+      "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-hud-lifetime-417-early1\\steps.tsv",
+      "--ui-report",
+      "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-hud-lifetime-417-early1\\states.tsv"
+    ],
+    "binarySha256": "92299a09c2e56a08688fde1a24b16373d8a5f2eeb469d7e38cc15b41bcc692c9",
+    "returnCode": 1,
+    "timedOut": false,
+    "seconds": 415.58024619997013,
+    "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderrSha256": "b556892cbd51de82ac129034eec7230fd4d494ff89ce1dd7e05a73090b9994a1",
+    "originalsUnchanged": true,
+    "inspectionError": "AssertionError()"
+  },
+  "history": [
+    "첫 정적 검사는 정상/NULL 두 포인터 쓰기를 하나로 기대해 실패했고 실제 분기를 구별한검사2를 보존했다.",
+    "첫 집중의 신규 월드 통지는 미부착 결과에 도킹Resize부터 호출한 검사 순서 오류로 Native void Push 진단을 냈다. 부착을 선행했고 진단을 생략하지 않았다.",
+    "첫 전체 검사는70.77초/SEGFAULT였다. Windows1000 오류 RVA와 당시 COFF Close 기호의240BYTE가 일치했다(재배치20BYTE 제외). 기존 두 검사의 CleanupGumps 뒤 해제된 C++ 참조 사용을 제거하고 반복Close는 정리 전 실제 소유 수명 안에 유지했다. Ritual/생산수명 단독은 최초 제품에서도 통과했으므로 마지막 버퍼 출력으로 오류 검사를 확정하지 않는다. 게임 제품 바이트는 교정 전후 같다.",
+    "최종 제품의 남동 Early1 입력은 D/SP0에서 마지막 Next Tutorial 클릭을 찾지 못해 종료1이었다. 이를 제품 회귀나 입력 계획 문제 중 하나로 확정하지 않는다. 다른 실제 간헐천 입력 결과와 최초 실패를 함께 기록한다."
+  ],
+  "limits": [
+    "전체 Uber/배경GIF/HUD dock/resize·State 정리/prefix/Editor 설치와 명령 전송은 아직 미완료다.",
+    "미니맵 dirty 표시flags 어댑터·영어 Help 번역 경계·설치 전 통지 연결 시점도 전체 통합에서 대조해야 한다.",
+    "초기 완료값을 보존했으며 새 진행0→1/디스크 저장이나 전체Early/캠페인/Demo 완주·픽셀/음향/규칙 완전동일성을 입증하지 않는다."
+  ]
+}

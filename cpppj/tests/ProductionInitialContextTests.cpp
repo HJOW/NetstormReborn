@@ -8,6 +8,7 @@
 #include "client/HudDock.h"
 #include "client/PaletteColors.h"
 #include "client/PaletteShade.h"
+#include "client/RawMinimapControls.h"
 #include <sstream>
 
 using namespace netstorm::client;
@@ -82,7 +83,7 @@ TEST_CASE(ProductionInitialContext_RepeatedConstructionAndGlobalPageRetirement) 
 // 선택 번역 누락 뒤 부분 등록을 그대로 관측하고 실제 Close로 원래 개수를 복구한다.
 TEST_CASE(ProductionInitialContext_MissingTranslationKeepsAndRetiresPartialEffects) {
     InitialProductionScene scene;const auto before=scene.Count();bool rejected{};try { scene.buttons.ConstructProduction(scene.Context(),scene.assets.game,scene.Hooks(false)); } catch (const std::logic_error&) { rejected=true; }
-    CHECK(rejected && scene.buttons.Production() && scene.Count()==before+2);scene.buttons.DisableProduction();CHECK(scene.Count()==before && scene.menus->Report().find("raw_gump_help_strings\t0\n")!=std::string::npos);
+    CHECK(rejected && !scene.buttons.Production() && scene.Count()==before+2);scene.buttons.DisableProduction();CHECK(scene.Count()==before && scene.menus->Report().find("raw_gump_help_strings\t0\n")!=std::string::npos); // 실패한생성자는현재serial을쓰지않지만부분등록2개는실제Close까지남는다.
 }
 
 // 실제 같은 Subscriber 참조와 단일 대여를 유지하며 소멸한 Player/커서 상태만 무효화한다.
@@ -92,4 +93,76 @@ TEST_CASE(ProductionInitialContext_GameplayGlobalsKeepRealAliasesAndRejectDuplic
     try { globals->Acquire(); } catch (const std::logic_error&) { rejected=true; }CHECK(rejected && globals->Borrowed() && globals->player.playerKnown==1 && globals->cursor.inputFlags==0x41);
     use.reset();CHECK(!globals->Borrowed() && globals->player.playerKnown==0 && globals->cursor.inputFlags==0 && globals->cursor.lockDepth==1 && globals->world.mySubscriber==71 && globals->world.loginSubscriber==93);
     bool missing{};try { globals->RequireSession(); } catch (const std::logic_error&) { missing=true; }CHECK(missing); // 게임 효과를 가짜 Session 성공으로 바꾸지 않는다.
+}
+
+namespace {
+// 실제 파일의 RGB만 공통 Draw와 미니맵 색 해석에 공급한다.
+std::array<std::uint32_t,256> InitialHudLogical(InitialProductionScene& scene) {
+    std::array<std::uint32_t,256> result{};
+    for (std::size_t index=0;index<result.size();++index) { const auto color=scene.assets.game.Palette().Color(static_cast<std::uint8_t>(index));result[index]=color.red|(std::uint32_t(color.green)<<8)|(std::uint32_t(color.blue)<<16); } // 팔레트의 원래 번호 순서를 유지한다.
+    return result;
+}
+// 실제 메뉴 수집/정렬/클립이 새/이전 HUD를 모두 그리는지 같은 화면에서 검사한다.
+std::vector<std::uint8_t> InitialHudPixels(InitialProductionScene& scene) {
+    const auto logical=InitialHudLogical(scene);std::vector<std::uint8_t> result(640*480,0x5a);scene.menus->Draw(result,640,480,BuildPaletteColorTable(logical),BuildGumpShadeMaps(logical));return result;
+}
+// 두 서로 떨어진 실제 패널 영역에서 배경/글자 픽셀을 비교한다.
+std::vector<std::uint8_t> InitialHudRegion(const std::vector<std::uint8_t>& image,int left,int top,int width,int height) {
+    std::vector<std::uint8_t> result;
+    for (int y=top;y<top+height;++y) result.insert(result.end(),image.begin()+y*640+left,image.begin()+y*640+left+width); // 행 padding이나 다른 HUD를 포함하지 않는다.
+    return result;
+}
+// 같은 초기 물리에서 현재 카메라 장치만 제공하며 Session/게임 계산을 대체하지 않는다.
+RawMinimapHooks InitialMinimapHooks() {
+    RawMinimapHooks hooks;hooks.view=[] { return MinimapGeometryView{{},{85,0,640,400},16,11}; };hooks.center=[](float,float) {};hooks.move=[](float,float) {};hooks.inputMode=[] { return 0U; };hooks.poll=[] { return InputEvent{InputCode::kRelease,0,0}; };return hooks;
+}
+}
+
+// 이전 생산을 지우기 전에 새 전체 생산을 만들고 실제 두 출력이 동시에 살아 있는지 확인한다.
+TEST_CASE(ProductionInitialContext_OverlappingParentsRetireOnlyOldDraw) {
+    InitialProductionScene scene;const auto before=scene.Count();scene.menus->SetExternalGumps({{},[](auto) { return false; },[](auto,auto&,auto&,auto&) { throw std::logic_error("비소유 고정 슬롯 출력에 도달"); }});
+    auto& old=scene.buttons.ConstructProduction(scene.Context(),scene.assets.game,scene.Hooks());const auto oldToken=old.RootToken();old.Attach(oldToken,0,0,scene.buttons.RootToken(),0);
+    auto& current=scene.buttons.ConstructProduction(scene.Context(),scene.assets.game,scene.Hooks());const auto currentToken=current.RootToken();current.Attach(currentToken,200,0,scene.buttons.RootToken(),0);
+    CHECK(scene.buttons.Production()==&current && scene.Count()==before+16 && old.Node(oldToken) && current.Node(currentToken));
+    const auto both=InitialHudPixels(scene);const auto oldPixels=InitialHudRegion(both,0,0,40,480),currentPixels=InitialHudRegion(both,200,0,40,480);
+    CHECK(std::any_of(oldPixels.begin(),oldPixels.end(),[](auto value) { return value!=0x5a; }) && std::any_of(currentPixels.begin(),currentPixels.end(),[](auto value) { return value!=0x5a; }));
+    scene.buttons.KillGump(oldToken);CHECK(scene.Count()==before+16 && scene.buttons.Production()==&current);scene.buttons.CleanupGumps();CHECK(scene.Count()==before+8 && scene.buttons.Production()==&current);
+    const auto after=InitialHudPixels(scene),cleared=InitialHudRegion(after,0,0,40,480);CHECK(std::all_of(cleared.begin(),cleared.end(),[](auto value) { return value==0x5a; }) && InitialHudRegion(after,200,0,40,480)==currentPixels);
+    CHECK(scene.menus->Report().find("raw_external_gumps\t1\t1\n")!=std::string::npos);scene.buttons.DisableProduction();CHECK(scene.Count()==before && scene.menus->Report().find("raw_external_gumps\t1\t0\n")!=std::string::npos);scene.menus->SetExternalGumps({});
+}
+
+// 최신serial의 대상이 죽었을 때 아직 살아 있는 이전 생산을 현재로 되살리지 않는다.
+TEST_CASE(ProductionInitialContext_LatestKilledDoesNotSelectOlderParent) {
+    InitialProductionScene scene;const auto before=scene.Count();auto& old=scene.buttons.ConstructProduction(scene.Context(),scene.assets.game,scene.Hooks());const auto oldToken=old.RootToken();
+    auto& current=scene.buttons.ConstructProduction(scene.Context(),scene.assets.game,scene.Hooks());scene.buttons.KillGump(current.RootToken());CHECK(!scene.buttons.Production());scene.buttons.CleanupGumps();CHECK(!scene.buttons.Production() && old.Node(oldToken) && scene.Count()==before+8);
+    auto& next=scene.buttons.ConstructProduction(scene.Context(),scene.assets.game,scene.Hooks());CHECK(scene.buttons.Production()==&next && old.Node(oldToken));scene.buttons.DisableProduction();CHECK(scene.Count()==before);
+}
+
+// 실패한 새 생성의 부분 노드와 이전 현재serial은 독립적으로 보존된다.
+TEST_CASE(ProductionInitialContext_PartialNewConstructorKeepsPreviousSerial) {
+    InitialProductionScene scene;const auto before=scene.Count();auto& old=scene.buttons.ConstructProduction(scene.Context(),scene.assets.game,scene.Hooks());bool rejected{};
+    try { scene.buttons.ConstructProduction(scene.Context(),scene.assets.game,scene.Hooks(false)); } catch (const std::logic_error&) { rejected=true; }
+    CHECK(rejected && scene.buttons.Production()==&old && scene.Count()==before+10);scene.buttons.CleanupGumps();CHECK(scene.buttons.Production()==&old && scene.Count()==before+10);scene.buttons.DisableProduction();CHECK(scene.Count()==before);
+}
+
+// 원문 생성자는 최초bitmap폭0과부모0을보존하며bitmap/도킹작업을선행하지않는다.
+TEST_CASE(ProductionInitialContext_MinimapFactoryUsesCurrentWidthWithoutRefresh) {
+    InitialProductionScene scene;const auto before=scene.Count();auto& mini=scene.buttons.ConstructMinimap(scene.storage,InitialMinimapHooks());const auto* node=mini.Node(mini.RootToken());
+    CHECK(scene.buttons.Minimap()==&mini && scene.Count()==before+1 && node && !node->parent && node->baseWidth==0 && node->baseHeight==0 && !(node->flags&0x20000U));
+    CHECK(mini.Report().ends_with("\t0\t0\t0\t2166136261") && scene.menus->Report().find("raw_gump_help_strings\t2\n")!=std::string::npos);scene.buttons.DisableMinimap();CHECK(!scene.buttons.Minimap() && scene.Count()==before && scene.menus->Report().find("raw_gump_help_strings\t0\n")!=std::string::npos);
+}
+
+// 새현재표시는공유bitmap을사용하고이전표시소멸뒤에도자기출력을유지한다.
+TEST_CASE(ProductionInitialContext_OverlappingMinimapsKeepCurrentBitmapAndDraw) {
+    InitialProductionScene scene;const auto before=scene.Count();const auto palette=BuildPaletteColorTable(InitialHudLogical(scene));auto& old=scene.buttons.EnableMinimap(scene.storage,InitialMinimapHooks());old.SetPalette(palette);old.Resize(480);old.Refresh();const auto oldToken=old.RootToken();
+    auto& current=scene.buttons.ConstructMinimap(scene.storage,InitialMinimapHooks());const auto token=current.RootToken();auto* node=current.Node(token);CHECK(node && !node->parent && node->baseWidth==128 && node->baseHeight==128);node->baseWidth=node->width=80;node->baseHeight=node->height=75;current.Attach(token,160,405,scene.buttons.RootToken(),0);current.Refresh();
+    CHECK(scene.buttons.Minimap()==&current && scene.Count()==before+2);const auto report=current.Report();CHECK(!old.Refresh() && current.Report()==report);const auto both=InitialHudPixels(scene),newPixels=InitialHudRegion(both,160,405,80,75),oldPixels=InitialHudRegion(both,0,405,80,75);CHECK(std::any_of(oldPixels.begin(),oldPixels.end(),[](auto value) { return value!=0x5a; }) && std::any_of(newPixels.begin(),newPixels.end(),[](auto value) { return value!=0x5a; }));
+    scene.buttons.KillGump(oldToken);scene.buttons.CleanupGumps();CHECK(scene.buttons.Minimap()==&current && scene.Count()==before+1);const auto after=InitialHudPixels(scene),cleared=InitialHudRegion(after,0,405,80,75);CHECK(std::all_of(cleared.begin(),cleared.end(),[](auto value) { return value==0x5a; }) && InitialHudRegion(after,160,405,80,75)==newPixels);
+    CHECK(scene.menus->Report().find("raw_external_gumps\t0\t1\n")!=std::string::npos);scene.buttons.DisableMinimap();CHECK(scene.Count()==before && scene.menus->Report().find("raw_external_gumps\t0\t0\n")!=std::string::npos);
+}
+
+// 포인터기반현재표시를삭제해도등록표의이전노드로fallback하지않는다.
+TEST_CASE(ProductionInitialContext_LatestMinimapKilledDoesNotSelectOlder) {
+    InitialProductionScene scene;const auto before=scene.Count();auto& old=scene.buttons.ConstructMinimap(scene.storage,InitialMinimapHooks());const auto oldToken=old.RootToken();auto& current=scene.buttons.ConstructMinimap(scene.storage,InitialMinimapHooks());scene.buttons.KillGump(current.RootToken());scene.buttons.CleanupGumps();
+    CHECK(!scene.buttons.Minimap() && old.Node(oldToken) && !old.Refresh() && scene.Count()==before+1);scene.buttons.DisableMinimap();CHECK(scene.Count()==before);
 }

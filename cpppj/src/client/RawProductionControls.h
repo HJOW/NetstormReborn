@@ -20,6 +20,8 @@ public:
     RawProductionControls(RawMenuTree tree,RawMenuControls& menus,RawCampaignSession& session,const GameAssets& assets,ProductionMaintenanceGlobals& globals,RawProductionHooks hooks); // 현재 실제 Context를 같은 생성 경계에 빌린다.
     RawProductionControls(RawMenuTree tree,RawMenuControls& menus,ProductionControlContext context,const GameAssets& assets,ProductionMaintenanceGlobals& globals,RawProductionHooks hooks); // Session 전에 실제 물리/전역만으로 전체 생산 부모를 준비한다.
     ~RawProductionControls(); // 공통 노드 삭제가 끝난 뒤 처리기를 반납한다.
+    std::uint32_t RootToken() const; // 같은 실제 생산 루트 토큰이며 새/이전 처리기를 구별한다.
+    bool HasNodes() const; // 공통 scalar가 반납할 실제 저장소가 남아 있는지 읽는다. Kill 예약과 소멸 완료를 구별한다.
     void Close(); // 월드보다 먼저 모든 연결 Form과 자식을 반납한다.
     void Open(); // 원본43e640/43ddd0 및 초기43ec00 사건이다.
     std::uint32_t Construct(); //0043e640/예산0043e490의 전체 생성만 한다. 추가 도킹/즉시 생산 동기화를 섞지 않는다.

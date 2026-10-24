@@ -107,6 +107,7 @@ public:
     void ConfigureTestBridgePatterns(std::string_view patterns); // 테스트 전용 임시 조작이며 원본 분석 결과가 아니다. 초기/진행 중 지정 순서를 교체한다.
     RawMinimapControls& EnableMinimap(RawCampaignSession& session,RawMinimapHooks hooks); // 같은 실제 트리/월드에 미니맵을 생성한다.
     RawMinimapControls& EnableMinimap(std::shared_ptr<RawSurfaceStorage> storage,RawMinimapHooks hooks); // Session 이전에도 같은 실제 장기 물리에 미니맵을 설치한다.
+    RawMinimapControls& ConstructMinimap(std::shared_ptr<RawSurfaceStorage> storage,RawMinimapHooks hooks); // 실제공장만호출하며이전표시가살아있어도새부모0노드를만든다.부착/도킹은원문Uber가담당한다.
     RawMinimapControls* Minimap() const; // 살아 있는 실제 미니맵 처리기다.
     void DisableMinimap(); // 현재Session보다먼저통지/입력/표시참조를반납한다.
     void DisableProduction(); // Session 해제 전에 연결 노드/참조를 반납한다.

@@ -32,6 +32,7 @@
 #include <algorithm>
 #include <bit>
 #include <sstream>
+#include <limits>
 #include <stdexcept>
 
 namespace netstorm::client {
@@ -64,6 +65,7 @@ struct RawMenuControls::Impl {
     const GameAssets& assets; // 보호 TYPE/SHP를 읽는 같은 자산 저장소다.
     FontStore& fonts; // Client 글꼴 캐시를 공유한다.
     std::map<std::uint32_t,RawMenuExternalGumps> external; // 생산/미니맵의 독립 수명도 같은 실제 표면과 가상 Draw를 공유한다.
+    std::map<std::uint32_t,RawMenuExternalGumps> ownedExternal;std::uint32_t nextExternal{}; // 기존 슬롯과 분리한 실제 처리기 수명 토큰이며 반납한 번호를 재사용하지 않는다.
     RawMenuHooks hooks; // 실제 설정/명령/음향/마우스 경계다.
     PaletteColorTable palette; // 현재 파일 팔레트의 실제 색 번호다.
     GumpText metrics; // 기존 원본 일반 글자 측정기다.
@@ -211,12 +213,16 @@ struct RawMenuControls::Impl {
     // 현재 토큰을 소유한 외부 파생을 등록 순서대로 조회하며 다른 UI의 수명을 바꾸지 않는다.
     const RawMenuExternalGumps* External(std::uint32_t token) const {
         // 등록하지 않은 슬롯과 비소유 노드는 그대로 다음 처리기로 넘긴다.
-        for (const auto& [slot,externalHooks]:external) if (externalHooks.owns && externalHooks.owns(token)) return &externalHooks;return nullptr;
+        for (const auto& [slot,externalHooks]:external) if (externalHooks.owns && externalHooks.owns(token)) return &externalHooks;
+        for (const auto& [registration,externalHooks]:ownedExternal) if (externalHooks.owns(token)) return &externalHooks; // 살아 있는 각 HUD의 같은 파생만 조회한다.
+        return nullptr;
     }
     // 외부 TextGump만 같은 한 줄 글자 처리기에 빌린다.
     TextGumpNode* ExternalText(std::uint32_t token) const {
         // 생산 글자와 다른 파생을 같은 노드로 잘못 분류하지 않는다.
-        for (const auto& [slot,externalHooks]:external) if (externalHooks.text) if (auto* node=externalHooks.text(token)) return node;return nullptr;
+        for (const auto& [slot,externalHooks]:external) if (externalHooks.text) if (auto* node=externalHooks.text(token)) return node;
+        for (const auto& [registration,externalHooks]:ownedExternal) if (externalHooks.text) if (auto* node=externalHooks.text(token)) return node; // 새/이전 생산 글자를 동일 StyleText에 공급한다.
+        return nullptr;
     }
     // 같은0xd8 요청도 제목·Slider·손잡이는 호출 계층에 따라 구별한다.
     std::uint32_t Allocate(std::size_t bytes,int context) {
@@ -448,6 +454,14 @@ RawMenuControls::~RawMenuControls() {
 void RawMenuControls::SetExternalGumps(RawMenuExternalGumps hooks) { SetExternalGumps(0,std::move(hooks)); }
 // 빈 소유자 훅은 해당 슬롯만 반납한다. 다른 살아 있는 월드 UI는 유지한다.
 void RawMenuControls::SetExternalGumps(std::uint32_t slot,RawMenuExternalGumps hooks) { if (hooks.owns) impl_->external[slot]=std::move(hooks);else impl_->external.erase(slot); }
+// 원문 가상 Draw의 호스트 연결 수명만 관리하며 Gump 등록ID나 깊이는 만들지 않는다.
+std::uint32_t RawMenuControls::RegisterExternalGumps(RawMenuExternalGumps hooks) {
+    auto& s=*impl_;if (!hooks.owns || !hooks.draw) throw std::invalid_argument("외부 Gump의 실제 소유/출력 장치 필요");
+    if (s.nextExternal==std::numeric_limits<std::uint32_t>::max()) throw std::overflow_error("외부 Gump 출력 소유 토큰 소진");
+    const auto registration=s.nextExternal+1;s.ownedExternal.emplace(registration,std::move(hooks));s.nextExternal=registration;return registration;
+}
+// 파생 처리기 반납은 자신이 받은 등록만 지우며 새 처리기의 출력은 유지한다.
+void RawMenuControls::UnregisterExternalGumps(std::uint32_t registration) { impl_->ownedExternal.erase(registration); }
 // 기본 Help가 읽는 노드/문자열과 메뉴 생성기는 현재 공통 상태다.
 std::uint32_t RawMenuControls::BaseHandle(std::uint32_t token,std::uint32_t event,std::uint32_t first,std::uint32_t second) const { return impl_->BaseHelp(token,event,first,second); }
 const TextGump& RawMenuControls::TextBackend() const { return *impl_->costText; } // 같은 한 줄 처리기다.
@@ -722,6 +736,7 @@ bool RawMenuControls::Contains(ScreenPoint point) const {
 // 같은 실제 저장소의 개수/controlled 깊이를 진단 보고에 기록한다.
 std::string RawMenuControls::Report() const {
     auto& s=*impl_;std::ostringstream out;out<<"raw_menus\t"<<s.menuState.instances<<'\t'<<s.menuState.index<<'\t'<<s.menus.size()<<'\t'<<s.titles.size()<<'\t'<<s.fragments.fragments.size()<<'\n';
+    out<<"raw_external_gumps\t"<<s.external.size()<<'\t'<<s.ownedExternal.size()<<'\n'; // 고정 슬롯과 실제 HUD 처리기 수명을 구별하는 읽기 관측이다.
     if (s.nsContext) out<<"raw_nsinfo\t"<<s.nsContext->globals->current<<'\t'<<s.nsRoots.size()<<'\t'<<s.nsPlayers.size()<<'\t'<<s.nsBattles.size()<<'\t'<<s.nsButtons.size()<<'\t'<<s.plainTexts.size()<<'\t'<<s.titles.size()<<'\n'; // 실제 현재 전역/등록 파생만 관측한다.
     out<<"raw_nsinfo_owned\t"<<s.nsOwned.size()<<'\n'; // 기본 생성자 전 미등록 저장소까지 같은 실제 소유 집합에서 관측한다.
     for (const auto& [token,node]:s.nsRoots) { // 실제 파생 필드와 이미 파싱한 현재 버퍼에서만 제목을 관측한다.

@@ -8,8 +8,8 @@
 
 namespace netstorm::client {
 namespace {
-// 생산0번과 독립적으로 반납하는 공통 메뉴 외부 출력 슬롯이다.
-constexpr std::uint32_t kDrawSlot=1,kMinimapVtable=0x0050d51c;
+// 원문 미니맵 파생 가상표이며 출력 수명 토큰과 구별한다.
+constexpr std::uint32_t kMinimapVtable=0x0050d51c;
 // 현재 전체 생성자에 필요한 실제 물리만 요구하며 빈 대체 월드를 만들지 않는다.
 std::shared_ptr<RawSurfaceStorage> RequireStorage(std::shared_ptr<RawSurfaceStorage> storage) {
     if (!storage || storage->pool.Edition()!=o::OriginalEdition::Patch1078) throw std::invalid_argument("미니맵의 실제10.78 물리 저장소 필요");return storage;
@@ -18,18 +18,19 @@ std::shared_ptr<RawSurfaceStorage> RequireStorage(std::shared_ptr<RawSurfaceStor
 // 파생 기본 노드와 bitmap/큐/원본 처리기는 움직이지 않는 한 주소에서 서로 참조한다.
 struct RawMinimapControls::Impl {
     RawMenuTree common;RawMenuControls& menus;RawMinimapHooks hooks; // 실제 공통 처리기와 현재 카메라 장치다.
+    RawMinimapGlobals& globals;std::uint32_t drawRegistration{}; // 같은현재표시/serial을빌리며자기출력등록만반납한다.
     std::shared_ptr<RawSurfaceStorage> storage;o::SquidPop* pop{};o::SquidUnpop* unpop{}; // 물리는 소유하고 현재 월드의 통지만 짧게 빌린다.
     GumpCreateNode node;std::uint32_t token{}; // 실제 공통 등록된 기본 주소다.
-    MinimapGeometryState geometry;o::MetadisplayDirtyState& state;o::MinimapRasterState colors; // 원본 crop/bitmap/큐/색 전역이다.
+    MinimapGeometryState geometry;o::MetadisplayDirtyState& state;o::MinimapRasterState& colors; // 개별crop과공유bitmap/큐/색전역을구별한다.
     o::RawMinimapRaster raster;o::RawMetadisplayDirty dirty; // 실제 같은Pool의 기존 공간 통지와 셀 그림이다.
     bool modified{}; // 현재Refresh가 실제 redraw/셀 쓰기를 수행했는지다.
     // 연결 훅은 실제 호출 시점에 현재 카메라·모드·프레임을 조회한다.
-    Impl(RawMenuTree tree,RawMenuControls& menu,std::shared_ptr<RawSurfaceStorage> data,o::MetadisplayDirtyState& shared,RawMinimapHooks supplied)
-        :common(std::move(tree)),menus(menu),hooks(std::move(supplied)),storage(RequireStorage(std::move(data))),state(shared),raster(storage->pool,storage->hash,storage->types,colors),
+    Impl(RawMenuTree tree,RawMenuControls& menu,std::shared_ptr<RawSurfaceStorage> data,o::MetadisplayDirtyState& shared,RawMinimapGlobals& current,RawMinimapHooks supplied)
+        :common(std::move(tree)),menus(menu),hooks(std::move(supplied)),globals(current),storage(RequireStorage(std::move(data))),state(shared),colors(globals.colors),raster(storage->pool,storage->hash,storage->types,colors),
         dirty(storage->pool,state,{[this] { SyncSize();if (RebuildMinimap(geometry,hooks.view())) { common.changed();modified=true; } },
             [this](auto x,auto y) { colors.challenge=storage->ownerMode.challenge;colors.frame=state.frames;raster.DrawCell(state.bitmap,x,y);modified=true; }}) {
         if (!hooks.view || !hooks.center || !hooks.move || !hooks.inputMode || !hooks.poll) throw std::invalid_argument("실제 미니맵 장치 연결 누락");
-        menus.SetExternalGumps(kDrawSlot,{{},[this](auto value) { return value && value==token; },[this](auto,auto& target,auto&,auto&) { Draw(target); }});
+        drawRegistration=menus.RegisterExternalGumps({{},[this](auto value) { return value && value==token; },[this](auto,auto& target,auto&,auto&) { Draw(target); }});
     }
     // 노드의 실제 현재 크기를 기하 몸체에 전달하며 별도 UI 크기를 누적하지 않는다.
     void SyncSize() { geometry.width=node.baseWidth;geometry.height=node.baseHeight; }
@@ -45,28 +46,36 @@ struct RawMinimapControls::Impl {
     }
 };
 // 생성 전에 같은Session 참조와 실제 장치 경계를 확인한다.
-RawMinimapControls::RawMinimapControls(RawMenuTree tree,RawMenuControls& menus,RawCampaignSession& session,o::MetadisplayDirtyState& state,RawMinimapHooks hooks)
-    :RawMinimapControls(std::move(tree),menus,session.World().Storage(),state,std::move(hooks)) { BindWorld(session.Core()); }
+RawMinimapControls::RawMinimapControls(RawMenuTree tree,RawMenuControls& menus,RawCampaignSession& session,o::MetadisplayDirtyState& state,RawMinimapGlobals& globals,RawMinimapHooks hooks)
+    :RawMinimapControls(std::move(tree),menus,session.World().Storage(),state,globals,std::move(hooks)) { BindWorld(session.Core()); }
 // 초기 HUD도 같은 실제 물리를 사용하며 Session 참조나 Core 사본을 보관하지 않는다.
-RawMinimapControls::RawMinimapControls(RawMenuTree tree,RawMenuControls& menus,std::shared_ptr<RawSurfaceStorage> storage,o::MetadisplayDirtyState& state,RawMinimapHooks hooks)
-    :impl_(std::make_unique<Impl>(std::move(tree),menus,std::move(storage),state,std::move(hooks))) {}
+RawMinimapControls::RawMinimapControls(RawMenuTree tree,RawMenuControls& menus,std::shared_ptr<RawSurfaceStorage> storage,o::MetadisplayDirtyState& state,RawMinimapGlobals& globals,RawMinimapHooks hooks)
+    :impl_(std::make_unique<Impl>(std::move(tree),menus,std::move(storage),state,globals,std::move(hooks))) {}
 // 실제 같은 Pool/공간 자료를 확인한 뒤에만 현재 모듈의 통지를 설치한다.
 void RawMinimapControls::BindWorld(RawWorldCore core) {
     auto& s=*impl_;if (s.pop || s.unpop || &core.pool!=&s.storage->pool || &core.hash!=&s.storage->hash || &core.unpop.Pool()!=&s.storage->pool || &core.ownerMode!=&s.storage->ownerMode || core.types.data()!=s.storage->types.data() || core.spots.data()!=s.storage->spots.data()) throw std::invalid_argument("미니맵의 현재 월드 물리/대여 불일치");
     s.pop=&core.pop;s.unpop=&core.unpop;s.pop->SetMetadisplayDirty(&s.dirty);s.unpop->SetMetadisplayDirty(&s.dirty);s.state.fullRefresh=1;
 }
 // 통지의 대여를 먼저 끊으며 실제 물리 배열과 bitmap은 유지한다.
-void RawMinimapControls::UnbindWorld() { auto& s=*impl_;if (s.pop) s.pop->SetMetadisplayDirty(nullptr);if (s.unpop) s.unpop->SetMetadisplayDirty(nullptr);s.pop=nullptr;s.unpop=nullptr; }
+void RawMinimapControls::UnbindWorld() { auto& s=*impl_;if (s.pop) static_cast<void>(s.pop->ReleaseMetadisplayDirty(&s.dirty));if (s.unpop) static_cast<void>(s.unpop->ReleaseMetadisplayDirty(&s.dirty));s.pop=nullptr;s.unpop=nullptr; }
 // 외부 Draw와 Pop 통지의 참조를 같은Session 반납 전에 끊는다.
-RawMinimapControls::~RawMinimapControls() { Close();UnbindWorld();impl_->menus.SetExternalGumps(kDrawSlot,{}); }
+RawMinimapControls::~RawMinimapControls() { Close();UnbindWorld();impl_->menus.UnregisterExternalGumps(impl_->drawRegistration); }
+// 원문의생성자와공장을같은고정노드에서실행하고이전현재표시는성공한새생성뒤에만교체한다.
+std::uint32_t RawMinimapControls::Construct() {
+    auto& s=*impl_;if (s.token) throw std::logic_error("현재 미니맵 중복 생성");s.token=s.common.token();
+    const auto width=static_cast<float>(s.state.bitmapWidth);s.common.factory.Construct(s.token,0,width,width,0x301);s.node.vtable=kMinimapVtable;s.node.command=29;s.geometry={};
+    s.menus.SetHelpText(s.token,"Sky Overview");s.menus.SetHelpWord(s.token,"minimapGump");s.globals.serial=s.node.serial;s.globals.current=s.token; // 기존영어문구를원문처럼개별노드소유문자열로설치한뒤전역을쓴다.
+    s.state.displayPresent=true;s.state.displayFlags=static_cast<std::uint8_t>(s.node.flags);return s.token;
+}
+std::uint32_t RawMinimapControls::RootToken() const { return impl_->token; } // 실제공통노드의같은호스트별칭이다.
 // 제목/Help 문자열은 기존 공통 메뉴의 안정된 정적 토큰을 사용한다.
 void RawMinimapControls::Open() {
-    auto& s=*impl_;if (s.token) throw std::logic_error("현재 미니맵 중복 생성");s.token=s.common.token();s.common.factory.Construct(s.token,0,128,128,0x301);s.node.vtable=kMinimapVtable;s.node.command=29;s.node.textPointer=0x61000004;s.node.alternateTextPointer=0x61000005;s.geometry={};
-    s.dirty.Refresh({});s.state.displayPresent=true;s.state.displayFlags=static_cast<std::uint8_t>(s.node.flags);s.state.fullRefresh=1;
+    auto& s=*impl_;s.dirty.Refresh({});Construct();s.node.baseWidth=s.node.width=128;s.node.baseHeight=s.node.height=128; // 기존Client의bitmap준비/기본배치를별도호스트설치경계로유지한다.
+    s.state.displayPresent=true;s.state.displayFlags=static_cast<std::uint8_t>(s.node.flags);s.state.fullRefresh=1;
     Attach(s.token,0,0,s.common.create.collection.root,0);s.node.flags|=0x20000;
 }
 // 공통Kill이Idle/캡처/등록표를 함께 처리하며 독립bitmap은 처리기와 같은 수명이다.
-void RawMinimapControls::Close() { auto& s=*impl_;if (s.token) { s.common.lifetime.Kill(s.token);s.common.lifetime.Cleanup(); }s.state.displayPresent=false; }
+void RawMinimapControls::Close() { auto& s=*impl_;if (s.token) { s.common.lifetime.Kill(s.token);s.common.lifetime.Cleanup(); } } // scalar반납이현재표시와일치할때만공유표시관측을해제한다.
 // 원본 mode3의 세로분할x80/가로분할H-80/선두께5가 만드는 기본 영역이다. 전체dock 드래그는 별도 복원 경계다.
 void RawMinimapControls::Resize(int screenHeight) {
     auto& s=*impl_;if (!s.token || screenHeight<=80) throw std::invalid_argument("미니맵 실제 화면 높이/수명 오류");
@@ -82,7 +91,7 @@ void RawMinimapControls::SetPalette(const PaletteColorTable& palette) {
 }
 // 현재 모달/정지 상태를 추가하지 않고 원본 displayPresent/visible 조건만 같은 큐에서 읽는다.
 bool RawMinimapControls::Refresh() {
-    auto& s=*impl_;const auto view=s.hooks.view();s.modified=false;s.state.displayPresent=s.token!=0;s.state.displayFlags=static_cast<std::uint8_t>(s.node.flags);
+    auto& s=*impl_;if (!s.token || s.globals.current!=s.token) return false;const auto view=s.hooks.view();s.modified=false;s.state.displayPresent=true;s.state.displayFlags=static_cast<std::uint8_t>(s.node.flags);
     s.dirty.Refresh({view.camera,{view.viewport.left,view.viewport.top,view.viewport.right,view.viewport.bottom}});return s.modified;
 }
 // 공통 생성/수명/입력은 같은 기본주소를 빌린다.
@@ -105,7 +114,7 @@ void RawMinimapControls::Idle(std::uint32_t token) { auto& s=*impl_;if (!Node(to
 // 별도 bitmap 해제 없는 기본 scalar 소멸자다.
 void RawMinimapControls::DeleteScalar(std::uint32_t token,std::uint32_t flags) { impl_->common.lifetime.DeleteScalar(token,flags); }
 // 같은scalar가끝난뒤만등록대상의포인터를없앤다.
-void RawMinimapControls::Release(std::uint32_t token) { if (token==impl_->token) { impl_->token=0;impl_->state.displayPresent=false; } }
+void RawMinimapControls::Release(std::uint32_t token) { auto& s=*impl_;if (token==s.token) { s.token=0;if (s.globals.current==token) s.state.displayPresent=false; } } // 이전표시반납이새현재표시의전역을지우지않는다.
 // 좌표 지정은 같은 현재 경계를 읽기만 하며 crop/카메라/게임 상태를 쓰지 않는다.
 std::optional<ScreenPoint> RawMinimapControls::Point(std::string_view label) const {
     if (!impl_->token || !label.starts_with("minimap:")) return {};const auto comma=label.find(',');if (comma==label.npos) return {};const auto origin=impl_->common.collection.Position(impl_->token); // Draw와 같은 현재 위치다.

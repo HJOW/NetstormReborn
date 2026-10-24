@@ -12,6 +12,8 @@
 #include <string>
 
 namespace netstorm::o {
+// 미니맵 교체 중 이전 C++ 처리기의 소멸은 이후 연결한 실제 관측 대여를 덮지 않는다.
+bool SquidPop::ReleaseMetadisplayDirty(const RawMetadisplayDirty* expected) { if (!expected || metadisplay_!=expected) return false;metadisplay_=nullptr;return true; }
 // 다른 월드의 SID 풀을 사용하는 큐는 구성 단계에서 거부한다.
 void SquidPop::SetMetadisplayDirty(const RawMetadisplayDirty* dirty) {
     if (dirty && &dirty->Pool()!=&pool_) throw std::invalid_argument("Pop/미니맵 큐 SID 풀 불일치");

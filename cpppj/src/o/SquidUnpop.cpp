@@ -10,6 +10,8 @@
 #include <stdexcept>
 
 namespace netstorm::o {
+// 새 미니맵이 이미 빌린 관측자는 이전 처리기 반납 뒤에도 같은 dirty 큐에 연결돼 있어야 한다.
+bool SquidUnpop::ReleaseMetadisplayDirty(const RawMetadisplayDirty* expected) { if (!expected || metadisplay_!=expected) return false;metadisplay_=nullptr;return true; }
 // 삭제/프레임 갱신도 같은 월드의 미니맵 큐만 사용할 수 있다.
 void SquidUnpop::SetMetadisplayDirty(const RawMetadisplayDirty* dirty) {
     if (dirty && &dirty->Pool()!=&pool_) throw std::invalid_argument("Unpop/미니맵 큐 SID 풀 불일치");

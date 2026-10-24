@@ -80,6 +80,8 @@ public:
     RawMenuControls& operator=(const RawMenuControls&)=delete; // 같은 저장소/처리기를 유지한다.
     void SetExternalGumps(RawMenuExternalGumps hooks);
     void SetExternalGumps(std::uint32_t slot,RawMenuExternalGumps hooks); // 독립 월드 UI가 같은 수집/정렬/클립을 공유하며 슬롯별로 수명을 반납한다.
+    std::uint32_t RegisterExternalGumps(RawMenuExternalGumps hooks); // 고정 슬롯과 별개인 단조 증가 소유 토큰을 발급한다. 새/이전 HUD의 동시 출력을 허용한다.
+    void UnregisterExternalGumps(std::uint32_t registration); // 해당 소유자의 출력만 반납한다. 다른 HUD나 기존 고정 슬롯은 보존한다.
     std::uint32_t BaseHandle(std::uint32_t token,std::uint32_t event,std::uint32_t first,std::uint32_t second) const; // 외부 파생도 같은 기본 우클릭 Help로 위임한다. // 생산 패널의 현재 저장소를 같은 출력 계층에 연결/해제한다.
     const TextGump& TextBackend() const; // 수량/예산도 기존 원본 한 줄 글자 처리기를 공유한다.
     const StyleText& StyleBackend() const; // 생산 글자도 같은 실제 조각·글꼴·그림 파서를 공유한다.

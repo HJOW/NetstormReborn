@@ -360,3 +360,13 @@ TEST_CASE(RawMenuControls_MinimapBeforeSessionAndAcrossWorldBindings) {
     std::vector<std::uint8_t> pixels(640*480,0x5a);client.menus->Draw(pixels,640,480,client.Palette(),BuildGumpShadeMaps(logical));CHECK(std::any_of(pixels.begin()+405*640,pixels.end(),[](auto byte) { return byte!=0x5a; }));
     client.buttons.DisableMinimap();CHECK(!client.buttons.Minimap());world.reset();CHECK(!storage->Borrowed());
 }
+
+// 이전표시의소멸이새표시의실제Pop/Unpop연결을지우면두번째표면의셀그림변화가실패해야한다.
+TEST_CASE(RawMenuControls_MinimapReplacementKeepsCurrentWorldNotifications) {
+    MenuClient client;auto storage=MakeRawSurfaceStorage(client.assets);RawMinimapHooks hooks;hooks.view=[] { return MinimapGeometryView{{},{85,0,640,400},16,11}; };hooks.center=[](float,float) {};hooks.move=[](float,float) {};hooks.inputMode=[] { return 0U; };hooks.poll=[&] { return client.poll; };
+    auto& old=client.buttons.EnableMinimap(storage,hooks);old.SetPalette(client.Palette());old.Resize(480);old.Refresh();const auto oldToken=old.RootToken();
+    BridgeConnectState links;links.bridgeType=82;links.islandType=94;links.stalagType=95;links.connectorType=155;links.noIslandType=157;links.battle=true;auto world=std::make_unique<RawSurfaceWorld>(OriginalEdition::Patch1078,storage->types,storage->frames,storage->shapes,links,97,nullptr,storage);old.BindWorld(world->Core());
+    auto& current=client.buttons.ConstructMinimap(storage,hooks);current.BindWorld(world->Core());current.Attach(current.RootToken(),0,0,client.buttons.RootToken(),0);current.Resize(480);current.Refresh();const auto bitmap=[&] { const auto text=current.Report();return text.substr(text.rfind('\t')+1); };const auto empty=bitmap(); // 미부착공장뒤의기존도킹Resize는원문처럼부착후에호출한다.
+    client.buttons.KillGump(oldToken);client.buttons.CleanupGumps();CHECK(client.buttons.Minimap()==&current);const auto sid=world->Create(157);world->Core().owner.Set(sid,1);world->Pop(sid,128,128,0);current.Refresh();CHECK(bitmap()!=empty);
+    CHECK(world->Destroy(sid));current.Refresh();CHECK(bitmap()==empty);client.buttons.DisableMinimap();world.reset();CHECK(!storage->Borrowed());
+}
