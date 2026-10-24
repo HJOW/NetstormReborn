@@ -30,6 +30,9 @@
 #include "client/MissionFortRequest.h"
 #include "client/CampaignTemplateStorage.h"
 #include "client/TellMapMenus.h"
+#include "client/FortSelection.h"
+#include "client/ClientLocalStateGlobals.h"
+#include "client/ClientGameplayGlobals.h"
 #include "client/RawKnowledgeMenu.h"
 #include "o/RawMissionGuide.h"
 #include "client/GifImage.h"
@@ -67,12 +70,14 @@ std::uint32_t DialogScriptCode(std::string_view name) {
     if (lower=="startdemo") return kStartDemo;
     if (lower=="config") return kScriptConfig;
     if (lower=="warning") return kScriptWarning;
+    const auto fort=FortSelectionScriptCode(name);if (fort!=0xffffffffU) return fort; // 실제 맵 행도 같은 원문 번호와 문자열 고리를 사용한다.
     if (mission!=0xffffffffU) return mission;
     const auto knowledge=KnowledgeScriptCode(name); // 기술 창/지급도 동일 입력 큐를 사용한다.
     return knowledge!=0xffffffffU ? knowledge : GameMenuScriptCode(name);
 }
 // 실제 HTML 메뉴가 선택하는 현재 복원 명령도 같은 원본 메뉴 큐를 사용할 수 있다.
 bool IsTellMenuCommand(std::uint32_t command) {
+    if (command==kAskEditFortCommand || command==kReadFortCommand) return true; // HTML 맵 행을 임시 DialogAction 번호로 바꾸지 않는다.
     static constexpr std::array<std::string_view,11> names{"Tell","DoNothing","StartDemo","Config","Warning","MissionBegin","MissionRestart","MissionAbort","LeaveBattle","MissionFork","MissionEnd"}; // 같은 실제 이름 조회와 숫자 코드를 공유한다.
     for (const auto name:names) if (command==DialogScriptCode(name)) return true; // 별도 호스트 Action 번호로 바꾸지 않는다.
     return false;
@@ -323,7 +328,25 @@ void UberGump::ClearPage() {
     rawButtons_->Menus()->RequestCloseHtmlWindows();page_={};
 }
 // 기존 메인/팝업 메뉴만 호스트 전환 큐를 사용한다. HTML 선택은 실제 부모가 원시 입력 큐에 쓴다.
-void UberGump::ActivatePageAction(DialogAction action) { state_.Post(std::move(action)); }
+void UberGump::ActivatePageAction(DialogAction action) {
+    if (QueueFortSelectionAction(action.command,action.argument,client_.Input(),scriptStrings_)) return; // 메인Edit의원문명령은버튼콜백에서같은일반입력고리에직접예약한다.
+    state_.Post(std::move(action));
+}
+// 현재Guide/Gump가 소비하지 않은 원문 사건만 받고 숫자State 예약을 선착순UI큐와 분리한다.
+bool UberGump::FortSelectionEvent(const InputEvent& event) {
+    const auto command=event.code&0x03ffffffU;
+    if (command!=kAskEditFortCommand && command!=kReadFortCommand) return false;
+    auto native=client_.LocalStateGlobals()->State();auto& player=client_.GameplayGlobals()->player;
+    const std::uint32_t battle=world_ ? world_->Session().BattleActive() : 0U; // 원문의 첫 Battle 관문에서만 읽으므로 이후 callback의 사본 상태로 재사용하지 않는다.
+    FortSelectionHooks hooks;hooks.resolveString=[this](auto token) { return scriptStrings_.Resolve(token); };
+    hooks.lastEditPath=[this] { return client_.Configuration().PathSpec("lastEditFort"); };
+    hooks.pending=[this](auto name) { SetPendingFortName(pendingFortName_,name,[] { std::clog<<"Fort pending 이름의 점 진단\n"; }); };
+    hooks.refresh=[this](auto mode) { static_cast<void>(mapCatalog_->Refresh(static_cast<std::int32_t>(mode))); };
+    hooks.tell=[this](auto name) { Tell(std::string(name)); };hooks.gameSeconds=[this] { return client_.Time().game; };
+    // Battle/phase14의 파일 보존 하위는 아직 현재 Fort 파일 장치가 필요하며 빈 성공으로 채우지 않는다.
+    const auto result=DispatchFortSelectionCommand(event,{fortSelectionMode_,native.next[0],battle,native.phase[0],player.templateOwner,player.battleOwner},hooks);
+    if (result) Refresh();return result;
+}
 // 실제 전체 창의 Kill 직후 표시 phase만 복귀시키며 소멸/OnExit를 앞당기지 않는다.
 void UberGump::SyncTellPresentation() {
     if (!popup_.empty() || (state_.phase!=ClientPhase::Dialog && state_.phase!=ClientPhase::Briefing) || rawButtons_->Menus()->HtmlWindowsOpen()) return;
@@ -763,6 +786,7 @@ void UberGump::Event(InputEvent event) {
     }
     if (transitionCode==0x02000095U) { if (!(event.code&InputCode::kRelease)) { const auto name=std::string(scriptStrings_.Resolve(std::bit_cast<std::uint32_t>(event.y)));static_cast<void>(TryTell(name)); }return; } // Help Back의 스크립트 복귀다.
     if (transitionCode==kDialogDoNothing) return; // 원본 명령 자체는 효과가 없으며 HTML 부모는 발화 시 이미 Kill되었다.
+    if (FortSelectionEvent(event)) return; // Guide와 실제 Gump 입력 뒤 원문 일반 부모의 같은 두 명령을 처리한다.
     if (transitionCode==kStartDemo) {
         if (!(event.code&InputCode::kRelease)) BeginMission(std::string(scriptStrings_.Resolve(std::bit_cast<std::uint32_t>(event.y))),1);
         return; // 원본005429f4의 실제 세 번째 인자를 동일 공장으로 전달한다.
@@ -916,6 +940,7 @@ void UberGump::Execute(const DialogAction& action) {
     if (o::AsciiLower(action.command)=="loadmissionworld") { LoadMissionWorld();StartMissionWorld();return; } // 비 Tutorial도 표시/입력 뒤 같은 원본 월드 설치를 수행한다.
     if (o::AsciiLower(action.command)=="loadmissionfort") { if (!missionRuntime_ || !missionRuntime_->guided) throw std::logic_error("현재 Tutorial 없는 지연 요새 로드");LoadMissionWorld(action.argument);return; } // 같은 전환 큐의 다음 루프에서만 설치한다.
     if (QueueMissionControlAction(action.command,action.argument,client_.Input(),scriptStrings_)) return;
+    if (QueueFortSelectionAction(action.command,action.argument,client_.Input(),scriptStrings_)) return;
     if (GameMenuScriptCode(action.command)!=0xffffffffU) { QueueScriptCommand(action.command+','+action.argument,client_.Input(),scriptStrings_,{GameMenuScriptCode,{}});return; } // 원본확인창/메뉴닫기효과도같은정수명령큐를사용한다.
     if (KnowledgeScriptCode(action.command)!=0xffffffffU) { QueueScriptCommand(action.command+','+action.argument,client_.Input(),scriptStrings_,{KnowledgeScriptCode,{}});return; }
     const auto command = o::AsciiLower(action.command);
@@ -1012,7 +1037,7 @@ void UberGump::Compose() {
         // 원본 10.78의 8개 버튼. 미복원 기능도 원본 자료의 창을 통해 상태를 알린다.
         const std::array<DialogItem, 8> buttons{{
             {"Campaign", {"Tell", campaign}}, {"Multiplayer", {"Tell", "NotImplemented"}}, {"Demo", {"Tell", "DEMOVILLE"}}, {"Help", {"Menu", "help"}},
-            {"Edit", {"Tell", "NotImplemented"}}, {"Credits", {"Tell", "Credits"}}, {"Options", {"Menu", "options"}}, {"Quit", {"Quit", "0"}}}};
+            {"Edit", {"AskEditFort", "0"}}, {"Credits", {"Tell", "Credits"}}, {"Options", {"Menu", "options"}}, {"Quit", {"Quit", "0"}}}};
         // 펼침 메뉴 동안 밑에 보이는 버튼은 입력 영역에 넣지 않는다.
         for (std::size_t i = 0; i < buttons.size(); ++i) button(buttons[i], x + static_cast<int>(i % 4) * kButtonPitch, y + static_cast<int>(i / 4) * 23, kButtonWidth);
     }
@@ -1133,6 +1158,8 @@ std::string UberGump::Report() const {
     out << "paused\t" << client_.Paused() << "\nsound\t" << client_.Configuration().GetInt("sound") << "\n";
     out<<"map_menu\t"<<rawButtons_->Menus()->HtmlMenuColumns()<<'\t'<<mapCatalog_->Cached().count<<'\t'<<mapCatalog_->Cached().dirty<<'\t'<<mapFileSpec_.Current()<<'\n'; // 실제 부착된 열과 캐시 상태만 관찰한다. 선택/로딩 성공을 합성하지 않는다.
     out<<"html_window_state\t"<<client_.HtmlWindowGlobals()->window.instances<<'\t'<<rawButtons_->DialogCount()<<'\t'<<rawButtons_->Menus()->HtmlWindowsOpen()<<'\n'; // Kill 뒤 인스턴스와 즉시 모달 반납을 구별하는 현재값이다.
+    const auto& local=client_.LocalStateGlobals()->Blocks();out<<"fort_selection\t"<<fortSelectionMode_<<'\t'<<local[1][0]<<'\t'<<local[3][0]<<'\t'<<local[4][0]<<'\t'<<Field(pendingFortName_)<<'\n'; // 원문mode/확정phase/현재요청/next/pending을 설치완료와 구별해 읽는다.
+    out<<"fort_catalog\t"<<mapCatalog_->Cached().count<<'\t'<<mapCatalog_->Cached().dirty<<'\t'<<client_.Configuration().GetInt("mayEditMissions")<<'\t'<<mapFileSpec_.Current()<<'\n'; // 실제50칸캐시와현재원문설정/키를읽고목록을다시열거하지않는다.
     out<<"current_dialog\t"<<rawButtons_->CurrentDialog()<<'\n'; // Guide4c8e90과 같은 실제565dd4다.
     out << "thunder_processes\t" << client_.ThunderFlashCount() << '\n';
     out<<"game_menu_bar\t"<<(gameMenuState_ ? gameMenuState_->menuSerial : 0U)<<'\t'<<GameMenuOpen()<<'\t'<<(gameMenuState_ ? gameMenuState_->checksum : 0)<<'\n'; // 같은serial조회와기존SP검산을관찰한다.

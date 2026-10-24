@@ -282,6 +282,7 @@ public:
     // 같은 실제 PlayerWorld의00540c70을 읽는다. 자산/UI 어댑터의 로컬 번호 사본을 사용하지 않는다.
     std::uint32_t LocalOwner() const;
     std::uint32_t TemplateOwner() const; // 실제00540cac의 템플릿 소유자이며 로컬 소유자와 구별한다.
+    std::uint32_t BattleActive() const; // 원문00594fbc의 현재 실제 자산 Battle 관문을 읽는다. Editor/표시phase로 대체하지 않는다.
     std::uint32_t CurrentTechnologyParent() const; // 현재48fc60의 실제 기술 부모다.
     std::uint32_t IslandCount() const; // 설치중 Add Island 관문도 현재3204BYTE IslandList의 countDWORD를 직접 읽는다.
     void SynchronizeProductionContents(); // 실제43ec00(first1)의43df80 직접 호출이다.

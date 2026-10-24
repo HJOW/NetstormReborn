@@ -3319,6 +3319,7 @@ std::string_view RawCampaignSession::CurrentHandle() const {
 std::uint32_t RawCampaignSession::LocalOwner() const { return impl_->playerState.battleOwner; }
 // 원본 정보 설명이 읽는 같은 PlayerWorld 템플릿 소유자다.
 std::uint32_t RawCampaignSession::TemplateOwner() const { return impl_->playerState.templateOwner; }
+std::uint32_t RawCampaignSession::BattleActive() const { return impl_->assetState.inBattle ? 1U : 0U; } // 동일Session의 실제00594fbc 관문이며 새 표시 상태를 만들지 않는다.
 // 원본48fc60의 현재 기술 부모를 값 복사 없이 같은 Player 저장소에서 읽는다.
 std::uint32_t RawCampaignSession::CurrentTechnologyParent() const { return impl_->player->CurrentTechnology(); }
 // 실제 생산 패널의 명시 갱신과 반복자는 같은 현재 장기 몸체를 사용한다.

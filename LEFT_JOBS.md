@@ -1,5 +1,16 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-25 단위416 완료: 실제 Edit 맵 선택 명령과 숫자 State 예약 연결
+
+- [x] 이전 단위415는 **ab298e32 / 20261025-09 CP**로 완료됐으며 실제 자연 완료·같은 프레임 관측·전체2796검사와 로컬 커밋을 남긴 진척이다. AGENTS와 양 인계를 재독했고 현재/마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-10-23**이다. 보호1821파일 기준은 `extracted/cpp-editor-frontdoor-416-baseline.json`이다.
+- [x] 현재 메인 Edit가 여전히NotImplemented이며 기존 FortSelection은 제품 호출자가 없음을 다시 확인했다. 원문004d7408의mode2→lastEditFort/별도pending→목록2→LoadEditable, ReadFort의event.y→nextState1을 기존 공통 입력/HTML/Client720BYTE에 연결한다. 원문의next 덮어쓰기를 State::Post 선착순 큐로 대체하지 않는다.
+- [x] 실제 Ask/선택/취소·미션 회귀·전체 검사와 보호 감사를 완료했다. 이 선택 예약은 기존 Editor 전체 설치/State1 prefix·HUD/State4/loaded·도구/저장 완료와 다르며 전체 편집 완료로 판정하지 않는다.
+- [x] build1 종료0과 GUI cancel1의 실제 LoadEditable/Cancel이 통과했다. 기본 원본 디스크에는 Fort433개가 있고 관측한Alerted/Alliance/TEST01/TEST02의State+17은2다. 원문의50칸 상한으로TEST01은첫목록밖이다. mayEditMissions=0만으로이종류2상한이풀리지않으며 이를 제품 필터/파일 개조로 우회하지 않는다.
+- [x] 메인Edit를호스트UI전환큐보다원문일반입력고리에직접예약한build2 종료0이다. 최종제품 **cbdb3eaecd663663761fe1f62e06cc316bc40459400dbd9fd1b2602b34a82556**, 검사 **096680183fa8de49eecba3e45b6290cb5bf3ac8b5ba4c5fee7409b709962158b**다. 실제 버튼 클릭과같은3프레임에LoadEditable을확인했고, 최종공유도구 `tools/cpp_editor_selection_smoke.py`로기본목록50/취소·원문복사작업폴더2/취소·TEST01선택·기존TEST01체크뒤TEST02선택의네경로를통과했다. 정상PathSpec으로두원문Fort를별도폴더에서읽으며바이트/규칙/단계를바꾸지않았다. next1은아직소비되지않는실제미완료설치예약이다.
+- [x] 최초select1은실제clone종료0/보호복구동일이지만설정복구OSError22두재시도와PowerShell wrapper종료1을보존했다. 최종도구의네실행은wrapper0이다. 기존Early회귀첫시도는잘못쓴CLI별칭f4로종료1이며원시driver를보존했다. 실제기존별칭home=VK_F4로복원한early2의MORE→A1.→OK→F4→B./66과Campaign/Early목록/Back이통과했다. 제품CLI/게임규칙은이검사오류때문에바꾸지않았다.
+- [x] 최종FortSelection4/맵메뉴4/실제목록9/HTML메타11 **28회·고유28/실패0**이며기존독립Native3672행을포함한다. 최종C++4/검사도구1을 `extracted/cpp-editor-frontdoor-416-final-source/`에고정했다. 전체CTest **2796검사/실패check0/종료0·319.59초**, 보호 **1821파일 변경0**이다. [완료 문서](docs/exe/cpp-editor-frontdoor-20261025.md)/[제품 보고서](cpppj/editor-frontdoor-runtime-20261025.json)에 실제 입력·실패·SHA·미완료 경계를 남겼다. **20261025-10 CP**로 로컬 커밋하며 push하지 않는다.
+- [ ] 다음에는 현재소비되지않는next1을실제State1부모에연결한다. 원문정리004b2df0/prefix와전체Uber생성/이전루트반납·HUD의복수소유/출력슬롯→current Fort이름/작업본→checkpoint→HUD/팔레트→공통State확정/다음Poll4→설치공개·실제편집명령전송 순서가 필요하다. Battle/phase14 파일보존, Create New Map/Save as/편집도구/저장·재로드·언어별scenario와전체Early/캠페인/Demo자연완주/완전동일성도미완료다. /goal은활성이다.
+
 ## 2026-10-25 단위415 완료: 전체 HTML 안내의 실제 Early1/2 자연 완료 재검증
 
 - [x] 단위414 **6dd8d803 / 20261025-08 CP**와 AGENTS/양 인계를 재독했다. 현재/마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-10-23**이다. 새 전체 디컴파일/원본 실행0이며 보호 기준은 `extracted/cpp-early-html-415-baseline.json`이다.

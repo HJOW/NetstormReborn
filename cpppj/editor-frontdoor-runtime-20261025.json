@@ -1,0 +1,1529 @@
+{
+  "unit": 416,
+  "goalComplete": false,
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "originalGameExecuted": false,
+  "newNativeOracleRuns": 0,
+  "productSha256": "cbdb3eaecd663663761fe1f62e06cc316bc40459400dbd9fd1b2602b34a82556",
+  "testBinarySha256": "096680183fa8de49eecba3e45b6290cb5bf3ac8b5ba4c5fee7409b709962158b",
+  "sourceHashes": {
+    "cpppj/src/client/UberGump.cpp": "1efba4754ca9830ead009f2f4309ab5f6f8dd262d2c99be03ee9d694eba732eb",
+    "cpppj/src/client/UberGump.h": "f03f456288e58b829bffa45d7ac10a6930a4ae200350d34555a6d0a1cfce60d6",
+    "cpppj/src/client/RawCampaignSession.cpp": "6c2e2d4a9d4016e5cafeeafd16e528295c884207782b8c4a49fc64f030c707da",
+    "cpppj/src/client/RawCampaignSession.h": "0f8f3ea9ec19ab517e3c41615cb8d026b3111c2ef5d1988f4abd0805d59fac3b",
+    "tools/cpp_editor_selection_smoke.py": "e2e37a63bcb4dd1e0870a8fc58521ca187cc3df2d489fa4805447809490a1d17",
+    "docs/exe/cpp-editor-frontdoor-20261025.md": "f28aed9aaf091834377e2f16d91ed9259912f0651c78c6750abd816f5ceaa323"
+  },
+  "referenceHashes": {
+    "AGENTS.md": "7f853771930147c26e67d444ced94114992510a3fa072f5ed6bd63da7ba88bd9",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "cpppj/src/client/FortSelection.cpp": "2b750a240ee6ebeb2e0d2e47a751f52dfd43b3f6545faa6bbd9290dc3ebd0653",
+    "cpppj/src/client/FortSelection.h": "4ffb954ff17342b12596fcc739329cfd7728a7322869cb5e2b51d89718145ee8",
+    "cpppj/src/client/ClientLocalStateGlobals.h": "25ab0e0e0667b83af78155ad7202b3ce31ea1bb3562aad09d10a7ee8bc9a3ca1",
+    "cpppj/src/client/TellMapMenus.cpp": "fca2bec01dd1ee75aba67cdfa115f094e4f33e272d38ab355214118ca578f49b",
+    "cpppj/tests/fixtures/fort-selection-x86.tsv": "3a129f729f73dc82e86c621a7ed48cbdda1dde486075fdc7746cea6089e18c9c",
+    "tools/decomp_fort_selection.py": "c07f525b743021870421c2e3d76cf0e6a36028f9d4be0b15f960e6feac3fd6ac",
+    "originals/d/TEST01.fort": "3c8a7d73be785f5b06f4c94aea633697b52d95129ed502ebc43f1efe326bad8f",
+    "originals/d/TEST02.fort": "85c328b764ccddc6395e0ce582d31b6241b0c6296ed600665d8ceb4465e46640"
+  },
+  "rawHashes": {
+    "extracted/cpp-editor-frontdoor-416-audit.py": "ff185e66b39917abc790a51c96f6d00c710227fb30b571e8f7a89b75a93cf2af",
+    "extracted/cpp-editor-frontdoor-416-baseline.json": "b438b029f670abd19cf40456b6e6ec0850ccfa70aa938276cd23a3c1c46d1938",
+    "extracted/cpp-editor-frontdoor-416-build1.log": "c8edacc6a7358079d46ea1d331110975e37f1215eaf0f417e03cc91bf10ad4f4",
+    "extracted/cpp-editor-frontdoor-416-build2.log": "be8fd99b6697e0e1fd3ffa2a221a2e22e0fdb618d4b60cef4613cc3635251461",
+    "extracted/cpp-editor-frontdoor-416-cancel-final/editable.bmp": "f46a3ed517a4a307b157b663cd6765fa4ca2bb8f0247ee9291f8a5187790d473",
+    "extracted/cpp-editor-frontdoor-416-cancel-final/editable.png": "44865b9046dbca1f16ac0bb2fcf0ff01aaebf1a01bcd3656e58bf2c850506d4a",
+    "extracted/cpp-editor-frontdoor-416-cancel-final/execution.json": "a15cb9d27a15b8b4232e7c5cd33dbc882d24202f49b1ed797e64a6f6468144f9",
+    "extracted/cpp-editor-frontdoor-416-cancel-final/main.bmp": "78508b37669a9706f508a4b89b25b3d2a7d3c0e0cf914cf93d64dccd7177925e",
+    "extracted/cpp-editor-frontdoor-416-cancel-final/main.png": "5568372bf07af158b4e848ddd156a5dba1844ec7cf51113064abdc0d61f61af3",
+    "extracted/cpp-editor-frontdoor-416-cancel-final/opened.bmp": "f46a3ed517a4a307b157b663cd6765fa4ca2bb8f0247ee9291f8a5187790d473",
+    "extracted/cpp-editor-frontdoor-416-cancel-final/opened.png": "44865b9046dbca1f16ac0bb2fcf0ff01aaebf1a01bcd3656e58bf2c850506d4a",
+    "extracted/cpp-editor-frontdoor-416-cancel-final/originals-after.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-editor-frontdoor-416-cancel-final/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-editor-frontdoor-416-cancel-final/prepared.json": "12f853d541f64c7c14b28ff44b2d2be93d5252184d73c699cc8ec71ed03b29f7",
+    "extracted/cpp-editor-frontdoor-416-cancel-final/requested.bmp": "78508b37669a9706f508a4b89b25b3d2a7d3c0e0cf914cf93d64dccd7177925e",
+    "extracted/cpp-editor-frontdoor-416-cancel-final/requested.png": "5568372bf07af158b4e848ddd156a5dba1844ec7cf51113064abdc0d61f61af3",
+    "extracted/cpp-editor-frontdoor-416-cancel-final/results.json": "b4dc0bfa4040065d3c77d5b0d52e65d76e36bb6fa4c4ab23be5d1bfd56ecf532",
+    "extracted/cpp-editor-frontdoor-416-cancel-final/returned.bmp": "78508b37669a9706f508a4b89b25b3d2a7d3c0e0cf914cf93d64dccd7177925e",
+    "extracted/cpp-editor-frontdoor-416-cancel-final/returned.png": "5568372bf07af158b4e848ddd156a5dba1844ec7cf51113064abdc0d61f61af3",
+    "extracted/cpp-editor-frontdoor-416-cancel-final/running.json": "598c46c1ddd3e7efc15fa49892ff7dcd1a57024f5b6ff1d7995dffa6c575ae32",
+    "extracted/cpp-editor-frontdoor-416-cancel-final/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-editor-frontdoor-416-cancel-final/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-editor-frontdoor-416-cancel-final/states.tsv": "1e39b3f261283e9597daaee537630012da92b5690bad2bf5bdb9b8693e470f30",
+    "extracted/cpp-editor-frontdoor-416-cancel-final/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-editor-frontdoor-416-cancel-final/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-editor-frontdoor-416-cancel-final/steps.tsv": "52d7df954e5ac73fcd8dbef05d32612bca589271aeb06ef834421935d538721c",
+    "extracted/cpp-editor-frontdoor-416-cancel-final.log": "525d7d96bbb2d55f3906f03d88e752151eb6ed5f57637e2ad38a19875c9e1033",
+    "extracted/cpp-editor-frontdoor-416-cancel-working/editable.bmp": "86ac347fde566232a3d868f339c71591ea1f6b737ff661d37fa77eec9e83a0f8",
+    "extracted/cpp-editor-frontdoor-416-cancel-working/editable.png": "c2ca0684196a904f53c2c1050e034a24a0d4d270b72a3d3f278b6ca75511effe",
+    "extracted/cpp-editor-frontdoor-416-cancel-working/execution.json": "baaba9fab9a8c65231ba851e8e4eff397689516ada94c837904a4bd9f8ce6cd2",
+    "extracted/cpp-editor-frontdoor-416-cancel-working/main.bmp": "78508b37669a9706f508a4b89b25b3d2a7d3c0e0cf914cf93d64dccd7177925e",
+    "extracted/cpp-editor-frontdoor-416-cancel-working/main.png": "5568372bf07af158b4e848ddd156a5dba1844ec7cf51113064abdc0d61f61af3",
+    "extracted/cpp-editor-frontdoor-416-cancel-working/maps/TEST01.fort": "3c8a7d73be785f5b06f4c94aea633697b52d95129ed502ebc43f1efe326bad8f",
+    "extracted/cpp-editor-frontdoor-416-cancel-working/maps/TEST02.fort": "85c328b764ccddc6395e0ce582d31b6241b0c6296ed600665d8ceb4465e46640",
+    "extracted/cpp-editor-frontdoor-416-cancel-working/opened.bmp": "86ac347fde566232a3d868f339c71591ea1f6b737ff661d37fa77eec9e83a0f8",
+    "extracted/cpp-editor-frontdoor-416-cancel-working/opened.png": "c2ca0684196a904f53c2c1050e034a24a0d4d270b72a3d3f278b6ca75511effe",
+    "extracted/cpp-editor-frontdoor-416-cancel-working/originals-after.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-editor-frontdoor-416-cancel-working/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-editor-frontdoor-416-cancel-working/prepared.json": "614bb28f3af54a047bc20d2cc207d335413c730b92c3904e7ebf0677a11c9517",
+    "extracted/cpp-editor-frontdoor-416-cancel-working/requested.bmp": "78508b37669a9706f508a4b89b25b3d2a7d3c0e0cf914cf93d64dccd7177925e",
+    "extracted/cpp-editor-frontdoor-416-cancel-working/requested.png": "5568372bf07af158b4e848ddd156a5dba1844ec7cf51113064abdc0d61f61af3",
+    "extracted/cpp-editor-frontdoor-416-cancel-working/results.json": "461c50dd268c8f32a6c8a8e69ff57d0363fc4a179f7a82038824e8a01d2bda83",
+    "extracted/cpp-editor-frontdoor-416-cancel-working/returned.bmp": "78508b37669a9706f508a4b89b25b3d2a7d3c0e0cf914cf93d64dccd7177925e",
+    "extracted/cpp-editor-frontdoor-416-cancel-working/returned.png": "5568372bf07af158b4e848ddd156a5dba1844ec7cf51113064abdc0d61f61af3",
+    "extracted/cpp-editor-frontdoor-416-cancel-working/running.json": "e79479390998c16a52439183740831482a82a2b9a4b2ad484701d92cb0486405",
+    "extracted/cpp-editor-frontdoor-416-cancel-working/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-editor-frontdoor-416-cancel-working/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-editor-frontdoor-416-cancel-working/states.tsv": "d238904caeb10ada8e86fc1e26deee35e5aad1dfcf0d5ff3779cfcdee102cc95",
+    "extracted/cpp-editor-frontdoor-416-cancel-working/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-editor-frontdoor-416-cancel-working/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-editor-frontdoor-416-cancel-working/steps.tsv": "892697407170ccc0d48ca3ccd09900c132422382c2cf6707b37bb5888a17d208",
+    "extracted/cpp-editor-frontdoor-416-cancel-working.log": "868701dd338807f9b9f322405b40b9feda3a88c15985e7444c2b199290460b28",
+    "extracted/cpp-editor-frontdoor-416-cancel1/editable.bmp": "f46a3ed517a4a307b157b663cd6765fa4ca2bb8f0247ee9291f8a5187790d473",
+    "extracted/cpp-editor-frontdoor-416-cancel1/editable.png": "44865b9046dbca1f16ac0bb2fcf0ff01aaebf1a01bcd3656e58bf2c850506d4a",
+    "extracted/cpp-editor-frontdoor-416-cancel1/observed.json": "b43047b5906ca44c6f76741e5ae035f7878714574338f2fda6f63f84fb236962",
+    "extracted/cpp-editor-frontdoor-416-cancel1/originals-after.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-editor-frontdoor-416-cancel1/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-editor-frontdoor-416-cancel1/requested.bmp": "78508b37669a9706f508a4b89b25b3d2a7d3c0e0cf914cf93d64dccd7177925e",
+    "extracted/cpp-editor-frontdoor-416-cancel1/requested.png": "5568372bf07af158b4e848ddd156a5dba1844ec7cf51113064abdc0d61f61af3",
+    "extracted/cpp-editor-frontdoor-416-cancel1/result.json": "3c26c56a5dc3fd454ce1cf06710b741e66335e0fe20b7a350bffd254878dcca5",
+    "extracted/cpp-editor-frontdoor-416-cancel1/returned.bmp": "78508b37669a9706f508a4b89b25b3d2a7d3c0e0cf914cf93d64dccd7177925e",
+    "extracted/cpp-editor-frontdoor-416-cancel1/returned.png": "5568372bf07af158b4e848ddd156a5dba1844ec7cf51113064abdc0d61f61af3",
+    "extracted/cpp-editor-frontdoor-416-cancel1/running.json": "3f3d0b3ff287b4aa3c93ddc82a28536ae0c6786a48e7af86d5b334d4de5d02e8",
+    "extracted/cpp-editor-frontdoor-416-cancel1/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-editor-frontdoor-416-cancel1/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-editor-frontdoor-416-cancel1/states.tsv": "ed355cbdf75edba59e0deb576308c41f7ee5d462102b01dfe8497ee2c3592277",
+    "extracted/cpp-editor-frontdoor-416-cancel1/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-editor-frontdoor-416-cancel1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-editor-frontdoor-416-cancel1/steps.tsv": "e079c3c8580da1073c521ceb2af3d8351c6135761ca203fda4c1fa3367664c3f",
+    "extracted/cpp-editor-frontdoor-416-cancel1.log": "9bccf438f9cfd971d3ee8c0b496320a265ffc4a52fd515c174707fd386046b0c",
+    "extracted/cpp-editor-frontdoor-416-cancel2/editable.bmp": "f46a3ed517a4a307b157b663cd6765fa4ca2bb8f0247ee9291f8a5187790d473",
+    "extracted/cpp-editor-frontdoor-416-cancel2/editable.png": "44865b9046dbca1f16ac0bb2fcf0ff01aaebf1a01bcd3656e58bf2c850506d4a",
+    "extracted/cpp-editor-frontdoor-416-cancel2/observed.json": "19667ae3b5f0667453012e10dab2fd10ad059d0c30b580189ccd30da9c20c00a",
+    "extracted/cpp-editor-frontdoor-416-cancel2/originals-after.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-editor-frontdoor-416-cancel2/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-editor-frontdoor-416-cancel2/requested.bmp": "78508b37669a9706f508a4b89b25b3d2a7d3c0e0cf914cf93d64dccd7177925e",
+    "extracted/cpp-editor-frontdoor-416-cancel2/requested.png": "5568372bf07af158b4e848ddd156a5dba1844ec7cf51113064abdc0d61f61af3",
+    "extracted/cpp-editor-frontdoor-416-cancel2/result.json": "fccb9687bc039561f073e8b60e374c3b1967dc5624911448c9d734eadcafd1ef",
+    "extracted/cpp-editor-frontdoor-416-cancel2/returned.bmp": "78508b37669a9706f508a4b89b25b3d2a7d3c0e0cf914cf93d64dccd7177925e",
+    "extracted/cpp-editor-frontdoor-416-cancel2/returned.png": "5568372bf07af158b4e848ddd156a5dba1844ec7cf51113064abdc0d61f61af3",
+    "extracted/cpp-editor-frontdoor-416-cancel2/running.json": "93756f93da44fa8a2d9623d13ed1244ef9d3d253154f8c411c2c90fd92a2b215",
+    "extracted/cpp-editor-frontdoor-416-cancel2/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-editor-frontdoor-416-cancel2/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-editor-frontdoor-416-cancel2/states.tsv": "6df0a890d56deb09db8f55078aab95073e4e9b9ced85bc26663e89533f028c79",
+    "extracted/cpp-editor-frontdoor-416-cancel2/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-editor-frontdoor-416-cancel2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-editor-frontdoor-416-cancel2/steps.tsv": "8fc18274b22e83b51e420bc2829fae3927fc9a2803a86198275ddd1945fba412",
+    "extracted/cpp-editor-frontdoor-416-cancel2.log": "3eefd934cb12e69eb41b7c781d07ab1b8f4c811ac82d555e614dd86cd9a63643",
+    "extracted/cpp-editor-frontdoor-416-catalog1.log": "194d06d0db0cfd40909a0dbe41d97da8f7225c2416d52f39cf187387f2251a26",
+    "extracted/cpp-editor-frontdoor-416-catalog2.log": "194d06d0db0cfd40909a0dbe41d97da8f7225c2416d52f39cf187387f2251a26",
+    "extracted/cpp-editor-frontdoor-416-ctest1-tests.log": "a4672b762876732136b2030801f074f0cef6d795d286ccd768bf1658e7e856ce",
+    "extracted/cpp-editor-frontdoor-416-ctest1.log": "979bd4eabaf875a4d078e6ddf53a56e5d663f180b35fc77b048f155593d04680",
+    "extracted/cpp-editor-frontdoor-416-early.py": "d3d940d1a00e4290a8cae3be949a9c3da771e31ab3f2fd83e6b721faeb5fa7a1",
+    "extracted/cpp-editor-frontdoor-416-early1/campaign.bmp": "e375ac0f254506a91be64e3225242c2bdd6bb42ac725ae25ea447c6771728edd",
+    "extracted/cpp-editor-frontdoor-416-early1/continued.bmp": "45592b5ea08df96083baea5051bc906da5e99a8852def23df62b89ee8f42a276",
+    "extracted/cpp-editor-frontdoor-416-early1/driver.py": "3282a26815117f9c57c578b8b368b0e9b5decdd67b24cdd072ef82dd4ddedd71",
+    "extracted/cpp-editor-frontdoor-416-early1/early.bmp": "3901369f51647844a1df20100cd16b83203ab11e12b2a3b1ec53b008cabbf77c",
+    "extracted/cpp-editor-frontdoor-416-early1/loading.bmp": "3754aef43896315738d0dacf5e6cd5756a3ee9d09a332c42828c9071fd5a8a39",
+    "extracted/cpp-editor-frontdoor-416-early1/ready.bmp": "2f80a15da231a387110e732eb84644a108d2433b7d8e7189fb36589638983650",
+    "extracted/cpp-editor-frontdoor-416-early1/result.json": "e467beb2d65f9e489845999cdd51ca5d86e8eda6e4b25f5abab62dad4fe76442",
+    "extracted/cpp-editor-frontdoor-416-early1/running.json": "8916df91f426028766d7af5d1ba1ed8523c193b791bb1063b8f8bca50f43b1af",
+    "extracted/cpp-editor-frontdoor-416-early1/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-editor-frontdoor-416-early1/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-editor-frontdoor-416-early1/started.bmp": "7e703c7c3ceab9950c3779c71301ddcdc61f0d4d24f1c166bef954f5d955ea45",
+    "extracted/cpp-editor-frontdoor-416-early1/states.tsv": "8ac184d6011acf6e5651d2ba2c6a435c954222a23a70048ac8396437ac4c607b",
+    "extracted/cpp-editor-frontdoor-416-early1/stderr.log": "9eadad327093bddeb19f4e9dbb8c1683b1e14f5d6285fea26cf46fadcfadb239",
+    "extracted/cpp-editor-frontdoor-416-early1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-editor-frontdoor-416-early1/steps.tsv": "09f3dd6e7094c4953a27191b29d357e1eb38aee15879d0b4c981bad397da061a",
+    "extracted/cpp-editor-frontdoor-416-early1.log": "d3c99cbc4602d55a69290122a612d197d780695398190a9d5710b68f2a69baa1",
+    "extracted/cpp-editor-frontdoor-416-early2/campaign.bmp": "e375ac0f254506a91be64e3225242c2bdd6bb42ac725ae25ea447c6771728edd",
+    "extracted/cpp-editor-frontdoor-416-early2/campaign.png": "48e966186d428cda6ce61afeb9c9a52d9ab860aae08b386526f5926ffd0d73e1",
+    "extracted/cpp-editor-frontdoor-416-early2/continued.bmp": "e8ed8c5c06004e41ee550ca0bf9bc467bb8f7d9cacd4ff0e4138eaa843888723",
+    "extracted/cpp-editor-frontdoor-416-early2/continued.png": "5390a7d9b1c0081ea201e6a9c0d954d1fed70e985807437d72f1f99968ae535f",
+    "extracted/cpp-editor-frontdoor-416-early2/early.bmp": "3901369f51647844a1df20100cd16b83203ab11e12b2a3b1ec53b008cabbf77c",
+    "extracted/cpp-editor-frontdoor-416-early2/early.png": "2c8b5f75a958c58326a59f73ccba2787f9c080b651680b9a1c07307f28cb95cd",
+    "extracted/cpp-editor-frontdoor-416-early2/home.bmp": "13933f1ba309a64871e736bf9b5f6753e0d0f21f623162dc93703b9b3b95a33b",
+    "extracted/cpp-editor-frontdoor-416-early2/home.png": "858d0aa6ae555d0adc5e9711751cf656b159fe34d96c29e387294cac48e42e2a",
+    "extracted/cpp-editor-frontdoor-416-early2/loading.bmp": "2f58ee16fef8d26495bba7486db61e49fde2766bef7515eb069248c988466929",
+    "extracted/cpp-editor-frontdoor-416-early2/loading.png": "f4f3ae3a71d3d037d991386a4a64e6e4c052d1b9d49ddfbe12ad23a45fc87ab7",
+    "extracted/cpp-editor-frontdoor-416-early2/ready.bmp": "b6f5b5110ce72abb8ce66b8302c0b1db7a9ba0ea7f9946bab2c55cb692923bee",
+    "extracted/cpp-editor-frontdoor-416-early2/ready.png": "2a01489da9b9474db550799dc0f251903eb099a315f2977c1f49f514707a0a0b",
+    "extracted/cpp-editor-frontdoor-416-early2/result.json": "2fde44728ce0f2d92fb86461a896f6852992f807c058a8d5f28a38fea4706493",
+    "extracted/cpp-editor-frontdoor-416-early2/running.json": "bb79da79925c52062e73e2f1fe64bd918a776ba2d08e0fa6afebed45496b4dfe",
+    "extracted/cpp-editor-frontdoor-416-early2/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-editor-frontdoor-416-early2/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-editor-frontdoor-416-early2/started.bmp": "a97750d431434902766207c302fe820b0d7cd09da98fe6ee0475f1ece2c43cc7",
+    "extracted/cpp-editor-frontdoor-416-early2/started.png": "1a852f304b0c8f2a48a5a7a3114bd4c9f802287fad80baa80fec05dca02ee10f",
+    "extracted/cpp-editor-frontdoor-416-early2/states.tsv": "f0057bba27c2f899efc90cf3196956a2aec39b2ce3fb237192722064df853a90",
+    "extracted/cpp-editor-frontdoor-416-early2/stderr.log": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+    "extracted/cpp-editor-frontdoor-416-early2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-editor-frontdoor-416-early2/steps.tsv": "48df84d7628f2695d2792eaa9630a4e5918b91b9dd106f5e1614f20d83c10cbb",
+    "extracted/cpp-editor-frontdoor-416-early2.log": "2bef6e97d4efaa49b600c539fba50e6db8a29035bc8d8dd99e66afe56c835c0d",
+    "extracted/cpp-editor-frontdoor-416-final-source/cpppj/src/client/RawCampaignSession.cpp": "6c2e2d4a9d4016e5cafeeafd16e528295c884207782b8c4a49fc64f030c707da",
+    "extracted/cpp-editor-frontdoor-416-final-source/cpppj/src/client/RawCampaignSession.h": "0f8f3ea9ec19ab517e3c41615cb8d026b3111c2ef5d1988f4abd0805d59fac3b",
+    "extracted/cpp-editor-frontdoor-416-final-source/cpppj/src/client/UberGump.cpp": "1efba4754ca9830ead009f2f4309ab5f6f8dd262d2c99be03ee9d694eba732eb",
+    "extracted/cpp-editor-frontdoor-416-final-source/cpppj/src/client/UberGump.h": "f03f456288e58b829bffa45d7ac10a6930a4ae200350d34555a6d0a1cfce60d6",
+    "extracted/cpp-editor-frontdoor-416-final-source/tools/cpp_editor_selection_smoke.py": "e2e37a63bcb4dd1e0870a8fc58521ca187cc3df2d489fa4805447809490a1d17",
+    "extracted/cpp-editor-frontdoor-416-fort1.log": "a97668176baa6ebb657670f8ddf83325564b346bb74ba3bd04aa36cf0eed2056",
+    "extracted/cpp-editor-frontdoor-416-fort2.log": "a97668176baa6ebb657670f8ddf83325564b346bb74ba3bd04aa36cf0eed2056",
+    "extracted/cpp-editor-frontdoor-416-gui.py": "d9222ceec905a6101d9af707ee64e748a37f0c99edcb01d5096b573ac7ef734a",
+    "extracted/cpp-editor-frontdoor-416-maps1.log": "ac764a41f0a47771d3247af7a1d56b3458506e2d1031be3d500076a464cec21c",
+    "extracted/cpp-editor-frontdoor-416-maps2.log": "ac764a41f0a47771d3247af7a1d56b3458506e2d1031be3d500076a464cec21c",
+    "extracted/cpp-editor-frontdoor-416-menus/campaign.bmp": "e375ac0f254506a91be64e3225242c2bdd6bb42ac725ae25ea447c6771728edd",
+    "extracted/cpp-editor-frontdoor-416-menus/campaign.png": "48e966186d428cda6ce61afeb9c9a52d9ab860aae08b386526f5926ffd0d73e1",
+    "extracted/cpp-editor-frontdoor-416-menus/early.bmp": "3901369f51647844a1df20100cd16b83203ab11e12b2a3b1ec53b008cabbf77c",
+    "extracted/cpp-editor-frontdoor-416-menus/early.png": "2c8b5f75a958c58326a59f73ccba2787f9c080b651680b9a1c07307f28cb95cd",
+    "extracted/cpp-editor-frontdoor-416-menus/result.json": "c1702e1b6ffc56fa6c6049112fca5e42db4e7529eee71c625b8e7bbdaf139acf",
+    "extracted/cpp-editor-frontdoor-416-menus/running.json": "ea171377f7927827abd08f5757a9e3d7a14ee6aae2d9edaae9978819bf81d770",
+    "extracted/cpp-editor-frontdoor-416-menus/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-editor-frontdoor-416-menus/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-editor-frontdoor-416-menus/states.tsv": "5404da3b378d02ec6d1253373662ecb1a79c7b2c6eb390058b1b3d1fcb4be1ff",
+    "extracted/cpp-editor-frontdoor-416-menus/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-editor-frontdoor-416-menus/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-editor-frontdoor-416-menus/steps.tsv": "50436083fef579231b07858df23849947fd103688cc48d2b53cdf81c6487883d",
+    "extracted/cpp-editor-frontdoor-416-menus.log": "82d2d15691a93d51a6763818583fe7dbe9491303587859f8096385ba0cdf7d4f",
+    "extracted/cpp-editor-frontdoor-416-metadata1.log": "6809736c702317f1a1a8ee78f7d7c00e00599b5961802d437ca8dcd7095c106f",
+    "extracted/cpp-editor-frontdoor-416-metadata2.log": "6809736c702317f1a1a8ee78f7d7c00e00599b5961802d437ca8dcd7095c106f",
+    "extracted/cpp-editor-frontdoor-416-select-other/editable.bmp": "86ac347fde566232a3d868f339c71591ea1f6b737ff661d37fa77eec9e83a0f8",
+    "extracted/cpp-editor-frontdoor-416-select-other/editable.png": "c2ca0684196a904f53c2c1050e034a24a0d4d270b72a3d3f278b6ca75511effe",
+    "extracted/cpp-editor-frontdoor-416-select-other/execution.json": "17814cdf04726da7a44804ef78f5ee6203ace10263150a61814a574a8fa834b9",
+    "extracted/cpp-editor-frontdoor-416-select-other/main.bmp": "78508b37669a9706f508a4b89b25b3d2a7d3c0e0cf914cf93d64dccd7177925e",
+    "extracted/cpp-editor-frontdoor-416-select-other/main.png": "5568372bf07af158b4e848ddd156a5dba1844ec7cf51113064abdc0d61f61af3",
+    "extracted/cpp-editor-frontdoor-416-select-other/maps/TEST01.fort": "3c8a7d73be785f5b06f4c94aea633697b52d95129ed502ebc43f1efe326bad8f",
+    "extracted/cpp-editor-frontdoor-416-select-other/maps/TEST02.fort": "85c328b764ccddc6395e0ce582d31b6241b0c6296ed600665d8ceb4465e46640",
+    "extracted/cpp-editor-frontdoor-416-select-other/opened.bmp": "86ac347fde566232a3d868f339c71591ea1f6b737ff661d37fa77eec9e83a0f8",
+    "extracted/cpp-editor-frontdoor-416-select-other/opened.png": "c2ca0684196a904f53c2c1050e034a24a0d4d270b72a3d3f278b6ca75511effe",
+    "extracted/cpp-editor-frontdoor-416-select-other/originals-after.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-editor-frontdoor-416-select-other/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-editor-frontdoor-416-select-other/prepared.json": "9d44a592c5aac8defb09fe2132379ad687995d455972c1d9f47e3c404f1e2abe",
+    "extracted/cpp-editor-frontdoor-416-select-other/requested.bmp": "78508b37669a9706f508a4b89b25b3d2a7d3c0e0cf914cf93d64dccd7177925e",
+    "extracted/cpp-editor-frontdoor-416-select-other/requested.png": "5568372bf07af158b4e848ddd156a5dba1844ec7cf51113064abdc0d61f61af3",
+    "extracted/cpp-editor-frontdoor-416-select-other/results.json": "b3bce31734eec74b3cb2f70a7681359bd04b0e6e924e89b8105f8ef76959ab10",
+    "extracted/cpp-editor-frontdoor-416-select-other/returned.bmp": "78508b37669a9706f508a4b89b25b3d2a7d3c0e0cf914cf93d64dccd7177925e",
+    "extracted/cpp-editor-frontdoor-416-select-other/returned.png": "5568372bf07af158b4e848ddd156a5dba1844ec7cf51113064abdc0d61f61af3",
+    "extracted/cpp-editor-frontdoor-416-select-other/running.json": "8cae922e1be284e0deb59afb7cbc31540a57ee20e36ec542275eb4e4884c0dba",
+    "extracted/cpp-editor-frontdoor-416-select-other/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-editor-frontdoor-416-select-other/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-editor-frontdoor-416-select-other/states.tsv": "c6b7feea376fe8bd57d35aab48279637c1a38b8dc731d45049478ee288ed0c26",
+    "extracted/cpp-editor-frontdoor-416-select-other/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-editor-frontdoor-416-select-other/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-editor-frontdoor-416-select-other/steps.tsv": "2d9c24313f6e1279bbf761bc992ff1858455dd9b61533341eb12423cf7b7b02c",
+    "extracted/cpp-editor-frontdoor-416-select-other.log": "09a9c471a964fc58a66680cca3e6283eb5823b1f12105b1eba27413a36a03752",
+    "extracted/cpp-editor-frontdoor-416-select1/editable.bmp": "86ac347fde566232a3d868f339c71591ea1f6b737ff661d37fa77eec9e83a0f8",
+    "extracted/cpp-editor-frontdoor-416-select1/editable.png": "c2ca0684196a904f53c2c1050e034a24a0d4d270b72a3d3f278b6ca75511effe",
+    "extracted/cpp-editor-frontdoor-416-select1/maps/TEST01.fort": "3c8a7d73be785f5b06f4c94aea633697b52d95129ed502ebc43f1efe326bad8f",
+    "extracted/cpp-editor-frontdoor-416-select1/maps/TEST02.fort": "85c328b764ccddc6395e0ce582d31b6241b0c6296ed600665d8ceb4465e46640",
+    "extracted/cpp-editor-frontdoor-416-select1/observed.json": "e0b6b30b9c16ea6e7e1ceb86a2aafdaef9d89567934294f6bc5c756200372346",
+    "extracted/cpp-editor-frontdoor-416-select1/opened.bmp": "86ac347fde566232a3d868f339c71591ea1f6b737ff661d37fa77eec9e83a0f8",
+    "extracted/cpp-editor-frontdoor-416-select1/opened.png": "c2ca0684196a904f53c2c1050e034a24a0d4d270b72a3d3f278b6ca75511effe",
+    "extracted/cpp-editor-frontdoor-416-select1/originals-after.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-editor-frontdoor-416-select1/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-editor-frontdoor-416-select1/requested.bmp": "78508b37669a9706f508a4b89b25b3d2a7d3c0e0cf914cf93d64dccd7177925e",
+    "extracted/cpp-editor-frontdoor-416-select1/requested.png": "5568372bf07af158b4e848ddd156a5dba1844ec7cf51113064abdc0d61f61af3",
+    "extracted/cpp-editor-frontdoor-416-select1/result.json": "7cb2cae285e4de5d8db37aada700c7819e6daffaf2c57addc4643d5b93feb129",
+    "extracted/cpp-editor-frontdoor-416-select1/returned.bmp": "78508b37669a9706f508a4b89b25b3d2a7d3c0e0cf914cf93d64dccd7177925e",
+    "extracted/cpp-editor-frontdoor-416-select1/returned.png": "5568372bf07af158b4e848ddd156a5dba1844ec7cf51113064abdc0d61f61af3",
+    "extracted/cpp-editor-frontdoor-416-select1/running.json": "a58c2a76d67aec8ac78352dc6929c6a73a48ca0102c8ac8e6bb413ed70e5c8af",
+    "extracted/cpp-editor-frontdoor-416-select1/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-editor-frontdoor-416-select1/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-editor-frontdoor-416-select1/states.tsv": "83c53ce324c521fbca2b4e7c2d67c50bd3b60146b328c5da76e4ce82c6e840ea",
+    "extracted/cpp-editor-frontdoor-416-select1/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-editor-frontdoor-416-select1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-editor-frontdoor-416-select1/steps.tsv": "1903b655761a38a6a9478eee8156bd3fa06461963f5736fc6f903978526bf64b",
+    "extracted/cpp-editor-frontdoor-416-select1.log": "2de9fd5c2cccd90bb758b5824793d0508d597b0d1e98650a2c8f77582cdbd867",
+    "extracted/cpp-editor-frontdoor-416-select2/editable.bmp": "86ac347fde566232a3d868f339c71591ea1f6b737ff661d37fa77eec9e83a0f8",
+    "extracted/cpp-editor-frontdoor-416-select2/editable.png": "c2ca0684196a904f53c2c1050e034a24a0d4d270b72a3d3f278b6ca75511effe",
+    "extracted/cpp-editor-frontdoor-416-select2/execution.json": "d4895f0414e0ced5e01e8f43e63735a79a5dd41ac77be1655a8bf818c22198e3",
+    "extracted/cpp-editor-frontdoor-416-select2/main.bmp": "78508b37669a9706f508a4b89b25b3d2a7d3c0e0cf914cf93d64dccd7177925e",
+    "extracted/cpp-editor-frontdoor-416-select2/main.png": "5568372bf07af158b4e848ddd156a5dba1844ec7cf51113064abdc0d61f61af3",
+    "extracted/cpp-editor-frontdoor-416-select2/maps/TEST01.fort": "3c8a7d73be785f5b06f4c94aea633697b52d95129ed502ebc43f1efe326bad8f",
+    "extracted/cpp-editor-frontdoor-416-select2/maps/TEST02.fort": "85c328b764ccddc6395e0ce582d31b6241b0c6296ed600665d8ceb4465e46640",
+    "extracted/cpp-editor-frontdoor-416-select2/opened.bmp": "86ac347fde566232a3d868f339c71591ea1f6b737ff661d37fa77eec9e83a0f8",
+    "extracted/cpp-editor-frontdoor-416-select2/opened.png": "c2ca0684196a904f53c2c1050e034a24a0d4d270b72a3d3f278b6ca75511effe",
+    "extracted/cpp-editor-frontdoor-416-select2/originals-after.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-editor-frontdoor-416-select2/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-editor-frontdoor-416-select2/prepared.json": "f10b3805affcea92e8178b070b046bd4fa3e0e335b2c804d65e4aacb2ea78d6e",
+    "extracted/cpp-editor-frontdoor-416-select2/requested.bmp": "78508b37669a9706f508a4b89b25b3d2a7d3c0e0cf914cf93d64dccd7177925e",
+    "extracted/cpp-editor-frontdoor-416-select2/requested.png": "5568372bf07af158b4e848ddd156a5dba1844ec7cf51113064abdc0d61f61af3",
+    "extracted/cpp-editor-frontdoor-416-select2/results.json": "467cc477dece7e78db70bf979b8965cc3eacf2267015549288fc611d50b8deb6",
+    "extracted/cpp-editor-frontdoor-416-select2/returned.bmp": "78508b37669a9706f508a4b89b25b3d2a7d3c0e0cf914cf93d64dccd7177925e",
+    "extracted/cpp-editor-frontdoor-416-select2/returned.png": "5568372bf07af158b4e848ddd156a5dba1844ec7cf51113064abdc0d61f61af3",
+    "extracted/cpp-editor-frontdoor-416-select2/running.json": "18fc02f06b68032004ccde930bbbdc531fe7f98116bdddd328b4da60f5d3186a",
+    "extracted/cpp-editor-frontdoor-416-select2/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-editor-frontdoor-416-select2/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-editor-frontdoor-416-select2/states.tsv": "a2f4ab8c71c33d20bb7940f5ccefa8ff46bc73a6bb5f01bad8402f81555c4f8b",
+    "extracted/cpp-editor-frontdoor-416-select2/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-editor-frontdoor-416-select2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-editor-frontdoor-416-select2/steps.tsv": "29bfa7fc18ce3a7d661c2e49487a36c502526843ccd88365dee2d9da888b5470",
+    "extracted/cpp-editor-frontdoor-416-select2.log": "e3f10767c8d31b5c30693cd34b5fd07b9d83db1da2153f7795d55cbfc0e688ad",
+    "extracted/cpp-editor-frontdoor-416-source1/cpppj/build/bin/Release/NetstormCpp.exe": "7a1d268b004db4959afd6cc11c81d14e8c8e22a9dc404d4f0601189367930961",
+    "extracted/cpp-editor-frontdoor-416-source1/cpppj/src/client/RawCampaignSession.cpp": "6c2e2d4a9d4016e5cafeeafd16e528295c884207782b8c4a49fc64f030c707da",
+    "extracted/cpp-editor-frontdoor-416-source1/cpppj/src/client/RawCampaignSession.h": "0f8f3ea9ec19ab517e3c41615cb8d026b3111c2ef5d1988f4abd0805d59fac3b",
+    "extracted/cpp-editor-frontdoor-416-source1/cpppj/src/client/UberGump.cpp": "6745b461c5d8ed325444d7a9bf374470c8858adf6a49fe181585209714e7e6bf",
+    "extracted/cpp-editor-frontdoor-416-source1/cpppj/src/client/UberGump.h": "f03f456288e58b829bffa45d7ac10a6930a4ae200350d34555a6d0a1cfce60d6"
+  },
+  "protectedAudit": {
+    "compared": 1821,
+    "changed": []
+  },
+  "checks": {
+    "focusedExecutions": {
+      "fort2": 4,
+      "maps2": 4,
+      "catalog2": 9,
+      "metadata2": 11
+    },
+    "focusedUniqueTests": 28,
+    "existingNativeFixtureRows": 3672,
+    "fullPassed": 2796,
+    "fullFailedChecks": 0,
+    "buildObservedWarningsErrors": 0
+  },
+  "finalSelectors": {
+    "cancel-final": {
+      "result": {
+        "binarySha256": "cbdb3eaecd663663761fe1f62e06cc316bc40459400dbd9fd1b2602b34a82556",
+        "originalsUnchanged": true,
+        "sameFrameVerified": true,
+        "observed": {
+          "main": {
+            "frame": 2,
+            "phase": [
+              "0"
+            ],
+            "page": [
+              "main"
+            ],
+            "fort_selection": [
+              "0",
+              "0",
+              "0",
+              "0",
+              ""
+            ],
+            "fort_catalog": [
+              "0",
+              "0",
+              "0",
+              "fortSpec"
+            ],
+            "html_window_state": [
+              "0",
+              "0",
+              "0"
+            ]
+          },
+          "opened": {
+            "frame": 3,
+            "phase": [
+              "1"
+            ],
+            "page": [
+              "LoadEditable"
+            ],
+            "fort_selection": [
+              "2",
+              "0",
+              "0",
+              "0",
+              ""
+            ],
+            "fort_catalog": [
+              "50",
+              "1",
+              "0",
+              "fortSpec"
+            ],
+            "html_window_state": [
+              "1",
+              "1",
+              "1"
+            ]
+          },
+          "editable": {
+            "frame": 12,
+            "phase": [
+              "1"
+            ],
+            "page": [
+              "LoadEditable"
+            ],
+            "fort_selection": [
+              "2",
+              "0",
+              "0",
+              "0",
+              ""
+            ],
+            "fort_catalog": [
+              "50",
+              "1",
+              "0",
+              "fortSpec"
+            ],
+            "html_window_state": [
+              "1",
+              "1",
+              "1"
+            ]
+          },
+          "requested": {
+            "frame": 15,
+            "phase": [
+              "0"
+            ],
+            "page": [
+              "main"
+            ],
+            "fort_selection": [
+              "2",
+              "0",
+              "0",
+              "0",
+              ""
+            ],
+            "fort_catalog": [
+              "50",
+              "1",
+              "0",
+              "fortSpec"
+            ],
+            "html_window_state": [
+              "0",
+              "0",
+              "0"
+            ]
+          },
+          "returned": {
+            "frame": 22,
+            "phase": [
+              "0"
+            ],
+            "page": [
+              "main"
+            ],
+            "fort_selection": [
+              "2",
+              "0",
+              "0",
+              "0",
+              ""
+            ],
+            "fort_catalog": [
+              "50",
+              "1",
+              "0",
+              "fortSpec"
+            ],
+            "html_window_state": [
+              "0",
+              "0",
+              "0"
+            ]
+          }
+        },
+        "menuItems": [
+          [
+            "23",
+            "0",
+            "66689",
+            "33554634",
+            "103",
+            "1",
+            "Alerted"
+          ],
+          [
+            "23",
+            "1",
+            "66689",
+            "33554634",
+            "104",
+            "1",
+            "Alliance"
+          ],
+          [
+            "23",
+            "2",
+            "66689",
+            "33554634",
+            "105",
+            "1",
+            "Assassination"
+          ],
+          [
+            "23",
+            "3",
+            "66689",
+            "33554634",
+            "106",
+            "1",
+            "BC1Menu"
+          ],
+          [
+            "23",
+            "4",
+            "66689",
+            "33554634",
+            "107",
+            "1",
+            "BC2Bridging"
+          ],
+          [
+            "23",
+            "5",
+            "66689",
+            "33554634",
+            "108",
+            "1",
+            "BC3Acid_Bar"
+          ],
+          [
+            "23",
+            "6",
+            "66689",
+            "33554634",
+            "109",
+            "1",
+            "BC4Bow_Rush"
+          ],
+          [
+            "23",
+            "7",
+            "66689",
+            "33554634",
+            "110",
+            "1",
+            "BC5Walkers"
+          ],
+          [
+            "23",
+            "8",
+            "66689",
+            "33554634",
+            "111",
+            "1",
+            "BC8Mows"
+          ],
+          [
+            "23",
+            "9",
+            "66689",
+            "33554634",
+            "112",
+            "1",
+            "BC9Sun_Bars"
+          ],
+          [
+            "23",
+            "10",
+            "66689",
+            "33554634",
+            "113",
+            "1",
+            "BCFury"
+          ],
+          [
+            "23",
+            "11",
+            "66689",
+            "33554634",
+            "114",
+            "1",
+            "BCSSun_Bars"
+          ],
+          [
+            "23",
+            "12",
+            "66689",
+            "33554634",
+            "115",
+            "1",
+            "Battle1"
+          ],
+          [
+            "23",
+            "13",
+            "66689",
+            "33554634",
+            "116",
+            "1",
+            "Battle2"
+          ],
+          [
+            "23",
+            "14",
+            "66689",
+            "33554634",
+            "117",
+            "1",
+            "Beginning"
+          ],
+          [
+            "23",
+            "15",
+            "66689",
+            "33554634",
+            "118",
+            "1",
+            "Big_Brothers"
+          ],
+          [
+            "23",
+            "16",
+            "66689",
+            "33554634",
+            "119",
+            "1",
+            "Bofend"
+          ],
+          [
+            "23",
+            "17",
+            "66689",
+            "33554634",
+            "120",
+            "1",
+            "Bounty"
+          ],
+          [
+            "23",
+            "18",
+            "66689",
+            "33554634",
+            "121",
+            "1",
+            "Bro1"
+          ],
+          [
+            "23",
+            "19",
+            "66689",
+            "33554634",
+            "122",
+            "1",
+            "Bulflevel"
+          ],
+          [
+            "23",
+            "20",
+            "66689",
+            "33554634",
+            "123",
+            "1",
+            "CHEAT"
+          ],
+          [
+            "23",
+            "21",
+            "66689",
+            "33554634",
+            "124",
+            "1",
+            "CursedScen"
+          ],
+          [
+            "23",
+            "22",
+            "66689",
+            "33554634",
+            "125",
+            "1",
+            "DEMOFw"
+          ],
+          [
+            "23",
+            "23",
+            "66689",
+            "33554634",
+            "126",
+            "1",
+            "Dark1"
+          ],
+          [
+            "23",
+            "24",
+            "66689",
+            "33554634",
+            "127",
+            "1",
+            "Dark2"
+          ],
+          [
+            "24",
+            "0",
+            "66689",
+            "33554634",
+            "128",
+            "1",
+            "Dark3"
+          ],
+          [
+            "24",
+            "1",
+            "66689",
+            "33554634",
+            "129",
+            "1",
+            "Dark4"
+          ],
+          [
+            "24",
+            "2",
+            "66689",
+            "33554634",
+            "130",
+            "1",
+            "Dark5"
+          ],
+          [
+            "24",
+            "3",
+            "66689",
+            "33554634",
+            "131",
+            "1",
+            "Dark6"
+          ],
+          [
+            "24",
+            "4",
+            "66689",
+            "33554634",
+            "132",
+            "1",
+            "DarkLord"
+          ],
+          [
+            "24",
+            "5",
+            "66689",
+            "33554634",
+            "133",
+            "1",
+            "Death"
+          ],
+          [
+            "24",
+            "6",
+            "66689",
+            "33554634",
+            "134",
+            "1",
+            "Deathguard"
+          ],
+          [
+            "24",
+            "7",
+            "66689",
+            "33554634",
+            "135",
+            "1",
+            "DerfIsGod"
+          ],
+          [
+            "24",
+            "8",
+            "66689",
+            "33554634",
+            "136",
+            "1",
+            "Duel"
+          ],
+          [
+            "24",
+            "9",
+            "66689",
+            "33554634",
+            "137",
+            "1",
+            "EvilestsLair"
+          ],
+          [
+            "24",
+            "10",
+            "66689",
+            "33554634",
+            "138",
+            "1",
+            "FW1"
+          ],
+          [
+            "24",
+            "11",
+            "66689",
+            "33554634",
+            "139",
+            "1",
+            "FW1b"
+          ],
+          [
+            "24",
+            "12",
+            "66689",
+            "33554634",
+            "140",
+            "1",
+            "FW2"
+          ],
+          [
+            "24",
+            "13",
+            "66689",
+            "33554634",
+            "141",
+            "1",
+            "FW3"
+          ],
+          [
+            "24",
+            "14",
+            "66689",
+            "33554634",
+            "142",
+            "1",
+            "FW4"
+          ],
+          [
+            "24",
+            "15",
+            "66689",
+            "33554634",
+            "143",
+            "1",
+            "FW5"
+          ],
+          [
+            "24",
+            "16",
+            "66689",
+            "33554634",
+            "144",
+            "1",
+            "FW6"
+          ],
+          [
+            "24",
+            "17",
+            "66689",
+            "33554634",
+            "145",
+            "1",
+            "FW7"
+          ],
+          [
+            "24",
+            "18",
+            "66689",
+            "33554634",
+            "146",
+            "1",
+            "FW8"
+          ],
+          [
+            "24",
+            "19",
+            "66689",
+            "33554634",
+            "147",
+            "1",
+            "FW9"
+          ],
+          [
+            "24",
+            "20",
+            "66689",
+            "33554634",
+            "148",
+            "1",
+            "FWOS1"
+          ],
+          [
+            "24",
+            "21",
+            "66689",
+            "33554634",
+            "149",
+            "1",
+            "FWOS2"
+          ],
+          [
+            "24",
+            "22",
+            "66689",
+            "33554634",
+            "150",
+            "1",
+            "FWOS3"
+          ],
+          [
+            "24",
+            "23",
+            "66689",
+            "33554634",
+            "151",
+            "1",
+            "FWOS4"
+          ],
+          [
+            "24",
+            "24",
+            "66689",
+            "33554634",
+            "152",
+            "1",
+            "FWOS5"
+          ]
+        ],
+        "selectorOnly": true,
+        "editorInstallVerified": false,
+        "goalComplete": false
+      },
+      "executionSeconds": 1.4192898999899626
+    },
+    "cancel-working": {
+      "result": {
+        "binarySha256": "cbdb3eaecd663663761fe1f62e06cc316bc40459400dbd9fd1b2602b34a82556",
+        "originalsUnchanged": true,
+        "sameFrameVerified": true,
+        "observed": {
+          "main": {
+            "frame": 2,
+            "phase": [
+              "0"
+            ],
+            "page": [
+              "main"
+            ],
+            "fort_selection": [
+              "0",
+              "0",
+              "0",
+              "0",
+              ""
+            ],
+            "fort_catalog": [
+              "0",
+              "0",
+              "0",
+              "fortSpec"
+            ],
+            "html_window_state": [
+              "0",
+              "0",
+              "0"
+            ]
+          },
+          "opened": {
+            "frame": 3,
+            "phase": [
+              "1"
+            ],
+            "page": [
+              "LoadEditable"
+            ],
+            "fort_selection": [
+              "2",
+              "0",
+              "0",
+              "0",
+              "TEST01"
+            ],
+            "fort_catalog": [
+              "2",
+              "1",
+              "0",
+              "fortSpec"
+            ],
+            "html_window_state": [
+              "1",
+              "1",
+              "1"
+            ]
+          },
+          "editable": {
+            "frame": 12,
+            "phase": [
+              "1"
+            ],
+            "page": [
+              "LoadEditable"
+            ],
+            "fort_selection": [
+              "2",
+              "0",
+              "0",
+              "0",
+              "TEST01"
+            ],
+            "fort_catalog": [
+              "2",
+              "1",
+              "0",
+              "fortSpec"
+            ],
+            "html_window_state": [
+              "1",
+              "1",
+              "1"
+            ]
+          },
+          "requested": {
+            "frame": 15,
+            "phase": [
+              "0"
+            ],
+            "page": [
+              "main"
+            ],
+            "fort_selection": [
+              "2",
+              "0",
+              "0",
+              "0",
+              "TEST01"
+            ],
+            "fort_catalog": [
+              "2",
+              "1",
+              "0",
+              "fortSpec"
+            ],
+            "html_window_state": [
+              "0",
+              "0",
+              "0"
+            ]
+          },
+          "returned": {
+            "frame": 22,
+            "phase": [
+              "0"
+            ],
+            "page": [
+              "main"
+            ],
+            "fort_selection": [
+              "2",
+              "0",
+              "0",
+              "0",
+              "TEST01"
+            ],
+            "fort_catalog": [
+              "2",
+              "1",
+              "0",
+              "fortSpec"
+            ],
+            "html_window_state": [
+              "0",
+              "0",
+              "0"
+            ]
+          }
+        },
+        "menuItems": [
+          [
+            "23",
+            "0",
+            "66693",
+            "33554634",
+            "103",
+            "1",
+            "TEST01"
+          ],
+          [
+            "23",
+            "1",
+            "66689",
+            "33554634",
+            "104",
+            "1",
+            "TEST02"
+          ]
+        ],
+        "selectorOnly": true,
+        "editorInstallVerified": false,
+        "goalComplete": false
+      },
+      "executionSeconds": 1.4596227000001818
+    },
+    "select2": {
+      "result": {
+        "binarySha256": "cbdb3eaecd663663761fe1f62e06cc316bc40459400dbd9fd1b2602b34a82556",
+        "originalsUnchanged": true,
+        "sameFrameVerified": true,
+        "observed": {
+          "main": {
+            "frame": 2,
+            "phase": [
+              "0"
+            ],
+            "page": [
+              "main"
+            ],
+            "fort_selection": [
+              "0",
+              "0",
+              "0",
+              "0",
+              ""
+            ],
+            "fort_catalog": [
+              "0",
+              "0",
+              "0",
+              "fortSpec"
+            ],
+            "html_window_state": [
+              "0",
+              "0",
+              "0"
+            ]
+          },
+          "opened": {
+            "frame": 3,
+            "phase": [
+              "1"
+            ],
+            "page": [
+              "LoadEditable"
+            ],
+            "fort_selection": [
+              "2",
+              "0",
+              "0",
+              "0",
+              "TEST01"
+            ],
+            "fort_catalog": [
+              "2",
+              "1",
+              "0",
+              "fortSpec"
+            ],
+            "html_window_state": [
+              "1",
+              "1",
+              "1"
+            ]
+          },
+          "editable": {
+            "frame": 12,
+            "phase": [
+              "1"
+            ],
+            "page": [
+              "LoadEditable"
+            ],
+            "fort_selection": [
+              "2",
+              "0",
+              "0",
+              "0",
+              "TEST01"
+            ],
+            "fort_catalog": [
+              "2",
+              "1",
+              "0",
+              "fortSpec"
+            ],
+            "html_window_state": [
+              "1",
+              "1",
+              "1"
+            ]
+          },
+          "requested": {
+            "frame": 15,
+            "phase": [
+              "0"
+            ],
+            "page": [
+              "main"
+            ],
+            "fort_selection": [
+              "2",
+              "0",
+              "0",
+              "1",
+              "TEST01"
+            ],
+            "fort_catalog": [
+              "2",
+              "1",
+              "0",
+              "fortSpec"
+            ],
+            "html_window_state": [
+              "0",
+              "0",
+              "0"
+            ]
+          },
+          "returned": {
+            "frame": 22,
+            "phase": [
+              "0"
+            ],
+            "page": [
+              "main"
+            ],
+            "fort_selection": [
+              "2",
+              "0",
+              "0",
+              "1",
+              "TEST01"
+            ],
+            "fort_catalog": [
+              "2",
+              "1",
+              "0",
+              "fortSpec"
+            ],
+            "html_window_state": [
+              "0",
+              "0",
+              "0"
+            ]
+          }
+        },
+        "menuItems": [
+          [
+            "23",
+            "0",
+            "66693",
+            "33554634",
+            "103",
+            "1",
+            "TEST01"
+          ],
+          [
+            "23",
+            "1",
+            "66689",
+            "33554634",
+            "104",
+            "1",
+            "TEST02"
+          ]
+        ],
+        "selectorOnly": true,
+        "editorInstallVerified": false,
+        "goalComplete": false
+      },
+      "executionSeconds": 1.4234080000314862
+    },
+    "select-other": {
+      "result": {
+        "binarySha256": "cbdb3eaecd663663761fe1f62e06cc316bc40459400dbd9fd1b2602b34a82556",
+        "originalsUnchanged": true,
+        "sameFrameVerified": true,
+        "observed": {
+          "main": {
+            "frame": 2,
+            "phase": [
+              "0"
+            ],
+            "page": [
+              "main"
+            ],
+            "fort_selection": [
+              "0",
+              "0",
+              "0",
+              "0",
+              ""
+            ],
+            "fort_catalog": [
+              "0",
+              "0",
+              "0",
+              "fortSpec"
+            ],
+            "html_window_state": [
+              "0",
+              "0",
+              "0"
+            ]
+          },
+          "opened": {
+            "frame": 3,
+            "phase": [
+              "1"
+            ],
+            "page": [
+              "LoadEditable"
+            ],
+            "fort_selection": [
+              "2",
+              "0",
+              "0",
+              "0",
+              "TEST01"
+            ],
+            "fort_catalog": [
+              "2",
+              "1",
+              "0",
+              "fortSpec"
+            ],
+            "html_window_state": [
+              "1",
+              "1",
+              "1"
+            ]
+          },
+          "editable": {
+            "frame": 12,
+            "phase": [
+              "1"
+            ],
+            "page": [
+              "LoadEditable"
+            ],
+            "fort_selection": [
+              "2",
+              "0",
+              "0",
+              "0",
+              "TEST01"
+            ],
+            "fort_catalog": [
+              "2",
+              "1",
+              "0",
+              "fortSpec"
+            ],
+            "html_window_state": [
+              "1",
+              "1",
+              "1"
+            ]
+          },
+          "requested": {
+            "frame": 15,
+            "phase": [
+              "0"
+            ],
+            "page": [
+              "main"
+            ],
+            "fort_selection": [
+              "2",
+              "0",
+              "0",
+              "1",
+              "TEST02"
+            ],
+            "fort_catalog": [
+              "2",
+              "1",
+              "0",
+              "fortSpec"
+            ],
+            "html_window_state": [
+              "0",
+              "0",
+              "0"
+            ]
+          },
+          "returned": {
+            "frame": 22,
+            "phase": [
+              "0"
+            ],
+            "page": [
+              "main"
+            ],
+            "fort_selection": [
+              "2",
+              "0",
+              "0",
+              "1",
+              "TEST02"
+            ],
+            "fort_catalog": [
+              "2",
+              "1",
+              "0",
+              "fortSpec"
+            ],
+            "html_window_state": [
+              "0",
+              "0",
+              "0"
+            ]
+          }
+        },
+        "menuItems": [
+          [
+            "23",
+            "0",
+            "66693",
+            "33554634",
+            "103",
+            "1",
+            "TEST01"
+          ],
+          [
+            "23",
+            "1",
+            "66689",
+            "33554634",
+            "104",
+            "1",
+            "TEST02"
+          ]
+        ],
+        "selectorOnly": true,
+        "editorInstallVerified": false,
+        "goalComplete": false
+      },
+      "executionSeconds": 1.4115896000294015
+    }
+  },
+  "regressions": {
+    "early2": {
+      "execution": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\originals",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "140",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;sleepPerLoop=10;autoDemo=0;tellTips=0;currentLanguage=english",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-frontdoor-416-early2\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-frontdoor-416-early2\\states.tsv"
+        ],
+        "binarySha256": "cbdb3eaecd663663761fe1f62e06cc316bc40459400dbd9fd1b2602b34a82556",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 4.2088697999715805,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e"
+      },
+      "observed": {
+        "exitCode": 0,
+        "home": [
+          [
+            "1",
+            "66",
+            "0",
+            "1",
+            "0",
+            "1",
+            "2.638",
+            "0"
+          ]
+        ],
+        "page": [
+          [
+            "B."
+          ]
+        ],
+        "html": [
+          [
+            "1",
+            "1",
+            "1"
+          ]
+        ]
+      }
+    },
+    "menus": {
+      "execution": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\originals",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "28",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;sleepPerLoop=10;autoDemo=0;tellTips=0;currentLanguage=english",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-frontdoor-416-menus\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-frontdoor-416-menus\\states.tsv"
+        ],
+        "binarySha256": "cbdb3eaecd663663761fe1f62e06cc316bc40459400dbd9fd1b2602b34a82556",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 1.5149006999563426,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "observed": {
+        "exitCode": 0,
+        "campaignRows": [
+          "Early Missions",
+          "Priest Training",
+          "",
+          "Struggle For Freedom",
+          "A Nation Rises",
+          "Complete Victory",
+          "",
+          "User Made Campaigns"
+        ],
+        "earlyRows": [
+          "1 Bridge the Gap",
+          "2 Secret Workshop",
+          "3 Capture The Priest",
+          "4 Tactical Combat",
+          "5 Subtle Defense",
+          "6 Raw Power"
+        ],
+        "pages": {
+          "main": [
+            [
+              "main"
+            ]
+          ],
+          "campaign": [
+            [
+              "UCampaign"
+            ]
+          ],
+          "early": [
+            [
+              "offical1.overview"
+            ]
+          ],
+          "campaign-returned": [
+            [
+              "UCampaign"
+            ]
+          ],
+          "returned": [
+            [
+              "main"
+            ]
+          ]
+        }
+      }
+    }
+  },
+  "history": [
+    "build1/cancel1은실제목록과취소를통과했다. build2는메인Ask를같은입력고리에직접예약해같은3프레임에열린다.",
+    "기본Fort433개중관측한네파일은종류2다. 공식제외설정0도종류2의원문50칸상한을풀지않는다. TEST원문두개를별도작업폴더에그대로복사하고현재FileSpec으로읽은실제경로를검사했다.",
+    "select1은clone0/보호동일이지만설정복구OSError22두재시도와PowerShell wrapper1을보존했다. 이후공유도구최종네실행은wrapper0이다.",
+    "early1은검사기별칭을home에서미지원f4로잘못바꿔Unknown UI key/clone1이었다. 실패driver를보존하고기존home=VK_F4로복원한early2가통과했다. 제품CLI/게임규칙은수정하지않았다."
+  ],
+  "limits": [
+    "선택한실제next1은현재다음Tick에서소비되지않으며Editor설치/State4/loaded는미완료다. 선택예약을전체Edit완료로판정하지않는다.",
+    "Battle/phase14의파일보존하위는현재파일/State장치미연결이며빈성공으로대체하지않았다.",
+    "원문State정리/prefix·current Fort 이름·기존Editor checkpoint·전체Uber/HUD·명령전송·편집도구/저장/재로드·언어별시나리오및전체Early/캠페인/Demo완주/동일성이남는다."
+  ]
+}
