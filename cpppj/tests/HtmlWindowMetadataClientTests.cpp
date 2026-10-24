@@ -7,6 +7,7 @@
 #include "client/MenuGumpWidgets.h"
 #include "client/TellMapMenus.h"
 #include "client/TellFileMenus.h"
+#include "o/OriginalText.h"
 #include <algorithm>
 #include <bit>
 #include <sstream>
@@ -101,4 +102,12 @@ TEST_CASE(HtmlWindowMetadataClient_FileMenusActualConfigRowsAndSharedRing) {
         if (children.size()==1) { const auto* menu=static_cast<MenuGumpNode*>(scene.menus->Node(children[0]));CHECK(menu->itemCount==3 && menu->items[0].command==kScriptConfig && scene.strings.Resolve(menu->items[0].parameter)=="a" && (menu->items[1].flags&0x10) && menu->items[2].command==kScriptConfig && scene.strings.Resolve(menu->items[2].parameter)=="c" && scene.menus->Point("Cee")); }
         scene.menus->CloseHtmlWindows();CHECK(scene.Count()==before && scene.menus->MenuInstances()==0 && config.Registry().FindByName("a")!=nullptr); // 부모를 닫아도 적재 Config는 장기 목록의 같은 실제 수명이다.
     }
+}
+
+// 실제 % 목록의 두 번 Config/VFS 조회 뒤에도 원문의 replacement 길이만 복사하는 메타를 유지한다.
+TEST_CASE(HtmlWindowMetadataClient_InlineFilesActualQueriesAndPhysicalPartialCopy) {
+    std::uint32_t queries{};netstorm::o::ConfigInterface config([&](auto path)->std::optional<std::vector<std::uint8_t>> { const auto lower=netstorm::o::AsciiLower(path);const std::string text=lower=="probe" ? "value="+std::to_string(++queries)+"\n" : "title=Cee\n";return std::vector<std::uint8_t>(text.begin(),text.end()); });config.Configuration().Assign("ready=1\nmissionSpec={local.1}\n");MetadataScene scene;
+    auto files=std::make_shared<TellFileMenus>(config,[](auto pattern) { CHECK(pattern=="input");return std::vector<std::string>{"d/c.english"}; });auto context=scene.Context();context.metadata.fileMenus=files;const auto before=scene.Count(),root=scene.Create(std::move(context));const std::string prefix="HEAD "+std::string(128,'P')+' ',source=prefix+"$Menu=%input,Config,{@probe.value} \nTAIL";std::array<char,8192> buffer;buffer.fill('!');std::copy(source.begin(),source.end(),buffer.begin());buffer[source.size()]=0;
+    CHECK(scene.menus->ProcessHtmlMetadata(root,buffer)==1 && queries==2 && scene.strings.Index()==1 && scene.Root(root).menuColumns==1 && std::string(buffer.data())==prefix+"TAIL" && buffer[source.size()+1]=='!' && config.Registry().FindByName("cur")==nullptr && config.Registry().FindByName("c")!=nullptr);
+    scene.menus->CloseHtmlWindows();CHECK(scene.Count()==before && scene.menus->MenuInstances()==0); // 실제 비부착 메뉴 스택도 같은 HTML 수명에서 반납한다.
 }

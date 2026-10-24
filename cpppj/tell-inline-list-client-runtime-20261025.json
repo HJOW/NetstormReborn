@@ -1,0 +1,65 @@
+{
+  "unit": 410,
+  "goalComplete": false,
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "originalGameExecuted": false,
+  "cloneGameExecuted": false,
+  "guiExecuted": false,
+  "productSha256": "481bb6150467c39fdfa6d8f9a874b85c864e48d27e606e572b3dfd046f31dee4",
+  "testBinarySha256": "25c7c8991098f8a01c1d04b9711826c0073844d60a107e586e1ce6e08dacb46f",
+  "sourceHashes": {
+    "cpppj/src/client/TellFileMenus.cpp": "a0155fd0f65199d720fb11ea1cca91239b411d86776abb57a185f8c968590902",
+    "cpppj/src/client/TellFileMenus.h": "0dce67f71189835dcac058d1a96de3f41670c4b642a5ba2cf88b6a4c6ad8a6d5",
+    "cpppj/src/client/RawMenuHtml.inc": "a719baf217f13e85f8c9a8fd69bc86ed0777db2082fe6122c7cef953e1fdbc4a",
+    "cpppj/tests/CMakeLists.txt": "f1b5e46a8a9fa9dfe5937df0ce34643bcd93eb02d94d89299542188d1ee12de5",
+    "cpppj/tests/TellFileMenusTests.cpp": "5298254b5677674ce70df9d1bee469defab307f0760879ab707aa6fd83663f07",
+    "cpppj/tests/HtmlWindowMetadataClientTests.cpp": "13c78d8b2b6f1358c03f66d2245501166038b84c8108cfa48e863b2632f28803",
+    "tools/decomp_tell_inline_list.py": "2b58673ccd1e8bc03b28e5416508a50ee151dfd9a54bd874caa0012c5d87d40b",
+    "cpppj/tests/fixtures/tell-inline-list-x86.tsv": "5c868c7e99e7223eb35cf60ed5ee4a580591ff4b598d7efb8e73d72b0d85c85a",
+    "docs/exe/cpp-tell-inline-list-client-20261025.md": "66ab3405adc97aaafde7a424122465fc9b703f76d77886ae9e254461ce7357c9"
+  },
+  "referenceHashes": {
+    "AGENTS.md": "7f853771930147c26e67d444ced94114992510a3fa072f5ed6bd63da7ba88bd9",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "cpppj/src/o/Config.cpp": "5e61071bbd0577d4878b388927b28308133547e0776b271dab656eb9e73b5715",
+    "cpppj/src/o/ConfigInterface.cpp": "62852c460b740586da52b1ee727de96206198ba0a5e7ff4a18f6acf5086b308c",
+    "cpppj/src/client/HtmlWindowMetadata.cpp": "4b58577ebab26498104e8f187fa1b294f811bb08097bf7ccb15ebff079b7a5b6",
+    "cpppj/tests/fixtures/html-window-metadata-x86.tsv": "22aebb9dca3c67272a8867d53370051346258fb47880c240e51904764c1e62c5",
+    "tools/decomp_tell_file_menus.py": "2babbcd24127ff8ed602612193a4d6ad6c2430f97e6b7cbdd300f6072a93a118",
+    "cpppj/tests/fixtures/tell-file-menus-x86.tsv": "dbdceb9b4e8745baf0c5da501c75b2718e0bfaf7fa98539f7dd1356ee782bc06"
+  },
+  "rawHashes": {
+    "extracted/cpp-tell-inline-410-audit.py": "48e54fa14627e88efee3fa42d2b8a29eef04b91106008cb764e4ff560a7f328f",
+    "extracted/cpp-tell-inline-410-baseline.json": "56b75c7c1e0194b8d3c9a41ef58124bac06f66e714da6fd6babbd4f8fc198901",
+    "extracted/cpp-tell-inline-410-build1.log": "7d3f27078bce744504294c19635009aca280afc45b931eb56284d6c0dd105832",
+    "extracted/cpp-tell-inline-410-build2.log": "c58182331a7453674c9b2db2585be173cf62f2bc15794f56c2298e07d592e1cb",
+    "extracted/cpp-tell-inline-410-client1.log": "61adfc99aa01363a6ae9543650e9a6cfe25e9205658b13ee5a8c4c8dbb382a12",
+    "extracted/cpp-tell-inline-410-ctest1-tests.log": "36d2d29ac8f5083b2d4e88f914f4e68fdf63028d25c016c6e2d91ecbe745f2c1",
+    "extracted/cpp-tell-inline-410-ctest1.log": "704c11c82424eb20b544949010e7d9e29775cd3e20079120a9b78d583c515a15",
+    "extracted/cpp-tell-inline-410-native.json": "1129b5c104fa55de2a5820fd2ea60fc9f34f9e82bef0f1961b0e1e6259449744",
+    "extracted/cpp-tell-inline-410-tell1.log": "44bdc0e1f07ad0f59462d007d9dd10fe4d283411037bfb581c175c869edefe8b"
+  },
+  "protectedAudit": {
+    "compared": 1821,
+    "originals": 1394,
+    "originalCD": 425,
+    "changed": []
+  },
+  "checks": {
+    "nativeRows": 288,
+    "existingFileMenuRowsReplayed": 384,
+    "precisionDifferences": 0,
+    "nativeReplayReadOnly": true,
+    "focusedPassed": 29,
+    "fullPassed": 2781,
+    "fullFailedChecks": 0
+  },
+  "limits": [
+    "% 원문의 정상 본체/공유 꼬리와 명시 하위 장치에 대한 관측이다. 실제 Config/VFS 두 번 조회·메타 물리 부분복사는 별도 결합 검사다.",
+    "행별 원본 C++ 예외/Catch의 ERROR 링크 복구는 미복원이며 현재 선택 장치 예외는 호출자에 전달된다.",
+    "기존 Tell 부모/구형 % 표시·기술/Input/전송·배경/Checked·Guide/full Uber와 전체 미션 완주/Edit/완전 동일성은 미완료다."
+  ]
+}
