@@ -1,0 +1,354 @@
+{
+  "host": "HJOW-Athlon",
+  "gameExecuted": false,
+  "bodies": [
+    "00407171",
+    "00406ef7",
+    "00406d90..00407117"
+  ],
+  "deviceBoundary": "00406939 실제 LZW 행의 출력 복사만 관측",
+  "peSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+  "fixtureSha256": "6153a1ec5a7c6fa2f584f94753c67a2264b7f8d61dd8639f6bffbd14d0c7d083",
+  "cases": [
+    {
+      "path": "d/bulf.GIF",
+      "width": 640,
+      "height": 480,
+      "fnv1a64": "0e4405410d19915a",
+      "pixelSha256": "50d0dc26226ff8445a207064f42010aab836ad9ded707f4f4dd6c9d6c02396b1",
+      "sourceSha256": "b64744c31e72e7c8997a2f2e013f9f1dc23e50fb4b3db299f10f47eaf165de0f",
+      "rows": 480,
+      "basicBlockEntries": 4141565
+    },
+    {
+      "path": "d/Defeat.gif",
+      "width": 640,
+      "height": 480,
+      "fnv1a64": "a7e7f4192f7529e5",
+      "pixelSha256": "9f394419dbde55e9ec8025b445ad7748c0b5ea4dced9039c06b79187494551f0",
+      "sourceSha256": "de0337808481513aeaa863dede6aa6529935a5bcd508dedc7f54ad16ca3eed7c",
+      "rows": 480,
+      "basicBlockEntries": 3905022
+    },
+    {
+      "path": "d/Gifcloud.gif",
+      "width": 512,
+      "height": 512,
+      "fnv1a64": "74a31bd350b21517",
+      "pixelSha256": "d963b1d8d721067b370f32d8ded66eb92532e70bb36714a46f5859cc62e5799c",
+      "sourceSha256": "8bf7707b77526bf4dbac82c711f15c078406f2a7bc3dcef1c35330ea3a128cf0",
+      "rows": 512,
+      "basicBlockEntries": 2868684
+    },
+    {
+      "path": "d/Gifcloud2.GIF",
+      "width": 512,
+      "height": 512,
+      "fnv1a64": "75d936a296917fc9",
+      "pixelSha256": "ffac56e2bc115b52ffd899476d5c72e4e58aee3fb22ea705ec136f8ee694a063",
+      "sourceSha256": "243c5568c2e4223bd4601ba18e32375f5142411bcdd0152245991b0eca650dd1",
+      "rows": 512,
+      "basicBlockEntries": 2890431
+    },
+    {
+      "path": "d/rainAviary.gif",
+      "width": 640,
+      "height": 480,
+      "fnv1a64": "63a02ca6bb81d5b3",
+      "pixelSha256": "607baa85786f2227294448b4141149643c137c39f981d22c7a85b2ca0f807539",
+      "sourceSha256": "348b36bf4e547763bbc909cec1cadd5ecfd01c7ac1bcff2517d6e16f7fb7abdc",
+      "rows": 480,
+      "basicBlockEntries": 5091238
+    },
+    {
+      "path": "d/rainballoon.gif",
+      "width": 640,
+      "height": 480,
+      "fnv1a64": "e8aa66d9a6bd67f7",
+      "pixelSha256": "2037ff5de12eefe108ad8edc8cfc27ffd329381b0efe220d0e4ab5d2cb8675c6",
+      "sourceSha256": "9a2ea98e79e6f777f81f53d0e6cbf02cfb9e584b80a5af30a1a2a1e669257d7a",
+      "rows": 480,
+      "basicBlockEntries": 4617500
+    },
+    {
+      "path": "d/rainBattery.gif",
+      "width": 640,
+      "height": 480,
+      "fnv1a64": "a71e70c60fc2aa55",
+      "pixelSha256": "69c689f442f4a92290d9da453e8e2bd14a5142bfeed156e0ef08e1205471f367",
+      "sourceSha256": "ef19ce141d99c66201595a5cae16da851399a06dab1389e81602533d3f3e05f8",
+      "rows": 480,
+      "basicBlockEntries": 4363634
+    },
+    {
+      "path": "d/Rainblocker.gif",
+      "width": 640,
+      "height": 480,
+      "fnv1a64": "4e6fb611cc1e8033",
+      "pixelSha256": "976a445c0990f56c455fa28348ea9f77182d23ba4788bfb907c76eda96c124f0",
+      "sourceSha256": "02c560f23e582ad520e3c986dd4cf4bfbfd9db0681b8df99cac3d3dae846ed76",
+      "rows": 480,
+      "basicBlockEntries": 4637217
+    },
+    {
+      "path": "d/raincannon.gif",
+      "width": 640,
+      "height": 480,
+      "fnv1a64": "39f9b8f0e3445ade",
+      "pixelSha256": "0195805ab6962538686ea836d4425238294fa90f56356bf85b7a81600701e3bc",
+      "sourceSha256": "7b5f176541e41fe86e8f483fb8c904688f432e192334acfd57e6604f671803a9",
+      "rows": 480,
+      "basicBlockEntries": 4525487
+    },
+    {
+      "path": "d/rainfence.GIF",
+      "width": 640,
+      "height": 480,
+      "fnv1a64": "23cf3be24257b57f",
+      "pixelSha256": "969c266031317ca78f91fa857d8f78fa04aaabc111fae7ea0b396b16f9810410",
+      "sourceSha256": "df3cee39901bc4989cde56be586ef1fb0db85e25ccf3ec8ee0103fab4ba77bbb",
+      "rows": 480,
+      "basicBlockEntries": 4356209
+    },
+    {
+      "path": "d/rainwalker.gif",
+      "width": 640,
+      "height": 480,
+      "fnv1a64": "f58fd9fd99c60b17",
+      "pixelSha256": "f5b0e8cc0e0ba19d75e127132d0c3ea12de7b34d7c987e8f17cd01bb316266db",
+      "sourceSha256": "c3ceb0635c952d4a0b2a3b2c155dfa202cafc7ca40da8f77dbda71686db71ea0",
+      "rows": 480,
+      "basicBlockEntries": 5121968
+    },
+    {
+      "path": "d/sunArcher.gif",
+      "width": 640,
+      "height": 480,
+      "fnv1a64": "9a3fbb651a4a3ef7",
+      "pixelSha256": "bb12db7d8df234e791bd3c212058ea3faf3c1781fb02dff5e062fa16d95e6293",
+      "sourceSha256": "001c67634f423820e9732011844a5a69b98fb76b326fbcd5a929da2b2a1bf901",
+      "rows": 480,
+      "basicBlockEntries": 4764059
+    },
+    {
+      "path": "d/sunAviary.gif",
+      "width": 640,
+      "height": 480,
+      "fnv1a64": "9667627d1486d964",
+      "pixelSha256": "4ecfd8a96f18f7b33855970e50ace2ad04d021e0defc40763ac81faea4523fad",
+      "sourceSha256": "ad443db25a4cbcb9e689b46a83b69c8e4890882db3bfdeeedb9d7b5763c5500f",
+      "rows": 480,
+      "basicBlockEntries": 3742905
+    },
+    {
+      "path": "d/sunballoon.GIF",
+      "width": 640,
+      "height": 480,
+      "fnv1a64": "156c179043834934",
+      "pixelSha256": "44d4c890019e96ce5c3d80b1f21602a1ec8eb01581bfa591c9e4a10b14ce6b6f",
+      "sourceSha256": "03995cce1b7818267a0107dde7a15f7d1f5aede8e02a0506bb46d17de0264d14",
+      "rows": 480,
+      "basicBlockEntries": 4092889
+    },
+    {
+      "path": "d/sunblocker.GIF",
+      "width": 640,
+      "height": 480,
+      "fnv1a64": "0b09cbdc516d576e",
+      "pixelSha256": "8fbd6187539077171990c5015cd732e103084b5f9c1a9dfc2bb3bda814ac8c71",
+      "sourceSha256": "695b676246216ceb1241250033c5238944f62447985c4a0a6827333be3249420",
+      "rows": 480,
+      "basicBlockEntries": 4439841
+    },
+    {
+      "path": "d/suncannon.gif",
+      "width": 640,
+      "height": 480,
+      "fnv1a64": "6462ed08f48a6e68",
+      "pixelSha256": "f907b1e9e48430815c3a7f4f49bf675bbb1c2ef98c967aabe13248ae8eb691b8",
+      "sourceSha256": "456dce93cdf8c5d09b6692d93c133555ff59b2ab6649deb6a85c9679da5c1f4b",
+      "rows": 480,
+      "basicBlockEntries": 4576488
+    },
+    {
+      "path": "d/sunfence.GIF",
+      "width": 640,
+      "height": 480,
+      "fnv1a64": "163ef5867610c407",
+      "pixelSha256": "b78f35f5c0697f7ac23b6e99f80cc9e7fe4c2ed304bb56944a8b9e339613eaf3",
+      "sourceSha256": "25ece940622e0628b52c433336e9d0608c59109a0a87da5ad8795e2b787fbf67",
+      "rows": 480,
+      "basicBlockEntries": 4232834
+    },
+    {
+      "path": "d/thunderarcher.gif",
+      "width": 640,
+      "height": 480,
+      "fnv1a64": "083db40f0f7da7b6",
+      "pixelSha256": "684e284520278a065d4abc13fde9bcd85243c673d558656f515b5bc9966886fe",
+      "sourceSha256": "621b61d373b7302a5b78704816cefe2bfed94514f4fe90743a9d19599c51617a",
+      "rows": 480,
+      "basicBlockEntries": 5035064
+    },
+    {
+      "path": "d/thunderBattery.gif",
+      "width": 640,
+      "height": 480,
+      "fnv1a64": "a71e70c60fc2aa55",
+      "pixelSha256": "69c689f442f4a92290d9da453e8e2bd14a5142bfeed156e0ef08e1205471f367",
+      "sourceSha256": "ef19ce141d99c66201595a5cae16da851399a06dab1389e81602533d3f3e05f8",
+      "rows": 480,
+      "basicBlockEntries": 4363634
+    },
+    {
+      "path": "d/thunderBlocker.gif",
+      "width": 640,
+      "height": 480,
+      "fnv1a64": "a53eef6ea0fc927d",
+      "pixelSha256": "54de0c54d2b9aaaca0d471573d4d3ef6a2081d85049d35062696a5ffc201c207",
+      "sourceSha256": "99b5cb7ab72b1e8a960a5ba4dbc3249dbb4fb6f7b38dc9c720b3b1608427dd62",
+      "rows": 480,
+      "basicBlockEntries": 4811973
+    },
+    {
+      "path": "d/thunderCannon.gif",
+      "width": 640,
+      "height": 480,
+      "fnv1a64": "34b0144724ab4748",
+      "pixelSha256": "535e259027d03e6e0a41e504e0423ade8da6ec609ee97ef8faf643b7d43d60f7",
+      "sourceSha256": "9a78fc390bb23c7fc0a50b1a2e9f978af4075b8c23a99d79243789e645f30239",
+      "rows": 480,
+      "basicBlockEntries": 4294844
+    },
+    {
+      "path": "d/thunderFence.gif",
+      "width": 640,
+      "height": 480,
+      "fnv1a64": "b8b96dac2df907c9",
+      "pixelSha256": "a961398601edede26436919144047962a9eab778cfcfced24a8805702dcf038c",
+      "sourceSha256": "9658bb4caf7a5cdbe00dc5ade3b8940386514ac9fb77755f29ca3a55b7cbcae9",
+      "rows": 480,
+      "basicBlockEntries": 4172872
+    },
+    {
+      "path": "d/title0.gif",
+      "width": 640,
+      "height": 480,
+      "fnv1a64": "a79fd5033c9614ff",
+      "pixelSha256": "a49e3e384951c113093b13be9efa385a93300548273d016c27ea0e0c37d2840a",
+      "sourceSha256": "b54403d4a9c86316b440fba4640e75993a392294d168c0464ae3f4e34a968557",
+      "rows": 480,
+      "basicBlockEntries": 1697475
+    },
+    {
+      "path": "d/title6.gif",
+      "width": 640,
+      "height": 480,
+      "fnv1a64": "3a3bcb706c086333",
+      "pixelSha256": "169ab8e2bf0d8ff9551d38850ad02b2c8e853ba48e9a8df415f88cda6321df44",
+      "sourceSha256": "1edfb3bfe901462f63022c31370bc1c37e7ae991a47ffa01b66cd1c1034236de",
+      "rows": 480,
+      "basicBlockEntries": 2023621
+    },
+    {
+      "path": "d/TITLE7.GIF",
+      "width": 640,
+      "height": 480,
+      "fnv1a64": "189ce9a336078f5b",
+      "pixelSha256": "2003a6767f6ab3b2fc59d16222553f7ded04f581955e8c650a1a83bba5f7602a",
+      "sourceSha256": "07b0f832431c2d4a359d61fc81b9fd6d3daccfd1cd7d9fa51de5b07b56b040ac",
+      "rows": 480,
+      "basicBlockEntries": 4128642
+    },
+    {
+      "path": "d/titleMenu.gif",
+      "width": 639,
+      "height": 480,
+      "fnv1a64": "20cb0983d118d4a4",
+      "pixelSha256": "d653adbd23234d6a09a443391154cb50a365b4a0d8b35b1bffdd04b9fe706510",
+      "sourceSha256": "94abb526de09f8e9a91f951e978e0b4762dfedd546673b4de0ede0e12971ca12",
+      "rows": 480,
+      "basicBlockEntries": 3953928
+    },
+    {
+      "path": "d/victory.gif",
+      "width": 640,
+      "height": 480,
+      "fnv1a64": "436a2d2626f9cd15",
+      "pixelSha256": "b07dd5df03b80004c440ea0047079a53ddab9e9a611d641535fe8fd734b604e0",
+      "sourceSha256": "711f18a08ca853383fe2cc900e85a9f63a0b9ffc25a3bfb5567e3aa388f33851",
+      "rows": 480,
+      "basicBlockEntries": 4328819
+    },
+    {
+      "path": "d/windarcher.gif",
+      "width": 640,
+      "height": 480,
+      "fnv1a64": "1ad4d04bb877be74",
+      "pixelSha256": "19adbd631146cb197701b97f9bbee023906a9d71615a2172bc33fbd4c702d0b2",
+      "sourceSha256": "399366d09ceb56e601ade6167388987aa4bc9fd08092a504fc0750776b0aaee0",
+      "rows": 480,
+      "basicBlockEntries": 4737870
+    },
+    {
+      "path": "d/windAviary.gif",
+      "width": 640,
+      "height": 480,
+      "fnv1a64": "69d6976d9842bbbf",
+      "pixelSha256": "5fb34b3f5e4ffe6644a793b23898f0f23f0e12cd6dc13efac0bafe5c765fd80e",
+      "sourceSha256": "bd731d2e1c8cd8268c7d8fefedc583fa13cc7f31873d4f7f17394ca8e01571d8",
+      "rows": 480,
+      "basicBlockEntries": 3911549
+    },
+    {
+      "path": "d/windballoon.GIF",
+      "width": 640,
+      "height": 480,
+      "fnv1a64": "b234fefd1f360673",
+      "pixelSha256": "c25b15afe56d6aa3486ee5baeb2079a3813dc38a69d499df6a8018aac645b669",
+      "sourceSha256": "54930e085bf9bdae66bd76f42cbd88894e06740aca2900784a388da0bae7b76e",
+      "rows": 480,
+      "basicBlockEntries": 4261837
+    },
+    {
+      "path": "d/windBattery.gif",
+      "width": 640,
+      "height": 480,
+      "fnv1a64": "f6eebf2630f5ceae",
+      "pixelSha256": "b2ded54f82bdb9de034b982fdeeeee6c5ddd37ebf4aa0e24765d1135766ecba9",
+      "sourceSha256": "2c98d0f59983ab6f521269ed9c91d16901fcdd5e1e8af8a46d9f83c2e7800903",
+      "rows": 480,
+      "basicBlockEntries": 4363634
+    },
+    {
+      "path": "d/windblocker.gif",
+      "width": 640,
+      "height": 480,
+      "fnv1a64": "514ad88f5d3d5a9f",
+      "pixelSha256": "627f9eb85fdc0fad540602c7886e24a905156738c57051aab8c6532317f57b4c",
+      "sourceSha256": "ac23f136302c2f05ab541bc92ab4ae66e9aab851f3921abc249df5379120d77f",
+      "rows": 480,
+      "basicBlockEntries": 4163101
+    },
+    {
+      "path": "d/windflyer.gif",
+      "width": 1024,
+      "height": 768,
+      "fnv1a64": "5f105a710f7844a7",
+      "pixelSha256": "a483303577ae7b4908485e8395b454174117d5a3712a2fe9440ffb15bab7a8d6",
+      "sourceSha256": "484f8be5c9c48f8cf92a754f0e84d2d0c8ecdbd385f4897e35852a17c7a54677",
+      "rows": 768,
+      "basicBlockEntries": 6427025
+    },
+    {
+      "path": "d/windWalker.gif",
+      "width": 640,
+      "height": 480,
+      "fnv1a64": "888356b1eea2c568",
+      "pixelSha256": "27752d9cd4b5ff0f6f17a1e17ebd10deb4de80c1ec975999c73eb38842c0591a",
+      "sourceSha256": "f096ccce7a914e468c14d8fcccdb5a9d06a6c703a4bbb6189d31728308d98a76",
+      "rows": 480,
+      "basicBlockEntries": 4541059
+    }
+  ]
+}

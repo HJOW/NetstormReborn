@@ -1,5 +1,13 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-24 단위402 완료: 실제 BackgroundGif 창과 공통 UI
+
+- [x] AGENTS/공통/닷넷 인계·86458a88/단위401을 확인했다. 현재/마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-10-23**이다. 새 전체 디컴파일/원본 게임 직접 실행/GUI0이다. 작업 중 네임스페이스 주석 규칙의 별도 사용자 커밋eeec368d를 확인했으며 AGENTS의 같은 바이트를 보존하고 이번 stage에서 제외한다.
+- [x] Uber의41a030/new0xb0를 HTML이 아닌 **BackgroundGifSpec GIF 창**으로 바로잡고 실제 생성/교체/SetEvent/재부착/입력/원시 Draw/소멸을 공통 Gump/VFS/설정/등록표/클립/픽셀/수명에 연결했다.419e40은 정밀 텍스트의419e9e 꼬리 분리와 구별해 PE/vtable로 확인했다.452f90 raw 큐는 세DWORD를 유지하며 Command 정규화를 추가하지 않는다. Draw는 배율 치수 아닌 base3c/40·현재 bitmap을 사용한다. 같은 실제 이미지의 동시/미부착/부분 생성/페이지 반납을 검사했다.
+- [x] 첫 descriptor 치수/원시 행을 사용하는 DecodeBackgroundGif를 추가해 논리 화면/좌상단 오프셋 차이를 복원했다. Native 상위7본문/_ftol **308행**, 실제 LZW의 보호 GIF전체 **34개**와 메모리 헤더 변형 **4개**, 합계346행을 최초 작성·읽기 전용 재생했다. 모두 같고 기존 자료 변경0이다. 두 x87 정밀도 차이0이며 상위14616명령 위치에는 장치/STOP 포함, 해독기 basicBlockEntries는 명령 수와 다르다. 실제 C++ 결합6검사는 보호/변형 픽셀 지문과 공통 수명/출력/입력을 확인했다.
+- [x] 빌드1~5 종료0, 중간4의 fill_n C4244는 BYTE0으로 명시해 최종 관측 경고오류0이다. 최초 기대값의 flags1/폭640·Attach 보정 누락을 실제 flags9/titleMenu639/mode1에 맞췄고 경과를 원시에 남겼다. 최종 집중 **60/0**, 전체 CTest **2733/0·324.89초**이며 실제 최종 BMP를 직접 확인했다. 최종 제품 **8cf5dc348c195e7dc23285650f6b1ab73640f714b6562971e6f0e9b7f99b19f7**, 검사 **9bc1f20a93ca4b13d1a5f117d25a54bfe67413504ec2808eb07a5a7c1c7d54b4**가 집중/전체에서 같고 originals1394동일·보호/AGENTS/기존 Native 추적 변경0이다. [완료 문서](docs/exe/cpp-background-gif-client-20261024.md)/[제품 보고서](cpppj/background-gif-client-runtime-20261024.json)와 `extracted/cpp-background-gif-402-*`에 SHA/경과/한계를 기록했다. 선택26파일 감사 후 **20261024-25 CP**로 로컬 커밋한다. push하지 않는다.
+- [ ] 다음은 **실제 전체 HTML 공장4cf120과 full Uber 도킹/교체·State/Core/Pool 순서**다. 기존 게임 화면에는 새 GIF/Chat/NSInfo 공장을 아직 설치하지 않았다. Production/Minimap 기존/새 제공자의 동시 소유와 실제 Win32/파일/전송 경계가 필요하며 기존 UI를 먼저 닫아 원문 순서를 바꾸지 않는다. 모든 Early/캠페인/Demo 사용자 완주·Edit/언어별 시나리오 전체·완전 동일성 및393 Wide SaveOptions 원인은 미완료이며 /goal은 활성 상태다.
+
 ## 2026-10-24 단위401 완료: 실제 ChatWindow 공장과 Client 공유 로그
 
 - [x] AGENTS/공통/닷넷 인계·**8661b66b / 20261024-23 CP**를 확인했다. 현재/마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-10-23**이다. 이전400은 실제 진척/커밋이었다. 새 전체 디컴파일/원본 직접 실행/GUI0이며 AGENTS의 외부 변경 두 행은 보존하고 stage/커밋에서 제외한다.

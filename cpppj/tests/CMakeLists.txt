@@ -2109,3 +2109,10 @@ set_source_files_properties(HudNsInfoCreateTests.cpp PROPERTIES COMPILE_DEFINITI
 target_sources(netstorm_tests PRIVATE ProductionInitialContextTests.cpp)
 set_source_files_properties(PlayerInitializationTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_PLAYER_INITIALIZATION_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/player-initialization-x86.tsv\"")
+
+# 원문 GIF 창308행과 실제 보호 GIF 전체/공통 입력·픽셀·수명을 같은 검사기에 등록한다.
+target_sources(netstorm_tests PRIVATE BackgroundGifGumpTests.cpp BackgroundGifClientTests.cpp)
+set_source_files_properties(BackgroundGifGumpTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_BACKGROUND_GIF_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/background-gif-gump-x86.tsv\"")
+set_source_files_properties(BackgroundGifClientTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_BACKGROUND_GIF_ASSETS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/background-gif-assets-x86.tsv\";NETSTORM_BACKGROUND_GIF_VARIANTS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/background-gif-variants-x86.tsv\"")

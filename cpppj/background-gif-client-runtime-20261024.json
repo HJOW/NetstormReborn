@@ -1,0 +1,1068 @@
+{
+  "unit": 402,
+  "goalComplete": false,
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "productSha256": "8cf5dc348c195e7dc23285650f6b1ab73640f714b6562971e6f0e9b7f99b19f7",
+  "testBinarySha256": "9bc1f20a93ca4b13d1a5f117d25a54bfe67413504ec2808eb07a5a7c1c7d54b4",
+  "sourceHashes": {
+    "cpppj/src/client/BackgroundGifGump.cpp": "b2daeecf8cafec1a36e94ec49b19d97bf77d133b283ead8801dd84fe308b157e",
+    "cpppj/src/client/BackgroundGifGump.h": "a83ee4a7f63166217f3e9a9223727d5ab47cd97e43844c04086b00df96479e7f",
+    "cpppj/src/client/CMakeLists.txt": "99fd71981cffaf66df77d530fca72c7f433c45b2c5c8bbdad75cf82d6d9f31d1",
+    "cpppj/src/client/GifImage.cpp": "941f5cba3ff2c800ecbe1b4b488f493004c080cad61c8a7957e238d14104a1b2",
+    "cpppj/src/client/GifImage.h": "fa999c862b805c6026dfd165b1074d9c9bfc80a7ebbe95b279ec158a0000584d",
+    "cpppj/src/client/RawBackgroundGifControls.cpp": "f6ac357d482dc4836e3aab2fbcc25c319bbc58bcb29f79a1687a7408b6a6c049",
+    "cpppj/src/client/RawBackgroundGifControls.h": "4939e1eb6a9187e558fcacb78daee9763777a45e726d0760f0d194ddf3ae03db",
+    "cpppj/src/client/RawButtonControls.cpp": "a4ef51b161c09d35d7dbad3a89a8118176bfac2e5dd30dbf6a952bd6b7012db7",
+    "cpppj/src/client/RawMenuControls.cpp": "dfb5132d1c7cdfe770810d3b935f7e45e11a3d5e968cb69b595e3f156639d846",
+    "cpppj/src/client/RawMenuControls.h": "5a9e753094ae38dc3f990816100ea6d67144f92cc58f1a6d0c6454ed64fa5259",
+    "cpppj/src/client/UberRootGump.h": "b511bb06b57b626fb0b42a245ad668e2a05519966d3293090eab31769fc4b0a6",
+    "cpppj/tests/BackgroundGifClientTests.cpp": "11ecdd3f33d5042fb8395ad279c3e3649c72ca1d895cd1f3ca478e85a5dfe541",
+    "cpppj/tests/BackgroundGifGumpTests.cpp": "3cf53a768c9fa4258ab01de547f14b5c4bb1d593ed659f52ce51a06857ff8b7f",
+    "cpppj/tests/CMakeLists.txt": "f42c21659dc00c478f7043a78fdb4f53559557b67ae0efdac60f9c2050074aff"
+  },
+  "referenceHashes": {
+    "cpppj/src/client/GumpCreate.cpp": "4eb77de7063d33238c6bee30b8a282c89506c38172be0c4131afc7b843c33cd9",
+    "cpppj/src/client/GumpTree.cpp": "b623d624f056ef2117dea2393334e1d8b30666b2d8243e49dc53e5e56b633c56",
+    "cpppj/src/client/GumpCollection.cpp": "d913b1ad8a6c786bfbae8820e0db09a7ec900b2674c8c49ba92541b475ea259b",
+    "cpppj/src/client/GumpLifetime.cpp": "c0b7bacd2f1ed87a2b5e9c0854d2f89200574f1408d7ac738cec891a185ca57a",
+    "cpppj/src/client/GumpDraw.cpp": "b2fe442a6d02602ba0e9d72fcd1d302d7f40d925a40ed14b570196a95f12eb36",
+    "cpppj/src/client/GumpHelp.cpp": "e0f8c2ab626afbf45a6f547948546623f2bef2b81a4266590ced032396049057",
+    "cpppj/src/client/UberRootGump.cpp": "caf4194b597d3146ea1c80f27bb119d56f56b72e6e02a67d0f7bc7a00d1e92ac",
+    "cpppj/src/client/RawMenuChat.inc": "b70745f7dea3aed25c329752163219d82f96ac575f7d9de5d87a9de5270ed2a0",
+    "cpppj/src/client/RawTextEntryControls.cpp": "0e1044a618216b99c9b977bab6d8a10520203e0ecc2e404cff3dddfd8048c3c8",
+    "cpppj/src/client/VFXDraw.cpp": "2de7032c46cc0e78eba6d87be0428a772d585f7cc0dc41f7314a7e9733453a5c"
+  },
+  "preservedNativeHashes": {
+    "cpppj/tests/fixtures/chat-window-x86.tsv": "e7faa97fbd0bf4c4d8b9d5a48bb6c64e3930ed3a0365948f850ecf65623ee5e5",
+    "cpppj/tests/fixtures/chat-window-base-x86.tsv": "10733b34b909bbb32d0eac76e9fcb5b176dfbb105c81f71be542caa9f2434463",
+    "cpppj/tests/fixtures/hud-chat-geometry-x86.tsv": "9c3cb7eba22c800405b726861d102c4fa0deb4b911b5dbe4a77238984f22504a",
+    "cpppj/tests/fixtures/text-entry-gump-x86.tsv": "658245fb178eae9f9b03365caabd65f8f189fe04867babbcda0c102fca003474",
+    "cpppj/tests/fixtures/text-entry-buffer-x86.tsv": "aa792a6af93d503c2236c378936bd74f6ae2d300b28974e48c4f40d55a7f4109",
+    "cpppj/tests/fixtures/chat-callbacks-x86.tsv": "fe2e8eadd7f118cabbcdf6984cc74fa53021af9df565353d7c87614eb97ee34a"
+  },
+  "newNativeHashes": {
+    "tools/decomp_background_gif_gump.py": "ef6b766a6c90cc71b4c1ff578051971506b13f6ff5d2b158159d59d709c255e1",
+    "cpppj/tests/fixtures/background-gif-gump-x86.tsv": "93844c8848a17dda6b03c3d26f9b087a1056037859736213428ff30997bbb995",
+    "cpppj/background-gif-gump-native-20261024.json": "229f77d9fdcdae368266ae4fafeadb6d196321d25fef2287d7e7b569b97becab",
+    "tools/decomp_background_gif_assets.py": "4c29385c81d8cd49c9ba487daea96570b9279ee4573fbfd571b7f6030d7a3d22",
+    "cpppj/tests/fixtures/background-gif-assets-x86.tsv": "6153a1ec5a7c6fa2f584f94753c67a2264b7f8d61dd8639f6bffbd14d0c7d083",
+    "cpppj/background-gif-assets-native-20261024.json": "439e266b12028476965782a71d7cc56c6d0deaee06119cb8d1e080128c7d35b0",
+    "tools/decomp_background_gif_variants.py": "e8e66dcaed84e43acfdbc25189edb2bcf2032f40b33e066e6e8d6432adc5bb29",
+    "cpppj/tests/fixtures/background-gif-variants-x86.tsv": "e3084fcfc65dd9312f2bc57dede50fbf5c2a5c9bc057b71df128cd59642a05cc",
+    "cpppj/background-gif-variants-native-20261024.json": "39846a9509d578b7553dbfcf82cd94fa174915eaadb88a58669edb6637d9abbc"
+  },
+  "rawHashes": {
+    "extracted/cpp-background-gif-402-edit.py": "0feb3de7f281b30cc0a81f4d6d6a50ad977104875b3005d43a75f41c74f29275",
+    "extracted/cpp-background-gif-402-build1.log": "518631d816fadb00d457ab671d7f7c237774fc425ec14ee4644fcaafdba12ae1",
+    "extracted/cpp-background-gif-402-assets-native1.log": "ba2e1c9b016e59c08241dfd7895e33afe50e01dcb0b32ca29c6b27c2aac1589e",
+    "extracted/cpp-background-gif-402-assets-native2.log": "ba2e1c9b016e59c08241dfd7895e33afe50e01dcb0b32ca29c6b27c2aac1589e",
+    "extracted/cpp-background-gif-402-assets-native3.log": "01aca3ea8e8884cf3431e9286333af947d78a67723eb0b0742607dee3d8a760e",
+    "extracted/cpp-background-gif-402-build2.log": "7f72a93485b624f1295b616f07a166a3bb964ab37d97fc5eab096817068b7902",
+    "extracted/cpp-background-gif-402-assets-native4.log": "8ecf85b3209388a97ee7c2be5651198aa13587e2bbdb50da4976f54498a62c26",
+    "extracted/cpp-background-gif-402-adjust.py": "9893c88e171f7f89ae2eaa343db0eda80caf2caf600af94b1391c02143b0911e",
+    "extracted/cpp-background-gif-402-checks.py": "de845c143d738a1f385250e5dee53d7bf18889d3c003914cc255d1d3a920241d",
+    "extracted/cpp-background-gif-402-build3.log": "8b5d18ef634638e13bb04263ae571da612f9f24f8a2d42a4cefd44300655f8fc",
+    "extracted/cpp-background-gif-402-variants-native1.log": "79f5905aeaabf19d0e8677c2cef2a21a31ff34eab7aacf0f0e6ba0ba495121b5",
+    "extracted/cpp-background-gif-402-build4.log": "14110b391fda08873ddf4be245f9ce97c09bc55fb084ad30d8d13a6acc08f74d",
+    "extracted/cpp-background-gif-402-native-verify.py": "99f350d7f714a96253301f1bd71dfdc5a2e40b2bd3175c94a57f1918eb259438",
+    "extracted/cpp-background-gif-402-verify-gump1.log": "088d1fb12f7189f9c6c59e2b7c0ce0f0bc48061500b7144e4805a9756c1fd67b",
+    "extracted/cpp-background-gif-402-verify-assets1.log": "5d4263e739fa4cdada29bb52a5ab2ac99e0146e6cc7d947a19e1cace5567a312",
+    "extracted/cpp-background-gif-402-verify-variants1.log": "0a0470a5bc1b3fb894f78ebdc56780c3ad235c6fcf5e0364fa2cfd7765e43998",
+    "extracted/cpp-background-gif-402-build5.log": "0e60a8b6005b66ee5756977b13def9801c91acb163a7ae1d62d871239e917639",
+    "extracted/cpp-background-gif-402-early-validation.json": "c57a20723c6cd649bf00f598cf918902c877d15461e6a112ad4e0b8061682b99",
+    "extracted/cpp-background-gif-402-focused1-before.json": "0461e0fd49f2b1c744bf5012fa4e0ac81e8406e74be49bb17526a17088fb966d",
+    "extracted/cpp-background-gif-402-focused1-1.log": "e37b58d2986c40bc35c4fd89bc056b07db189aad1a418b02a0c81e9eada30f6e",
+    "extracted/cpp-background-gif-402-focused1-progress1.json": "0b698c969584de158c173dd24d257fc20e2aed2f89cdff348e35388d444476a0",
+    "extracted/cpp-background-gif-402-focused1-2.log": "73443f6b064e5c8690f21fa4988aba8aef71cea8cbf148041cb335979da66bf5",
+    "extracted/cpp-background-gif-402-focused1-gif.bmp": "cc69eb5a03ae6d3efbb25dbe601519b675a562f5e42486e97669065fb9371dc8",
+    "extracted/cpp-background-gif-402-focused1-progress2.json": "a4dbcf6bb880783cd3c125f2ca1974fa8691807edc613ad92e524cfeb2c10d50",
+    "extracted/cpp-background-gif-402-focused1-3.log": "860811e0b2f0957fe0c8e78bddc1126c72f9350c88770ae67c036aa4f776a72d",
+    "extracted/cpp-background-gif-402-focused1-progress3.json": "cd7d1c3831e34f6fd48ab5140c7d81e0e685c06a3b7ee95bc2419c5ec10c8f6d",
+    "extracted/cpp-background-gif-402-focused1-4.log": "94c820f35fed8c69e76bd8da1e976f11521c2e6aeac93cbfcac694cf6f9d1405",
+    "extracted/cpp-background-gif-402-focused1-chat.bmp": "375eecff124ac10d350aad7c0ec98365b94f4b810cbea47b9d5e8436bdebe17a",
+    "extracted/cpp-background-gif-402-focused1-progress4.json": "43af14c633e2b3530945b5ac7ee17c483b02031b7fc498db339a2d2416c5c39b",
+    "extracted/cpp-background-gif-402-focused1-5.log": "5075e076baeae15ccd1747c2c8ca3c8c4b90595549f2e2df8725079e1494c286",
+    "extracted/cpp-background-gif-402-focused1-progress5.json": "f4f564940d86cd02b2539ef8f8b35f2b7183204bb04831f3ccb8079eb08c75a8",
+    "extracted/cpp-background-gif-402-focused1-6.log": "efcc36a0a5066bc84c1e108c84a6faed984ff7f0aa75887756f9e543b589f5a5",
+    "extracted/cpp-background-gif-402-focused1-progress6.json": "19da2a2e93be5bc890f90bcb91c98937ed73ff01fbadb475896098fc6bf634af",
+    "extracted/cpp-background-gif-402-focused1-7.log": "caef703d6711ac5c20db7270599791613d588e7ba295cfec30b7ad341a0a13e3",
+    "extracted/cpp-background-gif-402-focused1-progress7.json": "70147990b3f076813353787a2f41738c048f2e76d5dec237229dee341818baf2",
+    "extracted/cpp-background-gif-402-focused1-8.log": "b5b64a6315c7bc6542e3bedf631a3682e858664e0ecb92f6088ee7b56dcc7d12",
+    "extracted/cpp-background-gif-402-focused1-console.bmp": "0bc55ac0c4ea878611a1277535a8b05ab54191bbe2533124add8a3d9b96b5474",
+    "extracted/cpp-background-gif-402-focused1-progress8.json": "fbd87bd7204bf44b9c0013628ae85c7df836abcf23c2b9ae438ed4f6b46b367f",
+    "extracted/cpp-background-gif-402-focused1-9.log": "29c7ea49404747fbbdd472fce171133de89323a9ea3685396b327b2b47f3772a",
+    "extracted/cpp-background-gif-402-focused1-progress9.json": "1fa4fdc59e78b7996e042e3fc568aac075546a2c6faae7fc389ac93e22dda382",
+    "extracted/cpp-background-gif-402-focused1-10.log": "426a3d77cc906c9a8caf6fe5c6c0c0e191465767a352e340c63ff7a8804e8c6a",
+    "extracted/cpp-background-gif-402-focused1-progress10.json": "5f677e95ceb84df23c93c8d99221eccdd2d4ce086618f54384adbcad8207a27a",
+    "extracted/cpp-background-gif-402-focused1-11.log": "f2105a03659dcd35ec440a769b319de162ebe6cb5c638b2caafff44a871839d2",
+    "extracted/cpp-background-gif-402-focused1-progress11.json": "a93f342d678201bd877395448f377c711f3c41b01996cbb28926ea3f78b2c639",
+    "extracted/cpp-background-gif-402-focused1-12.log": "eba35a6f6f19d9634b8f45e9e85b80911b6c26a7c83fa3f6124ee2a09d7a91a5",
+    "extracted/cpp-background-gif-402-focused1-progress12.json": "e6704e6454bfb9cb77b80c5d0e10cf8f598e061d0b4acaf80e54dfa50a554164",
+    "extracted/cpp-background-gif-402-focused1-13.log": "5ca5531774b5f13fc82081a254cff97b0cd8481d48e9e41e2ed8aa3bdb8503e5",
+    "extracted/cpp-background-gif-402-focused1-progress13.json": "cda005d1ab0f740b7f58847ede3c873fedaa4fecdf51379d832562e5402f5abb",
+    "extracted/cpp-background-gif-402-focused1-14.log": "4e0cde1d19c18e8335926b907de08279c605765a208e161f4ed7ff8843838387",
+    "extracted/cpp-background-gif-402-focused1-progress14.json": "2ee7d18bc936759d285fa656277b806c4ae0923b6ba288c2390a70fb25b409f0",
+    "extracted/cpp-background-gif-402-focused1-15.log": "688dd03368db1e8e3668a88d62baabfaf41891dc28e61379dfeb1a07ec4e18c0",
+    "extracted/cpp-background-gif-402-focused1-progress15.json": "2ad7ac7d0c1017f4830ff46907ae90a6ae1e291d859a3445574a44dcda45ae2a",
+    "extracted/cpp-background-gif-402-focused1.json": "d911a144d355c45fe371203b79ddce6f15832a8c565fd628f81209e2cee7f251",
+    "extracted/cpp-background-gif-402-ctest1.log": "1a01e894967712b8d31c9a943fdafa344fde46504aab50a4163c381a1121db0c",
+    "extracted/cpp-background-gif-402-native-replay1.json": "96c953108cd13265de36f347213c21237f2d0b25e19e739769ae508941277ee0",
+    "extracted/cpp-background-gif-402-final.py": "d4b8cdbceda34cb93a2362c99fbed78c9e32b47e7a856d6c0cce44b2e0a87bce",
+    "extracted/cpp-background-gif-402-audit.py": "ce615d5698c53e7fa672adb6aa09f2214dc7223dface550ed731adcb20a28cc7",
+    "extracted/cpp-background-gif-402-receipt.py": "79d8df022a272a1205c4045119487602c7c5f5ba14939f21cae5188cbd0bdf31",
+    "extracted/cpp-background-gif-402-ctest1-tests.log": "651bb49e2f1e5fede36b88b31a257faa68a3d036793c552d9eb953d21143e10e",
+    "extracted/cpp-background-gif-402-ctest1.json": "f3edb78bd5f54a63bdd98a8f33e7cf239d333428f08a08e5b9eaaa24f2f001ea",
+    "extracted/cpp-background-gif-402-terminal.json": "655b9bc30056ea13f8d5fc3db665758774e8dfb7a7f8b0c7aae21da91ac4acf0"
+  },
+  "builds": [
+    {
+      "index": 1,
+      "session": 51534,
+      "returnCode": 0,
+      "path": "extracted/cpp-background-gif-402-build1.log",
+      "sha256": "518631d816fadb00d457ab671d7f7c237774fc425ec14ee4644fcaafdba12ae1",
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "index": 2,
+      "session": 50937,
+      "returnCode": 0,
+      "path": "extracted/cpp-background-gif-402-build2.log",
+      "sha256": "7f72a93485b624f1295b616f07a166a3bb964ab37d97fc5eab096817068b7902",
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "index": 3,
+      "session": 24212,
+      "returnCode": 0,
+      "path": "extracted/cpp-background-gif-402-build3.log",
+      "sha256": "8b5d18ef634638e13bb04263ae571da612f9f24f8a2d42a4cefd44300655f8fc",
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "index": 4,
+      "session": 19164,
+      "returnCode": 0,
+      "path": "extracted/cpp-background-gif-402-build4.log",
+      "sha256": "14110b391fda08873ddf4be245f9ce97c09bc55fb084ad30d8d13a6acc08f74d",
+      "errors": [],
+      "warnings": [
+        "warning C4244",
+        "warning C4244",
+        "warning C4244",
+        "warning C4244",
+        "warning C4244",
+        "warning C4244",
+        "warning C4244",
+        "warning C4244",
+        "warning C4244",
+        "warning C4244"
+      ]
+    },
+    {
+      "index": 5,
+      "session": 32145,
+      "returnCode": 0,
+      "path": "extracted/cpp-background-gif-402-build5.log",
+      "sha256": "0e60a8b6005b66ee5756977b13def9801c91acb163a7ae1d62d871239e917639",
+      "errors": [],
+      "warnings": []
+    }
+  ],
+  "focused": {
+    "productSha256": "8cf5dc348c195e7dc23285650f6b1ab73640f714b6562971e6f0e9b7f99b19f7",
+    "testBinarySha256": "9bc1f20a93ca4b13d1a5f117d25a54bfe67413504ec2808eb07a5a7c1c7d54b4",
+    "runs": [
+      {
+        "returnCode": 0,
+        "seconds": 0.8931177000049502,
+        "log": "extracted/cpp-background-gif-402-focused1-1.log",
+        "filter": "BackgroundGifGump_",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "BackgroundGifGump_IndependentNativeAllBodiesAndCurrentEffects"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 1.0860973000526428,
+        "log": "extracted/cpp-background-gif-402-focused1-2.log",
+        "filter": "BackgroundGifClient_",
+        "counts": [
+          [
+            "6",
+            "0"
+          ]
+        ],
+        "names": [
+          "BackgroundGifClient_ActualDefaultPathFactoryAndConcurrentStorage",
+          "BackgroundGifClient_AllProtectedAssetsIndependentNativePixels",
+          "BackgroundGifClient_IndependentNativeDescriptorAndInterlaceVariants",
+          "BackgroundGifClient_ActualCommonPixelsBaseDimensionsAndClip",
+          "BackgroundGifClient_CommonInputPreservesRawQueueTripletAndRetirement",
+          "BackgroundGifClient_MissingFilePartialDecodeAndPageLifetime"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.3633756999624893,
+        "log": "extracted/cpp-background-gif-402-focused1-3.log",
+        "filter": "ChatWindow_",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "ChatWindow_IndependentNativeCreationInputHelperAndLifetime"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 1.2282528999494389,
+        "log": "extracted/cpp-background-gif-402-focused1-4.log",
+        "filter": "ChatWindowClient_",
+        "counts": [
+          [
+            "7",
+            "0"
+          ]
+        ],
+        "names": [
+          "ChatWindowClient_FullFactoryActualChildrenClientLogAndCommands",
+          "ChatWindowClient_ConcurrentRootsSharedLogAndNativeCurrentRetirement",
+          "ChatWindowClient_ActualLogCallbackClearTailAndQuitBoundary",
+          "ChatWindowClient_ActualHelperMenusPreserveStablePayloadsBeyondInputRing",
+          "ChatWindowClient_RealGeometryInputAndStyledPixels",
+          "ChatWindowClient_PartialCreationAndSelectedUnboundDevicesAreExplicit",
+          "ChatWindowClient_IndependentNativeCallbackMutationsAndCurrentReads"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.43048770003952086,
+        "log": "extracted/cpp-background-gif-402-focused1-5.log",
+        "filter": "HudChatGeometry_",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "HudChatGeometry_Native3960SizesAndCallbacks"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.9153824999229982,
+        "log": "extracted/cpp-background-gif-402-focused1-6.log",
+        "filter": "TextEntryGump_",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "TextEntryGump_IndependentNativeConstructorAttachInputDrawLifetime"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.521963500068523,
+        "log": "extracted/cpp-background-gif-402-focused1-7.log",
+        "filter": "TextEntryBuffer_",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "TextEntryBuffer_IndependentNativeAllOperations"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.5392512999242172,
+        "log": "extracted/cpp-background-gif-402-focused1-8.log",
+        "filter": "TextEntryClient_",
+        "counts": [
+          [
+            "5",
+            "0"
+          ]
+        ],
+        "names": [
+          "TextEntryClient_RealStorageAddressesGrowthAndIndependentLifetimes",
+          "TextEntryClient_ActualConsoleTreeInputClipboardAndCompletion",
+          "TextEntryClient_RealGlyphSelectionCaretClipAndIdle",
+          "TextEntryClient_ConcurrentConsolesRetirementAndPartialCreationCleanup",
+          "TextEntryClient_BorrowedGlobalLogUsesSameStateAndActualFontFragments"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 1.946882399963215,
+        "log": "extracted/cpp-background-gif-402-focused1-9.log",
+        "filter": "RawMenuControls_",
+        "counts": [
+          [
+            "12",
+            "0"
+          ]
+        ],
+        "names": [
+          "RawMenuControls_HelpActualTreePixelsAndOutsideInput",
+          "RawMenuControls_OwnedHelpStringsDriveRealMenuAndRelease",
+          "RawMenuControls_HelpActualHistoryButtonsAndReopen",
+          "RawMenuControls_HelpActualTypeInfoAndImage",
+          "RawMenuControls_FloatingSpActualPixelsAndLifetime",
+          "RawMenuControls_CommonTreeInputAndDisabledItem",
+          "RawMenuControls_HorizontalPointAndDeferredReplace",
+          "RawMenuControls_FancySubmenuPixelsAndCleanup",
+          "RawMenuControls_ObjectMenuCommandsAndCurrentConfig",
+          "RawMenuControls_CarrierAndObjectMenuChain",
+          "RawMenuControls_MissionLoadingUsesSharedTreeAndCancel",
+          "RawMenuControls_MinimapBeforeSessionAndAcrossWorldBindings"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.6346936000045389,
+        "log": "extracted/cpp-background-gif-402-focused1-10.log",
+        "filter": "GumpLifetime_",
+        "counts": [
+          [
+            "9",
+            "0"
+          ]
+        ],
+        "names": [
+          "GumpLifetime_PatchNative",
+          "GumpLifetime_CdNative",
+          "GumpLifetime_AdditionalNative",
+          "GumpLifetime_CreateTreeKillCleanupAndReuse",
+          "GumpLifetime_TreeReplacementDefersDestruction",
+          "GumpLifetime_BaseDoesNotUnregisterOrRemoveDialogs",
+          "GumpLifetime_CdIdleCapacity",
+          "GumpLifetime_ContractsAndCycles",
+          "GumpLifetime_CallbackExceptionKeepsWrittenState"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.6071633000392467,
+        "log": "extracted/cpp-background-gif-402-focused1-11.log",
+        "filter": "NsInfoClient_",
+        "counts": [
+          [
+            "4",
+            "0"
+          ]
+        ],
+        "names": [
+          "NsInfoClient_FullRealChildrenBuffersAndHiddenPixelsBeforeSession",
+          "NsInfoClient_TwoRootsThenRealRetirementAndPageCleanup",
+          "NsInfoClient_PartialTranslationAndSelectedMetamapAreNotFakeSuccess",
+          "NsInfoClient_CurrentServerConfigAndNativeNameBufferRules"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.5645237000426278,
+        "log": "extracted/cpp-background-gif-402-focused1-12.log",
+        "filter": "ProductionInitialContext_",
+        "counts": [
+          [
+            "4",
+            "0"
+          ]
+        ],
+        "names": [
+          "ProductionInitialContext_ConstructsAllNativeChildrenWithoutSession",
+          "ProductionInitialContext_RepeatedConstructionAndGlobalPageRetirement",
+          "ProductionInitialContext_MissingTranslationKeepsAndRetiresPartialEffects",
+          "ProductionInitialContext_GameplayGlobalsKeepRealAliasesAndRejectDuplicate"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 1.5668821999570355,
+        "log": "extracted/cpp-background-gif-402-focused1-13.log",
+        "filter": "HudDock_",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "HudDock_IndependentNativeBodiesAndNestedViewport"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.6396037000231445,
+        "log": "extracted/cpp-background-gif-402-focused1-14.log",
+        "filter": "HudDividerInput_",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "HudDividerInput_Native13398StateAndCallbacks"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.6105028999736533,
+        "log": "extracted/cpp-background-gif-402-focused1-15.log",
+        "filter": "UberRoot_",
+        "counts": [
+          [
+            "6",
+            "0"
+          ]
+        ],
+        "names": [
+          "UberRoot_Native160",
+          "UberRoot_RealTreeAndLifetimeTransfer",
+          "UberRoot_DockReadsLiveThisFields",
+          "UberRoot_MissingFactoryKeepsPriorEffects",
+          "UberRoot_MissingOldRootFailsAfterConstructionEffects",
+          "UberRoot_EmptyLeafNeedsNoGameHook"
+        ]
+      }
+    ],
+    "sameBinaries": true,
+    "originalsUnchanged": true
+  },
+  "full": {
+    "returnCode": 0,
+    "seconds": 324.8878173000412,
+    "log": "extracted/cpp-background-gif-402-ctest1.log",
+    "productSha256": "8cf5dc348c195e7dc23285650f6b1ab73640f714b6562971e6f0e9b7f99b19f7",
+    "testBinarySha256": "9bc1f20a93ca4b13d1a5f117d25a54bfe67413504ec2808eb07a5a7c1c7d54b4",
+    "counts": [
+      [
+        "2733",
+        "0"
+      ]
+    ],
+    "sameBinaries": true,
+    "originalsUnchanged": true
+  },
+  "nativeReplay": {
+    "success": true,
+    "gameExecuted": false,
+    "originalsUnchanged": true,
+    "fixturesUnchanged": true,
+    "fixtureHashes": {
+      "cpppj\\tests\\fixtures\\background-gif-gump-x86.tsv": "93844c8848a17dda6b03c3d26f9b087a1056037859736213428ff30997bbb995",
+      "cpppj\\tests\\fixtures\\background-gif-assets-x86.tsv": "6153a1ec5a7c6fa2f584f94753c67a2264b7f8d61dd8639f6bffbd14d0c7d083",
+      "cpppj\\tests\\fixtures\\background-gif-variants-x86.tsv": "e3084fcfc65dd9312f2bc57dede50fbf5c2a5c9bc057b71df128cd59642a05cc"
+    },
+    "runs": [
+      {
+        "returnCode": 0,
+        "seconds": 2.799924400052987,
+        "log": "extracted/cpp-background-gif-402-verify-gump1.log",
+        "scope": "gump"
+      },
+      {
+        "returnCode": 0,
+        "seconds": 246.32709999999497,
+        "log": "extracted/cpp-background-gif-402-verify-assets1.log",
+        "scope": "assets"
+      },
+      {
+        "returnCode": 0,
+        "seconds": 30.80616779997945,
+        "log": "extracted/cpp-background-gif-402-verify-variants1.log",
+        "scope": "variants"
+      }
+    ]
+  },
+  "nativeObservations": {
+    "gump": {
+      "host": "HJOW-Athlon",
+      "lastFullDecompileHost": "HJOW-Athlon",
+      "lastFullDecompileDate": "2026-10-23",
+      "peSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "sourceSha256": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+      "rows": 308,
+      "cases": 154,
+      "instructions": 14616,
+      "instructionCountIncludesDeviceHooks": true,
+      "precisionDifferences": [],
+      "entryPoints": {
+        "construct": 4300848,
+        "refresh": 4300480,
+        "setEvent": 4300304,
+        "handle": 4300352,
+        "draw": 4300624,
+        "destroy": 4300176,
+        "reattach": 4300272
+      },
+      "fixtureSha256": "93844c8848a17dda6b03c3d26f9b087a1056037859736213428ff30997bbb995",
+      "toolSha256": "ef6b766a6c90cc71b4c1ff578051971506b13f6ff5d2b158159d59d709c255e1",
+      "gameExecuted": false,
+      "limits": [
+        "실제 생성/교체/설정/가상 입력/Draw/소멸/재부착과 _ftol 본문 실행",
+        "419e40 진입은 원문 vtable/PE로 확인하며 정밀 텍스트의419e9e 꼬리 분리와 구별",
+        "기본 생성/파일/원시 복사/입력/수명 하위는 명시 장치; 전체 게임/GUI/디코더 증거 아님",
+        "명시 중단은 실제 EH unwind 검증 아님; 미완료/void EAX0·constructor this1 정규화"
+      ]
+    },
+    "assets": {
+      "host": "HJOW-Athlon",
+      "gameExecuted": false,
+      "bodies": [
+        "00407171",
+        "00406ef7",
+        "00406d90..00407117"
+      ],
+      "deviceBoundary": "00406939 실제 LZW 행의 출력 복사만 관측",
+      "peSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "fixtureSha256": "6153a1ec5a7c6fa2f584f94753c67a2264b7f8d61dd8639f6bffbd14d0c7d083",
+      "cases": [
+        {
+          "path": "d/bulf.GIF",
+          "width": 640,
+          "height": 480,
+          "fnv1a64": "0e4405410d19915a",
+          "pixelSha256": "50d0dc26226ff8445a207064f42010aab836ad9ded707f4f4dd6c9d6c02396b1",
+          "sourceSha256": "b64744c31e72e7c8997a2f2e013f9f1dc23e50fb4b3db299f10f47eaf165de0f",
+          "rows": 480,
+          "basicBlockEntries": 4141565
+        },
+        {
+          "path": "d/Defeat.gif",
+          "width": 640,
+          "height": 480,
+          "fnv1a64": "a7e7f4192f7529e5",
+          "pixelSha256": "9f394419dbde55e9ec8025b445ad7748c0b5ea4dced9039c06b79187494551f0",
+          "sourceSha256": "de0337808481513aeaa863dede6aa6529935a5bcd508dedc7f54ad16ca3eed7c",
+          "rows": 480,
+          "basicBlockEntries": 3905022
+        },
+        {
+          "path": "d/Gifcloud.gif",
+          "width": 512,
+          "height": 512,
+          "fnv1a64": "74a31bd350b21517",
+          "pixelSha256": "d963b1d8d721067b370f32d8ded66eb92532e70bb36714a46f5859cc62e5799c",
+          "sourceSha256": "8bf7707b77526bf4dbac82c711f15c078406f2a7bc3dcef1c35330ea3a128cf0",
+          "rows": 512,
+          "basicBlockEntries": 2868684
+        },
+        {
+          "path": "d/Gifcloud2.GIF",
+          "width": 512,
+          "height": 512,
+          "fnv1a64": "75d936a296917fc9",
+          "pixelSha256": "ffac56e2bc115b52ffd899476d5c72e4e58aee3fb22ea705ec136f8ee694a063",
+          "sourceSha256": "243c5568c2e4223bd4601ba18e32375f5142411bcdd0152245991b0eca650dd1",
+          "rows": 512,
+          "basicBlockEntries": 2890431
+        },
+        {
+          "path": "d/rainAviary.gif",
+          "width": 640,
+          "height": 480,
+          "fnv1a64": "63a02ca6bb81d5b3",
+          "pixelSha256": "607baa85786f2227294448b4141149643c137c39f981d22c7a85b2ca0f807539",
+          "sourceSha256": "348b36bf4e547763bbc909cec1cadd5ecfd01c7ac1bcff2517d6e16f7fb7abdc",
+          "rows": 480,
+          "basicBlockEntries": 5091238
+        },
+        {
+          "path": "d/rainballoon.gif",
+          "width": 640,
+          "height": 480,
+          "fnv1a64": "e8aa66d9a6bd67f7",
+          "pixelSha256": "2037ff5de12eefe108ad8edc8cfc27ffd329381b0efe220d0e4ab5d2cb8675c6",
+          "sourceSha256": "9a2ea98e79e6f777f81f53d0e6cbf02cfb9e584b80a5af30a1a2a1e669257d7a",
+          "rows": 480,
+          "basicBlockEntries": 4617500
+        },
+        {
+          "path": "d/rainBattery.gif",
+          "width": 640,
+          "height": 480,
+          "fnv1a64": "a71e70c60fc2aa55",
+          "pixelSha256": "69c689f442f4a92290d9da453e8e2bd14a5142bfeed156e0ef08e1205471f367",
+          "sourceSha256": "ef19ce141d99c66201595a5cae16da851399a06dab1389e81602533d3f3e05f8",
+          "rows": 480,
+          "basicBlockEntries": 4363634
+        },
+        {
+          "path": "d/Rainblocker.gif",
+          "width": 640,
+          "height": 480,
+          "fnv1a64": "4e6fb611cc1e8033",
+          "pixelSha256": "976a445c0990f56c455fa28348ea9f77182d23ba4788bfb907c76eda96c124f0",
+          "sourceSha256": "02c560f23e582ad520e3c986dd4cf4bfbfd9db0681b8df99cac3d3dae846ed76",
+          "rows": 480,
+          "basicBlockEntries": 4637217
+        },
+        {
+          "path": "d/raincannon.gif",
+          "width": 640,
+          "height": 480,
+          "fnv1a64": "39f9b8f0e3445ade",
+          "pixelSha256": "0195805ab6962538686ea836d4425238294fa90f56356bf85b7a81600701e3bc",
+          "sourceSha256": "7b5f176541e41fe86e8f483fb8c904688f432e192334acfd57e6604f671803a9",
+          "rows": 480,
+          "basicBlockEntries": 4525487
+        },
+        {
+          "path": "d/rainfence.GIF",
+          "width": 640,
+          "height": 480,
+          "fnv1a64": "23cf3be24257b57f",
+          "pixelSha256": "969c266031317ca78f91fa857d8f78fa04aaabc111fae7ea0b396b16f9810410",
+          "sourceSha256": "df3cee39901bc4989cde56be586ef1fb0db85e25ccf3ec8ee0103fab4ba77bbb",
+          "rows": 480,
+          "basicBlockEntries": 4356209
+        },
+        {
+          "path": "d/rainwalker.gif",
+          "width": 640,
+          "height": 480,
+          "fnv1a64": "f58fd9fd99c60b17",
+          "pixelSha256": "f5b0e8cc0e0ba19d75e127132d0c3ea12de7b34d7c987e8f17cd01bb316266db",
+          "sourceSha256": "c3ceb0635c952d4a0b2a3b2c155dfa202cafc7ca40da8f77dbda71686db71ea0",
+          "rows": 480,
+          "basicBlockEntries": 5121968
+        },
+        {
+          "path": "d/sunArcher.gif",
+          "width": 640,
+          "height": 480,
+          "fnv1a64": "9a3fbb651a4a3ef7",
+          "pixelSha256": "bb12db7d8df234e791bd3c212058ea3faf3c1781fb02dff5e062fa16d95e6293",
+          "sourceSha256": "001c67634f423820e9732011844a5a69b98fb76b326fbcd5a929da2b2a1bf901",
+          "rows": 480,
+          "basicBlockEntries": 4764059
+        },
+        {
+          "path": "d/sunAviary.gif",
+          "width": 640,
+          "height": 480,
+          "fnv1a64": "9667627d1486d964",
+          "pixelSha256": "4ecfd8a96f18f7b33855970e50ace2ad04d021e0defc40763ac81faea4523fad",
+          "sourceSha256": "ad443db25a4cbcb9e689b46a83b69c8e4890882db3bfdeeedb9d7b5763c5500f",
+          "rows": 480,
+          "basicBlockEntries": 3742905
+        },
+        {
+          "path": "d/sunballoon.GIF",
+          "width": 640,
+          "height": 480,
+          "fnv1a64": "156c179043834934",
+          "pixelSha256": "44d4c890019e96ce5c3d80b1f21602a1ec8eb01581bfa591c9e4a10b14ce6b6f",
+          "sourceSha256": "03995cce1b7818267a0107dde7a15f7d1f5aede8e02a0506bb46d17de0264d14",
+          "rows": 480,
+          "basicBlockEntries": 4092889
+        },
+        {
+          "path": "d/sunblocker.GIF",
+          "width": 640,
+          "height": 480,
+          "fnv1a64": "0b09cbdc516d576e",
+          "pixelSha256": "8fbd6187539077171990c5015cd732e103084b5f9c1a9dfc2bb3bda814ac8c71",
+          "sourceSha256": "695b676246216ceb1241250033c5238944f62447985c4a0a6827333be3249420",
+          "rows": 480,
+          "basicBlockEntries": 4439841
+        },
+        {
+          "path": "d/suncannon.gif",
+          "width": 640,
+          "height": 480,
+          "fnv1a64": "6462ed08f48a6e68",
+          "pixelSha256": "f907b1e9e48430815c3a7f4f49bf675bbb1c2ef98c967aabe13248ae8eb691b8",
+          "sourceSha256": "456dce93cdf8c5d09b6692d93c133555ff59b2ab6649deb6a85c9679da5c1f4b",
+          "rows": 480,
+          "basicBlockEntries": 4576488
+        },
+        {
+          "path": "d/sunfence.GIF",
+          "width": 640,
+          "height": 480,
+          "fnv1a64": "163ef5867610c407",
+          "pixelSha256": "b78f35f5c0697f7ac23b6e99f80cc9e7fe4c2ed304bb56944a8b9e339613eaf3",
+          "sourceSha256": "25ece940622e0628b52c433336e9d0608c59109a0a87da5ad8795e2b787fbf67",
+          "rows": 480,
+          "basicBlockEntries": 4232834
+        },
+        {
+          "path": "d/thunderarcher.gif",
+          "width": 640,
+          "height": 480,
+          "fnv1a64": "083db40f0f7da7b6",
+          "pixelSha256": "684e284520278a065d4abc13fde9bcd85243c673d558656f515b5bc9966886fe",
+          "sourceSha256": "621b61d373b7302a5b78704816cefe2bfed94514f4fe90743a9d19599c51617a",
+          "rows": 480,
+          "basicBlockEntries": 5035064
+        },
+        {
+          "path": "d/thunderBattery.gif",
+          "width": 640,
+          "height": 480,
+          "fnv1a64": "a71e70c60fc2aa55",
+          "pixelSha256": "69c689f442f4a92290d9da453e8e2bd14a5142bfeed156e0ef08e1205471f367",
+          "sourceSha256": "ef19ce141d99c66201595a5cae16da851399a06dab1389e81602533d3f3e05f8",
+          "rows": 480,
+          "basicBlockEntries": 4363634
+        },
+        {
+          "path": "d/thunderBlocker.gif",
+          "width": 640,
+          "height": 480,
+          "fnv1a64": "a53eef6ea0fc927d",
+          "pixelSha256": "54de0c54d2b9aaaca0d471573d4d3ef6a2081d85049d35062696a5ffc201c207",
+          "sourceSha256": "99b5cb7ab72b1e8a960a5ba4dbc3249dbb4fb6f7b38dc9c720b3b1608427dd62",
+          "rows": 480,
+          "basicBlockEntries": 4811973
+        },
+        {
+          "path": "d/thunderCannon.gif",
+          "width": 640,
+          "height": 480,
+          "fnv1a64": "34b0144724ab4748",
+          "pixelSha256": "535e259027d03e6e0a41e504e0423ade8da6ec609ee97ef8faf643b7d43d60f7",
+          "sourceSha256": "9a78fc390bb23c7fc0a50b1a2e9f978af4075b8c23a99d79243789e645f30239",
+          "rows": 480,
+          "basicBlockEntries": 4294844
+        },
+        {
+          "path": "d/thunderFence.gif",
+          "width": 640,
+          "height": 480,
+          "fnv1a64": "b8b96dac2df907c9",
+          "pixelSha256": "a961398601edede26436919144047962a9eab778cfcfced24a8805702dcf038c",
+          "sourceSha256": "9658bb4caf7a5cdbe00dc5ade3b8940386514ac9fb77755f29ca3a55b7cbcae9",
+          "rows": 480,
+          "basicBlockEntries": 4172872
+        },
+        {
+          "path": "d/title0.gif",
+          "width": 640,
+          "height": 480,
+          "fnv1a64": "a79fd5033c9614ff",
+          "pixelSha256": "a49e3e384951c113093b13be9efa385a93300548273d016c27ea0e0c37d2840a",
+          "sourceSha256": "b54403d4a9c86316b440fba4640e75993a392294d168c0464ae3f4e34a968557",
+          "rows": 480,
+          "basicBlockEntries": 1697475
+        },
+        {
+          "path": "d/title6.gif",
+          "width": 640,
+          "height": 480,
+          "fnv1a64": "3a3bcb706c086333",
+          "pixelSha256": "169ab8e2bf0d8ff9551d38850ad02b2c8e853ba48e9a8df415f88cda6321df44",
+          "sourceSha256": "1edfb3bfe901462f63022c31370bc1c37e7ae991a47ffa01b66cd1c1034236de",
+          "rows": 480,
+          "basicBlockEntries": 2023621
+        },
+        {
+          "path": "d/TITLE7.GIF",
+          "width": 640,
+          "height": 480,
+          "fnv1a64": "189ce9a336078f5b",
+          "pixelSha256": "2003a6767f6ab3b2fc59d16222553f7ded04f581955e8c650a1a83bba5f7602a",
+          "sourceSha256": "07b0f832431c2d4a359d61fc81b9fd6d3daccfd1cd7d9fa51de5b07b56b040ac",
+          "rows": 480,
+          "basicBlockEntries": 4128642
+        },
+        {
+          "path": "d/titleMenu.gif",
+          "width": 639,
+          "height": 480,
+          "fnv1a64": "20cb0983d118d4a4",
+          "pixelSha256": "d653adbd23234d6a09a443391154cb50a365b4a0d8b35b1bffdd04b9fe706510",
+          "sourceSha256": "94abb526de09f8e9a91f951e978e0b4762dfedd546673b4de0ede0e12971ca12",
+          "rows": 480,
+          "basicBlockEntries": 3953928
+        },
+        {
+          "path": "d/victory.gif",
+          "width": 640,
+          "height": 480,
+          "fnv1a64": "436a2d2626f9cd15",
+          "pixelSha256": "b07dd5df03b80004c440ea0047079a53ddab9e9a611d641535fe8fd734b604e0",
+          "sourceSha256": "711f18a08ca853383fe2cc900e85a9f63a0b9ffc25a3bfb5567e3aa388f33851",
+          "rows": 480,
+          "basicBlockEntries": 4328819
+        },
+        {
+          "path": "d/windarcher.gif",
+          "width": 640,
+          "height": 480,
+          "fnv1a64": "1ad4d04bb877be74",
+          "pixelSha256": "19adbd631146cb197701b97f9bbee023906a9d71615a2172bc33fbd4c702d0b2",
+          "sourceSha256": "399366d09ceb56e601ade6167388987aa4bc9fd08092a504fc0750776b0aaee0",
+          "rows": 480,
+          "basicBlockEntries": 4737870
+        },
+        {
+          "path": "d/windAviary.gif",
+          "width": 640,
+          "height": 480,
+          "fnv1a64": "69d6976d9842bbbf",
+          "pixelSha256": "5fb34b3f5e4ffe6644a793b23898f0f23f0e12cd6dc13efac0bafe5c765fd80e",
+          "sourceSha256": "bd731d2e1c8cd8268c7d8fefedc583fa13cc7f31873d4f7f17394ca8e01571d8",
+          "rows": 480,
+          "basicBlockEntries": 3911549
+        },
+        {
+          "path": "d/windballoon.GIF",
+          "width": 640,
+          "height": 480,
+          "fnv1a64": "b234fefd1f360673",
+          "pixelSha256": "c25b15afe56d6aa3486ee5baeb2079a3813dc38a69d499df6a8018aac645b669",
+          "sourceSha256": "54930e085bf9bdae66bd76f42cbd88894e06740aca2900784a388da0bae7b76e",
+          "rows": 480,
+          "basicBlockEntries": 4261837
+        },
+        {
+          "path": "d/windBattery.gif",
+          "width": 640,
+          "height": 480,
+          "fnv1a64": "f6eebf2630f5ceae",
+          "pixelSha256": "b2ded54f82bdb9de034b982fdeeeee6c5ddd37ebf4aa0e24765d1135766ecba9",
+          "sourceSha256": "2c98d0f59983ab6f521269ed9c91d16901fcdd5e1e8af8a46d9f83c2e7800903",
+          "rows": 480,
+          "basicBlockEntries": 4363634
+        },
+        {
+          "path": "d/windblocker.gif",
+          "width": 640,
+          "height": 480,
+          "fnv1a64": "514ad88f5d3d5a9f",
+          "pixelSha256": "627f9eb85fdc0fad540602c7886e24a905156738c57051aab8c6532317f57b4c",
+          "sourceSha256": "ac23f136302c2f05ab541bc92ab4ae66e9aab851f3921abc249df5379120d77f",
+          "rows": 480,
+          "basicBlockEntries": 4163101
+        },
+        {
+          "path": "d/windflyer.gif",
+          "width": 1024,
+          "height": 768,
+          "fnv1a64": "5f105a710f7844a7",
+          "pixelSha256": "a483303577ae7b4908485e8395b454174117d5a3712a2fe9440ffb15bab7a8d6",
+          "sourceSha256": "484f8be5c9c48f8cf92a754f0e84d2d0c8ecdbd385f4897e35852a17c7a54677",
+          "rows": 768,
+          "basicBlockEntries": 6427025
+        },
+        {
+          "path": "d/windWalker.gif",
+          "width": 640,
+          "height": 480,
+          "fnv1a64": "888356b1eea2c568",
+          "pixelSha256": "27752d9cd4b5ff0f6f17a1e17ebd10deb4de80c1ec975999c73eb38842c0591a",
+          "sourceSha256": "f096ccce7a914e468c14d8fcccdb5a9d06a6c703a4bbb6189d31728308d98a76",
+          "rows": 480,
+          "basicBlockEntries": 4541059
+        }
+      ]
+    },
+    "variants": {
+      "host": "HJOW-Athlon",
+      "gameExecuted": false,
+      "protectedFilesModified": false,
+      "fixtureSha256": "e3084fcfc65dd9312f2bc57dede50fbf5c2a5c9bc057b71df128cd59642a05cc",
+      "cases": [
+        {
+          "path": "logicalOffsets",
+          "width": 639,
+          "height": 480,
+          "fnv1a64": "20cb0983d118d4a4",
+          "pixelSha256": "d653adbd23234d6a09a443391154cb50a365b4a0d8b35b1bffdd04b9fe706510",
+          "sourceSha256": "dd3a369ec09f4d268b1b85d7d94f5cf5b22750c210815b48f38c255082945d7d",
+          "rows": 480,
+          "basicBlockEntries": 3953928
+        },
+        {
+          "path": "smallCanvas",
+          "width": 639,
+          "height": 480,
+          "fnv1a64": "20cb0983d118d4a4",
+          "pixelSha256": "d653adbd23234d6a09a443391154cb50a365b4a0d8b35b1bffdd04b9fe706510",
+          "sourceSha256": "2fc43a7e3aff31f336c20a73337a4d6f01f970eb070ab59a394cdc4a5a514cb4",
+          "rows": 480,
+          "basicBlockEntries": 3953928
+        },
+        {
+          "path": "interlaced",
+          "width": 639,
+          "height": 480,
+          "fnv1a64": "2204cb9eb2fe77fe",
+          "pixelSha256": "4c7fbdad39f4597e221f1c2080f1d004efcfe009b6174dbc2cdc9bb31f69d2fe",
+          "sourceSha256": "37bcf05ed28bb6955e5bdc2877864955f14f705619ff6b8f71f265fafa05b3e3",
+          "rows": 480,
+          "basicBlockEntries": 3954408
+        },
+        {
+          "path": "localPalette",
+          "width": 639,
+          "height": 480,
+          "fnv1a64": "20cb0983d118d4a4",
+          "pixelSha256": "d653adbd23234d6a09a443391154cb50a365b4a0d8b35b1bffdd04b9fe706510",
+          "sourceSha256": "c5a52e0b0e30a0cc65bd3951af53529d70012fab6e451bac9a4ad9947db03610",
+          "rows": 480,
+          "basicBlockEntries": 3953928
+        }
+      ]
+    }
+  },
+  "terminal": {
+    "unit": 402,
+    "builds": [
+      {
+        "index": 1,
+        "session": 51534,
+        "returnCode": 0
+      },
+      {
+        "index": 2,
+        "session": 50937,
+        "returnCode": 0
+      },
+      {
+        "index": 3,
+        "session": 24212,
+        "returnCode": 0
+      },
+      {
+        "index": 4,
+        "session": 19164,
+        "returnCode": 0
+      },
+      {
+        "index": 5,
+        "session": 32145,
+        "returnCode": 0
+      }
+    ],
+    "focused": {
+      "tag": "focused1",
+      "session": 64054,
+      "returnCode": 0,
+      "tests": 60,
+      "failedChecks": 0
+    },
+    "full": {
+      "tag": "ctest1",
+      "session": 83641,
+      "returnCode": 0,
+      "tests": 2733,
+      "failedChecks": 0
+    },
+    "nativeAssets": {
+      "session": 37436,
+      "returnCode": 0,
+      "rows": 34
+    },
+    "nativeVariants": {
+      "session": 96220,
+      "returnCode": 0,
+      "rows": 4
+    },
+    "nativeReplay": {
+      "session": 86583,
+      "returnCode": 0,
+      "rows": 346
+    },
+    "qaViewed": true,
+    "qaPath": "extracted/cpp-background-gif-402-focused1-gif.bmp",
+    "originalGameExecuted": false,
+    "guiExecuted": false,
+    "goalComplete": false
+  },
+  "earlyValidation": {
+    "unit": 402,
+    "observedFromTerminalToolResults": true,
+    "firstNativeAssetsAttempts": [
+      {
+        "attempt": 1,
+        "returnCode": 1,
+        "reason": "VFX pop ES 실행을 위한 평면 세그먼트 미설치"
+      },
+      {
+        "attempt": 2,
+        "returnCode": 1,
+        "reason": "0페이지 매핑만으로 해결되지 않아 GDT의 CS/SS/DS/ES를 실제32비트 평면으로 설치"
+      },
+      {
+        "attempt": 3,
+        "session": 66460,
+        "returnCode": 1,
+        "reason": "전체 명령 Python hook의 비용 때문에 명시 중단; 최초 fixture 작성 전이며 같은 원문을 기본 블록/장치 경계 관측으로 재실행"
+      }
+    ],
+    "firstClientTests": [
+      {
+        "filter": "ActualDefaultPath",
+        "returnCode": 1,
+        "failedChecks": 2,
+        "reason": "검사의 flags1/폭640 가정; 실제 기본 flags9와 보호 titleMenu.gif 폭639로 수정"
+      },
+      {
+        "filter": "ActualCommonPixels",
+        "returnCode": 1,
+        "failedChecks": 482295,
+        "reason": "mode0의 원문 화면 보정을 기대값에서 누락; 원시 이동 출력 검사는 명시 mode1로 수행하며 픽셀 차이를 집계하도록 수정"
+      },
+      {
+        "filter": "CommonInputPreserves",
+        "returnCode": 0
+      },
+      {
+        "filter": "MissingFilePartial",
+        "returnCode": 0
+      },
+      {
+        "filter": "BackgroundGifGump_",
+        "returnCode": 0,
+        "nativeRows": 308
+      }
+    ],
+    "scope": "이 경과는 최종 바이너리의 성공 증거를 대신하지 않으며 최종 집중/전체/원문 재생으로 별도 확인한다."
+  },
+  "originals1394Unchanged": true,
+  "originalGameExecuted": false,
+  "guiExecuted": false,
+  "agentsUnchanged": {
+    "sha256": "7f853771930147c26e67d444ced94114992510a3fa072f5ed6bd63da7ba88bd9",
+    "separateUserCommit": "eeec368d",
+    "stagedByThisUnit": false
+  },
+  "limits": [
+    "BackgroundGif41a030/0xb0와 Tell HTML4cf120/0x21e8은 다른 클래스; full HTML/Uber/기존 게임 화면 연결 완료 아님",
+    "308행은 실제 상위7본문/_ftol과14현재필드/분기/RET; 기본 생성/파일/픽셀/큐/수명 하위는 명시 장치",
+    "34보호GIF+4메모리입력은 실제 원문407171/406ef7/LZW;406939의 실제 출력 행 복사만 장치 경계",
+    "메모리 헤더 변형4개는 원본 파일 수정이 아니며 C++ 기대 픽셀을 원문에 공급하지 않음",
+    "BackgroundGif는 첫 descriptor 치수/원시 색 번호를 사용하고 논리 화면/좌상단 오프셋/투명 합성/팔레트 변환/리샘플링을 추가하지 않음",
+    "452f90은 원시 입력 큐이며452fe0의 Command 정규화와 구별; 실제 Win32/Client 이벤트 루프는 full Uber 접합 때 연결",
+    "상위14616명령 위치에는 장치/STOP 포함; 해독기 관측의 basicBlockEntries는 명령 수와 다름",
+    "명시 실패/회복 검사는 일반 Native EH unwind/손상 GIF의 무정의 동작 복원 증거가 아님",
+    "모든 Early/캠페인/Demo 사용자 완주·Edit/언어별 시나리오 전체·완전 동일성 및393 Wide SaveOptions 원인은 미완료"
+  ]
+}

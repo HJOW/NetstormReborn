@@ -30,7 +30,7 @@ struct UberRootHooks {
     std::function<void(std::uint32_t,std::string_view)> helpWord; //00464f80의 chatView 포인터 보관이다.
     std::function<std::uint32_t()> savedMessage; //565e70 현재 C문자열의 원본 포인터 토큰이며 복사 시점과 구별한다.
     std::function<bool(std::uint32_t,std::string_view)> equalText; // 현재 원본 C문자열의 대소문자 무시 비교다.
-    std::function<void(std::uint32_t,std::uint32_t)> constructMessage; //0041a030의 같은 메시지 이름/전체 HTML 부모다.
+    std::function<void(std::uint32_t,std::uint32_t)> constructMessage; //0041a030의 같은 이름/BackgroundGifSpec GIF 창이다. HTML 부모4cf120과 구별한다.
     std::function<std::uint32_t(const std::array<std::uint32_t,9>&)> formatMessage; //459c60의 실제9개원시인자로 조건표현식을 작성한다.
     std::function<std::uint32_t(std::uint32_t)> testMessage; //41ab10의 실제 완성 표현식 포인터를 검사한다.
     std::function<void(std::uint32_t)> visitMessage; //4b6100의 실제 메시지 방문 기록이다.

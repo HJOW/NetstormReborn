@@ -72,6 +72,14 @@ std::vector<std::uint8_t> Lzw(std::span<const std::uint8_t> bytes, unsigned mini
     throw std::runtime_error("Missing GIF LZW end code");
 }
 }
+// 원문 배경 로더는 전역 팔레트 바로 뒤의 descriptor 치수를 쓰고 이미지 오프셋을 무시한다.
+IndexedImage DecodeBackgroundGif(std::span<const std::uint8_t> bytes) {
+    if (bytes.size()<13) throw std::runtime_error("Truncated BackgroundGif header");
+    const std::size_t descriptor=13+((bytes[10]&0x80) ? (3U<<((bytes[10]&7)+1)) : 0U); //407171의 실제 첫 이미지 위치다.
+    if (descriptor>bytes.size() || bytes.size()-descriptor<10 || bytes[descriptor]!=0x2c) throw std::runtime_error("BackgroundGif first descriptor required");
+    std::vector<std::uint8_t> normalized(bytes.begin(),bytes.end()); // 보호 파일은 수정하지 않고 공통 LZW에만 첫 이미지의 독립 캔버스를 전달한다.
+    std::copy_n(bytes.begin()+descriptor+5,4,normalized.begin()+6);std::fill_n(normalized.begin()+descriptor+1,4,std::uint8_t{});return DecodeGif(normalized);
+}
 // 첫 이미지까지 확장을 건너뛴다. 게임 배경에는 애니메이션 GIF를 사용하지 않는다.
 IndexedImage DecodeGif(std::span<const std::uint8_t> bytes) {
     if (bytes.size() < 13 || (std::memcmp(bytes.data(), "GIF87a", 6) != 0 && std::memcmp(bytes.data(), "GIF89a", 6) != 0))

@@ -1,0 +1,48 @@
+{
+  "host": "HJOW-Athlon",
+  "gameExecuted": false,
+  "protectedFilesModified": false,
+  "fixtureSha256": "e3084fcfc65dd9312f2bc57dede50fbf5c2a5c9bc057b71df128cd59642a05cc",
+  "cases": [
+    {
+      "path": "logicalOffsets",
+      "width": 639,
+      "height": 480,
+      "fnv1a64": "20cb0983d118d4a4",
+      "pixelSha256": "d653adbd23234d6a09a443391154cb50a365b4a0d8b35b1bffdd04b9fe706510",
+      "sourceSha256": "dd3a369ec09f4d268b1b85d7d94f5cf5b22750c210815b48f38c255082945d7d",
+      "rows": 480,
+      "basicBlockEntries": 3953928
+    },
+    {
+      "path": "smallCanvas",
+      "width": 639,
+      "height": 480,
+      "fnv1a64": "20cb0983d118d4a4",
+      "pixelSha256": "d653adbd23234d6a09a443391154cb50a365b4a0d8b35b1bffdd04b9fe706510",
+      "sourceSha256": "2fc43a7e3aff31f336c20a73337a4d6f01f970eb070ab59a394cdc4a5a514cb4",
+      "rows": 480,
+      "basicBlockEntries": 3953928
+    },
+    {
+      "path": "interlaced",
+      "width": 639,
+      "height": 480,
+      "fnv1a64": "2204cb9eb2fe77fe",
+      "pixelSha256": "4c7fbdad39f4597e221f1c2080f1d004efcfe009b6174dbc2cdc9bb31f69d2fe",
+      "sourceSha256": "37bcf05ed28bb6955e5bdc2877864955f14f705619ff6b8f71f265fafa05b3e3",
+      "rows": 480,
+      "basicBlockEntries": 3954408
+    },
+    {
+      "path": "localPalette",
+      "width": 639,
+      "height": 480,
+      "fnv1a64": "20cb0983d118d4a4",
+      "pixelSha256": "d653adbd23234d6a09a443391154cb50a365b4a0d8b35b1bffdd04b9fe706510",
+      "sourceSha256": "c5a52e0b0e30a0cc65bd3951af53529d70012fab6e451bac9a4ad9947db03610",
+      "rows": 480,
+      "basicBlockEntries": 3953928
+    }
+  ]
+}

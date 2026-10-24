@@ -237,3 +237,6 @@ target_sources(netstorm PRIVATE TextEntryStorage.cpp TextEntryStorage.h RawTextE
 
 # 실제 Client 수명의 Chat 전역과 공통 UI 전체 공장을 빌드한다.
 target_sources(netstorm PRIVATE ClientChatWindowGlobals.h RawChatWindowContext.h RawMenuChat.inc)
+
+# 원본 Uber의 BackgroundGif 자식을 실제 공통 UI에 연결한다.
+target_sources(netstorm PRIVATE BackgroundGifGump.h BackgroundGifGump.cpp RawBackgroundGifControls.h RawBackgroundGifControls.cpp)

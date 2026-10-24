@@ -16,6 +16,7 @@ class RawCampaignSession; // 현재 지식 창도 같은 세션의 실제 기술
 struct RawNsInfoContext; // 전체 NSInfo 생성의 실제 Client 전역과 문자열 수명이다.
 struct RawTextEntryContext;class RawTextEntryControls; // 같은 실제 편집 버퍼/Console 조립 계층이다.
 struct RawChatWindowContext;class ChatWindow;class HudChatGeometry; // 전체 Chat 공장과 같은 실제 자식 기하다.
+struct RawBackgroundGifContext;class RawBackgroundGifControls; // 새 Uber의 실제 BackgroundGif 자식이다.
 // 같은 수집/정렬/클립 안에서 생산 패널의 원본 파생 Draw를 호출한다.
 struct RawMenuExternalGumps {
     std::function<TextGumpNode*(std::uint32_t)> text; // 같은 TextGump/StyleText가 읽는 외부 텍스트 노드다.
@@ -97,6 +98,9 @@ public:
     void AppendChatLog(std::uint32_t token,std::string_view text); // 현재 실제 스크롤 노드에 원문 스타일 문자열을 추가한다.
     std::uint32_t InvokeChatCommand(std::uint32_t callback); // 실제 clear/quit callback의 원문 효과다. 미지원 콜백은 거부한다.
     void CloseChatWindows(); // 부분 생성/미부착 자식과 모든 실제 Chat root를 공통 수명으로 반납한다.
+    RawBackgroundGifControls& EnableBackgroundGifs(RawBackgroundGifContext context); // 실제 VFS/설정과 GIF 공장을 같은 UI에 설치한다.
+    RawBackgroundGifControls* BackgroundGifs() const; // 설치한 실제 GIF 처리기를 빌린다.
+    void CloseBackgroundGifs(); // 미부착/부분 생성도 같은 공통 수명으로 반납한다.
     ButtonGumpNode* BaseButton(std::uint32_t token) const; // 실제 특수 Button 파생도 공통 입력 처리기에 빌린다.
     QuickHelpPopupState& PopupState() const; // 지식 카드 표식과 전용 Help Back이 공유할 같은 실제 저장소다.
     void EnableHelp(RawHelpHooks hooks); // 현재 Client 경계를 같은 공통 트리에 한 번 연결한다.

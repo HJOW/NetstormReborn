@@ -1,0 +1,30 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "peSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+  "sourceSha256": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+  "rows": 308,
+  "cases": 154,
+  "instructions": 14616,
+  "instructionCountIncludesDeviceHooks": true,
+  "precisionDifferences": [],
+  "entryPoints": {
+    "construct": 4300848,
+    "refresh": 4300480,
+    "setEvent": 4300304,
+    "handle": 4300352,
+    "draw": 4300624,
+    "destroy": 4300176,
+    "reattach": 4300272
+  },
+  "fixtureSha256": "93844c8848a17dda6b03c3d26f9b087a1056037859736213428ff30997bbb995",
+  "toolSha256": "ef6b766a6c90cc71b4c1ff578051971506b13f6ff5d2b158159d59d709c255e1",
+  "gameExecuted": false,
+  "limits": [
+    "실제 생성/교체/설정/가상 입력/Draw/소멸/재부착과 _ftol 본문 실행",
+    "419e40 진입은 원문 vtable/PE로 확인하며 정밀 텍스트의419e9e 꼬리 분리와 구별",
+    "기본 생성/파일/원시 복사/입력/수명 하위는 명시 장치; 전체 게임/GUI/디코더 증거 아님",
+    "명시 중단은 실제 EH unwind 검증 아님; 미완료/void EAX0·constructor this1 정규화"
+  ]
+}
