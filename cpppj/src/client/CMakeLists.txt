@@ -131,6 +131,7 @@ target_sources(netstorm PRIVATE
     PaletteShade.cpp PaletteShade.h
     State.cpp State.h
     UberGump.cpp UberGump.h
+    UberRootGump.cpp UberRootGump.h
     GameWorld.cpp GameWorld.h
     RawSurfaceWorld.cpp RawSurfaceWorld.h
     RawTerrainWorldBinding.cpp RawTerrainWorldBinding.h

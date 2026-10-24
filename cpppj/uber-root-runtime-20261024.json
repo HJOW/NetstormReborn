@@ -1,0 +1,471 @@
+{
+  "unit": 395,
+  "date": "2026-10-24",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "baseCommit": "805b2717",
+  "componentValidationPassed": true,
+  "liveClientConnected": false,
+  "clientCallSites": [],
+  "gameExecuted": false,
+  "guiExecuted": false,
+  "overallGoalComplete": false,
+  "scope": "1078 Uber 전체 생성/루트교체 부모·현재 this 도킹뷰·공통 Tree/Lifetime 계약이다.실제 네 하위 공장/HTML/Client root activation을 검증한 것이 아니다.",
+  "productSha256": "48ee8913a25557dc3068839d3a80df6a119a52a9318fac5fe245392f558fea73",
+  "testBinarySha256": "9e38f088ddf38ee5c3f5438f109d53c2ff5e60c608d66e38e249e06757ee1df9",
+  "native": {
+    "host": "HJOW-Athlon",
+    "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+    "inputs": 80,
+    "observations": 160,
+    "schema": [
+      "name",
+      "operation",
+      "globals",
+      "scales",
+      "message",
+      "test",
+      "children",
+      "fill",
+      "mutation",
+      "stop",
+      "fail",
+      "completed",
+      "result",
+      "globalsout",
+      "registry",
+      "nodes",
+      "trace",
+      "instructions"
+    ],
+    "nativeRanges": [
+      [
+        5009760,
+        5011350
+      ],
+      [
+        5011360,
+        5011379
+      ],
+      [
+        5011392,
+        5011566
+      ]
+    ],
+    "nativeInstructions": {
+      "639": 33322,
+      "895": 33322
+    },
+    "cpuWrites": {
+      "stack": 31168,
+      "seh": 468,
+      "nodes": 5436,
+      "globals": 468,
+      "registry": 76
+    },
+    "boundaries": {
+      "base": 158,
+      "alloc": 684,
+      "divider": 466,
+      "attach": 1318,
+      "map": 546,
+      "minimap": 154,
+      "production": 152,
+      "knowledge": 150,
+      "type": 148,
+      "chat": 148,
+      "translate": 146,
+      "help": 146,
+      "helpword": 146,
+      "refresh": 146,
+      "slave": 1450,
+      "cleanup": 572,
+      "move": 428,
+      "message": 118,
+      "equal": 276,
+      "format": 44,
+      "test": 42,
+      "event": 42,
+      "overlay": 40,
+      "depth": 40,
+      "visit": 30,
+      "push": 142,
+      "replace": 76
+    },
+    "gameExecuted": false,
+    "guiExecuted": false,
+    "limits": [
+      "실제004c7160/004c77c0와특수메시지정상epilogue전체를실행한다.콜백별다른현재주소/정상RET/보존GP/ESP/SEH/x87/원시노드·등록표를비교한다.",
+      "기존공통Gump/구분선/4개전체자식공장/가상Attach·Move·Push/정리·도킹/메시지·번역·검사·Overlay·깊이·최종ReplaceRoot는명시장치다.이자식들의기존모듈/실제Client접합은별도로검증해야한다.",
+      "명시Attach장치는flags/parent/x/y만쓰며최종ReplaceRoot는호출만기록한다.실제하위Kill·트리재연결·GPU·게임·창·전체소멸을검증한것이아니다."
+    ],
+    "sha256": {
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+      "tools/decomp_production_shortcuts.py": "4caf1c87e4a152f65b2815395ea553b2609587be06a95512974b893e985b24e3",
+      "tools/decomp_uber_root.py": "f107e275702c251778d5519cbeddccc8cca89181e5286914139dae3af465dc9b",
+      "cpppj/tests/fixtures/uber-root-x86.tsv": "eb1720f168c6d48b45a5c6526c82019657f14c197c4b5f62c9d50b394e27b717"
+    }
+  },
+  "focused": {
+    "productSha256": "48ee8913a25557dc3068839d3a80df6a119a52a9318fac5fe245392f558fea73",
+    "testBinarySha256": "9e38f088ddf38ee5c3f5438f109d53c2ff5e60c608d66e38e249e06757ee1df9",
+    "passed": true,
+    "runs": [
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "UberRoot_"
+        ],
+        "returnCode": 0,
+        "seconds": 1.2292292000493035,
+        "log": "extracted/cpp-uber-root-395-focused3-UberRoot_.log",
+        "counts": [
+          [
+            "6",
+            "0"
+          ]
+        ],
+        "names": [
+          "UberRoot_Native160",
+          "UberRoot_RealTreeAndLifetimeTransfer",
+          "UberRoot_DockReadsLiveThisFields",
+          "UberRoot_MissingFactoryKeepsPriorEffects",
+          "UberRoot_MissingOldRootFailsAfterConstructionEffects",
+          "UberRoot_EmptyLeafNeedsNoGameHook"
+        ]
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "HudDock_"
+        ],
+        "returnCode": 0,
+        "seconds": 1.8228309999685735,
+        "log": "extracted/cpp-uber-root-395-focused3-HudDock_.log",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "HudDock_IndependentNativeBodiesAndNestedViewport"
+        ]
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "HudDividerInput_"
+        ],
+        "returnCode": 0,
+        "seconds": 0.6552566000027582,
+        "log": "extracted/cpp-uber-root-395-focused3-HudDividerInput_.log",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "HudDividerInput_Native13398StateAndCallbacks"
+        ]
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "GumpCreate_"
+        ],
+        "returnCode": 0,
+        "seconds": 0.4211497000651434,
+        "log": "extracted/cpp-uber-root-395-focused3-GumpCreate_.log",
+        "counts": [
+          [
+            "8",
+            "0"
+          ]
+        ],
+        "names": [
+          "GumpCreate_PatchNative",
+          "GumpCreate_CdNative",
+          "GumpCreate_AdditionalNative",
+          "GumpCreate_RootFailurePreservesOtherState",
+          "GumpCreate_CurrentGlobalsAfterAllocation",
+          "GumpCreate_FirstHoleUnregisteredAndFullTable",
+          "GumpCreate_CollectionDrawSameStorage",
+          "GumpCreate_ContractsAndCountLimit"
+        ]
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "GumpTree_"
+        ],
+        "returnCode": 0,
+        "seconds": 1.0610223999246955,
+        "log": "extracted/cpp-uber-root-395-focused3-GumpTree_.log",
+        "counts": [
+          [
+            "8",
+            "0"
+          ]
+        ],
+        "names": [
+          "GumpTree_PatchNative",
+          "GumpTree_CdNative",
+          "GumpTree_AdditionalNative",
+          "GumpTree_CreatedAttachPushCollectionDraw",
+          "GumpTree_RealVirtualChildReflow",
+          "GumpTree_DepthChangesReachCollection",
+          "GumpTree_ContractsAndCycles",
+          "GumpTree_CallbackExceptionKeepsWrittenState"
+        ]
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "GumpLifetime_"
+        ],
+        "returnCode": 0,
+        "seconds": 0.44687279989011586,
+        "log": "extracted/cpp-uber-root-395-focused3-GumpLifetime_.log",
+        "counts": [
+          [
+            "9",
+            "0"
+          ]
+        ],
+        "names": [
+          "GumpLifetime_PatchNative",
+          "GumpLifetime_CdNative",
+          "GumpLifetime_AdditionalNative",
+          "GumpLifetime_CreateTreeKillCleanupAndReuse",
+          "GumpLifetime_TreeReplacementDefersDestruction",
+          "GumpLifetime_BaseDoesNotUnregisterOrRemoveDialogs",
+          "GumpLifetime_CdIdleCapacity",
+          "GumpLifetime_ContractsAndCycles",
+          "GumpLifetime_CallbackExceptionKeepsWrittenState"
+        ]
+      }
+    ],
+    "distinctTests": 33,
+    "sameBinaries": true,
+    "originalsUnchanged": true
+  },
+  "full": {
+    "command": [
+      "ctest",
+      "--test-dir",
+      "H:\\T5Workspace\\NetstormReborn\\cpppj\\build",
+      "-C",
+      "Release",
+      "--output-on-failure"
+    ],
+    "returnCode": 0,
+    "seconds": 299.01797699998133,
+    "log": "extracted/cpp-uber-root-395-ctest1.log",
+    "counts": [
+      [
+        "2683",
+        "0"
+      ]
+    ],
+    "productSha256": "48ee8913a25557dc3068839d3a80df6a119a52a9318fac5fe245392f558fea73",
+    "testBinarySha256": "9e38f088ddf38ee5c3f5438f109d53c2ff5e60c608d66e38e249e06757ee1df9",
+    "sameProduct": true,
+    "sameTests": true,
+    "originalsUnchanged": true
+  },
+  "emptyAndVtables": {
+    "empty": {
+      "address": "004437f0",
+      "bytes": "c3"
+    },
+    "rootVtable": [
+      5065792,
+      4613952,
+      4606544,
+      4606640,
+      4607248,
+      4607328,
+      4605280,
+      4300272,
+      4613968,
+      4470768,
+      5006640,
+      4613536
+    ],
+    "dividerVtable": [
+      5065792,
+      4613952,
+      4606544,
+      4606640,
+      4607248,
+      4607328,
+      4605280,
+      4300272,
+      4999152,
+      4611168,
+      4999664,
+      4999936
+    ],
+    "scalarInstructions": [
+      {
+        "address": "0x4d4c40",
+        "mnemonic": "push",
+        "operands": "esi"
+      },
+      {
+        "address": "0x4d4c41",
+        "mnemonic": "mov",
+        "operands": "esi, ecx"
+      },
+      {
+        "address": "0x4d4c43",
+        "mnemonic": "call",
+        "operands": "0x4d0110"
+      },
+      {
+        "address": "0x4d4c48",
+        "mnemonic": "test",
+        "operands": "byte ptr [esp + 8], 1"
+      },
+      {
+        "address": "0x4d4c4d",
+        "mnemonic": "je",
+        "operands": "0x4d4c58"
+      },
+      {
+        "address": "0x4d4c4f",
+        "mnemonic": "push",
+        "operands": "esi"
+      },
+      {
+        "address": "0x4d4c50",
+        "mnemonic": "call",
+        "operands": "0x4e4354"
+      },
+      {
+        "address": "0x4d4c55",
+        "mnemonic": "add",
+        "operands": "esp, 4"
+      },
+      {
+        "address": "0x4d4c58",
+        "mnemonic": "mov",
+        "operands": "eax, esi"
+      },
+      {
+        "address": "0x4d4c5a",
+        "mnemonic": "pop",
+        "operands": "esi"
+      },
+      {
+        "address": "0x4d4c5b",
+        "mnemonic": "ret",
+        "operands": "4"
+      },
+      {
+        "address": "0x4d4c5e",
+        "mnemonic": "int3",
+        "operands": ""
+      },
+      {
+        "address": "0x4d4c5f",
+        "mnemonic": "int3",
+        "operands": ""
+      }
+    ],
+    "sourcePeSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "gameExecuted": false
+  },
+  "kindBytes": {
+    "rootKindAddress": "00540451",
+    "rootKindByte": 54,
+    "dividerKindAddress": "00540452",
+    "dividerKindByte": 55,
+    "nativeFixtureKindIsExplicitInput": 11,
+    "sourcePeSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236"
+  },
+  "sourceSha256": {
+    "cpppj/src/client/UberRootGump.cpp": "caf4194b597d3146ea1c80f27bb119d56f56b72e6e02a67d0f7bc7a00d1e92ac",
+    "cpppj/src/client/UberRootGump.h": "aab2c9dd0ef5280d5397c50deccfea1a891b8ee870892e52ddf323899d4b132c",
+    "cpppj/src/client/HudDock.cpp": "8e6c64b2b81ed83e3b3614595ae666b6c1ef696d337ff07ca3921bf38140bb1a",
+    "cpppj/src/client/HudDock.h": "99420abd188d186e9ef61566786c444d95c6f9a737b0a97d91233d28bdd07a3d",
+    "cpppj/src/client/CMakeLists.txt": "4790b4c44d61d7de0a802fd2ce4627e29f242edb9e9ec238ed809f482715eb6b",
+    "cpppj/src/o/RawStateWorldCleanup.h": "108c6e59775dde1630011204bf22243318c00835979c1ade884d892f88537823",
+    "cpppj/tests/UberRootGumpTests.cpp": "e043aa91bbc1ba9a4953d37251893108b5bbe24601af8f687e28a11e254d53f9",
+    "cpppj/tests/CMakeLists.txt": "53dfa3de06eee879361343e1f727d9439aa4a34c6247ba20c8ff066dbeaa6bef",
+    "tools/decomp_uber_root.py": "f107e275702c251778d5519cbeddccc8cca89181e5286914139dae3af465dc9b"
+  },
+  "nativeFixtureSha256": "eb1720f168c6d48b45a5c6526c82019657f14c197c4b5f62c9d50b394e27b717",
+  "evidenceSha256": {
+    "extracted/cpp-uber-root-395-native.json": "dcc38d52f4c14a5ad8e99114b1b91b482d5df372f43cca80c5d29680b29e80f5",
+    "extracted/cpp-uber-root-395-native1.log": "f2c7ae59ee56a4850bed246d660c079234f6ddd8a7a2cfaf08716180ed057abe",
+    "extracted/cpp-uber-root-395-native2.log": "e2b26ba22d67ef12f7e9a99653c387b46a17b93f83a2a04a4a64074e56b009b1",
+    "extracted/cpp-uber-root-395-native3.log": "1c93122aeb554fe0220dda0ca34079549895045ac5ef27c2d2ee7944e37837ea",
+    "extracted/cpp-uber-root-395-native-verify1.log": "b9368e60b536e7ee023a36a5aa3f6f23cc5bed05629ff29d76ef9d1cf52c8bf0",
+    "extracted/cpp-uber-root-395-empty-leaf.json": "7ffe7e048bb1db4de0fc118618ba3a16094fc94e2f7609ebedd464e33d499124",
+    "extracted/cpp-uber-root-395-empty-leaf-verified.json": "f2d3dc8c67fce5202c87fc30de8cdfb29101525b0fe44c6ae638aede29d38ff5",
+    "extracted/cpp-uber-root-395-kind-bytes.json": "75790dcde92bb7fc92b0976dfc93edc5d6d3fed8f7d39be942dd179f3258d9cc",
+    "extracted/cpp-uber-root-395-build1.log": "5fc4e5156b46444c72c9c62adfc254c38bad8677f33149f7bf690f6642f380d6",
+    "extracted/cpp-uber-root-395-build2.log": "3a698775239b8ad48eafbc3670e59ec8cda3586fb7d396c4383d54736b708041",
+    "extracted/cpp-uber-root-395-build3.log": "f8e0abf72c5aee088094493f5d51b4ac3e30ce199aa14efe9ddd67a8799b2dcd",
+    "extracted/cpp-uber-root-395-build4.log": "f8e0abf72c5aee088094493f5d51b4ac3e30ce199aa14efe9ddd67a8799b2dcd",
+    "extracted/cpp-uber-root-395-build5.log": "151a8164b4412daf1397a55ee85863cbaa72faaba55d7c85ef8ff5d65f1d7606",
+    "extracted/cpp-uber-root-395-build6.log": "96470b9b6552a0256da26ab11381857e9c004ceaf758d655c58aca97da7b44bc",
+    "extracted/cpp-uber-root-395-build7.log": "e641da9df8c175186d1bc5c6b433b44076ef8131416ba5539e67b485f739ed11",
+    "extracted/cpp-uber-root-395-focused1.log": "e4cc168011767c92ef7555e0eff1e4f98092aea524394633dba5480c11036a78",
+    "extracted/cpp-uber-root-395-focused2.log": "48b41d6d4c44bb64a7c3deb08a68902c206cdbf433507d89c95a1790ff20f9ff",
+    "extracted/cpp-uber-root-395-focused3-before.json": "aa88c724aefe9eefaab2d7fba3a06872b51a66c40104a9de1fee75d110db3deb",
+    "extracted/cpp-uber-root-395-focused3.json": "2f0dc840f1cd81b69022b31fc82336aa2d71f962559f82f160a79212a28faffe",
+    "extracted/cpp-uber-root-395-focused3-UberRoot_.log": "688dd03368db1e8e3668a88d62baabfaf41891dc28e61379dfeb1a07ec4e18c0",
+    "extracted/cpp-uber-root-395-focused3-HudDock_.log": "5ca5531774b5f13fc82081a254cff97b0cd8481d48e9e41e2ed8aa3bdb8503e5",
+    "extracted/cpp-uber-root-395-focused3-HudDividerInput_.log": "4e0cde1d19c18e8335926b907de08279c605765a208e161f4ed7ff8843838387",
+    "extracted/cpp-uber-root-395-focused3-GumpCreate_.log": "aa6cc37ac629d28383eff622a0609a6cca329004851f29ceecefbe7af2a52077",
+    "extracted/cpp-uber-root-395-focused3-GumpTree_.log": "37662ace27eaf63e1be50f42fc617583edb59705d89880df8993c63dafa37a5e",
+    "extracted/cpp-uber-root-395-focused3-GumpLifetime_.log": "426a3d77cc906c9a8caf6fe5c6c0c0e191465767a352e340c63ff7a8804e8c6a",
+    "extracted/cpp-uber-root-395-ctest1.json": "73f1a812d26f6318d795152fc42f81b234fe3cacf08e9abe351f9c9f96fe9403",
+    "extracted/cpp-uber-root-395-ctest1.log": "b3e94e37792b3a75a4cbbcec70ce8ba556ea9c106786feee49e85152fff8ee04",
+    "extracted/cpp-uber-root-395-ctest1-tests.log": "0d300ab717a5b293e96c120e2a2dbc2e09fb04ff9a0dced6ca09fcd444306f82"
+  },
+  "originals": {
+    "count": 1394,
+    "allBytesUnchanged": true
+  },
+  "initialFailures": [
+    {
+      "kind": "Native 도구 ABI guard",
+      "logs": [
+        "extracted/cpp-uber-root-395-native1.log",
+        "extracted/cpp-uber-root-395-native2.log"
+      ],
+      "reason": "도움말/도움말키는 thiscall이 아니라 두 인자의 cdecl이다.교정한 Native3 전체160은 GP/ESP/SEH/x87 정상반환 guard 통과."
+    },
+    {
+      "kind": "build1/2",
+      "reason": "검사 Scene 이름의 기존 rawscene::Scene 충돌과 iostream 누락.제품 본체 컴파일 오류가 아니며 로그를 보존한다."
+    },
+    {
+      "kind": "focused1",
+      "failedChecks": 118,
+      "reason": "명시0xb0 메시지 장치의 할당종류 라벨 m을 호스트가 b로 직렬화했다.라벨 교정 후 Native160 원시 전체가 일치했다."
+    }
+  ],
+  "limitations": [
+    "Native 부모의 하위 Gump/구분선/네 공장/가상 부착·이동·Push/정리·도킹/메시지 등은 명시 장치다.기존 하위 모듈의 실제 Client 연결을 대신하지 않는다.",
+    "공통 Tree/Kill/Cleanup 검사는 기본 명시 자식의 이전3→새7 직접자식 보존을 확인했다.실제 Production/NSInfo/Chat 내부 전체 자식/그리기/게임/EH unwind의 증거가 아니다.",
+    "Native 자료의 map 라벨은 4437f0의 과거 관측 이름이다.실제 PE 본문은C3 빈RET이며 현재 구현은 게임 하위 없이 복귀하고 관측자만 선택적으로 호출한다.",
+    "Native fixture의 kind11은 명시 합성 입력이다.실제 PE의 Uber54/divider55를 별도로 확인했으며 실제 Client 종류/자식 전역 연결은 아직 남았다.",
+    "CD10.72는4c77c0↔4cd000이라는기존SourceMap만기록한다.이번구현/Native실행은1078전용이다."
+  ]
+}

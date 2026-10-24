@@ -29,7 +29,7 @@ enum class StateWorldCleanupEffect : std::uint32_t {
     Clear43b540=0x43b540, //Core선택해제직전의기존자식이다.
     Reset422490=0x422490, //Pool초기화뒤원문상태자식이다.
     Clear4c2450=0x4c2450, //기존세표정리몸체다.
-    MapMode=0x4437f0, //원문두호출위치를합치거나생략하지않는다.
+    MapMode=0x4437f0, //이름은기존API호환용이다.실제본문은C3빈RET이며지도/모드계산이없다.두호출위치를보존한다.
     SceneMusic=0x469fc0, //실제음악부모를그시점에호출한다.
     Clear472830=0x472830, //기존Graph/명령관련자식을실행한다.
     Clear4b2b50=0x4b2b50, //원문의현재State하위몸체다.

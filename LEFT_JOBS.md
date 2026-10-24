@@ -1,5 +1,17 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-24 단위395 완료: Uber 전체 생성/교체 부모와 this 도킹뷰
+
+- [x] 시작 **805b2717 / 20261024-17 CP**·깨끗한 작업본·AGENTS/공통/닷넷 인계를 재확인했다. 현재/마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-10-23**이다. 이번 디컴파일/보호 파일 변경0이다.394는 실제 진척이었으며 아래 결과는 이번 새 컴포넌트 검증과 구별한다.
+- [x] `UberRootGump`에004c7160 전체부모(세구분선/미니맵/생산/전체NSInfo/Chat/조건부HTML/10도킹관계/정리·Move·검사·Overlay)와004c77c0(next선행캡처/Push뒤현재x,y/임시등록0·count보존/원문ReplaceRoot)를 복원했다. FILD→FST 뒤 원값 FMUL/미작성 필드/등록0의 호스트별칭을 보존한다. 필수 실제 하위가 없으면 도달 위치에서 실패하며 빈 노드/이전객체 재사용을 원문 공장 성공으로 세지 않는다.
+- [x] Native1/2의 명시 도움말 경계 cdecl 오류는 GPguard 실패로 보존했다. 교정 Native3은 **80입력×2정밀도=160관측·각33322명령·정밀도차이0**이고 정상 GP/ESP/SEH/CW/전체 원시상태를 확인했다. 특수 메시지 별도epilogue도 포함한다. 최초 fixture/보고서/toolSHA 보존·verify1의160동일이다. 하위 생성/가상부착·이동/최종ReplaceRoot는 명시장치이며 실제Client/전체자식/EH unwind 증거가 아니다.
+- [x] build1/2는 검사 Scene 이름충돌/iostream 누락으로 실패했다. build3~7은 종료0·관측 경고오류0이다. focused1의118check는 명시0xb0 메시지 라벨 m/b 직렬화 차이였으며 교정 뒤160전체가 같았다. 최종 focused3 **신규6+기존27=33검사/실패0**이다. 실제공통Tree/Kill/Cleanup/이전자식이동/유일등록/최종count0·미연결공장부분효과·이전루트없음별칭·현재this필드뷰·빈RET 무장치를 확인했다.
+- [x] `DockView`/`HudDockNodeView`는 실제 Uber 필드를 직접 읽으며 등록0의 이전루트/별도8포인터 사본으로 바꾸지 않는다. 기존 HudDock 사용자는 기존 상태 getter로 연결했다. **4437f0은 실제C3 빈RET**이므로 필수 게임하위 요구를 제거하고 선택 관측만 제공한다. Native map은 과거 관측라벨이며 MapMode라는 지도/모드 계산이 아니다. 실제PE 종류는 **Uber54/divider55**이고 fixture의11은 명시 입력이다. 두VT의scalar4d4c40도 확인했다.10.72는 기존SourceMap4c77c0↔4cd000만 기록하며 구현/관측은1078전용이다.
+- [x] 전체 CTest1 **2683검사/실패0·종료0·299.02초**·제품/검사전후같음·원본1394동일·보호추적변경0이다. 최종 제품은 **48ee8913a25557dc3068839d3a80df6a119a52a9318fac5fe245392f558fea73**, 검사는 **9e38f088ddf38ee5c3f5438f109d53c2ff5e60c608d66e38e249e06757ee1df9**다. build7 20835/CTest38634는 종료0이다. [완료 문서](docs/exe/cpp-uber-root-20261024.md)와 [제품 보고서](cpppj/uber-root-runtime-20261024.json)에 소스9/Native/28증거SHA와 최초실패를 구별한다. UTF-8/링크/stage 감사를 마쳐 **20261024-18 CP**로 로컬 커밋한다. 원시는 `extracted/cpp-uber-root-395-*`다.
+- [ ] **실제 Client 연결은 미완료다.** 소스 호출자를 확인하면 새 부모의 live호출0이며 RawButtonControls는 기존 기본루트를 유지한다. 새 GUI/게임실행0이다. 이 단위의 Native/공통수명 증거를 실제 전체HUD/Editor 완성이나394의새플레이로 확대하지 않는다. 네 실제 전체 공장/HTML을 현재 공통 저장소에 연결해야 하며 Session 이전 생성/월드교체 수명도 보존해야 한다.
+- [ ] 다음 실제 선행 확인: RawProductionControls::Release는 inline root/budget token을 반납 후에도 유지하고 Node/Text는 해당 죽은 토큰을 계속 돌려줄 수 있다. 반면 RawMinimap::Release는 token0/displayPresentfalse다. 글로벌Kill/Cleanup→providerClose/교체 시 중복반납을 실제 검사로 재현/수정해야 한다. Node/Text의0토큰 거부는 이미 있으므로 추측한0토큰 버그를 새로 만들거나 고쳤다고 주장하지 않는다. RawProduction/Minimap의Session 참조와 Pool·world 모듈 수명도 실제Client 공통owner로 옮겨야 초기/State전환 전체생성이 가능하다. 미니맵은 core(game.Core()) 이후 session필드 사용이 없는지도 다시 확인해 분리할 수 있다.
+- [ ] 전체 State 부모/Core·cache·active/Pool/Player/SP/나머지목록owner, 논리HTML 공통Gump, Edit 최종HUD/도구/커스텀맵·언어시나리오/저장·재로드와 모든 Early/캠페인/Demo 사용자자연완주·완전동일성은 남았다.393 원본경로 Wide SaveOptions 오류도 이번 재생0/미해결이다. 목표는 활성 상태다.
+
 ## 2026-10-24 단위394 완료: Warning/Pause의 실제 공통 Gump 접합
 
 - [x] AGENTS.md·공통/닷넷 인계를 재확인했다. 시작 HEAD는 **47e97725 / 20261024-16 CP**이고 현재/마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-10-23**이다. 이번 새 디컴파일/Native 실행0이며 기존 warnings254관측·도구·fixture SHA를 보존했다.
@@ -10,7 +22,7 @@
 - [x] 수정 피격 입력의 실제 게임은 종료0·안내4생존/9만료 표본·기한39.242000000000004초다. 원본 bold CHFNT/색/그림자와4캡처 **각996픽셀/불일치0**이다. 마지막HP1 고정 가정은 실제 회복/피격HP1·17 때문에 검사 종료1이었다. 실패/마지막HP17은 보존하고 원본 PriestRegen과 맞게 만료 후HP1 관측+마지막실제HP를 검사하도록 고쳤다. 새 게임 없이 같은 원시 캡처 재대조가 통과했으며 상태 주입0/원본1394동일이다.
 - [x] 가림 없는 Pause의 독립441픽셀은 불일치0이다. 가로 메뉴에서도 표시되어야 한다는 첫 가정은 실패했으나 실제0,0..1024,17 메뉴가 안내 전체를 가리고 원문Text-40/메뉴-60을 따른다. 실제 공통 정렬/닫기/재표시 검사는 통과했다. 제품 강제최상위0이며 가린441픽셀은 일치 검증에 합산하지 않는다. 최초 실패는 보존한다.
 - [x] 모든 실제 창/설정 복원 뒤 전체 CTest1은 **2677검사/실패0·종료0·322.30초**다. 제품/검사SHA 전후동일·원본1394동일·보호추적변경0이다. build2 43300/gui2 62569/피격87598/CTest96972는 모두 종료했고 피격wrapper는기존HP가정때문에1/교정compare-only0임을 구별한다. [완료 문서](docs/exe/cpp-warning-common-gump-20261024.md)와 [제품 보고서](cpppj/warning-common-gump-runtime-20261024.json)에 최초 실패·소스8·실제 증거 SHA를 보존했다. UTF-8/링크/stage 감사를 마쳐 **20261024-17 CP**로 로컬 커밋한다. 원시는 `extracted/cpp-warning-shared-394-*`다.
-- [ ] 다음은 실제 공통 Uber 루트/State 정리/Core 선택·Pool·Player/SP 접합이다.004c77c0은 MapMode→새200BYTE Uber(004c7160)→임시등록해제/id0→기존루트직계자식각각Push/현재x,y로새루트Attach→ReplaceRoot다. 현재 RawButtonControls의 일반base루트와 단순토큰변경으로 대신하면 안 된다.004c7160은가상표51503c/command BYTE540451/flags800 및 실제 세배경·본문/상호작용 필드를 구성한다. 이번 정적 읽기만 했고 구현/새Native관측은0이다.
+- [ ] 다음은 실제 공통 Uber 루트/State 정리/Core 선택·Pool·Player/SP 접합이다.004c77c0은4437f0(실제빈RET;395에서확인)→새200BYTE Uber(004c7160)→임시등록해제/id0→기존루트직계자식각각Push/현재x,y로새루트Attach→ReplaceRoot다. 현재 RawButtonControls의 일반base루트와 단순토큰변경으로 대신하면 안 된다.004c7160은가상표51503c/command BYTE540451/flags800 및 실제 세배경·본문/상호작용 필드를 구성한다.394당시는정적읽기만한이력이며위395의부모복원/Native160과실제연결잔여를구별한다.
 - [ ] 전체 State 부모/나머지 owner, Client/Login Core·cache·active 공유, 논리 HTML 공통 Gump, Edit 최종 HUD/편집/커스텀 맵·언어 시나리오/저장·재로드와 모든 Early/캠페인/Demo 사용자 자연 완주·완전 동일성은 미완료다.393 원본경로 Wide SaveOptions errno22/doserrno1224도 미해결이며 이번 새재생0이다. 목표는 활성 상태다.
 
 ## 2026-10-24 단위393 완료: 실제 Client 단일 Kernel과 월드 소유권 접합

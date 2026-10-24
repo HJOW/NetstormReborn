@@ -83,6 +83,9 @@ set_source_files_properties(GumpPointerBoundaryTests.cpp PROPERTIES COMPILE_DEFI
 # HUD 기하와 입력의 독립 원본 관측을 두 검사에만 공급한다.
 set_source_files_properties(HudDockTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_HUD_DOCK_GEOMETRY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/hud-dock-geometry-x86.tsv\"")
+# 전체 Uber 부모의 최초 독립 관측을 해당 검사에만 공급한다.
+set_source_files_properties(UberRootGumpTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_UBER_ROOT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/uber-root-x86.tsv\"")
 set_source_files_properties(HudDividerInputTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_HUD_DIVIDER_INPUT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/hud-divider-input-x86.tsv\"")
 # 미션 시작 안내의 독립 원문 조립/serial 재사용 관측을 해당 검사에 공급한다.
@@ -208,6 +211,7 @@ add_executable(netstorm_tests
     GumpPointerBoundaryTests.cpp
     MissionLoadingMessageTests.cpp
     HudDockTests.cpp
+    UberRootGumpTests.cpp
     HudDividerInputTests.cpp
     MinimapGeometryTests.cpp
     MinimapBlitTests.cpp

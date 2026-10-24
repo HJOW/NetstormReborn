@@ -25,10 +25,20 @@ void Height(GumpCreateNode& node,double value) { node.baseHeight=static_cast<flo
 }
 // 기본 저장소와 재배치에 필요한 실제 공통 처리기만 처음에 확인한다.
 HudDock::HudDock(HudDockNodes& nodes,HudDockGlobals globals,const std::int8_t& color,HudDockHooks hooks)
-    :nodes_(nodes),globals_(globals),color_(color),hooks_(std::move(hooks)) {
+    :HudDock(HudDockNodeView{[&nodes](HudDockPart part) {
+        switch (part) {
+        case HudDockPart::Root:return nodes.root;case HudDockPart::Vertical:return nodes.vertical;case HudDockPart::MinimapDivider:return nodes.minimapDivider;case HudDockPart::ChatDivider:return nodes.chatDivider;
+        case HudDockPart::Minimap:return nodes.minimap;case HudDockPart::Production:return nodes.production;case HudDockPart::Chat:return nodes.chat;case HudDockPart::Knowledge:return nodes.knowledge;
+        }throw std::logic_error("HUD 현재 필드 종류 오류");
+    }},globals,color,std::move(hooks)) {}
+// 실제 부모의 현재 필드 조회도 기존8노드 몸체와 같은 소유권/가상 분배를 사용한다.
+HudDock::HudDock(HudDockNodeView nodes,HudDockGlobals globals,const std::int8_t& color,HudDockHooks hooks)
+    :nodes_(std::move(nodes)),globals_(globals),color_(color),hooks_(std::move(hooks)) {
     if (!hooks_.node || !hooks_.divider || !hooks_.baseAttach || !hooks_.push || !hooks_.attach || !hooks_.move ||
         !hooks_.resolveSerial || !hooks_.bubble || !hooks_.closePopups) throw std::invalid_argument("HUD의 실제 노드/트리 처리기가 필요합니다");
 }
+// 필드가 선택된 위치에서만 조회를 요구하므로 구분선 생성에 다른 패널을 미리 요구하지 않는다.
+std::uint32_t HudDock::Token(HudDockPart part) const { if (!nodes_.token) throw std::logic_error("HUD 실제 부모 필드 미연결");return nodes_.token(part); }
 // 원본 유효 포인터의 수명 계약을 토큰 경계에서 검사한다.
 GumpCreateNode& HudDock::Node(std::uint32_t token) const {
     auto* node=token ? hooks_.node(token) : nullptr;if (!node) throw std::runtime_error("HUD Gump 저장소 없음");return *node;
@@ -90,66 +100,66 @@ void HudDock::Attach(std::uint32_t token,float x,float y,std::uint32_t parent,st
 }
 // 원문HUD 직계의 실제자식생성 뒤 등록 순서와 제한값을 그대로 쓴다.
 void HudDock::RegisterNormalLayout() const {
-    RegisterSlave(nodes_.vertical,nodes_.minimapDivider,1);RegisterSlave(nodes_.vertical,nodes_.chatDivider,4);
-    RegisterSlave(nodes_.vertical,nodes_.minimap,1);RegisterSlave(nodes_.vertical,nodes_.production,1);
-    RegisterSlave(nodes_.vertical,nodes_.knowledge,1);RegisterSlave(nodes_.vertical,nodes_.chat,4);
-    RegisterSlave(nodes_.minimapDivider,nodes_.minimap,8);RegisterSlave(nodes_.minimapDivider,nodes_.production,2);
-    RegisterSlave(nodes_.minimapDivider,nodes_.knowledge,2);RegisterSlave(nodes_.chatDivider,nodes_.chat,8);
-    auto& vertical=Divider(nodes_.vertical);vertical.minX=60;vertical.maxX=130;vertical.axis|=4;
-    auto& minimap=Divider(nodes_.minimapDivider);minimap.minY=Subtract(globals_.screenHeight,123);minimap.maxY=globals_.screenHeight;minimap.axis|=8;
-    auto& chat=Divider(nodes_.chatDivider);chat.minY=25;chat.maxY=Subtract(globals_.screenHeight,25);chat.axis|=8;
+    RegisterSlave(Token(HudDockPart::Vertical),Token(HudDockPart::MinimapDivider),1);RegisterSlave(Token(HudDockPart::Vertical),Token(HudDockPart::ChatDivider),4);
+    RegisterSlave(Token(HudDockPart::Vertical),Token(HudDockPart::Minimap),1);RegisterSlave(Token(HudDockPart::Vertical),Token(HudDockPart::Production),1);
+    RegisterSlave(Token(HudDockPart::Vertical),Token(HudDockPart::Knowledge),1);RegisterSlave(Token(HudDockPart::Vertical),Token(HudDockPart::Chat),4);
+    RegisterSlave(Token(HudDockPart::MinimapDivider),Token(HudDockPart::Minimap),8);RegisterSlave(Token(HudDockPart::MinimapDivider),Token(HudDockPart::Production),2);
+    RegisterSlave(Token(HudDockPart::MinimapDivider),Token(HudDockPart::Knowledge),2);RegisterSlave(Token(HudDockPart::ChatDivider),Token(HudDockPart::Chat),8);
+    auto& vertical=Divider(Token(HudDockPart::Vertical));vertical.minX=60;vertical.maxX=130;vertical.axis|=4;
+    auto& minimap=Divider(Token(HudDockPart::MinimapDivider));minimap.minY=Subtract(globals_.screenHeight,123);minimap.maxY=globals_.screenHeight;minimap.axis|=8;
+    auto& chat=Divider(Token(HudDockPart::ChatDivider));chat.minY=25;chat.maxY=Subtract(globals_.screenHeight,25);chat.axis|=8;
 }
 // 표시모드와divider사건이 실제HUD의현재직계자식/전역을 통해 같은viewport를 갱신한다.
 std::uint32_t HudDock::Handle(std::uint32_t event,std::uint32_t first,std::uint32_t second) const {
     const auto command=event&0x03ffffff; // 원본은release비트도 제거한 뒤 이 몸체를 처리한다.
     if (command==kChatToggle) {
         if (!hooks_.chatVisible || !hooks_.chatInput) throw std::runtime_error("HUD의 실제 채팅 설정 경계 없음");
-        if (second && (second!=2 || double(globals_.screenHeight)<=Node(nodes_.chatDivider).y)) {
+        if (second && (second!=2 || double(globals_.screenHeight)<=Node(Token(HudDockPart::ChatDivider)).y)) {
             hooks_.chatVisible(true);
-            if (double(globals_.screenHeight)<=Node(nodes_.chatDivider).y) {
-                hooks_.push(nodes_.chatDivider);const auto token=nodes_.chatDivider;hooks_.attach(token,Node(token).x,globals_.savedChatY,nodes_.root,0);
+            if (double(globals_.screenHeight)<=Node(Token(HudDockPart::ChatDivider)).y) {
+                hooks_.push(Token(HudDockPart::ChatDivider));const auto token=Token(HudDockPart::ChatDivider);hooks_.attach(token,Node(token).x,globals_.savedChatY,Token(HudDockPart::Root),0);
             }
         } else {
             hooks_.chatVisible(false);
-            if (Node(nodes_.chatDivider).y<double(globals_.screenHeight)) globals_.savedChatY=Node(nodes_.chatDivider).y;
-            hooks_.chatInput(false);hooks_.push(nodes_.chatDivider);const auto token=nodes_.chatDivider;
-            hooks_.attach(token,Node(token).x,static_cast<float>(globals_.screenHeight),nodes_.root,0);
+            if (Node(Token(HudDockPart::ChatDivider)).y<double(globals_.screenHeight)) globals_.savedChatY=Node(Token(HudDockPart::ChatDivider)).y;
+            hooks_.chatInput(false);hooks_.push(Token(HudDockPart::ChatDivider));const auto token=Token(HudDockPart::ChatDivider);
+            hooks_.attach(token,Node(token).x,static_cast<float>(globals_.screenHeight),Token(HudDockPart::Root),0);
         }
     }
     if (command==kMoved || command==kResized) {
         if (!hooks_.invalidate) throw std::runtime_error("HUD dirty 경계 없음");
-        if (nodes_.vertical && first==Node(nodes_.vertical).serial) {
-            const auto& node=Node(nodes_.vertical);const auto left=Truncate(double(node.x)+node.baseWidth);const auto height=globals_.screenHeight;
+        if (Token(HudDockPart::Vertical) && first==Node(Token(HudDockPart::Vertical)).serial) {
+            const auto& node=Node(Token(HudDockPart::Vertical));const auto left=Truncate(double(node.x)+node.baseWidth);const auto height=globals_.screenHeight;
             globals_.mapWidth=Subtract(globals_.screenWidth,left);globals_.mapLeft=left;
             hooks_.invalidate(0,0,Add(left,1),height,0);
             hooks_.invalidate(globals_.mapLeft,globals_.mapHeight,globals_.mapWidth,Subtract(globals_.screenHeight,globals_.mapHeight),0);
         }
-        if (nodes_.chatDivider && first==Node(nodes_.chatDivider).serial) {
-            const auto height=Truncate(Node(nodes_.chatDivider).y);globals_.mapHeight=height;
+        if (Token(HudDockPart::ChatDivider) && first==Node(Token(HudDockPart::ChatDivider)).serial) {
+            const auto height=Truncate(Node(Token(HudDockPart::ChatDivider)).y);globals_.mapHeight=height;
             hooks_.invalidate(globals_.mapLeft,height,globals_.mapWidth,Subtract(globals_.screenHeight,height),0);
         }
         const auto left=globals_.mapLeft,top=globals_.mapTop,right=Add(left,globals_.mapWidth),bottom=Add(top,globals_.mapHeight); // 레지스터/스택에 먼저 고정한 정수LTRB다.
         globals_.mapRect={left,top,right,bottom};globals_.mapFloatRect={static_cast<float>(left),static_cast<float>(top),static_cast<float>(right),static_cast<float>(bottom)};
-        if (nodes_.minimapDivider) {
-            const auto& node=Node(nodes_.minimapDivider);globals_.leftBottomRect={0,Truncate(node.y),Truncate(node.baseWidth),globals_.screenHeight};
+        if (Token(HudDockPart::MinimapDivider)) {
+            const auto& node=Node(Token(HudDockPart::MinimapDivider));globals_.leftBottomRect={0,Truncate(node.y),Truncate(node.baseWidth),globals_.screenHeight};
         } else globals_.leftBottomRect={};return 1;
     }
     if (command!=kHudMode) {
         if (command==kChatSize) {
             const float y=static_cast<float>(Subtract(Subtract(globals_.screenHeight,std::bit_cast<std::int32_t>(second)),5));
-            hooks_.push(nodes_.chatDivider);const auto token=nodes_.chatDivider;hooks_.attach(token,Node(token).x,y,nodes_.root,0);return 1;
+            hooks_.push(Token(HudDockPart::ChatDivider));const auto token=Token(HudDockPart::ChatDivider);hooks_.attach(token,Node(token).x,y,Token(HudDockPart::Root),0);return 1;
         }
         if (!hooks_.baseHandle) throw std::runtime_error("HUD 기본 입력 경계 없음");return hooks_.baseHandle(event,first,second);
     }
     if (first==1 || first==3) {
-        Node(nodes_.vertical).flags|=1;Node(nodes_.minimapDivider).flags|=1;Node(nodes_.minimap).flags|=1;Node(nodes_.production).flags|=1;Node(nodes_.knowledge).flags&=~1U;
-        hooks_.move(nodes_.vertical,(first==3 || globals_.showHud) ? 80.0F : -Node(nodes_.vertical).baseWidth,0,0);
-        hooks_.move(nodes_.minimapDivider,0,static_cast<float>(Subtract(globals_.screenHeight,80)),0);
+        Node(Token(HudDockPart::Vertical)).flags|=1;Node(Token(HudDockPart::MinimapDivider)).flags|=1;Node(Token(HudDockPart::Minimap)).flags|=1;Node(Token(HudDockPart::Production)).flags|=1;Node(Token(HudDockPart::Knowledge)).flags&=~1U;
+        hooks_.move(Token(HudDockPart::Vertical),(first==3 || globals_.showHud) ? 80.0F : -Node(Token(HudDockPart::Vertical)).baseWidth,0,0);
+        hooks_.move(Token(HudDockPart::MinimapDivider),0,static_cast<float>(Subtract(globals_.screenHeight,80)),0);
     } else if (first==4) {
-        Node(nodes_.production).flags&=~1U;Node(nodes_.knowledge).flags|=1;Node(nodes_.minimap).flags&=~1U;
-        hooks_.move(nodes_.vertical,170,0,0);hooks_.move(nodes_.minimapDivider,0,static_cast<float>(globals_.screenHeight),0);
+        Node(Token(HudDockPart::Production)).flags&=~1U;Node(Token(HudDockPart::Knowledge)).flags|=1;Node(Token(HudDockPart::Minimap)).flags&=~1U;
+        hooks_.move(Token(HudDockPart::Vertical),170,0,0);hooks_.move(Token(HudDockPart::MinimapDivider),0,static_cast<float>(globals_.screenHeight),0);
     }
-    hooks_.push(nodes_.chatDivider);const auto token=nodes_.chatDivider;hooks_.attach(token,Node(token).x,Node(token).y,0,0);
+    hooks_.push(Token(HudDockPart::ChatDivider));const auto token=Token(HudDockPart::ChatDivider);hooks_.attach(token,Node(token).x,Node(token).y,0,0);
     ++globals_.fullRefresh;if (!hooks_.finishResize) throw std::runtime_error("HUD 화면 후처리 경계 없음");hooks_.finishResize();return 0;
 }
 }

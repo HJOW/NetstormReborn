@@ -16,6 +16,12 @@ struct HudDockNodes {
     std::uint32_t vertical{},minimapDivider{},chatDivider{}; // +a0/+a4/+a8의 세 divider다.
     std::uint32_t minimap{},production{},chat{},knowledge{}; // +ac/+b0/+b8/+c0의 실제 UI다.
 };
+// 현재 실제 Uber this의 필드다. 전역 등록0루트와 새로 생성 중인 this를 구별한다.
+enum class HudDockPart { Root,Vertical,MinimapDivider,ChatDivider,Minimap,Production,Chat,Knowledge };
+// 값 사본을 만들지 않고 실제 부모의 현재 자식 포인터를 매 소비 시점에 읽는다.
+struct HudDockNodeView {
+    std::function<std::uint32_t(HudDockPart)> token; // 해당 부모와 그 필드 저장소는 이 뷰보다 오래 살아야 한다.
+};
 // 복제하지 않고 실제 화면/지도 전역에 연결하는 참조 묶음이다.
 struct HudDockGlobals {
     const std::int32_t& screenWidth; //005c78f0의 현재 signed 화면 너비다.
@@ -56,6 +62,7 @@ class HudDock {
 public:
     // 색은 원본00540452의 signed BYTE다. 토큰 조회 및 일반 재배치 경계는 필수다.
     HudDock(HudDockNodes& nodes,HudDockGlobals globals,const std::int8_t& color,HudDockHooks hooks);
+    HudDock(HudDockNodeView nodes,HudDockGlobals globals,const std::int8_t& color,HudDockHooks hooks); // 실제 Uber 필드도 같은 본체에 직접 빌린다.
     //004c6c50: 배경 생성 뒤 divider 필드·고정10슬롯을 초기화한다.
     std::uint32_t Construct(std::uint32_t token,std::uint32_t axis,std::int32_t width,std::int32_t height,
         std::uint32_t backgroundFlags,std::uint32_t type,std::uint32_t frame) const;
@@ -72,7 +79,8 @@ private:
     GumpCreateNode& Node(std::uint32_t token) const;
     // 확장 노드와 기본 노드의 주소가 동일한지 검사한다.
     HudDividerNode& Divider(std::uint32_t token) const;
-    HudDockNodes& nodes_; // HUD의 현재 자식 포인터를 보유하는 실제 상태다.
+    std::uint32_t Token(HudDockPart part) const; // 같은 실제 부모의 현재 필드를 읽으며 값을 캐시하지 않는다.
+    HudDockNodeView nodes_; // 기존 상태 또는 실제 Uber 노드의 같은 현재 포인터 뷰다.
     HudDockGlobals globals_; // 실제 전역을 가리키는 참조만 보관한다.
     const std::int8_t& color_; // 런타임 색 패치의 현재 값을 생성에서 읽는다.
     HudDockHooks hooks_; // 실제 공통 Gump와 가상 처리를 연결한다.
