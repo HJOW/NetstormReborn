@@ -1,0 +1,864 @@
+{
+  "unit": 405,
+  "goalComplete": false,
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "productSha256": "4fd7d140266915ff9a10fc7ab933850d3633f30d591da893394fa836664f676b",
+  "testBinarySha256": "f3a4f2d4353fc1777f77ffcbd354a62aea15719dc201f0714b9341f2f1086963",
+  "sourceHashes": {
+    "cpppj/src/client/CMakeLists.txt": "e65edfc38e2aed9b77858fa32fb9a1a0e0d7a45bdd0cce631dc1b84bb22868a4",
+    "cpppj/src/client/HtmlWindowMetadata.cpp": "4b58577ebab26498104e8f187fa1b294f811bb08097bf7ccb15ebff079b7a5b6",
+    "cpppj/src/client/HtmlWindowMetadata.h": "1df4f8fd0852e586ec621f066945236fb8b9ebf1d6d7f8e13c5457476bbbdfbd",
+    "cpppj/src/client/RawHtmlWindowContext.h": "234eb66d5f7d00e06cc88047fe31acb03285383a51deebf200635c795979b53b",
+    "cpppj/src/client/RawMenuControls.cpp": "72f402c2348964e18be3e20e0cd30ddf502d50669a67ccbe73a48562ec9b0464",
+    "cpppj/src/client/RawMenuControls.h": "10446c8b9b8c44be42d0ed403d0910ca234b6807e3a510812e04c7a1fb26329e",
+    "cpppj/src/client/RawMenuHtml.inc": "e34f91037334e6998bd20d4402bbb3f28aa35b0632363b249397e430640db28e",
+    "cpppj/tests/CMakeLists.txt": "5b0611a450020eee2d1ef425dcb861c9f1399a2964ca6d237bf02dfe978e23e4",
+    "cpppj/tests/HtmlWindowMetadataClientTests.cpp": "458ad051966b33424aa9f583823d69d927e28fd3ca3d7cc262dad87fad1c4d70",
+    "cpppj/tests/HtmlWindowMetadataTests.cpp": "7240bbb9af7c32d260e206e090b362a3fdf2381810cca3c0f76ad5f353bc94da"
+  },
+  "referenceHashes": {
+    "cpppj/src/client/HtmlWindowGump.cpp": "87faf6f44913300a74da04687850cdc0629c6fb5868ff08db639f7a01cb3a40c",
+    "cpppj/src/client/HtmlWindowFit.cpp": "482e1859163f26ad60d98a23d0035c920692993405107b37c0f17fc34f0bfa91",
+    "cpppj/src/client/RawButtonControls.cpp": "46592fa15659ac4652364c792cd2371bb95226f8041de0c202e3fa329f679adb",
+    "cpppj/src/client/GumpLifetime.cpp": "c0b7bacd2f1ed87a2b5e9c0854d2f89200574f1408d7ac738cec891a185ca57a",
+    "cpppj/src/client/GumpFrame.cpp": "8b11b43508eb63675acd1d29d39974814575dcf437089a2c76632deec7b19871",
+    "cpppj/src/client/MenuGump.cpp": "9738a69d18151ca3b4d10d91e99622addcf0a89af12f66cc082ff5bb432631a4",
+    "cpppj/src/client/MenuGumpWidgets.cpp": "33acda5b10a39d19cab04f867d42b2c6dde48530ad62ea651750eba6446d003f",
+    "cpppj/src/client/MenuGumpControls.cpp": "ca1017cf31843d3de16929ef71a0f1fff9d177b3d33154d820674d366af5dc16",
+    "cpppj/src/client/TellMapMenus.cpp": "fca2bec01dd1ee75aba67cdfa115f094e4f33e272d38ab355214118ca578f49b",
+    "cpppj/src/client/SoloMapCatalog.cpp": "5e3d54c69a62c605d7edb8d01bd39d0bb459c4fa93a66ae97cb2d7bf9929e62e",
+    "cpppj/src/client/ScriptCommand.cpp": "87908a7252875cfcd2b7a96313c29bd8ea7ae91ef95e53f793c29e8bf0ad880b",
+    "cpppj/src/client/DialogExitCommand.cpp": "be0909d7660e1cfee08ca7a782dbae85bedab51390d7e0ae4550962ca89cca11"
+  },
+  "preservedNativeHashes": {
+    "cpppj/tests/fixtures/html-window-fit-x86.tsv": "adaeea8c65dbb3cd5f8a5ac80545b0de86a5bdc27c0f25a2f0c74832ae8a5855",
+    "cpppj/tests/fixtures/html-window-gump-x86.tsv": "2acaf260f0f47cce99b5d0cabfc341aaa14b2921281e32ba9c63c92797061f36",
+    "cpppj/tests/fixtures/html-window-idle-v2-x86.tsv": "b0309464c7c8643467a819d5c28aa413a1e2d15b57ceed1e8b48af95d855f333",
+    "cpppj/tests/fixtures/dialog-exit-command-x86.tsv": "b09428751d30aff304cfd0c7be8467563147bdf8729b75b0a9840c8d330961ed",
+    "cpppj/tests/fixtures/dialog-command-lifetime-x86.tsv": "ee27d2eca659dae70d66fd3f30636485c0eae485356d937a9d8bc24f35a13482",
+    "cpppj/tests/fixtures/mission-loading-message-x86.tsv": "9770007e448fa9710c3e7fe3eee8c26503cd21bddcfee3231b91db0ebc47a0c5",
+    "cpppj/tests/fixtures/tell-map-menus-x86.tsv": "bd14f558b98aed4554c20f3210eee6e784184430d68d7f7b85f29849e0821351"
+  },
+  "newNativeHashes": {
+    "tools/decomp_html_window_metadata.py": "be6631a8810767004ce65d52381e202912f50bc84b33e42852dc52993843b542",
+    "cpppj/tests/fixtures/html-window-metadata-x86.tsv": "22aebb9dca3c67272a8867d53370051346258fb47880c240e51904764c1e62c5",
+    "cpppj/html-window-metadata-native-20261024.json": "238e5e4ce532c7c7161fb2cedc6bfe1152c5a91e8589e1300256fbb0b4234078"
+  },
+  "rawHashes": {
+    "extracted/cpp-html-meta-405-percent-disassembly.txt": "4c1ce97a4d8d1a66125353c4d9e83bf11413104eb8f997a2f653c9463f9fd525",
+    "extracted/cpp-html-meta-405-native1.log": "0ab84220071cca7374684752ae53869e89995bdb8aa91f77dcad139be839c703",
+    "extracted/cpp-html-meta-405-native2.log": "f0f78cfe26269560c47755add11b6227e7453ecbf1593a2e2b73c8e6b6690901",
+    "extracted/cpp-html-meta-405-build1.log": "4e47905e9bf17b2e8dab7768f62121b8f3885ec00b09564d63b47358bf7fac37",
+    "extracted/cpp-html-meta-405-build2.log": "2874ce817fefe1c23ec0a997aad8b1a370f6fe6e3d46bb68f0ec1fd5c498c0bb",
+    "extracted/cpp-html-meta-405-checks.py": "0b1d96921c114014c1ca740dc2f9cea0e55743b93f462816bc6f918956a2bf1b",
+    "extracted/cpp-html-meta-405-native-verify.py": "ae153130c48c4033775449da7742ea804d427ac16cb546ba631645b64abb2771",
+    "extracted/cpp-html-meta-405-verify-metadata1.log": "b236d594a983e5f403dadf413aeead20477327a70828049d5175422fe9f30be2",
+    "extracted/cpp-html-meta-405-verify-idle1.log": "f4b5e5bebf22ed0243174f2d8663879864b980e28143edbfb5656a41b6bb8b67",
+    "extracted/cpp-html-meta-405-verify-fit1.log": "1fa68c2efe8de108c79900bdd60497cf895f0e5f48406d642776636e2cccc543",
+    "extracted/cpp-html-meta-405-verify-gump1.log": "cff42f470a5045c99fd6a35d58731baf368075809a211b0dfcb5b843662972b8",
+    "extracted/cpp-html-meta-405-native-replay1.json": "3a2a8898904040aaedc753f63be3d2d1745256dda1e16902eb7107233983b9e8",
+    "extracted/cpp-html-meta-405-final.py": "c562f65ab67677fe0f85803f04704d2ed1a0fe100b5e672f16bf6cc3a63c4082",
+    "extracted/cpp-html-meta-405-build3.log": "11b4efc787a05ed707c3f030c089e6149b1001bedf30bb3a8f9e9f2636b9428b",
+    "extracted/cpp-html-meta-405-audit.py": "86978d938404506b9f1d7a4be5c321555c04c2c2c75beede049ab5b6d614618d",
+    "extracted/cpp-html-meta-405-receipt.py": "abc2520afaff90efa3c8fed8ff31b4ab2e529840715620b6fd6e0f391d6c1e88",
+    "extracted/cpp-html-meta-405-client1.log": "6488dc03e4b01d49204e69c0dbe4f2cc54abc7e5ba18d032ecd5749415edc25a",
+    "extracted/cpp-html-meta-405-build4.log": "f578624fcf561f71a319c8e85a5d304511631953c08266a7139498160942c21d",
+    "extracted/cpp-html-meta-405-focused1-before.json": "feb2923241d0106e43dc01656a299106209f8365e0b92aadc95a1ce5aa615b14",
+    "extracted/cpp-html-meta-405-focused1-1.log": "86aa0a5e0f369bb6c470b7d2b0c785cefa0a1075a4c7032aca7fa547de240e9b",
+    "extracted/cpp-html-meta-405-focused1-progress1.json": "393dae3e5b9165cfab89bc23bd69be3e81c705d34d912b068a7667e0dc882a52",
+    "extracted/cpp-html-meta-405-focused1-2.log": "1cc687a130dc1949d866e1026efd0b4f3d0ef1fb13a44112ea489dc65661872f",
+    "extracted/cpp-html-meta-405-focused1-progress2.json": "f1f687d0cc9defb8a6891f33df17e802206dbb70a8eec2e60f2161d9cb5a37cd",
+    "extracted/cpp-html-meta-405-focused1-3.log": "88e737f48b6e30207604fe1fe88404cd591ebde5a6123e2f25265dcb41756f88",
+    "extracted/cpp-html-meta-405-focused1-progress3.json": "bb08bc2c686a15ee76e613a9ea80c2add2968e04ea4fa63d5fd9677e123869ca",
+    "extracted/cpp-html-meta-405-focused1-4.log": "7e6ca64d7c7b4877dcf377bc8e965ba83630b39f3c9a842b4a94c76ca00ddf1a",
+    "extracted/cpp-html-meta-405-focused1-html.bmp": "55f5e96afc60cb0045befe778635b4c31908d167c0ca6e1e80fa6c408c29a8d2",
+    "extracted/cpp-html-meta-405-focused1-progress4.json": "d80969deb1320447540fb32a3f551588407491f697b78193eb75c4e3aeaa6850",
+    "extracted/cpp-html-meta-405-focused1-5.log": "deef60ef6f3d4f3acd9fa18bb2348fd16c9e4826d48353b6f48644605df1f763",
+    "extracted/cpp-html-meta-405-focused1-progress5.json": "32374777ce3d7c007d01f78651c1ffc9e5b22c6d7db78849131c344894548a70",
+    "extracted/cpp-html-meta-405-focused1-6.log": "7fb4e2f5928de1c1ebf8f3a73067f91fe3b158112ae07a86f53bff491c5d2aa3",
+    "extracted/cpp-html-meta-405-focused1-progress6.json": "b1537fdd0e4b9e85671e9d2475ceac30af499176645e3954e8ee9867e68778d4",
+    "extracted/cpp-html-meta-405-focused1-7.log": "11d12f462e5aed980837913e88096b2fafdfcb52df1e96709672f6ced9710f5b",
+    "extracted/cpp-html-meta-405-focused1-progress7.json": "b05cc2d93043328eecefc3d4fc2054b9c58cd975581162e551b444329bedbad8",
+    "extracted/cpp-html-meta-405-focused1-8.log": "f7bec18a26182d27784d6228cf3d3fd01394db19f807787ab43eb3816d1e134b",
+    "extracted/cpp-html-meta-405-focused1-progress8.json": "7c706bcb2056b383ced4627be2accd0e2899a348507b0db231cd34995ecd6dc4",
+    "extracted/cpp-html-meta-405-focused1-9.log": "0195a4cf1dab9824a5f5e0b1060c41c56de1f5e41dfa4707fc241dcd44b8e732",
+    "extracted/cpp-html-meta-405-focused1-progress9.json": "0d80a94b3792c21bceb57c02decd39aa2a5225e1e99dc68e0f46dbffde1f3087",
+    "extracted/cpp-html-meta-405-focused1-10.log": "d4b27a55819edc216b236c551f2dbcd380c3f77ece8e74deee7bf087474d6ecf",
+    "extracted/cpp-html-meta-405-focused1-progress10.json": "6e226e50322c4e6f46add7814de002454b1b678106d179e77acb171ebe8afaec",
+    "extracted/cpp-html-meta-405-focused1-11.log": "ffcd5f5378884950148365b9e33256822bb75acb7cfe427cb2e1f1596b4de253",
+    "extracted/cpp-html-meta-405-focused1-progress11.json": "69055cc66f8734902b3d10f1edcfec3e47b125fb25aa03c975ec726aae2876db",
+    "extracted/cpp-html-meta-405-focused1-12.log": "5060e0b1d316f392ab2e2018e25ee3ea3de0518e635fe7ab008e76005db28fbf",
+    "extracted/cpp-html-meta-405-focused1-progress12.json": "34105525935243f4939e20996ee0f6bad0ce2e94e28a03ec829e10a65822f7e4",
+    "extracted/cpp-html-meta-405-focused1-13.log": "b32541e3cbdb179194a20bcbf9959a8abba9a883923269d35e6e6804c33c72d0",
+    "extracted/cpp-html-meta-405-focused1-progress13.json": "c872d49defda4d4893534beb42a50c68fdcf0238c1adffd952d5e0c5e45a0a10",
+    "extracted/cpp-html-meta-405-focused1-14.log": "460aa02995ab9da1f17df7519af5ac7be128dbe4622c764206e1abcb67e6a0df",
+    "extracted/cpp-html-meta-405-focused1-progress14.json": "03d8a169146ef46b108340186e73f8c4fa0075fdae2b217f18a714638bfdeea5",
+    "extracted/cpp-html-meta-405-focused1-15.log": "e37b58d2986c40bc35c4fd89bc056b07db189aad1a418b02a0c81e9eada30f6e",
+    "extracted/cpp-html-meta-405-focused1-progress15.json": "fca7b74b745f86ceb19c7b4228c53e54bd69ce51d7c942505fa5f9756038ffe1",
+    "extracted/cpp-html-meta-405-focused1-16.log": "73443f6b064e5c8690f21fa4988aba8aef71cea8cbf148041cb335979da66bf5",
+    "extracted/cpp-html-meta-405-focused1-gif.bmp": "cc69eb5a03ae6d3efbb25dbe601519b675a562f5e42486e97669065fb9371dc8",
+    "extracted/cpp-html-meta-405-focused1-progress16.json": "8310e12efc8cfca60582fee6d02b67c2c4afe23319f55cfdba6fa75dc4f9a044",
+    "extracted/cpp-html-meta-405-focused1-17.log": "860811e0b2f0957fe0c8e78bddc1126c72f9350c88770ae67c036aa4f776a72d",
+    "extracted/cpp-html-meta-405-focused1-progress17.json": "60b5d327a3482e5c2a1cf03359d1ae0b4e8da8b4f998b635e11fb57887db2205",
+    "extracted/cpp-html-meta-405-focused1-18.log": "94c820f35fed8c69e76bd8da1e976f11521c2e6aeac93cbfcac694cf6f9d1405",
+    "extracted/cpp-html-meta-405-focused1-chat.bmp": "375eecff124ac10d350aad7c0ec98365b94f4b810cbea47b9d5e8436bdebe17a",
+    "extracted/cpp-html-meta-405-focused1-progress18.json": "5bd2c920c737ed3ece09f3f7d74b6cec2f8109cd655a65935362dca6d485ca2c",
+    "extracted/cpp-html-meta-405-focused1-19.log": "5075e076baeae15ccd1747c2c8ca3c8c4b90595549f2e2df8725079e1494c286",
+    "extracted/cpp-html-meta-405-focused1-progress19.json": "0a052e164e70d53eec443378ad7a5fd9e5ae9866c20d55a8802f551e09224249",
+    "extracted/cpp-html-meta-405-focused1-20.log": "efcc36a0a5066bc84c1e108c84a6faed984ff7f0aa75887756f9e543b589f5a5",
+    "extracted/cpp-html-meta-405-focused1-progress20.json": "02747b8387860f6df2511cac4a917c8b4ebfa058f4ce1a8b9580ebd08a7b0590",
+    "extracted/cpp-html-meta-405-focused1-21.log": "caef703d6711ac5c20db7270599791613d588e7ba295cfec30b7ad341a0a13e3",
+    "extracted/cpp-html-meta-405-focused1-progress21.json": "eb7bd6c4204e03dfb4d620894f1aa14d0a4545970b61181a152fabfd972ff058",
+    "extracted/cpp-html-meta-405-focused1-22.log": "b5b64a6315c7bc6542e3bedf631a3682e858664e0ecb92f6088ee7b56dcc7d12",
+    "extracted/cpp-html-meta-405-focused1-console.bmp": "0bc55ac0c4ea878611a1277535a8b05ab54191bbe2533124add8a3d9b96b5474",
+    "extracted/cpp-html-meta-405-focused1-progress22.json": "0aa8f794cf41b64a80bd7124dee8fe38f81fa38c6ba273dfc07627e7a7f0d72c",
+    "extracted/cpp-html-meta-405-focused1-23.log": "29c7ea49404747fbbdd472fce171133de89323a9ea3685396b327b2b47f3772a",
+    "extracted/cpp-html-meta-405-focused1-progress23.json": "d487502de2fa199e78b72e4759e2c016d9316580f1da7988805c3c42ea144ede",
+    "extracted/cpp-html-meta-405-focused1-24.log": "426a3d77cc906c9a8caf6fe5c6c0c0e191465767a352e340c63ff7a8804e8c6a",
+    "extracted/cpp-html-meta-405-focused1-progress24.json": "725ce271727990d0a893f39c25bc0d5cf7228abaa1041a9aea9725770bc3d88e",
+    "extracted/cpp-html-meta-405-focused1-25.log": "f2105a03659dcd35ec440a769b319de162ebe6cb5c638b2caafff44a871839d2",
+    "extracted/cpp-html-meta-405-focused1-progress25.json": "fcc32630077a84db7916d97009b9db2fdc8966c56f3f253bb331346e72cf2010",
+    "extracted/cpp-html-meta-405-focused1-26.log": "eba35a6f6f19d9634b8f45e9e85b80911b6c26a7c83fa3f6124ee2a09d7a91a5",
+    "extracted/cpp-html-meta-405-focused1-progress26.json": "ed4c1d6580a45f43babc3970de53494b642b26e80eae16d0a3522466c412183a",
+    "extracted/cpp-html-meta-405-focused1-27.log": "5ca5531774b5f13fc82081a254cff97b0cd8481d48e9e41e2ed8aa3bdb8503e5",
+    "extracted/cpp-html-meta-405-focused1-progress27.json": "294308b2f609290a7b5bfc084f79480760c339ad5e8a9efcaca21c981f10801b",
+    "extracted/cpp-html-meta-405-focused1-28.log": "4e0cde1d19c18e8335926b907de08279c605765a208e161f4ed7ff8843838387",
+    "extracted/cpp-html-meta-405-focused1-progress28.json": "c19d9eb3b7211cee0b639ed50219b02f3e95325978e30c6be67f843193350f08",
+    "extracted/cpp-html-meta-405-focused1-29.log": "688dd03368db1e8e3668a88d62baabfaf41891dc28e61379dfeb1a07ec4e18c0",
+    "extracted/cpp-html-meta-405-focused1-progress29.json": "64489729d9b288fb0836dad507ba5f6afafb6ce8e0edb712133b12670680fac5",
+    "extracted/cpp-html-meta-405-focused1.json": "dccdfa710fd6e2b9a84f9048dbda7d0b249b4ca1e738d606238572d9a9a986f0",
+    "extracted/cpp-html-meta-405-ctest1.log": "39dd1c807562656d5bab661d8fe0d1a4de314a5376ca7397db705f3594910f4a",
+    "extracted/cpp-html-meta-405-ctest1-tests.log": "5a597c4edc5a45f0165786b8162a17ed54185fb7c3f87445042541179129603a",
+    "extracted/cpp-html-meta-405-ctest1.json": "dc6736225a251d1c64a53162c0c6ed8996ea5523b5577cc93d56bdcf172195dc",
+    "extracted/cpp-html-meta-405-terminal.json": "bdad93a2112e952ac93c814b8d24efd67dc900c60c823263d54ceab2f4615571"
+  },
+  "builds": [
+    {
+      "index": 1,
+      "sessionId": 2393,
+      "returnCode": 0,
+      "path": "extracted/cpp-html-meta-405-build1.log",
+      "sha256": "4e47905e9bf17b2e8dab7768f62121b8f3885ec00b09564d63b47358bf7fac37",
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "index": 2,
+      "sessionId": null,
+      "returnCode": null,
+      "completionEvidence": "검사 optional문자열 C2672/C4805가 기록되었고 컴파일 프로세스 종료를 확인했다. 반환 객체에서 핸들/종료코드를 보존하지 못해 종료코드를 추정하지 않는다.",
+      "path": "extracted/cpp-html-meta-405-build2.log",
+      "sha256": "2874ce817fefe1c23ec0a997aad8b1a370f6fe6e3d46bb68f0ec1fd5c498c0bb",
+      "errors": [
+        "error C2672"
+      ],
+      "warnings": [
+        "warning C4805"
+      ]
+    },
+    {
+      "index": 3,
+      "sessionId": 42936,
+      "returnCode": 0,
+      "path": "extracted/cpp-html-meta-405-build3.log",
+      "sha256": "11b4efc787a05ed707c3f030c089e6149b1001bedf30bb3a8f9e9f2636b9428b",
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "index": 4,
+      "sessionId": 34378,
+      "returnCode": 0,
+      "path": "extracted/cpp-html-meta-405-build4.log",
+      "sha256": "f578624fcf561f71a319c8e85a5d304511631953c08266a7139498160942c21d",
+      "errors": [],
+      "warnings": []
+    }
+  ],
+  "focused": {
+    "productSha256": "4fd7d140266915ff9a10fc7ab933850d3633f30d591da893394fa836664f676b",
+    "testBinarySha256": "f3a4f2d4353fc1777f77ffcbd354a62aea15719dc201f0714b9341f2f1086963",
+    "runs": [
+      {
+        "returnCode": 0,
+        "seconds": 0.8790026999777183,
+        "log": "extracted/cpp-html-meta-405-focused1-1.log",
+        "filter": "HtmlWindowMetadata_",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "HtmlWindowMetadata_IndependentNativePriorityEffectsAndPhysicalBuffer"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.8585037000011653,
+        "log": "extracted/cpp-html-meta-405-focused1-2.log",
+        "filter": "HtmlWindowMetadataClient_",
+        "counts": [
+          [
+            "7",
+            "0"
+          ]
+        ],
+        "names": [
+          "HtmlWindowMetadataClient_ActualPriorityRawCapturesAndTwentyControls",
+          "HtmlWindowMetadataClient_ActualMenuCheckedFieldsFitAndCleanup",
+          "HtmlWindowMetadataClient_ActualIdleDeadlineRawQueueAndOnExit",
+          "HtmlWindowMetadataClient_ActualProtectedMapCatalogRowsAndFileSpec",
+          "HtmlWindowMetadataClient_SelectedBoundariesRetirePartialMenusAndStack",
+          "HtmlWindowMetadataClient_ActualSharedRingKeyNoControlAndStaleTokens",
+          "HtmlWindowMetadataClient_InlineLowerBoundaryPreservesPhysicalPartialCopy"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.42651209991890937,
+        "log": "extracted/cpp-html-meta-405-focused1-3.log",
+        "filter": "HtmlWindowFit_",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "HtmlWindowFit_IndependentNativeAllGeometryAndCurrentEffects"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.5976722999475896,
+        "log": "extracted/cpp-html-meta-405-focused1-4.log",
+        "filter": "HtmlWindowFitClient_",
+        "counts": [
+          [
+            "6",
+            "0"
+          ]
+        ],
+        "names": [
+          "HtmlWindowFitClient_ActualShortBodyUniformButtonsCenterAndDepth",
+          "HtmlWindowFitClient_ActualLongBodyScreenLimitAndScrolling",
+          "HtmlWindowFitClient_ActualTwoMenuColumnsAndStackRetirement",
+          "HtmlWindowFitClient_ActualAttachedBodyReplacementAndCurrentView",
+          "HtmlWindowFitClient_ActualAuxiliaryReferenceSelectsCurrentCenter",
+          "HtmlWindowFitClient_ActualPixelsClipsAndPadding"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.3843089999863878,
+        "log": "extracted/cpp-html-meta-405-focused1-5.log",
+        "filter": "HtmlWindowGump_",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "HtmlWindowGump_IndependentNativeLifecycleControlsBodyAndInput"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.5296363000525162,
+        "log": "extracted/cpp-html-meta-405-focused1-6.log",
+        "filter": "HtmlWindowClient_",
+        "counts": [
+          [
+            "6",
+            "0"
+          ]
+        ],
+        "names": [
+          "HtmlWindowClient_ActualConstructorConcurrentRootsAndClientGlobals",
+          "HtmlWindowClient_ActualTwentyStoneControlsAndDeferredClear",
+          "HtmlWindowClient_ActualScrollingBodyStyleAndReplacementLifetime",
+          "HtmlWindowClient_ActualInputQueueAndNativeOnExitOrder",
+          "HtmlWindowClient_CurrentAuxiliarySerialAndExplicitFitBoundary",
+          "HtmlWindowClient_ActualIdleCurrentDeadlineAndRawZeroCommand"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.3652280999813229,
+        "log": "extracted/cpp-html-meta-405-focused1-7.log",
+        "filter": "DialogConditionFlow_",
+        "counts": [
+          [
+            "12",
+            "0"
+          ]
+        ],
+        "names": [
+          "DialogConditionFlow_WholeSubstitutionBeforeCondition",
+          "DialogConditionFlow_CurrentEffectsAndInlineStyle",
+          "DialogConditionFlow_ReusesHiddenStateOnSecondPass",
+          "DialogConditionFlow_MetadataPriorityAndBodyBoundary",
+          "DialogConditionFlow_NoContentAndExplicitBoundaries",
+          "DialogConditionFlow_QuotedCommandKeepsNativeCursorRule",
+          "DialogConditionFlow_OnExitRawCaptureKeepsLegacyContract",
+          "DialogConditionFlow_OnExitHiddenLastAndHtmlQueueOrder",
+          "DialogConditionFlow_OnExitQuotesSpacesAndSigns",
+          "DialogConditionFlow_SetSizeExitIsContentAndResolvesBeforeSecondPass",
+          "DialogConditionFlow_OnExitCapturePhysicalBounds",
+          "DialogConditionFlow_OnExitRawTailLfStaysOwned"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.3184152999892831,
+        "log": "extracted/cpp-html-meta-405-focused1-8.log",
+        "filter": "DialogExitCommand_",
+        "counts": [
+          [
+            "3",
+            "0"
+          ]
+        ],
+        "names": [
+          "DialogExitCommand_Native204",
+          "DialogExitCommand_CurrentRingQueueAndSingleDisposal",
+          "DialogExitCommand_MissingAndPhysicalBoundaries"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.46925910003483295,
+        "log": "extracted/cpp-html-meta-405-focused1-9.log",
+        "filter": "DialogBodyLayout_",
+        "counts": [
+          [
+            "7",
+            "0"
+          ]
+        ],
+        "names": [
+          "DialogBodyLayout_ActualInlineFontsColorsAndBaseline",
+          "DialogBodyLayout_ActualBufferWrapAndIndependentClip",
+          "DialogBodyLayout_ActualHeadingAndHardLineHeights",
+          "DialogBodyLayout_EffectsOnceAndFailedReplacementKeepsContent",
+          "DialogBodyLayout_ActualFontRasterUsesContentClip",
+          "DialogBodyLayout_EarlyMissionActualPicturesAndHeaders",
+          "DialogBodyLayout_ActualPictureBufferCloneAndRasterClip"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.3223423999734223,
+        "log": "extracted/cpp-html-meta-405-focused1-10.log",
+        "filter": "DialogCommandLifetime_",
+        "counts": [
+          [
+            "3",
+            "0"
+          ]
+        ],
+        "names": [
+          "DialogCommandLifetime_Native252",
+          "DialogCommandLifetime_CurrentQueueDeferredExit",
+          "DialogCommandLifetime_CallbackMutationKeepsSource"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.3719120000023395,
+        "log": "extracted/cpp-html-meta-405-focused1-11.log",
+        "filter": "DialogRuntimeAction_",
+        "counts": [
+          [
+            "3",
+            "0"
+          ]
+        ],
+        "names": [
+          "DialogRuntimeAction_PriorityAndSingleExitResolve",
+          "DialogRuntimeAction_RawArgumentKeepsQuotedAndSignedBytes",
+          "DialogRuntimeAction_FiresFrozenFieldsWithoutNewLookup"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.31773669994436204,
+        "log": "extracted/cpp-html-meta-405-focused1-12.log",
+        "filter": "MissionLoadingMessage_",
+        "counts": [
+          [
+            "3",
+            "0"
+          ]
+        ],
+        "names": [
+          "MissionLoadingMessage_Native1540",
+          "MissionLoadingMessage_StartingMissionDialogMetadata",
+          "MissionLoadingMessage_ConditionalCallbacksAndBounds"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.44463529996573925,
+        "log": "extracted/cpp-html-meta-405-focused1-13.log",
+        "filter": "TellParameters_",
+        "counts": [
+          [
+            "3",
+            "0"
+          ]
+        ],
+        "names": [
+          "TellParameters_Native1070",
+          "TellParameters_ActualConfigLifetimeAndSequentialSubstitution",
+          "TellParameters_MissingEffectsAndPhysicalLimit"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.3305524999741465,
+        "log": "extracted/cpp-html-meta-405-focused1-14.log",
+        "filter": "TellMapMenus_",
+        "counts": [
+          [
+            "4",
+            "0"
+          ]
+        ],
+        "names": [
+          "TellMapMenus_IndependentNativeRegion",
+          "TellMapMenus_EmptyUnknownAndMissingDevices",
+          "TellMapMenus_ExceptionPreservesPartialEffects",
+          "TellMapMenus_RuntimeMetadataOrderAndColumns"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.4616340999491513,
+        "log": "extracted/cpp-html-meta-405-focused1-15.log",
+        "filter": "BackgroundGifGump_",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "BackgroundGifGump_IndependentNativeAllBodiesAndCurrentEffects"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 1.1656917999498546,
+        "log": "extracted/cpp-html-meta-405-focused1-16.log",
+        "filter": "BackgroundGifClient_",
+        "counts": [
+          [
+            "6",
+            "0"
+          ]
+        ],
+        "names": [
+          "BackgroundGifClient_ActualDefaultPathFactoryAndConcurrentStorage",
+          "BackgroundGifClient_AllProtectedAssetsIndependentNativePixels",
+          "BackgroundGifClient_IndependentNativeDescriptorAndInterlaceVariants",
+          "BackgroundGifClient_ActualCommonPixelsBaseDimensionsAndClip",
+          "BackgroundGifClient_CommonInputPreservesRawQueueTripletAndRetirement",
+          "BackgroundGifClient_MissingFilePartialDecodeAndPageLifetime"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.43341850000433624,
+        "log": "extracted/cpp-html-meta-405-focused1-17.log",
+        "filter": "ChatWindow_",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "ChatWindow_IndependentNativeCreationInputHelperAndLifetime"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 1.495907900040038,
+        "log": "extracted/cpp-html-meta-405-focused1-18.log",
+        "filter": "ChatWindowClient_",
+        "counts": [
+          [
+            "7",
+            "0"
+          ]
+        ],
+        "names": [
+          "ChatWindowClient_FullFactoryActualChildrenClientLogAndCommands",
+          "ChatWindowClient_ConcurrentRootsSharedLogAndNativeCurrentRetirement",
+          "ChatWindowClient_ActualLogCallbackClearTailAndQuitBoundary",
+          "ChatWindowClient_ActualHelperMenusPreserveStablePayloadsBeyondInputRing",
+          "ChatWindowClient_RealGeometryInputAndStyledPixels",
+          "ChatWindowClient_PartialCreationAndSelectedUnboundDevicesAreExplicit",
+          "ChatWindowClient_IndependentNativeCallbackMutationsAndCurrentReads"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.40775470004882663,
+        "log": "extracted/cpp-html-meta-405-focused1-19.log",
+        "filter": "HudChatGeometry_",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "HudChatGeometry_Native3960SizesAndCallbacks"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 1.0071661000838503,
+        "log": "extracted/cpp-html-meta-405-focused1-20.log",
+        "filter": "TextEntryGump_",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "TextEntryGump_IndependentNativeConstructorAttachInputDrawLifetime"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.4338196999160573,
+        "log": "extracted/cpp-html-meta-405-focused1-21.log",
+        "filter": "TextEntryBuffer_",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "TextEntryBuffer_IndependentNativeAllOperations"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.5370398999657482,
+        "log": "extracted/cpp-html-meta-405-focused1-22.log",
+        "filter": "TextEntryClient_",
+        "counts": [
+          [
+            "5",
+            "0"
+          ]
+        ],
+        "names": [
+          "TextEntryClient_RealStorageAddressesGrowthAndIndependentLifetimes",
+          "TextEntryClient_ActualConsoleTreeInputClipboardAndCompletion",
+          "TextEntryClient_RealGlyphSelectionCaretClipAndIdle",
+          "TextEntryClient_ConcurrentConsolesRetirementAndPartialCreationCleanup",
+          "TextEntryClient_BorrowedGlobalLogUsesSameStateAndActualFontFragments"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 1.7217871999600902,
+        "log": "extracted/cpp-html-meta-405-focused1-23.log",
+        "filter": "RawMenuControls_",
+        "counts": [
+          [
+            "12",
+            "0"
+          ]
+        ],
+        "names": [
+          "RawMenuControls_HelpActualTreePixelsAndOutsideInput",
+          "RawMenuControls_OwnedHelpStringsDriveRealMenuAndRelease",
+          "RawMenuControls_HelpActualHistoryButtonsAndReopen",
+          "RawMenuControls_HelpActualTypeInfoAndImage",
+          "RawMenuControls_FloatingSpActualPixelsAndLifetime",
+          "RawMenuControls_CommonTreeInputAndDisabledItem",
+          "RawMenuControls_HorizontalPointAndDeferredReplace",
+          "RawMenuControls_FancySubmenuPixelsAndCleanup",
+          "RawMenuControls_ObjectMenuCommandsAndCurrentConfig",
+          "RawMenuControls_CarrierAndObjectMenuChain",
+          "RawMenuControls_MissionLoadingUsesSharedTreeAndCancel",
+          "RawMenuControls_MinimapBeforeSessionAndAcrossWorldBindings"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.503160799969919,
+        "log": "extracted/cpp-html-meta-405-focused1-24.log",
+        "filter": "GumpLifetime_",
+        "counts": [
+          [
+            "9",
+            "0"
+          ]
+        ],
+        "names": [
+          "GumpLifetime_PatchNative",
+          "GumpLifetime_CdNative",
+          "GumpLifetime_AdditionalNative",
+          "GumpLifetime_CreateTreeKillCleanupAndReuse",
+          "GumpLifetime_TreeReplacementDefersDestruction",
+          "GumpLifetime_BaseDoesNotUnregisterOrRemoveDialogs",
+          "GumpLifetime_CdIdleCapacity",
+          "GumpLifetime_ContractsAndCycles",
+          "GumpLifetime_CallbackExceptionKeepsWrittenState"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.7805807000258937,
+        "log": "extracted/cpp-html-meta-405-focused1-25.log",
+        "filter": "NsInfoClient_",
+        "counts": [
+          [
+            "4",
+            "0"
+          ]
+        ],
+        "names": [
+          "NsInfoClient_FullRealChildrenBuffersAndHiddenPixelsBeforeSession",
+          "NsInfoClient_TwoRootsThenRealRetirementAndPageCleanup",
+          "NsInfoClient_PartialTranslationAndSelectedMetamapAreNotFakeSuccess",
+          "NsInfoClient_CurrentServerConfigAndNativeNameBufferRules"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.7157671999884769,
+        "log": "extracted/cpp-html-meta-405-focused1-26.log",
+        "filter": "ProductionInitialContext_",
+        "counts": [
+          [
+            "4",
+            "0"
+          ]
+        ],
+        "names": [
+          "ProductionInitialContext_ConstructsAllNativeChildrenWithoutSession",
+          "ProductionInitialContext_RepeatedConstructionAndGlobalPageRetirement",
+          "ProductionInitialContext_MissingTranslationKeepsAndRetiresPartialEffects",
+          "ProductionInitialContext_GameplayGlobalsKeepRealAliasesAndRejectDuplicate"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 1.6058154999045655,
+        "log": "extracted/cpp-html-meta-405-focused1-27.log",
+        "filter": "HudDock_",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "HudDock_IndependentNativeBodiesAndNestedViewport"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.6338622999610379,
+        "log": "extracted/cpp-html-meta-405-focused1-28.log",
+        "filter": "HudDividerInput_",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "HudDividerInput_Native13398StateAndCallbacks"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.6548935000319034,
+        "log": "extracted/cpp-html-meta-405-focused1-29.log",
+        "filter": "UberRoot_",
+        "counts": [
+          [
+            "6",
+            "0"
+          ]
+        ],
+        "names": [
+          "UberRoot_Native160",
+          "UberRoot_RealTreeAndLifetimeTransfer",
+          "UberRoot_DockReadsLiveThisFields",
+          "UberRoot_MissingFactoryKeepsPriorEffects",
+          "UberRoot_MissingOldRootFailsAfterConstructionEffects",
+          "UberRoot_EmptyLeafNeedsNoGameHook"
+        ]
+      }
+    ],
+    "sameBinaries": true,
+    "originalsUnchanged": true
+  },
+  "full": {
+    "returnCode": 0,
+    "seconds": 322.92820119997486,
+    "log": "extracted/cpp-html-meta-405-ctest1.log",
+    "productSha256": "4fd7d140266915ff9a10fc7ab933850d3633f30d591da893394fa836664f676b",
+    "testBinarySha256": "f3a4f2d4353fc1777f77ffcbd354a62aea15719dc201f0714b9341f2f1086963",
+    "counts": [
+      [
+        "2755",
+        "0"
+      ]
+    ],
+    "sameBinaries": true,
+    "originalsUnchanged": true
+  },
+  "nativeReplay": {
+    "success": true,
+    "newRows": 128,
+    "preservedRows": 498,
+    "fixturesUnchanged": true,
+    "originalsUnchanged": true,
+    "fixtureHashes": {
+      "cpppj\\tests\\fixtures\\html-window-metadata-x86.tsv": "22aebb9dca3c67272a8867d53370051346258fb47880c240e51904764c1e62c5",
+      "cpppj\\tests\\fixtures\\html-window-fit-x86.tsv": "adaeea8c65dbb3cd5f8a5ac80545b0de86a5bdc27c0f25a2f0c74832ae8a5855",
+      "cpppj\\tests\\fixtures\\html-window-gump-x86.tsv": "2acaf260f0f47cce99b5d0cabfc341aaa14b2921281e32ba9c63c92797061f36",
+      "cpppj\\tests\\fixtures\\html-window-idle-v2-x86.tsv": "b0309464c7c8643467a819d5c28aa413a1e2d15b57ceed1e8b48af95d855f333"
+    },
+    "runs": [
+      {
+        "returnCode": 0,
+        "seconds": 8.898849199991673,
+        "log": "extracted/cpp-html-meta-405-verify-metadata1.log",
+        "scope": "metadata"
+      },
+      {
+        "returnCode": 0,
+        "seconds": 8.308714799932204,
+        "log": "extracted/cpp-html-meta-405-verify-fit1.log",
+        "scope": "fit"
+      },
+      {
+        "returnCode": 0,
+        "seconds": 8.75344070000574,
+        "log": "extracted/cpp-html-meta-405-verify-gump1.log",
+        "scope": "gump"
+      },
+      {
+        "returnCode": 0,
+        "seconds": 18.21083519991953,
+        "log": "extracted/cpp-html-meta-405-verify-idle1.log",
+        "scope": "idle"
+      }
+    ],
+    "gameExecuted": false
+  },
+  "nativeMetadata": {
+    "host": "HJOW-Athlon",
+    "lastFullDecompileHost": "HJOW-Athlon",
+    "lastFullDecompileDate": "2026-10-23",
+    "peSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "sourceSha256": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "rows": 128,
+    "instructions": 170132,
+    "precisionDifferences": [],
+    "fixtureSha256": "22aebb9dca3c67272a8867d53370051346258fb47880c240e51904764c1e62c5",
+    "toolSha256": "be6631a8810767004ce65d52381e202912f50bc84b33e42852dc52993843b542",
+    "gameExecuted": false,
+    "limits": [
+      "실제4c83b0 전체·ClearButtons/AddButton·캡처95a10/시작95ab0·String길이/줄제거·부분REP복사·RET",
+      "regex compile/search는 명시 Pythonre 하위이며 실제 regexp엔진 전체를 실행했다는 뜻 아님",
+      "현재명령/CRT/80칸고리/문자열/Ctrl·메뉴/맵·기술/시각/Idle/Input/Packet/메모리이동은 명시 장치",
+      "8192BYTE 전체를 실제 설치/재조회해 NUL 뒤 변경 포함; 정상 완료와 선택 중단 구별",
+      "명령 위치에는 장치/STOP 포함; 전체 EH/네트워크/게임GUI 증거 아님"
+    ]
+  },
+  "terminal": {
+    "unit": 405,
+    "builds": [
+      {
+        "index": 1,
+        "sessionId": 2393,
+        "returnCode": 0
+      },
+      {
+        "index": 2,
+        "sessionId": null,
+        "returnCode": null,
+        "completionEvidence": "검사 optional문자열 C2672/C4805가 기록되었고 컴파일 프로세스 종료를 확인했다. 반환 객체에서 핸들/종료코드를 보존하지 못해 종료코드를 추정하지 않는다."
+      },
+      {
+        "index": 3,
+        "sessionId": 42936,
+        "returnCode": 0
+      },
+      {
+        "index": 4,
+        "sessionId": 34378,
+        "returnCode": 0
+      }
+    ],
+    "firstNativeAttempt": {
+      "returnCode": 1,
+      "log": "extracted/cpp-html-meta-405-native1.log",
+      "reason": "미선언4e65ed _stricmp를 명시 ASCII 비교 하위 경계로 추가한 뒤 두 번째 실행을 최초 관측으로 채택했다."
+    },
+    "firstActualClientRun": {
+      "returnCode": 0,
+      "log": "extracted/cpp-html-meta-405-client1.log",
+      "tests": 7,
+      "failedChecks": 0
+    },
+    "focused": {
+      "sessionId": 57858,
+      "returnCode": 0,
+      "tests": 120,
+      "failedChecks": 0
+    },
+    "ctest": {
+      "sessionId": 8920,
+      "returnCode": 0,
+      "tests": 2755,
+      "failedChecks": 0
+    },
+    "nativeReplay": {
+      "sessionId": 14362,
+      "returnCode": 0,
+      "rows": 626
+    },
+    "qaViewed": true,
+    "qaScope": "최종 집중 검사가 생성한 기존 HTML Fit 실제 픽셀 회귀 표면을 직접 확인했다. 새 전체 게임 화면 검증과 구별한다.",
+    "originalGameExecuted": false,
+    "gameUiLaunched": false,
+    "goalComplete": false
+  },
+  "originals1394Unchanged": true,
+  "originalGameExecuted": false,
+  "gameUiLaunched": false,
+  "agentsUnchanged": {
+    "sha256": "7f853771930147c26e67d444ced94114992510a3fa072f5ed6bd63da7ba88bd9",
+    "stagedByThisUnit": false
+  },
+  "limits": [
+    "실제4c83b0 전체·Clear/Add·캡처495a10/시작495ab0·String길이/부분REP복사를128행 관측; regex compile/search는 Pythonre 명시 하위이며 실제 regexp엔진 전체 관측은 아님",
+    "현재명령/CRT/80칸고리/문자열·컨트롤/메뉴/맵·기술/시각/Idle/Input/Packet/메모리이동은 Native의 명시 장치;170132명령 위치에는 장치/STOP 포함",
+    "실제 결합7검사에서 보호 자산/공통 UI/원문 메뉴/같은 Client·80칸 고리/정상idle/원시큐/실제 보호 SOLO·FORT 캐시·행을 사용; 현재 화면·사용자·미정할당 바이트는 명시 입력",
+    "@/#/%·기술·입력 창·Zsend·링크의 실제 하위 생성/외부 전송은 미완료; 선택 경계가 없으면 명시 실패; % 결합은 명시 반환 문자열을 사용하며 실제 파일 목록 생성 검증과 구별",
+    "캡처80/256BYTE의 NUL 오버런 입력은 호스트에서 명시 거부; 정상 원문과 같은 raw 공백/따옴표/개행과 숫자 첫BYTE 판정을 보존",
+    "factory4cf270 전체/HTML 링크·두 번 파싱/기존LoadingFields 교체/full Uber·State/Core/Pool/Win32 연결은 후속",
+    "모든 Early/캠페인/Demo 사용자 완주·Edit/언어별 시나리오 전체·완전 동일성 및393 Wide SaveOptions 원인은 미완료"
+  ]
+}

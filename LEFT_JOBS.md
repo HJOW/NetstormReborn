@@ -1,5 +1,12 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-24 단위405 완료: 실제 HTML 메타·메뉴·시간/고리
+
+- [x] AGENTS/공통/닷넷 인계와 **b5a076fa / 20261024-27 CP**를 확인했다. 현재/마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-10-23**이며 보호/정밀 SHA가 같다. 새 전체 디컴파일/원본 직접 실행/게임 GUI0이고 originals1394/AGENTS/기존 Native 추적 변경0이다.
+- [x] 실제4c83b0의 Clear→9regex 우선순위/원시 캡처·숫자·80칸 고리/20버튼·현재 열/Checked/맵·기술·목록/Timeout·OnExit/Key 무동작/Input·Zsend/줄삭제·% 부분REP복사/반환을 복원했다. 실제 Client 부모/공통 메뉴·Fit/보호 SOLO·FORT 캐시/같은 고리/정상idle/원시큐에 연결했다. 미연결 선택 장치는 명시 거부하며 부분 미부착 메뉴/controlled 스택 반납·재사용을 확인했다.
+- [x] 실제 전체 메타 **128행**이 C++와 같고 새128+보존498=**626행**을 읽기 재생했다. 두 정밀도 차이0·170132명령 위치에는 장치/STOP 포함이다. regex 검색은 Pythonre 명시 하위이며 실제 regexp엔진 전체/게임·네트워크 실행 증거와 구별한다. 최종 빌드 종료0·관측 경고오류0, 실제 결합7/집중 **120/0**, 전체 CTest **2755/0·322.93초**다. 제품 **4fd7d140266915ff9a10fc7ab933850d3633f30d591da893394fa836664f676b**, 검사 **f3a4f2d4353fc1777f77ffcbd354a62aea15719dc201f0714b9341f2f1086963**가 집중/전체에서 같고 보호1394개도 같다. [완료 문서](docs/exe/cpp-html-window-metadata-client-20261024.md)/[제품 보고서](cpppj/html-window-metadata-client-runtime-20261024.json)와 `extracted/cpp-html-meta-405-*`에 중간 실패/종료·SHA·경계를 남겼다. 선택 파일 감사 후 **20261024-28 CP**로 로컬 커밋하며 push하지 않는다.
+- [ ] 다음은 **factory4cf270 전체/현재 링크/Config 치환·같은 파서 두 번 처리/기술·@/#/%·입력 장치와 기존 LoadingFields 교체**다. 새 전체 HTML 공장/full Uber 화면 설치·Production/Minimap 동시 제공자·State/Core/Pool/Win32 접합·모든 Early/캠페인/Demo 사용자 완주·Edit/언어별 시나리오 전체·완전 동일성과393 Wide SaveOptions 원인은 미완료이며 /goal은 활성 상태다.
+
 ## 2026-10-24 단위404 완료: HTML 전체 Fit/Attach와 실제 배치
 
 - [x] AGENTS/공통/닷넷 인계와 **b402a15d / 20261024-26 CP**를 확인했다. 현재/마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-10-23**이며 새 전체 디컴파일/원본 게임 직접 실행/게임 GUI0이다. AGENTS/보호/CD/기존 Native 추적 변경0이다.

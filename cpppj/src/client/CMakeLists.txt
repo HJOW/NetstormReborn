@@ -246,3 +246,6 @@ target_sources(netstorm PRIVATE HtmlWindowGump.cpp HtmlWindowGump.h ClientHtmlWi
 
 # 실제 HTML 전체 Fit의 폭/높이·메뉴·버튼·가상 부착을 원문 순서로 계산한다.
 target_sources(netstorm PRIVATE HtmlWindowFit.cpp HtmlWindowFit.h)
+
+# 실제 HTML 메타의9종 우선순위/원시 캡처·버퍼/현재 명령과 UI 효과를 연결한다.
+target_sources(netstorm PRIVATE HtmlWindowMetadata.cpp HtmlWindowMetadata.h)

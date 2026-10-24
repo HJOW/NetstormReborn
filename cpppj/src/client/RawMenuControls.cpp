@@ -20,6 +20,8 @@
 #include "client/RawBackgroundGifControls.h"
 #include "client/RawHtmlWindowContext.h"
 #include "client/HtmlWindowFit.h"
+#include "client/HtmlWindowMetadata.h"
+#include "client/TellMapMenus.h"
 #include "client/ClientDotCommandGlobals.h"
 #include "client/TextEntryStorage.h"
 #include <cstdio>
@@ -53,6 +55,7 @@ struct RawMenuControls::Impl {
     std::unique_ptr<RawBackgroundGifControls> gifWindows; // 같은 실제 기본 노드/소유 GIF/픽셀 조립이다.
     std::optional<RawHtmlWindowContext> htmlContext;std::map<std::uint32_t,std::unique_ptr<HtmlWindowGumpNode>> htmlRoots; // 같은 Client와 실제8192BYTE/20행 저장소다.
     std::set<std::uint32_t> htmlOwned,htmlConstructed;std::unique_ptr<HtmlWindowGump> htmlWindow;std::unique_ptr<HtmlWindowFit> htmlFit; // 직접 할당/완전 생성 여부와 같은 원문 수명/전체 배치 본체다.
+    std::unique_ptr<HtmlWindowMetadata> htmlMetadata; // 현재 실제 부모/메뉴/명령 고리의 원문 메타 본체다.
     RawMenuTree common; // Client 돌 버튼과 같은 공통 상태/처리기다.
     const GameAssets& assets; // 보호 TYPE/SHP를 읽는 같은 자산 저장소다.
     FontStore& fonts; // Client 글꼴 캐시를 공유한다.
@@ -573,6 +576,7 @@ void RawMenuControls::CloseTextEntries() { if (impl_->textEntries) impl_->textEn
 RawBackgroundGifControls& RawMenuControls::EnableBackgroundGifs(RawBackgroundGifContext context) { auto& s=*impl_;if (!s.gifWindows) s.gifWindows=std::make_unique<RawBackgroundGifControls>(s.common,std::move(context),[&s](auto token,auto event,auto first,auto second) { return s.BaseHelp(token,event,first,second); });return *s.gifWindows; }
 std::uint32_t RawMenuControls::CreateHtmlWindow(RawHtmlWindowContext context,std::uint32_t width,std::uint32_t height) { return impl_->CreateHtml(std::move(context),width,height); } // 실제 부모 생성자다.
 const HtmlWindowGump* RawMenuControls::HtmlBackend() const { return impl_->htmlWindow.get(); } // 같은 원문 본체다.
+std::uint32_t RawMenuControls::ProcessHtmlMetadata(std::uint32_t token,std::span<char> buffer) { if (!impl_->htmlMetadata) throw std::logic_error("HTML 실제 부모 미설치");return impl_->htmlMetadata->Process(token,buffer); } // 현재 물리 버퍼를 복사하지 않는다.
 void RawMenuControls::CloseHtmlWindows() { impl_->CloseHtml(); } // 실제 공통 수명을 사용한다.
 RawBackgroundGifControls* RawMenuControls::BackgroundGifs() const { return impl_->gifWindows.get(); } // 같은 실제 소유자만 조회한다.
 void RawMenuControls::CloseBackgroundGifs() { if (impl_->gifWindows) impl_->gifWindows->Close(); } // 실제 공통 Kill/Cleanup이다.

@@ -1,0 +1,20 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "peSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+  "sourceSha256": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+  "rows": 128,
+  "instructions": 170132,
+  "precisionDifferences": [],
+  "fixtureSha256": "22aebb9dca3c67272a8867d53370051346258fb47880c240e51904764c1e62c5",
+  "toolSha256": "be6631a8810767004ce65d52381e202912f50bc84b33e42852dc52993843b542",
+  "gameExecuted": false,
+  "limits": [
+    "실제4c83b0 전체·ClearButtons/AddButton·캡처95a10/시작95ab0·String길이/줄제거·부분REP복사·RET",
+    "regex compile/search는 명시 Pythonre 하위이며 실제 regexp엔진 전체를 실행했다는 뜻 아님",
+    "현재명령/CRT/80칸고리/문자열/Ctrl·메뉴/맵·기술/시각/Idle/Input/Packet/메모리이동은 명시 장치",
+    "8192BYTE 전체를 실제 설치/재조회해 NUL 뒤 변경 포함; 정상 완료와 선택 중단 구별",
+    "명령 위치에는 장치/STOP 포함; 전체 EH/네트워크/게임GUI 증거 아님"
+  ]
+}

@@ -2127,3 +2127,9 @@ target_sources(netstorm_tests PRIVATE HtmlWindowFitTests.cpp)
 target_sources(netstorm_tests PRIVATE HtmlWindowFitClientTests.cpp) # 실제 글꼴/메뉴/픽셀·교체 결합을 확인한다.
 set_source_files_properties(HtmlWindowFitTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_HTML_WINDOW_FIT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/html-window-fit-x86.tsv\"")
+
+# 실제 원문 전체 메타128행의 물리 버퍼/현재 필드/장치 순서를 대조한다.
+target_sources(netstorm_tests PRIVATE HtmlWindowMetadataTests.cpp)
+target_sources(netstorm_tests PRIVATE HtmlWindowMetadataClientTests.cpp) # 실제 공통 UI/고리/타이머/보호 맵 목록 연결을 확인한다.
+set_source_files_properties(HtmlWindowMetadataTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_HTML_METADATA_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/html-window-metadata-x86.tsv\"")
