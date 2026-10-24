@@ -1,0 +1,19 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "peSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+  "sourceSha256": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+  "rows": 106,
+  "instructions": 36208,
+  "precisionDifferences": [],
+  "fixtureSha256": "24e0e986a8dd113422473f726447936401cf68e2e495807109bf2427475cbd8e",
+  "toolSha256": "0a15c3d1f1361f4783f8645f9e7d572d7e7d8f6be493e594f692f0ec8ca08af5",
+  "gameExecuted": false,
+  "limits": [
+    "실제4cf270전체/스택probe/파서기본생성·출력/입력설정/alnum관문·x87중앙/RET",
+    "할당·HTML부모생성/Config치환·조회/파서실행/메타/String·replace/벽시각/Body/Attach/Modal/Kill/CRT alnum은 명시 하위 장치",
+    "파서 실행과 메타/전체 게임·Win32/네트워크를 함께 실행한 증거와 구별",
+    "현재 부모8192BYTE·전역·C문자열/순서를 실제 재조회; 미정스택 꼬리/전체EH unwind 검증 아님"
+  ]
+}

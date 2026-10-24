@@ -104,6 +104,8 @@ public:
     std::uint32_t CreateHtmlWindow(RawHtmlWindowContext context,std::uint32_t width,std::uint32_t height); // 같은 Client/공통 등록표에 실제 전체 저장소를 생성한다.
     const HtmlWindowGump* HtmlBackend() const; // 복원된 부모의 본문/버튼/입력·수명을 빌린다.
     std::uint32_t ProcessHtmlMetadata(std::uint32_t token,std::span<char> buffer); // 실제 부모/메뉴 스택/80칸 고리에 원문 메타를 적용한다.
+    std::uint32_t ShowHtmlWindow(RawHtmlWindowContext context,std::string_view source,std::uint32_t suppress,std::uint32_t width,std::uint32_t height); // 원문 전체 생성의 최종serial 또는0이다. 창 없는 첫 파서 효과도 보존한다.
+    std::string ResolveHtmlWindowLink(std::uint32_t token) const; // Kill 뒤 Cleanup 전까지 실제 부모8192BYTE를 읽고 반납된 링크는 거부한다.
     void CloseHtmlWindows(); // 미부착/부분 생성도 같은 공통 수명으로 반납한다.
     void CloseBackgroundGifs(); // 미부착/부분 생성도 같은 공통 수명으로 반납한다.
     ButtonGumpNode* BaseButton(std::uint32_t token) const; // 실제 특수 Button 파생도 공통 입력 처리기에 빌린다.

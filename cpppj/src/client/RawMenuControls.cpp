@@ -21,6 +21,7 @@
 #include "client/RawHtmlWindowContext.h"
 #include "client/HtmlWindowFit.h"
 #include "client/HtmlWindowMetadata.h"
+#include "client/HtmlWindowFactory.h"
 #include "client/TellMapMenus.h"
 #include "client/ClientDotCommandGlobals.h"
 #include "client/TextEntryStorage.h"
@@ -56,6 +57,8 @@ struct RawMenuControls::Impl {
     std::optional<RawHtmlWindowContext> htmlContext;std::map<std::uint32_t,std::unique_ptr<HtmlWindowGumpNode>> htmlRoots; // 같은 Client와 실제8192BYTE/20행 저장소다.
     std::set<std::uint32_t> htmlOwned,htmlConstructed;std::unique_ptr<HtmlWindowGump> htmlWindow;std::unique_ptr<HtmlWindowFit> htmlFit; // 직접 할당/완전 생성 여부와 같은 원문 수명/전체 배치 본체다.
     std::unique_ptr<HtmlWindowMetadata> htmlMetadata; // 현재 실제 부모/메뉴/명령 고리의 원문 메타 본체다.
+    std::unique_ptr<HtmlWindowFactory> htmlFactory;std::map<std::uint32_t,std::uint32_t> htmlLinkBases;std::uint32_t nextHtmlLinkBase{0x71000000}; // 실제 부모 링크 주소 별칭은 Help/고리와 겹치지 않으며 반납 뒤 재사용하지 않는다.
+    std::int32_t modalMinimumDepth{};std::uint32_t modalLowest{}; //466600/464090의 현재 최소 깊이와 실제 선택 노드다.
     RawMenuTree common; // Client 돌 버튼과 같은 공통 상태/처리기다.
     const GameAssets& assets; // 보호 TYPE/SHP를 읽는 같은 자산 저장소다.
     FontStore& fonts; // Client 글꼴 캐시를 공유한다.
@@ -476,7 +479,7 @@ struct RawMenuControls::Impl {
     std::uint32_t OpenHelp(std::uint32_t topic,std::int32_t mode,std::uint32_t learnType) {
         if (!helpWindow) throw std::logic_error("전용 Help Client 경계 미설치");bodyState.screenWidth=common.create.screenWidth;bodyState.screenHeight=common.create.screenHeight;helpState.battle=helpHooks.battle();helpState.challenge=helpHooks.challenge();helpState.scriptName=helpHooks.scriptName();
         QuickHelpOpenHooks h;h.closePopups=[this] { input->ClosePopups(); };h.lookup=[this](auto serial) { return Reference(serial); };h.noModal=[this] { return common.life.currentDialog==0; };h.currentModal=[this] { return common.life.currentDialog; };h.construct=[this](auto type) { return helpWindow->Construct(AllocateHelp(0xd0),type); };h.node=common.node;h.attach=common.attach;h.addDepth=[this](auto token,auto delta) { common.tree.AddDepth(token,delta); };
-        h.modal=[this](auto token,auto enabled) { if (!enabled) common.lifetime.RemoveDialog(token);else if (common.input.AddDialog(token) && common.life.dialogCount>1) { const auto prior=common.life.dialogs[common.life.dialogCount-2];common.tree.AddDepth(token,common.node(prior)->depth-common.node(token)->depth-3U); }common.changed(); };
+        h.modal=[this](auto token,auto enabled) { SetModal(token,enabled); };
         h.handle=[this](auto token,auto code,auto x,auto y) { return Handle(token,code,x,y); };
         return OpenQuickHelpWindow({helpState.id,0,common.create.collection.root,0,common.create.screenWidth},h,topic,mode,learnType);
     }
@@ -551,14 +554,14 @@ void RawMenuControls::Idle(std::uint32_t token) const { if (impl_->htmlRoots.con
 void RawMenuControls::Redraw(std::uint32_t token,bool erase) const { impl_->Redraw(token,erase); }
 // 원본 파서·제목·메뉴가 소유한 자원을 각 소멸자로 반납한다.
 void RawMenuControls::DeleteScalar(std::uint32_t token,std::uint32_t flags) const {
-    auto& s=*impl_;if (s.htmlRoots.contains(token)) { if (s.htmlConstructed.contains(token)) s.htmlWindow->Destruct(token);else s.common.lifetime.DestructBase(token);if (flags&1) { s.htmlConstructed.erase(token);s.htmlOwned.erase(token);s.htmlRoots.erase(token); } }
+    auto& s=*impl_;if (s.htmlRoots.contains(token)) { if (s.htmlConstructed.contains(token)) s.htmlWindow->Destruct(token);else s.common.lifetime.DestructBase(token);if (flags&1) { s.htmlConstructed.erase(token);s.htmlOwned.erase(token);s.htmlLinkBases.erase(token);s.htmlRoots.erase(token); } }
     else if (s.gifWindows && s.gifWindows->Node(token)) s.gifWindows->DeleteScalar(token,flags);else if (s.chatRoots.contains(token)) { s.chatWindow->Destruct(token);if (flags&1) { s.chatOwned.erase(token);s.chatRoots.erase(token); } } // 원문 scalar 반납은 같은 실제 Chat 저장소만 해제한다.
     else if (s.textEntries && s.textEntries->Node(token)) { s.textEntries->DeleteScalar(token,flags);if (flags&1) s.chatOwned.erase(token); }else if (s.helpWindows.contains(token)) { s.helpHistory=QuickHelpHistory{};s.popupState.command=0;s.common.lifetime.DeleteScalar(token,flags); } // 실제4c6d40은 이력/명령만 지우고80바이트 인자는 보존한다.
     else if (s.helpButtons.contains(token)) s.common.stones.DeleteScalar(token,flags);else if (s.menus.contains(token)) s.widgets->DeleteScalar(token,flags);else if (s.titles.contains(token)) s.titleWidgets->DeleteScalar(token,flags);
     else if (s.decorations.contains(token)) s.decoration->DeleteScalar(token,flags);else if (s.costs.contains(token)) s.costGump->DeleteScalar(token,flags);else if (s.plainTexts.contains(token)) s.costText->DeleteScalar(token,flags);else if (s.sliders.contains(token) || s.thumbs.contains(token) || s.arrows.contains(token)) s.sliderWidgets->DeleteScalar(token,flags);else s.common.lifetime.DeleteScalar(token,flags);
 }
 // 공통 scalar의 release만 실제 저장소를 지운다.
-void RawMenuControls::Release(std::uint32_t token) { auto& s=*impl_;s.htmlOwned.erase(token);s.htmlConstructed.erase(token);s.htmlRoots.erase(token);if (s.gifWindows) s.gifWindows->Release(token);s.chatOwned.erase(token);s.chatRoots.erase(token);if (s.textEntries) s.textEntries->Release(token);s.nsOwned.erase(token);s.nsRoots.erase(token);s.nsPlayers.erase(token);s.nsBattles.erase(token);s.nsButtons.erase(token);s.plainTexts.erase(token);s.helpStrings.erase(token);s.loading.erase(token);s.helpWindows.erase(token);s.helpBodies.erase(token);s.helpButtons.erase(token);s.helpImages.erase(token);s.helpLinks.erase(token);s.menus.erase(token);s.decorations.erase(token);s.titles.erase(token);s.sliders.erase(token);s.arrows.erase(token);s.thumbs.erase(token);s.backgrounds.erase(token);s.costs.erase(token); }
+void RawMenuControls::Release(std::uint32_t token) { auto& s=*impl_;s.htmlOwned.erase(token);s.htmlConstructed.erase(token);s.htmlLinkBases.erase(token);s.htmlRoots.erase(token);if (s.gifWindows) s.gifWindows->Release(token);s.chatOwned.erase(token);s.chatRoots.erase(token);if (s.textEntries) s.textEntries->Release(token);s.nsOwned.erase(token);s.nsRoots.erase(token);s.nsPlayers.erase(token);s.nsBattles.erase(token);s.nsButtons.erase(token);s.plainTexts.erase(token);s.helpStrings.erase(token);s.loading.erase(token);s.helpWindows.erase(token);s.helpBodies.erase(token);s.helpButtons.erase(token);s.helpImages.erase(token);s.helpLinks.erase(token);s.menus.erase(token);s.decorations.erase(token);s.titles.erase(token);s.sliders.erase(token);s.arrows.erase(token);s.thumbs.erase(token);s.backgrounds.erase(token);s.costs.erase(token); }
 // 전체 Native wrapper를 호출하며 첫0xd8의 파생 종류 문맥은 예외에도 반납한다.
 std::uint32_t RawMenuControls::CreateNsInfo(RawNsInfoContext context) {
     auto& s=*impl_;s.BindNs(std::move(context));s.nsRootAllocation=true;
@@ -577,6 +580,8 @@ RawBackgroundGifControls& RawMenuControls::EnableBackgroundGifs(RawBackgroundGif
 std::uint32_t RawMenuControls::CreateHtmlWindow(RawHtmlWindowContext context,std::uint32_t width,std::uint32_t height) { return impl_->CreateHtml(std::move(context),width,height); } // 실제 부모 생성자다.
 const HtmlWindowGump* RawMenuControls::HtmlBackend() const { return impl_->htmlWindow.get(); } // 같은 원문 본체다.
 std::uint32_t RawMenuControls::ProcessHtmlMetadata(std::uint32_t token,std::span<char> buffer) { if (!impl_->htmlMetadata) throw std::logic_error("HTML 실제 부모 미설치");return impl_->htmlMetadata->Process(token,buffer); } // 현재 물리 버퍼를 복사하지 않는다.
+std::uint32_t RawMenuControls::ShowHtmlWindow(RawHtmlWindowContext context,std::string_view source,std::uint32_t suppress,std::uint32_t width,std::uint32_t height) { impl_->BindHtml(std::move(context));return impl_->htmlFactory->Show(source,suppress,width,height); } // 같은 공통 부모/전체 공장만 호출한다.
+std::string RawMenuControls::ResolveHtmlWindowLink(std::uint32_t token) const { return impl_->HtmlLink(token); } // 살아 있는 실제 소유 바이트를 복사해 반환한다.
 void RawMenuControls::CloseHtmlWindows() { impl_->CloseHtml(); } // 실제 공통 수명을 사용한다.
 RawBackgroundGifControls* RawMenuControls::BackgroundGifs() const { return impl_->gifWindows.get(); } // 같은 실제 소유자만 조회한다.
 void RawMenuControls::CloseBackgroundGifs() { if (impl_->gifWindows) impl_->gifWindows->Close(); } // 실제 공통 Kill/Cleanup이다.
@@ -773,7 +778,11 @@ std::string RawMenuControls::Report() const {
             std::replace(label.begin(),label.end(),'\n',' ');std::replace(label.begin(),label.end(),'\t',' ');out<<"raw_nsinfo_caption\t"<<token<<'\t'<<buffer.lineCount<<'\t'<<label<<'\n';
         }
     }
-    if (s.htmlContext) out<<"raw_html_globals\t"<<s.htmlContext->globals->window.instances<<'\t'<<s.htmlContext->globals->window.lastCloseTime<<'\n'; // 실제 Client 수/최근 종료 시각만 관측한다.
+    if (s.htmlContext) { // 실제 모달/부모 입력을 원본과 대조할 때도 같은 공통 저장소만 읽는다.
+        out<<"raw_html_globals\t"<<s.htmlContext->globals->window.instances<<'\t'<<s.htmlContext->globals->window.lastCloseTime<<'\n';
+        out<<"raw_modal_globals\t"<<s.common.life.dialogCount<<'\t'<<s.common.life.currentDialog<<'\t'<<s.modalMinimumDepth<<'\t'<<s.modalLowest<<'\n';
+        for (const auto token:s.common.create.entries) if (token) { const auto* node=s.common.node(token);out<<"raw_modal_node\t"<<token<<'\t'<<node->flags<<'\t'<<node->depth<<'\t'<<node->child<<'\t'<<node->next<<'\t'<<node->parent<<'\n'; } // 선택 탐색이 실제로 보는 모든 현재 자식/형제/flags/depth를 관측한다.
+    }
     for (const auto& [token,node]:s.htmlRoots) { // 같은 부모/본문/소유 조각을 읽으며 미작성 인자는 읽지 않는다.
         out<<"raw_html_root\t"<<token<<'\t'<<node->serial<<'\t'<<node->flags<<'\t'<<node->controlCount<<'\t'<<node->body<<'\t'<<node->requestedWidth<<'\t'<<node->requestedHeight<<'\n';
         if (const auto* body=Find(s.titles,node->body);body && body->buffer) { const auto& buffer=*s.buffers->Binding(body->buffer).state;std::string text;

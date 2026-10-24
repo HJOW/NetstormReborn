@@ -3,8 +3,13 @@
 #include "client/ClientHtmlWindowGlobals.h"
 #include "client/ScriptCommand.h"
 #include "client/SoloMapCatalog.h"
+#include "client/HtmlTextParser.h"
 #include <memory>
 namespace netstorm::client { // HTML 부모의 실제 외부 경계 계약이다.
+struct RawHtmlFactoryServices { // 같은 현재 Config·HTML 전역/효과를 전체 생성에 빌린다.
+    HtmlTextParserGlobals* globals{};HtmlTextParserHooks html; // Tell/Help도 같은 단락 억제 전역을 공유한다. 링크는 실제 부모 저장소에 연결한다.
+    std::function<std::string(std::string_view,std::uint32_t)> substitute;std::function<std::string()> fallback; // 현재441660/OkButton의 원시 치환·조회다.
+};
 struct RawHtmlMetadataServices { // 같은 Client의 원시 명령/문자열 고리와 선택된 목록·입력 장치다.
     ScriptCommandHooks commands;ScriptStringRing* strings{}; // 조회/진단과 실제80칸 고리는 부모보다 오래 살아야 한다.
     SoloMapCatalog* maps{};SoloMapFileSpec* fileSpec{}; // 실제 파일 캐시와 현재9BYTE 키를 공유한다.
@@ -20,5 +25,6 @@ struct RawHtmlWindowContext { // 같은 Client/공통 UI보다 오래 살아야 
     std::function<void(std::uint32_t,std::uint32_t,std::uint32_t)> queue;std::function<void(std::uint32_t)> link; //452f90의 원시 사건과4a00c0의 현재 문자열 처리다.
     std::function<std::uint32_t(std::uint32_t)> read; // 현재 Client의 뷰 폭/출력·전체 크기/지도 직사각형 DWORD를 읽는다. 미설치 PE0으로 대체하지 않는다.
     RawHtmlMetadataServices metadata; // 같은 실제 UI에 연결할 메타 장치이며 사용된 분기에서만 요구한다.
+    RawHtmlFactoryServices factory; // 실제 전체 생성에서만 파서·Config 경계를 요구한다.
 };
 }

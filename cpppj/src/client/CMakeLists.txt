@@ -249,3 +249,4 @@ target_sources(netstorm PRIVATE HtmlWindowFit.cpp HtmlWindowFit.h)
 
 # 실제 HTML 메타의9종 우선순위/원시 캡처·버퍼/현재 명령과 UI 효과를 연결한다.
 target_sources(netstorm PRIVATE HtmlWindowMetadata.cpp HtmlWindowMetadata.h)
+target_sources(netstorm PRIVATE HtmlWindowFactory.cpp HtmlWindowFactory.h) # 원문 전체 HTML 생성과 같은 두 번 파서·메타·모달 순서다.
