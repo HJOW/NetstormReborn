@@ -253,7 +253,7 @@ UberGump::UberGump(Client& client) : client_(client),initLoginSubscriber_(client
     };
     pauseContext.challengePlayerName=[](auto) { throw std::logic_error("Challenge 메시지 현재 이름 관리자 미연결"); };
     pauseContext.translate=[this](auto value) { return FontBytes(client_.Translate(value)); };
-    warnings_=std::make_unique<WarningMessages>(client_.Fonts(),client_.GetScreen().Colors(),[this] { return client_.WallSeconds(); },[this] {
+    warnings_=&rawButtons_->EnableWarnings([this] { return client_.WallSeconds(); },[this] {
         client_.WorldAudio().Sounds().PlayByName("newWarnMessage.wav",0,0,0,0,0);
     },std::move(pauseContext));
     dialogBody_=std::make_unique<DialogBodyLayout>(client_.Fonts(),client_.GetScreen().Colors(),client_.Assets(),client_.Assets().Edition());
@@ -985,16 +985,14 @@ void UberGump::FinishKernelFrame() { if (world_) world_->FinishKernelFrame(); }
 void UberGump::RefreshMinimap() { if (rawButtons_->Minimap() && rawButtons_->Minimap()->Refresh()) rebuild_=true; }
 // Client 정상 갱신의 원본4662b0 위치에서만 논리 페이지의 지연 소멸을 실행한다.
 void UberGump::CleanupDialogs() { DisposeRetiredPages(); }
-// 단일 전역 큐를 아직 공유하지 않는 Warning/논리 HTML은 명시 순서 어댑터다. raw 부모의 실제 정리는 같은 공통 큐 한 번뿐이다.
+// Warning도 포함한 실제 공통 삭제 큐를 한 번 비운다. 논리 HTML의 지연 소멸은 남은 어댑터다.
 void UberGump::CleanupGumps() {
     if (rawButtons_->CleanupGumps()) rebuild_=true;
-    if (warnings_->CleanupGumps()) rebuild_=true;
     CleanupDialogs();
 }
 // 원본 일반/영상잠금 양쪽 가지에서 같은 idle을 한 번 실행하고 표시 변화는 뒤쪽 Frame 합성으로 넘긴다.
 void UberGump::IdleGumps() {
     if (rawButtons_->IdleGumps()) rebuild_=true;
-    if (warnings_->IdleGumps()) rebuild_=true;
 }
 // 커널의 이동·날씨와 비동기 Tell을 같은 프레임에 반영한다. 페이지가 같으면 입력 영역/누름 상태를 유지한다.
 void UberGump::Frame() {
@@ -1065,9 +1063,8 @@ void UberGump::Compose() {
     const auto buttonColors=ButtonColors(client_.GetScreen().Colors());
     const auto buttonContexts=ButtonTextContexts(buttonColors);
     warnings_->SetView(width,height,client_.GetScreen().Colors());
-    // TextGump의 실제 기준선/내부 클립을 UI 글자 목록 끝에 제출한다.
-    const auto appendWarnings=[&] { auto messages=warnings_->Text();text.insert(text.end(),std::make_move_iterator(messages.begin()),std::make_move_iterator(messages.end())); };
     std::vector<RenderSprite> worldSprites,dialogSprites; // 월드와본문그림은같은실제자산을읽으며UI본문목록은해당패널에만제출한다.
+    bool commonDrawSubmitted=false; // 같은 raw 수집/정렬을 배경 또는 Overlay에 이미 제출했는지 기록한다.
     client_.GetRenderer().SetOverlay(nullptr);client_.GetRenderer().SetOverlayProcedure({});
     if (world_ && state_.phase!=ClientPhase::LoadingMission) {
         world_->Resize(width,height);worldSprites=world_->Sprites();
@@ -1088,6 +1085,7 @@ void UberGump::Compose() {
     if (world_ && popup_.empty() && (state_.phase==ClientPhase::Dialog || state_.phase==ClientPhase::Briefing) && rawButtons_->Production()) {
         // 같은 살아 있는 패널을 먼저 그린 뒤 아래에서 모달 본문/테두리를 합성한다.
         rawButtons_->Menus()->Draw(canvas->indices,width,height,client_.GetScreen().Colors(),client_.GetScreen().ShadeMaps());
+        commonDrawSubmitted=true;
     }
     if (controls) { labels_.clear(); actions_.clear(); input_.Cancel();rawButtons_->Cancel(); }
     // 같은 순서의 영역/라벨/명령을 제출한다. 그림만 갱신할 때도 번호가 유지된다.
@@ -1127,9 +1125,10 @@ void UberGump::Compose() {
         // 현재 연결한 Game 메뉴와 실제 로컬 Storm Power를 월드 위에 표시한다.
         button({"Game", {"Menu", "game"}}, 84, 4, kButtonWidth);
 
-        appendWarnings();client_.GetRenderer().SetBackground(canvas); client_.GetRenderer().SetScene(std::move(worldSprites), std::move(text));
+        client_.GetRenderer().SetBackground(canvas); client_.GetRenderer().SetScene(std::move(worldSprites), std::move(text));
         if (world_) client_.GetRenderer().SetOverlay(world_->SelectionImage());
         if (rawButtons_->Menus()->HasOverlay()) {
+            commonDrawSubmitted=true;
             client_.GetRenderer().SetOverlayProcedure(RenderProcedure{all,[this](std::span<std::uint8_t> pixels,int pitch,int height,ScreenRect clip) {
                 rawButtons_->Menus()->Draw(pixels,pitch,height,client_.GetScreen().Colors(),client_.GetScreen().ShadeMaps(),clip);
             }});
@@ -1145,6 +1144,7 @@ void UberGump::Compose() {
                 // 먼저 기존 바탕 글자를 실제 픽셀로 합성하고 그 위에 같은 원본 메뉴 Draw를 실행한다.
                 RasterMenuBackdropText(*canvas,text);text.clear();
                 rawButtons_->Menus()->Draw(canvas->indices,width,height,client_.GetScreen().Colors(),client_.GetScreen().ShadeMaps());
+                commonDrawSubmitted=true;
             }
         } else if (state_.phase == ClientPhase::Dialog || state_.phase == ClientPhase::Briefing) {
             if (!page_.background.empty()) {
@@ -1195,8 +1195,9 @@ void UberGump::Compose() {
             }
         } else if (state_.phase == ClientPhase::LoadingMission && !controls) {
             rawButtons_->Menus()->Draw(canvas->indices,width,height,client_.GetScreen().Colors(),client_.GetScreen().ShadeMaps());
+            commonDrawSubmitted=true;
         }
-        appendWarnings();client_.GetRenderer().SetBackground(canvas); client_.GetRenderer().SetScene(std::move(dialogSprites), std::move(text));
+        client_.GetRenderer().SetBackground(canvas); client_.GetRenderer().SetScene(std::move(dialogSprites), std::move(text));
     }
     if (controls) {
         if (state_.phase!=ClientPhase::LoadingMission) rawButtons_->Menus()->CloseMissionLoading();
@@ -1240,7 +1241,7 @@ void UberGump::Compose() {
         // 새 페이지는 같은 raw 노드로 한 번 다시 합성하며 중간 어댑터 그림은 화면에 제출하지 않는다.
         controlsChanged_=false;Compose();return;
     }
-    if (rawButtons_->Menus()->KnowledgeOpen() || rawButtons_->Menus()->HelpOpen()) client_.GetRenderer().SetOverlayProcedure(RenderProcedure{{0,0,width,height},[this](std::span<std::uint8_t> pixels,int pitch,int height,ScreenRect clip) {
+    if (rawButtons_->Menus()->KnowledgeOpen() || rawButtons_->Menus()->HelpOpen() || (warnings_->HasMessages() && !commonDrawSubmitted)) client_.GetRenderer().SetOverlayProcedure(RenderProcedure{{0,0,width,height},[this](std::span<std::uint8_t> pixels,int pitch,int height,ScreenRect clip) {
         rawButtons_->Menus()->Draw(pixels,pitch,height,client_.GetScreen().Colors(),client_.GetScreen().ShadeMaps(),clip);
     }}); // 원래 브리핑을 유지한 상태에서도 같은 실제 지식 카드를 가장 위에 그린다.
     if (world_) world_->TakeChanged();

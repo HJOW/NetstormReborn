@@ -65,8 +65,8 @@ public:
     std::optional<ScreenPoint> ControlPoint(std::string_view label) const;
     bool QuitRequested() const { return quit_; } // 실제 QuitApp/사용자 종료 요청만 읽으며 검사 프레임 제한 종료와 구별한다.
     void CleanupDialogs(); // 원본처럼 설정 저장/미니맵 갱신 뒤 Kernel 전에 반납한 부모의 OnExit를 예약한다.
-    void CleanupGumps(); // 원본4662b0 위치에서 raw 공통 큐·별도 Warning·논리 HTML을 정리하는 현재 어댑터다.
-    void IdleGumps(); // 원본464170 위치에서 현재 raw/Warning idle을 각각 한 번 실행한다. 최종 단일 표 통합은 후속이다.
+    void CleanupGumps(); // 원본4662b0 위치에서 Warning을 포함한 같은 raw 공통 큐와 논리 HTML을 정리한다.
+    void IdleGumps(); // 원본464170 위치에서 Warning을 포함한 현재 공통 idle 표를 한 번 실행한다.
     // --ui-script 전용 검사 경계다. 실제 월드의 가상 삭제를 호출하며 일반 게임 입력에는 노출하지 않는다.
     bool InspectDestroySurface(std::string_view type,float x,float y);
     // --ui-script의 커널 검사에서 일반 게임과 같은 Tell 경로를 실행한다. 일반 사용자 명령으로 노출하지 않는다.
@@ -137,7 +137,7 @@ private:
     GumpControlInput input_;
     GumpPointerBoundaryState pointerBoundary_; // 원본 정적 안팎/버튼 기록은 같은 Client UI 수명 동안 유지하고 페이지·월드 교체에서 지우지 않는다.
     std::unique_ptr<RawButtonControls> rawButtons_; // 돌 버튼은 실제 공유 트리/수명/캡처를 사용한다. input_은 메뉴 행/판정 보고용이다.
-    std::unique_ptr<WarningMessages> warnings_; // 원본의 모달이 아닌10초 글자 안내와 실제 StyleText/Gump 수명이다.
+    WarningMessages* warnings_{}; // rawButtons가 소유하는 같은 실제 Gump/StyleText의10초 안내를 빌린다.
     ScriptStringRing scriptStrings_; // 입력 큐에 예약한 문자열의 원본80칸 수명이며 페이지가 바뀌어도 보존한다.
     SoloMapFileSpec mapFileSpec_; // 페이지 교체 뒤에도 같은9BYTE FileSpec 키를 보존한다.
     std::unique_ptr<SoloMapCatalog> mapCatalog_; // 현재 파일 캐시/dirty/이름을 Client 수명에 소유한다.

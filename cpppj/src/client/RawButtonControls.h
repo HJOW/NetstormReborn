@@ -19,6 +19,8 @@ class RawMenuControls; // 같은 트리에 연결하는 실제 메뉴 처리기�
 struct RawMenuHooks; // 현재 Client의 메뉴 외부 효과다.
 class GameAssets; // Client가 소유하는 실제 TYPE/SHP 저장소다.
 class FontStore; // Client가 소유하는 실제 글꼴 저장소다.
+class WarningMessages; // 같은 등록표/삭제 큐의 실제 Warning/Pause 파생 처리기다.
+struct MessageGumpHooks; // 현재 모드/이름/번역의 Pause 생성 경계다.
 // 실제 fortGump A00 헤더와 현재 팔레트다. 픽셀 출력과 raw 배경 생성은 같은 자산을 사용한다.
 struct RawButtonAssets {
     // type: 타입 표에서 객체 종류를 찾는 번호.
@@ -90,6 +92,9 @@ public:
     RawMenuControls& EnableMenus(const GameAssets& assets,FontStore& fonts,RawMenuHooks hooks);
     // 연결된 실제 메뉴를 빌린다. 연결 전에는 nullptr다.
     RawMenuControls* Menus() const;
+    // 실제 공통 Gump/StyleText를 빌리는 안내 처리기를 한 번 설치한다. 별도 루트/등록표를 만들지 않는다.
+    WarningMessages& EnableWarnings(std::function<double()> now,std::function<void()> sound,MessageGumpHooks pauseContext);
+    WarningMessages* Warnings() const; // 같은 공통 가상 분배가 소유하는 현재 안내 처리기다.
     RawProductionControls& EnableProduction(RawCampaignSession& session,const GameAssets& assets,RawProductionHooks hooks); // 현재 미션 패널을 조립한다.
     RawProductionControls* Production() const; // 현재 살아 있는 패널 처리기다.
     void ConfigureTestBridgePatterns(std::string_view patterns); // 테스트 전용 임시 조작이며 원본 분석 결과가 아니다. 초기/진행 중 지정 순서를 교체한다.

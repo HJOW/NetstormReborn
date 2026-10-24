@@ -1,0 +1,530 @@
+{
+  "unit": 394,
+  "date": "2026-10-24",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "baseCommit": "47e97725",
+  "unitValidationPassed": true,
+  "overallGoalComplete": false,
+  "scope": "Warning/Pause의 실제 단일 Gump 등록/토큰/루트/삭제/idle/StyleText/정렬 Draw 접합. 전체 State/Core/Editor 완성을 뜻하지 않는다.",
+  "productSha256": "dc0513a6f7ccd603b4cadf0e88715743358d23b5c9090cba8cf77e68e8687209",
+  "testBinarySha256": "1089db432b4c27cceb9c4a579ddbc224eda9298b14590ee0e8ebd10a2e8267a0",
+  "focused": {
+    "passed": true,
+    "productSha256": "dc0513a6f7ccd603b4cadf0e88715743358d23b5c9090cba8cf77e68e8687209",
+    "testBinarySha256": "1089db432b4c27cceb9c4a579ddbc224eda9298b14590ee0e8ebd10a2e8267a0",
+    "runs": [
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "Warnings_"
+        ],
+        "returnCode": 0,
+        "seconds": 0.6719330999767408,
+        "log": "extracted/cpp-warning-shared-394-focused3-Warnings_.log",
+        "filter": "Warnings_",
+        "counts": [
+          [
+            "13",
+            "0"
+          ]
+        ],
+        "names": [
+          "Warnings_BoardNative154",
+          "Warnings_DeadlineNative10",
+          "Warnings_IdleNative90",
+          "Warnings_ActualStyleAndGumpLifetime",
+          "Warnings_PauseSharesBoardAndPermanentText",
+          "Warnings_SeparatedFrameStagesExpireWhileGameClockIsPaused",
+          "Warnings_SeparatedIdleReusesBoardSlotBeforeFollowingCleanup",
+          "Warnings_CommonDrawStyleAndClip",
+          "Warnings_CommonRegistryMixedMenuAndGlobalKill",
+          "Warnings_CommonMenuOccludesByNativeDepth",
+          "Warnings_CommonPageClearAndStaleBoard",
+          "Warnings_ReentrantSoundCreatesMenuInSameRegistry",
+          "Warnings_InlineCommandParser"
+        ]
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "RawMenuControls_"
+        ],
+        "returnCode": 0,
+        "seconds": 1.6923327000113204,
+        "log": "extracted/cpp-warning-shared-394-focused3-RawMenuControls_.log",
+        "filter": "RawMenuControls_",
+        "counts": [
+          [
+            "10",
+            "0"
+          ]
+        ],
+        "names": [
+          "RawMenuControls_HelpActualTreePixelsAndOutsideInput",
+          "RawMenuControls_HelpActualHistoryButtonsAndReopen",
+          "RawMenuControls_HelpActualTypeInfoAndImage",
+          "RawMenuControls_FloatingSpActualPixelsAndLifetime",
+          "RawMenuControls_CommonTreeInputAndDisabledItem",
+          "RawMenuControls_HorizontalPointAndDeferredReplace",
+          "RawMenuControls_FancySubmenuPixelsAndCleanup",
+          "RawMenuControls_ObjectMenuCommandsAndCurrentConfig",
+          "RawMenuControls_CarrierAndObjectMenuChain",
+          "RawMenuControls_MissionLoadingUsesSharedTreeAndCancel"
+        ]
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "RawButtonControls_"
+        ],
+        "returnCode": 0,
+        "seconds": 0.39738019998185337,
+        "log": "extracted/cpp-warning-shared-394-focused3-RawButtonControls_.log",
+        "filter": "RawButtonControls_",
+        "counts": [
+          [
+            "7",
+            "0"
+          ]
+        ],
+        "names": [
+          "RawButtonControls_CaptureUsesRawTreeAndParentSerial",
+          "RawButtonControls_DrawReadsCurrentChildAndButtonState",
+          "RawButtonControls_DrawMatchesNativeConstructorFixture",
+          "RawButtonControls_PageReplacementReusesRegistryAndKeepsSerial",
+          "RawButtonControls_CurrentRegisteredDirectHandle",
+          "RawButtonControls_RouteAndSerialStayDistinctAcrossDeletion",
+          "RawButtonControls_RetiredPageStopsInputBeforeCleanup"
+        ]
+      }
+    ],
+    "distinctTests": 30,
+    "originalsUnchanged": true
+  },
+  "full": {
+    "command": [
+      "ctest",
+      "--test-dir",
+      "H:\\T5Workspace\\NetstormReborn\\cpppj\\build",
+      "-C",
+      "Release",
+      "--output-on-failure"
+    ],
+    "returnCode": 0,
+    "seconds": 322.30080099997576,
+    "log": "extracted/cpp-warning-shared-394-ctest1.log",
+    "counts": [
+      [
+        "2677",
+        "0"
+      ]
+    ],
+    "productSha256": "dc0513a6f7ccd603b4cadf0e88715743358d23b5c9090cba8cf77e68e8687209",
+    "testBinarySha256": "1089db432b4c27cceb9c4a579ddbc224eda9298b14590ee0e8ebd10a2e8267a0",
+    "sameProduct": true,
+    "sameTests": true,
+    "originalsUnchanged": true
+  },
+  "guiFourGroups": {
+    "passed": true,
+    "productSha256": "dc0513a6f7ccd603b4cadf0e88715743358d23b5c9090cba8cf77e68e8687209",
+    "runs": [
+      {
+        "command": [
+          "C:\\Program Files\\Python\\313\\python.exe",
+          "tools/cpp_game_menu_pause_smoke.py",
+          "--output",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-warning-shared-394-gui2-pause"
+        ],
+        "returnCode": 0,
+        "seconds": 10.35788769996725,
+        "log": "extracted/cpp-warning-shared-394-gui2-pause.log",
+        "sharedRegistryReports": 10,
+        "sharedRegistryCountsEqual": true,
+        "label": "pause",
+        "sameProduct": true,
+        "originalsUnchanged": true
+      },
+      {
+        "command": [
+          "C:\\Program Files\\Python\\313\\python.exe",
+          "tools/cpp_game_menu_smoke.py",
+          "--output",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-warning-shared-394-gui2-menus1024",
+          "--only",
+          "1024x768"
+        ],
+        "returnCode": 0,
+        "seconds": 17.210492599988356,
+        "log": "extracted/cpp-warning-shared-394-gui2-menus1024.log",
+        "sharedRegistryReports": 19,
+        "sharedRegistryCountsEqual": true,
+        "label": "menus1024",
+        "sameProduct": true,
+        "originalsUnchanged": true
+      },
+      {
+        "command": [
+          "C:\\Program Files\\Python\\313\\python.exe",
+          "tools/cpp_tutorial_harvest_smoke.py",
+          "--output",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-warning-shared-394-gui2-early1",
+          "--plan",
+          "cpppj/tests/fixtures/tutorial-one-harvest-six-slots-ui-input.tsv"
+        ],
+        "returnCode": 0,
+        "seconds": 335.89850310003385,
+        "log": "extracted/cpp-warning-shared-394-gui2-early1.log",
+        "sharedRegistryReports": 106,
+        "sharedRegistryCountsEqual": true,
+        "label": "early1",
+        "sameProduct": true,
+        "originalsUnchanged": true
+      },
+      {
+        "command": [
+          "C:\\Program Files\\Python\\313\\python.exe",
+          "tools/cpp_tutorial_two_smoke.py",
+          "--output",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-warning-shared-394-gui2-early2"
+        ],
+        "returnCode": 0,
+        "seconds": 194.96216340002138,
+        "log": "extracted/cpp-warning-shared-394-gui2-early2.log",
+        "sharedRegistryReports": 78,
+        "sharedRegistryCountsEqual": true,
+        "label": "early2",
+        "sameProduct": true,
+        "originalsUnchanged": true
+      }
+    ],
+    "allCasesAttempted": true
+  },
+  "warningCorrectedCaptureVerification": {
+    "passed": true,
+    "warning_ui_verified": true,
+    "originals_unchanged": true,
+    "audio_device": false,
+    "initial_selection_verified": true,
+    "game_state_injected": false,
+    "active_samples": 4,
+    "expired_samples": 9,
+    "deadline": 39.242000000000004,
+    "first_active_wall": "30.826",
+    "last_wall": "59.734",
+    "hp_after": "17",
+    "hp1_after_expiry_observed": true,
+    "pixels": [
+      {
+        "label": "warning1300",
+        "pixels": 996,
+        "mismatches": 0,
+        "first_mismatches": []
+      },
+      {
+        "label": "warning1400",
+        "pixels": 996,
+        "mismatches": 0,
+        "first_mismatches": []
+      },
+      {
+        "label": "warning1500",
+        "pixels": 996,
+        "mismatches": 0,
+        "first_mismatches": []
+      },
+      {
+        "label": "warning1600",
+        "pixels": 996,
+        "mismatches": 0,
+        "first_mismatches": []
+      }
+    ]
+  },
+  "pausePixels": {
+    "passed": true,
+    "font": "!Arial.normal.14.700.chfnt",
+    "text": "Game Paused!",
+    "results": [
+      {
+        "label": "paused",
+        "pixels": 441,
+        "mismatches": 0,
+        "firstMismatches": [],
+        "screenshotSha256": "a9336170b23acb1fd3948dc9bd5b3034c279f51302525cb8593d65ebd61c3973"
+      },
+      {
+        "label": "pausedBar",
+        "pixels": 441,
+        "mismatches": 441,
+        "firstMismatches": [
+          [
+            [
+              947,
+              4
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              139,
+              115,
+              83
+            ]
+          ],
+          [
+            [
+              948,
+              4
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              122,
+              119,
+              110
+            ]
+          ],
+          [
+            [
+              949,
+              4
+            ],
+            [
+              255,
+              255,
+              255
+            ],
+            [
+              104,
+              96,
+              62
+            ]
+          ],
+          [
+            [
+              950,
+              4
+            ],
+            [
+              255,
+              255,
+              255
+            ],
+            [
+              122,
+              119,
+              110
+            ]
+          ],
+          [
+            [
+              946,
+              5
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              113,
+              106,
+              104
+            ]
+          ],
+          [
+            [
+              947,
+              5
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              113,
+              106,
+              104
+            ]
+          ],
+          [
+            [
+              950,
+              5
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              122,
+              119,
+              110
+            ]
+          ],
+          [
+            [
+              951,
+              5
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              122,
+              119,
+              110
+            ]
+          ]
+        ],
+        "screenshotSha256": "8456a80a6dbaa1c5af26d62dbf038ddbc665e3b02a47fd2cb69740fbf2c6ddf7",
+        "pixelMatchRequired": false,
+        "reason": "기본 Text 깊이 -40보다 앞 메뉴 깊이 -60의 완전 가림",
+        "frontMenuRect": [
+          0,
+          0,
+          1024,
+          17
+        ],
+        "unoccludedPixels": 0
+      }
+    ]
+  },
+  "sourceSha256": {
+    "cpppj/src/client/RawButtonControls.cpp": "189de1e21a78046cad77840d8a70fc0ef73fc758d00490733f63fc2aeb343a61",
+    "cpppj/src/client/RawButtonControls.h": "589cff9b6570a6868e623f7c42dd52f5b2147fddf7353f8e79c2666d23e671c5",
+    "cpppj/src/client/UberGump.cpp": "241c827f2b0ece77d16310d580f985b378be9bcd21a77c8639b6d467fff968e7",
+    "cpppj/src/client/UberGump.h": "e1f3fd0d00fc59f8ed983051c6ca3378c341124c1c8e3968433b12bd9051da5f",
+    "cpppj/src/client/WarningMessages.cpp": "4e3aa6941a69785bea3ce147fb5fd3af8201bc74ee186f4539c25397e8cb2f26",
+    "cpppj/src/client/WarningMessages.h": "24c468767bc22b5c5c0a0b56d5604aabfeb6ed02fbaa57a9da85a7c41ae876aa",
+    "cpppj/tests/WarningTests.cpp": "8962b04e862c66f7100c759a9c23ed4f9a364de965e1a11b7cee9667464dee7d",
+    "tools/check_warning_scene.py": "dc3302a3ee9a86f0bfe2154a1b331e6945c49e27d155061cfeac8929bc328676"
+  },
+  "evidenceSha256": {
+    "extracted/cpp-warning-shared-394-focused1.json": "59c0ea58ee611b1685d620feee02e954d610e1289d86339f1d9900e367a61b01",
+    "extracted/cpp-warning-shared-394-focused2-progress1.json": "206b7d4e295975093f2f08e88cde27471ec81a6b14429f8c8b71570ef67f4181",
+    "extracted/cpp-warning-shared-394-focused2-progress2.json": "df98240aff31b64e07fdea19a0332c38354b7fc50fc33b2f1f8596a523be6671",
+    "extracted/cpp-warning-shared-394-focused2-progress3.json": "fccd9911d9a5068e9b5ccfe5b0bafdd41f314ec6598bc3c53a5a24a0e658a421",
+    "extracted/cpp-warning-shared-394-focused2-wrapper.log": "2cdd3cc666e09035ebe2c18133a97d9db7bcfb1ac275e0b750916d3975ff5a7c",
+    "extracted/cpp-warning-shared-394-focused3.json": "71dce03a94cf30a7791e2e0bda9c9603b7ec6955a691eb4e8e9fdf46b4dcef71",
+    "extracted/cpp-warning-shared-394-gui1.json": "60053c3625acfcb60e79dfc107ce41703524f6473d5372d3b2d36c9b87dbcba5",
+    "extracted/cpp-warning-shared-394-gui2.json": "32c1391bc097c724a483efa388dc1b66fe5e7f9626601527d62a4e396929975b",
+    "extracted/cpp-warning-shared-394-ctest1.json": "7159afd08995b6504bae1346665db3145e4fd316d7c15e9757374f19cea1fd39",
+    "extracted/cpp-warning-shared-394-ctest1.log": "0d06efd9a5aae61ad4be3a2baeb425172b3b222f19616df05c281597422289c5",
+    "extracted/cpp-warning-shared-394-ctest1-tests.log": "9f3f37d85c41d0980b6a3ab1001f49c599cd58b1ef842762b192e335be0fd7be",
+    "extracted/cpp-warning-shared-394-build1.log": "ebf03b9417c2cfd41caecffb3bfc4137d09e29552e65e5543a539dba49e13c89",
+    "extracted/cpp-warning-shared-394-build2.log": "670b34fb8dbabe288f71bd73befa1723969c9d76c91a3fad9b0c308c8879adb6",
+    "extracted/cpp-warning-shared-394-native-preserved.json": "4242367e8be52853dac296b640efe783ce804833604ed5b679723d6f69fb2607",
+    "extracted/cpp-warning-shared-394-control393-before.json": "641f6480fba76b67d7a40f28e04da29da088fa28ec2f0d714ab682651be59b3d",
+    "extracted/cpp-warning-shared-394-control393-wrapper.log": "2e3bd7b49e2b07c4cf19d86e08b81fe5e554e8a4d7d1833a8a3f323559627c71",
+    "extracted/cpp-warning-shared-394-control393-warning/states.tsv": "c97a310764d3abc04c34bee46cc52b61a4dcbeb92e596e650ee7e416bd08e143",
+    "extracted/cpp-warning-shared-394-gui1-warning/states.tsv": "ebbdd143160fcb3e53fe2e9a8613e6c93a782d7c59710f5e6495beac2059977b",
+    "extracted/cpp-warning-shared-394-gui1-warning.log": "e9407604233c9d796f360361e6db0d17b214a4d0c121a28c779d7f2736fb53c7",
+    "extracted/cpp-warning-shared-394-delayed-input/observation.json": "9a994f00e7180e6c40e8043f58e122f1ebc4d34891d3175843c1ccc391c42486",
+    "extracted/cpp-warning-shared-394-delayed-warning/steps.tsv": "07d5295f80499baf44cd089dde8e5d9c133080e590d2eb15da0ce830c25ed98c",
+    "extracted/cpp-warning-shared-394-delayed-warning/states.tsv": "8c94c05f0b753e16c13eca313549ba6889e8d385aa4a9214acfe4ac81a78fb7b",
+    "extracted/cpp-warning-shared-394-delayed-warning/verification.json": "a33165baf0e41e7300e4f9c30eaf2121a5d95a4d6396951e408e92973af626c4",
+    "extracted/cpp-warning-shared-394-delayed-warning-wrapper.log": "61bfee6a5ecc5bf5d55fdeae4e8e15a3997301af39202788b84b4df8696ac58d",
+    "extracted/cpp-warning-shared-394-delayed-warning-compare.log": "f6d2e6c2da7586e5c23e265cc2481ab5e2a98555912ae5fd90d6a06f117fa380",
+    "extracted/cpp-warning-shared-394-pause-pixels.log": "e5208f7ff4764b615e9dee68c6f1b0836fb6b65139b2a7125bd7d6b0fd2262d6",
+    "extracted/cpp-warning-shared-394-pause-pixels2.json": "37476ed00134503acd5c7a32372ded8f406eec8bbb37197054781cbcab49f623",
+    "extracted/cpp-warning-shared-394-pause-pixels2.py": "6d649f65aa34e90c006bf67e9b8a713c93ff43d34d03fbd173925ffb17191c6c",
+    "extracted/cpp-warning-shared-394-warning-tool-before.py": "f7ff15ee9ddd58b1d701ef38877edf1932ad5a24b31a4414aad1e5f7eb380445",
+    "extracted/cpp-warning-shared-394-warning-tool-timing.py": "9f994e8331c3860eb7b57920ff7da552d53efd86292f9a9870a880f56bf34a2c",
+    "extracted/cpp-warning-shared-394-gui2-early1/results.json": "7563ff30c1c60769b0cf3ddc1d04ac6c6cecabf00cec1098e0248522465bbeb9",
+    "extracted/cpp-warning-shared-394-gui2-early2/results.json": "b291038dbd87b18492ad4837e49f1fe1b83b6da998862bd501d271da99c9479f",
+    "extracted/cpp-warning-shared-394-gui2-pause/scenario/paused.bmp": "a9336170b23acb1fd3948dc9bd5b3034c279f51302525cb8593d65ebd61c3973",
+    "extracted/cpp-warning-shared-394-gui2-pause/scenario/paused-bar.bmp": "8456a80a6dbaa1c5af26d62dbf038ddbc665e3b02a47fd2cb69740fbf2c6ddf7",
+    "extracted/cpp-warning-shared-394-gui2-early1/goal.bmp": "93e7ca7164cf935023fead5d2572f8110246c12365eff6edc02d20b1741a1a7a",
+    "extracted/cpp-warning-shared-394-gui2-early2/goal.bmp": "1ae20142608c3da647ba392424f3232f663c5d8b3d7ad9314a57fc467b83f62a",
+    "extracted/cpp-warning-shared-394-delayed-warning/warning1300.bmp": "a91dc13c2d6fcd60afd92821785d09c8d60c6aaec0f1cabed0ff54314f3eaa94",
+    "extracted/cpp-warning-shared-394-delayed-warning/warning1400.bmp": "e56dea8d1f14bb9ecf9add2c6937b8f25bfad7225dffd7b5ff7f22a6e1faa620",
+    "extracted/cpp-warning-shared-394-delayed-warning/warning1500.bmp": "9f5bd299ed682626ac9929771a210f00d7a1627a57aa259f565593e7ce340d03",
+    "extracted/cpp-warning-shared-394-delayed-warning/warning1600.bmp": "53d6749cacc533bd2a03f4b031ff0d9c447921cba61c52442e2ede5b455ffb7a"
+  },
+  "commonRegistry": [
+    {
+      "path": "extracted/cpp-warning-shared-394-gui2-pause/scenario/states.tsv",
+      "reports": 6,
+      "countsEqual": true
+    },
+    {
+      "path": "extracted/cpp-warning-shared-394-gui2-early1/states.tsv",
+      "reports": 106,
+      "countsEqual": true
+    },
+    {
+      "path": "extracted/cpp-warning-shared-394-gui2-early2/states.tsv",
+      "reports": 78,
+      "countsEqual": true
+    },
+    {
+      "path": "extracted/cpp-warning-shared-394-delayed-warning/states.tsv",
+      "reports": 28,
+      "countsEqual": true
+    }
+  ],
+  "nativePreserved": [
+    {
+      "path": "tools/decomp_warnings.py",
+      "sha256": "f0f2c3f309cd0505b1e8e8d6f3c4e54b66fd77941a63192b2a03239b10cac04a",
+      "matchesOriginalReport": null
+    },
+    {
+      "path": "cpppj/tests/fixtures/warnings-x86.tsv",
+      "sha256": "a6ce8e05619ee1e13d9d05aa166faac757fe3ffff97af515dc0a55f0df65702b",
+      "matchesOriginalReport": null
+    },
+    {
+      "path": "cpppj/warnings.json",
+      "sha256": "e6cffcac481f79929d11d41e96e3cd7ad7c653417246f5e997a90b80f5726f50",
+      "matchesOriginalReport": null
+    }
+  ],
+  "originals": {
+    "files": 1394,
+    "bytesUnchanged": true
+  },
+  "initialFailures": [
+    {
+      "check": "기존7프레임 사제 선택 피격 계획",
+      "result": "394/393최초제품 모두 선택0/시작좌표/HP100. 최초 실패 보존. 입력 시점 변형은 실제 선택/이동에 성공했다."
+    },
+    {
+      "check": "정지 중 메뉴에서도 Pause 글자가 보여야 한다는 픽셀 가정",
+      "result": "첫441픽셀은 일치. 이후441픽셀은 깊이-60 가로 메뉴에 가려졌다. 실제 공통 정렬/닫기/재표시 검사로 Native Text-40/메뉴-60 순서를 검증하고 가린 픽셀은 일치 수에 합산하지 않았다."
+    },
+    {
+      "check": "focused2 종료 보호 원본 guard",
+      "result": "C++30개는 모두 통과. 실제 게임과 겹친 임시 options 변경 때문에 wrapper 종료1. 게임 종료/복원 뒤 focused3 전체30/원본1394동일 통과."
+    },
+    {
+      "check": "입력 교정 피격 실행의 마지막 HP1 고정 가정",
+      "result": "실제 게임 종료0/선택·이동·안내/만료 성공 뒤 검사 종료1. Native PriestRegen과 피격으로 HP1/17을 관측했다. 마지막HP17을 보존하고 만료 후 실제HP1 관측+마지막 실제HP를 검사하도록 고쳤다. 새 게임 없이 같은 캡처 재대조 통과."
+    }
+  ],
+  "remaining": [
+    "전체 State 부모와 실제 하위 owner/Core 선택·Pool·Player/SP 및004c77c0 실제 Uber 루트 교체",
+    "논리 HTML의 실제 공통 Gump 접합",
+    "Edit 최종 HUD/도구/커스텀 맵·언어 시나리오/저장·재로드",
+    "모든 Early/캠페인/Demo 자연 완주 및 픽셀·음향·규칙 완전 동일성",
+    "393에서 재현한 보호 원본 경로 Wide SaveOptions errno22/doserrno1224: 이번 재실행0/원인 해결 미확정"
+  ]
+}

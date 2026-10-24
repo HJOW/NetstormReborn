@@ -1,5 +1,18 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-24 단위394 완료: Warning/Pause의 실제 공통 Gump 접합
+
+- [x] AGENTS.md·공통/닷넷 인계를 재확인했다. 시작 HEAD는 **47e97725 / 20261024-16 CP**이고 현재/마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-10-23**이다. 이번 새 디컴파일/Native 실행0이며 기존 warnings254관측·도구·fixture SHA를 보존했다.
+- [x] WarningMessages의 별도 루트/등록표/토큰/수명/idle/StyleText/RenderText 출력과 실제 Client의 중복 Cleanup/Idle 호출을 제거했다. RawButtonControls가 파생 노드를 소유하고 같은 가상 Node/Idle/DeleteScalar/Release와 실제 메뉴 TextGump/StyleText/정렬 Draw 슬롯2를 연결한다.20칸과 현재 등록0루트의 직계 serial 조회를 유지하며 다른 종류 형제를 파생으로 역참조하지 않는다. 정상 페이지 보존/전체 반납과 최종 공통 큐/루트 정리 뒤 callback 해제를 확인했다.
+- [x] build1/2 종료0·관측 경고오류0이다. 최초 focused1은29/실패0이다. 메뉴 가림/닫기/재표시 검사를 추가한 focused2의 C++30개도 모두 통과했으나 실제 게임과 겹친 임시 options 바이트 때문에 마지막 보호 원본 guard가 종료1이었다. 원시 실패를 보존했고 게임 종료·복원 뒤 focused3 **30검사/실패0·원본1394동일**을 확인했다. 제품은 **dc0513a6f7ccd603b4cadf0e88715743358d23b5c9090cba8cf77e68e8687209**, 검사파일은 **1089db432b4c27cceb9c4a579ddbc224eda9298b14590ee0e8ebd10a2e8267a0**다.
+- [x] 실제 Pause/정지 중 ESC 재열기/해제10.36초,1024 메뉴17.21초,자연Early1 **335.90초·A~G·SP0→200→400→600→Tutorial2**, 자연Early2 **194.96초·A~I·신전/워크샾·발사기4→3/환불75→Tutorial3**이 모두 통과했다. 각각 공통 등록 수10/19/106/78보고가 같았다. 완료1→1/주입0/제품타이머1이며 진행0→1 영구저장/모든 미션 완주로 확대하지 않는다.
+- [x] 최초 피격 계획의7프레임 선택0/94,108/HP100 정체는394/393최초 공유Kernel 제품(최종부분생성교정전)에서 모두 실패했다. 늦춘 실제 입력은 SID15000 선택/이동에 성공했다. 도구 입력을Play10/미션20/선택25/관측26/이동40과 앞 구간100프레임 캡처로 고쳤다. 최초 내부 미선택 원인을 확정하지 않았고 원시 두 실패/소스/진단을 보존했다.
+- [x] 수정 피격 입력의 실제 게임은 종료0·안내4생존/9만료 표본·기한39.242000000000004초다. 원본 bold CHFNT/색/그림자와4캡처 **각996픽셀/불일치0**이다. 마지막HP1 고정 가정은 실제 회복/피격HP1·17 때문에 검사 종료1이었다. 실패/마지막HP17은 보존하고 원본 PriestRegen과 맞게 만료 후HP1 관측+마지막실제HP를 검사하도록 고쳤다. 새 게임 없이 같은 원시 캡처 재대조가 통과했으며 상태 주입0/원본1394동일이다.
+- [x] 가림 없는 Pause의 독립441픽셀은 불일치0이다. 가로 메뉴에서도 표시되어야 한다는 첫 가정은 실패했으나 실제0,0..1024,17 메뉴가 안내 전체를 가리고 원문Text-40/메뉴-60을 따른다. 실제 공통 정렬/닫기/재표시 검사는 통과했다. 제품 강제최상위0이며 가린441픽셀은 일치 검증에 합산하지 않는다. 최초 실패는 보존한다.
+- [x] 모든 실제 창/설정 복원 뒤 전체 CTest1은 **2677검사/실패0·종료0·322.30초**다. 제품/검사SHA 전후동일·원본1394동일·보호추적변경0이다. build2 43300/gui2 62569/피격87598/CTest96972는 모두 종료했고 피격wrapper는기존HP가정때문에1/교정compare-only0임을 구별한다. [완료 문서](docs/exe/cpp-warning-common-gump-20261024.md)와 [제품 보고서](cpppj/warning-common-gump-runtime-20261024.json)에 최초 실패·소스8·실제 증거 SHA를 보존했다. UTF-8/링크/stage 감사를 마쳐 **20261024-17 CP**로 로컬 커밋한다. 원시는 `extracted/cpp-warning-shared-394-*`다.
+- [ ] 다음은 실제 공통 Uber 루트/State 정리/Core 선택·Pool·Player/SP 접합이다.004c77c0은 MapMode→새200BYTE Uber(004c7160)→임시등록해제/id0→기존루트직계자식각각Push/현재x,y로새루트Attach→ReplaceRoot다. 현재 RawButtonControls의 일반base루트와 단순토큰변경으로 대신하면 안 된다.004c7160은가상표51503c/command BYTE540451/flags800 및 실제 세배경·본문/상호작용 필드를 구성한다. 이번 정적 읽기만 했고 구현/새Native관측은0이다.
+- [ ] 전체 State 부모/나머지 owner, Client/Login Core·cache·active 공유, 논리 HTML 공통 Gump, Edit 최종 HUD/편집/커스텀 맵·언어 시나리오/저장·재로드와 모든 Early/캠페인/Demo 사용자 자연 완주·완전 동일성은 미완료다.393 원본경로 Wide SaveOptions errno22/doserrno1224도 미해결이며 이번 새재생0이다. 목표는 활성 상태다.
+
 ## 2026-10-24 단위393 완료: 실제 Client 단일 Kernel과 월드 소유권 접합
 
 - [x] AGENTS.md·공통/닷넷 인계·HEAD/호스트를 재확인했다. 시작 HEAD는 **a6f12d98 / 20261024-15 CP**, 현재/마지막 정밀 디컴파일은 **HJOW-Athlon / 2026-10-23**이다. 이전392의 코드/검사/실제 실행/커밋은 완료된 진척이다. 이번에는 새 디컴파일/Native 관측을 만들지 않았다.
@@ -14,7 +27,7 @@
 - [x] 전체 CTest1은 모든 실제 게임 종료/설정 복구 뒤 **2673검사/실패0·종료0·329.30초(전체329.34초, wrapper329.44초)**로 통과했다. 제품/검사 SHA는 전후 같고 원본1394파일 바이트도 동일하다. 핸들33807은 종료0이며 GUI2/추가 진입 핸들50956/87780도 terminal이다. [단위 문서](docs/exe/cpp-client-kernel-lifetime-20261024.md)와 [제품 보고서](cpppj/client-kernel-runtime-20261024.json)에 전체 GUI 실패1·복사본 비교·남은 범위를 구별한다. UTF-8/링크/선택14파일을 감사한 뒤 **20261024-16 CP**로 커밋한다. 원시 출력은 `extracted/cpp-shared-kernel-393-*`다.
 - [x] 최종 감사1은 종료0이며 **소스11·증거110 SHA·실제 공유 Kernel823행**을 고정했다. 보고서의 validationPassed는false/failedGuiGroups는1이다. CTest2673 통과와 원본 경로 Wide 실패를 혼동하지 않는다. 기존 Native Kernel/최초 fixture·보고서 변경0·보호 경로 추적 변경0이며 UTF-8/링크/선택14파일 stage 감사를 마쳐 **20261024-16 CP**로 로컬 커밋한다.
 - [x] 후속 State 자식 owner 조사(구현 아님):00445140은 RawChatChannels::ResetOccupied에 존재한다.00472830의20포인터표00592938은 RenderProcessSystem의40칸 출력 목록이 아니다.0044fb20은 new(N*4)→this+4 pointer/+8capacity/+cCount0→00472880(this)의첫빈20칸등록,0044fb90은004728a0(this)의모든일치등록0→버퍼free다. 현재 Factory500(004fc990), DudePopulation30(004fc9b0), EnergyProvider256(004fcb60)이 같은44fb20 계열이다. 실제 공통 등록/Count 소유자를 대조해야 하며 별도 길이20 표를 만들어 대신하지 않는다.004ab940의현재005c7c44/65536BYTE는 기존 EditorWorldFinish spots 주소계약과 대조할 수 있다.004328a0/0054d4e8의255DWORD warning 표 owner는 미확정이다.
-- [ ] 다음 작업은 Wide 옵션 저장의 미해결 사항과 공통 Gump/State/Core 접합을 이어 조사/구현하는 것이다. WarningMessages는 RawButtonControls와 별도 등록표/토큰/루트/수명/StyleText를 소유한다. 공통 RawMenuTree는 이미 참조/토큰/노드 조회를 빌릴 수 있으나 실제 가상 소멸/Idle/Draw/직계 자식 serial lookup도 함께 연결해야 한다. 전체 State 선행 저장/Player/전송/표/Pool과 Client/Login current Core·cache·active 공유는 여전히 미완료다. 최종 Editor HUD/State/loaded·편집·커스텀 맵/언어별 시나리오·저장/재로드, 모든 Early/캠페인/Demo 사용자 자연 완주·픽셀/음향/규칙 동일성도 미완료이며 목표는 활성 상태다.
+- [ ] 다음 작업은 Wide 옵션 저장의 미해결 사항과 공통 Gump/State/Core 접합을 이어 조사/구현하는 것이다. 당시 분리된 WarningMessages의 등록표/토큰/루트/수명/StyleText 및 실제 가상 소멸/Idle/Draw/직계 자식 serial 조회는 위 단위394에서 공통 소유자로 접합 완료했다. 전체 State 선행 저장/Player/전송/표/Pool과 Client/Login current Core·cache·active 공유는 여전히 미완료다. 최종 Editor HUD/State/loaded·편집·커스텀 맵/언어별 시나리오·저장/재로드, 모든 Early/캠페인/Demo 사용자 자연 완주·픽셀/음향/규칙 동일성도 미완료이며 목표는 활성 상태다.
 
 ## 2026-10-24 단위392 완료: 실제 Session의 Player 링크 반납 선행 순서
 

@@ -69,14 +69,14 @@ def main():
     directory.mkdir(parents=True, exist_ok=True)
     before = snapshots(ROOT / 'originals')
     if not args.compare_only:
-        steps = [(3, 'report', 'briefing'), (5, 'click', 'Play Mission'), (6, 'report', 'mission'), (7, 'click', 'world:priest'),
-            (8, 'report', 'selected'), (9, 'click', 'cell:122,114')]
-        # 상태와 캡처를 같은 루프에 배치하고 충분한 실제 벽 시각 동안 진행한다.
-        for frame in range(1100, 2600, 100):
+        # 실제 Play/초기 패킷 처리 뒤에 선택한다. 초기7프레임 입력은 현재 Client에서 선택0으로 남는다.
+        steps = [(5, 'report', 'briefing'), (10, 'click', 'Play Mission'), (20, 'report', 'mission'), (25, 'click', 'world:priest'),
+            (26, 'report', 'selected'), (40, 'click', 'cell:122,114')]
+        # 실제 피격 시점이 전진해도 생성 전/생존/만료를 놓치지 않도록 앞 구간부터 같은 프레임을 캡처한다.
+        for frame in range(100, 2600, 100):
             label = f'warning{frame}'
             steps.append((frame, 'report', label))
-            if frame in (1300, 1500, 1700, 1900, 2100, 2500):
-                steps.append((frame, 'snapshot', str(directory / f'{label}.bmp')))
+            steps.append((frame, 'snapshot', str(directory / f'{label}.bmp')))
         script = directory / 'steps.tsv'
         script.write_text(''.join(f'{frame}\t{operation}\t{argument}\n' for frame, operation, argument in steps), encoding='utf-8')
         command = [str(EXE), '--run', str(ROOT / 'originals'), '--mission', 'thewarbegins', '--window', '--no-audio', '--frames', '2600',
@@ -90,6 +90,7 @@ def main():
         (directory / 'stderr.log').write_bytes(run.stderr)
         assert run.returncode == 0, run.stderr.decode('utf-8', errors='replace')
     observed = states(directory / 'states.tsv')
+    assert observed['selected']['selected'] == ['15000'], observed['selected']['selected']
     samples = {label: state for label, state in observed.items() if label.startswith('warning')}
     assert samples and all(state['phase'] == ['4'] and state['paused'] == ['0'] and state['page'] == ['mission'] for state in samples.values())
     active = [state for state in samples.values() if state.get('warning_count') == ['1']]
@@ -98,15 +99,19 @@ def main():
     assert all(state['warning'][0] == '0' and state['warning'][7] == '~B~E~y' + TEXT and float(state['time'][1]) < deadline for state in active)
     after = [state for state in samples.values() if float(state['time'][1]) >= deadline]
     assert after and all(state['warning_count'] == ['0'] for state in after)
-    assert observed['selected']['objects'][15000][12] == '100' and after[-1]['objects'][15000][12] == '1'
+    # 실제 피격 뒤 HP1과 이후 원본 PriestRegen의 회복은 함께 발생한다. 마지막 표본의 우연한 피격 주기는 고정하지 않는다.
+    hp1_after_expiry = any(state['objects'][15000][12] == '1' for state in after)
+    assert observed['selected']['objects'][15000][12] == '100' and hp1_after_expiry
     assert after[-1]['objects'][15000][5:7] == ['122', '114']
     assert float(after[-1]['raw_world'][0]) > float(active[0]['raw_world'][0]) + 5.0
     pixels = compare_pixels(directory, observed)
     unchanged = snapshots(ROOT / 'originals') == before
     passed = unchanged and pixels and all(row['pixels'] > 500 and row['mismatches'] == 0 for row in pixels)
     report = {'passed': bool(passed), 'warning_ui_verified': bool(passed), 'originals_unchanged': unchanged, 'audio_device': False,
+        'initial_selection_verified': True, 'game_state_injected': False,
         'active_samples': len(active), 'expired_samples': len(after), 'deadline': deadline,
-        'first_active_wall': active[0]['time'][1], 'last_wall': after[-1]['time'][1], 'hp_after': '1', 'pixels': pixels}
+        'first_active_wall': active[0]['time'][1], 'last_wall': after[-1]['time'][1], 'hp_after': after[-1]['objects'][15000][12],
+        'hp1_after_expiry_observed': hp1_after_expiry, 'pixels': pixels}
     (directory / 'verification.json').write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
     print(json.dumps(report, ensure_ascii=False))
     assert passed, 'Warning 글꼴/색/그림자 픽셀 불일치: verification.json 확인'

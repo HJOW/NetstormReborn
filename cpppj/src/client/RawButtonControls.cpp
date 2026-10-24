@@ -3,6 +3,7 @@
 #include "client/RawMenuControls.h"
 #include "client/RawProductionControls.h"
 #include "client/RawMinimapControls.h"
+#include "client/WarningMessages.h"
 #include "client/StoneButtonGump.h"
 #include "client/GumpFormBinding.h"
 #include <algorithm>
@@ -58,6 +59,7 @@ struct RawButtonControls::Impl {
     o::MetadisplayDirtyState minimapState; // 원본전역bitmap/큐/프레임은개별Gump와월드교체보다오래살아있다.
     std::unique_ptr<RawMinimapControls> minimap; // 같은 Gump/Pool의 실제 미니맵이며 월드보다 먼저 반납한다.
     std::unique_ptr<RawMenuControls> menus; // 실제 메뉴도 같은 루트/serial/등록표/입력/수명을 공유한다.
+    std::unique_ptr<WarningMessages> warnings; // 메뉴보다 먼저 해제하며 같은 현재 루트의 안내 노드만 소유한다.
     // 모든 분배 훅은 실제 호출 때 현재 노드와 처리기를 조회하여 순환 의존을 연결한다.
     Impl(o::OriginalEdition edition,RawButtonHooks supplied):hooks(std::move(supplied)) {
         create.collection.edition=edition;stoneState.color=kStoneType;stoneState.defaultContext={0,0,0,0,0,0,1,1};
@@ -74,9 +76,9 @@ struct RawButtonControls::Impl {
         lifeHooks.push=[this](auto token) { tree->Push(token); };
         lifeHooks.deleteForm=[this](std::uint32_t form,std::uint32_t flags) { if (!hooks.deleteForm) throw std::logic_error("현재UI Form삭제소비자미연결");hooks.deleteForm(form,flags); };
         lifeHooks.deletingDestructor=[this](auto token,auto flags) {
-            if (minimap && minimap->Node(token)) minimap->DeleteScalar(token,flags);else if (production && production->Node(token)) production->DeleteScalar(token,flags);else if (menus && menus->Node(token)) menus->DeleteScalar(token,flags);else if (stones.contains(token)) stone->DeleteScalar(token,flags);else lifetime->DeleteScalar(token,flags);
+            if (warnings && warnings->Node(token)) warnings->DeleteScalar(token,flags);else if (minimap && minimap->Node(token)) minimap->DeleteScalar(token,flags);else if (production && production->Node(token)) production->DeleteScalar(token,flags);else if (menus && menus->Node(token)) menus->DeleteScalar(token,flags);else if (stones.contains(token)) stone->DeleteScalar(token,flags);else lifetime->DeleteScalar(token,flags);
         };
-        lifeHooks.release=[this](auto token) { if (minimap) minimap->Release(token);if (production) production->Release(token);if (menus) menus->Release(token);bases.erase(token);stones.erase(token);backgrounds.erase(token); };
+        lifeHooks.release=[this](auto token) { if (warnings) warnings->Release(token);if (minimap) minimap->Release(token);if (production) production->Release(token);if (menus) menus->Release(token);bases.erase(token);stones.erase(token);backgrounds.erase(token); };
         lifetime=std::make_unique<GumpLifetime>(create,life,std::move(lifeHooks));
         GumpEventHooks eventHooks;eventHooks.node=[this](auto token) { return Node(token); };
         eventHooks.handle=[this](auto token,auto event,auto first,auto second) { return Handle(token,event,first,second); };
@@ -86,7 +88,7 @@ struct RawButtonControls::Impl {
         input=std::make_unique<GumpInput>(create,life,inputState,*collection,*events,std::move(inputHooks));
         GumpFrameHooks frameHooks;frameHooks.node=[this](auto token) { return Node(token); };
         frameHooks.redraw=[this](auto,bool) { changed=true; };
-        frameHooks.idle=[this](auto token) { if (stones.contains(token) || (menus && menus->Button(token))) buttons->Idle(token);else if (minimap && minimap->Node(token)) minimap->Idle(token);else if (production && production->Node(token)) production->Idle(token);else if (menus && menus->Node(token)) menus->Idle(token); };
+        frameHooks.idle=[this](auto token) { if (warnings && warnings->Node(token)) warnings->Idle(token);else if (stones.contains(token) || (menus && menus->Button(token))) buttons->Idle(token);else if (minimap && minimap->Node(token)) minimap->Idle(token);else if (production && production->Node(token)) production->Idle(token);else if (menus && menus->Node(token)) menus->Idle(token); };
         frameHooks.broadcast=[this](auto token,auto event,auto first,auto second) {
             if (stones.contains(token) || (menus && menus->Button(token))) buttons->Broadcast(token,event,first,second);
             else if (menus && menus->Node(token)) menus->Broadcast(token,event,first,second);
@@ -117,6 +119,7 @@ struct RawButtonControls::Impl {
     }
     // 가상 호출 동안 노드 주소는 유지되며 실제 scalar 소멸자에서만 erase한다.
     GumpCreateNode* Node(std::uint32_t token) const {
+        if (warnings) if (auto* node=warnings->Node(token)) return node;
         if (const auto it=stones.find(token);it!=stones.end()) return it->second.get();
         if (const auto it=backgrounds.find(token);it!=backgrounds.end()) return it->second.get();
         if (minimap) if (auto* node=minimap->Node(token)) return node;
@@ -255,6 +258,17 @@ RawMenuControls& RawButtonControls::EnableMenus(const GameAssets& assets,FontSto
 }
 // 별도 메뉴 트리 사본을 만들지 않고 같은 현재 확장 계층을 반환한다.
 RawMenuControls* RawButtonControls::Menus() const { return impl_->menus.get(); }
+// 같은 공통 참조를 빌려 실제 Warning/Pause를 가상 분배와 원본 정렬 Draw에 연결한다.
+WarningMessages& RawButtonControls::EnableWarnings(std::function<double()> now,std::function<void()> sound,MessageGumpHooks pauseContext) {
+    auto& s=*impl_;if (s.warnings || !s.menus) throw std::logic_error("Warning 공통 트리/메뉴 수명 오류");
+    RawMenuTree tree{s.create,s.life,*s.factory,*s.collection,*s.tree,*s.lifetime,*s.events,*s.input,*s.stone,
+        [&s](auto token) { const auto it=s.backgrounds.find(token);return it==s.backgrounds.end() ? nullptr : it->second.get(); },
+        [&s] { return ++s.nextToken; },[&s](auto token) { return s.Node(token); },
+        [&s](auto token,float x,float y,auto parent,auto mode) { s.Attach(token,x,y,parent,mode); },[&s] { s.changed=true; }};
+    s.warnings=std::make_unique<WarningMessages>(std::move(tree),*s.menus,std::move(now),std::move(sound),std::move(pauseContext));return *s.warnings;
+}
+// 소유권을 넘기지 않고 같은 현재 처리기를 빌린다.
+WarningMessages* RawButtonControls::Warnings() const { return impl_->warnings.get(); }
 // 같은 공통 참조와 가상 분배를 생산 노드에도 빌려 준다.
 RawProductionControls& RawButtonControls::EnableProduction(RawCampaignSession& session,const GameAssets& assets,RawProductionHooks hooks) {
     auto& s=*impl_;if (s.production || !s.menus) throw std::logic_error("생산 패널 수명/메뉴 연결 오류");

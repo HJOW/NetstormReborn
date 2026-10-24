@@ -3,6 +3,11 @@
 #include "DudeSpawnSupport.h"
 #include "client/MessageBoard.h"
 #include "client/WarningMessages.h"
+#include "client/RawButtonControls.h"
+#include "client/RawMenuControls.h"
+#include "client/GumpTextDraw.h"
+#include "client/PaletteShade.h"
+#include <sstream>
 #include "client/DialogScript.h"
 #include "o/GameClock.h"
 #include <cmath>
@@ -85,72 +90,148 @@ TEST_CASE(Warnings_IdleNative90) {
     }
     CHECK(count==90);
 }
-// 실제 글꼴과 Gump 노드에서 스타일·독립 행·20칸 한도·정확한 만료·빈 칸 재사용을 확인한다.
-TEST_CASE(Warnings_ActualStyleAndGumpLifetime) {
-    const auto& assets=netstorm::test::dudespawn::Assets(netstorm::o::OriginalEdition::Patch1078);FontStore fonts(assets.files,"Arial");const auto palette=WarningPalette(assets.game);
-    double now=0.1;std::size_t sounds=0;WarningMessages messages(fonts,palette,[&] { return now; },[&] { ++sounds; });messages.SetView(1024,768,palette);
-    messages.Add("~B~E~yOur Priest has been Immobilized");messages.Add("~B~E~yOur Priest has been Immobilized");
-    auto text=messages.Text();CHECK(text.size()==2);CHECK(sounds==2);
-    CHECK(text[0].bytes=="Our Priest has been Immobilized");CHECK(text[0].font==&fonts.Get(0,FontStyle::Bold));CHECK(text[0].shadow && text[0].color==palette.basic[5]);
-    CHECK(text[0].y==0 && text[1].y==12);CHECK(text[0].clip && text[0].clip->right==1024);CHECK(text[0].x==text[0].clip->left);
-    // 같은 Warning을 추가해도 첫 안내를 교체하지 않으며20개 이후에는 소리도 재생하지 않는다.
-    for (int i=0;i<19;++i) messages.Add("~E~yWarning");
-    CHECK(sounds==20 && messages.Text().size()==20);CHECK(messages.Idle());
-    now=std::nextafter(10.1,-std::numeric_limits<double>::infinity());CHECK(!messages.Idle());CHECK(messages.Text().size()==20);
-    now=10.1;CHECK(messages.Idle());CHECK(messages.Text().empty());
-    messages.Add("~E~yAgain");CHECK(messages.Text().size()==1 && messages.Text()[0].y==0 && sounds==21);
-}
-// TextGump 내부 클립을 Renderer가 실제 글자·그림자 픽셀에도 적용한다.
-// Pause와 만료 Warning이 같은20칸 검색/실제 글꼴/삭제 수명을 공유하는지 확인한다.
-TEST_CASE(Warnings_PauseSharesBoardAndPermanentText) {
-    const auto& assets=netstorm::test::dudespawn::Assets(netstorm::o::OriginalEdition::Patch1078);FontStore fonts(assets.files,"Arial");const auto palette=WarningPalette(assets.game);
-    double now{};int sounds{},names{},translations{};MessageGumpHooks context;
-    context.challenge=[] { return 0U; };context.playerName=[&](auto player) { CHECK(player==0);++names; };
-    context.translate=[&](auto text) { CHECK(text=="~E~wGame Paused!");++translations;return std::string(text); };
-    WarningMessages messages(fonts,palette,[&] { return now; },[&] { ++sounds; },std::move(context));messages.SetView(640,480,palette);
-    messages.PauseStatus(true);messages.Add("~E~yWarning");const auto initial=messages.Text();CHECK(initial.size()==2 && names==1 && translations==1 && sounds==1);
-    CHECK(initial[0].bytes=="Game Paused!" && initial[0].y==0 && initial[1].y==12);
-    now=100;CHECK(messages.Idle());const auto paused=messages.Text();CHECK(paused.size()==1 && paused[0].bytes=="Game Paused!");
-    messages.PauseStatus(false);CHECK(messages.Text().empty());CHECK(messages.Idle());
-    messages.PauseStatus(true);CHECK(messages.Text().size()==1 && names==2 && sounds==1);
-}
-// 실제 게임 시계가 멈춰도 Cleanup→Idle의 벽시계 만료는 실행되고 영구 Pause 안내는 남는다.
-TEST_CASE(Warnings_SeparatedFrameStagesExpireWhileGameClockIsPaused) {
-    const auto& assets=netstorm::test::dudespawn::Assets(netstorm::o::OriginalEdition::Patch1078);FontStore fonts(assets.files,"Arial");const auto palette=WarningPalette(assets.game);
-    netstorm::o::GameClock clock;std::uint32_t milliseconds=100;std::size_t reads{},sounds{};MessageGumpHooks context; // 게임 시간과 Warning의 실제 벽시계 공급을 구별한다.
-    context.challenge=[] { return 0U; };context.playerName=[](auto) {};context.translate=[](auto text) { return std::string(text); };
-    WarningMessages messages(fonts,palette,[&] { ++reads;return clock.WallSeconds(milliseconds); },[&] { ++sounds; },std::move(context));messages.SetView(640,480,palette);
-    messages.PauseStatus(true);messages.Add("~E~yTimed warning");CHECK(messages.Text().size()==2 && sounds==1);const auto initialReads=reads;
-    clock.Pause(milliseconds);milliseconds=10100;CHECK(clock.IsPaused() && clock.GameSeconds(milliseconds)==0.1);
-    messages.CleanupGumps();CHECK(reads==initialReads && messages.Text().size()==2); // 만료 시각이어도 Cleanup 자체는 시계를 조회하거나 Idle하지 않는다.
-    CHECK(messages.IdleGumps());const auto permanent=messages.Text();CHECK(reads==initialReads+1 && clock.IsPaused());
-    CHECK(permanent.size()==1 && permanent[0].bytes=="Game Paused!"); // 같은 board의 영구 기한0은 실제 Warning 만료와 다르다.
-    CHECK(!messages.IdleGumps() && reads==initialReads+1); // Kill된 Warning은 다음 Cleanup 전에도 idle 표에서 제외된다.
-    messages.CleanupGumps();CHECK(reads==initialReads+1 && messages.Text().size()==1);
-    messages.PauseStatus(false);CHECK(messages.Text().empty());messages.CleanupGumps();CHECK(clock.IsPaused() && reads==initialReads+1);
-}
-// Idle에서 죽은 실제 메시지의 stale serial 칸은 다음 Cleanup 전에도 새 표시가 재사용한다.
-TEST_CASE(Warnings_SeparatedIdleReusesBoardSlotBeforeFollowingCleanup) {
-    const auto& assets=netstorm::test::dudespawn::Assets(netstorm::o::OriginalEdition::Patch1078);FontStore fonts(assets.files,"Arial");const auto palette=WarningPalette(assets.game);
-    double now=0.1;std::size_t reads{},sounds{};WarningMessages messages(fonts,palette,[&] { ++reads;return now; },[&] { ++sounds; });messages.SetView(640,480,palette); // 같은 실제 노드/StyleText/20칸 표를 사용한다.
-    messages.Add("~E~yFirst row");messages.CleanupGumps();CHECK(messages.Text().size()==1 && reads==1);
-    now=10.1;messages.CleanupGumps();CHECK(messages.Text().size()==1 && reads==1);CHECK(messages.IdleGumps());CHECK(messages.Text().empty() && reads==2);
-    messages.Add("~E~yReused row");const auto replacement=messages.Text();CHECK(replacement.size()==1 && replacement[0].bytes=="Reused row" && replacement[0].y==0);CHECK(reads==3 && sounds==2);
-    messages.CleanupGumps();const auto afterCleanup=messages.Text();CHECK(reads==3 && afterCleanup.size()==1 && afterCleanup[0].bytes=="Reused row" && afterCleanup[0].y==0); // 이전 dead 노드의 반납이 새 노드의 소유 조각을 해제하면 안 된다.
-    CHECK(!messages.IdleGumps() && reads==4 && messages.Text().size()==1);now=100;CHECK(messages.IdleGumps() && reads==5 && messages.Text().empty());messages.CleanupGumps();
-    // Warning 공개 Text/Report는 dead를 제외한다. 실제 반납 전 주소/등록 칸 잔존은 RawButtonCursorBoundary의 공통 실제 수명 검사에서 확인한다.
-}
-// TextGump 내부 클립을 Renderer가 실제 글자·그림자 픽셀에도 적용한다.
-TEST_CASE(Warnings_RendererTextClip) {
-    const auto& assets=netstorm::test::dudespawn::Assets(netstorm::o::OriginalEdition::Patch1078);FontStore fonts(assets.files,"Arial");const auto palette=WarningPalette(assets.game);
-    WarningMessages messages(fonts,palette,[] { return 0.0; },[] {});messages.SetView(320,40,palette);messages.Add("~B~E~yWarning");auto text=messages.Text();CHECK(text.size()==1);
-    const ScreenRect clip{text[0].x+1,1,text[0].x+30,9};text[0].clip=clip;
-    Renderer renderer(320,40);renderer.SetScene({},text);std::vector<std::uint8_t> pixels(320*40,7);renderer.Draw(pixels,320,7);std::size_t changed=0;
-    // 클립 밖은 배경을 유지하며 내부에는 실제 글리프가 있어야 한다.
-    for (int y=0;y<40;++y) for (int x=0;x<320;++x) if (pixels[static_cast<std::size_t>(y)*320+x]!=7) {
-        CHECK(x>=clip.left && x<clip.right && y>=clip.top && y<clip.bottom);++changed;
+namespace {
+// 공개 실제 Report의 생존 행이다. 표시/검색 결과를 별도 상태로 계산하지 않는다.
+struct WarningRow {
+    std::uint32_t serial{};int x{},y{},width{},height{};double deadline{};std::string source; // 원시 실제 노드 관측이다.
+};
+// 게임/창 없이 실제 Client와 동일한 등록/트리/삭제/StyleText/가상 Draw를 구성한다.
+struct WarningClient {
+    const netstorm::test::dudespawn::DudeAssets& assets; // 보호 자산의 읽기 전용 공유 수명이다.
+    FontStore fonts;PaletteColorTable palette;RawButtonControls buttons; // 실제 글꼴/색/단일 Gump 소유자다.
+    RawMenuControls* menus{};WarningMessages* messages{}; // 위 소유자의 같은 처리기를 빌린다.
+    int width{},height{}; // 현재 실제 표면 크기다.
+    // 같은 공통 가상 분배가 설치된 뒤에만 안내를 생성한다.
+    WarningClient(std::function<double()> now,std::function<void()> sound,MessageGumpHooks context={},int w=1024,int h=768)
+        :assets(netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078)),fonts(assets.files,"Arial"),palette(WarningPalette(assets.game)),buttons(OriginalEdition::Patch1078),width(w),height(h) {
+        RawMenuHooks hooks;hooks.command=[](auto,auto,auto) {};hooks.readInt=[](auto,auto&) {};hooks.sound=[](auto) {};
+        hooks.poll=[](auto) { return InputEvent{InputCode::kRelease,0,0}; };hooks.cursor=[](auto) {};
+        menus=&buttons.EnableMenus(assets.game,fonts,std::move(hooks));messages=&buttons.EnableWarnings(std::move(now),std::move(sound),std::move(context));Reset();
     }
+    // 호스트 페이지 전환도 같은 실제 공통 Kill/Cleanup으로 이전 자식을 반납한다.
+    void Reset(bool preserve=false) { buttons.SetControls({}, {},width,height,{},preserve);messages->SetView(width,height,palette); }
+    // 기존 RawButtons 원시 필드에서 실제 등록/serial/idle 수를 읽는다.
+    std::array<std::uint32_t,6> Fields() const {
+        std::istringstream input(buttons.Report());std::string tag;input>>tag;std::array<std::uint32_t,6> result{};
+        for (auto& value:result) input>>value; // 실제 출력 순서의 여섯 DWORD다.
+        return result;
+    }
+    // Warning 보고의 실제20칸 순서를 보존해 읽는다.
+    std::vector<WarningRow> Rows() const {
+        std::vector<WarningRow> result;std::istringstream report(messages->Report());std::string line;
+        while (std::getline(report,line)) { // count/registry 행은 메시지로 해석하지 않는다.
+            std::istringstream input(line);std::string tag;std::size_t index{};WarningRow row;input>>tag;if (tag!="warning") continue;
+            input>>index>>row.serial>>row.x>>row.y>>row.width>>row.height>>row.deadline;input.get();std::getline(input,row.source);result.push_back(std::move(row));
+        }
+        return result;
+    }
+    // 현재 Client의 모든 raw 파생을 원본 공통 수집/정렬/클립으로 실제 표면에 그린다.
+    std::vector<std::uint8_t> Pixels(std::optional<ScreenRect> clip={}) const {
+        std::vector<std::uint8_t> pixels(static_cast<std::size_t>(width)*height,7);std::array<std::uint32_t,256> logical{};
+        for (std::size_t i=0;i<logical.size();++i) { const auto c=assets.game.Palette().Color(static_cast<std::uint8_t>(i));logical[i]=c.red|(std::uint32_t(c.green)<<8)|(std::uint32_t(c.blue)<<16); } // 실제 파일 팔레트 순서다.
+        menus->Draw(pixels,width,height,palette,BuildGumpShadeMaps(logical),clip);return pixels;
+    }
+};
+// Pause의 현재 실제 모드/이름/번역 경계다. 게임 시계나 Gump를 대신 소유하지 않는다.
+MessageGumpHooks PauseContext() {
+    MessageGumpHooks context;context.challenge=[] { return 0U; };context.playerName=[](auto) {};context.translate=[](auto text) { return std::string(text); };return context;
+}
+}
+// 실제 공통 글꼴/행/20칸 한도·정확한 만료·빈 칸 재사용을 확인한다.
+TEST_CASE(Warnings_ActualStyleAndGumpLifetime) {
+    double now=0.1;std::size_t sounds=0;WarningClient client([&] { return now; },[&] { ++sounds; });auto& messages=*client.messages;
+    messages.Add("~B~E~yOur Priest has been Immobilized");messages.Add("~B~E~yOur Priest has been Immobilized");
+    auto rows=client.Rows();CHECK(rows.size()==2 && sounds==2);CHECK(rows[0].source=="~B~E~yOur Priest has been Immobilized");CHECK(rows[0].y==0 && rows[1].y==12);
+    CHECK(client.Fields()[1]==3 && client.Fields()[4]==2);CHECK(messages.Node(client.buttons.SerialGump(rows[0].serial))->parent==client.buttons.RootToken());
+    for (int i=0;i<19;++i) messages.Add("~E~yWarning"); // 같은 Warning도 독립 안내이며20개 이후에는 소리도 없다.
+    CHECK(sounds==20 && client.Rows().size()==20);client.buttons.IdleGumps();client.buttons.CleanupGumps();
+    now=std::nextafter(10.1,-std::numeric_limits<double>::infinity());CHECK(!client.buttons.IdleGumps());CHECK(client.Rows().size()==20);
+    now=10.1;CHECK(client.buttons.IdleGumps());CHECK(client.Rows().empty());CHECK(client.Fields()[1]==21 && client.Fields()[4]==0);
+    client.buttons.CleanupGumps();CHECK(client.Fields()[1]==1);messages.Add("~E~yAgain");CHECK(client.Rows().size()==1 && client.Rows()[0].y==0 && sounds==21);
+}
+// Pause와 만료 Warning이 같은20칸/실제 글꼴/공통 삭제 수명을 공유한다.
+TEST_CASE(Warnings_PauseSharesBoardAndPermanentText) {
+    double now{};int sounds{},names{},translations{};auto context=PauseContext();
+    context.playerName=[&](auto player) { CHECK(player==0);++names; };context.translate=[&](auto text) { CHECK(text=="~E~wGame Paused!");++translations;return std::string(text); };
+    WarningClient client([&] { return now; },[&] { ++sounds; },std::move(context),640,480);auto& messages=*client.messages;
+    messages.PauseStatus(true);messages.Add("~E~yWarning");const auto initial=client.Rows();CHECK(initial.size()==2 && names==1 && translations==1 && sounds==1);
+    CHECK(initial[0].source=="~E~wGame Paused!" && initial[0].y==0 && initial[1].y==12);
+    now=100;CHECK(client.buttons.IdleGumps());const auto paused=client.Rows();CHECK(paused.size()==1 && paused[0].source=="~E~wGame Paused!");
+    messages.PauseStatus(false);CHECK(client.Rows().empty());client.buttons.CleanupGumps();CHECK(client.Fields()[1]==1);
+    messages.PauseStatus(true);CHECK(client.Rows().size()==1 && names==2 && sounds==1);
+}
+// 실제 게임 시계 정지 중에도 같은 공통 Cleanup→Idle에서 벽시계 만료를 처리한다.
+TEST_CASE(Warnings_SeparatedFrameStagesExpireWhileGameClockIsPaused) {
+    netstorm::o::GameClock clock;std::uint32_t milliseconds=100;std::size_t reads{},sounds{};
+    WarningClient client([&] { ++reads;return clock.WallSeconds(milliseconds); },[&] { ++sounds; },PauseContext(),640,480);auto& messages=*client.messages;
+    messages.PauseStatus(true);messages.Add("~E~yTimed warning");const auto rows=client.Rows();CHECK(rows.size()==2 && sounds==1);const auto initialReads=reads;
+    const auto warningToken=client.buttons.SerialGump(rows[1].serial);const auto warningId=messages.Node(warningToken)->id;
+    clock.Pause(milliseconds);milliseconds=10100;CHECK(clock.IsPaused() && clock.GameSeconds(milliseconds)==0.1);
+    client.buttons.CleanupGumps();CHECK(reads==initialReads && client.Rows().size()==2);
+    CHECK(client.buttons.IdleGumps());const auto permanent=client.Rows();CHECK(reads==initialReads+1 && clock.IsPaused());
+    CHECK(permanent.size()==1 && permanent[0].source=="~E~wGame Paused!");CHECK(messages.Node(warningToken) && client.buttons.RegisteredGump(warningId)==warningToken);
+    CHECK(messages.Node(warningToken)->flags&0x10000U);CHECK(client.buttons.SerialGump(rows[1].serial)==0);CHECK(!client.buttons.IdleGumps() && reads==initialReads+1);
+    client.buttons.CleanupGumps();CHECK(!messages.Node(warningToken) && !client.buttons.RegisteredGump(warningId));CHECK(reads==initialReads+1 && client.Rows().size()==1);
+    messages.PauseStatus(false);client.buttons.CleanupGumps();CHECK(clock.IsPaused() && reads==initialReads+1 && client.Rows().empty());
+}
+// 만료 Idle 뒤 아직 등록된 dead 안내의 칸을 새 메시지가 재사용해도 공통 소멸이 새 체인을 해제하지 않는다.
+TEST_CASE(Warnings_SeparatedIdleReusesBoardSlotBeforeFollowingCleanup) {
+    double now=0.1;std::size_t reads{},sounds{};WarningClient client([&] { ++reads;return now; },[&] { ++sounds; },{},640,480);auto& messages=*client.messages;
+    messages.Add("~E~yFirst row");client.buttons.CleanupGumps();CHECK(client.Rows().size()==1 && reads==1);
+    now=10.1;client.buttons.CleanupGumps();CHECK(client.Rows().size()==1 && reads==1);CHECK(client.buttons.IdleGumps());CHECK(client.Rows().empty() && reads==2);
+    messages.Add("~E~yReused row");const auto replacement=client.Rows();CHECK(replacement.size()==1 && replacement[0].source=="~E~yReused row" && replacement[0].y==0);CHECK(reads==3 && sounds==2);
+    const auto before=client.Pixels();client.buttons.CleanupGumps();CHECK(reads==3 && client.Rows().size()==1 && before==client.Pixels());
+    CHECK(!client.buttons.IdleGumps() && reads==4);now=100;CHECK(client.buttons.IdleGumps() && reads==5 && !messages.HasMessages());client.buttons.CleanupGumps();CHECK(client.Fields()[1]==1);
+}
+// Renderer용 별도 글자 목록 없이 실제 공통 Draw의 스타일·그림자·내부/외부 클립을 비교한다.
+TEST_CASE(Warnings_CommonDrawStyleAndClip) {
+    WarningClient client([] { return 0.0; },[] {},{},320,40);client.messages->Add("~B~E~yWarning");const auto rows=client.Rows();CHECK(rows.size()==1);
+    const ScreenRect clip{rows[0].x+1,1,rows[0].x+30,9};const auto actual=client.Pixels(clip);std::vector<std::uint8_t> expected(320*40,7);
+    GumpDrawState draw;SetGumpDrawClip(draw,clip);GumpPixelTarget target(expected,320,40,draw);GumpGlyphColorState colors;GumpTextDraw glyphs(client.fonts,MakeGumpGlyphPixelHooks(target,colors));
+    const GumpTextContext context{2,0,client.palette.basic[5],static_cast<std::uint32_t>(FontStyle::Bold),0,client.palette.basic[0],1,1};
+    const std::string text="Warning";glyphs.Draw(std::span(text.c_str(),text.size()+1),{rows[0].x,0},context);CHECK(actual==expected);
+    std::size_t changed=0;
+    for (int y=0;y<40;++y) for (int x=0;x<320;++x) if (actual[static_cast<std::size_t>(y)*320+x]!=7) { CHECK(x>=clip.left && x<clip.right && y>=clip.top && y<clip.bottom);++changed; } // 실제 표면 guard다.
     CHECK(changed>0);
+}
+// 메뉴 형제와 안내가 같은 serial/등록표를 사용하고 공통 Kill 뒤 실제 free가 일어난다.
+TEST_CASE(Warnings_CommonRegistryMixedMenuAndGlobalKill) {
+    WarningClient client([] { return 0.0; },[] {});client.menus->Open({200,100},[](const auto& widgets,const auto& controls,const auto&) { widgets.BeginVertical();controls.AddText("Menu sibling"); });
+    const auto menuFields=client.Fields();client.messages->Add("~E~ySame Client");const auto row=client.Rows().at(0);const auto token=client.buttons.SerialGump(row.serial);const auto id=client.messages->Node(token)->id;
+    CHECK(client.Fields()[1]==menuFields[1]+1 && row.serial>menuFields[2]);CHECK(client.buttons.RegisteredGump(id)==token);CHECK(client.messages->Lookup(row.serial)->token==token);
+    CHECK(!client.messages->Lookup(menuFields[2]));CHECK(client.messages->Node(token)->parent==client.buttons.RootToken());const auto menuAndMessage=client.Pixels();
+    client.buttons.KillGump(token);CHECK(!client.messages->HasMessages() && client.messages->Node(token));CHECK(client.buttons.RegisteredGump(id)==token);CHECK(client.menus->HasMenus());
+    client.buttons.CleanupGumps();CHECK(!client.messages->Node(token) && !client.buttons.RegisteredGump(id));CHECK(client.Fields()[1]==menuFields[1]);CHECK(menuAndMessage!=client.Pixels());
+    client.menus->Close();client.buttons.CleanupGumps();CHECK(client.Fields()[1]==1);
+}
+// 원본 기본 Text(-40)보다 앞 메뉴(-60)가 안내를 가리며 닫으면 같은 체인이 다시 보인다.
+TEST_CASE(Warnings_CommonMenuOccludesByNativeDepth) {
+    WarningClient client([] { return 0.0; },[] {},PauseContext());client.messages->PauseStatus(true);const auto row=client.Rows().at(0);
+    const auto warning=client.buttons.SerialGump(row.serial);CHECK(client.messages->Node(warning)->depth==0xffffffd8U);const auto onlyMessage=client.Pixels();
+    const auto open=[&] { client.menus->Open({1024,0},[](const auto& widgets,const auto& controls,const auto&) { widgets.BeginVertical();controls.AddText("Native menu in front"); }); }; // 실제 메뉴 생성/화면 끝 정렬이다.
+    open();std::uint32_t front{};
+    for (std::uint32_t id=1;id<kGumpRegistryCapacity;++id) { const auto token=client.buttons.RegisteredGump(id);const auto* node=client.menus->Node(token);if (node && node->parent==client.buttons.RootToken()) { front=token;break; } } // 실제 등록표의 직계 메뉴를 찾는다.
+    CHECK(front!=0);const auto* menu=client.menus->Node(front);CHECK(menu && menu->depth==0xffffffc4U);CHECK(menu && menu->x<=row.x && menu->x+menu->width>=row.x+row.width && menu->y==0 && menu->height>=row.height);
+    const auto covered=client.Pixels();CHECK(covered!=onlyMessage && client.messages->HasMessages());client.menus->Close();client.buttons.CleanupGumps();CHECK(client.Pixels()==onlyMessage && client.messages->HasMessages());
+    open();CHECK(client.Pixels()==covered);client.buttons.KillGump(warning);client.buttons.CleanupGumps();CHECK(client.Pixels()==covered && !client.messages->HasMessages());
+}
+// 같은 페이지 재구성의 보존/전체 정리와 오래된20칸의 후속 재사용을 실제 부모에서 확인한다.
+TEST_CASE(Warnings_CommonPageClearAndStaleBoard) {
+    std::size_t sounds{};WarningClient client([] { return 0.0; },[&] { ++sounds; });
+    for (int i=0;i<20;++i) client.messages->Add("~E~yOld page"); // 원본 표를 실제 안내로 가득 채운다.
+    const auto old=client.Rows();CHECK(old.size()==20);client.Reset(true);CHECK(client.Rows().size()==20 && client.Fields()[1]==21);
+    client.Reset();CHECK(client.Rows().empty() && client.Fields()[1]==1 && client.Fields()[4]==0);
+    client.messages->Add("~E~yNew page");const auto fresh=client.Rows();CHECK(fresh.size()==1 && fresh[0].y==0 && fresh[0].serial>old.back().serial && sounds==21);
+    CHECK(client.Pixels()!=std::vector<std::uint8_t>(1024*768,7));
+}
+// 생성 중 음향 callback이 메뉴를 생성해도 새 serial/조각/현재 루트는 같은 소유자다.
+TEST_CASE(Warnings_ReentrantSoundCreatesMenuInSameRegistry) {
+    WarningClient* current{};std::size_t sounds{};WarningClient client([] { return 0.0; },[&] {
+        ++sounds;current->menus->Open({200,100},[](const auto& widgets,const auto& controls,const auto&) { widgets.BeginVertical();controls.AddText("Created during Warning sound"); });
+    });current=&client;client.messages->Add("~E~yAfter nested menu");const auto rows=client.Rows();CHECK(rows.size()==1 && sounds==1 && client.menus->HasMenus());
+    const auto token=client.buttons.SerialGump(rows[0].serial);CHECK(token && client.messages->Node(token)->parent==client.buttons.RootToken());CHECK(client.Fields()[2]>rows[0].serial);
+    const auto before=client.Pixels();client.menus->Close();client.buttons.CleanupGumps();CHECK(client.Rows().size()==1 && client.Fields()[1]==2 && before!=client.Pixels());
+    client.Reset();CHECK(client.Fields()[1]==1 && !client.messages->HasMessages());
 }
 // 실제 tell 문법과 인자 안의 쉼표/꺾쇠/스타일을 보존하며 조건으로 숨긴 명령은 실행하지 않는다.
 TEST_CASE(Warnings_InlineCommandParser) {
