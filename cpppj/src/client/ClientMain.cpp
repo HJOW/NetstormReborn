@@ -15,6 +15,7 @@
 #include "client/ClientLocalStateGlobals.h"
 #include "client/ClientCoreDataGlobals.h"
 #include "client/ClientPlayerRecords.h"
+#include "client/ClientGameplayGlobals.h"
 #include "client/ClientChatManagerGlobals.h"
 #include "client/ClientDotCommandGlobals.h"
 #include "client/RawSurfaceWorld.h"
@@ -178,6 +179,7 @@ Client::Client(ClientOptions options)
       localStateGlobals_(std::make_shared<ClientLocalStateGlobals>()),
       coreDataGlobals_(std::make_shared<ClientCoreDataGlobals>()),
       playerRecords_(std::make_shared<ClientPlayerRecords>()),
+      gameplayGlobals_(std::make_shared<ClientGameplayGlobals>(subscriberGlobals_)),
       chatManagerGlobals_(std::make_shared<ClientChatManagerGlobals>()),
       dotCommandGlobals_(std::make_shared<ClientDotCommandGlobals>()),
       chat_(std::make_unique<ChatState>(*this,options_.edition)) {
@@ -901,6 +903,8 @@ const std::shared_ptr<ClientLocalStateGlobals>& Client::LocalStateGlobals() cons
 const std::shared_ptr<ClientCoreDataGlobals>& Client::CoreDataGlobals() const { return coreDataGlobals_; }
 // 실제 Player/factory의 단일 할당 소유자를 세션에 빌린다. 조회는 초기화를 실행하지 않는다.
 const std::shared_ptr<ClientPlayerRecords>& Client::PlayerRecords() const { return playerRecords_; }
+// 현재 전역의 주소를 빌리며 조회 자체는 게임/초기화를 수행하지 않는다.
+const std::shared_ptr<ClientGameplayGlobals>& Client::GameplayGlobals() const { return gameplayGlobals_; }
 //현재 manager와 실제 할당의 한 소유자를 반환하며 공통 초기화 시점을 앞당기지 않는다.
 const std::shared_ptr<ClientChatManagerGlobals>& Client::ChatManagerGlobals() const { return chatManagerGlobals_; }
 //초기 say와 이후 등록을 보존한 같은 표를 반환하며 Session 해제 때 다시 초기화하지 않는다.

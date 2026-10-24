@@ -27,6 +27,7 @@ template<class T> T* Find(const std::map<std::uint32_t,std::unique_ptr<T>>& node
 }
 // 실제 노드/조각·버퍼/처리기는 고정 주소에서 서로 참조한다.
 struct RawMenuControls::Impl {
+    std::map<std::uint32_t,std::string> helpStrings;std::uint32_t nextHelpString{0x61100000U}; // 정적61000001..5/기본HTML61010000/전용HTML62000000..6fffffff와 겹치지 않는 공통 소유 문자열 영역이다.
     RawMenuTree common; // Client 돌 버튼과 같은 공통 상태/처리기다.
     const GameAssets& assets; // 보호 TYPE/SHP를 읽는 같은 자산 저장소다.
     FontStore& fonts; // Client 글꼴 캐시를 공유한다.
@@ -304,6 +305,7 @@ struct RawMenuControls::Impl {
     }
     // 빈 요청/정적 themeHelp/현재 HTML 링크/입력 문자열 고리의 실제 수명을 구별한다.
     std::string HelpText(std::uint32_t token) const {
+        if (const auto found=helpStrings.find(token);found!=helpStrings.end()) return found->second;
         if (!token) return {};if (token==0x61000001U) return "themeHelp";if (token==0x61000002U) return helpHooks.translate("Help");if (token==0x61000003U) return "F1Help";if (token==0x61000004U) return helpHooks.translate("Sky Overview");if (token==0x61000005U) return "minimapGump";
         // 링크 토큰은 소유 HTML 부모가 아직 살아 있는 경우에만 해석한다.
         for (const auto& [body,links]:helpLinks) if (!(common.node(body)->flags&0x10000) && token>=links.base && token-links.base<links.bytes.size()) return std::string(ResolveHtmlLink(links,token));
@@ -398,6 +400,16 @@ void RawMenuControls::SetExternalGumps(std::uint32_t slot,RawMenuExternalGumps h
 std::uint32_t RawMenuControls::BaseHandle(std::uint32_t token,std::uint32_t event,std::uint32_t first,std::uint32_t second) const { return impl_->BaseHelp(token,event,first,second); }
 const TextGump& RawMenuControls::TextBackend() const { return *impl_->costText; } // 같은 한 줄 처리기다.
 const StyleText& RawMenuControls::StyleBackend() const { return *impl_->style; } // 같은 조각 소유자다.
+// 초기 도움말 문자열도 다른 메뉴/생산 노드와 같은 공통 수명에서 반납한다.
+void RawMenuControls::SetHelpText(std::uint32_t token,std::string_view text) {
+    auto& s=*impl_;auto* node=s.common.node(token);if (!node) throw std::out_of_range("도움말 실제 노드 없음");s.helpStrings.erase(node->textPointer);node->textPointer=0;
+    if (s.nextHelpString==0x61ffffffU) throw std::overflow_error("도움말 문자열 주소 영역 소진");const auto value=++s.nextHelpString;s.helpStrings.emplace(value,text);node->textPointer=value;
+}
+// 현재 alternate 포인터만 교체하며 다른 기본 필드나 도움말 제목은 보존한다.
+void RawMenuControls::SetHelpWord(std::uint32_t token,std::string_view text) {
+    auto& s=*impl_;auto* node=s.common.node(token);if (!node) throw std::out_of_range("도움말 키 실제 노드 없음");s.helpStrings.erase(node->alternateTextPointer);node->alternateTextPointer=0;
+    if (s.nextHelpString==0x61ffffffU) throw std::overflow_error("도움말 키 주소 영역 소진");const auto value=++s.nextHelpString;s.helpStrings.emplace(value,text);node->alternateTextPointer=value;
+}
 void RawMenuControls::MeasureText(std::span<const char> bytes,const std::array<std::uint32_t,8>& context,std::int32_t& width,std::int32_t& height,std::uint32_t limit) const { impl_->metrics.Measure(bytes,DecodeGumpTextContext(context),width,height,std::bit_cast<std::int32_t>(limit)); } // 같은 원본 문맥과 signed 길이다.
 const GumpBackgroundCreate& RawMenuControls::BackgroundBackend() const { return *impl_->backgroundCreate; } // 같은 실제 자산이다.
 QuickHelpPopupState& RawMenuControls::PopupState() const { return impl_->popupState; } // 현재 팝업 표식 사본을 만들지 않는다.
@@ -434,7 +446,7 @@ void RawMenuControls::DeleteScalar(std::uint32_t token,std::uint32_t flags) cons
     else if (s.decorations.contains(token)) s.decoration->DeleteScalar(token,flags);else if (s.costs.contains(token)) s.costGump->DeleteScalar(token,flags);else if (s.sliders.contains(token) || s.thumbs.contains(token) || s.arrows.contains(token)) s.sliderWidgets->DeleteScalar(token,flags);else s.common.lifetime.DeleteScalar(token,flags);
 }
 // 공통 scalar의 release만 실제 저장소를 지운다.
-void RawMenuControls::Release(std::uint32_t token) { auto& s=*impl_;s.loading.erase(token);s.helpWindows.erase(token);s.helpBodies.erase(token);s.helpButtons.erase(token);s.helpImages.erase(token);s.helpLinks.erase(token);s.menus.erase(token);s.decorations.erase(token);s.titles.erase(token);s.sliders.erase(token);s.arrows.erase(token);s.thumbs.erase(token);s.backgrounds.erase(token);s.costs.erase(token); }
+void RawMenuControls::Release(std::uint32_t token) { auto& s=*impl_;s.helpStrings.erase(token);s.loading.erase(token);s.helpWindows.erase(token);s.helpBodies.erase(token);s.helpButtons.erase(token);s.helpImages.erase(token);s.helpLinks.erase(token);s.menus.erase(token);s.decorations.erase(token);s.titles.erase(token);s.sliders.erase(token);s.arrows.erase(token);s.thumbs.erase(token);s.backgrounds.erase(token);s.costs.erase(token); }
 // controlled 스택의 실제 루트 메뉴를 공통 루트에 부착한다.
 void RawMenuControls::Open(ScreenPoint point,const std::function<void(const MenuGumpWidgets&,const MenuGumpControls&,const MenuGump&)>& builder) {
     Close();auto& s=*impl_;if (!builder || s.menuState.index) throw std::invalid_argument("실제 메뉴 builder/controlled 스택 계약 오류");
@@ -587,6 +599,7 @@ bool RawMenuControls::Contains(ScreenPoint point) const {
 // 같은 실제 저장소의 개수/controlled 깊이를 진단 보고에 기록한다.
 std::string RawMenuControls::Report() const {
     auto& s=*impl_;std::ostringstream out;out<<"raw_menus\t"<<s.menuState.instances<<'\t'<<s.menuState.index<<'\t'<<s.menus.size()<<'\t'<<s.titles.size()<<'\t'<<s.fragments.fragments.size()<<'\n';
+    out<<"raw_gump_help_strings\t"<<s.helpStrings.size()<<'\n'; // 같은 공통 scalar가 반납한 실제 도움말 문자열 수를 읽기만 한다.
     // 로딩 부모와 실제 자식의 현재 토큰/직사각형만 읽어 잔존·재사용·화면 위치를 관측한다.
     if (const auto token=s.Reference(s.loadingState.transientSerial)) {
         const auto& fields=s.loading.at(token);const auto rect=s.common.collection.Bounds(token);

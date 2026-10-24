@@ -51,7 +51,7 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
     // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     o::SidPool& pool;/* hash: 같은 실제 공간 해시다. */ o::SquidHash& hash;/* spots: 같은 실제 공간 배열이다. */ std::vector<std::uint8_t>& spots;
     // links: 연결 함수들이 읽는 원본 전역이다. 패치 주소 / CD 주소를 주석에 둔다 (o::BridgeConnectState).
-    o::BridgeConnectState links;/* terrainType: isle 지면 자산을 타입 표에서 찾는 번호. */ std::uint32_t terrainType;/* bookkeeping: 객체 종류·소유자별 등록 목록과 개수를 관리하는 장부. */ o::SquidPostPopState bookkeeping;
+    o::BridgeConnectState& links;/* terrainType: isle 지면 자산을 타입 표에서 찾는 번호. */ std::uint32_t terrainType;/* bookkeeping: 객체 종류·소유자별 등록 목록과 개수를 관리하는 장부. */ o::SquidPostPopState bookkeeping;
     // deletion: 삭제.
     o::SquidDeletionState deletion;/* mode: 원본 실행 상태 전역. 기본값은 싱글 플레이(로컬이 서버) 전투 화면이다 (o::BridgeDecayMode). */ o::BridgeDecayMode mode;/* eventState: 처리기가 읽는 원본 전역이다. 패치 주소 / CD 주소를 괄호에 둔다 (o::BridgeEventState). */ o::BridgeEventState eventState;
     // loadState: 로딩 상태.
@@ -95,8 +95,9 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
     Impl(o::OriginalEdition selected,std::span<const o::RiftTypeRecord> inputTypes,std::span<const o::RiftTypeFrames> inputFrames,
         std::span<const o::SquidDisplayShape> inputShapes,o::BridgeConnectState state,std::uint32_t terrain,o::Kernel* processKernel,std::shared_ptr<RawSurfaceStorage> supplied)
         :storage(SelectStorage(std::move(supplied),selected,inputTypes,inputFrames,inputShapes,state,terrain)),storageUse(storage->Acquire()),
-         edition(selected),types(storage->types),frames(storage->frames),shapes(storage->shapes),codes(storage->codes),pool(storage->pool),hash(storage->hash),spots(storage->spots),links(state),terrainType(terrain),ownerMode(storage->ownerMode),
+         edition(selected),types(storage->types),frames(storage->frames),shapes(storage->shapes),codes(storage->codes),pool(storage->pool),hash(storage->hash),spots(storage->spots),links(storage->links),terrainType(terrain),ownerMode(storage->ownerMode),
          localKernel(processKernel ? nullptr : std::make_unique<o::Kernel>()),kernel(processKernel ? *processKernel : *localKernel) {
+        links=state; // 대여 전 검증한 실제 설치 종류를 다른 모듈 구성보다 먼저 같은 장기 전역에 쓴다.
         if (pool.Edition()!=selected || frames.size()!=inputFrames.size() || shapes.size()!=inputShapes.size() || types.size()!=inputTypes.size()) throw std::invalid_argument("raw 표면 월드 실제 물리/판본 불일치");
         if (terrainType>=types.size() || links.bridgeType>=types.size() || links.noIslandType>=types.size())
             throw std::out_of_range("raw 표면 월드 타입 번호 오류");

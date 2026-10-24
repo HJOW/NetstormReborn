@@ -2083,5 +2083,7 @@ set_source_files_properties(ChatStateClearTests.cpp PROPERTIES COMPILE_DEFINITIO
 target_sources(netstorm_tests PRIVATE PlayerInitializationTests.cpp)
 # 실제 Client Player/factory 소유자와 raw 헤더/재대여/초기화 실패를 검사한다.
 target_sources(netstorm_tests PRIVATE ClientPlayerRecordsTests.cpp)
+# Session 없는 실제 생산 생성/공통 수명과 현재 전역 대여를 검사한다.
+target_sources(netstorm_tests PRIVATE ProductionInitialContextTests.cpp)
 set_source_files_properties(PlayerInitializationTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_PLAYER_INITIALIZATION_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/player-initialization-x86.tsv\"")

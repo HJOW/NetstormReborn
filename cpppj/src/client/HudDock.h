@@ -57,6 +57,19 @@ struct HudDockHooks {
     std::function<void(bool)> chatVisible; //0042f250의 실제 채팅 표시 설정이다.
     std::function<void(bool)> chatInput; //0042f270의 실제 채팅 입력 표시다.
 };
+// Uber와 생산 패널의 실제 구분선이 공유하는 생성/부착/슬레이브 몸체다.
+class HudDividerGump {
+public:
+    HudDividerGump(const std::int32_t& width,const std::int32_t& height,const std::int8_t& color,const HudDockHooks& hooks); // 실제 화면 두 전역과 같은 callback을 사본 없이 빌린다.
+    std::uint32_t Construct(std::uint32_t token,std::uint32_t axis,std::int32_t width,std::int32_t height,std::uint32_t flags,std::uint32_t type,std::uint32_t frame) const; //004c6c50의 실제 전체 구분선 생성이다.
+    void RegisterSlave(std::uint32_t master,std::uint32_t slave,std::uint32_t flags) const; //004c4790의 고정10슬롯 관계 등록이다.
+    void Attach(std::uint32_t token,float x,float y,std::uint32_t parent,std::uint32_t mode) const; //004c48f0의 현재 관계/좌표를 사용하는 실제 부착이다.
+private:
+    GumpCreateNode& Node(std::uint32_t token) const; // 실제 기본 주소만 조회한다.
+    HudDividerNode& Divider(std::uint32_t token) const; // 같은 기본 주소인 구분선 확장을 요구한다.
+    const std::int32_t& screenWidth_;const std::int32_t& screenHeight_; // 실제 현재 화면 크기이며 viewport 사본은 필요하지 않다.
+    const std::int8_t& color_;const HudDockHooks& hooks_; // 호출보다 오래 사는 실제 구분선 종류/가상 분배다.
+};
 // 상태와 노드는 처리기 및 모든 콜백보다 오래 살아 있어야 한다.
 class HudDock {
 public:

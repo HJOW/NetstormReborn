@@ -3607,7 +3607,7 @@ TEST_CASE(CampaignProduction_ModalPagesPreservePanelBudgetAndResize) {
     controls.EnableMenus(assets.game,fonts,std::move(hooks));const auto& texture=assets.game.Find("fortGump");const auto metrics=assets.game.Shapes().SquidMetrics(texture.block,0);const RawButtonAssets buttonAssets{static_cast<std::uint32_t>(texture.block+70),0,metrics.width,metrics.height,{}}; // 실제 버튼 텍스처와 공통 트리다.
     const std::array<GumpControl,1> game{{{0,{84,4,160,26},false,true,false}}},dialog{{{0,{470,400,550,423},false,true,false}}};const std::array<std::string,1> gameLabels{{"Game"}},dialogLabels{{"OK"}}; // 현재 페이지의 실제 버튼들이다.
     controls.SetControls(game,gameLabels,1024,768,buttonAssets);
-    auto& panel=controls.EnableProduction(session,assets.game,{[&] { return wall; },[](std::string_view) {},[](std::string_view) { throw std::logic_error("모달 수명 검사에서 예기치 않은 Tell"); },[](std::string_view key,std::int32_t fallback) { return key=="useProductTimers" ? 0 : fallback; }});
+    auto& panel=controls.EnableProduction(session,assets.game,{[&] { return wall; },[](std::string_view) {},[](std::string_view) { throw std::logic_error("모달 수명 검사에서 예기치 않은 Tell"); },[](std::string_view key,std::int32_t fallback) { return key=="useProductTimers" ? 0 : fallback; },[](std::string_view text) { return std::string(text); }});
     const auto summary=[&] { const auto text=controls.Production()->Report();return text.substr(0,text.find('\n')); }; // 같은 실제 root/id/크기/예산만 읽는다.
     // 게임 프레임을 실행하지 않고 실제 UI idle만 호출해 원본 예산 애니메이션을 수렴시킨다.
     for (int frame=0;frame<200;++frame) { wall+=.025;controls.Poll({InputCode::kRelease,500,350}); }
@@ -3653,7 +3653,7 @@ struct ProductionLifetimeScene {
     ~ProductionLifetimeScene() { controls.reset(); }
     // 공개 설치 경계를 통해 새 처리기를 만들며 이전 객체를 새 공장 성공으로 재사용하지 않는다.
     RawProductionControls& OpenProduction() {
-        return controls->EnableProduction(*session,assets.game,{[this] { return wall; },[](std::string_view) {},[](std::string_view) { throw std::logic_error("생산 수명 검사의 예상 밖 Tell"); },[](std::string_view key,std::int32_t fallback) { return key=="useProductTimers" ? 0 : fallback; }});
+        return controls->EnableProduction(*session,assets.game,{[this] { return wall; },[](std::string_view) {},[](std::string_view) { throw std::logic_error("생산 수명 검사의 예상 밖 Tell"); },[](std::string_view key,std::int32_t fallback) { return key=="useProductTimers" ? 0 : fallback; },[](std::string_view text) { return std::string(text); }});
     }
     // 공통 보고서의 실제 등록 개수이며 생산 처리기 사본을 세지 않는다.
     std::uint32_t Count() const { std::istringstream input(controls->Report());std::string label;std::uint32_t buttons{},count{};input>>label>>buttons>>count;CHECK(label=="RawButtons");return count; }
@@ -4781,4 +4781,27 @@ TEST_CASE(CampaignSharedStorage_ForeignAssetsFailBeforePhysicalMutation) {
     const auto before=std::vector<std::uint8_t>(storage->pool.Bytes().begin(),storage->pool.Bytes().end());try { SharedKernelSession(std::move(services)); } catch (const std::invalid_argument&) { rejected=true; }
     CHECK(rejected && !storage->Borrowed() && storage->Generation()==0 && std::equal(before.begin(),before.end(),storage->pool.Bytes().begin()));
     auto valid=SharedKernelSession(SharedKernelServices(client,external));CHECK(valid->Core().pool.Edition()==OriginalEdition::Patch1078); // 실패한 Player 대여도 실제 다음 생성 전에 반납됐다.
+}
+
+// 실제 두 Session과 Client가 커서/검색/Player/editor의 같은 주소를 공유하며 Runtime만 교체한다.
+TEST_CASE(CampaignSharedGameplay_TwoActualSessionsPublishAndRetireSameGlobals) {
+    Client client(SessionLinksOptions());SessionServicesFixture external;auto globals=client.GameplayGlobals();auto storage=MakeRawSurfaceStorage(netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078).game);const auto* cursor=&globals->cursor;const auto* finder=&globals->finder; // 창 없는 실제 자산 물리와 같은 Client 전역 고정 주소다.
+    for (int generation=0;generation<2;++generation) { // 실제 첫 반납 뒤 새 Session을 설치한다.
+        auto services=SharedKernelServices(client,external);services.gameplayGlobals=globals;services.subscriberGlobals=client.SubscriberGlobals();services.surfaceStorage=storage;
+        auto session=SharedKernelSession(std::move(services));CHECK(globals->Borrowed() && &globals->RequireSession()==session.get());session->Load();const auto context=session->ProductionContext();
+        CHECK(context.gameplay==globals && context.players==client.PlayerRecords() && context.storage==storage);CHECK(&session->CursorDropSettings()==cursor && &session->ProductionFinder()==finder);
+        CHECK(session->PlayerKnown()==globals->player.playerKnown && session->LocalOwner()==globals->player.battleOwner && session->TemplateOwner()==globals->player.templateOwner && session->Editor()==globals->world.editor);
+        session.reset();CHECK(!globals->Borrowed() && globals->player.playerKnown==0 && globals->cursor.lockDepth==1 && client.GetKernel().Size()==0);bool missing{};
+        try { globals->RequireSession(); } catch (const std::logic_error&) { missing=true; }CHECK(missing); // 폐기한 Runtime을 다시 공개하지 않는다.
+    }
+}
+
+// 다른 Client 참조와 부분 생성 실패를 실제 공장에 넣고 대여/외부 Kernel의 부작용을 구별한다.
+TEST_CASE(CampaignSharedGameplay_ForeignAndPartialConstructionRetireLease) {
+    Client client(SessionLinksOptions());SessionServicesFixture external;auto globals=client.GameplayGlobals();auto services=SharedKernelServices(client,external);services.gameplayGlobals=globals;bool rejected{};
+    try { SharedKernelSession(std::move(services)); } catch (const std::invalid_argument&) { rejected=true; }CHECK(rejected && !globals->Borrowed() && client.PlayerRecords()->Base()==0); // 실제 Subscriber 소유자를 빠뜨린 입력이다.
+    bool deleted{};const auto pid=client.GetKernel().Add(std::make_unique<SharedKernelProbe>(std::function<void()>{},[&] { deleted=true; }));
+    services=SharedKernelServices(client,external);services.gameplayGlobals=globals;services.subscriberGlobals=client.SubscriberGlobals();services.deferExistingEditorFile=true;rejected=false;
+    try { SharedKernelSession(std::move(services)); } catch (const std::invalid_argument&) { rejected=true; }CHECK(rejected && !globals->Borrowed() && !deleted && client.GetKernel().Get(pid));
+    services=SharedKernelServices(client,external);services.gameplayGlobals=globals;services.subscriberGlobals=client.SubscriberGlobals();auto session=SharedKernelSession(std::move(services));CHECK(&globals->RequireSession()==session.get());session.reset();CHECK(!globals->Borrowed() && deleted);
 }

@@ -99,6 +99,7 @@ RawCampaignSessionServices MakeCampaignClientServices(Client& client,RawButtonCo
     RawCampaignSessionServices services; // 게임 규칙 경계는 실제 세션의 명시 누락 판정을 유지한다.
     services.subscriberGlobals=client.SubscriberGlobals(); // Init/Chat/모든 Session이 같은 두 DWORD를 수명째 빌린다.
     services.playerRecords=client.PlayerRecords(); // 실제 Player/factory를 Client 수명에 소유하고 Session 대여 중 재할당하지 않는다.
+    services.gameplayGlobals=client.GameplayGlobals(); // 초기 HUD와 같은 실제 현재 Player/커서/검색/미션 전역이다.
     services.processKernel=&client.GetKernel(); // 모든 실제 Form/경로/Regular와 번개가 같은 원문 전역 Kernel을 사용한다.
     services.surfaceStorage=client.SurfaceStorage(); // 현재 Core의 Pool/해시/TYPE/spot을 같은 실제 Client 물리에 연결한다.
     services.colorSortInput=client.ColorSortInput(); // 실제 Client의 같은 고정 초기입력 소유자를 반드시 전달한다.

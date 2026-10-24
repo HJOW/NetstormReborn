@@ -1,0 +1,3198 @@
+{
+  "unit": 398,
+  "finalization": {
+    "firstWrapperReturnCode": 1,
+    "completionArtifactsWritten": true,
+    "closedLogHashRefreshed": true,
+    "note": "첫 완료 작성은 PowerShell 리디렉션이 git의 LF/CRLF 경고를 NativeCommandError로 기록해 wrapper 종료1이었다. 제품 보고서·문서·인계는 모두 작성됐다. 작성 중이던 final1.log 한 개의 중간 SHA 차이를 확인하고 닫힌 로그의 최종 SHA만 갱신했다. 이후 전체 SHA/UTF-8/링크/stage 감사로 검증한다."
+  },
+  "date": "2026-10-24",
+  "host": "HJOW-Athlon",
+  "beginCommit": "a89fbc61",
+  "lastFullDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23",
+    "sourceSha256": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646"
+  },
+  "goalComplete": false,
+  "scope": "실제 생산 전체 생성 경계/공통 현재 전역/도움말과 구분선",
+  "productSha256": "8ccdcfadd7b84978df46223807d65ba776d75c75107e9da0f78d366b7751150e",
+  "testBinarySha256": "16ba8391e9891c68373993b8d15ed81b6f9a9144cac0ce09f7cd54ee049aa2e8",
+  "builds": [
+    {
+      "index": 1,
+      "session": 81114,
+      "returnCode": 1,
+      "errors": [
+        "C2039",
+        "C2440"
+      ],
+      "warnings": [
+        "C4390"
+      ],
+      "path": "extracted/cpp-production-context-398-build1.log",
+      "sha256": "4bd463e3f25890bbaccfc819dc2063ad0a03d1d8e738dc2734bb71d4fca310ff"
+    },
+    {
+      "index": 2,
+      "session": 63995,
+      "returnCode": 0,
+      "errors": [],
+      "warnings": [],
+      "path": "extracted/cpp-production-context-398-build2.log",
+      "sha256": "a53ff127239e447fd70131756d9951b8940f21224314a6db441a3a5df2cf5360"
+    },
+    {
+      "index": 3,
+      "session": 9536,
+      "returnCode": 0,
+      "errors": [],
+      "warnings": [],
+      "path": "extracted/cpp-production-context-398-build3.log",
+      "sha256": "e5e40c83787656aa8c5691ad2d6a1963986a8b9124c60fe8b310cd55a853cce5"
+    },
+    {
+      "index": 4,
+      "session": 59027,
+      "returnCode": 0,
+      "errors": [],
+      "warnings": [],
+      "path": "extracted/cpp-production-context-398-build4.log",
+      "sha256": "521bde1c4fba3dcddffd792817b22447c6b3f41bf238b970861b17c4a07b0f06"
+    },
+    {
+      "index": 5,
+      "session": 87841,
+      "returnCode": 0,
+      "errors": [],
+      "warnings": [],
+      "path": "extracted/cpp-production-context-398-build5.log",
+      "sha256": "5b8d938828e72164a7a9e7f0cdd48240e0b54f3569f8278feaa2e5bcdf32ca61"
+    }
+  ],
+  "focused": {
+    "newTests": 7,
+    "totalTests": 66,
+    "names": [
+      "ProductionInitialContext_ConstructsAllNativeChildrenWithoutSession",
+      "ProductionInitialContext_RepeatedConstructionAndGlobalPageRetirement",
+      "ProductionInitialContext_MissingTranslationKeepsAndRetiresPartialEffects",
+      "ProductionInitialContext_GameplayGlobalsKeepRealAliasesAndRejectDuplicate",
+      "CampaignSharedGameplay_TwoActualSessionsPublishAndRetireSameGlobals",
+      "CampaignSharedGameplay_ForeignAndPartialConstructionRetireLease",
+      "CampaignProductionLifetime_GlobalCleanupRetiresRootAndBudget",
+      "CampaignProductionLifetime_IndependentBudgetCleanupRetiresText",
+      "CampaignProductionLifetime_QueuedKillThenCloseDrainsOnce",
+      "CampaignProductionLifetime_DuplicateOpenAndProviderRecreation",
+      "CampaignProduction_ModalPagesPreservePanelBudgetAndResize",
+      "CampaignSharedKernel_ActualFormsAndSingleClientFrame",
+      "CampaignSharedKernel_GameWorldSurvivesExplicitGlobalClear",
+      "CampaignSharedKernel_FinalDrainPrecedesPlayerAndServiceRelease",
+      "CampaignSharedKernel_PartialConstructorPreservesExistingProcess",
+      "CampaignSharedStorage_TwoActualSessionsUseSamePhysicalArrays",
+      "CampaignSharedStorage_PartialConstructorReleasesPhysicalLease",
+      "CampaignSharedStorage_ForeignAssetsFailBeforePhysicalMutation",
+      "HudDock_IndependentNativeBodiesAndNestedViewport",
+      "HudDividerInput_Native13398StateAndCallbacks",
+      "UberRoot_Native160",
+      "UberRoot_RealTreeAndLifetimeTransfer",
+      "UberRoot_DockReadsLiveThisFields",
+      "UberRoot_MissingFactoryKeepsPriorEffects",
+      "UberRoot_MissingOldRootFailsAfterConstructionEffects",
+      "UberRoot_EmptyLeafNeedsNoGameHook",
+      "InventoryGump_Native170",
+      "InventoryGump_SharedTreeRebuildAndLifetime",
+      "InventoryItemGump_Native132",
+      "InventoryItemGump_ActualAssetsTreePixelsAndClick",
+      "ProductionMaintenance_TestBridgeSequence",
+      "ProductionMaintenance_TestBridgeOverrideAfterOriginalRules",
+      "ProductionMaintenance_NativeAllInputs",
+      "ProductionMaintenance_TransientNeighborNativeBoundary",
+      "ProductionSync_Native98",
+      "ProductionHintGump_Native126",
+      "ProductionShortcuts_Native4280ReachableCases",
+      "ProductionShortcuts_ReleasePauseAndLazyDevices",
+      "RawMenuControls_HelpActualTreePixelsAndOutsideInput",
+      "RawMenuControls_OwnedHelpStringsDriveRealMenuAndRelease",
+      "RawMenuControls_HelpActualHistoryButtonsAndReopen",
+      "RawMenuControls_HelpActualTypeInfoAndImage",
+      "RawMenuControls_FloatingSpActualPixelsAndLifetime",
+      "RawMenuControls_CommonTreeInputAndDisabledItem",
+      "RawMenuControls_HorizontalPointAndDeferredReplace",
+      "RawMenuControls_FancySubmenuPixelsAndCleanup",
+      "RawMenuControls_ObjectMenuCommandsAndCurrentConfig",
+      "RawMenuControls_CarrierAndObjectMenuChain",
+      "RawMenuControls_MissionLoadingUsesSharedTreeAndCancel",
+      "RawMenuControls_MinimapBeforeSessionAndAcrossWorldBindings",
+      "GumpLifetime_PatchNative",
+      "GumpLifetime_CdNative",
+      "GumpLifetime_AdditionalNative",
+      "GumpLifetime_CreateTreeKillCleanupAndReuse",
+      "GumpLifetime_TreeReplacementDefersDestruction",
+      "GumpLifetime_BaseDoesNotUnregisterOrRemoveDialogs",
+      "GumpLifetime_CdIdleCapacity",
+      "GumpLifetime_ContractsAndCycles",
+      "GumpLifetime_CallbackExceptionKeepsWrittenState",
+      "RawSurfaceWorld_PausedRegularResumesWithClientGameClock",
+      "RawSurfaceWorld_HardBridgeAndPendingMissionTeardown",
+      "RawSurfaceWorld_DisplaySuppressionAndDeviceReplacement",
+      "RawSurfaceWorld_InvalidLoadRejectedBeforeAllocation",
+      "RawSurfaceWorld_RuntimeSharesStorageAndCurrentDispatch",
+      "RawSurfaceWorld_RuntimeRejectsIncompleteOrLateBinding",
+      "RawSurfaceWorld_CampaignFinishPreservesParentGraph"
+    ]
+  },
+  "gui": {
+    "returnCode": 0,
+    "seconds": 194.11718499998096,
+    "log": "extracted/cpp-production-context-398-gui2.log",
+    "productSha256": "8ccdcfadd7b84978df46223807d65ba776d75c75107e9da0f78d366b7751150e",
+    "testBinarySha256": "16ba8391e9891c68373993b8d15ed81b6f9a9144cac0ce09f7cd54ee049aa2e8",
+    "sameBinaries": true,
+    "originalsUnchanged": true,
+    "storageRows": [
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "2",
+        "1"
+      ]
+    ],
+    "gameplayRows": [
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ]
+    ],
+    "generations": [
+      1,
+      2
+    ],
+    "samePhysicalInAllObservations": true,
+    "sameGlobalsInAllObservations": true,
+    "observation": {
+      "returnCode": 0,
+      "originalsUnchanged": true,
+      "stages": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "I"
+      ],
+      "startSp": 10000,
+      "finalSp": 3075,
+      "templeCount": 1,
+      "workshopCount": 1,
+      "maxArchers": 4,
+      "finalArchers": 3,
+      "salvagePackets": 1,
+      "refund": 75,
+      "doneBefore": 1,
+      "doneAfter": 1,
+      "nextMission": "tutorial3",
+      "nextSp": 2000,
+      "initialProgressInjected": false,
+      "noStateInjection": true,
+      "nextGuideSequence": 4,
+      "inspectionContract": "native-guide-0-6",
+      "lastGameTime": 81.149,
+      "naturalTutorialTwoComplete": true,
+      "goalComplete": false,
+      "scope": "실제 A~I/사제 신전·워크샾/지식·생산/발사기4개/신전 선택/정상 회수·완료값 관측/다음 Tutorial3 진입이다. 영구 진행 저장·Early3 진행·전체 동일성은 별도다.",
+      "binarySha256": "8ccdcfadd7b84978df46223807d65ba776d75c75107e9da0f78d366b7751150e",
+      "productTimers": 1,
+      "testStateInjection": false
+    }
+  },
+  "full": {
+    "returnCode": 0,
+    "seconds": 300.61616700002924,
+    "log": "extracted/cpp-production-context-398-ctest1.log",
+    "productSha256": "8ccdcfadd7b84978df46223807d65ba776d75c75107e9da0f78d366b7751150e",
+    "testBinarySha256": "16ba8391e9891c68373993b8d15ed81b6f9a9144cac0ce09f7cd54ee049aa2e8",
+    "counts": [
+      [
+        "2702",
+        "0"
+      ]
+    ],
+    "sameBinaries": true,
+    "originalsUnchanged": true
+  },
+  "sourceHashes": {
+    "cpppj/src/client/CMakeLists.txt": "341b8f6e3b6b3fca35b91623695e63389e0b1dea131bc4fad82a1690bfe592a6",
+    "cpppj/src/client/CampaignClientServices.cpp": "98023b64bfb7f21703988651c40a116b0ae7cc67d78469d240e96acdea083d5a",
+    "cpppj/src/client/ClientGameplayGlobals.cpp": "74b2ce20ae3c8bbe7375e1efb236ad749b7dc4b88e488ef8a61e38b3223304f9",
+    "cpppj/src/client/ClientGameplayGlobals.h": "c01453d7f86a626395c9dd623a628fd13e9f4118029344b6e9ce6f5dc81d375f",
+    "cpppj/src/client/ClientMain.cpp": "87dd76af363baf6c37101bd038d8638284747f40a6c25f2615c73a2d9b193447",
+    "cpppj/src/client/ClientMain.h": "8908aac02496db2b5590db1232b9a247ce4001a2362ceb756c515a167cc9ce49",
+    "cpppj/src/client/HudDock.cpp": "aaac6bde8decd3f0b838c89bdabd306c90a1b8965b97b1b2bbb0a2a8e265aafb",
+    "cpppj/src/client/HudDock.h": "e324e20ac796d9d58e2bed6774ec7ea67a84af52f2cf614a3358910de9842960",
+    "cpppj/src/client/ProductionControlContext.h": "5f8c25058e2796b8b02bbd8bf6ab9418ed7050dd0f950cb9b397b9695659ef15",
+    "cpppj/src/client/RawButtonControls.cpp": "22a651c0b79f578b412bd833b96c28a722f3afbd799bd6267e272755c3596171",
+    "cpppj/src/client/RawButtonControls.h": "5c2c36057045a2f721ac528749f89f5690c2f180d94a9d7dc31cdd67e63a2ebb",
+    "cpppj/src/client/RawCampaignSession.cpp": "4cec7fcace050344c9b6c4e63d6807391d0e6fbf20bddff259bc2747748d55a2",
+    "cpppj/src/client/RawCampaignSession.h": "21d0cf3293dffdf94dfb1b2c8fd83793a36dbef60628e77e0d73908a54d2b174",
+    "cpppj/src/client/RawMenuControls.cpp": "e9e46308fa88a79a7addf475f51fa978a4ee472074d4fc061b975f3932368b59",
+    "cpppj/src/client/RawMenuControls.h": "57d0301dc80e33d87d99026b08d8e31072d05341f7cf54ac6d16d91fe27b7434",
+    "cpppj/src/client/RawProductionControls.cpp": "406e25d8f2a9b2b9622e2e36f85b71ef5f21a6d1fa4e862c2be198cfb50eb6ad",
+    "cpppj/src/client/RawProductionControls.h": "a8d11a4b22728bbb5a2734a243d44801f7f0631b93d501b24a21d9326da82042",
+    "cpppj/src/client/RawProductionMaintenance.h": "902bdf896d397eb0c1f4eff802f2414a9b76cb7f32d111b7fa43ce9c87be6079",
+    "cpppj/src/client/RawSurfaceStorage.cpp": "aab3aeeaa102a1baa9c6cc8144ec58690b52219e8f1fffae7d0674313f5b292c",
+    "cpppj/src/client/RawSurfaceWorld.cpp": "b2bde3dac0c42c0b0ea642129ef5c7997fd9d2af7263ff9c008f406e90ec3c32",
+    "cpppj/src/client/RawSurfaceWorld.h": "0309e8a584f061c86b607d3970c6b83d7e8c4be22bb71d90deff92230e261f9d",
+    "cpppj/src/client/UberGump.cpp": "32838c600db6dfddec7c2aa9c7b77bb1dff92504ce5fe3480e6e427f7ac901ea",
+    "cpppj/tests/CMakeLists.txt": "a903319d71f8a00588750d814cf6337b6a13f149b6851ed588a535d82c1208c9",
+    "cpppj/tests/CampaignSessionTests.cpp": "12d1c68b33f7522cfd16b7b0573aedc0b2b648b3cc6235048b0be159cb282312",
+    "cpppj/tests/ProductionInitialContextTests.cpp": "dce101c3d81ffd7767744685bbad5aaa546b460cf858223559866380011cb049",
+    "cpppj/tests/RawMenuControlsTests.cpp": "8613ee9fb62c7968cb90fa5291aa031f528ff6b4cee100f5f2f7d0f1ea10a1c0"
+  },
+  "preservedNativeHashes": {
+    "cpppj/tests/fixtures/hud-dock-geometry-x86.tsv": "a8bd529f1df42321d035882dcdc59efb1016b43b2ad08ea108a0fe879250830e",
+    "cpppj/tests/fixtures/hud-divider-input-x86.tsv": "d6551d404c129e9e389519ffc4cb11061f1c4769929a5f4dd0fc65f1100d6183",
+    "cpppj/tests/fixtures/uber-root-x86.tsv": "eb1720f168c6d48b45a5c6526c82019657f14c197c4b5f62c9d50b394e27b717",
+    "cpppj/tests/fixtures/inventory-grid-x86.tsv": "e58dd7725294925c2e9ff69c39521591ddedbabc8c21e2b8ee3034643c71aa0c",
+    "cpppj/tests/fixtures/inventory-item-x86.tsv": "2e0dd1216399d96cdb76e68f8d8ef1aa017b398376e3ec23a7d195518aaac749",
+    "cpppj/tests/fixtures/production-idle-x86.tsv": "d8b5ac6f180d70225b16a726a6b36d75069545206aa1b579882ff013bcc3ec91",
+    "cpppj/tests/fixtures/production-sync-x86.tsv": "5dd7df714a0e7b7c2c47974539504e6f4df179f32fd937b335172be0a780b164",
+    "cpppj/tests/fixtures/production-hint-x86.tsv": "de2e73e104769163f2af876dd8bb41d16c1b0e15d0a33518e624b430d216d629",
+    "cpppj/tests/fixtures/production-shortcuts-x86.tsv": "e97fbf01c4e571fa09dcda69c1041fd0d9d7a30cf05ed7c07ea73ad0b6ed43aa"
+  },
+  "rawHashes": {
+    "extracted/cpp-production-context-398-audit.py": "b5a0dfcdc8d50965181ea3d64af665f8f53852387d7b4eda02ea3554f8030850",
+    "extracted/cpp-production-context-398-build1.log": "4bd463e3f25890bbaccfc819dc2063ad0a03d1d8e738dc2734bb71d4fca310ff",
+    "extracted/cpp-production-context-398-build2.log": "a53ff127239e447fd70131756d9951b8940f21224314a6db441a3a5df2cf5360",
+    "extracted/cpp-production-context-398-build3.log": "e5e40c83787656aa8c5691ad2d6a1963986a8b9124c60fe8b310cd55a853cce5",
+    "extracted/cpp-production-context-398-build4.log": "521bde1c4fba3dcddffd792817b22447c6b3f41bf238b970861b17c4a07b0f06",
+    "extracted/cpp-production-context-398-build5.log": "5b8d938828e72164a7a9e7f0cdd48240e0b54f3569f8278feaa2e5bcdf32ca61",
+    "extracted/cpp-production-context-398-checks.py": "e20b2a08ad7bac02e9d568a1fb8261e071f23697c45bad6be6f2c7d177af0bfc",
+    "extracted/cpp-production-context-398-construct.py": "652b09e4c5d13ab15cd8e106fbe25d7d137ba72b7f8888c748cc52d28b235452",
+    "extracted/cpp-production-context-398-ctest1-tests.log": "1273fdea6b3c23da38a9a2f1a86eadb7cc6bbe52b4516460807802bbab0d1448",
+    "extracted/cpp-production-context-398-ctest1.json": "20c1f4f68c405b42446d7c8b74ed11ec8bd57b7ede60845d31d2925b14a5177e",
+    "extracted/cpp-production-context-398-ctest1.log": "80f45594d27b33577ca184e45ca00cfd4b25e3f55f3386c019234fa9809956da",
+    "extracted/cpp-production-context-398-early2-gui2/A.bmp": "4e27e37c5062d861afb6217902a4de6907a51eaad1b0f2856f1b2545c37cef00",
+    "extracted/cpp-production-context-398-early2-gui2/cycle0.bmp": "a717333e72f781d9efe62f847e9c7cb56b8777c50f59d1e4bb593895349c393b",
+    "extracted/cpp-production-context-398-early2-gui2/cycle1.bmp": "b97a7a49c649101e5aa7d26be1873bc718e175f4c843b5955f37c73a6de8e185",
+    "extracted/cpp-production-context-398-early2-gui2/cycle10.bmp": "b509efbad3b21705132ebfcc71c286f4070ba20d59c6af2f9ebcc9f094481299",
+    "extracted/cpp-production-context-398-early2-gui2/cycle11.bmp": "e107f69e4ee724c230fcb4f4a1f30cc20e8db3d0e3ce4b61d77f09dd6e4920e2",
+    "extracted/cpp-production-context-398-early2-gui2/cycle12.bmp": "7201cbd9e4f56210b57bf57ece8c71f88d0df40b0759d557052572b7b66f1c24",
+    "extracted/cpp-production-context-398-early2-gui2/cycle13.bmp": "342f3efe55b02386e2c18c20f978e945535a0f86b5c24bf5e17029da4644a160",
+    "extracted/cpp-production-context-398-early2-gui2/cycle14.bmp": "9c13d24692568db24a88287dcd2e5fe2da8bed0d7772f05d2ce93a303c08922d",
+    "extracted/cpp-production-context-398-early2-gui2/cycle15.bmp": "4a9e6d59a81b961c8e61f89667cc4b34b383ab9a7eba53309631eafdb75425fa",
+    "extracted/cpp-production-context-398-early2-gui2/cycle16.bmp": "2ae73c9f28f771910c5c8dece131e422125c0c312ea8ba7372a946289ef5bf72",
+    "extracted/cpp-production-context-398-early2-gui2/cycle17.bmp": "667fdeeff062c5ade0d08c9e5426f5110791f94a68903211a031c3dba9441761",
+    "extracted/cpp-production-context-398-early2-gui2/cycle18.bmp": "75d1a516afad9349dfee6f74e91deba06b65553d78572c7cb620e3b72ce1e0e9",
+    "extracted/cpp-production-context-398-early2-gui2/cycle19.bmp": "f51260f6ce119807e3bd5e7cd843d9292d8b9fa736d0cbd5a1434f8c7387df4b",
+    "extracted/cpp-production-context-398-early2-gui2/cycle2.bmp": "f590473911dbcdd1d60a90e7794cc695308bb88867e73f41747b9fe11c07f0b1",
+    "extracted/cpp-production-context-398-early2-gui2/cycle20.bmp": "f51260f6ce119807e3bd5e7cd843d9292d8b9fa736d0cbd5a1434f8c7387df4b",
+    "extracted/cpp-production-context-398-early2-gui2/cycle21.bmp": "f51260f6ce119807e3bd5e7cd843d9292d8b9fa736d0cbd5a1434f8c7387df4b",
+    "extracted/cpp-production-context-398-early2-gui2/cycle22.bmp": "f51260f6ce119807e3bd5e7cd843d9292d8b9fa736d0cbd5a1434f8c7387df4b",
+    "extracted/cpp-production-context-398-early2-gui2/cycle23.bmp": "f51260f6ce119807e3bd5e7cd843d9292d8b9fa736d0cbd5a1434f8c7387df4b",
+    "extracted/cpp-production-context-398-early2-gui2/cycle24.bmp": "f51260f6ce119807e3bd5e7cd843d9292d8b9fa736d0cbd5a1434f8c7387df4b",
+    "extracted/cpp-production-context-398-early2-gui2/cycle25.bmp": "f51260f6ce119807e3bd5e7cd843d9292d8b9fa736d0cbd5a1434f8c7387df4b",
+    "extracted/cpp-production-context-398-early2-gui2/cycle26.bmp": "f51260f6ce119807e3bd5e7cd843d9292d8b9fa736d0cbd5a1434f8c7387df4b",
+    "extracted/cpp-production-context-398-early2-gui2/cycle27.bmp": "f51260f6ce119807e3bd5e7cd843d9292d8b9fa736d0cbd5a1434f8c7387df4b",
+    "extracted/cpp-production-context-398-early2-gui2/cycle28.bmp": "f51260f6ce119807e3bd5e7cd843d9292d8b9fa736d0cbd5a1434f8c7387df4b",
+    "extracted/cpp-production-context-398-early2-gui2/cycle29.bmp": "f51260f6ce119807e3bd5e7cd843d9292d8b9fa736d0cbd5a1434f8c7387df4b",
+    "extracted/cpp-production-context-398-early2-gui2/cycle3.bmp": "69f2c49bd9f93bc18973fc373898f533e2f2cd1ee4980455b9fac550e7622a5f",
+    "extracted/cpp-production-context-398-early2-gui2/cycle30.bmp": "f51260f6ce119807e3bd5e7cd843d9292d8b9fa736d0cbd5a1434f8c7387df4b",
+    "extracted/cpp-production-context-398-early2-gui2/cycle31.bmp": "f51260f6ce119807e3bd5e7cd843d9292d8b9fa736d0cbd5a1434f8c7387df4b",
+    "extracted/cpp-production-context-398-early2-gui2/cycle32.bmp": "f51260f6ce119807e3bd5e7cd843d9292d8b9fa736d0cbd5a1434f8c7387df4b",
+    "extracted/cpp-production-context-398-early2-gui2/cycle33.bmp": "f51260f6ce119807e3bd5e7cd843d9292d8b9fa736d0cbd5a1434f8c7387df4b",
+    "extracted/cpp-production-context-398-early2-gui2/cycle34.bmp": "f51260f6ce119807e3bd5e7cd843d9292d8b9fa736d0cbd5a1434f8c7387df4b",
+    "extracted/cpp-production-context-398-early2-gui2/cycle35.bmp": "f51260f6ce119807e3bd5e7cd843d9292d8b9fa736d0cbd5a1434f8c7387df4b",
+    "extracted/cpp-production-context-398-early2-gui2/cycle4.bmp": "65c83e82bf6595f10ce0d0a622e0b02415dd107c379db62b78696cf49f89d96f",
+    "extracted/cpp-production-context-398-early2-gui2/cycle5.bmp": "0311239266b2a04a350959a2f9b460d949d60b946adb385dc0d525fb4e21c491",
+    "extracted/cpp-production-context-398-early2-gui2/cycle6.bmp": "d4242969e53227e6cafcfeaf9273d1d9ded9094229a93dc68beefc24f13d2c08",
+    "extracted/cpp-production-context-398-early2-gui2/cycle7.bmp": "562c8f4c20538a71fee473ec00d62cae440ef8b456387470ad931c79ad6f0e0f",
+    "extracted/cpp-production-context-398-early2-gui2/cycle8.bmp": "f0640bcba83f2394fd965e74d4c14903a0978411abb3b626b64bf7dc1935c571",
+    "extracted/cpp-production-context-398-early2-gui2/cycle9.bmp": "244d763e4a4d4742e9965fc8fbea4df76fdc38918be26f7a2df2422b137fb00a",
+    "extracted/cpp-production-context-398-early2-gui2/execution.json": "102cfa05fd78af470f4534e75091ad0261efbab694783b9b139562d0b2edb85e",
+    "extracted/cpp-production-context-398-early2-gui2/goal.bmp": "f51260f6ce119807e3bd5e7cd843d9292d8b9fa736d0cbd5a1434f8c7387df4b",
+    "extracted/cpp-production-context-398-early2-gui2/nextBriefing.bmp": "97fb8348344d45ff10634adb9c27fbe6e5c3f6df03b98acdfa524bda80ecd298",
+    "extracted/cpp-production-context-398-early2-gui2/originals-after.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-production-context-398-early2-gui2/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-production-context-398-early2-gui2/prepared.json": "996ebb99a56dcb6147f3e946d8f97a04e8cf1444b60f6692d3595a6d48bb8eb8",
+    "extracted/cpp-production-context-398-early2-gui2/results.json": "03d7a630ba5f3b9727cd910d4c2669a31196718c3f9a520025e214f1f4dc7ed6",
+    "extracted/cpp-production-context-398-early2-gui2/running.json": "768f9d45ac6085d032664e4e266cc6aaac4f38b7904e7127cbc5d2eb56f8b450",
+    "extracted/cpp-production-context-398-early2-gui2/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-production-context-398-early2-gui2/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-production-context-398-early2-gui2/states.tsv": "d74a7895e888e718577033a9a1b589db0e507a078372adc1f7a8ab82db792033",
+    "extracted/cpp-production-context-398-early2-gui2/stderr.log": "7bda425048640ffbe4f58f699a5c42b3cd433844b83d886ded35b1cce28766c9",
+    "extracted/cpp-production-context-398-early2-gui2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-production-context-398-early2-gui2/steps.tsv": "4fb5c8914407f19d101dc0c88f9e0849be54c623f528ebd854e8d7a360f309ff",
+    "extracted/cpp-production-context-398-early2/A.bmp": "4a0cd8dfe5557d1e0f63a224612e7cfc8a78cf0e3883ea921ec4cbce9fcd14ae",
+    "extracted/cpp-production-context-398-early2/cycle0.bmp": "944a9418b65953f694d747b0b19e612356331a9172b75b7abd83d3ce4bb63122",
+    "extracted/cpp-production-context-398-early2/cycle1.bmp": "d473138fd042133e18d3e8183b9c954ec8073419526cbf473c0a14f866ff7391",
+    "extracted/cpp-production-context-398-early2/cycle10.bmp": "728cf3d312b5fba882e04e1e2b40c0c4ba24ecc61207551cf96bd3918333ac8a",
+    "extracted/cpp-production-context-398-early2/cycle11.bmp": "64e01c825f2673dc42f7890a0cc5f9057a2466401a8e2c50542a65685f4b782c",
+    "extracted/cpp-production-context-398-early2/cycle12.bmp": "73b2eb8a74c701895129dc01b4e14901f0eb95b48641a1a04fa640adc9cc56a4",
+    "extracted/cpp-production-context-398-early2/cycle13.bmp": "7ddcb82e6480c3a09ce8c5cb10f2d7e18370ef477a15fb0f627bf63203f0328e",
+    "extracted/cpp-production-context-398-early2/cycle14.bmp": "d5fb65f4379d921e4a4ddcd88930fa0ef322b0c1018056a96b3e92d9541297ec",
+    "extracted/cpp-production-context-398-early2/cycle15.bmp": "1eee08bd6e8a9e0f6ba2e31b24c374e898d5703908ab455790573b0b544e5a81",
+    "extracted/cpp-production-context-398-early2/cycle16.bmp": "807a1128133e001d1a5eeeff1ed378bc0c2eb6e08793452829fb95961b162c35",
+    "extracted/cpp-production-context-398-early2/cycle17.bmp": "b739af1715d2c3408fd1e9108c5d9a8549ca82087db125abca84c99e897d9e63",
+    "extracted/cpp-production-context-398-early2/cycle18.bmp": "6a0046054b7df757798d25f9e2d80e13881a19ede1ac7b40f0c3ec6d87d74dca",
+    "extracted/cpp-production-context-398-early2/cycle19.bmp": "e6d4a06fffda1189622501aca2cf2e68c42b9b082a7464799f8f1b950d821226",
+    "extracted/cpp-production-context-398-early2/cycle2.bmp": "4177d6285dd57911d2d8c75bebb1b41789e285a931d9ee144fc708316da382a0",
+    "extracted/cpp-production-context-398-early2/cycle20.bmp": "e6d4a06fffda1189622501aca2cf2e68c42b9b082a7464799f8f1b950d821226",
+    "extracted/cpp-production-context-398-early2/cycle21.bmp": "e6d4a06fffda1189622501aca2cf2e68c42b9b082a7464799f8f1b950d821226",
+    "extracted/cpp-production-context-398-early2/cycle22.bmp": "e6d4a06fffda1189622501aca2cf2e68c42b9b082a7464799f8f1b950d821226",
+    "extracted/cpp-production-context-398-early2/cycle23.bmp": "e6d4a06fffda1189622501aca2cf2e68c42b9b082a7464799f8f1b950d821226",
+    "extracted/cpp-production-context-398-early2/cycle24.bmp": "e6d4a06fffda1189622501aca2cf2e68c42b9b082a7464799f8f1b950d821226",
+    "extracted/cpp-production-context-398-early2/cycle25.bmp": "e6d4a06fffda1189622501aca2cf2e68c42b9b082a7464799f8f1b950d821226",
+    "extracted/cpp-production-context-398-early2/cycle26.bmp": "e6d4a06fffda1189622501aca2cf2e68c42b9b082a7464799f8f1b950d821226",
+    "extracted/cpp-production-context-398-early2/cycle27.bmp": "e6d4a06fffda1189622501aca2cf2e68c42b9b082a7464799f8f1b950d821226",
+    "extracted/cpp-production-context-398-early2/cycle28.bmp": "e6d4a06fffda1189622501aca2cf2e68c42b9b082a7464799f8f1b950d821226",
+    "extracted/cpp-production-context-398-early2/cycle29.bmp": "e6d4a06fffda1189622501aca2cf2e68c42b9b082a7464799f8f1b950d821226",
+    "extracted/cpp-production-context-398-early2/cycle3.bmp": "9fde19ec0215ee22985ac45f927cc10e49adb23d3c139650e83baae98f592f52",
+    "extracted/cpp-production-context-398-early2/cycle30.bmp": "e6d4a06fffda1189622501aca2cf2e68c42b9b082a7464799f8f1b950d821226",
+    "extracted/cpp-production-context-398-early2/cycle31.bmp": "e6d4a06fffda1189622501aca2cf2e68c42b9b082a7464799f8f1b950d821226",
+    "extracted/cpp-production-context-398-early2/cycle32.bmp": "e6d4a06fffda1189622501aca2cf2e68c42b9b082a7464799f8f1b950d821226",
+    "extracted/cpp-production-context-398-early2/cycle33.bmp": "e6d4a06fffda1189622501aca2cf2e68c42b9b082a7464799f8f1b950d821226",
+    "extracted/cpp-production-context-398-early2/cycle34.bmp": "e6d4a06fffda1189622501aca2cf2e68c42b9b082a7464799f8f1b950d821226",
+    "extracted/cpp-production-context-398-early2/cycle35.bmp": "e6d4a06fffda1189622501aca2cf2e68c42b9b082a7464799f8f1b950d821226",
+    "extracted/cpp-production-context-398-early2/cycle4.bmp": "aa1ba40bce5f968b16ae0ea0f2363c1faefe1d0f47cffcfc4b547c71eb0d6fc5",
+    "extracted/cpp-production-context-398-early2/cycle5.bmp": "99b7eeca090e5c232882fa2ee4ec0462eddd478c290df5ca3da84594294d8a43",
+    "extracted/cpp-production-context-398-early2/cycle6.bmp": "e732af316b19bd0cc7154b7d7878b9002ffdbdc555a3c848e98dd1c0d9b11a03",
+    "extracted/cpp-production-context-398-early2/cycle7.bmp": "5530d23a88155ad97bd73782f76e544bfebae3a47942566080513e874c55dc64",
+    "extracted/cpp-production-context-398-early2/cycle8.bmp": "cd0d899f9fdf9c06410d8c2c1b798aaa13b1610f4c495a6e12afafaba284492f",
+    "extracted/cpp-production-context-398-early2/cycle9.bmp": "99586969f52ae175948dcf4752d466ca435ed0bf9e6a8bad22d7889076bd4b1e",
+    "extracted/cpp-production-context-398-early2/execution.json": "3dadd372701286c3da4cb815c72d0bdc46749ddcb158e9e198c746e6ed0f7daa",
+    "extracted/cpp-production-context-398-early2/goal.bmp": "e6d4a06fffda1189622501aca2cf2e68c42b9b082a7464799f8f1b950d821226",
+    "extracted/cpp-production-context-398-early2/nextBriefing.bmp": "9276526368e419371a28a1af59aa05f8a4f16977bcb4c106c37d4521cd82ee96",
+    "extracted/cpp-production-context-398-early2/originals-after.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-production-context-398-early2/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-production-context-398-early2/prepared.json": "908e3614f615e946739da642252f558cb28ae66049b62dbd49e92beca7218c39",
+    "extracted/cpp-production-context-398-early2/results.json": "7f2a96f7aec31e03f0e8017c16597386b42bc8b8a656f1aac24b3614252317e8",
+    "extracted/cpp-production-context-398-early2/running.json": "e88e4bd69e1a1369da42a1511f0cbcb49144a3c20b32e24ac8303aa05fafdffb",
+    "extracted/cpp-production-context-398-early2/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-production-context-398-early2/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-production-context-398-early2/states.tsv": "5f670e7354e119acddc49afa4e646806233eb335336cbdee431d96dbf86c9f24",
+    "extracted/cpp-production-context-398-early2/stderr.log": "7bda425048640ffbe4f58f699a5c42b3cd433844b83d886ded35b1cce28766c9",
+    "extracted/cpp-production-context-398-early2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-production-context-398-early2/steps.tsv": "c114d6b208795aea8e371eb8f745b6bed6fc83060037956b28d29dc3f2093e3d",
+    "extracted/cpp-production-context-398-edit.py": "be995a56b3d9aceaa4f78f0bbdbe5ccd5ac918b5922a84323b58e79de3544198",
+    "extracted/cpp-production-context-398-final.py": "8cc494ccee35e7334883904c8825da9811eb780dd78a6816c86f02a3d5876478",
+    "extracted/cpp-production-context-398-final1.log": "42fcf1899b511d56869343fd33ae801b6493c6b3e1150bb126c352c9ff80c2e1",
+    "extracted/cpp-production-context-398-focused1-1.log": "eba35a6f6f19d9634b8f45e9e85b80911b6c26a7c83fa3f6124ee2a09d7a91a5",
+    "extracted/cpp-production-context-398-focused1-10.log": "340a095ba963a92d01b2ffbcac21ffc8678ccf1049e478adde3552c1774c30b0",
+    "extracted/cpp-production-context-398-focused1-11.log": "49ba46747352c4692f18e6986f84a2811d088c04535bf46e0ccb0abf0e3a85d4",
+    "extracted/cpp-production-context-398-focused1-12.log": "97aecab8938bb8b354bba70e3b343a3c8d55c63c670a593812da048dcc750443",
+    "extracted/cpp-production-context-398-focused1-13.log": "294cb6af5d2bc614ef47bec63143a0ff972448fa7dbbf151f5d8ffa7ae719e13",
+    "extracted/cpp-production-context-398-focused1-14.log": "1665837da7b1fefabfc0e61b36ab3e46aacda3409374a3ec4923f27c44be3941",
+    "extracted/cpp-production-context-398-focused1-15.log": "3b98130fa6ffd277b4729a5abcc9886e4cdbe60d148d853bc475a69ebc30a979",
+    "extracted/cpp-production-context-398-focused1-16.log": "29c7ea49404747fbbdd472fce171133de89323a9ea3685396b327b2b47f3772a",
+    "extracted/cpp-production-context-398-focused1-17.log": "426a3d77cc906c9a8caf6fe5c6c0c0e191465767a352e340c63ff7a8804e8c6a",
+    "extracted/cpp-production-context-398-focused1-18.log": "7f50abce8e01778f80ed6307873d585fd13227d45328e0540b1912af2ca1a56e",
+    "extracted/cpp-production-context-398-focused1-2.log": "1105e68d7473761ee98e18778e807261fde39e0f8bba29a7cfabfb0ecf93628f",
+    "extracted/cpp-production-context-398-focused1-3.log": "bcdc64dba65c54099e8e526e3ce03c4b3d9651a01e0eadc90b60f80688ab0cda",
+    "extracted/cpp-production-context-398-focused1-4.log": "65c29b65651daea9299127314155b65f75b37bee950ee511f5b3678ff2ef220a",
+    "extracted/cpp-production-context-398-focused1-5.log": "6d05afca73baab099c985eb1bfec69a8c1449a63d346ec75be1e3fb88c3143df",
+    "extracted/cpp-production-context-398-focused1-6.log": "ea33e8799bde69b3b1be580574c63ddc1b7265fbd48d69e7fca5b6883233efe0",
+    "extracted/cpp-production-context-398-focused1-7.log": "5ca5531774b5f13fc82081a254cff97b0cd8481d48e9e41e2ed8aa3bdb8503e5",
+    "extracted/cpp-production-context-398-focused1-8.log": "4e0cde1d19c18e8335926b907de08279c605765a208e161f4ed7ff8843838387",
+    "extracted/cpp-production-context-398-focused1-9.log": "688dd03368db1e8e3668a88d62baabfaf41891dc28e61379dfeb1a07ec4e18c0",
+    "extracted/cpp-production-context-398-focused1-before.json": "d7d0555f9e331a1291b8cac741caa832f9c4e03f75f7448386baa1c79e4ef73e",
+    "extracted/cpp-production-context-398-focused1-progress1.json": "37594808cec894f1aa2b5313d569f288f1214f7acf24f355faf1dc5a5792f2af",
+    "extracted/cpp-production-context-398-focused1-progress10.json": "5416d08e9bc85cf94e19c790eeaf76a176cb57d236802ad699a8bb35efe47b09",
+    "extracted/cpp-production-context-398-focused1-progress11.json": "1f6da1681cf7a80b3030e928bd3bb319f620f16b28d4dc297e5c0094d8693fba",
+    "extracted/cpp-production-context-398-focused1-progress12.json": "09e3aa9ca3011df3e2fba759584a9aebb0e008a446a642c5536838f64bfb3326",
+    "extracted/cpp-production-context-398-focused1-progress13.json": "fa604275f58d7f4ac7f865c22211e2c221e124feabf44be763139a3b8ea587c1",
+    "extracted/cpp-production-context-398-focused1-progress14.json": "1c39bbbe13d4ec08df4a1e3cfa21943499dfc6053117227c305badbbf6d21298",
+    "extracted/cpp-production-context-398-focused1-progress15.json": "98897375105980cc8c689be7674a1b48c3ce62f489509e4467f34d45a016cf6b",
+    "extracted/cpp-production-context-398-focused1-progress16.json": "431652107d2e8bbb2e34ddf9fbe5c33d8241fcaf18da956f52b2e8d84edf6d64",
+    "extracted/cpp-production-context-398-focused1-progress17.json": "4284323e7cd3e6c70e965d940567b701e64584f9d7d42e6c8f844eb4ea692ac2",
+    "extracted/cpp-production-context-398-focused1-progress18.json": "619a3cda427ba5253e54fa1c33016946ca02b693a4e3c40174d7c7fd0d7b69c4",
+    "extracted/cpp-production-context-398-focused1-progress2.json": "22d3151b3e2c045d298438b2daf5e569b6b486e20fdaae4491b66afadfc7b0e1",
+    "extracted/cpp-production-context-398-focused1-progress3.json": "a8e9befa1b7e6f1a4a9cecf53e69ebfa2fcf41585b9e3078d40662c8cd095a0a",
+    "extracted/cpp-production-context-398-focused1-progress4.json": "03dff6183aadac8fe56dd0aad6d3bcc36f09f46e4a3c07f97fa7ab24e32fa508",
+    "extracted/cpp-production-context-398-focused1-progress5.json": "fee9466c7bd5300c11b7fabd41faafa4b86bdbf28043ab2d836ad5547d8b7bc2",
+    "extracted/cpp-production-context-398-focused1-progress6.json": "73bf5b8be3fc20b2b487c9df6978162edc40c45666e1697eb763d41400f134f9",
+    "extracted/cpp-production-context-398-focused1-progress7.json": "87a075971db0dca87fcb1b825dd727d4572a4df5a87b2597994a3b6317a8dae3",
+    "extracted/cpp-production-context-398-focused1-progress8.json": "37e157493c4caf0d67fa702aa11b0a1bfd4d4b5caaef2a4805b8e49a552441f8",
+    "extracted/cpp-production-context-398-focused1-progress9.json": "b31b06c1d702f2b415a396c4aa7e7a396978c8f0d90abf2934cb4a32b988cc5d",
+    "extracted/cpp-production-context-398-focused1.json": "dcb67cfed02173769964e2b356b75fe47b2d7d35c3bb515e8d6e82b8dcb3405b",
+    "extracted/cpp-production-context-398-focused2-1.log": "eba35a6f6f19d9634b8f45e9e85b80911b6c26a7c83fa3f6124ee2a09d7a91a5",
+    "extracted/cpp-production-context-398-focused2-10.log": "340a095ba963a92d01b2ffbcac21ffc8678ccf1049e478adde3552c1774c30b0",
+    "extracted/cpp-production-context-398-focused2-11.log": "49ba46747352c4692f18e6986f84a2811d088c04535bf46e0ccb0abf0e3a85d4",
+    "extracted/cpp-production-context-398-focused2-12.log": "97aecab8938bb8b354bba70e3b343a3c8d55c63c670a593812da048dcc750443",
+    "extracted/cpp-production-context-398-focused2-13.log": "294cb6af5d2bc614ef47bec63143a0ff972448fa7dbbf151f5d8ffa7ae719e13",
+    "extracted/cpp-production-context-398-focused2-14.log": "1665837da7b1fefabfc0e61b36ab3e46aacda3409374a3ec4923f27c44be3941",
+    "extracted/cpp-production-context-398-focused2-15.log": "3b98130fa6ffd277b4729a5abcc9886e4cdbe60d148d853bc475a69ebc30a979",
+    "extracted/cpp-production-context-398-focused2-16.log": "29c7ea49404747fbbdd472fce171133de89323a9ea3685396b327b2b47f3772a",
+    "extracted/cpp-production-context-398-focused2-17.log": "426a3d77cc906c9a8caf6fe5c6c0c0e191465767a352e340c63ff7a8804e8c6a",
+    "extracted/cpp-production-context-398-focused2-18.log": "7f50abce8e01778f80ed6307873d585fd13227d45328e0540b1912af2ca1a56e",
+    "extracted/cpp-production-context-398-focused2-2.log": "1105e68d7473761ee98e18778e807261fde39e0f8bba29a7cfabfb0ecf93628f",
+    "extracted/cpp-production-context-398-focused2-3.log": "bcdc64dba65c54099e8e526e3ce03c4b3d9651a01e0eadc90b60f80688ab0cda",
+    "extracted/cpp-production-context-398-focused2-4.log": "65c29b65651daea9299127314155b65f75b37bee950ee511f5b3678ff2ef220a",
+    "extracted/cpp-production-context-398-focused2-5.log": "6d05afca73baab099c985eb1bfec69a8c1449a63d346ec75be1e3fb88c3143df",
+    "extracted/cpp-production-context-398-focused2-6.log": "ea33e8799bde69b3b1be580574c63ddc1b7265fbd48d69e7fca5b6883233efe0",
+    "extracted/cpp-production-context-398-focused2-7.log": "5ca5531774b5f13fc82081a254cff97b0cd8481d48e9e41e2ed8aa3bdb8503e5",
+    "extracted/cpp-production-context-398-focused2-8.log": "4e0cde1d19c18e8335926b907de08279c605765a208e161f4ed7ff8843838387",
+    "extracted/cpp-production-context-398-focused2-9.log": "688dd03368db1e8e3668a88d62baabfaf41891dc28e61379dfeb1a07ec4e18c0",
+    "extracted/cpp-production-context-398-focused2-before.json": "c27771a64efb65a7f3deeee01defdc655ef5cc1f49e5d1c6cfe1a7b48245f3b0",
+    "extracted/cpp-production-context-398-focused2-progress1.json": "49f559a783b0df0d908d305ed88cf3980d5b81e188164c0a12722dddfa6a31fc",
+    "extracted/cpp-production-context-398-focused2-progress10.json": "aeff992d50425e2519e465fb33a22da161d9313ba7ded793286aeff857a4c6fe",
+    "extracted/cpp-production-context-398-focused2-progress11.json": "31ae1b3c69eda16f7c33572e3dd6cef956dc2daf255c149fd1174de5f1f69cb5",
+    "extracted/cpp-production-context-398-focused2-progress12.json": "e4edf788997ab4a57739a884f304ad3fa4d52ba1ac83975ead22ca18c0aeffd0",
+    "extracted/cpp-production-context-398-focused2-progress13.json": "84bb88311c2bdde55c88c9d9a88da884ae8d1c3de7851374287a737123a81520",
+    "extracted/cpp-production-context-398-focused2-progress14.json": "e51990e92fc422af9a6676cc4f370522387db59301c3bf5de90482bd75b6bfea",
+    "extracted/cpp-production-context-398-focused2-progress15.json": "9bd7185959d8baf6d9594b5433a7171baf4919c30bb5841a24f8c029a0da944c",
+    "extracted/cpp-production-context-398-focused2-progress16.json": "e2e42ce5427440afbc9e859516351ae130256a612e9465f0339fd5a9a92398a9",
+    "extracted/cpp-production-context-398-focused2-progress17.json": "73921d039b8a65cc43337a9558f921bd20277c4f2ab0cf68d4a7a7fa608a9403",
+    "extracted/cpp-production-context-398-focused2-progress18.json": "2c2090b107a85979a2d23b07b5e3c4eb93cd179555d210ac3429f615490f30eb",
+    "extracted/cpp-production-context-398-focused2-progress2.json": "86ec6893c5985b0922a2cea9c796864633b9c2c5f16194318de5ebe2121f12e6",
+    "extracted/cpp-production-context-398-focused2-progress3.json": "ce64cd78e0677617115aed068eabe5c76d9d08dee364913e61b60b69354d72da",
+    "extracted/cpp-production-context-398-focused2-progress4.json": "941e731a31bfa6f47b84a46e16582d2c5feda50abc1ebe6b01e45e42767c9dd9",
+    "extracted/cpp-production-context-398-focused2-progress5.json": "4caae3ebc701681a06abc3707a037e5adeba60570e5822108542c17c652f86e6",
+    "extracted/cpp-production-context-398-focused2-progress6.json": "c19fab7cbc3870683911f9c2083f97dcafea2fcf5a6bb9bcdc306bd349e3c584",
+    "extracted/cpp-production-context-398-focused2-progress7.json": "f97676e17bc1b77653d993f1c90bed7750c8d89a3ddfec01857295f4b81de2f7",
+    "extracted/cpp-production-context-398-focused2-progress8.json": "a05cdad5da19a744e4d92d4d358e4bc866c7994a7dbb17ad991cb4e2ad510e7e",
+    "extracted/cpp-production-context-398-focused2-progress9.json": "2ee223632f2f872650c95faa468b8a8a6bd9a580581e22a27f8582b0dec1d7da",
+    "extracted/cpp-production-context-398-focused2.json": "79513f2359d1805c7364a4a30bcdc8f015ba6c416a890aa4df4a28002ad3c925",
+    "extracted/cpp-production-context-398-gui1-before.json": "d7d0555f9e331a1291b8cac741caa832f9c4e03f75f7448386baa1c79e4ef73e",
+    "extracted/cpp-production-context-398-gui1.json": "25843ebfe748b744d142aee62992b681fbacc63439e4000865ddea71631d0314",
+    "extracted/cpp-production-context-398-gui1.log": "f15f178d81ab061f6fd82646fafb3a13e5d52e7577f41b18ba52dffd31975ffa",
+    "extracted/cpp-production-context-398-gui2-before.json": "c27771a64efb65a7f3deeee01defdc655ef5cc1f49e5d1c6cfe1a7b48245f3b0",
+    "extracted/cpp-production-context-398-gui2.json": "14603a409c2e06b4d44ffcc434952eaca294d047a38089ec9b4f97b1cb2f8e4c",
+    "extracted/cpp-production-context-398-gui2.log": "f8469f67894df311b1c422f93b89b4aea83b529e1327cc934c96e0cb2a9a5ff0",
+    "extracted/cpp-production-context-398-static.py": "37fe603a3e138760ff6a3aefa8d90c0befd42ab5e352e93641cbf47289764c57",
+    "extracted/cpp-production-context-398-static1.json": "113ec0daf7dfb8c3b9a8d8c12548790d50992545a443267851654db33dfa542e"
+  },
+  "originals1394Unchanged": true,
+  "protectedTrackedChanges": [],
+  "originalExecutions": 0,
+  "newEmulation": 0,
+  "newFullDecompilation": 0,
+  "limitations": [
+    "생산 전체 생성자의 새 독립 x86 실행 fixture는 없다. 정적 원문과 실제 기존 Native 하위 모듈/통합 검사를 구별한다.",
+    "실제 Client는 기존 Open 배치/즉시 Sync를 유지한다. 새 Uber의 전체 Client 연결은 미완료다.",
+    "생산의 maintenance와 UI Form은 실제 Session보다 먼저 Close해야 한다. 같은 UI를 다른 Session에 유지하는 수명은 지원 판정하지 않았다.",
+    "전역 Acquire/반납은 기존 C++ 설치/소멸 의미다. 전체 NativeState/Core/Pool 초기화 순서의 복원 완료가 아니다.",
+    "현재0축 footer는 드래그 기능을 선택하지 않는다. 전체 덱 조절/모든 입력 복원을 완료로 세지 않는다.",
+    "전체 Early/캠페인/Demo 사용자 완주, Edit/시나리오 전체, 원본과의 모든 픽셀/음향 동일성은 미완료다.",
+    "393의 Wide SaveOptions errno22/doserrno1224 원인은 이번에 재현/수정하지 않았다."
+  ],
+  "priorObservations": {
+    "focused1": {
+      "productSha256": "52ce279f03ef03f7807f3965647acdcd5431a17f21ca2e5fa09ed257279c36e1",
+      "testBinarySha256": "d6068dcfc5003beab0fd5e737ee194630bd377f6e80f0e9ea93ae781e2e2a8b2",
+      "runs": [
+        {
+          "returnCode": 0,
+          "seconds": 1.1559573999838904,
+          "log": "extracted/cpp-production-context-398-focused1-1.log",
+          "filter": "ProductionInitialContext_",
+          "counts": [
+            [
+              "4",
+              "0"
+            ]
+          ],
+          "names": [
+            "ProductionInitialContext_ConstructsAllNativeChildrenWithoutSession",
+            "ProductionInitialContext_RepeatedConstructionAndGlobalPageRetirement",
+            "ProductionInitialContext_MissingTranslationKeepsAndRetiresPartialEffects",
+            "ProductionInitialContext_GameplayGlobalsKeepRealAliasesAndRejectDuplicate"
+          ]
+        },
+        {
+          "returnCode": 0,
+          "seconds": 0.7656690999865532,
+          "log": "extracted/cpp-production-context-398-focused1-2.log",
+          "filter": "CampaignSharedGameplay_",
+          "counts": [
+            [
+              "2",
+              "0"
+            ]
+          ],
+          "names": [
+            "CampaignSharedGameplay_TwoActualSessionsPublishAndRetireSameGlobals",
+            "CampaignSharedGameplay_ForeignAndPartialConstructionRetireLease"
+          ]
+        },
+        {
+          "returnCode": 0,
+          "seconds": 0.7179440000327304,
+          "log": "extracted/cpp-production-context-398-focused1-3.log",
+          "filter": "CampaignProductionLifetime_",
+          "counts": [
+            [
+              "4",
+              "0"
+            ]
+          ],
+          "names": [
+            "CampaignProductionLifetime_GlobalCleanupRetiresRootAndBudget",
+            "CampaignProductionLifetime_IndependentBudgetCleanupRetiresText",
+            "CampaignProductionLifetime_QueuedKillThenCloseDrainsOnce",
+            "CampaignProductionLifetime_DuplicateOpenAndProviderRecreation"
+          ]
+        },
+        {
+          "returnCode": 0,
+          "seconds": 0.6908438000828028,
+          "log": "extracted/cpp-production-context-398-focused1-4.log",
+          "filter": "CampaignProduction_ModalPages",
+          "counts": [
+            [
+              "1",
+              "0"
+            ]
+          ],
+          "names": [
+            "CampaignProduction_ModalPagesPreservePanelBudgetAndResize"
+          ]
+        },
+        {
+          "returnCode": 0,
+          "seconds": 0.6868420999962837,
+          "log": "extracted/cpp-production-context-398-focused1-5.log",
+          "filter": "CampaignSharedKernel_",
+          "counts": [
+            [
+              "4",
+              "0"
+            ]
+          ],
+          "names": [
+            "CampaignSharedKernel_ActualFormsAndSingleClientFrame",
+            "CampaignSharedKernel_GameWorldSurvivesExplicitGlobalClear",
+            "CampaignSharedKernel_FinalDrainPrecedesPlayerAndServiceRelease",
+            "CampaignSharedKernel_PartialConstructorPreservesExistingProcess"
+          ]
+        },
+        {
+          "returnCode": 0,
+          "seconds": 0.6592569999629632,
+          "log": "extracted/cpp-production-context-398-focused1-6.log",
+          "filter": "CampaignSharedStorage_",
+          "counts": [
+            [
+              "3",
+              "0"
+            ]
+          ],
+          "names": [
+            "CampaignSharedStorage_TwoActualSessionsUseSamePhysicalArrays",
+            "CampaignSharedStorage_PartialConstructorReleasesPhysicalLease",
+            "CampaignSharedStorage_ForeignAssetsFailBeforePhysicalMutation"
+          ]
+        },
+        {
+          "returnCode": 0,
+          "seconds": 1.5215056000743061,
+          "log": "extracted/cpp-production-context-398-focused1-7.log",
+          "filter": "HudDock_",
+          "counts": [
+            [
+              "1",
+              "0"
+            ]
+          ],
+          "names": [
+            "HudDock_IndependentNativeBodiesAndNestedViewport"
+          ]
+        },
+        {
+          "returnCode": 0,
+          "seconds": 0.6457762999925762,
+          "log": "extracted/cpp-production-context-398-focused1-8.log",
+          "filter": "HudDividerInput_",
+          "counts": [
+            [
+              "1",
+              "0"
+            ]
+          ],
+          "names": [
+            "HudDividerInput_Native13398StateAndCallbacks"
+          ]
+        },
+        {
+          "returnCode": 0,
+          "seconds": 0.603029299993068,
+          "log": "extracted/cpp-production-context-398-focused1-9.log",
+          "filter": "UberRoot_",
+          "counts": [
+            [
+              "6",
+              "0"
+            ]
+          ],
+          "names": [
+            "UberRoot_Native160",
+            "UberRoot_RealTreeAndLifetimeTransfer",
+            "UberRoot_DockReadsLiveThisFields",
+            "UberRoot_MissingFactoryKeepsPriorEffects",
+            "UberRoot_MissingOldRootFailsAfterConstructionEffects",
+            "UberRoot_EmptyLeafNeedsNoGameHook"
+          ]
+        },
+        {
+          "returnCode": 0,
+          "seconds": 0.538003500085324,
+          "log": "extracted/cpp-production-context-398-focused1-10.log",
+          "filter": "InventoryGump_",
+          "counts": [
+            [
+              "2",
+              "0"
+            ]
+          ],
+          "names": [
+            "InventoryGump_Native170",
+            "InventoryGump_SharedTreeRebuildAndLifetime"
+          ]
+        },
+        {
+          "returnCode": 0,
+          "seconds": 0.6575327001046389,
+          "log": "extracted/cpp-production-context-398-focused1-11.log",
+          "filter": "InventoryItemGump_",
+          "counts": [
+            [
+              "2",
+              "0"
+            ]
+          ],
+          "names": [
+            "InventoryItemGump_Native132",
+            "InventoryItemGump_ActualAssetsTreePixelsAndClick"
+          ]
+        },
+        {
+          "returnCode": 0,
+          "seconds": 0.6599089000374079,
+          "log": "extracted/cpp-production-context-398-focused1-12.log",
+          "filter": "ProductionMaintenance_",
+          "counts": [
+            [
+              "4",
+              "0"
+            ]
+          ],
+          "names": [
+            "ProductionMaintenance_TestBridgeSequence",
+            "ProductionMaintenance_TestBridgeOverrideAfterOriginalRules",
+            "ProductionMaintenance_NativeAllInputs",
+            "ProductionMaintenance_TransientNeighborNativeBoundary"
+          ]
+        },
+        {
+          "returnCode": 0,
+          "seconds": 0.5375454000895843,
+          "log": "extracted/cpp-production-context-398-focused1-13.log",
+          "filter": "ProductionSync_",
+          "counts": [
+            [
+              "1",
+              "0"
+            ]
+          ],
+          "names": [
+            "ProductionSync_Native98"
+          ]
+        },
+        {
+          "returnCode": 0,
+          "seconds": 0.35761679999995977,
+          "log": "extracted/cpp-production-context-398-focused1-14.log",
+          "filter": "ProductionHintGump_",
+          "counts": [
+            [
+              "1",
+              "0"
+            ]
+          ],
+          "names": [
+            "ProductionHintGump_Native126"
+          ]
+        },
+        {
+          "returnCode": 0,
+          "seconds": 0.5238966000033543,
+          "log": "extracted/cpp-production-context-398-focused1-15.log",
+          "filter": "ProductionShortcuts_",
+          "counts": [
+            [
+              "2",
+              "0"
+            ]
+          ],
+          "names": [
+            "ProductionShortcuts_Native4280ReachableCases",
+            "ProductionShortcuts_ReleasePauseAndLazyDevices"
+          ]
+        },
+        {
+          "returnCode": 0,
+          "seconds": 1.8554622000083327,
+          "log": "extracted/cpp-production-context-398-focused1-16.log",
+          "filter": "RawMenuControls_",
+          "counts": [
+            [
+              "12",
+              "0"
+            ]
+          ],
+          "names": [
+            "RawMenuControls_HelpActualTreePixelsAndOutsideInput",
+            "RawMenuControls_OwnedHelpStringsDriveRealMenuAndRelease",
+            "RawMenuControls_HelpActualHistoryButtonsAndReopen",
+            "RawMenuControls_HelpActualTypeInfoAndImage",
+            "RawMenuControls_FloatingSpActualPixelsAndLifetime",
+            "RawMenuControls_CommonTreeInputAndDisabledItem",
+            "RawMenuControls_HorizontalPointAndDeferredReplace",
+            "RawMenuControls_FancySubmenuPixelsAndCleanup",
+            "RawMenuControls_ObjectMenuCommandsAndCurrentConfig",
+            "RawMenuControls_CarrierAndObjectMenuChain",
+            "RawMenuControls_MissionLoadingUsesSharedTreeAndCancel",
+            "RawMenuControls_MinimapBeforeSessionAndAcrossWorldBindings"
+          ]
+        },
+        {
+          "returnCode": 0,
+          "seconds": 0.6900224999990314,
+          "log": "extracted/cpp-production-context-398-focused1-17.log",
+          "filter": "GumpLifetime_",
+          "counts": [
+            [
+              "9",
+              "0"
+            ]
+          ],
+          "names": [
+            "GumpLifetime_PatchNative",
+            "GumpLifetime_CdNative",
+            "GumpLifetime_AdditionalNative",
+            "GumpLifetime_CreateTreeKillCleanupAndReuse",
+            "GumpLifetime_TreeReplacementDefersDestruction",
+            "GumpLifetime_BaseDoesNotUnregisterOrRemoveDialogs",
+            "GumpLifetime_CdIdleCapacity",
+            "GumpLifetime_ContractsAndCycles",
+            "GumpLifetime_CallbackExceptionKeepsWrittenState"
+          ]
+        },
+        {
+          "returnCode": 0,
+          "seconds": 0.38800060003995895,
+          "log": "extracted/cpp-production-context-398-focused1-18.log",
+          "filter": "RawSurfaceWorld_",
+          "counts": [
+            [
+              "7",
+              "0"
+            ]
+          ],
+          "names": [
+            "RawSurfaceWorld_PausedRegularResumesWithClientGameClock",
+            "RawSurfaceWorld_HardBridgeAndPendingMissionTeardown",
+            "RawSurfaceWorld_DisplaySuppressionAndDeviceReplacement",
+            "RawSurfaceWorld_InvalidLoadRejectedBeforeAllocation",
+            "RawSurfaceWorld_RuntimeSharesStorageAndCurrentDispatch",
+            "RawSurfaceWorld_RuntimeRejectsIncompleteOrLateBinding",
+            "RawSurfaceWorld_CampaignFinishPreservesParentGraph"
+          ]
+        }
+      ],
+      "sameBinaries": true,
+      "originalsUnchanged": true
+    },
+    "gui1": {
+      "returnCode": 0,
+      "seconds": 194.23331460007466,
+      "log": "extracted/cpp-production-context-398-gui1.log",
+      "productSha256": "52ce279f03ef03f7807f3965647acdcd5431a17f21ca2e5fa09ed257279c36e1",
+      "testBinarySha256": "d6068dcfc5003beab0fd5e737ee194630bd377f6e80f0e9ea93ae781e2e2a8b2",
+      "sameBinaries": true,
+      "originalsUnchanged": true,
+      "storageRows": [
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "2",
+          "1"
+        ]
+      ],
+      "gameplayRows": [
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      ],
+      "generations": [
+        1,
+        2
+      ],
+      "samePhysicalInAllObservations": true,
+      "sameGlobalsInAllObservations": true,
+      "observation": {
+        "returnCode": 0,
+        "originalsUnchanged": true,
+        "stages": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E",
+          "F",
+          "G",
+          "H",
+          "I"
+        ],
+        "startSp": 10000,
+        "finalSp": 3075,
+        "templeCount": 1,
+        "workshopCount": 1,
+        "maxArchers": 4,
+        "finalArchers": 3,
+        "salvagePackets": 1,
+        "refund": 75,
+        "doneBefore": 1,
+        "doneAfter": 1,
+        "nextMission": "tutorial3",
+        "nextSp": 2000,
+        "initialProgressInjected": false,
+        "noStateInjection": true,
+        "nextGuideSequence": 4,
+        "inspectionContract": "native-guide-0-6",
+        "lastGameTime": 80.836,
+        "naturalTutorialTwoComplete": true,
+        "goalComplete": false,
+        "scope": "실제 A~I/사제 신전·워크샾/지식·생산/발사기4개/신전 선택/정상 회수·완료값 관측/다음 Tutorial3 진입이다. 영구 진행 저장·Early3 진행·전체 동일성은 별도다.",
+        "binarySha256": "52ce279f03ef03f7807f3965647acdcd5431a17f21ca2e5fa09ed257279c36e1",
+        "productTimers": 1,
+        "testStateInjection": false
+      }
+    },
+    "reasonForFinalRebuild": "검토에서 새 소유 help의66000000..66ffffff와 기존 전용HTML62000000..6fffffff 범위의 겹침을 발견했다. 최종61100001..61ffffff 영역으로 교정했다. 최초 실행은 보존하고 최종 바이너리의 집중/GUI를 다시 수행했다."
+  }
+}

@@ -28,7 +28,7 @@ constexpr std::uint32_t kRefreshProductionEvent=0x02000003;
 }
 // 기본·돌 버튼·배경은 같은 기본 노드 주소로 조회되며 저장소 이동은 하지 않는다.
 struct RawButtonControls::Impl {
-    ProductionMaintenanceGlobals productionGlobals;ProductionMaintenancePanel productionPanel; // 전역 TYPE 시계/추첨 순번과 현재 월드 패널 필드는 다시 그려도 보존한다.
+    ProductionMaintenanceGlobals productionGlobals; // 전역 TYPE 시계/추첨 순번이며 패널 필드는 실제 생산 노드가 소유한다.
     // create: 등록 표 +0이 실제 루트다. 외부에서 표를 바꿀 때 collection.root도 같은 토큰으로 맞춰야 한다 (GumpCreateState).
     GumpCreateState create;/* life: 원본의 고정 크기 idle/overlay/삭제/dialog 표와 현재 삭제 전역이다 (GumpLifetimeState). */ GumpLifetimeState life;/* treeState: 원본 지도 화면 영역과 패치판의 밀어내기 링크 진단 전역이다 (GumpTreeState). */ GumpTreeState treeState;/* eventState: 원본 전체 트리 커서 선택의 현재 좌표/필터/최소 signed 깊이/선택 토큰 전역이다 (GumpEventState). */ GumpEventState eventState;/* inputState: overlay 처리기는 호출자의 사건 대신 원본의 별도 사건 코드 전역을 사용한다 (GumpInputState). */ GumpInputState inputState;
     // buttonState: 실행 중 문자열 ID 전역 네 개와 기본 버튼 색 BYTE다. 사건 ID는 호출자가 실제 초기화 값을 공급한다 (ButtonGumpState).
@@ -91,6 +91,7 @@ struct RawButtonControls::Impl {
         frameHooks.idle=[this](auto token) { if (warnings && warnings->Node(token)) warnings->Idle(token);else if (stones.contains(token) || (menus && menus->Button(token))) buttons->Idle(token);else if (minimap && minimap->Node(token)) minimap->Idle(token);else if (production && production->Node(token)) production->Idle(token);else if (menus && menus->Node(token)) menus->Idle(token); };
         frameHooks.broadcast=[this](auto token,auto event,auto first,auto second) {
             if (stones.contains(token) || (menus && menus->Button(token))) buttons->Broadcast(token,event,first,second);
+            else if (production && production->Node(token)) production->Broadcast(token,event,first,second);
             else if (menus && menus->Node(token)) menus->Broadcast(token,event,first,second);
         };
         frame=std::make_unique<GumpFrame>(create,life,std::move(frameHooks));
@@ -159,7 +160,7 @@ struct RawButtonControls::Impl {
             // Kill이 root.child를 바꾸므로 현재 머리를 매번 읽는다.
             while (Node(root)->child) lifetime->Kill(Node(root)->child);
         }
-        lifetime->Cleanup();if (!preserveWorldUi) { minimap.reset();production.reset(); }controls.clear();activated.reset();
+        lifetime->Cleanup();if (!preserveWorldUi) { minimap.reset();if (production) production->Close();production.reset(); }controls.clear();activated.reset();
     }
 };
 // 구현 주소는 생성 이후 이동하지 않아 순환 훅이 안정된 처리기를 조회한다.
@@ -250,6 +251,7 @@ std::uint32_t RawButtonControls::NotifyHudMode(std::uint32_t command) { return i
 // 공통 등록표와 현재 파생 가상 분배를 그대로 빌려 메뉴 처리기를 생성한다.
 RawMenuControls& RawButtonControls::EnableMenus(const GameAssets& assets,FontStore& fonts,RawMenuHooks hooks) {
     auto& s=*impl_;if (s.menus) throw std::logic_error("실제 메뉴 계층은 한 번만 연결 가능");
+    s.productionGlobals.backgroundType=static_cast<std::uint32_t>(assets.Find("fortGump").block+o::kFirstAssetTypeNumber); // 초기 HUD도 실제 원문 타입 연결 뒤 같은 배경 전역을 읽는다.
     RawMenuTree tree{s.create,s.life,*s.factory,*s.collection,*s.tree,*s.lifetime,*s.events,*s.input,*s.stone,
         [&s](auto token) { const auto it=s.backgrounds.find(token);return it==s.backgrounds.end() ? (s.production ? s.production->Background(token) : nullptr) : it->second.get(); },
         [&s] { return ++s.nextToken; },[&s](auto token) { return s.Node(token); },
@@ -276,12 +278,22 @@ RawProductionControls& RawButtonControls::EnableProduction(RawCampaignSession& s
         [&s](auto token) { const auto it=s.backgrounds.find(token);return it==s.backgrounds.end() ? nullptr : it->second.get(); },
         [&s] { return ++s.nextToken; },[&s](auto token) { return s.Node(token); },
         [&s](auto token,float x,float y,auto parent,auto mode) { s.Attach(token,x,y,parent,mode); },[&s] { s.changed=true; }};
-    s.production=std::make_unique<RawProductionControls>(std::move(tree),*s.menus,session,assets,s.productionGlobals,s.productionPanel,std::move(hooks));s.production->Open();return *s.production;
+    if (!hooks.poll) hooks.poll=[&s](auto code) { return s.hooks.poll ? s.hooks.poll(code) : s.currentPoll; }; // 같은 공통 폴링 기록을 구분선도 읽는다.
+    s.production=std::make_unique<RawProductionControls>(std::move(tree),*s.menus,session,assets,s.productionGlobals,std::move(hooks));s.production->Open();return *s.production;
+}
+// 실제 전체 생성 경계를 같은 등록표/노드/문자열 수명에 연결한다.
+RawProductionControls& RawButtonControls::ConstructProduction(ProductionControlContext context,const GameAssets& assets,RawProductionHooks hooks) {
+    auto& s=*impl_;if (s.production || !s.menus) throw std::logic_error("초기 생산 생성의 공통 수명/메뉴 불일치");
+    RawMenuTree tree{s.create,s.life,*s.factory,*s.collection,*s.tree,*s.lifetime,*s.events,*s.input,*s.stone,
+        [&s](auto token) { const auto it=s.backgrounds.find(token);return it==s.backgrounds.end() ? nullptr : it->second.get(); },
+        [&s] { return ++s.nextToken; },[&s](auto token) { return s.Node(token); },[&s](auto token,float x,float y,auto parent,auto mode) { s.Attach(token,x,y,parent,mode); },[&s] { s.changed=true; }};
+    if (!hooks.poll) hooks.poll=[&s](auto code) { return s.hooks.poll ? s.hooks.poll(code) : s.currentPoll; };
+    s.production=std::make_unique<RawProductionControls>(std::move(tree),*s.menus,std::move(context),assets,s.productionGlobals,std::move(hooks));s.production->Construct();return *s.production;
 }
 RawProductionControls* RawButtonControls::Production() const { return impl_->production.get(); } // 같은 현재 처리기다.
 // 테스트 전용 임시 조작이며 원본 분석 결과가 아니다. 게임 설정 파일에 저장하지 않는다.
 void RawButtonControls::ConfigureTestBridgePatterns(std::string_view patterns) { impl_->productionGlobals.ConfigureTestBridgePatterns(patterns); }
-void RawButtonControls::DisableProduction() { if (impl_->production) { impl_->production->Close();impl_->production.reset(); }impl_->productionPanel={}; } // 월드를 떠날 때 패널 필드만 새로 만들며 TYPE 시계와 순번은 전역 수명을 유지한다.
+void RawButtonControls::DisableProduction() { if (impl_->production) { impl_->production->Close();impl_->production.reset(); } } // 패널은 실제 노드와 함께 반납하고 전역 TYPE 시계/순번은 유지한다.
 
 // 같은 등록표/수명/입력/원본 셀 그림을 현재Session과 공유한다.
 RawMinimapControls& RawButtonControls::EnableMinimap(RawCampaignSession& session,RawMinimapHooks hooks) {

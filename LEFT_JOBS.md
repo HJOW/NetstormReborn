@@ -1,5 +1,17 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-24 단위398 완료: 실제 생산 생성과 Client 현재 전역
+
+- [x] AGENTS/공통/닷넷 인계·깨끗한 시작 **a89fbc61 / 20261024-20 CP**를 확인했다. 현재/마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-10-23**이다. 새 전체 디컴파일/원본 실행/에뮬레이션은0이다.
+- [x] ClientGameplayGlobals의 실제 Player/owner/known·커서·검색·editor/post·두 Subscriber 참조를 Services→Session→생산 Context의 같은 주소에 연결했다. 단일 대여는 모듈보다 먼저 확보/뒤에 반납하고 실제 완성 Session만 Publish/Withdraw한다. BridgeConnect 종류도 같은 실제 장기 물리에 연결했다. 생성/출력에 가짜 Session·Player를 만들지 않는다. 이 Acquire/반납은 기존 C++ 설치/소멸 의미이며 전체 NativeState 초기화·정리 순서의 완료가 아니다.
+- [x] 원문 생산0043e640/예산0043e490 Construct의8노드·40폭·전체높이·시계·serial·정책·슬롯·실제 help를 복원하고 기존 Open의80폭/하단80예약·도킹·즉시Sync는 후처리로 구별했다. 실제0x11c footer를 공유 HudDividerGump/입력/Overlay/Draw에 연결했다. 소유 help 문자열의 실제 scalar 반납/교체와 격자 기본 Help를 연결하고 기존 HTML 링크와 겹치던 새 토큰 범위를 최종61100001..61ffffff로 분리했다. 미부착/부분 생성·페이지 교체의 Close도 실제 등록표에서 정리한다. maintenance/UI Form은 실제 Session보다 먼저 Close해야 한다. 같은 UI의 Session 간 유지·0축 footer 드래그·전체43ec00 완료 판정은 하지 않는다.
+- [x] build1(81114)은 C2039/C2440과 후속 C4390으로 종료1이며 수정했다. build2/3/4/5(63995/9536/59027/87841)는 모두 종료0·관측 컴파일 경고오류0이다. 최초 집중1은66/0·GUI1은194.23초/자연 완료로 통과했다. 토큰 범위 검토 교정 뒤 **최종 집중2 신규7+기존59=66검사/실패0**이며 초기 실제 생성/배치/픽셀/padding/부분 실패/반복 수명/두 실제 Session·외부 Kernel·alias/격자 Help 클릭과 기존 Native9자료를 확인했다. 생산 전체 생성자의 새 독립 x86 fixture는 없으며 정적 PE2블록과 실제 통합/하위 Native를 구별한다.
+- [x] 최종 GUI2(43966)는 종료0·**194.12초**, Early2 A~I·신전1/워크샾1·발사기4→3·회수1/환불75/SP10000→3075·자연 완료→Tutorial3 안내/실제SP2000이 통과했다. 주입0/기존완료1→1이다. 전역78행은 모두 다섯 값1, 물리78행은 네 정체성1/대여활성이며 대여1→2다. goal/nextBriefing BMP를 직접 확인했다. 예산의 단계 표시1700과 실제SP2000을 구별하며 영구0→1저장/Early3 이후/전체 픽셀의 증거로 확대하지 않는다.
+- [x] 전체 CTest1(79998)은 **2702검사/실패0·종료0·300.62초(wrapper)**다. 최종 집중/GUI/전체 제품 **8ccdcfadd7b84978df46223807d65ba776d75c75107e9da0f78d366b7751150e**, 검사 **16ba8391e9891c68373993b8d15ed81b6f9a9144cac0ce09f7cd54ee049aa2e8**가 같다. 원본1394동일·보호/Native 추적 변경0이다. [완료 문서](docs/exe/cpp-production-initial-context-20261024.md)와 [제품 보고서](cpppj/production-initial-context-runtime-20261024.json)에 소스26/Native9/원시200 SHA·최초 실패·이전/최종 관측·한계를 기록했다. 원시는 `extracted/cpp-production-context-398-*`이며 UTF-8/링크/선택29파일 stage 감사 뒤 **20261024-21 CP**로 로컬 커밋한다. push하지 않는다.
+- [ ] **새 Uber의 실제 Client 연결은 계속 미완료다.** 다음은 전체 NSInfo/Chat/HTML 공장을 같은 공통 저장소에 연결하고 부모 교체를 접합한다. NSInfo는 일반 모드에서도 roster/title/BattleInfo/PlayerInfo8/스크롤·버튼·문자를 실제로 모두 생성해야 한다. 기존 RawMenuControls의 전용 Scrolling/Buffer/Slider 전체 공장과 실제 ServerName·번역·배경 전역을 연결해야 하며 숨김 기본노드로 대신하지 않는다. NativeState/Core/Pool 전체 순서, 나머지 Runtime/Form/Graph/장부/Player/SP 수명, Edit/시나리오 전체와 모든 Early/캠페인/Demo 사용자 완주·완전 동일성 및393 Wide SaveOptions errno22/doserrno1224 원인은 남는다. /goal은 활성 상태다.
+
+- [x] 첫 완료 작성 wrapper는 PowerShell이 git 개행 경고를 NativeCommandError로 기록해 종료1이었다. 보고서/문서/인계 작성은 끝났으며 작성 중 final1.log의 중간 SHA 차이1개를 닫힌 최종 로그 SHA로만 갱신했다. 최초 로그를 보존하고 전체 SHA/UTF-8/링크/선택 stage 감사로 검증한다.
+
 ## 2026-10-24 단위397 완료: Client의 실제 물리와 Session 없는 미니맵
 
 - [x] AGENTS/공통/닷넷 인계·깨끗한 시작 **b0e6bb2b / 20261024-19 CP**를 다시 확인했다. 이전396은 실제 코드/검사/커밋 진척이다. 현재/마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-10-23**이며 새 디컴파일/Native도구0이다.

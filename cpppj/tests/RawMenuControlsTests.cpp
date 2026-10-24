@@ -11,6 +11,7 @@
 #include "client/ImageGump.h"
 #include "client/RawMinimapControls.h"
 #include "client/RawSurfaceWorld.h"
+#include "client/RawProductionControls.h"
 #include <filesystem>
 #include <sstream>
 
@@ -94,6 +95,20 @@ TEST_CASE(RawMenuControls_HelpActualTreePixelsAndOutsideInput) {
     for (int y=0;y<height;++y) for (int x=640;x<pitch;++x) CHECK(pixels[static_cast<std::size_t>(y)*pitch+x]==0x5a);
     CHECK(!client.buttons.Event({InputCode::kLeftButton,20,20}));CHECK(!client.menus->HelpOpen() && client.menus->Node(token) && (window->flags&0x10000));
     const auto child=body->text;client.menus->CleanupFrame();CHECK(!client.menus->Node(token) && !client.menus->Node(child)); // 아래 돌 버튼으로 클릭을 재전달하지 않는다.
+}
+
+// 공통 소유 문자열의 교체/우클릭 제목·주제·본문과 실제 scalar 정리를 함께 검사한다.
+TEST_CASE(RawMenuControls_OwnedHelpStringsDriveRealMenuAndRelease) {
+    std::array<std::uint8_t,87> options{};MenuClient client;client.EnableHelp();RawProductionHooks hooks;hooks.now=[] { return 0.0; };hooks.sound=hooks.tell=[](auto) {};hooks.configInt=[](auto,auto fallback) { return fallback; };hooks.translate=[](auto text) { return std::string(text); };hooks.gameSeconds=[] { return 0.0; }; // Session 없이 실제 원본 생성자에 명시 외부 입력을 제공한다.
+    auto& panel=client.buttons.ConstructProduction({MakeRawSurfaceStorage(client.assets),std::make_shared<ClientGameplayGlobals>(),std::make_shared<ClientPlayerRecords>(),options},client.assets,std::move(hooks));std::uint32_t token{}; // 실제 생산 격자의 부모와 같은 공통 등록표다.
+    for (std::uint32_t id=1;id<1000;++id) { const auto current=client.buttons.RegisteredGump(id);const auto* node=panel.Node(current);if (node && node->vtable==0x506800 && node->textPointer) { token=current;break; } } // 생성한 다리 격자만 그 실제 포인터로 선택한다.
+    CHECK(token!=0);if (!token) return;
+    client.menus->SetHelpText(token,"Old owned title");client.menus->SetHelpWord(token,"oldOwned");const auto before=client.menus->Report();CHECK(before.find("raw_gump_help_strings\t8\n")!=std::string::npos);
+    client.menus->SetHelpText(token,"Production Window");client.menus->SetHelpWord(token,"teleportView");CHECK(client.menus->Report().find("raw_gump_help_strings\t8\n")!=std::string::npos);
+    CHECK(panel.Handle(token,InputCode::kRightButton,300,200)==1);const auto help=client.menus->Point("Help");CHECK(client.menus->Point("Production Window").has_value() && help.has_value());
+    CHECK(client.sounds==std::vector<std::string>{"opengump.wav"});if (help) client.Click(*help);CHECK(client.commands.size()==1);
+    if (client.commands.size()==1) CHECK(client.commands[0][0]==0x02000017U && client.helpStrings.Resolve(client.commands[0][2]&0x0fffffffU)=="teleportViewHelp"); // 실제 클릭의 주제 토큰을 외부 문자열 고리에서 관측한다.
+    client.buttons.KillGump(token);client.buttons.CleanupGumps();CHECK(client.menus->Report().find("raw_gump_help_strings\t6\n")!=std::string::npos);client.buttons.DisableProduction();CHECK(client.menus->Report().find("raw_gump_help_strings\t0\n")!=std::string::npos);
 }
 // Back/OK는 실제 돌 버튼 serial과 같은 파생 Handle을 통과하고 소멸 뒤 이력/표식을 정리한다.
 TEST_CASE(RawMenuControls_HelpActualHistoryButtonsAndReopen) {

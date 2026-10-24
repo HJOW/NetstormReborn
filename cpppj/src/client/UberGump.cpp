@@ -1296,6 +1296,8 @@ std::string UberGump::Report() const {
         out<<"shared_kernel\t"<<(&core.kernel==&client_.GetKernel())<<'\t'<<core.kernel.Size()<<'\t'<<client_.GetKernel().Size()<<'\n';
         const auto& storage=client_.SurfaceStorage(); // 같은 실제 물리의 정체성과 대여 횟수를 읽기만 한다.
         out<<"shared_surface_storage\t"<<(&core.pool==&storage->pool)<<'\t'<<(&core.hash==&storage->hash)<<'\t'<<(core.types.data()==storage->types.data())<<'\t'<<(core.spots.data()==storage->spots.data())<<'\t'<<storage->Generation()<<'\t'<<storage->Borrowed()<<'\n';
+        const auto& gameplay=client_.GameplayGlobals();const auto context=world_->Session().ProductionContext(); // 실제 UI/Session의 같은 전역 주소와 대여만 읽는다.
+        out<<"shared_gameplay_globals\t"<<(context.gameplay==gameplay)<<'\t'<<(&world_->Session().CursorDropSettings()==&gameplay->cursor)<<'\t'<<(&world_->Session().ProductionFinder()==&gameplay->finder)<<'\t'<<(world_->Session().Editor()==gameplay->world.editor)<<'\t'<<gameplay->Borrowed()<<'\n';
         out<<world_->Report();
     }
     // 화면/월드와 같은 프레임에 위치 효과음이 실제로 읽는 여섯 값을 기록한다. 소리 없는 실행에는 항목을 만들지 않는다.

@@ -135,6 +135,7 @@ target_sources(netstorm PRIVATE
     GameWorld.cpp GameWorld.h
     RawSurfaceWorld.cpp RawSurfaceWorld.h
     RawSurfaceStorage.cpp
+    ClientGameplayGlobals.cpp ClientGameplayGlobals.h ProductionControlContext.h
     RawTerrainWorldBinding.cpp RawTerrainWorldBinding.h
     RawNormalTerrainWorldBinding.cpp RawNormalTerrainWorldBinding.h
     RawFortWorldLoadBinding.cpp RawFortWorldLoadBinding.h

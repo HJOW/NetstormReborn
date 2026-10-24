@@ -11,6 +11,8 @@ struct ProductionMaintenanceGlobals {
     std::vector<double> stockUntil; // 557d80: TYPE별 벽시각 종료값이며 최초 한 번0으로 초기화한다.
     std::uint32_t sequence{},stockEnabled{1},quickBridges{},forcedPattern{}; // 557dac/5318f4/54db78/54db7c이다.
     std::uint32_t bridgeType{82}; // 현재5411a0이며 실제 Session의 다리 타입과 공유한다.
+    std::uint32_t rootSerial{},budgetSerial{},policyFirst{},policyByte{}; //557d7c/557d74/557d70/557d68의 실제 현재 생산 식별·정책 전역이다.
+    std::uint32_t backgroundType{},backgroundFrame{},panelFrame{2}; // 같은 생성 부모가 사용하는5ca920/924/928이다.
     std::int32_t stockLimit{1},bridgeDelay{1}; // 초기화 후54db74=1,531b2c=1이다.
     std::vector<std::uint32_t> testBridgePatterns; // 테스트 전용 임시 조작이며 원본 분석 결과가 아니다. 비어 있으면 원본 조각 결정을 사용한다.
     std::uint64_t testBridgeDraws{}; // 테스트 전용 지정 순서의 실제 공급 횟수다. 패널 재그리기로 되감지 않는다.

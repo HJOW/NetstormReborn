@@ -3,6 +3,7 @@
 #include "client/ClientRandomGlobals.h"
 #include "client/ClientSubscriberGlobals.h"
 #include "client/ClientPlayerRecords.h"
+#include "client/ProductionControlContext.h"
 #include "o/RawPlayerLinksCleanup.h"
 #include "client/ClientColorSortInput.h"
 #include "client/ClientLocalStateGlobals.h"
@@ -231,6 +232,11 @@ BridgeConnectState CampaignLinks() { BridgeConnectState result;result.bridgeType
 std::shared_ptr<RawSurfaceStorage> SessionSurfaceStorage(const RawCampaignSessionServices& services,const GameAssets& assets) {
     if (services.surfaceStorage && services.surfaceStorage->Source()!=&assets) throw std::invalid_argument("Session의 실제 Client 월드 자산 불일치");return services.surfaceStorage;
 }
+// 다른 Client의 두 Subscriber를 실제 현재 전역에 섞기 전에 거부한다.
+std::shared_ptr<ClientGameplayGlobals> SessionGameplayGlobals(const RawCampaignSessionServices& services) {
+    if (services.gameplayGlobals && services.gameplayGlobals->Subscribers()!=services.subscriberGlobals) throw std::invalid_argument("Session의 실제 현재 전역/Subscriber 소유자 불일치");
+    return services.gameplayGlobals ? services.gameplayGlobals : std::make_shared<ClientGameplayGlobals>(services.subscriberGlobals);
+}
 constexpr std::size_t kCampaignFactoryCapacity=500; // PATCH004fc990의push1f4→0044fb20이확보하는실제0055a4d0목록의DWORD수다.
 constexpr std::uint32_t kAiSearchTypeBase=0x6b000000U; //같은실제188TYPE의opaque32포인터기준이다.원본가상주소가아니며500stride대응만보존한다.
 // 실제83개 VT에서+10/+14/+18이4af780/44b4b0/44b9e0인14개만 일반 Damageable 수명으로 연결한다.
@@ -305,6 +311,7 @@ std::string_view RawCampaignObjectMenus::TextParameter(std::uint32_t token) cons
 bool RawCampaignObjectMenus::ResolveIdentity(PlayerIdentityRecord& record) const { return impl_->identity->Resolve(record); }
 // 실제 월드/상태와 모든 callback 대상을 같은 고정 주소에 소유한다.
 struct RawCampaignSession::Impl {
+    std::shared_ptr<ClientGameplayGlobals> gameplayGlobals;std::unique_ptr<ClientGameplayGlobals::Use> gameplayUse; // 모든 모듈/Player 대여 뒤에 반납하는 현재 전역과 Runtime 대여다.
     std::shared_ptr<ClientPlayerRecords> playerRecords; // 모든 소비자보다 먼저 구성하고 마지막에 반납하는 실제 Client Player owner다.
     std::unique_ptr<ClientPlayerRecords::Use> playerUse; // Login과 서비스 callback까지 모두 소멸한 뒤 다음 Player 재할당을 허용한다.
     RawCampaignSessionServices services; // Login/장기 callback보다 먼저 만들고 나중에 반납하는 실제 클라이언트 장치다.
@@ -327,7 +334,7 @@ struct RawCampaignSession::Impl {
     RawWorldCore core; // 같은 Pool/장부/해시의 참조만 유지한다.
     std::unique_ptr<RawCampaignCursor> cursor; // 같은 실제 Form/마나/위치/로컬 예측 몸체를 설치 뒤 소유한다.
     SoundView cursorView{}; // 마우스 위치의 실제 투영에도 현재 단일 카메라/화면 원점을 사용한다.
-    CursorDropState cursorDrop{.lockDepth=1}; // 보호 PE5325c8의 초기 잠금1이며  실제 취득/배치/취소가 공유할 커서 상태이며 마나 토큰도 같은 저장소다.
+    CursorDropState& cursorDrop{gameplayGlobals->cursor}; // 초기 HUD와 같은 실제 취득/배치/취소/마우스 전역이다.
     CursorManaGlobals cursorManaGlobals; // 현재 마나 종류/반경과 월드 좌표 제한 전역이다.
     std::unique_ptr<RawCursorMana> cursorMana; // Kernel을 먼저 비운 뒤 해제하는 실제 마나 프레임/수명 몸체다.
     EnergySupplyState energyState; // 마나 반경과 별개인 실제 제곱 반경 및 공급 전역이다.
@@ -438,9 +445,9 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawPriestSacrificeRequest> sacrificeRequest; // 사용자 입력과 서버40h가 공유하는 wrapper다.
     std::unique_ptr<void,void(*)(void*)> pendingRitualSound{nullptr,[](void* storage) { ::operator delete(storage); }}; // Dais 지연 소리의 new40 확보 한 번을 같은 Sound47 생성까지 보관한다.
     std::unique_ptr<RegularProcess> pendingRitualRegular; // 실제 확보 한 번을 예약/생성/부착까지 유지한다.
-    PlayerWorldState playerState; // 현재 battleOwner와 templateOwner는 별도 상태다.
+    PlayerWorldState& playerState{gameplayGlobals->player}; // 현재 두 owner/known을 초기 HUD와 같은 주소에서 읽고 쓴다.
     FortObjectLoadState objectState; // 저장객체의 실제 미션/로딩 상태다.
-    CampaignWorldGlobals globals=services.subscriberGlobals ? CampaignWorldGlobals::BorrowSubscribers(services.subscriberGlobals->MySubscriber(),services.subscriberGlobals->LoginSubscriber()) : CampaignWorldGlobals{}; // 두 ID만 빌리며 editor/post는 Session별 값을 유지한다.
+    CampaignWorldGlobals& globals{gameplayGlobals->world}; // 두 실제 Subscriber와 editor/post도 같은 장기 주소를 사용한다.
     std::uint32_t revision{},ownerChanged{},vortexRevision{},piece{107}; // 원본 섬/신전/패턴 전역이다.
     std::uint32_t localCrt{}; // 소유자 없는 기존 독립Session 검사에 한해서 보존하는 초기CRT0 입력이다.
     std::uint32_t& crt{services.randomGlobals ? services.randomGlobals->CrtState() : localCrt}; // Seed/지형은같은Client실제DWORD를직접빌리며사본동기화를하지않는다.
@@ -527,7 +534,7 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawCanonPlacementPipeline> gameplayPipeline; // 같은 풀/표면/원본 자산으로 전체 실제 MayPlace를 실행한다.
     CanonPlacementPipelineState placement; // 실제 공간/기하/지형 허용 상태다.
     SquidPostPopList additional; // 기존 pipeline이 읽는 실제 추가 목록이다.
-    ContainedFinderState contentFinder; // 기존 내용물 검색의 장기 전역이다.
+    ContainedFinderState& contentFinder{gameplayGlobals->finder}; // 초기/현재 생산 UI와 같은 검색 전역이다.
     PriestMenuState priestMenu; // 원본 사제 메뉴의 타입/명령·특수 모드 전역을 같은 Session에서 소유한다.
     SquidPostPopList constructionExcludedTypes; // 0052f7e0의 초기 빈 TYPE 목록이며 additional의 SID 목록과 다르다.
 
@@ -727,6 +734,7 @@ struct RawCampaignSession::Impl {
 
     // 보호 자료를 읽기 전용으로 사용하며 모든 필수 후처리를 첫 생성 전에 등록한다.
     Impl(const GameAssets& game,const BaseFileSystem& files,FortTemplate fort,std::string mission,RawCampaignSessionServices input):
+        gameplayGlobals(SessionGameplayGlobals(input)),gameplayUse(gameplayGlobals->Acquire()),
         playerRecords(input.playerRecords ? input.playerRecords : std::make_shared<ClientPlayerRecords>()),playerUse(playerRecords->Acquire()),
         services(std::move(input)),templateStorage(services.templateStorage ? services.templateStorage : std::make_shared<CampaignTemplateStorage>()),headers(templateStorage->Headers()),assets(game,files),metadata(assets.game),
         world(OriginalEdition::Patch1078,assets.types,assets.frames,metadata.shapes,CampaignLinks(),terrainType,services.processKernel,SessionSurfaceStorage(services,game)),core(world.Core()),
@@ -3112,9 +3120,9 @@ void RawCampaignSession::SendLocalPacket(std::int32_t target,std::span<const std
 }
 // 현재 실제 자산/Template/서비스를 보관하고 모든 하위 모듈을 구성한다.
 RawCampaignSession::RawCampaignSession(const GameAssets& assets,const BaseFileSystem& files,FortTemplate fort,std::string mission,RawCampaignSessionServices services)
-    :impl_(std::make_unique<Impl>(assets,files,std::move(fort),std::move(mission),std::move(services))) {}
+    :impl_(std::make_unique<Impl>(assets,files,std::move(fort),std::move(mission),std::move(services))) { impl_->gameplayUse->Publish(*this); }
 // Impl이 Kernel을 비운 뒤 실제 모듈을 해제한다.
-RawCampaignSession::~RawCampaignSession()=default;
+RawCampaignSession::~RawCampaignSession() { impl_->gameplayUse->Withdraw(*this); }
 // 저장 다이스/룬의 전체 후처리를 먼저 등록한 뒤 동일 원본 부모로 월드를 로드한다.
 void RawCampaignSession::Load() {
     if (impl_->services.installMode!=CampaignInstallMode::Campaign) throw std::logic_error("기존Editor는별도World단계와외곽완료부모필요");
@@ -3318,6 +3326,8 @@ void RawCampaignSession::SynchronizeProductionContents() { if (!impl_->loaded) t
 // 구식 배치용 IslandList 벡터 대신 실제 섬 목록 첫DWORD를 현재 시점에 읽는다.
 std::uint32_t RawCampaignSession::IslandCount() const { return impl_->islands->Count(); }
 const ContainedFinderState& RawCampaignSession::ProductionFinder() const { return impl_->contentFinder; }
+// 별도 값 버퍼나 가짜 Session 없이 현재 실제 생성 자료를 빌린다.
+ProductionControlContext RawCampaignSession::ProductionContext() const { return {impl_->world.Storage(),impl_->gameplayGlobals,impl_->playerRecords,impl_->battleOptions}; }
 // 원본43ef10의 생산 단락만 현재 Gump idle 위치에서 실행한다. 나머지HUD/공급 주기는 별도 몸체다.
 bool RawCampaignSession::UpdateProductionContents() {
     auto& s=*impl_;if (!s.loaded || (!s.core.ownerMode.fort && !s.core.ownerMode.battle && !s.core.ownerMode.challenge)) return false;

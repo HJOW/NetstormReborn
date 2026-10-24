@@ -78,6 +78,8 @@ public:
     std::uint32_t BaseHandle(std::uint32_t token,std::uint32_t event,std::uint32_t first,std::uint32_t second) const; // 외부 파생도 같은 기본 우클릭 Help로 위임한다. // 생산 패널의 현재 저장소를 같은 출력 계층에 연결/해제한다.
     const TextGump& TextBackend() const; // 수량/예산도 기존 원본 한 줄 글자 처리기를 공유한다.
     const StyleText& StyleBackend() const; // 생산 글자도 같은 실제 조각·글꼴·그림 파서를 공유한다.
+    void SetHelpText(std::uint32_t token,std::string_view text); //464ed0의 실제 소유 문자열을 같은 노드의 textPointer에 설치한다.
+    void SetHelpWord(std::uint32_t token,std::string_view text); //464f80의 실제 소유 도움말 키를 alternateTextPointer에 설치한다.
     void MeasureText(std::span<const char> bytes,const std::array<std::uint32_t,8>& context,std::int32_t& width,std::int32_t& height,std::uint32_t limit) const; // 공통 돌 버튼 Fit도 같은 원본 글꼴 측정기를 사용한다.
     const GumpBackgroundCreate& BackgroundBackend() const; // 실제 TYPE/SHP를 읽는 같은 배경 생성기다.
     QuickHelpPopupState& PopupState() const; // 지식 카드 표식과 전용 Help Back이 공유할 같은 실제 저장소다.

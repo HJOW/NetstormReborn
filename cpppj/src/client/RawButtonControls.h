@@ -12,6 +12,7 @@
 namespace netstorm::client {
 class RawCampaignSession; // 생산 패널과 같은 현재 실제 월드다.
 struct RawProductionHooks; // 현재 생산 UI 장치 효과다.
+struct ProductionControlContext; // 초기 HUD의 실제 물리/현재 전역/Player/옵션이다.
 class RawMinimapControls; // 같은 월드의 실제 Sky Overview 처리기다.
 class RawSurfaceStorage; // Session보다 오래 보관하는 실제 Pool/Hash/TYPE 물리다.
 struct RawMinimapHooks; // 현재 카메라/입력 장치다.
@@ -97,6 +98,7 @@ public:
     WarningMessages& EnableWarnings(std::function<double()> now,std::function<void()> sound,MessageGumpHooks pauseContext);
     WarningMessages* Warnings() const; // 같은 공통 가상 분배가 소유하는 현재 안내 처리기다.
     RawProductionControls& EnableProduction(RawCampaignSession& session,const GameAssets& assets,RawProductionHooks hooks); // 현재 미션 패널을 조립한다.
+    RawProductionControls& ConstructProduction(ProductionControlContext context,const GameAssets& assets,RawProductionHooks hooks); // Session 이전에도 같은 원문 생성만 수행하며 루트 부착은 실제 부모가 담당한다.
     RawProductionControls* Production() const; // 현재 살아 있는 패널 처리기다.
     void ConfigureTestBridgePatterns(std::string_view patterns); // 테스트 전용 임시 조작이며 원본 분석 결과가 아니다. 초기/진행 중 지정 순서를 교체한다.
     RawMinimapControls& EnableMinimap(RawCampaignSession& session,RawMinimapHooks hooks); // 같은 실제 트리/월드에 미니맵을 생성한다.

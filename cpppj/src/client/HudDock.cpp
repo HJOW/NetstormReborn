@@ -49,7 +49,7 @@ HudDividerNode& HudDock::Divider(std::uint32_t token) const {
     if (!node || static_cast<GumpCreateNode*>(node)!=&Node(token)) throw std::runtime_error("HUD divider의 동일 저장소 필요");return *node;
 }
 // 기본 배경 생성의 signed정수→float32 변환 뒤 원본 확장 필드만 초기화한다.
-std::uint32_t HudDock::Construct(std::uint32_t token,std::uint32_t axis,std::int32_t width,std::int32_t height,
+std::uint32_t HudDividerGump::Construct(std::uint32_t token,std::uint32_t axis,std::int32_t width,std::int32_t height,
     std::uint32_t backgroundFlags,std::uint32_t type,std::uint32_t frame) const {
     if (!hooks_.constructBackground || !hooks_.activate) throw std::runtime_error("HUD divider 생성 경계 없음");
     hooks_.constructBackground(token,static_cast<float>(width),static_cast<float>(height),backgroundFlags,type,frame);
@@ -59,7 +59,7 @@ std::uint32_t HudDock::Construct(std::uint32_t token,std::uint32_t axis,std::int
     hooks_.activate(token,1);return token;
 }
 // 원본은 꽉 찬 표의 진단이 복귀해도 자식에slave표시를 남긴다.
-void HudDock::RegisterSlave(std::uint32_t master,std::uint32_t slave,std::uint32_t flags) const {
+void HudDividerGump::RegisterSlave(std::uint32_t master,std::uint32_t slave,std::uint32_t flags) const {
     if (!slave) return;auto& divider=Divider(master);std::size_t index=0;
     // serial0은 빈 슬롯이며 동일 serial의 중복 등록을 허용한다.
     for (;index<divider.slaves.size();++index) if (!divider.slaves[index].first) break;
@@ -69,10 +69,10 @@ void HudDock::RegisterSlave(std::uint32_t master,std::uint32_t slave,std::uint32
     Node(slave).flags|=0x40000;
 }
 // 첫popup정리 뒤 oldY를 저장하며 기본부착과 방송 뒤에는 현재 좌표/관계를 다시 읽는다.
-void HudDock::Attach(std::uint32_t token,float x,float y,std::uint32_t parent,std::uint32_t mode) const {
+void HudDividerGump::Attach(std::uint32_t token,float x,float y,std::uint32_t parent,std::uint32_t mode) const {
     hooks_.closePopups();auto& master=Divider(token);const float oldY=master.y;
     hooks_.baseAttach(token,x,y,parent,mode);if (!(master.flags&1)) return;
-    if (master.axis&0x10) Width(master,double(globals_.screenWidth)-x);
+    if (master.axis&0x10) Width(master,double(screenWidth_)-x);
     hooks_.bubble(token,kMoved,master.serial,0);
     // 고정10번을 순회하지만 매번 현재 serial을 읽으며 해결한 slave포인터는 네 관계 분기에서 유지한다.
     for (std::size_t index=0;index<master.slaves.size();++index) {
@@ -89,15 +89,27 @@ void HudDock::Attach(std::uint32_t token,float x,float y,std::uint32_t parent,st
         }
         if (master.slaves[index].second&4) {
             hooks_.push(slave);const double right=double(master.baseWidth)+master.x; // 두 필드 합은 slave폭 계산이 끝날 때까지float32로 줄이지 않는다.
-            Width(child,double(globals_.screenWidth)-right);hooks_.attach(slave,static_cast<float>(right),child.y,0,1);
+            Width(child,double(screenWidth_)-right);hooks_.attach(slave,static_cast<float>(right),child.y,0,1);
         }
         if (master.slaves[index].second&8) {
             hooks_.push(slave);const double bottom=double(master.baseHeight)+master.y; // 확장 합과 실제Attach의float32 인자를 구별한다.
-            Height(child,(master.slaves[index].second&0x40) ? (double(oldY)-master.y)+child.baseHeight : double(globals_.screenHeight)-bottom);
+            Height(child,(master.slaves[index].second&0x40) ? (double(oldY)-master.y)+child.baseHeight : double(screenHeight_)-bottom);
             hooks_.attach(slave,child.x,static_cast<float>(bottom),0,1);
         }
     }
 }
+// 실제 callback 인스턴스를 참조하므로 캡처의 상태나 가상 분배를 복제하지 않는다.
+HudDividerGump::HudDividerGump(const std::int32_t& width,const std::int32_t& height,const std::int8_t& color,const HudDockHooks& hooks):screenWidth_(width),screenHeight_(height),color_(color),hooks_(hooks) {}
+// 구분선과 공통 Gump가 같은 현재 주소를 사용해야 한다.
+GumpCreateNode& HudDividerGump::Node(std::uint32_t token) const { auto* node=token && hooks_.node ? hooks_.node(token) : nullptr;if (!node) throw std::runtime_error("구분선의 실제 기본 저장소 없음");return *node; }
+// 확장 주소를 별도 배경 사본으로 대신하지 않는다.
+HudDividerNode& HudDividerGump::Divider(std::uint32_t token) const { auto* node=token && hooks_.divider ? hooks_.divider(token) : nullptr;if (!node || static_cast<GumpCreateNode*>(node)!=&Node(token)) throw std::runtime_error("구분선의 실제 파생 저장소 불일치");return *node; }
+// 기존 Uber 경계는 같은 공유 몸체를 그대로 호출한다.
+std::uint32_t HudDock::Construct(std::uint32_t token,std::uint32_t axis,std::int32_t width,std::int32_t height,std::uint32_t flags,std::uint32_t type,std::uint32_t frame) const { return HudDividerGump(globals_.screenWidth,globals_.screenHeight,color_,hooks_).Construct(token,axis,width,height,flags,type,frame); }
+// 기존 등록의 현재 노드/순서/진단 경계를 보존한다.
+void HudDock::RegisterSlave(std::uint32_t master,std::uint32_t slave,std::uint32_t flags) const { HudDividerGump(globals_.screenWidth,globals_.screenHeight,color_,hooks_).RegisterSlave(master,slave,flags); }
+// 기존 부착도 같은 실제 화면 두 값과 현재 callback을 공유한다.
+void HudDock::Attach(std::uint32_t token,float x,float y,std::uint32_t parent,std::uint32_t mode) const { HudDividerGump(globals_.screenWidth,globals_.screenHeight,color_,hooks_).Attach(token,x,y,parent,mode); }
 // 원문HUD 직계의 실제자식생성 뒤 등록 순서와 제한값을 그대로 쓴다.
 void HudDock::RegisterNormalLayout() const {
     RegisterSlave(Token(HudDockPart::Vertical),Token(HudDockPart::MinimapDivider),1);RegisterSlave(Token(HudDockPart::Vertical),Token(HudDockPart::ChatDivider),4);
