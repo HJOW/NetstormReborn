@@ -13,6 +13,7 @@
 #include "client/GameMenuCommands.h"
 #include "client/GameMenuActions.h"
 #include "client/TellParameters.h"
+#include "client/TellSection.h"
 #include "client/ClientAudio.h"
 #include "client/ClientMain.h"
 #include "client/ClientSubscriberGlobals.h"
@@ -417,7 +418,7 @@ void UberGump::Tell(std::string target, bool briefing) {
 // 원본004cf730은 phase와 무관하게 현재 Mission의 설정에서 전체 target을 조회한다.
 bool UberGump::TryTell(std::string target,bool briefing,bool* windowCreated) {
     if (windowCreated) *windowCreated=false; // 무본문/빈 Tell은 창 생성 성공으로 보고하지 않는다.
-    if (o::AsciiLower(target) == "blank" || target.empty()) {
+    if (o::AsciiLower(target) == "blank") {
         if (mission_) { state_.phase = ClientPhase::Mission; pageName_ = "mission"; popup_.clear(); ClearPage(); client_.Pause(false); }
         else MainMenu();
         RebuildControls(); return true;
@@ -427,16 +428,8 @@ bool UberGump::TryTell(std::string target,bool briefing,bool* windowCreated) {
         [this](std::string_view value) { const auto decoded=o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(value.data()),value.size()});return FontBytes(client_.Configuration().SubstituteLocal(decoded)); },
         [&parameters](std::string_view line) { parameters.Append(o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(line.data()),line.size()})); }}); // 원문치환과Append사이에인용escape를끼우지않는다.
     target=o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(original.data()),original.size()});
-    std::optional<std::string> body;
-    const auto split = target.find('.');
-    if (split != std::string::npos && split + 1 < target.size()) {
-        auto& script = Script(target.substr(0, split));
-        if (const auto section = script.Section(target.substr(split + 1))) body = std::string(*section);
-    }
-    if (!body && mission_) body = mission_->Section(target);
-    if (!body) {
-        if (const auto section = Script("tell").Section(target)) body = std::string(*section);
-    }
+    const auto body=FindTellSectionInConfig(client_.HtmlWindowGlobals()->tell,original,client_.Configuration(),
+        [this](auto section)->std::optional<std::string> { return mission_ ? mission_->Section(section) : std::nullopt; }); // 원문 등록 객체→현재 미션→새 tell 적재와 실패 전 이름 기록을 같은 Client에 연결한다.
     if (!body) return false;
     const auto protectedBody = Replace(*body, "{cur.file}", "__CURRENT_FILE__");
     ScriptCommandHooks commands; // 현재복원된실제명령을원본ID로조회하고미등록은원본처럼진단뒤거부한다.

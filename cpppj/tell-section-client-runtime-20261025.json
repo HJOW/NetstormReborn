@@ -1,0 +1,66 @@
+{
+  "unit": 408,
+  "goalComplete": false,
+  "goalResumed": true,
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "gameExecuted": false,
+  "guiExecuted": false,
+  "productSha256": "8e4014301b3db0935bb16b2df5d28f47c4b8c69315330124bea3a985f2a1f0c9",
+  "testBinarySha256": "65db919b8a90f08713979bfe79c5666019a9da8237aca0608d72a9719c6f6aed",
+  "sourceHashes": {
+    "cpppj/src/client/TellSection.cpp": "4099a0faa36ed194f292e7d4e439df921b4ea747b9abfddb75560844db1c9fa4",
+    "cpppj/src/client/TellSection.h": "5e3db4f64c85adc016ac472dc9d261ef52317f11ea99b7924da640b3c0144d5f",
+    "cpppj/src/client/ClientHtmlWindowGlobals.h": "119444cc218a927ff8dbc6ca63da2fa31c0d4cdf7d83b80d6477273084039018",
+    "cpppj/src/client/UberGump.cpp": "5146d27777e9c815dbeec4b5cfb8750d38918789ef672bf65c289766cda01905",
+    "cpppj/src/client/CMakeLists.txt": "761833d42c6cbd5560b3c1e9c7ae5230e6764cf8792281e3ae109c10faab907b",
+    "cpppj/tests/TellSectionTests.cpp": "a306f5ac6ae05a5640e28c28680f8481ab6604a88c0717615ffdf9f336519c1c",
+    "cpppj/tests/CMakeLists.txt": "454bd625a7527637bc7258c24b4ca93c71046bd01e3155b56e3ac82df1d8e8fd",
+    "tools/decomp_tell_section.py": "661c53f22428a5727aec07d7f938542c13bae5e0f498069758008f73b4b72a5a",
+    "cpppj/tests/fixtures/tell-section-x86.tsv": "2a75006a18d404d8a30464ff0b3406423439f2e64c1bc4aa3aa7ccb70e85b32e",
+    "docs/exe/cpp-tell-section-client-20261025.md": "d7903a7238c21bbb9c2accdbda69539a574d4a735665307fa55e2b5943bd74b1"
+  },
+  "referenceHashes": {
+    "AGENTS.md": "7f853771930147c26e67d444ced94114992510a3fa072f5ed6bd63da7ba88bd9",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "cpppj/src/o/Config.cpp": "5e61071bbd0577d4878b388927b28308133547e0776b271dab656eb9e73b5715",
+    "cpppj/src/o/ConfigInterface.cpp": "62852c460b740586da52b1ee727de96206198ba0a5e7ff4a18f6acf5086b308c",
+    "cpppj/src/client/TellParameters.cpp": "4a01aca273eaa9be6aa679d65cf5a763e5cb38f74bcd550965a4ae1d716c9a15",
+    "cpppj/tests/fixtures/tell-parameters-x86.tsv": "20bd8ba4b7800e7e9474d1324276ef70cb40882e56bc67fce3502df05de3d9b5"
+  },
+  "rawHashes": {
+    "extracted/cpp-tell-section-408-audit.py": "1b2513421c51e3c7de7cda08700414e92bafe98a30eb09ae4959a328ac32117b",
+    "extracted/cpp-tell-section-408-baseline.json": "56b75c7c1e0194b8d3c9a41ef58124bac06f66e714da6fd6babbd4f8fc198901",
+    "extracted/cpp-tell-section-408-build1.log": "9b11d36e5a6a418378f3793275632d0d8f4796031f93750773bb66bc9733c67a",
+    "extracted/cpp-tell-section-408-build2.log": "be8fd99b6697e0e1fd3ffa2a221a2e22e0fdb618d4b60cef4613cc3635251461",
+    "extracted/cpp-tell-section-408-build3.log": "e9818b1c2b0a81778fb17f2f1f99c1292873d104fd91f78125b886e4c145957f",
+    "extracted/cpp-tell-section-408-build4.log": "e9818b1c2b0a81778fb17f2f1f99c1292873d104fd91f78125b886e4c145957f",
+    "extracted/cpp-tell-section-408-ctest1-tests.log": "a98fbfaba29730c9589f29ccbadafaf73ef23b8e1f5d24b25d10a98db651fd4f",
+    "extracted/cpp-tell-section-408-ctest1.log": "c18456cf8d17945c4b0d9c6212123c3d817ee47c7c7c58a33954e895f92e57a9",
+    "extracted/cpp-tell-section-408-focused1.log": "f128c1259f999c964e593f49f45743aa10ad78631677b1c0885f9b2a21837050",
+    "extracted/cpp-tell-section-408-focused2.log": "06e36da31596e35badd1041745da7ec1080389b00dd6c38df0b9ad948d86dc14",
+    "extracted/cpp-tell-section-408-focused3.log": "a577b18c2dd982b4248c3c62d97dab3f3185e76e5671c21e0155f4b6b0623d91",
+    "extracted/cpp-tell-section-408-native.json": "67355673cb9fb59fd5271fc4de5731bc948bde5efed70cef8eb54f3f3fc33fec"
+  },
+  "protectedAudit": {
+    "compared": 1821,
+    "originals": 1394,
+    "originalCD": 425,
+    "changed": []
+  },
+  "checks": {
+    "nativeRows": 858,
+    "precisionDifferences": 0,
+    "nativeReplay": "--check 통과/fixture 변경0",
+    "focusedPassed": 13,
+    "fullPassed": 2772,
+    "fullFailedChecks": 0
+  },
+  "limits": [
+    "원문 정상 본체의 파라미터 처리 뒤 이름 기록/선택 부분 투영만 비교했다. Config/파서/HTML 등 하위는 명시 장치다.",
+    "실제 Config의 이름조회·적재/반납·치환은 별도 결합 검사다. 전체 Tell 공장/페이지/Guide 이행과 GUI·전체 미션 완주는 미완료다.",
+    "초기 새 결합 검사 기대값의 최신 등록 객체 우선 가정을 수정했다. 기존 Config 제품 동작을 변경하지 않았다."
+  ]
+}

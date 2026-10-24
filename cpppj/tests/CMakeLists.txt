@@ -2139,3 +2139,6 @@ set_source_files_properties(HtmlWindowFactoryTests.cpp PROPERTIES COMPILE_DEFINI
     "NETSTORM_HTML_FACTORY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/html-window-factory-x86.tsv\"")
 set_source_files_properties(HtmlWindowMetadataTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_HTML_METADATA_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/html-window-metadata-x86.tsv\"")
+target_sources(netstorm_tests PRIVATE TellSectionTests.cpp) # 현재 Tell 이름과 등록 객체·미션·새 tell 섹션 조회를 검증한다.
+set_source_files_properties(TellSectionTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_TELL_SECTION_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/tell-section-x86.tsv\"")
