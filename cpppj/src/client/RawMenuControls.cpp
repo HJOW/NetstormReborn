@@ -740,6 +740,14 @@ std::string RawMenuControls::Report() const {
     }
     for (const auto& [token,node]:s.htmlRoots) { // 같은 부모/본문/소유 조각을 읽으며 미작성 인자는 읽지 않는다.
         out<<"raw_html_root\t"<<token<<'\t'<<node->serial<<'\t'<<node->flags<<'\t'<<node->controlCount<<'\t'<<node->body<<'\t'<<node->requestedWidth<<'\t'<<node->requestedHeight<<'\n';
+        for (std::uint32_t index=0;index<std::min(node->controlCount,static_cast<std::uint32_t>(node->controls.size()));++index) { // 실제 부모가 보유한 버튼의 현재 원문 인자/표시 경계만 보고한다.
+            const auto& entry=node->controls[index];const auto* button=Find(s.helpButtons,entry.child);if (!button) continue;
+            bool visible=node->parent!=0 && button->parent!=0;
+            for (auto current=entry.child;visible && current;current=s.common.node(current)->parent) { const auto flags=s.common.node(current)->flags;if (!(flags&1U) || (flags&0x10000U)) visible=false; } // Kill/미부착/숨긴 조상을 실제 트리에서 구별한다.
+            const auto bounds=s.common.collection.Bounds(entry.child);std::string label(button->label.begin(),std::find(button->label.begin(),button->label.end(),'\0'));
+            std::replace(label.begin(),label.end(),'\n',' ');std::replace(label.begin(),label.end(),'\t',' ');
+            out<<"raw_html_button\t"<<token<<'\t'<<index<<'\t'<<entry.child<<'\t'<<entry.command<<'\t'<<entry.parameter<<'\t'<<button->serial<<'\t'<<bounds.left<<'\t'<<bounds.top<<'\t'<<bounds.right<<'\t'<<bounds.bottom<<'\t'<<visible<<'\t'<<label<<'\n';
+        }
         if (const auto* body=Find(s.titles,node->body);body && body->buffer) { const auto& buffer=*s.buffers->Binding(body->buffer).state;std::string text;
             for (const auto head:buffer.hardLines) for (auto part=head;part;part=s.fragments.fragments.at(part).next) { const auto& bytes=s.fragments.fragments.at(part).text;text.append(bytes.begin(),std::find(bytes.begin(),bytes.end(),'\0')); } // 실제 스타일/그림은 바꾸지 않고 진단 문자열만 이어 붙인다.
             std::replace(text.begin(),text.end(),'\n',' ');std::replace(text.begin(),text.end(),'\t',' ');out<<"raw_html_body\t"<<token<<'\t'<<node->body<<'\t'<<buffer.lineCount<<'\t'<<text<<'\n';

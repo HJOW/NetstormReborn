@@ -24,7 +24,7 @@ MISSIONS = ('thewarbegins', 'savetheisland', 'tutorial1', 'TEST01')
 
 def parse(text):
     """같은 프레임의 객체를 번호로 유지하여 이동 전후 같은 유닛을 비교한다."""
-    state = {'objects': {}, 'raw_objects': {}, 'players': {}, 'controls': {}}
+    state = {'objects': {}, 'raw_objects': {}, 'players': {}, 'controls': {}, 'html_buttons': {}}
     # TSV의 종류별로 반복 레코드와 단일 레코드를 구분한다.
     for line in text.splitlines():
         fields = line.split('\t')
@@ -36,9 +36,27 @@ def parse(text):
             state['players'][int(fields[1])] = fields[2:]
         elif fields[0] == 'control':
             state['controls'][fields[1]] = fields[2:]
+        elif fields[0] == 'raw_html_button':
+            state['html_buttons'].setdefault(fields[1], []).append(fields[2:])  # 같은 실제 부모의 모든 버튼을 순서와 원문 인자 그대로 유지한다.
         else:
             state[fields[0]] = fields[1:]
     return state
+
+
+def dialog_button_labels(state):
+    """실제 전체 HTML은 조상까지 표시된 버튼을 읽고, 과거 저장 관측만 옛 호스트 표를 사용한다."""
+    if 'html_window_state' not in state:
+        return set(state['controls'])
+    assert state['html_window_state'] == ['1', '1', '1'], '현재 안내의 실제 부모/모달 수 불일치'
+    return {row[-1] for rows in state['html_buttons'].values() for row in rows if row[-2] == '1'}
+
+
+def verify_capture_frame(directory, state, label):
+    """검토하는 상태와 같은 이름의 캡처가 실제로 같은 입력 계획 프레임인지 확인한다."""
+    rows=[line.split('\t',2) for line in (directory/'steps.tsv').read_text('utf-8').splitlines() if line and not line.startswith('#')]
+    report_frames=[int(frame) for frame,operation,argument in rows if operation=='report' and argument==label]
+    image_frames=[int(frame) for frame,operation,argument in rows if operation=='snapshot' and Path(argument).name==label+'.bmp']
+    assert report_frames==image_frames==[state['frame']] and (directory/(label+'.bmp')).is_file(), '상태와 캡처 프레임 불일치: '+label
 
 
 def states(path):

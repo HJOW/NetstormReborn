@@ -11,7 +11,7 @@ import pefile
 from cpp_campaign_entry_smoke import ROOT, EXE
 from cpp_renderer_smoke import snapshots
 from cpp_smoke_files import preserve_game_settings
-from cpp_world_smoke import states
+from cpp_world_smoke import states, dialog_button_labels, verify_capture_frame
 from cpp_tutorial_harvest_smoke import original
 from cpp_bridge_ritual_runtime import execute, save
 
@@ -29,11 +29,12 @@ def count(current, name):
     return sum(row[0].lower() == name and row[1] == '1' for row in current['objects'].values())
 
 
-def inspect(directory, code, unchanged, *, initial_progress_injected=True, legacy_guide_sequence=False):
+def inspect(directory, code, unchanged, *, initial_progress_injected=True, legacy_guide_sequence=False, same_frame_next=False):
     """원본 비용/환불 상수와 실제 단계·객체·돈·회수·완료를 비교한다."""
     assert code == 0 and unchanged
     observed = states(directory / 'states.tsv')
     initial, placed, goal, following = (observed[name] for name in ('initial', 'templePlaced', 'goal', 'nextBriefing'))
+    if same_frame_next:verify_capture_frame(directory, following, 'nextBriefing')
     history = [row for row in observed.values() if row.get('mission', [''])[0].lower() == 'tutorial2']
     stages = list(dict.fromkeys(int(row['mission_gate'][1]) for row in history))
     assert stages == list(range(ord('A'), ord('I') + 1))
@@ -41,7 +42,7 @@ def inspect(directory, code, unchanged, *, initial_progress_injected=True, legac
     assert done_before in (0, 1) and goal['mission_progress'] == ['1']
     if initial_progress_injected:
         assert done_before == 0  # 과거 명시 초기 프로필의0 시작 증거를 별도로 유지한다.
-    assert goal['page'] == ['I.'] and goal['paused'] == ['1'] and {'Leave Tutorials', 'Next Tutorial'} <= set(goal['controls'])
+    assert goal['page'] == ['I.'] and goal['paused'] == ['1'] and {'Leave Tutorials', 'Next Tutorial'} <= dialog_button_labels(goal)
     assert all(row['mission_gate'][0] == '2' and row['mission_gate'][5] == '1' for row in history)
     assert all(row['mission_options'] == ['2', '0', '196'] for row in history if row is not initial)
     costs = {name:int(re.search(r'\bcost\s*=\s*(\d+)', original(name + '.type'))[1]) for name in ('windvortex', 'sunfactory', 'sunarcher')}
@@ -73,7 +74,7 @@ def inspect(directory, code, unchanged, *, initial_progress_injected=True, legac
                 salvagePackets=1, refund=refund, doneBefore=done_before, doneAfter=1, nextMission='tutorial3', nextSp=following_money,
                 initialProgressInjected=initial_progress_injected, noStateInjection=not initial_progress_injected,
                 nextGuideSequence=int(next_sequence), inspectionContract='legacy-20261019' if legacy_guide_sequence else 'native-guide-0-6',
-                lastGameTime=float(goal['raw_world'][0]), naturalTutorialTwoComplete=True, goalComplete=False,
+                lastGameTime=float(goal['raw_world'][0]), naturalTutorialTwoComplete=True, goalComplete=False, sameFrameNextBriefingVerified=same_frame_next,
                 scope='실제 A~I/사제 신전·워크샾/지식·생산/발사기4개/신전 선택/정상 회수·완료값 관측/다음 Tutorial3 진입이다. 영구 진행 저장·Early3 진행·전체 동일성은 별도다.')
 
 
@@ -98,7 +99,7 @@ def prepare(directory, reset_progress_profile=False):
     command = [str(EXE), '--run', str(ROOT / 'originals'), '--mission', 'tutorial2', '--window', '--no-audio', '--frames', '4524',
                '--set', settings, '--ui-script', str(script), '--ui-report', str(directory / 'states.tsv')]
     profile = dict(command=command, initialProgressInjected=reset_progress_profile, productTimers=1,
-                   testStateInjection=False, noStateInjection=not reset_progress_profile,
+                   testStateInjection=False, noStateInjection=not reset_progress_profile, sameFrameNextBriefing=True,
                    planSha256=sha(PLAN), replaySha256=sha(script), inspectionContract='native-guide-0-6')  # 실제 입력 출처와 검사 전용 쓰기 부재를 실행 전에 고정한다.
     save(directory / 'prepared.json', profile)
     return profile
@@ -128,7 +129,7 @@ def run(directory, *, reset_progress_profile=False, timeout=600, prepare_only=Fa
         save(directory / 'execution.json', evidence)
     try:
         assert not evidence['timedOut'], 'Early2 자연 플레이 실행 상한 도달'
-        value = inspect(directory, evidence['returnCode'], evidence['originalsUnchanged'], initial_progress_injected=reset_progress_profile)
+        value = inspect(directory, evidence['returnCode'], evidence['originalsUnchanged'], initial_progress_injected=reset_progress_profile, same_frame_next=True)
     except Exception as error:
         evidence['inspectionError'] = repr(error)
         save(directory / 'execution.json', evidence)
@@ -161,7 +162,8 @@ def main():
         injected = evidence.get('profile', {}).get('initialProgressInjected', True)  # 과거 실행은 실제0 주입 계약으로 분류한다.
         legacy = 'profile' not in evidence  # 최초2026-10-19 관측만 옛 Guide1 계약으로 재판정한다.
         print(json.dumps(inspect(args.inspect, evidence['returnCode'], evidence['originalsUnchanged'],
-                                 initial_progress_injected=injected, legacy_guide_sequence=legacy), ensure_ascii=False))
+                                 initial_progress_injected=injected, legacy_guide_sequence=legacy,
+                                 same_frame_next=evidence.get('profile',{}).get('sameFrameNextBriefing',False)), ensure_ascii=False))
     else:
         if not args.output: parser.error('새 관측 폴더 --output이 필요합니다')
         print(json.dumps(run(args.output.resolve(), reset_progress_profile=args.fresh_progress_profile,

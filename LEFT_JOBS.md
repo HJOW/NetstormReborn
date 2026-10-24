@@ -1,5 +1,21 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-25 단위415 완료: 전체 HTML 안내의 실제 Early1/2 자연 완료 재검증
+
+- [x] 단위414 **6dd8d803 / 20261025-08 CP**와 AGENTS/양 인계를 재독했다. 현재/마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-10-23**이다. 새 전체 디컴파일/원본 실행0이며 보호 기준은 `extracted/cpp-early-html-415-baseline.json`이다.
+- [x] 실제 HTML 부모의 현재 버튼/인자/serial/경계·조상 표시 상태를 진단 보고에 추가하고, 읽기 도구에서 구형 호스트 `controls`와 별도 수집하도록 작성했다. Early1/2 검사는 실제 HTML 표시 버튼으로 완료/다음 안내를 확인하며 과거 저장 관측의 검사는 유지한다. 게임 규칙·성공 상태를 합성하지 않는다.
+- [x] build1의 size_t→DWORD C4267을 명시 고정 배열 크기 변환으로 정리한 build2 완료0/관측 경고오류0이다. 실제 공장13/0과 과거393 Early1/2 저장 관측 읽기 재검사가 통과했다. 새 제품 **19e6ffd17d4fc793ba8c3f63e8b9d180748c4ed7722c2cf4c6dacd10b52bb4ba**의 짧은 GUI1은 MORE→A1.→OK 복귀를 통과했고, 실제 `MORE`/`BACK`/`OK`를 새 보고에서 확인했다. 구형 controls는 빈 상태이며 이를 실제 버튼으로 거짓 복제하지 않는다.
+- [x] `tools/cpp_tutorial_harvest_smoke.py --output extracted/cpp-early-html-415-early1 --plan cpppj/tests/fixtures/tutorial-one-harvest-six-slots-ui-input.tsv`의 실제 A~G/수확SP0→200→400→600/정상 Next Tutorial→Tutorial2 A./SP10000/Guide4가 종료0·보호 원본 복구 동일로 통과했다. 초기 완료값1을 보존했으므로0→1/영구 저장을 증명한 것은 아니다. stock timers1·강제 상태/다리 패턴0이며, 실행 소스4개는 `extracted/cpp-early-html-415-source1/`이다. 완료/다음 화면도 확인했다.
+- [x] 같은 제품의 Early2는 A~I/신전·워크샾·발사기4개/회수75/SP3075/Next Tutorial→Tutorial3 A./SP2000/Guide4를192.50초·종료0·복구 동일로 통과했다. 정상 Restart Mission 클릭의 재시작1도 새 안내를 표시했고 refresh 전후 같았다.
+- [x] **중요 정정:** Early1의 `next.bmp`는7404프레임(Next 클릭3프레임 뒤, 실제 phase4/HTML0), `nextBriefing` 상태는7420프레임(phase3/A./HTML1)이었다. 서로 다른 시점을 비교해 표시 문제로 잘못 판단했다. 같은 프레임의 `adaptive2/next37.png`는 실제 안내와 MORE를 정상 표시했다. 최초 `visual-review1.json`은 유효한 표시 실패 판정이 아니며 별도 `review-correction.json`에 정정했다. 사용자에게 비교 오류를 알렸다.
+- [x] 그 잘못된 비교 뒤 시험했던 live Draw 변경과 기하/그리기 카운터는 모두 회수했다. UberGump/RawButtonControls는414 HEAD와 같으며 최종 게임 변경은 실제 HTML 버튼 진단8줄뿐이다. 시험 코드/바이너리/원시는 Source2/before-live/diagnostic과 각 실행 폴더에 보존했다. build3의40검사와 GUI2는 시험판 자료다. 시험판 `early1-final`의 D/SP0/지점 없음 실패(420.30초), `early1-northwest` 정상 완주(304.37초), 최초2/3진입 정상, adaptive1의F/SP400 상한 뒤 검사 실패, adaptive2의정상 Next/같은 프레임 안내도 각각 원시대로 보존한다. 이를 최종 제품 검사로 합산하지 않는다.
+- [x] 수확 검사 도구는 새 실행에서 `nextBriefing` 상태와 같은 프레임의 `nextBriefing.bmp`를 추가하고 입력 계획/관측 프레임의 일치를 명시 검사하도록 수정했다. 과거 저장 관측은 옛 계약으로 읽으며 덮어쓰지 않는다. 북서 입력 변형은 원본 계획을 보존하고 D/E 목표만 실제 간헐천35,33으로 바꾼 정상 입력이다.
+- [x] 불필요한 시험 변경 회수 뒤 build5 완료0/관측 경고오류0이다. 최종 제품은 **32b22498604cc342abe39f3c402946bbb7194d8583b3cda5ddcb8e51b023eb43**다. 실제 공장13/일반 메뉴12/Renderer15의 최종 집중40/0, Python 구문·과거 Early2의 같은 프레임 연결 검사·새 계획의7420 report/snapshot 일치를 확인했다. `final-source/`에 현재4소스를 보존했다.
+- [x] 최종 제품의 `early1-verified`는316.23초/종료0/보호 복구 동일로 A~G/SP0→200→400→600/실제 완료 버튼/정상 Next→Tutorial2 A.를 통과했다. 새 `nextBriefing.bmp`는보고와같은7420프레임이며 완료/다음 화면을 확인했다. 다음 화면의SP1700은실제예산파생의보간값이며 같은상태의raw SP10000과구별한다(이전7404표시100→16idle뒤1700). 원문43e530의100/10/1 단계 증감에 해당하므로 금액 불일치로 판정하지 않는다.
+- [x] 최종 제품의 `early2-verified`는192.21초/종료0/보호 복구 동일로 A~I·신전1/워크샾1·발사기4→3·회수75·SP3075·실제 완료 버튼·정상 Next→Tutorial3 A./SP2000/Guide4를 통과했다. 같은4520프레임의다음안내와완료화면도확인했다. 두 최종검사 모두 상태/패턴/진행초기화0·정상타이머1이다.
+- [x] 최종 전체 CTest **2796검사/실패check0/종료0·317.70초**, 집중 **40회·고유40·실패0**이다. 검사 SHA는 **4aee08bac05883c63a21f5bc5910809fb6884ded4817ad66f8191c197794eeb2**다. 감사는 보호1821파일 변경0·최종4소스/실행 파일 일치·두 실제 자연 완료/같은프레임을 통과했다. [완료 문서](docs/exe/cpp-early-html-runtime-20261025.md)/[제품 보고서](cpppj/early-html-runtime-20261025.json)에 실패/정정/한계와 원시 SHA를 남겼다. **20261025-09 CP**로 로컬 커밋하며 push하지 않는다.
+- [ ] 다음 단위는 원본 MainMenu/Edit 실제 진입과 전체 Uber 배경GIF/HUD dock/resize 연결, 나머지 Early/전체 캠페인/Demo 자연 진행을 계속한다. 현재 생산/미니맵의 고정 외부 출력 슬롯0/1과 단일 소유 제한은 원문 새 부모 생성→이전 부모 반납 순서를 구현하기 전에 해소해야 한다. 전체 동일성·State/Core/Pool/Win32·커스텀/언어별 시나리오·393 Wide SaveOptions는 계속 미완료이며 /goal은 활성이다.
+
 ## 2026-10-25 단위414 완료: Tell 전체 HTML 부모/입력/Guide 연결
 
 - [x] 단위413 **a1da69c5 / 20261025-07 CP** 뒤 이어서 진행한다. 현재/마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-10-23**이다. 새 전체 디컴파일/원본 직접 실행0이며 보호 기준은 `extracted/cpp-tell-window-414-baseline.json`이다.
@@ -13,7 +29,7 @@
 - [x] 빌드4 제품 SHA **081f387468ae5e06e6cb61a7189102e69535e92abbac81f5be0cce46a208ae07**에서 GUI9/10으로 위 두 경로를 재검증했다. GUI11은 첫 안내 뒤 원문 지시대로 F4를 눌러 단계65→66/실제 안내B./모달1에 도달했고 화면도 확인했다. 설정은 매회 복원했고 직후 보호1821파일 변경0을 확인했다. 게임 소스는 빌드3과 같으며 이후 검사 컴파일은 계속 진행 중이다.
 - [x] 신규 실제 Config/공장/클릭 결합5+VFS1과 기존 검사 변경을 작성했다. 빌드3은 게임 target 완료 뒤 검사 파일별 고유 정의로 컴파일이 순차 진행됐다. 설치된 VS18의 실제 MultiToolTask 지원을 확인하고 CMake9676/부모14948의 경로/빌드3 로그 명령을 검증한 뒤 자신의 트리만 종료했다. 검사/소스 변경 없이 작업별 `UseMultiToolTask=true / CL_MPCount=4 / EnforceProcessCountAcrossBuilds=true`로 빌드4를 완료했다. 빌드3 전체 완료로 세지 않으며 영구 빌드 설정은 바꾸지 않았다.
 - [x] 빌드4 완료0/관측 경고오류0 뒤 VFS 집중의 임시 부모 비교(끝 구분자)가 두 검사 생성을 막은 오류를 확인했다. 검사 전용 정규화만 교정한 빌드5 완료0/제품 동일이다. 최종 집중 공장13/Tell26/버튼7/BaseFile4/안내8 **58회·고유54/실패0**, 전체 CTest **2796/0·318.93초**다. 검사 SHA는 **4e3f62b899856ae9ed50b07ecb01809ab249bb89ffc9bd53cf7df6974f8af807**다. 보호1821파일 변경0이며 [문서](docs/exe/cpp-tell-window-client-20261025.md)/[제품 보고서](cpppj/tell-window-client-runtime-20261025.json)에 원문/소스/바이너리/원시 SHA·실패 이력과 경계를 남겼다. 원시는 `extracted/cpp-tell-window-414-*`다. **20261025-08 CP**로 로컬 커밋하며 push하지 않는다.
-- [ ] 다음 실제 플레이 검증은 새 전체 HTML 안내를 사용한 Early1/2 자연 완료·다음 미션 전환부터 진행한다. 기존 검사 도구의 `controls`는 구형 호스트 표이므로 실제 HTML 부모/모달/정상 클릭 결과를 읽는 관측으로 이행한다. 완료값/돈/단계/다리 패턴을 주입해 통과시키지 않는다. 전체 Uber 연결 전에는 기존 생산/미니맵의 고정 외부 출력 슬롯0/1과 단일 소유 제한도 해소해야 하며 새 자식을 만들기 전에 이전 자식을 닫아 원문 순서를 바꾸지 않는다.
+- [x] 다음 실제 플레이 검증이던 새 전체 HTML 안내의 Early1/2 자연 완료와 다음 미션 안내 전환은 단위415에서 완료했다. 구형 `controls`와 실제 HTML 버튼 관측을 구별하고 완료값/돈/단계/다리 패턴을 주입하지 않았다. 전체 Uber 연결 전의 생산/미니맵 고정 출력 슬롯0/1과 단일 소유 제한은 아직 남으며 새 자식을 만들기 전에 이전 자식을 닫아 원문 순서를 바꾸지 않는다.
 - [ ] 전체 Uber 루트의 실제 배경 GIF 생성/교체·HUD dock과 원본 MainMenu/Edit 진입은 별도 미완료다. 현재 배경 표시는 전역 이름의 기존 GIF 표시 어댑터를 사용한다. 전체 사용자 완주/Edit/언어별 시나리오·완전 동일성·State/Core/Pool/Win32 및393 Wide SaveOptions도 계속 미완료다.
 
 ## 2026-10-25 단위413 완료: Checked의 실제 Client 전역·설정/공급 수명 연결

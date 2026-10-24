@@ -11,7 +11,7 @@ from cpp_bridge_ritual_runtime import execute, save
 from cpp_menu_smoke import source
 from cpp_renderer_smoke import snapshots
 from cpp_smoke_files import preserve_game_settings
-from cpp_world_smoke import states
+from cpp_world_smoke import states, dialog_button_labels, verify_capture_frame
 from taff import TaffArchive
 
 PLAN = ROOT / 'cpppj/tests/fixtures/tutorial-one-harvest-ui-input.tsv'  # 현재 화면에 맞춘 실제 입력 계획이다.
@@ -30,18 +30,20 @@ def original(name):
     return source(ROOT / 'originals', archive, 'd/' + name).decode('cp1252')
 
 
-def inspect(directory, code, unchanged, *, expected_stock=None, progress_profile=None):
+def inspect(directory, code, unchanged, *, expected_stock=None, progress_profile=None, same_frame_next=False):
     """Guide4·실제 수확/완주를 판정하고 초기 완료값 보존과 명시 초기 프로필을 구별한다."""
     assert code == 0 and unchanged
     observed = states(directory / 'states.tsv')
     initial, goal, following = (observed[name] for name in ('initial', 'goal', 'nextBriefing'))
+    if same_frame_next:
+        verify_capture_frame(directory, following, 'nextBriefing')
     before = int(initial['mission_progress'][0])  # 원래 완료값이1이어도 실제 플레이를 막거나0으로 바꾸지 않는다.
     if progress_profile is True:
         assert before == 0, '명시 초기 프로필의 완료값0이 실제 시작 관측에 적용되지 않았습니다'
     assert float(initial['raw_sp'][1]) == 0
     assert goal['mission'][0].lower() == 'tutorial1' and goal['page'] == ['G.']
     assert goal['mission_gate'][:6] == ['1', '71', '0', '1', '0', '1'] and goal['paused'] == ['1']
-    assert goal['mission_progress'] == ['1'] and {'Leave Tutorials', 'Next Tutorial'} <= set(goal['controls'])
+    assert goal['mission_progress'] == ['1'] and {'Leave Tutorials', 'Next Tutorial'} <= dialog_button_labels(goal)
     assert goal['mission_start'][:3] == ['1', '4', '0'] and goal['raw_session'] == ['1', '1']
     history = [current for current in observed.values() if current.get('mission', [''])[0].lower() == 'tutorial1']
     stages = [int(current['mission_gate'][1]) for current in history]
@@ -60,7 +62,7 @@ def inspect(directory, code, unchanged, *, expected_stock=None, progress_profile
     assert len(positions) > 3 and goal['raw_packets'].count('64') == 1
     assert any(current['page'] == ['E.'] for current in history)
     expected = int(re.search(r'\bmyStartMoney\s*=\s*(\d+)', original('tutorial2.english'))[1])
-    assert following['mission'][0].lower() == 'tutorial2' and following['page'] == ['A.'] and following['controls'] and following['paused'] == ['1']
+    assert following['mission'][0].lower() == 'tutorial2' and following['page'] == ['A.'] and dialog_button_labels(following) and following['paused'] == ['1']
     assert following['mission_start'][:3] == ['1', '4', '0'] and following['raw_session'] == ['1', '1']
     assert float(following['raw_sp'][1]) == expected == 10000 and following['mission_gate'][0] == '2'
     assert 'raw_mission_loading' not in goal and 'raw_mission_loading' not in following
@@ -69,7 +71,7 @@ def inspect(directory, code, unchanged, *, expected_stock=None, progress_profile
                 initialProgressInjected=progress_profile, progressProfile='explicit-reset' if progress_profile else 'preserved' if progress_profile is False else 'unrecorded',
                 stockTimersObserved=stock, defaultStockTimersVerified=stock == [1], priest=priest, distinctPositions=len(positions), movePackets=1,
                 lastGameTime=float(goal['raw_world'][0]), nextMission='tutorial2', nextSp=expected,
-                naturalTutorialOneComplete=True, goalComplete=False,
+                naturalTutorialOneComplete=True, goalComplete=False, sameFrameNextBriefingVerified=same_frame_next,
                 scope='실제 A~G/합법 다리·회전/간헐천 연결/한 번의 사제 명령/세 번 채취·귀환/SP600/다음 Tutorial2 Guide4다. 진행0→1은 실제 초기값이0일 때의 메모리 관측이며 디스크 저장·Early2 진행·전체 동일성은 별도다.')
 
 
@@ -91,6 +93,10 @@ def prepare(directory, reset_progress_profile=False, *, input_plan=None):
         else:
             assert operation in INPUT_OPERATIONS or operation in ('report', 'snapshot')
         rows.append((frame, operation, argument))
+    for frame,operation,argument in list(rows):  # 전환 직후의next와 구별하여 판정하는 같은 프레임의 안내를 보존한다.
+        capture=(frame,'snapshot',str(directory/'nextBriefing.bmp'))
+        if operation=='report' and argument=='nextBriefing' and capture not in rows:rows.append(capture)
+    rows.sort(key=lambda row:int(row[0]))  # 같은 프레임 안의 기존 입력/보고 순서는 유지한다.
     script = directory / 'steps.tsv'
     script.write_text(''.join(f'{frame}\t{operation}\t{argument}\n' for frame, operation, argument in rows), 'utf-8', newline='\n')
     settings = 'SCREENW=1024;SCREENH=768;maxFPS=40;sleepPerLoop=25;autoDemo=0;tellTips=0;useProductTimers=1'  # 기존SP/단계/HP/완료값을 주입하지 않는 기본 실행이다.
@@ -99,7 +105,7 @@ def prepare(directory, reset_progress_profile=False, *, input_plan=None):
     frame_limit = max(3924, max(int(row[0]) for row in rows) + 4)  # 기본3924는 유지하고 긴 실제 입력 계획의 마지막 관측까지 실행한다.
     command = [str(EXE), '--run', str(ROOT / 'originals'), '--mission', 'tutorial1', '--window', '--no-audio', '--frames', str(frame_limit),
                '--set', settings, '--ui-script', str(script), '--ui-report', str(directory / 'states.tsv')]
-    profile = dict(initialProgressInjected=reset_progress_profile, productTimers=1, testStateInjection=False,
+    profile = dict(initialProgressInjected=reset_progress_profile, productTimers=1, testStateInjection=False, sameFrameNextBriefing=True,
                    noStateInjection=not reset_progress_profile, planSha256=sha(plan), replaySha256=sha(script), command=command)
     save(directory / 'prepared.json', profile)
     return profile
@@ -130,7 +136,7 @@ def run(directory, *, reset_progress_profile=False, timeout=600, prepare_only=Fa
     try:
         assert not evidence['timedOut'], '실제 완주 관측의 실행 상한 도달'
         value = inspect(directory, evidence['returnCode'], evidence['originalsUnchanged'], expected_stock=1,
-                        progress_profile=reset_progress_profile)
+                        progress_profile=reset_progress_profile, same_frame_next=True)
     except Exception as error:
         evidence['inspectionError'] = repr(error)
         save(directory / 'execution.json', evidence)
@@ -169,7 +175,8 @@ def main():
         assert not evidence.get('timedOut', False), '저장 관측이 상한 종료했습니다'
         profile = evidence.get('profile', {})  # 옛 결과에 없는 초기 프로필을 보존 실행으로 추정하지 않는다.
         print(json.dumps(inspect(args.inspect, evidence['returnCode'], evidence['originalsUnchanged'],
-                                 expected_stock=profile.get('productTimers'), progress_profile=profile.get('initialProgressInjected')), ensure_ascii=False))
+                                 expected_stock=profile.get('productTimers'), progress_profile=profile.get('initialProgressInjected'),
+                                 same_frame_next=profile.get('sameFrameNextBriefing',False)), ensure_ascii=False))
     else:
         if not args.output: parser.error('새 관측 폴더 --output이 필요합니다')
         print(json.dumps(run(args.output.resolve(), reset_progress_profile=args.fresh_progress_profile,
