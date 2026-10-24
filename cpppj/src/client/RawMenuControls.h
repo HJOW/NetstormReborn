@@ -108,6 +108,9 @@ public:
     std::string ResolveHtmlWindowLink(std::uint32_t token) const; // Kill 뒤 Cleanup 전까지 실제 부모8192BYTE를 읽고 반납된 링크는 거부한다.
     void ActivateHtmlWindowLink(std::uint32_t token); // 실제 부모 링크를 같은 Help/cmd/외부 요청 분배기에 전달한다. 선택 외부 경계의 실패를 보존한다.
     void CloseHtmlWindows(); // 미부착/부분 생성도 같은 공통 수명으로 반납한다.
+    bool HtmlWindowsOpen() const; // 실제 부착된 전체 HTML 부모의 visible/dead를 현재 저장소에서 읽는다. Kill 뒤 인스턴스 수와 구별한다.
+    std::uint32_t HtmlMenuColumns() const; // 검사 보고에서 현재 최상위 모달 HTML에 실제 부착된 직계 메뉴 열을 센다. Fit이 소비한 메타 카운터와 구별한다.
+    void RequestCloseHtmlWindows(); // 실제 전체 부모를 Kill만 하며 OnExit와 반납은 같은 후반 Cleanup까지 남긴다.
     void CloseBackgroundGifs(); // 미부착/부분 생성도 같은 공통 수명으로 반납한다.
     ButtonGumpNode* BaseButton(std::uint32_t token) const; // 실제 특수 Button 파생도 공통 입력 처리기에 빌린다.
     QuickHelpPopupState& PopupState() const; // 지식 카드 표식과 전용 Help Back이 공유할 같은 실제 저장소다.

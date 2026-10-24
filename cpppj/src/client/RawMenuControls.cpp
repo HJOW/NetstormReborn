@@ -470,7 +470,7 @@ std::uint32_t RawMenuControls::OpenHelp(std::uint32_t topic,std::int32_t mode,st
 // 같은 현재 transient를 실제 원본 생성/갱신 경로에 전달한다.
 std::uint32_t RawMenuControls::ShowMissionLoading(RawHtmlWindowContext context,std::string_view message,std::function<std::string()> cancelText) { return impl_->ShowLoading(std::move(context),message,std::move(cancelText)); }
 // 새 화면에서 이전 안내를 현재 serial로 반납하며 다른 메뉴/생산 자식은 건드리지 않는다.
-void RawMenuControls::CloseMissionLoading() { auto& s=*impl_;if (const auto token=s.LoadingRoot()) s.common.lifetime.Kill(token);s.common.changed(); }
+void RawMenuControls::CloseMissionLoading() { auto& s=*impl_;if (const auto token=s.LoadingRoot()) s.common.lifetime.Kill(token);if (s.htmlContext) s.htmlContext->globals->window.transientSerial=0;s.common.changed(); } // 원문4c8dc0의Kill 뒤 현재 안내serial0을 유지한다.
 // 자동 검사도 그림과 같은 실제 공통 경계를 읽는다.
 std::optional<ScreenRect> RawMenuControls::MissionLoadingBounds() const { const auto& s=*impl_;if (const auto token=s.LoadingRoot()) return s.common.collection.Bounds(token);return {}; }
 bool RawMenuControls::HelpOpen() const { const auto token=impl_->Reference(impl_->helpState.id);return token && (impl_->common.node(token)->flags&1) && impl_->common.node(token)->parent; } // 현재 등록/표시를 직접 읽는다.
@@ -524,6 +524,21 @@ std::string RawMenuControls::ResolveHtmlWindowLink(std::uint32_t token) const { 
 // 원문4a00c0과 같은 Help/명령/외부 링크 분배기를 현재 부모 바이트에 적용한다.
 void RawMenuControls::ActivateHtmlWindowLink(std::uint32_t token) { impl_->HelpLink(impl_->HtmlLink(token)); }
 void RawMenuControls::CloseHtmlWindows() { impl_->CloseHtml(); } // 실제 공통 수명을 사용한다.
+// 현재 부착된 실제 부모만 사용자 선택을 받는 창으로 조회한다.
+bool RawMenuControls::HtmlWindowsOpen() const {
+    const auto& s=*impl_;for (const auto& [token,node]:s.htmlRoots) if (s.htmlConstructed.contains(token) && node->parent && (node->flags&1U) && !(node->flags&0x10000U)) return true; // 생성만 된 미부착 부모와 Kill된 부모를 표시 상태에 합치지 않는다.
+    return false;
+}
+// 메타 카운터가0으로 돌아간 뒤에도 같은 실제 직계 메뉴를 보고한다.
+std::uint32_t RawMenuControls::HtmlMenuColumns() const {
+    const auto& s=*impl_;const auto* root=s.common.life.dialogCount ? Find(s.htmlRoots,s.common.life.dialogs[s.common.life.dialogCount-1]) : nullptr;if (!root) return 0;std::uint32_t count{};
+    for (auto child=root->child;child;child=s.common.node(child)->next) if (s.menus.contains(child)) ++count; // 같은 부모의 현재 형제 연결만 읽고 하위 팝업은 열로 세지 않는다.
+    return count;
+}
+// 현재 실제 부모에 Kill을 전달하고 같은 입력 드레인 안에서 소멸하지 않는다.
+void RawMenuControls::RequestCloseHtmlWindows() {
+    auto& s=*impl_;for (const auto& [token,node]:s.htmlRoots) if (s.htmlConstructed.contains(token) && !(node->flags&0x10000U)) s.common.lifetime.Kill(token); // Kill은 저장소 반납과 달라 같은 map 순회를 보존한다.
+}
 RawBackgroundGifControls* RawMenuControls::BackgroundGifs() const { return impl_->gifWindows.get(); } // 같은 실제 소유자만 조회한다.
 void RawMenuControls::CloseBackgroundGifs() { if (impl_->gifWindows) impl_->gifWindows->Close(); } // 실제 공통 Kill/Cleanup이다.
 // 전체 실제 Chat 생성자는 네 자식과 공유 버퍼를 원문 순서대로 조립한다.
@@ -630,10 +645,9 @@ void RawMenuControls::Draw(std::span<std::uint8_t> pixels,int pitch,int height,c
 // 실제 입력/출력과 같은 현재 배치에서 자동 입력 지점을 읽는다.
 std::optional<ScreenPoint> RawMenuControls::Point(std::string_view label) const {
     auto& s=*impl_;
-    // 현재 미션 안내의 실제 돌 버튼도 같은 공통 위치에서 라벨 지점을 읽는다.
-    if (const auto token=s.LoadingRoot()) {
-        // 같은 실제 전체 부모의 모든 현재 버튼을 원문 슬롯 순서로 조회한다.
-        for (const auto& entry:s.LoadingNode(token).controls) { const auto* node=Find(s.helpButtons,entry.child);if (node && std::string_view(node->label.data())==label) { const auto rect=s.common.collection.Bounds(entry.child);return ScreenPoint{(rect.left+rect.right)/2,(rect.top+rect.bottom)/2}; } }
+    // 가장 위의 실제 모달 HTML 부모에서 돌 버튼의 현재 공통 경계를 읽는다.
+    if (const auto* root=s.common.life.dialogCount ? Find(s.htmlRoots,s.common.life.dialogs[s.common.life.dialogCount-1]) : nullptr) {
+        for (std::uint32_t index=0;index<root->controlCount;++index) { const auto* node=Find(s.helpButtons,root->controls[index].child);if (node && std::string_view(node->label.data())==label) { const auto rect=s.common.collection.Bounds(root->controls[index].child);return ScreenPoint{(rect.left+rect.right)/2,(rect.top+rect.bottom)/2}; } } // 생성 순서의 실제 controlCount 안에서만 조회한다.
     }
     // 저장된 스타일 원문은 별도 라벨 사본으로 치환하지 않는다.
     for (const auto& [token,node]:s.menus) {

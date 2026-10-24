@@ -65,6 +65,8 @@ public:
     // 원본 Filespec.cpp의 Win32 FindFirst/Next 순서다. 기본 디스크만 열거하며 TAFF/보조 경로/정렬을 적용하지 않는다.
     // 와일드카드가 없으면 원본처럼 존재 확인 없이 그 이름 한 개를 반환한다. cpppj의 Windows 경계다.
     std::vector<std::string> MatchDisk(std::string_view pattern) const;
+    // 원본4588a0 FileFinder의 기본 디스크→등록 TAFF→보조 디스크 스냅샷이다. 첫 대소문자 무시 중복만 남기며 정렬하지 않는다.
+    std::vector<std::string> MatchFinder(std::string_view pattern) const;
 private:
     // base_: 파생 처리에서 공통 동작을 위임하는 기본 객체.
     std::filesystem::path base_;

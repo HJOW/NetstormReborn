@@ -24,7 +24,6 @@ class Client;
 class GameWorld;
 class UserInput;
 class WarningMessages;
-class DialogBodyLayout;
 struct GameMenuBarState; // 현재Session의기존검산참조와메뉴serial만빌린다.
 class CampaignObjectMenuClient; // 같은 실제 원본 객체 메뉴와 현재 명령 큐를 연결한다.
 struct MissionFortLoadRequest; // Init부터 실제 Session 설치까지 같은 요청과 Zone 이미지를 소유한다.
@@ -66,8 +65,7 @@ public:
     // 버튼/목록의 실제 위치를 라벨로 찾는다. 없으면 빈 값.
     std::optional<ScreenPoint> ControlPoint(std::string_view label) const;
     bool QuitRequested() const { return quit_; } // 실제 QuitApp/사용자 종료 요청만 읽으며 검사 프레임 제한 종료와 구별한다.
-    void CleanupDialogs(); // 원본처럼 설정 저장/미니맵 갱신 뒤 Kernel 전에 반납한 부모의 OnExit를 예약한다.
-    void CleanupGumps(); // 원본4662b0 위치에서 Warning을 포함한 같은 raw 공통 큐와 논리 HTML을 정리한다.
+    void CleanupGumps(); // 원본4662b0 위치에서 실제 전체 HTML/Warning을 포함한 같은 공통 큐를 정리한다.
     void IdleGumps(); // 원본464170 위치에서 Warning을 포함한 현재 공통 idle 표를 한 번 실행한다.
     // --ui-script 전용 검사 경계다. 실제 월드의 가상 삭제를 호출하며 일반 게임 입력에는 노출하지 않는다.
     bool InspectDestroySurface(std::string_view type,float x,float y);
@@ -78,12 +76,9 @@ private:
     // 원본 Tell의 파일.섹션/현재 tell 섹션을 읽어 대화상자를 연다.
     void Tell(std::string target, bool briefing = false);
     // 원본00482de0처럼 현재 미션/일반 섹션이 없으면 false로 반환하며 기존 페이지를 유지한다.
-    bool TryTell(std::string target,bool briefing=false,bool* windowCreated=nullptr);
+    bool TryTell(std::string target,bool briefing=false,bool* windowCreated=nullptr,std::uint32_t suppress=0); // 원문 mode1은 첫 HTML 처리만 실행하고 창을 만들지 않는다.
     // 원본 이름의 설정 객체를 보존해 캠페인 제목과 변수를 치환한다.
     o::Config& Script(std::string_view name);
-    // @guideSpec/%userSpec 파일 목록을 현재 파일 설정으로 확장한다.
-    void ExpandMenus(DialogPage& page);
-    DialogMetadataHooks MapMetadata(); // 실제 메타 추출 시점의 메뉴 열과 현재 파일 목록을 페이지 표시 자료에 연결한다.
     RawHtmlWindowContext LoadingHtmlContext(ScreenRect mapView); // 같은 Client/Config/큐와 매번 현재 뷰를 공급한다.
     // 표시 상태를 합성한다. 페이지 교체 예약이 있을 때만 입력 영역과 실제 돌 버튼을 함께 교체한다.
     void Compose();
@@ -115,9 +110,9 @@ private:
     void ToggleGameMenu(); // ESC의현재serial조회→열기또는Kill/serial0/팝업닫기를실행한다.
     bool GameMenuOpen() const; // 현재serial을공통등록표에서조회하며과거열림bool을저장하지않는다.
     bool GameMenuCommand(const InputEvent& event); // 메뉴부모가예약한현재원본명령을각실제소유자로분배한다.
-    void ClearPage(); // 실제 페이지 교체/반납에서 부모의 OnExit를 지연 소멸 표로 옮기고 표시 소유 내용을 비운다.
-    void ActivatePageAction(DialogAction action); // 실제 HTML 버튼/메뉴/timeout은 명령을 즉시 예약한 뒤 부모를 Kill한다. 호스트 임시 UI는 기존 전환을 사용한다.
-    void DisposeRetiredPages(); // 설정 저장 뒤 갱신에서 지연 반납한 부모들의 OnExit를 같은 큐에 예약한다.
+    void ClearPage(); // 실제 전체 HTML 부모를 Kill만 예약하고 호스트 팝업 자료를 비운다.
+    void ActivatePageAction(DialogAction action); // 메인/호스트 팝업 선택만 기존 전환 큐로 보낸다. 실제 HTML은 공통 부모가 원시 큐를 사용한다.
+    void SyncTellPresentation(); // 현재 실제 전체 부모의 Kill을 읽어 표시 phase/호스트 정지만 반납하며 소멸을 앞당기지 않는다.
 
     // 원본 우클릭 메뉴의 연결점. 건설/수확 명령은 다음 단계에서 활성화한다.
     void OpenObjectMenu(o::SquidId id,const InputEvent& event);
@@ -146,7 +141,6 @@ private:
     std::unique_ptr<SoloMapCatalog> mapCatalog_; // 현재 파일 캐시/dirty/이름을 Client 수명에 소유한다.
     std::shared_ptr<TellFileMenus> fileMenus_; // 기존 Tell과 실제 전체 HTML 메타가 같은 @/# Config를 공유한다.
     std::string mapUserName_,pendingFortName_; // 원본 초기 빈 사용자 이름과 별도 pending 이름이다. current Fort 이름과 합치지 않는다.
-    std::unique_ptr<DialogBodyLayout> dialogBody_; // 현재페이지의실제StyleText입력/표시복제를소유하며Compose때효과를재실행하지않는다.
     HtmlTextParserGlobals htmlGlobals_; // 원본의페이지간공유P억제전역이다.
     ScreenRect htmlMapView_{};std::string htmlCurrentFortName_; // 각 조회에서 현재 뷰와 반환 문자열의 수명을 보존한다.
     std::uint32_t buttonTextureType_{},buttonTextureFrame_{}; // 실제 버튼 배경 생성자에 전달할 fortGump/A01 타입·프레임 번호다.
@@ -161,9 +155,6 @@ private:
     IndexedImage title_, clouds_;
     // page_: 표시할 페이지 또는 스크롤 페이지 크기.
     DialogPage page_;
-    bool pageAlive_{}; // Kill 전 현재 HTML 부모다. Kill 뒤에도 retiredPageExits_는 Cleanup까지 원본 창 개수를 유지한다.
-    DialogExitCommandState pageExit_; // 현재 표시 부모의 원문 +21e0/+21e4이며 메타 해석 시 고정한 명령/고리 토큰이다.
-    std::vector<DialogExitCommandState> retiredPageExits_; // 현재 입력 처리 중 Kill된 페이지의 지연 소멸 값이며 표시 재합성과 구별한다.
     // labels_: 라벨.
     std::vector<std::string> labels_;
     // actions_: 동작.

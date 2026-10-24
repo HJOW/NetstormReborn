@@ -1,14 +1,17 @@
 // 이름 기록은 섹션 성공 여부보다 먼저 수행하며 실제 조회의 빈 본문을 보존한다.
 #include "client/TellSection.h"
+#include "client/TellParameters.h"
 #include "o/ConfigInterface.h"
 #include "o/OriginalText.h"
 #include <algorithm>
 #include <stdexcept>
+#include <utility>
 
 namespace netstorm::client { //4cf730의 현재 이름/조회 부분 본체와 실제 Config 연결이다.
 namespace { // 원문 C문자열과 선택된 외부 경계만 확인한다.
 template<class F> const F& Need(const F& hook) { if (!hook) throw std::logic_error("Tell 섹션의 선택된 실제 조회 미연결");return hook; } // 선택하지 않은 조회는 요구하지 않는다.
 std::string Decode(std::string_view bytes) { return o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(bytes.data()),bytes.size()}); } // 설정의 UTF-8 경계에서만 원본 바이트를 변환한다.
+std::string Encode(std::string_view text) { const auto bytes=o::EncodeOriginalText(text);return {bytes.begin(),bytes.end()}; } // 현재 Config의 UTF-8 치환 결과만 원본 좁은 문자열로 되돌린다.
 }
 std::optional<std::string> FindTellSection(TellSectionState& state,std::string_view name,const TellSectionHooks& hooks) {
     const std::string local(name.substr(0,name.find('\0'))); // 콜백이 원래 입력 저장소를 바꿔도 원문 지역256BYTE 복사본은 유지한다.
@@ -32,5 +35,14 @@ std::optional<std::string> FindTellSectionInConfig(TellSectionState& state,std::
         const auto body=temporary.Section(Decode(target));return body ? std::optional<std::string>(std::string(*body)) : std::nullopt;
     };
     return FindTellSection(state,name,hooks);
+}
+// 원문cf730의 지역param 생성/파싱/조회/전체 공장 호출/반납을 같은 실제 등록부에서 수행한다.
+TellWindowResult ShowTellInConfig(TellSectionState& state,std::string_view original,std::uint32_t suppress,o::ConfigInterface& config,
+    std::function<std::optional<std::string>(std::string_view)> mission,
+    std::function<std::uint32_t(std::string_view,std::uint32_t,std::uint32_t,std::uint32_t)> show) {
+    o::Config parameters(config.Registry(),"param");const auto name=ParseTellParameters(original,{
+        [&](auto value) { return Encode(config.SubstituteLocal(Decode(value))); },[&](auto line) { parameters.Append(Decode(line)); }}); // 두 번의 HTML과 메타 처리 동안 같은 지역param이 등록되어 있다.
+    const auto body=FindTellSectionInConfig(state,name,config,std::move(mission));if (!body) return {};
+    return {true,Need(show)(*body,suppress,0,0)};
 }
 }

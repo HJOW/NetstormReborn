@@ -6,6 +6,8 @@
 #include "client/RawHtmlWindowContext.h"
 #include "client/MenuGumpWidgets.h"
 #include "client/TellMapMenus.h"
+#include "client/TellSection.h"
+#include "client/TellFileMenus.h"
 #include "client/HtmlConditionEffect.h"
 #include "client/PaletteShade.h"
 #include "platform/Bitmap.h"
@@ -21,13 +23,14 @@ template<class F> bool FactoryRejected(F action) { try { action(); }catch (const
 struct FactoryScene { // UI callback이 참조하는 모든 실제 장치를 UI보다 오래 유지한다.
     const netstorm::test::dudespawn::DudeAssets& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);Client client{FactoryOptions()};FontStore fonts{assets.files,"Arial"}; // 보호 자료와 같은 Client 전역이다.
     ScriptStringRing strings;InputQueue input;double now{100.5};std::uint32_t enableAll{},editor{};std::vector<std::string> diagnostics; // 같은80칸/원시 큐와 명시 현재 전역이다.
-    HtmlTextParserGlobals parserGlobals;netstorm::o::ConfigInterface config{{}};std::uint32_t wallCalls{},fallbackCalls{};std::vector<std::string> links; // 같은 파서 전역/Config·선택 효과의 실제 관측이다.
+    HtmlTextParserGlobals parserGlobals;netstorm::o::ConfigInterface config{[this](auto path) { return assets.files.TryRead(path); }};std::uint32_t wallCalls{},fallbackCalls{};std::vector<std::string> links; // 같은 보호 VFS/파서 전역/Config·선택 효과를 관측한다.
     std::uint32_t screenWidth{640},screenHeight{480};ScreenRect mapView{0,0,640,480}; // 재사용한 콜백도 현재 출력과 지도 영역을 다시 읽는다.
-    RawButtonControls buttons{OriginalEdition::Patch1078,{[this] { return now; }}};RawMenuControls* menus{}; // 같은 공통 등록표/수명/실제 파생 UI다.
+    InputEvent pointer{InputCode::kRelease,0,0};RawButtonAssets buttonAssets; // 실제 입력 폴링과 재합성도 같은 준비된 버튼 자산을 빌린다.
+    RawButtonControls buttons{OriginalEdition::Patch1078,{[this] { return now; },[this](auto) { return pointer; }}};RawMenuControls* menus{}; // 같은 공통 등록표/수명/실제 파생 UI다.
     FactoryScene() { // 실제 팔레트/원문 글꼴/공통 루트를 준비한다.
         std::array<std::uint32_t,256> logical{};for (std::size_t index=0;index<logical.size();++index) { const auto color=assets.game.Palette().Color(static_cast<std::uint8_t>(index));logical[index]=color.red|(std::uint32_t(color.green)<<8)|(std::uint32_t(color.blue)<<16); } // 실제 색 채널을 원문 순서로 공급한다.
-        config.Set("OkButton","$Button=Okay,Config,0 ");RawMenuHooks hooks;hooks.command=[](auto,auto,auto) {};hooks.readInt=[](auto,std::int32_t& value) { value=0; };hooks.sound=[](auto) {};hooks.poll=[](auto) { return InputEvent{InputCode::kRelease,0,0}; };hooks.cursor=[](auto) {};menus=&buttons.EnableMenus(assets.game,fonts,std::move(hooks));menus->SetPalette(BuildPaletteColorTable(logical));
-        const auto& fort=assets.game.Find("fortGump");const auto frame=assets.game.FrameIndex(fort,"A01",0);const auto size=assets.game.Shapes().SquidMetrics(fort.block,frame);buttons.SetControls({}, {},640,480,{static_cast<std::uint32_t>(fort.block+70),static_cast<std::uint32_t>(frame),size.width,size.height,{}});
+        config.Set("OkButton","$Button=Okay,Config,0 ");RawMenuHooks hooks;hooks.command=[this](auto code,auto id,auto parameter) { input.PushCommand(code,std::bit_cast<std::int32_t>(id),std::bit_cast<std::int32_t>(parameter)); };hooks.readInt=[](auto,std::int32_t& value) { value=0; };hooks.sound=[](auto) {};hooks.poll=[this](auto) { return pointer; };hooks.cursor=[](auto) {};menus=&buttons.EnableMenus(assets.game,fonts,std::move(hooks));menus->SetPalette(BuildPaletteColorTable(logical));
+        const auto& fort=assets.game.Find("fortGump");const auto frame=assets.game.FrameIndex(fort,"A01",0);const auto size=assets.game.Shapes().SquidMetrics(fort.block,frame);buttonAssets={static_cast<std::uint32_t>(fort.block+70),static_cast<std::uint32_t>(frame),size.width,size.height,{}};buttons.SetControls({}, {},640,480,buttonAssets);
     }
     ~FactoryScene() { if (menus) menus->CloseHtmlWindows(); } // 관측/시각/고리의 반납 전에 실제 부모를 먼저 닫는다.
     RawHtmlWindowContext Context() { // 같은 실제 장치와 명시 현재 화면을 원문 주소에 연결한다.
@@ -37,7 +40,55 @@ struct FactoryScene { // UI callback이 참조하는 모든 실제 장치를 UI�
     }
     HtmlWindowGumpNode& Root(std::uint32_t token) { return *static_cast<HtmlWindowGumpNode*>(menus->Node(token)); } // 같은 실제 파생 주소다.
     std::uint32_t Count() const { std::istringstream report(buttons.Report());std::string name;std::uint32_t controls{},count{};report>>name>>controls>>count;CHECK(name=="RawButtons");return count; } // 실제 등록 수만 읽는다.
+    void Click(std::string_view label) { // 실제 Point/폴링/포인터 통지/공통 Route만 사용한다.
+        const auto point=menus->Point(label);CHECK(point.has_value());if (!point) return;pointer={InputCode::kLeftButton,point->x,point->y};buttons.NotifyPointer(pointer,0,false);buttons.RouteInput(pointer);now+=0.25;pointer.code|=InputCode::kRelease;buttons.NotifyPointer(pointer,0,false);buttons.RouteInput(pointer);
+    }
 };
+}
+
+// 원문cf730의 지역param은 폭높이0의 실제 두 번 파서/메타까지 유지하고 mode 비트를 그대로 전달한다.
+TEST_CASE(HtmlWindowFactoryClient_ActualTellParamLifetimeZeroSizeAndSuppressedModes) {
+    for (const std::uint32_t mode:{0U,1U,0xffffffffU}) { // 같은 실제 본문에서 창 생성과 첫 파서 전용 경로를 비교한다.
+        FactoryScene scene;netstorm::o::Config outer(scene.config.Registry(),"param"),book(scene.config.Registry(),"book");outer.Append("1=outer");book.Assign("[entry]\n<p>{param.1}</p><$probe>\n$Button=Continue,Config,7 \n[END]\n");const auto objects=scene.config.Registry().Objects().size();const auto before=scene.Count();auto context=scene.Context();std::uint32_t calls{},effects{};
+        context.factory.html.command=[&](auto&,auto) { ++effects;CHECK(scene.config.SubstituteLocal("{param.1}")=="value" && scene.config.Registry().Objects().size()==objects+1); };
+        const auto result=ShowTellInConfig(scene.client.HtmlWindowGlobals()->tell,"book.entry(value)",mode,scene.config,{},[&](auto body,auto suppress,auto width,auto height) { ++calls;CHECK(suppress==mode && width==0 && height==0 && scene.config.SubstituteLocal("{param.1}")=="value");return scene.menus->ShowHtmlWindow(context,body,suppress,width,height); });
+        CHECK(result.found && calls==1 && effects==1 && bool(result.serial)==(mode==0));CHECK(scene.config.SubstituteLocal("{param.1}")=="outer" && scene.config.Registry().Objects().size()==objects);
+        if (!mode) { const auto root=scene.buttons.SerialGump(result.serial);CHECK(root && scene.Root(root).baseWidth>0 && scene.Root(root).baseHeight>0 && scene.buttons.DialogCount()==1 && scene.menus->HtmlWindowsOpen());scene.menus->CloseHtmlWindows(); }
+        CHECK(scene.Count()==before && scene.buttons.DialogCount()==0 && scene.client.HtmlWindowGlobals()->window.instances==0);
+    }
+}
+
+// 조회 실패는 공장을 부르지 않으며 빈 본문 임시 부모/공장 예외도 지역param을 반납한다.
+TEST_CASE(HtmlWindowFactoryClient_ActualTellMissingEmptyAndExceptionScope) {
+    FactoryScene scene;netstorm::o::Config book(scene.config.Registry(),"book");book.Assign("[empty]\n[throw]\nBody\n[END]\n");const auto before=scene.Count();const auto objects=scene.config.Registry().Objects().size();std::uint32_t calls{};
+    const auto show=[&](auto body,auto mode,auto width,auto height) { ++calls;return scene.menus->ShowHtmlWindow(scene.Context(),body,mode,width,height); };
+    CHECK(!ShowTellInConfig(scene.client.HtmlWindowGlobals()->tell,"missing(arg)",0,scene.config,{},show).found && calls==0);
+    const auto empty=ShowTellInConfig(scene.client.HtmlWindowGlobals()->tell,"book.empty(arg)",0,scene.config,{},show);CHECK(empty.found && !empty.serial && calls==1 && scene.client.HtmlWindowGlobals()->window.instances==1 && !scene.menus->HtmlWindowsOpen() && !scene.buttons.DialogCount());scene.buttons.CleanupGumps();CHECK(scene.Count()==before);
+    bool failed{};try { ShowTellInConfig(scene.client.HtmlWindowGlobals()->tell,"book.throw(arg)",0,scene.config,{},[&](auto,auto,auto,auto)->std::uint32_t { CHECK(scene.config.SubstituteLocal("{param.1}")=="arg");throw std::runtime_error("실제 공장 경계의 명시 실패"); }); }catch (const std::runtime_error&) { failed=true; }
+    CHECK(failed && scene.config.Registry().FindByName("param")==nullptr && scene.config.Registry().Objects().size()==objects && scene.Count()==before);
+}
+
+// 실제 메뉴 클릭의 원본 큐 인자와 부모Kill/모달 즉시 반납/OnExit 후반 반납을 함께 검사한다.
+TEST_CASE(HtmlWindowFactoryClient_ActualTellMenuClickAndDeferredExitAcrossRecompose) {
+    FactoryScene scene;const auto before=scene.Count();const auto root=scene.buttons.SerialGump(scene.menus->ShowHtmlWindow(scene.Context(),"Choose.<br>$Menu=Select,Config,7 \n$OnExit=unused,Warning,9 \n",0,0,0));CHECK(root && scene.buttons.DialogCount()==1 && scene.menus->HtmlMenuColumns()==1 && scene.menus->HtmlWindowsOpen());
+    std::uint32_t menu{};for (auto child=scene.Root(root).child;child;child=scene.menus->Node(child)->next) if (scene.menus->Node(child)->vtable==0x50c6f0) menu=child; // 같은 실제 부모에 부착된 메뉴 ID를 읽는다.
+    CHECK(menu!=0);if (!menu) return;const auto id=scene.menus->Node(menu)->id;scene.Click("Select");CHECK(!scene.input.Empty());const auto selected=scene.input.Pop(false);CHECK(selected.code==kScriptConfig && selected.x==std::bit_cast<std::int32_t>(id) && selected.y==7 && scene.input.Empty());CHECK((scene.Root(root).flags&0x10000) && !scene.buttons.DialogCount() && !scene.menus->HtmlWindowsOpen() && scene.client.HtmlWindowGlobals()->window.instances==1);
+    scene.buttons.SetControls({}, {},640,480,scene.buttonAssets,true,true);CHECK(scene.client.HtmlWindowGlobals()->window.instances==1 && scene.input.Empty());scene.buttons.CleanupGumps();const auto exit=scene.input.Pop(false);CHECK(exit.code==kScriptWarning && exit.x==9 && exit.y==9 && scene.input.Empty() && scene.Count()==before && scene.client.HtmlWindowGlobals()->window.instances==0);
+}
+
+// 일반 HTML 돌 버튼 Point는 최상위 모달을 읽고 화면 재합성에서 부모/serial을 보존한다.
+TEST_CASE(HtmlWindowFactoryClient_ActualTellButtonPointNestedCountsAndPreservedParent) {
+    FactoryScene scene;const auto before=scene.Count();const std::array<GumpControl,1> controls{{{0,{5,5,70,25},false,true,false}}};const std::array<std::string,1> labels{"Main"};scene.buttons.SetControls(controls,labels,640,480,scene.buttonAssets);
+    const auto first=scene.buttons.SerialGump(scene.menus->ShowHtmlWindow(scene.Context(),"First\n$Button=FirstAction,Config,3 \n",0,0,0)),second=scene.buttons.SerialGump(scene.menus->ShowHtmlWindow(scene.Context(),"Second\n$Button=TopAction,Config,4 \n",0,0,0));const auto serial=scene.Root(second).serial;CHECK(scene.buttons.DialogCount()==2 && scene.buttons.CurrentDialog()==second && scene.client.HtmlWindowGlobals()->window.instances==2 && scene.menus->Point("TopAction") && !scene.menus->Point("FirstAction"));
+    scene.buttons.SetControls({}, {},640,480,scene.buttonAssets,true,true);CHECK(scene.buttons.SerialGump(serial)==second && scene.buttons.DialogCount()==2 && scene.client.HtmlWindowGlobals()->window.instances==2);scene.buttons.RouteInput({0x02000038U,0,0});const auto selected=scene.input.Pop(false);CHECK(selected.code==kScriptConfig && selected.x==4 && selected.y==4 && scene.buttons.DialogCount()==1 && scene.buttons.CurrentDialog()==first && scene.client.HtmlWindowGlobals()->window.instances==2 && scene.menus->Point("FirstAction"));
+    scene.buttons.CleanupGumps();CHECK(scene.client.HtmlWindowGlobals()->window.instances==1 && scene.buttons.SerialGump(scene.Root(first).serial)==first);scene.menus->RequestCloseHtmlWindows();CHECK(!scene.buttons.DialogCount() && !scene.buttons.CurrentDialog() && !scene.menus->HtmlWindowsOpen() && scene.client.HtmlWindowGlobals()->window.instances==1);scene.buttons.CleanupGumps();CHECK(scene.Count()==before && scene.client.HtmlWindowGlobals()->window.instances==0);
+}
+
+// 공식 캠페인 파일이 디스크에 없어도 실제 TAFF FileFinder와 전체 @ 메타가 여섯 제목/두 구분선을 작성한다.
+TEST_CASE(HtmlWindowFactoryClient_ActualOfficialArchiveFileFinderAndMenus) {
+    FactoryScene scene;scene.config.Set("missionSpec","d/{local.1}.english");auto context=scene.Context();context.metadata.fileMenus=std::make_shared<TellFileMenus>(scene.config,[&](auto pattern) { return scene.assets.files.MatchFinder(pattern); });const auto root=scene.buttons.SerialGump(scene.menus->ShowHtmlWindow(context,"Campaign<br>$Menu=@d/offical*.english,Config,{cur.file}.overview \n$Button=Back,Config,0 \n",0,0,0));
+    CHECK(root && scene.menus->HtmlMenuColumns()==1 && scene.menus->Point("Early Missions") && scene.menus->Point("Back"));std::uint32_t menu{};for (auto child=scene.Root(root).child;child;child=scene.menus->Node(child)->next) if (scene.menus->Node(child)->vtable==0x50c6f0) menu=child; // 같은 실제 부착 메뉴의 항목을 읽는다.
+    CHECK(menu!=0);if (!menu) return;const auto* node=static_cast<MenuGumpNode*>(scene.menus->Node(menu));CHECK(node->itemCount==8 && scene.strings.Resolve(node->items[0].parameter)=="offical1.overview");const auto* official=scene.config.Registry().FindByName("offical1");CHECK(official && official->GetRaw("path")=="\\d\\offical1.english" && official->GetRaw("index")=="1");scene.menus->CloseHtmlWindows();
 }
 
 // 같은 실제 전체 공장의 일반/빈 부모/창 생략과 반납 뒤에도 배경 전역만 현재값으로 유지한다.
@@ -108,7 +159,7 @@ TEST_CASE(MissionLoadingClient_ActualOwnerFactoryReuseQueueAndCleanup) {
     const auto oldBody=scene.Root(root).body,oldButton=scene.Root(root).controls[0].child;CHECK(scene.Root(root).controls[0].command==0x020000c5U && scene.Root(root).controls[0].parameter==3);
     CHECK(scene.menus->ShowMissionLoading(scene.Context(),"Preparing islands...",cancel)==serial && translated==2 && state.instances==1 && scene.Root(root).body!=oldBody && scene.Root(root).controls[0].child!=oldButton && (scene.menus->Node(oldBody)->flags&0x10000) && (scene.menus->Node(oldButton)->flags&0x10000));
     scene.buttons.CleanupGumps();CHECK(scene.menus->Report().find("Preparing islands...")!=std::string::npos);scene.buttons.RouteInput({0x02000038,0,0});const auto event=scene.input.Pop(false);CHECK(event.code==0x020000c5U && event.x==3 && event.y==3 && state.instances==1 && scene.buttons.SerialGump(serial)==0);
-    scene.buttons.CleanupGumps();CHECK(state.instances==0 && scene.Count()==before);const auto next=scene.menus->ShowMissionLoading(scene.Context(),"Starting Mission...",cancel);CHECK(next!=serial && state.transientSerial==next && state.createdSerial==next && state.instances==1);scene.menus->CloseMissionLoading();scene.buttons.CleanupGumps();CHECK(state.instances==0 && scene.Count()==before);
+    scene.buttons.CleanupGumps();CHECK(state.instances==0 && scene.Count()==before);const auto next=scene.menus->ShowMissionLoading(scene.Context(),"Starting Mission...",cancel);CHECK(next!=serial && state.transientSerial==next && state.createdSerial==next && state.instances==1);scene.menus->CloseMissionLoading();CHECK(state.transientSerial==0 && state.createdSerial==next && state.instances==1 && scene.buttons.CurrentDialog()==0);scene.buttons.CleanupGumps();CHECK(state.instances==0 && scene.Count()==before);
 }
 
 // 원문 사용자 메타와 '~.'는 기본 Cancel 조회를 생략하고 실제 전체 부모를 갱신한다.

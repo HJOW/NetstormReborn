@@ -43,7 +43,6 @@
 #include "client/UserInput.h"
 #include "client/WindowTitle.h"
 #include "client/WarningMessages.h"
-#include "client/DialogBodyLayout.h"
 #include "client/HtmlConditionEffect.h"
 #include "o/OriginalText.h"
 #include "o/Template.h"
@@ -72,6 +71,12 @@ std::uint32_t DialogScriptCode(std::string_view name) {
     const auto knowledge=KnowledgeScriptCode(name); // 기술 창/지급도 동일 입력 큐를 사용한다.
     return knowledge!=0xffffffffU ? knowledge : GameMenuScriptCode(name);
 }
+// 실제 HTML 메뉴가 선택하는 현재 복원 명령도 같은 원본 메뉴 큐를 사용할 수 있다.
+bool IsTellMenuCommand(std::uint32_t command) {
+    static constexpr std::array<std::string_view,11> names{"Tell","DoNothing","StartDemo","Config","Warning","MissionBegin","MissionRestart","MissionAbort","LeaveBattle","MissionFork","MissionEnd"}; // 같은 실제 이름 조회와 숫자 코드를 공유한다.
+    for (const auto name:names) if (command==DialogScriptCode(name)) return true; // 별도 호스트 Action 번호로 바꾸지 않는다.
+    return false;
+}
 // 팝업 아래에 남는 기존 UI 글자를 같은 원본 글리프 몸체로 먼저 합성한다. 월드 전용 SceneImage는 UI 글자를 생략한다.
 void RasterMenuBackdropText(IndexedImage& image,std::span<const RenderText> texts) {
     const auto width=static_cast<int>(image.width),height=static_cast<int>(image.height);const ScreenRect all{0,0,width,height};
@@ -96,7 +101,7 @@ bool UberGump::InspectDestroySurface(std::string_view type,float x,float y) {
 void UberGump::InspectTell(std::string target) { Tell(std::move(target)); }
 namespace {
 // 원본 메인 메뉴의 돌 버튼 폭·높이·피치와 목록 행 높이.
-constexpr int kButtonWidth = 75, kButtonHeight = 19, kButtonPitch = 79, kRowHeight = 18;
+constexpr int kButtonWidth = 75, kButtonHeight = 19, kButtonPitch = 79;
 // 화면 조합은 GIF/VFX의 원래 팔레트 번호를 사용한다.
 void Paste(IndexedImage& canvas, const IndexedImage& image, int x, int y, ScreenRect clip) {
     DrawIndexedImage(canvas.indices, static_cast<int>(canvas.width), static_cast<int>(canvas.height), image, x, y, clip);
@@ -109,47 +114,9 @@ void Tile(IndexedImage& canvas, const IndexedImage& image, ScreenRect rect) {
         for (int x = rect.left; x < rect.right; x += static_cast<int>(image.width)) Paste(canvas, image, x, y, rect);
     }
 }
-// 화면 경계를 벗어나는 UI 선은 버퍼 경계에서 자른다.
-void Fill(IndexedImage& canvas, ScreenRect rect, std::uint8_t color) {
-    // 각 줄의 유효 픽셀만 채운다.
-    for (int y = std::max(0, rect.top); y < std::min(static_cast<int>(canvas.height), rect.bottom); ++y) {
-        const int left = std::clamp(rect.left, 0, static_cast<int>(canvas.width)), right = std::clamp(rect.right, left, static_cast<int>(canvas.width));
-        std::fill(canvas.indices.begin() + y * canvas.width + left, canvas.indices.begin() + y * canvas.width + right, color);
-    }
-}
-// 돌 가장자리의 원본 관찰 색을 현재 게임 팔레트의 가장 가까운 색으로 고른다.
-std::uint8_t Color(std::span<const ScreenColor> palette, int red, int green, int blue) {
-    int distance = 200000, result = 0;
-    // UI 가장자리 두 색에만 적용한다. GIF 팔레트를 재배치하지 않는다.
-    for (std::size_t i = 0; i < palette.size(); ++i) {
-        const auto c = palette[i];
-        const int next = (c.red - red) * (c.red - red) + (c.green - green) * (c.green - green) + (c.blue - blue) * (c.blue - blue);
-        if (next < distance) { distance = next; result = static_cast<int>(i); }
-    }
-    return static_cast<std::uint8_t>(result);
-}
-// 눌림 여부에 따라 돌 테두리의 명암 방향을 바꾼다.
-void Bevel(IndexedImage& canvas, ScreenRect r, std::uint8_t light, std::uint8_t dark, bool pressed = false) {
-    if (pressed) std::swap(light, dark);
-    Fill(canvas, {r.left, r.top, r.right, r.top + 1}, light); Fill(canvas, {r.left, r.top, r.left + 1, r.bottom}, light);
-    Fill(canvas, {r.left, r.bottom - 1, r.right, r.bottom}, dark); Fill(canvas, {r.right - 1, r.top, r.right, r.bottom}, dark);
-}
-// 메뉴 파일 이름을 치환하기 전까지 cur.file 참조를 보존한다.
-std::string Replace(std::string text, std::string_view from, std::string_view to) {
-    std::size_t pos = 0;
-    // 한 번 치환한 부분을 다시 읽지 않아 자기 참조를 만들지 않는다.
-    while ((pos = text.find(from, pos)) != std::string::npos) { text.replace(pos, from.size(), to); pos += to.size(); }
-    return text;
-}
 // 설정의 UTF-8 문자열을 원본 글꼴의 Windows-1252 바이트로 되돌린다.
 std::string FontBytes(std::string_view text) {
     const auto encoded = o::EncodeOriginalText(text); return std::string(encoded.begin(), encoded.end());
-}
-// 현재 단계에서 실제 처리 경로가 있는 메뉴 명령만 활성화한다.
-bool Supported(std::string_view command) {
-    const auto name = o::AsciiLower(command);
-    return MissionControlScriptCode(name)!=0xffffffffU || KnowledgeScriptCode(name)!=0xffffffffU || GameMenuScriptCode(name)!=0xffffffffU || name == "tell" || name == "missionbegin" || name == "startdemo" || name == "donothing" ||
-        name == "quit" || name == "menu" || name == "toggle" || name == "resolution" || name == "volume" || name == "resume";
 }
 // 자동 검사 보고에는 개행/탭을 제거하여 한 항목 한 줄을 유지한다.
 std::string Field(std::string text) { std::replace(text.begin(), text.end(), '\t', ' '); std::replace(text.begin(), text.end(), '\n', ' '); std::replace(text.begin(), text.end(), '\r', ' '); return text; }
@@ -217,7 +184,7 @@ UberGump::UberGump(Client& client) : client_(client),initLoginSubscriber_(client
             state_.Post(actions_[parameter-1]); // 기존 DialogAction의 임시 호스트 번호이며 원본 게임 명령 토큰과 구별한다.
         } else {
             // 실제 메뉴 항목이 선택한 미연결 명령은 여기서 거부한다. 돌 버튼의 별도 기본 클릭 통지와 구별한다.
-            if (command!=0x02000060U && command!=0x03000080U && command!=0x03000032U && command!=0x03000063U && command!=0x0200005dU && command!=0x02000017U && command!=0x030000afU && command!=0x030000e2U && command!=0x03000015U && command!=0x0300011aU && command!=0x03000076U && !IsGameMenuCommand(command)) throw std::logic_error("현재 Client 원본 메뉴 항목 명령 미연결: "+std::to_string(command));
+            if (command!=0x02000060U && command!=0x03000080U && command!=0x03000032U && command!=0x03000063U && command!=0x0200005dU && command!=0x02000017U && command!=0x030000afU && command!=0x030000e2U && command!=0x03000015U && command!=0x0300011aU && command!=0x03000076U && !IsGameMenuCommand(command) && !IsTellMenuCommand(command)) throw std::logic_error("현재 Client 원본 메뉴 항목 명령 미연결: "+std::to_string(command));
             client_.Input().PushCommand(command,std::bit_cast<std::int32_t>(id),std::bit_cast<std::int32_t>(parameter));
         }
     };
@@ -241,7 +208,7 @@ UberGump::UberGump(Client& client) : client_(client),initLoginSubscriber_(client
     help.queue=[this](auto command,auto first,auto second) { const auto x=scriptStrings_.Store(first),y=scriptStrings_.Store(second);client_.Input().PushCommand(command,std::bit_cast<std::int32_t>(x),std::bit_cast<std::int32_t>(y)); };
     help.script=[this](auto text) { QueueScriptCommand(text,client_.Input(),scriptStrings_,{DialogScriptCode,[](auto name) { std::clog<<"도움말 스크립트 명령 미연결: "<<name<<'\n'; }}); };
     help.external=[](auto text) { throw std::logic_error("도움말 외부 OS 프로토콜 미복원: "+std::string(text)); };help.learn=[](auto type) { throw std::logic_error("도움말 기술 학습492a30 미연결: "+std::to_string(type)); };
-    help.scripted=[this] { return state_.phase==ClientPhase::Dialog || state_.phase==ClientPhase::Briefing; };help.scriptName=[this] { return FontBytes(pageName_); };
+    help.scripted=[this] { return state_.phase==ClientPhase::Dialog || state_.phase==ClientPhase::Briefing; };help.scriptName=[this] { return std::string(client_.HtmlWindowGlobals()->tell.current.data()); }; // 창 생략/실패도 기록하는 원문 현재 Tell 이름을 읽는다.
     help.battle=[this] { return world_ && world_->Session().Core().ownerMode.battle; };help.challenge=[this] { return world_ && world_->Session().Core().ownerMode.challenge; };
     help.html.command=[this](auto&,auto text) { QueueScriptCommand(text,client_.Input(),scriptStrings_,{KnowledgeScriptCode,[](auto name) { std::clog<<"도움말 HTML 명령 미연결: "<<name<<'\n'; }}); };
     BindHtmlConditionConfig(help.html,client_.Configuration(),client_.Assets().Edition());BindHtmlPictureText(help.html);
@@ -260,17 +227,16 @@ UberGump::UberGump(Client& client) : client_(client),initLoginSubscriber_(client
     warnings_=&rawButtons_->EnableWarnings([this] { return client_.WallSeconds(); },[this] {
         client_.WorldAudio().Sounds().PlayByName("newWarnMessage.wav",0,0,0,0,0);
     },std::move(pauseContext));
-    fileMenus_=std::make_shared<TellFileMenus>(client_.Configuration(),[this](auto pattern) { return client_.Files().MatchDisk(pattern); }); // 실제 원문 OS 열거 순서와 장기 Config 수명을 같은 Client에 연결한다.
-    dialogBody_=std::make_unique<DialogBodyLayout>(client_.Fonts(),client_.GetScreen().Colors(),client_.Assets(),client_.Assets().Edition());
+    fileMenus_=std::make_shared<TellFileMenus>(client_.Configuration(),[this](auto pattern) { return client_.Files().MatchFinder(pattern); }); // 실제 FileFinder의 디스크/TAFF/보조 순서와 장기 Config 수명을 공유한다.
     o::MissionGuideHooks guideHooks; // 같은 실제 현재 미션/전환 큐/창과 복원한 Guide 반복 몸체다.
     guideHooks.current=[this]() -> o::MissionStartState* { return missionRuntime_ && missionRuntime_->guided ? &missionRuntime_->state : nullptr; };
     guideHooks.pending=[this] { return state_.Pending() ? 1U : 0U; };
-    guideHooks.dialogsClear=[this] { return !pageAlive_; }; // Kill은 즉시 모달을 반납하지만 GuideOpen 개수는 Cleanup까지 남는다.
+    guideHooks.dialogsClear=[this] { return rawButtons_->CurrentDialog()==0; }; // 원문4c8e90의 같은565dd4이며 Kill 뒤 인스턴스 수와 구별한다.
     guideHooks.stage=[this](o::MissionStartState& state,std::uint32_t sequence) {
         TutorialMissionStageHooks hooks; // 현재 단계가 실제로 도달한 소비자만 호출한다.
         hooks.initialize=[this] { InitializeMission(); };hooks.start=[this] { StartMissionWorld(); };
         hooks.tellGlobal=[this](std::string_view name,std::uint32_t mode) {
-            if (mode!=1) throw std::logic_error("Guide init Tell의 원본 인자 위반");static_cast<void>(TryTell(std::string(name)));
+            if (mode!=1) throw std::logic_error("Guide init Tell의 원본 인자 위반");static_cast<void>(TryTell(std::string(name),false,nullptr,mode));
         };
         hooks.frame=[this] { if (!missionRuntime_ || !missionRuntime_->tutorial) throw std::logic_error("Guide 프레임의 실제 미션 연결 누락");missionRuntime_->tutorial->Frame(); };
         hooks.showStage=[this] { if (!missionRuntime_ || !missionRuntime_->tutorial) throw std::logic_error("Guide First의 현재 안내 연결 누락");missionRuntime_->tutorial->TellStage(); };
@@ -290,7 +256,7 @@ UberGump::UberGump(Client& client) : client_(client),initLoginSubscriber_(client
     MainMenu(); Compose(); client_.ShowScene();
 }
 // 입력 참조를 먼저 없애고 메뉴가 소유한 월드를 이 구현 파일에서 제거한다.
-UberGump::~UberGump() { ClearWorld();DisposeRetiredPages(); }
+UberGump::~UberGump() { ClearWorld(); }
 // 입력 참조를 먼저 없애고 월드의 실제 소유권을 해제한다. 위치 효과음은 카메라 0의 전체 메뉴 영역으로 되돌린다.
 void UberGump::ClearWorld() {
     ClearPage(); // 현재 부모의 OnExit를 월드/미션 수명보다 먼저 같은 큐에 반납한다.
@@ -335,25 +301,7 @@ o::Config& UberGump::Script(std::string_view name) {
     const auto [it, inserted] = scripts_.emplace(key, std::move(script)); (void)inserted;
     return *it->second;
 }
-// 미이행 % 표시 목록만 기존 어댑터로 확장한다. @/#는 메타 시점에 실제 본체가 작성한 라벨을 다시 해석하지 않는다.
-void UberGump::ExpandMenus(DialogPage& page) {
-    std::vector<DialogItem> items;
-    // 일반 항목은 유지하고 파일 목록 항목만 확장한다.
-    for (auto item : page.items) {
-        if (item.menu && !item.checkedDirective && !item.label.empty() && item.label[0] == '%') {
-            // 빈 사용자 목록은 빈 메뉴다. 원본에 없는 캠페인을 만들지 않는다.
-            for (const auto& path : client_.Files().Match(item.label.substr(1))) {
-                const auto name = std::filesystem::path(path).stem().string(); auto& script = Script(name);
-                const auto title = script.Get(name + ".title").value_or(name);
-                auto entry = item; entry.label = title; entry.action.argument = Replace(item.action.argument, "{cur.file}", name);
-                entry.action.parameter=scriptStrings_.Store(FontBytes(entry.action.argument)); // 각 실제 파일 행은 자기 이름의 새 인자 수명을 소유한다.
-                entry.enabled = !title.starts_with("--") && Supported(entry.action.command); items.push_back(std::move(entry));
-            }
-        } else { item.enabled = item.enabled && Supported(item.action.command); items.push_back(std::move(item)); }
-    }
-    page.items = std::move(items);
-}
-// 목록을 전체 파싱 뒤 다시 찾지 않고 실제 메타 추출 순서에서 현재 파일/이름/열을 읽는다.
+// 현재 Client의 같은 전체 HTML 장치를 Tell과 미션 안내가 공유한다.
 RawHtmlWindowContext UberGump::LoadingHtmlContext(ScreenRect mapView) { // 미션 안내의 실제 전체 HTML 경계를 같은 장기 소유자에 연결한다.
     htmlMapView_=mapView;RawHtmlWindowContext context;context.globals=client_.HtmlWindowGlobals();context.wallSeconds=[this] { return client_.WallSeconds(); };
     context.queue=[this](auto command,auto first,auto second) { client_.Input().Push(command,std::bit_cast<std::int32_t>(first),std::bit_cast<std::int32_t>(second)); };context.link=[this](auto token) { rawButtons_->Menus()->ActivateHtmlWindowLink(token); };
@@ -370,106 +318,43 @@ RawHtmlWindowContext UberGump::LoadingHtmlContext(ScreenRect mapView) { // 미�
         default:throw std::logic_error("전체 HTML 현재 Client 전역 미연결: "+std::to_string(address));
     } };return context;
 }
-// 실제 메타 추출 시점에 현재 맵 목록을 기존 페이지에 연결한다.
-DialogMetadataHooks UberGump::MapMetadata() {
-    DialogMetadataHooks metadata;
-    metadata.appendMenu=[this](DialogPage& page,DialogItem item) {
-        const auto current=mission_ ? mission_->FortName() : std::string(); // 현재 설치된 미션 Fort 이름과 별도 pending 이름의 수명을 구별한다.
-        const auto begin=[&](auto flags) { page.menuColumnFlags.push_back(flags); }; // 표시 어댑터의 실제 열 생성 자료를 현재 페이지에 소유한다.
-        const auto hooks=MakeTellMapMenuHooks(*mapCatalog_,mapFileSpec_,[&]() -> std::string_view { return current; },
-            [this]() -> std::string_view { return pendingFortName_; },begin,[&](const auto& row,auto command) {
-                if (command!=kReadFortCommand) throw std::logic_error("Tell 맵 행의 원본 ReadFort 명령 불일치");
-                const auto decode=[](std::string_view bytes) { return o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(bytes.data()),bytes.size()}); }; // 원본 좁은 파일/라벨을 기존 페이지의UTF-8 경계로 옮긴다.
-                page.items.push_back({decode(row.label),{"ReadFort",decode(row.name),kReadFortCommand,scriptStrings_.Store(row.name)},true,row.checked,row.enabled,false,page.menuColumns-1});
-            });
-        if (item.checkedDirective) {
-            if (!page.menuColumns) { begin(kTellMenuFlags);++page.menuColumns; }
-            item.enabled=item.enabled || client_.ScriptMenuGlobal(0x5cab30)!=0 || client_.ScriptMenuGlobal(0x55a480)!=0; // 구형 표시 어댑터도 같은 원문 단락 평가 순서로 활성 조건을 읽는다.
-        } else if (AppendTellMapMenus(item.label,page.menuColumns,hooks)) return;
-        else if (!item.label.empty() && (item.label.front()=='@' || item.label.front()=='#')) { // 실제 메타 처리 시점의 현재 cur.file/Config와 같은 고리를 사용한다.
-            fileMenus_->Append(FontBytes(item.label.substr(1)),item.action.commandCode,FontBytes(item.action.argument),item.label.front()=='@',scriptStrings_,[&](const auto& row) {
-                const auto decode=[](std::string_view bytes) { return o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(bytes.data()),bytes.size()}); }; // 기존 표시 어댑터만 UTF-8 라벨을 사용한다.
-                auto entry=item;entry.label=decode(row.label);entry.action.parameter=row.parameter;entry.action.argument=row.separator ? std::string{} : decode(scriptStrings_.Resolve(row.parameter));entry.enabled=!row.separator && Supported(entry.action.command);entry.menuColumn=page.menuColumns-1;page.items.push_back(std::move(entry));
-            });return;
-        }
-        item.menuColumn=page.menuColumns-1;page.items.push_back(std::move(item));
-    };return metadata;
-}
-// 실제 부모가 반납되는 변경에서만 호출하며 Resize/Compose는 이 수명을 건드리지 않는다.
+// 실제 전체 부모는 Kill만 예약하고 공통 Cleanup에서 OnExit/인스턴스를 반납한다.
 void UberGump::ClearPage() {
-    if (pageAlive_) {
-        retiredPageExits_.push_back(pageExit_); // OnExit0인 부모도 Cleanup까지005cab2c의 개수를 유지한다.
-        rawButtons_->RetirePageControls();input_.SetControls({}); // 교체 Tell/명시 Kill 모두 같은 드레인에서 옛 부모 입력을 즉시 반납한다.
-    }
-    pageAlive_=false;pageExit_={};page_={}; // 같은 부모를 두 번 반납하지 않고 실제 예약은 입력 드레인 뒤로 남긴다.
+    rawButtons_->Menus()->RequestCloseHtmlWindows();page_={};
 }
-// c79b0의 선택 예약→Kill 순서는 일반·Instant 버튼과 메뉴 종료·timeout에 공통이다.
-void UberGump::ActivatePageAction(DialogAction action) {
-    if (!pageAlive_ || !popup_.empty()) { state_.Post(std::move(action));return; } // 실제 HTML 외 임시 화면 전환의 기존 경계다.
-    if (action.commandCode==0xffffffffU) throw std::logic_error("현재 HTML 선택의 메타 명령 해석 누락: "+action.command);
-    FireDialogCommand(1,{action.commandCode,action.parameter},client_.Input(),[this](std::uint32_t) {
-        ClearPage();popup_.clear();state_.phase=mission_ ? ClientPhase::Mission : ClientPhase::MainMenu;pageName_=mission_ ? "mission" : "main";
-        if (!(missionRuntime_ && missionRuntime_->tutorial)) client_.Pause(false); // Guide 자기 정지는 원본7프레임 게이트가 반납한다.
-        RebuildControls();
-    });
-}
-// 원본의 부모 Kill과 소멸을 구별하여 OnExit가 현재 입력 루프 안에서 바로 재실행되지 않게 한다.
-void UberGump::DisposeRetiredPages() {
-    auto retired=std::exchange(retiredPageExits_,{}); // 예약 콜백 전에 현재 반납 표를 비운다.
-    for (auto& exit:retired) DisposeDialogExitCommand(exit,client_.Input()); // 부모 반납 순서대로 같은40칸 큐에 한 번씩 쓴다.
+// 기존 메인/팝업 메뉴만 호스트 전환 큐를 사용한다. HTML 선택은 실제 부모가 원시 입력 큐에 쓴다.
+void UberGump::ActivatePageAction(DialogAction action) { state_.Post(std::move(action)); }
+// 실제 전체 창의 Kill 직후 표시 phase만 복귀시키며 소멸/OnExit를 앞당기지 않는다.
+void UberGump::SyncTellPresentation() {
+    if (!popup_.empty() || (state_.phase!=ClientPhase::Dialog && state_.phase!=ClientPhase::Briefing) || rawButtons_->Menus()->HtmlWindowsOpen()) return;
+    state_.phase=mission_ ? ClientPhase::Mission : ClientPhase::MainMenu;pageName_=mission_ ? "mission" : "main";page_={};
+    if (!(missionRuntime_ && missionRuntime_->tutorial)) client_.Pause(false);RebuildControls();
 }
 // 명시 사용자 명령에서 잘못된 섹션은 기존 진단을 유지한다. 선택적 미션 사건은 TryTell을 사용한다.
 void UberGump::Tell(std::string target, bool briefing) {
     bool created=false; // 섹션 존재와 실제 창 생성(serial 비제로)을 구별한다.
-    if (!TryTell(target,briefing,&created)) throw std::runtime_error("Missing dialog section: "+target);
+    if (!TryTell(target,briefing,&created)) { std::clog<<"TELL cannot find \""<<target<<"\".\n";return; } // 원문cf730의 누락 경고/0 반환이며 새 창을 만들었다고 보고하지 않는다.
     if (created && missionRuntime_ && missionRuntime_->tutorial)
         missionRuntime_->tutorial->Gate().PauseForDialog(); // 명시 Tell도 같은 자기 깊이만 보유한다.
 }
 // 원본004cf730은 phase와 무관하게 현재 Mission의 설정에서 전체 target을 조회한다.
-bool UberGump::TryTell(std::string target,bool briefing,bool* windowCreated) {
-    if (windowCreated) *windowCreated=false; // 무본문/빈 Tell은 창 생성 성공으로 보고하지 않는다.
-    if (o::AsciiLower(target) == "blank") {
-        if (mission_) { state_.phase = ClientPhase::Mission; pageName_ = "mission"; popup_.clear(); ClearPage(); client_.Pause(false); }
-        else MainMenu();
-        RebuildControls(); return true;
+bool UberGump::TryTell(std::string target,bool briefing,bool* windowCreated,std::uint32_t suppress) {
+    if (windowCreated) *windowCreated=false;
+    if (o::AsciiLower(target)=="blank") {
+        if (mission_) { state_.phase=ClientPhase::Mission;pageName_="mission";popup_.clear();ClearPage();client_.Pause(false); }
+        else MainMenu();RebuildControls();return true;
     }
-    o::Config parameters(client_.Configuration().Registry(),"param"); // 원본지역param은즉시본문처리와두HTML순회가끝날때까지같은Registry에남는다.
-    const auto original=ParseTellParameters(FontBytes(target),TellParameterHooks{
-        [this](std::string_view value) { const auto decoded=o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(value.data()),value.size()});return FontBytes(client_.Configuration().SubstituteLocal(decoded)); },
-        [&parameters](std::string_view line) { parameters.Append(o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(line.data()),line.size()})); }}); // 원문치환과Append사이에인용escape를끼우지않는다.
-    target=o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(original.data()),original.size()});
-    const auto body=FindTellSectionInConfig(client_.HtmlWindowGlobals()->tell,original,client_.Configuration(),
-        [this](auto section)->std::optional<std::string> { return mission_ ? mission_->Section(section) : std::nullopt; }); // 원문 등록 객체→현재 미션→새 tell 적재와 실패 전 이름 기록을 같은 Client에 연결한다.
-    if (!body) return false;
-    const auto protectedBody = Replace(*body, "{cur.file}", "__CURRENT_FILE__");
-    ScriptCommandHooks commands; // 현재복원된실제명령을원본ID로조회하고미등록은원본처럼진단뒤거부한다.
-    commands.lookup=DialogScriptCode;
-    commands.unknown=[](std::string_view name) { std::clog<<"스크립트 명령 미연결: "<<name<<'\n'; };
-    HtmlTextParserState htmlState;HtmlTextParserHooks htmlHooks; // 원본처럼새페이지는shown=1로시작하고두번의HTML순회에서같은상태를공유한다.
-    BindHtmlBackground(htmlHooks,htmlGlobals_); // 페이지가 아닌 같은565e70의 현재80BYTE를 두 번의HTML과Help가 공유한다.
-    htmlHooks.command=[&](HtmlTextParserState&,std::string_view raw) { QueueScriptCommand(FontBytes(raw),client_.Input(),scriptStrings_,commands); }; // 원본1차HTML의선택시점에기존40칸입력큐로예약한다.
-    BindHtmlConditionConfig(htmlHooks,client_.Configuration(),client_.Assets().Edition()); // 초기전체치환결과의조건토큰을그시점의현재Config에서다시치환한다.
-    BindHtmlPictureText(htmlHooks); // 원본인용그림표기를실제Markup/SHP를읽는본문버퍼에전달한다.
-    const auto expanded=Replace(client_.Configuration().SubstituteLocal(protectedBody),"__CURRENT_FILE__","{cur.file}"); // 원본004cf270의선행전체치환을HTML조건평가보다먼저유지한다.
-    DialogExitCommandState parsedExit;auto metadata=MapMetadata();const auto exitHooks=MakeDialogExitResolveHooks(scriptStrings_,commands); // 새 부모의 메타 수명은 기존 표시 부모와 구별한다.
-    metadata.resolveRuntimeAction=[&](DialogAction& action,std::string_view command,std::string_view argument) {
-        DialogExitCommandState selected;ResolveDialogExitCommand(selected,FontBytes(command),FontBytes(argument),exitHooks); // 같은 생성 시점의 명령/숫자·고리 해석이다.
-        action.commandCode=selected.command;action.parameter=selected.parameter;
-    };
-    metadata.resolveOnExit=[&](std::string_view command,std::string_view argument) { ResolveDialogExitCommand(parsedExit,FontBytes(command),FontBytes(argument),exitHooks); }; // 원문 캡처는 Trim/따옴표 해제 없이 원본 바이트로 전달한다.
-    auto parsed=ParseDialogPage(expanded,htmlState,htmlGlobals_,htmlHooks,client_.Assets().Edition(),std::move(metadata)); // 현재 목록/열도1차HTML뒤 실제 메타 추출 시점에 처리한다.
-    if (!parsed.hasContent) { if (parsedExit.command) throw std::logic_error("내용 없는 HTML 부모의 OnExit 메타 관문 위반");retiredPageExits_.push_back({});rebuild_=true;return true; } // 원본cf120→Kill 임시 부모는 Cleanup까지 세지만 기존 표시 부모를 닫지 않는다.
-    const std::array<std::uint32_t,8> context{0,0,client_.GetScreen().Colors().basic[7],0,0,0,1,1}; // 실제기본TextGump의font0/normal/흰색/그림자오프셋문맥이다.
-    dialogBody_->SetBody(FontBytes(parsed.htmlBody),context,htmlState,htmlGlobals_,std::move(htmlHooks));
-    parsed.background=HtmlBackgroundName(htmlGlobals_); // 구형 표시 어댑터도 현재 전역을 읽는다. 전체 Uber의 GIF 생성/교체는 별도 이행한다.
-    ClearPage();page_=std::move(parsed);pageExit_=parsedExit;pageAlive_=true;
-    ExpandMenus(page_);
-    if (page_.items.empty()) page_.items.push_back({"OK", {"DoNothing", "0",kDialogDoNothing,0}});
-    state_.phase = briefing ? ClientPhase::Briefing : ClientPhase::Dialog;
-    pageName_ = target; popup_.clear(); opened_ = client_.Time().wall; RebuildControls();
+    const auto result=ShowTellInConfig(client_.HtmlWindowGlobals()->tell,FontBytes(target),suppress,client_.Configuration(),
+        [this](auto section)->std::optional<std::string> { return mission_ ? mission_->Section(section) : std::nullopt; },
+        [this](auto body,auto mode,auto width,auto height) { // 원문의 UTF-8 본문을 실제 좁은 HTML 공장에 한 번만 전달한다.
+            const auto screenWidth=client_.GetScreen().Width(),screenHeight=client_.GetScreen().Height();
+            return rawButtons_->Menus()->ShowHtmlWindow(LoadingHtmlContext({mission_ ? 85 : 0,0,screenWidth,screenHeight}),FontBytes(body),mode,width,height);
+        });
+    if (!result.found) return false;rebuild_=true;
+    if (!result.serial) return true; // 빈 부모/창 생략은 기존 표시 부모나 phase를 교체하지 않는다.
+    state_.phase=briefing ? ClientPhase::Briefing : ClientPhase::Dialog;pageName_=o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(client_.HtmlWindowGlobals()->tell.current.data()),std::char_traits<char>::length(client_.HtmlWindowGlobals()->tell.current.data())});popup_.clear();
     if (mission_ && !(missionRuntime_ && missionRuntime_->tutorial)) client_.Pause(true);
-    if (windowCreated) *windowCreated=true;
-    return true;
+    if (windowCreated) *windowCreated=true;RebuildControls();return true;
 }
 // 메인 메뉴로 돌아올 때 미션 설정 객체도 등록 목록에서 제거한다.
 void UberGump::MainMenu() {
@@ -505,8 +390,7 @@ void UberGump::CreateMission(std::string name,std::uint32_t demo,std::uint32_t m
     missionRuntime_=std::make_unique<MissionRuntime>(*mission_,demo,mode,++nextMissionSaveToken_);
     missionRuntime_->guided=missionRuntime_->guided && client_.Assets().Edition()==o::OriginalEdition::Patch1078; // 복원하지 않은 판본의 순번을 새 Guide에 분배하지 않는다.
     briefingSections_.clear();briefingIndex_=0;state_.phase=ClientPhase::LoadingMission;pageName_="loading";popup_.clear();ClearPage();client_.Pause(false);RebuildControls(); // 제목은 실제 단계1의 Header 적용/설치에서 갱신한다.
-    Compose();client_.PresentScene(); // 동기 요새 적재 전에 같은 실제 안내를 먼저 출력하며 임의 최소 표시 시간은 두지 않는다.
-    if (!missionRuntime_->guided) state_.Post({"LoadMissionWorld",{}}); // 다음 루프에 같은 로드를 수행하여 입력/Cancel을 한 차례 처리한다.
+    if (!missionRuntime_->guided) { Compose();client_.PresentScene();state_.Post({"LoadMissionWorld",{}}); } // Guide.Init이 시작되기 전 로딩 모달로 자체 관문을 막지 않는다. 실제 안내는 로드 호출에서 표시한다.
 }
 // Guide의 각 교체 함수가 같은 Runtime/Script/월드와 소유 정지 깊이를 직접 사용하게 한다.
 GuideMissionTransitionHooks UberGump::MissionTransitionEffects() {
@@ -562,6 +446,12 @@ o::FortMissionSaveHooks UberGump::FortMissionSaveEffects() {
 // 캡처한 요새 요청을 다음 State 자리에서 실제 설치한다. Start는 원래 Guide 단계3에 남긴다.
 void UberGump::LoadMissionWorld(std::optional<std::string> requestedFort) {
     if (!mission_ || !missionRuntime_ || world_) throw std::logic_error("Guide 초기화의 현재 Script/Runtime/빈 월드 계약 위반");
+    struct LoadingRetirement { // 원문 진행 안내의 수명을 실제 동기 로드 호출에 한정한다.
+        RawMenuControls& menus; // 로드/실패 반납보다 오래 사는 같은 실제 UI 소유자다.
+        ~LoadingRetirement() { menus.CloseMissionLoading(); } // 현재 안내를Kill/serial0으로 반납하고 소멸은 공통 Cleanup에 남긴다.
+    } loading{*rawButtons_->Menus()};
+    rawButtons_->Menus()->ShowMissionLoading(LoadingHtmlContext({85,0,client_.GetScreen().Width(),client_.GetScreen().Height()}),FontBytes(client_.Translate("Starting Mission...")),[this] { return FontBytes(client_.Translate("Cancel")); });
+    rebuild_=true;Compose();client_.PresentScene(); // 실제 파일 읽기 전에 같은 전체 부모를 먼저 출력하며 가짜 표시 지연을 넣지 않는다.
     const auto type=o::AsciiLower(mission_->MissionType()); // 현재 미션의 실제 가상 형식에 맞는 기존 설치 경로다.
     if (!missionRuntime_->guided) { missionRuntime_->gate.tutorialNumber=std::bit_cast<std::uint32_t>(o::ConfigParseLong(mission_->Get("tutorialNumber").value_or("")));ApplyMissionDemo(mission_->Get("demo").value_or(""),missionRuntime_->gate.demo);o::ResetMissionBattleOptions(o::OriginalEdition::Patch1078,*missionOptions_);o::SetTotalMadeAllowAll(*missionRestrictions_,1);initLoginSubscriber_=1; }
     const auto selectedFort=requestedFort ? *requestedFort : mission_->FortName(); // Init의 지역256BYTE에서 캡처한 값을 이후 설정 재조회로 바꾸지 않는다.
@@ -630,9 +520,9 @@ void UberGump::LoadMissionWorld(std::optional<std::string> requestedFort) {
         CampaignTutorialOneEffects frameEffects; // 원본 화면 프레임/입력이 함께 사용하는 현재 UI/시계다.
         frameEffects.frame.gameSeconds=[this] { return client_.Time().game; };
         frameEffects.frame.paused=[this] { return client_.Paused(); };
-        frameEffects.frame.dialogsClear=[this] { return !pageAlive_; };
+        frameEffects.frame.dialogsClear=[this] { return rawButtons_->CurrentDialog()==0; };
         frameEffects.frame.knowledgeOpen=[this] { return world_->Session().CursorDropSettings().lockDepth==0; };
-        frameEffects.frame.guideOpen=[this] { return pageAlive_ || !retiredPageExits_.empty(); }; // 원본005cab2c는 Kill 뒤에도 실제 소멸까지 창 개수를 유지한다.
+        frameEffects.frame.guideOpen=[this] { return client_.HtmlWindowGlobals()->window.instances!=0; }; // 원본005cab2c는 Kill 뒤에도 실제 소멸까지 창 개수를 유지한다.
         frameEffects.frame.blockingGumpOpen=[this] { return rawButtons_->BlockingGumpOpen(); };
         frameEffects.frame.pause=[this] { client_.PushGamePause(); };
         frameEffects.frame.resume=[this] { client_.PopGamePause(); };
@@ -856,13 +746,8 @@ void UberGump::Event(InputEvent event) {
         if (missionRuntime_->tutorial->Event(missionEvent)) return;
         if (QueueMissionFirstKey(event,client_.Input(),true)) return; // 모든 연결된 Tutorial 형식은 큐 끝의 First가 현재 안내/자기 정지를 다시 사용한다.
     }
-    if (pageAlive_ && popup_.empty() && transitionCode==0x02000038U) {
-        const auto first=std::find_if(page_.items.begin(),page_.items.end(),[](const DialogItem& item) { return !item.menu; }); // 원본 첫 버튼 슬롯이며 메뉴 행은 포함하지 않는다.
-        if (first!=page_.items.end()) ActivatePageAction(first->action);
-        return; // c79b0은 부모에 전달된 Enter 사건의 release를 별도로 거부하지 않는다.
-    }
-    bool worldUiRouted=false; // 미션사건은같은공통Gump에서먼저한번만소비를판정한다.
-    if (world_ && state_.phase==ClientPhase::Mission && popup_.empty()) {
+    bool worldUiRouted=false; // 실제 HTML 모달과 월드 사건은 같은 공통 Gump에서 먼저 한 번만 소비를 판정한다.
+    if (popup_.empty() && ((world_ && state_.phase==ClientPhase::Mission) || rawButtons_->Menus()->HtmlWindowsOpen())) {
         const auto old=rawButtons_->Pressed();const auto routed=rawButtons_->RouteInput(event);worldUiRouted=true; // nativeGuide뒤466200의현재성공토큰이다.
         if (old!=rawButtons_->Pressed()) rebuild_=true;
         if (routed.activated) {
@@ -970,7 +855,7 @@ bool UberGump::Input() {
     else if (userInput_) userInput_->Cancel();
     const auto mode=world_ ? world_->InputMode() : 0U; //005cae90의 현재 강조 모드이며 페이지 phase로 대체하지 않는다.
     const bool cursorActive=world_ && world_->Session().CursorDropSettings().lockDepth==0; //445330은5325c8==0이며 Session의 같은 깊이를 읽는다.
-    const bool logicalModal=state_.phase==ClientPhase::Dialog || state_.phase==ClientPhase::Briefing || !popup_.empty(); // 아직 공통 modal 부모가 아닌 기존 HTML/임시 팝업 뒤의 overlay만 막는 호스트 경계다.
+    const bool logicalModal=!popup_.empty(); // 실제 HTML 모달은 공통 트리에 맡기고 남은 호스트 팝업의 overlay만 막는다.
     const auto pointer=rawButtons_->NotifyPointer(mouse,mode,cursorActive,!logicalModal); // 원본4d69f4는 일반 큐 Pop보다 앞이다.
     if (pointer.overlay && *pointer.overlay==0) client_.GetCursor().Set(1); // 실제466150 반환0의4d68cc→4d69d3 fallback이며 미호출과 구별한다.
     if (pointer.changed) rebuild_=true;
@@ -979,7 +864,7 @@ bool UberGump::Input() {
         if (state_.phase==ClientPhase::MainMenu && popup_.empty()) client_.ClearFullScreenState();
         ActivatePageAction(actions_[static_cast<std::size_t>(*pointer.activated)]);rebuild_=true;
     }
-    while (!client_.Input().Empty()) Event(client_.Input().Pop(false));
+    while (!client_.Input().Empty()) { Event(client_.Input().Pop(false));SyncTellPresentation(); } // 실제 부모 Kill 뒤 다음 큐 사건 전에 표시 phase를 맞춘다.
     if (input_.Move({mouse.x, mouse.y}, (mouse.code & InputCode::kOutside) == 0)) rebuild_ = true;
     if (world_ && world_->TakeChanged()) rebuild_=true;
     if (rebuild_) Compose();
@@ -990,9 +875,7 @@ void UberGump::Tick() {
     const bool loading = state_.phase == ClientPhase::LoadingMission;
     if (const auto action = state_.Take()) Execute(*action);
     else if (loading && !(missionRuntime_ && missionRuntime_->guided)) AdvanceBriefing();
-    if (page_.timeoutSeconds > 0 && client_.Time().wall - opened_ >= page_.timeoutSeconds) {
-        const auto action=page_.timeout;page_.timeoutSeconds=0;ActivatePageAction(action); // 같은 부모의 timeout을 두 번 발화하지 않는다.
-    }
+    SyncTellPresentation();
     if (rebuild_) Compose();
 }
 // 원본 루프8번에서 현재 Guide의 상태/창 관문과0..6 단계를 한 번 실행한다.
@@ -1005,16 +888,13 @@ void UberGump::PrepareKernelFrame() { if (world_) world_->PrepareKernelFrame(); 
 void UberGump::FinishKernelFrame() { if (world_) world_->FinishKernelFrame(); }
 // 원본의미니맵프레임은게임정지와별개로커널보다먼저실행한다.
 void UberGump::RefreshMinimap() { if (rawButtons_->Minimap() && rawButtons_->Minimap()->Refresh()) rebuild_=true; }
-// Client 정상 갱신의 원본4662b0 위치에서만 논리 페이지의 지연 소멸을 실행한다.
-void UberGump::CleanupDialogs() { DisposeRetiredPages(); }
-// Warning도 포함한 실제 공통 삭제 큐를 한 번 비운다. 논리 HTML의 지연 소멸은 남은 어댑터다.
+// 실제 공통 삭제 큐의 후반 반납 뒤 표시 상태를 현재 부모에서 다시 조회한다.
 void UberGump::CleanupGumps() {
-    if (rawButtons_->CleanupGumps()) rebuild_=true;
-    CleanupDialogs();
+    if (rawButtons_->CleanupGumps()) rebuild_=true;SyncTellPresentation();
 }
 // 원본 일반/영상잠금 양쪽 가지에서 같은 idle을 한 번 실행하고 표시 변화는 뒤쪽 Frame 합성으로 넘긴다.
 void UberGump::IdleGumps() {
-    if (rawButtons_->IdleGumps()) rebuild_=true;
+    if (rawButtons_->IdleGumps()) rebuild_=true;SyncTellPresentation();
 }
 // 커널의 이동·날씨와 비동기 Tell을 같은 프레임에 반영한다. 페이지가 같으면 입력 영역/누름 상태를 유지한다.
 void UberGump::Frame() {
@@ -1079,8 +959,6 @@ void UberGump::Compose() {
     Tile(*canvas, clouds_, all);
     std::vector<RenderText> text; std::vector<GumpControl> regions;
     const auto& font = client_.Fonts().Get(0);
-    const auto palette = client_.GetScreen().Palette();
-    const auto light = Color(palette, 191, 178, 139), dark = Color(palette, 49, 44, 36);
     // 마지막 파일 로딩의 실제 버튼 색/문맥을 사용한다. 일시 번개 팔레트에서 색 번호를 다시 찾지 않는다.
     const auto buttonColors=ButtonColors(client_.GetScreen().Colors());
     const auto buttonContexts=ButtonTextContexts(buttonColors);
@@ -1103,11 +981,6 @@ void UberGump::Compose() {
             client_.GetRenderer().SetBackground(canvas); client_.GetRenderer().SetScene(worldSprites);
             canvas = std::make_shared<IndexedImage>(client_.GetRenderer().SceneImage());
         }
-    }
-    if (world_ && popup_.empty() && (state_.phase==ClientPhase::Dialog || state_.phase==ClientPhase::Briefing) && rawButtons_->Production()) {
-        // 같은 살아 있는 패널을 먼저 그린 뒤 아래에서 모달 본문/테두리를 합성한다.
-        rawButtons_->Menus()->Draw(canvas->indices,width,height,client_.GetScreen().Colors(),client_.GetScreen().ShadeMaps());
-        commonDrawSubmitted=true;
     }
     if (controls) { labels_.clear(); actions_.clear(); input_.Cancel();rawButtons_->Cancel(); }
     // 같은 순서의 영역/라벨/명령을 제출한다. 그림만 갱신할 때도 번호가 유지된다.
@@ -1135,7 +1008,7 @@ void UberGump::Compose() {
     if (state_.phase == ClientPhase::MainMenu || (!mission_ && !popup_.empty())) {
         Paste(*canvas, title_, (width - 640) / 2, (height - 480) / 2, all);
         const int x = width / 2 - 156, y = height / 2 - 73;
-        const std::string campaign = Script("tell").Section("UCampaign") ? "UCampaign" : "Campaign";
+        const std::string campaign = client_.Assets().Edition()==o::OriginalEdition::Patch1078 ? "UCampaign" : Script("tell").Section("UCampaign") ? "UCampaign" : "Campaign"; // 원문10.78 MainMenu의 고정 target이며 영구 tell Config를 새로 등록하지 않는다.
         // 원본 10.78의 8개 버튼. 미복원 기능도 원본 자료의 창을 통해 상태를 알린다.
         const std::array<DialogItem, 8> buttons{{
             {"Campaign", {"Tell", campaign}}, {"Multiplayer", {"Tell", "NotImplemented"}}, {"Demo", {"Tell", "DEMOVILLE"}}, {"Help", {"Menu", "help"}},
@@ -1169,52 +1042,17 @@ void UberGump::Compose() {
                 commonDrawSubmitted=true;
             }
         } else if (state_.phase == ClientPhase::Dialog || state_.phase == ClientPhase::Briefing) {
-            if (!page_.background.empty()) {
-                auto it = decorations_.find(page_.background);
+            const auto background=std::string(HtmlBackgroundName(htmlGlobals_));
+            if (!background.empty()) {
+                auto it = decorations_.find(background);
                 if (it == decorations_.end()) {
                     // 원본 00419ec0도 파일이 없으면 배경을 만들지 않는다(nsstart 등은 배포 자료에 없을 수 있다).
-                    if (const auto bytes = client_.Files().TryRead(client_.Configuration().PathSpec("BackgroundGifSpec", page_.background)))
-                        it = decorations_.emplace(page_.background, DecodeGif(*bytes)).first;
+                    if (const auto bytes = client_.Files().TryRead(client_.Configuration().PathSpec("BackgroundGifSpec", background)))
+                        it = decorations_.emplace(background, DecodeGif(*bytes)).first;
                 }
                 if (it != decorations_.end()) Paste(*canvas, it->second, (width - static_cast<int>(it->second.width)) / 2, (height - static_cast<int>(it->second.height)) / 2, all);
             }
-            const int contentWidth = std::min(480, width - 64), panelWidth = contentWidth + 32;
-            int contentHeight = 0, menuRows = 0, totalButtonWidth = 0, buttons = 0; // 본문과 가장 긴 현재 열/하단 버튼의 높이를 합친다.
-            const auto columnCount=std::max(1U,page_.menuColumns);std::vector<int> rowsByColumn(columnCount); // 단일 열 페이지도 같은 계산을 사용한다.
-            const auto measured=dialogBody_->Layout(contentWidth,{0,0},{0,0,contentWidth,height}); // 실제원본버퍼의전체줄높이를구하고inline서식은별도문단으로쪼개지않는다.
-            contentHeight=measured.height;
-            // 목록과 하단 버튼의 실제 높이를 더한다.
-            for (const auto& item : page_.items) {
-                if (item.menu) {
-                    if (item.menuColumn>=columnCount) throw std::out_of_range("Tell 표시의 현재 메뉴 열 범위 오류");
-                    menuRows=std::max(menuRows,++rowsByColumn[item.menuColumn]);
-                } else { ++buttons; totalButtonWidth += std::max(kButtonWidth, font.Measure(FontBytes(item.label)) + 16) + 4; }
-            }
-            const int panelHeight = std::min(height - 32, contentHeight + menuRows * kRowHeight + (buttons ? 27 : 0) + 32);
-            const int left = (width - panelWidth) / 2, top = (height - panelHeight) / 2;
-            const ScreenRect panel{left, top, left + panelWidth, top + panelHeight}; Tile(*canvas, decorations_.at("A00"), panel); Bevel(*canvas, panel, light, dark);
-            const int footerTop = top + panelHeight - 16 - (buttons ? 27 : 0) - menuRows * kRowHeight;
-            const auto bodyLayout=dialogBody_->Layout(contentWidth,{left+16,top+16},{left+16,top+16,left+16+contentWidth,footerTop}); // 같은표시복제를현재본문내부영역에서만출력한다.
-            text.insert(text.end(),bodyLayout.text.begin(),bodyLayout.text.end());
-            dialogSprites=bodyLayout.sprites;
-            std::fill(rowsByColumn.begin(),rowsByColumn.end(),footerTop); // 각 열의 첫 행은 같은 footer 위쪽 기준에서 시작한다.
-            // 캠페인 제목/완료 체크/잠금 조건은 원본 스크립트 값을 그대로 사용한다.
-            for (const auto& item : page_.items) if (item.menu) {
-                auto& row=rowsByColumn[item.menuColumn];const auto column=static_cast<int>(item.menuColumn),columns=static_cast<int>(columnCount);
-                const ScreenRect rect{left+16+contentWidth*column/columns,row,left+16+contentWidth*(column+1)/columns,row+kRowHeight};
-                const int id = control(item,rect);
-                if (input_.HoveredMenu() == id) Fill(*canvas,rect,dark);
-                if (item.checked) Paste(*canvas, decorations_.at("J02"),rect.left+1,row+3,panel);
-                text.push_back({&font,FontBytes(item.label),rect.left+16,row+1,item.enabled ? static_cast<std::uint8_t>(255) : dark,0,{1,1},true,false});text.back().clip=rect;row+=kRowHeight;
-            }
-            int x = (width - totalButtonWidth + 4) / 2;
-            // 하단 버튼은 라벨 폭에 맞춰 나란히 놓는다.
-            for (const auto& item : page_.items) if (!item.menu) { const int w = std::max(kButtonWidth, font.Measure(FontBytes(item.label)) + 16); button(item, x, top + panelHeight - 16 - kButtonHeight, w); x += w + 4; }
-            // 원본 장식 모서리 네 프레임을 확대하지 않고 붙인다.
-            for (int corner = 0; corner < 4; ++corner) {
-                const auto& image = decorations_.at("I0" + std::to_string(corner));
-                Paste(*canvas, image, corner % 2 ? panel.right - static_cast<int>(image.width) : panel.left, corner / 2 ? panel.bottom - static_cast<int>(image.height) : panel.top, panel);
-            }
+            if (!controls) { rawButtons_->Menus()->Draw(canvas->indices,width,height,client_.GetScreen().Colors(),client_.GetScreen().ShadeMaps());commonDrawSubmitted=true; }
         } else if (state_.phase == ClientPhase::LoadingMission && !controls) {
             rawButtons_->Menus()->Draw(canvas->indices,width,height,client_.GetScreen().Colors(),client_.GetScreen().ShadeMaps());
             commonDrawSubmitted=true;
@@ -1227,8 +1065,8 @@ void UberGump::Compose() {
         // 원본 돌 버튼의 63바이트 라벨은 UTF-8가 아닌 기존 게임 글꼴 바이트를 사용한다.
         for (const auto& label:labels_) originalLabels.push_back(FontBytes(label));
         if (popup_.empty()) rawButtons_->SetControls(regions,originalLabels,width,height,{buttonTextureType_,buttonTextureFrame_,
-            static_cast<std::int16_t>(buttonTextureMetrics_.width),static_cast<std::int16_t>(buttonTextureMetrics_.height),buttonColors},world_!=nullptr);
-        if (state_.phase==ClientPhase::LoadingMission) {
+            static_cast<std::int16_t>(buttonTextureMetrics_.width),static_cast<std::int16_t>(buttonTextureMetrics_.height),buttonColors},world_!=nullptr || client_.HtmlWindowGlobals()->window.instances!=0,client_.HtmlWindowGlobals()->window.instances!=0);
+        if (state_.phase==ClientPhase::LoadingMission && !(missionRuntime_ && missionRuntime_->guided)) {
             rawButtons_->Menus()->SetPalette(client_.GetScreen().Colors());
             // 원본 기본 HUD의 수직 구분선 오른쪽 지도 사각형이다. 전체 dock 드래그 연결 전의 초기값85를 사용한다.
             rawButtons_->Menus()->ShowMissionLoading(LoadingHtmlContext({85,0,width,height}),FontBytes(client_.Translate("Starting Mission...")),[this] { return FontBytes(client_.Translate("Cancel")); });
@@ -1270,7 +1108,7 @@ void UberGump::Compose() {
         // 새 페이지는 같은 raw 노드로 한 번 다시 합성하며 중간 어댑터 그림은 화면에 제출하지 않는다.
         controlsChanged_=false;Compose();return;
     }
-    if (rawButtons_->Menus()->KnowledgeOpen() || rawButtons_->Menus()->HelpOpen() || (warnings_->HasMessages() && !commonDrawSubmitted)) client_.GetRenderer().SetOverlayProcedure(RenderProcedure{{0,0,width,height},[this](std::span<std::uint8_t> pixels,int pitch,int height,ScreenRect clip) {
+    if (!commonDrawSubmitted && (rawButtons_->Menus()->KnowledgeOpen() || rawButtons_->Menus()->HelpOpen() || warnings_->HasMessages())) client_.GetRenderer().SetOverlayProcedure(RenderProcedure{{0,0,width,height},[this](std::span<std::uint8_t> pixels,int pitch,int height,ScreenRect clip) {
         rawButtons_->Menus()->Draw(pixels,pitch,height,client_.GetScreen().Colors(),client_.GetScreen().ShadeMaps(),clip);
     }}); // 원래 브리핑을 유지한 상태에서도 같은 실제 지식 카드를 가장 위에 그린다.
     if (world_) world_->TakeChanged();
@@ -1281,7 +1119,7 @@ std::optional<ScreenPoint> UberGump::ControlPoint(std::string_view label) const 
     if (rawButtons_->Minimap() && label.starts_with("minimap:")) return rawButtons_->Minimap()->Point(label);
     if (rawButtons_->Production() && label.starts_with("production:")) return rawButtons_->Production()->Point(static_cast<std::uint32_t>(std::stoul(std::string(label.substr(11)))));
     if (world_ && (label.starts_with("world:") || label.starts_with("cell:") || label.starts_with("placement:") || label.starts_with("placement-near:") || label.starts_with("placement-reach:") || label.starts_with("placement-fire:"))) return world_->Point(label);
-    if (rawButtons_->Menus()->HasMenus() || state_.phase==ClientPhase::LoadingMission) if (const auto point=rawButtons_->Menus()->Point(FontBytes(label))) return point;
+    if (rawButtons_->Menus()->HasMenus() || rawButtons_->Menus()->HtmlWindowsOpen() || state_.phase==ClientPhase::LoadingMission) if (const auto point=rawButtons_->Menus()->Point(FontBytes(label))) return point;
     // 동일 라벨의 첫 영역을 선택한다.
     for (const auto& control : input_.Controls()) if (labels_.at(static_cast<std::size_t>(control.id)) == label)
         return ScreenPoint{(control.rect.left + control.rect.right) / 2, (control.rect.top + control.rect.bottom) / 2};
@@ -1293,7 +1131,9 @@ std::string UberGump::Report() const {
     out << "phase\t" << static_cast<int>(state_.phase) << "\npage\t" << Field(pageName_) << "\npopup\t" << Field(popup_) << "\n";
     out << "size\t" << client_.GetScreen().Width() << '\t' << client_.GetScreen().Height() << "\n";
     out << "paused\t" << client_.Paused() << "\nsound\t" << client_.Configuration().GetInt("sound") << "\n";
-    out<<"map_menu\t"<<page_.menuColumns<<'\t'<<mapCatalog_->Cached().count<<'\t'<<mapCatalog_->Cached().dirty<<'\t'<<mapFileSpec_.Current()<<'\n'; // 실제 표시/캐시 상태만 관찰하며 선택/로딩 성공을 합성하지 않는다.
+    out<<"map_menu\t"<<rawButtons_->Menus()->HtmlMenuColumns()<<'\t'<<mapCatalog_->Cached().count<<'\t'<<mapCatalog_->Cached().dirty<<'\t'<<mapFileSpec_.Current()<<'\n'; // 실제 부착된 열과 캐시 상태만 관찰한다. 선택/로딩 성공을 합성하지 않는다.
+    out<<"html_window_state\t"<<client_.HtmlWindowGlobals()->window.instances<<'\t'<<rawButtons_->DialogCount()<<'\t'<<rawButtons_->Menus()->HtmlWindowsOpen()<<'\n'; // Kill 뒤 인스턴스와 즉시 모달 반납을 구별하는 현재값이다.
+    out<<"current_dialog\t"<<rawButtons_->CurrentDialog()<<'\n'; // Guide4c8e90과 같은 실제565dd4다.
     out << "thunder_processes\t" << client_.ThunderFlashCount() << '\n';
     out<<"game_menu_bar\t"<<(gameMenuState_ ? gameMenuState_->menuSerial : 0U)<<'\t'<<GameMenuOpen()<<'\t'<<(gameMenuState_ ? gameMenuState_->checksum : 0)<<'\n'; // 같은serial조회와기존SP검산을관찰한다.
     out<<rawButtons_->Report()<<'\n';

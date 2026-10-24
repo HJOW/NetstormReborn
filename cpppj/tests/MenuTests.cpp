@@ -28,13 +28,19 @@ std::vector<std::uint8_t> Gif(bool interlaced, bool transparent) {
     return bytes;
 }
 // 단위 테스트 전용 임시 디렉터리. 예외에도 이 테스트가 만든 폴더만 정리한다.
+// 실제 임시 부모를 정규화하고 마지막 구분자가 만든 빈 파일명만 제거한다.
+std::filesystem::path MenuTemporaryRoot() {
+    auto root=std::filesystem::weakly_canonical(std::filesystem::temp_directory_path());
+    if (root.filename().empty() && root!=root.root_path()) root=root.parent_path();return root;
+}
 struct TemporaryDirectory {
+    const std::filesystem::path parent; // 생성/반납이 같은 실제 임시 부모를 검증하도록 수명 동안 보존한다.
     // path: 경로. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::filesystem::path path;
     // 서로 다른 실행이 같은 이름을 쓰지 않도록 현재 시계값을 붙인다.
-    TemporaryDirectory() : path(std::filesystem::temp_directory_path() / ("netstorm-menu-test-" + std::to_string(std::chrono::steady_clock::now().time_since_epoch().count()))) { std::filesystem::create_directory(path); }
+    TemporaryDirectory() : parent(MenuTemporaryRoot()),path(parent/("netstorm-menu-test-"+std::to_string(std::chrono::steady_clock::now().time_since_epoch().count()))) { if (!path.is_absolute() || path.parent_path()!=parent || !std::filesystem::create_directory(path)) throw std::runtime_error("메뉴 검사 전용 임시 경로 확보 실패"); }
     // 원본 경로와 무관한 생성 폴더만 삭제한다.
-    ~TemporaryDirectory() { std::error_code error; std::filesystem::remove_all(path, error); }
+    ~TemporaryDirectory() { std::error_code error;if (path.is_absolute() && path.parent_path()==parent && path.filename().string().starts_with("netstorm-menu-test-")) std::filesystem::remove_all(path,error); } // 실제 절대 부모/고정 접두어를 확인한 검사 전용 디렉터리만 재귀 반납한다.
 };
 }
 // 돌 버튼은 누름/뗌이 같은 버튼에 있어야 한다. 밖으로 나갔다 돌아오는 캡처는 유지된다.
@@ -111,4 +117,14 @@ TEST_CASE(BaseFile_WildcardCampaignDiscovery) {
     netstorm::o::BaseFileSystem files(base.path, secondary.path);
     CHECK(files.Match("D\\OFFICAL?.ENGLISH") == std::vector<std::string>({"d/offical1.english","d/offical2.english","d/offical3.english"}));
     CHECK(files.Match("d/missing*.english").empty()); CHECK(files.Read("d/offical3.english") == std::vector<std::uint8_t>({'d','i','s','k'}));
+}
+// FileFinder는 디스크 우선/TAFF 이름 인덱스/보조 순서를 유지해 Config index를 정렬 전에 확정한다.
+TEST_CASE(BaseFile_FileFinderDiskArchiveSecondaryOrderAndFirstDuplicate) {
+    TemporaryDirectory base,secondary,outside;std::filesystem::create_directory(base.path/"d");std::filesystem::create_directory(secondary.path/"d");
+    std::ofstream(base.path/"d/offical3.english")<<"disk";std::ofstream(secondary.path/"d/offical0.english")<<"secondary";std::ofstream(secondary.path/"d/offical1.english")<<"shadowed";
+    netstorm::o::BaseFileSystem files(base.path,secondary.path);const auto original=std::filesystem::path(__FILE__).parent_path().parent_path().parent_path()/"originals";files.RegisterArchive(original/"netstorm.tarc");
+    const std::vector<std::string> expected{"\\d\\offical3.english","\\d\\offical1.english","\\d\\offical2.english","\\d\\offical2sep.english","\\d\\offical4.english","\\d\\offical5.english","\\d\\offical5sep.english","\\d\\offical6.english","\\d\\offical0.english"}; // 원문의 디스크 우선과 후속 중복 제거로 결정되는 실제 자료 순서다.
+    CHECK(files.MatchFinder("d\\offical*.english")==expected && files.Read(expected[0])==std::vector<std::uint8_t>({'d','i','s','k'}));CHECK(files.Read(expected[1])!=std::vector<std::uint8_t>({'s','h','a','d','o','w','e','d'}));
+    const auto upper=files.MatchFinder("D\\OFFICAL*.ENGLISH");CHECK(upper.size()==expected.size() && upper.front()=="\\D\\offical3.english" && upper.back()=="\\D\\offical0.english"); // 최초 디스크 경로의 대소문자는 정규화하지 않는다.
+    CHECK(files.MatchFinder("d/missing*.english").empty());CHECK(files.MatchFinder("d/missing.english")==std::vector<std::string>{"\\d\\missing.english"});CHECK(files.MatchFinder((outside.path/"external.english").string()).empty());
 }

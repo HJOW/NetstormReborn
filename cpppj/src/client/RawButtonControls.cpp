@@ -153,7 +153,7 @@ struct RawButtonControls::Impl {
         return 0;
     }
     // 자식 먼저 Kill한 실제 큐를 비우며 루트/serial/count를 임의 초기화하지 않는다.
-    void Clear(bool preserveWorldUi=false) {
+    void Clear(bool preserveWorldUi=false,bool deferCleanup=false) { // 명시 보존 교체는 같은 실제 HTML의 OnExit를 공통 후반 Cleanup까지 남길 수 있다.
         if (preserveWorldUi) {
             // 이 페이지가 만든 돌 버튼과 그 배경만 같은 자식 우선 수명으로 반납한다.
             for (const auto& control:controls) lifetime->Kill(control.second);
@@ -161,7 +161,7 @@ struct RawButtonControls::Impl {
             // Kill이 root.child를 바꾸므로 현재 머리를 매번 읽는다.
             while (Node(root)->child) lifetime->Kill(Node(root)->child);
         }
-        lifetime->Cleanup();if (!preserveWorldUi) { minimap.reset();if (production) production->Close();production.reset();if (menus) { menus->CloseHtmlWindows();menus->CloseBackgroundGifs();menus->CloseChatWindows();menus->CloseNsInfo();menus->CloseTextEntries(); } }controls.clear();activated.reset();
+        if (!deferCleanup) lifetime->Cleanup();if (!preserveWorldUi) { minimap.reset();if (production) production->Close();production.reset();if (menus) { menus->CloseHtmlWindows();menus->CloseBackgroundGifs();menus->CloseChatWindows();menus->CloseNsInfo();menus->CloseTextEntries(); } }controls.clear();activated.reset();
     }
 };
 // 구현 주소는 생성 이후 이동하지 않아 순환 훅이 안정된 처리기를 조회한다.
@@ -170,7 +170,8 @@ RawButtonControls::RawButtonControls(o::OriginalEdition edition,RawButtonHooks h
 RawButtonControls::~RawButtonControls() { impl_->Clear();impl_->lifetime->Kill(impl_->root);impl_->lifetime->Cleanup(); }
 // 쓰기 전에 전체 화면 입력을 검증하고 이전 페이지를 실제 수명 경로로 정리한다.
 void RawButtonControls::SetControls(std::span<const GumpControl> controls,std::span<const std::string> labels,
-    int width,int height,RawButtonAssets assets,bool preserveWorldUi) {
+    int width,int height,RawButtonAssets assets,bool preserveWorldUi,bool deferCleanup) {
+    if (deferCleanup && !preserveWorldUi) throw std::invalid_argument("전체 UI 반납에서 HTML 지연 보존을 사용할 수 없음"); // 잘못된 수명 계약을 변경 전에 거부한다.
     auto& state=*impl_;if (width<=0 || height<=0 || controls.size()*2+1>=kGumpRegistryCapacity) throw std::out_of_range("raw 버튼 화면/개수 범위 오류");
     std::map<int,bool> ids;
     // 메뉴 행은 다른 실제 처리기의 대상이므로 돌 버튼 등록에 포함하지 않는다.
@@ -178,7 +179,7 @@ void RawButtonControls::SetControls(std::span<const GumpControl> controls,std::s
         if (control.id<0 || static_cast<std::size_t>(control.id)>=labels.size() || !ids.emplace(control.id,true).second ||
             control.rect.right<=control.rect.left || control.rect.bottom<=control.rect.top) throw std::invalid_argument("raw 버튼 입력 오류");
     }
-    state.Clear(preserveWorldUi);state.assets=assets;state.backgroundAsset={assets.type,assets.type};state.backgroundFrame={assets.width,assets.height};
+    state.Clear(preserveWorldUi,deferCleanup);state.assets=assets;state.backgroundAsset={assets.type,assets.type};state.backgroundFrame={assets.width,assets.height};
     state.stoneState.palette=assets.palette;state.stoneState.backgroundType=assets.type;state.stoneState.backgroundFrame=assets.frame;
     state.create.screenWidth=width;state.create.screenHeight=height;auto& root=*state.Node(state.root);
     root.baseWidth=root.width=static_cast<float>(width);root.baseHeight=root.height=static_cast<float>(height);
@@ -367,6 +368,10 @@ bool RawButtonControls::BlockingGumpOpen() const {
         if ((impl_->Node(token)->flags&0x4000U)!=0) return true;
     return false;
 }
+// HTML/Help/미션 안내가 공유하는 같은 원문 모달 표의 현재 개수다.
+std::uint32_t RawButtonControls::DialogCount() const { return impl_->life.dialogCount; }
+// Guide와 일반 입력이 같은 활성 부모 포인터를 읽는다.
+std::uint32_t RawButtonControls::CurrentDialog() const { return impl_->life.currentDialog; }
 // 렌더링이 이전 어댑터의 캡처 사본을 조회하지 않게 현재 raw 상태만 읽는다.
 std::optional<int> RawButtonControls::Pressed() const {
     // 표시 명령 번호 순서는 부모 트리 방문 순서와 구별한다.

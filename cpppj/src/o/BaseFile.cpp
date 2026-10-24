@@ -151,7 +151,29 @@ std::vector<std::string> BaseFileSystem::MatchDisk(std::string_view pattern) con
     throw std::logic_error("원본 Filespec의 실제 Win32 디스크 열거는 Windows에서만 지원합니다");
 #endif
 }
-// 원본 004ce580은 파일 목록을 모은 뒤 이름을 대소문자 없이 정렬한다. 내용 읽기는 기존 우선순위를 따른다.
+// 실제 FileFinder 목록은 등록/Config index를 위해 첫 열거 순서를 유지한다. 별도 보조 TAFF 풀의 등록은 현재 VFS 모형 밖이다.
+std::vector<std::string> BaseFileSystem::MatchFinder(std::string_view pattern) const {
+    const auto normalized=NormalizeGamePath(pattern);const std::filesystem::path wanted(normalized);const auto directory=wanted.parent_path(),maskPath=wanted.filename();const auto mask=maskPath.string();std::vector<std::string> result;
+    const auto append=[&](std::string name) { //587f0은 첫 문자열의 대소문자/바이트를 보존하고 나중 중복만 제외한다.
+        std::replace(name.begin(),name.end(),'/','\\');if (name.empty() || name.front()!='\\') name.insert(name.begin(),'\\');
+        const auto key=AsciiLower(name);if (std::none_of(result.begin(),result.end(),[&](const auto& old) { return AsciiLower(old)==key; })) result.push_back(std::move(name));
+    };
+    const auto disk=[&](const std::filesystem::path& root) { // FileSpec의 실제 Win32 순서를 가져와 원문의 기본 경로 접두부만 제거한다.
+        const auto absoluteRoot=std::filesystem::absolute(root).lexically_normal();auto prefix=absoluteRoot.string();std::replace(prefix.begin(),prefix.end(),'/','\\');while (!prefix.empty() && prefix.back()=='\\') prefix.pop_back(); // 끝 구분자는 반환 상대 이름에 한 번만 남긴다.
+        const BaseFileSystem finder(root);for (const auto& name:finder.MatchDisk(pattern)) { // 디렉터리 속성도 FileSpec과 같이 제외하지 않는다.
+            const std::filesystem::path path(name);auto absolute=std::filesystem::absolute(path.is_absolute() ? path : root/path).lexically_normal().string();std::replace(absolute.begin(),absolute.end(),'/','\\');
+            if (absolute.size()>prefix.size() && absolute.compare(0,prefix.size(),prefix)==0 && absolute[prefix.size()]=='\\') append(absolute.substr(prefix.size())); // 원문처럼 경로 접두부 비교는 대소문자를 바꾸지 않는다.
+        }
+    };
+    const auto matches=[&](std::string name) { // 현재 TAFF의 한 디렉터리에서 ASCII *·? 이름을 비교한다.
+        name=AsciiLower(name);std::size_t n{},m{},star=std::string::npos,retry{};
+        while (n<name.size()) { if (m<mask.size() && (mask[m]=='?' || mask[m]==name[n])) { ++m;++n; }else if (m<mask.size() && mask[m]=='*') { star=m++;retry=n; }else if (star!=std::string::npos) { m=star+1;n=++retry; }else return false; } // 마지막 별표의 소비 길이만 늘려 재시도한다.
+        while (m<mask.size() && mask[m]=='*') ++m;return m==mask.size(); // 끝의 별표는 빈 문자열에도 일치한다.
+    };
+    disk(base_);for (const auto& archive:archives_) for (const auto& entry:archive.Entries()) { const std::filesystem::path name(NormalizeGamePath(entry.name));if (name.parent_path()==directory && matches(name.filename().string())) append(entry.name); } // 현재 등록 TAFF/이름 인덱스 순서를 그대로 보존한다.
+    if (base_.string()!=secondary_.string()) disk(secondary_);return result; // 원문은 두 경로 문자열이 같으면 보조 탐색을 생략한다.
+}
+// 기존 정렬 목록 API다. 실제 Tell은 index 확정 전에 정렬하지 않는 MatchFinder를 사용한다.
 std::vector<std::string> BaseFileSystem::Match(std::string_view pattern) const {
     const auto normalized = NormalizeGamePath(pattern);
     const std::filesystem::path path(normalized);

@@ -65,15 +65,17 @@ public:
     ~RawButtonControls();
     RawButtonControls(const RawButtonControls&)=delete;
     RawButtonControls& operator=(const RawButtonControls&)=delete;
-    // 기본은 기존 자식을 Kill/Cleanup한다. preserveWorldUi이면 이 페이지의 돌 버튼만 반납하고 같은 월드 UI를 유지한다.
+    // 기본은 기존 자식을 Kill/Cleanup한다. preserveWorldUi는 돌 버튼만 교체한다. deferCleanup은 보존 모드에서 실제 HTML의 후반 소멸을 유지한다.
     void SetControls(std::span<const GumpControl> controls,std::span<const std::string> labels,
-        int width,int height,RawButtonAssets assets,bool preserveWorldUi=false);
+        int width,int height,RawButtonAssets assets,bool preserveWorldUi=false,bool deferCleanup=false);
     // 실제 GumpInput::Route와 부모 click 통지로 활성화된 화면 명령 번호를 반환한다.
     std::optional<int> Event(InputEvent event);
     RawButtonInputResult RouteInput(InputEvent event); // 같은 실제 Route를 한 번 실행해 월드 전 입력 소비를 돌려준다.
     std::uint32_t RootToken() const; // 현재 등록표0칸의 실제 공통 루트다.
     std::uint32_t SerialGump(std::uint32_t serial) const; //00464020: 등록1..999에서 같은serial·비dead의 첫 대상이다.
     void KillGump(std::uint32_t token); // 같은 실제 수명으로 Kill만 하고 callback 밖 프레임 Cleanup을 유지한다.
+    std::uint32_t DialogCount() const; // Guide가 공통 입력/수명과 같은 현재 모달 개수를 읽는다. Kill의 즉시 반납과 소멸 전 창 인스턴스 수를 구별한다.
+    std::uint32_t CurrentDialog() const; // 원문565dd4의 실제 현재 모달 토큰이다.4c8e90은 개수가 아닌 이 값의0 여부를 읽는다.
 
     // 004d68c2/004d69f4: 안쪽 포인터의 조건부 Overlay 뒤 raw code/x/y Broadcast만 실행한다. 일반 큐 드레인보다 앞에서 한 번 부른다.
     // cursorActive는445330의 참/거짓이고 mode는005cae90이다. allowOverlay는 아직 공통 부모가 아닌 논리 HTML의 명시 호스트 차단 경계다.
